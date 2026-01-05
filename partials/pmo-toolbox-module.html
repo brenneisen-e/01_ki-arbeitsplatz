@@ -961,57 +961,48 @@
 .pmo-projects-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 16px;
+    gap: 24px;
 }
 
 .pmo-project-card {
     background: white;
-    border-radius: 12px;
-    padding: 20px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     cursor: pointer;
     transition: all 0.2s;
     border: 2px solid transparent;
+    min-height: 180px;
+    display: flex;
+    flex-direction: column;
 }
 
 .pmo-project-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
     border-color: #E30613;
 }
 
 .pmo-project-header {
     display: flex;
     align-items: flex-start;
-    justify-content: space-between;
-    margin-bottom: 12px;
-}
-
-.pmo-project-id {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 32px;
-    height: 32px;
-    background: #334155;
-    color: white;
-    font-weight: 700;
-    font-size: 14px;
-    border-radius: 8px;
+    justify-content: flex-end;
+    margin-bottom: 8px;
 }
 
 .pmo-project-name {
-    margin: 8px 0 4px;
-    font-size: 16px;
-    font-weight: 600;
+    margin: 0 0 8px;
+    font-size: 18px;
+    font-weight: 700;
     color: #1e293b;
 }
 
 .pmo-project-full-name {
-    font-size: 12px;
+    font-size: 13px;
     color: #64748b;
-    line-height: 1.4;
-    margin-bottom: 12px;
+    line-height: 1.5;
+    margin-bottom: 16px;
+    flex: 1;
 }
 
 .pmo-project-workstreams {
@@ -1451,19 +1442,6 @@
     margin-bottom: 24px;
     padding-bottom: 16px;
     border-bottom: 1px solid #e2e8f0;
-}
-
-.pmo-project-detail-id {
-    width: 48px;
-    height: 48px;
-    background: #334155;
-    color: white;
-    font-size: 20px;
-    font-weight: 700;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
 .pmo-project-detail-info h3 {
@@ -2431,6 +2409,9 @@
 }
 </style>
 
+<!-- pptxgenjs Library for PowerPoint Export -->
+<script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js"></script>
+
 <script>
 // ========================================
 // PMO TOOLBOX - JavaScript
@@ -2728,7 +2709,6 @@ const PMO = {
 
             card.innerHTML = `
                 <div class="pmo-project-header">
-                    <span class="pmo-project-id">${project.id}</span>
                     <div class="pmo-traffic-light ${status?.overall || 'gray'}"></div>
                 </div>
                 <h4 class="pmo-project-name">${project.name}</h4>
@@ -2777,7 +2757,6 @@ const PMO = {
 
         body.innerHTML = `
             <div class="pmo-project-detail-header">
-                <div class="pmo-project-detail-id">${project.id}</div>
                 <div class="pmo-project-detail-info">
                     <h3>${project.name}</h3>
                     <p>${project.fullName}</p>
@@ -3717,7 +3696,253 @@ const PMO = {
     },
 
     exportPPT() {
-        alert('PPT-Export wird in Kürze verfügbar sein.\n\nFür den Export ist die pptxgenjs Library erforderlich.');
+        const status = this.pptStatusHistory[this.pptCurrentIndex];
+        if (!status) {
+            alert('Kein Status zum Exportieren vorhanden.');
+            return;
+        }
+
+        const project = this.PROGRAM_STRUCTURE.projects.find(p => p.id === status.projectId);
+        const ws = project?.workstreams.find(w => w.id === status.workstreamId);
+
+        // Create new presentation
+        const pptx = new PptxGenJS();
+        pptx.layout = 'LAYOUT_16x9';
+        pptx.title = `CPE Status ${status.workstreamId}`;
+        pptx.author = 'PMO Toolbox';
+
+        // ERGO colors
+        const ERGO_RED = 'C8102E';
+        const ERGO_DARK = '1E293B';
+        const ERGO_GRAY = '64748B';
+        const LIGHT_GRAY = 'F1F5F9';
+
+        // Status colors
+        const statusColors = {
+            green: '22C55E',
+            yellow: 'EAB308',
+            red: 'EF4444',
+            gray: '94A3B8'
+        };
+
+        // Create slide
+        const slide = pptx.addSlide();
+
+        // Header line
+        slide.addShape(pptx.ShapeType.rect, {
+            x: 0.4,
+            y: 0.3,
+            w: 9.5,
+            h: 0.05,
+            fill: { color: ERGO_RED }
+        });
+
+        // Sub-header
+        slide.addText('CPE STATUS TEILPROJEKTE', {
+            x: 0.4,
+            y: 0.4,
+            w: 6,
+            h: 0.25,
+            fontSize: 10,
+            color: ERGO_GRAY,
+            fontFace: 'Arial'
+        });
+
+        // Title
+        slide.addText(`CPE – Teilprojekt ${status.workstreamId}: ${ws?.name || ''}`, {
+            x: 0.4,
+            y: 0.65,
+            w: 8,
+            h: 0.4,
+            fontSize: 18,
+            bold: true,
+            color: ERGO_DARK,
+            fontFace: 'Arial'
+        });
+
+        // Date
+        slide.addText(`Status vom: ${this.formatDate(status.date)}`, {
+            x: 8.5,
+            y: 0.4,
+            w: 1.5,
+            h: 0.25,
+            fontSize: 9,
+            color: ERGO_GRAY,
+            fontFace: 'Arial',
+            align: 'right'
+        });
+
+        // Main status circle on the right
+        const mainStatusColor = statusColors[status.status.overall] || statusColors.gray;
+        slide.addShape(pptx.ShapeType.ellipse, {
+            x: 8.8,
+            y: 0.8,
+            w: 0.7,
+            h: 0.7,
+            fill: { color: mainStatusColor }
+        });
+        slide.addText('Status', {
+            x: 8.6,
+            y: 1.55,
+            w: 1.1,
+            h: 0.2,
+            fontSize: 8,
+            color: ERGO_GRAY,
+            fontFace: 'Arial',
+            align: 'center'
+        });
+
+        // Sub-status indicators
+        const subStatuses = [
+            { label: 'Budget', status: status.status.budget },
+            { label: 'Scope', status: status.status.scope },
+            { label: 'Zeit', status: status.status.time },
+            { label: 'Ressourcen', status: status.status.resources },
+            { label: 'Risiken', status: status.status.risks }
+        ];
+
+        let subY = 1.9;
+        subStatuses.forEach((sub, idx) => {
+            const col = idx % 2;
+            const row = Math.floor(idx / 2);
+            const x = 8.5 + (col * 0.8);
+            const y = subY + (row * 0.35);
+
+            slide.addShape(pptx.ShapeType.ellipse, {
+                x: x,
+                y: y,
+                w: 0.2,
+                h: 0.2,
+                fill: { color: statusColors[sub.status] || statusColors.gray }
+            });
+            slide.addText(sub.label, {
+                x: x + 0.25,
+                y: y,
+                w: 0.6,
+                h: 0.2,
+                fontSize: 7,
+                color: ERGO_DARK,
+                fontFace: 'Arial'
+            });
+        });
+
+        // Table with sections
+        const tableData = [];
+        const tableOpts = {
+            x: 0.4,
+            y: 1.2,
+            w: 7.8,
+            colW: [7.8],
+            fontFace: 'Arial',
+            fontSize: 8,
+            color: ERGO_DARK,
+            valign: 'top'
+        };
+
+        // Section: Projektfortschritt
+        tableData.push([{
+            text: 'Projektfortschritt gegenüber Vorwoche',
+            options: { bold: true, fontSize: 10, fill: { color: 'FFFFFF' }, color: ERGO_DARK }
+        }]);
+
+        const progressBullets = status.progress ? status.progress.split('\n').filter(l => l.trim()) : ['Keine Angaben'];
+        progressBullets.forEach(bullet => {
+            tableData.push([{
+                text: `• ${bullet.replace(/^[•\-]\s*/, '')}`,
+                options: { fontSize: 8, fill: { color: 'FFFFFF' } }
+            }]);
+        });
+
+        // Section: Anstehende Aktivitäten
+        tableData.push([{
+            text: 'Anstehende Aktivitäten (insb. kommende Woche)',
+            options: { bold: true, fontSize: 10, fill: { color: 'FFFFFF' }, color: ERGO_DARK }
+        }]);
+
+        const upcomingBullets = status.upcoming ? status.upcoming.split('\n').filter(l => l.trim()) : ['Keine Angaben'];
+        upcomingBullets.forEach(bullet => {
+            tableData.push([{
+                text: `• ${bullet.replace(/^[•\-]\s*/, '')}`,
+                options: { fontSize: 8, fill: { color: 'FFFFFF' } }
+            }]);
+        });
+
+        // Section: Risiken & Herausforderungen
+        tableData.push([{
+            text: 'Aktuelle Herausforderungen und Risiken',
+            options: { bold: true, fontSize: 10, fill: { color: 'FFFFFF' }, color: ERGO_DARK }
+        }]);
+
+        if (status.risksAndIssues && status.risksAndIssues.length > 0) {
+            status.risksAndIssues.forEach(risk => {
+                tableData.push([{
+                    text: `${risk.type}: ${risk.description} (${risk.status})`,
+                    options: { fontSize: 8, fill: { color: 'FFFFFF' } }
+                }]);
+            });
+        } else {
+            tableData.push([{
+                text: '• Keine offenen Risiken',
+                options: { fontSize: 8, fill: { color: 'FFFFFF' } }
+            }]);
+        }
+
+        // Section: Meilensteine
+        tableData.push([{
+            text: 'Wesentliche Meilensteine',
+            options: { bold: true, fontSize: 10, fill: { color: 'FFFFFF' }, color: ERGO_DARK }
+        }]);
+
+        if (status.milestones && status.milestones.length > 0) {
+            status.milestones.forEach(ms => {
+                const icon = ms.status === 'Geschlossen' ? '✓' : ms.status === 'Verzögert' ? '⚠' : '○';
+                tableData.push([{
+                    text: `${icon} ${ms.name} - ${this.formatDate(ms.currentEstimate || ms.plannedDate)} (${ms.status})`,
+                    options: { fontSize: 8, fill: { color: 'FFFFFF' } }
+                }]);
+            });
+        } else {
+            tableData.push([{
+                text: '• Keine Meilensteine definiert',
+                options: { fontSize: 8, fill: { color: 'FFFFFF' } }
+            }]);
+        }
+
+        // Section: Entscheidungen
+        if (status.decisions) {
+            tableData.push([{
+                text: 'Erforderliche Entscheidungen',
+                options: { bold: true, fontSize: 10, fill: { color: 'FFFFFF' }, color: ERGO_DARK }
+            }]);
+            tableData.push([{
+                text: status.decisions,
+                options: { fontSize: 8, fill: { color: 'FFFFFF' } }
+            }]);
+        }
+
+        slide.addTable(tableData, tableOpts);
+
+        // Footer with ERGO branding
+        slide.addText('Sales Excellence Transformationsprogramm', {
+            x: 0.4,
+            y: 5.15,
+            w: 3,
+            h: 0.2,
+            fontSize: 7,
+            color: ERGO_GRAY,
+            fontFace: 'Arial'
+        });
+
+        // Save file
+        const filename = `CPE_Status_${status.workstreamId}_${status.date}.pptx`;
+        pptx.writeFile({ fileName: filename })
+            .then(() => {
+                console.log(`PPTX exported: ${filename}`);
+            })
+            .catch(err => {
+                console.error('PPTX Export Error:', err);
+                alert('Fehler beim PPTX-Export: ' + err.message);
+            });
     },
 
     exportPDF() {

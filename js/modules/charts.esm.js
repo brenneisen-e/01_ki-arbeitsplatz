@@ -187,8 +187,19 @@ export function createChart(kpiId, data, view, kpi, timeRange = 'year', offset =
         };
     }
 
+    // Destroy existing chart if any (use Chart.getChart for robust detection)
+    const existingChart = Chart.getChart(canvas);
+    if (existingChart) {
+        existingChart.destroy();
+    }
+    // Also clean up state tracking
     if (currentState.charts[kpiId]) {
-        currentState.charts[kpiId].destroy();
+        try {
+            currentState.charts[kpiId].destroy();
+        } catch (e) {
+            // Already destroyed
+        }
+        delete currentState.charts[kpiId];
     }
 
     currentState.charts[kpiId] = new Chart(ctx, {

@@ -1038,26 +1038,22 @@ function hideTyping() {
 function askSampleQuestion(question) {
     console.log('📝 Sample Question clicked:', question);
 
-    // Check if we're on landing page or dashboard
+    // Check which view is currently visible (not just which elements exist)
+    const landingPage = document.getElementById('landingPage');
+    const mainApp = document.getElementById('mainApp');
+    const chatWidget = document.getElementById('chatWidget');
+
+    const isLandingVisible = landingPage && landingPage.style.display !== 'none';
+    const isMainAppVisible = mainApp && mainApp.style.display !== 'none';
+    const isChatWidgetVisible = chatWidget && chatWidget.style.display !== 'none';
+
     const landingChatInput = document.getElementById('landingChatInput');
     const dashboardChatInput = document.getElementById('chatInput');
 
-    if (landingChatInput) {
-        // Landing Page Chat
-        console.log('📝 Using Landing Chat');
-        landingChatInput.value = question;
-
-        // Trigger the landing chat send
-        if (typeof sendLandingChatMessage === 'function') {
-            sendLandingChatMessage();
-        } else {
-            // Fallback: click the send button
-            const sendBtn = document.getElementById('landingChatSend');
-            if (sendBtn) sendBtn.click();
-        }
-    } else if (dashboardChatInput) {
+    // Use dashboard chat if main app is visible OR if chat widget is visible
+    if ((isMainAppVisible || isChatWidgetVisible) && dashboardChatInput) {
         // Dashboard Chat
-        console.log('📝 Using Dashboard Chat');
+        console.log('📝 Using Dashboard Chat (Main App visible)');
 
         // Verstecke Welcome Screen
         const welcomeDiv = document.querySelector('.chat-welcome');
@@ -1071,8 +1067,21 @@ function askSampleQuestion(question) {
         if (typeof sendMessage === 'function') {
             sendMessage();
         }
+    } else if (isLandingVisible && landingChatInput) {
+        // Landing Page Chat
+        console.log('📝 Using Landing Chat (Landing Page visible)');
+        landingChatInput.value = question;
+
+        // Trigger the landing chat send
+        if (typeof sendLandingChatMessage === 'function') {
+            sendLandingChatMessage();
+        } else {
+            // Fallback: click the send button
+            const sendBtn = document.getElementById('landingChatSend');
+            if (sendBtn) sendBtn.click();
+        }
     } else {
-        console.error('❌ Kein Chat-Input gefunden');
+        console.error('❌ Kein sichtbarer Chat gefunden');
     }
 }
 

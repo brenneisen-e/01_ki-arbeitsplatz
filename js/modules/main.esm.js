@@ -15,6 +15,7 @@ import './utils.esm.js';
 import './data-functions.esm.js';
 import './charts.esm.js';
 import './tables.esm.js';
+import './map.esm.js';
 
 // Log successful load
 console.log('═══════════════════════════════════════════');
@@ -27,6 +28,7 @@ console.log('  ✓ utils.esm.js          - Utility functions');
 console.log('  ✓ data-functions.esm.js - Data access');
 console.log('  ✓ charts.esm.js         - Chart rendering');
 console.log('  ✓ tables.esm.js         - Table rendering');
+console.log('  ✓ map.esm.js            - Map (D3.js) rendering');
 console.log('═══════════════════════════════════════════');
 
 // Verify bridge is working
@@ -37,7 +39,8 @@ if (typeof window !== 'undefined') {
         ['formatValue', window.formatValue],
         ['getFilteredData', window.getFilteredData],
         ['createChart', window.createChart],
-        ['renderTable', window.renderTable]
+        ['renderTable', window.renderTable],
+        ['initMap', window.initMap]
     ];
 
     let allOk = true;

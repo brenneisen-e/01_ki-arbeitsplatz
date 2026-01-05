@@ -4931,21 +4931,82 @@ const PMO = {
                 `<a:t>STATUS TEILPROJEKTE</a:t>`
             );
 
-            // Replace Xxx placeholders with actual content
-            // The template has multiple bullet points marked with "Xxx"
+            // Replace Xxx placeholders with actual content (Projektfortschritt, Aktivitäten, Risiken)
             let xxxIndex = 0;
-            const allBullets = [
+            const xxxBullets = [
                 ...progressBullets.slice(0, 3),
                 ...upcomingBullets.slice(0, 3),
-                ...riskBullets.slice(0, 3),
-                ...milestoneBullets.slice(0, 3)
+                ...riskBullets.slice(0, 3)
             ];
 
             slideXml = slideXml.replace(/<a:t>Xxx<\/a:t>/g, () => {
-                const content = allBullets[xxxIndex] || '';
+                const content = xxxBullets[xxxIndex] || '';
                 xxxIndex++;
                 return `<a:t>${this.escapeXml(content)}</a:t>`;
             });
+
+            // Replace XX placeholders for Management Summary
+            let xxIndex = 0;
+            const summaryBullets = Array.isArray(status.summary) ? status.summary : progressBullets;
+            slideXml = slideXml.replace(/<a:t>XX<\/a:t>/g, () => {
+                const content = summaryBullets[xxIndex] || '';
+                xxIndex++;
+                return `<a:t>${this.escapeXml(content)}</a:t>`;
+            });
+
+            // Replace milestone placeholders in table
+            // Template uses "MS 1", "MS 2", "MS 3" as placeholders for milestone names
+            // and "TT.MM.JJ" for dates
+            if (status.milestones && status.milestones.length > 0) {
+                status.milestones.forEach((ms, i) => {
+                    const msNum = i + 1;
+                    const msName = this.escapeXml(ms.name);
+                    const msPlanned = this.escapeXml(this.formatDate(ms.plannedDate));
+                    const msCurrent = this.escapeXml(this.formatDate(ms.currentEstimate || ms.plannedDate));
+                    const msStatus = this.escapeXml(ms.status || 'Im Plan');
+
+                    // Replace milestone name placeholder
+                    slideXml = slideXml.replace(
+                        new RegExp(`<a:t>MS ${msNum}</a:t>`, 'g'),
+                        `<a:t>${msName}</a:t>`
+                    );
+
+                    // Replace milestone date placeholders (pattern: TT.MM.JJ or DD.MM.YY)
+                    // First occurrence per milestone = planned, second = current estimate
+                });
+            }
+
+            // Replace date placeholders (TT.MM.JJ pattern)
+            let dateIndex = 0;
+            const allDates = [];
+            if (status.milestones) {
+                status.milestones.forEach(ms => {
+                    allDates.push(this.formatDate(ms.plannedDate));
+                    allDates.push(this.formatDate(ms.currentEstimate || ms.plannedDate));
+                });
+            }
+            slideXml = slideXml.replace(/<a:t>TT\.MM\.JJ<\/a:t>/g, () => {
+                const date = allDates[dateIndex] || '';
+                dateIndex++;
+                return `<a:t>${this.escapeXml(date)}</a:t>`;
+            });
+
+            // Replace milestone status placeholders
+            let statusIndex = 0;
+            const milestoneStatuses = status.milestones ? status.milestones.map(ms => ms.status || 'Im Plan') : [];
+            slideXml = slideXml.replace(/<a:t>(Im Plan|Offen)<\/a:t>/g, () => {
+                const msStatus = milestoneStatuses[statusIndex] || 'Im Plan';
+                statusIndex++;
+                return `<a:t>${this.escapeXml(msStatus)}</a:t>`;
+            });
+
+            // Replace decision placeholder if exists
+            if (decisions) {
+                slideXml = slideXml.replace(
+                    /<a:t>Entscheidung[^<]*<\/a:t>/g,
+                    `<a:t>${this.escapeXml(decisions)}</a:t>`
+                );
+            }
 
             // Update the slide
             zip.file('ppt/slides/slide1.xml', slideXml);

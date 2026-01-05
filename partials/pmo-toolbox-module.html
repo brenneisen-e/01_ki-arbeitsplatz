@@ -3031,8 +3031,8 @@
 }
 </style>
 
-<!-- pptxgenjs Library for PowerPoint Export -->
-<script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js"></script>
+<!-- JSZip for Template-based PowerPoint Export -->
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
 
 <script>
 // ========================================
@@ -4821,7 +4821,7 @@ const PMO = {
         document.getElementById('status-workstream').value = status.workstreamId;
     },
 
-    exportPPT() {
+    async exportPPT() {
         const status = this.pptStatusHistory[this.pptCurrentIndex];
         if (!status) {
             alert('Kein Status zum Exportieren vorhanden.');
@@ -4831,217 +4831,114 @@ const PMO = {
         const project = this.PROGRAM_STRUCTURE.projects.find(p => p.id === status.projectId);
         const ws = project?.workstreams.find(w => w.id === status.workstreamId);
 
-        // Create new presentation
-        const pptx = new PptxGenJS();
-        pptx.layout = 'LAYOUT_16x9';
-        pptx.title = `CPE Status ${status.workstreamId}`;
-        pptx.author = 'PMO Toolbox';
+        try {
+            // Show loading indicator
+            const exportBtn = document.querySelector('[onclick="PMO.exportPPT()"]');
+            if (exportBtn) {
+                exportBtn.disabled = true;
+                exportBtn.innerHTML = '<span>Exportiere...</span>';
+            }
 
-        // ERGO colors from template
-        const ERGO_RED = 'C8102E';
-        const ERGO_DARK_BLUE = '003366';  // Dark blue for headers
-        const TEXT_BLACK = '000000';
-        const TEXT_GRAY = '666666';
-        const BORDER_GRAY = 'BFBFBF';
-        const BG_LIGHT = 'F2F2F2';
+            // Fetch the template PPTX
+            const templateResponse = await fetch('/2025_CPE_Status_Template.pptx');
+            if (!templateResponse.ok) {
+                throw new Error('Template nicht gefunden');
+            }
+            const templateBuffer = await templateResponse.arrayBuffer();
 
-        // Status colors
-        const statusColors = {
-            green: '00B050',
-            yellow: 'FFC000',
-            red: 'FF0000',
-            gray: 'BFBFBF'
-        };
+            // Load with JSZip
+            const zip = await JSZip.loadAsync(templateBuffer);
 
-        // Create slide
-        const slide = pptx.addSlide();
+            // Get slide XML
+            const slideXmlFile = zip.file('ppt/slides/slide1.xml');
+            if (!slideXmlFile) {
+                throw new Error('Slide nicht gefunden im Template');
+            }
+            let slideXml = await slideXmlFile.async('string');
 
-        // ============ TOP HEADER ============
-        // Red line at top
-        slide.addShape(pptx.ShapeType.rect, {
-            x: 0.4, y: 0.25, w: 9.2, h: 0.04,
-            fill: { color: ERGO_RED }
-        });
+            // Prepare content
+            const title = `CPE – Teilprojekt ${status.workstreamId}: ${ws?.name || ''}`;
+            const progressBullets = status.progress ? status.progress.split('\n').filter(l => l.trim()) : ['Keine Angaben'];
+            const upcomingBullets = status.upcoming ? status.upcoming.split('\n').filter(l => l.trim()) : ['Keine Angaben'];
+            const riskBullets = status.risksAndIssues?.length > 0
+                ? status.risksAndIssues.map(r => `${r.type}: ${r.description}`)
+                : ['Keine offenen Risiken'];
+            const milestoneBullets = status.milestones?.length > 0
+                ? status.milestones.map(m => `${m.name} - ${this.formatDate(m.plannedDate)} (${m.status || 'Im Plan'})`)
+                : ['Keine Meilensteine'];
+            const decisions = status.decisions || 'Keine Entscheidungen erforderlich';
 
-        // CPE STATUS TEILPROJEKTE (small text above title)
-        slide.addText('CPE STATUS TEILPROJEKTE', {
-            x: 0.4, y: 0.35, w: 4, h: 0.2,
-            fontSize: 9, color: ERGO_RED, fontFace: 'Arial'
-        });
+            // Replace title
+            slideXml = slideXml.replace(
+                /<a:t>CPE – Teilprojekt<\/a:t>/g,
+                `<a:t>${this.escapeXml(title)}</a:t>`
+            );
 
-        // Main Title
-        slide.addText(`CPE – Teilprojekt ${status.workstreamId}: ${ws?.name || ''}`, {
-            x: 0.4, y: 0.55, w: 7.5, h: 0.35,
-            fontSize: 16, bold: true, color: ERGO_DARK_BLUE, fontFace: 'Arial'
-        });
+            // Replace Xxx placeholders with actual content
+            // The template has multiple bullet points marked with "Xxx"
+            let xxxIndex = 0;
+            const allBullets = [
+                ...progressBullets.slice(0, 3),
+                ...upcomingBullets.slice(0, 3),
+                ...riskBullets.slice(0, 3),
+                ...milestoneBullets.slice(0, 3)
+            ];
 
-        // ============ RIGHT SIDE PANEL ============
-        // "Vertraulich" label
-        slide.addText('Vertraulich', {
-            x: 8.2, y: 0.25, w: 1.4, h: 0.2,
-            fontSize: 8, color: TEXT_GRAY, fontFace: 'Arial', align: 'right'
-        });
-
-        // Status date
-        slide.addText(`Status vom:\n${this.formatDate(status.date)}`, {
-            x: 8.2, y: 0.45, w: 1.4, h: 0.35,
-            fontSize: 8, color: TEXT_GRAY, fontFace: 'Arial', align: 'right'
-        });
-
-        // Status box outline
-        slide.addShape(pptx.ShapeType.rect, {
-            x: 8.0, y: 0.85, w: 1.8, h: 1.0,
-            fill: { color: 'FFFFFF' },
-            line: { color: BORDER_GRAY, width: 0.5 }
-        });
-
-        // Main status circle (large)
-        const mainStatusColor = statusColors[status.status?.overall] || statusColors.gray;
-        slide.addShape(pptx.ShapeType.ellipse, {
-            x: 8.5, y: 0.95, w: 0.8, h: 0.8,
-            fill: { color: mainStatusColor }
-        });
-
-        // "Status" label below circle
-        slide.addText('Status', {
-            x: 8.0, y: 1.85, w: 1.8, h: 0.2,
-            fontSize: 9, color: ERGO_DARK_BLUE, fontFace: 'Arial', align: 'center'
-        });
-
-        // Sub-status indicators (2x3 grid)
-        const subStatuses = [
-            { label: 'Budget', status: status.status?.budget },
-            { label: 'Scope', status: status.status?.scope },
-            { label: 'Zeit', status: status.status?.time },
-            { label: 'Ressour-\ncen', status: status.status?.resources },
-            { label: 'Risiken', status: status.status?.risks }
-        ];
-
-        const startY = 2.15;
-        const colWidth = 0.9;
-        subStatuses.forEach((sub, idx) => {
-            const col = idx % 2;
-            const row = Math.floor(idx / 2);
-            const x = 8.0 + (col * colWidth);
-            const y = startY + (row * 0.45);
-
-            // Circle
-            slide.addShape(pptx.ShapeType.ellipse, {
-                x: x + 0.05, y: y, w: 0.28, h: 0.28,
-                fill: { color: statusColors[sub.status] || statusColors.gray }
+            slideXml = slideXml.replace(/<a:t>Xxx<\/a:t>/g, () => {
+                const content = allBullets[xxxIndex] || '';
+                xxxIndex++;
+                return `<a:t>${this.escapeXml(content)}</a:t>`;
             });
-            // Label
-            slide.addText(sub.label, {
-                x: x + 0.38, y: y - 0.02, w: 0.55, h: 0.32,
-                fontSize: 7, color: TEXT_BLACK, fontFace: 'Arial', valign: 'middle'
+
+            // Update the slide
+            zip.file('ppt/slides/slide1.xml', slideXml);
+
+            // Generate modified PPTX
+            const modifiedPptx = await zip.generateAsync({
+                type: 'blob',
+                compression: 'DEFLATE',
+                compressionOptions: { level: 9 }
             });
-        });
 
-        // Management Summary box
-        slide.addShape(pptx.ShapeType.rect, {
-            x: 8.0, y: 3.55, w: 1.8, h: 1.8,
-            fill: { color: BG_LIGHT },
-            line: { color: BORDER_GRAY, width: 0.5 }
-        });
-        slide.addText('Management Summary', {
-            x: 8.0, y: 3.6, w: 1.8, h: 0.25,
-            fontSize: 8, bold: true, color: ERGO_DARK_BLUE, fontFace: 'Arial', align: 'center'
-        });
+            // Download
+            const filename = `CPE_Status_${status.workstreamId}_${status.date}.pptx`;
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(modifiedPptx);
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(link.href);
 
-        // ============ LEFT SIDE CONTENT TABLE ============
-        const leftW = 7.4;
-        let currentY = 1.0;
+            console.log(`PPTX exported: ${filename}`);
 
-        // Helper function for section header
-        const addSectionHeader = (text, y) => {
-            slide.addText(text, {
-                x: 0.4, y: y, w: leftW, h: 0.28,
-                fontSize: 10, bold: true, color: ERGO_DARK_BLUE, fontFace: 'Arial'
-            });
-            // Underline
-            slide.addShape(pptx.ShapeType.rect, {
-                x: 0.4, y: y + 0.28, w: leftW, h: 0.01,
-                fill: { color: BORDER_GRAY }
-            });
-            return y + 0.35;
-        };
-
-        // Helper function for bullet content
-        const addBulletContent = (lines, y, maxHeight = 0.6) => {
-            const bulletText = lines.map(l => `• ${l.replace(/^[•\-]\s*/, '')}`).join('\n');
-            slide.addText(bulletText, {
-                x: 0.4, y: y, w: leftW, h: maxHeight,
-                fontSize: 8, color: TEXT_BLACK, fontFace: 'Arial', valign: 'top'
-            });
-            return y + maxHeight;
-        };
-
-        // Section 1: Projektfortschritt
-        currentY = addSectionHeader('Projektfortschritt gegenüber Vorwoche / Details zum Status', currentY);
-        const progressLines = status.progress ? status.progress.split('\n').filter(l => l.trim()) : ['Keine Angaben'];
-        currentY = addBulletContent(progressLines, currentY, 0.55);
-
-        // Section 2: Anstehende Aktivitäten
-        currentY = addSectionHeader('Anstehende Aktivitäten (insb. kommende Woche)', currentY);
-        const upcomingLines = status.upcoming ? status.upcoming.split('\n').filter(l => l.trim()) : ['Keine Angaben'];
-        currentY = addBulletContent(upcomingLines, currentY, 0.55);
-
-        // Section 3: Herausforderungen und Risiken
-        currentY = addSectionHeader('Aktuelle Herausforderungen und Risiken', currentY);
-        let riskLines = ['Keine offenen Risiken'];
-        if (status.risksAndIssues && status.risksAndIssues.length > 0) {
-            riskLines = status.risksAndIssues.map(r => `${r.type}: ${r.description}`);
+        } catch (error) {
+            console.error('PPTX Export Error:', error);
+            alert('Fehler beim PPTX-Export: ' + error.message);
+        } finally {
+            // Reset button
+            const exportBtn = document.querySelector('[onclick="PMO.exportPPT()"]');
+            if (exportBtn) {
+                exportBtn.disabled = false;
+                exportBtn.innerHTML = `
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                        <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+                    </svg>
+                    PPTX
+                `;
+            }
         }
-        currentY = addBulletContent(riskLines, currentY, 0.5);
+    },
 
-        // Section 4: Meilensteine (Table format)
-        currentY = addSectionHeader('Wesentliche Meilensteine', currentY);
-
-        if (status.milestones && status.milestones.length > 0) {
-            const msTableData = status.milestones.map(ms => {
-                const icon = ms.status === 'Geschlossen' ? '●' : ms.status === 'Verzögert' ? '◐' : '○';
-                return [
-                    { text: icon, options: { fontSize: 8, align: 'center' } },
-                    { text: ms.name, options: { fontSize: 8 } },
-                    { text: this.formatDate(ms.plannedDate), options: { fontSize: 8, align: 'center' } },
-                    { text: ms.status || 'Im Plan', options: { fontSize: 8, align: 'center' } }
-                ];
-            });
-            slide.addTable(msTableData, {
-                x: 0.4, y: currentY, w: leftW,
-                colW: [0.3, 4.0, 1.5, 1.6],
-                fontSize: 8, fontFace: 'Arial',
-                border: { type: 'solid', pt: 0.5, color: BORDER_GRAY }
-            });
-            currentY += 0.25 * status.milestones.length + 0.15;
-        } else {
-            currentY = addBulletContent(['Keine Meilensteine definiert'], currentY, 0.3);
-        }
-
-        // Section 5: Entscheidungen
-        currentY = addSectionHeader('Erforderliche Entscheidungen', currentY);
-        const decisionText = status.decisions || 'Keine Entscheidungen erforderlich';
-        slide.addText(decisionText, {
-            x: 0.4, y: currentY, w: leftW, h: 0.4,
-            fontSize: 8, color: TEXT_BLACK, fontFace: 'Arial'
-        });
-
-        // ============ FOOTER ============
-        slide.addText('Sales Excellence Transformationsprogramm', {
-            x: 0.4, y: 5.2, w: 4, h: 0.2,
-            fontSize: 7, color: TEXT_GRAY, fontFace: 'Arial'
-        });
-
-        // Save file
-        const filename = `CPE_Status_${status.workstreamId}_${status.date}.pptx`;
-        pptx.writeFile({ fileName: filename })
-            .then(() => {
-                console.log(`PPTX exported: ${filename}`);
-            })
-            .catch(err => {
-                console.error('PPTX Export Error:', err);
-                alert('Fehler beim PPTX-Export: ' + err.message);
-            });
+    // Helper to escape XML special characters
+    escapeXml(str) {
+        if (!str) return '';
+        return str
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&apos;');
     },
 
     exportPDF() {

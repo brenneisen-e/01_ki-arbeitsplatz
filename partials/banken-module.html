@@ -1,0 +1,314 @@
+<!-- Banken Collections Dashboard - Modular Version -->
+<!-- Components are loaded from partials/banken/ directory -->
+<!-- Original file backed up at: partials/banken-module-backup.html -->
+<div class="banken-page">
+    <!-- Component: Header (Navigation, Alert Banner) -->
+    <div data-component="header"></div>
+
+    <!-- Component: Section Kundensegmentierung -->
+    <div data-component="section-segmentierung"></div>
+
+    <!-- Component: Section NPL Dashboard -->
+    <div data-component="section-npl"></div>
+
+    <!-- Component: Section Stage 2 Analysis -->
+    <div data-component="section-stage2"></div>
+
+    <!-- Component: Section Meine Aufgaben -->
+    <div data-component="section-aufgaben"></div>
+
+<!-- Component: Customer Detail Modal -->
+<div data-component="modal-customer-detail"></div>
+
+<!-- Component: Document Scanner Modal -->
+<div data-component="modal-document-scanner"></div>
+
+<!-- Component: CRM Profile View -->
+<div data-component="crm-profile-view"></div>
+
+<!-- AI Chat Widget -->
+<button class="banken-chat-toggle" id="bankenChatToggle">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+    </svg>
+    <span class="chat-badge">KI</span>
+</button>
+
+<div class="banken-chat-widget" id="bankenChatWidget" style="display: none;">
+    <div class="banken-chat-header">
+        <div class="banken-chat-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                <circle cx="12" cy="12" r="3"></circle>
+                <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9"></path>
+            </svg>
+            Collections Assistent
+        </div>
+        <button class="banken-chat-close">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+        </button>
+    </div>
+    <div class="banken-chat-body" id="bankenChatBody">
+        <div class="banken-chat-welcome">
+            <div class="welcome-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="32" height="32">
+                    <circle cx="12" cy="12" r="3"></circle>
+                    <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9"></path>
+                </svg>
+            </div>
+            <h4>Collections Assistent</h4>
+            <p>Fragen Sie mich zu Kunden, Forderungen oder Portfolio-Daten.</p>
+            <div class="welcome-examples">
+                <button class="example-btn" data-question="Kunden mit höchster Restforderung">Höchste Restforderung</button>
+                <button class="example-btn" data-question="Kunden mit höchster Rückzahlungschance">Höchste Rückzahlungschance</button>
+                <button class="example-btn" data-question="Kunden mit längster Verzugsdauer">Längste Verzugsdauer</button>
+                <button class="example-btn" data-question="Neue Fälle dieser Woche">Neue Fälle</button>
+                <button class="example-btn" data-question="Zahlungseingänge der letzten Woche">Letzte Zahlungen</button>
+                <button class="example-btn" data-question="Vereinbarungen in Bearbeitung">Aktive Vereinbarungen</button>
+            </div>
+        </div>
+    </div>
+    <div class="banken-chat-footer">
+        <textarea id="bankenChatInput" placeholder="Frage stellen..." rows="1"></textarea>
+        <button id="bankenChatSend">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                <line x1="22" y1="2" x2="11" y2="13"></line>
+                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+            </svg>
+        </button>
+    </div>
+</div>
+
+<!-- Feedback/Kommentar System (Button ist jetzt im Header) -->
+<div class="feedback-panel" id="feedbackPanel">
+    <div class="feedback-panel-header">
+        <h3>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+            Feedback & Kommentare
+        </h3>
+        <button class="feedback-close" onclick="toggleFeedbackPanel()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+        </button>
+    </div>
+
+    <div class="feedback-panel-content">
+        <div class="feedback-info">
+            <p>Hinterlasse hier Feedback, Verbesserungsvorschläge oder Kommentare zum Dashboard.</p>
+        </div>
+
+        <div class="feedback-form">
+        <div class="feedback-form-row">
+            <label>Autor:</label>
+            <div class="feedback-author-select">
+                <select id="feedbackAuthorSelect" onchange="handleAuthorSelect()">
+                    <option value="">-- Wähle --</option>
+                    <option value="Eike">Eike</option>
+                    <option value="Bianca">Bianca</option>
+                    <option value="custom">Anderer Name...</option>
+                </select>
+                <input type="text" id="feedbackAuthor" placeholder="Dein Name" value="" style="display: none;">
+            </div>
+        </div>
+        <div class="feedback-form-row">
+            <label>Bereich:</label>
+            <select id="feedbackArea">
+                <option value="allgemein">Allgemein</option>
+                <option value="dashboard">Dashboard Übersicht</option>
+                <option value="kundenakte">Kundenakte</option>
+                <option value="konten-finanzen">Konten & Finanzen</option>
+                <option value="kommunikation">Kommunikation</option>
+                <option value="ki-analyse">KI-Analyse</option>
+                <option value="design">Design/UI</option>
+                <option value="daten">Daten/Konsistenz</option>
+                <option value="funktion">Funktionalität</option>
+            </select>
+        </div>
+        <div class="feedback-form-row">
+            <label>Typ:</label>
+            <div class="feedback-type-buttons">
+                <button class="feedback-type-btn active" data-type="verbesserung" onclick="setFeedbackType('verbesserung')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
+                    Verbesserung
+                </button>
+                <button class="feedback-type-btn" data-type="fehler" onclick="setFeedbackType('fehler')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
+                    Fehler
+                </button>
+                <button class="feedback-type-btn" data-type="frage" onclick="setFeedbackType('frage')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                    Frage
+                </button>
+                <button class="feedback-type-btn" data-type="lob" onclick="setFeedbackType('lob')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3zM7 22H4a2 2 0 01-2-2v-7a2 2 0 012-2h3"></path></svg>
+                    Lob
+                </button>
+            </div>
+        </div>
+        <div class="feedback-form-row">
+            <label>Kommentar:</label>
+            <textarea id="feedbackText" placeholder="Beschreibe dein Feedback..." rows="4"></textarea>
+        </div>
+
+        <!-- Screenshot Section -->
+        <div class="feedback-form-row">
+            <label>Screenshot:</label>
+            <div class="feedback-screenshot-section">
+                <button class="feedback-screenshot-btn" onclick="captureScreenshot()" id="screenshotBtn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                        <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                        <polyline points="21 15 16 10 5 21"></polyline>
+                    </svg>
+                    Screenshot aufnehmen
+                </button>
+                <div class="feedback-screenshot-preview" id="screenshotPreview" style="display: none;">
+                    <img id="screenshotThumbnail" alt="Screenshot Vorschau">
+                    <button class="screenshot-edit-btn" onclick="editScreenshot()" title="Bearbeiten">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                        </svg>
+                    </button>
+                    <button class="screenshot-remove-btn" onclick="removeScreenshot()" title="Entfernen">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <button class="feedback-submit-btn" onclick="submitFeedback()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                <line x1="22" y1="2" x2="11" y2="13"></line>
+                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+            </svg>
+                Feedback speichern
+            </button>
+        </div>
+
+        <div class="feedback-list-header">
+            <h4>Bisherige Kommentare</h4>
+            <div class="feedback-list-actions">
+                <button class="feedback-refresh-btn" onclick="refreshFeedbackList()" title="Aktualisieren">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                        <polyline points="23 4 23 10 17 10"></polyline>
+                        <polyline points="1 20 1 14 7 14"></polyline>
+                        <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                    </svg>
+                </button>
+                <button class="feedback-export-btn" onclick="exportFeedback()" title="Als JSON exportieren">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <div class="feedback-list" id="feedbackList">
+            <!-- Kommentare werden hier dynamisch eingefügt -->
+        </div>
+    </div>
+</div>
+
+<!-- Screenshot Annotation Modal -->
+<div class="screenshot-modal" id="screenshotModal">
+    <div class="screenshot-modal-content">
+        <div class="screenshot-modal-header">
+            <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                    <polyline points="21 15 16 10 5 21"></polyline>
+                </svg>
+                Screenshot bearbeiten
+            </h3>
+            <button class="screenshot-modal-close" onclick="closeScreenshotModal()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+        <div class="screenshot-toolbar">
+            <div class="screenshot-tools">
+                <button class="screenshot-tool active" data-tool="pen" onclick="setDrawTool('pen')" title="Stift">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                        <path d="M12 19l7-7 3 3-7 7-3-3z"></path>
+                        <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path>
+                        <path d="M2 2l7.586 7.586"></path>
+                    </svg>
+                </button>
+                <button class="screenshot-tool" data-tool="arrow" onclick="setDrawTool('arrow')" title="Pfeil">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                </button>
+                <button class="screenshot-tool" data-tool="rect" onclick="setDrawTool('rect')" title="Rechteck">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                    </svg>
+                </button>
+                <button class="screenshot-tool" data-tool="circle" onclick="setDrawTool('circle')" title="Kreis">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                        <circle cx="12" cy="12" r="10"></circle>
+                    </svg>
+                </button>
+                <button class="screenshot-tool" data-tool="text" onclick="setDrawTool('text')" title="Text">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                        <polyline points="4 7 4 4 20 4 20 7"></polyline>
+                        <line x1="9" y1="20" x2="15" y2="20"></line>
+                        <line x1="12" y1="4" x2="12" y2="20"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="screenshot-colors">
+                <button class="screenshot-color active" data-color="#ef4444" onclick="setDrawColor('#ef4444')" style="background: #ef4444;" title="Rot"></button>
+                <button class="screenshot-color" data-color="#f97316" onclick="setDrawColor('#f97316')" style="background: #f97316;" title="Orange"></button>
+                <button class="screenshot-color" data-color="#eab308" onclick="setDrawColor('#eab308')" style="background: #eab308;" title="Gelb"></button>
+                <button class="screenshot-color" data-color="#22c55e" onclick="setDrawColor('#22c55e')" style="background: #22c55e;" title="Grün"></button>
+                <button class="screenshot-color" data-color="#3b82f6" onclick="setDrawColor('#3b82f6')" style="background: #3b82f6;" title="Blau"></button>
+                <button class="screenshot-color" data-color="#000000" onclick="setDrawColor('#000000')" style="background: #000000;" title="Schwarz"></button>
+            </div>
+            <div class="screenshot-actions-left">
+                <button class="screenshot-undo" onclick="undoDrawing()" title="Rückgängig">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                        <polyline points="1 4 1 10 7 10"></polyline>
+                        <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+                    </svg>
+                </button>
+                <button class="screenshot-clear" onclick="clearDrawing()" title="Alles löschen">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                        <polyline points="3 6 5 6 21 6"></polyline>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <div class="screenshot-canvas-container">
+            <canvas id="screenshotCanvas"></canvas>
+        </div>
+        <div class="screenshot-modal-footer">
+            <button class="screenshot-cancel-btn" onclick="closeScreenshotModal()">Abbrechen</button>
+            <button class="screenshot-save-btn" onclick="saveAnnotatedScreenshot()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                Übernehmen
+            </button>
+        </div>
+    </div>
+</div>
+
+</div>

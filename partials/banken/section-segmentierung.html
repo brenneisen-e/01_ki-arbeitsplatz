@@ -1,0 +1,827 @@
+    <!-- Section: Kundensegmentierung -->
+    <div class="banken-section active" id="section-segmentierung">
+        <!-- Intro Text -->
+        <div class="section-intro">
+            <h2>Kundensegmentierung nach Zahlungsbereitschaft & Zahlungsfähigkeit</h2>
+            <p>Die KI-gestützte Analyse klassifiziert jeden Kunden anhand von Transaktionsmustern, externen Datenquellen und historischem Verhalten. Die Punktewolke zeigt die Verteilung aller 10.234 Fälle nach <strong>Willingness to Pay</strong> (horizontale Achse) und <strong>Ability to Pay</strong> (vertikale Achse).</p>
+        </div>
+
+        <!-- Portfolio KPI Boxes - 5 Cards with Mini Charts -->
+        <div class="portfolio-kpi-grid five-columns">
+            <div class="portfolio-kpi-box clickable" onclick="filterByAll()">
+                <div class="kpi-icon blue">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                </div>
+                <div class="kpi-content-wrapper">
+                    <div class="kpi-content">
+                        <div class="kpi-label">Aktive Fälle</div>
+                        <div class="kpi-value-row">
+                            <div class="kpi-value">10.234</div>
+                            <div class="kpi-change negative">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12">
+                                    <polyline points="18 15 12 9 6 15"></polyline>
+                                </svg>
+                                +127 zur Vorwoche
+                            </div>
+                        </div>
+                    </div>
+                    <div class="kpi-mini-chart" onclick="event.stopPropagation(); showChartPopup('aktive-faelle', 'Aktive Fälle - Zeitverlauf')">
+                        <svg viewBox="0 0 64 34">
+                            <polyline fill="none" stroke="#3b82f6" stroke-width="2" points="2,27 12,22 22,24 32,17 42,20 52,12 58,14"/>
+                            <circle cx="58" cy="14" r="3" fill="#3b82f6"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            <div class="portfolio-kpi-box clickable" onclick="filterByAmount()">
+                <div class="kpi-icon orange">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
+                        <circle cx="9" cy="9" r="7"></circle>
+                        <path d="M15 15a7 7 0 0 0-6-6"></path>
+                    </svg>
+                </div>
+                <div class="kpi-content-wrapper">
+                    <div class="kpi-content">
+                        <div class="kpi-label">Offene Forderung</div>
+                        <div class="kpi-value-row">
+                            <div class="kpi-value">€ 47,8 Mio</div>
+                            <div class="kpi-change negative">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12">
+                                    <polyline points="18 15 12 9 6 15"></polyline>
+                                </svg>
+                                +€ 1,2 Mio
+                            </div>
+                        </div>
+                    </div>
+                    <div class="kpi-mini-chart" onclick="event.stopPropagation(); showChartPopup('offene-forderung', 'Offene Forderung - Zeitverlauf')">
+                        <svg viewBox="0 0 64 34">
+                            <polyline fill="none" stroke="#f97316" stroke-width="2" points="2,22 12,20 22,24 32,21 42,17 52,19 58,16"/>
+                            <circle cx="58" cy="16" r="3" fill="#f97316"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            <div class="portfolio-kpi-box clickable" onclick="showRecoveryDetails()">
+                <div class="kpi-icon green">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
+                        <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+                        <polyline points="17 6 23 6 23 12"></polyline>
+                    </svg>
+                </div>
+                <div class="kpi-content-wrapper">
+                    <div class="kpi-content">
+                        <div class="kpi-label">Recovery Rate</div>
+                        <div class="kpi-value-row">
+                            <div class="kpi-value highlight-green">68,4%</div>
+                            <div class="kpi-change positive">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12">
+                                    <polyline points="18 15 12 9 6 15"></polyline>
+                                </svg>
+                                +2,3% vs. Vormonat
+                            </div>
+                        </div>
+                    </div>
+                    <div class="kpi-mini-chart" onclick="event.stopPropagation(); showChartPopup('recovery-rate', 'Recovery Rate - Zeitverlauf')">
+                        <svg viewBox="0 0 64 34">
+                            <polyline fill="none" stroke="#22c55e" stroke-width="2" points="2,26 12,24 22,22 32,20 42,18 52,14 58,10"/>
+                            <circle cx="58" cy="10" r="3" fill="#22c55e"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            <div class="portfolio-kpi-box clickable dpd-expanded" onclick="filterByDPD()">
+                <div class="kpi-icon purple">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polyline points="12 6 12 12 16 14"></polyline>
+                    </svg>
+                </div>
+                <div class="kpi-content-wrapper">
+                    <div class="kpi-content">
+                        <div class="kpi-label">Ø Verzugstage</div>
+                        <div class="kpi-value-row">
+                            <div class="kpi-value">47</div>
+                            <div class="kpi-change positive">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12">
+                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                </svg>
+                                -3 Tage
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Mini Donut Chart für Verzugstage-Verteilung -->
+                    <div class="dpd-mini-donut" onclick="event.stopPropagation(); showChartPopup('dpd', 'Verzugstage - Verteilung')">
+                        <svg viewBox="0 0 42 42" class="donut-chart">
+                            <!-- Hintergrundkreis -->
+                            <circle cx="21" cy="21" r="15.9" fill="transparent" stroke="#e2e8f0" stroke-width="4"></circle>
+                            <!-- 0-30 Tage (grün) - 49% = 5010/10234 -->
+                            <circle cx="21" cy="21" r="15.9" fill="transparent" stroke="#22c55e" stroke-width="4"
+                                stroke-dasharray="49 51" stroke-dashoffset="25" class="donut-segment green"
+                                onclick="event.stopPropagation(); filterByDPDBucket('0-30')"></circle>
+                            <!-- 31-90 Tage (amber) - 28% = 2880/10234 -->
+                            <circle cx="21" cy="21" r="15.9" fill="transparent" stroke="#f59e0b" stroke-width="4"
+                                stroke-dasharray="28 72" stroke-dashoffset="-24" class="donut-segment amber"
+                                onclick="event.stopPropagation(); filterByDPDBucket('31-90')"></circle>
+                            <!-- >90 Tage (rot) - 23% = 2344/10234 -->
+                            <circle cx="21" cy="21" r="15.9" fill="transparent" stroke="#ef4444" stroke-width="4"
+                                stroke-dasharray="23 77" stroke-dashoffset="-52" class="donut-segment red"
+                                onclick="event.stopPropagation(); filterByDPDBucket('90+')"></circle>
+                            <!-- Zentraler Wert -->
+                            <text x="21" y="23" text-anchor="middle" class="donut-center-text">47</text>
+                        </svg>
+                        <div class="donut-legend">
+                            <span class="legend-item green" onclick="event.stopPropagation(); filterByDPDBucket('0-30')">0-30</span>
+                            <span class="legend-item amber" onclick="event.stopPropagation(); filterByDPDBucket('31-90')">31-90</span>
+                            <span class="legend-item red" onclick="event.stopPropagation(); filterByDPDBucket('90+')">&gt;90</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="portfolio-kpi-box clickable aufgaben-expanded" onclick="showBankenSection('aufgaben')">
+                <div class="kpi-icon red">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
+                        <path d="M9 11l3 3L22 4"></path>
+                        <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                    </svg>
+                </div>
+                <div class="kpi-content-wrapper">
+                    <div class="kpi-content">
+                        <div class="kpi-label">Meine Aufgaben</div>
+                        <div class="kpi-value-row">
+                            <div class="kpi-value">156</div>
+                            <div class="kpi-change neutral pulse-text">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                                </svg>
+                                23 überfällig
+                            </div>
+                        </div>
+                        <button class="kpi-action-btn" onclick="event.stopPropagation(); showBankenSection('aufgaben')">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                            Jetzt bearbeiten
+                        </button>
+                    </div>
+                    <div class="kpi-mini-chart" onclick="event.stopPropagation(); showChartPopup('aufgaben', 'Meine Aufgaben - Zeitverlauf')">
+                        <svg viewBox="0 0 64 34">
+                            <polyline fill="none" stroke="#ef4444" stroke-width="2" points="2,20 12,17 22,22 32,14 42,18 52,16 58,12"/>
+                            <circle cx="58" cy="12" r="3" fill="#ef4444"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Bar with Quick Actions and Today Stats -->
+        <div class="action-bar compact">
+            <div class="action-bar-left">
+                <div class="search-box">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    <input type="text" placeholder="Kunden-Nr, Name oder IBAN suchen..." oninput="searchCustomers(this.value)">
+                </div>
+            </div>
+            <div class="action-bar-center">
+                <div class="inline-stats">
+                    <div class="inline-stat" onclick="showNewCases()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="16"></line>
+                            <line x1="8" y1="12" x2="16" y2="12"></line>
+                        </svg>
+                        <span class="stat-label">Neue Fälle</span>
+                        <span class="stat-value blue">47</span>
+                    </div>
+                    <div class="inline-stat" onclick="showPayments()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                        </svg>
+                        <span class="stat-label">Zahlungseingänge</span>
+                        <span class="stat-value green">31</span>
+                    </div>
+                    <div class="inline-stat" onclick="showPromises()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                            <path d="M9 12l2 2 4-4"></path>
+                            <path d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9c1.5 0 2.91.37 4.15 1.02"></path>
+                        </svg>
+                        <span class="stat-label">Zahlungszusagen</span>
+                        <span class="stat-value purple">18</span>
+                    </div>
+                </div>
+            </div>
+            <div class="action-bar-right">
+                <button class="btn-icon" onclick="startMahnlauf()" title="Mahnlauf starten">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                        <polyline points="22,6 12,13 2,6"></polyline>
+                    </svg>
+                </button>
+                <button class="btn-icon" onclick="exportReport()" title="Report generieren">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                        <line x1="18" y1="20" x2="18" y2="10"></line>
+                        <line x1="12" y1="20" x2="12" y2="4"></line>
+                        <line x1="6" y1="20" x2="6" y2="14"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- News & Updates -->
+        <div class="dashboard-updates">
+            <div class="updates-card new-cases">
+                <div class="updates-header">
+                    <div class="updates-icon new">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="16"></line>
+                            <line x1="8" y1="12" x2="16" y2="12"></line>
+                        </svg>
+                    </div>
+                    <h4>Neue Fälle seit letztem Login</h4>
+                    <span class="updates-count">47</span>
+                </div>
+                <div class="updates-list">
+                    <div class="update-item" onclick="openCustomerDetail('K-2024-8847')">
+                        <div class="update-main">
+                            <span class="update-name">Müller, Hans</span>
+                            <span class="update-amount warning">€180 überfällig</span>
+                        </div>
+                        <div class="update-sub">
+                            <span class="update-type">Ratenkredit (Ges. €4.230)</span>
+                            <span class="update-time">18 DPD</span>
+                        </div>
+                    </div>
+                    <div class="update-item" onclick="openCustomerDetail('K-2024-8846')">
+                        <div class="update-main">
+                            <span class="update-name">Schmidt GmbH</span>
+                            <span class="update-amount warning">€650 überfällig</span>
+                        </div>
+                        <div class="update-sub">
+                            <span class="update-type">Kontokorrent (Ges. €12.890)</span>
+                            <span class="update-time">18 DPD</span>
+                        </div>
+                    </div>
+                    <div class="update-item" onclick="openCustomerDetail('K-2024-8845')">
+                        <div class="update-main">
+                            <span class="update-name">Weber, Anna</span>
+                            <span class="update-amount warning">€120 überfällig</span>
+                        </div>
+                        <div class="update-sub">
+                            <span class="update-type">Kreditkarte (Ges. €2.150)</span>
+                            <span class="update-time">18 DPD</span>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn-show-all" onclick="showAllNewCases()">Alle 47 anzeigen</button>
+            </div>
+
+            <div class="updates-card resolved-cases">
+                <div class="updates-header">
+                    <div class="updates-icon success">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                        </svg>
+                    </div>
+                    <h4>Zahlungseingänge</h4>
+                    <span class="updates-count success">31</span>
+                </div>
+                <div class="updates-list">
+                    <div class="update-item success" onclick="openCustomerDetail('K-2024-7234')">
+                        <div class="update-main">
+                            <span class="update-name">Braun, Thomas</span>
+                            <span class="update-amount positive">€1.890 gezahlt</span>
+                        </div>
+                        <div class="update-sub">
+                            <span class="update-type">Vollständige Tilgung</span>
+                            <span class="update-time">heute, 09:14</span>
+                        </div>
+                    </div>
+                    <div class="update-item success" onclick="openCustomerDetail('K-2024-6891')">
+                        <div class="update-main">
+                            <span class="update-name">Klein KG</span>
+                            <span class="update-amount positive">€3.400 gezahlt</span>
+                        </div>
+                        <div class="update-sub">
+                            <span class="update-type">Ratenvereinbarung</span>
+                            <span class="update-time">heute, 08:45</span>
+                        </div>
+                    </div>
+                    <div class="update-item success" onclick="openCustomerDetail('K-2024-6234')">
+                        <div class="update-main">
+                            <span class="update-name">Fischer, Maria</span>
+                            <span class="update-amount positive">€780 gezahlt</span>
+                        </div>
+                        <div class="update-sub">
+                            <span class="update-type">Teilzahlung</span>
+                            <span class="update-time">gestern, 16:30</span>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn-show-all success" onclick="showAllResolvedCases()">Alle 31 anzeigen</button>
+            </div>
+        </div>
+
+        <!-- Main Content Grid with Sidebar -->
+        <div class="matrix-ehemalige-grid">
+            <!-- Left: Matrix Section (Collapsible) -->
+            <div class="collapsible-section matrix-section-wrapper" id="matrixSection">
+                <div class="collapsible-header" onclick="toggleSection('matrixSection')">
+                    <div class="collapsible-header-left">
+                        <h3>Willingness / Ability Matrix</h3>
+                        <p class="card-subtitle">KI-gestützte Segmentierung • Klick auf Quadrant zum Filtern</p>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <button class="btn-secondary btn-sm" onclick="event.stopPropagation(); exportMatrix()">Export</button>
+                        <div class="collapse-toggle">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                <div class="collapsible-content">
+                    <!-- Matrix with Axes - Flexbox Layout -->
+                    <div class="matrix-with-axes">
+                        <!-- Y-Axis Label (left side) -->
+                        <div class="axis-y-label">
+                            <span>← Geringe Ability</span>
+                            <span>Hohe Ability →</span>
+                        </div>
+                        <!-- Matrix Main Area -->
+                        <div class="matrix-main-area">
+                            <!-- Matrix Quadrants Grid -->
+                            <div class="matrix-quadrants">
+                    <!-- Top Left: Eskalation (High Ability, Low Willingness) -->
+                    <div class="matrix-quadrant segment-eskalation" onclick="openSegmentFullscreen('eskalation')">
+                        <div class="quadrant-header">
+                            <div>
+                                <span class="quadrant-subtitle">Hohe Fähigkeit • Geringe Bereitschaft</span>
+                                <h4 class="quadrant-title">Eskalation</h4>
+                            </div>
+                            <span class="quadrant-count">1.890</span>
+                        </div>
+                        <p class="quadrant-volume">€ 12,4 Mio • Ø € 6.560</p>
+                        <div class="quadrant-strategy">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                                <polyline points="12 5 19 12 12 19"></polyline>
+                            </svg>
+                            Inkasso, Mahnbescheid, Vollstreckung
+                        </div>
+                    </div>
+
+                    <!-- Top Right: Priorität (High Ability, High Willingness) -->
+                    <div class="matrix-quadrant segment-prioritaet" onclick="openSegmentFullscreen('prioritaet')">
+                        <div class="quadrant-header">
+                            <div>
+                                <span class="quadrant-subtitle">Hohe Fähigkeit • Hohe Bereitschaft</span>
+                                <h4 class="quadrant-title">Priorität</h4>
+                            </div>
+                            <span class="quadrant-count">2.340</span>
+                        </div>
+                        <p class="quadrant-volume">€ 8,2 Mio • Ø € 3.504</p>
+                        <div class="quadrant-strategy">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                                <polyline points="12 5 19 12 12 19"></polyline>
+                            </svg>
+                            Schnelle Vereinbarung, flexible Raten
+                        </div>
+                    </div>
+
+                    <!-- Bottom Left: Abwicklung (Low Ability, Low Willingness) -->
+                    <div class="matrix-quadrant segment-abwicklung" onclick="openSegmentFullscreen('abwicklung')">
+                        <div class="quadrant-header">
+                            <div>
+                                <span class="quadrant-subtitle">Geringe Fähigkeit • Geringe Bereitschaft</span>
+                                <h4 class="quadrant-title">Abwicklung</h4>
+                            </div>
+                            <span class="quadrant-count">2.884</span>
+                        </div>
+                        <p class="quadrant-volume">€ 18,7 Mio • Ø € 6.484</p>
+                        <div class="quadrant-strategy">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                                <polyline points="12 5 19 12 12 19"></polyline>
+                            </svg>
+                            Verkauf, Abschreibung, Insolvenz
+                        </div>
+                    </div>
+
+                    <!-- Bottom Right: Restrukturierung (Low Ability, High Willingness) -->
+                    <div class="matrix-quadrant segment-restrukturierung" onclick="openSegmentFullscreen('restrukturierung')">
+                        <div class="quadrant-header">
+                            <div>
+                                <span class="quadrant-subtitle">Geringe Fähigkeit • Hohe Bereitschaft</span>
+                                <h4 class="quadrant-title">Restrukturierung</h4>
+                            </div>
+                            <span class="quadrant-count">3.120</span>
+                        </div>
+                        <p class="quadrant-volume">€ 8,5 Mio • Ø € 2.724</p>
+                        <div class="quadrant-strategy">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                                <polyline points="12 5 19 12 12 19"></polyline>
+                            </svg>
+                            Stundung, Ratenpläne, Beratung
+                        </div>
+                    </div>
+                </div>
+
+                            <!-- X-Axis Label (bottom) -->
+                            <div class="axis-x-label">
+                                <span>← Geringe Willingness</span>
+                                <span>Hohe Willingness →</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Matrix Gesamtsumme -->
+                    <div class="matrix-total-summary">
+                        <div class="matrix-total-item">
+                            <span class="matrix-total-label">Gesamt:</span>
+                            <span class="matrix-total-value">10.234 Fälle</span>
+                        </div>
+                        <div class="matrix-total-divider">•</div>
+                        <div class="matrix-total-item">
+                            <span class="matrix-total-value">€ 47,8 Mio</span>
+                            <span class="matrix-total-label">Forderungen</span>
+                        </div>
+                        <div class="matrix-total-divider">•</div>
+                        <div class="matrix-total-item">
+                            <span class="matrix-total-value">Ø € 4.672</span>
+                            <span class="matrix-total-label">pro Fall</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ehemalige Fälle Trigger Button (ersetzt Sidebar) -->
+            <button class="ehemalige-trigger-btn" onclick="toggleEhemaligeDrawer()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                </svg>
+                <span class="ehemalige-trigger-count">847</span>
+                <span class="ehemalige-trigger-label">Fälle abgeschlossen</span>
+                <span class="ehemalige-trigger-volume">€4,2 Mio</span>
+            </button>
+        </div>
+
+        <!-- Ehemalige Fälle Drawer (Slide-in von rechts) -->
+        <div class="ehemalige-drawer-overlay" id="ehemaligeDrawerOverlay" onclick="closeEhemaligeDrawer()"></div>
+        <div class="ehemalige-drawer" id="ehemaligeDrawer">
+            <div class="ehemalige-drawer-header">
+                <div class="drawer-title-section">
+                    <div class="drawer-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3>Ehemalige Fälle</h3>
+                        <p class="drawer-subtitle">Abgeschlossene Vorgänge diesen Monat</p>
+                    </div>
+                </div>
+                <button class="drawer-close-btn" onclick="closeEhemaligeDrawer()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="ehemalige-drawer-stats">
+                <div class="drawer-stat">
+                    <span class="drawer-stat-value">847</span>
+                    <span class="drawer-stat-label">Fälle</span>
+                </div>
+                <div class="drawer-stat">
+                    <span class="drawer-stat-value">€4,2 Mio</span>
+                    <span class="drawer-stat-label">Volumen</span>
+                </div>
+                <div class="drawer-stat">
+                    <span class="drawer-stat-value">72%</span>
+                    <span class="drawer-stat-label">Recovery</span>
+                </div>
+            </div>
+            <div class="ehemalige-drawer-content">
+                <div class="ehemalige-list-title">Kürzlich abgeschlossen</div>
+                <div class="ehemalige-item" onclick="openCustomerDetail('K-2024-6891')">
+                    <div>
+                        <div class="ehemalige-item-name">Klein KG</div>
+                        <div class="ehemalige-item-info">Betriebsmittel • vor 5 Tagen</div>
+                    </div>
+                    <div class="ehemalige-item-amount success">€8.400</div>
+                </div>
+                <div class="ehemalige-item" onclick="openCustomerDetail('K-2024-5982')">
+                    <div>
+                        <div class="ehemalige-item-name">Meier, Stefan</div>
+                        <div class="ehemalige-item-info">Dispo • vor 1 Woche</div>
+                    </div>
+                    <div class="ehemalige-item-amount success">€2.340</div>
+                </div>
+                <div class="ehemalige-item" onclick="openCustomerDetail('K-2024-5876')">
+                    <div>
+                        <div class="ehemalige-item-name">Schneider Logistik</div>
+                        <div class="ehemalige-item-info">Kontokorrent • vor 1 Woche</div>
+                    </div>
+                    <div class="ehemalige-item-amount success">€15.200</div>
+                </div>
+                <div class="ehemalige-item" onclick="openCustomerDetail('K-2024-5801')">
+                    <div>
+                        <div class="ehemalige-item-name">Weber Transport</div>
+                        <div class="ehemalige-item-info">Ratenkredit • vor 2 Wochen</div>
+                    </div>
+                    <div class="ehemalige-item-amount success">€22.800</div>
+                </div>
+                <div class="ehemalige-item" onclick="openCustomerDetail('K-2024-5755')">
+                    <div>
+                        <div class="ehemalige-item-name">Fischer, Anna</div>
+                        <div class="ehemalige-item-info">Kreditkarte • vor 2 Wochen</div>
+                    </div>
+                    <div class="ehemalige-item-amount success">€1.890</div>
+                </div>
+            </div>
+            <div class="ehemalige-drawer-footer">
+                <button class="btn-primary" onclick="openSegmentFullscreen('ehemalige')">
+                    Alle 847 Fälle anzeigen
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Customer List with Actions -->
+        <div class="customer-list-section">
+            <div class="section-header">
+                <h3>Kundenliste</h3>
+                <div class="list-filters">
+                    <select class="filter-select" onchange="filterCustomers('segment', this.value)">
+                        <option value="">Alle Segmente</option>
+                        <option value="priority">Priorität</option>
+                        <option value="restructure">Restrukturierung</option>
+                        <option value="escalate">Eskalation</option>
+                        <option value="writeoff">Abwicklung</option>
+                    </select>
+                    <select class="filter-select" onchange="filterCustomers('product', this.value)">
+                        <option value="">Alle Produkte</option>
+                        <option value="dispo">Dispositionskredit</option>
+                        <option value="ratenkredit">Ratenkredit</option>
+                        <option value="kreditkarte">Kreditkarte</option>
+                        <option value="betriebsmittel">Betriebsmittelkredit</option>
+                    </select>
+                    <div class="search-box">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                        <input type="text" placeholder="Kunde suchen..." onkeyup="searchCustomers(this.value)">
+                    </div>
+                </div>
+            </div>
+
+            <div class="customer-table-wrapper">
+                <table class="customer-table">
+                    <thead>
+                        <tr>
+                            <th onclick="sortCustomerTable('name')" class="sortable">Kunde <span class="sort-icon"></span></th>
+                            <th>Produkt</th>
+                            <th onclick="sortCustomerTable('amount')" class="sortable">Forderung <span class="sort-icon"></span></th>
+                            <th onclick="sortCustomerTable('dpd')" class="sortable">Verzugstage <span class="sort-icon"></span></th>
+                            <th onclick="sortCustomerTable('segment')" class="sortable">Segment <span class="sort-icon"></span></th>
+                            <th>W/A Score</th>
+                            <th onclick="sortCustomerTable('mahnstufe')" class="sortable">Mahnstufe <span class="sort-icon"></span></th>
+                            <th onclick="sortCustomerTable('action')" class="sortable">Nächste Aktion <span class="sort-icon"></span></th>
+                            <th>Status</th>
+                            <th>Bearbeiter</th>
+                            <th>Aktionen</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Eskalation/Inkasso Case - Mueller GmbH (K-2024-0001) - vollständige Demoakte -->
+                        <tr onclick="openCustomerDetail('K-2024-0001')">
+                            <td>
+                                <div class="customer-cell">
+                                    <strong>Mueller GmbH</strong>
+                                    <small>Gewerbe | K-2024-0001</small>
+                                </div>
+                            </td>
+                            <td>Betriebsmittelkredit</td>
+                            <td class="amount">€125.000</td>
+                            <td><span class="dpd-badge medium">35</span></td>
+                            <td><span class="segment-badge escalate">Eskalation</span></td>
+                            <td>
+                                <div class="wa-score-visual">
+                                    <div class="wa-bar-container">
+                                        <span class="wa-label">W</span>
+                                        <div class="wa-bar">
+                                            <div class="wa-bar-fill willingness" style="width: 25%;"></div>
+                                        </div>
+                                        <span class="wa-value">25%</span>
+                                    </div>
+                                    <div class="wa-bar-container">
+                                        <span class="wa-label">A</span>
+                                        <div class="wa-bar">
+                                            <div class="wa-bar-fill ability" style="width: 60%;"></div>
+                                        </div>
+                                        <span class="wa-value">60%</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><span class="mahnstufe-badge m3">M3</span></td>
+                            <td>
+                                <div class="next-action">
+                                    <span class="action-type">Inkasso-Verfahren</span>
+                                    <small class="action-date overdue">10.12.2025</small>
+                                </div>
+                            </td>
+                            <td><span class="status-badge inkasso">Inkasso</span></td>
+                            <td><span class="bearbeiter-badge">M. Schneider</span></td>
+                            <td class="actions-cell" onclick="event.stopPropagation();">
+                                <button class="action-btn" onclick="startMahnprozess('K-2024-0001')" title="Mahnprozess">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                                        <polyline points="22,6 12,13 2,6"></polyline>
+                                    </svg>
+                                </button>
+                                <button class="action-btn" onclick="sellCase('K-2024-0001')" title="Verkaufen">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                                        <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+                                        <line x1="7" y1="7" x2="7.01" y2="7"></line>
+                                    </svg>
+                                </button>
+                                <button class="action-btn danger" onclick="writeOff('K-2024-0001')" title="Abschreiben">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                                        <polyline points="3 6 5 6 21 6"></polyline>
+                                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                    </svg>
+                                </button>
+                            </td>
+                        </tr>
+                        <!-- Priorität - Müller, Hans (K-2024-8847) - vollständige Demoakte mit Zahlungszusage -->
+                        <tr onclick="openCustomerDetail('K-2024-8847')">
+                            <td><div class="customer-cell"><strong>Müller, Hans</strong><small>Privat | K-2024-8847</small></div></td>
+                            <td>Ratenkredit</td>
+                            <td class="amount">€4.230</td>
+                            <td><span class="dpd-badge low">18</span></td>
+                            <td><span class="segment-badge priority">Priorität</span></td>
+                            <td><div class="wa-score-visual"><div class="wa-bar-container"><span class="wa-label">W</span><div class="wa-bar"><div class="wa-bar-fill willingness high" style="width: 85%;"></div></div><span class="wa-value">85%</span></div><div class="wa-bar-container"><span class="wa-label">A</span><div class="wa-bar"><div class="wa-bar-fill ability" style="width: 70%;"></div></div><span class="wa-value">70%</span></div></div></td>
+                            <td><span class="mahnstufe-badge m1">M1</span></td>
+                            <td><div class="next-action"><span class="action-type">Zahlungszusage 23.12.</span><small class="action-date upcoming">23.12.2025</small></div></td>
+                            <td><span class="status-badge zusage">Zusage</span></td>
+                            <td><span class="bearbeiter-badge">K. Weber</span></td>
+                            <td class="actions-cell" onclick="event.stopPropagation();"><button class="action-btn primary" onclick="scheduleCall('K-2024-8847')" title="Anrufen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg></button></td>
+                        </tr>
+                        <!-- Priorität - Schmidt GmbH (K-2024-8846) - vollständige Demoakte mit Zahlungszusage -->
+                        <tr onclick="openCustomerDetail('K-2024-8846')">
+                            <td><div class="customer-cell"><strong>Schmidt GmbH</strong><small>Gewerbe | K-2024-8846</small></div></td>
+                            <td>Kontokorrentkredit</td>
+                            <td class="amount">€12.890</td>
+                            <td><span class="dpd-badge low">18</span></td>
+                            <td><span class="segment-badge priority">Priorität</span></td>
+                            <td><div class="wa-score-visual"><div class="wa-bar-container"><span class="wa-label">W</span><div class="wa-bar"><div class="wa-bar-fill willingness" style="width: 75%;"></div></div><span class="wa-value">75%</span></div><div class="wa-bar-container"><span class="wa-label">A</span><div class="wa-bar"><div class="wa-bar-fill ability" style="width: 80%;"></div></div><span class="wa-value">80%</span></div></div></td>
+                            <td><span class="mahnstufe-badge m2">M2</span></td>
+                            <td><div class="next-action"><span class="action-type">Zahlungszusage 27.12.</span><small class="action-date upcoming">27.12.2025</small></div></td>
+                            <td><span class="status-badge zusage">Zusage</span></td>
+                            <td><span class="bearbeiter-badge">T. Fischer</span></td>
+                            <td class="actions-cell" onclick="event.stopPropagation();"><button class="action-btn primary" onclick="scheduleCall('K-2024-8846')" title="Anrufen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg></button></td>
+                        </tr>
+                        <!-- Priorität - Weber, Anna (K-2024-8845) - vollständige Demoakte mit Zahlungszusage -->
+                        <tr onclick="openCustomerDetail('K-2024-8845')">
+                            <td><div class="customer-cell"><strong>Weber, Anna</strong><small>Privat | K-2024-8845</small></div></td>
+                            <td>Kreditkarte</td>
+                            <td class="amount">€2.150</td>
+                            <td><span class="dpd-badge low">18</span></td>
+                            <td><span class="segment-badge priority">Priorität</span></td>
+                            <td><div class="wa-score-visual"><div class="wa-bar-container"><span class="wa-label">W</span><div class="wa-bar"><div class="wa-bar-fill willingness" style="width: 70%;"></div></div><span class="wa-value">70%</span></div><div class="wa-bar-container"><span class="wa-label">A</span><div class="wa-bar"><div class="wa-bar-fill ability" style="width: 55%;"></div></div><span class="wa-value">55%</span></div></div></td>
+                            <td><span class="mahnstufe-badge m2">M2</span></td>
+                            <td><div class="next-action"><span class="action-type">Zahlungszusage 28.12.</span><small class="action-date upcoming">28.12.2025</small></div></td>
+                            <td><span class="status-badge zusage">Zusage</span></td>
+                            <td><span class="bearbeiter-badge">S. Müller</span></td>
+                            <td class="actions-cell" onclick="event.stopPropagation();"><button class="action-btn primary" onclick="scheduleCall('K-2024-8845')" title="Anrufen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg></button></td>
+                        </tr>
+                        <!-- Monitoring - Braun, Thomas (K-2024-7234) - vollständige Demoakte -->
+                        <tr onclick="openCustomerDetail('K-2024-7234')">
+                            <td><div class="customer-cell"><strong>Braun, Thomas</strong><small>Privat | K-2024-7234</small></div></td>
+                            <td>Baufinanzierung</td>
+                            <td class="amount">€289.350</td>
+                            <td><span class="dpd-badge low">0</span></td>
+                            <td><span class="segment-badge priority">Stabil</span></td>
+                            <td><div class="wa-score-visual"><div class="wa-bar-container"><span class="wa-label">W</span><div class="wa-bar"><div class="wa-bar-fill willingness high" style="width: 90%;"></div></div><span class="wa-value">90%</span></div><div class="wa-bar-container"><span class="wa-label">A</span><div class="wa-bar"><div class="wa-bar-fill ability high" style="width: 85%;"></div></div><span class="wa-value">85%</span></div></div></td>
+                            <td><span class="mahnstufe-badge m0">M0</span></td>
+                            <td><div class="next-action"><span class="action-type">Monitoring</span><small class="action-date">Aktiv</small></div></td>
+                            <td><span class="status-badge offen">Aktiv</span></td>
+                            <td><span class="bearbeiter-badge">A. Becker</span></td>
+                            <td class="actions-cell" onclick="event.stopPropagation();"><button class="action-btn" onclick="viewCustomer('K-2024-7234')" title="Ansehen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg></button></td>
+                        </tr>
+                        <!-- Monitoring - Fischer, Maria (K-2024-6234) - vollständige Demoakte -->
+                        <tr onclick="openCustomerDetail('K-2024-6234')">
+                            <td><div class="customer-cell"><strong>Fischer, Maria</strong><small>Privat | K-2024-6234</small></div></td>
+                            <td>Ratenkredit</td>
+                            <td class="amount">€3.200</td>
+                            <td><span class="dpd-badge low">0</span></td>
+                            <td><span class="segment-badge priority">Stabil</span></td>
+                            <td><div class="wa-score-visual"><div class="wa-bar-container"><span class="wa-label">W</span><div class="wa-bar"><div class="wa-bar-fill willingness high" style="width: 80%;"></div></div><span class="wa-value">80%</span></div><div class="wa-bar-container"><span class="wa-label">A</span><div class="wa-bar"><div class="wa-bar-fill ability" style="width: 50%;"></div></div><span class="wa-value">50%</span></div></div></td>
+                            <td><span class="mahnstufe-badge m0">M0</span></td>
+                            <td><div class="next-action"><span class="action-type">Monitoring</span><small class="action-date">Aktiv</small></div></td>
+                            <td><span class="status-badge offen">Aktiv</span></td>
+                            <td><span class="bearbeiter-badge">K. Weber</span></td>
+                            <td class="actions-cell" onclick="event.stopPropagation();"><button class="action-btn" onclick="viewCustomer('K-2024-6234')" title="Ansehen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg></button></td>
+                        </tr>
+                        <!-- Abgeschlossen - Klein KG (K-2024-6891) - vollständige Demoakte -->
+                        <tr onclick="openCustomerDetail('K-2024-6891')">
+                            <td><div class="customer-cell"><strong>Klein KG</strong><small>Gewerbe | K-2024-6891</small></div></td>
+                            <td>Betriebsmittelkredit</td>
+                            <td class="amount success">€0</td>
+                            <td><span class="dpd-badge low">0</span></td>
+                            <td><span class="segment-badge success">Abgeschlossen</span></td>
+                            <td><div class="wa-score-visual"><div class="wa-bar-container"><span class="wa-label">W</span><div class="wa-bar"><div class="wa-bar-fill willingness high" style="width: 85%;"></div></div><span class="wa-value">85%</span></div><div class="wa-bar-container"><span class="wa-label">A</span><div class="wa-bar"><div class="wa-bar-fill ability" style="width: 75%;"></div></div><span class="wa-value">75%</span></div></div></td>
+                            <td><span class="mahnstufe-badge m0">M0</span></td>
+                            <td><div class="next-action"><span class="action-type success">Ratenvereinbarung erfüllt</span><small class="action-date">19.12.2025</small></div></td>
+                            <td><span class="status-badge success">Bezahlt</span></td>
+                            <td><span class="bearbeiter-badge">M. Schneider</span></td>
+                            <td class="actions-cell" onclick="event.stopPropagation();"><button class="action-btn" onclick="viewCustomer('K-2024-6891')" title="Ansehen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg></button></td>
+                        </tr>
+                        <!-- Abgeschlossen - Meier, Stefan (K-2024-5982) - vollständige Demoakte -->
+                        <tr onclick="openCustomerDetail('K-2024-5982')">
+                            <td><div class="customer-cell"><strong>Meier, Stefan</strong><small>Privat | K-2024-5982</small></div></td>
+                            <td>Dispositionskredit</td>
+                            <td class="amount success">€0</td>
+                            <td><span class="dpd-badge low">0</span></td>
+                            <td><span class="segment-badge success">Abgeschlossen</span></td>
+                            <td><div class="wa-score-visual"><div class="wa-bar-container"><span class="wa-label">W</span><div class="wa-bar"><div class="wa-bar-fill willingness" style="width: 75%;"></div></div><span class="wa-value">75%</span></div><div class="wa-bar-container"><span class="wa-label">A</span><div class="wa-bar"><div class="wa-bar-fill ability" style="width: 70%;"></div></div><span class="wa-value">70%</span></div></div></td>
+                            <td><span class="mahnstufe-badge m0">M0</span></td>
+                            <td><div class="next-action"><span class="action-type success">Dispo ausgeglichen</span><small class="action-date">15.12.2025</small></div></td>
+                            <td><span class="status-badge success">Bezahlt</span></td>
+                            <td><span class="bearbeiter-badge">T. Fischer</span></td>
+                            <td class="actions-cell" onclick="event.stopPropagation();"><button class="action-btn" onclick="viewCustomer('K-2024-5982')" title="Ansehen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg></button></td>
+                        </tr>
+                        <!-- Abgeschlossen - Schneider Logistik GmbH (K-2024-5876) - vollständige Demoakte -->
+                        <tr onclick="openCustomerDetail('K-2024-5876')">
+                            <td><div class="customer-cell"><strong>Schneider Logistik GmbH</strong><small>Gewerbe | K-2024-5876</small></div></td>
+                            <td>Kontokorrentkredit</td>
+                            <td class="amount success">€0</td>
+                            <td><span class="dpd-badge low">0</span></td>
+                            <td><span class="segment-badge success">Abgeschlossen</span></td>
+                            <td><div class="wa-score-visual"><div class="wa-bar-container"><span class="wa-label">W</span><div class="wa-bar"><div class="wa-bar-fill willingness high" style="width: 80%;"></div></div><span class="wa-value">80%</span></div><div class="wa-bar-container"><span class="wa-label">A</span><div class="wa-bar"><div class="wa-bar-fill ability high" style="width: 85%;"></div></div><span class="wa-value">85%</span></div></div></td>
+                            <td><span class="mahnstufe-badge m0">M0</span></td>
+                            <td><div class="next-action"><span class="action-type success">Alle Kredite beglichen</span><small class="action-date">12.12.2025</small></div></td>
+                            <td><span class="status-badge success">Bezahlt</span></td>
+                            <td><span class="bearbeiter-badge">A. Becker</span></td>
+                            <td class="actions-cell" onclick="event.stopPropagation();"><button class="action-btn" onclick="viewCustomer('K-2024-5876')" title="Ansehen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg></button></td>
+                        </tr>
+                        <!-- Abgeschlossen - Fischer, Anna (K-2024-5734) - vollständige Demoakte -->
+                        <tr onclick="openCustomerDetail('K-2024-5734')">
+                            <td><div class="customer-cell"><strong>Fischer, Anna</strong><small>Privat | K-2024-5734</small></div></td>
+                            <td>Kreditkarte</td>
+                            <td class="amount success">€0</td>
+                            <td><span class="dpd-badge low">0</span></td>
+                            <td><span class="segment-badge success">Abgeschlossen</span></td>
+                            <td><div class="wa-score-visual"><div class="wa-bar-container"><span class="wa-label">W</span><div class="wa-bar"><div class="wa-bar-fill willingness high" style="width: 95%;"></div></div><span class="wa-value">95%</span></div><div class="wa-bar-container"><span class="wa-label">A</span><div class="wa-bar"><div class="wa-bar-fill ability high" style="width: 90%;"></div></div><span class="wa-value">90%</span></div></div></td>
+                            <td><span class="mahnstufe-badge m0">M0</span></td>
+                            <td><div class="next-action"><span class="action-type success">Kreditkarte beglichen</span><small class="action-date">10.12.2025</small></div></td>
+                            <td><span class="status-badge success">Bezahlt</span></td>
+                            <td><span class="bearbeiter-badge">S. Müller</span></td>
+                            <td class="actions-cell" onclick="event.stopPropagation();"><button class="action-btn" onclick="viewCustomer('K-2024-5734')" title="Ansehen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg></button></td>
+                        </tr>
+                        <!-- Abgeschlossen - Bäckerei Müller (K-2024-5612) - vollständige Demoakte -->
+                        <tr onclick="openCustomerDetail('K-2024-5612')">
+                            <td><div class="customer-cell"><strong>Bäckerei Müller</strong><small>Gewerbe | K-2024-5612</small></div></td>
+                            <td>Investitionskredit</td>
+                            <td class="amount success">€0</td>
+                            <td><span class="dpd-badge low">0</span></td>
+                            <td><span class="segment-badge success">Abgeschlossen</span></td>
+                            <td><div class="wa-score-visual"><div class="wa-bar-container"><span class="wa-label">W</span><div class="wa-bar"><div class="wa-bar-fill willingness high" style="width: 85%;"></div></div><span class="wa-value">85%</span></div><div class="wa-bar-container"><span class="wa-label">A</span><div class="wa-bar"><div class="wa-bar-fill ability high" style="width: 80%;"></div></div><span class="wa-value">80%</span></div></div></td>
+                            <td><span class="mahnstufe-badge m0">M0</span></td>
+                            <td><div class="next-action"><span class="action-type success">Kredit vollständig getilgt</span><small class="action-date">08.12.2025</small></div></td>
+                            <td><span class="status-badge success">Bezahlt</span></td>
+                            <td><span class="bearbeiter-badge">K. Weber</span></td>
+                            <td class="actions-cell" onclick="event.stopPropagation();"><button class="action-btn" onclick="viewCustomer('K-2024-5612')" title="Ansehen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg></button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="table-pagination">
+                <span>Zeige 1-11 von 11 Demo-Kunden</span>
+                <div class="pagination-controls">
+                    <button class="pagination-btn" disabled>Zurück</button>
+                    <button class="pagination-btn active">1</button>
+                    <button class="pagination-btn" disabled>Weiter</button>
+                </div>
+            </div>
+        </div>
+    </div>

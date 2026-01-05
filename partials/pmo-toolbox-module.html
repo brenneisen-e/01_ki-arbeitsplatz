@@ -4820,10 +4820,19 @@ const PMO = {
         document.getElementById('status-workstream').value = status.workstreamId;
     },
 
-    async exportPPT() {
-        const status = this.pptStatusHistory[this.pptCurrentIndex];
+    async exportPPT(workstreamId = null) {
+        // Get status - either from PPT modal or from current workstream
+        let status = null;
+
+        if (this.pptStatusHistory && this.pptStatusHistory[this.pptCurrentIndex]) {
+            status = this.pptStatusHistory[this.pptCurrentIndex];
+        } else if (workstreamId || this.currentWorkstream) {
+            const wsId = workstreamId || this.currentWorkstream;
+            status = this.getWorkstreamLatestStatus(wsId);
+        }
+
         if (!status) {
-            alert('Kein Status zum Exportieren vorhanden.');
+            alert('Kein Status zum Exportieren vorhanden. Bitte zuerst einen Status erstellen.');
             return;
         }
 

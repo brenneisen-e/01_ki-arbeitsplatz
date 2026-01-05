@@ -3691,7 +3691,6 @@ const PMO = {
         const statuses = ['green', 'yellow', 'red'];
         const statusIndex = statuses.indexOf(scenario.currentStatus);
 
-        // Slight variation based on trend
         let adjustedStatus = scenario.currentStatus;
         if (weekOffset > 2 && scenario.trend === 'improving') {
             adjustedStatus = statuses[Math.min(statusIndex + 1, 2)];
@@ -3699,45 +3698,90 @@ const PMO = {
             adjustedStatus = statuses[Math.max(statusIndex - 1, 0)];
         }
 
+        // Detailed progress texts per project
+        const progressTexts = {
+            "A": ["Lead-Routing System erfolgreich in Pilotphase gestartet", "Integration der K-EWE Servicepunkte zu 60% abgeschlossen", "Inside Sales Team mit 5 von 8 Mitarbeitern besetzt"],
+            "B": ["Reporting-Framework vollständig implementiert und live", "Performance-Dashboards für alle Regionen ausgerollt", "Schulungen für Vertriebsleiter abgeschlossen"],
+            "C": ["Recruiting-Pipeline mit 25 qualifizierten Kandidaten", "Neues Onboarding-Konzept in 2 Pilotregionen getestet", "Ausbildungsformate wurden standardisiert"],
+            "D": ["Servicemodell in 3 Pilotregionen erfolgreich eingeführt", "Kundenanalytik-Tool in Testphase", "EASY Backlog zu 40% abgearbeitet"],
+            "E": ["SEO-Optimierung zeigt +35% organischen Traffic", "Social Media Reichweite um 50% gesteigert", "EMOK-Funktionen erweitert und ausgerollt"],
+            "F": ["Kostenanalyse für alle Bereiche abgeschlossen", "Erste Effizienzmaßnahmen identifiziert", "Investitionsplanung in Überarbeitung"],
+            "G": ["Change-Kommunikationsplan verabschiedet", "Erste Townhall-Meetings durchgeführt", "Feedback aus dem Außendienst wird ausgewertet"],
+            "H": ["Anforderungsanalyse zu 80% abgeschlossen", "IT-Architektur wird derzeit designed", "Stakeholder-Abstimmung läuft"]
+        };
+
+        const upcomingTexts = {
+            "A": ["Go-Live Lead-Routing für Region Nord", "Abschluss K-EWE Integration", "Vervollständigung Inside Sales Team"],
+            "B": ["Rollout Performance-Steuerung Phase 2", "Entwicklung Agenturentwicklungspläne", "Optimierung Provisionsmodell"],
+            "C": ["Recruiting-Kampagne starten", "Rollout Onboarding bundesweit", "Evaluation Ausbildungsformate"],
+            "D": ["Erweiterung Pilotierung auf 5 Regionen", "Launch Kundenanalytik-Tool", "Weiterführung EASY Backlog"],
+            "E": ["SEO-Optimierung Phase 2", "Launch Instagram-Kampagne", "EMOK Feature Release"],
+            "F": ["Umsetzung erste Sparmaßnahmen", "Finalisierung Investitionsplan", "Management-Review Kostenstruktur"],
+            "G": ["Weitere Change-Workshops", "Umsetzung Feedback-Maßnahmen", "Kommunikation nächste Schritte"],
+            "H": ["Abschluss Anforderungsanalyse", "Start IT-Entwicklung", "Kick-off mit allen Stakeholdern"]
+        };
+
+        const decisionTexts = {
+            "A": "Entscheidung über Lead-Routing Technologie bis KW 5 erforderlich",
+            "B": "Freigabe Budget für Performance-Tools benötigt",
+            "C": "Genehmigung zusätzlicher Recruiting-Ressourcen ausstehend",
+            "D": "Entscheidung zur Pilotregion-Erweiterung in Steering Committee",
+            "E": "Budget-Freigabe für Social Media Kampagne erforderlich",
+            "F": "Entscheidung zu Investitionsprioritäten überfällig",
+            "G": "Freigabe Change-Kommunikationsbudget benötigt",
+            "H": "Technologie-Entscheidung für Middle Layer ausstehend"
+        };
+
+        // Generate risks
         const risks = [];
-        if (scenario.currentStatus !== 'green' && Math.random() > 0.5) {
+        if (scenario.currentStatus !== 'green') {
             risks.push({
-                type: Math.random() > 0.5 ? 'R' : 'H',
-                description: scenario.themes[Math.floor(Math.random() * scenario.themes.length)],
-                identifiedDate: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-                targetDate: new Date(Date.now() + Math.random() * 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-                status: weekOffset === 0 ? 'Offen' : (Math.random() > 0.7 ? 'Geschlossen' : 'Offen'),
-                countermeasures: 'Maßnahmen werden umgesetzt'
+                type: 'R',
+                description: scenario.themes[0],
+                identifiedDate: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                targetDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                status: weekOffset === 0 ? 'Offen' : 'In Bearbeitung',
+                countermeasures: 'Eskalation an Steering Committee, wöchentliches Tracking eingeführt'
             });
+            if (scenario.currentStatus === 'red') {
+                risks.push({
+                    type: 'H',
+                    description: scenario.themes[1] || 'Ressourcenengpass im Team',
+                    identifiedDate: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                    targetDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                    status: 'Offen',
+                    countermeasures: 'Zusätzliche Ressourcen werden angefordert'
+                });
+            }
         }
 
-        const milestones = [];
-        if (Math.random() > 0.6) {
-            milestones.push({
-                name: ['Kick-off', 'Design Complete', 'Pilotierung', 'Go-Live'][Math.floor(Math.random() * 4)],
-                plannedDate: new Date(Date.now() + Math.random() * 60 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-                currentEstimate: new Date(Date.now() + Math.random() * 70 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-                status: ['Im Plan', 'Verzögert', 'Geschlossen'][Math.floor(Math.random() * 3)]
-            });
-        }
+        // Generate milestones
+        const milestones = [
+            { name: 'Konzeptphase', plannedDate: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], currentEstimate: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], status: 'Geschlossen' },
+            { name: 'Pilotierung', plannedDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], currentEstimate: new Date(Date.now() + (scenario.currentStatus === 'red' ? 45 : 30) * 24 * 60 * 60 * 1000).toISOString().split('T')[0], status: scenario.currentStatus === 'red' ? 'Verzögert' : 'Im Plan' },
+            { name: 'Go-Live', plannedDate: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], currentEstimate: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], status: 'Im Plan' }
+        ];
+
+        const progressArr = progressTexts[projectId] || scenario.themes;
+        const upcomingArr = upcomingTexts[projectId] || ['Nächste Schritte werden geplant'];
 
         return {
             projectId,
             workstreamId: wsId,
             status: {
                 overall: adjustedStatus,
-                budget: ['green', 'green', 'yellow'][Math.floor(Math.random() * 3)],
+                budget: scenario.currentStatus === 'red' ? 'yellow' : 'green',
                 scope: adjustedStatus,
                 time: adjustedStatus,
-                resources: ['green', 'yellow', 'yellow'][Math.floor(Math.random() * 3)],
-                risks: risks.length > 0 ? 'yellow' : 'green'
+                resources: scenario.currentStatus === 'green' ? 'green' : 'yellow',
+                risks: risks.length > 0 ? (risks.length > 1 ? 'red' : 'yellow') : 'green'
             },
-            summary: scenario.themes.slice(0, 4),
-            progress: `Fortschritt in KW ${52 - weekOffset}: ${scenario.themes[0]}`,
-            upcoming: 'Nächste Schritte werden geplant',
+            summary: progressArr,
+            progress: progressArr.join('\n'),
+            upcoming: upcomingArr.join('\n'),
             risksAndIssues: risks,
             milestones,
-            decisions: weekOffset === 0 ? 'Entscheidung zu Ressourcenallokation ausstehend' : ''
+            decisions: weekOffset === 0 ? decisionTexts[projectId] : ''
         };
     },
 
@@ -4702,8 +4746,8 @@ const PMO = {
         const slideContent = `
             <div class="ppt-header">
                 <div class="ppt-header-left">
-                    <h2>CPE STATUS TEILPROJEKTE</h2>
-                    <h1>CPE – Teilprojekt ${status.workstreamId}: ${ws?.name || ''}</h1>
+                    <h2>STATUS TEILPROJEKTE</h2>
+                    <h1>Teilprojekt ${status.workstreamId}: ${ws?.name || ''}</h1>
                 </div>
                 <div class="ppt-header-right">
                     Status vom: ${this.formatDate(status.date)}
@@ -4865,7 +4909,7 @@ const PMO = {
             let slideXml = await slideXmlFile.async('string');
 
             // Prepare content
-            const title = `CPE – Teilprojekt ${status.workstreamId}: ${ws?.name || ''}`;
+            const title = `Teilprojekt ${status.workstreamId}: ${ws?.name || ''}`;
             const progressBullets = status.progress ? status.progress.split('\n').filter(l => l.trim()) : ['Keine Angaben'];
             const upcomingBullets = status.upcoming ? status.upcoming.split('\n').filter(l => l.trim()) : ['Keine Angaben'];
             const riskBullets = status.risksAndIssues?.length > 0
@@ -4876,10 +4920,15 @@ const PMO = {
                 : ['Keine Meilensteine'];
             const decisions = status.decisions || 'Keine Entscheidungen erforderlich';
 
-            // Replace title
+            // Replace title - remove CPE prefix
             slideXml = slideXml.replace(
                 /<a:t>CPE – Teilprojekt<\/a:t>/g,
                 `<a:t>${this.escapeXml(title)}</a:t>`
+            );
+            // Also replace CPE STATUS header
+            slideXml = slideXml.replace(
+                /<a:t>CPE STATUS TEILPROJEKTE<\/a:t>/g,
+                `<a:t>STATUS TEILPROJEKTE</a:t>`
             );
 
             // Replace Xxx placeholders with actual content
@@ -4909,7 +4958,7 @@ const PMO = {
             });
 
             // Download
-            const filename = `CPE_Status_${status.workstreamId}_${status.date}.pptx`;
+            const filename = `Status_${status.workstreamId}_${status.date}.pptx`;
             const link = document.createElement('a');
             link.href = URL.createObjectURL(modifiedPptx);
             link.download = filename;

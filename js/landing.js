@@ -1194,6 +1194,10 @@ async function openPMOToolbox() {
                     const scripts = pmoModule.querySelectorAll('script');
                     scripts.forEach(oldScript => {
                         const newScript = document.createElement('script');
+                        // Copy type attribute (important for ES6 modules!)
+                        if (oldScript.type) {
+                            newScript.type = oldScript.type;
+                        }
                         if (oldScript.src) {
                             newScript.src = oldScript.src;
                         } else {

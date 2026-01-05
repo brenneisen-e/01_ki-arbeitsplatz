@@ -291,10 +291,23 @@ function generateMockResponse(message) {
     
     // Top performers
     if (lowerMessage.includes('top') || lowerMessage.includes('beste')) {
-        const agenturen = getAgenturen().slice(0, 5);
-        return `📊 Hier sind die Top 5 Vermittler:\n\n${agenturen.map((a, i) => 
+        // Bestimme die Sortierung basierend auf der Anfrage
+        let sortBy = 'neugeschaeft';
+        if (lowerMessage.includes('ergebnis')) sortBy = 'ergebnis';
+        else if (lowerMessage.includes('bestand')) sortBy = 'bestand';
+        else if (lowerMessage.includes('deckungsbeitrag')) sortBy = 'deckungsbeitrag';
+
+        // Extrahiere die Anzahl (z.B. "top 10" -> 10, default 5)
+        const topMatch = lowerMessage.match(/top\s*(\d+)/);
+        const topN = topMatch ? parseInt(topMatch[1]) : 5;
+
+        // Wechsel zur Agenturen-Tabelle und zeige Top N
+        showTopAgenturen(topN, sortBy);
+
+        const agenturen = getAgenturen().slice(0, topN);
+        return `📊 **Top ${topN} Vermittler** (nach ${sortBy === 'neugeschaeft' ? 'Neugeschäft' : sortBy}):\n\n${agenturen.map((a, i) =>
             `${i+1}. **${a.name || a.id}**`
-        ).join('\n')}\n\n💡 *Dies ist eine Mock-Antwort. Mit einem API-Key würde ich die tatsächlichen Zahlen analysieren.*`;
+        ).join('\n')}\n\n✅ *Die Tabelle zeigt jetzt die Top ${topN} Vermittler.*`;
     }
     
     // Filter commands

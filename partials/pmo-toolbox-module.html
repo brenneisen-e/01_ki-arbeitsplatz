@@ -3191,8 +3191,7 @@ const PMO = {
             const projectStatus = this.getProjectLatestStatus(project.id);
             html += `
                 <div class="pmo-stream-card pmo-project-card-landing" onclick="PMO.showProjectWorkstreams('${project.id}')">
-                    <div class="pmo-stream-card-header">
-                        <span class="pmo-stream-id">${project.id}</span>
+                    <div class="pmo-stream-card-header" style="justify-content: flex-end;">
                         <div class="pmo-stream-status">
                             <div class="pmo-traffic-light ${projectStatus?.overall || 'gray'}"></div>
                         </div>

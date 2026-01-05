@@ -1166,6 +1166,16 @@ async function openPMOToolbox() {
         bestandModule.style.display = 'none';
     }
 
+    // Hide main chat widget and toggle (they should not appear in PMO Toolbox)
+    const chatWidget = document.getElementById('chatWidget');
+    if (chatWidget) {
+        chatWidget.style.display = 'none';
+    }
+    const chatToggle = document.getElementById('chatToggle');
+    if (chatToggle) {
+        chatToggle.style.display = 'none';
+    }
+
     // Show PMO Toolbox module
     const pmoModule = document.getElementById('pmoToolboxModule');
     if (pmoModule) {

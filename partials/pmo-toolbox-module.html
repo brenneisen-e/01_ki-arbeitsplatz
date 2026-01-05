@@ -62,6 +62,32 @@
             </svg>
             Meilensteine
         </button>
+        <button class="pmo-nav-btn" data-view="gantt" onclick="PMO.showView('gantt')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                <rect x="3" y="4" width="18" height="4" rx="1"></rect>
+                <rect x="3" y="10" width="12" height="4" rx="1"></rect>
+                <rect x="3" y="16" width="16" height="4" rx="1"></rect>
+            </svg>
+            Gantt-Chart
+            <span class="pmo-nav-badge">Neu</span>
+        </button>
+        <button class="pmo-nav-btn" data-view="entscheidungen" onclick="PMO.showView('entscheidungen')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M9 12l2 2 4-4"></path>
+            </svg>
+            Entscheidungen
+            <span class="pmo-nav-badge">Neu</span>
+        </button>
+        <button class="pmo-nav-btn" data-view="dokumente" onclick="PMO.showView('dokumente')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <circle cx="12" cy="15" r="2"></circle>
+            </svg>
+            Dokumentation
+            <span class="pmo-nav-badge">KI</span>
+        </button>
     </nav>
 
     <!-- Main Content Area -->
@@ -206,6 +232,184 @@
                         <!-- Milestones will be rendered here -->
                     </tbody>
                 </table>
+            </div>
+        </div>
+
+        <!-- Gantt Chart View -->
+        <div id="pmo-gantt" class="pmo-view">
+            <div class="pmo-gantt-header">
+                <h3 class="pmo-section-title">Gantt-Chart: Meilensteine</h3>
+                <div class="pmo-gantt-controls">
+                    <select id="gantt-project-filter" onchange="PMO.renderGantt()">
+                        <option value="">Alle Projekte</option>
+                    </select>
+                    <select id="gantt-status-filter" onchange="PMO.renderGantt()">
+                        <option value="">Alle Status</option>
+                        <option value="Im Plan">Im Plan</option>
+                        <option value="Verzögert">Verzögert</option>
+                        <option value="Geschlossen">Geschlossen</option>
+                    </select>
+                    <div class="pmo-gantt-zoom">
+                        <button class="pmo-btn-sm" onclick="PMO.setGanttZoom('month')">Monat</button>
+                        <button class="pmo-btn-sm active" onclick="PMO.setGanttZoom('quarter')">Quartal</button>
+                        <button class="pmo-btn-sm" onclick="PMO.setGanttZoom('year')">Jahr</button>
+                    </div>
+                </div>
+            </div>
+            <div class="pmo-gantt-container" id="pmo-gantt-container">
+                <!-- Gantt chart will be rendered here -->
+            </div>
+            <div class="pmo-gantt-legend">
+                <span class="legend-item"><span class="legend-bar green"></span> Im Plan</span>
+                <span class="legend-item"><span class="legend-bar yellow"></span> Gefährdet</span>
+                <span class="legend-item"><span class="legend-bar red"></span> Verzögert</span>
+                <span class="legend-item"><span class="legend-bar gray"></span> Abgeschlossen</span>
+                <span class="legend-item"><span class="legend-line"></span> Heute</span>
+            </div>
+        </div>
+
+        <!-- Entscheidungen View -->
+        <div id="pmo-entscheidungen" class="pmo-view">
+            <div class="pmo-decisions-header">
+                <h3 class="pmo-section-title">Entscheidungs-Management</h3>
+                <div class="pmo-decisions-controls">
+                    <select id="decisions-project-filter" onchange="PMO.renderDecisions()">
+                        <option value="">Alle Projekte</option>
+                    </select>
+                    <div class="pmo-view-toggle">
+                        <button class="pmo-btn-sm active" onclick="PMO.setDecisionView('kanban')">Kanban</button>
+                        <button class="pmo-btn-sm" onclick="PMO.setDecisionView('list')">Liste</button>
+                    </div>
+                    <button class="pmo-btn pmo-btn-primary" onclick="PMO.openNewDecisionModal()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                            <path d="M12 5v14M5 12h14"/>
+                        </svg>
+                        Neue Entscheidung
+                    </button>
+                </div>
+            </div>
+            <div class="pmo-decisions-kanban" id="pmo-decisions-kanban">
+                <div class="kanban-column" data-status="pending">
+                    <div class="kanban-column-header">
+                        <span class="kanban-column-title">Ausstehend</span>
+                        <span class="kanban-column-count" id="kanban-count-pending">0</span>
+                    </div>
+                    <div class="kanban-column-body" id="kanban-pending"></div>
+                </div>
+                <div class="kanban-column" data-status="escalated">
+                    <div class="kanban-column-header escalated">
+                        <span class="kanban-column-title">Eskaliert</span>
+                        <span class="kanban-column-count" id="kanban-count-escalated">0</span>
+                    </div>
+                    <div class="kanban-column-body" id="kanban-escalated"></div>
+                </div>
+                <div class="kanban-column" data-status="approved">
+                    <div class="kanban-column-header approved">
+                        <span class="kanban-column-title">Genehmigt</span>
+                        <span class="kanban-column-count" id="kanban-count-approved">0</span>
+                    </div>
+                    <div class="kanban-column-body" id="kanban-approved"></div>
+                </div>
+                <div class="kanban-column" data-status="rejected">
+                    <div class="kanban-column-header rejected">
+                        <span class="kanban-column-title">Abgelehnt</span>
+                        <span class="kanban-column-count" id="kanban-count-rejected">0</span>
+                    </div>
+                    <div class="kanban-column-body" id="kanban-rejected"></div>
+                </div>
+            </div>
+            <div class="pmo-decisions-list" id="pmo-decisions-list" style="display: none;">
+                <table class="pmo-table">
+                    <thead>
+                        <tr>
+                            <th>Typ</th>
+                            <th>Titel</th>
+                            <th>Projekt</th>
+                            <th>Fällig</th>
+                            <th>Status</th>
+                            <th>Aktionen</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pmo-decisions-tbody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Dokumente / KI-Assistent View -->
+        <div id="pmo-dokumente" class="pmo-view">
+            <div class="pmo-docs-container">
+                <div class="pmo-docs-sidebar">
+                    <div class="pmo-docs-upload">
+                        <div class="pmo-upload-zone" id="pmo-upload-zone" ondrop="PMO.handleDrop(event)" ondragover="PMO.handleDragOver(event)" ondragleave="PMO.handleDragLeave(event)">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="32" height="32">
+                                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
+                            </svg>
+                            <p>Dokumente hier ablegen</p>
+                            <span>oder</span>
+                            <button class="pmo-btn pmo-btn-secondary" onclick="document.getElementById('file-input').click()">Dateien auswählen</button>
+                            <input type="file" id="file-input" multiple accept=".pdf,.docx,.xlsx,.pptx,.txt,.md" style="display:none" onchange="PMO.handleFileSelect(event)">
+                        </div>
+                    </div>
+                    <div class="pmo-docs-search">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="M21 21l-4.35-4.35"></path>
+                        </svg>
+                        <input type="text" id="docs-search-input" placeholder="Suche in Dokumenten..." oninput="PMO.searchDocuments()">
+                    </div>
+                    <div class="pmo-docs-filters">
+                        <select id="docs-project-filter" onchange="PMO.filterDocuments()">
+                            <option value="">Alle Projekte</option>
+                        </select>
+                        <select id="docs-type-filter" onchange="PMO.filterDocuments()">
+                            <option value="">Alle Typen</option>
+                            <option value="pdf">PDF</option>
+                            <option value="docx">Word</option>
+                            <option value="xlsx">Excel</option>
+                            <option value="pptx">PowerPoint</option>
+                        </select>
+                    </div>
+                    <div class="pmo-docs-list" id="pmo-docs-list">
+                        <p class="pmo-docs-empty">Noch keine Dokumente hochgeladen</p>
+                    </div>
+                </div>
+                <div class="pmo-ai-chat">
+                    <div class="pmo-ai-header">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
+                            <circle cx="12" cy="12" r="3"></circle>
+                            <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+                        </svg>
+                        <span>KI-Dokumentenassistent</span>
+                    </div>
+                    <div class="pmo-ai-messages" id="pmo-ai-messages">
+                        <div class="ai-message ai-assistant">
+                            <div class="ai-message-content">
+                                <p>Hallo! Ich kann dir helfen, Informationen in den Projektdokumenten zu finden.</p>
+                                <p style="margin-top: 8px; font-size: 12px; color: #64748b;">Lade Dokumente hoch und stelle mir Fragen dazu.</p>
+                            </div>
+                        </div>
+                        <div class="pmo-ai-suggestions">
+                            <p>Vorgeschlagene Fragen:</p>
+                            <button onclick="PMO.askAI('Was sind die Hauptrisiken im Programm?')">Was sind die Hauptrisiken?</button>
+                            <button onclick="PMO.askAI('Welche Meilensteine stehen an?')">Welche Meilensteine stehen an?</button>
+                            <button onclick="PMO.askAI('Welche Entscheidungen sind ausstehend?')">Ausstehende Entscheidungen?</button>
+                        </div>
+                    </div>
+                    <div class="pmo-ai-input">
+                        <input type="text" id="pmo-ai-input" placeholder="Frage eingeben..." onkeypress="if(event.key==='Enter')PMO.sendAIMessage()">
+                        <button onclick="PMO.sendAIMessage()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                                <line x1="22" y1="2" x2="11" y2="13"></line>
+                                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="pmo-ai-actions">
+                        <button class="pmo-btn-sm" onclick="PMO.askAI('Erstelle eine Zusammenfassung des Programmstatus')">Zusammenfassung</button>
+                        <button class="pmo-btn-sm" onclick="PMO.askAI('Finde alle Risiken in den Dokumenten')">Risiken finden</button>
+                        <button class="pmo-btn-sm" onclick="PMO.askAI('Liste alle Action Items aus den Protokollen')">Action Items</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -412,6 +616,140 @@
                 <div class="pmo-search-results" id="pmo-search-results">
                     <p class="pmo-search-hint">Geben Sie einen Suchbegriff ein...</p>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PPT Status View Modal -->
+    <div class="pmo-modal" id="pmo-ppt-modal">
+        <div class="pmo-modal-backdrop" onclick="PMO.closePPTModal()"></div>
+        <div class="pmo-modal-content pmo-modal-fullwidth">
+            <div class="pmo-modal-header">
+                <div class="ppt-nav-controls">
+                    <button class="pmo-btn-sm" onclick="PMO.pptPrevWeek()" id="ppt-prev-btn" disabled>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                            <path d="M15 18l-6-6 6-6"/>
+                        </svg>
+                        Vorwoche
+                    </button>
+                    <span id="ppt-current-date" style="font-weight: 600;"></span>
+                    <button class="pmo-btn-sm" onclick="PMO.pptNextWeek()" id="ppt-next-btn" disabled>
+                        Nächste
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                            <path d="M9 18l6-6-6-6"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="ppt-actions">
+                    <button class="pmo-btn pmo-btn-secondary" onclick="PMO.editPPTStatus()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                            <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/>
+                            <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                        </svg>
+                        Bearbeiten
+                    </button>
+                    <button class="pmo-btn pmo-btn-secondary" onclick="PMO.exportPPT()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+                        </svg>
+                        PPTX
+                    </button>
+                    <button class="pmo-btn pmo-btn-secondary" onclick="PMO.exportPDF()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                        </svg>
+                        PDF
+                    </button>
+                </div>
+                <button class="pmo-modal-close" onclick="PMO.closePPTModal()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="pmo-modal-body ppt-body">
+                <div class="ppt-slide" id="ppt-slide-content">
+                    <!-- PPT Slide will be rendered here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Decision Modal -->
+    <div class="pmo-modal" id="pmo-decision-modal">
+        <div class="pmo-modal-backdrop" onclick="PMO.closeDecisionModal()"></div>
+        <div class="pmo-modal-content pmo-modal-large">
+            <div class="pmo-modal-header">
+                <h2 id="decision-modal-title">Neue Entscheidung</h2>
+                <button class="pmo-modal-close" onclick="PMO.closeDecisionModal()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="pmo-modal-body">
+                <form id="pmo-decision-form" onsubmit="PMO.saveDecision(event)">
+                    <input type="hidden" id="decision-id">
+                    <div class="pmo-form-row">
+                        <div class="pmo-form-group">
+                            <label>Typ *</label>
+                            <select id="decision-type" required>
+                                <option value="strategic">Strategisch</option>
+                                <option value="tactical">Taktisch</option>
+                                <option value="operational">Operativ</option>
+                            </select>
+                        </div>
+                        <div class="pmo-form-group">
+                            <label>Projekt *</label>
+                            <select id="decision-project" required>
+                                <option value="">Projekt wählen...</option>
+                            </select>
+                        </div>
+                        <div class="pmo-form-group">
+                            <label>Fällig am *</label>
+                            <input type="date" id="decision-due-date" required>
+                        </div>
+                    </div>
+                    <div class="pmo-form-group">
+                        <label>Titel *</label>
+                        <input type="text" id="decision-title" required maxlength="100" placeholder="Kurze Beschreibung der Entscheidung...">
+                    </div>
+                    <div class="pmo-form-group">
+                        <label>Beschreibung</label>
+                        <textarea id="decision-description" rows="3" maxlength="500" placeholder="Detaillierte Beschreibung..."></textarea>
+                    </div>
+                    <div class="pmo-form-row">
+                        <div class="pmo-form-group">
+                            <label>Angefordert von</label>
+                            <input type="text" id="decision-requested-by" placeholder="Name">
+                        </div>
+                        <div class="pmo-form-group">
+                            <label>Entscheidungsträger</label>
+                            <input type="text" id="decision-owner" placeholder="Name">
+                        </div>
+                        <div class="pmo-form-group">
+                            <label>Status</label>
+                            <select id="decision-status">
+                                <option value="pending">Ausstehend</option>
+                                <option value="escalated">Eskaliert</option>
+                                <option value="approved">Genehmigt</option>
+                                <option value="rejected">Abgelehnt</option>
+                                <option value="deferred">Vertagt</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="pmo-form-group">
+                        <label>Entscheidung / Ergebnis</label>
+                        <textarea id="decision-result" rows="2" placeholder="Die getroffene Entscheidung..."></textarea>
+                    </div>
+                    <div class="pmo-form-actions">
+                        <button type="button" class="pmo-btn pmo-btn-secondary" onclick="PMO.closeDecisionModal()">Abbrechen</button>
+                        <button type="submit" class="pmo-btn pmo-btn-primary">Speichern</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -655,7 +993,7 @@
     justify-content: center;
     width: 32px;
     height: 32px;
-    background: #E30613;
+    background: #334155;
     color: white;
     font-weight: 700;
     font-size: 14px;
@@ -1118,7 +1456,7 @@
 .pmo-project-detail-id {
     width: 48px;
     height: 48px;
-    background: #E30613;
+    background: #334155;
     color: white;
     font-size: 20px;
     font-weight: 700;
@@ -1204,6 +1542,891 @@
 
     .pmo-traffic-lights-grid {
         grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* ========================================
+   NEW FEATURES STYLES
+   ======================================== */
+
+/* Navigation Badge */
+.pmo-nav-badge {
+    padding: 2px 6px;
+    font-size: 10px;
+    font-weight: 600;
+    border-radius: 4px;
+    background: #E30613;
+    color: white;
+    margin-left: 4px;
+}
+
+/* Small Button */
+.pmo-btn-sm {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: 500;
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.pmo-btn-sm:hover {
+    background: #e2e8f0;
+}
+
+.pmo-btn-sm.active {
+    background: #334155;
+    color: white;
+    border-color: #334155;
+}
+
+/* View Toggle */
+.pmo-view-toggle {
+    display: flex;
+    gap: 4px;
+}
+
+/* ========================================
+   GANTT CHART STYLES
+   ======================================== */
+.pmo-gantt-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.pmo-gantt-controls {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.pmo-gantt-zoom {
+    display: flex;
+    gap: 4px;
+}
+
+.pmo-gantt-container {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+.gantt-chart {
+    overflow-x: auto;
+    padding: 20px;
+}
+
+.gantt-header {
+    display: flex;
+    border-bottom: 2px solid #e2e8f0;
+    padding-bottom: 12px;
+    margin-bottom: 12px;
+}
+
+.gantt-label-column {
+    width: 200px;
+    flex-shrink: 0;
+    font-weight: 600;
+    font-size: 12px;
+    color: #64748b;
+    text-transform: uppercase;
+}
+
+.gantt-timeline {
+    flex: 1;
+    display: flex;
+    position: relative;
+}
+
+.gantt-month {
+    flex: 1;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 600;
+    color: #64748b;
+    border-left: 1px solid #e2e8f0;
+    padding: 0 8px;
+}
+
+.gantt-row {
+    display: flex;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.gantt-row:hover {
+    background: #f8fafc;
+}
+
+.gantt-row-label {
+    width: 200px;
+    flex-shrink: 0;
+    font-size: 13px;
+    padding-right: 16px;
+}
+
+.gantt-row-label .project-id {
+    font-weight: 700;
+    color: #334155;
+    margin-right: 8px;
+}
+
+.gantt-row-label .milestone-name {
+    color: #475569;
+}
+
+.gantt-row-timeline {
+    flex: 1;
+    height: 24px;
+    position: relative;
+}
+
+.gantt-bar {
+    position: absolute;
+    height: 20px;
+    border-radius: 4px;
+    top: 2px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    padding: 0 8px;
+    font-size: 11px;
+    font-weight: 500;
+    color: white;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.gantt-bar:hover {
+    transform: scaleY(1.2);
+    z-index: 10;
+}
+
+.gantt-bar.green { background: #22c55e; }
+.gantt-bar.yellow { background: #eab308; }
+.gantt-bar.red { background: #ef4444; }
+.gantt-bar.gray { background: #94a3b8; }
+
+.gantt-today-line {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #E30613;
+    z-index: 5;
+}
+
+.gantt-today-line::before {
+    content: 'Heute';
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 10px;
+    font-weight: 600;
+    color: #E30613;
+    white-space: nowrap;
+}
+
+.pmo-gantt-legend {
+    display: flex;
+    gap: 20px;
+    padding: 16px 20px;
+    background: #f8fafc;
+    border-top: 1px solid #e2e8f0;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: #64748b;
+}
+
+.legend-bar {
+    width: 20px;
+    height: 10px;
+    border-radius: 2px;
+}
+
+.legend-bar.green { background: #22c55e; }
+.legend-bar.yellow { background: #eab308; }
+.legend-bar.red { background: #ef4444; }
+.legend-bar.gray { background: #94a3b8; }
+
+.legend-line {
+    width: 2px;
+    height: 16px;
+    background: #E30613;
+}
+
+/* ========================================
+   KANBAN BOARD STYLES
+   ======================================== */
+.pmo-decisions-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.pmo-decisions-controls {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.pmo-decisions-kanban {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+}
+
+.kanban-column {
+    background: #f8fafc;
+    border-radius: 12px;
+    min-height: 400px;
+}
+
+.kanban-column-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px;
+    background: #e2e8f0;
+    border-radius: 12px 12px 0 0;
+    font-weight: 600;
+    font-size: 14px;
+    color: #334155;
+}
+
+.kanban-column-header.escalated {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+.kanban-column-header.approved {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.kanban-column-header.rejected {
+    background: #fef3c7;
+    color: #b45309;
+}
+
+.kanban-column-count {
+    background: white;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 12px;
+}
+
+.kanban-column-body {
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.kanban-card {
+    background: white;
+    border-radius: 10px;
+    padding: 14px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    cursor: pointer;
+    transition: all 0.2s;
+    border-left: 4px solid transparent;
+}
+
+.kanban-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+}
+
+.kanban-card.strategic { border-left-color: #E30613; }
+.kanban-card.tactical { border-left-color: #2563eb; }
+.kanban-card.operational { border-left-color: #64748b; }
+
+.kanban-card-type {
+    font-size: 11px;
+    font-weight: 500;
+    margin-bottom: 6px;
+}
+
+.kanban-card.strategic .kanban-card-type { color: #E30613; }
+.kanban-card.tactical .kanban-card-type { color: #2563eb; }
+.kanban-card.operational .kanban-card-type { color: #64748b; }
+
+.kanban-card-title {
+    font-weight: 600;
+    font-size: 14px;
+    color: #1e293b;
+    margin-bottom: 8px;
+    line-height: 1.3;
+}
+
+.kanban-card-project {
+    font-size: 12px;
+    color: #64748b;
+    margin-bottom: 8px;
+}
+
+.kanban-card-due {
+    font-size: 11px;
+    padding: 4px 8px;
+    background: #f1f5f9;
+    border-radius: 4px;
+    display: inline-block;
+}
+
+.kanban-card-due.overdue {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+/* ========================================
+   PPT SLIDE STYLES
+   ======================================== */
+.pmo-modal-fullwidth {
+    width: 95%;
+    max-width: 1200px;
+}
+
+.ppt-nav-controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.ppt-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.ppt-body {
+    background: #f1f5f9;
+    padding: 24px;
+}
+
+.ppt-slide {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    padding: 32px;
+    aspect-ratio: 16/9;
+    max-height: calc(90vh - 150px);
+    overflow: auto;
+}
+
+.ppt-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 3px solid #E30613;
+}
+
+.ppt-header-left h2 {
+    font-size: 14px;
+    font-weight: 600;
+    color: #64748b;
+    margin: 0 0 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.ppt-header-left h1 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0;
+}
+
+.ppt-header-right {
+    text-align: right;
+    font-size: 13px;
+    color: #64748b;
+}
+
+.ppt-content {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 24px;
+}
+
+.ppt-summary {
+    background: #f8fafc;
+    border-radius: 8px;
+    padding: 16px;
+}
+
+.ppt-summary h3 {
+    font-size: 12px;
+    font-weight: 600;
+    color: #64748b;
+    text-transform: uppercase;
+    margin: 0 0 12px;
+}
+
+.ppt-summary ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.ppt-summary li {
+    padding: 8px 0;
+    border-bottom: 1px solid #e2e8f0;
+    font-size: 14px;
+    color: #334155;
+}
+
+.ppt-summary li:last-child {
+    border-bottom: none;
+}
+
+.ppt-summary li::before {
+    content: '•';
+    color: #E30613;
+    font-weight: 700;
+    margin-right: 8px;
+}
+
+.ppt-status-panel {
+    background: #f8fafc;
+    border-radius: 8px;
+    padding: 16px;
+}
+
+.ppt-main-status {
+    text-align: center;
+    margin-bottom: 16px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.ppt-main-status .label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #64748b;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
+
+.ppt-main-status .traffic-light {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    margin: 0 auto;
+}
+
+.ppt-main-status .traffic-light.green { background: #22c55e; }
+.ppt-main-status .traffic-light.yellow { background: #eab308; }
+.ppt-main-status .traffic-light.red { background: #ef4444; }
+
+.ppt-sub-status {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+}
+
+.ppt-sub-status-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: #475569;
+}
+
+.ppt-sub-status-item .dot {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+}
+
+.ppt-sub-status-item .dot.green { background: #22c55e; }
+.ppt-sub-status-item .dot.yellow { background: #eab308; }
+.ppt-sub-status-item .dot.red { background: #ef4444; }
+
+.ppt-history {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid #e2e8f0;
+}
+
+.ppt-history-label {
+    font-size: 11px;
+    color: #94a3b8;
+    margin-bottom: 8px;
+}
+
+.ppt-history-dots {
+    display: flex;
+    gap: 6px;
+    justify-content: center;
+}
+
+.ppt-history-dots .dot {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.ppt-sections {
+    margin-top: 24px;
+}
+
+.ppt-section {
+    background: #f8fafc;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 16px;
+}
+
+.ppt-section h4 {
+    font-size: 12px;
+    font-weight: 600;
+    color: #64748b;
+    text-transform: uppercase;
+    margin: 0 0 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.ppt-section p {
+    margin: 0;
+    font-size: 14px;
+    color: #334155;
+    line-height: 1.5;
+}
+
+.ppt-section-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+/* ========================================
+   DOCUMENTS / AI CHAT STYLES
+   ======================================== */
+.pmo-docs-container {
+    display: grid;
+    grid-template-columns: 400px 1fr;
+    gap: 24px;
+    min-height: 600px;
+}
+
+.pmo-docs-sidebar {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.pmo-upload-zone {
+    padding: 24px;
+    border: 2px dashed #e2e8f0;
+    border-radius: 8px;
+    margin: 16px;
+    text-align: center;
+    transition: all 0.2s;
+}
+
+.pmo-upload-zone:hover,
+.pmo-upload-zone.dragover {
+    border-color: #E30613;
+    background: #fef2f2;
+}
+
+.pmo-upload-zone svg {
+    color: #94a3b8;
+    margin-bottom: 8px;
+}
+
+.pmo-upload-zone p {
+    margin: 0 0 4px;
+    font-weight: 500;
+    color: #475569;
+}
+
+.pmo-upload-zone span {
+    font-size: 12px;
+    color: #94a3b8;
+}
+
+.pmo-docs-search {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    margin: 0 16px;
+    background: #f8fafc;
+    border-radius: 8px;
+}
+
+.pmo-docs-search svg {
+    color: #94a3b8;
+}
+
+.pmo-docs-search input {
+    flex: 1;
+    border: none;
+    background: none;
+    font-size: 14px;
+    outline: none;
+}
+
+.pmo-docs-filters {
+    display: flex;
+    gap: 8px;
+    padding: 12px 16px;
+}
+
+.pmo-docs-filters select {
+    flex: 1;
+    padding: 8px 10px;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    font-size: 13px;
+}
+
+.pmo-docs-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 16px 16px;
+}
+
+.pmo-docs-empty {
+    text-align: center;
+    color: #94a3b8;
+    padding: 40px 20px;
+}
+
+.pmo-doc-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background: #f8fafc;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.pmo-doc-item:hover {
+    background: #f1f5f9;
+}
+
+.pmo-doc-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.pmo-doc-icon.pdf { background: #fee2e2; color: #dc2626; }
+.pmo-doc-icon.docx { background: #dbeafe; color: #2563eb; }
+.pmo-doc-icon.xlsx { background: #dcfce7; color: #16a34a; }
+.pmo-doc-icon.pptx { background: #fef3c7; color: #d97706; }
+
+.pmo-doc-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.pmo-doc-name {
+    font-weight: 500;
+    font-size: 14px;
+    color: #1e293b;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.pmo-doc-meta {
+    font-size: 12px;
+    color: #94a3b8;
+}
+
+/* AI Chat */
+.pmo-ai-chat {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+}
+
+.pmo-ai-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 20px;
+    border-bottom: 1px solid #e2e8f0;
+    font-weight: 600;
+    font-size: 16px;
+    color: #1e293b;
+}
+
+.pmo-ai-header svg {
+    color: #E30613;
+}
+
+.pmo-ai-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.ai-message {
+    display: flex;
+    gap: 12px;
+}
+
+.ai-message.ai-user {
+    flex-direction: row-reverse;
+}
+
+.ai-message-content {
+    max-width: 80%;
+    padding: 12px 16px;
+    border-radius: 12px;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.ai-assistant .ai-message-content {
+    background: #f8fafc;
+    color: #334155;
+}
+
+.ai-user .ai-message-content {
+    background: #E30613;
+    color: white;
+}
+
+.pmo-ai-suggestions {
+    padding: 16px;
+    background: #f8fafc;
+    border-radius: 8px;
+}
+
+.pmo-ai-suggestions p {
+    margin: 0 0 10px;
+    font-size: 12px;
+    color: #64748b;
+}
+
+.pmo-ai-suggestions button {
+    display: block;
+    width: 100%;
+    padding: 10px 12px;
+    margin-bottom: 6px;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    text-align: left;
+    font-size: 13px;
+    color: #475569;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.pmo-ai-suggestions button:hover {
+    border-color: #E30613;
+    color: #E30613;
+}
+
+.pmo-ai-input {
+    display: flex;
+    gap: 12px;
+    padding: 16px 20px;
+    border-top: 1px solid #e2e8f0;
+}
+
+.pmo-ai-input input {
+    flex: 1;
+    padding: 12px 16px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 14px;
+    outline: none;
+}
+
+.pmo-ai-input input:focus {
+    border-color: #E30613;
+}
+
+.pmo-ai-input button {
+    padding: 12px 16px;
+    background: #E30613;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.pmo-ai-input button:hover {
+    background: #B8000F;
+}
+
+.pmo-ai-actions {
+    display: flex;
+    gap: 8px;
+    padding: 0 20px 16px;
+}
+
+/* Responsive for new features */
+@media (max-width: 1200px) {
+    .pmo-decisions-kanban {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .pmo-docs-container {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .pmo-decisions-kanban {
+        grid-template-columns: 1fr;
+    }
+
+    .pmo-gantt-controls {
+        flex-wrap: wrap;
+    }
+
+    .ppt-content {
+        grid-template-columns: 1fr;
     }
 }
 </style>
@@ -1537,6 +2760,9 @@ const PMO = {
         if (viewId === 'risiken') this.renderRisks();
         if (viewId === 'meilensteine') this.renderMilestones();
         if (viewId === 'timeline') this.renderTimeline();
+        if (viewId === 'gantt') this.renderGantt();
+        if (viewId === 'entscheidungen') this.renderDecisions();
+        if (viewId === 'dokumente') this.renderDocumentsList();
     },
 
     // Project Detail Modal
@@ -1577,6 +2803,13 @@ const PMO = {
                             <span class="pmo-workstream-name">${ws.name}</span>
                             <div class="pmo-workstream-status">
                                 <span class="pmo-mini-light ${wsStatus?.status?.overall || 'gray'}"></span>
+                                <button class="pmo-btn-sm" onclick="event.stopPropagation(); PMO.openPPTView('${ws.id}')" style="margin-left:8px;" title="PPT-Ansicht öffnen">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                                        <rect x="2" y="2" width="20" height="20" rx="2"/>
+                                        <path d="M9 8h6M9 12h6M9 16h4"/>
+                                    </svg>
+                                    PPT
+                                </button>
                             </div>
                         </div>
                     `;
@@ -1978,6 +3211,730 @@ const PMO = {
         if (!dateStr) return '-';
         const date = new Date(dateStr);
         return date.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    },
+
+    // ========================================
+    // GANTT CHART
+    // ========================================
+    ganttZoom: 'quarter',
+
+    setGanttZoom(zoom) {
+        this.ganttZoom = zoom;
+        document.querySelectorAll('.pmo-gantt-zoom .pmo-btn-sm').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        event.target.classList.add('active');
+        this.renderGantt();
+    },
+
+    renderGantt() {
+        const container = document.getElementById('pmo-gantt-container');
+        const projectFilter = document.getElementById('gantt-project-filter');
+        const statusFilter = document.getElementById('gantt-status-filter');
+
+        // Populate project filter if empty
+        if (projectFilter.options.length === 1) {
+            this.PROGRAM_STRUCTURE.projects.forEach(p => {
+                const option = document.createElement('option');
+                option.value = p.id;
+                option.textContent = `${p.id} - ${p.name}`;
+                projectFilter.appendChild(option);
+            });
+        }
+
+        // Collect all milestones
+        let allMilestones = [];
+        this.statusData.forEach(status => {
+            status.milestones.forEach(ms => {
+                allMilestones.push({
+                    ...ms,
+                    projectId: status.projectId,
+                    workstreamId: status.workstreamId
+                });
+            });
+        });
+
+        // Filter
+        if (projectFilter.value) {
+            allMilestones = allMilestones.filter(m => m.projectId === projectFilter.value);
+        }
+        if (statusFilter.value) {
+            allMilestones = allMilestones.filter(m => m.status === statusFilter.value);
+        }
+
+        // Remove duplicates
+        const seen = new Set();
+        allMilestones = allMilestones.filter(ms => {
+            const key = `${ms.workstreamId}_${ms.name}`;
+            if (seen.has(key)) return false;
+            seen.add(key);
+            return true;
+        });
+
+        // Calculate date range
+        const today = new Date();
+        let startDate, endDate, months;
+
+        if (this.ganttZoom === 'month') {
+            startDate = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+            endDate = new Date(today.getFullYear(), today.getMonth() + 2, 0);
+            months = 3;
+        } else if (this.ganttZoom === 'quarter') {
+            startDate = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+            endDate = new Date(today.getFullYear(), today.getMonth() + 4, 0);
+            months = 5;
+        } else {
+            startDate = new Date(today.getFullYear(), 0, 1);
+            endDate = new Date(today.getFullYear(), 11, 31);
+            months = 12;
+        }
+
+        const totalDays = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
+        const todayOffset = Math.ceil((today - startDate) / (1000 * 60 * 60 * 24));
+
+        // Generate month headers
+        const monthNames = ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'];
+        let monthHeaders = '';
+        for (let i = 0; i < months; i++) {
+            const d = new Date(startDate.getFullYear(), startDate.getMonth() + i, 1);
+            monthHeaders += `<div class="gantt-month">${monthNames[d.getMonth()]} ${d.getFullYear()}</div>`;
+        }
+
+        // Generate rows
+        let rows = '';
+        allMilestones.forEach(ms => {
+            const planned = new Date(ms.plannedDate);
+            const current = new Date(ms.currentEstimate || ms.plannedDate);
+
+            const plannedOffset = Math.ceil((planned - startDate) / (1000 * 60 * 60 * 24));
+            const currentOffset = Math.ceil((current - startDate) / (1000 * 60 * 60 * 24));
+            const barWidth = Math.max(20, Math.abs(currentOffset - plannedOffset) + 10);
+
+            let colorClass = 'green';
+            if (ms.status === 'Verzögert') colorClass = 'red';
+            else if (ms.status === 'Geschlossen') colorClass = 'gray';
+            else if (current > planned) colorClass = 'yellow';
+
+            const leftPercent = Math.max(0, Math.min(100, (Math.min(plannedOffset, currentOffset) / totalDays) * 100));
+            const widthPercent = Math.max(2, (barWidth / totalDays) * 100);
+
+            rows += `
+                <div class="gantt-row">
+                    <div class="gantt-row-label">
+                        <span class="project-id">${ms.workstreamId}</span>
+                        <span class="milestone-name">${ms.name}</span>
+                    </div>
+                    <div class="gantt-row-timeline">
+                        <div class="gantt-bar ${colorClass}" style="left: ${leftPercent}%; width: ${widthPercent}%;" title="${ms.name}: ${this.formatDate(ms.plannedDate)} → ${this.formatDate(ms.currentEstimate)}">
+                            ${ms.status === 'Geschlossen' ? '✓' : ''}
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+
+        const todayLine = (todayOffset >= 0 && todayOffset <= totalDays)
+            ? `<div class="gantt-today-line" style="left: calc(200px + ${(todayOffset / totalDays) * 100}% - 1px);"></div>`
+            : '';
+
+        container.innerHTML = `
+            <div class="gantt-chart">
+                <div class="gantt-header">
+                    <div class="gantt-label-column">Meilenstein</div>
+                    <div class="gantt-timeline">${monthHeaders}</div>
+                </div>
+                ${rows || '<p style="text-align:center;color:#94a3b8;padding:40px;">Keine Meilensteine gefunden</p>'}
+                ${todayLine}
+            </div>
+        `;
+    },
+
+    // ========================================
+    // DECISIONS MANAGEMENT
+    // ========================================
+    decisions: [],
+    decisionView: 'kanban',
+
+    loadDecisions() {
+        const stored = localStorage.getItem('pmo_decisions');
+        if (stored) {
+            this.decisions = JSON.parse(stored);
+        } else {
+            this.generateDemoDecisions();
+        }
+    },
+
+    saveDecisions() {
+        localStorage.setItem('pmo_decisions', JSON.stringify(this.decisions));
+    },
+
+    generateDemoDecisions() {
+        this.decisions = [
+            { id: 'dec1', type: 'strategic', title: 'Budget-Freigabe Phase 2 Rollout', projectId: 'A', dueDate: '2026-01-10', status: 'pending', description: 'Freigabe des Budgets für den Rollout der zweiten Phase', requestedBy: 'Projektleiter A', owner: 'Programmleitung' },
+            { id: 'dec2', type: 'strategic', title: 'Ressourcen-Aufstockung Recruiting', projectId: 'C', dueDate: '2026-01-05', status: 'escalated', description: 'Zusätzliche Recruiter für Zielerreichung', requestedBy: 'Projektleiter C', owner: 'Vorstand' },
+            { id: 'dec3', type: 'tactical', title: 'Vendor-Auswahl CRM-Integration', projectId: 'H', dueDate: '2026-01-15', status: 'pending', description: 'Auswahl des Implementierungspartners', requestedBy: 'IT-Leitung', owner: 'Programmleitung' },
+            { id: 'dec4', type: 'operational', title: 'Schulungskonzept Außendienst', projectId: 'G', dueDate: '2026-01-12', status: 'pending', description: 'Finale Freigabe des Schulungskonzepts', requestedBy: 'Change Manager', owner: 'Projektleitung' },
+            { id: 'dec5', type: 'tactical', title: 'Pilotregionen Auswahl', projectId: 'A', dueDate: '2025-12-28', status: 'approved', description: 'Festlegung der 3 Pilotregionen', requestedBy: 'Projektleiter A', owner: 'Programmleitung', result: 'München, Hamburg, Berlin ausgewählt' },
+            { id: 'dec6', type: 'tactical', title: 'Reporting-Format Standardisierung', projectId: 'B', dueDate: '2025-12-20', status: 'approved', description: 'Einheitliches Format für alle Reports', requestedBy: 'Projektleiter B', owner: 'Programmleitung', result: 'Neues Template genehmigt' }
+        ];
+        this.saveDecisions();
+    },
+
+    setDecisionView(view) {
+        this.decisionView = view;
+        document.querySelectorAll('.pmo-view-toggle .pmo-btn-sm').forEach(btn => btn.classList.remove('active'));
+        event.target.classList.add('active');
+
+        if (view === 'kanban') {
+            document.getElementById('pmo-decisions-kanban').style.display = 'grid';
+            document.getElementById('pmo-decisions-list').style.display = 'none';
+        } else {
+            document.getElementById('pmo-decisions-kanban').style.display = 'none';
+            document.getElementById('pmo-decisions-list').style.display = 'block';
+        }
+        this.renderDecisions();
+    },
+
+    renderDecisions() {
+        this.loadDecisions();
+        const projectFilter = document.getElementById('decisions-project-filter');
+
+        // Populate filter if empty
+        if (projectFilter.options.length === 1) {
+            this.PROGRAM_STRUCTURE.projects.forEach(p => {
+                const option = document.createElement('option');
+                option.value = p.id;
+                option.textContent = `${p.id} - ${p.name}`;
+                projectFilter.appendChild(option);
+            });
+        }
+
+        let filtered = this.decisions;
+        if (projectFilter.value) {
+            filtered = filtered.filter(d => d.projectId === projectFilter.value);
+        }
+
+        if (this.decisionView === 'kanban') {
+            this.renderKanban(filtered);
+        } else {
+            this.renderDecisionsList(filtered);
+        }
+    },
+
+    renderKanban(decisions) {
+        const columns = ['pending', 'escalated', 'approved', 'rejected'];
+        const today = new Date().toISOString().split('T')[0];
+
+        columns.forEach(status => {
+            const container = document.getElementById(`kanban-${status}`);
+            const count = document.getElementById(`kanban-count-${status}`);
+            const items = decisions.filter(d => d.status === status);
+
+            count.textContent = items.length;
+            container.innerHTML = items.map(d => {
+                const isOverdue = d.dueDate < today && status === 'pending';
+                const typeLabels = { strategic: 'Strategisch', tactical: 'Taktisch', operational: 'Operativ' };
+
+                return `
+                    <div class="kanban-card ${d.type}" onclick="PMO.editDecision('${d.id}')">
+                        <div class="kanban-card-type">${typeLabels[d.type]}</div>
+                        <div class="kanban-card-title">${d.title}</div>
+                        <div class="kanban-card-project">${d.projectId} - ${this.getProjectName(d.projectId)}</div>
+                        <div class="kanban-card-due ${isOverdue ? 'overdue' : ''}">
+                            Fällig: ${this.formatDate(d.dueDate)} ${isOverdue ? '⚠️' : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('') || '<p style="color:#94a3b8;font-size:13px;text-align:center;padding:20px;">Keine Einträge</p>';
+        });
+    },
+
+    renderDecisionsList(decisions) {
+        const tbody = document.getElementById('pmo-decisions-tbody');
+        const typeLabels = { strategic: 'Strategisch', tactical: 'Taktisch', operational: 'Operativ' };
+        const statusLabels = { pending: 'Ausstehend', escalated: 'Eskaliert', approved: 'Genehmigt', rejected: 'Abgelehnt', deferred: 'Vertagt' };
+
+        tbody.innerHTML = decisions.map(d => `
+            <tr>
+                <td><span class="pmo-type-badge" style="background:${d.type === 'strategic' ? '#E30613' : d.type === 'tactical' ? '#2563eb' : '#64748b'};color:white;">${typeLabels[d.type].charAt(0)}</span></td>
+                <td>${d.title}</td>
+                <td>${d.projectId}</td>
+                <td>${this.formatDate(d.dueDate)}</td>
+                <td><span class="pmo-status-badge ${d.status}">${statusLabels[d.status]}</span></td>
+                <td><button class="pmo-btn-sm" onclick="PMO.editDecision('${d.id}')">Bearbeiten</button></td>
+            </tr>
+        `).join('') || '<tr><td colspan="6" style="text-align:center;color:#94a3b8;">Keine Entscheidungen gefunden</td></tr>';
+    },
+
+    getProjectName(id) {
+        const project = this.PROGRAM_STRUCTURE.projects.find(p => p.id === id);
+        return project ? project.name : id;
+    },
+
+    openNewDecisionModal() {
+        document.getElementById('decision-modal-title').textContent = 'Neue Entscheidung';
+        document.getElementById('pmo-decision-form').reset();
+        document.getElementById('decision-id').value = '';
+
+        // Populate project select
+        const projectSelect = document.getElementById('decision-project');
+        if (projectSelect.options.length === 1) {
+            this.PROGRAM_STRUCTURE.projects.forEach(p => {
+                const option = document.createElement('option');
+                option.value = p.id;
+                option.textContent = `${p.id} - ${p.name}`;
+                projectSelect.appendChild(option);
+            });
+        }
+
+        document.getElementById('decision-due-date').value = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+        document.getElementById('pmo-decision-modal').classList.add('active');
+    },
+
+    editDecision(id) {
+        const decision = this.decisions.find(d => d.id === id);
+        if (!decision) return;
+
+        document.getElementById('decision-modal-title').textContent = 'Entscheidung bearbeiten';
+        document.getElementById('decision-id').value = decision.id;
+        document.getElementById('decision-type').value = decision.type;
+        document.getElementById('decision-title').value = decision.title;
+        document.getElementById('decision-description').value = decision.description || '';
+        document.getElementById('decision-due-date').value = decision.dueDate;
+        document.getElementById('decision-status').value = decision.status;
+        document.getElementById('decision-requested-by').value = decision.requestedBy || '';
+        document.getElementById('decision-owner').value = decision.owner || '';
+        document.getElementById('decision-result').value = decision.result || '';
+
+        // Populate and set project
+        const projectSelect = document.getElementById('decision-project');
+        if (projectSelect.options.length === 1) {
+            this.PROGRAM_STRUCTURE.projects.forEach(p => {
+                const option = document.createElement('option');
+                option.value = p.id;
+                option.textContent = `${p.id} - ${p.name}`;
+                projectSelect.appendChild(option);
+            });
+        }
+        projectSelect.value = decision.projectId;
+
+        document.getElementById('pmo-decision-modal').classList.add('active');
+    },
+
+    closeDecisionModal() {
+        document.getElementById('pmo-decision-modal').classList.remove('active');
+    },
+
+    saveDecision(event) {
+        event.preventDefault();
+
+        const id = document.getElementById('decision-id').value || `dec_${Date.now()}`;
+        const decision = {
+            id,
+            type: document.getElementById('decision-type').value,
+            title: document.getElementById('decision-title').value,
+            description: document.getElementById('decision-description').value,
+            projectId: document.getElementById('decision-project').value,
+            dueDate: document.getElementById('decision-due-date').value,
+            status: document.getElementById('decision-status').value,
+            requestedBy: document.getElementById('decision-requested-by').value,
+            owner: document.getElementById('decision-owner').value,
+            result: document.getElementById('decision-result').value
+        };
+
+        const existingIndex = this.decisions.findIndex(d => d.id === id);
+        if (existingIndex >= 0) {
+            this.decisions[existingIndex] = decision;
+        } else {
+            this.decisions.push(decision);
+        }
+
+        this.saveDecisions();
+        this.renderDecisions();
+        this.closeDecisionModal();
+    },
+
+    // ========================================
+    // PPT STATUS VIEW
+    // ========================================
+    pptCurrentStatus: null,
+    pptStatusHistory: [],
+    pptCurrentIndex: 0,
+
+    openPPTView(workstreamId) {
+        const wsStatuses = this.statusData
+            .filter(s => s.workstreamId === workstreamId)
+            .sort((a, b) => b.date.localeCompare(a.date));
+
+        if (wsStatuses.length === 0) {
+            alert('Keine Status-Daten für diesen Workstream gefunden.');
+            return;
+        }
+
+        this.pptStatusHistory = wsStatuses;
+        this.pptCurrentIndex = 0;
+        this.renderPPTSlide();
+        document.getElementById('pmo-ppt-modal').classList.add('active');
+    },
+
+    renderPPTSlide() {
+        const status = this.pptStatusHistory[this.pptCurrentIndex];
+        if (!status) return;
+
+        const project = this.PROGRAM_STRUCTURE.projects.find(p => p.id === status.projectId);
+        const ws = project?.workstreams.find(w => w.id === status.workstreamId);
+
+        document.getElementById('ppt-current-date').textContent = `Status vom ${this.formatDate(status.date)}`;
+
+        // Update navigation buttons
+        document.getElementById('ppt-prev-btn').disabled = this.pptCurrentIndex >= this.pptStatusHistory.length - 1;
+        document.getElementById('ppt-next-btn').disabled = this.pptCurrentIndex <= 0;
+
+        // History dots (last 4 weeks)
+        const historyDots = this.pptStatusHistory.slice(0, 4).map((s, i) => {
+            return `<div class="dot ${s.status.overall}" title="${this.formatDate(s.date)}">${i === 0 ? 'A' : `-${i}`}</div>`;
+        }).join('');
+
+        const slideContent = `
+            <div class="ppt-header">
+                <div class="ppt-header-left">
+                    <h2>CPE STATUS TEILPROJEKTE</h2>
+                    <h1>CPE – Teilprojekt ${status.workstreamId}: ${ws?.name || ''}</h1>
+                </div>
+                <div class="ppt-header-right">
+                    Status vom: ${this.formatDate(status.date)}
+                </div>
+            </div>
+
+            <div class="ppt-content">
+                <div class="ppt-left">
+                    <div class="ppt-summary">
+                        <h3>Management Summary</h3>
+                        <ul>
+                            ${status.summary.map(s => `<li>${s}</li>`).join('') || '<li>Kein Summary vorhanden</li>'}
+                        </ul>
+                    </div>
+
+                    <div class="ppt-sections">
+                        <div class="ppt-section">
+                            <h4>Projektfortschritt gegenüber Vorwoche</h4>
+                            <p>${status.progress || 'Keine Angabe'}</p>
+                        </div>
+
+                        <div class="ppt-section">
+                            <h4>Anstehende Aktivitäten</h4>
+                            <p>${status.upcoming || 'Keine Angabe'}</p>
+                        </div>
+
+                        <div class="ppt-section-grid">
+                            <div class="ppt-section">
+                                <h4>Risiken & Herausforderungen</h4>
+                                ${status.risksAndIssues.length > 0
+                                    ? status.risksAndIssues.map(r => `
+                                        <p style="margin-bottom:8px;">
+                                            <strong>${r.type}:</strong> ${r.description}
+                                            <br><small style="color:#64748b;">${r.status} | ${this.formatDate(r.targetDate)}</small>
+                                        </p>
+                                    `).join('')
+                                    : '<p style="color:#94a3b8;">Keine Risiken</p>'
+                                }
+                            </div>
+                            <div class="ppt-section">
+                                <h4>Meilensteine</h4>
+                                ${status.milestones.length > 0
+                                    ? status.milestones.map(m => `
+                                        <p style="margin-bottom:8px;">
+                                            ${m.status === 'Geschlossen' ? '✓' : m.status === 'Verzögert' ? '⚠️' : '⏳'} ${m.name}
+                                            <br><small style="color:#64748b;">${this.formatDate(m.currentEstimate || m.plannedDate)}</small>
+                                        </p>
+                                    `).join('')
+                                    : '<p style="color:#94a3b8;">Keine Meilensteine</p>'
+                                }
+                            </div>
+                        </div>
+
+                        ${status.decisions ? `
+                            <div class="ppt-section">
+                                <h4>Erforderliche Entscheidungen</h4>
+                                <p>${status.decisions}</p>
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+
+                <div class="ppt-status-panel">
+                    <div class="ppt-main-status">
+                        <div class="label">Status</div>
+                        <div class="traffic-light ${status.status.overall}"></div>
+                    </div>
+
+                    <div class="ppt-sub-status">
+                        <div class="ppt-sub-status-item"><div class="dot ${status.status.budget}"></div> Budget</div>
+                        <div class="ppt-sub-status-item"><div class="dot ${status.status.scope}"></div> Scope</div>
+                        <div class="ppt-sub-status-item"><div class="dot ${status.status.time}"></div> Zeit</div>
+                        <div class="ppt-sub-status-item"><div class="dot ${status.status.resources}"></div> Ressourcen</div>
+                        <div class="ppt-sub-status-item"><div class="dot ${status.status.risks}"></div> Risiken</div>
+                    </div>
+
+                    <div class="ppt-history">
+                        <div class="ppt-history-label">Vorwochen</div>
+                        <div class="ppt-history-dots">
+                            ${historyDots}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        document.getElementById('ppt-slide-content').innerHTML = slideContent;
+    },
+
+    pptPrevWeek() {
+        if (this.pptCurrentIndex < this.pptStatusHistory.length - 1) {
+            this.pptCurrentIndex++;
+            this.renderPPTSlide();
+        }
+    },
+
+    pptNextWeek() {
+        if (this.pptCurrentIndex > 0) {
+            this.pptCurrentIndex--;
+            this.renderPPTSlide();
+        }
+    },
+
+    closePPTModal() {
+        document.getElementById('pmo-ppt-modal').classList.remove('active');
+    },
+
+    editPPTStatus() {
+        const status = this.pptStatusHistory[this.pptCurrentIndex];
+        if (!status) return;
+
+        this.closePPTModal();
+        this.openStatusModalForProject(status.projectId);
+        document.getElementById('status-workstream').value = status.workstreamId;
+    },
+
+    exportPPT() {
+        alert('PPT-Export wird in Kürze verfügbar sein.\n\nFür den Export ist die pptxgenjs Library erforderlich.');
+    },
+
+    exportPDF() {
+        window.print();
+    },
+
+    // ========================================
+    // DOCUMENTS / AI ASSISTANT
+    // ========================================
+    documents: [],
+    aiMessages: [],
+
+    loadDocuments() {
+        const stored = localStorage.getItem('pmo_documents');
+        if (stored) {
+            this.documents = JSON.parse(stored);
+        }
+    },
+
+    saveDocuments() {
+        localStorage.setItem('pmo_documents', JSON.stringify(this.documents));
+    },
+
+    handleDragOver(event) {
+        event.preventDefault();
+        document.getElementById('pmo-upload-zone').classList.add('dragover');
+    },
+
+    handleDragLeave(event) {
+        document.getElementById('pmo-upload-zone').classList.remove('dragover');
+    },
+
+    handleDrop(event) {
+        event.preventDefault();
+        document.getElementById('pmo-upload-zone').classList.remove('dragover');
+        const files = event.dataTransfer.files;
+        this.processFiles(files);
+    },
+
+    handleFileSelect(event) {
+        const files = event.target.files;
+        this.processFiles(files);
+    },
+
+    processFiles(files) {
+        Array.from(files).forEach(file => {
+            const ext = file.name.split('.').pop().toLowerCase();
+            const doc = {
+                id: `doc_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+                name: file.name,
+                type: ext,
+                size: file.size,
+                uploadDate: new Date().toISOString(),
+                projectId: '',
+                content: '' // In a real app, we would extract text content here
+            };
+            this.documents.push(doc);
+        });
+
+        this.saveDocuments();
+        this.renderDocumentsList();
+    },
+
+    renderDocumentsList() {
+        this.loadDocuments();
+        const container = document.getElementById('pmo-docs-list');
+        const projectFilter = document.getElementById('docs-project-filter');
+        const typeFilter = document.getElementById('docs-type-filter');
+
+        // Populate project filter
+        if (projectFilter.options.length === 1) {
+            this.PROGRAM_STRUCTURE.projects.forEach(p => {
+                const option = document.createElement('option');
+                option.value = p.id;
+                option.textContent = `${p.id} - ${p.name}`;
+                projectFilter.appendChild(option);
+            });
+        }
+
+        let filtered = this.documents;
+        if (projectFilter.value) {
+            filtered = filtered.filter(d => d.projectId === projectFilter.value);
+        }
+        if (typeFilter.value) {
+            filtered = filtered.filter(d => d.type === typeFilter.value);
+        }
+
+        if (filtered.length === 0) {
+            container.innerHTML = '<p class="pmo-docs-empty">Noch keine Dokumente hochgeladen</p>';
+            return;
+        }
+
+        container.innerHTML = filtered.map(doc => {
+            const sizeKB = Math.round(doc.size / 1024);
+            return `
+                <div class="pmo-doc-item" onclick="PMO.previewDocument('${doc.id}')">
+                    <div class="pmo-doc-icon ${doc.type}">${doc.type.toUpperCase()}</div>
+                    <div class="pmo-doc-info">
+                        <div class="pmo-doc-name">${doc.name}</div>
+                        <div class="pmo-doc-meta">${sizeKB} KB • ${this.formatDate(doc.uploadDate)}</div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    },
+
+    filterDocuments() {
+        this.renderDocumentsList();
+    },
+
+    searchDocuments() {
+        const query = document.getElementById('docs-search-input').value.toLowerCase();
+        if (query.length < 2) {
+            this.renderDocumentsList();
+            return;
+        }
+
+        const container = document.getElementById('pmo-docs-list');
+        const filtered = this.documents.filter(d => d.name.toLowerCase().includes(query));
+
+        container.innerHTML = filtered.map(doc => {
+            const sizeKB = Math.round(doc.size / 1024);
+            return `
+                <div class="pmo-doc-item">
+                    <div class="pmo-doc-icon ${doc.type}">${doc.type.toUpperCase()}</div>
+                    <div class="pmo-doc-info">
+                        <div class="pmo-doc-name">${doc.name}</div>
+                        <div class="pmo-doc-meta">${sizeKB} KB • ${this.formatDate(doc.uploadDate)}</div>
+                    </div>
+                </div>
+            `;
+        }).join('') || '<p class="pmo-docs-empty">Keine Dokumente gefunden</p>';
+    },
+
+    previewDocument(id) {
+        const doc = this.documents.find(d => d.id === id);
+        if (doc) {
+            this.addAIMessage('assistant', `Du hast "${doc.name}" ausgewählt. Stelle mir Fragen zu diesem Dokument.`);
+        }
+    },
+
+    askAI(question) {
+        document.getElementById('pmo-ai-input').value = question;
+        this.sendAIMessage();
+    },
+
+    sendAIMessage() {
+        const input = document.getElementById('pmo-ai-input');
+        const message = input.value.trim();
+        if (!message) return;
+
+        this.addAIMessage('user', message);
+        input.value = '';
+
+        // Simulate AI response (in real app, call API)
+        setTimeout(() => {
+            const response = this.generateAIResponse(message);
+            this.addAIMessage('assistant', response);
+        }, 500);
+    },
+
+    addAIMessage(role, content) {
+        const container = document.getElementById('pmo-ai-messages');
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `ai-message ai-${role}`;
+        messageDiv.innerHTML = `<div class="ai-message-content"><p>${content}</p></div>`;
+        container.appendChild(messageDiv);
+        container.scrollTop = container.scrollHeight;
+    },
+
+    generateAIResponse(question) {
+        const q = question.toLowerCase();
+
+        if (q.includes('risiko') || q.includes('risiken')) {
+            const allRisks = [];
+            this.statusData.forEach(s => {
+                s.risksAndIssues.forEach(r => {
+                    if (r.status !== 'Geschlossen') {
+                        allRisks.push(`• ${s.projectId}/${s.workstreamId}: ${r.description}`);
+                    }
+                });
+            });
+            return `Ich habe ${allRisks.length} offene Risiken gefunden:\n\n${allRisks.slice(0, 5).join('\n')}\n\n${allRisks.length > 5 ? `... und ${allRisks.length - 5} weitere.` : ''}`;
+        }
+
+        if (q.includes('meilenstein') || q.includes('milestone')) {
+            const upcoming = [];
+            const today = new Date();
+            this.statusData.forEach(s => {
+                s.milestones.forEach(m => {
+                    if (m.status !== 'Geschlossen' && new Date(m.currentEstimate || m.plannedDate) > today) {
+                        upcoming.push(`• ${s.workstreamId} - ${m.name}: ${this.formatDate(m.currentEstimate || m.plannedDate)}`);
+                    }
+                });
+            });
+            return `Kommende Meilensteine:\n\n${upcoming.slice(0, 5).join('\n') || 'Keine anstehenden Meilensteine gefunden.'}`;
+        }
+
+        if (q.includes('entscheidung') || q.includes('decision')) {
+            const pending = this.decisions.filter(d => d.status === 'pending' || d.status === 'escalated');
+            return `${pending.length} Entscheidungen sind ausstehend:\n\n${pending.slice(0, 5).map(d => `• ${d.title} (${d.projectId}, fällig: ${this.formatDate(d.dueDate)})`).join('\n')}`;
+        }
+
+        if (q.includes('zusammenfassung') || q.includes('status') || q.includes('summary')) {
+            const latest = this.getLatestStatuses();
+            const green = latest.filter(s => s.status.overall === 'green').length;
+            const yellow = latest.filter(s => s.status.overall === 'yellow').length;
+            const red = latest.filter(s => s.status.overall === 'red').length;
+
+            return `📊 Programmstatus Sales Excellence:\n\n` +
+                `• 🟢 ${green} Workstreams im Plan\n` +
+                `• 🟡 ${yellow} Workstreams mit Einschränkungen\n` +
+                `• 🔴 ${red} Workstreams kritisch\n\n` +
+                `Gesamt: ${latest.length} aktive Workstreams über 8 Projekte.`;
+        }
+
+        return 'Ich kann dir bei Fragen zu Risiken, Meilensteinen, Entscheidungen oder dem Gesamtstatus helfen. Versuche es mit einer spezifischeren Frage.';
     }
 };
 

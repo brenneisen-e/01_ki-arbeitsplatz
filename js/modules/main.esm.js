@@ -13,16 +13,20 @@ import './config.esm.js';
 import './state.esm.js';
 import './utils.esm.js';
 import './data-functions.esm.js';
+import './charts.esm.js';
+import './tables.esm.js';
 
 // Log successful load
 console.log('═══════════════════════════════════════════');
 console.log('  ES6 Modules loaded successfully!');
 console.log('═══════════════════════════════════════════');
 console.log('  Modules:');
-console.log('  ✓ config.esm.js     - KPI definitions, factors');
-console.log('  ✓ state.esm.js      - Application state');
-console.log('  ✓ utils.esm.js      - Utility functions');
+console.log('  ✓ config.esm.js         - KPI definitions, factors');
+console.log('  ✓ state.esm.js          - Application state');
+console.log('  ✓ utils.esm.js          - Utility functions');
 console.log('  ✓ data-functions.esm.js - Data access');
+console.log('  ✓ charts.esm.js         - Chart rendering');
+console.log('  ✓ tables.esm.js         - Table rendering');
 console.log('═══════════════════════════════════════════');
 
 // Verify bridge is working
@@ -31,7 +35,9 @@ if (typeof window !== 'undefined') {
         ['kpiDefinitions', window.kpiDefinitions],
         ['state', window.state],
         ['formatValue', window.formatValue],
-        ['getFilteredData', window.getFilteredData]
+        ['getFilteredData', window.getFilteredData],
+        ['createChart', window.createChart],
+        ['renderTable', window.renderTable]
     ];
 
     let allOk = true;

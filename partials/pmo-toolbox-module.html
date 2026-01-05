@@ -92,8 +92,137 @@
 
     <!-- Main Content Area -->
     <div class="pmo-content">
+        <!-- Landing / Stream Selection View -->
+        <div id="pmo-landing" class="pmo-view active">
+            <div class="pmo-landing-container">
+                <div class="pmo-landing-header">
+                    <h2>Willkommen zur PMO Toolbox</h2>
+                    <p>Wählen Sie Ihren Workstream aus, um loszulegen</p>
+                </div>
+
+                <div class="pmo-stream-grid" id="pmo-stream-grid">
+                    <!-- Stream cards will be rendered here -->
+                </div>
+
+                <div class="pmo-landing-footer">
+                    <button class="pmo-btn pmo-btn-secondary" onclick="PMO.skipLanding()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                            <rect x="3" y="3" width="7" height="7"></rect>
+                            <rect x="14" y="3" width="7" height="7"></rect>
+                            <rect x="14" y="14" width="7" height="7"></rect>
+                            <rect x="3" y="14" width="7" height="7"></rect>
+                        </svg>
+                        Zum Gesamt-Dashboard
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- My Workstream View (appears after stream selection) -->
+        <div id="pmo-my-workstream" class="pmo-view">
+            <div class="pmo-my-header">
+                <div class="pmo-my-header-left">
+                    <button class="pmo-btn pmo-btn-icon" onclick="PMO.showLanding()" title="Stream wechseln">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                            <path d="M19 12H5M12 19l-7-7 7-7"/>
+                        </svg>
+                    </button>
+                    <div class="pmo-my-workstream-info">
+                        <span class="pmo-my-workstream-id" id="my-ws-id">A1</span>
+                        <div>
+                            <h3 id="my-ws-name">Workstream Name</h3>
+                            <p id="my-ws-project">Projekt A - Hybrider Kunde</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="pmo-my-header-right">
+                    <button class="pmo-btn pmo-btn-primary" onclick="PMO.addNewStatus()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                            <path d="M12 5v14M5 12h14"/>
+                        </svg>
+                        Neuen Status abgeben
+                    </button>
+                    <button class="pmo-btn pmo-btn-secondary" onclick="PMO.exportMyPPT()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                            <rect x="2" y="2" width="20" height="20" rx="2"/>
+                            <path d="M9 8h6M9 12h6M9 16h4"/>
+                        </svg>
+                        PPT Export
+                    </button>
+                </div>
+            </div>
+
+            <!-- Current Status Card -->
+            <div class="pmo-my-section">
+                <h4 class="pmo-my-section-title">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <path d="M12 6v6l4 2"></path>
+                    </svg>
+                    Aktueller Status
+                </h4>
+                <div class="pmo-my-status-card" id="my-current-status">
+                    <!-- Current status will be rendered here -->
+                </div>
+            </div>
+
+            <!-- Status History -->
+            <div class="pmo-my-section">
+                <h4 class="pmo-my-section-title">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                        <polyline points="23 4 23 10 17 10"></polyline>
+                        <path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"></path>
+                    </svg>
+                    Status-Historie
+                </h4>
+                <div class="pmo-my-history" id="my-status-history">
+                    <!-- History will be rendered here -->
+                </div>
+            </div>
+
+            <!-- Milestones -->
+            <div class="pmo-my-section">
+                <h4 class="pmo-my-section-title">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                        <path d="M22 11.08V12a10 10 0 11-5.93-9.14"></path>
+                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                    </svg>
+                    Meilensteine
+                    <button class="pmo-btn-sm" onclick="PMO.addMilestone()" style="margin-left: auto;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                            <path d="M12 5v14M5 12h14"/>
+                        </svg>
+                        Hinzufügen
+                    </button>
+                </h4>
+                <div class="pmo-my-milestones" id="my-milestones">
+                    <!-- Milestones will be rendered here -->
+                </div>
+            </div>
+
+            <!-- Tasks -->
+            <div class="pmo-my-section">
+                <h4 class="pmo-my-section-title">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                        <path d="M9 11l3 3L22 4"></path>
+                        <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"></path>
+                    </svg>
+                    Aufgaben
+                    <button class="pmo-btn-sm" onclick="PMO.addTask()" style="margin-left: auto;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                            <path d="M12 5v14M5 12h14"/>
+                        </svg>
+                        Hinzufügen
+                    </button>
+                </h4>
+                <div class="pmo-my-tasks" id="my-tasks">
+                    <!-- Tasks will be rendered here -->
+                </div>
+            </div>
+        </div>
+
         <!-- Dashboard View -->
-        <div id="pmo-dashboard" class="pmo-view active">
+        <div id="pmo-dashboard" class="pmo-view">
             <!-- Quick Stats -->
             <div class="pmo-quick-stats">
                 <div class="pmo-stat-card">
@@ -2407,6 +2536,499 @@
         grid-template-columns: 1fr;
     }
 }
+
+/* Landing Page Styles */
+.pmo-landing-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 24px;
+}
+
+.pmo-landing-header {
+    text-align: center;
+    margin-bottom: 48px;
+}
+
+.pmo-landing-header h2 {
+    font-size: 32px;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0 0 12px;
+}
+
+.pmo-landing-header p {
+    font-size: 16px;
+    color: #64748b;
+    margin: 0;
+}
+
+.pmo-stream-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+.pmo-stream-card {
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 2px solid transparent;
+}
+
+.pmo-stream-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    border-color: #C8102E;
+}
+
+.pmo-stream-card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.pmo-stream-id {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #C8102E, #a00d24);
+    color: white;
+    font-size: 14px;
+    font-weight: 700;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pmo-stream-status {
+    margin-left: auto;
+}
+
+.pmo-stream-card h4 {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0 0 8px;
+    line-height: 1.4;
+}
+
+.pmo-stream-card p {
+    font-size: 12px;
+    color: #64748b;
+    margin: 0;
+    line-height: 1.4;
+}
+
+.pmo-stream-project-label {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    color: #64748b;
+    background: #f1f5f9;
+    padding: 4px 8px;
+    border-radius: 4px;
+    margin-top: 12px;
+}
+
+.pmo-landing-footer {
+    text-align: center;
+}
+
+/* My Workstream View Styles */
+.pmo-my-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    margin-bottom: 24px;
+}
+
+.pmo-my-header-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.pmo-my-workstream-info {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.pmo-my-workstream-id {
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, #C8102E, #a00d24);
+    color: white;
+    font-size: 16px;
+    font-weight: 700;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pmo-my-workstream-info h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0 0 4px;
+}
+
+.pmo-my-workstream-info p {
+    font-size: 13px;
+    color: #64748b;
+    margin: 0;
+}
+
+.pmo-my-header-right {
+    display: flex;
+    gap: 12px;
+}
+
+.pmo-btn-icon {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    background: #f1f5f9;
+    border: none;
+    cursor: pointer;
+    color: #64748b;
+    transition: all 0.2s;
+}
+
+.pmo-btn-icon:hover {
+    background: #e2e8f0;
+    color: #1e293b;
+}
+
+.pmo-my-section {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    margin-bottom: 24px;
+}
+
+.pmo-my-section-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0 0 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.pmo-my-section-title svg {
+    color: #64748b;
+}
+
+/* Current Status Card */
+.pmo-my-status-card {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 24px;
+}
+
+.pmo-status-lights {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px;
+    background: #f8fafc;
+    border-radius: 12px;
+}
+
+.pmo-status-light-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: #64748b;
+}
+
+.pmo-status-light-row .pmo-traffic-light {
+    width: 20px;
+    height: 20px;
+}
+
+.pmo-status-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.pmo-status-detail-item h5 {
+    font-size: 12px;
+    font-weight: 600;
+    color: #64748b;
+    text-transform: uppercase;
+    margin: 0 0 8px;
+}
+
+.pmo-status-detail-item p {
+    font-size: 14px;
+    color: #1e293b;
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* Status History */
+.pmo-my-history {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.pmo-history-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+    background: #f8fafc;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.pmo-history-item:hover {
+    background: #f1f5f9;
+}
+
+.pmo-history-date {
+    font-size: 13px;
+    font-weight: 600;
+    color: #64748b;
+    min-width: 100px;
+}
+
+.pmo-history-summary {
+    flex: 1;
+    font-size: 14px;
+    color: #1e293b;
+}
+
+.pmo-history-status {
+    display: flex;
+    gap: 8px;
+}
+
+/* Milestones */
+.pmo-my-milestones {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.pmo-milestone-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+    background: #f8fafc;
+    border-radius: 12px;
+    transition: all 0.2s;
+}
+
+.pmo-milestone-item:hover {
+    background: #f1f5f9;
+}
+
+.pmo-milestone-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #e2e8f0;
+    color: #64748b;
+}
+
+.pmo-milestone-icon.completed {
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+.pmo-milestone-icon.delayed {
+    background: #fef3c7;
+    color: #d97706;
+}
+
+.pmo-milestone-icon.critical {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.pmo-milestone-info {
+    flex: 1;
+}
+
+.pmo-milestone-info h5 {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0 0 4px;
+}
+
+.pmo-milestone-info p {
+    font-size: 12px;
+    color: #64748b;
+    margin: 0;
+}
+
+.pmo-milestone-dates {
+    text-align: right;
+}
+
+.pmo-milestone-dates .planned {
+    font-size: 12px;
+    color: #64748b;
+    margin: 0 0 4px;
+}
+
+.pmo-milestone-dates .current {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0;
+}
+
+.pmo-milestone-actions {
+    display: flex;
+    gap: 8px;
+}
+
+/* Tasks */
+.pmo-my-tasks {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.pmo-task-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background: #f8fafc;
+    border-radius: 10px;
+    transition: all 0.2s;
+}
+
+.pmo-task-item:hover {
+    background: #f1f5f9;
+}
+
+.pmo-task-checkbox {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #cbd5e1;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.pmo-task-checkbox.checked {
+    background: #16a34a;
+    border-color: #16a34a;
+    color: white;
+}
+
+.pmo-task-info {
+    flex: 1;
+}
+
+.pmo-task-info h5 {
+    font-size: 14px;
+    font-weight: 500;
+    color: #1e293b;
+    margin: 0;
+}
+
+.pmo-task-info.completed h5 {
+    color: #94a3b8;
+    text-decoration: line-through;
+}
+
+.pmo-task-due {
+    font-size: 12px;
+    color: #64748b;
+}
+
+.pmo-task-due.overdue {
+    color: #dc2626;
+    font-weight: 600;
+}
+
+.pmo-empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: #94a3b8;
+}
+
+.pmo-empty-state svg {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 16px;
+    opacity: 0.5;
+}
+
+.pmo-empty-state p {
+    margin: 0;
+    font-size: 14px;
+}
+
+@media (max-width: 1200px) {
+    .pmo-stream-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 900px) {
+    .pmo-stream-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .pmo-my-header {
+        flex-direction: column;
+        gap: 16px;
+        align-items: flex-start;
+    }
+
+    .pmo-my-header-right {
+        width: 100%;
+        justify-content: flex-end;
+    }
+
+    .pmo-my-status-card {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 600px) {
+    .pmo-stream-grid {
+        grid-template-columns: 1fr;
+    }
+}
 </style>
 
 <!-- pptxgenjs Library for PowerPoint Export -->
@@ -2505,17 +3127,463 @@ const PMO = {
 
     // State
     statusData: [],
-    currentView: 'dashboard',
+    currentView: 'landing',
+    currentWorkstream: null,
+    tasks: [],
+    milestones: [],
     selectedTrafficLights: {},
 
     // Initialize
     init() {
         console.log('🚀 PMO Toolbox initialisiert');
         this.loadData();
-        this.renderDashboard();
+        this.loadTasks();
+        this.loadMilestones();
+        this.renderLandingPage();
         this.setupEventListeners();
         this.populateProjectSelect();
         this.setDefaultDate();
+
+        // Check if user has a saved workstream preference
+        const savedWs = localStorage.getItem('pmo_current_workstream');
+        if (savedWs) {
+            this.selectWorkstream(savedWs);
+        }
+    },
+
+    // Load tasks from localStorage
+    loadTasks() {
+        const stored = localStorage.getItem('pmo_tasks');
+        if (stored) {
+            this.tasks = JSON.parse(stored);
+        } else {
+            this.tasks = [];
+        }
+    },
+
+    // Save tasks to localStorage
+    saveTasks() {
+        localStorage.setItem('pmo_tasks', JSON.stringify(this.tasks));
+    },
+
+    // Load milestones from localStorage
+    loadMilestones() {
+        const stored = localStorage.getItem('pmo_milestones');
+        if (stored) {
+            this.milestones = JSON.parse(stored);
+        } else {
+            this.milestones = [];
+        }
+    },
+
+    // Save milestones to localStorage
+    saveMilestones() {
+        localStorage.setItem('pmo_milestones', JSON.stringify(this.milestones));
+    },
+
+    // Render Landing Page
+    renderLandingPage() {
+        const grid = document.getElementById('pmo-stream-grid');
+        if (!grid) return;
+
+        let html = '';
+        this.PROGRAM_STRUCTURE.projects.forEach(project => {
+            project.workstreams.forEach(ws => {
+                const status = this.getWorkstreamLatestStatus(ws.id);
+                html += `
+                    <div class="pmo-stream-card" onclick="PMO.selectWorkstream('${ws.id}')">
+                        <div class="pmo-stream-card-header">
+                            <span class="pmo-stream-id">${ws.id}</span>
+                            <div class="pmo-stream-status">
+                                <div class="pmo-traffic-light ${status?.status?.overall || 'gray'}"></div>
+                            </div>
+                        </div>
+                        <h4>${ws.name}</h4>
+                        <span class="pmo-stream-project-label">Projekt ${project.id} - ${project.name}</span>
+                    </div>
+                `;
+            });
+        });
+
+        grid.innerHTML = html;
+    },
+
+    // Select a workstream
+    selectWorkstream(wsId) {
+        this.currentWorkstream = wsId;
+        localStorage.setItem('pmo_current_workstream', wsId);
+
+        // Find workstream info
+        let wsInfo = null;
+        let projectInfo = null;
+        for (const project of this.PROGRAM_STRUCTURE.projects) {
+            const ws = project.workstreams.find(w => w.id === wsId);
+            if (ws) {
+                wsInfo = ws;
+                projectInfo = project;
+                break;
+            }
+        }
+
+        if (wsInfo && projectInfo) {
+            document.getElementById('my-ws-id').textContent = wsId;
+            document.getElementById('my-ws-name').textContent = wsInfo.name;
+            document.getElementById('my-ws-project').textContent = `Projekt ${projectInfo.id} - ${projectInfo.name}`;
+        }
+
+        this.renderMyWorkstream();
+        this.showView('my-workstream');
+    },
+
+    // Show landing page
+    showLanding() {
+        this.currentWorkstream = null;
+        localStorage.removeItem('pmo_current_workstream');
+        this.showViewInternal('landing');
+    },
+
+    // Skip landing and go to dashboard
+    skipLanding() {
+        this.showView('dashboard');
+        this.renderDashboard();
+    },
+
+    // Render My Workstream View
+    renderMyWorkstream() {
+        if (!this.currentWorkstream) return;
+
+        this.renderCurrentStatus();
+        this.renderStatusHistory();
+        this.renderMyMilestones();
+        this.renderMyTasks();
+    },
+
+    // Render current status
+    renderCurrentStatus() {
+        const container = document.getElementById('my-current-status');
+        if (!container) return;
+
+        const status = this.getWorkstreamLatestStatus(this.currentWorkstream);
+
+        if (!status) {
+            container.innerHTML = `
+                <div class="pmo-empty-state">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <path d="M12 6v6l4 2"></path>
+                    </svg>
+                    <p>Noch kein Status vorhanden. Erstellen Sie Ihren ersten Status!</p>
+                </div>
+            `;
+            return;
+        }
+
+        container.innerHTML = `
+            <div class="pmo-status-lights">
+                <div class="pmo-status-light-row">
+                    <div class="pmo-traffic-light ${status.status?.overall || 'gray'}"></div>
+                    <span>Gesamt</span>
+                </div>
+                <div class="pmo-status-light-row">
+                    <div class="pmo-traffic-light ${status.status?.budget || 'gray'}"></div>
+                    <span>Budget</span>
+                </div>
+                <div class="pmo-status-light-row">
+                    <div class="pmo-traffic-light ${status.status?.scope || 'gray'}"></div>
+                    <span>Scope</span>
+                </div>
+                <div class="pmo-status-light-row">
+                    <div class="pmo-traffic-light ${status.status?.time || 'gray'}"></div>
+                    <span>Zeit</span>
+                </div>
+                <div class="pmo-status-light-row">
+                    <div class="pmo-traffic-light ${status.status?.resources || 'gray'}"></div>
+                    <span>Ressourcen</span>
+                </div>
+            </div>
+            <div class="pmo-status-details">
+                <div class="pmo-status-detail-item">
+                    <h5>Fortschritt</h5>
+                    <p>${status.progress || 'Keine Angabe'}</p>
+                </div>
+                <div class="pmo-status-detail-item">
+                    <h5>Nächste Schritte</h5>
+                    <p>${status.upcoming || 'Keine Angabe'}</p>
+                </div>
+                <div class="pmo-status-detail-item">
+                    <h5>Letzte Aktualisierung</h5>
+                    <p>${this.formatDate(status.date)}</p>
+                </div>
+                <div class="pmo-status-detail-item">
+                    <h5>Offene Risiken</h5>
+                    <p>${status.risksAndIssues?.filter(r => r.status !== 'Geschlossen').length || 0} Risiken offen</p>
+                </div>
+            </div>
+        `;
+    },
+
+    // Render status history
+    renderStatusHistory() {
+        const container = document.getElementById('my-status-history');
+        if (!container) return;
+
+        const history = this.statusData
+            .filter(s => s.workstreamId === this.currentWorkstream)
+            .sort((a, b) => b.date.localeCompare(a.date))
+            .slice(0, 10);
+
+        if (history.length === 0) {
+            container.innerHTML = `
+                <div class="pmo-empty-state">
+                    <p>Keine Historie vorhanden</p>
+                </div>
+            `;
+            return;
+        }
+
+        container.innerHTML = history.map(s => `
+            <div class="pmo-history-item" onclick="PMO.viewHistoryDetail('${s.id}')">
+                <span class="pmo-history-date">${this.formatDate(s.date)}</span>
+                <span class="pmo-history-summary">${s.progress || 'Status Update'}</span>
+                <div class="pmo-history-status">
+                    <div class="pmo-traffic-light ${s.status?.overall || 'gray'}" style="width:16px;height:16px;"></div>
+                </div>
+            </div>
+        `).join('');
+    },
+
+    // View history detail
+    viewHistoryDetail(statusId) {
+        const status = this.statusData.find(s => s.id === statusId);
+        if (!status) return;
+
+        // Open PPT view for this status
+        this.openPPTView(this.currentWorkstream, status);
+    },
+
+    // Render milestones for my workstream
+    renderMyMilestones() {
+        const container = document.getElementById('my-milestones');
+        if (!container) return;
+
+        // Get milestones from status data and custom milestones
+        const statusMilestones = [];
+        const latestStatus = this.getWorkstreamLatestStatus(this.currentWorkstream);
+        if (latestStatus?.milestones) {
+            statusMilestones.push(...latestStatus.milestones);
+        }
+
+        const customMilestones = this.milestones.filter(m => m.workstreamId === this.currentWorkstream);
+        const allMilestones = [...statusMilestones, ...customMilestones];
+
+        if (allMilestones.length === 0) {
+            container.innerHTML = `
+                <div class="pmo-empty-state">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 11.08V12a10 10 0 11-5.93-9.14"></path>
+                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                    </svg>
+                    <p>Keine Meilensteine definiert</p>
+                </div>
+            `;
+            return;
+        }
+
+        container.innerHTML = allMilestones.map((m, idx) => {
+            const iconClass = m.status === 'Geschlossen' ? 'completed' :
+                              m.status === 'Verzögert' ? 'delayed' : '';
+            return `
+                <div class="pmo-milestone-item">
+                    <div class="pmo-milestone-icon ${iconClass}">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                            ${m.status === 'Geschlossen' ?
+                                '<path d="M22 11.08V12a10 10 0 11-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline>' :
+                                '<circle cx="12" cy="12" r="10"></circle><path d="M12 6v6l4 2"></path>'}
+                        </svg>
+                    </div>
+                    <div class="pmo-milestone-info">
+                        <h5>${m.name}</h5>
+                        <p>Status: ${m.status || 'Im Plan'}</p>
+                    </div>
+                    <div class="pmo-milestone-dates">
+                        <p class="planned">Geplant: ${this.formatDate(m.plannedDate)}</p>
+                        <p class="current">Aktuell: ${this.formatDate(m.currentEstimate || m.plannedDate)}</p>
+                    </div>
+                    <div class="pmo-milestone-actions">
+                        <button class="pmo-btn-sm" onclick="PMO.editMilestone(${idx})" title="Bearbeiten">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                                <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"></path>
+                                <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    },
+
+    // Render tasks for my workstream
+    renderMyTasks() {
+        const container = document.getElementById('my-tasks');
+        if (!container) return;
+
+        const myTasks = this.tasks.filter(t => t.workstreamId === this.currentWorkstream);
+
+        if (myTasks.length === 0) {
+            container.innerHTML = `
+                <div class="pmo-empty-state">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 11l3 3L22 4"></path>
+                        <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"></path>
+                    </svg>
+                    <p>Keine Aufgaben vorhanden</p>
+                </div>
+            `;
+            return;
+        }
+
+        container.innerHTML = myTasks.map((t, idx) => {
+            const isOverdue = t.dueDate && new Date(t.dueDate) < new Date() && !t.completed;
+            return `
+                <div class="pmo-task-item">
+                    <div class="pmo-task-checkbox ${t.completed ? 'checked' : ''}" onclick="PMO.toggleTask(${idx})">
+                        ${t.completed ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" width="12" height="12"><polyline points="20 6 9 17 4 12"></polyline></svg>' : ''}
+                    </div>
+                    <div class="pmo-task-info ${t.completed ? 'completed' : ''}">
+                        <h5>${t.title}</h5>
+                    </div>
+                    ${t.dueDate ? `<span class="pmo-task-due ${isOverdue ? 'overdue' : ''}">${this.formatDate(t.dueDate)}</span>` : ''}
+                    <button class="pmo-btn-sm" onclick="PMO.deleteTask(${idx})" title="Löschen">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                            <polyline points="3 6 5 6 21 6"></polyline>
+                            <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path>
+                        </svg>
+                    </button>
+                </div>
+            `;
+        }).join('');
+    },
+
+    // Toggle task completion
+    toggleTask(idx) {
+        const myTasks = this.tasks.filter(t => t.workstreamId === this.currentWorkstream);
+        const task = myTasks[idx];
+        if (task) {
+            const globalIdx = this.tasks.indexOf(task);
+            this.tasks[globalIdx].completed = !this.tasks[globalIdx].completed;
+            this.saveTasks();
+            this.renderMyTasks();
+        }
+    },
+
+    // Delete task
+    deleteTask(idx) {
+        const myTasks = this.tasks.filter(t => t.workstreamId === this.currentWorkstream);
+        const task = myTasks[idx];
+        if (task && confirm('Aufgabe wirklich löschen?')) {
+            const globalIdx = this.tasks.indexOf(task);
+            this.tasks.splice(globalIdx, 1);
+            this.saveTasks();
+            this.renderMyTasks();
+        }
+    },
+
+    // Add new task
+    addTask() {
+        const title = prompt('Aufgabe:');
+        if (!title) return;
+
+        const dueDate = prompt('Fälligkeitsdatum (YYYY-MM-DD, optional):');
+
+        this.tasks.push({
+            id: `task_${Date.now()}`,
+            workstreamId: this.currentWorkstream,
+            title: title,
+            dueDate: dueDate || null,
+            completed: false,
+            createdAt: new Date().toISOString()
+        });
+
+        this.saveTasks();
+        this.renderMyTasks();
+    },
+
+    // Add new milestone
+    addMilestone() {
+        const name = prompt('Meilenstein Name:');
+        if (!name) return;
+
+        const plannedDate = prompt('Geplantes Datum (YYYY-MM-DD):');
+        if (!plannedDate) return;
+
+        this.milestones.push({
+            id: `ms_${Date.now()}`,
+            workstreamId: this.currentWorkstream,
+            name: name,
+            plannedDate: plannedDate,
+            currentEstimate: plannedDate,
+            status: 'Im Plan'
+        });
+
+        this.saveMilestones();
+        this.renderMyMilestones();
+    },
+
+    // Edit milestone
+    editMilestone(idx) {
+        const customMilestones = this.milestones.filter(m => m.workstreamId === this.currentWorkstream);
+        const milestone = customMilestones[idx];
+        if (!milestone) {
+            alert('Dieser Meilenstein kann nicht bearbeitet werden');
+            return;
+        }
+
+        const newStatus = prompt('Status (Im Plan / Verzögert / Geschlossen):', milestone.status);
+        if (newStatus) {
+            const globalIdx = this.milestones.indexOf(milestone);
+            this.milestones[globalIdx].status = newStatus;
+
+            if (newStatus === 'Verzögert') {
+                const newDate = prompt('Neues geschätztes Datum (YYYY-MM-DD):', milestone.currentEstimate);
+                if (newDate) {
+                    this.milestones[globalIdx].currentEstimate = newDate;
+                }
+            }
+
+            this.saveMilestones();
+            this.renderMyMilestones();
+        }
+    },
+
+    // Add new status for my workstream
+    addNewStatus() {
+        // Pre-fill the status modal with current workstream
+        this.openStatusModal();
+
+        // Find the project for current workstream
+        for (const project of this.PROGRAM_STRUCTURE.projects) {
+            const ws = project.workstreams.find(w => w.id === this.currentWorkstream);
+            if (ws) {
+                document.getElementById('status-project').value = project.id;
+                this.updateWorkstreamSelect();
+                document.getElementById('status-workstream').value = this.currentWorkstream;
+                break;
+            }
+        }
+    },
+
+    // Export PPT for my workstream
+    exportMyPPT() {
+        if (this.currentWorkstream) {
+            this.exportPPT(this.currentWorkstream);
+        }
+    },
+
+    // Format date helper
+    formatDate(dateStr) {
+        if (!dateStr) return '-';
+        const date = new Date(dateStr);
+        return date.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
     },
 
     // Load data from localStorage
@@ -2729,20 +3797,29 @@ const PMO = {
 
     // View Management
     showView(viewId) {
-        document.querySelectorAll('.pmo-view').forEach(v => v.classList.remove('active'));
-        document.querySelectorAll('.pmo-nav-btn').forEach(b => b.classList.remove('active'));
+        this.showViewInternal(viewId);
 
-        document.getElementById(`pmo-${viewId}`).classList.add('active');
-        document.querySelector(`[data-view="${viewId}"]`).classList.add('active');
-
-        this.currentView = viewId;
-
+        // Also render dashboard if switching to it
+        if (viewId === 'dashboard') this.renderDashboard();
         if (viewId === 'risiken') this.renderRisks();
         if (viewId === 'meilensteine') this.renderMilestones();
         if (viewId === 'timeline') this.renderTimeline();
         if (viewId === 'gantt') this.renderGantt();
         if (viewId === 'entscheidungen') this.renderDecisions();
         if (viewId === 'dokumente') this.renderDocumentsList();
+    },
+
+    showViewInternal(viewId) {
+        document.querySelectorAll('.pmo-view').forEach(v => v.classList.remove('active'));
+        document.querySelectorAll('.pmo-nav-btn').forEach(b => b.classList.remove('active'));
+
+        const view = document.getElementById(`pmo-${viewId}`);
+        if (view) view.classList.add('active');
+
+        const navBtn = document.querySelector(`[data-view="${viewId}"]`);
+        if (navBtn) navBtn.classList.add('active');
+
+        this.currentView = viewId;
     },
 
     // Project Detail Modal

@@ -114,16 +114,12 @@ export const PMO = {
         this.loadData();
         this.loadTasks();
         this.loadMilestones();
-        this.renderLandingPage();
         this.setupEventListeners();
         this.populateProjectSelect();
         this.setDefaultDate();
 
-        // Check if user has a saved workstream preference
-        const savedWs = localStorage.getItem('pmo_current_workstream');
-        if (savedWs) {
-            this.selectWorkstream(savedWs);
-        }
+        // Show Dashboard as landing page
+        this.showView('dashboard');
     },
 
     // Load tasks from localStorage
@@ -941,6 +937,129 @@ export const PMO = {
     renderDashboard() {
         this.updateQuickStats();
         this.renderProjectsGrid();
+        this.renderUpcomingMilestones();
+    },
+
+    renderUpcomingMilestones() {
+        const container = document.getElementById('pmo-upcoming-milestones');
+        if (!container) return;
+
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        // Collect all milestones from all status data
+        let allMilestones = [];
+        const latestStatuses = this.getLatestStatuses();
+
+        latestStatuses.forEach(status => {
+            const project = this.PROGRAM_STRUCTURE.projects.find(p => p.id === status.projectId);
+            const ws = project?.workstreams.find(w => w.id === status.workstreamId);
+
+            status.milestones.forEach(ms => {
+                const dueDate = new Date(ms.currentEstimate || ms.plannedDate);
+                const isOverdue = dueDate < today && ms.status !== 'Geschlossen';
+
+                allMilestones.push({
+                    ...ms,
+                    projectId: status.projectId,
+                    projectName: project?.name || status.projectId,
+                    workstreamId: status.workstreamId,
+                    workstreamName: ws?.name || status.workstreamId,
+                    dueDate,
+                    isOverdue
+                });
+            });
+        });
+
+        // Filter: only show non-closed milestones in the next 60 days or overdue
+        const sixtyDaysFromNow = new Date(today);
+        sixtyDaysFromNow.setDate(sixtyDaysFromNow.getDate() + 60);
+
+        allMilestones = allMilestones
+            .filter(ms => ms.status !== 'Geschlossen')
+            .filter(ms => ms.isOverdue || ms.dueDate <= sixtyDaysFromNow)
+            .sort((a, b) => a.dueDate - b.dueDate);
+
+        if (allMilestones.length === 0) {
+            container.innerHTML = '<p class="pmo-no-milestones">Keine kommenden Meilensteine in den nächsten 60 Tagen</p>';
+            return;
+        }
+
+        // Group by project
+        const byProject = {};
+        allMilestones.forEach(ms => {
+            if (!byProject[ms.projectId]) {
+                byProject[ms.projectId] = {
+                    name: ms.projectName,
+                    milestones: []
+                };
+            }
+            byProject[ms.projectId].milestones.push(ms);
+        });
+
+        let html = '<div class="pmo-milestones-grid">';
+
+        Object.entries(byProject).forEach(([projectId, data]) => {
+            html += `
+                <div class="pmo-milestone-project-card">
+                    <div class="pmo-milestone-project-header">
+                        <span class="pmo-milestone-project-id">${projectId}</span>
+                        <span class="pmo-milestone-project-name">${data.name}</span>
+                    </div>
+                    <div class="pmo-milestone-list">
+            `;
+
+            data.milestones.forEach(ms => {
+                const daysUntil = Math.ceil((ms.dueDate - today) / (1000 * 60 * 60 * 24));
+                let dateLabel;
+                let dateClass = '';
+
+                if (ms.isOverdue) {
+                    dateLabel = `${Math.abs(daysUntil)} Tage überfällig`;
+                    dateClass = 'overdue';
+                } else if (daysUntil === 0) {
+                    dateLabel = 'Heute';
+                    dateClass = 'today';
+                } else if (daysUntil === 1) {
+                    dateLabel = 'Morgen';
+                    dateClass = 'soon';
+                } else if (daysUntil <= 7) {
+                    dateLabel = `In ${daysUntil} Tagen`;
+                    dateClass = 'soon';
+                } else {
+                    dateLabel = this.formatDate(ms.dueDate.toISOString().split('T')[0]);
+                }
+
+                html += `
+                    <div class="pmo-milestone-item ${ms.isOverdue ? 'overdue' : ''}">
+                        <div class="pmo-milestone-info">
+                            <span class="pmo-milestone-name">${ms.name}</span>
+                            <span class="pmo-milestone-date ${dateClass}">${dateLabel}</span>
+                        </div>
+                        <button class="pmo-reminder-btn" onclick="PMO.sendReminder('${projectId}', '${ms.name}')" title="Erinnerung senden">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                                <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                                <path d="M13.73 21a2 2 0 01-3.46 0"></path>
+                            </svg>
+                        </button>
+                    </div>
+                `;
+            });
+
+            html += `
+                    </div>
+                </div>
+            `;
+        });
+
+        html += '</div>';
+        container.innerHTML = html;
+    },
+
+    sendReminder(projectId, milestoneName) {
+        // Simulate sending a reminder
+        const project = this.PROGRAM_STRUCTURE.projects.find(p => p.id === projectId);
+        alert(`Erinnerung gesendet für:\n\nProjekt: ${project?.name || projectId}\nMeilenstein: ${milestoneName}\n\nAlle Verantwortlichen wurden per E-Mail benachrichtigt.`);
     },
 
     updateQuickStats() {

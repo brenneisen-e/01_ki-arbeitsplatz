@@ -331,6 +331,140 @@
 .pmo-mini-light.red { background: #ef4444; }
 .pmo-mini-light.gray { background: #94a3b8; }
 
+/* Upcoming Milestones on Dashboard */
+.pmo-upcoming-milestones {
+    margin-top: 16px;
+}
+
+.pmo-milestones-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 20px;
+}
+
+.pmo-milestone-project-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.pmo-milestone-project-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.pmo-milestone-project-id {
+    background: #E30613;
+    color: white;
+    font-weight: 700;
+    font-size: 14px;
+    padding: 4px 10px;
+    border-radius: 6px;
+}
+
+.pmo-milestone-project-name {
+    font-weight: 600;
+    color: #1e293b;
+    font-size: 15px;
+}
+
+.pmo-milestone-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.pmo-milestone-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px;
+    background: #f8fafc;
+    border-radius: 8px;
+    border-left: 3px solid #22c55e;
+    transition: all 0.2s;
+}
+
+.pmo-milestone-item:hover {
+    background: #f1f5f9;
+}
+
+.pmo-milestone-item.overdue {
+    border-left-color: #ef4444;
+    background: #fef2f2;
+}
+
+.pmo-milestone-item.overdue:hover {
+    background: #fee2e2;
+}
+
+.pmo-milestone-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+    min-width: 0;
+}
+
+.pmo-milestone-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: #1e293b;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.pmo-milestone-date {
+    font-size: 12px;
+    color: #64748b;
+}
+
+.pmo-milestone-date.overdue {
+    color: #ef4444;
+    font-weight: 600;
+}
+
+.pmo-milestone-date.today {
+    color: #f59e0b;
+    font-weight: 600;
+}
+
+.pmo-milestone-date.soon {
+    color: #f59e0b;
+}
+
+.pmo-reminder-btn {
+    background: transparent;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 8px;
+    cursor: pointer;
+    color: #64748b;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pmo-reminder-btn:hover {
+    background: #E30613;
+    border-color: #E30613;
+    color: white;
+}
+
+.pmo-no-milestones {
+    color: #94a3b8;
+    font-style: italic;
+    padding: 20px;
+    text-align: center;
+}
+
 /* Traffic Light (large) */
 .pmo-traffic-light {
     width: 40px;

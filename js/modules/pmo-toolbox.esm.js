@@ -640,12 +640,12 @@ export const PMO = {
         const demoData = [];
         const today = new Date();
 
-        // Generate 8 weeks of data for each workstream
+        // Generate 5 weeks of data for each workstream
         this.PROGRAM_STRUCTURE.projects.forEach(project => {
             const scenario = scenarios[project.id];
 
             project.workstreams.forEach(ws => {
-                for (let week = 0; week < 8; week++) {
+                for (let week = 0; week < 5; week++) {
                     const date = new Date(today);
                     date.setDate(date.getDate() - (week * 7));
 
@@ -666,90 +666,214 @@ export const PMO = {
         const statuses = ['green', 'yellow', 'red'];
         const statusIndex = statuses.indexOf(scenario.currentStatus);
 
+        // Status changes based on trend and week
         let adjustedStatus = scenario.currentStatus;
-        if (weekOffset > 2 && scenario.trend === 'improving') {
-            adjustedStatus = statuses[Math.min(statusIndex + 1, 2)];
-        } else if (weekOffset > 2 && scenario.trend === 'declining') {
-            adjustedStatus = statuses[Math.max(statusIndex - 1, 0)];
+        if (scenario.trend === 'improving') {
+            if (weekOffset >= 3) adjustedStatus = 'red';
+            else if (weekOffset >= 1) adjustedStatus = 'yellow';
+            else adjustedStatus = scenario.currentStatus === 'yellow' ? 'yellow' : 'green';
+        } else if (scenario.trend === 'declining') {
+            if (weekOffset >= 3) adjustedStatus = 'green';
+            else if (weekOffset >= 1) adjustedStatus = 'yellow';
+            else adjustedStatus = scenario.currentStatus;
+        } else if (scenario.trend === 'critical') {
+            adjustedStatus = weekOffset >= 2 ? 'yellow' : 'red';
         }
 
-        // Detailed progress texts per project
-        const progressTexts = {
-            "A": ["Lead-Routing System erfolgreich in Pilotphase gestartet", "Integration der K-EWE Servicepunkte zu 60% abgeschlossen", "Inside Sales Team mit 5 von 8 Mitarbeitern besetzt"],
-            "B": ["Reporting-Framework vollständig implementiert und live", "Performance-Dashboards für alle Regionen ausgerollt", "Schulungen für Vertriebsleiter abgeschlossen"],
-            "C": ["Recruiting-Pipeline mit 25 qualifizierten Kandidaten", "Neues Onboarding-Konzept in 2 Pilotregionen getestet", "Ausbildungsformate wurden standardisiert"],
-            "D": ["Servicemodell in 3 Pilotregionen erfolgreich eingeführt", "Kundenanalytik-Tool in Testphase", "EASY Backlog zu 40% abgearbeitet"],
-            "E": ["SEO-Optimierung zeigt +35% organischen Traffic", "Social Media Reichweite um 50% gesteigert", "EMOK-Funktionen erweitert und ausgerollt"],
-            "F": ["Kostenanalyse für alle Bereiche abgeschlossen", "Erste Effizienzmaßnahmen identifiziert", "Investitionsplanung in Überarbeitung"],
-            "G": ["Change-Kommunikationsplan verabschiedet", "Erste Townhall-Meetings durchgeführt", "Feedback aus dem Außendienst wird ausgewertet"],
-            "H": ["Anforderungsanalyse zu 80% abgeschlossen", "IT-Architektur wird derzeit designed", "Stakeholder-Abstimmung läuft"]
+        // Week-specific progress texts showing real progression
+        const weeklyProgress = {
+            "A": [
+                // Week 0 (current)
+                ["Lead-Routing System: Go-Live für Region Nord erfolgreich abgeschlossen", "K-EWE Integration: 85% der Servicepunkte angebunden", "Inside Sales Team komplett (8/8 Mitarbeiter)"],
+                // Week 1
+                ["Lead-Routing System: UAT-Tests in Region Nord abgeschlossen", "K-EWE Integration: 70% der Servicepunkte angebunden", "Inside Sales: 7. Mitarbeiter eingestellt"],
+                // Week 2
+                ["Lead-Routing System: UAT-Phase gestartet", "K-EWE Integration: API-Anbindung fertiggestellt", "Inside Sales: Schulungsprogramm abgeschlossen"],
+                // Week 3
+                ["Lead-Routing System: Entwicklung abgeschlossen", "K-EWE Integration: 50% der Servicepunkte angebunden", "Inside Sales: 5 von 8 Mitarbeitern besetzt"],
+                // Week 4
+                ["Lead-Routing System: Backend-Entwicklung bei 80%", "K-EWE Integration: Pilotphase gestartet", "Inside Sales: Recruiting läuft"]
+            ],
+            "B": [
+                ["Automatisierte Tagesberichte für alle 16 Bundesländer live", "Performance-Dashboards: Mobile App Version released", "Provisionsmodell-Optimierung: Simulation abgeschlossen"],
+                ["Wochenberichte automatisiert, Tagesberichte in Entwicklung", "Performance-Dashboards: Mobile Version in Beta-Test", "Provisionsmodell: Stakeholder-Feedback eingearbeitet"],
+                ["Reporting-Automatisierung: 12 von 16 Bundesländern live", "Performance-Dashboards: Drill-Down Funktion implementiert", "Provisionsmodell: Konzept finalisiert"],
+                ["Reporting-Automatisierung: Template-Design abgeschlossen", "Performance-Dashboards: Rollout in 8 Regionen", "Provisionsmodell: Workshop mit Vertriebsleitern"],
+                ["Reporting-Framework: Architektur definiert", "Performance-Dashboards: Prototyp vorgestellt", "Provisionsmodell: Anforderungen gesammelt"]
+            ],
+            "C": [
+                ["32 neue Vermittler eingestellt (Ziel: 30) - übertroffen!", "Onboarding 2.0: Bundesweiter Rollout gestartet", "Digitale Schulungsplattform: 500 aktive Nutzer"],
+                ["28 neue Vermittler eingestellt", "Onboarding 2.0: 5 weitere Regionen angebunden", "Digitale Schulungsplattform: Content für KV abgeschlossen"],
+                ["22 neue Vermittler eingestellt", "Onboarding 2.0: Pilotregionen zeigen +40% Einarbeitungseffizienz", "Schulungsplattform: LV-Module live"],
+                ["15 neue Vermittler eingestellt (unter Plan)", "Onboarding 2.0: Feedback aus Pilotregionen positiv", "Schulungsplattform: Basismodule fertig"],
+                ["Recruiting unter Ziel: 10 von 25 Stellen besetzt", "Onboarding 2.0: Konzept in Pilotierung", "Schulungsplattform: Entwicklung gestartet"]
+            ],
+            "D": [
+                ["Servicemodell in 5 Regionen live - Kundenzufriedenheit +12%", "EASY Backlog: 75% abgearbeitet", "Kundenanalytik-Tool: Produktivbetrieb gestartet"],
+                ["Servicemodell: 4. und 5. Pilotregion angebunden", "EASY Backlog: 60% abgearbeitet", "Kundenanalytik-Tool: Schulungen durchgeführt"],
+                ["Servicemodell: Expansion auf 5 Regionen genehmigt", "EASY Backlog: 45% abgearbeitet", "Kundenanalytik-Tool: UAT erfolgreich"],
+                ["Servicemodell: 3 Pilotregionen stabil", "EASY Backlog: 30% abgearbeitet", "Kundenanalytik-Tool: Beta-Phase"],
+                ["Servicemodell: Start in 3 Pilotregionen", "EASY Backlog: Priorisierung abgeschlossen", "Kundenanalytik-Tool: Entwicklung"]
+            ],
+            "E": [
+                ["SEO: +52% organischer Traffic vs. Vorjahr", "Instagram-Kampagne: 10.000 Follower erreicht", "EMOK 3.0: Alle Features released"],
+                ["SEO: +45% organischer Traffic", "Instagram-Kampagne: Launch erfolgreich", "EMOK 3.0: Letzte Features in Entwicklung"],
+                ["SEO: +35% organischer Traffic", "Social Media: Content-Plan finalisiert", "EMOK 3.0: 80% der Features live"],
+                ["SEO: Erste Maßnahmen zeigen Wirkung (+20%)", "Social Media: Strategie verabschiedet", "EMOK: Feature-Priorisierung"],
+                ["SEO: Technical Audit abgeschlossen", "Social Media: Analyse Wettbewerb", "EMOK: Backlog-Grooming"]
+            ],
+            "F": [
+                ["KRITISCH: Sparziele weiter verfehlt (-15% vs. Plan)", "Investitionsstopp durch Vorstand verhängt", "Notfall-Taskforce eingerichtet"],
+                ["Kosteneinsparungen: -12% vs. Plan", "Investitionsplanung: Überarbeitung läuft", "Management-Review angesetzt"],
+                ["Kosteneinsparungen: Erste Maßnahmen greifen nicht", "Prozessoptimierung: Quick-Wins identifiziert", "Eskalation an Vorstand vorbereitet"],
+                ["Kostenanalyse abgeschlossen: Potenzial €2.5 Mio", "Effizienzmaßnahmen: 12 Handlungsfelder definiert", "Umsetzungsplan in Arbeit"],
+                ["Kostenanalyse: Datenerhebung in allen Bereichen", "Benchmark mit Wettbewerb gestartet", "Projektteam aufgestellt"]
+            ],
+            "G": [
+                ["Change-Kommunikation: 85% Awareness erreicht", "Widerstand im Außendienst reduziert", "Führungskräfte-Coaching abgeschlossen"],
+                ["Townhall #3 durchgeführt (450 Teilnehmer)", "Feedback-Workshops in 8 Regionen", "FAQ-Portal live geschaltet"],
+                ["Townhall #2: Fragen aus dem Außendienst beantwortet", "Regionale Change-Agents benannt", "Kommunikationsmaterialien erstellt"],
+                ["Erste Townhall mit 380 Teilnehmern", "Widerstand im Außendienst identifiziert", "Change-Story entwickelt"],
+                ["Change-Kommunikationsplan verabschiedet", "Stakeholder-Analyse abgeschlossen", "Kick-off mit Führungskräften"]
+            ],
+            "H": [
+                ["Anforderungsanalyse 100% - Scope finalisiert", "IT-Architektur: Design-Review bestanden", "Vendor-Shortlist auf 3 Anbieter reduziert"],
+                ["Anforderungsanalyse: 90% abgeschlossen", "IT-Architektur: Cloud vs. On-Premise entschieden", "Vendor-Evaluation läuft"],
+                ["Anforderungsanalyse: 70% der Interviews geführt", "IT-Architektur: Optionen bewertet", "RFI an 8 Vendors gesendet"],
+                ["Anforderungsanalyse: 50% abgeschlossen", "Fachkonzept in Abstimmung", "Marktanalyse CRM-Systeme"],
+                ["Programmaufsatz genehmigt", "Anforderungsanalyse gestartet", "Projektteam formiert"]
+            ]
         };
 
-        const upcomingTexts = {
-            "A": ["Go-Live Lead-Routing für Region Nord", "Abschluss K-EWE Integration", "Vervollständigung Inside Sales Team"],
-            "B": ["Rollout Performance-Steuerung Phase 2", "Entwicklung Agenturentwicklungspläne", "Optimierung Provisionsmodell"],
-            "C": ["Recruiting-Kampagne starten", "Rollout Onboarding bundesweit", "Evaluation Ausbildungsformate"],
-            "D": ["Erweiterung Pilotierung auf 5 Regionen", "Launch Kundenanalytik-Tool", "Weiterführung EASY Backlog"],
-            "E": ["SEO-Optimierung Phase 2", "Launch Instagram-Kampagne", "EMOK Feature Release"],
-            "F": ["Umsetzung erste Sparmaßnahmen", "Finalisierung Investitionsplan", "Management-Review Kostenstruktur"],
-            "G": ["Weitere Change-Workshops", "Umsetzung Feedback-Maßnahmen", "Kommunikation nächste Schritte"],
-            "H": ["Abschluss Anforderungsanalyse", "Start IT-Entwicklung", "Kick-off mit allen Stakeholdern"]
+        const weeklyUpcoming = {
+            "A": [
+                ["Rollout Lead-Routing auf Region Süd", "K-EWE: Restliche 15% Servicepunkte", "First Line Support aufbauen"],
+                ["Go-Live Region Nord vorbereiten", "K-EWE: Weitere Anbindungen", "Inside Sales: Onboarding letzter MA"],
+                ["UAT-Tests abschließen", "K-EWE: API-Stabilisierung", "Schulungen durchführen"],
+                ["UAT-Phase starten", "K-EWE: Entwicklung fertigstellen", "Recruiting abschließen"],
+                ["Entwicklung abschließen", "K-EWE: Pilot erweitern", "Weitere Interviews führen"]
+            ],
+            "B": [
+                ["Predictive Analytics integrieren", "Gamification-Features entwickeln", "Agenturentwicklungspläne 2.0"],
+                ["Tagesberichte live schalten", "Mobile App finalisieren", "Provisionsmodell implementieren"],
+                ["Automatisierung erweitern", "Mobile Beta-Test auswerten", "Simulation durchführen"],
+                ["Weitere Regionen anbinden", "Mobile Version entwickeln", "Konzept präsentieren"],
+                ["Template entwickeln", "Dashboard-Rollout fortsetzen", "Workshop planen"]
+            ],
+            "C": [
+                ["Employer Branding Kampagne Q1", "Mentoring-Programm starten", "Advanced Training Module"],
+                ["Bundesweiten Rollout fortsetzen", "Schulungsplattform: Sach-Module", "Recruiting-Push starten"],
+                ["Weitere Regionen onboarden", "Content-Erstellung fortsetzen", "Employer Branding planen"],
+                ["Pilot-Feedback umsetzen", "LV-Module fertigstellen", "Recruiting intensivieren"],
+                ["Pilotierung auswerten", "Basismodule testen", "Stellenausschreibungen"]
+            ],
+            "D": [
+                ["Rollout auf 3 weitere Regionen", "EASY Backlog abschließen", "Analytics-Erweiterungen"],
+                ["Region 5 onboarden", "Backlog-Sprint", "Produktivbetrieb starten"],
+                ["Genehmigung einholen", "Sprint-Planung", "Schulungen vorbereiten"],
+                ["Stabilisierungsphase", "Backlog priorisieren", "UAT durchführen"],
+                ["Pilotierung starten", "Backlog aufarbeiten", "Beta-Tests"]
+            ],
+            "E": [
+                ["SEO: Voice Search Optimierung", "TikTok-Strategie entwickeln", "EMOK 4.0 Roadmap"],
+                ["Instagram: Influencer-Kooperation", "EMOK: Letzte Features", "Conversion-Optimierung"],
+                ["Kampagnen-Launch", "Feature-Entwicklung", "A/B-Tests"],
+                ["Content-Produktion", "Feature-Priorisierung", "Analyse vertiefen"],
+                ["Maßnahmen umsetzen", "Strategie finalisieren", "Development starten"]
+            ],
+            "F": [
+                ["Taskforce-Ergebnisse präsentieren", "Sofortmaßnahmen umsetzen", "Restrukturierung planen"],
+                ["Notfall-Review mit Vorstand", "Quick-Wins umsetzen", "Investitionsstopp prüfen"],
+                ["Eskalation durchführen", "Quick-Win Umsetzung", "Kostenstellen analysieren"],
+                ["Maßnahmenplan erstellen", "Prozesse optimieren", "Management informieren"],
+                ["Potenziale validieren", "Handlungsfelder priorisieren", "Ressourcen planen"]
+            ],
+            "G": [
+                ["Pulse-Survey durchführen", "Regional-Workshops fortsetzen", "Erfolgsgeschichten teilen"],
+                ["Townhall #4 vorbereiten", "Coaching-Programm starten", "Widerstand adressieren"],
+                ["Weitere Workshops planen", "FAQ erweitern", "Führungskräfte briefen"],
+                ["Regionale Rollouts", "Change-Agents schulen", "Materialien verteilen"],
+                ["Townhall #1 durchführen", "Workshops planen", "Story kommunizieren"]
+            ],
+            "H": [
+                ["Vendor-Entscheidung treffen", "Projektplan finalisieren", "Kick-off Entwicklung"],
+                ["Design-Review abschließen", "Shortlist erstellen", "Ressourcen planen"],
+                ["Architektur finalisieren", "Vendor-Demos bewerten", "Fachkonzept fertigstellen"],
+                ["Interviews fortsetzen", "Optionen bewerten", "RFI auswerten"],
+                ["Interviews starten", "Konzept entwickeln", "Markt sondieren"]
+            ]
         };
 
         const decisionTexts = {
-            "A": "Entscheidung über Lead-Routing Technologie bis KW 5 erforderlich",
-            "B": "Freigabe Budget für Performance-Tools benötigt",
-            "C": "Genehmigung zusätzlicher Recruiting-Ressourcen ausstehend",
-            "D": "Entscheidung zur Pilotregion-Erweiterung in Steering Committee",
-            "E": "Budget-Freigabe für Social Media Kampagne erforderlich",
-            "F": "Entscheidung zu Investitionsprioritäten überfällig",
-            "G": "Freigabe Change-Kommunikationsbudget benötigt",
-            "H": "Technologie-Entscheidung für Middle Layer ausstehend"
+            "A": "Entscheidung: Skalierung Lead-Routing auf alle Regionen",
+            "B": "Entscheidung: Budget für Predictive Analytics Modul",
+            "C": "Entscheidung: Zusätzliche Recruiting-Ressourcen",
+            "D": "Entscheidung: Rollout-Geschwindigkeit Servicemodell",
+            "E": "Entscheidung: TikTok-Budget Freigabe",
+            "F": "DRINGEND: Freigabe Restrukturierungsmaßnahmen",
+            "G": "Entscheidung: Erweiterung Change-Budget",
+            "H": "Entscheidung: CRM-Vendor Auswahl"
         };
 
-        // Generate risks
+        // Get week-specific content
+        const progressArr = weeklyProgress[projectId]?.[weekOffset] || scenario.themes;
+        const upcomingArr = weeklyUpcoming[projectId]?.[weekOffset] || ['Nächste Schritte werden geplant'];
+
+        // Generate risks based on status
         const risks = [];
-        if (scenario.currentStatus !== 'green') {
+        if (adjustedStatus !== 'green') {
             risks.push({
-                type: 'R',
+                type: adjustedStatus === 'red' ? 'H' : 'R',
                 description: scenario.themes[0],
-                identifiedDate: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-                targetDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-                status: weekOffset === 0 ? 'Offen' : 'In Bearbeitung',
-                countermeasures: 'Eskalation an Steering Committee, wöchentliches Tracking eingeführt'
+                identifiedDate: new Date(Date.now() - (14 + weekOffset * 7) * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                targetDate: new Date(Date.now() + (30 - weekOffset * 7) * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                status: weekOffset === 0 ? 'Offen' : (weekOffset < 2 ? 'In Bearbeitung' : 'Geschlossen'),
+                countermeasures: 'Eskalation an Steering Committee, wöchentliches Tracking'
             });
-            if (scenario.currentStatus === 'red') {
+            if (adjustedStatus === 'red' && scenario.themes[1]) {
                 risks.push({
                     type: 'H',
-                    description: scenario.themes[1] || 'Ressourcenengpass im Team',
-                    identifiedDate: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-                    targetDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                    description: scenario.themes[1],
+                    identifiedDate: new Date(Date.now() - (7 + weekOffset * 7) * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                    targetDate: new Date(Date.now() + (14 - weekOffset * 3) * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
                     status: 'Offen',
-                    countermeasures: 'Zusätzliche Ressourcen werden angefordert'
+                    countermeasures: 'Taskforce eingerichtet, tägliches Standup'
                 });
             }
         }
 
-        // Generate milestones
+        // Generate milestones with realistic dates
         const milestones = [
-            { name: 'Konzeptphase', plannedDate: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], currentEstimate: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], status: 'Geschlossen' },
-            { name: 'Pilotierung', plannedDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], currentEstimate: new Date(Date.now() + (scenario.currentStatus === 'red' ? 45 : 30) * 24 * 60 * 60 * 1000).toISOString().split('T')[0], status: scenario.currentStatus === 'red' ? 'Verzögert' : 'Im Plan' },
-            { name: 'Go-Live', plannedDate: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], currentEstimate: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], status: 'Im Plan' }
+            {
+                name: 'Konzeptphase',
+                plannedDate: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                currentEstimate: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                status: 'Geschlossen'
+            },
+            {
+                name: 'Pilotierung',
+                plannedDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                currentEstimate: new Date(Date.now() + (adjustedStatus === 'red' ? 45 : 30) * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                status: adjustedStatus === 'red' ? 'Verzögert' : (weekOffset < 2 ? 'Im Plan' : 'Im Plan')
+            },
+            {
+                name: 'Go-Live',
+                plannedDate: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                currentEstimate: new Date(Date.now() + (adjustedStatus === 'red' ? 105 : 90) * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                status: 'Im Plan'
+            }
         ];
-
-        const progressArr = progressTexts[projectId] || scenario.themes;
-        const upcomingArr = upcomingTexts[projectId] || ['Nächste Schritte werden geplant'];
 
         return {
             projectId,
             workstreamId: wsId,
             status: {
                 overall: adjustedStatus,
-                budget: scenario.currentStatus === 'red' ? 'yellow' : 'green',
+                budget: adjustedStatus === 'red' ? 'yellow' : 'green',
                 scope: adjustedStatus,
                 time: adjustedStatus,
-                resources: scenario.currentStatus === 'green' ? 'green' : 'yellow',
-                risks: risks.length > 0 ? (risks.length > 1 ? 'red' : 'yellow') : 'green'
+                resources: adjustedStatus === 'green' ? 'green' : 'yellow',
+                risks: risks.length > 0 ? (risks.some(r => r.type === 'H') ? 'red' : 'yellow') : 'green'
             },
             summary: progressArr,
             progress: progressArr.join('\n'),

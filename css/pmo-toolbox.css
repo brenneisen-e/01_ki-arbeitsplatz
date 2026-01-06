@@ -592,6 +592,148 @@
     text-align: center;
 }
 
+/* Gremien Calendar */
+.pmo-gremien-calendar {
+    margin-top: 8px;
+}
+
+.gremien-calendar {
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 12px;
+}
+
+.gremien-calendar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.gremien-month-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.gremien-nav-btn {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 4px;
+    cursor: pointer;
+    color: #64748b;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.gremien-nav-btn:hover {
+    background: #e2e8f0;
+    color: #1e293b;
+}
+
+.gremien-calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+}
+
+.gremien-day-header {
+    text-align: center;
+    font-size: 10px;
+    font-weight: 600;
+    color: #94a3b8;
+    padding: 4px 0;
+    text-transform: uppercase;
+}
+
+.gremien-day {
+    aspect-ratio: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    border-radius: 6px;
+    cursor: default;
+    position: relative;
+    min-height: 32px;
+}
+
+.gremien-day.empty {
+    background: transparent;
+}
+
+.gremien-day.today {
+    background: #1e293b;
+}
+
+.gremien-day.today .gremien-day-number {
+    color: white;
+}
+
+.gremien-day-number {
+    font-size: 11px;
+    font-weight: 500;
+    color: #475569;
+    line-height: 1;
+}
+
+.gremien-dots {
+    display: flex;
+    gap: 2px;
+    margin-top: 2px;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 100%;
+}
+
+.gremien-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.gremien-day:has(.gremien-dots) {
+    cursor: pointer;
+}
+
+.gremien-day:has(.gremien-dots):hover {
+    background: #f1f5f9;
+    transform: scale(1.05);
+}
+
+.gremien-day.today:has(.gremien-dots):hover {
+    background: #334155;
+}
+
+.gremien-legend {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid #e2e8f0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.gremien-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10px;
+    color: #64748b;
+}
+
+.gremien-legend-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
 /* Traffic Light (large) */
 .pmo-traffic-light {
     width: 40px;

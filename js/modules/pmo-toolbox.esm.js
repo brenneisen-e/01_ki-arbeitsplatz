@@ -100,6 +100,15 @@ export const PMO = {
         ]
     },
 
+    // Gremien (Committees) with their meeting schedules
+    GREMIEN: [
+        { id: 'lenkung', name: 'Lenkungsausschuss', color: '#E30613', day: 2, week: 'first' },    // First Tuesday of month
+        { id: 'steering', name: 'Steering Committee', color: '#2563eb', day: 4, week: 'every' }, // Every Thursday
+        { id: 'pmo', name: 'PMO Jour Fixe', color: '#16a34a', day: 1, week: 'every' },           // Every Monday
+        { id: 'review', name: 'Sprint Review', color: '#7c3aed', day: 5, week: 'biweekly' },     // Every 2 weeks Friday
+        { id: 'risk', name: 'Risiko-Board', color: '#ea580c', day: 3, week: 'last' }             // Last Wednesday of month
+    ],
+
     // State
     statusData: [],
     currentView: 'landing',
@@ -944,6 +953,7 @@ export const PMO = {
         this.updateQuickStats();
         this.renderProjectsGrid();
         this.renderUpcomingMilestones();
+        this.renderGremienCalendar();
     },
 
     renderUpcomingMilestones() {
@@ -1047,6 +1057,241 @@ export const PMO = {
         // Simulate sending a reminder
         const project = this.PROGRAM_STRUCTURE.projects.find(p => p.id === projectId);
         alert(`Erinnerung gesendet für:\n\nProjekt: ${project?.name || projectId}\nMeilenstein: ${milestoneName}\n\nAlle Verantwortlichen wurden per E-Mail benachrichtigt.`);
+    },
+
+    // Gremien Calendar
+    renderGremienCalendar() {
+        const container = document.getElementById('pmo-gremien-calendar');
+        if (!container) return;
+
+        const today = new Date();
+        const currentMonth = today.getMonth();
+        const currentYear = today.getFullYear();
+
+        // Get first and last day of month
+        const firstDay = new Date(currentYear, currentMonth, 1);
+        const lastDay = new Date(currentYear, currentMonth + 1, 0);
+        const daysInMonth = lastDay.getDate();
+        const startDayOfWeek = (firstDay.getDay() + 6) % 7; // Monday = 0
+
+        // Calculate meetings for each day
+        const meetingsMap = this.calculateMeetings(currentYear, currentMonth);
+
+        // Build calendar HTML
+        const monthNames = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'];
+        const dayNames = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
+
+        let html = `
+            <div class="gremien-calendar">
+                <div class="gremien-calendar-header">
+                    <button class="gremien-nav-btn" onclick="PMO.changeCalendarMonth(-1)">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M15 18l-6-6 6-6"/></svg>
+                    </button>
+                    <span class="gremien-month-title">${monthNames[currentMonth]} ${currentYear}</span>
+                    <button class="gremien-nav-btn" onclick="PMO.changeCalendarMonth(1)">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M9 18l6-6-6-6"/></svg>
+                    </button>
+                </div>
+                <div class="gremien-calendar-grid">
+                    ${dayNames.map(d => `<div class="gremien-day-header">${d}</div>`).join('')}
+        `;
+
+        // Empty cells before first day
+        for (let i = 0; i < startDayOfWeek; i++) {
+            html += '<div class="gremien-day empty"></div>';
+        }
+
+        // Days of month
+        for (let day = 1; day <= daysInMonth; day++) {
+            const dateKey = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+            const meetings = meetingsMap[dateKey] || [];
+            const isToday = day === today.getDate() && currentMonth === today.getMonth() && currentYear === today.getFullYear();
+
+            const meetingDots = meetings.map(m =>
+                `<div class="gremien-dot" style="background: ${m.color};" title="${m.name}"></div>`
+            ).join('');
+
+            html += `
+                <div class="gremien-day ${isToday ? 'today' : ''}" ${meetings.length > 0 ? `onclick="PMO.showDayMeetings('${dateKey}')"` : ''}>
+                    <span class="gremien-day-number">${day}</span>
+                    ${meetings.length > 0 ? `<div class="gremien-dots">${meetingDots}</div>` : ''}
+                </div>
+            `;
+        }
+
+        html += `
+                </div>
+                <div class="gremien-legend">
+                    ${this.GREMIEN.map(g => `
+                        <div class="gremien-legend-item">
+                            <div class="gremien-legend-dot" style="background: ${g.color};"></div>
+                            <span>${g.name}</span>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+
+        container.innerHTML = html;
+    },
+
+    calendarOffset: 0,
+
+    changeCalendarMonth(delta) {
+        this.calendarOffset += delta;
+        const today = new Date();
+        const targetDate = new Date(today.getFullYear(), today.getMonth() + this.calendarOffset, 1);
+        this.renderGremienCalendarForMonth(targetDate.getFullYear(), targetDate.getMonth());
+    },
+
+    renderGremienCalendarForMonth(year, month) {
+        const container = document.getElementById('pmo-gremien-calendar');
+        if (!container) return;
+
+        const today = new Date();
+
+        // Get first and last day of month
+        const firstDay = new Date(year, month, 1);
+        const lastDay = new Date(year, month + 1, 0);
+        const daysInMonth = lastDay.getDate();
+        const startDayOfWeek = (firstDay.getDay() + 6) % 7;
+
+        const meetingsMap = this.calculateMeetings(year, month);
+
+        const monthNames = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'];
+        const dayNames = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
+
+        let html = `
+            <div class="gremien-calendar">
+                <div class="gremien-calendar-header">
+                    <button class="gremien-nav-btn" onclick="PMO.changeCalendarMonth(-1)">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M15 18l-6-6 6-6"/></svg>
+                    </button>
+                    <span class="gremien-month-title">${monthNames[month]} ${year}</span>
+                    <button class="gremien-nav-btn" onclick="PMO.changeCalendarMonth(1)">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M9 18l6-6-6-6"/></svg>
+                    </button>
+                </div>
+                <div class="gremien-calendar-grid">
+                    ${dayNames.map(d => `<div class="gremien-day-header">${d}</div>`).join('')}
+        `;
+
+        for (let i = 0; i < startDayOfWeek; i++) {
+            html += '<div class="gremien-day empty"></div>';
+        }
+
+        for (let day = 1; day <= daysInMonth; day++) {
+            const dateKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+            const meetings = meetingsMap[dateKey] || [];
+            const isToday = day === today.getDate() && month === today.getMonth() && year === today.getFullYear();
+
+            const meetingDots = meetings.map(m =>
+                `<div class="gremien-dot" style="background: ${m.color};" title="${m.name}"></div>`
+            ).join('');
+
+            html += `
+                <div class="gremien-day ${isToday ? 'today' : ''}" ${meetings.length > 0 ? `onclick="PMO.showDayMeetings('${dateKey}')"` : ''}>
+                    <span class="gremien-day-number">${day}</span>
+                    ${meetings.length > 0 ? `<div class="gremien-dots">${meetingDots}</div>` : ''}
+                </div>
+            `;
+        }
+
+        html += `
+                </div>
+                <div class="gremien-legend">
+                    ${this.GREMIEN.map(g => `
+                        <div class="gremien-legend-item">
+                            <div class="gremien-legend-dot" style="background: ${g.color};"></div>
+                            <span>${g.name}</span>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+
+        container.innerHTML = html;
+    },
+
+    calculateMeetings(year, month) {
+        const meetingsMap = {};
+        const firstDay = new Date(year, month, 1);
+        const lastDay = new Date(year, month + 1, 0);
+
+        this.GREMIEN.forEach(gremium => {
+            const meetingDates = this.getMeetingDates(gremium, year, month);
+            meetingDates.forEach(date => {
+                const dateKey = date.toISOString().split('T')[0];
+                if (!meetingsMap[dateKey]) meetingsMap[dateKey] = [];
+                meetingsMap[dateKey].push({ name: gremium.name, color: gremium.color });
+            });
+        });
+
+        return meetingsMap;
+    },
+
+    getMeetingDates(gremium, year, month) {
+        const dates = [];
+        const firstDay = new Date(year, month, 1);
+        const lastDay = new Date(year, month + 1, 0);
+
+        // day: 1=Monday, 2=Tuesday, etc. (JS: 0=Sunday, 1=Monday...)
+        const targetDayJS = gremium.day % 7; // Convert to JS day (0=Sunday)
+
+        if (gremium.week === 'every') {
+            // Every week
+            let d = new Date(year, month, 1);
+            while (d.getMonth() === month) {
+                if (d.getDay() === targetDayJS) {
+                    dates.push(new Date(d));
+                }
+                d.setDate(d.getDate() + 1);
+            }
+        } else if (gremium.week === 'biweekly') {
+            // Every 2 weeks (starting from first occurrence)
+            let d = new Date(year, month, 1);
+            let count = 0;
+            while (d.getMonth() === month) {
+                if (d.getDay() === targetDayJS) {
+                    if (count % 2 === 0) dates.push(new Date(d));
+                    count++;
+                }
+                d.setDate(d.getDate() + 1);
+            }
+        } else if (gremium.week === 'first') {
+            // First occurrence in month
+            let d = new Date(year, month, 1);
+            while (d.getMonth() === month) {
+                if (d.getDay() === targetDayJS) {
+                    dates.push(new Date(d));
+                    break;
+                }
+                d.setDate(d.getDate() + 1);
+            }
+        } else if (gremium.week === 'last') {
+            // Last occurrence in month
+            let d = new Date(year, month + 1, 0);
+            while (d.getMonth() === month) {
+                if (d.getDay() === targetDayJS) {
+                    dates.push(new Date(d));
+                    break;
+                }
+                d.setDate(d.getDate() - 1);
+            }
+        }
+
+        return dates;
+    },
+
+    showDayMeetings(dateKey) {
+        const [year, month, day] = dateKey.split('-').map(Number);
+        const meetingsMap = this.calculateMeetings(year, month - 1);
+        const meetings = meetingsMap[dateKey] || [];
+
+        const dateStr = new Date(year, month - 1, day).toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+
+        const meetingsList = meetings.map(m => `• ${m.name}`).join('\n');
+        alert(`Termine am ${dateStr}:\n\n${meetingsList}`);
     },
 
     updateQuickStats() {

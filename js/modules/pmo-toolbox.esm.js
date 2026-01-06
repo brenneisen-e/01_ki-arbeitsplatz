@@ -1085,32 +1085,22 @@ export const PMO = {
                 <div class="pmo-traffic-light ${status?.overall || 'gray'}"></div>
             </div>
 
-            <div class="pmo-project-status-row" style="margin-bottom: 24px;">
-                <span class="pmo-mini-light ${status?.budget || 'gray'}">Budget</span>
-                <span class="pmo-mini-light ${status?.scope || 'gray'}">Scope</span>
-                <span class="pmo-mini-light ${status?.time || 'gray'}">Zeit</span>
-                <span class="pmo-mini-light ${status?.resources || 'gray'}">Ressourcen</span>
-                <span class="pmo-mini-light ${status?.risks || 'gray'}">Risiken</span>
-            </div>
-
-            <h4 style="margin: 0 0 16px; color: #64748b; font-size: 13px; text-transform: uppercase;">Workstreams</h4>
+            <h4 style="margin: 0 0 16px; color: #64748b; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;">Workstreams</h4>
             <div class="pmo-workstreams-list">
                 ${project.workstreams.map(ws => {
                     const wsStatus = this.getWorkstreamLatestStatus(ws.id);
                     return `
-                        <div class="pmo-workstream-item">
-                            <span class="pmo-workstream-id">${ws.id}</span>
-                            <span class="pmo-workstream-name">${ws.name}</span>
-                            <div class="pmo-workstream-status">
-                                <span class="pmo-mini-light ${wsStatus?.status?.overall || 'gray'}"></span>
-                                <button class="pmo-btn-sm" onclick="event.stopPropagation(); PMO.openPPTView('${ws.id}')" style="margin-left:8px;" title="PPT-Ansicht öffnen">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
-                                        <rect x="2" y="2" width="20" height="20" rx="2"/>
-                                        <path d="M9 8h6M9 12h6M9 16h4"/>
-                                    </svg>
-                                    PPT
-                                </button>
-                            </div>
+                        <div class="pmo-workstream-item" style="display: flex; align-items: center; padding: 12px 16px; background: #f8fafc; border-radius: 8px; margin-bottom: 8px;">
+                            <div class="pmo-traffic-light-small ${wsStatus?.status?.overall || 'gray'}" style="width: 12px; height: 12px; border-radius: 50%; margin-right: 12px;"></div>
+                            <span class="pmo-workstream-id" style="font-weight: 600; color: #E30613; margin-right: 8px; font-size: 13px;">${ws.id}</span>
+                            <span class="pmo-workstream-name" style="flex: 1; font-size: 14px; color: #1e293b;">${ws.name}</span>
+                            <button class="pmo-btn-sm" onclick="event.stopPropagation(); PMO.openPPTView('${ws.id}')" title="PPT-Ansicht öffnen" style="display: inline-flex; align-items: center; gap: 4px; padding: 6px 12px; border-radius: 6px; border: 1px solid #e2e8f0; background: white; cursor: pointer; font-size: 12px;">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                                    <rect x="2" y="2" width="20" height="20" rx="2"/>
+                                    <path d="M9 8h6M9 12h6M9 16h4"/>
+                                </svg>
+                                PPT
+                            </button>
                         </div>
                     `;
                 }).join('')}

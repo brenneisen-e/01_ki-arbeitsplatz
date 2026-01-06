@@ -310,6 +310,19 @@
 .pmo-traffic-light.green { background: #22c55e; }
 .pmo-traffic-light.yellow { background: #eab308; }
 .pmo-traffic-light.red { background: #ef4444; }
+.pmo-traffic-light.gray { background: #94a3b8; }
+
+/* Small Traffic Light for Workstream List */
+.pmo-traffic-light-small {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+.pmo-traffic-light-small.green { background: #22c55e; }
+.pmo-traffic-light-small.yellow { background: #eab308; }
+.pmo-traffic-light-small.red { background: #ef4444; }
+.pmo-traffic-light-small.gray { background: #94a3b8; }
 
 /* Modal */
 .pmo-modal {

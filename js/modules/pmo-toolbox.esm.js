@@ -1026,13 +1026,6 @@ export const PMO = {
                 <h4 class="pmo-project-name">${project.name}</h4>
                 <p class="pmo-project-full-name">${project.fullName}</p>
                 <p class="pmo-project-workstreams">${project.workstreams.length} Workstreams</p>
-                <div class="pmo-project-status-row">
-                    <span class="pmo-mini-light ${status?.budget || 'gray'}" title="Budget">B</span>
-                    <span class="pmo-mini-light ${status?.scope || 'gray'}" title="Scope">S</span>
-                    <span class="pmo-mini-light ${status?.time || 'gray'}" title="Zeit">Z</span>
-                    <span class="pmo-mini-light ${status?.resources || 'gray'}" title="Ressourcen">R</span>
-                    <span class="pmo-mini-light ${status?.risks || 'gray'}" title="Risiken">I</span>
-                </div>
             `;
 
             grid.appendChild(card);

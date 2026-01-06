@@ -1019,17 +1019,38 @@ export const PMO = {
             card.className = 'pmo-project-card';
             card.onclick = () => this.openProjectDetail(project.id);
 
+            // Get workstream statuses
+            const workstreamHtml = project.workstreams.map(ws => {
+                const wsStatus = this.getWorkstreamLatestStatus(project.id, ws.id);
+                const wsColor = wsStatus?.status?.overall || 'gray';
+                return `
+                    <div class="pmo-ws-item">
+                        <div class="pmo-traffic-light-small ${wsColor}"></div>
+                        <span class="pmo-ws-name">${ws.name}</span>
+                    </div>
+                `;
+            }).join('');
+
             card.innerHTML = `
                 <div class="pmo-project-header">
                     <div class="pmo-traffic-light ${status?.overall || 'gray'}"></div>
                 </div>
                 <h4 class="pmo-project-name">${project.name}</h4>
                 <p class="pmo-project-full-name">${project.fullName}</p>
-                <p class="pmo-project-workstreams">${project.workstreams.length} Workstreams</p>
+                <div class="pmo-project-workstreams-list">
+                    ${workstreamHtml}
+                </div>
             `;
 
             grid.appendChild(card);
         });
+    },
+
+    getWorkstreamLatestStatus(projectId, workstreamId) {
+        const statuses = this.statusData
+            .filter(s => s.projectId === projectId && s.workstreamId === workstreamId)
+            .sort((a, b) => b.date.localeCompare(a.date));
+        return statuses.length > 0 ? statuses[0] : null;
     },
 
     // View Management

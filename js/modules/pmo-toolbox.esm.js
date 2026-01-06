@@ -1288,11 +1288,15 @@ export const PMO = {
     },
 
     handleSearchResultClick(type, id) {
+        // Save search query for highlighting before closing search
+        const searchQuery = document.getElementById('pmo-search-input')?.value?.trim() || null;
         this.closeSearch();
+
         if (type === 'project') {
             this.openProjectDetail(id);
         } else if (type === 'status') {
-            // Open PPT view directly for the found status
+            // Open PPT view directly for the found status with search highlighting
+            this.pptSearchHighlight = searchQuery;
             this.openPPTViewForStatus(id);
         }
     },
@@ -1686,6 +1690,7 @@ export const PMO = {
     pptCurrentStatus: null,
     pptStatusHistory: [],
     pptCurrentIndex: 0,
+    pptSearchHighlight: null,  // Search term to highlight in PPT view
 
     openPPTView(workstreamId, specificStatusId = null) {
         const wsStatuses = this.statusData
@@ -1719,6 +1724,17 @@ export const PMO = {
             return;
         }
         this.openPPTView(status.workstreamId, statusId);
+    },
+
+    // Highlight search term in text (for PPT view)
+    highlightSearchTerm(text) {
+        if (!text || !this.pptSearchHighlight) return text;
+        const query = this.pptSearchHighlight;
+        try {
+            return text.replace(new RegExp(`(${query})`, 'gi'), '<mark>$1</mark>');
+        } catch (e) {
+            return text;
+        }
     },
 
     renderPPTSlide() {
@@ -1755,19 +1771,19 @@ export const PMO = {
                     <div class="ppt-summary">
                         <h3>Management Summary</h3>
                         <ul>
-                            ${status.summary.map(s => `<li>${s}</li>`).join('') || '<li>Kein Summary vorhanden</li>'}
+                            ${status.summary.map(s => `<li>${this.highlightSearchTerm(s)}</li>`).join('') || '<li>Kein Summary vorhanden</li>'}
                         </ul>
                     </div>
 
                     <div class="ppt-sections">
                         <div class="ppt-section">
                             <h4>Projektfortschritt gegenüber Vorwoche</h4>
-                            <p>${status.progress || 'Keine Angabe'}</p>
+                            <p>${this.highlightSearchTerm(status.progress) || 'Keine Angabe'}</p>
                         </div>
 
                         <div class="ppt-section">
                             <h4>Anstehende Aktivitäten</h4>
-                            <p>${status.upcoming || 'Keine Angabe'}</p>
+                            <p>${this.highlightSearchTerm(status.upcoming) || 'Keine Angabe'}</p>
                         </div>
 
                         <div class="ppt-section-grid">
@@ -1776,7 +1792,7 @@ export const PMO = {
                                 ${status.risksAndIssues.length > 0
                                     ? status.risksAndIssues.map(r => `
                                         <p style="margin-bottom:8px;">
-                                            <strong>${r.type}:</strong> ${r.description}
+                                            <strong>${r.type}:</strong> ${this.highlightSearchTerm(r.description)}
                                             <br><small style="color:#64748b;">${r.status} | ${this.formatDate(r.targetDate)}</small>
                                         </p>
                                     `).join('')
@@ -1788,7 +1804,7 @@ export const PMO = {
                                 ${status.milestones.length > 0
                                     ? status.milestones.map(m => `
                                         <p style="margin-bottom:8px;">
-                                            ${m.status === 'Geschlossen' ? '✓' : m.status === 'Verzögert' ? '⚠️' : '⏳'} ${m.name}
+                                            ${m.status === 'Geschlossen' ? '✓' : m.status === 'Verzögert' ? '⚠️' : '⏳'} ${this.highlightSearchTerm(m.name)}
                                             <br><small style="color:#64748b;">${this.formatDate(m.currentEstimate || m.plannedDate)}</small>
                                         </p>
                                     `).join('')
@@ -1800,7 +1816,7 @@ export const PMO = {
                         ${status.decisions ? `
                             <div class="ppt-section">
                                 <h4>Erforderliche Entscheidungen</h4>
-                                <p>${status.decisions}</p>
+                                <p>${this.highlightSearchTerm(status.decisions)}</p>
                             </div>
                         ` : ''}
                     </div>
@@ -1849,6 +1865,7 @@ export const PMO = {
 
     closePPTModal() {
         document.getElementById('pmo-ppt-modal').classList.remove('active');
+        this.pptSearchHighlight = null;  // Clear search highlight
     },
 
     editPPTStatus() {

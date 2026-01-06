@@ -1171,6 +1171,15 @@
     overflow: auto;
 }
 
+/* Search highlight in PPT view */
+.ppt-slide mark {
+    background-color: #fef08a;
+    color: inherit;
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-weight: 600;
+}
+
 .ppt-header {
     display: flex;
     justify-content: space-between;

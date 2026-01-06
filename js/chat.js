@@ -907,10 +907,10 @@ function showTopAgenturen(topN = 5, sortBy = 'neugeschaeft') {
     }
 
     // 2. Wechsel zum Agentur-Tab
-    state.currentTableView = 'agenturen';
-    document.querySelectorAll('.table-tab-btn').forEach(btn => {
+    state.currentTableView = 'agentur';
+    document.querySelectorAll('.table-view-toggle button').forEach(btn => {
         btn.classList.remove('active');
-        if (btn.dataset.view === 'agenturen') {
+        if (btn.dataset.tableView === 'agentur') {
             btn.classList.add('active');
         }
     });

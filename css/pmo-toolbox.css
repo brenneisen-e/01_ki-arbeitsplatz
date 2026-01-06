@@ -221,8 +221,8 @@
 /* Dashboard Layout */
 .pmo-dashboard-layout {
     display: grid;
-    grid-template-columns: 1fr 380px;
-    gap: 32px;
+    grid-template-columns: 1fr 320px;
+    gap: 24px;
     align-items: start;
 }
 
@@ -230,20 +230,66 @@
     min-width: 0;
 }
 
-.pmo-dashboard-milestones {
+.pmo-dashboard-sidebar {
     background: white;
     border-radius: 16px;
     padding: 20px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     position: sticky;
     top: 20px;
-    max-height: calc(100vh - 200px);
+    max-height: calc(100vh - 180px);
     overflow-y: auto;
 }
 
-.pmo-dashboard-milestones .pmo-section-title {
-    margin-bottom: 16px;
-    font-size: 15px;
+/* Mini Stats in Sidebar */
+.pmo-sidebar-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.pmo-mini-stat {
+    text-align: center;
+    padding: 10px 4px;
+    border-radius: 8px;
+    background: #f8fafc;
+}
+
+.pmo-mini-stat.green { background: #f0fdf4; }
+.pmo-mini-stat.yellow { background: #fefce8; }
+.pmo-mini-stat.red { background: #fef2f2; }
+.pmo-mini-stat.blue { background: #eff6ff; }
+
+.pmo-mini-stat-value {
+    display: block;
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.pmo-mini-stat.green .pmo-mini-stat-value { color: #16a34a; }
+.pmo-mini-stat.yellow .pmo-mini-stat-value { color: #ca8a04; }
+.pmo-mini-stat.red .pmo-mini-stat-value { color: #dc2626; }
+.pmo-mini-stat.blue .pmo-mini-stat-value { color: #2563eb; }
+
+.pmo-mini-stat-label {
+    display: block;
+    font-size: 9px;
+    color: #64748b;
+    margin-top: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.pmo-sidebar-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    font-size: 13px;
 }
 
 /* Projects Grid */

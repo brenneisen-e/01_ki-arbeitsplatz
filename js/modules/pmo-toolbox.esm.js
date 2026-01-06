@@ -107,6 +107,7 @@ export const PMO = {
     tasks: [],
     milestones: [],
     selectedTrafficLights: {},
+    DEMO_DATA_VERSION: 3,  // Increment to force regeneration of demo data
 
     // Initialize
     init() {
@@ -608,10 +609,15 @@ export const PMO = {
     // Load data from localStorage
     loadData() {
         const stored = localStorage.getItem('pmo_status_data');
-        if (stored) {
-            this.statusData = JSON.parse(stored);
-        } else {
+        const storedVersion = localStorage.getItem('pmo_demo_version');
+
+        // Check if we need to regenerate demo data (version mismatch or no data)
+        if (!stored || storedVersion !== String(this.DEMO_DATA_VERSION)) {
+            console.log('🔄 Generiere neue Demo-Daten (Version ' + this.DEMO_DATA_VERSION + ')');
             this.generateDemoData();
+            localStorage.setItem('pmo_demo_version', String(this.DEMO_DATA_VERSION));
+        } else {
+            this.statusData = JSON.parse(stored);
         }
     },
 

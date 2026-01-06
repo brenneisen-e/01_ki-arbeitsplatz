@@ -6,10 +6,9 @@
  */
 
 /**
- * Global application state
- * @type {Object}
+ * Default state structure
  */
-export const state = {
+const defaultState = {
     filters: {
         year: '2025',
         silo: 'alle',
@@ -33,6 +32,13 @@ export const state = {
         direction: 'asc'
     }
 };
+
+/**
+ * Global application state
+ * Use existing window.state if available (from data.js), otherwise use default
+ * @type {Object}
+ */
+export const state = (typeof window !== 'undefined' && window.state) ? window.state : defaultState;
 
 /**
  * Store for daily raw data
@@ -89,7 +95,10 @@ export function resetState() {
 // BRIDGE: Set global variables for backward compatibility
 // ============================================
 if (typeof window !== 'undefined') {
-    window.state = state;
+    // Only set window.state if it doesn't exist yet
+    if (!window.state) {
+        window.state = state;
+    }
     window.dailyRawData = dailyRawData;
     window.setDailyRawData = setDailyRawData;
     window.getDailyRawData = getDailyRawData;

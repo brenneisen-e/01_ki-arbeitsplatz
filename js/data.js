@@ -26,6 +26,9 @@ const state = {
     }
 };
 
+// Set on window for ESM module compatibility
+window.state = state;
+
 // Store daily data globally
 let dailyRawData = null;
 

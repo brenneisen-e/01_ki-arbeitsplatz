@@ -1235,6 +1235,8 @@ export const PMO = {
                 }).join('')}
             </div>
 
+            ${this.renderProjectMilestones(projectId)}
+
             <div style="margin-top: 24px;">
                 <button class="pmo-btn pmo-btn-primary" onclick="PMO.openStatusModalForProject('${projectId}')">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
@@ -1250,6 +1252,84 @@ export const PMO = {
 
     closeProjectModal() {
         document.getElementById('pmo-project-modal').classList.remove('active');
+    },
+
+    // Render milestones for a specific project in detail modal
+    renderProjectMilestones(projectId) {
+        // Collect all milestones for this project from status data
+        const projectMilestones = [];
+        const seen = new Set();
+
+        this.statusData
+            .filter(s => s.projectId === projectId)
+            .forEach(status => {
+                status.milestones.forEach(ms => {
+                    const key = `${ms.name}_${ms.plannedDate}`;
+                    if (!seen.has(key)) {
+                        seen.add(key);
+                        projectMilestones.push({
+                            ...ms,
+                            workstreamId: status.workstreamId
+                        });
+                    }
+                });
+            });
+
+        if (projectMilestones.length === 0) {
+            return '';
+        }
+
+        // Sort by date
+        projectMilestones.sort((a, b) => {
+            const dateA = new Date(a.currentEstimate || a.plannedDate);
+            const dateB = new Date(b.currentEstimate || b.plannedDate);
+            return dateA - dateB;
+        });
+
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        return `
+            <h4 style="margin: 24px 0 16px; color: #64748b; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14" style="vertical-align: middle; margin-right: 6px;">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+                Meilensteine
+            </h4>
+            <div class="pmo-project-milestones-list">
+                ${projectMilestones.map(ms => {
+                    const dueDate = new Date(ms.currentEstimate || ms.plannedDate);
+                    const isOverdue = ms.status !== 'Geschlossen' && dueDate < today;
+                    const isClosed = ms.status === 'Geschlossen';
+                    const isDelayed = ms.status === 'Verzögert';
+
+                    let statusIcon = '⏳';
+                    let statusColor = '#64748b';
+                    if (isClosed) {
+                        statusIcon = '✓';
+                        statusColor = '#22c55e';
+                    } else if (isOverdue) {
+                        statusIcon = '⚠️';
+                        statusColor = '#ef4444';
+                    } else if (isDelayed) {
+                        statusIcon = '⚠️';
+                        statusColor = '#eab308';
+                    }
+
+                    return `
+                        <div style="display: flex; align-items: center; padding: 10px 16px; background: ${isOverdue ? '#fef2f2' : '#f8fafc'}; border-radius: 8px; margin-bottom: 6px; border-left: 3px solid ${statusColor};">
+                            <span style="margin-right: 10px;">${statusIcon}</span>
+                            <span style="font-weight: 500; color: #E30613; margin-right: 8px; font-size: 11px;">${ms.workstreamId}</span>
+                            <span style="flex: 1; font-size: 13px; color: #1e293b; ${isClosed ? 'text-decoration: line-through; opacity: 0.6;' : ''}">${ms.name}</span>
+                            <span style="font-size: 12px; color: ${isOverdue ? '#ef4444' : '#64748b'}; font-weight: ${isOverdue ? '600' : '400'};">${this.formatDate(ms.currentEstimate || ms.plannedDate)}</span>
+                        </div>
+                    `;
+                }).join('')}
+            </div>
+        `;
     },
 
     // Status Modal

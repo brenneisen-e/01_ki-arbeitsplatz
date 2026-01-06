@@ -241,7 +241,7 @@
     top: 80px;
     max-height: calc(100vh - 120px);
     overflow-y: auto;
-    margin-top: 34px; /* Align with top of project cards (below "Projekte" title) */
+    margin-top: 40px; /* Align with top of project cards (below "Projekte" title: 18px font + 16px margin + 6px line-height) */
 }
 
 /* Mini Stats in Sidebar */

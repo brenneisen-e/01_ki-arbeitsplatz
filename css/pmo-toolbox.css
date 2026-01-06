@@ -220,24 +220,26 @@
 
 /* Dashboard Layout */
 .pmo-dashboard-layout {
-    display: grid;
-    grid-template-columns: 1fr 320px;
+    display: flex;
     gap: 24px;
-    align-items: start;
+    align-items: flex-start;
 }
 
 .pmo-dashboard-projects {
+    flex: 1;
     min-width: 0;
 }
 
 .pmo-dashboard-sidebar {
+    width: 300px;
+    flex-shrink: 0;
     background: white;
     border-radius: 16px;
-    padding: 20px;
+    padding: 16px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     position: sticky;
-    top: 20px;
-    max-height: calc(100vh - 180px);
+    top: 100px;
+    max-height: calc(100vh - 140px);
     overflow-y: auto;
 }
 
@@ -295,7 +297,7 @@
 /* Projects Grid */
 .pmo-projects-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 16px;
     padding: 12px 0;
 }

@@ -238,9 +238,10 @@
     padding: 16px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     position: sticky;
-    top: 100px;
-    max-height: calc(100vh - 140px);
+    top: 80px;
+    max-height: calc(100vh - 120px);
     overflow-y: auto;
+    margin-top: 34px; /* Align with top of project cards (below "Projekte" title) */
 }
 
 /* Mini Stats in Sidebar */
@@ -1630,21 +1631,58 @@
     margin-bottom: 8px;
 }
 
-.ppt-history-dots {
+.ppt-history-calendar {
     display: flex;
-    gap: 6px;
+    gap: 4px;
     justify-content: center;
+    flex-wrap: wrap;
 }
 
-.ppt-history-dots .dot {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    font-size: 10px;
+.ppt-cal-week {
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
     color: white;
+    transition: all 0.2s;
+    cursor: pointer;
+    position: relative;
+}
+
+.ppt-cal-week.current {
+    box-shadow: 0 0 0 2px #1e293b;
+    transform: scale(1.08);
+}
+
+.ppt-cal-week.green { background: linear-gradient(135deg, #22c55e, #16a34a); }
+.ppt-cal-week.yellow { background: linear-gradient(135deg, #eab308, #ca8a04); }
+.ppt-cal-week.red { background: linear-gradient(135deg, #ef4444, #dc2626); }
+
+.ppt-cal-week:hover {
+    transform: scale(1.05);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.ppt-cal-week.current:hover {
+    transform: scale(1.1);
+}
+
+.ppt-cal-day {
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.ppt-cal-month {
+    font-size: 9px;
+    font-weight: 500;
+    text-transform: uppercase;
+    opacity: 0.9;
+    line-height: 1;
+    margin-top: 2px;
 }
 
 .ppt-sections {

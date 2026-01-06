@@ -2039,9 +2039,18 @@ export const PMO = {
         document.getElementById('ppt-prev-btn').disabled = this.pptCurrentIndex >= this.pptStatusHistory.length - 1;
         document.getElementById('ppt-next-btn').disabled = this.pptCurrentIndex <= 0;
 
-        // History dots (last 4 weeks)
-        const historyDots = this.pptStatusHistory.slice(0, 4).map((s, i) => {
-            return `<div class="dot ${s.status.overall}" title="${this.formatDate(s.date)}">${i === 0 ? 'A' : `-${i}`}</div>`;
+        // History calendar (last 4 weeks)
+        const historyCalendar = this.pptStatusHistory.slice(0, 4).map((s, i) => {
+            const date = new Date(s.date);
+            const day = date.getDate();
+            const month = date.toLocaleDateString('de-DE', { month: 'short' });
+            const isCurrentWeek = i === this.pptCurrentIndex;
+            return `
+                <div class="ppt-cal-week ${s.status.overall} ${isCurrentWeek ? 'current' : ''}" title="${this.formatDate(s.date)}">
+                    <span class="ppt-cal-day">${day}</span>
+                    <span class="ppt-cal-month">${month}</span>
+                </div>
+            `;
         }).join('');
 
         const slideContent = `
@@ -2126,9 +2135,9 @@ export const PMO = {
                     </div>
 
                     <div class="ppt-history">
-                        <div class="ppt-history-label">Vorwochen</div>
-                        <div class="ppt-history-dots">
-                            ${historyDots}
+                        <div class="ppt-history-label">Statusverlauf</div>
+                        <div class="ppt-history-calendar">
+                            ${historyCalendar}
                         </div>
                     </div>
                 </div>

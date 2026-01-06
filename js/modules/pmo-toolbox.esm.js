@@ -2364,14 +2364,17 @@ export const PMO = {
         document.getElementById('ppt-prev-btn').disabled = this.pptCurrentIndex >= this.pptStatusHistory.length - 1;
         document.getElementById('ppt-next-btn').disabled = this.pptCurrentIndex <= 0;
 
-        // History calendar (last 4 weeks)
+        // History calendar (last 4 weeks) - clickable to navigate
         const historyCalendar = this.pptStatusHistory.slice(0, 4).map((s, i) => {
             const date = new Date(s.date);
             const day = date.getDate();
             const month = date.toLocaleDateString('de-DE', { month: 'short' });
             const isCurrentWeek = i === this.pptCurrentIndex;
             return `
-                <div class="ppt-cal-week ${s.status.overall} ${isCurrentWeek ? 'current' : ''}" title="${this.formatDate(s.date)}">
+                <div class="ppt-cal-week ${s.status.overall} ${isCurrentWeek ? 'current' : ''}"
+                     title="${this.formatDate(s.date)} - Klicken zum Anzeigen"
+                     onclick="PMO.pptJumpToWeek(${i})"
+                     style="cursor: pointer;">
                     <span class="ppt-cal-day">${day}</span>
                     <span class="ppt-cal-month">${month}</span>
                 </div>
@@ -2487,6 +2490,13 @@ export const PMO = {
     pptNextWeek() {
         if (this.pptCurrentIndex > 0) {
             this.pptCurrentIndex--;
+            this.renderPPTSlide();
+        }
+    },
+
+    pptJumpToWeek(index) {
+        if (index >= 0 && index < this.pptStatusHistory.length) {
+            this.pptCurrentIndex = index;
             this.renderPPTSlide();
         }
     },

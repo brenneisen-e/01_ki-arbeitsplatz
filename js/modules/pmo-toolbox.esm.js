@@ -1024,7 +1024,6 @@ export const PMO = {
 
             html += `
                 <div class="pmo-milestone-row ${ms.isOverdue ? 'overdue' : ''}">
-                    <div class="pmo-milestone-project-badge">${ms.projectId}</div>
                     <div class="pmo-milestone-content">
                         <span class="pmo-milestone-name">${ms.name}</span>
                         <span class="pmo-milestone-project-name">${ms.projectName}</span>

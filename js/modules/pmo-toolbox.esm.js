@@ -838,63 +838,63 @@ export const PMO = {
             }
         }
 
-        // Project-specific milestones (5 per project)
+        // Project-specific milestones (5 per project) - with varied timing and 2 overdue
         const projectMilestones = {
             "A": [
-                { name: 'Konzept Lead-Routing abgeschlossen', daysOffset: -45, status: 'Geschlossen' },
-                { name: 'K-EWE Schnittstelle live', daysOffset: -14, status: 'Geschlossen' },
-                { name: 'Inside Sales Team komplett', daysOffset: 0, status: adjustedStatus === 'red' ? 'Verzögert' : 'Im Plan' },
-                { name: 'Go-Live Region Nord', daysOffset: 21, status: 'Im Plan' },
-                { name: 'Bundesweiter Rollout', daysOffset: 60, status: 'Im Plan' }
+                { name: 'Lead-Routing MVP abgeschlossen', daysOffset: -45, status: 'Geschlossen' },
+                { name: 'K-EWE API-Integration', daysOffset: -5, status: 'Verzögert' },  // OVERDUE!
+                { name: 'Inside Sales Recruiting 8/8', daysOffset: 3, status: 'Im Plan' },
+                { name: 'Go-Live Region Nord', daysOffset: 18, status: 'Im Plan' },
+                { name: 'Bundesweiter Rollout Start', daysOffset: 55, status: 'Im Plan' }
             ],
             "B": [
-                { name: 'Reporting-Framework Design', daysOffset: -60, status: 'Geschlossen' },
-                { name: 'Dashboard MVP live', daysOffset: -30, status: 'Geschlossen' },
-                { name: 'Mobile App Release', daysOffset: 7, status: 'Im Plan' },
-                { name: 'Provisionsmodell Pilot', daysOffset: 30, status: 'Im Plan' },
-                { name: 'Performance-Steuerung 2.0', daysOffset: 75, status: 'Im Plan' }
+                { name: 'Dashboard-Architektur final', daysOffset: -60, status: 'Geschlossen' },
+                { name: 'Reports Automatisierung', daysOffset: -3, status: 'Verzögert' },  // OVERDUE!
+                { name: 'Mobile App Beta Release', daysOffset: 5, status: 'Im Plan' },
+                { name: 'Provisionsmodell Simulation', daysOffset: 25, status: 'Im Plan' },
+                { name: 'Analytics Go-Live', daysOffset: 70, status: 'Im Plan' }
             ],
             "C": [
-                { name: 'Recruiting-Strategie verabschiedet', daysOffset: -50, status: 'Geschlossen' },
-                { name: 'Onboarding 2.0 Konzept', daysOffset: -21, status: 'Geschlossen' },
-                { name: 'Schulungsplattform Go-Live', daysOffset: 14, status: adjustedStatus === 'red' ? 'Verzögert' : 'Im Plan' },
-                { name: '30 Vermittler eingestellt', daysOffset: 35, status: 'Im Plan' },
-                { name: 'Bundesweiter Onboarding-Rollout', daysOffset: 60, status: 'Im Plan' }
+                { name: 'Recruiting-Pipeline Setup', daysOffset: -50, status: 'Geschlossen' },
+                { name: 'Onboarding Pilotphase Ende', daysOffset: -21, status: 'Geschlossen' },
+                { name: 'E-Learning Plattform Live', daysOffset: 12, status: 'Im Plan' },
+                { name: '25 Vermittler onboarded', daysOffset: 30, status: 'Im Plan' },
+                { name: 'Mentoring-Programm Start', daysOffset: 50, status: 'Im Plan' }
             ],
             "D": [
-                { name: 'Servicemodell Definition', daysOffset: -55, status: 'Geschlossen' },
-                { name: '3 Pilotregionen live', daysOffset: -14, status: 'Geschlossen' },
-                { name: 'Kundenanalytik-Tool Produktiv', daysOffset: 7, status: 'Im Plan' },
-                { name: 'EASY Backlog 100%', daysOffset: 45, status: 'Im Plan' },
-                { name: 'Rollout auf 10 Regionen', daysOffset: 90, status: 'Im Plan' }
+                { name: 'Servicemodell Pilotregionen', daysOffset: -55, status: 'Geschlossen' },
+                { name: 'Kundenanalytik UAT', daysOffset: -14, status: 'Geschlossen' },
+                { name: 'EASY Backlog Sprint 3', daysOffset: 8, status: 'Im Plan' },
+                { name: 'Beratungsmodell Rollout', daysOffset: 40, status: 'Im Plan' },
+                { name: '5 weitere Regionen Live', daysOffset: 85, status: 'Im Plan' }
             ],
             "E": [
-                { name: 'SEO-Audit abgeschlossen', daysOffset: -40, status: 'Geschlossen' },
-                { name: 'Social Media Strategie', daysOffset: -20, status: 'Geschlossen' },
-                { name: 'Instagram-Kampagne Launch', daysOffset: 0, status: 'Im Plan' },
-                { name: 'EMOK 3.0 Complete', daysOffset: 21, status: 'Im Plan' },
-                { name: '+50% Organic Traffic', daysOffset: 60, status: 'Im Plan' }
+                { name: 'SEO Technical Fixes', daysOffset: -40, status: 'Geschlossen' },
+                { name: 'EMOK 3.0 Feature Freeze', daysOffset: -20, status: 'Geschlossen' },
+                { name: 'Instagram 5K Follower', daysOffset: 2, status: 'Im Plan' },
+                { name: 'Conversion Rate +15%', daysOffset: 28, status: 'Im Plan' },
+                { name: 'Organic Traffic Verdopplung', daysOffset: 65, status: 'Im Plan' }
             ],
             "F": [
-                { name: 'Kostenanalyse alle Bereiche', daysOffset: -30, status: 'Geschlossen' },
-                { name: 'Maßnahmenplan Vorstand', daysOffset: -7, status: adjustedStatus === 'red' ? 'Verzögert' : 'Im Plan' },
-                { name: 'Quick-Wins umgesetzt', daysOffset: 14, status: adjustedStatus === 'red' ? 'Gefährdet' : 'Im Plan' },
-                { name: 'Investitionsplan genehmigt', daysOffset: 30, status: 'Im Plan' },
-                { name: '€2 Mio Einsparungen realisiert', daysOffset: 90, status: 'Im Plan' }
+                { name: 'Kostenstellenanalyse', daysOffset: -30, status: 'Geschlossen' },
+                { name: 'Vorstandspräsentation', daysOffset: 1, status: 'Im Plan' },
+                { name: 'Quick-Wins Phase 1', daysOffset: 20, status: 'Im Plan' },
+                { name: 'Restrukturierung genehmigt', daysOffset: 35, status: 'Im Plan' },
+                { name: '€1.5M Savings Q1', daysOffset: 80, status: 'Im Plan' }
             ],
             "G": [
-                { name: 'Change-Story entwickelt', daysOffset: -35, status: 'Geschlossen' },
-                { name: 'Führungskräfte-Kickoff', daysOffset: -21, status: 'Geschlossen' },
-                { name: 'Townhall-Serie abgeschlossen', daysOffset: 14, status: 'Im Plan' },
-                { name: '80% Awareness erreicht', daysOffset: 30, status: 'Im Plan' },
-                { name: 'Change nachhaltig verankert', daysOffset: 75, status: 'Im Plan' }
+                { name: 'Change-Kommunikation fertig', daysOffset: -35, status: 'Geschlossen' },
+                { name: 'Führungskräfte-Workshops', daysOffset: -21, status: 'Geschlossen' },
+                { name: 'Townhall #3 durchgeführt', daysOffset: 10, status: 'Im Plan' },
+                { name: 'Pulse Survey Ergebnisse', daysOffset: 32, status: 'Im Plan' },
+                { name: 'Change-Agents aktiv', daysOffset: 60, status: 'Im Plan' }
             ],
             "H": [
-                { name: 'Programmaufsatz genehmigt', daysOffset: -42, status: 'Geschlossen' },
-                { name: 'Anforderungsanalyse 100%', daysOffset: -7, status: weekOffset > 0 ? 'Im Plan' : 'Geschlossen' },
-                { name: 'Vendor-Entscheidung', daysOffset: 21, status: 'Im Plan' },
-                { name: 'Entwicklung Kick-off', daysOffset: 45, status: 'Im Plan' },
-                { name: 'CRM MVP Go-Live', daysOffset: 120, status: 'Im Plan' }
+                { name: 'CRM Anforderungen final', daysOffset: -42, status: 'Geschlossen' },
+                { name: 'Vendor Shortlist erstellt', daysOffset: -7, status: 'Geschlossen' },
+                { name: 'Vendor Demo-Runde', daysOffset: 15, status: 'Im Plan' },
+                { name: 'Vertragsverhandlung Start', daysOffset: 38, status: 'Im Plan' },
+                { name: 'Implementierung Kickoff', daysOffset: 90, status: 'Im Plan' }
             ]
         };
 
@@ -951,11 +951,17 @@ export const PMO = {
         let allMilestones = [];
         const latestStatuses = this.getLatestStatuses();
 
+        // Deduplicate milestones by name + project (same milestone can appear in multiple workstreams)
+        const seen = new Set();
+
         latestStatuses.forEach(status => {
             const project = this.PROGRAM_STRUCTURE.projects.find(p => p.id === status.projectId);
-            const ws = project?.workstreams.find(w => w.id === status.workstreamId);
 
             status.milestones.forEach(ms => {
+                const key = `${status.projectId}_${ms.name}`;
+                if (seen.has(key)) return;
+                seen.add(key);
+
                 const dueDate = new Date(ms.currentEstimate || ms.plannedDate);
                 const isOverdue = dueDate < today && ms.status !== 'Geschlossen';
 
@@ -963,91 +969,67 @@ export const PMO = {
                     ...ms,
                     projectId: status.projectId,
                     projectName: project?.name || status.projectId,
-                    workstreamId: status.workstreamId,
-                    workstreamName: ws?.name || status.workstreamId,
                     dueDate,
                     isOverdue
                 });
             });
         });
 
-        // Filter: only show non-closed milestones in the next 60 days or overdue
-        const sixtyDaysFromNow = new Date(today);
-        sixtyDaysFromNow.setDate(sixtyDaysFromNow.getDate() + 60);
+        // Filter: only show non-closed milestones in the next 90 days or overdue
+        const ninetyDaysFromNow = new Date(today);
+        ninetyDaysFromNow.setDate(ninetyDaysFromNow.getDate() + 90);
 
         allMilestones = allMilestones
             .filter(ms => ms.status !== 'Geschlossen')
-            .filter(ms => ms.isOverdue || ms.dueDate <= sixtyDaysFromNow)
+            .filter(ms => ms.isOverdue || ms.dueDate <= ninetyDaysFromNow)
             .sort((a, b) => a.dueDate - b.dueDate);
 
+        // Limit to 12 entries
+        allMilestones = allMilestones.slice(0, 12);
+
         if (allMilestones.length === 0) {
-            container.innerHTML = '<p class="pmo-no-milestones">Keine kommenden Meilensteine in den nächsten 60 Tagen</p>';
+            container.innerHTML = '<p class="pmo-no-milestones">Keine kommenden Meilensteine</p>';
             return;
         }
 
-        // Group by project
-        const byProject = {};
+        let html = '<div class="pmo-milestone-structured-list">';
+
         allMilestones.forEach(ms => {
-            if (!byProject[ms.projectId]) {
-                byProject[ms.projectId] = {
-                    name: ms.projectName,
-                    milestones: []
-                };
+            const daysUntil = Math.ceil((ms.dueDate - today) / (1000 * 60 * 60 * 24));
+            let dateLabel;
+            let dateClass = '';
+
+            if (ms.isOverdue) {
+                const absDays = Math.abs(daysUntil);
+                dateLabel = absDays === 1 ? '1 Tag überfällig' : `${absDays} Tage überfällig`;
+                dateClass = 'overdue';
+            } else if (daysUntil === 0) {
+                dateLabel = 'Heute';
+                dateClass = 'today';
+            } else if (daysUntil === 1) {
+                dateLabel = 'Morgen';
+                dateClass = 'soon';
+            } else if (daysUntil <= 7) {
+                dateLabel = `In ${daysUntil} Tagen`;
+                dateClass = 'soon';
+            } else {
+                dateLabel = this.formatDate(ms.dueDate.toISOString().split('T')[0]);
             }
-            byProject[ms.projectId].milestones.push(ms);
-        });
-
-        let html = '<div class="pmo-milestones-grid">';
-
-        Object.entries(byProject).forEach(([projectId, data]) => {
-            html += `
-                <div class="pmo-milestone-project-card">
-                    <div class="pmo-milestone-project-header">
-                        <span class="pmo-milestone-project-id">${projectId}</span>
-                        <span class="pmo-milestone-project-name">${data.name}</span>
-                    </div>
-                    <div class="pmo-milestone-list">
-            `;
-
-            data.milestones.forEach(ms => {
-                const daysUntil = Math.ceil((ms.dueDate - today) / (1000 * 60 * 60 * 24));
-                let dateLabel;
-                let dateClass = '';
-
-                if (ms.isOverdue) {
-                    dateLabel = `${Math.abs(daysUntil)} Tage überfällig`;
-                    dateClass = 'overdue';
-                } else if (daysUntil === 0) {
-                    dateLabel = 'Heute';
-                    dateClass = 'today';
-                } else if (daysUntil === 1) {
-                    dateLabel = 'Morgen';
-                    dateClass = 'soon';
-                } else if (daysUntil <= 7) {
-                    dateLabel = `In ${daysUntil} Tagen`;
-                    dateClass = 'soon';
-                } else {
-                    dateLabel = this.formatDate(ms.dueDate.toISOString().split('T')[0]);
-                }
-
-                html += `
-                    <div class="pmo-milestone-item ${ms.isOverdue ? 'overdue' : ''}">
-                        <div class="pmo-milestone-info">
-                            <span class="pmo-milestone-name">${ms.name}</span>
-                            <span class="pmo-milestone-date ${dateClass}">${dateLabel}</span>
-                        </div>
-                        <button class="pmo-reminder-btn" onclick="PMO.sendReminder('${projectId}', '${ms.name}')" title="Erinnerung senden">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
-                                <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-                                <path d="M13.73 21a2 2 0 01-3.46 0"></path>
-                            </svg>
-                        </button>
-                    </div>
-                `;
-            });
 
             html += `
+                <div class="pmo-milestone-row ${ms.isOverdue ? 'overdue' : ''}">
+                    <div class="pmo-milestone-project-badge">${ms.projectId}</div>
+                    <div class="pmo-milestone-content">
+                        <span class="pmo-milestone-name">${ms.name}</span>
+                        <span class="pmo-milestone-project-name">${ms.projectName}</span>
                     </div>
+                    <span class="pmo-milestone-date ${dateClass}">${dateLabel}</span>
+                    <button class="pmo-reminder-btn" onclick="PMO.sendReminder('${ms.projectId}', '${ms.name}')" title="Erinnerung senden">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                            <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                            <path d="M13.73 21a2 2 0 01-3.46 0"></path>
+                        </svg>
+                    </button>
                 </div>
             `;
         });

@@ -116,7 +116,7 @@ export const PMO = {
     tasks: [],
     milestones: [],
     selectedTrafficLights: {},
-    DEMO_DATA_VERSION: 3,  // Increment to force regeneration of demo data
+    DEMO_DATA_VERSION: 4,  // Increment to force regeneration of demo data
 
     // Initialize
     init() {
@@ -727,8 +727,8 @@ export const PMO = {
                 ["Servicemodell: Start in 3 Pilotregionen", "EASY Backlog: Priorisierung abgeschlossen", "Kundenanalytik-Tool: Entwicklung"]
             ],
             "E": [
-                ["SEO: +52% organischer Traffic vs. Vorjahr", "Instagram-Kampagne: 10.000 Follower erreicht", "EMOK 3.0: Alle Features released"],
-                ["SEO: +45% organischer Traffic", "Instagram-Kampagne: Launch erfolgreich", "EMOK 3.0: Letzte Features in Entwicklung"],
+                ["SEO: +52% organischer Traffic vs. Vorjahr", "Marketing-Automation: Alle Workflows aktiv", "EMOK 3.0: Alle Features released"],
+                ["SEO: +45% organischer Traffic", "Marketing-Automation: Lead-Scoring implementiert", "EMOK 3.0: Letzte Features in Entwicklung"],
                 ["SEO: +35% organischer Traffic", "Social Media: Content-Plan finalisiert", "EMOK 3.0: 80% der Features live"],
                 ["SEO: Erste Maßnahmen zeigen Wirkung (+20%)", "Social Media: Strategie verabschiedet", "EMOK: Feature-Priorisierung"],
                 ["SEO: Technical Audit abgeschlossen", "Social Media: Analyse Wettbewerb", "EMOK: Backlog-Grooming"]
@@ -786,8 +786,8 @@ export const PMO = {
                 ["Pilotierung starten", "Backlog aufarbeiten", "Beta-Tests"]
             ],
             "E": [
-                ["SEO: Voice Search Optimierung", "TikTok-Strategie entwickeln", "EMOK 4.0 Roadmap"],
-                ["Instagram: Influencer-Kooperation", "EMOK: Letzte Features", "Conversion-Optimierung"],
+                ["SEO: Voice Search Optimierung", "Omnichannel-Strategie entwickeln", "EMOK 4.0 Roadmap"],
+                ["Lead-Nurturing Workflows testen", "EMOK: Letzte Features", "Conversion-Optimierung"],
                 ["Kampagnen-Launch", "Feature-Entwicklung", "A/B-Tests"],
                 ["Content-Produktion", "Feature-Priorisierung", "Analyse vertiefen"],
                 ["Maßnahmen umsetzen", "Strategie finalisieren", "Development starten"]
@@ -886,7 +886,7 @@ export const PMO = {
             "E": [
                 { name: 'SEO Technical Fixes', daysOffset: -40, status: 'Geschlossen' },
                 { name: 'EMOK 3.0 Feature Freeze', daysOffset: -20, status: 'Geschlossen' },
-                { name: 'Instagram 5K Follower', daysOffset: 2, status: 'Im Plan' },
+                { name: 'Marketing-Automation Live', daysOffset: 2, status: 'Im Plan' },
                 { name: 'Conversion Rate +15%', daysOffset: 28, status: 'Im Plan' },
                 { name: 'Organic Traffic Verdopplung', daysOffset: 65, status: 'Im Plan' }
             ],

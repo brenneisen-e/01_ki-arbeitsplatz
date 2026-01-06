@@ -842,27 +842,80 @@ export const PMO = {
             }
         }
 
-        // Generate milestones with realistic dates
-        const milestones = [
-            {
-                name: 'Konzeptphase',
-                plannedDate: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-                currentEstimate: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-                status: 'Geschlossen'
-            },
-            {
-                name: 'Pilotierung',
-                plannedDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-                currentEstimate: new Date(Date.now() + (adjustedStatus === 'red' ? 45 : 30) * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-                status: adjustedStatus === 'red' ? 'Verzögert' : (weekOffset < 2 ? 'Im Plan' : 'Im Plan')
-            },
-            {
-                name: 'Go-Live',
-                plannedDate: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-                currentEstimate: new Date(Date.now() + (adjustedStatus === 'red' ? 105 : 90) * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-                status: 'Im Plan'
-            }
-        ];
+        // Project-specific milestones (5 per project)
+        const projectMilestones = {
+            "A": [
+                { name: 'Konzept Lead-Routing abgeschlossen', daysOffset: -45, status: 'Geschlossen' },
+                { name: 'K-EWE Schnittstelle live', daysOffset: -14, status: 'Geschlossen' },
+                { name: 'Inside Sales Team komplett', daysOffset: 0, status: adjustedStatus === 'red' ? 'Verzögert' : 'Im Plan' },
+                { name: 'Go-Live Region Nord', daysOffset: 21, status: 'Im Plan' },
+                { name: 'Bundesweiter Rollout', daysOffset: 60, status: 'Im Plan' }
+            ],
+            "B": [
+                { name: 'Reporting-Framework Design', daysOffset: -60, status: 'Geschlossen' },
+                { name: 'Dashboard MVP live', daysOffset: -30, status: 'Geschlossen' },
+                { name: 'Mobile App Release', daysOffset: 7, status: 'Im Plan' },
+                { name: 'Provisionsmodell Pilot', daysOffset: 30, status: 'Im Plan' },
+                { name: 'Performance-Steuerung 2.0', daysOffset: 75, status: 'Im Plan' }
+            ],
+            "C": [
+                { name: 'Recruiting-Strategie verabschiedet', daysOffset: -50, status: 'Geschlossen' },
+                { name: 'Onboarding 2.0 Konzept', daysOffset: -21, status: 'Geschlossen' },
+                { name: 'Schulungsplattform Go-Live', daysOffset: 14, status: adjustedStatus === 'red' ? 'Verzögert' : 'Im Plan' },
+                { name: '30 Vermittler eingestellt', daysOffset: 35, status: 'Im Plan' },
+                { name: 'Bundesweiter Onboarding-Rollout', daysOffset: 60, status: 'Im Plan' }
+            ],
+            "D": [
+                { name: 'Servicemodell Definition', daysOffset: -55, status: 'Geschlossen' },
+                { name: '3 Pilotregionen live', daysOffset: -14, status: 'Geschlossen' },
+                { name: 'Kundenanalytik-Tool Produktiv', daysOffset: 7, status: 'Im Plan' },
+                { name: 'EASY Backlog 100%', daysOffset: 45, status: 'Im Plan' },
+                { name: 'Rollout auf 10 Regionen', daysOffset: 90, status: 'Im Plan' }
+            ],
+            "E": [
+                { name: 'SEO-Audit abgeschlossen', daysOffset: -40, status: 'Geschlossen' },
+                { name: 'Social Media Strategie', daysOffset: -20, status: 'Geschlossen' },
+                { name: 'Instagram-Kampagne Launch', daysOffset: 0, status: 'Im Plan' },
+                { name: 'EMOK 3.0 Complete', daysOffset: 21, status: 'Im Plan' },
+                { name: '+50% Organic Traffic', daysOffset: 60, status: 'Im Plan' }
+            ],
+            "F": [
+                { name: 'Kostenanalyse alle Bereiche', daysOffset: -30, status: 'Geschlossen' },
+                { name: 'Maßnahmenplan Vorstand', daysOffset: -7, status: adjustedStatus === 'red' ? 'Verzögert' : 'Im Plan' },
+                { name: 'Quick-Wins umgesetzt', daysOffset: 14, status: adjustedStatus === 'red' ? 'Gefährdet' : 'Im Plan' },
+                { name: 'Investitionsplan genehmigt', daysOffset: 30, status: 'Im Plan' },
+                { name: '€2 Mio Einsparungen realisiert', daysOffset: 90, status: 'Im Plan' }
+            ],
+            "G": [
+                { name: 'Change-Story entwickelt', daysOffset: -35, status: 'Geschlossen' },
+                { name: 'Führungskräfte-Kickoff', daysOffset: -21, status: 'Geschlossen' },
+                { name: 'Townhall-Serie abgeschlossen', daysOffset: 14, status: 'Im Plan' },
+                { name: '80% Awareness erreicht', daysOffset: 30, status: 'Im Plan' },
+                { name: 'Change nachhaltig verankert', daysOffset: 75, status: 'Im Plan' }
+            ],
+            "H": [
+                { name: 'Programmaufsatz genehmigt', daysOffset: -42, status: 'Geschlossen' },
+                { name: 'Anforderungsanalyse 100%', daysOffset: -7, status: weekOffset > 0 ? 'Im Plan' : 'Geschlossen' },
+                { name: 'Vendor-Entscheidung', daysOffset: 21, status: 'Im Plan' },
+                { name: 'Entwicklung Kick-off', daysOffset: 45, status: 'Im Plan' },
+                { name: 'CRM MVP Go-Live', daysOffset: 120, status: 'Im Plan' }
+            ]
+        };
+
+        const baseMilestones = projectMilestones[projectId] || projectMilestones["A"];
+        const milestones = baseMilestones.map(ms => {
+            const plannedDate = new Date(Date.now() + ms.daysOffset * 24 * 60 * 60 * 1000);
+            const delayDays = adjustedStatus === 'red' ? 14 : 0;
+            const currentEstimate = new Date(Date.now() + (ms.daysOffset + delayDays) * 24 * 60 * 60 * 1000);
+
+            return {
+                name: ms.name,
+                plannedDate: plannedDate.toISOString().split('T')[0],
+                currentEstimate: currentEstimate.toISOString().split('T')[0],
+                status: ms.status === 'Geschlossen' ? 'Geschlossen' :
+                        (adjustedStatus === 'red' && ms.daysOffset < 30 ? 'Verzögert' : ms.status)
+            };
+        });
 
         return {
             projectId,

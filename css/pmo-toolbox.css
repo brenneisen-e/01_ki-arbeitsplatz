@@ -283,6 +283,15 @@
     border-top: 1px solid #e2e8f0;
 }
 
+.pmo-ws-header {
+    font-size: 11px;
+    font-weight: 600;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+}
+
 .pmo-ws-item {
     display: flex;
     align-items: center;

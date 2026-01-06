@@ -1038,6 +1038,7 @@ export const PMO = {
                 <h4 class="pmo-project-name">${project.name}</h4>
                 <p class="pmo-project-full-name">${project.fullName}</p>
                 <div class="pmo-project-workstreams-list">
+                    <span class="pmo-ws-header">Workstreams</span>
                     ${workstreamHtml}
                 </div>
             `;
@@ -1046,10 +1047,18 @@ export const PMO = {
         });
     },
 
-    getWorkstreamLatestStatus(projectId, workstreamId) {
-        const statuses = this.statusData
-            .filter(s => s.projectId === projectId && s.workstreamId === workstreamId)
-            .sort((a, b) => b.date.localeCompare(a.date));
+    getWorkstreamLatestStatus(projectIdOrWsId, workstreamId = null) {
+        let statuses;
+        if (workstreamId) {
+            // Called with (projectId, workstreamId)
+            statuses = this.statusData
+                .filter(s => s.projectId === projectIdOrWsId && s.workstreamId === workstreamId);
+        } else {
+            // Called with (wsId) only
+            statuses = this.statusData
+                .filter(s => s.workstreamId === projectIdOrWsId);
+        }
+        statuses.sort((a, b) => b.date.localeCompare(a.date));
         return statuses.length > 0 ? statuses[0] : null;
     },
 
@@ -1131,13 +1140,6 @@ export const PMO = {
         `;
 
         document.getElementById('pmo-project-modal').classList.add('active');
-    },
-
-    getWorkstreamLatestStatus(wsId) {
-        const wsStatuses = this.statusData
-            .filter(s => s.workstreamId === wsId)
-            .sort((a, b) => b.date.localeCompare(a.date));
-        return wsStatuses[0] || null;
     },
 
     closeProjectModal() {

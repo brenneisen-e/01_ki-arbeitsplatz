@@ -1291,6 +1291,9 @@ export const PMO = {
         this.closeSearch();
         if (type === 'project') {
             this.openProjectDetail(id);
+        } else if (type === 'status') {
+            // Open PPT view directly for the found status
+            this.openPPTViewForStatus(id);
         }
     },
 
@@ -1684,7 +1687,7 @@ export const PMO = {
     pptStatusHistory: [],
     pptCurrentIndex: 0,
 
-    openPPTView(workstreamId) {
+    openPPTView(workstreamId, specificStatusId = null) {
         const wsStatuses = this.statusData
             .filter(s => s.workstreamId === workstreamId)
             .sort((a, b) => b.date.localeCompare(a.date));
@@ -1695,9 +1698,27 @@ export const PMO = {
         }
 
         this.pptStatusHistory = wsStatuses;
-        this.pptCurrentIndex = 0;
+
+        // If a specific status ID is given, navigate to that status
+        if (specificStatusId) {
+            const idx = wsStatuses.findIndex(s => s.id === specificStatusId);
+            this.pptCurrentIndex = idx >= 0 ? idx : 0;
+        } else {
+            this.pptCurrentIndex = 0;
+        }
+
         this.renderPPTSlide();
         document.getElementById('pmo-ppt-modal').classList.add('active');
+    },
+
+    // Open PPT view for a specific status by its ID
+    openPPTViewForStatus(statusId) {
+        const status = this.statusData.find(s => s.id === statusId);
+        if (!status) {
+            alert('Status nicht gefunden.');
+            return;
+        }
+        this.openPPTView(status.workstreamId, statusId);
     },
 
     renderPPTSlide() {

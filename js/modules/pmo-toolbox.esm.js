@@ -1306,22 +1306,22 @@ export const PMO = {
                     const isClosed = ms.status === 'Geschlossen';
                     const isDelayed = ms.status === 'Verzögert';
 
-                    let statusIcon = '⏳';
+                    let statusIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2" width="14" height="14"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>';
                     let statusColor = '#64748b';
                     if (isClosed) {
-                        statusIcon = '✓';
+                        statusIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2" width="14" height="14"><path d="M20 6L9 17l-5-5"/></svg>';
                         statusColor = '#22c55e';
                     } else if (isOverdue) {
-                        statusIcon = '⚠️';
+                        statusIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" width="14" height="14"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>';
                         statusColor = '#ef4444';
                     } else if (isDelayed) {
-                        statusIcon = '⚠️';
+                        statusIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="#eab308" stroke-width="2" width="14" height="14"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>';
                         statusColor = '#eab308';
                     }
 
                     return `
                         <div style="display: flex; align-items: center; padding: 10px 16px; background: ${isOverdue ? '#fef2f2' : '#f8fafc'}; border-radius: 8px; margin-bottom: 6px; border-left: 3px solid ${statusColor};">
-                            <span style="margin-right: 10px;">${statusIcon}</span>
+                            <span style="margin-right: 10px; display: flex; align-items: center;">${statusIcon}</span>
                             <span style="font-weight: 500; color: #E30613; margin-right: 8px; font-size: 11px;">${ms.workstreamId}</span>
                             <span style="flex: 1; font-size: 13px; color: #1e293b; ${isClosed ? 'text-decoration: line-through; opacity: 0.6;' : ''}">${ms.name}</span>
                             <span style="font-size: 12px; color: ${isOverdue ? '#ef4444' : '#64748b'}; font-weight: ${isOverdue ? '600' : '400'};">${this.formatDate(ms.currentEstimate || ms.plannedDate)}</span>
@@ -1825,7 +1825,7 @@ export const PMO = {
                     </div>
                     <div class="gantt-row-timeline">
                         <div class="gantt-bar ${colorClass}" style="left: ${leftPercent}%; width: ${widthPercent}%;" title="${ms.name}: ${this.formatDate(ms.plannedDate)} → ${this.formatDate(ms.currentEstimate)}">
-                            ${ms.status === 'Geschlossen' ? '✓' : ''}
+                            ${ms.status === 'Geschlossen' ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" width="12" height="12"><path d="M20 6L9 17l-5-5"/></svg>' : ''}
                         </div>
                     </div>
                 </div>
@@ -1940,7 +1940,7 @@ export const PMO = {
                         <div class="kanban-card-title">${d.title}</div>
                         <div class="kanban-card-project">${d.projectId} - ${this.getProjectName(d.projectId)}</div>
                         <div class="kanban-card-due ${isOverdue ? 'overdue' : ''}">
-                            Fällig: ${this.formatDate(d.dueDate)} ${isOverdue ? '⚠️' : ''}
+                            Fällig: ${this.formatDate(d.dueDate)} ${isOverdue ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12" style="vertical-align: middle; margin-left: 4px;"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>' : ''}
                         </div>
                     </div>
                 `;
@@ -2181,9 +2181,14 @@ export const PMO = {
                                 <h4>Meilensteine</h4>
                                 ${status.milestones.length > 0
                                     ? status.milestones.map(m => `
-                                        <p style="margin-bottom:8px;">
-                                            ${m.status === 'Geschlossen' ? '✓' : m.status === 'Verzögert' ? '⚠️' : '⏳'} ${this.highlightSearchTerm(m.name)}
-                                            <br><small style="color:#64748b;">${this.formatDate(m.currentEstimate || m.plannedDate)}</small>
+                                        <p style="margin-bottom:8px; display: flex; align-items: flex-start; gap: 6px;">
+                                            ${m.status === 'Geschlossen'
+                                                ? '<svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2" width="14" height="14" style="flex-shrink:0; margin-top:2px;"><path d="M20 6L9 17l-5-5"/></svg>'
+                                                : m.status === 'Verzögert'
+                                                    ? '<svg viewBox="0 0 24 24" fill="none" stroke="#eab308" stroke-width="2" width="14" height="14" style="flex-shrink:0; margin-top:2px;"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>'
+                                                    : '<svg viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2" width="14" height="14" style="flex-shrink:0; margin-top:2px;"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>'
+                                            }
+                                            <span>${this.highlightSearchTerm(m.name)}<br><small style="color:#64748b;">${this.formatDate(m.currentEstimate || m.plannedDate)}</small></span>
                                         </p>
                                     `).join('')
                                     : '<p style="color:#94a3b8;">Keine Meilensteine</p>'

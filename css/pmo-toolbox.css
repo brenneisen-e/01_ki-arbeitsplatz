@@ -220,16 +220,40 @@
 
 /* Dashboard Layout */
 .pmo-dashboard-layout {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr auto;
     gap: 24px;
-    align-items: flex-start;
+    align-items: start;
 }
 
 .pmo-dashboard-projects {
-    flex: 1;
     min-width: 0;
 }
 
+.pmo-dashboard-sidebar-grid {
+    display: grid;
+    grid-template-columns: 280px 260px;
+    gap: 16px;
+    margin-top: 46px;
+    position: sticky;
+    top: 80px;
+    align-items: start;
+}
+
+.pmo-sidebar-panel {
+    background: white;
+    border-radius: 16px;
+    padding: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    max-height: calc(100vh - 140px);
+    overflow-y: auto;
+}
+
+.pmo-calendar-panel {
+    padding: 12px;
+}
+
+/* Legacy single sidebar (keep for backwards compatibility) */
 .pmo-dashboard-sidebar {
     width: 300px;
     flex-shrink: 0;
@@ -241,7 +265,7 @@
     top: 80px;
     max-height: calc(100vh - 120px);
     overflow-y: auto;
-    margin-top: 46px; /* Align with project cards: title (18px + 16px margin) + grid padding (12px) */
+    margin-top: 46px;
 }
 
 /* Mini Stats in Sidebar */

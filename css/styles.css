@@ -6829,6 +6829,273 @@ button svg,
     color: #1e293b;
 }
 
+/* Floating Agentur Chat Widget */
+.agentur-chat-toggle {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #86BC25, #6B9A1F);
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(134, 188, 37, 0.4);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+}
+
+.agentur-chat-toggle:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(134, 188, 37, 0.5);
+}
+
+.agentur-chat-toggle svg {
+    color: white;
+}
+
+.agentur-chat-toggle .chat-badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    background: #1e293b;
+    color: white;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 10px;
+}
+
+.agentur-chat-widget {
+    position: fixed;
+    bottom: 96px;
+    right: 24px;
+    width: 380px;
+    max-height: 520px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+    z-index: 1001;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.agentur-chat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    background: linear-gradient(135deg, #86BC25, #6B9A1F);
+    color: white;
+}
+
+.agentur-chat-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+    font-size: 15px;
+}
+
+.agentur-chat-close {
+    background: rgba(255,255,255,0.2);
+    border: none;
+    border-radius: 8px;
+    padding: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.agentur-chat-close:hover {
+    background: rgba(255,255,255,0.3);
+}
+
+.agentur-chat-close svg {
+    color: white;
+    display: block;
+}
+
+.agentur-chat-widget .agentur-chat-body {
+    flex: 1;
+    padding: 16px;
+    overflow-y: auto;
+    max-height: 350px;
+}
+
+.agentur-chat-widget .agentur-chat-welcome {
+    text-align: center;
+    padding: 20px 0;
+}
+
+.agentur-chat-widget .welcome-icon {
+    width: 60px;
+    height: 60px;
+    background: rgba(134, 188, 37, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+}
+
+.agentur-chat-widget .welcome-icon svg {
+    color: #86BC25;
+}
+
+.agentur-chat-widget .agentur-chat-welcome h4 {
+    margin: 0 0 8px 0;
+    font-size: 16px;
+    color: #1e293b;
+}
+
+.agentur-chat-widget .agentur-chat-welcome p {
+    margin: 0 0 16px 0;
+    font-size: 13px;
+    color: #64748b;
+}
+
+.agentur-chat-widget .welcome-examples {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+}
+
+.agentur-chat-widget .example-btn {
+    padding: 8px 12px;
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    font-size: 12px;
+    color: #475569;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.agentur-chat-widget .example-btn:hover {
+    background: #86BC25;
+    border-color: #86BC25;
+    color: white;
+}
+
+.agentur-chat-input-area {
+    display: flex;
+    gap: 8px;
+    padding: 12px 16px;
+    border-top: 1px solid #e2e8f0;
+    background: #f8fafc;
+}
+
+.agentur-chat-input-area textarea {
+    flex: 1;
+    padding: 10px 14px;
+    border: 1px solid #e2e8f0;
+    border-radius: 20px;
+    font-size: 13px;
+    resize: none;
+    font-family: inherit;
+    background: white;
+}
+
+.agentur-chat-input-area textarea:focus {
+    outline: none;
+    border-color: #86BC25;
+}
+
+.agentur-chat-input-area button {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    background: #86BC25;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.agentur-chat-input-area button svg {
+    color: white;
+}
+
+.agentur-chat-input-area button:hover {
+    background: #6B9A1F;
+}
+
+/* Weitere Potentiale Toggle */
+.weitere-potentiale-toggle {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 16px;
+    margin-top: 12px;
+    background: #f1f5f9;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 14px;
+    color: #64748b;
+}
+
+.weitere-potentiale-toggle:hover {
+    background: #e2e8f0;
+    color: #1e293b;
+}
+
+.weitere-badge {
+    background: #86BC25;
+    color: white;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.weitere-potentiale-toggle .toggle-arrow {
+    margin-left: auto;
+    transition: transform 0.2s;
+}
+
+.weitere-potentiale-toggle.expanded .toggle-arrow {
+    transform: rotate(180deg);
+}
+
+.weitere-potentiale-liste {
+    margin-top: 12px;
+    border-top: 1px solid #e2e8f0;
+    padding-top: 12px;
+}
+
+/* Potentiale in Übersicht-Card anpassen */
+.potentiale-impuls-card .impuls-item {
+    margin: 0;
+    border-radius: 10px;
+}
+
+.potentiale-impuls-card .impuls-detail {
+    margin: 0 0 12px 0;
+    border-radius: 0 0 10px 10px;
+}
+
+/* Herleitung Items mit Hintergrundfarbe */
+.herleitung-item.highlight-green {
+    background: rgba(134, 188, 37, 0.1);
+    border-left: 3px solid #86BC25;
+    padding-left: 12px;
+}
+
+.herleitung-item.highlight-red {
+    background: rgba(220, 38, 38, 0.1);
+    border-left: 3px solid #dc2626;
+    padding-left: 12px;
+}
+
 /* Responsive Übersicht */
 @media (max-width: 1200px) {
     .agentur-uebersicht-grid {

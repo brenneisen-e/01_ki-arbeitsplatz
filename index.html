@@ -561,8 +561,8 @@
                                 </div>
                             </div>
 
-                            <!-- Vertriebspotentiale (expandierbar) -->
-                            <div class="uebersicht-card">
+                            <!-- Vertriebspotentiale (Impulse-Stil) -->
+                            <div class="uebersicht-card potentiale-impuls-card">
                                 <div class="uebersicht-card-header">
                                     <h3>
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
@@ -570,107 +570,189 @@
                                         </svg>
                                         Vertriebspotentiale
                                     </h3>
-                                    <span class="badge-count">5 aktiv</span>
                                 </div>
-                                <div class="potentiale-liste">
-                                    <div class="potential-item expandable" onclick="togglePotentialDetails(this)">
-                                        <div class="potential-header">
-                                            <div class="potential-kunde">
-                                                <div class="kunde-avatar">PS</div>
-                                                <div class="kunde-info">
-                                                    <strong>Peter Schmidt</strong>
-                                                    <span class="potential-type uebergreifend">Übergreifend</span>
-                                                </div>
+
+                                <!-- Hauptpotential (immer sichtbar, aufgeklappt) -->
+                                <div class="impuls-item highlight expanded" onclick="toggleImpulsDetail('uebersicht-impuls-bu')">
+                                    <div class="impuls-icon">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
+                                            <path d="M22 11.08V12a10 10 0 11-5.93-9.14"></path>
+                                            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                        </svg>
+                                    </div>
+                                    <div class="impuls-text">
+                                        <strong>BU-Nachversicherung anbieten (Erhöhungsgeschäft)</strong>
+                                        <p><span class="fida-source-badge small">PSD2 + Eigene Daten</span> Bestehende BU deckt nur €1.500/Mon. bei Netto-Gehalt €3.680. Deckungslücke €2.180/Mon. (nur 41% abgesichert).</p>
+                                    </div>
+                                    <span class="impuls-priority high">Hohe Priorität</span>
+                                    <span class="impuls-expand">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                                            <polyline points="6 9 12 15 18 9"></polyline>
+                                        </svg>
+                                    </span>
+                                </div>
+                                <div class="impuls-detail" id="uebersicht-impuls-bu" style="display: block;">
+                                    <div class="impuls-detail-section">
+                                        <h4>Herleitung des Impulses</h4>
+                                        <div class="herleitung-grid">
+                                            <div class="herleitung-item">
+                                                <span class="herleitung-label">Datenquelle</span>
+                                                <span class="herleitung-value">PSD2 (Gehaltsdaten) + Eigener Vertrag (BU)</span>
                                             </div>
-                                            <div class="potential-value">€8.500/Jahr</div>
-                                            <svg class="expand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
-                                                <polyline points="6 9 12 15 18 9"></polyline>
-                                            </svg>
+                                            <div class="herleitung-item">
+                                                <span class="herleitung-label">Netto-Gehalt</span>
+                                                <span class="herleitung-value">€3.680/Monat (aus Zahlungsverkehrsdaten)</span>
+                                            </div>
+                                            <div class="herleitung-item highlight-green">
+                                                <span class="herleitung-label">Aktuelle BU-Absicherung</span>
+                                                <span class="herleitung-value">€1.500/Monat (eigener Vertrag)</span>
+                                            </div>
+                                            <div class="herleitung-item highlight-red">
+                                                <span class="herleitung-label">Deckungslücke</span>
+                                                <span class="herleitung-value" style="color: #dc2626;">€2.180/Monat (nur 41% abgesichert)</span>
+                                            </div>
                                         </div>
-                                        <div class="potential-details" style="display: none;">
-                                            <div class="herleitung-box">
-                                                <div class="herleitung-title">Herleitung</div>
-                                                <p>Hypothek €285.000 bei Sparkasse ohne Restschuldversicherung. Familie vorhanden – dringender Absicherungsbedarf. Empfehlung: Risikolebensversicherung + BU.</p>
-                                                <div class="herleitung-quelle">
-                                                    <span class="fida-source-badge small">Open Finance</span>
-                                                    Kreditdaten (Sparkasse)
-                                                </div>
-                                            </div>
-                                            <button class="btn-primary btn-kunde-oeffnen" onclick="event.stopPropagation(); openKundenDetail('Peter Schmidt', 'KD00001')">
+                                        <div class="deckungsluecke-bar">
+                                            <div class="deckungsluecke-bar-filled" style="width: 41%;"></div>
+                                            <span class="deckungsluecke-bar-label">41% abgesichert</span>
+                                        </div>
+                                    </div>
+                                    <div class="impuls-detail-section">
+                                        <h4>Empfehlung: BU-Erhöhung</h4>
+                                        <p>Empfohlene Aufstockung: €2.200/Monat zusätzlich. Geschätzte Mehrprämie: ca. €120-150/Monat.</p>
+                                    </div>
+                                    <div class="impuls-detail-section">
+                                        <h4>Aktionen</h4>
+                                        <div class="impuls-actions">
+                                            <button class="action-btn primary" onclick="event.stopPropagation(); openKundenDetail('Peter Schmidt', 'KD00001')">
                                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
                                                     <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                                                     <circle cx="12" cy="12" r="3"></circle>
                                                 </svg>
                                                 Kunden öffnen
                                             </button>
-                                        </div>
-                                    </div>
-                                    <div class="potential-item expandable" onclick="togglePotentialDetails(this)">
-                                        <div class="potential-header">
-                                            <div class="potential-kunde">
-                                                <div class="kunde-avatar">SK</div>
-                                                <div class="kunde-info">
-                                                    <strong>Sabine König</strong>
-                                                    <span class="potential-type kfz">Kfz-Wechsel</span>
-                                                </div>
-                                            </div>
-                                            <div class="potential-value">€650/Jahr</div>
-                                            <svg class="expand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
-                                                <polyline points="6 9 12 15 18 9"></polyline>
-                                            </svg>
-                                        </div>
-                                        <div class="potential-details" style="display: none;">
-                                            <div class="herleitung-box">
-                                                <div class="herleitung-title">Herleitung</div>
-                                                <p>Kfz bei Allianz läuft 30.11.2025 aus, SF-Klasse 12, aktuell €720/Jahr. Ersparnis von ca. €180/Jahr möglich durch Wechsel.</p>
-                                                <div class="herleitung-quelle">
-                                                    <span class="fida-source-badge small">Versicherung</span>
-                                                    Kfz-Daten (Allianz)
-                                                </div>
-                                            </div>
-                                            <button class="btn-primary btn-kunde-oeffnen" onclick="event.stopPropagation(); openKundenDetail('Sabine König', 'KD00002')">
+                                            <button class="action-btn secondary">
                                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
-                                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                                                    <circle cx="12" cy="12" r="3"></circle>
+                                                    <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path>
+                                                    <polyline points="14 2 14 8 20 8"></polyline>
                                                 </svg>
-                                                Kunden öffnen
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div class="potential-item expandable" onclick="togglePotentialDetails(this)">
-                                        <div class="potential-header">
-                                            <div class="potential-kunde">
-                                                <div class="kunde-avatar">TW</div>
-                                                <div class="kunde-info">
-                                                    <strong>Thomas Weber</strong>
-                                                    <span class="potential-type risiko">Risikoleben fehlt</span>
-                                                </div>
-                                            </div>
-                                            <div class="potential-value">€1.800/Jahr</div>
-                                            <svg class="expand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
-                                                <polyline points="6 9 12 15 18 9"></polyline>
-                                            </svg>
-                                        </div>
-                                        <div class="potential-details" style="display: none;">
-                                            <div class="herleitung-box">
-                                                <div class="herleitung-title">Herleitung</div>
-                                                <p>Baufinanzierung €320.000 ohne Absicherung. 2 Kinder im Haushalt. Dringend Risikolebensversicherung empfohlen.</p>
-                                                <div class="herleitung-quelle">
-                                                    <span class="fida-source-badge small">Kredit</span>
-                                                    Baufinanzierung (Bestand)
-                                                </div>
-                                            </div>
-                                            <button class="btn-primary btn-kunde-oeffnen" onclick="event.stopPropagation(); openKundenDetail('Thomas Weber', 'KD00003')">
-                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
-                                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                                                    <circle cx="12" cy="12" r="3"></circle>
-                                                </svg>
-                                                Kunden öffnen
+                                                Angebot erstellen
                                             </button>
                                         </div>
                                     </div>
                                 </div>
-                                <a href="#" class="link-alle-anzeigen" onclick="showAgenturTab('potential'); return false;">Alle Potentiale anzeigen →</a>
+
+                                <!-- Weitere Potentiale (ausklappbar) -->
+                                <div class="weitere-potentiale-toggle" onclick="toggleWeiterePotentiale()">
+                                    <span class="weitere-badge">+4</span>
+                                    <span>Weitere Potentiale anzeigen</span>
+                                    <svg class="toggle-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                                        <polyline points="6 9 12 15 18 9"></polyline>
+                                    </svg>
+                                </div>
+                                <div class="weitere-potentiale-liste" id="weiterePotentialeListe" style="display: none;">
+                                    <div class="impuls-item clickable" onclick="toggleImpulsDetail('uebersicht-impuls-kfz')">
+                                        <div class="impuls-icon">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
+                                                <rect x="1" y="3" width="15" height="13" rx="2"></rect>
+                                                <path d="M16 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2"></path>
+                                                <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                                                <circle cx="18.5" cy="18.5" r="2.5"></circle>
+                                            </svg>
+                                        </div>
+                                        <div class="impuls-text">
+                                            <strong>Kfz-Wechsel: Sabine König</strong>
+                                            <p><span class="fida-source-badge small">Open Finance</span> Kfz bei Allianz läuft 30.11.2025 aus. Ersparnis ca. €180/Jahr möglich.</p>
+                                        </div>
+                                        <span class="impuls-priority medium">Mittlere Priorität</span>
+                                    </div>
+                                    <div class="impuls-detail" id="uebersicht-impuls-kfz" style="display: none;">
+                                        <div class="impuls-detail-section">
+                                            <h4>Herleitung des Impulses</h4>
+                                            <div class="herleitung-grid">
+                                                <div class="herleitung-item">
+                                                    <span class="herleitung-label">Datenquelle</span>
+                                                    <span class="herleitung-value">Open Finance - Versicherungsdaten (Allianz)</span>
+                                                </div>
+                                                <div class="herleitung-item">
+                                                    <span class="herleitung-label">Aktueller Vertrag</span>
+                                                    <span class="herleitung-value">Allianz Kfz-Vollkasko, €720/Jahr, SF-Klasse 12</span>
+                                                </div>
+                                                <div class="herleitung-item">
+                                                    <span class="herleitung-label">Ablaufdatum</span>
+                                                    <span class="herleitung-value">30.11.2025</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="impuls-actions">
+                                            <button class="action-btn primary" onclick="event.stopPropagation(); openKundenDetail('Sabine König', 'KD00002')">Kunden öffnen</button>
+                                        </div>
+                                    </div>
+
+                                    <div class="impuls-item clickable" onclick="toggleImpulsDetail('uebersicht-impuls-risiko')">
+                                        <div class="impuls-icon">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
+                                                <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"></path>
+                                            </svg>
+                                        </div>
+                                        <div class="impuls-text">
+                                            <strong>Risikoleben fehlt: Thomas Weber</strong>
+                                            <p><span class="fida-source-badge small">Kredit</span> Baufinanzierung €320.000 ohne Absicherung. 2 Kinder im Haushalt.</p>
+                                        </div>
+                                        <span class="impuls-priority high">Hohe Priorität</span>
+                                    </div>
+                                    <div class="impuls-detail" id="uebersicht-impuls-risiko" style="display: none;">
+                                        <div class="impuls-detail-section">
+                                            <h4>Herleitung des Impulses</h4>
+                                            <div class="herleitung-grid">
+                                                <div class="herleitung-item">
+                                                    <span class="herleitung-label">Datenquelle</span>
+                                                    <span class="herleitung-value">Baufinanzierung (Bestand)</span>
+                                                </div>
+                                                <div class="herleitung-item">
+                                                    <span class="herleitung-label">Kreditbetrag</span>
+                                                    <span class="herleitung-value">€320.000</span>
+                                                </div>
+                                                <div class="herleitung-item">
+                                                    <span class="herleitung-label">Haushalt</span>
+                                                    <span class="herleitung-value">2 Kinder, dringender Absicherungsbedarf</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="impuls-actions">
+                                            <button class="action-btn primary" onclick="event.stopPropagation(); openKundenDetail('Thomas Weber', 'KD00003')">Kunden öffnen</button>
+                                        </div>
+                                    </div>
+
+                                    <div class="impuls-item clickable">
+                                        <div class="impuls-icon">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
+                                                <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"></path>
+                                                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                                            </svg>
+                                        </div>
+                                        <div class="impuls-text">
+                                            <strong>Hausrat-Anpassung: Maria Fischer</strong>
+                                            <p><span class="fida-source-badge small">PSD2</span> Mietzahlung geändert - vermutlich Umzug in größere Wohnung.</p>
+                                        </div>
+                                        <span class="impuls-priority medium">Mittlere Priorität</span>
+                                    </div>
+
+                                    <div class="impuls-item clickable">
+                                        <div class="impuls-icon">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
+                                                <circle cx="12" cy="12" r="10"></circle>
+                                                <path d="M16 8l-4 4-4-4"></path>
+                                                <path d="M12 16V12"></path>
+                                            </svg>
+                                        </div>
+                                        <div class="impuls-text">
+                                            <strong>Altersvorsorge-Check: Hans Müller</strong>
+                                            <p><span class="fida-source-badge small">PSD2</span> Hohe Sparrate ohne Altersvorsorge erkannt.</p>
+                                        </div>
+                                        <span class="impuls-priority low">Niedrige Priorität</span>
+                                    </div>
+                                </div>
                             </div>
 
                             <!-- Aktuelle Aufgaben -->
@@ -937,38 +1019,6 @@
                                     </div>
                                 </div>
                                 <a href="#" class="link-alle-anzeigen" onclick="showAgenturTab('provision'); return false;">Alle Abrechnungen anzeigen →</a>
-                            </div>
-
-                            <!-- KI-Assistent Chat Widget -->
-                            <div class="uebersicht-card chat-widget-card">
-                                <div class="uebersicht-card-header">
-                                    <h3>
-                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
-                                            <circle cx="12" cy="12" r="3"></circle>
-                                            <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9"></path>
-                                        </svg>
-                                        KI-Assistent
-                                    </h3>
-                                </div>
-                                <div class="agentur-chat-body" id="agenturChatBody">
-                                    <div class="agentur-chat-welcome">
-                                        <p>Fragen Sie mich zu Kunden, Potentialen oder Vertriebsdaten.</p>
-                                        <div class="welcome-examples">
-                                            <button class="example-btn" onclick="askAgenturQuestion('Welche Potentiale habe ich diese Woche?')">Potentiale diese Woche</button>
-                                            <button class="example-btn" onclick="askAgenturQuestion('Zeige offene Aufgaben')">Offene Aufgaben</button>
-                                            <button class="example-btn" onclick="askAgenturQuestion('Meine Vertriebskennzahlen')">Kennzahlen</button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="agentur-chat-footer">
-                                    <textarea id="agenturChatInput" placeholder="Frage stellen..." rows="1"></textarea>
-                                    <button id="agenturChatSend" onclick="sendAgenturChat()">
-                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
-                                            <line x1="22" y1="2" x2="11" y2="13"></line>
-                                            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-                                        </svg>
-                                    </button>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -2404,6 +2454,59 @@
                         </tbody>
                     </table>
                 </div>
+            </div>
+        </div>
+
+        <!-- Floating AI Chat Widget für Agentur -->
+        <button class="agentur-chat-toggle" id="agenturChatToggle" onclick="toggleAgenturChat()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+            <span class="chat-badge">KI</span>
+        </button>
+
+        <div class="agentur-chat-widget" id="agenturChatWidget" style="display: none;">
+            <div class="agentur-chat-header">
+                <div class="agentur-chat-title">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9"></path>
+                    </svg>
+                    Vertriebs-Assistent
+                </div>
+                <button class="agentur-chat-close" onclick="toggleAgenturChat()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="agentur-chat-body" id="agenturChatBody">
+                <div class="agentur-chat-welcome">
+                    <div class="welcome-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="32" height="32">
+                            <circle cx="12" cy="12" r="3"></circle>
+                            <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9"></path>
+                        </svg>
+                    </div>
+                    <h4>Vertriebs-Assistent</h4>
+                    <p>Fragen Sie mich zu Kunden, Potentialen oder Vertriebsdaten.</p>
+                    <div class="welcome-examples">
+                        <button class="example-btn" onclick="askAgenturQuestion('Welche Potentiale habe ich diese Woche?')">Potentiale diese Woche</button>
+                        <button class="example-btn" onclick="askAgenturQuestion('Zeige offene Aufgaben')">Offene Aufgaben</button>
+                        <button class="example-btn" onclick="askAgenturQuestion('Meine Vertriebskennzahlen')">Kennzahlen</button>
+                        <button class="example-btn" onclick="askAgenturQuestion('Kunden mit höchstem Potential')">Top Potentiale</button>
+                    </div>
+                </div>
+            </div>
+            <div class="agentur-chat-input-area">
+                <textarea id="agenturChatInput" placeholder="Frage stellen..." rows="1"></textarea>
+                <button id="agenturChatSend" onclick="sendAgenturChat()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                        <line x1="22" y1="2" x2="11" y2="13"></line>
+                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                    </svg>
+                </button>
             </div>
         </div>
     </div>

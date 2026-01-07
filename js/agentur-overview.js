@@ -64,8 +64,8 @@ function loadAgenturData(vermittlerId) {
     fillProvisionTab(agenturData);
     fillQualitaetTab(agenturData);
 
-    // Zeige ersten Tab
-    showAgenturTab('stammdaten');
+    // Zeige Übersicht-Tab als ersten Tab
+    showAgenturTab('uebersicht');
 }
 
 /**
@@ -669,10 +669,52 @@ function getAgenturChatResponse(question) {
         👏 Starke Woche! Sie liegen über dem Durchschnitt.`;
     }
 
+    if (q.includes('top') || q.includes('höchst')) {
+        return `<strong>Kunden mit höchstem Potential:</strong><br><br>
+        1. <strong>Peter Schmidt</strong> - €8.500/Jahr (BU-Erhöhung)<br>
+        2. <strong>Thomas Weber</strong> - €1.800/Jahr (Risikoleben)<br>
+        3. <strong>Sabine König</strong> - €650/Jahr (Kfz-Wechsel)<br><br>
+        Gesamtpotential: €10.950/Jahr`;
+    }
+
     return `Ich habe Ihre Anfrage verstanden. Hier sind einige Möglichkeiten:<br><br>
     • Fragen Sie nach <strong>"Potentiale"</strong> für Ihre aktuellen Vertriebschancen<br>
     • Fragen Sie nach <strong>"Aufgaben"</strong> für Ihre offenen To-Dos<br>
     • Fragen Sie nach <strong>"Kennzahlen"</strong> für Ihre Performance`;
+}
+
+/**
+ * Toggle für den floating Agentur Chat
+ */
+function toggleAgenturChat() {
+    const widget = document.getElementById('agenturChatWidget');
+    const toggle = document.getElementById('agenturChatToggle');
+
+    if (widget.style.display === 'none' || widget.style.display === '') {
+        widget.style.display = 'flex';
+        toggle.style.display = 'none';
+    } else {
+        widget.style.display = 'none';
+        toggle.style.display = 'flex';
+    }
+}
+
+/**
+ * Toggle für weitere Potentiale in der Übersicht
+ */
+function toggleWeiterePotentiale() {
+    const liste = document.getElementById('weiterePotentialeListe');
+    const toggle = document.querySelector('.weitere-potentiale-toggle');
+
+    if (liste.style.display === 'none' || liste.style.display === '') {
+        liste.style.display = 'block';
+        toggle.classList.add('expanded');
+        toggle.querySelector('span:not(.weitere-badge)').textContent = 'Weitere Potentiale ausblenden';
+    } else {
+        liste.style.display = 'none';
+        toggle.classList.remove('expanded');
+        toggle.querySelector('span:not(.weitere-badge)').textContent = 'Weitere Potentiale anzeigen';
+    }
 }
 
 // Global verfügbar machen
@@ -685,3 +727,5 @@ window.openAbrechnung = openAbrechnung;
 window.sendAgenturChat = sendAgenturChat;
 window.askAgenturQuestion = askAgenturQuestion;
 window.openKundenDetailFromFida = openKundenDetailFromFida;
+window.toggleAgenturChat = toggleAgenturChat;
+window.toggleWeiterePotentiale = toggleWeiterePotentiale;

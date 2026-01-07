@@ -1,5 +1,44 @@
 // js/charts.js - Chart Functions
 
+// =====================================================
+// SCHRAFFIER-PATTERN FÜR KI-FORECAST
+// =====================================================
+
+// Erstellt ein schraffiertes Canvas-Pattern für Forecast-Daten
+function createStripedPattern(ctx, color) {
+    // Erstelle ein kleines Canvas für das Pattern
+    const patternCanvas = document.createElement('canvas');
+    const patternCtx = patternCanvas.getContext('2d');
+    const size = 10;
+    patternCanvas.width = size;
+    patternCanvas.height = size;
+
+    // Hintergrund transparent
+    patternCtx.fillStyle = 'rgba(134, 188, 37, 0.15)';
+    patternCtx.fillRect(0, 0, size, size);
+
+    // Diagonale Streifen
+    patternCtx.strokeStyle = color;
+    patternCtx.lineWidth = 2;
+    patternCtx.beginPath();
+    patternCtx.moveTo(0, size);
+    patternCtx.lineTo(size, 0);
+    patternCtx.stroke();
+
+    // Zusätzlicher Streifen für Kontinuität
+    patternCtx.beginPath();
+    patternCtx.moveTo(-size/2, size/2);
+    patternCtx.lineTo(size/2, -size/2);
+    patternCtx.stroke();
+
+    patternCtx.beginPath();
+    patternCtx.moveTo(size/2, size + size/2);
+    patternCtx.lineTo(size + size/2, size/2);
+    patternCtx.stroke();
+
+    return ctx.createPattern(patternCanvas, 'repeat');
+}
+
 // Generate daily data
 function generateDailyData(monthlyData, kpiId, timeRange = 'year', offset = 0) {
     const dailyData = [];
@@ -94,28 +133,93 @@ function generateDailyData(monthlyData, kpiId, timeRange = 'year', offset = 0) {
 function createChart(kpiId, data, view, kpi, timeRange = 'year', offset = 0) {
     const canvas = document.getElementById(`chart-${kpiId}`);
     if (!canvas) return;
-    
+
     const ctx = canvas.getContext('2d');
-    
+
     let chartData;
     let chartType = 'line';
-    
+
+    // Prüfe, ob Forecast aktiviert ist und hole erweiterte Daten
+    const forecastEnabled = state.forecastEnabled;
+    const fullData = forecastEnabled && typeof getFilteredDataWithForecast === 'function'
+        ? getFilteredDataWithForecast()
+        : data;
+
     if (view === 'month') {
         const months = ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'];
-        chartData = {
-            labels: data.map(d => months[d.month - 1]),
-            datasets: [{
-                label: kpi.title,
-                data: data.map(d => d[kpiId]),
-                backgroundColor: 'rgba(59, 130, 246, 0.2)',
-                borderColor: 'rgba(59, 130, 246, 1)',
-                borderWidth: 2,
-                fill: true,
-                tension: 0.3,
-                pointRadius: 4,
-                pointHoverRadius: 6
-            }]
-        };
+
+        if (forecastEnabled) {
+            // Separiere Ist-Daten und Forecast-Daten
+            const actualData = fullData.filter(d => !d.isForecast);
+            const forecastData = fullData.filter(d => d.isForecast);
+
+            // Erstelle Schraffier-Pattern für Forecast
+            const forecastPattern = createStripedPattern(ctx, 'rgba(134, 188, 37, 0.7)');
+
+            // Erstelle kombinierte Datenpunkte (null für nicht vorhandene Monate)
+            const actualPoints = months.map((_, idx) => {
+                const monthData = actualData.find(d => d.month === idx + 1);
+                return monthData ? monthData[kpiId] : null;
+            });
+
+            const forecastPoints = months.map((_, idx) => {
+                const monthData = forecastData.find(d => d.month === idx + 1);
+                // Zeige Forecast ab letztem Ist-Wert (Übergangsmonat)
+                if (monthData) return monthData[kpiId];
+                // Brücke: letzter Ist-Wert für Übergang
+                if (actualData.length > 0 && idx === actualData[actualData.length - 1].month) {
+                    return actualData[actualData.length - 1][kpiId];
+                }
+                return null;
+            });
+
+            chartData = {
+                labels: months,
+                datasets: [
+                    {
+                        label: kpi.title + ' (Ist)',
+                        data: actualPoints,
+                        backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                        borderColor: 'rgba(59, 130, 246, 1)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.3,
+                        pointRadius: 4,
+                        pointHoverRadius: 6,
+                        spanGaps: false
+                    },
+                    {
+                        label: kpi.title + ' (KI-Forecast)',
+                        data: forecastPoints,
+                        backgroundColor: forecastPattern,
+                        borderColor: 'rgba(134, 188, 37, 1)',
+                        borderWidth: 2,
+                        borderDash: [5, 5],
+                        fill: true,
+                        tension: 0.3,
+                        pointRadius: 4,
+                        pointHoverRadius: 6,
+                        pointStyle: 'triangle',
+                        spanGaps: false
+                    }
+                ]
+            };
+        } else {
+            chartData = {
+                labels: data.map(d => months[d.month - 1]),
+                datasets: [{
+                    label: kpi.title,
+                    data: data.map(d => d[kpiId]),
+                    backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                    borderColor: 'rgba(59, 130, 246, 1)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.3,
+                    pointRadius: 4,
+                    pointHoverRadius: 6
+                }]
+            };
+        }
     } else if (view === 'daily') {
         const dailyData = generateDailyData(data, kpiId, timeRange, offset);
         
@@ -178,7 +282,13 @@ function createChart(kpiId, data, view, kpi, timeRange = 'year', offset = 0) {
             },
             plugins: {
                 legend: {
-                    display: false
+                    display: forecastEnabled,  // Zeige Legende nur bei aktivem Forecast
+                    position: 'bottom',
+                    labels: {
+                        usePointStyle: true,
+                        padding: 15,
+                        font: { size: 11 }
+                    }
                 },
                 tooltip: {
                     callbacks: {
@@ -186,7 +296,9 @@ function createChart(kpiId, data, view, kpi, timeRange = 'year', offset = 0) {
                             if (view === 'distribution') {
                                 return `Anzahl Vermittler: ${context.parsed.y}`;
                             }
-                            return `${kpi.title}: ${formatValue(context.parsed.y, kpi.unit)}`;
+                            const isForecast = context.dataset.label?.includes('Forecast');
+                            const prefix = isForecast ? '🔮 KI-Prognose: ' : '';
+                            return `${prefix}${kpi.title}: ${formatValue(context.parsed.y, kpi.unit)}`;
                         }
                     }
                 }

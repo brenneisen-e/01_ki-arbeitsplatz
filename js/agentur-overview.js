@@ -26,6 +26,12 @@ function showAgenturOverview(vermittlerId) {
     if (kundenDetail) kundenDetail.style.display = 'none';
     if (agenturOverview) agenturOverview.style.display = 'block';
 
+    // Zeige den Agentur-Chat-Toggle Button
+    const agenturChatToggle = document.getElementById('agenturChatToggle');
+    if (agenturChatToggle) {
+        agenturChatToggle.style.display = 'flex';
+    }
+
     // Lade und zeige Agentur-Daten
     loadAgenturData(vermittlerId);
 }
@@ -402,6 +408,9 @@ function backFromAgentur() {
 
     if (landingPage) landingPage.style.display = 'flex';
     if (agenturOverview) agenturOverview.style.display = 'none';
+
+    // Verstecke den Agentur-Chat
+    hideAgenturChat();
 }
 
 // ========================================
@@ -420,6 +429,9 @@ function openBillingCheck() {
     if (mainApp) mainApp.style.display = 'none';
     if (agenturOverview) agenturOverview.style.display = 'none';
     if (billingCheckPage) billingCheckPage.style.display = 'block';
+
+    // Verstecke den Agentur-Chat-Toggle
+    hideAgenturChat();
 }
 
 function closeBillingCheck() {
@@ -700,6 +712,16 @@ function toggleAgenturChat() {
 }
 
 /**
+ * Versteckt den Agentur Chat komplett (beim Verlassen der Agentursicht)
+ */
+function hideAgenturChat() {
+    const widget = document.getElementById('agenturChatWidget');
+    const toggle = document.getElementById('agenturChatToggle');
+    if (widget) widget.style.display = 'none';
+    if (toggle) toggle.style.display = 'none';
+}
+
+/**
  * Toggle für weitere Potentiale in der Übersicht
  */
 function toggleWeiterePotentiale() {
@@ -728,4 +750,5 @@ window.sendAgenturChat = sendAgenturChat;
 window.askAgenturQuestion = askAgenturQuestion;
 window.openKundenDetailFromFida = openKundenDetailFromFida;
 window.toggleAgenturChat = toggleAgenturChat;
+window.hideAgenturChat = hideAgenturChat;
 window.toggleWeiterePotentiale = toggleWeiterePotentiale;

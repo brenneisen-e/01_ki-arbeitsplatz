@@ -23,7 +23,8 @@ const state = {
     tableSort: {
         column: null,
         direction: 'asc'
-    }
+    },
+    forecastEnabled: false  // NEU: KI-Forecast Modus
 };
 
 // Set on window for ESM module compatibility

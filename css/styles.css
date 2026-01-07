@@ -8636,25 +8636,27 @@ button svg,
     letter-spacing: 0.5px;
 }
 
-/* KI Enhanced Badge on KPI Cards */
-.kpi-card.forecast-active .kpi-header::after {
-    content: 'KI-Forecast';
+/* KI Enhanced Badge on KPI Cards - dynamisch eingefügt */
+.ki-forecast-badge {
     position: absolute;
-    top: 8px;
-    right: 8px;
+    top: -8px;
+    right: -8px;
     background: linear-gradient(135deg, #f59e0b, #d97706);
     color: white;
-    font-size: 0.65rem;
+    font-size: 0.6rem;
     font-weight: 700;
-    padding: 3px 8px;
+    padding: 4px 8px;
     border-radius: 4px;
     letter-spacing: 0.5px;
     animation: pulse-badge 2s infinite;
+    box-shadow: 0 2px 8px rgba(245, 158, 11, 0.4);
+    z-index: 10;
+    white-space: nowrap;
 }
 
 @keyframes pulse-badge {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.8; }
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.9; transform: scale(1.02); }
 }
 
 .kpi-card.forecast-active {
@@ -8662,6 +8664,10 @@ button svg,
     border: 2px solid transparent;
     background: linear-gradient(white, white) padding-box,
                 linear-gradient(135deg, #86BC25, #f59e0b) border-box;
+}
+
+.kpi-card.forecast-active .kpi-header {
+    position: relative;
 }
 
 /* Schraffierte Darstellung für Forecast-Daten */

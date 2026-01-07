@@ -148,30 +148,44 @@ function createChart(kpiId, data, view, kpi, timeRange = 'year', offset = 0) {
     if (view === 'month') {
         const months = ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'];
 
-        if (forecastEnabled) {
+        if (forecastEnabled && fullData.some(d => d.isForecast)) {
             // Separiere Ist-Daten und Forecast-Daten
             const actualData = fullData.filter(d => !d.isForecast);
-            const forecastData = fullData.filter(d => d.isForecast);
+            const forecastDataList = fullData.filter(d => d.isForecast);
+
+            console.log('📊 Chart', kpiId, '- Actual:', actualData.length, 'Forecast:', forecastDataList.length);
 
             // Erstelle Schraffier-Pattern für Forecast
             const forecastPattern = createStripedPattern(ctx, 'rgba(134, 188, 37, 0.7)');
 
-            // Erstelle kombinierte Datenpunkte (null für nicht vorhandene Monate)
+            // Letzter Monat der Ist-Daten
+            const lastActualMonth = actualData.length > 0 ? actualData[actualData.length - 1].month : 0;
+            const lastActualValue = actualData.length > 0 ? actualData[actualData.length - 1][kpiId] : 0;
+
+            // Erstelle kombinierte Datenpunkte für alle 12 Monate
             const actualPoints = months.map((_, idx) => {
-                const monthData = actualData.find(d => d.month === idx + 1);
+                const monthNum = idx + 1;
+                const monthData = actualData.find(d => d.month === monthNum);
                 return monthData ? monthData[kpiId] : null;
             });
 
+            // Forecast-Punkte: Start beim letzten Ist-Wert für nahtlosen Übergang
             const forecastPoints = months.map((_, idx) => {
-                const monthData = forecastData.find(d => d.month === idx + 1);
-                // Zeige Forecast ab letztem Ist-Wert (Übergangsmonat)
-                if (monthData) return monthData[kpiId];
-                // Brücke: letzter Ist-Wert für Übergang
-                if (actualData.length > 0 && idx === actualData[actualData.length - 1].month) {
-                    return actualData[actualData.length - 1][kpiId];
+                const monthNum = idx + 1;
+
+                // Brücke: letzter Ist-Wert für Übergang (zeigt am letzten Ist-Monat)
+                if (monthNum === lastActualMonth) {
+                    return lastActualValue;
                 }
+
+                // Forecast-Daten für zukünftige Monate
+                const monthData = forecastDataList.find(d => d.month === monthNum);
+                if (monthData) return monthData[kpiId];
+
                 return null;
             });
+
+            console.log('📈 Forecast points:', forecastPoints);
 
             chartData = {
                 labels: months,
@@ -189,7 +203,7 @@ function createChart(kpiId, data, view, kpi, timeRange = 'year', offset = 0) {
                         spanGaps: false
                     },
                     {
-                        label: kpi.title + ' (KI-Forecast)',
+                        label: kpi.title + ' (KI-Prognose)',
                         data: forecastPoints,
                         backgroundColor: forecastPattern,
                         borderColor: 'rgba(134, 188, 37, 1)',
@@ -197,10 +211,10 @@ function createChart(kpiId, data, view, kpi, timeRange = 'year', offset = 0) {
                         borderDash: [5, 5],
                         fill: true,
                         tension: 0.3,
-                        pointRadius: 4,
-                        pointHoverRadius: 6,
+                        pointRadius: 5,
+                        pointHoverRadius: 7,
                         pointStyle: 'triangle',
-                        spanGaps: false
+                        spanGaps: true
                     }
                 ]
             };

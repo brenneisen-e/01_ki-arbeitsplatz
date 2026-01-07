@@ -863,128 +863,123 @@ function toggleForecast() {
     const checkbox = document.getElementById('forecastToggle');
     state.forecastEnabled = checkbox.checked;
 
-    console.log('Forecast-Modus:', state.forecastEnabled ? 'aktiviert' : 'deaktiviert');
+    console.log('🔮 Forecast-Modus:', state.forecastEnabled ? 'aktiviert' : 'deaktiviert');
 
-    // Alle KPI-Cards mit forecast-active Klasse versehen
+    // Alle KPI-Cards mit forecast-active Klasse und Badge versehen
     document.querySelectorAll('.kpi-card').forEach(card => {
         if (state.forecastEnabled) {
             card.classList.add('forecast-active');
+            // Füge KI-Badge zum Header hinzu (falls noch nicht vorhanden)
+            const header = card.querySelector('.kpi-header');
+            if (header && !header.querySelector('.ki-forecast-badge')) {
+                const badge = document.createElement('span');
+                badge.className = 'ki-forecast-badge';
+                badge.textContent = 'KI-Forecast';
+                header.style.position = 'relative';
+                header.appendChild(badge);
+            }
         } else {
             card.classList.remove('forecast-active');
+            // Entferne KI-Badge
+            const badge = card.querySelector('.ki-forecast-badge');
+            if (badge) badge.remove();
         }
     });
 
-    // Alle Charts neu rendern
+    // Alle Charts neu rendern mit Forecast-Daten
     updateAllKPIs();
 }
 
-// Generiere Forecast-Daten basierend auf historischen Daten
-function generateForecastData(historicalData, kpiId) {
-    if (!historicalData || historicalData.length === 0) return [];
+// Generiere Forecast-Daten für alle KPIs
+function generateAllForecastData(actualData) {
+    if (!actualData || actualData.length === 0) return [];
 
-    const lastMonth = historicalData[historicalData.length - 1]?.month || 10;
-    const forecastMonths = [];
+    const lastMonth = actualData[actualData.length - 1]?.month || 10;
+    const lastMonthData = actualData[actualData.length - 1];
+    const forecastData = [];
 
-    // Berechne Trend aus den letzten 3 Monaten
-    const recentData = historicalData.slice(-3);
-    let avgGrowth = 0;
+    console.log('📊 Generating forecast from month', lastMonth, 'to 12');
 
-    if (recentData.length >= 2) {
-        const values = recentData.map(d => d[kpiId]);
-        for (let i = 1; i < values.length; i++) {
-            if (values[i - 1] !== 0) {
-                avgGrowth += (values[i] - values[i - 1]) / Math.abs(values[i - 1]);
+    // KPI-IDs
+    const allKpiIds = ['neugeschaeft', 'bestand', 'storno', 'nps', 'risiko', 'combined', 'ergebnis', 'underwriting', 'deckungsbeitrag'];
+
+    // Berechne Trends für jeden KPI
+    const trends = {};
+    allKpiIds.forEach(kpiId => {
+        const recentData = actualData.slice(-3);
+        let avgGrowth = 0;
+        if (recentData.length >= 2) {
+            const values = recentData.map(d => d[kpiId] || 0);
+            for (let i = 1; i < values.length; i++) {
+                if (values[i - 1] !== 0) {
+                    avgGrowth += (values[i] - values[i - 1]) / Math.abs(values[i - 1]);
+                }
             }
+            avgGrowth = avgGrowth / (values.length - 1);
         }
-        avgGrowth = avgGrowth / (values.length - 1);
-    }
+        trends[kpiId] = avgGrowth;
+    });
 
-    // Saisonale Anpassungen für verschiedene KPIs
-    const seasonalFactors = {
-        11: 1.1,  // November: leicht erhöht
-        12: 0.85  // Dezember: niedriger (Feiertage)
-    };
+    // Saisonale Faktoren
+    const seasonalFactors = { 11: 1.08, 12: 0.85 };
 
-    // Generiere Forecast für restliche Monate
-    let lastValue = historicalData[historicalData.length - 1]?.[kpiId] || 0;
+    // Generiere Forecast für fehlende Monate
+    let prevData = { ...lastMonthData };
 
     for (let month = lastMonth + 1; month <= 12; month++) {
         const seasonalFactor = seasonalFactors[month] || 1;
-
-        // KI-"Verbesserung": Varianz hinzufügen
-        const randomVariance = 1 + (Math.random() - 0.5) * 0.1; // ±5% Varianz
-
-        let forecastValue;
-        if (['storno', 'risiko'].includes(kpiId)) {
-            // Für negative KPIs: leichte Verbesserung prognostizieren
-            forecastValue = lastValue * (1 - Math.abs(avgGrowth) * 0.5) * seasonalFactor * randomVariance;
-        } else if (['nps', 'combined', 'underwriting'].includes(kpiId)) {
-            // Prozentuale KPIs: stabiler Trend
-            forecastValue = lastValue * (1 + avgGrowth * 0.3) * randomVariance;
-            forecastValue = Math.min(Math.max(forecastValue, 0), 100); // Zwischen 0-100
-        } else {
-            // Absolut-Werte: moderater Wachstumstrend
-            forecastValue = lastValue * (1 + avgGrowth * seasonalFactor) * randomVariance;
-        }
-
-        // Erstelle Forecast-Datenpunkt
         const forecastPoint = {
             month: month,
             isForecast: true
         };
 
-        // Kopiere alle KPI-Werte vom letzten Monat
-        Object.keys(historicalData[historicalData.length - 1]).forEach(key => {
-            if (key !== 'month' && key !== 'isForecast') {
-                forecastPoint[key] = historicalData[historicalData.length - 1][key];
+        allKpiIds.forEach(kpiId => {
+            const lastValue = prevData[kpiId] || 0;
+            const trend = trends[kpiId] || 0;
+            const variance = 1 + (Math.random() - 0.5) * 0.08;
+
+            let forecastValue;
+            if (['storno', 'risiko'].includes(kpiId)) {
+                forecastValue = lastValue * (1 - Math.abs(trend) * 0.3) * variance;
+            } else if (['nps', 'combined', 'underwriting'].includes(kpiId)) {
+                forecastValue = lastValue * (1 + trend * 0.2) * variance;
+                forecastValue = Math.min(Math.max(forecastValue, 0), 100);
+            } else {
+                forecastValue = lastValue * (1 + trend * seasonalFactor) * variance;
             }
+
+            forecastPoint[kpiId] = forecastValue;
         });
 
-        // Setze Forecast-Wert für aktuellen KPI
-        forecastPoint[kpiId] = forecastValue;
-
-        forecastMonths.push(forecastPoint);
-        lastValue = forecastValue;
+        forecastData.push(forecastPoint);
+        prevData = { ...forecastPoint };
     }
 
-    return forecastMonths;
+    console.log('✅ Generated', forecastData.length, 'forecast months');
+    return forecastData;
 }
 
 // Erweitere getFilteredData um Forecast
 function getFilteredDataWithForecast() {
     const actualData = getFilteredData();
 
-    if (!state.forecastEnabled) {
+    if (!state.forecastEnabled || actualData.length === 0) {
         return actualData;
     }
 
-    // Füge Forecast-Daten hinzu
-    const allKpiIds = ['neugeschaeft', 'bestand', 'storno', 'nps', 'risiko', 'combined', 'ergebnis', 'underwriting', 'deckungsbeitrag'];
+    // Markiere Ist-Daten explizit
+    const markedActualData = actualData.map(d => ({ ...d, isForecast: false }));
 
-    // Generiere kombinierte Forecast-Daten
-    const lastMonth = actualData[actualData.length - 1]?.month || 10;
-    const forecastData = [];
+    // Generiere Forecast-Daten
+    const forecastData = generateAllForecastData(actualData);
 
-    for (let month = lastMonth + 1; month <= 12; month++) {
-        const forecastPoint = {
-            month: month,
-            isForecast: true
-        };
+    const combined = [...markedActualData, ...forecastData];
+    console.log('📈 Combined data:', combined.length, 'months');
 
-        // Berechne Forecast für jeden KPI
-        allKpiIds.forEach(kpiId => {
-            const kpiForecast = generateForecastData(actualData, kpiId);
-            const forecastForMonth = kpiForecast.find(f => f.month === month);
-            forecastPoint[kpiId] = forecastForMonth ? forecastForMonth[kpiId] : 0;
-        });
-
-        forecastData.push(forecastPoint);
-    }
-
-    return [...actualData, ...forecastData];
+    return combined;
 }
 
 // Globale Funktionen verfügbar machen
 window.toggleForecast = toggleForecast;
 window.getFilteredDataWithForecast = getFilteredDataWithForecast;
-window.generateForecastData = generateForecastData;
+window.generateAllForecastData = generateAllForecastData;

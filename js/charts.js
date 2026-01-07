@@ -141,9 +141,13 @@ function createChart(kpiId, data, view, kpi, timeRange = 'year', offset = 0) {
 
     // Prüfe, ob Forecast aktiviert ist und hole erweiterte Daten
     const forecastEnabled = state.forecastEnabled;
-    const fullData = forecastEnabled && typeof getFilteredDataWithForecast === 'function'
-        ? getFilteredDataWithForecast()
+    const fullData = forecastEnabled && typeof window.getFilteredDataWithForecast === 'function'
+        ? window.getFilteredDataWithForecast()
         : data;
+
+    if (forecastEnabled) {
+        console.log('🔮 Chart', kpiId, '- forecastEnabled:', forecastEnabled, 'fullData length:', fullData.length, 'has isForecast:', fullData.some(d => d.isForecast));
+    }
 
     if (view === 'month') {
         const months = ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'];

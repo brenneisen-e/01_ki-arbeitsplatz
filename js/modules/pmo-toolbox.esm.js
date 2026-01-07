@@ -111,12 +111,13 @@ export const PMO = {
 
     // State
     statusData: [],
+    projectStatusData: [],  // Project-level status (separate from workstream status)
     currentView: 'landing',
     currentWorkstream: null,
     tasks: [],
     milestones: [],
     selectedTrafficLights: {},
-    DEMO_DATA_VERSION: 4,  // Increment to force regeneration of demo data
+    DEMO_DATA_VERSION: 5,  // Increment to force regeneration of demo data
 
     // Initialize
     init() {
@@ -618,21 +619,29 @@ export const PMO = {
     // Load data from localStorage
     loadData() {
         const stored = localStorage.getItem('pmo_status_data');
+        const storedProjectStatus = localStorage.getItem('pmo_project_status_data');
         const storedVersion = localStorage.getItem('pmo_demo_version');
 
         // Check if we need to regenerate demo data (version mismatch or no data)
         if (!stored || storedVersion !== String(this.DEMO_DATA_VERSION)) {
             console.log('🔄 Generiere neue Demo-Daten (Version ' + this.DEMO_DATA_VERSION + ')');
             this.generateDemoData();
+            this.generateProjectDemoData();
             localStorage.setItem('pmo_demo_version', String(this.DEMO_DATA_VERSION));
         } else {
             this.statusData = JSON.parse(stored);
+            this.projectStatusData = storedProjectStatus ? JSON.parse(storedProjectStatus) : [];
+            // Generate project data if missing
+            if (this.projectStatusData.length === 0) {
+                this.generateProjectDemoData();
+            }
         }
     },
 
     // Save data to localStorage
     saveData() {
         localStorage.setItem('pmo_status_data', JSON.stringify(this.statusData));
+        localStorage.setItem('pmo_project_status_data', JSON.stringify(this.projectStatusData));
     },
 
     // Generate Demo Data
@@ -671,6 +680,187 @@ export const PMO = {
 
         this.statusData = demoData;
         this.saveData();
+    },
+
+    // Generate Project-Level Demo Data (aggregated status for each of the 8 projects)
+    generateProjectDemoData() {
+        const projectScenarios = {
+            "A": {
+                currentStatus: 'yellow',
+                trend: 'improving',
+                summary: [
+                    "Lead-Routing Optimierung zeigt erste Erfolge (+18% Conversion)",
+                    "K-EWE Servicepunkte: 12 von 20 Standorten live",
+                    "Inside Sales Team vollständig aufgebaut"
+                ],
+                risks: "Ressourcenengpass bei Schulung neuer Mitarbeiter",
+                nextSteps: "Rollout der verbleibenden 8 Servicepunkte bis Q1-Ende"
+            },
+            "B": {
+                currentStatus: 'green',
+                trend: 'stable',
+                summary: [
+                    "Einheitliche Reports in allen Regionen ausgerollt",
+                    "Performance-Dashboard live und wird aktiv genutzt",
+                    "Provisionsmodell-Anpassungen genehmigt"
+                ],
+                risks: "Keine kritischen Risiken",
+                nextSteps: "Schulung der Regionalleiter auf neue Reports"
+            },
+            "C": {
+                currentStatus: 'yellow',
+                trend: 'stable',
+                summary: [
+                    "Recruiting: 85% der Zielkapazität erreicht",
+                    "E-Learning Plattform in Pilotphase",
+                    "Onboarding-Prozess neu strukturiert"
+                ],
+                risks: "Hohe Fluktuation im ersten Jahr (22%)",
+                nextSteps: "Mentoring-Programm zur Mitarbeiterbindung starten"
+            },
+            "D": {
+                currentStatus: 'green',
+                trend: 'improving',
+                summary: [
+                    "Servicemodell in 5 Regionen erfolgreich etabliert",
+                    "Kundenanalytik-Tool: 94% Nutzerzufriedenheit",
+                    "EASY Backlog zu 60% abgearbeitet"
+                ],
+                risks: "Keine kritischen Risiken",
+                nextSteps: "Expansion auf weitere 5 Regionen vorbereiten"
+            },
+            "E": {
+                currentStatus: 'green',
+                trend: 'stable',
+                summary: [
+                    "SEO: +52% organischer Traffic vs. Vorjahr",
+                    "Marketing-Automation vollständig implementiert",
+                    "EMOK 3.0 erfolgreich released"
+                ],
+                risks: "Keine kritischen Risiken",
+                nextSteps: "Conversion-Optimierung und A/B-Tests fortsetzen"
+            },
+            "F": {
+                currentStatus: 'red',
+                trend: 'critical',
+                summary: [
+                    "KRITISCH: Sparziele um 15% verfehlt",
+                    "Investitionsstopp durch Vorstand verhängt",
+                    "Notfall-Taskforce eingerichtet"
+                ],
+                risks: "Budgetüberschreitung gefährdet Gesamtprogramm",
+                nextSteps: "Vorstandspräsentation mit Maßnahmenplan"
+            },
+            "G": {
+                currentStatus: 'yellow',
+                trend: 'improving',
+                summary: [
+                    "Change-Kommunikation: 85% Awareness erreicht",
+                    "Führungskräfte-Workshops abgeschlossen",
+                    "Widerstand im Außendienst reduziert"
+                ],
+                risks: "Vereinzelt noch Akzeptanzprobleme in Süd-Region",
+                nextSteps: "Townhall #3 und Pulse Survey durchführen"
+            },
+            "H": {
+                currentStatus: 'yellow',
+                trend: 'stable',
+                summary: [
+                    "CRM-Anforderungen finalisiert",
+                    "Vendor Shortlist auf 3 Anbieter reduziert",
+                    "Proof of Concept in Vorbereitung"
+                ],
+                risks: "Zeitplan ambitioniert für Go-Live in Q3",
+                nextSteps: "Vendor Demo-Runde durchführen und bewerten"
+            }
+        };
+
+        const projectData = [];
+        const today = new Date();
+
+        // Generate 4 weeks of project status history for each project
+        this.PROGRAM_STRUCTURE.projects.forEach(project => {
+            const scenario = projectScenarios[project.id];
+            if (!scenario) return;
+
+            for (let weekOffset = 0; weekOffset < 4; weekOffset++) {
+                const date = new Date(today);
+                date.setDate(date.getDate() - (weekOffset * 7));
+                const dateStr = date.toISOString().split('T')[0];
+
+                // Adjust status based on trend and week offset
+                let adjustedStatus = scenario.currentStatus;
+                if (scenario.trend === 'improving' && weekOffset >= 2) {
+                    adjustedStatus = scenario.currentStatus === 'green' ? 'yellow' : 'red';
+                } else if (scenario.trend === 'critical' && weekOffset >= 2) {
+                    adjustedStatus = 'yellow';
+                }
+
+                projectData.push({
+                    projectId: project.id,
+                    date: dateStr,
+                    status: {
+                        overall: adjustedStatus,
+                        budget: this.randomStatus(adjustedStatus),
+                        scope: this.randomStatus(adjustedStatus),
+                        time: this.randomStatus(adjustedStatus),
+                        resources: this.randomStatus(adjustedStatus),
+                        risks: scenario.currentStatus === 'red' ? 'red' : this.randomStatus(adjustedStatus)
+                    },
+                    summary: weekOffset === 0 ? scenario.summary : this.adjustSummaryForWeek(scenario.summary, weekOffset),
+                    risks: scenario.risks,
+                    nextSteps: scenario.nextSteps,
+                    progress: this.getProgressText(project.id, weekOffset),
+                    upcoming: scenario.nextSteps
+                });
+            }
+        });
+
+        this.projectStatusData = projectData;
+        this.saveData();
+    },
+
+    randomStatus(baseStatus) {
+        const rand = Math.random();
+        if (baseStatus === 'green') return rand > 0.8 ? 'yellow' : 'green';
+        if (baseStatus === 'yellow') return rand > 0.7 ? 'red' : (rand > 0.3 ? 'yellow' : 'green');
+        if (baseStatus === 'red') return rand > 0.6 ? 'yellow' : 'red';
+        return baseStatus;
+    },
+
+    adjustSummaryForWeek(summary, weekOffset) {
+        // Return slightly modified summary for older weeks
+        return summary.map(s => s.replace(/\d+%/, m => {
+            const num = parseInt(m) - (weekOffset * 5);
+            return Math.max(0, num) + '%';
+        }));
+    },
+
+    getProgressText(projectId, weekOffset) {
+        const progressTexts = {
+            "A": ["Lead-Routing Feintuning", "Servicepunkte Rollout läuft", "Inside Sales Schulungen", "Konzeptphase"],
+            "B": ["Reports-Optimierung", "Dashboard-Feedback einarbeiten", "KPI-Definition", "Anforderungsanalyse"],
+            "C": ["Recruiting intensiviert", "E-Learning Content erstellt", "Prozessanpassungen", "Ist-Analyse"],
+            "D": ["Regionen-Expansion", "Tool-Optimierung", "Pilotierung", "Entwicklung"],
+            "E": ["SEO-Optimierung", "Automation-Tests", "Feature-Entwicklung", "Planung"],
+            "F": ["Maßnahmenplan erstellt", "Analyse vertieft", "Kostenstellen geprüft", "Datenerhebung"],
+            "G": ["Workshops durchgeführt", "Kommunikation verstärkt", "Stakeholder-Analyse", "Konzept erstellt"],
+            "H": ["Vendor-Gespräche", "Anforderungen finalisiert", "Marktanalyse", "Projektsetup"]
+        };
+        const texts = progressTexts[projectId] || ["Fortschritt"];
+        return texts[Math.min(weekOffset, texts.length - 1)];
+    },
+
+    getLatestProjectStatus(projectId) {
+        const statuses = this.projectStatusData.filter(s => s.projectId === projectId);
+        statuses.sort((a, b) => b.date.localeCompare(a.date));
+        return statuses.length > 0 ? statuses[0] : null;
+    },
+
+    getProjectStatusHistory(projectId) {
+        return this.projectStatusData
+            .filter(s => s.projectId === projectId)
+            .sort((a, b) => b.date.localeCompare(a.date));
     },
 
     generateStatusForWeek(projectId, wsId, scenario, weekOffset) {
@@ -1448,18 +1638,93 @@ export const PMO = {
         document.getElementById('project-modal-title').textContent = `Projekt ${project.id}: ${project.name}`;
 
         const body = document.getElementById('project-modal-body');
-        const status = this.getProjectLatestStatus(projectId);
+        const projectStatus = this.getLatestProjectStatus(projectId);
+        const statusHistory = this.getProjectStatusHistory(projectId);
+
+        // Build status history calendar
+        const historyCalendar = statusHistory.slice(0, 4).map((s, i) => {
+            const date = new Date(s.date);
+            const day = date.getDate();
+            const month = date.toLocaleDateString('de-DE', { month: 'short' });
+            const isCurrent = i === 0;
+            return `
+                <div class="ppt-cal-week ${s.status.overall} ${isCurrent ? 'current' : ''}"
+                     title="${this.formatDate(s.date)}"
+                     onclick="PMO.showProjectStatusForDate('${projectId}', ${i})"
+                     style="cursor: pointer;">
+                    <span class="ppt-cal-day">${day}</span>
+                    <span class="ppt-cal-month">${month}</span>
+                </div>
+            `;
+        }).join('');
 
         body.innerHTML = `
-            <div class="pmo-project-detail-header">
-                <div class="pmo-project-detail-info">
-                    <h3>${project.name}</h3>
-                    <p>${project.fullName}</p>
+            <!-- Project Status Section (like PPT viewer) -->
+            <div class="pmo-project-status-view" style="background: #f8fafc; border-radius: 12px; padding: 20px; margin-bottom: 24px;">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px;">
+                    <div>
+                        <h3 style="margin: 0 0 4px; font-size: 18px; color: #1e293b;">${project.name}</h3>
+                        <p style="margin: 0; font-size: 13px; color: #64748b;">${project.fullName}</p>
+                        <p style="margin: 8px 0 0; font-size: 12px; color: #94a3b8;">Status vom ${projectStatus ? this.formatDate(projectStatus.date) : '-'}</p>
+                    </div>
+                    <div style="text-align: center;">
+                        <div class="pmo-traffic-light ${projectStatus?.status?.overall || 'gray'}" style="width: 50px; height: 50px;"></div>
+                        <span style="font-size: 11px; color: #64748b; display: block; margin-top: 4px;">Gesamtstatus</span>
+                    </div>
                 </div>
-                <div class="pmo-traffic-light ${status?.overall || 'gray'}"></div>
+
+                <!-- Sub-Status Grid -->
+                <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 20px;">
+                    ${['budget', 'scope', 'time', 'resources', 'risks'].map(key => `
+                        <div style="text-align: center; padding: 8px; background: white; border-radius: 8px;">
+                            <div class="pmo-traffic-light-small ${projectStatus?.status?.[key] || 'gray'}" style="width: 16px; height: 16px; margin: 0 auto 4px;"></div>
+                            <span style="font-size: 10px; color: #64748b; text-transform: capitalize;">${key === 'risks' ? 'Risiken' : key === 'time' ? 'Zeit' : key === 'resources' ? 'Ressourcen' : key.charAt(0).toUpperCase() + key.slice(1)}</span>
+                        </div>
+                    `).join('')}
+                </div>
+
+                <!-- Management Summary -->
+                ${projectStatus?.summary ? `
+                    <div style="margin-bottom: 16px;">
+                        <h4 style="margin: 0 0 8px; font-size: 12px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;">Management Summary</h4>
+                        <ul style="margin: 0; padding-left: 20px; font-size: 13px; color: #334155;">
+                            ${projectStatus.summary.map(s => `<li style="margin-bottom: 4px;">${s}</li>`).join('')}
+                        </ul>
+                    </div>
+                ` : ''}
+
+                <!-- Risks & Next Steps -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                    ${projectStatus?.risks ? `
+                        <div style="background: white; padding: 12px; border-radius: 8px;">
+                            <h4 style="margin: 0 0 6px; font-size: 11px; color: #64748b; text-transform: uppercase;">Risiken</h4>
+                            <p style="margin: 0; font-size: 12px; color: #334155;">${projectStatus.risks}</p>
+                        </div>
+                    ` : ''}
+                    ${projectStatus?.nextSteps ? `
+                        <div style="background: white; padding: 12px; border-radius: 8px;">
+                            <h4 style="margin: 0 0 6px; font-size: 11px; color: #64748b; text-transform: uppercase;">Nächste Schritte</h4>
+                            <p style="margin: 0; font-size: 12px; color: #334155;">${projectStatus.nextSteps}</p>
+                        </div>
+                    ` : ''}
+                </div>
+
+                <!-- Status History Calendar -->
+                <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid #e2e8f0;">
+                    <h4 style="margin: 0 0 8px; font-size: 11px; color: #94a3b8; text-align: center;">Statusverlauf</h4>
+                    <div style="display: flex; gap: 6px; justify-content: center;">
+                        ${historyCalendar}
+                    </div>
+                </div>
             </div>
 
-            <h4 style="margin: 0 0 16px; color: #64748b; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;">Workstreams</h4>
+            <!-- Workstreams Section -->
+            <h4 style="margin: 0 0 16px; color: #64748b; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14" style="vertical-align: middle; margin-right: 6px;">
+                    <path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/>
+                </svg>
+                Workstreams
+            </h4>
             <div class="pmo-workstreams-list">
                 ${project.workstreams.map(ws => {
                     const wsStatus = this.getWorkstreamLatestStatus(ws.id);
@@ -1493,6 +1758,19 @@ export const PMO = {
         `;
 
         document.getElementById('pmo-project-modal').classList.add('active');
+    },
+
+    // Show project status for a specific date (from history calendar)
+    showProjectStatusForDate(projectId, historyIndex) {
+        const history = this.getProjectStatusHistory(projectId);
+        const status = history[historyIndex];
+        if (!status) return;
+
+        alert(`Projektstatus vom ${this.formatDate(status.date)}:\n\n` +
+            `Gesamtstatus: ${status.status.overall.toUpperCase()}\n\n` +
+            `Summary:\n${status.summary.map(s => '• ' + s).join('\n')}\n\n` +
+            `Risiken: ${status.risks}\n\n` +
+            `Nächste Schritte: ${status.nextSteps}`);
     },
 
     closeProjectModal() {

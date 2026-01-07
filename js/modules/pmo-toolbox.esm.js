@@ -117,7 +117,7 @@ export const PMO = {
     tasks: [],
     milestones: [],
     selectedTrafficLights: {},
-    DEMO_DATA_VERSION: 5,  // Increment to force regeneration of demo data
+    DEMO_DATA_VERSION: 6,  // Increment to force regeneration of demo data
 
     // Initialize
     init() {
@@ -668,6 +668,8 @@ export const PMO = {
                 for (let week = 0; week < 5; week++) {
                     const date = new Date(today);
                     date.setDate(date.getDate() - (week * 7));
+                    // Skip holidays (24.12 and 31.12)
+                    this.adjustForHolidays(date);
 
                     const status = this.generateStatusForWeek(project.id, ws.id, scenario, week);
                     status.date = date.toISOString().split('T')[0];
@@ -786,6 +788,8 @@ export const PMO = {
             for (let weekOffset = 0; weekOffset < 4; weekOffset++) {
                 const date = new Date(today);
                 date.setDate(date.getDate() - (weekOffset * 7));
+                // Skip holidays (24.12 and 31.12)
+                this.adjustForHolidays(date);
                 const dateStr = date.toISOString().split('T')[0];
 
                 // Adjust status based on trend and week offset
@@ -826,6 +830,20 @@ export const PMO = {
         if (baseStatus === 'yellow') return rand > 0.7 ? 'red' : (rand > 0.3 ? 'yellow' : 'green');
         if (baseStatus === 'red') return rand > 0.6 ? 'yellow' : 'red';
         return baseStatus;
+    },
+
+    adjustForHolidays(date) {
+        const month = date.getMonth();
+        const day = date.getDate();
+        // Skip 24.12 and 31.12 (Christmas Eve and New Year's Eve)
+        if (month === 11) { // December
+            if (day === 24) {
+                date.setDate(23); // Move to 23.12
+            } else if (day === 31) {
+                date.setDate(30); // Move to 30.12
+            }
+        }
+        return date;
     },
 
     adjustSummaryForWeek(summary, weekOffset) {
@@ -1760,17 +1778,102 @@ export const PMO = {
         document.getElementById('pmo-project-modal').classList.add('active');
     },
 
+    // Current project status index for navigation
+    currentProjectStatusIndex: 0,
+
     // Show project status for a specific date (from history calendar)
     showProjectStatusForDate(projectId, historyIndex) {
-        const history = this.getProjectStatusHistory(projectId);
-        const status = history[historyIndex];
-        if (!status) return;
+        this.currentProjectStatusIndex = historyIndex;
+        this.renderProjectStatusInModal(projectId, historyIndex);
+    },
 
-        alert(`Projektstatus vom ${this.formatDate(status.date)}:\n\n` +
-            `Gesamtstatus: ${status.status.overall.toUpperCase()}\n\n` +
-            `Summary:\n${status.summary.map(s => '• ' + s).join('\n')}\n\n` +
-            `Risiken: ${status.risks}\n\n` +
-            `Nächste Schritte: ${status.nextSteps}`);
+    // Render project status section in modal for a specific history index
+    renderProjectStatusInModal(projectId, historyIndex) {
+        const project = this.PROGRAM_STRUCTURE.projects.find(p => p.id === projectId);
+        if (!project) return;
+
+        const statusHistory = this.getProjectStatusHistory(projectId);
+        const projectStatus = statusHistory[historyIndex];
+        if (!projectStatus) return;
+
+        // Build status history calendar
+        const historyCalendar = statusHistory.slice(0, 4).map((s, i) => {
+            const date = new Date(s.date);
+            const day = date.getDate();
+            const month = date.toLocaleDateString('de-DE', { month: 'short' });
+            const isCurrent = i === historyIndex;
+            return `
+                <div class="ppt-cal-week ${s.status.overall} ${isCurrent ? 'current' : ''}"
+                     title="${this.formatDate(s.date)} - Klicken zum Anzeigen"
+                     onclick="PMO.showProjectStatusForDate('${projectId}', ${i})"
+                     style="cursor: pointer;">
+                    <span class="ppt-cal-day">${day}</span>
+                    <span class="ppt-cal-month">${month}</span>
+                </div>
+            `;
+        }).join('');
+
+        // Update only the status section
+        const statusView = document.querySelector('.pmo-project-status-view');
+        if (statusView) {
+            statusView.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px;">
+                    <div>
+                        <h3 style="margin: 0 0 4px; font-size: 18px; color: #1e293b;">${project.name}</h3>
+                        <p style="margin: 0; font-size: 13px; color: #64748b;">${project.fullName}</p>
+                        <p style="margin: 8px 0 0; font-size: 12px; color: #94a3b8;">Status vom ${this.formatDate(projectStatus.date)}</p>
+                    </div>
+                    <div style="text-align: center;">
+                        <div class="pmo-traffic-light ${projectStatus?.status?.overall || 'gray'}" style="width: 50px; height: 50px;"></div>
+                        <span style="font-size: 11px; color: #64748b; display: block; margin-top: 4px;">Gesamtstatus</span>
+                    </div>
+                </div>
+
+                <!-- Sub-Status Grid -->
+                <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 20px;">
+                    ${['budget', 'scope', 'time', 'resources', 'risks'].map(key => `
+                        <div style="text-align: center; padding: 8px; background: white; border-radius: 8px;">
+                            <div class="pmo-traffic-light-small ${projectStatus?.status?.[key] || 'gray'}" style="width: 16px; height: 16px; margin: 0 auto 4px;"></div>
+                            <span style="font-size: 10px; color: #64748b; text-transform: capitalize;">${key === 'risks' ? 'Risiken' : key === 'time' ? 'Zeit' : key === 'resources' ? 'Ressourcen' : key.charAt(0).toUpperCase() + key.slice(1)}</span>
+                        </div>
+                    `).join('')}
+                </div>
+
+                <!-- Management Summary -->
+                ${projectStatus?.summary ? `
+                    <div style="margin-bottom: 16px;">
+                        <h4 style="margin: 0 0 8px; font-size: 12px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;">Management Summary</h4>
+                        <ul style="margin: 0; padding-left: 20px; font-size: 13px; color: #334155;">
+                            ${projectStatus.summary.map(s => `<li style="margin-bottom: 4px;">${s}</li>`).join('')}
+                        </ul>
+                    </div>
+                ` : ''}
+
+                <!-- Risks & Next Steps -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                    ${projectStatus?.risks ? `
+                        <div style="background: white; padding: 12px; border-radius: 8px;">
+                            <h4 style="margin: 0 0 6px; font-size: 11px; color: #64748b; text-transform: uppercase;">Risiken</h4>
+                            <p style="margin: 0; font-size: 12px; color: #334155;">${projectStatus.risks}</p>
+                        </div>
+                    ` : ''}
+                    ${projectStatus?.nextSteps ? `
+                        <div style="background: white; padding: 12px; border-radius: 8px;">
+                            <h4 style="margin: 0 0 6px; font-size: 11px; color: #64748b; text-transform: uppercase;">Nächste Schritte</h4>
+                            <p style="margin: 0; font-size: 12px; color: #334155;">${projectStatus.nextSteps}</p>
+                        </div>
+                    ` : ''}
+                </div>
+
+                <!-- Status History Calendar -->
+                <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid #e2e8f0;">
+                    <h4 style="margin: 0 0 8px; font-size: 11px; color: #94a3b8; text-align: center;">Statusverlauf</h4>
+                    <div style="display: flex; gap: 6px; justify-content: center;">
+                        ${historyCalendar}
+                    </div>
+                </div>
+            `;
+        }
     },
 
     closeProjectModal() {

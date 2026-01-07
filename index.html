@@ -456,7 +456,16 @@
             <div class="agentur-main-content">
                 <!-- Tab Navigation -->
                 <div class="agentur-tabs">
-                    <button class="agentur-tab active" onclick="showAgenturTab('stammdaten')">
+                    <button class="agentur-tab active" onclick="showAgenturTab('uebersicht')">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                            <rect x="3" y="3" width="7" height="7"></rect>
+                            <rect x="14" y="3" width="7" height="7"></rect>
+                            <rect x="14" y="14" width="7" height="7"></rect>
+                            <rect x="3" y="14" width="7" height="7"></rect>
+                        </svg>
+                        Übersicht
+                    </button>
+                    <button class="agentur-tab" onclick="showAgenturTab('stammdaten')">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
                             <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"></path>
                             <circle cx="12" cy="7" r="4"></circle>
@@ -507,8 +516,466 @@
                     </button>
                 </div>
 
+                <!-- Tab Content: Übersicht (neu) -->
+                <div class="agentur-tab-content active" id="tab-uebersicht">
+                    <div class="agentur-uebersicht-grid">
+                        <!-- Linke Spalte: Hauptinhalte -->
+                        <div class="agentur-uebersicht-main">
+                            <!-- Vertriebskennzahlen -->
+                            <div class="uebersicht-card">
+                                <div class="uebersicht-card-header">
+                                    <h3>
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                                            <line x1="18" y1="20" x2="18" y2="10"></line>
+                                            <line x1="12" y1="20" x2="12" y2="4"></line>
+                                            <line x1="6" y1="20" x2="6" y2="14"></line>
+                                        </svg>
+                                        Vertriebskennzahlen
+                                    </h3>
+                                    <div class="period-toggle">
+                                        <button class="period-btn active" onclick="toggleVertriebsPeriod('week')">Woche</button>
+                                        <button class="period-btn" onclick="toggleVertriebsPeriod('month')">Monat</button>
+                                    </div>
+                                </div>
+                                <div class="kennzahlen-grid" id="vertriebsKennzahlen">
+                                    <div class="kennzahl-item">
+                                        <div class="kennzahl-value">12</div>
+                                        <div class="kennzahl-label">Abschlüsse</div>
+                                        <div class="kennzahl-trend positive">+3 vs. Vorwoche</div>
+                                    </div>
+                                    <div class="kennzahl-item">
+                                        <div class="kennzahl-value">€18.450</div>
+                                        <div class="kennzahl-label">Neugeschäft</div>
+                                        <div class="kennzahl-trend positive">+12%</div>
+                                    </div>
+                                    <div class="kennzahl-item">
+                                        <div class="kennzahl-value">28</div>
+                                        <div class="kennzahl-label">Termine</div>
+                                        <div class="kennzahl-trend neutral">±0</div>
+                                    </div>
+                                    <div class="kennzahl-item">
+                                        <div class="kennzahl-value">68%</div>
+                                        <div class="kennzahl-label">Abschlussquote</div>
+                                        <div class="kennzahl-trend positive">+5%</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Vertriebspotentiale (expandierbar) -->
+                            <div class="uebersicht-card">
+                                <div class="uebersicht-card-header">
+                                    <h3>
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                                            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                                        </svg>
+                                        Vertriebspotentiale
+                                    </h3>
+                                    <span class="badge-count">5 aktiv</span>
+                                </div>
+                                <div class="potentiale-liste">
+                                    <div class="potential-item expandable" onclick="togglePotentialDetails(this)">
+                                        <div class="potential-header">
+                                            <div class="potential-kunde">
+                                                <div class="kunde-avatar">PS</div>
+                                                <div class="kunde-info">
+                                                    <strong>Peter Schmidt</strong>
+                                                    <span class="potential-type uebergreifend">Übergreifend</span>
+                                                </div>
+                                            </div>
+                                            <div class="potential-value">€8.500/Jahr</div>
+                                            <svg class="expand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                                                <polyline points="6 9 12 15 18 9"></polyline>
+                                            </svg>
+                                        </div>
+                                        <div class="potential-details" style="display: none;">
+                                            <div class="herleitung-box">
+                                                <div class="herleitung-title">Herleitung</div>
+                                                <p>Hypothek €285.000 bei Sparkasse ohne Restschuldversicherung. Familie vorhanden – dringender Absicherungsbedarf. Empfehlung: Risikolebensversicherung + BU.</p>
+                                                <div class="herleitung-quelle">
+                                                    <span class="fida-source-badge small">Open Finance</span>
+                                                    Kreditdaten (Sparkasse)
+                                                </div>
+                                            </div>
+                                            <button class="btn-primary btn-kunde-oeffnen" onclick="event.stopPropagation(); openKundenDetail('Peter Schmidt', 'KD00001')">
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                                    <circle cx="12" cy="12" r="3"></circle>
+                                                </svg>
+                                                Kunden öffnen
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="potential-item expandable" onclick="togglePotentialDetails(this)">
+                                        <div class="potential-header">
+                                            <div class="potential-kunde">
+                                                <div class="kunde-avatar">SK</div>
+                                                <div class="kunde-info">
+                                                    <strong>Sabine König</strong>
+                                                    <span class="potential-type kfz">Kfz-Wechsel</span>
+                                                </div>
+                                            </div>
+                                            <div class="potential-value">€650/Jahr</div>
+                                            <svg class="expand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                                                <polyline points="6 9 12 15 18 9"></polyline>
+                                            </svg>
+                                        </div>
+                                        <div class="potential-details" style="display: none;">
+                                            <div class="herleitung-box">
+                                                <div class="herleitung-title">Herleitung</div>
+                                                <p>Kfz bei Allianz läuft 30.11.2025 aus, SF-Klasse 12, aktuell €720/Jahr. Ersparnis von ca. €180/Jahr möglich durch Wechsel.</p>
+                                                <div class="herleitung-quelle">
+                                                    <span class="fida-source-badge small">Versicherung</span>
+                                                    Kfz-Daten (Allianz)
+                                                </div>
+                                            </div>
+                                            <button class="btn-primary btn-kunde-oeffnen" onclick="event.stopPropagation(); openKundenDetail('Sabine König', 'KD00002')">
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                                    <circle cx="12" cy="12" r="3"></circle>
+                                                </svg>
+                                                Kunden öffnen
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="potential-item expandable" onclick="togglePotentialDetails(this)">
+                                        <div class="potential-header">
+                                            <div class="potential-kunde">
+                                                <div class="kunde-avatar">TW</div>
+                                                <div class="kunde-info">
+                                                    <strong>Thomas Weber</strong>
+                                                    <span class="potential-type risiko">Risikoleben fehlt</span>
+                                                </div>
+                                            </div>
+                                            <div class="potential-value">€1.800/Jahr</div>
+                                            <svg class="expand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                                                <polyline points="6 9 12 15 18 9"></polyline>
+                                            </svg>
+                                        </div>
+                                        <div class="potential-details" style="display: none;">
+                                            <div class="herleitung-box">
+                                                <div class="herleitung-title">Herleitung</div>
+                                                <p>Baufinanzierung €320.000 ohne Absicherung. 2 Kinder im Haushalt. Dringend Risikolebensversicherung empfohlen.</p>
+                                                <div class="herleitung-quelle">
+                                                    <span class="fida-source-badge small">Kredit</span>
+                                                    Baufinanzierung (Bestand)
+                                                </div>
+                                            </div>
+                                            <button class="btn-primary btn-kunde-oeffnen" onclick="event.stopPropagation(); openKundenDetail('Thomas Weber', 'KD00003')">
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                                    <circle cx="12" cy="12" r="3"></circle>
+                                                </svg>
+                                                Kunden öffnen
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <a href="#" class="link-alle-anzeigen" onclick="showAgenturTab('potential'); return false;">Alle Potentiale anzeigen →</a>
+                            </div>
+
+                            <!-- Aktuelle Aufgaben -->
+                            <div class="uebersicht-card">
+                                <div class="uebersicht-card-header">
+                                    <h3>
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                                            <path d="M9 11l3 3L22 4"></path>
+                                            <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"></path>
+                                        </svg>
+                                        Aktuelle Aufgaben
+                                    </h3>
+                                    <span class="badge-count urgent">3 offen</span>
+                                </div>
+                                <div class="aufgaben-liste">
+                                    <div class="aufgabe-item priority-high">
+                                        <div class="aufgabe-checkbox">
+                                            <input type="checkbox" id="aufgabe1">
+                                        </div>
+                                        <div class="aufgabe-content">
+                                            <label for="aufgabe1">Rückruf Peter Schmidt - Beratungstermin</label>
+                                            <span class="aufgabe-due">Heute, 14:00</span>
+                                        </div>
+                                    </div>
+                                    <div class="aufgabe-item priority-medium">
+                                        <div class="aufgabe-checkbox">
+                                            <input type="checkbox" id="aufgabe2">
+                                        </div>
+                                        <div class="aufgabe-content">
+                                            <label for="aufgabe2">Angebot Kfz-Versicherung für König erstellen</label>
+                                            <span class="aufgabe-due">Morgen</span>
+                                        </div>
+                                    </div>
+                                    <div class="aufgabe-item priority-low">
+                                        <div class="aufgabe-checkbox">
+                                            <input type="checkbox" id="aufgabe3">
+                                        </div>
+                                        <div class="aufgabe-content">
+                                            <label for="aufgabe3">Quartalsreporting vorbereiten</label>
+                                            <span class="aufgabe-due">Diese Woche</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Letzte Abschlüsse -->
+                            <div class="uebersicht-card">
+                                <div class="uebersicht-card-header">
+                                    <h3>
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                                            <path d="M22 11.08V12a10 10 0 11-5.93-9.14"></path>
+                                            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                        </svg>
+                                        Letzte Abschlüsse
+                                    </h3>
+                                    <span class="badge-count">Diese Woche</span>
+                                </div>
+                                <div class="abschluesse-liste">
+                                    <div class="abschluss-item" onclick="openKundenDetail('Maria Fischer', 'KD00008')">
+                                        <div class="abschluss-info">
+                                            <span class="abschluss-kunde">Maria Fischer</span>
+                                            <span class="abschluss-produkt">Risikolebensversicherung</span>
+                                        </div>
+                                        <div class="abschluss-meta">
+                                            <div class="abschluss-betrag">€1.450/Jahr</div>
+                                            <div class="abschluss-datum">Heute</div>
+                                        </div>
+                                    </div>
+                                    <div class="abschluss-item" onclick="openKundenDetail('Hans Müller', 'KD00009')">
+                                        <div class="abschluss-info">
+                                            <span class="abschluss-kunde">Hans Müller</span>
+                                            <span class="abschluss-produkt">Kfz-Versicherung (Wechsel)</span>
+                                        </div>
+                                        <div class="abschluss-meta">
+                                            <div class="abschluss-betrag">€680/Jahr</div>
+                                            <div class="abschluss-datum">Gestern</div>
+                                        </div>
+                                    </div>
+                                    <div class="abschluss-item" onclick="openKundenDetail('Familie Becker', 'KD00010')">
+                                        <div class="abschluss-info">
+                                            <span class="abschluss-kunde">Familie Becker</span>
+                                            <span class="abschluss-produkt">Hausratversicherung</span>
+                                        </div>
+                                        <div class="abschluss-meta">
+                                            <div class="abschluss-betrag">€320/Jahr</div>
+                                            <div class="abschluss-datum">Mo, 06.01.</div>
+                                        </div>
+                                    </div>
+                                    <div class="abschluss-item" onclick="openKundenDetail('Markus Braun', 'KD00011')">
+                                        <div class="abschluss-info">
+                                            <span class="abschluss-kunde">Markus Braun</span>
+                                            <span class="abschluss-produkt">BU-Versicherung</span>
+                                        </div>
+                                        <div class="abschluss-meta">
+                                            <div class="abschluss-betrag">€1.850/Jahr</div>
+                                            <div class="abschluss-datum">Mo, 06.01.</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <a href="#" class="link-alle-anzeigen" onclick="showAgenturTab('neugeschaeft'); return false;">Alle Abschlüsse anzeigen →</a>
+                            </div>
+                        </div>
+
+                        <!-- Rechte Spalte: Sidebar -->
+                        <div class="agentur-uebersicht-sidebar">
+                            <!-- Anstehende Termine -->
+                            <div class="uebersicht-card">
+                                <div class="uebersicht-card-header">
+                                    <h3>
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                            <line x1="16" y1="2" x2="16" y2="6"></line>
+                                            <line x1="8" y1="2" x2="8" y2="6"></line>
+                                            <line x1="3" y1="10" x2="21" y2="10"></line>
+                                        </svg>
+                                        Anstehende Termine
+                                    </h3>
+                                </div>
+                                <div class="termine-liste">
+                                    <div class="termin-item heute">
+                                        <div class="termin-zeit">
+                                            <span class="termin-tag">Heute</span>
+                                            <span class="termin-uhrzeit">14:00</span>
+                                        </div>
+                                        <div class="termin-details">
+                                            <strong>Peter Schmidt</strong>
+                                            <span>Beratungsgespräch Vorsorge</span>
+                                        </div>
+                                    </div>
+                                    <div class="termin-item">
+                                        <div class="termin-zeit">
+                                            <span class="termin-tag">Mo, 13.01.</span>
+                                            <span class="termin-uhrzeit">10:30</span>
+                                        </div>
+                                        <div class="termin-details">
+                                            <strong>Sabine König</strong>
+                                            <span>Kfz-Angebot besprechen</span>
+                                        </div>
+                                    </div>
+                                    <div class="termin-item">
+                                        <div class="termin-zeit">
+                                            <span class="termin-tag">Di, 14.01.</span>
+                                            <span class="termin-uhrzeit">09:00</span>
+                                        </div>
+                                        <div class="termin-details">
+                                            <strong>Thomas Weber</strong>
+                                            <span>Hausbesuch - Risikoabsicherung</span>
+                                        </div>
+                                    </div>
+                                    <div class="termin-item">
+                                        <div class="termin-zeit">
+                                            <span class="termin-tag">Mi, 15.01.</span>
+                                            <span class="termin-uhrzeit">15:00</span>
+                                        </div>
+                                        <div class="termin-details">
+                                            <strong>Maria Fischer</strong>
+                                            <span>Jahresgespräch</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Schnellzugriff auf Formulare -->
+                            <div class="uebersicht-card">
+                                <div class="uebersicht-card-header">
+                                    <h3>
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                                            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path>
+                                            <polyline points="14 2 14 8 20 8"></polyline>
+                                        </svg>
+                                        Schnellzugriff Formulare
+                                    </h3>
+                                </div>
+                                <div class="formulare-grid">
+                                    <button class="formular-btn" onclick="openFormular('antrag-leben')">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                                            <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"></path>
+                                        </svg>
+                                        Lebensversicherung
+                                    </button>
+                                    <button class="formular-btn" onclick="openFormular('antrag-kfz')">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                                            <rect x="1" y="3" width="15" height="13" rx="2"></rect>
+                                            <path d="M16 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2"></path>
+                                            <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                                            <circle cx="18.5" cy="18.5" r="2.5"></circle>
+                                        </svg>
+                                        Kfz-Versicherung
+                                    </button>
+                                    <button class="formular-btn" onclick="openFormular('antrag-sach')">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                                            <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"></path>
+                                            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                                        </svg>
+                                        Sachversicherung
+                                    </button>
+                                    <button class="formular-btn" onclick="openFormular('schadenmeldung')">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                                            <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"></path>
+                                            <line x1="12" y1="9" x2="12" y2="13"></line>
+                                            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                                        </svg>
+                                        Schadenmeldung
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Provisionsabrechnungen -->
+                            <div class="uebersicht-card">
+                                <div class="uebersicht-card-header">
+                                    <h3>
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                                            <line x1="12" y1="1" x2="12" y2="23"></line>
+                                            <path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"></path>
+                                        </svg>
+                                        Provisionsabrechnungen
+                                    </h3>
+                                </div>
+                                <div class="abrechnungen-liste">
+                                    <div class="abrechnung-item" onclick="openAbrechnung('2024-12')">
+                                        <div class="abrechnung-info">
+                                            <div class="abrechnung-icon">
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                                                    <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path>
+                                                    <polyline points="14 2 14 8 20 8"></polyline>
+                                                </svg>
+                                            </div>
+                                            <div class="abrechnung-details">
+                                                <span class="abrechnung-monat">Dezember 2024</span>
+                                                <span class="abrechnung-datum">Erstellt: 03.01.2025</span>
+                                            </div>
+                                        </div>
+                                        <span class="abrechnung-betrag">€4.280</span>
+                                    </div>
+                                    <div class="abrechnung-item" onclick="openAbrechnung('2024-11')">
+                                        <div class="abrechnung-info">
+                                            <div class="abrechnung-icon">
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                                                    <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path>
+                                                    <polyline points="14 2 14 8 20 8"></polyline>
+                                                </svg>
+                                            </div>
+                                            <div class="abrechnung-details">
+                                                <span class="abrechnung-monat">November 2024</span>
+                                                <span class="abrechnung-datum">Erstellt: 02.12.2024</span>
+                                            </div>
+                                        </div>
+                                        <span class="abrechnung-betrag">€3.890</span>
+                                    </div>
+                                    <div class="abrechnung-item" onclick="openAbrechnung('2024-10')">
+                                        <div class="abrechnung-info">
+                                            <div class="abrechnung-icon">
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                                                    <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path>
+                                                    <polyline points="14 2 14 8 20 8"></polyline>
+                                                </svg>
+                                            </div>
+                                            <div class="abrechnung-details">
+                                                <span class="abrechnung-monat">Oktober 2024</span>
+                                                <span class="abrechnung-datum">Erstellt: 04.11.2024</span>
+                                            </div>
+                                        </div>
+                                        <span class="abrechnung-betrag">€4.120</span>
+                                    </div>
+                                </div>
+                                <a href="#" class="link-alle-anzeigen" onclick="showAgenturTab('provision'); return false;">Alle Abrechnungen anzeigen →</a>
+                            </div>
+
+                            <!-- KI-Assistent Chat Widget -->
+                            <div class="uebersicht-card chat-widget-card">
+                                <div class="uebersicht-card-header">
+                                    <h3>
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                                            <circle cx="12" cy="12" r="3"></circle>
+                                            <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9"></path>
+                                        </svg>
+                                        KI-Assistent
+                                    </h3>
+                                </div>
+                                <div class="agentur-chat-body" id="agenturChatBody">
+                                    <div class="agentur-chat-welcome">
+                                        <p>Fragen Sie mich zu Kunden, Potentialen oder Vertriebsdaten.</p>
+                                        <div class="welcome-examples">
+                                            <button class="example-btn" onclick="askAgenturQuestion('Welche Potentiale habe ich diese Woche?')">Potentiale diese Woche</button>
+                                            <button class="example-btn" onclick="askAgenturQuestion('Zeige offene Aufgaben')">Offene Aufgaben</button>
+                                            <button class="example-btn" onclick="askAgenturQuestion('Meine Vertriebskennzahlen')">Kennzahlen</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="agentur-chat-footer">
+                                    <textarea id="agenturChatInput" placeholder="Frage stellen..." rows="1"></textarea>
+                                    <button id="agenturChatSend" onclick="sendAgenturChat()">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                                            <line x1="22" y1="2" x2="11" y2="13"></line>
+                                            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Tab Content: Stammdaten -->
-                <div class="agentur-tab-content active" id="tab-stammdaten">
+                <div class="agentur-tab-content" id="tab-stammdaten">
                     <div class="stammdaten-sections">
                         <!-- Basis-Stammdaten -->
                         <div class="stammdaten-section">
@@ -1353,7 +1820,7 @@
                                 <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path>
                                 <polyline points="14 2 14 8 20 8"></polyline>
                             </svg>
-                            Aktuelle Open Finance Fälle
+                            Vertriebspotentiale
                         </h3>
                         <div class="fida-filter-row">
                             <button class="fida-filter-btn active" onclick="filterFidaCases('alle')">Alle</button>

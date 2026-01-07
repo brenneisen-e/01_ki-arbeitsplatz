@@ -482,7 +482,206 @@ function openKundenDetailFromFida(kundenId) {
     }
 }
 
+/**
+ * Expandiert/Kollabiert die Vertriebspotentiale-Details
+ * @param {HTMLElement} item - Das Potential-Item Element
+ */
+function togglePotentialDetails(item) {
+    const details = item.querySelector('.potential-details');
+    const isExpanded = item.classList.contains('expanded');
+
+    // Alle anderen schließen
+    document.querySelectorAll('.potential-item.expanded').forEach(el => {
+        if (el !== item) {
+            el.classList.remove('expanded');
+            el.querySelector('.potential-details').style.display = 'none';
+        }
+    });
+
+    // Toggle current
+    if (isExpanded) {
+        item.classList.remove('expanded');
+        details.style.display = 'none';
+    } else {
+        item.classList.add('expanded');
+        details.style.display = 'block';
+    }
+}
+
+/**
+ * Wechselt die Periode für Vertriebskennzahlen
+ * @param {string} period - 'week' oder 'month'
+ */
+function toggleVertriebsPeriod(period) {
+    const buttons = document.querySelectorAll('.period-btn');
+    buttons.forEach(btn => btn.classList.remove('active'));
+    event.target.classList.add('active');
+
+    const kennzahlenContainer = document.getElementById('vertriebsKennzahlen');
+
+    if (period === 'week') {
+        kennzahlenContainer.innerHTML = `
+            <div class="kennzahl-item">
+                <div class="kennzahl-value">12</div>
+                <div class="kennzahl-label">Abschlüsse</div>
+                <div class="kennzahl-trend positive">+3 vs. Vorwoche</div>
+            </div>
+            <div class="kennzahl-item">
+                <div class="kennzahl-value">€18.450</div>
+                <div class="kennzahl-label">Neugeschäft</div>
+                <div class="kennzahl-trend positive">+12%</div>
+            </div>
+            <div class="kennzahl-item">
+                <div class="kennzahl-value">28</div>
+                <div class="kennzahl-label">Termine</div>
+                <div class="kennzahl-trend neutral">±0</div>
+            </div>
+            <div class="kennzahl-item">
+                <div class="kennzahl-value">68%</div>
+                <div class="kennzahl-label">Abschlussquote</div>
+                <div class="kennzahl-trend positive">+5%</div>
+            </div>
+        `;
+    } else {
+        kennzahlenContainer.innerHTML = `
+            <div class="kennzahl-item">
+                <div class="kennzahl-value">47</div>
+                <div class="kennzahl-label">Abschlüsse</div>
+                <div class="kennzahl-trend positive">+8 vs. Vormonat</div>
+            </div>
+            <div class="kennzahl-item">
+                <div class="kennzahl-value">€72.340</div>
+                <div class="kennzahl-label">Neugeschäft</div>
+                <div class="kennzahl-trend positive">+18%</div>
+            </div>
+            <div class="kennzahl-item">
+                <div class="kennzahl-value">112</div>
+                <div class="kennzahl-label">Termine</div>
+                <div class="kennzahl-trend positive">+12</div>
+            </div>
+            <div class="kennzahl-item">
+                <div class="kennzahl-value">71%</div>
+                <div class="kennzahl-label">Abschlussquote</div>
+                <div class="kennzahl-trend positive">+3%</div>
+            </div>
+        `;
+    }
+}
+
+/**
+ * Öffnet ein Formular (Placeholder)
+ * @param {string} formularId - Die ID des Formulars
+ */
+function openFormular(formularId) {
+    console.log('📄 Öffne Formular:', formularId);
+    alert('Formular "' + formularId + '" wird geladen...\n\n(Demo-Funktion)');
+}
+
+/**
+ * Öffnet eine Provisionsabrechnung (PDF)
+ * @param {string} period - Der Abrechnungszeitraum (z.B. '2024-12')
+ */
+function openAbrechnung(period) {
+    console.log('📄 Öffne Provisionsabrechnung:', period);
+    const [year, month] = period.split('-');
+    const monthNames = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni',
+                       'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'];
+    const monthName = monthNames[parseInt(month) - 1];
+    alert(`Provisionsabrechnung ${monthName} ${year}\n\nDas PDF wird heruntergeladen...\n\n(Demo-Funktion)`);
+}
+
+/**
+ * Sendet eine Frage an den Agentur-Chat
+ */
+function sendAgenturChat() {
+    const input = document.getElementById('agenturChatInput');
+    const chatBody = document.getElementById('agenturChatBody');
+    const question = input.value.trim();
+
+    if (!question) return;
+
+    // Clear welcome message
+    const welcome = chatBody.querySelector('.agentur-chat-welcome');
+    if (welcome) welcome.style.display = 'none';
+
+    // Add user message
+    chatBody.innerHTML += `
+        <div class="chat-message user-message">
+            <div class="message-content">${question}</div>
+        </div>
+    `;
+
+    input.value = '';
+
+    // Simulate AI response
+    setTimeout(() => {
+        const response = getAgenturChatResponse(question);
+        chatBody.innerHTML += `
+            <div class="chat-message ai-message">
+                <div class="message-content">${response}</div>
+            </div>
+        `;
+        chatBody.scrollTop = chatBody.scrollHeight;
+    }, 800);
+}
+
+/**
+ * Stellt eine vordefinierte Frage an den Agentur-Chat
+ * @param {string} question - Die vordefinierte Frage
+ */
+function askAgenturQuestion(question) {
+    const input = document.getElementById('agenturChatInput');
+    input.value = question;
+    sendAgenturChat();
+}
+
+/**
+ * Generiert eine Chat-Antwort basierend auf der Frage
+ * @param {string} question - Die Frage
+ * @returns {string} - Die Antwort
+ */
+function getAgenturChatResponse(question) {
+    const q = question.toLowerCase();
+
+    if (q.includes('potential') || q.includes('woche')) {
+        return `<strong>Ihre Vertriebspotentiale diese Woche:</strong><br><br>
+        • <strong>5 aktive Potentiale</strong> mit Gesamtvolumen €12.750/Jahr<br>
+        • <strong>Peter Schmidt</strong> - Übergreifend (€8.500) - Hohe Priorität<br>
+        • <strong>Sabine König</strong> - Kfz-Wechsel (€650)<br>
+        • <strong>Thomas Weber</strong> - Risikoleben (€1.800)<br><br>
+        Empfehlung: Fokus auf Peter Schmidt - hier ist der größte Hebel.`;
+    }
+
+    if (q.includes('aufgabe') || q.includes('offen')) {
+        return `<strong>Ihre offenen Aufgaben:</strong><br><br>
+        🔴 <strong>Heute:</strong> Rückruf Peter Schmidt - Beratungstermin (14:00)<br>
+        🟡 <strong>Morgen:</strong> Angebot Kfz für König erstellen<br>
+        ⚪ <strong>Diese Woche:</strong> Quartalsreporting vorbereiten<br><br>
+        Tipp: Der Termin mit Schmidt ist in 2 Stunden!`;
+    }
+
+    if (q.includes('kennzahl') || q.includes('vertrieb')) {
+        return `<strong>Ihre Vertriebskennzahlen:</strong><br><br>
+        📈 <strong>Diese Woche:</strong><br>
+        • 12 Abschlüsse (+3 vs. Vorwoche)<br>
+        • €18.450 Neugeschäft (+12%)<br>
+        • 68% Abschlussquote (+5%)<br><br>
+        👏 Starke Woche! Sie liegen über dem Durchschnitt.`;
+    }
+
+    return `Ich habe Ihre Anfrage verstanden. Hier sind einige Möglichkeiten:<br><br>
+    • Fragen Sie nach <strong>"Potentiale"</strong> für Ihre aktuellen Vertriebschancen<br>
+    • Fragen Sie nach <strong>"Aufgaben"</strong> für Ihre offenen To-Dos<br>
+    • Fragen Sie nach <strong>"Kennzahlen"</strong> für Ihre Performance`;
+}
+
 // Global verfügbar machen
 window.showAgenturTab = showAgenturTab;
 window.filterFidaCases = filterFidaCases;
+window.togglePotentialDetails = togglePotentialDetails;
+window.toggleVertriebsPeriod = toggleVertriebsPeriod;
+window.openFormular = openFormular;
+window.openAbrechnung = openAbrechnung;
+window.sendAgenturChat = sendAgenturChat;
+window.askAgenturQuestion = askAgenturQuestion;
 window.openKundenDetailFromFida = openKundenDetailFromFida;

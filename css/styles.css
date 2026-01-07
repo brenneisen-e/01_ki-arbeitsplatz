@@ -6189,6 +6189,657 @@ button svg,
     display: block;
 }
 
+/* Agentur Übersicht Tab Styles */
+.agentur-uebersicht-grid {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 24px;
+}
+
+.agentur-uebersicht-main {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.agentur-uebersicht-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.uebersicht-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    border: 1px solid #e2e8f0;
+}
+
+.uebersicht-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.uebersicht-card-header h3 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0;
+}
+
+.uebersicht-card-header h3 svg {
+    color: #86BC25;
+}
+
+.badge-count {
+    background: #e2e8f0;
+    color: #64748b;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.badge-count.urgent {
+    background: #fef2f2;
+    color: #dc2626;
+}
+
+/* Period Toggle */
+.period-toggle {
+    display: flex;
+    gap: 4px;
+    background: #f1f5f9;
+    padding: 3px;
+    border-radius: 8px;
+}
+
+.period-btn {
+    padding: 6px 12px;
+    border: none;
+    background: transparent;
+    border-radius: 6px;
+    font-size: 13px;
+    color: #64748b;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.period-btn.active {
+    background: white;
+    color: #1e293b;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+/* Kennzahlen Grid */
+.kennzahlen-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+}
+
+.kennzahl-item {
+    text-align: center;
+    padding: 16px 12px;
+    background: #f8fafc;
+    border-radius: 10px;
+}
+
+.kennzahl-value {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.kennzahl-label {
+    font-size: 12px;
+    color: #64748b;
+    margin: 4px 0;
+}
+
+.kennzahl-trend {
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.kennzahl-trend.positive { color: #16a34a; }
+.kennzahl-trend.negative { color: #dc2626; }
+.kennzahl-trend.neutral { color: #64748b; }
+
+/* Potentiale Liste */
+.potentiale-liste {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.potential-item {
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: all 0.2s;
+}
+
+.potential-item.expandable {
+    cursor: pointer;
+}
+
+.potential-item:hover {
+    border-color: #86BC25;
+}
+
+.potential-item.expanded {
+    border-color: #86BC25;
+    box-shadow: 0 2px 8px rgba(134, 188, 37, 0.15);
+}
+
+.potential-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px;
+    background: #f8fafc;
+}
+
+.potential-kunde {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.potential-kunde .kunde-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #86BC25, #6B9A1F);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.potential-kunde .kunde-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.potential-kunde .kunde-info strong {
+    font-size: 14px;
+    color: #1e293b;
+}
+
+.potential-value {
+    font-size: 15px;
+    font-weight: 600;
+    color: #16a34a;
+}
+
+.expand-icon {
+    color: #94a3b8;
+    transition: transform 0.2s;
+}
+
+.potential-item.expanded .expand-icon {
+    transform: rotate(180deg);
+}
+
+.potential-details {
+    padding: 16px;
+    background: white;
+    border-top: 1px solid #e2e8f0;
+}
+
+.herleitung-box {
+    background: #f8fafc;
+    padding: 14px;
+    border-radius: 8px;
+    margin-bottom: 14px;
+}
+
+.herleitung-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+}
+
+.herleitung-box p {
+    font-size: 13px;
+    color: #475569;
+    line-height: 1.5;
+    margin: 0 0 10px 0;
+}
+
+.herleitung-quelle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: #64748b;
+}
+
+.btn-kunde-oeffnen {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    background: #86BC25;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-kunde-oeffnen:hover {
+    background: #6B9A1F;
+}
+
+.link-alle-anzeigen {
+    display: block;
+    text-align: center;
+    padding-top: 12px;
+    font-size: 13px;
+    color: #86BC25;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.link-alle-anzeigen:hover {
+    text-decoration: underline;
+}
+
+/* Aufgaben Liste */
+.aufgaben-liste {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.aufgabe-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px;
+    background: #f8fafc;
+    border-radius: 8px;
+    border-left: 3px solid transparent;
+}
+
+.aufgabe-item.priority-high { border-left-color: #dc2626; }
+.aufgabe-item.priority-medium { border-left-color: #f59e0b; }
+.aufgabe-item.priority-low { border-left-color: #94a3b8; }
+
+.aufgabe-checkbox input {
+    width: 18px;
+    height: 18px;
+    margin-top: 2px;
+    cursor: pointer;
+}
+
+.aufgabe-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.aufgabe-content label {
+    font-size: 13px;
+    color: #1e293b;
+    cursor: pointer;
+}
+
+.aufgabe-due {
+    font-size: 11px;
+    color: #64748b;
+}
+
+/* Termine Liste */
+.termine-liste {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.termin-item {
+    display: flex;
+    gap: 14px;
+    padding: 12px;
+    border-radius: 8px;
+    background: #f8fafc;
+}
+
+.termin-item.heute {
+    background: linear-gradient(135deg, rgba(134, 188, 37, 0.1), rgba(134, 188, 37, 0.05));
+    border: 1px solid rgba(134, 188, 37, 0.2);
+}
+
+.termin-zeit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 70px;
+}
+
+.termin-tag {
+    font-size: 11px;
+    font-weight: 600;
+    color: #64748b;
+}
+
+.termin-item.heute .termin-tag {
+    color: #86BC25;
+}
+
+.termin-uhrzeit {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.termin-details {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.termin-details strong {
+    font-size: 14px;
+    color: #1e293b;
+}
+
+.termin-details span {
+    font-size: 12px;
+    color: #64748b;
+}
+
+/* Formulare Grid */
+.formulare-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.formular-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 16px 12px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 12px;
+    color: #475569;
+}
+
+.formular-btn svg {
+    color: #86BC25;
+}
+
+.formular-btn:hover {
+    background: white;
+    border-color: #86BC25;
+    box-shadow: 0 2px 8px rgba(134, 188, 37, 0.15);
+}
+
+/* Agentur Chat Widget */
+.chat-widget-card {
+    display: flex;
+    flex-direction: column;
+}
+
+.agentur-chat-body {
+    min-height: 120px;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.agentur-chat-welcome {
+    text-align: center;
+    padding: 10px 0;
+}
+
+.agentur-chat-welcome p {
+    font-size: 13px;
+    color: #64748b;
+    margin: 0 0 12px 0;
+}
+
+.agentur-chat-welcome .welcome-examples {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+}
+
+.agentur-chat-welcome .example-btn {
+    padding: 8px 12px;
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    font-size: 12px;
+    color: #475569;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.agentur-chat-welcome .example-btn:hover {
+    background: #86BC25;
+    border-color: #86BC25;
+    color: white;
+}
+
+.agentur-chat-footer {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid #e2e8f0;
+}
+
+.agentur-chat-footer textarea {
+    flex: 1;
+    padding: 10px 14px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 13px;
+    resize: none;
+    font-family: inherit;
+}
+
+.agentur-chat-footer textarea:focus {
+    outline: none;
+    border-color: #86BC25;
+}
+
+.agentur-chat-footer button {
+    padding: 10px 14px;
+    background: #86BC25;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.agentur-chat-footer button svg {
+    color: white;
+}
+
+.agentur-chat-footer button:hover {
+    background: #6B9A1F;
+}
+
+/* Chat Messages */
+.chat-message {
+    margin-bottom: 12px;
+    padding: 10px 14px;
+    border-radius: 12px;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.chat-message.user-message {
+    background: #86BC25;
+    color: white;
+    margin-left: 40px;
+    border-bottom-right-radius: 4px;
+}
+
+.chat-message.ai-message {
+    background: #f1f5f9;
+    color: #1e293b;
+    margin-right: 40px;
+    border-bottom-left-radius: 4px;
+}
+
+.chat-message .message-content {
+    word-wrap: break-word;
+}
+
+/* Letzte Abschlüsse */
+.abschluesse-liste {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.abschluss-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 14px;
+    background: #f8fafc;
+    border-radius: 8px;
+    border-left: 3px solid #86BC25;
+}
+
+.abschluss-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.abschluss-kunde {
+    font-size: 14px;
+    font-weight: 500;
+    color: #1e293b;
+}
+
+.abschluss-produkt {
+    font-size: 12px;
+    color: #64748b;
+}
+
+.abschluss-meta {
+    text-align: right;
+}
+
+.abschluss-betrag {
+    font-size: 14px;
+    font-weight: 600;
+    color: #16a34a;
+}
+
+.abschluss-datum {
+    font-size: 11px;
+    color: #94a3b8;
+}
+
+/* Provisionsabrechnungen */
+.abrechnungen-liste {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.abrechnung-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 14px;
+    background: #f8fafc;
+    border-radius: 8px;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.abrechnung-item:hover {
+    background: #e2e8f0;
+}
+
+.abrechnung-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.abrechnung-icon {
+    width: 36px;
+    height: 36px;
+    background: linear-gradient(135deg, #dc2626, #b91c1c);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.abrechnung-icon svg {
+    color: white;
+}
+
+.abrechnung-details {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.abrechnung-monat {
+    font-size: 14px;
+    font-weight: 500;
+    color: #1e293b;
+}
+
+.abrechnung-datum {
+    font-size: 11px;
+    color: #94a3b8;
+}
+
+.abrechnung-betrag {
+    font-size: 15px;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+/* Responsive Übersicht */
+@media (max-width: 1200px) {
+    .agentur-uebersicht-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .kennzahlen-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
 /* Stammdaten Sections */
 .stammdaten-sections {
     display: grid;

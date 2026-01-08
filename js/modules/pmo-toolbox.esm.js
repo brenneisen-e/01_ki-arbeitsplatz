@@ -3001,7 +3001,7 @@ PMO Team
             let slideXml = await slideXmlFile.async('string');
 
             // Prepare content
-            const title = `Teilprojekt ${status.workstreamId}: ${ws?.name || ''}`;
+            const title = ws?.name || status.workstreamId;
             const progressBullets = status.progress ? status.progress.split('\n').filter(l => l.trim()) : ['Keine Angaben'];
             const upcomingBullets = status.upcoming ? status.upcoming.split('\n').filter(l => l.trim()) : ['Keine Angaben'];
 

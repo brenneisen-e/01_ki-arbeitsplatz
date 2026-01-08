@@ -1208,16 +1208,21 @@ select:focus, .dropdown-button:focus {
 .kpi-metrics {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
-    margin-bottom: 0.75rem;
+    gap: 0.25rem;
+    margin-bottom: 0.5rem;
 }
 
-/* Value and trend on same row */
-.kpi-metrics > div:first-child {
+/* Value row - alle Elemente auf einer Zeile */
+.kpi-value-row {
     display: flex;
     align-items: baseline;
-    gap: 1rem;
+    gap: 0.5rem;
     flex-wrap: wrap;
+}
+
+.kpi-ytd-label {
+    font-size: 0.75rem;
+    color: #64748b;
 }
 
 .kpi-value {
@@ -8636,32 +8641,25 @@ button svg,
     letter-spacing: 0.5px;
 }
 
-/* Trend Row - Legende und Trend nebeneinander */
-.kpi-trend-row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-wrap: wrap;
-}
-
-/* Forecast Legend - neben Trend */
+/* Forecast Legend - kompakt neben Value */
 .forecast-legend {
-    display: flex;
-    gap: 8px;
-    font-size: 0.65rem;
+    display: inline-flex;
+    gap: 6px;
+    font-size: 0.6rem;
     color: #64748b;
+    align-items: center;
 }
 
 .forecast-legend .legend-item {
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    gap: 4px;
+    gap: 3px;
 }
 
 .forecast-legend .legend-box {
-    width: 12px;
-    height: 8px;
-    border-radius: 2px;
+    width: 10px;
+    height: 6px;
+    border-radius: 1px;
     display: inline-block;
 }
 
@@ -8692,42 +8690,4 @@ button svg,
     );
 }
 
-/* Legend für Forecast Charts */
-.forecast-legend {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    padding: 8px 12px;
-    background: #f8fafc;
-    border-radius: 6px;
-    margin-top: 8px;
-    font-size: 0.75rem;
-    color: #64748b;
-}
-
-.forecast-legend-item {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-
-.forecast-legend-item .legend-color {
-    width: 16px;
-    height: 4px;
-    border-radius: 2px;
-}
-
-.forecast-legend-item .legend-color.actual {
-    background: rgba(59, 130, 246, 1);
-}
-
-.forecast-legend-item .legend-color.forecast {
-    background: repeating-linear-gradient(
-        90deg,
-        rgba(134, 188, 37, 1),
-        rgba(134, 188, 37, 1) 3px,
-        rgba(134, 188, 37, 0.3) 3px,
-        rgba(134, 188, 37, 0.3) 6px
-    );
-}
 

@@ -41,26 +41,22 @@ function createKPICard(kpi) {
             </div>
         </div>
         <div class="kpi-metrics">
-            <div>
+            <div class="kpi-value-row">
                 <div class="kpi-value">${formatValue(ytdValue, kpi.unit)}</div>
-                <div class="kpi-trend-row">
-                    <div class="forecast-legend" id="forecast-legend-${kpi.id}" style="display: none;">
-                        <span class="legend-item legend-ist"><span class="legend-box"></span>Ist</span>
-                        <span class="legend-item legend-prognose"><span class="legend-box"></span>Prognose</span>
-                    </div>
-                    <div class="kpi-trend ${trendIsPositive ? 'positive' : 'negative'}">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
-                            ${trendIsPositive
-                                ? '<polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline>'
-                                : '<polyline points="23 18 13.5 8.5 8.5 13.5 1 6"></polyline><polyline points="17 18 23 18 23 12"></polyline>'
-                            }
-                        </svg>
-                        <span>${Math.abs(trend).toFixed(1)}% vs. Vormonat</span>
-                    </div>
+                <div class="forecast-legend" id="forecast-legend-${kpi.id}" style="display: none;">
+                    <span class="legend-item legend-ist"><span class="legend-box"></span>Ist</span>
+                    <span class="legend-item legend-prognose"><span class="legend-box"></span>Prognose</span>
                 </div>
-                <div style="font-size: 0.75rem; color: #64748b; margin-top: 0.25rem;">
-                    ${['storno', 'nps', 'risiko', 'combined', 'underwriting'].includes(kpi.id) ? 'Durchschnitt YTD' : 'Summe YTD'}
+                <div class="kpi-trend ${trendIsPositive ? 'positive' : 'negative'}">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                        ${trendIsPositive
+                            ? '<polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline>'
+                            : '<polyline points="23 18 13.5 8.5 8.5 13.5 1 6"></polyline><polyline points="17 18 23 18 23 12"></polyline>'
+                        }
+                    </svg>
+                    <span>${Math.abs(trend).toFixed(1)}% vs. Vormonat</span>
                 </div>
+                <span class="kpi-ytd-label">${['storno', 'nps', 'risiko', 'combined', 'underwriting'].includes(kpi.id) ? 'Durchschnitt YTD' : 'Summe YTD'}</span>
             </div>
             <div class="view-toggle">
                 <button class="active" data-view="month" data-kpi="${kpi.id}" title="Monatsansicht">
@@ -876,7 +872,7 @@ function toggleForecast() {
         const kpiId = card.id.replace('kpi-', '');
         const legend = document.getElementById(`forecast-legend-${kpiId}`);
         if (legend) {
-            legend.style.display = window.state.forecastEnabled ? 'flex' : 'none';
+            legend.style.display = window.state.forecastEnabled ? 'inline-flex' : 'none';
         }
     });
 

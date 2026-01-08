@@ -218,19 +218,19 @@ export function createChart(kpiId, data, view, kpi, timeRange = 'year', offset =
                 labels: months,
                 datasets: [
                     {
-                        label: kpi.title + ' (Ist)',
+                        label: 'Ist',
                         data: actualPoints,
                         backgroundColor: 'rgba(59, 130, 246, 0.2)',
                         borderColor: 'rgba(59, 130, 246, 1)',
                         borderWidth: 2,
                         fill: true,
                         tension: 0.3,
-                        pointRadius: 4,
-                        pointHoverRadius: 6,
+                        pointRadius: 3,
+                        pointHoverRadius: 5,
                         spanGaps: false
                     },
                     {
-                        label: kpi.title + ' (KI-Prognose)',
+                        label: 'Prognose',
                         data: forecastPoints,
                         backgroundColor: forecastPattern,
                         borderColor: 'rgba(134, 188, 37, 1)',
@@ -238,8 +238,8 @@ export function createChart(kpiId, data, view, kpi, timeRange = 'year', offset =
                         borderDash: [5, 5],
                         fill: true,
                         tension: 0.3,
-                        pointRadius: 5,
-                        pointHoverRadius: 7,
+                        pointRadius: 3,
+                        pointHoverRadius: 5,
                         pointStyle: 'triangle',
                         spanGaps: true
                     }
@@ -328,7 +328,18 @@ export function createChart(kpiId, data, view, kpi, timeRange = 'year', offset =
                 padding: { top: 5, right: 8, bottom: 5, left: 8 }
             },
             plugins: {
-                legend: { display: showLegend },
+                legend: {
+                    display: showLegend,
+                    position: 'top',
+                    align: 'end',
+                    labels: {
+                        boxWidth: 12,
+                        boxHeight: 8,
+                        padding: 8,
+                        font: { size: 10 },
+                        usePointStyle: false
+                    }
+                },
                 tooltip: {
                     callbacks: {
                         label: function(context) {

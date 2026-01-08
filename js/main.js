@@ -875,7 +875,7 @@ function toggleForecast() {
             if (header && !header.querySelector('.ki-forecast-badge')) {
                 const badge = document.createElement('span');
                 badge.className = 'ki-forecast-badge';
-                badge.textContent = 'KI-Forecast';
+                badge.innerHTML = '🔮 KI';
                 header.style.position = 'relative';
                 header.appendChild(badge);
             }

@@ -328,18 +328,7 @@ export function createChart(kpiId, data, view, kpi, timeRange = 'year', offset =
                 padding: { top: 5, right: 8, bottom: 5, left: 8 }
             },
             plugins: {
-                legend: {
-                    display: showLegend,
-                    position: 'top',
-                    align: 'start',
-                    labels: {
-                        boxWidth: 10,
-                        boxHeight: 6,
-                        padding: 6,
-                        font: { size: 9 },
-                        usePointStyle: false
-                    }
-                },
+                legend: { display: false },
                 tooltip: {
                     callbacks: {
                         label: function(context) {

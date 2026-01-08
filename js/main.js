@@ -43,6 +43,10 @@ function createKPICard(kpi) {
         <div class="kpi-metrics">
             <div>
                 <div class="kpi-value">${formatValue(ytdValue, kpi.unit)}</div>
+                <div class="forecast-legend" id="forecast-legend-${kpi.id}" style="display: none;">
+                    <span class="legend-item legend-ist"><span class="legend-box"></span>Ist</span>
+                    <span class="legend-item legend-prognose"><span class="legend-box"></span>Prognose</span>
+                </div>
                 <div class="kpi-trend ${trendIsPositive ? 'positive' : 'negative'}">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
                         ${trendIsPositive
@@ -864,26 +868,13 @@ function toggleForecast() {
     window.state.forecastEnabled = checkbox.checked;
 
     console.log('🔮 Forecast-Modus:', window.state.forecastEnabled ? 'aktiviert' : 'deaktiviert');
-    console.log('🔮 window.state.forecastEnabled =', window.state.forecastEnabled);
 
-    // Alle KPI-Cards mit forecast-active Klasse und Badge versehen
+    // Zeige/Verstecke Forecast-Legenden in allen KPI-Cards
     document.querySelectorAll('.kpi-card').forEach(card => {
-        if (window.state.forecastEnabled) {
-            card.classList.add('forecast-active');
-            // Füge KI-Badge zum Header hinzu (falls noch nicht vorhanden)
-            const header = card.querySelector('.kpi-header');
-            if (header && !header.querySelector('.ki-forecast-badge')) {
-                const badge = document.createElement('span');
-                badge.className = 'ki-forecast-badge';
-                badge.innerHTML = '🔮 KI';
-                header.style.position = 'relative';
-                header.appendChild(badge);
-            }
-        } else {
-            card.classList.remove('forecast-active');
-            // Entferne KI-Badge
-            const badge = card.querySelector('.ki-forecast-badge');
-            if (badge) badge.remove();
+        const kpiId = card.id.replace('kpi-', '');
+        const legend = document.getElementById(`forecast-legend-${kpiId}`);
+        if (legend) {
+            legend.style.display = window.state.forecastEnabled ? 'flex' : 'none';
         }
     });
 

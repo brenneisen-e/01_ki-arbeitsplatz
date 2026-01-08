@@ -861,13 +861,14 @@ function updateSelectedAgenturenDisplay() {
 // Toggle Forecast-Modus
 function toggleForecast() {
     const checkbox = document.getElementById('forecastToggle');
-    state.forecastEnabled = checkbox.checked;
+    window.state.forecastEnabled = checkbox.checked;
 
-    console.log('🔮 Forecast-Modus:', state.forecastEnabled ? 'aktiviert' : 'deaktiviert');
+    console.log('🔮 Forecast-Modus:', window.state.forecastEnabled ? 'aktiviert' : 'deaktiviert');
+    console.log('🔮 window.state.forecastEnabled =', window.state.forecastEnabled);
 
     // Alle KPI-Cards mit forecast-active Klasse und Badge versehen
     document.querySelectorAll('.kpi-card').forEach(card => {
-        if (state.forecastEnabled) {
+        if (window.state.forecastEnabled) {
             card.classList.add('forecast-active');
             // Füge KI-Badge zum Header hinzu (falls noch nicht vorhanden)
             const header = card.querySelector('.kpi-header');
@@ -963,7 +964,9 @@ function generateAllForecastData(actualData) {
 function getFilteredDataWithForecast() {
     const actualData = getFilteredData();
 
-    if (!state.forecastEnabled || actualData.length === 0) {
+    console.log('🔮 getFilteredDataWithForecast called, forecastEnabled:', window.state.forecastEnabled);
+
+    if (!window.state.forecastEnabled || actualData.length === 0) {
         return actualData;
     }
 

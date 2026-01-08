@@ -1262,9 +1262,59 @@ export const PMO = {
     },
 
     sendReminder(projectId, milestoneName) {
-        // Simulate sending a reminder
+        // Hole Projekt-Informationen
         const project = this.PROGRAM_STRUCTURE.projects.find(p => p.id === projectId);
-        alert(`Erinnerung gesendet für:\n\nProjekt: ${project?.name || projectId}\nMeilenstein: ${milestoneName}\n\nAlle Verantwortlichen wurden per E-Mail benachrichtigt.`);
+        const projectName = project?.name || projectId;
+        const projectFullName = project?.fullName || '';
+
+        // Hole Meilenstein-Details falls verfügbar
+        const milestone = this.getMilestoneDetails(projectId, milestoneName);
+        const dueDate = milestone?.date ? new Date(milestone.date).toLocaleDateString('de-DE') : 'TBD';
+
+        // E-Mail-Inhalte vorbereiten
+        const subject = encodeURIComponent(`Erinnerung: Meilenstein "${milestoneName}" - Projekt ${projectName}`);
+
+        const body = encodeURIComponent(`Sehr geehrte Damen und Herren,
+
+hiermit möchte ich Sie an den bevorstehenden Meilenstein erinnern:
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+MEILENSTEIN-INFORMATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Projekt:      ${projectName}
+              ${projectFullName}
+
+Meilenstein:  ${milestoneName}
+Fällig am:    ${dueDate}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Bitte stellen Sie sicher, dass alle erforderlichen Arbeiten rechtzeitig abgeschlossen werden.
+
+Bei Fragen oder falls Sie Unterstützung benötigen, melden Sie sich bitte umgehend.
+
+Mit freundlichen Grüßen,
+PMO Team
+`);
+
+        // Öffne mailto-Link (öffnet Outlook/Standard-Mail-Client)
+        const mailtoLink = `mailto:?subject=${subject}&body=${body}`;
+        window.location.href = mailtoLink;
+    },
+
+    // Hilfsfunktion um Meilenstein-Details zu holen
+    getMilestoneDetails(projectId, milestoneName) {
+        if (!this.statusData) return null;
+
+        // Suche in den Status-Daten nach dem Meilenstein
+        for (const status of this.statusData) {
+            if (status.projectId === projectId && status.milestones) {
+                const milestone = status.milestones.find(m => m.name === milestoneName);
+                if (milestone) return milestone;
+            }
+        }
+        return null;
     },
 
     // Gremien Calendar

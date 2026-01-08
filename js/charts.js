@@ -43,8 +43,8 @@ function createStripedPattern(ctx, color) {
 function generateDailyData(monthlyData, kpiId, timeRange = 'year', offset = 0) {
     const dailyData = [];
     
-    if (!state.timeNavigation[kpiId]) {
-        state.timeNavigation[kpiId] = {
+    if (!window.state.timeNavigation[kpiId]) {
+        window.state.timeNavigation[kpiId] = {
             monthOffset: 0,
             weekOffset: 0
         };
@@ -52,7 +52,7 @@ function generateDailyData(monthlyData, kpiId, timeRange = 'year', offset = 0) {
     
     if (timeRange === 'month') {
         const targetMonth = Math.max(0, Math.min(monthlyData.length - 1, monthlyData.length - 1 + offset));
-        state.timeNavigation[kpiId].monthOffset = offset;
+        window.state.timeNavigation[kpiId].monthOffset = offset;
         
         const month = monthlyData[targetMonth];
         if (!month) return dailyData;
@@ -67,12 +67,12 @@ function generateDailyData(monthlyData, kpiId, timeRange = 'year', offset = 0) {
             });
         }
         
-        state.timeNavigation[kpiId].currentPeriod = getMonthName(month.month) + ' ' + 2025;
-        state.timeNavigation[kpiId].canGoNext = targetMonth < monthlyData.length - 1;
-        state.timeNavigation[kpiId].canGoPrev = targetMonth > 0;
+        window.state.timeNavigation[kpiId].currentPeriod = getMonthName(month.month) + ' ' + 2025;
+        window.state.timeNavigation[kpiId].canGoNext = targetMonth < monthlyData.length - 1;
+        window.state.timeNavigation[kpiId].canGoPrev = targetMonth > 0;
         
     } else if (timeRange === 'week') {
-        state.timeNavigation[kpiId].weekOffset = offset;
+        window.state.timeNavigation[kpiId].weekOffset = offset;
         const totalWeeks = Math.floor(monthlyData.length * 4.3);
         const currentWeek = totalWeeks + offset;
         
@@ -86,9 +86,9 @@ function generateDailyData(monthlyData, kpiId, timeRange = 'year', offset = 0) {
             });
         }
         
-        state.timeNavigation[kpiId].currentPeriod = `KW ${currentWeek}`;
-        state.timeNavigation[kpiId].canGoNext = currentWeek < totalWeeks;
-        state.timeNavigation[kpiId].canGoPrev = currentWeek > 1;
+        window.state.timeNavigation[kpiId].currentPeriod = `KW ${currentWeek}`;
+        window.state.timeNavigation[kpiId].canGoNext = currentWeek < totalWeeks;
+        window.state.timeNavigation[kpiId].canGoPrev = currentWeek > 1;
         
     } else {
         for (let monthIdx = 0; monthIdx < monthlyData.length; monthIdx++) {
@@ -121,9 +121,9 @@ function generateDailyData(monthlyData, kpiId, timeRange = 'year', offset = 0) {
             }
         }
         
-        state.timeNavigation[kpiId].currentPeriod = '2025 Gesamt';
-        state.timeNavigation[kpiId].canGoNext = false;
-        state.timeNavigation[kpiId].canGoPrev = false;
+        window.state.timeNavigation[kpiId].currentPeriod = '2025 Gesamt';
+        window.state.timeNavigation[kpiId].canGoNext = false;
+        window.state.timeNavigation[kpiId].canGoPrev = false;
     }
     
     return dailyData;
@@ -140,7 +140,7 @@ function createChart(kpiId, data, view, kpi, timeRange = 'year', offset = 0) {
     let chartType = 'line';
 
     // Prüfe, ob Forecast aktiviert ist und hole erweiterte Daten
-    const forecastEnabled = state.forecastEnabled;
+    const forecastEnabled = window.state.forecastEnabled;
     const fullData = forecastEnabled && typeof window.getFilteredDataWithForecast === 'function'
         ? window.getFilteredDataWithForecast()
         : data;
@@ -279,11 +279,11 @@ function createChart(kpiId, data, view, kpi, timeRange = 'year', offset = 0) {
         };
     }
 
-    if (state.charts[kpiId]) {
-        state.charts[kpiId].destroy();
+    if (window.state.charts[kpiId]) {
+        window.state.charts[kpiId].destroy();
     }
 
-    state.charts[kpiId] = new Chart(ctx, {
+    window.state.charts[kpiId] = new Chart(ctx, {
         type: chartType,
         data: chartData,
         options: {
@@ -384,9 +384,9 @@ function navigateTime(kpiId, direction) {
     
     let offset = 0;
     if (timeRange === 'month') {
-        offset = (state.timeNavigation[kpiId].monthOffset || 0) + direction;
+        offset = (window.state.timeNavigation[kpiId].monthOffset || 0) + direction;
     } else if (timeRange === 'week') {
-        offset = (state.timeNavigation[kpiId].weekOffset || 0) + direction;
+        offset = (window.state.timeNavigation[kpiId].weekOffset || 0) + direction;
     }
     
     const data = getFilteredData();
@@ -396,7 +396,7 @@ function navigateTime(kpiId, direction) {
 
 // Update navigation buttons
 function updateNavigationButtons(kpiId) {
-    const navState = state.timeNavigation[kpiId];
+    const navState = window.state.timeNavigation[kpiId];
     if (!navState) return;
     
     const card = document.getElementById(`kpi-${kpiId}`);
@@ -448,8 +448,8 @@ function renderFullscreenChart(kpiId, viewType) {
     const ctx = canvas.getContext('2d');
     const data = getFilteredData();
 
-    if (state.fullscreenChart) {
-        state.fullscreenChart.destroy();
+    if (window.state.fullscreenChart) {
+        window.state.fullscreenChart.destroy();
     }
 
     const months = ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'];
@@ -530,16 +530,16 @@ function renderFullscreenChart(kpiId, viewType) {
         };
     }
 
-    state.fullscreenChart = new Chart(ctx, chartConfig);
+    window.state.fullscreenChart = new Chart(ctx, chartConfig);
 }
 
 function closeFullscreen() {
     const modal = document.getElementById('fullscreenModal');
     modal.classList.remove('show');
     currentFullscreenKpiId = null;
-    if (state.fullscreenChart) {
-        state.fullscreenChart.destroy();
-        state.fullscreenChart = null;
+    if (window.state.fullscreenChart) {
+        window.state.fullscreenChart.destroy();
+        window.state.fullscreenChart = null;
     }
 }
 

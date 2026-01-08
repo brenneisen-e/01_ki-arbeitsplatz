@@ -331,12 +331,12 @@ export function createChart(kpiId, data, view, kpi, timeRange = 'year', offset =
                 legend: {
                     display: showLegend,
                     position: 'top',
-                    align: 'end',
+                    align: 'start',
                     labels: {
-                        boxWidth: 12,
-                        boxHeight: 8,
-                        padding: 8,
-                        font: { size: 10 },
+                        boxWidth: 10,
+                        boxHeight: 6,
+                        padding: 6,
+                        font: { size: 9 },
                         usePointStyle: false
                     }
                 },

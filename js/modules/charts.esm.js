@@ -343,7 +343,25 @@ export function createChart(kpiId, data, view, kpi, timeRange = 'year', offset =
             scales: {
                 x: {
                     grid: { display: true, color: 'rgba(0, 0, 0, 0.05)', drawBorder: false, lineWidth: 1 },
-                    ticks: { font: { size: 11 }, color: '#64748b', maxRotation: 0, autoSkip: true, maxTicksLimit: 8, padding: 8 },
+                    ticks: {
+                        font: { size: 10 },
+                        color: '#64748b',
+                        maxRotation: 0,
+                        autoSkip: false,
+                        padding: 4,
+                        callback: function(value, index, ticks) {
+                            // Bei 18 Labels: zeige jeden 3. (Jan, Apr, Jul, Okt, Jan, Apr)
+                            // Bei 12 Labels: zeige jeden 3. (Jan, Apr, Jul, Okt)
+                            const totalLabels = ticks.length;
+                            if (totalLabels > 12) {
+                                // 18 Labels: 0, 3, 6, 9, 12, 15 (6 Labels)
+                                return index % 3 === 0 ? this.getLabelForValue(value) : '';
+                            } else {
+                                // 12 Labels: 0, 3, 6, 9 (4 Labels)
+                                return index % 3 === 0 ? this.getLabelForValue(value) : '';
+                            }
+                        }
+                    },
                     offset: true
                 },
                 y: {

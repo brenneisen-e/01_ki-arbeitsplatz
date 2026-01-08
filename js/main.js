@@ -891,33 +891,30 @@ function generateAllForecastData(actualData) {
     // Wenn alle 12 Monate vorhanden sind, generiere Forecast für nächstes Jahr (Monate 13-18 = Jan-Jun)
     const forecastEndMonth = lastMonth >= 12 ? 18 : 12;
 
-    console.log('📊 Generating forecast from month', lastMonth + 1, 'to', forecastEndMonth);
-
     // KPI-IDs
     const allKpiIds = ['neugeschaeft', 'bestand', 'storno', 'nps', 'risiko', 'combined', 'ergebnis', 'underwriting', 'deckungsbeitrag'];
 
-    // Fixe positive Wachstumsraten pro KPI (realistisch, leicht positiv)
-    const growthRates = {
-        neugeschaeft: 0.012,      // +1.2% pro Monat
-        bestand: 0.008,           // +0.8% pro Monat
-        storno: -0.005,           // -0.5% pro Monat (Verbesserung)
-        nps: 0.003,               // +0.3 Punkte pro Monat
-        risiko: -0.004,           // -0.4% pro Monat (Verbesserung)
-        combined: -0.002,         // -0.2% pro Monat (niedriger ist besser)
-        ergebnis: 0.015,          // +1.5% pro Monat
-        underwriting: 0.002,      // +0.2% pro Monat
-        deckungsbeitrag: 0.01     // +1% pro Monat
-    };
-
-    // Minimale saisonale Faktoren (abgeschwächt)
-    const seasonalFactors = { 1: 0.98, 2: 0.99, 3: 1.0, 4: 1.01, 5: 1.02, 6: 1.01 };
+    // Berechne den Trend der letzten 3 Monate für jeden KPI
+    const trends = {};
+    allKpiIds.forEach(kpiId => {
+        const recent = actualData.slice(-3);
+        if (recent.length >= 2) {
+            const first = recent[0][kpiId] || 0;
+            const last = recent[recent.length - 1][kpiId] || 0;
+            if (first !== 0) {
+                trends[kpiId] = (last - first) / first / (recent.length - 1);
+            } else {
+                trends[kpiId] = 0;
+            }
+        } else {
+            trends[kpiId] = 0;
+        }
+    });
 
     // Generiere Forecast für fehlende Monate
     let prevData = { ...lastMonthData };
 
     for (let month = lastMonth + 1; month <= forecastEndMonth; month++) {
-        const seasonalMonth = month > 12 ? month - 12 : month;
-        const seasonalFactor = seasonalFactors[seasonalMonth] || 1;
         const forecastPoint = {
             month: month,
             isForecast: true
@@ -925,30 +922,25 @@ function generateAllForecastData(actualData) {
 
         allKpiIds.forEach(kpiId => {
             const lastValue = prevData[kpiId] || 0;
-            const growth = growthRates[kpiId] || 0.005;
+            // Nutze den tatsächlichen Trend, aber dämpfe ihn leicht ab (80%)
+            const trend = (trends[kpiId] || 0) * 0.8;
 
-            // Sehr geringe Varianz für glatte Kurven (+/- 1%)
-            const variance = 1 + (Math.random() - 0.5) * 0.02;
+            // Minimale Varianz für glatte Kurven (+/- 0.3%)
+            const variance = 1 + (Math.random() - 0.5) * 0.006;
 
-            let forecastValue;
-            if (['nps', 'combined', 'underwriting', 'storno', 'risiko'].includes(kpiId)) {
-                // Prozent/Score-basierte KPIs: additives Wachstum
-                forecastValue = lastValue * (1 + growth) * variance;
-                // Begrenzungen
-                if (['nps'].includes(kpiId)) {
-                    forecastValue = Math.min(Math.max(forecastValue, 30), 70);
-                } else if (['combined'].includes(kpiId)) {
-                    forecastValue = Math.min(Math.max(forecastValue, 88), 98);
-                } else if (['underwriting'].includes(kpiId)) {
-                    forecastValue = Math.min(Math.max(forecastValue, 82), 92);
-                } else if (['storno'].includes(kpiId)) {
-                    forecastValue = Math.min(Math.max(forecastValue, 6), 10);
-                } else if (['risiko'].includes(kpiId)) {
-                    forecastValue = Math.min(Math.max(forecastValue, 40), 60);
-                }
-            } else {
-                // Volumen-KPIs: mit saisonalem Faktor
-                forecastValue = lastValue * (1 + growth * seasonalFactor) * variance;
+            let forecastValue = lastValue * (1 + trend) * variance;
+
+            // Realistische Grenzen
+            if (kpiId === 'storno') {
+                forecastValue = Math.min(Math.max(forecastValue, 6), 10);
+            } else if (kpiId === 'combined') {
+                forecastValue = Math.min(Math.max(forecastValue, 90), 98);
+            } else if (kpiId === 'underwriting') {
+                forecastValue = Math.min(Math.max(forecastValue, 82), 92);
+            } else if (kpiId === 'nps') {
+                forecastValue = Math.min(Math.max(forecastValue, 35), 55);
+            } else if (kpiId === 'risiko') {
+                forecastValue = Math.min(Math.max(forecastValue, 45), 55);
             }
 
             forecastPoint[kpiId] = forecastValue;
@@ -958,7 +950,6 @@ function generateAllForecastData(actualData) {
         prevData = { ...forecastPoint };
     }
 
-    console.log('✅ Generated', forecastData.length, 'forecast months');
     return forecastData;
 }
 

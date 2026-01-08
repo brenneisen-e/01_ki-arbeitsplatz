@@ -8695,4 +8695,81 @@ button svg,
     );
 }
 
+/* ========================================
+   CHAT CUSTOMER BUTTONS & FOLLOW-UP
+   ======================================== */
+
+/* Customer Button in Chat Responses */
+.chat-customer-btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    background: #86BC25;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-right: 4px;
+}
+
+.chat-customer-btn:hover {
+    background: #6B9A1F;
+    transform: translateY(-1px);
+}
+
+.chat-customer-btn:active {
+    transform: translateY(0);
+}
+
+/* Customer Item Container */
+.chat-customer-item {
+    padding: 10px 12px;
+    background: #f8fafc;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    border-left: 3px solid #86BC25;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+/* Recommendation Text */
+.chat-recommendation {
+    display: block;
+    color: #64748b;
+    font-size: 12px;
+    margin-top: 4px;
+    font-style: italic;
+}
+
+/* Follow-up Suggestions Container */
+.chat-followup-suggestions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px solid #e2e8f0;
+}
+
+.chat-followup-suggestions button {
+    padding: 8px 14px;
+    background: white;
+    color: #1e293b;
+    border: 1px solid #e2e8f0;
+    border-radius: 18px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.chat-followup-suggestions button:hover {
+    background: #86BC25;
+    border-color: #86BC25;
+    color: white;
+}
+
 

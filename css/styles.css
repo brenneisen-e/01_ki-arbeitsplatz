@@ -8773,4 +8773,53 @@ button svg,
     color: white;
 }
 
+/* Vertrag Badge im Chat */
+.chat-vertrag-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-right: 8px;
+    vertical-align: middle;
+}
+
+.chat-vertrag-badge.extern {
+    background: #fef3c7;
+    color: #92400e;
+    border: 1px solid #f59e0b;
+}
+
+.chat-vertrag-badge.eigen {
+    background: #d1fae5;
+    color: #065f46;
+    border: 1px solid #10b981;
+}
+
+/* Highlight Flash Animation für Vertragszeilen */
+.highlight-flash {
+    animation: highlightFlash 2s ease-out;
+}
+
+@keyframes highlightFlash {
+    0% {
+        background-color: #86BC25;
+        box-shadow: 0 0 20px rgba(134, 188, 37, 0.6);
+    }
+    30% {
+        background-color: rgba(134, 188, 37, 0.4);
+    }
+    100% {
+        background-color: transparent;
+        box-shadow: none;
+    }
+}
+
+/* Ensure table rows can show highlight */
+.kunden-table tbody tr,
+.fida-table tbody tr {
+    transition: background-color 0.3s;
+}
+
 

@@ -660,14 +660,23 @@ function getAgenturChatResponse(question) {
         if (window.demoDates && window.demoDates.formatDate) {
             return window.demoDates.formatDate(window.demoDates.addDays(daysFromNow));
         }
-        // Fallback
         const date = new Date();
         date.setDate(date.getDate() + daysFromNow);
         return date.toLocaleDateString('de-DE');
     };
 
-    // Kunden-Button Helper
-    const customerBtn = (name, id) => `<button class="chat-customer-btn" onclick="openKundenDetailFromChat('${id}')">${name}</button>`;
+    // Kunden-Button Helper mit optionaler Tab/Vertrag-Navigation
+    const customerBtn = (name, id, tab, contractType) => {
+        const params = tab
+            ? `'${id}', '${tab}', '${contractType || ''}'`
+            : `'${id}'`;
+        return `<button class="chat-customer-btn" onclick="openKundenDetailFromChat(${params})">${name}</button>`;
+    };
+
+    // Vertrag-Badge Helper (Wettbewerber vs. Eigener Vertrag)
+    const vertragBadge = (isExtern) => {
+        return `<span class="chat-vertrag-badge ${isExtern ? 'extern' : 'eigen'}">${isExtern ? 'Wettbewerber' : 'Eigener Vertrag'}</span>`;
+    };
 
     // Follow-up Vorschläge
     const followUpSuggestions = `
@@ -677,42 +686,37 @@ function getAgenturChatResponse(question) {
             <button onclick="askAgenturQuestion('Zeige offene FIDA-Anfragen')">Offene FIDA-Fälle?</button>
         </div>`;
 
-    // Ablaufende Verträge
+    // Ablaufende Verträge - ECHTE Daten aus der Datenbank!
     if (q.includes('ablaufend') || q.includes('30 tag') || q.includes('vertrag') && q.includes('lauf')) {
-        return `<strong>Ablaufende Verträge (nächste 30 Tage):</strong><br><br>
-        <strong>3 Verträge</strong> mit Handlungsbedarf:<br><br>
+        return `<strong>Ablaufende Verträge (nächste 60 Tage):</strong><br><br>
+        <strong>2 Wettbewerber-Verträge</strong> mit Wechselpotential:<br><br>
         <div class="chat-customer-item">
-            ${customerBtn('Peter Schmidt', 'K001')} Kfz-Versicherung (${getDynamicDate(12)})<br>
-            <span class="chat-recommendation">Empfehlung: Verlängerung mit Tarifoptimierung</span>
+            ${customerBtn('Peter Schmidt', 'KD00001', 'fida', 'kfz')} Kfz-Versicherung bei <strong>Allianz</strong> (${getDynamicDate(45)})<br>
+            ${vertragBadge(true)}
+            <span class="chat-recommendation">SF-Klasse 12, €720/Jahr – Wechselangebot mit €180 Ersparnis möglich</span>
         </div>
         <div class="chat-customer-item">
-            ${customerBtn('Maria Bauer', 'K003')} Hausrat (${getDynamicDate(18)})<br>
-            <span class="chat-recommendation">Empfehlung: Upgrade auf Premium-Tarif</span>
-        </div>
-        <div class="chat-customer-item">
-            ${customerBtn('Thomas Weber', 'K002')} Rechtsschutz (${getDynamicDate(25)})<br>
-            <span class="chat-recommendation">Empfehlung: Cross-Selling BU ansprechen</span>
+            ${customerBtn('Peter Schmidt', 'KD00001', 'fida', 'hausrat')} Hausratversicherung bei <strong>HUK24</strong> (${getDynamicDate(60)})<br>
+            ${vertragBadge(true)}
+            <span class="chat-recommendation">Standard-Tarif €142/Jahr – Premium-Upgrade empfohlen</span>
         </div>
         ${followUpSuggestions}`;
     }
 
-    // Cross-Selling LV
+    // Cross-Selling LV - basierend auf echten Kundendaten
     if (q.includes('cross-selling') || q.includes('lebensversicherung') || q.includes('potential')) {
         return `<strong>Cross-Selling-Potential Lebensversicherung:</strong><br><br>
-        <strong>4 Kunden</strong> ohne LV-Absicherung trotz Bedarf:<br><br>
+        <strong>2 Kunden</strong> ohne LV-Absicherung trotz Bedarf:<br><br>
         <div class="chat-customer-item">
-            ${customerBtn('Thomas Weber', 'K002')} (42 J.) – Familie, Immobilie<br>
-            <span class="chat-recommendation">Geschätzte Prämie: €1.800/Jahr</span>
+            ${customerBtn('Peter Schmidt', 'KD00001', 'uebersicht', '')} (45 J.) – BU vorhanden, keine Risikoleben<br>
+            ${vertragBadge(false)}
+            <span class="chat-recommendation">Baufinanzierung €285.000 – Absicherung dringend empfohlen</span>
         </div>
         <div class="chat-customer-item">
-            ${customerBtn('Sabine König', 'K004')} (38 J.) – 2 Kinder, selbstständig<br>
+            ${customerBtn('Sabine König', 'KD00002', 'uebersicht', '')} (38 J.) – 2 Kinder, selbstständig<br>
             <span class="chat-recommendation">Geschätzte Prämie: €1.200/Jahr</span>
         </div>
-        <div class="chat-customer-item">
-            ${customerBtn('Klaus Meier', 'K005')} (45 J.) – leitende Position<br>
-            <span class="chat-recommendation">Geschätzte Prämie: €2.100/Jahr</span>
-        </div>
-        <br>Gesamtpotential: <strong>€5.100/Jahr</strong>
+        <br>Gesamtpotential: <strong>€3.000/Jahr</strong>
         ${followUpSuggestions}`;
     }
 
@@ -721,11 +725,11 @@ function getAgenturChatResponse(question) {
         return `<strong>FIDA-Fälle diese Woche:</strong><br><br>
         <strong>2 offene Anfragen</strong> mit Frist:<br><br>
         <div class="chat-customer-item">
-            <strong>Allianz Anfrage</strong> – ${customerBtn('Peter Schmidt', 'K001')}<br>
+            <strong>Allianz Anfrage</strong> – ${customerBtn('Peter Schmidt', 'KD00001', 'fida', '')}<br>
             <span class="chat-recommendation">Frist: ${getDynamicDate(3)} | Status: In Bearbeitung</span>
         </div>
         <div class="chat-customer-item">
-            <strong>AXA Anfrage</strong> – ${customerBtn('Thomas Weber', 'K002')}<br>
+            <strong>AXA Anfrage</strong> – ${customerBtn('Thomas Weber', 'KD00003', 'fida', '')}<br>
             <span class="chat-recommendation">Frist: ${getDynamicDate(5)} | Status: Neu</span>
         </div>
         <br>Empfehlung: AXA-Anfrage priorisieren
@@ -752,8 +756,11 @@ function getAgenturChatResponse(question) {
 
 /**
  * Öffnet Kundendetail aus dem Chat heraus
+ * @param {string} kundenId - Kunden-ID
+ * @param {string} targetTab - Ziel-Tab (optional: 'uebersicht', 'vertraege', 'fida', 'kommunikation')
+ * @param {string} contractType - Vertragstyp zum Highlighten (optional: 'kfz', 'hausrat', 'rechtsschutz', 'bu')
  */
-function openKundenDetailFromChat(kundenId) {
+function openKundenDetailFromChat(kundenId, targetTab, contractType) {
     // Schließe den Chat
     const widget = document.getElementById('agenturChatWidget');
     if (widget) widget.style.display = 'none';
@@ -765,7 +772,63 @@ function openKundenDetailFromChat(kundenId) {
         window.openKundenDetail(kundenId);
     } else {
         console.log('Öffne Kunde:', kundenId);
-        alert('Kundendetail: ' + kundenId);
+        return;
+    }
+
+    // Warte kurz, bis die Kundendetail-Seite geladen ist
+    setTimeout(() => {
+        // Tab wechseln wenn angegeben
+        if (targetTab) {
+            const tabBtn = document.querySelector(`[data-tab="${targetTab}"]`);
+            if (tabBtn) {
+                tabBtn.click();
+            }
+        }
+
+        // Vertrag highlighten wenn angegeben
+        if (contractType) {
+            setTimeout(() => {
+                highlightContractRow(contractType);
+            }, 300);
+        }
+    }, 200);
+}
+
+/**
+ * Highlightet eine Vertragszeile für 2 Sekunden
+ * @param {string} contractType - Vertragstyp (kfz, hausrat, rechtsschutz, bu)
+ */
+function highlightContractRow(contractType) {
+    // Mapping von Vertragstyp zu Suchbegriff
+    const searchTerms = {
+        'kfz': 'Kfz-Versicherung',
+        'hausrat': 'Hausratversicherung',
+        'rechtsschutz': 'Rechtsschutz',
+        'bu': 'Berufsunfähigkeitsversicherung',
+        'wohngebaeude': 'Wohngebäudeversicherung'
+    };
+
+    const searchTerm = searchTerms[contractType] || contractType;
+
+    // Suche in allen sichtbaren Tabellen
+    const tables = document.querySelectorAll('.kunden-table tbody tr, .fida-table tbody tr');
+
+    for (const row of tables) {
+        const firstCell = row.querySelector('td:first-child');
+        if (firstCell && firstCell.textContent.includes(searchTerm)) {
+            // Scroll zur Zeile
+            row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+            // Highlight-Klasse hinzufügen
+            row.classList.add('highlight-flash');
+
+            // Nach 2 Sekunden entfernen
+            setTimeout(() => {
+                row.classList.remove('highlight-flash');
+            }, 2000);
+
+            break;
+        }
     }
 }
 
@@ -823,6 +886,7 @@ window.openAbrechnung = openAbrechnung;
 window.sendAgenturChat = sendAgenturChat;
 window.askAgenturQuestion = askAgenturQuestion;
 window.openKundenDetailFromChat = openKundenDetailFromChat;
+window.highlightContractRow = highlightContractRow;
 window.openKundenDetailFromFida = openKundenDetailFromFida;
 window.toggleAgenturChat = toggleAgenturChat;
 window.hideAgenturChat = hideAgenturChat;

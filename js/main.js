@@ -954,3 +954,108 @@ function getFilteredDataWithForecast() {
 window.toggleForecast = toggleForecast;
 window.getFilteredDataWithForecast = getFilteredDataWithForecast;
 window.generateAllForecastData = generateAllForecastData;
+
+// =============================================
+// DYNAMIC DEMO DATES
+// =============================================
+
+/**
+ * Berechnet dynamische Demo-Daten basierend auf dem heutigen Datum
+ */
+function initDynamicDemoDates() {
+    const today = new Date();
+
+    // Helper: Datum formatieren (DD.MM.YYYY)
+    const formatDate = (date) => {
+        const d = date.getDate().toString().padStart(2, '0');
+        const m = (date.getMonth() + 1).toString().padStart(2, '0');
+        const y = date.getFullYear();
+        return `${d}.${m}.${y}`;
+    };
+
+    // Helper: Datum + X Tage
+    const addDays = (days) => {
+        const date = new Date(today);
+        date.setDate(date.getDate() + days);
+        return date;
+    };
+
+    // Helper: Datum + X Monate
+    const addMonths = (months) => {
+        const date = new Date(today);
+        date.setMonth(date.getMonth() + months);
+        return date;
+    };
+
+    // Dynamische Daten definieren
+    const dynamicDates = {
+        // Kündigungsfristen (relative zum heutigen Datum)
+        'kuend-kfz': { date: addDays(45), urgent: true },           // 45 Tage - dringend
+        'kuend-hausrat': { date: addMonths(2), urgent: false },     // 2 Monate
+        'kuend-rechtsschutz': { date: addMonths(8), urgent: false }, // 8 Monate
+
+        // FIDA Fristen
+        'fida-frist': { date: addMonths(3), urgent: false },
+
+        // Kommunikation (Vergangenheit)
+        'komm-date-1': { date: addDays(-10), urgent: false },
+        'komm-date-2': { date: addDays(-25), urgent: false },
+        'komm-date-3': { date: addDays(-30), urgent: false },
+        'komm-date-4': { date: addDays(-60), urgent: false },
+
+        // Termine
+        'termin-beratung': { date: addDays(35), urgent: false },
+
+        // Potentiale Tabellen
+        'potential-kfz-arag': { date: addMonths(12), urgent: false },
+        'potential-kfz-huk': { date: addMonths(12), urgent: false },
+    };
+
+    // Alle Elemente mit data-dynamic-date Attribut aktualisieren
+    document.querySelectorAll('[data-dynamic-date]').forEach(el => {
+        const key = el.getAttribute('data-dynamic-date');
+        if (dynamicDates[key]) {
+            const { date, urgent } = dynamicDates[key];
+            el.textContent = formatDate(date);
+            if (urgent) {
+                el.style.color = '#dc2626';
+                el.style.fontWeight = 'bold';
+            }
+        }
+    });
+
+    // Spezifische Text-Updates (für Texte die das Datum enthalten)
+    const kfzDateStr = formatDate(dynamicDates['kuend-kfz'].date);
+
+    // Update Impulse texts
+    document.querySelectorAll('.impuls-text p').forEach(el => {
+        if (el.textContent.includes('30.11.2025')) {
+            el.innerHTML = el.innerHTML.replace(/30\.11\.2025/g, kfzDateStr);
+        }
+    });
+
+    // Update Herleitung values
+    document.querySelectorAll('.herleitung-value').forEach(el => {
+        if (el.textContent.includes('30.11.2025')) {
+            el.textContent = el.textContent.replace(/30\.11\.2025/g, kfzDateStr);
+        }
+    });
+
+    // Update Kommunikation
+    document.querySelectorAll('.komm-preview').forEach(el => {
+        if (el.textContent.includes('30.11.2025')) {
+            el.textContent = el.textContent.replace(/30\.11\.2025/g, kfzDateStr);
+        }
+    });
+
+    console.log('📅 Dynamic demo dates initialized');
+}
+
+// Bei Seitenwechsel zur Kundenansicht aufrufen
+window.initDynamicDemoDates = initDynamicDemoDates;
+
+// Initial aufrufen wenn DOM geladen
+document.addEventListener('DOMContentLoaded', function() {
+    // Kurze Verzögerung damit alle Elemente geladen sind
+    setTimeout(initDynamicDemoDates, 100);
+});

@@ -3239,6 +3239,26 @@ PMO Team
 
             console.log(`PPTX exported: ${filename}`);
 
+            // Demo-Modus: Versuche PowerPoint in den Vordergrund zu holen
+            // Nutze ms-powerpoint: Protokoll um PowerPoint zu aktivieren
+            setTimeout(() => {
+                try {
+                    // Versuche PowerPoint über Protokoll-Handler zu öffnen
+                    const pptFrame = document.createElement('iframe');
+                    pptFrame.style.display = 'none';
+                    pptFrame.src = 'ms-powerpoint:';
+                    document.body.appendChild(pptFrame);
+                    setTimeout(() => {
+                        document.body.removeChild(pptFrame);
+                    }, 100);
+
+                    // Zusätzlich: Browser-Fenster in den Hintergrund
+                    window.blur();
+                } catch (e) {
+                    console.log('PowerPoint Protokoll nicht verfügbar');
+                }
+            }, 300);
+
         } catch (error) {
             console.error('PPTX Export Error:', error);
             alert('Fehler beim PPTX-Export: ' + error.message);

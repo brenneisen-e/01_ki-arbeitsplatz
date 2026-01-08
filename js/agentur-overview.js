@@ -655,44 +655,86 @@ function askAgenturQuestion(question) {
 function getAgenturChatResponse(question) {
     const q = question.toLowerCase();
 
+    // Ablaufende Verträge
+    if (q.includes('ablaufend') || q.includes('30 tag')) {
+        return `<strong>Ablaufende Verträge (nächste 30 Tage):</strong><br><br>
+        <strong>3 Verträge</strong> mit Handlungsbedarf:<br><br>
+        • <strong>Peter Schmidt</strong> – Kfz-Versicherung (15.02.2026)<br>
+        &nbsp;&nbsp;Empfehlung: Verlängerung mit Tarifoptimierung anbieten<br><br>
+        • <strong>Maria Bauer</strong> – Hausrat (22.02.2026)<br>
+        &nbsp;&nbsp;Empfehlung: Upgrade auf Premium-Tarif prüfen<br><br>
+        • <strong>Thomas Weber</strong> – Rechtsschutz (28.02.2026)<br>
+        &nbsp;&nbsp;Empfehlung: Cross-Selling BU ansprechen`;
+    }
+
+    // Cross-Selling LV
+    if (q.includes('cross-selling') || q.includes('lebensversicherung')) {
+        return `<strong>Cross-Selling-Potential Lebensversicherung:</strong><br><br>
+        <strong>4 Kunden</strong> ohne LV-Absicherung trotz Bedarf:<br><br>
+        • <strong>Thomas Weber</strong> (42 J.) – Familie, Immobilienfinanzierung<br>
+        &nbsp;&nbsp;Geschätzte Prämie: €1.800/Jahr<br><br>
+        • <strong>Sabine König</strong> (38 J.) – 2 Kinder, selbstständig<br>
+        &nbsp;&nbsp;Geschätzte Prämie: €1.200/Jahr<br><br>
+        • <strong>Klaus Meier</strong> (45 J.) – leitende Position, keine Absicherung<br>
+        &nbsp;&nbsp;Geschätzte Prämie: €2.100/Jahr<br><br>
+        Gesamtpotential: €5.100/Jahr`;
+    }
+
+    // FIDA-Fälle
+    if (q.includes('fida')) {
+        return `<strong>FIDA-Fälle diese Woche:</strong><br><br>
+        <strong>2 offene Anfragen</strong> mit Frist:<br><br>
+        • <strong>Allianz Anfrage</strong> – Kunde: Schmidt, Peter<br>
+        &nbsp;&nbsp;Frist: 10.01.2026 | Status: In Bearbeitung<br><br>
+        • <strong>AXA Anfrage</strong> – Kunde: Weber, Thomas<br>
+        &nbsp;&nbsp;Frist: 12.01.2026 | Status: Neu<br><br>
+        Empfehlung: AXA-Anfrage priorisieren (kürzere Restlaufzeit)`;
+    }
+
+    // Abschlussquote
+    if (q.includes('abschlussquote') || q.includes('vergleich')) {
+        return `<strong>Abschlussquote im Vergleich:</strong><br><br>
+        <strong>Aktueller Monat:</strong> 68% (12 von 18 Angeboten)<br>
+        <strong>Vormonat:</strong> 62% (10 von 16 Angeboten)<br><br>
+        Veränderung: <strong>+6 Prozentpunkte</strong><br><br>
+        Stärkste Sparten:<br>
+        • Kfz: 78% Abschlussquote<br>
+        • Hausrat: 71% Abschlussquote<br>
+        • BU: 45% Abschlussquote (unter Durchschnitt)`;
+    }
+
+    // Fallback für alte Fragen
     if (q.includes('potential') || q.includes('woche')) {
-        return `<strong>Ihre Vertriebspotentiale diese Woche:</strong><br><br>
-        • <strong>5 aktive Potentiale</strong> mit Gesamtvolumen €12.750/Jahr<br>
-        • <strong>Peter Schmidt</strong> - Übergreifend (€8.500) - Hohe Priorität<br>
-        • <strong>Sabine König</strong> - Kfz-Wechsel (€650)<br>
-        • <strong>Thomas Weber</strong> - Risikoleben (€1.800)<br><br>
-        Empfehlung: Fokus auf Peter Schmidt - hier ist der größte Hebel.`;
+        return `<strong>Aktive Vertriebspotentiale:</strong><br><br>
+        <strong>5 Potentiale</strong> mit Gesamtvolumen €12.750/Jahr:<br><br>
+        • <strong>Peter Schmidt</strong> – BU-Erhöhung (€8.500)<br>
+        • <strong>Sabine König</strong> – Kfz-Wechsel (€650)<br>
+        • <strong>Thomas Weber</strong> – Risikoleben (€1.800)`;
     }
 
     if (q.includes('aufgabe') || q.includes('offen')) {
-        return `<strong>Ihre offenen Aufgaben:</strong><br><br>
-        🔴 <strong>Heute:</strong> Rückruf Peter Schmidt - Beratungstermin (14:00)<br>
-        🟡 <strong>Morgen:</strong> Angebot Kfz für König erstellen<br>
-        ⚪ <strong>Diese Woche:</strong> Quartalsreporting vorbereiten<br><br>
-        Tipp: Der Termin mit Schmidt ist in 2 Stunden!`;
+        return `<strong>Offene Aufgaben:</strong><br><br>
+        <strong>Heute:</strong><br>
+        • Rückruf Peter Schmidt – Beratungstermin (14:00)<br><br>
+        <strong>Morgen:</strong><br>
+        • Angebot Kfz für König erstellen<br><br>
+        <strong>Diese Woche:</strong><br>
+        • Quartalsreporting vorbereiten`;
     }
 
-    if (q.includes('kennzahl') || q.includes('vertrieb')) {
-        return `<strong>Ihre Vertriebskennzahlen:</strong><br><br>
-        📈 <strong>Diese Woche:</strong><br>
+    if (q.includes('kennzahl')) {
+        return `<strong>Vertriebskennzahlen:</strong><br><br>
+        <strong>Aktuelle Woche:</strong><br>
         • 12 Abschlüsse (+3 vs. Vorwoche)<br>
         • €18.450 Neugeschäft (+12%)<br>
-        • 68% Abschlussquote (+5%)<br><br>
-        👏 Starke Woche! Sie liegen über dem Durchschnitt.`;
+        • 68% Abschlussquote (+5%)`;
     }
 
-    if (q.includes('top') || q.includes('höchst')) {
-        return `<strong>Kunden mit höchstem Potential:</strong><br><br>
-        1. <strong>Peter Schmidt</strong> - €8.500/Jahr (BU-Erhöhung)<br>
-        2. <strong>Thomas Weber</strong> - €1.800/Jahr (Risikoleben)<br>
-        3. <strong>Sabine König</strong> - €650/Jahr (Kfz-Wechsel)<br><br>
-        Gesamtpotential: €10.950/Jahr`;
-    }
-
-    return `Ich habe Ihre Anfrage verstanden. Hier sind einige Möglichkeiten:<br><br>
-    • Fragen Sie nach <strong>"Potentiale"</strong> für Ihre aktuellen Vertriebschancen<br>
-    • Fragen Sie nach <strong>"Aufgaben"</strong> für Ihre offenen To-Dos<br>
-    • Fragen Sie nach <strong>"Kennzahlen"</strong> für Ihre Performance`;
+    return `Ich kann Ihnen bei folgenden Themen helfen:<br><br>
+    • <strong>Ablaufende Verträge</strong> – Kunden mit anstehenden Vertragsverlängerungen<br>
+    • <strong>Cross-Selling</strong> – Kunden mit zusätzlichem Absicherungsbedarf<br>
+    • <strong>FIDA-Fälle</strong> – Offene Datenanfragen anderer Versicherer<br>
+    • <strong>Abschlussquote</strong> – Ihre Vertriebsperformance im Vergleich`;
 }
 
 /**

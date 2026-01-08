@@ -631,6 +631,16 @@ export const PMO = {
         } else {
             this.statusData = JSON.parse(stored);
             this.projectStatusData = storedProjectStatus ? JSON.parse(storedProjectStatus) : [];
+
+            // Check if today's status is missing - regenerate if so
+            const today = new Date().toISOString().split('T')[0];
+            const hasTodayStatus = this.statusData.some(s => s.date === today);
+            if (!hasTodayStatus) {
+                console.log('🔄 Heutiges Datum fehlt in Demo-Daten, regeneriere...');
+                this.generateDemoData();
+                this.generateProjectDemoData();
+            }
+
             // Generate project data if missing
             if (this.projectStatusData.length === 0) {
                 this.generateProjectDemoData();

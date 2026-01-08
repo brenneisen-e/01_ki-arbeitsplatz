@@ -117,7 +117,7 @@ export const PMO = {
     tasks: [],
     milestones: [],
     selectedTrafficLights: {},
-    DEMO_DATA_VERSION: 6,  // Increment to force regeneration of demo data
+    DEMO_DATA_VERSION: 7,  // Increment to force regeneration of demo data
 
     // Initialize
     init() {
@@ -632,15 +632,6 @@ export const PMO = {
             this.statusData = JSON.parse(stored);
             this.projectStatusData = storedProjectStatus ? JSON.parse(storedProjectStatus) : [];
 
-            // Check if today's status is missing - regenerate if so
-            const today = new Date().toISOString().split('T')[0];
-            const hasTodayStatus = this.statusData.some(s => s.date === today);
-            if (!hasTodayStatus) {
-                console.log('🔄 Heutiges Datum fehlt in Demo-Daten, regeneriere...');
-                this.generateDemoData();
-                this.generateProjectDemoData();
-            }
-
             // Generate project data if missing
             if (this.projectStatusData.length === 0) {
                 this.generateProjectDemoData();
@@ -668,7 +659,9 @@ export const PMO = {
         };
 
         const demoData = [];
+        // Start from yesterday for consistent demo data (07.01 instead of 08.01)
         const today = new Date();
+        today.setDate(today.getDate() - 1);
 
         // Generate 5 weeks of data for each workstream
         this.PROGRAM_STRUCTURE.projects.forEach(project => {
@@ -788,7 +781,9 @@ export const PMO = {
         };
 
         const projectData = [];
+        // Start from yesterday for consistent demo data
         const today = new Date();
+        today.setDate(today.getDate() - 1);
 
         // Generate 4 weeks of project status history for each project
         this.PROGRAM_STRUCTURE.projects.forEach(project => {

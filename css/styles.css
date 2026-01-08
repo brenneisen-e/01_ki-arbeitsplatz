@@ -8647,6 +8647,11 @@ button svg,
     font-size: 0.6rem;
     color: #64748b;
     align-items: center;
+    visibility: hidden; /* Versteckt aber Platz reserviert */
+}
+
+.forecast-legend.visible {
+    visibility: visible;
 }
 
 .forecast-legend .legend-item {

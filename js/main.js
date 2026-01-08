@@ -43,7 +43,7 @@ function createKPICard(kpi) {
         <div class="kpi-metrics">
             <div class="kpi-value-row">
                 <div class="kpi-value">${formatValue(ytdValue, kpi.unit)}</div>
-                <div class="forecast-legend" id="forecast-legend-${kpi.id}" style="display: none;">
+                <div class="forecast-legend" id="forecast-legend-${kpi.id}">
                     <span class="legend-item legend-ist"><span class="legend-box"></span>Ist</span>
                     <span class="legend-item legend-prognose"><span class="legend-box"></span>Prognose</span>
                 </div>
@@ -872,7 +872,7 @@ function toggleForecast() {
         const kpiId = card.id.replace('kpi-', '');
         const legend = document.getElementById(`forecast-legend-${kpiId}`);
         if (legend) {
-            legend.style.display = window.state.forecastEnabled ? 'inline-flex' : 'none';
+            legend.classList.toggle('visible', window.state.forecastEnabled);
         }
     });
 

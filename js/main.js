@@ -41,12 +41,14 @@ function createKPICard(kpi) {
             </div>
         </div>
         <div class="kpi-metrics">
-            <div class="kpi-value-row">
+            <div class="kpi-value-line">
                 <div class="kpi-value">${formatValue(ytdValue, kpi.unit)}</div>
                 <div class="forecast-legend" id="forecast-legend-${kpi.id}">
                     <span class="legend-item legend-ist"><span class="legend-box"></span>Ist</span>
                     <span class="legend-item legend-prognose"><span class="legend-box"></span>Prognose</span>
                 </div>
+            </div>
+            <div class="kpi-trend-line">
                 <div class="kpi-trend ${trendIsPositive ? 'positive' : 'negative'}">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
                         ${trendIsPositive

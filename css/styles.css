@@ -1212,12 +1212,18 @@ select:focus, .dropdown-button:focus {
     margin-bottom: 0.75rem;
 }
 
-/* Value row - alle Elemente auf einer Zeile */
-.kpi-value-row {
+/* Value line - Wert und Legende */
+.kpi-value-line {
     display: flex;
     align-items: baseline;
     gap: 0.5rem;
-    flex-wrap: wrap;
+}
+
+/* Trend line - Trend und YTD Label */
+.kpi-trend-line {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
 }
 
 .kpi-ytd-label {

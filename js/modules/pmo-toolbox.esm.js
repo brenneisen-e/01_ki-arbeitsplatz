@@ -3038,6 +3038,12 @@ PMO Team
                 `<a:t>Status vom: ${statusDate}</a:t>`
             );
 
+            // Debug: Check what patterns exist in ORIGINAL template BEFORE any replacements
+            const xxMatchesBefore = (slideXml.match(/<a:t>xx<\/a:t>/g) || []).length;
+            const xxxMatchesBefore = (slideXml.match(/<a:t>: xxx<\/a:t>/g) || []).length;
+            const XxxMatchesBefore = (slideXml.match(/<a:t>Xxx<\/a:t>/g) || []).length;
+            console.log('📝 ORIGINAL Template patterns:', { xx: xxMatchesBefore, colonXxx: xxxMatchesBefore, Xxx: XxxMatchesBefore });
+
             // Combine all content for Xxx placeholders in order:
             // 1-3: Projektfortschritt (3 bullets)
             // 4-6: Anstehende Aktivitäten (3 bullets)
@@ -3073,10 +3079,15 @@ PMO Team
                 return `<a:t>${this.escapeXml(content)}</a:t>`;
             });
 
+            // Debug: Log data being used for replacements
+            console.log('📝 Summary bullets:', summaryBullets);
+            console.log('📝 Risks/Challenges:', status.risksAndIssues);
+
             // Replace xx (lowercase) placeholders for Management Summary
             let xxIndex = 0;
             slideXml = slideXml.replace(/<a:t>xx<\/a:t>/g, () => {
                 const content = summaryBullets[xxIndex] || '';
+                console.log(`📝 Replacing xx[${xxIndex}] with: "${content}"`);
                 xxIndex++;
                 return `<a:t>${this.escapeXml(content)}</a:t>`;
             });
@@ -3085,6 +3096,7 @@ PMO Team
             xxIndex = 0;
             slideXml = slideXml.replace(/<a:t>XX<\/a:t>/g, () => {
                 const content = summaryBullets[xxIndex] || '';
+                console.log(`📝 Replacing XX[${xxIndex}] with: "${content}"`);
                 xxIndex++;
                 return `<a:t>${this.escapeXml(content)}</a:t>`;
             });
@@ -3097,6 +3109,7 @@ PMO Team
             // Replace ": xxx" patterns with actual risk/challenge descriptions
             slideXml = slideXml.replace(/<a:t>: xxx<\/a:t>/g, () => {
                 const item = allRisksAndChallenges[riskChallengeIndex];
+                console.log(`📝 Replacing : xxx[${riskChallengeIndex}] with:`, item?.description);
                 riskChallengeIndex++;
                 if (item) {
                     return `<a:t>: ${this.escapeXml(item.description)}</a:t>`;

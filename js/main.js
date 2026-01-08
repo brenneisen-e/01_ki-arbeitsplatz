@@ -961,6 +961,7 @@ window.generateAllForecastData = generateAllForecastData;
 
 /**
  * Berechnet dynamische Demo-Daten basierend auf dem heutigen Datum
+ * Ersetzt alle hardcoded Daten durch relative Daten
  */
 function initDynamicDemoDates() {
     const today = new Date();
@@ -971,6 +972,16 @@ function initDynamicDemoDates() {
         const m = (date.getMonth() + 1).toString().padStart(2, '0');
         const y = date.getFullYear();
         return `${d}.${m}.${y}`;
+    };
+
+    // Helper: Datum mit Uhrzeit formatieren (DD.MM.YYYY, HH:MM)
+    const formatDateTime = (date, hours, minutes) => {
+        const d = date.getDate().toString().padStart(2, '0');
+        const m = (date.getMonth() + 1).toString().padStart(2, '0');
+        const y = date.getFullYear();
+        const h = hours.toString().padStart(2, '0');
+        const min = minutes.toString().padStart(2, '0');
+        return `${d}.${m}.${y}, ${h}:${min}`;
     };
 
     // Helper: Datum + X Tage
@@ -987,31 +998,53 @@ function initDynamicDemoDates() {
         return date;
     };
 
-    // Dynamische Daten definieren
-    const dynamicDates = {
-        // Kündigungsfristen (relative zum heutigen Datum)
-        'kuend-kfz': { date: addDays(45), urgent: true },           // 45 Tage - dringend
-        'kuend-hausrat': { date: addMonths(2), urgent: false },     // 2 Monate
-        'kuend-rechtsschutz': { date: addMonths(8), urgent: false }, // 8 Monate
+    // Mapping: Alte hardcoded Daten -> Neue relative Daten
+    const dateReplacements = {
+        // Kündigungsfristen (Zukunft)
+        '30.11.2025': formatDate(addDays(45)),      // Kfz Allianz - 45 Tage
+        '14.02.2026': formatDate(addMonths(2)),     // Hausrat - 2 Monate
+        '31.08.2026': formatDate(addMonths(8)),     // Rechtsschutz - 8 Monate
+        '31.12.2025': formatDate(addMonths(12)),    // Potentiale - 12 Monate
+        '31.03.2026': formatDate(addMonths(3)),     // Kredit Laufzeit - 3 Monate
 
-        // FIDA Fristen
-        'fida-frist': { date: addMonths(3), urgent: false },
+        // FIDA Daten
+        '15.03.2024': formatDate(addMonths(-10)),   // FIDA Einwilligung erteilt (Vergangenheit)
+        '15.03.2026': formatDate(addMonths(14)),    // FIDA gültig bis (Zukunft)
+
+        // Abrechnungen (Vergangenheit)
+        '03.01.2025': formatDate(addDays(-5)),      // Letzte Abrechnung
+        '02.12.2024': formatDate(addDays(-35)),     // Vorletzte Abrechnung
+        '04.11.2024': formatDate(addDays(-65)),     // Ältere Abrechnung
 
         // Kommunikation (Vergangenheit)
-        'komm-date-1': { date: addDays(-10), urgent: false },
-        'komm-date-2': { date: addDays(-25), urgent: false },
-        'komm-date-3': { date: addDays(-30), urgent: false },
-        'komm-date-4': { date: addDays(-60), urgent: false },
+        '28.11.2025': formatDate(addDays(-10)),     // Neueste Kommunikation
+        '15.11.2025': formatDate(addDays(-25)),     //
+        '10.11.2025': formatDate(addDays(-30)),     //
+        '01.10.2025': formatDate(addDays(-60)),     // Ältere Kommunikation
+        '01.09.2025': formatDate(addDays(-90)),     // Mietzahlung Änderung
 
-        // Termine
-        'termin-beratung': { date: addDays(35), urgent: false },
+        // Termine (Zukunft)
+        '12.12.2025': formatDate(addDays(35)),      // Beratungstermin
+    };
 
-        // Potentiale Tabellen
+    // Datetime Replacements (mit Uhrzeit)
+    const dateTimeReplacements = {
+        '28.11.2025, 09:15': formatDateTime(addDays(-10), 9, 15),
+        '28.11.2025, 14:32': formatDateTime(addDays(-10), 14, 32),
+        '10.11.2025, 11:20': formatDateTime(addDays(-30), 11, 20),
+        '01.10.2025, 08:00': formatDateTime(addDays(-60), 8, 0),
+        '01.10.2025, 19:45': formatDateTime(addDays(-60), 19, 45),
+    };
+
+    // Alle Elemente mit data-dynamic-date Attribut aktualisieren
+    const dynamicDates = {
+        'kuend-kfz': { date: addDays(45), urgent: true },
+        'kuend-hausrat': { date: addMonths(2), urgent: false },
+        'kuend-rechtsschutz': { date: addMonths(8), urgent: false },
         'potential-kfz-arag': { date: addMonths(12), urgent: false },
         'potential-kfz-huk': { date: addMonths(12), urgent: false },
     };
 
-    // Alle Elemente mit data-dynamic-date Attribut aktualisieren
     document.querySelectorAll('[data-dynamic-date]').forEach(el => {
         const key = el.getAttribute('data-dynamic-date');
         if (dynamicDates[key]) {
@@ -1024,31 +1057,54 @@ function initDynamicDemoDates() {
         }
     });
 
-    // Spezifische Text-Updates (für Texte die das Datum enthalten)
-    const kfzDateStr = formatDate(dynamicDates['kuend-kfz'].date);
+    // Globale Text-Ersetzung für alle relevanten Elemente
+    const selectorsToUpdate = [
+        '.impuls-text p',
+        '.herleitung-value',
+        '.komm-preview',
+        '.komm-date',
+        '.komm-detail',
+        '.fida-status-value',
+        '.abrechnung-datum',
+        'td',
+        'span'
+    ];
 
-    // Update Impulse texts
-    document.querySelectorAll('.impuls-text p').forEach(el => {
-        if (el.textContent.includes('30.11.2025')) {
-            el.innerHTML = el.innerHTML.replace(/30\.11\.2025/g, kfzDateStr);
-        }
+    // DateTime Ersetzungen zuerst (längere Strings)
+    Object.entries(dateTimeReplacements).forEach(([oldDate, newDate]) => {
+        selectorsToUpdate.forEach(selector => {
+            document.querySelectorAll(selector).forEach(el => {
+                if (el.innerHTML.includes(oldDate)) {
+                    el.innerHTML = el.innerHTML.split(oldDate).join(newDate);
+                }
+            });
+        });
     });
 
-    // Update Herleitung values
-    document.querySelectorAll('.herleitung-value').forEach(el => {
-        if (el.textContent.includes('30.11.2025')) {
-            el.textContent = el.textContent.replace(/30\.11\.2025/g, kfzDateStr);
-        }
+    // Dann einfache Datum-Ersetzungen
+    Object.entries(dateReplacements).forEach(([oldDate, newDate]) => {
+        selectorsToUpdate.forEach(selector => {
+            document.querySelectorAll(selector).forEach(el => {
+                if (el.innerHTML.includes(oldDate)) {
+                    el.innerHTML = el.innerHTML.split(oldDate).join(newDate);
+                }
+            });
+        });
     });
 
-    // Update Kommunikation
-    document.querySelectorAll('.komm-preview').forEach(el => {
-        if (el.textContent.includes('30.11.2025')) {
-            el.textContent = el.textContent.replace(/30\.11\.2025/g, kfzDateStr);
-        }
-    });
+    console.log('📅 Dynamic demo dates initialized - all dates updated relative to today');
 
-    console.log('📅 Dynamic demo dates initialized');
+    // Globale Helper-Funktionen für Chat-Responses verfügbar machen
+    window.demoDates = {
+        kfzKuendigung: formatDate(addDays(45)),
+        hausratKuendigung: formatDate(addMonths(2)),
+        rechtsschutzKuendigung: formatDate(addMonths(8)),
+        fidaFrist: formatDate(addDays(5)),
+        fidaFrist2: formatDate(addDays(7)),
+        formatDate,
+        addDays,
+        addMonths
+    };
 }
 
 // Bei Seitenwechsel zur Kundenansicht aufrufen
@@ -1056,6 +1112,5 @@ window.initDynamicDemoDates = initDynamicDemoDates;
 
 // Initial aufrufen wenn DOM geladen
 document.addEventListener('DOMContentLoaded', function() {
-    // Kurze Verzögerung damit alle Elemente geladen sind
     setTimeout(initDynamicDemoDates, 100);
 });

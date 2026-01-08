@@ -655,6 +655,17 @@ function askAgenturQuestion(question) {
 function getAgenturChatResponse(question) {
     const q = question.toLowerCase();
 
+    // Dynamische Datums-Helper
+    const getDynamicDate = (daysFromNow) => {
+        if (window.demoDates && window.demoDates.formatDate) {
+            return window.demoDates.formatDate(window.demoDates.addDays(daysFromNow));
+        }
+        // Fallback
+        const date = new Date();
+        date.setDate(date.getDate() + daysFromNow);
+        return date.toLocaleDateString('de-DE');
+    };
+
     // Kunden-Button Helper
     const customerBtn = (name, id) => `<button class="chat-customer-btn" onclick="openKundenDetailFromChat('${id}')">${name}</button>`;
 
@@ -671,15 +682,15 @@ function getAgenturChatResponse(question) {
         return `<strong>Ablaufende Verträge (nächste 30 Tage):</strong><br><br>
         <strong>3 Verträge</strong> mit Handlungsbedarf:<br><br>
         <div class="chat-customer-item">
-            ${customerBtn('Peter Schmidt', 'K001')} Kfz-Versicherung (15.02.2026)<br>
+            ${customerBtn('Peter Schmidt', 'K001')} Kfz-Versicherung (${getDynamicDate(12)})<br>
             <span class="chat-recommendation">Empfehlung: Verlängerung mit Tarifoptimierung</span>
         </div>
         <div class="chat-customer-item">
-            ${customerBtn('Maria Bauer', 'K003')} Hausrat (22.02.2026)<br>
+            ${customerBtn('Maria Bauer', 'K003')} Hausrat (${getDynamicDate(18)})<br>
             <span class="chat-recommendation">Empfehlung: Upgrade auf Premium-Tarif</span>
         </div>
         <div class="chat-customer-item">
-            ${customerBtn('Thomas Weber', 'K002')} Rechtsschutz (28.02.2026)<br>
+            ${customerBtn('Thomas Weber', 'K002')} Rechtsschutz (${getDynamicDate(25)})<br>
             <span class="chat-recommendation">Empfehlung: Cross-Selling BU ansprechen</span>
         </div>
         ${followUpSuggestions}`;
@@ -711,11 +722,11 @@ function getAgenturChatResponse(question) {
         <strong>2 offene Anfragen</strong> mit Frist:<br><br>
         <div class="chat-customer-item">
             <strong>Allianz Anfrage</strong> – ${customerBtn('Peter Schmidt', 'K001')}<br>
-            <span class="chat-recommendation">Frist: 10.01.2026 | Status: In Bearbeitung</span>
+            <span class="chat-recommendation">Frist: ${getDynamicDate(3)} | Status: In Bearbeitung</span>
         </div>
         <div class="chat-customer-item">
             <strong>AXA Anfrage</strong> – ${customerBtn('Thomas Weber', 'K002')}<br>
-            <span class="chat-recommendation">Frist: 12.01.2026 | Status: Neu</span>
+            <span class="chat-recommendation">Frist: ${getDynamicDate(5)} | Status: Neu</span>
         </div>
         <br>Empfehlung: AXA-Anfrage priorisieren
         ${followUpSuggestions}`;

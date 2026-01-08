@@ -23,6 +23,53 @@ function shouldUseMockMode() {
 
 let USE_MOCK_MODE = shouldUseMockMode();
 
+/**
+ * Generiert Follow-up-Vorschläge für den Sales Steering Chat
+ * @param {string} context - Kontext der letzten Antwort
+ * @returns {string} - HTML mit Vorschlag-Buttons
+ */
+function getSalesChatSuggestions(context) {
+    const suggestions = {
+        topAgenturen: [
+            { text: 'Top 5 nach Neugeschäft', query: 'Zeige Top 5 Vermittler nach Neugeschäft' },
+            { text: 'Wer hat den besten NPS?', query: 'Welche Vermittler haben den höchsten NPS?' },
+            { text: 'Stornoquoten vergleichen', query: 'Welche Vermittler haben die niedrigste Stornoquote?' }
+        ],
+        filter: [
+            { text: 'Alle Filter zurücksetzen', query: 'Setze alle Filter zurück' },
+            { text: 'Top Performer anzeigen', query: 'Zeige Top 10 Vermittler nach Ergebnis' },
+            { text: 'Vergleich Bundesländer', query: 'Vergleiche die Performance nach Bundesländern' }
+        ],
+        default: [
+            { text: 'Top 5 nach Ergebnis', query: 'Zeige Top 5 Vermittler nach Ergebnis' },
+            { text: 'Performance Überblick', query: 'Wie ist die Gesamt-Performance?' },
+            { text: 'Auffällige Vermittler', query: 'Welche Vermittler haben ungewöhnliche Werte?' }
+        ]
+    };
+
+    const selected = suggestions[context] || suggestions.default;
+
+    const buttons = selected.map(s =>
+        `<button onclick="sendSuggestedQuery('${s.query.replace(/'/g, "\\'")}')">${s.text}</button>`
+    ).join('');
+
+    return `\n\n<div class="chat-followup-suggestions">${buttons}</div>`;
+}
+
+/**
+ * Sendet eine vorgeschlagene Anfrage an den Chat
+ */
+function sendSuggestedQuery(query) {
+    const chatInput = document.getElementById('chatInput');
+    if (chatInput) {
+        chatInput.value = query;
+        sendMessage();
+    }
+}
+
+// Global verfügbar machen
+window.sendSuggestedQuery = sendSuggestedQuery;
+
 // Initialize chat widget
 function initChat() {
     // ✨ v15: Prevent multiple initializations
@@ -189,17 +236,19 @@ async function sendMessage() {
             await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate delay
             const mockResponse = generateMockResponse(message);
             hideTyping();
-            addMessage('assistant', mockResponse);
+            const suggestions = getSalesChatSuggestions('default');
+            addMessage('assistant', mockResponse + suggestions);
         } else {
             // Real API call
             console.log('🚀 Rufe Claude API auf...');
             await sendToClaude(message);
         }
-        
+
     } catch (error) {
         console.error('❌ Chat Fehler:', error);
         hideTyping();
-        addMessage('assistant', '❌ Entschuldigung, es gab einen Fehler bei der Verarbeitung deiner Anfrage. Bitte versuche es erneut.');
+        const suggestions = getSalesChatSuggestions('default');
+        addMessage('assistant', '❌ Entschuldigung, es gab einen Fehler bei der Verarbeitung deiner Anfrage. Bitte versuche es erneut.' + suggestions);
     }
     
     isProcessing = false;
@@ -441,10 +490,17 @@ USER FRAGE: ${message}`
     console.log('📝 VOLLSTÄNDIGE API-Antwort:', assistantMessage);  // DEBUG
 
     hideTyping();
-    addMessage('assistant', assistantMessage);
 
     // Check if response contains filter commands and process them
     const filterWasSet = await processFilterCommands(assistantMessage);
+
+    // Add suggestions if no filter was triggered (filters add their own suggestions)
+    if (!filterWasSet) {
+        const suggestions = getSalesChatSuggestions('default');
+        addMessage('assistant', assistantMessage + suggestions);
+    } else {
+        addMessage('assistant', assistantMessage);
+    }
 
     // FALLBACK: Wenn KI keine showTopAgenturen() Funktion nutzte, prüfe User-Message
     if (!filterWasSet && message.toLowerCase().match(/top\s+(\d+)/)) {
@@ -743,8 +799,9 @@ async function processFilterCommands(message) {
                 confirmationMessage = `✅ **Alle Filter zurückgesetzt:** Dashboard zeigt wieder alle Daten`;
             } else if (filterInfo.type === 'topAgenturen') {
                 confirmationMessage = `✅ **Tabellen-Ansicht:** Zeige die Top ${filterInfo.topN} Vermittler nach ${filterInfo.sortBy}`;
-                // Skip analysis for topAgenturen - data is already visible in table
-                addMessage('assistant', confirmationMessage);
+                // Add follow-up suggestions
+                const suggestions = getSalesChatSuggestions('topAgenturen');
+                addMessage('assistant', confirmationMessage + suggestions);
                 return;  // Early return - no need for auto-analysis
             }
             
@@ -808,14 +865,17 @@ Formatiere große Zahlen lesbar (z.B. "€45.2 Mio") und sei konkret mit den ech
 
                     const data = await response.json();
                     const analysisMessage = data.content[0].text;
-                    
+
                     hideTyping();
-                    addMessage('assistant', analysisMessage);
-                    
+                    // Add follow-up suggestions after analysis
+                    const suggestions = getSalesChatSuggestions('filter');
+                    addMessage('assistant', analysisMessage + suggestions);
+
                 } catch (error) {
                     console.error('❌ Analyse Fehler:', error);
                     hideTyping();
-                    addMessage('assistant', '❌ Fehler bei der Datenanalyse. Bitte versuche es erneut.');
+                    const suggestions = getSalesChatSuggestions('default');
+                    addMessage('assistant', '❌ Fehler bei der Datenanalyse. Bitte versuche es erneut.' + suggestions);
                 }
             }, 500);
             

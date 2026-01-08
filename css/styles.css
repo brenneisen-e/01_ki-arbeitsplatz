@@ -8636,12 +8636,19 @@ button svg,
     letter-spacing: 0.5px;
 }
 
-/* Forecast Legend - unter KPI-Wert */
+/* Trend Row - Legende und Trend nebeneinander */
+.kpi-trend-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+/* Forecast Legend - neben Trend */
 .forecast-legend {
     display: flex;
-    gap: 12px;
-    margin-top: 4px;
-    font-size: 0.7rem;
+    gap: 8px;
+    font-size: 0.65rem;
     color: #64748b;
 }
 

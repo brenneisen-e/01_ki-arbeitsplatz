@@ -325,7 +325,7 @@ export function createChart(kpiId, data, view, kpi, timeRange = 'year', offset =
             responsive: true,
             maintainAspectRatio: false,
             layout: {
-                padding: { top: 5, right: 8, bottom: 5, left: 8 }
+                padding: { top: 5, right: 8, bottom: 20, left: 8 }
             },
             plugins: {
                 legend: { display: false },

@@ -1011,6 +1011,7 @@ select:focus, .dropdown-button:focus {
     gap: 0.5rem;
     align-items: flex-start;
     margin-bottom: 0.5rem;
+    min-height: 52px; /* Feste Höhe für konsistente Ausrichtung */
 }
 
 .kpi-header-text {
@@ -1210,6 +1211,7 @@ select:focus, .dropdown-button:focus {
     flex-direction: column;
     gap: 0.25rem;
     margin-bottom: 0.5rem;
+    min-height: 58px; /* Feste Höhe für konsistente Chart-Position */
 }
 
 /* Value row - alle Elemente auf einer Zeile */
@@ -1277,9 +1279,10 @@ select:focus, .dropdown-button:focus {
 /* ✨ v18: Chart Container mit max-height für gleiche Box-Größen */
 .chart-container {
     flex-grow: 1;
-    min-height: 150px;
-    max-height: 200px; /* Verhindert zu große Charts */
+    min-height: 130px;
+    max-height: 160px;
     position: relative;
+    margin-bottom: 18px; /* Platz für X-Achsen-Labels */
 } 
 
 .chart-container.clickable { 

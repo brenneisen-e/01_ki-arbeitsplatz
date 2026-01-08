@@ -120,6 +120,28 @@ export function generateDailyData(monthlyData, kpiId, timeRange = 'year', offset
  * @param {string} timeRange - Time range
  * @param {number} offset - Time offset
  */
+/**
+ * Create striped pattern for forecast visualization
+ */
+function createStripedPattern(ctx, color) {
+    const patternCanvas = document.createElement('canvas');
+    const patternCtx = patternCanvas.getContext('2d');
+    patternCanvas.width = 10;
+    patternCanvas.height = 10;
+
+    patternCtx.fillStyle = color.replace('0.7', '0.3');
+    patternCtx.fillRect(0, 0, 10, 10);
+
+    patternCtx.strokeStyle = color;
+    patternCtx.lineWidth = 2;
+    patternCtx.beginPath();
+    patternCtx.moveTo(0, 10);
+    patternCtx.lineTo(10, 0);
+    patternCtx.stroke();
+
+    return ctx.createPattern(patternCanvas, 'repeat');
+}
+
 export function createChart(kpiId, data, view, kpi, timeRange = 'year', offset = 0) {
     const currentState = window.state || state;
     const canvas = document.getElementById(`chart-${kpiId}`);
@@ -127,25 +149,119 @@ export function createChart(kpiId, data, view, kpi, timeRange = 'year', offset =
 
     const ctx = canvas.getContext('2d');
 
+    // Check for forecast mode
+    const forecastEnabled = currentState.forecastEnabled || window.state?.forecastEnabled;
+    let fullData = data;
+
+    if (forecastEnabled && typeof window.getFilteredDataWithForecast === 'function') {
+        fullData = window.getFilteredDataWithForecast();
+        console.log('🔮 Chart ESM', kpiId, '- forecastEnabled:', forecastEnabled, 'fullData length:', fullData.length);
+    }
+
     let chartData;
     let chartType = 'line';
+    let showLegend = false;
 
     if (view === 'month') {
-        const months = ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'];
-        chartData = {
-            labels: data.map(d => months[d.month - 1]),
-            datasets: [{
-                label: kpi.title,
-                data: data.map(d => d[kpiId]),
-                backgroundColor: 'rgba(59, 130, 246, 0.2)',
-                borderColor: 'rgba(59, 130, 246, 1)',
-                borderWidth: 2,
-                fill: true,
-                tension: 0.3,
-                pointRadius: 4,
-                pointHoverRadius: 6
-            }]
-        };
+        const monthNames = ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'];
+
+        // Check if we have forecast data
+        if (forecastEnabled && fullData.some(d => d.isForecast)) {
+            const actualData = fullData.filter(d => !d.isForecast);
+            const forecastDataList = fullData.filter(d => d.isForecast);
+
+            console.log('📊 Chart ESM', kpiId, '- Actual:', actualData.length, 'Forecast:', forecastDataList.length);
+
+            const forecastPattern = createStripedPattern(ctx, 'rgba(134, 188, 37, 0.7)');
+
+            const lastActualMonth = actualData.length > 0 ? actualData[actualData.length - 1].month : 0;
+            const lastActualValue = actualData.length > 0 ? actualData[actualData.length - 1][kpiId] : 0;
+
+            // Check if forecast extends beyond month 12
+            const maxForecastMonth = forecastDataList.length > 0 ? Math.max(...forecastDataList.map(d => d.month)) : 12;
+            const hasFutureYearForecast = maxForecastMonth > 12;
+
+            const currentYear = currentState.filters?.year || '2025';
+            const nextYear = (parseInt(currentYear) + 1).toString().slice(-2);
+            const currentYearShort = currentYear.slice(-2);
+
+            let months;
+            if (hasFutureYearForecast) {
+                months = monthNames.map(m => m + "'" + currentYearShort);
+                for (let i = 13; i <= maxForecastMonth; i++) {
+                    months.push(monthNames[i - 13] + "'" + nextYear);
+                }
+            } else {
+                months = [...monthNames];
+            }
+
+            const actualPoints = months.map((_, idx) => {
+                const monthNum = idx + 1;
+                const monthData = actualData.find(d => d.month === monthNum);
+                return monthData ? monthData[kpiId] : null;
+            });
+
+            const forecastPoints = months.map((_, idx) => {
+                const monthNum = idx + 1;
+                if (monthNum === lastActualMonth) {
+                    return lastActualValue;
+                }
+                const monthData = forecastDataList.find(d => d.month === monthNum);
+                if (monthData) return monthData[kpiId];
+                return null;
+            });
+
+            console.log('📈 Forecast points ESM:', forecastPoints.filter(p => p !== null).length, 'Labels:', months.length);
+
+            showLegend = true;
+            chartData = {
+                labels: months,
+                datasets: [
+                    {
+                        label: kpi.title + ' (Ist)',
+                        data: actualPoints,
+                        backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                        borderColor: 'rgba(59, 130, 246, 1)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.3,
+                        pointRadius: 4,
+                        pointHoverRadius: 6,
+                        spanGaps: false
+                    },
+                    {
+                        label: kpi.title + ' (KI-Prognose)',
+                        data: forecastPoints,
+                        backgroundColor: forecastPattern,
+                        borderColor: 'rgba(134, 188, 37, 1)',
+                        borderWidth: 2,
+                        borderDash: [5, 5],
+                        fill: true,
+                        tension: 0.3,
+                        pointRadius: 5,
+                        pointHoverRadius: 7,
+                        pointStyle: 'triangle',
+                        spanGaps: true
+                    }
+                ]
+            };
+        } else {
+            // No forecast - regular chart
+            chartData = {
+                labels: data.map(d => monthNames[d.month - 1]),
+                datasets: [{
+                    label: kpi.title,
+                    data: data.map(d => d[kpiId]),
+                    backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                    borderColor: 'rgba(59, 130, 246, 1)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.3,
+                    pointRadius: 4,
+                    pointHoverRadius: 6
+                }]
+            };
+        }
     } else if (view === 'daily') {
         const dailyData = generateDailyData(data, kpiId, timeRange, offset);
 
@@ -212,7 +328,7 @@ export function createChart(kpiId, data, view, kpi, timeRange = 'year', offset =
                 padding: { top: 5, right: 8, bottom: 5, left: 8 }
             },
             plugins: {
-                legend: { display: false },
+                legend: { display: showLegend },
                 tooltip: {
                     callbacks: {
                         label: function(context) {

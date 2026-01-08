@@ -899,7 +899,11 @@ function generateAllForecastData(actualData) {
     const lastMonthData = actualData[actualData.length - 1];
     const forecastData = [];
 
-    console.log('📊 Generating forecast from month', lastMonth, 'to 12');
+    // Wenn alle 12 Monate vorhanden sind, generiere Forecast für nächstes Jahr (Monate 13-18 = Jan-Jun)
+    // Ansonsten fülle die fehlenden Monate bis Dezember
+    const forecastEndMonth = lastMonth >= 12 ? 18 : 12;
+
+    console.log('📊 Generating forecast from month', lastMonth + 1, 'to', forecastEndMonth);
 
     // KPI-IDs
     const allKpiIds = ['neugeschaeft', 'bestand', 'storno', 'nps', 'risiko', 'combined', 'ergebnis', 'underwriting', 'deckungsbeitrag'];
@@ -921,14 +925,16 @@ function generateAllForecastData(actualData) {
         trends[kpiId] = avgGrowth;
     });
 
-    // Saisonale Faktoren
-    const seasonalFactors = { 11: 1.08, 12: 0.85 };
+    // Saisonale Faktoren (für Monate 1-12, wiederholen für 13-18)
+    const seasonalFactors = { 1: 0.90, 2: 0.92, 3: 0.95, 4: 1.0, 5: 1.05, 6: 1.08, 11: 1.08, 12: 0.85 };
 
     // Generiere Forecast für fehlende Monate
     let prevData = { ...lastMonthData };
 
-    for (let month = lastMonth + 1; month <= 12; month++) {
-        const seasonalFactor = seasonalFactors[month] || 1;
+    for (let month = lastMonth + 1; month <= forecastEndMonth; month++) {
+        // Saisonaler Faktor - für Monate > 12 verwende den entsprechenden Monat des Jahres
+        const seasonalMonth = month > 12 ? month - 12 : month;
+        const seasonalFactor = seasonalFactors[seasonalMonth] || 1;
         const forecastPoint = {
             month: month,
             isForecast: true

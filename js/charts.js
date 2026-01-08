@@ -150,7 +150,7 @@ function createChart(kpiId, data, view, kpi, timeRange = 'year', offset = 0) {
     }
 
     if (view === 'month') {
-        const months = ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'];
+        const monthNames = ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'];
 
         if (forecastEnabled && fullData.some(d => d.isForecast)) {
             // Separiere Ist-Daten und Forecast-Daten
@@ -166,7 +166,27 @@ function createChart(kpiId, data, view, kpi, timeRange = 'year', offset = 0) {
             const lastActualMonth = actualData.length > 0 ? actualData[actualData.length - 1].month : 0;
             const lastActualValue = actualData.length > 0 ? actualData[actualData.length - 1][kpiId] : 0;
 
-            // Erstelle kombinierte Datenpunkte für alle 12 Monate
+            // Prüfe ob Forecast über Monat 12 hinausgeht (= nächstes Jahr)
+            const maxForecastMonth = forecastDataList.length > 0 ? Math.max(...forecastDataList.map(d => d.month)) : 12;
+            const hasFutureYearForecast = maxForecastMonth > 12;
+
+            // Erstelle erweiterte Labels wenn nötig (z.B. Jan'25 ... Dez'25, Jan'26 ... Jun'26)
+            const currentYear = window.state?.filters?.year || '2025';
+            const nextYear = (parseInt(currentYear) + 1).toString().slice(-2);
+            const currentYearShort = currentYear.slice(-2);
+
+            let months;
+            if (hasFutureYearForecast) {
+                // Erstelle erweiterte Labels mit Jahresangaben
+                months = monthNames.map(m => m + "'" + currentYearShort);
+                for (let i = 13; i <= maxForecastMonth; i++) {
+                    months.push(monthNames[i - 13] + "'" + nextYear);
+                }
+            } else {
+                months = [...monthNames];
+            }
+
+            // Erstelle kombinierte Datenpunkte
             const actualPoints = months.map((_, idx) => {
                 const monthNum = idx + 1;
                 const monthData = actualData.find(d => d.month === monthNum);
@@ -189,7 +209,7 @@ function createChart(kpiId, data, view, kpi, timeRange = 'year', offset = 0) {
                 return null;
             });
 
-            console.log('📈 Forecast points:', forecastPoints);
+            console.log('📈 Forecast points:', forecastPoints, 'Labels:', months);
 
             chartData = {
                 labels: months,
@@ -223,6 +243,7 @@ function createChart(kpiId, data, view, kpi, timeRange = 'year', offset = 0) {
                 ]
             };
         } else {
+            const months = monthNames;
             chartData = {
                 labels: data.map(d => months[d.month - 1]),
                 datasets: [{

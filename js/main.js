@@ -867,15 +867,6 @@ function toggleForecast() {
 
     console.log('🔮 Forecast-Modus:', window.state.forecastEnabled ? 'aktiviert' : 'deaktiviert');
 
-    // Zeige/Verstecke Forecast-Legenden in allen KPI-Cards
-    document.querySelectorAll('.kpi-card').forEach(card => {
-        const kpiId = card.id.replace('kpi-', '');
-        const legend = document.getElementById(`forecast-legend-${kpiId}`);
-        if (legend) {
-            legend.classList.toggle('visible', window.state.forecastEnabled);
-        }
-    });
-
     // Alle Charts neu rendern mit Forecast-Daten
     updateAllKPIs();
 }

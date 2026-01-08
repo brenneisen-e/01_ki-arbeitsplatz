@@ -8640,18 +8640,13 @@ button svg,
     letter-spacing: 0.5px;
 }
 
-/* Forecast Legend - kompakt neben Value */
+/* Forecast Legend - immer sichtbar neben Value */
 .forecast-legend {
     display: inline-flex;
     gap: 6px;
     font-size: 0.6rem;
     color: #64748b;
     align-items: center;
-    visibility: hidden; /* Versteckt aber Platz reserviert */
-}
-
-.forecast-legend.visible {
-    visibility: visible;
 }
 
 .forecast-legend .legend-item {

@@ -517,7 +517,10 @@ async function sendLandingChatMessage() {
     } catch (error) {
         console.error('❌ Landing Chat Fehler:', error);
         hideLandingChatTyping();
-        addLandingChatMessage('assistant', '❌ Entschuldigung, es gab einen Fehler. Bitte versuche es erneut.');
+        // Fallback to mock response on API error
+        console.log('🔄 Fallback auf Mock-Antwort...');
+        const mockResponse = generateLandingMockResponse(message);
+        addLandingChatMessage('assistant', mockResponse);
     }
     
     isLandingChatProcessing = false;
@@ -682,7 +685,104 @@ AGGREGIERTE DATEN:
 // Generate mock response - VERBESSERT
 function generateLandingMockResponse(message) {
     const lowerMessage = message.toLowerCase();
-    
+
+    // ========================================
+    // SAMPLE QUESTIONS - Hardcoded Responses
+    // ========================================
+
+    // "Was kann ich mit diesem Tool alles machen?"
+    if (lowerMessage.includes('was kann ich') && lowerMessage.includes('machen')) {
+        return `**Willkommen beim Vertriebssteuerungs-Dashboard!**
+
+Dieses Tool bietet Ihnen:
+
+**Analyse & Monitoring**
+• Echtzeit-Übersicht über Neugeschäft, Bestand und Storno
+• Performance-Vergleich nach Region, Segment und Vertriebskanal
+• Interaktive Landkarte mit Regierungsbezirk-Drill-Down
+
+**KI-gestützte Features**
+• Natürlichsprachliche Datenabfragen
+• Automatische Anomalie-Erkennung
+• Intelligente Handlungsempfehlungen
+
+**Steuerung & Filter**
+• Flexible Filterung nach Zeitraum, Bundesland, Segment
+• Export-Funktionen für Reports
+• Personalisierbare Dashboards
+
+👉 Klicken Sie auf **"Zum Dashboard"** um loszulegen!`;
+    }
+
+    // "Welche Use Cases gibt es für dieses Dashboard?"
+    if (lowerMessage.includes('use case')) {
+        return `**Typische Use Cases für das Dashboard:**
+
+**1. Vertriebsleiter**
+• Tägliche Performance-Übersicht aller Vermittler
+• Identifikation von Top- und Low-Performern
+• Regionale Marktanalysen
+
+**2. Regionalmanager**
+• Vergleich der Vertriebskanäle in der Region
+• Stornoquoten-Monitoring
+• NPS-Tracking für Kundenzufriedenheit
+
+**3. Controlling**
+• Monatliche Berichtskonsolidierung
+• Trend-Analysen über Zeiträume
+• Segment-übergreifende Auswertungen
+
+**4. Vorstand**
+• High-Level KPI-Übersicht
+• Strategische Entscheidungsunterstützung
+• Benchmark-Vergleiche
+
+👉 Wählen Sie im Dashboard den für Sie relevanten Bereich!`;
+    }
+
+    // "Zeige mir eine Übersicht meiner Daten"
+    if (lowerMessage.includes('übersicht') && lowerMessage.includes('daten')) {
+        const count = dailyRawData ? dailyRawData.length : 0;
+        const agentCount = typeof getAgenturen === 'function' ? getAgenturen().length : 0;
+
+        if (count > 0) {
+            return `**Ihre Datenübersicht:**
+
+**Datenbasis**
+• ${count.toLocaleString()} Datensätze geladen
+• ${agentCount} Vermittler im System
+• Zeitraum: 2024 - 2025
+
+**Verfügbare Dimensionen**
+• **Segmente:** Leben, Kranken, Schaden, Kfz
+• **Vertriebskanäle:** Ausschließlichkeit, Makler, Direktvertrieb, Banken
+• **Regionen:** Alle Bundesländer und Regierungsbezirke
+
+**KPIs im Dashboard**
+• Neugeschäft (Prämienvolumen)
+• Bestand (verwaltetes Volumen)
+• Stornoquote
+• NPS Score
+• Deckungsbeitrag
+
+👉 Gehen Sie zum **Dashboard** für detaillierte Analysen!`;
+        }
+        return `**Datenübersicht**
+
+⚠️ Aktuell sind keine Daten geladen.
+
+**So starten Sie:**
+1. Laden Sie eine CSV-Datei hoch (Drag & Drop unten)
+2. Oder klicken Sie auf "Zum Dashboard" für Demo-Daten
+
+**Unterstützte Formate:**
+• CSV mit Tages-Granularität
+• Felder: Datum, Vermittler, Segment, KPIs
+
+👉 Nach dem Upload analysiere ich Ihre Daten automatisch!`;
+    }
+
     // Prüfe ob Daten vorhanden sind
     if (!dailyRawData || dailyRawData.length === 0) {
         if (lowerMessage.includes('daten') || lowerMessage.includes('analyse') || lowerMessage.includes('zahlen')) {

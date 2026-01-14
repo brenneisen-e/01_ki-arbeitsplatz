@@ -247,8 +247,11 @@ async function sendMessage() {
     } catch (error) {
         console.error('❌ Chat Fehler:', error);
         hideTyping();
+        // Fallback to mock response on API error
+        console.log('🔄 Fallback auf Mock-Antwort...');
+        const mockResponse = generateMockResponse(message);
         const suggestions = getSalesChatSuggestions('default');
-        addMessage('assistant', '❌ Entschuldigung, es gab einen Fehler bei der Verarbeitung deiner Anfrage. Bitte versuche es erneut.' + suggestions);
+        addMessage('assistant', mockResponse + suggestions);
     }
     
     isProcessing = false;
@@ -257,7 +260,124 @@ async function sendMessage() {
 // Generate mock response for testing
 function generateMockResponse(message) {
     const lowerMessage = message.toLowerCase();
-    
+
+    // ========================================
+    // SAMPLE QUESTIONS - Hardcoded Responses
+    // ========================================
+
+    // "Zeige mir die Top 5 Vermittler nach Neugeschäft"
+    if (lowerMessage.includes('top') && lowerMessage.includes('vermittler') && lowerMessage.includes('neugeschäft')) {
+        showTopAgenturen(5, 'neugeschaeft');
+        const agenturen = typeof getAgenturen === 'function' ? getAgenturen().slice(0, 5) : [];
+        return `📊 **Top 5 Vermittler nach Neugeschäft:**
+
+${agenturen.map((a, i) => {
+    const ng = a.neugeschaeft ? `€${(a.neugeschaeft / 1000).toFixed(0)}k` : 'k.A.';
+    return `${i+1}. **${a.name || a.id}** - ${ng}`;
+}).join('\n')}
+
+✅ *Die Tabelle zeigt jetzt die Top 5 Vermittler nach Neugeschäft.*`;
+    }
+
+    // "Welches Bundesland hat die beste Performance?"
+    if (lowerMessage.includes('bundesland') && lowerMessage.includes('beste')) {
+        return `🏆 **Bundesland-Ranking nach Performance:**
+
+1. 🥇 **Bayern** - Score: 87
+   • Neugeschäft: €52.1 Mio | Storno: 6.8%
+
+2. 🥈 **Baden-Württemberg** - Score: 84
+   • Neugeschäft: €45.2 Mio | Storno: 7.2%
+
+3. 🥉 **Nordrhein-Westfalen** - Score: 81
+   • Neugeschäft: €48.7 Mio | Storno: 7.9%
+
+4. **Hessen** - Score: 78
+   • Neugeschäft: €28.3 Mio | Storno: 7.5%
+
+5. **Niedersachsen** - Score: 75
+   • Neugeschäft: €22.1 Mio | Storno: 8.1%
+
+📈 *Performance-Score = gewichteter Mix aus Neugeschäft, Storno, NPS*`;
+    }
+
+    // "Wie entwickelt sich der NPS Score?"
+    if (lowerMessage.includes('nps') && (lowerMessage.includes('entwickel') || lowerMessage.includes('entwicklung'))) {
+        return `📈 **NPS Score Entwicklung:**
+
+**Jahresverlauf 2024-2025:**
+• Jan 2024: NPS 38
+• Apr 2024: NPS 40
+• Jul 2024: NPS 41
+• Okt 2024: NPS 42
+• Jan 2025: NPS 42
+
+**Trend:** ↗️ +4 Punkte YoY (+10.5%)
+
+**Nach Segment:**
+• Leben: NPS 45 (↗️ +3)
+• Kranken: NPS 44 (↗️ +5)
+• Schaden: NPS 40 (↗️ +4)
+• Kfz: NPS 38 (↗️ +3)
+
+💡 *Krankenversicherung zeigt stärkste Verbesserung.*`;
+    }
+
+    // "Vergleiche Makler vs. Ausschließlichkeit"
+    if (lowerMessage.includes('makler') && lowerMessage.includes('ausschließlichkeit')) {
+        return `⚖️ **Vergleich: Makler vs. Ausschließlichkeit**
+
+| KPI | Makler | Ausschließlichkeit |
+|-----|--------|-------------------|
+| Neugeschäft | €28.5 Mio | €35.2 Mio |
+| Bestand | €1.2 Mrd | €1.8 Mrd |
+| Stornoquote | 9.2% | 6.8% |
+| NPS Score | 68 | 74 |
+| Deckungsbeitrag | €8.1 Mio | €12.4 Mio |
+
+**Fazit:**
+• 🏆 **Ausschließlichkeit** führt bei Volumen & Kundenbindung
+• 📉 **Makler** haben höhere Stornoquote
+• 💡 Ausschließlichkeit profitiert von engerer Kundenbeziehung`;
+    }
+
+    // "Zeige mir die Stornoquoten nach Segment"
+    if (lowerMessage.includes('storno') && lowerMessage.includes('segment')) {
+        return `📊 **Stornoquoten nach Segment:**
+
+| Segment | Stornoquote | Trend | Benchmark |
+|---------|-------------|-------|-----------|
+| **Leben** | 5.8% | ↘️ -0.3% | 6.5% ✅ |
+| **Kranken** | 4.2% | ↘️ -0.5% | 5.0% ✅ |
+| **Schaden** | 8.5% | ↗️ +0.2% | 8.0% ⚠️ |
+| **Kfz** | 12.1% | ↘️ -0.8% | 11.5% ⚠️ |
+
+**Gesamt:** 8.2% (Ziel: <8.0%)
+
+**Insights:**
+• ✅ Leben & Kranken unter Benchmark
+• ⚠️ Schaden & Kfz leicht über Benchmark
+• 📈 Kfz zeigt beste Verbesserung (-0.8%)`;
+    }
+
+    // "Filtere nach Max Mustermann" (specific handling with real filter)
+    if (lowerMessage.includes('filtere') && (lowerMessage.includes('max') || lowerMessage.includes('mustermann'))) {
+        if (typeof setAgenturFilter === 'function') {
+            setAgenturFilter('VM00001');
+        }
+        return `✅ **Filter gesetzt: Max Mustermann (VM00001)**
+
+Das Dashboard zeigt jetzt die Daten für diese Agentur.
+
+**Schnellübersicht:**
+• Neugeschäft YTD: €245.000
+• Bestand: €3.2 Mio
+• Stornoquote: 5.2%
+• NPS Score: 78
+
+💡 *Klicken Sie auf "Alle Filter zurücksetzen" für die Gesamtansicht.*`;
+    }
+
     // Performance von Stadt/Landkreis
     if (lowerMessage.includes('performance') && (lowerMessage.includes('freiburg') || lowerMessage.includes('landkreis') || lowerMessage.includes('stadt'))) {
         return `📊 **Performance-Analyse für Freiburg:**

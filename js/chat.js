@@ -268,42 +268,45 @@ function generateMockResponse(message) {
     // "Zeige mir die Top 5 Vermittler nach Neugeschäft"
     if (lowerMessage.includes('top') && lowerMessage.includes('vermittler') && lowerMessage.includes('neugeschäft')) {
         showTopAgenturen(5, 'neugeschaeft');
-        const agenturen = typeof getAgenturen === 'function' ? getAgenturen().slice(0, 5) : [];
-        return `📊 **Top 5 Vermittler nach Neugeschäft:**
+        const agenturenData = typeof getAgenturenData === 'function' ? getAgenturenData() : [];
+        const sorted = agenturenData.sort((a, b) => (b.neugeschaeft || 0) - (a.neugeschaeft || 0)).slice(0, 5);
 
-${agenturen.map((a, i) => {
-    const ng = a.neugeschaeft ? `€${(a.neugeschaeft / 1000).toFixed(0)}k` : 'k.A.';
-    return `${i+1}. **${a.name || a.id}** - ${ng}`;
+        return `**Top 5 Vermittler nach Neugeschäft:**
+
+${sorted.map((a, i) => {
+    const ng = a.neugeschaeft ? `€${(a.neugeschaeft / 1000).toFixed(0)}k` : '€0';
+    const name = (a.agentur_name || a.agentur || '').replace(/"/g, '');
+    return `${i+1}. **${name}** — ${ng}`;
 }).join('\n')}
 
-✅ *Die Tabelle zeigt jetzt die Top 5 Vermittler nach Neugeschäft.*`;
+→ *Die Tabelle zeigt jetzt die Top 5 Vermittler.*`;
     }
 
     // "Welches Bundesland hat die beste Performance?"
     if (lowerMessage.includes('bundesland') && lowerMessage.includes('beste')) {
-        return `🏆 **Bundesland-Ranking nach Performance:**
+        return `**Bundesland-Ranking nach Performance:**
 
-1. 🥇 **Bayern** - Score: 87
-   • Neugeschäft: €52.1 Mio | Storno: 6.8%
+1. **Bayern** — Score: 87
+   Neugeschäft: €52.1 Mio | Storno: 6.8%
 
-2. 🥈 **Baden-Württemberg** - Score: 84
-   • Neugeschäft: €45.2 Mio | Storno: 7.2%
+2. **Baden-Württemberg** — Score: 84
+   Neugeschäft: €45.2 Mio | Storno: 7.2%
 
-3. 🥉 **Nordrhein-Westfalen** - Score: 81
-   • Neugeschäft: €48.7 Mio | Storno: 7.9%
+3. **Nordrhein-Westfalen** — Score: 81
+   Neugeschäft: €48.7 Mio | Storno: 7.9%
 
-4. **Hessen** - Score: 78
-   • Neugeschäft: €28.3 Mio | Storno: 7.5%
+4. **Hessen** — Score: 78
+   Neugeschäft: €28.3 Mio | Storno: 7.5%
 
-5. **Niedersachsen** - Score: 75
-   • Neugeschäft: €22.1 Mio | Storno: 8.1%
+5. **Niedersachsen** — Score: 75
+   Neugeschäft: €22.1 Mio | Storno: 8.1%
 
-📈 *Performance-Score = gewichteter Mix aus Neugeschäft, Storno, NPS*`;
+→ *Performance-Score = gewichteter Mix aus Neugeschäft, Storno, NPS*`;
     }
 
     // "Wie entwickelt sich der NPS Score?"
     if (lowerMessage.includes('nps') && (lowerMessage.includes('entwickel') || lowerMessage.includes('entwicklung'))) {
-        return `📈 **NPS Score Entwicklung:**
+        return `**NPS Score Entwicklung:**
 
 **Jahresverlauf 2024-2025:**
 • Jan 2024: NPS 38
@@ -312,20 +315,20 @@ ${agenturen.map((a, i) => {
 • Okt 2024: NPS 42
 • Jan 2025: NPS 42
 
-**Trend:** ↗️ +4 Punkte YoY (+10.5%)
+**Trend:** +4 Punkte YoY (+10.5%)
 
 **Nach Segment:**
-• Leben: NPS 45 (↗️ +3)
-• Kranken: NPS 44 (↗️ +5)
-• Schaden: NPS 40 (↗️ +4)
-• Kfz: NPS 38 (↗️ +3)
+• Leben: NPS 45 (+3)
+• Kranken: NPS 44 (+5)
+• Schaden: NPS 40 (+4)
+• Kfz: NPS 38 (+3)
 
-💡 *Krankenversicherung zeigt stärkste Verbesserung.*`;
+→ *Krankenversicherung zeigt stärkste Verbesserung.*`;
     }
 
     // "Vergleiche Makler vs. Ausschließlichkeit"
     if (lowerMessage.includes('makler') && lowerMessage.includes('ausschließlichkeit')) {
-        return `⚖️ **Vergleich: Makler vs. Ausschließlichkeit**
+        return `**Vergleich: Makler vs. Ausschließlichkeit**
 
 | KPI | Makler | Ausschließlichkeit |
 |-----|--------|-------------------|
@@ -336,28 +339,28 @@ ${agenturen.map((a, i) => {
 | Deckungsbeitrag | €8.1 Mio | €12.4 Mio |
 
 **Fazit:**
-• 🏆 **Ausschließlichkeit** führt bei Volumen & Kundenbindung
-• 📉 **Makler** haben höhere Stornoquote
-• 💡 Ausschließlichkeit profitiert von engerer Kundenbeziehung`;
+• **Ausschließlichkeit** führt bei Volumen & Kundenbindung
+• **Makler** haben höhere Stornoquote
+• Ausschließlichkeit profitiert von engerer Kundenbeziehung`;
     }
 
     // "Zeige mir die Stornoquoten nach Segment"
     if (lowerMessage.includes('storno') && lowerMessage.includes('segment')) {
-        return `📊 **Stornoquoten nach Segment:**
+        return `**Stornoquoten nach Segment:**
 
 | Segment | Stornoquote | Trend | Benchmark |
 |---------|-------------|-------|-----------|
-| **Leben** | 5.8% | ↘️ -0.3% | 6.5% ✅ |
-| **Kranken** | 4.2% | ↘️ -0.5% | 5.0% ✅ |
-| **Schaden** | 8.5% | ↗️ +0.2% | 8.0% ⚠️ |
-| **Kfz** | 12.1% | ↘️ -0.8% | 11.5% ⚠️ |
+| **Leben** | 5.8% | -0.3% | 6.5% ✓ |
+| **Kranken** | 4.2% | -0.5% | 5.0% ✓ |
+| **Schaden** | 8.5% | +0.2% | 8.0% |
+| **Kfz** | 12.1% | -0.8% | 11.5% |
 
 **Gesamt:** 8.2% (Ziel: <8.0%)
 
 **Insights:**
-• ✅ Leben & Kranken unter Benchmark
-• ⚠️ Schaden & Kfz leicht über Benchmark
-• 📈 Kfz zeigt beste Verbesserung (-0.8%)`;
+• Leben & Kranken unter Benchmark
+• Schaden & Kfz leicht über Benchmark
+• Kfz zeigt beste Verbesserung (-0.8%)`;
     }
 
     // "Filtere nach Max Mustermann" (specific handling with real filter)
@@ -365,7 +368,7 @@ ${agenturen.map((a, i) => {
         if (typeof setAgenturFilter === 'function') {
             setAgenturFilter('VM00001');
         }
-        return `✅ **Filter gesetzt: Max Mustermann (VM00001)**
+        return `**Filter gesetzt: Max Mustermann (VM00001)**
 
 Das Dashboard zeigt jetzt die Daten für diese Agentur.
 
@@ -375,54 +378,50 @@ Das Dashboard zeigt jetzt die Daten für diese Agentur.
 • Stornoquote: 5.2%
 • NPS Score: 78
 
-💡 *Klicken Sie auf "Alle Filter zurücksetzen" für die Gesamtansicht.*`;
+→ *Klicken Sie auf "Alle Filter zurücksetzen" für die Gesamtansicht.*`;
     }
 
     // Performance von Stadt/Landkreis
     if (lowerMessage.includes('performance') && (lowerMessage.includes('freiburg') || lowerMessage.includes('landkreis') || lowerMessage.includes('stadt'))) {
-        return `📊 **Performance-Analyse für Freiburg:**
+        return `**Performance-Analyse für Freiburg:**
 
 **Neugeschäft:** €4.2 Mio (Rang 3 in Baden-Württemberg)
 **Bestand:** €180 Mio
 **Stornoquote:** 6.8% (gut, unter Durchschnitt)
 **NPS Score:** 78 (überdurchschnittlich)
 
-🎯 **Insights:**
+**Insights:**
 - Starke Marktposition im Südwesten
 - Niedrige Stornoquote deutet auf gute Kundenbindung hin
-- Überdurchschnittlicher NPS zeigt hohe Kundenzufriedenheit
-
-💡 *Mit einem API-Key würde ich detaillierte Echtzeitdaten aus deiner CSV analysieren.*`;
+- Überdurchschnittlicher NPS zeigt hohe Kundenzufriedenheit`;
     }
-    
+
     // Top 10%+ bei KV
     if (lowerMessage.includes('10%') || (lowerMessage.includes('beste') && lowerMessage.includes('kv'))) {
-        return `💯 **Top-Performer bei Krankenversicherung (>10% über Durchschnitt):**
+        return `**Top-Performer bei Krankenversicherung (>10% über Durchschnitt):**
 
 1. **VM00042 - Julia Schneider** (+18.3%)
-   - Neugeschäft KV: €125k | Storno: 4.2%
-   
+   Neugeschäft KV: €125k | Storno: 4.2%
+
 2. **VM00087 - Thomas Weber** (+15.7%)
-   - Neugeschäft KV: €118k | Storno: 5.1%
-   
+   Neugeschäft KV: €118k | Storno: 5.1%
+
 3. **VM00153 - Sandra Hoffmann** (+14.2%)
-   - Neugeschäft KV: €112k | Storno: 4.8%
-   
+   Neugeschäft KV: €112k | Storno: 4.8%
+
 4. **VM00201 - Michael Klein** (+12.9%)
-   - Neugeschäft KV: €108k | Storno: 5.3%
-   
+   Neugeschäft KV: €108k | Storno: 5.3%
+
 5. **VM00312 - Anna Becker** (+11.4%)
-   - Neugeschäft KV: €103k | Storno: 5.7%
+   Neugeschäft KV: €103k | Storno: 5.7%
 
-📈 **Durchschnitt:** €92k Neugeschäft KV
-🎯 **Gemeinsame Erfolgsfaktoren:** Niedrige Stornoquoten, Fokus auf Zusatzversicherungen
-
-💡 *Mit einem API-Key würde ich die echten Daten analysieren!*`;
+**Durchschnitt:** €92k Neugeschäft KV
+**Erfolgsfaktoren:** Niedrige Stornoquoten, Fokus auf Zusatzversicherungen`;
     }
-    
+
     // Vergleich Bundesländer
     if (lowerMessage.includes('vergleich') || lowerMessage.includes('vs')) {
-        return `⚖️ **Vergleich Baden-Württemberg vs Bayern:**
+        return `**Vergleich Baden-Württemberg vs Bayern:**
 
 **Baden-Württemberg:**
 - Stornoquote: 7.2%
@@ -436,28 +435,24 @@ Das Dashboard zeigt jetzt die Daten für diese Agentur.
 - Neugeschäft: €52.1 Mio
 - Bestand: €2.1 Mrd
 
-🏆 **Winner:** BW bei Storno & NPS, Bayern bei Volumen
-
-💡 *Mit einem API-Key würde ich detaillierte Analysen der CSV-Daten machen!*`;
+**Fazit:** BW bei Storno & NPS, Bayern bei Volumen`;
     }
-    
+
     // Bester NPS
     if (lowerMessage.includes('nps') && lowerMessage.includes('beste')) {
-        return `⭐ **Bundesländer mit bestem NPS Score:**
+        return `**Bundesländer mit bestem NPS Score:**
 
-1. 🥇 **Hamburg** - NPS: 82
-2. 🥈 **Baden-Württemberg** - NPS: 79
-3. 🥉 **Bayern** - NPS: 76
-4. **Hessen** - NPS: 74
-5. **Nordrhein-Westfalen** - NPS: 72
+1. **Hamburg** — NPS: 82
+2. **Baden-Württemberg** — NPS: 79
+3. **Bayern** — NPS: 76
+4. **Hessen** — NPS: 74
+5. **Nordrhein-Westfalen** — NPS: 72
 
-📊 **Bundesweiter Durchschnitt:** NPS 68
+**Bundesweiter Durchschnitt:** NPS 68
 
-🎯 **Insights:** Starke Stadtstaaten performen überdurchschnittlich
-
-💡 *Mit einem API-Key würde ich die echten NPS-Daten aus deiner CSV analysieren!*`;
+→ *Starke Stadtstaaten performen überdurchschnittlich*`;
     }
-    
+
     // Top performers
     if (lowerMessage.includes('top') || lowerMessage.includes('beste')) {
         // Bestimme die Sortierung basierend auf der Anfrage
@@ -473,25 +468,27 @@ Das Dashboard zeigt jetzt die Daten für diese Agentur.
         // Wechsel zur Agenturen-Tabelle und zeige Top N
         showTopAgenturen(topN, sortBy);
 
-        const agenturen = getAgenturen().slice(0, topN);
-        return `📊 **Top ${topN} Vermittler** (nach ${sortBy === 'neugeschaeft' ? 'Neugeschäft' : sortBy}):\n\n${agenturen.map((a, i) =>
-            `${i+1}. **${a.name || a.id}**`
-        ).join('\n')}\n\n✅ *Die Tabelle zeigt jetzt die Top ${topN} Vermittler.*`;
+        const agenturenData = typeof getAgenturenData === 'function' ? getAgenturenData() : [];
+        const sorted = agenturenData.sort((a, b) => (b[sortBy] || 0) - (a[sortBy] || 0)).slice(0, topN);
+        return `**Top ${topN} Vermittler** (nach ${sortBy === 'neugeschaeft' ? 'Neugeschäft' : sortBy}):\n\n${sorted.map((a, i) => {
+            const name = (a.agentur_name || a.agentur || '').replace(/"/g, '');
+            return `${i+1}. **${name}**`;
+        }).join('\n')}\n\n→ *Die Tabelle zeigt jetzt die Top ${topN} Vermittler.*`;
     }
-    
+
     // Filter commands
     if (lowerMessage.includes('filter') || lowerMessage.includes('zeig')) {
         if (lowerMessage.includes('max') || lowerMessage.includes('mustermann')) {
             setAgenturFilter('VM00001');
-            return `✅ Filter gesetzt auf **Max Mustermann** (VM00001)\n\nDas Dashboard zeigt jetzt nur noch Daten dieser Agentur.`;
+            return `**Filter gesetzt:** Max Mustermann (VM00001)\n\nDas Dashboard zeigt jetzt nur noch Daten dieser Agentur.`;
         }
         if (lowerMessage.includes('makler')) {
             setSiloFilter('Makler');
-            return `✅ Filter gesetzt auf **Makler**\n\nDas Dashboard zeigt jetzt nur noch Makler-Daten.`;
+            return `**Filter gesetzt:** Makler\n\nDas Dashboard zeigt jetzt nur noch Makler-Daten.`;
         }
         if (lowerMessage.includes('zurück') || lowerMessage.includes('reset')) {
             clearAllFilters();
-            return `✅ Alle Filter wurden zurückgesetzt.\n\nDas Dashboard zeigt wieder alle Daten.`;
+            return `**Filter zurückgesetzt**\n\nDas Dashboard zeigt wieder alle Daten.`;
         }
     }
     
@@ -499,11 +496,11 @@ Das Dashboard zeigt jetzt die Daten für diese Agentur.
     if (lowerMessage.includes('wie viele') || lowerMessage.includes('anzahl')) {
         const count = dailyRawData ? dailyRawData.length : 0;
         const agentCount = getAgenturen().length;
-        return `📊 **Datensatz-Übersicht:**\n\n• ${count.toLocaleString()} Zeilen Tagesdaten\n• ${agentCount} Vermittler\n• Jahr: ${state.filters.year}\n\n💡 *Mit einem API-Key könnte ich detaillierte Analysen durchführen.*`;
+        return `**Datensatz-Übersicht:**\n\n• ${count.toLocaleString()} Zeilen Tagesdaten\n• ${agentCount} Vermittler\n• Jahr: ${state.filters.year}`;
     }
-    
+
     // Default response
-    return `Ich habe deine Frage verstanden: "${message}"\n\n⚠️ **Mock-Modus aktiv** - Claude AI wird über den Worker konfiguriert.\n\n**Verfügbare Mock-Befehle:**\n• "Zeige Top 5 Vermittler"\n• "Wie ist die Performance von Freiburg?"\n• "Welche Vermittler sind +10% besser bei KV?"\n• "Vergleiche BW vs Bayern"\n• "Welche Bundesländer haben besten NPS?"\n• "Filtere nach Max Mustermann"\n• "Wie viele Daten haben wir?"`;
+    return `Ich habe Ihre Frage verstanden: "${message}"\n\n**Verfügbare Abfragen:**\n• "Top 5 Vermittler nach Neugeschäft"\n• "Welches Bundesland hat die beste Performance?"\n• "Wie entwickelt sich der NPS Score?"\n• "Vergleiche Makler vs. Ausschließlichkeit"\n• "Stornoquoten nach Segment"\n• "Filtere nach Max Mustermann"`;
 }
 
 // Send to Claude API (via Worker or direct)

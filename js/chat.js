@@ -385,24 +385,21 @@ Das Dashboard zeigt jetzt die Daten für diese Agentur.
     if (lowerMessage.includes('ungewöhnlich') || lowerMessage.includes('ungewohnlich') ||
         lowerMessage.includes('auffällig') || lowerMessage.includes('auffallig') ||
         lowerMessage.includes('anomalie') || (lowerMessage.includes('vermittler') && lowerMessage.includes('werte'))) {
+
+        // Zeige die auffälligen Vermittler in der Tabelle mit KI-Analyse
+        showAnomalyAgenturen();
+
         return `**Auffällige Vermittler (Anomalie-Erkennung):**
 
-**Hohe Stornoquote:**
-• **VM00089 - Peter Schmidt** — Storno: 18.2% (Ø 7.5%)
-  Mögliche Ursache: Hoher Anteil Kfz-Neugeschäft
+4 Vermittler mit auffälligen Werten identifiziert.
+Die Tabelle zeigt jetzt diese Vermittler mit detaillierter KI-Analyse.
 
-• **VM00156 - Lisa Wagner** — Storno: 15.8% (Ø 7.5%)
-  Mögliche Ursache: Kundenstruktur prüfen
+**Erkannte Anomalien:**
+• 2x Hohe Stornoquote (>15%)
+• 1x Niedriger NPS Score (<30)
+• 1x Bestandsrückgang (>10% YoY)
 
-**Ungewöhnlich niedriger NPS:**
-• **VM00203 - Klaus Meyer** — NPS: 28 (Ø 42)
-  Empfehlung: Kundenfeedback analysieren
-
-**Starker Bestandsrückgang:**
-• **VM00078 - Maria Braun** — Bestand: -12% YoY
-  Mögliche Ursache: Abwanderung zu Wettbewerb
-
-→ *Klicken Sie auf einen Vermittler für Details.*`;
+→ *Die KI-Analyse-Spalte zeigt Ursachen und Handlungsempfehlungen.*`;
     }
 
     // Performance von Stadt/Landkreis
@@ -1088,12 +1085,15 @@ function clearAllFilters() {
     updateMapSelection();
     updateAllKPIs();
 
-    console.log('✅ Alle Filter zurückgesetzt');
+    // Entferne KI-Analyse-Spalte falls vorhanden
+    removeAnomalyColumn();
+
+    console.log('Alle Filter zurückgesetzt');
 }
 
 // NEU: Show Top N Agenturen in Table View
 function showTopAgenturen(topN = 5, sortBy = 'neugeschaeft') {
-    console.log(`📊 Zeige Top ${topN} Agenturen nach ${sortBy}`);
+    console.log(`Zeige Top ${topN} Agenturen nach ${sortBy}`);
 
     // 1. Wechsel zur Tabellenansicht mit existierender Funktion
     if (typeof switchView === 'function') {
@@ -1146,7 +1146,138 @@ function showTopAgenturen(topN = 5, sortBy = 'neugeschaeft') {
         renderTable();
     }
 
-    console.log(`✅ Top ${topN} Agenturen ausgewählt:`, Array.from(state.selectedAgenturen));
+    console.log(`Top ${topN} Agenturen ausgewählt:`, Array.from(state.selectedAgenturen));
+}
+
+// Zeigt auffällige Vermittler mit KI-Erklärungen
+function showAnomalyAgenturen() {
+    console.log('Zeige auffällige Vermittler mit KI-Analyse');
+
+    // Mock-Daten für auffällige Vermittler mit KI-Erklärungen
+    const anomalyData = {
+        'VM00089': {
+            reason: 'Hohe Stornoquote',
+            analysis: 'Stornoquote 18.2% liegt deutlich über dem Durchschnitt von 7.5%. Hauptursache: 68% der Stornos im Kfz-Bereich, vermutlich durch aggressive Neukundenakquise mit unzureichender Bedarfsanalyse.'
+        },
+        'VM00156': {
+            reason: 'Hohe Stornoquote',
+            analysis: 'Stornoquote 15.8% auffällig hoch. Kundenstruktur zeigt hohen Anteil an Einsteigertarifen. Empfehlung: Cross-Selling-Quote erhöhen und Kundenbindungsmaßnahmen verstärken.'
+        },
+        'VM00203': {
+            reason: 'Niedriger NPS',
+            analysis: 'NPS Score 28 liegt 14 Punkte unter Durchschnitt. Analyse der Kundenfeedbacks zeigt Beschwerden über Erreichbarkeit und Reaktionszeiten. Schulungsbedarf im Kundenservice.'
+        },
+        'VM00078': {
+            reason: 'Bestandsrückgang',
+            analysis: 'Bestand -12% YoY. Wettbewerbsanalyse zeigt verstärkte Aktivität von Direktversicherern in der Region. Handlungsempfehlung: Proaktive Kundenansprache und Tarifoptimierung.'
+        }
+    };
+
+    // 1. Wechsel zur Tabellenansicht
+    if (typeof switchView === 'function') {
+        switchView('table');
+    } else {
+        state.currentView = 'table';
+        const dashboardView = document.getElementById('dashboardView');
+        const tableView = document.getElementById('tableView');
+        if (dashboardView) dashboardView.style.display = 'none';
+        if (tableView) tableView.classList.add('active');
+    }
+
+    // 2. Wechsel zum Agentur-Tab
+    state.currentTableView = 'agentur';
+    document.querySelectorAll('.table-view-toggle button').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.dataset.tableView === 'agentur') {
+            btn.classList.add('active');
+        }
+    });
+
+    // 3. Wähle die auffälligen Vermittler aus
+    const anomalyIds = Object.keys(anomalyData);
+    state.selectedAgenturen.clear();
+    anomalyIds.forEach(id => {
+        state.selectedAgenturen.add(id);
+    });
+
+    // 4. Speichere Anomalie-Daten für Tabellen-Rendering
+    window.currentAnomalyData = anomalyData;
+
+    // 5. Rendere Tabelle mit KI-Spalte
+    if (typeof renderTable === 'function') {
+        renderTable();
+    }
+
+    // 6. Füge KI-Analyse-Spalte hinzu (nach kurzer Verzögerung für DOM)
+    setTimeout(() => {
+        addAnomalyColumn(anomalyData);
+    }, 100);
+
+    console.log('Auffällige Vermittler ausgewählt:', anomalyIds);
+}
+
+// Fügt KI-Analyse-Spalte zur Tabelle hinzu
+function addAnomalyColumn(anomalyData) {
+    const table = document.querySelector('#tableView table, .agentur-table');
+    if (!table) {
+        console.log('Tabelle nicht gefunden');
+        return;
+    }
+
+    // Prüfe ob Spalte bereits existiert
+    if (table.querySelector('.ki-analysis-col')) {
+        return;
+    }
+
+    // Header hinzufügen
+    const headerRow = table.querySelector('thead tr');
+    if (headerRow) {
+        const th = document.createElement('th');
+        th.className = 'ki-analysis-col';
+        th.innerHTML = 'KI-Analyse';
+        th.style.cssText = 'min-width: 250px; background: #f0fdf4; color: #166534;';
+        headerRow.appendChild(th);
+    }
+
+    // Zellen für jede Zeile hinzufügen
+    const bodyRows = table.querySelectorAll('tbody tr');
+    bodyRows.forEach(row => {
+        const firstCell = row.querySelector('td');
+        if (!firstCell) return;
+
+        // Extrahiere Vermittler-ID aus erster Zelle
+        const cellText = firstCell.textContent || '';
+        const vmMatch = cellText.match(/VM\d+/);
+        const vmId = vmMatch ? vmMatch[0] : null;
+
+        const td = document.createElement('td');
+        td.className = 'ki-analysis-col';
+
+        if (vmId && anomalyData[vmId]) {
+            const data = anomalyData[vmId];
+            td.innerHTML = `
+                <div style="font-size: 11px; line-height: 1.4;">
+                    <strong style="color: #dc2626;">${data.reason}</strong><br>
+                    <span style="color: #475569;">${data.analysis}</span>
+                </div>
+            `;
+            td.style.cssText = 'background: #fef2f2; padding: 8px; max-width: 300px;';
+        } else {
+            td.innerHTML = '-';
+            td.style.color = '#9ca3af';
+        }
+
+        row.appendChild(td);
+    });
+
+    console.log('KI-Analyse-Spalte hinzugefügt');
+}
+
+// Entfernt KI-Analyse-Spalte (bei Filter-Reset)
+function removeAnomalyColumn() {
+    const cols = document.querySelectorAll('.ki-analysis-col');
+    cols.forEach(col => col.remove());
+    window.currentAnomalyData = null;
 }
 
 // UI functions
@@ -1409,5 +1540,7 @@ window.clearAllFilters = clearAllFilters;
 window.askSampleQuestion = askSampleQuestion;
 window.showAIResponse = showAIResponse;
 window.hideAIResponse = hideAIResponse;
+window.showAnomalyAgenturen = showAnomalyAgenturen;
+window.removeAnomalyColumn = removeAnomalyColumn;
 
 console.log('✅ chat.js geladen - initChat() ist verfügbar');

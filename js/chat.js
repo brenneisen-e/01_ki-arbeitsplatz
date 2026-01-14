@@ -382,7 +382,9 @@ Das Dashboard zeigt jetzt die Daten für diese Agentur.
     }
 
     // "Welche Vermittler haben ungewöhnliche Werte?" / Anomalien
-    if (lowerMessage.includes('ungewöhnlich') || lowerMessage.includes('auffällig') || lowerMessage.includes('anomalie')) {
+    if (lowerMessage.includes('ungewöhnlich') || lowerMessage.includes('ungewohnlich') ||
+        lowerMessage.includes('auffällig') || lowerMessage.includes('auffallig') ||
+        lowerMessage.includes('anomalie') || (lowerMessage.includes('vermittler') && lowerMessage.includes('werte'))) {
         return `**Auffällige Vermittler (Anomalie-Erkennung):**
 
 **Hohe Stornoquote:**

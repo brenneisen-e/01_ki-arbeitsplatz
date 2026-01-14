@@ -689,6 +689,12 @@ function getAgenturChatResponse(question) {
     // Ablaufende Verträge - ECHTE Daten aus der Datenbank!
     if (q.includes('ablaufend') || q.includes('30 tag') || q.includes('vertrag') && q.includes('lauf')) {
         return `<strong>Ablaufende Verträge (nächste 60 Tage):</strong><br><br>
+        <strong>1 Eigener Vertrag</strong> zur Verlängerung:<br><br>
+        <div class="chat-customer-item">
+            ${customerBtn('Sabine König', 'KD00002', 'uebersicht', 'leben')} Risikoleben bei <strong>ERGO</strong> (${getDynamicDate(21)})<br>
+            ${vertragBadge(false)}
+            <span class="chat-recommendation">Vertragsverlängerung vorbereiten – Beitragsanpassung +3.2% kommunizieren</span>
+        </div>
         <strong>2 Wettbewerber-Verträge</strong> mit Wechselpotential:<br><br>
         <div class="chat-customer-item">
             ${customerBtn('Peter Schmidt', 'KD00001', 'fida', 'kfz')} Kfz-Versicherung bei <strong>Allianz</strong> (${getDynamicDate(45)})<br>

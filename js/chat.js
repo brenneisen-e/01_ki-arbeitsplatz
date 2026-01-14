@@ -381,6 +381,28 @@ Das Dashboard zeigt jetzt die Daten für diese Agentur.
 → *Klicken Sie auf "Alle Filter zurücksetzen" für die Gesamtansicht.*`;
     }
 
+    // "Welche Vermittler haben ungewöhnliche Werte?" / Anomalien
+    if (lowerMessage.includes('ungewöhnlich') || lowerMessage.includes('auffällig') || lowerMessage.includes('anomalie')) {
+        return `**Auffällige Vermittler (Anomalie-Erkennung):**
+
+**Hohe Stornoquote:**
+• **VM00089 - Peter Schmidt** — Storno: 18.2% (Ø 7.5%)
+  Mögliche Ursache: Hoher Anteil Kfz-Neugeschäft
+
+• **VM00156 - Lisa Wagner** — Storno: 15.8% (Ø 7.5%)
+  Mögliche Ursache: Kundenstruktur prüfen
+
+**Ungewöhnlich niedriger NPS:**
+• **VM00203 - Klaus Meyer** — NPS: 28 (Ø 42)
+  Empfehlung: Kundenfeedback analysieren
+
+**Starker Bestandsrückgang:**
+• **VM00078 - Maria Braun** — Bestand: -12% YoY
+  Mögliche Ursache: Abwanderung zu Wettbewerb
+
+→ *Klicken Sie auf einen Vermittler für Details.*`;
+    }
+
     // Performance von Stadt/Landkreis
     if (lowerMessage.includes('performance') && (lowerMessage.includes('freiburg') || lowerMessage.includes('landkreis') || lowerMessage.includes('stadt'))) {
         return `**Performance-Analyse für Freiburg:**

@@ -498,8 +498,8 @@
                     </button>
                     <button class="agentur-tab" onclick="showAgenturTab('provision')">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
-                            <line x1="12" y1="1" x2="12" y2="23"></line>
-                            <path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"></path>
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <text x="12" y="16" text-anchor="middle" fill="currentColor" stroke="none" font-size="12" font-weight="bold">€</text>
                         </svg>
                         Vergütung
                     </button>
@@ -3790,14 +3790,44 @@
                                 <div class="impuls-detail-section">
                                     <h4>Empfehlung: Santander Consumer Bank Umschuldung</h4>
                                     <p><strong>Santander BestCredit</strong> - ERGO Kooperationspartner mit Sonderkonditionen:</p>
-                                    <ul>
-                                        <li>✓ Zinssatz nur 4,9% p.a. (statt 9,0%)</li>
-                                        <li>✓ Monatliche Rate sinkt auf €384 (statt €405)</li>
-                                        <li>✓ Gesamtersparnis über Laufzeit: €756</li>
-                                        <li>✓ Kostenlose Sondertilgungen möglich</li>
-                                        <li>✓ Schnelle Abwicklung über ERGO Partnerschaft</li>
-                                        <li>✓ Vorfälligkeitsentschädigung Targobank wird berücksichtigt</li>
-                                    </ul>
+                                    <div class="vorteile-grid">
+                                        <div class="vorteil-item">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18" class="vorteil-icon">
+                                                <polyline points="20 6 9 17 4 12"></polyline>
+                                            </svg>
+                                            <span>Zinssatz nur 4,9% p.a. (statt 9,0%)</span>
+                                        </div>
+                                        <div class="vorteil-item">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18" class="vorteil-icon">
+                                                <polyline points="20 6 9 17 4 12"></polyline>
+                                            </svg>
+                                            <span>Monatliche Rate sinkt auf €384 (statt €405)</span>
+                                        </div>
+                                        <div class="vorteil-item">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18" class="vorteil-icon">
+                                                <polyline points="20 6 9 17 4 12"></polyline>
+                                            </svg>
+                                            <span>Gesamtersparnis über Laufzeit: €756</span>
+                                        </div>
+                                        <div class="vorteil-item">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18" class="vorteil-icon">
+                                                <polyline points="20 6 9 17 4 12"></polyline>
+                                            </svg>
+                                            <span>Kostenlose Sondertilgungen möglich</span>
+                                        </div>
+                                        <div class="vorteil-item">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18" class="vorteil-icon">
+                                                <polyline points="20 6 9 17 4 12"></polyline>
+                                            </svg>
+                                            <span>Schnelle Abwicklung über ERGO Partnerschaft</span>
+                                        </div>
+                                        <div class="vorteil-item">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18" class="vorteil-icon">
+                                                <polyline points="20 6 9 17 4 12"></polyline>
+                                            </svg>
+                                            <span>Vorfälligkeitsentschädigung Targobank wird berücksichtigt</span>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="impuls-detail-section">
                                     <h4>Aktionen</h4>

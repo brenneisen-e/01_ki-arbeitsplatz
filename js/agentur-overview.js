@@ -796,9 +796,8 @@ function getAgenturChatResponse(question) {
  * @param {string} contractType - Vertragstyp zum Highlighten (optional: 'leben', 'kfz', 'hausrat', 'rechtsschutz', 'bu', 'unfall', 'haftpflicht')
  */
 function openKundenDetailFromChat(kundenId, targetTab, contractType) {
-    // Schließe den Chat
-    const widget = document.getElementById('agenturChatWidget');
-    if (widget) widget.style.display = 'none';
+    // Chat bleibt offen, damit Nutzer ihn weiter verwenden kann
+    // (Chat-Toggle Button bleibt verfügbar in Kundendetail-Ansicht)
 
     // Öffne Kundendetail
     if (typeof openKundenDetailFromFida === 'function') {

@@ -712,7 +712,7 @@ function getAgenturChatResponse(question) {
         <div class="chat-followup-suggestions">
             <button onclick="askAgenturQuestion('Welche Verträge laufen in den nächsten 30 Tagen aus?')">Welche Verträge laufen bald aus?</button>
             <button onclick="askAgenturQuestion('Welche Kunden haben Cross-Selling-Potential?')">Wer hat Cross-Selling-Potential?</button>
-            <button onclick="askAgenturQuestion('Zeige offene FIDA-Anfragen')">Offene FIDA-Fälle?</button>
+            <button onclick="showNeuePotentiale()">Neue Potentiale?</button>
         </div>`;
 
     // Ablaufende Verträge - ECHTE Daten aus der Datenbank!
@@ -913,6 +913,116 @@ function toggleWeiterePotentiale() {
     }
 }
 
+/**
+ * Zeigt neue Potentiale mit Ladeanimation und wechselt dann zum Potentiale-Tab
+ */
+function showNeuePotentiale() {
+    const chatMessages = document.getElementById('agenturChatMessages');
+    if (!chatMessages) return;
+
+    // User-Nachricht hinzufügen
+    const userMsg = document.createElement('div');
+    userMsg.className = 'chat-message user-message';
+    userMsg.innerHTML = '<div class="message-content">Neue Potentiale?</div>';
+    chatMessages.appendChild(userMsg);
+
+    // Typing-Indikator hinzufügen
+    const typingMsg = document.createElement('div');
+    typingMsg.className = 'chat-message bot-message typing-indicator';
+    typingMsg.innerHTML = `
+        <div class="message-content">
+            <div class="typing-dots">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>`;
+    chatMessages.appendChild(typingMsg);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+
+    // Nach 1.5 Sekunden: Potentiale nacheinander anzeigen
+    setTimeout(() => {
+        // Typing-Indikator entfernen
+        typingMsg.remove();
+
+        // Bot-Antwort Container erstellen
+        const botMsg = document.createElement('div');
+        botMsg.className = 'chat-message bot-message';
+        botMsg.innerHTML = '<div class="message-content"><strong>Aktuelle Top-Potentiale:</strong><br><br></div>';
+        chatMessages.appendChild(botMsg);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+
+        const messageContent = botMsg.querySelector('.message-content');
+
+        // Potentiale nacheinander einblenden
+        const potentiale = [
+            {
+                name: 'Peter Schmidt',
+                title: 'Risikoleben fehlt',
+                desc: 'Baufinanzierung €285.000 ohne Absicherung'
+            },
+            {
+                name: 'Peter Schmidt',
+                title: 'BU-Nachversicherung',
+                desc: 'Nur 41% des Einkommens abgesichert'
+            },
+            {
+                name: 'Sabine König',
+                title: 'Kfz-Wechsel',
+                desc: 'Vertrag läuft bald aus, €200/Jahr Ersparnis möglich'
+            },
+            {
+                name: 'Thomas Weber',
+                title: 'Risikoleben fehlt',
+                desc: 'Familie unzureichend abgesichert'
+            }
+        ];
+
+        // Jedes Potential nacheinander mit 400ms Delay einblenden
+        potentiale.forEach((potential, index) => {
+            setTimeout(() => {
+                const item = document.createElement('div');
+                item.className = 'chat-customer-item';
+                item.style.opacity = '0';
+                item.style.transform = 'translateY(10px)';
+                item.style.transition = 'all 0.3s ease';
+                item.innerHTML = `
+                    <strong>${potential.name}</strong> – ${potential.title}<br>
+                    <span class="chat-recommendation">${potential.desc}</span>`;
+                messageContent.appendChild(item);
+
+                // Fade-in Animation
+                setTimeout(() => {
+                    item.style.opacity = '1';
+                    item.style.transform = 'translateY(0)';
+                }, 10);
+
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+
+                // Nach dem letzten Potential: Hinweis und Tab-Wechsel
+                if (index === potentiale.length - 1) {
+                    setTimeout(() => {
+                        const footer = document.createElement('div');
+                        footer.innerHTML = '<br><strong>→ Wechsle zum Potentiale-Tab für vollständige Übersicht...</strong>';
+                        messageContent.appendChild(footer);
+                        chatMessages.scrollTop = chatMessages.scrollHeight;
+
+                        // Nach 2 Sekunden: Zum Potentiale-Tab wechseln
+                        setTimeout(() => {
+                            showAgenturTab('potential');
+
+                            // Chat schließen nach Tab-Wechsel
+                            setTimeout(() => {
+                                hideAgenturChat();
+                            }, 500);
+                        }, 2000);
+                    }, 300);
+                }
+            }, index * 400);
+        });
+    }, 1500);
+}
+
 // Global verfügbar machen
 window.showAgenturTab = showAgenturTab;
 window.filterFidaCases = filterFidaCases;
@@ -927,4 +1037,5 @@ window.highlightContractRow = highlightContractRow;
 window.openKundenDetailFromFida = openKundenDetailFromFida;
 window.toggleAgenturChat = toggleAgenturChat;
 window.hideAgenturChat = hideAgenturChat;
+window.showNeuePotentiale = showNeuePotentiale;
 window.toggleWeiterePotentiale = toggleWeiterePotentiale;

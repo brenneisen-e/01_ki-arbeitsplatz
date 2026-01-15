@@ -25,13 +25,14 @@ const PageIDTracker = {
         versicherung: {
             'landing': 'A-01',              // Agentur-Auswahl
             'agentursicht': 'A-02',         // Vermittler-Overview
-            'kundenliste': 'A-03',          // Kunden-Übersicht
-            'potentialanalyse': 'A-04',     // Potentialanalyse
-            'fidaCases': 'A-05',            // FIDA Cases Tab
-            'eigeneDaten': 'A-06',          // Eigene Daten Tab
-            'chat': 'A-07',                 // KI-Chat Versicherung (Mock-Daten)
-            'finanzplanung': 'A-08',        // Finanzplanung
-            'kundendetail': 'A-09'          // Kunden-Detailansicht
+            'dashboard': 'A-03',            // Gesamtsicht (9 KPI-Boxen Dashboard)
+            'kundenliste': 'A-04',          // Kunden-Übersicht (Tabellen-Ansicht)
+            'potentialanalyse': 'A-05',     // Potentialanalyse
+            'fidaCases': 'A-06',            // FIDA Cases Tab
+            'eigeneDaten': 'A-07',          // Eigene Daten Tab
+            'chat': 'A-08',                 // KI-Chat Versicherung (Mock-Daten)
+            'finanzplanung': 'A-09',        // Finanzplanung
+            'kundendetail': 'A-10'          // Kunden-Detailansicht
         },
 
         // B - Banken Module
@@ -228,6 +229,19 @@ const PageIDTracker = {
         // Check if finanzplanung is visible
         if (document.getElementById('finanzplanung')?.style.display !== 'none') {
             return 'finanzplanung';
+        }
+
+        // Check if mainApp is visible (Gesamtsicht)
+        const mainApp = document.getElementById('mainApp');
+        if (mainApp && mainApp.style.display !== 'none') {
+            // Check if dashboard or table view is active
+            const dashboardView = document.getElementById('dashboardView');
+            const tableView = document.getElementById('tableView');
+
+            if (tableView && tableView.style.display !== 'none') {
+                return 'kundenliste';  // Table view
+            }
+            return 'dashboard';  // Dashboard with 9 KPI boxes (default)
         }
 
         return 'landing';

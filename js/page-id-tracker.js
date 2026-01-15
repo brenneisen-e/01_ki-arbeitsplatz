@@ -3,6 +3,7 @@
  * Automatically updates page ID based on current module and view
  *
  * Module Prefixes:
+ * M = Main (Module Selection Landing)
  * A = Versicherung (Insurance)
  * B = Banken (Banking)
  * P = PMO Toolbox
@@ -11,57 +12,65 @@
  */
 
 const PageIDTracker = {
-    currentPageId: 'A-01',
+    currentPageId: 'M-01',
 
     // Page ID mapping for all modules and views
     pageIds: {
+        // M - Main Module Selection (Landing Page)
+        main: {
+            'landing': 'M-01'
+        },
+
         // A - Versicherung Module
         versicherung: {
-            'landing': 'A-01',
-            'agentursicht': 'A-02',
-            'kundenliste': 'A-03',
-            'potentialanalyse': 'A-04',
-            'fidaCases': 'A-05',
-            'eigeneDaten': 'A-06',
-            'chat': 'A-07',
-            'finanzplanung': 'A-08'
+            'landing': 'A-01',              // Agentur-Auswahl
+            'agentursicht': 'A-02',         // Vermittler-Overview
+            'kundenliste': 'A-03',          // Kunden-Übersicht
+            'potentialanalyse': 'A-04',     // Potentialanalyse
+            'fidaCases': 'A-05',            // FIDA Cases Tab
+            'eigeneDaten': 'A-06',          // Eigene Daten Tab
+            'chat': 'A-07',                 // KI-Chat Versicherung (Mock-Daten)
+            'finanzplanung': 'A-08',        // Finanzplanung
+            'kundendetail': 'A-09'          // Kunden-Detailansicht
         },
 
         // B - Banken Module
         banken: {
-            'segmentierung': 'B-01',
-            'aufgaben': 'B-02',
-            'npl': 'B-03',
-            'stage2': 'B-04',
-            'crm-profile': 'B-05'
+            'segmentierung': 'B-01',        // Segmentierung
+            'aufgaben': 'B-02',             // Aufgaben
+            'npl': 'B-03',                  // NPL Dashboard
+            'stage2': 'B-04',               // Stage 2 Ampel
+            'crm-profile': 'B-05',          // CRM Profil
+            'chat': 'B-06',                 // KI-Chat Banken (Mock-Daten)
+            'customer-detail': 'B-07'       // Kunden-Detail
         },
 
         // P - PMO Toolbox Module
         'pmo-toolbox': {
-            'landing': 'P-01',
-            'dashboard': 'P-02',
-            'my-workstream': 'P-03',
-            'timeline': 'P-04',
-            'risiken': 'P-05',
-            'meilensteine': 'P-06',
-            'gantt': 'P-07',
-            'entscheidungen': 'P-08',
-            'suche': 'P-09',
-            'dokumente': 'P-10'
+            'landing': 'P-01',              // Projekt-Auswahl
+            'dashboard': 'P-02',            // Programm-Dashboard
+            'my-workstream': 'P-03',        // Mein Workstream
+            'timeline': 'P-04',             // Timeline
+            'risiken': 'P-05',              // Risiken & Issues
+            'meilensteine': 'P-06',         // Meilensteine
+            'gantt': 'P-07',                // Gantt-Chart
+            'entscheidungen': 'P-08',       // Entscheidungen
+            'suche': 'P-09',                // Suche/Stichwortverzeichnis
+            'dokumente': 'P-10'             // Dokumentation/KI-Assistent (Mock-Daten)
         },
 
         // R - Risikoscoring Module
         risikoscoring: {
-            'dashboard': 'R-01',
-            'vermittler-detail': 'R-02'
+            'dashboard': 'R-01',            // Scoring Dashboard
+            'vermittler-detail': 'R-02'     // Vermittler-Detail
         },
 
         // T - Bestandsübertragung Module
         bestandsuebertragung: {
-            'upload': 'T-01',
-            'mapping': 'T-02',
-            'preview': 'T-03',
-            'export': 'T-04'
+            'upload': 'T-01',               // Upload
+            'mapping': 'T-02',              // Mapping
+            'preview': 'T-03',              // Preview
+            'export': 'T-04'                // Export
         }
     },
 
@@ -129,6 +138,14 @@ const PageIDTracker = {
     },
 
     getCurrentModule() {
+        // Check if we're on the main landing page (module selection)
+        const landingPage = document.getElementById('landingPage');
+        if (landingPage && landingPage.style.display !== 'none' &&
+            document.getElementById('agenturGrid')?.style.display === 'none') {
+            // We're on the main module selection page
+            return 'main';
+        }
+
         // Check which module is currently visible
         const modules = [
             { id: 'versicherungModule', name: 'versicherung' },
@@ -159,6 +176,8 @@ const PageIDTracker = {
 
         // Module-specific view detection
         switch(module) {
+            case 'main':
+                return 'landing';
             case 'versicherung':
                 return this.getVersicherungView();
             case 'banken':
@@ -175,6 +194,12 @@ const PageIDTracker = {
     },
 
     getVersicherungView() {
+        // Check if chat is visible (expanded)
+        const chatContainer = document.getElementById('chatContainer');
+        if (chatContainer && chatContainer.classList.contains('expanded')) {
+            return 'chat';
+        }
+
         // Check if on landing page
         if (document.getElementById('agenturGrid')?.style.display !== 'none') {
             return 'landing';
@@ -185,8 +210,13 @@ const PageIDTracker = {
             return 'agentursicht';
         }
 
+        // Check if on kunden detail page
+        if (document.getElementById('kundenDetailPage')?.style.display !== 'none') {
+            return 'kundendetail';
+        }
+
         // Check if on potentialanalyse
-        if (document.getElementById('potentialanalyse')?.style.display !== 'none') {
+        if (document.getElementById('potentialAnalysePage')?.style.display !== 'none') {
             // Check which tab is active
             const fidaTab = document.querySelector('.potential-filter-btn.active');
             if (fidaTab?.textContent.includes('FIDA')) {
@@ -204,6 +234,24 @@ const PageIDTracker = {
     },
 
     getBankenView() {
+        // Check if chat is visible (in banken module)
+        const bankenChat = document.querySelector('.banken-chat-container.expanded, .banken-chat-container.open');
+        if (bankenChat) {
+            return 'chat';
+        }
+
+        // Check if CRM profile view is open
+        const crmProfile = document.getElementById('crm-profile-view');
+        if (crmProfile && !crmProfile.classList.contains('hidden')) {
+            return 'crm-profile';
+        }
+
+        // Check if customer detail modal is open
+        const customerDetail = document.getElementById('customer-detail-modal');
+        if (customerDetail && customerDetail.classList.contains('active')) {
+            return 'customer-detail';
+        }
+
         // Check active section in banken module
         const activeSections = [
             { id: 'segmentierung-section', view: 'segmentierung' },

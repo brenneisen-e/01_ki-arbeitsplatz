@@ -932,17 +932,23 @@ function showNeuePotentiale() {
 }
 
 function showNeuePotentialeContent() {
-    const chatMessages = document.getElementById('agenturChatMessages');
-    if (!chatMessages) {
-        console.error('agenturChatMessages nicht gefunden!');
+    const chatBody = document.getElementById('agenturChatBody');
+    if (!chatBody) {
+        console.error('agenturChatBody nicht gefunden!');
         return;
+    }
+
+    // Welcome message entfernen falls vorhanden
+    const welcome = chatBody.querySelector('.agentur-chat-welcome');
+    if (welcome) {
+        welcome.style.display = 'none';
     }
 
     // User-Nachricht hinzufügen
     const userMsg = document.createElement('div');
     userMsg.className = 'chat-message user-message';
     userMsg.innerHTML = '<div class="message-content">Neue Potentiale?</div>';
-    chatMessages.appendChild(userMsg);
+    chatBody.appendChild(userMsg);
 
     // Typing-Indikator hinzufügen
     const typingMsg = document.createElement('div');
@@ -955,8 +961,8 @@ function showNeuePotentialeContent() {
                 <span></span>
             </div>
         </div>`;
-    chatMessages.appendChild(typingMsg);
-    chatMessages.scrollTop = chatMessages.scrollHeight;
+    chatBody.appendChild(typingMsg);
+    chatBody.scrollTop = chatBody.scrollHeight;
 
     // Nach 1.5 Sekunden: Potentiale nacheinander anzeigen
     setTimeout(() => {
@@ -967,8 +973,8 @@ function showNeuePotentialeContent() {
         const botMsg = document.createElement('div');
         botMsg.className = 'chat-message bot-message';
         botMsg.innerHTML = '<div class="message-content"><strong>Aktuelle Top-Potentiale:</strong><br><br></div>';
-        chatMessages.appendChild(botMsg);
-        chatMessages.scrollTop = chatMessages.scrollHeight;
+        chatBody.appendChild(botMsg);
+        chatBody.scrollTop = chatBody.scrollHeight;
 
         const messageContent = botMsg.querySelector('.message-content');
 
@@ -1015,7 +1021,7 @@ function showNeuePotentialeContent() {
                     item.style.transform = 'translateY(0)';
                 }, 10);
 
-                chatMessages.scrollTop = chatMessages.scrollHeight;
+                chatBody.scrollTop = chatBody.scrollHeight;
 
                 // Nach dem letzten Potential: Hinweis und Tab-Wechsel
                 if (index === potentiale.length - 1) {
@@ -1023,7 +1029,7 @@ function showNeuePotentialeContent() {
                         const footer = document.createElement('div');
                         footer.innerHTML = '<br><strong>→ Wechsle zum Potentiale-Tab für vollständige Übersicht...</strong>';
                         messageContent.appendChild(footer);
-                        chatMessages.scrollTop = chatMessages.scrollHeight;
+                        chatBody.scrollTop = chatBody.scrollHeight;
 
                         // Nach 2 Sekunden: Zum Potentiale-Tab wechseln
                         setTimeout(() => {

@@ -1314,6 +1314,11 @@ function switchModule(moduleName) {
         loadBankenModule();
     }
 
+    // Dispatch event for Page ID Tracker
+    document.dispatchEvent(new CustomEvent('moduleChanged', {
+        detail: { module: moduleName }
+    }));
+
     console.log('Switched to module:', moduleName);
 }
 

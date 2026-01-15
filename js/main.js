@@ -368,19 +368,29 @@ function switchView(viewMode) {
     if (viewMode === 'dashboard') {
         dashboardView.style.display = 'flex';
         tableView.classList.remove('active');
-        
+
         if (countyMapHandler && countyMapHandler.svg) {
             setTimeout(() => {
                 const data = getFilteredData();
                 countyMapHandler.updateMapData(data);
             }, 100);
         }
+
+        // Dispatch event for Page ID Tracker
+        document.dispatchEvent(new CustomEvent('viewChanged', {
+            detail: { module: 'versicherung', view: 'dashboard' }
+        }));
     } else {
         dashboardView.style.display = 'none';
         tableView.classList.add('active');
-        
+
         updateAgenturSelector();
         renderTable();
+
+        // Dispatch event for Page ID Tracker
+        document.dispatchEvent(new CustomEvent('viewChanged', {
+            detail: { module: 'versicherung', view: 'kundenliste' }
+        }));
     }
 }
 

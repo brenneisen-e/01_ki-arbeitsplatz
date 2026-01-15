@@ -34,6 +34,11 @@ function showAgenturOverview(vermittlerId) {
 
     // Lade und zeige Agentur-Daten
     loadAgenturData(vermittlerId);
+
+    // Dispatch event for Page ID Tracker
+    document.dispatchEvent(new CustomEvent('viewChanged', {
+        detail: { module: 'versicherung', view: 'agentursicht' }
+    }));
 }
 
 /**
@@ -411,6 +416,11 @@ function backFromAgentur() {
 
     // Verstecke den Agentur-Chat
     hideAgenturChat();
+
+    // Dispatch event for Page ID Tracker
+    document.dispatchEvent(new CustomEvent('viewChanged', {
+        detail: { module: 'versicherung', view: 'landing' }
+    }));
 }
 
 // ========================================

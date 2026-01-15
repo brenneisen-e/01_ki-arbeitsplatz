@@ -720,7 +720,7 @@ function getAgenturChatResponse(question) {
         return `<strong>Ablaufende Verträge (nächste 60 Tage):</strong><br><br>
         <strong>1 Eigener Vertrag</strong> zur Verlängerung:<br><br>
         <div class="chat-customer-item">
-            ${customerBtn('Sabine König', 'KD00002', 'uebersicht', 'leben')} Risikoleben bei <strong>ERGO</strong> (${getDynamicDate(21)})<br>
+            ${customerBtn('Sabine König', 'KD00002', 'vertraege', 'leben')} Risikoleben bei <strong>ERGO</strong> (${getDynamicDate(21)})<br>
             ${vertragBadge(false)}
             <span class="chat-recommendation">Vertragsverlängerung vorbereiten – Beitragsanpassung +3.2% kommunizieren</span>
         </div>
@@ -743,12 +743,12 @@ function getAgenturChatResponse(question) {
         return `<strong>Cross-Selling-Potential Lebensversicherung:</strong><br><br>
         <strong>2 Kunden</strong> ohne LV-Absicherung trotz Bedarf:<br><br>
         <div class="chat-customer-item">
-            ${customerBtn('Peter Schmidt', 'KD00001', 'uebersicht', '')} (45 J.) – BU vorhanden, keine Risikoleben<br>
+            ${customerBtn('Peter Schmidt', 'KD00001', 'stammdaten', '')} (45 J.) – BU vorhanden, keine Risikoleben<br>
             ${vertragBadge(false)}
             <span class="chat-recommendation">Baufinanzierung €285.000 – Absicherung dringend empfohlen</span>
         </div>
         <div class="chat-customer-item">
-            ${customerBtn('Sabine König', 'KD00002', 'uebersicht', '')} (38 J.) – 2 Kinder, selbstständig<br>
+            ${customerBtn('Sabine König', 'KD00002', 'stammdaten', '')} (38 J.) – 2 Kinder, selbstständig<br>
             <span class="chat-recommendation">Geschätzte Prämie: €1.200/Jahr</span>
         </div>
         <br>Gesamtpotential: <strong>€3.000/Jahr</strong>
@@ -792,8 +792,8 @@ function getAgenturChatResponse(question) {
 /**
  * Öffnet Kundendetail aus dem Chat heraus
  * @param {string} kundenId - Kunden-ID
- * @param {string} targetTab - Ziel-Tab (optional: 'uebersicht', 'vertraege', 'fida', 'kommunikation')
- * @param {string} contractType - Vertragstyp zum Highlighten (optional: 'kfz', 'hausrat', 'rechtsschutz', 'bu')
+ * @param {string} targetTab - Ziel-Tab (optional: 'stammdaten', 'vertraege', 'fida', 'impulse', 'finanzplanung', 'kommunikation')
+ * @param {string} contractType - Vertragstyp zum Highlighten (optional: 'leben', 'kfz', 'hausrat', 'rechtsschutz', 'bu', 'unfall', 'haftpflicht')
  */
 function openKundenDetailFromChat(kundenId, targetTab, contractType) {
     // Schließe den Chat

@@ -252,6 +252,11 @@ function openDashboard() {
     const mainApp = document.getElementById('mainApp');
     if (mainApp) {
         mainApp.style.display = 'block';
+
+        // Dispatch event for Page ID Tracker (A-03)
+        document.dispatchEvent(new CustomEvent('viewChanged', {
+            detail: { module: 'versicherung', view: 'dashboard' }
+        }));
     }
 
     // Initialize dashboard
@@ -441,7 +446,14 @@ function backToLanding() {
     if (billingCheckPage) billingCheckPage.style.display = 'none';
 
     // Landing Page anzeigen
-    if (landingPage) landingPage.style.display = 'flex';
+    if (landingPage) {
+        landingPage.style.display = 'flex';
+
+        // Dispatch event for Page ID Tracker (M-01)
+        document.dispatchEvent(new CustomEvent('moduleChanged', {
+            detail: { module: 'main', view: 'landing' }
+        }));
+    }
 }
 
 

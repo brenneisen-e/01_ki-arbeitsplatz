@@ -1048,6 +1048,11 @@ window.addEventListener('DOMContentLoaded', function() {
 
         console.log('✅ Welcome Chat angezeigt');
 
+        // Dispatch event for Page ID Tracker (M-01)
+        document.dispatchEvent(new CustomEvent('moduleChanged', {
+            detail: { module: 'main', view: 'landing' }
+        }));
+
         // WICHTIG: Initialize landing chat
         initLandingChat();
     });

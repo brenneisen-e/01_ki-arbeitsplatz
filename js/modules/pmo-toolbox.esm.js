@@ -1708,6 +1708,11 @@ PMO Team
         if (navBtn) navBtn.classList.add('active');
 
         this.currentView = viewId;
+
+        // Dispatch event for Page ID Tracker
+        document.dispatchEvent(new CustomEvent('viewChanged', {
+            detail: { module: 'pmo-toolbox', view: viewId }
+        }));
     },
 
     // Project Detail Modal

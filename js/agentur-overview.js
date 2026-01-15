@@ -940,48 +940,86 @@ function showNeuePotentiale() {
     chatMessages.appendChild(typingMsg);
     chatMessages.scrollTop = chatMessages.scrollHeight;
 
-    // Nach 1.5 Sekunden: Potentiale anzeigen
+    // Nach 1.5 Sekunden: Potentiale nacheinander anzeigen
     setTimeout(() => {
         // Typing-Indikator entfernen
         typingMsg.remove();
 
-        // Bot-Antwort mit Potentialen
+        // Bot-Antwort Container erstellen
         const botMsg = document.createElement('div');
         botMsg.className = 'chat-message bot-message';
-        botMsg.innerHTML = `
-            <div class="message-content">
-                <strong>Aktuelle Top-Potentiale:</strong><br><br>
-                <div class="chat-customer-item">
-                    <strong>Peter Schmidt</strong> – Risikoleben fehlt<br>
-                    <span class="chat-recommendation">Baufinanzierung €285.000 ohne Absicherung</span>
-                </div>
-                <div class="chat-customer-item">
-                    <strong>Peter Schmidt</strong> – BU-Nachversicherung<br>
-                    <span class="chat-recommendation">Nur 41% des Einkommens abgesichert</span>
-                </div>
-                <div class="chat-customer-item">
-                    <strong>Sabine König</strong> – Kfz-Wechsel<br>
-                    <span class="chat-recommendation">Vertrag läuft bald aus, €200/Jahr Ersparnis möglich</span>
-                </div>
-                <div class="chat-customer-item">
-                    <strong>Thomas Weber</strong> – Risikoleben fehlt<br>
-                    <span class="chat-recommendation">Familie unzureichend abgesichert</span>
-                </div>
-                <br>
-                <strong>→ Wechsle zum Potentiale-Tab für vollständige Übersicht...</strong>
-            </div>`;
+        botMsg.innerHTML = '<div class="message-content"><strong>Aktuelle Top-Potentiale:</strong><br><br></div>';
         chatMessages.appendChild(botMsg);
         chatMessages.scrollTop = chatMessages.scrollHeight;
 
-        // Nach weiteren 1 Sekunde: Zum Potentiale-Tab wechseln
-        setTimeout(() => {
-            showAgenturTab('potential');
+        const messageContent = botMsg.querySelector('.message-content');
 
-            // Optional: Chat schließen nach Tab-Wechsel
+        // Potentiale nacheinander einblenden
+        const potentiale = [
+            {
+                name: 'Peter Schmidt',
+                title: 'Risikoleben fehlt',
+                desc: 'Baufinanzierung €285.000 ohne Absicherung'
+            },
+            {
+                name: 'Peter Schmidt',
+                title: 'BU-Nachversicherung',
+                desc: 'Nur 41% des Einkommens abgesichert'
+            },
+            {
+                name: 'Sabine König',
+                title: 'Kfz-Wechsel',
+                desc: 'Vertrag läuft bald aus, €200/Jahr Ersparnis möglich'
+            },
+            {
+                name: 'Thomas Weber',
+                title: 'Risikoleben fehlt',
+                desc: 'Familie unzureichend abgesichert'
+            }
+        ];
+
+        // Jedes Potential nacheinander mit 400ms Delay einblenden
+        potentiale.forEach((potential, index) => {
             setTimeout(() => {
-                hideAgenturChat();
-            }, 500);
-        }, 1000);
+                const item = document.createElement('div');
+                item.className = 'chat-customer-item';
+                item.style.opacity = '0';
+                item.style.transform = 'translateY(10px)';
+                item.style.transition = 'all 0.3s ease';
+                item.innerHTML = `
+                    <strong>${potential.name}</strong> – ${potential.title}<br>
+                    <span class="chat-recommendation">${potential.desc}</span>`;
+                messageContent.appendChild(item);
+
+                // Fade-in Animation
+                setTimeout(() => {
+                    item.style.opacity = '1';
+                    item.style.transform = 'translateY(0)';
+                }, 10);
+
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+
+                // Nach dem letzten Potential: Hinweis und Tab-Wechsel
+                if (index === potentiale.length - 1) {
+                    setTimeout(() => {
+                        const footer = document.createElement('div');
+                        footer.innerHTML = '<br><strong>→ Wechsle zum Potentiale-Tab für vollständige Übersicht...</strong>';
+                        messageContent.appendChild(footer);
+                        chatMessages.scrollTop = chatMessages.scrollHeight;
+
+                        // Nach 2 Sekunden: Zum Potentiale-Tab wechseln
+                        setTimeout(() => {
+                            showAgenturTab('potential');
+
+                            // Chat schließen nach Tab-Wechsel
+                            setTimeout(() => {
+                                hideAgenturChat();
+                            }, 500);
+                        }, 2000);
+                    }, 300);
+                }
+            }, index * 400);
+        });
     }, 1500);
 }
 

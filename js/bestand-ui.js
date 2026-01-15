@@ -546,6 +546,19 @@ const UI = (function() {
         document.querySelectorAll('.view').forEach(view => {
             view.classList.toggle('active', view.id === `view-${viewName}`);
         });
+
+        // Dispatch event for Page ID Tracker
+        // Map view names: dashboard, vorgaenge, makler, emails -> upload, mapping, preview, export
+        const viewMapping = {
+            'dashboard': 'upload',
+            'vorgaenge': 'mapping',
+            'makler': 'preview',
+            'emails': 'export'
+        };
+        const mappedView = viewMapping[viewName] || viewName;
+        document.dispatchEvent(new CustomEvent('viewChanged', {
+            detail: { module: 'bestandsuebertragung', view: mappedView }
+        }));
     }
 
     /**

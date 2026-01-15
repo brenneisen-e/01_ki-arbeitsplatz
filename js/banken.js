@@ -2342,6 +2342,11 @@ function showBankenSection(sectionName) {
     }
 
     console.log('Showing Banken section:', sectionName);
+
+    // Dispatch event for Page ID Tracker
+    document.dispatchEvent(new CustomEvent('viewChanged', {
+        detail: { module: 'banken', view: sectionName }
+    }));
 }
 
 // ========================================
@@ -2452,6 +2457,11 @@ function openCustomerDetail(customerId, options = {}) {
         }
 
         console.log('Opening customer detail:', customerId, customer.name);
+
+        // Dispatch event for Page ID Tracker
+        document.dispatchEvent(new CustomEvent('viewChanged', {
+            detail: { module: 'banken', view: 'customer-detail' }
+        }));
     }
 }
 
@@ -4272,6 +4282,11 @@ function closeCustomerDetail() {
     const modal = document.getElementById('customerDetailModal');
     if (modal) {
         modal.style.display = 'none';
+
+        // Dispatch event for Page ID Tracker - return to segmentierung
+        document.dispatchEvent(new CustomEvent('viewChanged', {
+            detail: { module: 'banken', view: 'segmentierung' }
+        }));
     }
 }
 

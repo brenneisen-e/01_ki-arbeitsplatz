@@ -2426,7 +2426,7 @@ function initKundenFidaState() {
 }
 
 // Speichert den aktuellen Vermittlermodus (makler/ao)
-let currentVermittlerMode = 'makler';
+let currentVermittlerMode = 'ao'; // Default: AO ERGO Makler
 
 // Wechselt zwischen Makler und AO Modus
 function switchVermittlerMode(mode) {

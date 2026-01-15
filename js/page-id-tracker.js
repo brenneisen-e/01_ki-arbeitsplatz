@@ -157,6 +157,12 @@ const PageIDTracker = {
             return 'versicherung';
         }
 
+        // Check if mainApp (Dashboard) is visible (belongs to versicherung module)
+        const mainApp = document.getElementById('mainApp');
+        if (mainApp && mainApp.style.display !== 'none') {
+            return 'versicherung';
+        }
+
         // Check if we're on the main landing page (module selection)
         // The welcome chat is only visible on the main landing page
         const welcomeChat = document.getElementById('welcomeChat');

@@ -2305,6 +2305,9 @@ window.togglePotentialGroup = togglePotentialGroup;
 // Speichert ob FIDA in der Potentialanalyse aktiv war
 let fidaActiveInPotentialAnalyse = false;
 
+// Speichert von welcher View der Nutzer zur Kundendetail-Seite gekommen ist
+let previousViewBeforeKundenDetail = 'potentialanalyse';
+
 function openKundenDetail(kundenName, vermittlerId) {
     console.log('👤 Kundendetail öffnen:', kundenName, vermittlerId);
 
@@ -2317,11 +2320,22 @@ function openKundenDetail(kundenName, vermittlerId) {
     fidaActiveInPotentialAnalyse = (fidaContainerDisplay === 'block');
     console.log('📊 FIDA Check - Container display:', fidaContainerDisplay, '| FIDA aktiv:', fidaActiveInPotentialAnalyse);
 
+    // Speichere von welcher View wir kommen (für korrekten Zurück-Button)
+    const agenturOverview = document.getElementById('agenturOverview');
+    const potentialAnalyse = document.getElementById('potentialAnalysePage');
+
+    if (agenturOverview && agenturOverview.style.display !== 'none') {
+        previousViewBeforeKundenDetail = 'agentursicht';
+        console.log('📍 Komme von: Agentursicht');
+    } else if (potentialAnalyse && potentialAnalyse.style.display !== 'none') {
+        previousViewBeforeKundenDetail = 'potentialanalyse';
+        console.log('📍 Komme von: Potentialanalyse');
+    }
+
     // Verstecke alle Seiten
     document.getElementById('landingPage').style.display = 'none';
     document.getElementById('mainApp').style.display = 'none';
     document.getElementById('potentialAnalysePage').style.display = 'none';
-    const agenturOverview = document.getElementById('agenturOverview');
     if (agenturOverview) agenturOverview.style.display = 'none';
 
     // Zeige Kundendetail-Seite
@@ -2338,6 +2352,11 @@ function openKundenDetail(kundenName, vermittlerId) {
 
         // Aktiviere FIDA in Kundendetail wenn es in Potentialanalyse aktiv war
         initKundenFidaState();
+
+        // Dispatch event for Page ID Tracker
+        document.dispatchEvent(new CustomEvent('viewChanged', {
+            detail: { module: 'versicherung', view: 'kundendetail' }
+        }));
     }
 }
 
@@ -2445,7 +2464,29 @@ function updateOpenFinanceTable(mode) {
 
 function closeKundenDetail() {
     document.getElementById('kundenDetailPage').style.display = 'none';
-    document.getElementById('potentialAnalysePage').style.display = 'block';
+
+    // Gehe zurück zur vorherigen View
+    if (previousViewBeforeKundenDetail === 'agentursicht') {
+        const agenturOverview = document.getElementById('agenturOverview');
+        if (agenturOverview) {
+            agenturOverview.style.display = 'block';
+            console.log('↩️ Zurück zur Agentursicht');
+
+            // Dispatch event for Page ID Tracker
+            document.dispatchEvent(new CustomEvent('viewChanged', {
+                detail: { module: 'versicherung', view: 'agentursicht' }
+            }));
+        }
+    } else {
+        // Default: Potentialanalyse
+        document.getElementById('potentialAnalysePage').style.display = 'block';
+        console.log('↩️ Zurück zur Potentialanalyse');
+
+        // Dispatch event for Page ID Tracker
+        document.dispatchEvent(new CustomEvent('viewChanged', {
+            detail: { module: 'versicherung', view: 'potentialanalyse' }
+        }));
+    }
 }
 
 function fillKundenDetail(kundenName, vermittlerId) {

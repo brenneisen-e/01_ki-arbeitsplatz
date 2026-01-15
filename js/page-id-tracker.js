@@ -139,6 +139,24 @@ const PageIDTracker = {
     },
 
     getCurrentModule() {
+        // Check if we're on Kundendetail page (belongs to versicherung module)
+        const kundenDetailPage = document.getElementById('kundenDetailPage');
+        if (kundenDetailPage && kundenDetailPage.style.display !== 'none') {
+            return 'versicherung';
+        }
+
+        // Check if we're on Agentursicht (belongs to versicherung module)
+        const agenturOverview = document.getElementById('agenturOverview');
+        if (agenturOverview && agenturOverview.style.display !== 'none') {
+            return 'versicherung';
+        }
+
+        // Check if we're on Potentialanalyse (belongs to versicherung module)
+        const potentialAnalysePage = document.getElementById('potentialAnalysePage');
+        if (potentialAnalysePage && potentialAnalysePage.style.display !== 'none') {
+            return 'versicherung';
+        }
+
         // Check if we're on the main landing page (module selection)
         const landingPage = document.getElementById('landingPage');
         if (landingPage && landingPage.style.display !== 'none' &&

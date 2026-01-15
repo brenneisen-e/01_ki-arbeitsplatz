@@ -917,9 +917,10 @@ function toggleWeiterePotentiale() {
  * Zeigt neue Potentiale mit Ladeanimation und wechselt dann zum Potentiale-Tab
  */
 function showNeuePotentiale() {
-    // Chat öffnen falls geschlossen
+    // Prüfen ob Chat geschlossen ist (display = 'none' oder '')
     const chatWidget = document.getElementById('agenturChatWidget');
-    if (chatWidget && !chatWidget.classList.contains('open')) {
+    if (chatWidget && (chatWidget.style.display === 'none' || chatWidget.style.display === '')) {
+        // Chat ist geschlossen - öffnen
         toggleAgenturChat();
         // Kurz warten bis Chat geöffnet ist
         setTimeout(() => {
@@ -928,6 +929,7 @@ function showNeuePotentiale() {
         return;
     }
 
+    // Chat ist bereits offen - direkt Inhalt anzeigen
     showNeuePotentialeContent();
 }
 

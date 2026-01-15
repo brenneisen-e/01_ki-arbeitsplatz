@@ -1031,15 +1031,11 @@ function showNeuePotentialeContent() {
                         messageContent.appendChild(footer);
                         chatBody.scrollTop = chatBody.scrollHeight;
 
-                        // Nach 2 Sekunden: Zum Potentiale-Tab wechseln
+                        // Nach 1,5 Sekunden: Zum Potentiale-Tab wechseln
                         setTimeout(() => {
                             showAgenturTab('potential');
-
-                            // Chat schließen nach Tab-Wechsel
-                            setTimeout(() => {
-                                hideAgenturChat();
-                            }, 500);
-                        }, 2000);
+                            // Chat bleibt offen für weitere Interaktionen
+                        }, 1500);
                     }, 300);
                 }
             }, index * 400);

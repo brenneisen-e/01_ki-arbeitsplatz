@@ -158,12 +158,14 @@ const PageIDTracker = {
         }
 
         // Check if we're on the main landing page (module selection)
-        const landingPage = document.getElementById('landingPage');
+        // The welcome chat is only visible on the main landing page
         const welcomeChat = document.getElementById('welcomeChat');
-        if (landingPage && landingPage.style.display !== 'none' &&
-            welcomeChat && welcomeChat.style.display !== 'none') {
-            // We're on the main module selection page (welcome chat is visible)
-            return 'main';
+        if (welcomeChat) {
+            const computedStyle = window.getComputedStyle(welcomeChat);
+            if (computedStyle.display !== 'none') {
+                // Welcome chat is visible, we're on the main module selection page
+                return 'main';
+            }
         }
 
         // Check which module is currently visible

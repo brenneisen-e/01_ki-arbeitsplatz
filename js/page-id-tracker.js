@@ -159,9 +159,10 @@ const PageIDTracker = {
 
         // Check if we're on the main landing page (module selection)
         const landingPage = document.getElementById('landingPage');
+        const welcomeChat = document.getElementById('welcomeChat');
         if (landingPage && landingPage.style.display !== 'none' &&
-            document.getElementById('agenturGrid')?.style.display === 'none') {
-            // We're on the main module selection page
+            welcomeChat && welcomeChat.style.display !== 'none') {
+            // We're on the main module selection page (welcome chat is visible)
             return 'main';
         }
 

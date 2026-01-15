@@ -646,7 +646,7 @@
 
                                 <!-- Weitere Potentiale (ausklappbar) -->
                                 <div class="weitere-potentiale-toggle" onclick="toggleWeiterePotentiale()">
-                                    <span class="weitere-badge">+4</span>
+                                    <span class="weitere-badge">+10</span>
                                     <span>Weitere Potentiale anzeigen</span>
                                     <svg class="toggle-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
                                         <polyline points="6 9 12 15 18 9"></polyline>
@@ -740,7 +740,25 @@
                                         <span class="impuls-priority medium">Mittlere Priorität</span>
                                     </div>
 
-                                    <div class="impuls-item clickable">
+                                    <div class="impuls-item clickable" onclick="toggleImpulsDetail('uebersicht-impuls-peter-risiko')">
+                                        <div class="impuls-icon">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
+                                                <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"></path>
+                                            </svg>
+                                        </div>
+                                        <div class="impuls-text">
+                                            <strong>Risikoleben fehlt: Peter Schmidt</strong>
+                                            <p><span class="fida-source-badge small">Eigene Daten</span> BU vorhanden, Baufinanzierung €285.000 – Risikoleben-Absicherung dringend empfohlen</p>
+                                        </div>
+                                        <span class="impuls-priority high">Hohe Priorität</span>
+                                    </div>
+                                    <div class="impuls-detail" id="uebersicht-impuls-peter-risiko" style="display: none;">
+                                        <div class="impuls-actions">
+                                            <button class="action-btn primary" onclick="event.stopPropagation(); openKundenDetail('Peter Schmidt', 'KD00001')">Kunden öffnen</button>
+                                        </div>
+                                    </div>
+
+                                    <div class="impuls-item clickable" onclick="toggleImpulsDetail('uebersicht-impuls-anna')">
                                         <div class="impuls-icon">
                                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
                                                 <circle cx="12" cy="12" r="10"></circle>
@@ -749,10 +767,135 @@
                                             </svg>
                                         </div>
                                         <div class="impuls-text">
-                                            <strong>Altersvorsorge-Check: Hans Müller</strong>
-                                            <p><span class="fida-source-badge small">PSD2</span> Hohe Sparrate ohne Altersvorsorge erkannt.</p>
+                                            <strong>Fondsrente: Anna Hoffmann</strong>
+                                            <p><span class="fida-source-badge small">PSD2</span> Junge Familie, Sparrate €1.200/Mon. ohne Altersvorsorge</p>
                                         </div>
-                                        <span class="impuls-priority low">Niedrige Priorität</span>
+                                        <span class="impuls-priority high">Hohe Priorität</span>
+                                    </div>
+                                    <div class="impuls-detail" id="uebersicht-impuls-anna" style="display: none;">
+                                        <div class="impuls-actions">
+                                            <button class="action-btn primary" onclick="event.stopPropagation(); openKundenDetail('Anna Hoffmann', 'KD00004')">Kunden öffnen</button>
+                                        </div>
+                                    </div>
+
+                                    <div class="impuls-item clickable" onclick="toggleImpulsDetail('uebersicht-impuls-michael')">
+                                        <div class="impuls-icon">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
+                                                <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"></path>
+                                                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                                            </svg>
+                                        </div>
+                                        <div class="impuls-text">
+                                            <strong>Hausrat-Wechsel: Michael Braun</strong>
+                                            <p><span class="fida-source-badge small">Open Finance</span> Hausrat bei Wettbewerber überteuert, Wechsel €180/J. Ersparnis</p>
+                                        </div>
+                                        <span class="impuls-priority medium">Mittlere Priorität</span>
+                                    </div>
+                                    <div class="impuls-detail" id="uebersicht-impuls-michael" style="display: none;">
+                                        <div class="impuls-actions">
+                                            <button class="action-btn primary" onclick="event.stopPropagation(); openKundenDetail('Michael Braun', 'KD00005')">Kunden öffnen</button>
+                                        </div>
+                                    </div>
+
+                                    <div class="impuls-item clickable" onclick="toggleImpulsDetail('uebersicht-impuls-lisa')">
+                                        <div class="impuls-icon">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
+                                                <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+                                            </svg>
+                                        </div>
+                                        <div class="impuls-text">
+                                            <strong>Kranken-Zusatz: Lisa Müller</strong>
+                                            <p><span class="fida-source-badge small">Eigene Daten</span> Ärztin, PKV ohne Krankentagegeld und Zahnzusatz</p>
+                                        </div>
+                                        <span class="impuls-priority high">Hohe Priorität</span>
+                                    </div>
+                                    <div class="impuls-detail" id="uebersicht-impuls-lisa" style="display: none;">
+                                        <div class="impuls-actions">
+                                            <button class="action-btn primary" onclick="event.stopPropagation(); openKundenDetail('Lisa Müller', 'KD00006')">Kunden öffnen</button>
+                                        </div>
+                                    </div>
+
+                                    <div class="impuls-item clickable" onclick="toggleImpulsDetail('uebersicht-impuls-matthias')">
+                                        <div class="impuls-icon">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
+                                                <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                                                <polyline points="2 17 12 22 22 17"></polyline>
+                                                <polyline points="2 12 12 17 22 12"></polyline>
+                                            </svg>
+                                        </div>
+                                        <div class="impuls-text">
+                                            <strong>BU-Deckungslücke: Matthias Engel</strong>
+                                            <p><span class="fida-source-badge small">Eigene Daten</span> IT-Consultant, Netto €4.200, BU nur €1.200 - unterversichert</p>
+                                        </div>
+                                        <span class="impuls-priority high">Hohe Priorität</span>
+                                    </div>
+                                    <div class="impuls-detail" id="uebersicht-impuls-matthias" style="display: none;">
+                                        <div class="impuls-actions">
+                                            <button class="action-btn primary" onclick="event.stopPropagation(); openKundenDetail('Matthias Engel', 'KD00007')">Kunden öffnen</button>
+                                        </div>
+                                    </div>
+
+                                    <div class="impuls-item clickable" onclick="toggleImpulsDetail('uebersicht-impuls-christian')">
+                                        <div class="impuls-icon">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
+                                                <rect x="1" y="3" width="15" height="13" rx="2"></rect>
+                                                <path d="M16 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2"></path>
+                                                <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                                                <circle cx="18.5" cy="18.5" r="2.5"></circle>
+                                            </svg>
+                                        </div>
+                                        <div class="impuls-text">
+                                            <strong>Kfz-Versicherung: Christian Bauer</strong>
+                                            <p><span class="fida-source-badge small">Eigene Daten</span> Neues Fahrzeug geleast, Versicherung fehlt</p>
+                                        </div>
+                                        <span class="impuls-priority high">Hohe Priorität</span>
+                                    </div>
+                                    <div class="impuls-detail" id="uebersicht-impuls-christian" style="display: none;">
+                                        <div class="impuls-actions">
+                                            <button class="action-btn primary" onclick="event.stopPropagation(); openKundenDetail('Christian Bauer', 'KD00008')">Kunden öffnen</button>
+                                        </div>
+                                    </div>
+
+                                    <div class="impuls-item clickable" onclick="toggleImpulsDetail('uebersicht-impuls-martin')">
+                                        <div class="impuls-icon">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
+                                                <rect x="1" y="3" width="15" height="13" rx="2"></rect>
+                                                <path d="M16 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2"></path>
+                                                <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                                                <circle cx="18.5" cy="18.5" r="2.5"></circle>
+                                            </svg>
+                                        </div>
+                                        <div class="impuls-text">
+                                            <strong>Kfz-Nutzfahrzeug: Martin Wolf</strong>
+                                            <p><span class="fida-source-badge small">Eigene Daten</span> Dachdecker-Meister, Firmenfahrzeug ohne Vollkasko</p>
+                                        </div>
+                                        <span class="impuls-priority high">Hohe Priorität</span>
+                                    </div>
+                                    <div class="impuls-detail" id="uebersicht-impuls-martin" style="display: none;">
+                                        <div class="impuls-actions">
+                                            <button class="action-btn primary" onclick="event.stopPropagation(); openKundenDetail('Martin Wolf', 'KD00009')">Kunden öffnen</button>
+                                        </div>
+                                    </div>
+
+                                    <div class="impuls-item clickable" onclick="toggleImpulsDetail('uebersicht-impuls-eva')">
+                                        <div class="impuls-icon">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
+                                                <rect x="1" y="3" width="15" height="13" rx="2"></rect>
+                                                <path d="M16 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2"></path>
+                                                <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                                                <circle cx="18.5" cy="18.5" r="2.5"></circle>
+                                            </svg>
+                                        </div>
+                                        <div class="impuls-text">
+                                            <strong>Kfz-Wechsel: Eva Hartmann</strong>
+                                            <p><span class="fida-source-badge small">Open Finance</span> Kfz bei HUK läuft aus, Wechsel €200/J. Ersparnis</p>
+                                        </div>
+                                        <span class="impuls-priority medium">Mittlere Priorität</span>
+                                    </div>
+                                    <div class="impuls-detail" id="uebersicht-impuls-eva" style="display: none;">
+                                        <div class="impuls-actions">
+                                            <button class="action-btn primary" onclick="event.stopPropagation(); openKundenDetail('Eva Hartmann', 'KD00010')">Kunden öffnen</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -2379,6 +2522,14 @@
                                 <td>Andreas Meyer</td>
                                 <td><span class="potential-badge kfz">Kfz-Wechsel</span></td>
                                 <td>Kfz bei HUK läuft aus, Wechsel €200/J. Ersparnis</td>
+                                <td><span class="priority medium">Mittel</span></td>
+                            </tr>
+                            <tr onclick="openKundenDetail('Maria Fischer', 'KD00008')" class="clickable-row">
+                                <td>Maria Fischer</td>
+                                <td>KD00008</td>
+                                <td>Max Mustermann</td>
+                                <td><span class="potential-badge hausrat">Hausrat-Anpassung</span></td>
+                                <td>Mietzahlung geändert - vermutlich Umzug in größere Wohnung</td>
                                 <td><span class="priority medium">Mittel</span></td>
                             </tr>
                         </tbody>

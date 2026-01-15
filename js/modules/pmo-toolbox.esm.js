@@ -117,7 +117,7 @@ export const PMO = {
     tasks: [],
     milestones: [],
     selectedTrafficLights: {},
-    DEMO_DATA_VERSION: 7,  // Increment to force regeneration of demo data
+    DEMO_DATA_VERSION: 8,  // Increment to force regeneration of demo data
 
     // Initialize
     init() {
@@ -648,14 +648,14 @@ export const PMO = {
     // Generate Demo Data
     generateDemoData() {
         const scenarios = {
-            "A": { trend: "improving", currentStatus: "yellow", themes: ["Lead-Routing System in Pilotphase", "K-EWE Integration verzögert", "Inside Sales Team im Aufbau"] },
-            "B": { trend: "stable", currentStatus: "green", themes: ["Reporting-Framework implementiert", "Performance-Dashboards live"] },
-            "C": { trend: "declining", currentStatus: "yellow", themes: ["Recruiting-Ziele unter Plan", "Onboarding-Prozess optimiert"] },
-            "D": { trend: "stable", currentStatus: "green", themes: ["Servicemodell definiert", "Pilotierung in 3 Regionen"] },
-            "E": { trend: "improving", currentStatus: "green", themes: ["SEO-Maßnahmen zeigen Wirkung", "Social Media Strategie umgesetzt"] },
-            "F": { trend: "critical", currentStatus: "red", themes: ["Effizienzziele gefährdet", "Kosteneinsparungen unter Plan"] },
-            "G": { trend: "stable", currentStatus: "yellow", themes: ["Change-Kommunikation läuft", "Widerstand im Außendienst"] },
-            "H": { trend: "starting", currentStatus: "yellow", themes: ["Programmaufsatz in Arbeit", "Anforderungsanalyse läuft"] }
+            "A": { trend: "improving", currentStatus: "yellow", themes: ["Lead-Routing Skalierung: Konversion +18% vs. Baseline", "K-EWE Sammelpunkte: 12/20 Standorte operativ, IT-Anbindung verzögert", "Inside Sales Telefonie-Einheit: 8/8 FTE besetzt, Produktivität unter Ziel (-22%)"] },
+            "B": { trend: "stable", currentStatus: "green", themes: ["Reporting-Automatisierung: Alle 16 Bundesländer live, KPI-Konsistenz erreicht", "Performance-Steuerung: Agentur-Scorecards produktiv, 94% Nutzerakzeptanz", "Provisionsmanagement-Optimierung: Simulation abgeschlossen, Umsetzung Q2"] },
+            "C": { trend: "declining", currentStatus: "yellow", themes: ["Recruiting-Pipeline: 28/35 Stellen besetzt (80%), Employer Branding zeigt Wirkung", "Onboarding 2.0: Digitale Lernplattform live, Einarbeitungszeit -30%", "Fluktuation 1. Jahr: 22% - über Benchmark (18%), Mentoring-Programm startet"] },
+            "D": { trend: "stable", currentStatus: "green", themes: ["Servicemodell: Rollout in 5 Regionen abgeschlossen, NPS +12 Punkte", "Kundenanalytik A-TOM: Potentialidentifikation produktiv, 2.400 Leads generiert", "EASY Backlog: 60% abgearbeitet, kritische Bugs behoben"] },
+            "E": { trend: "improving", currentStatus: "green", themes: ["EMOK 3.0: Alle Features released, Vermittler-Aktivierungsquote 67%", "SEO-Skalierung: Organischer Traffic +52% YoY, 380 Homepages optimiert", "Social Media: Follower-Wachstum +145%, GenAI-Content-Tool pilotiert"] },
+            "F": { trend: "critical", currentStatus: "red", themes: ["KRITISCH: Effizienzziele verfehlt -€1.8 Mio vs. Plan", "Kostenoptimierung: Investitionsstopp verhängt, Projektportfolio-Review läuft", "Strukturmaßnahmen: Vorstand fordert Beschleunigung, Notfall-Taskforce eingesetzt"] },
+            "G": { trend: "stable", currentStatus: "yellow", themes: ["Change-Kommunikation: 85% Awareness erreicht, 3 Townhalls durchgeführt", "Führungskräfte-Readiness: Coaching-Programm abgeschlossen, Multiplikatoren aktiv", "Widerstand Außendienst: Regional unterschiedlich, Süd-Region kritisch"] },
+            "H": { trend: "starting", currentStatus: "yellow", themes: ["Anforderungsanalyse: 90% abgeschlossen, 45 Stakeholder-Interviews geführt", "IT-Architektur: Cloud-First entschieden, Security-Review läuft", "Vendor-Selection: Shortlist auf 3 CRM-Anbieter (Salesforce, MS Dynamics, SAP)"] }
         };
 
         const demoData = [];
@@ -694,89 +694,89 @@ export const PMO = {
                 currentStatus: 'yellow',
                 trend: 'improving',
                 summary: [
-                    "Lead-Routing Optimierung zeigt erste Erfolge (+18% Conversion)",
-                    "K-EWE Servicepunkte: 12 von 20 Standorten live",
-                    "Inside Sales Team vollständig aufgebaut"
+                    "Neukunden-Lead-Generierung: +18% Konversion durch optimiertes Routing, 2.400 qualifizierte Leads in Q1",
+                    "K-EWE Sammelpunkte: 12/20 Standorte live, IT-Anbindung Verzögerung -3 Wochen",
+                    "Inside Sales Telefonie-Einheit: Team komplett (8 FTE), Produktivität 78% des Ziels"
                 ],
-                risks: "Ressourcenengpass bei Schulung neuer Mitarbeiter",
-                nextSteps: "Rollout der verbleibenden 8 Servicepunkte bis Q1-Ende"
+                risks: "IT-Abhängigkeiten K-EWE API verzögern Rollout, Schulungskapazität begrenzt",
+                nextSteps: "Eskalation IT-Roadmap, Express-Rollout verbleibende 8 Servicepunkte bis 28.02"
             },
             "B": {
                 currentStatus: 'green',
                 trend: 'stable',
                 summary: [
-                    "Einheitliche Reports in allen Regionen ausgerollt",
-                    "Performance-Dashboard live und wird aktiv genutzt",
-                    "Provisionsmodell-Anpassungen genehmigt"
+                    "Reporting-Automatisierung: Bundesweiter Rollout abgeschlossen, alle 16 Bundesländer live",
+                    "Performance-Steuerung: Agentur-Scorecards produktiv, 94% Nutzerakzeptanz, 450 aktive User",
+                    "Provisionsmanagement: Simulationsmodell validiert, Freigabe für Umsetzung Q2 erhalten"
                 ],
-                risks: "Keine kritischen Risiken",
-                nextSteps: "Schulung der Regionalleiter auf neue Reports"
+                risks: "Keine kritischen Risiken - Projekt im grünen Bereich",
+                nextSteps: "Schulung Regionalleiter abschließen, Predictive Analytics Modul vorbereiten"
             },
             "C": {
                 currentStatus: 'yellow',
                 trend: 'stable',
                 summary: [
-                    "Recruiting: 85% der Zielkapazität erreicht",
-                    "E-Learning Plattform in Pilotphase",
-                    "Onboarding-Prozess neu strukturiert"
+                    "Recruiting: 28/35 Stellen besetzt (80%), Employer Branding Kampagne zeigt Wirkung (+35% Bewerbungen)",
+                    "Onboarding 2.0: Digitale Lernplattform live, Einarbeitungszeit -30% (11 → 7,7 Wochen)",
+                    "Fluktuation kritisch: 22% im 1. Jahr - über Benchmark (18%), Exit-Interviews laufen"
                 ],
-                risks: "Hohe Fluktuation im ersten Jahr (22%)",
-                nextSteps: "Mentoring-Programm zur Mitarbeiterbindung starten"
+                risks: "Hohe Fluktuation gefährdet Kapazitätsaufbau, Regional unterschiedliche Performance",
+                nextSteps: "Mentoring-Programm Q2 starten, Vergütungsmodell-Review, Recruiting-Push Süd-Region"
             },
             "D": {
                 currentStatus: 'green',
                 trend: 'improving',
                 summary: [
-                    "Servicemodell in 5 Regionen erfolgreich etabliert",
-                    "Kundenanalytik-Tool: 94% Nutzerzufriedenheit",
-                    "EASY Backlog zu 60% abgearbeitet"
+                    "Servicemodell: Rollout 5 Regionen abgeschlossen, NPS +12 Punkte (72 → 84), 98% SLA-Einhaltung",
+                    "Kundenanalytik A-TOM: Potentialidentifikation produktiv, 2.400 qualifizierte Cross-Sell-Leads",
+                    "EASY Backlog: 60% abgearbeitet (180/300 Items), kritische Performance-Bugs behoben"
                 ],
-                risks: "Keine kritischen Risiken",
-                nextSteps: "Expansion auf weitere 5 Regionen vorbereiten"
+                risks: "Keine kritischen Risiken - Expansion on track",
+                nextSteps: "Rollout auf 5 weitere Regionen Q2, Enhanced Analytics Features, EASY-Finalisierung Q3"
             },
             "E": {
                 currentStatus: 'green',
                 trend: 'stable',
                 summary: [
-                    "SEO: +52% organischer Traffic vs. Vorjahr",
-                    "Marketing-Automation vollständig implementiert",
-                    "EMOK 3.0 erfolgreich released"
+                    "EMOK 3.0: Feature-Rollout komplett, Vermittler-Aktivierung 67% (380/570 Homepages migriert)",
+                    "SEO-Skalierung: Organischer Traffic +52% YoY, Google-Rankings Top 3 für 45 Keywords",
+                    "Social Media: Follower +145% (LinkedIn 12k, Instagram 8k), GenAI Content-Tool pilotiert"
                 ],
-                risks: "Keine kritischen Risiken",
-                nextSteps: "Conversion-Optimierung und A/B-Tests fortsetzen"
+                risks: "Keine kritischen Risiken - Digitalisierung läuft plangemäß",
+                nextSteps: "Conversion-Rate-Optimierung, Voice Search Integration, TikTok-Strategie entwickeln"
             },
             "F": {
                 currentStatus: 'red',
                 trend: 'critical',
                 summary: [
-                    "KRITISCH: Sparziele um 15% verfehlt",
-                    "Investitionsstopp durch Vorstand verhängt",
-                    "Notfall-Taskforce eingerichtet"
+                    "KRITISCH: Effizienzziele massiv verfehlt -€1.8 Mio vs. Plan (-15%), Vorstand eskaliert",
+                    "Investitionsstopp: Alle Nicht-Business-Critical-Projekte frozen, Portfolio-Review läuft",
+                    "Notfall-Taskforce: CFO-geleitet, wöchentliches Steering, Sofortmaßnahmen-Katalog erstellt"
                 ],
-                risks: "Budgetüberschreitung gefährdet Gesamtprogramm",
-                nextSteps: "Vorstandspräsentation mit Maßnahmenplan"
+                risks: "Budgetüberschreitung gefährdet Gesamt-ESP III, Reputationsrisiko bei Aufsichtsrat",
+                nextSteps: "Vorstandspräsentation 15.01, Restrukturierungsplan vorlegen, Quick-Wins identifizieren"
             },
             "G": {
                 currentStatus: 'yellow',
                 trend: 'improving',
                 summary: [
-                    "Change-Kommunikation: 85% Awareness erreicht",
-                    "Führungskräfte-Workshops abgeschlossen",
-                    "Widerstand im Außendienst reduziert"
+                    "Change-Kommunikation: 85% Awareness (Pulse Survey Dez.), 3 Townhalls à 400+ Teilnehmer",
+                    "Führungskräfte-Readiness: Coaching-Programm für 120 FK abgeschlossen, Multiplikatoren aktiv",
+                    "Widerstand: Außendienst regional unterschiedlich - Nord grün, Süd-Region kritisch (NPS -18)"
                 ],
-                risks: "Vereinzelt noch Akzeptanzprobleme in Süd-Region",
-                nextSteps: "Townhall #3 und Pulse Survey durchführen"
+                risks: "Persistenter Widerstand Süd-Region gefährdet Akzeptanz, Betriebsrat involviert",
+                nextSteps: "Intensive Dialoge Süd-Region, Townhall #4 mit Vorstand, Erfolgsgeschichten skalieren"
             },
             "H": {
                 currentStatus: 'yellow',
                 trend: 'stable',
                 summary: [
-                    "CRM-Anforderungen finalisiert",
-                    "Vendor Shortlist auf 3 Anbieter reduziert",
-                    "Proof of Concept in Vorbereitung"
+                    "Anforderungsanalyse: 90% abgeschlossen (45 Stakeholder-Interviews), Fachkonzept final",
+                    "IT-Architektur: Cloud-First entschieden (Azure), Security & Compliance Review läuft",
+                    "Vendor-Selection: Shortlist 3 CRM-Anbieter (Salesforce, MS Dynamics 365, SAP C4C), POC Q2"
                 ],
-                risks: "Zeitplan ambitioniert für Go-Live in Q3",
-                nextSteps: "Vendor Demo-Runde durchführen und bewerten"
+                risks: "Zeitplan ambitioniert für Go-Live Q3, IT-Ressourcen-Konflikt mit Projekt D",
+                nextSteps: "Vendor-Demos Feb, POC-Design finalisieren, Ressourcen-Eskalation IT-Leitung"
             }
         };
 

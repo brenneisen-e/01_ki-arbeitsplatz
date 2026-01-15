@@ -1688,6 +1688,13 @@ PMO Team
         if (viewId === 'gantt') this.renderGantt();
         if (viewId === 'entscheidungen') this.renderDecisions();
         if (viewId === 'dokumente') this.renderDocumentsList();
+        if (viewId === 'suche') {
+            // Focus search input when switching to search view
+            setTimeout(() => {
+                const searchInput = document.getElementById('pmo-view-search-input');
+                if (searchInput) searchInput.focus();
+            }, 100);
+        }
     },
 
     showViewInternal(viewId) {
@@ -2349,6 +2356,140 @@ PMO Team
             this.pptSearchHighlight = searchQuery;
             this.openPPTViewForStatus(id);
         }
+    },
+
+    // ========================================
+    // VIEW-BASED SEARCH (Dedicated Search Tab)
+    // ========================================
+    performViewSearch() {
+        const query = document.getElementById('pmo-view-search-input').value.toLowerCase().trim();
+        const resultsContainer = document.getElementById('pmo-view-search-results');
+
+        if (query.length < 2) {
+            resultsContainer.innerHTML = `
+                <div class="pmo-search-hint-box">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="48" height="48">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="M21 21l-4.35-4.35"></path>
+                    </svg>
+                    <p>Geben Sie mindestens 2 Zeichen ein, um zu suchen</p>
+                </div>
+            `;
+            return;
+        }
+
+        const results = [];
+
+        // Search in status data
+        this.statusData.forEach(status => {
+            const project = this.PROGRAM_STRUCTURE.projects.find(p => p.id === status.projectId);
+            const ws = project?.workstreams.find(w => w.id === status.workstreamId);
+
+            // Search in all text fields
+            const fields = [
+                { name: 'Management Summary', content: status.summary.join(' ') },
+                { name: 'Projektfortschritt', content: status.progress },
+                { name: 'Anstehende Aktivitäten', content: status.upcoming },
+                { name: 'Erforderliche Entscheidungen', content: status.decisions }
+            ];
+
+            // Add risks and issues
+            status.risksAndIssues.forEach((r, idx) => {
+                fields.push({ name: `Risiko/Issue #${idx + 1}`, content: r.description });
+            });
+
+            // Add milestones
+            status.milestones.forEach((m, idx) => {
+                fields.push({ name: `Meilenstein: ${m.name}`, content: m.name });
+            });
+
+            // Check each field for matches
+            fields.forEach(field => {
+                if (field.content && field.content.toLowerCase().includes(query)) {
+                    const context = this.extractContext(field.content, query);
+                    results.push({
+                        type: 'status',
+                        statusId: status.id,
+                        projectId: status.projectId,
+                        workstreamId: status.workstreamId,
+                        workstreamName: ws?.name || status.workstreamId,
+                        date: status.date,
+                        field: field.name,
+                        context: context,
+                        fullText: field.content
+                    });
+                }
+            });
+        });
+
+        if (results.length === 0) {
+            resultsContainer.innerHTML = `
+                <div class="pmo-search-hint-box">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="48" height="48">
+                        <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"></path>
+                        <line x1="12" y1="9" x2="12" y2="13"></line>
+                        <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                    </svg>
+                    <p>Keine Ergebnisse gefunden für "${query}"</p>
+                    <small>Versuchen Sie andere Suchbegriffe</small>
+                </div>
+            `;
+            return;
+        }
+
+        // Sort by date (newest first)
+        results.sort((a, b) => b.date.localeCompare(a.date));
+
+        // Render results
+        resultsContainer.innerHTML = `
+            <div class="pmo-search-stats">
+                <strong>${results.length}</strong> ${results.length === 1 ? 'Ergebnis' : 'Ergebnisse'} gefunden für "<mark>${query}</mark>"
+            </div>
+            <div class="pmo-search-results-list">
+                ${results.map(r => `
+                    <div class="pmo-search-result-card" onclick="PMO.handleViewSearchResultClick('${r.statusId}', '${query}')">
+                        <div class="pmo-search-result-header">
+                            <div class="pmo-search-result-meta">
+                                <span class="pmo-search-result-ws">${r.projectId} / ${r.workstreamId}</span>
+                                <span class="pmo-search-result-date">${this.formatDate(r.date)}</span>
+                            </div>
+                            <div class="pmo-search-result-field">${r.field}</div>
+                        </div>
+                        <div class="pmo-search-result-title">${r.workstreamName}</div>
+                        <div class="pmo-search-result-context">${r.context}</div>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+    },
+
+    extractContext(text, query, contextLength = 100) {
+        const lowerText = text.toLowerCase();
+        const lowerQuery = query.toLowerCase();
+        const index = lowerText.indexOf(lowerQuery);
+
+        if (index === -1) return text.substring(0, contextLength) + '...';
+
+        const start = Math.max(0, index - contextLength);
+        const end = Math.min(text.length, index + query.length + contextLength);
+        let excerpt = text.substring(start, end);
+
+        if (start > 0) excerpt = '...' + excerpt;
+        if (end < text.length) excerpt = excerpt + '...';
+
+        // Highlight the query
+        return excerpt.replace(new RegExp(`(${this.escapeRegex(query)})`, 'gi'), '<mark>$1</mark>');
+    },
+
+    escapeRegex(string) {
+        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    },
+
+    handleViewSearchResultClick(statusId, searchQuery) {
+        // Save search query for highlighting
+        this.pptSearchHighlight = searchQuery;
+        // Open PPT view for the status
+        this.openPPTViewForStatus(statusId);
     },
 
     // Setup Event Listeners

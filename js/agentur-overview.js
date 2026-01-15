@@ -917,8 +917,26 @@ function toggleWeiterePotentiale() {
  * Zeigt neue Potentiale mit Ladeanimation und wechselt dann zum Potentiale-Tab
  */
 function showNeuePotentiale() {
+    // Chat öffnen falls geschlossen
+    const chatWidget = document.getElementById('agenturChatWidget');
+    if (chatWidget && !chatWidget.classList.contains('open')) {
+        toggleAgenturChat();
+        // Kurz warten bis Chat geöffnet ist
+        setTimeout(() => {
+            showNeuePotentialeContent();
+        }, 300);
+        return;
+    }
+
+    showNeuePotentialeContent();
+}
+
+function showNeuePotentialeContent() {
     const chatMessages = document.getElementById('agenturChatMessages');
-    if (!chatMessages) return;
+    if (!chatMessages) {
+        console.error('agenturChatMessages nicht gefunden!');
+        return;
+    }
 
     // User-Nachricht hinzufügen
     const userMsg = document.createElement('div');

@@ -2389,6 +2389,15 @@ function openKundenDetail(kundenName, vermittlerId) {
         kundenDetail.classList.remove('makler-view', 'ao-view');
         kundenDetail.classList.add(currentVermittlerMode === 'makler' ? 'makler-view' : 'ao-view');
 
+        // Toggle-Buttons auf den aktuellen Modus setzen
+        const toggleBtns = document.querySelectorAll('.toggle-option');
+        toggleBtns.forEach(btn => {
+            btn.classList.remove('active');
+            if (btn.dataset.mode === currentVermittlerMode) {
+                btn.classList.add('active');
+            }
+        });
+
         // Fülle Kundendaten
         fillKundenDetail(kundenName, vermittlerId);
 

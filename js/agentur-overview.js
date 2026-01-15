@@ -712,7 +712,7 @@ function getAgenturChatResponse(question) {
         <div class="chat-followup-suggestions">
             <button onclick="askAgenturQuestion('Welche Verträge laufen in den nächsten 30 Tagen aus?')">Welche Verträge laufen bald aus?</button>
             <button onclick="askAgenturQuestion('Welche Kunden haben Cross-Selling-Potential?')">Wer hat Cross-Selling-Potential?</button>
-            <button onclick="askAgenturQuestion('Zeige offene FIDA-Anfragen')">Offene FIDA-Fälle?</button>
+            <button onclick="showNeuePotentiale()">Neue Potentiale?</button>
         </div>`;
 
     // Ablaufende Verträge - ECHTE Daten aus der Datenbank!
@@ -913,6 +913,78 @@ function toggleWeiterePotentiale() {
     }
 }
 
+/**
+ * Zeigt neue Potentiale mit Ladeanimation und wechselt dann zum Potentiale-Tab
+ */
+function showNeuePotentiale() {
+    const chatMessages = document.getElementById('agenturChatMessages');
+    if (!chatMessages) return;
+
+    // User-Nachricht hinzufügen
+    const userMsg = document.createElement('div');
+    userMsg.className = 'chat-message user-message';
+    userMsg.innerHTML = '<div class="message-content">Neue Potentiale?</div>';
+    chatMessages.appendChild(userMsg);
+
+    // Typing-Indikator hinzufügen
+    const typingMsg = document.createElement('div');
+    typingMsg.className = 'chat-message bot-message typing-indicator';
+    typingMsg.innerHTML = `
+        <div class="message-content">
+            <div class="typing-dots">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>`;
+    chatMessages.appendChild(typingMsg);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+
+    // Nach 1.5 Sekunden: Potentiale anzeigen
+    setTimeout(() => {
+        // Typing-Indikator entfernen
+        typingMsg.remove();
+
+        // Bot-Antwort mit Potentialen
+        const botMsg = document.createElement('div');
+        botMsg.className = 'chat-message bot-message';
+        botMsg.innerHTML = `
+            <div class="message-content">
+                <strong>Aktuelle Top-Potentiale:</strong><br><br>
+                <div class="chat-customer-item">
+                    <strong>Peter Schmidt</strong> – Risikoleben fehlt<br>
+                    <span class="chat-recommendation">Baufinanzierung €285.000 ohne Absicherung</span>
+                </div>
+                <div class="chat-customer-item">
+                    <strong>Peter Schmidt</strong> – BU-Nachversicherung<br>
+                    <span class="chat-recommendation">Nur 41% des Einkommens abgesichert</span>
+                </div>
+                <div class="chat-customer-item">
+                    <strong>Sabine König</strong> – Kfz-Wechsel<br>
+                    <span class="chat-recommendation">Vertrag läuft bald aus, €200/Jahr Ersparnis möglich</span>
+                </div>
+                <div class="chat-customer-item">
+                    <strong>Thomas Weber</strong> – Risikoleben fehlt<br>
+                    <span class="chat-recommendation">Familie unzureichend abgesichert</span>
+                </div>
+                <br>
+                <strong>→ Wechsle zum Potentiale-Tab für vollständige Übersicht...</strong>
+            </div>`;
+        chatMessages.appendChild(botMsg);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+
+        // Nach weiteren 1 Sekunde: Zum Potentiale-Tab wechseln
+        setTimeout(() => {
+            showAgenturTab('potential');
+
+            // Optional: Chat schließen nach Tab-Wechsel
+            setTimeout(() => {
+                hideAgenturChat();
+            }, 500);
+        }, 1000);
+    }, 1500);
+}
+
 // Global verfügbar machen
 window.showAgenturTab = showAgenturTab;
 window.filterFidaCases = filterFidaCases;
@@ -927,4 +999,5 @@ window.highlightContractRow = highlightContractRow;
 window.openKundenDetailFromFida = openKundenDetailFromFida;
 window.toggleAgenturChat = toggleAgenturChat;
 window.hideAgenturChat = hideAgenturChat;
+window.showNeuePotentiale = showNeuePotentiale;
 window.toggleWeiterePotentiale = toggleWeiterePotentiale;

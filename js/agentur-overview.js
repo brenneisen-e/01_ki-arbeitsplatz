@@ -490,15 +490,34 @@ function filterFidaCases(status) {
 }
 
 /**
+ * Mapping von Kunden-IDs zu Kundennamen
+ */
+const kundenMapping = {
+    'KD00001': 'Peter Schmidt',
+    'KD00002': 'Sabine König',
+    'KD00003': 'Thomas Weber',
+    'KD00004': 'Maria Schneider',
+    'KD00005': 'Andreas Müller',
+    'KD00006': 'Julia Fischer',
+    'KD00007': 'Michael Bauer',
+    'KD00008': 'Lisa Wagner',
+    'KD00009': 'Stefan Hoffmann',
+    'KD00010': 'Claudia Richter'
+};
+
+/**
  * Öffnet die Kundendetailansicht für einen Kunden
- * @param {string} kundenId - Die Kunden-ID (z.B. 'VM00001')
+ * @param {string} kundenId - Die Kunden-ID (z.B. 'KD00001')
  */
 function openKundenDetailFromFida(kundenId) {
     console.log('👤 Öffne Kundendetail von FIDA für:', kundenId);
 
-    // Wenn openKundenDetail existiert, nutze sie
+    // Hole Kundennamen aus Mapping
+    const kundenName = kundenMapping[kundenId] || kundenId;
+
+    // Wenn openKundenDetail existiert, nutze sie mit korrekten Parametern
     if (typeof window.openKundenDetail === 'function') {
-        window.openKundenDetail(kundenId);
+        window.openKundenDetail(kundenName, kundenId);
     } else {
         console.log('openKundenDetail Funktion nicht gefunden');
     }
@@ -817,11 +836,14 @@ function openKundenDetailFromChat(kundenId, targetTab, contractType) {
 function highlightContractRow(contractType) {
     // Mapping von Vertragstyp zu Suchbegriff
     const searchTerms = {
+        'leben': 'Risikolebensversicherung',
         'kfz': 'Kfz-Versicherung',
         'hausrat': 'Hausratversicherung',
         'rechtsschutz': 'Rechtsschutz',
         'bu': 'Berufsunfähigkeitsversicherung',
-        'wohngebaeude': 'Wohngebäudeversicherung'
+        'wohngebaeude': 'Wohngebäudeversicherung',
+        'unfall': 'Unfallversicherung',
+        'haftpflicht': 'Privathaftpflichtversicherung'
     };
 
     const searchTerm = searchTerms[contractType] || contractType;

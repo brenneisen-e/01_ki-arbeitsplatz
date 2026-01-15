@@ -2004,6 +2004,11 @@ function openPotentialAnalyse() {
     // Reset Filter
     currentPotentialFilter = null;
     updatePotentialFilter();
+
+    // Dispatch event for Page ID Tracker
+    document.dispatchEvent(new CustomEvent('viewChanged', {
+        detail: { module: 'versicherung', view: 'potentialanalyse' }
+    }));
 }
 
 function openPotentialAnalyseWithFilter(productId, productName) {
@@ -2027,12 +2032,22 @@ function openPotentialAnalyseWithFilter(productId, productName) {
         filterSelect.value = productId;
     }
     updatePotentialFilter();
+
+    // Dispatch event for Page ID Tracker
+    document.dispatchEvent(new CustomEvent('viewChanged', {
+        detail: { module: 'versicherung', view: 'potentialanalyse' }
+    }));
 }
 
 function closePotentialAnalyse() {
     document.getElementById('potentialAnalysePage').style.display = 'none';
     document.getElementById('landingPage').style.display = 'flex';
     currentPotentialFilter = null;
+
+    // Dispatch event for Page ID Tracker
+    document.dispatchEvent(new CustomEvent('viewChanged', {
+        detail: { module: 'versicherung', view: 'landing' }
+    }));
 }
 
 function showEigeneDaten() {
@@ -2040,6 +2055,11 @@ function showEigeneDaten() {
     document.getElementById('fidaContainer').style.display = 'none';
     document.getElementById('eigeneDatenBtn').classList.add('active');
     document.getElementById('fidaBtn').classList.remove('active');
+
+    // Dispatch event for Page ID Tracker
+    document.dispatchEvent(new CustomEvent('viewChanged', {
+        detail: { module: 'versicherung', view: 'eigeneDaten' }
+    }));
 }
 
 function showFidaDaten() {
@@ -2048,6 +2068,11 @@ function showFidaDaten() {
     document.getElementById('fidaContainer').style.display = 'block';
     document.getElementById('eigeneDatenBtn').classList.remove('active');
     document.getElementById('fidaBtn').classList.add('active');
+
+    // Dispatch event for Page ID Tracker
+    document.dispatchEvent(new CustomEvent('viewChanged', {
+        detail: { module: 'versicherung', view: 'fidaCases' }
+    }));
 }
 
 function updatePotentialFilter() {

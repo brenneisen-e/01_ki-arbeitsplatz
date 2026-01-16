@@ -2040,8 +2040,9 @@ PMO Team
                         statusColor = '#eab308';
                     }
 
+                    const milestoneId = `${ms.workstreamId}_${ms.name.replace(/\s/g, '_')}`;
                     return `
-                        <div style="display: flex; align-items: center; padding: 10px 16px; background: ${isOverdue ? '#fef2f2' : '#f8fafc'}; border-radius: 8px; margin-bottom: 6px; border-left: 3px solid ${statusColor};">
+                        <div class="pmo-milestone-item" style="display: flex; align-items: center; padding: 10px 16px; background: ${isOverdue ? '#fef2f2' : '#f8fafc'}; border-radius: 8px; margin-bottom: 6px; border-left: 3px solid ${statusColor}; cursor: pointer; transition: all 0.2s;" onclick="PMO.openMilestoneModal('${milestoneId}')">
                             <span style="margin-right: 10px; display: flex; align-items: center;">${statusIcon}</span>
                             <span style="font-weight: 500; color: #E30613; margin-right: 8px; font-size: 11px;">${ms.workstreamId}</span>
                             <span style="flex: 1; font-size: 13px; color: #1e293b; ${isClosed ? 'text-decoration: line-through; opacity: 0.6;' : ''}">${ms.name}</span>

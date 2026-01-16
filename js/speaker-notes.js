@@ -12,6 +12,20 @@ const SpeakerNotes = {
     // Speaker notes content for PMO Toolbox presentation
     notes: [
         {
+            section: "EINLEITUNG",
+            content: `Ich bin Eike Brenneisen, ich bin seit 4 Jahren für Deloitte im Bereich Financial Services unterwegs und hab in dieser Zeit schon einige große Transformationsprogramme begleitet – unter anderem auch für die ERGO, wo ich aktuell im Zentralbereich Absatzorganisation Vertrieb (ZAV) als PMO Lead tätig bin.
+
+Und dabei sehe ich immer wieder eine zentrale Herausforderung: Wie behalten wir bei komplexen Programmen eigentlich den Überblick? Wie schaffen wir Transparenz für alle Beteiligten – vom Workstream-Lead bis zum Steering Committee?`
+        },
+        {
+            section: "PROBLEMSTELLUNG & LÖSUNG",
+            content: `Bei einem Programm dieser Größenordnung – mit so vielen Workstreams, Beteiligten und Abhängigkeiten – entstehen jede Woche hunderte von E-Mails, PowerPoint-Folien, SharePoint-Ordnern. Die Information ist da, aber sie ist verteilt. Und wenn ich dann im Steering Committee bin und jemand fragt: "Wo stehen wir bei Workstream A3?" – dann muss ich erst mal drei PDFs öffnen, durch den letzten Statusbericht scrollen, den Meilensteinplan suchen.
+
+Und genau hier setzt die PMO Toolbox an. Das ist eine Frontend-Plattform, die auf Ihrem bestehenden SharePoint aufsetzt – keine neue Datenhaltung, kein zusätzliches Hosting. Wir greifen einfach auf die Daten zu, die Sie ohnehin schon pflegen, und bereiten sie übersichtlich auf.
+
+Das Ziel: Schnellere Entscheidungen. Weniger Suchaufwand. Mehr Transparenz für alle Stakeholder.`
+        },
+        {
             section: "LANDING PAGE / DASHBOARD",
             content: `So, schauen wir uns das mal direkt an. Das hier ist die PMO Toolbox Landing Page – sozusagen die zentrale Einstiegsseite für alle Projektbeteiligten.
 

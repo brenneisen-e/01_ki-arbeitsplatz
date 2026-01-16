@@ -1744,101 +1744,129 @@ PMO Team
         }).join('');
 
         body.innerHTML = `
-            <!-- Project Status Section (like PPT viewer) -->
-            <div class="pmo-project-status-view" style="background: #f8fafc; border-radius: 12px; padding: 20px; margin-bottom: 24px;">
-                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px;">
-                    <div>
-                        <h3 style="margin: 0 0 4px; font-size: 18px; color: #1e293b;">${project.name}</h3>
-                        <p style="margin: 0; font-size: 13px; color: #64748b;">${project.fullName}</p>
-                        <p style="margin: 8px 0 0; font-size: 12px; color: #94a3b8;">Status vom ${projectStatus ? this.formatDate(projectStatus.date) : '-'}</p>
-                    </div>
-                    <div style="text-align: center;">
-                        <div class="pmo-traffic-light ${projectStatus?.status?.overall || 'gray'}" style="width: 50px; height: 50px;"></div>
-                        <span style="font-size: 11px; color: #64748b; display: block; margin-top: 4px;">Gesamtstatus</span>
-                    </div>
-                </div>
-
-                <!-- Sub-Status Grid -->
-                <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 20px;">
-                    ${['budget', 'scope', 'time', 'resources', 'risks'].map(key => `
-                        <div style="text-align: center; padding: 8px; background: white; border-radius: 8px;">
-                            <div class="pmo-traffic-light-small ${projectStatus?.status?.[key] || 'gray'}" style="width: 16px; height: 16px; margin: 0 auto 4px;"></div>
-                            <span style="font-size: 10px; color: #64748b; text-transform: capitalize;">${key === 'risks' ? 'Risiken' : key === 'time' ? 'Zeit' : key === 'resources' ? 'Ressourcen' : key.charAt(0).toUpperCase() + key.slice(1)}</span>
-                        </div>
-                    `).join('')}
-                </div>
-
-                <!-- Management Summary -->
-                ${projectStatus?.summary ? `
-                    <div style="margin-bottom: 16px;">
-                        <h4 style="margin: 0 0 8px; font-size: 12px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;">Management Summary</h4>
-                        <ul style="margin: 0; padding-left: 20px; font-size: 13px; color: #334155;">
-                            ${projectStatus.summary.map(s => `<li style="margin-bottom: 4px;">${s}</li>`).join('')}
-                        </ul>
-                    </div>
-                ` : ''}
-
-                <!-- Risks & Next Steps -->
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-                    ${projectStatus?.risks ? `
-                        <div style="background: white; padding: 12px; border-radius: 8px;">
-                            <h4 style="margin: 0 0 6px; font-size: 11px; color: #64748b; text-transform: uppercase;">Risiken</h4>
-                            <p style="margin: 0; font-size: 12px; color: #334155;">${projectStatus.risks}</p>
-                        </div>
-                    ` : ''}
-                    ${projectStatus?.nextSteps ? `
-                        <div style="background: white; padding: 12px; border-radius: 8px;">
-                            <h4 style="margin: 0 0 6px; font-size: 11px; color: #64748b; text-transform: uppercase;">Nächste Schritte</h4>
-                            <p style="margin: 0; font-size: 12px; color: #334155;">${projectStatus.nextSteps}</p>
-                        </div>
-                    ` : ''}
-                </div>
-
-                <!-- Status History Calendar -->
-                <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid #e2e8f0;">
-                    <h4 style="margin: 0 0 8px; font-size: 11px; color: #94a3b8; text-align: center;">Statusverlauf</h4>
-                    <div style="display: flex; gap: 6px; justify-content: center;">
-                        ${historyCalendar}
-                    </div>
-                </div>
-            </div>
-
-            <!-- Workstreams Section -->
-            <h4 style="margin: 0 0 16px; color: #64748b; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14" style="vertical-align: middle; margin-right: 6px;">
-                    <path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/>
-                </svg>
-                Workstreams
-            </h4>
-            <div class="pmo-workstreams-list">
-                ${project.workstreams.map(ws => {
-                    const wsStatus = this.getWorkstreamLatestStatus(ws.id);
-                    return `
-                        <div class="pmo-workstream-item" style="display: flex; align-items: center; padding: 12px 16px; background: #f8fafc; border-radius: 8px; margin-bottom: 8px;">
-                            <div class="pmo-traffic-light-small ${wsStatus?.status?.overall || 'gray'}" style="width: 12px; height: 12px; border-radius: 50%; margin-right: 12px;"></div>
-                            <span class="pmo-workstream-id" style="font-weight: 600; color: #E30613; margin-right: 8px; font-size: 13px;">${ws.id}</span>
-                            <span class="pmo-workstream-name" style="flex: 1; font-size: 14px; color: #1e293b;">${ws.name}</span>
-                            <button class="pmo-btn-sm" onclick="event.stopPropagation(); PMO.openPPTView('${ws.id}')" title="PPT-Ansicht öffnen" style="display: inline-flex; align-items: center; gap: 4px; padding: 6px 12px; border-radius: 6px; border: 1px solid #e2e8f0; background: white; cursor: pointer; font-size: 12px;">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
-                                    <rect x="2" y="2" width="20" height="20" rx="2"/>
-                                    <path d="M9 8h6M9 12h6M9 16h4"/>
-                                </svg>
-                                PPT
-                            </button>
-                        </div>
-                    `;
-                }).join('')}
-            </div>
-
-            ${this.renderProjectMilestones(projectId)}
-
-            <div style="margin-top: 24px;">
-                <button class="pmo-btn pmo-btn-primary" onclick="PMO.openStatusModalForProject('${projectId}')">
+            <!-- Project Tabs -->
+            <div class="pmo-my-tabs" style="margin-bottom: 24px;">
+                <button class="pmo-my-tab active" data-tab="overview" onclick="PMO.switchProjectTab('overview')">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
-                        <path d="M12 5v14M5 12h14"/>
+                        <rect x="3" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="14" width="7" height="7"></rect>
+                        <rect x="3" y="14" width="7" height="7"></rect>
                     </svg>
-                    Neuen Status erfassen
+                    Übersicht
                 </button>
+                <button class="pmo-my-tab" data-tab="workstreams" onclick="PMO.switchProjectTab('workstreams')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                        <path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/>
+                    </svg>
+                    Workstreams
+                </button>
+                <button class="pmo-my-tab" data-tab="milestones" onclick="PMO.switchProjectTab('milestones')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                        <path d="M22 11.08V12a10 10 0 11-5.93-9.14"></path>
+                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                    </svg>
+                    Meilensteine
+                </button>
+            </div>
+
+            <!-- Tab Content: Overview -->
+            <div class="pmo-my-tab-content active" id="tab-content-overview">
+                <!-- Project Status Section (like PPT viewer) -->
+                <div class="pmo-project-status-view" style="background: #f8fafc; border-radius: 12px; padding: 20px; margin-bottom: 24px;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px;">
+                        <div>
+                            <h3 style="margin: 0 0 4px; font-size: 18px; color: #1e293b;">${project.name}</h3>
+                            <p style="margin: 0; font-size: 13px; color: #64748b;">${project.fullName}</p>
+                            <p style="margin: 8px 0 0; font-size: 12px; color: #94a3b8;">Status vom ${projectStatus ? this.formatDate(projectStatus.date) : '-'}</p>
+                        </div>
+                        <div style="text-align: center;">
+                            <div class="pmo-traffic-light ${projectStatus?.status?.overall || 'gray'}" style="width: 50px; height: 50px;"></div>
+                            <span style="font-size: 11px; color: #64748b; display: block; margin-top: 4px;">Gesamtstatus</span>
+                        </div>
+                    </div>
+
+                    <!-- Sub-Status Grid -->
+                    <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 20px;">
+                        ${['budget', 'scope', 'time', 'resources', 'risks'].map(key => `
+                            <div style="text-align: center; padding: 8px; background: white; border-radius: 8px;">
+                                <div class="pmo-traffic-light-small ${projectStatus?.status?.[key] || 'gray'}" style="width: 16px; height: 16px; margin: 0 auto 4px;"></div>
+                                <span style="font-size: 10px; color: #64748b; text-transform: capitalize;">${key === 'risks' ? 'Risiken' : key === 'time' ? 'Zeit' : key === 'resources' ? 'Ressourcen' : key.charAt(0).toUpperCase() + key.slice(1)}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <!-- Management Summary -->
+                    ${projectStatus?.summary ? `
+                        <div style="margin-bottom: 16px;">
+                            <h4 style="margin: 0 0 8px; font-size: 12px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;">Management Summary</h4>
+                            <ul style="margin: 0; padding-left: 20px; font-size: 13px; color: #334155;">
+                                ${projectStatus.summary.map(s => `<li style="margin-bottom: 4px;">${s}</li>`).join('')}
+                            </ul>
+                        </div>
+                    ` : ''}
+
+                    <!-- Risks & Next Steps -->
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                        ${projectStatus?.risks ? `
+                            <div style="background: white; padding: 12px; border-radius: 8px;">
+                                <h4 style="margin: 0 0 6px; font-size: 11px; color: #64748b; text-transform: uppercase;">Risiken</h4>
+                                <p style="margin: 0; font-size: 12px; color: #334155;">${projectStatus.risks}</p>
+                            </div>
+                        ` : ''}
+                        ${projectStatus?.nextSteps ? `
+                            <div style="background: white; padding: 12px; border-radius: 8px;">
+                                <h4 style="margin: 0 0 6px; font-size: 11px; color: #64748b; text-transform: uppercase;">Nächste Schritte</h4>
+                                <p style="margin: 0; font-size: 12px; color: #334155;">${projectStatus.nextSteps}</p>
+                            </div>
+                        ` : ''}
+                    </div>
+
+                    <!-- Status History Calendar -->
+                    <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid #e2e8f0;">
+                        <h4 style="margin: 0 0 8px; font-size: 11px; color: #94a3b8; text-align: center;">Statusverlauf</h4>
+                        <div style="display: flex; gap: 6px; justify-content: center;">
+                            ${historyCalendar}
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 24px;">
+                    <button class="pmo-btn pmo-btn-primary" onclick="PMO.openStatusModalForProject('${projectId}')">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                            <path d="M12 5v14M5 12h14"/>
+                        </svg>
+                        Neuen Status erfassen
+                    </button>
+                </div>
+            </div>
+
+            <!-- Tab Content: Workstreams -->
+            <div class="pmo-my-tab-content" id="tab-content-workstreams">
+                <div class="pmo-workstreams-list">
+                    ${project.workstreams.map(ws => {
+                        const wsStatus = this.getWorkstreamLatestStatus(ws.id);
+                        return `
+                            <div class="pmo-workstream-item" style="display: flex; align-items: center; padding: 12px 16px; background: #f8fafc; border-radius: 8px; margin-bottom: 8px;">
+                                <div class="pmo-traffic-light-small ${wsStatus?.status?.overall || 'gray'}" style="width: 12px; height: 12px; border-radius: 50%; margin-right: 12px;"></div>
+                                <span class="pmo-workstream-id" style="font-weight: 600; color: #E30613; margin-right: 8px; font-size: 13px;">${ws.id}</span>
+                                <span class="pmo-workstream-name" style="flex: 1; font-size: 14px; color: #1e293b;">${ws.name}</span>
+                                <button class="pmo-btn-sm" onclick="event.stopPropagation(); PMO.openPPTView('${ws.id}')" title="PPT-Ansicht öffnen" style="display: inline-flex; align-items: center; gap: 4px; padding: 6px 12px; border-radius: 6px; border: 1px solid #e2e8f0; background: white; cursor: pointer; font-size: 12px;">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                                        <rect x="2" y="2" width="20" height="20" rx="2"/>
+                                        <path d="M9 8h6M9 12h6M9 16h4"/>
+                                    </svg>
+                                    PPT
+                                </button>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            </div>
+
+            <!-- Tab Content: Milestones -->
+            <div class="pmo-my-tab-content" id="tab-content-milestones">
+                ${this.renderProjectMilestones(projectId)}
             </div>
         `;
 
@@ -3757,6 +3785,30 @@ PMO.switchMyTab = function(tabName) {
     }
     
     console.log('Switched to tab:', tabName);
+};
+
+PMO.switchProjectTab = function(tabName) {
+    // Update tab buttons in project modal
+    const modal = document.getElementById('pmo-project-modal');
+    if (!modal) return;
+
+    modal.querySelectorAll('.pmo-my-tab').forEach(tab => {
+        tab.classList.remove('active');
+        if (tab.dataset.tab === tabName) {
+            tab.classList.add('active');
+        }
+    });
+
+    // Update tab content in project modal
+    modal.querySelectorAll('.pmo-my-tab-content').forEach(content => {
+        content.classList.remove('active');
+    });
+    const targetContent = modal.querySelector(`#tab-content-${tabName}`);
+    if (targetContent) {
+        targetContent.classList.add('active');
+    }
+
+    console.log('Switched to project tab:', tabName);
 };
 
 // ============================================

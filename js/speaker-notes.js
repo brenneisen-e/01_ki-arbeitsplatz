@@ -406,7 +406,23 @@ Haben Sie dazu Fragen? Oder soll ich nochmal auf einen bestimmten Bereich tiefer
                     this.keepOnTopInterval = null;
                 }
             }
-        }, 1000); // Check every second
+        }, 300); // Check every 300ms for faster response
+
+        // Also bring teleprompter back when main window regains focus
+        // (e.g., after closing email window)
+        window.addEventListener('focus', this.focusTeleprompter);
+        window.addEventListener('click', this.focusTeleprompter);
+    },
+
+    focusTeleprompter() {
+        // Bound function to refocus teleprompter
+        if (SpeakerNotes.notesWindow && !SpeakerNotes.notesWindow.closed) {
+            try {
+                SpeakerNotes.notesWindow.focus();
+            } catch (e) {
+                // Ignore errors
+            }
+        }
     },
 
     closeNotesWindow() {
@@ -415,6 +431,10 @@ Haben Sie dazu Fragen? Oder soll ich nochmal auf einen bestimmten Bereich tiefer
             clearInterval(this.keepOnTopInterval);
             this.keepOnTopInterval = null;
         }
+
+        // Remove event listeners
+        window.removeEventListener('focus', this.focusTeleprompter);
+        window.removeEventListener('click', this.focusTeleprompter);
 
         // Close the window
         if (this.notesWindow && !this.notesWindow.closed) {

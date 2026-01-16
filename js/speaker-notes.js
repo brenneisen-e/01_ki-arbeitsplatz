@@ -8,6 +8,7 @@ const SpeakerNotes = {
     isFollowing: false,
     scrollSpeed: 30, // pixels per second
     mouseOffset: 50, // pixels left from cursor
+    keepOnTopInterval: null, // Interval to keep window on top
 
     // Speaker notes content for PMO Toolbox presentation
     notes: [
@@ -153,6 +154,9 @@ Haben Sie dazu Fragen? Oder soll ich nochmal auf einen bestimmten Bereich tiefer
 
         // Start auto-scroll
         this.startAutoScroll();
+
+        // Keep window on top
+        this.startKeepOnTop();
     },
 
     buildNotesHTML() {
@@ -384,7 +388,35 @@ Haben Sie dazu Fragen? Oder soll ich nochmal auf einen bestimmten Bereich tiefer
         // Auto-scroll is handled in the notes window itself
     },
 
+    startKeepOnTop() {
+        // Periodically bring the notes window to the front
+        // This prevents it from being hidden by modals or other windows
+        this.keepOnTopInterval = setInterval(() => {
+            if (this.notesWindow && !this.notesWindow.closed) {
+                try {
+                    this.notesWindow.focus();
+                } catch (e) {
+                    // Ignore errors if window is closed or inaccessible
+                    console.log('Could not focus notes window:', e);
+                }
+            } else {
+                // Window was closed, clear the interval
+                if (this.keepOnTopInterval) {
+                    clearInterval(this.keepOnTopInterval);
+                    this.keepOnTopInterval = null;
+                }
+            }
+        }, 1000); // Check every second
+    },
+
     closeNotesWindow() {
+        // Clear the keep-on-top interval
+        if (this.keepOnTopInterval) {
+            clearInterval(this.keepOnTopInterval);
+            this.keepOnTopInterval = null;
+        }
+
+        // Close the window
         if (this.notesWindow && !this.notesWindow.closed) {
             this.notesWindow.close();
             this.notesWindow = null;

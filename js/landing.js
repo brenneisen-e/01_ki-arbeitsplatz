@@ -1361,6 +1361,27 @@ function closePMOToolbox() {
         pmoModule.style.display = 'none';
     }
 
+    // Hide all other modules
+    const versicherungModule = document.getElementById('versicherungModule');
+    if (versicherungModule) {
+        versicherungModule.style.display = 'none';
+    }
+
+    const bankenModule = document.getElementById('bankenModule');
+    if (bankenModule) {
+        bankenModule.style.display = 'none';
+    }
+
+    const risikoscoringModule = document.getElementById('risikoscoringModule');
+    if (risikoscoringModule) {
+        risikoscoringModule.style.display = 'none';
+    }
+
+    const bestandsModule = document.getElementById('bestandsuebertragungModule');
+    if (bestandsModule) {
+        bestandsModule.style.display = 'none';
+    }
+
     // Show landing page (use flex for proper centering)
     const landingPage = document.getElementById('landingPage');
     if (landingPage) {

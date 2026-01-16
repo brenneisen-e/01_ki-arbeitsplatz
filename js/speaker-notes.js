@@ -13,9 +13,7 @@ const SpeakerNotes = {
     notes: [
         {
             section: "EINLEITUNG",
-            content: `Ich bin Eike Brenneisen, ich bin seit 4 Jahren für Deloitte im Bereich Financial Services unterwegs und hab in dieser Zeit schon einige große Transformationsprogramme begleitet – unter anderem auch für die ERGO, wo ich aktuell im Zentralbereich Absatzorganisation Vertrieb (ZAV) als PMO Lead tätig bin.
-
-Und dabei sehe ich immer wieder eine zentrale Herausforderung: Wie behalten wir bei komplexen Programmen eigentlich den Überblick? Wie schaffen wir Transparenz für alle Beteiligten – vom Workstream-Lead bis zum Steering Committee?`
+            content: `Ich bin Eike Brenneisen, ich bin seit 4 Jahren für Deloitte im Bereich Financial Services unterwegs und schwerpunktmäßig begleite ich Transformationsprogrammen bei Versicherungen. Beispielsweise das ERGO ZAV-Programm kenne ich sehr gut aus der Vergangenheit – dort war ich unter anderem für die gesamte Gremienbegleitung verantwortlich. Was mich dabei besonders antreibt: Ich baue gerne selbst Tools und Lösungen, die das Programmleben einfacher machen – sei es ein Dashboard, eine Automatisierung oder eben eine PMO-Plattform wie die, die ich Ihnen heute zeige. Also weniger PowerPoint-Berater, mehr Hands-on. Und genau das möchte ich Ihnen heute mitgeben.`
         },
         {
             section: "PROBLEMSTELLUNG & LÖSUNG",
@@ -358,6 +356,18 @@ Haben Sie dazu Fragen? Oder soll ich nochmal auf einen bestimmten Bereich tiefer
                 const finalTop = Math.max(0, Math.min(screen.height - this.notesWindow.outerHeight, newTop));
 
                 this.notesWindow.moveTo(finalLeft, finalTop);
+            }
+        });
+
+        // Track mouse wheel in main window and scroll notes window
+        document.addEventListener('wheel', (e) => {
+            if (this.notesWindow && !this.notesWindow.closed) {
+                // Scroll the teleprompter window
+                const scrollAmount = e.deltaY;
+                this.notesWindow.scrollBy({
+                    top: scrollAmount,
+                    behavior: 'auto'
+                });
             }
         });
     },

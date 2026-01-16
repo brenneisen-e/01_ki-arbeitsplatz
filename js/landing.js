@@ -1262,6 +1262,12 @@ async function openPMOToolbox() {
         landingPage.style.display = 'none';
     }
 
+    // Hide welcome chat (sibling of landing page)
+    const welcomeChat = document.getElementById('welcomeChat');
+    if (welcomeChat) {
+        welcomeChat.style.display = 'none';
+    }
+
     // Hide main app if visible
     const mainApp = document.getElementById('mainApp');
     if (mainApp) {
@@ -1298,6 +1304,11 @@ async function openPMOToolbox() {
     const pmoModule = document.getElementById('pmoToolboxModule');
     if (pmoModule) {
         pmoModule.style.display = 'block';
+
+        // Dispatch event for Page ID Tracker
+        document.dispatchEvent(new CustomEvent('moduleChanged', {
+            detail: { module: 'pmo-toolbox', view: 'landing' }
+        }));
 
         // Load module content if not already loaded
         if (!pmoToolboxLoaded) {

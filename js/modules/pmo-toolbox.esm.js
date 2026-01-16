@@ -3583,22 +3583,79 @@ PMO Team
 
         // Simulate AI response (in real app, call API)
         setTimeout(() => {
-            const response = this.generateAIResponse(message);
-            this.addAIMessage('assistant', response);
+            const { content, isHTML } = this.generateAIResponse(message);
+            this.addAIMessage('assistant', content, isHTML);
         }, 500);
     },
 
-    addAIMessage(role, content) {
+    addAIMessage(role, content, isHTML = false) {
         const container = document.getElementById('pmo-ai-messages');
         const messageDiv = document.createElement('div');
         messageDiv.className = `ai-message ai-${role}`;
-        messageDiv.innerHTML = `<div class="ai-message-content"><p>${content}</p></div>`;
+
+        if (isHTML) {
+            messageDiv.innerHTML = `<div class="ai-message-content">${content}</div>`;
+        } else {
+            messageDiv.innerHTML = `<div class="ai-message-content"><p>${content}</p></div>`;
+        }
+
         container.appendChild(messageDiv);
         container.scrollTop = container.scrollHeight;
     },
 
     generateAIResponse(question) {
         const q = question.toLowerCase();
+
+        // Governance Dokumentation
+        if (q.includes('governance')) {
+            const htmlContent = `
+                <p><strong>Relevante Governance-Dokumente gefunden:</strong></p>
+                <div class="ai-document-list">
+                    <div class="ai-document-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                        </svg>
+                        <div class="ai-document-info">
+                            <div class="ai-document-title">Programm-Governance-Handbuch_v2.4.pdf</div>
+                            <div class="ai-document-meta">Sales Excellence • Aktualisiert: 15.12.2024 • 2,3 MB</div>
+                        </div>
+                    </div>
+                    <div class="ai-document-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                        </svg>
+                        <div class="ai-document-info">
+                            <div class="ai-document-title">Steering-Committee-Satzung_2024.pdf</div>
+                            <div class="ai-document-meta">Governance • Aktualisiert: 08.01.2025 • 856 KB</div>
+                        </div>
+                    </div>
+                    <div class="ai-document-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                        </svg>
+                        <div class="ai-document-info">
+                            <div class="ai-document-title">Entscheidungsprozesse_und_Eskalation.pdf</div>
+                            <div class="ai-document-meta">Prozesse • Aktualisiert: 03.12.2024 • 1,1 MB</div>
+                        </div>
+                    </div>
+                    <div class="ai-document-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                        </svg>
+                        <div class="ai-document-info">
+                            <div class="ai-document-title">RACI-Matrix_Programmorganisation.pdf</div>
+                            <div class="ai-document-meta">Organisation • Aktualisiert: 20.11.2024 • 645 KB</div>
+                        </div>
+                    </div>
+                </div>
+                <p style="margin-top: 12px; font-size: 12px; color: #64748b;">Die Governance-Struktur umfasst Steering Committee (monatlich), PMO Reviews (wöchentlich) und Workstream-Leads (daily standups).</p>
+            `;
+            return { content: htmlContent, isHTML: true };
+        }
 
         if (q.includes('risiko') || q.includes('risiken')) {
             const allRisks = [];
@@ -3609,7 +3666,10 @@ PMO Team
                     }
                 });
             });
-            return `Ich habe ${allRisks.length} offene Risiken gefunden:\n\n${allRisks.slice(0, 5).join('\n')}\n\n${allRisks.length > 5 ? `... und ${allRisks.length - 5} weitere.` : ''}`;
+            return {
+                content: `Ich habe ${allRisks.length} offene Risiken gefunden:\n\n${allRisks.slice(0, 5).join('\n')}\n\n${allRisks.length > 5 ? `... und ${allRisks.length - 5} weitere.` : ''}`,
+                isHTML: false
+            };
         }
 
         if (q.includes('meilenstein') || q.includes('milestone')) {
@@ -3622,12 +3682,18 @@ PMO Team
                     }
                 });
             });
-            return `Kommende Meilensteine:\n\n${upcoming.slice(0, 5).join('\n') || 'Keine anstehenden Meilensteine gefunden.'}`;
+            return {
+                content: `Kommende Meilensteine:\n\n${upcoming.slice(0, 5).join('\n') || 'Keine anstehenden Meilensteine gefunden.'}`,
+                isHTML: false
+            };
         }
 
         if (q.includes('entscheidung') || q.includes('decision')) {
             const pending = this.decisions.filter(d => d.status === 'pending' || d.status === 'escalated');
-            return `${pending.length} Entscheidungen sind ausstehend:\n\n${pending.slice(0, 5).map(d => `• ${d.title} (${d.projectId}, fällig: ${this.formatDate(d.dueDate)})`).join('\n')}`;
+            return {
+                content: `${pending.length} Entscheidungen sind ausstehend:\n\n${pending.slice(0, 5).map(d => `• ${d.title} (${d.projectId}, fällig: ${this.formatDate(d.dueDate)})`).join('\n')}`,
+                isHTML: false
+            };
         }
 
         if (q.includes('zusammenfassung') || q.includes('status') || q.includes('summary')) {
@@ -3636,14 +3702,20 @@ PMO Team
             const yellow = latest.filter(s => s.status.overall === 'yellow').length;
             const red = latest.filter(s => s.status.overall === 'red').length;
 
-            return `📊 Programmstatus Sales Excellence:\n\n` +
-                `• 🟢 ${green} Workstreams im Plan\n` +
-                `• 🟡 ${yellow} Workstreams mit Einschränkungen\n` +
-                `• 🔴 ${red} Workstreams kritisch\n\n` +
-                `Gesamt: ${latest.length} aktive Workstreams über 8 Projekte.`;
+            return {
+                content: `📊 Programmstatus Sales Excellence:\n\n` +
+                    `• 🟢 ${green} Workstreams im Plan\n` +
+                    `• 🟡 ${yellow} Workstreams mit Einschränkungen\n` +
+                    `• 🔴 ${red} Workstreams kritisch\n\n` +
+                    `Gesamt: ${latest.length} aktive Workstreams über 8 Projekte.`,
+                isHTML: false
+            };
         }
 
-        return 'Ich kann dir bei Fragen zu Risiken, Meilensteinen, Entscheidungen oder dem Gesamtstatus helfen. Versuche es mit einer spezifischeren Frage.';
+        return {
+            content: 'Ich kann dir bei Fragen zu Risiken, Meilensteinen, Entscheidungen, Governance oder dem Gesamtstatus helfen. Versuche es mit einer spezifischeren Frage.',
+            isHTML: false
+        };
     }
 };
 

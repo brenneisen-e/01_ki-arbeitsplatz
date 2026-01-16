@@ -36,81 +36,39 @@ Wie das konkret aussieht, zeige ich Ihnen jetzt direkt im System.`
             section: "LANDING PAGE / DASHBOARD",
             content: `So, schauen wir uns das mal direkt an. Das hier ist die PMO Toolbox Landing Page – sozusagen die zentrale Einstiegsseite für alle Projektbeteiligten.
 
-Ich sehe hier auf einen Blick die aktuelle Lage: 8 aktive Projekte im Sales Excellence Programm. Von diesen 8 Projekten sind aktuell 3 im Plan – grün. 4 laufen mit kleineren Einschränkungen – gelb. Und 1 Projekt ist kritisch – rot. Das gibt mir sofort ein Gefühl dafür: Wo brennt es gerade?
+Ich sehe hier auf einen Blick die aktuelle Lage: 8 aktive Projekte im Sales Excellence Programm. Von diesen 8 Projekten sind aktuell 3 im Plan – grün. 4 laufen mit kleineren Einschränkungen – gelb. Und 1 Projekt ist kritisch – rot.
 
-Und rechts sehe ich zusätzlich zwei wichtige Bereiche:
-
-• Der Gremienkalender zeigt mir alle anstehenden Termine – Steering Committees, PMO Reviews, Reifegradboard. Ich sehe direkt im Januar-Kalender: Wann ist welches Gremium? Das hilft mir bei der Vorbereitung.
-
-• Darunter die kommenden Meilensteine über alle Projekte hinweg. Hier sehe ich zum Beispiel: K-EWE API-Integration überfällig, Reports Automatisierung 6 Tage überfällig. Ich erkenne sofort kritische Termine und kann gegensteuern.
-
-Und genau das ist der Punkt: Ich muss nicht erst 5 PowerPoints öffnen oder durch SharePoint-Ordner klicken. Die Information ist da – Projektstatus, Termine, Meilensteine, alles auf einer Seite.`
+Rechts sehe ich den Gremienkalender und die kommenden Meilensteine über alle Projekte hinweg. Das gibt mir sofort Transparenz: Wo brennt es? Welche Termine stehen an?`
         },
         {
-            section: "PROJEKTÜBERSICHT",
-            content: `Wenn ich jetzt zum Beispiel ins Projekt "Hybrider Kunde" reinschaue, sehe ich hier alle zugehörigen Workstreams mit ihrem jeweiligen Status.
-
-Hier haben wir 4 Workstreams – und ich sehe auf einen Blick: Wo stehen wir bei jedem einzelnen Workstream? Termin, Budget, Scope, Risiken – alles übersichtlich dargestellt.`
+            section: "PROJEKTANSICHT",
+            content: `Wenn ich jetzt zum Beispiel ins Projekt "Hybrider Kunde" reinschaue, sehe ich hier alle zugehörigen Workstreams mit ihrem jeweiligen Status – Budget, Scope, Zeit, Ressourcen. Auf einen Blick erkennbar: Wo stehen wir?`
         },
         {
-            section: "WORKSTREAM-DETAILANSICHT",
-            content: `Gehen wir mal tiefer rein – ich klicke auf Workstream A1, den ersten Workstream im Projekt "Hybrider Kunde".
+            section: "WORKSTREAM MIT WOCHENWECHSEL & PPT",
+            content: `Gehen wir mal tiefer rein – ich klicke auf Workstream A1.
 
-Jetzt bin ich in der Workstream-Ansicht. Hier sehe ich als Teilprojektleiter alles, was ich brauche:
+Hier sehe ich den aktuellen Wochenstatus mit Ampeln. Das Praktische: Ich kann hier zwischen den Wochen hin- und herwechseln. Ich kann zurückblättern und sehen, wie sich der Status entwickelt hat. War das schon länger gelb? Oder ist das neu?
 
-• Aktueller Status: Die vier Ampeln für Overall, Termin, Budget, Scope. Das ist mein aktueller Wochenstand.
-
-• Wochenwechsel: Und jetzt das Praktische – ich kann hier zwischen den Wochen hin- und herwechseln. Ich kann zurückblättern und sehen, wie sich der Status über die letzten Wochen entwickelt hat. War das schon länger gelb? Oder ist das ein neues Problem? Das hilft enorm bei der Einordnung und für die Statusberichterstattung.
-
-• Meilensteine: Hier sehe ich alle anstehenden und abgeschlossenen Meilensteine. Als Teilprojektleiter kann ich Meilensteine direkt im System bestätigen – mit einem Klick, ohne E-Mail-Ping-Pong.`
+Und jetzt das Feature für Workstream-Leads: PPT-Export. Ein Klick – und ich bekomme eine fertige PowerPoint-Folie mit meinem Wochenstatus, bereits formatiert im Corporate Design. Direkt nutzbar fürs Reporting.`
         },
         {
             section: "GANTT-CHART",
-            content: `Wenn ich jetzt auf 'Gesamtplanung' wechsle, sehe ich den aktuellen Projektplan als Gantt-Chart. Alle Workstreams, alle Meilensteine, zeitlich aufgereiht. Die rote Linie zeigt mir: Heute ist hier. Und ich sehe sofort, wo wir im Verzug sind – das ist dann rot markiert.
-
-Das Besondere: Diese Planung wird nicht manuell in Excel gepflegt und dann irgendwann hochgeladen. Die Daten kommen direkt aus dem SharePoint, wo die Projektleiter ihre Pläne pflegen. Das Frontend hier zeigt das nur übersichtlich an.`
+            content: `Wenn ich auf 'Gesamtplanung' wechsle, sehe ich den aktuellen Projektplan als Gantt-Chart. Alle Workstreams, alle Meilensteine, zeitlich aufgereiht. Und hier sehe ich auch immer den aktuellen Stand – was ist überfällig, was läuft noch im Plan.`
         },
         {
-            section: "ENTSCHEIDUNGSBOARD / KANBAN",
-            content: `Ein weiterer wichtiger Punkt: Entscheidungen. In so einem Programm gibt es ständig offene Punkte, die eskaliert werden müssen.
+            section: "SUCHE",
+            content: `Wir haben anfangs über die Herausforderung gesprochen: Wie finde ich die richtige Information?
 
-Hier im Entscheidungsboard sehe ich alle offenen, eskalierten und bereits getroffenen Entscheidungen – als Kanban-Board. Ich kann nachvollziehen: Wann wurde was entschieden? Von wem? Und was ist gerade in der Schwebe?
-
-Das ist Gold wert, wenn jemand nach drei Monaten fragt: 'Warum haben wir uns damals für Option A entschieden?' – Ich gehe einfach ins System und habe die Dokumentation da.`
+Hier gibt es eine zentrale Suche. Ich suche nach einem Stichwort – und das System zeigt mir alle relevanten Einträge: Status, Entscheidungen, Dokumente. Sofort sichtbar: In welchem Workstream? Aus welcher Woche?`
         },
         {
-            section: "GREMIENKALENDER",
-            content: `Dann der Gremienkalender. Hier sehe ich alle anstehenden Steering Committees, PMO Reviews, Abstimmungen. Mit einem Blick erkenne ich: In welcher Woche sind welche Gremien? Wann muss ich meinen Status abgeben?
-
-Das ist vor allem für die Vorbereitung extrem hilfreich. Ich weiß genau, wann ich liefern muss.`
+            section: "KI-DOKUMENTENASSISTENT",
+            content: `Und noch ein Ausblick – das ist optional: Ein KI-Dokumentenassistent. Ich stelle eine Frage wie 'Was ist die aktuelle Governance?' – und das System durchsucht automatisch alle Dokumente und zeigt mir die relevanten PDFs.`
         },
         {
-            section: "PPT-EXPORT",
-            content: `Und jetzt das Feature, das besonders den Workstream-Leads das Leben erleichtert: Der PPT-Export.
-
-Ich bin hier in Workstream A1 und kann mir aus dem System heraus direkt eine fertige PowerPoint-Seite generieren lassen. Ein Klick – und ich bekomme eine Slide mit meinem aktuellen Wochenstatus: Die vier Ampeln, die Statushistorie über die letzten Wochen, alle wichtigen Kennzahlen.
-
-Die Folie ist bereits im Corporate Design formatiert und kann direkt ins Reporting übernommen werden. Das spart mir jede Woche Zeit. Ich muss nicht mehr manuell Ampeln in PowerPoint malen oder Tabellen kopieren. Das System generiert das automatisch aus den aktuellen Daten.`
-        },
-        {
-            section: "DOKUMENTE & SUCHE",
-            content: `Noch ein letzter Punkt: Dokumente und Suche.
-
-Wir haben ja anfangs über die Herausforderung gesprochen: Wie finde ich die richtige Information in hunderten von Dateien?
-
-Hier im System gibt es eine zentrale Suche. Ich kann nach Stichworten suchen – sagen wir 'Datenmodell' – und das System zeigt mir alle relevanten Status-Einträge, Entscheidungen, Dokumente, in denen das Wort vorkommt. Ich sehe sofort: In welchem Workstream? Aus welcher Woche? Und ich kann direkt dorthin springen.
-
-Das ist Zeiteinsparung pur.`
-        },
-        {
-            section: "OPTIONAL: KI-DOKUMENTENASSISTENT",
-            content: `Und jetzt noch ein Ausblick – das ist eine optionale Ausbaustufe, die wir anbieten können:
-
-Ein KI-Dokumentenassistent. Ich kann dem System eine Frage stellen, zum Beispiel: 'Was ist die aktuelle Governance?' Und das System durchsucht automatisch alle hinterlegten Dokumente – Handbücher, Prozessbeschreibungen, RACI-Matrizen – und zeigt mir die relevanten PDFs an.
-
-Das ist keine Magie, sondern einfach eine intelligente Verknüpfung der vorhandenen Dokumente. Aber es spart enorm Zeit, wenn ich nicht mehr manuell durch SharePoint-Ordner navigieren muss.
-
-Diese KI-Funktion ist optional – das Kern-Tool funktioniert auch ohne. Aber es zeigt, in welche Richtung wir gehen können.`
+            section: "WEITERE FUNKTIONEN",
+            content: `Darüber hinaus gibt es noch: Entscheidungsboard als Kanban, Gremienkalender mit Terminen, Meilenstein-Management. Das schauen wir uns bei Bedarf gerne im Detail an.`
         },
         {
             section: "ABSCHLUSS",

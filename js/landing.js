@@ -1275,6 +1275,11 @@ async function openPMOToolbox() {
     }
 
     // Hide other modules
+    const versicherungModule = document.getElementById('versicherungModule');
+    if (versicherungModule) {
+        versicherungModule.style.display = 'none';
+    }
+
     const bankenModule = document.getElementById('bankenModule');
     if (bankenModule) {
         bankenModule.style.display = 'none';
@@ -1361,6 +1366,17 @@ function closePMOToolbox() {
     if (landingPage) {
         landingPage.style.display = 'flex';
     }
+
+    // Show welcome chat again
+    const welcomeChat = document.getElementById('welcomeChat');
+    if (welcomeChat) {
+        welcomeChat.style.display = 'block';
+    }
+
+    // Dispatch event to update Page ID back to M-01
+    document.dispatchEvent(new CustomEvent('moduleChanged', {
+        detail: { module: 'main', view: 'landing' }
+    }));
 }
 
 // ========================================

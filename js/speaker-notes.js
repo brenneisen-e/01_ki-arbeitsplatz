@@ -71,6 +71,24 @@ Hier gibt es eine zentrale Suche. Ich suche nach einem Stichwort – und das Sys
             content: `Darüber hinaus gibt es noch: Entscheidungsboard als Kanban, Gremienkalender mit Terminen, Meilenstein-Management. Das schauen wir uns bei Bedarf gerne im Detail an.`
         },
         {
+            section: "VISION: MODERNE VERMITTLER-JOURNEY",
+            content: `Diese Folie zeigt unsere Vision einer modernen Vermittler-Journey – end-to-end gedacht, vom Tagesstart bis zur Abendanalyse.
+
+Der Tag beginnt mit der täglichen Vorbereitung: Heute oft manuell – Kalender checken, Kundendaten zusammensuchen. In Zukunft übernimmt ein KI-Assistent diese Vorarbeit mit priorisierten Kontakten und Next-Best-Actions.
+
+Dann das Agentur-Cockpit als 360-Grad-Kundenansicht – alle Kennzahlen gebündelt, Fragen zu Produkten und Tarifen beantwortet ein integrierter Chatbot.
+
+In der Kundenberatung unterstützt ein Verkaufsassistent mit Echtzeit-Analysen und Cross-Selling-Vorschlägen. Nach dem Gespräch erstellt die KI automatisch die IDD-konforme Dokumentation.
+
+Und so zieht sich das durch den ganzen Tag – bis hin zur Vertriebsberichterstattung am Abend: Hier fließen alle Aktivitäten zusammen in einem Dashboard mit Echtzeit-KPIs und datenbasierten Handlungsempfehlungen.
+
+Das ist der Kern: Operative Vertriebsarbeit und strategische Steuerung greifen auf dieselbe Datenbasis zu.
+
+Genau diese beiden Perspektiven zeige ich Ihnen jetzt kurz live: Erst die Steuerungsperspektive – wie bildet man Vertriebsperformance ab? Und dann die Vermittlerperspektive – wie sieht der KI-gestützte Arbeitsplatz aus?
+
+Beide Ansichten sind Teil derselben Lösung. Das ist der Hebel für eine integrierte Vertriebstransformation.`
+        },
+        {
             section: "ABSCHLUSS",
             content: `Zusammengefasst:
 

@@ -3819,22 +3819,30 @@ PMO.switchProjectTab = function(tabName) {
 PMO.currentMilestone = null;
 
 PMO.openMilestoneModal = function(milestoneId) {
+    // Parse the milestoneId (format: workstreamId_MilestoneName)
+    const parts = milestoneId.split('_');
+    const workstreamId = parts[0]; // e.g., "A1"
+    const milestoneName = parts.slice(1).join(' ').replace(/_/g, ' '); // Reconstruct name with spaces
+
     // Find the milestone in the data
     let milestone = null;
     for (const status of this.statusData) {
-        const found = status.milestones.find(m => m.id === milestoneId);
+        const found = status.milestones.find(m =>
+            status.workstreamId === workstreamId && m.name === milestoneName
+        );
         if (found) {
             milestone = {
                 ...found,
                 projectId: status.projectId,
-                workstreamId: status.workstreamId
+                workstreamId: status.workstreamId,
+                id: milestoneId
             };
             break;
         }
     }
 
     if (!milestone) {
-        console.error('Milestone not found:', milestoneId);
+        console.error('Milestone not found:', milestoneId, 'workstream:', workstreamId, 'name:', milestoneName);
         return;
     }
 
@@ -3843,9 +3851,9 @@ PMO.openMilestoneModal = function(milestoneId) {
     // Populate form
     document.getElementById('milestone-name').value = milestone.name;
     document.getElementById('milestone-project').value = `${milestone.projectId} / ${milestone.workstreamId}`;
-    document.getElementById('milestone-planned-date').value = this.formatDateInput(milestone.planned);
-    document.getElementById('milestone-current-date').value = this.formatDateInput(milestone.actual || milestone.planned);
-    document.getElementById('milestone-status').value = milestone.status;
+    document.getElementById('milestone-planned-date').value = this.formatDateInput(milestone.plannedDate);
+    document.getElementById('milestone-current-date').value = this.formatDateInput(milestone.currentEstimate || milestone.plannedDate);
+    document.getElementById('milestone-status').value = milestone.status || 'Offen';
     document.getElementById('milestone-comment').value = '';
 
     // Show modal

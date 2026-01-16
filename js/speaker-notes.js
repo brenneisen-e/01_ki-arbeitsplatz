@@ -368,31 +368,46 @@ Haben Sie dazu Fragen? Oder soll ich nochmal auf einen bestimmten Bereich tiefer
         // Periodically bring the notes window to the front
         // This prevents it from being hidden by modals or other windows
         this.keepOnTopInterval = setInterval(() => {
-            if (this.notesWindow && !this.notesWindow.closed) {
+            // Don't focus if user is typing in an input field
+            const activeElement = document.activeElement;
+            const isTyping = activeElement && (
+                activeElement.tagName === 'INPUT' ||
+                activeElement.tagName === 'TEXTAREA' ||
+                activeElement.isContentEditable
+            );
+
+            if (this.notesWindow && !this.notesWindow.closed && !isTyping) {
                 try {
                     this.notesWindow.focus();
                 } catch (e) {
                     // Ignore errors if window is closed or inaccessible
                     console.log('Could not focus notes window:', e);
                 }
-            } else {
+            } else if (this.notesWindow && this.notesWindow.closed) {
                 // Window was closed, clear the interval
                 if (this.keepOnTopInterval) {
                     clearInterval(this.keepOnTopInterval);
                     this.keepOnTopInterval = null;
                 }
             }
-        }, 300); // Check every 300ms for faster response
+        }, 1000); // Check every second (less aggressive)
 
         // Also bring teleprompter back when main window regains focus
-        // (e.g., after closing email window)
+        // (e.g., after closing email window) - but only if not typing
         window.addEventListener('focus', this.focusTeleprompter);
-        window.addEventListener('click', this.focusTeleprompter);
     },
 
     focusTeleprompter() {
         // Bound function to refocus teleprompter
-        if (SpeakerNotes.notesWindow && !SpeakerNotes.notesWindow.closed) {
+        // Don't focus if user is typing in an input field
+        const activeElement = document.activeElement;
+        const isTyping = activeElement && (
+            activeElement.tagName === 'INPUT' ||
+            activeElement.tagName === 'TEXTAREA' ||
+            activeElement.isContentEditable
+        );
+
+        if (SpeakerNotes.notesWindow && !SpeakerNotes.notesWindow.closed && !isTyping) {
             try {
                 SpeakerNotes.notesWindow.focus();
             } catch (e) {
@@ -410,7 +425,6 @@ Haben Sie dazu Fragen? Oder soll ich nochmal auf einen bestimmten Bereich tiefer
 
         // Remove event listeners
         window.removeEventListener('focus', this.focusTeleprompter);
-        window.removeEventListener('click', this.focusTeleprompter);
 
         // Close the window
         if (this.notesWindow && !this.notesWindow.closed) {

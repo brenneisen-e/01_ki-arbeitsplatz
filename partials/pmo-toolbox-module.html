@@ -159,71 +159,103 @@
                 </div>
             </div>
 
-            <!-- Current Status Card -->
-            <div class="pmo-my-section">
-                <h4 class="pmo-my-section-title">
+            <!-- Tab Navigation for Workstream Details -->
+            <div class="pmo-my-tabs">
+                <button class="pmo-my-tab active" data-tab="status" onclick="PMO.switchMyTab('status')">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
                         <circle cx="12" cy="12" r="10"></circle>
                         <path d="M12 6v6l4 2"></path>
                     </svg>
-                    Aktueller Status
-                </h4>
-                <div class="pmo-my-status-card" id="my-current-status">
-                    <!-- Current status will be rendered here -->
-                </div>
-            </div>
-
-            <!-- Status History -->
-            <div class="pmo-my-section">
-                <h4 class="pmo-my-section-title">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
-                        <polyline points="23 4 23 10 17 10"></polyline>
-                        <path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"></path>
-                    </svg>
-                    Status-Historie
-                </h4>
-                <div class="pmo-my-history" id="my-status-history">
-                    <!-- History will be rendered here -->
-                </div>
-            </div>
-
-            <!-- Milestones -->
-            <div class="pmo-my-section">
-                <h4 class="pmo-my-section-title">
+                    Status & Historie
+                </button>
+                <button class="pmo-my-tab" data-tab="milestones" onclick="PMO.switchMyTab('milestones')">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
                         <path d="M22 11.08V12a10 10 0 11-5.93-9.14"></path>
                         <polyline points="22 4 12 14.01 9 11.01"></polyline>
                     </svg>
                     Meilensteine
-                    <button class="pmo-btn-sm" onclick="PMO.addMilestone()" style="margin-left: auto;">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
-                            <path d="M12 5v14M5 12h14"/>
-                        </svg>
-                        Hinzufügen
-                    </button>
-                </h4>
-                <div class="pmo-my-milestones" id="my-milestones">
-                    <!-- Milestones will be rendered here -->
-                </div>
-            </div>
-
-            <!-- Tasks -->
-            <div class="pmo-my-section">
-                <h4 class="pmo-my-section-title">
+                </button>
+                <button class="pmo-my-tab" data-tab="tasks" onclick="PMO.switchMyTab('tasks')">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
                         <path d="M9 11l3 3L22 4"></path>
                         <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"></path>
                     </svg>
                     Aufgaben
-                    <button class="pmo-btn-sm" onclick="PMO.addTask()" style="margin-left: auto;">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
-                            <path d="M12 5v14M5 12h14"/>
+                </button>
+            </div>
+
+            <!-- Status Tab Content -->
+            <div class="pmo-my-tab-content active" id="tab-content-status">
+                <!-- Current Status Card -->
+                <div class="pmo-my-section">
+                    <h4 class="pmo-my-section-title">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <path d="M12 6v6l4 2"></path>
                         </svg>
-                        Hinzufügen
-                    </button>
-                </h4>
-                <div class="pmo-my-tasks" id="my-tasks">
-                    <!-- Tasks will be rendered here -->
+                        Aktueller Status
+                    </h4>
+                    <div class="pmo-my-status-card" id="my-current-status">
+                        <!-- Current status will be rendered here -->
+                    </div>
+                </div>
+
+                <!-- Status History -->
+                <div class="pmo-my-section">
+                    <h4 class="pmo-my-section-title">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                            <polyline points="23 4 23 10 17 10"></polyline>
+                            <path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"></path>
+                        </svg>
+                        Status-Historie
+                    </h4>
+                    <div class="pmo-my-history" id="my-status-history">
+                        <!-- History will be rendered here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Milestones Tab Content -->
+            <div class="pmo-my-tab-content" id="tab-content-milestones">
+                <div class="pmo-my-section">
+                    <h4 class="pmo-my-section-title">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                            <path d="M22 11.08V12a10 10 0 11-5.93-9.14"></path>
+                            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                        </svg>
+                        Meilensteine
+                        <button class="pmo-btn-sm" onclick="PMO.addMilestone()" style="margin-left: auto;">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                                <path d="M12 5v14M5 12h14"/>
+                            </svg>
+                            Hinzufügen
+                        </button>
+                    </h4>
+                    <div class="pmo-my-milestones" id="my-milestones">
+                        <!-- Milestones will be rendered here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tasks Tab Content -->
+            <div class="pmo-my-tab-content" id="tab-content-tasks">
+                <div class="pmo-my-section">
+                    <h4 class="pmo-my-section-title">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                            <path d="M9 11l3 3L22 4"></path>
+                            <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"></path>
+                        </svg>
+                        Aufgaben
+                        <button class="pmo-btn-sm" onclick="PMO.addTask()" style="margin-left: auto;">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                                <path d="M12 5v14M5 12h14"/>
+                            </svg>
+                            Hinzufügen
+                        </button>
+                    </h4>
+                    <div class="pmo-my-tasks" id="my-tasks">
+                        <!-- Tasks will be rendered here -->
+                    </div>
                 </div>
             </div>
         </div>
@@ -792,6 +824,112 @@
         </div>
     </div>
 
+    <!-- Milestone Edit Modal -->
+    <div class="pmo-modal" id="pmo-milestone-modal">
+        <div class="pmo-modal-backdrop" onclick="PMO.closeMilestoneModal()"></div>
+        <div class="pmo-modal-content pmo-modal-large">
+            <div class="pmo-modal-header">
+                <h2 id="milestone-modal-title">Meilenstein bearbeiten</h2>
+                <button class="pmo-modal-close" onclick="PMO.closeMilestoneModal()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="pmo-modal-body">
+                <div class="pmo-milestone-detail-grid">
+                    <!-- Left Column: Milestone Info -->
+                    <div class="pmo-milestone-info-col">
+                        <div class="pmo-form-group">
+                            <label>Meilenstein-Name</label>
+                            <input type="text" id="milestone-name" readonly disabled style="background: #f1f5f9;">
+                        </div>
+
+                        <div class="pmo-form-group">
+                            <label>Projekt / Workstream</label>
+                            <input type="text" id="milestone-project" readonly disabled style="background: #f1f5f9;">
+                        </div>
+
+                        <div class="pmo-form-row" style="grid-template-columns: 1fr 1fr;">
+                            <div class="pmo-form-group">
+                                <label>Geplantes Datum</label>
+                                <input type="date" id="milestone-planned-date" readonly disabled style="background: #f1f5f9;">
+                            </div>
+                            <div class="pmo-form-group">
+                                <label>Aktuelles Datum</label>
+                                <input type="date" id="milestone-current-date">
+                            </div>
+                        </div>
+
+                        <div class="pmo-form-group">
+                            <label>Status</label>
+                            <select id="milestone-status">
+                                <option value="Im Plan">Im Plan</option>
+                                <option value="Verzögert">Verzögert</option>
+                                <option value="Geschlossen">Geschlossen (Bestätigt)</option>
+                            </select>
+                        </div>
+
+                        <div class="pmo-form-group">
+                            <label>Kommentar / Begründung</label>
+                            <textarea id="milestone-comment" rows="4" placeholder="Begründung für Verschiebung oder Statusänderung..."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Actions & History -->
+                    <div class="pmo-milestone-actions-col">
+                        <div class="pmo-milestone-action-card">
+                            <h4>Schnellaktionen</h4>
+                            <button class="pmo-btn pmo-btn-primary" style="width: 100%; margin-bottom: 12px;" onclick="PMO.confirmMilestone()">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                                Meilenstein bestätigen
+                            </button>
+                            <button class="pmo-btn pmo-btn-secondary" style="width: 100%; margin-bottom: 12px;" onclick="PMO.delayMilestone()">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <polyline points="12 6 12 12 16 14"></polyline>
+                                </svg>
+                                Meilenstein verschieben
+                            </button>
+                            <button class="pmo-btn pmo-btn-secondary" style="width: 100%;" onclick="PMO.reopenMilestone()">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                                    <polyline points="1 4 1 10 7 10"></polyline>
+                                    <path d="M3.51 15a9 9 0 102.13-9.36L1 10"></path>
+                                </svg>
+                                Meilenstein wieder öffnen
+                            </button>
+                        </div>
+
+                        <div class="pmo-milestone-history-card">
+                            <h4>Änderungshistorie</h4>
+                            <div class="pmo-milestone-history" id="milestone-history">
+                                <!-- History will be rendered here -->
+                                <div class="pmo-empty-state" style="padding: 20px;">
+                                    <p style="font-size: 13px;">Noch keine Änderungen</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pmo-form-actions">
+                    <button class="pmo-btn pmo-btn-secondary" onclick="PMO.closeMilestoneModal()">Abbrechen</button>
+                    <button class="pmo-btn pmo-btn-primary" onclick="PMO.saveMilestone()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                            <path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"></path>
+                            <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                            <polyline points="7 3 7 8 15 8"></polyline>
+                        </svg>
+                        Speichern
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- PPT Status View Modal -->
     <div class="pmo-modal" id="pmo-ppt-modal">
         <div class="pmo-modal-backdrop" onclick="PMO.closePPTModal()"></div>
@@ -929,7 +1067,7 @@
 
 
 <!-- PMO Toolbox Styles (externalized) -->
-<link rel="stylesheet" href="/css/pmo-toolbox.css?v=20260116a">
+<link rel="stylesheet" href="/css/pmo-toolbox.css?v=20260116b">
 
 <!-- PMO Toolbox JavaScript (ES6 Module) -->
-<script type="module" src="/js/modules/pmo-toolbox.esm.js?v=20260116a"></script>
+<script type="module" src="/js/modules/pmo-toolbox.esm.js?v=20260116b"></script>

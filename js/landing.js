@@ -1374,9 +1374,17 @@ function closePMOToolbox() {
     }
 
     // Dispatch event to update Page ID back to M-01
-    document.dispatchEvent(new CustomEvent('moduleChanged', {
-        detail: { module: 'main', view: 'landing' }
-    }));
+    // Use setTimeout to ensure DOM is updated first
+    setTimeout(() => {
+        document.dispatchEvent(new CustomEvent('moduleChanged', {
+            detail: { module: 'main', view: 'landing' }
+        }));
+
+        // Force an immediate update
+        if (window.PageIDTracker) {
+            window.PageIDTracker.updatePageId('main', 'landing');
+        }
+    }, 50);
 }
 
 // ========================================

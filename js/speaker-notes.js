@@ -15,7 +15,7 @@ const SpeakerNotes = {
             section: "LANDING PAGE / DASHBOARD",
             content: `So, schauen wir uns das mal direkt an. Das hier ist die PMO Toolbox Landing Page – sozusagen die zentrale Einstiegsseite für alle Projektbeteiligten.
 
-Ich sehe hier auf einen Blick die aktuelle Lage: 8 aktive Projekte, 24 Workstreams insgesamt. Von diesen 24 sind aktuell 16 im Plan – grün. 5 laufen mit kleineren Einschränkungen – gelb. Und 3 sind kritisch – rot. Das gibt mir sofort ein Gefühl dafür: Wo brennt es gerade?
+Ich sehe hier auf einen Blick die aktuelle Lage: 8 aktive Projekte im Sales Excellence Programm. Von diesen 8 Projekten sind aktuell 3 im Plan – grün. 4 laufen mit kleineren Einschränkungen – gelb. Und 1 Projekt ist kritisch – rot. Das gibt mir sofort ein Gefühl dafür: Wo brennt es gerade?
 
 Und genau das ist der Punkt: Ich muss nicht erst 5 PowerPoints öffnen oder durch SharePoint-Ordner klicken. Die Information ist da.`
         },

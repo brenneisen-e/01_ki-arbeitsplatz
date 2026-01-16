@@ -2935,3 +2935,145 @@ mark {
         align-self: flex-start;
     }
 }
+
+/* ========================================
+   WORKSTREAM TABS
+   ======================================== */
+
+.pmo-my-tabs {
+    display: flex;
+    gap: 8px;
+    padding: 0 24px;
+    background: white;
+    border-bottom: 2px solid #e2e8f0;
+    margin-bottom: 24px;
+}
+
+.pmo-my-tab {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 20px;
+    background: transparent;
+    border: none;
+    border-bottom: 3px solid transparent;
+    font-size: 15px;
+    font-weight: 500;
+    color: #64748b;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-bottom: -2px;
+}
+
+.pmo-my-tab:hover {
+    color: #1e293b;
+    background: #f8fafc;
+}
+
+.pmo-my-tab.active {
+    color: #E30613;
+    border-bottom-color: #E30613;
+    background: white;
+}
+
+.pmo-my-tab svg {
+    width: 18px;
+    height: 18px;
+}
+
+.pmo-my-tab-content {
+    display: none;
+}
+
+.pmo-my-tab-content.active {
+    display: block;
+}
+
+/* ========================================
+   MILESTONE MODAL
+   ======================================== */
+
+.pmo-milestone-detail-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 32px;
+    margin-bottom: 24px;
+}
+
+.pmo-milestone-info-col {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.pmo-milestone-actions-col {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.pmo-milestone-action-card,
+.pmo-milestone-history-card {
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 20px;
+}
+
+.pmo-milestone-action-card h4,
+.pmo-milestone-history-card h4 {
+    margin: 0 0 16px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #1e293b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.pmo-milestone-history {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.pmo-milestone-history-item {
+    padding: 12px;
+    background: white;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    border-left: 3px solid #E30613;
+}
+
+.pmo-milestone-history-item .history-date {
+    font-size: 11px;
+    color: #94a3b8;
+    margin-bottom: 4px;
+}
+
+.pmo-milestone-history-item .history-action {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 4px;
+}
+
+.pmo-milestone-history-item .history-comment {
+    font-size: 13px;
+    color: #64748b;
+    font-style: italic;
+}
+
+/* Make milestone items clickable */
+.pmo-milestone-item {
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.pmo-milestone-item:hover {
+    transform: translateX(4px);
+    background: #e2e8f0 !important;
+}
+
+@media (max-width: 900px) {
+    .pmo-milestone-detail-grid {
+        grid-template-columns: 1fr;
+    }
+}

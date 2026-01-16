@@ -13,7 +13,9 @@ const SpeakerNotes = {
     notes: [
         {
             section: "EINLEITUNG",
-            content: `Ich bin Eike Brenneisen, ich bin seit 4 Jahren für Deloitte im Bereich Financial Services unterwegs und schwerpunktmäßig begleite ich Transformationsprogrammen bei Versicherungen. Beispielsweise das ERGO ZAV-Programm kenne ich sehr gut aus der Vergangenheit – dort war ich unter anderem für die gesamte Gremienbegleitung verantwortlich. Was mich dabei besonders antreibt: Ich baue gerne selbst Tools und Lösungen, die das Programmleben einfacher machen – sei es ein Dashboard, eine Automatisierung oder eben eine PMO-Plattform wie die, die ich Ihnen heute zeige. Also weniger PowerPoint-Berater, mehr Hands-on. Und genau das möchte ich Ihnen heute mitgeben.`
+            content: `Ich bin Eike Brenneisen, ich bin seit 4 Jahren für Deloitte im Bereich Financial Services unterwegs und schwerpunktmäßig begleite ich Transformationsprogrammen bei Versicherungen. Beispielsweise das ERGO ZAV-Programm kenne ich sehr gut aus der Vergangenheit – dort war ich unter anderem für die gesamte Gremienbegleitung verantwortlich.
+
+Was mich besonders antreibt: Ich mag keine Ineffizienzen. Deswegen baue ich gerne selbst Tools und Lösungen, die das Programmleben einfacher machen – sei es ein Dashboard, eine Automatisierung oder gar eben eine ganze PMO-Plattform - darauf kommen wir später nochmal zurück.`
         },
         {
             section: "PROBLEMSTELLUNG & LÖSUNG",

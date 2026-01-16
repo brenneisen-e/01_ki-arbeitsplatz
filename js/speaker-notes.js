@@ -17,7 +17,13 @@ const SpeakerNotes = {
 
 Ich sehe hier auf einen Blick die aktuelle Lage: 8 aktive Projekte im Sales Excellence Programm. Von diesen 8 Projekten sind aktuell 3 im Plan – grün. 4 laufen mit kleineren Einschränkungen – gelb. Und 1 Projekt ist kritisch – rot. Das gibt mir sofort ein Gefühl dafür: Wo brennt es gerade?
 
-Und genau das ist der Punkt: Ich muss nicht erst 5 PowerPoints öffnen oder durch SharePoint-Ordner klicken. Die Information ist da.`
+Und rechts sehe ich zusätzlich zwei wichtige Bereiche:
+
+• Der Gremienkalender zeigt mir alle anstehenden Termine – Steering Committees, PMO Reviews, Reifegradboard. Ich sehe direkt im Januar-Kalender: Wann ist welches Gremium? Das hilft mir bei der Vorbereitung.
+
+• Darunter die kommenden Meilensteine über alle Projekte hinweg. Hier sehe ich zum Beispiel: K-EWE API-Integration überfällig, Reports Automatisierung 6 Tage überfällig. Ich erkenne sofort kritische Termine und kann gegensteuern.
+
+Und genau das ist der Punkt: Ich muss nicht erst 5 PowerPoints öffnen oder durch SharePoint-Ordner klicken. Die Information ist da – Projektstatus, Termine, Meilensteine, alles auf einer Seite.`
         },
         {
             section: "PROJEKTÜBERSICHT",

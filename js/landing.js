@@ -1361,12 +1361,7 @@ function closePMOToolbox() {
         pmoModule.style.display = 'none';
     }
 
-    // Hide all other modules
-    const versicherungModule = document.getElementById('versicherungModule');
-    if (versicherungModule) {
-        versicherungModule.style.display = 'none';
-    }
-
+    // Hide other modules (but NOT versicherungModule, as landingPage is inside it!)
     const bankenModule = document.getElementById('bankenModule');
     if (bankenModule) {
         bankenModule.style.display = 'none';
@@ -1380,6 +1375,43 @@ function closePMOToolbox() {
     const bestandsModule = document.getElementById('bestandsuebertragungModule');
     if (bestandsModule) {
         bestandsModule.style.display = 'none';
+    }
+
+    // Show versicherungModule (contains the landing page!)
+    const versicherungModule = document.getElementById('versicherungModule');
+    if (versicherungModule) {
+        versicherungModule.style.display = 'block';
+    }
+
+    // Hide all versicherung sub-views
+    const mainApp = document.getElementById('mainApp');
+    if (mainApp) {
+        mainApp.style.display = 'none';
+    }
+
+    const agenturOverview = document.getElementById('agenturOverview');
+    if (agenturOverview) {
+        agenturOverview.style.display = 'none';
+    }
+
+    const kundenDetailPage = document.getElementById('kundenDetailPage');
+    if (kundenDetailPage) {
+        kundenDetailPage.style.display = 'none';
+    }
+
+    const potentialAnalysePage = document.getElementById('potentialAnalysePage');
+    if (potentialAnalysePage) {
+        potentialAnalysePage.style.display = 'none';
+    }
+
+    const finanzplanung = document.getElementById('finanzplanung');
+    if (finanzplanung) {
+        finanzplanung.style.display = 'none';
+    }
+
+    const agenturGrid = document.getElementById('agenturGrid');
+    if (agenturGrid) {
+        agenturGrid.style.display = 'none';
     }
 
     // Show landing page (use flex for proper centering)

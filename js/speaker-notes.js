@@ -8,20 +8,29 @@ const SpeakerNotes = {
     isFollowing: false,
     scrollSpeed: 30, // pixels per second
     mouseOffset: 50, // pixels left from cursor
+    keepOnTopInterval: null, // Interval to keep window on top
 
     // Speaker notes content for PMO Toolbox presentation
     notes: [
         {
             section: "EINLEITUNG",
-            content: `Ich bin Eike Brenneisen, ich bin seit 4 Jahren für Deloitte im Bereich Financial Services unterwegs und schwerpunktmäßig begleite ich Transformationsprogrammen bei Versicherungen. Beispielsweise das ERGO ZAV-Programm kenne ich sehr gut aus der Vergangenheit – dort war ich unter anderem für die gesamte Gremienbegleitung verantwortlich. Was mich dabei besonders antreibt: Ich baue gerne selbst Tools und Lösungen, die das Programmleben einfacher machen – sei es ein Dashboard, eine Automatisierung oder eben eine PMO-Plattform wie die, die ich Ihnen heute zeige. Also weniger PowerPoint-Berater, mehr Hands-on. Und genau das möchte ich Ihnen heute mitgeben.`
+            content: `Ich bin Eike Brenneisen, ich bin seit 4 Jahren für Deloitte im Bereich Financial Services unterwegs und schwerpunktmäßig begleite ich Transformationsprogrammen bei Versicherungen. Beispielsweise das ERGO ZAV-Programm kenne ich sehr gut aus der Vergangenheit – dort war ich unter anderem für die gesamte Gremienbegleitung verantwortlich.
+
+Was mich besonders antreibt: Ich mag keine Ineffizienzen. Deswegen baue ich gerne selbst Tools und Lösungen, die das Programmleben einfacher machen – sei es ein Dashboard, eine Automatisierung oder gar eben eine ganze PMO-Plattform - darauf kommen wir später nochmal zurück.`
         },
         {
             section: "PROBLEMSTELLUNG & LÖSUNG",
-            content: `Bei einem Programm dieser Größenordnung – mit so vielen Workstreams, Beteiligten und Abhängigkeiten – entstehen jede Woche hunderte von E-Mails, PowerPoint-Folien, SharePoint-Ordnern. Die Information ist da, aber sie ist verteilt. Und wenn ich dann im Steering Committee bin und jemand fragt: "Wo stehen wir bei Workstream A3?" – dann muss ich erst mal drei PDFs öffnen, durch den letzten Statusbericht scrollen, den Meilensteinplan suchen.
+            content: `Bei einem Programm dieser Größenordnung – mit so vielen Workstreams, Beteiligten und Abhängigkeiten – ist eine saubere, durchstrukturierte Termin- und Prozesssteuerung absolut erfolgskritisch. Gleichzeitig brauchen alle Stakeholder auf ihren jeweiligen Ebenen regelmäßig Transparenz: Wo stehen wir bei Time, Scope und Budget?
 
-Und genau hier setzt die PMO Toolbox an. Das ist eine Frontend-Plattform, die auf Ihrem bestehenden SharePoint aufsetzt – keine neue Datenhaltung, kein zusätzliches Hosting. Wir greifen einfach auf die Daten zu, die Sie ohnehin schon pflegen, und bereiten sie übersichtlich auf.
+Jetzt ist es so: Typischerweise werden solche Programme – und das war auch bei ERGO ZAV in der Vergangenheit nicht anders – im Wesentlichen über PowerPoint und Excel koordiniert. Und das wird auch erstmal so bleiben, das ist auch völlig in Ordnung.
 
-Das Ziel: Schnellere Entscheidungen. Weniger Suchaufwand. Mehr Transparenz für alle Stakeholder.`
+Aber es gibt einen großen Nachteil: Die schiere Datenmenge. Die Anzahl an Dateien. Selbst auf einem gut strukturierten SharePoint verliert man irgendwann den Überblick. Wie war nochmal die Entscheidung zu Thema XY vor einem Monat? Wo finde ich den aktuellen Status zu Workstream Z? Das kostet Zeit und Nerven.
+
+Genau hier wollen wir Abhilfe schaffen. Wir ergänzen die bestehenden Microsoft-Strukturen durch eine PMO-Toolbox, die wir individuell auf ERGO anpassen. Diese läuft als Frontend direkt auf dem SharePoint und dient als zentrale Startplattform für alle Projekterfordernisse: Status abgeben, Status einsehen, Meilensteine bestätigen, Entscheidungen nachvollziehen – alles an einem Ort.
+
+Das Gute dabei: Wir bauen das ohne zusätzliches Hosting als eigenständiges Tool auf. Es greift einfach auf den bestehenden SharePoint zu und zeigt alle relevanten Informationen gebündelt an einer Stelle an.
+
+Wie das konkret aussieht, zeige ich Ihnen jetzt direkt im System.`
         },
         {
             section: "LANDING PAGE / DASHBOARD",
@@ -145,6 +154,9 @@ Haben Sie dazu Fragen? Oder soll ich nochmal auf einen bestimmten Bereich tiefer
 
         // Start auto-scroll
         this.startAutoScroll();
+
+        // Keep window on top
+        this.startKeepOnTop();
     },
 
     buildNotesHTML() {
@@ -376,7 +388,35 @@ Haben Sie dazu Fragen? Oder soll ich nochmal auf einen bestimmten Bereich tiefer
         // Auto-scroll is handled in the notes window itself
     },
 
+    startKeepOnTop() {
+        // Periodically bring the notes window to the front
+        // This prevents it from being hidden by modals or other windows
+        this.keepOnTopInterval = setInterval(() => {
+            if (this.notesWindow && !this.notesWindow.closed) {
+                try {
+                    this.notesWindow.focus();
+                } catch (e) {
+                    // Ignore errors if window is closed or inaccessible
+                    console.log('Could not focus notes window:', e);
+                }
+            } else {
+                // Window was closed, clear the interval
+                if (this.keepOnTopInterval) {
+                    clearInterval(this.keepOnTopInterval);
+                    this.keepOnTopInterval = null;
+                }
+            }
+        }, 1000); // Check every second
+    },
+
     closeNotesWindow() {
+        // Clear the keep-on-top interval
+        if (this.keepOnTopInterval) {
+            clearInterval(this.keepOnTopInterval);
+            this.keepOnTopInterval = null;
+        }
+
+        // Close the window
         if (this.notesWindow && !this.notesWindow.closed) {
             this.notesWindow.close();
             this.notesWindow = null;

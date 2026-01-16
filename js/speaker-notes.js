@@ -15,25 +15,33 @@ const SpeakerNotes = {
             section: "LANDING PAGE / DASHBOARD",
             content: `So, schauen wir uns das mal direkt an. Das hier ist die PMO Toolbox Landing Page – sozusagen die zentrale Einstiegsseite für alle Projektbeteiligten.
 
-Ich sehe hier auf einen Blick die aktuelle Lage: 8 aktive Projekte, 24 Workstreams insgesamt. Von diesen 24 sind aktuell 16 im Plan – grün. 5 laufen mit kleineren Einschränkungen – gelb. Und 3 sind kritisch – rot. Das gibt mir sofort ein Gefühl dafür: Wo brennt es gerade?
+Ich sehe hier auf einen Blick die aktuelle Lage: 8 aktive Projekte im Sales Excellence Programm. Von diesen 8 Projekten sind aktuell 3 im Plan – grün. 4 laufen mit kleineren Einschränkungen – gelb. Und 1 Projekt ist kritisch – rot. Das gibt mir sofort ein Gefühl dafür: Wo brennt es gerade?
 
-Und genau das ist der Punkt: Ich muss nicht erst 5 PowerPoints öffnen oder durch SharePoint-Ordner klicken. Die Information ist da.`
+Und rechts sehe ich zusätzlich zwei wichtige Bereiche:
+
+• Der Gremienkalender zeigt mir alle anstehenden Termine – Steering Committees, PMO Reviews, Reifegradboard. Ich sehe direkt im Januar-Kalender: Wann ist welches Gremium? Das hilft mir bei der Vorbereitung.
+
+• Darunter die kommenden Meilensteine über alle Projekte hinweg. Hier sehe ich zum Beispiel: K-EWE API-Integration überfällig, Reports Automatisierung 6 Tage überfällig. Ich erkenne sofort kritische Termine und kann gegensteuern.
+
+Und genau das ist der Punkt: Ich muss nicht erst 5 PowerPoints öffnen oder durch SharePoint-Ordner klicken. Die Information ist da – Projektstatus, Termine, Meilensteine, alles auf einer Seite.`
         },
         {
             section: "PROJEKTÜBERSICHT",
-            content: `Wenn ich jetzt zum Beispiel ins Projekt Sales Excellence reinschaue, sehe ich hier alle zugehörigen Workstreams. Jeder Workstream hat seinen eigenen Status – Termin, Budget, Scope, Risiken. Ich kann direkt erkennen: Wo gibt es Handlungsbedarf?`
+            content: `Wenn ich jetzt zum Beispiel ins Projekt "Hybrider Kunde" reinschaue, sehe ich hier alle zugehörigen Workstreams mit ihrem jeweiligen Status.
+
+Hier haben wir 4 Workstreams – und ich sehe auf einen Blick: Wo stehen wir bei jedem einzelnen Workstream? Termin, Budget, Scope, Risiken – alles übersichtlich dargestellt.`
         },
         {
             section: "WORKSTREAM-DETAILANSICHT",
-            content: `Gehen wir mal tiefer rein – ich klicke auf einen Workstream, sagen wir 'Digitale Vertriebsplattform'.
+            content: `Gehen wir mal tiefer rein – ich klicke auf Workstream A1, den ersten Workstream im Projekt "Hybrider Kunde".
 
 Jetzt bin ich in der Workstream-Ansicht. Hier sehe ich als Teilprojektleiter alles, was ich brauche:
 
 • Aktueller Status: Die vier Ampeln für Overall, Termin, Budget, Scope. Das ist mein aktueller Wochenstand.
 
-• Statushistorie: Ich kann zurückblättern und sehen, wie sich der Status über die letzten Wochen entwickelt hat. War das schon länger rot? Oder ist das ein neues Problem? Das hilft enorm bei der Einordnung.
+• Wochenwechsel: Und jetzt das Praktische – ich kann hier zwischen den Wochen hin- und herwechseln. Ich kann zurückblättern und sehen, wie sich der Status über die letzten Wochen entwickelt hat. War das schon länger gelb? Oder ist das ein neues Problem? Das hilft enorm bei der Einordnung und für die Statusberichterstattung.
 
-• Meilensteine: Hier sehe ich alle anstehenden und abgeschlossenen Meilensteine. Und ganz wichtig: Als Teilprojektleiter kann ich hier direkt Meilensteine bestätigen – mit einem Klick, ohne E-Mail-Ping-Pong. Das System trackt automatisch, wer wann was bestätigt hat.`
+• Meilensteine: Hier sehe ich alle anstehenden und abgeschlossenen Meilensteine. Als Teilprojektleiter kann ich Meilensteine direkt im System bestätigen – mit einem Klick, ohne E-Mail-Ping-Pong.`
         },
         {
             section: "GANTT-CHART",
@@ -57,11 +65,11 @@ Das ist vor allem für die Vorbereitung extrem hilfreich. Ich weiß genau, wann 
         },
         {
             section: "PPT-EXPORT",
-            content: `Und jetzt das Feature, das besonders den Workstream-Leads das Leben erleichtert: PPT-Export.
+            content: `Und jetzt das Feature, das besonders den Workstream-Leads das Leben erleichtert: Der PPT-Export.
 
-Ich kann mir aus dem System heraus direkt eine fertige PowerPoint-Seite generieren lassen – mit meinem aktuellen Status, den Ampeln, der Historie, den Meilensteinen. Die Folie ist schon im ERGO Corporate Design und kann direkt ins Reporting übernommen werden.
+Ich bin hier in Workstream A1 und kann mir aus dem System heraus direkt eine fertige PowerPoint-Seite generieren lassen. Ein Klick – und ich bekomme eine Slide mit meinem aktuellen Wochenstatus: Die vier Ampeln, die Statushistorie über die letzten Wochen, alle wichtigen Kennzahlen.
 
-Das spart mir jede Woche Zeit. Ich muss nicht mehr manuell Tabellen kopieren oder Ampeln in PowerPoint malen. Das System generiert das automatisch aus den Daten.`
+Die Folie ist bereits im Corporate Design formatiert und kann direkt ins Reporting übernommen werden. Das spart mir jede Woche Zeit. Ich muss nicht mehr manuell Ampeln in PowerPoint malen oder Tabellen kopieren. Das System generiert das automatisch aus den aktuellen Daten.`
         },
         {
             section: "DOKUMENTE & SUCHE",
@@ -176,7 +184,7 @@ Haben Sie dazu Fragen? Oder soll ich nochmal auf einen bestimmten Bereich tiefer
         }
 
         .note-section p {
-            font-size: 18px;
+            font-size: 24px;
             line-height: 1.8;
             color: #e0e0e0;
         }
@@ -257,10 +265,15 @@ Haben Sie dazu Fragen? Oder soll ich nochmal auf einen bestimmten Bereich tiefer
         let scrollInterval = null;
 
         function startScrolling() {
+            console.log('Starting auto-scroll at', scrollSpeed, 'px/s');
             stopScrolling();
             scrollInterval = setInterval(() => {
                 if (isScrolling) {
-                    window.scrollBy(0, scrollSpeed / 60);
+                    const scrollAmount = scrollSpeed / 60;
+                    window.scrollBy({
+                        top: scrollAmount,
+                        behavior: 'auto'
+                    });
                 }
             }, 1000 / 60); // 60 FPS
         }
@@ -275,17 +288,26 @@ Haben Sie dazu Fragen? Oder soll ich nochmal auf einen bestimmten Bereich tiefer
         function changeSpeed(delta) {
             scrollSpeed = Math.max(0, Math.min(100, scrollSpeed + delta));
             document.getElementById('speed-label').textContent = 'Speed: ' + scrollSpeed + ' px/s';
+            console.log('Speed changed to:', scrollSpeed);
         }
 
         function toggleScroll() {
             isScrolling = !isScrolling;
+            console.log('Scrolling', isScrolling ? 'resumed' : 'paused');
         }
 
         function resetScroll() {
             window.scrollTo(0, 0);
+            console.log('Scroll reset to top');
         }
 
-        // Start auto-scroll
+        // Start auto-scroll when page loads
+        window.addEventListener('load', function() {
+            console.log('Page loaded, starting auto-scroll');
+            startScrolling();
+        });
+
+        // Fallback: start immediately
         startScrolling();
 
         // Keyboard shortcuts

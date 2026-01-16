@@ -17,11 +17,17 @@ const SpeakerNotes = {
         },
         {
             section: "PROBLEMSTELLUNG & LÖSUNG",
-            content: `Bei einem Programm dieser Größenordnung – mit so vielen Workstreams, Beteiligten und Abhängigkeiten – entstehen jede Woche hunderte von E-Mails, PowerPoint-Folien, SharePoint-Ordnern. Die Information ist da, aber sie ist verteilt. Und wenn ich dann im Steering Committee bin und jemand fragt: "Wo stehen wir bei Workstream A3?" – dann muss ich erst mal drei PDFs öffnen, durch den letzten Statusbericht scrollen, den Meilensteinplan suchen.
+            content: `Bei einem Programm dieser Größenordnung – mit so vielen Workstreams, Beteiligten und Abhängigkeiten – ist eine saubere, durchstrukturierte Termin- und Prozesssteuerung absolut erfolgskritisch. Gleichzeitig brauchen alle Stakeholder auf ihren jeweiligen Ebenen regelmäßig Transparenz: Wo stehen wir bei Time, Scope und Budget?
 
-Und genau hier setzt die PMO Toolbox an. Das ist eine Frontend-Plattform, die auf Ihrem bestehenden SharePoint aufsetzt – keine neue Datenhaltung, kein zusätzliches Hosting. Wir greifen einfach auf die Daten zu, die Sie ohnehin schon pflegen, und bereiten sie übersichtlich auf.
+Jetzt ist es so: Typischerweise werden solche Programme – und das war auch bei ERGO ZAV in der Vergangenheit nicht anders – im Wesentlichen über PowerPoint und Excel koordiniert. Und das wird auch erstmal so bleiben, das ist auch völlig in Ordnung.
 
-Das Ziel: Schnellere Entscheidungen. Weniger Suchaufwand. Mehr Transparenz für alle Stakeholder.`
+Aber es gibt einen großen Nachteil: Die schiere Datenmenge. Die Anzahl an Dateien. Selbst auf einem gut strukturierten SharePoint verliert man irgendwann den Überblick. Wie war nochmal die Entscheidung zu Thema XY vor einem Monat? Wo finde ich den aktuellen Status zu Workstream Z? Das kostet Zeit und Nerven.
+
+Genau hier wollen wir Abhilfe schaffen. Wir ergänzen die bestehenden Microsoft-Strukturen durch eine PMO-Toolbox, die wir individuell auf ERGO anpassen. Diese läuft als Frontend direkt auf dem SharePoint und dient als zentrale Startplattform für alle Projekterfordernisse: Status abgeben, Status einsehen, Meilensteine bestätigen, Entscheidungen nachvollziehen – alles an einem Ort.
+
+Das Gute dabei: Wir bauen das ohne zusätzliches Hosting als eigenständiges Tool auf. Es greift einfach auf den bestehenden SharePoint zu und zeigt alle relevanten Informationen gebündelt an einer Stelle an.
+
+Wie das konkret aussieht, zeige ich Ihnen jetzt direkt im System.`
         },
         {
             section: "LANDING PAGE / DASHBOARD",

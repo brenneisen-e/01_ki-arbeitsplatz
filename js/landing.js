@@ -1198,9 +1198,10 @@ function showTopRegionsResponse(regions, count, errorMessage = null) {
 
                 <!-- Action Button: Top Vermittler -->
                 <div style="padding: 12px 16px; border-top: 1px solid #e2e8f0;">
-                    <div style="font-size: 12px; color: #64748b; margin-bottom: 8px;">🔍 Weitere Analyse:</div>
+                    <div style="font-size: 12px; color: #64748b; margin-bottom: 8px;">Weitere Analyse:</div>
                     <button onclick="showTopVermittlerInRegions()" class="action-btn" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 16px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);">
-                        <span>👥</span> Top 5 Vermittler in diesen Regionen anzeigen
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                        Top 5 Vermittler anzeigen
                     </button>
                 </div>
             </div>
@@ -1434,18 +1435,12 @@ function exportTopRegionsExcel() {
 }
 
 /**
- * Show top Vermittler in the selected regions (switches to table view)
+ * Show top 5 Vermittler overall (switches to table view)
+ * Note: Shows best Vermittler across all regions, not filtered by selected regions
  */
 function showTopVermittlerInRegions() {
-    console.log('👥 Zeige Top Vermittler in ausgewählten Regionen...');
+    console.log('👥 Zeige Top 5 Vermittler (gesamt)...');
 
-    const mapHandler = window.countyMapHandler;
-    if (!mapHandler || mapHandler.selectedCounties.size === 0) {
-        alert('Keine Regionen ausgewählt.');
-        return;
-    }
-
-    const selectedRegions = Array.from(mapHandler.selectedCounties);
     const rawData = window.dailyRawData || dailyRawData;
 
     if (!rawData || rawData.length === 0) {
@@ -1453,13 +1448,11 @@ function showTopVermittlerInRegions() {
         return;
     }
 
-    // Filter data by selected regions
-    const filteredData = rawData.filter(row => {
-        const kreis = row.landkreis || row.kreis;
-        return selectedRegions.some(region =>
-            kreis && kreis.toLowerCase().includes(region.toLowerCase())
-        );
-    });
+    // Get current year filter
+    const currentYear = window.state?.filters?.year || new Date().getFullYear();
+
+    // Filter by year only (no region filter - show overall top Vermittler)
+    const filteredData = rawData.filter(row => row.year == currentYear);
 
     // Aggregate by Vermittler
     const vermittlerMap = new Map();
@@ -1492,10 +1485,17 @@ function showTopVermittlerInRegions() {
     if (dashboardView) dashboardView.style.display = 'none';
     if (tableView) tableView.style.display = 'block';
 
-    // Set state for table view
+    // Clear region selection so table shows all data
     if (window.state) {
         window.state.currentView = 'table';
         window.state.currentTableView = 'agentur'; // Show Agenturen tab
+        window.state.selectedCounties = new Set(); // Clear region filter
+    }
+
+    // Also clear map selection visually
+    const mapHandler = window.countyMapHandler;
+    if (mapHandler) {
+        mapHandler.clearSelection();
     }
 
     // Activate the Agenturen tab button
@@ -1507,13 +1507,13 @@ function showTopVermittlerInRegions() {
         }
     });
 
-    // Render the table (will use selectedCounties filter automatically)
+    // Render the table (without region filter)
     if (typeof renderTable === 'function') {
         renderTable();
     }
 
     // Update the response to show Vermittler data
-    showTopVermittlerResponse(topVermittler, selectedRegions);
+    showTopVermittlerResponse(topVermittler, []);
 }
 
 /**
@@ -1559,13 +1559,17 @@ function showTopVermittlerResponse(vermittler, regions) {
         const bubble = document.createElement('div');
         bubble.className = 'chat-bubble';
 
+        const regionText = regions && regions.length > 0
+            ? `In: <strong>${regions.slice(0, 3).join(', ')}${regions.length > 3 ? '...' : ''}</strong>`
+            : `<strong>Alle Regionen</strong> (nach Neugeschäft)`;
+
         bubble.innerHTML = `
             <div style="margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
                 <strong style="font-size: 14px;">Top 5 Vermittler</strong>
             </div>
             <div style="font-size: 11px; color: #64748b; margin-bottom: 12px;">
-                In: <strong>${regions.slice(0, 3).join(', ')}${regions.length > 3 ? '...' : ''}</strong>
+                ${regionText}
             </div>
 
             ${vermittlerList}
@@ -1590,6 +1594,10 @@ function showTopVermittlerResponse(vermittler, regions) {
         const responseContainer = document.getElementById('landingChatResponse');
         if (!responseContainer) return;
 
+        const landingRegionText = regions && regions.length > 0
+            ? `In den Regionen: <strong>${regions.join(', ')}</strong>`
+            : `<strong>Alle Regionen</strong> (nach Neugeschäft sortiert)`;
+
         responseContainer.innerHTML = `
             <div class="landing-response-card" style="max-width: 500px;">
                 <div class="landing-response-header">
@@ -1599,7 +1607,7 @@ function showTopVermittlerResponse(vermittler, regions) {
 
                 <div class="landing-response-content" style="padding: 16px;">
                     <div style="font-size: 13px; color: #64748b; margin-bottom: 12px;">
-                        In den Regionen: <strong>${regions.join(', ')}</strong>
+                        ${landingRegionText}
                     </div>
 
                     ${vermittlerList}

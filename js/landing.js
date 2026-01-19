@@ -976,25 +976,62 @@ async function handleTopRegionsQuery(count = 5) {
         return;
     }
 
-    // Navigate to Dashboard first (this initializes KPIs and map)
-    openDashboard();
+    // Show loading indicator on landing page
+    const responseContainer = document.getElementById('landingChatResponse');
+    if (responseContainer) {
+        responseContainer.style.display = 'block';
+        responseContainer.innerHTML = `
+            <div class="landing-response-card" style="text-align: center; padding: 24px;">
+                <div style="margin-bottom: 12px;">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#0ea5e9" stroke-width="2" style="animation: spin 1s linear infinite;">
+                        <path d="M21 12a9 9 0 11-6.219-8.56"/>
+                    </svg>
+                </div>
+                <div style="font-weight: 600; color: #1e293b;">Lade Dashboard und Karte...</div>
+                <div style="font-size: 12px; color: #64748b; margin-top: 4px;">Regionen werden analysiert</div>
+            </div>
+            <style>
+                @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+            </style>
+        `;
+    }
+
+    // Initialize dashboard in background (hidden)
+    const landingPage = document.getElementById('landingPage');
+    const mainApp = document.getElementById('mainApp');
+
+    // Show mainApp but keep it invisible for initialization
+    if (mainApp) {
+        mainApp.style.display = 'block';
+        mainApp.style.visibility = 'hidden';
+        mainApp.style.position = 'absolute';
+        mainApp.style.left = '-9999px';
+    }
+
+    // Trigger dashboard initialization
+    if (typeof waitForLibraries === 'function') {
+        waitForLibraries(function() {
+            if (typeof initKPIGrid === 'function') initKPIGrid();
+            if (typeof updateAllKPIs === 'function') updateAllKPIs();
+            if (typeof initMap === 'function') initMap();
+        });
+    }
 
     // Wait for map to fully initialize with polling
     let mapHandler = null;
     let attempts = 0;
-    const maxAttempts = 20; // 20 * 250ms = 5 seconds max
+    const maxAttempts = 40; // 40 * 150ms = 6 seconds max
 
     while (!mapHandler && attempts < maxAttempts) {
-        await new Promise(resolve => setTimeout(resolve, 250));
+        await new Promise(resolve => setTimeout(resolve, 150));
         mapHandler = window.countyMapHandler;
         attempts++;
 
         // Check if map has data
         if (mapHandler && mapHandler.counties && mapHandler.counties.size > 0) {
-            // Wait for map data to be populated
             const hasData = Array.from(mapHandler.counties.values()).some(c => c.value > 0);
             if (!hasData) {
-                mapHandler = null; // Continue waiting
+                mapHandler = null;
             }
         } else {
             mapHandler = null;
@@ -1003,25 +1040,54 @@ async function handleTopRegionsQuery(count = 5) {
 
     if (!mapHandler) {
         console.error('[Query] Map handler nicht gefunden nach Timeout');
+        // Reset mainApp visibility
+        if (mainApp) {
+            mainApp.style.display = 'none';
+            mainApp.style.visibility = '';
+            mainApp.style.position = '';
+            mainApp.style.left = '';
+        }
         showTopRegionsResponse(null, count, 'Karte konnte nicht geladen werden. Bitte versuche es erneut.');
         return;
     }
 
-    console.log(`[Query] Karte geladen nach ${attempts * 250}ms`);
+    console.log(`[Query] Karte geladen nach ${attempts * 150}ms`);
 
-    // Get top regions from map handler
+    // Get top regions
     const topRegions = mapHandler.getTopRegions(count);
 
     if (topRegions.length === 0) {
-        showTopRegionsResponse(null, count, 'Keine Regionsdaten verfügbar. Die Karte hat noch keine Werte.');
+        if (mainApp) {
+            mainApp.style.display = 'none';
+            mainApp.style.visibility = '';
+            mainApp.style.position = '';
+            mainApp.style.left = '';
+        }
+        showTopRegionsResponse(null, count, 'Keine Regionsdaten verfügbar.');
         return;
     }
 
-    // Select the top regions on the map
+    // Select the top regions on the map BEFORE showing
     const regionNames = topRegions.map(r => r.name);
     mapHandler.selectMultipleCounties(regionNames);
 
-    // Show the interactive response
+    // Small delay to ensure selection is rendered
+    await new Promise(resolve => setTimeout(resolve, 100));
+
+    // NOW show the dashboard (everything is ready)
+    if (landingPage) landingPage.style.display = 'none';
+    if (mainApp) {
+        mainApp.style.visibility = '';
+        mainApp.style.position = '';
+        mainApp.style.left = '';
+    }
+
+    // Dispatch event for page tracker
+    document.dispatchEvent(new CustomEvent('viewChanged', {
+        detail: { module: 'versicherung', view: 'dashboard' }
+    }));
+
+    // Show the interactive response in dashboard chat
     showTopRegionsResponse(topRegions, count);
 }
 

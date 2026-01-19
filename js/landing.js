@@ -1265,66 +1265,27 @@ function showTopRegionsInDashboardChat(regions, count, errorMessage = null) {
         return `€${value.toFixed(0)}`;
     };
 
-    // Build regions list HTML - clean, modern design without emojis
-    const regionsList = regions.map((r, i) => `
-        <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; background: ${i < 3 ? '#f0fdf4' : '#f8fafc'}; border-radius: 6px; margin-bottom: 4px; border-left: 3px solid ${i === 0 ? '#22c55e' : i === 1 ? '#86efac' : i === 2 ? '#bbf7d0' : '#e2e8f0'};">
-            <div style="display: flex; align-items: center; gap: 10px;">
-                <span style="font-weight: 700; color: ${i < 3 ? '#166534' : '#64748b'}; min-width: 24px; font-size: 13px;">${i + 1}.</span>
-                <div>
-                    <div style="font-weight: 600; color: #1e293b; font-size: 13px;">${r.name}</div>
-                    <div style="font-size: 11px; color: #64748b;">${r.state}</div>
-                </div>
-            </div>
-            <div style="text-align: right;">
-                <div style="font-weight: 700; color: #0ea5e9; font-size: 14px;">${formatCurrency(r.value)}</div>
-            </div>
-        </div>
-    `).join('');
+    // Simple text-based list matching original chat style
+    const regionsList = regions.map((r, i) =>
+        `<strong>${i + 1}. ${r.name}</strong> (${r.state}) — ${formatCurrency(r.value)}`
+    ).join('<br>');
 
     const total = regions.reduce((sum, r) => sum + r.value, 0);
 
     bubble.innerHTML = `
-        <div style="margin-bottom: 14px; display: flex; align-items: center; gap: 8px;">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0ea5e9" stroke-width="2"><path d="M3 3v18h18"/><path d="M18 9l-5-5-4 4-3-3"/></svg>
-            <strong style="font-size: 14px;">Top ${count} Vertriebsregionen</strong>
-        </div>
-
+        <strong>Top ${count} Vertriebsregionen:</strong><br><br>
         ${regionsList}
+        <br><br>
+        <em>Gesamt: ${formatCurrency(total)}</em>
+        <br><br>
+        → <em>Die Regionen sind auf der Karte markiert.</em>
 
-        <!-- Total -->
-        <div style="margin: 14px 0; padding: 12px; background: linear-gradient(135deg, #0ea5e9 0%, #3b82f6 100%); border-radius: 8px; color: white; display: flex; justify-content: space-between; align-items: center;">
-            <span style="font-weight: 500; font-size: 13px;">Gesamt</span>
-            <span style="font-weight: 700; font-size: 16px;">${formatCurrency(total)}</span>
+        <div class="chat-followup-suggestions" style="margin-top: 12px;">
+            <button onclick="showTopVermittlerInRegions()">Top 5 Vermittler</button>
+            <button onclick="askSampleQuestion('Welche Vermittler haben ungewöhnliche Werte?')">Auffällige Vermittler</button>
+            <button onclick="exportTopRegionsPDF()">PDF Export</button>
+            <button onclick="exportTopRegionsExcel()">Excel Export</button>
         </div>
-
-        <div style="font-size: 12px; color: #64748b; margin-bottom: 14px; display: flex; align-items: center; gap: 6px;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            Regionen auf der Karte markiert
-        </div>
-
-        <!-- Export Buttons -->
-        <div style="margin-bottom: 12px;">
-            <div style="font-size: 11px; color: #64748b; margin-bottom: 8px; display: flex; align-items: center; gap: 4px;">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                Exportieren
-            </div>
-            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                <button onclick="exportTopRegionsPDF()" style="display: flex; align-items: center; gap: 6px; padding: 8px 12px; background: #dc2626; color: white; border: none; border-radius: 6px; font-size: 12px; font-weight: 500; cursor: pointer;">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                    PDF
-                </button>
-                <button onclick="exportTopRegionsExcel()" style="display: flex; align-items: center; gap: 6px; padding: 8px 12px; background: #16a34a; color: white; border: none; border-radius: 6px; font-size: 12px; font-weight: 500; cursor: pointer;">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/><path d="M3 9h18"/></svg>
-                    Excel
-                </button>
-            </div>
-        </div>
-
-        <!-- Action Button -->
-        <button onclick="showTopVermittlerInRegions()" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 14px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-            Top 5 Vermittler anzeigen
-        </button>
     `;
 
     messageDiv.appendChild(avatar);
@@ -1523,6 +1484,7 @@ function showTopVermittlerInRegions() {
 
 /**
  * Show top Vermittler response - uses dashboard chat when in dashboard
+ * Simple text-based style matching original chat format
  */
 function showTopVermittlerResponse(vermittler, regions) {
     const mainApp = document.getElementById('mainApp');
@@ -1534,20 +1496,10 @@ function showTopVermittlerResponse(vermittler, regions) {
         return `€${value.toFixed(0)}`;
     };
 
-    const vermittlerList = vermittler.map((v, i) => `
-        <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 10px; background: ${i === 0 ? '#fef3c7' : '#f8fafc'}; border-radius: 6px; margin-bottom: 4px; border-left: 3px solid ${i === 0 ? '#f59e0b' : '#e2e8f0'};">
-            <div style="display: flex; align-items: center; gap: 8px;">
-                <span style="font-weight: 700; color: ${i === 0 ? '#b45309' : '#64748b'}; min-width: 20px; font-size: 12px;">#${i + 1}</span>
-                <div>
-                    <div style="font-weight: 600; color: #1e293b; font-size: 13px;">${v.name}</div>
-                    <div style="font-size: 10px; color: #64748b;">${v.id}</div>
-                </div>
-            </div>
-            <div style="text-align: right;">
-                <div style="font-weight: 700; color: #0ea5e9; font-size: 13px;">${formatCurrency(v.neugeschaeft)}</div>
-            </div>
-        </div>
-    `).join('');
+    // Simple text list matching original chat style
+    const vermittlerList = vermittler.map((v, i) =>
+        `<strong>${i + 1}. ${v.name}</strong> — ${formatCurrency(v.neugeschaeft)}`
+    ).join('<br>');
 
     if (isInDashboard) {
         // Use dashboard chat
@@ -1564,30 +1516,16 @@ function showTopVermittlerResponse(vermittler, regions) {
         const bubble = document.createElement('div');
         bubble.className = 'chat-bubble';
 
-        const regionText = regions && regions.length > 0
-            ? `In: <strong>${regions.slice(0, 3).join(', ')}${regions.length > 3 ? '...' : ''}</strong>`
-            : `<strong>Alle Regionen</strong> (nach Neugeschäft)`;
-
         bubble.innerHTML = `
-            <div style="margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                <strong style="font-size: 14px;">Top 5 Vermittler</strong>
-            </div>
-            <div style="font-size: 11px; color: #64748b; margin-bottom: 12px;">
-                ${regionText}
-            </div>
-
+            <strong>Top 5 Vermittler nach Neugeschäft:</strong><br><br>
             ${vermittlerList}
+            <br><br>
+            → <em>Die Tabelle zeigt jetzt die Top 5 Vermittler.</em>
 
-            <div style="margin-top: 12px; padding: 10px; background: #f1f5f9; border-radius: 6px; font-size: 11px; color: #475569; display: flex; align-items: center; gap: 6px;">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
-                Klicke auf einen Vermittler-Namen für Details.
+            <div class="chat-followup-suggestions" style="margin-top: 12px;">
+                <button onclick="askSampleQuestion('Welche Vermittler haben ungewöhnliche Werte?')">Auffällige Vermittler</button>
+                <button onclick="backToRegionsView()">Zurück zur Karte</button>
             </div>
-
-            <button onclick="backToRegionsView()" style="margin-top: 10px; width: 100%; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 10px; background: #e2e8f0; color: #475569; border: none; border-radius: 6px; font-size: 12px; cursor: pointer;">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-                Zurück zu Regionen
-            </button>
         `;
 
         messageDiv.appendChild(avatar);
@@ -1595,13 +1533,9 @@ function showTopVermittlerResponse(vermittler, regions) {
         chatBody.appendChild(messageDiv);
         chatBody.scrollTop = chatBody.scrollHeight;
     } else {
-        // Use landing page response container
+        // Use landing page response container - simple style
         const responseContainer = document.getElementById('landingChatResponse');
         if (!responseContainer) return;
-
-        const landingRegionText = regions && regions.length > 0
-            ? `In den Regionen: <strong>${regions.join(', ')}</strong>`
-            : `<strong>Alle Regionen</strong> (nach Neugeschäft sortiert)`;
 
         responseContainer.innerHTML = `
             <div class="landing-response-card" style="max-width: 500px;">
@@ -1611,15 +1545,15 @@ function showTopVermittlerResponse(vermittler, regions) {
                 </div>
 
                 <div class="landing-response-content" style="padding: 16px;">
-                    <div style="font-size: 13px; color: #64748b; margin-bottom: 12px;">
-                        ${landingRegionText}
-                    </div>
-
+                    <strong>Top 5 Vermittler nach Neugeschäft:</strong><br><br>
                     ${vermittlerList}
+                    <br><br>
+                    → <em>Die Tabelle zeigt jetzt die Top 5 Vermittler.</em>
 
-                    <button onclick="backToRegionsView()" style="margin-top: 12px; width: 100%; padding: 10px; background: #e2e8f0; color: #475569; border: none; border-radius: 8px; font-size: 13px; cursor: pointer;">
-                        ← Zurück zur Regionen-Ansicht
-                    </button>
+                    <div class="chat-followup-suggestions" style="margin-top: 12px;">
+                        <button onclick="askSampleQuestion('Welche Vermittler haben ungewöhnliche Werte?')">Auffällige Vermittler</button>
+                        <button onclick="backToRegionsView()">Zurück zur Karte</button>
+                    </div>
                 </div>
             </div>
         `;

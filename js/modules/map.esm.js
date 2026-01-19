@@ -98,7 +98,7 @@ export class CountyMapHandler {
             const name = this.getCountyName(feature);
             this.counties.set(name, {
                 name: name,
-                state: feature.properties.Bundesland || feature.properties.VARNAME_1,
+                state: feature.properties.NAME_1 || feature.properties.Bundesland || feature.properties.VARNAME_1 || '',
                 feature: feature,
                 selected: false,
                 value: 0

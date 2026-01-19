@@ -1478,6 +1478,10 @@ function showTopVermittlerInRegions() {
         .sort((a, b) => b.neugeschaeft - a.neugeschaeft)
         .slice(0, 5);
 
+    // Get the IDs of the top 5 Vermittler
+    const top5Ids = topVermittler.map(v => v.id);
+    console.log('🏆 Top 5 Vermittler IDs:', top5Ids);
+
     // Switch to table view with Agenturen data
     const dashboardView = document.getElementById('dashboardView');
     const tableView = document.getElementById('tableView');
@@ -1485,11 +1489,12 @@ function showTopVermittlerInRegions() {
     if (dashboardView) dashboardView.style.display = 'none';
     if (tableView) tableView.style.display = 'block';
 
-    // Clear region selection so table shows all data
+    // Set filters to show only top 5 Vermittler
     if (window.state) {
         window.state.currentView = 'table';
         window.state.currentTableView = 'agentur'; // Show Agenturen tab
         window.state.selectedCounties = new Set(); // Clear region filter
+        window.state.selectedAgenturen = new Set(top5Ids); // Filter to top 5 Vermittler
     }
 
     // Also clear map selection visually
@@ -1507,7 +1512,7 @@ function showTopVermittlerInRegions() {
         }
     });
 
-    // Render the table (without region filter)
+    // Render the table (filtered to top 5 Vermittler)
     if (typeof renderTable === 'function') {
         renderTable();
     }

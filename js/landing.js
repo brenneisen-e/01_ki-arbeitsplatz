@@ -1419,8 +1419,32 @@ function showTopVermittlerInRegions() {
         .sort((a, b) => b.neugeschaeft - a.neugeschaeft)
         .slice(0, 5);
 
-    // Stay in dashboard view, just update the chat response
-    // (Don't switch to empty table view)
+    // Switch to table view with Agenturen data
+    const dashboardView = document.getElementById('dashboardView');
+    const tableView = document.getElementById('tableView');
+
+    if (dashboardView) dashboardView.style.display = 'none';
+    if (tableView) tableView.style.display = 'block';
+
+    // Set state for table view
+    if (window.state) {
+        window.state.currentView = 'table';
+        window.state.currentTableView = 'agentur'; // Show Agenturen tab
+    }
+
+    // Activate the Agenturen tab button
+    const tableViewBtns = document.querySelectorAll('.table-view-btn');
+    tableViewBtns.forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.dataset.tableView === 'agentur') {
+            btn.classList.add('active');
+        }
+    });
+
+    // Render the table (will use selectedCounties filter automatically)
+    if (typeof renderTable === 'function') {
+        renderTable();
+    }
 
     // Update the response to show Vermittler data
     showTopVermittlerResponse(topVermittler, selectedRegions);

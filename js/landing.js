@@ -818,13 +818,29 @@ Dieses Tool bietet Ihnen:
 
 💡 *Mit einem API-Key würde ich detaillierte Echtzeitdaten aus deiner CSV analysieren.*`;
     }
-    
-    // Top performers
+
+    // ========================================
+    // SPECIAL: Best Sales Regions Query
+    // ========================================
+    if ((lowerMessage.includes('beste') || lowerMessage.includes('top')) &&
+        (lowerMessage.includes('vertriebsregion') || lowerMessage.includes('region') || lowerMessage.includes('gebiet'))) {
+
+        // Extract number if provided (default to 5)
+        const numberMatch = lowerMessage.match(/(\d+)/);
+        const count = numberMatch ? Math.min(parseInt(numberMatch[1]), 10) : 5;
+
+        // Trigger the special query handler
+        setTimeout(() => handleTopRegionsQuery(count), 100);
+
+        return `🔍 **Analysiere die ${count} besten Vertriebsregionen...**\n\nEinen Moment, ich navigiere zum Dashboard und zeige dir die Regionen auf der Karte.`;
+    }
+
+    // Top performers (Vermittler)
     if (lowerMessage.includes('top') || lowerMessage.includes('beste')) {
         if (dailyRawData && dailyRawData.length > 0) {
             const agenturen = typeof getAgenturen === 'function' ? getAgenturen().slice(0, 5) : [];
             if (agenturen.length > 0) {
-                return `📊 **Top 5 Vermittler:**\n\n${agenturen.map((a, i) => 
+                return `📊 **Top 5 Vermittler:**\n\n${agenturen.map((a, i) =>
                     `${i+1}. **${a.name || a.id}**`
                 ).join('\n')}\n\n💡 *Mit einem API-Key würde ich die tatsächlichen Zahlen analysieren.*`;
             }
@@ -936,6 +952,579 @@ function hideLandingChatTyping() {
     const typing = document.getElementById('landingTypingIndicator');
     if (typing) {
         typing.remove();
+    }
+}
+
+// ========================================
+// SPECIAL QUERY HANDLER: Top Sales Regions
+// ========================================
+
+/**
+ * Handle the "beste Vertriebsregionen" query
+ * - Navigate to Dashboard (A-03)
+ * - Calculate top regions from data
+ * - Select regions on the map
+ * - Show interactive response with export buttons
+ */
+async function handleTopRegionsQuery(count = 5) {
+    console.log(`🗺️ Top ${count} Vertriebsregionen Query gestartet...`);
+
+    // Check if data is available
+    const rawData = window.dailyRawData || (typeof dailyRawData !== 'undefined' ? dailyRawData : null);
+    if (!rawData || rawData.length === 0) {
+        showTopRegionsResponse(null, count, 'Keine Daten verfügbar. Bitte lade zuerst eine CSV-Datei hoch.');
+        return;
+    }
+
+    // Navigate to Dashboard first
+    openDashboard();
+
+    // Wait for map to initialize
+    await new Promise(resolve => setTimeout(resolve, 2000));
+
+    // Get the map handler
+    const mapHandler = window.countyMapHandler;
+    if (!mapHandler) {
+        console.error('❌ Map handler nicht gefunden');
+        showTopRegionsResponse(null, count, 'Karte konnte nicht geladen werden. Bitte versuche es erneut.');
+        return;
+    }
+
+    // Wait a bit more for map data to be populated
+    await new Promise(resolve => setTimeout(resolve, 500));
+
+    // Get top regions from map handler
+    const topRegions = mapHandler.getTopRegions(count);
+
+    if (topRegions.length === 0) {
+        showTopRegionsResponse(null, count, 'Keine Regionsdaten verfügbar. Die Karte hat noch keine Werte.');
+        return;
+    }
+
+    // Select the top regions on the map
+    const regionNames = topRegions.map(r => r.name);
+    mapHandler.selectMultipleCounties(regionNames);
+
+    // Show the interactive response
+    showTopRegionsResponse(topRegions, count);
+}
+
+/**
+ * Show the top regions response with export buttons and action button
+ * Uses the dashboard chat (A-03) when in dashboard view
+ */
+function showTopRegionsResponse(regions, count, errorMessage = null) {
+    // Check if we're in dashboard view
+    const mainApp = document.getElementById('mainApp');
+    const isInDashboard = mainApp && mainApp.style.display !== 'none';
+
+    if (isInDashboard) {
+        // Use the dashboard chat widget
+        showTopRegionsInDashboardChat(regions, count, errorMessage);
+        return;
+    }
+
+    // Otherwise use the landing page response container
+    const responseContainer = document.getElementById('landingChatResponse');
+    if (!responseContainer) return;
+
+    responseContainer.style.display = 'block';
+
+    if (errorMessage) {
+        responseContainer.innerHTML = `
+            <div class="landing-response-card">
+                <div class="landing-response-header">
+                    <div class="chat-avatar-deloitte"><span class="deloitte-d">D</span></div>
+                    <span class="landing-response-title">Fehler</span>
+                </div>
+                <div class="landing-response-content">
+                    ⚠️ ${errorMessage}
+                </div>
+            </div>
+        `;
+        return;
+    }
+
+    // Format currency
+    const formatCurrency = (value) => {
+        if (value >= 1000000) {
+            return `€${(value / 1000000).toFixed(2)} Mio`;
+        } else if (value >= 1000) {
+            return `€${(value / 1000).toFixed(0)}k`;
+        }
+        return `€${value.toFixed(0)}`;
+    };
+
+    // Build regions list
+    const regionsList = regions.map((r, i) => `
+        <div class="top-region-item" style="display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; background: ${i < 3 ? '#f0fdf4' : '#f8fafc'}; border-radius: 8px; margin-bottom: 6px; border-left: 4px solid ${i === 0 ? '#22c55e' : i === 1 ? '#86efac' : i === 2 ? '#bbf7d0' : '#e2e8f0'};">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <span style="font-weight: 700; color: ${i < 3 ? '#166534' : '#64748b'}; min-width: 24px;">#${i + 1}</span>
+                <div>
+                    <div style="font-weight: 600; color: #1e293b;">${r.name}</div>
+                    <div style="font-size: 11px; color: #64748b;">${r.state}</div>
+                </div>
+            </div>
+            <div style="text-align: right;">
+                <div style="font-weight: 700; color: #0ea5e9;">${formatCurrency(r.value)}</div>
+                <div style="font-size: 10px; color: #94a3b8;">Neugeschäft</div>
+            </div>
+        </div>
+    `).join('');
+
+    // Calculate total
+    const total = regions.reduce((sum, r) => sum + r.value, 0);
+
+    responseContainer.innerHTML = `
+        <div class="landing-response-card" style="max-width: 500px; position: relative;">
+            <div class="landing-response-header">
+                <div class="chat-avatar-deloitte"><span class="deloitte-d">D</span></div>
+                <span class="landing-response-title">Top ${count} Vertriebsregionen</span>
+            </div>
+
+            <div class="landing-response-content" style="padding: 0;">
+                <!-- Regions List -->
+                <div style="padding: 16px;">
+                    ${regionsList}
+
+                    <!-- Total -->
+                    <div style="margin-top: 12px; padding: 12px; background: linear-gradient(135deg, #0ea5e9 0%, #3b82f6 100%); border-radius: 10px; color: white;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span style="font-weight: 500;">Gesamt Top ${count}</span>
+                            <span style="font-weight: 700; font-size: 18px;">${formatCurrency(total)}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Info Text -->
+                <div style="padding: 0 16px 12px; font-size: 13px; color: #64748b;">
+                    📍 Die Regionen sind auf der Karte markiert. Du kannst die Ergebnisse exportieren oder weitere Analysen durchführen.
+                </div>
+
+                <!-- Export Buttons -->
+                <div style="padding: 12px 16px; background: #f8fafc; border-top: 1px solid #e2e8f0;">
+                    <div style="font-size: 12px; color: #64748b; margin-bottom: 8px;">📥 Ergebnisse exportieren:</div>
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                        <button onclick="exportTopRegionsPDF()" class="export-btn" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; background: #dc2626; color: white; border: none; border-radius: 6px; font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.2s;">
+                            <span>📄</span> PDF Export
+                        </button>
+                        <button onclick="exportTopRegionsExcel()" class="export-btn" style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; background: #16a34a; color: white; border: none; border-radius: 6px; font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.2s;">
+                            <span>📊</span> Excel Export
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Action Button: Top Vermittler -->
+                <div style="padding: 12px 16px; border-top: 1px solid #e2e8f0;">
+                    <div style="font-size: 12px; color: #64748b; margin-bottom: 8px;">🔍 Weitere Analyse:</div>
+                    <button onclick="showTopVermittlerInRegions()" class="action-btn" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 16px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);">
+                        <span>👥</span> Top 5 Vermittler in diesen Regionen anzeigen
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+
+    // Store regions for export functions
+    window._topRegionsData = regions;
+}
+
+/**
+ * Show top regions in the dashboard chat widget (A-03)
+ */
+function showTopRegionsInDashboardChat(regions, count, errorMessage = null) {
+    // Open and show the chat widget
+    const chatWidget = document.getElementById('chatWidget');
+    const chatToggle = document.getElementById('chatToggle');
+    const chatBody = document.getElementById('chatBody');
+
+    if (chatWidget) {
+        chatWidget.style.display = 'flex';
+        chatWidget.classList.remove('minimized');
+    }
+    if (chatToggle) {
+        chatToggle.style.display = 'none';
+    }
+
+    if (!chatBody) {
+        console.error('❌ Chat Body nicht gefunden');
+        return;
+    }
+
+    // Remove welcome message if exists
+    const welcome = chatBody.querySelector('.chat-welcome');
+    if (welcome) welcome.remove();
+
+    // Create message div
+    const messageDiv = document.createElement('div');
+    messageDiv.className = 'chat-message assistant';
+
+    const avatar = document.createElement('div');
+    avatar.className = 'chat-avatar';
+    avatar.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4M12 8h.01"></path></svg>';
+
+    const bubble = document.createElement('div');
+    bubble.className = 'chat-bubble';
+
+    if (errorMessage) {
+        bubble.innerHTML = `<strong>⚠️ Fehler</strong><br><br>${errorMessage}`;
+        messageDiv.appendChild(avatar);
+        messageDiv.appendChild(bubble);
+        chatBody.appendChild(messageDiv);
+        chatBody.scrollTop = chatBody.scrollHeight;
+        return;
+    }
+
+    // Format currency
+    const formatCurrency = (value) => {
+        if (value >= 1000000) return `€${(value / 1000000).toFixed(2)} Mio`;
+        if (value >= 1000) return `€${(value / 1000).toFixed(0)}k`;
+        return `€${value.toFixed(0)}`;
+    };
+
+    // Build regions list HTML
+    const regionsList = regions.map((r, i) => `
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 10px; background: ${i < 3 ? '#f0fdf4' : '#f8fafc'}; border-radius: 6px; margin-bottom: 4px; border-left: 3px solid ${i === 0 ? '#22c55e' : i === 1 ? '#86efac' : i === 2 ? '#bbf7d0' : '#e2e8f0'};">
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="font-weight: 700; color: ${i < 3 ? '#166534' : '#64748b'}; min-width: 20px; font-size: 12px;">#${i + 1}</span>
+                <div>
+                    <div style="font-weight: 600; color: #1e293b; font-size: 13px;">${r.name}</div>
+                    <div style="font-size: 10px; color: #64748b;">${r.state}</div>
+                </div>
+            </div>
+            <div style="text-align: right;">
+                <div style="font-weight: 700; color: #0ea5e9; font-size: 13px;">${formatCurrency(r.value)}</div>
+            </div>
+        </div>
+    `).join('');
+
+    const total = regions.reduce((sum, r) => sum + r.value, 0);
+
+    bubble.innerHTML = `
+        <div style="margin-bottom: 12px;">
+            <strong>📊 Top ${count} Vertriebsregionen</strong>
+        </div>
+
+        ${regionsList}
+
+        <!-- Total -->
+        <div style="margin: 12px 0; padding: 10px; background: linear-gradient(135deg, #0ea5e9 0%, #3b82f6 100%); border-radius: 8px; color: white; display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-weight: 500; font-size: 13px;">Gesamt</span>
+            <span style="font-weight: 700; font-size: 15px;">${formatCurrency(total)}</span>
+        </div>
+
+        <div style="font-size: 12px; color: #64748b; margin-bottom: 12px;">
+            📍 Die Regionen sind auf der Karte markiert.
+        </div>
+
+        <!-- Export Buttons -->
+        <div style="margin-bottom: 10px;">
+            <div style="font-size: 11px; color: #64748b; margin-bottom: 6px;">📥 Exportieren:</div>
+            <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                <button onclick="exportTopRegionsPDF()" style="display: flex; align-items: center; gap: 4px; padding: 6px 10px; background: #dc2626; color: white; border: none; border-radius: 5px; font-size: 12px; font-weight: 500; cursor: pointer;">
+                    📄 PDF
+                </button>
+                <button onclick="exportTopRegionsExcel()" style="display: flex; align-items: center; gap: 4px; padding: 6px 10px; background: #16a34a; color: white; border: none; border-radius: 5px; font-size: 12px; font-weight: 500; cursor: pointer;">
+                    📊 Excel
+                </button>
+            </div>
+        </div>
+
+        <!-- Action Button -->
+        <button onclick="showTopVermittlerInRegions()" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 10px 12px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);">
+            👥 Top 5 Vermittler anzeigen
+        </button>
+    `;
+
+    messageDiv.appendChild(avatar);
+    messageDiv.appendChild(bubble);
+    chatBody.appendChild(messageDiv);
+    chatBody.scrollTop = chatBody.scrollHeight;
+
+    // Store regions for export functions
+    window._topRegionsData = regions;
+}
+
+/**
+ * Export top regions as PDF
+ */
+function exportTopRegionsPDF() {
+    const regions = window._topRegionsData;
+    if (!regions) {
+        alert('Keine Daten zum Exportieren verfügbar.');
+        return;
+    }
+
+    // Simple PDF export using browser print
+    const formatCurrency = (value) => {
+        if (value >= 1000000) return `€${(value / 1000000).toFixed(2)} Mio`;
+        if (value >= 1000) return `€${(value / 1000).toFixed(0)}k`;
+        return `€${value.toFixed(0)}`;
+    };
+
+    const total = regions.reduce((sum, r) => sum + r.value, 0);
+    const date = new Date().toLocaleDateString('de-DE');
+
+    const content = `
+        <html>
+        <head>
+            <title>Top Vertriebsregionen - ${date}</title>
+            <style>
+                body { font-family: Arial, sans-serif; padding: 40px; }
+                h1 { color: #1e293b; border-bottom: 3px solid #0ea5e9; padding-bottom: 10px; }
+                .region { display: flex; justify-content: space-between; padding: 12px; border-bottom: 1px solid #e2e8f0; }
+                .region:nth-child(odd) { background: #f8fafc; }
+                .rank { font-weight: bold; color: #0ea5e9; width: 40px; }
+                .name { flex: 1; }
+                .state { color: #64748b; font-size: 12px; }
+                .value { font-weight: bold; color: #16a34a; }
+                .total { margin-top: 20px; padding: 16px; background: #0ea5e9; color: white; border-radius: 8px; display: flex; justify-content: space-between; }
+                .footer { margin-top: 40px; color: #94a3b8; font-size: 12px; }
+            </style>
+        </head>
+        <body>
+            <h1>📊 Top ${regions.length} Vertriebsregionen</h1>
+            <p>Exportiert am ${date}</p>
+            ${regions.map((r, i) => `
+                <div class="region">
+                    <span class="rank">#${i + 1}</span>
+                    <div class="name">${r.name}<br><span class="state">${r.state}</span></div>
+                    <span class="value">${formatCurrency(r.value)}</span>
+                </div>
+            `).join('')}
+            <div class="total">
+                <span>Gesamt</span>
+                <span>${formatCurrency(total)}</span>
+            </div>
+            <div class="footer">
+                Generiert vom Vertriebssteuerungs-Dashboard
+            </div>
+        </body>
+        </html>
+    `;
+
+    const printWindow = window.open('', '_blank');
+    printWindow.document.write(content);
+    printWindow.document.close();
+    printWindow.print();
+}
+
+/**
+ * Export top regions as Excel (CSV)
+ */
+function exportTopRegionsExcel() {
+    const regions = window._topRegionsData;
+    if (!regions) {
+        alert('Keine Daten zum Exportieren verfügbar.');
+        return;
+    }
+
+    // Create CSV content
+    const headers = ['Rang', 'Region', 'Bundesland', 'Neugeschäft (EUR)'];
+    const rows = regions.map((r, i) => [i + 1, r.name, r.state, r.value.toFixed(2)]);
+
+    // Add total row
+    const total = regions.reduce((sum, r) => sum + r.value, 0);
+    rows.push(['', 'GESAMT', '', total.toFixed(2)]);
+
+    // Convert to CSV
+    const csvContent = [headers, ...rows]
+        .map(row => row.map(cell => `"${cell}"`).join(';'))
+        .join('\n');
+
+    // Add BOM for Excel UTF-8 compatibility
+    const BOM = '\uFEFF';
+    const blob = new Blob([BOM + csvContent], { type: 'text/csv;charset=utf-8;' });
+
+    // Download
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `Top_Vertriebsregionen_${new Date().toISOString().split('T')[0]}.csv`;
+    link.click();
+}
+
+/**
+ * Show top Vermittler in the selected regions (switches to table view)
+ */
+function showTopVermittlerInRegions() {
+    console.log('👥 Zeige Top Vermittler in ausgewählten Regionen...');
+
+    const mapHandler = window.countyMapHandler;
+    if (!mapHandler || mapHandler.selectedCounties.size === 0) {
+        alert('Keine Regionen ausgewählt.');
+        return;
+    }
+
+    const selectedRegions = Array.from(mapHandler.selectedCounties);
+    const rawData = window.dailyRawData || dailyRawData;
+
+    if (!rawData || rawData.length === 0) {
+        alert('Keine Daten verfügbar.');
+        return;
+    }
+
+    // Filter data by selected regions
+    const filteredData = rawData.filter(row => {
+        const kreis = row.landkreis || row.kreis;
+        return selectedRegions.some(region =>
+            kreis && kreis.toLowerCase().includes(region.toLowerCase())
+        );
+    });
+
+    // Aggregate by Vermittler
+    const vermittlerMap = new Map();
+    filteredData.forEach(row => {
+        const id = row.vermittler_id;
+        if (!id) return;
+
+        if (!vermittlerMap.has(id)) {
+            vermittlerMap.set(id, {
+                id: id,
+                name: row.vermittler_name || row.agentur_name || id,
+                neugeschaeft: 0,
+                count: 0
+            });
+        }
+        const v = vermittlerMap.get(id);
+        v.neugeschaeft += parseFloat(row.neugeschaeft) || 0;
+        v.count++;
+    });
+
+    // Sort by Neugeschäft and get top 5
+    const topVermittler = Array.from(vermittlerMap.values())
+        .sort((a, b) => b.neugeschaeft - a.neugeschaeft)
+        .slice(0, 5);
+
+    // Switch to table view
+    if (typeof switchToTableView === 'function') {
+        switchToTableView();
+    } else {
+        // Fallback: manually show table view
+        const dashboardView = document.getElementById('dashboardView');
+        const tableView = document.getElementById('tableView');
+        if (dashboardView) dashboardView.style.display = 'none';
+        if (tableView) tableView.style.display = 'block';
+
+        if (window.state) window.state.currentView = 'table';
+    }
+
+    // Update the response to show Vermittler data
+    showTopVermittlerResponse(topVermittler, selectedRegions);
+}
+
+/**
+ * Show top Vermittler response - uses dashboard chat when in dashboard
+ */
+function showTopVermittlerResponse(vermittler, regions) {
+    const mainApp = document.getElementById('mainApp');
+    const isInDashboard = mainApp && mainApp.style.display !== 'none';
+
+    const formatCurrency = (value) => {
+        if (value >= 1000000) return `€${(value / 1000000).toFixed(2)} Mio`;
+        if (value >= 1000) return `€${(value / 1000).toFixed(0)}k`;
+        return `€${value.toFixed(0)}`;
+    };
+
+    const vermittlerList = vermittler.map((v, i) => `
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 10px; background: ${i === 0 ? '#fef3c7' : '#f8fafc'}; border-radius: 6px; margin-bottom: 4px; border-left: 3px solid ${i === 0 ? '#f59e0b' : '#e2e8f0'};">
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="font-weight: 700; color: ${i === 0 ? '#b45309' : '#64748b'}; min-width: 20px; font-size: 12px;">#${i + 1}</span>
+                <div>
+                    <div style="font-weight: 600; color: #1e293b; font-size: 13px;">${v.name}</div>
+                    <div style="font-size: 10px; color: #64748b;">${v.id}</div>
+                </div>
+            </div>
+            <div style="text-align: right;">
+                <div style="font-weight: 700; color: #0ea5e9; font-size: 13px;">${formatCurrency(v.neugeschaeft)}</div>
+            </div>
+        </div>
+    `).join('');
+
+    if (isInDashboard) {
+        // Use dashboard chat
+        const chatBody = document.getElementById('chatBody');
+        if (!chatBody) return;
+
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'chat-message assistant';
+
+        const avatar = document.createElement('div');
+        avatar.className = 'chat-avatar';
+        avatar.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4M12 8h.01"></path></svg>';
+
+        const bubble = document.createElement('div');
+        bubble.className = 'chat-bubble';
+
+        bubble.innerHTML = `
+            <div style="margin-bottom: 10px;">
+                <strong>👥 Top 5 Vermittler</strong>
+            </div>
+            <div style="font-size: 11px; color: #64748b; margin-bottom: 10px;">
+                In: <strong>${regions.slice(0, 3).join(', ')}${regions.length > 3 ? '...' : ''}</strong>
+            </div>
+
+            ${vermittlerList}
+
+            <div style="margin-top: 10px; padding: 8px; background: #f1f5f9; border-radius: 6px; font-size: 11px; color: #475569;">
+                📋 Tabelle zeigt Details. Klicke auf einen Vermittler für mehr Info.
+            </div>
+
+            <button onclick="backToRegionsView()" style="margin-top: 8px; width: 100%; padding: 8px; background: #e2e8f0; color: #475569; border: none; border-radius: 6px; font-size: 12px; cursor: pointer;">
+                ← Zurück zu Regionen
+            </button>
+        `;
+
+        messageDiv.appendChild(avatar);
+        messageDiv.appendChild(bubble);
+        chatBody.appendChild(messageDiv);
+        chatBody.scrollTop = chatBody.scrollHeight;
+    } else {
+        // Use landing page response container
+        const responseContainer = document.getElementById('landingChatResponse');
+        if (!responseContainer) return;
+
+        responseContainer.innerHTML = `
+            <div class="landing-response-card" style="max-width: 500px;">
+                <div class="landing-response-header">
+                    <div class="chat-avatar-deloitte"><span class="deloitte-d">D</span></div>
+                    <span class="landing-response-title">Top 5 Vermittler</span>
+                </div>
+
+                <div class="landing-response-content" style="padding: 16px;">
+                    <div style="font-size: 13px; color: #64748b; margin-bottom: 12px;">
+                        👥 In den Regionen: <strong>${regions.join(', ')}</strong>
+                    </div>
+
+                    ${vermittlerList}
+
+                    <div style="margin-top: 16px; padding: 12px; background: #f1f5f9; border-radius: 8px; font-size: 13px; color: #475569;">
+                        📋 Die Tabelle oben zeigt alle Vermittler in den ausgewählten Regionen.
+                    </div>
+
+                    <button onclick="backToRegionsView()" style="margin-top: 12px; width: 100%; padding: 10px; background: #e2e8f0; color: #475569; border: none; border-radius: 8px; font-size: 13px; cursor: pointer;">
+                        ← Zurück zur Regionen-Ansicht
+                    </button>
+                </div>
+            </div>
+        `;
+    }
+}
+
+/**
+ * Switch back to dashboard view from table view
+ */
+function backToRegionsView() {
+    const dashboardView = document.getElementById('dashboardView');
+    const tableView = document.getElementById('tableView');
+
+    if (dashboardView) dashboardView.style.display = 'flex';
+    if (tableView) tableView.style.display = 'none';
+
+    if (window.state) window.state.currentView = 'dashboard';
+
+    // Restore the regions response
+    if (window._topRegionsData) {
+        showTopRegionsResponse(window._topRegionsData, window._topRegionsData.length);
     }
 }
 

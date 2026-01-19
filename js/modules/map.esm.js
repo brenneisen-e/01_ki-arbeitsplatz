@@ -454,6 +454,78 @@ export class CountyMapHandler {
         this.updateDashboard();
     }
 
+    /**
+     * Select multiple counties programmatically (for AI queries)
+     * @param {Array<string>} countyNames - Array of county names to select
+     * @param {boolean} clearFirst - Whether to clear existing selection first (default: true)
+     */
+    selectMultipleCounties(countyNames, clearFirst = true) {
+        console.log('🗺️ Programmatische Multi-Selektion:', countyNames);
+
+        // Clear existing selection if requested
+        if (clearFirst) {
+            this.selectedCounties.clear();
+            this.counties.forEach((countyData, countyName) => {
+                countyData.selected = false;
+                this.svg.select(`[data-county="${countyName}"]`)
+                    .attr('stroke', '#cbd5e1')
+                    .attr('stroke-width', 0.5)
+                    .attr('fill', '#ffffff')
+                    .style('filter', 'none');
+            });
+        }
+
+        // Select each county
+        countyNames.forEach(searchName => {
+            // Try to find the county (with fuzzy matching)
+            const foundName = this.findCountyByName(searchName);
+            if (!foundName) {
+                console.warn(`⚠️ Region nicht gefunden: ${searchName}`);
+                return;
+            }
+
+            const county = this.counties.get(foundName);
+            if (!county) return;
+
+            county.selected = true;
+            this.selectedCounties.add(foundName);
+
+            const color = this.getColorForValue(county.value);
+            this.svg.select(`[data-county="${foundName}"]`)
+                .attr('stroke', '#3b82f6')
+                .attr('stroke-width', 3)
+                .attr('fill', color)
+                .style('filter', 'drop-shadow(0 0 8px rgba(59, 130, 246, 1))')
+                .raise();
+        });
+
+        console.log(`✅ ${this.selectedCounties.size} Regionen selektiert`);
+        this.updateDashboard();
+    }
+
+    /**
+     * Get top N regions by value (Neugeschäft)
+     * @param {number} n - Number of top regions to return
+     * @returns {Array<{name: string, value: number, state: string}>}
+     */
+    getTopRegions(n = 5) {
+        const regions = [];
+        this.counties.forEach((county, name) => {
+            if (county.value > 0) {
+                regions.push({
+                    name: name,
+                    value: county.value,
+                    state: county.state
+                });
+            }
+        });
+
+        // Sort by value descending
+        regions.sort((a, b) => b.value - a.value);
+
+        return regions.slice(0, n);
+    }
+
     zoomToState(stateName) {
         const stateCounties = [];
         this.counties.forEach((county, name) => {

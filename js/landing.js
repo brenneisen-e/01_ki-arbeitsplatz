@@ -454,6 +454,19 @@ function backToLanding() {
             detail: { module: 'main', view: 'landing' }
         }));
     }
+
+    // Reset the landing chat response container (clear loading indicator)
+    const responseContainer = document.getElementById('landingChatResponse');
+    if (responseContainer) {
+        responseContainer.style.display = 'none';
+        responseContainer.innerHTML = '';
+    }
+
+    // Clear the chat input
+    const chatInput = document.getElementById('landingChatInput');
+    if (chatInput) {
+        chatInput.value = '';
+    }
 }
 
 

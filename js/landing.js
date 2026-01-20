@@ -1127,6 +1127,83 @@ async function handleTopRegionsQuery(count = 5) {
 // SPECIAL QUERY HANDLER: Single Region
 // ========================================
 
+// Mapping of city names to their Regierungsbezirke
+const CITY_TO_REGION_MAP = {
+    // Bayern
+    'münchen': 'Oberbayern',
+    'munich': 'Oberbayern',
+    'augsburg': 'Schwaben',
+    'nürnberg': 'Mittelfranken',
+    'nuremberg': 'Mittelfranken',
+    'würzburg': 'Unterfranken',
+    'regensburg': 'Oberpfalz',
+    'bayreuth': 'Oberfranken',
+    'passau': 'Niederbayern',
+    'ingolstadt': 'Oberbayern',
+    // Baden-Württemberg
+    'stuttgart': 'Stuttgart',
+    'karlsruhe': 'Karlsruhe',
+    'freiburg': 'Freiburg',
+    'heidelberg': 'Karlsruhe',
+    'mannheim': 'Karlsruhe',
+    'ulm': 'Tübingen',
+    'reutlingen': 'Tübingen',
+    // NRW
+    'düsseldorf': 'Düsseldorf',
+    'dusseldorf': 'Düsseldorf',
+    'köln': 'Köln',
+    'koln': 'Köln',
+    'cologne': 'Köln',
+    'bonn': 'Köln',
+    'essen': 'Düsseldorf',
+    'dortmund': 'Arnsberg',
+    'bielefeld': 'Detmold',
+    'münster': 'Munster',
+    'aachen': 'Köln',
+    'wuppertal': 'Düsseldorf',
+    'duisburg': 'Düsseldorf',
+    // Niedersachsen
+    'hannover': 'Hannover',
+    'braunschweig': 'Braunschweig',
+    'osnabrück': 'Weser-Ems',
+    'oldenburg': 'Weser-Ems',
+    'göttingen': 'Braunschweig',
+    'wolfsburg': 'Braunschweig',
+    // Hessen
+    'frankfurt': 'Darmstadt',
+    'wiesbaden': 'Darmstadt',
+    'kassel': 'Kassel',
+    'darmstadt': 'Darmstadt',
+    'gießen': 'Gießen',
+    'marburg': 'Gießen',
+    // Sachsen
+    'dresden': 'Dresden',
+    'leipzig': 'Leipzig',
+    'chemnitz': 'Chemnitz',
+    // Sachsen-Anhalt
+    'magdeburg': 'Magdeburg',
+    'halle': 'Halle',
+    'dessau': 'Dessau',
+    // Rheinland-Pfalz
+    'mainz': 'Rheinhessen-Pfalz',
+    'koblenz': 'Koblenz',
+    'trier': 'Trier',
+    'ludwigshafen': 'Rheinhessen-Pfalz',
+    // Stadtstaaten & Flächenländer ohne Bezirke
+    'berlin': 'Berlin',
+    'hamburg': 'Hamburg',
+    'bremen': 'Bremen',
+    'saarbrücken': 'Saarland',
+    'kiel': 'Schleswig-Holstein',
+    'lübeck': 'Schleswig-Holstein',
+    'rostock': 'Mecklenburg-Vorpommern',
+    'schwerin': 'Mecklenburg-Vorpommern',
+    'erfurt': 'Thüringen',
+    'jena': 'Thüringen',
+    'potsdam': 'Brandenburg',
+    'cottbus': 'Brandenburg'
+};
+
 /**
  * Handle single region query (e.g. "Vertriebszahlen aus Düsseldorf")
  * - Navigate to Dashboard (A-03)
@@ -1135,6 +1212,14 @@ async function handleTopRegionsQuery(count = 5) {
  */
 async function handleSingleRegionQuery(regionName) {
     console.log(`[Query] Einzelregion "${regionName}" gestartet...`);
+
+    // Check if city name maps to a Regierungsbezirk
+    const lowerName = regionName.toLowerCase().trim();
+    const mappedRegion = CITY_TO_REGION_MAP[lowerName];
+    const searchRegion = mappedRegion || regionName;
+    const displayName = mappedRegion ? `${regionName} (${mappedRegion})` : regionName;
+
+    console.log(`[Query] Suche nach: ${searchRegion} (Original: ${regionName})`);
 
     // Check if data is available
     const rawData = window.dailyRawData || (typeof dailyRawData !== 'undefined' ? dailyRawData : null);
@@ -1217,8 +1302,8 @@ async function handleSingleRegionQuery(regionName) {
 
     console.log(`[Query] Karte geladen nach ${attempts * 150}ms`);
 
-    // Find the region on the map
-    const foundRegion = mapHandler.findCountyByName(regionName);
+    // Find the region on the map (use searchRegion which may be mapped from city name)
+    const foundRegion = mapHandler.findCountyByName(searchRegion);
 
     if (!foundRegion) {
         if (mainApp) {
@@ -1227,7 +1312,10 @@ async function handleSingleRegionQuery(regionName) {
             mainApp.style.position = '';
             mainApp.style.left = '';
         }
-        showSingleRegionResponse(null, regionName, `Region "${regionName}" wurde nicht gefunden. Verfügbare Regionen sind z.B. Düsseldorf, Köln, München, Berlin, Hamburg...`);
+        const hint = mappedRegion
+            ? `Stadt "${regionName}" wurde der Region "${mappedRegion}" zugeordnet, aber diese wurde nicht gefunden.`
+            : `Region "${regionName}" wurde nicht gefunden. Verfügbare Regionen sind z.B. Düsseldorf, Köln, Oberbayern (München), Berlin, Hamburg...`;
+        showSingleRegionResponse(null, displayName, hint);
         return;
     }
 
@@ -1236,7 +1324,9 @@ async function handleSingleRegionQuery(regionName) {
     const regionData = {
         name: foundRegion,
         value: county ? county.value : 0,
-        state: county ? county.state : ''
+        state: county ? county.state : '',
+        originalQuery: regionName,
+        mappedFrom: mappedRegion ? regionName : null
     };
 
     // Select the region on the map
@@ -1259,7 +1349,7 @@ async function handleSingleRegionQuery(regionName) {
     }));
 
     // Show the response in dashboard chat
-    showSingleRegionResponse(regionData, regionName);
+    showSingleRegionResponse(regionData, displayName);
 }
 
 /**
@@ -1304,8 +1394,14 @@ function showSingleRegionResponse(regionData, regionName, errorMessage = null) {
         if (errorMessage) {
             bubble.innerHTML = `<strong>Fehler</strong><br><br>${errorMessage}`;
         } else {
+            // Show mapping info if city was mapped to region
+            const mappingInfo = regionData.mappedFrom
+                ? `<em style="color: #64748b; font-size: 12px;">(${regionData.mappedFrom} → Region ${regionData.name})</em><br><br>`
+                : '';
+
             bubble.innerHTML = `
-                <strong>Vertriebsdaten für ${regionData.name}:</strong><br><br>
+                <strong>Vertriebsdaten für ${regionData.name}:</strong><br>
+                ${mappingInfo}
                 <strong>Neugeschäft:</strong> ${formatCurrency(regionData.value)}<br>
                 <strong>Bundesland:</strong> ${regionData.state}<br><br>
                 → <em>Die Region ist auf der Karte markiert.</em>

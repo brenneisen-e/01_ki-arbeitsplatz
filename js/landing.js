@@ -848,6 +848,25 @@ Dieses Tool bietet Ihnen:
         return `🔍 **Analysiere die ${count} besten Vertriebsregionen...**\n\nEinen Moment, ich navigiere zum Dashboard und zeige dir die Regionen auf der Karte.`;
     }
 
+    // ========================================
+    // SPECIAL: Single Region Query (e.g. "Vertriebszahlen aus Düsseldorf")
+    // ========================================
+    const regionKeywords = ['vertriebszahlen', 'zahlen', 'daten', 'performance', 'wie läuft', 'wie geht', 'ergebnisse', 'umsatz'];
+    const locationPreps = ['aus', 'von', 'in', 'für', 'zu'];
+
+    const hasRegionKeyword = regionKeywords.some(kw => lowerMessage.includes(kw));
+    const hasLocationPrep = locationPreps.some(prep => lowerMessage.includes(prep));
+
+    if (hasRegionKeyword && hasLocationPrep) {
+        // Try to extract region name
+        const regionMatch = message.match(/(?:aus|von|in|für|zu)\s+([A-ZÄÖÜa-zäöüß][A-ZÄÖÜa-zäöüß\-\s]+?)(?:\s*\?|$|\s+und|\s+oder|\s+mit)/i);
+        if (regionMatch) {
+            const regionName = regionMatch[1].trim();
+            setTimeout(() => handleSingleRegionQuery(regionName), 100);
+            return `🔍 **Lade Vertriebsdaten für ${regionName}...**\n\nEinen Moment, ich navigiere zum Dashboard und zeige dir die Region auf der Karte.`;
+        }
+    }
+
     // Top performers (Vermittler)
     if (lowerMessage.includes('top') || lowerMessage.includes('beste')) {
         if (dailyRawData && dailyRawData.length > 0) {
@@ -1102,6 +1121,227 @@ async function handleTopRegionsQuery(count = 5) {
 
     // Show the interactive response in dashboard chat
     showTopRegionsResponse(topRegions, count);
+}
+
+// ========================================
+// SPECIAL QUERY HANDLER: Single Region
+// ========================================
+
+/**
+ * Handle single region query (e.g. "Vertriebszahlen aus Düsseldorf")
+ * - Navigate to Dashboard (A-03)
+ * - Select the region on the map
+ * - Show region data in chat
+ */
+async function handleSingleRegionQuery(regionName) {
+    console.log(`[Query] Einzelregion "${regionName}" gestartet...`);
+
+    // Check if data is available
+    const rawData = window.dailyRawData || (typeof dailyRawData !== 'undefined' ? dailyRawData : null);
+    if (!rawData || rawData.length === 0) {
+        showSingleRegionResponse(null, regionName, 'Keine Daten verfügbar. Bitte lade zuerst eine CSV-Datei hoch.');
+        return;
+    }
+
+    // Show loading indicator on landing page
+    const responseContainer = document.getElementById('landingChatResponse');
+    if (responseContainer) {
+        responseContainer.style.display = 'block';
+        responseContainer.innerHTML = `
+            <div class="landing-response-card" style="text-align: center; padding: 24px;">
+                <div style="margin-bottom: 12px;">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#0ea5e9" stroke-width="2" style="animation: spin 1s linear infinite;">
+                        <path d="M21 12a9 9 0 11-6.219-8.56"/>
+                    </svg>
+                </div>
+                <div style="font-weight: 600; color: #1e293b;">Lade Dashboard und Karte...</div>
+                <div style="font-size: 12px; color: #64748b; margin-top: 4px;">Suche nach ${regionName}</div>
+            </div>
+            <style>
+                @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+            </style>
+        `;
+    }
+
+    // Initialize dashboard in background (hidden)
+    const landingPage = document.getElementById('landingPage');
+    const mainApp = document.getElementById('mainApp');
+
+    if (mainApp) {
+        mainApp.style.display = 'block';
+        mainApp.style.visibility = 'hidden';
+        mainApp.style.position = 'absolute';
+        mainApp.style.left = '-9999px';
+    }
+
+    // Trigger dashboard initialization
+    if (typeof waitForLibraries === 'function') {
+        waitForLibraries(function() {
+            if (typeof initKPIGrid === 'function') initKPIGrid();
+            if (typeof updateAllKPIs === 'function') updateAllKPIs();
+            if (typeof initMap === 'function') initMap();
+        });
+    }
+
+    // Wait for map to fully initialize with polling
+    let mapHandler = null;
+    let attempts = 0;
+    const maxAttempts = 40;
+
+    while (!mapHandler && attempts < maxAttempts) {
+        await new Promise(resolve => setTimeout(resolve, 150));
+        mapHandler = window.countyMapHandler;
+        attempts++;
+
+        if (mapHandler && mapHandler.counties && mapHandler.counties.size > 0) {
+            const hasData = Array.from(mapHandler.counties.values()).some(c => c.value > 0);
+            if (!hasData) {
+                mapHandler = null;
+            }
+        } else {
+            mapHandler = null;
+        }
+    }
+
+    if (!mapHandler) {
+        console.error('[Query] Map handler nicht gefunden nach Timeout');
+        if (mainApp) {
+            mainApp.style.display = 'none';
+            mainApp.style.visibility = '';
+            mainApp.style.position = '';
+            mainApp.style.left = '';
+        }
+        showSingleRegionResponse(null, regionName, 'Karte konnte nicht geladen werden. Bitte versuche es erneut.');
+        return;
+    }
+
+    console.log(`[Query] Karte geladen nach ${attempts * 150}ms`);
+
+    // Find the region on the map
+    const foundRegion = mapHandler.findCountyByName(regionName);
+
+    if (!foundRegion) {
+        if (mainApp) {
+            mainApp.style.display = 'none';
+            mainApp.style.visibility = '';
+            mainApp.style.position = '';
+            mainApp.style.left = '';
+        }
+        showSingleRegionResponse(null, regionName, `Region "${regionName}" wurde nicht gefunden. Verfügbare Regionen sind z.B. Düsseldorf, Köln, München, Berlin, Hamburg...`);
+        return;
+    }
+
+    // Get region data
+    const county = mapHandler.counties.get(foundRegion);
+    const regionData = {
+        name: foundRegion,
+        value: county ? county.value : 0,
+        state: county ? county.state : ''
+    };
+
+    // Select the region on the map
+    mapHandler.selectMultipleCounties([foundRegion]);
+
+    // Small delay to ensure selection is rendered
+    await new Promise(resolve => setTimeout(resolve, 100));
+
+    // NOW show the dashboard
+    if (landingPage) landingPage.style.display = 'none';
+    if (mainApp) {
+        mainApp.style.visibility = '';
+        mainApp.style.position = '';
+        mainApp.style.left = '';
+    }
+
+    // Dispatch event for page tracker
+    document.dispatchEvent(new CustomEvent('viewChanged', {
+        detail: { module: 'versicherung', view: 'dashboard' }
+    }));
+
+    // Show the response in dashboard chat
+    showSingleRegionResponse(regionData, regionName);
+}
+
+/**
+ * Show single region response in dashboard chat
+ */
+function showSingleRegionResponse(regionData, regionName, errorMessage = null) {
+    const mainApp = document.getElementById('mainApp');
+    const isInDashboard = mainApp && mainApp.style.display !== 'none';
+
+    const formatCurrency = (value) => {
+        if (value >= 1000000) return `€${(value / 1000000).toFixed(2)} Mio`;
+        if (value >= 1000) return `€${(value / 1000).toFixed(0)}k`;
+        return `€${value.toFixed(0)}`;
+    };
+
+    if (isInDashboard) {
+        // Use dashboard chat
+        const chatWidget = document.getElementById('chatWidget');
+        const chatToggle = document.getElementById('chatToggle');
+        const chatBody = document.getElementById('chatBody');
+
+        if (chatWidget) {
+            chatWidget.style.display = 'flex';
+            chatWidget.classList.remove('minimized');
+        }
+        if (chatToggle) chatToggle.style.display = 'none';
+        if (!chatBody) return;
+
+        const welcome = chatBody.querySelector('.chat-welcome');
+        if (welcome) welcome.remove();
+
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'chat-message assistant';
+
+        const avatar = document.createElement('div');
+        avatar.className = 'chat-avatar';
+        avatar.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4M12 8h.01"></path></svg>';
+
+        const bubble = document.createElement('div');
+        bubble.className = 'chat-bubble';
+
+        if (errorMessage) {
+            bubble.innerHTML = `<strong>Fehler</strong><br><br>${errorMessage}`;
+        } else {
+            bubble.innerHTML = `
+                <strong>Vertriebsdaten für ${regionData.name}:</strong><br><br>
+                <strong>Neugeschäft:</strong> ${formatCurrency(regionData.value)}<br>
+                <strong>Bundesland:</strong> ${regionData.state}<br><br>
+                → <em>Die Region ist auf der Karte markiert.</em>
+
+                <div class="chat-followup-suggestions" style="margin-top: 12px;">
+                    <button onclick="showTopVermittlerInRegions()">Top 5 Vermittler</button>
+                    <button onclick="askSampleQuestion('Welche Vermittler haben ungewöhnliche Werte?')">Auffällige Vermittler</button>
+                </div>
+            `;
+        }
+
+        messageDiv.appendChild(avatar);
+        messageDiv.appendChild(bubble);
+        chatBody.appendChild(messageDiv);
+        chatBody.scrollTop = chatBody.scrollHeight;
+
+        // Store region for later
+        window._currentRegionData = regionData;
+    } else {
+        // Use landing page response
+        const responseContainer = document.getElementById('landingChatResponse');
+        if (!responseContainer) return;
+
+        responseContainer.style.display = 'block';
+        if (errorMessage) {
+            responseContainer.innerHTML = `
+                <div class="landing-response-card">
+                    <div class="landing-response-header">
+                        <div class="chat-avatar-deloitte"><span class="deloitte-d">D</span></div>
+                        <span class="landing-response-title">Fehler</span>
+                    </div>
+                    <div class="landing-response-content">⚠️ ${errorMessage}</div>
+                </div>
+            `;
+        }
+    }
 }
 
 /**
@@ -1686,6 +1926,8 @@ window.openBestandsuebertragung = openBestandsuebertragung;
 window.closeBestandsuebertragung = closeBestandsuebertragung;
 window.saveUserName = saveUserName;
 window.loadUserName = loadUserName;
+window.handleTopRegionsQuery = handleTopRegionsQuery;
+window.handleSingleRegionQuery = handleSingleRegionQuery;
 
 // WICHTIG: Entfernen Sie den ersten DOMContentLoaded von ganz oben!
 // Hier ist der einzige DOMContentLoaded Listener:

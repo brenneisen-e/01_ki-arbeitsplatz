@@ -849,19 +849,49 @@ Dieses Tool bietet Ihnen:
     }
 
     // ========================================
-    // SPECIAL: Single Region Query (e.g. "Vertriebszahlen aus Düsseldorf")
+    // SPECIAL: Single Region Query (e.g. "Vertriebszahlen aus Düsseldorf" or "Vertriebskennzahlen München")
     // ========================================
-    const regionKeywords = ['vertriebszahlen', 'zahlen', 'daten', 'performance', 'wie läuft', 'wie geht', 'ergebnisse', 'umsatz'];
+    const regionKeywords = ['vertriebszahlen', 'vertriebskennzahlen', 'kennzahlen', 'zahlen', 'daten', 'performance', 'wie läuft', 'wie geht', 'ergebnisse', 'umsatz', 'neugeschäft'];
     const locationPreps = ['aus', 'von', 'in', 'für', 'zu'];
 
-    const hasRegionKeyword = regionKeywords.some(kw => lowerMessage.includes(kw));
-    const hasLocationPrep = locationPreps.some(prep => lowerMessage.includes(prep));
+    // Known cities/regions for direct matching (without preposition)
+    const knownLocations = [
+        'münchen', 'munich', 'berlin', 'hamburg', 'köln', 'cologne', 'düsseldorf', 'dusseldorf',
+        'frankfurt', 'stuttgart', 'dortmund', 'essen', 'bremen', 'dresden', 'leipzig', 'hannover',
+        'nürnberg', 'nuremberg', 'duisburg', 'bochum', 'wuppertal', 'bielefeld', 'bonn', 'münster',
+        'karlsruhe', 'mannheim', 'augsburg', 'wiesbaden', 'mainz', 'freiburg', 'koblenz', 'trier',
+        'kassel', 'braunschweig', 'magdeburg', 'erfurt', 'rostock', 'kiel', 'lübeck', 'potsdam',
+        'oberbayern', 'niederbayern', 'oberpfalz', 'oberfranken', 'mittelfranken', 'unterfranken',
+        'schwaben', 'arnsberg', 'detmold', 'köln', 'düsseldorf', 'darmstadt', 'gießen'
+    ];
 
-    if (hasRegionKeyword && hasLocationPrep) {
-        // Try to extract region name
-        const regionMatch = message.match(/(?:aus|von|in|für|zu)\s+([A-ZÄÖÜa-zäöüß][A-ZÄÖÜa-zäöüß\-\s]+?)(?:\s*\?|$|\s+und|\s+oder|\s+mit)/i);
-        if (regionMatch) {
-            const regionName = regionMatch[1].trim();
+    const hasRegionKeyword = regionKeywords.some(kw => lowerMessage.includes(kw));
+    const hasLocationPrep = locationPreps.some(prep => lowerMessage.includes(' ' + prep + ' '));
+
+    // Check for direct city name match (e.g. "Vertriebskennzahlen München")
+    const foundLocation = knownLocations.find(loc => lowerMessage.includes(loc));
+
+    if (hasRegionKeyword && (hasLocationPrep || foundLocation)) {
+        let regionName = null;
+
+        // First try with preposition
+        if (hasLocationPrep) {
+            const regionMatch = message.match(/(?:aus|von|in|für|zu)\s+([A-ZÄÖÜa-zäöüß][A-ZÄÖÜa-zäöüß\-\s]+?)(?:\s*\?|$|\s+und|\s+oder|\s+mit)/i);
+            if (regionMatch) {
+                regionName = regionMatch[1].trim();
+            }
+        }
+
+        // If no preposition match, try direct city match
+        if (!regionName && foundLocation) {
+            // Find the properly capitalized version in the original message
+            const cityMatch = message.match(new RegExp(foundLocation, 'i'));
+            if (cityMatch) {
+                regionName = cityMatch[0];
+            }
+        }
+
+        if (regionName) {
             setTimeout(() => handleSingleRegionQuery(regionName), 100);
             return `🔍 **Lade Vertriebsdaten für ${regionName}...**\n\nEinen Moment, ich navigiere zum Dashboard und zeige dir die Region auf der Karte.`;
         }

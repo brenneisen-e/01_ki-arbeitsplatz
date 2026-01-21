@@ -57,7 +57,8 @@ const PageIDTracker = {
             'gantt': 'P-07',                // Gantt-Chart
             'entscheidungen': 'P-08',       // Entscheidungen
             'suche': 'P-09',                // Suche/Stichwortverzeichnis
-            'dokumente': 'P-10'             // Dokumentation/KI-Assistent (Mock-Daten)
+            'kpis': 'P-10',                 // KPIs Dashboard (9 KPI-Cards)
+            'dokumente': 'P-11'             // Dokumentation/KI-Assistent (Mock-Daten)
         },
 
         // R - Risikoscoring Module

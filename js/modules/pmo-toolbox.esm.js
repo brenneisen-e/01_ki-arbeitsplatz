@@ -2348,6 +2348,7 @@ PMO Team
         if (viewId === 'gantt') this.renderGantt();
         if (viewId === 'entscheidungen') this.renderDecisions();
         if (viewId === 'dokumente') this.renderDocumentsList();
+        if (viewId === 'kpis') this.renderKPIs();
         if (viewId === 'suche') {
             // Focus search input when switching to search view
             setTimeout(() => {
@@ -4248,6 +4249,341 @@ PMO Team
                 </div>
             `;
         }).join('') || '<p class="pmo-docs-empty">Keine Dokumente gefunden</p>';
+    },
+
+    // ==========================================
+    // KPIs View
+    // ==========================================
+
+    // KPI Data for Mock
+    kpiData: {
+        'milestone-delays': {
+            value: 7,
+            trend: '+2 vs. Vorwoche',
+            trendType: 'negative',
+            history: [3, 4, 5, 4, 6, 5, 7],
+            historyPlan: [2, 2, 3, 3, 4, 4, 5]
+        },
+        'cr-requests': {
+            value: 12,
+            trend: '+3 vs. Vorwoche',
+            trendType: 'warning',
+            history: [8, 9, 10, 9, 11, 10, 12],
+            historyPlan: [6, 7, 8, 8, 9, 9, 9]
+        },
+        'budget-efficiency': {
+            value: '87%',
+            trend: '+5% Effizienz',
+            trendType: 'positive',
+            history: [72, 75, 78, 80, 82, 85, 87],
+            historyPlan: [75, 78, 80, 82, 84, 86, 88]
+        },
+        'resource-utilization': {
+            value: '94%',
+            trend: '2 Engpässe',
+            trendType: 'warning',
+            history: [85, 88, 90, 91, 92, 93, 94],
+            historyPlan: [80, 82, 85, 87, 88, 90, 90]
+        },
+        'decision-backlog': {
+            value: 4,
+            trend: '+2 vs. Vorwoche',
+            trendType: 'negative',
+            history: [1, 2, 1, 2, 3, 2, 4],
+            historyPlan: [1, 1, 1, 1, 1, 1, 1]
+        },
+        'critical-path': {
+            value: 3,
+            trend: 'Unverändert',
+            trendType: 'warning',
+            history: [2, 2, 3, 3, 4, 3, 3],
+            historyPlan: [1, 1, 2, 2, 2, 2, 2]
+        },
+        'value-realization': {
+            value: '72%',
+            trend: '+8% vs. Q3',
+            trendType: 'positive',
+            history: [45, 52, 58, 62, 65, 68, 72],
+            historyPlan: [50, 55, 60, 65, 70, 75, 80]
+        },
+        'partner-nps': {
+            value: '+42',
+            trend: '+12 vs. Q3',
+            trendType: 'positive',
+            history: [18, 22, 28, 30, 35, 38, 42],
+            historyPlan: [20, 25, 30, 32, 35, 38, 40]
+        },
+        'adoption-rate': {
+            value: '68%',
+            trend: '+15% vs. Rollout',
+            trendType: 'positive',
+            history: [25, 35, 45, 52, 58, 63, 68],
+            historyPlan: [30, 40, 50, 60, 70, 75, 80]
+        }
+    },
+
+    renderKPIs() {
+        // Populate project filter
+        const projectFilter = document.getElementById('kpis-project-filter');
+        if (projectFilter && projectFilter.options.length === 1) {
+            this.PROGRAM_STRUCTURE.projects.forEach(p => {
+                const option = document.createElement('option');
+                option.value = p.id;
+                option.textContent = `${p.id} - ${p.name}`;
+                projectFilter.appendChild(option);
+            });
+        }
+
+        // Update KPI values
+        this.updateKPIValues();
+    },
+
+    updateKPIValues() {
+        // Update Milestone Delays KPI
+        const milestoneDelays = document.getElementById('kpi-milestone-delays');
+        const milestoneDelaysTrend = document.getElementById('kpi-milestone-delays-trend');
+        if (milestoneDelays) {
+            milestoneDelays.textContent = this.kpiData['milestone-delays'].value;
+        }
+        if (milestoneDelaysTrend) {
+            milestoneDelaysTrend.textContent = this.kpiData['milestone-delays'].trend;
+        }
+
+        // Update CR Requests KPI
+        const crRequests = document.getElementById('kpi-cr-requests');
+        const crRequestsTrend = document.getElementById('kpi-cr-requests-trend');
+        if (crRequests) {
+            crRequests.textContent = this.kpiData['cr-requests'].value;
+        }
+        if (crRequestsTrend) {
+            crRequestsTrend.textContent = this.kpiData['cr-requests'].trend;
+        }
+
+        // Render mini charts for active KPIs
+        this.renderKPIMiniCharts();
+    },
+
+    renderKPIMiniCharts() {
+        // Render chart for Milestone Delays (A-03 Style)
+        const milestoneCanvas = document.getElementById('chart-milestone-delays');
+        if (milestoneCanvas && typeof Chart !== 'undefined') {
+            const ctx = milestoneCanvas.getContext('2d');
+
+            // Destroy existing chart if any
+            if (milestoneCanvas._chart) {
+                milestoneCanvas._chart.destroy();
+            }
+
+            milestoneCanvas._chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt'],
+                    datasets: [{
+                        label: 'Ist',
+                        data: [2, 3, 3, 4, 5, 4, 5, 6, 5, 7],
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'transparent',
+                        tension: 0.3,
+                        pointRadius: 4,
+                        pointBackgroundColor: '#3b82f6',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        borderWidth: 2
+                    }, {
+                        label: 'Vorwoche',
+                        data: [2, 2, 3, 3, 4, 4, 4, 5, 5, 5],
+                        borderColor: '#94a3b8',
+                        backgroundColor: 'transparent',
+                        tension: 0.3,
+                        pointRadius: 4,
+                        pointBackgroundColor: '#94a3b8',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        borderWidth: 2,
+                        borderDash: [5, 5]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        x: {
+                            display: true,
+                            grid: { display: false },
+                            ticks: {
+                                color: '#94a3b8',
+                                font: { size: 10 },
+                                maxRotation: 0
+                            }
+                        },
+                        y: {
+                            display: true,
+                            grid: {
+                                color: 'rgba(0,0,0,0.05)',
+                                drawBorder: false
+                            },
+                            ticks: {
+                                color: '#94a3b8',
+                                font: { size: 10 },
+                                stepSize: 2
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Render chart for CR Requests (A-03 Style)
+        const crCanvas = document.getElementById('chart-cr-requests');
+        if (crCanvas && typeof Chart !== 'undefined') {
+            const ctx = crCanvas.getContext('2d');
+
+            // Destroy existing chart if any
+            if (crCanvas._chart) {
+                crCanvas._chart.destroy();
+            }
+
+            crCanvas._chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt'],
+                    datasets: [{
+                        label: 'Ist',
+                        data: [5, 6, 8, 7, 9, 10, 8, 11, 10, 12],
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'transparent',
+                        tension: 0.3,
+                        pointRadius: 4,
+                        pointBackgroundColor: '#3b82f6',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        borderWidth: 2
+                    }, {
+                        label: 'Vorwoche',
+                        data: [4, 5, 6, 6, 7, 8, 7, 9, 9, 9],
+                        borderColor: '#94a3b8',
+                        backgroundColor: 'transparent',
+                        tension: 0.3,
+                        pointRadius: 4,
+                        pointBackgroundColor: '#94a3b8',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        borderWidth: 2,
+                        borderDash: [5, 5]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        x: {
+                            display: true,
+                            grid: { display: false },
+                            ticks: {
+                                color: '#94a3b8',
+                                font: { size: 10 },
+                                maxRotation: 0
+                            }
+                        },
+                        y: {
+                            display: true,
+                            grid: {
+                                color: 'rgba(0,0,0,0.05)',
+                                drawBorder: false
+                            },
+                            ticks: {
+                                color: '#94a3b8',
+                                font: { size: 10 },
+                                stepSize: 3
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Helper function to render standard KPI charts
+        const renderKPIChart = (canvasId, data, planData, isPercentage = false) => {
+            const canvas = document.getElementById(canvasId);
+            if (canvas && typeof Chart !== 'undefined') {
+                const ctx = canvas.getContext('2d');
+                if (canvas._chart) canvas._chart.destroy();
+
+                canvas._chart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt'],
+                        datasets: [{
+                            label: 'Ist',
+                            data: data,
+                            borderColor: '#3b82f6',
+                            backgroundColor: 'transparent',
+                            tension: 0.3,
+                            pointRadius: 4,
+                            pointBackgroundColor: '#3b82f6',
+                            pointBorderColor: '#fff',
+                            pointBorderWidth: 2,
+                            borderWidth: 2
+                        }, {
+                            label: 'Plan',
+                            data: planData,
+                            borderColor: '#94a3b8',
+                            backgroundColor: 'transparent',
+                            tension: 0.3,
+                            pointRadius: 4,
+                            pointBackgroundColor: '#94a3b8',
+                            pointBorderColor: '#fff',
+                            pointBorderWidth: 2,
+                            borderWidth: 2,
+                            borderDash: [5, 5]
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            x: {
+                                display: true,
+                                grid: { display: false },
+                                ticks: { color: '#94a3b8', font: { size: 10 }, maxRotation: 0 }
+                            },
+                            y: {
+                                display: true,
+                                grid: { color: 'rgba(0,0,0,0.05)', drawBorder: false },
+                                ticks: {
+                                    color: '#94a3b8',
+                                    font: { size: 10 },
+                                    callback: (value) => isPercentage ? value + '%' : value
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        };
+
+        // Render charts for new KPIs
+        const kpis = this.kpiData;
+        renderKPIChart('chart-budget-efficiency', kpis['budget-efficiency'].history, kpis['budget-efficiency'].historyPlan, true);
+        renderKPIChart('chart-resource-utilization', kpis['resource-utilization'].history, kpis['resource-utilization'].historyPlan, true);
+        renderKPIChart('chart-decision-backlog', kpis['decision-backlog'].history, kpis['decision-backlog'].historyPlan);
+        renderKPIChart('chart-critical-path', kpis['critical-path'].history, kpis['critical-path'].historyPlan);
+        renderKPIChart('chart-value-realization', kpis['value-realization'].history, kpis['value-realization'].historyPlan, true);
+        renderKPIChart('chart-partner-nps', kpis['partner-nps'].history, kpis['partner-nps'].historyPlan);
+        renderKPIChart('chart-adoption-rate', kpis['adoption-rate'].history, kpis['adoption-rate'].historyPlan, true);
+    },
+
+    filterKPIs() {
+        // Re-render KPIs with filters applied
+        // For now, just update the values (filters can be implemented later)
+        this.updateKPIValues();
     },
 
     previewDocument(id) {

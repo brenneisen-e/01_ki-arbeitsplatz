@@ -4878,6 +4878,11 @@ PMO Team
             [{ data: this.kpiData.nps.history, color: '#8b5cf6', label: 'NPS' }],
             this.kpiData.nps.benchmark, '#86BC25', -20, 60);
 
+        // Pulse Check OPL & WS
+        this.renderSVGLineChart('chart-pulse-check', labels,
+            [{ data: [3.8, 3.9, 4.0, 4.1, 4.0, 4.1, 4.2, 4.1, 4.2, 4.2], color: '#10b981', label: 'Score' }],
+            4.0, '#86BC25', 3.5, 5.0);
+
         // User Adoption (2-year multi-line)
         const adoptionLabels = ['Jan 24', 'Apr', 'Jul', 'Okt', 'Jan 25', 'Apr', 'Jul', 'Okt', 'Jan 26'];
         this.renderSVGMultiLineChart('chart-adoption', adoptionLabels, [

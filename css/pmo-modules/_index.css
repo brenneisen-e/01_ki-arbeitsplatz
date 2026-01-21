@@ -1,0 +1,18 @@
+/**
+ * PMO Toolbox CSS Modules Index
+ *
+ * This file imports all modular CSS components.
+ * Import this file instead of individual modules for full styling.
+ */
+
+/* KPI Cards - Core card styling */
+@import url('./pmo-kpi-cards.css');
+
+/* Value Map - Cluster overview and overlay */
+@import url('./pmo-valuemap.css');
+
+/* Dashboard - P-10 dashboard redesign */
+@import url('./pmo-dashboard.css');
+
+/* Warnings - Frühwarnindikatoren */
+@import url('./pmo-warnings.css');

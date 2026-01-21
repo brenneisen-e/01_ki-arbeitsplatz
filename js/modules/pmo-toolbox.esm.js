@@ -1688,6 +1688,7 @@ PMO Team
         if (viewId === 'gantt') this.renderGantt();
         if (viewId === 'entscheidungen') this.renderDecisions();
         if (viewId === 'dokumente') this.renderDocumentsList();
+        if (viewId === 'kpis') this.renderKPIs();
         if (viewId === 'suche') {
             // Focus search input when switching to search view
             setTimeout(() => {
@@ -3588,6 +3589,151 @@ PMO Team
                 </div>
             `;
         }).join('') || '<p class="pmo-docs-empty">Keine Dokumente gefunden</p>';
+    },
+
+    // ==========================================
+    // KPIs View
+    // ==========================================
+
+    // KPI Data for Mock
+    kpiData: {
+        'milestone-delays': {
+            value: 7,
+            trend: '+2',
+            trendType: 'negative',
+            history: [3, 4, 5, 4, 6, 5, 7]
+        },
+        'cr-requests': {
+            value: 12,
+            trend: '+3',
+            trendType: 'warning',
+            history: [8, 9, 10, 9, 11, 10, 12]
+        }
+    },
+
+    renderKPIs() {
+        // Populate project filter
+        const projectFilter = document.getElementById('kpis-project-filter');
+        if (projectFilter && projectFilter.options.length === 1) {
+            this.PROGRAM_STRUCTURE.projects.forEach(p => {
+                const option = document.createElement('option');
+                option.value = p.id;
+                option.textContent = `${p.id} - ${p.name}`;
+                projectFilter.appendChild(option);
+            });
+        }
+
+        // Update KPI values
+        this.updateKPIValues();
+    },
+
+    updateKPIValues() {
+        // Update Milestone Delays KPI
+        const milestoneDelays = document.getElementById('kpi-milestone-delays');
+        const milestoneDelaysTrend = document.getElementById('kpi-milestone-delays-trend');
+        if (milestoneDelays) {
+            milestoneDelays.textContent = this.kpiData['milestone-delays'].value;
+        }
+        if (milestoneDelaysTrend) {
+            milestoneDelaysTrend.textContent = this.kpiData['milestone-delays'].trend;
+        }
+
+        // Update CR Requests KPI
+        const crRequests = document.getElementById('kpi-cr-requests');
+        const crRequestsTrend = document.getElementById('kpi-cr-requests-trend');
+        if (crRequests) {
+            crRequests.textContent = this.kpiData['cr-requests'].value;
+        }
+        if (crRequestsTrend) {
+            crRequestsTrend.textContent = this.kpiData['cr-requests'].trend;
+        }
+
+        // Render mini charts for active KPIs
+        this.renderKPIMiniCharts();
+    },
+
+    renderKPIMiniCharts() {
+        // Render mini chart for Milestone Delays
+        const milestoneCanvas = document.getElementById('chart-milestone-delays');
+        if (milestoneCanvas && typeof Chart !== 'undefined') {
+            const ctx = milestoneCanvas.getContext('2d');
+
+            // Destroy existing chart if any
+            if (milestoneCanvas._chart) {
+                milestoneCanvas._chart.destroy();
+            }
+
+            milestoneCanvas._chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['W1', 'W2', 'W3', 'W4', 'W5', 'W6', 'W7'],
+                    datasets: [{
+                        data: this.kpiData['milestone-delays'].history,
+                        borderColor: '#f59e0b',
+                        backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 0,
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        x: { display: false },
+                        y: { display: false }
+                    }
+                }
+            });
+        }
+
+        // Render mini chart for CR Requests
+        const crCanvas = document.getElementById('chart-cr-requests');
+        if (crCanvas && typeof Chart !== 'undefined') {
+            const ctx = crCanvas.getContext('2d');
+
+            // Destroy existing chart if any
+            if (crCanvas._chart) {
+                crCanvas._chart.destroy();
+            }
+
+            crCanvas._chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['W1', 'W2', 'W3', 'W4', 'W5', 'W6', 'W7'],
+                    datasets: [{
+                        data: this.kpiData['cr-requests'].history,
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 0,
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        x: { display: false },
+                        y: { display: false }
+                    }
+                }
+            });
+        }
+    },
+
+    filterKPIs() {
+        // Re-render KPIs with filters applied
+        // For now, just update the values (filters can be implemented later)
+        this.updateKPIValues();
     },
 
     previewDocument(id) {

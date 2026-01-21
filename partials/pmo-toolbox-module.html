@@ -86,6 +86,14 @@
             </svg>
             Suche
         </button>
+        <button class="pmo-nav-btn" data-view="kpis" onclick="PMO.showView('kpis')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+                <polyline points="17 6 23 6 23 12"></polyline>
+            </svg>
+            KPIs
+            <span class="pmo-nav-badge">Neu</span>
+        </button>
         <button class="pmo-nav-btn" data-view="dokumente" onclick="PMO.showView('dokumente')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
                 <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path>
@@ -534,6 +542,202 @@
                         </svg>
                         <p>Geben Sie ein Stichwort ein, um in allen Status-Templates zu suchen</p>
                         <small>Die Suche durchsucht Management Summary, Fortschritt, Aktivitäten, Risiken, Meilensteine und Entscheidungen</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- KPIs View -->
+        <div id="pmo-kpis" class="pmo-view">
+            <div class="pmo-kpis-header">
+                <h3 class="pmo-section-title">Programm-KPIs</h3>
+                <div class="pmo-kpis-filters">
+                    <select id="kpis-project-filter" onchange="PMO.filterKPIs()">
+                        <option value="">Alle Projekte</option>
+                    </select>
+                    <select id="kpis-period-filter" onchange="PMO.filterKPIs()">
+                        <option value="current">Aktuelle Woche</option>
+                        <option value="month">Letzter Monat</option>
+                        <option value="quarter">Letztes Quartal</option>
+                        <option value="year">Letztes Jahr</option>
+                    </select>
+                </div>
+            </div>
+            <div class="pmo-kpi-grid" id="pmo-kpi-grid">
+                <!-- KPI Card 1: Meilensteinverschiebungen -->
+                <div class="pmo-kpi-card" data-kpi="milestone-delays">
+                    <div class="pmo-kpi-icon warning">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polyline points="12 6 12 12 16 14"></polyline>
+                        </svg>
+                    </div>
+                    <div class="pmo-kpi-content">
+                        <span class="pmo-kpi-label">Meilensteinverschiebungen</span>
+                        <span class="pmo-kpi-value" id="kpi-milestone-delays">0</span>
+                        <div class="pmo-kpi-trend negative">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                                <polyline points="23 18 13.5 8.5 8.5 13.5 1 6"></polyline>
+                            </svg>
+                            <span id="kpi-milestone-delays-trend">+0%</span>
+                        </div>
+                    </div>
+                    <div class="pmo-kpi-chart">
+                        <canvas id="chart-milestone-delays"></canvas>
+                    </div>
+                </div>
+
+                <!-- KPI Card 2: CR Requests -->
+                <div class="pmo-kpi-card" data-kpi="cr-requests">
+                    <div class="pmo-kpi-icon info">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
+                            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                            <line x1="12" y1="18" x2="12" y2="12"></line>
+                            <line x1="9" y1="15" x2="15" y2="15"></line>
+                        </svg>
+                    </div>
+                    <div class="pmo-kpi-content">
+                        <span class="pmo-kpi-label">CR Requests</span>
+                        <span class="pmo-kpi-value" id="kpi-cr-requests">0</span>
+                        <div class="pmo-kpi-trend neutral">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                            <span id="kpi-cr-requests-trend">0%</span>
+                        </div>
+                    </div>
+                    <div class="pmo-kpi-chart">
+                        <canvas id="chart-cr-requests"></canvas>
+                    </div>
+                </div>
+
+                <!-- KPI Card 3: Offene Risiken (WIP) -->
+                <div class="pmo-kpi-card pmo-kpi-wip" data-kpi="open-risks">
+                    <span class="pmo-kpi-wip-badge">Work in Progress</span>
+                    <div class="pmo-kpi-icon danger">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
+                            <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"></path>
+                            <line x1="12" y1="9" x2="12" y2="13"></line>
+                            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                        </svg>
+                    </div>
+                    <div class="pmo-kpi-content">
+                        <span class="pmo-kpi-label">Offene Risiken</span>
+                        <span class="pmo-kpi-value" id="kpi-open-risks">--</span>
+                        <div class="pmo-kpi-trend neutral">
+                            <span id="kpi-open-risks-trend">Demnächst</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- KPI Card 4: Budgetauslastung (WIP) -->
+                <div class="pmo-kpi-card pmo-kpi-wip" data-kpi="budget-usage">
+                    <span class="pmo-kpi-wip-badge">Work in Progress</span>
+                    <div class="pmo-kpi-icon success">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
+                            <line x1="12" y1="1" x2="12" y2="23"></line>
+                            <path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"></path>
+                        </svg>
+                    </div>
+                    <div class="pmo-kpi-content">
+                        <span class="pmo-kpi-label">Budgetauslastung</span>
+                        <span class="pmo-kpi-value" id="kpi-budget-usage">--</span>
+                        <div class="pmo-kpi-trend neutral">
+                            <span id="kpi-budget-usage-trend">Demnächst</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- KPI Card 5: Ressourcenauslastung (WIP) -->
+                <div class="pmo-kpi-card pmo-kpi-wip" data-kpi="resource-usage">
+                    <span class="pmo-kpi-wip-badge">Work in Progress</span>
+                    <div class="pmo-kpi-icon info">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
+                            <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M23 21v-2a4 4 0 00-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 010 7.75"></path>
+                        </svg>
+                    </div>
+                    <div class="pmo-kpi-content">
+                        <span class="pmo-kpi-label">Ressourcenauslastung</span>
+                        <span class="pmo-kpi-value" id="kpi-resource-usage">--</span>
+                        <div class="pmo-kpi-trend neutral">
+                            <span id="kpi-resource-usage-trend">Demnächst</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- KPI Card 6: Projektfortschritt (WIP) -->
+                <div class="pmo-kpi-card pmo-kpi-wip" data-kpi="project-progress">
+                    <span class="pmo-kpi-wip-badge">Work in Progress</span>
+                    <div class="pmo-kpi-icon success">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
+                            <path d="M22 11.08V12a10 10 0 11-5.93-9.14"></path>
+                            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                        </svg>
+                    </div>
+                    <div class="pmo-kpi-content">
+                        <span class="pmo-kpi-label">Projektfortschritt</span>
+                        <span class="pmo-kpi-value" id="kpi-project-progress">--</span>
+                        <div class="pmo-kpi-trend neutral">
+                            <span id="kpi-project-progress-trend">Demnächst</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- KPI Card 7: Ausstehende Entscheidungen (WIP) -->
+                <div class="pmo-kpi-card pmo-kpi-wip" data-kpi="pending-decisions">
+                    <span class="pmo-kpi-wip-badge">Work in Progress</span>
+                    <div class="pmo-kpi-icon warning">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"></path>
+                            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                        </svg>
+                    </div>
+                    <div class="pmo-kpi-content">
+                        <span class="pmo-kpi-label">Ausstehende Entscheidungen</span>
+                        <span class="pmo-kpi-value" id="kpi-pending-decisions">--</span>
+                        <div class="pmo-kpi-trend neutral">
+                            <span id="kpi-pending-decisions-trend">Demnächst</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- KPI Card 8: Abgeschlossene Tasks (WIP) -->
+                <div class="pmo-kpi-card pmo-kpi-wip" data-kpi="completed-tasks">
+                    <span class="pmo-kpi-wip-badge">Work in Progress</span>
+                    <div class="pmo-kpi-icon success">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
+                            <path d="M9 11l3 3L22 4"></path>
+                            <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"></path>
+                        </svg>
+                    </div>
+                    <div class="pmo-kpi-content">
+                        <span class="pmo-kpi-label">Abgeschlossene Tasks</span>
+                        <span class="pmo-kpi-value" id="kpi-completed-tasks">--</span>
+                        <div class="pmo-kpi-trend neutral">
+                            <span id="kpi-completed-tasks-trend">Demnächst</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- KPI Card 9: SLA Einhaltung (WIP) -->
+                <div class="pmo-kpi-card pmo-kpi-wip" data-kpi="sla-compliance">
+                    <span class="pmo-kpi-wip-badge">Work in Progress</span>
+                    <div class="pmo-kpi-icon success">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                        </svg>
+                    </div>
+                    <div class="pmo-kpi-content">
+                        <span class="pmo-kpi-label">SLA Einhaltung</span>
+                        <span class="pmo-kpi-value" id="kpi-sla-compliance">--</span>
+                        <div class="pmo-kpi-trend neutral">
+                            <span id="kpi-sla-compliance-trend">Demnächst</span>
+                        </div>
                     </div>
                 </div>
             </div>

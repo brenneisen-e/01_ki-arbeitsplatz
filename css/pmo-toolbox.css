@@ -4681,6 +4681,40 @@ mark {
     box-shadow: 0 2px 8px rgba(134, 188, 37, 0.35);
 }
 
+/* Projekt Dropdown */
+.pmo-project-dropdown {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 12px;
+    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+    border: 1px solid #86BC25;
+    border-radius: 12px;
+}
+
+.pmo-dropdown-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #166534;
+}
+
+.pmo-project-dropdown select {
+    padding: 6px 12px;
+    font-size: 13px;
+    font-weight: 500;
+    border: 1px solid #86BC25;
+    border-radius: 8px;
+    background: white;
+    color: #166534;
+    cursor: pointer;
+    min-width: 180px;
+}
+
+.pmo-project-dropdown select:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(134, 188, 37, 0.3);
+}
+
 /* Small KPI Status Indicator (Ampel) */
 .pmo-kpi-status {
     width: 12px;

@@ -3521,6 +3521,20 @@ mark {
     background: linear-gradient(to right, transparent, #86efac, transparent);
 }
 
+.pmo-kpi-section-divider[data-category="vertrieblich"] {
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.08), rgba(168, 85, 247, 0.03));
+    border-color: rgba(168, 85, 247, 0.2);
+}
+
+.pmo-kpi-section-divider[data-category="vertrieblich"] .pmo-kpi-section-title {
+    color: #a855f7;
+}
+
+.pmo-kpi-section-divider[data-category="vertrieblich"]::before,
+.pmo-kpi-section-divider[data-category="vertrieblich"]::after {
+    background: linear-gradient(to right, transparent, #c4b5fd, transparent);
+}
+
 /* Category Badge Colors */
 .pmo-kpi-badge.info {
     background: rgba(59, 130, 246, 0.1);

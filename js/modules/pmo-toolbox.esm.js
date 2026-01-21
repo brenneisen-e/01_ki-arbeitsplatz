@@ -1167,6 +1167,10 @@ export const PMO = {
         this.renderProjectsGrid();
         this.renderUpcomingMilestones();
         this.renderGremienCalendar();
+        // Render new KPI dashboard
+        this.renderKPICharts();
+        this.renderUSStackedBar();
+        this.renderEarlyWarnings();
     },
 
     // ========================================
@@ -1512,7 +1516,7 @@ export const PMO = {
     },
 
     renderVertraegeChart() {
-        const container = document.getElementById('chart-vertraege');
+        const container = document.getElementById('chart-vertraege-kunde');
         if (!container) return;
 
         const data = this.KPI_DATA.vertraegeProKunde;
@@ -1548,7 +1552,7 @@ export const PMO = {
     },
 
     renderAPEChart() {
-        const container = document.getElementById('chart-ape');
+        const container = document.getElementById('chart-ape-kunde');
         if (!container) return;
 
         const data = this.KPI_DATA.apeProKunde;
@@ -1580,37 +1584,33 @@ export const PMO = {
     },
 
     renderUserAdoptionChart() {
-        const container = document.getElementById('chart-adoption');
+        const container = document.getElementById('chart-user-adoption');
         if (!container) return;
 
-        // Line chart for User Adoption over time
+        // Simple bar chart progression
         const months = ['Sep', 'Okt', 'Nov', 'Dez', 'Jan'];
         const values = [52, 58, 62, 64, 67];
         const target = 85;
 
         const width = container.offsetWidth || 200;
         const height = 80;
-        const padding = 10;
+        const barWidth = (width - 40) / months.length - 4;
 
-        const minVal = Math.min(...values) - 5;
-        const maxVal = Math.max(target, ...values) + 5;
+        let bars = '';
+        values.forEach((v, i) => {
+            const x = 20 + i * (barWidth + 4);
+            const barHeight = (v / 100) * (height - 20);
+            bars += `<rect x="${x}" y="${height - 10 - barHeight}" width="${barWidth}" height="${barHeight}"
+                          fill="${i === values.length - 1 ? '#86BC25' : '#e2e8f0'}" rx="2"/>`;
+        });
 
-        const xScale = (i) => padding + (i / (values.length - 1)) * (width - 2 * padding);
-        const yScale = (v) => height - padding - ((v - minVal) / (maxVal - minVal)) * (height - 2 * padding);
-
-        const points = values.map((v, i) => `${xScale(i)},${yScale(v)}`).join(' ');
-        const targetY = yScale(target);
+        const targetY = height - 10 - (target / 100) * (height - 20);
 
         container.innerHTML = `
             <svg width="100%" height="${height}" viewBox="0 0 ${width} ${height}" preserveAspectRatio="none">
-                <!-- Target line -->
-                <line x1="${padding}" y1="${targetY}" x2="${width - padding}" y2="${targetY}"
-                      stroke="#86BC25" stroke-width="2" stroke-dasharray="4,4"/>
-                <!-- Data line -->
-                <polyline points="${points}" fill="none" stroke="#8b5cf6" stroke-width="2"/>
-                <!-- Current point -->
-                <circle cx="${xScale(values.length - 1)}" cy="${yScale(values[values.length - 1])}"
-                        r="4" fill="#8b5cf6"/>
+                ${bars}
+                <line x1="10" y1="${targetY}" x2="${width - 10}" y2="${targetY}"
+                      stroke="#ef4444" stroke-width="1" stroke-dasharray="4,4"/>
             </svg>
         `;
     },
@@ -4261,70 +4261,84 @@ PMO Team
     // KPIs View
     // ==========================================
 
-    // KPI Data for Mock
+    // KPI Data for Mock (Apr 2025 - Jan 2026)
     kpiData: {
         'milestone-delays': {
             value: 7,
             trend: '+2 vs. Vorwoche',
             trendType: 'negative',
-            history: [3, 4, 5, 4, 6, 5, 7],
-            historyPlan: [2, 2, 3, 3, 4, 4, 5]
+            history: [3, 4, 5, 4, 6, 5, 7, 6, 7, 7],
+            historyPlan: [2, 2, 3, 3, 4, 4, 5, 5, 5, 5]
         },
         'cr-requests': {
             value: 12,
             trend: '+3 vs. Vorwoche',
             trendType: 'warning',
-            history: [8, 9, 10, 9, 11, 10, 12],
-            historyPlan: [6, 7, 8, 8, 9, 9, 9]
+            history: [8, 9, 10, 9, 11, 10, 12, 11, 13, 12],
+            historyPlan: [6, 7, 8, 8, 9, 9, 9, 10, 10, 10]
         },
         'budget-efficiency': {
-            value: '87%',
+            value: '89%',
             trend: '+5% Effizienz',
             trendType: 'positive',
-            history: [72, 75, 78, 80, 82, 85, 87],
-            historyPlan: [75, 78, 80, 82, 84, 86, 88]
+            history: [72, 75, 78, 80, 82, 85, 87, 88, 88, 89],
+            historyPlan: [75, 78, 80, 82, 84, 86, 88, 89, 90, 90]
         },
         'resource-utilization': {
-            value: '94%',
+            value: '92%',
             trend: '2 Engpässe',
             trendType: 'warning',
-            history: [85, 88, 90, 91, 92, 93, 94],
-            historyPlan: [80, 82, 85, 87, 88, 90, 90]
+            history: [85, 88, 90, 91, 92, 93, 94, 93, 92, 92],
+            historyPlan: [80, 82, 85, 87, 88, 90, 90, 91, 91, 92]
         },
         'decision-backlog': {
-            value: 4,
-            trend: '+2 vs. Vorwoche',
-            trendType: 'negative',
-            history: [1, 2, 1, 2, 3, 2, 4],
-            historyPlan: [1, 1, 1, 1, 1, 1, 1]
+            value: 3,
+            trend: '-1 vs. Vorwoche',
+            trendType: 'positive',
+            history: [1, 2, 1, 2, 3, 2, 4, 4, 3, 3],
+            historyPlan: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
         },
         'critical-path': {
-            value: 3,
-            trend: 'Unverändert',
-            trendType: 'warning',
-            history: [2, 2, 3, 3, 4, 3, 3],
-            historyPlan: [1, 1, 2, 2, 2, 2, 2]
+            value: 2,
+            trend: '-1 vs. Vorwoche',
+            trendType: 'positive',
+            history: [2, 2, 3, 3, 4, 3, 3, 3, 2, 2],
+            historyPlan: [1, 1, 2, 2, 2, 2, 2, 2, 2, 2]
         },
         'value-realization': {
-            value: '72%',
+            value: '78%',
             trend: '+8% vs. Q3',
             trendType: 'positive',
-            history: [45, 52, 58, 62, 65, 68, 72],
-            historyPlan: [50, 55, 60, 65, 70, 75, 80]
+            history: [45, 52, 58, 62, 65, 68, 72, 74, 76, 78],
+            historyPlan: [50, 55, 60, 65, 70, 75, 80, 82, 84, 85]
         },
         'partner-nps': {
-            value: '+42',
+            value: '+48',
             trend: '+12 vs. Q3',
             trendType: 'positive',
-            history: [18, 22, 28, 30, 35, 38, 42],
-            historyPlan: [20, 25, 30, 32, 35, 38, 40]
+            history: [18, 22, 28, 30, 35, 38, 42, 44, 46, 48],
+            historyPlan: [20, 25, 30, 32, 35, 38, 40, 42, 44, 45]
         },
         'adoption-rate': {
-            value: '68%',
+            value: '76%',
             trend: '+15% vs. Rollout',
             trendType: 'positive',
-            history: [25, 35, 45, 52, 58, 63, 68],
-            historyPlan: [30, 40, 50, 60, 70, 75, 80]
+            history: [25, 35, 45, 52, 58, 63, 68, 71, 74, 76],
+            historyPlan: [30, 40, 50, 60, 70, 75, 80, 82, 84, 85]
+        },
+        'vertraege-pro-kunde': {
+            value: '2,10',
+            trend: '+1,4% vs. Vormonat',
+            trendType: 'positive',
+            history: [1.85, 1.88, 1.92, 1.95, 1.98, 2.02, 2.05, 2.07, 2.08, 2.10],
+            historyPlan: [1.90, 2.00, 2.10, 2.20, 2.30, 2.40, 2.50, 2.60, 2.70, 2.80]
+        },
+        'ape-pro-kunde': {
+            value: '€145k',
+            trend: '+2,1% vs. Vormonat',
+            trendType: 'positive',
+            history: [115, 120, 125, 128, 132, 136, 140, 142, 144, 145],
+            historyPlan: [120, 130, 140, 150, 155, 160, 165, 170, 175, 180]
         }
     },
 
@@ -4340,13 +4354,11 @@ PMO Team
             });
         }
 
-        // Render line charts for P-10 KPIs
-        this.renderKPICharts();
-        this.renderUSStackedBar();
-        this.renderEarlyWarnings();
-
         // Update KPI values
         this.updateKPIValues();
+
+        // Render early warning indicators in sidebar
+        this.renderEarlyWarnings();
     },
 
     updateKPIValues() {
@@ -4529,7 +4541,7 @@ PMO Team
                 canvas._chart = new Chart(ctx, {
                     type: 'line',
                     data: {
-                        labels: ['Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt'],
+                        labels: ['Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez', 'Jan'],
                         datasets: [{
                             label: 'Ist',
                             data: data,
@@ -4589,6 +4601,9 @@ PMO Team
         renderKPIChart('chart-value-realization', kpis['value-realization'].history, kpis['value-realization'].historyPlan, true);
         renderKPIChart('chart-partner-nps', kpis['partner-nps'].history, kpis['partner-nps'].historyPlan);
         renderKPIChart('chart-adoption-rate', kpis['adoption-rate'].history, kpis['adoption-rate'].historyPlan, true);
+        // Vertriebliche KPIs
+        renderKPIChart('chart-vertraege-pro-kunde', kpis['vertraege-pro-kunde'].history, kpis['vertraege-pro-kunde'].historyPlan);
+        renderKPIChart('chart-ape-pro-kunde', kpis['ape-pro-kunde'].history, kpis['ape-pro-kunde'].historyPlan);
     },
 
     filterKPIs() {

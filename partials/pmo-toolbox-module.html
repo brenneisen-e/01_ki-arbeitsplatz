@@ -680,27 +680,27 @@
                         </div>
 
                         <!-- NPS Score -->
-                        <div class="pmo-kpi-card" data-kpi="nps" data-category="vertrieblich">
+                        <div class="pmo-kpi-card pmo-kpi-alert" data-kpi="nps" data-category="vertrieblich">
                             <div class="pmo-kpi-header">
                                 <div class="pmo-kpi-title-row">
                                     <span class="pmo-kpi-label">NPS Score</span>
-                                    <span class="pmo-kpi-status green" title="Grün: Über Benchmark"></span>
+                                    <span class="pmo-kpi-status yellow" title="Gelb: NPS gefallen"></span>
                                 </div>
-                                <span class="pmo-kpi-badge success">Aktuell: +42</span>
+                                <span class="pmo-kpi-badge warning">-7 vs. Vormonat</span>
                             </div>
                             <p class="pmo-kpi-description">Net Promoter Score (-100 bis +100)</p>
                             <div class="pmo-kpi-value-row">
-                                <span class="pmo-kpi-value" id="kpi-nps">+42</span>
+                                <span class="pmo-kpi-value" id="kpi-nps">+38</span>
                                 <div class="pmo-kpi-legend">
                                     <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot ist"></span> NPS</span>
                                     <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot prognose"></span> Benchmark +35</span>
                                 </div>
                             </div>
-                            <div class="pmo-kpi-trend positive">
+                            <div class="pmo-kpi-trend negative">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+                                    <polyline points="23 18 13.5 8.5 8.5 13.5 1 6"></polyline>
                                 </svg>
-                                <span>+5 vs. Vorquartal</span>
+                                <span>-7 vs. Vormonat</span>
                                 <span class="pmo-kpi-trend-label">156 Teilnehmer</span>
                             </div>
                             <div class="pmo-kpi-chart">
@@ -779,7 +779,17 @@
                                     <span class="pmo-kpi-label">User Stories</span>
                                     <span class="pmo-kpi-status green" title="Grün: Guter Fortschritt"></span>
                                 </div>
-                                <span class="pmo-kpi-badge info">156 gesamt</span>
+                                <div class="pmo-kpi-header-right">
+                                    <div class="pmo-view-toggle" data-chart="userstories">
+                                        <button class="pmo-view-btn active" data-view="timeline" title="Zeitverlauf">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                                        </button>
+                                        <button class="pmo-view-btn" data-view="distribution" title="Verteilung">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path><path d="M22 12A10 10 0 0 0 12 2v10z"></path></svg>
+                                        </button>
+                                    </div>
+                                    <span class="pmo-kpi-badge info">156 gesamt</span>
+                                </div>
                             </div>
                             <p class="pmo-kpi-description">User Stories nach Status im Zeitverlauf</p>
                             <div class="pmo-kpi-value-row">
@@ -1461,7 +1471,7 @@
 
 
 <!-- PMO Toolbox Styles (externalized) -->
-<link rel="stylesheet" href="/css/pmo-toolbox.css?v=20260121q">
+<link rel="stylesheet" href="/css/pmo-toolbox.css?v=20260121s">
 
 <!-- PMO Toolbox JavaScript (ES6 Module) -->
-<script type="module" src="/js/modules/pmo-toolbox.esm.js?v=20260121r"></script>
+<script type="module" src="/js/modules/pmo-toolbox.esm.js?v=20260121s"></script>

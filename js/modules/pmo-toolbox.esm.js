@@ -4564,49 +4564,38 @@ PMO Team
             const npsHistory = this.kpiData.nps.history;
             const npsDropped = npsHistory[npsHistory.length - 1] < npsHistory[npsHistory.length - 2];
 
-            // Create warning overlay for NPS drop
-            const createNPSWarningOverlay = (chart) => {
-                if (!npsDropped) return;
-
-                // Remove existing overlay
-                const existingOverlay = chart.canvas.parentElement.querySelector('.chart-warning-overlay');
-                if (existingOverlay) existingOverlay.remove();
-
-                // Get position of last point
-                const meta = chart.getDatasetMeta(0);
-                const lastPoint = meta.data[meta.data.length - 1];
-                const x = lastPoint.x;
-                const y = lastPoint.y;
-
-                // Create overlay div
-                const overlay = document.createElement('div');
-                overlay.className = 'chart-warning-overlay';
-                overlay.innerHTML = `
-                    <div class="chart-warning-icon blink warning-yellow" title="NPS gefallen (-7) - Klicken für Details" onclick="PMO.scrollToEarlyWarning('nps_warning')">
-                        <span>!</span>
-                    </div>
-                `;
-                overlay.style.cssText = `
-                    position: absolute;
-                    left: ${x}px;
-                    top: ${y - 30}px;
-                    transform: translateX(-50%);
-                    pointer-events: auto;
-                    z-index: 10;
-                `;
-
-                // Make parent relative if not already
-                const parent = chart.canvas.parentElement;
-                if (getComputedStyle(parent).position === 'static') {
-                    parent.style.position = 'relative';
-                }
-                parent.appendChild(overlay);
-            };
-
+            // Plugin to draw warning icon directly on canvas (more reliable than overlay)
             const npsWarningPlugin = {
-                id: 'npsWarningOverlay',
-                afterRender: (chart) => {
-                    createNPSWarningOverlay(chart);
+                id: 'npsWarningIcon',
+                afterDatasetsDraw: (chart) => {
+                    if (!npsDropped) return;
+
+                    const ctx = chart.ctx;
+                    const meta = chart.getDatasetMeta(0);
+                    const lastPoint = meta.data[meta.data.length - 1];
+
+                    if (!lastPoint) return;
+
+                    const x = lastPoint.x;
+                    const y = lastPoint.y - 22; // 22px above the data point
+
+                    // Draw circle background
+                    ctx.save();
+                    ctx.fillStyle = '#f59e0b';
+                    ctx.shadowColor = 'rgba(245, 158, 11, 0.4)';
+                    ctx.shadowBlur = 8;
+                    ctx.beginPath();
+                    ctx.arc(x, y, 11, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    // Draw exclamation mark
+                    ctx.shadowBlur = 0;
+                    ctx.fillStyle = 'white';
+                    ctx.font = 'bold 13px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText('!', x, y);
+                    ctx.restore();
                 }
             };
 
@@ -4685,62 +4674,47 @@ PMO Team
             if (existingDef) existingDef.destroy();
             const ctx = defCanvas.getContext('2d');
 
-            // Create HTML overlay for blinking warning icon
-            const createWarningOverlay = (chart) => {
-                const criticalCount = this.kpiData.defects.critical;
-                if (criticalCount <= 0) return;
+            // Plugin to draw warning icon directly on canvas
+            const defectsWarningPlugin = {
+                id: 'defectsWarningIcon',
+                afterDatasetsDraw: (chart) => {
+                    const criticalCount = this.kpiData.defects.critical;
+                    if (criticalCount <= 0) return;
 
-                // Remove existing overlay
-                const existingOverlay = chart.canvas.parentElement.querySelector('.chart-warning-overlay');
-                if (existingOverlay) existingOverlay.remove();
+                    const ctx = chart.ctx;
+                    const lastIndex = chart.data.labels.length - 1;
 
-                // Get position of last bar (top of stacked column)
-                const datasetCount = chart.data.datasets.length;
-                const lastIndex = chart.data.labels.length - 1;
-
-                // Calculate the top of the stacked bar
-                let topY = chart.chartArea.bottom;
-                for (let i = 0; i < datasetCount; i++) {
-                    const meta = chart.getDatasetMeta(i);
-                    const bar = meta.data[lastIndex];
-                    if (bar && bar.y < topY) {
-                        topY = bar.y;
+                    // Get the top of the stacked bar (highest point)
+                    let topY = chart.chartArea.bottom;
+                    for (let i = 0; i < chart.data.datasets.length; i++) {
+                        const meta = chart.getDatasetMeta(i);
+                        const bar = meta.data[lastIndex];
+                        if (bar && bar.y < topY) {
+                            topY = bar.y;
+                        }
                     }
-                }
 
-                const lastBar = chart.getDatasetMeta(0).data[lastIndex];
-                const x = lastBar.x;
+                    const lastBar = chart.getDatasetMeta(0).data[lastIndex];
+                    const x = lastBar.x;
+                    const y = topY - 20; // 20px above the bar
 
-                // Create overlay div
-                const overlay = document.createElement('div');
-                overlay.className = 'chart-warning-overlay';
-                overlay.innerHTML = `
-                    <div class="chart-warning-icon blink" title="3 kritische Defects - Klicken für Details" onclick="PMO.scrollToEarlyWarning('defect_critical')">
-                        <span>!</span>
-                    </div>
-                `;
-                overlay.style.cssText = `
-                    position: absolute;
-                    left: ${x}px;
-                    top: ${topY - 35}px;
-                    transform: translateX(-50%);
-                    pointer-events: auto;
-                    z-index: 10;
-                `;
+                    // Draw circle background
+                    ctx.save();
+                    ctx.fillStyle = '#dc2626';
+                    ctx.shadowColor = 'rgba(220, 38, 38, 0.4)';
+                    ctx.shadowBlur = 8;
+                    ctx.beginPath();
+                    ctx.arc(x, y, 12, 0, Math.PI * 2);
+                    ctx.fill();
 
-                // Make parent relative if not already
-                const parent = chart.canvas.parentElement;
-                if (getComputedStyle(parent).position === 'static') {
-                    parent.style.position = 'relative';
-                }
-                parent.appendChild(overlay);
-            };
-
-            // Plugin to position warning overlay after chart renders
-            const warningOverlayPlugin = {
-                id: 'warningOverlay',
-                afterRender: (chart) => {
-                    createWarningOverlay(chart);
+                    // Draw exclamation mark
+                    ctx.shadowBlur = 0;
+                    ctx.fillStyle = 'white';
+                    ctx.font = 'bold 14px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText('!', x, y);
+                    ctx.restore();
                 }
             };
 
@@ -4755,7 +4729,7 @@ PMO Team
                     ]
                 },
                 options: { ...chartOptions, scales: { x: { ...chartOptions.scales.x, stacked: true }, y: { ...chartOptions.scales.y, stacked: true, max: 100 } } },
-                plugins: [warningOverlayPlugin]
+                plugins: [defectsWarningPlugin]
             });
         }
 

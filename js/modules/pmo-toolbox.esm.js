@@ -4464,12 +4464,12 @@ PMO Team
             auslastung: 87,
             // Breakdown by intern/extern
             intern: {
-                ist: 165,
-                angefragt: 155,  // More requested than available! (overload)
-                auslastung: 106, // >100% = warning!
+                ist: 155,        // Verfügbare interne PT
+                angefragt: 165,  // Nachgefragte interne PT - mehr als verfügbar!
+                auslastung: 106, // 165/155 = 106% = Überlastung!
                 history: {
-                    ist: [140, 142, 145, 148, 150, 152, 155, 158, 160, 165],
-                    angefragt: [135, 138, 140, 142, 145, 148, 150, 152, 155, 155]
+                    ist: [135, 138, 140, 142, 145, 148, 150, 152, 155, 155],      // Verfügbar
+                    angefragt: [140, 142, 145, 148, 150, 152, 155, 158, 163, 165] // Nachgefragt - steigt!
                 }
             },
             extern: {
@@ -5766,16 +5766,44 @@ PMO Team
                     console.log('📊 Using gesamt data:', istData, angefragtData);
                 }
 
+                // Check if intern and overloaded - show warning icon
+                const showInternWarning = scope === 'intern' && rData.intern.auslastung > 100;
+
                 new Chart(ctx, {
                     type: 'line',
                     data: {
                         labels,
                         datasets: [
                             { label: 'Ist', data: istData, borderColor: '#3b82f6', tension: 0.3, pointRadius: 3, borderWidth: 2 },
-                            { label: 'Angefragt', data: angefragtData, borderColor: '#94a3b8', borderDash: [5, 5], tension: 0.3, pointRadius: 3, borderWidth: 2 }
+                            { label: 'Angefragt', data: angefragtData, borderColor: showInternWarning ? '#f59e0b' : '#94a3b8', borderDash: [5, 5], tension: 0.3, pointRadius: 3, borderWidth: 2 }
                         ]
                     },
-                    options: { ...chartOptions, scales: { ...chartOptions.scales, y: { ...chartOptions.scales.y, min: yMin, max: yMax } } }
+                    options: { ...chartOptions, scales: { ...chartOptions.scales, y: { ...chartOptions.scales.y, min: yMin, max: yMax } } },
+                    plugins: showInternWarning ? [{
+                        id: 'ressourcenWarningIcon',
+                        afterDatasetsDraw: (chart) => {
+                            const ctx = chart.ctx;
+                            const meta = chart.getDatasetMeta(1); // Angefragt line
+                            const lastPoint = meta.data[meta.data.length - 1];
+                            if (lastPoint) {
+                                const x = lastPoint.x + 12;
+                                const y = lastPoint.y;
+                                // Draw warning circle
+                                ctx.save();
+                                ctx.beginPath();
+                                ctx.arc(x, y, 10, 0, Math.PI * 2);
+                                ctx.fillStyle = '#f59e0b';
+                                ctx.fill();
+                                // Draw exclamation mark
+                                ctx.fillStyle = 'white';
+                                ctx.font = 'bold 14px system-ui';
+                                ctx.textAlign = 'center';
+                                ctx.textBaseline = 'middle';
+                                ctx.fillText('!', x, y);
+                                ctx.restore();
+                            }
+                        }
+                    }] : []
                 });
                 break;
 

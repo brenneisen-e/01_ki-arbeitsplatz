@@ -3924,7 +3924,6 @@ mark {
 
 .pmo-kpi-section-divider[data-category="northstar"] .pmo-kpi-section-title {
     color: #92400e;
-    font-size: 1.2rem;
 }
 
 .pmo-kpi-section-divider[data-category="northstar"]::before,

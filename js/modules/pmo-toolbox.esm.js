@@ -1167,10 +1167,6 @@ export const PMO = {
         this.renderProjectsGrid();
         this.renderUpcomingMilestones();
         this.renderGremienCalendar();
-        // Render new KPI dashboard
-        this.renderKPICharts();
-        this.renderUSStackedBar();
-        this.renderEarlyWarnings();
     },
 
     // ========================================
@@ -1516,7 +1512,7 @@ export const PMO = {
     },
 
     renderVertraegeChart() {
-        const container = document.getElementById('chart-vertraege-kunde');
+        const container = document.getElementById('chart-vertraege');
         if (!container) return;
 
         const data = this.KPI_DATA.vertraegeProKunde;
@@ -1552,7 +1548,7 @@ export const PMO = {
     },
 
     renderAPEChart() {
-        const container = document.getElementById('chart-ape-kunde');
+        const container = document.getElementById('chart-ape');
         if (!container) return;
 
         const data = this.KPI_DATA.apeProKunde;
@@ -1584,33 +1580,37 @@ export const PMO = {
     },
 
     renderUserAdoptionChart() {
-        const container = document.getElementById('chart-user-adoption');
+        const container = document.getElementById('chart-adoption');
         if (!container) return;
 
-        // Simple bar chart progression
+        // Line chart for User Adoption over time
         const months = ['Sep', 'Okt', 'Nov', 'Dez', 'Jan'];
         const values = [52, 58, 62, 64, 67];
         const target = 85;
 
         const width = container.offsetWidth || 200;
         const height = 80;
-        const barWidth = (width - 40) / months.length - 4;
+        const padding = 10;
 
-        let bars = '';
-        values.forEach((v, i) => {
-            const x = 20 + i * (barWidth + 4);
-            const barHeight = (v / 100) * (height - 20);
-            bars += `<rect x="${x}" y="${height - 10 - barHeight}" width="${barWidth}" height="${barHeight}"
-                          fill="${i === values.length - 1 ? '#86BC25' : '#e2e8f0'}" rx="2"/>`;
-        });
+        const minVal = Math.min(...values) - 5;
+        const maxVal = Math.max(target, ...values) + 5;
 
-        const targetY = height - 10 - (target / 100) * (height - 20);
+        const xScale = (i) => padding + (i / (values.length - 1)) * (width - 2 * padding);
+        const yScale = (v) => height - padding - ((v - minVal) / (maxVal - minVal)) * (height - 2 * padding);
+
+        const points = values.map((v, i) => `${xScale(i)},${yScale(v)}`).join(' ');
+        const targetY = yScale(target);
 
         container.innerHTML = `
             <svg width="100%" height="${height}" viewBox="0 0 ${width} ${height}" preserveAspectRatio="none">
-                ${bars}
-                <line x1="10" y1="${targetY}" x2="${width - 10}" y2="${targetY}"
-                      stroke="#ef4444" stroke-width="1" stroke-dasharray="4,4"/>
+                <!-- Target line -->
+                <line x1="${padding}" y1="${targetY}" x2="${width - padding}" y2="${targetY}"
+                      stroke="#86BC25" stroke-width="2" stroke-dasharray="4,4"/>
+                <!-- Data line -->
+                <polyline points="${points}" fill="none" stroke="#8b5cf6" stroke-width="2"/>
+                <!-- Current point -->
+                <circle cx="${xScale(values.length - 1)}" cy="${yScale(values[values.length - 1])}"
+                        r="4" fill="#8b5cf6"/>
             </svg>
         `;
     },
@@ -4339,6 +4339,11 @@ PMO Team
                 projectFilter.appendChild(option);
             });
         }
+
+        // Render line charts for P-10 KPIs
+        this.renderKPICharts();
+        this.renderUSStackedBar();
+        this.renderEarlyWarnings();
 
         // Update KPI values
         this.updateKPIValues();

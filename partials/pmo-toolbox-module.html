@@ -889,7 +889,7 @@
                             <div class="pmo-kpi-header">
                                 <div class="pmo-kpi-title-row">
                                     <span class="pmo-kpi-label">Ressourcen</span>
-                                    <span class="pmo-kpi-status green" title="Grün: 87% Auslastung"></span>
+                                    <span class="pmo-kpi-status yellow" title="Gelb: Interne Ressourcen >100%"></span>
                                 </div>
                                 <div class="pmo-kpi-header-actions">
                                     <div class="pmo-chart-toggle" data-kpi="ressourcen">
@@ -899,8 +899,11 @@
                                         <button class="pmo-chart-toggle-btn" data-view="distribution" title="Verteilung" onclick="PMO.switchChartView('ressourcen', 'distribution')">
                                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>
                                         </button>
+                                        <button class="pmo-chart-toggle-btn" data-view="breakdown" title="Intern/Extern" onclick="PMO.switchChartView('ressourcen', 'breakdown')">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="6" height="16" rx="1"/><rect x="14" y="8" width="6" height="12" rx="1"/></svg>
+                                        </button>
                                     </div>
-                                    <span class="pmo-kpi-badge success">87% Auslastung</span>
+                                    <span class="pmo-kpi-badge warning">Intern >100%</span>
                                 </div>
                             </div>
                             <p class="pmo-kpi-description" id="desc-ressourcen">Personentage Ist vs. Angefragt pro Monat</p>
@@ -911,11 +914,11 @@
                                     <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot prognose"></span> PT Angefragt</span>
                                 </div>
                             </div>
-                            <div class="pmo-kpi-trend positive">
+                            <div class="pmo-kpi-trend warning">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+                                    <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"></path>
                                 </svg>
-                                <span>245 / 280 PT</span>
+                                <span>Intern: 165 / 155 PT (106%)</span>
                                 <span class="pmo-kpi-trend-label">Januar</span>
                             </div>
                             <div class="pmo-kpi-chart">

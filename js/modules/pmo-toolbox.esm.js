@@ -4368,13 +4368,26 @@ PMO Team
     },
 
     renderP10Charts() {
-        // Use Chart.js for all P-10 KPI charts with proper axes
-        if (typeof Chart === 'undefined') {
-            console.warn('Chart.js not loaded, skipping P-10 chart rendering');
-            return;
-        }
+        console.log('🎯 renderP10Charts() aufgerufen');
 
+        // Wait a tick for DOM to be ready, then render
+        setTimeout(() => this._doRenderP10Charts(), 100);
+    },
+
+    _doRenderP10Charts() {
         const labels = ['Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez', 'Jan'];
+
+        // Try Chart.js first (like A-03), fallback to SVG
+        if (typeof Chart !== 'undefined') {
+            console.log('✅ Chart.js verfügbar - verwende Chart.js');
+            this._renderP10WithChartJS(labels);
+        } else {
+            console.log('⚠️ Chart.js nicht verfügbar - verwende SVG');
+            this._renderP10WithSVG(labels);
+        }
+    },
+
+    _renderP10WithChartJS(labels) {
         const chartOptions = {
             responsive: true,
             maintainAspectRatio: false,
@@ -4393,79 +4406,344 @@ PMO Team
             }
         };
 
-        // Verträge pro Kunde (line with target)
-        this.renderChartJS('chart-vertraege', 'line', labels, [
-            { label: 'Ist', data: this.kpiData.vertraege.history, borderColor: '#3b82f6', backgroundColor: 'transparent', tension: 0.3, pointRadius: 4, pointBackgroundColor: '#3b82f6', pointBorderColor: '#fff', pointBorderWidth: 2, borderWidth: 2 },
-            { label: 'Ziel', data: Array(10).fill(this.kpiData.vertraege.target), borderColor: '#86BC25', backgroundColor: 'transparent', borderDash: [5, 5], borderWidth: 2, pointRadius: 0 }
-        ], { ...chartOptions, scales: { ...chartOptions.scales, y: { ...chartOptions.scales.y, min: 1.8, max: 3.0 } } });
+        // Helper to create Chart.js chart
+        const createChart = (canvasId, datasets, yMin, yMax, tickCallback) => {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) { console.warn('Canvas nicht gefunden:', canvasId); return; }
+
+            const ctx = canvas.getContext('2d');
+            if (canvas._chart) canvas._chart.destroy();
+
+            const opts = JSON.parse(JSON.stringify(chartOptions));
+            if (yMin !== undefined) opts.scales.y.min = yMin;
+            if (yMax !== undefined) opts.scales.y.max = yMax;
+            if (tickCallback) opts.scales.y.ticks.callback = tickCallback;
+
+            canvas._chart = new Chart(ctx, {
+                type: 'line',
+                data: { labels, datasets },
+                options: opts
+            });
+        };
+
+        // Verträge pro Kunde
+        createChart('chart-vertraege', [
+            { label: 'Ist', data: this.kpiData.vertraege.history, borderColor: '#3b82f6', backgroundColor: 'transparent', tension: 0.3, pointRadius: 4, borderWidth: 2 },
+            { label: 'Ziel', data: Array(10).fill(this.kpiData.vertraege.target), borderColor: '#86BC25', borderDash: [5, 5], borderWidth: 2, pointRadius: 0 }
+        ], 1.8, 3.0);
 
         // APE pro Kunde
-        this.renderChartJS('chart-ape', 'line', labels, [
-            { label: 'Ist', data: this.kpiData.ape.history.map(v => v/1000), borderColor: '#0ea5e9', backgroundColor: 'transparent', tension: 0.3, pointRadius: 4, pointBackgroundColor: '#0ea5e9', pointBorderColor: '#fff', pointBorderWidth: 2, borderWidth: 2 },
-            { label: 'Ziel', data: Array(10).fill(this.kpiData.ape.target/1000), borderColor: '#86BC25', backgroundColor: 'transparent', borderDash: [5, 5], borderWidth: 2, pointRadius: 0 }
-        ], { ...chartOptions, scales: { ...chartOptions.scales, y: { ...chartOptions.scales.y, min: 100, max: 200, ticks: { ...chartOptions.scales.y.ticks, callback: (v) => '€' + v + 'k' } } } });
+        createChart('chart-ape', [
+            { label: 'Ist', data: this.kpiData.ape.history.map(v => v/1000), borderColor: '#0ea5e9', backgroundColor: 'transparent', tension: 0.3, pointRadius: 4, borderWidth: 2 },
+            { label: 'Ziel', data: Array(10).fill(this.kpiData.ape.target/1000), borderColor: '#86BC25', borderDash: [5, 5], borderWidth: 2, pointRadius: 0 }
+        ], 100, 200, v => '€' + v + 'k');
 
-        // NPS Score (time series)
-        this.renderChartJS('chart-nps', 'line', labels, [
-            { label: 'NPS', data: this.kpiData.nps.history, borderColor: '#8b5cf6', backgroundColor: 'transparent', tension: 0.3, pointRadius: 4, pointBackgroundColor: '#8b5cf6', pointBorderColor: '#fff', pointBorderWidth: 2, borderWidth: 2 },
-            { label: 'Benchmark', data: Array(10).fill(this.kpiData.nps.benchmark), borderColor: '#86BC25', backgroundColor: 'transparent', borderDash: [5, 5], borderWidth: 2, pointRadius: 0 }
-        ], { ...chartOptions, scales: { ...chartOptions.scales, y: { ...chartOptions.scales.y, min: -100, max: 100 } } });
+        // NPS Score
+        createChart('chart-nps', [
+            { label: 'NPS', data: this.kpiData.nps.history, borderColor: '#8b5cf6', backgroundColor: 'transparent', tension: 0.3, pointRadius: 4, borderWidth: 2 },
+            { label: 'Benchmark', data: Array(10).fill(this.kpiData.nps.benchmark), borderColor: '#86BC25', borderDash: [5, 5], borderWidth: 2, pointRadius: 0 }
+        ], -20, 60);
 
-        // User Adoption (2-year multi-line with different start points)
-        const adoptionLabels = ['Jan 24', 'Apr 24', 'Jul 24', 'Okt 24', 'Jan 25', 'Apr 25', 'Jul 25', 'Okt 25', 'Jan 26'];
-        this.renderChartJS('chart-adoption', 'line', adoptionLabels, [
-            { label: 'Vertriebsportal', data: [10, 25, 45, 65, 78, 85, 90, 93, 95], borderColor: '#3b82f6', backgroundColor: 'transparent', tension: 0.3, pointRadius: 3, borderWidth: 2 },
-            { label: 'Risikoscoring', data: [null, null, 5, 18, 35, 52, 62, 70, 74], borderColor: '#f59e0b', backgroundColor: 'transparent', tension: 0.3, pointRadius: 3, borderWidth: 2 },
-            { label: 'KI-Assistent', data: [null, null, null, null, null, 8, 22, 38, 48], borderColor: '#8b5cf6', backgroundColor: 'transparent', tension: 0.3, pointRadius: 3, borderWidth: 2 }
-        ], { ...chartOptions, scales: { ...chartOptions.scales, y: { ...chartOptions.scales.y, min: 0, max: 100, ticks: { ...chartOptions.scales.y.ticks, callback: (v) => v + '%' } } } });
+        // User Adoption
+        const adoptionLabels = ['Jan 24', 'Apr', 'Jul', 'Okt', 'Jan 25', 'Apr', 'Jul', 'Okt', 'Jan 26'];
+        const adoptionCanvas = document.getElementById('chart-adoption');
+        if (adoptionCanvas) {
+            const ctx = adoptionCanvas.getContext('2d');
+            if (adoptionCanvas._chart) adoptionCanvas._chart.destroy();
+            adoptionCanvas._chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: adoptionLabels,
+                    datasets: [
+                        { label: 'Portal', data: [10, 25, 45, 65, 78, 85, 90, 93, 95], borderColor: '#3b82f6', tension: 0.3, pointRadius: 3, borderWidth: 2 },
+                        { label: 'Risk', data: [null, null, 5, 18, 35, 52, 62, 70, 74], borderColor: '#f59e0b', tension: 0.3, pointRadius: 3, borderWidth: 2 },
+                        { label: 'KI', data: [null, null, null, null, null, 8, 22, 38, 48], borderColor: '#8b5cf6', tension: 0.3, pointRadius: 3, borderWidth: 2 }
+                    ]
+                },
+                options: { ...chartOptions, scales: { ...chartOptions.scales, y: { ...chartOptions.scales.y, min: 0, max: 100, ticks: { ...chartOptions.scales.y.ticks, callback: v => v + '%' } } } }
+            });
+        }
 
         // Meilensteine
-        this.renderChartJS('chart-meilensteine', 'line', labels, [
-            { label: 'Im Plan', data: this.kpiData.meilensteine.history, borderColor: '#16a34a', backgroundColor: 'transparent', tension: 0.3, pointRadius: 4, pointBackgroundColor: '#16a34a', pointBorderColor: '#fff', pointBorderWidth: 2, borderWidth: 2 }
-        ], { ...chartOptions, scales: { ...chartOptions.scales, y: { ...chartOptions.scales.y, min: 0, max: 100, ticks: { ...chartOptions.scales.y.ticks, callback: (v) => v + '%' } } } });
+        createChart('chart-meilensteine', [
+            { label: 'Im Plan', data: this.kpiData.meilensteine.history, borderColor: '#16a34a', backgroundColor: 'transparent', tension: 0.3, pointRadius: 4, borderWidth: 2 }
+        ], 50, 100, v => v + '%');
 
-        // User Stories (stacked bar over time)
-        this.renderChartJS('chart-userstories', 'bar', labels, [
-            { label: 'Backlog', data: this.kpiData.userstories.monthly.map(m => m.backlog), backgroundColor: '#94a3b8', stack: 'stack1' },
-            { label: 'In Progress', data: this.kpiData.userstories.monthly.map(m => m.inprogress), backgroundColor: '#3b82f6', stack: 'stack1' },
-            { label: 'Review', data: this.kpiData.userstories.monthly.map(m => m.review), backgroundColor: '#f59e0b', stack: 'stack1' },
-            { label: 'Done', data: this.kpiData.userstories.monthly.map(m => m.done), backgroundColor: '#16a34a', stack: 'stack1' }
-        ], { ...chartOptions, scales: { ...chartOptions.scales, x: { ...chartOptions.scales.x, stacked: true }, y: { ...chartOptions.scales.y, stacked: true } } });
+        // User Stories (stacked bar)
+        const usCanvas = document.getElementById('chart-userstories');
+        if (usCanvas) {
+            const ctx = usCanvas.getContext('2d');
+            if (usCanvas._chart) usCanvas._chart.destroy();
+            usCanvas._chart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels,
+                    datasets: [
+                        { label: 'Backlog', data: this.kpiData.userstories.monthly.map(m => m.backlog), backgroundColor: '#94a3b8', stack: 's1' },
+                        { label: 'In Progress', data: this.kpiData.userstories.monthly.map(m => m.inprogress), backgroundColor: '#3b82f6', stack: 's1' },
+                        { label: 'Review', data: this.kpiData.userstories.monthly.map(m => m.review), backgroundColor: '#f59e0b', stack: 's1' },
+                        { label: 'Done', data: this.kpiData.userstories.monthly.map(m => m.done), backgroundColor: '#16a34a', stack: 's1' }
+                    ]
+                },
+                options: { ...chartOptions, scales: { x: { ...chartOptions.scales.x, stacked: true }, y: { ...chartOptions.scales.y, stacked: true } } }
+            });
+        }
 
         // Tests
-        this.renderChartJS('chart-tests', 'line', labels, [
-            { label: 'Gesamt', data: this.kpiData.tests.history.total, borderColor: '#64748b', backgroundColor: 'transparent', tension: 0.3, pointRadius: 3, borderWidth: 2 },
-            { label: 'Gestartet', data: this.kpiData.tests.history.started, borderColor: '#3b82f6', backgroundColor: 'transparent', tension: 0.3, pointRadius: 3, borderWidth: 2 },
-            { label: 'Abgeschlossen', data: this.kpiData.tests.history.completed, borderColor: '#16a34a', backgroundColor: 'transparent', tension: 0.3, pointRadius: 3, borderWidth: 2 }
-        ], chartOptions);
+        createChart('chart-tests', [
+            { label: 'Gesamt', data: this.kpiData.tests.history.total, borderColor: '#64748b', tension: 0.3, pointRadius: 3, borderWidth: 2 },
+            { label: 'Gestartet', data: this.kpiData.tests.history.started, borderColor: '#3b82f6', tension: 0.3, pointRadius: 3, borderWidth: 2 },
+            { label: 'Fertig', data: this.kpiData.tests.history.completed, borderColor: '#16a34a', tension: 0.3, pointRadius: 3, borderWidth: 2 }
+        ], 20, 55);
 
         // Defects (stacked bar)
-        this.renderChartJS('chart-defects', 'bar', labels, [
-            { label: 'Kritisch', data: this.kpiData.defects.monthly.map(m => m.critical), backgroundColor: '#dc2626', stack: 'stack1' },
-            { label: 'Major', data: this.kpiData.defects.monthly.map(m => m.major), backgroundColor: '#f59e0b', stack: 'stack1' },
-            { label: 'Minor', data: this.kpiData.defects.monthly.map(m => m.minor), backgroundColor: '#fbbf24', stack: 'stack1' }
-        ], { ...chartOptions, scales: { ...chartOptions.scales, x: { ...chartOptions.scales.x, stacked: true }, y: { ...chartOptions.scales.y, stacked: true } } });
+        const defCanvas = document.getElementById('chart-defects');
+        if (defCanvas) {
+            const ctx = defCanvas.getContext('2d');
+            if (defCanvas._chart) defCanvas._chart.destroy();
+            defCanvas._chart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels,
+                    datasets: [
+                        { label: 'Kritisch', data: this.kpiData.defects.monthly.map(m => m.critical), backgroundColor: '#dc2626', stack: 's1' },
+                        { label: 'Major', data: this.kpiData.defects.monthly.map(m => m.major), backgroundColor: '#f59e0b', stack: 's1' },
+                        { label: 'Minor', data: this.kpiData.defects.monthly.map(m => m.minor), backgroundColor: '#fbbf24', stack: 's1' }
+                    ]
+                },
+                options: { ...chartOptions, scales: { x: { ...chartOptions.scales.x, stacked: true }, y: { ...chartOptions.scales.y, stacked: true } } }
+            });
+        }
 
         // Ressourcen
-        this.renderChartJS('chart-ressourcen', 'line', labels, [
-            { label: 'PT Ist', data: this.kpiData.ressourcen.history.ist, borderColor: '#3b82f6', backgroundColor: 'transparent', tension: 0.3, pointRadius: 3, borderWidth: 2 },
-            { label: 'PT Angefragt', data: this.kpiData.ressourcen.history.angefragt, borderColor: '#94a3b8', backgroundColor: 'transparent', tension: 0.3, pointRadius: 3, borderWidth: 2, borderDash: [5, 5] }
-        ], chartOptions);
+        createChart('chart-ressourcen', [
+            { label: 'Ist', data: this.kpiData.ressourcen.history.ist, borderColor: '#3b82f6', tension: 0.3, pointRadius: 3, borderWidth: 2 },
+            { label: 'Angefragt', data: this.kpiData.ressourcen.history.angefragt, borderColor: '#94a3b8', borderDash: [5, 5], tension: 0.3, pointRadius: 3, borderWidth: 2 }
+        ], 200, 300);
 
-        // Budget (history values are in thousands, so /1000 gives millions)
-        this.renderChartJS('chart-budget', 'line', labels, [
-            { label: 'Plan', data: this.kpiData.budget.history.plan.map(v => v/1000), borderColor: '#86BC25', backgroundColor: 'transparent', tension: 0.3, pointRadius: 3, borderWidth: 2 },
-            { label: 'Verbrauch', data: this.kpiData.budget.history.verbrauch.map(v => v/1000), borderColor: '#3b82f6', backgroundColor: 'transparent', tension: 0.3, pointRadius: 3, borderWidth: 2 },
-            { label: 'Forecast', data: this.kpiData.budget.history.forecast.map(v => v/1000), borderColor: '#8b5cf6', backgroundColor: 'transparent', tension: 0.3, pointRadius: 3, borderWidth: 2, borderDash: [5, 5] }
-        ], { ...chartOptions, scales: { ...chartOptions.scales, y: { ...chartOptions.scales.y, ticks: { ...chartOptions.scales.y.ticks, callback: (v) => '€' + v.toFixed(1) + 'M' } } } });
+        // Budget
+        createChart('chart-budget', [
+            { label: 'Plan', data: this.kpiData.budget.history.plan.map(v => v/1000), borderColor: '#86BC25', tension: 0.3, pointRadius: 3, borderWidth: 2 },
+            { label: 'Verbrauch', data: this.kpiData.budget.history.verbrauch.map(v => v/1000), borderColor: '#3b82f6', tension: 0.3, pointRadius: 3, borderWidth: 2 },
+            { label: 'Forecast', data: this.kpiData.budget.history.forecast.map(v => v/1000), borderColor: '#8b5cf6', borderDash: [5, 5], tension: 0.3, pointRadius: 3, borderWidth: 2 }
+        ], 0, 3.5, v => '€' + v.toFixed(1) + 'M');
     },
 
-    renderChartJS(canvasId, type, labels, datasets, options) {
-        const canvas = document.getElementById(canvasId);
-        if (!canvas) return;
+    _renderP10WithSVG(labels) {
 
-        const ctx = canvas.getContext('2d');
-        if (canvas._chart) canvas._chart.destroy();
+        // Verträge pro Kunde
+        this.renderSVGLineChart('chart-vertraege', labels,
+            [{ data: this.kpiData.vertraege.history, color: '#3b82f6', label: 'Ist' }],
+            this.kpiData.vertraege.target, '#86BC25', 1.8, 3.0);
+
+        // APE pro Kunde
+        this.renderSVGLineChart('chart-ape', labels,
+            [{ data: this.kpiData.ape.history.map(v => v/1000), color: '#0ea5e9', label: 'Ist' }],
+            this.kpiData.ape.target/1000, '#86BC25', 100, 200, '€', 'k');
+
+        // NPS Score (time series)
+        this.renderSVGLineChart('chart-nps', labels,
+            [{ data: this.kpiData.nps.history, color: '#8b5cf6', label: 'NPS' }],
+            this.kpiData.nps.benchmark, '#86BC25', -20, 60);
+
+        // User Adoption (2-year multi-line)
+        const adoptionLabels = ['Jan 24', 'Apr', 'Jul', 'Okt', 'Jan 25', 'Apr', 'Jul', 'Okt', 'Jan 26'];
+        this.renderSVGMultiLineChart('chart-adoption', adoptionLabels, [
+            { data: [10, 25, 45, 65, 78, 85, 90, 93, 95], color: '#3b82f6', label: 'Portal' },
+            { data: [null, null, 5, 18, 35, 52, 62, 70, 74], color: '#f59e0b', label: 'Risk' },
+            { data: [null, null, null, null, null, 8, 22, 38, 48], color: '#8b5cf6', label: 'KI' }
+        ], 0, 100, '', '%');
+
+        // Meilensteine
+        this.renderSVGLineChart('chart-meilensteine', labels,
+            [{ data: this.kpiData.meilensteine.history, color: '#16a34a', label: 'Im Plan' }],
+            null, null, 50, 100, '', '%');
+
+        // User Stories (stacked bar)
+        this.renderSVGStackedBarChart('chart-userstories', labels, this.kpiData.userstories.monthly,
+            ['backlog', 'inprogress', 'review', 'done'],
+            ['#94a3b8', '#3b82f6', '#f59e0b', '#16a34a']);
+
+        // Tests
+        this.renderSVGMultiLineChart('chart-tests', labels, [
+            { data: this.kpiData.tests.history.total, color: '#64748b', label: 'Gesamt' },
+            { data: this.kpiData.tests.history.started, color: '#3b82f6', label: 'Gestartet' },
+            { data: this.kpiData.tests.history.completed, color: '#16a34a', label: 'Fertig' }
+        ], 20, 55);
+
+        // Defects (stacked bar)
+        this.renderSVGStackedBarChart('chart-defects', labels, this.kpiData.defects.monthly,
+            ['critical', 'major', 'minor'],
+            ['#dc2626', '#f59e0b', '#fbbf24']);
+
+        // Ressourcen
+        this.renderSVGMultiLineChart('chart-ressourcen', labels, [
+            { data: this.kpiData.ressourcen.history.ist, color: '#3b82f6', label: 'Ist' },
+            { data: this.kpiData.ressourcen.history.angefragt, color: '#94a3b8', label: 'Angefr.', dashed: true }
+        ], 200, 300);
+
+        // Budget
+        this.renderSVGMultiLineChart('chart-budget', labels, [
+            { data: this.kpiData.budget.history.plan.map(v => v/1000), color: '#86BC25', label: 'Plan' },
+            { data: this.kpiData.budget.history.verbrauch.map(v => v/1000), color: '#3b82f6', label: 'Verbr.' },
+            { data: this.kpiData.budget.history.forecast.map(v => v/1000), color: '#8b5cf6', label: 'Forecast', dashed: true }
+        ], 0, 3.5, '€', 'M');
+    },
+
+    renderSVGLineChart(containerId, labels, lines, targetValue, targetColor, minY, maxY, prefix = '', suffix = '') {
+        const container = document.getElementById(containerId);
+        if (!container) { console.warn('Container not found:', containerId); return; }
+
+        // Clear existing content and get parent dimensions
+        const parent = container.parentElement;
+        const width = parent ? parent.offsetWidth - 20 : 280;
+        const height = 130;
+        const padding = { top: 15, right: 15, bottom: 25, left: 45 };
+
+        const chartWidth = width - padding.left - padding.right;
+        const chartHeight = height - padding.top - padding.bottom;
+
+        const xScale = (i, len) => padding.left + (i / (len - 1)) * chartWidth;
+        const yScale = (v) => padding.top + chartHeight - ((v - minY) / (maxY - minY)) * chartHeight;
+
+        let svg = `<svg width="100%" height="${height}" viewBox="0 0 ${width} ${height}" style="overflow:visible">`;
+
+        // Y-axis grid lines and labels
+        const ySteps = 4;
+        for (let i = 0; i <= ySteps; i++) {
+            const yVal = minY + (maxY - minY) * (i / ySteps);
+            const y = yScale(yVal);
+            svg += `<line x1="${padding.left}" y1="${y}" x2="${width - padding.right}" y2="${y}" stroke="#e2e8f0" stroke-width="1"/>`;
+            svg += `<text x="${padding.left - 5}" y="${y + 3}" text-anchor="end" fill="#94a3b8" font-size="10">${prefix}${yVal.toFixed(1)}${suffix}</text>`;
+        }
+
+        // X-axis labels
+        labels.forEach((label, i) => {
+            if (i % 2 === 0 || i === labels.length - 1) {
+                svg += `<text x="${xScale(i, labels.length)}" y="${height - 5}" text-anchor="middle" fill="#94a3b8" font-size="9">${label}</text>`;
+            }
+        });
+
+        // Target line if exists
+        if (targetValue !== null && targetColor) {
+            const targetY = yScale(targetValue);
+            svg += `<line x1="${padding.left}" y1="${targetY}" x2="${width - padding.right}" y2="${targetY}" stroke="${targetColor}" stroke-width="2" stroke-dasharray="6,4"/>`;
+        }
+
+        // Data lines
+        lines.forEach(line => {
+            const points = line.data.map((v, i) => `${xScale(i, line.data.length)},${yScale(v)}`).join(' ');
+            svg += `<polyline points="${points}" fill="none" stroke="${line.color}" stroke-width="2.5"/>`;
+            // End point
+            const lastIdx = line.data.length - 1;
+            svg += `<circle cx="${xScale(lastIdx, line.data.length)}" cy="${yScale(line.data[lastIdx])}" r="5" fill="${line.color}"/>`;
+        });
+
+        svg += '</svg>';
+        container.innerHTML = svg;
+    },
+
+    renderSVGMultiLineChart(containerId, labels, lines, minY, maxY, prefix = '', suffix = '') {
+        const container = document.getElementById(containerId);
+        if (!container) { console.warn('Container not found:', containerId); return; }
+
+        const parent = container.parentElement;
+        const width = parent ? parent.offsetWidth - 20 : 280;
+        const height = 130;
+        const padding = { top: 15, right: 15, bottom: 25, left: 45 };
+
+        const chartWidth = width - padding.left - padding.right;
+        const chartHeight = height - padding.top - padding.bottom;
+
+        const xScale = (i, len) => padding.left + (i / (len - 1)) * chartWidth;
+        const yScale = (v) => padding.top + chartHeight - ((v - minY) / (maxY - minY)) * chartHeight;
+
+        let svg = `<svg width="100%" height="${height}" viewBox="0 0 ${width} ${height}" style="overflow:visible">`;
+
+        // Y-axis grid and labels
+        const ySteps = 4;
+        for (let i = 0; i <= ySteps; i++) {
+            const yVal = minY + (maxY - minY) * (i / ySteps);
+            const y = yScale(yVal);
+            svg += `<line x1="${padding.left}" y1="${y}" x2="${width - padding.right}" y2="${y}" stroke="#e2e8f0" stroke-width="1"/>`;
+            svg += `<text x="${padding.left - 5}" y="${y + 3}" text-anchor="end" fill="#94a3b8" font-size="10">${prefix}${Number.isInteger(yVal) ? yVal : yVal.toFixed(1)}${suffix}</text>`;
+        }
+
+        // X-axis labels
+        labels.forEach((label, i) => {
+            if (i % 2 === 0 || i === labels.length - 1) {
+                svg += `<text x="${xScale(i, labels.length)}" y="${height - 5}" text-anchor="middle" fill="#94a3b8" font-size="9">${label}</text>`;
+            }
+        });
+
+        // Data lines
+        lines.forEach(line => {
+            const validPoints = line.data.map((v, i) => v !== null ? { x: xScale(i, line.data.length), y: yScale(v) } : null).filter(p => p !== null);
+            if (validPoints.length > 1) {
+                const pathPoints = validPoints.map(p => `${p.x},${p.y}`).join(' ');
+                const dashAttr = line.dashed ? 'stroke-dasharray="5,3"' : '';
+                svg += `<polyline points="${pathPoints}" fill="none" stroke="${line.color}" stroke-width="2" ${dashAttr}/>`;
+                // End point
+                const last = validPoints[validPoints.length - 1];
+                svg += `<circle cx="${last.x}" cy="${last.y}" r="4" fill="${line.color}"/>`;
+            }
+        });
+
+        svg += '</svg>';
+        container.innerHTML = svg;
+    },
+
+    renderSVGStackedBarChart(containerId, labels, monthlyData, keys, colors) {
+        const container = document.getElementById(containerId);
+        if (!container) { console.warn('Container not found:', containerId); return; }
+
+        const parent = container.parentElement;
+        const width = parent ? parent.offsetWidth - 20 : 280;
+        const height = 130;
+        const padding = { top: 15, right: 15, bottom: 25, left: 35 };
+
+        const chartWidth = width - padding.left - padding.right;
+        const chartHeight = height - padding.top - padding.bottom;
+        const barWidth = (chartWidth / monthlyData.length) - 6;
+
+        const maxTotal = Math.max(...monthlyData.map(m => keys.reduce((sum, k) => sum + (m[k] || 0), 0)));
+        const yScale = (v) => (v / maxTotal) * chartHeight;
+
+        let svg = `<svg width="100%" height="${height}" viewBox="0 0 ${width} ${height}" style="overflow:visible">`;
+
+        // Y-axis labels
+        [0, Math.round(maxTotal/2), maxTotal].forEach((v, i) => {
+            const y = padding.top + chartHeight - yScale(v);
+            svg += `<text x="${padding.left - 5}" y="${y + 3}" text-anchor="end" fill="#94a3b8" font-size="10">${v}</text>`;
+        });
+
+        // Bars
+        monthlyData.forEach((month, i) => {
+            const x = padding.left + i * (barWidth + 6) + 3;
+            let currentY = padding.top + chartHeight;
+
+            keys.forEach((key, ki) => {
+                const value = month[key] || 0;
+                const barHeight = yScale(value);
+                currentY -= barHeight;
+                svg += `<rect x="${x}" y="${currentY}" width="${barWidth}" height="${barHeight}" fill="${colors[ki]}" rx="2"/>`;
+            });
+
+            // X-axis label
+            if (i % 2 === 0 || i === monthlyData.length - 1) {
+                svg += `<text x="${x + barWidth/2}" y="${height - 5}" text-anchor="middle" fill="#94a3b8" font-size="9">${labels[i]}</text>`;
+            }
+        });
+
+        svg += '</svg>';
+        container.innerHTML = svg;
+    },
+
+    // Keep renderChartJS as fallback for Chart.js if available
+    renderChartJS(canvasId, type, labels, datasets, options) {
+        // This function is now deprecated in favor of SVG rendering
+        console.log('renderChartJS called but using SVG instead');
+        return;
 
         canvas._chart = new Chart(ctx, {
             type: type,

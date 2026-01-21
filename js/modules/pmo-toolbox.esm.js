@@ -4420,8 +4420,13 @@ PMO Team
             const canvas = document.getElementById(canvasId);
             if (!canvas) { console.warn('Canvas nicht gefunden:', canvasId); return; }
 
+            // Destroy existing chart using Chart.js API
+            const existingChart = Chart.getChart(canvas);
+            if (existingChart) {
+                existingChart.destroy();
+            }
+
             const ctx = canvas.getContext('2d');
-            if (canvas._chart) canvas._chart.destroy();
 
             const opts = JSON.parse(JSON.stringify(chartOptions));
             if (yMin !== undefined) opts.scales.y.min = yMin;
@@ -4457,8 +4462,9 @@ PMO Team
         const adoptionLabels = ['Jan 24', 'Apr', 'Jul', 'Okt', 'Jan 25', 'Apr', 'Jul', 'Okt', 'Jan 26'];
         const adoptionCanvas = document.getElementById('chart-adoption');
         if (adoptionCanvas) {
+            const existingAdoption = Chart.getChart(adoptionCanvas);
+            if (existingAdoption) existingAdoption.destroy();
             const ctx = adoptionCanvas.getContext('2d');
-            if (adoptionCanvas._chart) adoptionCanvas._chart.destroy();
             adoptionCanvas._chart = new Chart(ctx, {
                 type: 'line',
                 data: {
@@ -4481,8 +4487,9 @@ PMO Team
         // User Stories (stacked bar)
         const usCanvas = document.getElementById('chart-userstories');
         if (usCanvas) {
+            const existingUS = Chart.getChart(usCanvas);
+            if (existingUS) existingUS.destroy();
             const ctx = usCanvas.getContext('2d');
-            if (usCanvas._chart) usCanvas._chart.destroy();
             usCanvas._chart = new Chart(ctx, {
                 type: 'bar',
                 data: {
@@ -4508,8 +4515,9 @@ PMO Team
         // Defects (stacked bar)
         const defCanvas = document.getElementById('chart-defects');
         if (defCanvas) {
+            const existingDef = Chart.getChart(defCanvas);
+            if (existingDef) existingDef.destroy();
             const ctx = defCanvas.getContext('2d');
-            if (defCanvas._chart) defCanvas._chart.destroy();
             defCanvas._chart = new Chart(ctx, {
                 type: 'bar',
                 data: {

@@ -697,23 +697,30 @@
                         </div>
 
                         <!-- User Adoption Rate -->
-                        <div class="pmo-kpi-card pmo-kpi-wide" data-kpi="adoption" data-category="vertrieblich">
+                        <div class="pmo-kpi-card" data-kpi="adoption" data-category="vertrieblich">
                             <div class="pmo-kpi-header">
                                 <div class="pmo-kpi-title-row">
                                     <span class="pmo-kpi-label">User Adoption Rate</span>
                                     <span class="pmo-kpi-status yellow" title="Gelb: Wachstumspotenzial"></span>
                                 </div>
-                                <span class="pmo-kpi-badge info">2 Jahre Zeitraum</span>
+                                <span class="pmo-kpi-badge info">Aktuell: 95%</span>
                             </div>
-                            <p class="pmo-kpi-description">Nutzungsgrad nach Tool-Freischaltung (unterschiedliche Startpunkte)</p>
+                            <p class="pmo-kpi-description">Nutzungsgrad der Tools nach Freischaltung</p>
                             <div class="pmo-kpi-value-row">
-                                <div class="pmo-kpi-legend pmo-kpi-legend-wide">
-                                    <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot tool1"></span> Vertriebsportal 95%</span>
-                                    <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot tool2"></span> Risikoscoring 74%</span>
-                                    <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot tool3"></span> KI-Assistent 48%</span>
+                                <span class="pmo-kpi-value">95%</span>
+                                <div class="pmo-kpi-legend">
+                                    <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot tool1"></span> Portal</span>
+                                    <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot tool2"></span> Risk</span>
+                                    <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot tool3"></span> KI</span>
                                 </div>
                             </div>
-                            <div class="pmo-kpi-chart pmo-kpi-chart-wide">
+                            <div class="pmo-kpi-trend positive">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+                                </svg>
+                                <span>+2% vs. Vormonat</span>
+                            </div>
+                            <div class="pmo-kpi-chart">
                                 <canvas id="chart-adoption"></canvas>
                             </div>
                         </div>
@@ -801,13 +808,13 @@
                         </div>
 
                         <!-- Defects -->
-                        <div class="pmo-kpi-card" data-kpi="defects" data-category="operativ">
+                        <div class="pmo-kpi-card pmo-kpi-alert" data-kpi="defects" data-category="operativ">
                             <div class="pmo-kpi-header">
                                 <div class="pmo-kpi-title-row">
                                     <span class="pmo-kpi-label">Defects</span>
-                                    <span class="pmo-kpi-status yellow" title="Gelb: 3 kritische Defects"></span>
+                                    <span class="pmo-kpi-status red" title="Rot: 3 kritische Defects offen!"></span>
                                 </div>
-                                <span class="pmo-kpi-badge warning">43 offen</span>
+                                <span class="pmo-kpi-badge danger">3 kritisch!</span>
                             </div>
                             <p class="pmo-kpi-description">Defects nach Severity im Zeitverlauf</p>
                             <div class="pmo-kpi-value-row">
@@ -1442,7 +1449,7 @@
 
 
 <!-- PMO Toolbox Styles (externalized) -->
-<link rel="stylesheet" href="/css/pmo-toolbox.css?v=20260121k">
+<link rel="stylesheet" href="/css/pmo-toolbox.css?v=20260121p">
 
 <!-- PMO Toolbox JavaScript (ES6 Module) -->
-<script type="module" src="/js/modules/pmo-toolbox.esm.js?v=20260121n"></script>
+<script type="module" src="/js/modules/pmo-toolbox.esm.js?v=20260121p"></script>

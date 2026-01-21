@@ -1334,6 +1334,17 @@ export const PMO = {
             details: '3 kritische Defects seit > 5 Tagen offen',
             navigateTo: 'kpis',
             filterTo: 'defects'
+        },
+        {
+            id: 'resource_intern_overload',
+            type: 'warning',
+            indicator: 'Interne Ressourcen',
+            condition: 'Auslastung >100%',
+            active: true,
+            recommendation: 'Prüfung Ressourcenverlagerung auf externe, ggf. Scope reduzieren',
+            details: 'Interne Ressourcen bei 106% Auslastung - mehr angefragt als verfügbar',
+            navigateTo: 'kpis',
+            filterTo: 'ressourcen'
         }
     ],
 
@@ -4450,6 +4461,25 @@ PMO Team
             ptIst: 245,
             ptAngefragt: 280,
             auslastung: 87,
+            // Breakdown by intern/extern
+            intern: {
+                ist: 165,
+                angefragt: 155,  // More requested than available! (overload)
+                auslastung: 106, // >100% = warning!
+                history: {
+                    ist: [140, 142, 145, 148, 150, 152, 155, 158, 160, 165],
+                    angefragt: [135, 138, 140, 142, 145, 148, 150, 152, 155, 155]
+                }
+            },
+            extern: {
+                ist: 80,
+                angefragt: 125,
+                auslastung: 64,
+                history: {
+                    ist: [80, 83, 85, 87, 88, 88, 87, 86, 85, 80],
+                    angefragt: [115, 117, 120, 123, 125, 127, 128, 127, 125, 125]
+                }
+            },
             history: {
                 ist: [220, 225, 230, 235, 238, 240, 242, 244, 245, 245],
                 angefragt: [250, 255, 260, 265, 270, 275, 278, 279, 280, 280]
@@ -5493,7 +5523,7 @@ PMO Team
                 userstories: { timeline: 'User Stories nach Status im Zeitverlauf', distribution: 'User Stories nach aktuellem Status' },
                 tests: { timeline: 'Testreihen: Gesamt, Gestartet, Abgeschlossen', distribution: 'Testreihen nach aktuellem Status' },
                 defects: { timeline: 'Defects nach Severity im Zeitverlauf', distribution: 'Defects nach aktueller Severity' },
-                ressourcen: { timeline: 'Personentage Ist vs. Angefragt pro Monat', distribution: 'Ressourcen Ist vs. Angefragt aktuell' },
+                ressourcen: { timeline: 'Personentage Ist vs. Angefragt pro Monat', distribution: 'Ressourcen Ist vs. Angefragt aktuell', breakdown: 'Interne vs. Externe Ressourcen im Vergleich' },
                 budget: { timeline: 'Budget: Plan, Verbrauch, Forecast', distribution: 'Budget Verteilung aktuell' }
             };
             descEl.textContent = descriptions[kpiId]?.[viewMode] || descEl.textContent;
@@ -5502,6 +5532,8 @@ PMO Team
         // Render the appropriate chart
         if (viewMode === 'timeline') {
             this.renderTimelineChart(kpiId);
+        } else if (viewMode === 'breakdown') {
+            this.renderBreakdownChart(kpiId);
         } else {
             this.renderDistributionChart(kpiId);
         }
@@ -5754,6 +5786,104 @@ PMO Team
                     }
                 });
                 break;
+        }
+    },
+
+    // Render breakdown chart (intern/extern for Ressourcen)
+    renderBreakdownChart(kpiId) {
+        const canvasId = `chart-${kpiId}`;
+        const canvas = document.getElementById(canvasId);
+        if (!canvas || typeof Chart === 'undefined') return;
+
+        const existingChart = Chart.getChart(canvas);
+        if (existingChart) existingChart.destroy();
+
+        const ctx = canvas.getContext('2d');
+
+        if (kpiId === 'ressourcen') {
+            const r = this.kpiData.ressourcen;
+            const internOverload = r.intern.auslastung > 100;
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Intern', 'Extern'],
+                    datasets: [
+                        {
+                            label: 'Verfügbar (Ist)',
+                            data: [r.intern.ist, r.extern.ist],
+                            backgroundColor: ['#3b82f6', '#3b82f6'],
+                            borderRadius: 4
+                        },
+                        {
+                            label: 'Angefragt',
+                            data: [r.intern.angefragt, r.extern.angefragt],
+                            backgroundColor: [internOverload ? '#f59e0b' : '#86BC25', '#86BC25'],
+                            borderRadius: 4
+                        }
+                    ]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: { boxWidth: 12, padding: 8, font: { size: 10 } }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                afterLabel: (context) => {
+                                    if (context.datasetIndex === 1 && context.dataIndex === 0 && internOverload) {
+                                        return '⚠️ Überlastung: ' + r.intern.auslastung + '%';
+                                    }
+                                    return '';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            display: true,
+                            grid: { display: false },
+                            ticks: { color: '#94a3b8', font: { size: 10 } },
+                            max: 200
+                        },
+                        y: {
+                            display: true,
+                            grid: { display: false },
+                            ticks: { color: '#64748b', font: { size: 11, weight: 500 } }
+                        }
+                    }
+                },
+                plugins: internOverload ? [{
+                    id: 'internWarningLabel',
+                    afterDraw: (chart) => {
+                        const ctx = chart.ctx;
+                        const meta = chart.getDatasetMeta(1);
+                        const bar = meta.data[0];
+                        if (bar) {
+                            ctx.save();
+                            ctx.fillStyle = '#f59e0b';
+                            ctx.font = 'bold 10px system-ui';
+                            ctx.textAlign = 'left';
+                            ctx.fillText('⚠️ ' + r.intern.auslastung + '%', bar.x + 5, bar.y + 4);
+                            ctx.restore();
+                        }
+                    }
+                }] : []
+            });
+
+            // Update the legend to show intern/extern info
+            const legendEl = document.getElementById('legend-ressourcen');
+            if (legendEl) {
+                legendEl.innerHTML = `
+                    <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot ist"></span> Intern: ${r.intern.ist} / ${r.intern.angefragt} PT</span>
+                    <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot" style="background: #86BC25"></span> Extern: ${r.extern.ist} / ${r.extern.angefragt} PT</span>
+                `;
+            }
         }
     },
 

@@ -1036,6 +1036,210 @@
     background: #f8fafc;
 }
 
+/* ==========================================================================
+   P-06 MEILENSTEINE VIEW
+   ========================================================================== */
+
+.pmo-milestones-header {
+    margin-bottom: 20px;
+}
+
+.pmo-milestones-title-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.pmo-milestones-title-row .pmo-section-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+}
+
+.pmo-milestones-title-row .pmo-section-title svg {
+    color: #86BC25;
+}
+
+.pmo-milestones-filters select {
+    padding: 8px 32px 8px 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #475569;
+    background: white url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") no-repeat right 10px center;
+    cursor: pointer;
+    appearance: none;
+}
+
+/* Milestone Stats Summary */
+.pmo-milestone-stats {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.pmo-milestone-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 12px 20px;
+    background: #f8fafc;
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+    min-width: 80px;
+}
+
+.pmo-milestone-stat .stat-value {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.pmo-milestone-stat .stat-label {
+    font-size: 11px;
+    font-weight: 500;
+    color: #64748b;
+    text-transform: uppercase;
+    margin-top: 2px;
+}
+
+.pmo-milestone-stat.green {
+    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+    border-color: #86efac;
+}
+
+.pmo-milestone-stat.green .stat-value {
+    color: #16a34a;
+}
+
+.pmo-milestone-stat.yellow {
+    background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+    border-color: #fde68a;
+}
+
+.pmo-milestone-stat.yellow .stat-value {
+    color: #d97706;
+}
+
+.pmo-milestone-stat.gray {
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border-color: #cbd5e1;
+}
+
+.pmo-milestone-stat.gray .stat-value {
+    color: #64748b;
+}
+
+.pmo-milestone-stat.red {
+    background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+    border-color: #fca5a5;
+}
+
+.pmo-milestone-stat.red .stat-value {
+    color: #dc2626;
+}
+
+.pmo-milestone-stat.blink-stat {
+    animation: stat-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes stat-pulse {
+    0%, 100% {
+        box-shadow: 0 0 0 0 rgba(220, 38, 38, 0);
+    }
+    50% {
+        box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.2);
+    }
+}
+
+/* Milestones Table */
+.pmo-milestones-table-container {
+    background: white;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    overflow: hidden;
+}
+
+.pmo-milestones-table tbody tr {
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.pmo-milestones-table tbody tr:hover {
+    background: #f1f5f9;
+}
+
+.pmo-milestones-table tbody tr.delayed-row {
+    background: #fffbeb;
+}
+
+.pmo-milestones-table tbody tr.delayed-row:hover {
+    background: #fef3c7;
+}
+
+.pmo-milestones-table tbody tr.overdue-row {
+    background: #fef2f2;
+}
+
+.pmo-milestones-table tbody tr.overdue-row:hover {
+    background: #fee2e2;
+}
+
+/* Project Badge */
+.pmo-project-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    background: linear-gradient(135deg, #E30613 0%, #B8000F 100%);
+    color: white;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+/* Milestone Name Cell */
+.pmo-milestone-name-cell {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.pmo-overdue-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    background: #dc2626;
+    color: white;
+    border-radius: 50%;
+    font-size: 12px;
+    font-weight: 700;
+    animation: warning-blink 1.5s ease-in-out infinite;
+}
+
+/* Current Date Cell with Delay Badge */
+.pmo-current-date-cell {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.pmo-delay-badge {
+    display: inline-flex;
+    padding: 2px 6px;
+    background: #fee2e2;
+    color: #dc2626;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
 /* Status Badges */
 .pmo-status-badge {
     display: inline-flex;

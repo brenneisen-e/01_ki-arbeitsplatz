@@ -1,7 +1,6 @@
 # Cloudflare Pages Redirects
+# Note: Cloudflare Pages automatically serves index.html for /
+# Only add specific redirects here if needed
 
-# Redirect root to index.html (falls nicht automatisch geschieht)
-/  /index.html  200
-
-# SPA Fallback - Alle nicht existierenden Pfade zu index.html
-/*  /index.html  200
+# Example: Redirect old paths to new ones
+# /old-path  /new-path  301

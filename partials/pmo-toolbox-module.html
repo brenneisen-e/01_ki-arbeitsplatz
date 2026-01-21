@@ -270,357 +270,69 @@
 
         <!-- Dashboard View -->
         <div id="pmo-dashboard" class="pmo-view active">
-            <!-- Level Toggle -->
-            <div class="pmo-level-toggle">
-                <button class="pmo-level-btn active" data-level="program" onclick="PMO.switchLevel('program')">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
-                        <rect x="3" y="3" width="18" height="18" rx="2"/>
-                        <path d="M3 9h18M9 21V9"/>
-                    </svg>
-                    Programm-Ebene
-                </button>
-                <button class="pmo-level-btn" data-level="subproject" onclick="PMO.switchLevel('subproject')">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
-                        <rect x="3" y="3" width="7" height="7"/>
-                        <rect x="14" y="3" width="7" height="7"/>
-                        <rect x="3" y="14" width="7" height="7"/>
-                        <rect x="14" y="14" width="7" height="7"/>
-                    </svg>
-                    Teilprojekt-Ebene
-                </button>
-            </div>
-
-            <!-- PROGRAM LEVEL CONTENT -->
-            <div id="pmo-program-level" class="pmo-level-content active">
-                <!-- Section 1: Strategisch -->
-                <div class="pmo-dashboard-section" id="section-strategisch">
-                    <h3 class="pmo-section-header">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
-                            <circle cx="12" cy="12" r="10"/>
-                            <path d="M12 2a14.5 14.5 0 000 20 14.5 14.5 0 000-20"/>
-                            <path d="M2 12h20"/>
-                        </svg>
-                        Strategisch
-                    </h3>
-                    <div class="pmo-kpi-grid pmo-kpi-grid-3">
-                        <!-- Verträge pro Kunde -->
-                        <div class="pmo-kpi-card">
-                            <div class="pmo-kpi-header">
-                                <span class="pmo-kpi-title">Verträge pro Kunde</span>
-                                <span class="pmo-kpi-trend positive">+1.4%</span>
-                            </div>
-                            <div class="pmo-kpi-value-row">
-                                <span class="pmo-kpi-value">2,10</span>
-                                <span class="pmo-kpi-target">Ziel: 2,80</span>
-                            </div>
-                            <div class="pmo-kpi-chart" id="chart-vertraege-kunde"></div>
-                            <div class="pmo-kpi-footer">
-                                <span class="pmo-kpi-delta">+0,03 vs. Vormonat</span>
-                            </div>
-                        </div>
-
-                        <!-- APE pro Kunde -->
-                        <div class="pmo-kpi-card">
-                            <div class="pmo-kpi-header">
-                                <span class="pmo-kpi-title">APE pro Kunde</span>
-                                <span class="pmo-kpi-trend positive">+2.1%</span>
-                            </div>
-                            <div class="pmo-kpi-value-row">
-                                <span class="pmo-kpi-value">€140k</span>
-                                <span class="pmo-kpi-target">Ziel: €180k</span>
-                            </div>
-                            <div class="pmo-kpi-chart" id="chart-ape-kunde"></div>
-                            <div class="pmo-kpi-footer">
-                                <span class="pmo-kpi-delta">+€2.800 vs. Vormonat</span>
-                            </div>
-                        </div>
-
-                        <!-- Value Map -->
-                        <div class="pmo-kpi-card pmo-kpi-card-large">
-                            <div class="pmo-kpi-header">
-                                <span class="pmo-kpi-title">Value Map</span>
-                                <button class="pmo-kpi-action" onclick="PMO.openValueMap()">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
-                                        <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/>
-                                        <polyline points="15 3 21 3 21 9"/>
-                                        <line x1="10" y1="14" x2="21" y2="3"/>
-                                    </svg>
-                                </button>
-                            </div>
-                            <div class="pmo-value-map-preview" id="value-map-preview">
-                                <div class="pmo-value-item realized">
-                                    <span class="pmo-value-label">Realisiert</span>
-                                    <span class="pmo-value-amount">€1.2M</span>
-                                </div>
-                                <div class="pmo-value-item pipeline">
-                                    <span class="pmo-value-label">Pipeline</span>
-                                    <span class="pmo-value-amount">€2.8M</span>
-                                </div>
-                                <div class="pmo-value-item target">
-                                    <span class="pmo-value-label">Ziel 2025</span>
-                                    <span class="pmo-value-amount">€5.0M</span>
-                                </div>
-                            </div>
-                        </div>
+            <!-- Dashboard Main Layout: Projects + Milestones side by side -->
+            <div class="pmo-dashboard-layout">
+                <!-- Projects Grid (left side) -->
+                <div class="pmo-dashboard-projects">
+                    <h3 class="pmo-section-title">Projekte</h3>
+                    <div class="pmo-projects-grid" id="pmo-projects-grid">
+                        <!-- Projects will be rendered here -->
                     </div>
                 </div>
 
-                <!-- Section 2: Vertrieblich -->
-                <div class="pmo-dashboard-section" id="section-vertrieblich">
-                    <h3 class="pmo-section-header">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
-                            <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
-                            <circle cx="9" cy="7" r="4"/>
-                            <path d="M23 21v-2a4 4 0 00-3-3.87"/>
-                            <path d="M16 3.13a4 4 0 010 7.75"/>
-                        </svg>
-                        Vertrieblich
-                    </h3>
-                    <div class="pmo-kpi-grid pmo-kpi-grid-2">
-                        <!-- NPS -->
-                        <div class="pmo-kpi-card">
-                            <div class="pmo-kpi-header">
-                                <span class="pmo-kpi-title">NPS Score</span>
-                                <span class="pmo-kpi-trend positive">+0.3</span>
+                <!-- Right Sidebar: Two columns - Milestones + Calendar -->
+                <div class="pmo-dashboard-sidebar-grid">
+                    <!-- Milestones Column -->
+                    <div class="pmo-sidebar-panel">
+                        <!-- Quick Stats -->
+                        <div class="pmo-sidebar-stats">
+                            <div class="pmo-mini-stat green">
+                                <span class="pmo-mini-stat-value" id="stat-green">0</span>
+                                <span class="pmo-mini-stat-label">Im Plan</span>
                             </div>
-                            <div class="pmo-kpi-value-row">
-                                <span class="pmo-kpi-value pmo-kpi-nps">4.2</span>
-                                <span class="pmo-kpi-max">/ 5.0</span>
+                            <div class="pmo-mini-stat yellow">
+                                <span class="pmo-mini-stat-value" id="stat-yellow">0</span>
+                                <span class="pmo-mini-stat-label">Achtung</span>
                             </div>
-                            <div class="pmo-nps-bar">
-                                <div class="pmo-nps-fill" style="width: 84%;"></div>
+                            <div class="pmo-mini-stat red">
+                                <span class="pmo-mini-stat-value" id="stat-red">0</span>
+                                <span class="pmo-mini-stat-label">Kritisch</span>
                             </div>
-                            <div class="pmo-kpi-footer">
-                                <span class="pmo-kpi-delta">+0.3 vs. Vorquartal</span>
+                            <div class="pmo-mini-stat blue">
+                                <span class="pmo-mini-stat-value" id="stat-risks">0</span>
+                                <span class="pmo-mini-stat-label">Risiken</span>
                             </div>
                         </div>
 
-                        <!-- User Adoption Rate -->
-                        <div class="pmo-kpi-card">
-                            <div class="pmo-kpi-header">
-                                <span class="pmo-kpi-title">User Adoption Rate</span>
-                                <span class="pmo-kpi-trend positive">+5.2%</span>
-                            </div>
-                            <div class="pmo-kpi-value-row">
-                                <span class="pmo-kpi-value">67%</span>
-                                <span class="pmo-kpi-target">Ziel: 85%</span>
-                            </div>
-                            <div class="pmo-kpi-chart" id="chart-user-adoption"></div>
-                            <div class="pmo-kpi-footer">
-                                <span class="pmo-kpi-delta">1.240 / 1.850 User aktiv</span>
-                            </div>
+                        <!-- Upcoming Milestones -->
+                        <h3 class="pmo-section-title pmo-sidebar-title">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="16" y1="2" x2="16" y2="6"></line>
+                                <line x1="8" y1="2" x2="8" y2="6"></line>
+                                <line x1="3" y1="10" x2="21" y2="10"></line>
+                            </svg>
+                            Kommende Meilensteine
+                        </h3>
+                        <div class="pmo-upcoming-milestones" id="pmo-upcoming-milestones">
+                            <!-- Milestones will be rendered here -->
                         </div>
                     </div>
-                </div>
 
-                <!-- Section 3: Operativ -->
-                <div class="pmo-dashboard-section" id="section-operativ">
-                    <h3 class="pmo-section-header">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
-                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
-                        </svg>
-                        Operativ
-                    </h3>
-                    <div class="pmo-kpi-grid pmo-kpi-grid-3">
-                        <!-- Meilensteine (switchable) -->
-                        <div class="pmo-kpi-card pmo-kpi-switchable">
-                            <div class="pmo-kpi-header">
-                                <span class="pmo-kpi-title" id="milestone-kpi-title">Meilensteine im Plan</span>
-                                <div class="pmo-kpi-switch">
-                                    <button class="pmo-switch-btn active" data-mode="plan" onclick="PMO.switchMilestoneKPI('plan')">Im Plan</button>
-                                    <button class="pmo-switch-btn" data-mode="delay" onclick="PMO.switchMilestoneKPI('delay')">Verzögerung</button>
-                                </div>
-                            </div>
-                            <div class="pmo-kpi-value-row" id="milestone-kpi-content">
-                                <span class="pmo-kpi-value pmo-kpi-percent">78%</span>
-                                <span class="pmo-kpi-sub">14 / 18 Meilensteine</span>
-                            </div>
-                            <div class="pmo-milestone-bar">
-                                <div class="pmo-milestone-fill green" style="width: 78%;"></div>
-                                <div class="pmo-milestone-fill yellow" style="width: 11%;"></div>
-                                <div class="pmo-milestone-fill red" style="width: 11%;"></div>
-                            </div>
-                            <div class="pmo-kpi-footer">
-                                <span class="pmo-status-dot green"></span> 14 Im Plan
-                                <span class="pmo-status-dot yellow"></span> 2 Gefährdet
-                                <span class="pmo-status-dot red"></span> 2 Verzögert
-                            </div>
+                    <!-- Calendar Column -->
+                    <div class="pmo-sidebar-panel pmo-calendar-panel">
+                        <h3 class="pmo-section-title pmo-sidebar-title">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                            </svg>
+                            Gremienkalender
+                        </h3>
+                        <div class="pmo-gremien-calendar" id="pmo-gremien-calendar">
+                            <!-- Calendar will be rendered here -->
                         </div>
-
-                        <!-- User Stories -->
-                        <div class="pmo-kpi-card pmo-kpi-switchable">
-                            <div class="pmo-kpi-header">
-                                <span class="pmo-kpi-title" id="us-kpi-title">User Stories nach Status</span>
-                                <div class="pmo-kpi-switch">
-                                    <button class="pmo-switch-btn active" data-mode="status" onclick="PMO.switchUSKPI('status')">Status</button>
-                                    <button class="pmo-switch-btn" data-mode="konzeption" onclick="PMO.switchUSKPI('konzeption')">Konzeption</button>
-                                    <button class="pmo-switch-btn" data-mode="umsetzung" onclick="PMO.switchUSKPI('umsetzung')">Umsetzung</button>
-                                </div>
-                            </div>
-                            <div class="pmo-us-content" id="us-kpi-content">
-                                <div class="pmo-stacked-bar" id="us-stacked-bar">
-                                    <!-- Stacked bar chart will be rendered here -->
-                                </div>
-                                <div class="pmo-us-legend">
-                                    <span><span class="dot backlog"></span> Backlog (45)</span>
-                                    <span><span class="dot inprogress"></span> In Arbeit (23)</span>
-                                    <span><span class="dot review"></span> Review (12)</span>
-                                    <span><span class="dot done"></span> Done (67)</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Tests -->
-                        <div class="pmo-kpi-card pmo-kpi-multilayer">
-                            <div class="pmo-kpi-header">
-                                <span class="pmo-kpi-title">Tests</span>
-                                <div class="pmo-kpi-switch">
-                                    <button class="pmo-switch-btn active" data-mode="overview" onclick="PMO.switchTestKPI('overview')">Übersicht</button>
-                                    <button class="pmo-switch-btn" data-mode="coverage" onclick="PMO.switchTestKPI('coverage')">Coverage</button>
-                                </div>
-                            </div>
-                            <div class="pmo-test-content" id="test-kpi-content">
-                                <div class="pmo-test-stats">
-                                    <div class="pmo-test-stat passed">
-                                        <span class="pmo-test-value">342</span>
-                                        <span class="pmo-test-label">Bestanden</span>
-                                    </div>
-                                    <div class="pmo-test-stat failed">
-                                        <span class="pmo-test-value">18</span>
-                                        <span class="pmo-test-label">Fehlgeschlagen</span>
-                                    </div>
-                                    <div class="pmo-test-stat pending">
-                                        <span class="pmo-test-value">24</span>
-                                        <span class="pmo-test-label">Ausstehend</span>
-                                    </div>
-                                </div>
-                                <div class="pmo-test-bar">
-                                    <div class="pmo-test-fill passed" style="width: 89%;"></div>
-                                    <div class="pmo-test-fill failed" style="width: 5%;"></div>
-                                    <div class="pmo-test-fill pending" style="width: 6%;"></div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Defects -->
-                        <div class="pmo-kpi-card pmo-kpi-multilayer">
-                            <div class="pmo-kpi-header">
-                                <span class="pmo-kpi-title">Defects</span>
-                                <div class="pmo-kpi-switch">
-                                    <button class="pmo-switch-btn active" onclick="PMO.switchDefectKPI('open')">Offen</button>
-                                    <button class="pmo-switch-btn" onclick="PMO.switchDefectKPI('trend')">Trend</button>
-                                </div>
-                            </div>
-                            <div class="pmo-defect-content" id="defect-kpi-content">
-                                <div class="pmo-defect-stats">
-                                    <div class="pmo-defect-stat critical">
-                                        <span class="pmo-defect-value">3</span>
-                                        <span class="pmo-defect-label">Kritisch</span>
-                                    </div>
-                                    <div class="pmo-defect-stat major">
-                                        <span class="pmo-defect-value">12</span>
-                                        <span class="pmo-defect-label">Major</span>
-                                    </div>
-                                    <div class="pmo-defect-stat minor">
-                                        <span class="pmo-defect-value">28</span>
-                                        <span class="pmo-defect-label">Minor</span>
-                                    </div>
-                                </div>
-                                <div class="pmo-kpi-chart" id="chart-defects"></div>
-                            </div>
-                        </div>
-
-                        <!-- Resources -->
-                        <div class="pmo-kpi-card pmo-kpi-multilayer">
-                            <div class="pmo-kpi-header">
-                                <span class="pmo-kpi-title">Ressourcen</span>
-                                <div class="pmo-kpi-switch">
-                                    <button class="pmo-switch-btn active" onclick="PMO.switchResourceKPI('auslastung')">Auslastung</button>
-                                    <button class="pmo-switch-btn" onclick="PMO.switchResourceKPI('verteilung')">Verteilung</button>
-                                </div>
-                            </div>
-                            <div class="pmo-resource-content" id="resource-kpi-content">
-                                <div class="pmo-resource-gauge">
-                                    <div class="pmo-gauge-value">87%</div>
-                                    <div class="pmo-gauge-label">Auslastung</div>
-                                </div>
-                                <div class="pmo-resource-breakdown">
-                                    <div class="pmo-resource-item">
-                                        <span>Entwicklung</span>
-                                        <div class="pmo-resource-bar"><div style="width: 92%;"></div></div>
-                                        <span>92%</span>
-                                    </div>
-                                    <div class="pmo-resource-item">
-                                        <span>Testing</span>
-                                        <div class="pmo-resource-bar"><div style="width: 78%;"></div></div>
-                                        <span>78%</span>
-                                    </div>
-                                    <div class="pmo-resource-item">
-                                        <span>Design</span>
-                                        <div class="pmo-resource-bar"><div style="width: 85%;"></div></div>
-                                        <span>85%</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Budget -->
-                        <div class="pmo-kpi-card pmo-kpi-multilayer">
-                            <div class="pmo-kpi-header">
-                                <span class="pmo-kpi-title">Budget</span>
-                                <div class="pmo-kpi-switch">
-                                    <button class="pmo-switch-btn active" onclick="PMO.switchBudgetKPI('verbrauch')">Verbrauch</button>
-                                    <button class="pmo-switch-btn" onclick="PMO.switchBudgetKPI('forecast')">Forecast</button>
-                                </div>
-                            </div>
-                            <div class="pmo-budget-content" id="budget-kpi-content">
-                                <div class="pmo-budget-main">
-                                    <div class="pmo-budget-spent">
-                                        <span class="pmo-budget-value">€2.4M</span>
-                                        <span class="pmo-budget-label">verbraucht</span>
-                                    </div>
-                                    <div class="pmo-budget-total">
-                                        <span>von €3.2M</span>
-                                    </div>
-                                </div>
-                                <div class="pmo-budget-bar">
-                                    <div class="pmo-budget-fill" style="width: 75%;"></div>
-                                    <div class="pmo-budget-marker" style="left: 68%;"></div>
-                                </div>
-                                <div class="pmo-budget-legend">
-                                    <span>75% verbraucht</span>
-                                    <span>68% Projektfortschritt</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- SUBPROJECT LEVEL CONTENT -->
-            <div id="pmo-subproject-level" class="pmo-level-content">
-                <!-- Subproject Selector -->
-                <div class="pmo-subproject-selector">
-                    <label>Teilprojekt:</label>
-                    <select id="pmo-subproject-select" onchange="PMO.loadSubprojectData()">
-                        <option value="tp1">TP1 - Hybrider Kunde</option>
-                        <option value="tp2">TP2 - Bestandsmanagement</option>
-                        <option value="tp3">TP3 - Digitale Antragsstrecke</option>
-                        <option value="tp4">TP4 - CRM Integration</option>
-                        <option value="tp5">TP5 - Reporting & Analytics</option>
-                    </select>
-                </div>
-
-                <!-- Subproject Operativ Section (same structure as Program Operativ) -->
-                <div class="pmo-dashboard-section" id="section-subproject-operativ">
-                    <h3 class="pmo-section-header">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
-                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
-                        </svg>
-                        Operativ - <span id="subproject-name">TP1 - Hybrider Kunde</span>
-                    </h3>
-                    <div class="pmo-kpi-grid pmo-kpi-grid-3" id="subproject-kpi-grid">
-                        <!-- Will be populated dynamically -->
                     </div>
                 </div>
             </div>

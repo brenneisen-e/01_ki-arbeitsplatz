@@ -4512,12 +4512,48 @@ PMO Team
             { label: 'Fertig', data: this.kpiData.tests.history.completed, borderColor: '#86BC25', tension: 0.3, pointRadius: 3, borderWidth: 2 }
         ], 20, 55);
 
-        // Defects (stacked bar)
+        // Defects (stacked bar) with warning icon on last bar
         const defCanvas = document.getElementById('chart-defects');
         if (defCanvas) {
             const existingDef = Chart.getChart(defCanvas);
             if (existingDef) existingDef.destroy();
             const ctx = defCanvas.getContext('2d');
+
+            // Plugin to draw warning icon over last bar
+            const warningPlugin = {
+                id: 'warningIcon',
+                afterDraw: (chart) => {
+                    const criticalCount = this.kpiData.defects.critical;
+                    if (criticalCount > 0) {
+                        const ctx = chart.ctx;
+                        const meta = chart.getDatasetMeta(0); // First dataset (Kritisch)
+                        const lastBar = meta.data[meta.data.length - 1];
+                        if (lastBar) {
+                            const x = lastBar.x;
+                            const y = lastBar.y - 20;
+
+                            // Draw warning triangle
+                            ctx.save();
+                            ctx.fillStyle = '#dc2626';
+                            ctx.beginPath();
+                            ctx.moveTo(x, y - 12);
+                            ctx.lineTo(x - 10, y + 6);
+                            ctx.lineTo(x + 10, y + 6);
+                            ctx.closePath();
+                            ctx.fill();
+
+                            // Draw exclamation mark
+                            ctx.fillStyle = 'white';
+                            ctx.font = 'bold 12px Arial';
+                            ctx.textAlign = 'center';
+                            ctx.textBaseline = 'middle';
+                            ctx.fillText('!', x, y - 1);
+                            ctx.restore();
+                        }
+                    }
+                }
+            };
+
             defCanvas._chart = new Chart(ctx, {
                 type: 'bar',
                 data: {
@@ -4528,7 +4564,8 @@ PMO Team
                         { label: 'Minor', data: this.kpiData.defects.monthly.map(m => m.minor), backgroundColor: '#86BC25', stack: 's1', barPercentage: 0.5, categoryPercentage: 0.6 }
                     ]
                 },
-                options: { ...chartOptions, scales: { x: { ...chartOptions.scales.x, stacked: true }, y: { ...chartOptions.scales.y, stacked: true, max: 100 } } }
+                options: { ...chartOptions, scales: { x: { ...chartOptions.scales.x, stacked: true }, y: { ...chartOptions.scales.y, stacked: true, max: 100 } } },
+                plugins: [warningPlugin]
             });
         }
 

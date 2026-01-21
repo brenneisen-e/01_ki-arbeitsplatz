@@ -4495,13 +4495,13 @@ PMO Team
                 data: {
                     labels,
                     datasets: [
-                        { label: 'Backlog', data: this.kpiData.userstories.monthly.map(m => m.backlog), backgroundColor: '#94a3b8', stack: 's1' },
-                        { label: 'In Progress', data: this.kpiData.userstories.monthly.map(m => m.inprogress), backgroundColor: '#3b82f6', stack: 's1' },
-                        { label: 'Review', data: this.kpiData.userstories.monthly.map(m => m.review), backgroundColor: '#f59e0b', stack: 's1' },
-                        { label: 'Done', data: this.kpiData.userstories.monthly.map(m => m.done), backgroundColor: '#16a34a', stack: 's1' }
+                        { label: 'Backlog', data: this.kpiData.userstories.monthly.map(m => m.backlog), backgroundColor: '#cbd5e1', stack: 's1', barPercentage: 0.5, categoryPercentage: 0.6 },
+                        { label: 'In Progress', data: this.kpiData.userstories.monthly.map(m => m.inprogress), backgroundColor: '#3b82f6', stack: 's1', barPercentage: 0.5, categoryPercentage: 0.6 },
+                        { label: 'Review', data: this.kpiData.userstories.monthly.map(m => m.review), backgroundColor: '#f59e0b', stack: 's1', barPercentage: 0.5, categoryPercentage: 0.6 },
+                        { label: 'Done', data: this.kpiData.userstories.monthly.map(m => m.done), backgroundColor: '#86BC25', stack: 's1', barPercentage: 0.5, categoryPercentage: 0.6 }
                     ]
                 },
-                options: { ...chartOptions, scales: { x: { ...chartOptions.scales.x, stacked: true }, y: { ...chartOptions.scales.y, stacked: true } } }
+                options: { ...chartOptions, scales: { x: { ...chartOptions.scales.x, stacked: true }, y: { ...chartOptions.scales.y, stacked: true, max: 200 } } }
             });
         }
 
@@ -4509,7 +4509,7 @@ PMO Team
         createChart('chart-tests', [
             { label: 'Gesamt', data: this.kpiData.tests.history.total, borderColor: '#64748b', tension: 0.3, pointRadius: 3, borderWidth: 2 },
             { label: 'Gestartet', data: this.kpiData.tests.history.started, borderColor: '#3b82f6', tension: 0.3, pointRadius: 3, borderWidth: 2 },
-            { label: 'Fertig', data: this.kpiData.tests.history.completed, borderColor: '#16a34a', tension: 0.3, pointRadius: 3, borderWidth: 2 }
+            { label: 'Fertig', data: this.kpiData.tests.history.completed, borderColor: '#86BC25', tension: 0.3, pointRadius: 3, borderWidth: 2 }
         ], 20, 55);
 
         // Defects (stacked bar)
@@ -4523,12 +4523,12 @@ PMO Team
                 data: {
                     labels,
                     datasets: [
-                        { label: 'Kritisch', data: this.kpiData.defects.monthly.map(m => m.critical), backgroundColor: '#dc2626', stack: 's1' },
-                        { label: 'Major', data: this.kpiData.defects.monthly.map(m => m.major), backgroundColor: '#f59e0b', stack: 's1' },
-                        { label: 'Minor', data: this.kpiData.defects.monthly.map(m => m.minor), backgroundColor: '#fbbf24', stack: 's1' }
+                        { label: 'Kritisch', data: this.kpiData.defects.monthly.map(m => m.critical), backgroundColor: '#dc2626', stack: 's1', barPercentage: 0.5, categoryPercentage: 0.6 },
+                        { label: 'Major', data: this.kpiData.defects.monthly.map(m => m.major), backgroundColor: '#f59e0b', stack: 's1', barPercentage: 0.5, categoryPercentage: 0.6 },
+                        { label: 'Minor', data: this.kpiData.defects.monthly.map(m => m.minor), backgroundColor: '#86BC25', stack: 's1', barPercentage: 0.5, categoryPercentage: 0.6 }
                     ]
                 },
-                options: { ...chartOptions, scales: { x: { ...chartOptions.scales.x, stacked: true }, y: { ...chartOptions.scales.y, stacked: true } } }
+                options: { ...chartOptions, scales: { x: { ...chartOptions.scales.x, stacked: true }, y: { ...chartOptions.scales.y, stacked: true, max: 100 } } }
             });
         }
 

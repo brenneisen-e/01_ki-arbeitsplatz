@@ -3715,8 +3715,8 @@ mark {
     color: #0ea5e9;
 }
 
-/* KPI Chart Placeholder */
-.pmo-kpi-chart {
+/* KPI Chart Placeholder - for non-Canvas charts only */
+.pmo-kpi-chart-placeholder {
     height: 80px;
     background: linear-gradient(to right, #f1f5f9, #e2e8f0);
     border-radius: 8px;
@@ -4625,6 +4625,71 @@ mark {
 
 .pmo-kpi-chart-wide {
     height: 180px;
+}
+
+/* KPI Controls Header */
+.pmo-kpis-controls {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+/* Programm/Projekt Toggle */
+.pmo-kpis-toggle {
+    display: flex;
+    background: #f1f5f9;
+    padding: 3px;
+    border-radius: 8px;
+}
+
+.pmo-toggle-btn {
+    padding: 6px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    border: none;
+    background: transparent;
+    color: #64748b;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.2s;
+}
+
+.pmo-toggle-btn:hover {
+    color: #334155;
+}
+
+.pmo-toggle-btn.active {
+    background: white;
+    color: #1e293b;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+/* Small KPI Status Indicator (Ampel) */
+.pmo-kpi-status {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+}
+
+.pmo-kpi-status.green {
+    background: #16a34a;
+    box-shadow: 0 0 4px rgba(22, 163, 74, 0.4);
+}
+
+.pmo-kpi-status.yellow {
+    background: #f59e0b;
+    box-shadow: 0 0 4px rgba(245, 158, 11, 0.4);
+}
+
+.pmo-kpi-status.red {
+    background: #dc2626;
+    box-shadow: 0 0 4px rgba(220, 38, 38, 0.4);
+}
+
+.pmo-kpi-status.gray {
+    background: #94a3b8;
 }
 
 /* Wide card spanning 2 columns */

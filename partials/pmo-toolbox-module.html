@@ -892,36 +892,11 @@
                                     <span class="pmo-kpi-status yellow" title="Gelb: Interne Ressourcen >100%"></span>
                                 </div>
                                 <div class="pmo-kpi-header-actions">
-                                    <div class="pmo-view-dropdown" data-kpi="ressourcen">
-                                        <button class="pmo-view-dropdown-trigger" onclick="PMO.toggleViewDropdown('ressourcen')">
-                                            <svg class="pmo-view-dropdown-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
-                                            <span class="pmo-view-dropdown-label">Zeitverlauf</span>
-                                            <svg class="pmo-view-dropdown-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="6 9 12 15 18 9"/></svg>
-                                        </button>
-                                        <div class="pmo-view-dropdown-menu" id="dropdown-ressourcen">
-                                            <button class="pmo-view-dropdown-item active" data-view="timeline" onclick="PMO.selectViewFromDropdown('ressourcen', 'timeline')">
-                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
-                                                <div class="pmo-view-dropdown-item-text">
-                                                    <span class="pmo-view-dropdown-item-title">Zeitverlauf</span>
-                                                    <span class="pmo-view-dropdown-item-desc">PT Ist vs. Angefragt pro Monat</span>
-                                                </div>
-                                            </button>
-                                            <button class="pmo-view-dropdown-item" data-view="distribution" onclick="PMO.selectViewFromDropdown('ressourcen', 'distribution')">
-                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>
-                                                <div class="pmo-view-dropdown-item-text">
-                                                    <span class="pmo-view-dropdown-item-title">Verteilung</span>
-                                                    <span class="pmo-view-dropdown-item-desc">Aktuelle Ressourcenverteilung</span>
-                                                </div>
-                                            </button>
-                                            <button class="pmo-view-dropdown-item" data-view="breakdown" onclick="PMO.selectViewFromDropdown('ressourcen', 'breakdown')">
-                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><rect x="4" y="4" width="6" height="16" rx="1"/><rect x="14" y="8" width="6" height="12" rx="1"/></svg>
-                                                <div class="pmo-view-dropdown-item-text">
-                                                    <span class="pmo-view-dropdown-item-title">Intern / Extern</span>
-                                                    <span class="pmo-view-dropdown-item-desc">Vergleich interne vs. externe PT</span>
-                                                </div>
-                                            </button>
-                                        </div>
-                                    </div>
+                                    <select class="pmo-view-select" data-kpi="ressourcen" onchange="PMO.switchChartView('ressourcen', this.value)">
+                                        <option value="timeline">Zeitverlauf</option>
+                                        <option value="distribution">Verteilung</option>
+                                        <option value="breakdown">Intern/Extern</option>
+                                    </select>
                                     <span class="pmo-kpi-badge warning">Intern >100%</span>
                                 </div>
                             </div>

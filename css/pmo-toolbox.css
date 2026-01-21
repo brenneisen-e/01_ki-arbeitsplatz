@@ -3914,6 +3914,67 @@ mark {
     background: linear-gradient(to right, transparent, #c4b5fd, transparent);
 }
 
+/* North Star section styling */
+.pmo-kpi-section-divider[data-category="northstar"] {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 50%, #fef3c7 100%);
+    border-color: #f59e0b;
+    border-width: 2px;
+    margin-top: 2rem;
+}
+
+.pmo-kpi-section-divider[data-category="northstar"] .pmo-kpi-section-title {
+    color: #92400e;
+    font-size: 1.2rem;
+}
+
+.pmo-kpi-section-divider[data-category="northstar"]::before,
+.pmo-kpi-section-divider[data-category="northstar"]::after {
+    background: linear-gradient(to right, transparent, #f59e0b, transparent);
+}
+
+/* North Star KPI card special styling */
+.pmo-kpi-card.pmo-kpi-northstar {
+    border: 2px solid #f59e0b;
+    background: linear-gradient(135deg, #fffbeb 0%, white 30%);
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.15);
+}
+
+.pmo-kpi-card.pmo-kpi-northstar .pmo-kpi-label {
+    color: #92400e;
+}
+
+/* Collapsible North Star Section */
+.pmo-collapsible-header {
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.2s ease;
+}
+
+.pmo-collapsible-header:hover {
+    transform: scale(1.01);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.pmo-collapse-indicator {
+    display: flex;
+    align-items: center;
+    color: #92400e;
+    transition: transform 0.3s ease;
+}
+
+.pmo-collapsible-header.collapsed .pmo-collapse-indicator {
+    transform: rotate(-90deg);
+}
+
+.pmo-northstar-container {
+    display: contents;
+    transition: all 0.3s ease;
+}
+
+.pmo-northstar-container.collapsed {
+    display: none;
+}
+
 /* Category Badge Colors */
 .pmo-kpi-badge.info {
     background: rgba(59, 130, 246, 0.1);
@@ -4492,6 +4553,25 @@ mark {
     max-height: calc(100vh - 200px);
     overflow-y: auto;
     overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: #e2e8f0 transparent;
+}
+
+.pmo-kpis-sidebar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.pmo-kpis-sidebar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.pmo-kpis-sidebar::-webkit-scrollbar-thumb {
+    background: #e2e8f0;
+    border-radius: 3px;
+}
+
+.pmo-kpis-sidebar::-webkit-scrollbar-thumb:hover {
+    background: #cbd5e1;
 }
 
 @media (max-width: 1400px) {

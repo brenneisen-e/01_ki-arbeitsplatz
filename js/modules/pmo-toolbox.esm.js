@@ -2344,6 +2344,7 @@ PMO Team
 
     // View Management
     showView(viewId) {
+        console.log('🔀 showView aufgerufen mit viewId:', viewId);
         this.showViewInternal(viewId);
 
         // Also render dashboard if switching to it
@@ -4360,6 +4361,7 @@ PMO Team
     },
 
     renderKPIs() {
+        console.log('📊 renderKPIs() aufgerufen');
         // Render all P-10 KPI charts
         this.renderP10Charts();
 

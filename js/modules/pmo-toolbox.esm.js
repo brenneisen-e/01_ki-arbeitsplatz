@@ -5501,6 +5501,67 @@ PMO Team
         budget: 'timeline'
     },
 
+    // Toggle view dropdown
+    toggleViewDropdown(kpiId) {
+        const dropdown = document.querySelector(`.pmo-view-dropdown[data-kpi="${kpiId}"]`);
+        if (!dropdown) return;
+
+        // Close other dropdowns
+        document.querySelectorAll('.pmo-view-dropdown.open').forEach(d => {
+            if (d !== dropdown) d.classList.remove('open');
+        });
+
+        dropdown.classList.toggle('open');
+
+        // Close on click outside
+        if (dropdown.classList.contains('open')) {
+            const closeHandler = (e) => {
+                if (!dropdown.contains(e.target)) {
+                    dropdown.classList.remove('open');
+                    document.removeEventListener('click', closeHandler);
+                }
+            };
+            setTimeout(() => document.addEventListener('click', closeHandler), 0);
+        }
+    },
+
+    // Select view from dropdown and update UI
+    selectViewFromDropdown(kpiId, viewMode) {
+        const dropdown = document.querySelector(`.pmo-view-dropdown[data-kpi="${kpiId}"]`);
+        if (dropdown) {
+            // Update trigger label and icon
+            const trigger = dropdown.querySelector('.pmo-view-dropdown-trigger');
+            const selectedItem = dropdown.querySelector(`.pmo-view-dropdown-item[data-view="${viewMode}"]`);
+
+            if (trigger && selectedItem) {
+                const label = trigger.querySelector('.pmo-view-dropdown-label');
+                const icon = trigger.querySelector('.pmo-view-dropdown-icon');
+                const itemIcon = selectedItem.querySelector('svg');
+                const itemTitle = selectedItem.querySelector('.pmo-view-dropdown-item-title');
+
+                if (label && itemTitle) label.textContent = itemTitle.textContent;
+                if (icon && itemIcon) {
+                    const newIcon = itemIcon.cloneNode(true);
+                    newIcon.setAttribute('width', '16');
+                    newIcon.setAttribute('height', '16');
+                    newIcon.classList.add('pmo-view-dropdown-icon');
+                    icon.replaceWith(newIcon);
+                }
+            }
+
+            // Update active state in menu
+            dropdown.querySelectorAll('.pmo-view-dropdown-item').forEach(item => {
+                item.classList.toggle('active', item.dataset.view === viewMode);
+            });
+
+            // Close dropdown
+            dropdown.classList.remove('open');
+        }
+
+        // Switch the chart view
+        this.switchChartView(kpiId, viewMode);
+    },
+
     // Switch between timeline and distribution view for a KPI
     switchChartView(kpiId, viewMode) {
         console.log(`📊 Switching ${kpiId} to ${viewMode} view`);
@@ -5508,7 +5569,7 @@ PMO Team
         // Update stored view mode
         this.kpiViewModes[kpiId] = viewMode;
 
-        // Update toggle buttons
+        // Update toggle buttons (for non-dropdown toggles)
         const toggleContainer = document.querySelector(`.pmo-chart-toggle[data-kpi="${kpiId}"]`);
         if (toggleContainer) {
             toggleContainer.querySelectorAll('.pmo-chart-toggle-btn').forEach(btn => {

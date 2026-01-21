@@ -5502,13 +5502,21 @@ PMO Team
         budget: 'timeline'
     },
 
-    // Track resource scope (gesamt/intern/extern)
-    resourceScope: 'gesamt',
+    // Track resource scope (gesamt/intern/extern) - default to intern to show warning
+    resourceScope: 'intern',
 
     // Switch resource scope and re-render chart
     switchResourceScope(scope) {
         console.log(`📊 Switching resource scope to: ${scope}`);
         this.resourceScope = scope;
+
+        // Update toggle buttons
+        const toggleContainer = document.getElementById('ressourcen-scope-toggle');
+        if (toggleContainer) {
+            toggleContainer.querySelectorAll('.pmo-scope-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.scope === scope);
+            });
+        }
 
         // Update description
         const descEl = document.getElementById('desc-ressourcen');
@@ -5786,8 +5794,8 @@ PMO Team
                             const meta = chart.getDatasetMeta(1); // Angefragt line
                             const lastPoint = meta.data[meta.data.length - 1];
                             if (lastPoint) {
-                                const x = lastPoint.x + 12;
-                                const y = lastPoint.y;
+                                const x = lastPoint.x;
+                                const y = lastPoint.y - 18; // Über dem Punkt
                                 // Draw warning circle
                                 ctx.save();
                                 ctx.beginPath();

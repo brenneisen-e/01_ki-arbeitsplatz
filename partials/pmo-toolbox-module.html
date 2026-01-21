@@ -563,9 +563,12 @@
                     </select>
                 </div>
             </div>
-            <div class="pmo-kpi-grid" id="pmo-kpi-grid">
-                <!-- Strategisch Section Header (zuerst) -->
-                <div class="pmo-kpi-section-divider" data-category="strategisch">
+            <!-- KPIs Layout: Main + Sidebar -->
+            <div class="pmo-kpis-layout">
+                <div class="pmo-kpis-main">
+                    <div class="pmo-kpi-grid" id="pmo-kpi-grid">
+                        <!-- Strategisch Section Header (zuerst) -->
+                        <div class="pmo-kpi-section-divider" data-category="strategisch">
                     <span class="pmo-kpi-section-title">Strategische KPIs</span>
                 </div>
 
@@ -700,6 +703,103 @@
                     </div>
                     <div class="pmo-kpi-chart">
                         <canvas id="chart-adoption-rate"></canvas>
+                    </div>
+                </div>
+
+                <!-- Vertrieblich Section Header -->
+                <div class="pmo-kpi-section-divider" data-category="vertrieblich">
+                    <span class="pmo-kpi-section-title">Vertriebliche KPIs</span>
+                </div>
+
+                <!-- KPI Card: Verträge pro Kunde -->
+                <div class="pmo-kpi-card" data-kpi="vertraege-pro-kunde" data-category="vertrieblich">
+                    <div class="pmo-kpi-header">
+                        <div class="pmo-kpi-title-row">
+                            <span class="pmo-kpi-label">Verträge pro Kunde</span>
+                            <div class="pmo-kpi-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path>
+                                    <polyline points="14 2 14 8 20 8"></polyline>
+                                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                                </svg>
+                            </div>
+                        </div>
+                        <span class="pmo-kpi-badge info">Aktuell: 2,10</span>
+                    </div>
+                    <p class="pmo-kpi-description">Durchschnittliche Verträge pro Bestandskunde</p>
+                    <div class="pmo-kpi-value-row">
+                        <span class="pmo-kpi-value" id="kpi-vertraege-pro-kunde">2,10</span>
+                        <div class="pmo-kpi-legend">
+                            <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot ist"></span> Ist</span>
+                            <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot prognose"></span> Ziel 2,80</span>
+                        </div>
+                    </div>
+                    <div class="pmo-kpi-trend positive">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+                        </svg>
+                        <span id="kpi-vertraege-trend">+1,4% vs. Vormonat</span>
+                        <span class="pmo-kpi-trend-label">Cross-Selling</span>
+                    </div>
+                    <div class="pmo-kpi-actions">
+                        <button class="pmo-kpi-action-btn active" title="Monatsansicht">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                        </button>
+                        <button class="pmo-kpi-action-btn" title="Balkendiagramm">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                        </button>
+                        <button class="pmo-kpi-action-btn" title="Liniendiagramm">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                        </button>
+                    </div>
+                    <div class="pmo-kpi-chart">
+                        <canvas id="chart-vertraege-pro-kunde"></canvas>
+                    </div>
+                </div>
+
+                <!-- KPI Card: APE pro Kunde -->
+                <div class="pmo-kpi-card" data-kpi="ape-pro-kunde" data-category="vertrieblich">
+                    <div class="pmo-kpi-header">
+                        <div class="pmo-kpi-title-row">
+                            <span class="pmo-kpi-label">APE pro Kunde</span>
+                            <div class="pmo-kpi-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="12" y1="1" x2="12" y2="23"></line>
+                                    <path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        <span class="pmo-kpi-badge success">Aktuell: €145k</span>
+                    </div>
+                    <p class="pmo-kpi-description">Annual Premium Equivalent pro Bestandskunde</p>
+                    <div class="pmo-kpi-value-row">
+                        <span class="pmo-kpi-value" id="kpi-ape-pro-kunde">€145k</span>
+                        <div class="pmo-kpi-legend">
+                            <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot ist"></span> Ist</span>
+                            <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot prognose"></span> Ziel €180k</span>
+                        </div>
+                    </div>
+                    <div class="pmo-kpi-trend positive">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+                        </svg>
+                        <span id="kpi-ape-trend">+2,1% vs. Vormonat</span>
+                        <span class="pmo-kpi-trend-label">Upselling</span>
+                    </div>
+                    <div class="pmo-kpi-actions">
+                        <button class="pmo-kpi-action-btn active" title="Monatsansicht">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                        </button>
+                        <button class="pmo-kpi-action-btn" title="Balkendiagramm">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                        </button>
+                        <button class="pmo-kpi-action-btn" title="Liniendiagramm">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                        </button>
+                    </div>
+                    <div class="pmo-kpi-chart">
+                        <canvas id="chart-ape-pro-kunde"></canvas>
                     </div>
                 </div>
 
@@ -981,6 +1081,24 @@
                     </div>
                     <div class="pmo-kpi-chart">
                         <canvas id="chart-critical-path"></canvas>
+                    </div>
+                </div>
+                    </div>
+                </div>
+                <!-- Frühwarnindikatoren Sidebar -->
+                <div class="pmo-kpis-sidebar">
+                    <div class="pmo-warnings-section">
+                        <h3 class="pmo-section-header">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                                <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+                                <line x1="12" y1="9" x2="12" y2="13"/>
+                                <line x1="12" y1="17" x2="12.01" y2="17"/>
+                            </svg>
+                            Frühwarnindikatoren
+                        </h3>
+                        <div class="pmo-warnings-grid" id="pmo-early-warnings">
+                            <!-- Rendered by JS -->
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1525,7 +1643,7 @@
 
 
 <!-- PMO Toolbox Styles (externalized) -->
-<link rel="stylesheet" href="/css/pmo-toolbox.css?v=20260121i">
+<link rel="stylesheet" href="/css/pmo-toolbox.css?v=20260121j">
 
 <!-- PMO Toolbox JavaScript (ES6 Module) -->
-<script type="module" src="/js/modules/pmo-toolbox.esm.js?v=20260121i"></script>
+<script type="module" src="/js/modules/pmo-toolbox.esm.js?v=20260121j"></script>

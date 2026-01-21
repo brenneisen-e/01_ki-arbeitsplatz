@@ -6455,136 +6455,6 @@ if (typeof window !== 'undefined') {
         }
     };
 
-    // Toggle Value Map Overlay (für Cluster-Übersicht)
-    window.PMO.toggleValueMapOverlay = function() {
-        const overlay = document.getElementById('valuemap-overlay');
-        if (!overlay) return;
-
-        const isHidden = overlay.classList.contains('hidden');
-
-        if (isHidden) {
-            // Befülle das Overlay mit den Cluster-Daten
-            const overlayBody = document.getElementById('valuemap-overlay-body');
-            if (overlayBody) {
-                overlayBody.innerHTML = PMO.generateValueMapOverlayContent();
-            }
-            overlay.classList.remove('hidden');
-            document.body.style.overflow = 'hidden'; // Verhindern des Scrollens im Hintergrund
-        } else {
-            overlay.classList.add('hidden');
-            document.body.style.overflow = '';
-        }
-    };
-
-    // Generiere den HTML-Inhalt für das Value Map Overlay
-    window.PMO.generateValueMapOverlayContent = function() {
-        const clusters = [
-            {
-                number: 1,
-                title: 'Kundenzufriedenheit & Beratungsqualität',
-                kpis: [
-                    { name: 'Kunden-NPS', value: '+42', status: 'positive' },
-                    { name: 'Beratungsqualität', value: '87%', status: 'positive' }
-                ]
-            },
-            {
-                number: 2,
-                title: 'Zufriedenheit & Bindung der Vertriebspartner',
-                kpis: [
-                    { name: 'VP-Zufriedenheit (NPS)', value: '+28', status: 'warning' },
-                    { name: 'VP-Abgangsquote', value: '8.2%', status: 'positive' },
-                    { name: 'EoDB Score', value: '72%', status: 'warning' }
-                ]
-            },
-            {
-                number: 3,
-                title: 'Bestandskundenentwicklung (Mehrvertragschampion)',
-                kpis: [
-                    { name: 'Vertragsdichte', value: '2.1', status: 'warning' },
-                    { name: 'Cross-Sell-Quote', value: '24%', status: 'positive' }
-                ]
-            },
-            {
-                number: 4,
-                title: 'Effizienz, Digitalisierung & AI-Nutzung',
-                kpis: [
-                    { name: 'AI-Nutzungsquote', value: '48%', status: 'positive' },
-                    { name: 'Conversion Rate', value: '18%', status: 'warning' }
-                ]
-            },
-            {
-                number: 5,
-                title: 'Neue Vertriebspartner gewinnen & entwickeln',
-                kpis: [
-                    { name: 'Rekrutierungsquote', value: '112', status: 'positive' },
-                    { name: 'Time-to-Productivity', value: '8.5 Mo.', status: 'warning' }
-                ]
-            }
-        ];
-
-        let html = '';
-
-        // North Star Section
-        html += `
-            <div class="pmo-overlay-northstar">
-                <div class="pmo-overlay-northstar-header">
-                    <span class="pmo-overlay-northstar-title">APE-Produktivität je Vertriebspartner</span>
-                    <span class="pmo-overlay-northstar-badge">NORTH STAR</span>
-                </div>
-                <div class="pmo-overlay-northstar-value">€42k</div>
-                <div class="pmo-overlay-northstar-target">Ziel: €50k · +8% vs. Vorjahr</div>
-            </div>
-        `;
-
-        // Cluster Sections
-        clusters.forEach(cluster => {
-            html += `
-                <div class="pmo-overlay-cluster">
-                    <div class="pmo-overlay-cluster-header">
-                        <span class="pmo-overlay-cluster-number">${cluster.number}</span>
-                        <span class="pmo-overlay-cluster-title">${cluster.title}</span>
-                    </div>
-                    <div class="pmo-overlay-cluster-kpis">
-            `;
-
-            cluster.kpis.forEach(kpi => {
-                html += `
-                    <div class="pmo-overlay-kpi-item">
-                        <span class="pmo-overlay-kpi-name">${kpi.name}</span>
-                        <span class="pmo-overlay-kpi-value ${kpi.status}">${kpi.value}</span>
-                    </div>
-                `;
-            });
-
-            html += `
-                    </div>
-                </div>
-            `;
-        });
-
-        return html;
-    };
-
-    // Schließe Overlay bei Klick außerhalb
-    document.addEventListener('click', function(e) {
-        const overlay = document.getElementById('valuemap-overlay');
-        if (overlay && !overlay.classList.contains('hidden')) {
-            if (e.target === overlay) {
-                PMO.toggleValueMapOverlay();
-            }
-        }
-    });
-
-    // Schließe Overlay bei Escape-Taste
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-            const overlay = document.getElementById('valuemap-overlay');
-            if (overlay && !overlay.classList.contains('hidden')) {
-                PMO.toggleValueMapOverlay();
-            }
-        }
-    });
-
     console.log('[ESM] pmo-toolbox.esm.js loaded');
 }
 
@@ -6594,6 +6464,96 @@ if (document.readyState === 'loading') {
 } else {
     PMO.init();
 }
+
+// ============================================
+// VALUE MAP OVERLAY FUNCTIONS
+// ============================================
+
+PMO.toggleValueMapOverlay = function() {
+    const overlay = document.getElementById('valuemap-overlay');
+    if (!overlay) {
+        console.error('Value Map Overlay not found');
+        return;
+    }
+
+    const isHidden = overlay.classList.contains('hidden');
+
+    if (isHidden) {
+        const overlayBody = document.getElementById('valuemap-overlay-body');
+        if (overlayBody) {
+            overlayBody.innerHTML = PMO.generateValueMapOverlayContent();
+        }
+        overlay.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    } else {
+        overlay.classList.add('hidden');
+        document.body.style.overflow = '';
+    }
+};
+
+PMO.generateValueMapOverlayContent = function() {
+    const clusters = [
+        { number: 1, title: 'Kundenzufriedenheit & Beratungsqualität', color: '#3b82f6',
+          kpis: [{ name: 'Kunden-NPS', value: '+42', status: 'positive' }, { name: 'Beratungsqualität', value: '87%', status: 'positive' }] },
+        { number: 2, title: 'Zufriedenheit & Bindung der VP', color: '#8b5cf6',
+          kpis: [{ name: 'VP-Zufriedenheit', value: '+28', status: 'warning' }, { name: 'VP-Abgangsquote', value: '8.2%', status: 'positive' }, { name: 'EoDB Score', value: '72%', status: 'warning' }] },
+        { number: 3, title: 'Bestandskundenentwicklung', color: '#10b981',
+          kpis: [{ name: 'Vertragsdichte', value: '2.1', status: 'warning' }, { name: 'Cross-Sell-Quote', value: '24%', status: 'positive' }] },
+        { number: 4, title: 'Effizienz & AI-Nutzung', color: '#f59e0b',
+          kpis: [{ name: 'AI-Nutzungsquote', value: '48%', status: 'positive' }, { name: 'Conversion Rate', value: '18%', status: 'warning' }] },
+        { number: 5, title: 'Neue VP gewinnen & entwickeln', color: '#ef4444',
+          kpis: [{ name: 'Rekrutierungsquote', value: '112', status: 'positive' }, { name: 'Time-to-Productivity', value: '8.5 Mo.', status: 'warning' }] }
+    ];
+
+    let html = `
+        <div class="pmo-overlay-northstar">
+            <div class="pmo-overlay-northstar-header">
+                <span class="pmo-overlay-northstar-title">APE-Produktivität je Vertriebspartner</span>
+                <span class="pmo-overlay-northstar-badge">NORTH STAR</span>
+            </div>
+            <div class="pmo-overlay-northstar-value">€42k</div>
+            <div class="pmo-overlay-northstar-target">Ziel: €50k · +8% vs. Vorjahr</div>
+        </div>
+    `;
+
+    clusters.forEach(cluster => {
+        html += `
+            <div class="pmo-overlay-cluster">
+                <div class="pmo-overlay-cluster-header">
+                    <span class="pmo-overlay-cluster-number" style="background: ${cluster.color}">${cluster.number}</span>
+                    <span class="pmo-overlay-cluster-title">${cluster.title}</span>
+                </div>
+                <div class="pmo-overlay-cluster-kpis">
+                    ${cluster.kpis.map(kpi => `
+                        <div class="pmo-overlay-kpi-item">
+                            <span class="pmo-overlay-kpi-name">${kpi.name}</span>
+                            <span class="pmo-overlay-kpi-value ${kpi.status}">${kpi.value}</span>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+    });
+
+    return html;
+};
+
+// Event listeners for overlay
+document.addEventListener('click', function(e) {
+    const overlay = document.getElementById('valuemap-overlay');
+    if (overlay && !overlay.classList.contains('hidden') && e.target === overlay) {
+        PMO.toggleValueMapOverlay();
+    }
+});
+
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        const overlay = document.getElementById('valuemap-overlay');
+        if (overlay && !overlay.classList.contains('hidden')) {
+            PMO.toggleValueMapOverlay();
+        }
+    }
+});
 
 // ============================================
 // WORKSTREAM TABS

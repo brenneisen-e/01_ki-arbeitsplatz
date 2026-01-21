@@ -2230,10 +2230,16 @@ PMO Team
             openRisks += status.risksAndIssues.filter(r => r.status !== 'Geschlossen').length;
         });
 
-        document.getElementById('stat-green').textContent = green;
-        document.getElementById('stat-yellow').textContent = yellow;
-        document.getElementById('stat-red').textContent = red;
-        document.getElementById('stat-risks').textContent = openRisks;
+        // Only update if elements exist (they may not in the new KPI dashboard view)
+        const statGreen = document.getElementById('stat-green');
+        const statYellow = document.getElementById('stat-yellow');
+        const statRed = document.getElementById('stat-red');
+        const statRisks = document.getElementById('stat-risks');
+
+        if (statGreen) statGreen.textContent = green;
+        if (statYellow) statYellow.textContent = yellow;
+        if (statRed) statRed.textContent = red;
+        if (statRisks) statRisks.textContent = openRisks;
     },
 
     getLatestStatuses() {
@@ -4744,19 +4750,19 @@ PMO Team
     }
 };
 
-// Initialize when DOM is ready
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => PMO.init());
-} else {
-    PMO.init();
-}
-
 // ============================================
 // BRIDGE: Set global variable for backward compatibility
 // ============================================
 if (typeof window !== 'undefined') {
     window.PMO = PMO;
     console.log('[ESM] pmo-toolbox.esm.js loaded');
+}
+
+// Initialize when DOM is ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => PMO.init());
+} else {
+    PMO.init();
 }
 
 // ============================================

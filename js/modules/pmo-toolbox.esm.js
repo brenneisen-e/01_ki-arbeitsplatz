@@ -4806,12 +4806,7 @@ PMO Team
         const ns = this.kpiData.northStar;
         if (!ns) return;
 
-        // 1. APE-Produktivität je VP
-        createChart('chart-ape-produktivitaet', [
-            { label: 'Ist', data: ns.apeProduktivitaet.history, borderColor: '#3b82f6', tension: 0.3, pointRadius: 3, borderWidth: 2 }
-        ], 30, 55);
-
-        // 2. Kunden-NPS
+        // Kunden-NPS
         createChart('chart-kunden-nps', [
             { label: 'NPS', data: ns.kundenNps.history, borderColor: '#8b5cf6', tension: 0.3, pointRadius: 3, borderWidth: 2 }
         ], 25, 50);

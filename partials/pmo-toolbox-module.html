@@ -598,309 +598,10 @@
                 <div class="pmo-kpis-main">
                     <div class="pmo-kpi-grid" id="pmo-kpi-grid">
 
-                        <!-- ========== ERGO NORTH STAR ========== -->
-                        <div class="pmo-kpi-section-divider pmo-kpi-section-northstar pmo-collapsible-header" data-category="northstar" onclick="PMO.toggleNorthStarSection()">
-                            <span class="pmo-kpi-section-title">ERGO North Star</span>
-                            <span class="pmo-collapse-indicator">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><polyline points="6 9 12 15 18 9"/></svg>
-                            </span>
-                        </div>
-
-                        <div class="pmo-northstar-container" id="northstar-container">
-                        <!-- 1. APE-Produktivität je Vertriebspartner (NORTH STAR) -->
-                        <div class="pmo-kpi-card pmo-kpi-northstar" data-kpi="ape-produktivitaet" data-category="northstar">
-                            <div class="pmo-kpi-header">
-                                <div class="pmo-kpi-title-row">
-                                    <span class="pmo-kpi-label">APE-Produktivität je VP</span>
-                                    <span class="pmo-kpi-status yellow" title="Gelb: Unter Ziel"></span>
-                                </div>
-                                <div class="pmo-kpi-header-actions">
-                                    <span class="pmo-kpi-badge info">NORTH STAR</span>
-                                </div>
-                            </div>
-                            <p class="pmo-kpi-description">Jährliches Neugeschäftsvolumen (APE) pro aktivem VP</p>
-                            <div class="pmo-kpi-value-row">
-                                <span class="pmo-kpi-value">€42k</span>
-                                <div class="pmo-kpi-legend">
-                                    <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot ist"></span> Ist</span>
-                                    <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot target"></span> Ziel €50k</span>
-                                </div>
-                            </div>
-                            <div class="pmo-kpi-trend positive">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg>
-                                <span>+8% vs. Vorjahr</span>
-                            </div>
-                            <div class="pmo-kpi-chart"><canvas id="chart-ape-produktivitaet"></canvas></div>
-                        </div>
-
-                        <!-- 2. Kunden-NPS -->
-                        <div class="pmo-kpi-card" data-kpi="kunden-nps" data-category="northstar">
-                            <div class="pmo-kpi-header">
-                                <div class="pmo-kpi-title-row">
-                                    <span class="pmo-kpi-label">Kunden-NPS</span>
-                                    <span class="pmo-kpi-status green" title="Grün: Über Benchmark"></span>
-                                </div>
-                                <span class="pmo-kpi-badge success">+42</span>
-                            </div>
-                            <p class="pmo-kpi-description">Weiterempfehlungswahrscheinlichkeit der Kunden</p>
-                            <div class="pmo-kpi-value-row">
-                                <span class="pmo-kpi-value">+42</span>
-                                <div class="pmo-kpi-legend">
-                                    <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot ist"></span> NPS</span>
-                                    <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot target"></span> Benchmark +35</span>
-                                </div>
-                            </div>
-                            <div class="pmo-kpi-trend positive">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg>
-                                <span>+5 vs. Vorquartal</span>
-                            </div>
-                            <div class="pmo-kpi-chart"><canvas id="chart-kunden-nps"></canvas></div>
-                        </div>
-
-                        <!-- 3. Beratungsqualitäts-Score -->
-                        <div class="pmo-kpi-card" data-kpi="beratungsqualitaet" data-category="northstar">
-                            <div class="pmo-kpi-header">
-                                <div class="pmo-kpi-title-row">
-                                    <span class="pmo-kpi-label">Beratungsqualität</span>
-                                    <span class="pmo-kpi-status green" title="Grün: Gut"></span>
-                                </div>
-                                <span class="pmo-kpi-badge success">87%</span>
-                            </div>
-                            <p class="pmo-kpi-description">Score aus IDD-Konformität, Doku, Mystery Shopping</p>
-                            <div class="pmo-kpi-value-row">
-                                <span class="pmo-kpi-value">87%</span>
-                                <div class="pmo-kpi-legend">
-                                    <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot ist"></span> Score</span>
-                                    <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot target"></span> Ziel 90%</span>
-                                </div>
-                            </div>
-                            <div class="pmo-kpi-trend positive">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg>
-                                <span>+3% vs. Vorquartal</span>
-                            </div>
-                            <div class="pmo-kpi-chart"><canvas id="chart-beratungsqualitaet"></canvas></div>
-                        </div>
-
-                        <!-- 4. VP-NPS (Vertriebspartner-Zufriedenheit) -->
-                        <div class="pmo-kpi-card" data-kpi="vp-nps" data-category="northstar">
-                            <div class="pmo-kpi-header">
-                                <div class="pmo-kpi-title-row">
-                                    <span class="pmo-kpi-label">VP-Zufriedenheit</span>
-                                    <span class="pmo-kpi-status yellow" title="Gelb: Verbesserungspotential"></span>
-                                </div>
-                                <span class="pmo-kpi-badge warning">+28</span>
-                            </div>
-                            <p class="pmo-kpi-description">NPS der Vertriebspartner mit ERGO</p>
-                            <div class="pmo-kpi-value-row">
-                                <span class="pmo-kpi-value">+28</span>
-                                <div class="pmo-kpi-legend">
-                                    <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot ist"></span> VP-NPS</span>
-                                    <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot target"></span> Ziel +40</span>
-                                </div>
-                            </div>
-                            <div class="pmo-kpi-trend positive">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg>
-                                <span>+4 vs. Vorjahr</span>
-                            </div>
-                            <div class="pmo-kpi-chart"><canvas id="chart-vp-nps"></canvas></div>
-                        </div>
-
-                        <!-- 5. VP-Loyalität / Abgangsquote -->
-                        <div class="pmo-kpi-card" data-kpi="vp-abgang" data-category="northstar">
-                            <div class="pmo-kpi-header">
-                                <div class="pmo-kpi-title-row">
-                                    <span class="pmo-kpi-label">VP-Abgangsquote</span>
-                                    <span class="pmo-kpi-status green" title="Grün: Niedrig"></span>
-                                </div>
-                                <span class="pmo-kpi-badge success">8.2%</span>
-                            </div>
-                            <p class="pmo-kpi-description">Jährliche Abgangsquote aktiver Vertriebspartner</p>
-                            <div class="pmo-kpi-value-row">
-                                <span class="pmo-kpi-value">8.2%</span>
-                                <div class="pmo-kpi-legend">
-                                    <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot ist"></span> Abgang</span>
-                                    <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot target"></span> Ziel &lt;10%</span>
-                                </div>
-                            </div>
-                            <div class="pmo-kpi-trend positive">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/></svg>
-                                <span>-1.5% vs. Vorjahr</span>
-                            </div>
-                            <div class="pmo-kpi-chart"><canvas id="chart-vp-abgang"></canvas></div>
-                        </div>
-
-                        <!-- 6. Ease-of-Doing-Business Score -->
-                        <div class="pmo-kpi-card" data-kpi="eodb" data-category="northstar">
-                            <div class="pmo-kpi-header">
-                                <div class="pmo-kpi-title-row">
-                                    <span class="pmo-kpi-label">EoDB Score</span>
-                                    <span class="pmo-kpi-status yellow" title="Gelb: Ausbaufähig"></span>
-                                </div>
-                                <span class="pmo-kpi-badge warning">72%</span>
-                            </div>
-                            <p class="pmo-kpi-description">Ease-of-Doing-Business: Tool-Usability, Prozesse</p>
-                            <div class="pmo-kpi-value-row">
-                                <span class="pmo-kpi-value">72%</span>
-                                <div class="pmo-kpi-legend">
-                                    <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot ist"></span> Score</span>
-                                    <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot target"></span> Ziel 85%</span>
-                                </div>
-                            </div>
-                            <div class="pmo-kpi-trend positive">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg>
-                                <span>+8% vs. Vorjahr</span>
-                            </div>
-                            <div class="pmo-kpi-chart"><canvas id="chart-eodb"></canvas></div>
-                        </div>
-
-                        <!-- 7. Vertragsdichte je Bestandskunde -->
-                        <div class="pmo-kpi-card" data-kpi="vertragsdichte" data-category="northstar">
-                            <div class="pmo-kpi-header">
-                                <div class="pmo-kpi-title-row">
-                                    <span class="pmo-kpi-label">Vertragsdichte</span>
-                                    <span class="pmo-kpi-status yellow" title="Gelb: Unter Ziel"></span>
-                                </div>
-                                <span class="pmo-kpi-badge warning">2.1</span>
-                            </div>
-                            <p class="pmo-kpi-description">Durchschnittliche Verträge je Bestandskunde</p>
-                            <div class="pmo-kpi-value-row">
-                                <span class="pmo-kpi-value">2.1</span>
-                                <div class="pmo-kpi-legend">
-                                    <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot ist"></span> Ist</span>
-                                    <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot target"></span> Ziel 2.8</span>
-                                </div>
-                            </div>
-                            <div class="pmo-kpi-trend positive">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg>
-                                <span>+0.15 vs. Vorjahr</span>
-                            </div>
-                            <div class="pmo-kpi-chart"><canvas id="chart-vertragsdichte"></canvas></div>
-                        </div>
-
-                        <!-- 8. Cross-Sell-Quote -->
-                        <div class="pmo-kpi-card" data-kpi="cross-sell" data-category="northstar">
-                            <div class="pmo-kpi-header">
-                                <div class="pmo-kpi-title-row">
-                                    <span class="pmo-kpi-label">Cross-Sell-Quote</span>
-                                    <span class="pmo-kpi-status green" title="Grün: Im Plan"></span>
-                                </div>
-                                <span class="pmo-kpi-badge success">24%</span>
-                            </div>
-                            <p class="pmo-kpi-description">Anteil Kunden mit Zusatzprodukt-Abschluss</p>
-                            <div class="pmo-kpi-value-row">
-                                <span class="pmo-kpi-value">24%</span>
-                                <div class="pmo-kpi-legend">
-                                    <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot ist"></span> Quote</span>
-                                    <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot target"></span> Ziel 25%</span>
-                                </div>
-                            </div>
-                            <div class="pmo-kpi-trend positive">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg>
-                                <span>+4% vs. Vorjahr</span>
-                            </div>
-                            <div class="pmo-kpi-chart"><canvas id="chart-cross-sell"></canvas></div>
-                        </div>
-
-                        <!-- 9. Effizienz- & AI-Nutzungsquote -->
-                        <div class="pmo-kpi-card" data-kpi="ai-nutzung" data-category="northstar">
-                            <div class="pmo-kpi-header">
-                                <div class="pmo-kpi-title-row">
-                                    <span class="pmo-kpi-label">AI-Nutzungsquote</span>
-                                    <span class="pmo-kpi-status green" title="Grün: Stark steigend"></span>
-                                </div>
-                                <span class="pmo-kpi-badge success">48%</span>
-                            </div>
-                            <p class="pmo-kpi-description">Nutzung digitaler und AI-basierter Tools</p>
-                            <div class="pmo-kpi-value-row">
-                                <span class="pmo-kpi-value">48%</span>
-                                <div class="pmo-kpi-legend">
-                                    <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot ist"></span> Nutzung</span>
-                                    <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot target"></span> Ziel 60%</span>
-                                </div>
-                            </div>
-                            <div class="pmo-kpi-trend positive">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg>
-                                <span>+22% vs. Vorjahr</span>
-                            </div>
-                            <div class="pmo-kpi-chart"><canvas id="chart-ai-nutzung"></canvas></div>
-                        </div>
-
-                        <!-- 10. Conversion Rate nach Lead-Typ -->
-                        <div class="pmo-kpi-card" data-kpi="conversion" data-category="northstar">
-                            <div class="pmo-kpi-header">
-                                <div class="pmo-kpi-title-row">
-                                    <span class="pmo-kpi-label">Conversion Rate</span>
-                                    <span class="pmo-kpi-status yellow" title="Gelb: Ausbaufähig"></span>
-                                </div>
-                                <span class="pmo-kpi-badge warning">18%</span>
-                            </div>
-                            <p class="pmo-kpi-description">Abschlussquoten je Lead-Quelle</p>
-                            <div class="pmo-kpi-value-row">
-                                <span class="pmo-kpi-value">18%</span>
-                                <div class="pmo-kpi-legend">
-                                    <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot ist"></span> Gesamt</span>
-                                    <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot target"></span> Ziel 22%</span>
-                                </div>
-                            </div>
-                            <div class="pmo-kpi-trend positive">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg>
-                                <span>+2% vs. Vorjahr</span>
-                            </div>
-                            <div class="pmo-kpi-chart"><canvas id="chart-conversion"></canvas></div>
-                        </div>
-
-                        <!-- 11. Rekrutierungsquote -->
-                        <div class="pmo-kpi-card" data-kpi="rekrutierung" data-category="northstar">
-                            <div class="pmo-kpi-header">
-                                <div class="pmo-kpi-title-row">
-                                    <span class="pmo-kpi-label">Rekrutierungsquote</span>
-                                    <span class="pmo-kpi-status green" title="Grün: Im Plan"></span>
-                                </div>
-                                <span class="pmo-kpi-badge success">112</span>
-                            </div>
-                            <p class="pmo-kpi-description">Qualifizierte neue Vertriebspartner pro Quartal</p>
-                            <div class="pmo-kpi-value-row">
-                                <span class="pmo-kpi-value">112</span>
-                                <div class="pmo-kpi-legend">
-                                    <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot ist"></span> Neue VPs</span>
-                                    <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot target"></span> Ziel 100</span>
-                                </div>
-                            </div>
-                            <div class="pmo-kpi-trend positive">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg>
-                                <span>+15% vs. Vorjahr</span>
-                            </div>
-                            <div class="pmo-kpi-chart"><canvas id="chart-rekrutierung"></canvas></div>
-                        </div>
-
-                        <!-- 12. Time-to-Productivity -->
-                        <div class="pmo-kpi-card" data-kpi="time-to-prod" data-category="northstar">
-                            <div class="pmo-kpi-header">
-                                <div class="pmo-kpi-title-row">
-                                    <span class="pmo-kpi-label">Time-to-Productivity</span>
-                                    <span class="pmo-kpi-status yellow" title="Gelb: Zu lang"></span>
-                                </div>
-                                <span class="pmo-kpi-badge warning">8.5 Mo.</span>
-                            </div>
-                            <p class="pmo-kpi-description">Zeit bis neuer VP stabiles Umsatzniveau erreicht</p>
-                            <div class="pmo-kpi-value-row">
-                                <span class="pmo-kpi-value">8.5</span>
-                                <div class="pmo-kpi-legend">
-                                    <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot ist"></span> Monate</span>
-                                    <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot target"></span> Ziel 6 Mo.</span>
-                                </div>
-                            </div>
-                            <div class="pmo-kpi-trend positive">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/></svg>
-                                <span>-1.5 Mo. vs. Vorjahr</span>
-                            </div>
-                            <div class="pmo-kpi-chart"><canvas id="chart-time-to-prod"></canvas></div>
-                        </div>
-                        </div><!-- End northstar-container -->
-
                         <!-- ========== STRATEGISCH ========== -->
                         <div class="pmo-kpi-section-divider" data-category="strategisch">
                             <span class="pmo-kpi-section-title">Strategische KPIs</span>
+                            <span class="pmo-kpi-badge-section">Linie</span>
                         </div>
 
                         <!-- Verträge pro Kunde -->
@@ -961,41 +662,334 @@
                             </div>
                         </div>
 
-                        <!-- Value Map -->
-                        <div class="pmo-kpi-card pmo-kpi-discuss" data-kpi="valuemap" data-category="strategisch">
+                        <!-- ========== VALUE MAP (aufklappbar) ========== -->
+                        <div class="pmo-kpi-section-divider pmo-kpi-section-valuemap pmo-collapsible-header collapsed" data-category="valuemap" onclick="PMO.toggleValueMapSection()">
+                            <span class="pmo-kpi-section-title">Value Map</span>
+                            <span class="pmo-collapse-indicator">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><polyline points="6 9 12 15 18 9"/></svg>
+                            </span>
+                        </div>
+
+                        <div class="pmo-valuemap-container collapsed" id="valuemap-container">
+
+                        <!-- NORTH STAR: APE-Produktivität je Vertriebspartner -->
+                        <div class="pmo-kpi-card pmo-kpi-northstar pmo-valuemap-fullwidth" data-kpi="ape-produktivitaet" data-category="valuemap">
                             <div class="pmo-kpi-header">
                                 <div class="pmo-kpi-title-row">
-                                    <span class="pmo-kpi-label">Value Map</span>
-                                    <span class="pmo-kpi-status gray" title="Grau: Noch zu definieren"></span>
+                                    <span class="pmo-kpi-label">APE-Produktivität je VP</span>
+                                    <span class="pmo-kpi-status yellow" title="Gelb: Unter Ziel"></span>
                                 </div>
-                                <span class="pmo-kpi-badge warning">zu diskutieren</span>
+                                <div class="pmo-kpi-header-actions">
+                                    <span class="pmo-kpi-badge info">NORTH STAR</span>
+                                </div>
                             </div>
-                            <p class="pmo-kpi-description">Wertbeitrag und Nutzenrealisierung des Programms</p>
+                            <p class="pmo-kpi-description">Jährliches Neugeschäftsvolumen (APE) pro aktivem VP</p>
                             <div class="pmo-kpi-value-row">
-                                <span class="pmo-kpi-value">—</span>
+                                <span class="pmo-kpi-value">€42k</span>
                                 <div class="pmo-kpi-legend">
-                                    <span class="pmo-kpi-legend-item">Inhalt wird definiert</span>
+                                    <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot ist"></span> Ist</span>
+                                    <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot target"></span> Ziel €50k</span>
                                 </div>
                             </div>
-                            <div class="pmo-kpi-placeholder">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="40" height="40">
-                                    <circle cx="12" cy="12" r="10"></circle>
-                                    <path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"></path>
-                                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
-                                </svg>
+                            <div class="pmo-kpi-trend positive">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg>
+                                <span>+8% vs. Vorjahr</span>
                             </div>
+                            <div class="pmo-kpi-chart"><canvas id="chart-ape-produktivitaet"></canvas></div>
                         </div>
 
-                        <!-- ========== VERTRIEBLICH ========== -->
-                        <div class="pmo-kpi-section-divider" data-category="vertrieblich">
-                            <span class="pmo-kpi-section-title">Vertriebliche KPIs</span>
-                        </div>
+                        <!-- Cluster 1: Kundenzufriedenheit & Beratungsqualität -->
+                        <div class="pmo-valuemap-cluster-header">1. Kundenzufriedenheit & Beratungsqualität</div>
 
-                        <!-- NPS Score -->
-                        <div class="pmo-kpi-card pmo-kpi-alert" data-kpi="nps" data-category="vertrieblich">
+                        <!-- Kunden-NPS -->
+                        <div class="pmo-kpi-card" data-kpi="kunden-nps" data-category="valuemap">
                             <div class="pmo-kpi-header">
                                 <div class="pmo-kpi-title-row">
-                                    <span class="pmo-kpi-label">NPS Score</span>
+                                    <span class="pmo-kpi-label">Kunden-NPS</span>
+                                    <span class="pmo-kpi-status green" title="Grün: Über Benchmark"></span>
+                                </div>
+                                <span class="pmo-kpi-badge success">+42</span>
+                            </div>
+                            <p class="pmo-kpi-description">Weiterempfehlungswahrscheinlichkeit der Kunden</p>
+                            <div class="pmo-kpi-value-row">
+                                <span class="pmo-kpi-value">+42</span>
+                                <div class="pmo-kpi-legend">
+                                    <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot ist"></span> NPS</span>
+                                    <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot target"></span> Benchmark +35</span>
+                                </div>
+                            </div>
+                            <div class="pmo-kpi-trend positive">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg>
+                                <span>+5 vs. Vorquartal</span>
+                            </div>
+                            <div class="pmo-kpi-chart"><canvas id="chart-kunden-nps"></canvas></div>
+                        </div>
+
+                        <!-- Beratungsqualitäts-Score -->
+                        <div class="pmo-kpi-card" data-kpi="beratungsqualitaet" data-category="valuemap">
+                            <div class="pmo-kpi-header">
+                                <div class="pmo-kpi-title-row">
+                                    <span class="pmo-kpi-label">Beratungsqualität</span>
+                                    <span class="pmo-kpi-status green" title="Grün: Gut"></span>
+                                </div>
+                                <span class="pmo-kpi-badge success">87%</span>
+                            </div>
+                            <p class="pmo-kpi-description">Score aus IDD-Konformität, Doku, Mystery Shopping</p>
+                            <div class="pmo-kpi-value-row">
+                                <span class="pmo-kpi-value">87%</span>
+                                <div class="pmo-kpi-legend">
+                                    <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot ist"></span> Score</span>
+                                    <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot target"></span> Ziel 90%</span>
+                                </div>
+                            </div>
+                            <div class="pmo-kpi-trend positive">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg>
+                                <span>+3% vs. Vorquartal</span>
+                            </div>
+                            <div class="pmo-kpi-chart"><canvas id="chart-beratungsqualitaet"></canvas></div>
+                        </div>
+
+                        <!-- Cluster 2: Zufriedenheit & Bindung der Vertriebspartner -->
+                        <div class="pmo-valuemap-cluster-header">2. Zufriedenheit & Bindung der Vertriebspartner</div>
+
+                        <!-- VP-NPS -->
+                        <div class="pmo-kpi-card" data-kpi="vp-nps" data-category="valuemap">
+                            <div class="pmo-kpi-header">
+                                <div class="pmo-kpi-title-row">
+                                    <span class="pmo-kpi-label">VP-Zufriedenheit</span>
+                                    <span class="pmo-kpi-status yellow" title="Gelb: Verbesserungspotential"></span>
+                                </div>
+                                <span class="pmo-kpi-badge warning">+28</span>
+                            </div>
+                            <p class="pmo-kpi-description">NPS der Vertriebspartner mit ERGO</p>
+                            <div class="pmo-kpi-value-row">
+                                <span class="pmo-kpi-value">+28</span>
+                                <div class="pmo-kpi-legend">
+                                    <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot ist"></span> VP-NPS</span>
+                                    <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot target"></span> Ziel +40</span>
+                                </div>
+                            </div>
+                            <div class="pmo-kpi-trend positive">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg>
+                                <span>+4 vs. Vorjahr</span>
+                            </div>
+                            <div class="pmo-kpi-chart"><canvas id="chart-vp-nps"></canvas></div>
+                        </div>
+
+                        <!-- VP-Abgangsquote -->
+                        <div class="pmo-kpi-card" data-kpi="vp-abgang" data-category="valuemap">
+                            <div class="pmo-kpi-header">
+                                <div class="pmo-kpi-title-row">
+                                    <span class="pmo-kpi-label">VP-Abgangsquote</span>
+                                    <span class="pmo-kpi-status green" title="Grün: Niedrig"></span>
+                                </div>
+                                <span class="pmo-kpi-badge success">8.2%</span>
+                            </div>
+                            <p class="pmo-kpi-description">Jährliche Abgangsquote aktiver Vertriebspartner</p>
+                            <div class="pmo-kpi-value-row">
+                                <span class="pmo-kpi-value">8.2%</span>
+                                <div class="pmo-kpi-legend">
+                                    <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot ist"></span> Abgang</span>
+                                    <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot target"></span> Ziel &lt;10%</span>
+                                </div>
+                            </div>
+                            <div class="pmo-kpi-trend positive">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/></svg>
+                                <span>-1.5% vs. Vorjahr</span>
+                            </div>
+                            <div class="pmo-kpi-chart"><canvas id="chart-vp-abgang"></canvas></div>
+                        </div>
+
+                        <!-- EoDB Score -->
+                        <div class="pmo-kpi-card" data-kpi="eodb" data-category="valuemap">
+                            <div class="pmo-kpi-header">
+                                <div class="pmo-kpi-title-row">
+                                    <span class="pmo-kpi-label">EoDB Score</span>
+                                    <span class="pmo-kpi-status yellow" title="Gelb: Ausbaufähig"></span>
+                                </div>
+                                <span class="pmo-kpi-badge warning">72%</span>
+                            </div>
+                            <p class="pmo-kpi-description">Ease-of-Doing-Business: Tool-Usability, Prozesse</p>
+                            <div class="pmo-kpi-value-row">
+                                <span class="pmo-kpi-value">72%</span>
+                                <div class="pmo-kpi-legend">
+                                    <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot ist"></span> Score</span>
+                                    <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot target"></span> Ziel 85%</span>
+                                </div>
+                            </div>
+                            <div class="pmo-kpi-trend positive">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg>
+                                <span>+8% vs. Vorjahr</span>
+                            </div>
+                            <div class="pmo-kpi-chart"><canvas id="chart-eodb"></canvas></div>
+                        </div>
+
+                        <!-- Cluster 3: Bestandskundenentwicklung (Mehrvertragschampion) -->
+                        <div class="pmo-valuemap-cluster-header">3. Bestandskundenentwicklung (Mehrvertragschampion)</div>
+
+                        <!-- Vertragsdichte -->
+                        <div class="pmo-kpi-card" data-kpi="vertragsdichte" data-category="valuemap">
+                            <div class="pmo-kpi-header">
+                                <div class="pmo-kpi-title-row">
+                                    <span class="pmo-kpi-label">Vertragsdichte</span>
+                                    <span class="pmo-kpi-status yellow" title="Gelb: Unter Ziel"></span>
+                                </div>
+                                <span class="pmo-kpi-badge warning">2.1</span>
+                            </div>
+                            <p class="pmo-kpi-description">Durchschnittliche Verträge je Bestandskunde</p>
+                            <div class="pmo-kpi-value-row">
+                                <span class="pmo-kpi-value">2.1</span>
+                                <div class="pmo-kpi-legend">
+                                    <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot ist"></span> Ist</span>
+                                    <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot target"></span> Ziel 2.8</span>
+                                </div>
+                            </div>
+                            <div class="pmo-kpi-trend positive">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg>
+                                <span>+0.15 vs. Vorjahr</span>
+                            </div>
+                            <div class="pmo-kpi-chart"><canvas id="chart-vertragsdichte"></canvas></div>
+                        </div>
+
+                        <!-- Cross-Sell-Quote -->
+                        <div class="pmo-kpi-card" data-kpi="cross-sell" data-category="valuemap">
+                            <div class="pmo-kpi-header">
+                                <div class="pmo-kpi-title-row">
+                                    <span class="pmo-kpi-label">Cross-Sell-Quote</span>
+                                    <span class="pmo-kpi-status green" title="Grün: Im Plan"></span>
+                                </div>
+                                <span class="pmo-kpi-badge success">24%</span>
+                            </div>
+                            <p class="pmo-kpi-description">Anteil Kunden mit Zusatzprodukt-Abschluss</p>
+                            <div class="pmo-kpi-value-row">
+                                <span class="pmo-kpi-value">24%</span>
+                                <div class="pmo-kpi-legend">
+                                    <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot ist"></span> Quote</span>
+                                    <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot target"></span> Ziel 25%</span>
+                                </div>
+                            </div>
+                            <div class="pmo-kpi-trend positive">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg>
+                                <span>+4% vs. Vorjahr</span>
+                            </div>
+                            <div class="pmo-kpi-chart"><canvas id="chart-cross-sell"></canvas></div>
+                        </div>
+
+                        <!-- Cluster 4: Effizienz, Digitalisierung & AI-Nutzung -->
+                        <div class="pmo-valuemap-cluster-header">4. Effizienz, Digitalisierung & AI-Nutzung</div>
+
+                        <!-- AI-Nutzungsquote -->
+                        <div class="pmo-kpi-card" data-kpi="ai-nutzung" data-category="valuemap">
+                            <div class="pmo-kpi-header">
+                                <div class="pmo-kpi-title-row">
+                                    <span class="pmo-kpi-label">AI-Nutzungsquote</span>
+                                    <span class="pmo-kpi-status green" title="Grün: Stark steigend"></span>
+                                </div>
+                                <span class="pmo-kpi-badge success">48%</span>
+                            </div>
+                            <p class="pmo-kpi-description">Nutzung digitaler und AI-basierter Tools</p>
+                            <div class="pmo-kpi-value-row">
+                                <span class="pmo-kpi-value">48%</span>
+                                <div class="pmo-kpi-legend">
+                                    <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot ist"></span> Nutzung</span>
+                                    <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot target"></span> Ziel 60%</span>
+                                </div>
+                            </div>
+                            <div class="pmo-kpi-trend positive">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg>
+                                <span>+22% vs. Vorjahr</span>
+                            </div>
+                            <div class="pmo-kpi-chart"><canvas id="chart-ai-nutzung"></canvas></div>
+                        </div>
+
+                        <!-- Conversion Rate -->
+                        <div class="pmo-kpi-card" data-kpi="conversion" data-category="valuemap">
+                            <div class="pmo-kpi-header">
+                                <div class="pmo-kpi-title-row">
+                                    <span class="pmo-kpi-label">Conversion Rate</span>
+                                    <span class="pmo-kpi-status yellow" title="Gelb: Ausbaufähig"></span>
+                                </div>
+                                <span class="pmo-kpi-badge warning">18%</span>
+                            </div>
+                            <p class="pmo-kpi-description">Abschlussquoten je Lead-Quelle</p>
+                            <div class="pmo-kpi-value-row">
+                                <span class="pmo-kpi-value">18%</span>
+                                <div class="pmo-kpi-legend">
+                                    <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot ist"></span> Gesamt</span>
+                                    <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot target"></span> Ziel 22%</span>
+                                </div>
+                            </div>
+                            <div class="pmo-kpi-trend positive">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg>
+                                <span>+2% vs. Vorjahr</span>
+                            </div>
+                            <div class="pmo-kpi-chart"><canvas id="chart-conversion"></canvas></div>
+                        </div>
+
+                        <!-- Cluster 5: Neue Vertriebspartner gewinnen & entwickeln -->
+                        <div class="pmo-valuemap-cluster-header">5. Neue Vertriebspartner gewinnen & entwickeln</div>
+
+                        <!-- Rekrutierungsquote -->
+                        <div class="pmo-kpi-card" data-kpi="rekrutierung" data-category="valuemap">
+                            <div class="pmo-kpi-header">
+                                <div class="pmo-kpi-title-row">
+                                    <span class="pmo-kpi-label">Rekrutierungsquote</span>
+                                    <span class="pmo-kpi-status green" title="Grün: Im Plan"></span>
+                                </div>
+                                <span class="pmo-kpi-badge success">112</span>
+                            </div>
+                            <p class="pmo-kpi-description">Qualifizierte neue Vertriebspartner pro Quartal</p>
+                            <div class="pmo-kpi-value-row">
+                                <span class="pmo-kpi-value">112</span>
+                                <div class="pmo-kpi-legend">
+                                    <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot ist"></span> Neue VPs</span>
+                                    <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot target"></span> Ziel 100</span>
+                                </div>
+                            </div>
+                            <div class="pmo-kpi-trend positive">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg>
+                                <span>+15% vs. Vorjahr</span>
+                            </div>
+                            <div class="pmo-kpi-chart"><canvas id="chart-rekrutierung"></canvas></div>
+                        </div>
+
+                        <!-- Time-to-Productivity -->
+                        <div class="pmo-kpi-card" data-kpi="time-to-prod" data-category="valuemap">
+                            <div class="pmo-kpi-header">
+                                <div class="pmo-kpi-title-row">
+                                    <span class="pmo-kpi-label">Time-to-Productivity</span>
+                                    <span class="pmo-kpi-status yellow" title="Gelb: Zu lang"></span>
+                                </div>
+                                <span class="pmo-kpi-badge warning">8.5 Mo.</span>
+                            </div>
+                            <p class="pmo-kpi-description">Zeit bis neuer VP stabiles Umsatzniveau erreicht</p>
+                            <div class="pmo-kpi-value-row">
+                                <span class="pmo-kpi-value">8.5</span>
+                                <div class="pmo-kpi-legend">
+                                    <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot ist"></span> Monate</span>
+                                    <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot target"></span> Ziel 6 Mo.</span>
+                                </div>
+                            </div>
+                            <div class="pmo-kpi-trend positive">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/></svg>
+                                <span>-1.5 Mo. vs. Vorjahr</span>
+                            </div>
+                            <div class="pmo-kpi-chart"><canvas id="chart-time-to-prod"></canvas></div>
+                        </div>
+
+                        </div><!-- End valuemap-container -->
+
+                        <!-- ========== ZUFRIEDENHEIT UND NUTZUNG ========== -->
+                        <div class="pmo-kpi-section-divider" data-category="zufriedenheit">
+                            <span class="pmo-kpi-section-title">Zufriedenheit und Nutzung KPI</span>
+                            <span class="pmo-kpi-badge-section">Programm und Projekt</span>
+                        </div>
+
+                        <!-- NPS-Score Vertrieb -->
+                        <div class="pmo-kpi-card pmo-kpi-alert" data-kpi="nps" data-category="zufriedenheit">
+                            <div class="pmo-kpi-header">
+                                <div class="pmo-kpi-title-row">
+                                    <span class="pmo-kpi-label">NPS-Score Vertrieb</span>
                                     <span class="pmo-kpi-status yellow" title="Gelb: NPS gefallen"></span>
                                 </div>
                                 <span class="pmo-kpi-badge warning">-7 vs. Vormonat</span>
@@ -1020,8 +1014,37 @@
                             </div>
                         </div>
 
+                        <!-- Pulse Check OPL & WS -->
+                        <div class="pmo-kpi-card" data-kpi="pulse-check" data-category="zufriedenheit">
+                            <div class="pmo-kpi-header">
+                                <div class="pmo-kpi-title-row">
+                                    <span class="pmo-kpi-label">Pulse Check OPL & WS</span>
+                                    <span class="pmo-kpi-status green" title="Grün: Gute Stimmung"></span>
+                                </div>
+                                <span class="pmo-kpi-badge success">4.2/5.0</span>
+                            </div>
+                            <p class="pmo-kpi-description">Stimmungsbild der Projektleiter und Workstreams</p>
+                            <div class="pmo-kpi-value-row">
+                                <span class="pmo-kpi-value">4.2</span>
+                                <div class="pmo-kpi-legend">
+                                    <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot ist"></span> Score</span>
+                                    <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot target"></span> Ziel 4.0</span>
+                                </div>
+                            </div>
+                            <div class="pmo-kpi-trend positive">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+                                </svg>
+                                <span>+0.3 vs. Vormonat</span>
+                                <span class="pmo-kpi-trend-label">24 Teilnehmer</span>
+                            </div>
+                            <div class="pmo-kpi-chart">
+                                <canvas id="chart-pulse-check"></canvas>
+                            </div>
+                        </div>
+
                         <!-- User Adoption Rate -->
-                        <div class="pmo-kpi-card" data-kpi="adoption" data-category="vertrieblich">
+                        <div class="pmo-kpi-card" data-kpi="adoption" data-category="zufriedenheit">
                             <div class="pmo-kpi-header">
                                 <div class="pmo-kpi-title-row">
                                     <span class="pmo-kpi-label">User Adoption Rate</span>
@@ -1049,13 +1072,14 @@
                             </div>
                         </div>
 
-                        <!-- ========== OPERATIV ========== -->
-                        <div class="pmo-kpi-section-divider" data-category="operativ">
-                            <span class="pmo-kpi-section-title">Operative KPIs</span>
+                        <!-- ========== FORTSCHRITT ========== -->
+                        <div class="pmo-kpi-section-divider" data-category="fortschritt">
+                            <span class="pmo-kpi-section-title">Fortschritt KPIs</span>
+                            <span class="pmo-kpi-badge-section">Projekt</span>
                         </div>
 
                         <!-- Meilensteine -->
-                        <div class="pmo-kpi-card" data-kpi="meilensteine" data-category="operativ">
+                        <div class="pmo-kpi-card" data-kpi="meilensteine" data-category="fortschritt">
                             <div class="pmo-kpi-header">
                                 <div class="pmo-kpi-title-row">
                                     <span class="pmo-kpi-label">Meilensteine</span>
@@ -1085,7 +1109,7 @@
                         </div>
 
                         <!-- User Stories -->
-                        <div class="pmo-kpi-card" data-kpi="userstories" data-category="operativ">
+                        <div class="pmo-kpi-card" data-kpi="userstories" data-category="fortschritt">
                             <div class="pmo-kpi-header">
                                 <div class="pmo-kpi-title-row">
                                     <span class="pmo-kpi-label">User Stories</span>
@@ -1119,7 +1143,7 @@
                         </div>
 
                         <!-- Tests -->
-                        <div class="pmo-kpi-card" data-kpi="tests" data-category="operativ">
+                        <div class="pmo-kpi-card" data-kpi="tests" data-category="fortschritt">
                             <div class="pmo-kpi-header">
                                 <div class="pmo-kpi-title-row">
                                     <span class="pmo-kpi-label">Testreihen</span>
@@ -1152,7 +1176,7 @@
                         </div>
 
                         <!-- Defects -->
-                        <div class="pmo-kpi-card pmo-kpi-alert" data-kpi="defects" data-category="operativ">
+                        <div class="pmo-kpi-card pmo-kpi-alert" data-kpi="defects" data-category="fortschritt">
                             <div class="pmo-kpi-header">
                                 <div class="pmo-kpi-title-row">
                                     <span class="pmo-kpi-label">Defects</span>
@@ -1185,7 +1209,7 @@
                         </div>
 
                         <!-- Ressourcen -->
-                        <div class="pmo-kpi-card" data-kpi="ressourcen" data-category="operativ">
+                        <div class="pmo-kpi-card" data-kpi="ressourcen" data-category="fortschritt">
                             <div class="pmo-kpi-header">
                                 <div class="pmo-kpi-title-row">
                                     <span class="pmo-kpi-label">Ressourcen</span>
@@ -1229,7 +1253,7 @@
                         </div>
 
                         <!-- Budget -->
-                        <div class="pmo-kpi-card" data-kpi="budget" data-category="operativ">
+                        <div class="pmo-kpi-card" data-kpi="budget" data-category="fortschritt">
                             <div class="pmo-kpi-header">
                                 <div class="pmo-kpi-title-row">
                                     <span class="pmo-kpi-label">Budget</span>

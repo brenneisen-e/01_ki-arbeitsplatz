@@ -3952,13 +3952,67 @@ mark {
     transform: rotate(-90deg);
 }
 
-.pmo-northstar-container {
+/* Value Map Container */
+.pmo-valuemap-container {
     display: contents;
     transition: all 0.3s ease;
 }
 
-.pmo-northstar-container.collapsed {
+.pmo-valuemap-container.collapsed {
     display: none;
+}
+
+/* Value Map Section Header */
+.pmo-kpi-section-valuemap {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 12px 20px;
+    margin-bottom: 0;
+}
+
+.pmo-kpi-section-valuemap .pmo-kpi-section-title {
+    color: #475569;
+    font-weight: 600;
+}
+
+.pmo-kpi-section-valuemap .pmo-collapse-indicator {
+    color: #64748b;
+}
+
+/* Value Map Cluster Headers */
+.pmo-valuemap-cluster-header {
+    grid-column: 1 / -1;
+    padding: 12px 16px;
+    margin-top: 8px;
+    margin-bottom: 4px;
+    background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+    border-left: 4px solid #E30613;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #334155;
+}
+
+/* Full-width North Star card in Value Map */
+.pmo-valuemap-fullwidth {
+    grid-column: 1 / -1;
+    max-width: 100%;
+}
+
+/* Section Badge */
+.pmo-kpi-badge-section {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 12px;
+    margin-left: 12px;
+    background: rgba(100, 116, 139, 0.1);
+    color: #64748b;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 /* Category Badge Colors */

@@ -4452,11 +4452,11 @@ PMO Team
             { label: 'PT Angefragt', data: this.kpiData.ressourcen.history.angefragt, borderColor: '#94a3b8', backgroundColor: 'transparent', tension: 0.3, pointRadius: 3, borderWidth: 2, borderDash: [5, 5] }
         ], chartOptions);
 
-        // Budget
+        // Budget (history values are in thousands, so /1000 gives millions)
         this.renderChartJS('chart-budget', 'line', labels, [
-            { label: 'Plan', data: this.kpiData.budget.history.plan.map(v => v/1000000), borderColor: '#86BC25', backgroundColor: 'transparent', tension: 0.3, pointRadius: 3, borderWidth: 2 },
-            { label: 'Verbrauch', data: this.kpiData.budget.history.verbrauch.map(v => v/1000000), borderColor: '#3b82f6', backgroundColor: 'transparent', tension: 0.3, pointRadius: 3, borderWidth: 2 },
-            { label: 'Forecast', data: this.kpiData.budget.history.forecast.map(v => v/1000000), borderColor: '#8b5cf6', backgroundColor: 'transparent', tension: 0.3, pointRadius: 3, borderWidth: 2, borderDash: [5, 5] }
+            { label: 'Plan', data: this.kpiData.budget.history.plan.map(v => v/1000), borderColor: '#86BC25', backgroundColor: 'transparent', tension: 0.3, pointRadius: 3, borderWidth: 2 },
+            { label: 'Verbrauch', data: this.kpiData.budget.history.verbrauch.map(v => v/1000), borderColor: '#3b82f6', backgroundColor: 'transparent', tension: 0.3, pointRadius: 3, borderWidth: 2 },
+            { label: 'Forecast', data: this.kpiData.budget.history.forecast.map(v => v/1000), borderColor: '#8b5cf6', backgroundColor: 'transparent', tension: 0.3, pointRadius: 3, borderWidth: 2, borderDash: [5, 5] }
         ], { ...chartOptions, scales: { ...chartOptions.scales, y: { ...chartOptions.scales.y, ticks: { ...chartOptions.scales.y.ticks, callback: (v) => '€' + v.toFixed(1) + 'M' } } } });
     },
 
@@ -4934,6 +4934,23 @@ PMO Team
         // Re-render KPIs with filters applied
         // For now, just update the values (filters can be implemented later)
         this.updateKPIValues();
+    },
+
+    switchKPILevel(level) {
+        // Toggle between Programm and Projekt level
+        const buttons = document.querySelectorAll('.pmo-kpis-toggle .pmo-toggle-btn');
+        buttons.forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.level === level);
+        });
+
+        // Show/hide project filter based on level
+        const projectFilter = document.getElementById('kpis-project-filter');
+        if (projectFilter) {
+            projectFilter.style.display = level === 'projekt' ? 'block' : 'none';
+        }
+
+        // Re-render charts (in future: with project-specific data)
+        this.renderP10Charts();
     },
 
     previewDocument(id) {

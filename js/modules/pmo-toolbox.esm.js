@@ -4659,6 +4659,12 @@ PMO Team
             });
         }
 
+        // Pulse Check OPL & WS
+        createChart('chart-pulse-check', [
+            { label: 'Score', data: [3.8, 3.9, 4.0, 4.1, 4.0, 4.1, 4.2, 4.1, 4.2, 4.2], borderColor: '#10b981', backgroundColor: 'transparent', tension: 0.3, pointRadius: 4, borderWidth: 2 },
+            { label: 'Ziel', data: Array(10).fill(4.0), borderColor: '#86BC25', borderDash: [5, 5], borderWidth: 2, pointRadius: 0 }
+        ], 3.5, 5.0);
+
         // User Adoption
         const adoptionLabels = ['Jan 24', 'Apr', 'Jul', 'Okt', 'Jan 25', 'Apr', 'Jul', 'Okt', 'Jan 26'];
         const adoptionCanvas = document.getElementById('chart-adoption');

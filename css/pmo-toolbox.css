@@ -4553,12 +4553,23 @@ mark {
     max-height: calc(100vh - 200px);
     overflow-y: auto;
     overflow-x: hidden;
-    scrollbar-width: thin;
-    scrollbar-color: #e2e8f0 transparent;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
 }
 
 .pmo-kpis-sidebar::-webkit-scrollbar {
-    width: 6px;
+    width: 0;
+    display: none;
+}
+
+.pmo-kpis-sidebar:hover {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0,0,0,0.15) transparent;
+}
+
+.pmo-kpis-sidebar:hover::-webkit-scrollbar {
+    width: 4px;
+    display: block;
 }
 
 .pmo-kpis-sidebar::-webkit-scrollbar-track {
@@ -4566,12 +4577,12 @@ mark {
 }
 
 .pmo-kpis-sidebar::-webkit-scrollbar-thumb {
-    background: #e2e8f0;
-    border-radius: 3px;
+    background: rgba(0,0,0,0.15);
+    border-radius: 2px;
 }
 
 .pmo-kpis-sidebar::-webkit-scrollbar-thumb:hover {
-    background: #cbd5e1;
+    background: rgba(0,0,0,0.25);
 }
 
 @media (max-width: 1400px) {

@@ -5166,7 +5166,9 @@ mark {
    ========================================================================== */
 
 .pmo-warnings-section {
-    margin-top: 32px;
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid #e2e8f0;
     overflow: hidden;
 }
 
@@ -5184,7 +5186,7 @@ mark {
     background: white;
     border-radius: 12px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    border-left: 4px solid #f59e0b;
+    border-left: 4px solid transparent;
     transition: all 0.2s;
 }
 
@@ -5194,18 +5196,27 @@ mark {
 }
 
 .pmo-warning-card.warning {
-    border-left-color: #f59e0b;
     background: linear-gradient(135deg, #fffbeb 0%, white 50%);
 }
 
+.pmo-warning-card.warning:hover {
+    border-left-color: #f59e0b;
+}
+
 .pmo-warning-card.critical {
-    border-left-color: #ef4444;
     background: linear-gradient(135deg, #fef2f2 0%, white 50%);
 }
 
+.pmo-warning-card.critical:hover {
+    border-left-color: #ef4444;
+}
+
 .pmo-warning-card.info {
-    border-left-color: #3b82f6;
     background: linear-gradient(135deg, #eff6ff 0%, white 50%);
+}
+
+.pmo-warning-card.info:hover {
+    border-left-color: #3b82f6;
 }
 
 .pmo-warning-icon {

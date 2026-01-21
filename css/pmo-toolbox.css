@@ -4035,8 +4035,6 @@ mark {
     cursor: pointer;
     transition: all 0.3s ease;
     border: 2px solid transparent;
-    min-height: 280px;
-    max-height: 280px;
 }
 
 .pmo-valuemap-cluster-overview:hover {
@@ -4045,15 +4043,21 @@ mark {
     transform: translateY(-2px);
 }
 
+.pmo-valuemap-cluster-overview.expanded {
+    border-color: #10b981;
+    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+}
+
+.pmo-valuemap-cluster-overview.expanded:hover {
+    border-color: #10b981;
+}
+
 /* Cluster List */
 .pmo-cluster-list {
     display: flex;
     flex-direction: column;
     gap: 6px;
     margin-top: 8px;
-    flex: 1;
-    overflow-y: auto;
-    max-height: 160px;
 }
 
 .pmo-cluster-item {
@@ -5029,16 +5033,12 @@ mark {
     padding: 16px;
     display: flex;
     flex-direction: column;
-    min-height: 280px;
-    max-height: 280px;
-    overflow: hidden;
 }
 
 /* Chart area fills remaining space */
 .pmo-kpi-card .pmo-kpi-chart {
     flex: 1;
-    min-height: 0;
-    max-height: 120px;
+    min-height: 100px;
 }
 
 .pmo-kpi-card.pmo-kpi-wide {

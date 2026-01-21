@@ -3431,6 +3431,35 @@ mark {
     font-style: italic;
 }
 
+/* WIP Card Direct Icon Styling */
+.pmo-kpi-wip > .pmo-kpi-icon {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 12px;
+    flex-shrink: 0;
+}
+
+.pmo-kpi-wip > .pmo-kpi-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+.pmo-kpi-wip > .pmo-kpi-icon.danger {
+    color: #ef4444;
+}
+
+.pmo-kpi-wip > .pmo-kpi-icon.success {
+    color: #10b981;
+}
+
+.pmo-kpi-wip > .pmo-kpi-icon.info {
+    color: #3b82f6;
+}
+
+.pmo-kpi-wip > .pmo-kpi-icon.warning {
+    color: #f59e0b;
+}
+
 /* Hover effects */
 .pmo-kpi-card:not(.pmo-kpi-wip):hover .pmo-kpi-icon {
     color: #E30613;

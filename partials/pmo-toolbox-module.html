@@ -590,10 +590,10 @@
                                     <div class="pmo-kpi-header">
                                         <span class="pmo-kpi-title">Verträge pro Kunde</span>
                                         <div class="pmo-kpi-switch">
-                                            <button class="pmo-switch-btn active" data-mode="bar" onclick="PMO.switchChartMode('vertraege', 'bar')">
+                                            <button class="pmo-switch-btn" data-mode="bar" onclick="PMO.switchChartMode('vertraege', 'bar')">
                                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
                                             </button>
-                                            <button class="pmo-switch-btn" data-mode="line" onclick="PMO.switchChartMode('vertraege', 'line')">
+                                            <button class="pmo-switch-btn active" data-mode="line" onclick="PMO.switchChartMode('vertraege', 'line')">
                                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
                                             </button>
                                         </div>
@@ -616,10 +616,10 @@
                                     <div class="pmo-kpi-header">
                                         <span class="pmo-kpi-title">APE pro Kunde</span>
                                         <div class="pmo-kpi-switch">
-                                            <button class="pmo-switch-btn active" data-mode="bar" onclick="PMO.switchChartMode('ape', 'bar')">
+                                            <button class="pmo-switch-btn" data-mode="bar" onclick="PMO.switchChartMode('ape', 'bar')">
                                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
                                             </button>
-                                            <button class="pmo-switch-btn" data-mode="line" onclick="PMO.switchChartMode('ape', 'line')">
+                                            <button class="pmo-switch-btn active" data-mode="line" onclick="PMO.switchChartMode('ape', 'line')">
                                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
                                             </button>
                                         </div>
@@ -687,8 +687,8 @@
                                     <div class="pmo-kpi-header">
                                         <span class="pmo-kpi-title">NPS Score</span>
                                         <div class="pmo-kpi-switch">
-                                            <button class="pmo-switch-btn active" data-mode="gauge" onclick="PMO.switchChartMode('nps', 'gauge')">Gauge</button>
-                                            <button class="pmo-switch-btn" data-mode="trend" onclick="PMO.switchChartMode('nps', 'trend')">Trend</button>
+                                            <button class="pmo-switch-btn" data-mode="gauge" onclick="PMO.switchChartMode('nps', 'gauge')">Gauge</button>
+                                            <button class="pmo-switch-btn active" data-mode="trend" onclick="PMO.switchChartMode('nps', 'trend')">Trend</button>
                                         </div>
                                     </div>
                                     <div class="pmo-kpi-value-row">
@@ -711,10 +711,10 @@
                                     <div class="pmo-kpi-header">
                                         <span class="pmo-kpi-title">User Adoption Rate</span>
                                         <div class="pmo-kpi-switch">
-                                            <button class="pmo-switch-btn active" data-mode="bar" onclick="PMO.switchChartMode('adoption', 'bar')">
+                                            <button class="pmo-switch-btn" data-mode="bar" onclick="PMO.switchChartMode('adoption', 'bar')">
                                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
                                             </button>
-                                            <button class="pmo-switch-btn" data-mode="line" onclick="PMO.switchChartMode('adoption', 'line')">
+                                            <button class="pmo-switch-btn active" data-mode="line" onclick="PMO.switchChartMode('adoption', 'line')">
                                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
                                             </button>
                                         </div>
@@ -825,8 +825,8 @@
                                     <div class="pmo-kpi-header">
                                         <span class="pmo-kpi-title">Defects</span>
                                         <div class="pmo-kpi-switch">
-                                            <button class="pmo-switch-btn active" data-mode="open" onclick="PMO.switchDefectKPI('open')">Offen</button>
-                                            <button class="pmo-switch-btn" data-mode="trend" onclick="PMO.switchDefectKPI('trend')">Trend</button>
+                                            <button class="pmo-switch-btn" data-mode="open" onclick="PMO.switchDefectKPI('open')">Offen</button>
+                                            <button class="pmo-switch-btn active" data-mode="trend" onclick="PMO.switchDefectKPI('trend')">Trend</button>
                                         </div>
                                     </div>
                                     <div class="pmo-defect-content" id="defect-kpi-content">
@@ -1487,7 +1487,7 @@
 
 
 <!-- PMO Toolbox Styles (externalized) -->
-<link rel="stylesheet" href="/css/pmo-toolbox.css?v=20260121g">
+<link rel="stylesheet" href="/css/pmo-toolbox.css?v=20260121h">
 
 <!-- PMO Toolbox JavaScript (ES6 Module) -->
-<script type="module" src="/js/modules/pmo-toolbox.esm.js?v=20260121g"></script>
+<script type="module" src="/js/modules/pmo-toolbox.esm.js?v=20260121h"></script>

@@ -3011,7 +3011,6 @@ PMO Team
         const milestoneId = `${workstreamId}_${milestoneName.replace(/\s/g, '_')}`;
         this.openMilestoneModal(milestoneId);
     },
-    },
 
     filterMilestones() {
         this.renderMilestones();

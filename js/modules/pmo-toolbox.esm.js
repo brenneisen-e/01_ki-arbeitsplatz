@@ -4261,104 +4261,380 @@ PMO Team
     // KPIs View
     // ==========================================
 
-    // KPI Data for Mock (Apr 2025 - Jan 2026)
+    // KPI Data for P-10 (Apr 2025 - Jan 2026)
     kpiData: {
-        'milestone-delays': {
-            value: 7,
-            trend: '+2 vs. Vorwoche',
-            trendType: 'negative',
-            history: [3, 4, 5, 4, 6, 5, 7, 6, 7, 7],
-            historyPlan: [2, 2, 3, 3, 4, 4, 5, 5, 5, 5]
+        // Strategisch
+        vertraege: {
+            current: 2.10,
+            target: 2.80,
+            history: [2.02, 2.04, 2.05, 2.07, 2.08, 2.10, 2.13, 2.12, 2.12, 2.10]
         },
-        'cr-requests': {
-            value: 12,
-            trend: '+3 vs. Vorwoche',
-            trendType: 'warning',
-            history: [8, 9, 10, 9, 11, 10, 12, 11, 13, 12],
-            historyPlan: [6, 7, 8, 8, 9, 9, 9, 10, 10, 10]
+        ape: {
+            current: 140000,
+            target: 180000,
+            history: [125000, 128000, 130000, 132000, 135000, 137000, 138000, 139000, 140000, 140000]
         },
-        'budget-efficiency': {
-            value: '89%',
-            trend: '+5% Effizienz',
-            trendType: 'positive',
-            history: [72, 75, 78, 80, 82, 85, 87, 88, 88, 89],
-            historyPlan: [75, 78, 80, 82, 84, 86, 88, 89, 90, 90]
+        // Vertrieblich
+        nps: {
+            current: 42,
+            benchmark: 35,
+            history: [28, 30, 32, 34, 36, 38, 39, 40, 41, 42]
         },
-        'resource-utilization': {
-            value: '92%',
-            trend: '2 Engpässe',
-            trendType: 'warning',
-            history: [85, 88, 90, 91, 92, 93, 94, 93, 92, 92],
-            historyPlan: [80, 82, 85, 87, 88, 90, 90, 91, 91, 92]
+        adoption: {
+            tools: {
+                'Vertriebsportal': { start: 0, data: [15, 25, 38, 48, 55, 62, 68, 72, 75, 78, 80, 82, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95] },
+                'Risikoscoring': { start: 6, data: [null, null, null, null, null, null, 12, 22, 35, 45, 52, 58, 62, 65, 68, 70, 72, 74] },
+                'KI-Assistent': { start: 12, data: [null, null, null, null, null, null, null, null, null, null, null, null, 8, 18, 28, 35, 42, 48] }
+            }
         },
-        'decision-backlog': {
-            value: 3,
-            trend: '-1 vs. Vorwoche',
-            trendType: 'positive',
-            history: [1, 2, 1, 2, 3, 2, 4, 4, 3, 3],
-            historyPlan: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+        // Operativ
+        meilensteine: {
+            imPlan: 78,
+            total: 41,
+            inPlan: 32,
+            history: [72, 74, 75, 76, 77, 78, 79, 78, 77, 78]
         },
-        'critical-path': {
-            value: 2,
-            trend: '-1 vs. Vorwoche',
-            trendType: 'positive',
-            history: [2, 2, 3, 3, 4, 3, 3, 3, 2, 2],
-            historyPlan: [1, 1, 2, 2, 2, 2, 2, 2, 2, 2]
+        userstories: {
+            total: 156,
+            byStatus: { backlog: 42, inprogress: 28, review: 18, done: 68 },
+            monthly: [
+                { month: 'Apr', backlog: 80, inprogress: 15, review: 5, done: 12 },
+                { month: 'Mai', backlog: 75, inprogress: 18, review: 8, done: 22 },
+                { month: 'Jun', backlog: 68, inprogress: 22, review: 10, done: 32 },
+                { month: 'Jul', backlog: 62, inprogress: 25, review: 12, done: 42 },
+                { month: 'Aug', backlog: 55, inprogress: 28, review: 15, done: 52 },
+                { month: 'Sep', backlog: 50, inprogress: 28, review: 16, done: 58 },
+                { month: 'Okt', backlog: 48, inprogress: 26, review: 18, done: 62 },
+                { month: 'Nov', backlog: 45, inprogress: 28, review: 17, done: 65 },
+                { month: 'Dez', backlog: 43, inprogress: 27, review: 18, done: 67 },
+                { month: 'Jan', backlog: 42, inprogress: 28, review: 18, done: 68 }
+            ]
         },
-        'value-realization': {
-            value: '78%',
-            trend: '+8% vs. Q3',
-            trendType: 'positive',
-            history: [45, 52, 58, 62, 65, 68, 72, 74, 76, 78],
-            historyPlan: [50, 55, 60, 65, 70, 75, 80, 82, 84, 85]
+        tests: {
+            total: 48,
+            started: 42,
+            completed: 38,
+            history: {
+                total: [30, 32, 35, 38, 40, 42, 44, 45, 47, 48],
+                started: [28, 30, 32, 35, 37, 39, 40, 41, 42, 42],
+                completed: [22, 25, 28, 30, 32, 34, 35, 36, 37, 38]
+            }
         },
-        'partner-nps': {
-            value: '+48',
-            trend: '+12 vs. Q3',
-            trendType: 'positive',
-            history: [18, 22, 28, 30, 35, 38, 42, 44, 46, 48],
-            historyPlan: [20, 25, 30, 32, 35, 38, 40, 42, 44, 45]
+        defects: {
+            critical: 3,
+            major: 12,
+            minor: 28,
+            monthly: [
+                { month: 'Apr', critical: 5, major: 18, minor: 35 },
+                { month: 'Mai', critical: 6, major: 20, minor: 38 },
+                { month: 'Jun', critical: 5, major: 18, minor: 36 },
+                { month: 'Jul', critical: 4, major: 16, minor: 34 },
+                { month: 'Aug', critical: 4, major: 15, minor: 32 },
+                { month: 'Sep', critical: 3, major: 14, minor: 30 },
+                { month: 'Okt', critical: 3, major: 13, minor: 29 },
+                { month: 'Nov', critical: 3, major: 12, minor: 28 },
+                { month: 'Dez', critical: 3, major: 12, minor: 28 },
+                { month: 'Jan', critical: 3, major: 12, minor: 28 }
+            ]
         },
-        'adoption-rate': {
-            value: '76%',
-            trend: '+15% vs. Rollout',
-            trendType: 'positive',
-            history: [25, 35, 45, 52, 58, 63, 68, 71, 74, 76],
-            historyPlan: [30, 40, 50, 60, 70, 75, 80, 82, 84, 85]
+        ressourcen: {
+            ptIst: 245,
+            ptAngefragt: 280,
+            auslastung: 87,
+            history: {
+                ist: [220, 225, 230, 235, 238, 240, 242, 244, 245, 245],
+                angefragt: [250, 255, 260, 265, 270, 275, 278, 279, 280, 280]
+            }
         },
-        'vertraege-pro-kunde': {
-            value: '2,10',
-            trend: '+1,4% vs. Vormonat',
-            trendType: 'positive',
-            history: [1.85, 1.88, 1.92, 1.95, 1.98, 2.02, 2.05, 2.07, 2.08, 2.10],
-            historyPlan: [1.90, 2.00, 2.10, 2.20, 2.30, 2.40, 2.50, 2.60, 2.70, 2.80]
-        },
-        'ape-pro-kunde': {
-            value: '€145k',
-            trend: '+2,1% vs. Vormonat',
-            trendType: 'positive',
-            history: [115, 120, 125, 128, 132, 136, 140, 142, 144, 145],
-            historyPlan: [120, 130, 140, 150, 155, 160, 165, 170, 175, 180]
+        budget: {
+            plan: 3200000,
+            verbrauch: 2400000,
+            abweichung: -100000,
+            forecast: 3100000,
+            history: {
+                plan: [320, 640, 960, 1280, 1600, 1920, 2240, 2560, 2880, 3200],
+                verbrauch: [280, 580, 870, 1180, 1480, 1780, 2050, 2250, 2400, 2400],
+                forecast: [280, 580, 870, 1180, 1480, 1780, 2100, 2450, 2800, 3100]
+            }
         }
     },
 
     renderKPIs() {
-        // Populate project filter
-        const projectFilter = document.getElementById('kpis-project-filter');
-        if (projectFilter && projectFilter.options.length === 1) {
-            this.PROGRAM_STRUCTURE.projects.forEach(p => {
-                const option = document.createElement('option');
-                option.value = p.id;
-                option.textContent = `${p.id} - ${p.name}`;
-                projectFilter.appendChild(option);
-            });
-        }
-
-        // Update KPI values
-        this.updateKPIValues();
+        // Render all P-10 KPI charts
+        this.renderP10Charts();
 
         // Render early warning indicators in sidebar
         this.renderEarlyWarnings();
+    },
+
+    renderP10Charts() {
+        const labels = ['Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez', 'Jan'];
+
+        // Verträge pro Kunde
+        this.renderLineChartWithTarget('chart-vertraege',
+            this.kpiData.vertraege.history,
+            this.kpiData.vertraege.target,
+            labels, '#3b82f6', 1.8, 3.0);
+
+        // APE pro Kunde
+        this.renderLineChartWithTarget('chart-ape',
+            this.kpiData.ape.history.map(v => v/1000),
+            this.kpiData.ape.target/1000,
+            labels, '#0ea5e9', 100, 200, '€', 'k');
+
+        // NPS Score
+        this.renderLineChartWithTarget('chart-nps',
+            this.kpiData.nps.history,
+            this.kpiData.nps.benchmark,
+            labels, '#8b5cf6', -100, 100);
+
+        // User Adoption (2 years, multiple lines)
+        this.renderAdoptionChart('chart-adoption');
+
+        // Meilensteine
+        this.renderLineChart('chart-meilensteine',
+            this.kpiData.meilensteine.history,
+            labels, '#16a34a', 0, 100, '', '%');
+
+        // User Stories (stacked bar)
+        this.renderStackedBarChart('chart-userstories',
+            this.kpiData.userstories.monthly,
+            ['backlog', 'inprogress', 'review', 'done'],
+            ['#94a3b8', '#3b82f6', '#f59e0b', '#16a34a']);
+
+        // Tests
+        this.renderMultiLineChart('chart-tests',
+            [this.kpiData.tests.history.total, this.kpiData.tests.history.started, this.kpiData.tests.history.completed],
+            labels, ['#64748b', '#3b82f6', '#16a34a']);
+
+        // Defects (stacked)
+        this.renderStackedBarChart('chart-defects',
+            this.kpiData.defects.monthly,
+            ['critical', 'major', 'minor'],
+            ['#dc2626', '#f59e0b', '#fbbf24']);
+
+        // Ressourcen
+        this.renderMultiLineChart('chart-ressourcen',
+            [this.kpiData.ressourcen.history.ist, this.kpiData.ressourcen.history.angefragt],
+            labels, ['#3b82f6', '#94a3b8']);
+
+        // Budget
+        this.renderMultiLineChart('chart-budget',
+            [this.kpiData.budget.history.plan.map(v => v/1000),
+             this.kpiData.budget.history.verbrauch.map(v => v/1000),
+             this.kpiData.budget.history.forecast.map(v => v/1000)],
+            labels, ['#86BC25', '#3b82f6', '#8b5cf6']);
+    },
+
+    renderLineChartWithTarget(containerId, data, target, labels, color, minY, maxY, prefix = '', suffix = '') {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+
+        const width = container.offsetWidth || 280;
+        const height = 120;
+        const padding = { top: 10, right: 10, bottom: 25, left: 40 };
+
+        const chartWidth = width - padding.left - padding.right;
+        const chartHeight = height - padding.top - padding.bottom;
+
+        const xScale = (i) => padding.left + (i / (data.length - 1)) * chartWidth;
+        const yScale = (v) => padding.top + chartHeight - ((v - minY) / (maxY - minY)) * chartHeight;
+
+        const points = data.map((v, i) => `${xScale(i)},${yScale(v)}`).join(' ');
+        const targetY = yScale(target);
+
+        // X-axis labels (show every 3rd)
+        let xLabels = '';
+        labels.forEach((label, i) => {
+            if (i % 3 === 0 || i === labels.length - 1) {
+                xLabels += `<text x="${xScale(i)}" y="${height - 5}" text-anchor="middle" fill="#94a3b8" font-size="10">${label}</text>`;
+            }
+        });
+
+        // Y-axis labels
+        const yLabels = `
+            <text x="${padding.left - 5}" y="${yScale(maxY)}" text-anchor="end" fill="#94a3b8" font-size="10">${prefix}${maxY}${suffix}</text>
+            <text x="${padding.left - 5}" y="${yScale(minY)}" text-anchor="end" fill="#94a3b8" font-size="10">${prefix}${minY}${suffix}</text>
+        `;
+
+        container.innerHTML = `
+            <svg width="100%" height="${height}" viewBox="0 0 ${width} ${height}">
+                ${yLabels}
+                ${xLabels}
+                <!-- Target line -->
+                <line x1="${padding.left}" y1="${targetY}" x2="${width - padding.right}" y2="${targetY}"
+                      stroke="#86BC25" stroke-width="2" stroke-dasharray="6,4"/>
+                <!-- Data line -->
+                <polyline points="${points}" fill="none" stroke="${color}" stroke-width="2.5"/>
+                <!-- Current point -->
+                <circle cx="${xScale(data.length - 1)}" cy="${yScale(data[data.length - 1])}" r="5" fill="${color}"/>
+            </svg>
+        `;
+    },
+
+    renderLineChart(containerId, data, labels, color, minY, maxY, prefix = '', suffix = '') {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+
+        const width = container.offsetWidth || 280;
+        const height = 120;
+        const padding = { top: 10, right: 10, bottom: 25, left: 35 };
+
+        const chartWidth = width - padding.left - padding.right;
+        const chartHeight = height - padding.top - padding.bottom;
+
+        const xScale = (i) => padding.left + (i / (data.length - 1)) * chartWidth;
+        const yScale = (v) => padding.top + chartHeight - ((v - minY) / (maxY - minY)) * chartHeight;
+
+        const points = data.map((v, i) => `${xScale(i)},${yScale(v)}`).join(' ');
+
+        let xLabels = '';
+        labels.forEach((label, i) => {
+            if (i % 3 === 0 || i === labels.length - 1) {
+                xLabels += `<text x="${xScale(i)}" y="${height - 5}" text-anchor="middle" fill="#94a3b8" font-size="10">${label}</text>`;
+            }
+        });
+
+        container.innerHTML = `
+            <svg width="100%" height="${height}" viewBox="0 0 ${width} ${height}">
+                ${xLabels}
+                <polyline points="${points}" fill="none" stroke="${color}" stroke-width="2.5"/>
+                <circle cx="${xScale(data.length - 1)}" cy="${yScale(data[data.length - 1])}" r="5" fill="${color}"/>
+            </svg>
+        `;
+    },
+
+    renderMultiLineChart(containerId, datasets, labels, colors) {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+
+        const width = container.offsetWidth || 280;
+        const height = 120;
+        const padding = { top: 10, right: 10, bottom: 25, left: 35 };
+
+        const chartWidth = width - padding.left - padding.right;
+        const chartHeight = height - padding.top - padding.bottom;
+
+        const allValues = datasets.flat();
+        const minY = Math.min(...allValues) * 0.9;
+        const maxY = Math.max(...allValues) * 1.1;
+
+        const xScale = (i) => padding.left + (i / (labels.length - 1)) * chartWidth;
+        const yScale = (v) => padding.top + chartHeight - ((v - minY) / (maxY - minY)) * chartHeight;
+
+        let lines = '';
+        datasets.forEach((data, di) => {
+            const points = data.map((v, i) => `${xScale(i)},${yScale(v)}`).join(' ');
+            const isDashed = di === datasets.length - 1 && datasets.length === 3; // Forecast line dashed
+            lines += `<polyline points="${points}" fill="none" stroke="${colors[di]}" stroke-width="2" ${isDashed ? 'stroke-dasharray="4,4"' : ''}/>`;
+        });
+
+        let xLabelsHtml = '';
+        labels.forEach((label, i) => {
+            if (i % 3 === 0 || i === labels.length - 1) {
+                xLabelsHtml += `<text x="${xScale(i)}" y="${height - 5}" text-anchor="middle" fill="#94a3b8" font-size="10">${label}</text>`;
+            }
+        });
+
+        container.innerHTML = `
+            <svg width="100%" height="${height}" viewBox="0 0 ${width} ${height}">
+                ${xLabelsHtml}
+                ${lines}
+            </svg>
+        `;
+    },
+
+    renderStackedBarChart(containerId, monthlyData, keys, colors) {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+
+        const width = container.offsetWidth || 280;
+        const height = 120;
+        const padding = { top: 10, right: 10, bottom: 25, left: 10 };
+
+        const chartWidth = width - padding.left - padding.right;
+        const chartHeight = height - padding.top - padding.bottom;
+        const barWidth = (chartWidth / monthlyData.length) - 4;
+
+        const maxTotal = Math.max(...monthlyData.map(m => keys.reduce((sum, k) => sum + m[k], 0)));
+
+        let bars = '';
+        monthlyData.forEach((m, i) => {
+            const x = padding.left + i * (barWidth + 4) + 2;
+            let y = padding.top + chartHeight;
+
+            keys.forEach((key, ki) => {
+                const h = (m[key] / maxTotal) * chartHeight;
+                y -= h;
+                bars += `<rect x="${x}" y="${y}" width="${barWidth}" height="${h}" fill="${colors[ki]}" rx="2"/>`;
+            });
+        });
+
+        let xLabels = '';
+        monthlyData.forEach((m, i) => {
+            if (i % 3 === 0 || i === monthlyData.length - 1) {
+                xLabels += `<text x="${padding.left + i * (barWidth + 4) + barWidth/2 + 2}" y="${height - 5}" text-anchor="middle" fill="#94a3b8" font-size="9">${m.month}</text>`;
+            }
+        });
+
+        container.innerHTML = `
+            <svg width="100%" height="${height}" viewBox="0 0 ${width} ${height}">
+                ${bars}
+                ${xLabels}
+            </svg>
+        `;
+    },
+
+    renderAdoptionChart(containerId) {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+
+        const tools = this.kpiData.adoption.tools;
+        const width = container.offsetWidth || 400;
+        const height = 140;
+        const padding = { top: 10, right: 10, bottom: 25, left: 35 };
+
+        const chartWidth = width - padding.left - padding.right;
+        const chartHeight = height - padding.top - padding.bottom;
+
+        // 24 months
+        const months = 24;
+        const xScale = (i) => padding.left + (i / (months - 1)) * chartWidth;
+        const yScale = (v) => padding.top + chartHeight - (v / 100) * chartHeight;
+
+        const colors = { 'Vertriebsportal': '#3b82f6', 'Risikoscoring': '#8b5cf6', 'KI-Assistent': '#f59e0b' };
+
+        let lines = '';
+        Object.entries(tools).forEach(([name, tool]) => {
+            const validPoints = tool.data
+                .map((v, i) => v !== null ? `${xScale(tool.start + i)},${yScale(v)}` : null)
+                .filter(p => p !== null);
+            if (validPoints.length > 0) {
+                lines += `<polyline points="${validPoints.join(' ')}" fill="none" stroke="${colors[name]}" stroke-width="2"/>`;
+            }
+        });
+
+        // X-axis: show year labels
+        const xLabels = `
+            <text x="${xScale(0)}" y="${height - 5}" text-anchor="start" fill="#94a3b8" font-size="10">Jan 24</text>
+            <text x="${xScale(12)}" y="${height - 5}" text-anchor="middle" fill="#94a3b8" font-size="10">Jan 25</text>
+            <text x="${xScale(23)}" y="${height - 5}" text-anchor="end" fill="#94a3b8" font-size="10">Dez 25</text>
+        `;
+
+        // Y-axis
+        const yLabels = `
+            <text x="${padding.left - 5}" y="${yScale(100)}" text-anchor="end" fill="#94a3b8" font-size="10">100%</text>
+            <text x="${padding.left - 5}" y="${yScale(50)}" text-anchor="end" fill="#94a3b8" font-size="10">50%</text>
+            <text x="${padding.left - 5}" y="${yScale(0)}" text-anchor="end" fill="#94a3b8" font-size="10">0%</text>
+        `;
+
+        container.innerHTML = `
+            <svg width="100%" height="${height}" viewBox="0 0 ${width} ${height}">
+                ${yLabels}
+                ${xLabels}
+                ${lines}
+            </svg>
+        `;
     },
 
     updateKPIValues() {

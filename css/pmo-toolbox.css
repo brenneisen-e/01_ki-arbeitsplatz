@@ -27,6 +27,12 @@
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
+/* Default SVG sizing to prevent oversized icons */
+.pmo-page svg:not([width]):not([height]) {
+    width: 24px;
+    height: 24px;
+}
+
 /* Header */
 .pmo-header {
     display: flex;
@@ -2302,6 +2308,9 @@
 }
 
 .pmo-ai-header svg {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
     color: #E30613;
 }
 
@@ -3014,6 +3023,8 @@
     left: 16px;
     top: 50%;
     transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
     color: #64748b;
     pointer-events: none;
 }

@@ -5501,6 +5501,48 @@ PMO Team
         budget: 'timeline'
     },
 
+    // Track resource scope (gesamt/intern/extern)
+    resourceScope: 'gesamt',
+
+    // Switch resource scope and re-render chart
+    switchResourceScope(scope) {
+        console.log(`📊 Switching resource scope to: ${scope}`);
+        this.resourceScope = scope;
+
+        // Update description
+        const descEl = document.getElementById('desc-ressourcen');
+        if (descEl) {
+            const descriptions = {
+                gesamt: 'Personentage Ist vs. Angefragt pro Monat',
+                intern: 'Interne Ressourcen: Ist vs. Angefragt',
+                extern: 'Externe Ressourcen: Ist vs. Angefragt'
+            };
+            descEl.textContent = descriptions[scope];
+        }
+
+        // Update legend
+        const legendEl = document.getElementById('legend-ressourcen');
+        if (legendEl) {
+            const labels = {
+                gesamt: { ist: 'PT Ist', angef: 'PT Angefragt' },
+                intern: { ist: 'Intern Ist', angef: 'Intern Angefr.' },
+                extern: { ist: 'Extern Ist', angef: 'Extern Angefr.' }
+            };
+            legendEl.innerHTML = `
+                <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot ist"></span> ${labels[scope].ist}</span>
+                <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot prognose"></span> ${labels[scope].angef}</span>
+            `;
+        }
+
+        // Re-render the current view
+        const currentView = this.kpiViewModes.ressourcen;
+        if (currentView === 'timeline') {
+            this.renderTimelineChart('ressourcen');
+        } else if (currentView === 'distribution') {
+            this.renderDistributionChart('ressourcen');
+        }
+    },
+
     // Toggle view dropdown
     toggleViewDropdown(kpiId) {
         const dropdown = document.querySelector(`.pmo-view-dropdown[data-kpi="${kpiId}"]`);
@@ -5700,16 +5742,34 @@ PMO Team
                 break;
 
             case 'ressourcen':
+                const scope = this.resourceScope || 'gesamt';
+                const rData = this.kpiData.ressourcen;
+                let istData, angefragtData, yMin, yMax;
+
+                if (scope === 'intern') {
+                    istData = rData.intern.history.ist;
+                    angefragtData = rData.intern.history.angefragt;
+                    yMin = 120; yMax = 180;
+                } else if (scope === 'extern') {
+                    istData = rData.extern.history.ist;
+                    angefragtData = rData.extern.history.angefragt;
+                    yMin = 60; yMax = 140;
+                } else {
+                    istData = rData.history.ist;
+                    angefragtData = rData.history.angefragt;
+                    yMin = 200; yMax = 300;
+                }
+
                 new Chart(ctx, {
                     type: 'line',
                     data: {
                         labels,
                         datasets: [
-                            { label: 'Ist', data: this.kpiData.ressourcen.history.ist, borderColor: '#3b82f6', tension: 0.3, pointRadius: 3, borderWidth: 2 },
-                            { label: 'Angefragt', data: this.kpiData.ressourcen.history.angefragt, borderColor: '#94a3b8', borderDash: [5, 5], tension: 0.3, pointRadius: 3, borderWidth: 2 }
+                            { label: 'Ist', data: istData, borderColor: '#3b82f6', tension: 0.3, pointRadius: 3, borderWidth: 2 },
+                            { label: 'Angefragt', data: angefragtData, borderColor: '#94a3b8', borderDash: [5, 5], tension: 0.3, pointRadius: 3, borderWidth: 2 }
                         ]
                     },
-                    options: { ...chartOptions, scales: { ...chartOptions.scales, y: { ...chartOptions.scales.y, min: 200, max: 300 } } }
+                    options: { ...chartOptions, scales: { ...chartOptions.scales, y: { ...chartOptions.scales.y, min: yMin, max: yMax } } }
                 });
                 break;
 
@@ -5811,18 +5871,35 @@ PMO Team
                 break;
 
             case 'ressourcen':
-                const r = this.kpiData.ressourcen;
+                const rScope = this.resourceScope || 'gesamt';
+                const rr = this.kpiData.ressourcen;
+                let rIst, rAngef, rMax;
+
+                if (rScope === 'intern') {
+                    rIst = rr.intern.ist;
+                    rAngef = rr.intern.angefragt;
+                    rMax = 200;
+                } else if (rScope === 'extern') {
+                    rIst = rr.extern.ist;
+                    rAngef = rr.extern.angefragt;
+                    rMax = 150;
+                } else {
+                    rIst = rr.ptIst;
+                    rAngef = rr.ptAngefragt;
+                    rMax = 300;
+                }
+
                 new Chart(ctx, {
                     type: 'bar',
                     data: {
                         labels: ['PT Ist', 'PT Angefragt'],
                         datasets: [{
-                            data: [r.ptIst, r.ptAngefragt],
+                            data: [rIst, rAngef],
                             backgroundColor: ['#3b82f6', '#94a3b8'],
                             borderRadius: 4
                         }]
                     },
-                    options: { ...barOptions, scales: { ...barOptions.scales, x: { ...barOptions.scales.x, max: 300 } } }
+                    options: { ...barOptions, scales: { ...barOptions.scales, x: { ...barOptions.scales.x, max: rMax } } }
                 });
                 break;
 

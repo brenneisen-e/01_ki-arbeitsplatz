@@ -1167,6 +1167,666 @@ export const PMO = {
         this.renderProjectsGrid();
         this.renderUpcomingMilestones();
         this.renderGremienCalendar();
+        // Render new KPI dashboard
+        this.renderKPICharts();
+        this.renderUSStackedBar();
+        this.renderEarlyWarnings();
+    },
+
+    // ========================================
+    // NEW KPI DASHBOARD FUNCTIONS
+    // ========================================
+
+    // Demo data for KPIs (timeline until Jan 2026)
+    KPI_DATA: {
+        vertraegeProKunde: {
+            current: 2.10,
+            target: 2.80,
+            history: [
+                { month: 'Jan 25', value: 2.03 },
+                { month: 'Feb 25', value: 2.05 },
+                { month: 'Mrz 25', value: 2.04 },
+                { month: 'Apr 25', value: 2.06 },
+                { month: 'Mai 25', value: 2.07 },
+                { month: 'Jun 25', value: 2.08 },
+                { month: 'Jul 25', value: 2.07 },
+                { month: 'Aug 25', value: 2.09 },
+                { month: 'Sep 25', value: 2.08 },
+                { month: 'Okt 25', value: 2.10 },
+                { month: 'Nov 25', value: 2.12 },
+                { month: 'Dez 25', value: 2.11 },
+                { month: 'Jan 26', value: 2.13 }
+            ]
+        },
+        apeProKunde: {
+            current: 140000,
+            target: 180000,
+            history: [
+                { month: 'Jan 25', value: 128000 },
+                { month: 'Feb 25', value: 130000 },
+                { month: 'Mrz 25', value: 131000 },
+                { month: 'Apr 25', value: 133000 },
+                { month: 'Mai 25', value: 134500 },
+                { month: 'Jun 25', value: 135000 },
+                { month: 'Jul 25', value: 136000 },
+                { month: 'Aug 25', value: 137500 },
+                { month: 'Sep 25', value: 138000 },
+                { month: 'Okt 25', value: 139000 },
+                { month: 'Nov 25', value: 140000 },
+                { month: 'Dez 25', value: 141000 },
+                { month: 'Jan 26', value: 142500 }
+            ]
+        },
+        nps: { current: 4.2, max: 5.0, trend: '+0.3' },
+        userAdoption: { current: 67, target: 85, activeUsers: 1240, totalUsers: 1850 },
+        userStories: {
+            backlog: 45,
+            inProgress: 23,
+            review: 12,
+            done: 67,
+            epics: 8,
+            konzeption: { fachlich: 5, technisch: 3 },
+            umsetzung: { entwicklung: 15, test: 8, release: 4 }
+        },
+        milestones: {
+            total: 18,
+            imPlan: 14,
+            gefaehrdet: 2,
+            verzoegert: 2,
+            avgDelayDays: 4.5
+        },
+        tests: { passed: 342, failed: 18, pending: 24 },
+        defects: { critical: 3, major: 12, minor: 28 },
+        resources: { overall: 87, entwicklung: 92, testing: 78, design: 85 },
+        budget: { spent: 2400000, total: 3200000, progress: 68 }
+    },
+
+    // Subproject demo data
+    SUBPROJECT_DATA: {
+        tp1: {
+            name: 'TP1 - Hybrider Kunde',
+            milestones: { total: 5, imPlan: 4, gefaehrdet: 1, verzoegert: 0, avgDelay: 2 },
+            userStories: { backlog: 12, inProgress: 8, review: 3, done: 22 },
+            tests: { passed: 85, failed: 3, pending: 7 },
+            defects: { critical: 1, major: 3, minor: 8 },
+            resources: { overall: 92 },
+            budget: { spent: 580000, total: 750000 }
+        },
+        tp2: {
+            name: 'TP2 - Bestandsmanagement',
+            milestones: { total: 4, imPlan: 3, gefaehrdet: 0, verzoegert: 1, avgDelay: 8 },
+            userStories: { backlog: 8, inProgress: 5, review: 2, done: 15 },
+            tests: { passed: 62, failed: 5, pending: 4 },
+            defects: { critical: 0, major: 4, minor: 6 },
+            resources: { overall: 85 },
+            budget: { spent: 420000, total: 550000 }
+        },
+        tp3: {
+            name: 'TP3 - Digitale Antragsstrecke',
+            milestones: { total: 3, imPlan: 2, gefaehrdet: 1, verzoegert: 0, avgDelay: 3 },
+            userStories: { backlog: 15, inProgress: 6, review: 4, done: 18 },
+            tests: { passed: 95, failed: 8, pending: 10 },
+            defects: { critical: 2, major: 3, minor: 9 },
+            resources: { overall: 88 },
+            budget: { spent: 620000, total: 800000 }
+        },
+        tp4: {
+            name: 'TP4 - CRM Integration',
+            milestones: { total: 3, imPlan: 3, gefaehrdet: 0, verzoegert: 0, avgDelay: 0 },
+            userStories: { backlog: 5, inProgress: 2, review: 2, done: 8 },
+            tests: { passed: 55, failed: 1, pending: 2 },
+            defects: { critical: 0, major: 1, minor: 3 },
+            resources: { overall: 78 },
+            budget: { spent: 380000, total: 500000 }
+        },
+        tp5: {
+            name: 'TP5 - Reporting & Analytics',
+            milestones: { total: 3, imPlan: 2, gefaehrdet: 0, verzoegert: 1, avgDelay: 5 },
+            userStories: { backlog: 5, inProgress: 2, review: 1, done: 4 },
+            tests: { passed: 45, failed: 1, pending: 1 },
+            defects: { critical: 0, major: 1, minor: 2 },
+            resources: { overall: 82 },
+            budget: { spent: 400000, total: 600000 }
+        }
+    },
+
+    // Early warning indicators
+    EARLY_WARNINGS: [
+        {
+            id: 'nps_warning',
+            type: 'warning',
+            indicator: 'NPS Score',
+            condition: 'Unter Schwellwert (4.0)',
+            active: true,
+            recommendation: 'Sondermeeting mit VVE im Projekt aufplanen',
+            details: 'NPS ist auf 4.2 gesunken, Trend negativ'
+        },
+        {
+            id: 'milestone_warning',
+            type: 'critical',
+            indicator: 'Meilensteinverschiebungen',
+            condition: '3+ Verschiebungen in 4 Wochen',
+            active: true,
+            recommendation: 'Ressourcenallokation prüfen, Scope Review durchführen',
+            details: '4 Meilensteine in den letzten 4 Wochen verschoben'
+        },
+        {
+            id: 'change_request',
+            type: 'info',
+            indicator: 'Change Request Quote',
+            condition: 'Steigend (+15% vs. Vormonat)',
+            active: false,
+            recommendation: 'Anforderungsmanagement-Workshop planen',
+            details: 'Quote aktuell bei 12%, Trend steigend'
+        },
+        {
+            id: 'defect_critical',
+            type: 'critical',
+            indicator: 'Kritische Defects',
+            condition: '3 kritische Defects offen',
+            active: true,
+            recommendation: 'Bug-Fixing Sprint priorisieren',
+            details: '3 kritische Defects seit > 5 Tagen offen'
+        }
+    ],
+
+    // Switch between Program and Subproject level
+    switchLevel(level) {
+        const programLevel = document.getElementById('pmo-program-level');
+        const subprojectLevel = document.getElementById('pmo-subproject-level');
+        const buttons = document.querySelectorAll('.pmo-level-btn');
+
+        buttons.forEach(btn => btn.classList.remove('active'));
+        document.querySelector(`.pmo-level-btn[data-level="${level}"]`)?.classList.add('active');
+
+        if (level === 'program') {
+            programLevel?.classList.add('active');
+            subprojectLevel?.classList.remove('active');
+        } else {
+            programLevel?.classList.remove('active');
+            subprojectLevel?.classList.add('active');
+            this.loadSubprojectData();
+        }
+    },
+
+    // Load subproject data
+    loadSubprojectData() {
+        const select = document.getElementById('pmo-subproject-select');
+        const nameSpan = document.getElementById('subproject-name');
+        const grid = document.getElementById('subproject-kpi-grid');
+
+        if (!select || !grid) return;
+
+        const tpId = select.value;
+        const data = this.SUBPROJECT_DATA[tpId];
+
+        if (!data) return;
+
+        if (nameSpan) nameSpan.textContent = data.name;
+
+        // Render subproject KPIs (same structure as program operativ)
+        const ms = data.milestones;
+        const msPercent = Math.round((ms.imPlan / ms.total) * 100);
+        const us = data.userStories;
+        const usTotal = us.backlog + us.inProgress + us.review + us.done;
+        const t = data.tests;
+        const tTotal = t.passed + t.failed + t.pending;
+        const d = data.defects;
+        const b = data.budget;
+        const bPercent = Math.round((b.spent / b.total) * 100);
+
+        grid.innerHTML = `
+            <!-- Meilensteine -->
+            <div class="pmo-kpi-card">
+                <div class="pmo-kpi-header">
+                    <span class="pmo-kpi-title">Meilensteine im Plan</span>
+                </div>
+                <div class="pmo-kpi-value-row">
+                    <span class="pmo-kpi-value pmo-kpi-percent">${msPercent}%</span>
+                    <span class="pmo-kpi-sub">${ms.imPlan} / ${ms.total} Meilensteine</span>
+                </div>
+                <div class="pmo-milestone-bar">
+                    <div class="pmo-milestone-fill green" style="width: ${msPercent}%;"></div>
+                    <div class="pmo-milestone-fill yellow" style="width: ${Math.round((ms.gefaehrdet / ms.total) * 100)}%;"></div>
+                    <div class="pmo-milestone-fill red" style="width: ${Math.round((ms.verzoegert / ms.total) * 100)}%;"></div>
+                </div>
+                <div class="pmo-kpi-footer">
+                    <span class="pmo-status-dot green"></span> ${ms.imPlan} Im Plan
+                    <span class="pmo-status-dot yellow"></span> ${ms.gefaehrdet} Gefährdet
+                    <span class="pmo-status-dot red"></span> ${ms.verzoegert} Verzögert
+                </div>
+            </div>
+
+            <!-- User Stories -->
+            <div class="pmo-kpi-card">
+                <div class="pmo-kpi-header">
+                    <span class="pmo-kpi-title">User Stories</span>
+                </div>
+                <div class="pmo-us-content">
+                    <div class="pmo-stacked-bar">
+                        <div class="pmo-stacked-segment backlog" style="width: ${(us.backlog/usTotal*100).toFixed(0)}%;">${us.backlog}</div>
+                        <div class="pmo-stacked-segment inprogress" style="width: ${(us.inProgress/usTotal*100).toFixed(0)}%;">${us.inProgress}</div>
+                        <div class="pmo-stacked-segment review" style="width: ${(us.review/usTotal*100).toFixed(0)}%;">${us.review}</div>
+                        <div class="pmo-stacked-segment done" style="width: ${(us.done/usTotal*100).toFixed(0)}%;">${us.done}</div>
+                    </div>
+                    <div class="pmo-us-legend">
+                        <span><span class="dot backlog"></span> Backlog (${us.backlog})</span>
+                        <span><span class="dot inprogress"></span> In Arbeit (${us.inProgress})</span>
+                        <span><span class="dot review"></span> Review (${us.review})</span>
+                        <span><span class="dot done"></span> Done (${us.done})</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tests -->
+            <div class="pmo-kpi-card">
+                <div class="pmo-kpi-header">
+                    <span class="pmo-kpi-title">Tests</span>
+                </div>
+                <div class="pmo-test-content">
+                    <div class="pmo-test-stats">
+                        <div class="pmo-test-stat passed">
+                            <span class="pmo-test-value">${t.passed}</span>
+                            <span class="pmo-test-label">Bestanden</span>
+                        </div>
+                        <div class="pmo-test-stat failed">
+                            <span class="pmo-test-value">${t.failed}</span>
+                            <span class="pmo-test-label">Fehlgeschlagen</span>
+                        </div>
+                        <div class="pmo-test-stat pending">
+                            <span class="pmo-test-value">${t.pending}</span>
+                            <span class="pmo-test-label">Ausstehend</span>
+                        </div>
+                    </div>
+                    <div class="pmo-test-bar">
+                        <div class="pmo-test-fill passed" style="width: ${(t.passed/tTotal*100).toFixed(0)}%;"></div>
+                        <div class="pmo-test-fill failed" style="width: ${(t.failed/tTotal*100).toFixed(0)}%;"></div>
+                        <div class="pmo-test-fill pending" style="width: ${(t.pending/tTotal*100).toFixed(0)}%;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Defects -->
+            <div class="pmo-kpi-card">
+                <div class="pmo-kpi-header">
+                    <span class="pmo-kpi-title">Defects</span>
+                </div>
+                <div class="pmo-defect-content">
+                    <div class="pmo-defect-stats">
+                        <div class="pmo-defect-stat critical">
+                            <span class="pmo-defect-value">${d.critical}</span>
+                            <span class="pmo-defect-label">Kritisch</span>
+                        </div>
+                        <div class="pmo-defect-stat major">
+                            <span class="pmo-defect-value">${d.major}</span>
+                            <span class="pmo-defect-label">Major</span>
+                        </div>
+                        <div class="pmo-defect-stat minor">
+                            <span class="pmo-defect-value">${d.minor}</span>
+                            <span class="pmo-defect-label">Minor</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Resources -->
+            <div class="pmo-kpi-card">
+                <div class="pmo-kpi-header">
+                    <span class="pmo-kpi-title">Ressourcen-Auslastung</span>
+                </div>
+                <div class="pmo-resource-content">
+                    <div class="pmo-resource-gauge">
+                        <div class="pmo-gauge-value">${data.resources.overall}%</div>
+                        <div class="pmo-gauge-label">Auslastung</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Budget -->
+            <div class="pmo-kpi-card">
+                <div class="pmo-kpi-header">
+                    <span class="pmo-kpi-title">Budget</span>
+                </div>
+                <div class="pmo-budget-content">
+                    <div class="pmo-budget-main">
+                        <div class="pmo-budget-spent">
+                            <span class="pmo-budget-value">€${(b.spent/1000).toFixed(0)}k</span>
+                            <span class="pmo-budget-label">verbraucht</span>
+                        </div>
+                        <div class="pmo-budget-total">
+                            <span>von €${(b.total/1000).toFixed(0)}k</span>
+                        </div>
+                    </div>
+                    <div class="pmo-budget-bar">
+                        <div class="pmo-budget-fill" style="width: ${bPercent}%;"></div>
+                    </div>
+                    <div class="pmo-budget-legend">
+                        <span>${bPercent}% verbraucht</span>
+                    </div>
+                </div>
+            </div>
+        `;
+    },
+
+    // Render KPI line charts
+    renderKPICharts() {
+        this.renderVertraegeChart();
+        this.renderAPEChart();
+        this.renderUserAdoptionChart();
+    },
+
+    renderVertraegeChart() {
+        const container = document.getElementById('chart-vertraege-kunde');
+        if (!container) return;
+
+        const data = this.KPI_DATA.vertraegeProKunde;
+        const history = data.history;
+        const target = data.target;
+
+        // Simple SVG line chart
+        const width = container.offsetWidth || 200;
+        const height = 80;
+        const padding = 10;
+
+        const minVal = Math.min(...history.map(h => h.value)) - 0.1;
+        const maxVal = Math.max(target, ...history.map(h => h.value)) + 0.1;
+
+        const xScale = (i) => padding + (i / (history.length - 1)) * (width - 2 * padding);
+        const yScale = (v) => height - padding - ((v - minVal) / (maxVal - minVal)) * (height - 2 * padding);
+
+        const points = history.map((h, i) => `${xScale(i)},${yScale(h.value)}`).join(' ');
+        const targetY = yScale(target);
+
+        container.innerHTML = `
+            <svg width="100%" height="${height}" viewBox="0 0 ${width} ${height}" preserveAspectRatio="none">
+                <!-- Target line -->
+                <line x1="${padding}" y1="${targetY}" x2="${width - padding}" y2="${targetY}"
+                      stroke="#86BC25" stroke-width="2" stroke-dasharray="4,4"/>
+                <!-- Data line -->
+                <polyline points="${points}" fill="none" stroke="#3b82f6" stroke-width="2"/>
+                <!-- Current point -->
+                <circle cx="${xScale(history.length - 1)}" cy="${yScale(history[history.length - 1].value)}"
+                        r="4" fill="#3b82f6"/>
+            </svg>
+        `;
+    },
+
+    renderAPEChart() {
+        const container = document.getElementById('chart-ape-kunde');
+        if (!container) return;
+
+        const data = this.KPI_DATA.apeProKunde;
+        const history = data.history;
+        const target = data.target;
+
+        const width = container.offsetWidth || 200;
+        const height = 80;
+        const padding = 10;
+
+        const minVal = Math.min(...history.map(h => h.value)) - 5000;
+        const maxVal = Math.max(target, ...history.map(h => h.value)) + 5000;
+
+        const xScale = (i) => padding + (i / (history.length - 1)) * (width - 2 * padding);
+        const yScale = (v) => height - padding - ((v - minVal) / (maxVal - minVal)) * (height - 2 * padding);
+
+        const points = history.map((h, i) => `${xScale(i)},${yScale(h.value)}`).join(' ');
+        const targetY = yScale(target);
+
+        container.innerHTML = `
+            <svg width="100%" height="${height}" viewBox="0 0 ${width} ${height}" preserveAspectRatio="none">
+                <line x1="${padding}" y1="${targetY}" x2="${width - padding}" y2="${targetY}"
+                      stroke="#86BC25" stroke-width="2" stroke-dasharray="4,4"/>
+                <polyline points="${points}" fill="none" stroke="#0ea5e9" stroke-width="2"/>
+                <circle cx="${xScale(history.length - 1)}" cy="${yScale(history[history.length - 1].value)}"
+                        r="4" fill="#0ea5e9"/>
+            </svg>
+        `;
+    },
+
+    renderUserAdoptionChart() {
+        const container = document.getElementById('chart-user-adoption');
+        if (!container) return;
+
+        // Simple bar chart progression
+        const months = ['Sep', 'Okt', 'Nov', 'Dez', 'Jan'];
+        const values = [52, 58, 62, 64, 67];
+        const target = 85;
+
+        const width = container.offsetWidth || 200;
+        const height = 80;
+        const barWidth = (width - 40) / months.length - 4;
+
+        let bars = '';
+        values.forEach((v, i) => {
+            const x = 20 + i * (barWidth + 4);
+            const barHeight = (v / 100) * (height - 20);
+            bars += `<rect x="${x}" y="${height - 10 - barHeight}" width="${barWidth}" height="${barHeight}"
+                          fill="${i === values.length - 1 ? '#86BC25' : '#e2e8f0'}" rx="2"/>`;
+        });
+
+        const targetY = height - 10 - (target / 100) * (height - 20);
+
+        container.innerHTML = `
+            <svg width="100%" height="${height}" viewBox="0 0 ${width} ${height}" preserveAspectRatio="none">
+                ${bars}
+                <line x1="10" y1="${targetY}" x2="${width - 10}" y2="${targetY}"
+                      stroke="#ef4444" stroke-width="1" stroke-dasharray="4,4"/>
+            </svg>
+        `;
+    },
+
+    // Render US stacked bar
+    renderUSStackedBar() {
+        const container = document.getElementById('us-stacked-bar');
+        if (!container) return;
+
+        const us = this.KPI_DATA.userStories;
+        const total = us.backlog + us.inProgress + us.review + us.done;
+
+        container.innerHTML = `
+            <div class="pmo-stacked-segment backlog" style="width: ${(us.backlog/total*100).toFixed(0)}%;">${us.backlog}</div>
+            <div class="pmo-stacked-segment inprogress" style="width: ${(us.inProgress/total*100).toFixed(0)}%;">${us.inProgress}</div>
+            <div class="pmo-stacked-segment review" style="width: ${(us.review/total*100).toFixed(0)}%;">${us.review}</div>
+            <div class="pmo-stacked-segment done" style="width: ${(us.done/total*100).toFixed(0)}%;">${us.done}</div>
+        `;
+    },
+
+    // Render early warning indicators
+    renderEarlyWarnings() {
+        // Find or create early warnings container
+        let container = document.getElementById('pmo-early-warnings');
+        if (!container) {
+            // Create container if not exists in sidebar
+            const sidebar = document.querySelector('.pmo-dashboard-sidebar-grid') ||
+                           document.querySelector('#section-operativ');
+            if (!sidebar) return;
+
+            // Add to DOM after operativ section
+            const operativSection = document.getElementById('section-operativ');
+            if (operativSection) {
+                const warningsSection = document.createElement('div');
+                warningsSection.className = 'pmo-dashboard-section pmo-warnings-section';
+                warningsSection.innerHTML = `
+                    <h3 class="pmo-section-header">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                            <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+                            <line x1="12" y1="9" x2="12" y2="13"/>
+                            <line x1="12" y1="17" x2="12.01" y2="17"/>
+                        </svg>
+                        Frühwarnindikatoren
+                    </h3>
+                    <div class="pmo-warnings-grid" id="pmo-early-warnings"></div>
+                `;
+                operativSection.parentNode.insertBefore(warningsSection, operativSection.nextSibling);
+                container = document.getElementById('pmo-early-warnings');
+            }
+        }
+
+        if (!container) return;
+
+        const activeWarnings = this.EARLY_WARNINGS.filter(w => w.active);
+
+        if (activeWarnings.length === 0) {
+            container.innerHTML = `
+                <div class="pmo-no-warnings">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2" width="24" height="24">
+                        <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
+                        <polyline points="22 4 12 14.01 9 11.01"/>
+                    </svg>
+                    <span>Keine aktiven Warnungen</span>
+                </div>
+            `;
+            return;
+        }
+
+        container.innerHTML = activeWarnings.map(w => `
+            <div class="pmo-warning-card ${w.type}">
+                <div class="pmo-warning-icon">
+                    ${w.type === 'critical' ?
+                        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>' :
+                        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>'
+                    }
+                </div>
+                <div class="pmo-warning-content">
+                    <div class="pmo-warning-header">
+                        <strong>${w.indicator}</strong>
+                        <span class="pmo-warning-condition">${w.condition}</span>
+                    </div>
+                    <div class="pmo-warning-details">${w.details}</div>
+                    <div class="pmo-warning-recommendation">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 16v-4M12 8h.01"/>
+                        </svg>
+                        ${w.recommendation}
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    },
+
+    // Switch milestone KPI view
+    switchMilestoneKPI(mode) {
+        const title = document.getElementById('milestone-kpi-title');
+        const content = document.getElementById('milestone-kpi-content');
+        const buttons = document.querySelectorAll('.pmo-kpi-card.pmo-kpi-switchable:first-of-type .pmo-switch-btn');
+
+        buttons.forEach(btn => btn.classList.toggle('active', btn.dataset.mode === mode));
+
+        const ms = this.KPI_DATA.milestones;
+
+        if (mode === 'plan') {
+            if (title) title.textContent = 'Meilensteine im Plan';
+            if (content) {
+                const percent = Math.round((ms.imPlan / ms.total) * 100);
+                content.innerHTML = `
+                    <span class="pmo-kpi-value pmo-kpi-percent">${percent}%</span>
+                    <span class="pmo-kpi-sub">${ms.imPlan} / ${ms.total} Meilensteine</span>
+                `;
+            }
+        } else {
+            if (title) title.textContent = 'Durchschn. Verzögerung';
+            if (content) {
+                content.innerHTML = `
+                    <span class="pmo-kpi-value">${ms.avgDelayDays}</span>
+                    <span class="pmo-kpi-sub">Tage Ø Verzögerung</span>
+                `;
+            }
+        }
+    },
+
+    // Switch US KPI view
+    switchUSKPI(mode) {
+        const title = document.getElementById('us-kpi-title');
+        const content = document.getElementById('us-kpi-content');
+        const buttons = document.querySelectorAll('#section-operativ .pmo-kpi-card:nth-child(2) .pmo-switch-btn');
+
+        buttons.forEach(btn => btn.classList.toggle('active', btn.dataset.mode === mode));
+
+        const us = this.KPI_DATA.userStories;
+        const total = us.backlog + us.inProgress + us.review + us.done;
+
+        if (mode === 'status') {
+            if (title) title.textContent = 'User Stories nach Status';
+            if (content) {
+                content.innerHTML = `
+                    <div class="pmo-stacked-bar" id="us-stacked-bar">
+                        <div class="pmo-stacked-segment backlog" style="width: ${(us.backlog/total*100).toFixed(0)}%;">${us.backlog}</div>
+                        <div class="pmo-stacked-segment inprogress" style="width: ${(us.inProgress/total*100).toFixed(0)}%;">${us.inProgress}</div>
+                        <div class="pmo-stacked-segment review" style="width: ${(us.review/total*100).toFixed(0)}%;">${us.review}</div>
+                        <div class="pmo-stacked-segment done" style="width: ${(us.done/total*100).toFixed(0)}%;">${us.done}</div>
+                    </div>
+                    <div class="pmo-us-legend">
+                        <span><span class="dot backlog"></span> Backlog (${us.backlog})</span>
+                        <span><span class="dot inprogress"></span> In Arbeit (${us.inProgress})</span>
+                        <span><span class="dot review"></span> Review (${us.review})</span>
+                        <span><span class="dot done"></span> Done (${us.done})</span>
+                    </div>
+                `;
+            }
+        } else if (mode === 'konzeption') {
+            if (title) title.textContent = 'US in Konzeption';
+            if (content) {
+                content.innerHTML = `
+                    <div class="pmo-us-konzeption">
+                        <div class="pmo-konzeption-stat">
+                            <span class="pmo-konzeption-value">${us.epics}</span>
+                            <span class="pmo-konzeption-label">Epics</span>
+                        </div>
+                        <div class="pmo-konzeption-stat">
+                            <span class="pmo-konzeption-value">${us.konzeption.fachlich}</span>
+                            <span class="pmo-konzeption-label">Fachlich abgenommen</span>
+                        </div>
+                        <div class="pmo-konzeption-stat">
+                            <span class="pmo-konzeption-value">${us.konzeption.technisch}</span>
+                            <span class="pmo-konzeption-label">Technisch abgenommen</span>
+                        </div>
+                    </div>
+                `;
+            }
+        } else if (mode === 'umsetzung') {
+            if (title) title.textContent = 'US in Umsetzung';
+            if (content) {
+                const uTotal = us.umsetzung.entwicklung + us.umsetzung.test + us.umsetzung.release;
+                content.innerHTML = `
+                    <div class="pmo-stacked-bar">
+                        <div class="pmo-stacked-segment" style="background: #3b82f6; width: ${(us.umsetzung.entwicklung/uTotal*100).toFixed(0)}%;">${us.umsetzung.entwicklung}</div>
+                        <div class="pmo-stacked-segment" style="background: #f59e0b; width: ${(us.umsetzung.test/uTotal*100).toFixed(0)}%;">${us.umsetzung.test}</div>
+                        <div class="pmo-stacked-segment" style="background: #22c55e; width: ${(us.umsetzung.release/uTotal*100).toFixed(0)}%;">${us.umsetzung.release}</div>
+                    </div>
+                    <div class="pmo-us-legend">
+                        <span><span class="dot" style="background: #3b82f6;"></span> Entwicklung (${us.umsetzung.entwicklung})</span>
+                        <span><span class="dot" style="background: #f59e0b;"></span> Test (${us.umsetzung.test})</span>
+                        <span><span class="dot" style="background: #22c55e;"></span> Release (${us.umsetzung.release})</span>
+                    </div>
+                `;
+            }
+        }
+    },
+
+    // Switch Test KPI view
+    switchTestKPI(mode) {
+        console.log('Switch test KPI to:', mode);
+    },
+
+    // Switch Defect KPI view
+    switchDefectKPI(mode) {
+        console.log('Switch defect KPI to:', mode);
+    },
+
+    // Switch Resource KPI view
+    switchResourceKPI(mode) {
+        console.log('Switch resource KPI to:', mode);
+    },
+
+    // Switch Budget KPI view
+    switchBudgetKPI(mode) {
+        console.log('Switch budget KPI to:', mode);
+    },
+
+    // Open Value Map detail
+    openValueMap() {
+        alert('Value Map Details würden hier in einem Modal geöffnet werden.');
     },
 
     renderUpcomingMilestones() {

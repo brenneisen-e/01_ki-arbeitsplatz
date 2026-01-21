@@ -4368,62 +4368,110 @@ PMO Team
     },
 
     renderP10Charts() {
-        const labels = ['Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez', 'Jan'];
+        // Use Chart.js for all P-10 KPI charts with proper axes
+        if (typeof Chart === 'undefined') {
+            console.warn('Chart.js not loaded, skipping P-10 chart rendering');
+            return;
+        }
 
-        // Verträge pro Kunde
-        this.renderLineChartWithTarget('chart-vertraege',
-            this.kpiData.vertraege.history,
-            this.kpiData.vertraege.target,
-            labels, '#3b82f6', 1.8, 3.0);
+        const labels = ['Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez', 'Jan'];
+        const chartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+                x: {
+                    display: true,
+                    grid: { display: false },
+                    ticks: { color: '#94a3b8', font: { size: 10 }, maxRotation: 0 }
+                },
+                y: {
+                    display: true,
+                    grid: { color: 'rgba(0,0,0,0.05)', drawBorder: false },
+                    ticks: { color: '#94a3b8', font: { size: 10 } }
+                }
+            }
+        };
+
+        // Verträge pro Kunde (line with target)
+        this.renderChartJS('chart-vertraege', 'line', labels, [
+            { label: 'Ist', data: this.kpiData.vertraege.history, borderColor: '#3b82f6', backgroundColor: 'transparent', tension: 0.3, pointRadius: 4, pointBackgroundColor: '#3b82f6', pointBorderColor: '#fff', pointBorderWidth: 2, borderWidth: 2 },
+            { label: 'Ziel', data: Array(10).fill(this.kpiData.vertraege.target), borderColor: '#86BC25', backgroundColor: 'transparent', borderDash: [5, 5], borderWidth: 2, pointRadius: 0 }
+        ], { ...chartOptions, scales: { ...chartOptions.scales, y: { ...chartOptions.scales.y, min: 1.8, max: 3.0 } } });
 
         // APE pro Kunde
-        this.renderLineChartWithTarget('chart-ape',
-            this.kpiData.ape.history.map(v => v/1000),
-            this.kpiData.ape.target/1000,
-            labels, '#0ea5e9', 100, 200, '€', 'k');
+        this.renderChartJS('chart-ape', 'line', labels, [
+            { label: 'Ist', data: this.kpiData.ape.history.map(v => v/1000), borderColor: '#0ea5e9', backgroundColor: 'transparent', tension: 0.3, pointRadius: 4, pointBackgroundColor: '#0ea5e9', pointBorderColor: '#fff', pointBorderWidth: 2, borderWidth: 2 },
+            { label: 'Ziel', data: Array(10).fill(this.kpiData.ape.target/1000), borderColor: '#86BC25', backgroundColor: 'transparent', borderDash: [5, 5], borderWidth: 2, pointRadius: 0 }
+        ], { ...chartOptions, scales: { ...chartOptions.scales, y: { ...chartOptions.scales.y, min: 100, max: 200, ticks: { ...chartOptions.scales.y.ticks, callback: (v) => '€' + v + 'k' } } } });
 
-        // NPS Score
-        this.renderLineChartWithTarget('chart-nps',
-            this.kpiData.nps.history,
-            this.kpiData.nps.benchmark,
-            labels, '#8b5cf6', -100, 100);
+        // NPS Score (time series)
+        this.renderChartJS('chart-nps', 'line', labels, [
+            { label: 'NPS', data: this.kpiData.nps.history, borderColor: '#8b5cf6', backgroundColor: 'transparent', tension: 0.3, pointRadius: 4, pointBackgroundColor: '#8b5cf6', pointBorderColor: '#fff', pointBorderWidth: 2, borderWidth: 2 },
+            { label: 'Benchmark', data: Array(10).fill(this.kpiData.nps.benchmark), borderColor: '#86BC25', backgroundColor: 'transparent', borderDash: [5, 5], borderWidth: 2, pointRadius: 0 }
+        ], { ...chartOptions, scales: { ...chartOptions.scales, y: { ...chartOptions.scales.y, min: -100, max: 100 } } });
 
-        // User Adoption (2 years, multiple lines)
-        this.renderAdoptionChart('chart-adoption');
+        // User Adoption (2-year multi-line with different start points)
+        const adoptionLabels = ['Jan 24', 'Apr 24', 'Jul 24', 'Okt 24', 'Jan 25', 'Apr 25', 'Jul 25', 'Okt 25', 'Jan 26'];
+        this.renderChartJS('chart-adoption', 'line', adoptionLabels, [
+            { label: 'Vertriebsportal', data: [10, 25, 45, 65, 78, 85, 90, 93, 95], borderColor: '#3b82f6', backgroundColor: 'transparent', tension: 0.3, pointRadius: 3, borderWidth: 2 },
+            { label: 'Risikoscoring', data: [null, null, 5, 18, 35, 52, 62, 70, 74], borderColor: '#f59e0b', backgroundColor: 'transparent', tension: 0.3, pointRadius: 3, borderWidth: 2 },
+            { label: 'KI-Assistent', data: [null, null, null, null, null, 8, 22, 38, 48], borderColor: '#8b5cf6', backgroundColor: 'transparent', tension: 0.3, pointRadius: 3, borderWidth: 2 }
+        ], { ...chartOptions, scales: { ...chartOptions.scales, y: { ...chartOptions.scales.y, min: 0, max: 100, ticks: { ...chartOptions.scales.y.ticks, callback: (v) => v + '%' } } } });
 
         // Meilensteine
-        this.renderLineChart('chart-meilensteine',
-            this.kpiData.meilensteine.history,
-            labels, '#16a34a', 0, 100, '', '%');
+        this.renderChartJS('chart-meilensteine', 'line', labels, [
+            { label: 'Im Plan', data: this.kpiData.meilensteine.history, borderColor: '#16a34a', backgroundColor: 'transparent', tension: 0.3, pointRadius: 4, pointBackgroundColor: '#16a34a', pointBorderColor: '#fff', pointBorderWidth: 2, borderWidth: 2 }
+        ], { ...chartOptions, scales: { ...chartOptions.scales, y: { ...chartOptions.scales.y, min: 0, max: 100, ticks: { ...chartOptions.scales.y.ticks, callback: (v) => v + '%' } } } });
 
-        // User Stories (stacked bar)
-        this.renderStackedBarChart('chart-userstories',
-            this.kpiData.userstories.monthly,
-            ['backlog', 'inprogress', 'review', 'done'],
-            ['#94a3b8', '#3b82f6', '#f59e0b', '#16a34a']);
+        // User Stories (stacked bar over time)
+        this.renderChartJS('chart-userstories', 'bar', labels, [
+            { label: 'Backlog', data: this.kpiData.userstories.monthly.map(m => m.backlog), backgroundColor: '#94a3b8', stack: 'stack1' },
+            { label: 'In Progress', data: this.kpiData.userstories.monthly.map(m => m.inprogress), backgroundColor: '#3b82f6', stack: 'stack1' },
+            { label: 'Review', data: this.kpiData.userstories.monthly.map(m => m.review), backgroundColor: '#f59e0b', stack: 'stack1' },
+            { label: 'Done', data: this.kpiData.userstories.monthly.map(m => m.done), backgroundColor: '#16a34a', stack: 'stack1' }
+        ], { ...chartOptions, scales: { ...chartOptions.scales, x: { ...chartOptions.scales.x, stacked: true }, y: { ...chartOptions.scales.y, stacked: true } } });
 
         // Tests
-        this.renderMultiLineChart('chart-tests',
-            [this.kpiData.tests.history.total, this.kpiData.tests.history.started, this.kpiData.tests.history.completed],
-            labels, ['#64748b', '#3b82f6', '#16a34a']);
+        this.renderChartJS('chart-tests', 'line', labels, [
+            { label: 'Gesamt', data: this.kpiData.tests.history.total, borderColor: '#64748b', backgroundColor: 'transparent', tension: 0.3, pointRadius: 3, borderWidth: 2 },
+            { label: 'Gestartet', data: this.kpiData.tests.history.started, borderColor: '#3b82f6', backgroundColor: 'transparent', tension: 0.3, pointRadius: 3, borderWidth: 2 },
+            { label: 'Abgeschlossen', data: this.kpiData.tests.history.completed, borderColor: '#16a34a', backgroundColor: 'transparent', tension: 0.3, pointRadius: 3, borderWidth: 2 }
+        ], chartOptions);
 
-        // Defects (stacked)
-        this.renderStackedBarChart('chart-defects',
-            this.kpiData.defects.monthly,
-            ['critical', 'major', 'minor'],
-            ['#dc2626', '#f59e0b', '#fbbf24']);
+        // Defects (stacked bar)
+        this.renderChartJS('chart-defects', 'bar', labels, [
+            { label: 'Kritisch', data: this.kpiData.defects.monthly.map(m => m.critical), backgroundColor: '#dc2626', stack: 'stack1' },
+            { label: 'Major', data: this.kpiData.defects.monthly.map(m => m.major), backgroundColor: '#f59e0b', stack: 'stack1' },
+            { label: 'Minor', data: this.kpiData.defects.monthly.map(m => m.minor), backgroundColor: '#fbbf24', stack: 'stack1' }
+        ], { ...chartOptions, scales: { ...chartOptions.scales, x: { ...chartOptions.scales.x, stacked: true }, y: { ...chartOptions.scales.y, stacked: true } } });
 
         // Ressourcen
-        this.renderMultiLineChart('chart-ressourcen',
-            [this.kpiData.ressourcen.history.ist, this.kpiData.ressourcen.history.angefragt],
-            labels, ['#3b82f6', '#94a3b8']);
+        this.renderChartJS('chart-ressourcen', 'line', labels, [
+            { label: 'PT Ist', data: this.kpiData.ressourcen.history.ist, borderColor: '#3b82f6', backgroundColor: 'transparent', tension: 0.3, pointRadius: 3, borderWidth: 2 },
+            { label: 'PT Angefragt', data: this.kpiData.ressourcen.history.angefragt, borderColor: '#94a3b8', backgroundColor: 'transparent', tension: 0.3, pointRadius: 3, borderWidth: 2, borderDash: [5, 5] }
+        ], chartOptions);
 
         // Budget
-        this.renderMultiLineChart('chart-budget',
-            [this.kpiData.budget.history.plan.map(v => v/1000),
-             this.kpiData.budget.history.verbrauch.map(v => v/1000),
-             this.kpiData.budget.history.forecast.map(v => v/1000)],
-            labels, ['#86BC25', '#3b82f6', '#8b5cf6']);
+        this.renderChartJS('chart-budget', 'line', labels, [
+            { label: 'Plan', data: this.kpiData.budget.history.plan.map(v => v/1000000), borderColor: '#86BC25', backgroundColor: 'transparent', tension: 0.3, pointRadius: 3, borderWidth: 2 },
+            { label: 'Verbrauch', data: this.kpiData.budget.history.verbrauch.map(v => v/1000000), borderColor: '#3b82f6', backgroundColor: 'transparent', tension: 0.3, pointRadius: 3, borderWidth: 2 },
+            { label: 'Forecast', data: this.kpiData.budget.history.forecast.map(v => v/1000000), borderColor: '#8b5cf6', backgroundColor: 'transparent', tension: 0.3, pointRadius: 3, borderWidth: 2, borderDash: [5, 5] }
+        ], { ...chartOptions, scales: { ...chartOptions.scales, y: { ...chartOptions.scales.y, ticks: { ...chartOptions.scales.y.ticks, callback: (v) => '€' + v.toFixed(1) + 'M' } } } });
+    },
+
+    renderChartJS(canvasId, type, labels, datasets, options) {
+        const canvas = document.getElementById(canvasId);
+        if (!canvas) return;
+
+        const ctx = canvas.getContext('2d');
+        if (canvas._chart) canvas._chart.destroy();
+
+        canvas._chart = new Chart(ctx, {
+            type: type,
+            data: { labels, datasets },
+            options
+        });
     },
 
     renderLineChartWithTarget(containerId, data, target, labels, color, minY, maxY, prefix = '', suffix = '') {

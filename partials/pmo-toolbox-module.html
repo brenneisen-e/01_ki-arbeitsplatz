@@ -900,20 +900,20 @@
                                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>
                                         </button>
                                     </div>
-                                    <select class="pmo-scope-select" id="ressourcen-scope" onchange="PMO.switchResourceScope(this.value)">
-                                        <option value="gesamt">Gesamt</option>
-                                        <option value="intern">Intern</option>
-                                        <option value="extern">Extern</option>
-                                    </select>
-                                    <span class="pmo-kpi-badge warning">Intern >100%</span>
+                                    <div class="pmo-scope-toggle" id="ressourcen-scope-toggle">
+                                        <button class="pmo-scope-btn" data-scope="gesamt" title="Gesamt" onclick="PMO.switchResourceScope('gesamt')">G</button>
+                                        <button class="pmo-scope-btn active" data-scope="intern" title="Intern" onclick="PMO.switchResourceScope('intern')">I</button>
+                                        <button class="pmo-scope-btn" data-scope="extern" title="Extern" onclick="PMO.switchResourceScope('extern')">E</button>
+                                    </div>
+                                    <span class="pmo-kpi-badge warning">I &gt;100%</span>
                                 </div>
                             </div>
-                            <p class="pmo-kpi-description" id="desc-ressourcen">Personentage Ist vs. Angefragt pro Monat</p>
+                            <p class="pmo-kpi-description" id="desc-ressourcen">Interne Ressourcen: Ist vs. Angefragt</p>
                             <div class="pmo-kpi-value-row">
-                                <span class="pmo-kpi-value" id="kpi-ressourcen">87%</span>
+                                <span class="pmo-kpi-value" id="kpi-ressourcen">106%</span>
                                 <div class="pmo-kpi-legend" id="legend-ressourcen">
-                                    <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot ist"></span> PT Ist</span>
-                                    <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot prognose"></span> PT Angefragt</span>
+                                    <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot ist"></span> Intern Ist</span>
+                                    <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot prognose"></span> Intern Angefr.</span>
                                 </div>
                             </div>
                             <div class="pmo-kpi-trend warning">

@@ -3916,30 +3916,17 @@ mark {
 
 /* North Star section styling */
 .pmo-kpi-section-divider[data-category="northstar"] {
-    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 50%, #fef3c7 100%);
-    border-color: #f59e0b;
-    border-width: 2px;
-    margin-top: 2rem;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border-color: #cbd5e1;
 }
 
 .pmo-kpi-section-divider[data-category="northstar"] .pmo-kpi-section-title {
-    color: #92400e;
+    color: #475569;
 }
 
 .pmo-kpi-section-divider[data-category="northstar"]::before,
 .pmo-kpi-section-divider[data-category="northstar"]::after {
-    background: linear-gradient(to right, transparent, #f59e0b, transparent);
-}
-
-/* North Star KPI card special styling */
-.pmo-kpi-card.pmo-kpi-northstar {
-    border: 2px solid #f59e0b;
-    background: linear-gradient(135deg, #fffbeb 0%, white 30%);
-    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.15);
-}
-
-.pmo-kpi-card.pmo-kpi-northstar .pmo-kpi-label {
-    color: #92400e;
+    background: linear-gradient(to right, transparent, #cbd5e1, transparent);
 }
 
 /* Collapsible North Star Section */

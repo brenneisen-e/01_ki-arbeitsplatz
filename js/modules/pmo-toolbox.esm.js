@@ -6452,11 +6452,30 @@ if (typeof window !== 'undefined') {
 
     // Toggle Value Map section collapse
     window.PMO.toggleValueMapSection = function() {
-        const header = document.querySelector('.pmo-kpi-section-valuemap');
         const container = document.getElementById('valuemap-container');
-        if (header && container) {
-            header.classList.toggle('collapsed');
+        const clusterBox = document.querySelector('.pmo-valuemap-cluster-overview');
+        const hint = document.getElementById('valuemap-expand-hint');
+
+        if (container) {
+            const isCollapsed = container.classList.contains('collapsed');
             container.classList.toggle('collapsed');
+
+            // Update cluster box state
+            if (clusterBox) {
+                clusterBox.classList.toggle('expanded', isCollapsed);
+            }
+
+            // Update hint text
+            if (hint) {
+                const hintText = hint.querySelector('span');
+                const hintIcon = hint.querySelector('svg');
+                if (hintText) {
+                    hintText.textContent = isCollapsed ? 'Klicken zum Einklappen' : 'Klicken zum Aufklappen';
+                }
+                if (hintIcon) {
+                    hintIcon.style.transform = isCollapsed ? 'rotate(180deg)' : '';
+                }
+            }
         }
     };
 

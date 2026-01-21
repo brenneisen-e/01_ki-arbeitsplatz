@@ -601,10 +601,7 @@
                         <!-- ========== STRATEGISCH ========== -->
                         <div class="pmo-kpi-section-divider" data-category="strategisch">
                             <span class="pmo-kpi-section-title">Strategische KPIs (Value Map)</span>
-                            <span class="pmo-kpi-badge-section badge-linie">
-                                <svg class="badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h4l3-9 4 18 3-9h4"/></svg>
-                                Linie
-                            </span>
+                            <span class="pmo-kpi-badge-section badge-linie">Linie</span>
                         </div>
 
                         <!-- Verträge pro Kunde -->
@@ -665,16 +662,16 @@
                             </div>
                         </div>
 
-                        <!-- Value Map Cluster Übersicht (klickbar) -->
-                        <div class="pmo-kpi-card pmo-valuemap-cluster-overview" data-category="strategisch" onclick="PMO.toggleValueMapOverlay()">
+                        <!-- Value Map Cluster Übersicht (klickbar zum Ein-/Ausklappen) -->
+                        <div class="pmo-kpi-card pmo-valuemap-cluster-overview" data-category="strategisch" onclick="PMO.toggleValueMapSection()">
                             <div class="pmo-kpi-header">
                                 <div class="pmo-kpi-title-row">
                                     <span class="pmo-kpi-label">Value Map Cluster</span>
-                                    <span class="pmo-kpi-status green" title="Klicken zum Öffnen"></span>
+                                    <span class="pmo-kpi-status green" title="Klicken zum Ein-/Ausklappen"></span>
                                 </div>
                                 <span class="pmo-kpi-badge info">5 Cluster</span>
                             </div>
-                            <p class="pmo-kpi-description">Klicken für detaillierte Cluster-Übersicht</p>
+                            <p class="pmo-kpi-description">Klicken zum Ein-/Ausklappen der Value Map KPIs</p>
                             <div class="pmo-cluster-list">
                                 <div class="pmo-cluster-item">
                                     <span class="pmo-cluster-number">1</span>
@@ -697,29 +694,14 @@
                                     <span class="pmo-cluster-name">Neue VP gewinnen & entwickeln</span>
                                 </div>
                             </div>
-                            <div class="pmo-cluster-expand-hint">
+                            <div class="pmo-cluster-expand-hint" id="valuemap-expand-hint">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="6 9 12 15 18 9"/></svg>
                                 <span>Klicken zum Aufklappen</span>
                             </div>
                         </div>
 
-                        <!-- ========== VALUE MAP Overlay (versteckt, wird bei Klick sichtbar) ========== -->
-                        <div class="pmo-valuemap-overlay hidden" id="valuemap-overlay">
-                            <div class="pmo-valuemap-overlay-content">
-                                <div class="pmo-valuemap-overlay-header">
-                                    <h3>Value Map – Alle Cluster</h3>
-                                    <button class="pmo-valuemap-close" onclick="PMO.toggleValueMapOverlay()">
-                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                                    </button>
-                                </div>
-                                <div class="pmo-valuemap-overlay-body" id="valuemap-overlay-body">
-                                    <!-- Wird dynamisch befüllt mit den Clustern -->
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- ========== VALUE MAP INLINE (für Programm-Ansicht, standardmäßig ausgeblendet) ========== -->
-                        <div class="pmo-valuemap-container collapsed hidden" id="valuemap-container">
+                        <!-- ========== VALUE MAP KPIs (einklappbar) ========== -->
+                        <div class="pmo-valuemap-container collapsed" id="valuemap-container">
 
                         <!-- NORTH STAR: APE-Produktivität je Vertriebspartner -->
                         <div class="pmo-kpi-card" data-kpi="ape-produktivitaet" data-category="valuemap">
@@ -1031,10 +1013,7 @@
                         <!-- ========== ZUFRIEDENHEIT UND NUTZUNG ========== -->
                         <div class="pmo-kpi-section-divider" data-category="zufriedenheit">
                             <span class="pmo-kpi-section-title">Zufriedenheit und Nutzung KPI</span>
-                            <span class="pmo-kpi-badge-section badge-programm-projekt">
-                                <svg class="badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
-                                Programm + Projekt
-                            </span>
+                            <span class="pmo-kpi-badge-section badge-programm-projekt">Programm + Projekt</span>
                         </div>
 
                         <!-- NPS-Score Vertrieb -->
@@ -1127,10 +1106,7 @@
                         <!-- ========== FORTSCHRITT ========== -->
                         <div class="pmo-kpi-section-divider" data-category="fortschritt">
                             <span class="pmo-kpi-section-title">Fortschritt KPIs</span>
-                            <span class="pmo-kpi-badge-section badge-projekt">
-                                <svg class="badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-                                Projekt
-                            </span>
+                            <span class="pmo-kpi-badge-section badge-projekt">Projekt</span>
                         </div>
 
                         <!-- Meilensteine -->

@@ -4496,6 +4496,21 @@ PMO Team
                 verbrauch: [280, 580, 870, 1180, 1480, 1780, 2050, 2250, 2400, 2400],
                 forecast: [280, 580, 870, 1180, 1480, 1780, 2100, 2450, 2800, 3100]
             }
+        },
+        // ERGO North Star KPIs
+        northStar: {
+            apeProduktivitaet: { current: 42, target: 50, history: [35, 36, 37, 38, 39, 40, 40, 41, 42, 42] },
+            kundenNps: { current: 42, benchmark: 35, history: [32, 34, 35, 36, 37, 38, 39, 40, 41, 42] },
+            beratungsqualitaet: { current: 87, target: 90, history: [78, 80, 81, 82, 83, 84, 85, 86, 86, 87] },
+            vpNps: { current: 28, target: 40, history: [18, 20, 21, 22, 23, 24, 25, 26, 27, 28] },
+            vpAbgang: { current: 8.2, target: 10, history: [12, 11.5, 11, 10.5, 10, 9.5, 9, 8.8, 8.5, 8.2] },
+            eodb: { current: 72, target: 85, history: [55, 58, 60, 62, 64, 66, 68, 70, 71, 72] },
+            vertragsdichte: { current: 2.1, target: 2.8, history: [1.85, 1.88, 1.90, 1.93, 1.96, 1.99, 2.02, 2.05, 2.08, 2.10] },
+            crossSell: { current: 24, target: 25, history: [16, 17, 18, 19, 20, 21, 22, 22, 23, 24] },
+            aiNutzung: { current: 48, target: 60, history: [8, 12, 18, 24, 28, 32, 38, 42, 45, 48] },
+            conversion: { current: 18, target: 22, history: [12, 13, 14, 14, 15, 15, 16, 17, 17, 18] },
+            rekrutierung: { current: 112, target: 100, history: [85, 88, 92, 95, 98, 100, 104, 106, 110, 112] },
+            timeToProd: { current: 8.5, target: 6, history: [12, 11.5, 11, 10.5, 10, 9.5, 9, 8.8, 8.6, 8.5] }
         }
     },
 
@@ -4776,6 +4791,74 @@ PMO Team
             { label: 'Verbrauch', data: this.kpiData.budget.history.verbrauch.map(v => v/1000), borderColor: '#3b82f6', tension: 0.3, pointRadius: 3, borderWidth: 2 },
             { label: 'Forecast', data: this.kpiData.budget.history.forecast.map(v => v/1000), borderColor: '#8b5cf6', borderDash: [5, 5], tension: 0.3, pointRadius: 3, borderWidth: 2 }
         ], 0, 3.5, v => '€' + v.toFixed(1) + 'M');
+
+        // Render North Star KPI charts
+        this._renderNorthStarCharts(labels, createChart);
+    },
+
+    _renderNorthStarCharts(labels, createChart) {
+        const ns = this.kpiData.northStar;
+        if (!ns) return;
+
+        // 1. APE-Produktivität je VP
+        createChart('chart-ape-produktivitaet', [
+            { label: 'Ist', data: ns.apeProduktivitaet.history, borderColor: '#3b82f6', tension: 0.3, pointRadius: 3, borderWidth: 2 }
+        ], 30, 55);
+
+        // 2. Kunden-NPS
+        createChart('chart-kunden-nps', [
+            { label: 'NPS', data: ns.kundenNps.history, borderColor: '#8b5cf6', tension: 0.3, pointRadius: 3, borderWidth: 2 }
+        ], 25, 50);
+
+        // 3. Beratungsqualität
+        createChart('chart-beratungsqualitaet', [
+            { label: 'Score', data: ns.beratungsqualitaet.history, borderColor: '#10b981', tension: 0.3, pointRadius: 3, borderWidth: 2 }
+        ], 70, 95, v => v + '%');
+
+        // 4. VP-NPS
+        createChart('chart-vp-nps', [
+            { label: 'VP-NPS', data: ns.vpNps.history, borderColor: '#f59e0b', tension: 0.3, pointRadius: 3, borderWidth: 2 }
+        ], 10, 45);
+
+        // 5. VP-Abgangsquote (inverted - lower is better)
+        createChart('chart-vp-abgang', [
+            { label: 'Abgang', data: ns.vpAbgang.history, borderColor: '#ef4444', tension: 0.3, pointRadius: 3, borderWidth: 2 }
+        ], 5, 15, v => v + '%');
+
+        // 6. EoDB Score
+        createChart('chart-eodb', [
+            { label: 'Score', data: ns.eodb.history, borderColor: '#6366f1', tension: 0.3, pointRadius: 3, borderWidth: 2 }
+        ], 50, 90, v => v + '%');
+
+        // 7. Vertragsdichte
+        createChart('chart-vertragsdichte', [
+            { label: 'Dichte', data: ns.vertragsdichte.history, borderColor: '#0ea5e9', tension: 0.3, pointRadius: 3, borderWidth: 2 }
+        ], 1.7, 2.3);
+
+        // 8. Cross-Sell-Quote
+        createChart('chart-cross-sell', [
+            { label: 'Quote', data: ns.crossSell.history, borderColor: '#22c55e', tension: 0.3, pointRadius: 3, borderWidth: 2 }
+        ], 10, 30, v => v + '%');
+
+        // 9. AI-Nutzungsquote
+        createChart('chart-ai-nutzung', [
+            { label: 'Nutzung', data: ns.aiNutzung.history, borderColor: '#8b5cf6', tension: 0.3, pointRadius: 3, borderWidth: 2 }
+        ], 0, 65, v => v + '%');
+
+        // 10. Conversion Rate
+        createChart('chart-conversion', [
+            { label: 'Conversion', data: ns.conversion.history, borderColor: '#f97316', tension: 0.3, pointRadius: 3, borderWidth: 2 }
+        ], 8, 25, v => v + '%');
+
+        // 11. Rekrutierungsquote
+        createChart('chart-rekrutierung', [
+            { label: 'Neue VPs', data: ns.rekrutierung.history, borderColor: '#14b8a6', tension: 0.3, pointRadius: 3, borderWidth: 2 }
+        ], 70, 130);
+
+        // 12. Time-to-Productivity (inverted - lower is better)
+        createChart('chart-time-to-prod', [
+            { label: 'Monate', data: ns.timeToProd.history, borderColor: '#f43f5e', tension: 0.3, pointRadius: 3, borderWidth: 2 }
+        ], 5, 15);
     },
 
     _renderP10WithSVG(labels) {
@@ -6361,6 +6444,17 @@ if (typeof window !== 'undefined') {
     window.PMO.switchResourceScope = PMO.switchResourceScope.bind(PMO);
     window.PMO.toggleViewDropdown = PMO.toggleViewDropdown.bind(PMO);
     window.PMO.selectViewFromDropdown = PMO.selectViewFromDropdown.bind(PMO);
+
+    // Toggle North Star section collapse
+    window.PMO.toggleNorthStarSection = function() {
+        const header = document.querySelector('.pmo-kpi-section-northstar');
+        const container = document.getElementById('northstar-container');
+        if (header && container) {
+            header.classList.toggle('collapsed');
+            container.classList.toggle('collapsed');
+        }
+    };
+
     console.log('[ESM] pmo-toolbox.esm.js loaded');
 }
 

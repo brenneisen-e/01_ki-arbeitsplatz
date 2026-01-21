@@ -6445,10 +6445,10 @@ if (typeof window !== 'undefined') {
     window.PMO.toggleViewDropdown = PMO.toggleViewDropdown.bind(PMO);
     window.PMO.selectViewFromDropdown = PMO.selectViewFromDropdown.bind(PMO);
 
-    // Toggle North Star section collapse
-    window.PMO.toggleNorthStarSection = function() {
-        const header = document.querySelector('.pmo-kpi-section-northstar');
-        const container = document.getElementById('northstar-container');
+    // Toggle Value Map section collapse
+    window.PMO.toggleValueMapSection = function() {
+        const header = document.querySelector('.pmo-kpi-section-valuemap');
+        const container = document.getElementById('valuemap-container');
         if (header && container) {
             header.classList.toggle('collapsed');
             container.classList.toggle('collapsed');

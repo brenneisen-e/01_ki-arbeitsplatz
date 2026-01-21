@@ -4443,6 +4443,201 @@ mark {
 .pmo-budget-item.abweichung.positive .pmo-budget-value { color: #16a34a; }
 .pmo-budget-item.abweichung.negative .pmo-budget-value { color: #dc2626; }
 
+/* ========================================
+   A-03 Style KPI Cards (P-10)
+   ======================================== */
+
+/* Grid layout for P-10 KPIs */
+.pmo-kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+@media (max-width: 1200px) {
+    .pmo-kpi-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .pmo-kpi-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Section dividers */
+.pmo-kpi-section-divider {
+    grid-column: 1 / -1;
+    padding: 12px 0 8px;
+    border-bottom: 2px solid #e2e8f0;
+    margin-bottom: 8px;
+}
+
+.pmo-kpi-section-divider .pmo-kpi-section-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* A-03 Style Card Title Row */
+.pmo-kpi-title-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.pmo-kpi-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #334155;
+}
+
+.pmo-kpi-icon {
+    width: 20px;
+    height: 20px;
+    color: #94a3b8;
+}
+
+.pmo-kpi-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+/* Badge styles */
+.pmo-kpi-badge {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 4px 8px;
+    border-radius: 4px;
+    text-transform: uppercase;
+}
+
+.pmo-kpi-badge.success {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.pmo-kpi-badge.info {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.pmo-kpi-badge.warning {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.pmo-kpi-badge.danger {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+/* Description text */
+.pmo-kpi-description {
+    font-size: 12px;
+    color: #64748b;
+    margin: 4px 0 12px;
+    line-height: 1.4;
+}
+
+/* Value row */
+.pmo-kpi-value-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.pmo-kpi-value {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+/* Legend in A-03 style */
+.pmo-kpi-legend {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.pmo-kpi-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    color: #64748b;
+}
+
+.pmo-kpi-legend-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.pmo-kpi-legend-wide {
+    flex-direction: column;
+    gap: 6px;
+}
+
+/* Trend indicator */
+.pmo-kpi-trend {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    margin-bottom: 12px;
+}
+
+.pmo-kpi-trend svg {
+    width: 16px;
+    height: 16px;
+}
+
+.pmo-kpi-trend.positive {
+    color: #16a34a;
+}
+
+.pmo-kpi-trend.negative {
+    color: #dc2626;
+}
+
+.pmo-kpi-trend-label {
+    color: #94a3b8;
+    font-size: 11px;
+}
+
+/* Chart container for Canvas elements */
+.pmo-kpi-chart {
+    height: 140px;
+    margin-top: 8px;
+    position: relative;
+}
+
+.pmo-kpi-chart canvas {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.pmo-kpi-chart-wide {
+    height: 180px;
+}
+
+/* Wide card spanning 2 columns */
+.pmo-kpi-wide {
+    grid-column: span 2;
+}
+
+@media (max-width: 768px) {
+    .pmo-kpi-wide {
+        grid-column: span 1;
+    }
+}
+
 /* KPI Chart Container */
 .pmo-kpi-chart-container {
     height: 100px;

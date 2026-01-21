@@ -1,0 +1,376 @@
+/* ==========================================================================
+   VALUE MAP CLUSTER OVERVIEW BOX
+   ========================================================================== */
+
+/* Cluster Overview Card */
+.pmo-valuemap-cluster-overview {
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    min-height: 280px;
+    max-height: 280px;
+}
+
+.pmo-valuemap-cluster-overview:hover {
+    border-color: #3b82f6;
+    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.15);
+    transform: translateY(-2px);
+}
+
+/* Cluster List */
+.pmo-cluster-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 8px;
+    flex: 1;
+    overflow-y: auto;
+    max-height: 160px;
+}
+
+.pmo-cluster-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.pmo-cluster-item:hover {
+    background: linear-gradient(135deg, #e0f2fe 0%, #dbeafe 100%);
+}
+
+.pmo-cluster-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    color: white;
+    border-radius: 50%;
+    font-size: 10px;
+    font-weight: 600;
+    flex-shrink: 0;
+}
+
+.pmo-cluster-name {
+    font-size: 11px;
+    color: #475569;
+    font-weight: 500;
+    line-height: 1.2;
+}
+
+/* Expand Hint */
+.pmo-cluster-expand-hint {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid #e2e8f0;
+    color: #94a3b8;
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.pmo-cluster-expand-hint svg {
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(3px);
+    }
+    60% {
+        transform: translateY(1px);
+    }
+}
+
+/* ==========================================================================
+   VALUE MAP OVERLAY (Modal/Expanded View)
+   ========================================================================== */
+
+.pmo-valuemap-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(4px);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+.pmo-valuemap-overlay.hidden {
+    display: none;
+    opacity: 0;
+}
+
+.pmo-valuemap-overlay-content {
+    background: white;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 900px;
+    max-height: 85vh;
+    overflow: hidden;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+    display: flex;
+    flex-direction: column;
+}
+
+.pmo-valuemap-overlay-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.pmo-valuemap-overlay-header h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.pmo-valuemap-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    cursor: pointer;
+    color: #64748b;
+    transition: all 0.2s ease;
+}
+
+.pmo-valuemap-close:hover {
+    background: #f1f5f9;
+    color: #1e293b;
+    border-color: #cbd5e1;
+}
+
+.pmo-valuemap-overlay-body {
+    padding: 24px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+/* Cluster Sections in Overlay */
+.pmo-overlay-cluster {
+    margin-bottom: 24px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.pmo-overlay-cluster:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.pmo-overlay-cluster-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.pmo-overlay-cluster-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    color: white;
+    border-radius: 50%;
+    font-size: 14px;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.pmo-overlay-cluster-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.pmo-overlay-cluster-kpis {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 12px;
+}
+
+.pmo-overlay-kpi-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+}
+
+.pmo-overlay-kpi-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: #475569;
+}
+
+.pmo-overlay-kpi-value {
+    font-size: 14px;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.pmo-overlay-kpi-value.positive {
+    color: #10b981;
+}
+
+.pmo-overlay-kpi-value.warning {
+    color: #f59e0b;
+}
+
+/* North Star in Overlay */
+.pmo-overlay-northstar {
+    background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
+    border: 2px solid #e5e5e5;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 24px;
+}
+
+.pmo-overlay-northstar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.pmo-overlay-northstar-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.pmo-overlay-northstar-badge {
+    padding: 4px 12px;
+    background: rgba(115, 115, 115, 0.15);
+    color: #525252;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.pmo-overlay-northstar-value {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 4px;
+}
+
+.pmo-overlay-northstar-target {
+    font-size: 13px;
+    color: #64748b;
+}
+
+/* Section Badge - Improved */
+.pmo-kpi-badge-section {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    margin-left: 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+    color: #64748b;
+    border: 1px solid rgba(100, 116, 139, 0.2);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
+}
+
+.pmo-kpi-badge-section:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Badge Type: Linie (Blau) */
+.pmo-kpi-badge-section.badge-linie {
+    background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+    color: #1e40af;
+    border-color: rgba(59, 130, 246, 0.3);
+}
+
+/* Badge Type: Programm (Violett) */
+.pmo-kpi-badge-section.badge-programm {
+    background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%);
+    color: #5b21b6;
+    border-color: rgba(139, 92, 246, 0.3);
+}
+
+/* Badge Type: Projekt (Grün) */
+.pmo-kpi-badge-section.badge-projekt {
+    background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+    color: #047857;
+    border-color: rgba(16, 185, 129, 0.3);
+}
+
+/* Badge Type: Programm + Projekt (Gradient) */
+.pmo-kpi-badge-section.badge-programm-projekt {
+    background: linear-gradient(135deg, #ede9fe 0%, #d1fae5 100%);
+    color: #4338ca;
+    border-color: rgba(99, 102, 241, 0.3);
+}
+
+/* Badge Icon */
+.pmo-kpi-badge-section .badge-icon {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+}
+
+/* Category Badge Colors */
+.pmo-kpi-badge.info {
+    background: rgba(59, 130, 246, 0.1);
+    color: #3b82f6;
+}
+
+.pmo-kpi-badge.success {
+    background: rgba(16, 185, 129, 0.1);
+    color: #10b981;
+}
+
+.pmo-kpi-badge.danger {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+}
+
+/* Hover effects */
+.pmo-kpi-card:not(.pmo-kpi-wip):hover .pmo-kpi-icon {
+    color: #E30613;
+    transition: color 0.3s ease;
+}
+

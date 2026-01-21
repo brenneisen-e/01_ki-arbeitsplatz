@@ -1,0 +1,342 @@
+/* ==========================================================================
+   FRÜHWARNINDIKATOREN (Early Warnings)
+   ========================================================================== */
+
+.pmo-warnings-section {
+    margin-top: 64px;
+    padding-top: 32px;
+    border-top: 1px solid #e2e8f0;
+    overflow: hidden;
+}
+
+.pmo-warnings-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    overflow: hidden;
+}
+
+.pmo-warning-card {
+    display: flex;
+    gap: 16px;
+    padding: 16px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    border-left: 4px solid transparent;
+    transition: all 0.2s;
+}
+
+.pmo-warning-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    transform: translateX(2px);
+}
+
+.pmo-warning-card.warning {
+    background: linear-gradient(135deg, #fffbeb 0%, white 50%);
+}
+
+.pmo-warning-card.warning:hover {
+    border-left-color: #f59e0b;
+}
+
+.pmo-warning-card.critical {
+    background: linear-gradient(135deg, #fef2f2 0%, white 50%);
+}
+
+.pmo-warning-card.critical:hover {
+    border-left-color: #ef4444;
+}
+
+.pmo-warning-card.info {
+    background: linear-gradient(135deg, #eff6ff 0%, white 50%);
+}
+
+.pmo-warning-card.info:hover {
+    border-left-color: #3b82f6;
+}
+
+.pmo-warning-icon {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+}
+
+.pmo-warning-card.warning .pmo-warning-icon {
+    background: #fef3c7;
+    color: #d97706;
+}
+
+.pmo-warning-card.critical .pmo-warning-icon {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.pmo-warning-card.info .pmo-warning-icon {
+    background: #dbeafe;
+    color: #2563eb;
+}
+
+.pmo-warning-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.pmo-warning-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 6px;
+    flex-wrap: wrap;
+}
+
+.pmo-warning-header strong {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.pmo-warning-condition {
+    font-size: 12px;
+    padding: 2px 8px;
+    background: #f1f5f9;
+    border-radius: 4px;
+    color: #64748b;
+}
+
+.pmo-warning-card.critical .pmo-warning-condition {
+    background: #fecaca;
+    color: #991b1b;
+}
+
+.pmo-warning-card.warning .pmo-warning-condition {
+    background: #fde68a;
+    color: #92400e;
+}
+
+.pmo-warning-details {
+    font-size: 13px;
+    color: #64748b;
+    margin-bottom: 10px;
+    line-height: 1.4;
+}
+
+.pmo-warning-recommendation {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    padding: 10px 12px;
+    background: #f8fafc;
+    border-radius: 8px;
+    font-size: 12px;
+    color: #475569;
+    line-height: 1.4;
+}
+
+.pmo-warning-recommendation svg {
+    flex-shrink: 0;
+    margin-top: 1px;
+    color: #86BC25;
+}
+
+.pmo-no-warnings {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 32px;
+    background: linear-gradient(135deg, #f0fdf4 0%, white 50%);
+    border-radius: 12px;
+    border: 2px dashed #86efac;
+}
+
+.pmo-no-warnings svg {
+    color: #22c55e;
+}
+
+.pmo-no-warnings span {
+    font-size: 14px;
+    font-weight: 500;
+    color: #16a34a;
+}
+
+/* Warning badge for NPS chart */
+.pmo-nps-warning-badge {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 24px;
+    height: 24px;
+    background: #fef3c7;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #d97706;
+    animation: pulse-warning 2s infinite;
+}
+
+@keyframes pulse-warning {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.1); opacity: 0.8; }
+}
+
+/* Chart Warning Icon Overlay - Floating circle with exclamation mark */
+.chart-warning-overlay {
+    pointer-events: auto;
+}
+
+.chart-warning-icon {
+    width: 28px;
+    height: 28px;
+    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(220, 38, 38, 0.4);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.chart-warning-icon:hover {
+    transform: scale(1.15);
+    box-shadow: 0 4px 16px rgba(220, 38, 38, 0.5);
+}
+
+.chart-warning-icon span {
+    color: white;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.chart-warning-icon.blink {
+    animation: warning-blink 1.5s ease-in-out infinite;
+}
+
+/* Yellow warning icon variant (for NPS drop) */
+.chart-warning-icon.warning-yellow {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    box-shadow: 0 2px 8px rgba(245, 158, 11, 0.4);
+}
+
+.chart-warning-icon.warning-yellow:hover {
+    box-shadow: 0 4px 16px rgba(245, 158, 11, 0.5);
+}
+
+.chart-warning-icon.warning-yellow.blink {
+    animation: warning-blink-yellow 1.5s ease-in-out infinite;
+}
+
+@keyframes warning-blink-yellow {
+    0%, 100% {
+        opacity: 1;
+        box-shadow: 0 2px 8px rgba(245, 158, 11, 0.4);
+    }
+    50% {
+        opacity: 0.7;
+        box-shadow: 0 2px 16px rgba(245, 158, 11, 0.7), 0 0 20px rgba(245, 158, 11, 0.3);
+    }
+}
+
+@keyframes warning-blink {
+    0%, 100% {
+        opacity: 1;
+        box-shadow: 0 2px 8px rgba(220, 38, 38, 0.4);
+    }
+    50% {
+        opacity: 0.7;
+        box-shadow: 0 2px 16px rgba(220, 38, 38, 0.7), 0 0 20px rgba(220, 38, 38, 0.3);
+    }
+}
+
+/* Highlight flash effect for early warning cards */
+.pmo-warning-card.highlight-flash {
+    animation: card-highlight 0.5s ease-out 3;
+}
+
+@keyframes card-highlight {
+    0%, 100% {
+        transform: translateX(0);
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    50% {
+        transform: translateX(4px);
+        box-shadow: 0 4px 20px rgba(0,0,0,0.15), 0 0 0 3px rgba(220, 38, 38, 0.3);
+    }
+}
+
+/* Clickable warning card */
+.pmo-warning-card.clickable {
+    cursor: pointer;
+    padding-right: 12px;
+}
+
+.pmo-warning-card.clickable:hover {
+    transform: translateX(4px);
+}
+
+.pmo-warning-action {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #94a3b8;
+    transition: color 0.2s, transform 0.2s;
+}
+
+.pmo-warning-card.clickable:hover .pmo-warning-action {
+    color: #64748b;
+    transform: translateX(4px);
+}
+
+/* Highlight flash for table rows */
+#pmo-milestones-tbody tr.highlight-flash {
+    animation: row-highlight 0.5s ease-out 3;
+}
+
+@keyframes row-highlight {
+    0%, 100% {
+        background-color: transparent;
+    }
+    50% {
+        background-color: rgba(220, 38, 38, 0.1);
+    }
+}
+
+/* Highlight flash for KPI cards */
+.pmo-kpi-card.highlight-flash {
+    animation: kpi-highlight 0.5s ease-out 3;
+}
+
+@keyframes kpi-highlight {
+    0%, 100% {
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    50% {
+        box-shadow: 0 4px 20px rgba(0,0,0,0.15), 0 0 0 3px rgba(220, 38, 38, 0.3);
+    }
+}
+
+/* Small inline warning indicator */
+.pmo-inline-warning {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 6px;
+    background: #fef3c7;
+    border-radius: 4px;
+    font-size: 11px;
+    color: #d97706;
+    margin-left: 8px;
+}
+
+.pmo-inline-warning svg {
+    width: 12px;
+    height: 12px;
+}

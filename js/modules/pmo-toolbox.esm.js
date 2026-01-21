@@ -6463,16 +6463,12 @@ if (typeof window !== 'undefined') {
     console.log('[ESM] pmo-toolbox.esm.js loaded');
 }
 
-// Initialize when DOM is ready
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => PMO.init());
-} else {
-    PMO.init();
-}
+// ============================================
+// VALUE MAP OVERLAY FUNCTIONS (must be before init)
+// ============================================
 
-// ============================================
-// VALUE MAP OVERLAY FUNCTIONS
-// ============================================
+// Ensure window.PMO exists for onclick handlers
+window.PMO = window.PMO || PMO;
 
 PMO.toggleValueMapOverlay = function() {
     const overlay = document.getElementById('valuemap-overlay');
@@ -6513,7 +6509,7 @@ PMO.generateValueMapOverlayContent = function() {
     let html = `
         <div class="pmo-overlay-northstar">
             <div class="pmo-overlay-northstar-header">
-                <span class="pmo-overlay-northstar-title">APE-Produktivität je Vertriebspartner</span>
+                <span class="pmo-overlay-northstar-title">APE-Produktivität je VP</span>
                 <span class="pmo-overlay-northstar-badge">NORTH STAR</span>
             </div>
             <div class="pmo-overlay-northstar-value">€42k</div>
@@ -6559,6 +6555,13 @@ document.addEventListener('keydown', function(e) {
         }
     }
 });
+
+// Initialize when DOM is ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => PMO.init());
+} else {
+    PMO.init();
+}
 
 // ============================================
 // WORKSTREAM TABS

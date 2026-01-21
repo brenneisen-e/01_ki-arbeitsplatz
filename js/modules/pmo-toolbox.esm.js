@@ -1683,6 +1683,7 @@ export const PMO = {
         if (!container) return;
 
         const activeWarnings = this.EARLY_WARNINGS.filter(w => w.active);
+        console.log('🚨 Rendering early warnings:', activeWarnings.length, 'active warnings');
 
         if (activeWarnings.length === 0) {
             container.innerHTML = `
@@ -5746,18 +5747,23 @@ PMO Team
                 const rData = this.kpiData.ressourcen;
                 let istData, angefragtData, yMin, yMax;
 
+                console.log('📊 Rendering ressourcen chart with scope:', scope);
+
                 if (scope === 'intern') {
                     istData = rData.intern.history.ist;
                     angefragtData = rData.intern.history.angefragt;
                     yMin = 120; yMax = 180;
+                    console.log('📊 Using intern data:', istData, angefragtData);
                 } else if (scope === 'extern') {
                     istData = rData.extern.history.ist;
                     angefragtData = rData.extern.history.angefragt;
                     yMin = 60; yMax = 140;
+                    console.log('📊 Using extern data:', istData, angefragtData);
                 } else {
                     istData = rData.history.ist;
                     angefragtData = rData.history.angefragt;
                     yMin = 200; yMax = 300;
+                    console.log('📊 Using gesamt data:', istData, angefragtData);
                 }
 
                 new Chart(ctx, {
@@ -6315,6 +6321,10 @@ PMO Team
 // ============================================
 if (typeof window !== 'undefined') {
     window.PMO = PMO;
+    // Explicitly expose new functions
+    window.PMO.switchResourceScope = PMO.switchResourceScope.bind(PMO);
+    window.PMO.toggleViewDropdown = PMO.toggleViewDropdown.bind(PMO);
+    window.PMO.selectViewFromDropdown = PMO.selectViewFromDropdown.bind(PMO);
     console.log('[ESM] pmo-toolbox.esm.js loaded');
 }
 

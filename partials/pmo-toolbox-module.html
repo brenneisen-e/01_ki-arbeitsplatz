@@ -600,7 +600,7 @@
 
                         <!-- ========== STRATEGISCH ========== -->
                         <div class="pmo-kpi-section-divider" data-category="strategisch">
-                            <span class="pmo-kpi-section-title">Strategische KPIs</span>
+                            <span class="pmo-kpi-section-title">Strategische KPIs (Value Map)</span>
                             <span class="pmo-kpi-badge-section">Linie</span>
                         </div>
 
@@ -662,15 +662,61 @@
                             </div>
                         </div>
 
-                        <!-- ========== VALUE MAP (aufklappbar) ========== -->
-                        <div class="pmo-kpi-section-divider pmo-kpi-section-valuemap pmo-collapsible-header collapsed" data-category="valuemap" onclick="PMO.toggleValueMapSection()">
-                            <span class="pmo-kpi-section-title">Value Map</span>
-                            <span class="pmo-collapse-indicator">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><polyline points="6 9 12 15 18 9"/></svg>
-                            </span>
+                        <!-- Value Map Cluster Übersicht (klickbar) -->
+                        <div class="pmo-kpi-card pmo-valuemap-cluster-overview" data-category="strategisch" onclick="PMO.toggleValueMapOverlay()">
+                            <div class="pmo-kpi-header">
+                                <div class="pmo-kpi-title-row">
+                                    <span class="pmo-kpi-label">Value Map Cluster</span>
+                                    <span class="pmo-kpi-status green" title="Klicken zum Öffnen"></span>
+                                </div>
+                                <span class="pmo-kpi-badge info">5 Cluster</span>
+                            </div>
+                            <p class="pmo-kpi-description">Klicken für detaillierte Cluster-Übersicht</p>
+                            <div class="pmo-cluster-list">
+                                <div class="pmo-cluster-item">
+                                    <span class="pmo-cluster-number">1</span>
+                                    <span class="pmo-cluster-name">Kundenzufriedenheit & Beratungsqualität</span>
+                                </div>
+                                <div class="pmo-cluster-item">
+                                    <span class="pmo-cluster-number">2</span>
+                                    <span class="pmo-cluster-name">Zufriedenheit & Bindung der VP</span>
+                                </div>
+                                <div class="pmo-cluster-item">
+                                    <span class="pmo-cluster-number">3</span>
+                                    <span class="pmo-cluster-name">Bestandskundenentwicklung</span>
+                                </div>
+                                <div class="pmo-cluster-item">
+                                    <span class="pmo-cluster-number">4</span>
+                                    <span class="pmo-cluster-name">Effizienz & AI-Nutzung</span>
+                                </div>
+                                <div class="pmo-cluster-item">
+                                    <span class="pmo-cluster-number">5</span>
+                                    <span class="pmo-cluster-name">Neue VP gewinnen & entwickeln</span>
+                                </div>
+                            </div>
+                            <div class="pmo-cluster-expand-hint">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="6 9 12 15 18 9"/></svg>
+                                <span>Klicken zum Aufklappen</span>
+                            </div>
                         </div>
 
-                        <div class="pmo-valuemap-container collapsed" id="valuemap-container">
+                        <!-- ========== VALUE MAP Overlay (versteckt, wird bei Klick sichtbar) ========== -->
+                        <div class="pmo-valuemap-overlay hidden" id="valuemap-overlay">
+                            <div class="pmo-valuemap-overlay-content">
+                                <div class="pmo-valuemap-overlay-header">
+                                    <h3>Value Map – Alle Cluster</h3>
+                                    <button class="pmo-valuemap-close" onclick="PMO.toggleValueMapOverlay()">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                                    </button>
+                                </div>
+                                <div class="pmo-valuemap-overlay-body" id="valuemap-overlay-body">
+                                    <!-- Wird dynamisch befüllt mit den Clustern -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ========== VALUE MAP INLINE (für Programm-Ansicht, standardmäßig ausgeblendet) ========== -->
+                        <div class="pmo-valuemap-container collapsed hidden" id="valuemap-container">
 
                         <!-- NORTH STAR: APE-Produktivität je Vertriebspartner -->
                         <div class="pmo-kpi-card pmo-kpi-northstar pmo-valuemap-fullwidth" data-kpi="ape-produktivitaet" data-category="valuemap">

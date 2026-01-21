@@ -2888,15 +2888,26 @@ PMO Team
     // Milestones View
     renderMilestones() {
         const tbody = document.getElementById('pmo-milestones-tbody');
-        const filter = document.getElementById('milestones-status-filter').value;
+        const filter = document.getElementById('milestones-status-filter')?.value || '';
 
         const allMilestones = [];
         this.statusData.forEach(status => {
             status.milestones.forEach(ms => {
+                // Calculate delay days
+                const planned = new Date(ms.plannedDate);
+                const current = ms.currentEstimate ? new Date(ms.currentEstimate) : planned;
+                const today = new Date();
+                const delayDays = Math.ceil((current - planned) / (1000 * 60 * 60 * 24));
+                const daysUntil = Math.ceil((current - today) / (1000 * 60 * 60 * 24));
+                const isOverdue = daysUntil < 0 && ms.status !== 'Geschlossen';
+
                 allMilestones.push({
                     ...ms,
                     projectId: status.projectId,
-                    workstreamId: status.workstreamId
+                    workstreamId: status.workstreamId,
+                    delayDays,
+                    daysUntil,
+                    isOverdue
                 });
             });
         });
@@ -2912,20 +2923,94 @@ PMO Team
             }
         });
 
+        // Update stats summary
+        this.updateMilestoneStats(uniqueMilestones);
+
         const filteredMilestones = filter
             ? uniqueMilestones.filter(m => m.status === filter)
             : uniqueMilestones;
 
-        tbody.innerHTML = filteredMilestones.map(ms => `
-            <tr>
-                <td>${ms.projectId}</td>
+        // Sort: overdue first, then by date
+        filteredMilestones.sort((a, b) => {
+            if (a.isOverdue && !b.isOverdue) return -1;
+            if (!a.isOverdue && b.isOverdue) return 1;
+            if (a.status === 'Verzögert' && b.status !== 'Verzögert') return -1;
+            if (a.status !== 'Verzögert' && b.status === 'Verzögert') return 1;
+            return new Date(a.currentEstimate) - new Date(b.currentEstimate);
+        });
+
+        tbody.innerHTML = filteredMilestones.map(ms => {
+            const rowClass = ms.isOverdue ? 'overdue-row' : (ms.status === 'Verzögert' ? 'delayed-row' : '');
+            const delayBadge = ms.delayDays > 0
+                ? `<span class="pmo-delay-badge">${ms.delayDays > 0 ? '+' : ''}${ms.delayDays}d</span>`
+                : '';
+            const statusClass = ms.status.toLowerCase().replace(' ', '-');
+
+            return `
+            <tr class="${rowClass}" onclick="PMO.openMilestoneDetail('${ms.workstreamId}', '${ms.name.replace(/'/g, "\\'")}')">
+                <td><span class="pmo-project-badge">${ms.projectId}</span></td>
                 <td>${ms.workstreamId}</td>
-                <td>${ms.name}</td>
+                <td>
+                    <div class="pmo-milestone-name-cell">
+                        ${ms.isOverdue ? '<span class="pmo-overdue-icon">!</span>' : ''}
+                        <span>${ms.name}</span>
+                    </div>
+                </td>
                 <td>${this.formatDate(ms.plannedDate)}</td>
-                <td>${this.formatDate(ms.currentEstimate)}</td>
-                <td><span class="pmo-status-badge ${ms.status.toLowerCase().replace(' ', '-')}">${ms.status}</span></td>
+                <td>
+                    <div class="pmo-current-date-cell">
+                        <span>${this.formatDate(ms.currentEstimate)}</span>
+                        ${delayBadge}
+                    </div>
+                </td>
+                <td><span class="pmo-status-badge ${statusClass}">${ms.status}</span></td>
             </tr>
-        `).join('') || '<tr><td colspan="6" style="text-align: center; color: #94a3b8;">Keine Meilensteine gefunden</td></tr>';
+        `;
+        }).join('') || '<tr><td colspan="6" style="text-align: center; color: #94a3b8; padding: 40px;">Keine Meilensteine gefunden</td></tr>';
+    },
+
+    // Update milestone stats summary
+    updateMilestoneStats(milestones) {
+        const statsContainer = document.getElementById('milestone-stats');
+        if (!statsContainer) return;
+
+        const total = milestones.length;
+        const imPlan = milestones.filter(m => m.status === 'Im Plan').length;
+        const verzoegert = milestones.filter(m => m.status === 'Verzögert').length;
+        const geschlossen = milestones.filter(m => m.status === 'Geschlossen').length;
+        const overdue = milestones.filter(m => m.isOverdue).length;
+
+        statsContainer.innerHTML = `
+            <div class="pmo-milestone-stat">
+                <span class="stat-value">${total}</span>
+                <span class="stat-label">Gesamt</span>
+            </div>
+            <div class="pmo-milestone-stat green">
+                <span class="stat-value">${imPlan}</span>
+                <span class="stat-label">Im Plan</span>
+            </div>
+            <div class="pmo-milestone-stat yellow">
+                <span class="stat-value">${verzoegert}</span>
+                <span class="stat-label">Verzögert</span>
+            </div>
+            <div class="pmo-milestone-stat gray">
+                <span class="stat-value">${geschlossen}</span>
+                <span class="stat-label">Geschlossen</span>
+            </div>
+            ${overdue > 0 ? `
+            <div class="pmo-milestone-stat red blink-stat">
+                <span class="stat-value">${overdue}</span>
+                <span class="stat-label">Überfällig!</span>
+            </div>
+            ` : ''}
+        `;
+    },
+
+    // Open milestone detail for editing
+    openMilestoneDetail(workstreamId, milestoneName) {
+        const milestoneId = `${workstreamId}_${milestoneName.replace(/\s/g, '_')}`;
+        this.openMilestoneModal(milestoneId);
+    },
     },
 
     filterMilestones() {

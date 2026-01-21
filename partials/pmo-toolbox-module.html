@@ -389,26 +389,38 @@
         <!-- Milestones View -->
         <div id="pmo-meilensteine" class="pmo-view">
             <div class="pmo-milestones-header">
-                <h3 class="pmo-section-title">Meilensteine</h3>
-                <div class="pmo-milestones-filters">
-                    <select id="milestones-status-filter" onchange="PMO.filterMilestones()">
-                        <option value="">Alle Status</option>
-                        <option value="Im Plan">Im Plan</option>
-                        <option value="Verzögert">Verzögert</option>
-                        <option value="Geschlossen">Geschlossen</option>
-                    </select>
+                <div class="pmo-milestones-title-row">
+                    <h3 class="pmo-section-title">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22">
+                            <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
+                            <polyline points="22 4 12 14.01 9 11.01"/>
+                        </svg>
+                        Meilensteine
+                    </h3>
+                    <div class="pmo-milestones-filters">
+                        <select id="milestones-status-filter" onchange="PMO.filterMilestones()">
+                            <option value="">Alle Status</option>
+                            <option value="Im Plan">Im Plan</option>
+                            <option value="Verzögert">Verzögert</option>
+                            <option value="Geschlossen">Geschlossen</option>
+                        </select>
+                    </div>
+                </div>
+                <!-- Stats Summary -->
+                <div class="pmo-milestone-stats" id="milestone-stats">
+                    <!-- Stats will be rendered here -->
                 </div>
             </div>
             <div class="pmo-milestones-table-container">
-                <table class="pmo-table">
+                <table class="pmo-table pmo-milestones-table">
                     <thead>
                         <tr>
-                            <th>Projekt</th>
-                            <th>Workstream</th>
+                            <th style="width: 60px;">Projekt</th>
+                            <th style="width: 80px;">Workstream</th>
                             <th>Meilenstein</th>
-                            <th>Geplant</th>
-                            <th>Aktuell</th>
-                            <th>Status</th>
+                            <th style="width: 100px;">Geplant</th>
+                            <th style="width: 130px;">Aktuell</th>
+                            <th style="width: 100px;">Status</th>
                         </tr>
                     </thead>
                     <tbody id="pmo-milestones-tbody">
@@ -1471,7 +1483,7 @@
 
 
 <!-- PMO Toolbox Styles (externalized) -->
-<link rel="stylesheet" href="/css/pmo-toolbox.css?v=20260121s">
+<link rel="stylesheet" href="/css/pmo-toolbox.css?v=20260121t">
 
 <!-- PMO Toolbox JavaScript (ES6 Module) -->
-<script type="module" src="/js/modules/pmo-toolbox.esm.js?v=20260121s"></script>
+<script type="module" src="/js/modules/pmo-toolbox.esm.js?v=20260121t"></script>

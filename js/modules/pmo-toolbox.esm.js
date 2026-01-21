@@ -1217,7 +1217,7 @@ export const PMO = {
                 { month: 'Jan 26', value: 142500 }
             ]
         },
-        nps: { current: 4.2, max: 5.0, trend: '+0.3' },
+        nps: { current: 38, previousMonth: 45, benchmark: 35, trend: '-7' },
         userAdoption: { current: 67, target: 85, activeUsers: 1240, totalUsers: 1850 },
         userStories: {
             backlog: 45,
@@ -1296,10 +1296,12 @@ export const PMO = {
             id: 'nps_warning',
             type: 'warning',
             indicator: 'NPS Score',
-            condition: 'Unter Schwellwert (4.0)',
+            condition: 'Gefallen von +45 auf +38',
             active: true,
             recommendation: 'Sondermeeting mit VVE im Projekt aufplanen',
-            details: 'NPS ist auf 4.2 gesunken, Trend negativ'
+            details: 'NPS ist auf +38 gesunken (-7 vs. Vormonat), Trend negativ',
+            navigateTo: 'kpis',
+            filterTo: 'nps'
         },
         {
             id: 'milestone_warning',
@@ -1308,7 +1310,9 @@ export const PMO = {
             condition: '3+ Verschiebungen in 4 Wochen',
             active: true,
             recommendation: 'Ressourcenallokation prüfen, Scope Review durchführen',
-            details: '4 Meilensteine in den letzten 4 Wochen verschoben'
+            details: '4 Meilensteine in den letzten 4 Wochen verschoben',
+            navigateTo: 'meilensteine',
+            filterTo: 'Verzögert'
         },
         {
             id: 'change_request',
@@ -1317,7 +1321,8 @@ export const PMO = {
             condition: 'Steigend (+15% vs. Vormonat)',
             active: false,
             recommendation: 'Anforderungsmanagement-Workshop planen',
-            details: 'Quote aktuell bei 12%, Trend steigend'
+            details: 'Quote aktuell bei 12%, Trend steigend',
+            navigateTo: 'entscheidungen'
         },
         {
             id: 'defect_critical',
@@ -1326,7 +1331,9 @@ export const PMO = {
             condition: '3 kritische Defects offen',
             active: true,
             recommendation: 'Bug-Fixing Sprint priorisieren',
-            details: '3 kritische Defects seit > 5 Tagen offen'
+            details: '3 kritische Defects seit > 5 Tagen offen',
+            navigateTo: 'kpis',
+            filterTo: 'defects'
         }
     ],
 
@@ -1680,7 +1687,9 @@ export const PMO = {
         }
 
         container.innerHTML = activeWarnings.map(w => `
-            <div class="pmo-warning-card ${w.type}">
+            <div class="pmo-warning-card ${w.type} ${w.navigateTo ? 'clickable' : ''}"
+                 ${w.navigateTo ? `onclick="PMO.navigateFromWarning('${w.id}', '${w.navigateTo}', '${w.filterTo || ''}')"` : ''}
+                 ${w.navigateTo ? 'title="Klicken zum Anzeigen"' : ''}>
                 <div class="pmo-warning-icon">
                     ${w.type === 'critical' ?
                         '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>' :
@@ -1701,6 +1710,13 @@ export const PMO = {
                         ${w.recommendation}
                     </div>
                 </div>
+                ${w.navigateTo ? `
+                <div class="pmo-warning-action">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                </div>
+                ` : ''}
             </div>
         `).join('');
     },
@@ -4284,9 +4300,10 @@ PMO Team
         },
         // Vertrieblich
         nps: {
-            current: 42,
+            current: 38,
             benchmark: 35,
-            history: [28, 30, 32, 34, 36, 38, 39, 40, 41, 42]
+            previousMonth: 45,
+            history: [28, 30, 32, 34, 36, 40, 43, 45, 45, 38]  // Drop in January from 45 to 38
         },
         adoption: {
             tools: {
@@ -4452,11 +4469,76 @@ PMO Team
             { label: 'Ziel', data: Array(10).fill(this.kpiData.ape.target/1000), borderColor: '#86BC25', borderDash: [5, 5], borderWidth: 2, pointRadius: 0 }
         ], 100, 200, v => '€' + v + 'k');
 
-        // NPS Score
-        createChart('pmo-chart-nps', [
-            { label: 'NPS', data: this.kpiData.nps.history, borderColor: '#8b5cf6', backgroundColor: 'transparent', tension: 0.3, pointRadius: 4, borderWidth: 2 },
-            { label: 'Benchmark', data: Array(10).fill(this.kpiData.nps.benchmark), borderColor: '#86BC25', borderDash: [5, 5], borderWidth: 2, pointRadius: 0 }
-        ], -20, 60);
+        // NPS Score - with warning overlay since it dropped
+        const npsCanvas = document.getElementById('pmo-chart-nps');
+        if (npsCanvas) {
+            const existingNPS = Chart.getChart(npsCanvas);
+            if (existingNPS) existingNPS.destroy();
+            const npsCtx = npsCanvas.getContext('2d');
+
+            // Check if NPS dropped (current < previous)
+            const npsHistory = this.kpiData.nps.history;
+            const npsDropped = npsHistory[npsHistory.length - 1] < npsHistory[npsHistory.length - 2];
+
+            // Create warning overlay for NPS drop
+            const createNPSWarningOverlay = (chart) => {
+                if (!npsDropped) return;
+
+                // Remove existing overlay
+                const existingOverlay = chart.canvas.parentElement.querySelector('.chart-warning-overlay');
+                if (existingOverlay) existingOverlay.remove();
+
+                // Get position of last point
+                const meta = chart.getDatasetMeta(0);
+                const lastPoint = meta.data[meta.data.length - 1];
+                const x = lastPoint.x;
+                const y = lastPoint.y;
+
+                // Create overlay div
+                const overlay = document.createElement('div');
+                overlay.className = 'chart-warning-overlay';
+                overlay.innerHTML = `
+                    <div class="chart-warning-icon blink warning-yellow" title="NPS gefallen (-7) - Klicken für Details" onclick="PMO.scrollToEarlyWarning('nps_warning')">
+                        <span>!</span>
+                    </div>
+                `;
+                overlay.style.cssText = `
+                    position: absolute;
+                    left: ${x}px;
+                    top: ${y - 30}px;
+                    transform: translateX(-50%);
+                    pointer-events: auto;
+                    z-index: 10;
+                `;
+
+                // Make parent relative if not already
+                const parent = chart.canvas.parentElement;
+                if (getComputedStyle(parent).position === 'static') {
+                    parent.style.position = 'relative';
+                }
+                parent.appendChild(overlay);
+            };
+
+            const npsWarningPlugin = {
+                id: 'npsWarningOverlay',
+                afterRender: (chart) => {
+                    createNPSWarningOverlay(chart);
+                }
+            };
+
+            npsCanvas._chart = new Chart(npsCtx, {
+                type: 'line',
+                data: {
+                    labels,
+                    datasets: [
+                        { label: 'NPS', data: this.kpiData.nps.history, borderColor: '#8b5cf6', backgroundColor: 'transparent', tension: 0.3, pointRadius: 4, borderWidth: 2 },
+                        { label: 'Benchmark', data: Array(10).fill(this.kpiData.nps.benchmark), borderColor: '#86BC25', borderDash: [5, 5], borderWidth: 2, pointRadius: 0 }
+                    ]
+                },
+                options: { ...chartOptions, scales: { ...chartOptions.scales, y: { ...chartOptions.scales.y, min: -20, max: 60 } } },
+                plugins: [npsWarningPlugin]
+            });
+        }
 
         // User Adoption
         const adoptionLabels = ['Jan 24', 'Apr', 'Jul', 'Okt', 'Jan 25', 'Apr', 'Jul', 'Okt', 'Jan 26'];
@@ -4519,38 +4601,62 @@ PMO Team
             if (existingDef) existingDef.destroy();
             const ctx = defCanvas.getContext('2d');
 
-            // Plugin to draw warning icon over last bar
-            const warningPlugin = {
-                id: 'warningIcon',
-                afterDraw: (chart) => {
-                    const criticalCount = this.kpiData.defects.critical;
-                    if (criticalCount > 0) {
-                        const ctx = chart.ctx;
-                        const meta = chart.getDatasetMeta(0); // First dataset (Kritisch)
-                        const lastBar = meta.data[meta.data.length - 1];
-                        if (lastBar) {
-                            const x = lastBar.x;
-                            const y = lastBar.y - 20;
+            // Create HTML overlay for blinking warning icon
+            const createWarningOverlay = (chart) => {
+                const criticalCount = this.kpiData.defects.critical;
+                if (criticalCount <= 0) return;
 
-                            // Draw warning triangle
-                            ctx.save();
-                            ctx.fillStyle = '#dc2626';
-                            ctx.beginPath();
-                            ctx.moveTo(x, y - 12);
-                            ctx.lineTo(x - 10, y + 6);
-                            ctx.lineTo(x + 10, y + 6);
-                            ctx.closePath();
-                            ctx.fill();
+                // Remove existing overlay
+                const existingOverlay = chart.canvas.parentElement.querySelector('.chart-warning-overlay');
+                if (existingOverlay) existingOverlay.remove();
 
-                            // Draw exclamation mark
-                            ctx.fillStyle = 'white';
-                            ctx.font = 'bold 12px Arial';
-                            ctx.textAlign = 'center';
-                            ctx.textBaseline = 'middle';
-                            ctx.fillText('!', x, y - 1);
-                            ctx.restore();
-                        }
+                // Get position of last bar (top of stacked column)
+                const datasetCount = chart.data.datasets.length;
+                const lastIndex = chart.data.labels.length - 1;
+
+                // Calculate the top of the stacked bar
+                let topY = chart.chartArea.bottom;
+                for (let i = 0; i < datasetCount; i++) {
+                    const meta = chart.getDatasetMeta(i);
+                    const bar = meta.data[lastIndex];
+                    if (bar && bar.y < topY) {
+                        topY = bar.y;
                     }
+                }
+
+                const lastBar = chart.getDatasetMeta(0).data[lastIndex];
+                const x = lastBar.x;
+
+                // Create overlay div
+                const overlay = document.createElement('div');
+                overlay.className = 'chart-warning-overlay';
+                overlay.innerHTML = `
+                    <div class="chart-warning-icon blink" title="3 kritische Defects - Klicken für Details" onclick="PMO.scrollToEarlyWarning('defect_critical')">
+                        <span>!</span>
+                    </div>
+                `;
+                overlay.style.cssText = `
+                    position: absolute;
+                    left: ${x}px;
+                    top: ${topY - 35}px;
+                    transform: translateX(-50%);
+                    pointer-events: auto;
+                    z-index: 10;
+                `;
+
+                // Make parent relative if not already
+                const parent = chart.canvas.parentElement;
+                if (getComputedStyle(parent).position === 'static') {
+                    parent.style.position = 'relative';
+                }
+                parent.appendChild(overlay);
+            };
+
+            // Plugin to position warning overlay after chart renders
+            const warningOverlayPlugin = {
+                id: 'warningOverlay',
+                afterRender: (chart) => {
+                    createWarningOverlay(chart);
                 }
             };
 
@@ -4565,7 +4671,7 @@ PMO Team
                     ]
                 },
                 options: { ...chartOptions, scales: { x: { ...chartOptions.scales.x, stacked: true }, y: { ...chartOptions.scales.y, stacked: true, max: 100 } } },
-                plugins: [warningPlugin]
+                plugins: [warningOverlayPlugin]
             });
         }
 
@@ -5296,6 +5402,70 @@ PMO Team
         // Re-render KPIs with filters applied
         // For now, just update the values (filters can be implemented later)
         this.updateKPIValues();
+    },
+
+    // Scroll to early warning indicator in sidebar
+    scrollToEarlyWarning(warningId) {
+        const warningsContainer = document.getElementById('pmo-early-warnings');
+        if (warningsContainer) {
+            // Find the warning card
+            const warningCards = warningsContainer.querySelectorAll('.pmo-warning-card');
+            warningCards.forEach(card => {
+                // Flash highlight effect
+                card.style.transition = 'transform 0.3s, box-shadow 0.3s';
+            });
+
+            // Scroll to the warnings section
+            warningsContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+            // Highlight the relevant warning briefly
+            setTimeout(() => {
+                const targetCard = warningsContainer.querySelector(`.pmo-warning-card:has([onclick*="${warningId}"])`) ||
+                                   Array.from(warningCards).find(c => c.textContent.includes(warningId === 'defect_critical' ? 'Defects' : warningId === 'nps_warning' ? 'NPS' : 'Meilenstein'));
+                if (targetCard) {
+                    targetCard.classList.add('highlight-flash');
+                    setTimeout(() => targetCard.classList.remove('highlight-flash'), 2000);
+                }
+            }, 500);
+        }
+    },
+
+    // Navigate from early warning card to related view
+    navigateFromWarning(warningId, viewId, filterTo) {
+        console.log(`🔗 Navigating from warning ${warningId} to ${viewId} with filter ${filterTo}`);
+
+        // Navigate to the view
+        this.showView(viewId);
+
+        // Apply filter if specified
+        setTimeout(() => {
+            if (viewId === 'meilensteine' && filterTo) {
+                // Set the milestone status filter
+                const statusFilter = document.getElementById('milestones-status-filter');
+                if (statusFilter) {
+                    statusFilter.value = filterTo;
+                    this.filterMilestones();
+                }
+                // Highlight delayed milestones
+                setTimeout(() => {
+                    const delayedRows = document.querySelectorAll('#pmo-milestones-tbody tr');
+                    delayedRows.forEach(row => {
+                        if (row.textContent.includes('Verzögert')) {
+                            row.classList.add('highlight-flash');
+                            setTimeout(() => row.classList.remove('highlight-flash'), 2000);
+                        }
+                    });
+                }, 300);
+            } else if (viewId === 'kpis' && filterTo) {
+                // Scroll to and highlight the KPI card
+                const kpiCard = document.querySelector(`.pmo-kpi-card[data-kpi="${filterTo}"]`);
+                if (kpiCard) {
+                    kpiCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    kpiCard.classList.add('highlight-flash');
+                    setTimeout(() => kpiCard.classList.remove('highlight-flash'), 2000);
+                }
+            }
+        }, 100);
     },
 
     switchKPILevel(level) {

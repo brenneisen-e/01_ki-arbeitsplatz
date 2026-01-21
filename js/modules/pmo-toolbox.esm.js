@@ -3653,7 +3653,7 @@ PMO Team
     },
 
     renderKPIMiniCharts() {
-        // Render mini chart for Milestone Delays
+        // Render chart for Milestone Delays (A-03 Style)
         const milestoneCanvas = document.getElementById('chart-milestone-delays');
         if (milestoneCanvas && typeof Chart !== 'undefined') {
             const ctx = milestoneCanvas.getContext('2d');
@@ -3666,15 +3666,30 @@ PMO Team
             milestoneCanvas._chart = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: ['W1', 'W2', 'W3', 'W4', 'W5', 'W6', 'W7'],
+                    labels: ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt'],
                     datasets: [{
-                        data: this.kpiData['milestone-delays'].history,
-                        borderColor: '#f59e0b',
-                        backgroundColor: 'rgba(245, 158, 11, 0.1)',
-                        fill: true,
-                        tension: 0.4,
-                        pointRadius: 0,
+                        label: 'Ist',
+                        data: [2, 3, 3, 4, 5, 4, 5, 6, 5, 7],
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'transparent',
+                        tension: 0.3,
+                        pointRadius: 4,
+                        pointBackgroundColor: '#3b82f6',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
                         borderWidth: 2
+                    }, {
+                        label: 'Vorwoche',
+                        data: [2, 2, 3, 3, 4, 4, 4, 5, 5, 5],
+                        borderColor: '#94a3b8',
+                        backgroundColor: 'transparent',
+                        tension: 0.3,
+                        pointRadius: 4,
+                        pointBackgroundColor: '#94a3b8',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        borderWidth: 2,
+                        borderDash: [5, 5]
                     }]
                 },
                 options: {
@@ -3684,14 +3699,33 @@ PMO Team
                         legend: { display: false }
                     },
                     scales: {
-                        x: { display: false },
-                        y: { display: false }
+                        x: {
+                            display: true,
+                            grid: { display: false },
+                            ticks: {
+                                color: '#94a3b8',
+                                font: { size: 10 },
+                                maxRotation: 0
+                            }
+                        },
+                        y: {
+                            display: true,
+                            grid: {
+                                color: 'rgba(0,0,0,0.05)',
+                                drawBorder: false
+                            },
+                            ticks: {
+                                color: '#94a3b8',
+                                font: { size: 10 },
+                                stepSize: 2
+                            }
+                        }
                     }
                 }
             });
         }
 
-        // Render mini chart for CR Requests
+        // Render chart for CR Requests (A-03 Style)
         const crCanvas = document.getElementById('chart-cr-requests');
         if (crCanvas && typeof Chart !== 'undefined') {
             const ctx = crCanvas.getContext('2d');
@@ -3704,15 +3738,30 @@ PMO Team
             crCanvas._chart = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: ['W1', 'W2', 'W3', 'W4', 'W5', 'W6', 'W7'],
+                    labels: ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt'],
                     datasets: [{
-                        data: this.kpiData['cr-requests'].history,
+                        label: 'Ist',
+                        data: [5, 6, 8, 7, 9, 10, 8, 11, 10, 12],
                         borderColor: '#3b82f6',
-                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                        fill: true,
-                        tension: 0.4,
-                        pointRadius: 0,
+                        backgroundColor: 'transparent',
+                        tension: 0.3,
+                        pointRadius: 4,
+                        pointBackgroundColor: '#3b82f6',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
                         borderWidth: 2
+                    }, {
+                        label: 'Vorwoche',
+                        data: [4, 5, 6, 6, 7, 8, 7, 9, 9, 9],
+                        borderColor: '#94a3b8',
+                        backgroundColor: 'transparent',
+                        tension: 0.3,
+                        pointRadius: 4,
+                        pointBackgroundColor: '#94a3b8',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        borderWidth: 2,
+                        borderDash: [5, 5]
                     }]
                 },
                 options: {
@@ -3722,8 +3771,27 @@ PMO Team
                         legend: { display: false }
                     },
                     scales: {
-                        x: { display: false },
-                        y: { display: false }
+                        x: {
+                            display: true,
+                            grid: { display: false },
+                            ticks: {
+                                color: '#94a3b8',
+                                font: { size: 10 },
+                                maxRotation: 0
+                            }
+                        },
+                        y: {
+                            display: true,
+                            grid: {
+                                color: 'rgba(0,0,0,0.05)',
+                                drawBorder: false
+                            },
+                            ticks: {
+                                color: '#94a3b8',
+                                font: { size: 10 },
+                                stepSize: 3
+                            }
+                        }
                     }
                 }
             });

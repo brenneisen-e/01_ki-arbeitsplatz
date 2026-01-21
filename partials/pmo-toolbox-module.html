@@ -791,12 +791,22 @@
                                     <span class="pmo-kpi-label">User Stories</span>
                                     <span class="pmo-kpi-status green" title="Grün: Guter Fortschritt"></span>
                                 </div>
-                                <span class="pmo-kpi-badge info">156 gesamt</span>
+                                <div class="pmo-kpi-header-actions">
+                                    <div class="pmo-chart-toggle" data-kpi="userstories">
+                                        <button class="pmo-chart-toggle-btn active" data-view="timeline" title="Zeitverlauf" onclick="PMO.switchChartView('userstories', 'timeline')">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+                                        </button>
+                                        <button class="pmo-chart-toggle-btn" data-view="distribution" title="Verteilung" onclick="PMO.switchChartView('userstories', 'distribution')">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>
+                                        </button>
+                                    </div>
+                                    <span class="pmo-kpi-badge info">156 gesamt</span>
+                                </div>
                             </div>
-                            <p class="pmo-kpi-description">User Stories nach Status im Zeitverlauf</p>
+                            <p class="pmo-kpi-description" id="desc-userstories">User Stories nach Status im Zeitverlauf</p>
                             <div class="pmo-kpi-value-row">
                                 <span class="pmo-kpi-value" id="kpi-userstories">156</span>
-                                <div class="pmo-kpi-legend">
+                                <div class="pmo-kpi-legend" id="legend-userstories">
                                     <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot backlog"></span> Backlog</span>
                                     <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot inprogress"></span> In Progress</span>
                                     <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot review"></span> Review</span>
@@ -815,12 +825,22 @@
                                     <span class="pmo-kpi-label">Testreihen</span>
                                     <span class="pmo-kpi-status green" title="Grün: 79% abgeschlossen"></span>
                                 </div>
-                                <span class="pmo-kpi-badge success">38 abgeschlossen</span>
+                                <div class="pmo-kpi-header-actions">
+                                    <div class="pmo-chart-toggle" data-kpi="tests">
+                                        <button class="pmo-chart-toggle-btn active" data-view="timeline" title="Zeitverlauf" onclick="PMO.switchChartView('tests', 'timeline')">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+                                        </button>
+                                        <button class="pmo-chart-toggle-btn" data-view="distribution" title="Verteilung" onclick="PMO.switchChartView('tests', 'distribution')">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>
+                                        </button>
+                                    </div>
+                                    <span class="pmo-kpi-badge success">38 abgeschlossen</span>
+                                </div>
                             </div>
-                            <p class="pmo-kpi-description">Testreihen: Gesamt, Gestartet, Abgeschlossen</p>
+                            <p class="pmo-kpi-description" id="desc-tests">Testreihen: Gesamt, Gestartet, Abgeschlossen</p>
                             <div class="pmo-kpi-value-row">
                                 <span class="pmo-kpi-value" id="kpi-tests">48</span>
-                                <div class="pmo-kpi-legend">
+                                <div class="pmo-kpi-legend" id="legend-tests">
                                     <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot total"></span> Gesamt</span>
                                     <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot started"></span> Gestartet</span>
                                     <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot completed"></span> Abgeschlossen</span>
@@ -838,12 +858,22 @@
                                     <span class="pmo-kpi-label">Defects</span>
                                     <span class="pmo-kpi-status red" title="Rot: 3 kritische Defects offen!"></span>
                                 </div>
-                                <span class="pmo-kpi-badge danger">3 kritisch!</span>
+                                <div class="pmo-kpi-header-actions">
+                                    <div class="pmo-chart-toggle" data-kpi="defects">
+                                        <button class="pmo-chart-toggle-btn active" data-view="timeline" title="Zeitverlauf" onclick="PMO.switchChartView('defects', 'timeline')">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+                                        </button>
+                                        <button class="pmo-chart-toggle-btn" data-view="distribution" title="Verteilung" onclick="PMO.switchChartView('defects', 'distribution')">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>
+                                        </button>
+                                    </div>
+                                    <span class="pmo-kpi-badge danger">3 kritisch!</span>
+                                </div>
                             </div>
-                            <p class="pmo-kpi-description">Defects nach Severity im Zeitverlauf</p>
+                            <p class="pmo-kpi-description" id="desc-defects">Defects nach Severity im Zeitverlauf</p>
                             <div class="pmo-kpi-value-row">
                                 <span class="pmo-kpi-value" id="kpi-defects">43</span>
-                                <div class="pmo-kpi-legend">
+                                <div class="pmo-kpi-legend" id="legend-defects">
                                     <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot critical"></span> Kritisch (3)</span>
                                     <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot major"></span> Major (12)</span>
                                     <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot minor"></span> Minor (28)</span>
@@ -861,12 +891,22 @@
                                     <span class="pmo-kpi-label">Ressourcen</span>
                                     <span class="pmo-kpi-status green" title="Grün: 87% Auslastung"></span>
                                 </div>
-                                <span class="pmo-kpi-badge success">87% Auslastung</span>
+                                <div class="pmo-kpi-header-actions">
+                                    <div class="pmo-chart-toggle" data-kpi="ressourcen">
+                                        <button class="pmo-chart-toggle-btn active" data-view="timeline" title="Zeitverlauf" onclick="PMO.switchChartView('ressourcen', 'timeline')">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+                                        </button>
+                                        <button class="pmo-chart-toggle-btn" data-view="distribution" title="Verteilung" onclick="PMO.switchChartView('ressourcen', 'distribution')">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>
+                                        </button>
+                                    </div>
+                                    <span class="pmo-kpi-badge success">87% Auslastung</span>
+                                </div>
                             </div>
-                            <p class="pmo-kpi-description">Personentage Ist vs. Angefragt pro Monat</p>
+                            <p class="pmo-kpi-description" id="desc-ressourcen">Personentage Ist vs. Angefragt pro Monat</p>
                             <div class="pmo-kpi-value-row">
                                 <span class="pmo-kpi-value" id="kpi-ressourcen">87%</span>
-                                <div class="pmo-kpi-legend">
+                                <div class="pmo-kpi-legend" id="legend-ressourcen">
                                     <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot ist"></span> PT Ist</span>
                                     <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot prognose"></span> PT Angefragt</span>
                                 </div>
@@ -890,12 +930,22 @@
                                     <span class="pmo-kpi-label">Budget</span>
                                     <span class="pmo-kpi-status green" title="Grün: Im Plan"></span>
                                 </div>
-                                <span class="pmo-kpi-badge success">Im Plan</span>
+                                <div class="pmo-kpi-header-actions">
+                                    <div class="pmo-chart-toggle" data-kpi="budget">
+                                        <button class="pmo-chart-toggle-btn active" data-view="timeline" title="Zeitverlauf" onclick="PMO.switchChartView('budget', 'timeline')">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+                                        </button>
+                                        <button class="pmo-chart-toggle-btn" data-view="distribution" title="Verteilung" onclick="PMO.switchChartView('budget', 'distribution')">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>
+                                        </button>
+                                    </div>
+                                    <span class="pmo-kpi-badge success">Im Plan</span>
+                                </div>
                             </div>
-                            <p class="pmo-kpi-description">Budget: Plan, Verbrauch, Forecast</p>
+                            <p class="pmo-kpi-description" id="desc-budget">Budget: Plan, Verbrauch, Forecast</p>
                             <div class="pmo-kpi-value-row">
                                 <span class="pmo-kpi-value" id="kpi-budget">€2.4M</span>
-                                <div class="pmo-kpi-legend">
+                                <div class="pmo-kpi-legend" id="legend-budget">
                                     <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot plan"></span> Plan €3.2M</span>
                                     <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot verbrauch"></span> Verbrauch</span>
                                     <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot forecast"></span> Forecast €3.1M</span>
@@ -1473,7 +1523,7 @@
 
 
 <!-- PMO Toolbox Styles (externalized) -->
-<link rel="stylesheet" href="/css/pmo-toolbox.css?v=20260121w">
+<link rel="stylesheet" href="/css/pmo-toolbox.css?v=20260121x">
 
 <!-- PMO Toolbox JavaScript (ES6 Module) -->
-<script type="module" src="/js/modules/pmo-toolbox.esm.js?v=20260121w"></script>
+<script type="module" src="/js/modules/pmo-toolbox.esm.js?v=20260121x"></script>

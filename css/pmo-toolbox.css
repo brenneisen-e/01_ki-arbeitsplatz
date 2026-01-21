@@ -4947,7 +4947,7 @@ mark {
 .pmo-kpis-layout {
     display: grid;
     grid-template-columns: 1fr 320px;
-    gap: 24px;
+    gap: 48px;
     padding: 24px;
 }
 

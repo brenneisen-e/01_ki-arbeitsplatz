@@ -3599,15 +3599,66 @@ PMO Team
     kpiData: {
         'milestone-delays': {
             value: 7,
-            trend: '+2',
+            trend: '+2 vs. Vorwoche',
             trendType: 'negative',
-            history: [3, 4, 5, 4, 6, 5, 7]
+            history: [3, 4, 5, 4, 6, 5, 7],
+            historyPlan: [2, 2, 3, 3, 4, 4, 5]
         },
         'cr-requests': {
             value: 12,
-            trend: '+3',
+            trend: '+3 vs. Vorwoche',
             trendType: 'warning',
-            history: [8, 9, 10, 9, 11, 10, 12]
+            history: [8, 9, 10, 9, 11, 10, 12],
+            historyPlan: [6, 7, 8, 8, 9, 9, 9]
+        },
+        'budget-efficiency': {
+            value: '87%',
+            trend: '+5% Effizienz',
+            trendType: 'positive',
+            history: [72, 75, 78, 80, 82, 85, 87],
+            historyPlan: [75, 78, 80, 82, 84, 86, 88]
+        },
+        'resource-utilization': {
+            value: '94%',
+            trend: '2 Engpässe',
+            trendType: 'warning',
+            history: [85, 88, 90, 91, 92, 93, 94],
+            historyPlan: [80, 82, 85, 87, 88, 90, 90]
+        },
+        'decision-backlog': {
+            value: 4,
+            trend: '+2 vs. Vorwoche',
+            trendType: 'negative',
+            history: [1, 2, 1, 2, 3, 2, 4],
+            historyPlan: [1, 1, 1, 1, 1, 1, 1]
+        },
+        'critical-path': {
+            value: 3,
+            trend: 'Unverändert',
+            trendType: 'warning',
+            history: [2, 2, 3, 3, 4, 3, 3],
+            historyPlan: [1, 1, 2, 2, 2, 2, 2]
+        },
+        'value-realization': {
+            value: '72%',
+            trend: '+8% vs. Q3',
+            trendType: 'positive',
+            history: [45, 52, 58, 62, 65, 68, 72],
+            historyPlan: [50, 55, 60, 65, 70, 75, 80]
+        },
+        'partner-nps': {
+            value: '+42',
+            trend: '+12 vs. Q3',
+            trendType: 'positive',
+            history: [18, 22, 28, 30, 35, 38, 42],
+            historyPlan: [20, 25, 30, 32, 35, 38, 40]
+        },
+        'adoption-rate': {
+            value: '68%',
+            trend: '+15% vs. Rollout',
+            trendType: 'positive',
+            history: [25, 35, 45, 52, 58, 63, 68],
+            historyPlan: [30, 40, 50, 60, 70, 75, 80]
         }
     },
 
@@ -3796,6 +3847,77 @@ PMO Team
                 }
             });
         }
+
+        // Helper function to render standard KPI charts
+        const renderKPIChart = (canvasId, data, planData, isPercentage = false) => {
+            const canvas = document.getElementById(canvasId);
+            if (canvas && typeof Chart !== 'undefined') {
+                const ctx = canvas.getContext('2d');
+                if (canvas._chart) canvas._chart.destroy();
+
+                canvas._chart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt'],
+                        datasets: [{
+                            label: 'Ist',
+                            data: data,
+                            borderColor: '#3b82f6',
+                            backgroundColor: 'transparent',
+                            tension: 0.3,
+                            pointRadius: 4,
+                            pointBackgroundColor: '#3b82f6',
+                            pointBorderColor: '#fff',
+                            pointBorderWidth: 2,
+                            borderWidth: 2
+                        }, {
+                            label: 'Plan',
+                            data: planData,
+                            borderColor: '#94a3b8',
+                            backgroundColor: 'transparent',
+                            tension: 0.3,
+                            pointRadius: 4,
+                            pointBackgroundColor: '#94a3b8',
+                            pointBorderColor: '#fff',
+                            pointBorderWidth: 2,
+                            borderWidth: 2,
+                            borderDash: [5, 5]
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            x: {
+                                display: true,
+                                grid: { display: false },
+                                ticks: { color: '#94a3b8', font: { size: 10 }, maxRotation: 0 }
+                            },
+                            y: {
+                                display: true,
+                                grid: { color: 'rgba(0,0,0,0.05)', drawBorder: false },
+                                ticks: {
+                                    color: '#94a3b8',
+                                    font: { size: 10 },
+                                    callback: (value) => isPercentage ? value + '%' : value
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        };
+
+        // Render charts for new KPIs
+        const kpis = this.kpiData;
+        renderKPIChart('chart-budget-efficiency', kpis['budget-efficiency'].history, kpis['budget-efficiency'].historyPlan, true);
+        renderKPIChart('chart-resource-utilization', kpis['resource-utilization'].history, kpis['resource-utilization'].historyPlan, true);
+        renderKPIChart('chart-decision-backlog', kpis['decision-backlog'].history, kpis['decision-backlog'].historyPlan);
+        renderKPIChart('chart-critical-path', kpis['critical-path'].history, kpis['critical-path'].historyPlan);
+        renderKPIChart('chart-value-realization', kpis['value-realization'].history, kpis['value-realization'].historyPlan, true);
+        renderKPIChart('chart-partner-nps', kpis['partner-nps'].history, kpis['partner-nps'].historyPlan);
+        renderKPIChart('chart-adoption-rate', kpis['adoption-rate'].history, kpis['adoption-rate'].historyPlan, true);
     },
 
     filterKPIs() {

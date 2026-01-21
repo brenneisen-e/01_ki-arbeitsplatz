@@ -4368,10 +4368,168 @@ PMO Team
     },
 
     renderP10Charts() {
-        // Use SVG-based rendering with proper axes (no Chart.js dependency)
-        console.log('🎯 renderP10Charts() aufgerufen - SVG-Rendering');
+        console.log('🎯 renderP10Charts() aufgerufen');
 
+        // Wait a tick for DOM to be ready, then render
+        setTimeout(() => this._doRenderP10Charts(), 100);
+    },
+
+    _doRenderP10Charts() {
         const labels = ['Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez', 'Jan'];
+
+        // Try Chart.js first (like A-03), fallback to SVG
+        if (typeof Chart !== 'undefined') {
+            console.log('✅ Chart.js verfügbar - verwende Chart.js');
+            this._renderP10WithChartJS(labels);
+        } else {
+            console.log('⚠️ Chart.js nicht verfügbar - verwende SVG');
+            this._renderP10WithSVG(labels);
+        }
+    },
+
+    _renderP10WithChartJS(labels) {
+        const chartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+                x: {
+                    display: true,
+                    grid: { display: false },
+                    ticks: { color: '#94a3b8', font: { size: 10 }, maxRotation: 0 }
+                },
+                y: {
+                    display: true,
+                    grid: { color: 'rgba(0,0,0,0.05)', drawBorder: false },
+                    ticks: { color: '#94a3b8', font: { size: 10 } }
+                }
+            }
+        };
+
+        // Helper to create Chart.js chart
+        const createChart = (canvasId, datasets, yMin, yMax, tickCallback) => {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) { console.warn('Canvas nicht gefunden:', canvasId); return; }
+
+            const ctx = canvas.getContext('2d');
+            if (canvas._chart) canvas._chart.destroy();
+
+            const opts = JSON.parse(JSON.stringify(chartOptions));
+            if (yMin !== undefined) opts.scales.y.min = yMin;
+            if (yMax !== undefined) opts.scales.y.max = yMax;
+            if (tickCallback) opts.scales.y.ticks.callback = tickCallback;
+
+            canvas._chart = new Chart(ctx, {
+                type: 'line',
+                data: { labels, datasets },
+                options: opts
+            });
+        };
+
+        // Verträge pro Kunde
+        createChart('chart-vertraege', [
+            { label: 'Ist', data: this.kpiData.vertraege.history, borderColor: '#3b82f6', backgroundColor: 'transparent', tension: 0.3, pointRadius: 4, borderWidth: 2 },
+            { label: 'Ziel', data: Array(10).fill(this.kpiData.vertraege.target), borderColor: '#86BC25', borderDash: [5, 5], borderWidth: 2, pointRadius: 0 }
+        ], 1.8, 3.0);
+
+        // APE pro Kunde
+        createChart('chart-ape', [
+            { label: 'Ist', data: this.kpiData.ape.history.map(v => v/1000), borderColor: '#0ea5e9', backgroundColor: 'transparent', tension: 0.3, pointRadius: 4, borderWidth: 2 },
+            { label: 'Ziel', data: Array(10).fill(this.kpiData.ape.target/1000), borderColor: '#86BC25', borderDash: [5, 5], borderWidth: 2, pointRadius: 0 }
+        ], 100, 200, v => '€' + v + 'k');
+
+        // NPS Score
+        createChart('chart-nps', [
+            { label: 'NPS', data: this.kpiData.nps.history, borderColor: '#8b5cf6', backgroundColor: 'transparent', tension: 0.3, pointRadius: 4, borderWidth: 2 },
+            { label: 'Benchmark', data: Array(10).fill(this.kpiData.nps.benchmark), borderColor: '#86BC25', borderDash: [5, 5], borderWidth: 2, pointRadius: 0 }
+        ], -20, 60);
+
+        // User Adoption
+        const adoptionLabels = ['Jan 24', 'Apr', 'Jul', 'Okt', 'Jan 25', 'Apr', 'Jul', 'Okt', 'Jan 26'];
+        const adoptionCanvas = document.getElementById('chart-adoption');
+        if (adoptionCanvas) {
+            const ctx = adoptionCanvas.getContext('2d');
+            if (adoptionCanvas._chart) adoptionCanvas._chart.destroy();
+            adoptionCanvas._chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: adoptionLabels,
+                    datasets: [
+                        { label: 'Portal', data: [10, 25, 45, 65, 78, 85, 90, 93, 95], borderColor: '#3b82f6', tension: 0.3, pointRadius: 3, borderWidth: 2 },
+                        { label: 'Risk', data: [null, null, 5, 18, 35, 52, 62, 70, 74], borderColor: '#f59e0b', tension: 0.3, pointRadius: 3, borderWidth: 2 },
+                        { label: 'KI', data: [null, null, null, null, null, 8, 22, 38, 48], borderColor: '#8b5cf6', tension: 0.3, pointRadius: 3, borderWidth: 2 }
+                    ]
+                },
+                options: { ...chartOptions, scales: { ...chartOptions.scales, y: { ...chartOptions.scales.y, min: 0, max: 100, ticks: { ...chartOptions.scales.y.ticks, callback: v => v + '%' } } } }
+            });
+        }
+
+        // Meilensteine
+        createChart('chart-meilensteine', [
+            { label: 'Im Plan', data: this.kpiData.meilensteine.history, borderColor: '#16a34a', backgroundColor: 'transparent', tension: 0.3, pointRadius: 4, borderWidth: 2 }
+        ], 50, 100, v => v + '%');
+
+        // User Stories (stacked bar)
+        const usCanvas = document.getElementById('chart-userstories');
+        if (usCanvas) {
+            const ctx = usCanvas.getContext('2d');
+            if (usCanvas._chart) usCanvas._chart.destroy();
+            usCanvas._chart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels,
+                    datasets: [
+                        { label: 'Backlog', data: this.kpiData.userstories.monthly.map(m => m.backlog), backgroundColor: '#94a3b8', stack: 's1' },
+                        { label: 'In Progress', data: this.kpiData.userstories.monthly.map(m => m.inprogress), backgroundColor: '#3b82f6', stack: 's1' },
+                        { label: 'Review', data: this.kpiData.userstories.monthly.map(m => m.review), backgroundColor: '#f59e0b', stack: 's1' },
+                        { label: 'Done', data: this.kpiData.userstories.monthly.map(m => m.done), backgroundColor: '#16a34a', stack: 's1' }
+                    ]
+                },
+                options: { ...chartOptions, scales: { x: { ...chartOptions.scales.x, stacked: true }, y: { ...chartOptions.scales.y, stacked: true } } }
+            });
+        }
+
+        // Tests
+        createChart('chart-tests', [
+            { label: 'Gesamt', data: this.kpiData.tests.history.total, borderColor: '#64748b', tension: 0.3, pointRadius: 3, borderWidth: 2 },
+            { label: 'Gestartet', data: this.kpiData.tests.history.started, borderColor: '#3b82f6', tension: 0.3, pointRadius: 3, borderWidth: 2 },
+            { label: 'Fertig', data: this.kpiData.tests.history.completed, borderColor: '#16a34a', tension: 0.3, pointRadius: 3, borderWidth: 2 }
+        ], 20, 55);
+
+        // Defects (stacked bar)
+        const defCanvas = document.getElementById('chart-defects');
+        if (defCanvas) {
+            const ctx = defCanvas.getContext('2d');
+            if (defCanvas._chart) defCanvas._chart.destroy();
+            defCanvas._chart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels,
+                    datasets: [
+                        { label: 'Kritisch', data: this.kpiData.defects.monthly.map(m => m.critical), backgroundColor: '#dc2626', stack: 's1' },
+                        { label: 'Major', data: this.kpiData.defects.monthly.map(m => m.major), backgroundColor: '#f59e0b', stack: 's1' },
+                        { label: 'Minor', data: this.kpiData.defects.monthly.map(m => m.minor), backgroundColor: '#fbbf24', stack: 's1' }
+                    ]
+                },
+                options: { ...chartOptions, scales: { x: { ...chartOptions.scales.x, stacked: true }, y: { ...chartOptions.scales.y, stacked: true } } }
+            });
+        }
+
+        // Ressourcen
+        createChart('chart-ressourcen', [
+            { label: 'Ist', data: this.kpiData.ressourcen.history.ist, borderColor: '#3b82f6', tension: 0.3, pointRadius: 3, borderWidth: 2 },
+            { label: 'Angefragt', data: this.kpiData.ressourcen.history.angefragt, borderColor: '#94a3b8', borderDash: [5, 5], tension: 0.3, pointRadius: 3, borderWidth: 2 }
+        ], 200, 300);
+
+        // Budget
+        createChart('chart-budget', [
+            { label: 'Plan', data: this.kpiData.budget.history.plan.map(v => v/1000), borderColor: '#86BC25', tension: 0.3, pointRadius: 3, borderWidth: 2 },
+            { label: 'Verbrauch', data: this.kpiData.budget.history.verbrauch.map(v => v/1000), borderColor: '#3b82f6', tension: 0.3, pointRadius: 3, borderWidth: 2 },
+            { label: 'Forecast', data: this.kpiData.budget.history.forecast.map(v => v/1000), borderColor: '#8b5cf6', borderDash: [5, 5], tension: 0.3, pointRadius: 3, borderWidth: 2 }
+        ], 0, 3.5, v => '€' + v.toFixed(1) + 'M');
+    },
+
+    _renderP10WithSVG(labels) {
 
         // Verträge pro Kunde
         this.renderSVGLineChart('chart-vertraege', labels,

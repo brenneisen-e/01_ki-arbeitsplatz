@@ -4080,6 +4080,69 @@ mark {
 .pmo-value-item.pipeline .pmo-value-amount { color: #2563eb; }
 .pmo-value-item.target .pmo-value-amount { color: #64748b; }
 
+/* P-10 KPIs Layout (Main + Sidebar) */
+.pmo-kpis-layout {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 24px;
+    padding: 24px;
+}
+
+.pmo-kpis-main {
+    min-width: 0;
+}
+
+.pmo-kpis-sidebar {
+    position: sticky;
+    top: 24px;
+    height: fit-content;
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
+}
+
+@media (max-width: 1400px) {
+    .pmo-kpis-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .pmo-kpis-sidebar {
+        position: static;
+        max-height: none;
+    }
+}
+
+/* KPI Chart Container */
+.pmo-kpi-chart-container {
+    height: 100px;
+    margin: 12px 0;
+    background: linear-gradient(to bottom, #f8fafc, #f1f5f9);
+    border-radius: 8px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-around;
+    padding: 8px;
+    gap: 4px;
+}
+
+/* Bar Chart Bars */
+.pmo-bar {
+    flex: 1;
+    max-width: 24px;
+    background: linear-gradient(to top, #86BC25, #a3d447);
+    border-radius: 4px 4px 0 0;
+    transition: height 0.3s ease;
+    position: relative;
+}
+
+.pmo-bar:hover {
+    background: linear-gradient(to top, #6fa31e, #86BC25);
+}
+
+.pmo-bar.target {
+    background: linear-gradient(to top, #e2e8f0, #cbd5e1);
+    opacity: 0.5;
+}
+
 /* Subproject Selector */
 .pmo-subproject-selector {
     display: flex;

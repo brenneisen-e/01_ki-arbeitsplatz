@@ -2345,23 +2345,30 @@ PMO Team
     // View Management
     showView(viewId) {
         console.log('🔀 showView aufgerufen mit viewId:', viewId);
-        this.showViewInternal(viewId);
+        try {
+            this.showViewInternal(viewId);
 
-        // Also render dashboard if switching to it
-        if (viewId === 'dashboard') this.renderDashboard();
-        if (viewId === 'risiken') this.renderRisks();
-        if (viewId === 'meilensteine') this.renderMilestones();
-        if (viewId === 'timeline') this.renderTimeline();
-        if (viewId === 'gantt') this.renderGantt();
-        if (viewId === 'entscheidungen') this.renderDecisions();
-        if (viewId === 'dokumente') this.renderDocumentsList();
-        if (viewId === 'kpis') this.renderKPIs();
-        if (viewId === 'suche') {
-            // Focus search input when switching to search view
-            setTimeout(() => {
-                const searchInput = document.getElementById('pmo-view-search-input');
-                if (searchInput) searchInput.focus();
-            }, 100);
+            // Also render dashboard if switching to it
+            if (viewId === 'dashboard') this.renderDashboard();
+            if (viewId === 'risiken') this.renderRisks();
+            if (viewId === 'meilensteine') this.renderMilestones();
+            if (viewId === 'timeline') this.renderTimeline();
+            if (viewId === 'gantt') this.renderGantt();
+            if (viewId === 'entscheidungen') this.renderDecisions();
+            if (viewId === 'dokumente') this.renderDocumentsList();
+            if (viewId === 'kpis') {
+                console.log('✅ viewId === kpis, calling renderKPIs()');
+                this.renderKPIs();
+            }
+            if (viewId === 'suche') {
+                // Focus search input when switching to search view
+                setTimeout(() => {
+                    const searchInput = document.getElementById('pmo-view-search-input');
+                    if (searchInput) searchInput.focus();
+                }, 100);
+            }
+        } catch (error) {
+            console.error('❌ Error in showView:', error);
         }
     },
 
@@ -4593,8 +4600,18 @@ PMO Team
     },
 
     renderSVGLineChart(containerId, labels, lines, targetValue, targetColor, minY, maxY, prefix = '', suffix = '') {
-        const container = document.getElementById(containerId);
+        let container = document.getElementById(containerId);
         if (!container) { console.warn('Container not found:', containerId); return; }
+
+        // If it's a canvas, replace with a div for SVG rendering
+        if (container.tagName === 'CANVAS') {
+            const div = document.createElement('div');
+            div.id = containerId;
+            div.style.width = '100%';
+            div.style.height = '130px';
+            container.parentElement.replaceChild(div, container);
+            container = div;
+        }
 
         // Clear existing content and get parent dimensions
         const parent = container.parentElement;
@@ -4646,8 +4663,18 @@ PMO Team
     },
 
     renderSVGMultiLineChart(containerId, labels, lines, minY, maxY, prefix = '', suffix = '') {
-        const container = document.getElementById(containerId);
+        let container = document.getElementById(containerId);
         if (!container) { console.warn('Container not found:', containerId); return; }
+
+        // If it's a canvas, replace with a div for SVG rendering
+        if (container.tagName === 'CANVAS') {
+            const div = document.createElement('div');
+            div.id = containerId;
+            div.style.width = '100%';
+            div.style.height = '130px';
+            container.parentElement.replaceChild(div, container);
+            container = div;
+        }
 
         const parent = container.parentElement;
         const width = parent ? parent.offsetWidth - 20 : 280;
@@ -4696,8 +4723,18 @@ PMO Team
     },
 
     renderSVGStackedBarChart(containerId, labels, monthlyData, keys, colors) {
-        const container = document.getElementById(containerId);
+        let container = document.getElementById(containerId);
         if (!container) { console.warn('Container not found:', containerId); return; }
+
+        // If it's a canvas, replace with a div for SVG rendering
+        if (container.tagName === 'CANVAS') {
+            const div = document.createElement('div');
+            div.id = containerId;
+            div.style.width = '100%';
+            div.style.height = '130px';
+            container.parentElement.replaceChild(div, container);
+            container = div;
+        }
 
         const parent = container.parentElement;
         const width = parent ? parent.offsetWidth - 20 : 280;

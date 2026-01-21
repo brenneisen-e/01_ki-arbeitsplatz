@@ -4453,7 +4453,7 @@ PMO Team
         ], 100, 200, v => '€' + v + 'k');
 
         // NPS Score
-        createChart('chart-nps', [
+        createChart('pmo-chart-nps', [
             { label: 'NPS', data: this.kpiData.nps.history, borderColor: '#8b5cf6', backgroundColor: 'transparent', tension: 0.3, pointRadius: 4, borderWidth: 2 },
             { label: 'Benchmark', data: Array(10).fill(this.kpiData.nps.benchmark), borderColor: '#86BC25', borderDash: [5, 5], borderWidth: 2, pointRadius: 0 }
         ], -20, 60);
@@ -4512,12 +4512,48 @@ PMO Team
             { label: 'Fertig', data: this.kpiData.tests.history.completed, borderColor: '#86BC25', tension: 0.3, pointRadius: 3, borderWidth: 2 }
         ], 20, 55);
 
-        // Defects (stacked bar)
+        // Defects (stacked bar) with warning icon on last bar
         const defCanvas = document.getElementById('chart-defects');
         if (defCanvas) {
             const existingDef = Chart.getChart(defCanvas);
             if (existingDef) existingDef.destroy();
             const ctx = defCanvas.getContext('2d');
+
+            // Plugin to draw warning icon over last bar
+            const warningPlugin = {
+                id: 'warningIcon',
+                afterDraw: (chart) => {
+                    const criticalCount = this.kpiData.defects.critical;
+                    if (criticalCount > 0) {
+                        const ctx = chart.ctx;
+                        const meta = chart.getDatasetMeta(0); // First dataset (Kritisch)
+                        const lastBar = meta.data[meta.data.length - 1];
+                        if (lastBar) {
+                            const x = lastBar.x;
+                            const y = lastBar.y - 20;
+
+                            // Draw warning triangle
+                            ctx.save();
+                            ctx.fillStyle = '#dc2626';
+                            ctx.beginPath();
+                            ctx.moveTo(x, y - 12);
+                            ctx.lineTo(x - 10, y + 6);
+                            ctx.lineTo(x + 10, y + 6);
+                            ctx.closePath();
+                            ctx.fill();
+
+                            // Draw exclamation mark
+                            ctx.fillStyle = 'white';
+                            ctx.font = 'bold 12px Arial';
+                            ctx.textAlign = 'center';
+                            ctx.textBaseline = 'middle';
+                            ctx.fillText('!', x, y - 1);
+                            ctx.restore();
+                        }
+                    }
+                }
+            };
+
             defCanvas._chart = new Chart(ctx, {
                 type: 'bar',
                 data: {
@@ -4528,7 +4564,8 @@ PMO Team
                         { label: 'Minor', data: this.kpiData.defects.monthly.map(m => m.minor), backgroundColor: '#86BC25', stack: 's1', barPercentage: 0.5, categoryPercentage: 0.6 }
                     ]
                 },
-                options: { ...chartOptions, scales: { x: { ...chartOptions.scales.x, stacked: true }, y: { ...chartOptions.scales.y, stacked: true, max: 100 } } }
+                options: { ...chartOptions, scales: { x: { ...chartOptions.scales.x, stacked: true }, y: { ...chartOptions.scales.y, stacked: true, max: 100 } } },
+                plugins: [warningPlugin]
             });
         }
 
@@ -4559,7 +4596,7 @@ PMO Team
             this.kpiData.ape.target/1000, '#86BC25', 100, 200, '€', 'k');
 
         // NPS Score (time series)
-        this.renderSVGLineChart('chart-nps', labels,
+        this.renderSVGLineChart('pmo-chart-nps', labels,
             [{ data: this.kpiData.nps.history, color: '#8b5cf6', label: 'NPS' }],
             this.kpiData.nps.benchmark, '#86BC25', -20, 60);
 
@@ -5268,13 +5305,59 @@ PMO Team
             btn.classList.toggle('active', btn.dataset.level === level);
         });
 
-        // Show/hide project filter based on level
-        const projectFilter = document.getElementById('kpis-project-filter');
-        if (projectFilter) {
-            projectFilter.style.display = level === 'projekt' ? 'block' : 'none';
+        // Show/hide sections based on level
+        const strategischSection = document.querySelector('[data-category="strategisch"]');
+        const vertrieblichSection = document.querySelector('[data-category="vertrieblich"]');
+        const strategischCards = document.querySelectorAll('.pmo-kpi-card[data-category="strategisch"]');
+        const vertrieblichCards = document.querySelectorAll('.pmo-kpi-card[data-category="vertrieblich"]');
+        const strategischDivider = document.querySelector('.pmo-kpi-section-divider[data-category="strategisch"]');
+        const vertrieblichDivider = document.querySelector('.pmo-kpi-section-divider[data-category="vertrieblich"]');
+
+        // Show/hide project dropdown
+        const projectDropdown = document.getElementById('kpis-project-dropdown');
+
+        if (level === 'projekt') {
+            // Hide Strategisch and Vertrieblich
+            if (strategischDivider) strategischDivider.style.display = 'none';
+            if (vertrieblichDivider) vertrieblichDivider.style.display = 'none';
+            strategischCards.forEach(card => card.style.display = 'none');
+            vertrieblichCards.forEach(card => card.style.display = 'none');
+            // Show project dropdown
+            if (projectDropdown) projectDropdown.style.display = 'flex';
+        } else {
+            // Show all sections
+            if (strategischDivider) strategischDivider.style.display = '';
+            if (vertrieblichDivider) vertrieblichDivider.style.display = '';
+            strategischCards.forEach(card => card.style.display = '');
+            vertrieblichCards.forEach(card => card.style.display = '');
+            // Hide project dropdown
+            if (projectDropdown) projectDropdown.style.display = 'none';
         }
 
+        this.currentKPILevel = level;
         // Re-render charts (in future: with project-specific data)
+        this.renderP10Charts();
+    },
+
+    selectProject(projectId) {
+        this.currentSelectedProject = projectId;
+        const project = this.PROGRAM_STRUCTURE.projects.find(p => p.id === projectId);
+
+        if (project) {
+            // Update title to show selected project
+            const title = document.querySelector('.pmo-section-title');
+            if (title) {
+                title.textContent = `Projekt ${projectId}: ${project.name}`;
+            }
+            console.log('📊 Projekt ausgewählt:', projectId, project.name);
+        } else {
+            const title = document.querySelector('.pmo-section-title');
+            if (title) {
+                title.textContent = 'Projekt-KPIs';
+            }
+        }
+
+        // Re-render charts with project-specific data (mock for now)
         this.renderP10Charts();
     },
 

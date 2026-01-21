@@ -557,10 +557,22 @@
                         <button class="pmo-toggle-btn active" data-level="programm" onclick="PMO.switchKPILevel('programm')">Programm</button>
                         <button class="pmo-toggle-btn" data-level="projekt" onclick="PMO.switchKPILevel('projekt')">Projekt</button>
                     </div>
-                    <div class="pmo-kpis-filters">
-                        <select id="kpis-project-filter" onchange="PMO.filterKPIs()">
-                            <option value="">Alle Projekte</option>
+                    <!-- Projekt-Dropdown (nur bei Projekt-Level sichtbar) -->
+                    <div class="pmo-project-dropdown" id="kpis-project-dropdown" style="display: none;">
+                        <label class="pmo-dropdown-label">Projekt:</label>
+                        <select id="kpis-project-select" onchange="PMO.selectProject(this.value)">
+                            <option value="">— Projekt wählen —</option>
+                            <option value="A">A - Hybrider Kunde</option>
+                            <option value="B">B - Digitale Tools</option>
+                            <option value="C">C - Operations</option>
+                            <option value="D">D - Data Excellence</option>
+                            <option value="E">E - Enabling</option>
+                            <option value="F">F - IT-Plattform</option>
+                            <option value="G">G - Governance</option>
+                            <option value="H">H - Change</option>
                         </select>
+                    </div>
+                    <div class="pmo-kpis-filters">
                         <select id="kpis-period-filter" onchange="PMO.filterKPIs()">
                             <option value="ytd">2025 YTD</option>
                             <option value="q4">Q4 2025</option>
@@ -692,7 +704,7 @@
                                 <span class="pmo-kpi-trend-label">156 Teilnehmer</span>
                             </div>
                             <div class="pmo-kpi-chart">
-                                <canvas id="chart-nps"></canvas>
+                                <canvas id="pmo-chart-nps"></canvas>
                             </div>
                         </div>
 
@@ -1449,7 +1461,7 @@
 
 
 <!-- PMO Toolbox Styles (externalized) -->
-<link rel="stylesheet" href="/css/pmo-toolbox.css?v=20260121p">
+<link rel="stylesheet" href="/css/pmo-toolbox.css?v=20260121q">
 
 <!-- PMO Toolbox JavaScript (ES6 Module) -->
-<script type="module" src="/js/modules/pmo-toolbox.esm.js?v=20260121p"></script>
+<script type="module" src="/js/modules/pmo-toolbox.esm.js?v=20260121r"></script>

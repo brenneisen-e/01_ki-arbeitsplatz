@@ -4416,20 +4416,38 @@ PMO Team
             history: [72, 74, 75, 76, 77, 78, 79, 78, 77, 78]
         },
         userstories: {
-            total: 156,
-            byStatus: { backlog: 42, inprogress: 28, review: 18, done: 68 },
-            monthly: [
-                { month: 'Apr', backlog: 80, inprogress: 15, review: 5, done: 12 },
-                { month: 'Mai', backlog: 75, inprogress: 18, review: 8, done: 22 },
-                { month: 'Jun', backlog: 68, inprogress: 22, review: 10, done: 32 },
-                { month: 'Jul', backlog: 62, inprogress: 25, review: 12, done: 42 },
-                { month: 'Aug', backlog: 55, inprogress: 28, review: 15, done: 52 },
-                { month: 'Sep', backlog: 50, inprogress: 28, review: 16, done: 58 },
-                { month: 'Okt', backlog: 48, inprogress: 26, review: 18, done: 62 },
-                { month: 'Nov', backlog: 45, inprogress: 28, review: 17, done: 65 },
-                { month: 'Dez', backlog: 43, inprogress: 27, review: 18, done: 67 },
-                { month: 'Jan', backlog: 42, inprogress: 28, review: 18, done: 68 }
-            ]
+            konzeption: {
+                total: 156,
+                byStatus: { backlog: 42, inprogress: 28, review: 18, done: 68 },
+                monthly: [
+                    { month: 'Apr', backlog: 80, inprogress: 15, review: 5, done: 12 },
+                    { month: 'Mai', backlog: 75, inprogress: 18, review: 8, done: 22 },
+                    { month: 'Jun', backlog: 68, inprogress: 22, review: 10, done: 32 },
+                    { month: 'Jul', backlog: 62, inprogress: 25, review: 12, done: 42 },
+                    { month: 'Aug', backlog: 55, inprogress: 28, review: 15, done: 52 },
+                    { month: 'Sep', backlog: 50, inprogress: 28, review: 16, done: 58 },
+                    { month: 'Okt', backlog: 48, inprogress: 26, review: 18, done: 62 },
+                    { month: 'Nov', backlog: 45, inprogress: 28, review: 17, done: 65 },
+                    { month: 'Dez', backlog: 43, inprogress: 27, review: 18, done: 67 },
+                    { month: 'Jan', backlog: 42, inprogress: 28, review: 18, done: 68 }
+                ]
+            },
+            umsetzung: {
+                total: 124,
+                byStatus: { backlog: 18, inprogress: 22, review: 12, done: 72 },
+                monthly: [
+                    { month: 'Apr', backlog: 45, inprogress: 12, review: 8, done: 20 },
+                    { month: 'Mai', backlog: 40, inprogress: 15, review: 10, done: 28 },
+                    { month: 'Jun', backlog: 35, inprogress: 18, review: 12, done: 38 },
+                    { month: 'Jul', backlog: 30, inprogress: 20, review: 10, done: 48 },
+                    { month: 'Aug', backlog: 26, inprogress: 22, review: 11, done: 56 },
+                    { month: 'Sep', backlog: 24, inprogress: 24, review: 10, done: 62 },
+                    { month: 'Okt', backlog: 22, inprogress: 23, review: 11, done: 66 },
+                    { month: 'Nov', backlog: 20, inprogress: 22, review: 12, done: 69 },
+                    { month: 'Dez', backlog: 19, inprogress: 22, review: 12, done: 71 },
+                    { month: 'Jan', backlog: 18, inprogress: 22, review: 12, done: 72 }
+                ]
+            }
         },
         tests: {
             total: 48,
@@ -4691,9 +4709,11 @@ PMO Team
             { label: 'Im Plan', data: this.kpiData.meilensteine.history, borderColor: '#16a34a', backgroundColor: 'transparent', tension: 0.3, pointRadius: 4, borderWidth: 2 }
         ], 50, 100, v => v + '%');
 
-        // User Stories (stacked bar)
+        // User Stories (stacked bar) - use current mode
         const usCanvas = document.getElementById('chart-userstories');
         if (usCanvas) {
+            const usInitModeChart = this.userStoriesMode || 'konzeption';
+            const usInitData = this.kpiData.userstories[usInitModeChart];
             const existingUS = Chart.getChart(usCanvas);
             if (existingUS) existingUS.destroy();
             const ctx = usCanvas.getContext('2d');
@@ -4702,10 +4722,10 @@ PMO Team
                 data: {
                     labels,
                     datasets: [
-                        { label: 'Backlog', data: this.kpiData.userstories.monthly.map(m => m.backlog), backgroundColor: '#cbd5e1', stack: 's1', barPercentage: 0.5, categoryPercentage: 0.6 },
-                        { label: 'In Progress', data: this.kpiData.userstories.monthly.map(m => m.inprogress), backgroundColor: '#3b82f6', stack: 's1', barPercentage: 0.5, categoryPercentage: 0.6 },
-                        { label: 'Review', data: this.kpiData.userstories.monthly.map(m => m.review), backgroundColor: '#f59e0b', stack: 's1', barPercentage: 0.5, categoryPercentage: 0.6 },
-                        { label: 'Done', data: this.kpiData.userstories.monthly.map(m => m.done), backgroundColor: '#86BC25', stack: 's1', barPercentage: 0.5, categoryPercentage: 0.6 }
+                        { label: 'Backlog', data: usInitData.monthly.map(m => m.backlog), backgroundColor: '#cbd5e1', stack: 's1', barPercentage: 0.5, categoryPercentage: 0.6 },
+                        { label: 'In Progress', data: usInitData.monthly.map(m => m.inprogress), backgroundColor: '#3b82f6', stack: 's1', barPercentage: 0.5, categoryPercentage: 0.6 },
+                        { label: 'Review', data: usInitData.monthly.map(m => m.review), backgroundColor: '#f59e0b', stack: 's1', barPercentage: 0.5, categoryPercentage: 0.6 },
+                        { label: 'Done', data: usInitData.monthly.map(m => m.done), backgroundColor: '#86BC25', stack: 's1', barPercentage: 0.5, categoryPercentage: 0.6 }
                     ]
                 },
                 options: { ...chartOptions, scales: { x: { ...chartOptions.scales.x, stacked: true }, y: { ...chartOptions.scales.y, stacked: true, max: 200 } } }
@@ -4897,8 +4917,9 @@ PMO Team
             [{ data: this.kpiData.meilensteine.history, color: '#16a34a', label: 'Im Plan' }],
             null, null, 50, 100, '', '%');
 
-        // User Stories (stacked bar)
-        this.renderSVGStackedBarChart('chart-userstories', labels, this.kpiData.userstories.monthly,
+        // User Stories (stacked bar) - use current mode
+        const usInitMode = this.userStoriesMode || 'konzeption';
+        this.renderSVGStackedBarChart('chart-userstories', labels, this.kpiData.userstories[usInitMode].monthly,
             ['backlog', 'inprogress', 'review', 'done'],
             ['#94a3b8', '#3b82f6', '#f59e0b', '#16a34a']);
 
@@ -5641,6 +5662,56 @@ PMO Team
         }
     },
 
+    // Track User Stories mode (konzeption/umsetzung)
+    userStoriesMode: 'konzeption',
+
+    // Switch User Stories mode and re-render chart
+    switchUserStoriesMode(mode) {
+        console.log(`📊 Switching User Stories mode to: ${mode}`);
+        this.userStoriesMode = mode;
+
+        // Update toggle buttons
+        const toggleContainer = document.getElementById('userstories-mode-toggle');
+        if (toggleContainer) {
+            toggleContainer.querySelectorAll('.pmo-scope-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.mode === mode);
+            });
+        }
+
+        // Get data for current mode
+        const data = this.kpiData.userstories[mode];
+
+        // Update description
+        const descEl = document.getElementById('desc-userstories');
+        if (descEl) {
+            const descriptions = {
+                konzeption: 'Konzeption: User Stories nach Status',
+                umsetzung: 'Umsetzung: User Stories nach Status'
+            };
+            descEl.textContent = descriptions[mode];
+        }
+
+        // Update value
+        const valueEl = document.getElementById('kpi-userstories');
+        if (valueEl) {
+            valueEl.textContent = data.total;
+        }
+
+        // Update badge
+        const badgeEl = document.getElementById('badge-userstories');
+        if (badgeEl) {
+            badgeEl.textContent = `${data.total} gesamt`;
+        }
+
+        // Re-render the current view
+        const currentView = this.kpiViewModes.userstories;
+        if (currentView === 'timeline') {
+            this.renderTimelineChart('userstories');
+        } else if (currentView === 'distribution') {
+            this.renderDistributionChart('userstories');
+        }
+    },
+
     // Toggle view dropdown
     toggleViewDropdown(kpiId) {
         const dropdown = document.querySelector(`.pmo-view-dropdown[data-kpi="${kpiId}"]`);
@@ -5764,15 +5835,17 @@ PMO Team
 
         switch (kpiId) {
             case 'userstories':
+                const usMode = this.userStoriesMode || 'konzeption';
+                const usData = this.kpiData.userstories[usMode];
                 new Chart(ctx, {
                     type: 'bar',
                     data: {
                         labels,
                         datasets: [
-                            { label: 'Backlog', data: this.kpiData.userstories.monthly.map(m => m.backlog), backgroundColor: '#cbd5e1', stack: 's1', barPercentage: 0.5, categoryPercentage: 0.6 },
-                            { label: 'In Progress', data: this.kpiData.userstories.monthly.map(m => m.inprogress), backgroundColor: '#3b82f6', stack: 's1', barPercentage: 0.5, categoryPercentage: 0.6 },
-                            { label: 'Review', data: this.kpiData.userstories.monthly.map(m => m.review), backgroundColor: '#f59e0b', stack: 's1', barPercentage: 0.5, categoryPercentage: 0.6 },
-                            { label: 'Done', data: this.kpiData.userstories.monthly.map(m => m.done), backgroundColor: '#86BC25', stack: 's1', barPercentage: 0.5, categoryPercentage: 0.6 }
+                            { label: 'Backlog', data: usData.monthly.map(m => m.backlog), backgroundColor: '#cbd5e1', stack: 's1', barPercentage: 0.5, categoryPercentage: 0.6 },
+                            { label: 'In Progress', data: usData.monthly.map(m => m.inprogress), backgroundColor: '#3b82f6', stack: 's1', barPercentage: 0.5, categoryPercentage: 0.6 },
+                            { label: 'Review', data: usData.monthly.map(m => m.review), backgroundColor: '#f59e0b', stack: 's1', barPercentage: 0.5, categoryPercentage: 0.6 },
+                            { label: 'Done', data: usData.monthly.map(m => m.done), backgroundColor: '#86BC25', stack: 's1', barPercentage: 0.5, categoryPercentage: 0.6 }
                         ]
                     },
                     options: { ...chartOptions, scales: { x: { ...chartOptions.scales.x, stacked: true }, y: { ...chartOptions.scales.y, stacked: true, max: 200 } } }
@@ -5954,7 +6027,8 @@ PMO Team
 
         switch (kpiId) {
             case 'userstories':
-                const us = this.kpiData.userstories.byStatus;
+                const usDistMode = this.userStoriesMode || 'konzeption';
+                const us = this.kpiData.userstories[usDistMode].byStatus;
                 new Chart(ctx, {
                     type: 'doughnut',
                     data: {
@@ -6448,6 +6522,7 @@ if (typeof window !== 'undefined') {
     window.PMO = PMO;
     // Explicitly expose new functions
     window.PMO.switchResourceScope = PMO.switchResourceScope.bind(PMO);
+    window.PMO.switchUserStoriesMode = PMO.switchUserStoriesMode.bind(PMO);
     window.PMO.toggleViewDropdown = PMO.toggleViewDropdown.bind(PMO);
     window.PMO.selectViewFromDropdown = PMO.selectViewFromDropdown.bind(PMO);
 

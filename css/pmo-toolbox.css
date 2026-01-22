@@ -3470,6 +3470,11 @@ mark {
     gap: 16px;
 }
 
+.pmo-kpis-header.compact {
+    margin-bottom: 12px;
+    padding-top: 0;
+}
+
 .pmo-kpis-filters {
     display: flex;
     gap: 12px;
@@ -4948,7 +4953,7 @@ mark {
     display: grid;
     grid-template-columns: 1fr 320px;
     gap: 48px;
-    padding: 24px;
+    padding: 8px 24px 24px 24px;
 }
 
 .pmo-kpis-main {
@@ -5463,7 +5468,33 @@ mark {
     width: 8px;
     height: 8px;
     border-radius: 50%;
+    background: #94a3b8;
 }
+
+/* Legend dot color variants */
+.pmo-kpi-legend-dot.ist { background: #3b82f6; }
+.pmo-kpi-legend-dot.prognose { background: #86BC25; }
+.pmo-kpi-legend-dot.target { background: #86BC25; }
+.pmo-kpi-legend-dot.plan { background: #86BC25; border: 2px dashed #86BC25; background: transparent; box-sizing: border-box; }
+.pmo-kpi-legend-dot.benchmark { background: #94a3b8; }
+.pmo-kpi-legend-dot.tool1 { background: #3b82f6; }
+.pmo-kpi-legend-dot.tool2 { background: #8b5cf6; }
+.pmo-kpi-legend-dot.tool3 { background: #f59e0b; }
+.pmo-kpi-legend-dot.green { background: #16a34a; }
+.pmo-kpi-legend-dot.yellow { background: #f59e0b; }
+.pmo-kpi-legend-dot.red { background: #dc2626; }
+.pmo-kpi-legend-dot.backlog { background: #cbd5e1; }
+.pmo-kpi-legend-dot.inprogress { background: #3b82f6; }
+.pmo-kpi-legend-dot.review { background: #f59e0b; }
+.pmo-kpi-legend-dot.done { background: #86BC25; }
+.pmo-kpi-legend-dot.total { background: #64748b; }
+.pmo-kpi-legend-dot.started { background: #3b82f6; }
+.pmo-kpi-legend-dot.completed { background: #86BC25; }
+.pmo-kpi-legend-dot.critical { background: #dc2626; }
+.pmo-kpi-legend-dot.major { background: #f59e0b; }
+.pmo-kpi-legend-dot.minor { background: #fbbf24; }
+.pmo-kpi-legend-dot.verbrauch { background: #3b82f6; }
+.pmo-kpi-legend-dot.forecast { background: #8b5cf6; border: 2px dashed #8b5cf6; background: transparent; box-sizing: border-box; }
 
 .pmo-kpi-legend-wide {
     flex-direction: column;

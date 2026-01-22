@@ -601,7 +601,7 @@
                         <!-- ========== STRATEGISCH ========== -->
                         <div class="pmo-kpi-section-divider" data-category="strategisch">
                             <span class="pmo-kpi-section-title">Strategische KPIs (Value Map)</span>
-                            <span class="pmo-kpi-badge-section badge-linie">Linie</span>
+                            <span class="pmo-kpi-badge-section badge-linie">ERGO Linie</span>
                         </div>
 
                         <!-- Verträge pro Kunde -->
@@ -1213,12 +1213,12 @@
                             </div>
                         </div>
 
-                        <!-- Ressourcen -->
+                        <!-- Doability (Ressourcen) -->
                         <div class="pmo-kpi-card" data-kpi="ressourcen" data-category="fortschritt">
                             <div class="pmo-kpi-header">
                                 <div class="pmo-kpi-title-row">
-                                    <span class="pmo-kpi-label">Ressourcen</span>
-                                    <span class="pmo-kpi-status yellow" title="Gelb: Interne Ressourcen >100%"></span>
+                                    <span class="pmo-kpi-label">Doability (Ressourcen)</span>
+                                    <span class="pmo-kpi-status yellow" title="Gelb: Verfügbarkeit <100%"></span>
                                 </div>
                                 <div class="pmo-kpi-header-actions">
                                     <div class="pmo-chart-toggle" data-kpi="ressourcen">
@@ -1234,23 +1234,23 @@
                                         <button class="pmo-scope-btn active" data-scope="intern" title="Intern" onclick="PMO.switchResourceScope('intern')">I</button>
                                         <button class="pmo-scope-btn" data-scope="extern" title="Extern" onclick="PMO.switchResourceScope('extern')">E</button>
                                     </div>
-                                    <span class="pmo-kpi-badge warning">I &gt;100%</span>
+                                    <span class="pmo-kpi-badge warning">I: 94%</span>
                                 </div>
                             </div>
-                            <p class="pmo-kpi-description" id="desc-ressourcen">Interne Ressourcen: Ist vs. Angefragt</p>
+                            <p class="pmo-kpi-description" id="desc-ressourcen">Interne Ressourcen: Verfügbar vs. Bedarf</p>
                             <div class="pmo-kpi-value-row">
-                                <span class="pmo-kpi-value" id="kpi-ressourcen">106%</span>
+                                <span class="pmo-kpi-value" id="kpi-ressourcen">94%</span>
                                 <div class="pmo-kpi-legend" id="legend-ressourcen">
-                                    <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot ist"></span> Intern Ist</span>
-                                    <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot prognose"></span> Intern Angefr.</span>
+                                    <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot ist"></span> Verfügbar</span>
+                                    <span class="pmo-kpi-legend-item"><span class="pmo-kpi-legend-dot prognose"></span> Bedarf</span>
                                 </div>
                             </div>
                             <div class="pmo-kpi-trend warning">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"></path>
                                 </svg>
-                                <span>Intern: 165 PT Bedarf / 155 PT verfügbar</span>
-                                <span class="pmo-kpi-trend-label">106%</span>
+                                <span>Intern: 155 PT verfügbar / 165 PT Bedarf</span>
+                                <span class="pmo-kpi-trend-label">94%</span>
                             </div>
                             <div class="pmo-kpi-chart">
                                 <canvas id="chart-ressourcen"></canvas>
@@ -1858,7 +1858,7 @@
 
 
 <!-- PMO Toolbox Styles (externalized) -->
-<link rel="stylesheet" href="/css/pmo-toolbox.css?v=20260122c">
+<link rel="stylesheet" href="/css/pmo-toolbox.css?v=20260122d">
 
 <!-- PMO Toolbox JavaScript (ES6 Module) -->
-<script type="module" src="/js/modules/pmo-toolbox.esm.js?v=20260122b"></script>
+<script type="module" src="/js/modules/pmo-toolbox.esm.js?v=20260122d"></script>

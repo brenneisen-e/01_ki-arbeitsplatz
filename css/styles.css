@@ -940,6 +940,7 @@ select:focus, .dropdown-button:focus {
     margin: 0 auto;
     padding: 1.25rem;
     display: flex;
+    flex-wrap: wrap; /* Erlaubt Zeilenumbruch für Vertriebsbericht */
     gap: 1.25rem;
     align-items: stretch; /* KPI-Grid und Map-Sidebar gleich hoch */
 } 

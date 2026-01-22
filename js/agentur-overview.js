@@ -1042,12 +1042,29 @@ function showNeuePotentialeContent() {
 
                 chatBody.scrollTop = chatBody.scrollHeight;
 
-                // Nach dem letzten Potential: Hinweis und Tab-Wechsel
+                // Nach dem letzten Potential: Hinweis, Follow-up Buttons und Tab-Wechsel
                 if (index === potentiale.length - 1) {
                     setTimeout(() => {
                         const footer = document.createElement('div');
                         footer.innerHTML = '<br><strong>→ Wechsle zum Potentiale-Tab für vollständige Übersicht...</strong>';
                         messageContent.appendChild(footer);
+
+                        // Follow-up Buttons hinzufügen (wie bei anderen Chat-Antworten)
+                        const followUpDiv = document.createElement('div');
+                        followUpDiv.innerHTML = `
+                            <div class="chat-followup-suggestions">
+                                <button onclick="askAgenturQuestion('Welche Verträge laufen in den nächsten 30 Tagen aus?')">Welche Verträge laufen bald aus?</button>
+                                <button onclick="askAgenturQuestion('Welche Kunden haben Cross-Selling-Potential?')">Wer hat Cross-Selling-Potential?</button>
+                                <button onclick="showNeuePotentiale()">Neue Potentiale?</button>
+                                <button onclick="goToSalesReport()">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14" style="vertical-align: middle; margin-right: 4px;">
+                                        <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path>
+                                        <polyline points="14 2 14 8 20 8"></polyline>
+                                    </svg>
+                                    Vertriebsbericht
+                                </button>
+                            </div>`;
+                        messageContent.appendChild(followUpDiv);
                         chatBody.scrollTop = chatBody.scrollHeight;
 
                         // Nach 1,5 Sekunden: Zum Potentiale-Tab wechseln

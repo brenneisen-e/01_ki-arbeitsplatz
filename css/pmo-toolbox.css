@@ -3470,6 +3470,11 @@ mark {
     gap: 16px;
 }
 
+.pmo-kpis-header.compact {
+    margin-bottom: 12px;
+    padding-top: 0;
+}
+
 .pmo-kpis-filters {
     display: flex;
     gap: 12px;
@@ -4948,7 +4953,7 @@ mark {
     display: grid;
     grid-template-columns: 1fr 320px;
     gap: 48px;
-    padding: 24px;
+    padding: 8px 24px 24px 24px;
 }
 
 .pmo-kpis-main {

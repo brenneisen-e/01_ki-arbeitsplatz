@@ -4390,9 +4390,9 @@ PMO Team
             history: [2.02, 2.04, 2.05, 2.07, 2.08, 2.10, 2.13, 2.12, 2.12, 2.10]
         },
         ape: {
-            current: 140000,
-            target: 180000,
-            history: [125000, 128000, 130000, 132000, 135000, 137000, 138000, 139000, 140000, 140000]
+            current: 42000,
+            target: 50000,
+            history: [35000, 36000, 37000, 38000, 39000, 40000, 40000, 41000, 42000, 42000]
         },
         // Vertrieblich
         nps: {
@@ -4611,11 +4611,11 @@ PMO Team
             { label: 'Ziel', data: Array(10).fill(this.kpiData.vertraege.target), borderColor: '#86BC25', borderDash: [5, 5], borderWidth: 2, pointRadius: 0 }
         ], 1.8, 3.0);
 
-        // APE pro Kunde
+        // APE pro Vertriebspartner
         createChart('chart-ape', [
             { label: 'Ist', data: this.kpiData.ape.history.map(v => v/1000), borderColor: '#0ea5e9', backgroundColor: 'transparent', tension: 0.3, pointRadius: 4, borderWidth: 2 },
             { label: 'Ziel', data: Array(10).fill(this.kpiData.ape.target/1000), borderColor: '#86BC25', borderDash: [5, 5], borderWidth: 2, pointRadius: 0 }
-        ], 100, 200, v => '€' + v + 'k');
+        ], 30, 55, v => '€' + v + 'k');
 
         // NPS Score - with warning overlay since it dropped
         const npsCanvas = document.getElementById('pmo-chart-nps');
@@ -4891,10 +4891,10 @@ PMO Team
             [{ data: this.kpiData.vertraege.history, color: '#3b82f6', label: 'Ist' }],
             this.kpiData.vertraege.target, '#86BC25', 1.8, 3.0);
 
-        // APE pro Kunde
+        // APE pro Vertriebspartner
         this.renderSVGLineChart('chart-ape', labels,
             [{ data: this.kpiData.ape.history.map(v => v/1000), color: '#0ea5e9', label: 'Ist' }],
-            this.kpiData.ape.target/1000, '#86BC25', 100, 200, '€', 'k');
+            this.kpiData.ape.target/1000, '#86BC25', 30, 55, '€', 'k');
 
         // NPS Score (time series)
         this.renderSVGLineChart('pmo-chart-nps', labels,

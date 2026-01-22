@@ -1,6 +1,13 @@
 // js/agentur-overview.js - Agentur-Übersicht Funktionalität (Fachkonzept-konform)
 
 // ========================================
+// STATE
+// ========================================
+
+// Speichert die aktuell angezeigte Agentur-ID
+let currentAgenturIdInOverview = null;
+
+// ========================================
 // AGENTUR OVERVIEW FUNCTIONS
 // ========================================
 
@@ -47,6 +54,9 @@ function showAgenturOverview(vermittlerId) {
  */
 function loadAgenturData(vermittlerId) {
     console.log('📂 Lade Daten für Agentur:', vermittlerId);
+
+    // Speichere die aktuelle Agentur-ID für späteren Zugriff
+    currentAgenturIdInOverview = vermittlerId;
 
     // Hole Agentur-Daten aus den bestehenden Funktionen
     const agenturen = typeof getAgenturen === 'function' ? getAgenturen() : [];
@@ -713,6 +723,13 @@ function getAgenturChatResponse(question) {
             <button onclick="askAgenturQuestion('Welche Verträge laufen in den nächsten 30 Tagen aus?')">Welche Verträge laufen bald aus?</button>
             <button onclick="askAgenturQuestion('Welche Kunden haben Cross-Selling-Potential?')">Wer hat Cross-Selling-Potential?</button>
             <button onclick="showNeuePotentiale()">Neue Potentiale?</button>
+            <button onclick="goToSalesReport()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14" style="vertical-align: middle; margin-right: 4px;">
+                    <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                </svg>
+                Vertriebsbericht
+            </button>
         </div>`;
 
     // Ablaufende Verträge - ECHTE Daten aus der Datenbank!
@@ -1045,7 +1062,28 @@ function showNeuePotentialeContent() {
     }, 1500);
 }
 
+/**
+ * Navigiert zum Vertriebsbericht in A-03 (Dashboard)
+ * mit der aktuellen Agentur gefiltert
+ */
+function goToSalesReport() {
+    const agenturId = currentAgenturIdInOverview || 'VM00001';
+    console.log('📊 Navigiere zu Vertriebsbericht für:', agenturId);
+
+    // Nutze die globale Navigation-Funktion aus sales-report.js
+    if (typeof navigateToSalesReport === 'function') {
+        navigateToSalesReport(agenturId);
+    } else {
+        console.error('❌ navigateToSalesReport Funktion nicht gefunden');
+        // Fallback: Manuell navigieren
+        if (typeof openDashboard === 'function') {
+            openDashboard();
+        }
+    }
+}
+
 // Global verfügbar machen
+window.goToSalesReport = goToSalesReport;
 window.showAgenturTab = showAgenturTab;
 window.filterFidaCases = filterFidaCases;
 window.togglePotentialDetails = togglePotentialDetails;

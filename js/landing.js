@@ -3458,8 +3458,14 @@ let fidaActiveInPotentialAnalyse = false;
 // Speichert von welcher View der Nutzer zur Kundendetail-Seite gekommen ist
 let previousViewBeforeKundenDetail = 'potentialanalyse';
 
+// Speichert die aktuelle Vermittler-ID in der Kundendetail-Seite
+let currentKundenVermittlerId = null;
+
 function openKundenDetail(kundenName, vermittlerId) {
     console.log('👤 Kundendetail öffnen:', kundenName, vermittlerId);
+
+    // Speichere die Vermittler-ID für späteren Zugriff (z.B. Vertriebsbericht)
+    currentKundenVermittlerId = vermittlerId || 'VM00001';
 
     // Prüfe ob FIDA in der Potentialanalyse aktiv ist (mehrere Checks für Zuverlässigkeit)
     const fidaBtn = document.getElementById('fidaBtn');
@@ -3645,6 +3651,28 @@ function closeKundenDetail() {
         document.dispatchEvent(new CustomEvent('viewChanged', {
             detail: { module: 'versicherung', view: 'potentialanalyse' }
         }));
+    }
+}
+
+/**
+ * Navigiert zum Vertriebsbericht aus der Kundendetail-Seite
+ */
+function goToSalesReportFromKundenDetail() {
+    const agenturId = currentKundenVermittlerId || 'VM00001';
+    console.log('📊 Navigiere zu Vertriebsbericht für:', agenturId);
+
+    // Verstecke Kundendetail-Seite
+    document.getElementById('kundenDetailPage').style.display = 'none';
+
+    // Nutze die globale Navigation-Funktion aus sales-report.js
+    if (typeof navigateToSalesReport === 'function') {
+        navigateToSalesReport(agenturId);
+    } else {
+        console.error('❌ navigateToSalesReport Funktion nicht gefunden');
+        // Fallback: Manuell navigieren
+        if (typeof openDashboard === 'function') {
+            openDashboard();
+        }
     }
 }
 
@@ -4833,6 +4861,7 @@ window.selectPotentialSuggestion = selectPotentialSuggestion;
 window.filterPotentials = filterPotentials;
 window.openKundenDetail = openKundenDetail;
 window.closeKundenDetail = closeKundenDetail;
+window.goToSalesReportFromKundenDetail = goToSalesReportFromKundenDetail;
 window.toggleKundenFida = toggleKundenFida;
 window.initUploadMode = initUploadMode;
 window.exportImagesForGitHub = exportImagesForGitHub;

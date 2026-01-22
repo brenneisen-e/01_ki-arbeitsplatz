@@ -6306,6 +6306,7 @@ PMO Team
         });
 
         // Show/hide sections based on level
+        // Linie-level (only show on Programm)
         const strategischCards = document.querySelectorAll('.pmo-kpi-card[data-category="strategisch"]');
         const vertrieblichCards = document.querySelectorAll('.pmo-kpi-card[data-category="vertrieblich"]');
         const valuemapCards = document.querySelectorAll('.pmo-kpi-card[data-category="valuemap"]');
@@ -6314,11 +6315,15 @@ PMO Team
         const valuemapContainer = document.getElementById('valuemap-container');
         const valuemapClusterBox = document.querySelector('.pmo-valuemap-cluster-overview');
 
+        // Programm-level (only show on Programm)
+        const zufriedenheitCards = document.querySelectorAll('.pmo-kpi-card[data-category="zufriedenheit"]');
+        const zufriedenheitDivider = document.querySelector('.pmo-kpi-section-divider[data-category="zufriedenheit"]');
+
         // Show/hide project dropdown
         const projectDropdown = document.getElementById('kpis-project-dropdown');
 
         if (level === 'projekt') {
-            // Hide Strategisch, Vertrieblich and Value Map (Linie-level KPIs)
+            // Hide Linie-level: Strategisch, Vertrieblich, Value Map
             if (strategischDivider) strategischDivider.style.display = 'none';
             if (vertrieblichDivider) vertrieblichDivider.style.display = 'none';
             strategischCards.forEach(card => card.style.display = 'none');
@@ -6326,6 +6331,11 @@ PMO Team
             valuemapCards.forEach(card => card.style.display = 'none');
             if (valuemapContainer) valuemapContainer.style.display = 'none';
             if (valuemapClusterBox) valuemapClusterBox.style.display = 'none';
+
+            // Hide Programm-level: Zufriedenheit und Nutzung
+            if (zufriedenheitDivider) zufriedenheitDivider.style.display = 'none';
+            zufriedenheitCards.forEach(card => card.style.display = 'none');
+
             // Show project dropdown
             if (projectDropdown) projectDropdown.style.display = 'flex';
         } else {
@@ -6337,6 +6347,11 @@ PMO Team
             valuemapCards.forEach(card => card.style.display = '');
             if (valuemapContainer) valuemapContainer.style.display = '';
             if (valuemapClusterBox) valuemapClusterBox.style.display = '';
+
+            // Show Programm-level
+            if (zufriedenheitDivider) zufriedenheitDivider.style.display = '';
+            zufriedenheitCards.forEach(card => card.style.display = '');
+
             // Hide project dropdown
             if (projectDropdown) projectDropdown.style.display = 'none';
         }

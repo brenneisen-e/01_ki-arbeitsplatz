@@ -31,6 +31,7 @@
     <link rel="stylesheet" href="css/risikoscoring.css?v=20251217">
     <link rel="stylesheet" href="css/bestandsuebertragung-vst.css?v=20251217">
     <link rel="stylesheet" href="css/guided-tour.css?v=20251217">
+    <link rel="stylesheet" href="css/sales-report.css?v=20260122">
 </head>
 <body>
   <!-- ========================================
@@ -2735,6 +2736,17 @@
                         </button>
                     </div>
                 </div>
+
+                <!-- Vertriebsbericht Button -->
+                <button class="action-button sales-report-btn" onclick="goToSalesReportFromKundenDetail()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                        <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                    </svg>
+                    Vertriebsbericht
+                </button>
             </div>
 
             <!-- Tab Navigation -->
@@ -4624,6 +4636,61 @@
     <!-- Dashboard View -->
     <main class="main" id="dashboardView">
         <div class="kpi-grid" id="kpiGrid"></div>
+
+        <!-- Vertriebsbericht-Bereich (unterhalb der KPI-Boxen) -->
+        <div class="sales-report-container" id="salesReportContainer" style="display: none;">
+            <div class="sales-report-header">
+                <h2>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
+                        <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                        <polyline points="10 9 9 9 8 9"></polyline>
+                    </svg>
+                    Vertriebsbericht
+                </h2>
+                <button class="sales-report-close" onclick="hideSalesReport()" title="Schließen">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Kennzahlen-Zusammenfassung -->
+            <div class="sales-report-summary" id="salesReportSummary"></div>
+
+            <!-- Filter-Tabs -->
+            <div class="sales-report-filters" id="salesReportTabs"></div>
+
+            <!-- Abschluss-Tabelle -->
+            <div class="sales-report-table-wrapper">
+                <table class="sales-report-table">
+                    <thead>
+                        <tr>
+                            <th>Datum</th>
+                            <th>Versicherungsnehmer</th>
+                            <th>Produkt</th>
+                            <th>Tarif</th>
+                            <th>Antragsnummer</th>
+                            <th class="number">Beitrag</th>
+                            <th class="number">Faktor</th>
+                            <th class="number">Provision</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="salesReportTableBody"></tbody>
+                </table>
+            </div>
+
+            <!-- Pagination -->
+            <div class="sales-report-pagination" id="salesReportPagination"></div>
+
+            <!-- KI-Zusammenfassung -->
+            <div class="sales-report-ai-summary" id="salesReportAISummary"></div>
+        </div>
+
         <div class="map-sidebar">
             <div id="map" class="map-container"></div>
             <div class="map-info">
@@ -4889,6 +4956,7 @@
     <script src="js/chat.js"></script>
     <script src="js/agentur-overview.js"></script>
     <script src="js/landing.js?v=20251223b"></script>
+    <script src="js/sales-report.js?v=20260122"></script>
     <script src="js/finanzplanung.js?v=20251216"></script>
     <script src="js/banken.js?v=20251223b"></script>
     <script src="js/banken-chat.js?v=20251217"></script>

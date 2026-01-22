@@ -7,12 +7,12 @@
 // Demo-Abschlüsse für Max Mustermann (VM00001)
 const demoAbschluesse = [
     {
-        id: 'AB-2025-001',
-        datum: '2025-01-15',
+        id: 'AB-2026-001',
+        datum: '2026-01-20',
         versicherungsnehmer: 'Peter Schmidt',
         produkt: 'Risikolebensversicherung',
         tarif: 'Premium Plus',
-        antragsnummer: 'ANT-2025-00142',
+        antragsnummer: 'ANT-2026-00142',
         beitrag: 89.00,
         zahlweise: 'monatlich',
         faktor: 12.0,
@@ -22,12 +22,12 @@ const demoAbschluesse = [
         status: 'policiert'
     },
     {
-        id: 'AB-2025-002',
-        datum: '2025-01-12',
+        id: 'AB-2026-002',
+        datum: '2026-01-15',
         versicherungsnehmer: 'Sabine König',
         produkt: 'Berufsunfähigkeitsversicherung',
         tarif: 'BU Comfort',
-        antragsnummer: 'ANT-2025-00138',
+        antragsnummer: 'ANT-2026-00138',
         beitrag: 145.00,
         zahlweise: 'monatlich',
         faktor: 12.0,
@@ -37,12 +37,12 @@ const demoAbschluesse = [
         status: 'policiert'
     },
     {
-        id: 'AB-2025-003',
-        datum: '2025-01-10',
+        id: 'AB-2026-003',
+        datum: '2026-01-10',
         versicherungsnehmer: 'Thomas Weber',
         produkt: 'Kfz-Versicherung',
         tarif: 'Vollkasko Premium',
-        antragsnummer: 'ANT-2025-00135',
+        antragsnummer: 'ANT-2026-00135',
         beitrag: 720.00,
         zahlweise: 'jährlich',
         faktor: 1.0,
@@ -52,12 +52,12 @@ const demoAbschluesse = [
         status: 'policiert'
     },
     {
-        id: 'AB-2025-004',
-        datum: '2025-01-08',
+        id: 'AB-2026-004',
+        datum: '2026-01-05',
         versicherungsnehmer: 'Maria Schneider',
         produkt: 'Hausratversicherung',
         tarif: 'Hausrat Plus',
-        antragsnummer: 'ANT-2025-00129',
+        antragsnummer: 'ANT-2026-00129',
         beitrag: 185.00,
         zahlweise: 'jährlich',
         faktor: 1.0,
@@ -67,12 +67,12 @@ const demoAbschluesse = [
         status: 'policiert'
     },
     {
-        id: 'AB-2025-005',
-        datum: '2025-01-05',
+        id: 'AB-2025-098',
+        datum: '2025-12-28',
         versicherungsnehmer: 'Andreas Müller',
         produkt: 'Private Krankenversicherung',
         tarif: 'PKV Basis',
-        antragsnummer: 'ANT-2025-00122',
+        antragsnummer: 'ANT-2025-01922',
         beitrag: 485.00,
         zahlweise: 'monatlich',
         faktor: 12.0,
@@ -82,12 +82,12 @@ const demoAbschluesse = [
         status: 'policiert'
     },
     {
-        id: 'AB-2024-098',
-        datum: '2024-12-20',
+        id: 'AB-2025-097',
+        datum: '2025-12-20',
         versicherungsnehmer: 'Julia Fischer',
         produkt: 'Unfallversicherung',
         tarif: 'Unfall Premium',
-        antragsnummer: 'ANT-2024-01876',
+        antragsnummer: 'ANT-2025-01876',
         beitrag: 220.00,
         zahlweise: 'jährlich',
         faktor: 1.0,
@@ -97,12 +97,12 @@ const demoAbschluesse = [
         status: 'policiert'
     },
     {
-        id: 'AB-2024-097',
-        datum: '2024-12-18',
+        id: 'AB-2025-096',
+        datum: '2025-12-15',
         versicherungsnehmer: 'Michael Bauer',
         produkt: 'Rechtsschutzversicherung',
         tarif: 'Rundum-Schutz',
-        antragsnummer: 'ANT-2024-01865',
+        antragsnummer: 'ANT-2025-01865',
         beitrag: 280.00,
         zahlweise: 'jährlich',
         faktor: 1.0,
@@ -112,12 +112,12 @@ const demoAbschluesse = [
         status: 'policiert'
     },
     {
-        id: 'AB-2024-096',
-        datum: '2024-12-15',
+        id: 'AB-2025-095',
+        datum: '2025-12-10',
         versicherungsnehmer: 'Lisa Wagner',
         produkt: 'Risikolebensversicherung',
         tarif: 'Standard',
-        antragsnummer: 'ANT-2024-01852',
+        antragsnummer: 'ANT-2025-01852',
         beitrag: 45.00,
         zahlweise: 'monatlich',
         faktor: 12.0,
@@ -127,12 +127,12 @@ const demoAbschluesse = [
         status: 'policiert'
     },
     {
-        id: 'AB-2024-095',
-        datum: '2024-12-10',
+        id: 'AB-2025-094',
+        datum: '2025-12-05',
         versicherungsnehmer: 'Stefan Hoffmann',
         produkt: 'Wohngebäudeversicherung',
         tarif: 'Gebäude Komfort',
-        antragsnummer: 'ANT-2024-01840',
+        antragsnummer: 'ANT-2025-01840',
         beitrag: 450.00,
         zahlweise: 'jährlich',
         faktor: 1.0,
@@ -142,12 +142,12 @@ const demoAbschluesse = [
         status: 'policiert'
     },
     {
-        id: 'AB-2024-094',
-        datum: '2024-12-05',
+        id: 'AB-2025-093',
+        datum: '2025-11-28',
         versicherungsnehmer: 'Claudia Richter',
         produkt: 'Berufsunfähigkeitsversicherung',
         tarif: 'BU Premium',
-        antragsnummer: 'ANT-2024-01828',
+        antragsnummer: 'ANT-2025-01828',
         beitrag: 178.00,
         zahlweise: 'monatlich',
         faktor: 12.0,
@@ -157,12 +157,12 @@ const demoAbschluesse = [
         status: 'policiert'
     },
     {
-        id: 'AB-2024-093',
-        datum: '2024-11-28',
+        id: 'AB-2025-092',
+        datum: '2025-11-22',
         versicherungsnehmer: 'Robert Klein',
         produkt: 'Kfz-Versicherung',
         tarif: 'Haftpflicht Plus',
-        antragsnummer: 'ANT-2024-01815',
+        antragsnummer: 'ANT-2025-01815',
         beitrag: 380.00,
         zahlweise: 'jährlich',
         faktor: 1.0,
@@ -172,12 +172,12 @@ const demoAbschluesse = [
         status: 'policiert'
     },
     {
-        id: 'AB-2024-092',
-        datum: '2024-11-22',
+        id: 'AB-2025-091',
+        datum: '2025-11-15',
         versicherungsnehmer: 'Anna Berger',
         produkt: 'Private Haftpflichtversicherung',
         tarif: 'Haftpflicht Family',
-        antragsnummer: 'ANT-2024-01798',
+        antragsnummer: 'ANT-2025-01798',
         beitrag: 85.00,
         zahlweise: 'jährlich',
         faktor: 1.0,
@@ -187,12 +187,12 @@ const demoAbschluesse = [
         status: 'policiert'
     },
     {
-        id: 'AB-2024-091',
-        datum: '2024-11-15',
+        id: 'AB-2025-090',
+        datum: '2025-11-08',
         versicherungsnehmer: 'Frank Neumann',
         produkt: 'Rentenversicherung',
         tarif: 'Rente Flex',
-        antragsnummer: 'ANT-2024-01780',
+        antragsnummer: 'ANT-2025-01780',
         beitrag: 200.00,
         zahlweise: 'monatlich',
         faktor: 12.0,
@@ -202,12 +202,12 @@ const demoAbschluesse = [
         status: 'policiert'
     },
     {
-        id: 'AB-2024-090',
-        datum: '2024-11-08',
+        id: 'AB-2025-089',
+        datum: '2025-11-02',
         versicherungsnehmer: 'Sandra Wolf',
         produkt: 'Zahnzusatzversicherung',
         tarif: 'Zahn Premium',
-        antragsnummer: 'ANT-2024-01765',
+        antragsnummer: 'ANT-2025-01765',
         beitrag: 35.00,
         zahlweise: 'monatlich',
         faktor: 12.0,
@@ -217,12 +217,12 @@ const demoAbschluesse = [
         status: 'policiert'
     },
     {
-        id: 'AB-2024-089',
-        datum: '2024-11-02',
+        id: 'AB-2025-088',
+        datum: '2025-10-25',
         versicherungsnehmer: 'Markus Schwarz',
         produkt: 'Berufsunfähigkeitsversicherung',
         tarif: 'BU Basis',
-        antragsnummer: 'ANT-2024-01752',
+        antragsnummer: 'ANT-2025-01752',
         beitrag: 95.00,
         zahlweise: 'monatlich',
         faktor: 12.0,
@@ -730,7 +730,7 @@ function renderAISummary(summary) {
             </div>
             <div class="ai-summary-title">
                 <h4>KI-Analyse: ${summary.zeitraum}</h4>
-                <span class="ai-badge">Generiert mit Claude AI</span>
+                <span class="ai-badge">Automatisch generiert</span>
             </div>
         </div>
 
@@ -779,36 +779,49 @@ function renderAISummary(summary) {
 function navigateToSalesReport(agenturId) {
     console.log('🚀 Navigation zu Vertriebsbericht für:', agenturId);
 
-    // 1. Navigiere zum Dashboard (A-03)
-    if (typeof openDashboard === 'function') {
-        // Verstecke andere Seiten
-        const pages = ['landingPage', 'agenturOverview', 'potentialAnalysePage', 'kundenDetailPage', 'billingCheckPage'];
-        pages.forEach(pageId => {
-            const page = document.getElementById(pageId);
-            if (page) page.style.display = 'none';
-        });
+    // 1. Verstecke andere Seiten und zeige Dashboard
+    const pages = ['landingPage', 'agenturOverview', 'potentialAnalysePage', 'kundenDetailPage', 'billingCheckPage'];
+    pages.forEach(pageId => {
+        const page = document.getElementById(pageId);
+        if (page) page.style.display = 'none';
+    });
 
-        // Zeige Dashboard
-        const mainApp = document.getElementById('mainApp');
-        if (mainApp) {
-            mainApp.style.display = 'block';
-        }
+    // Verstecke auch den Agentur-Chat
+    const agenturChatWidget = document.getElementById('agenturChatWidget');
+    const agenturChatToggle = document.getElementById('agenturChatToggle');
+    if (agenturChatWidget) agenturChatWidget.style.display = 'none';
+    if (agenturChatToggle) agenturChatToggle.style.display = 'none';
+
+    // Zeige Dashboard
+    const mainApp = document.getElementById('mainApp');
+    const dashboardView = document.getElementById('dashboardView');
+    if (mainApp) {
+        mainApp.style.display = 'block';
+    }
+    if (dashboardView) {
+        dashboardView.style.display = 'flex';
     }
 
-    // 2. Setze Agentur-Filter
+    // 2. Setze Agentur-Filter und aktualisiere UI
     if (typeof setAgenturFilter === 'function') {
         setAgenturFilter(agenturId);
-    } else {
+    } else if (typeof state !== 'undefined') {
         // Fallback: State direkt setzen
-        if (typeof state !== 'undefined') {
-            state.filters.agentur = agenturId;
+        state.filters.agentur = agenturId;
+        // Update Agentur-Dropdown UI
+        if (typeof updateAgenturFilterDisplay === 'function') {
+            updateAgenturFilterDisplay();
+        }
+        // Update KPIs
+        if (typeof updateAllKPIs === 'function') {
+            updateAllKPIs();
         }
     }
 
     // 3. Zeige Vertriebsbericht
     setTimeout(() => {
         showSalesReport(agenturId);
-    }, 500);
+    }, 300);
 
     // 4. Dispatch Event für Page-ID-Tracker
     document.dispatchEvent(new CustomEvent('viewChanged', {

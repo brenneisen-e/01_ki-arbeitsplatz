@@ -1070,16 +1070,73 @@ function goToSalesReport() {
     const agenturId = currentAgenturIdInOverview || 'VM00001';
     console.log('📊 Navigiere zu Vertriebsbericht für:', agenturId);
 
-    // Nutze die globale Navigation-Funktion aus sales-report.js
-    if (typeof navigateToSalesReport === 'function') {
-        navigateToSalesReport(agenturId);
-    } else {
-        console.error('❌ navigateToSalesReport Funktion nicht gefunden');
-        // Fallback: Manuell navigieren
-        if (typeof openDashboard === 'function') {
-            openDashboard();
+    const chatBody = document.getElementById('agenturChatBody');
+    if (!chatBody) {
+        // Fallback ohne Animation
+        if (typeof navigateToSalesReport === 'function') {
+            navigateToSalesReport(agenturId);
         }
+        return;
     }
+
+    // Welcome message entfernen falls vorhanden
+    const welcome = chatBody.querySelector('.agentur-chat-welcome');
+    if (welcome) {
+        welcome.style.display = 'none';
+    }
+
+    // User-Nachricht hinzufügen
+    const userMsg = document.createElement('div');
+    userMsg.className = 'chat-message user-message';
+    userMsg.innerHTML = '<div class="message-content">Vertriebsbericht</div>';
+    chatBody.appendChild(userMsg);
+
+    // Typing-Indikator hinzufügen
+    const typingMsg = document.createElement('div');
+    typingMsg.className = 'chat-message bot-message typing-indicator';
+    typingMsg.id = 'salesReportTyping';
+    typingMsg.innerHTML = `
+        <div class="message-content">
+            <div class="typing-dots">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    `;
+    chatBody.appendChild(typingMsg);
+    chatBody.scrollTop = chatBody.scrollHeight;
+
+    // Nach kurzer Zeit Bot-Antwort und Navigation
+    setTimeout(() => {
+        // Typing entfernen
+        const typing = document.getElementById('salesReportTyping');
+        if (typing) typing.remove();
+
+        // Bot-Antwort hinzufügen
+        const botMsg = document.createElement('div');
+        botMsg.className = 'chat-message bot-message';
+        botMsg.innerHTML = `
+            <div class="message-content">
+                <strong>Vertriebsbericht wird geladen...</strong><br><br>
+                Ich öffne jetzt das Dashboard mit dem Vertriebsbericht für diese Agentur.
+            </div>
+        `;
+        chatBody.appendChild(botMsg);
+        chatBody.scrollTop = chatBody.scrollHeight;
+
+        // Nach kurzer Pause navigieren
+        setTimeout(() => {
+            if (typeof navigateToSalesReport === 'function') {
+                navigateToSalesReport(agenturId);
+            } else {
+                console.error('❌ navigateToSalesReport Funktion nicht gefunden');
+                if (typeof openDashboard === 'function') {
+                    openDashboard();
+                }
+            }
+        }, 800);
+    }, 1500);
 }
 
 // Global verfügbar machen

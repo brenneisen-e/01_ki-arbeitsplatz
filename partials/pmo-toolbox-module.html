@@ -1129,10 +1129,14 @@
                                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>
                                         </button>
                                     </div>
-                                    <span class="pmo-kpi-badge info">156 gesamt</span>
+                                    <div class="pmo-scope-toggle" id="userstories-mode-toggle">
+                                        <button class="pmo-scope-btn active" data-mode="konzeption" title="Konzeption" onclick="PMO.switchUserStoriesMode('konzeption')">K</button>
+                                        <button class="pmo-scope-btn" data-mode="umsetzung" title="Umsetzung" onclick="PMO.switchUserStoriesMode('umsetzung')">U</button>
+                                    </div>
+                                    <span class="pmo-kpi-badge info" id="badge-userstories">156 gesamt</span>
                                 </div>
                             </div>
-                            <p class="pmo-kpi-description" id="desc-userstories">User Stories nach Status im Zeitverlauf</p>
+                            <p class="pmo-kpi-description" id="desc-userstories">Konzeption: User Stories nach Status</p>
                             <div class="pmo-kpi-value-row">
                                 <span class="pmo-kpi-value" id="kpi-userstories">156</span>
                                 <div class="pmo-kpi-legend" id="legend-userstories">
@@ -1858,7 +1862,7 @@
 
 
 <!-- PMO Toolbox Styles (externalized) -->
-<link rel="stylesheet" href="/css/pmo-toolbox.css?v=20260122d">
+<link rel="stylesheet" href="/css/pmo-toolbox.css?v=20260122e">
 
 <!-- PMO Toolbox JavaScript (ES6 Module) -->
-<script type="module" src="/js/modules/pmo-toolbox.esm.js?v=20260122d"></script>
+<script type="module" src="/js/modules/pmo-toolbox.esm.js?v=20260122e"></script>

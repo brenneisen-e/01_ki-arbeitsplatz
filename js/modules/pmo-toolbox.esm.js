@@ -4805,11 +4805,13 @@ PMO Team
             });
         }
 
-        // Ressourcen
+        // Ressourcen - use intern data by default (matching the selected button)
+        const resScope = this.resourceScope || 'intern';
+        const resData = resScope === 'gesamt' ? this.kpiData.ressourcen.history : this.kpiData.ressourcen[resScope].history;
         createChart('chart-ressourcen', [
-            { label: 'Ist', data: this.kpiData.ressourcen.history.ist, borderColor: '#3b82f6', tension: 0.3, pointRadius: 3, borderWidth: 2 },
-            { label: 'Angefragt', data: this.kpiData.ressourcen.history.angefragt, borderColor: '#94a3b8', borderDash: [5, 5], tension: 0.3, pointRadius: 3, borderWidth: 2 }
-        ], 200, 300);
+            { label: 'Verfügbar', data: resData.ist, borderColor: '#3b82f6', tension: 0.3, pointRadius: 3, borderWidth: 2 },
+            { label: 'Bedarf', data: resData.angefragt, borderColor: '#94a3b8', borderDash: [5, 5], tension: 0.3, pointRadius: 3, borderWidth: 2 }
+        ], 100, 200);
 
         // Budget
         createChart('chart-budget', [
@@ -4935,11 +4937,13 @@ PMO Team
             ['critical', 'major', 'minor'],
             ['#dc2626', '#f59e0b', '#fbbf24']);
 
-        // Ressourcen
+        // Ressourcen - use intern data by default
+        const resScopeSVG = this.resourceScope || 'intern';
+        const resDataSVG = resScopeSVG === 'gesamt' ? this.kpiData.ressourcen.history : this.kpiData.ressourcen[resScopeSVG].history;
         this.renderSVGMultiLineChart('chart-ressourcen', labels, [
-            { data: this.kpiData.ressourcen.history.ist, color: '#3b82f6', label: 'Ist' },
-            { data: this.kpiData.ressourcen.history.angefragt, color: '#94a3b8', label: 'Angefr.', dashed: true }
-        ], 200, 300);
+            { data: resDataSVG.ist, color: '#3b82f6', label: 'Verfügbar' },
+            { data: resDataSVG.angefragt, color: '#94a3b8', label: 'Bedarf', dashed: true }
+        ], 100, 200);
 
         // Budget
         this.renderSVGMultiLineChart('chart-budget', labels, [
@@ -6302,22 +6306,26 @@ PMO Team
         });
 
         // Show/hide sections based on level
-        const strategischSection = document.querySelector('[data-category="strategisch"]');
-        const vertrieblichSection = document.querySelector('[data-category="vertrieblich"]');
         const strategischCards = document.querySelectorAll('.pmo-kpi-card[data-category="strategisch"]');
         const vertrieblichCards = document.querySelectorAll('.pmo-kpi-card[data-category="vertrieblich"]');
+        const valuemapCards = document.querySelectorAll('.pmo-kpi-card[data-category="valuemap"]');
         const strategischDivider = document.querySelector('.pmo-kpi-section-divider[data-category="strategisch"]');
         const vertrieblichDivider = document.querySelector('.pmo-kpi-section-divider[data-category="vertrieblich"]');
+        const valuemapContainer = document.getElementById('valuemap-container');
+        const valuemapClusterBox = document.querySelector('.pmo-valuemap-cluster-overview');
 
         // Show/hide project dropdown
         const projectDropdown = document.getElementById('kpis-project-dropdown');
 
         if (level === 'projekt') {
-            // Hide Strategisch and Vertrieblich
+            // Hide Strategisch, Vertrieblich and Value Map (Linie-level KPIs)
             if (strategischDivider) strategischDivider.style.display = 'none';
             if (vertrieblichDivider) vertrieblichDivider.style.display = 'none';
             strategischCards.forEach(card => card.style.display = 'none');
             vertrieblichCards.forEach(card => card.style.display = 'none');
+            valuemapCards.forEach(card => card.style.display = 'none');
+            if (valuemapContainer) valuemapContainer.style.display = 'none';
+            if (valuemapClusterBox) valuemapClusterBox.style.display = 'none';
             // Show project dropdown
             if (projectDropdown) projectDropdown.style.display = 'flex';
         } else {
@@ -6326,6 +6334,9 @@ PMO Team
             if (vertrieblichDivider) vertrieblichDivider.style.display = '';
             strategischCards.forEach(card => card.style.display = '');
             vertrieblichCards.forEach(card => card.style.display = '');
+            valuemapCards.forEach(card => card.style.display = '');
+            if (valuemapContainer) valuemapContainer.style.display = '';
+            if (valuemapClusterBox) valuemapClusterBox.style.display = '';
             // Hide project dropdown
             if (projectDropdown) projectDropdown.style.display = 'none';
         }

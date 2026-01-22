@@ -689,13 +689,13 @@ function generateLocalAISummary() {
     const topKatName = topKategorie ? produktKategorien[topKategorie[0]] : 'Sach/Kfz';
     const avgProvision = totalAbschluesse > 0 ? (totalProvision / totalAbschluesse) : 0;
 
-    let fliesstext = `In den letzten drei Monaten wurden ${totalAbschluesse} Verträge mit einem Gesamtvolumen von €${formatNumber(totalAPE)} APE abgeschlossen, was einer durchschnittlichen Provision von €${formatNumber(avgProvision)} pro Abschluss entspricht. `;
-    fliesstext += `Der Vertriebsschwerpunkt lag mit ${topKategorie ? topKategorie[1] : 0} Abschlüssen im Bereich ${topKatName}, gefolgt von ${lebenCount > 0 ? 'Leben-Produkten' : 'anderen Sparten'}. `;
-    fliesstext += `Die Terminquote von ${terminquote}% liegt ${parseFloat(terminquote) > 65 ? 'über' : 'unter'} dem Branchendurchschnitt von 65% und zeigt ${parseFloat(terminquote) > 65 ? 'eine effiziente Kundenakquise' : 'Optimierungspotential bei der Terminvereinbarung'}. `;
-    fliesstext += `Besonders lukrativ war das BU-Geschäft mit einem durchschnittlichen Provisionssatz von 75%, welches weiter ausgebaut werden sollte. `;
+    let fliesstext = `In den letzten drei Monaten wurden <strong>${totalAbschluesse} Verträge</strong> mit einem Gesamtvolumen von <strong>€${formatNumber(totalAPE)} APE</strong> abgeschlossen, was einer durchschnittlichen Provision von <strong>€${formatNumber(avgProvision)}</strong> pro Abschluss entspricht. `;
+    fliesstext += `Der Vertriebsschwerpunkt lag mit <strong>${topKategorie ? topKategorie[1] : 0} Abschlüssen</strong> im Bereich <strong>${topKatName}</strong>, gefolgt von ${lebenCount > 0 ? 'Leben-Produkten' : 'anderen Sparten'}. `;
+    fliesstext += `Die <strong>Terminquote von ${terminquote}%</strong> liegt ${parseFloat(terminquote) > 65 ? 'über' : 'unter'} dem Branchendurchschnitt von 65% und zeigt ${parseFloat(terminquote) > 65 ? '<strong>eine effiziente Kundenakquise</strong>' : 'Optimierungspotential bei der Terminvereinbarung'}. `;
+    fliesstext += `Besonders lukrativ war das <strong>BU-Geschäft</strong> mit einem durchschnittlichen Provisionssatz von <strong>75%</strong>, welches weiter ausgebaut werden sollte. `;
     fliesstext += trendPositiv
-        ? `Insgesamt zeigt die Agentur eine positive Entwicklung und ist auf einem guten Weg, die Jahresziele zu erreichen.`
-        : `Um die Jahresziele zu erreichen, wird empfohlen, den Fokus auf höherwertige Produkte wie BU und PKV zu legen.`;
+        ? `Insgesamt zeigt die Agentur eine <strong>positive Entwicklung</strong> und ist auf einem guten Weg, die Jahresziele zu erreichen.`
+        : `Um die Jahresziele zu erreichen, wird empfohlen, den Fokus auf höherwertige Produkte wie <strong>BU und PKV</strong> zu legen.`;
 
     return {
         zeitraum: 'Letzte 3 Monate',

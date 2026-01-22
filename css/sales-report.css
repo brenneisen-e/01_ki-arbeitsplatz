@@ -11,6 +11,10 @@
     margin-top: 1.5rem;
     padding: 1.5rem;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    /* Wichtig: Volle Breite unter der KPI-Grid */
+    width: 100%;
+    flex-basis: 100%;
+    order: 99; /* Immer am Ende */
 }
 
 .sales-report-header {
@@ -438,6 +442,22 @@
     font-size: 1.25rem;
     font-weight: 700;
     color: var(--text-primary, #1e293b);
+}
+
+.ai-summary-text {
+    margin-bottom: 1.25rem;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 8px;
+    border-left: 4px solid var(--primary-color, #86BC25);
+}
+
+.ai-summary-text p {
+    margin: 0;
+    font-size: 0.9375rem;
+    line-height: 1.7;
+    color: var(--text-primary, #1e293b);
+    text-align: justify;
 }
 
 .ai-summary-insights {

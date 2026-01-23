@@ -67,6 +67,9 @@
             E-Mails
             <span class="nav-count" id="emailsNavCount">0</span>
         </button>
+        <button class="nav-btn" data-view="ai-upload">
+            KI Upload
+        </button>
         <button class="nav-btn" data-view="architektur">
             Architektur
         </button>
@@ -641,6 +644,141 @@ ERGO Maklerservice</div>
     </section>
 
     <!-- ============================================ -->
+    <!-- VIEW: KI Upload -->
+    <!-- ============================================ -->
+    <section class="view" id="view-ai-upload">
+        <div class="ai-landing-container">
+            <!-- Header -->
+            <div class="ai-header">
+                <div class="ai-header-content">
+                    <div class="ai-title-section">
+                        <div class="ai-icon">◈</div>
+                        <div>
+                            <h2>KI-gestützte Analyse</h2>
+                            <p class="ai-subtitle">E-Mails und Dokumente mit Claude AI verarbeiten</p>
+                        </div>
+                    </div>
+                    <div class="ai-header-actions">
+                        <button class="btn btn-secondary" id="aiApiKeyBtn">
+                            <span class="icon">⚙</span> API Key
+                        </button>
+                        <div class="api-status" id="aiApiKeyStatus">
+                            <span class="status-dot status-inactive"></span> Kein API Key
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content Grid -->
+            <div class="ai-main-grid">
+                <!-- Upload Section -->
+                <div class="ai-upload-section">
+                    <div class="ai-drop-zone" id="aiDropZone">
+                        <div class="drop-zone-content">
+                            <div class="drop-icon">↑</div>
+                            <h3>Dateien hochladen</h3>
+                            <p>MSG-Dateien, Excel oder Word hier ablegen</p>
+                            <p class="drop-hint">oder klicken zum Auswählen</p>
+                        </div>
+                        <input type="file" id="aiFileInput" multiple accept=".msg,.xlsx,.xls,.docx,.doc,.pdf" hidden>
+                    </div>
+
+                    <!-- File List -->
+                    <div class="ai-file-list" id="aiFileList">
+                        <p class="empty-message">Keine Dateien hochgeladen</p>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="ai-actions">
+                        <button class="btn btn-primary btn-large" id="aiAnalyzeBtn" disabled>
+                            <span class="icon">◈</span> KI Analyse starten
+                        </button>
+                        <button class="btn btn-secondary" id="aiClearBtn" disabled>
+                            <span class="icon">×</span> Zurücksetzen
+                        </button>
+                    </div>
+
+                    <!-- Progress -->
+                    <div class="ai-progress" id="aiProgress" style="display: none;">
+                        <div class="progress-text" id="aiProgressText">Verarbeite...</div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar" id="aiProgressBar" style="width: 0%;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Results Section -->
+                <div class="ai-results-section">
+                    <div class="ai-results" id="aiResults">
+                        <!-- Dynamisch gefüllt -->
+                    </div>
+
+                    <!-- Export Actions -->
+                    <div class="ai-export-actions">
+                        <button class="btn btn-success btn-large" id="aiExportBtn" disabled>
+                            <span class="icon">▦</span> Excel Export
+                        </button>
+                        <button class="btn btn-primary" id="aiSaveToStorageBtn" disabled>
+                            <span class="icon">↓</span> In Vorgänge übernehmen
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Info Cards -->
+            <div class="ai-info-grid">
+                <div class="ai-info-card">
+                    <div class="info-icon">✉</div>
+                    <h4>MSG Dateien</h4>
+                    <p>Outlook E-Mails direkt verarbeiten</p>
+                </div>
+                <div class="ai-info-card">
+                    <div class="info-icon">▦</div>
+                    <h4>Excel Listen</h4>
+                    <p>Kundenlisten aus Tabellen</p>
+                </div>
+                <div class="ai-info-card">
+                    <div class="info-icon">▤</div>
+                    <h4>Word Dokumente</h4>
+                    <p>Maklervollmachten prüfen</p>
+                </div>
+                <div class="ai-info-card">
+                    <div class="info-icon">◈</div>
+                    <h4>KI Erkennung</h4>
+                    <p>Automatische Datenextraktion</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- MODAL: API Key -->
+    <!-- ============================================ -->
+    <div class="modal-overlay" id="aiApiKeyModal" style="display: none;">
+        <div class="modal modal-small">
+            <div class="modal-header">
+                <h2>Claude API Key</h2>
+                <button class="modal-close" id="aiApiKeyModalClose">×</button>
+            </div>
+            <div class="modal-body">
+                <p class="text-muted" style="margin-bottom: 1rem;">
+                    Geben Sie Ihren Anthropic API Key ein, um die KI-Analyse zu nutzen.
+                </p>
+                <div class="form-group">
+                    <label>API Key</label>
+                    <input type="password" id="aiApiKeyInput" placeholder="sk-ant-api...">
+                </div>
+                <p class="text-muted text-small" style="margin-top: 0.5rem;">
+                    Der Key wird lokal im Browser gespeichert.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" id="aiApiKeySave">Speichern</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================ -->
     <!-- MODAL: Vorgang Detail (Komplett neu) -->
     <!-- ============================================ -->
     <div class="modal-overlay" id="caseModal" style="display: none;">
@@ -1060,13 +1198,4 @@ ERGO Maklerservice</div>
 
     <!-- Toast Notifications -->
     <div class="toast-container" id="toastContainer"></div>
-
-    <!-- Scripts -->
-    <script src="js/storage.js"></script>
-    <script src="js/extractor.js"></script>
-    <script src="js/matcher.js"></script>
-    <script src="js/ui.js"></script>
-    <script src="js/export.js"></script>
-    <script src="js/demo-data.js"></script>
-    <script src="js/app.js"></script>
 </div>

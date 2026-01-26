@@ -2184,7 +2184,7 @@ PMO Team
         this.GREMIEN.forEach(gremium => {
             const meetingDates = this.getMeetingDates(gremium, year, month);
             meetingDates.forEach(date => {
-                const dateKey = date.toISOString().split('T')[0];
+                const dateKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
                 if (!meetingsMap[dateKey]) meetingsMap[dateKey] = [];
                 meetingsMap[dateKey].push({ name: gremium.name, color: gremium.color });
             });

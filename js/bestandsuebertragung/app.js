@@ -41,7 +41,8 @@ function setupEventListeners() {
     document.getElementById('resetDemoBtn')?.addEventListener('click', handleResetDemo);
     document.getElementById('downloadDemoBtn')?.addEventListener('click', handleDownloadDemo);
 
-    document.querySelectorAll('.nav-btn').forEach(btn => {
+    const bestandContainer = document.querySelector('.bestand-page') || document;
+    bestandContainer.querySelectorAll('.nav-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             currentView = btn.dataset.view;
             UI.switchView(currentView);

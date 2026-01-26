@@ -278,23 +278,18 @@ export function updateNavCounts(vorgaenge, makler, emails) {
  * View wechseln
  */
 export function switchView(viewName) {
-    document.querySelectorAll('.nav-btn').forEach(btn => {
+    const container = document.querySelector('.bestand-page') || document;
+
+    container.querySelectorAll('.nav-btn').forEach(btn => {
         btn.classList.toggle('active', btn.dataset.view === viewName);
     });
 
-    document.querySelectorAll('.view').forEach(view => {
+    container.querySelectorAll('.view').forEach(view => {
         view.classList.toggle('active', view.id === `view-${viewName}`);
     });
 
-    const viewMapping = {
-        'dashboard': 'upload',
-        'vorgaenge': 'mapping',
-        'makler': 'preview',
-        'emails': 'export'
-    };
-    const mappedView = viewMapping[viewName] || viewName;
     document.dispatchEvent(new CustomEvent('viewChanged', {
-        detail: { module: 'bestandsuebertragung', view: mappedView }
+        detail: { module: 'bestandsuebertragung', view: viewName }
     }));
 }
 

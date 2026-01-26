@@ -102,11 +102,10 @@ export const PMO = {
 
     // Gremien (Committees) with their meeting schedules
     GREMIEN: [
-        { id: 'lenkung', name: 'Lenkungsausschuss', color: '#E30613', day: 2, week: 'first' },    // First Tuesday of month
-        { id: 'steering', name: 'Steering Committee', color: '#2563eb', day: 4, week: 'every' }, // Every Thursday
-        { id: 'pmo', name: 'PMO Jour Fixe', color: '#16a34a', day: 1, week: 'every' },           // Every Monday
-        { id: 'review', name: 'Sprint Review', color: '#7c3aed', day: 5, week: 'biweekly' },     // Every 2 weeks Friday
-        { id: 'risk', name: 'Risiko-Board', color: '#ea580c', day: 3, week: 'last' }             // Last Wednesday of month
+        { id: 'steerco', name: 'Steering Committee (SteerCo)', color: '#1b5e20', day: 4, week: 'first' },             // Monatlich und auf Anfrage (first Thursday)
+        { id: 'programmleiter', name: 'Programmleiter Meeting', color: '#2e7d32', day: 4, week: 'every' },             // Wöchentlich bzw. 2-wöchentlich, Donnerstag
+        { id: 'pmm', name: 'Programmmanagement Meeting (PMM)', color: '#4caf50', day: 4, week: 'biweekly' },          // Wöchentlich bzw. 2-wöchentlich, Donnerstag
+        { id: 'projektteam', name: 'Einzel-Projektteam Meetings', color: '#81c784', day: 1, week: 'every' }           // Wöchentlich, Montag
     ],
 
     // State
@@ -2030,7 +2029,10 @@ PMO Team
 
         // Build calendar HTML
         const monthNames = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'];
-        const dayNames = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
+        const dayNames = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
+
+        // Adjust startDayOfWeek for 6-day grid (no Sunday)
+        let startPos = startDayOfWeek >= 6 ? 0 : startDayOfWeek;
 
         let html = `
             <div class="gremien-calendar">
@@ -2048,12 +2050,15 @@ PMO Team
         `;
 
         // Empty cells before first day
-        for (let i = 0; i < startDayOfWeek; i++) {
+        for (let i = 0; i < startPos; i++) {
             html += '<div class="gremien-day empty"></div>';
         }
 
-        // Days of month
+        // Days of month (skip Sundays)
         for (let day = 1; day <= daysInMonth; day++) {
+            const date = new Date(currentYear, currentMonth, day);
+            if (date.getDay() === 0) continue; // Skip Sunday
+
             const dateKey = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
             const meetings = meetingsMap[dateKey] || [];
             const isToday = day === today.getDate() && currentMonth === today.getMonth() && currentYear === today.getFullYear();
@@ -2110,7 +2115,10 @@ PMO Team
         const meetingsMap = this.calculateMeetings(year, month);
 
         const monthNames = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'];
-        const dayNames = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
+        const dayNames = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
+
+        // Adjust startDayOfWeek for 6-day grid (no Sunday)
+        let startPos = startDayOfWeek >= 6 ? 0 : startDayOfWeek;
 
         let html = `
             <div class="gremien-calendar">
@@ -2127,11 +2135,15 @@ PMO Team
                     ${dayNames.map(d => `<div class="gremien-day-header">${d}</div>`).join('')}
         `;
 
-        for (let i = 0; i < startDayOfWeek; i++) {
+        for (let i = 0; i < startPos; i++) {
             html += '<div class="gremien-day empty"></div>';
         }
 
+        // Days of month (skip Sundays)
         for (let day = 1; day <= daysInMonth; day++) {
+            const date = new Date(year, month, day);
+            if (date.getDay() === 0) continue; // Skip Sunday
+
             const dateKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
             const meetings = meetingsMap[dateKey] || [];
             const isToday = day === today.getDate() && month === today.getMonth() && year === today.getFullYear();

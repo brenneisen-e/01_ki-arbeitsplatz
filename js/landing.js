@@ -2219,6 +2219,12 @@ async function openBestandsuebertragung() {
         rsModule.style.display = 'none';
     }
 
+    // Hide welcome chat (sibling of landing page)
+    const welcomeChat = document.getElementById('welcomeChat');
+    if (welcomeChat) {
+        welcomeChat.style.display = 'none';
+    }
+
     // Show bestandsuebertragung module
     const bestandModule = document.getElementById('bestandsuebertragungModule');
     if (bestandModule) {

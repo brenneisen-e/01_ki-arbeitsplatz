@@ -102,10 +102,10 @@ export const PMO = {
 
     // Gremien (Committees) with their meeting schedules
     GREMIEN: [
-        { id: 'steerco', name: 'Steering Committee (SteerCo)', color: '#1b5e20', day: 4, week: 'first' },             // Monatlich und auf Anfrage (first Thursday)
-        { id: 'programmleiter', name: 'Programmleiter Meeting', color: '#2e7d32', day: 4, week: 'every' },             // Wöchentlich bzw. 2-wöchentlich, Donnerstag
-        { id: 'pmm', name: 'Programmmanagement Meeting (PMM)', color: '#4caf50', day: 4, week: 'biweekly' },          // Wöchentlich bzw. 2-wöchentlich, Donnerstag
-        { id: 'projektteam', name: 'Einzel-Projektteam Meetings', color: '#81c784', day: 1, week: 'every' }           // Wöchentlich, Montag
+        { id: 'steerco', name: 'Steering Committee (SteerCo)', color: '#E30613', day: 3, week: 'first' },             // Monatlich, erster Mittwoch
+        { id: 'programmleiter', name: 'Programmleiter Meeting', color: '#2563eb', day: 4, week: 'every' },             // Wöchentlich, Donnerstag
+        { id: 'pmm', name: 'Programmmanagement Meeting (PMM)', color: '#7c3aed', day: 4, week: 'biweekly' },          // 2-wöchentlich, Donnerstag
+        { id: 'projektteam', name: 'Einzel-Projektteam Meetings', color: '#16a34a', day: 1, week: 'every' }           // Wöchentlich, Montag
     ],
 
     // State

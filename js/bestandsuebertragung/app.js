@@ -1167,7 +1167,7 @@ export default {
 };
 
 // Global exports für Integration
+// Note: window.initBestandApp is set by index.js (includes AILanding.init)
 if (typeof window !== 'undefined') {
     window.BestandApp = { init, refreshData };
-    window.initBestandApp = init;
 }

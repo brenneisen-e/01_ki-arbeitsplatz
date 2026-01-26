@@ -2193,6 +2193,68 @@ function closeRisikoscoring() {
 
 let bestandsuebertragungLoaded = false;
 
+/**
+ * Fallback: Stellt sicher, dass Navigation-Tabs funktionieren,
+ * auch wenn das ESM-Modul noch nicht geladen ist oder fehlschlägt.
+ */
+function setupBestandNavFallback(moduleEl) {
+    const bestandPage = moduleEl.querySelector('.bestand-page');
+    if (!bestandPage) return;
+
+    const navBtns = bestandPage.querySelectorAll('.nav-btn');
+    const views = bestandPage.querySelectorAll('.view');
+
+    if (navBtns.length === 0) return;
+
+    navBtns.forEach(btn => {
+        // Only add fallback if no click handler was attached by ESM module
+        if (!btn._bestandNavInit) {
+            btn._bestandNavInit = true;
+            btn.addEventListener('click', function() {
+                const viewName = this.dataset.view;
+
+                // Toggle active nav button
+                navBtns.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+
+                // Toggle active view
+                views.forEach(v => {
+                    v.classList.toggle('active', v.id === 'view-' + viewName);
+                });
+
+                // Try to call ESM module's switchView and refresh
+                try {
+                    if (typeof UI !== 'undefined' && typeof UI.switchView === 'function') {
+                        UI.switchView(viewName);
+                    }
+                    if (typeof BestandApp !== 'undefined' && typeof BestandApp.refreshData === 'function') {
+                        BestandApp.refreshData();
+                    }
+                } catch (e) {
+                    // Fallback is already handling the view switch
+                }
+            });
+        }
+    });
+
+    // Retry ESM init after a short delay if not yet available
+    if (typeof initBestandApp !== 'function' && typeof BestandApp === 'undefined') {
+        setTimeout(() => {
+            try {
+                if (typeof initBestandApp === 'function') {
+                    initBestandApp();
+                    console.log('✅ Bestandsübertragung verzögert initialisiert');
+                } else if (typeof BestandApp !== 'undefined' && typeof BestandApp.init === 'function') {
+                    BestandApp.init();
+                    console.log('✅ Bestandsübertragung via BestandApp verzögert initialisiert');
+                }
+            } catch (e) {
+                console.error('❌ Verzögerte Initialisierung fehlgeschlagen:', e);
+            }
+        }, 500);
+    }
+}
+
 async function openBestandsuebertragung() {
     console.log('📄 Bestandsübertragung öffnen...');
 
@@ -2250,11 +2312,23 @@ async function openBestandsuebertragung() {
                     bestandsuebertragungLoaded = true;
 
                     // Initialize the bestandsuebertragung app
-                    if (typeof initBestandApp === 'function') {
-                        initBestandApp();
-                    } else if (typeof BestandApp !== 'undefined' && typeof BestandApp.init === 'function') {
-                        BestandApp.init();
+                    try {
+                        if (typeof initBestandApp === 'function') {
+                            initBestandApp();
+                            console.log('✅ Bestandsübertragung via initBestandApp() initialisiert');
+                        } else if (typeof BestandApp !== 'undefined' && typeof BestandApp.init === 'function') {
+                            BestandApp.init();
+                            console.log('✅ Bestandsübertragung via BestandApp.init() initialisiert');
+                        } else {
+                            console.warn('⚠️ initBestandApp nicht verfügbar, warte auf ESM-Modul...');
+                        }
+                    } catch (initError) {
+                        console.error('❌ Fehler bei Bestandsübertragung-Initialisierung:', initError);
                     }
+
+                    // Fallback: ensure nav tabs work even if ESM init failed
+                    setupBestandNavFallback(bestandModule);
+
                     console.log('✅ Bestandsübertragung Modul geladen');
                 } else {
                     bestandModule.innerHTML = '<div class="error-message">Fehler beim Laden des Bestandsübertragung-Moduls</div>';

@@ -69,10 +69,13 @@ const PageIDTracker = {
 
         // T - Bestandsübertragung Module
         bestandsuebertragung: {
-            'upload': 'T-01',               // Upload
-            'mapping': 'T-02',              // Mapping
-            'preview': 'T-03',              // Preview
-            'export': 'T-04'                // Export
+            'dashboard': 'T-01',            // Dashboard
+            'vorgaenge': 'T-02',            // Vorgänge
+            'makler': 'T-03',              // Makler
+            'emails': 'T-04',              // E-Mails
+            'ai-upload': 'T-05',           // KI Upload
+            'architektur': 'T-06',         // Architektur
+            'vorlagen': 'T-07'             // E-Mail Vorlagen
         }
     },
 
@@ -343,13 +346,21 @@ const PageIDTracker = {
     },
 
     getBestandsuebertragungView() {
-        // Check active step in bestandsübertragung
-        const steps = ['upload', 'mapping', 'preview', 'export'];
-        for (const step of steps) {
-            const elem = document.querySelector(`.bestand-step-${step}.active`);
-            if (elem) return step;
+        // Check active view in bestandsübertragung
+        const views = ['dashboard', 'vorgaenge', 'makler', 'emails', 'ai-upload', 'architektur', 'vorlagen'];
+        const container = document.querySelector('.bestand-page');
+        if (container) {
+            for (const view of views) {
+                const elem = container.querySelector(`#view-${view}.active`);
+                if (elem) return view;
+            }
         }
-        return 'upload';
+        // Also check active nav button as fallback
+        const activeBtn = document.querySelector('.bestand-page .nav-btn.active');
+        if (activeBtn && activeBtn.dataset.view) {
+            return activeBtn.dataset.view;
+        }
+        return 'dashboard';
     },
 
     setPageId(pageId) {

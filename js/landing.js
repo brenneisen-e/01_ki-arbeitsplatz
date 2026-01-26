@@ -2208,7 +2208,18 @@ async function openBestandsuebertragung() {
         mainApp.style.display = 'none';
     }
 
-    // Hide other modules
+    // Hide welcome chat (sibling of landing page)
+    const welcomeChat = document.getElementById('welcomeChat');
+    if (welcomeChat) {
+        welcomeChat.style.display = 'none';
+    }
+
+    // Hide all other modules
+    const versicherungModule = document.getElementById('versicherungModule');
+    if (versicherungModule) {
+        versicherungModule.style.display = 'none';
+    }
+
     const bankenModule = document.getElementById('bankenModule');
     if (bankenModule) {
         bankenModule.style.display = 'none';
@@ -2219,10 +2230,9 @@ async function openBestandsuebertragung() {
         rsModule.style.display = 'none';
     }
 
-    // Hide welcome chat (sibling of landing page)
-    const welcomeChat = document.getElementById('welcomeChat');
-    if (welcomeChat) {
-        welcomeChat.style.display = 'none';
+    const pmoModule = document.getElementById('pmoToolboxModule');
+    if (pmoModule) {
+        pmoModule.style.display = 'none';
     }
 
     // Show bestandsuebertragung module
@@ -2255,6 +2265,16 @@ async function openBestandsuebertragung() {
             }
         }
     }
+
+    // Dispatch event for Page ID Tracker
+    document.dispatchEvent(new CustomEvent('moduleChanged', {
+        detail: { module: 'bestandsuebertragung', view: 'dashboard' }
+    }));
+
+    // Force immediate Page ID update
+    if (window.PageIDTracker) {
+        window.PageIDTracker.updatePageId('bestandsuebertragung', 'dashboard');
+    }
 }
 
 function closeBestandsuebertragung() {
@@ -2266,11 +2286,81 @@ function closeBestandsuebertragung() {
         bestandModule.style.display = 'none';
     }
 
+    // Hide other modules
+    const bankenModule = document.getElementById('bankenModule');
+    if (bankenModule) {
+        bankenModule.style.display = 'none';
+    }
+
+    const risikoscoringModule = document.getElementById('risikoscoringModule');
+    if (risikoscoringModule) {
+        risikoscoringModule.style.display = 'none';
+    }
+
+    const pmoModule = document.getElementById('pmoToolboxModule');
+    if (pmoModule) {
+        pmoModule.style.display = 'none';
+    }
+
+    // Show versicherungModule (contains the landing page!)
+    const versicherungModule = document.getElementById('versicherungModule');
+    if (versicherungModule) {
+        versicherungModule.style.display = 'block';
+    }
+
+    // Hide all versicherung sub-views
+    const mainApp = document.getElementById('mainApp');
+    if (mainApp) {
+        mainApp.style.display = 'none';
+    }
+
+    const agenturOverview = document.getElementById('agenturOverview');
+    if (agenturOverview) {
+        agenturOverview.style.display = 'none';
+    }
+
+    const kundenDetailPage = document.getElementById('kundenDetailPage');
+    if (kundenDetailPage) {
+        kundenDetailPage.style.display = 'none';
+    }
+
+    const potentialAnalysePage = document.getElementById('potentialAnalysePage');
+    if (potentialAnalysePage) {
+        potentialAnalysePage.style.display = 'none';
+    }
+
+    const finanzplanung = document.getElementById('finanzplanung');
+    if (finanzplanung) {
+        finanzplanung.style.display = 'none';
+    }
+
+    const agenturGrid = document.getElementById('agenturGrid');
+    if (agenturGrid) {
+        agenturGrid.style.display = 'none';
+    }
+
     // Show landing page (use flex for proper centering)
     const landingPage = document.getElementById('landingPage');
     if (landingPage) {
         landingPage.style.display = 'flex';
     }
+
+    // Show welcome chat again
+    const welcomeChat = document.getElementById('welcomeChat');
+    if (welcomeChat) {
+        welcomeChat.style.display = 'block';
+    }
+
+    // Dispatch event to update Page ID back to M-01
+    setTimeout(() => {
+        document.dispatchEvent(new CustomEvent('moduleChanged', {
+            detail: { module: 'main', view: 'landing' }
+        }));
+
+        if (window.PageIDTracker) {
+            window.PageIDTracker.updatePageId('main', 'landing');
+        }
+    }, 50);
 }
 
 // ========================================

@@ -33,23 +33,14 @@ export function initBestandApp() {
     AILanding.init();
 }
 
-// Auto-Initialisierung wenn DOM bereit
-function initAll() {
-    init();
-    AILanding.init();
-}
-
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initAll);
-} else {
-    // DOM ist bereits geladen
-    initAll();
-}
+// Keine Auto-Initialisierung: die Anwendung wird erst initialisiert,
+// wenn openBestandsuebertragung() in landing.js window.initBestandApp() aufruft.
+// Die HTML-Struktur wird per fetch() lazy-loaded.
 
 // Globale Exports für Kompatibilität mit bestehenden Scripts
 if (typeof window !== 'undefined') {
     window.BestandApp = { init, refreshData };
-    window.initBestandApp = init;
+    window.initBestandApp = initBestandApp;
 
     // Legacy-Kompatibilität: Module als globale Variablen
     window.Storage = Storage;

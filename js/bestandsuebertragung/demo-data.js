@@ -358,8 +358,10 @@ export function generateDemoCases() {
  */
 export function loadDemoData(force = false) {
     const settings = Storage.getSettings();
+    const existingCases = Storage.getCasesArray();
 
-    if (settings.demoLoaded && !force) {
+    // Skip if already loaded AND cases actually exist
+    if (settings.demoLoaded && !force && existingCases.length > 0) {
         return false;
     }
 

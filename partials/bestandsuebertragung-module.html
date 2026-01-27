@@ -1027,28 +1027,10 @@ ERGO Maklerservice</div>
 
                         <div class="flow-arrow"><span>&rarr;</span></div>
 
-                        <!-- Step 4: Prüfpunkt Export -->
-                        <div class="flow-node node-decision">
-                            <div class="flow-node-head">
-                                <span class="flow-node-num">4</span>
-                                <span class="flow-node-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></span>
-                            </div>
-                            <h4>Pr&uuml;fpunkt: Export</h4>
-                            <p>Welche M&ouml;glichkeiten gibt es, Postkorbvorg&auml;nge zu exportieren?</p>
-                            <div class="flow-node-tags">
-                                <span>EML/MSG?</span>
-                                <span>API?</span>
-                                <span>Batch?</span>
-                            </div>
-                            <div class="flow-node-pain"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Exportformat pr&uuml;fen f&uuml;r KI-Nutzung</div>
-                        </div>
-
-                        <div class="flow-arrow"><span>&rarr;</span></div>
-
-                        <!-- Step 5 -->
+                        <!-- Step 4 -->
                         <div class="flow-node node-manual">
                             <div class="flow-node-head">
-                                <span class="flow-node-num">5</span>
+                                <span class="flow-node-num">4</span>
                                 <span class="flow-node-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
                             </div>
                             <h4>Manuelle Pr&uuml;fung</h4>
@@ -1058,10 +1040,10 @@ ERGO Maklerservice</div>
 
                         <div class="flow-arrow"><span>&rarr;</span></div>
 
-                        <!-- Step 6: Decision -->
+                        <!-- Step 5: Decision -->
                         <div class="flow-node node-decision">
                             <div class="flow-node-head">
-                                <span class="flow-node-num">6</span>
+                                <span class="flow-node-num">5</span>
                                 <span class="flow-node-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg></span>
                             </div>
                             <h4>Einfach-Vorgang?</h4>
@@ -1075,10 +1057,10 @@ ERGO Maklerservice</div>
 
                         <div class="flow-arrow"><span>&rarr;</span></div>
 
-                        <!-- Step 7 -->
+                        <!-- Step 6 -->
                         <div class="flow-node node-ai">
                             <div class="flow-node-head">
-                                <span class="flow-node-num">7</span>
+                                <span class="flow-node-num">6</span>
                                 <span class="flow-node-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></span>
                             </div>
                             <h4>ERGO GPT</h4>
@@ -1091,10 +1073,10 @@ ERGO Maklerservice</div>
 
                         <div class="flow-arrow"><span>&rarr;</span></div>
 
-                        <!-- Step 8 -->
+                        <!-- Step 7 -->
                         <div class="flow-node node-output">
                             <div class="flow-node-head">
-                                <span class="flow-node-num">8</span>
+                                <span class="flow-node-num">7</span>
                                 <span class="flow-node-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/><path d="M9 3v18"/></svg></span>
                             </div>
                             <h4>Excel f&uuml;r Robotics</h4>
@@ -1176,6 +1158,53 @@ ERGO Maklerservice</div>
                                 <p>Automatische Pr&uuml;fung ob g&uuml;ltige, unterschriebene Maklervollmacht beiliegt.</p>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== SOLL: Ansatzpunkt zwischen Schritt 3 und 4 ===== -->
+            <div class="prozess-section">
+                <div class="prozess-section-header">
+                    <span class="prozess-label prozess-label-soll">SOLL</span>
+                    <h3>Ansatzpunkt: zwischen Schritt 3 und 4</h3>
+                </div>
+
+                <div class="flow-soll-card">
+                    <div class="flow-soll-card-head">
+                        <div class="improvement-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></div>
+                        <div>
+                            <h4>Export der Postkorbvorg&auml;nge f&uuml;r KI-Nutzung</h4>
+                            <p>Bevor die manuelle Pr&uuml;fung beginnt, m&uuml;ssen die Postkorbvorg&auml;nge in einem maschinell lesbaren Format exportiert werden &ndash; als Grundlage f&uuml;r die automatisierte KI-Analyse.</p>
+                        </div>
+                    </div>
+
+                    <div class="flow-soll-benefits">
+                        <div class="benefit-item">
+                            <span class="benefit-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 7l-10 7L2 7"/></svg></span>
+                            <div>
+                                <strong>EML/MSG-Export</strong>
+                                <p>Einzelne Postkorbvorg&auml;nge als .eml- oder .msg-Dateien exportieren &ndash; inkl. aller Anh&auml;nge (Word, Excel, PDF).</p>
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <span class="benefit-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></span>
+                            <div>
+                                <strong>API-Schnittstelle</strong>
+                                <p>Pr&uuml;fen, ob das Postkorbsystem eine API bereitstellt, &uuml;ber die Vorg&auml;nge programmatisch abgerufen werden k&ouml;nnen.</p>
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <span class="benefit-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></span>
+                            <div>
+                                <strong>Batch-/Ordner-Export</strong>
+                                <p>Sammlung der E-Mails in einem &uuml;berwachten Ordner oder Batch-Download f&uuml;r automatisierte Weiterverarbeitung.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flow-soll-note">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                        <span>Exportformat und -m&ouml;glichkeiten m&uuml;ssen mit der IT gekl&auml;rt werden, bevor die KI-Pipeline aufgesetzt wird.</span>
                     </div>
                 </div>
             </div>

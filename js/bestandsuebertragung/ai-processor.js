@@ -191,7 +191,9 @@ function parseEmlContent(raw) {
                         type: partResult.contentType.includes('word') || partResult.filename.match(/\.docx?$/i) ? 'word' :
                               partResult.contentType.includes('excel') || partResult.contentType.includes('spreadsheet') || partResult.filename.match(/\.xlsx?$/i) ? 'excel' : 'other',
                         content: partResult.textContent,
-                        filename: partResult.filename
+                        filename: partResult.filename,
+                        rawBase64: partResult.rawBase64 || null,
+                        mimeType: partResult.contentType
                     });
                 }
             } else if (partResult.isText && !body) {
@@ -212,9 +214,12 @@ function parseEmlContent(raw) {
                         attachmentNames.push(innerResult.filename);
                         if (innerResult.textContent) {
                             attachmentTexts.push({
-                                type: 'other',
+                                type: innerResult.contentType?.includes('word') || innerResult.filename?.match(/\.docx?$/i) ? 'word' :
+                                      innerResult.contentType?.includes('excel') || innerResult.contentType?.includes('spreadsheet') || innerResult.filename?.match(/\.xlsx?$/i) ? 'excel' : 'other',
                                 content: innerResult.textContent,
-                                filename: innerResult.filename
+                                filename: innerResult.filename,
+                                rawBase64: innerResult.rawBase64 || null,
+                                mimeType: innerResult.contentType
                             });
                         }
                     }
@@ -306,13 +311,20 @@ function parseMimePart(partRaw) {
 
     // Für Attachments: versuche Text zu extrahieren wenn es XML-basiert ist (docx/xlsx)
     let textContent = decoded;
+    let rawBase64 = null;
     if (isAttachment && cte === 'base64') {
+        rawBase64 = bodyBlock.replace(/[\r\n\s]/g, '');
         // Base64 Attachment - versuche XML-Text zu extrahieren für Office-Formate
         try {
-            const binaryStr = atob(bodyBlock.replace(/[\r\n\s]/g, ''));
+            const binaryStr = atob(rawBase64);
             if (filename.match(/\.docx$/i)) {
-                const textMatches = binaryStr.matchAll(/<w:t[^>]*>([^<]+)<\/w:t>/g);
-                textContent = Array.from(textMatches).map(m => m[1]).join(' ');
+                // Paragraphen-weise extrahieren für bessere Struktur
+                const paragraphs = binaryStr.split(/<\/w:p>/g);
+                const lines = paragraphs.map(p => {
+                    const textMatches = p.matchAll(/<w:t[^>]*>([^<]+)<\/w:t>/g);
+                    return Array.from(textMatches).map(m => m[1]).join('');
+                }).filter(line => line.trim());
+                textContent = lines.join('\n');
             } else if (filename.match(/\.xlsx$/i)) {
                 const cellMatches = binaryStr.matchAll(/<v>([^<]+)<\/v>|<t[^>]*>([^<]+)<\/t>/g);
                 textContent = Array.from(cellMatches).map(m => m[1] || m[2]).filter(Boolean).join('\n');
@@ -330,7 +342,8 @@ function parseMimePart(partRaw) {
         isHtml,
         filename,
         contentType: ct,
-        textContent
+        textContent,
+        rawBase64
     };
 }
 
@@ -543,7 +556,7 @@ Prüfe die Maklervollmacht anhand dieser Kriterien:
 - Vollmacht liegt als PDF vor (Signatur kann nicht sicher geprüft werden)
 - Vollmacht fehlt komplett
 
-**anmerkung** (string): Kurze Erklärung zum Status, z.B. "Vollmacht als Word-Anhang, Unterschrift vorhanden", "Vollmacht laut E-Mail per Post übermittelt – nicht beigefügt", "Keine Vollmacht erwähnt oder beigefügt".
+**anmerkung** (string): NUR zusätzliche Details, die NICHT schon durch die obigen Felder (als_anhang, nur_erwaehnt, unterschrieben) abgedeckt sind. Beispiele: "Vollmacht laut E-Mail per Post übermittelt am 15.01.2026", "PDF-Anhang, Signaturprüfung nicht möglich". NICHT wiederholen was schon aus den Boolean-Feldern hervorgeht (z.B. NICHT "Vollmacht als Anhang vorhanden, nicht unterschrieben" – das ergibt sich bereits aus als_anhang=true, unterschrieben=false). Leerer String "" wenn keine Zusatzinfo nötig.
 
 ## FEHLENDE INFORMATIONEN – STRENGE REGELN
 Das Feld "fehlende_infos" darf NUR Informationen enthalten, die in KEINER der bereitgestellten Quellen vorkommen (E-Mail-Text, Betreff, Anhänge).

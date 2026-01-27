@@ -62,6 +62,10 @@ export function init() {
         kpiExportReadyPct: document.getElementById('kpiExportReadyPct'),
         kpiExportiert: document.getElementById('kpiExportiert'),
         kpiExportiertPct: document.getElementById('kpiExportiertPct'),
+        kpiBarKi: document.getElementById('kpiBarKi'),
+        kpiBarPv: document.getElementById('kpiBarPv'),
+        kpiBarExport: document.getElementById('kpiBarExport'),
+        kpiBarDone: document.getElementById('kpiBarDone'),
         spartenList: document.getElementById('spartenList'),
         incompleteCount: document.getElementById('incompleteCount'),
         validationPendingCount: document.getElementById('validationPendingCount'),
@@ -308,12 +312,21 @@ export function renderDashboardKPIs(stats) {
     if (elements.kpiExportReady) elements.kpiExportReady.textContent = stats.exportReady || 0;
     if (elements.kpiExportiert) elements.kpiExportiert.textContent = wf.exported || 0;
 
-    if (total > 0) {
-        if (elements.kpiKiRecognizedPct) elements.kpiKiRecognizedPct.textContent = Math.round((wf.kiRecognized || 0) / total * 100) + '%';
-        if (elements.kpiPvValidatedPct) elements.kpiPvValidatedPct.textContent = Math.round((wf.pvValidated || 0) / total * 100) + '%';
-        if (elements.kpiExportReadyPct) elements.kpiExportReadyPct.textContent = Math.round((stats.exportReady || 0) / total * 100) + '%';
-        if (elements.kpiExportiertPct) elements.kpiExportiertPct.textContent = Math.round((wf.exported || 0) / total * 100) + '%';
-    }
+    const pctKi = total > 0 ? Math.round((wf.kiRecognized || 0) / total * 100) : 0;
+    const pctPv = total > 0 ? Math.round((wf.pvValidated || 0) / total * 100) : 0;
+    const pctExport = total > 0 ? Math.round((stats.exportReady || 0) / total * 100) : 0;
+    const pctDone = total > 0 ? Math.round((wf.exported || 0) / total * 100) : 0;
+
+    if (elements.kpiKiRecognizedPct) elements.kpiKiRecognizedPct.textContent = pctKi + '%';
+    if (elements.kpiPvValidatedPct) elements.kpiPvValidatedPct.textContent = pctPv + '%';
+    if (elements.kpiExportReadyPct) elements.kpiExportReadyPct.textContent = pctExport + '%';
+    if (elements.kpiExportiertPct) elements.kpiExportiertPct.textContent = pctDone + '%';
+
+    // Update progress bars
+    if (elements.kpiBarKi) elements.kpiBarKi.style.width = pctKi + '%';
+    if (elements.kpiBarPv) elements.kpiBarPv.style.width = pctPv + '%';
+    if (elements.kpiBarExport) elements.kpiBarExport.style.width = pctExport + '%';
+    if (elements.kpiBarDone) elements.kpiBarDone.style.width = pctDone + '%';
 
     if (elements.validationPendingCount) {
         const pendingCases = Storage.getPendingValidationCases();
@@ -332,17 +345,25 @@ export function renderDashboardKPIs(stats) {
 export function renderSpartenList(spartenStats) {
     if (!elements.spartenList) return;
 
-    if (spartenStats.length === 0) {
+    if (!spartenStats || spartenStats.length === 0) {
         elements.spartenList.innerHTML = '<p class="text-muted">Keine Sparten vorhanden</p>';
         return;
     }
 
-    elements.spartenList.innerHTML = spartenStats.map(s => `
-        <span class="sparten-tag">
-            ${escapeHtml(s.sparte)}
-            <span class="count">${s.count}</span>
-        </span>
-    `).join('');
+    const maxCount = Math.max(...spartenStats.map(s => s.count), 1);
+
+    elements.spartenList.innerHTML = spartenStats.slice(0, 8).map(s => {
+        const pct = Math.round((s.count / maxCount) * 100);
+        return `
+            <div class="sparten-bar-item">
+                <span class="sparten-bar-label" title="${escapeHtml(s.sparte)}">${escapeHtml(s.sparte)}</span>
+                <div class="sparten-bar-track">
+                    <div class="sparten-bar-fill" style="width: ${pct}%"></div>
+                </div>
+                <span class="sparten-bar-count">${s.count}</span>
+            </div>
+        `;
+    }).join('');
 }
 
 /**

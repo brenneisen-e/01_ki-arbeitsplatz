@@ -322,29 +322,70 @@ body {
 /* ========================================
    KPI CARDS - Refined Design
    ======================================== */
-.bestand-page .kpi-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: var(--space-4);
+.bestand-page .kpi-grid,
+.bestand-page .kpi-pipeline {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
     margin-bottom: var(--space-6);
+}
+
+.bestand-page .kpi-connector {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 24px;
+    color: var(--text-muted);
+    font-size: 1.25rem;
+    opacity: 0.4;
 }
 
 .bestand-page .kpi-card {
     display: flex;
-    align-items: center;
-    gap: var(--space-3);
+    flex-direction: column;
+    gap: var(--space-2);
     padding: var(--space-4);
     background: var(--surface);
     border-radius: var(--radius-lg);
     border: 1px solid var(--border);
     box-shadow: var(--shadow-xs);
     transition: var(--transition-base);
+    flex: 1;
+    min-width: 0;
+    position: relative;
+}
+
+.bestand-page .kpi-card .kpi-icon {
+    margin-bottom: var(--space-1);
 }
 
 .bestand-page .kpi-card:hover {
     border-color: var(--border-strong);
     box-shadow: var(--shadow-sm);
 }
+
+/* KPI Progress Bar */
+.bestand-page .kpi-bar {
+    width: 100%;
+    height: 4px;
+    background: var(--surface-subtle);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-top: auto;
+}
+
+.bestand-page .kpi-bar-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 0.5s ease;
+    width: 0%;
+}
+
+.bestand-page .kpi-bar-ki { background: var(--status-wiedervorlage); }
+.bestand-page .kpi-bar-pv { background: var(--status-bestaetigt); }
+.bestand-page .kpi-bar-export { background: var(--primary); }
+.bestand-page .kpi-bar-done { background: var(--status-exportiert, #8b5cf6); }
 
 .bestand-page .kpi-icon {
     width: 40px;
@@ -474,9 +515,23 @@ body {
    ======================================== */
 .bestand-page .dashboard-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: var(--space-5);
-    margin-bottom: var(--space-8);
+    margin-bottom: var(--space-6);
+}
+
+.bestand-page .dashboard-grid-3col {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-5);
+    margin-bottom: var(--space-6);
+}
+
+.bestand-page .dashboard-grid-2col {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-5);
+    margin-bottom: var(--space-6);
 }
 
 .bestand-page .dashboard-card {
@@ -504,14 +559,57 @@ body {
     gap: var(--space-2);
 }
 
-/* Card icon in header */
-.bestand-page .dashboard-card h3::before {
-    content: '';
-    display: none; /* Icons should be in HTML, not pseudo-elements */
+.bestand-page .dashboard-card.dashboard-wide {
+    grid-column: 1 / -1;
 }
 
-.bestand-page .dashboard-card.dashboard-wide {
-    grid-column: span 4;
+/* Sparten Bars */
+.bestand-page .sparten-bars {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+}
+
+.bestand-page .sparten-bar-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+}
+
+.bestand-page .sparten-bar-label {
+    width: 90px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex-shrink: 0;
+}
+
+.bestand-page .sparten-bar-track {
+    flex: 1;
+    height: 8px;
+    background: var(--surface-subtle, #f1f5f9);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.bestand-page .sparten-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    background: var(--primary);
+    transition: width 0.4s ease;
+    min-width: 4px;
+}
+
+.bestand-page .sparten-bar-count {
+    width: 28px;
+    text-align: right;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    flex-shrink: 0;
 }
 
 /* Activity Header with Controls */
@@ -2473,8 +2571,13 @@ body {
         grid-template-columns: repeat(4, 1fr);
     }
 
-    .dashboard-grid {
+    .dashboard-grid,
+    .bestand-page .dashboard-grid-3col {
         grid-template-columns: repeat(2, 1fr);
+    }
+
+    .bestand-page .dashboard-grid-3col .card-sparten {
+        grid-column: 1 / -1;
     }
 
     .dashboard-card.dashboard-wide {
@@ -2483,8 +2586,21 @@ body {
 }
 
 @media (max-width: 1100px) {
-    .bestand-page .kpi-grid {
+    .bestand-page .kpi-grid,
+    .bestand-page .kpi-pipeline {
         grid-template-columns: repeat(4, 1fr);
+    }
+
+    .bestand-page .kpi-pipeline {
+        flex-wrap: wrap;
+    }
+
+    .bestand-page .kpi-pipeline .kpi-connector {
+        display: none;
+    }
+
+    .bestand-page .kpi-pipeline .kpi-card {
+        flex: 0 0 calc(33.33% - var(--space-3));
     }
 }
 
@@ -2517,11 +2633,22 @@ body {
     }
 
     .kpi-grid,
-    .bestand-page .kpi-grid {
-        grid-template-columns: repeat(2, 1fr);
+    .bestand-page .kpi-grid,
+    .bestand-page .kpi-pipeline {
+        flex-wrap: wrap;
     }
 
-    .dashboard-grid {
+    .bestand-page .kpi-pipeline .kpi-card {
+        flex: 0 0 calc(50% - var(--space-3));
+    }
+
+    .bestand-page .kpi-pipeline .kpi-connector {
+        display: none;
+    }
+
+    .dashboard-grid,
+    .bestand-page .dashboard-grid-3col,
+    .bestand-page .dashboard-grid-2col {
         grid-template-columns: 1fr;
     }
 

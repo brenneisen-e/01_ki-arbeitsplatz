@@ -2691,7 +2691,7 @@ body {
    PROZESS VIEW (T-08)
    ======================================== */
 .bestand-page .prozess-container {
-    max-width: 900px;
+    max-width: 1400px;
     margin: 0 auto;
 }
 
@@ -2761,12 +2761,12 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0 0.15rem;
+    padding: 0 0.25rem;
     flex-shrink: 0;
 }
 
 .bestand-page .flow-arrow span {
-    font-size: 1.5rem;
+    font-size: 1.6rem;
     font-weight: 300;
     color: var(--gray-400);
     line-height: 1;
@@ -2774,12 +2774,12 @@ body {
 
 /* Flow Node */
 .bestand-page .flow-node {
-    width: 168px;
-    min-width: 168px;
+    width: 190px;
+    min-width: 190px;
     background: white;
     border: 1px solid var(--gray-200);
     border-radius: var(--radius-md);
-    padding: 0.85rem 0.9rem 0.75rem;
+    padding: 1rem 1rem 0.85rem;
     display: flex;
     flex-direction: column;
     transition: box-shadow 0.15s, border-color 0.15s;
@@ -2796,17 +2796,17 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.6rem;
 }
 
 .bestand-page .flow-node-num {
-    width: 26px;
-    height: 26px;
+    width: 28px;
+    height: 28px;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     font-weight: 700;
     color: white;
     background: var(--gray-400);
@@ -2814,9 +2814,14 @@ body {
 }
 
 .bestand-page .flow-node-icon {
-    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
     color: var(--gray-400);
     line-height: 1;
+}
+
+.bestand-page .flow-node-icon svg {
+    display: block;
 }
 
 /* Number colors per type */
@@ -2837,18 +2842,18 @@ body {
 
 /* Node content */
 .bestand-page .flow-node h4 {
-    font-size: 0.8rem;
+    font-size: 0.88rem;
     font-weight: 600;
     color: var(--gray-800);
-    margin: 0 0 0.3rem;
+    margin: 0 0 0.35rem;
     line-height: 1.3;
 }
 
 .bestand-page .flow-node p {
-    font-size: 0.72rem;
+    font-size: 0.8rem;
     color: var(--gray-500);
     margin: 0;
-    line-height: 1.4;
+    line-height: 1.45;
     flex: 1;
 }
 
@@ -2856,14 +2861,14 @@ body {
 .bestand-page .flow-node-tags {
     display: flex;
     flex-wrap: wrap;
-    gap: 3px;
-    margin-top: 0.5rem;
+    gap: 4px;
+    margin-top: 0.55rem;
 }
 
 .bestand-page .flow-node-tags span {
-    font-size: 0.62rem;
+    font-size: 0.7rem;
     font-weight: 600;
-    padding: 1px 6px;
+    padding: 2px 7px;
     border-radius: 3px;
     background: var(--gray-100);
     color: var(--gray-600);
@@ -2871,37 +2876,44 @@ body {
 
 /* Meta label */
 .bestand-page .flow-node-meta {
-    font-size: 0.65rem;
+    font-size: 0.72rem;
     color: var(--gray-400);
     font-style: italic;
-    margin-top: 0.5rem;
+    margin-top: 0.55rem;
 }
 
 /* Pain point badge */
 .bestand-page .flow-node-pain {
-    margin-top: 0.5rem;
-    padding: 3px 6px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 0.55rem;
+    padding: 4px 8px;
     background: #fef3c7;
     border-left: 2px solid #d97706;
     border-radius: 0 3px 3px 0;
-    font-size: 0.62rem;
+    font-size: 0.7rem;
     color: #92400e;
     line-height: 1.3;
+}
+
+.bestand-page .flow-node-pain svg {
+    flex-shrink: 0;
 }
 
 /* Decision branches */
 .bestand-page .flow-node-branches {
     display: flex;
     flex-direction: column;
-    gap: 3px;
-    margin-top: 0.45rem;
+    gap: 4px;
+    margin-top: 0.5rem;
 }
 
 .bestand-page .flow-branch-yes,
 .bestand-page .flow-branch-no {
-    font-size: 0.62rem;
+    font-size: 0.7rem;
     font-weight: 600;
-    padding: 2px 6px;
+    padding: 3px 8px;
     border-radius: 3px;
 }
 
@@ -2967,7 +2979,13 @@ body {
 }
 
 .bestand-page .flow-node-mini .flow-node-icon {
-    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    line-height: 1;
+}
+
+.bestand-page .flow-node-mini .flow-node-icon svg {
+    display: block;
 }
 
 .bestand-page .flow-node-mini strong {
@@ -3021,7 +3039,6 @@ body {
     background: #d1fae5;
     color: #059669;
     border-radius: var(--radius-md);
-    font-size: 1.5rem;
     flex-shrink: 0;
 }
 
@@ -3033,18 +3050,16 @@ body {
 }
 
 .bestand-page .benefit-icon {
-    width: 22px;
-    height: 22px;
+    width: 24px;
+    height: 24px;
     display: flex;
     align-items: center;
     justify-content: center;
     background: #d1fae5;
     color: #059669;
     border-radius: 50%;
-    font-size: 0.7rem;
-    font-weight: 700;
     flex-shrink: 0;
-    margin-top: 2px;
+    margin-top: 1px;
 }
 
 .bestand-page .benefit-item strong {

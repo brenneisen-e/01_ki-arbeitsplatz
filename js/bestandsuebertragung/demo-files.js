@@ -996,12 +996,12 @@ Tel.: 0221-4488770`,
         }
     },
     {
-        id: 'mehrere_vsnr_fischer',
+        id: 'teilweise_fischer',
         category: 'email-edge',
-        title: 'Mehrere VS-Nr erw\u00e4hnt \u2013 Fischer',
-        description: 'E-Mail erw\u00e4hnt mehrere Versicherungsnummern in einem Vorgang.',
-        tags: ['EML', 'DOCX', 'Mehrere VS-Nr'],
-        filename: '12_Mehrere_VSNr_Fischer.eml',
+        title: 'Teilweise vollst\u00e4ndig \u2013 Fischer (Haftpflicht + Unfall)',
+        description: 'Haftpflicht mit VS-Nr vollst\u00e4ndig, Unfall ohne VS-Nr \u2013 teilweise vollst\u00e4ndig.',
+        tags: ['EML', 'DOCX', 'VS-Nr fehlt', 'Teilweise'],
+        filename: '12_Teilweise_Fischer.eml',
         generate() {
             const vollmacht = buildMaklervollmacht(
                 'Maria Fischer', '25.09.1991',
@@ -1013,19 +1013,18 @@ Tel.: 0221-4488770`,
             return createEml({
                 from: '"J\u00fcrgen Becker" <juergen.becker@becker-partner.de>',
                 to: 'maklerservice@ergo.de',
-                subject: 'Bestands\u00fcbertragung Fischer \u2013 Hausrat und Haftpflicht',
+                subject: 'Bestands\u00fcbertragung Fischer \u2013 Haftpflicht und Unfall',
                 date: 'Wed, 15 Jan 2026 10:45:00 +0100',
                 body: `Sehr geehrte Damen und Herren,
 
 f\u00fcr unsere Kundin Maria Fischer beantragen wir die \u00dcbertragung folgender Vertr\u00e4ge:
 
-- Hausratversicherung, VS-Nr. ERG-4534100
-- Haftpflichtversicherung, VS-Nr. ERG-4534201
-- evtl. auch Unfallversicherung VS-Nr. ERG-4534302, hier kl\u00e4ren wir noch mit der Kundin
+1. Haftpflichtversicherung, VS-Nr. ERG-4534201
+   Gew\u00fcnschtes \u00dcbertragungsdatum: 01.04.2026
 
-Frau Fischer hatte urspr\u00fcnglich auch den Vertrag ERG-4534050 (Rechtsschutz) bei Ihnen, dieser wurde aber bereits 2024 gek\u00fcndigt.
-
-Gew\u00fcnschtes \u00dcbertragungsdatum: 01.04.2026
+2. Unfallversicherung
+   Gew\u00fcnschtes \u00dcbertragungsdatum: 01.04.2026
+   Die Versicherungsnummer liegt uns aktuell leider nicht vor. Frau Fischer wird diese nachreichen.
 
 Die unterschriebene Maklervollmacht liegt bei.
 

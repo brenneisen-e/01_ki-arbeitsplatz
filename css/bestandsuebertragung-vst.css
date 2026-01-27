@@ -2741,261 +2741,277 @@ body {
     color: #065f46;
 }
 
-/* Flow Layout */
-.bestand-page .prozess-flow {
-    position: relative;
+/* ---- Horizontal Flowchart ---- */
+.bestand-page .flow-h-scroll {
+    overflow-x: auto;
+    padding-bottom: 0.75rem;
+    margin: 0 -0.5rem;
+    padding: 0 0.5rem 0.75rem;
 }
 
-.bestand-page .prozess-connector {
+.bestand-page .flow-h-track {
     display: flex;
+    align-items: stretch;
+    gap: 0;
+    min-width: min-content;
+}
+
+/* Arrow connector */
+.bestand-page .flow-arrow {
+    display: flex;
+    align-items: center;
     justify-content: center;
-    padding: 4px 0;
+    padding: 0 0.15rem;
+    flex-shrink: 0;
+}
+
+.bestand-page .flow-arrow span {
+    font-size: 1.5rem;
+    font-weight: 300;
     color: var(--gray-400);
-    font-size: 1.25rem;
     line-height: 1;
 }
 
-/* Step Cards */
-.bestand-page .prozess-step {
+/* Flow Node */
+.bestand-page .flow-node {
+    width: 168px;
+    min-width: 168px;
+    background: white;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-md);
+    padding: 0.85rem 0.9rem 0.75rem;
     display: flex;
-    gap: 1rem;
-    align-items: flex-start;
+    flex-direction: column;
+    transition: box-shadow 0.15s, border-color 0.15s;
+    position: relative;
 }
 
-.bestand-page .step-number {
-    width: 32px;
-    height: 32px;
+.bestand-page .flow-node:hover {
+    box-shadow: var(--shadow-sm);
+    border-color: var(--gray-300);
+}
+
+/* Node header: number + icon */
+.bestand-page .flow-node-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+}
+
+.bestand-page .flow-node-num {
+    width: 26px;
+    height: 26px;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    font-size: 0.85rem;
+    font-size: 0.75rem;
     font-weight: 700;
-    flex-shrink: 0;
-    margin-top: 1rem;
     color: white;
     background: var(--gray-400);
+    flex-shrink: 0;
 }
 
-.bestand-page .step-input .step-number { background: #6366f1; }
-.bestand-page .step-system .step-number { background: #64748b; }
-.bestand-page .step-manual .step-number { background: #d97706; }
-.bestand-page .step-decision .step-number { background: #dc2626; }
-.bestand-page .step-ai .step-number { background: #7c3aed; }
-.bestand-page .step-output .step-number { background: #059669; }
-
-.bestand-page .step-card {
-    flex: 1;
-    background: white;
-    border: 1px solid var(--gray-200);
-    border-radius: var(--radius-md);
-    padding: 1rem 1.25rem;
-    transition: box-shadow 0.15s;
-}
-
-.bestand-page .step-card:hover {
-    box-shadow: var(--shadow-sm);
-}
-
-.bestand-page .step-card .step-icon {
-    float: right;
-    font-size: 1.5rem;
+.bestand-page .flow-node-icon {
+    font-size: 1.2rem;
     color: var(--gray-400);
-    margin-left: 0.5rem;
+    line-height: 1;
 }
 
-.bestand-page .step-card h4 {
-    font-size: 0.95rem;
+/* Number colors per type */
+.bestand-page .node-input .flow-node-num { background: #6366f1; }
+.bestand-page .node-system .flow-node-num { background: #64748b; }
+.bestand-page .node-manual .flow-node-num { background: #d97706; }
+.bestand-page .node-decision .flow-node-num { background: #dc2626; }
+.bestand-page .node-ai .flow-node-num { background: #7c3aed; }
+.bestand-page .node-output .flow-node-num { background: #059669; }
+
+/* Border accent per type */
+.bestand-page .node-input { border-top: 3px solid #6366f1; }
+.bestand-page .node-system { border-top: 3px solid #94a3b8; }
+.bestand-page .node-manual { border-top: 3px solid #d97706; }
+.bestand-page .node-decision { border-top: 3px solid #dc2626; background: #fff5f5; }
+.bestand-page .node-ai { border-top: 3px solid #7c3aed; }
+.bestand-page .node-output { border-top: 3px solid #059669; }
+
+/* Node content */
+.bestand-page .flow-node h4 {
+    font-size: 0.8rem;
     font-weight: 600;
     color: var(--gray-800);
-    margin: 0 0 0.35rem;
+    margin: 0 0 0.3rem;
+    line-height: 1.3;
 }
 
-.bestand-page .step-card p {
-    font-size: 0.85rem;
-    color: var(--gray-600);
-    margin: 0 0 0.75rem;
-    line-height: 1.45;
+.bestand-page .flow-node p {
+    font-size: 0.72rem;
+    color: var(--gray-500);
+    margin: 0;
+    line-height: 1.4;
+    flex: 1;
 }
 
-.bestand-page .step-card .step-meta {
-    font-size: 0.75rem;
-    color: var(--gray-400);
-    font-style: italic;
-}
-
-/* Step Detail Items */
-.bestand-page .step-details {
+/* Tags inside nodes */
+.bestand-page .flow-node-tags {
     display: flex;
-    flex-direction: column;
-    gap: 0.35rem;
+    flex-wrap: wrap;
+    gap: 3px;
     margin-top: 0.5rem;
 }
 
-.bestand-page .step-detail-item {
-    display: flex;
-    gap: 0.5rem;
-    font-size: 0.8rem;
-    line-height: 1.4;
-}
-
-.bestand-page .step-detail-item .detail-label {
-    flex-shrink: 0;
+.bestand-page .flow-node-tags span {
+    font-size: 0.62rem;
     font-weight: 600;
-    color: var(--gray-500);
-    min-width: 65px;
+    padding: 1px 6px;
+    border-radius: 3px;
+    background: var(--gray-100);
+    color: var(--gray-600);
 }
 
-.bestand-page .step-detail-item .detail-value {
-    color: var(--gray-700);
+/* Meta label */
+.bestand-page .flow-node-meta {
+    font-size: 0.65rem;
+    color: var(--gray-400);
+    font-style: italic;
+    margin-top: 0.5rem;
 }
 
-/* Pain Point */
-.bestand-page .step-pain {
-    margin-top: 0.75rem;
-    padding: 0.5rem 0.75rem;
+/* Pain point badge */
+.bestand-page .flow-node-pain {
+    margin-top: 0.5rem;
+    padding: 3px 6px;
     background: #fef3c7;
-    border-left: 3px solid #d97706;
-    border-radius: 0 4px 4px 0;
-    font-size: 0.8rem;
+    border-left: 2px solid #d97706;
+    border-radius: 0 3px 3px 0;
+    font-size: 0.62rem;
     color: #92400e;
-    line-height: 1.4;
+    line-height: 1.3;
 }
 
-/* Decision Card */
-.bestand-page .step-card-decision {
-    border-color: #fca5a5;
-    background: #fff5f5;
-}
-
-.bestand-page .decision-branches {
+/* Decision branches */
+.bestand-page .flow-node-branches {
     display: flex;
     flex-direction: column;
-    gap: 0.4rem;
-    margin: 0.5rem 0;
+    gap: 3px;
+    margin-top: 0.45rem;
 }
 
-.bestand-page .decision-branch {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.8rem;
-    padding: 0.35rem 0.75rem;
-    border-radius: 4px;
+.bestand-page .flow-branch-yes,
+.bestand-page .flow-branch-no {
+    font-size: 0.62rem;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 3px;
 }
 
-.bestand-page .decision-yes {
+.bestand-page .flow-branch-yes {
     background: #d1fae5;
     color: #065f46;
 }
 
-.bestand-page .decision-no {
+.bestand-page .flow-branch-no {
     background: #fee2e2;
     color: #991b1b;
 }
 
-.bestand-page .decision-label {
-    font-weight: 700;
-    white-space: nowrap;
-}
-
-/* Inline SOLL Block (between steps) */
-.bestand-page .prozess-soll-inline {
+/* ---- SOLL Card ---- */
+.bestand-page .flow-soll-card {
+    background: white;
     border: 2px solid #86efac;
     border-radius: var(--radius-lg);
     overflow: hidden;
-    margin: 0.25rem 0 0.25rem 42px;
-    background: #f0fdf4;
 }
 
-.bestand-page .soll-inline-header {
+.bestand-page .flow-soll-card-head {
     display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    padding: 0.6rem 1.25rem;
-    background: #dcfce7;
-    border-bottom: 1px solid #bbf7d0;
-}
-
-.bestand-page .soll-inline-title {
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: #065f46;
-}
-
-.bestand-page .soll-inline-body {
-    display: flex;
-    gap: 1.25rem;
+    gap: 1rem;
     padding: 1.25rem;
+    background: #f0fdf4;
+    border-bottom: 1px solid #dcfce7;
+}
+
+.bestand-page .flow-soll-card-head h4 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--gray-800);
+    margin: 0 0 0.35rem;
+}
+
+.bestand-page .flow-soll-card-head > div > p {
+    font-size: 0.85rem;
+    color: var(--gray-600);
+    margin: 0;
+    line-height: 1.45;
+}
+
+/* SOLL mini-flow inside card */
+.bestand-page .flow-h-soll {
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid #dcfce7;
     background: white;
 }
 
-.bestand-page .prozess-connector-ist {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 4px 0;
-    gap: 2px;
+.bestand-page .flow-h-soll .flow-h-track {
+    gap: 0;
 }
 
-.bestand-page .prozess-connector-ist span:first-child {
-    color: var(--gray-400);
-    font-size: 1.25rem;
-    line-height: 1;
-}
-
-.bestand-page .connector-label {
-    font-size: 0.65rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    color: #94a3b8;
-    background: #f1f5f9;
-    padding: 1px 8px;
-    border-radius: 3px;
-}
-
-/* Improvement Cards */
-.bestand-page .prozess-improvements {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-}
-
-.bestand-page .improvement-card {
-    background: white;
-    border: 1px solid var(--gray-200);
-    border-radius: var(--radius-lg);
-    overflow: hidden;
-}
-
-.bestand-page .improvement-primary {
-    border-color: #86efac;
-    border-width: 2px;
-}
-
-.bestand-page .improvement-position {
+/* Mini-flow nodes */
+.bestand-page .flow-node-mini {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.65rem 1.25rem;
-    background: #f0fdf4;
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: #065f46;
-    border-bottom: 1px solid #bbf7d0;
+    padding: 0.5rem 0.85rem;
+    border-radius: var(--radius-md);
+    white-space: nowrap;
 }
 
-.bestand-page .improvement-arrow {
+.bestand-page .flow-node-mini .flow-node-icon {
     font-size: 1rem;
 }
 
-.bestand-page .improvement-content {
+.bestand-page .flow-node-mini strong {
+    font-size: 0.78rem;
+    font-weight: 600;
+}
+
+.bestand-page .node-mini-input {
+    background: #eef2ff;
+    color: #4338ca;
+}
+
+.bestand-page .node-mini-ai {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.bestand-page .node-mini-process {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.bestand-page .node-mini-output {
+    background: #ecfdf5;
+    color: #047857;
+}
+
+.bestand-page .flow-arrow-mini {
     display: flex;
-    gap: 1.25rem;
+    align-items: center;
+    padding: 0 0.35rem;
+    color: var(--gray-400);
+    font-size: 1.1rem;
+}
+
+/* SOLL benefits grid */
+.bestand-page .flow-soll-benefits {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
     padding: 1.25rem;
 }
 
+/* Improvement Icon (reused in SOLL card) */
 .bestand-page .improvement-icon {
     width: 48px;
     height: 48px;
@@ -3009,32 +3025,7 @@ body {
     flex-shrink: 0;
 }
 
-.bestand-page .improvement-body {
-    flex: 1;
-}
-
-.bestand-page .improvement-body h4 {
-    font-size: 1.05rem;
-    font-weight: 700;
-    color: var(--gray-800);
-    margin: 0 0 0.5rem;
-}
-
-.bestand-page .improvement-body > p {
-    font-size: 0.9rem;
-    color: var(--gray-600);
-    margin: 0 0 1rem;
-    line-height: 1.5;
-}
-
 /* Benefit Items */
-.bestand-page .improvement-benefits {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-    margin-bottom: 1.25rem;
-}
-
 .bestand-page .benefit-item {
     display: flex;
     gap: 0.75rem;
@@ -3068,47 +3059,6 @@ body {
     color: var(--gray-500);
     margin: 0;
     line-height: 1.4;
-}
-
-/* Mini Flow */
-.bestand-page .improvement-flow {
-    margin-top: 1rem;
-    padding-top: 1rem;
-    border-top: 1px solid var(--gray-200);
-}
-
-.bestand-page .improvement-flow h5 {
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: var(--gray-500);
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    margin: 0 0 0.75rem;
-}
-
-.bestand-page .mini-flow {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-}
-
-.bestand-page .mini-step {
-    padding: 0.4rem 0.75rem;
-    font-size: 0.75rem;
-    font-weight: 600;
-    border-radius: 4px;
-    white-space: nowrap;
-}
-
-.bestand-page .mini-input { background: #eef2ff; color: #4338ca; }
-.bestand-page .mini-ai { background: #d1fae5; color: #065f46; }
-.bestand-page .mini-decision { background: #fef3c7; color: #92400e; }
-.bestand-page .mini-output { background: #ecfdf5; color: #047857; }
-
-.bestand-page .mini-arrow {
-    color: var(--gray-400);
-    font-size: 0.9rem;
 }
 
 /* Comparison Table */

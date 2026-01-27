@@ -2691,16 +2691,111 @@ async function loadDefaultCSVData() {
 
     } catch (error) {
         console.warn('Fehler beim Laden der CSV-Daten:', error);
+        console.log('Generiere Fallback-Demo-Daten...');
+
+        updateMainLoadingProgress(50, 'Generiere Demo-Daten...');
+        await sleep(200);
+
+        const fallbackCSV = generateFallbackDemoCSV();
+        updateMainLoadingProgress(75, 'Verarbeite Demo-Daten...');
+        await sleep(200);
+        processCSVData(fallbackCSV);
+
         updateMainLoadingProgress(90, 'Lade Feedback-Kommentare...');
         await loadFeedbackData();
-        updateMainLoadingProgress(100, 'Bereit');
-        await sleep(500);
-        console.log('Daten können manuell über Settings > CSV Upload geladen werden');
+        updateMainLoadingProgress(100, 'Fertig!');
+        await sleep(400);
+        console.log('Fallback-Demo-Daten geladen');
     }
 }
 
 /**
- * Lädt die Feedback-Kommentare von Cloudflare
+ * Generiert Demo-CSV-Daten als Fallback wenn der Fetch fehlschlaegt
+ * (z.B. bei file:// Protokoll oder fehlender Netzwerkverbindung)
+ */
+function generateFallbackDemoCSV() {
+    const silos = ['Ausschließlichkeit', 'Makler', 'Banken', 'Direktvertrieb'];
+    const segments = ['Leben', 'Kranken', 'Schaden', 'Kfz'];
+    const products = {
+        'Leben': ['Risikoleben', 'Kapitallebensversicherung', 'Berufsunfähigkeit', 'Rentenversicherung', 'Fondsgebundene LV'],
+        'Kranken': ['Vollversicherung', 'Zahnzusatz', 'Zusatzversicherung', 'Pflegeversicherung', 'Auslandsreise'],
+        'Schaden': ['Haftpflicht', 'Hausrat', 'Wohngebäude', 'Rechtsschutz', 'Gewerbe'],
+        'Kfz': ['Kfz-Haftpflicht', 'Vollkasko', 'Teilkasko', 'Schutzbrief', 'Flottenversicherung']
+    };
+    const bundeslaender = [
+        {name: 'Bayern', kreise: ['Oberbayern', 'Niederbayern', 'Oberpfalz', 'Oberfranken', 'Mittelfranken', 'Unterfranken', 'Schwaben']},
+        {name: 'Nordrhein-Westfalen', kreise: ['Düsseldorf', 'Köln', 'Munster', 'Detmold', 'Arnsberg']},
+        {name: 'Baden-Württemberg', kreise: ['Stuttgart', 'Karlsruhe', 'Freiburg', 'Tübingen']},
+        {name: 'Hessen', kreise: ['Darmstadt', 'Gießen', 'Kassel']},
+        {name: 'Niedersachsen', kreise: ['Hannover', 'Braunschweig', 'Luneburg', 'Weser-Ems']},
+        {name: 'Sachsen', kreise: ['Dresden', 'Leipzig', 'Chemnitz']},
+        {name: 'Berlin', kreise: ['Berlin']},
+        {name: 'Hamburg', kreise: ['Hamburg']},
+        {name: 'Rheinland-Pfalz', kreise: ['Koblenz', 'Trier', 'Rheinhessen-Pfalz']},
+        {name: 'Schleswig-Holstein', kreise: ['Schleswig-Holstein']},
+        {name: 'Brandenburg', kreise: ['Brandenburg']},
+        {name: 'Thüringen', kreise: ['Thüringen']},
+        {name: 'Sachsen-Anhalt', kreise: ['Halle', 'Dessau', 'Magdeburg']},
+        {name: 'Mecklenburg-Vorpommern', kreise: ['Mecklenburg-Vorpommern']},
+        {name: 'Saarland', kreise: ['Saarland']},
+        {name: 'Bremen', kreise: ['Bremen']}
+    ];
+
+    const namen = [
+        'Max Mustermann', 'Emma Ludwig', 'Thomas Schneider', 'Anna Fischer',
+        'Michael Weber', 'Sophie Wagner', 'Andreas Becker', 'Laura Hoffmann',
+        'Stefan Schulz', 'Marie Koch', 'Christian Werner', 'Julia Braun',
+        'Markus Lehmann', 'Katharina Schmitt', 'Daniel Krüger', 'Lisa Hartmann',
+        'Patrick Meier', 'Sabine Lange', 'Frank Richter', 'Claudia Wolf'
+    ];
+
+    const rand = (min, max) => (Math.random() * (max - min) + min);
+    const pick = arr => arr[Math.floor(Math.random() * arr.length)];
+
+    const header = 'year,month,day,vermittler_id,vermittler_name,silo,segment,product,bundesland,landkreis,neugeschaeft,bestand,storno,nps,risiko,combined,ergebnis,underwriting,deckungsbeitrag';
+    const rows = [header];
+
+    // 20 Vermittler, 24 Monate (2024-2025), 5 Tage pro Monat = 2400 Zeilen
+    for (let v = 0; v < namen.length; v++) {
+        const vmId = 'VM' + String(v + 1).padStart(5, '0');
+        const vmName = namen[v];
+        const vmSilo = silos[v % silos.length];
+        const bl = bundeslaender[v % bundeslaender.length];
+        const kreis = pick(bl.kreise);
+        const performanceFactor = 0.5 + Math.random() * 1.5;
+
+        for (let year = 2024; year <= 2025; year++) {
+            for (let month = 1; month <= 12; month++) {
+                const daysInMonth = new Date(year, month, 0).getDate();
+                const sampleDays = [3, 8, 14, 20, 26].filter(d => d <= daysInMonth);
+
+                for (const day of sampleDays) {
+                    const seg = pick(segments);
+                    const prod = pick(products[seg]);
+                    const seasonal = 1 + 0.15 * Math.sin((month - 1) * Math.PI / 6);
+
+                    const ng = rand(50, 5000) * performanceFactor * seasonal;
+                    const bs = rand(1000000, 15000000) * performanceFactor;
+                    const st = rand(0, 18);
+                    const nps = rand(-5, 95);
+                    const risk = rand(20, 80);
+                    const comb = rand(65, 120);
+                    const erg = rand(50, 2500) * performanceFactor;
+                    const uw = rand(65, 100);
+                    const db = rand(200, 12000) * performanceFactor;
+
+                    rows.push(`${year},${month},${day},${vmId},"${vmName}",${vmSilo},${seg},${prod},${bl.name},"${kreis}",${ng.toFixed(2)},${bs.toFixed(2)},${st.toFixed(2)},${nps.toFixed(2)},${risk.toFixed(2)},${comb.toFixed(2)},${erg.toFixed(2)},${uw.toFixed(2)},${db.toFixed(2)}`);
+                }
+            }
+        }
+    }
+
+    console.log('Fallback-Demo-Daten generiert:', rows.length - 1, 'Datensätze');
+    return rows.join('\n');
+}
+
+/**
+ * Lädt die Feedback-Kommentare
  */
 async function loadFeedbackData() {
     const FEEDBACK_API_URL = 'https://vsteike-feedback.eike-3e2.workers.dev';

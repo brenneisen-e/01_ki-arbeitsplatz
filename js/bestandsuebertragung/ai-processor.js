@@ -90,6 +90,13 @@ function extractMsgContent(data) {
             .sort((a, b) => b.length - a.length)[0] || '';
     }
 
+    // Versuche Datum zu finden
+    let date = '';
+    const dateMatch = text.match(/Date[:\s]*([A-Za-z]{3},?\s+\d{1,2}\s+[A-Za-z]{3}\s+\d{4}\s+[\d:]+\s*[+-]?\d{0,4})/i);
+    if (dateMatch) {
+        date = dateMatch[1].trim();
+    }
+
     // Suche nach Anhängen (Dateinamen)
     const attachments = [];
     const attachmentMatches = text.matchAll(/([^\x00-\x1F]{3,50}\.(pdf|doc|docx|xls|xlsx|jpg|png))/gi);
@@ -102,6 +109,7 @@ function extractMsgContent(data) {
     return {
         subject: cleanText(subject),
         sender: cleanText(sender),
+        date: date,
         body: cleanText(body),
         attachmentNames: attachments,
         rawSize: data.length
@@ -168,6 +176,7 @@ function parseEmlContent(raw) {
 
     const subject = decodeRfc2047(headers['subject'] || '');
     const sender = decodeRfc2047(headers['from'] || '');
+    const dateRaw = headers['date'] || '';
 
     // Content-Type prüfen
     const contentType = headers['content-type'] || 'text/plain';
@@ -235,6 +244,7 @@ function parseEmlContent(raw) {
     return {
         subject: cleanText(subject),
         sender: cleanText(sender),
+        date: dateRaw,
         body: cleanText(body),
         attachmentNames,
         attachmentTexts,
@@ -319,10 +329,26 @@ function parseMimePart(partRaw) {
             const binaryStr = atob(rawBase64);
             if (filename.match(/\.docx$/i)) {
                 // Paragraphen-weise extrahieren für bessere Struktur
+                const signatureFonts = /segoe\s*script|lucida\s*handwriting|brush\s*script|comic\s*sans|dancing\s*script/i;
                 const paragraphs = binaryStr.split(/<\/w:p>/g);
                 const lines = paragraphs.map(p => {
-                    const textMatches = p.matchAll(/<w:t[^>]*>([^<]+)<\/w:t>/g);
-                    return Array.from(textMatches).map(m => m[1]).join('');
+                    // Runs einzeln prüfen um Schriftart zu erkennen
+                    const runs = p.matchAll(/<w:r>([\s\S]*?)<\/w:r>/g);
+                    let lineText = '';
+                    let hasSignatureFont = false;
+                    for (const run of runs) {
+                        const runXml = run[1];
+                        // Prüfe auf Signatur-Schriftart
+                        if (signatureFonts.test(runXml)) {
+                            hasSignatureFont = true;
+                        }
+                        // Text extrahieren
+                        const texts = runXml.matchAll(/<w:t[^>]*>([^<]+)<\/w:t>/g);
+                        for (const t of texts) lineText += t[1];
+                    }
+                    if (!lineText.trim()) return '';
+                    if (hasSignatureFont) return '[Handschriftliche Unterschrift: ' + lineText.trim() + ']';
+                    return lineText;
                 }).filter(line => line.trim());
                 textContent = lines.join('\n');
             } else if (filename.match(/\.xlsx$/i)) {
@@ -546,7 +572,7 @@ Prüfe die Maklervollmacht anhand dieser Kriterien:
 **nur_erwaehnt** (boolean): Wird eine Maklervollmacht nur im E-Mail-Text erwähnt, z.B. "per Post übermittelt", "wurde bereits geschickt", "liegt vor"? Wenn ja: true. Das bedeutet, die Vollmacht ist NICHT in dieser E-Mail enthalten.
 
 **unterschrieben** (boolean | null):
-- true: NUR wenn im Anhang-Dokument eine Unterschrift erkennbar ist (z.B. handschriftlicher Name, Wingdings-Zeichen, Bild-Signatur, oder Text der klar auf eine geleistete Unterschrift hinweist).
+- true: NUR wenn im Anhang-Dokument eine Unterschrift erkennbar ist (z.B. "[Handschriftliche Unterschrift: Name]"-Marker, handschriftlicher Name, Wingdings-Zeichen, Bild-Signatur, oder Text der klar auf eine geleistete Unterschrift hinweist). Der Marker "[Handschriftliche Unterschrift: ...]" bedeutet DEFINITIV unterschrieben = true.
 - false: Wenn das Vollmacht-Dokument als Anhang vorliegt, aber KEINE Unterschrift erkennbar ist (leere Unterschriftszeile, Platzhalter wie "________________________", "[Unterschrift]" o.ä.).
 - null: Wenn die Vollmacht nicht als Anhang vorliegt und daher nicht geprüft werden kann.
 
@@ -725,6 +751,7 @@ export function exportToExcel(analysisResults) {
         'Makler',
         'Makler E-Mail',
         'Gültig ab',
+        'Eingegangen am',
         'Status',
         'MV als Anhang',
         'MV nur erwähnt',
@@ -749,6 +776,7 @@ export function exportToExcel(analysisResults) {
                 vorgang.makler || '',
                 vorgang.maklerEmail || '',
                 vorgang.gueltigkeitsdatum || '',
+                result.email?.date || '',
                 vorgang._onHold ? 'on-hold' : (vorgang.status || ''),
                 mv.als_anhang === true ? 'Ja' : (mv.vorhanden === true ? 'Ja' : 'Nein'),
                 mv.nur_erwaehnt === true ? 'Ja' : 'Nein',

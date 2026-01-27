@@ -401,6 +401,9 @@ function renderResults() {
             const resultIdx = analysisResults.indexOf(result);
             const holdBtnId = `hold-${resultIdx}-${vi}`;
 
+            // E-Mail-Datum formatieren
+            const emailDateStr = formatEmailDate(result.email?.date);
+
             // Build attachment list for this result
             const attachmentNames = result.email?.attachmentNames || [];
             const attachmentTexts = result.email?.attachmentTexts || [];
@@ -438,6 +441,10 @@ function renderResults() {
                         <div class="detail-row">
                             <span class="detail-label">Gültig ab:</span>
                             <span class="detail-value">${escapeHtml(vorgang.gueltigkeitsdatum || '-')}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Eingegangen:</span>
+                            <span class="detail-value">${escapeHtml(emailDateStr)}</span>
                         </div>
                         <div class="detail-row">
                             <span class="detail-label">Makler:</span>
@@ -789,6 +796,23 @@ export function downloadAttachment(resultIdx, filename) {
 export function closeAttachmentPreview() {
     const modal = document.getElementById('attachmentPreviewModal');
     if (modal) modal.style.display = 'none';
+}
+
+/**
+ * E-Mail-Datum (RFC 2822) in deutsches Format umwandeln
+ */
+function formatEmailDate(dateStr) {
+    if (!dateStr) return '-';
+    try {
+        const d = new Date(dateStr);
+        if (isNaN(d.getTime())) return dateStr;
+        const dd = String(d.getDate()).padStart(2, '0');
+        const mm = String(d.getMonth() + 1).padStart(2, '0');
+        const yyyy = d.getFullYear();
+        return `${dd}.${mm}.${yyyy}`;
+    } catch {
+        return dateStr;
+    }
 }
 
 /**

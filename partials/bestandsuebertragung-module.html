@@ -559,7 +559,7 @@
             <h2>Testdateien &amp; E-Mail Vorlagen</h2>
             <p class="text-muted" style="margin-bottom: 0.5rem;">Realistische Demo-Dateien zum Testen des KI-Upload-Workflows. Alle Dateien werden im Browser erzeugt und k&ouml;nnen direkt im KI Upload verwendet werden.</p>
             <div style="margin-bottom: 1.5rem;">
-                <button class="btn btn-primary" id="downloadAllDemoFiles">Alle Dateien herunterladen (13 Dateien)</button>
+                <button class="btn btn-primary" id="downloadAllDemoFiles">Alle Dateien herunterladen (20 Dateien)</button>
             </div>
 
             <!-- Einfache E-Mails -->
@@ -650,6 +650,45 @@
                         </div>
                         <button class="btn btn-secondary btn-sm btn-demo-dl" data-demo-file="antwort_vollmacht_schneider">&darr; Download</button>
                     </div>
+                    <div class="demo-file-card">
+                        <div class="demo-file-icon demo-icon-word">W</div>
+                        <div class="demo-file-info">
+                            <h4>Komplett Anfrage &ndash; Kraus (Rechtsschutz)</h4>
+                            <p>Vollst&auml;ndige Anfrage mit MV: VS-Nr, Sparte, Datum</p>
+                            <div class="demo-file-tags">
+                                <span class="demo-tag tag-eml">EML</span>
+                                <span class="demo-tag tag-docx">DOCX</span>
+                                <span class="demo-tag tag-vollmacht">Vollst&auml;ndig</span>
+                            </div>
+                        </div>
+                        <button class="btn btn-secondary btn-sm btn-demo-dl" data-demo-file="komplett_kraus">&darr; Download</button>
+                    </div>
+                    <div class="demo-file-card">
+                        <div class="demo-file-icon demo-icon-word">W</div>
+                        <div class="demo-file-info">
+                            <h4>Komplett Anfrage &ndash; Winter (Leben)</h4>
+                            <p>Vollst&auml;ndige Anfrage Lebensversicherung mit MV</p>
+                            <div class="demo-file-tags">
+                                <span class="demo-tag tag-eml">EML</span>
+                                <span class="demo-tag tag-docx">DOCX</span>
+                                <span class="demo-tag tag-vollmacht">Vollst&auml;ndig</span>
+                            </div>
+                        </div>
+                        <button class="btn btn-secondary btn-sm btn-demo-dl" data-demo-file="komplett_winter">&darr; Download</button>
+                    </div>
+                    <div class="demo-file-card">
+                        <div class="demo-file-icon demo-icon-word">W</div>
+                        <div class="demo-file-info">
+                            <h4>Komplett Anfrage &ndash; Engel (Unfall)</h4>
+                            <p>Vollst&auml;ndige Anfrage Unfallversicherung mit MV</p>
+                            <div class="demo-file-tags">
+                                <span class="demo-tag tag-eml">EML</span>
+                                <span class="demo-tag tag-docx">DOCX</span>
+                                <span class="demo-tag tag-vollmacht">Vollst&auml;ndig</span>
+                            </div>
+                        </div>
+                        <button class="btn btn-secondary btn-sm btn-demo-dl" data-demo-file="komplett_engel">&darr; Download</button>
+                    </div>
                 </div>
             </div>
 
@@ -718,6 +757,67 @@
                             </div>
                         </div>
                         <button class="btn btn-secondary btn-sm btn-demo-dl" data-demo-file="excel_und_vollmacht_keller">&darr; Download</button>
+                    </div>
+                    <div class="demo-file-card demo-file-card-highlight">
+                        <div class="demo-file-icon demo-icon-complex">&#9830;</div>
+                        <div class="demo-file-info">
+                            <h4>Komplett-Paket &ndash; Otto (2 Vertr&auml;ge)</h4>
+                            <p>Vollst&auml;ndige Anfrage: Vollmacht (DOCX) + Vertragsliste (XLSX) f&uuml;r Hausrat + KFZ</p>
+                            <div class="demo-file-tags">
+                                <span class="demo-tag tag-eml">EML</span>
+                                <span class="demo-tag tag-docx">DOCX</span>
+                                <span class="demo-tag tag-xlsx">XLSX</span>
+                                <span class="demo-tag tag-vollmacht">Vollst&auml;ndig</span>
+                            </div>
+                        </div>
+                        <button class="btn btn-secondary btn-sm btn-demo-dl" data-demo-file="komplett_sammel_otto">&darr; Download</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Edge-Cases -->
+            <div class="demo-section">
+                <h3 class="demo-section-title">Edge-Cases (fehlende Daten / Sonderf&auml;lle)</h3>
+                <p class="demo-section-desc">E-Mails mit typischen Problemf&auml;llen: fehlende VS-Nr, mehrere VS-Nummern, fehlendes Datum.</p>
+                <div class="demo-files-grid">
+                    <div class="demo-file-card">
+                        <div class="demo-file-icon demo-icon-word">W</div>
+                        <div class="demo-file-info">
+                            <h4>MV vorhanden, VS-Nr fehlt &ndash; Bergmann</h4>
+                            <p>Unterschriebene Maklervollmacht als Anhang, aber keine Versicherungsnummer im Text</p>
+                            <div class="demo-file-tags">
+                                <span class="demo-tag tag-eml">EML</span>
+                                <span class="demo-tag tag-docx">DOCX</span>
+                                <span class="demo-tag tag-vollmacht">VS-Nr fehlt</span>
+                            </div>
+                        </div>
+                        <button class="btn btn-secondary btn-sm btn-demo-dl" data-demo-file="vollmacht_ohne_vsnr_bergmann">&darr; Download</button>
+                    </div>
+                    <div class="demo-file-card">
+                        <div class="demo-file-icon demo-icon-word">W</div>
+                        <div class="demo-file-info">
+                            <h4>Mehrere VS-Nr erw&auml;hnt &ndash; Fischer</h4>
+                            <p>Hausrat + Haftpflicht + evtl. Unfall: mehrere Nummern, eine unklar</p>
+                            <div class="demo-file-tags">
+                                <span class="demo-tag tag-eml">EML</span>
+                                <span class="demo-tag tag-docx">DOCX</span>
+                                <span class="demo-tag tag-vollmacht">Mehrere VS-Nr</span>
+                            </div>
+                        </div>
+                        <button class="btn btn-secondary btn-sm btn-demo-dl" data-demo-file="mehrere_vsnr_fischer">&darr; Download</button>
+                    </div>
+                    <div class="demo-file-card">
+                        <div class="demo-file-icon demo-icon-word">W</div>
+                        <div class="demo-file-info">
+                            <h4>Kein G&uuml;ltigkeitsdatum &ndash; Lange</h4>
+                            <p>Wohngeb&auml;ude-Vertrag: MV vorhanden, aber kein &Uuml;bertragungsdatum angegeben</p>
+                            <div class="demo-file-tags">
+                                <span class="demo-tag tag-eml">EML</span>
+                                <span class="demo-tag tag-docx">DOCX</span>
+                                <span class="demo-tag tag-vollmacht">Datum fehlt</span>
+                            </div>
+                        </div>
+                        <button class="btn btn-secondary btn-sm btn-demo-dl" data-demo-file="ohne_datum_lange">&darr; Download</button>
                     </div>
                 </div>
             </div>

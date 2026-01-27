@@ -950,6 +950,343 @@ Andreas Braun`,
         }
     },
 
+    // === Category: Edge-Cases (fehlende Daten / Sonderf\u00e4lle) ===
+    {
+        id: 'vollmacht_ohne_vsnr_bergmann',
+        category: 'email-edge',
+        title: 'MV vorhanden, VS-Nr fehlt \u2013 Bergmann',
+        description: 'Unterschriebene Maklervollmacht als Anhang, aber keine Versicherungsnummer im Text.',
+        tags: ['EML', 'DOCX', 'Maklervollmacht', 'VS-Nr fehlt'],
+        filename: '11_Vollmacht_Ohne_VSNr_Bergmann.eml',
+        generate() {
+            const vollmacht = buildMaklervollmacht(
+                'Karl Bergmann', '08.04.1969',
+                'Schillerstr. 14, 51065 K\u00f6ln',
+                'Petra Hartmann', 'Hartmann Versicherungsdienst',
+                'K\u00f6ln', '12.01.2026',
+                true // unterschrieben
+            );
+            return createEml({
+                from: '"Petra Hartmann" <petra.hartmann@hartmann-versicherungen.de>',
+                to: 'maklerservice@ergo.de',
+                subject: 'Bestands\u00fcbertragung Karl Bergmann \u2013 Maklervollmacht anbei',
+                date: 'Mon, 13 Jan 2026 08:30:00 +0100',
+                body: `Sehr geehrte Damen und Herren,
+
+anbei erhalten Sie die unterschriebene Maklervollmacht f\u00fcr unseren Kunden Karl Bergmann.
+
+Bitte \u00fcbertragen Sie seinen KFZ-Vertrag bei der ERGO in unseren Maklerbestand.
+
+Die Maklervollmacht ist dem Schreiben beigef\u00fcgt.
+
+Gew\u00fcnschtes \u00dcbertragungsdatum: 01.03.2026
+
+Mit freundlichen Gr\u00fc\u00dfen
+
+Petra Hartmann
+Hartmann Versicherungsdienst
+M\u00fclheimer Str. 22, 51065 K\u00f6ln
+Tel.: 0221-4488770`,
+                attachments: [{
+                    filename: 'Maklervollmacht_Bergmann.docx',
+                    mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                    data: vollmacht
+                }]
+            });
+        }
+    },
+    {
+        id: 'mehrere_vsnr_fischer',
+        category: 'email-edge',
+        title: 'Mehrere VS-Nr erw\u00e4hnt \u2013 Fischer',
+        description: 'E-Mail erw\u00e4hnt mehrere Versicherungsnummern in einem Vorgang.',
+        tags: ['EML', 'DOCX', 'Mehrere VS-Nr'],
+        filename: '12_Mehrere_VSNr_Fischer.eml',
+        generate() {
+            const vollmacht = buildMaklervollmacht(
+                'Maria Fischer', '25.09.1991',
+                'Waldstr. 19, 40229 D\u00fcsseldorf',
+                'J\u00fcrgen Becker', 'Becker & Partner Makler',
+                'D\u00fcsseldorf', '14.01.2026',
+                true // unterschrieben
+            );
+            return createEml({
+                from: '"J\u00fcrgen Becker" <juergen.becker@becker-partner.de>',
+                to: 'maklerservice@ergo.de',
+                subject: 'Bestands\u00fcbertragung Fischer \u2013 Hausrat und Haftpflicht',
+                date: 'Wed, 15 Jan 2026 10:45:00 +0100',
+                body: `Sehr geehrte Damen und Herren,
+
+f\u00fcr unsere Kundin Maria Fischer beantragen wir die \u00dcbertragung folgender Vertr\u00e4ge:
+
+- Hausratversicherung, VS-Nr. ERG-4534100
+- Haftpflichtversicherung, VS-Nr. ERG-4534201
+- evtl. auch Unfallversicherung VS-Nr. ERG-4534302, hier kl\u00e4ren wir noch mit der Kundin
+
+Frau Fischer hatte urspr\u00fcnglich auch den Vertrag ERG-4534050 (Rechtsschutz) bei Ihnen, dieser wurde aber bereits 2024 gek\u00fcndigt.
+
+Gew\u00fcnschtes \u00dcbertragungsdatum: 01.04.2026
+
+Die unterschriebene Maklervollmacht liegt bei.
+
+Mit freundlichen Gr\u00fc\u00dfen
+
+J\u00fcrgen Becker
+Becker & Partner Makler
+Graf-Adolf-Str. 88, 40210 D\u00fcsseldorf
+Tel.: 0211-9912345`,
+                attachments: [{
+                    filename: 'Maklervollmacht_Fischer.docx',
+                    mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                    data: vollmacht
+                }]
+            });
+        }
+    },
+    {
+        id: 'ohne_datum_lange',
+        category: 'email-edge',
+        title: 'Kein G\u00fcltigkeitsdatum \u2013 Lange',
+        description: 'Anfrage ohne gew\u00fcnschtes \u00dcbertragungsdatum, Vollmacht vorhanden.',
+        tags: ['EML', 'DOCX', 'Datum fehlt'],
+        filename: '13_Ohne_Datum_Lange.eml',
+        generate() {
+            const vollmacht = buildMaklervollmacht(
+                'Herbert Lange', '17.12.1955',
+                'Beethovenstr. 3, 53113 Bonn',
+                'Claudia Stein', 'Stein Finanzberatung',
+                'Bonn', '10.01.2026',
+                true // unterschrieben
+            );
+            return createEml({
+                from: '"Claudia Stein" <claudia.stein@stein-finanz.de>',
+                to: 'maklerservice@ergo.de',
+                subject: 'Bestands\u00fcbertragung Wohngeb\u00e4ude \u2013 Herbert Lange, ERG-7710234',
+                date: 'Fri, 10 Jan 2026 16:20:00 +0100',
+                body: `Sehr geehrte Damen und Herren,
+
+unser Kunde Herbert Lange m\u00f6chte seinen Wohngeb\u00e4udevertrag (ERG-7710234) in unseren Maklerbestand \u00fcbertragen lassen.
+
+Anbei die unterschriebene Maklervollmacht.
+
+Bitte leiten Sie die \u00dcbertragung in die Wege.
+
+Mit freundlichen Gr\u00fc\u00dfen
+
+Claudia Stein
+Stein Finanzberatung
+Adenauerallee 10, 53113 Bonn
+Tel.: 0228-5567788`,
+                attachments: [{
+                    filename: 'Maklervollmacht_Lange.docx',
+                    mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                    data: vollmacht
+                }]
+            });
+        }
+    },
+
+    // === Category: Vollst\u00e4ndige Neuvorg\u00e4nge ===
+    {
+        id: 'komplett_kraus',
+        category: 'email-word',
+        title: 'Komplett Anfrage \u2013 Kraus (Rechtsschutz)',
+        description: 'Vollst\u00e4ndige Anfrage mit Maklervollmacht: VS-Nr, Sparte, Datum.',
+        tags: ['EML', 'DOCX', 'Maklervollmacht', 'Vollst\u00e4ndig'],
+        filename: '14_Komplett_Kraus.eml',
+        generate() {
+            const vollmacht = buildMaklervollmacht(
+                'Doris Kraus', '22.06.1974',
+                'Kaiserstr. 55, 53113 Bonn',
+                'Markus Reuter', 'Reuter Maklerb\u00fcro',
+                'Bonn', '08.01.2026',
+                true
+            );
+            return createEml({
+                from: '"Markus Reuter" <markus.reuter@reuter-makler.de>',
+                to: 'maklerservice@ergo.de',
+                subject: 'Bestands\u00fcbertragung Rechtsschutz \u2013 Doris Kraus, ERG-9012345',
+                date: 'Fri, 10 Jan 2026 09:05:00 +0100',
+                body: `Sehr geehrte Damen und Herren,
+
+hiermit beantragen wir die Bestands\u00fcbertragung f\u00fcr:
+
+Versicherungsnehmer: Doris Kraus
+Versicherungsnummer: ERG-9012345
+Sparte: Rechtsschutzversicherung
+Gew\u00fcnschtes \u00dcbertragungsdatum: 01.02.2026
+
+Die unterschriebene Maklervollmacht finden Sie im Anhang.
+
+Bitte best\u00e4tigen Sie die \u00dcbertragung.
+
+Mit freundlichen Gr\u00fc\u00dfen
+
+Markus Reuter
+Reuter Maklerb\u00fcro
+Poppelsdorfer Allee 30, 53115 Bonn
+Tel.: 0228-3344221`,
+                attachments: [{
+                    filename: 'Maklervollmacht_Kraus.docx',
+                    mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                    data: vollmacht
+                }]
+            });
+        }
+    },
+    {
+        id: 'komplett_winter',
+        category: 'email-word',
+        title: 'Komplett Anfrage \u2013 Winter (Leben)',
+        description: 'Vollst\u00e4ndige Anfrage Lebensversicherung mit MV.',
+        tags: ['EML', 'DOCX', 'Maklervollmacht', 'Vollst\u00e4ndig'],
+        filename: '15_Komplett_Winter.eml',
+        generate() {
+            const vollmacht = buildMaklervollmacht(
+                'Gerhard Winter', '03.11.1960',
+                'Bonner Str. 120, 50677 K\u00f6ln',
+                'Eva Lorenz', 'Lorenz Versicherungsmakler',
+                'K\u00f6ln', '09.01.2026',
+                true
+            );
+            return createEml({
+                from: '"Eva Lorenz" <eva.lorenz@lorenz-makler.de>',
+                to: 'maklerservice@ergo.de',
+                subject: 'Bestands\u00fcbertragung Lebensversicherung \u2013 Gerhard Winter, ERG-6678901',
+                date: 'Thu, 09 Jan 2026 14:50:00 +0100',
+                body: `Sehr geehrte Damen und Herren,
+
+hiermit beantrage ich die \u00dcbertragung des folgenden Vertrags in meinen Maklerbestand:
+
+Versicherungsnehmer: Gerhard Winter
+Versicherungsnummer: ERG-6678901
+Sparte: Kapitallebensversicherung
+Gew\u00fcnschtes \u00dcbertragungsdatum: 01.03.2026
+
+Die Maklervollmacht mit Unterschrift des Kunden liegt als Anhang bei.
+
+Vielen Dank f\u00fcr die z\u00fcgige Bearbeitung.
+
+Mit freundlichen Gr\u00fc\u00dfen
+
+Eva Lorenz
+Lorenz Versicherungsmakler
+S\u00fclzburgstr. 45, 50937 K\u00f6ln
+Tel.: 0221-7723456`,
+                attachments: [{
+                    filename: 'Maklervollmacht_Winter.docx',
+                    mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                    data: vollmacht
+                }]
+            });
+        }
+    },
+    {
+        id: 'komplett_engel',
+        category: 'email-word',
+        title: 'Komplett Anfrage \u2013 Engel (Unfall)',
+        description: 'Vollst\u00e4ndige Anfrage Unfallversicherung mit MV.',
+        tags: ['EML', 'DOCX', 'Maklervollmacht', 'Vollst\u00e4ndig'],
+        filename: '16_Komplett_Engel.eml',
+        generate() {
+            const vollmacht = buildMaklervollmacht(
+                'Susanne Engel', '28.02.1987',
+                'Am Rheinufer 7, 40213 D\u00fcsseldorf',
+                'Frank Nowak', 'Nowak Versicherungsservice',
+                'D\u00fcsseldorf', '11.01.2026',
+                true
+            );
+            return createEml({
+                from: '"Frank Nowak" <frank.nowak@nowak-versicherung.de>',
+                to: 'maklerservice@ergo.de',
+                subject: 'Bestands\u00fcbertragung Unfall \u2013 Susanne Engel, ERG-5543210',
+                date: 'Mon, 13 Jan 2026 11:30:00 +0100',
+                body: `Sehr geehrte Damen und Herren,
+
+f\u00fcr unsere Kundin beantragen wir die Bestands\u00fcbertragung:
+
+Versicherungsnehmer: Susanne Engel
+Versicherungsnummer: ERG-5543210
+Sparte: Unfallversicherung
+Gew\u00fcnschtes \u00dcbertragungsdatum: 15.02.2026
+
+Die Maklervollmacht von Frau Engel finden Sie anbei.
+
+Bitte um Best\u00e4tigung.
+
+Frank Nowak
+Nowak Versicherungsservice
+Schadowstr. 60, 40212 D\u00fcsseldorf
+Tel.: 0211-8867543`,
+                attachments: [{
+                    filename: 'Maklervollmacht_Engel.docx',
+                    mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                    data: vollmacht
+                }]
+            });
+        }
+    },
+    {
+        id: 'komplett_sammel_otto',
+        category: 'email-complex',
+        title: 'Komplett-Paket \u2013 Otto (2 Vertr\u00e4ge)',
+        description: 'Vollst\u00e4ndige Anfrage mit MV + Excel-Vertragsliste: 2 Vertr\u00e4ge, Hausrat + KFZ.',
+        tags: ['EML', 'DOCX', 'XLSX', 'Komplett', 'Vollst\u00e4ndig'],
+        filename: '17_Komplett_Otto.eml',
+        generate() {
+            const vollmacht = buildMaklervollmacht(
+                'Thomas Otto', '14.09.1976',
+                'Danziger Str. 8, 40477 D\u00fcsseldorf',
+                'Birgit Feld', 'Feld Finanzberatung',
+                'D\u00fcsseldorf', '13.01.2026',
+                true
+            );
+            const xlsx = buildVersicherungsliste([
+                ['ERG-8834001', 'Thomas Otto', 'Hausrat', 'ERGO', '01.06.2025', '01.06.2026', '134,40 \u20ac'],
+                ['ERG-8834002', 'Thomas Otto', 'KFZ', 'ERGO', '01.06.2025', '01.06.2026', '780,00 \u20ac'],
+            ]);
+            return createEml({
+                from: '"Birgit Feld" <birgit.feld@feld-finanz.de>',
+                to: 'maklerservice@ergo.de',
+                subject: 'Bestands\u00fcbertragung Thomas Otto \u2013 Vollmacht + Vertragsliste',
+                date: 'Tue, 14 Jan 2026 09:20:00 +0100',
+                body: `Sehr geehrte Damen und Herren,
+
+f\u00fcr unseren Kunden Thomas Otto beantragen wir die Bestands\u00fcbertragung folgender Vertr\u00e4ge:
+
+1. Hausratversicherung, ERG-8834001
+2. KFZ-Versicherung, ERG-8834002
+
+Gew\u00fcnschtes \u00dcbertragungsdatum: 01.03.2026
+
+Anbei:
+- Unterschriebene Maklervollmacht
+- Vertragsliste
+
+Bitte best\u00e4tigen Sie die \u00dcbertragung f\u00fcr beide Vertr\u00e4ge.
+
+Mit freundlichen Gr\u00fc\u00dfen
+
+Birgit Feld
+Feld Finanzberatung
+Nordstr. 12, 40477 D\u00fcsseldorf
+Tel.: 0211-5567890`,
+                attachments: [
+                    {
+                        filename: 'Maklervollmacht_Otto.docx',
+                        mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                        data: vollmacht
+                    },
+                    {
+                        filename: 'Vertragsliste_Otto.xlsx',
+                        mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                        data: xlsx
+                    }
+                ]
+            });
+        }
+    },
+
     // === Category: Standalone Vorlagen ===
     {
         id: 'vorlage_maklervollmacht',

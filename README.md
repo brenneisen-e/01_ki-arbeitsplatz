@@ -21,8 +21,7 @@ Refactored von [VSTEike](https://github.com/brenneisen-e/VSTEike) (Stand: Januar
 - **Charts**: Chart.js 4.4, D3.js 7.8
 - **Karten**: Leaflet.js 1.9 (Regierungsbezirk-Ebene)
 - **Export**: html2canvas, jsPDF
-- **Hosting**: Cloudflare Pages
-- **KI-Chat**: API-Anbindung via Cloudflare Worker
+- **KI-Chat**: API-Anbindung (konfigurierbar, siehe API_SETUP.md)
 
 ## Projektstruktur
 
@@ -84,7 +83,7 @@ kiarbeitsplatz/
 |   |   +-- storage.js                  Persistenz
 |   |
 |   |-- banken/
-|   |   +-- feedback.js                 Feedback-System (Cloudflare-backed)
+|   |   +-- feedback.js                 Feedback-System (Backend-API)
 |   |
 |   |-- modules/                        ES6-Module (Migration in Arbeit)
 |   |   |-- main.esm.js                 Entry-Point
@@ -119,8 +118,8 @@ kiarbeitsplatz/
 |   |-- geo/                            GeoJSON (Regierungsbezirke)
 |   +-- images/                         Bilder und Icons
 |
-|-- cloudflare/
-|   |-- setup.sh                        Cloudflare-Setup-Skript
+|-- cloudflare/                            Hosting-Konfiguration (optional)
+|   |-- setup.sh                        Setup-Skript
 |   |-- setup-cloudflare.js             Worker-Konfiguration
 |   |-- feedback-worker.js              Feedback-API Worker
 |   +-- SETUP.md                        Setup-Anleitung
@@ -131,7 +130,6 @@ kiarbeitsplatz/
 +-- docs/
     |-- CHANGELOG.md -> ../CHANGELOG.md
     |-- API_SETUP.md -> ../API_SETUP.md
-    |-- CLOUDFLARE_DEPLOYMENT.md -> ../CLOUDFLARE_DEPLOYMENT.md
     |-- ES6_MIGRATION_STRATEGY.md -> ../ES6_MIGRATION_STRATEGY.md
     |-- FEATURE_CHECKLIST.md -> ../FEATURE_CHECKLIST.md
     +-- OPTIMIZATIONS.md -> ../OPTIMIZATIONS.md
@@ -145,12 +143,11 @@ python3 -m http.server 8000
 
 # oder mit npx
 npx serve .
-
-# mit Cloudflare Wrangler (fuer Worker-Funktionen)
-npx wrangler pages dev .
 ```
 
 Dann `http://localhost:8000` im Browser oeffnen.
+
+Die Anwendung laeuft vollstaendig lokal im Browser. Fuer die KI-Chat-Funktion wird ein API-Endpoint benoetigt (siehe [API_SETUP.md](./API_SETUP.md)).
 
 ## CSS Design-System
 
@@ -173,16 +170,6 @@ Dann `http://localhost:8000` im Browser oeffnen.
 --space-1: 4px;  --space-2: 8px;  --space-4: 16px;  --space-8: 32px;
 ```
 
-## Deployment
-
-Cloudflare Pages:
-
-1. Repository verbinden
-2. Build-Befehl leer lassen
-3. Output-Verzeichnis: `.`
-
-Details in [CLOUDFLARE_DEPLOYMENT.md](./CLOUDFLARE_DEPLOYMENT.md).
-
 ## Dokumentation
 
 | Datei | Inhalt |
@@ -191,7 +178,6 @@ Details in [CLOUDFLARE_DEPLOYMENT.md](./CLOUDFLARE_DEPLOYMENT.md).
 | [FEATURE_CHECKLIST.md](./FEATURE_CHECKLIST.md) | Feature-Checkliste |
 | [ES6_MIGRATION_STRATEGY.md](./ES6_MIGRATION_STRATEGY.md) | ES6-Modul-Migration |
 | [API_SETUP.md](./API_SETUP.md) | API-Konfiguration |
-| [CLOUDFLARE_DEPLOYMENT.md](./CLOUDFLARE_DEPLOYMENT.md) | Deployment-Anleitung |
 | [OPTIMIZATIONS.md](./OPTIMIZATIONS.md) | Performance-Hinweise |
 
 ## Lizenz

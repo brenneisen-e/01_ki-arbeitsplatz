@@ -90,6 +90,13 @@ function extractMsgContent(data) {
             .sort((a, b) => b.length - a.length)[0] || '';
     }
 
+    // Versuche Datum zu finden
+    let date = '';
+    const dateMatch = text.match(/Date[:\s]*([A-Za-z]{3},?\s+\d{1,2}\s+[A-Za-z]{3}\s+\d{4}\s+[\d:]+\s*[+-]?\d{0,4})/i);
+    if (dateMatch) {
+        date = dateMatch[1].trim();
+    }
+
     // Suche nach Anhängen (Dateinamen)
     const attachments = [];
     const attachmentMatches = text.matchAll(/([^\x00-\x1F]{3,50}\.(pdf|doc|docx|xls|xlsx|jpg|png))/gi);
@@ -102,6 +109,7 @@ function extractMsgContent(data) {
     return {
         subject: cleanText(subject),
         sender: cleanText(sender),
+        date: date,
         body: cleanText(body),
         attachmentNames: attachments,
         rawSize: data.length
@@ -168,6 +176,7 @@ function parseEmlContent(raw) {
 
     const subject = decodeRfc2047(headers['subject'] || '');
     const sender = decodeRfc2047(headers['from'] || '');
+    const dateRaw = headers['date'] || '';
 
     // Content-Type prüfen
     const contentType = headers['content-type'] || 'text/plain';
@@ -235,6 +244,7 @@ function parseEmlContent(raw) {
     return {
         subject: cleanText(subject),
         sender: cleanText(sender),
+        date: dateRaw,
         body: cleanText(body),
         attachmentNames,
         attachmentTexts,
@@ -725,6 +735,7 @@ export function exportToExcel(analysisResults) {
         'Makler',
         'Makler E-Mail',
         'Gültig ab',
+        'Eingegangen am',
         'Status',
         'MV als Anhang',
         'MV nur erwähnt',
@@ -749,6 +760,7 @@ export function exportToExcel(analysisResults) {
                 vorgang.makler || '',
                 vorgang.maklerEmail || '',
                 vorgang.gueltigkeitsdatum || '',
+                result.email?.date || '',
                 vorgang._onHold ? 'on-hold' : (vorgang.status || ''),
                 mv.als_anhang === true ? 'Ja' : (mv.vorhanden === true ? 'Ja' : 'Nein'),
                 mv.nur_erwaehnt === true ? 'Ja' : 'Nein',

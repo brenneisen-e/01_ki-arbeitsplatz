@@ -1,178 +1,199 @@
-# kiarbeitsplatz - Financial Service Sales Excellence Platform
+# kiarbeitsplatz
 
-[![Cloudflare Pages](https://img.shields.io/badge/Deployed%20on-Cloudflare%20Pages-orange)](https://pages.cloudflare.com/)
-[![Version](https://img.shields.io/badge/Version-v2.0-blue)](https://github.com/brenneisen-e/kiarbeitsplatz)
+Dashboard-Plattform fuer Vertriebssteuerung im Versicherungs- und Finanzbereich. Interaktive KPIs, geografische Visualisierungen, KI-Chat und modularer Aufbau.
 
-KI-gestütztes Dashboard für Vertriebssteuerung mit interaktiven KPIs, geografischen Visualisierungen und Datenanalyse.
+Refactored von [VSTEike](https://github.com/brenneisen-e/VSTEike) (Stand: Januar 2026).
 
-> **Refactored** von [VSTEike](https://github.com/brenneisen-e/VSTEike) am 2026-01-05
+## Module
 
-## Features
+| Modul | Beschreibung |
+|-------|-------------|
+| **Versicherungs-Dashboard** | 9 KPIs mit Charts, Kartenansicht und Agentur-Tabelle |
+| **Banken-Modul** | Collections Management, CRM, Kundensegmentierung |
+| **Risikoscoring** | Vermittler-Bewertung auf Basis von 20+ Parametern |
+| **Bestandsuebertragung** | Portfolio-Transfer-Validierung und -Management |
+| **PMO-Toolbox** | Projektmanagement fuer Transformationsprogramme (Gantt, Kanban, PPTX-Export) |
+| **Provisionssimulation** | Vergleich Alpha/Beta-Provisionsmodelle |
 
-### Hauptmodule
-- **Versicherungs-Dashboard** - 9 KPIs mit interaktiven Charts
-- **Banken-Modul** - Collections Management & CRM
-- **Risikoscoring** - Vermittler-Bewertung mit 20+ Parametern
-- **Bestandsübertragung** - Portfolio Transfer Management
-- **PMO-Toolbox** - Projekt-Management für Transformationsprogramme
-- **Provisionssimulation** - Alpha/Beta-Modell Vergleich
+## Tech-Stack
 
-### Technische Features
-- **Geografische Visualisierung** auf Regierungsbezirk-Ebene (Leaflet.js)
-- **KI-gestützter Chat** (KI-API Integration)
-- **CSV-Import** mit automatischer Datenverarbeitung
-- **Responsive Design** für Desktop, Tablet und Mobile
-- **Demo-Tour** für Guided Onboarding
-
-## Technologie-Stack
-
-- **Frontend**: Vanilla HTML, CSS, JavaScript (kein Framework)
+- **Frontend**: HTML, CSS, JavaScript (kein Framework)
 - **Charts**: Chart.js 4.4, D3.js 7.8
-- **Maps**: Leaflet.js 1.9
-- **Screenshots**: html2canvas, jsPDF
+- **Karten**: Leaflet.js 1.9 (Regierungsbezirk-Ebene)
+- **Export**: html2canvas, jsPDF
 - **Hosting**: Cloudflare Pages
-- **KI**: KI-API via Cloudflare Worker
+- **KI-Chat**: API-Anbindung via Cloudflare Worker
 
 ## Projektstruktur
 
 ```
 kiarbeitsplatz/
-├── index.html                    # Haupt-Dashboard & Landing Page
-├── Provisionssimulation.html     # Standalone Provisionssimulation
-├── Risikoscoring_vDraft.html     # Standalone Risikoscoring
-├── csv-generator.html            # Test-Daten Generator
-│
-├── css/
-│   ├── variables.css             # CSS Design System (NEU)
-│   ├── shared.css                # Gemeinsame Styles (NEU)
-│   ├── styles.css                # Haupt-Styles (7.645 Zeilen)
-│   ├── banken.css                # Banken-Modul (12.059 Zeilen)
-│   ├── bestandsuebertragung-vst.css
-│   ├── provisionssimulation.css
-│   ├── risikoscoring.css
-│   ├── finanzplanung.css
-│   ├── guided-tour.css
-│   └── components/               # (Für zukünftige Komponenten)
-│
-├── js/
-│   ├── config.js                 # KPI-Definitionen, Faktoren
-│   ├── data.js                   # State & Daten-Aggregation
-│   ├── utils.js                  # Utility-Funktionen
-│   ├── main.js                   # Dashboard-Logik
-│   ├── charts.js                 # Chart.js Wrapper
-│   ├── tables.js                 # Tabellen-Rendering
-│   ├── chat.js                   # KI-Chat Integration
-│   ├── landing.js                # Landing Page (3.535 Zeilen)
-│   ├── banken.js                 # Banken-Modul (8.267 Zeilen)
-│   ├── banken-chat.js            # Banken Chat
-│   ├── risikoscoring.js          # Risikoscoring-Logik
-│   ├── provisionssimulation.js   # Provisionsberechnung
-│   ├── bestand-*.js              # Bestandsübertragung (7 Dateien)
-│   ├── guided-tour.js            # Demo-Tour
-│   ├── agentur-overview.js       # Agentur-Übersicht
-│   ├── map-counties.js           # Landkreis-Karten
-│   ├── finanzplanung.js          # Finanzplanung
-│   ├── names.js                  # Namensdatenbank
-│   ├── data/                     # (Für zukünftige Daten-Module)
-│   └── components/               # (Für zukünftige Komponenten)
-│
-├── partials/
-│   ├── banken-module.html        # Banken Container
-│   ├── banken/                   # Banken Sub-Komponenten (8 Dateien)
-│   ├── risikoscoring-module.html
-│   ├── bestandsuebertragung-module.html
-│   └── pmo-toolbox-module.html
-│
-├── assets/
-│   ├── geo/                      # GeoJSON Dateien
-│   └── images/                   # Bilder & Icons
-│
-├── pages/                        # (Für zukünftige Seiten)
-├── cloudflare/                   # Cloudflare Worker Scripts
-├── data/                         # Mock-Daten
-│
-├── CHANGELOG.md                  # Änderungshistorie
-├── FEATURE_CHECKLIST.md          # Feature-Parität Checkliste
-├── ES6_MIGRATION_STRATEGY.md     # ES6 Module Migrationsleitfaden
-├── API_SETUP.md                  # API Konfiguration
-├── CLOUDFLARE_DEPLOYMENT.md      # Deployment Guide
-├── OPTIMIZATIONS.md              # Performance-Optimierungen
-├── _headers                      # Security Headers
-└── _redirects                    # Routing-Regeln
-```
-
-## CSS Design System
-
-Die neue `css/variables.css` definiert ein zentrales Design System:
-
-```css
-/* Farben */
---primary: #C8102E;           /* ERGO Red */
---secondary: #0F172A;         /* Dark */
---brand-gradient-start: #667eea;
---brand-gradient-end: #764ba2;
-
-/* Status */
---status-export-bereit: #16A34A;  /* Grün */
---status-zu-validieren: #2563EB;  /* Blau */
---status-wiedervorlage: #D97706;  /* Gelb */
---status-abgelehnt: #DC2626;      /* Rot */
-
-/* Spacing (8px Grid) */
---space-1: 4px;
---space-2: 8px;
---space-4: 16px;
---space-8: 32px;
-
-/* Shadows */
---shadow-sm, --shadow-md, --shadow-lg, --shadow-xl
+|
+|-- index.html                          Haupt-Dashboard + Landing Page
+|-- Provisionssimulation.html           Standalone Provisionssimulation
+|-- Risikoscoring_vDraft.html           Standalone Risikoscoring
+|-- csv-generator.html                  Test-Daten Generator
+|
+|-- css/
+|   |-- variables.css                   Design-System (Farben, Spacing, Shadows)
+|   |-- shared.css                      Gemeinsame Styles
+|   |-- styles.css                      Haupt-Dashboard Styles
+|   |-- banken.css                      Banken-Modul
+|   |-- bestandsuebertragung-vst.css    Bestandsuebertragung
+|   |-- pmo-toolbox.css                 PMO-Toolbox
+|   |-- provisionssimulation.css        Provisionssimulation
+|   |-- risikoscoring.css               Risikoscoring
+|   |-- finanzplanung.css               Finanzplanung
+|   |-- guided-tour.css                 Demo-Tour
+|   |-- sales-report.css                Vertriebsbericht
+|   +-- pmo-modules/                    PMO CSS-Submodule
+|
+|-- js/
+|   |-- config.js                       KPI-Definitionen, Faktoren
+|   |-- data.js                         State-Management, Daten-Aggregation
+|   |-- utils.js                        Hilfsfunktionen
+|   |-- main.js                         Dashboard-Initialisierung
+|   |-- charts.js                       Chart.js Wrapper (Linie, Bar, Forecast)
+|   |-- tables.js                       Tabellen-Rendering (Agentur, Bundesland, Landkreis)
+|   |-- chat.js                         KI-Chat fuer Dashboard
+|   |-- landing.js                      Landing Page mit Einstellungen und Chat
+|   |-- banken.js                       Banken-Modul (CRM, Segmentierung, Prozesse)
+|   |-- banken-chat.js                  Chat-Logik fuer Banken-Modul
+|   |-- risikoscoring.js                Scoring-Berechnung und -Darstellung
+|   |-- provisionssimulation.js         Provisionsberechnung
+|   |-- sales-report.js                 Vertriebsbericht mit KI-Zusammenfassung
+|   |-- agentur-overview.js             Einzelansicht Agentur-Profil
+|   |-- map-counties.js                 Regierungsbezirk-Karte (Leaflet)
+|   |-- finanzplanung.js                Finanzplanung-Modul
+|   |-- guided-tour.js                  Interaktive Demo-Tour
+|   |-- names.js                        Namensdatenbank fuer Demo-Daten
+|   |-- page-id-tracker.js              Seitennavigation und Tracking
+|   |-- speaker-notes.js                Presenter-Notizen
+|   |
+|   |-- bestandsuebertragung/           Bestandsuebertragung (neues Modul)
+|   |   |-- index.js                    Modul-Entry-Point
+|   |   |-- app.js                      Haupt-Applikationslogik
+|   |   |-- ui.js                       UI-Rendering
+|   |   |-- ai-processor.js             KI-Analyse fuer Dokumente
+|   |   |-- ai-landing.js               Upload-Oberflaeche mit KI
+|   |   |-- demo-data.js                Demo-Daten
+|   |   |-- demo-files.js               Simulierte Dateien
+|   |   |-- export.js                   Export-Funktionen
+|   |   |-- extractor.js                Daten-Extraktion
+|   |   |-- matcher.js                  Matching-Logik
+|   |   +-- storage.js                  Persistenz
+|   |
+|   |-- banken/
+|   |   +-- feedback.js                 Feedback-System (Cloudflare-backed)
+|   |
+|   |-- modules/                        ES6-Module (Migration in Arbeit)
+|   |   |-- main.esm.js                 Entry-Point
+|   |   |-- config.esm.js               KPI-Definitionen
+|   |   |-- state.esm.js                State-Management
+|   |   |-- data-functions.esm.js       Daten-Aggregation
+|   |   |-- charts.esm.js               Chart-Funktionen
+|   |   |-- tables.esm.js               Tabellen-Funktionen
+|   |   |-- map.esm.js                  Karten-Funktionen
+|   |   |-- utils.esm.js                Hilfsfunktionen
+|   |   |-- pmo-toolbox.esm.js          PMO-Toolbox komplett
+|   |   +-- pmo/                        PMO-Submodule
+|   |
+|   +-- bestand-*.js                    Legacy Bestandsuebertragung (7 Dateien)
+|
+|-- partials/
+|   |-- banken-module.html              Banken Container
+|   |-- banken/                         Banken Sub-Komponenten
+|   |   |-- header.html                 Modul-Header und Navigation
+|   |   |-- section-segmentierung.html  Willingness/Ability-Matrix
+|   |   |-- section-aufgaben.html       Aufgabenverwaltung
+|   |   |-- section-npl.html            NPL-Uebersicht
+|   |   |-- section-stage2.html         Stage-2-Faelle
+|   |   |-- modal-customer-detail.html  Kunden-Detail-Modal
+|   |   |-- modal-document-scanner.html Dokumenten-Scanner
+|   |   +-- crm-profile-view.html       CRM-Profilansicht
+|   |-- bestandsuebertragung-module.html
+|   |-- pmo-toolbox-module.html
+|   +-- risikoscoring-module.html
+|
+|-- assets/
+|   |-- geo/                            GeoJSON (Regierungsbezirke)
+|   +-- images/                         Bilder und Icons
+|
+|-- cloudflare/
+|   |-- setup.sh                        Cloudflare-Setup-Skript
+|   |-- setup-cloudflare.js             Worker-Konfiguration
+|   |-- feedback-worker.js              Feedback-API Worker
+|   +-- SETUP.md                        Setup-Anleitung
+|
+|-- data/
+|   +-- mock-data.csv                   Beispieldaten
+|
++-- docs/
+    |-- CHANGELOG.md -> ../CHANGELOG.md
+    |-- API_SETUP.md -> ../API_SETUP.md
+    |-- CLOUDFLARE_DEPLOYMENT.md -> ../CLOUDFLARE_DEPLOYMENT.md
+    |-- ES6_MIGRATION_STRATEGY.md -> ../ES6_MIGRATION_STRATEGY.md
+    |-- FEATURE_CHECKLIST.md -> ../FEATURE_CHECKLIST.md
+    +-- OPTIMIZATIONS.md -> ../OPTIMIZATIONS.md
 ```
 
 ## Lokale Entwicklung
 
 ```bash
-# Einfacher HTTP Server
+# HTTP-Server starten
 python3 -m http.server 8000
 
-# Oder mit npx
+# oder mit npx
 npx serve .
 
-# Mit Cloudflare Wrangler (empfohlen)
+# mit Cloudflare Wrangler (fuer Worker-Funktionen)
 npx wrangler pages dev .
 ```
 
-Öffne dann `http://localhost:8000` im Browser.
+Dann `http://localhost:8000` im Browser oeffnen.
 
-## Dokumentation
+## CSS Design-System
 
-| Dokument | Beschreibung |
-|----------|--------------|
-| [CHANGELOG.md](./CHANGELOG.md) | Alle Änderungen dokumentiert |
-| [FEATURE_CHECKLIST.md](./FEATURE_CHECKLIST.md) | Feature-Parität Testliste |
-| [ES6_MIGRATION_STRATEGY.md](./ES6_MIGRATION_STRATEGY.md) | ES6 Module Migrationsleitfaden |
-| [CLOUDFLARE_DEPLOYMENT.md](./CLOUDFLARE_DEPLOYMENT.md) | Deployment-Anleitung |
-| [API_SETUP.md](./API_SETUP.md) | API-Konfiguration |
-| [OPTIMIZATIONS.md](./OPTIMIZATIONS.md) | Performance-Tipps |
+`css/variables.css` definiert die zentralen Design-Tokens:
+
+```css
+/* Farben */
+--primary: #C8102E;              /* Markenfarbe */
+--secondary: #0F172A;            /* Dunkel */
+--brand-gradient-start: #667eea;
+--brand-gradient-end: #764ba2;
+
+/* Status-Farben */
+--status-export-bereit: #16A34A;
+--status-zu-validieren: #2563EB;
+--status-wiedervorlage: #D97706;
+--status-abgelehnt: #DC2626;
+
+/* 8px Spacing Grid */
+--space-1: 4px;  --space-2: 8px;  --space-4: 16px;  --space-8: 32px;
+```
 
 ## Deployment
 
-Das Projekt ist für **Cloudflare Pages** optimiert:
+Cloudflare Pages:
 
-1. Repository mit Cloudflare Pages verbinden
-2. Build-Befehl: (leer lassen)
+1. Repository verbinden
+2. Build-Befehl leer lassen
 3. Output-Verzeichnis: `.`
 
-Siehe [CLOUDFLARE_DEPLOYMENT.md](./CLOUDFLARE_DEPLOYMENT.md) für Details.
+Details in [CLOUDFLARE_DEPLOYMENT.md](./CLOUDFLARE_DEPLOYMENT.md).
 
-## Migration History
+## Dokumentation
 
-- **v1.0**: Original VSTEike
-- **v2.0**: Refactoring zu kiarbeitsplatz
-  - Neue CSS-Architektur (variables.css, shared.css)
-  - Dokumentation erweitert
-  - Ordnerstruktur vorbereitet für ES6-Module
-  - 100% Feature-Parität gewährleistet
+| Datei | Inhalt |
+|-------|--------|
+| [CHANGELOG.md](./CHANGELOG.md) | Aenderungshistorie |
+| [FEATURE_CHECKLIST.md](./FEATURE_CHECKLIST.md) | Feature-Checkliste |
+| [ES6_MIGRATION_STRATEGY.md](./ES6_MIGRATION_STRATEGY.md) | ES6-Modul-Migration |
+| [API_SETUP.md](./API_SETUP.md) | API-Konfiguration |
+| [CLOUDFLARE_DEPLOYMENT.md](./CLOUDFLARE_DEPLOYMENT.md) | Deployment-Anleitung |
+| [OPTIMIZATIONS.md](./OPTIMIZATIONS.md) | Performance-Hinweise |
 
 ## Lizenz
 
-Private Repository - Alle Rechte vorbehalten.
+Privates Repository. Alle Rechte vorbehalten.

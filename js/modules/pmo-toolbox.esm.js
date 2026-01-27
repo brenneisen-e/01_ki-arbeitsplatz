@@ -3953,7 +3953,7 @@ PMO Team
             }
 
             // Fetch the template PPTX
-            const templateResponse = await fetch('/2025_CPE_Status_Template.pptx');
+            const templateResponse = await fetch('/assets/2025_CPE_Status_Template.pptx');
             if (!templateResponse.ok) {
                 throw new Error('Template nicht gefunden');
             }

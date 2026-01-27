@@ -1544,6 +1544,50 @@ body {
     margin-bottom: 1rem;
 }
 
+.bestand-page .demo-section-collapsible {
+    border: 1px solid var(--gray-200);
+    border-radius: 8px;
+    padding: 0;
+}
+
+.bestand-page .demo-section-collapsible > .vorlagen-grid {
+    padding: 0 1.25rem 1.25rem;
+}
+
+.bestand-page .demo-section-toggle {
+    cursor: pointer;
+    padding: 1rem 1.25rem;
+    list-style: none;
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    user-select: none;
+}
+
+.bestand-page .demo-section-toggle::-webkit-details-marker { display: none; }
+
+.bestand-page .demo-section-toggle::before {
+    content: '›';
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--gray-400);
+    transition: transform 0.2s ease;
+    display: inline-block;
+    flex-shrink: 0;
+}
+
+.bestand-page .demo-section-collapsible[open] > .demo-section-toggle::before {
+    transform: rotate(90deg);
+}
+
+.bestand-page .demo-section-toggle .demo-section-title {
+    margin-bottom: 0;
+}
+
+.bestand-page .demo-section-toggle .demo-section-desc {
+    margin-bottom: 0;
+}
+
 .bestand-page .demo-files-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));

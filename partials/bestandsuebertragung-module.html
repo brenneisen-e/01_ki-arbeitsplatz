@@ -76,6 +76,9 @@
         <button class="nav-btn" data-view="vorlagen">
             E-Mail Vorlagen
         </button>
+        <button class="nav-btn" data-view="prozess">
+            Prozess
+        </button>
     </nav>
 
     <!-- ============================================ -->
@@ -959,6 +962,293 @@ ERGO Maklerservice</div>
                     <p>Automatische Datenextraktion</p>
                 </div>
             </div>
+        </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- VIEW: Prozess -->
+    <!-- ============================================ -->
+    <section class="view" id="view-prozess">
+        <div class="prozess-container">
+            <h2>Prozess Bestands&uuml;bertragung</h2>
+            <p class="text-muted" style="margin-bottom: 2rem;">Darstellung des aktuellen Ablaufs und Optimierungspotenziale durch KI-Automatisierung.</p>
+
+            <!-- ===== IST-Prozess ===== -->
+            <div class="prozess-section">
+                <div class="prozess-section-header">
+                    <span class="prozess-label prozess-label-ist">IST</span>
+                    <h3>Aktueller Prozess</h3>
+                </div>
+
+                <div class="prozess-flow">
+
+                    <!-- Step 1: Makler sendet E-Mail -->
+                    <div class="prozess-step step-input">
+                        <div class="step-number">1</div>
+                        <div class="step-card">
+                            <div class="step-icon">&#9993;</div>
+                            <h4>Makler sendet E-Mail</h4>
+                            <p>Der Versicherungsmakler sendet eine E-Mail an das ERGO Gruppenpostfach.</p>
+                            <div class="step-details">
+                                <div class="step-detail-item">
+                                    <span class="detail-label">Betreff</span>
+                                    <span class="detail-value">Bestands&uuml;bertragung + Kundenname + VS-Nr</span>
+                                </div>
+                                <div class="step-detail-item">
+                                    <span class="detail-label">Body</span>
+                                    <span class="detail-value">Freitext mit Anfrage, Kundendaten, R&uuml;ckfragen</span>
+                                </div>
+                                <div class="step-detail-item">
+                                    <span class="detail-label">Anh&auml;nge</span>
+                                    <span class="detail-value">Maklervollmacht (Word/PDF), Excel-Listen, Antragsschreiben (Word)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="prozess-connector"><span>&darr;</span></div>
+
+                    <!-- Step 2: Weiterleitung Postkorbsystem -->
+                    <div class="prozess-step step-system">
+                        <div class="step-number">2</div>
+                        <div class="step-card">
+                            <div class="step-icon">&#9881;</div>
+                            <h4>Weiterleitung an Postkorbsystem</h4>
+                            <p>Die E-Mail wird automatisch an das interne Postkorbsystem weitergeleitet.</p>
+                            <div class="step-meta">Automatisch &middot; Keine manuelle Aktion</div>
+                        </div>
+                    </div>
+
+                    <div class="prozess-connector"><span>&darr;</span></div>
+
+                    <!-- Step 3: Postkorbvorgang -->
+                    <div class="prozess-step step-system">
+                        <div class="step-number">3</div>
+                        <div class="step-card">
+                            <div class="step-icon">&#9776;</div>
+                            <h4>Postkorbvorgang wird erstellt</h4>
+                            <p>Aus der E-Mail wird ein Vorgang im Postkorb erzeugt und steht zur Bearbeitung bereit.</p>
+                            <div class="step-meta">Automatisch &middot; Vorgang in Warteschlange</div>
+                        </div>
+                    </div>
+
+                    <div class="prozess-connector"><span>&darr;</span></div>
+
+                    <!-- Step 4: Manuelle Pr&uuml;fung -->
+                    <div class="prozess-step step-manual">
+                        <div class="step-number">4</div>
+                        <div class="step-card">
+                            <div class="step-icon">&#9997;</div>
+                            <h4>Manuelle Pr&uuml;fung (Sachbearbeiter)</h4>
+                            <p>Ein Sachbearbeiter nimmt sich den Vorgang einzeln vor und pr&uuml;ft auf verschiedene Kriterien.</p>
+                            <div class="step-details">
+                                <div class="step-detail-item">
+                                    <span class="detail-label">Pr&uuml;fung</span>
+                                    <span class="detail-value">Vollst&auml;ndigkeit der Daten, Maklervollmacht vorhanden?</span>
+                                </div>
+                                <div class="step-detail-item">
+                                    <span class="detail-label">Pr&uuml;fung</span>
+                                    <span class="detail-value">Handelt es sich um einen einzelnen Vertrag?</span>
+                                </div>
+                                <div class="step-detail-item">
+                                    <span class="detail-label">Pr&uuml;fung</span>
+                                    <span class="detail-value">Ist die VS-Nr eindeutig identifizierbar?</span>
+                                </div>
+                            </div>
+                            <div class="step-pain">&#9888; Zeitaufwendig: Jeder Vorgang wird einzeln gepr&uuml;ft</div>
+                        </div>
+                    </div>
+
+                    <div class="prozess-connector"><span>&darr;</span></div>
+
+                    <!-- Step 5: Entscheidung Einfach-Vorgang -->
+                    <div class="prozess-step step-decision">
+                        <div class="step-number">5</div>
+                        <div class="step-card step-card-decision">
+                            <div class="step-icon">&#9670;</div>
+                            <h4>Einfach-Vorgang?</h4>
+                            <p>Nur wenn es sich um eine einzelne Mail zu einer einzigen Versicherung handelt, qualifiziert der Vorgang als &bdquo;Einfach-Vorgang&ldquo;.</p>
+                            <div class="decision-branches">
+                                <div class="decision-branch decision-yes">
+                                    <span class="decision-label">Ja &rarr;</span>
+                                    <span>Weiter zu ERGO GPT</span>
+                                </div>
+                                <div class="decision-branch decision-no">
+                                    <span class="decision-label">Nein &rarr;</span>
+                                    <span>Manuelle Bearbeitung (kein GPT-Support)</span>
+                                </div>
+                            </div>
+                            <div class="step-pain">&#9888; Komplex-Vorg&auml;nge (Excel-Listen, mehrere Vertr&auml;ge) werden nicht automatisiert</div>
+                        </div>
+                    </div>
+
+                    <div class="prozess-connector"><span>&darr;</span></div>
+
+                    <!-- Step 6: ERGO GPT -->
+                    <div class="prozess-step step-ai">
+                        <div class="step-number">6</div>
+                        <div class="step-card">
+                            <div class="step-icon">&#9672;</div>
+                            <h4>ERGO GPT (nur Einfach-Vorg&auml;nge)</h4>
+                            <p>Der Einfach-Vorgang wird mit einem bestimmten Prompt an ERGO GPT geschickt zur automatischen Datenextraktion.</p>
+                            <div class="step-details">
+                                <div class="step-detail-item">
+                                    <span class="detail-label">Input</span>
+                                    <span class="detail-value">E-Mail-Text + Betreff (keine Anh&auml;nge)</span>
+                                </div>
+                                <div class="step-detail-item">
+                                    <span class="detail-label">Output</span>
+                                    <span class="detail-value">Extrahierte Daten: Kunde, VS-Nr, Sparte, Status</span>
+                                </div>
+                                <div class="step-detail-item">
+                                    <span class="detail-label">Prompt</span>
+                                    <span class="detail-value">Fest definierter Prompt f&uuml;r Datenextraktion</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="prozess-connector"><span>&darr;</span></div>
+
+                    <!-- Step 7: Excel f&uuml;r Robotics -->
+                    <div class="prozess-step step-output">
+                        <div class="step-number">7</div>
+                        <div class="step-card">
+                            <div class="step-icon">&#9783;</div>
+                            <h4>Excel f&uuml;r Robotics</h4>
+                            <p>Der gepr&uuml;fte Vorgang wird in eine Excel-Datei geschrieben, die als Input f&uuml;r den Robotics-Prozess dient.</p>
+                            <div class="step-details">
+                                <div class="step-detail-item">
+                                    <span class="detail-label">Format</span>
+                                    <span class="detail-value">Strukturierte Excel mit Pflichtfeldern f&uuml;r RPA</span>
+                                </div>
+                                <div class="step-detail-item">
+                                    <span class="detail-label">Danach</span>
+                                    <span class="detail-value">Robotics f&uuml;hrt die &Uuml;bertragung im Bestandssystem durch</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- ===== Ansatzpunkte / SOLL ===== -->
+            <div class="prozess-section prozess-section-soll">
+                <div class="prozess-section-header">
+                    <span class="prozess-label prozess-label-soll">SOLL</span>
+                    <h3>Optimierungspotenzial</h3>
+                </div>
+
+                <div class="prozess-improvements">
+
+                    <!-- Ansatzpunkt 1 -->
+                    <div class="improvement-card improvement-primary">
+                        <div class="improvement-position">
+                            <span class="improvement-arrow">&#10140;</span>
+                            <span>Ansatzpunkt: Vor dem Postkorbsystem (zwischen Schritt 1 und 2)</span>
+                        </div>
+                        <div class="improvement-content">
+                            <div class="improvement-icon">&#9672;</div>
+                            <div class="improvement-body">
+                                <h4>KI-Agentensystem zur vollst&auml;ndigen Vorpr&uuml;fung</h4>
+                                <p>Direkt nach Eingang der E-Mail im Gruppenpostfach wird diese durch ein KI-Agentensystem komplett gepr&uuml;ft &ndash; noch bevor sie ins Postkorbsystem gelangt.</p>
+                                <div class="improvement-benefits">
+                                    <div class="benefit-item">
+                                        <span class="benefit-icon">&#10003;</span>
+                                        <div>
+                                            <strong>Vollst&auml;ndige Analyse inkl. Anh&auml;nge</strong>
+                                            <p>KI liest nicht nur den E-Mail-Text, sondern auch Word-Dokumente, Excel-Listen und Maklervollmachten aus den Anh&auml;ngen.</p>
+                                        </div>
+                                    </div>
+                                    <div class="benefit-item">
+                                        <span class="benefit-icon">&#10003;</span>
+                                        <div>
+                                            <strong>Auch Komplex-Vorg&auml;nge automatisierbar</strong>
+                                            <p>Excel-Listen mit mehreren Vertr&auml;gen werden automatisch in Einzelvorg&auml;nge aufgesplittet. Mails mit &bdquo;siehe Anlage&ldquo; werden durch Anhang-Analyse aufgel&ouml;st.</p>
+                                        </div>
+                                    </div>
+                                    <div class="benefit-item">
+                                        <span class="benefit-icon">&#10003;</span>
+                                        <div>
+                                            <strong>Manuelle Pr&uuml;fung nur noch f&uuml;r Sonderf&auml;lle</strong>
+                                            <p>Standard-Vorg&auml;nge werden automatisch klassifiziert und f&uuml;r Robotics vorbereitet. Sachbearbeiter pr&uuml;fen nur noch Ausnahmen.</p>
+                                        </div>
+                                    </div>
+                                    <div class="benefit-item">
+                                        <span class="benefit-icon">&#10003;</span>
+                                        <div>
+                                            <strong>Maklervollmacht-Erkennung</strong>
+                                            <p>Automatische Pr&uuml;fung ob eine g&uuml;ltige, unterschriebene Maklervollmacht beiliegt &ndash; fehlende Dokumente werden direkt gemeldet.</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="improvement-flow">
+                                    <h5>Neuer Ablauf:</h5>
+                                    <div class="mini-flow">
+                                        <span class="mini-step mini-input">E-Mail eingang</span>
+                                        <span class="mini-arrow">&rarr;</span>
+                                        <span class="mini-step mini-ai">KI-Agent pr&uuml;ft E-Mail + Anh&auml;nge</span>
+                                        <span class="mini-arrow">&rarr;</span>
+                                        <span class="mini-step mini-decision">Klassifikation &amp; Datenextraktion</span>
+                                        <span class="mini-arrow">&rarr;</span>
+                                        <span class="mini-step mini-output">Direkt Robotics-ready</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Vergleich IST vs SOLL -->
+                    <div class="prozess-comparison">
+                        <h4>Vergleich IST vs. SOLL</h4>
+                        <table class="comparison-table">
+                            <thead>
+                                <tr>
+                                    <th>Kriterium</th>
+                                    <th>IST (heute)</th>
+                                    <th>SOLL (KI-Agent)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Bearbeitete Formate</td>
+                                    <td class="ist-cell">Nur E-Mail-Text (Einfach-Vorg&auml;nge)</td>
+                                    <td class="soll-cell">E-Mail + Word + Excel + PDF</td>
+                                </tr>
+                                <tr>
+                                    <td>Komplexe Vorg&auml;nge</td>
+                                    <td class="ist-cell">Manuell bearbeitet</td>
+                                    <td class="soll-cell">Automatisch aufgesplittet</td>
+                                </tr>
+                                <tr>
+                                    <td>Maklervollmacht</td>
+                                    <td class="ist-cell">Manuell gepr&uuml;ft</td>
+                                    <td class="soll-cell">KI erkennt und pr&uuml;ft</td>
+                                </tr>
+                                <tr>
+                                    <td>Durchlaufzeit</td>
+                                    <td class="ist-cell">Stunden bis Tage</td>
+                                    <td class="soll-cell">Sekunden bis Minuten</td>
+                                </tr>
+                                <tr>
+                                    <td>Manuelle Schritte</td>
+                                    <td class="ist-cell">3&ndash;4 pro Vorgang</td>
+                                    <td class="soll-cell">Nur Ausnahmen / Validierung</td>
+                                </tr>
+                                <tr>
+                                    <td>&bdquo;Siehe Anlage&ldquo;-Mails</td>
+                                    <td class="ist-cell">Manuelles &Ouml;ffnen der Anh&auml;nge</td>
+                                    <td class="soll-cell">Anh&auml;nge werden automatisch gelesen</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+
         </div>
     </section>
 

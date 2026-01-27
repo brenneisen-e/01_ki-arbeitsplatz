@@ -564,11 +564,13 @@ export async function analyzeEmailWithAI(emailData, attachments = []) {
 - gueltigkeitsdatum: Gewünschter Übertragungstermin (TT.MM.JJJJ), NUR wenn explizit genannt
 - status: angefragt | bestaetigt | abgelehnt | in-bearbeitung
 - kategorie: "neu" | "erinnerung"
+- erstmail_datum: NUR bei kategorie="erinnerung" – Datum der ursprünglichen Anfrage/Erstmail (TT.MM.JJJJ), falls aus dem Text ableitbar. Sonst null.
 
 ## KATEGORIE – KLASSIFIZIERUNG
 Bestimme ob es sich um einen NEUEN Vorgang oder eine ERINNERUNG handelt:
 - **"erinnerung"**: Die E-Mail ist eine Nachfass-Mail, Erinnerung, Statusanfrage oder Rückfrage zu einem BESTEHENDEN/BEREITS BEKANNTEN Vorgang. Typische Merkmale: "Erinnerung" im Betreff, Bezug auf frühere Korrespondenz, "nochmals", "erneut", "wie besprochen", "Rückmeldung ausstehend", Status "in-bearbeitung", oder die E-Mail fragt nach dem Stand eines bereits eingereichten Antrags.
-- **"neu"**: Die E-Mail enthält einen NEUEN Übertragungsantrag/-auftrag, der zum ersten Mal eingereicht wird. Dies ist der Standardwert wenn nichts auf eine Erinnerung hindeutet.
+  - Bei Erinnerungen: Extrahiere das Datum der Erstmail/des ursprünglichen Antrags aus dem E-Mail-Text, z.B. "Antrag vom 06.01.2026 eingereicht", "am 15.01.2026 per Post übermittelt". Setze erstmail_datum auf dieses Datum.
+- **"neu"**: Die E-Mail enthält einen NEUEN Übertragungsantrag/-auftrag, der zum ersten Mal eingereicht wird. Dies ist der Standardwert wenn nichts auf eine Erinnerung hindeutet. erstmail_datum bleibt null.
 
 ## MAKLERVOLLMACHT – STRENGE REGELN
 Prüfe die Maklervollmacht anhand dieser Kriterien:
@@ -625,6 +627,7 @@ Das Feld "notizen" darf KEINE Informationen wiederholen, die bereits in anderen 
       "gueltigkeitsdatum": "TT.MM.JJJJ oder null",
       "status": "angefragt",
       "kategorie": "neu",
+      "erstmail_datum": null,
       "maklervollmacht": {
         "als_anhang": false,
         "nur_erwaehnt": true,
@@ -759,6 +762,8 @@ export function exportToExcel(analysisResults) {
         'Makler E-Mail',
         'Gültig ab',
         'Eingegangen am',
+        'Kategorie',
+        'Erstmail',
         'Status',
         'MV als Anhang',
         'MV nur erwähnt',
@@ -784,6 +789,8 @@ export function exportToExcel(analysisResults) {
                 vorgang.maklerEmail || '',
                 vorgang.gueltigkeitsdatum || '',
                 result.email?.date || '',
+                vorgang.kategorie || 'neu',
+                vorgang.erstmail_datum || '',
                 vorgang._onHold ? 'on-hold' : (vorgang.status || ''),
                 mv.als_anhang === true ? 'Ja' : (mv.vorhanden === true ? 'Ja' : 'Nein'),
                 mv.nur_erwaehnt === true ? 'Ja' : 'Nein',

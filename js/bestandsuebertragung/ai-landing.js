@@ -11,7 +11,7 @@ let uploadedFiles = [];
 let analysisResults = [];
 let isProcessing = false;
 let activeTab = 'neu'; // 'neu' | 'erinnerung'
-let neuFilter = 'alle'; // 'alle' | 'vollstaendig' | 'nicht-vollstaendig'
+let neuFilter = 'alle'; // 'alle' | 'vollstaendig' | 'teilweise' | 'nicht-vollstaendig'
 
 /**
  * AI Landing Page initialisieren
@@ -360,26 +360,37 @@ function renderResults() {
         return;
     }
 
-    // Count vorgaenge per category for tab badges
+    // Classify each result at the email level: vollstaendig / teilweise / nicht-vollstaendig
+    // A result is "teilweise" if it has both complete and incomplete Neu-Vorgänge
+    const resultClassification = new Map(); // result → 'vollstaendig' | 'teilweise' | 'nicht-vollstaendig'
+
     let countNeu = 0;
     let countErinnerung = 0;
     let countNeuVollstaendig = 0;
+    let countNeuTeilweise = 0;
     let countNeuNichtVollstaendig = 0;
 
     for (const result of analysisResults) {
         if (!result.success || !result.analysis?.vorgaenge) continue;
-        for (const v of result.analysis.vorgaenge) {
-            const kat = v.kategorie || 'neu';
-            if (kat === 'erinnerung') {
-                countErinnerung++;
-            } else {
-                countNeu++;
-                if (isVorgangVollstaendig(v)) {
-                    countNeuVollstaendig++;
-                } else {
-                    countNeuNichtVollstaendig++;
-                }
-            }
+        const neuVorgaenge = result.analysis.vorgaenge.filter(v => (v.kategorie || 'neu') === 'neu');
+        const erinnerungCount = result.analysis.vorgaenge.length - neuVorgaenge.length;
+        countErinnerung += erinnerungCount;
+
+        if (neuVorgaenge.length === 0) continue;
+
+        const completeCount = neuVorgaenge.filter(v => isVorgangVollstaendig(v)).length;
+        const incompleteCount = neuVorgaenge.length - completeCount;
+        countNeu += neuVorgaenge.length;
+
+        if (completeCount > 0 && incompleteCount > 0) {
+            resultClassification.set(result, 'teilweise');
+            countNeuTeilweise += neuVorgaenge.length;
+        } else if (completeCount === neuVorgaenge.length) {
+            resultClassification.set(result, 'vollstaendig');
+            countNeuVollstaendig += neuVorgaenge.length;
+        } else {
+            resultClassification.set(result, 'nicht-vollstaendig');
+            countNeuNichtVollstaendig += neuVorgaenge.length;
         }
     }
 
@@ -406,6 +417,9 @@ function renderResults() {
                 </button>
                 <button class="subfilter-btn${neuFilter === 'vollstaendig' ? ' active' : ''}" onclick="window.AILanding.setNeuFilter('vollstaendig')">
                     Vollständig <span class="subfilter-count">${countNeuVollstaendig}</span>
+                </button>
+                <button class="subfilter-btn${neuFilter === 'teilweise' ? ' active' : ''}" onclick="window.AILanding.setNeuFilter('teilweise')">
+                    Teilweise vollständig <span class="subfilter-count">${countNeuTeilweise}</span>
                 </button>
                 <button class="subfilter-btn${neuFilter === 'nicht-vollstaendig' ? ' active' : ''}" onclick="window.AILanding.setNeuFilter('nicht-vollstaendig')">
                     Nicht vollständig <span class="subfilter-count">${countNeuNichtVollstaendig}</span>
@@ -444,13 +458,14 @@ function renderResults() {
         if (!result.success || result.type === 'attachment' || !result.analysis?.vorgaenge) continue;
 
         // Filter vorgaenge by active tab and sub-filter
+        const resultClass = resultClassification.get(result);
         const filteredVorgaenge = result.analysis.vorgaenge.filter((v, _vi) => {
             const kat = v.kategorie || 'neu';
             if (kat !== activeTab) return false;
             if (activeTab === 'neu' && neuFilter !== 'alle') {
-                const vollst = isVorgangVollstaendig(v);
-                if (neuFilter === 'vollstaendig' && !vollst) return false;
-                if (neuFilter === 'nicht-vollstaendig' && vollst) return false;
+                if (neuFilter === 'vollstaendig' && resultClass !== 'vollstaendig') return false;
+                if (neuFilter === 'teilweise' && resultClass !== 'teilweise') return false;
+                if (neuFilter === 'nicht-vollstaendig' && resultClass !== 'nicht-vollstaendig') return false;
             }
             return true;
         });
@@ -546,6 +561,12 @@ function renderResults() {
                             <span class="detail-label">Eingegangen:</span>
                             <span class="detail-value">${escapeHtml(emailDateStr)}</span>
                         </div>
+                        ${(vorgang.kategorie === 'erinnerung' && vorgang.erstmail_datum) ? `
+                        <div class="detail-row">
+                            <span class="detail-label">Erstmail:</span>
+                            <span class="detail-value">${escapeHtml(vorgang.erstmail_datum)}</span>
+                        </div>
+                        ` : ''}
                         <div class="detail-row">
                             <span class="detail-label">Makler:</span>
                             <span class="detail-value">${escapeHtml(vorgang.makler || '-')}</span>

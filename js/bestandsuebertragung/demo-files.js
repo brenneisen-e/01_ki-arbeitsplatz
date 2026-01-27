@@ -344,8 +344,8 @@ function createEml(options) {
 // Demo Document Builders
 // ============================================================
 
-function buildMaklervollmacht(kunde, gebDatum, adresse, makler, firma, ort, datum) {
-    return createDocx([
+function buildMaklervollmacht(kunde, gebDatum, adresse, makler, firma, ort, datum, signed = true) {
+    const paragraphs = [
         'MAKLERVOLLMACHT',
         '',
         `Hiermit bevollm\u00e4chtige ich,`,
@@ -372,7 +372,84 @@ function buildMaklervollmacht(kunde, gebDatum, adresse, makler, firma, ort, datu
         '',
         '________________________',
         `${kunde}`,
-    ], { title: true, bold: [11] });
+    ];
+
+    if (signed) {
+        // Use buildSignedMaklervollmacht which includes a Wingdings signature run
+        return createSignedDocx(paragraphs, kunde);
+    }
+    return createDocx(paragraphs, { title: true, bold: [11] });
+}
+
+/**
+ * DOCX mit Wingdings-Signatur erzeugen
+ */
+function createSignedDocx(paragraphs, kundeName) {
+    // Build paragraphs, but replace the "________________________" line
+    // with a Wingdings signature + the underline + printed name
+    const bodyParts = [];
+    for (let i = 0; i < paragraphs.length; i++) {
+        const p = paragraphs[i];
+        const isTitle = i === 0;
+        const isBold = i === 11;
+        const fontSize = isTitle ? 32 : (isBold ? 24 : 22);
+        const bold = (isTitle || isBold) ? '<w:b/>' : '';
+        const jc = isTitle ? '<w:jc w:val="center"/>' : '';
+        const spacing = isTitle ? '<w:spacing w:after="240"/>' : '<w:spacing w:after="120"/>';
+
+        if (p === '') {
+            bodyParts.push('<w:p><w:pPr><w:spacing w:after="120"/></w:pPr></w:p>');
+        } else if (p === '________________________') {
+            // Wingdings signature line: signature chars + underline below
+            // Wingdings chars that look like a handwritten signature
+            const sigChars = '\u0048\u006F\u0072\u0073\u0074'; // renders as symbols in Wingdings
+            bodyParts.push(
+                `<w:p><w:pPr><w:spacing w:after="0"/></w:pPr>` +
+                `<w:r><w:rPr><w:rFonts w:ascii="Wingdings" w:hAnsi="Wingdings"/><w:sz w:val="28"/><w:color w:val="1a1a6e"/></w:rPr><w:t xml:space="preserve">${sigChars}</w:t></w:r>` +
+                `</w:p>` +
+                `<w:p><w:pPr><w:spacing w:after="120"/></w:pPr>` +
+                `<w:r><w:rPr><w:sz w:val="22"/></w:rPr><w:t xml:space="preserve">________________________</w:t></w:r>` +
+                `</w:p>`
+            );
+        } else {
+            bodyParts.push(
+                `<w:p><w:pPr>${jc}${spacing}</w:pPr>` +
+                `<w:r><w:rPr>${bold}<w:sz w:val="${fontSize}"/></w:rPr><w:t xml:space="preserve">${escXml(p)}</w:t></w:r>` +
+                `</w:p>`
+            );
+        }
+    }
+
+    const bodyXml = bodyParts.join('\n');
+
+    const contentTypes = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
+<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>
+<Default Extension="xml" ContentType="application/xml"/>
+<Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/>
+</Types>`;
+
+    const rels = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/>
+</Relationships>`;
+
+    const docRels = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"/>`;
+
+    const document = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
+<w:body>
+${bodyXml}
+</w:body>
+</w:document>`;
+
+    return createZip([
+        { name: '[Content_Types].xml', content: contentTypes },
+        { name: '_rels/.rels', content: rels },
+        { name: 'word/_rels/document.xml.rels', content: docRels },
+        { name: 'word/document.xml', content: document }
+    ]);
 }
 
 function buildAntragSchreiben(versicherer, makler, firma, kunde, vsNr, sparte, datum) {
@@ -526,7 +603,7 @@ Maklerservice Bestandsübertragung`
         id: 'anfrage_vollmacht_seidel',
         category: 'email-word',
         title: 'Anfrage + Maklervollmacht \u2013 Seidel',
-        description: 'E-Mail mit Maklervollmacht als Word-Dokument im Anhang.',
+        description: 'E-Mail mit unterschriebener Maklervollmacht als Word-Dokument im Anhang.',
         tags: ['EML', 'DOCX', 'Maklervollmacht'],
         filename: '04_Anfrage_Vollmacht_Seidel.eml',
         generate() {
@@ -534,29 +611,30 @@ Maklerservice Bestandsübertragung`
                 'Ralf Seidel', '12.05.1978',
                 'Hauptstra\u00dfe 42, 50667 K\u00f6ln',
                 'Martina Koch', 'Koch Finanzberatung',
-                'K\u00f6ln', '06.01.2026'
+                'K\u00f6ln', '06.01.2026',
+                true // unterschrieben
             );
             return createEml({
                 from: '"Martina Koch" <martina.koch@koch-finanz.de>',
-                to: 'maklerservice@allianz.de',
-                subject: 'Bestandsübertragung Kranken – Ralf Seidel, inkl. Maklervollmacht',
+                to: 'maklerservice@ergo.de',
+                subject: 'Bestandsübertragung Kranken – Ralf Seidel, ERG-3345678, inkl. Maklervollmacht',
                 date: 'Tue, 07 Jan 2026 11:20:00 +0100',
                 body: `Sehr geehrte Damen und Herren,
 
-anbei übersende ich Ihnen die unterschriebene Maklervollmacht für unseren Kunden Ralf Seidel.
+anbei \u00fcbersende ich Ihnen die unterschriebene Maklervollmacht f\u00fcr unseren Kunden Ralf Seidel.
 
 Vertragsdaten:
 Versicherungsnehmer: Ralf Seidel
-Versicherungsnummer: ALZ-3345678
+Versicherungsnummer: ERG-3345678
 Sparte: Krankenversicherung (Zusatz)
 
-Bitte übertragen Sie den Vertrag in unseren Maklerbestand.
+Bitte \u00fcbertragen Sie den Vertrag in unseren Maklerbestand.
 
-Mit freundlichen Grüßen
+Mit freundlichen Gr\u00fc\u00dfen
 
 Martina Koch
 Koch Finanzberatung
-Breite Str. 15, 50667 Köln
+Breite Str. 15, 50667 K\u00f6ln
 Tel.: 0221-5554433`,
                 attachments: [{
                     filename: 'Maklervollmacht_Seidel.docx',
@@ -575,21 +653,21 @@ Tel.: 0221-5554433`,
         filename: '05_Siehe_Anlage_Franke.eml',
         generate() {
             const antrag = buildAntragSchreiben(
-                'Generali Deutschland Versicherung AG',
+                'ERGO Versicherung AG',
                 'Stefan Zimmermann', 'Zimmermann Versicherungsmakler',
-                'Birgit Franke', 'GEN-2298765', 'Haftpflicht',
+                'Birgit Franke', 'ERG-2298765', 'Haftpflicht',
                 '10.01.2026'
             );
             return createEml({
                 from: '"Stefan Zimmermann" <stefan.zimmermann@zimmermann-versicherungen.de>',
-                to: 'maklerservice@generali.de',
-                subject: 'Bestandsübertragung Franke – siehe beigefügtes Schreiben',
+                to: 'maklerservice@ergo.de',
+                subject: 'Bestands\u00fcbertragung Franke \u2013 ERG-2298765, siehe beigef\u00fcgtes Schreiben',
                 date: 'Fri, 10 Jan 2026 08:45:00 +0100',
                 body: `Sehr geehrte Damen und Herren,
 
-bezüglich der Bestandsübertragung für unsere Kundin Birgit Franke verweise ich auf das beigefügte Schreiben.
+bez\u00fcglich der Bestands\u00fcbertragung f\u00fcr unsere Kundin Birgit Franke verweise ich auf das beigef\u00fcgte Schreiben.
 
-Bitte um Bestätigung.
+Bitte um Best\u00e4tigung.
 
 MfG
 Stefan Zimmermann`,
@@ -613,7 +691,8 @@ Stefan Zimmermann`,
                 'Petra Schneider', '23.11.1985',
                 'Lindenweg 8, 40210 D\u00fcsseldorf',
                 'Lisa Wagner', 'Wagner Maklerb\u00fcro',
-                'D\u00fcsseldorf', '17.01.2026'
+                'D\u00fcsseldorf', '17.01.2026',
+                true // unterschrieben
             );
             return createEml({
                 from: '"Lisa Wagner" <lisa.wagner@wagner-makler.de>',
@@ -653,33 +732,33 @@ Tel.: 0211-7788990`,
         filename: '07_Vertragsliste_Braun.eml',
         generate() {
             const xlsx = buildVersicherungsliste([
-                ['AXA-1122334', 'Wolfgang Huber', 'KFZ', 'AXA', '01.03.2024', '01.03.2025', '945,00 \u20ac'],
-                ['AXA-1122335', 'Wolfgang Huber', 'Hausrat', 'AXA', '15.06.2023', '15.06.2024', '187,20 \u20ac'],
-                ['AXA-2233445', 'Sabine Keller', 'Haftpflicht', 'AXA', '01.01.2024', '01.01.2025', '124,80 \u20ac'],
-                ['AXA-2233446', 'Sabine Keller', 'Unfall', 'AXA', '01.01.2024', '01.01.2025', '215,40 \u20ac'],
-                ['AXA-3344556', 'Michael Baumann', 'Wohngeb\u00e4ude', 'AXA', '01.07.2023', '01.07.2024', '578,60 \u20ac'],
-                ['AXA-3344557', 'Michael Baumann', 'KFZ', 'AXA', '01.09.2024', '01.09.2025', '1.120,00 \u20ac'],
+                ['ERG-1122334', 'Wolfgang Huber', 'KFZ', 'ERGO', '01.03.2025', '01.03.2026', '945,00 \u20ac'],
+                ['ERG-1122335', 'Wolfgang Huber', 'Hausrat', 'ERGO', '15.06.2025', '15.06.2026', '187,20 \u20ac'],
+                ['ERG-2233445', 'Sabine Keller', 'Haftpflicht', 'ERGO', '01.01.2025', '01.01.2026', '124,80 \u20ac'],
+                ['ERG-2233446', 'Sabine Keller', 'Unfall', 'ERGO', '01.01.2025', '01.01.2026', '215,40 \u20ac'],
+                ['ERG-3344556', 'Michael Baumann', 'Wohngeb\u00e4ude', 'ERGO', '01.07.2025', '01.07.2026', '578,60 \u20ac'],
+                ['ERG-3344557', 'Michael Baumann', 'KFZ', 'ERGO', '01.09.2025', '01.09.2026', '1.120,00 \u20ac'],
             ]);
             return createEml({
                 from: '"Andreas Braun" <andreas.braun@braun-makler.de>',
-                to: 'bestandsuebertragung@axa.de',
-                subject: 'Sammelantrag Bestandsübertragung – 6 Verträge, siehe Excel-Liste',
+                to: 'maklerservice@ergo.de',
+                subject: 'Sammelantrag Bestands\u00fcbertragung \u2013 6 Vertr\u00e4ge, siehe Excel-Liste',
                 date: 'Mon, 20 Jan 2026 10:30:00 +0100',
                 body: `Sehr geehrte Damen und Herren,
 
-in der Anlage finden Sie die Liste der zu übertragenden Verträge für die Bestandsübertragung.
+in der Anlage finden Sie die Liste der zu \u00fcbertragenden Vertr\u00e4ge f\u00fcr die Bestands\u00fcbertragung.
 
-Es handelt sich um 6 Verträge von 3 Kunden (Huber, Keller, Baumann).
+Es handelt sich um 6 Vertr\u00e4ge von 3 Kunden (Huber, Keller, Baumann).
 
-Die Maklervollmachten für alle genannten Kunden liegen bereits vor und wurden am 15.01.2026 per Post übermittelt.
+Die Maklervollmachten f\u00fcr alle genannten Kunden liegen bereits vor und wurden am 15.01.2026 per Post \u00fcbermittelt.
 
-Bitte bestätigen Sie die Übertragung je Vertrag.
+Bitte best\u00e4tigen Sie die \u00dcbertragung je Vertrag.
 
-Mit freundlichen Grüßen
+Mit freundlichen Gr\u00fc\u00dfen
 
 Andreas Braun
 Braun Versicherungsmakler
-Kölner Str. 78, 53111 Bonn
+K\u00f6lner Str. 78, 53111 Bonn
 Tel.: 0228-6654321`,
                 attachments: [{
                     filename: 'Vertragsliste_Bestandsuebertragung.xlsx',
@@ -748,41 +827,42 @@ Tel.: 0211-3344556`,
                 'Wolfgang Huber', '30.07.1970',
                 'Mozartstr. 15, 53115 Bonn',
                 'Andreas Braun', 'Braun Versicherungsmakler',
-                'Bonn', '18.01.2026'
+                'Bonn', '18.01.2026',
+                true // unterschrieben
             );
             const antrag = buildAntragSchreiben(
-                'HUK-COBURG Versicherungsgruppe',
+                'ERGO Versicherung AG',
                 'Andreas Braun', 'Braun Versicherungsmakler',
-                'Wolfgang Huber', 'HUK-8876543', 'KFZ + Hausrat',
+                'Wolfgang Huber', 'ERG-8876543', 'KFZ + Hausrat',
                 '20.01.2026'
             );
             const xlsx = buildVersicherungsliste([
-                ['HUK-8876543', 'Wolfgang Huber', 'KFZ', 'HUK-COBURG', '01.04.2024', '01.04.2025', '892,50 \u20ac'],
-                ['HUK-8876544', 'Wolfgang Huber', 'Hausrat', 'HUK-COBURG', '01.04.2024', '01.04.2025', '156,00 \u20ac'],
-                ['HUK-8876545', 'Wolfgang Huber', 'Haftpflicht', 'HUK-COBURG', '01.04.2024', '01.04.2025', '98,40 \u20ac'],
+                ['ERG-8876543', 'Wolfgang Huber', 'KFZ', 'ERGO', '01.04.2025', '01.04.2026', '892,50 \u20ac'],
+                ['ERG-8876544', 'Wolfgang Huber', 'Hausrat', 'ERGO', '01.04.2025', '01.04.2026', '156,00 \u20ac'],
+                ['ERG-8876545', 'Wolfgang Huber', 'Haftpflicht', 'ERGO', '01.04.2025', '01.04.2026', '98,40 \u20ac'],
             ]);
             return createEml({
                 from: '"Andreas Braun" <andreas.braun@braun-makler.de>',
-                to: 'maklerservice@huk.de',
-                subject: 'Bestandsübertragung Wolfgang Huber – Vollständige Unterlagen',
+                to: 'maklerservice@ergo.de',
+                subject: 'Bestands\u00fcbertragung Wolfgang Huber \u2013 Vollst\u00e4ndige Unterlagen',
                 date: 'Mon, 20 Jan 2026 14:00:00 +0100',
                 body: `Sehr geehrte Damen und Herren,
 
-anbei übersende ich Ihnen die vollständigen Unterlagen zur Bestandsübertragung für unseren Kunden Wolfgang Huber:
+anbei \u00fcbersende ich Ihnen die vollst\u00e4ndigen Unterlagen zur Bestands\u00fcbertragung f\u00fcr unseren Kunden Wolfgang Huber:
 
 1. Maklervollmacht (unterschrieben)
-2. Formeller Antrag auf Bestandsübertragung
-3. Vertragsliste mit allen betroffenen Verträgen
+2. Formeller Antrag auf Bestands\u00fcbertragung
+3. Vertragsliste mit allen betroffenen Vertr\u00e4gen
 
-Es handelt sich um 3 Verträge (KFZ, Hausrat, Haftpflicht).
+Es handelt sich um 3 Vertr\u00e4ge (KFZ, Hausrat, Haftpflicht).
 
-Bitte bestätigen Sie die Übertragung für alle Verträge.
+Bitte best\u00e4tigen Sie die \u00dcbertragung f\u00fcr alle Vertr\u00e4ge.
 
-Mit freundlichen Grüßen
+Mit freundlichen Gr\u00fc\u00dfen
 
 Andreas Braun
 Braun Versicherungsmakler
-Kölner Str. 78, 53111 Bonn`,
+K\u00f6lner Str. 78, 53111 Bonn`,
                 attachments: [
                     {
                         filename: 'Maklervollmacht_Huber.docx',
@@ -806,35 +886,36 @@ Kölner Str. 78, 53111 Bonn`,
     {
         id: 'excel_und_vollmacht_keller',
         category: 'email-complex',
-        title: 'Excel + Vollmacht \u2013 Keller',
-        description: 'E-Mail mit Kundenliste (Excel) und Maklervollmacht (Word) f\u00fcr 2 Vertr\u00e4ge.',
-        tags: ['EML', 'DOCX', 'XLSX'],
+        title: 'Excel + Vollmacht (NICHT unterschrieben) \u2013 Keller',
+        description: 'E-Mail mit Kundenliste (Excel) und Maklervollmacht (Word) \u2013 Vollmacht ist NICHT unterschrieben.',
+        tags: ['EML', 'DOCX', 'XLSX', 'Ohne Unterschrift'],
         filename: '10_Excel_Vollmacht_Keller.eml',
         generate() {
             const vollmacht = buildMaklervollmacht(
                 'Sabine Keller', '15.03.1982',
                 'Rheinuferstr. 30, 53113 Bonn',
                 'Andreas Braun', 'Braun Versicherungsmakler',
-                'Bonn', '19.01.2026'
+                'Bonn', '19.01.2026',
+                false // NICHT unterschrieben
             );
             const xlsx = buildVersicherungsliste([
-                ['AXA-2233445', 'Sabine Keller', 'Haftpflicht', 'AXA', '01.01.2024', '01.01.2025', '124,80 \u20ac'],
-                ['AXA-2233446', 'Sabine Keller', 'Unfall', 'AXA', '01.01.2024', '01.01.2025', '215,40 \u20ac'],
+                ['ERG-2233445', 'Sabine Keller', 'Haftpflicht', 'ERGO', '01.01.2025', '01.01.2026', '124,80 \u20ac'],
+                ['ERG-2233446', 'Sabine Keller', 'Unfall', 'ERGO', '01.01.2025', '01.01.2026', '215,40 \u20ac'],
             ]);
             return createEml({
                 from: '"Andreas Braun" <andreas.braun@braun-makler.de>',
-                to: 'bestandsuebertragung@axa.de',
-                subject: 'Bestandsübertragung Keller – Vollmacht + Vertragsliste',
+                to: 'maklerservice@ergo.de',
+                subject: 'Bestands\u00fcbertragung Keller \u2013 Vollmacht + Vertragsliste',
                 date: 'Mon, 20 Jan 2026 11:15:00 +0100',
                 body: `Sehr geehrte Damen und Herren,
 
-für unsere Kundin Sabine Keller beantragen wir die Übertragung der in der Anlage aufgeführten Verträge (Haftpflicht und Unfall).
+f\u00fcr unsere Kundin Sabine Keller beantragen wir die \u00dcbertragung der in der Anlage aufgef\u00fchrten Vertr\u00e4ge (Haftpflicht und Unfall).
 
 Anbei:
-- Unterschriebene Maklervollmacht
+- Maklervollmacht
 - Vertragsliste mit den betroffenen Versicherungen
 
-Bitte um Bestätigung.
+Bitte um Best\u00e4tigung.
 
 MfG
 Andreas Braun`,

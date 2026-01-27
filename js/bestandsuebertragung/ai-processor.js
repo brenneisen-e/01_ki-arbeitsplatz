@@ -508,43 +508,85 @@ async function callClaudeAPI(prompt, systemPrompt = null) {
  * E-Mail mit KI analysieren
  */
 export async function analyzeEmailWithAI(emailData, attachments = []) {
-    const systemPrompt = `Du bist ein Experte für Versicherungs-Bestandsübertragungen bei ERGO.
-Analysiere die bereitgestellten E-Mails und Dokumente und extrahiere alle relevanten Informationen.
+    const systemPrompt = `Du bist ein Experte für Versicherungs-Bestandsübertragungen. Du analysierst E-Mails und deren Anhänge und extrahierst strukturierte Daten.
 
-Deine Aufgabe:
-1. Identifiziere jeden einzelnen Vorgang (es können mehrere Kunden in einer Mail sein)
-2. Extrahiere für jeden Vorgang:
-   - Kundenname (Nachname, Vorname)
-   - Versicherungsnummer
-   - Sparte (KFZ, Leben, Kranken, etc.)
-   - Makler/Absender
-   - Gültigkeitsdatum
-   - Status der Übertragung
-3. Prüfe ob eine Maklervollmacht vorhanden ist und ob sie unterschrieben ist
-4. Notiere fehlende Informationen
+## AUFGABE
+1. Identifiziere JEDEN einzelnen Übertragungsvorgang. Eine E-Mail kann mehrere Kunden/Verträge enthalten.
+2. Extrahiere pro Vorgang die unten genannten Felder.
+3. Prüfe die Maklervollmacht gemäß den STRENGEN Regeln unten.
+4. Prüfe fehlende Informationen gemäß den STRENGEN Regeln unten.
 
-Antworte IMMER im folgenden JSON-Format:
+## FELDER PRO VORGANG
+- kunde: "Nachname, Vorname" (genau wie im Dokument)
+- versicherungsnummer: exakte Nummer aus dem Dokument
+- sparte: KFZ | Leben | Kranken | Haftpflicht | Hausrat | Wohngebäude | BU | Unfall | Rechtsschutz | Sonstige
+- makler: Name des Maklers/Absenders
+- maklerEmail: E-Mail-Adresse des Maklers
+- gueltigkeitsdatum: Gewünschter Übertragungstermin (TT.MM.JJJJ), NUR wenn explizit genannt
+- status: angefragt | bestaetigt | abgelehnt | in-bearbeitung
+
+## MAKLERVOLLMACHT – STRENGE REGELN
+Prüfe die Maklervollmacht anhand dieser Kriterien:
+
+**als_anhang** (boolean): Ist ein Dokument mit dem Titel/Namen "Maklervollmacht" oder "Vollmacht" tatsächlich als Dateianhang der E-Mail beigefügt? NUR true wenn die Datei physisch als Attachment vorhanden ist.
+
+**nur_erwaehnt** (boolean): Wird eine Maklervollmacht nur im E-Mail-Text erwähnt, z.B. "per Post übermittelt", "wurde bereits geschickt", "liegt vor"? Wenn ja: true. Das bedeutet, die Vollmacht ist NICHT in dieser E-Mail enthalten.
+
+**unterschrieben** (boolean | null):
+- true: NUR wenn im Anhang-Dokument eine Unterschrift erkennbar ist (z.B. handschriftlicher Name, Wingdings-Zeichen, Bild-Signatur, oder Text der klar auf eine geleistete Unterschrift hinweist).
+- false: Wenn das Vollmacht-Dokument als Anhang vorliegt, aber KEINE Unterschrift erkennbar ist (leere Unterschriftszeile, Platzhalter wie "________________________", "[Unterschrift]" o.ä.).
+- null: Wenn die Vollmacht nicht als Anhang vorliegt und daher nicht geprüft werden kann.
+
+**manuell_pruefen** (boolean): true in folgenden Fällen:
+- Vollmacht wird nur erwähnt aber ist nicht als Anhang beigefügt
+- Unterschriftsstatus ist unklar
+- Vollmacht liegt als PDF vor (Signatur kann nicht sicher geprüft werden)
+- Vollmacht fehlt komplett
+
+**anmerkung** (string): Kurze Erklärung zum Status, z.B. "Vollmacht als Word-Anhang, Unterschrift vorhanden", "Vollmacht laut E-Mail per Post übermittelt – nicht beigefügt", "Keine Vollmacht erwähnt oder beigefügt".
+
+## FEHLENDE INFORMATIONEN – STRENGE REGELN
+Das Feld "fehlende_infos" darf NUR Informationen enthalten, die in KEINER der bereitgestellten Quellen vorkommen (E-Mail-Text, Betreff, Anhänge).
+
+NICHT als fehlend melden:
+- Informationen die in einem Excel-/Word-Anhang stehen (auch wenn nicht im E-Mail-Text)
+- Informationen die aus dem Kontext ableitbar sind
+- Gültigkeitsdatum, wenn kein konkreter Termin genannt wird (das ist normal)
+
+NUR als fehlend melden wenn es geschäftskritisch ist:
+- Versicherungsnummer fehlt komplett (nirgends im Dokument)
+- Kundenname fehlt komplett
+- Sparte/Vertragsart ist nicht identifizierbar
+- Maklervollmacht fehlt komplett (weder erwähnt noch beigefügt)
+
+Wenn NICHTS fehlt: leeres Array [] zurückgeben.
+
+## ANTWORTFORMAT (JSON)
 {
   "vorgaenge": [
     {
       "kunde": "Nachname, Vorname",
       "versicherungsnummer": "XXX-XXXXXXX",
-      "sparte": "KFZ|Leben|Kranken|Haftpflicht|etc",
+      "sparte": "KFZ",
       "makler": "Name",
       "maklerEmail": "email@example.com",
-      "gueltigkeitsdatum": "TT.MM.JJJJ",
-      "status": "angefragt|bestaetigt|abgelehnt|in-bearbeitung",
+      "gueltigkeitsdatum": "TT.MM.JJJJ oder null",
+      "status": "angefragt",
       "maklervollmacht": {
-        "vorhanden": true/false,
-        "unterschrieben": true/false,
-        "anmerkung": "optional"
+        "als_anhang": false,
+        "nur_erwaehnt": true,
+        "unterschrieben": null,
+        "manuell_pruefen": true,
+        "anmerkung": "Laut E-Mail per Post übermittelt"
       },
-      "fehlende_infos": ["Liste fehlender Informationen"],
+      "fehlende_infos": [],
       "notizen": "Weitere relevante Informationen"
     }
   ],
   "zusammenfassung": "Kurze Zusammenfassung der E-Mail"
-}`;
+}
+
+WICHTIG: Antworte NUR mit validem JSON. Keine Erklärungen davor oder danach.`;
 
     // Prompt zusammenbauen
     let prompt = `Analysiere folgende E-Mail zur Bestandsübertragung:\n\n`;
@@ -664,8 +706,11 @@ export function exportToExcel(analysisResults) {
         'Makler E-Mail',
         'Gültig ab',
         'Status',
-        'Maklervollmacht vorhanden',
-        'Maklervollmacht unterschrieben',
+        'MV als Anhang',
+        'MV nur erwähnt',
+        'MV unterschrieben',
+        'MV manuell prüfen',
+        'MV Anmerkung',
         'Fehlende Infos',
         'Notizen',
         'Quelldatei'
@@ -676,6 +721,7 @@ export function exportToExcel(analysisResults) {
         if (!result.success || !result.analysis?.vorgaenge) continue;
 
         for (const vorgang of result.analysis.vorgaenge) {
+            const mv = vorgang.maklervollmacht || {};
             rows.push([
                 vorgang.kunde || '',
                 vorgang.versicherungsnummer || '',
@@ -683,9 +729,12 @@ export function exportToExcel(analysisResults) {
                 vorgang.makler || '',
                 vorgang.maklerEmail || '',
                 vorgang.gueltigkeitsdatum || '',
-                vorgang.status || '',
-                vorgang.maklervollmacht?.vorhanden ? 'Ja' : 'Nein',
-                vorgang.maklervollmacht?.unterschrieben ? 'Ja' : 'Nein',
+                vorgang._onHold ? 'on-hold' : (vorgang.status || ''),
+                mv.als_anhang === true ? 'Ja' : (mv.vorhanden === true ? 'Ja' : 'Nein'),
+                mv.nur_erwaehnt === true ? 'Ja' : 'Nein',
+                mv.unterschrieben === true ? 'Ja' : (mv.unterschrieben === false ? 'Nein' : 'Unklar'),
+                mv.manuell_pruefen === true ? 'Ja' : 'Nein',
+                mv.anmerkung || '',
                 (vorgang.fehlende_infos || []).join(', '),
                 vorgang.notizen || '',
                 result.filename

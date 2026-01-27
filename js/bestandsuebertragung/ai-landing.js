@@ -372,13 +372,39 @@ function renderResults() {
 
         html += '<div class="vorgaenge-list">';
 
-        for (const vorgang of result.analysis.vorgaenge) {
-            const mvStatus = vorgang.maklervollmacht?.vorhanden
-                ? (vorgang.maklervollmacht.unterschrieben ? '✓ unterschrieben' : '○ nicht unterschrieben')
-                : '✕ fehlt';
+        for (let vi = 0; vi < result.analysis.vorgaenge.length; vi++) {
+            const vorgang = result.analysis.vorgaenge[vi];
+            const mv = vorgang.maklervollmacht || {};
+
+            // Build MV status display
+            let mvIcon, mvText, mvClass;
+            if (mv.als_anhang && mv.unterschrieben === true) {
+                mvIcon = '✓'; mvText = 'Vollmacht als Anhang, unterschrieben'; mvClass = 'mv-ok';
+            } else if (mv.als_anhang && mv.unterschrieben === false) {
+                mvIcon = '△'; mvText = 'Vollmacht als Anhang, NICHT unterschrieben'; mvClass = 'mv-warn';
+            } else if (mv.nur_erwaehnt) {
+                mvIcon = '○'; mvText = 'Nur erwähnt (nicht beigefügt)'; mvClass = 'mv-warn';
+            } else if (mv.als_anhang && mv.unterschrieben === null) {
+                mvIcon = '?'; mvText = 'Vollmacht als Anhang, Signatur unklar'; mvClass = 'mv-warn';
+            } else if (mv.vorhanden === true) {
+                // Backwards-compatible with old format
+                mvIcon = mv.unterschrieben ? '✓' : '○';
+                mvText = mv.unterschrieben ? 'vorhanden, unterschrieben' : 'vorhanden, nicht unterschrieben';
+                mvClass = mv.unterschrieben ? 'mv-ok' : 'mv-warn';
+            } else {
+                mvIcon = '✕'; mvText = 'Keine Vollmacht'; mvClass = 'mv-missing';
+            }
+
+            if (mv.anmerkung) {
+                mvText += ` – ${escapeHtml(mv.anmerkung)}`;
+            }
+
+            const needsManualCheck = mv.manuell_pruefen === true;
+            const resultIdx = analysisResults.indexOf(result);
+            const holdBtnId = `hold-${resultIdx}-${vi}`;
 
             html += `
-                <div class="vorgang-card">
+                <div class="vorgang-card${needsManualCheck ? ' needs-check' : ''}">
                     <div class="vorgang-header">
                         <span class="vorgang-kunde">${escapeHtml(vorgang.kunde || 'Unbekannt')}</span>
                         <span class="vorgang-status status-${vorgang.status || 'angefragt'}">${escapeHtml(vorgang.status || 'angefragt')}</span>
@@ -398,7 +424,7 @@ function renderResults() {
                         </div>
                         <div class="detail-row">
                             <span class="detail-label">Maklervollmacht:</span>
-                            <span class="detail-value mv-status">${mvStatus}</span>
+                            <span class="detail-value ${mvClass}"><span class="mv-icon">${mvIcon}</span> ${mvText}</span>
                         </div>
                     </div>
                     ${vorgang.fehlende_infos?.length ? `
@@ -408,6 +434,13 @@ function renderResults() {
                     ` : ''}
                     ${vorgang.notizen ? `
                         <div class="vorgang-notes">${escapeHtml(vorgang.notizen)}</div>
+                    ` : ''}
+                    ${needsManualCheck ? `
+                        <div class="vorgang-actions">
+                            <button class="btn-hold" id="${holdBtnId}" onclick="window.AILanding.toggleHold('${holdBtnId}', ${resultIdx}, ${vi})">
+                                <span class="hold-icon">⏸</span> Auf Hold – manuell prüfen
+                            </button>
+                        </div>
                     ` : ''}
                 </div>
             `;
@@ -462,11 +495,12 @@ function saveToStorage() {
                     confidence: 0.8,
                     source: 'ai'
                 } : null,
-                status: mapStatus(vorgang.status),
+                status: vorgang._onHold ? 'wiedervorlage' : mapStatus(vorgang.status),
                 notes: [
                     vorgang.notizen,
                     vorgang.maklervollmacht?.anmerkung,
-                    vorgang.fehlende_infos?.length ? `Fehlend: ${vorgang.fehlende_infos.join(', ')}` : null
+                    vorgang.fehlende_infos?.length ? `Fehlend: ${vorgang.fehlende_infos.join(', ')}` : null,
+                    vorgang._onHold ? 'Auf Hold gesetzt – manuelle Prüfung erforderlich' : null
                 ].filter(Boolean).join('\n'),
                 workflow: {
                     mailReceived: new Date().toISOString(),
@@ -481,6 +515,7 @@ function saveToStorage() {
                 }],
                 aiAnalysis: {
                     maklervollmacht: vorgang.maklervollmacht,
+                    onHold: vorgang._onHold || false,
                     sourceFile: result.filename,
                     analyzedAt: new Date().toISOString()
                 }
@@ -506,6 +541,32 @@ function mapStatus(status) {
         'in-bearbeitung': 'wiedervorlage'
     };
     return mapping[status] || 'zu-validieren';
+}
+
+/**
+ * Vorgang auf Hold setzen / Hold aufheben
+ */
+export function toggleHold(btnId, resultIdx, vorgangIdx) {
+    const btn = document.getElementById(btnId);
+    if (!btn) return;
+
+    const result = analysisResults[resultIdx];
+    if (!result?.analysis?.vorgaenge?.[vorgangIdx]) return;
+
+    const vorgang = result.analysis.vorgaenge[vorgangIdx];
+    const isOnHold = vorgang._onHold === true;
+
+    vorgang._onHold = !isOnHold;
+
+    if (vorgang._onHold) {
+        btn.innerHTML = '<span class="hold-icon">▶</span> Hold aufheben';
+        btn.classList.add('on-hold');
+        btn.closest('.vorgang-card')?.classList.add('on-hold');
+    } else {
+        btn.innerHTML = '<span class="hold-icon">⏸</span> Auf Hold – manuell prüfen';
+        btn.classList.remove('on-hold');
+        btn.closest('.vorgang-card')?.classList.remove('on-hold');
+    }
 }
 
 /**
@@ -561,10 +622,11 @@ function escapeHtml(str) {
 // Default export
 export default {
     init,
-    removeFile
+    removeFile,
+    toggleHold
 };
 
 // Global export
 if (typeof window !== 'undefined') {
-    window.AILanding = { init, removeFile };
+    window.AILanding = { init, removeFile, toggleHold };
 }

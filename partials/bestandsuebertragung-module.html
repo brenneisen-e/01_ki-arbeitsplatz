@@ -1008,6 +1008,69 @@ ERGO Maklerservice</div>
 
                     <div class="prozess-connector"><span>&darr;</span></div>
 
+                    <!-- === SOLL: Ansatzpunkt direkt zwischen Schritt 1 und 2 === -->
+                    <div class="prozess-soll-inline">
+                        <div class="soll-inline-header">
+                            <span class="prozess-label prozess-label-soll">SOLL</span>
+                            <span class="soll-inline-title">Ansatzpunkt: KI-Agentensystem hier einsetzen</span>
+                        </div>
+                        <div class="soll-inline-body">
+                            <div class="improvement-icon">&#9672;</div>
+                            <div class="improvement-body">
+                                <h4>KI-Agentensystem zur vollst&auml;ndigen Vorpr&uuml;fung</h4>
+                                <p>Direkt nach Eingang der E-Mail im Gruppenpostfach wird diese durch ein KI-Agentensystem komplett gepr&uuml;ft &ndash; noch bevor sie ins Postkorbsystem gelangt.</p>
+                                <div class="improvement-benefits">
+                                    <div class="benefit-item">
+                                        <span class="benefit-icon">&#10003;</span>
+                                        <div>
+                                            <strong>Vollst&auml;ndige Analyse inkl. Anh&auml;nge</strong>
+                                            <p>KI liest nicht nur den E-Mail-Text, sondern auch Word-Dokumente, Excel-Listen und Maklervollmachten aus den Anh&auml;ngen.</p>
+                                        </div>
+                                    </div>
+                                    <div class="benefit-item">
+                                        <span class="benefit-icon">&#10003;</span>
+                                        <div>
+                                            <strong>Auch Komplex-Vorg&auml;nge automatisierbar</strong>
+                                            <p>Excel-Listen mit mehreren Vertr&auml;gen werden automatisch in Einzelvorg&auml;nge aufgesplittet. Mails mit &bdquo;siehe Anlage&ldquo; werden durch Anhang-Analyse aufgel&ouml;st.</p>
+                                        </div>
+                                    </div>
+                                    <div class="benefit-item">
+                                        <span class="benefit-icon">&#10003;</span>
+                                        <div>
+                                            <strong>Manuelle Pr&uuml;fung nur noch f&uuml;r Sonderf&auml;lle</strong>
+                                            <p>Standard-Vorg&auml;nge werden automatisch klassifiziert und f&uuml;r Robotics vorbereitet. Sachbearbeiter pr&uuml;fen nur noch Ausnahmen.</p>
+                                        </div>
+                                    </div>
+                                    <div class="benefit-item">
+                                        <span class="benefit-icon">&#10003;</span>
+                                        <div>
+                                            <strong>Maklervollmacht-Erkennung</strong>
+                                            <p>Automatische Pr&uuml;fung ob eine g&uuml;ltige, unterschriebene Maklervollmacht beiliegt &ndash; fehlende Dokumente werden direkt gemeldet.</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="improvement-flow">
+                                    <h5>Neuer Ablauf (ersetzt Schritte 2&ndash;6):</h5>
+                                    <div class="mini-flow">
+                                        <span class="mini-step mini-input">E-Mail Eingang</span>
+                                        <span class="mini-arrow">&rarr;</span>
+                                        <span class="mini-step mini-ai">KI-Agent pr&uuml;ft E-Mail + Anh&auml;nge</span>
+                                        <span class="mini-arrow">&rarr;</span>
+                                        <span class="mini-step mini-decision">Klassifikation &amp; Datenextraktion</span>
+                                        <span class="mini-arrow">&rarr;</span>
+                                        <span class="mini-step mini-output">Direkt Robotics-ready</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="prozess-connector prozess-connector-ist">
+                        <span>&darr;</span>
+                        <span class="connector-label">IST: heutiger Ablauf</span>
+                    </div>
+
                     <!-- Step 2: Weiterleitung Postkorbsystem -->
                     <div class="prozess-step step-system">
                         <div class="step-number">2</div>
@@ -1133,76 +1196,14 @@ ERGO Maklerservice</div>
                 </div>
             </div>
 
-            <!-- ===== Ansatzpunkte / SOLL ===== -->
-            <div class="prozess-section prozess-section-soll">
+            <!-- ===== Vergleich IST vs SOLL ===== -->
+            <div class="prozess-section">
                 <div class="prozess-section-header">
                     <span class="prozess-label prozess-label-soll">SOLL</span>
-                    <h3>Optimierungspotenzial</h3>
+                    <h3>Vergleich IST vs. SOLL</h3>
                 </div>
-
-                <div class="prozess-improvements">
-
-                    <!-- Ansatzpunkt 1 -->
-                    <div class="improvement-card improvement-primary">
-                        <div class="improvement-position">
-                            <span class="improvement-arrow">&#10140;</span>
-                            <span>Ansatzpunkt: Vor dem Postkorbsystem (zwischen Schritt 1 und 2)</span>
-                        </div>
-                        <div class="improvement-content">
-                            <div class="improvement-icon">&#9672;</div>
-                            <div class="improvement-body">
-                                <h4>KI-Agentensystem zur vollst&auml;ndigen Vorpr&uuml;fung</h4>
-                                <p>Direkt nach Eingang der E-Mail im Gruppenpostfach wird diese durch ein KI-Agentensystem komplett gepr&uuml;ft &ndash; noch bevor sie ins Postkorbsystem gelangt.</p>
-                                <div class="improvement-benefits">
-                                    <div class="benefit-item">
-                                        <span class="benefit-icon">&#10003;</span>
-                                        <div>
-                                            <strong>Vollst&auml;ndige Analyse inkl. Anh&auml;nge</strong>
-                                            <p>KI liest nicht nur den E-Mail-Text, sondern auch Word-Dokumente, Excel-Listen und Maklervollmachten aus den Anh&auml;ngen.</p>
-                                        </div>
-                                    </div>
-                                    <div class="benefit-item">
-                                        <span class="benefit-icon">&#10003;</span>
-                                        <div>
-                                            <strong>Auch Komplex-Vorg&auml;nge automatisierbar</strong>
-                                            <p>Excel-Listen mit mehreren Vertr&auml;gen werden automatisch in Einzelvorg&auml;nge aufgesplittet. Mails mit &bdquo;siehe Anlage&ldquo; werden durch Anhang-Analyse aufgel&ouml;st.</p>
-                                        </div>
-                                    </div>
-                                    <div class="benefit-item">
-                                        <span class="benefit-icon">&#10003;</span>
-                                        <div>
-                                            <strong>Manuelle Pr&uuml;fung nur noch f&uuml;r Sonderf&auml;lle</strong>
-                                            <p>Standard-Vorg&auml;nge werden automatisch klassifiziert und f&uuml;r Robotics vorbereitet. Sachbearbeiter pr&uuml;fen nur noch Ausnahmen.</p>
-                                        </div>
-                                    </div>
-                                    <div class="benefit-item">
-                                        <span class="benefit-icon">&#10003;</span>
-                                        <div>
-                                            <strong>Maklervollmacht-Erkennung</strong>
-                                            <p>Automatische Pr&uuml;fung ob eine g&uuml;ltige, unterschriebene Maklervollmacht beiliegt &ndash; fehlende Dokumente werden direkt gemeldet.</p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="improvement-flow">
-                                    <h5>Neuer Ablauf:</h5>
-                                    <div class="mini-flow">
-                                        <span class="mini-step mini-input">E-Mail eingang</span>
-                                        <span class="mini-arrow">&rarr;</span>
-                                        <span class="mini-step mini-ai">KI-Agent pr&uuml;ft E-Mail + Anh&auml;nge</span>
-                                        <span class="mini-arrow">&rarr;</span>
-                                        <span class="mini-step mini-decision">Klassifikation &amp; Datenextraktion</span>
-                                        <span class="mini-arrow">&rarr;</span>
-                                        <span class="mini-step mini-output">Direkt Robotics-ready</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Vergleich IST vs SOLL -->
-                    <div class="prozess-comparison">
-                        <h4>Vergleich IST vs. SOLL</h4>
+                <div class="prozess-comparison">
+                    <h4>Gegen&uuml;berstellung</h4>
                         <table class="comparison-table">
                             <thead>
                                 <tr>
@@ -1245,8 +1246,6 @@ ERGO Maklerservice</div>
                             </tbody>
                         </table>
                     </div>
-
-                </div>
             </div>
 
         </div>

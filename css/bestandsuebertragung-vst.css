@@ -2899,6 +2899,62 @@ body {
     white-space: nowrap;
 }
 
+/* Inline SOLL Block (between steps) */
+.bestand-page .prozess-soll-inline {
+    border: 2px solid #86efac;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    margin: 0.25rem 0 0.25rem 42px;
+    background: #f0fdf4;
+}
+
+.bestand-page .soll-inline-header {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.6rem 1.25rem;
+    background: #dcfce7;
+    border-bottom: 1px solid #bbf7d0;
+}
+
+.bestand-page .soll-inline-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #065f46;
+}
+
+.bestand-page .soll-inline-body {
+    display: flex;
+    gap: 1.25rem;
+    padding: 1.25rem;
+    background: white;
+}
+
+.bestand-page .prozess-connector-ist {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 4px 0;
+    gap: 2px;
+}
+
+.bestand-page .prozess-connector-ist span:first-child {
+    color: var(--gray-400);
+    font-size: 1.25rem;
+    line-height: 1;
+}
+
+.bestand-page .connector-label {
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #94a3b8;
+    background: #f1f5f9;
+    padding: 1px 8px;
+    border-radius: 3px;
+}
+
 /* Improvement Cards */
 .bestand-page .prozess-improvements {
     display: flex;

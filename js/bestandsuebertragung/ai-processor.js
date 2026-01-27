@@ -565,14 +565,21 @@ NICHT als fehlend melden:
 - Informationen die in einem Excel-/Word-Anhang stehen (auch wenn nicht im E-Mail-Text)
 - Informationen die aus dem Kontext ableitbar sind
 - Gültigkeitsdatum, wenn kein konkreter Termin genannt wird (das ist normal)
+- NIEMALS Maklervollmacht-bezogene Einträge (z.B. "Vollmacht fehlt", "Vollmacht nicht unterschrieben") – die Maklervollmacht hat eigene dedizierte Felder (als_anhang, unterschrieben, manuell_pruefen) und wird dort bereits vollständig erfasst
 
 NUR als fehlend melden wenn es geschäftskritisch ist:
 - Versicherungsnummer fehlt komplett (nirgends im Dokument)
 - Kundenname fehlt komplett
 - Sparte/Vertragsart ist nicht identifizierbar
-- Maklervollmacht fehlt komplett (weder erwähnt noch beigefügt)
 
 Wenn NICHTS fehlt: leeres Array [] zurückgeben.
+
+## NOTIZEN – STRENGE REGELN
+Das Feld "notizen" darf KEINE Informationen wiederholen, die bereits in anderen Feldern erfasst sind:
+- KEINE Wiederholung von Maklervollmacht-Informationen (Status, Unterschrift, Anhang) – das steht im maklervollmacht-Objekt
+- KEINE Wiederholung von Kunde, Versicherungsnummer, Sparte, Makler – das steht in den eigenen Feldern
+- NUR echte Zusatzinformationen die in keinem anderen Feld Platz haben
+- Leerer String "" wenn keine echten Zusatzinfos vorhanden sind
 
 ## ANTWORTFORMAT (JSON)
 {

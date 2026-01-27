@@ -563,6 +563,12 @@ export async function analyzeEmailWithAI(emailData, attachments = []) {
 - maklerEmail: E-Mail-Adresse des Maklers
 - gueltigkeitsdatum: Gewünschter Übertragungstermin (TT.MM.JJJJ), NUR wenn explizit genannt
 - status: angefragt | bestaetigt | abgelehnt | in-bearbeitung
+- kategorie: "neu" | "erinnerung"
+
+## KATEGORIE – KLASSIFIZIERUNG
+Bestimme ob es sich um einen NEUEN Vorgang oder eine ERINNERUNG handelt:
+- **"erinnerung"**: Die E-Mail ist eine Nachfass-Mail, Erinnerung, Statusanfrage oder Rückfrage zu einem BESTEHENDEN/BEREITS BEKANNTEN Vorgang. Typische Merkmale: "Erinnerung" im Betreff, Bezug auf frühere Korrespondenz, "nochmals", "erneut", "wie besprochen", "Rückmeldung ausstehend", Status "in-bearbeitung", oder die E-Mail fragt nach dem Stand eines bereits eingereichten Antrags.
+- **"neu"**: Die E-Mail enthält einen NEUEN Übertragungsantrag/-auftrag, der zum ersten Mal eingereicht wird. Dies ist der Standardwert wenn nichts auf eine Erinnerung hindeutet.
 
 ## MAKLERVOLLMACHT – STRENGE REGELN
 Prüfe die Maklervollmacht anhand dieser Kriterien:
@@ -618,6 +624,7 @@ Das Feld "notizen" darf KEINE Informationen wiederholen, die bereits in anderen 
       "maklerEmail": "email@example.com",
       "gueltigkeitsdatum": "TT.MM.JJJJ oder null",
       "status": "angefragt",
+      "kategorie": "neu",
       "maklervollmacht": {
         "als_anhang": false,
         "nur_erwaehnt": true,

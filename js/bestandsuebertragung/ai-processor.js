@@ -329,10 +329,26 @@ function parseMimePart(partRaw) {
             const binaryStr = atob(rawBase64);
             if (filename.match(/\.docx$/i)) {
                 // Paragraphen-weise extrahieren für bessere Struktur
+                const signatureFonts = /segoe\s*script|lucida\s*handwriting|brush\s*script|comic\s*sans|dancing\s*script/i;
                 const paragraphs = binaryStr.split(/<\/w:p>/g);
                 const lines = paragraphs.map(p => {
-                    const textMatches = p.matchAll(/<w:t[^>]*>([^<]+)<\/w:t>/g);
-                    return Array.from(textMatches).map(m => m[1]).join('');
+                    // Runs einzeln prüfen um Schriftart zu erkennen
+                    const runs = p.matchAll(/<w:r>([\s\S]*?)<\/w:r>/g);
+                    let lineText = '';
+                    let hasSignatureFont = false;
+                    for (const run of runs) {
+                        const runXml = run[1];
+                        // Prüfe auf Signatur-Schriftart
+                        if (signatureFonts.test(runXml)) {
+                            hasSignatureFont = true;
+                        }
+                        // Text extrahieren
+                        const texts = runXml.matchAll(/<w:t[^>]*>([^<]+)<\/w:t>/g);
+                        for (const t of texts) lineText += t[1];
+                    }
+                    if (!lineText.trim()) return '';
+                    if (hasSignatureFont) return '[Handschriftliche Unterschrift: ' + lineText.trim() + ']';
+                    return lineText;
                 }).filter(line => line.trim());
                 textContent = lines.join('\n');
             } else if (filename.match(/\.xlsx$/i)) {
@@ -556,7 +572,7 @@ Prüfe die Maklervollmacht anhand dieser Kriterien:
 **nur_erwaehnt** (boolean): Wird eine Maklervollmacht nur im E-Mail-Text erwähnt, z.B. "per Post übermittelt", "wurde bereits geschickt", "liegt vor"? Wenn ja: true. Das bedeutet, die Vollmacht ist NICHT in dieser E-Mail enthalten.
 
 **unterschrieben** (boolean | null):
-- true: NUR wenn im Anhang-Dokument eine Unterschrift erkennbar ist (z.B. handschriftlicher Name, Wingdings-Zeichen, Bild-Signatur, oder Text der klar auf eine geleistete Unterschrift hinweist).
+- true: NUR wenn im Anhang-Dokument eine Unterschrift erkennbar ist (z.B. "[Handschriftliche Unterschrift: Name]"-Marker, handschriftlicher Name, Wingdings-Zeichen, Bild-Signatur, oder Text der klar auf eine geleistete Unterschrift hinweist). Der Marker "[Handschriftliche Unterschrift: ...]" bedeutet DEFINITIV unterschrieben = true.
 - false: Wenn das Vollmacht-Dokument als Anhang vorliegt, aber KEINE Unterschrift erkennbar ist (leere Unterschriftszeile, Platzhalter wie "________________________", "[Unterschrift]" o.ä.).
 - null: Wenn die Vollmacht nicht als Anhang vorliegt und daher nicht geprüft werden kann.
 

@@ -3031,6 +3031,26 @@ body {
     padding: 1.25rem;
 }
 
+.bestand-page .flow-soll-note {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin: 0 1.25rem 1.25rem;
+    padding: 10px 14px;
+    background: #fff8e1;
+    border: 1px solid #ffe082;
+    border-radius: 8px;
+    font-size: 0.88rem;
+    color: #7b6b00;
+    line-height: 1.5;
+}
+
+.bestand-page .flow-soll-note svg {
+    flex-shrink: 0;
+    color: #f9a825;
+    margin-top: 2px;
+}
+
 /* Improvement Icon (reused in SOLL card) */
 .bestand-page .improvement-icon {
     width: 48px;
@@ -4488,6 +4508,10 @@ body {
     font-weight: 500;
 }
 
+.bestand-page .detail-row-full {
+    grid-column: 1 / -1;
+}
+
 .bestand-page .mv-ok {
     color: #2e7d32;
     font-weight: 600;
@@ -4586,18 +4610,20 @@ body {
 
 /* MV Anmerkung - separate line below status */
 .bestand-page .mv-anmerkung-row {
-    margin-top: -4px;
+    margin-top: -2px;
+    padding-left: 88px;
 }
 
 .bestand-page .mv-anmerkung {
-    font-size: 12px;
-    color: #666;
+    font-size: 11px;
+    color: #777;
     font-style: italic;
-    padding: 6px 10px;
-    background: #f9f9f9;
+    padding: 4px 10px;
+    background: #f5f5f5;
     border-left: 2px solid #ddd;
     border-radius: 0 4px 4px 0;
-    line-height: 1.5;
+    line-height: 1.4;
+    display: inline-block;
 }
 
 /* Attachment Chips */
@@ -4639,13 +4665,21 @@ body {
 }
 
 .bestand-page .attachment-chip-icon {
-    font-size: 14px;
+    display: inline-flex;
+    align-items: center;
+    color: #666;
+}
+
+.bestand-page .attachment-chip-icon svg {
+    vertical-align: middle;
 }
 
 .bestand-page .attachment-preview-btn {
     margin-left: 2px;
-    font-size: 13px;
-    opacity: 0.6;
+    display: inline-flex;
+    align-items: center;
+    opacity: 0.5;
+    color: #666;
 }
 
 .bestand-page .attachment-chip.has-preview:hover .attachment-preview-btn {
@@ -4689,7 +4723,14 @@ body {
 }
 
 .attachment-modal-icon {
-    font-size: 20px;
+    display: flex;
+    align-items: center;
+    color: #555;
+}
+
+.attachment-modal-icon svg {
+    width: 20px;
+    height: 20px;
 }
 
 .attachment-modal-title {
@@ -4741,6 +4782,87 @@ body {
     border-radius: 8px;
     border: 1px solid #e8ecf0;
     margin: 0;
+}
+
+/* Word Preview */
+.attachment-word-preview {
+    padding: 24px 32px;
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    font-family: 'Georgia', 'Times New Roman', serif;
+    font-size: 14px;
+    line-height: 1.7;
+    color: #222;
+}
+
+.attachment-word-preview .word-heading {
+    font-weight: 700;
+    font-size: 16px;
+    text-align: center;
+    margin-bottom: 12px;
+}
+
+.attachment-word-preview .word-paragraph {
+    margin-bottom: 4px;
+}
+
+.attachment-word-preview .word-spacer {
+    height: 8px;
+}
+
+.attachment-word-preview .word-line {
+    color: #666;
+    margin-bottom: 4px;
+}
+
+/* Excel Preview */
+.attachment-excel-preview {
+    overflow-x: auto;
+}
+
+.excel-preview-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.excel-preview-table th,
+.excel-preview-table td {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+.excel-preview-table th {
+    background: #f0f4f8;
+    font-weight: 600;
+    color: #333;
+}
+
+.excel-preview-table tr:nth-child(even) td {
+    background: #fafbfc;
+}
+
+/* Download Button */
+.attachment-download-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    font-size: 12px;
+    font-weight: 500;
+    background: #f0f4f8;
+    color: #456;
+    border: 1px solid #d0d8e0;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.15s;
+    margin-left: auto;
+}
+
+.attachment-download-btn:hover {
+    background: #e3edf7;
 }
 
 /* Export Actions */

@@ -395,18 +395,21 @@ function renderResults() {
                 mvIcon = '✕'; mvText = 'Keine Vollmacht'; mvClass = 'mv-missing';
             }
 
-            if (mv.anmerkung) {
-                mvText += ` – ${escapeHtml(mv.anmerkung)}`;
-            }
+            const mvAnmerkung = mv.anmerkung ? escapeHtml(mv.anmerkung) : '';
 
             const needsManualCheck = mv.manuell_pruefen === true;
             const resultIdx = analysisResults.indexOf(result);
             const holdBtnId = `hold-${resultIdx}-${vi}`;
 
+            // Build attachment list for this result
+            const attachmentNames = result.email?.attachmentNames || [];
+            const attachmentTexts = result.email?.attachmentTexts || [];
+            const previewId = `preview-${resultIdx}-${vi}`;
+
             html += `
                 <div class="vorgang-card${needsManualCheck ? ' needs-check' : ''}">
                     <div class="vorgang-header">
-                        <span class="vorgang-kunde">${escapeHtml(vorgang.kunde || 'Unbekannt')}</span>
+                        <span class="vorgang-kunde"><span class="kunde-label">Versicherungsnehmer:</span> ${escapeHtml(vorgang.kunde || 'Unbekannt')}</span>
                         <span class="vorgang-status status-${vorgang.status || 'angefragt'}">${escapeHtml(vorgang.status || 'angefragt')}</span>
                     </div>
                     <div class="vorgang-details">
@@ -426,7 +429,28 @@ function renderResults() {
                             <span class="detail-label">Maklervollmacht:</span>
                             <span class="detail-value ${mvClass}"><span class="mv-icon">${mvIcon}</span> ${mvText}</span>
                         </div>
+                        ${mvAnmerkung ? `
+                        <div class="detail-row mv-anmerkung-row">
+                            <span class="detail-label"></span>
+                            <span class="detail-value mv-anmerkung">${mvAnmerkung}</span>
+                        </div>
+                        ` : ''}
                     </div>
+                    ${attachmentNames.length > 0 ? `
+                        <div class="vorgang-attachments">
+                            <strong>Anhänge:</strong>
+                            <div class="attachment-chips">
+                                ${attachmentNames.map((name, ai) => {
+                                    const hasPreview = attachmentTexts.some(t => t.filename === name);
+                                    return `<span class="attachment-chip${hasPreview ? ' has-preview' : ''}"${hasPreview ? ` onclick="window.AILanding.showAttachmentPreview(${resultIdx}, '${escapeHtml(name).replace(/'/g, "\\'")}')"` : ''}>
+                                        <span class="attachment-chip-icon">${getAttachmentIcon(name)}</span>
+                                        ${escapeHtml(name)}
+                                        ${hasPreview ? '<span class="attachment-preview-btn" title="Vorschau">👁</span>' : ''}
+                                    </span>`;
+                                }).join('')}
+                            </div>
+                        </div>
+                    ` : ''}
                     ${vorgang.fehlende_infos?.length ? `
                         <div class="vorgang-missing">
                             <strong>Fehlend:</strong> ${vorgang.fehlende_infos.join(', ')}
@@ -610,6 +634,73 @@ function showToast(message, type = 'info') {
 }
 
 /**
+ * Anhang-Icon basierend auf Dateiendung
+ */
+function getAttachmentIcon(filename) {
+    const ext = (filename || '').split('.').pop().toLowerCase();
+    const icons = {
+        pdf: '📄', doc: '📝', docx: '📝',
+        xls: '📊', xlsx: '📊',
+        jpg: '🖼', jpeg: '🖼', png: '🖼',
+        eml: '✉', msg: '✉'
+    };
+    return icons[ext] || '📎';
+}
+
+/**
+ * Anhang-Vorschau anzeigen
+ */
+export function showAttachmentPreview(resultIdx, filename) {
+    const result = analysisResults[resultIdx];
+    if (!result?.email?.attachmentTexts) return;
+
+    const att = result.email.attachmentTexts.find(t => t.filename === filename);
+    if (!att) {
+        showToast('Keine Vorschau verfügbar', 'warning');
+        return;
+    }
+
+    // Modal erstellen
+    let modal = document.getElementById('attachmentPreviewModal');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'attachmentPreviewModal';
+        modal.className = 'attachment-modal-overlay';
+        document.body.appendChild(modal);
+    }
+
+    const typeLabel = att.type === 'word' ? 'Word-Dokument' :
+                      att.type === 'excel' ? 'Excel-Tabelle' : 'Anhang';
+
+    modal.innerHTML = `
+        <div class="attachment-modal">
+            <div class="attachment-modal-header">
+                <span class="attachment-modal-icon">${getAttachmentIcon(filename)}</span>
+                <span class="attachment-modal-title">${escapeHtml(filename)}</span>
+                <span class="attachment-modal-type">${typeLabel}</span>
+                <button class="attachment-modal-close" onclick="window.AILanding.closeAttachmentPreview()">&times;</button>
+            </div>
+            <div class="attachment-modal-body">
+                <pre class="attachment-modal-content">${escapeHtml(att.content)}</pre>
+            </div>
+        </div>
+    `;
+
+    modal.style.display = 'flex';
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeAttachmentPreview();
+    });
+}
+
+/**
+ * Anhang-Vorschau schließen
+ */
+export function closeAttachmentPreview() {
+    const modal = document.getElementById('attachmentPreviewModal');
+    if (modal) modal.style.display = 'none';
+}
+
+/**
  * HTML escapen
  */
 function escapeHtml(str) {
@@ -623,10 +714,12 @@ function escapeHtml(str) {
 export default {
     init,
     removeFile,
-    toggleHold
+    toggleHold,
+    showAttachmentPreview,
+    closeAttachmentPreview
 };
 
 // Global export
 if (typeof window !== 'undefined') {
-    window.AILanding = { init, removeFile, toggleHold };
+    window.AILanding = { init, removeFile, toggleHold, showAttachmentPreview, closeAttachmentPreview };
 }

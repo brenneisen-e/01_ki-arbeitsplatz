@@ -1230,13 +1230,20 @@ Tel.: 0211-8867543`,
         id: 'komplett_sammel_otto_sommer',
         category: 'email-complex',
         title: 'Sammel\u00fcbertragung \u2013 Otto + Sommer (2 VN)',
-        description: 'Ein Makler beantragt \u00dcbertragungen f\u00fcr 2 verschiedene Versicherungsnehmer. MV nur f\u00fcr Otto vorhanden.',
-        tags: ['EML', 'DOCX', 'XLSX', '2 VN', 'Teilweise'],
+        description: 'Ein Makler beantragt \u00dcbertragungen f\u00fcr 2 verschiedene Versicherungsnehmer. Beide MVs vorhanden.',
+        tags: ['EML', 'DOCX', 'XLSX', '2 VN', 'Vollst\u00e4ndig'],
         filename: '17_Sammel_Otto_Sommer.eml',
         generate() {
-            const vollmacht = buildMaklervollmacht(
+            const vollmachtOtto = buildMaklervollmacht(
                 'Thomas Otto', '14.09.1976',
                 'Danziger Str. 8, 40477 D\u00fcsseldorf',
+                'Birgit Feld', 'Feld Finanzberatung',
+                'D\u00fcsseldorf', '13.01.2026',
+                true
+            );
+            const vollmachtSommer = buildMaklervollmacht(
+                'Karin Sommer', '02.05.1983',
+                'Rethelstr. 22, 40237 D\u00fcsseldorf',
                 'Birgit Feld', 'Feld Finanzberatung',
                 'D\u00fcsseldorf', '13.01.2026',
                 true
@@ -1248,7 +1255,7 @@ Tel.: 0211-8867543`,
             return createEml({
                 from: '"Birgit Feld" <birgit.feld@feld-finanz.de>',
                 to: 'maklerservice@ergo.de',
-                subject: 'Bestands\u00fcbertragung Otto + Sommer \u2013 Vertragsliste + Vollmacht',
+                subject: 'Bestands\u00fcbertragung Otto + Sommer \u2013 Vollmachten + Vertragsliste',
                 date: 'Tue, 14 Jan 2026 09:20:00 +0100',
                 body: `Sehr geehrte Damen und Herren,
 
@@ -1261,11 +1268,10 @@ Gew\u00fcnschtes \u00dcbertragungsdatum f\u00fcr beide: 01.03.2026
 
 Anbei:
 - Unterschriebene Maklervollmacht f\u00fcr Herrn Otto
+- Unterschriebene Maklervollmacht f\u00fcr Frau Sommer
 - Vertragsliste mit beiden Vertr\u00e4gen
 
-Die Maklervollmacht f\u00fcr Frau Sommer folgt in den n\u00e4chsten Tagen per Post.
-
-Bitte best\u00e4tigen Sie die \u00dcbertragung.
+Bitte best\u00e4tigen Sie die \u00dcbertragung f\u00fcr beide Kunden.
 
 Mit freundlichen Gr\u00fc\u00dfen
 
@@ -1277,7 +1283,12 @@ Tel.: 0211-5567890`,
                     {
                         filename: 'Maklervollmacht_Otto.docx',
                         mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-                        data: vollmacht
+                        data: vollmachtOtto
+                    },
+                    {
+                        filename: 'Maklervollmacht_Sommer.docx',
+                        mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                        data: vollmachtSommer
                     },
                     {
                         filename: 'Vertragsliste_Otto_Sommer.xlsx',

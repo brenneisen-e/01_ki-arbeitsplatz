@@ -4486,8 +4486,74 @@ body {
     font-weight: 500;
 }
 
-.bestand-page .mv-status {
+.bestand-page .mv-ok {
+    color: #2e7d32;
     font-weight: 600;
+}
+
+.bestand-page .mv-warn {
+    color: #e65100;
+    font-weight: 600;
+}
+
+.bestand-page .mv-missing {
+    color: #c62828;
+    font-weight: 600;
+}
+
+.bestand-page .mv-icon {
+    display: inline-block;
+    width: 16px;
+    text-align: center;
+}
+
+.bestand-page .vorgang-card.needs-check {
+    border-left: 3px solid #e65100;
+}
+
+.bestand-page .vorgang-card.on-hold {
+    opacity: 0.65;
+    border-left: 3px solid #9e9e9e;
+    background: #fafafa;
+}
+
+.bestand-page .vorgang-actions {
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid #eee;
+}
+
+.bestand-page .btn-hold {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    font-size: 12px;
+    font-weight: 500;
+    background: #fff3e0;
+    color: #e65100;
+    border: 1px solid #ffcc80;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+}
+
+.bestand-page .btn-hold:hover {
+    background: #ffe0b2;
+}
+
+.bestand-page .btn-hold.on-hold {
+    background: #e8f5e9;
+    color: #2e7d32;
+    border-color: #a5d6a7;
+}
+
+.bestand-page .btn-hold.on-hold:hover {
+    background: #c8e6c9;
+}
+
+.bestand-page .hold-icon {
+    font-size: 13px;
 }
 
 .bestand-page .vorgang-missing {

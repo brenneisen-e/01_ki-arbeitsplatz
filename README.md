@@ -21,118 +21,74 @@ Refactored von [VSTEike](https://github.com/brenneisen-e/VSTEike) (Stand: Januar
 - **Charts**: Chart.js 4.4, D3.js 7.8
 - **Karten**: Leaflet.js 1.9 (Regierungsbezirk-Ebene)
 - **Export**: html2canvas, jsPDF
-- **KI-Chat**: API-Anbindung (konfigurierbar, siehe API_SETUP.md)
+- **KI-Chat**: API-Anbindung (konfigurierbar, siehe docs/API_SETUP.md)
 
 ## Projektstruktur
 
 ```
 kiarbeitsplatz/
 |
-|-- index.html                          Haupt-Dashboard + Landing Page
-|-- Provisionssimulation.html           Standalone Provisionssimulation
-|-- Risikoscoring_vDraft.html           Standalone Risikoscoring
-|-- csv-generator.html                  Test-Daten Generator
+|-- index.html                      Haupt-Dashboard + Landing Page
+|-- Provisionssimulation.html       Standalone-Seiten
+|-- Risikoscoring_vDraft.html
+|-- csv-generator.html              Test-Daten Generator
 |
 |-- css/
-|   |-- variables.css                   Design-System (Farben, Spacing, Shadows)
-|   |-- shared.css                      Gemeinsame Styles
-|   |-- styles.css                      Haupt-Dashboard Styles
-|   |-- banken.css                      Banken-Modul
-|   |-- bestandsuebertragung-vst.css    Bestandsuebertragung
-|   |-- pmo-toolbox.css                 PMO-Toolbox
-|   |-- provisionssimulation.css        Provisionssimulation
-|   |-- risikoscoring.css               Risikoscoring
-|   |-- finanzplanung.css               Finanzplanung
-|   |-- guided-tour.css                 Demo-Tour
-|   |-- sales-report.css                Vertriebsbericht
-|   +-- pmo-modules/                    PMO CSS-Submodule
+|   |-- variables.css               Design-Tokens (Farben, Spacing, Shadows)
+|   |-- shared.css                  Gemeinsame Styles
+|   |-- styles.css                  Dashboard-Styles
+|   |-- [modul].css                 Je ein Stylesheet pro Modul
+|   +-- pmo-modules/                PMO CSS-Submodule
 |
 |-- js/
-|   |-- config.js                       KPI-Definitionen, Faktoren
-|   |-- data.js                         State-Management, Daten-Aggregation
-|   |-- utils.js                        Hilfsfunktionen
-|   |-- main.js                         Dashboard-Initialisierung
-|   |-- charts.js                       Chart.js Wrapper (Linie, Bar, Forecast)
-|   |-- tables.js                       Tabellen-Rendering (Agentur, Bundesland, Landkreis)
-|   |-- chat.js                         KI-Chat fuer Dashboard
-|   |-- landing.js                      Landing Page mit Einstellungen und Chat
-|   |-- banken.js                       Banken-Modul (CRM, Segmentierung, Prozesse)
-|   |-- banken-chat.js                  Chat-Logik fuer Banken-Modul
-|   |-- risikoscoring.js                Scoring-Berechnung und -Darstellung
-|   |-- provisionssimulation.js         Provisionsberechnung
-|   |-- sales-report.js                 Vertriebsbericht mit KI-Zusammenfassung
-|   |-- agentur-overview.js             Einzelansicht Agentur-Profil
-|   |-- map-counties.js                 Regierungsbezirk-Karte (Leaflet)
-|   |-- finanzplanung.js                Finanzplanung-Modul
-|   |-- guided-tour.js                  Interaktive Demo-Tour
-|   |-- names.js                        Namensdatenbank fuer Demo-Daten
-|   |-- page-id-tracker.js              Seitennavigation und Tracking
-|   |-- speaker-notes.js                Presenter-Notizen
+|   |-- main.js                     Dashboard-Initialisierung
+|   |-- config.js                   KPI-Definitionen, Faktoren
+|   |-- data.js                     State-Management, Daten-Aggregation
+|   |-- utils.js                    Hilfsfunktionen
+|   |-- charts.js                   Chart.js Wrapper
+|   |-- tables.js                   Tabellen-Rendering
+|   |-- chat.js                     KI-Chat (Dashboard)
+|   |-- landing.js                  Landing Page + Chat
+|   |-- banken.js                   Banken-Modul
+|   |-- banken-chat.js              Chat (Banken)
+|   |-- map-counties.js             Regierungsbezirk-Karte (Leaflet)
+|   |-- sales-report.js             Vertriebsbericht
+|   |-- agentur-overview.js         Agentur-Profil
+|   |-- ...                         Weitere Modul-Dateien
 |   |
-|   |-- bestandsuebertragung/           Bestandsuebertragung (neues Modul)
-|   |   |-- index.js                    Modul-Entry-Point
-|   |   |-- app.js                      Haupt-Applikationslogik
-|   |   |-- ui.js                       UI-Rendering
-|   |   |-- ai-processor.js             KI-Analyse fuer Dokumente
-|   |   |-- ai-landing.js               Upload-Oberflaeche mit KI
-|   |   |-- demo-data.js                Demo-Daten
-|   |   |-- demo-files.js               Simulierte Dateien
-|   |   |-- export.js                   Export-Funktionen
-|   |   |-- extractor.js                Daten-Extraktion
-|   |   |-- matcher.js                  Matching-Logik
-|   |   +-- storage.js                  Persistenz
+|   |-- bestandsuebertragung/       Bestandsuebertragung-Modul
+|   |   |-- index.js                Entry-Point
+|   |   |-- app.js                  Applikationslogik
+|   |   |-- ui.js                   UI-Rendering
+|   |   |-- ai-processor.js         KI-Analyse
+|   |   +-- ...                     Export, Matching, Demo-Daten
 |   |
 |   |-- banken/
-|   |   +-- feedback.js                 Feedback-System (Backend-API)
+|   |   +-- feedback.js             Feedback-System
 |   |
-|   |-- modules/                        ES6-Module (Migration in Arbeit)
-|   |   |-- main.esm.js                 Entry-Point
-|   |   |-- config.esm.js               KPI-Definitionen
-|   |   |-- state.esm.js                State-Management
-|   |   |-- data-functions.esm.js       Daten-Aggregation
-|   |   |-- charts.esm.js               Chart-Funktionen
-|   |   |-- tables.esm.js               Tabellen-Funktionen
-|   |   |-- map.esm.js                  Karten-Funktionen
-|   |   |-- utils.esm.js                Hilfsfunktionen
-|   |   |-- pmo-toolbox.esm.js          PMO-Toolbox komplett
-|   |   +-- pmo/                        PMO-Submodule
+|   |-- modules/                    ES6-Module (Migration in Arbeit)
+|   |   |-- *.esm.js               Modul-Pendants der Kernlogik
+|   |   +-- pmo/                    PMO-Submodule
 |   |
-|   +-- bestand-*.js                    Legacy Bestandsuebertragung (7 Dateien)
+|   +-- bestand-*.js                Legacy Bestandsuebertragung
 |
-|-- partials/
-|   |-- banken-module.html              Banken Container
-|   |-- banken/                         Banken Sub-Komponenten
-|   |   |-- header.html                 Modul-Header und Navigation
-|   |   |-- section-segmentierung.html  Willingness/Ability-Matrix
-|   |   |-- section-aufgaben.html       Aufgabenverwaltung
-|   |   |-- section-npl.html            NPL-Uebersicht
-|   |   |-- section-stage2.html         Stage-2-Faelle
-|   |   |-- modal-customer-detail.html  Kunden-Detail-Modal
-|   |   |-- modal-document-scanner.html Dokumenten-Scanner
-|   |   +-- crm-profile-view.html       CRM-Profilansicht
+|-- partials/                       HTML-Templates (per fetch eingebunden)
+|   |-- banken-module.html          Banken Container
+|   |-- banken/                     Banken Sub-Komponenten (8 Templates)
 |   |-- bestandsuebertragung-module.html
 |   |-- pmo-toolbox-module.html
 |   +-- risikoscoring-module.html
 |
 |-- assets/
-|   |-- geo/                            GeoJSON (Regierungsbezirke)
-|   +-- images/                         Bilder und Icons
+|   |-- geo/                        GeoJSON (Regierungsbezirke)
+|   +-- images/
 |
-|-- cloudflare/                            Hosting-Konfiguration (optional)
-|   |-- setup.sh                        Setup-Skript
-|   |-- setup-cloudflare.js             Worker-Konfiguration
-|   |-- feedback-worker.js              Feedback-API Worker
-|   +-- SETUP.md                        Setup-Anleitung
+|-- cloudflare/                     Hosting-Konfiguration (optional)
 |
 |-- data/
-|   +-- mock-data.csv                   Beispieldaten
+|   +-- mock-data.csv               Beispieldaten
 |
-+-- docs/
-    |-- CHANGELOG.md -> ../CHANGELOG.md
-    |-- API_SETUP.md -> ../API_SETUP.md
-    |-- ES6_MIGRATION_STRATEGY.md -> ../ES6_MIGRATION_STRATEGY.md
-    |-- FEATURE_CHECKLIST.md -> ../FEATURE_CHECKLIST.md
-    +-- OPTIMIZATIONS.md -> ../OPTIMIZATIONS.md
++-- docs/                           Projekt-Dokumentation
 ```
 
 ## Lokale Entwicklung
@@ -147,7 +103,7 @@ npx serve .
 
 Dann `http://localhost:8000` im Browser oeffnen.
 
-Die Anwendung laeuft vollstaendig lokal im Browser. Fuer die KI-Chat-Funktion wird ein API-Endpoint benoetigt (siehe [API_SETUP.md](./API_SETUP.md)).
+Die Anwendung laeuft vollstaendig lokal im Browser. Fuer die KI-Chat-Funktion wird ein API-Endpoint benoetigt (siehe [API_SETUP.md](./docs/API_SETUP.md)).
 
 ## CSS Design-System
 
@@ -174,11 +130,11 @@ Die Anwendung laeuft vollstaendig lokal im Browser. Fuer die KI-Chat-Funktion wi
 
 | Datei | Inhalt |
 |-------|--------|
-| [CHANGELOG.md](./CHANGELOG.md) | Aenderungshistorie |
-| [FEATURE_CHECKLIST.md](./FEATURE_CHECKLIST.md) | Feature-Checkliste |
-| [ES6_MIGRATION_STRATEGY.md](./ES6_MIGRATION_STRATEGY.md) | ES6-Modul-Migration |
-| [API_SETUP.md](./API_SETUP.md) | API-Konfiguration |
-| [OPTIMIZATIONS.md](./OPTIMIZATIONS.md) | Performance-Hinweise |
+| [CHANGELOG.md](./docs/CHANGELOG.md) | Aenderungshistorie |
+| [FEATURE_CHECKLIST.md](./docs/FEATURE_CHECKLIST.md) | Feature-Checkliste |
+| [ES6_MIGRATION_STRATEGY.md](./docs/ES6_MIGRATION_STRATEGY.md) | ES6-Modul-Migration |
+| [API_SETUP.md](./docs/API_SETUP.md) | API-Konfiguration |
+| [OPTIMIZATIONS.md](./docs/OPTIMIZATIONS.md) | Performance-Hinweise |
 
 ## Lizenz
 

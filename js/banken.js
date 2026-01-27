@@ -25,11 +25,11 @@ function initFeedbackSystem() {
     initAuthorSelect();
 
     if (USE_CLOUDFLARE) {
-        console.log('✅ Cloudflare Feedback System aktiv');
+        console.log('Cloudflare Feedback System aktiv');
         loadFeedbackFromCloudflare();
     } else {
-        console.log('⚠️ Cloudflare nicht konfiguriert, nutze LocalStorage');
-        console.log('📝 Konfiguriere FEEDBACK_API_URL in banken.js für persistente Speicherung');
+        console.log('Cloudflare nicht konfiguriert, nutze LocalStorage');
+        console.log('Konfiguriere FEEDBACK_API_URL in banken.js fuer persistente Speicherung');
         loadFeedbackFromLocalStorage();
     }
 }
@@ -206,7 +206,7 @@ async function saveFeedbackToCloudflare(feedback) {
 async function loadFeedbackFromCloudflare() {
     // Verwende vorgeladene Daten falls verfügbar
     if (window.preloadedFeedback && !window.feedbackAlreadyLoaded) {
-        console.log('📦 Verwende vorgeladene Feedback-Daten');
+        console.log('Verwende vorgeladene Feedback-Daten');
         renderFeedbackList(window.preloadedFeedback);
         updateFeedbackBadge(window.preloadedFeedback.length);
         window.feedbackAlreadyLoaded = true;
@@ -214,20 +214,20 @@ async function loadFeedbackFromCloudflare() {
     }
 
     try {
-        console.log('📡 Lade Feedback von Cloudflare:', FEEDBACK_API_URL);
+        console.log('Lade Feedback von Cloudflare:', FEEDBACK_API_URL);
         const response = await fetch(`${FEEDBACK_API_URL}/feedback`);
         const result = await response.json();
 
         if (result.success) {
-            console.log(`✅ ${result.count} Feedbacks von Cloudflare geladen`);
+            console.log(`${result.count} Feedbacks von Cloudflare geladen`);
             renderFeedbackList(result.data);
             updateFeedbackBadge(result.count);
         } else {
             throw new Error(result.error || 'Laden fehlgeschlagen');
         }
     } catch (error) {
-        console.error('❌ Cloudflare Laden Fehler:', error);
-        console.log('⚠️ Fallback zu LocalStorage...');
+        console.error('Cloudflare Laden Fehler:', error);
+        console.log('Fallback zu LocalStorage...');
         loadFeedbackFromLocalStorage();
     }
 }
@@ -259,7 +259,7 @@ function renderFeedbackList(feedbacks) {
 
     // Debug: Anzahl Feedbacks mit Screenshots
     const withScreenshots = feedbacks.filter(f => f.screenshot).length;
-    console.log(`📋 Rendere ${feedbacks.length} Feedbacks (${withScreenshots} mit Screenshot)`);
+    console.log(`Rendere ${feedbacks.length} Feedbacks (${withScreenshots} mit Screenshot)`);
 
     if (feedbacks.length === 0) {
         listEl.innerHTML = '<div class="feedback-empty">Noch keine Kommentare vorhanden.</div>';
@@ -335,7 +335,7 @@ function openFeedbackDetail(index) {
     const fb = currentFeedbackList[index];
     if (!fb) return;
 
-    console.log(`📝 Öffne Feedback Detail #${index}:`, fb.id, 'Screenshot:', fb.screenshot ? 'Ja (' + fb.screenshot.length + ' bytes)' : 'Nein');
+    console.log(`Öffne Feedback Detail #${index}:`, fb.id, 'Screenshot:', fb.screenshot ? 'Ja (' + fb.screenshot.length + ' bytes)' : 'Nein');
 
     const typeLabels = {
         'verbesserung': 'Verbesserung',
@@ -2132,7 +2132,7 @@ function submitTaskCompletion() {
             id: Date.now().toString(),
             type: 'aufgabe',
             typeLabel: 'Aufgabe erledigt',
-            text: `**${taskTitle}**\n\n**Problem:** ${problem}\n\n**Lösung:** ${solution}\n\n✅ Status: Erledigt`,
+            text: `**${taskTitle}**\n\n**Problem:** ${problem}\n\n**Lösung:** ${solution}\n\nStatus: Erledigt`,
             author: localStorage.getItem('feedbackAuthor') || 'Eike',
             timestamp: new Date().toISOString(),
             isCompleted: true
@@ -7850,9 +7850,9 @@ async function printToolOverview() {
 
             if (screenshot) {
                 screenshots.push({ name: step.name, data: screenshot });
-                console.log(`✅ Screenshot ${i + 1}: ${step.name}`);
+                console.log(`Screenshot ${i + 1}: ${step.name}`);
             } else {
-                console.warn(`⚠️ Kein Screenshot für: ${step.name}`);
+                console.warn(`Kein Screenshot für: ${step.name}`);
             }
 
             await delay(300);
@@ -8284,4 +8284,4 @@ document.addEventListener('DOMContentLoaded', function() {
     restoreCollapsedSections();
 });
 
-console.log('✅ banken.js geladen');
+console.log('banken.js geladen');

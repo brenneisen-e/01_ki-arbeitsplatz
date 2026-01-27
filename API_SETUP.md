@@ -32,7 +32,7 @@ Der Mock-Modus bietet:
 ### Schritt 2: API-Key konfigurieren
 
 #### Methode A: Direkt im Code (nur für lokale Entwicklung)
-⚠️ **WARNUNG**: Committen Sie niemals echte API-Keys in Git!
+**WARNUNG**: Committen Sie niemals echte API-Keys in Git!
 
 ```javascript
 // In js/chat-common.js
@@ -59,17 +59,17 @@ USE_MOCK_MODE=false
 ### Schritt 3: Testen
 1. Öffne das Dashboard
 2. Lade CSV-Daten hoch
-3. Öffne den Chat (💬 Button)
+3. Öffne den Chat (Chat-Button)
 4. Stelle eine Frage wie "Zeige die Top 5 Vermittler"
 5. Du solltest eine KI-generierte Antwort erhalten
 
 ## Sicherheitshinweise
 
-### ⚠️ NIEMALS:
-- ❌ API-Keys in Git committen
-- ❌ API-Keys im Client-Code für Produktion
-- ❌ API-Keys in öffentlichen Repositories
-- ❌ Denselben Key für mehrere Projekte nutzen
+### NIEMALS:
+- API-Keys in Git committen
+- API-Keys im Client-Code für Produktion
+- API-Keys in öffentlichen Repositories
+- Denselben Key für mehrere Projekte nutzen
 
 ### ✓ IMMER:
 - ✓ API-Keys in `.env.local` oder ähnlich speichern

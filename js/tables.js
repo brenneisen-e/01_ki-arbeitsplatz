@@ -184,9 +184,9 @@ function renderTable() {
 function updateAgenturSelector() {
     const selector = document.getElementById('agenturSelect');
 
-    // ✨ v18.3: agenturSelect existiert nicht mehr (ersetzt durch Multi-Select)
+    // v18.3: agenturSelect existiert nicht mehr (ersetzt durch Multi-Select)
     if (!selector) {
-        console.log('ℹ️ agenturSelect nicht gefunden - Multi-Select UI wird verwendet');
+        console.log('agenturSelect nicht gefunden - Multi-Select UI wird verwendet');
         return;
     }
 

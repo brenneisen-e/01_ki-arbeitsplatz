@@ -112,7 +112,7 @@ Original VSTEike Codebase von https://github.com/brenneisen-e/VSTEike
 - PMO-Toolbox
 - Provisionssimulation
 - CSV-Generator
-- KI-Chat-Integration (Claude API)
+- KI-Chat-Integration (KI-API)
 - Landkreis-Karten (Leaflet)
 - Charts (Chart.js)
 - Demo-Tour

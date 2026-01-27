@@ -192,7 +192,7 @@ export function updateAgenturSelector() {
     const selector = document.getElementById('agenturSelect');
 
     if (!selector) {
-        console.log('ℹ️ agenturSelect nicht gefunden - Multi-Select UI wird verwendet');
+        console.log('agenturSelect nicht gefunden - Multi-Select UI wird verwendet');
         return;
     }
 

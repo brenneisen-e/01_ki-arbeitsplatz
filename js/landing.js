@@ -4,7 +4,7 @@
 // CLAUDE API CONFIGURATION
 // ========================================
 
-// Claude API via Cloudflare Worker (nutze window, um Konflikte mit chat.js zu vermeiden)
+// API via Cloudflare Worker (nutze window, um Konflikte mit chat.js zu vermeiden)
 window.CLAUDE_WORKER_URL = window.CLAUDE_WORKER_URL || 'https://vst-claude-api.eike-3e2.workers.dev';
 window.CLAUDE_MODEL = window.CLAUDE_MODEL || 'claude-haiku-4-5-20251001';
 
@@ -47,13 +47,13 @@ function setupApiTokenInput() {
     // Worker-Modus Status anzeigen
     if (window.USE_WORKER) {
         statusDiv.className = 'api-token-status success';
-        statusDiv.textContent = '✅ Claude AI aktiv (via Worker)';
+        statusDiv.textContent = 'KI aktiv (via Worker)';
     } else {
         const existingToken = getApiToken();
         if (existingToken) {
             tokenInput.value = existingToken;
             statusDiv.className = 'api-token-status success';
-            statusDiv.textContent = '✅ API-Key gespeichert (KI-Modus aktiv)';
+            statusDiv.textContent = 'API-Key gespeichert (KI-Modus aktiv)';
         } else {
             statusDiv.className = 'api-token-status';
             statusDiv.textContent = 'ℹ️ Mock-Modus aktiv (vorgefertigte Antworten)';
@@ -91,7 +91,7 @@ function setupApiTokenInput() {
 
         if (saveApiToken(token)) {
             statusDiv.className = 'api-token-status success';
-            statusDiv.textContent = '✅ API-Key gespeichert! KI-Modus ist jetzt aktiv.';
+            statusDiv.textContent = 'API-Key gespeichert! KI-Modus ist jetzt aktiv.';
 
             // Update mock mode status
             window.USE_MOCK_MODE = false;
@@ -185,7 +185,7 @@ function handleQuickUpload(file) {
 
                 const landkreisInfo = hasLandkreis ? ' mit Landkreisen' : '';
                 statusDiv.className = 'upload-status success';
-                statusDiv.textContent = `✅ ${file.name} geladen (${parsedData.length} Tagesdaten → ${monthlyData.length} Monate${landkreisInfo})`;
+                statusDiv.textContent = `${file.name} geladen (${parsedData.length} Tagesdaten → ${monthlyData.length} Monate${landkreisInfo})`;
             } else if (hasMonth && !hasDay) {
                 // Monatsdaten
                 state.uploadedData = parsedData;
@@ -209,7 +209,7 @@ function handleQuickUpload(file) {
             // Update year filter if years are present
             if (hasYear && parsedData.length > 0) {
                 const years = [...new Set(parsedData.map(row => row.year))].sort();
-                console.log('📅 Gefundene Jahre:', years);
+                console.log('Gefundene Jahre:', years);
 
                 // Store years for Dashboard initialization
                 state.availableYears = years;
@@ -217,11 +217,11 @@ function handleQuickUpload(file) {
                 // Set current year to first available year if not already set
                 if (!years.includes(parseInt(state.filters.year))) {
                     state.filters.year = String(years[0]);
-                    console.log('📅 Jahr-Filter gesetzt auf:', years[0]);
+                    console.log('Jahr-Filter gesetzt auf:', years[0]);
                 }
             }
 
-            console.log('✅ Daten erfolgreich geladen:', parsedData.length, 'Zeilen');
+            console.log('Daten erfolgreich geladen:', parsedData.length, 'Zeilen');
 
         } catch (error) {
             console.error('Fehler beim Parsen:', error);
@@ -240,7 +240,7 @@ function handleQuickUpload(file) {
 
 // Open main dashboard - MIT CHAT!
 function openDashboard() {
-    console.log('📊 Dashboard öffnen...');
+    console.log('Dashboard öffnen...');
 
     // Hide landing page
     const landingPage = document.getElementById('landingPage');
@@ -263,7 +263,7 @@ function openDashboard() {
     setTimeout(function() {
         if (typeof waitForLibraries === 'function') {
             waitForLibraries(function() {
-                console.log('📚 Libraries geladen, initialisiere Dashboard...');
+                console.log('Libraries geladen, initialisiere Dashboard...');
 
                 // Update year filter if years were loaded from CSV
                 if (state.availableYears && state.availableYears.length > 0) {
@@ -278,42 +278,42 @@ function openDashboard() {
                             }
                         });
                         yearFilter.value = state.filters.year;
-                        console.log('📅 Jahr-Filter aktualisiert:', state.availableYears);
+                        console.log('Jahr-Filter aktualisiert:', state.availableYears);
                     }
                 }
 
                 // Update Agentur dropdown with uploaded data
                 if (typeof updateAgenturFilterDropdown === 'function') {
                     updateAgenturFilterDropdown();
-                    console.log('✅ Agentur-Filter Dropdown aktualisiert');
+                    console.log('Agentur-Filter Dropdown aktualisiert');
                 }
 
                 if (typeof initKPIGrid === 'function') {
                     initKPIGrid();
-                    console.log('✅ KPI Grid initialisiert');
+                    console.log('KPI Grid initialisiert');
                 }
 
                 if (typeof updateAllKPIs === 'function') {
                     updateAllKPIs();
-                    console.log('✅ KPIs aktualisiert');
+                    console.log('KPIs aktualisiert');
                 }
                 
                 setTimeout(() => {
                     if (typeof initMap === 'function') {
                         initMap();
-                        console.log('✅ Map initialisiert');
+                        console.log('Map initialisiert');
                     }
                 }, 500);
                 
                 // WICHTIG: Chat RICHTIG aktivieren!
                 setTimeout(() => {
-                    console.log('🤖 Initialisiere Chat...');
+                    console.log('Initialisiere Chat...');
                     
                     const chatWidget = document.getElementById('chatWidget');
                     const chatToggle = document.getElementById('chatToggle');
                     
                     if (!chatWidget || !chatToggle) {
-                        console.error('❌ Chat Elemente nicht gefunden!');
+                        console.error('Chat Elemente nicht gefunden!');
                         return;
                     }
                     
@@ -323,19 +323,19 @@ function openDashboard() {
                     
                     // Chat RICHTIG initialisieren (aus chat.js)
                     if (typeof initChat === 'function') {
-                        console.log('🔧 Rufe initChat() auf...');
+                        console.log('Rufe initChat() auf...');
                         initChat();
                     } else {
-                        console.error('❌ initChat() Funktion nicht gefunden!');
+                        console.error('initChat() Funktion nicht gefunden!');
                         
                         // Fallback: Manuell Event Listeners setzen
-                        console.log('🔄 Fallback: Setze Chat Event Listeners manuell...');
+                        console.log('Fallback: Setze Chat Event Listeners manuell...');
                         setupChatManually();
                     }
                 }, 1000);
             });
         } else {
-            console.error('❌ waitForLibraries nicht gefunden!');
+            console.error('waitForLibraries nicht gefunden!');
         }
     }, 100);
 }
@@ -350,16 +350,16 @@ function setupChatManually() {
     const chatWidget = document.getElementById('chatWidget');
     
     if (!chatSend || !chatInput) {
-        console.error('❌ Chat Input/Send Buttons nicht gefunden!');
+        console.error('Chat Input/Send Buttons nicht gefunden!');
         return;
     }
     
-    console.log('✅ Chat Elemente gefunden, setze Event Listeners...');
+    console.log('Chat Elemente gefunden, setze Event Listeners...');
     
     // Close chat
     if (chatClose) {
         chatClose.addEventListener('click', () => {
-            console.log('❌ Chat geschlossen');
+            console.log('Chat geschlossen');
             chatWidget.style.display = 'none';
             chatToggle.style.display = 'flex';
         });
@@ -368,18 +368,18 @@ function setupChatManually() {
     // Minimize chat
     if (chatMinimize) {
         chatMinimize.addEventListener('click', () => {
-            console.log('➖ Chat minimiert/maximiert');
+            console.log('Chat minimiert/maximiert');
             chatWidget.classList.toggle('minimized');
         });
     }
     
     // Send message
     chatSend.addEventListener('click', () => {
-        console.log('📤 Send Button geklickt');
+        console.log('Send Button geklickt');
         if (typeof sendMessage === 'function') {
             sendMessage();
         } else {
-            console.error('❌ sendMessage() nicht gefunden!');
+            console.error('sendMessage() nicht gefunden!');
         }
     });
     
@@ -387,11 +387,11 @@ function setupChatManually() {
     chatInput.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
-            console.log('⌨️ Enter gedrückt');
+            console.log('Enter gedrückt');
             if (typeof sendMessage === 'function') {
                 sendMessage();
             } else {
-                console.error('❌ sendMessage() nicht gefunden!');
+                console.error('sendMessage() nicht gefunden!');
             }
         }
     });
@@ -405,31 +405,31 @@ function setupChatManually() {
     // Toggle chat
     if (chatToggle) {
         chatToggle.addEventListener('click', () => {
-            console.log('💬 Chat Toggle geklickt');
+            console.log('Chat Toggle geklickt');
             chatWidget.style.display = 'flex';
             chatToggle.style.display = 'none';
             chatInput.focus();
         });
     }
     
-    console.log('✅ Chat manuell initialisiert!');
+    console.log('Chat manuell initialisiert!');
 }
 
 // Open upload dialog
 function openUploadDialog() {
-    console.log('📁 Öffne Upload-Dialog...');
+    console.log('Öffne Upload-Dialog...');
     document.getElementById('quickCsvUpload').click();
 }
 
 // Open CSV generator
 function openGenerator() {
-    console.log('⚙️ Öffne Generator...');
+    console.log('Öffne Generator...');
     window.location.href = 'csv-generator.html';
 }
 
 // Back to landing page (ohne Reload)
 function backToLanding() {
-    console.log('🏠 Zurück zur Landing Page...');
+    console.log('Zurück zur Landing Page...');
 
     const landingPage = document.getElementById('landingPage');
     const mainApp = document.getElementById('mainApp');
@@ -498,7 +498,7 @@ function initLandingChat() {
         chatInput.style.height = chatInput.scrollHeight + 'px';
     });
     
-    console.log('✅ Landing Chat initialisiert');
+    console.log('Landing Chat initialisiert');
 }
 
 // Send message in landing chat - NUTZT GLEICHE LOGIK WIE DASHBOARD
@@ -506,10 +506,10 @@ async function sendLandingChatMessage() {
     const chatInput = document.getElementById('landingChatInput');
     const message = chatInput.value.trim();
     
-    console.log('📤 Landing Nachricht senden:', message);
+    console.log('Landing Nachricht senden:', message);
     
     if (!message || isLandingChatProcessing) {
-        console.log('⚠️ Leere Nachricht oder bereits in Verarbeitung');
+        console.log('Leere Nachricht oder bereits in Verarbeitung');
         return;
     }
     
@@ -528,22 +528,22 @@ async function sendLandingChatMessage() {
     try {
         if (isUsingMockMode()) {
             // Mock response
-            console.log('🎭 Mock-Modus - Generiere Test-Antwort');
+            console.log('Mock-Modus - Generiere Test-Antwort');
             await new Promise(resolve => setTimeout(resolve, 1000));
             const mockResponse = generateLandingMockResponse(message);
             hideLandingChatTyping();
             addLandingChatMessage('assistant', mockResponse);
         } else {
-            // Real API call via Claude
-            console.log('🚀 Rufe Claude API auf...');
+            // Real API call via Worker
+            console.log('Rufe API auf...');
             await sendLandingMessageToClaude(message);
         }
         
     } catch (error) {
-        console.error('❌ Landing Chat Fehler:', error);
+        console.error('Landing Chat Fehler:', error);
         hideLandingChatTyping();
         // Fallback to mock response on API error
-        console.log('🔄 Fallback auf Mock-Antwort...');
+        console.log('Fallback auf Mock-Antwort...');
         const mockResponse = generateLandingMockResponse(message);
         addLandingChatMessage('assistant', mockResponse);
     }
@@ -551,14 +551,14 @@ async function sendLandingChatMessage() {
     isLandingChatProcessing = false;
 }
 
-// Send to Claude API via Worker
+// Send to API via Worker
 async function sendLandingMessageToClaude(message) {
-    console.log('🤖 Sende Anfrage an Claude API...');
+    console.log('Sende Anfrage an API...');
 
     // Prepare context about current data
     const dataContext = getLandingDataContext();
 
-    // System prompt for Claude
+    // System prompt
     const systemPrompt = `Du bist ein KI-Assistent für ein Versicherungs-Dashboard. Du hast Zugriff auf CSV-Daten und kannst Dashboard-Filter steuern.
 
 VERFÜGBARE FUNKTIONEN:
@@ -590,7 +590,7 @@ WICHTIG:
 - Antworte auf Deutsch und sei freundlich
 - Wenn keine Daten vorhanden sind, erkläre dass der User zuerst eine CSV hochladen oder zum Dashboard gehen sollte`;
 
-    // Build messages array for Claude
+    // Build messages array
     const messages = [
         {
             role: 'user',
@@ -612,7 +612,7 @@ USER FRAGE: ${message}`
         headers["anthropic-dangerous-direct-browser-access"] = "true";
     }
 
-    // Call Claude API
+    // Call API
     const response = await fetch(apiUrl, {
         method: "POST",
         headers: headers,
@@ -626,14 +626,14 @@ USER FRAGE: ${message}`
 
     if (!response.ok) {
         const errorText = await response.text();
-        console.error('❌ Claude API Fehler:', response.status, errorText);
+        console.error('API Fehler:', response.status, errorText);
         throw new Error(`API request failed: ${response.status}`);
     }
 
     const data = await response.json();
     const assistantMessage = data.content[0].text;
     
-    console.log('✅ API Antwort erhalten:', assistantMessage.substring(0, 100) + '...');
+    console.log('API Antwort erhalten:', assistantMessage.substring(0, 100) + '...');
     
     hideLandingChatTyping();
     addLandingChatMessage('assistant', assistantMessage);
@@ -643,7 +643,7 @@ USER FRAGE: ${message}`
         { role: 'assistant', content: assistantMessage }
     );
 
-    // ✨ NEU: Parse und führe Filter-Befehle aus
+    // NEU: Parse und führe Filter-Befehle aus
     await parseAndExecuteCommands(assistantMessage);
 }
 
@@ -811,7 +811,7 @@ Dieses Tool bietet Ihnen:
     // Prüfe ob Daten vorhanden sind
     if (!dailyRawData || dailyRawData.length === 0) {
         if (lowerMessage.includes('daten') || lowerMessage.includes('analyse') || lowerMessage.includes('zahlen')) {
-            return '📊 **Keine Daten vorhanden**\n\nBitte lade zuerst eine CSV-Datei hoch (unten in der Box) oder gehe zum Dashboard und generiere Test-Daten.\n\nDann kann ich dir bei der Analyse helfen! 🚀';
+            return '**Keine Daten vorhanden**\n\nBitte lade zuerst eine CSV-Datei hoch (unten in der Box) oder gehe zum Dashboard und generiere Test-Daten.\n\nDann kann ich dir bei der Analyse helfen!';
         }
     }
     
@@ -926,7 +926,7 @@ Dieses Tool bietet Ihnen:
         return 'Hallo! 👋 Ich kann dir beim Einstieg ins Dashboard helfen. Möchtest du eine CSV hochladen oder direkt zum Dashboard?';
     }
     
-    return `Ich habe deine Frage verstanden: "${message}"\n\n⚠️ **Mock-Modus aktiv** - Claude AI wird über den Worker konfiguriert.\n\n**Verfügbare Mock-Befehle:**\n• "Wie viele Daten haben wir?"\n• "Zeige Top 5 Vermittler"\n• "Wie ist die Performance von Freiburg?"`;
+    return `Ich habe deine Frage verstanden: "${message}"\n\n⚠️ **Mock-Modus aktiv** - KI wird über den Worker konfiguriert.\n\n**Verfügbare Mock-Befehle:**\n• "Wie viele Daten haben wir?"\n• "Zeige Top 5 Vermittler"\n• "Wie ist die Performance von Freiburg?"`;
 }
 
 // Add message to chat - Display in response container below input
@@ -1609,7 +1609,7 @@ function showTopRegionsInDashboardChat(regions, count, errorMessage = null) {
     }
 
     if (!chatBody) {
-        console.error('❌ Chat Body nicht gefunden');
+        console.error('Chat Body nicht gefunden');
         return;
     }
 
@@ -1779,7 +1779,7 @@ function exportTopRegionsExcel() {
  * Note: Shows best Vermittler across all regions, not filtered by selected regions
  */
 function showTopVermittlerInRegions() {
-    console.log('👥 Zeige Top 5 Vermittler (gesamt)...');
+    console.log('Zeige Top 5 Vermittler (gesamt)...');
 
     const rawData = window.dailyRawData || dailyRawData;
 
@@ -1820,7 +1820,7 @@ function showTopVermittlerInRegions() {
 
     // Get the IDs of the top 5 Vermittler
     const top5Ids = topVermittler.map(v => v.id);
-    console.log('🏆 Top 5 Vermittler IDs:', top5Ids);
+    console.log('Top 5 Vermittler IDs:', top5Ids);
 
     // Switch to table view with Agenturen data
     const dashboardView = document.getElementById('dashboardView');
@@ -2009,7 +2009,7 @@ function loadUserName() {
 
 // Open Agentur View (zeigt Agentur-Auswahl oder direkt die Übersicht)
 function openAgenturView() {
-    console.log('👤 Agenturansicht öffnen...');
+    console.log('Agenturansicht öffnen...');
 
     // Prüfe ob Daten vorhanden sind
     const rawData = window.dailyRawData || (typeof dailyRawData !== 'undefined' ? dailyRawData : null);
@@ -2058,7 +2058,7 @@ window.handleSingleRegionQuery = handleSingleRegionQuery;
 // WICHTIG: Entfernen Sie den ersten DOMContentLoaded von ganz oben!
 // Hier ist der einzige DOMContentLoaded Listener:
 window.addEventListener('DOMContentLoaded', function() {
-    console.log('🚀 Landing Page wird geladen...');
+    console.log('Landing Page wird geladen...');
 
     // Benutzername aus localStorage laden
     loadUserName();
@@ -2078,7 +2078,7 @@ window.addEventListener('DOMContentLoaded', function() {
         if (loadingAnim) loadingAnim.style.display = 'none';
         if (welcomeChat) welcomeChat.style.display = 'block';
 
-        console.log('✅ Welcome Chat angezeigt');
+        console.log('Welcome Chat angezeigt');
 
         // Dispatch event for Page ID Tracker (M-01)
         document.dispatchEvent(new CustomEvent('moduleChanged', {
@@ -2121,7 +2121,7 @@ function setNavigationEnabled(enabled) {
 let risikoscoringLoaded = false;
 
 async function openRisikoscoring() {
-    console.log('📊 Risikoscoring öffnen...');
+    console.log('Risikoscoring öffnen...');
 
     // Hide landing page
     const landingPage = document.getElementById('landingPage');
@@ -2159,7 +2159,7 @@ async function openRisikoscoring() {
                     if (typeof initRisikoscoring === 'function') {
                         initRisikoscoring();
                     }
-                    console.log('✅ Risikoscoring Modul geladen');
+                    console.log('Risikoscoring Modul geladen');
                 } else {
                     rsModule.innerHTML = '<div class="error-message">Fehler beim Laden des Risikoscoring-Moduls</div>';
                 }
@@ -2172,7 +2172,7 @@ async function openRisikoscoring() {
 }
 
 function closeRisikoscoring() {
-    console.log('📊 Risikoscoring schließen...');
+    console.log('Risikoscoring schließen...');
 
     // Hide risikoscoring module
     const rsModule = document.getElementById('risikoscoringModule');
@@ -2243,20 +2243,20 @@ function setupBestandNavFallback(moduleEl) {
             try {
                 if (typeof initBestandApp === 'function') {
                     initBestandApp();
-                    console.log('✅ Bestandsübertragung verzögert initialisiert');
+                    console.log('Bestandsübertragung verzögert initialisiert');
                 } else if (typeof BestandApp !== 'undefined' && typeof BestandApp.init === 'function') {
                     BestandApp.init();
-                    console.log('✅ Bestandsübertragung via BestandApp verzögert initialisiert');
+                    console.log('Bestandsübertragung via BestandApp verzögert initialisiert');
                 }
             } catch (e) {
-                console.error('❌ Verzögerte Initialisierung fehlgeschlagen:', e);
+                console.error('Verzögerte Initialisierung fehlgeschlagen:', e);
             }
         }, 500);
     }
 }
 
 async function openBestandsuebertragung() {
-    console.log('📄 Bestandsübertragung öffnen...');
+    console.log('Bestandsübertragung öffnen...');
 
     // Hide landing page
     const landingPage = document.getElementById('landingPage');
@@ -2319,7 +2319,7 @@ async function openBestandsuebertragung() {
                         if (bSettings.demoLoaded && Object.keys(bCases).length === 0) {
                             bSettings.demoLoaded = false;
                             localStorage.setItem('bestandsuebertragung_settings', JSON.stringify(bSettings));
-                            console.log('🔄 Stale demoLoaded flag zurückgesetzt');
+                            console.log('Stale demoLoaded flag zurückgesetzt');
                         }
                     } catch (e) { /* ignore */ }
 
@@ -2327,21 +2327,21 @@ async function openBestandsuebertragung() {
                     try {
                         if (typeof initBestandApp === 'function') {
                             initBestandApp();
-                            console.log('✅ Bestandsübertragung via initBestandApp() initialisiert');
+                            console.log('Bestandsübertragung via initBestandApp() initialisiert');
                         } else if (typeof BestandApp !== 'undefined' && typeof BestandApp.init === 'function') {
                             BestandApp.init();
-                            console.log('✅ Bestandsübertragung via BestandApp.init() initialisiert');
+                            console.log('Bestandsübertragung via BestandApp.init() initialisiert');
                         } else {
-                            console.warn('⚠️ initBestandApp nicht verfügbar, warte auf ESM-Modul...');
+                            console.warn('initBestandApp nicht verfügbar, warte auf ESM-Modul...');
                         }
                     } catch (initError) {
-                        console.error('❌ Fehler bei Bestandsübertragung-Initialisierung:', initError);
+                        console.error('Fehler bei Bestandsübertragung-Initialisierung:', initError);
                     }
 
                     // Fallback: ensure nav tabs work even if ESM init failed
                     setupBestandNavFallback(bestandModule);
 
-                    console.log('✅ Bestandsübertragung Modul geladen');
+                    console.log('Bestandsübertragung Modul geladen');
                 } else {
                     bestandModule.innerHTML = '<div class="error-message">Fehler beim Laden des Bestandsübertragung-Moduls</div>';
                 }
@@ -2364,7 +2364,7 @@ async function openBestandsuebertragung() {
 }
 
 function closeBestandsuebertragung() {
-    console.log('📄 Bestandsübertragung schließen...');
+    console.log('Bestandsübertragung schließen...');
 
     // Hide bestandsuebertragung module
     const bestandModule = document.getElementById('bestandsuebertragungModule');
@@ -2456,7 +2456,7 @@ function closeBestandsuebertragung() {
 let pmoToolboxLoaded = false;
 
 async function openPMOToolbox() {
-    console.log('📊 PMO Toolbox öffnen...');
+    console.log('PMO Toolbox öffnen...');
 
     // Hide landing page
     const landingPage = document.getElementById('landingPage');
@@ -2542,7 +2542,7 @@ async function openPMOToolbox() {
                         oldScript.parentNode.replaceChild(newScript, oldScript);
                     });
 
-                    console.log('✅ PMO Toolbox Modul geladen');
+                    console.log('PMO Toolbox Modul geladen');
                 } else {
                     pmoModule.innerHTML = '<div class="error-message">Fehler beim Laden des PMO Toolbox-Moduls</div>';
                 }
@@ -2555,7 +2555,7 @@ async function openPMOToolbox() {
 }
 
 function closePMOToolbox() {
-    console.log('📊 PMO Toolbox schließen...');
+    console.log('PMO Toolbox schließen...');
 
     // Hide PMO Toolbox module
     const pmoModule = document.getElementById('pmoToolboxModule');
@@ -2650,7 +2650,7 @@ function closePMOToolbox() {
  * Lädt automatisch die Standard-CSV-Daten beim Start
  */
 async function loadDefaultCSVData() {
-    console.log('📊 Lade Standard-CSV-Daten...');
+    console.log('Lade Standard-CSV-Daten...');
 
     // Start loading animation
     updateMainLoadingProgress(10, 'Initialisiere Anwendung...');
@@ -2687,15 +2687,15 @@ async function loadDefaultCSVData() {
         updateMainLoadingProgress(100, 'Fertig!');
         await sleep(400);
 
-        console.log('✅ Alle Daten geladen');
+        console.log('Alle Daten geladen');
 
     } catch (error) {
-        console.warn('⚠️ Fehler beim Laden der CSV-Daten:', error);
+        console.warn('Fehler beim Laden der CSV-Daten:', error);
         updateMainLoadingProgress(90, 'Lade Feedback-Kommentare...');
         await loadFeedbackData();
         updateMainLoadingProgress(100, 'Bereit');
         await sleep(500);
-        console.log('ℹ️ Daten können manuell über Settings > CSV Upload geladen werden');
+        console.log('Daten können manuell über Settings > CSV Upload geladen werden');
     }
 }
 
@@ -2710,7 +2710,7 @@ async function loadFeedbackData() {
             const result = await response.json();
             if (result.success && result.data) {
                 window.preloadedFeedback = result.data;
-                console.log(`✅ ${result.data.length} Feedback-Kommentare geladen`);
+                console.log(`${result.data.length} Feedback-Kommentare geladen`);
             }
         }
     } catch (error) {
@@ -2731,7 +2731,7 @@ function updateMainLoadingProgress(percent, text) {
     const statusText = document.getElementById('loadingStatus');
     const percentText = document.getElementById('loadingPercent');
 
-    console.log(`📊 Loading: ${percent}% - ${text}`);
+    console.log(`Loading: ${percent}% - ${text}`);
     if (progressBar) progressBar.style.width = `${percent}%`;
     if (statusText) statusText.textContent = text;
     if (percentText) percentText.textContent = `${percent}%`;
@@ -2766,7 +2766,7 @@ function processCSVData(csvText) {
                 state.useUploadedData = true;
             }
 
-            console.log('✅ CSV-Daten geladen:', parsedData.length, 'Datensätze');
+            console.log('CSV-Daten geladen:', parsedData.length, 'Datensätze');
 
             // Aktualisiere Filter-Dropdowns
             if (typeof updateAgenturFilterDropdown === 'function') {
@@ -2791,17 +2791,17 @@ function processCSVData(csvText) {
             }
         }
     } catch (error) {
-        console.error('❌ Fehler beim Parsen der CSV:', error);
+        console.error('Fehler beim Parsen der CSV:', error);
     }
 }
 
 // ========================================
-// ✨ v14 FEATURE: KI Filter Commands + Auto-Navigation
+// v14 FEATURE: KI Filter Commands + Auto-Navigation
 // ========================================
 
 // Parse KI-Antwort und führe Filter-Befehle aus
 async function parseAndExecuteCommands(message) {
-    console.log('🔍 Parse KI-Antwort nach Befehlen...');
+    console.log('Parse KI-Antwort nach Befehlen...');
 
     let hasExecutedCommands = false;
 
@@ -2809,13 +2809,13 @@ async function parseAndExecuteCommands(message) {
     const overviewMatch = message.match(/showAgenturOverview\(['"]([^'"]+)['"]\)/);
     if (overviewMatch) {
         const vermittlerId = overviewMatch[1];
-        console.log('📊 Gefunden: showAgenturOverview für', vermittlerId);
+        console.log('Gefunden: showAgenturOverview für', vermittlerId);
 
         if (typeof showAgenturOverview === 'function') {
             showAgenturOverview(vermittlerId);
             return true; // Early return
         } else {
-            console.error('❌ showAgenturOverview Funktion nicht verfügbar!');
+            console.error('showAgenturOverview Funktion nicht verfügbar!');
         }
     }
 
@@ -2832,7 +2832,7 @@ async function parseAndExecuteCommands(message) {
     let match;
     while ((match = patterns.setAgenturFilter.exec(message)) !== null) {
         const agenturId = match[1];
-        console.log('📌 Setze Agentur-Filter:', agenturId);
+        console.log('Setze Agentur-Filter:', agenturId);
         setAgenturFilter(agenturId);
         hasExecutedCommands = true;
     }
@@ -2841,7 +2841,7 @@ async function parseAndExecuteCommands(message) {
     patterns.setSiloFilter.lastIndex = 0;
     while ((match = patterns.setSiloFilter.exec(message)) !== null) {
         const silo = match[1];
-        console.log('📌 Setze Silo-Filter:', silo);
+        console.log('Setze Silo-Filter:', silo);
         setSiloFilter(silo);
         hasExecutedCommands = true;
     }
@@ -2851,7 +2851,7 @@ async function parseAndExecuteCommands(message) {
     while ((match = patterns.setSegmentFilter.exec(message)) !== null) {
         const segmentsStr = match[1];
         const segments = segmentsStr.split(',').map(s => s.trim().replace(/['"]/g, ''));
-        console.log('📌 Setze Segment-Filter:', segments);
+        console.log('Setze Segment-Filter:', segments);
         setSegmentFilter(segments);
         hasExecutedCommands = true;
     }
@@ -2861,21 +2861,21 @@ async function parseAndExecuteCommands(message) {
     while ((match = patterns.setBundeslandFilter.exec(message)) !== null) {
         const laenderStr = match[1];
         const laender = laenderStr.split(',').map(s => s.trim().replace(/['"]/g, ''));
-        console.log('📌 Setze Bundesland-Filter:', laender);
+        console.log('Setze Bundesland-Filter:', laender);
         setBundeslandFilter(laender);
         hasExecutedCommands = true;
     }
 
     // Clear Filters
     if (patterns.clearAllFilters.test(message)) {
-        console.log('🗑️ Lösche alle Filter');
+        console.log('Lösche alle Filter');
         clearAllFilters();
         hasExecutedCommands = true;
     }
 
     // Wenn Befehle ausgeführt wurden, navigiere zum Dashboard
     if (hasExecutedCommands) {
-        console.log('✨ Filter wurden gesetzt - navigiere zum Dashboard...');
+        console.log('Filter wurden gesetzt - navigiere zum Dashboard...');
 
         // Zeige Bestätigung
         addLandingChatMessage('system', '✅ Filter wurden angewendet. Öffne Dashboard...');
@@ -2889,7 +2889,7 @@ async function parseAndExecuteCommands(message) {
 
 // Filter-Funktionen
 function setAgenturFilter(vermittlerId) {
-    console.log('🎯 setAgenturFilter:', vermittlerId);
+    console.log('setAgenturFilter:', vermittlerId);
 
     // WICHTIG: Erst alle anderen Filter zurücksetzen!
     if (typeof state !== 'undefined') {
@@ -2906,19 +2906,19 @@ function setAgenturFilter(vermittlerId) {
             bundeslaender: []
         };
 
-        console.log('✅ Filter zurückgesetzt und Agentur-Filter gesetzt:', state.filters);
+        console.log('Filter zurückgesetzt und Agentur-Filter gesetzt:', state.filters);
     } else {
         // Falls state noch nicht existiert, speichere im localStorage
         localStorage.removeItem('pendingSiloFilter');
         localStorage.removeItem('pendingSegmentFilter');
         localStorage.removeItem('pendingBundeslandFilter');
         localStorage.setItem('pendingAgenturFilter', vermittlerId);
-        console.log('✅ Filter im localStorage gespeichert');
+        console.log('Filter im localStorage gespeichert');
     }
 }
 
 function setSiloFilter(silo) {
-    console.log('🎯 setSiloFilter:', silo);
+    console.log('setSiloFilter:', silo);
 
     if (typeof state !== 'undefined') {
         state.filters.silo = silo;
@@ -2928,7 +2928,7 @@ function setSiloFilter(silo) {
 }
 
 function setSegmentFilter(segments) {
-    console.log('🎯 setSegmentFilter:', segments);
+    console.log('setSegmentFilter:', segments);
 
     if (typeof state !== 'undefined') {
         state.filters.segments = segments;
@@ -2938,7 +2938,7 @@ function setSegmentFilter(segments) {
 }
 
 function setBundeslandFilter(laender) {
-    console.log('🎯 setBundeslandFilter:', laender);
+    console.log('setBundeslandFilter:', laender);
 
     if (typeof state !== 'undefined') {
         state.filters.bundeslaender = laender;
@@ -2948,7 +2948,7 @@ function setBundeslandFilter(laender) {
 }
 
 function clearAllFilters() {
-    console.log('🗑️ clearAllFilters');
+    console.log('clearAllFilters');
 
     if (typeof state !== 'undefined') {
         state.filters = {
@@ -2966,7 +2966,7 @@ function clearAllFilters() {
     }
 }
 
-// ✨ v16: Predefined answers for standard questions (no AI needed)
+// v16: Predefined answers for standard questions (no AI needed)
 const standardAnswers = {
     'Was kann ich hier machen?': `**Willkommen im Vertriebssteuerungs-Cockpit!** 🎯
 
@@ -2974,7 +2974,7 @@ Hier kannst du:
 • **Dashboard öffnen** - Visualisiere deine Versicherungsdaten mit interaktiven Charts
 • **CSV-Daten hochladen** - Lade deine eigenen Daten hoch oder nutze den Generator
 • **Daten generieren** - Erstelle realistische Testdaten mit dem CSV-Generator
-• **KI-Analysen** - Stelle Fragen zu deinen Daten (powered by Claude AI)
+• **KI-Analysen** - Stelle Fragen zu deinen Daten (powered by KI)
 
 Klicke auf "Zur Gesamtübersicht" um loszulegen!`,
 
@@ -3007,9 +3007,9 @@ Klicke auf "Zur Gesamtübersicht" um loszulegen!`,
 • Download CSV und lade sie hoch`
 };
 
-// ✨ v16 FEATURE: Landing Page Sample Questions with instant answers
+// v16 FEATURE: Landing Page Sample Questions with instant answers
 function askLandingSampleQuestion(question) {
-    console.log('📝 Landing Sample Question clicked:', question);
+    console.log('Landing Sample Question clicked:', question);
 
     // Verstecke Sample Questions nach erstem Click
     const sampleQuestions = document.getElementById('landingSampleQuestions');
@@ -3019,7 +3019,7 @@ function askLandingSampleQuestion(question) {
 
     // Check if this is a standard question
     if (standardAnswers[question]) {
-        console.log('✨ Using predefined answer (no AI)');
+        console.log('Using predefined answer (no AI)');
 
         // Add user message
         addLandingChatMessage('user', question);
@@ -3062,11 +3062,11 @@ function toggleUploadMode() {
     if (uploadModeActive) {
         body.classList.add('upload-mode-active');
         if (hint) hint.style.display = 'block';
-        console.log('📤 Upload-Modus aktiviert');
+        console.log('Upload-Modus aktiviert');
     } else {
         body.classList.remove('upload-mode-active');
         if (hint) hint.style.display = 'none';
-        console.log('📤 Upload-Modus deaktiviert');
+        console.log('Upload-Modus deaktiviert');
     }
 }
 
@@ -3080,13 +3080,13 @@ function initUploadMode() {
     const hint = document.getElementById('uploadModeHint');
     if (hint) hint.style.display = 'block';
     uploadModeActive = true;
-    console.log('📤 Upload-Modus standardmäßig aktiviert');
+    console.log('Upload-Modus standardmäßig aktiviert');
 }
 
 // Logo Upload
 function triggerLogoUpload() {
     if (!uploadModeActive) {
-        console.log('ℹ️ Upload-Modus nicht aktiv');
+        console.log('Upload-Modus nicht aktiv');
         return;
     }
     document.getElementById('logoUploadInput').click();
@@ -3107,7 +3107,7 @@ function handleLogoUpload(event) {
 
         // Speichern im localStorage
         localStorage.setItem('customLogo', e.target.result);
-        console.log('✅ Logo hochgeladen und gespeichert');
+        console.log('Logo hochgeladen und gespeichert');
     };
     reader.readAsDataURL(file);
 }
@@ -3140,14 +3140,14 @@ function handleProfileUpload(event, vermittlerId) {
             if (kundenFoto) {
                 kundenFoto.innerHTML = `<img src="${e.target.result}" alt="Kundenfoto" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
             }
-            console.log('✅ Kundenfoto gespeichert');
+            console.log('Kundenfoto gespeichert');
         } else {
             // Bild in Agenturansicht aktualisieren
             const photoContainer = document.getElementById('agenturPhoto');
             if (photoContainer) {
                 photoContainer.innerHTML = `<img src="${e.target.result}" alt="Profilbild">`;
             }
-            console.log('✅ Profilbild gespeichert für:', vermittlerId);
+            console.log('Profilbild gespeichert für:', vermittlerId);
         }
     };
     reader.readAsDataURL(file);
@@ -3179,7 +3179,7 @@ function handleAgenturPhotoUpload(event) {
 
         // Speichern im localStorage
         localStorage.setItem('agenturPhoto', e.target.result);
-        console.log('✅ Agentur-Foto hochgeladen und gespeichert');
+        console.log('Agentur-Foto hochgeladen und gespeichert');
     };
     reader.readAsDataURL(file);
 }
@@ -3194,7 +3194,7 @@ async function loadSavedImages() {
             configImages = await response.json();
         }
     } catch (e) {
-        console.log('ℹ️ Keine images-config.json gefunden, nutze Fallbacks');
+        console.log('Keine images-config.json gefunden, nutze Fallbacks');
     }
 
     // Logo laden: localStorage > config > default SVG
@@ -3285,7 +3285,7 @@ function exportImagesForGitHub() {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
 
-    console.log('✅ Bilder exportiert für GitHub');
+    console.log('Bilder exportiert für GitHub');
 }
 
 // ========================================
@@ -3295,7 +3295,7 @@ function exportImagesForGitHub() {
 let currentPotentialFilter = null;
 
 function openPotentialAnalyse() {
-    console.log('📊 Potentialanalyse öffnen...');
+    console.log('Potentialanalyse öffnen...');
 
     // Verstecke alle Seiten
     document.getElementById('landingPage').style.display = 'none';
@@ -3319,7 +3319,7 @@ function openPotentialAnalyse() {
 }
 
 function openPotentialAnalyseWithFilter(productId, productName) {
-    console.log('📊 Potentialanalyse öffnen mit Filter:', productId);
+    console.log('Potentialanalyse öffnen mit Filter:', productId);
 
     // Verstecke alle Seiten
     document.getElementById('landingPage').style.display = 'none';
@@ -3644,7 +3644,7 @@ let previousViewBeforeKundenDetail = 'potentialanalyse';
 let currentKundenVermittlerId = null;
 
 function openKundenDetail(kundenName, vermittlerId) {
-    console.log('👤 Kundendetail öffnen:', kundenName, vermittlerId);
+    console.log('Kundendetail öffnen:', kundenName, vermittlerId);
 
     // Speichere die Vermittler-ID für späteren Zugriff (z.B. Vertriebsbericht)
     currentKundenVermittlerId = vermittlerId || 'VM00001';
@@ -3656,7 +3656,7 @@ function openKundenDetail(kundenName, vermittlerId) {
     // FIDA ist aktiv wenn Container sichtbar ist (display: block)
     const fidaContainerDisplay = fidaContainer ? fidaContainer.style.display : 'none';
     fidaActiveInPotentialAnalyse = (fidaContainerDisplay === 'block');
-    console.log('📊 FIDA Check - Container display:', fidaContainerDisplay, '| FIDA aktiv:', fidaActiveInPotentialAnalyse);
+    console.log('FIDA Check - Container display:', fidaContainerDisplay, '| FIDA aktiv:', fidaActiveInPotentialAnalyse);
 
     // Speichere von welcher View wir kommen (für korrekten Zurück-Button)
     const agenturOverview = document.getElementById('agenturOverview');
@@ -3664,10 +3664,10 @@ function openKundenDetail(kundenName, vermittlerId) {
 
     if (agenturOverview && agenturOverview.style.display !== 'none') {
         previousViewBeforeKundenDetail = 'agentursicht';
-        console.log('📍 Komme von: Agentursicht');
+        console.log('Komme von: Agentursicht');
     } else if (potentialAnalyse && potentialAnalyse.style.display !== 'none') {
         previousViewBeforeKundenDetail = 'potentialanalyse';
-        console.log('📍 Komme von: Potentialanalyse');
+        console.log('Komme von: Potentialanalyse');
     }
 
     // Verstecke alle Seiten
@@ -3719,7 +3719,7 @@ function initKundenFidaState() {
             fidaBtn.classList.add('active');
             fidaBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4"></path><path d="M12 8h.01"></path></svg> Open Finance aktiv';
         }
-        console.log('✅ FIDA in Kundendetail aktiviert');
+        console.log('FIDA in Kundendetail aktiviert');
     } else {
         // FIDA deaktivieren (Standard)
         if (fidaDaten) fidaDaten.style.display = 'none';
@@ -3736,7 +3736,7 @@ let currentVermittlerMode = 'ao'; // Default: AO ERGO Makler
 // Wechselt zwischen Makler und AO Modus
 function switchVermittlerMode(mode) {
     currentVermittlerMode = mode;
-    console.log('🔄 Vermittlermodus gewechselt zu:', mode);
+    console.log('Vermittlermodus gewechselt zu:', mode);
 
     // Toggle-Buttons aktualisieren
     const toggleBtns = document.querySelectorAll('.toggle-option');
@@ -3786,7 +3786,7 @@ function switchVermittlerMode(mode) {
 function updateOpenFinanceTable(mode) {
     // Bei AO (ERGO) sollten die ERGO-Produkte ausgeblendet werden
     // da diese als eigene Produkte gelten und nicht als "Fremdprodukte" angezeigt werden
-    console.log('📊 Open Finance Tabelle für Modus:', mode);
+    console.log('Open Finance Tabelle für Modus:', mode);
 
     const ergoRows = document.querySelectorAll('tr[data-anbieter="ergo"]');
     const sourceTag = document.querySelector('.fida-source-tag');
@@ -3817,7 +3817,7 @@ function closeKundenDetail() {
         const agenturOverview = document.getElementById('agenturOverview');
         if (agenturOverview) {
             agenturOverview.style.display = 'block';
-            console.log('↩️ Zurück zur Agentursicht');
+            console.log('Zurück zur Agentursicht');
 
             // Dispatch event for Page ID Tracker
             document.dispatchEvent(new CustomEvent('viewChanged', {
@@ -3827,7 +3827,7 @@ function closeKundenDetail() {
     } else {
         // Default: Potentialanalyse
         document.getElementById('potentialAnalysePage').style.display = 'block';
-        console.log('↩️ Zurück zur Potentialanalyse');
+        console.log('Zurück zur Potentialanalyse');
 
         // Dispatch event for Page ID Tracker
         document.dispatchEvent(new CustomEvent('viewChanged', {
@@ -3841,7 +3841,7 @@ function closeKundenDetail() {
  */
 function goToSalesReportFromKundenDetail() {
     const agenturId = currentKundenVermittlerId || 'VM00001';
-    console.log('📊 Navigiere zu Vertriebsbericht für:', agenturId);
+    console.log('Navigiere zu Vertriebsbericht für:', agenturId);
 
     // Verstecke Kundendetail-Seite
     document.getElementById('kundenDetailPage').style.display = 'none';
@@ -3850,7 +3850,7 @@ function goToSalesReportFromKundenDetail() {
     if (typeof navigateToSalesReport === 'function') {
         navigateToSalesReport(agenturId);
     } else {
-        console.error('❌ navigateToSalesReport Funktion nicht gefunden');
+        console.error('navigateToSalesReport Funktion nicht gefunden');
         // Fallback: Manuell navigieren
         if (typeof openDashboard === 'function') {
             openDashboard();
@@ -4598,7 +4598,7 @@ function updateSuggestionSelection(items) {
 }
 
 function selectAgentSuggestion(agentId, agentName) {
-    console.log('✅ Agentur ausgewählt:', agentId, agentName);
+    console.log('Agentur ausgewählt:', agentId, agentName);
 
     // Verstecke Suggestions
     const container = document.getElementById('autocompleteSuggestions');
@@ -4619,7 +4619,7 @@ function selectAgentSuggestion(agentId, agentName) {
 }
 
 function selectPotentialSuggestion(productId, productName) {
-    console.log('✅ Potential ausgewählt:', productId, productName);
+    console.log('Potential ausgewählt:', productId, productName);
 
     // Verstecke Suggestions
     const container = document.getElementById('autocompleteSuggestions');
@@ -4790,22 +4790,22 @@ function updateWelcomeMessage(mode) {
 
 // Update Profile Avatar based on mode
 function updateProfileAvatar(mode) {
-    console.log('📷 updateProfileAvatar aufgerufen für Modus:', mode);
+    console.log('updateProfileAvatar aufgerufen für Modus:', mode);
     const profileAvatarImg = document.getElementById('profileAvatarImg');
     if (!profileAvatarImg) {
-        console.error('❌ profileAvatarImg Element nicht gefunden!');
+        console.error('profileAvatarImg Element nicht gefunden!');
         return;
     }
 
     const savedImage = localStorage.getItem(`userProfileImage_${mode}`);
-    console.log('📷 Gespeichertes Bild vorhanden:', savedImage ? 'JA (' + savedImage.substring(0, 50) + '...)' : 'NEIN');
+    console.log('Gespeichertes Bild vorhanden:', savedImage ? 'JA (' + savedImage.substring(0, 50) + '...)' : 'NEIN');
 
     if (savedImage) {
         profileAvatarImg.src = savedImage;
-        console.log('✅ Haupt-Avatar auf gespeichertes Bild gesetzt');
+        console.log('Haupt-Avatar auf gespeichertes Bild gesetzt');
     } else {
         profileAvatarImg.src = 'assets/images/default-profile.svg';
-        console.log('ℹ️ Haupt-Avatar auf Standard-Bild gesetzt');
+        console.log('Haupt-Avatar auf Standard-Bild gesetzt');
     }
 }
 
@@ -4822,13 +4822,13 @@ function triggerUserProfileUpload(event) {
         event.preventDefault();
     }
     currentUploadTarget = currentUserMode;
-    console.log('📷 Trigger Upload für:', currentUploadTarget);
+    console.log('Trigger Upload für:', currentUploadTarget);
 
     const input = document.getElementById('userProfileUpload');
     if (input) {
         input.click();
     } else {
-        console.error('❌ Upload input nicht gefunden');
+        console.error('Upload input nicht gefunden');
     }
 }
 
@@ -4839,22 +4839,22 @@ function triggerUserProfileUploadFor(mode, event) {
         event.preventDefault();
     }
     currentUploadTarget = mode;
-    console.log('📷 Trigger Upload für (dropdown):', currentUploadTarget);
+    console.log('Trigger Upload für (dropdown):', currentUploadTarget);
 
     const input = document.getElementById('userProfileUploadDropdown');
     if (input) {
         input.click();
     } else {
-        console.error('❌ Dropdown Upload input nicht gefunden');
+        console.error('Dropdown Upload input nicht gefunden');
     }
 }
 
 // Handle upload from main profile
 function handleUserProfileUpload(event) {
-    console.log('📷 Handle Upload Event');
+    console.log('Handle Upload Event');
     const file = event.target.files[0];
     if (file) {
-        console.log('📷 Datei ausgewählt:', file.name);
+        console.log('Datei ausgewählt:', file.name);
         processUserProfileImage(file, currentUploadTarget);
     }
     event.target.value = '';
@@ -4862,10 +4862,10 @@ function handleUserProfileUpload(event) {
 
 // Handle upload from dropdown
 function handleUserProfileUploadDropdown(event) {
-    console.log('📷 Handle Dropdown Upload Event');
+    console.log('Handle Dropdown Upload Event');
     const file = event.target.files[0];
     if (file) {
-        console.log('📷 Datei ausgewählt:', file.name);
+        console.log('Datei ausgewählt:', file.name);
         processUserProfileImage(file, currentUploadTarget);
     }
     event.target.value = '';
@@ -4884,9 +4884,9 @@ function processUserProfileImage(file, mode) {
                 // Update all relevant images
                 updateAllUserProfileImages(mode, compressedData);
 
-                console.log(`✅ Profilbild für ${mode} gespeichert (komprimiert)`);
+                console.log(`Profilbild für ${mode} gespeichert (komprimiert)`);
             } catch (error) {
-                console.error('❌ Fehler beim Speichern:', error);
+                console.error('Fehler beim Speichern:', error);
                 alert('Das Bild konnte nicht gespeichert werden. Bitte versuche ein kleineres Bild.');
             }
         });
@@ -4923,7 +4923,7 @@ function compressImage(dataUrl, maxSize, quality, callback) {
 
         // Konvertiere zu komprimiertem JPEG
         const compressedData = canvas.toDataURL('image/jpeg', quality);
-        console.log(`📷 Bild komprimiert: ${Math.round(dataUrl.length/1024)}KB → ${Math.round(compressedData.length/1024)}KB`);
+        console.log(`Bild komprimiert: ${Math.round(dataUrl.length/1024)}KB → ${Math.round(compressedData.length/1024)}KB`);
 
         callback(compressedData);
     };
@@ -4932,16 +4932,16 @@ function compressImage(dataUrl, maxSize, quality, callback) {
 
 // Update all profile images for a given mode
 function updateAllUserProfileImages(mode, imageData) {
-    console.log('📷 Update Bilder für Modus:', mode);
+    console.log('Update Bilder für Modus:', mode);
 
     // Update dropdown option avatar
     const avatarId = mode === 'vertrieb' ? 'optionAvatarVertrieb' : 'optionAvatarPva';
     const optionAvatar = document.getElementById(avatarId);
-    console.log('📷 Dropdown Avatar Element:', avatarId, optionAvatar ? 'gefunden' : 'NICHT GEFUNDEN');
+    console.log('Dropdown Avatar Element:', avatarId, optionAvatar ? 'gefunden' : 'NICHT GEFUNDEN');
 
     if (optionAvatar) {
         optionAvatar.src = imageData;
-        console.log('✅ Dropdown Avatar aktualisiert');
+        console.log('Dropdown Avatar aktualisiert');
     }
 
     // Update main profile avatar if this mode is currently active
@@ -4949,37 +4949,37 @@ function updateAllUserProfileImages(mode, imageData) {
         const profileAvatarImg = document.getElementById('profileAvatarImg');
         if (profileAvatarImg) {
             profileAvatarImg.src = imageData;
-            console.log('✅ Haupt-Avatar aktualisiert');
+            console.log('Haupt-Avatar aktualisiert');
         }
     } else {
-        console.log('ℹ️ Haupt-Avatar nicht aktualisiert (anderer Modus aktiv:', currentUserMode, ')');
+        console.log('Haupt-Avatar nicht aktualisiert (anderer Modus aktiv:', currentUserMode, ')');
     }
 }
 
 // Load saved user profile images on page load
 function loadUserProfileImages() {
-    console.log('📷 loadUserProfileImages aufgerufen');
+    console.log('loadUserProfileImages aufgerufen');
 
     // Load Vertrieb profile
     const vertriebImage = localStorage.getItem('userProfileImage_vertrieb');
-    console.log('📷 Vertrieb Bild in localStorage:', vertriebImage ? 'JA' : 'NEIN');
+    console.log('Vertrieb Bild in localStorage:', vertriebImage ? 'JA' : 'NEIN');
     if (vertriebImage) {
         const optionVertrieb = document.getElementById('optionAvatarVertrieb');
         if (optionVertrieb) {
             optionVertrieb.src = vertriebImage;
-            console.log('✅ Vertrieb Dropdown-Avatar geladen');
+            console.log('Vertrieb Dropdown-Avatar geladen');
         }
     }
 
     // Load PVA profile
     const pvaImage = localStorage.getItem('userProfileImage_pva');
-    console.log('📷 PVA (Anja) Bild in localStorage:', pvaImage ? 'JA' : 'NEIN');
+    console.log('PVA (Anja) Bild in localStorage:', pvaImage ? 'JA' : 'NEIN');
     if (pvaImage) {
         const optionPva = document.getElementById('optionAvatarPva');
-        console.log('📷 optionAvatarPva Element:', optionPva ? 'gefunden' : 'NICHT GEFUNDEN');
+        console.log('optionAvatarPva Element:', optionPva ? 'gefunden' : 'NICHT GEFUNDEN');
         if (optionPva) {
             optionPva.src = pvaImage;
-            console.log('✅ PVA (Anja) Dropdown-Avatar geladen');
+            console.log('PVA (Anja) Dropdown-Avatar geladen');
         }
     }
 
@@ -5059,4 +5059,4 @@ window.handleUserProfileUploadDropdown = handleUserProfileUploadDropdown;
 window.loadUserProfileImages = loadUserProfileImages;
 
 
-console.log('✅ landing.js geladen');
+console.log('landing.js geladen');

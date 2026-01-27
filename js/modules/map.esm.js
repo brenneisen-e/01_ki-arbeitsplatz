@@ -24,7 +24,7 @@ export class CountyMapHandler {
     }
 
     async init() {
-        console.log('🗺️ Initialisiere Landkreis-Karte...');
+        console.log('Initialisiere Landkreis-Karte...');
 
         const container = d3.select('#map');
         container.html('');
@@ -47,10 +47,10 @@ export class CountyMapHandler {
             .attr('fill', '#f8fafc');
 
         // Lade Regierungsbezirke GeoJSON
-        console.log('📥 Lade Regierungsbezirke...');
+        console.log('Lade Regierungsbezirke...');
         const geojson = await d3.json('assets/geo/regierungsbezirke.geo.json');
 
-        console.log(`✅ ${geojson.features.length} Regierungsbezirke geladen`);
+        console.log(`${geojson.features.length} Regierungsbezirke geladen`);
 
         // Projektion
         this.projection = d3.geoMercator()
@@ -105,7 +105,7 @@ export class CountyMapHandler {
             });
         });
 
-        console.log('✅ Karte initialisiert:', this.counties.size, 'Regierungsbezirke');
+        console.log('Karte initialisiert:', this.counties.size, 'Regierungsbezirke');
 
         this.logCountiesByState();
     }
@@ -119,12 +119,12 @@ export class CountyMapHandler {
             byState[county.state].push(name);
         });
 
-        console.log('📋 REGIERUNGSBEZIRKE NACH BUNDESLAND:');
+        console.log('REGIERUNGSBEZIRKE NACH BUNDESLAND:');
         Object.keys(byState).sort().forEach(state => {
             console.log(`'${state}': [${byState[state].map(n => `'${n}'`).join(', ')}],`);
         });
 
-        console.log('\n💡 Kopiere diese Namen in den CSV-Generator!');
+        console.log('\nKopiere diese Namen in den CSV-Generator!');
     }
 
     getCountyName(feature) {
@@ -269,10 +269,10 @@ export class CountyMapHandler {
         const currentState = window.state || state;
         const dailyData = window.dailyRawData;
 
-        console.log('🎨 Update Landkreis-Map');
+        console.log('Update Landkreis-Map');
 
         if (!dailyData || dailyData.length === 0) {
-            console.log('⚠️ Keine Daten - Karte bleibt weiß');
+            console.log('Keine Daten - Karte bleibt weiss');
             this.counties.forEach((countyData, countyName) => {
                 countyData.value = 0;
                 this.svg.select(`[data-county="${countyName}"]`)
@@ -305,7 +305,7 @@ export class CountyMapHandler {
             }
         });
 
-        console.log(`📊 ${countyValues.size} von ${this.counties.size} Regionen haben Daten`);
+        console.log(`${countyValues.size} von ${this.counties.size} Regionen haben Daten`);
 
         this.counties.forEach((countyData, countyName) => {
             const value = countyValues.get(countyName) || 0;
@@ -413,10 +413,10 @@ export class CountyMapHandler {
 
         currentState.selectedCounties = new Set(this.selectedCounties);
 
-        console.log('🔄 Dashboard Update - Ausgewählte Regionen:', Array.from(this.selectedCounties));
+        console.log('Dashboard Update - Ausgewaehlte Regionen:', Array.from(this.selectedCounties));
 
         if (this.selectedCounties.size > 0 && currentState.filters.agentur !== 'alle') {
-            console.log('🔄 Bundesland ausgewählt - Setze Agenturfilter zurück');
+            console.log('Bundesland ausgewaehlt - Setze Agenturfilter zurueck');
             currentState.filters.agentur = 'alle';
 
             const agenturSelect = document.getElementById('agenturFilterSelect');
@@ -428,10 +428,10 @@ export class CountyMapHandler {
         updateCountySelection();
 
         if (typeof window.updateAllKPIs === 'function') {
-            console.log('📊 Aktualisiere KPIs...');
+            console.log('Aktualisiere KPIs...');
             window.updateAllKPIs();
         } else {
-            console.error('❌ updateAllKPIs Funktion nicht gefunden!');
+            console.error('updateAllKPIs Funktion nicht gefunden!');
         }
 
         if (currentState.currentView === 'table') {
@@ -460,7 +460,7 @@ export class CountyMapHandler {
      * @param {boolean} clearFirst - Whether to clear existing selection first (default: true)
      */
     selectMultipleCounties(countyNames, clearFirst = true) {
-        console.log('🗺️ Programmatische Multi-Selektion:', countyNames);
+        console.log('Programmatische Multi-Selektion:', countyNames);
 
         // Clear existing selection if requested
         if (clearFirst) {
@@ -480,7 +480,7 @@ export class CountyMapHandler {
             // Try to find the county (with fuzzy matching)
             const foundName = this.findCountyByName(searchName);
             if (!foundName) {
-                console.warn(`⚠️ Region nicht gefunden: ${searchName}`);
+                console.warn(`Region nicht gefunden: ${searchName}`);
                 return;
             }
 
@@ -499,7 +499,7 @@ export class CountyMapHandler {
                 .raise();
         });
 
-        console.log(`✅ ${this.selectedCounties.size} Regionen selektiert`);
+        console.log(`${this.selectedCounties.size} Regionen selektiert`);
         this.updateDashboard();
     }
 
@@ -564,7 +564,7 @@ export let countyMapHandler;
  * Initialize the map
  */
 export async function initMap() {
-    console.log('🗺️ initMap() aufgerufen');
+    console.log('initMap() aufgerufen');
 
     const container = document.getElementById('map');
     if (container) {
@@ -581,9 +581,9 @@ export async function initMap() {
             countyMapHandler.updateMapData(data);
         }
 
-        console.log('✅ Karte erfolgreich initialisiert');
+        console.log('Karte erfolgreich initialisiert');
     } catch (error) {
-        console.error('❌ Fehler bei Karteninitialisierung:', error);
+        console.error('Fehler bei Karteninitialisierung:', error);
         if (container) {
             container.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#ef4444;text-align:center;padding:1rem;"><span>Karte konnte nicht geladen werden.<br>Bitte Seite neu laden.</span></div>';
         }

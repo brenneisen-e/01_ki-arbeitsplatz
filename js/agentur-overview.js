@@ -16,7 +16,7 @@ let currentAgenturIdInOverview = null;
  * @param {string} vermittlerId - Die Vermittler-ID (z.B. 'VM00001')
  */
 function showAgenturOverview(vermittlerId) {
-    console.log('📊 Zeige Agentur-Übersicht für:', vermittlerId);
+    console.log('Zeige Agentur-Übersicht für:', vermittlerId);
 
     // Verstecke alle anderen Pages
     const landingPage = document.getElementById('landingPage');
@@ -53,7 +53,7 @@ function showAgenturOverview(vermittlerId) {
  * @param {string} vermittlerId - Die Vermittler-ID
  */
 function loadAgenturData(vermittlerId) {
-    console.log('📂 Lade Daten für Agentur:', vermittlerId);
+    console.log('Lade Daten für Agentur:', vermittlerId);
 
     // Speichere die aktuelle Agentur-ID für späteren Zugriff
     currentAgenturIdInOverview = vermittlerId;
@@ -63,7 +63,7 @@ function loadAgenturData(vermittlerId) {
     const agentur = agenturen.find(a => a.id === vermittlerId);
 
     if (!agentur) {
-        console.error('❌ Agentur nicht gefunden:', vermittlerId);
+        console.error('Agentur nicht gefunden:', vermittlerId);
         alert('Agentur nicht gefunden: ' + vermittlerId);
         backFromAgentur();
         return;
@@ -72,8 +72,8 @@ function loadAgenturData(vermittlerId) {
     // Hole detaillierte Daten
     const agenturData = typeof getAgenturData === 'function' ? getAgenturData(vermittlerId) : null;
 
-    console.log('✅ Agentur gefunden:', agentur);
-    console.log('📊 Agentur Daten:', agenturData);
+    console.log('Agentur gefunden:', agentur);
+    console.log('Agentur Daten:', agenturData);
 
     // Fülle alle Bereiche
     fillHeader(agentur, agenturData);
@@ -416,7 +416,7 @@ function generateEintrittsdatum() {
  */
 
 function backFromAgentur() {
-    console.log('🔙 Zurück vom Agentur-Overview');
+    console.log('Zurück vom Agentur-Overview');
 
     const landingPage = document.getElementById('landingPage');
     const agenturOverview = document.getElementById('agenturOverview');
@@ -438,7 +438,7 @@ function backFromAgentur() {
 // ========================================
 
 function openBillingCheck() {
-    console.log('💳 Öffne Billing Check');
+    console.log('Öffne Billing Check');
 
     const landingPage = document.getElementById('landingPage');
     const mainApp = document.getElementById('mainApp');
@@ -455,7 +455,7 @@ function openBillingCheck() {
 }
 
 function closeBillingCheck() {
-    console.log('🔙 Schließe Billing Check');
+    console.log('Schließe Billing Check');
 
     const landingPage = document.getElementById('landingPage');
     const billingCheckPage = document.getElementById('billingCheckPage');
@@ -473,7 +473,7 @@ function closeBillingCheck() {
  * @param {string} status - Filter-Status (alle, neu, angeschrieben, termin, abgeschlossen)
  */
 function filterFidaCases(status) {
-    console.log('🔍 Filtere FIDA-Fälle nach:', status);
+    console.log('Filtere FIDA-Fälle nach:', status);
 
     // Update active filter button
     document.querySelectorAll('.fida-filter-btn').forEach(btn => {
@@ -520,7 +520,7 @@ const kundenMapping = {
  * @param {string} kundenId - Die Kunden-ID (z.B. 'KD00001')
  */
 function openKundenDetailFromFida(kundenId) {
-    console.log('👤 Öffne Kundendetail von FIDA für:', kundenId);
+    console.log('Öffne Kundendetail von FIDA für:', kundenId);
 
     // Hole Kundennamen aus Mapping
     const kundenName = kundenMapping[kundenId] || kundenId;
@@ -624,7 +624,7 @@ function toggleVertriebsPeriod(period) {
  * @param {string} formularId - Die ID des Formulars
  */
 function openFormular(formularId) {
-    console.log('📄 Öffne Formular:', formularId);
+    console.log('Öffne Formular:', formularId);
     alert('Formular "' + formularId + '" wird geladen...\n\n(Demo-Funktion)');
 }
 
@@ -633,7 +633,7 @@ function openFormular(formularId) {
  * @param {string} period - Der Abrechnungszeitraum (z.B. '2024-12')
  */
 function openAbrechnung(period) {
-    console.log('📄 Öffne Provisionsabrechnung:', period);
+    console.log('Öffne Provisionsabrechnung:', period);
     const [year, month] = period.split('-');
     const monthNames = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni',
                        'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'];
@@ -1085,7 +1085,7 @@ function showNeuePotentialeContent() {
  */
 function goToSalesReport() {
     const agenturId = currentAgenturIdInOverview || 'VM00001';
-    console.log('📊 Navigiere zu Vertriebsbericht für:', agenturId);
+    console.log('Navigiere zu Vertriebsbericht für:', agenturId);
 
     const chatBody = document.getElementById('agenturChatBody');
     if (!chatBody) {
@@ -1147,7 +1147,7 @@ function goToSalesReport() {
             if (typeof navigateToSalesReport === 'function') {
                 navigateToSalesReport(agenturId);
             } else {
-                console.error('❌ navigateToSalesReport Funktion nicht gefunden');
+                console.error('navigateToSalesReport Funktion nicht gefunden');
                 if (typeof openDashboard === 'function') {
                     openDashboard();
                 }

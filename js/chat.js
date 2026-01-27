@@ -1,10 +1,10 @@
-// js/chat.js - AI Chat Logic with Claude API (mit automatischer Datenanalyse nach Filtern)
+// js/chat.js - Chat Logic (mit automatischer Datenanalyse nach Filtern)
 
 let chatHistory = [];
 let isProcessing = false;
 let chatInitialized = false;
 
-// ⚠️ CONFIGURATION - Claude API via Cloudflare Worker
+// CONFIGURATION - API via Cloudflare Worker
 window.CLAUDE_WORKER_URL = 'https://vst-claude-api.eike-3e2.workers.dev';
 window.CLAUDE_MODEL = 'claude-haiku-4-5-20251001';
 
@@ -72,20 +72,20 @@ window.sendSuggestedQuery = sendSuggestedQuery;
 
 // Initialize chat widget
 function initChat() {
-    // ✨ v15: Prevent multiple initializations
+    // v15: Prevent multiple initializations
     if (chatInitialized) {
-        console.log('⚠️ Chat bereits initialisiert, überspringe...');
+        console.log('Chat bereits initialisiert, ueberspringe...');
         return;
     }
 
-    console.log('🤖 initChat() aufgerufen');
-    console.log('📊 dailyRawData verfügbar:', dailyRawData ? dailyRawData.length + ' Zeilen' : 'NICHT VERFÜGBAR');
+    console.log('initChat() aufgerufen');
+    console.log('dailyRawData verfuegbar:', dailyRawData ? dailyRawData.length + ' Zeilen' : 'NICHT VERFÜGBAR');
 
     const chatWidget = document.getElementById('chatWidget');
     const chatToggle = document.getElementById('chatToggle');
 
     if (!chatWidget || !chatToggle) {
-        console.error('❌ Chat Elemente nicht gefunden im DOM!');
+        console.error('Chat Elemente nicht gefunden im DOM!');
         console.log('chatWidget:', chatWidget);
         console.log('chatToggle:', chatToggle);
         return;
@@ -98,35 +98,35 @@ function initChat() {
     const chatBody = document.getElementById('chatBody');
 
     if (!chatSend || !chatInput || !chatBody) {
-        console.error('❌ Chat Input-Elemente nicht gefunden!');
+        console.error('Chat Input-Elemente nicht gefunden!');
         return;
     }
 
-    // ✨ v15: Mark as initialized
+    // v15: Mark as initialized
     chatInitialized = true;
 
     // Toggle chat
     chatToggle.addEventListener('click', () => {
-        console.log('💬 Chat Toggle geklickt');
+        console.log('Chat Toggle geklickt');
         chatWidget.style.display = 'flex';
         chatToggle.style.display = 'none';
-        chatWidget.classList.remove('minimized'); // ✨ v15: Ensure not minimized when opened
+        chatWidget.classList.remove('minimized'); // v15: Ensure not minimized when opened
         chatInput.focus();
     });
 
     // Close chat
     chatClose.addEventListener('click', () => {
-        console.log('❌ Chat geschlossen');
+        console.log('Chat geschlossen');
         chatWidget.style.display = 'none';
         chatToggle.style.display = 'flex';
-        chatWidget.classList.remove('minimized'); // ✨ v15: Reset minimized state
+        chatWidget.classList.remove('minimized'); // v15: Reset minimized state
     });
 
     // Minimize chat
     chatMinimize.addEventListener('click', () => {
-        console.log('➖ Chat minimiert/maximiert');
+        console.log('Chat minimiert/maximiert');
         const isMinimized = chatWidget.classList.toggle('minimized');
-        console.log('📐 Minimized state:', isMinimized);
+        console.log('Minimized state:', isMinimized);
     });
     
     // Send message
@@ -158,28 +158,28 @@ function initChat() {
     // Show chat if data is already loaded
     const rawData = window.dailyRawData || (typeof dailyRawData !== 'undefined' ? dailyRawData : null);
     if (rawData && rawData.length > 0) {
-        console.log('✅ CSV Daten vorhanden - Chat wird aktiviert');
+        console.log('CSV Daten vorhanden - Chat wird aktiviert');
         chatToggle.style.display = 'flex';
         chatWidget.style.display = 'flex';
 
         // Auto-hide toggle, show widget after 1 second
         setTimeout(() => {
-            console.log('🎯 Chat Toggle ausgeblendet, Widget angezeigt');
+            console.log('Chat Toggle ausgeblendet, Widget angezeigt');
             chatToggle.style.display = 'none';
         }, 1000);
 
         // Show API warning if needed
         if (shouldUseMockMode()) {
-            addMessage('assistant', '⚠️ **Mock-Modus aktiv** - Claude AI ist über den Worker konfiguriert.\n\nStelle trotzdem gerne Fragen - ich zeige dir wie die Integration funktioniert!');
+            addMessage('assistant', '⚠️ **Mock-Modus aktiv** - KI ist über den Worker konfiguriert.\n\nStelle trotzdem gerne Fragen - ich zeige dir wie die Integration funktioniert!');
         }
     } else {
-        console.log('ℹ️ Keine CSV Daten - Chat bleibt verborgen bis Daten geladen werden');
+        console.log('Keine CSV Daten - Chat bleibt verborgen bis Daten geladen werden');
         // Chat ist initialisiert, aber versteckt
         chatToggle.style.display = 'none';
         chatWidget.style.display = 'none';
     }
 
-    console.log('✅ Chat erfolgreich initialisiert!');
+    console.log('Chat erfolgreich initialisiert');
 }
 
 // Activate chat when data is loaded (call this after CSV upload)
@@ -188,7 +188,7 @@ function activateChat() {
     const chatWidget = document.getElementById('chatWidget');
 
     if (chatToggle && chatWidget) {
-        console.log('✅ Chat wird aktiviert (Daten wurden geladen)');
+        console.log('Chat wird aktiviert (Daten wurden geladen)');
         chatToggle.style.display = 'flex';
         chatWidget.style.display = 'flex';
 
@@ -201,15 +201,15 @@ function activateChat() {
 // Make activateChat globally available
 window.activateChat = activateChat;
 
-// Send message to Claude (or Mock)
+// Send message (or Mock)
 async function sendMessage() {
     const chatInput = document.getElementById('chatInput');
     const message = chatInput.value.trim();
     
-    console.log('📤 Nachricht senden:', message);
-    
+    console.log('Nachricht senden:', message);
+
     if (!message || isProcessing) {
-        console.log('⚠️ Leere Nachricht oder bereits in Verarbeitung');
+        console.log('Leere Nachricht oder bereits in Verarbeitung');
         return;
     }
     
@@ -228,11 +228,11 @@ async function sendMessage() {
     try {
         // Dynamisch prüfen ob Mock-Modus aktiv ist (erlaubt API-Key Änderung ohne Reload)
         const useMock = shouldUseMockMode();
-        console.log('🔑 API-Key Status:', useMock ? 'MOCK-MODUS' : 'API-MODUS AKTIV');
+        console.log('API-Key Status:', useMock ? 'MOCK-MODUS' : 'API-MODUS AKTIV');
 
         if (useMock) {
             // Mock response for testing
-            console.log('🎭 Mock-Modus - Generiere Test-Antwort');
+            console.log('Mock-Modus - Generiere Test-Antwort');
             await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate delay
             const mockResponse = generateMockResponse(message);
             hideTyping();
@@ -240,15 +240,15 @@ async function sendMessage() {
             addMessage('assistant', mockResponse + suggestions);
         } else {
             // Real API call
-            console.log('🚀 Rufe Claude API auf...');
+            console.log('Rufe API auf...');
             await sendToClaude(message);
         }
 
     } catch (error) {
-        console.error('❌ Chat Fehler:', error);
+        console.error('Chat Fehler:', error);
         hideTyping();
         // Fallback to mock response on API error
-        console.log('🔄 Fallback auf Mock-Antwort...');
+        console.log('Fallback auf Mock-Antwort...');
         const mockResponse = generateMockResponse(message);
         const suggestions = getSalesChatSuggestions('default');
         addMessage('assistant', mockResponse + suggestions);
@@ -524,14 +524,14 @@ Die Tabelle zeigt jetzt diese Vermittler mit detaillierter KI-Analyse.
     return `Ich habe Ihre Frage verstanden: "${message}"\n\n**Verfügbare Abfragen:**\n• "Top 5 Vermittler nach Neugeschäft"\n• "Welches Bundesland hat die beste Performance?"\n• "Wie entwickelt sich der NPS Score?"\n• "Vergleiche Makler vs. Ausschließlichkeit"\n• "Stornoquoten nach Segment"\n• "Filtere nach Max Mustermann"`;
 }
 
-// Send to Claude API (via Worker or direct)
+// Send to API (via Worker or direct)
 async function sendToClaude(message) {
-    console.log('🤖 Sende Anfrage an Claude API...');
+    console.log('Sende Anfrage an API...');
 
     // Prepare context about current data
     const dataContext = getDataContext();
 
-    // System prompt for Claude
+    // System prompt
     const systemPrompt = `Du bist ein KI-Assistent für ein Versicherungs-Dashboard. Du hast Zugriff auf CSV-Daten und kannst Dashboard-Filter steuern.
 
 VERFÜGBARE FUNKTIONEN:
@@ -578,7 +578,7 @@ WICHTIG bei Analysen:
 - Sei präzise und konkret
 - Antworte auf Deutsch und sei freundlich`;
 
-    // Build messages array for Claude
+    // Build messages array
     const messages = [
         {
             role: 'user',
@@ -603,7 +603,7 @@ USER FRAGE: ${message}`
         headers["anthropic-dangerous-direct-browser-access"] = "true";
     }
 
-    // Call Claude API
+    // Call API
     const response = await fetch(apiUrl, {
         method: "POST",
         headers: headers,
@@ -617,15 +617,15 @@ USER FRAGE: ${message}`
 
     if (!response.ok) {
         const errorText = await response.text();
-        console.error('❌ Claude API Fehler:', response.status, errorText);
+        console.error('API Fehler:', response.status, errorText);
         throw new Error(`API request failed: ${response.status}`);
     }
 
     const data = await response.json();
     const assistantMessage = data.content[0].text;
     
-    console.log('✅ API Antwort erhalten:', assistantMessage.substring(0, 100) + '...');
-    console.log('📝 VOLLSTÄNDIGE API-Antwort:', assistantMessage);  // DEBUG
+    console.log('API Antwort erhalten:', assistantMessage.substring(0, 100) + '...');
+    console.log('VOLLSTAENDIGE API-Antwort:', assistantMessage);
 
     hideTyping();
 
@@ -642,7 +642,7 @@ USER FRAGE: ${message}`
 
     // FALLBACK: Wenn KI keine showTopAgenturen() Funktion nutzte, prüfe User-Message
     if (!filterWasSet && message.toLowerCase().match(/top\s+(\d+)/)) {
-        console.log('🔄 FALLBACK: Erkenne "Top X" direkt aus User-Message');
+        console.log('FALLBACK: Erkenne "Top X" direkt aus User-Message');
         const match = message.toLowerCase().match(/top\s+(\d+)/);
         const topN = parseInt(match[1]);
 
@@ -652,7 +652,7 @@ USER FRAGE: ${message}`
         else if (message.toLowerCase().includes('bestand')) sortBy = 'bestand';
         else if (message.toLowerCase().includes('deckungsbeitrag')) sortBy = 'deckungsbeitrag';
 
-        console.log(`🎯 Führe direkt aus: showTopAgenturen(${topN}, '${sortBy}')`);
+        console.log(`Fuehre direkt aus: showTopAgenturen(${topN}, '${sortBy}')`);
         showTopAgenturen(topN, sortBy);
     }
     
@@ -666,12 +666,12 @@ USER FRAGE: ${message}`
 // Get context about current data
 function getDataContext() {
     if (!dailyRawData || dailyRawData.length === 0) {
-        console.error('❌ getDataContext: dailyRawData ist leer oder null!');
+        console.error('getDataContext: dailyRawData ist leer oder null!');
         return "Keine Daten geladen.";
     }
 
-    console.log('📊 getDataContext: dailyRawData hat', dailyRawData.length, 'Zeilen');
-    console.log('📊 Aktuelle Filter:', JSON.stringify(state.filters));
+    console.log('getDataContext: dailyRawData hat', dailyRawData.length, 'Zeilen');
+    console.log('Aktuelle Filter:', JSON.stringify(state.filters));
 
     const agenturen = getAgenturen();
     const bundeslaender = [...new Set(dailyRawData.map(r => r.bundesland))].filter(Boolean);
@@ -681,27 +681,27 @@ function getDataContext() {
     // Calculate some basic stats from FILTERED data
     const filteredData = getFilteredData();
 
-    console.log('📊 getFilteredData() lieferte', filteredData.length, 'Monate');
+    console.log('getFilteredData() lieferte', filteredData.length, 'Monate');
 
     // WICHTIG: Wenn gefilterte Daten leer sind, gib hilfreiche Meldung zurück
     if (filteredData.length === 0) {
-        console.warn('⚠️ WARNUNG: Gefilterte Daten sind leer! Filter:', JSON.stringify(state.filters));
+        console.warn('Gefilterte Daten sind leer! Filter:', JSON.stringify(state.filters));
 
         // Finde heraus, welcher Filter das Problem verursacht
         let filterInfo = '';
         if (state.filters.agentur !== 'alle') {
             const agentExists = agenturen.find(a => a.id === state.filters.agentur);
             if (!agentExists) {
-                filterInfo = `❌ Der Vermittler "${state.filters.agentur}" existiert nicht in den Daten!\n\nVerfügbare Vermittler:\n`;
+                filterInfo = `Der Vermittler "${state.filters.agentur}" existiert nicht in den Daten!\n\nVerfügbare Vermittler:\n`;
                 filterInfo += agenturen.slice(0, 10).map(a => `  - ${a.id}: ${a.name}`).join('\n');
                 if (agenturen.length > 10) {
                     filterInfo += `\n  ... und ${agenturen.length - 10} weitere`;
                 }
             } else {
-                filterInfo = `⚠️ Der Vermittler "${state.filters.agentur}" existiert, aber es gibt keine Daten für die aktuelle Filterkombination.`;
+                filterInfo = `Der Vermittler "${state.filters.agentur}" existiert, aber es gibt keine Daten für die aktuelle Filterkombination.`;
             }
         } else {
-            filterInfo = `⚠️ Keine Daten für die aktuelle Filterkombination gefunden.`;
+            filterInfo = `Keine Daten für die aktuelle Filterkombination gefunden.`;
         }
 
         return `
@@ -755,7 +755,7 @@ ${agentData.bundesland ? `- Bundesland: ${agentData.bundesland}` : ''}
 ${agentData.silo ? `- Silo: ${agentData.silo}` : ''}
 `;
         } else {
-            console.warn('⚠️ getAgenturData() lieferte null für Agentur:', state.filters.agentur);
+            console.warn('getAgenturData() lieferte null fuer Agentur:', state.filters.agentur);
         }
     }
     
@@ -791,8 +791,8 @@ ${specificAgentData}
 
 // Process filter commands in response - VERBESSERT mit Auto-Analyse + Agentur-Übersicht!
 async function processFilterCommands(message) {
-    console.log('🔍 Prüfe Filter-Befehle in Antwort...');
-    console.log('📄 Message to parse:', message.substring(0, 300));  // DEBUG: Erste 300 Zeichen
+    console.log('Pruefe Filter-Befehle in Antwort...');
+    console.log('Message to parse:', message.substring(0, 300));
 
     let filterWasSet = false;
     let filterInfo = null;
@@ -801,13 +801,13 @@ async function processFilterCommands(message) {
     const overviewMatch = message.match(/showAgenturOverview\(['"]([^'"]+)['"]\)/);
     if (overviewMatch) {
         const vermittlerId = overviewMatch[1];
-        console.log('📊 Gefunden: showAgenturOverview für', vermittlerId);
+        console.log('Gefunden: showAgenturOverview fuer', vermittlerId);
 
         if (typeof showAgenturOverview === 'function') {
             showAgenturOverview(vermittlerId);
             return true; // Early return, keine weiteren Filter
         } else {
-            console.error('❌ showAgenturOverview Funktion nicht verfügbar!');
+            console.error('showAgenturOverview Funktion nicht verfuegbar!');
         }
     }
     
@@ -816,7 +816,7 @@ async function processFilterCommands(message) {
         const match = message.match(/setAgenturFilter\(['"](.+?)['"]\)/);
         if (match) {
             let value = match[1];
-            console.log('📊 Gefunden: setAgenturFilter mit Wert:', value);
+            console.log('Gefunden: setAgenturFilter mit Wert:', value);
             
             // Wenn es ein Name ist, konvertiere zu ID
             const agenturen = getAgenturen();
@@ -825,7 +825,7 @@ async function processFilterCommands(message) {
             );
             
             if (byName) {
-                console.log('✅ Name zu ID konvertiert:', value, '→', byName.id);
+                console.log('Name zu ID konvertiert:', value, '->', byName.id);
                 value = byName.id;
             }
             
@@ -849,7 +849,7 @@ async function processFilterCommands(message) {
     if (message.includes('setSiloFilter')) {
         const match = message.match(/setSiloFilter\(['"](.+?)['"]\)/);
         if (match) {
-            console.log('📊 Gefunden: setSiloFilter mit Wert:', match[1]);
+            console.log('Gefunden: setSiloFilter mit Wert:', match[1]);
             setSiloFilter(match[1]);
             filterWasSet = true;
             
@@ -864,7 +864,7 @@ async function processFilterCommands(message) {
     if (message.includes('setSegmentFilter')) {
         const match = message.match(/setSegmentFilter\(\[?['"](.+?)['"]\]?\)/);
         if (match) {
-            console.log('📊 Gefunden: setSegmentFilter mit Wert:', match[1]);
+            console.log('Gefunden: setSegmentFilter mit Wert:', match[1]);
             const segments = match[1].split(',').map(s => s.trim().replace(/['"]/g, ''));
             setSegmentFilter(segments);
             filterWasSet = true;
@@ -878,7 +878,7 @@ async function processFilterCommands(message) {
     
     // Check for clear filters
     if (message.includes('clearAllFilters')) {
-        console.log('📊 Gefunden: clearAllFilters');
+        console.log('Gefunden: clearAllFilters');
         clearAllFilters();
         filterWasSet = true;
 
@@ -901,8 +901,8 @@ async function processFilterCommands(message) {
             else if (message.toLowerCase().includes('neugeschäft')) sortBy = 'neugeschaeft';
         }
 
-        console.log(`📊 Gefunden: Top ${topN} Agenturen nach ${sortBy}`);
-        console.log(`📊 Match details:`, topMatch);  // DEBUG
+        console.log(`Gefunden: Top ${topN} Agenturen nach ${sortBy}`);
+        console.log('Match details:', topMatch);
 
         showTopAgenturen(topN, sortBy);
         filterWasSet = true;
@@ -916,27 +916,27 @@ async function processFilterCommands(message) {
 
     // DEBUG: Log ob etwas gefunden wurde
     if (!filterWasSet) {
-        console.log('⚠️ Keine Filter-Befehle gefunden in der Antwort');
+        console.log('Keine Filter-Befehle gefunden in der Antwort');
     }
 
     // If a filter was set, automatically trigger analysis
     if (filterWasSet && filterInfo) {
-        console.log('✅ Filter wurde gesetzt - starte automatische Analyse...');
+        console.log('Filter wurde gesetzt - starte automatische Analyse...');
         
         // Show confirmation
         setTimeout(() => {
             let confirmationMessage = '';
             
             if (filterInfo.type === 'agentur') {
-                confirmationMessage = `✅ **Filter aktiv:** Dashboard zeigt jetzt nur Daten von ${filterInfo.displayName}`;
+                confirmationMessage = `**Filter aktiv:** Dashboard zeigt jetzt nur Daten von ${filterInfo.displayName}`;
             } else if (filterInfo.type === 'silo') {
-                confirmationMessage = `✅ **Filter aktiv:** Dashboard zeigt jetzt nur ${filterInfo.value}-Daten`;
+                confirmationMessage = `**Filter aktiv:** Dashboard zeigt jetzt nur ${filterInfo.value}-Daten`;
             } else if (filterInfo.type === 'segment') {
-                confirmationMessage = `✅ **Filter aktiv:** Dashboard zeigt jetzt nur ${filterInfo.value}-Segmente`;
+                confirmationMessage = `**Filter aktiv:** Dashboard zeigt jetzt nur ${filterInfo.value}-Segmente`;
             } else if (filterInfo.type === 'clear') {
-                confirmationMessage = `✅ **Alle Filter zurückgesetzt:** Dashboard zeigt wieder alle Daten`;
+                confirmationMessage = `**Alle Filter zurückgesetzt:** Dashboard zeigt wieder alle Daten`;
             } else if (filterInfo.type === 'topAgenturen') {
-                confirmationMessage = `✅ **Tabellen-Ansicht:** Zeige die Top ${filterInfo.topN} Vermittler nach ${filterInfo.sortBy}`;
+                confirmationMessage = `**Tabellen-Ansicht:** Zeige die Top ${filterInfo.topN} Vermittler nach ${filterInfo.sortBy}`;
                 // Add follow-up suggestions
                 const suggestions = getSalesChatSuggestions('topAgenturen');
                 addMessage('assistant', confirmationMessage + suggestions);
@@ -953,12 +953,12 @@ async function processFilterCommands(message) {
                     // Get fresh filtered context
                     const filteredContext = getDataContext();
 
-                    console.log('📊 DEBUG: Filtered Context wird an Claude gesendet:');
-                    console.log('📊 Context Länge:', filteredContext.length);
-                    console.log('📊 Context erste 500 Zeichen:', filteredContext.substring(0, 500));
-                    console.log('📊 Aktuelle Filter:', JSON.stringify(state.filters));
+                    console.log('DEBUG: Filtered Context wird gesendet:');
+                    console.log('Context Laenge:', filteredContext.length);
+                    console.log('Context erste 500 Zeichen:', filteredContext.substring(0, 500));
+                    console.log('Aktuelle Filter:', JSON.stringify(state.filters));
 
-                    // Send analysis request to Claude
+                    // Send analysis request
                     const systemPrompt = `Du bist ein KI-Assistent für ein Versicherungs-Dashboard. Analysiere die gefilterten Daten und gib konkrete Insights.`;
 
                     const messages = [
@@ -1010,10 +1010,10 @@ Formatiere große Zahlen lesbar (z.B. "€45.2 Mio") und sei konkret mit den ech
                     addMessage('assistant', analysisMessage + suggestions);
 
                 } catch (error) {
-                    console.error('❌ Analyse Fehler:', error);
+                    console.error('Analyse Fehler:', error);
                     hideTyping();
                     const suggestions = getSalesChatSuggestions('default');
-                    addMessage('assistant', '❌ Fehler bei der Datenanalyse. Bitte versuche es erneut.' + suggestions);
+                    addMessage('assistant', 'Fehler bei der Datenanalyse. Bitte versuche es erneut.' + suggestions);
                 }
             }, 500);
             
@@ -1047,21 +1047,21 @@ function setAgenturFilter(vermittlerId) {
     updateMapSelection();
     updateAllKPIs();
 
-    console.log('✅ Alle Filter zurückgesetzt, Agentur-Filter gesetzt:', vermittlerId);
+    console.log('Alle Filter zurueckgesetzt, Agentur-Filter gesetzt:', vermittlerId);
 }
 
 function setSiloFilter(silo) {
     state.filters.silo = silo;
     document.getElementById('siloFilter').value = silo;
     updateAllKPIs();
-    console.log('✅ Filter gesetzt: Silo =', silo);
+    console.log('Filter gesetzt: Silo =', silo);
 }
 
 function setSegmentFilter(segments) {
     state.filters.segments = Array.isArray(segments) ? segments : [segments];
     updateSegmentDisplay();
     updateAllKPIs();
-    console.log('✅ Filter gesetzt: Segment =', segments);
+    console.log('Filter gesetzt: Segment =', segments);
 }
 
 function setBundeslandFilter(bundeslaender) {
@@ -1069,7 +1069,7 @@ function setBundeslandFilter(bundeslaender) {
     bundeslaender.forEach(land => state.selectedStates.add(land));
     updateMapSelection();
     updateAllKPIs();
-    console.log('✅ Filter gesetzt: Bundesland =', bundeslaender);
+    console.log('Filter gesetzt: Bundesland =', bundeslaender);
 }
 
 function clearAllFilters() {
@@ -1119,7 +1119,7 @@ function showTopAgenturen(topN = 5, sortBy = 'neugeschaeft') {
     // 3. Ermittle Top N Agenturen
     const allAgenturen = getAgenturenData();
     if (allAgenturen.length === 0) {
-        console.warn('⚠️ Keine Agenturen gefunden');
+        console.warn('Keine Agenturen gefunden');
         return;
     }
 
@@ -1319,7 +1319,7 @@ function addMessage(role, content) {
     chatBody.appendChild(messageDiv);
     chatBody.scrollTop = chatBody.scrollHeight;
 
-    // ✨ v14: Zeige Antwort auch im AI Response Panel
+    // v14: Zeige Antwort auch im AI Response Panel
     if (role === 'assistant') {
         showAIResponse(cleanedContent);
     }
@@ -1378,10 +1378,10 @@ function hideTyping() {
 }
 
 // ========================================
-// ✨ v14 FEATURE: Sample Questions
+// v14 FEATURE: Sample Questions
 // ========================================
 function askSampleQuestion(question) {
-    console.log('📝 Sample Question clicked:', question);
+    console.log('Sample Question clicked:', question);
 
     // Check which view is currently visible (not just which elements exist)
     const landingPage = document.getElementById('landingPage');
@@ -1398,7 +1398,7 @@ function askSampleQuestion(question) {
     // Use dashboard chat if main app is visible OR if chat widget is visible
     if ((isMainAppVisible || isChatWidgetVisible) && dashboardChatInput) {
         // Dashboard Chat
-        console.log('📝 Using Dashboard Chat (Main App visible)');
+        console.log('Using Dashboard Chat (Main App visible)');
 
         // Verstecke Welcome Screen
         const welcomeDiv = document.querySelector('.chat-welcome');
@@ -1414,7 +1414,7 @@ function askSampleQuestion(question) {
         }
     } else if (isLandingVisible && landingChatInput) {
         // Landing Page Chat
-        console.log('📝 Using Landing Chat (Landing Page visible)');
+        console.log('Using Landing Chat (Landing Page visible)');
         landingChatInput.value = question;
 
         // Trigger the landing chat send
@@ -1426,21 +1426,21 @@ function askSampleQuestion(question) {
             if (sendBtn) sendBtn.click();
         }
     } else {
-        console.error('❌ Kein sichtbarer Chat gefunden');
+        console.error('Kein sichtbarer Chat gefunden');
     }
 }
 
 // ========================================
-// ✨ v14 FEATURE: AI Response Panel
+// v14 FEATURE: AI Response Panel
 // ========================================
 function showAIResponse(message) {
-    console.log('📊 Show AI Response in Panel');
+    console.log('Show AI Response in Panel');
 
     const panel = document.getElementById('aiResponsePanel');
     const content = document.getElementById('aiResponseContent');
 
     if (!panel || !content) {
-        console.error('❌ AI Response Panel nicht gefunden');
+        console.error('AI Response Panel nicht gefunden');
         return;
     }
 
@@ -1543,4 +1543,4 @@ window.hideAIResponse = hideAIResponse;
 window.showAnomalyAgenturen = showAnomalyAgenturen;
 window.removeAnomalyColumn = removeAnomalyColumn;
 
-console.log('✅ chat.js geladen - initChat() ist verfügbar');
+console.log('chat.js geladen - initChat() ist verfuegbar');

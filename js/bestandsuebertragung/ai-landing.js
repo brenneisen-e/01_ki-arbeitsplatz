@@ -1,5 +1,5 @@
 /**
- * AI Landing Page - Moderne Upload-Oberfläche mit Claude AI Integration
+ * AI Landing Page - Moderne Upload-Oberflaeche mit KI-Integration
  * ESM Module
  */
 

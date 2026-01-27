@@ -1,6 +1,6 @@
 # Cloudflare Pages Deployment Guide
 
-## 🚀 Deployment auf Cloudflare Pages
+## Deployment auf Cloudflare Pages
 
 Diese Anwendung ist für Cloudflare Pages optimiert und kann direkt aus dem GitHub Repository deployed werden.
 
@@ -31,18 +31,18 @@ Für die KI-Features:
 #### 4. Deploy
 
 Klicke auf **Save and Deploy**. Cloudflare Pages wird:
-- ✅ Dein Repository klonen
-- ✅ Die statischen Dateien deployen
-- ✅ Eine URL bereitstellen (z.B. `vsteike.pages.dev`)
-- ✅ Automatisch bei jedem Push auf `main` neu deployen
+- Dein Repository klonen
+- Die statischen Dateien deployen
+- Eine URL bereitstellen (z.B. `vsteike.pages.dev`)
+- Automatisch bei jedem Push auf `main` neu deployen
 
-### 📦 Was wurde konfiguriert
+### Was wurde konfiguriert
 
 - **wrangler.toml**: Cloudflare Pages Konfiguration
 - **_headers**: Security Headers (CSP, X-Frame-Options, etc.)
 - **_redirects**: SPA Routing-Regeln
 
-### 🔒 Security Features
+### Security Features
 
 Die `_headers` Datei aktiviert:
 - Content Security Policy (CSP)
@@ -52,28 +52,28 @@ Die `_headers` Datei aktiviert:
 - Referrer-Policy
 - Permissions-Policy
 
-### 🌐 Custom Domain (Optional)
+### Custom Domain (Optional)
 
 1. Gehe zu deinem Cloudflare Pages Projekt
 2. Klicke auf **Custom domains**
 3. Füge deine Domain hinzu (z.B. `dashboard.deine-domain.de`)
 4. Folge den DNS-Anweisungen
 
-### 🔄 Automatisches Deployment
+### Automatisches Deployment
 
 Cloudflare Pages deployed automatisch:
-- ✅ Bei jedem Push auf `main` → Production
-- ✅ Bei jedem Push auf andere Branches → Preview
+- Bei jedem Push auf `main` → Production
+- Bei jedem Push auf andere Branches → Preview
 
-### 📊 Performance
+### Performance
 
 Cloudflare Pages bietet:
-- 🚀 Globales CDN
-- ⚡ Edge Caching
-- 🔒 Automatisches HTTPS
-- 📈 Analytics
+- Globales CDN
+- Edge Caching
+- Automatisches HTTPS
+- Analytics
 
-### 🛠️ Lokale Entwicklung
+### Lokale Entwicklung
 
 ```bash
 # Mit einem einfachen HTTP Server
@@ -86,7 +86,7 @@ npx serve .
 npx wrangler pages dev .
 ```
 
-### 🔧 Troubleshooting
+### Troubleshooting
 
 **Problem**: CSP blockiert externe Resources
 **Lösung**: Passe die `_headers` Datei an und füge weitere Domains hinzu
@@ -94,20 +94,20 @@ npx wrangler pages dev .
 **Problem**: 404 bei direkten URLs
 **Lösung**: Die `_redirects` Datei sollte alle Anfragen zu `index.html` umleiten
 
-### 📝 Hinweise
+### Hinweise
 
 - Die App ist eine reine Frontend-Anwendung (keine Server-Side Logic)
 - API-Calls gehen direkt vom Browser zu OpenAI
 - Keine Datenbank notwendig
 - Alle Daten werden im Browser verarbeitet
 
-### 🎯 Nächste Schritte nach Deployment
+### Nächste Schritte nach Deployment
 
-1. ✅ Teste die deployed URL
-2. ✅ Prüfe die Console auf CSP-Fehler
-3. ✅ Teste CSV-Upload Funktionalität
-4. ✅ Teste KI-Chat Features
-5. ✅ Richte ggf. Custom Domain ein
+1. Teste die deployed URL
+2. Prüfe die Console auf CSP-Fehler
+3. Teste CSV-Upload Funktionalität
+4. Teste KI-Chat Features
+5. Richte ggf. Custom Domain ein
 
 ---
 

@@ -109,7 +109,7 @@ export function getFilteredData() {
         }
 
         if (currentState.selectedCounties && currentState.selectedCounties.size > 0) {
-            console.log('🔍 Filtere nach Regionen:', Array.from(currentState.selectedCounties));
+            console.log('Filtere nach Regionen:', Array.from(currentState.selectedCounties));
             const beforeCount = filteredDaily.length;
 
             filteredDaily = filteredDaily.filter(row => {

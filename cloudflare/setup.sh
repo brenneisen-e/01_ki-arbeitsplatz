@@ -11,7 +11,7 @@ WORKER_NAME="vsteike-feedback"
 # ============================================
 # 1. Account ID ermitteln
 # ============================================
-echo "🔍 Ermittle Account ID..."
+echo "Ermittle Account ID..."
 ACCOUNT_RESPONSE=$(curl -s -X GET "https://api.cloudflare.com/client/v4/accounts" \
   -H "Authorization: Bearer $API_TOKEN" \
   -H "Content-Type: application/json")
@@ -19,18 +19,18 @@ ACCOUNT_RESPONSE=$(curl -s -X GET "https://api.cloudflare.com/client/v4/accounts
 ACCOUNT_ID=$(echo $ACCOUNT_RESPONSE | grep -o '"id":"[^"]*"' | head -1 | cut -d'"' -f4)
 
 if [ -z "$ACCOUNT_ID" ]; then
-    echo "❌ Fehler: Konnte Account ID nicht ermitteln"
+    echo "Fehler: Konnte Account ID nicht ermitteln"
     echo "Response: $ACCOUNT_RESPONSE"
     exit 1
 fi
 
-echo "✅ Account ID: $ACCOUNT_ID"
+echo "Account ID: $ACCOUNT_ID"
 
 # ============================================
 # 2. KV Namespace erstellen
 # ============================================
 echo ""
-echo "📦 Erstelle KV Namespace..."
+echo "Erstelle KV Namespace..."
 KV_RESPONSE=$(curl -s -X POST "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/storage/kv/namespaces" \
   -H "Authorization: Bearer $API_TOKEN" \
   -H "Content-Type: application/json" \
@@ -40,24 +40,24 @@ KV_ID=$(echo $KV_RESPONSE | grep -o '"id":"[^"]*"' | head -1 | cut -d'"' -f4)
 
 if [ -z "$KV_ID" ]; then
     # Vielleicht existiert er schon - versuche zu finden
-    echo "⚠️ KV existiert möglicherweise bereits, suche..."
+    echo "KV existiert moeglicherweise bereits, suche..."
     KV_LIST=$(curl -s -X GET "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/storage/kv/namespaces" \
       -H "Authorization: Bearer $API_TOKEN")
     KV_ID=$(echo $KV_LIST | grep -o '"id":"[^"]*","title":"FEEDBACK_KV"' | head -1 | cut -d'"' -f4)
 fi
 
 if [ -z "$KV_ID" ]; then
-    echo "❌ Fehler: Konnte KV Namespace nicht erstellen"
+    echo "Fehler: Konnte KV Namespace nicht erstellen"
     exit 1
 fi
 
-echo "✅ KV Namespace ID: $KV_ID"
+echo "KV Namespace ID: $KV_ID"
 
 # ============================================
 # 3. Worker erstellen
 # ============================================
 echo ""
-echo "🚀 Erstelle Worker..."
+echo "Erstelle Worker..."
 
 # Worker Script aus Datei lesen
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -82,16 +82,16 @@ WORKER_RESPONSE=$(curl -s -X PUT "https://api.cloudflare.com/client/v4/accounts/
   -F "worker.js=@$SCRIPT_DIR/feedback-worker.js;type=application/javascript+module")
 
 if echo "$WORKER_RESPONSE" | grep -q '"success":true'; then
-    echo "✅ Worker erstellt!"
+    echo "Worker erstellt!"
 else
-    echo "⚠️ Worker Response: $WORKER_RESPONSE"
+    echo "Worker Response: $WORKER_RESPONSE"
 fi
 
 # ============================================
 # 4. Worker subdomain aktivieren (workers.dev)
 # ============================================
 echo ""
-echo "🌐 Aktiviere workers.dev Subdomain..."
+echo "Aktiviere workers.dev Subdomain..."
 
 SUBDOMAIN_RESPONSE=$(curl -s -X POST "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/workers/scripts/$WORKER_NAME/subdomain" \
   -H "Authorization: Bearer $API_TOKEN" \
@@ -102,7 +102,7 @@ SUBDOMAIN_RESPONSE=$(curl -s -X POST "https://api.cloudflare.com/client/v4/accou
 # 5. Worker URL ermitteln
 # ============================================
 echo ""
-echo "🔗 Ermittle Worker URL..."
+echo "Ermittle Worker URL..."
 
 # Account subdomain holen
 SUBDOMAIN_INFO=$(curl -s -X GET "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/workers/subdomain" \
@@ -114,7 +114,7 @@ if [ -n "$SUBDOMAIN" ]; then
     WORKER_URL="https://$WORKER_NAME.$SUBDOMAIN.workers.dev"
     echo ""
     echo "============================================"
-    echo "✅ SETUP ABGESCHLOSSEN!"
+    echo "SETUP ABGESCHLOSSEN!"
     echo "============================================"
     echo ""
     echo "Worker URL: $WORKER_URL"
@@ -127,7 +127,7 @@ if [ -n "$SUBDOMAIN" ]; then
 else
     echo ""
     echo "============================================"
-    echo "✅ Worker wurde erstellt!"
+    echo "Worker wurde erstellt!"
     echo "============================================"
     echo ""
     echo "Bitte prüfen Sie die Worker URL im Cloudflare Dashboard:"

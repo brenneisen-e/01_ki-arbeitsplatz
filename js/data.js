@@ -127,7 +127,7 @@ function getFilteredData() {
         
         // NEU: Filter by selected counties (Regierungsbezirke)
         if (state.selectedCounties && state.selectedCounties.size > 0) {
-            console.log('🔍 Filtere nach Regionen:', Array.from(state.selectedCounties));
+            console.log('Filtere nach Regionen:', Array.from(state.selectedCounties));
             const beforeCount = filteredDaily.length;
 
             filteredDaily = filteredDaily.filter(row => {

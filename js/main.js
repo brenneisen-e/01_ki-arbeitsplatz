@@ -278,7 +278,7 @@ function updateProductFilter() {
     updateProductDisplay();
 }
 
-// ✨ v18: Update product display mit Checkbox-Update
+// v18: Update product display mit Checkbox-Update
 function updateProductDisplay() {
     const button = document.getElementById('productButton');
     if (button) {
@@ -877,7 +877,7 @@ function toggleForecast() {
     const checkbox = document.getElementById('forecastToggle');
     window.state.forecastEnabled = checkbox.checked;
 
-    console.log('🔮 Forecast-Modus:', window.state.forecastEnabled ? 'aktiviert' : 'deaktiviert');
+    console.log('Forecast-Modus:', window.state.forecastEnabled ? 'aktiviert' : 'deaktiviert');
 
     // Alle Charts neu rendern mit Forecast-Daten
     updateAllKPIs();
@@ -942,7 +942,7 @@ function generateAllForecastData(actualData) {
 function getFilteredDataWithForecast() {
     const actualData = getFilteredData();
 
-    console.log('🔮 getFilteredDataWithForecast called, forecastEnabled:', window.state.forecastEnabled);
+    console.log('getFilteredDataWithForecast called, forecastEnabled:', window.state.forecastEnabled);
 
     if (!window.state.forecastEnabled || actualData.length === 0) {
         return actualData;
@@ -955,7 +955,7 @@ function getFilteredDataWithForecast() {
     const forecastData = generateAllForecastData(actualData);
 
     const combined = [...markedActualData, ...forecastData];
-    console.log('📈 Combined data:', combined.length, 'months');
+    console.log('Combined data:', combined.length, 'months');
 
     return combined;
 }

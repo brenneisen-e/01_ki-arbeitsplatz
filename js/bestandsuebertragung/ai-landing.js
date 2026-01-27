@@ -505,8 +505,7 @@ function renderResults() {
                 </div>
         `;
 
-        // Zusammenfassung nur bei mehreren Vorgängen anzeigen
-        if (result.analysis.zusammenfassung && result.analysis.vorgaenge.length > 1) {
+        if (result.analysis.zusammenfassung) {
             html += `<div class="result-summary">${escapeHtml(result.analysis.zusammenfassung)}</div>`;
         }
 

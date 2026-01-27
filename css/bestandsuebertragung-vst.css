@@ -4952,6 +4952,111 @@ body {
     color: #666;
 }
 
+/* Results Tabs */
+.bestand-page .results-tabs {
+    display: flex;
+    gap: 0;
+    margin-bottom: 0;
+    border-bottom: 2px solid var(--gray-200);
+    padding: 0 4px;
+}
+
+.bestand-page .results-tab {
+    padding: 10px 20px;
+    border: none;
+    background: none;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--gray-500);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    transition: color 0.2s, border-color 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.bestand-page .results-tab:hover {
+    color: var(--gray-700);
+}
+
+.bestand-page .results-tab.active {
+    color: #C8102E;
+    border-bottom-color: #C8102E;
+}
+
+.bestand-page .tab-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 22px;
+    height: 22px;
+    padding: 0 6px;
+    border-radius: 11px;
+    font-size: 12px;
+    font-weight: 700;
+    background: var(--gray-100);
+    color: var(--gray-600);
+}
+
+.bestand-page .results-tab.active .tab-count {
+    background: #C8102E;
+    color: white;
+}
+
+/* Sub-filters for Neu tab */
+.bestand-page .results-subfilters {
+    display: flex;
+    gap: 8px;
+    padding: 12px 4px 8px;
+}
+
+.bestand-page .subfilter-btn {
+    padding: 6px 14px;
+    border: 1px solid var(--gray-200);
+    background: white;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--gray-600);
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.bestand-page .subfilter-btn:hover {
+    border-color: var(--gray-300);
+    background: var(--gray-50);
+}
+
+.bestand-page .subfilter-btn.active {
+    background: #C8102E;
+    color: white;
+    border-color: #C8102E;
+}
+
+.bestand-page .subfilter-count {
+    font-size: 11px;
+    font-weight: 700;
+    opacity: 0.75;
+}
+
+.bestand-page .subfilter-btn.active .subfilter-count {
+    opacity: 1;
+}
+
+/* Empty filter state */
+.bestand-page .results-empty-filter {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--gray-400);
+    font-size: 14px;
+    font-style: italic;
+}
+
 /* Responsive */
 @media (max-width: 1024px) {
     .bestand-page .ai-main-grid {

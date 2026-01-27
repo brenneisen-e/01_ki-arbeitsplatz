@@ -10,6 +10,8 @@ import * as Storage from './storage.js';
 let uploadedFiles = [];
 let analysisResults = [];
 let isProcessing = false;
+let activeTab = 'neu'; // 'neu' | 'erinnerung'
+let neuFilter = 'alle'; // 'alle' | 'vollstaendig' | 'nicht-vollstaendig'
 
 /**
  * AI Landing Page initialisieren
@@ -315,6 +317,38 @@ function updateProgress(info) {
 }
 
 /**
+ * Tab wechseln
+ */
+export function setActiveTab(tab) {
+    activeTab = tab;
+    if (tab === 'erinnerung') {
+        neuFilter = 'alle';
+    }
+    renderResults();
+}
+
+/**
+ * Neu-Filter wechseln
+ */
+export function setNeuFilter(filter) {
+    neuFilter = filter;
+    renderResults();
+}
+
+/**
+ * Prüfen ob ein Vorgang "vollständig" ist
+ * Vollständig = MV als Anhang + unterschrieben + keine fehlenden Infos + keine manuelle Prüfung nötig
+ */
+function isVorgangVollstaendig(vorgang) {
+    const mv = vorgang.maklervollmacht || {};
+    const fehlend = (vorgang.fehlende_infos || []).filter(info => !/vollmacht|maklervollmacht/i.test(info));
+    return mv.als_anhang === true
+        && mv.unterschrieben === true
+        && mv.manuell_pruefen !== true
+        && fehlend.length === 0;
+}
+
+/**
  * Ergebnisse rendern
  */
 function renderResults() {
@@ -326,8 +360,61 @@ function renderResults() {
         return;
     }
 
+    // Count vorgaenge per category for tab badges
+    let countNeu = 0;
+    let countErinnerung = 0;
+    let countNeuVollstaendig = 0;
+    let countNeuNichtVollstaendig = 0;
+
+    for (const result of analysisResults) {
+        if (!result.success || !result.analysis?.vorgaenge) continue;
+        for (const v of result.analysis.vorgaenge) {
+            const kat = v.kategorie || 'neu';
+            if (kat === 'erinnerung') {
+                countErinnerung++;
+            } else {
+                countNeu++;
+                if (isVorgangVollstaendig(v)) {
+                    countNeuVollstaendig++;
+                } else {
+                    countNeuNichtVollstaendig++;
+                }
+            }
+        }
+    }
+
     let html = '<div class="results-header"><h3>Analyseergebnisse</h3></div>';
 
+    // Tab bar
+    html += `
+        <div class="results-tabs">
+            <button class="results-tab${activeTab === 'neu' ? ' active' : ''}" onclick="window.AILanding.setActiveTab('neu')">
+                Neu <span class="tab-count">${countNeu}</span>
+            </button>
+            <button class="results-tab${activeTab === 'erinnerung' ? ' active' : ''}" onclick="window.AILanding.setActiveTab('erinnerung')">
+                Erinnerung <span class="tab-count">${countErinnerung}</span>
+            </button>
+        </div>
+    `;
+
+    // Sub-filters for Neu tab
+    if (activeTab === 'neu') {
+        html += `
+            <div class="results-subfilters">
+                <button class="subfilter-btn${neuFilter === 'alle' ? ' active' : ''}" onclick="window.AILanding.setNeuFilter('alle')">
+                    Alle <span class="subfilter-count">${countNeu}</span>
+                </button>
+                <button class="subfilter-btn${neuFilter === 'vollstaendig' ? ' active' : ''}" onclick="window.AILanding.setNeuFilter('vollstaendig')">
+                    Vollständig <span class="subfilter-count">${countNeuVollstaendig}</span>
+                </button>
+                <button class="subfilter-btn${neuFilter === 'nicht-vollstaendig' ? ' active' : ''}" onclick="window.AILanding.setNeuFilter('nicht-vollstaendig')">
+                    Nicht vollständig <span class="subfilter-count">${countNeuNichtVollstaendig}</span>
+                </button>
+            </div>
+        `;
+    }
+
+    // Render error and attachment cards (always visible)
     for (const result of analysisResults) {
         if (!result.success) {
             html += `
@@ -339,10 +426,7 @@ function renderResults() {
                     <div class="result-error">${escapeHtml(result.error)}</div>
                 </div>
             `;
-            continue;
-        }
-
-        if (result.type === 'attachment') {
+        } else if (result.type === 'attachment') {
             html += `
                 <div class="result-card attachment">
                     <div class="result-header">
@@ -352,17 +436,33 @@ function renderResults() {
                     </div>
                 </div>
             `;
-            continue;
         }
+    }
 
-        if (!result.analysis?.vorgaenge) continue;
+    // Render success results with filtered vorgaenge
+    for (const result of analysisResults) {
+        if (!result.success || result.type === 'attachment' || !result.analysis?.vorgaenge) continue;
+
+        // Filter vorgaenge by active tab and sub-filter
+        const filteredVorgaenge = result.analysis.vorgaenge.filter((v, _vi) => {
+            const kat = v.kategorie || 'neu';
+            if (kat !== activeTab) return false;
+            if (activeTab === 'neu' && neuFilter !== 'alle') {
+                const vollst = isVorgangVollstaendig(v);
+                if (neuFilter === 'vollstaendig' && !vollst) return false;
+                if (neuFilter === 'nicht-vollstaendig' && vollst) return false;
+            }
+            return true;
+        });
+
+        if (filteredVorgaenge.length === 0) continue;
 
         html += `
             <div class="result-card success">
                 <div class="result-header">
                     <span class="result-icon">✓</span>
                     <span class="result-filename">${escapeHtml(result.filename)}</span>
-                    <span class="result-badge">${result.analysis.vorgaenge.length} Vorgänge</span>
+                    <span class="result-badge">${filteredVorgaenge.length} Vorgänge</span>
                 </div>
         `;
 
@@ -373,8 +473,8 @@ function renderResults() {
 
         html += '<div class="vorgaenge-list">';
 
-        for (let vi = 0; vi < result.analysis.vorgaenge.length; vi++) {
-            const vorgang = result.analysis.vorgaenge[vi];
+        for (const vorgang of filteredVorgaenge) {
+            const vi = result.analysis.vorgaenge.indexOf(vorgang);
             const mv = vorgang.maklervollmacht || {};
 
             // Build MV status display
@@ -495,6 +595,16 @@ function renderResults() {
         }
 
         html += '</div></div>';
+    }
+
+    // Empty state for current filter
+    const hasVisibleVorgaenge = html.includes('vorgang-card');
+    if (!hasVisibleVorgaenge) {
+        const tabLabel = activeTab === 'neu' ? 'Neu' : 'Erinnerung';
+        const filterLabel = activeTab === 'neu' && neuFilter !== 'alle'
+            ? (neuFilter === 'vollstaendig' ? ' (vollständig)' : ' (nicht vollständig)')
+            : '';
+        html += `<div class="results-empty-filter">Keine Vorgänge unter "${tabLabel}${filterLabel}"</div>`;
     }
 
     container.innerHTML = html;
@@ -832,10 +942,12 @@ export default {
     toggleHold,
     showAttachmentPreview,
     closeAttachmentPreview,
-    downloadAttachment
+    downloadAttachment,
+    setActiveTab,
+    setNeuFilter
 };
 
 // Global export
 if (typeof window !== 'undefined') {
-    window.AILanding = { init, removeFile, toggleHold, showAttachmentPreview, closeAttachmentPreview, downloadAttachment };
+    window.AILanding = { init, removeFile, toggleHold, showAttachmentPreview, closeAttachmentPreview, downloadAttachment, setActiveTab, setNeuFilter };
 }

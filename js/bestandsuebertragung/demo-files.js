@@ -709,18 +709,18 @@ Stefan Zimmermann`,
                 date: 'Fri, 17 Jan 2026 15:10:00 +0100',
                 body: `Sehr geehrte Damen und Herren,
 
-vielen Dank für Ihre Rückmeldung.
+vielen Dank f\u00fcr Ihre R\u00fcckmeldung zu unserem Antrag vom 16.01.2026.
 
 Anbei die nachgeforderte Maklervollmacht f\u00fcr Frau Petra Schneider (ERG-5567891, BU-Versicherung).
 Gew\u00fcnschtes \u00dcbertragungsdatum: 01.03.2026
 
 Bitte setzen Sie die Bestands\u00fcbertragung nun fort.
 
-Mit freundlichen Grüßen
+Mit freundlichen Gr\u00fc\u00dfen
 
 Lisa Wagner
-Wagner Maklerbüro
-Friedrichstr. 22, 40210 Düsseldorf
+Wagner Maklerb\u00fcro
+Friedrichstr. 22, 40210 D\u00fcsseldorf
 Tel.: 0211-7788990`,
                 attachments: [{
                     filename: 'Maklervollmacht_Schneider.docx',
@@ -1227,12 +1227,12 @@ Tel.: 0211-8867543`,
         }
     },
     {
-        id: 'komplett_sammel_otto',
+        id: 'komplett_sammel_otto_sommer',
         category: 'email-complex',
-        title: 'Komplett-Paket \u2013 Otto (2 Vertr\u00e4ge)',
-        description: 'Vollst\u00e4ndige Anfrage mit MV + Excel-Vertragsliste: 2 Vertr\u00e4ge, Hausrat + KFZ.',
-        tags: ['EML', 'DOCX', 'XLSX', 'Komplett', 'Vollst\u00e4ndig'],
-        filename: '17_Komplett_Otto.eml',
+        title: 'Sammel\u00fcbertragung \u2013 Otto + Sommer (2 VN)',
+        description: 'Ein Makler beantragt \u00dcbertragungen f\u00fcr 2 verschiedene Versicherungsnehmer. MV nur f\u00fcr Otto vorhanden.',
+        tags: ['EML', 'DOCX', 'XLSX', '2 VN', 'Teilweise'],
+        filename: '17_Sammel_Otto_Sommer.eml',
         generate() {
             const vollmacht = buildMaklervollmacht(
                 'Thomas Otto', '14.09.1976',
@@ -1243,27 +1243,29 @@ Tel.: 0211-8867543`,
             );
             const xlsx = buildVersicherungsliste([
                 ['ERG-8834001', 'Thomas Otto', 'Hausrat', 'ERGO', '01.06.2025', '01.06.2026', '134,40 \u20ac'],
-                ['ERG-8834002', 'Thomas Otto', 'KFZ', 'ERGO', '01.06.2025', '01.06.2026', '780,00 \u20ac'],
+                ['ERG-8834002', 'Karin Sommer', 'KFZ', 'ERGO', '01.03.2025', '01.03.2026', '780,00 \u20ac'],
             ]);
             return createEml({
                 from: '"Birgit Feld" <birgit.feld@feld-finanz.de>',
                 to: 'maklerservice@ergo.de',
-                subject: 'Bestands\u00fcbertragung Thomas Otto \u2013 Vollmacht + Vertragsliste',
+                subject: 'Bestands\u00fcbertragung Otto + Sommer \u2013 Vertragsliste + Vollmacht',
                 date: 'Tue, 14 Jan 2026 09:20:00 +0100',
                 body: `Sehr geehrte Damen und Herren,
 
-f\u00fcr unseren Kunden Thomas Otto beantragen wir die Bestands\u00fcbertragung folgender Vertr\u00e4ge:
+wir beantragen die Bestands\u00fcbertragung f\u00fcr zwei unserer Kunden:
 
-1. Hausratversicherung, ERG-8834001
-2. KFZ-Versicherung, ERG-8834002
+1. Thomas Otto \u2013 Hausratversicherung, ERG-8834001
+2. Karin Sommer \u2013 KFZ-Versicherung, ERG-8834002
 
-Gew\u00fcnschtes \u00dcbertragungsdatum: 01.03.2026
+Gew\u00fcnschtes \u00dcbertragungsdatum f\u00fcr beide: 01.03.2026
 
 Anbei:
-- Unterschriebene Maklervollmacht
-- Vertragsliste
+- Unterschriebene Maklervollmacht f\u00fcr Herrn Otto
+- Vertragsliste mit beiden Vertr\u00e4gen
 
-Bitte best\u00e4tigen Sie die \u00dcbertragung f\u00fcr beide Vertr\u00e4ge.
+Die Maklervollmacht f\u00fcr Frau Sommer folgt in den n\u00e4chsten Tagen per Post.
+
+Bitte best\u00e4tigen Sie die \u00dcbertragung.
 
 Mit freundlichen Gr\u00fc\u00dfen
 
@@ -1278,7 +1280,7 @@ Tel.: 0211-5567890`,
                         data: vollmacht
                     },
                     {
-                        filename: 'Vertragsliste_Otto.xlsx',
+                        filename: 'Vertragsliste_Otto_Sommer.xlsx',
                         mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
                         data: xlsx
                     }

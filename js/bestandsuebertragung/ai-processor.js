@@ -378,13 +378,31 @@ function parseMimePart(partRaw) {
  */
 function decodeMimeBody(body, encoding) {
     if (encoding === 'quoted-printable') {
-        return body
-            .replace(/=\r?\n/g, '') // Soft line breaks
-            .replace(/=([0-9A-Fa-f]{2})/g, (_, hex) => String.fromCharCode(parseInt(hex, 16)));
+        const cleaned = body.replace(/=\r?\n/g, ''); // Soft line breaks
+        // Collect bytes, then decode as UTF-8
+        const bytes = [];
+        for (let i = 0; i < cleaned.length; i++) {
+            if (cleaned[i] === '=' && i + 2 < cleaned.length && /^[0-9A-Fa-f]{2}$/.test(cleaned.substring(i + 1, i + 3))) {
+                bytes.push(parseInt(cleaned.substring(i + 1, i + 3), 16));
+                i += 2;
+            } else {
+                const code = cleaned.charCodeAt(i);
+                if (code === 0x0D) continue; // skip CR
+                bytes.push(code & 0xFF);
+            }
+        }
+        try {
+            return new TextDecoder('utf-8').decode(new Uint8Array(bytes));
+        } catch {
+            return cleaned.replace(/=([0-9A-Fa-f]{2})/g, (_, hex) => String.fromCharCode(parseInt(hex, 16)));
+        }
     }
     if (encoding === 'base64') {
         try {
-            return atob(body.replace(/[\r\n\s]/g, ''));
+            const binaryStr = atob(body.replace(/[\r\n\s]/g, ''));
+            const bytes = new Uint8Array(binaryStr.length);
+            for (let i = 0; i < binaryStr.length; i++) bytes[i] = binaryStr.charCodeAt(i);
+            return new TextDecoder('utf-8').decode(bytes);
         } catch {
             return body;
         }
@@ -397,13 +415,31 @@ function decodeMimeBody(body, encoding) {
  */
 function decodeRfc2047(str) {
     return str.replace(/=\?([^?]+)\?([BbQq])\?([^?]*)\?=/g, (_, charset, enc, text) => {
-        if (enc.toUpperCase() === 'B') {
-            try { return atob(text); } catch { return text; }
+        try {
+            let bytes;
+            if (enc.toUpperCase() === 'B') {
+                const binaryStr = atob(text);
+                bytes = new Uint8Array(binaryStr.length);
+                for (let i = 0; i < binaryStr.length; i++) bytes[i] = binaryStr.charCodeAt(i);
+            } else {
+                // Q encoding
+                const decoded = text.replace(/_/g, ' ');
+                const arr = [];
+                for (let i = 0; i < decoded.length; i++) {
+                    if (decoded[i] === '=' && i + 2 < decoded.length && /^[0-9A-Fa-f]{2}$/.test(decoded.substring(i + 1, i + 3))) {
+                        arr.push(parseInt(decoded.substring(i + 1, i + 3), 16));
+                        i += 2;
+                    } else {
+                        arr.push(decoded.charCodeAt(i) & 0xFF);
+                    }
+                }
+                bytes = new Uint8Array(arr);
+            }
+            const label = charset.toLowerCase().replace(/^utf-?8$/, 'utf-8');
+            return new TextDecoder(label).decode(bytes);
+        } catch {
+            return text;
         }
-        // Q encoding
-        return text
-            .replace(/_/g, ' ')
-            .replace(/=([0-9A-Fa-f]{2})/g, (__, hex) => String.fromCharCode(parseInt(hex, 16)));
     });
 }
 

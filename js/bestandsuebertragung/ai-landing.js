@@ -337,7 +337,7 @@ export function setNeuFilter(filter) {
 
 /**
  * Prüfen ob ein Vorgang "vollständig" ist
- * Vollständig = MV als Anhang + unterschrieben + keine fehlenden Infos + keine manuelle Prüfung nötig
+ * Vollständig = MV als Anhang + unterschrieben + keine fehlenden Infos + keine manuelle Prüfung + Gültigkeitsdatum vorhanden
  */
 function isVorgangVollstaendig(vorgang) {
     const mv = vorgang.maklervollmacht || {};
@@ -345,7 +345,8 @@ function isVorgangVollstaendig(vorgang) {
     return mv.als_anhang === true
         && mv.unterschrieben === true
         && mv.manuell_pruefen !== true
-        && fehlend.length === 0;
+        && fehlend.length === 0
+        && !!vorgang.gueltigkeitsdatum;
 }
 
 /**

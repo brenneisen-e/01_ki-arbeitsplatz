@@ -155,7 +155,7 @@ export function createChart(kpiId, data, view, kpi, timeRange = 'year', offset =
 
     if (forecastEnabled && typeof window.getFilteredDataWithForecast === 'function') {
         fullData = window.getFilteredDataWithForecast();
-        console.log('🔮 Chart ESM', kpiId, '- forecastEnabled:', forecastEnabled, 'fullData length:', fullData.length);
+        console.log('Chart ESM', kpiId, '- forecastEnabled:', forecastEnabled, 'fullData length:', fullData.length);
     }
 
     let chartData;
@@ -170,7 +170,7 @@ export function createChart(kpiId, data, view, kpi, timeRange = 'year', offset =
             const actualData = fullData.filter(d => !d.isForecast);
             const forecastDataList = fullData.filter(d => d.isForecast);
 
-            console.log('📊 Chart ESM', kpiId, '- Actual:', actualData.length, 'Forecast:', forecastDataList.length);
+            console.log('Chart ESM', kpiId, '- Actual:', actualData.length, 'Forecast:', forecastDataList.length);
 
             const forecastPattern = createStripedPattern(ctx, 'rgba(134, 188, 37, 0.7)');
 
@@ -211,7 +211,7 @@ export function createChart(kpiId, data, view, kpi, timeRange = 'year', offset =
                 return null;
             });
 
-            console.log('📈 Forecast points ESM:', forecastPoints.filter(p => p !== null).length, 'Labels:', months.length);
+            console.log('Forecast points ESM:', forecastPoints.filter(p => p !== null).length, 'Labels:', months.length);
 
             showLegend = true;
             chartData = {

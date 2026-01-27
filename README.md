@@ -19,7 +19,7 @@ KI-gestütztes Dashboard für Vertriebssteuerung mit interaktiven KPIs, geografi
 
 ### Technische Features
 - **Geografische Visualisierung** auf Regierungsbezirk-Ebene (Leaflet.js)
-- **KI-gestützter Chat** (Claude API Integration)
+- **KI-gestützter Chat** (KI-API Integration)
 - **CSV-Import** mit automatischer Datenverarbeitung
 - **Responsive Design** für Desktop, Tablet und Mobile
 - **Demo-Tour** für Guided Onboarding
@@ -31,7 +31,7 @@ KI-gestütztes Dashboard für Vertriebssteuerung mit interaktiven KPIs, geografi
 - **Maps**: Leaflet.js 1.9
 - **Screenshots**: html2canvas, jsPDF
 - **Hosting**: Cloudflare Pages
-- **KI**: Claude API via Cloudflare Worker
+- **KI**: KI-API via Cloudflare Worker
 
 ## Projektstruktur
 

@@ -448,4 +448,4 @@ function startDemoTour() {
 // Export
 window.startDemoTour = startDemoTour;
 
-console.log('✅ guided-tour.js geladen');
+console.log('guided-tour.js geladen');

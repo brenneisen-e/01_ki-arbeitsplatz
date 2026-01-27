@@ -934,7 +934,7 @@ select:focus, .dropdown-button:focus {
     font-size: 0.75rem; 
 } 
 
-/* ✨ v18: Main Layout mit align-items: stretch für gleiche Höhen */
+/* v18: Main Layout mit align-items: stretch für gleiche Höhen */
 .main {
     max-width: 1920px;
     margin: 0 auto;
@@ -949,7 +949,7 @@ select:focus, .dropdown-button:focus {
     padding: 1.25rem; 
 } 
 
-/* ✨ v18: KPI Grid mit gleichen Box-Größen */
+/* v18: KPI Grid mit gleichen Box-Größen */
 .kpi-grid {
     flex: 1;
     display: grid;
@@ -959,7 +959,7 @@ select:focus, .dropdown-button:focus {
     align-content: start; /* Grid startet oben */
 }
 
-/* ✨ v18: KPI Card mit fester Höhe - alle gleich groß */
+/* v18: KPI Card mit fester Höhe - alle gleich groß */
 .kpi-card {
     background: white;
     border-radius: 1rem;
@@ -1432,7 +1432,7 @@ select:focus, .dropdown-button:focus {
     font-size: 0.875rem; 
 } 
 
-/* ✨ v18: Map Sidebar - Höhe passt sich an KPI-Grid an */
+/* v18: Map Sidebar - Höhe passt sich an KPI-Grid an */
 .map-sidebar {
     width: 380px;
     background: white;
@@ -1770,7 +1770,7 @@ select:focus, .dropdown-button:focus {
     }
 }
 
-/* ✨ v18: Responsive mit festen Grid-Row Heights */
+/* v18: Responsive mit festen Grid-Row Heights */
 @media (max-width: 1280px) {
     .kpi-grid {
         grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -2249,7 +2249,7 @@ select:focus, .dropdown-button:focus {
 }
 
 /* ========================================
-   ✨ v14: Sample Question Buttons
+   v14: Sample Question Buttons
    ======================================== */
 
 .sample-questions {
@@ -2303,7 +2303,7 @@ select:focus, .dropdown-button:focus {
 }
 
 /* ========================================
-   ✨ v14: AI Response Panel unter Karte
+   v14: AI Response Panel unter Karte
    ======================================== */
 
 .ai-response-panel {

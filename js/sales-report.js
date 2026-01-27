@@ -297,7 +297,7 @@ let salesReportState = {
  * @param {string} agenturId - Optional: Agentur-ID zum Filtern
  */
 function showSalesReport(agenturId = null) {
-    console.log('📊 Zeige Vertriebsbericht für:', agenturId || 'Alle');
+    console.log('Zeige Vertriebsbericht für:', agenturId || 'Alle');
 
     salesReportState.filteredAgentur = agenturId;
     salesReportState.isVisible = true;
@@ -638,7 +638,7 @@ function generateAISummary() {
         </div>
     `;
 
-    // Simuliere API-Aufruf (in Produktion würde hier der Claude API Call stehen)
+    // Simuliere API-Aufruf (in Produktion wuerde hier der API Call stehen)
     setTimeout(() => {
         const summary = generateLocalAISummary();
         renderAISummary(summary);
@@ -799,7 +799,7 @@ function renderAISummary(summary) {
  * @param {string} agenturId - Die Agentur-ID (z.B. 'VM00001')
  */
 function navigateToSalesReport(agenturId) {
-    console.log('🚀 Navigation zu Vertriebsbericht für:', agenturId);
+    console.log('Navigation zu Vertriebsbericht für:', agenturId);
 
     // 1. Verstecke andere Seiten und zeige Dashboard
     const pages = ['landingPage', 'agenturOverview', 'potentialAnalysePage', 'kundenDetailPage', 'billingCheckPage'];
@@ -828,11 +828,11 @@ function navigateToSalesReport(agenturId) {
     setTimeout(() => {
         if (typeof setAgenturFilter === 'function') {
             setAgenturFilter(agenturId);
-            console.log('✅ setAgenturFilter aufgerufen mit:', agenturId);
+            console.log('setAgenturFilter aufgerufen mit:', agenturId);
         } else if (typeof state !== 'undefined') {
             // Fallback: State direkt setzen
             state.filters.agentur = agenturId;
-            console.log('✅ state.filters.agentur direkt gesetzt:', agenturId);
+            console.log('state.filters.agentur direkt gesetzt:', agenturId);
             // Update Agentur-Dropdown UI
             if (typeof updateAgenturFilterDisplay === 'function') {
                 updateAgenturFilterDisplay();
@@ -842,7 +842,7 @@ function navigateToSalesReport(agenturId) {
         // Immer KPIs aktualisieren um sicherzustellen dass die Filter angewendet werden
         if (typeof updateAllKPIs === 'function') {
             updateAllKPIs();
-            console.log('✅ updateAllKPIs aufgerufen');
+            console.log('updateAllKPIs aufgerufen');
         }
 
         // Update Agentur-Dropdown nochmal zur Sicherheit
@@ -873,4 +873,4 @@ window.changeSalesReportPage = changeSalesReportPage;
 window.navigateToSalesReport = navigateToSalesReport;
 window.demoAbschluesse = demoAbschluesse;
 
-console.log('✅ sales-report.js geladen');
+console.log('sales-report.js geladen');

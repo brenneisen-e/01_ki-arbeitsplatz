@@ -146,7 +146,7 @@ function createChart(kpiId, data, view, kpi, timeRange = 'year', offset = 0) {
         : data;
 
     if (forecastEnabled) {
-        console.log('🔮 Chart', kpiId, '- forecastEnabled:', forecastEnabled, 'fullData length:', fullData.length, 'has isForecast:', fullData.some(d => d.isForecast));
+        console.log('Chart', kpiId, '- forecastEnabled:', forecastEnabled, 'fullData length:', fullData.length, 'has isForecast:', fullData.some(d => d.isForecast));
     }
 
     if (view === 'month') {
@@ -157,7 +157,7 @@ function createChart(kpiId, data, view, kpi, timeRange = 'year', offset = 0) {
             const actualData = fullData.filter(d => !d.isForecast);
             const forecastDataList = fullData.filter(d => d.isForecast);
 
-            console.log('📊 Chart', kpiId, '- Actual:', actualData.length, 'Forecast:', forecastDataList.length);
+            console.log('Chart', kpiId, '- Actual:', actualData.length, 'Forecast:', forecastDataList.length);
 
             // Erstelle Schraffier-Pattern für Forecast
             const forecastPattern = createStripedPattern(ctx, 'rgba(134, 188, 37, 0.7)');
@@ -209,7 +209,7 @@ function createChart(kpiId, data, view, kpi, timeRange = 'year', offset = 0) {
                 return null;
             });
 
-            console.log('📈 Forecast points:', forecastPoints, 'Labels:', months);
+            console.log('Forecast points:', forecastPoints, 'Labels:', months);
 
             chartData = {
                 labels: months,
@@ -310,7 +310,7 @@ function createChart(kpiId, data, view, kpi, timeRange = 'year', offset = 0) {
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            // ✨ v18.2: Pixelgenaue Ausrichtung aller Charts
+            // v18.2: Pixelgenaue Ausrichtung aller Charts
             layout: {
                 padding: {
                     top: 5,
@@ -336,7 +336,7 @@ function createChart(kpiId, data, view, kpi, timeRange = 'year', offset = 0) {
                                 return `Anzahl Vermittler: ${context.parsed.y}`;
                             }
                             const isForecast = context.dataset.label?.includes('Forecast');
-                            const prefix = isForecast ? '🔮 KI-Prognose: ' : '';
+                            const prefix = isForecast ? 'KI-Prognose: ' : '';
                             return `${prefix}${kpi.title}: ${formatValue(context.parsed.y, kpi.unit)}`;
                         }
                     }
@@ -344,7 +344,7 @@ function createChart(kpiId, data, view, kpi, timeRange = 'year', offset = 0) {
             },
             scales: {
                 x: {
-                    // ✨ v18.2: Exakt standardisierte X-Achse
+                    // v18.2: Exakt standardisierte X-Achse
                     grid: {
                         display: true,
                         color: 'rgba(0, 0, 0, 0.05)',
@@ -364,7 +364,7 @@ function createChart(kpiId, data, view, kpi, timeRange = 'year', offset = 0) {
                     offset: true
                 },
                 y: {
-                    // ✨ v18.2: Fixierte Y-Achsen-Breite für perfekte Ausrichtung
+                    // v18.2: Fixierte Y-Achsen-Breite fuer perfekte Ausrichtung
                     beginAtZero: view === 'distribution' || kpi.id === 'ergebnis',
                     grid: {
                         display: true,

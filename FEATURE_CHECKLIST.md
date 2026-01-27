@@ -11,7 +11,7 @@
 - [ ] Nachrichten senden
 - [ ] Beispiel-Fragen anklicken
 - [ ] Mock-Modus funktioniert
-- [ ] Claude API Integration (wenn Token vorhanden)
+- [ ] KI-API Integration (wenn Token vorhanden)
 - [ ] Typing-Indicator Animation
 
 ### 1.2 Quick Upload
@@ -85,7 +85,7 @@
 - [ ] Chat öffnen/schließen/minimieren
 - [ ] Nachrichten senden
 - [ ] Mock-Responses
-- [ ] Claude API Integration
+- [ ] KI-API Integration
 - [ ] Filter-Befehle per Chat
 - [ ] Datenkontext für KI
 

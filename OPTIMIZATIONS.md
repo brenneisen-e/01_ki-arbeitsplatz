@@ -173,7 +173,7 @@ Keine Migration notwendig. Einfach neue Dateien deployen:
 6. Browser Memory Profiling (Chrome DevTools)
 
 ## Autor
-Optimiert mit Claude Code
+Optimiert
 
 ## Datum
 2025-10-21

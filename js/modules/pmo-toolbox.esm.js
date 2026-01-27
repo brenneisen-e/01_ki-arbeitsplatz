@@ -120,7 +120,7 @@ export const PMO = {
 
     // Initialize
     init() {
-        console.log('🚀 PMO Toolbox initialisiert');
+        console.log('PMO Toolbox initialisiert');
         this.loadData();
         this.loadTasks();
         this.loadMilestones();
@@ -623,7 +623,7 @@ export const PMO = {
 
         // Check if we need to regenerate demo data (version mismatch or no data)
         if (!stored || storedVersion !== String(this.DEMO_DATA_VERSION)) {
-            console.log('🔄 Generiere neue Demo-Daten (Version ' + this.DEMO_DATA_VERSION + ')');
+            console.log('Generiere neue Demo-Daten (Version ' + this.DEMO_DATA_VERSION + ')');
             this.generateDemoData();
             this.generateProjectDemoData();
             localStorage.setItem('pmo_demo_version', String(this.DEMO_DATA_VERSION));
@@ -1682,7 +1682,7 @@ export const PMO = {
         if (!container) return;
 
         const activeWarnings = this.EARLY_WARNINGS.filter(w => w.active);
-        console.log('🚨 Rendering early warnings:', activeWarnings.length, 'active warnings');
+        console.log('Rendering early warnings:', activeWarnings.length, 'active warnings');
 
         if (activeWarnings.length === 0) {
             container.innerHTML = `
@@ -2384,7 +2384,7 @@ PMO Team
 
     // View Management
     showView(viewId) {
-        console.log('🔀 showView aufgerufen mit viewId:', viewId);
+        console.log('showView aufgerufen mit viewId:', viewId);
         try {
             this.showViewInternal(viewId);
 
@@ -2397,7 +2397,7 @@ PMO Team
             if (viewId === 'entscheidungen') this.renderDecisions();
             if (viewId === 'dokumente') this.renderDocumentsList();
             if (viewId === 'kpis') {
-                console.log('✅ viewId === kpis, calling renderKPIs()');
+                console.log('viewId === kpis, calling renderKPIs()');
                 this.renderKPIs();
             }
             if (viewId === 'suche') {
@@ -2408,7 +2408,7 @@ PMO Team
                 }, 100);
             }
         } catch (error) {
-            console.error('❌ Error in showView:', error);
+            console.error('Error in showView:', error);
         }
     },
 
@@ -2865,7 +2865,7 @@ PMO Team
         this.renderDashboard();
         this.closeStatusModal();
 
-        console.log('✅ Status gespeichert:', newStatus);
+        console.log('Status gespeichert:', newStatus);
     },
 
     resetTrafficLightSelectors() {
@@ -4021,7 +4021,7 @@ PMO Team
             const xxMatchesBefore = (slideXml.match(/<a:t>xx<\/a:t>/g) || []).length;
             const xxxMatchesBefore = (slideXml.match(/<a:t>: xxx<\/a:t>/g) || []).length;
             const XxxMatchesBefore = (slideXml.match(/<a:t>Xxx<\/a:t>/g) || []).length;
-            console.log('📝 ORIGINAL Template patterns:', { xx: xxMatchesBefore, colonXxx: xxxMatchesBefore, Xxx: XxxMatchesBefore });
+            console.log('ORIGINAL Template patterns:', { xx: xxMatchesBefore, colonXxx: xxxMatchesBefore, Xxx: XxxMatchesBefore });
 
             // Combine all content for Xxx placeholders in order:
             // 1-3: Projektfortschritt (3 bullets)
@@ -4059,14 +4059,14 @@ PMO Team
             });
 
             // Debug: Log data being used for replacements
-            console.log('📝 Summary bullets:', summaryBullets);
-            console.log('📝 Risks/Challenges:', status.risksAndIssues);
+            console.log('Summary bullets:', summaryBullets);
+            console.log('Risks/Challenges:', status.risksAndIssues);
 
             // Replace xx (lowercase) placeholders for Management Summary
             let xxIndex = 0;
             slideXml = slideXml.replace(/<a:t>xx<\/a:t>/g, () => {
                 const content = summaryBullets[xxIndex] || '';
-                console.log(`📝 Replacing xx[${xxIndex}] with: "${content}"`);
+                console.log(`Replacing xx[${xxIndex}] with: "${content}"`);
                 xxIndex++;
                 return `<a:t>${this.escapeXml(content)}</a:t>`;
             });
@@ -4075,7 +4075,7 @@ PMO Team
             xxIndex = 0;
             slideXml = slideXml.replace(/<a:t>XX<\/a:t>/g, () => {
                 const content = summaryBullets[xxIndex] || '';
-                console.log(`📝 Replacing XX[${xxIndex}] with: "${content}"`);
+                console.log(`Replacing XX[${xxIndex}] with: "${content}"`);
                 xxIndex++;
                 return `<a:t>${this.escapeXml(content)}</a:t>`;
             });
@@ -4088,7 +4088,7 @@ PMO Team
             // Replace ": xxx" patterns with actual risk/challenge descriptions
             slideXml = slideXml.replace(/<a:t>: xxx<\/a:t>/g, () => {
                 const item = allRisksAndChallenges[riskChallengeIndex];
-                console.log(`📝 Replacing : xxx[${riskChallengeIndex}] with:`, item?.description);
+                console.log(`Replacing : xxx[${riskChallengeIndex}] with:`, item?.description);
                 riskChallengeIndex++;
                 if (item) {
                     return `<a:t>: ${this.escapeXml(item.description)}</a:t>`;
@@ -4545,7 +4545,7 @@ PMO Team
     },
 
     renderKPIs() {
-        console.log('📊 renderKPIs() aufgerufen');
+        console.log('renderKPIs() aufgerufen');
         // Render all P-10 KPI charts
         this.renderP10Charts();
 
@@ -4554,7 +4554,7 @@ PMO Team
     },
 
     renderP10Charts() {
-        console.log('🎯 renderP10Charts() aufgerufen');
+        console.log('renderP10Charts() aufgerufen');
 
         // Wait a tick for DOM to be ready, then render
         setTimeout(() => this._doRenderP10Charts(), 100);
@@ -4565,10 +4565,10 @@ PMO Team
 
         // Try Chart.js first (like A-03), fallback to SVG
         if (typeof Chart !== 'undefined') {
-            console.log('✅ Chart.js verfügbar - verwende Chart.js');
+            console.log('Chart.js verfuegbar - verwende Chart.js');
             this._renderP10WithChartJS(labels);
         } else {
-            console.log('⚠️ Chart.js nicht verfügbar - verwende SVG');
+            console.log('Chart.js nicht verfuegbar - verwende SVG');
             this._renderP10WithSVG(labels);
         }
     },
@@ -5633,7 +5633,7 @@ PMO Team
 
     // Switch resource scope and re-render chart
     switchResourceScope(scope) {
-        console.log(`📊 Switching resource scope to: ${scope}`);
+        console.log(`Switching resource scope to: ${scope}`);
         this.resourceScope = scope;
 
         // Update toggle buttons
@@ -5683,7 +5683,7 @@ PMO Team
 
     // Switch User Stories mode and re-render chart
     switchUserStoriesMode(mode) {
-        console.log(`📊 Switching User Stories mode to: ${mode}`);
+        console.log(`Switching User Stories mode to: ${mode}`);
         this.userStoriesMode = mode;
 
         // Update toggle buttons
@@ -5791,7 +5791,7 @@ PMO Team
 
     // Switch between timeline and distribution view for a KPI
     switchChartView(kpiId, viewMode) {
-        console.log(`📊 Switching ${kpiId} to ${viewMode} view`);
+        console.log(`Switching ${kpiId} to ${viewMode} view`);
 
         // Update stored view mode
         this.kpiViewModes[kpiId] = viewMode;
@@ -5933,23 +5933,23 @@ PMO Team
                 const rData = this.kpiData.ressourcen;
                 let istData, angefragtData, yMin, yMax;
 
-                console.log('📊 Rendering ressourcen chart with scope:', scope);
+                console.log('Rendering ressourcen chart with scope:', scope);
 
                 if (scope === 'intern') {
                     istData = rData.intern.history.ist;
                     angefragtData = rData.intern.history.angefragt;
                     yMin = 120; yMax = 180;
-                    console.log('📊 Using intern data:', istData, angefragtData);
+                    console.log('Using intern data:', istData, angefragtData);
                 } else if (scope === 'extern') {
                     istData = rData.extern.history.ist;
                     angefragtData = rData.extern.history.angefragt;
                     yMin = 60; yMax = 140;
-                    console.log('📊 Using extern data:', istData, angefragtData);
+                    console.log('Using extern data:', istData, angefragtData);
                 } else {
                     istData = rData.history.ist;
                     angefragtData = rData.history.angefragt;
                     yMin = 200; yMax = 300;
-                    console.log('📊 Using gesamt data:', istData, angefragtData);
+                    console.log('Using gesamt data:', istData, angefragtData);
                 }
 
                 // Check if intern and overloaded - show warning icon
@@ -6274,7 +6274,7 @@ PMO Team
 
     // Navigate from early warning card to related view
     navigateFromWarning(warningId, viewId, filterTo) {
-        console.log(`🔗 Navigating from warning ${warningId} to ${viewId} with filter ${filterTo}`);
+        console.log(`Navigating from warning ${warningId} to ${viewId} with filter ${filterTo}`);
 
         // Navigate to the view
         this.showView(viewId);
@@ -6383,7 +6383,7 @@ PMO Team
             if (title) {
                 title.textContent = `Projekt ${projectId}: ${project.name}`;
             }
-            console.log('📊 Projekt ausgewählt:', projectId, project.name);
+            console.log('Projekt ausgewaehlt:', projectId, project.name);
         } else {
             const title = document.querySelector('.pmo-section-title');
             if (title) {

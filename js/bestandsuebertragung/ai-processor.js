@@ -1,5 +1,5 @@
 /**
- * AI Processor Modul - Claude API Integration für Bestandsübertragung
+ * AI Processor Modul - API Integration fuer Bestandsuebertragung
  * Verarbeitet E-Mails und Anhänge mittels KI
  */
 
@@ -540,7 +540,7 @@ async function readWordFile(file) {
 }
 
 /**
- * Claude API aufrufen
+ * API aufrufen
  */
 async function callClaudeAPI(prompt, systemPrompt = null) {
     if (!apiConfig.apiKey) {

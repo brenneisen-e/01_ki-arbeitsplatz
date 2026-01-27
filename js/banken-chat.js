@@ -49,17 +49,17 @@ const demoPayments = [
 // Initialize Banken Chat
 function initBankenChat() {
     if (bankenChatInitialized) {
-        console.log('⚠️ Banken Chat bereits initialisiert');
+        console.log('Banken Chat bereits initialisiert');
         return;
     }
 
-    console.log('🤖 Initialisiere Banken Chat...');
+    console.log('Initialisiere Banken Chat...');
 
     const chatToggle = document.getElementById('bankenChatToggle');
     const chatWidget = document.getElementById('bankenChatWidget');
 
     if (!chatToggle || !chatWidget) {
-        console.log('ℹ️ Banken Chat Elemente nicht gefunden');
+        console.log('Banken Chat Elemente nicht gefunden');
         return;
     }
 
@@ -69,7 +69,7 @@ function initBankenChat() {
     const chatBody = document.getElementById('bankenChatBody');
 
     if (!chatSend || !chatInput || !chatBody) {
-        console.error('❌ Banken Chat Input-Elemente nicht gefunden');
+        console.error('Banken Chat Input-Elemente nicht gefunden');
         return;
     }
 
@@ -110,7 +110,7 @@ function initBankenChat() {
         }
     });
 
-    console.log('✅ Banken Chat initialisiert');
+    console.log('Banken Chat initialisiert');
 }
 
 // Send message and get response
@@ -496,7 +496,7 @@ function hideBankenTyping() {
 
 // Show filtered customers in the list
 function showFilteredCustomers(customerIdsString) {
-    console.log('🔍 Showing filtered customers:', customerIdsString);
+    console.log('Showing filtered customers:', customerIdsString);
 
     const customerIds = customerIdsString.split(',').map(id => id.trim());
 
@@ -781,4 +781,4 @@ window.exportChatToExcel = exportChatToExcel;
 window.exportChatToPdf = exportChatToPdf;
 window.lastChatQueryResult = null;
 
-console.log('✅ banken-chat.js geladen');
+console.log('banken-chat.js geladen');

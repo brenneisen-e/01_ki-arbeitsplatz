@@ -4574,6 +4574,175 @@ body {
     font-style: italic;
 }
 
+/* Versicherungsnehmer Label */
+.bestand-page .kunde-label {
+    font-size: 11px;
+    font-weight: 500;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    margin-right: 4px;
+}
+
+/* MV Anmerkung - separate line below status */
+.bestand-page .mv-anmerkung-row {
+    margin-top: -4px;
+}
+
+.bestand-page .mv-anmerkung {
+    font-size: 12px;
+    color: #666;
+    font-style: italic;
+    padding: 6px 10px;
+    background: #f9f9f9;
+    border-left: 2px solid #ddd;
+    border-radius: 0 4px 4px 0;
+    line-height: 1.5;
+}
+
+/* Attachment Chips */
+.bestand-page .vorgang-attachments {
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid #eee;
+    font-size: 12px;
+}
+
+.bestand-page .attachment-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 6px;
+}
+
+.bestand-page .attachment-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    background: #f0f4f8;
+    border: 1px solid #dce3eb;
+    border-radius: 16px;
+    font-size: 12px;
+    color: #444;
+    white-space: nowrap;
+}
+
+.bestand-page .attachment-chip.has-preview {
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+}
+
+.bestand-page .attachment-chip.has-preview:hover {
+    background: #e3edf7;
+    border-color: #b0c4de;
+}
+
+.bestand-page .attachment-chip-icon {
+    font-size: 14px;
+}
+
+.bestand-page .attachment-preview-btn {
+    margin-left: 2px;
+    font-size: 13px;
+    opacity: 0.6;
+}
+
+.bestand-page .attachment-chip.has-preview:hover .attachment-preview-btn {
+    opacity: 1;
+}
+
+/* Attachment Preview Modal */
+.attachment-modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 10000;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+}
+
+.attachment-modal {
+    background: white;
+    border-radius: 12px;
+    max-width: 900px;
+    width: 100%;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.attachment-modal-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 20px;
+    border-bottom: 1px solid #eee;
+    background: #f8f9fa;
+    border-radius: 12px 12px 0 0;
+}
+
+.attachment-modal-icon {
+    font-size: 20px;
+}
+
+.attachment-modal-title {
+    font-weight: 600;
+    font-size: 15px;
+    color: #333;
+    flex: 1;
+}
+
+.attachment-modal-type {
+    font-size: 11px;
+    padding: 3px 10px;
+    background: #e3edf7;
+    color: #456;
+    border-radius: 12px;
+    font-weight: 500;
+}
+
+.attachment-modal-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #999;
+    cursor: pointer;
+    padding: 0 4px;
+    line-height: 1;
+    transition: color 0.15s;
+}
+
+.attachment-modal-close:hover {
+    color: #333;
+}
+
+.attachment-modal-body {
+    padding: 20px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.attachment-modal-content {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-family: 'Consolas', 'Monaco', monospace;
+    font-size: 13px;
+    line-height: 1.6;
+    color: #333;
+    background: #fafbfc;
+    padding: 16px;
+    border-radius: 8px;
+    border: 1px solid #e8ecf0;
+    margin: 0;
+}
+
 /* Export Actions */
 .bestand-page .ai-export-actions {
     display: flex;

@@ -2311,6 +2311,18 @@ async function openBestandsuebertragung() {
                     bestandModule.innerHTML = html;
                     bestandsuebertragungLoaded = true;
 
+                    // Fix stale demoLoaded flag: if settings say loaded
+                    // but no cases exist, reset the flag so demo data regenerates
+                    try {
+                        var bSettings = JSON.parse(localStorage.getItem('bestandsuebertragung_settings') || '{}');
+                        var bCases = JSON.parse(localStorage.getItem('bestandsuebertragung_cases') || '{}');
+                        if (bSettings.demoLoaded && Object.keys(bCases).length === 0) {
+                            bSettings.demoLoaded = false;
+                            localStorage.setItem('bestandsuebertragung_settings', JSON.stringify(bSettings));
+                            console.log('🔄 Stale demoLoaded flag zurückgesetzt');
+                        }
+                    } catch (e) { /* ignore */ }
+
                     // Initialize the bestandsuebertragung app
                     try {
                         if (typeof initBestandApp === 'function') {

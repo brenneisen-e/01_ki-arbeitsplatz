@@ -75,7 +75,8 @@ const PageIDTracker = {
             'emails': 'T-04',              // E-Mails
             'ai-upload': 'T-05',           // KI Upload
             'architektur': 'T-06',         // Architektur
-            'vorlagen': 'T-07'             // E-Mail Vorlagen
+            'vorlagen': 'T-07',            // E-Mail Vorlagen
+            'prozess': 'T-08'              // Prozess
         }
     },
 

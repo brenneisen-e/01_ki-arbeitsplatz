@@ -1525,6 +1525,130 @@ body {
     padding: var(--spacing-xs) var(--spacing-sm);
 }
 
+/* Demo Files Section */
+.bestand-page .demo-section {
+    margin-bottom: 2rem;
+}
+
+.bestand-page .demo-section-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--gray-800);
+    margin-bottom: 0.25rem;
+}
+
+.bestand-page .demo-section-desc {
+    font-size: 0.85rem;
+    color: var(--gray-500);
+    margin-bottom: 1rem;
+}
+
+.bestand-page .demo-files-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: var(--spacing-md);
+}
+
+.bestand-page .demo-file-card {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-md);
+    background: white;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-md);
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.bestand-page .demo-file-card:hover {
+    border-color: var(--gray-300);
+    box-shadow: var(--shadow-sm);
+}
+
+.bestand-page .demo-file-card-highlight {
+    border-left: 3px solid var(--primary);
+}
+
+.bestand-page .demo-file-icon {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-md);
+    font-size: 1.25rem;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.bestand-page .demo-icon-eml {
+    background: #eef2ff;
+    color: #4f46e5;
+}
+
+.bestand-page .demo-icon-word {
+    background: #eff6ff;
+    color: #2563eb;
+}
+
+.bestand-page .demo-icon-excel {
+    background: #f0fdf4;
+    color: #16a34a;
+}
+
+.bestand-page .demo-icon-complex {
+    background: #fef3c7;
+    color: #d97706;
+}
+
+.bestand-page .demo-file-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.bestand-page .demo-file-info h4 {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--gray-800);
+    margin: 0 0 2px;
+}
+
+.bestand-page .demo-file-info p {
+    font-size: 0.8rem;
+    color: var(--gray-500);
+    margin: 0 0 6px;
+    line-height: 1.3;
+}
+
+.bestand-page .demo-file-tags {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+}
+
+.bestand-page .demo-tag {
+    display: inline-block;
+    padding: 1px 6px;
+    font-size: 0.65rem;
+    font-weight: 600;
+    border-radius: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.bestand-page .tag-eml { background: #eef2ff; color: #4f46e5; }
+.bestand-page .tag-text { background: #f1f5f9; color: #64748b; }
+.bestand-page .tag-docx { background: #eff6ff; color: #2563eb; }
+.bestand-page .tag-xlsx { background: #f0fdf4; color: #16a34a; }
+.bestand-page .tag-vollmacht { background: #fef3c7; color: #92400e; }
+.bestand-page .tag-antrag { background: #fce7f3; color: #9d174d; }
+.bestand-page .tag-liste { background: #ecfdf5; color: #065f46; }
+
+.bestand-page .btn-demo-dl {
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
 .bestand-page .modal-header {
     display: flex;
     justify-content: space-between;
@@ -2561,6 +2685,424 @@ body {
     border-radius: 2px;
     font-weight: 600;
     color: #92400e;
+}
+
+/* ========================================
+   PROZESS VIEW (T-08)
+   ======================================== */
+.bestand-page .prozess-container {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.bestand-page .prozess-container h2 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--gray-800);
+    margin-bottom: 0.25rem;
+}
+
+/* Section Header */
+.bestand-page .prozess-section {
+    margin-bottom: 3rem;
+}
+
+.bestand-page .prozess-section-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+}
+
+.bestand-page .prozess-section-header h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--gray-800);
+    margin: 0;
+}
+
+.bestand-page .prozess-label {
+    display: inline-block;
+    padding: 3px 10px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-radius: 4px;
+}
+
+.bestand-page .prozess-label-ist {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.bestand-page .prozess-label-soll {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+/* Flow Layout */
+.bestand-page .prozess-flow {
+    position: relative;
+}
+
+.bestand-page .prozess-connector {
+    display: flex;
+    justify-content: center;
+    padding: 4px 0;
+    color: var(--gray-400);
+    font-size: 1.25rem;
+    line-height: 1;
+}
+
+/* Step Cards */
+.bestand-page .prozess-step {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+}
+
+.bestand-page .step-number {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-size: 0.85rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 1rem;
+    color: white;
+    background: var(--gray-400);
+}
+
+.bestand-page .step-input .step-number { background: #6366f1; }
+.bestand-page .step-system .step-number { background: #64748b; }
+.bestand-page .step-manual .step-number { background: #d97706; }
+.bestand-page .step-decision .step-number { background: #dc2626; }
+.bestand-page .step-ai .step-number { background: #7c3aed; }
+.bestand-page .step-output .step-number { background: #059669; }
+
+.bestand-page .step-card {
+    flex: 1;
+    background: white;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-md);
+    padding: 1rem 1.25rem;
+    transition: box-shadow 0.15s;
+}
+
+.bestand-page .step-card:hover {
+    box-shadow: var(--shadow-sm);
+}
+
+.bestand-page .step-card .step-icon {
+    float: right;
+    font-size: 1.5rem;
+    color: var(--gray-400);
+    margin-left: 0.5rem;
+}
+
+.bestand-page .step-card h4 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--gray-800);
+    margin: 0 0 0.35rem;
+}
+
+.bestand-page .step-card p {
+    font-size: 0.85rem;
+    color: var(--gray-600);
+    margin: 0 0 0.75rem;
+    line-height: 1.45;
+}
+
+.bestand-page .step-card .step-meta {
+    font-size: 0.75rem;
+    color: var(--gray-400);
+    font-style: italic;
+}
+
+/* Step Detail Items */
+.bestand-page .step-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    margin-top: 0.5rem;
+}
+
+.bestand-page .step-detail-item {
+    display: flex;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    line-height: 1.4;
+}
+
+.bestand-page .step-detail-item .detail-label {
+    flex-shrink: 0;
+    font-weight: 600;
+    color: var(--gray-500);
+    min-width: 65px;
+}
+
+.bestand-page .step-detail-item .detail-value {
+    color: var(--gray-700);
+}
+
+/* Pain Point */
+.bestand-page .step-pain {
+    margin-top: 0.75rem;
+    padding: 0.5rem 0.75rem;
+    background: #fef3c7;
+    border-left: 3px solid #d97706;
+    border-radius: 0 4px 4px 0;
+    font-size: 0.8rem;
+    color: #92400e;
+    line-height: 1.4;
+}
+
+/* Decision Card */
+.bestand-page .step-card-decision {
+    border-color: #fca5a5;
+    background: #fff5f5;
+}
+
+.bestand-page .decision-branches {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    margin: 0.5rem 0;
+}
+
+.bestand-page .decision-branch {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    padding: 0.35rem 0.75rem;
+    border-radius: 4px;
+}
+
+.bestand-page .decision-yes {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.bestand-page .decision-no {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.bestand-page .decision-label {
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+/* Improvement Cards */
+.bestand-page .prozess-improvements {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.bestand-page .improvement-card {
+    background: white;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+}
+
+.bestand-page .improvement-primary {
+    border-color: #86efac;
+    border-width: 2px;
+}
+
+.bestand-page .improvement-position {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.65rem 1.25rem;
+    background: #f0fdf4;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #065f46;
+    border-bottom: 1px solid #bbf7d0;
+}
+
+.bestand-page .improvement-arrow {
+    font-size: 1rem;
+}
+
+.bestand-page .improvement-content {
+    display: flex;
+    gap: 1.25rem;
+    padding: 1.25rem;
+}
+
+.bestand-page .improvement-icon {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #d1fae5;
+    color: #059669;
+    border-radius: var(--radius-md);
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.bestand-page .improvement-body {
+    flex: 1;
+}
+
+.bestand-page .improvement-body h4 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--gray-800);
+    margin: 0 0 0.5rem;
+}
+
+.bestand-page .improvement-body > p {
+    font-size: 0.9rem;
+    color: var(--gray-600);
+    margin: 0 0 1rem;
+    line-height: 1.5;
+}
+
+/* Benefit Items */
+.bestand-page .improvement-benefits {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+}
+
+.bestand-page .benefit-item {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+}
+
+.bestand-page .benefit-icon {
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #d1fae5;
+    color: #059669;
+    border-radius: 50%;
+    font-size: 0.7rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.bestand-page .benefit-item strong {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--gray-800);
+    margin-bottom: 2px;
+}
+
+.bestand-page .benefit-item p {
+    font-size: 0.8rem;
+    color: var(--gray-500);
+    margin: 0;
+    line-height: 1.4;
+}
+
+/* Mini Flow */
+.bestand-page .improvement-flow {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--gray-200);
+}
+
+.bestand-page .improvement-flow h5 {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--gray-500);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin: 0 0 0.75rem;
+}
+
+.bestand-page .mini-flow {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.bestand-page .mini-step {
+    padding: 0.4rem 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: 4px;
+    white-space: nowrap;
+}
+
+.bestand-page .mini-input { background: #eef2ff; color: #4338ca; }
+.bestand-page .mini-ai { background: #d1fae5; color: #065f46; }
+.bestand-page .mini-decision { background: #fef3c7; color: #92400e; }
+.bestand-page .mini-output { background: #ecfdf5; color: #047857; }
+
+.bestand-page .mini-arrow {
+    color: var(--gray-400);
+    font-size: 0.9rem;
+}
+
+/* Comparison Table */
+.bestand-page .prozess-comparison {
+    background: white;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem;
+}
+
+.bestand-page .prozess-comparison h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--gray-800);
+    margin: 0 0 1rem;
+}
+
+.bestand-page .comparison-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+}
+
+.bestand-page .comparison-table th {
+    text-align: left;
+    padding: 0.6rem 0.75rem;
+    background: var(--gray-50);
+    color: var(--gray-600);
+    font-weight: 600;
+    border-bottom: 2px solid var(--gray-200);
+}
+
+.bestand-page .comparison-table td {
+    padding: 0.55rem 0.75rem;
+    border-bottom: 1px solid var(--gray-100);
+    color: var(--gray-700);
+    vertical-align: top;
+}
+
+.bestand-page .comparison-table tr:last-child td {
+    border-bottom: none;
+}
+
+.bestand-page .ist-cell {
+    color: #92400e;
+}
+
+.bestand-page .soll-cell {
+    color: #065f46;
+    font-weight: 500;
 }
 
 /* ========================================

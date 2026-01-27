@@ -565,16 +565,16 @@
             <!-- Einfache E-Mails -->
             <div class="demo-section">
                 <h3 class="demo-section-title">Einfache E-Mails (nur Text)</h3>
-                <p class="demo-section-desc">E-Mails ohne Anh&auml;nge &ndash; Anfragen, Best&auml;tigungen und R&uuml;ckfragen als reiner Text.</p>
+                <p class="demo-section-desc">Eingehende E-Mails ohne Anh&auml;nge &ndash; Anfragen, Erinnerungen und Nachreichungen von Maklern an ERGO.</p>
                 <div class="demo-files-grid">
                     <div class="demo-file-card">
                         <div class="demo-file-icon demo-icon-eml">&#9993;</div>
                         <div class="demo-file-info">
                             <h4>Anfrage KFZ &ndash; M&uuml;ller</h4>
-                            <p>Bestandsübertragung KFZ bei ERGO anfragen (Text-E-Mail)</p>
+                            <p>Makler beantragt Bestands&uuml;bertragung KFZ bei ERGO</p>
                             <div class="demo-file-tags">
                                 <span class="demo-tag tag-eml">EML</span>
-                                <span class="demo-tag tag-text">Nur Text</span>
+                                <span class="demo-tag tag-text">Anfrage</span>
                             </div>
                         </div>
                         <button class="btn btn-secondary btn-sm btn-demo-dl" data-demo-file="anfrage_text_mueller">&darr; Download</button>
@@ -582,26 +582,26 @@
                     <div class="demo-file-card">
                         <div class="demo-file-icon demo-icon-eml">&#9993;</div>
                         <div class="demo-file-info">
-                            <h4>Best&auml;tigung Leben &ndash; Weber</h4>
-                            <p>Versicherer best&auml;tigt Lebensversicherung-&Uuml;bertragung</p>
+                            <h4>Erinnerung Leben &ndash; Weber</h4>
+                            <p>Makler fragt nach Bearbeitungsstand Lebensversicherung</p>
                             <div class="demo-file-tags">
                                 <span class="demo-tag tag-eml">EML</span>
-                                <span class="demo-tag tag-text">Best&auml;tigung</span>
+                                <span class="demo-tag tag-text">Erinnerung</span>
                             </div>
                         </div>
-                        <button class="btn btn-secondary btn-sm btn-demo-dl" data-demo-file="bestaetigung_leben_weber">&darr; Download</button>
+                        <button class="btn btn-secondary btn-sm btn-demo-dl" data-demo-file="erinnerung_leben_weber">&darr; Download</button>
                     </div>
                     <div class="demo-file-card">
                         <div class="demo-file-icon demo-icon-eml">&#9993;</div>
                         <div class="demo-file-info">
-                            <h4>R&uuml;ckfrage Vollmacht &ndash; Schneider</h4>
-                            <p>Versicherer fordert fehlende Maklervollmacht nach</p>
+                            <h4>Nachreichung Vollmacht &ndash; Schneider</h4>
+                            <p>Makler k&uuml;ndigt Nachreichung der Maklervollmacht per Post an</p>
                             <div class="demo-file-tags">
                                 <span class="demo-tag tag-eml">EML</span>
-                                <span class="demo-tag tag-text">R&uuml;ckfrage</span>
+                                <span class="demo-tag tag-text">Nachreichung</span>
                             </div>
                         </div>
-                        <button class="btn btn-secondary btn-sm btn-demo-dl" data-demo-file="rueckfrage_schneider">&darr; Download</button>
+                        <button class="btn btn-secondary btn-sm btn-demo-dl" data-demo-file="nachreichung_schneider">&darr; Download</button>
                     </div>
                 </div>
             </div>
@@ -708,12 +708,13 @@
                     <div class="demo-file-card demo-file-card-highlight">
                         <div class="demo-file-icon demo-icon-complex">&#9830;</div>
                         <div class="demo-file-info">
-                            <h4>Excel + Vollmacht &ndash; Keller (2 Anh&auml;nge)</h4>
-                            <p>Haftpflicht + Unfall: Maklervollmacht (DOCX) + Vertragsliste (XLSX)</p>
+                            <h4>Excel + Vollmacht &ndash; Keller (NICHT unterschrieben)</h4>
+                            <p>Haftpflicht + Unfall: Vollmacht ohne Unterschrift (DOCX) + Vertragsliste (XLSX)</p>
                             <div class="demo-file-tags">
                                 <span class="demo-tag tag-eml">EML</span>
                                 <span class="demo-tag tag-docx">DOCX</span>
                                 <span class="demo-tag tag-xlsx">XLSX</span>
+                                <span class="demo-tag tag-vollmacht">Ohne Unterschrift</span>
                             </div>
                         </div>
                         <button class="btn btn-secondary btn-sm btn-demo-dl" data-demo-file="excel_und_vollmacht_keller">&darr; Download</button>
@@ -1026,10 +1027,28 @@ ERGO Maklerservice</div>
 
                         <div class="flow-arrow"><span>&rarr;</span></div>
 
-                        <!-- Step 4 -->
-                        <div class="flow-node node-manual">
+                        <!-- Step 4: Prüfpunkt Export -->
+                        <div class="flow-node node-decision">
                             <div class="flow-node-head">
                                 <span class="flow-node-num">4</span>
+                                <span class="flow-node-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></span>
+                            </div>
+                            <h4>Pr&uuml;fpunkt: Export</h4>
+                            <p>Welche M&ouml;glichkeiten gibt es, Postkorbvorg&auml;nge zu exportieren?</p>
+                            <div class="flow-node-tags">
+                                <span>EML/MSG?</span>
+                                <span>API?</span>
+                                <span>Batch?</span>
+                            </div>
+                            <div class="flow-node-pain"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Exportformat pr&uuml;fen f&uuml;r KI-Nutzung</div>
+                        </div>
+
+                        <div class="flow-arrow"><span>&rarr;</span></div>
+
+                        <!-- Step 5 -->
+                        <div class="flow-node node-manual">
+                            <div class="flow-node-head">
+                                <span class="flow-node-num">5</span>
                                 <span class="flow-node-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
                             </div>
                             <h4>Manuelle Pr&uuml;fung</h4>
@@ -1039,10 +1058,10 @@ ERGO Maklerservice</div>
 
                         <div class="flow-arrow"><span>&rarr;</span></div>
 
-                        <!-- Step 5: Decision -->
+                        <!-- Step 6: Decision -->
                         <div class="flow-node node-decision">
                             <div class="flow-node-head">
-                                <span class="flow-node-num">5</span>
+                                <span class="flow-node-num">6</span>
                                 <span class="flow-node-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg></span>
                             </div>
                             <h4>Einfach-Vorgang?</h4>
@@ -1056,10 +1075,10 @@ ERGO Maklerservice</div>
 
                         <div class="flow-arrow"><span>&rarr;</span></div>
 
-                        <!-- Step 6 -->
+                        <!-- Step 7 -->
                         <div class="flow-node node-ai">
                             <div class="flow-node-head">
-                                <span class="flow-node-num">6</span>
+                                <span class="flow-node-num">7</span>
                                 <span class="flow-node-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></span>
                             </div>
                             <h4>ERGO GPT</h4>
@@ -1072,10 +1091,10 @@ ERGO Maklerservice</div>
 
                         <div class="flow-arrow"><span>&rarr;</span></div>
 
-                        <!-- Step 7 -->
+                        <!-- Step 8 -->
                         <div class="flow-node node-output">
                             <div class="flow-node-head">
-                                <span class="flow-node-num">7</span>
+                                <span class="flow-node-num">8</span>
                                 <span class="flow-node-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/><path d="M9 3v18"/></svg></span>
                             </div>
                             <h4>Excel f&uuml;r Robotics</h4>

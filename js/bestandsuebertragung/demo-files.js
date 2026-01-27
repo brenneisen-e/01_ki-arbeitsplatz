@@ -382,11 +382,10 @@ function buildMaklervollmacht(kunde, gebDatum, adresse, makler, firma, ort, datu
 }
 
 /**
- * DOCX mit Wingdings-Signatur erzeugen
+ * DOCX mit handschriftlicher Signatur erzeugen
+ * Nutzt Segoe Script / Lucida Handwriting als Schriftart fuer realistische Unterschrift
  */
 function createSignedDocx(paragraphs, kundeName) {
-    // Build paragraphs, but replace the "________________________" line
-    // with a Wingdings signature + the underline + printed name
     const bodyParts = [];
     for (let i = 0; i < paragraphs.length; i++) {
         const p = paragraphs[i];
@@ -400,12 +399,13 @@ function createSignedDocx(paragraphs, kundeName) {
         if (p === '') {
             bodyParts.push('<w:p><w:pPr><w:spacing w:after="120"/></w:pPr></w:p>');
         } else if (p === '________________________') {
-            // Wingdings signature line: signature chars + underline below
-            // Wingdings chars that look like a handwritten signature
-            const sigChars = '\u0048\u006F\u0072\u0073\u0074'; // renders as symbols in Wingdings
+            // Handschriftliche Signatur: Kundenname in Script-Font + Unterschriftslinie
             bodyParts.push(
                 `<w:p><w:pPr><w:spacing w:after="0"/></w:pPr>` +
-                `<w:r><w:rPr><w:rFonts w:ascii="Wingdings" w:hAnsi="Wingdings"/><w:sz w:val="28"/><w:color w:val="1a1a6e"/></w:rPr><w:t xml:space="preserve">${sigChars}</w:t></w:r>` +
+                `<w:r><w:rPr>` +
+                `<w:rFonts w:ascii="Segoe Script" w:hAnsi="Segoe Script" w:cs="Lucida Handwriting"/>` +
+                `<w:i/><w:sz w:val="36"/><w:color w:val="1B1B6F"/>` +
+                `</w:rPr><w:t xml:space="preserve">${escXml(kundeName)}</w:t></w:r>` +
                 `</w:p>` +
                 `<w:p><w:pPr><w:spacing w:after="120"/></w:pPr>` +
                 `<w:r><w:rPr><w:sz w:val="22"/></w:rPr><w:t xml:space="preserve">________________________</w:t></w:r>` +
@@ -531,69 +531,73 @@ thomas.meier@meier-versicherungen.de`
         }
     },
     {
-        id: 'bestaetigung_leben_weber',
+        id: 'erinnerung_leben_weber',
         category: 'email-simple',
-        title: 'Best\u00e4tigung Leben \u2013 Weber',
-        description: 'Best\u00e4tigungs-E-Mail vom Versicherer f\u00fcr Lebensversicherung.',
-        tags: ['EML', 'Nur Text', 'Best\u00e4tigung'],
-        filename: '02_Bestaetigung_Leben_Weber.eml',
+        title: 'Erinnerung Leben \u2013 Weber',
+        description: 'Makler erinnert ERGO an laufende Bestands\u00fcbertragung Lebensversicherung.',
+        tags: ['EML', 'Nur Text', 'Erinnerung'],
+        filename: '02_Erinnerung_Leben_Weber.eml',
         generate() {
             return createEml({
-                from: '"ERGO Maklerservice" <maklerservice@ergo.de>',
-                to: 'sandra.schmidt@schmidt-makler.de',
-                subject: 'Bestätigung Bestandsübertragung – Christine Weber, ERG-4512378',
+                from: '"Sandra Schmidt" <sandra.schmidt@schmidt-makler.de>',
+                to: 'maklerservice@ergo.de',
+                subject: 'Erinnerung Bestands\u00fcbertragung \u2013 Christine Weber, ERG-4512378',
                 date: 'Wed, 15 Jan 2026 14:32:00 +0100',
-                body: `Sehr geehrte Frau Schmidt,
+                body: `Sehr geehrte Damen und Herren,
 
-wir bestätigen hiermit die Bestandsübertragung für folgenden Vertrag:
+ich m\u00f6chte mich nach dem Stand der Bestands\u00fcbertragung f\u00fcr folgende Kundin erkundigen:
 
 Versicherungsnehmer: Christine Weber
 Versicherungsnummer: ERG-4512378
 Sparte: Lebensversicherung (Kapital)
-Übertragungsdatum: 01.02.2026
+Gew\u00fcnschtes \u00dcbertragungsdatum: 01.02.2026
 
-Sie sind ab dem genannten Datum als betreuende Maklerin für diesen Vertrag hinterlegt.
+Den Antrag haben wir bereits am 06.01.2026 eingereicht. Die unterschriebene Maklervollmacht wurde mit dem Antrag per Post \u00fcbermittelt.
 
-Die aktualisierten Vertragsunterlagen werden Ihnen in den nächsten Tagen zugesandt.
+K\u00f6nnten Sie uns bitte den aktuellen Bearbeitungsstand mitteilen?
 
-Mit freundlichen Grüßen
+Mit freundlichen Gr\u00fc\u00dfen
 
-ERGO Versicherung AG
-Maklerservice Bestandsübertragung
-Tel.: 0800-3746-000
-maklerservice@ergo.de`
+Sandra Schmidt
+Schmidt Maklerb\u00fcro
+K\u00f6nigsallee 45, 40215 D\u00fcsseldorf
+Tel.: 0211-3344556
+sandra.schmidt@schmidt-makler.de`
             });
         }
     },
     {
-        id: 'rueckfrage_schneider',
+        id: 'nachreichung_schneider',
         category: 'email-simple',
-        title: 'R\u00fcckfrage fehlende Vollmacht \u2013 Schneider',
-        description: 'Versicherer fordert fehlende Maklervollmacht f\u00fcr BU-Vertrag nach.',
-        tags: ['EML', 'Nur Text', 'R\u00fcckfrage'],
-        filename: '03_Rueckfrage_Schneider.eml',
+        title: 'Nachreichung Vollmacht-Hinweis \u2013 Schneider',
+        description: 'Makler k\u00fcndigt Nachreichung der Maklervollmacht an.',
+        tags: ['EML', 'Nur Text', 'Nachreichung'],
+        filename: '03_Nachreichung_Schneider.eml',
         generate() {
             return createEml({
-                from: '"ERGO Maklerservice" <maklerservice@ergo.de>',
-                to: 'lisa.wagner@wagner-makler.de',
-                subject: 'Fehlende Maklervollmacht – Petra Schneider, ERG-5567891',
+                from: '"Lisa Wagner" <lisa.wagner@wagner-makler.de>',
+                to: 'maklerservice@ergo.de',
+                subject: 'Bestands\u00fcbertragung Petra Schneider, ERG-5567891 \u2013 Vollmacht folgt',
                 date: 'Thu, 16 Jan 2026 10:05:00 +0100',
-                body: `Sehr geehrte Frau Wagner,
+                body: `Sehr geehrte Damen und Herren,
 
-zu Ihrem Antrag auf Bestandsübertragung für den Vertrag:
+hiermit beantragen wir die Bestands\u00fcbertragung f\u00fcr unsere Kundin:
 
 Versicherungsnehmer: Petra Schneider
 Versicherungsnummer: ERG-5567891
-Sparte: Berufsunfähigkeit
+Sparte: Berufsunf\u00e4higkeit
 
-fehlt uns leider noch die unterschriebene Maklervollmacht.
+Die Maklervollmacht wurde von der Kundin unterschrieben und geht Ihnen in den n\u00e4chsten Tagen per Post zu.
 
-Bitte reichen Sie diese per E-Mail (Scan/Foto) oder postalisch nach, damit wir die Übertragung abschließen können.
+Bitte merken Sie den Vorgang bereits vor. Die Vollmacht wird sp\u00e4testens bis 24.01.2026 bei Ihnen eingehen.
 
-Mit freundlichen Grüßen
+Mit freundlichen Gr\u00fc\u00dfen
 
-ERGO Versicherung AG
-Maklerservice Bestandsübertragung`
+Lisa Wagner
+Wagner Maklerb\u00fcro
+Friedrichstr. 22, 40210 D\u00fcsseldorf
+Tel.: 0211-7788990
+lisa.wagner@wagner-makler.de`
             });
         }
     },

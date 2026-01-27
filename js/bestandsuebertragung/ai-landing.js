@@ -162,7 +162,7 @@ function handleFileSelect(e) {
  * Dateien hinzufügen
  */
 function addFiles(files) {
-    const validExtensions = ['.msg', '.xlsx', '.xls', '.docx', '.doc', '.pdf'];
+    const validExtensions = ['.msg', '.eml', '.xlsx', '.xls', '.docx', '.doc', '.pdf'];
 
     for (const file of files) {
         const ext = '.' + file.name.split('.').pop().toLowerCase();
@@ -217,6 +217,7 @@ function renderFileList() {
 function getFileIcon(ext) {
     const icons = {
         'msg': '✉',
+        'eml': '✉',
         'xlsx': '▦',
         'xls': '▦',
         'docx': '▤',

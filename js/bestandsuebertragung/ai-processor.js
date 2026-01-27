@@ -120,6 +120,255 @@ function cleanText(text) {
 }
 
 /**
+ * EML Datei parsen (RFC 2822 / MIME)
+ */
+export async function parseEmlFile(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+
+        reader.onload = (e) => {
+            try {
+                const raw = e.target.result;
+                resolve(parseEmlContent(raw));
+            } catch (error) {
+                reject(new Error('Fehler beim Parsen der EML-Datei: ' + error.message));
+            }
+        };
+
+        reader.onerror = () => reject(new Error('Fehler beim Lesen der Datei'));
+        reader.readAsText(file, 'UTF-8');
+    });
+}
+
+/**
+ * EML Rohtext parsen
+ */
+function parseEmlContent(raw) {
+    // Header / Body trennen (erste Leerzeile)
+    const splitIdx = raw.search(/\r?\n\r?\n/);
+    const headerBlock = splitIdx >= 0 ? raw.substring(0, splitIdx) : raw;
+    const bodyBlock = splitIdx >= 0 ? raw.substring(splitIdx).replace(/^[\r\n]+/, '') : '';
+
+    // Header parsen (unterstützt Continuation Lines)
+    const headers = {};
+    const headerLines = headerBlock.replace(/\r\n/g, '\n').split('\n');
+    let currentKey = '';
+    for (const line of headerLines) {
+        if (/^\s/.test(line) && currentKey) {
+            // Continuation
+            headers[currentKey] += ' ' + line.trim();
+        } else {
+            const m = line.match(/^([A-Za-z-]+):\s*(.*)/);
+            if (m) {
+                currentKey = m[1].toLowerCase();
+                headers[currentKey] = m[2].trim();
+            }
+        }
+    }
+
+    const subject = decodeRfc2047(headers['subject'] || '');
+    const sender = decodeRfc2047(headers['from'] || '');
+
+    // Content-Type prüfen
+    const contentType = headers['content-type'] || 'text/plain';
+    const boundaryMatch = contentType.match(/boundary="?([^";\s]+)"?/i);
+
+    let body = '';
+    const attachmentTexts = [];
+    const attachmentNames = [];
+
+    if (boundaryMatch) {
+        // Multipart
+        const boundary = boundaryMatch[1];
+        const parts = splitMimeParts(bodyBlock, boundary);
+
+        for (const part of parts) {
+            const partResult = parseMimePart(part);
+            if (partResult.isAttachment) {
+                attachmentNames.push(partResult.filename);
+                if (partResult.textContent) {
+                    attachmentTexts.push({
+                        type: partResult.contentType.includes('word') || partResult.filename.match(/\.docx?$/i) ? 'word' :
+                              partResult.contentType.includes('excel') || partResult.contentType.includes('spreadsheet') || partResult.filename.match(/\.xlsx?$/i) ? 'excel' : 'other',
+                        content: partResult.textContent,
+                        filename: partResult.filename
+                    });
+                }
+            } else if (partResult.isText && !body) {
+                body = partResult.textContent;
+            } else if (partResult.isHtml && !body) {
+                // HTML als Fallback
+                body = partResult.textContent.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+            } else if (partResult.isMultipart) {
+                // Verschachtelter Multipart
+                const innerParts = splitMimeParts(partResult.rawBody, partResult.boundary);
+                for (const inner of innerParts) {
+                    const innerResult = parseMimePart(inner);
+                    if (innerResult.isText && !body) {
+                        body = innerResult.textContent;
+                    } else if (innerResult.isHtml && !body) {
+                        body = innerResult.textContent.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+                    } else if (innerResult.isAttachment) {
+                        attachmentNames.push(innerResult.filename);
+                        if (innerResult.textContent) {
+                            attachmentTexts.push({
+                                type: 'other',
+                                content: innerResult.textContent,
+                                filename: innerResult.filename
+                            });
+                        }
+                    }
+                }
+            }
+        }
+    } else {
+        // Einfacher Body
+        const encoding = (headers['content-transfer-encoding'] || '').toLowerCase();
+        body = decodeMimeBody(bodyBlock, encoding);
+    }
+
+    return {
+        subject: cleanText(subject),
+        sender: cleanText(sender),
+        body: cleanText(body),
+        attachmentNames,
+        attachmentTexts,
+        rawSize: raw.length
+    };
+}
+
+/**
+ * MIME-Parts nach Boundary aufteilen
+ */
+function splitMimeParts(body, boundary) {
+    const parts = [];
+    const delim = '--' + boundary;
+    const sections = body.split(delim);
+    // Erste section ist Preamble, letzte endet mit --
+    for (let i = 1; i < sections.length; i++) {
+        const section = sections[i];
+        if (section.startsWith('--')) break; // End boundary
+        parts.push(section.replace(/^[\r\n]+/, ''));
+    }
+    return parts;
+}
+
+/**
+ * Einzelnen MIME-Part parsen
+ */
+function parseMimePart(partRaw) {
+    const splitIdx = partRaw.search(/\r?\n\r?\n/);
+    const headerBlock = splitIdx >= 0 ? partRaw.substring(0, splitIdx) : '';
+    const bodyBlock = splitIdx >= 0 ? partRaw.substring(splitIdx).replace(/^[\r\n]+/, '') : partRaw;
+
+    // Part-Header parsen
+    const headers = {};
+    let currentKey = '';
+    for (const line of headerBlock.replace(/\r\n/g, '\n').split('\n')) {
+        if (/^\s/.test(line) && currentKey) {
+            headers[currentKey] += ' ' + line.trim();
+        } else {
+            const m = line.match(/^([A-Za-z-]+):\s*(.*)/);
+            if (m) {
+                currentKey = m[1].toLowerCase();
+                headers[currentKey] = m[2].trim();
+            }
+        }
+    }
+
+    const ct = (headers['content-type'] || 'text/plain').toLowerCase();
+    const cte = (headers['content-transfer-encoding'] || '').toLowerCase();
+    const cd = headers['content-disposition'] || '';
+
+    // Filename extrahieren
+    let filename = '';
+    const fnMatch = (cd + ' ' + (headers['content-type'] || '')).match(/name="?([^";\r\n]+)"?/i);
+    if (fnMatch) filename = decodeRfc2047(fnMatch[1].trim());
+
+    // Ist es ein Attachment?
+    const isAttachment = cd.includes('attachment') || (filename && !ct.startsWith('text/'));
+
+    // Ist es ein verschachtelter Multipart?
+    const boundaryMatch = ct.match(/boundary="?([^";\s]+)"?/i);
+    if (ct.includes('multipart/')) {
+        return {
+            isMultipart: true,
+            boundary: boundaryMatch ? boundaryMatch[1] : '',
+            rawBody: bodyBlock
+        };
+    }
+
+    // Body dekodieren
+    const decoded = decodeMimeBody(bodyBlock, cte);
+
+    const isText = ct.startsWith('text/plain');
+    const isHtml = ct.startsWith('text/html');
+
+    // Für Attachments: versuche Text zu extrahieren wenn es XML-basiert ist (docx/xlsx)
+    let textContent = decoded;
+    if (isAttachment && cte === 'base64') {
+        // Base64 Attachment - versuche XML-Text zu extrahieren für Office-Formate
+        try {
+            const binaryStr = atob(bodyBlock.replace(/[\r\n\s]/g, ''));
+            if (filename.match(/\.docx$/i)) {
+                const textMatches = binaryStr.matchAll(/<w:t[^>]*>([^<]+)<\/w:t>/g);
+                textContent = Array.from(textMatches).map(m => m[1]).join(' ');
+            } else if (filename.match(/\.xlsx$/i)) {
+                const cellMatches = binaryStr.matchAll(/<v>([^<]+)<\/v>|<t[^>]*>([^<]+)<\/t>/g);
+                textContent = Array.from(cellMatches).map(m => m[1] || m[2]).filter(Boolean).join('\n');
+            } else {
+                textContent = '[Binäranhang: ' + filename + ']';
+            }
+        } catch {
+            textContent = '[Anhang: ' + filename + ']';
+        }
+    }
+
+    return {
+        isAttachment,
+        isText,
+        isHtml,
+        filename,
+        contentType: ct,
+        textContent
+    };
+}
+
+/**
+ * MIME Body dekodieren (quoted-printable / base64)
+ */
+function decodeMimeBody(body, encoding) {
+    if (encoding === 'quoted-printable') {
+        return body
+            .replace(/=\r?\n/g, '') // Soft line breaks
+            .replace(/=([0-9A-Fa-f]{2})/g, (_, hex) => String.fromCharCode(parseInt(hex, 16)));
+    }
+    if (encoding === 'base64') {
+        try {
+            return atob(body.replace(/[\r\n\s]/g, ''));
+        } catch {
+            return body;
+        }
+    }
+    return body;
+}
+
+/**
+ * RFC 2047 encoded-word dekodieren (=?charset?encoding?text?=)
+ */
+function decodeRfc2047(str) {
+    return str.replace(/=\?([^?]+)\?([BbQq])\?([^?]*)\?=/g, (_, charset, enc, text) => {
+        if (enc.toUpperCase() === 'B') {
+            try { return atob(text); } catch { return text; }
+        }
+        // Q encoding
+        return text
+            .replace(/_/g, ' ')
+            .replace(/=([0-9A-Fa-f]{2})/g, (__, hex) => String.fromCharCode(parseInt(hex, 16)));
+    });
+}
+
+/**
  * Excel/Word Datei lesen
  */
 export async function readAttachment(file) {
@@ -343,7 +592,9 @@ export async function processBatch(files, onProgress) {
                 status: 'processing'
             });
 
-            if (file.name.toLowerCase().endsWith('.msg')) {
+            const lower = file.name.toLowerCase();
+
+            if (lower.endsWith('.msg')) {
                 // MSG Datei verarbeiten
                 const msgContent = await parseMsgFile(file);
                 const analysis = await analyzeEmailWithAI(msgContent, []);
@@ -351,6 +602,18 @@ export async function processBatch(files, onProgress) {
                 results.push({
                     filename: file.name,
                     email: msgContent,
+                    analysis: analysis,
+                    success: true
+                });
+            } else if (lower.endsWith('.eml')) {
+                // EML Datei verarbeiten
+                const emlContent = await parseEmlFile(file);
+                const attachments = emlContent.attachmentTexts || [];
+                const analysis = await analyzeEmailWithAI(emlContent, attachments);
+
+                results.push({
+                    filename: file.name,
+                    email: emlContent,
                     analysis: analysis,
                     success: true
                 });
@@ -456,6 +719,7 @@ export default {
     loadApiKey,
     hasApiKey,
     parseMsgFile,
+    parseEmlFile,
     readAttachment,
     analyzeEmailWithAI,
     processBatch,

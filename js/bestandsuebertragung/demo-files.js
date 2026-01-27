@@ -586,6 +586,7 @@ hiermit beantragen wir die Bestands\u00fcbertragung f\u00fcr unsere Kundin:
 Versicherungsnehmer: Petra Schneider
 Versicherungsnummer: ERG-5567891
 Sparte: Berufsunf\u00e4higkeit
+Gew\u00fcnschtes \u00dcbertragungsdatum: 01.03.2026
 
 Die Maklervollmacht wurde von der Kundin unterschrieben und geht Ihnen in den n\u00e4chsten Tagen per Post zu.
 
@@ -631,6 +632,7 @@ Vertragsdaten:
 Versicherungsnehmer: Ralf Seidel
 Versicherungsnummer: ERG-3345678
 Sparte: Krankenversicherung (Zusatz)
+Gew\u00fcnschtes \u00dcbertragungsdatum: 15.02.2026
 
 Bitte \u00fcbertragen Sie den Vertrag in unseren Maklerbestand.
 
@@ -671,6 +673,8 @@ Tel.: 0221-5554433`,
 
 bez\u00fcglich der Bestands\u00fcbertragung f\u00fcr unsere Kundin Birgit Franke verweise ich auf das beigef\u00fcgte Schreiben.
 
+Gew\u00fcnschtes \u00dcbertragungsdatum: 01.03.2026
+
 Bitte um Best\u00e4tigung.
 
 MfG
@@ -707,9 +711,10 @@ Stefan Zimmermann`,
 
 vielen Dank für Ihre Rückmeldung.
 
-Anbei die nachgeforderte Maklervollmacht für Frau Petra Schneider (ERG-5567891, BU-Versicherung).
+Anbei die nachgeforderte Maklervollmacht f\u00fcr Frau Petra Schneider (ERG-5567891, BU-Versicherung).
+Gew\u00fcnschtes \u00dcbertragungsdatum: 01.03.2026
 
-Bitte setzen Sie die Bestandsübertragung nun fort.
+Bitte setzen Sie die Bestands\u00fcbertragung nun fort.
 
 Mit freundlichen Grüßen
 
@@ -753,6 +758,7 @@ Tel.: 0211-7788990`,
 in der Anlage finden Sie die Liste der zu \u00fcbertragenden Vertr\u00e4ge f\u00fcr die Bestands\u00fcbertragung.
 
 Es handelt sich um 6 Vertr\u00e4ge von 3 Kunden (Huber, Keller, Baumann).
+Gew\u00fcnschtes \u00dcbertragungsdatum: 01.03.2026
 
 Die Maklervollmachten f\u00fcr alle genannten Kunden liegen bereits vor und wurden am 15.01.2026 per Post \u00fcbermittelt.
 
@@ -796,9 +802,10 @@ Tel.: 0228-6654321`,
 
 anbei übersende ich Ihnen unsere aktuelle Kundenliste für die laufenden Bestandsübertragungen.
 
-Die Excel-Datei enthält 5 Kunden mit den jeweiligen Vertragsdaten und dem aktuellen Status.
+Die Excel-Datei enth\u00e4lt 5 Kunden mit den jeweiligen Vertragsdaten und dem aktuellen Status.
+Gew\u00fcnschtes \u00dcbertragungsdatum: 01.03.2026
 
-Für die Kunden Weber und Richter liegen die Maklervollmachten bereits vor.
+F\u00fcr die Kunden Weber und Richter liegen die Maklervollmachten bereits vor.
 Für Hofmann, Lehmann und Fischer folgen diese in den nächsten Tagen.
 
 Bei Rückfragen stehe ich gerne zur Verfügung.
@@ -860,6 +867,8 @@ anbei \u00fcbersende ich Ihnen die vollst\u00e4ndigen Unterlagen zur Bestands\u0
 
 Es handelt sich um 3 Vertr\u00e4ge (KFZ, Hausrat, Haftpflicht).
 
+Gew\u00fcnschtes \u00dcbertragungsdatum: 01.03.2026
+
 Bitte best\u00e4tigen Sie die \u00dcbertragung f\u00fcr alle Vertr\u00e4ge.
 
 Mit freundlichen Gr\u00fc\u00dfen
@@ -914,6 +923,8 @@ K\u00f6lner Str. 78, 53111 Bonn`,
                 body: `Sehr geehrte Damen und Herren,
 
 f\u00fcr unsere Kundin Sabine Keller beantragen wir die \u00dcbertragung der in der Anlage aufgef\u00fchrten Vertr\u00e4ge (Haftpflicht und Unfall).
+
+Gew\u00fcnschtes \u00dcbertragungsdatum: 15.02.2026
 
 Anbei:
 - Maklervollmacht

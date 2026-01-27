@@ -366,7 +366,8 @@ function renderResults() {
                 </div>
         `;
 
-        if (result.analysis.zusammenfassung) {
+        // Zusammenfassung nur bei mehreren Vorgängen anzeigen
+        if (result.analysis.zusammenfassung && result.analysis.vorgaenge.length > 1) {
             html += `<div class="result-summary">${escapeHtml(result.analysis.zusammenfassung)}</div>`;
         }
 
@@ -387,7 +388,6 @@ function renderResults() {
             } else if (mv.als_anhang && mv.unterschrieben === null) {
                 mvIcon = '?'; mvText = 'Vollmacht als Anhang, Signatur unklar'; mvClass = 'mv-warn';
             } else if (mv.vorhanden === true) {
-                // Backwards-compatible with old format
                 mvIcon = mv.unterschrieben ? '✓' : '○';
                 mvText = mv.unterschrieben ? 'vorhanden, unterschrieben' : 'vorhanden, nicht unterschrieben';
                 mvClass = mv.unterschrieben ? 'mv-ok' : 'mv-warn';
@@ -404,7 +404,21 @@ function renderResults() {
             // Build attachment list for this result
             const attachmentNames = result.email?.attachmentNames || [];
             const attachmentTexts = result.email?.attachmentTexts || [];
-            const previewId = `preview-${resultIdx}-${vi}`;
+
+            // Filter fehlende_infos: MV-bezogene Einträge ausfiltern (MV hat eigene Anzeige)
+            const mvKeywords = /vollmacht|maklervollmacht/i;
+            const filteredFehlend = (vorgang.fehlende_infos || []).filter(info => !mvKeywords.test(info));
+
+            // Filter notizen: MV-bezogene Sätze entfernen
+            let filteredNotizen = '';
+            if (vorgang.notizen) {
+                filteredNotizen = vorgang.notizen
+                    .split(/[.,;]\s*/)
+                    .filter(s => s.trim() && !mvKeywords.test(s))
+                    .join('. ')
+                    .trim();
+                if (filteredNotizen && !filteredNotizen.endsWith('.')) filteredNotizen += '.';
+            }
 
             html += `
                 <div class="vorgang-card${needsManualCheck ? ' needs-check' : ''}">
@@ -422,11 +436,15 @@ function renderResults() {
                             <span class="detail-value">${escapeHtml(vorgang.sparte || '-')}</span>
                         </div>
                         <div class="detail-row">
+                            <span class="detail-label">Gültig ab:</span>
+                            <span class="detail-value">${escapeHtml(vorgang.gueltigkeitsdatum || '-')}</span>
+                        </div>
+                        <div class="detail-row">
                             <span class="detail-label">Makler:</span>
                             <span class="detail-value">${escapeHtml(vorgang.makler || '-')}</span>
                         </div>
                         <div class="detail-row detail-row-full">
-                            <span class="detail-label">Maklervollmacht:</span>
+                            <span class="detail-label">Vollmacht:</span>
                             <span class="detail-value ${mvClass}"><span class="mv-icon">${mvIcon}</span> ${mvText}</span>
                         </div>
                         ${mvAnmerkung ? `
@@ -450,13 +468,13 @@ function renderResults() {
                             </div>
                         </div>
                     ` : ''}
-                    ${vorgang.fehlende_infos?.length ? `
+                    ${filteredFehlend.length ? `
                         <div class="vorgang-missing">
-                            <strong>Fehlend:</strong> ${vorgang.fehlende_infos.join(', ')}
+                            <strong>Fehlend:</strong> ${filteredFehlend.join(', ')}
                         </div>
                     ` : ''}
-                    ${vorgang.notizen ? `
-                        <div class="vorgang-notes">${escapeHtml(vorgang.notizen)}</div>
+                    ${filteredNotizen ? `
+                        <div class="vorgang-notes">${escapeHtml(filteredNotizen)}</div>
                     ` : ''}
                     ${needsManualCheck ? `
                         <div class="vorgang-actions">

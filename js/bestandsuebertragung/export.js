@@ -13,18 +13,30 @@ import * as Extractor from './extractor.js';
 export function fixMojibake(text) {
     if (!text) return text;
 
+    // Keys use Unicode escapes to avoid encoding corruption in the source file.
+    // Each key is the mojibake sequence (UTF-8 bytes misread as Windows-1252).
     const replacements = {
-        'Ã¤': 'ä', 'Ã¶': 'ö', 'Ã¼': 'ü',
-        'Ã„': 'Ä', 'Ã–': 'Ö', 'Ãœ': 'Ü',
-        'ÃŸ': 'ß',
-        'â€"': '–', 'â€"': '—',
-        'â€œ': '"', 'â€': '"',
-        'â€˜': ''', 'â€™': ''',
-        'â€¦': '…',
-        'Ã©': 'é', 'Ã¨': 'è', 'Ãª': 'ê',
-        'Ã ': 'à', 'Ã¢': 'â',
-        'Ã§': 'ç',
-        'â‚¬': '€'
+        '\u00c3\u00a4': '\u00e4',       // Ã¤ → ä
+        '\u00c3\u00b6': '\u00f6',       // Ã¶ → ö
+        '\u00c3\u00bc': '\u00fc',       // Ã¼ → ü
+        '\u00c3\u201e': '\u00c4',       // Ã„ → Ä
+        '\u00c3\u2013': '\u00d6',       // Ã– → Ö
+        '\u00c3\u0153': '\u00dc',       // Ãœ → Ü
+        '\u00c3\u0178': '\u00df',       // ÃŸ → ß
+        '\u00e2\u20ac\u201c': '\u2013', // â€" → – (en-dash)
+        '\u00e2\u20ac\u201d': '\u2014', // â€" → — (em-dash)
+        '\u00e2\u20ac\u0153': '\u201c', // â€œ → " (left double quote)
+        '\u00e2\u20ac\u009d': '\u201d', // â€\x9d → " (right double quote)
+        '\u00e2\u20ac\u02dc': '\u2018', // â€˜ → ' (left single quote)
+        '\u00e2\u20ac\u2122': '\u2019', // â€™ → ' (right single quote)
+        '\u00e2\u20ac\u00a6': '\u2026', // â€¦ → … (ellipsis)
+        '\u00c3\u00a9': '\u00e9',       // Ã© → é
+        '\u00c3\u00a8': '\u00e8',       // Ã¨ → è
+        '\u00c3\u00aa': '\u00ea',       // Ãª → ê
+        '\u00c3\u00a0': '\u00e0',       // Ã  → à
+        '\u00c3\u00a2': '\u00e2',       // Ã¢ → â
+        '\u00c3\u00a7': '\u00e7',       // Ã§ → ç
+        '\u00e2\u201a\u00ac': '\u20ac'  // â‚¬ → €
     };
 
     let fixed = text;

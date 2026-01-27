@@ -5057,6 +5057,46 @@ body {
     font-style: italic;
 }
 
+/* Linked Vorgang Badge (Erinnerung → Erstvorgang) */
+.bestand-page .linked-vorgang-badge {
+    margin: 8px 0 4px;
+    padding: 10px 14px;
+    background: #f0f4ff;
+    border: 1px solid #c7d4f0;
+    border-left: 3px solid #4a6fa5;
+    border-radius: 6px;
+    font-size: 13px;
+}
+
+.bestand-page .linked-badge-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 6px;
+    font-weight: 600;
+    color: #4a6fa5;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.bestand-page .linked-badge-icon {
+    font-size: 16px;
+    line-height: 1;
+}
+
+.bestand-page .linked-badge-details {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    color: var(--gray-600);
+    font-size: 13px;
+}
+
+.bestand-page .linked-badge-details strong {
+    color: var(--gray-800);
+}
+
 /* Responsive */
 @media (max-width: 1024px) {
     .bestand-page .ai-main-grid {

@@ -13,6 +13,28 @@ let isProcessing = false;
 let activeTab = 'neu'; // 'neu' | 'erinnerung'
 let neuFilter = 'alle'; // 'alle' | 'vollstaendig' | 'teilweise' | 'nicht-vollstaendig'
 
+// Demo: Vorhandene Vorgänge (simuliert bereits eingegangene Erstmails)
+const DEMO_EXISTING_VORGAENGE = {
+    'ERG-4512378': {
+        kunde: 'Weber, Christine',
+        versicherungsnummer: 'ERG-4512378',
+        sparte: 'Leben',
+        makler: 'Sandra Schmidt',
+        eingegangen: '06.01.2026',
+        status: 'angefragt',
+        quelldatei: 'Erstmail vom 06.01.2026'
+    },
+    'ERG-5567891': {
+        kunde: 'Schneider, Petra',
+        versicherungsnummer: 'ERG-5567891',
+        sparte: 'BU',
+        makler: 'Lisa Wagner',
+        eingegangen: '16.01.2026',
+        status: 'angefragt',
+        quelldatei: 'Erstmail vom 16.01.2026'
+    }
+};
+
 /**
  * AI Landing Page initialisieren
  */
@@ -337,7 +359,7 @@ export function setNeuFilter(filter) {
 
 /**
  * Prüfen ob ein Vorgang "vollständig" ist
- * Vollständig = MV als Anhang + unterschrieben + keine fehlenden Infos + keine manuelle Prüfung nötig
+ * Vollständig = MV als Anhang + unterschrieben + keine fehlenden Infos + keine manuelle Prüfung + Gültigkeitsdatum vorhanden
  */
 function isVorgangVollstaendig(vorgang) {
     const mv = vorgang.maklervollmacht || {};
@@ -345,7 +367,8 @@ function isVorgangVollstaendig(vorgang) {
     return mv.als_anhang === true
         && mv.unterschrieben === true
         && mv.manuell_pruefen !== true
-        && fehlend.length === 0;
+        && fehlend.length === 0
+        && !!vorgang.gueltigkeitsdatum;
 }
 
 /**
@@ -581,6 +604,24 @@ function renderResults() {
                         </div>
                         ` : ''}
                     </div>
+                    ${(() => {
+                        if (vorgang.kategorie !== 'erinnerung') return '';
+                        const vsNr = vorgang.versicherungsnummer || '';
+                        const linked = DEMO_EXISTING_VORGAENGE[vsNr];
+                        if (!linked) return '';
+                        return `
+                        <div class="linked-vorgang-badge">
+                            <div class="linked-badge-header">
+                                <span class="linked-badge-icon">&#8627;</span>
+                                <span class="linked-badge-title">Verkn\u00fcpfter Erstvorgang</span>
+                            </div>
+                            <div class="linked-badge-details">
+                                <span><strong>${escapeHtml(linked.kunde)}</strong></span>
+                                <span>${escapeHtml(linked.versicherungsnummer)} &middot; ${escapeHtml(linked.sparte)}</span>
+                                <span>Eingegangen: ${escapeHtml(linked.eingegangen)} &middot; Status: ${escapeHtml(linked.status)}</span>
+                            </div>
+                        </div>`;
+                    })()}
                     ${attachmentNames.length > 0 ? `
                         <div class="vorgang-attachments">
                             <strong>Anhänge:</strong>

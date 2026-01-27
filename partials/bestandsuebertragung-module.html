@@ -553,16 +553,217 @@
     <!-- ============================================ -->
     <section class="view" id="view-vorlagen">
         <div class="vorlagen-container">
-            <h2>E-Mail Vorlagen</h2>
-            <p class="text-muted" style="margin-bottom: 1.5rem;">Klicken Sie auf "Kopieren" um den Text in die Zwischenablage zu kopieren.</p>
+            <h2>Testdateien &amp; E-Mail Vorlagen</h2>
+            <p class="text-muted" style="margin-bottom: 0.5rem;">Realistische Demo-Dateien zum Testen des KI-Upload-Workflows. Alle Dateien werden im Browser erzeugt und k&ouml;nnen direkt im KI Upload verwendet werden.</p>
+            <div style="margin-bottom: 1.5rem;">
+                <button class="btn btn-primary" id="downloadAllDemoFiles">Alle Dateien herunterladen (13 Dateien)</button>
+            </div>
 
-            <div class="vorlagen-grid">
-                <div class="email-template-card">
-                    <div class="template-header">
-                        <h4>1. Bestandsübertragung anfragen</h4>
-                        <button class="btn btn-secondary btn-copy" data-template="tpl1">Kopieren</button>
+            <!-- Einfache E-Mails -->
+            <div class="demo-section">
+                <h3 class="demo-section-title">Einfache E-Mails (nur Text)</h3>
+                <p class="demo-section-desc">E-Mails ohne Anh&auml;nge &ndash; Anfragen, Best&auml;tigungen und R&uuml;ckfragen als reiner Text.</p>
+                <div class="demo-files-grid">
+                    <div class="demo-file-card">
+                        <div class="demo-file-icon demo-icon-eml">&#9993;</div>
+                        <div class="demo-file-info">
+                            <h4>Anfrage KFZ &ndash; M&uuml;ller</h4>
+                            <p>Bestandsübertragung KFZ bei ERGO anfragen (Text-E-Mail)</p>
+                            <div class="demo-file-tags">
+                                <span class="demo-tag tag-eml">EML</span>
+                                <span class="demo-tag tag-text">Nur Text</span>
+                            </div>
+                        </div>
+                        <button class="btn btn-secondary btn-sm btn-demo-dl" data-demo-file="anfrage_text_mueller">&darr; Download</button>
                     </div>
-                    <div class="template-content" id="tpl1">Sehr geehrte Damen und Herren,
+                    <div class="demo-file-card">
+                        <div class="demo-file-icon demo-icon-eml">&#9993;</div>
+                        <div class="demo-file-info">
+                            <h4>Best&auml;tigung Leben &ndash; Weber</h4>
+                            <p>Versicherer best&auml;tigt Lebensversicherung-&Uuml;bertragung</p>
+                            <div class="demo-file-tags">
+                                <span class="demo-tag tag-eml">EML</span>
+                                <span class="demo-tag tag-text">Best&auml;tigung</span>
+                            </div>
+                        </div>
+                        <button class="btn btn-secondary btn-sm btn-demo-dl" data-demo-file="bestaetigung_leben_weber">&darr; Download</button>
+                    </div>
+                    <div class="demo-file-card">
+                        <div class="demo-file-icon demo-icon-eml">&#9993;</div>
+                        <div class="demo-file-info">
+                            <h4>R&uuml;ckfrage Vollmacht &ndash; Schneider</h4>
+                            <p>Versicherer fordert fehlende Maklervollmacht nach</p>
+                            <div class="demo-file-tags">
+                                <span class="demo-tag tag-eml">EML</span>
+                                <span class="demo-tag tag-text">R&uuml;ckfrage</span>
+                            </div>
+                        </div>
+                        <button class="btn btn-secondary btn-sm btn-demo-dl" data-demo-file="rueckfrage_schneider">&darr; Download</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- E-Mails mit Word-Anhang -->
+            <div class="demo-section">
+                <h3 class="demo-section-title">E-Mails mit Word-Anhang</h3>
+                <p class="demo-section-desc">E-Mails mit echten DOCX-Dokumenten: Maklervollmachten und Antragsschreiben.</p>
+                <div class="demo-files-grid">
+                    <div class="demo-file-card">
+                        <div class="demo-file-icon demo-icon-word">W</div>
+                        <div class="demo-file-info">
+                            <h4>Anfrage + Maklervollmacht &ndash; Seidel</h4>
+                            <p>Krankenversicherung-Antrag mit Maklervollmacht.docx im Anhang</p>
+                            <div class="demo-file-tags">
+                                <span class="demo-tag tag-eml">EML</span>
+                                <span class="demo-tag tag-docx">DOCX</span>
+                                <span class="demo-tag tag-vollmacht">Vollmacht</span>
+                            </div>
+                        </div>
+                        <button class="btn btn-secondary btn-sm btn-demo-dl" data-demo-file="anfrage_vollmacht_seidel">&darr; Download</button>
+                    </div>
+                    <div class="demo-file-card">
+                        <div class="demo-file-icon demo-icon-word">W</div>
+                        <div class="demo-file-info">
+                            <h4>&bdquo;Siehe Anlage&ldquo; + Antrag &ndash; Franke</h4>
+                            <p>Kurze E-Mail: &bdquo;siehe beigef&uuml;gtes Schreiben&ldquo; &ndash; Antrag als Word-Datei</p>
+                            <div class="demo-file-tags">
+                                <span class="demo-tag tag-eml">EML</span>
+                                <span class="demo-tag tag-docx">DOCX</span>
+                                <span class="demo-tag tag-antrag">Antrag</span>
+                            </div>
+                        </div>
+                        <button class="btn btn-secondary btn-sm btn-demo-dl" data-demo-file="siehe_anlage_franke">&darr; Download</button>
+                    </div>
+                    <div class="demo-file-card">
+                        <div class="demo-file-icon demo-icon-word">W</div>
+                        <div class="demo-file-info">
+                            <h4>Nachreichung Vollmacht &ndash; Schneider</h4>
+                            <p>Antwort auf R&uuml;ckfrage mit nachgereichter Maklervollmacht</p>
+                            <div class="demo-file-tags">
+                                <span class="demo-tag tag-eml">EML</span>
+                                <span class="demo-tag tag-docx">DOCX</span>
+                                <span class="demo-tag tag-vollmacht">Vollmacht</span>
+                            </div>
+                        </div>
+                        <button class="btn btn-secondary btn-sm btn-demo-dl" data-demo-file="antwort_vollmacht_schneider">&darr; Download</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- E-Mails mit Excel-Anhang -->
+            <div class="demo-section">
+                <h3 class="demo-section-title">E-Mails mit Excel-Anhang</h3>
+                <p class="demo-section-desc">E-Mails mit echten XLSX-Tabellen: Versicherungslisten und Kundendaten.</p>
+                <div class="demo-files-grid">
+                    <div class="demo-file-card">
+                        <div class="demo-file-icon demo-icon-excel">X</div>
+                        <div class="demo-file-info">
+                            <h4>Vertragsliste 6 Vertr&auml;ge &ndash; Braun</h4>
+                            <p>Sammelantrag mit Excel-Liste: 6 Vertr&auml;ge von 3 Kunden bei AXA</p>
+                            <div class="demo-file-tags">
+                                <span class="demo-tag tag-eml">EML</span>
+                                <span class="demo-tag tag-xlsx">XLSX</span>
+                                <span class="demo-tag tag-liste">6 Vertr&auml;ge</span>
+                            </div>
+                        </div>
+                        <button class="btn btn-secondary btn-sm btn-demo-dl" data-demo-file="versicherungsliste_braun">&darr; Download</button>
+                    </div>
+                    <div class="demo-file-card">
+                        <div class="demo-file-icon demo-icon-excel">X</div>
+                        <div class="demo-file-info">
+                            <h4>Kundenliste 5 Kunden &ndash; Schmidt</h4>
+                            <p>Kundenliste mit Status&uuml;bersicht f&uuml;r laufende &Uuml;bertragungen</p>
+                            <div class="demo-file-tags">
+                                <span class="demo-tag tag-eml">EML</span>
+                                <span class="demo-tag tag-xlsx">XLSX</span>
+                                <span class="demo-tag tag-liste">5 Kunden</span>
+                            </div>
+                        </div>
+                        <button class="btn btn-secondary btn-sm btn-demo-dl" data-demo-file="kundenliste_schmidt">&darr; Download</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Komplexe E-Mails -->
+            <div class="demo-section">
+                <h3 class="demo-section-title">Komplexe E-Mails (mehrere Anh&auml;nge)</h3>
+                <p class="demo-section-desc">E-Mails mit Maklervollmacht + Excel-Liste + Antrag kombiniert.</p>
+                <div class="demo-files-grid">
+                    <div class="demo-file-card demo-file-card-highlight">
+                        <div class="demo-file-icon demo-icon-complex">&#9830;</div>
+                        <div class="demo-file-info">
+                            <h4>Komplett-Paket &ndash; Huber (3 Anh&auml;nge)</h4>
+                            <p>Vollst&auml;ndige Unterlagen: Vollmacht (DOCX) + Antrag (DOCX) + Vertragsliste (XLSX)</p>
+                            <div class="demo-file-tags">
+                                <span class="demo-tag tag-eml">EML</span>
+                                <span class="demo-tag tag-docx">2&times; DOCX</span>
+                                <span class="demo-tag tag-xlsx">XLSX</span>
+                            </div>
+                        </div>
+                        <button class="btn btn-secondary btn-sm btn-demo-dl" data-demo-file="komplett_huber">&darr; Download</button>
+                    </div>
+                    <div class="demo-file-card demo-file-card-highlight">
+                        <div class="demo-file-icon demo-icon-complex">&#9830;</div>
+                        <div class="demo-file-info">
+                            <h4>Excel + Vollmacht &ndash; Keller (2 Anh&auml;nge)</h4>
+                            <p>Haftpflicht + Unfall: Maklervollmacht (DOCX) + Vertragsliste (XLSX)</p>
+                            <div class="demo-file-tags">
+                                <span class="demo-tag tag-eml">EML</span>
+                                <span class="demo-tag tag-docx">DOCX</span>
+                                <span class="demo-tag tag-xlsx">XLSX</span>
+                            </div>
+                        </div>
+                        <button class="btn btn-secondary btn-sm btn-demo-dl" data-demo-file="excel_und_vollmacht_keller">&darr; Download</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Standalone Vorlagen -->
+            <div class="demo-section">
+                <h3 class="demo-section-title">Dokument-Vorlagen (Standalone)</h3>
+                <p class="demo-section-desc">Einzelne Dokumente zum direkten Download &ndash; auch als Vorlagen f&uuml;r eigene Antr&auml;ge nutzbar.</p>
+                <div class="demo-files-grid">
+                    <div class="demo-file-card">
+                        <div class="demo-file-icon demo-icon-word">W</div>
+                        <div class="demo-file-info">
+                            <h4>Maklervollmacht (Blanko-Vorlage)</h4>
+                            <p>Word-Vorlage mit Platzhaltern &ndash; zum Ausf&uuml;llen und Unterschreiben</p>
+                            <div class="demo-file-tags"><span class="demo-tag tag-docx">DOCX</span></div>
+                        </div>
+                        <button class="btn btn-secondary btn-sm btn-demo-dl" data-demo-file="vorlage_maklervollmacht">&darr; Download</button>
+                    </div>
+                    <div class="demo-file-card">
+                        <div class="demo-file-icon demo-icon-excel">X</div>
+                        <div class="demo-file-info">
+                            <h4>Versicherungsliste (Blanko-Vorlage)</h4>
+                            <p>Excel-Vorlage mit Beispielzeile &ndash; VS-Nr, Sparte, Beitrag etc.</p>
+                            <div class="demo-file-tags"><span class="demo-tag tag-xlsx">XLSX</span></div>
+                        </div>
+                        <button class="btn btn-secondary btn-sm btn-demo-dl" data-demo-file="vorlage_versicherungsliste">&darr; Download</button>
+                    </div>
+                    <div class="demo-file-card">
+                        <div class="demo-file-icon demo-icon-word">W</div>
+                        <div class="demo-file-info">
+                            <h4>Antrag Bestands&uuml;bertragung (Vorlage)</h4>
+                            <p>Formeller Antrag als Word-Dokument mit Platzhaltern</p>
+                            <div class="demo-file-tags"><span class="demo-tag tag-docx">DOCX</span></div>
+                        </div>
+                        <button class="btn btn-secondary btn-sm btn-demo-dl" data-demo-file="vorlage_antrag">&darr; Download</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- E-Mail Textvorlagen (Copy-Paste) -->
+            <div class="demo-section">
+                <h3 class="demo-section-title">E-Mail Textvorlagen (Copy &amp; Paste)</h3>
+                <p class="demo-section-desc">Fertige Textbausteine zum Kopieren in Outlook oder andere E-Mail-Programme.</p>
+                <div class="vorlagen-grid">
+                    <div class="email-template-card">
+                        <div class="template-header">
+                            <h4>1. Bestandsübertragung anfragen</h4>
+                            <button class="btn btn-secondary btn-copy" data-template="tpl1">Kopieren</button>
+                        </div>
+                        <div class="template-content" id="tpl1">Sehr geehrte Damen und Herren,
 
 hiermit beantragen wir die Bestandsübertragung für unseren Kunden Hans Müller.
 
@@ -575,14 +776,13 @@ Die unterschriebene Maklervollmacht liegt diesem Schreiben bei.
 Mit freundlichen Grüßen
 Thomas Meier
 Versicherungsmakler</div>
-                </div>
-
-                <div class="email-template-card">
-                    <div class="template-header">
-                        <h4>2. Rückfrage fehlende Versicherungsnummer</h4>
-                        <button class="btn btn-secondary btn-copy" data-template="tpl2">Kopieren</button>
                     </div>
-                    <div class="template-content" id="tpl2">Sehr geehrte Damen und Herren,
+                    <div class="email-template-card">
+                        <div class="template-header">
+                            <h4>2. Rückfrage fehlende VS-Nr</h4>
+                            <button class="btn btn-secondary btn-copy" data-template="tpl2">Kopieren</button>
+                        </div>
+                        <div class="template-content" id="tpl2">Sehr geehrte Damen und Herren,
 
 bezugnehmend auf unseren Antrag zur Bestandsübertragung für Ralf Seidel bitten wir um Mitteilung der korrekten Versicherungsnummer.
 
@@ -593,14 +793,13 @@ Vielen Dank für Ihre Rückmeldung.
 Mit freundlichen Grüßen
 Martina Koch
 Versicherungsmaklerin</div>
-                </div>
-
-                <div class="email-template-card">
-                    <div class="template-header">
-                        <h4>3. Nachreichung Maklervollmacht</h4>
-                        <button class="btn btn-secondary btn-copy" data-template="tpl3">Kopieren</button>
                     </div>
-                    <div class="template-content" id="tpl3">Sehr geehrte Damen und Herren,
+                    <div class="email-template-card">
+                        <div class="template-header">
+                            <h4>3. Nachreichung Maklervollmacht</h4>
+                            <button class="btn btn-secondary btn-copy" data-template="tpl3">Kopieren</button>
+                        </div>
+                        <div class="template-content" id="tpl3">Sehr geehrte Damen und Herren,
 
 in der Anlage übersende ich Ihnen die nachgeforderte Maklervollmacht für die Kundin Birgit Franke.
 
@@ -611,14 +810,13 @@ Ich bitte um Fortsetzung der Bestandsübertragung.
 Mit freundlichen Grüßen
 Stefan Zimmermann
 Versicherungsmakler</div>
-                </div>
-
-                <div class="email-template-card">
-                    <div class="template-header">
-                        <h4>4. Statusanfrage laufende Übertragung</h4>
-                        <button class="btn btn-secondary btn-copy" data-template="tpl4">Kopieren</button>
                     </div>
-                    <div class="template-content" id="tpl4">Sehr geehrte Damen und Herren,
+                    <div class="email-template-card">
+                        <div class="template-header">
+                            <h4>4. Statusanfrage</h4>
+                            <button class="btn btn-secondary btn-copy" data-template="tpl4">Kopieren</button>
+                        </div>
+                        <div class="template-content" id="tpl4">Sehr geehrte Damen und Herren,
 
 ich erlaube mir, nach dem Stand unserer Bestandsübertragung zu fragen.
 
@@ -631,14 +829,13 @@ Antragsdatum: 15.10.2024
 Mit freundlichen Grüßen
 Sandra Schmidt
 Versicherungsmaklerin</div>
-                </div>
-
-                <div class="email-template-card">
-                    <div class="template-header">
-                        <h4>5. Bestätigung an Makler weiterleiten</h4>
-                        <button class="btn btn-secondary btn-copy" data-template="tpl5">Kopieren</button>
                     </div>
-                    <div class="template-content" id="tpl5">Sehr geehrter Herr Meier,
+                    <div class="email-template-card">
+                        <div class="template-header">
+                            <h4>5. Bestätigung weiterleiten</h4>
+                            <button class="btn btn-secondary btn-copy" data-template="tpl5">Kopieren</button>
+                        </div>
+                        <div class="template-content" id="tpl5">Sehr geehrter Herr Meier,
 
 wir freuen uns, Ihnen mitteilen zu können, dass die Bestandsübertragung für Ihren Kunden Hans Müller bestätigt wurde.
 
@@ -651,6 +848,7 @@ Bei Fragen stehen wir Ihnen gerne zur Verfügung.
 
 Mit freundlichen Grüßen
 ERGO Maklerservice</div>
+                    </div>
                 </div>
             </div>
         </div>

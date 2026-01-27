@@ -1,0 +1,951 @@
+/**
+ * Demo-Dateien Generator für Bestandsübertragung
+ * Erzeugt realistische EML-, DOCX- und XLSX-Dateien zum Testen des KI-Upload-Workflows.
+ */
+
+// ============================================================
+// ZIP Builder (für DOCX/XLSX)
+// ============================================================
+
+function crc32(data) {
+    let crc = 0xFFFFFFFF;
+    for (let i = 0; i < data.length; i++) {
+        crc ^= data[i];
+        for (let j = 0; j < 8; j++) {
+            crc = (crc >>> 1) ^ (crc & 1 ? 0xEDB88320 : 0);
+        }
+    }
+    return (crc ^ 0xFFFFFFFF) >>> 0;
+}
+
+function createZip(files) {
+    const enc = new TextEncoder();
+    const entries = [];
+    let offset = 0;
+
+    files.forEach(f => {
+        const nameBytes = enc.encode(f.name);
+        const data = typeof f.content === 'string' ? enc.encode(f.content) : f.content;
+        const crc = crc32(data);
+
+        // Local file header
+        const lh = new Uint8Array(30 + nameBytes.length);
+        const lv = new DataView(lh.buffer);
+        lv.setUint32(0, 0x04034b50, true);
+        lv.setUint16(4, 20, true);
+        lv.setUint16(8, 0, true); // STORE
+        lv.setUint32(14, crc, true);
+        lv.setUint32(18, data.length, true);
+        lv.setUint32(22, data.length, true);
+        lv.setUint16(26, nameBytes.length, true);
+        lh.set(nameBytes, 30);
+
+        // Central directory header
+        const ch = new Uint8Array(46 + nameBytes.length);
+        const cv = new DataView(ch.buffer);
+        cv.setUint32(0, 0x02014b50, true);
+        cv.setUint16(4, 20, true);
+        cv.setUint16(6, 20, true);
+        cv.setUint16(8, 0, true);
+        cv.setUint16(10, 0, true);
+        cv.setUint32(16, crc, true);
+        cv.setUint32(20, data.length, true);
+        cv.setUint32(24, data.length, true);
+        cv.setUint16(28, nameBytes.length, true);
+        cv.setUint32(38, 0x20, true);
+        cv.setUint32(42, offset, true);
+        ch.set(nameBytes, 46);
+
+        entries.push({ lh, data, ch });
+        offset += lh.length + data.length;
+    });
+
+    const centralSize = entries.reduce((s, e) => s + e.ch.length, 0);
+    const eocd = new Uint8Array(22);
+    const ev = new DataView(eocd.buffer);
+    ev.setUint32(0, 0x06054b50, true);
+    ev.setUint16(8, entries.length, true);
+    ev.setUint16(10, entries.length, true);
+    ev.setUint32(12, centralSize, true);
+    ev.setUint32(16, offset, true);
+
+    const total = offset + centralSize + 22;
+    const result = new Uint8Array(total);
+    let pos = 0;
+    entries.forEach(e => {
+        result.set(e.lh, pos); pos += e.lh.length;
+        result.set(e.data, pos); pos += e.data.length;
+    });
+    entries.forEach(e => { result.set(e.ch, pos); pos += e.ch.length; });
+    result.set(eocd, pos);
+    return result;
+}
+
+// ============================================================
+// XML Helpers
+// ============================================================
+
+function escXml(str) {
+    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+// ============================================================
+// DOCX Generator
+// ============================================================
+
+function createDocx(paragraphs, options = {}) {
+    const { title, bold: boldLines = [] } = options;
+
+    const bodyXml = paragraphs.map((p, i) => {
+        const isBold = boldLines.includes(i);
+        const isTitle = i === 0 && title;
+        const fontSize = isTitle ? 32 : (isBold ? 24 : 22);
+        const bold = (isTitle || isBold) ? '<w:b/>' : '';
+        const jc = isTitle ? '<w:jc w:val="center"/>' : '';
+        const spacing = isTitle ? '<w:spacing w:after="240"/>' : '<w:spacing w:after="120"/>';
+        if (p === '') {
+            return '<w:p><w:pPr><w:spacing w:after="120"/></w:pPr></w:p>';
+        }
+        return `<w:p><w:pPr>${jc}${spacing}</w:pPr><w:r><w:rPr>${bold}<w:sz w:val="${fontSize}"/></w:rPr><w:t xml:space="preserve">${escXml(p)}</w:t></w:r></w:p>`;
+    }).join('\n');
+
+    const contentTypes = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
+<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>
+<Default Extension="xml" ContentType="application/xml"/>
+<Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/>
+</Types>`;
+
+    const rels = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/>
+</Relationships>`;
+
+    const docRels = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"/>`;
+
+    const document = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
+<w:body>
+${bodyXml}
+</w:body>
+</w:document>`;
+
+    return createZip([
+        { name: '[Content_Types].xml', content: contentTypes },
+        { name: '_rels/.rels', content: rels },
+        { name: 'word/_rels/document.xml.rels', content: docRels },
+        { name: 'word/document.xml', content: document }
+    ]);
+}
+
+// ============================================================
+// XLSX Generator
+// ============================================================
+
+function createXlsx(sheetName, headers, rows) {
+    // Collect all unique strings
+    const strings = [];
+    const stringIndex = {};
+    function addString(s) {
+        const str = String(s);
+        if (!(str in stringIndex)) {
+            stringIndex[str] = strings.length;
+            strings.push(str);
+        }
+        return stringIndex[str];
+    }
+
+    headers.forEach(h => addString(h));
+    rows.forEach(row => row.forEach(cell => addString(cell)));
+
+    // Column letter helper
+    function colLetter(i) {
+        return String.fromCharCode(65 + i);
+    }
+
+    // Build sheet XML
+    let sheetRows = '<row r="1">';
+    headers.forEach((h, i) => {
+        const idx = stringIndex[h];
+        sheetRows += `<c r="${colLetter(i)}1" t="s" s="1"><v>${idx}</v></c>`;
+    });
+    sheetRows += '</row>';
+
+    rows.forEach((row, ri) => {
+        const rn = ri + 2;
+        sheetRows += `<row r="${rn}">`;
+        row.forEach((cell, ci) => {
+            const idx = stringIndex[String(cell)];
+            sheetRows += `<c r="${colLetter(ci)}${rn}" t="s"><v>${idx}</v></c>`;
+        });
+        sheetRows += '</row>';
+    });
+
+    const lastCol = colLetter(headers.length - 1);
+    const lastRow = rows.length + 1;
+
+    const contentTypes = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
+<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>
+<Default Extension="xml" ContentType="application/xml"/>
+<Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>
+<Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>
+<Override PartName="/xl/sharedStrings.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sharedStrings+xml"/>
+<Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>
+</Types>`;
+
+    const rels = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/>
+</Relationships>`;
+
+    const wbRels = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/>
+<Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/sharedStrings" Target="sharedStrings.xml"/>
+<Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>
+</Relationships>`;
+
+    const workbook = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">
+<sheets><sheet name="${escXml(sheetName)}" sheetId="1" r:id="rId1"/></sheets>
+</workbook>`;
+
+    const sheet = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+<dimension ref="A1:${lastCol}${lastRow}"/>
+<sheetData>${sheetRows}</sheetData>
+</worksheet>`;
+
+    const sharedStringsXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<sst xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" count="${strings.length}" uniqueCount="${strings.length}">
+${strings.map(s => `<si><t>${escXml(s)}</t></si>`).join('')}
+</sst>`;
+
+    const styles = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+<fonts count="2"><font><sz val="11"/><name val="Calibri"/></font><font><b/><sz val="11"/><name val="Calibri"/></font></fonts>
+<fills count="2"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill></fills>
+<borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders>
+<cellStyleXfs count="1"><xf/></cellStyleXfs>
+<cellXfs count="2"><xf xfId="0"/><xf xfId="0" fontId="1" applyFont="1"/></cellXfs>
+</styleSheet>`;
+
+    return createZip([
+        { name: '[Content_Types].xml', content: contentTypes },
+        { name: '_rels/.rels', content: rels },
+        { name: 'xl/_rels/workbook.xml.rels', content: wbRels },
+        { name: 'xl/workbook.xml', content: workbook },
+        { name: 'xl/worksheets/sheet1.xml', content: sheet },
+        { name: 'xl/sharedStrings.xml', content: sharedStringsXml },
+        { name: 'xl/styles.xml', content: styles }
+    ]);
+}
+
+// ============================================================
+// Base64 & EML Generator
+// ============================================================
+
+function uint8ToBase64(data) {
+    let binary = '';
+    for (let i = 0; i < data.length; i++) {
+        binary += String.fromCharCode(data[i]);
+    }
+    return btoa(binary);
+}
+
+function wrapBase64(b64, lineLen = 76) {
+    const lines = [];
+    for (let i = 0; i < b64.length; i += lineLen) {
+        lines.push(b64.slice(i, i + lineLen));
+    }
+    return lines.join('\r\n');
+}
+
+function quotedPrintableEncode(text) {
+    const enc = new TextEncoder();
+    const bytes = enc.encode(text);
+    let result = '';
+    let lineLen = 0;
+    for (let i = 0; i < bytes.length; i++) {
+        const b = bytes[i];
+        let encoded;
+        if (b === 0x0A) {
+            encoded = '\r\n';
+            lineLen = 0;
+        } else if (b === 0x0D) {
+            continue;
+        } else if (b >= 33 && b <= 126 && b !== 61) {
+            encoded = String.fromCharCode(b);
+        } else if (b === 0x20 || b === 0x09) {
+            encoded = String.fromCharCode(b);
+        } else {
+            encoded = '=' + b.toString(16).toUpperCase().padStart(2, '0');
+        }
+        if (encoded !== '\r\n' && lineLen + encoded.length > 75) {
+            result += '=\r\n';
+            lineLen = 0;
+        }
+        result += encoded;
+        if (encoded === '\r\n') {
+            lineLen = 0;
+        } else {
+            lineLen += encoded.length;
+        }
+    }
+    return result;
+}
+
+function createEml(options) {
+    const { from, to, subject, date, body, attachments = [] } = options;
+    const boundary = '----=_Part_' + Math.random().toString(36).slice(2, 14);
+
+    let eml = '';
+    eml += `From: ${from}\r\n`;
+    eml += `To: ${to}\r\n`;
+    eml += `Subject: =?UTF-8?B?${btoa(unescape(encodeURIComponent(subject)))}?=\r\n`;
+    eml += `Date: ${date}\r\n`;
+    eml += `MIME-Version: 1.0\r\n`;
+    eml += `X-Mailer: Outlook 16.0\r\n`;
+
+    if (attachments.length === 0) {
+        eml += `Content-Type: text/plain; charset=utf-8\r\n`;
+        eml += `Content-Transfer-Encoding: quoted-printable\r\n`;
+        eml += `\r\n`;
+        eml += quotedPrintableEncode(body);
+    } else {
+        eml += `Content-Type: multipart/mixed; boundary="${boundary}"\r\n`;
+        eml += `\r\n`;
+        // Body part
+        eml += `--${boundary}\r\n`;
+        eml += `Content-Type: text/plain; charset=utf-8\r\n`;
+        eml += `Content-Transfer-Encoding: quoted-printable\r\n`;
+        eml += `\r\n`;
+        eml += quotedPrintableEncode(body);
+        eml += `\r\n`;
+        // Attachments
+        attachments.forEach(att => {
+            const b64 = uint8ToBase64(att.data);
+            eml += `\r\n--${boundary}\r\n`;
+            eml += `Content-Type: ${att.mimeType}; name="${att.filename}"\r\n`;
+            eml += `Content-Disposition: attachment; filename="${att.filename}"\r\n`;
+            eml += `Content-Transfer-Encoding: base64\r\n`;
+            eml += `\r\n`;
+            eml += wrapBase64(b64);
+            eml += `\r\n`;
+        });
+        eml += `\r\n--${boundary}--\r\n`;
+    }
+    return new TextEncoder().encode(eml);
+}
+
+// ============================================================
+// Demo Document Builders
+// ============================================================
+
+function buildMaklervollmacht(kunde, gebDatum, adresse, makler, firma, ort, datum) {
+    return createDocx([
+        'MAKLERVOLLMACHT',
+        '',
+        `Hiermit bevollm\u00e4chtige ich,`,
+        '',
+        `${kunde}, geboren am ${gebDatum},`,
+        `wohnhaft: ${adresse},`,
+        '',
+        `den Versicherungsmakler ${makler}, ${firma},`,
+        '',
+        `mit sofortiger Wirkung und bis auf Widerruf, mich in allen Versicherungsangelegenheiten zu vertreten.`,
+        '',
+        'Der bevollm\u00e4chtigte Makler ist insbesondere berechtigt:',
+        '',
+        '\u2022 Versicherungsvertr\u00e4ge in meinem Namen zu verwalten und zu betreuen',
+        '\u2022 Bestands\u00fcbertragungen zu beantragen und durchzuf\u00fchren',
+        '\u2022 Versicherungsunterlagen einzuholen und einzusehen',
+        '\u2022 Korrespondenz mit Versicherungsgesellschaften zu f\u00fchren',
+        '\u2022 Angebote einzuholen und Vertr\u00e4ge abzuschlie\u00dfen',
+        '',
+        'Diese Vollmacht gilt f\u00fcr alle bestehenden und zuk\u00fcnftigen Versicherungsvertr\u00e4ge.',
+        '',
+        `${ort}, den ${datum}`,
+        '',
+        '',
+        '________________________',
+        `${kunde}`,
+    ], { title: true, bold: [11] });
+}
+
+function buildAntragSchreiben(versicherer, makler, firma, kunde, vsNr, sparte, datum) {
+    return createDocx([
+        'Antrag auf Bestands\u00fcbertragung',
+        '',
+        `An: ${versicherer}`,
+        `Datum: ${datum}`,
+        `Betreff: Bestands\u00fcbertragung f\u00fcr ${kunde}`,
+        '',
+        'Sehr geehrte Damen und Herren,',
+        '',
+        `hiermit beantrage ich die \u00dcbertragung des folgenden Versicherungsvertrags in meinen Maklerbestand:`,
+        '',
+        `Versicherungsnehmer: ${kunde}`,
+        `Versicherungsnummer: ${vsNr}`,
+        `Sparte: ${sparte}`,
+        '',
+        'Die unterschriebene Maklervollmacht liegt als separate Anlage bei.',
+        '',
+        `Bitte best\u00e4tigen Sie die Bestands\u00fcbertragung schriftlich an die untenstehende Adresse.`,
+        '',
+        'Mit freundlichen Gr\u00fc\u00dfen,',
+        '',
+        `${makler}`,
+        `${firma}`,
+    ], { title: true });
+}
+
+function buildVersicherungsliste(rows) {
+    const headers = ['VS-Nr', 'Kunde', 'Sparte', 'Versicherer', 'Beginn', 'Ende', 'Jahresbeitrag'];
+    return createXlsx('Versicherungen', headers, rows);
+}
+
+function buildKundenliste(rows) {
+    const headers = ['Kunde', 'Anschrift', 'Geburtsdatum', 'VS-Nr', 'Sparte', 'Status', 'Makler'];
+    return createXlsx('Kundenliste', headers, rows);
+}
+
+// ============================================================
+// Demo File Catalog
+// ============================================================
+
+const CATALOG = [
+    // === Category: Einfache E-Mails ===
+    {
+        id: 'anfrage_text_mueller',
+        category: 'email-simple',
+        title: 'Anfrage KFZ \u2013 M\u00fcller',
+        description: 'Einfache Text-E-Mail: Bestands\u00fcbertragung KFZ bei ERGO anfragen.',
+        tags: ['EML', 'Nur Text', 'Anfrage'],
+        filename: '01_Anfrage_KFZ_Mueller.eml',
+        generate() {
+            return createEml({
+                from: '"Thomas Meier" <thomas.meier@meier-versicherungen.de>',
+                to: 'maklerservice@ergo.de',
+                subject: 'Bestandsübertragung KFZ – Hans Müller, ERG-7823456',
+                date: 'Mon, 13 Jan 2026 09:15:00 +0100',
+                body: `Sehr geehrte Damen und Herren,
+
+hiermit beantragen wir die Bestandsübertragung für unseren Kunden:
+
+Versicherungsnehmer: Hans Müller
+Versicherungsnummer: ERG-7823456
+Sparte: KFZ-Haftpflicht/Vollkasko
+Gewünschter Übertragungstermin: 01.03.2026
+
+Die unterschriebene Maklervollmacht wurde bereits per Post übermittelt (Einschreiben vom 08.01.2026).
+
+Bitte bestätigen Sie die Übertragung schriftlich.
+
+Mit freundlichen Grüßen
+
+Thomas Meier
+Meier Versicherungsmakler GmbH
+Tel.: 0221-9876543
+thomas.meier@meier-versicherungen.de`
+            });
+        }
+    },
+    {
+        id: 'bestaetigung_leben_weber',
+        category: 'email-simple',
+        title: 'Best\u00e4tigung Leben \u2013 Weber',
+        description: 'Best\u00e4tigungs-E-Mail vom Versicherer f\u00fcr Lebensversicherung.',
+        tags: ['EML', 'Nur Text', 'Best\u00e4tigung'],
+        filename: '02_Bestaetigung_Leben_Weber.eml',
+        generate() {
+            return createEml({
+                from: '"ERGO Maklerservice" <maklerservice@ergo.de>',
+                to: 'sandra.schmidt@schmidt-makler.de',
+                subject: 'Bestätigung Bestandsübertragung – Christine Weber, ERG-4512378',
+                date: 'Wed, 15 Jan 2026 14:32:00 +0100',
+                body: `Sehr geehrte Frau Schmidt,
+
+wir bestätigen hiermit die Bestandsübertragung für folgenden Vertrag:
+
+Versicherungsnehmer: Christine Weber
+Versicherungsnummer: ERG-4512378
+Sparte: Lebensversicherung (Kapital)
+Übertragungsdatum: 01.02.2026
+
+Sie sind ab dem genannten Datum als betreuende Maklerin für diesen Vertrag hinterlegt.
+
+Die aktualisierten Vertragsunterlagen werden Ihnen in den nächsten Tagen zugesandt.
+
+Mit freundlichen Grüßen
+
+ERGO Versicherung AG
+Maklerservice Bestandsübertragung
+Tel.: 0800-3746-000
+maklerservice@ergo.de`
+            });
+        }
+    },
+    {
+        id: 'rueckfrage_schneider',
+        category: 'email-simple',
+        title: 'R\u00fcckfrage fehlende Vollmacht \u2013 Schneider',
+        description: 'Versicherer fordert fehlende Maklervollmacht f\u00fcr BU-Vertrag nach.',
+        tags: ['EML', 'Nur Text', 'R\u00fcckfrage'],
+        filename: '03_Rueckfrage_Schneider.eml',
+        generate() {
+            return createEml({
+                from: '"ERGO Maklerservice" <maklerservice@ergo.de>',
+                to: 'lisa.wagner@wagner-makler.de',
+                subject: 'Fehlende Maklervollmacht – Petra Schneider, ERG-5567891',
+                date: 'Thu, 16 Jan 2026 10:05:00 +0100',
+                body: `Sehr geehrte Frau Wagner,
+
+zu Ihrem Antrag auf Bestandsübertragung für den Vertrag:
+
+Versicherungsnehmer: Petra Schneider
+Versicherungsnummer: ERG-5567891
+Sparte: Berufsunfähigkeit
+
+fehlt uns leider noch die unterschriebene Maklervollmacht.
+
+Bitte reichen Sie diese per E-Mail (Scan/Foto) oder postalisch nach, damit wir die Übertragung abschließen können.
+
+Mit freundlichen Grüßen
+
+ERGO Versicherung AG
+Maklerservice Bestandsübertragung`
+            });
+        }
+    },
+
+    // === Category: E-Mails mit Word-Anhang ===
+    {
+        id: 'anfrage_vollmacht_seidel',
+        category: 'email-word',
+        title: 'Anfrage + Maklervollmacht \u2013 Seidel',
+        description: 'E-Mail mit Maklervollmacht als Word-Dokument im Anhang.',
+        tags: ['EML', 'DOCX', 'Maklervollmacht'],
+        filename: '04_Anfrage_Vollmacht_Seidel.eml',
+        generate() {
+            const vollmacht = buildMaklervollmacht(
+                'Ralf Seidel', '12.05.1978',
+                'Hauptstra\u00dfe 42, 50667 K\u00f6ln',
+                'Martina Koch', 'Koch Finanzberatung',
+                'K\u00f6ln', '06.01.2026'
+            );
+            return createEml({
+                from: '"Martina Koch" <martina.koch@koch-finanz.de>',
+                to: 'maklerservice@allianz.de',
+                subject: 'Bestandsübertragung Kranken – Ralf Seidel, inkl. Maklervollmacht',
+                date: 'Tue, 07 Jan 2026 11:20:00 +0100',
+                body: `Sehr geehrte Damen und Herren,
+
+anbei übersende ich Ihnen die unterschriebene Maklervollmacht für unseren Kunden Ralf Seidel.
+
+Vertragsdaten:
+Versicherungsnehmer: Ralf Seidel
+Versicherungsnummer: ALZ-3345678
+Sparte: Krankenversicherung (Zusatz)
+
+Bitte übertragen Sie den Vertrag in unseren Maklerbestand.
+
+Mit freundlichen Grüßen
+
+Martina Koch
+Koch Finanzberatung
+Breite Str. 15, 50667 Köln
+Tel.: 0221-5554433`,
+                attachments: [{
+                    filename: 'Maklervollmacht_Seidel.docx',
+                    mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                    data: vollmacht
+                }]
+            });
+        }
+    },
+    {
+        id: 'siehe_anlage_franke',
+        category: 'email-word',
+        title: '"Siehe Anlage" + Antrag \u2013 Franke',
+        description: 'Kurze E-Mail verweist auf beigef\u00fcgtes Word-Dokument mit dem Antrag.',
+        tags: ['EML', 'DOCX', 'Antrag'],
+        filename: '05_Siehe_Anlage_Franke.eml',
+        generate() {
+            const antrag = buildAntragSchreiben(
+                'Generali Deutschland Versicherung AG',
+                'Stefan Zimmermann', 'Zimmermann Versicherungsmakler',
+                'Birgit Franke', 'GEN-2298765', 'Haftpflicht',
+                '10.01.2026'
+            );
+            return createEml({
+                from: '"Stefan Zimmermann" <stefan.zimmermann@zimmermann-versicherungen.de>',
+                to: 'maklerservice@generali.de',
+                subject: 'Bestandsübertragung Franke – siehe beigefügtes Schreiben',
+                date: 'Fri, 10 Jan 2026 08:45:00 +0100',
+                body: `Sehr geehrte Damen und Herren,
+
+bezüglich der Bestandsübertragung für unsere Kundin Birgit Franke verweise ich auf das beigefügte Schreiben.
+
+Bitte um Bestätigung.
+
+MfG
+Stefan Zimmermann`,
+                attachments: [{
+                    filename: 'Antrag_Bestandsuebertragung_Franke.docx',
+                    mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                    data: antrag
+                }]
+            });
+        }
+    },
+    {
+        id: 'antwort_vollmacht_schneider',
+        category: 'email-word',
+        title: 'Nachreichung Vollmacht \u2013 Schneider',
+        description: 'Antwort auf R\u00fcckfrage mit nachgereichter Maklervollmacht (Word).',
+        tags: ['EML', 'DOCX', 'Maklervollmacht'],
+        filename: '06_Antwort_Vollmacht_Schneider.eml',
+        generate() {
+            const vollmacht = buildMaklervollmacht(
+                'Petra Schneider', '23.11.1985',
+                'Lindenweg 8, 40210 D\u00fcsseldorf',
+                'Lisa Wagner', 'Wagner Maklerb\u00fcro',
+                'D\u00fcsseldorf', '17.01.2026'
+            );
+            return createEml({
+                from: '"Lisa Wagner" <lisa.wagner@wagner-makler.de>',
+                to: 'maklerservice@ergo.de',
+                subject: 'Re: Fehlende Maklervollmacht – Petra Schneider, ERG-5567891',
+                date: 'Fri, 17 Jan 2026 15:10:00 +0100',
+                body: `Sehr geehrte Damen und Herren,
+
+vielen Dank für Ihre Rückmeldung.
+
+Anbei die nachgeforderte Maklervollmacht für Frau Petra Schneider (ERG-5567891, BU-Versicherung).
+
+Bitte setzen Sie die Bestandsübertragung nun fort.
+
+Mit freundlichen Grüßen
+
+Lisa Wagner
+Wagner Maklerbüro
+Friedrichstr. 22, 40210 Düsseldorf
+Tel.: 0211-7788990`,
+                attachments: [{
+                    filename: 'Maklervollmacht_Schneider.docx',
+                    mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                    data: vollmacht
+                }]
+            });
+        }
+    },
+
+    // === Category: E-Mails mit Excel-Anhang ===
+    {
+        id: 'versicherungsliste_braun',
+        category: 'email-excel',
+        title: 'Vertragsliste Excel \u2013 Braun',
+        description: 'E-Mail mit Excel-Anhang: Liste der zu \u00fcbertragenden Versicherungsscheine.',
+        tags: ['EML', 'XLSX', 'Vertragsliste'],
+        filename: '07_Vertragsliste_Braun.eml',
+        generate() {
+            const xlsx = buildVersicherungsliste([
+                ['AXA-1122334', 'Wolfgang Huber', 'KFZ', 'AXA', '01.03.2024', '01.03.2025', '945,00 \u20ac'],
+                ['AXA-1122335', 'Wolfgang Huber', 'Hausrat', 'AXA', '15.06.2023', '15.06.2024', '187,20 \u20ac'],
+                ['AXA-2233445', 'Sabine Keller', 'Haftpflicht', 'AXA', '01.01.2024', '01.01.2025', '124,80 \u20ac'],
+                ['AXA-2233446', 'Sabine Keller', 'Unfall', 'AXA', '01.01.2024', '01.01.2025', '215,40 \u20ac'],
+                ['AXA-3344556', 'Michael Baumann', 'Wohngeb\u00e4ude', 'AXA', '01.07.2023', '01.07.2024', '578,60 \u20ac'],
+                ['AXA-3344557', 'Michael Baumann', 'KFZ', 'AXA', '01.09.2024', '01.09.2025', '1.120,00 \u20ac'],
+            ]);
+            return createEml({
+                from: '"Andreas Braun" <andreas.braun@braun-makler.de>',
+                to: 'bestandsuebertragung@axa.de',
+                subject: 'Sammelantrag Bestandsübertragung – 6 Verträge, siehe Excel-Liste',
+                date: 'Mon, 20 Jan 2026 10:30:00 +0100',
+                body: `Sehr geehrte Damen und Herren,
+
+in der Anlage finden Sie die Liste der zu übertragenden Verträge für die Bestandsübertragung.
+
+Es handelt sich um 6 Verträge von 3 Kunden (Huber, Keller, Baumann).
+
+Die Maklervollmachten für alle genannten Kunden liegen bereits vor und wurden am 15.01.2026 per Post übermittelt.
+
+Bitte bestätigen Sie die Übertragung je Vertrag.
+
+Mit freundlichen Grüßen
+
+Andreas Braun
+Braun Versicherungsmakler
+Kölner Str. 78, 53111 Bonn
+Tel.: 0228-6654321`,
+                attachments: [{
+                    filename: 'Vertragsliste_Bestandsuebertragung.xlsx',
+                    mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                    data: xlsx
+                }]
+            });
+        }
+    },
+    {
+        id: 'kundenliste_schmidt',
+        category: 'email-excel',
+        title: 'Kundenliste Excel \u2013 Schmidt',
+        description: 'E-Mail mit Kundenliste als Excel-Anhang f\u00fcr Massen\u00fcbertragung.',
+        tags: ['EML', 'XLSX', 'Kundenliste'],
+        filename: '08_Kundenliste_Schmidt.eml',
+        generate() {
+            const xlsx = buildKundenliste([
+                ['Weber, Christine', 'Bachstr. 5, 40215 D\u00fcsseldorf', '14.08.1972', 'ERG-4512378', 'Leben', 'best\u00e4tigt', 'Sandra Schmidt'],
+                ['Hofmann, Klaus', 'Ringstr. 12, 40213 D\u00fcsseldorf', '03.02.1965', 'ERG-4512490', 'KFZ', 'angefragt', 'Sandra Schmidt'],
+                ['Lehmann, Anna', 'Gartenweg 3, 40225 D\u00fcsseldorf', '19.11.1988', 'ERG-4523001', 'Haftpflicht', 'angefragt', 'Sandra Schmidt'],
+                ['Richter, Peter', 'Am Markt 7, 40212 D\u00fcsseldorf', '07.06.1958', 'ERG-4530022', 'Hausrat', 'in Bearbeitung', 'Sandra Schmidt'],
+                ['Fischer, Maria', 'Waldstr. 19, 40229 D\u00fcsseldorf', '25.09.1991', 'ERG-4534100', 'BU', 'angefragt', 'Sandra Schmidt'],
+            ]);
+            return createEml({
+                from: '"Sandra Schmidt" <sandra.schmidt@schmidt-makler.de>',
+                to: 'maklerservice@ergo.de',
+                subject: 'Bestandsübertragung – Kundenliste Schmidt Maklerbüro',
+                date: 'Tue, 21 Jan 2026 09:00:00 +0100',
+                body: `Sehr geehrte Damen und Herren,
+
+anbei übersende ich Ihnen unsere aktuelle Kundenliste für die laufenden Bestandsübertragungen.
+
+Die Excel-Datei enthält 5 Kunden mit den jeweiligen Vertragsdaten und dem aktuellen Status.
+
+Für die Kunden Weber und Richter liegen die Maklervollmachten bereits vor.
+Für Hofmann, Lehmann und Fischer folgen diese in den nächsten Tagen.
+
+Bei Rückfragen stehe ich gerne zur Verfügung.
+
+Mit freundlichen Grüßen
+
+Sandra Schmidt
+Schmidt Maklerbüro
+Königsallee 45, 40215 Düsseldorf
+Tel.: 0211-3344556`,
+                attachments: [{
+                    filename: 'Kundenliste_Schmidt_Makler.xlsx',
+                    mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                    data: xlsx
+                }]
+            });
+        }
+    },
+
+    // === Category: Komplexe E-Mails (mehrere Anhänge) ===
+    {
+        id: 'komplett_huber',
+        category: 'email-complex',
+        title: 'Komplett-Paket \u2013 Huber (3 Anh\u00e4nge)',
+        description: 'E-Mail mit Maklervollmacht (Word), Vertragsliste (Excel) und Antrag (Word).',
+        tags: ['EML', 'DOCX', 'XLSX', 'Komplett'],
+        filename: '09_Komplett_Huber.eml',
+        generate() {
+            const vollmacht = buildMaklervollmacht(
+                'Wolfgang Huber', '30.07.1970',
+                'Mozartstr. 15, 53115 Bonn',
+                'Andreas Braun', 'Braun Versicherungsmakler',
+                'Bonn', '18.01.2026'
+            );
+            const antrag = buildAntragSchreiben(
+                'HUK-COBURG Versicherungsgruppe',
+                'Andreas Braun', 'Braun Versicherungsmakler',
+                'Wolfgang Huber', 'HUK-8876543', 'KFZ + Hausrat',
+                '20.01.2026'
+            );
+            const xlsx = buildVersicherungsliste([
+                ['HUK-8876543', 'Wolfgang Huber', 'KFZ', 'HUK-COBURG', '01.04.2024', '01.04.2025', '892,50 \u20ac'],
+                ['HUK-8876544', 'Wolfgang Huber', 'Hausrat', 'HUK-COBURG', '01.04.2024', '01.04.2025', '156,00 \u20ac'],
+                ['HUK-8876545', 'Wolfgang Huber', 'Haftpflicht', 'HUK-COBURG', '01.04.2024', '01.04.2025', '98,40 \u20ac'],
+            ]);
+            return createEml({
+                from: '"Andreas Braun" <andreas.braun@braun-makler.de>',
+                to: 'maklerservice@huk.de',
+                subject: 'Bestandsübertragung Wolfgang Huber – Vollständige Unterlagen',
+                date: 'Mon, 20 Jan 2026 14:00:00 +0100',
+                body: `Sehr geehrte Damen und Herren,
+
+anbei übersende ich Ihnen die vollständigen Unterlagen zur Bestandsübertragung für unseren Kunden Wolfgang Huber:
+
+1. Maklervollmacht (unterschrieben)
+2. Formeller Antrag auf Bestandsübertragung
+3. Vertragsliste mit allen betroffenen Verträgen
+
+Es handelt sich um 3 Verträge (KFZ, Hausrat, Haftpflicht).
+
+Bitte bestätigen Sie die Übertragung für alle Verträge.
+
+Mit freundlichen Grüßen
+
+Andreas Braun
+Braun Versicherungsmakler
+Kölner Str. 78, 53111 Bonn`,
+                attachments: [
+                    {
+                        filename: 'Maklervollmacht_Huber.docx',
+                        mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                        data: vollmacht
+                    },
+                    {
+                        filename: 'Antrag_Bestandsuebertragung_Huber.docx',
+                        mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                        data: antrag
+                    },
+                    {
+                        filename: 'Vertragsliste_Huber.xlsx',
+                        mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                        data: xlsx
+                    }
+                ]
+            });
+        }
+    },
+    {
+        id: 'excel_und_vollmacht_keller',
+        category: 'email-complex',
+        title: 'Excel + Vollmacht \u2013 Keller',
+        description: 'E-Mail mit Kundenliste (Excel) und Maklervollmacht (Word) f\u00fcr 2 Vertr\u00e4ge.',
+        tags: ['EML', 'DOCX', 'XLSX'],
+        filename: '10_Excel_Vollmacht_Keller.eml',
+        generate() {
+            const vollmacht = buildMaklervollmacht(
+                'Sabine Keller', '15.03.1982',
+                'Rheinuferstr. 30, 53113 Bonn',
+                'Andreas Braun', 'Braun Versicherungsmakler',
+                'Bonn', '19.01.2026'
+            );
+            const xlsx = buildVersicherungsliste([
+                ['AXA-2233445', 'Sabine Keller', 'Haftpflicht', 'AXA', '01.01.2024', '01.01.2025', '124,80 \u20ac'],
+                ['AXA-2233446', 'Sabine Keller', 'Unfall', 'AXA', '01.01.2024', '01.01.2025', '215,40 \u20ac'],
+            ]);
+            return createEml({
+                from: '"Andreas Braun" <andreas.braun@braun-makler.de>',
+                to: 'bestandsuebertragung@axa.de',
+                subject: 'Bestandsübertragung Keller – Vollmacht + Vertragsliste',
+                date: 'Mon, 20 Jan 2026 11:15:00 +0100',
+                body: `Sehr geehrte Damen und Herren,
+
+für unsere Kundin Sabine Keller beantragen wir die Übertragung der in der Anlage aufgeführten Verträge (Haftpflicht und Unfall).
+
+Anbei:
+- Unterschriebene Maklervollmacht
+- Vertragsliste mit den betroffenen Versicherungen
+
+Bitte um Bestätigung.
+
+MfG
+Andreas Braun`,
+                attachments: [
+                    {
+                        filename: 'Maklervollmacht_Keller.docx',
+                        mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                        data: vollmacht
+                    },
+                    {
+                        filename: 'Vertragsliste_Keller.xlsx',
+                        mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                        data: xlsx
+                    }
+                ]
+            });
+        }
+    },
+
+    // === Category: Standalone Vorlagen ===
+    {
+        id: 'vorlage_maklervollmacht',
+        category: 'template',
+        title: 'Maklervollmacht (Vorlage)',
+        description: 'Blanko-Vorlage f\u00fcr eine Maklervollmacht als Word-Dokument.',
+        tags: ['DOCX', 'Vorlage'],
+        filename: 'Maklervollmacht_Vorlage.docx',
+        generate() {
+            return buildMaklervollmacht(
+                '[Vorname Nachname]', '[TT.MM.JJJJ]',
+                '[Stra\u00dfe Nr., PLZ Ort]',
+                '[Makler-Name]', '[Makler-Firma]',
+                '[Ort]', '[TT.MM.JJJJ]'
+            );
+        }
+    },
+    {
+        id: 'vorlage_versicherungsliste',
+        category: 'template',
+        title: 'Versicherungsliste (Vorlage)',
+        description: 'Excel-Vorlage mit Spalten f\u00fcr VS-Nr, Kunde, Sparte, Versicherer etc.',
+        tags: ['XLSX', 'Vorlage'],
+        filename: 'Versicherungsliste_Vorlage.xlsx',
+        generate() {
+            return buildVersicherungsliste([
+                ['ERG-XXXXXXX', 'Nachname, Vorname', 'KFZ', 'ERGO', '01.01.2026', '01.01.2027', '0,00 \u20ac'],
+            ]);
+        }
+    },
+    {
+        id: 'vorlage_antrag',
+        category: 'template',
+        title: 'Antrag Bestands\u00fcbertragung (Vorlage)',
+        description: 'Word-Vorlage f\u00fcr einen formellen Antrag auf Bestands\u00fcbertragung.',
+        tags: ['DOCX', 'Vorlage'],
+        filename: 'Antrag_Bestandsuebertragung_Vorlage.docx',
+        generate() {
+            return buildAntragSchreiben(
+                '[Versicherungsgesellschaft]',
+                '[Makler-Name]', '[Makler-Firma]',
+                '[Kundenname]', '[VS-Nr]', '[Sparte]',
+                '[TT.MM.JJJJ]'
+            );
+        }
+    },
+];
+
+// ============================================================
+// Public API
+// ============================================================
+
+export function getFileCatalog() {
+    return CATALOG.map(({ id, category, title, description, tags, filename }) =>
+        ({ id, category, title, description, tags, filename })
+    );
+}
+
+export function generateFile(fileId) {
+    const entry = CATALOG.find(f => f.id === fileId);
+    if (!entry) return null;
+
+    const data = entry.generate();
+    const isEml = entry.filename.endsWith('.eml');
+    const isXlsx = entry.filename.endsWith('.xlsx');
+    const mimeType = isEml
+        ? 'message/rfc822'
+        : isXlsx
+            ? 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            : 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+
+    return { data, filename: entry.filename, mimeType };
+}
+
+export function downloadFile(fileId) {
+    const result = generateFile(fileId);
+    if (!result) return false;
+
+    const blob = new Blob([result.data], { type: result.mimeType });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = result.filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    return true;
+}
+
+export function downloadAll() {
+    CATALOG.forEach(entry => {
+        setTimeout(() => downloadFile(entry.id), 0);
+    });
+}

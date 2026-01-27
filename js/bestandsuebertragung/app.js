@@ -8,6 +8,7 @@ import * as UI from './ui.js';
 import * as Export from './export.js';
 import * as DemoData from './demo-data.js';
 import * as Matcher from './matcher.js';
+import * as DemoFiles from './demo-files.js';
 
 // Aktueller Zustand
 let currentView = 'dashboard';
@@ -108,6 +109,15 @@ function setupEventListeners() {
     document.querySelectorAll('.btn-copy').forEach(btn => {
         btn.addEventListener('click', handleCopyTemplate);
     });
+
+    // Demo file downloads
+    document.querySelectorAll('.btn-demo-dl[data-demo-file]').forEach(btn => {
+        btn.addEventListener('click', handleDemoFileDownload);
+    });
+    const downloadAllBtn = document.getElementById('downloadAllDemoFiles');
+    if (downloadAllBtn) {
+        downloadAllBtn.addEventListener('click', handleDownloadAllDemoFiles);
+    }
 
     setupDragAndDrop();
 
@@ -1028,6 +1038,42 @@ function handleCopyTemplate(e) {
             UI.showToast('Kopieren fehlgeschlagen', 'error');
         });
     }
+}
+
+function handleDemoFileDownload(e) {
+    const fileId = e.currentTarget.dataset.demoFile;
+    if (!fileId) return;
+    const btn = e.currentTarget;
+    const origText = btn.textContent;
+    btn.textContent = '...';
+    btn.disabled = true;
+    setTimeout(() => {
+        try {
+            const ok = DemoFiles.downloadFile(fileId);
+            if (ok) {
+                UI.showToast('Datei heruntergeladen', 'success');
+            } else {
+                UI.showToast('Datei konnte nicht erzeugt werden', 'error');
+            }
+        } catch (err) {
+            console.error('Demo-Datei Download fehlgeschlagen:', err);
+            UI.showToast('Download fehlgeschlagen: ' + err.message, 'error');
+        }
+        btn.textContent = origText;
+        btn.disabled = false;
+    }, 50);
+}
+
+function handleDownloadAllDemoFiles() {
+    const catalog = DemoFiles.getFileCatalog();
+    let delay = 0;
+    catalog.forEach(entry => {
+        setTimeout(() => {
+            DemoFiles.downloadFile(entry.id);
+        }, delay);
+        delay += 300;
+    });
+    UI.showToast(`${catalog.length} Dateien werden heruntergeladen...`, 'success');
 }
 
 /**

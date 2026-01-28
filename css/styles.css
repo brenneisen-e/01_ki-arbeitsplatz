@@ -5356,6 +5356,291 @@ button svg,
     font-weight: 500;
 }
 
+/* ========================================
+   CUSTOMER LIFETIME VALUE (CLV)
+   ======================================== */
+
+/* Header Badge */
+.clv-header-badge {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 12px;
+    padding: 8px 14px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+}
+
+.clv-badge-main {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.clv-badge-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.clv-badge-value {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.clv-badge-segment {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.clv-badge-segment.premium {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.clv-badge-segment.wachstum {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.clv-badge-segment.entwicklung {
+    background: #f1f5f9;
+    color: #475569;
+}
+
+.clv-badge-trend {
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.clv-badge-trend.positive {
+    color: #16a34a;
+}
+
+.clv-badge-trend.negative {
+    color: #dc2626;
+}
+
+/* CLV Detail Card */
+.clv-detail-card {
+    margin-top: 16px;
+}
+
+.clv-content {
+    padding: 24px;
+}
+
+.clv-summary {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.clv-total-box,
+.clv-segment-box,
+.clv-haltedauer-box,
+.clv-storno-box {
+    padding: 16px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.clv-total-box {
+    background: #f0fdf4;
+    border-color: #bbf7d0;
+}
+
+.clv-total-label,
+.clv-segment-label,
+.clv-haltedauer-label,
+.clv-storno-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    margin-bottom: 8px;
+}
+
+.clv-total-value {
+    display: block;
+    font-size: 28px;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 4px;
+}
+
+.clv-total-trend {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.clv-total-trend.positive {
+    color: #16a34a;
+}
+
+.clv-total-trend.negative {
+    color: #dc2626;
+}
+
+.clv-segment-value {
+    display: block;
+    font-size: 18px;
+    font-weight: 700;
+    margin-top: 4px;
+}
+
+.clv-segment-value.premium {
+    color: #92400e;
+}
+
+.clv-segment-value.wachstum {
+    color: #1e40af;
+}
+
+.clv-segment-value.entwicklung {
+    color: #475569;
+}
+
+.clv-haltedauer-value {
+    display: block;
+    font-size: 18px;
+    font-weight: 700;
+    color: #1e293b;
+    margin-top: 4px;
+}
+
+.clv-storno-value {
+    display: block;
+    font-size: 18px;
+    font-weight: 700;
+    margin-top: 4px;
+}
+
+.clv-storno-value.low {
+    color: #16a34a;
+}
+
+.clv-storno-value.medium {
+    color: #d97706;
+}
+
+.clv-storno-value.high {
+    color: #dc2626;
+}
+
+/* Herleitung / Breakdown */
+.clv-breakdown {
+    border-top: 1px solid #e2e8f0;
+    padding-top: 20px;
+}
+
+.clv-breakdown-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #475569;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.clv-row {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr auto;
+    gap: 12px;
+    padding: 8px 12px;
+    border-bottom: 1px solid #f1f5f9;
+    align-items: center;
+}
+
+.clv-row:last-child {
+    border-bottom: none;
+}
+
+.clv-row-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: #334155;
+}
+
+.clv-row-calc {
+    font-size: 12px;
+    color: #64748b;
+}
+
+.clv-row-value {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1e293b;
+    text-align: right;
+}
+
+.clv-row.subtotal {
+    background: #f8fafc;
+    border-radius: 4px;
+    margin: 4px 0;
+}
+
+.clv-row.subtotal .clv-row-label,
+.clv-row.subtotal .clv-row-value {
+    font-weight: 700;
+}
+
+.clv-row.negative .clv-row-label,
+.clv-row.negative .clv-row-value {
+    color: #dc2626;
+}
+
+.clv-row.total {
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    border-radius: 6px;
+    margin-top: 8px;
+    padding: 12px;
+}
+
+.clv-row.total .clv-row-label {
+    font-size: 14px;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.clv-row.total .clv-row-value {
+    font-size: 16px;
+    font-weight: 700;
+    color: #16a34a;
+}
+
+/* CLV Responsive */
+@media (max-width: 768px) {
+    .clv-summary {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .clv-row {
+        grid-template-columns: 1fr auto;
+    }
+    .clv-row-calc {
+        display: none;
+    }
+    .clv-header-badge {
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+}
+
 .kunden-info-grid {
     flex: 1;
     display: grid;

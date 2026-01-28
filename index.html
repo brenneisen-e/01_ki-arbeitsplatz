@@ -2802,6 +2802,14 @@
                                 </div>
                                 <h3 id="kundenName">Peter Schmidt</h3>
                                 <span class="kunden-id" id="kundenVermittlerId">KD00001</span>
+                                <div class="clv-header-badge" id="clvHeaderBadge">
+                                    <div class="clv-badge-main">
+                                        <span class="clv-badge-label">CLV</span>
+                                        <span class="clv-badge-value" id="clvHeaderValue">&mdash;</span>
+                                    </div>
+                                    <span class="clv-badge-segment" id="clvHeaderSegment"></span>
+                                    <span class="clv-badge-trend" id="clvHeaderTrend"></span>
+                                </div>
                             </div>
                             <div class="kunden-info-grid">
                                 <div class="info-item">
@@ -2834,6 +2842,45 @@
                                         <span class="kinder-badge">Lena (8 Jahre)</span>
                                         <span class="kinder-badge">Paul (5 Jahre)</span>
                                     </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CLV Detail Card -->
+                    <div class="kunden-card clv-detail-card" id="clvDetailCard">
+                        <div class="kunden-card-header">
+                            <h2>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                                    <line x1="12" y1="1" x2="12" y2="23"></line>
+                                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                                </svg>
+                                Customer Lifetime Value
+                            </h2>
+                        </div>
+                        <div class="clv-content">
+                            <div class="clv-summary">
+                                <div class="clv-total-box">
+                                    <span class="clv-total-label">Gesamt-CLV</span>
+                                    <span class="clv-total-value" id="clvTotalValue">&mdash;</span>
+                                    <span class="clv-total-trend" id="clvTotalTrend"></span>
+                                </div>
+                                <div class="clv-segment-box" id="clvSegmentBox">
+                                    <span class="clv-segment-label">Kundensegment</span>
+                                    <span class="clv-segment-value" id="clvSegmentValue">&mdash;</span>
+                                </div>
+                                <div class="clv-haltedauer-box">
+                                    <span class="clv-haltedauer-label">Progn. Haltedauer</span>
+                                    <span class="clv-haltedauer-value" id="clvHaltedauerValue">&mdash;</span>
+                                </div>
+                                <div class="clv-storno-box">
+                                    <span class="clv-storno-label">Storno-Risiko</span>
+                                    <span class="clv-storno-value" id="clvStornoValue">&mdash;</span>
+                                </div>
+                            </div>
+                            <div class="clv-breakdown">
+                                <h3 class="clv-breakdown-title">Herleitung</h3>
+                                <div class="clv-breakdown-rows" id="clvBreakdownRows">
                                 </div>
                             </div>
                         </div>

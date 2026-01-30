@@ -885,7 +885,55 @@ async function initMap() {
         console.error('Fehler bei Karteninitialisierung:', error);
         // Zeige Fehlermeldung
         if (container) {
-            container.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#ef4444;text-align:center;padding:1rem;"><span>Karte konnte nicht geladen werden.<br>Bitte Seite neu laden.</span></div>';
+            container.innerHTML = `
+                <div style="
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    height: 100%;
+                    padding: 2rem;
+                    text-align: center;
+                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                    border-radius: 12px;
+                    color: white;
+                    position: relative;
+                    overflow: hidden;
+                ">
+                    <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; opacity: 0.1; background: url('data:image/svg+xml,<svg width=\"100\" height=\"100\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M50 10 L90 90 L10 90 Z\" fill=\"white\"/></svg>') repeat;"></div>
+
+                    <div style="position: relative; z-index: 1;">
+                        <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-bottom: 1.5rem; opacity: 0.9;">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                            <circle cx="12" cy="10" r="3"></circle>
+                        </svg>
+
+                        <h3 style="font-size: 1.5rem; font-weight: 700; margin: 0 0 1rem 0; text-shadow: 0 2px 4px rgba(0,0,0,0.2);">
+                            Deutschlandkarte
+                        </h3>
+
+                        <p style="font-size: 1rem; margin: 0 0 1.5rem 0; opacity: 0.95; line-height: 1.6; max-width: 320px;">
+                            Die interaktive Deutschlandkarte benötigt eine Internetverbindung, um die geografischen Daten (GeoJSON) zu laden.
+                        </p>
+
+                        <div style="
+                            background: rgba(255,255,255,0.15);
+                            backdrop-filter: blur(10px);
+                            padding: 1rem 1.5rem;
+                            border-radius: 8px;
+                            border: 1px solid rgba(255,255,255,0.2);
+                            font-size: 0.875rem;
+                            line-height: 1.5;
+                        ">
+                            <div style="margin-bottom: 0.5rem;">💡 <strong>Tipp:</strong></div>
+                            <div style="opacity: 0.9;">
+                                Hoste die Anwendung auf einem Webserver<br>
+                                oder öffne sie über <code style="background: rgba(0,0,0,0.2); padding: 2px 6px; border-radius: 4px;">localhost</code>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
         }
     }
 }

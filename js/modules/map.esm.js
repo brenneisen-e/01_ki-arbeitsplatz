@@ -624,7 +624,14 @@ export async function initMap() {
                             font-size: 0.875rem;
                             line-height: 1.5;
                         ">
-                            <div style="margin-bottom: 0.5rem;">💡 <strong>Tipp:</strong></div>
+                            <div style="margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                                </svg>
+                                <strong>Tipp:</strong>
+                            </div>
                             <div style="opacity: 0.9;">
                                 Hoste die Anwendung auf einem Webserver<br>
                                 oder öffne sie über <code style="background: rgba(0,0,0,0.2); padding: 2px 6px; border-radius: 4px;">localhost</code>

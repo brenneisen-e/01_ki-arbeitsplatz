@@ -1328,11 +1328,6 @@ function addMessage(role, content) {
 
     chatBody.appendChild(messageDiv);
     chatBody.scrollTop = chatBody.scrollHeight;
-
-    // v14: Zeige Antwort auch im AI Response Panel
-    if (role === 'assistant') {
-        showAIResponse(cleanedContent);
-    }
 }
 
 // Entfernt technische Funktionsaufrufe und Code-Blöcke aus der Antwort
@@ -1440,106 +1435,6 @@ function askSampleQuestion(question) {
     }
 }
 
-// ========================================
-// v14 FEATURE: AI Response Panel
-// ========================================
-function showAIResponse(message) {
-    console.log('Show AI Response in Panel');
-
-    const panel = document.getElementById('aiResponsePanel');
-    const content = document.getElementById('aiResponseContent');
-
-    if (!panel || !content) {
-        console.error('AI Response Panel nicht gefunden');
-        return;
-    }
-
-    // Formatiere die Nachricht (Markdown-ähnlich)
-    const formattedMessage = formatAIMessage(message);
-
-    // Setze den Inhalt
-    content.innerHTML = formattedMessage;
-
-    // Zeige das Panel
-    panel.style.display = 'block';
-
-    // Scroll to panel
-    panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-}
-
-function formatAIMessage(message) {
-    // Einfache Markdown-ähnliche Formatierung
-    let formatted = message;
-
-    // Überschriften
-    formatted = formatted.replace(/^### (.+)$/gm, '<h3>$1</h3>');
-    formatted = formatted.replace(/^## (.+)$/gm, '<h2>$1</h2>');
-    formatted = formatted.replace(/^# (.+)$/gm, '<h1>$1</h1>');
-
-    // Fett
-    formatted = formatted.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-
-    // Bullet Points
-    formatted = formatted.replace(/^- (.+)$/gm, '<li>$1</li>');
-    formatted = formatted.replace(/(<li>.*<\/li>\n?)+/g, '<ul>$&</ul>');
-
-    // Nummerierte Listen
-    formatted = formatted.replace(/^\d+\. (.+)$/gm, '<li>$1</li>');
-
-    // Paragraphen (einfache Implementierung)
-    const lines = formatted.split('\n');
-    const paragraphs = [];
-    let currentParagraph = '';
-
-    for (const line of lines) {
-        if (line.trim() === '') {
-            if (currentParagraph.trim()) {
-                // Kein <p> wenn es schon HTML-Tags gibt
-                if (!currentParagraph.match(/^<[^>]+>/)) {
-                    paragraphs.push('<p>' + currentParagraph + '</p>');
-                } else {
-                    paragraphs.push(currentParagraph);
-                }
-                currentParagraph = '';
-            }
-        } else {
-            currentParagraph += line + '\n';
-        }
-    }
-
-    if (currentParagraph.trim()) {
-        if (!currentParagraph.match(/^<[^>]+>/)) {
-            paragraphs.push('<p>' + currentParagraph + '</p>');
-        } else {
-            paragraphs.push(currentParagraph);
-        }
-    }
-
-    return paragraphs.join('');
-}
-
-function hideAIResponse() {
-    const panel = document.getElementById('aiResponsePanel');
-    if (panel) {
-        panel.style.display = 'none';
-    }
-}
-
-// Initialize AI Response Panel Close Button
-function initAIResponsePanel() {
-    const closeBtn = document.getElementById('aiResponseClose');
-    if (closeBtn) {
-        closeBtn.addEventListener('click', hideAIResponse);
-    }
-}
-
-// Call init on DOM load
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initAIResponsePanel);
-} else {
-    initAIResponsePanel();
-}
-
 // Make functions globally available
 window.initChat = initChat;
 window.setAgenturFilter = setAgenturFilter;
@@ -1548,8 +1443,6 @@ window.setSegmentFilter = setSegmentFilter;
 window.setBundeslandFilter = setBundeslandFilter;
 window.clearAllFilters = clearAllFilters;
 window.askSampleQuestion = askSampleQuestion;
-window.showAIResponse = showAIResponse;
-window.hideAIResponse = hideAIResponse;
 window.showAnomalyAgenturen = showAnomalyAgenturen;
 window.removeAnomalyColumn = removeAnomalyColumn;
 

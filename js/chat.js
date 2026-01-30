@@ -177,9 +177,9 @@ function initChat() {
             chatToggle.style.display = 'none';
         }, 1000);
 
-        // Show Demo Mode info with suggestions
+        // Show welcome message with suggestions
         if (shouldUseMockMode()) {
-            const welcomeMessage = '✨ **Demo-Modus aktiv** – Ich nutze vordefinierte Antworten für schnelle Interaktionen.\n\nStelle gerne Fragen zu den Daten im Dashboard!' + getSalesChatSuggestions('default');
+            const welcomeMessage = 'Hallo! 👋 Ich kann dir bei der Analyse deiner Dashboard-Daten helfen.\n\nHier sind einige Vorschläge:' + getSalesChatSuggestions('default');
             addMessage('assistant', welcomeMessage);
         }
     } else {

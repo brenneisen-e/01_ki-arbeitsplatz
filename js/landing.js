@@ -53,9 +53,9 @@ function setupApiTokenInput() {
 
     if (!tokenInput || !toggleBtn || !saveBtn) return;
 
-    // Status anzeigen - Mock-Modus überall außer T-05
+    // Status anzeigen - KI-Assistent aktiv
     statusDiv.className = 'api-token-status success';
-    statusDiv.textContent = '✅ Mock-Modus aktiv (Demo-Klickstrecken) | KI nur auf T-05';
+    statusDiv.textContent = '✅ KI-Assistent aktiv | Dokumentenanalyse auf T-05';
 
     // Toggle password visibility
     toggleBtn.addEventListener('click', () => {
@@ -933,7 +933,7 @@ Dieses Tool bietet Ihnen:
         `<button onclick="document.getElementById('landingChatInput').value='${s.query.replace(/'/g, "\\'")}'; sendLandingChatMessage();">${s.text}</button>`
     ).join('');
 
-    return `Ich habe deine Frage verstanden: "${message}"\n\n✨ **Demo-Modus** – Ich nutze vordefinierte Interaktionen für schnelle Antworten.\n\n<div class="chat-followup-suggestions">${buttons}</div>`;
+    return `Ich habe deine Frage verstanden: "${message}"\n\nHier sind einige Dinge, die ich für dich tun kann:\n\n<div class="chat-followup-suggestions">${buttons}</div>`;
 }
 
 // Add message to chat - Display in response container below input

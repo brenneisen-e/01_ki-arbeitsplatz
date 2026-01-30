@@ -48,7 +48,14 @@ export class CountyMapHandler {
 
         // Lade Regierungsbezirke GeoJSON
         console.log('Lade Regierungsbezirke...');
-        const geojson = await d3.json('assets/geo/regierungsbezirke.geo.json');
+
+        let geojson;
+        try {
+            geojson = await d3.json('assets/geo/regierungsbezirke.geo.json');
+        } catch (error) {
+            console.warn('GeoJSON konnte nicht geladen werden, verwende Fallback-Daten:', error);
+            geojson = this.getFallbackGeoJSON();
+        }
 
         console.log(`${geojson.features.length} Regierungsbezirke geladen`);
 
@@ -79,7 +86,13 @@ export class CountyMapHandler {
             .on('click', (event, d) => this.onClick(event, d));
 
         // Bundesland-Grenzen
-        const statesGeoJSON = await d3.json('assets/geo/bundeslaender.geo.json');
+        let statesGeoJSON;
+        try {
+            statesGeoJSON = await d3.json('assets/geo/bundeslaender.geo.json');
+        } catch (error) {
+            console.warn('Bundesländer-GeoJSON konnte nicht geladen werden, verwende Fallback-Daten:', error);
+            statesGeoJSON = this.getFallbackStatesGeoJSON();
+        }
 
         this.svg.append('g')
             .attr('id', 'states-borders')
@@ -108,6 +121,71 @@ export class CountyMapHandler {
         console.log('Karte initialisiert:', this.counties.size, 'Regierungsbezirke');
 
         this.logCountiesByState();
+    }
+
+    /**
+     * Fallback GeoJSON für Offline-Nutzung
+     * Vereinfachte Darstellung der deutschen Regierungsbezirke
+     */
+    getFallbackGeoJSON() {
+        console.log('Verwende Fallback-GeoJSON für Regierungsbezirke');
+        return {
+            "type": "FeatureCollection",
+            "features": [
+                {"type": "Feature", "properties": {"GEN": "Stuttgart", "Bundesland": "Baden-Württemberg"}, "geometry": {"type": "Polygon", "coordinates": [[[8.5, 48.2], [9.5, 48.2], [9.5, 49.0], [8.5, 49.0], [8.5, 48.2]]]}},
+                {"type": "Feature", "properties": {"GEN": "Karlsruhe", "Bundesland": "Baden-Württemberg"}, "geometry": {"type": "Polygon", "coordinates": [[[7.5, 48.5], [8.5, 48.5], [8.5, 49.3], [7.5, 49.3], [7.5, 48.5]]]}},
+                {"type": "Feature", "properties": {"GEN": "Freiburg", "Bundesland": "Baden-Württemberg"}, "geometry": {"type": "Polygon", "coordinates": [[[7.5, 47.5], [8.5, 47.5], [8.5, 48.5], [7.5, 48.5], [7.5, 47.5]]]}},
+                {"type": "Feature", "properties": {"GEN": "Tübingen", "Bundesland": "Baden-Württemberg"}, "geometry": {"type": "Polygon", "coordinates": [[[8.5, 47.5], [9.5, 47.5], [9.5, 48.5], [8.5, 48.5], [8.5, 47.5]]]}},
+                {"type": "Feature", "properties": {"GEN": "Oberbayern", "Bundesland": "Bayern"}, "geometry": {"type": "Polygon", "coordinates": [[[11.0, 47.5], [12.5, 47.5], [12.5, 48.5], [11.0, 48.5], [11.0, 47.5]]]}},
+                {"type": "Feature", "properties": {"GEN": "Niederbayern", "Bundesland": "Bayern"}, "geometry": {"type": "Polygon", "coordinates": [[[12.0, 48.2], [13.5, 48.2], [13.5, 49.2], [12.0, 49.2], [12.0, 48.2]]]}},
+                {"type": "Feature", "properties": {"GEN": "Oberpfalz", "Bundesland": "Bayern"}, "geometry": {"type": "Polygon", "coordinates": [[[11.5, 49.0], [13.0, 49.0], [13.0, 50.0], [11.5, 50.0], [11.5, 49.0]]]}},
+                {"type": "Feature", "properties": {"GEN": "Oberfranken", "Bundesland": "Bayern"}, "geometry": {"type": "Polygon", "coordinates": [[[10.5, 49.8], [12.0, 49.8], [12.0, 50.8], [10.5, 50.8], [10.5, 49.8]]]}},
+                {"type": "Feature", "properties": {"GEN": "Mittelfranken", "Bundesland": "Bayern"}, "geometry": {"type": "Polygon", "coordinates": [[[10.0, 49.0], [11.5, 49.0], [11.5, 49.8], [10.0, 49.8], [10.0, 49.0]]]}},
+                {"type": "Feature", "properties": {"GEN": "Unterfranken", "Bundesland": "Bayern"}, "geometry": {"type": "Polygon", "coordinates": [[[9.0, 49.5], [10.5, 49.5], [10.5, 50.5], [9.0, 50.5], [9.0, 49.5]]]}},
+                {"type": "Feature", "properties": {"GEN": "Schwaben", "Bundesland": "Bayern"}, "geometry": {"type": "Polygon", "coordinates": [[[9.5, 47.5], [11.0, 47.5], [11.0, 48.8], [9.5, 48.8], [9.5, 47.5]]]}},
+                {"type": "Feature", "properties": {"GEN": "Darmstadt", "Bundesland": "Hessen"}, "geometry": {"type": "Polygon", "coordinates": [[[8.0, 49.5], [9.5, 49.5], [9.5, 50.5], [8.0, 50.5], [8.0, 49.5]]]}},
+                {"type": "Feature", "properties": {"GEN": "Gießen", "Bundesland": "Hessen"}, "geometry": {"type": "Polygon", "coordinates": [[[8.0, 50.3], [9.0, 50.3], [9.0, 51.0], [8.0, 51.0], [8.0, 50.3]]]}},
+                {"type": "Feature", "properties": {"GEN": "Kassel", "Bundesland": "Hessen"}, "geometry": {"type": "Polygon", "coordinates": [[[8.5, 50.8], [10.0, 50.8], [10.0, 51.8], [8.5, 51.8], [8.5, 50.8]]]}},
+                {"type": "Feature", "properties": {"GEN": "Köln", "Bundesland": "Nordrhein-Westfalen"}, "geometry": {"type": "Polygon", "coordinates": [[[6.0, 50.5], [7.5, 50.5], [7.5, 51.3], [6.0, 51.3], [6.0, 50.5]]]}},
+                {"type": "Feature", "properties": {"GEN": "Düsseldorf", "Bundesland": "Nordrhein-Westfalen"}, "geometry": {"type": "Polygon", "coordinates": [[[6.0, 51.0], [7.5, 51.0], [7.5, 51.8], [6.0, 51.8], [6.0, 51.0]]]}},
+                {"type": "Feature", "properties": {"GEN": "Münster", "Bundesland": "Nordrhein-Westfalen"}, "geometry": {"type": "Polygon", "coordinates": [[[6.5, 51.5], [8.5, 51.5], [8.5, 52.5], [6.5, 52.5], [6.5, 51.5]]]}},
+                {"type": "Feature", "properties": {"GEN": "Detmold", "Bundesland": "Nordrhein-Westfalen"}, "geometry": {"type": "Polygon", "coordinates": [[[8.0, 51.3], [9.5, 51.3], [9.5, 52.3], [8.0, 52.3], [8.0, 51.3]]]}},
+                {"type": "Feature", "properties": {"GEN": "Arnsberg", "Bundesland": "Nordrhein-Westfalen"}, "geometry": {"type": "Polygon", "coordinates": [[[7.0, 50.8], [8.5, 50.8], [8.5, 51.8], [7.0, 51.8], [7.0, 50.8]]]}},
+                {"type": "Feature", "properties": {"GEN": "Berlin", "Bundesland": "Berlin"}, "geometry": {"type": "Polygon", "coordinates": [[[13.0, 52.3], [13.8, 52.3], [13.8, 52.7], [13.0, 52.7], [13.0, 52.3]]]}},
+                {"type": "Feature", "properties": {"GEN": "Hamburg", "Bundesland": "Hamburg"}, "geometry": {"type": "Polygon", "coordinates": [[[9.7, 53.4], [10.3, 53.4], [10.3, 53.8], [9.7, 53.8], [9.7, 53.4]]]}},
+                {"type": "Feature", "properties": {"GEN": "Dresden", "Bundesland": "Sachsen"}, "geometry": {"type": "Polygon", "coordinates": [[[13.0, 50.5], [14.5, 50.5], [14.5, 51.5], [13.0, 51.5], [13.0, 50.5]]]}},
+                {"type": "Feature", "properties": {"GEN": "Leipzig", "Bundesland": "Sachsen"}, "geometry": {"type": "Polygon", "coordinates": [[[11.5, 50.8], [13.0, 50.8], [13.0, 51.8], [11.5, 51.8], [11.5, 50.8]]]}},
+                {"type": "Feature", "properties": {"GEN": "Chemnitz", "Bundesland": "Sachsen"}, "geometry": {"type": "Polygon", "coordinates": [[[12.0, 50.0], [13.5, 50.0], [13.5, 51.0], [12.0, 51.0], [12.0, 50.0]]]}}
+            ]
+        };
+    }
+
+    /**
+     * Fallback GeoJSON für Bundesländer-Grenzen (Offline-Nutzung)
+     */
+    getFallbackStatesGeoJSON() {
+        console.log('Verwende Fallback-GeoJSON für Bundesländer');
+        return {
+            "type": "FeatureCollection",
+            "features": [
+                {"type": "Feature", "properties": {"name": "Baden-Württemberg"}, "geometry": {"type": "Polygon", "coordinates": [[[7.5, 47.5], [10.5, 47.5], [10.5, 49.8], [7.5, 49.8], [7.5, 47.5]]]}},
+                {"type": "Feature", "properties": {"name": "Bayern"}, "geometry": {"type": "Polygon", "coordinates": [[[8.9, 47.2], [13.8, 47.2], [13.8, 50.6], [8.9, 50.6], [8.9, 47.2]]]}},
+                {"type": "Feature", "properties": {"name": "Berlin"}, "geometry": {"type": "Polygon", "coordinates": [[[13.0, 52.3], [13.8, 52.3], [13.8, 52.7], [13.0, 52.7], [13.0, 52.3]]]}},
+                {"type": "Feature", "properties": {"name": "Brandenburg"}, "geometry": {"type": "Polygon", "coordinates": [[[11.2, 51.3], [14.8, 51.3], [14.8, 53.6], [11.2, 53.6], [11.2, 51.3]]]}},
+                {"type": "Feature", "properties": {"name": "Bremen"}, "geometry": {"type": "Polygon", "coordinates": [[[8.4, 53.0], [8.9, 53.0], [8.9, 53.6], [8.4, 53.6], [8.4, 53.0]]]}},
+                {"type": "Feature", "properties": {"name": "Hamburg"}, "geometry": {"type": "Polygon", "coordinates": [[[9.7, 53.4], [10.3, 53.4], [10.3, 53.8], [9.7, 53.8], [9.7, 53.4]]]}},
+                {"type": "Feature", "properties": {"name": "Hessen"}, "geometry": {"type": "Polygon", "coordinates": [[[7.7, 49.4], [10.2, 49.4], [10.2, 51.7], [7.7, 51.7], [7.7, 49.4]]]}},
+                {"type": "Feature", "properties": {"name": "Mecklenburg-Vorpommern"}, "geometry": {"type": "Polygon", "coordinates": [[[10.6, 53.1], [14.4, 53.1], [14.4, 54.7], [10.6, 54.7], [10.6, 53.1]]]}},
+                {"type": "Feature", "properties": {"name": "Niedersachsen"}, "geometry": {"type": "Polygon", "coordinates": [[[6.6, 51.3], [11.6, 51.3], [11.6, 53.9], [6.6, 53.9], [6.6, 51.3]]]}},
+                {"type": "Feature", "properties": {"name": "Nordrhein-Westfalen"}, "geometry": {"type": "Polygon", "coordinates": [[[5.9, 50.3], [9.5, 50.3], [9.5, 52.5], [5.9, 52.5], [5.9, 50.3]]]}},
+                {"type": "Feature", "properties": {"name": "Rheinland-Pfalz"}, "geometry": {"type": "Polygon", "coordinates": [[[6.1, 48.9], [8.5, 48.9], [8.5, 50.9], [6.1, 50.9], [6.1, 48.9]]]}},
+                {"type": "Feature", "properties": {"name": "Saarland"}, "geometry": {"type": "Polygon", "coordinates": [[[6.3, 49.1], [7.4, 49.1], [7.4, 49.6], [6.3, 49.6], [6.3, 49.1]]]}},
+                {"type": "Feature", "properties": {"name": "Sachsen"}, "geometry": {"type": "Polygon", "coordinates": [[[11.8, 50.2], [15.0, 50.2], [15.0, 51.7], [11.8, 51.7], [11.8, 50.2]]]}},
+                {"type": "Feature", "properties": {"name": "Sachsen-Anhalt"}, "geometry": {"type": "Polygon", "coordinates": [[[10.5, 50.9], [13.2, 50.9], [13.2, 53.0], [10.5, 53.0], [10.5, 50.9]]]}},
+                {"type": "Feature", "properties": {"name": "Schleswig-Holstein"}, "geometry": {"type": "Polygon", "coordinates": [[[8.4, 53.3], [11.3, 53.3], [11.3, 55.1], [8.4, 55.1], [8.4, 53.3]]]}},
+                {"type": "Feature", "properties": {"name": "Thüringen"}, "geometry": {"type": "Polygon", "coordinates": [[[9.9, 50.2], [12.7, 50.2], [12.7, 51.6], [9.9, 51.6], [9.9, 50.2]]]}}
+            ]
+        };
     }
 
     logCountiesByState() {

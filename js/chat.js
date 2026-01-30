@@ -177,9 +177,10 @@ function initChat() {
             chatToggle.style.display = 'none';
         }, 1000);
 
-        // Show API warning if needed
+        // Show Demo Mode info with suggestions
         if (shouldUseMockMode()) {
-            addMessage('assistant', '⚠️ **Mock-Modus aktiv** - KI ist über den Worker konfiguriert.\n\nStelle trotzdem gerne Fragen - ich zeige dir wie die Integration funktioniert!');
+            const welcomeMessage = '✨ **Demo-Modus aktiv** – Ich nutze vordefinierte Antworten für schnelle Interaktionen.\n\nStelle gerne Fragen zu den Daten im Dashboard!' + getSalesChatSuggestions('default');
+            addMessage('assistant', welcomeMessage);
         }
     } else {
         console.log('Keine CSV Daten - Chat bleibt verborgen bis Daten geladen werden');

@@ -33,10 +33,17 @@ function showAgenturOverview(vermittlerId) {
     if (kundenDetail) kundenDetail.style.display = 'none';
     if (agenturOverview) agenturOverview.style.display = 'block';
 
-    // Zeige den Agentur-Chat-Toggle Button
+    // Öffne den Agentur-Chat automatisch (Vertriebs-Assistent)
+    const agenturChatWidget = document.getElementById('agenturChatWidget');
     const agenturChatToggle = document.getElementById('agenturChatToggle');
+
+    if (agenturChatWidget) {
+        agenturChatWidget.style.display = 'flex';
+    }
+
+    // Toggle Button ausblenden, da Chat bereits geöffnet ist
     if (agenturChatToggle) {
-        agenturChatToggle.style.display = 'flex';
+        agenturChatToggle.style.display = 'none';
     }
 
     // Lade und zeige Agentur-Daten

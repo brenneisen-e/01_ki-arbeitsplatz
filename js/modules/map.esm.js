@@ -600,12 +600,10 @@ export async function initMap() {
                     position: relative;
                     overflow: hidden;
                 ">
-                    <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; opacity: 0.1; background: url('data:image/svg+xml,<svg width=\"100\" height=\"100\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M50 10 L90 90 L10 90 Z\" fill=\"white\"/></svg>') repeat;"></div>
-
-                    <div style="position: relative; z-index: 1;">
+                    <div>
                         <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-bottom: 1.5rem; opacity: 0.9;">
-                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                            <circle cx="12" cy="10" r="3"></circle>
+                            <path d="M22.54 16.88A8.002 8.002 0 0 0 11 8.05V7a3 3 0 0 0-6 0v1a8 8 0 0 0 0 16h13.54"></path>
+                            <line x1="2" y1="2" x2="22" y2="22"></line>
                         </svg>
 
                         <h3 style="font-size: 1.5rem; font-weight: 700; margin: 0 0 1rem 0; text-shadow: 0 2px 4px rgba(0,0,0,0.2);">

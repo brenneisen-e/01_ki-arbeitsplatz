@@ -30,9 +30,18 @@ function clearApiToken() {
 // Prüfe ob Worker oder API-Key vorhanden
 window.USE_WORKER = window.CLAUDE_WORKER_URL !== '';
 
-// Mock-Modus nur wenn weder Worker noch API-Key
+// Mock-Modus überall außer T-05 (KI-Dokumentenassistent)
 function isUsingMockMode() {
-    return !window.USE_WORKER && !getApiToken();
+    // Prüfe ob wir auf T-05 (KI-Dokumentenassistent) sind
+    const documentAssistantContainer = document.getElementById('documentAssistantContainer');
+    const isOnDocumentAssistant = documentAssistantContainer && documentAssistantContainer.style.display !== 'none';
+
+    // Nur auf T-05 echte API nutzen, überall sonst Mock-Modus
+    if (isOnDocumentAssistant) {
+        return false; // API aktiv auf T-05
+    }
+
+    return true; // Mock-Modus überall sonst (M-01 Landing Chat, A-03 Dashboard Chat, etc.)
 }
 
 // Setup API Token Input
@@ -44,21 +53,9 @@ function setupApiTokenInput() {
 
     if (!tokenInput || !toggleBtn || !saveBtn) return;
 
-    // Worker-Modus Status anzeigen
-    if (window.USE_WORKER) {
-        statusDiv.className = 'api-token-status success';
-        statusDiv.textContent = 'KI aktiv (via Worker)';
-    } else {
-        const existingToken = getApiToken();
-        if (existingToken) {
-            tokenInput.value = existingToken;
-            statusDiv.className = 'api-token-status success';
-            statusDiv.textContent = 'API-Key gespeichert (KI-Modus aktiv)';
-        } else {
-            statusDiv.className = 'api-token-status';
-            statusDiv.textContent = 'ℹ️ Mock-Modus aktiv (vorgefertigte Antworten)';
-        }
-    }
+    // Status anzeigen - Mock-Modus überall außer T-05
+    statusDiv.className = 'api-token-status success';
+    statusDiv.textContent = '✅ Mock-Modus aktiv (Demo-Klickstrecken) | KI nur auf T-05';
 
     // Toggle password visibility
     toggleBtn.addEventListener('click', () => {

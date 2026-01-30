@@ -16,9 +16,18 @@ function getClaudeApiKey() {
 // Prüfe ob Worker oder direkter Zugriff verwendet wird
 window.USE_WORKER = window.CLAUDE_WORKER_URL !== '';
 
-// Mock-Modus nur wenn weder Worker noch API-Key vorhanden
+// Mock-Modus überall außer T-05 (KI-Dokumentenassistent)
 function shouldUseMockMode() {
-    return !window.USE_WORKER && !getClaudeApiKey();
+    // Prüfe ob wir auf T-05 (KI-Dokumentenassistent) sind
+    const documentAssistantContainer = document.getElementById('documentAssistantContainer');
+    const isOnDocumentAssistant = documentAssistantContainer && documentAssistantContainer.style.display !== 'none';
+
+    // Nur auf T-05 echte API nutzen, überall sonst Mock-Modus
+    if (isOnDocumentAssistant) {
+        return false; // API aktiv auf T-05
+    }
+
+    return true; // Mock-Modus im Dashboard Chat (A-03) und überall sonst
 }
 
 let USE_MOCK_MODE = shouldUseMockMode();

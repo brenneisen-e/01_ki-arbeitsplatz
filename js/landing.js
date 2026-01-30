@@ -923,7 +923,17 @@ Dieses Tool bietet Ihnen:
         return 'Hallo! 👋 Ich kann dir beim Einstieg ins Dashboard helfen. Möchtest du eine CSV hochladen oder direkt zum Dashboard?';
     }
     
-    return `Ich habe deine Frage verstanden: "${message}"\n\n⚠️ **Mock-Modus aktiv** - KI wird über den Worker konfiguriert.\n\n**Verfügbare Mock-Befehle:**\n• "Wie viele Daten haben wir?"\n• "Zeige Top 5 Vermittler"\n• "Wie ist die Performance von Freiburg?"`;
+    const suggestions = [
+        { text: 'Kennzahlen München', query: 'Kennzahlen München' },
+        { text: 'Top 5 Vertriebsregionen', query: 'Top 5 Vertriebsregionen' },
+        { text: 'Übersicht Daten', query: 'Wie viele Daten haben wir?' }
+    ];
+
+    const buttons = suggestions.map(s =>
+        `<button onclick="document.getElementById('landingChatInput').value='${s.query.replace(/'/g, "\\'")}'; sendLandingChatMessage();">${s.text}</button>`
+    ).join('');
+
+    return `Ich habe deine Frage verstanden: "${message}"\n\n✨ **Demo-Modus** – Ich nutze vordefinierte Interaktionen für schnelle Antworten.\n\n<div class="chat-followup-suggestions">${buttons}</div>`;
 }
 
 // Add message to chat - Display in response container below input

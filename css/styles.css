@@ -9112,12 +9112,12 @@ button svg,
 }
 
 .chat-followup-suggestions button {
-    padding: 8px 14px;
+    padding: 10px 16px;
     background: white;
     color: #1e293b;
     border: 1px solid #e2e8f0;
     border-radius: 18px;
-    font-size: 12px;
+    font-size: 15px;
     cursor: pointer;
     transition: all 0.2s;
     white-space: nowrap;

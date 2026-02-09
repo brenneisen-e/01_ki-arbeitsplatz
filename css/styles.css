@@ -9236,17 +9236,17 @@ button svg,
 /* Tabs inline next to name */
 .agentur-header-tabs {
     display: flex;
-    gap: 2px;
+    gap: 4px;
     overflow-x: auto;
     flex-wrap: nowrap;
     flex: 1;
-    justify-content: flex-end;
+    justify-content: center;
 }
 
 .agentur-header-tabs .agentur-tab {
-    padding: 6px 10px;
-    font-size: 12px;
-    gap: 4px;
+    padding: 8px 14px;
+    font-size: 14px;
+    gap: 6px;
     white-space: nowrap;
     flex-shrink: 0;
 }

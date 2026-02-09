@@ -1168,6 +1168,16 @@
 
                 <!-- Tab Content: Kundenliste -->
                 <div class="agentur-tab-content" id="tab-kundenliste">
+                    <!-- NPS Style Switcher -->
+                    <div class="nps-style-switcher" id="npsStyleSwitcher">
+                        <button class="nps-style-arrow" onclick="switchNpsStyle(-1)">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                        </button>
+                        <span class="nps-style-label" id="npsStyleLabel">Option 1: Fortschrittsbalken</span>
+                        <button class="nps-style-arrow" onclick="switchNpsStyle(1)">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                        </button>
+                    </div>
                     <div class="kundenliste-header">
                         <h3 class="section-title">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">

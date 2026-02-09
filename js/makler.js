@@ -96,6 +96,15 @@ var maklerKpiData = {
 };
 
 // ========================================
+// Moderne einfarbige Segment-Icons (SVG)
+var maklerSegmentIcons = {
+    gesundheitswesen: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M12 2v20M2 12h20"/><rect x="4" y="4" width="16" height="16" rx="2"/></svg>',
+    kirche: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M12 2v6M9 5h6M7 22V12l5-4 5 4v10M3 22h18"/></svg>',
+    sozialwirtschaft: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>',
+    industrie: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M2 20V8l5 4V8l5 4V8l5 4V4h5v16H2z"/></svg>',
+    transport: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M1 3h15v13H1z"/><path d="M16 8h4l3 4v4h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>'
+};
+
 // MAKLER MOCK-KUNDEN (Institutionen)
 // ========================================
 var maklerKunden = [
@@ -104,7 +113,7 @@ var maklerKunden = [
         name: 'Marienhospital Detmold GmbH',
         id: 'MK-GW-001',
         segment: 'Gesundheitswesen',
-        segmentIcon: '🏥',
+        segmentIcon: maklerSegmentIcons.gesundheitswesen,
         branche: 'Akutkrankenhaus',
         betten: 450,
         mitarbeitende: 1800,
@@ -156,7 +165,7 @@ var maklerKunden = [
         name: 'Reha-Zentrum Ostwestfalen',
         id: 'MK-GW-002',
         segment: 'Gesundheitswesen',
-        segmentIcon: '🏥',
+        segmentIcon: maklerSegmentIcons.gesundheitswesen,
         branche: 'Rehabilitationsklinik',
         betten: 120,
         mitarbeitende: 280,
@@ -191,7 +200,7 @@ var maklerKunden = [
         name: 'MVZ Gesundheit Plus GmbH',
         id: 'MK-GW-003',
         segment: 'Gesundheitswesen',
-        segmentIcon: '🏥',
+        segmentIcon: maklerSegmentIcons.gesundheitswesen,
         branche: 'Medizinisches Versorgungszentrum',
         betten: null,
         mitarbeitende: 45,
@@ -213,7 +222,7 @@ var maklerKunden = [
         name: 'Seniorenresidenz Am Kirchplatz',
         id: 'MK-GW-004',
         segment: 'Gesundheitswesen',
-        segmentIcon: '🏥',
+        segmentIcon: maklerSegmentIcons.gesundheitswesen,
         branche: 'Pflegeeinrichtung',
         betten: 180,
         mitarbeitende: 220,
@@ -236,7 +245,7 @@ var maklerKunden = [
         name: 'Evangelische Kirche von Westfalen',
         id: 'MK-KI-001',
         segment: 'Kirche',
-        segmentIcon: '⛪',
+        segmentIcon: maklerSegmentIcons.kirche,
         branche: 'Landeskirche',
         betten: null,
         mitarbeitende: null,
@@ -272,7 +281,7 @@ var maklerKunden = [
         name: 'Bistum Paderborn',
         id: 'MK-KI-002',
         segment: 'Kirche',
-        segmentIcon: '⛪',
+        segmentIcon: maklerSegmentIcons.kirche,
         branche: 'Bistum',
         betten: null,
         mitarbeitende: null,
@@ -294,7 +303,7 @@ var maklerKunden = [
         name: 'Kirchenkreis Lippe',
         id: 'MK-KI-003',
         segment: 'Kirche',
-        segmentIcon: '⛪',
+        segmentIcon: maklerSegmentIcons.kirche,
         branche: 'Kirchenkreis',
         betten: null,
         mitarbeitende: null,
@@ -317,7 +326,7 @@ var maklerKunden = [
         name: 'Diakonisches Werk RWL',
         id: 'MK-SW-001',
         segment: 'Sozialwirtschaft',
-        segmentIcon: '🤝',
+        segmentIcon: maklerSegmentIcons.sozialwirtschaft,
         branche: 'Wohlfahrtsverband',
         betten: null,
         mitarbeitende: 4500,
@@ -339,7 +348,7 @@ var maklerKunden = [
         name: 'Caritas-Werkstätten Paderborn',
         id: 'MK-SW-002',
         segment: 'Sozialwirtschaft',
-        segmentIcon: '🤝',
+        segmentIcon: maklerSegmentIcons.sozialwirtschaft,
         branche: 'Behindertenwerkstatt',
         betten: null,
         mitarbeitende: 800,
@@ -361,7 +370,7 @@ var maklerKunden = [
         name: 'AWO Kreisverband Detmold',
         id: 'MK-SW-003',
         segment: 'Sozialwirtschaft',
-        segmentIcon: '🤝',
+        segmentIcon: maklerSegmentIcons.sozialwirtschaft,
         branche: 'Wohlfahrtsverband',
         betten: null,
         mitarbeitende: 1200,
@@ -384,7 +393,7 @@ var maklerKunden = [
         name: 'Weidmüller Interface GmbH',
         id: 'MK-IG-001',
         segment: 'Industrie & Gewerbe',
-        segmentIcon: '🏭',
+        segmentIcon: maklerSegmentIcons.industrie,
         branche: 'Elektrotechnik',
         betten: null,
         mitarbeitende: 5200,
@@ -406,7 +415,7 @@ var maklerKunden = [
         name: 'Phoenix Contact GmbH',
         id: 'MK-IG-002',
         segment: 'Industrie & Gewerbe',
-        segmentIcon: '🏭',
+        segmentIcon: maklerSegmentIcons.industrie,
         branche: 'Elektrotechnik / Automatisierung',
         betten: null,
         mitarbeitende: 22000,
@@ -428,7 +437,7 @@ var maklerKunden = [
         name: 'Boge Kompressoren GmbH',
         id: 'MK-IG-003',
         segment: 'Industrie & Gewerbe',
-        segmentIcon: '🏭',
+        segmentIcon: maklerSegmentIcons.industrie,
         branche: 'Maschinenbau',
         betten: null,
         mitarbeitende: 900,
@@ -451,7 +460,7 @@ var maklerKunden = [
         name: 'Hellmann Worldwide Logistics',
         id: 'MK-TL-001',
         segment: 'Transport & Logistik',
-        segmentIcon: '🚛',
+        segmentIcon: maklerSegmentIcons.transport,
         branche: 'Spedition / Logistik',
         betten: null,
         mitarbeitende: 12500,
@@ -473,7 +482,7 @@ var maklerKunden = [
         name: 'Emons Spedition GmbH',
         id: 'MK-TL-002',
         segment: 'Transport & Logistik',
-        segmentIcon: '🚛',
+        segmentIcon: maklerSegmentIcons.transport,
         branche: 'Spedition',
         betten: null,
         mitarbeitende: 1800,
@@ -495,7 +504,7 @@ var maklerKunden = [
         name: 'RegioFracht OWL GmbH',
         id: 'MK-TL-003',
         segment: 'Transport & Logistik',
-        segmentIcon: '🚛',
+        segmentIcon: maklerSegmentIcons.transport,
         branche: 'Regionalspedition',
         betten: null,
         mitarbeitende: 120,
@@ -578,7 +587,7 @@ function fillMaklerDetail(kunde) {
 
     // Foto → Segment-Icon
     var foto = document.querySelector('.kunden-foto');
-    if (foto) foto.innerHTML = '<span style="font-size:40px;line-height:80px">' + kunde.segmentIcon + '</span>';
+    if (foto) foto.innerHTML = '<span class="makler-segment-photo-icon">' + kunde.segmentIcon + '</span>';
 
     // Stammdaten → Makler-Stammdaten umschalten
     var privatStamm = document.getElementById('privatStammdaten');

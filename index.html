@@ -423,14 +423,9 @@
                             </div>
                         </div>
                     </div>
-                    <!-- Makler B2B Toggle (im Header-Left neben Name) -->
-                    <div class="makler-toggle-wrapper">
-                        <div class="makler-toggle-switch" id="maklerToggle" onclick="toggleMaklerModus()"></div>
-                        <span class="makler-toggle-label" id="maklerToggleLabel">Privatkunde (AO)</span>
-                    </div>
                 </div>
                 <input type="file" id="agenturPhotoInput" accept="image/*" style="display: none;" onchange="handleAgenturPhotoUpload(event)">
-                <!-- Tab Navigation (im Header, rechts neben Name) -->
+                <!-- Tab Navigation (im Header, zentriert) -->
                 <div class="agentur-header-tabs">
                     <button class="agentur-tab active" onclick="showAgenturTab('uebersicht')">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
@@ -490,6 +485,11 @@
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                         Deckungsl&uuml;cken
                     </button>
+                </div>
+                <!-- Makler B2B Toggle (ganz rechts im Header) -->
+                <div class="makler-toggle-wrapper">
+                    <div class="makler-toggle-switch" id="maklerToggle" onclick="toggleMaklerModus()"></div>
+                    <span class="makler-toggle-label" id="maklerToggleLabel">Privatkunde (AO)</span>
                 </div>
             </div>
 
@@ -3345,6 +3345,34 @@
                             </svg>
                             <span>Diese Verträge sind Ihnen als Bestandsbetreuer zugeordnet. Für diese Verträge erhalten Sie Bestandsprovision und können Serviceleistungen erbringen.</span>
                         </div>
+                    </div>
+
+                    <!-- Schadenhistorie / Leistungen -->
+                    <div class="kunden-card" id="schadenhistorieCard" style="display: none;">
+                        <div class="kunden-card-header">
+                            <h2>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                                    <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"></path>
+                                    <line x1="12" y1="9" x2="12" y2="13"></line>
+                                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                                </svg>
+                                Schadenhistorie &amp; Leistungen
+                            </h2>
+                            <span class="info-badge">Letzte 24 Monate</span>
+                        </div>
+                        <table class="kunden-table">
+                            <thead>
+                                <tr>
+                                    <th>Datum</th>
+                                    <th>Sparte</th>
+                                    <th>Beschreibung</th>
+                                    <th>Status</th>
+                                    <th class="text-right">Betrag</th>
+                                    <th>Versicherer</th>
+                                </tr>
+                            </thead>
+                            <tbody id="kundenSchadenhistorie"></tbody>
+                        </table>
                     </div>
                 </div>
 

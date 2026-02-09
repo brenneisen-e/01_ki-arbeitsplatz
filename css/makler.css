@@ -7,9 +7,9 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    margin-left: 20px;
-    padding-left: 20px;
-    border-left: 1px solid rgba(255, 255, 255, 0.25);
+    position: absolute;
+    right: 32px;
+    z-index: 2;
 }
 
 .makler-toggle-switch {
@@ -350,6 +350,28 @@
     .makler-kundenliste-table td {
         padding: 8px 8px;
     }
+}
+
+/* Makler Segment Photo Icon (SVG statt Emoji) */
+.makler-segment-photo-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    color: white;
+}
+
+.makler-segment-photo-icon svg {
+    width: 28px;
+    height: 28px;
+}
+
+/* Segment Badge SVG inline alignment */
+.makler-segment-badge svg,
+.makler-segment-badge-sm svg {
+    vertical-align: -2px;
+    margin-right: 2px;
 }
 
 .text-muted {

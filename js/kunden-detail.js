@@ -377,13 +377,24 @@ function fillKundenDetail(kundenName, vermittlerId) {
             beschaeftigtSeit: '01.03.2016',
             tiere: 'unbekannt',
             risikoscore: 35,
+            risikoDetails: [
+                'Skydive Academy Stuttgart \u2013 Risikosport (Open Finance)',
+                'Bungee Events GmbH \u2013 Extremsport (Open Finance)',
+                'BU-Leistungsfall (WG-Schaden, Aug. 2024)',
+                'Wohngeb\u00E4udeschaden Sturm (Nov. 2024)'
+            ],
             bonitaetsscore: 82,
+            schadenhistorie: [
+                { datum: '15.11.2024', sparte: 'Wohngeb\u00E4ude', beschreibung: 'Sturmschaden Dach \u2013 Ziegel abgedeckt', status: 'Reguliert', betrag: '\u20AC4.250', versicherer: 'VHV' },
+                { datum: '03.08.2024', sparte: 'BU-Versicherung', beschreibung: 'Leistungspr\u00FCfung wg. Bandscheibenvorfall \u2013 4 Wochen AU', status: 'Reguliert', betrag: '\u20AC1.500', versicherer: 'ERGO' },
+                { datum: '22.03.2023', sparte: 'Kfz-Haftpflicht', beschreibung: 'Parkschaden am Nachbarfahrzeug', status: 'Reguliert', betrag: '\u20AC890', versicherer: 'Allianz' }
+            ],
             kinder: [{ name: 'Lena', alter: 8 }, { name: 'Paul', alter: 5 }],
             nps: { score: 9, kategorie: 'promoter', datum: '15.10.2025', kampagne: 'Herbst-Zufriedenheitsbefragung 2025 (E-Mail)', details: [
-                { name: 'Beratungsqualität', wert: 9 },
+                { name: 'Beratungsqualit\u00E4t', wert: 9 },
                 { name: 'Zufriedenheit mit dem Unternehmen', wert: 8 },
                 { name: 'Weiterempfehlung an Freunde', wert: 10 },
-                { name: 'Preis-Leistungs-Verhältnis', wert: 8 },
+                { name: 'Preis-Leistungs-Verh\u00E4ltnis', wert: 8 },
                 { name: 'Erreichbarkeit & Service', wert: 9 }
             ]},
             vertraege: [
@@ -782,13 +793,21 @@ function fillKundenDetail(kundenName, vermittlerId) {
         }
     }
 
-    // Risikoscore (0-100)
+    // Risikoscore (0-100) mit Tooltip-Erklärung
     const risikoEl = document.getElementById('risikoScoreDisplay');
     if (risikoEl && kunde.risikoscore !== undefined) {
         var rColor = kunde.risikoscore <= 30 ? '#16a34a' : (kunde.risikoscore <= 60 ? '#d97706' : '#dc2626');
         var rLabel = kunde.risikoscore <= 30 ? 'Niedrig' : (kunde.risikoscore <= 60 ? 'Mittel' : 'Hoch');
+        var rTooltip = '';
+        if (kunde.risikoDetails && kunde.risikoDetails.length > 0) {
+            rTooltip = '<div class="risiko-tooltip-trigger" tabindex="0">' +
+                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>' +
+                '<div class="risiko-tooltip-content"><div class="risiko-tooltip-title">Risikofaktoren</div>' +
+                kunde.risikoDetails.map(function(d) { return '<div class="risiko-tooltip-item">\u2022 ' + d + '</div>'; }).join('') +
+                '</div></div>';
+        }
         risikoEl.innerHTML = '<div class="score-bar-track"><div class="score-bar-fill" style="width:' + kunde.risikoscore + '%;background:' + rColor + '"></div></div>' +
-            '<span class="score-bar-value" style="color:' + rColor + '">' + kunde.risikoscore + ' <small>(' + rLabel + ')</small></span>';
+            '<span class="score-bar-value" style="color:' + rColor + '">' + kunde.risikoscore + ' <small>(' + rLabel + ')</small></span>' + rTooltip;
     }
 
     // Bonitätsscore (0-100)
@@ -825,6 +844,27 @@ function fillKundenDetail(kundenName, vermittlerId) {
                 <td>${v.info}</td>
             </tr>
         `).join('');
+    }
+
+    // Schadenhistorie / Leistungen
+    const schadenEl = document.getElementById('kundenSchadenhistorie');
+    if (schadenEl && kunde.schadenhistorie && kunde.schadenhistorie.length > 0) {
+        schadenEl.innerHTML = kunde.schadenhistorie.map(function(s) {
+            var statusClass = s.status === 'Reguliert' ? 'reguliert' : (s.status === 'Offen' ? 'offen' : 'abgelehnt');
+            return '<tr>' +
+                '<td>' + s.datum + '</td>' +
+                '<td><strong>' + s.sparte + '</strong></td>' +
+                '<td>' + s.beschreibung + '</td>' +
+                '<td><span class="schaden-status-badge ' + statusClass + '">' + s.status + '</span></td>' +
+                '<td class="text-right">' + s.betrag + '</td>' +
+                '<td>' + s.versicherer + '</td>' +
+                '</tr>';
+        }).join('');
+        var schadenCard = document.getElementById('schadenhistorieCard');
+        if (schadenCard) schadenCard.style.display = '';
+    } else {
+        var schadenCard = document.getElementById('schadenhistorieCard');
+        if (schadenCard) schadenCard.style.display = 'none';
     }
 
     // CLV berechnen und rendern

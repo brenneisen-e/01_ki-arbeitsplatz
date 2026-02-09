@@ -4035,6 +4035,13 @@ function switchKundeDropdown(kundenName) {
 }
 window.switchKundeDropdown = switchKundeDropdown;
 
+function toggleNpsDetail() {
+    const popup = document.getElementById('npsDetailPopup');
+    if (!popup) return;
+    popup.style.display = popup.style.display === 'none' ? 'block' : 'none';
+}
+window.toggleNpsDetail = toggleNpsDetail;
+
 function filterKundenliste(searchText) {
     const rows = document.querySelectorAll('#kundenlisteTableBody tr');
     const term = searchText.toLowerCase();
@@ -4085,6 +4092,13 @@ function fillKundenDetail(kundenName, vermittlerId) {
             beruf: 'Angestellter',
             familienstand: 'Verheiratet',
             kinder: [{ name: 'Lena', alter: 8 }, { name: 'Paul', alter: 5 }],
+            nps: { score: 9, kategorie: 'promoter', details: [
+                { name: 'Beratungsqualität', wert: 9 },
+                { name: 'Zufriedenheit mit dem Unternehmen', wert: 8 },
+                { name: 'Weiterempfehlung an Freunde', wert: 10 },
+                { name: 'Preis-Leistungs-Verhältnis', wert: 8 },
+                { name: 'Erreichbarkeit & Service', wert: 9 }
+            ]},
             vertraege: [
                 { typ: 'Berufsunfähigkeitsversicherung', versicherer: 'ERGO', details: 'BU-Rente: €1.500/Mon., Endalter 67, ohne Ausschlüsse', praemie: '€89/Mon.', beginn: '01.03.2018', status: 'Aktiv' },
                 { typ: 'Wohngebäudeversicherung', versicherer: 'VHV', details: 'Vers.-Summe: €450.000, inkl. Elementar, gleitender Neuwert', praemie: '€450/Jahr', beginn: '15.06.2019', status: 'Aktiv' }
@@ -4103,6 +4117,13 @@ function fillKundenDetail(kundenName, vermittlerId) {
             beruf: 'Lehrerin',
             familienstand: 'Geschieden',
             kinder: [{ name: 'Max', alter: 12 }],
+            nps: { score: 7, kategorie: 'passive', details: [
+                { name: 'Beratungsqualität', wert: 7 },
+                { name: 'Zufriedenheit mit dem Unternehmen', wert: 6 },
+                { name: 'Weiterempfehlung an Freunde', wert: 7 },
+                { name: 'Preis-Leistungs-Verhältnis', wert: 7 },
+                { name: 'Erreichbarkeit & Service', wert: 8 }
+            ]},
             vertraege: [
                 { typ: 'Risikolebensversicherung', versicherer: 'ERGO', details: 'Vers.-Summe: €150.000, Laufzeit bis 02/2026', praemie: '€18/Mon.', beginn: '01.02.2016', status: 'Aktiv' },
                 { typ: 'Berufsunfähigkeitsversicherung', versicherer: 'ERGO', details: 'BU-Rente: €1.800/Mon., Endalter 67', praemie: '€95/Mon.', beginn: '01.09.2015', status: 'Aktiv' },
@@ -4121,6 +4142,13 @@ function fillKundenDetail(kundenName, vermittlerId) {
             beruf: 'Software-Entwickler',
             familienstand: 'Ledig',
             kinder: [],
+            nps: { score: 8, kategorie: 'promoter', details: [
+                { name: 'Beratungsqualität', wert: 8 },
+                { name: 'Zufriedenheit mit dem Unternehmen', wert: 7 },
+                { name: 'Weiterempfehlung an Freunde', wert: 9 },
+                { name: 'Preis-Leistungs-Verhältnis', wert: 8 },
+                { name: 'Erreichbarkeit & Service', wert: 7 }
+            ]},
             vertraege: [
                 { typ: 'Privathaftpflichtversicherung', versicherer: 'ERGO', details: 'Single, €50 Mio. Deckung', praemie: '€65/Jahr', beginn: '01.03.2021', status: 'Aktiv' }
             ],
@@ -4138,6 +4166,13 @@ function fillKundenDetail(kundenName, vermittlerId) {
             beruf: 'Marketing-Managerin',
             familienstand: 'Verheiratet',
             kinder: [{ name: 'Sophie', alter: 3 }, { name: 'Emma', alter: 1 }],
+            nps: { score: 10, kategorie: 'promoter', details: [
+                { name: 'Beratungsqualität', wert: 10 },
+                { name: 'Zufriedenheit mit dem Unternehmen', wert: 9 },
+                { name: 'Weiterempfehlung an Freunde', wert: 10 },
+                { name: 'Preis-Leistungs-Verhältnis', wert: 9 },
+                { name: 'Erreichbarkeit & Service', wert: 10 }
+            ]},
             vertraege: [
                 { typ: 'Risikolebensversicherung', versicherer: 'ERGO', details: 'Vers.-Summe: €300.000, Laufzeit bis 2045', praemie: '€25/Mon.', beginn: '01.07.2020', status: 'Aktiv' },
                 { typ: 'Berufsunfähigkeitsversicherung', versicherer: 'Alte Leipziger', details: 'BU-Rente: €2.000/Mon., Endalter 67', praemie: '€110/Mon.', beginn: '01.01.2019', status: 'Aktiv' }
@@ -4155,6 +4190,13 @@ function fillKundenDetail(kundenName, vermittlerId) {
             beruf: 'Geschäftsführer',
             familienstand: 'Verheiratet',
             kinder: [{ name: 'Lukas', alter: 18 }, { name: 'Jana', alter: 15 }],
+            nps: { score: 4, kategorie: 'detractor', details: [
+                { name: 'Beratungsqualität', wert: 5 },
+                { name: 'Zufriedenheit mit dem Unternehmen', wert: 3 },
+                { name: 'Weiterempfehlung an Freunde', wert: 4 },
+                { name: 'Preis-Leistungs-Verhältnis', wert: 3 },
+                { name: 'Erreichbarkeit & Service', wert: 5 }
+            ]},
             vertraege: [
                 { typ: 'Berufsunfähigkeitsversicherung', versicherer: 'ERGO', details: 'BU-Rente: €3.500/Mon., Endalter 65', praemie: '€220/Mon.', beginn: '01.06.2010', status: 'Aktiv' },
                 { typ: 'Wohngebäudeversicherung', versicherer: 'Axa', details: 'Vers.-Summe: €750.000, inkl. Elementar', praemie: '€680/Jahr', beginn: '01.01.2012', status: 'Aktiv' },
@@ -4174,6 +4216,13 @@ function fillKundenDetail(kundenName, vermittlerId) {
             beruf: 'Ärztin (Assistenz)',
             familienstand: 'In Partnerschaft',
             kinder: [],
+            nps: { score: 7, kategorie: 'passive', details: [
+                { name: 'Beratungsqualität', wert: 8 },
+                { name: 'Zufriedenheit mit dem Unternehmen', wert: 7 },
+                { name: 'Weiterempfehlung an Freunde', wert: 7 },
+                { name: 'Preis-Leistungs-Verhältnis', wert: 6 },
+                { name: 'Erreichbarkeit & Service', wert: 7 }
+            ]},
             vertraege: [
                 { typ: 'Berufsunfähigkeitsversicherung', versicherer: 'ERGO', details: 'BU-Rente: €2.500/Mon., Dienstunfähigkeitsklausel', praemie: '€145/Mon.', beginn: '01.08.2022', status: 'Aktiv' }
             ],
@@ -4191,6 +4240,13 @@ function fillKundenDetail(kundenName, vermittlerId) {
             beruf: 'Selbstständig (Handwerk)',
             familienstand: 'Verheiratet',
             kinder: [{ name: 'Tim', alter: 10 }, { name: 'Mia', alter: 7 }],
+            nps: { score: 9, kategorie: 'promoter', details: [
+                { name: 'Beratungsqualität', wert: 9 },
+                { name: 'Zufriedenheit mit dem Unternehmen', wert: 9 },
+                { name: 'Weiterempfehlung an Freunde', wert: 10 },
+                { name: 'Preis-Leistungs-Verhältnis', wert: 8 },
+                { name: 'Erreichbarkeit & Service', wert: 9 }
+            ]},
             vertraege: [
                 { typ: 'Betriebshaftpflicht', versicherer: 'ERGO', details: '€5 Mio. Deckung, Handwerksbetrieb', praemie: '€890/Jahr', beginn: '01.01.2015', status: 'Aktiv' },
                 { typ: 'Berufsunfähigkeitsversicherung', versicherer: 'Nürnberger', details: 'BU-Rente: €2.000/Mon., Handwerker-Tarif', praemie: '€135/Mon.', beginn: '01.03.2016', status: 'Aktiv' }
@@ -4208,6 +4264,13 @@ function fillKundenDetail(kundenName, vermittlerId) {
             beruf: 'IT-Consultant',
             familienstand: 'Verheiratet',
             kinder: [{ name: 'Jonas', alter: 6 }, { name: 'Lea', alter: 4 }],
+            nps: { score: 6, kategorie: 'passive', details: [
+                { name: 'Beratungsqualität', wert: 6 },
+                { name: 'Zufriedenheit mit dem Unternehmen', wert: 6 },
+                { name: 'Weiterempfehlung an Freunde', wert: 5 },
+                { name: 'Preis-Leistungs-Verhältnis', wert: 7 },
+                { name: 'Erreichbarkeit & Service', wert: 6 }
+            ]},
             vertraege: [
                 { typ: 'Berufsunfähigkeitsversicherung', versicherer: 'Allianz', details: 'BU-Rente: €1.200/Mon., Endalter 65 - UNTERDECKT', praemie: '€75/Mon.', beginn: '01.04.2015', status: 'Aktiv' },
                 { typ: 'Privathaftpflichtversicherung', versicherer: 'ERGO', details: 'Familie, €50 Mio. Deckung', praemie: '€85/Jahr', beginn: '01.01.2018', status: 'Aktiv' }
@@ -4226,6 +4289,13 @@ function fillKundenDetail(kundenName, vermittlerId) {
             beruf: 'Projektmanager',
             familienstand: 'Ledig',
             kinder: [],
+            nps: { score: 8, kategorie: 'promoter', details: [
+                { name: 'Beratungsqualität', wert: 8 },
+                { name: 'Zufriedenheit mit dem Unternehmen', wert: 8 },
+                { name: 'Weiterempfehlung an Freunde', wert: 9 },
+                { name: 'Preis-Leistungs-Verhältnis', wert: 7 },
+                { name: 'Erreichbarkeit & Service', wert: 8 }
+            ]},
             vertraege: [
                 { typ: 'Rechtsschutzversicherung', versicherer: 'ERGO', details: 'Beruf & Privat, €300 SB', praemie: '€280/Jahr', beginn: '01.06.2021', status: 'Aktiv' }
             ],
@@ -4243,6 +4313,13 @@ function fillKundenDetail(kundenName, vermittlerId) {
             beruf: 'Dachdecker (Meister)',
             familienstand: 'Verheiratet',
             kinder: [{ name: 'Felix', alter: 9 }, { name: 'Marie', alter: 7 }, { name: 'Ben', alter: 3 }],
+            nps: { score: 3, kategorie: 'detractor', details: [
+                { name: 'Beratungsqualität', wert: 4 },
+                { name: 'Zufriedenheit mit dem Unternehmen', wert: 2 },
+                { name: 'Weiterempfehlung an Freunde', wert: 3 },
+                { name: 'Preis-Leistungs-Verhältnis', wert: 2 },
+                { name: 'Erreichbarkeit & Service', wert: 4 }
+            ]},
             vertraege: [
                 { typ: 'Unfallversicherung', versicherer: 'ERGO', details: 'Invalidität €150.000, Progression 500%', praemie: '€320/Jahr', beginn: '01.03.2017', status: 'Aktiv' },
                 { typ: 'Wohngebäudeversicherung', versicherer: 'VHV', details: 'Vers.-Summe: €380.000, inkl. Elementar', praemie: '€520/Jahr', beginn: '01.07.2016', status: 'Aktiv' }
@@ -4261,6 +4338,13 @@ function fillKundenDetail(kundenName, vermittlerId) {
             beruf: 'Grafikdesignerin (selbstständig)',
             familienstand: 'In Partnerschaft',
             kinder: [{ name: 'Mila', alter: 2 }],
+            nps: { score: 9, kategorie: 'promoter', details: [
+                { name: 'Beratungsqualität', wert: 9 },
+                { name: 'Zufriedenheit mit dem Unternehmen', wert: 9 },
+                { name: 'Weiterempfehlung an Freunde', wert: 10 },
+                { name: 'Preis-Leistungs-Verhältnis', wert: 8 },
+                { name: 'Erreichbarkeit & Service', wert: 9 }
+            ]},
             vertraege: [
                 { typ: 'Berufsunfähigkeitsversicherung', versicherer: 'ERGO', details: 'BU-Rente: €1.000/Mon., Endalter 67 - Aufstockung empfohlen', praemie: '€68/Mon.', beginn: '01.09.2019', status: 'Aktiv' },
                 { typ: 'Betriebshaftpflicht', versicherer: 'Hiscox', details: '€2 Mio. Deckung, Freelancer-Tarif', praemie: '€290/Jahr', beginn: '01.01.2020', status: 'Aktiv' }
@@ -4307,6 +4391,25 @@ function fillKundenDetail(kundenName, vermittlerId) {
             kinderList.innerHTML = '<span class="no-children">Keine Kinder</span>';
         }
     }
+
+    // NPS
+    const npsBadge = document.getElementById('kundenNpsBadge');
+    const npsRows = document.getElementById('npsDetailRows');
+    if (npsBadge && kunde.nps) {
+        npsBadge.textContent = kunde.nps.score;
+        npsBadge.className = 'nps-badge ' + kunde.nps.kategorie + ' nps-clickable';
+        if (npsRows) {
+            npsRows.innerHTML = kunde.nps.details.map(d => {
+                const kat = d.wert >= 9 ? 'promoter' : (d.wert >= 7 ? 'passive' : 'detractor');
+                return `<div class="nps-detail-row">
+                    <span class="nps-detail-label">${d.name}</span>
+                    <span class="nps-badge ${kat}" style="width:24px;height:24px;font-size:11px;">${d.wert}</span>
+                </div>`;
+            }).join('');
+        }
+    }
+    const npsPopup = document.getElementById('npsDetailPopup');
+    if (npsPopup) npsPopup.style.display = 'none';
 
     // Verträge
     const vertraegeBody = document.getElementById('kundenVertraege');

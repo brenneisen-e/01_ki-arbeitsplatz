@@ -9438,6 +9438,142 @@ button svg,
     color: #1e293b;
 }
 
+/* NPS Style Switcher */
+.nps-style-switcher {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    padding: 8px 16px;
+    background: #1e293b;
+    border-radius: 10px;
+    user-select: none;
+}
+
+.nps-style-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border: none;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.nps-style-arrow:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.nps-style-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: white;
+    min-width: 220px;
+    text-align: center;
+}
+
+/* NPS Style 1: Fortschrittsbalken */
+.nps-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 100px;
+}
+
+.nps-bar-track {
+    flex: 1;
+    height: 8px;
+    background: #e2e8f0;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.nps-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.3s;
+}
+
+.nps-bar-fill.promoter { background: #2d5016; }
+.nps-bar-fill.passive { background: #f59e0b; }
+.nps-bar-fill.detractor { background: #ef4444; }
+
+.nps-bar-value {
+    font-size: 12px;
+    font-weight: 700;
+    min-width: 16px;
+    color: #334155;
+}
+
+/* NPS Style 2: Pill Badge mit Label */
+.nps-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    color: white;
+}
+
+.nps-pill.promoter { background: #2d5016; }
+.nps-pill.passive { background: #f59e0b; }
+.nps-pill.detractor { background: #ef4444; }
+
+.nps-pill-score {
+    font-weight: 800;
+}
+
+/* NPS Style 3: Sterne */
+.nps-stars {
+    display: inline-flex;
+    align-items: center;
+    gap: 1px;
+}
+
+.nps-star {
+    font-size: 14px;
+    line-height: 1;
+}
+
+.nps-star.filled { color: #f59e0b; }
+.nps-star.half { color: #f59e0b; opacity: 0.4; }
+.nps-star.empty { color: #e2e8f0; }
+
+/* NPS Style 4: Mini-Tacho */
+.nps-gauge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.nps-gauge-value {
+    font-size: 12px;
+    font-weight: 700;
+    color: #334155;
+}
+
+/* NPS Style 5: Emoji + Zahl */
+.nps-emoji {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #334155;
+}
+
+.nps-emoji-face {
+    font-size: 20px;
+    line-height: 1;
+}
+
 /* Kundenliste Tab */
 .kundenliste-header {
     display: flex;

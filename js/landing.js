@@ -4091,6 +4091,102 @@ function filterKundenliste(searchText) {
 }
 window.filterKundenliste = filterKundenliste;
 
+// ========================================
+// NPS DISPLAY STYLE SWITCHER
+// ========================================
+var currentNpsStyle = 0;
+var npsStyles = [
+    'Option 1: Fortschrittsbalken',
+    'Option 2: Pill-Badge mit Label',
+    'Option 3: Sterne-Rating',
+    'Option 4: Mini-Tacho',
+    'Option 5: Emoji + Zahl'
+];
+
+function switchNpsStyle(direction) {
+    currentNpsStyle = (currentNpsStyle + direction + npsStyles.length) % npsStyles.length;
+    var label = document.getElementById('npsStyleLabel');
+    if (label) label.textContent = npsStyles[currentNpsStyle];
+    renderNpsStyleAll();
+}
+window.switchNpsStyle = switchNpsStyle;
+
+function getNpsCategory(score) {
+    if (score >= 9) return 'promoter';
+    if (score >= 7) return 'passive';
+    return 'detractor';
+}
+
+function getNpsCategoryLabel(score) {
+    if (score >= 9) return 'Promoter';
+    if (score >= 7) return 'Passiv';
+    return 'Kritiker';
+}
+
+function renderNpsCell(score) {
+    var kat = getNpsCategory(score);
+    switch (currentNpsStyle) {
+        case 0: // Fortschrittsbalken
+            var pct = (score / 10) * 100;
+            return '<div class="nps-bar">' +
+                '<div class="nps-bar-track"><div class="nps-bar-fill ' + kat + '" style="width:' + pct + '%"></div></div>' +
+                '<span class="nps-bar-value">' + score + '</span></div>';
+        case 1: // Pill Badge
+            return '<span class="nps-pill ' + kat + '">' +
+                '<span class="nps-pill-score">' + score + '</span> ' +
+                getNpsCategoryLabel(score) + '</span>';
+        case 2: // Sterne
+            var stars = score / 2;
+            var full = Math.floor(stars);
+            var half = stars % 1 >= 0.5 ? 1 : 0;
+            var empty = 5 - full - half;
+            var html = '<span class="nps-stars">';
+            for (var i = 0; i < full; i++) html += '<span class="nps-star filled">\u2605</span>';
+            for (var i = 0; i < half; i++) html += '<span class="nps-star half">\u2605</span>';
+            for (var i = 0; i < empty; i++) html += '<span class="nps-star empty">\u2605</span>';
+            html += '</span>';
+            return html;
+        case 3: // Mini-Tacho SVG
+            var angle = -90 + (score / 10) * 180;
+            var color = kat === 'promoter' ? '#2d5016' : (kat === 'passive' ? '#f59e0b' : '#ef4444');
+            var rad = angle * Math.PI / 180;
+            var nx = 20 + 14 * Math.cos(rad);
+            var ny = 20 + 14 * Math.sin(rad);
+            return '<span class="nps-gauge">' +
+                '<svg width="40" height="24" viewBox="0 0 40 24">' +
+                '<path d="M 4 22 A 16 16 0 0 1 36 22" fill="none" stroke="#e2e8f0" stroke-width="3" stroke-linecap="round"/>' +
+                '<path d="M 4 22 A 16 16 0 0 1 36 22" fill="none" stroke="' + color + '" stroke-width="3" stroke-linecap="round" stroke-dasharray="' + (score / 10 * 50.3) + ' 50.3"/>' +
+                '<circle cx="' + nx.toFixed(1) + '" cy="' + ny.toFixed(1) + '" r="3" fill="' + color + '"/>' +
+                '</svg>' +
+                '<span class="nps-gauge-value">' + score + '</span></span>';
+        case 4: // Emoji + Zahl
+            var emoji = score >= 9 ? '\uD83D\uDE00' : (score >= 7 ? '\uD83D\uDE10' : '\uD83D\uDE1F');
+            return '<span class="nps-emoji"><span class="nps-emoji-face">' + emoji + '</span> ' + score + '</span>';
+        default:
+            return '<span class="nps-badge ' + kat + '">' + score + '</span>';
+    }
+}
+
+function renderNpsStyleAll() {
+    var rows = document.querySelectorAll('#kundenlisteTableBody tr');
+    rows.forEach(function(row) {
+        var cells = row.querySelectorAll('td');
+        if (cells.length >= 7) {
+            var npsCell = cells[6];
+            var badge = npsCell.querySelector('.nps-badge');
+            var score = npsCell.getAttribute('data-nps');
+            if (!score && badge) {
+                score = parseInt(badge.textContent);
+                npsCell.setAttribute('data-nps', score);
+            }
+            if (score) {
+                npsCell.innerHTML = renderNpsCell(parseInt(score));
+            }
+        }
+    });
+}
+window.renderNpsStyleAll = renderNpsStyleAll;
+
 /**
  * Navigiert zum Vertriebsbericht aus der Kundendetail-Seite
  */

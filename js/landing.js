@@ -1,6 +1,30 @@
 // js/landing.js - Landing Page Logic
 
 // ========================================
+// AUTO-ZOOM: Seite proportional skalieren
+// Optimiert für 27 Zoll (1920px Breite)
+// ========================================
+(function() {
+    var DESIGN_WIDTH = 1920;
+    var MIN_ZOOM = 0.55; // Nicht kleiner als 55%
+
+    function applyAutoZoom() {
+        var vw = window.innerWidth;
+        if (vw >= DESIGN_WIDTH) {
+            document.documentElement.style.zoom = '1';
+        } else {
+            var zoom = Math.max(vw / DESIGN_WIDTH, MIN_ZOOM);
+            document.documentElement.style.zoom = zoom;
+        }
+    }
+
+    // Sofort beim Laden + bei Resize
+    applyAutoZoom();
+    window.addEventListener('resize', applyAutoZoom);
+    window.addEventListener('DOMContentLoaded', applyAutoZoom);
+})();
+
+// ========================================
 // CLAUDE API CONFIGURATION
 // ========================================
 

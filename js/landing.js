@@ -1,6 +1,30 @@
 // js/landing.js - Landing Page Logic
 
 // ========================================
+// AUTO-ZOOM: Seite proportional skalieren
+// Optimiert für 27 Zoll (1920px Breite)
+// ========================================
+(function() {
+    var DESIGN_WIDTH = 1920;
+    var MIN_ZOOM = 0.55; // Nicht kleiner als 55%
+
+    function applyAutoZoom() {
+        var vw = window.innerWidth;
+        if (vw >= DESIGN_WIDTH) {
+            document.documentElement.style.zoom = '1';
+        } else {
+            var zoom = Math.max(vw / DESIGN_WIDTH, MIN_ZOOM);
+            document.documentElement.style.zoom = zoom;
+        }
+    }
+
+    // Sofort beim Laden + bei Resize
+    applyAutoZoom();
+    window.addEventListener('resize', applyAutoZoom);
+    window.addEventListener('DOMContentLoaded', applyAutoZoom);
+})();
+
+// ========================================
 // CLAUDE API CONFIGURATION
 // ========================================
 
@@ -4038,29 +4062,31 @@ function switchKundeDropdown(kundenName) {
 }
 window.switchKundeDropdown = switchKundeDropdown;
 
-function toggleNpsDetail() {
+function showNpsDetail() {
     var popup = document.getElementById('npsDetailPopup');
     if (!popup) return;
-    if (popup.style.display === 'none') {
-        var badge = document.getElementById('kundenNpsBadge');
-        if (badge) {
-            var rect = badge.getBoundingClientRect();
-            popup.style.left = rect.left + 'px';
-            popup.style.top = (rect.bottom + 8) + 'px';
-            // If popup would go below viewport, show above instead
-            popup.style.display = 'block';
-            var popupRect = popup.getBoundingClientRect();
-            if (popupRect.bottom > window.innerHeight) {
-                popup.style.top = (rect.top - popupRect.height - 8) + 'px';
-            }
-        } else {
-            popup.style.display = 'block';
+    var wrapper = document.getElementById('kundenNpsWrapper');
+    if (wrapper) {
+        var rect = wrapper.getBoundingClientRect();
+        popup.style.left = rect.left + 'px';
+        popup.style.top = (rect.bottom + 4) + 'px';
+        popup.style.display = 'block';
+        var popupRect = popup.getBoundingClientRect();
+        if (popupRect.bottom > window.innerHeight) {
+            popup.style.top = (rect.top - popupRect.height - 4) + 'px';
         }
-    } else {
-        popup.style.display = 'none';
+        if (popupRect.right > window.innerWidth) {
+            popup.style.left = (window.innerWidth - popupRect.width - 16) + 'px';
+        }
     }
 }
-window.toggleNpsDetail = toggleNpsDetail;
+window.showNpsDetail = showNpsDetail;
+
+function hideNpsDetail() {
+    var popup = document.getElementById('npsDetailPopup');
+    if (popup) popup.style.display = 'none';
+}
+window.hideNpsDetail = hideNpsDetail;
 
 // ========================================
 // KUNDE STICKY BAR
@@ -4165,13 +4191,18 @@ function fillKundenDetail(kundenName, vermittlerId) {
     const mockKunden = {
         'Peter Schmidt': {
             geburtsdatum: '15.03.1985',
-            adresse: 'Musterstraße 123, 12345 Musterstadt',
+            adresse: 'Musterstra\u00DFe 123, 12345 Musterstadt',
             telefon: '+49 123 456789',
             email: 'peter.schmidt@email.de',
             beruf: 'Angestellter',
             familienstand: 'Verheiratet',
+            arbeitgeber: 'TechCorp GmbH',
+            beschaeftigtSeit: '01.03.2016',
+            tiere: 'unbekannt',
+            risikoscore: 35,
+            bonitaetsscore: 82,
             kinder: [{ name: 'Lena', alter: 8 }, { name: 'Paul', alter: 5 }],
-            nps: { score: 9, kategorie: 'promoter', details: [
+            nps: { score: 9, kategorie: 'promoter', datum: '15.10.2025', kampagne: 'Herbst-Zufriedenheitsbefragung 2025 (E-Mail)', details: [
                 { name: 'Beratungsqualität', wert: 9 },
                 { name: 'Zufriedenheit mit dem Unternehmen', wert: 8 },
                 { name: 'Weiterempfehlung an Freunde', wert: 10 },
@@ -4195,8 +4226,13 @@ function fillKundenDetail(kundenName, vermittlerId) {
             email: 'sabine.koenig@email.de',
             beruf: 'Lehrerin',
             familienstand: 'Geschieden',
+            arbeitgeber: 'Stadtverwaltung Köln',
+            beschaeftigtSeit: '01.08.2008',
+            tiere: 'keine',
+            risikoscore: 22,
+            bonitaetsscore: 75,
             kinder: [{ name: 'Max', alter: 12 }],
-            nps: { score: 7, kategorie: 'passive', details: [
+            nps: { score: 7, kategorie: 'passive', datum: '08.10.2025', kampagne: 'Herbst-Zufriedenheitsbefragung 2025 (E-Mail)', details: [
                 { name: 'Beratungsqualität', wert: 7 },
                 { name: 'Zufriedenheit mit dem Unternehmen', wert: 6 },
                 { name: 'Weiterempfehlung an Freunde', wert: 7 },
@@ -4220,8 +4256,13 @@ function fillKundenDetail(kundenName, vermittlerId) {
             email: 'thomas.weber@email.de',
             beruf: 'Software-Entwickler',
             familienstand: 'Ledig',
+            arbeitgeber: 'SAP SE',
+            beschaeftigtSeit: '15.06.2020',
+            tiere: 'Katze (Mietze)',
+            risikoscore: 28,
+            bonitaetsscore: 88,
             kinder: [],
-            nps: { score: 8, kategorie: 'promoter', details: [
+            nps: { score: 8, kategorie: 'promoter', datum: '03.11.2025', kampagne: 'Nach-Beratungs-Feedback (E-Mail)', details: [
                 { name: 'Beratungsqualität', wert: 8 },
                 { name: 'Zufriedenheit mit dem Unternehmen', wert: 7 },
                 { name: 'Weiterempfehlung an Freunde', wert: 9 },
@@ -4244,8 +4285,13 @@ function fillKundenDetail(kundenName, vermittlerId) {
             email: 'anna.hoffmann@email.de',
             beruf: 'Marketing-Managerin',
             familienstand: 'Verheiratet',
+            arbeitgeber: 'Universitätsklinikum Köln',
+            beschaeftigtSeit: '01.04.2015',
+            tiere: 'keine',
+            risikoscore: 15,
+            bonitaetsscore: 91,
             kinder: [{ name: 'Sophie', alter: 3 }, { name: 'Emma', alter: 1 }],
-            nps: { score: 10, kategorie: 'promoter', details: [
+            nps: { score: 10, kategorie: 'promoter', datum: '15.10.2025', kampagne: 'Herbst-Zufriedenheitsbefragung 2025 (E-Mail)', details: [
                 { name: 'Beratungsqualität', wert: 10 },
                 { name: 'Zufriedenheit mit dem Unternehmen', wert: 9 },
                 { name: 'Weiterempfehlung an Freunde', wert: 10 },
@@ -4268,8 +4314,13 @@ function fillKundenDetail(kundenName, vermittlerId) {
             email: 'michael.braun@email.de',
             beruf: 'Geschäftsführer',
             familienstand: 'Verheiratet',
+            arbeitgeber: 'Meisterbetrieb Braun GmbH',
+            beschaeftigtSeit: '01.01.2005',
+            tiere: 'Hund (Rex)',
+            risikoscore: 55,
+            bonitaetsscore: 58,
             kinder: [{ name: 'Lukas', alter: 18 }, { name: 'Jana', alter: 15 }],
-            nps: { score: 4, kategorie: 'detractor', details: [
+            nps: { score: 4, kategorie: 'detractor', datum: '22.09.2025', kampagne: 'Jahres-Kundenbefragung Q3/2025 (Brief)', details: [
                 { name: 'Beratungsqualität', wert: 5 },
                 { name: 'Zufriedenheit mit dem Unternehmen', wert: 3 },
                 { name: 'Weiterempfehlung an Freunde', wert: 4 },
@@ -4294,8 +4345,13 @@ function fillKundenDetail(kundenName, vermittlerId) {
             email: 'lisa.mueller@email.de',
             beruf: 'Ärztin (Assistenz)',
             familienstand: 'In Partnerschaft',
+            arbeitgeber: 'Medienhaus München GmbH',
+            beschaeftigtSeit: '01.09.2017',
+            tiere: 'keine',
+            risikoscore: 20,
+            bonitaetsscore: 80,
             kinder: [],
-            nps: { score: 7, kategorie: 'passive', details: [
+            nps: { score: 7, kategorie: 'passive', datum: '08.10.2025', kampagne: 'Herbst-Zufriedenheitsbefragung 2025 (E-Mail)', details: [
                 { name: 'Beratungsqualität', wert: 8 },
                 { name: 'Zufriedenheit mit dem Unternehmen', wert: 7 },
                 { name: 'Weiterempfehlung an Freunde', wert: 7 },
@@ -4318,8 +4374,13 @@ function fillKundenDetail(kundenName, vermittlerId) {
             email: 'klaus.meier@email.de',
             beruf: 'Selbstständig (Handwerk)',
             familienstand: 'Verheiratet',
+            arbeitgeber: 'Freelance IT-Consulting',
+            beschaeftigtSeit: '01.03.2019',
+            tiere: 'keine',
+            risikoscore: 30,
+            bonitaetsscore: 85,
             kinder: [{ name: 'Tim', alter: 10 }, { name: 'Mia', alter: 7 }],
-            nps: { score: 9, kategorie: 'promoter', details: [
+            nps: { score: 9, kategorie: 'promoter', datum: '15.10.2025', kampagne: 'Herbst-Zufriedenheitsbefragung 2025 (E-Mail)', details: [
                 { name: 'Beratungsqualität', wert: 9 },
                 { name: 'Zufriedenheit mit dem Unternehmen', wert: 9 },
                 { name: 'Weiterempfehlung an Freunde', wert: 10 },
@@ -4342,8 +4403,13 @@ function fillKundenDetail(kundenName, vermittlerId) {
             email: 'matthias.engel@email.de',
             beruf: 'IT-Consultant',
             familienstand: 'Verheiratet',
+            arbeitgeber: 'Bauer Architekturbüro',
+            beschaeftigtSeit: '01.07.2012',
+            tiere: 'keine',
+            risikoscore: 18,
+            bonitaetsscore: 78,
             kinder: [{ name: 'Jonas', alter: 6 }, { name: 'Lea', alter: 4 }],
-            nps: { score: 6, kategorie: 'passive', details: [
+            nps: { score: 6, kategorie: 'passive', datum: '08.10.2025', kampagne: 'Herbst-Zufriedenheitsbefragung 2025 (E-Mail)', details: [
                 { name: 'Beratungsqualität', wert: 6 },
                 { name: 'Zufriedenheit mit dem Unternehmen', wert: 6 },
                 { name: 'Weiterempfehlung an Freunde', wert: 5 },
@@ -4367,8 +4433,13 @@ function fillKundenDetail(kundenName, vermittlerId) {
             email: 'christian.bauer@email.de',
             beruf: 'Projektmanager',
             familienstand: 'Ledig',
+            arbeitgeber: 'DesignStudio Hamburg',
+            beschaeftigtSeit: '01.10.2021',
+            tiere: 'Hamster',
+            risikoscore: 25,
+            bonitaetsscore: 72,
             kinder: [],
-            nps: { score: 8, kategorie: 'promoter', details: [
+            nps: { score: 8, kategorie: 'promoter', datum: '03.11.2025', kampagne: 'Nach-Beratungs-Feedback (E-Mail)', details: [
                 { name: 'Beratungsqualität', wert: 8 },
                 { name: 'Zufriedenheit mit dem Unternehmen', wert: 8 },
                 { name: 'Weiterempfehlung an Freunde', wert: 9 },
@@ -4391,8 +4462,13 @@ function fillKundenDetail(kundenName, vermittlerId) {
             email: 'martin.wolf@email.de',
             beruf: 'Dachdecker (Meister)',
             familienstand: 'Verheiratet',
+            arbeitgeber: 'Kanzlei Wolf & Partner',
+            beschaeftigtSeit: '01.02.2003',
+            tiere: 'Hund (Bruno)',
+            risikoscore: 12,
+            bonitaetsscore: 93,
             kinder: [{ name: 'Felix', alter: 9 }, { name: 'Marie', alter: 7 }, { name: 'Ben', alter: 3 }],
-            nps: { score: 3, kategorie: 'detractor', details: [
+            nps: { score: 3, kategorie: 'detractor', datum: '22.09.2025', kampagne: 'Jahres-Kundenbefragung Q3/2025 (Brief)', details: [
                 { name: 'Beratungsqualität', wert: 4 },
                 { name: 'Zufriedenheit mit dem Unternehmen', wert: 2 },
                 { name: 'Weiterempfehlung an Freunde', wert: 3 },
@@ -4416,8 +4492,13 @@ function fillKundenDetail(kundenName, vermittlerId) {
             email: 'eva.hartmann@email.de',
             beruf: 'Grafikdesignerin (selbstständig)',
             familienstand: 'In Partnerschaft',
+            arbeitgeber: 'Schmidt Holding AG',
+            beschaeftigtSeit: '01.01.1995',
+            tiere: 'keine',
+            risikoscore: 10,
+            bonitaetsscore: 95,
             kinder: [{ name: 'Mila', alter: 2 }],
-            nps: { score: 9, kategorie: 'promoter', details: [
+            nps: { score: 9, kategorie: 'promoter', datum: '15.10.2025', kampagne: 'Herbst-Zufriedenheitsbefragung 2025 (E-Mail)', details: [
                 { name: 'Beratungsqualität', wert: 9 },
                 { name: 'Zufriedenheit mit dem Unternehmen', wert: 9 },
                 { name: 'Weiterempfehlung an Freunde', wert: 10 },
@@ -4471,12 +4552,24 @@ function fillKundenDetail(kundenName, vermittlerId) {
         }
     }
 
-    // NPS (Stars)
+    // NPS (Stars + Survey Meta)
     const npsBadge = document.getElementById('kundenNpsBadge');
     const npsRows = document.getElementById('npsDetailRows');
+    const npsSurveyMeta = document.getElementById('npsSurveyMeta');
+    const npsDetailSurvey = document.getElementById('npsDetailSurvey');
     if (npsBadge && kunde.nps) {
         npsBadge.innerHTML = renderNpsStars(kunde.nps.score, 'nps-stars-display');
-        npsBadge.className = 'nps-stars-display nps-clickable';
+        npsBadge.className = 'nps-stars-display';
+        // Survey date + campaign info inline
+        if (npsSurveyMeta) {
+            npsSurveyMeta.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> ' +
+                (kunde.nps.datum || '') + ' &mdash; ' + (kunde.nps.kampagne || '');
+        }
+        // Popup header with survey info
+        if (npsDetailSurvey) {
+            npsDetailSurvey.innerHTML = '<span class="nps-survey-date">' + (kunde.nps.datum || '') + '</span>' +
+                '<span class="nps-survey-kampagne">' + (kunde.nps.kampagne || '') + '</span>';
+        }
         if (npsRows) {
             npsRows.innerHTML = kunde.nps.details.map(d => {
                 return `<div class="nps-detail-row">
@@ -4488,6 +4581,45 @@ function fillKundenDetail(kundenName, vermittlerId) {
     }
     const npsPopup = document.getElementById('npsDetailPopup');
     if (npsPopup) npsPopup.style.display = 'none';
+
+    // Arbeitgeber + Beschäftigt seit
+    const arbeitgeberEl = document.getElementById('kundenArbeitgeber');
+    if (arbeitgeberEl) arbeitgeberEl.textContent = kunde.arbeitgeber || '—';
+    const beschaeftigtEl = document.getElementById('kundenBeschaeftigtSeit');
+    if (beschaeftigtEl) beschaeftigtEl.textContent = kunde.beschaeftigtSeit || '—';
+
+    // Tiere
+    const tiereEl = document.getElementById('kundenTiere');
+    if (tiereEl) {
+        if (kunde.tiere === 'unbekannt') {
+            tiereEl.innerHTML = '<span class="tier-unknown-badge" id="kundenTiereBadge">' +
+                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> ' +
+                'Hinweise aus Kontoumsätzen</span>';
+        } else if (kunde.tiere === 'keine') {
+            tiereEl.innerHTML = '<span class="tier-none-badge">Keine bekannt</span>';
+        } else {
+            tiereEl.innerHTML = '<span class="tier-known-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M10 5.172C10 3.782 8.884 2.5 7.5 2.5S5 3.782 5 5.172c0 1.39 2.5 4.328 2.5 4.328S10 6.562 10 5.172z"/><path d="M19 5.172C19 3.782 17.884 2.5 16.5 2.5S14 3.782 14 5.172c0 1.39 2.5 4.328 2.5 4.328S19 6.562 19 5.172z"/><path d="M12 22c-4-3-8-6.58-8-10.5a4 4 0 018 0 4 4 0 018 0c0 3.92-4 7.5-8 10.5z"/></svg> ' +
+                kunde.tiere + '</span>';
+        }
+    }
+
+    // Risikoscore (0-100)
+    const risikoEl = document.getElementById('risikoScoreDisplay');
+    if (risikoEl && kunde.risikoscore !== undefined) {
+        var rColor = kunde.risikoscore <= 30 ? '#16a34a' : (kunde.risikoscore <= 60 ? '#d97706' : '#dc2626');
+        var rLabel = kunde.risikoscore <= 30 ? 'Niedrig' : (kunde.risikoscore <= 60 ? 'Mittel' : 'Hoch');
+        risikoEl.innerHTML = '<div class="score-bar-track"><div class="score-bar-fill" style="width:' + kunde.risikoscore + '%;background:' + rColor + '"></div></div>' +
+            '<span class="score-bar-value" style="color:' + rColor + '">' + kunde.risikoscore + ' <small>(' + rLabel + ')</small></span>';
+    }
+
+    // Bonitätsscore (0-100)
+    const bonitaetEl = document.getElementById('bonitaetScoreDisplay');
+    if (bonitaetEl && kunde.bonitaetsscore !== undefined) {
+        var bColor = kunde.bonitaetsscore >= 70 ? '#16a34a' : (kunde.bonitaetsscore >= 40 ? '#d97706' : '#dc2626');
+        var bLabel = kunde.bonitaetsscore >= 70 ? 'Gut' : (kunde.bonitaetsscore >= 40 ? 'Mittel' : 'Schwach');
+        bonitaetEl.innerHTML = '<div class="score-bar-track"><div class="score-bar-fill" style="width:' + kunde.bonitaetsscore + '%;background:' + bColor + '"></div></div>' +
+            '<span class="score-bar-value" style="color:' + bColor + '">' + kunde.bonitaetsscore + ' <small>(' + bLabel + ')</small></span>';
+    }
 
     // Verträge
     const vertraegeBody = document.getElementById('kundenVertraege');
@@ -5768,38 +5900,43 @@ window.loadUserProfileImages = loadUserProfileImages;
 // ========================================
 var currentBezahlenOption = 0;
 var bezahlenOptions = ['Option 1: Donut + Akkordeon', 'Option 2: Stacked Bar + Flat Cards', 'Option 3: Kategorie-Grid'];
+var currentDonutVariant = 0;
+var donutVariants = ['1A: Klassisch', '1B: Kompakt zentriert', '1C: Side-by-Side', '1D: Ring + Flat List', '1E: Mini-Karten Grid'];
 
 var bezahlenData = [
-    { name: 'Wohnen', amount: 1450, color: '#3b82f6', icon: '\uD83C\uDFE0', items: [
-        { name: 'Miete Wohnung', amount: 1200, badge: 'versichert' },
-        { name: 'Nebenkosten', amount: 180 },
-        { name: 'Strom/Gas', amount: 70 }
+    { name: 'Wohnen', amount: 1390, color: '#3b82f6', icon: '\uD83C\uDFE0', items: [
+        { name: 'Miete Wohnung', amount: 1200, datum: '01.11.2025', badge: 'versichert' },
+        { name: 'Nebenkosten', amount: 120, datum: '01.11.2025' },
+        { name: 'Strom/Gas EnBW', amount: 70, datum: '03.11.2025' }
     ]},
     { name: 'Versicherungen', amount: 520, color: '#10b981', icon: '\uD83D\uDEE1\uFE0F', items: [
-        { name: 'Berufsunfähigkeit (ERGO)', amount: 89, badge: 'versichert' },
-        { name: 'Wohngebäude (VHV)', amount: 38, badge: 'versichert' },
-        { name: 'Kfz-Versicherung (Allianz)', amount: 60, badge: 'luecke' },
-        { name: 'Private Haftpflicht', amount: 12, badge: 'versichert' },
-        { name: 'Rechtsschutz', amount: 25 },
-        { name: 'Krankenversicherung', amount: 296 }
+        { name: 'Berufsunf\u00E4higkeit (ERGO)', amount: 89, datum: '01.11.2025', badge: 'versichert' },
+        { name: 'Wohngeb\u00E4ude (VHV)', amount: 38, datum: '01.11.2025', badge: 'versichert' },
+        { name: 'Kfz-Versicherung (Allianz)', amount: 60, datum: '01.11.2025', badge: 'luecke' },
+        { name: 'Private Haftpflicht', amount: 12, datum: '01.11.2025', badge: 'versichert' },
+        { name: 'Rechtsschutz', amount: 25, datum: '01.11.2025' },
+        { name: 'Krankenversicherung', amount: 296, datum: '01.11.2025' }
     ]},
-    { name: 'Kredit & Finanzierung', amount: 540, color: '#8b5cf6', icon: '\uD83C\uDFE6', items: [
-        { name: 'Hypothek Sparkasse', amount: 540, badge: 'luecke' }
+    { name: 'Kredit & Finanzierung', amount: 330, color: '#8b5cf6', icon: '\uD83C\uDFE6', items: [
+        { name: 'Hypothek Sparkasse', amount: 330, datum: '05.11.2025', badge: 'luecke' }
     ]},
-    { name: 'Lebensmittel & Alltag', amount: 380, color: '#f59e0b', icon: '\uD83D\uDED2', items: [
-        { name: 'Supermarkt (Ø)', amount: 320 },
-        { name: 'Drogerie', amount: 60 }
+    { name: 'Lebensmittel & Alltag', amount: 320, color: '#f59e0b', icon: '\uD83D\uDED2', items: [
+        { name: 'REWE Supermarkt', amount: 145, datum: '08.11.2025' },
+        { name: 'EDEKA', amount: 95, datum: '15.11.2025' },
+        { name: 'dm Drogerie', amount: 35, datum: '10.11.2025' },
+        { name: 'Fressnapf Tiernahrung', amount: 45, datum: '12.11.2025', badge: 'insight', insight: 'Tierhalter \u2013 Haftpflicht/KV?' }
     ]},
-    { name: 'Mobilität', amount: 210, color: '#ef4444', icon: '\uD83D\uDE97', items: [
-        { name: 'Tankstelle / Laden', amount: 130 },
-        { name: 'ADAC / Wartung', amount: 45 },
-        { name: 'Parkgebühren', amount: 35 }
+    { name: 'Mobilit\u00E4t', amount: 130, color: '#ef4444', icon: '\uD83D\uDE97', items: [
+        { name: 'ARAL Tankstelle', amount: 85, datum: '06.11.2025' },
+        { name: 'ADAC Mitgliedschaft', amount: 30, datum: '01.11.2025' },
+        { name: 'Parkhaus Innenstadt', amount: 15, datum: '09.11.2025' }
     ]},
-    { name: 'Freizeit & Sonstiges', amount: 290, color: '#06b6d4', icon: '\uD83C\uDFAD', items: [
-        { name: 'Restaurant / Lieferdienst', amount: 120 },
-        { name: 'Streaming / Abos', amount: 45 },
-        { name: 'Sport / Fitness', amount: 50 },
-        { name: 'Sonstiges', amount: 75 }
+    { name: 'Freizeit & Hobbies', amount: 200, color: '#06b6d4', icon: '\uD83C\uDFAD', items: [
+        { name: 'Restaurant / Lieferdienst', amount: 80, datum: '11.11.2025' },
+        { name: 'Netflix / Spotify', amount: 30, datum: '01.11.2025' },
+        { name: 'FitX Fitness', amount: 40, datum: '01.11.2025' },
+        { name: 'Skydive Academy Stuttgart', amount: 25, datum: '14.11.2025', badge: 'insight', insight: 'Risikosport \u2013 Unfallvers. pr\u00FCfen!' },
+        { name: 'Bungee Events GmbH', amount: 25, datum: '22.10.2025', badge: 'insight', insight: 'Extremsport \u2013 Risikopr\u00FCfung BU?' }
     ]}
 ];
 
@@ -5811,58 +5948,173 @@ function switchBezahlenOption(direction) {
 }
 window.switchBezahlenOption = switchBezahlenOption;
 
+function switchDonutVariant(direction) {
+    currentDonutVariant = (currentDonutVariant + direction + donutVariants.length) % donutVariants.length;
+    var label = document.getElementById('donutVariantLabel');
+    if (label) label.textContent = donutVariants[currentDonutVariant];
+    renderBezahlenContent();
+}
+window.switchDonutVariant = switchDonutVariant;
+
 function renderBezahlenContent() {
     var container = document.getElementById('bezahlenContent');
     if (!container) return;
     var total = bezahlenData.reduce(function(s, c) { return s + c.amount; }, 0);
 
+    var content = '';
     switch (currentBezahlenOption) {
-        case 0: container.innerHTML = renderBezahlenDonut(total); break;
+        case 0:
+            // Sub-switcher for Donut+Akkordeon variants
+            content += '<div class="donut-variant-switcher">' +
+                '<span class="option-switcher-arrow" onclick="switchDonutVariant(-1)">&lsaquo;</span>' +
+                '<span class="option-switcher-label" id="donutVariantLabel">' + donutVariants[currentDonutVariant] + '</span>' +
+                '<span class="option-switcher-arrow" onclick="switchDonutVariant(1)">&rsaquo;</span></div>';
+            switch (currentDonutVariant) {
+                case 0: content += renderBezahlenDonutA(total); break;
+                case 1: content += renderBezahlenDonutB(total); break;
+                case 2: content += renderBezahlenDonutC(total); break;
+                case 3: content += renderBezahlenDonutD(total); break;
+                case 4: content += renderBezahlenDonutE(total); break;
+            }
+            container.innerHTML = content;
+            break;
         case 1: container.innerHTML = renderBezahlenStacked(total); break;
         case 2: container.innerHTML = renderBezahlenGrid(total); break;
     }
 }
 
-function renderBezahlenDonut(total) {
-    var svgSize = 140, cx = 70, cy = 70, r = 55;
+// Shared helper: generate donut SVG
+function buildDonutSvg(total, svgSize, strokeW) {
+    var cx = svgSize/2, cy = svgSize/2, r = svgSize/2 - strokeW/2 - 5;
     var circ = 2 * Math.PI * r;
     var offset = 0;
     var paths = '';
     bezahlenData.forEach(function(cat) {
         var pct = cat.amount / total;
         var dash = pct * circ;
-        paths += '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" fill="none" stroke="' + cat.color + '" stroke-width="20" stroke-dasharray="' + dash + ' ' + (circ - dash) + '" stroke-dashoffset="' + (-offset) + '" transform="rotate(-90 ' + cx + ' ' + cy + ')"/>';
+        paths += '<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="'+cat.color+'" stroke-width="'+strokeW+'" stroke-dasharray="'+dash+' '+(circ-dash)+'" stroke-dashoffset="'+(-offset)+'" transform="rotate(-90 '+cx+' '+cy+')"/>';
         offset += dash;
     });
+    return '<svg width="'+svgSize+'" height="'+svgSize+'" viewBox="0 0 '+svgSize+' '+svgSize+'">'+paths+
+        '<text x="'+cx+'" y="'+(cy-5)+'" text-anchor="middle" font-size="'+(svgSize>120?16:13)+'" font-weight="700" fill="#1e293b">\u20AC'+total+'</text>'+
+        '<text x="'+cx+'" y="'+(cy+12)+'" text-anchor="middle" font-size="'+(svgSize>120?10:9)+'" fill="#94a3b8">/Monat</text></svg>';
+}
 
-    var donutSvg = '<svg width="' + svgSize + '" height="' + svgSize + '" viewBox="0 0 ' + svgSize + ' ' + svgSize + '">' + paths +
-        '<text x="' + cx + '" y="' + (cy - 5) + '" text-anchor="middle" font-size="16" font-weight="700" fill="#1e293b">\u20AC' + total + '</text>' +
-        '<text x="' + cx + '" y="' + (cy + 12) + '" text-anchor="middle" font-size="10" fill="#94a3b8">/Monat</text></svg>';
+// Shared helper: build tx items HTML
+function buildTxItems(cat) {
+    return cat.items.map(function(tx) {
+        var badge = '';
+        if (tx.badge === 'versichert') badge = '<span class="bezahlen-tx-badge versichert">Versichert</span>';
+        if (tx.badge === 'luecke') badge = '<span class="bezahlen-tx-badge luecke">L\u00FCcke</span>';
+        if (tx.badge === 'insight') badge = '<span class="bezahlen-tx-badge insight">\u26A0 ' + (tx.insight || '') + '</span>';
+        var datum = tx.datum ? '<span class="bezahlen-tx-datum">' + tx.datum + '</span>' : '';
+        return '<div class="bezahlen-tx-item"><span class="bezahlen-tx-name">' + tx.name + datum + '</span><span class="bezahlen-tx-amount">\u20AC' + tx.amount + badge + '</span></div>';
+    }).join('');
+}
 
+// Shared helper: build standard akkordeon
+function buildAkkordeon() {
+    return bezahlenData.map(function(cat) {
+        return '<div class="bezahlen-kat-header" onclick="toggleBezahlenKat(\'' + cat.name + '\')">' +
+            '<span class="bezahlen-kat-dot" style="background:' + cat.color + '"></span>' +
+            '<span class="bezahlen-kat-name">' + cat.name + '</span>' +
+            '<span class="bezahlen-kat-amount">\u20AC' + cat.amount + '/Mon.</span>' +
+            '<span class="bezahlen-kat-arrow" id="bezArrow_' + cat.name.replace(/\s/g,'_') + '">\u25BC</span></div>' +
+            '<div class="bezahlen-kat-detail" id="bezDetail_' + cat.name.replace(/\s/g,'_') + '">' + buildTxItems(cat) + '</div>';
+    }).join('');
+}
+
+// Variant A: Klassisch - Donut links + Legende rechts, Akkordeon darunter
+function renderBezahlenDonutA(total) {
+    var donutSvg = buildDonutSvg(total, 140, 20);
     var legend = bezahlenData.map(function(cat) {
         return '<div class="bezahlen-legend-item" onclick="toggleBezahlenKat(\'' + cat.name + '\')">' +
             '<span class="bezahlen-legend-dot" style="background:' + cat.color + '"></span>' +
             '<span class="bezahlen-legend-label">' + cat.name + '</span>' +
             '<span class="bezahlen-legend-value">\u20AC' + cat.amount + '</span></div>';
     }).join('');
+    return '<div class="bezahlen-donut-container"><div class="bezahlen-donut-chart">' + donutSvg + '</div><div class="bezahlen-donut-legend">' + legend + '</div></div>' +
+        '<div class="bezahlen-akkordeon">' + buildAkkordeon() + '</div>';
+}
 
-    var akkordeon = bezahlenData.map(function(cat) {
-        var items = cat.items.map(function(tx) {
+// Variant B: Kompakt zentriert - Donut mittig oben, darunter Legende als Chips, dann Akkordeon
+function renderBezahlenDonutB(total) {
+    var donutSvg = buildDonutSvg(total, 120, 16);
+    var chips = bezahlenData.map(function(cat) {
+        var pct = (cat.amount / total * 100).toFixed(0);
+        return '<span class="bezahlen-chip" onclick="toggleBezahlenKat(\'' + cat.name + '\')" style="border-color:' + cat.color + ';color:' + cat.color + '">' +
+            cat.icon + ' ' + cat.name + ' <strong>' + pct + '%</strong></span>';
+    }).join('');
+    return '<div class="bezahlen-donut-centered"><div class="bezahlen-donut-chart">' + donutSvg + '</div>' +
+        '<div class="bezahlen-chips">' + chips + '</div></div>' +
+        '<div class="bezahlen-akkordeon">' + buildAkkordeon() + '</div>';
+}
+
+// Variant C: Side-by-Side - Donut links, Akkordeon rechts (kein Legende-Block)
+function renderBezahlenDonutC(total) {
+    var donutSvg = buildDonutSvg(total, 160, 22);
+    return '<div class="bezahlen-side-by-side">' +
+        '<div class="bezahlen-side-donut">' + donutSvg + '</div>' +
+        '<div class="bezahlen-side-akkordeon"><div class="bezahlen-akkordeon">' + buildAkkordeon() + '</div></div>' +
+        '</div>';
+}
+
+// Variant D: Ring + Flat List - Thin ring, all transactions visible, no accordion collapse
+function renderBezahlenDonutD(total) {
+    var cx = 80, cy = 80, r = 65;
+    var circ = 2 * Math.PI * r;
+    var offset = 0;
+    var paths = '';
+    bezahlenData.forEach(function(cat) {
+        var pct = cat.amount / total;
+        var dash = pct * circ;
+        paths += '<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="'+cat.color+'" stroke-width="10" stroke-dasharray="'+dash+' '+(circ-dash)+'" stroke-dashoffset="'+(-offset)+'" transform="rotate(-90 '+cx+' '+cy+')"/>';
+        offset += dash;
+    });
+    var ring = '<svg width="160" height="160" viewBox="0 0 160 160">' + paths +
+        '<text x="80" y="75" text-anchor="middle" font-size="18" font-weight="700" fill="#1e293b">\u20AC' + total + '</text>' +
+        '<text x="80" y="93" text-anchor="middle" font-size="10" fill="#94a3b8">/Monat</text></svg>';
+
+    var flatList = bezahlenData.map(function(cat) {
+        var txRows = cat.items.map(function(tx) {
             var badge = '';
             if (tx.badge === 'versichert') badge = '<span class="bezahlen-tx-badge versichert">Versichert</span>';
             if (tx.badge === 'luecke') badge = '<span class="bezahlen-tx-badge luecke">L\u00FCcke</span>';
-            return '<div class="bezahlen-tx-item"><span class="bezahlen-tx-name">' + tx.name + '</span><span class="bezahlen-tx-amount">\u20AC' + tx.amount + badge + '</span></div>';
+            if (tx.badge === 'insight') badge = '<span class="bezahlen-tx-badge insight">\u26A0 ' + (tx.insight || '') + '</span>';
+            var datum = tx.datum ? '<span class="bezahlen-tx-datum">' + tx.datum + '</span>' : '';
+            return '<div class="bezahlen-flat-tx"><span class="bezahlen-tx-name">' + tx.name + datum + '</span><span class="bezahlen-tx-amount">\u20AC' + tx.amount + badge + '</span></div>';
         }).join('');
-        return '<div class="bezahlen-kat-header" onclick="toggleBezahlenKat(\'' + cat.name + '\')">' +
-            '<span class="bezahlen-kat-dot" style="background:' + cat.color + '"></span>' +
-            '<span class="bezahlen-kat-name">' + cat.name + '</span>' +
-            '<span class="bezahlen-kat-amount">\u20AC' + cat.amount + '/Mon.</span>' +
-            '<span class="bezahlen-kat-arrow" id="bezArrow_' + cat.name.replace(/\s/g,'_') + '">\u25BC</span></div>' +
-            '<div class="bezahlen-kat-detail" id="bezDetail_' + cat.name.replace(/\s/g,'_') + '">' + items + '</div>';
+        return '<div class="bezahlen-flat-group">' +
+            '<div class="bezahlen-flat-group-header"><span class="bezahlen-kat-dot" style="background:' + cat.color + '"></span>' +
+            '<span>' + cat.icon + ' ' + cat.name + '</span><strong>\u20AC' + cat.amount + '</strong></div>' +
+            txRows + '</div>';
     }).join('');
 
-    return '<div class="bezahlen-donut-container"><div class="bezahlen-donut-chart">' + donutSvg + '</div><div class="bezahlen-donut-legend">' + legend + '</div></div>' +
-        '<div class="bezahlen-akkordeon">' + akkordeon + '</div>';
+    return '<div class="bezahlen-ring-container"><div class="bezahlen-ring-chart">' + ring + '</div>' +
+        '<div class="bezahlen-flat-list">' + flatList + '</div></div>';
+}
+
+// Variant E: Mini-Karten Grid - Kleine Donut pro Kategorie + expandable
+function renderBezahlenDonutE(total) {
+    var cards = bezahlenData.map(function(cat) {
+        var pct = cat.amount / total;
+        var r = 24, circ = 2 * Math.PI * r;
+        var dash = pct * circ;
+        var miniDonut = '<svg width="56" height="56" viewBox="0 0 56 56">' +
+            '<circle cx="28" cy="28" r="'+r+'" fill="none" stroke="#e2e8f0" stroke-width="5"/>' +
+            '<circle cx="28" cy="28" r="'+r+'" fill="none" stroke="'+cat.color+'" stroke-width="5" stroke-dasharray="'+dash+' '+(circ-dash)+'" stroke-dashoffset="0" transform="rotate(-90 28 28)"/>' +
+            '<text x="28" y="32" text-anchor="middle" font-size="11" font-weight="700" fill="'+cat.color+'">'+(pct*100).toFixed(0)+'%</text></svg>';
+        var txItems = buildTxItems(cat);
+        var safeId = cat.name.replace(/\s/g,'_');
+        return '<div class="bezahlen-mini-card">' +
+            '<div class="bezahlen-mini-card-header" onclick="toggleBezahlenKat(\'' + cat.name + '\')">' +
+            '<div class="bezahlen-mini-donut">' + miniDonut + '</div>' +
+            '<div class="bezahlen-mini-info"><div class="bezahlen-mini-name">' + cat.icon + ' ' + cat.name + '</div>' +
+            '<div class="bezahlen-mini-amount">\u20AC' + cat.amount + '/Mon.</div></div>' +
+            '<span class="bezahlen-kat-arrow" id="bezArrow_' + safeId + '">\u25BC</span></div>' +
+            '<div class="bezahlen-kat-detail" id="bezDetail_' + safeId + '">' + txItems + '</div></div>';
+    }).join('');
+    return '<div class="bezahlen-mini-grid">' + cards + '</div>';
 }
 
 function renderBezahlenStacked(total) {
@@ -5918,11 +6170,48 @@ var currentImpulseOption = 0;
 var impulseOptions = ['Option 1: Kartenansicht', 'Option 2: Kanban-Board', 'Option 3: Kompakte Tabelle'];
 
 var impulseData = [
-    { title: 'Risikolebensversicherung anbieten', desc: 'Hypothek \u20AC285.000 bei Sparkasse ohne Restschuldversicherung', kategorie: 'whitespots', prioritaet: 'high', source: 'Open Finance' },
-    { title: 'Fondspolice anbieten', desc: 'Depot \u20AC85.000 bei DWS, Sparrate \u20AC800/Mon. ohne Steueroptimierung', kategorie: 'whitespots', prioritaet: 'high', source: 'Open Finance' },
-    { title: 'Kfz-Wechsel anbieten', desc: 'Kfz bei Allianz l\u00E4uft aus, Ersparnis ca. \u20AC180/Jahr m\u00F6glich', kategorie: 'anpassung', prioritaet: 'high', source: 'Open Finance' },
-    { title: 'BU-Absicherung pr\u00FCfen', desc: 'Einkommensst\u00E4rke vs. BU-Rente pr\u00FCfen, ggf. erh\u00F6hen', kategorie: 'anpassung', prioritaet: 'medium', source: 'Bestandsdaten' },
-    { title: 'Rechtsschutz Cross-Sell', desc: 'Kein Rechtsschutz vorhanden, Familie mit Immobilienbesitz', kategorie: 'whitespots', prioritaet: 'medium', source: 'Bestandsdaten' }
+    { id: 'kb-risiko', title: 'Risikolebensversicherung anbieten', desc: 'Hypothek \u20AC285.000 bei Sparkasse ohne Restschuldversicherung', kategorie: 'whitespots', prioritaet: 'high', source: 'Open Finance',
+      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="20" height="20"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>',
+      herleitung: [
+        { label: 'Datenquelle', value: 'Open Finance - Kreditdaten (Sparkasse)' },
+        { label: 'Erkannte Situation', value: 'Baufinanzierung \u20AC285.000 ohne Absicherung' },
+        { label: 'Familiensituation', value: 'Verheiratet, 2 Kinder (8 + 5 Jahre)' },
+        { label: 'Empfehlung', value: 'Risikoleben \u20AC300.000, Laufzeit 20 Jahre, ca. \u20AC25/Monat' }
+      ]
+    },
+    { id: 'kb-fonds', title: 'Fondspolice anbieten', desc: 'Depot \u20AC85.000 bei DWS, Sparrate \u20AC800/Mon. ohne Steueroptimierung', kategorie: 'whitespots', prioritaet: 'high', source: 'Open Finance',
+      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="20" height="20"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>',
+      herleitung: [
+        { label: 'Datenquelle', value: 'Open Finance - Investmentdaten (DWS)' },
+        { label: 'Erkannte Situation', value: 'Hohe Sparrate \u20AC800/Mon., Depot \u20AC85.000 ohne Steueroptimierung' },
+        { label: 'Empfehlung', value: 'Fondsgebundene Rentenversicherung mit Steuervorteil + Todesfallschutz' }
+      ]
+    },
+    { id: 'kb-kfz', title: 'Kfz-Wechsel anbieten', desc: 'Kfz bei Allianz l\u00E4uft aus, Ersparnis ca. \u20AC180/Jahr m\u00F6glich', kategorie: 'anpassung', prioritaet: 'high', source: 'Open Finance',
+      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="20" height="20"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9L18 10l-3-5H7L4 10l-2.5 1.1C.7 11.3 0 12.1 0 13v3c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/></svg>',
+      herleitung: [
+        { label: 'Datenquelle', value: 'Open Finance - Versicherungsdaten (Allianz)' },
+        { label: 'Erkannte Situation', value: 'Kfz-Vertrag endet 30.11.2025, Wechselm\u00F6glichkeit' },
+        { label: 'Aktueller Tarif', value: 'Allianz Premium, SF12, \u20AC720/Jahr' },
+        { label: 'Empfehlung', value: 'Vergleichsangebot mit ca. \u20AC180/Jahr Ersparnis' }
+      ]
+    },
+    { id: 'kb-bu', title: 'BU-Absicherung pr\u00FCfen', desc: 'Einkommensst\u00E4rke vs. BU-Rente pr\u00FCfen, ggf. erh\u00F6hen', kategorie: 'anpassung', prioritaet: 'medium', source: 'Bestandsdaten',
+      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="20" height="20"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>',
+      herleitung: [
+        { label: 'Datenquelle', value: 'Bestandsdaten + Open Finance Gehalt' },
+        { label: 'Erkannte Situation', value: 'Nettoeinkommen \u20AC3.834 vs. BU-Rente \u20AC1.500 (39%)' },
+        { label: 'Empfehlung', value: 'BU-Rente auf mind. 60% erh\u00F6hen (\u20AC2.300)' }
+      ]
+    },
+    { id: 'kb-rs', title: 'Rechtsschutz Cross-Sell', desc: 'Kein Rechtsschutz vorhanden, Familie mit Immobilienbesitz', kategorie: 'whitespots', prioritaet: 'medium', source: 'Bestandsdaten',
+      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="20" height="20"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>',
+      herleitung: [
+        { label: 'Datenquelle', value: 'Bestandsdaten' },
+        { label: 'Erkannte Situation', value: 'Kein Rechtsschutz, aber Immobilie + Familie' },
+        { label: 'Empfehlung', value: 'Privat- und Immobilienrechtsschutz, ca. \u20AC25/Monat' }
+      ]
+    }
 ];
 
 function switchImpulseOption(direction) {
@@ -5986,10 +6275,26 @@ function renderImpulseKanban() {
 
     function renderCol(items) {
         return items.map(function(i) {
-            return '<div class="impulse-kanban-card">' +
+            var herleitungHtml = '';
+            if (i.herleitung && i.herleitung.length > 0) {
+                herleitungHtml = '<div class="kanban-detail" id="kanban-detail-' + i.id + '" style="display:none;">' +
+                    '<div class="kanban-detail-title">Herleitung</div>' +
+                    i.herleitung.map(function(h) {
+                        return '<div class="kanban-detail-row"><span class="kanban-detail-label">' + h.label + '</span><span class="kanban-detail-value">' + h.value + '</span></div>';
+                    }).join('') +
+                    '<div class="kanban-detail-actions">' +
+                    '<button class="action-btn primary small" onclick="event.stopPropagation()">Angebot erstellen</button>' +
+                    '<button class="action-btn secondary small" onclick="event.stopPropagation()">Termin vereinbaren</button></div></div>';
+            }
+            return '<div class="impulse-kanban-card" onclick="toggleKanbanDetail(\'' + i.id + '\')">' +
+                '<div class="impulse-kanban-card-header">' +
+                '<span class="impulse-kanban-card-icon">' + i.icon + '</span>' +
                 '<div class="impulse-kanban-card-title">' + i.title + '</div>' +
+                '<span class="impulse-kanban-card-expand" id="kanban-arrow-' + i.id + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="6 9 12 15 18 9"/></svg></span></div>' +
                 '<div class="impulse-kanban-card-desc">' + i.desc + '</div>' +
-                '<span class="impulse-kanban-card-badge ' + i.kategorie + '">' + (i.kategorie === 'whitespots' ? 'Neugesch\u00E4ft' : 'Anpassung') + '</span></div>';
+                '<div class="impulse-kanban-card-footer"><span class="impulse-kanban-card-badge ' + i.kategorie + '">' + (i.kategorie === 'whitespots' ? 'Neugesch\u00E4ft' : 'Anpassung') + '</span>' +
+                '<span class="impulse-kanban-card-source">' + i.source + '</span></div>' +
+                herleitungHtml + '</div>';
         }).join('');
     }
 
@@ -5997,6 +6302,20 @@ function renderImpulseKanban() {
         '<div class="impulse-kanban-col"><div class="impulse-kanban-col-title medium">Mittlere Priorit\u00E4t (' + medium.length + ')</div>' + renderCol(medium) + '</div>' +
         '<div class="impulse-kanban-col"><div class="impulse-kanban-col-title low">Niedrige Priorit\u00E4t (' + low.length + ')</div>' + renderCol(low) + '</div>';
 }
+
+function toggleKanbanDetail(id) {
+    var detail = document.getElementById('kanban-detail-' + id);
+    var arrow = document.getElementById('kanban-arrow-' + id);
+    if (!detail) return;
+    if (detail.style.display === 'none') {
+        detail.style.display = 'block';
+        if (arrow) arrow.classList.add('open');
+    } else {
+        detail.style.display = 'none';
+        if (arrow) arrow.classList.remove('open');
+    }
+}
+window.toggleKanbanDetail = toggleKanbanDetail;
 
 function renderImpulseTable() {
     var rows = impulseData.map(function(i) {
@@ -6101,14 +6420,35 @@ function renderKommCompact() {
         'brief': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>',
         'telefon': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>'
     };
-    return kommData.map(function(k) {
-        return '<div class="komm-compact-item">' +
+    return kommData.map(function(k, idx) {
+        return '<div class="komm-compact-row">' +
+            '<div class="komm-compact-item" onclick="toggleKommCompactDetail(' + idx + ')">' +
             '<span class="komm-compact-date">' + k.date + '</span>' +
             '<span class="komm-compact-icon">' + (typeIcons[k.type] || '') + '</span>' +
             '<span class="komm-compact-subject">' + k.subject + '</span>' +
             '<span class="komm-compact-type">' + k.typLabel + '</span>' +
-            '<span class="komm-compact-status ' + k.status + '">' + k.statusText + '</span></div>';
+            '<span class="komm-compact-status ' + k.status + '">' + k.statusText + '</span>' +
+            '<span class="komm-compact-expand" id="kommCompactArrow' + idx + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="6 9 12 15 18 9"/></svg></span></div>' +
+            '<div class="komm-compact-detail" id="kommCompactDetail' + idx + '" style="display:none;">' +
+            '<div class="komm-compact-detail-text">' + k.preview + '</div>' +
+            '<div class="komm-compact-detail-meta">' +
+            '<span class="komm-compact-detail-type">' + k.typLabel + '</span>' +
+            '<span class="komm-compact-detail-status ' + k.status + '">' + k.statusText + '</span></div></div></div>';
     }).join('');
 }
+
+function toggleKommCompactDetail(idx) {
+    var detail = document.getElementById('kommCompactDetail' + idx);
+    var arrow = document.getElementById('kommCompactArrow' + idx);
+    if (!detail) return;
+    if (detail.style.display === 'none') {
+        detail.style.display = 'block';
+        if (arrow) arrow.classList.add('open');
+    } else {
+        detail.style.display = 'none';
+        if (arrow) arrow.classList.remove('open');
+    }
+}
+window.toggleKommCompactDetail = toggleKommCompactDetail;
 
 console.log('landing.js geladen');

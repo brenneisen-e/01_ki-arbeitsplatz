@@ -2742,6 +2742,17 @@
          KUNDENDETAIL PAGE
          ======================================== -->
     <div id="kundenDetailPage" style="display: none;">
+        <!-- Option Switcher -->
+        <div class="option-switcher" id="optionSwitcher">
+            <button class="option-switcher-arrow" onclick="switchKundeDisplayOption(-1)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><polyline points="15 18 9 12 15 6"></polyline></svg>
+            </button>
+            <span class="option-switcher-label" id="optionSwitcherLabel">Option A</span>
+            <button class="option-switcher-arrow" onclick="switchKundeDisplayOption(1)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </button>
+        </div>
+
         <!-- Shared A-02 Header Tabs (Kundenliste active) -->
         <div class="kunden-shared-header">
             <div class="kunden-shared-header-top">
@@ -2763,6 +2774,13 @@
                             <span id="kundenHeaderId">-</span> | <span>Aktiv</span>
                         </div>
                     </div>
+                </div>
+                <!-- Option A: Kundenname im Header -->
+                <div class="kunde-header-inline" id="kundeOptionA">
+                    <span class="kunde-header-separator">|</span>
+                    <span class="kunde-header-label">Kunde:</span>
+                    <span class="kunde-header-name" id="kundeHeaderNameA">Peter Schmidt</span>
+                    <span class="kunde-header-kid" id="kundeHeaderIdA">KD00001</span>
                 </div>
             </div>
             <div class="kunden-switch-dropdown">
@@ -2821,6 +2839,34 @@
             </div>
         </div>
 
+        <!-- Option B: Sekundäre Sticky-Leiste -->
+        <div class="kunde-sticky-bar" id="kundeOptionB" style="display: none;">
+            <div class="kunde-sticky-bar-inner">
+                <div class="kunde-sticky-bar-left">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                        <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    <span class="kunde-sticky-name" id="kundeBarNameB">Peter Schmidt</span>
+                    <span class="kunde-sticky-kid" id="kundeBarIdB">KD00001</span>
+                </div>
+                <div class="kunde-sticky-bar-right">
+                    <div class="kunde-sticky-kpi">
+                        <span class="kunde-sticky-kpi-label">NPS</span>
+                        <span class="nps-badge promoter" id="kundeBarNpsB" style="width:22px;height:22px;font-size:11px;">9</span>
+                    </div>
+                    <div class="kunde-sticky-kpi">
+                        <span class="kunde-sticky-kpi-label">CLV</span>
+                        <span class="kunde-sticky-kpi-value" id="kundeBarClvB">&mdash;</span>
+                    </div>
+                    <div class="kunde-sticky-kpi">
+                        <span class="kunde-sticky-kpi-label">Segment</span>
+                        <span class="kunde-sticky-kpi-value" id="kundeBarSegmentB">&mdash;</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="kunden-page">
             <div class="kunden-header" style="display: none;">
                 <button class="back-button" onclick="closeKundenDetail()">
@@ -2853,6 +2899,15 @@
                             AO (ERGO)
                         </button>
                     </div>
+                </div>
+            </div>
+
+            <!-- Option C: Kundenname über den Tabs -->
+            <div class="kunde-tabs-header" id="kundeOptionC" style="display: none;">
+                <div class="kunde-tabs-header-inner">
+                    <h2 class="kunde-tabs-header-name" id="kundeTabsNameC">Peter Schmidt</h2>
+                    <span class="kunde-tabs-header-kid" id="kundeTabsIdC">KD00001</span>
+                    <span class="nps-badge promoter" id="kundeTabsNpsC" style="width:24px;height:24px;font-size:11px;">9</span>
                 </div>
             </div>
 

@@ -4060,38 +4060,9 @@ function toggleNpsDetail() {
 window.toggleNpsDetail = toggleNpsDetail;
 
 // ========================================
-// KUNDE DISPLAY OPTION SWITCHER (A/B/C)
+// KUNDE STICKY BAR
 // ========================================
-let currentKundeDisplayOption = 0;
-const kundeDisplayOptions = [
-    { id: 'A', label: 'Option A: Name im Header', elId: 'kundeOptionA' },
-    { id: 'B', label: 'Option B: Sticky-Leiste', elId: 'kundeOptionB' },
-    { id: 'C', label: 'Option C: Name \u00fcber Tabs', elId: 'kundeOptionC' }
-];
-
-function switchKundeDisplayOption(direction) {
-    currentKundeDisplayOption = (currentKundeDisplayOption + direction + kundeDisplayOptions.length) % kundeDisplayOptions.length;
-    applyKundeDisplayOption();
-}
-window.switchKundeDisplayOption = switchKundeDisplayOption;
-
-function applyKundeDisplayOption() {
-    kundeDisplayOptions.forEach(function(opt, i) {
-        var el = document.getElementById(opt.elId);
-        if (el) el.style.display = i === currentKundeDisplayOption ? '' : 'none';
-    });
-    var label = document.getElementById('optionSwitcherLabel');
-    if (label) label.textContent = kundeDisplayOptions[currentKundeDisplayOption].label;
-}
-
-function updateKundeDisplayOptions(kundenName, kundenId, npsData, clvValue, segmentValue) {
-    // Option A
-    var nameA = document.getElementById('kundeHeaderNameA');
-    var idA = document.getElementById('kundeHeaderIdA');
-    if (nameA) nameA.textContent = kundenName;
-    if (idA) idA.textContent = kundenId;
-
-    // Option B
+function updateKundeStickyBar(kundenName, kundenId, npsData, clvValue, segmentValue) {
     var nameB = document.getElementById('kundeBarNameB');
     var idB = document.getElementById('kundeBarIdB');
     var npsB = document.getElementById('kundeBarNpsB');
@@ -4108,22 +4079,6 @@ function updateKundeDisplayOptions(kundenName, kundenId, npsData, clvValue, segm
     }
     if (clvB) clvB.textContent = clvValue || '\u2014';
     if (segB) segB.textContent = segmentValue || '\u2014';
-
-    // Option C
-    var nameC = document.getElementById('kundeTabsNameC');
-    var idC = document.getElementById('kundeTabsIdC');
-    var npsC = document.getElementById('kundeTabsNpsC');
-    if (nameC) nameC.textContent = kundenName;
-    if (idC) idC.textContent = kundenId;
-    if (npsC && npsData) {
-        npsC.textContent = npsData.score;
-        npsC.className = 'nps-badge ' + npsData.kategorie;
-        npsC.style.width = '24px';
-        npsC.style.height = '24px';
-        npsC.style.fontSize = '11px';
-    }
-
-    applyKundeDisplayOption();
 }
 
 function filterKundenliste(searchText) {
@@ -4528,10 +4483,10 @@ function fillKundenDetail(kundenName, vermittlerId) {
         renderCLV(clvResult);
     }
 
-    // Kunde Display Options (A/B/C) aktualisieren
+    // Kunde Sticky Bar aktualisieren
     var clvStr = clvResult ? formatEuroCLV(clvResult.gesamtCLV) : '\u2014';
     var segStr = clvResult ? clvResult.segment : '\u2014';
-    updateKundeDisplayOptions(kundenName, vermittlerId, kunde.nps, clvStr, segStr);
+    updateKundeStickyBar(kundenName, vermittlerId, kunde.nps, clvStr, segStr);
 }
 
 // ========================================

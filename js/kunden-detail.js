@@ -334,6 +334,7 @@ function filterKundenliste(searchText) {
 window.filterKundenliste = filterKundenliste;
 
 // ========================================
+/**
  * Navigiert zum Vertriebsbericht aus der Kundendetail-Seite
  */
 function goToSalesReportFromKundenDetail() {
@@ -996,5 +997,8 @@ Ihre Versicherungsagentur`,
 function toggleKundenFida() {
     switchKundenTab('fida');
 }
+
+// Window-Exports für globale Verfügbarkeit
+window.toggleImpulsDetail = toggleImpulsDetail;
 
 // ========================================

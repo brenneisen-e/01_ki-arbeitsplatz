@@ -39,5 +39,3 @@ function renderNpsStyleAll() {
     });
 }
 window.renderNpsStyleAll = renderNpsStyleAll;
-
-/**

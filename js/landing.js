@@ -2076,7 +2076,6 @@ window.openGenerator = openGenerator;
 window.backToLanding = backToLanding;
 window.toggleSettings = toggleSettings;
 window.openAgenturView = openAgenturView;
-window.toggleImpulsDetail = toggleImpulsDetail;
 window.openRisikoscoring = openRisikoscoring;
 window.closeRisikoscoring = closeRisikoscoring;
 window.openBestandsuebertragung = openBestandsuebertragung;
@@ -3205,7 +3204,7 @@ window.askLandingSampleQuestion = askLandingSampleQuestion;
 // UPLOAD MODUS
 // ========================================
 
-let uploadModeActive = true; // Standardmäßig aktiviert
+var uploadModeActive = true; // Standardmäßig aktiviert
 
 function toggleUploadMode() {
     const toggle = document.getElementById('uploadModeToggle');

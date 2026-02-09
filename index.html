@@ -415,6 +415,11 @@
                 <input type="file" id="agenturPhotoInput" accept="image/*" style="display: none;" onchange="handleAgenturPhotoUpload(event)">
             </div>
 
+            <!-- Vermittler Quick-Switch -->
+            <div class="vermittler-selector" id="vermittlerSelector">
+                <!-- Filled dynamically by renderAgenturSelector() -->
+            </div>
+
             <!-- Ebene 1: Cockpit-Übersicht (Big Numbers) -->
             <div class="cockpit-kpis">
                 <div class="cockpit-kpi-card">
@@ -472,6 +477,19 @@
                         </div>
                     </div>
                 </div>
+                <div class="cockpit-kpi-card">
+                    <div class="cockpit-kpi-icon nps">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3H14z"></path>
+                            <path d="M7 22H4a2 2 0 01-2-2v-7a2 2 0 012-2h3"></path>
+                        </svg>
+                    </div>
+                    <div class="cockpit-kpi-content">
+                        <div class="cockpit-kpi-value" id="cockpitNPS">0</div>
+                        <div class="cockpit-kpi-label">NPS Score</div>
+                        <div class="cockpit-kpi-trend positive" id="cockpitNPSTrend">+0</div>
+                    </div>
+                </div>
             </div>
 
             <!-- Hauptinhalt mit Tabs -->
@@ -486,6 +504,15 @@
                             <rect x="3" y="14" width="7" height="7"></rect>
                         </svg>
                         Übersicht
+                    </button>
+                    <button class="agentur-tab" onclick="showAgenturTab('kundenliste')">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                            <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M23 21v-2a4 4 0 00-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 010 7.75"></path>
+                        </svg>
+                        Kundenliste
                     </button>
                     <button class="agentur-tab" onclick="showAgenturTab('stammdaten')">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
@@ -1186,7 +1213,22 @@
                                 <a href="#" class="link-alle-anzeigen" onclick="showAgenturTab('provision'); return false;">Alle Abrechnungen anzeigen →</a>
                             </div>
                         </div>
+
+                        <!-- Mittlere Spalte: Charts -->
+                        <div class="agentur-uebersicht-charts" id="agenturChartColumn">
+                            <!-- Filled dynamically by renderAgenturCharts() -->
+                        </div>
+
+                        <!-- Rechte Spalte: Top Kunden -->
+                        <div class="agentur-uebersicht-topkunden" id="agenturTopKunden">
+                            <!-- Filled dynamically by renderTopKunden() -->
+                        </div>
                     </div>
+                </div>
+
+                <!-- Tab Content: Kundenliste (NEU) -->
+                <div class="agentur-tab-content" id="tab-kundenliste">
+                    <!-- Filled dynamically by renderAgenturKundenliste() -->
                 </div>
 
                 <!-- Tab Content: Stammdaten -->
@@ -2751,7 +2793,16 @@
 
             <!-- Tab Navigation -->
             <div class="kunden-tabs">
-                <button class="kunden-tab active" data-tab="stammdaten" onclick="switchKundenTab('stammdaten')">
+                <button class="kunden-tab active" data-tab="uebersicht" onclick="switchKundenTab('uebersicht')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                        <rect x="3" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="14" width="7" height="7"></rect>
+                        <rect x="3" y="14" width="7" height="7"></rect>
+                    </svg>
+                    Übersicht
+                </button>
+                <button class="kunden-tab" data-tab="stammdaten" onclick="switchKundenTab('stammdaten')">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
                         <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"></path>
                         <circle cx="12" cy="7" r="4"></circle>
@@ -2772,6 +2823,26 @@
                         <path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"></path>
                     </svg>
                     Open Finance
+                </button>
+                <button class="kunden-tab" data-tab="banktransaktionen" onclick="switchKundenTab('banktransaktionen')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                        <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                        <line x1="1" y1="10" x2="23" y2="10"></line>
+                    </svg>
+                    Banktransaktionen
+                </button>
+                <button class="kunden-tab" data-tab="scoring" onclick="switchKundenTab('scoring')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                        <path d="M22 11.08V12a10 10 0 11-5.93-9.14"></path>
+                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                    </svg>
+                    Scoring & Bonität
+                </button>
+                <button class="kunden-tab" data-tab="deckungsquoten" onclick="switchKundenTab('deckungsquoten')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                    </svg>
+                    Deckungsquoten
                 </button>
                 <button class="kunden-tab impulse-tab" data-tab="impulse" onclick="switchKundenTab('impulse')">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
@@ -2795,8 +2866,13 @@
             </div>
 
             <div class="kunden-content">
+                <!-- TAB: Übersicht (NEU - Default) -->
+                <div id="tabUebersicht" class="kunden-tab-content active">
+                    <!-- Filled dynamically by fillKundenUebersichtTab() -->
+                </div>
+
                 <!-- TAB: Stammdaten -->
-                <div id="tabStammdaten" class="kunden-tab-content active">
+                <div id="tabStammdaten" class="kunden-tab-content">
                     <!-- Stammdaten Karte -->
                     <div class="kunden-card stammdaten-card">
                         <div class="kunden-card-header">
@@ -2819,6 +2895,9 @@
                                     </div>
                                     <span class="clv-badge-segment" id="clvHeaderSegment"></span>
                                     <span class="clv-badge-trend" id="clvHeaderTrend"></span>
+                                </div>
+                                <div class="header-scoring-badge" id="headerScoringBadge" style="display: none;">
+                                    <!-- Filled dynamically by updateKundenHeaderScores() -->
                                 </div>
                             </div>
                             <div class="kunden-info-grid">
@@ -3384,6 +3463,21 @@
                     </div>
                 </div>
 
+                <!-- TAB: Banktransaktionen (NEU) -->
+                <div id="tabBanktransaktionen" class="kunden-tab-content">
+                    <!-- Filled dynamically by fillTransaktionenTab() -->
+                </div>
+
+                <!-- TAB: Scoring & Bonität (NEU) -->
+                <div id="tabScoring" class="kunden-tab-content">
+                    <!-- Filled dynamically by fillScoringTab() -->
+                </div>
+
+                <!-- TAB: Deckungsquoten (NEU) -->
+                <div id="tabDeckungsquoten" class="kunden-tab-content">
+                    <!-- Filled dynamically by fillDeckungsquotenTab() -->
+                </div>
+
                 <!-- TAB: Impulse -->
                 <div id="tabImpulse" class="kunden-tab-content">
                     <!-- Übersicht der Vertriebsimpulse -->
@@ -3934,6 +4028,11 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
+
+                        <!-- Transaktionsbasierte Impulse (NEU) -->
+                        <div id="transaktionsImpulseContainer">
+                            <!-- Filled dynamically by fillTransaktionsImpulse() -->
                         </div>
                     </div>
                 </div>
@@ -5011,6 +5110,8 @@
     <script src="js/provisionssimulation.js?v=20251216"></script>
     <!-- CV Scanner Module -->
     <script src="js/cv-scanner.js?v=20260209"></script>
+    <!-- Kunden-Erweiterung (A-02/A-10 Extensions) -->
+    <script src="js/kunden-erweiterung.js?v=20260209"></script>
     <!-- Page ID Tracker -->
     <script src="js/page-id-tracker.js?v=20260126"></script>
     <!-- Speaker Notes Teleprompter -->

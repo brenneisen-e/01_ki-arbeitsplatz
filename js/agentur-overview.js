@@ -110,6 +110,11 @@ function showAgenturTab(tabName) {
 
     if (tabButton) tabButton.classList.add('active');
     if (tabContent) tabContent.classList.add('active');
+
+    // Fill dynamic tab contents
+    if (tabName === 'kundenliste' && typeof renderAgenturKundenliste === 'function') {
+        renderAgenturKundenliste();
+    }
 }
 
 /**

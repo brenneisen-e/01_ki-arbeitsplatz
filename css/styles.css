@@ -6275,9 +6275,9 @@ button svg,
 
 /* Header mit Agentur-Info */
 .agentur-header-new {
-    background: white;
+    background: #2d5016;
     padding: 16px 32px;
-    border-bottom: 1px solid #e2e8f0;
+    border-bottom: none;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -9226,21 +9226,28 @@ button svg,
    SHARED HEADER TABS (A-02 / A-10)
    ======================================== */
 
-/* A-02: Header - single row with tabs next to name */
+/* A-02: Header - single row, tabs centered over full width */
 .agentur-header-new {
     flex-direction: row;
     align-items: center;
-    gap: 16px;
+    gap: 0;
+    position: relative;
 }
 
-/* Tabs inline, centered in remaining space */
+.agentur-header-new > .agentur-header-left {
+    position: absolute;
+    left: 32px;
+    z-index: 2;
+}
+
+/* Tabs centered over full header width */
 .agentur-header-tabs {
     display: flex;
     gap: 6px;
     overflow-x: auto;
     flex-wrap: nowrap;
     justify-content: center;
-    flex: 1;
+    width: 100%;
     padding-top: 0;
 }
 
@@ -9257,11 +9264,43 @@ button svg,
     height: 16px;
 }
 
+/* Dark green header: text + tab colors */
+.agentur-header-new .agentur-header-text h1 {
+    color: white;
+}
+
+.agentur-header-new .agentur-subtitle {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.agentur-header-new .back-button {
+    color: white;
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.agentur-header-new .back-button:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.agentur-header-new .agentur-tab {
+    color: rgba(255, 255, 255, 0.75);
+}
+
+.agentur-header-new .agentur-tab:hover {
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
+}
+
+.agentur-header-new .agentur-tab.active {
+    background: #86BC25;
+    color: white;
+}
+
 /* A-10: Shared header mirroring A-02 */
 .kunden-shared-header {
-    background: white;
+    background: #2d5016;
     padding: 12px 32px;
-    border-bottom: 1px solid #e2e8f0;
+    border-bottom: none;
     position: sticky;
     top: 0;
     z-index: 100;
@@ -9319,6 +9358,51 @@ button svg,
 .kunden-shared-header .agentur-header-tabs {
     justify-content: center;
     padding-top: 12px;
+}
+
+.kunden-shared-header .agentur-header-text h1 {
+    color: white;
+}
+
+.kunden-shared-header .agentur-subtitle {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.kunden-shared-header .back-button {
+    color: white;
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.kunden-shared-header .back-button:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.kunden-shared-header .agentur-tab {
+    color: rgba(255, 255, 255, 0.75);
+}
+
+.kunden-shared-header .agentur-tab:hover {
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
+}
+
+.kunden-shared-header .agentur-tab.active {
+    background: #86BC25;
+    color: white;
+}
+
+.kunden-shared-header .kunden-switch-dropdown label {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.kunden-shared-header .kunden-switch-dropdown select {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
+    color: white;
+}
+
+.kunden-shared-header .kunden-switch-dropdown select:focus {
+    border-color: #86BC25;
 }
 
 /* Kundenliste Tab */

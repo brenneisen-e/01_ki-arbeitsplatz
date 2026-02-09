@@ -9667,6 +9667,11 @@ button svg,
 
 .nps-detail-wrapper {
     position: relative;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px;
+    cursor: default;
 }
 
 .nps-detail-popup {
@@ -9680,13 +9685,53 @@ button svg,
     z-index: 200;
 }
 
+/* NPS Survey Meta (inline next to stars) */
+.nps-survey-meta {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    color: #94a3b8;
+    margin-left: 12px;
+}
+
+.nps-survey-meta svg {
+    color: #94a3b8;
+    flex-shrink: 0;
+}
+
+.nps-detail-header {
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
 .nps-detail-title {
     font-size: 14px;
     font-weight: 700;
     color: #1e293b;
-    margin-bottom: 12px;
-    padding-bottom: 8px;
-    border-bottom: 1px solid #e2e8f0;
+    margin-bottom: 4px;
+}
+
+.nps-detail-survey {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.nps-survey-date {
+    font-size: 12px;
+    font-weight: 600;
+    color: #475569;
+    background: #f1f5f9;
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+
+.nps-survey-kampagne {
+    font-size: 12px;
+    color: #64748b;
 }
 
 .nps-detail-rows {

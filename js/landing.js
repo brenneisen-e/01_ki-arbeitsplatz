@@ -4038,29 +4038,31 @@ function switchKundeDropdown(kundenName) {
 }
 window.switchKundeDropdown = switchKundeDropdown;
 
-function toggleNpsDetail() {
+function showNpsDetail() {
     var popup = document.getElementById('npsDetailPopup');
     if (!popup) return;
-    if (popup.style.display === 'none') {
-        var badge = document.getElementById('kundenNpsBadge');
-        if (badge) {
-            var rect = badge.getBoundingClientRect();
-            popup.style.left = rect.left + 'px';
-            popup.style.top = (rect.bottom + 8) + 'px';
-            // If popup would go below viewport, show above instead
-            popup.style.display = 'block';
-            var popupRect = popup.getBoundingClientRect();
-            if (popupRect.bottom > window.innerHeight) {
-                popup.style.top = (rect.top - popupRect.height - 8) + 'px';
-            }
-        } else {
-            popup.style.display = 'block';
+    var wrapper = document.getElementById('kundenNpsWrapper');
+    if (wrapper) {
+        var rect = wrapper.getBoundingClientRect();
+        popup.style.left = rect.left + 'px';
+        popup.style.top = (rect.bottom + 4) + 'px';
+        popup.style.display = 'block';
+        var popupRect = popup.getBoundingClientRect();
+        if (popupRect.bottom > window.innerHeight) {
+            popup.style.top = (rect.top - popupRect.height - 4) + 'px';
         }
-    } else {
-        popup.style.display = 'none';
+        if (popupRect.right > window.innerWidth) {
+            popup.style.left = (window.innerWidth - popupRect.width - 16) + 'px';
+        }
     }
 }
-window.toggleNpsDetail = toggleNpsDetail;
+window.showNpsDetail = showNpsDetail;
+
+function hideNpsDetail() {
+    var popup = document.getElementById('npsDetailPopup');
+    if (popup) popup.style.display = 'none';
+}
+window.hideNpsDetail = hideNpsDetail;
 
 // ========================================
 // KUNDE STICKY BAR
@@ -4171,7 +4173,7 @@ function fillKundenDetail(kundenName, vermittlerId) {
             beruf: 'Angestellter',
             familienstand: 'Verheiratet',
             kinder: [{ name: 'Lena', alter: 8 }, { name: 'Paul', alter: 5 }],
-            nps: { score: 9, kategorie: 'promoter', details: [
+            nps: { score: 9, kategorie: 'promoter', datum: '15.10.2025', kampagne: 'Herbst-Zufriedenheitsbefragung 2025 (E-Mail)', details: [
                 { name: 'Beratungsqualität', wert: 9 },
                 { name: 'Zufriedenheit mit dem Unternehmen', wert: 8 },
                 { name: 'Weiterempfehlung an Freunde', wert: 10 },
@@ -4196,7 +4198,7 @@ function fillKundenDetail(kundenName, vermittlerId) {
             beruf: 'Lehrerin',
             familienstand: 'Geschieden',
             kinder: [{ name: 'Max', alter: 12 }],
-            nps: { score: 7, kategorie: 'passive', details: [
+            nps: { score: 7, kategorie: 'passive', datum: '08.10.2025', kampagne: 'Herbst-Zufriedenheitsbefragung 2025 (E-Mail)', details: [
                 { name: 'Beratungsqualität', wert: 7 },
                 { name: 'Zufriedenheit mit dem Unternehmen', wert: 6 },
                 { name: 'Weiterempfehlung an Freunde', wert: 7 },
@@ -4221,7 +4223,7 @@ function fillKundenDetail(kundenName, vermittlerId) {
             beruf: 'Software-Entwickler',
             familienstand: 'Ledig',
             kinder: [],
-            nps: { score: 8, kategorie: 'promoter', details: [
+            nps: { score: 8, kategorie: 'promoter', datum: '03.11.2025', kampagne: 'Nach-Beratungs-Feedback (E-Mail)', details: [
                 { name: 'Beratungsqualität', wert: 8 },
                 { name: 'Zufriedenheit mit dem Unternehmen', wert: 7 },
                 { name: 'Weiterempfehlung an Freunde', wert: 9 },
@@ -4245,7 +4247,7 @@ function fillKundenDetail(kundenName, vermittlerId) {
             beruf: 'Marketing-Managerin',
             familienstand: 'Verheiratet',
             kinder: [{ name: 'Sophie', alter: 3 }, { name: 'Emma', alter: 1 }],
-            nps: { score: 10, kategorie: 'promoter', details: [
+            nps: { score: 10, kategorie: 'promoter', datum: '15.10.2025', kampagne: 'Herbst-Zufriedenheitsbefragung 2025 (E-Mail)', details: [
                 { name: 'Beratungsqualität', wert: 10 },
                 { name: 'Zufriedenheit mit dem Unternehmen', wert: 9 },
                 { name: 'Weiterempfehlung an Freunde', wert: 10 },
@@ -4269,7 +4271,7 @@ function fillKundenDetail(kundenName, vermittlerId) {
             beruf: 'Geschäftsführer',
             familienstand: 'Verheiratet',
             kinder: [{ name: 'Lukas', alter: 18 }, { name: 'Jana', alter: 15 }],
-            nps: { score: 4, kategorie: 'detractor', details: [
+            nps: { score: 4, kategorie: 'detractor', datum: '22.09.2025', kampagne: 'Jahres-Kundenbefragung Q3/2025 (Brief)', details: [
                 { name: 'Beratungsqualität', wert: 5 },
                 { name: 'Zufriedenheit mit dem Unternehmen', wert: 3 },
                 { name: 'Weiterempfehlung an Freunde', wert: 4 },
@@ -4295,7 +4297,7 @@ function fillKundenDetail(kundenName, vermittlerId) {
             beruf: 'Ärztin (Assistenz)',
             familienstand: 'In Partnerschaft',
             kinder: [],
-            nps: { score: 7, kategorie: 'passive', details: [
+            nps: { score: 7, kategorie: 'passive', datum: '08.10.2025', kampagne: 'Herbst-Zufriedenheitsbefragung 2025 (E-Mail)', details: [
                 { name: 'Beratungsqualität', wert: 8 },
                 { name: 'Zufriedenheit mit dem Unternehmen', wert: 7 },
                 { name: 'Weiterempfehlung an Freunde', wert: 7 },
@@ -4319,7 +4321,7 @@ function fillKundenDetail(kundenName, vermittlerId) {
             beruf: 'Selbstständig (Handwerk)',
             familienstand: 'Verheiratet',
             kinder: [{ name: 'Tim', alter: 10 }, { name: 'Mia', alter: 7 }],
-            nps: { score: 9, kategorie: 'promoter', details: [
+            nps: { score: 9, kategorie: 'promoter', datum: '15.10.2025', kampagne: 'Herbst-Zufriedenheitsbefragung 2025 (E-Mail)', details: [
                 { name: 'Beratungsqualität', wert: 9 },
                 { name: 'Zufriedenheit mit dem Unternehmen', wert: 9 },
                 { name: 'Weiterempfehlung an Freunde', wert: 10 },
@@ -4343,7 +4345,7 @@ function fillKundenDetail(kundenName, vermittlerId) {
             beruf: 'IT-Consultant',
             familienstand: 'Verheiratet',
             kinder: [{ name: 'Jonas', alter: 6 }, { name: 'Lea', alter: 4 }],
-            nps: { score: 6, kategorie: 'passive', details: [
+            nps: { score: 6, kategorie: 'passive', datum: '08.10.2025', kampagne: 'Herbst-Zufriedenheitsbefragung 2025 (E-Mail)', details: [
                 { name: 'Beratungsqualität', wert: 6 },
                 { name: 'Zufriedenheit mit dem Unternehmen', wert: 6 },
                 { name: 'Weiterempfehlung an Freunde', wert: 5 },
@@ -4368,7 +4370,7 @@ function fillKundenDetail(kundenName, vermittlerId) {
             beruf: 'Projektmanager',
             familienstand: 'Ledig',
             kinder: [],
-            nps: { score: 8, kategorie: 'promoter', details: [
+            nps: { score: 8, kategorie: 'promoter', datum: '03.11.2025', kampagne: 'Nach-Beratungs-Feedback (E-Mail)', details: [
                 { name: 'Beratungsqualität', wert: 8 },
                 { name: 'Zufriedenheit mit dem Unternehmen', wert: 8 },
                 { name: 'Weiterempfehlung an Freunde', wert: 9 },
@@ -4392,7 +4394,7 @@ function fillKundenDetail(kundenName, vermittlerId) {
             beruf: 'Dachdecker (Meister)',
             familienstand: 'Verheiratet',
             kinder: [{ name: 'Felix', alter: 9 }, { name: 'Marie', alter: 7 }, { name: 'Ben', alter: 3 }],
-            nps: { score: 3, kategorie: 'detractor', details: [
+            nps: { score: 3, kategorie: 'detractor', datum: '22.09.2025', kampagne: 'Jahres-Kundenbefragung Q3/2025 (Brief)', details: [
                 { name: 'Beratungsqualität', wert: 4 },
                 { name: 'Zufriedenheit mit dem Unternehmen', wert: 2 },
                 { name: 'Weiterempfehlung an Freunde', wert: 3 },
@@ -4417,7 +4419,7 @@ function fillKundenDetail(kundenName, vermittlerId) {
             beruf: 'Grafikdesignerin (selbstständig)',
             familienstand: 'In Partnerschaft',
             kinder: [{ name: 'Mila', alter: 2 }],
-            nps: { score: 9, kategorie: 'promoter', details: [
+            nps: { score: 9, kategorie: 'promoter', datum: '15.10.2025', kampagne: 'Herbst-Zufriedenheitsbefragung 2025 (E-Mail)', details: [
                 { name: 'Beratungsqualität', wert: 9 },
                 { name: 'Zufriedenheit mit dem Unternehmen', wert: 9 },
                 { name: 'Weiterempfehlung an Freunde', wert: 10 },
@@ -4471,12 +4473,24 @@ function fillKundenDetail(kundenName, vermittlerId) {
         }
     }
 
-    // NPS (Stars)
+    // NPS (Stars + Survey Meta)
     const npsBadge = document.getElementById('kundenNpsBadge');
     const npsRows = document.getElementById('npsDetailRows');
+    const npsSurveyMeta = document.getElementById('npsSurveyMeta');
+    const npsDetailSurvey = document.getElementById('npsDetailSurvey');
     if (npsBadge && kunde.nps) {
         npsBadge.innerHTML = renderNpsStars(kunde.nps.score, 'nps-stars-display');
-        npsBadge.className = 'nps-stars-display nps-clickable';
+        npsBadge.className = 'nps-stars-display';
+        // Survey date + campaign info inline
+        if (npsSurveyMeta) {
+            npsSurveyMeta.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> ' +
+                (kunde.nps.datum || '') + ' &mdash; ' + (kunde.nps.kampagne || '');
+        }
+        // Popup header with survey info
+        if (npsDetailSurvey) {
+            npsDetailSurvey.innerHTML = '<span class="nps-survey-date">' + (kunde.nps.datum || '') + '</span>' +
+                '<span class="nps-survey-kampagne">' + (kunde.nps.kampagne || '') + '</span>';
+        }
         if (npsRows) {
             npsRows.innerHTML = kunde.nps.details.map(d => {
                 return `<div class="nps-detail-row">

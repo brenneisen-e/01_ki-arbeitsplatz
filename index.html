@@ -2990,10 +2990,14 @@
                                 </div>
                                 <div class="info-item full-width">
                                     <span class="info-label">NPS Score</span>
-                                    <div class="info-value nps-detail-wrapper" id="kundenNpsWrapper">
-                                        <span class="nps-stars-display nps-clickable" id="kundenNpsBadge" onclick="toggleNpsDetail()"></span>
+                                    <div class="info-value nps-detail-wrapper" id="kundenNpsWrapper" onmouseenter="showNpsDetail()" onmouseleave="hideNpsDetail()">
+                                        <span class="nps-stars-display" id="kundenNpsBadge"></span>
+                                        <span class="nps-survey-meta" id="npsSurveyMeta"></span>
                                         <div class="nps-detail-popup" id="npsDetailPopup" style="display: none;">
-                                            <div class="nps-detail-title">NPS-Kategorien</div>
+                                            <div class="nps-detail-header">
+                                                <div class="nps-detail-title">NPS-Kategorien</div>
+                                                <div class="nps-detail-survey" id="npsDetailSurvey"></div>
+                                            </div>
                                             <div class="nps-detail-rows" id="npsDetailRows"></div>
                                         </div>
                                     </div>

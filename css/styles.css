@@ -7059,7 +7059,7 @@ button svg,
     margin-bottom: 12px;
     padding: 10px 14px;
     border-radius: 12px;
-    font-size: 13px;
+    font-size: 15px;
     line-height: 1.5;
 }
 
@@ -7265,7 +7265,7 @@ button svg,
     align-items: center;
     gap: 10px;
     font-weight: 600;
-    font-size: 15px;
+    font-size: 17px;
 }
 
 .agentur-chat-close {
@@ -7315,13 +7315,13 @@ button svg,
 
 .agentur-chat-widget .agentur-chat-welcome h4 {
     margin: 0 0 8px 0;
-    font-size: 16px;
+    font-size: 18px;
     color: #1e293b;
 }
 
 .agentur-chat-widget .agentur-chat-welcome p {
     margin: 0 0 16px 0;
-    font-size: 13px;
+    font-size: 15px;
     color: #64748b;
 }
 
@@ -7338,7 +7338,7 @@ button svg,
     background: #f1f5f9;
     border: 1px solid #e2e8f0;
     border-radius: 16px;
-    font-size: 12px;
+    font-size: 14px;
     color: #475569;
     cursor: pointer;
     transition: all 0.2s;
@@ -7363,7 +7363,7 @@ button svg,
     padding: 10px 14px;
     border: 1px solid #e2e8f0;
     border-radius: 20px;
-    font-size: 13px;
+    font-size: 15px;
     resize: none;
     font-family: inherit;
     background: white;
@@ -9495,4 +9495,59 @@ button svg,
 
 .nps-badge.detractor {
     background: #ef4444;
+}
+
+/* NPS clickable badge in A-10 Stammdaten */
+.nps-clickable {
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.nps-clickable:hover {
+    transform: scale(1.15);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.nps-detail-wrapper {
+    position: relative;
+}
+
+.nps-detail-popup {
+    position: absolute;
+    top: 40px;
+    left: 0;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    padding: 16px;
+    min-width: 300px;
+    z-index: 50;
+}
+
+.nps-detail-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.nps-detail-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.nps-detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+}
+
+.nps-detail-label {
+    font-size: 13px;
+    color: #475569;
 }

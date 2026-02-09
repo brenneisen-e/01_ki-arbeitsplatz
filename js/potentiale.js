@@ -48,6 +48,31 @@ var impulseData = [
         { label: 'Erkannte Situation', value: 'Kein Rechtsschutz, aber Immobilie + Familie' },
         { label: 'Empfehlung', value: 'Privat- und Immobilienrechtsschutz, ca. \u20AC25/Monat' }
       ]
+    },
+    { id: 'kb-tier', title: 'Tierhalter-Haftpflicht pr\u00FCfen', desc: 'Hinweise auf Tierhaltung aus Kontoumsätzen (Fressnapf, Tierarzt)', kategorie: 'whitespots', prioritaet: 'low', source: 'Open Finance',
+      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="20" height="20"><path d="M10 5.172C10 3.782 8.884 2.5 7.5 2.5S5 3.782 5 5.172c0 1.39 2.5 4.328 2.5 4.328S10 6.562 10 5.172z"/><path d="M19 5.172C19 3.782 17.884 2.5 16.5 2.5S14 3.782 14 5.172c0 1.39 2.5 4.328 2.5 4.328S19 6.562 19 5.172z"/><path d="M12 22c-4-3-8-6.58-8-10.5a4 4 0 018 0 4 4 0 018 0c0 3.92-4 7.5-8 10.5z"/></svg>',
+      herleitung: [
+        { label: 'Datenquelle', value: 'Open Finance - Kontoumsätze (Sparkasse)' },
+        { label: 'Erkannte Transaktionen', value: 'Fressnapf (\u20AC45/Mon.), Tierarztpraxis Dr. M\u00FCller (\u20AC120, Sep. 2025)' },
+        { label: 'Erkannte Situation', value: 'Regelm\u00E4\u00DFige Tierhaltungsausgaben, kein Tierhalterhaftpflicht-Vertrag bekannt' },
+        { label: 'Empfehlung', value: 'Tierhalterhaftpflicht (Hund) ab ca. \u20AC5/Monat' }
+      ]
+    },
+    { id: 'kb-hausrat', title: 'Hausratversicherung pr\u00FCfen', desc: 'Wohnfl\u00E4che und Wertgegenst\u00E4nde ggf. unterversichert', kategorie: 'anpassung', prioritaet: 'low', source: 'Bestandsdaten',
+      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="20" height="20"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>',
+      herleitung: [
+        { label: 'Datenquelle', value: 'Bestandsdaten' },
+        { label: 'Erkannte Situation', value: 'Letzte Anpassung vor 5 Jahren, Wohnfl\u00E4che 120m\u00B2' },
+        { label: 'Empfehlung', value: 'Deckungssumme pr\u00FCfen, ggf. Fahrraddiebstahl erg\u00E4nzen' }
+      ]
+    },
+    { id: 'kb-umschuldung', title: 'Umschuldung Konsumentenkredit', desc: 'Targobank Kredit 9,0% p.a. \u2013 Umschuldung zu 4,9% m\u00F6glich', kategorie: 'anpassung', prioritaet: 'low', source: 'Open Finance',
+      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="20" height="20"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>',
+      herleitung: [
+        { label: 'Datenquelle', value: 'Open Finance - Kreditdaten (Targobank)' },
+        { label: 'Erkannte Situation', value: 'Restschuld \u20AC12.500, Zinssatz 9,0% p.a., noch 36 Mon. Laufzeit' },
+        { label: 'Empfehlung', value: 'Umschuldung zu Santander (ERGO-Partner) mit 4,9% p.a., Ersparnis ca. \u20AC750' }
+      ]
     }
 ];
 
@@ -81,7 +106,7 @@ function renderImpulseContent() {
             div.innerHTML = kanbanHtml;
             container.appendChild(div);
             break;
-        case 2: // Kompakte Tabelle
+        case 2: // Kompakte Tabelle mit aufklappbaren Details
             hideExistingImpulse(container);
             removeAltImpulse(container);
             var tableHtml = renderImpulseTable();
@@ -105,6 +130,12 @@ function removeAltImpulse(container) {
     if (t) t.remove();
 }
 
+// SVG Icons for action buttons
+var actionIcons = {
+    angebot: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>',
+    termin: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>'
+};
+
 function renderImpulseKanban() {
     var high = impulseData.filter(function(i) { return i.prioritaet === 'high'; });
     var medium = impulseData.filter(function(i) { return i.prioritaet === 'medium'; });
@@ -120,8 +151,8 @@ function renderImpulseKanban() {
                         return '<div class="kanban-detail-row"><span class="kanban-detail-label">' + h.label + '</span><span class="kanban-detail-value">' + h.value + '</span></div>';
                     }).join('') +
                     '<div class="kanban-detail-actions">' +
-                    '<button class="action-btn primary small" onclick="event.stopPropagation()">Angebot erstellen</button>' +
-                    '<button class="action-btn secondary small" onclick="event.stopPropagation()">Termin vereinbaren</button></div></div>';
+                    '<button class="action-btn primary small icon-only" onclick="event.stopPropagation()" title="Angebot erstellen">' + actionIcons.angebot + '</button>' +
+                    '<button class="action-btn secondary small icon-only" onclick="event.stopPropagation()" title="Termin vereinbaren">' + actionIcons.termin + '</button></div></div>';
             }
             return '<div class="impulse-kanban-card" onclick="toggleKanbanDetail(\'' + i.id + '\')">' +
                 '<div class="impulse-kanban-card-header">' +
@@ -154,16 +185,49 @@ function toggleKanbanDetail(id) {
 }
 window.toggleKanbanDetail = toggleKanbanDetail;
 
+// Option 3: Kompakte Tabelle mit aufklappbaren Detail-Zeilen
 function renderImpulseTable() {
     var rows = impulseData.map(function(i) {
-        return '<tr><td><strong>' + i.title + '</strong></td>' +
-            '<td>' + i.desc + '</td>' +
-            '<td><span class="impulse-kat-badge ' + i.kategorie + '">' + (i.kategorie === 'whitespots' ? 'Neugesch\u00E4ft' : 'Anpassung') + '</span></td>' +
-            '<td><span class="impulse-prio-badge ' + i.prioritaet + '">' + (i.prioritaet === 'high' ? 'Hoch' : (i.prioritaet === 'medium' ? 'Mittel' : 'Niedrig')) + '</span></td>' +
-            '<td>' + i.source + '</td></tr>';
+        var prioLabel = i.prioritaet === 'high' ? 'Hoch' : (i.prioritaet === 'medium' ? 'Mittel' : 'Niedrig');
+        var katLabel = i.kategorie === 'whitespots' ? 'Neugesch\u00E4ft' : 'Anpassung';
+
+        // Detail-Zeile mit Herleitung + Actions
+        var detailHtml = '';
+        if (i.herleitung && i.herleitung.length > 0) {
+            detailHtml = '<tr class="impulse-table-detail" id="table-detail-' + i.id + '">' +
+                '<td colspan="6"><div class="impulse-table-detail-inner">' +
+                '<div class="impulse-table-herleitung">' +
+                '<div class="kanban-detail-title">Herleitung</div>' +
+                i.herleitung.map(function(h) {
+                    return '<div class="kanban-detail-row"><span class="kanban-detail-label">' + h.label + '</span><span class="kanban-detail-value">' + h.value + '</span></div>';
+                }).join('') +
+                '</div>' +
+                '<div class="impulse-table-actions">' +
+                '<button class="action-btn primary small icon-only" onclick="event.stopPropagation()" title="Angebot erstellen">' + actionIcons.angebot + '</button>' +
+                '<button class="action-btn secondary small icon-only" onclick="event.stopPropagation()" title="Termin vereinbaren">' + actionIcons.termin + '</button>' +
+                '</div></div></td></tr>';
+        }
+
+        return '<tr class="impulse-table-row" onclick="toggleTableDetail(\'' + i.id + '\')">' +
+            '<td><span class="impulse-table-icon">' + i.icon + '</span></td>' +
+            '<td><strong>' + i.title + '</strong><div class="impulse-table-desc">' + i.desc + '</div></td>' +
+            '<td><span class="impulse-kat-badge ' + i.kategorie + '">' + katLabel + '</span></td>' +
+            '<td><span class="impulse-prio-badge ' + i.prioritaet + '">' + prioLabel + '</span></td>' +
+            '<td>' + i.source + '</td>' +
+            '<td class="impulse-table-expand-cell"><span class="impulse-table-expand" id="table-arrow-' + i.id + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="6 9 12 15 18 9"/></svg></span></td>' +
+            '</tr>' + detailHtml;
     }).join('');
 
-    return '<table class="impulse-table"><thead><tr><th>Impuls</th><th>Beschreibung</th><th>Kategorie</th><th>Priorit\u00E4t</th><th>Quelle</th></tr></thead><tbody>' + rows + '</tbody></table>';
+    return '<table class="impulse-table"><thead><tr><th style="width:36px"></th><th>Impuls</th><th>Kategorie</th><th>Priorit\u00E4t</th><th>Quelle</th><th style="width:30px"></th></tr></thead><tbody>' + rows + '</tbody></table>';
 }
+
+function toggleTableDetail(id) {
+    var detail = document.getElementById('table-detail-' + id);
+    var arrow = document.getElementById('table-arrow-' + id);
+    if (!detail) return;
+    detail.classList.toggle('open');
+    if (arrow) arrow.classList.toggle('open');
+}
+window.toggleTableDetail = toggleTableDetail;
 
 // ========================================

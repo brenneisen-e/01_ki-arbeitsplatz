@@ -2148,6 +2148,12 @@ async function openRisikoscoring() {
         bankenModule.style.display = 'none';
     }
 
+    // Hide CV Scanner if visible
+    const cvModule = document.getElementById('cvScannerModule');
+    if (cvModule) {
+        cvModule.style.display = 'none';
+    }
+
     // Show risikoscoring module
     const rsModule = document.getElementById('risikoscoringModule');
     if (rsModule) {
@@ -2304,6 +2310,11 @@ async function openBestandsuebertragung() {
         pmoModule.style.display = 'none';
     }
 
+    const cvModule = document.getElementById('cvScannerModule');
+    if (cvModule) {
+        cvModule.style.display = 'none';
+    }
+
     // Show bestandsuebertragung module
     const bestandModule = document.getElementById('bestandsuebertragungModule');
     if (bestandModule) {
@@ -2393,6 +2404,11 @@ function closeBestandsuebertragung() {
     const pmoModule = document.getElementById('pmoToolboxModule');
     if (pmoModule) {
         pmoModule.style.display = 'none';
+    }
+
+    const cvScannerModule2 = document.getElementById('cvScannerModule');
+    if (cvScannerModule2) {
+        cvScannerModule2.style.display = 'none';
     }
 
     // Show versicherungModule (contains the landing page!)
@@ -2504,6 +2520,11 @@ async function openPMOToolbox() {
         bestandModule.style.display = 'none';
     }
 
+    const cvModule = document.getElementById('cvScannerModule');
+    if (cvModule) {
+        cvModule.style.display = 'none';
+    }
+
     // Hide main chat widget and toggle (they should not appear in PMO Toolbox)
     const chatWidget = document.getElementById('chatWidget');
     if (chatWidget) {
@@ -2584,6 +2605,11 @@ function closePMOToolbox() {
     const bestandsModule = document.getElementById('bestandsuebertragungModule');
     if (bestandsModule) {
         bestandsModule.style.display = 'none';
+    }
+
+    const cvScannerModule = document.getElementById('cvScannerModule');
+    if (cvScannerModule) {
+        cvScannerModule.style.display = 'none';
     }
 
     // Show versicherungModule (contains the landing page!)

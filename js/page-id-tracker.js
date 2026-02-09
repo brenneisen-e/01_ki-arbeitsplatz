@@ -9,6 +9,7 @@
  * P = PMO Toolbox
  * R = Risikoscoring
  * T = Bestandsübertragung (Portfolio Transfer)
+ * C = CV Scanner (Bewerbermanagement)
  */
 
 const PageIDTracker = {
@@ -77,6 +78,12 @@ const PageIDTracker = {
             'architektur': 'T-06',         // Architektur
             'vorlagen': 'T-07',            // E-Mail Vorlagen
             'prozess': 'T-08'              // Prozess
+        },
+
+        // C - CV Scanner Module
+        'cv-scanner': {
+            'bewerber': 'C-01',             // Bewerber-Portal
+            'arbeitgeber': 'C-02'           // Recruiting Dashboard
         }
     },
 
@@ -185,7 +192,8 @@ const PageIDTracker = {
             { id: 'bankenModule', name: 'banken' },
             { id: 'pmoToolboxModule', name: 'pmo-toolbox' },
             { id: 'risikoscoringModule', name: 'risikoscoring' },
-            { id: 'bestandsuebertragungModule', name: 'bestandsuebertragung' }
+            { id: 'bestandsuebertragungModule', name: 'bestandsuebertragung' },
+            { id: 'cvScannerModule', name: 'cv-scanner' }
         ];
 
         for (const module of modules) {
@@ -221,6 +229,8 @@ const PageIDTracker = {
                 return this.getRisikoscoringView();
             case 'bestandsuebertragung':
                 return this.getBestandsuebertragungView();
+            case 'cv-scanner':
+                return this.getCVScannerView();
             default:
                 return 'landing';
         }
@@ -362,6 +372,14 @@ const PageIDTracker = {
             return activeBtn.dataset.view;
         }
         return 'dashboard';
+    },
+
+    getCVScannerView() {
+        const arbeitgeberMode = document.getElementById('cvArbeitgeberMode');
+        if (arbeitgeberMode && arbeitgeberMode.classList.contains('active')) {
+            return 'arbeitgeber';
+        }
+        return 'bewerber';
     },
 
     setPageId(pageId) {

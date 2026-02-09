@@ -7,9 +7,9 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    margin-left: 16px;
-    padding-left: 16px;
-    border-left: 1px solid #e2e8f0;
+    margin-left: 20px;
+    padding-left: 20px;
+    border-left: 1px solid rgba(255, 255, 255, 0.25);
 }
 
 .makler-toggle-switch {
@@ -46,7 +46,7 @@
 .makler-toggle-label {
     font-size: 13px;
     font-weight: 600;
-    color: #475569;
+    color: rgba(255, 255, 255, 0.85);
     white-space: nowrap;
 }
 

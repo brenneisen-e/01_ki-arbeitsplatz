@@ -166,6 +166,46 @@
     font-weight: 700;
 }
 
+.bezahlen-tx-badge.bekannt {
+    background: #dcfce7;
+    color: #166534;
+    cursor: pointer;
+    transition: background 0.2s, box-shadow 0.2s;
+}
+
+.bezahlen-tx-badge.bekannt:hover {
+    background: #bbf7d0;
+    box-shadow: 0 1px 4px rgba(22, 101, 52, 0.2);
+}
+
+.bezahlen-tx-badge.unbekannt {
+    background: #f1f5f9;
+    color: #64748b;
+}
+
+/* Akkordeon Icon */
+.bezahlen-kat-icon {
+    display: inline-flex;
+    align-items: center;
+    color: #64748b;
+}
+
+.bezahlen-kat-icon svg {
+    width: 16px;
+    height: 16px;
+}
+
+/* Highlight-Animation für Vertrag in Tabelle */
+@keyframes highlightFade {
+    0% { background: #fef3c7; }
+    100% { background: transparent; }
+}
+
+.highlight-vertrag {
+    animation: highlightFade 3s ease-out;
+    background: #fef3c7 !important;
+}
+
 .bezahlen-tx-datum {
     font-size: 11px;
     color: #94a3b8;

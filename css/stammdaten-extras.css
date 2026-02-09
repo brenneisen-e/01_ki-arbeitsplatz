@@ -14,7 +14,13 @@
     border-radius: 20px;
     font-size: 13px;
     font-weight: 600;
-    cursor: help;
+    cursor: pointer;
+    transition: background 0.2s, box-shadow 0.2s;
+}
+
+.tier-unknown-badge:hover {
+    background: #fde68a;
+    box-shadow: 0 2px 8px rgba(146, 64, 14, 0.15);
 }
 
 .tier-none-badge {

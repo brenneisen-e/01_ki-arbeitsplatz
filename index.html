@@ -423,13 +423,13 @@
                             </div>
                         </div>
                     </div>
+                    <!-- Makler B2B Toggle (im Header-Left neben Name) -->
+                    <div class="makler-toggle-wrapper">
+                        <div class="makler-toggle-switch" id="maklerToggle" onclick="toggleMaklerModus()"></div>
+                        <span class="makler-toggle-label" id="maklerToggleLabel">Privatkunde (AO)</span>
+                    </div>
                 </div>
                 <input type="file" id="agenturPhotoInput" accept="image/*" style="display: none;" onchange="handleAgenturPhotoUpload(event)">
-                <!-- Makler B2B Toggle -->
-                <div class="makler-toggle-wrapper">
-                    <div class="makler-toggle-switch" id="maklerToggle" onclick="toggleMaklerModus()"></div>
-                    <span class="makler-toggle-label" id="maklerToggleLabel">Privatkunde (AO)</span>
-                </div>
                 <!-- Tab Navigation (im Header, rechts neben Name) -->
                 <div class="agentur-header-tabs">
                     <button class="agentur-tab active" onclick="showAgenturTab('uebersicht')">
@@ -3154,7 +3154,9 @@
                                 <div class="info-item full-width">
                                     <span class="info-label">Tiere</span>
                                     <div class="info-value" id="kundenTiere">
-                                        <span class="tier-unknown-badge" id="kundenTiereBadge">
+                                        <span class="tier-unknown-badge" id="kundenTiereBadge"
+                                            title="Aus Open Finance Kontoumsätzen wurden Hinweise auf Tierhaltung erkannt (z.B. Fressnapf, Tierarzt). Klicken Sie hier, um zu den Open Finance Umsätzen zu navigieren."
+                                            onclick="switchKundenTab('fida')">
                                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
                                             Hinweise aus Kontoums&auml;tzen
                                         </span>
@@ -3485,17 +3487,6 @@
                                 <span class="fida-finance-detail">Nach allen laufenden Ausgaben</span>
                                 <span class="fida-finance-detail">Sparquote: ~25% des Nettoeinkommens</span>
                             </div>
-                        </div>
-
-                        <!-- Banktransaktionen Switcher -->
-                        <div class="bezahlen-switcher" id="bezahlenSwitcher">
-                            <button class="option-switcher-arrow" onclick="switchBezahlenOption(-1)">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14"><polyline points="15 18 9 12 15 6"></polyline></svg>
-                            </button>
-                            <span class="option-switcher-label" id="bezahlenOptionLabel">Option 1: Donut + Akkordeon</span>
-                            <button class="option-switcher-arrow" onclick="switchBezahlenOption(1)">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                            </button>
                         </div>
 
                         <!-- Banktransaktionen Content -->

@@ -4035,6 +4035,16 @@ function switchKundeDropdown(kundenName) {
 }
 window.switchKundeDropdown = switchKundeDropdown;
 
+function filterKundenliste(searchText) {
+    const rows = document.querySelectorAll('#kundenlisteTableBody tr');
+    const term = searchText.toLowerCase();
+    rows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        row.style.display = text.includes(term) ? '' : 'none';
+    });
+}
+window.filterKundenliste = filterKundenliste;
+
 /**
  * Navigiert zum Vertriebsbericht aus der Kundendetail-Seite
  */

@@ -77,7 +77,8 @@ const PageIDTracker = {
             'ai-upload': 'T-05',           // KI Upload
             'architektur': 'T-06',         // Architektur
             'vorlagen': 'T-07',            // E-Mail Vorlagen
-            'prozess': 'T-08'              // Prozess
+            'prozess': 'T-08',             // Prozess
+            'projektplan': 'T-09'          // Projektplan
         },
 
         // C - CV Scanner Module

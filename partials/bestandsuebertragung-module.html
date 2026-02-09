@@ -79,6 +79,9 @@
         <button class="nav-btn" data-view="prozess">
             Prozess
         </button>
+        <button class="nav-btn" data-view="projektplan">
+            Projektplan
+        </button>
     </nav>
 
     <!-- ============================================ -->
@@ -1357,6 +1360,556 @@ ERGO Maklerservice</div>
                                 <td>&bdquo;Siehe Anlage&ldquo;-Mails</td>
                                 <td class="ist-cell">Manuelles &Ouml;ffnen der Anh&auml;nge</td>
                                 <td class="soll-cell">Anh&auml;nge werden automatisch gelesen</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- VIEW: Projektplan (T-09) -->
+    <!-- ============================================ -->
+    <section class="view" id="view-projektplan">
+        <div class="projektplan-container">
+            <h2>Projektplan &amp; Ressourcensch&auml;tzung</h2>
+            <p class="text-muted" style="margin-bottom: 2rem;">Gesch&auml;tzter Zeitrahmen und Deloitte-Ressourcenbedarf f&uuml;r Prozessanalyse, Optimierung und KI-L&ouml;sungsbegleitung.</p>
+
+            <!-- ===== Executive Summary ===== -->
+            <div class="projektplan-section">
+                <div class="projektplan-section-header">
+                    <span class="prozess-label prozess-label-soll">&Uuml;BERSICHT</span>
+                    <h3>Executive Summary</h3>
+                </div>
+                <div class="projektplan-summary-grid">
+                    <div class="pp-kpi-card">
+                        <div class="pp-kpi-icon">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        </div>
+                        <div class="pp-kpi-value">20&ndash;26</div>
+                        <div class="pp-kpi-label">Wochen Gesamtlaufzeit</div>
+                        <div class="pp-kpi-sub">ca. 5&ndash;6 Monate</div>
+                    </div>
+                    <div class="pp-kpi-card">
+                        <div class="pp-kpi-icon">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+                        </div>
+                        <div class="pp-kpi-value">5</div>
+                        <div class="pp-kpi-label">Projektphasen</div>
+                        <div class="pp-kpi-sub">Analyse bis Rollout</div>
+                    </div>
+                    <div class="pp-kpi-card">
+                        <div class="pp-kpi-icon">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+                        </div>
+                        <div class="pp-kpi-value">3&ndash;4</div>
+                        <div class="pp-kpi-label">Deloitte FTEs (Peak)</div>
+                        <div class="pp-kpi-sub">Fachkonzeption, Steuerung, IT</div>
+                    </div>
+                    <div class="pp-kpi-card">
+                        <div class="pp-kpi-icon">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                        </div>
+                        <div class="pp-kpi-value">~200&ndash;265</div>
+                        <div class="pp-kpi-label">Personentage gesamt</div>
+                        <div class="pp-kpi-sub">alle Rollen kumuliert</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== Phasen-Timeline (Gantt) ===== -->
+            <div class="projektplan-section">
+                <div class="projektplan-section-header">
+                    <span class="prozess-label prozess-label-ist">TIMELINE</span>
+                    <h3>Phasen&uuml;bersicht</h3>
+                </div>
+                <div class="pp-gantt">
+                    <!-- Header -->
+                    <div class="pp-gantt-header">
+                        <div class="pp-gantt-label">Phase</div>
+                        <div class="pp-gantt-track-hd">
+                            <span>M1</span><span>M2</span><span>M3</span><span>M4</span><span>M5</span><span>M6</span>
+                        </div>
+                    </div>
+
+                    <!-- Phase 1 -->
+                    <div class="pp-gantt-row">
+                        <div class="pp-gantt-label">
+                            <span class="pp-gantt-num">1</span>
+                            <div><strong>Analyse &amp; Konzeption</strong><small>4&ndash;5 Wo.</small></div>
+                        </div>
+                        <div class="pp-gantt-track">
+                            <div class="pp-gantt-bar pp-bar-1" style="left:0%;width:19%"><span>W1&ndash;5</span></div>
+                        </div>
+                    </div>
+
+                    <!-- Phase 2 -->
+                    <div class="pp-gantt-row">
+                        <div class="pp-gantt-label">
+                            <span class="pp-gantt-num">2</span>
+                            <div><strong>Proof of Concept</strong><small>4&ndash;5 Wo.</small></div>
+                        </div>
+                        <div class="pp-gantt-track">
+                            <div class="pp-gantt-bar pp-bar-2" style="left:15%;width:19%"><span>W4&ndash;9</span></div>
+                        </div>
+                    </div>
+
+                    <!-- Phase 3 -->
+                    <div class="pp-gantt-row">
+                        <div class="pp-gantt-label">
+                            <span class="pp-gantt-num">3</span>
+                            <div><strong>Implementierung</strong><small>8&ndash;10 Wo.</small></div>
+                        </div>
+                        <div class="pp-gantt-track">
+                            <div class="pp-gantt-bar pp-bar-3" style="left:31%;width:38%"><span>W8&ndash;18</span></div>
+                        </div>
+                    </div>
+
+                    <!-- Phase 4 -->
+                    <div class="pp-gantt-row">
+                        <div class="pp-gantt-label">
+                            <span class="pp-gantt-num">4</span>
+                            <div><strong>Test &amp; Pilot</strong><small>3&ndash;4 Wo.</small></div>
+                        </div>
+                        <div class="pp-gantt-track">
+                            <div class="pp-gantt-bar pp-bar-4" style="left:69%;width:15%"><span>W18&ndash;22</span></div>
+                        </div>
+                    </div>
+
+                    <!-- Phase 5 -->
+                    <div class="pp-gantt-row">
+                        <div class="pp-gantt-label">
+                            <span class="pp-gantt-num">5</span>
+                            <div><strong>Rollout &amp; &Uuml;bergabe</strong><small>2&ndash;3 Wo.</small></div>
+                        </div>
+                        <div class="pp-gantt-track">
+                            <div class="pp-gantt-bar pp-bar-5" style="left:84%;width:12%"><span>W22&ndash;26</span></div>
+                        </div>
+                    </div>
+
+                    <!-- Meilensteine -->
+                    <div class="pp-gantt-row pp-gantt-milestones">
+                        <div class="pp-gantt-label"><strong>Meilensteine</strong></div>
+                        <div class="pp-gantt-track">
+                            <div class="pp-milestone" style="left:19%" title="Go/No-Go Entscheidung"><span>&loz;</span><small>Go/No-Go</small></div>
+                            <div class="pp-milestone" style="left:34%" title="PoC Abnahme"><span>&loz;</span><small>PoC ok</small></div>
+                            <div class="pp-milestone" style="left:69%" title="Feature Complete"><span>&loz;</span><small>Feature Complete</small></div>
+                            <div class="pp-milestone" style="left:84%" title="Pilotabnahme"><span>&loz;</span><small>Pilot ok</small></div>
+                            <div class="pp-milestone" style="left:96%" title="Go-Live"><span>&loz;</span><small>Go-Live</small></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== Phasen-Details ===== -->
+            <div class="projektplan-section">
+                <div class="projektplan-section-header">
+                    <span class="prozess-label prozess-label-ist">DETAILS</span>
+                    <h3>Detailbeschreibung je Phase</h3>
+                </div>
+
+                <div class="pp-phase-grid">
+                    <!-- Phase 1 -->
+                    <div class="pp-phase-card pp-phase-1">
+                        <div class="pp-phase-head">
+                            <span class="pp-phase-num">1</span>
+                            <div>
+                                <h4>Analyse &amp; Konzeption</h4>
+                                <span class="pp-phase-time">4&ndash;5 Wochen</span>
+                            </div>
+                        </div>
+                        <ul>
+                            <li>IST-Prozessaufnahme mit Fachbereich (Workshops)</li>
+                            <li>Volumenanalyse: E-Mail-Aufkommen, Falltypen, Komplexit&auml;tsverteilung</li>
+                            <li>Anforderungserhebung an KI-L&ouml;sung und Schnittstellen</li>
+                            <li>SOLL-Prozessdesign und Architekturentscheidung (Option 1 / 2A / 2B)</li>
+                            <li>Fachkonzept und Entscheidungsvorlage f&uuml;r Steering</li>
+                        </ul>
+                        <div class="pp-phase-del"><strong>Deliverables:</strong> Fachkonzept, Architektur-Empfehlung, Business Case</div>
+                    </div>
+
+                    <!-- Phase 2 -->
+                    <div class="pp-phase-card pp-phase-2">
+                        <div class="pp-phase-head">
+                            <span class="pp-phase-num">2</span>
+                            <div>
+                                <h4>Proof of Concept</h4>
+                                <span class="pp-phase-time">4&ndash;5 Wochen</span>
+                            </div>
+                        </div>
+                        <ul>
+                            <li>Technisches Setup KI-Agent (Claude / LLM-Anbindung)</li>
+                            <li>E-Mail-Parsing: EML/MSG inkl. Anh&auml;nge (Word, Excel, PDF)</li>
+                            <li>Erste Extraktionslogik f&uuml;r VS-Nr., Sparten, Maklerdaten</li>
+                            <li>Test mit repr&auml;sentativen Beispieldaten (20&ndash;50 F&auml;lle)</li>
+                            <li>Ergebnispr&auml;sentation und Go/No-Go</li>
+                        </ul>
+                        <div class="pp-phase-del"><strong>Deliverables:</strong> Funktionierender Prototyp, Testbericht, Erkennungsrate</div>
+                    </div>
+
+                    <!-- Phase 3 -->
+                    <div class="pp-phase-card pp-phase-3">
+                        <div class="pp-phase-head">
+                            <span class="pp-phase-num">3</span>
+                            <div>
+                                <h4>Implementierung &amp; Integration</h4>
+                                <span class="pp-phase-time">8&ndash;10 Wochen</span>
+                            </div>
+                        </div>
+                        <ul>
+                            <li>KI-Agent Produktiventwicklung (alle Dokumenttypen, Maklervollmacht-Erkennung)</li>
+                            <li>Handling komplexer F&auml;lle: Multi-Vertr&auml;ge, &bdquo;Siehe Anlage&ldquo;-Mails</li>
+                            <li>Integration Postkorbsystem (API oder Batch-Export)</li>
+                            <li>Anbindung an Robotics-Pipeline (JSON-Output)</li>
+                            <li>Web-Tool / Dashboard f&uuml;r Validierung und Ausnahmenbehandlung</li>
+                            <li>Sicherheits- und Datenschutzkonzept</li>
+                        </ul>
+                        <div class="pp-phase-del"><strong>Deliverables:</strong> Produktionsreifer KI-Agent, Schnittstellendoku, Sicherheitskonzept</div>
+                    </div>
+
+                    <!-- Phase 4 -->
+                    <div class="pp-phase-card pp-phase-4">
+                        <div class="pp-phase-head">
+                            <span class="pp-phase-num">4</span>
+                            <div>
+                                <h4>Test &amp; Pilotbetrieb</h4>
+                                <span class="pp-phase-time">3&ndash;4 Wochen</span>
+                            </div>
+                        </div>
+                        <ul>
+                            <li>Integrationstests mit echten E-Mail-Daten</li>
+                            <li>User Acceptance Testing mit Sachbearbeitern</li>
+                            <li>Feintuning Erkennungsqualit&auml;t (Ziel: &gt;95%)</li>
+                            <li>Pilotbetrieb mit begrenztem E-Mail-Volumen</li>
+                            <li>Feedback-Schleifen und Anpassungen</li>
+                        </ul>
+                        <div class="pp-phase-del"><strong>Deliverables:</strong> Testprotokoll, Pilotbericht, Freigabeempfehlung</div>
+                    </div>
+
+                    <!-- Phase 5 -->
+                    <div class="pp-phase-card pp-phase-5">
+                        <div class="pp-phase-head">
+                            <span class="pp-phase-num">5</span>
+                            <div>
+                                <h4>Rollout &amp; &Uuml;bergabe</h4>
+                                <span class="pp-phase-time">2&ndash;3 Wochen</span>
+                            </div>
+                        </div>
+                        <ul>
+                            <li>Go-Live Begleitung und Monitoring</li>
+                            <li>Schulung der Sachbearbeiter und Key User</li>
+                            <li>Betriebsdokumentation und Runbooks</li>
+                            <li>&Uuml;bergabe an ERGO IT / internes Betriebsteam</li>
+                            <li>Hyper-Care Phase (2 Wochen nach Go-Live)</li>
+                        </ul>
+                        <div class="pp-phase-del"><strong>Deliverables:</strong> Betriebshandbuch, Schulungsunterlagen, &Uuml;bergabeprotokoll</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== Ressourcenplanung Deloitte ===== -->
+            <div class="projektplan-section">
+                <div class="projektplan-section-header">
+                    <span class="prozess-label prozess-label-soll">RESSOURCEN</span>
+                    <h3>Deloitte-Ressourcenplanung</h3>
+                </div>
+
+                <div class="pp-table-scroll">
+                    <table class="comparison-table pp-ressourcen-table">
+                        <thead>
+                            <tr>
+                                <th>Rolle</th>
+                                <th>Seniorit&auml;t</th>
+                                <th>Ph.1<br><small>Analyse</small></th>
+                                <th>Ph.2<br><small>PoC</small></th>
+                                <th>Ph.3<br><small>Impl.</small></th>
+                                <th>Ph.4<br><small>Test</small></th>
+                                <th>Ph.5<br><small>Rollout</small></th>
+                                <th>PT gesamt</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Projektleitung / Steuerung</strong></td>
+                                <td>Manager</td>
+                                <td class="pp-util-high">80%</td>
+                                <td class="pp-util-mid">60%</td>
+                                <td class="pp-util-mid">50%</td>
+                                <td class="pp-util-mid">60%</td>
+                                <td class="pp-util-high">80%</td>
+                                <td><strong>50&ndash;65</strong></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Fachliche Konzeption</strong></td>
+                                <td>Senior Consultant</td>
+                                <td class="pp-util-full">100%</td>
+                                <td class="pp-util-high">80%</td>
+                                <td class="pp-util-mid">60%</td>
+                                <td class="pp-util-high">80%</td>
+                                <td class="pp-util-low">40%</td>
+                                <td><strong>55&ndash;70</strong></td>
+                            </tr>
+                            <tr>
+                                <td><strong>KI / Data Engineer</strong></td>
+                                <td>Senior Consultant</td>
+                                <td class="pp-util-low">20%</td>
+                                <td class="pp-util-full">100%</td>
+                                <td class="pp-util-full">100%</td>
+                                <td class="pp-util-high">80%</td>
+                                <td class="pp-util-low">40%</td>
+                                <td><strong>60&ndash;80</strong></td>
+                            </tr>
+                            <tr>
+                                <td><strong>IT-Integration / Entwicklung</strong></td>
+                                <td>Consultant</td>
+                                <td class="pp-util-none">&ndash;</td>
+                                <td class="pp-util-low">40%</td>
+                                <td class="pp-util-high">80%</td>
+                                <td class="pp-util-mid">60%</td>
+                                <td class="pp-util-low">20%</td>
+                                <td><strong>35&ndash;50</strong></td>
+                            </tr>
+                            <tr class="pp-total-row">
+                                <td colspan="2"><strong>Gesamt Deloitte (FTE)</strong></td>
+                                <td><strong>3.0</strong></td>
+                                <td><strong>2.8</strong></td>
+                                <td><strong>2.9</strong></td>
+                                <td><strong>2.8</strong></td>
+                                <td><strong>1.8</strong></td>
+                                <td><strong>~200&ndash;265 PT</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="pp-hinweis">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                    <span>Auslastung in % bezogen auf Vollzeit. Erg&auml;nzend wird partielle Einbindung eines Partners / Senior Managers f&uuml;r Quality Gates und Steering empfohlen (~10&ndash;15% &uuml;ber alle Phasen, ca. 8&ndash;12 PT).</span>
+                </div>
+            </div>
+
+            <!-- ===== Rollenprofile ===== -->
+            <div class="projektplan-section">
+                <div class="projektplan-section-header">
+                    <span class="prozess-label prozess-label-ist">ROLLEN</span>
+                    <h3>Rollenprofile Deloitte</h3>
+                </div>
+
+                <div class="pp-rollen-grid">
+                    <div class="pp-rolle-card">
+                        <div class="pp-rolle-icon pp-rolle-steuerung">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+                        </div>
+                        <h4>Projektleitung / Steuerung</h4>
+                        <p class="pp-rolle-level">Manager</p>
+                        <ul>
+                            <li>Gesamtprojektsteuerung und Kundeninteraktion</li>
+                            <li>Stakeholder-Management bei ERGO</li>
+                            <li>Risiko- und Eskalationsmanagement</li>
+                            <li>Qualit&auml;tssicherung der Deliverables</li>
+                            <li>Steering-Committee Vorbereitung</li>
+                        </ul>
+                    </div>
+
+                    <div class="pp-rolle-card">
+                        <div class="pp-rolle-icon pp-rolle-fach">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+                        </div>
+                        <h4>Fachliche Konzeption</h4>
+                        <p class="pp-rolle-level">Senior Consultant</p>
+                        <ul>
+                            <li>Prozessanalyse IST/SOLL und Gap-Analyse</li>
+                            <li>Fachkonzept Bestands&uuml;bertragung</li>
+                            <li>Anforderungsdefinition an KI-Agent</li>
+                            <li>Testfalldefinition und UAT-Begleitung</li>
+                            <li>Schulungskonzept und Change Management</li>
+                        </ul>
+                    </div>
+
+                    <div class="pp-rolle-card">
+                        <div class="pp-rolle-icon pp-rolle-ki">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                        </div>
+                        <h4>KI / Data Engineer</h4>
+                        <p class="pp-rolle-level">Senior Consultant</p>
+                        <ul>
+                            <li>KI-Agent-Entwicklung (LLM-Prompting, Pipeline)</li>
+                            <li>E-Mail-/Dokumenten-Parsing (EML, MSG, DOCX, XLSX)</li>
+                            <li>Maklervollmacht-Erkennung und Validierung</li>
+                            <li>Qualit&auml;tsmonitoring und Modell-Feintuning</li>
+                            <li>Performance-Optimierung und Skalierung</li>
+                        </ul>
+                    </div>
+
+                    <div class="pp-rolle-card">
+                        <div class="pp-rolle-icon pp-rolle-it">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                        </div>
+                        <h4>IT-Integration / Entwicklung</h4>
+                        <p class="pp-rolle-level">Consultant</p>
+                        <ul>
+                            <li>Anbindung Postkorbsystem (API/Batch)</li>
+                            <li>Robotics-Pipeline Integration (JSON-Export)</li>
+                            <li>Web-Tool f&uuml;r Validierung und Monitoring</li>
+                            <li>Deployment und Infrastruktur (je nach Option 2A/2B)</li>
+                            <li>Technische Dokumentation</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== Aufwand nach Architektur-Option ===== -->
+            <div class="projektplan-section">
+                <div class="projektplan-section-header">
+                    <span class="prozess-label prozess-label-soll">VARIANTEN</span>
+                    <h3>Aufwand je Architektur-Option</h3>
+                </div>
+
+                <div class="pp-varianten-grid">
+                    <div class="pp-variante pp-variante-1">
+                        <div class="pp-variante-head">
+                            <span class="pp-variante-num">1</span>
+                            <h4>Ohne KI (Stichwortbasiert)</h4>
+                        </div>
+                        <div class="pp-variante-metrics">
+                            <div class="pp-variante-m">
+                                <span class="pp-variante-val">8&ndash;12</span>
+                                <span class="pp-variante-lbl">Wochen</span>
+                            </div>
+                            <div class="pp-variante-m">
+                                <span class="pp-variante-val">~60&ndash;90</span>
+                                <span class="pp-variante-lbl">PT Deloitte</span>
+                            </div>
+                            <div class="pp-variante-m">
+                                <span class="pp-variante-val">2</span>
+                                <span class="pp-variante-lbl">FTEs Peak</span>
+                            </div>
+                        </div>
+                        <p class="pp-variante-note">Schnellste Umsetzung, aber eingeschr&auml;nkte Erkennungsqualit&auml;t. Kein KI-Spezialist erforderlich.</p>
+                    </div>
+
+                    <div class="pp-variante pp-variante-2a">
+                        <div class="pp-variante-head">
+                            <span class="pp-variante-num">2A</span>
+                            <h4>ERGO-interne KI-Plattform</h4>
+                            <span class="pp-variante-badge">Empfohlen</span>
+                        </div>
+                        <div class="pp-variante-metrics">
+                            <div class="pp-variante-m">
+                                <span class="pp-variante-val">20&ndash;26</span>
+                                <span class="pp-variante-lbl">Wochen</span>
+                            </div>
+                            <div class="pp-variante-m">
+                                <span class="pp-variante-val">~200&ndash;265</span>
+                                <span class="pp-variante-lbl">PT Deloitte</span>
+                            </div>
+                            <div class="pp-variante-m">
+                                <span class="pp-variante-val">3&ndash;4</span>
+                                <span class="pp-variante-lbl">FTEs Peak</span>
+                            </div>
+                        </div>
+                        <p class="pp-variante-note">Volle Kontrolle bei ERGO. Ben&ouml;tigt Agent-Plattform als Voraussetzung. H&ouml;chste Datenhoheit.</p>
+                    </div>
+
+                    <div class="pp-variante pp-variante-2b">
+                        <div class="pp-variante-head">
+                            <span class="pp-variante-num">2B</span>
+                            <h4>Deloitte External API</h4>
+                        </div>
+                        <div class="pp-variante-metrics">
+                            <div class="pp-variante-m">
+                                <span class="pp-variante-val">18&ndash;22</span>
+                                <span class="pp-variante-lbl">Wochen</span>
+                            </div>
+                            <div class="pp-variante-m">
+                                <span class="pp-variante-val">~180&ndash;230</span>
+                                <span class="pp-variante-lbl">PT Deloitte</span>
+                            </div>
+                            <div class="pp-variante-m">
+                                <span class="pp-variante-val">3&ndash;4</span>
+                                <span class="pp-variante-lbl">FTEs Peak</span>
+                            </div>
+                        </div>
+                        <p class="pp-variante-note">Schnellerer Start da keine ERGO-Plattform n&ouml;tig. Laufende Betriebskosten bei Deloitte. Datenschutz-Abstimmung erforderlich.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== Annahmen & Risiken ===== -->
+            <div class="projektplan-section">
+                <div class="projektplan-section-header">
+                    <span class="prozess-label prozess-label-ist">ANNAHMEN</span>
+                    <h3>Annahmen &amp; Risiken</h3>
+                </div>
+
+                <div class="pp-ar-grid">
+                    <div class="pp-ar-card">
+                        <h4>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+                            Annahmen
+                        </h4>
+                        <ul>
+                            <li>Zugang zu repr&auml;sentativen E-Mail-Testdaten wird innerhalb Phase 1 bereitgestellt</li>
+                            <li>Fachliche Ansprechpartner bei ERGO stehen f&uuml;r Workshops zur Verf&uuml;gung (mind. 1 Tag/Woche)</li>
+                            <li>Architekturentscheidung (Option 1/2A/2B) wird am Ende Phase 1 getroffen</li>
+                            <li>Bei Option 2A: ERGO Agent-Plattform ist verf&uuml;gbar oder wird parallel bereitgestellt</li>
+                            <li>Datenschutzfreigabe f&uuml;r KI-Verarbeitung von Kundendaten liegt vor oder wird in Phase 1 gekl&auml;rt</li>
+                        </ul>
+                    </div>
+                    <div class="pp-ar-card pp-ar-risiken">
+                        <h4>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                            Risiken
+                        </h4>
+                        <ul>
+                            <li><strong>Datenzugang:</strong> Verz&ouml;gerung bei Testdaten kann PoC verschieben (+2&ndash;4 Wo.)</li>
+                            <li><strong>Datenschutz:</strong> Langwierige DSGVO-Abstimmung kann Phase 2/3 blockieren</li>
+                            <li><strong>Systemzugang:</strong> Fehlende API zum Postkorbsystem erfordert Workaround (Batch statt Echtzeit)</li>
+                            <li><strong>Scope Creep:</strong> Erweiterung auf weitere Dokumenttypen oder Sparten erh&ouml;ht Aufwand</li>
+                            <li><strong>Erkennungsqualit&auml;t:</strong> Handschriftliche Vollmachten k&ouml;nnen zus&auml;tzliche Nacharbeit erfordern</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== ERGO-seitiger Bedarf ===== -->
+            <div class="projektplan-section">
+                <div class="projektplan-section-header">
+                    <span class="prozess-label prozess-label-soll">ERGO</span>
+                    <h3>Kundenseitiger Ressourcenbedarf</h3>
+                </div>
+
+                <div class="pp-table-scroll">
+                    <table class="comparison-table pp-ressourcen-table">
+                        <thead>
+                            <tr>
+                                <th>Rolle (ERGO)</th>
+                                <th>Aufwand</th>
+                                <th>Schwerpunkt</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Product Owner / Fachbereich</strong></td>
+                                <td>~30&ndash;40% &uuml;ber Laufzeit</td>
+                                <td>Anforderungen, Abnahmen, Priorisierung</td>
+                            </tr>
+                            <tr>
+                                <td><strong>IT-Ansprechpartner</strong></td>
+                                <td>~20&ndash;30% ab Phase 2</td>
+                                <td>Systemzug&auml;nge, Schnittstellenkl&auml;rung, Infrastruktur</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Sachbearbeiter (Tester)</strong></td>
+                                <td>~20% in Phase 4</td>
+                                <td>UAT, Feedback, Validierung der Ergebnisse</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Datenschutzbeauftragter</strong></td>
+                                <td>Punktuell (Phase 1, 3)</td>
+                                <td>DSGVO-Bewertung, Freigabe KI-Verarbeitung</td>
                             </tr>
                         </tbody>
                     </table>

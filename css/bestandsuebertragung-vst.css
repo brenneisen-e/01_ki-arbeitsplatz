@@ -4117,6 +4117,700 @@ body {
 }
 
 /* ============================================ */
+/* Projektplan (T-09) Styles */
+/* ============================================ */
+
+.bestand-page .projektplan-container {
+    max-width: none;
+    margin: 0;
+    padding: 0 1rem;
+}
+
+.bestand-page .projektplan-container h2 {
+    font-size: 1.85rem;
+    font-weight: 700;
+    color: var(--gray-800);
+    margin-bottom: 0.25rem;
+}
+
+.bestand-page .projektplan-section {
+    margin-bottom: 3rem;
+}
+
+.bestand-page .projektplan-section-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+}
+
+.bestand-page .projektplan-section-header h3 {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--gray-800);
+    margin: 0;
+}
+
+/* -- KPI Summary Cards -- */
+.bestand-page .projektplan-summary-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+}
+
+.bestand-page .pp-kpi-card {
+    background: white;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    text-align: center;
+    transition: box-shadow 0.15s, border-color 0.15s;
+}
+
+.bestand-page .pp-kpi-card:hover {
+    box-shadow: var(--shadow-md);
+    border-color: var(--gray-300);
+}
+
+.bestand-page .pp-kpi-icon {
+    color: var(--primary);
+    margin-bottom: 0.75rem;
+}
+
+.bestand-page .pp-kpi-value {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: var(--gray-800);
+    line-height: 1.1;
+}
+
+.bestand-page .pp-kpi-label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--gray-600);
+    margin-top: 0.25rem;
+}
+
+.bestand-page .pp-kpi-sub {
+    font-size: 0.8rem;
+    color: var(--gray-400);
+    margin-top: 0.25rem;
+}
+
+/* -- Gantt Chart -- */
+.bestand-page .pp-gantt {
+    background: white;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    overflow-x: auto;
+}
+
+.bestand-page .pp-gantt-header {
+    display: flex;
+    align-items: center;
+    border-bottom: 2px solid var(--gray-200);
+    padding-bottom: 0.75rem;
+    margin-bottom: 0.5rem;
+}
+
+.bestand-page .pp-gantt-label {
+    width: 240px;
+    min-width: 240px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: var(--gray-600);
+    padding-right: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+}
+
+.bestand-page .pp-gantt-label div {
+    display: flex;
+    flex-direction: column;
+}
+
+.bestand-page .pp-gantt-label small {
+    font-weight: 400;
+    color: var(--gray-400);
+    font-size: 0.75rem;
+}
+
+.bestand-page .pp-gantt-track-hd {
+    flex: 1;
+    display: flex;
+    min-width: 480px;
+}
+
+.bestand-page .pp-gantt-track-hd span {
+    flex: 1;
+    text-align: center;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--gray-500);
+}
+
+.bestand-page .pp-gantt-row {
+    display: flex;
+    align-items: center;
+    padding: 0.6rem 0;
+    border-bottom: 1px solid var(--gray-100);
+}
+
+.bestand-page .pp-gantt-row:last-child {
+    border-bottom: none;
+}
+
+.bestand-page .pp-gantt-num {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--gray-100);
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--gray-600);
+    flex-shrink: 0;
+}
+
+.bestand-page .pp-gantt-track {
+    flex: 1;
+    position: relative;
+    height: 32px;
+    min-width: 480px;
+    background: repeating-linear-gradient(
+        90deg,
+        var(--gray-50) 0%,
+        var(--gray-50) 16.66%,
+        var(--gray-100) 16.66%,
+        var(--gray-100) 16.67%
+    );
+    border-radius: var(--radius-sm);
+}
+
+.bestand-page .pp-gantt-bar {
+    position: absolute;
+    top: 3px;
+    height: 26px;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: white;
+    transition: opacity 0.15s;
+    cursor: default;
+}
+
+.bestand-page .pp-gantt-bar:hover {
+    opacity: 0.88;
+}
+
+.bestand-page .pp-gantt-bar span {
+    white-space: nowrap;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+
+.bestand-page .pp-bar-1 { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+.bestand-page .pp-bar-2 { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+.bestand-page .pp-bar-3 { background: linear-gradient(135deg, #C8102E, #a00d24); }
+.bestand-page .pp-bar-4 { background: linear-gradient(135deg, #f59e0b, #d97706); }
+.bestand-page .pp-bar-5 { background: linear-gradient(135deg, #10b981, #059669); }
+
+/* Milestones */
+.bestand-page .pp-gantt-milestones {
+    padding-top: 0.75rem;
+    border-top: 2px solid var(--gray-200);
+    border-bottom: none;
+}
+
+.bestand-page .pp-milestone {
+    position: absolute;
+    top: -4px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transform: translateX(-50%);
+}
+
+.bestand-page .pp-milestone span {
+    font-size: 1.4rem;
+    color: var(--primary);
+    line-height: 1;
+}
+
+.bestand-page .pp-milestone small {
+    font-size: 0.62rem;
+    color: var(--gray-500);
+    white-space: nowrap;
+    margin-top: 2px;
+    font-weight: 600;
+}
+
+/* -- Phase Detail Cards -- */
+.bestand-page .pp-phase-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 1rem;
+}
+
+.bestand-page .pp-phase-card {
+    background: white;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem;
+    border-top: 4px solid var(--gray-300);
+    transition: box-shadow 0.15s;
+}
+
+.bestand-page .pp-phase-card:hover {
+    box-shadow: var(--shadow-md);
+}
+
+.bestand-page .pp-phase-1 { border-top-color: #3b82f6; }
+.bestand-page .pp-phase-2 { border-top-color: #8b5cf6; }
+.bestand-page .pp-phase-3 { border-top-color: #C8102E; }
+.bestand-page .pp-phase-4 { border-top-color: #f59e0b; }
+.bestand-page .pp-phase-5 { border-top-color: #10b981; }
+
+.bestand-page .pp-phase-head {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.bestand-page .pp-phase-num {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    font-size: 1rem;
+    font-weight: 800;
+    color: white;
+    flex-shrink: 0;
+}
+
+.bestand-page .pp-phase-1 .pp-phase-num { background: #3b82f6; }
+.bestand-page .pp-phase-2 .pp-phase-num { background: #8b5cf6; }
+.bestand-page .pp-phase-3 .pp-phase-num { background: #C8102E; }
+.bestand-page .pp-phase-4 .pp-phase-num { background: #f59e0b; }
+.bestand-page .pp-phase-5 .pp-phase-num { background: #10b981; }
+
+.bestand-page .pp-phase-head h4 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--gray-800);
+    margin: 0;
+}
+
+.bestand-page .pp-phase-time {
+    font-size: 0.8rem;
+    color: var(--gray-500);
+    font-weight: 500;
+}
+
+.bestand-page .pp-phase-card ul {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1rem;
+}
+
+.bestand-page .pp-phase-card ul li {
+    padding: 0.35rem 0 0.35rem 1.25rem;
+    position: relative;
+    font-size: 0.88rem;
+    color: var(--gray-600);
+    line-height: 1.45;
+}
+
+.bestand-page .pp-phase-card ul li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.7rem;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--gray-300);
+}
+
+.bestand-page .pp-phase-del {
+    background: var(--gray-50);
+    border-radius: var(--radius-sm);
+    padding: 0.65rem 0.85rem;
+    font-size: 0.82rem;
+    color: var(--gray-600);
+    line-height: 1.5;
+}
+
+/* -- Ressourcen Table -- */
+.bestand-page .pp-table-scroll {
+    overflow-x: auto;
+    margin-bottom: 1rem;
+}
+
+.bestand-page .pp-ressourcen-table {
+    min-width: 700px;
+}
+
+.bestand-page .pp-ressourcen-table th {
+    text-align: center;
+    vertical-align: bottom;
+}
+
+.bestand-page .pp-ressourcen-table th:first-child,
+.bestand-page .pp-ressourcen-table th:nth-child(2) {
+    text-align: left;
+}
+
+.bestand-page .pp-ressourcen-table th small {
+    display: block;
+    font-weight: 400;
+    color: var(--gray-400);
+    font-size: 0.72rem;
+}
+
+.bestand-page .pp-ressourcen-table td {
+    text-align: center;
+    font-size: 0.88rem;
+}
+
+.bestand-page .pp-ressourcen-table td:first-child,
+.bestand-page .pp-ressourcen-table td:nth-child(2) {
+    text-align: left;
+}
+
+.bestand-page .pp-util-full {
+    background: #dcfce7 !important;
+    color: #166534 !important;
+    font-weight: 700;
+}
+
+.bestand-page .pp-util-high {
+    background: #dbeafe !important;
+    color: #1e40af !important;
+    font-weight: 600;
+}
+
+.bestand-page .pp-util-mid {
+    background: #fef3c7 !important;
+    color: #92400e !important;
+    font-weight: 600;
+}
+
+.bestand-page .pp-util-low {
+    background: var(--gray-50) !important;
+    color: var(--gray-500) !important;
+}
+
+.bestand-page .pp-util-none {
+    color: var(--gray-300) !important;
+}
+
+.bestand-page .pp-total-row td {
+    background: var(--gray-50) !important;
+    border-top: 2px solid var(--gray-300);
+    font-weight: 700 !important;
+    color: var(--gray-800) !important;
+}
+
+.bestand-page .pp-hinweis {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.65rem;
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: var(--radius-md);
+    padding: 0.85rem 1rem;
+    font-size: 0.85rem;
+    color: #1e40af;
+    line-height: 1.5;
+}
+
+.bestand-page .pp-hinweis svg {
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+/* -- Rollen Grid -- */
+.bestand-page .pp-rollen-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1rem;
+}
+
+.bestand-page .pp-rolle-card {
+    background: white;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem;
+    transition: box-shadow 0.15s;
+}
+
+.bestand-page .pp-rolle-card:hover {
+    box-shadow: var(--shadow-md);
+}
+
+.bestand-page .pp-rolle-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.75rem;
+}
+
+.bestand-page .pp-rolle-steuerung { background: #dbeafe; color: #2563eb; }
+.bestand-page .pp-rolle-fach { background: #f3e8ff; color: #7c3aed; }
+.bestand-page .pp-rolle-ki { background: #fce7f3; color: #C8102E; }
+.bestand-page .pp-rolle-it { background: #d1fae5; color: #059669; }
+
+.bestand-page .pp-rolle-card h4 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--gray-800);
+    margin: 0 0 0.15rem;
+}
+
+.bestand-page .pp-rolle-level {
+    font-size: 0.8rem;
+    color: var(--gray-500);
+    font-weight: 500;
+    margin: 0 0 0.75rem;
+}
+
+.bestand-page .pp-rolle-card ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.bestand-page .pp-rolle-card ul li {
+    padding: 0.3rem 0 0.3rem 1.1rem;
+    position: relative;
+    font-size: 0.84rem;
+    color: var(--gray-600);
+    line-height: 1.45;
+}
+
+.bestand-page .pp-rolle-card ul li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.65rem;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--gray-300);
+}
+
+/* -- Varianten Cards -- */
+.bestand-page .pp-varianten-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+}
+
+.bestand-page .pp-variante {
+    background: white;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem;
+    transition: box-shadow 0.15s;
+}
+
+.bestand-page .pp-variante:hover {
+    box-shadow: var(--shadow-md);
+}
+
+.bestand-page .pp-variante-2a {
+    border: 2px solid #10b981;
+    position: relative;
+}
+
+.bestand-page .pp-variante-head {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+}
+
+.bestand-page .pp-variante-num {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--gray-100);
+    font-size: 0.8rem;
+    font-weight: 800;
+    color: var(--gray-600);
+    flex-shrink: 0;
+}
+
+.bestand-page .pp-variante-2a .pp-variante-num {
+    background: #10b981;
+    color: white;
+}
+
+.bestand-page .pp-variante-head h4 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--gray-800);
+    margin: 0;
+    flex: 1;
+}
+
+.bestand-page .pp-variante-badge {
+    background: #dcfce7;
+    color: #166534;
+    padding: 3px 10px;
+    border-radius: var(--radius-sm);
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.bestand-page .pp-variante-metrics {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.bestand-page .pp-variante-m {
+    flex: 1;
+    background: var(--gray-50);
+    border-radius: var(--radius-sm);
+    padding: 0.65rem 0.5rem;
+    text-align: center;
+}
+
+.bestand-page .pp-variante-val {
+    display: block;
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: var(--gray-800);
+    line-height: 1.2;
+}
+
+.bestand-page .pp-variante-lbl {
+    display: block;
+    font-size: 0.68rem;
+    color: var(--gray-500);
+    margin-top: 2px;
+}
+
+.bestand-page .pp-variante-note {
+    font-size: 0.82rem;
+    color: var(--gray-500);
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* -- Annahmen & Risiken -- */
+.bestand-page .pp-ar-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.bestand-page .pp-ar-card {
+    background: white;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem;
+    border-left: 4px solid #3b82f6;
+}
+
+.bestand-page .pp-ar-risiken {
+    border-left-color: #f59e0b;
+}
+
+.bestand-page .pp-ar-card h4 {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--gray-800);
+    margin: 0 0 0.75rem;
+}
+
+.bestand-page .pp-ar-card h4 svg {
+    flex-shrink: 0;
+}
+
+.bestand-page .pp-ar-card ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.bestand-page .pp-ar-card ul li {
+    padding: 0.4rem 0 0.4rem 1.25rem;
+    position: relative;
+    font-size: 0.88rem;
+    color: var(--gray-600);
+    line-height: 1.5;
+}
+
+.bestand-page .pp-ar-card ul li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.75rem;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--gray-300);
+}
+
+.bestand-page .pp-ar-risiken ul li::before {
+    background: #f59e0b;
+}
+
+/* -- Projektplan Responsive -- */
+@media (max-width: 1024px) {
+    .bestand-page .projektplan-summary-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .bestand-page .pp-varianten-grid {
+        grid-template-columns: 1fr;
+    }
+    .bestand-page .pp-ar-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 640px) {
+    .bestand-page .projektplan-summary-grid {
+        grid-template-columns: 1fr;
+    }
+    .bestand-page .pp-gantt-label {
+        width: 160px;
+        min-width: 160px;
+        font-size: 0.78rem;
+    }
+    .bestand-page .pp-phase-grid {
+        grid-template-columns: 1fr;
+    }
+    .bestand-page .pp-rollen-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ============================================ */
 /* AI Landing Page Styles */
 /* ============================================ */
 

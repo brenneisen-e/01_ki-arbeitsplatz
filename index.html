@@ -405,7 +405,7 @@
                             <img id="agenturPhotoImgSmall" class="agentur-photo-img-small" style="display: none;" alt="Foto">
                         </div>
                         <div class="agentur-header-text">
-                            <h1 class="agentur-page-title" id="agenturPageTitle">Agentur-Übersicht</h1>
+                            <h1 class="agentur-page-title" id="agenturPageTitle">Agentur: Max Mustermann</h1>
                             <div class="agentur-subtitle">
                                 <span id="agenturIdHeader">-</span> | <span id="agenturStatusHeader">Aktiv</span>
                             </div>
@@ -2913,23 +2913,41 @@
     <div id="kundenDetailPage" style="display: none;">
         <!-- Shared A-02 Header Tabs (Kundenliste active) -->
         <div class="kunden-shared-header">
-            <button class="back-button" onclick="closeKundenDetail()">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
-                Zurück
-            </button>
-            <div class="kunden-shared-header-info">
-                <div class="agentur-photo-small" id="kundenHeaderPhoto">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="agentur-photo-placeholder-small">
-                        <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"></path>
-                        <circle cx="12" cy="7" r="4"></circle>
-                    </svg>
-                    <img id="kundenHeaderPhotoImg" class="agentur-photo-img-small" style="display: none;" alt="Foto">
-                </div>
-                <div class="agentur-header-text">
-                    <h1 class="agentur-page-title" id="kundenHeaderTitle">Agentur-Übersicht</h1>
-                    <div class="agentur-subtitle">
-                        <span id="kundenHeaderId">-</span> | <span>Aktiv</span>
+            <div class="kunden-shared-header-top">
+                <button class="back-button" onclick="closeKundenDetail()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                    Zurück
+                </button>
+                <div class="kunden-shared-header-info">
+                    <div class="agentur-photo-small" id="kundenHeaderPhoto">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="agentur-photo-placeholder-small">
+                            <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                        <img id="kundenHeaderPhotoImg" class="agentur-photo-img-small" style="display: none;" alt="Foto">
                     </div>
+                    <div class="agentur-header-text">
+                        <h1 class="agentur-page-title" id="kundenHeaderTitle">Agentur: Max Mustermann</h1>
+                        <div class="agentur-subtitle">
+                            <span id="kundenHeaderId">-</span> | <span>Aktiv</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="kunden-switch-dropdown">
+                    <label>Kunde:</label>
+                    <select id="kundenSwitchSelect" onchange="switchKundeDropdown(this.value)">
+                        <option value="Peter Schmidt">Peter Schmidt</option>
+                        <option value="Sabine König">Sabine König</option>
+                        <option value="Thomas Weber">Thomas Weber</option>
+                        <option value="Anna Hoffmann">Anna Hoffmann</option>
+                        <option value="Michael Braun">Michael Braun</option>
+                        <option value="Lisa Müller">Lisa Müller</option>
+                        <option value="Klaus Meier">Klaus Meier</option>
+                        <option value="Matthias Engel">Matthias Engel</option>
+                        <option value="Christian Bauer">Christian Bauer</option>
+                        <option value="Martin Wolf">Martin Wolf</option>
+                        <option value="Eva Hartmann">Eva Hartmann</option>
+                    </select>
                 </div>
             </div>
             <div class="agentur-header-tabs">
@@ -2969,22 +2987,6 @@
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
                     Potentiale
                 </button>
-            </div>
-            <div class="kunden-switch-dropdown">
-                <label>Kunde:</label>
-                <select id="kundenSwitchSelect" onchange="switchKundeDropdown(this.value)">
-                    <option value="Peter Schmidt">Peter Schmidt</option>
-                    <option value="Sabine König">Sabine König</option>
-                    <option value="Thomas Weber">Thomas Weber</option>
-                    <option value="Anna Hoffmann">Anna Hoffmann</option>
-                    <option value="Michael Braun">Michael Braun</option>
-                    <option value="Lisa Müller">Lisa Müller</option>
-                    <option value="Klaus Meier">Klaus Meier</option>
-                    <option value="Matthias Engel">Matthias Engel</option>
-                    <option value="Christian Bauer">Christian Bauer</option>
-                    <option value="Martin Wolf">Martin Wolf</option>
-                    <option value="Eva Hartmann">Eva Hartmann</option>
-                </select>
             </div>
         </div>
 

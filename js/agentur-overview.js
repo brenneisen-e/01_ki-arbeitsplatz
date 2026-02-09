@@ -123,7 +123,8 @@ function fillHeader(agentur, agenturData) {
     const idHeader = document.getElementById('agenturIdHeader');
     const statusHeader = document.getElementById('agenturStatusHeader');
 
-    if (title) title.textContent = agentur.name || agentur.id;
+    const displayName = (agentur.name || agentur.id).replace(/[""„"]/g, '');
+    if (title) title.textContent = 'Agentur: ' + displayName;
     if (idHeader) idHeader.textContent = agentur.id;
     if (statusHeader) statusHeader.textContent = 'Aktiv';
 

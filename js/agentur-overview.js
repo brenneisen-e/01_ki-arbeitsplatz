@@ -100,8 +100,11 @@ function loadAgenturData(vermittlerId) {
  * Tab-Wechsel Funktion
  */
 function showAgenturTab(tabName) {
-    // Alle Tabs deaktivieren
-    document.querySelectorAll('.agentur-tab').forEach(tab => tab.classList.remove('active'));
+    // Nur A-02 Tabs deaktivieren (nicht A-10)
+    const agenturHeader = document.querySelector('.agentur-page-new .agentur-header-tabs');
+    if (agenturHeader) {
+        agenturHeader.querySelectorAll('.agentur-tab').forEach(tab => tab.classList.remove('active'));
+    }
     document.querySelectorAll('.agentur-tab-content').forEach(content => content.classList.remove('active'));
 
     // Gewählten Tab aktivieren

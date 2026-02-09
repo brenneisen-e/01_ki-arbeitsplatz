@@ -9226,62 +9226,60 @@ button svg,
    SHARED HEADER TABS (A-02 / A-10)
    ======================================== */
 
-/* A-02: Header becomes flex-column for two rows */
+/* A-02: Header single row - tabs right of name */
 .agentur-header-new {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 0;
+    flex-direction: row;
+    align-items: center;
+    gap: 16px;
 }
 
-.agentur-header-new > .agentur-header-left {
-    padding-bottom: 12px;
-}
-
-/* Tabs row inside header */
+/* Tabs inline next to name */
 .agentur-header-tabs {
     display: flex;
-    gap: 4px;
-    padding: 8px 0 0;
-    border-top: 1px solid #e2e8f0;
+    gap: 2px;
     overflow-x: auto;
     flex-wrap: nowrap;
+    flex: 1;
+    justify-content: flex-end;
 }
 
 .agentur-header-tabs .agentur-tab {
-    padding: 8px 14px;
-    font-size: 13px;
-    gap: 6px;
+    padding: 6px 10px;
+    font-size: 12px;
+    gap: 4px;
     white-space: nowrap;
     flex-shrink: 0;
 }
 
 .agentur-header-tabs .agentur-tab svg {
-    width: 16px;
-    height: 16px;
+    width: 14px;
+    height: 14px;
 }
 
 /* A-10: Shared header mirroring A-02 */
 .kunden-shared-header {
     background: white;
-    padding: 16px 32px 0;
+    padding: 12px 32px;
     border-bottom: 1px solid #e2e8f0;
     position: sticky;
     top: 0;
     z-index: 100;
+    display: flex;
+    align-items: center;
+    gap: 16px;
 }
 
 .kunden-shared-header-top {
     display: flex;
     align-items: center;
-    gap: 24px;
-    padding-bottom: 12px;
+    gap: 16px;
+    flex-shrink: 0;
 }
 
 .kunden-shared-header-info {
     display: flex;
     align-items: center;
-    gap: 16px;
-    flex: 1;
+    gap: 12px;
 }
 
 /* Customer Switch Dropdown */
@@ -9318,6 +9316,8 @@ button svg,
 }
 
 .kunden-shared-header .agentur-header-tabs {
-    padding: 8px 0 0;
-    border-top: 1px solid #e2e8f0;
+    flex: 1;
+    justify-content: flex-end;
+    border-top: none;
+    padding: 0;
 }

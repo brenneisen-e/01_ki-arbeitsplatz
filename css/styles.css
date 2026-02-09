@@ -9275,11 +9275,12 @@ button svg,
 
 .agentur-header-new .back-button {
     color: white;
+    background: rgba(255, 255, 255, 0.15);
     border-color: rgba(255, 255, 255, 0.3);
 }
 
 .agentur-header-new .back-button:hover {
-    background: rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.25);
 }
 
 .agentur-header-new .agentur-tab {
@@ -9299,27 +9300,30 @@ button svg,
 /* A-10: Shared header mirroring A-02 */
 .kunden-shared-header {
     background: #2d5016;
-    padding: 12px 32px;
+    padding: 16px 32px;
     border-bottom: none;
     position: sticky;
     top: 0;
     z-index: 100;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    align-items: center;
     gap: 0;
 }
 
 .kunden-shared-header-top {
+    position: absolute;
+    left: 32px;
     display: flex;
     align-items: center;
     gap: 16px;
+    z-index: 2;
 }
 
 .kunden-shared-header-info {
     display: flex;
     align-items: center;
     gap: 12px;
-    flex: 1;
 }
 
 /* Customer Switch Dropdown */
@@ -9357,7 +9361,14 @@ button svg,
 
 .kunden-shared-header .agentur-header-tabs {
     justify-content: center;
-    padding-top: 12px;
+    width: 100%;
+    padding-top: 0;
+}
+
+.kunden-shared-header .kunden-switch-dropdown {
+    position: absolute;
+    right: 32px;
+    z-index: 2;
 }
 
 .kunden-shared-header .agentur-header-text h1 {
@@ -9370,11 +9381,12 @@ button svg,
 
 .kunden-shared-header .back-button {
     color: white;
+    background: rgba(255, 255, 255, 0.15);
     border-color: rgba(255, 255, 255, 0.3);
 }
 
 .kunden-shared-header .back-button:hover {
-    background: rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.25);
 }
 
 .kunden-shared-header .agentur-tab {

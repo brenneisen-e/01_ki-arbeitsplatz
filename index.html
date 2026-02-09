@@ -1185,7 +1185,8 @@
                     <table class="kundenliste-table">
                         <thead>
                             <tr>
-                                <th>Kunde</th>
+                                <th>Name</th>
+                                <th>Kunden-ID</th>
                                 <th>Geburtsdatum</th>
                                 <th>Beruf</th>
                                 <th>Verträge</th>
@@ -1195,152 +1196,9 @@
                             </tr>
                         </thead>
                         <tbody id="kundenlisteTableBody">
-                            <tr class="clickable-row" onclick="openKundenDetail('Peter Schmidt', 'KD00001')">
-                                <td>
-                                    <div class="kunde-cell">
-                                        <div class="kunde-avatar">PS</div>
-                                        <div class="kunde-info">
-                                            <strong>Peter Schmidt</strong>
-                                            <span>KD00001</span>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>15.03.1985</td>
-                                <td>Ingenieur</td>
-                                <td>5</td>
-                                <td><strong>€4.200/Jahr</strong></td>
-                                <td><span class="nps-badge promoter">9</span></td>
-                                <td>02.12.2024</td>
-                            </tr>
-                            <tr class="clickable-row" onclick="openKundenDetail('Sabine König', 'KD00002')">
-                                <td>
-                                    <div class="kunde-cell">
-                                        <div class="kunde-avatar">SK</div>
-                                        <div class="kunde-info">
-                                            <strong>Sabine König</strong>
-                                            <span>KD00002</span>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>22.07.1978</td>
-                                <td>Lehrerin</td>
-                                <td>3</td>
-                                <td><strong>€2.800/Jahr</strong></td>
-                                <td><span class="nps-badge passive">7</span></td>
-                                <td>25.11.2024</td>
-                            </tr>
-                            <tr class="clickable-row" onclick="openKundenDetail('Thomas Weber', 'KD00003')">
-                                <td>
-                                    <div class="kunde-cell">
-                                        <div class="kunde-avatar">TW</div>
-                                        <div class="kunde-info">
-                                            <strong>Thomas Weber</strong>
-                                            <span>KD00003</span>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>10.11.1990</td>
-                                <td>Selbstständig</td>
-                                <td>4</td>
-                                <td><strong>€5.100/Jahr</strong></td>
-                                <td><span class="nps-badge promoter">8</span></td>
-                                <td>30.11.2024</td>
-                            </tr>
-                            <tr class="clickable-row" onclick="openKundenDetail('Anna Hoffmann', 'KD00004')">
-                                <td>
-                                    <div class="kunde-cell">
-                                        <div class="kunde-avatar">AH</div>
-                                        <div class="kunde-info">
-                                            <strong>Anna Hoffmann</strong>
-                                            <span>KD00004</span>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>03.05.1982</td>
-                                <td>Ärztin</td>
-                                <td>6</td>
-                                <td><strong>€7.500/Jahr</strong></td>
-                                <td><span class="nps-badge promoter">10</span></td>
-                                <td>28.11.2024</td>
-                            </tr>
-                            <tr class="clickable-row" onclick="openKundenDetail('Michael Braun', 'KD00005')">
-                                <td>
-                                    <div class="kunde-cell">
-                                        <div class="kunde-avatar">MB</div>
-                                        <div class="kunde-info">
-                                            <strong>Michael Braun</strong>
-                                            <span>KD00005</span>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>18.09.1975</td>
-                                <td>Handwerksmeister</td>
-                                <td>3</td>
-                                <td><strong>€2.100/Jahr</strong></td>
-                                <td><span class="nps-badge detractor">4</span></td>
-                                <td>27.11.2024</td>
-                            </tr>
-                            <tr class="clickable-row" onclick="openKundenDetail('Lisa Müller', 'KD00006')">
-                                <td>
-                                    <div class="kunde-cell">
-                                        <div class="kunde-avatar">LM</div>
-                                        <div class="kunde-info">
-                                            <strong>Lisa Müller</strong>
-                                            <span>KD00006</span>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>14.02.1988</td>
-                                <td>Marketing-Managerin</td>
-                                <td>4</td>
-                                <td><strong>€3.600/Jahr</strong></td>
-                                <td><span class="nps-badge passive">7</span></td>
-                                <td>01.12.2024</td>
-                            </tr>
-                            <tr class="clickable-row" onclick="openKundenDetail('Klaus Meier', 'KD00011')">
-                                <td>
-                                    <div class="kunde-cell">
-                                        <div class="kunde-avatar">KM</div>
-                                        <div class="kunde-info">
-                                            <strong>Klaus Meier</strong>
-                                            <span>KD00011</span>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>30.06.1968</td>
-                                <td>Geschäftsführer</td>
-                                <td>7</td>
-                                <td><strong>€9.200/Jahr</strong></td>
-                                <td><span class="nps-badge promoter">9</span></td>
-                                <td>29.11.2024</td>
-                            </tr>
-                            <tr class="clickable-row" onclick="openKundenDetail('Matthias Engel', 'KD00007')">
-                                <td>
-                                    <div class="kunde-cell">
-                                        <div class="kunde-avatar">ME</div>
-                                        <div class="kunde-info">
-                                            <strong>Matthias Engel</strong>
-                                            <span>KD00007</span>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>25.01.1992</td>
-                                <td>IT-Berater</td>
-                                <td>2</td>
-                                <td><strong>€1.800/Jahr</strong></td>
-                                <td><span class="nps-badge passive">6</span></td>
-                                <td>02.12.2024</td>
-                            </tr>
                             <tr class="clickable-row" onclick="openKundenDetail('Christian Bauer', 'KD00008')">
-                                <td>
-                                    <div class="kunde-cell">
-                                        <div class="kunde-avatar">CB</div>
-                                        <div class="kunde-info">
-                                            <strong>Christian Bauer</strong>
-                                            <span>KD00008</span>
-                                        </div>
-                                    </div>
-                                </td>
+                                <td>Christian Bauer</td>
+                                <td>KD00008</td>
                                 <td>07.12.1980</td>
                                 <td>Architekt</td>
                                 <td>5</td>
@@ -1348,16 +1206,99 @@
                                 <td><span class="nps-badge promoter">8</span></td>
                                 <td>29.11.2024</td>
                             </tr>
+                            <tr class="clickable-row" onclick="openKundenDetail('Michael Braun', 'KD00005')">
+                                <td>Michael Braun</td>
+                                <td>KD00005</td>
+                                <td>18.09.1975</td>
+                                <td>Handwerksmeister</td>
+                                <td>3</td>
+                                <td><strong>€2.100/Jahr</strong></td>
+                                <td><span class="nps-badge detractor">4</span></td>
+                                <td>27.11.2024</td>
+                            </tr>
+                            <tr class="clickable-row" onclick="openKundenDetail('Matthias Engel', 'KD00007')">
+                                <td>Matthias Engel</td>
+                                <td>KD00007</td>
+                                <td>25.01.1992</td>
+                                <td>IT-Berater</td>
+                                <td>2</td>
+                                <td><strong>€1.800/Jahr</strong></td>
+                                <td><span class="nps-badge passive">6</span></td>
+                                <td>02.12.2024</td>
+                            </tr>
+                            <tr class="clickable-row" onclick="openKundenDetail('Eva Hartmann', 'KD00010')">
+                                <td>Eva Hartmann</td>
+                                <td>KD00010</td>
+                                <td>28.08.1995</td>
+                                <td>Grafikdesignerin</td>
+                                <td>2</td>
+                                <td><strong>€1.500/Jahr</strong></td>
+                                <td><span class="nps-badge promoter">9</span></td>
+                                <td>03.12.2024</td>
+                            </tr>
+                            <tr class="clickable-row" onclick="openKundenDetail('Anna Hoffmann', 'KD00004')">
+                                <td>Anna Hoffmann</td>
+                                <td>KD00004</td>
+                                <td>03.05.1982</td>
+                                <td>Ärztin</td>
+                                <td>6</td>
+                                <td><strong>€7.500/Jahr</strong></td>
+                                <td><span class="nps-badge promoter">10</span></td>
+                                <td>28.11.2024</td>
+                            </tr>
+                            <tr class="clickable-row" onclick="openKundenDetail('Sabine König', 'KD00002')">
+                                <td>Sabine König</td>
+                                <td>KD00002</td>
+                                <td>22.07.1978</td>
+                                <td>Lehrerin</td>
+                                <td>3</td>
+                                <td><strong>€2.800/Jahr</strong></td>
+                                <td><span class="nps-badge passive">7</span></td>
+                                <td>25.11.2024</td>
+                            </tr>
+                            <tr class="clickable-row" onclick="openKundenDetail('Klaus Meier', 'KD00011')">
+                                <td>Klaus Meier</td>
+                                <td>KD00011</td>
+                                <td>30.06.1968</td>
+                                <td>Geschäftsführer</td>
+                                <td>7</td>
+                                <td><strong>€9.200/Jahr</strong></td>
+                                <td><span class="nps-badge promoter">9</span></td>
+                                <td>29.11.2024</td>
+                            </tr>
+                            <tr class="clickable-row" onclick="openKundenDetail('Lisa Müller', 'KD00006')">
+                                <td>Lisa Müller</td>
+                                <td>KD00006</td>
+                                <td>14.02.1988</td>
+                                <td>Marketing-Managerin</td>
+                                <td>4</td>
+                                <td><strong>€3.600/Jahr</strong></td>
+                                <td><span class="nps-badge passive">7</span></td>
+                                <td>01.12.2024</td>
+                            </tr>
+                            <tr class="clickable-row" onclick="openKundenDetail('Peter Schmidt', 'KD00001')">
+                                <td>Peter Schmidt</td>
+                                <td>KD00001</td>
+                                <td>15.03.1985</td>
+                                <td>Ingenieur</td>
+                                <td>5</td>
+                                <td><strong>€4.200/Jahr</strong></td>
+                                <td><span class="nps-badge promoter">9</span></td>
+                                <td>02.12.2024</td>
+                            </tr>
+                            <tr class="clickable-row" onclick="openKundenDetail('Thomas Weber', 'KD00003')">
+                                <td>Thomas Weber</td>
+                                <td>KD00003</td>
+                                <td>10.11.1990</td>
+                                <td>Selbstständig</td>
+                                <td>4</td>
+                                <td><strong>€5.100/Jahr</strong></td>
+                                <td><span class="nps-badge promoter">8</span></td>
+                                <td>30.11.2024</td>
+                            </tr>
                             <tr class="clickable-row" onclick="openKundenDetail('Martin Wolf', 'KD00009')">
-                                <td>
-                                    <div class="kunde-cell">
-                                        <div class="kunde-avatar">MW</div>
-                                        <div class="kunde-info">
-                                            <strong>Martin Wolf</strong>
-                                            <span>KD00009</span>
-                                        </div>
-                                    </div>
-                                </td>
+                                <td>Martin Wolf</td>
+                                <td>KD00009</td>
                                 <td>19.04.1972</td>
                                 <td>Rechtsanwalt</td>
                                 <td>6</td>
@@ -1365,7 +1306,6 @@
                                 <td><span class="nps-badge detractor">3</span></td>
                                 <td>02.12.2024</td>
                             </tr>
-                            <tr class="clickable-row" onclick="openKundenDetail('Eva Hartmann', 'KD00010')">
                                 <td>
                                     <div class="kunde-cell">
                                         <div class="kunde-avatar">EH</div>
@@ -2245,6 +2185,7 @@
                             <thead>
                                 <tr>
                                     <th>Kunde</th>
+                                    <th>Kunden-ID</th>
                                     <th>Potential-Typ</th>
                                     <th>Quelle</th>
                                     <th>Geschätztes Volumen</th>
@@ -2255,15 +2196,8 @@
                             </thead>
                             <tbody id="fidaCasesTableBody">
                                 <tr data-status="neu" class="clickable-row pulse-new-row" onclick="openKundenDetail('Peter Schmidt', 'KD00001')">
-                                    <td>
-                                        <div class="kunde-cell">
-                                            <div class="kunde-avatar">PS</div>
-                                            <div class="kunde-info">
-                                                <strong>Peter Schmidt</strong>
-                                                <span>KD00001</span>
-                                            </div>
-                                        </div>
-                                    </td>
+                                    <td>Peter Schmidt</td>
+                                    <td>KD00001</td>
                                     <td><span class="potential-type uebergreifend">Übergreifend</span></td>
                                     <td><span class="fida-source-badge small">Open Finance</span></td>
                                     <td><strong>€8.500/Jahr</strong></td>
@@ -2279,15 +2213,8 @@
                                     </td>
                                 </tr>
                                 <tr data-status="angeschrieben" class="clickable-row" onclick="openKundenDetail('Sabine König', 'KD00002')">
-                                    <td>
-                                        <div class="kunde-cell">
-                                            <div class="kunde-avatar">SK</div>
-                                            <div class="kunde-info">
-                                                <strong>Sabine König</strong>
-                                                <span>KD00002</span>
-                                            </div>
-                                        </div>
-                                    </td>
+                                    <td>Sabine König</td>
+                                    <td>KD00002</td>
                                     <td><span class="potential-type kfz">Kfz-Wechsel</span></td>
                                     <td><span class="fida-source-badge small">Versicherung</span></td>
                                     <td><strong>€650/Jahr</strong></td>
@@ -2303,15 +2230,8 @@
                                     </td>
                                 </tr>
                                 <tr data-status="neu" class="clickable-row" onclick="openKundenDetail('Thomas Weber', 'KD00003')">
-                                    <td>
-                                        <div class="kunde-cell">
-                                            <div class="kunde-avatar">TW</div>
-                                            <div class="kunde-info">
-                                                <strong>Thomas Weber</strong>
-                                                <span>KD00003</span>
-                                            </div>
-                                        </div>
-                                    </td>
+                                    <td>Thomas Weber</td>
+                                    <td>KD00003</td>
                                     <td><span class="potential-type risiko">Risikoleben fehlt</span></td>
                                     <td><span class="fida-source-badge small">Kredit</span></td>
                                     <td><strong>€1.800/Jahr</strong></td>
@@ -2327,15 +2247,8 @@
                                     </td>
                                 </tr>
                                 <tr data-status="neu" class="clickable-row" onclick="openKundenDetail('Anna Hoffmann', 'KD00004')">
-                                    <td>
-                                        <div class="kunde-cell">
-                                            <div class="kunde-avatar">AH</div>
-                                            <div class="kunde-info">
-                                                <strong>Anna Hoffmann</strong>
-                                                <span>KD00004</span>
-                                            </div>
-                                        </div>
-                                    </td>
+                                    <td>Anna Hoffmann</td>
+                                    <td>KD00004</td>
                                     <td><span class="potential-type invest">Fondsrente</span></td>
                                     <td><span class="fida-source-badge small">Investment</span></td>
                                     <td><strong>€3.200/Jahr</strong></td>
@@ -2351,15 +2264,8 @@
                                     </td>
                                 </tr>
                                 <tr data-status="abgeschlossen" class="clickable-row" onclick="openKundenDetail('Michael Braun', 'KD00005')">
-                                    <td>
-                                        <div class="kunde-cell">
-                                            <div class="kunde-avatar">MB</div>
-                                            <div class="kunde-info">
-                                                <strong>Michael Braun</strong>
-                                                <span>KD00005</span>
-                                            </div>
-                                        </div>
-                                    </td>
+                                    <td>Michael Braun</td>
+                                    <td>KD00005</td>
                                     <td><span class="potential-type hausrat">Hausrat-Wechsel</span></td>
                                     <td><span class="fida-source-badge small">Versicherung</span></td>
                                     <td><strong>€420/Jahr</strong></td>
@@ -2375,15 +2281,8 @@
                                     </td>
                                 </tr>
                                 <tr data-status="termin" class="clickable-row" onclick="openKundenDetail('Lisa Müller', 'KD00006')">
-                                    <td>
-                                        <div class="kunde-cell">
-                                            <div class="kunde-avatar">LM</div>
-                                            <div class="kunde-info">
-                                                <strong>Lisa Müller</strong>
-                                                <span>KD00006</span>
-                                            </div>
-                                        </div>
-                                    </td>
+                                    <td>Lisa Müller</td>
+                                    <td>KD00006</td>
                                     <td><span class="potential-type kranken">Kranken-Zusatz</span></td>
                                     <td><span class="fida-source-badge small">Versicherung</span></td>
                                     <td><strong>€1.200/Jahr</strong></td>
@@ -2399,15 +2298,8 @@
                                     </td>
                                 </tr>
                                 <tr data-status="neu" class="clickable-row" onclick="openKundenDetail('Matthias Engel', 'KD00007')">
-                                    <td>
-                                        <div class="kunde-cell">
-                                            <div class="kunde-avatar">ME</div>
-                                            <div class="kunde-info">
-                                                <strong>Matthias Engel</strong>
-                                                <span>KD00007</span>
-                                            </div>
-                                        </div>
-                                    </td>
+                                    <td>Matthias Engel</td>
+                                    <td>KD00007</td>
                                     <td><span class="potential-type bu">BU-Deckungslücke</span></td>
                                     <td><span class="fida-source-badge small">Bank</span></td>
                                     <td><strong>€3.600/Jahr</strong></td>
@@ -2423,15 +2315,8 @@
                                     </td>
                                 </tr>
                                 <tr data-status="angeschrieben" class="clickable-row" onclick="openKundenDetail('Christian Bauer', 'KD00008')">
-                                    <td>
-                                        <div class="kunde-cell">
-                                            <div class="kunde-avatar">CB</div>
-                                            <div class="kunde-info">
-                                                <strong>Christian Bauer</strong>
-                                                <span>KD00008</span>
-                                            </div>
-                                        </div>
-                                    </td>
+                                    <td>Christian Bauer</td>
+                                    <td>KD00008</td>
                                     <td><span class="potential-type kfz">Kfz-Versicherung</span></td>
                                     <td><span class="fida-source-badge small">Versicherung</span></td>
                                     <td><strong>€850/Jahr</strong></td>
@@ -2447,15 +2332,8 @@
                                     </td>
                                 </tr>
                                 <tr data-status="neu" class="clickable-row" onclick="openKundenDetail('Martin Wolf', 'KD00009')">
-                                    <td>
-                                        <div class="kunde-cell">
-                                            <div class="kunde-avatar">MW</div>
-                                            <div class="kunde-info">
-                                                <strong>Martin Wolf</strong>
-                                                <span>KD00009</span>
-                                            </div>
-                                        </div>
-                                    </td>
+                                    <td>Martin Wolf</td>
+                                    <td>KD00009</td>
                                     <td><span class="potential-type kfz">Kfz-Nutzfahrzeug</span></td>
                                     <td><span class="fida-source-badge small">Versicherung</span></td>
                                     <td><strong>€1.400/Jahr</strong></td>
@@ -2471,15 +2349,8 @@
                                     </td>
                                 </tr>
                                 <tr data-status="termin" class="clickable-row" onclick="openKundenDetail('Eva Hartmann', 'KD00010')">
-                                    <td>
-                                        <div class="kunde-cell">
-                                            <div class="kunde-avatar">EH</div>
-                                            <div class="kunde-info">
-                                                <strong>Eva Hartmann</strong>
-                                                <span>KD00010</span>
-                                            </div>
-                                        </div>
-                                    </td>
+                                    <td>Eva Hartmann</td>
+                                    <td>KD00010</td>
                                     <td><span class="potential-type kfz">Kfz-Wechsel</span></td>
                                     <td><span class="fida-source-badge small">Versicherung</span></td>
                                     <td><strong>€720/Jahr</strong></td>

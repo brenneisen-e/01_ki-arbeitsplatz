@@ -9706,3 +9706,687 @@ button svg,
     font-size: 13px;
     color: #475569;
 }
+
+/* ========================================
+   NPS STARS DISPLAY (permanent)
+   ======================================== */
+.nps-stars-display {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+}
+
+.nps-stars-display .nps-star {
+    font-size: 18px;
+    line-height: 1;
+}
+
+.nps-stars-display .nps-star.filled { color: #f59e0b; }
+.nps-stars-display .nps-star.half { color: #f59e0b; opacity: 0.5; }
+.nps-stars-display .nps-star.empty { color: #e2e8f0; }
+
+.nps-stars-display .nps-score-num {
+    font-size: 15px;
+    font-weight: 700;
+    color: #334155;
+    margin-left: 4px;
+}
+
+.nps-stars-display-small {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+}
+
+.nps-stars-display-small .nps-star {
+    font-size: 13px;
+    line-height: 1;
+}
+
+.nps-stars-display-small .nps-star.filled { color: #f59e0b; }
+.nps-stars-display-small .nps-star.half { color: #f59e0b; opacity: 0.5; }
+.nps-stars-display-small .nps-star.empty { color: #e2e8f0; }
+
+.nps-stars-display-small .nps-score-num {
+    font-size: 11px;
+    font-weight: 700;
+    color: white;
+    margin-left: 2px;
+}
+
+/* NPS Stars in Kundenliste table */
+.nps-stars {
+    display: inline-flex;
+    align-items: center;
+    gap: 1px;
+}
+
+.nps-star {
+    font-size: 14px;
+    line-height: 1;
+}
+
+.nps-star.filled { color: #f59e0b; }
+.nps-star.half { color: #f59e0b; opacity: 0.5; }
+.nps-star.empty { color: #e2e8f0; }
+
+.nps-stars .nps-score-num {
+    font-size: 12px;
+    font-weight: 700;
+    color: #334155;
+    margin-left: 4px;
+}
+
+/* ========================================
+   OPTION SWITCHER (shared for all sections)
+   ======================================== */
+.option-switcher-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border: none;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.option-switcher-arrow:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.option-switcher-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: white;
+    min-width: 200px;
+    text-align: center;
+}
+
+.bezahlen-switcher,
+.impulse-switcher,
+.komm-switcher {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin: 16px 0 12px;
+    padding: 8px 16px;
+    background: #1e293b;
+    border-radius: 10px;
+    user-select: none;
+}
+
+.impulse-switcher,
+.komm-switcher {
+    margin: 0;
+}
+
+/* ========================================
+   BEZAHLEN TRANSACTIONS
+   ======================================== */
+.bezahlen-donut-container {
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+    margin-bottom: 16px;
+}
+
+.bezahlen-donut-chart {
+    flex-shrink: 0;
+}
+
+.bezahlen-donut-legend {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.bezahlen-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: #334155;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 6px;
+    transition: background 0.2s;
+}
+
+.bezahlen-legend-item:hover {
+    background: #f1f5f9;
+}
+
+.bezahlen-legend-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.bezahlen-legend-label {
+    flex: 1;
+}
+
+.bezahlen-legend-value {
+    font-weight: 700;
+}
+
+/* Bezahlen Akkordeon */
+.bezahlen-akkordeon {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.bezahlen-kat-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.bezahlen-kat-header:hover {
+    background: #f1f5f9;
+}
+
+.bezahlen-kat-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.bezahlen-kat-name {
+    flex: 1;
+    font-weight: 600;
+    font-size: 14px;
+    color: #1e293b;
+}
+
+.bezahlen-kat-amount {
+    font-weight: 700;
+    font-size: 14px;
+    color: #334155;
+}
+
+.bezahlen-kat-arrow {
+    transition: transform 0.2s;
+    color: #94a3b8;
+}
+
+.bezahlen-kat-arrow.open {
+    transform: rotate(180deg);
+}
+
+.bezahlen-kat-detail {
+    padding: 8px 14px 12px 34px;
+    display: none;
+}
+
+.bezahlen-kat-detail.open {
+    display: block;
+}
+
+.bezahlen-tx-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    border-bottom: 1px solid #f1f5f9;
+    font-size: 13px;
+    color: #475569;
+}
+
+.bezahlen-tx-item:last-child {
+    border-bottom: none;
+}
+
+.bezahlen-tx-name {
+    flex: 1;
+}
+
+.bezahlen-tx-amount {
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.bezahlen-tx-badge {
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-left: 8px;
+    font-weight: 600;
+}
+
+.bezahlen-tx-badge.versichert {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.bezahlen-tx-badge.luecke {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+/* Bezahlen Stacked Bar */
+.bezahlen-stacked-bar {
+    height: 32px;
+    display: flex;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 16px;
+}
+
+.bezahlen-bar-segment {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 600;
+    color: white;
+    transition: opacity 0.2s;
+    cursor: pointer;
+}
+
+.bezahlen-bar-segment:hover {
+    opacity: 0.85;
+}
+
+/* Bezahlen Flat Cards */
+.bezahlen-flat-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.bezahlen-flat-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    border-left: 4px solid;
+}
+
+.bezahlen-flat-card-name {
+    flex: 1;
+    font-weight: 600;
+    font-size: 14px;
+    color: #1e293b;
+}
+
+.bezahlen-flat-card-amount {
+    font-weight: 700;
+    font-size: 14px;
+    color: #334155;
+}
+
+.bezahlen-flat-card-pct {
+    font-size: 12px;
+    color: #94a3b8;
+    min-width: 40px;
+    text-align: right;
+}
+
+/* Bezahlen Category Grid */
+.bezahlen-grid-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+}
+
+.bezahlen-grid-card {
+    padding: 16px;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    background: white;
+    text-align: center;
+}
+
+.bezahlen-grid-card-icon {
+    font-size: 28px;
+    margin-bottom: 8px;
+}
+
+.bezahlen-grid-card-name {
+    font-weight: 600;
+    font-size: 13px;
+    color: #475569;
+    margin-bottom: 4px;
+}
+
+.bezahlen-grid-card-amount {
+    font-weight: 700;
+    font-size: 18px;
+    color: #1e293b;
+}
+
+.bezahlen-grid-card-pct {
+    font-size: 12px;
+    color: #94a3b8;
+    margin-top: 2px;
+}
+
+/* ========================================
+   IMPULSE DISPLAY OPTIONS
+   ======================================== */
+/* Option 2: Kanban Board */
+.impulse-kanban {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
+
+.impulse-kanban-col {
+    background: #f8fafc;
+    border-radius: 10px;
+    padding: 12px;
+}
+
+.impulse-kanban-col-title {
+    font-weight: 700;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid;
+}
+
+.impulse-kanban-col-title.high {
+    color: #dc2626;
+    border-color: #dc2626;
+}
+
+.impulse-kanban-col-title.medium {
+    color: #f59e0b;
+    border-color: #f59e0b;
+}
+
+.impulse-kanban-col-title.low {
+    color: #22c55e;
+    border-color: #22c55e;
+}
+
+.impulse-kanban-card {
+    background: white;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 8px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.impulse-kanban-card-title {
+    font-weight: 600;
+    font-size: 13px;
+    color: #1e293b;
+    margin-bottom: 4px;
+}
+
+.impulse-kanban-card-desc {
+    font-size: 12px;
+    color: #64748b;
+    line-height: 1.4;
+}
+
+.impulse-kanban-card-badge {
+    display: inline-block;
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-top: 6px;
+    font-weight: 600;
+}
+
+.impulse-kanban-card-badge.whitespots {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.impulse-kanban-card-badge.anpassung {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+/* Option 3: Kompakte Tabelle */
+.impulse-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.impulse-table th {
+    background: #f8fafc;
+    font-weight: 600;
+    text-align: left;
+    padding: 10px 12px;
+    color: #475569;
+    border-bottom: 2px solid #e2e8f0;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.impulse-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #f1f5f9;
+    color: #334155;
+}
+
+.impulse-table tr:hover {
+    background: #f8fafc;
+}
+
+.impulse-prio-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.impulse-prio-badge.high {
+    background: #fef2f2;
+    color: #dc2626;
+}
+
+.impulse-prio-badge.medium {
+    background: #fffbeb;
+    color: #d97706;
+}
+
+.impulse-prio-badge.low {
+    background: #f0fdf4;
+    color: #16a34a;
+}
+
+.impulse-kat-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.impulse-kat-badge.whitespots {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.impulse-kat-badge.anpassung {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+/* ========================================
+   KOMMUNIKATION DISPLAY OPTIONS
+   ======================================== */
+/* Option 2: Chat-Ansicht */
+.komm-chat {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-height: 500px;
+    overflow-y: auto;
+    padding: 16px;
+    background: #f8fafc;
+    border-radius: 12px;
+}
+
+.komm-chat-msg {
+    display: flex;
+    gap: 10px;
+    max-width: 85%;
+}
+
+.komm-chat-msg.outgoing {
+    align-self: flex-end;
+    flex-direction: row-reverse;
+}
+
+.komm-chat-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+}
+
+.komm-chat-msg.incoming .komm-chat-avatar {
+    background: #dbeafe;
+    color: #2563eb;
+}
+
+.komm-chat-msg.outgoing .komm-chat-avatar {
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+.komm-chat-bubble {
+    padding: 10px 14px;
+    border-radius: 12px;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.komm-chat-msg.incoming .komm-chat-bubble {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-bottom-left-radius: 4px;
+}
+
+.komm-chat-msg.outgoing .komm-chat-bubble {
+    background: #2d5016;
+    color: white;
+    border-bottom-right-radius: 4px;
+}
+
+.komm-chat-bubble-subject {
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.komm-chat-bubble-date {
+    font-size: 11px;
+    color: #94a3b8;
+    margin-top: 4px;
+}
+
+.komm-chat-msg.outgoing .komm-chat-bubble-date {
+    color: rgba(255,255,255,0.6);
+}
+
+/* Option 3: Kompakte Liste */
+.komm-compact {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.komm-compact-item {
+    display: grid;
+    grid-template-columns: 80px 24px 1fr auto auto;
+    gap: 10px;
+    align-items: center;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    transition: background 0.15s;
+}
+
+.komm-compact-item:hover {
+    background: #f8fafc;
+}
+
+.komm-compact-date {
+    font-size: 12px;
+    color: #94a3b8;
+    white-space: nowrap;
+}
+
+.komm-compact-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #64748b;
+}
+
+.komm-compact-subject {
+    font-weight: 500;
+    color: #1e293b;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.komm-compact-type {
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: #f1f5f9;
+    color: #64748b;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.komm-compact-status {
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.komm-compact-status.geoeffnet {
+    background: #dbeafe;
+    color: #2563eb;
+}
+
+.komm-compact-status.versendet {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.komm-compact-status.termin {
+    background: #fef3c7;
+    color: #92400e;
+}

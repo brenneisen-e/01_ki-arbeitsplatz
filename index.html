@@ -1168,16 +1168,6 @@
 
                 <!-- Tab Content: Kundenliste -->
                 <div class="agentur-tab-content" id="tab-kundenliste">
-                    <!-- NPS Style Switcher -->
-                    <div class="nps-style-switcher" id="npsStyleSwitcher">
-                        <button class="nps-style-arrow" onclick="switchNpsStyle(-1)">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14"><polyline points="15 18 9 12 15 6"></polyline></svg>
-                        </button>
-                        <span class="nps-style-label" id="npsStyleLabel">Option 1: Fortschrittsbalken</span>
-                        <button class="nps-style-arrow" onclick="switchNpsStyle(1)">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                        </button>
-                    </div>
                     <div class="kundenliste-header">
                         <h3 class="section-title">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
@@ -1213,7 +1203,7 @@
                                 <td>Architekt</td>
                                 <td>5</td>
                                 <td><strong>€4.800/Jahr</strong></td>
-                                <td><span class="nps-badge promoter">8</span></td>
+                                <td data-nps="8"><span class="nps-badge promoter">8</span></td>
                                 <td>29.11.2024</td>
                             </tr>
                             <tr class="clickable-row" onclick="openKundenDetail('Michael Braun', 'KD00005')">
@@ -1223,7 +1213,7 @@
                                 <td>Handwerksmeister</td>
                                 <td>3</td>
                                 <td><strong>€2.100/Jahr</strong></td>
-                                <td><span class="nps-badge detractor">4</span></td>
+                                <td data-nps="4"><span class="nps-badge detractor">4</span></td>
                                 <td>27.11.2024</td>
                             </tr>
                             <tr class="clickable-row" onclick="openKundenDetail('Matthias Engel', 'KD00007')">
@@ -1233,7 +1223,7 @@
                                 <td>IT-Berater</td>
                                 <td>2</td>
                                 <td><strong>€1.800/Jahr</strong></td>
-                                <td><span class="nps-badge passive">6</span></td>
+                                <td data-nps="6"><span class="nps-badge passive">6</span></td>
                                 <td>02.12.2024</td>
                             </tr>
                             <tr class="clickable-row" onclick="openKundenDetail('Eva Hartmann', 'KD00010')">
@@ -1243,7 +1233,7 @@
                                 <td>Grafikdesignerin</td>
                                 <td>2</td>
                                 <td><strong>€1.500/Jahr</strong></td>
-                                <td><span class="nps-badge promoter">9</span></td>
+                                <td data-nps="9"><span class="nps-badge promoter">9</span></td>
                                 <td>03.12.2024</td>
                             </tr>
                             <tr class="clickable-row" onclick="openKundenDetail('Anna Hoffmann', 'KD00004')">
@@ -1253,7 +1243,7 @@
                                 <td>Ärztin</td>
                                 <td>6</td>
                                 <td><strong>€7.500/Jahr</strong></td>
-                                <td><span class="nps-badge promoter">10</span></td>
+                                <td data-nps="10"><span class="nps-badge promoter">10</span></td>
                                 <td>28.11.2024</td>
                             </tr>
                             <tr class="clickable-row" onclick="openKundenDetail('Sabine König', 'KD00002')">
@@ -1263,7 +1253,7 @@
                                 <td>Lehrerin</td>
                                 <td>3</td>
                                 <td><strong>€2.800/Jahr</strong></td>
-                                <td><span class="nps-badge passive">7</span></td>
+                                <td data-nps="7"><span class="nps-badge passive">7</span></td>
                                 <td>25.11.2024</td>
                             </tr>
                             <tr class="clickable-row" onclick="openKundenDetail('Klaus Meier', 'KD00011')">
@@ -1273,7 +1263,7 @@
                                 <td>Geschäftsführer</td>
                                 <td>7</td>
                                 <td><strong>€9.200/Jahr</strong></td>
-                                <td><span class="nps-badge promoter">9</span></td>
+                                <td data-nps="9"><span class="nps-badge promoter">9</span></td>
                                 <td>29.11.2024</td>
                             </tr>
                             <tr class="clickable-row" onclick="openKundenDetail('Lisa Müller', 'KD00006')">
@@ -1283,7 +1273,7 @@
                                 <td>Marketing-Managerin</td>
                                 <td>4</td>
                                 <td><strong>€3.600/Jahr</strong></td>
-                                <td><span class="nps-badge passive">7</span></td>
+                                <td data-nps="7"><span class="nps-badge passive">7</span></td>
                                 <td>01.12.2024</td>
                             </tr>
                             <tr class="clickable-row" onclick="openKundenDetail('Peter Schmidt', 'KD00001')">
@@ -1293,7 +1283,7 @@
                                 <td>Ingenieur</td>
                                 <td>5</td>
                                 <td><strong>€4.200/Jahr</strong></td>
-                                <td><span class="nps-badge promoter">9</span></td>
+                                <td data-nps="9"><span class="nps-badge promoter">9</span></td>
                                 <td>02.12.2024</td>
                             </tr>
                             <tr class="clickable-row" onclick="openKundenDetail('Thomas Weber', 'KD00003')">
@@ -1303,7 +1293,7 @@
                                 <td>Selbstständig</td>
                                 <td>4</td>
                                 <td><strong>€5.100/Jahr</strong></td>
-                                <td><span class="nps-badge promoter">8</span></td>
+                                <td data-nps="8"><span class="nps-badge promoter">8</span></td>
                                 <td>30.11.2024</td>
                             </tr>
                             <tr class="clickable-row" onclick="openKundenDetail('Martin Wolf', 'KD00009')">
@@ -1313,7 +1303,7 @@
                                 <td>Rechtsanwalt</td>
                                 <td>6</td>
                                 <td><strong>€6.300/Jahr</strong></td>
-                                <td><span class="nps-badge detractor">3</span></td>
+                                <td data-nps="3"><span class="nps-badge detractor">3</span></td>
                                 <td>02.12.2024</td>
                             </tr>
                         </tbody>
@@ -2845,7 +2835,7 @@
                 <div class="kunde-sticky-bar-right">
                     <div class="kunde-sticky-kpi">
                         <span class="kunde-sticky-kpi-label">NPS</span>
-                        <span class="nps-badge promoter" id="kundeBarNpsB" style="width:22px;height:22px;font-size:11px;">9</span>
+                        <span class="nps-stars-display-small" id="kundeBarNpsB"></span>
                     </div>
                     <div class="kunde-sticky-kpi">
                         <span class="kunde-sticky-kpi-label">CLV</span>
@@ -3001,7 +2991,7 @@
                                 <div class="info-item full-width">
                                     <span class="info-label">NPS Score</span>
                                     <div class="info-value nps-detail-wrapper" id="kundenNpsWrapper">
-                                        <span class="nps-badge promoter nps-clickable" id="kundenNpsBadge" onclick="toggleNpsDetail()">9</span>
+                                        <span class="nps-stars-display nps-clickable" id="kundenNpsBadge" onclick="toggleNpsDetail()"></span>
                                         <div class="nps-detail-popup" id="npsDetailPopup" style="display: none;">
                                             <div class="nps-detail-title">NPS-Kategorien</div>
                                             <div class="nps-detail-rows" id="npsDetailRows"></div>
@@ -3246,6 +3236,20 @@
                                 <span class="fida-finance-detail">Sparquote: ~25% des Nettoeinkommens</span>
                             </div>
                         </div>
+
+                        <!-- Banktransaktionen Switcher -->
+                        <div class="bezahlen-switcher" id="bezahlenSwitcher">
+                            <button class="option-switcher-arrow" onclick="switchBezahlenOption(-1)">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                            </button>
+                            <span class="option-switcher-label" id="bezahlenOptionLabel">Option 1: Donut + Akkordeon</span>
+                            <button class="option-switcher-arrow" onclick="switchBezahlenOption(1)">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                            </button>
+                        </div>
+
+                        <!-- Banktransaktionen Content -->
+                        <div id="bezahlenContent"></div>
                     </div>
 
                     <!-- ===================== BEDARFSFELD: SPAREN & VORSORGEN ===================== -->
@@ -3550,8 +3554,18 @@
                                 </svg>
                                 Vertriebsimpulse
                             </h2>
+                            <div class="impulse-switcher" id="impulseSwitcher">
+                                <button class="option-switcher-arrow" onclick="switchImpulseOption(-1)">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                                </button>
+                                <span class="option-switcher-label" id="impulseOptionLabel">Option 1: Kartenansicht</span>
+                                <button class="option-switcher-arrow" onclick="switchImpulseOption(1)">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                                </button>
+                            </div>
                         </div>
 
+                        <div id="impulseContent">
                         <!-- Kategorie: Whitespots (Neugeschäft) -->
                         <div class="impuls-kategorie">
                             <h3 class="impuls-kategorie-title whitespots">
@@ -4567,6 +4581,7 @@
                                 </button>
                             </div>
                         </div>
+                        </div><!-- /impulseContent -->
                     </div>
                 </div>
 
@@ -4580,7 +4595,17 @@
                                 </svg>
                                 Kommunikationshistorie
                             </h2>
+                            <div class="komm-switcher" id="kommSwitcher">
+                                <button class="option-switcher-arrow" onclick="switchKommOption(-1)">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                                </button>
+                                <span class="option-switcher-label" id="kommOptionLabel">Option 1: Timeline</span>
+                                <button class="option-switcher-arrow" onclick="switchKommOption(1)">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                                </button>
+                            </div>
                         </div>
+                        <div id="kommContent">
                         <div class="kommunikation-timeline" id="kundenKommunikation">
                             <div class="komm-item auto">
                                 <div class="komm-icon">
@@ -4714,6 +4739,7 @@
                                 </button>
                             </div>
                         </div>
+                        </div><!-- /kommContent -->
                     </div>
                 </div>
             </div>

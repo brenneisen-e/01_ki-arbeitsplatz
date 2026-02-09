@@ -2101,6 +2101,9 @@ window.addEventListener('DOMContentLoaded', function() {
 
     // Setup API token input
     setupApiTokenInput();
+
+    // Render NPS stars in Kundenliste
+    setTimeout(renderNpsStyleAll, 100);
 });
 
 /**
@@ -4071,11 +4074,8 @@ function updateKundeStickyBar(kundenName, kundenId, npsData, clvValue, segmentVa
     if (nameB) nameB.textContent = kundenName;
     if (idB) idB.textContent = kundenId;
     if (npsB && npsData) {
-        npsB.textContent = npsData.score;
-        npsB.className = 'nps-badge ' + npsData.kategorie;
-        npsB.style.width = '22px';
-        npsB.style.height = '22px';
-        npsB.style.fontSize = '11px';
+        npsB.innerHTML = renderNpsStars(npsData.score, 'nps-stars-display-small');
+        npsB.className = 'nps-stars-display-small';
     }
     if (clvB) clvB.textContent = clvValue || '\u2014';
     if (segB) segB.textContent = segmentValue || '\u2014';
@@ -4092,79 +4092,21 @@ function filterKundenliste(searchText) {
 window.filterKundenliste = filterKundenliste;
 
 // ========================================
-// NPS DISPLAY STYLE SWITCHER
+// NPS STARS DISPLAY (5er Skala)
 // ========================================
-var currentNpsStyle = 0;
-var npsStyles = [
-    'Option 1: Fortschrittsbalken',
-    'Option 2: Pill-Badge mit Label',
-    'Option 3: Sterne-Rating',
-    'Option 4: Mini-Tacho',
-    'Option 5: Emoji + Zahl'
-];
-
-function switchNpsStyle(direction) {
-    currentNpsStyle = (currentNpsStyle + direction + npsStyles.length) % npsStyles.length;
-    var label = document.getElementById('npsStyleLabel');
-    if (label) label.textContent = npsStyles[currentNpsStyle];
-    renderNpsStyleAll();
-}
-window.switchNpsStyle = switchNpsStyle;
-
-function getNpsCategory(score) {
-    if (score >= 9) return 'promoter';
-    if (score >= 7) return 'passive';
-    return 'detractor';
-}
-
-function getNpsCategoryLabel(score) {
-    if (score >= 9) return 'Promoter';
-    if (score >= 7) return 'Passiv';
-    return 'Kritiker';
-}
-
-function renderNpsCell(score) {
-    var kat = getNpsCategory(score);
-    switch (currentNpsStyle) {
-        case 0: // Fortschrittsbalken
-            var pct = (score / 10) * 100;
-            return '<div class="nps-bar">' +
-                '<div class="nps-bar-track"><div class="nps-bar-fill ' + kat + '" style="width:' + pct + '%"></div></div>' +
-                '<span class="nps-bar-value">' + score + '</span></div>';
-        case 1: // Pill Badge
-            return '<span class="nps-pill ' + kat + '">' +
-                '<span class="nps-pill-score">' + score + '</span> ' +
-                getNpsCategoryLabel(score) + '</span>';
-        case 2: // Sterne
-            var stars = score / 2;
-            var full = Math.floor(stars);
-            var half = stars % 1 >= 0.5 ? 1 : 0;
-            var empty = 5 - full - half;
-            var html = '<span class="nps-stars">';
-            for (var i = 0; i < full; i++) html += '<span class="nps-star filled">\u2605</span>';
-            for (var i = 0; i < half; i++) html += '<span class="nps-star half">\u2605</span>';
-            for (var i = 0; i < empty; i++) html += '<span class="nps-star empty">\u2605</span>';
-            html += '</span>';
-            return html;
-        case 3: // Mini-Tacho SVG
-            var angle = -90 + (score / 10) * 180;
-            var color = kat === 'promoter' ? '#2d5016' : (kat === 'passive' ? '#f59e0b' : '#ef4444');
-            var rad = angle * Math.PI / 180;
-            var nx = 20 + 14 * Math.cos(rad);
-            var ny = 20 + 14 * Math.sin(rad);
-            return '<span class="nps-gauge">' +
-                '<svg width="40" height="24" viewBox="0 0 40 24">' +
-                '<path d="M 4 22 A 16 16 0 0 1 36 22" fill="none" stroke="#e2e8f0" stroke-width="3" stroke-linecap="round"/>' +
-                '<path d="M 4 22 A 16 16 0 0 1 36 22" fill="none" stroke="' + color + '" stroke-width="3" stroke-linecap="round" stroke-dasharray="' + (score / 10 * 50.3) + ' 50.3"/>' +
-                '<circle cx="' + nx.toFixed(1) + '" cy="' + ny.toFixed(1) + '" r="3" fill="' + color + '"/>' +
-                '</svg>' +
-                '<span class="nps-gauge-value">' + score + '</span></span>';
-        case 4: // Emoji + Zahl
-            var emoji = score >= 9 ? '\uD83D\uDE00' : (score >= 7 ? '\uD83D\uDE10' : '\uD83D\uDE1F');
-            return '<span class="nps-emoji"><span class="nps-emoji-face">' + emoji + '</span> ' + score + '</span>';
-        default:
-            return '<span class="nps-badge ' + kat + '">' + score + '</span>';
-    }
+function renderNpsStars(score, cssClass) {
+    var stars5 = (score / 10) * 5;
+    var display = Math.round(stars5 * 10) / 10;
+    var full = Math.floor(stars5);
+    var half = (stars5 - full) >= 0.25 ? 1 : 0;
+    var empty = 5 - full - half;
+    var cls = cssClass || 'nps-stars';
+    var html = '<span class="' + cls + '">';
+    for (var i = 0; i < full; i++) html += '<span class="nps-star filled">\u2605</span>';
+    for (var i = 0; i < half; i++) html += '<span class="nps-star half">\u2605</span>';
+    for (var i = 0; i < empty; i++) html += '<span class="nps-star empty">\u2605</span>';
+    html += '<span class="nps-score-num">' + display.toFixed(1) + '</span></span>';
+    return html;
 }
 
 function renderNpsStyleAll() {
@@ -4173,14 +4115,16 @@ function renderNpsStyleAll() {
         var cells = row.querySelectorAll('td');
         if (cells.length >= 7) {
             var npsCell = cells[6];
-            var badge = npsCell.querySelector('.nps-badge');
             var score = npsCell.getAttribute('data-nps');
-            if (!score && badge) {
-                score = parseInt(badge.textContent);
-                npsCell.setAttribute('data-nps', score);
+            if (!score) {
+                var badge = npsCell.querySelector('.nps-badge');
+                if (badge) {
+                    score = parseInt(badge.textContent);
+                    npsCell.setAttribute('data-nps', score);
+                }
             }
             if (score) {
-                npsCell.innerHTML = renderNpsCell(parseInt(score));
+                npsCell.innerHTML = renderNpsStars(parseInt(score));
             }
         }
     });
@@ -4527,18 +4471,17 @@ function fillKundenDetail(kundenName, vermittlerId) {
         }
     }
 
-    // NPS
+    // NPS (Stars)
     const npsBadge = document.getElementById('kundenNpsBadge');
     const npsRows = document.getElementById('npsDetailRows');
     if (npsBadge && kunde.nps) {
-        npsBadge.textContent = kunde.nps.score;
-        npsBadge.className = 'nps-badge ' + kunde.nps.kategorie + ' nps-clickable';
+        npsBadge.innerHTML = renderNpsStars(kunde.nps.score, 'nps-stars-display');
+        npsBadge.className = 'nps-stars-display nps-clickable';
         if (npsRows) {
             npsRows.innerHTML = kunde.nps.details.map(d => {
-                const kat = d.wert >= 9 ? 'promoter' : (d.wert >= 7 ? 'passive' : 'detractor');
                 return `<div class="nps-detail-row">
                     <span class="nps-detail-label">${d.name}</span>
-                    <span class="nps-badge ${kat}" style="width:24px;height:24px;font-size:11px;">${d.wert}</span>
+                    ${renderNpsStars(d.wert)}
                 </div>`;
             }).join('');
         }
@@ -4898,6 +4841,11 @@ function switchKundenTab(tabName) {
     }
 
     console.log('Tab gewechselt zu:', tabName);
+
+    // Render dynamic content for tabs
+    if (tabName === 'fida') setTimeout(function() { if (typeof renderBezahlenContent === 'function') renderBezahlenContent(); }, 50);
+    if (tabName === 'impulse') setTimeout(function() { if (typeof renderImpulseContent === 'function') renderImpulseContent(); }, 50);
+    if (tabName === 'kommunikation') setTimeout(function() { if (typeof renderKommContent === 'function') renderKommContent(); }, 50);
 }
 
 // Toggle Impuls Detail
@@ -5814,5 +5762,353 @@ window.handleUserProfileUpload = handleUserProfileUpload;
 window.handleUserProfileUploadDropdown = handleUserProfileUploadDropdown;
 window.loadUserProfileImages = loadUserProfileImages;
 
+
+// ========================================
+// BEZAHLEN TRANSACTIONS (3 Options)
+// ========================================
+var currentBezahlenOption = 0;
+var bezahlenOptions = ['Option 1: Donut + Akkordeon', 'Option 2: Stacked Bar + Flat Cards', 'Option 3: Kategorie-Grid'];
+
+var bezahlenData = [
+    { name: 'Wohnen', amount: 1450, color: '#3b82f6', icon: '\uD83C\uDFE0', items: [
+        { name: 'Miete Wohnung', amount: 1200, badge: 'versichert' },
+        { name: 'Nebenkosten', amount: 180 },
+        { name: 'Strom/Gas', amount: 70 }
+    ]},
+    { name: 'Versicherungen', amount: 520, color: '#10b981', icon: '\uD83D\uDEE1\uFE0F', items: [
+        { name: 'Berufsunfähigkeit (ERGO)', amount: 89, badge: 'versichert' },
+        { name: 'Wohngebäude (VHV)', amount: 38, badge: 'versichert' },
+        { name: 'Kfz-Versicherung (Allianz)', amount: 60, badge: 'luecke' },
+        { name: 'Private Haftpflicht', amount: 12, badge: 'versichert' },
+        { name: 'Rechtsschutz', amount: 25 },
+        { name: 'Krankenversicherung', amount: 296 }
+    ]},
+    { name: 'Kredit & Finanzierung', amount: 540, color: '#8b5cf6', icon: '\uD83C\uDFE6', items: [
+        { name: 'Hypothek Sparkasse', amount: 540, badge: 'luecke' }
+    ]},
+    { name: 'Lebensmittel & Alltag', amount: 380, color: '#f59e0b', icon: '\uD83D\uDED2', items: [
+        { name: 'Supermarkt (Ø)', amount: 320 },
+        { name: 'Drogerie', amount: 60 }
+    ]},
+    { name: 'Mobilität', amount: 210, color: '#ef4444', icon: '\uD83D\uDE97', items: [
+        { name: 'Tankstelle / Laden', amount: 130 },
+        { name: 'ADAC / Wartung', amount: 45 },
+        { name: 'Parkgebühren', amount: 35 }
+    ]},
+    { name: 'Freizeit & Sonstiges', amount: 290, color: '#06b6d4', icon: '\uD83C\uDFAD', items: [
+        { name: 'Restaurant / Lieferdienst', amount: 120 },
+        { name: 'Streaming / Abos', amount: 45 },
+        { name: 'Sport / Fitness', amount: 50 },
+        { name: 'Sonstiges', amount: 75 }
+    ]}
+];
+
+function switchBezahlenOption(direction) {
+    currentBezahlenOption = (currentBezahlenOption + direction + bezahlenOptions.length) % bezahlenOptions.length;
+    var label = document.getElementById('bezahlenOptionLabel');
+    if (label) label.textContent = bezahlenOptions[currentBezahlenOption];
+    renderBezahlenContent();
+}
+window.switchBezahlenOption = switchBezahlenOption;
+
+function renderBezahlenContent() {
+    var container = document.getElementById('bezahlenContent');
+    if (!container) return;
+    var total = bezahlenData.reduce(function(s, c) { return s + c.amount; }, 0);
+
+    switch (currentBezahlenOption) {
+        case 0: container.innerHTML = renderBezahlenDonut(total); break;
+        case 1: container.innerHTML = renderBezahlenStacked(total); break;
+        case 2: container.innerHTML = renderBezahlenGrid(total); break;
+    }
+}
+
+function renderBezahlenDonut(total) {
+    var svgSize = 140, cx = 70, cy = 70, r = 55;
+    var circ = 2 * Math.PI * r;
+    var offset = 0;
+    var paths = '';
+    bezahlenData.forEach(function(cat) {
+        var pct = cat.amount / total;
+        var dash = pct * circ;
+        paths += '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" fill="none" stroke="' + cat.color + '" stroke-width="20" stroke-dasharray="' + dash + ' ' + (circ - dash) + '" stroke-dashoffset="' + (-offset) + '" transform="rotate(-90 ' + cx + ' ' + cy + ')"/>';
+        offset += dash;
+    });
+
+    var donutSvg = '<svg width="' + svgSize + '" height="' + svgSize + '" viewBox="0 0 ' + svgSize + ' ' + svgSize + '">' + paths +
+        '<text x="' + cx + '" y="' + (cy - 5) + '" text-anchor="middle" font-size="16" font-weight="700" fill="#1e293b">\u20AC' + total + '</text>' +
+        '<text x="' + cx + '" y="' + (cy + 12) + '" text-anchor="middle" font-size="10" fill="#94a3b8">/Monat</text></svg>';
+
+    var legend = bezahlenData.map(function(cat) {
+        return '<div class="bezahlen-legend-item" onclick="toggleBezahlenKat(\'' + cat.name + '\')">' +
+            '<span class="bezahlen-legend-dot" style="background:' + cat.color + '"></span>' +
+            '<span class="bezahlen-legend-label">' + cat.name + '</span>' +
+            '<span class="bezahlen-legend-value">\u20AC' + cat.amount + '</span></div>';
+    }).join('');
+
+    var akkordeon = bezahlenData.map(function(cat) {
+        var items = cat.items.map(function(tx) {
+            var badge = '';
+            if (tx.badge === 'versichert') badge = '<span class="bezahlen-tx-badge versichert">Versichert</span>';
+            if (tx.badge === 'luecke') badge = '<span class="bezahlen-tx-badge luecke">L\u00FCcke</span>';
+            return '<div class="bezahlen-tx-item"><span class="bezahlen-tx-name">' + tx.name + '</span><span class="bezahlen-tx-amount">\u20AC' + tx.amount + badge + '</span></div>';
+        }).join('');
+        return '<div class="bezahlen-kat-header" onclick="toggleBezahlenKat(\'' + cat.name + '\')">' +
+            '<span class="bezahlen-kat-dot" style="background:' + cat.color + '"></span>' +
+            '<span class="bezahlen-kat-name">' + cat.name + '</span>' +
+            '<span class="bezahlen-kat-amount">\u20AC' + cat.amount + '/Mon.</span>' +
+            '<span class="bezahlen-kat-arrow" id="bezArrow_' + cat.name.replace(/\s/g,'_') + '">\u25BC</span></div>' +
+            '<div class="bezahlen-kat-detail" id="bezDetail_' + cat.name.replace(/\s/g,'_') + '">' + items + '</div>';
+    }).join('');
+
+    return '<div class="bezahlen-donut-container"><div class="bezahlen-donut-chart">' + donutSvg + '</div><div class="bezahlen-donut-legend">' + legend + '</div></div>' +
+        '<div class="bezahlen-akkordeon">' + akkordeon + '</div>';
+}
+
+function renderBezahlenStacked(total) {
+    var bar = bezahlenData.map(function(cat) {
+        var pct = (cat.amount / total * 100).toFixed(1);
+        return '<div class="bezahlen-bar-segment" style="width:' + pct + '%;background:' + cat.color + '" title="' + cat.name + ': \u20AC' + cat.amount + '">' +
+            (parseFloat(pct) > 8 ? pct + '%' : '') + '</div>';
+    }).join('');
+
+    var cards = bezahlenData.map(function(cat) {
+        var pct = (cat.amount / total * 100).toFixed(0);
+        return '<div class="bezahlen-flat-card" style="border-left-color:' + cat.color + '">' +
+            '<span class="bezahlen-flat-card-name">' + cat.name + '</span>' +
+            '<span class="bezahlen-flat-card-amount">\u20AC' + cat.amount + '/Mon.</span>' +
+            '<span class="bezahlen-flat-card-pct">' + pct + '%</span></div>';
+    }).join('');
+
+    return '<div class="bezahlen-stacked-bar">' + bar + '</div><div class="bezahlen-flat-cards">' + cards + '</div>';
+}
+
+function renderBezahlenGrid(total) {
+    var cards = bezahlenData.map(function(cat) {
+        var pct = (cat.amount / total * 100).toFixed(0);
+        return '<div class="bezahlen-grid-card" style="border-top:3px solid ' + cat.color + '">' +
+            '<div class="bezahlen-grid-card-icon">' + cat.icon + '</div>' +
+            '<div class="bezahlen-grid-card-name">' + cat.name + '</div>' +
+            '<div class="bezahlen-grid-card-amount">\u20AC' + cat.amount + '</div>' +
+            '<div class="bezahlen-grid-card-pct">' + pct + '% der Ausgaben</div></div>';
+    }).join('');
+    return '<div class="bezahlen-grid-cards">' + cards + '</div>';
+}
+
+function toggleBezahlenKat(katName) {
+    var id = katName.replace(/\s/g, '_');
+    var detail = document.getElementById('bezDetail_' + id);
+    var arrow = document.getElementById('bezArrow_' + id);
+    if (detail) {
+        if (detail.classList.contains('open')) {
+            detail.classList.remove('open');
+            if (arrow) arrow.classList.remove('open');
+        } else {
+            detail.classList.add('open');
+            if (arrow) arrow.classList.add('open');
+        }
+    }
+}
+window.toggleBezahlenKat = toggleBezahlenKat;
+
+// ========================================
+// IMPULSE DISPLAY OPTIONS (3 Options)
+// ========================================
+var currentImpulseOption = 0;
+var impulseOptions = ['Option 1: Kartenansicht', 'Option 2: Kanban-Board', 'Option 3: Kompakte Tabelle'];
+
+var impulseData = [
+    { title: 'Risikolebensversicherung anbieten', desc: 'Hypothek \u20AC285.000 bei Sparkasse ohne Restschuldversicherung', kategorie: 'whitespots', prioritaet: 'high', source: 'Open Finance' },
+    { title: 'Fondspolice anbieten', desc: 'Depot \u20AC85.000 bei DWS, Sparrate \u20AC800/Mon. ohne Steueroptimierung', kategorie: 'whitespots', prioritaet: 'high', source: 'Open Finance' },
+    { title: 'Kfz-Wechsel anbieten', desc: 'Kfz bei Allianz l\u00E4uft aus, Ersparnis ca. \u20AC180/Jahr m\u00F6glich', kategorie: 'anpassung', prioritaet: 'high', source: 'Open Finance' },
+    { title: 'BU-Absicherung pr\u00FCfen', desc: 'Einkommensst\u00E4rke vs. BU-Rente pr\u00FCfen, ggf. erh\u00F6hen', kategorie: 'anpassung', prioritaet: 'medium', source: 'Bestandsdaten' },
+    { title: 'Rechtsschutz Cross-Sell', desc: 'Kein Rechtsschutz vorhanden, Familie mit Immobilienbesitz', kategorie: 'whitespots', prioritaet: 'medium', source: 'Bestandsdaten' }
+];
+
+function switchImpulseOption(direction) {
+    currentImpulseOption = (currentImpulseOption + direction + impulseOptions.length) % impulseOptions.length;
+    var label = document.getElementById('impulseOptionLabel');
+    if (label) label.textContent = impulseOptions[currentImpulseOption];
+    renderImpulseContent();
+}
+window.switchImpulseOption = switchImpulseOption;
+
+function renderImpulseContent() {
+    var container = document.getElementById('impulseContent');
+    if (!container) return;
+
+    switch (currentImpulseOption) {
+        case 0: // Kartenansicht (existing HTML - show it)
+            var existingCards = container.querySelectorAll('.impuls-kategorie, .impuls-actions');
+            existingCards.forEach(function(el) { el.style.display = ''; });
+            var kanban = container.querySelector('.impulse-kanban');
+            if (kanban) kanban.remove();
+            var table = container.querySelector('.impulse-table-wrap');
+            if (table) table.remove();
+            break;
+        case 1: // Kanban Board
+            hideExistingImpulse(container);
+            removeAltImpulse(container);
+            var kanbanHtml = renderImpulseKanban();
+            var div = document.createElement('div');
+            div.className = 'impulse-kanban';
+            div.innerHTML = kanbanHtml;
+            container.appendChild(div);
+            break;
+        case 2: // Kompakte Tabelle
+            hideExistingImpulse(container);
+            removeAltImpulse(container);
+            var tableHtml = renderImpulseTable();
+            var div2 = document.createElement('div');
+            div2.className = 'impulse-table-wrap';
+            div2.innerHTML = tableHtml;
+            container.appendChild(div2);
+            break;
+    }
+}
+
+function hideExistingImpulse(container) {
+    var existing = container.querySelectorAll('.impuls-kategorie, .impuls-actions');
+    existing.forEach(function(el) { el.style.display = 'none'; });
+}
+
+function removeAltImpulse(container) {
+    var k = container.querySelector('.impulse-kanban');
+    if (k) k.remove();
+    var t = container.querySelector('.impulse-table-wrap');
+    if (t) t.remove();
+}
+
+function renderImpulseKanban() {
+    var high = impulseData.filter(function(i) { return i.prioritaet === 'high'; });
+    var medium = impulseData.filter(function(i) { return i.prioritaet === 'medium'; });
+    var low = impulseData.filter(function(i) { return i.prioritaet === 'low'; });
+
+    function renderCol(items) {
+        return items.map(function(i) {
+            return '<div class="impulse-kanban-card">' +
+                '<div class="impulse-kanban-card-title">' + i.title + '</div>' +
+                '<div class="impulse-kanban-card-desc">' + i.desc + '</div>' +
+                '<span class="impulse-kanban-card-badge ' + i.kategorie + '">' + (i.kategorie === 'whitespots' ? 'Neugesch\u00E4ft' : 'Anpassung') + '</span></div>';
+        }).join('');
+    }
+
+    return '<div class="impulse-kanban-col"><div class="impulse-kanban-col-title high">Hohe Priorit\u00E4t (' + high.length + ')</div>' + renderCol(high) + '</div>' +
+        '<div class="impulse-kanban-col"><div class="impulse-kanban-col-title medium">Mittlere Priorit\u00E4t (' + medium.length + ')</div>' + renderCol(medium) + '</div>' +
+        '<div class="impulse-kanban-col"><div class="impulse-kanban-col-title low">Niedrige Priorit\u00E4t (' + low.length + ')</div>' + renderCol(low) + '</div>';
+}
+
+function renderImpulseTable() {
+    var rows = impulseData.map(function(i) {
+        return '<tr><td><strong>' + i.title + '</strong></td>' +
+            '<td>' + i.desc + '</td>' +
+            '<td><span class="impulse-kat-badge ' + i.kategorie + '">' + (i.kategorie === 'whitespots' ? 'Neugesch\u00E4ft' : 'Anpassung') + '</span></td>' +
+            '<td><span class="impulse-prio-badge ' + i.prioritaet + '">' + (i.prioritaet === 'high' ? 'Hoch' : (i.prioritaet === 'medium' ? 'Mittel' : 'Niedrig')) + '</span></td>' +
+            '<td>' + i.source + '</td></tr>';
+    }).join('');
+
+    return '<table class="impulse-table"><thead><tr><th>Impuls</th><th>Beschreibung</th><th>Kategorie</th><th>Priorit\u00E4t</th><th>Quelle</th></tr></thead><tbody>' + rows + '</tbody></table>';
+}
+
+// ========================================
+// KOMMUNIKATION DISPLAY OPTIONS (3 Options)
+// ========================================
+var currentKommOption = 0;
+var kommOptions = ['Option 1: Timeline', 'Option 2: Chat-Ansicht', 'Option 3: Kompakte Liste'];
+
+var kommData = [
+    { type: 'email', typLabel: 'Automatische E-Mail', date: '28.11.2025', subject: 'Kfz-Versicherung: Ihr Vertrag l\u00E4uft aus', preview: 'Ihr Kfz-Vertrag bei der Allianz l\u00E4uft am 30.11.2025 aus. Wir haben ein attraktives Angebot...', status: 'geoeffnet', statusText: 'Ge\u00F6ffnet', direction: 'outgoing' },
+    { type: 'brief', typLabel: 'Automatischer Brief', date: '15.11.2025', subject: 'Open Finance Datenfreigabe: Neue Potentiale erkannt', preview: 'Basierend auf Ihren freigegebenen Finanzdaten haben wir Optimierungsm\u00F6glichkeiten...', status: 'versendet', statusText: 'Versendet', direction: 'outgoing' },
+    { type: 'telefon', typLabel: 'Telefonat', date: '10.11.2025', subject: 'R\u00FCckruf wegen Altersvorsorge-Angebot', preview: 'Kunde interessiert an fondsgebundener Rentenversicherung. Termin f\u00FCr 12.12. vereinbart.', status: 'termin', statusText: 'Termin: 12.12.2025', direction: 'incoming' },
+    { type: 'email', typLabel: 'Automatische E-Mail', date: '01.10.2025', subject: 'Willkommen bei Open Finance', preview: 'Vielen Dank f\u00FCr Ihre Open Finance Datenfreigabe. Personalisierte Empfehlungen verf\u00FCgbar.', status: 'geoeffnet', statusText: 'Ge\u00F6ffnet', direction: 'outgoing' }
+];
+
+function switchKommOption(direction) {
+    currentKommOption = (currentKommOption + direction + kommOptions.length) % kommOptions.length;
+    var label = document.getElementById('kommOptionLabel');
+    if (label) label.textContent = kommOptions[currentKommOption];
+    renderKommContent();
+}
+window.switchKommOption = switchKommOption;
+
+function renderKommContent() {
+    var container = document.getElementById('kommContent');
+    if (!container) return;
+
+    switch (currentKommOption) {
+        case 0: // Timeline (existing HTML)
+            var timeline = container.querySelector('.kommunikation-timeline');
+            if (timeline) timeline.style.display = '';
+            var chat = container.querySelector('.komm-chat');
+            if (chat) chat.remove();
+            var compact = container.querySelector('.komm-compact');
+            if (compact) compact.remove();
+            break;
+        case 1: // Chat
+            hideExistingKomm(container);
+            removeAltKomm(container);
+            var chatHtml = renderKommChat();
+            var div = document.createElement('div');
+            div.className = 'komm-chat';
+            div.innerHTML = chatHtml;
+            container.appendChild(div);
+            break;
+        case 2: // Kompakte Liste
+            hideExistingKomm(container);
+            removeAltKomm(container);
+            var listHtml = renderKommCompact();
+            var div2 = document.createElement('div');
+            div2.className = 'komm-compact';
+            div2.innerHTML = listHtml;
+            container.appendChild(div2);
+            break;
+    }
+}
+
+function hideExistingKomm(container) {
+    var timeline = container.querySelector('.kommunikation-timeline');
+    if (timeline) timeline.style.display = 'none';
+}
+
+function removeAltKomm(container) {
+    var c = container.querySelector('.komm-chat');
+    if (c) c.remove();
+    var l = container.querySelector('.komm-compact');
+    if (l) l.remove();
+}
+
+function renderKommChat() {
+    var typeIcons = {
+        'email': '\u2709\uFE0F',
+        'brief': '\uD83D\uDCC4',
+        'telefon': '\uD83D\uDCDE'
+    };
+    return kommData.map(function(k) {
+        var icon = typeIcons[k.type] || '\u2709\uFE0F';
+        var avatar = k.direction === 'outgoing' ? '\uD83E\uDDD1\u200D\uD83D\uDCBC' : '\uD83D\uDC64';
+        return '<div class="komm-chat-msg ' + k.direction + '">' +
+            '<div class="komm-chat-avatar">' + avatar + '</div>' +
+            '<div class="komm-chat-bubble">' +
+            '<div class="komm-chat-bubble-subject">' + k.subject + '</div>' +
+            '<div>' + k.preview + '</div>' +
+            '<div class="komm-chat-bubble-date">' + k.typLabel + ' \u2022 ' + k.date + '</div></div></div>';
+    }).join('');
+}
+
+function renderKommCompact() {
+    var typeIcons = {
+        'email': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>',
+        'brief': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>',
+        'telefon': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>'
+    };
+    return kommData.map(function(k) {
+        return '<div class="komm-compact-item">' +
+            '<span class="komm-compact-date">' + k.date + '</span>' +
+            '<span class="komm-compact-icon">' + (typeIcons[k.type] || '') + '</span>' +
+            '<span class="komm-compact-subject">' + k.subject + '</span>' +
+            '<span class="komm-compact-type">' + k.typLabel + '</span>' +
+            '<span class="komm-compact-status ' + k.status + '">' + k.statusText + '</span></div>';
+    }).join('');
+}
 
 console.log('landing.js geladen');

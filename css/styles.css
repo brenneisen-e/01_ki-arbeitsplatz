@@ -9226,21 +9226,22 @@ button svg,
    SHARED HEADER TABS (A-02 / A-10)
    ======================================== */
 
-/* A-02: Header - name row + centered tabs below */
+/* A-02: Header - single row with tabs next to name */
 .agentur-header-new {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 0;
+    flex-direction: row;
+    align-items: center;
+    gap: 16px;
 }
 
-/* Tabs centered below name, aligned to content width */
+/* Tabs inline, centered in remaining space */
 .agentur-header-tabs {
     display: flex;
     gap: 6px;
     overflow-x: auto;
     flex-wrap: nowrap;
     justify-content: center;
-    padding-top: 12px;
+    flex: 1;
+    padding-top: 0;
 }
 
 .agentur-header-tabs .agentur-tab {

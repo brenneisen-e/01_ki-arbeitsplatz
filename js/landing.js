@@ -4036,11 +4036,95 @@ function switchKundeDropdown(kundenName) {
 window.switchKundeDropdown = switchKundeDropdown;
 
 function toggleNpsDetail() {
-    const popup = document.getElementById('npsDetailPopup');
+    var popup = document.getElementById('npsDetailPopup');
     if (!popup) return;
-    popup.style.display = popup.style.display === 'none' ? 'block' : 'none';
+    if (popup.style.display === 'none') {
+        var badge = document.getElementById('kundenNpsBadge');
+        if (badge) {
+            var rect = badge.getBoundingClientRect();
+            popup.style.left = rect.left + 'px';
+            popup.style.top = (rect.bottom + 8) + 'px';
+            // If popup would go below viewport, show above instead
+            popup.style.display = 'block';
+            var popupRect = popup.getBoundingClientRect();
+            if (popupRect.bottom > window.innerHeight) {
+                popup.style.top = (rect.top - popupRect.height - 8) + 'px';
+            }
+        } else {
+            popup.style.display = 'block';
+        }
+    } else {
+        popup.style.display = 'none';
+    }
 }
 window.toggleNpsDetail = toggleNpsDetail;
+
+// ========================================
+// KUNDE DISPLAY OPTION SWITCHER (A/B/C)
+// ========================================
+let currentKundeDisplayOption = 0;
+const kundeDisplayOptions = [
+    { id: 'A', label: 'Option A: Name im Header', elId: 'kundeOptionA' },
+    { id: 'B', label: 'Option B: Sticky-Leiste', elId: 'kundeOptionB' },
+    { id: 'C', label: 'Option C: Name \u00fcber Tabs', elId: 'kundeOptionC' }
+];
+
+function switchKundeDisplayOption(direction) {
+    currentKundeDisplayOption = (currentKundeDisplayOption + direction + kundeDisplayOptions.length) % kundeDisplayOptions.length;
+    applyKundeDisplayOption();
+}
+window.switchKundeDisplayOption = switchKundeDisplayOption;
+
+function applyKundeDisplayOption() {
+    kundeDisplayOptions.forEach(function(opt, i) {
+        var el = document.getElementById(opt.elId);
+        if (el) el.style.display = i === currentKundeDisplayOption ? '' : 'none';
+    });
+    var label = document.getElementById('optionSwitcherLabel');
+    if (label) label.textContent = kundeDisplayOptions[currentKundeDisplayOption].label;
+}
+
+function updateKundeDisplayOptions(kundenName, kundenId, npsData, clvValue, segmentValue) {
+    // Option A
+    var nameA = document.getElementById('kundeHeaderNameA');
+    var idA = document.getElementById('kundeHeaderIdA');
+    if (nameA) nameA.textContent = kundenName;
+    if (idA) idA.textContent = kundenId;
+
+    // Option B
+    var nameB = document.getElementById('kundeBarNameB');
+    var idB = document.getElementById('kundeBarIdB');
+    var npsB = document.getElementById('kundeBarNpsB');
+    var clvB = document.getElementById('kundeBarClvB');
+    var segB = document.getElementById('kundeBarSegmentB');
+    if (nameB) nameB.textContent = kundenName;
+    if (idB) idB.textContent = kundenId;
+    if (npsB && npsData) {
+        npsB.textContent = npsData.score;
+        npsB.className = 'nps-badge ' + npsData.kategorie;
+        npsB.style.width = '22px';
+        npsB.style.height = '22px';
+        npsB.style.fontSize = '11px';
+    }
+    if (clvB) clvB.textContent = clvValue || '\u2014';
+    if (segB) segB.textContent = segmentValue || '\u2014';
+
+    // Option C
+    var nameC = document.getElementById('kundeTabsNameC');
+    var idC = document.getElementById('kundeTabsIdC');
+    var npsC = document.getElementById('kundeTabsNpsC');
+    if (nameC) nameC.textContent = kundenName;
+    if (idC) idC.textContent = kundenId;
+    if (npsC && npsData) {
+        npsC.textContent = npsData.score;
+        npsC.className = 'nps-badge ' + npsData.kategorie;
+        npsC.style.width = '24px';
+        npsC.style.height = '24px';
+        npsC.style.fontSize = '11px';
+    }
+
+    applyKundeDisplayOption();
+}
 
 function filterKundenliste(searchText) {
     const rows = document.querySelectorAll('#kundenlisteTableBody tr');
@@ -4443,6 +4527,11 @@ function fillKundenDetail(kundenName, vermittlerId) {
     if (clvResult) {
         renderCLV(clvResult);
     }
+
+    // Kunde Display Options (A/B/C) aktualisieren
+    var clvStr = clvResult ? formatEuroCLV(clvResult.gesamtCLV) : '\u2014';
+    var segStr = clvResult ? clvResult.segment : '\u2014';
+    updateKundeDisplayOptions(kundenName, vermittlerId, kunde.nps, clvStr, segStr);
 }
 
 // ========================================

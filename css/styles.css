@@ -9417,6 +9417,189 @@ button svg,
     border-color: #86BC25;
 }
 
+/* ========================================
+   KUNDE DISPLAY OPTIONS (A/B/C) + SWITCHER
+   ======================================== */
+
+/* Option Switcher */
+.option-switcher {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #1e293b;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    user-select: none;
+}
+
+.option-switcher-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.option-switcher-arrow:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.option-switcher-label {
+    font-size: 14px;
+    font-weight: 600;
+    min-width: 200px;
+    text-align: center;
+}
+
+/* Option A: Kundenname inline im Header */
+.kunde-header-inline {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: 16px;
+}
+
+.kunde-header-separator {
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 20px;
+    font-weight: 300;
+}
+
+.kunde-header-label {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.kunde-header-name {
+    color: white;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.kunde-header-kid {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 2px 8px;
+    border-radius: 6px;
+}
+
+/* Option B: Sekundäre Sticky-Leiste */
+.kunde-sticky-bar {
+    position: sticky;
+    top: 68px;
+    z-index: 99;
+    background: linear-gradient(135deg, #f0fdf4, #ecfdf5);
+    border-bottom: 2px solid #86BC25;
+    padding: 0;
+}
+
+.kunde-sticky-bar-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 10px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.kunde-sticky-bar-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #1e293b;
+}
+
+.kunde-sticky-bar-left svg {
+    color: #86BC25;
+}
+
+.kunde-sticky-name {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.kunde-sticky-kid {
+    font-size: 12px;
+    color: #64748b;
+    background: #e2e8f0;
+    padding: 2px 8px;
+    border-radius: 6px;
+}
+
+.kunde-sticky-bar-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.kunde-sticky-kpi {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.kunde-sticky-kpi-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.kunde-sticky-kpi-value {
+    font-size: 14px;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+/* Option C: Kundenname über den Tabs */
+.kunde-tabs-header {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 16px 24px 0;
+}
+
+.kunde-tabs-header-inner {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #e2e8f0;
+    margin-bottom: -1px;
+}
+
+.kunde-tabs-header-name {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0;
+}
+
+.kunde-tabs-header-kid {
+    font-size: 13px;
+    color: #64748b;
+    background: #f1f5f9;
+    padding: 3px 10px;
+    border-radius: 6px;
+    font-weight: 500;
+}
+
 /* Kundenliste Tab */
 .kundenliste-header {
     display: flex;
@@ -9486,7 +9669,7 @@ button svg,
 }
 
 .nps-badge.promoter {
-    background: #22c55e;
+    background: #2d5016;
 }
 
 .nps-badge.passive {
@@ -9513,16 +9696,14 @@ button svg,
 }
 
 .nps-detail-popup {
-    position: absolute;
-    top: 40px;
-    left: 0;
+    position: fixed;
     background: white;
     border: 1px solid #e2e8f0;
     border-radius: 12px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
     padding: 16px;
-    min-width: 300px;
-    z-index: 50;
+    min-width: 320px;
+    z-index: 200;
 }
 
 .nps-detail-title {

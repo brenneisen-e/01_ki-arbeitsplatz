@@ -9221,3 +9221,103 @@ button svg,
         display: none;
     }
 }
+
+/* ========================================
+   SHARED HEADER TABS (A-02 / A-10)
+   ======================================== */
+
+/* A-02: Header becomes flex-column for two rows */
+.agentur-header-new {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+}
+
+.agentur-header-new > .agentur-header-left {
+    padding-bottom: 12px;
+}
+
+/* Tabs row inside header */
+.agentur-header-tabs {
+    display: flex;
+    gap: 4px;
+    padding: 8px 0 0;
+    border-top: 1px solid #e2e8f0;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+}
+
+.agentur-header-tabs .agentur-tab {
+    padding: 8px 14px;
+    font-size: 13px;
+    gap: 6px;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.agentur-header-tabs .agentur-tab svg {
+    width: 16px;
+    height: 16px;
+}
+
+/* A-10: Shared header mirroring A-02 */
+.kunden-shared-header {
+    background: white;
+    padding: 16px 32px 0;
+    border-bottom: 1px solid #e2e8f0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.kunden-shared-header-top {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding-bottom: 12px;
+}
+
+.kunden-shared-header-info {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex: 1;
+}
+
+/* Customer Switch Dropdown */
+.kunden-switch-dropdown {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.kunden-switch-dropdown label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #64748b;
+    white-space: nowrap;
+}
+
+.kunden-switch-dropdown select {
+    padding: 6px 12px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    background: white;
+    cursor: pointer;
+    min-width: 180px;
+    transition: border-color 0.2s;
+}
+
+.kunden-switch-dropdown select:focus {
+    outline: none;
+    border-color: #86BC25;
+    box-shadow: 0 0 0 3px rgba(134, 188, 37, 0.15);
+}
+
+.kunden-shared-header .agentur-header-tabs {
+    padding: 8px 0 0;
+    border-top: 1px solid #e2e8f0;
+}

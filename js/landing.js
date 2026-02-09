@@ -3825,6 +3825,9 @@ function openKundenDetail(kundenName, vermittlerId) {
         // Fülle Kundendaten
         fillKundenDetail(kundenName, vermittlerId);
 
+        // Update shared header on A-10
+        updateKundenSharedHeader(kundenName, vermittlerId);
+
         // Aktiviere FIDA in Kundendetail wenn es in Potentialanalyse aktiv war
         initKundenFidaState();
 
@@ -3963,6 +3966,74 @@ function closeKundenDetail() {
         }));
     }
 }
+
+/**
+ * Update the shared header on A-10 with agent info and customer dropdown
+ */
+function updateKundenSharedHeader(kundenName, vermittlerId) {
+    // Update customer dropdown selection
+    const select = document.getElementById('kundenSwitchSelect');
+    if (select) {
+        select.value = kundenName;
+    }
+
+    // Update agent name/ID in shared header
+    const title = document.getElementById('kundenHeaderTitle');
+    const idSpan = document.getElementById('kundenHeaderId');
+    if (title) {
+        const agenturTitle = document.getElementById('agenturPageTitle');
+        title.textContent = agenturTitle ? agenturTitle.textContent : 'Agentur-Übersicht';
+    }
+    if (idSpan) {
+        const agenturId = document.getElementById('agenturIdHeader');
+        idSpan.textContent = agenturId ? agenturId.textContent : vermittlerId;
+    }
+
+    // Copy agent photo to shared header
+    const sourceImg = document.getElementById('agenturPhotoImgSmall');
+    const targetImg = document.getElementById('kundenHeaderPhotoImg');
+    const targetPlaceholder = document.querySelector('#kundenHeaderPhoto .agentur-photo-placeholder-small');
+    if (sourceImg && sourceImg.style.display !== 'none' && targetImg) {
+        targetImg.src = sourceImg.src;
+        targetImg.style.display = 'block';
+        if (targetPlaceholder) targetPlaceholder.style.display = 'none';
+    }
+}
+window.updateKundenSharedHeader = updateKundenSharedHeader;
+
+/**
+ * Navigate from A-10 back to A-02 and show a specific tab
+ */
+function navigateToAgenturTab(tabName) {
+    // Close Kundendetail
+    document.getElementById('kundenDetailPage').style.display = 'none';
+
+    // Show Agenturansicht
+    const agenturOverview = document.getElementById('agenturOverview');
+    if (agenturOverview) {
+        agenturOverview.style.display = 'block';
+    }
+
+    // Switch to the requested tab
+    if (typeof showAgenturTab === 'function') {
+        showAgenturTab(tabName);
+    }
+
+    document.dispatchEvent(new CustomEvent('viewChanged', {
+        detail: { module: 'versicherung', view: 'agentursicht' }
+    }));
+}
+window.navigateToAgenturTab = navigateToAgenturTab;
+
+/**
+ * Switch customer from dropdown on A-10
+ */
+function switchKundeDropdown(kundenName) {
+    if (!kundenName) return;
+    const vermittlerId = currentKundenVermittlerId || 'VM00001';
+    openKundenDetail(kundenName, vermittlerId);
+}
+window.switchKundeDropdown = switchKundeDropdown;
 
 /**
  * Navigiert zum Vertriebsbericht aus der Kundendetail-Seite
@@ -4193,6 +4264,19 @@ function fillKundenDetail(kundenName, vermittlerId) {
     };
 
     const kunde = mockKunden[kundenName] || mockKunden['Peter Schmidt'];
+
+    // Kundenfoto setzen
+    const kundenFoto = document.querySelector('.kunden-foto');
+    if (kundenFoto) {
+        if (kundenName === 'Peter Schmidt') {
+            kundenFoto.innerHTML = `<img src="AdobeStock_624564221.jpeg" alt="Peter Schmidt" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
+        } else {
+            kundenFoto.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+            </svg>`;
+        }
+    }
 
     // Stammdaten
     document.getElementById('kundenGeburtsdatum').textContent = kunde.geburtsdatum;

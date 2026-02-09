@@ -1,0 +1,359 @@
+/* css/makler.css - Makler B2B Modus Styles */
+
+/* ========================================
+   TOGGLE SWITCH
+   ======================================== */
+.makler-toggle-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: 16px;
+    padding-left: 16px;
+    border-left: 1px solid #e2e8f0;
+}
+
+.makler-toggle-switch {
+    width: 44px;
+    height: 24px;
+    background: #cbd5e1;
+    border-radius: 12px;
+    cursor: pointer;
+    position: relative;
+    transition: background 0.3s;
+}
+
+.makler-toggle-switch::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: white;
+    border-radius: 50%;
+    top: 2px;
+    left: 2px;
+    transition: transform 0.3s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.makler-toggle-switch.active {
+    background: #3b82f6;
+}
+
+.makler-toggle-switch.active::after {
+    transform: translateX(20px);
+}
+
+.makler-toggle-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #475569;
+    white-space: nowrap;
+}
+
+/* ========================================
+   MAKLER KPI KARTEN
+   ======================================== */
+.makler-kpi-card {
+    display: none;
+    background: white;
+    border-radius: 12px;
+    padding: 20px 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    border: 1px solid #e2e8f0;
+}
+
+.makler-kpi-card .cockpit-kpi-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.makler-kpi-card .cockpit-kpi-icon.bestand { background: #dbeafe; color: #2563eb; }
+.makler-kpi-card .cockpit-kpi-icon.neugeschaeft { background: #dcfce7; color: #16a34a; }
+.makler-kpi-card .cockpit-kpi-icon.courtage { background: #fef3c7; color: #d97706; }
+.makler-kpi-card .cockpit-kpi-icon.retention { background: #ede9fe; color: #7c3aed; }
+.makler-kpi-card .cockpit-kpi-icon.schadenquote { background: #fee2e2; color: #dc2626; }
+
+/* ========================================
+   MAKLER KUNDENLISTE
+   ======================================== */
+.makler-kundenliste-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.makler-kundenliste-table th {
+    background: #f8fafc;
+    padding: 10px 12px;
+    text-align: left;
+    font-weight: 600;
+    color: #64748b;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    border-bottom: 2px solid #e2e8f0;
+    white-space: nowrap;
+}
+
+.makler-kundenliste-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #f1f5f9;
+    color: #334155;
+}
+
+.makler-kundenliste-table .text-right {
+    text-align: right;
+}
+
+.makler-kundenliste-table .text-center {
+    text-align: center;
+}
+
+.makler-kundenliste-table .clickable-row:hover {
+    background: #f8fafc;
+    cursor: pointer;
+}
+
+/* Segment Badges */
+.makler-segment-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.segment-gesundheitswesen { background: #dbeafe; color: #1e40af; }
+.segment-kirche { background: #ede9fe; color: #6d28d9; }
+.segment-sozialwirtschaft { background: #fef3c7; color: #92400e; }
+.segment-industrie---gewerbe { background: #f1f5f9; color: #334155; }
+.segment-transport---logistik { background: #dcfce7; color: #166534; }
+
+.makler-segment-badge-sm {
+    font-size: 12px;
+    font-weight: 600;
+}
+
+/* Schadenquote Badges */
+.schaden-hoch { color: #dc2626; font-weight: 700; }
+.schaden-mittel { color: #d97706; font-weight: 600; }
+.schaden-niedrig { color: #16a34a; font-weight: 600; }
+
+/* Deckungsquote Mini-Bar */
+.deckung-mini-bar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+}
+
+.deckung-mini-bar > div {
+    flex: 1;
+    height: 6px;
+    background: #e2e8f0;
+    border-radius: 3px;
+    overflow: hidden;
+    max-width: 80px;
+}
+
+.deckung-mini-fill {
+    height: 100%;
+    background: #3b82f6;
+    border-radius: 3px;
+}
+
+.deckung-mini-bar span {
+    font-size: 12px;
+    font-weight: 600;
+    color: #475569;
+}
+
+/* Renewal Badges */
+.renewal-badge {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 4px;
+    white-space: nowrap;
+}
+
+.renewal-rot { background: #fee2e2; color: #dc2626; }
+.renewal-gelb { background: #fef3c7; color: #92400e; }
+.renewal-gruen { background: #dcfce7; color: #166534; }
+
+/* ========================================
+   MAKLER TABS (A-02 Ersatz)
+   ======================================== */
+.agentur-tab-makler {
+    display: none;
+}
+
+.makler-tab-content {
+    display: none;
+    padding: 24px;
+}
+
+.makler-tab-content.active {
+    display: block;
+}
+
+/* ========================================
+   MAKLER DETAIL TABELLEN
+   ======================================== */
+.makler-detail-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin-top: 8px;
+}
+
+.makler-detail-table th {
+    background: #f8fafc;
+    padding: 8px 12px;
+    text-align: left;
+    font-weight: 600;
+    color: #64748b;
+    font-size: 11px;
+    text-transform: uppercase;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.makler-detail-table td {
+    padding: 8px 12px;
+    border-bottom: 1px solid #f1f5f9;
+    color: #334155;
+}
+
+.makler-detail-table .text-right {
+    text-align: right;
+}
+
+/* ========================================
+   DECKUNGSLÜCKEN
+   ======================================== */
+.prio-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.prio-hoch { background: #fee2e2; color: #dc2626; }
+.prio-mittel { background: #fef3c7; color: #92400e; }
+.prio-niedrig { background: #f1f5f9; color: #64748b; }
+
+.status-badge-dl {
+    font-size: 11px;
+    color: #94a3b8;
+    font-style: italic;
+}
+
+/* ========================================
+   RENEWAL-AMPEL
+   ======================================== */
+.renewal-group {
+    margin-bottom: 16px;
+}
+
+.renewal-group-label {
+    font-size: 13px;
+    font-weight: 700;
+    padding: 8px 14px;
+    border-radius: 8px 8px 0 0;
+    border: 1px solid #e2e8f0;
+    border-bottom: none;
+}
+
+.renewal-group-label.renewal-rot { background: #fef2f2; color: #dc2626; border-color: #fecaca; }
+.renewal-group-label.renewal-gelb { background: #fffbeb; color: #92400e; border-color: #fde68a; }
+.renewal-group-label.renewal-gruen { background: #f0fdf4; color: #166534; border-color: #bbf7d0; }
+
+.renewal-item {
+    display: flex;
+    gap: 16px;
+    padding: 8px 14px;
+    border: 1px solid #e2e8f0;
+    border-top: none;
+    font-size: 13px;
+    color: #334155;
+}
+
+.renewal-item:last-child {
+    border-radius: 0 0 8px 8px;
+}
+
+.renewal-sparte {
+    flex: 1;
+    font-weight: 600;
+}
+
+.renewal-versicherer {
+    flex: 1;
+    color: #64748b;
+}
+
+.renewal-ablauf {
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+/* ========================================
+   MAKLER STAMMDATEN (A-10)
+   ======================================== */
+#maklerStammdaten {
+    display: none;
+}
+
+#maklerStammdaten .info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+}
+
+.risikoklasse-badge {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 4px;
+    font-weight: 700;
+    font-size: 13px;
+}
+
+.rk-a { background: #dcfce7; color: #166534; }
+.rk-b { background: #fef3c7; color: #92400e; }
+.rk-c { background: #fee2e2; color: #dc2626; }
+
+/* ========================================
+   MAKLER A-10 VERTRÄGE TABLE OVERRIDE
+   ======================================== */
+.makler-vertraege-header {
+    display: none;
+}
+
+/* Show extra columns when in Makler mode */
+
+/* ========================================
+   RESPONSIVE (Tablet)
+   ======================================== */
+@media (max-width: 1200px) {
+    .makler-kundenliste-table {
+        font-size: 12px;
+    }
+    .makler-kundenliste-table th,
+    .makler-kundenliste-table td {
+        padding: 8px 8px;
+    }
+}
+
+.text-muted {
+    color: #94a3b8;
+    font-style: italic;
+    padding: 20px;
+}

@@ -1,0 +1,1463 @@
+/* css/agentur-fachkonzept.css - Agentur Overview Fachkonzept Design */
+/* Extracted from styles.css for modularity */
+
+/* ========================================
+   AGENTUR OVERVIEW - FACHKONZEPT DESIGN
+   ======================================== */
+
+.agentur-page-new {
+    min-height: 100vh;
+    background: #f8fafc;
+    padding-bottom: 40px;
+}
+
+/* Header mit Agentur-Info */
+.agentur-header-new {
+    background: #2d5016;
+    padding: 16px 32px;
+    border-bottom: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.agentur-header-left {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.agentur-header-info {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.agentur-photo-small {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #86BC25 0%, #6fa31e 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+}
+
+.agentur-photo-placeholder-small {
+    width: 24px;
+    height: 24px;
+    color: white;
+}
+
+.agentur-photo-img-small {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.agentur-header-text h1 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0;
+}
+
+.agentur-subtitle {
+    font-size: 13px;
+    color: #64748b;
+    margin-top: 2px;
+}
+
+/* Cockpit KPIs (Big Numbers) */
+.cockpit-kpis {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    max-width: 1400px;
+    margin: 24px auto;
+    padding: 0 32px;
+}
+
+.cockpit-kpi-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px 24px;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    border: 1px solid #e2e8f0;
+}
+
+.cockpit-kpi-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.cockpit-kpi-icon svg {
+    width: 24px;
+    height: 24px;
+}
+
+.cockpit-kpi-icon.bestand {
+    background: #dbeafe;
+    color: #2563eb;
+}
+
+.cockpit-kpi-icon.neugeschaeft {
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+.cockpit-kpi-icon.storno {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.cockpit-kpi-icon.ziel {
+    background: #f3e8ff;
+    color: #9333ea;
+}
+
+.cockpit-kpi-content {
+    flex: 1;
+}
+
+.cockpit-kpi-value {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1e293b;
+    line-height: 1.2;
+}
+
+.cockpit-kpi-label {
+    font-size: 13px;
+    color: #64748b;
+    margin-top: 4px;
+}
+
+.cockpit-kpi-trend {
+    font-size: 12px;
+    font-weight: 600;
+    margin-top: 8px;
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+
+.cockpit-kpi-trend.positive {
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+.cockpit-kpi-trend.negative {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.cockpit-kpi-gauge {
+    height: 6px;
+    background: #e2e8f0;
+    border-radius: 3px;
+    margin-top: 10px;
+    overflow: hidden;
+}
+
+.cockpit-kpi-gauge .gauge-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #86BC25 0%, #6ba31c 100%);
+    border-radius: 3px;
+    transition: width 0.5s ease;
+}
+
+/* Tab Navigation */
+.agentur-main-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 32px;
+}
+
+.agentur-tabs {
+    display: flex;
+    gap: 8px;
+    background: white;
+    padding: 8px;
+    border-radius: 12px;
+    margin-bottom: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    overflow-x: auto;
+}
+
+.agentur-tab {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    border: none;
+    background: transparent;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    color: #64748b;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.agentur-tab:hover {
+    background: #f1f5f9;
+    color: #1e293b;
+}
+
+.agentur-tab.active {
+    background: #86BC25;
+    color: white;
+}
+
+.agentur-tab svg {
+    flex-shrink: 0;
+}
+
+/* Tab Content */
+.agentur-tab-content {
+    display: none;
+}
+
+.agentur-tab-content.active {
+    display: block;
+}
+
+/* Agentur Übersicht Tab Styles */
+.agentur-uebersicht-grid {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 24px;
+}
+
+.agentur-uebersicht-main {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.agentur-uebersicht-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.uebersicht-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    border: 1px solid #e2e8f0;
+}
+
+.uebersicht-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.uebersicht-card-header h3 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0;
+}
+
+.uebersicht-card-header h3 svg {
+    color: #86BC25;
+}
+
+.badge-count {
+    background: #e2e8f0;
+    color: #64748b;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.badge-count.urgent {
+    background: #fef2f2;
+    color: #dc2626;
+}
+
+/* Period Toggle */
+.period-toggle {
+    display: flex;
+    gap: 4px;
+    background: #f1f5f9;
+    padding: 3px;
+    border-radius: 8px;
+}
+
+.period-btn {
+    padding: 6px 12px;
+    border: none;
+    background: transparent;
+    border-radius: 6px;
+    font-size: 13px;
+    color: #64748b;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.period-btn.active {
+    background: white;
+    color: #1e293b;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+/* Kennzahlen Grid */
+.kennzahlen-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+}
+
+.kennzahl-item {
+    text-align: center;
+    padding: 16px 12px;
+    background: #f8fafc;
+    border-radius: 10px;
+}
+
+.kennzahl-value {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.kennzahl-label {
+    font-size: 12px;
+    color: #64748b;
+    margin: 4px 0;
+}
+
+.kennzahl-trend {
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.kennzahl-trend.positive { color: #16a34a; }
+.kennzahl-trend.negative { color: #dc2626; }
+.kennzahl-trend.neutral { color: #64748b; }
+
+/* Potentiale Liste */
+.potentiale-liste {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.potential-item {
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: all 0.2s;
+}
+
+.potential-item.expandable {
+    cursor: pointer;
+}
+
+.potential-item:hover {
+    border-color: #86BC25;
+}
+
+.potential-item.expanded {
+    border-color: #86BC25;
+    box-shadow: 0 2px 8px rgba(134, 188, 37, 0.15);
+}
+
+.potential-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px;
+    background: #f8fafc;
+}
+
+.potential-kunde {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.potential-kunde .kunde-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #86BC25, #6B9A1F);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.potential-kunde .kunde-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.potential-kunde .kunde-info strong {
+    font-size: 14px;
+    color: #1e293b;
+}
+
+.potential-value {
+    font-size: 15px;
+    font-weight: 600;
+    color: #16a34a;
+}
+
+.expand-icon {
+    color: #94a3b8;
+    transition: transform 0.2s;
+}
+
+.potential-item.expanded .expand-icon {
+    transform: rotate(180deg);
+}
+
+.potential-details {
+    padding: 16px;
+    background: white;
+    border-top: 1px solid #e2e8f0;
+}
+
+.herleitung-box {
+    background: #f8fafc;
+    padding: 14px;
+    border-radius: 8px;
+    margin-bottom: 14px;
+}
+
+.herleitung-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+}
+
+.herleitung-box p {
+    font-size: 13px;
+    color: #475569;
+    line-height: 1.5;
+    margin: 0 0 10px 0;
+}
+
+.herleitung-quelle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: #64748b;
+}
+
+.btn-kunde-oeffnen {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    background: #86BC25;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-kunde-oeffnen:hover {
+    background: #6B9A1F;
+}
+
+.link-alle-anzeigen {
+    display: block;
+    text-align: center;
+    padding-top: 12px;
+    font-size: 13px;
+    color: #86BC25;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.link-alle-anzeigen:hover {
+    text-decoration: underline;
+}
+
+/* Aufgaben Liste */
+.aufgaben-liste {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.aufgabe-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px;
+    background: #f8fafc;
+    border-radius: 8px;
+    border-left: 3px solid transparent;
+}
+
+.aufgabe-item.priority-high { border-left-color: #dc2626; }
+.aufgabe-item.priority-medium { border-left-color: #f59e0b; }
+.aufgabe-item.priority-low { border-left-color: #94a3b8; }
+
+.aufgabe-checkbox input {
+    width: 18px;
+    height: 18px;
+    margin-top: 2px;
+    cursor: pointer;
+}
+
+.aufgabe-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.aufgabe-content label {
+    font-size: 13px;
+    color: #1e293b;
+    cursor: pointer;
+}
+
+.aufgabe-due {
+    font-size: 11px;
+    color: #64748b;
+}
+
+/* Termine Liste */
+.termine-liste {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.termin-item {
+    display: flex;
+    gap: 14px;
+    padding: 12px;
+    border-radius: 8px;
+    background: #f8fafc;
+}
+
+.termin-item.heute {
+    background: linear-gradient(135deg, rgba(134, 188, 37, 0.1), rgba(134, 188, 37, 0.05));
+    border: 1px solid rgba(134, 188, 37, 0.2);
+}
+
+.termin-zeit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 70px;
+}
+
+.termin-tag {
+    font-size: 11px;
+    font-weight: 600;
+    color: #64748b;
+}
+
+.termin-item.heute .termin-tag {
+    color: #86BC25;
+}
+
+.termin-uhrzeit {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.termin-details {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.termin-details strong {
+    font-size: 14px;
+    color: #1e293b;
+}
+
+.termin-details span {
+    font-size: 12px;
+    color: #64748b;
+}
+
+/* Formulare Grid */
+.formulare-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.formular-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 16px 12px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 12px;
+    color: #475569;
+}
+
+.formular-btn svg {
+    color: #86BC25;
+}
+
+.formular-btn:hover {
+    background: white;
+    border-color: #86BC25;
+    box-shadow: 0 2px 8px rgba(134, 188, 37, 0.15);
+}
+
+/* Agentur Chat Widget */
+.chat-widget-card {
+    display: flex;
+    flex-direction: column;
+}
+
+.agentur-chat-body {
+    min-height: 120px;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.agentur-chat-welcome {
+    text-align: center;
+    padding: 10px 0;
+}
+
+.agentur-chat-welcome p {
+    font-size: 13px;
+    color: #64748b;
+    margin: 0 0 12px 0;
+}
+
+.agentur-chat-welcome .welcome-examples {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    max-width: 280px;
+    margin: 0 auto;
+}
+
+.agentur-chat-welcome .example-btn {
+    padding: 8px 12px;
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    font-size: 12px;
+    color: #475569;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.agentur-chat-welcome .example-btn:hover {
+    background: #86BC25;
+    border-color: #86BC25;
+    color: white;
+}
+
+.agentur-chat-footer {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid #e2e8f0;
+}
+
+/* Typing Indicator Animation */
+.typing-indicator .typing-dots {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 0;
+}
+
+.typing-indicator .typing-dots span {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #94a3b8;
+    animation: typing 1.4s infinite;
+}
+
+.typing-indicator .typing-dots span:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.typing-indicator .typing-dots span:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes typing {
+    0%, 60%, 100% {
+        opacity: 0.3;
+        transform: scale(0.8);
+    }
+    30% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.agentur-chat-footer textarea {
+    flex: 1;
+    padding: 10px 14px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 13px;
+    resize: none;
+    font-family: inherit;
+}
+
+.agentur-chat-footer textarea:focus {
+    outline: none;
+    border-color: #86BC25;
+}
+
+.agentur-chat-footer button {
+    padding: 10px 14px;
+    background: #86BC25;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.agentur-chat-footer button svg {
+    color: white;
+}
+
+.agentur-chat-footer button:hover {
+    background: #6B9A1F;
+}
+
+/* Chat Messages */
+.chat-message {
+    margin-bottom: 12px;
+    padding: 10px 14px;
+    border-radius: 12px;
+    font-size: 15px;
+    line-height: 1.5;
+}
+
+.chat-message.user-message {
+    background: #86BC25;
+    color: white;
+    margin-left: 40px;
+    border-bottom-right-radius: 4px;
+}
+
+.chat-message.ai-message {
+    background: #f1f5f9;
+    color: #1e293b;
+    margin-right: 40px;
+    border-bottom-left-radius: 4px;
+}
+
+.chat-message .message-content {
+    word-wrap: break-word;
+}
+
+/* Letzte Abschlüsse */
+.abschluesse-liste {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.abschluss-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 14px;
+    background: #f8fafc;
+    border-radius: 8px;
+    border-left: 3px solid #86BC25;
+}
+
+.abschluss-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.abschluss-kunde {
+    font-size: 14px;
+    font-weight: 500;
+    color: #1e293b;
+}
+
+.abschluss-produkt {
+    font-size: 12px;
+    color: #64748b;
+}
+
+.abschluss-meta {
+    text-align: right;
+}
+
+.abschluss-betrag {
+    font-size: 14px;
+    font-weight: 600;
+    color: #16a34a;
+}
+
+.abschluss-datum {
+    font-size: 11px;
+    color: #94a3b8;
+}
+
+/* Provisionsabrechnungen */
+.abrechnungen-liste {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.abrechnung-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 14px;
+    background: #f8fafc;
+    border-radius: 8px;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.abrechnung-item:hover {
+    background: #e2e8f0;
+}
+
+.abrechnung-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.abrechnung-icon {
+    width: 36px;
+    height: 36px;
+    background: linear-gradient(135deg, #dc2626, #b91c1c);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.abrechnung-icon svg {
+    color: white;
+}
+
+.abrechnung-details {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.abrechnung-monat {
+    font-size: 14px;
+    font-weight: 500;
+    color: #1e293b;
+}
+
+.abrechnung-datum {
+    font-size: 11px;
+    color: #94a3b8;
+}
+
+.abrechnung-betrag {
+    font-size: 15px;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+/* Floating Agentur Chat Widget */
+.agentur-chat-toggle {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #86BC25 0%, #6B9A1F 100%);
+    border: none;
+    box-shadow: 0 4px 20px rgba(134, 188, 37, 0.4);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    transition: all 0.3s ease;
+    z-index: 998;
+}
+
+.agentur-chat-toggle:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 25px rgba(134, 188, 37, 0.5);
+}
+
+.agentur-chat-toggle svg {
+    color: white;
+}
+
+.agentur-chat-toggle .chat-badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    background: #1e293b;
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 4px 6px;
+    border-radius: 8px;
+}
+
+.agentur-chat-widget {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 420px;
+    height: 560px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 10px 50px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    z-index: 999;
+    overflow: hidden;
+}
+
+.agentur-chat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    background: linear-gradient(135deg, #86BC25, #6B9A1F);
+    color: white;
+}
+
+.agentur-chat-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+    font-size: 17px;
+}
+
+.agentur-chat-close {
+    background: rgba(255,255,255,0.2);
+    border: none;
+    border-radius: 8px;
+    padding: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.agentur-chat-close:hover {
+    background: rgba(255,255,255,0.3);
+}
+
+.agentur-chat-close svg {
+    color: white;
+    display: block;
+}
+
+.agentur-chat-widget .agentur-chat-body {
+    flex: 1;
+    padding: 16px;
+    overflow-y: auto;
+    max-height: 350px;
+}
+
+.agentur-chat-widget .agentur-chat-welcome {
+    text-align: center;
+    padding: 20px 0;
+}
+
+.agentur-chat-widget .welcome-icon {
+    width: 60px;
+    height: 60px;
+    background: rgba(134, 188, 37, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+}
+
+.agentur-chat-widget .welcome-icon svg {
+    color: #86BC25;
+}
+
+.agentur-chat-widget .agentur-chat-welcome h4 {
+    margin: 0 0 8px 0;
+    font-size: 18px;
+    color: #1e293b;
+}
+
+.agentur-chat-widget .agentur-chat-welcome p {
+    margin: 0 0 16px 0;
+    font-size: 15px;
+    color: #64748b;
+}
+
+.agentur-chat-widget .welcome-examples {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    max-width: 280px;
+    margin: 0 auto;
+}
+
+.agentur-chat-widget .example-btn {
+    padding: 8px 12px;
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    font-size: 14px;
+    color: #475569;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.agentur-chat-widget .example-btn:hover {
+    background: #86BC25;
+    border-color: #86BC25;
+    color: white;
+}
+
+.agentur-chat-input-area {
+    display: flex;
+    gap: 8px;
+    padding: 12px 16px;
+    border-top: 1px solid #e2e8f0;
+    background: #f8fafc;
+}
+
+.agentur-chat-input-area textarea {
+    flex: 1;
+    padding: 10px 14px;
+    border: 1px solid #e2e8f0;
+    border-radius: 20px;
+    font-size: 15px;
+    resize: none;
+    font-family: inherit;
+    background: white;
+}
+
+.agentur-chat-input-area textarea:focus {
+    outline: none;
+    border-color: #86BC25;
+}
+
+.agentur-chat-input-area button {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    background: #86BC25;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.agentur-chat-input-area button svg {
+    color: white;
+}
+
+.agentur-chat-input-area button:hover {
+    background: #6B9A1F;
+}
+
+/* Weitere Potentiale Toggle */
+.weitere-potentiale-toggle {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 16px;
+    margin-top: 12px;
+    background: #f1f5f9;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 14px;
+    color: #64748b;
+}
+
+.weitere-potentiale-toggle:hover {
+    background: #e2e8f0;
+    color: #1e293b;
+}
+
+.weitere-badge {
+    background: #86BC25;
+    color: white;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.weitere-potentiale-toggle .toggle-arrow {
+    margin-left: auto;
+    transition: transform 0.2s;
+}
+
+.weitere-potentiale-toggle.expanded .toggle-arrow {
+    transform: rotate(180deg);
+}
+
+.weitere-potentiale-liste {
+    margin-top: 12px;
+    border-top: 1px solid #e2e8f0;
+    padding-top: 12px;
+}
+
+/* Potentiale in Übersicht-Card anpassen */
+.potentiale-impuls-card .impuls-item {
+    margin: 0;
+    border-radius: 10px;
+}
+
+.potentiale-impuls-card .impuls-detail {
+    margin: 0 0 12px 0;
+    border-radius: 0 0 10px 10px;
+}
+
+/* Herleitung Items mit Hintergrundfarbe */
+.herleitung-item.highlight-green {
+    background: rgba(134, 188, 37, 0.1);
+    border-left: 3px solid #86BC25;
+    padding-left: 12px;
+}
+
+.herleitung-item.highlight-red {
+    background: rgba(220, 38, 38, 0.1);
+    border-left: 3px solid #dc2626;
+    padding-left: 12px;
+}
+
+/* Responsive Übersicht */
+@media (max-width: 1200px) {
+    .agentur-uebersicht-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .kennzahlen-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Stammdaten Sections */
+.stammdaten-sections {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+}
+
+.stammdaten-section {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    border: 1px solid #e2e8f0;
+}
+
+.stammdaten-section h3 {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0 0 20px 0;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #86BC25;
+}
+
+.stammdaten-grid-new {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+}
+
+.stammdaten-item-new {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.stammdaten-item-new .stammdaten-label {
+    font-size: 12px;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.stammdaten-item-new .stammdaten-value {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.status-badge.active {
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+.status-badge.warning {
+    background: #fef3c7;
+    color: #d97706;
+}
+
+.status-badge.inactive {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+/* KPI Detail Cards */
+.kpi-detail-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-bottom: 24px;
+}
+
+.kpi-detail-card {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    border: 1px solid #e2e8f0;
+    text-align: center;
+}
+
+.kpi-detail-card.highlight {
+    border-color: #86BC25;
+    background: linear-gradient(180deg, #f8fdf5 0%, white 100%);
+}
+
+.kpi-detail-card.warning {
+    border-color: #f59e0b;
+    background: linear-gradient(180deg, #fffbeb 0%, white 100%);
+}
+
+.kpi-detail-header {
+    font-size: 13px;
+    color: #64748b;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.kpi-detail-value {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.kpi-detail-sub {
+    font-size: 12px;
+    color: #94a3b8;
+    margin-top: 4px;
+}
+
+/* Sparten Chart */
+.sparten-chart {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    border: 1px solid #e2e8f0;
+}
+
+.sparten-chart h3 {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0 0 20px 0;
+}
+
+.sparten-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.sparten-bar-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.sparten-bar-label {
+    width: 100px;
+    font-size: 13px;
+    color: #64748b;
+    flex-shrink: 0;
+}
+
+.sparten-bar-track {
+    flex: 1;
+    height: 24px;
+    background: #f1f5f9;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.sparten-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: white;
+    transition: width 0.5s ease;
+}
+
+.sparten-bar-fill.leben { background: #2563eb; }
+.sparten-bar-fill.kranken { background: #16a34a; }
+.sparten-bar-fill.schaden { background: #9333ea; }
+.sparten-bar-fill.kfz { background: #f59e0b; }
+
+/* Storno Reasons */
+.storno-reasons {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    border: 1px solid #e2e8f0;
+}
+
+.storno-reasons h3 {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0 0 16px 0;
+}
+
+.storno-reason-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.storno-reason-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    background: #f8fafc;
+    border-radius: 8px;
+}
+
+.storno-reason-name {
+    font-size: 14px;
+    color: #1e293b;
+}
+
+.storno-reason-count {
+    font-size: 14px;
+    font-weight: 600;
+    color: #dc2626;
+}
+
+/* Responsive für neue Agentur-Seite */
+@media (max-width: 1200px) {
+    .cockpit-kpis {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .stammdaten-sections {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .cockpit-kpis {
+        grid-template-columns: 1fr;
+        padding: 0 16px;
+    }
+
+    .agentur-header-new {
+        padding: 12px 16px;
+    }
+
+    .agentur-main-content {
+        padding: 0 16px;
+    }
+
+    .agentur-tabs {
+        padding: 4px;
+    }
+
+    .agentur-tab {
+        padding: 10px 12px;
+        font-size: 13px;
+    }
+
+    .agentur-tab span {
+        display: none;
+    }
+
+    .kpi-detail-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .stammdaten-grid-new {
+        grid-template-columns: 1fr;
+    }
+}
+

@@ -33,6 +33,18 @@
     <link rel="stylesheet" href="css/guided-tour.css?v=20251217">
     <link rel="stylesheet" href="css/sales-report.css?v=20260122">
     <link rel="stylesheet" href="css/cv-scanner.css?v=20260209">
+    <link rel="stylesheet" href="css/makler.css?v=20260209">
+    <!-- Modularisierte CSS-Module -->
+    <link rel="stylesheet" href="css/kunden-detail.css?v=20260209">
+    <link rel="stylesheet" href="css/clv.css?v=20260209">
+    <link rel="stylesheet" href="css/agentur-fachkonzept.css?v=20260209">
+    <link rel="stylesheet" href="css/user-profile.css?v=20260209">
+    <link rel="stylesheet" href="css/kunde-sticky-bar.css?v=20260209">
+    <link rel="stylesheet" href="css/nps.css?v=20260209">
+    <link rel="stylesheet" href="css/bezahlen-tx.css?v=20260209">
+    <link rel="stylesheet" href="css/potentiale-display.css?v=20260209">
+    <link rel="stylesheet" href="css/kommunikation-display.css?v=20260209">
+    <link rel="stylesheet" href="css/stammdaten-extras.css?v=20260209">
 </head>
 <body>
   <!-- ========================================
@@ -413,6 +425,11 @@
                     </div>
                 </div>
                 <input type="file" id="agenturPhotoInput" accept="image/*" style="display: none;" onchange="handleAgenturPhotoUpload(event)">
+                <!-- Makler B2B Toggle -->
+                <div class="makler-toggle-wrapper">
+                    <div class="makler-toggle-switch" id="maklerToggle" onclick="toggleMaklerModus()"></div>
+                    <span class="makler-toggle-label" id="maklerToggleLabel">Privatkunde (AO)</span>
+                </div>
                 <!-- Tab Navigation (im Header, rechts neben Name) -->
                 <div class="agentur-header-tabs">
                     <button class="agentur-tab active" onclick="showAgenturTab('uebersicht')">
@@ -451,6 +468,27 @@
                     <button class="agentur-tab" onclick="showAgenturTab('potential')">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
                         Potentiale
+                    </button>
+                    <!-- Makler B2B Tabs (hidden by default) -->
+                    <button class="agentur-tab agentur-tab-makler active" data-mktab="kunden" onclick="showMaklerTab('kunden')" style="display:none;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
+                        Kunden
+                    </button>
+                    <button class="agentur-tab agentur-tab-makler" data-mktab="versicherermix" onclick="showMaklerTab('versicherermix')" style="display:none;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><circle cx="12" cy="12" r="10"/><path d="M12 2v20M2 12h20"/></svg>
+                        Versicherer-Mix
+                    </button>
+                    <button class="agentur-tab agentur-tab-makler" data-mktab="renewal" onclick="showMaklerTab('renewal')" style="display:none;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                        Renewals
+                    </button>
+                    <button class="agentur-tab agentur-tab-makler" data-mktab="schaden" onclick="showMaklerTab('schaden')" style="display:none;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+                        Sch&auml;den
+                    </button>
+                    <button class="agentur-tab agentur-tab-makler" data-mktab="deckungsluecken" onclick="showMaklerTab('deckungsluecken')" style="display:none;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                        Deckungsl&uuml;cken
                     </button>
                 </div>
             </div>
@@ -510,6 +548,60 @@
                         <div class="cockpit-kpi-gauge" id="cockpitZielGauge">
                             <div class="gauge-fill" style="width: 0%"></div>
                         </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Makler B2B KPIs (hidden by default) -->
+            <div class="cockpit-kpis" id="maklerKpis" style="display:none;">
+                <div class="cockpit-kpi-card makler-kpi-card" style="display:flex;">
+                    <div class="cockpit-kpi-icon bestand">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
+                    </div>
+                    <div class="cockpit-kpi-content">
+                        <div class="cockpit-kpi-value">68,5 Mio. &euro;</div>
+                        <div class="cockpit-kpi-label">Bestandspr&auml;mie</div>
+                        <div class="cockpit-kpi-trend positive">+4,2% YoY</div>
+                    </div>
+                </div>
+                <div class="cockpit-kpi-card makler-kpi-card" style="display:flex;">
+                    <div class="cockpit-kpi-icon neugeschaeft">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
+                    </div>
+                    <div class="cockpit-kpi-content">
+                        <div class="cockpit-kpi-value">4,2 Mio. &euro;</div>
+                        <div class="cockpit-kpi-label">Neugesch&auml;ft YTD</div>
+                        <div class="cockpit-kpi-trend positive">+11,8% vs. VJ</div>
+                    </div>
+                </div>
+                <div class="cockpit-kpi-card makler-kpi-card" style="display:flex;">
+                    <div class="cockpit-kpi-icon courtage">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><text x="12" y="16" text-anchor="middle" fill="currentColor" stroke="none" font-size="12" font-weight="bold">&euro;</text></svg>
+                    </div>
+                    <div class="cockpit-kpi-content">
+                        <div class="cockpit-kpi-value">5,8 Mio. &euro;</div>
+                        <div class="cockpit-kpi-label">Courtage YTD</div>
+                        <div class="cockpit-kpi-trend">Ziel: 6,4 Mio.</div>
+                    </div>
+                </div>
+                <div class="cockpit-kpi-card makler-kpi-card" style="display:flex;">
+                    <div class="cockpit-kpi-icon retention">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                    </div>
+                    <div class="cockpit-kpi-content">
+                        <div class="cockpit-kpi-value">97,2%</div>
+                        <div class="cockpit-kpi-label">Retention Rate</div>
+                        <div class="cockpit-kpi-trend positive">Benchmark: 95%</div>
+                    </div>
+                </div>
+                <div class="cockpit-kpi-card makler-kpi-card" style="display:flex;">
+                    <div class="cockpit-kpi-icon schadenquote">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                    </div>
+                    <div class="cockpit-kpi-content">
+                        <div class="cockpit-kpi-value">62%</div>
+                        <div class="cockpit-kpi-label">&Oslash; Schadenquote</div>
+                        <div class="cockpit-kpi-trend positive">Ziel: &lt; 65%</div>
                     </div>
                 </div>
             </div>
@@ -1309,6 +1401,67 @@
                             </tr>
                         </tbody>
                     </table>
+                </div>
+
+                <!-- Makler B2B Kundenliste (hidden by default) -->
+                <div class="agentur-tab-content" id="tab-kundenliste-makler" style="display:none;">
+                    <div class="kundenliste-header">
+                        <h3 class="section-title">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
+                            Institutionelle Kunden (16)
+                        </h3>
+                        <div class="kundenliste-search">
+                            <input type="text" id="maklerKundenSearch" placeholder="Institution suchen..." oninput="filterMaklerKundenliste(this.value)">
+                        </div>
+                    </div>
+                    <table class="makler-kundenliste-table">
+                        <thead>
+                            <tr>
+                                <th>Institution</th>
+                                <th>Segment</th>
+                                <th>Kunden-ID</th>
+                                <th class="text-right">Pr&auml;mienvolumen</th>
+                                <th class="text-center">Vertr&auml;ge</th>
+                                <th>Schadenquote</th>
+                                <th>Deckungsquote</th>
+                                <th>N&auml;chstes Renewal</th>
+                            </tr>
+                        </thead>
+                        <tbody id="maklerKundenlisteBody"></tbody>
+                    </table>
+                </div>
+
+                <!-- Makler B2B A-02 Tabs -->
+                <div class="makler-tab-content" id="tab-makler-versicherermix">
+                    <h3 class="section-title">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><circle cx="12" cy="12" r="10"/><path d="M12 2v20M2 12h20"/></svg>
+                        Versicherer-Mix
+                    </h3>
+                    <div id="maklerVersichererContent"></div>
+                </div>
+
+                <div class="makler-tab-content" id="tab-makler-renewal">
+                    <h3 class="section-title">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                        Renewal-Kalender (n&auml;chste 180 Tage)
+                    </h3>
+                    <div id="maklerRenewalOverview"></div>
+                </div>
+
+                <div class="makler-tab-content" id="tab-makler-schaden">
+                    <h3 class="section-title">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                        Schadenmanagement
+                    </h3>
+                    <div id="maklerSchadenOverview"></div>
+                </div>
+
+                <div class="makler-tab-content" id="tab-makler-deckungsluecken">
+                    <h3 class="section-title">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                        Deckungsl&uuml;cken-Analyse (KI-gest&uuml;tzt)
+                    </h3>
+                    <div id="maklerDeckungslueckenOverview"></div>
                 </div>
 
                 <!-- Tab Content: Stammdaten -->
@@ -2958,7 +3111,7 @@
                                     <span class="clv-badge-trend" id="clvHeaderTrend"></span>
                                 </div>
                             </div>
-                            <div class="kunden-info-grid">
+                            <div class="kunden-info-grid" id="privatStammdaten">
                                 <div class="info-item">
                                     <span class="info-label">Geburtsdatum</span>
                                     <span class="info-value" id="kundenGeburtsdatum">15.03.1985</span>
@@ -3035,6 +3188,68 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+
+                    <!-- Makler B2B Stammdaten (hidden by default) -->
+                    <div class="kunden-info-grid" id="maklerStammdaten" style="display:none;">
+                        <div class="info-item">
+                            <span class="info-label">Branche</span>
+                            <span class="info-value" id="mkBranche">&mdash;</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Segment</span>
+                            <span class="info-value" id="mkSegment">&mdash;</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Mitarbeitende</span>
+                            <span class="info-value" id="mkMitarbeitende">&mdash;</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Jahresumsatz</span>
+                            <span class="info-value" id="mkJahresumsatz">&mdash;</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Betten / Pl&auml;tze</span>
+                            <span class="info-value" id="mkBetten">&mdash;</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Standorte</span>
+                            <span class="info-value" id="mkStandorte">&mdash;</span>
+                        </div>
+                        <div class="info-item full-width">
+                            <span class="info-label">Tr&auml;ger / Struktur</span>
+                            <span class="info-value" id="mkTraeger">&mdash;</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Key Contact</span>
+                            <span class="info-value" id="mkKeyContact">&mdash;</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Risikoklasse</span>
+                            <span class="info-value" id="mkRisikoklasse">&mdash;</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Kunde seit</span>
+                            <span class="info-value" id="mkKundeSeit">&mdash;</span>
+                        </div>
+                    </div>
+
+                    <!-- Makler A-10: Schadenhistorie -->
+                    <div class="kunden-card" id="maklerSchadenCard" style="display:none;">
+                        <div class="kunden-card-header"><h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg> Schadenhistorie</h2></div>
+                        <div class="kunden-card-body" id="maklerSchadenContent"></div>
+                    </div>
+
+                    <!-- Makler A-10: Deckungslücken -->
+                    <div class="kunden-card" id="maklerDeckungslueckenCard" style="display:none;">
+                        <div class="kunden-card-header"><h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Deckungsl&uuml;cken-Analyse</h2></div>
+                        <div class="kunden-card-body" id="maklerDeckungslueckenContent"></div>
+                    </div>
+
+                    <!-- Makler A-10: Renewal-Ampel -->
+                    <div class="kunden-card" id="maklerRenewalCard" style="display:none;">
+                        <div class="kunden-card-header"><h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> Renewal-Ampel</h2></div>
+                        <div class="kunden-card-body" id="maklerRenewalContent"></div>
                     </div>
 
                     <!-- CLV Detail Card -->
@@ -5219,6 +5434,16 @@
     <script src="js/chat.js"></script>
     <script src="js/agentur-overview.js"></script>
     <script src="js/landing.js?v=20251223b"></script>
+    <!-- Modularisierte JS-Module -->
+    <script src="js/nps-display.js?v=20260209"></script>
+    <script src="js/kunden-detail.js?v=20260209"></script>
+    <script src="js/clv.js?v=20260209"></script>
+    <script src="js/bezahlen.js?v=20260209"></script>
+    <script src="js/potentiale.js?v=20260209"></script>
+    <script src="js/kommunikation-display.js?v=20260209"></script>
+    <script src="js/autocomplete.js?v=20260209"></script>
+    <script src="js/user-mode.js?v=20260209"></script>
+    <script src="js/makler.js?v=20260209"></script>
     <script src="js/sales-report.js?v=20260122"></script>
     <script src="js/finanzplanung.js?v=20251216"></script>
     <script src="js/banken.js?v=20251223b"></script>

@@ -45,8 +45,15 @@
     <link rel="stylesheet" href="css/potentiale-display.css?v=20260209">
     <link rel="stylesheet" href="css/kommunikation-display.css?v=20260209">
     <link rel="stylesheet" href="css/stammdaten-extras.css?v=20260209">
+    <link rel="stylesheet" href="css/screen-recorder.css?v=20260210">
 </head>
 <body>
+  <!-- Bildschirmaufnahme-Button (fixed, immer sichtbar) -->
+  <div id="screenRecordBtn" onclick="toggleScreenRecord()" title="Bildschirmaufnahme starten">
+      <span class="rec-inner"></span>
+      <span class="rec-label">REC</span>
+  </div>
+
   <!-- ========================================
      VERSICHERUNG MODULE
      ======================================== -->
@@ -5574,6 +5581,7 @@
     <script src="js/autocomplete.js?v=20260209"></script>
     <script src="js/user-mode.js?v=20260209"></script>
     <script src="js/makler.js?v=20260209"></script>
+    <script src="js/screen-recorder.js?v=20260210"></script>
     <script src="js/sales-report.js?v=20260122"></script>
     <script src="js/finanzplanung.js?v=20251216"></script>
     <script src="js/banken.js?v=20251223b"></script>

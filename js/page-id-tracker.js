@@ -78,7 +78,8 @@ const PageIDTracker = {
             'architektur': 'T-06',         // Architektur
             'vorlagen': 'T-07',            // E-Mail Vorlagen
             'prozess': 'T-08',             // Prozess
-            'projektplan': 'T-09'          // Projektplan
+            'projektplan': 'T-09',          // Projektplan
+            'slide-cv': 'T-10'             // Slide CV Scanner
         },
 
         // C - CV Scanner Module

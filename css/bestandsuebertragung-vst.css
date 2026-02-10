@@ -4811,6 +4811,442 @@ body {
 }
 
 /* ============================================ */
+/* Slide CV Scanner (T-10) Styles */
+/* ============================================ */
+
+/* Fullscreen slide container per SLIDE_TEMPLATE_SPEC */
+.bestand-page .slide-cv-fullscreen {
+    position: relative;
+    width: 100%;
+    min-height: calc(100vh - 110px);
+    background: #ffffff;
+    font-family: 'Aptos', 'Open Sans', 'Segoe UI', sans-serif;
+    color: #333333;
+    line-height: 1.6;
+    padding: 2rem 3rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    font-size: 18px;
+}
+
+@media (min-width: 2400px) {
+    .bestand-page .slide-cv-fullscreen {
+        font-size: 20px;
+        max-width: 2560px;
+        margin: 0 auto;
+    }
+}
+
+/* ZONE 1: Title */
+.bestand-page .slide-cv-title-zone {
+    margin-bottom: 0.25rem;
+}
+
+.bestand-page .slide-cv-h1 {
+    font-size: 2.25rem;
+    font-weight: 400;
+    color: #000000;
+    text-align: left;
+    margin: 0;
+    line-height: 1.3;
+}
+
+.bestand-page .slide-cv-h1 strong {
+    font-weight: 700;
+}
+
+/* ZONE 2: Subtitle */
+.bestand-page .slide-cv-subtitle-zone {
+    margin-bottom: 1.5rem;
+}
+
+.bestand-page .slide-cv-h2 {
+    font-size: 1.5rem;
+    font-weight: 400;
+    color: #4B5563;
+    text-align: left;
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* Divider line */
+.bestand-page .slide-cv-divider {
+    height: 2px;
+    background: linear-gradient(90deg, #86BC25 0%, #86BC25 50%, transparent 100%);
+    margin-bottom: 1.25rem;
+}
+
+/* ZONE 3: Body - two column layout */
+.bestand-page .slide-cv-body {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 58% 42%;
+    gap: 2rem;
+    min-height: 0;
+}
+
+/* Section titles (green uppercase) */
+.bestand-page .slide-cv-section-title {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #86BC25;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0 0 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #86BC25;
+}
+
+.bestand-page .slide-cv-section-title-right {
+    color: #86BC25;
+    border-bottom-color: #86BC25;
+}
+
+/* -- Left side: Screenshots -- */
+.bestand-page .slide-cv-left {
+    min-width: 0;
+}
+
+.bestand-page .slide-cv-screenshots {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    height: calc(100% - 3rem);
+}
+
+.bestand-page .slide-cv-screenshot-card {
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.bestand-page .slide-cv-screenshot-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    background: #f3f4f6;
+    border-bottom: 1px solid #e5e7eb;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #374151;
+}
+
+.bestand-page .slide-cv-screenshot-body {
+    padding: 10px 12px;
+    flex: 1;
+    overflow: hidden;
+    font-size: 0.72rem;
+}
+
+/* -- Mini Profile (Bewerber card) -- */
+.bestand-page .slide-cv-mini-profile {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #e5e7eb;
+    margin-bottom: 8px;
+}
+
+.bestand-page .slide-cv-mini-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #C8102E;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.bestand-page .slide-cv-mini-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.bestand-page .slide-cv-mini-info strong {
+    display: block;
+    font-size: 0.82rem;
+    color: #1f2937;
+}
+
+.bestand-page .slide-cv-mini-info small {
+    color: #6b7280;
+    font-size: 0.62rem;
+}
+
+.bestand-page .slide-cv-mini-score {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.82rem;
+    font-weight: 800;
+    flex-shrink: 0;
+}
+
+.bestand-page .slide-cv-score-high {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.bestand-page .slide-cv-score-mid {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.bestand-page .slide-cv-score-low {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+/* Mini sections */
+.bestand-page .slide-cv-mini-section {
+    margin-bottom: 8px;
+}
+
+.bestand-page .slide-cv-mini-label {
+    font-size: 0.58rem;
+    font-weight: 700;
+    color: #9ca3af;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 4px;
+}
+
+.bestand-page .slide-cv-radar-placeholder {
+    display: flex;
+    justify-content: center;
+}
+
+.bestand-page .slide-cv-mini-text {
+    font-size: 0.65rem;
+    color: #4b5563;
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* Mini match rows */
+.bestand-page .slide-cv-mini-match {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px 8px;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 4px;
+    margin-bottom: 4px;
+}
+
+.bestand-page .slide-cv-match-title {
+    font-size: 0.65rem;
+    font-weight: 600;
+    color: #374151;
+}
+
+.bestand-page .slide-cv-match-badge {
+    font-size: 0.6rem;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 3px;
+}
+
+.bestand-page .slide-cv-match-high {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.bestand-page .slide-cv-match-mid {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+/* -- Dashboard mini (Recruiting card) -- */
+.bestand-page .slide-cv-dash-kpis {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+    margin-bottom: 10px;
+}
+
+.bestand-page .slide-cv-dash-kpi {
+    text-align: center;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 4px;
+    padding: 6px 4px;
+}
+
+.bestand-page .slide-cv-dash-kpi-val {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #1f2937;
+    line-height: 1.2;
+}
+
+.bestand-page .slide-cv-val-blue { color: #2563eb; }
+.bestand-page .slide-cv-val-green { color: #16a34a; }
+.bestand-page .slide-cv-val-red { color: #dc2626; }
+
+.bestand-page .slide-cv-dash-kpi-lbl {
+    font-size: 0.55rem;
+    color: #6b7280;
+    margin-top: 1px;
+}
+
+/* Dashboard candidate rows */
+.bestand-page .slide-cv-dash-list {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.bestand-page .slide-cv-dash-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 8px;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 4px;
+}
+
+.bestand-page .slide-cv-dash-score {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.68rem;
+    font-weight: 800;
+    flex-shrink: 0;
+}
+
+.bestand-page .slide-cv-dash-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.bestand-page .slide-cv-dash-info strong {
+    display: block;
+    font-size: 0.72rem;
+    color: #1f2937;
+}
+
+.bestand-page .slide-cv-dash-info small {
+    font-size: 0.58rem;
+    color: #9ca3af;
+}
+
+.bestand-page .slide-cv-dash-status {
+    font-size: 0.58rem;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 3px;
+    white-space: nowrap;
+}
+
+.bestand-page .slide-cv-status-green {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.bestand-page .slide-cv-status-orange {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.bestand-page .slide-cv-status-red {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+/* -- Right side: Erläuterungen -- */
+.bestand-page .slide-cv-right {
+    padding-left: 1rem;
+}
+
+.bestand-page .slide-cv-bullets {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.bestand-page .slide-cv-bullets li {
+    position: relative;
+    padding: 0 0 1.1rem 1.5rem;
+    font-size: 1.125rem;
+    color: #333333;
+    line-height: 1.6;
+}
+
+.bestand-page .slide-cv-bullets li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.65rem;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #86BC25;
+}
+
+.bestand-page .slide-cv-bullets li strong {
+    color: #000000;
+}
+
+/* ZONE 4: Footer */
+.bestand-page .slide-cv-footer {
+    height: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    color: #6B7280;
+    border-top: 1px solid #e5e7eb;
+    margin-top: auto;
+    padding-top: 0.5rem;
+}
+
+/* -- Slide CV Responsive -- */
+@media (max-width: 1200px) {
+    .bestand-page .slide-cv-body {
+        grid-template-columns: 1fr;
+    }
+    .bestand-page .slide-cv-right {
+        padding-left: 0;
+    }
+    .bestand-page .slide-cv-h1 {
+        font-size: 1.75rem;
+    }
+    .bestand-page .slide-cv-h2 {
+        font-size: 1.15rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .bestand-page .slide-cv-fullscreen {
+        padding: 1rem 1.5rem 1rem;
+    }
+    .bestand-page .slide-cv-screenshots {
+        grid-template-columns: 1fr;
+    }
+    .bestand-page .slide-cv-bullets li {
+        font-size: 0.92rem;
+    }
+}
+
+/* ============================================ */
 /* AI Landing Page Styles */
 /* ============================================ */
 

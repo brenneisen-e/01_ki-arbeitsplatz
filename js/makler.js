@@ -681,6 +681,7 @@ function fillMaklerDetail(kunde) {
                 '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg> Schäden</button>' +
             '<button class="agentur-tab" onclick="navigateToMaklerTab(\'deckungsluecken\')">' +
                 '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Deckungslücken</button>' +
+            '<div class="agentur-tab-divider"></div>' +
             '<button class="agentur-tab active" onclick="navigateToMaklerTab(\'kunden\')">' +
                 '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg> Kunden</button>' +
             '<button class="agentur-tab" onclick="navigateToMaklerTab(\'potentiale\')">' +

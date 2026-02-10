@@ -2102,6 +2102,12 @@ ERGO Maklerservice</div>
     <section class="view" id="view-slide-bu">
         <div class="slide-cv-fullscreen">
 
+            <!-- Export Buttons -->
+            <div class="slide-export-btns">
+                <button class="slide-export-btn" onclick="this.classList.add('slide-export-btn-active'); exportBUSlides('T-11')" title="Diese Slide als PPTX exportieren">&#x2B07; PPTX</button>
+                <button class="slide-export-btn slide-export-btn-both" onclick="this.classList.add('slide-export-btn-active'); exportBUSlides('both')" title="Beide Slides (T-11 + T-12) exportieren">Beide Slides</button>
+            </div>
+
             <!-- ZONE 1: Title -->
             <div class="slide-cv-title-zone">
                 <h1 class="slide-cv-h1"><strong>Bestandsübertragung</strong> | Ausgangslage &amp; Zielbild</h1>
@@ -2109,76 +2115,32 @@ ERGO Maklerservice</div>
 
             <!-- ZONE 2: Subtitle -->
             <div class="slide-cv-subtitle-zone">
-                <h2 class="slide-cv-h2">Sechsstellige Anzahl j&auml;hrlicher Bestands&uuml;bertragungen &ndash; heute &uuml;berwiegend manuell gepr&uuml;ft. Pragmatischer Aufbau einer KI-Interimsl&ouml;sung f&uuml;r unstrukturierte E-Mails bei gleichzeitiger Entwicklung eines strukturierten Formulars und einer API als Zielbild.</h2>
+                <h2 class="slide-cv-h2">Sechsstellige Anzahl j&auml;hrlicher Bestands&uuml;bertragungen &uuml;ber Gruppenpostf&auml;cher &ndash; heute &uuml;berwiegend manuell gepr&uuml;ft. Pragmatischer Aufbau einer KI-Interimsl&ouml;sung f&uuml;r unstrukturierte E-Mails bei gleichzeitiger Entwicklung eines strukturierten Formulars und einer API als Zielbild.</h2>
             </div>
 
             <!-- Trennlinie -->
             <div class="slide-cv-divider"></div>
 
             <!-- ZONE 3: Body -->
-            <div class="slide-cv-body">
+            <div class="slide-cv-body slide-bu-body-3row">
 
                 <!-- Linke Seite: Ausgangslage -->
                 <div class="slide-cv-left">
                     <h3 class="slide-cv-section-title">AUSGANGSLAGE (IST)</h3>
-
-                    <!-- Prozessflow horizontal -->
-                    <div class="slide-bu-flow">
-                        <div class="slide-bu-step slide-bu-step-input">
-                            <div class="slide-bu-step-num">1</div>
-                            <div class="slide-bu-step-label">E-Mail-Eingang</div>
-                            <div class="slide-bu-step-desc">Sechsstellige Anzahl BÜ-Anträge p.a. über Gruppenpostfach</div>
-                        </div>
-                        <div class="slide-bu-arrow">&rarr;</div>
-                        <div class="slide-bu-step slide-bu-step-system">
-                            <div class="slide-bu-step-num">2</div>
-                            <div class="slide-bu-step-label">Postkorbsystem</div>
-                            <div class="slide-bu-step-desc">Automatische Weiterleitung, Vorgang wird erstellt</div>
-                        </div>
-                        <div class="slide-bu-arrow">&rarr;</div>
-                        <div class="slide-bu-step slide-bu-step-manual">
-                            <div class="slide-bu-step-num">3</div>
-                            <div class="slide-bu-step-label">Manuelle Pr&uuml;fung</div>
-                            <div class="slide-bu-step-desc">Vollständigkeit, Maklervollmacht, VS-Nr. prüfen</div>
-                            <div class="slide-bu-pain">Zeitaufwendig</div>
-                        </div>
-                        <div class="slide-bu-arrow">&rarr;</div>
-                        <div class="slide-bu-step slide-bu-step-ai-limited">
-                            <div class="slide-bu-step-num">4</div>
-                            <div class="slide-bu-step-label">ERGO GPT</div>
-                            <div class="slide-bu-step-desc">Nur Einfach-Vorgänge, nur E-Mail-Text, keine Anhänge</div>
-                            <div class="slide-bu-pain">Stark eingeschr&auml;nkt</div>
-                        </div>
-                        <div class="slide-bu-arrow">&rarr;</div>
-                        <div class="slide-bu-step slide-bu-step-output">
-                            <div class="slide-bu-step-num">5</div>
-                            <div class="slide-bu-step-label">Robotics</div>
-                            <div class="slide-bu-step-desc">Excel-Export als Input f&uuml;r RPA-L&ouml;sung</div>
-                        </div>
-                    </div>
-
-                    <!-- Pain Points -->
-                    <div class="slide-bu-painpoints">
-                        <h4>Zentrale Herausforderungen</h4>
-                        <div class="slide-bu-pain-grid">
-                            <div class="slide-bu-pain-item">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-                                <span>3&ndash;4 manuelle Schritte pro Vorgang</span>
-                            </div>
-                            <div class="slide-bu-pain-item">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-                                <span>Komplexe Fälle (Multi-Verträge, „Siehe Anlage") rein manuell</span>
-                            </div>
-                            <div class="slide-bu-pain-item">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-                                <span>KI nur für einfache Text-E-Mails, keine Anhänge</span>
-                            </div>
-                            <div class="slide-bu-pain-item">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-                                <span>Unstrukturierte Eingangsdaten (Freitext-E-Mails)</span>
-                            </div>
-                        </div>
-                    </div>
+                    <ul class="slide-cv-bullets slide-bu-bullets">
+                        <li>
+                            <strong>Sechsstellige Anzahl an B&Uuml;-Vorg&auml;ngen p.a.</strong> &ndash; die ERGO bearbeitet j&auml;hrlich eine sechsstellige Anzahl an Bestands&uuml;bertragungen, die &uuml;berwiegend als unstrukturierte E-Mails &uuml;ber Gruppenpostf&auml;cher eingehen
+                        </li>
+                        <li>
+                            <strong>&Uuml;berwiegend manuelle Bearbeitung</strong> &ndash; jeder Vorgang durchl&auml;uft 3&ndash;4 manuelle Pr&uuml;fschritte inkl. Vollst&auml;ndigkeitspr&uuml;fung, Maklervollmacht und Vertragsnummernabgleich
+                        </li>
+                        <li>
+                            <strong>ERGO GPT nur eingeschr&auml;nkt nutzbar</strong> &ndash; die bestehende KI-L&ouml;sung verarbeitet ausschlie&szlig;lich einfache Text-E-Mails ohne Anh&auml;nge und deckt nur einen Bruchteil der Vorg&auml;nge ab
+                        </li>
+                        <li>
+                            <strong>Unstrukturierte Eingangsdaten</strong> &ndash; Freitext-E-Mails, heterogene Anh&auml;nge (PDF, Word, Excel) und fehlende Standardisierung erschweren die automatisierte Verarbeitung
+                        </li>
+                    </ul>
                 </div>
 
                 <!-- Rechte Seite: Zielbild -->
@@ -2192,29 +2154,74 @@ ERGO Maklerservice</div>
                             <strong>Zielbild: Strukturiertes Formular &amp; API</strong> &ndash; insbesondere Gro&szlig;makler liefern B&Uuml;-Daten k&uuml;nftig &uuml;ber ein standardisiertes Online-Formular oder eine API &ndash; unstrukturierte Eingangsdaten werden damit an der Quelle eliminiert
                         </li>
                         <li>
-                            <strong>Hoher Automatisierungsgrad</strong> &ndash; Standardvorg&auml;nge vollautomatisch klassifiziert, extrahiert und an Robotics &uuml;bergeben. Manuelle Pr&uuml;fung nur noch f&uuml;r Sonderf&auml;lle und Validierung
+                            <strong>Hoher Automatisierungsgrad</strong> &ndash; Standardvorg&auml;nge vollautomatisch klassifiziert, extrahiert und an Robotics &uuml;bergeben. Manuelle Pr&uuml;fung nur noch f&uuml;r Sonderf&auml;lle
                         </li>
                         <li>
-                            <strong>Bewertung der L&ouml;sungsoptionen</strong> &ndash; KI-Agent auf ERGO-interner Plattform (Option A) vs. Deloitte External API (Option B) vs. strukturiertes Formular/API als langfristiges Zielbild
+                            <strong>Bewertung der L&ouml;sungsoptionen</strong> &ndash; KI-Agent auf ERGO-Plattform (Option&nbsp;A) vs. Deloitte External API (Option&nbsp;B) vs. strukturiertes Formular/API als Zielbild
                         </li>
                         <li>
-                            <strong>Durchlaufzeit von Tagen auf Minuten</strong> &ndash; durch KI-Erkennung von Maklervollmachten, automatisches Splitting von Multi-Vertr&auml;gen und direkte JSON-Ausgabe f&uuml;r Robotics
+                            <strong>Durchlaufzeit von Tagen auf Minuten</strong> &ndash; KI-Erkennung von Vollmachten, automatisches Splitting von Multi-Vertr&auml;gen und direkte JSON-Ausgabe f&uuml;r Robotics
                         </li>
                     </ul>
+                </div>
 
-                    <!-- Vergleichstabelle kompakt -->
-                    <div class="slide-bu-compare">
-                        <table class="slide-bu-table">
-                            <thead>
-                                <tr><th></th><th>IST</th><th>SOLL</th></tr>
-                            </thead>
-                            <tbody>
-                                <tr><td>Formate</td><td class="slide-bu-ist">Nur E-Mail-Text</td><td class="slide-bu-soll">+ Word, Excel, PDF</td></tr>
-                                <tr><td>Komplexe F&auml;lle</td><td class="slide-bu-ist">Manuell</td><td class="slide-bu-soll">Automatisch gesplittet</td></tr>
-                                <tr><td>Durchlaufzeit</td><td class="slide-bu-ist">Stunden&ndash;Tage</td><td class="slide-bu-soll">Sekunden&ndash;Minuten</td></tr>
-                                <tr><td>Datenqualit&auml;t</td><td class="slide-bu-ist">Unstrukturiert</td><td class="slide-bu-soll">API / Formular / KI</td></tr>
-                            </tbody>
-                        </table>
+                <!-- Prozessbild: IST vs. SOLL (volle Breite) -->
+                <div class="slide-bu-process-diagram">
+                    <div class="slide-bu-proc-row">
+                        <div class="slide-bu-proc-label slide-bu-proc-label-ist">IST</div>
+                        <div class="slide-bu-proc-chain">
+                            <div class="slide-bu-proc-node slide-bu-proc-input">
+                                <span class="slide-bu-proc-icon">&#9993;</span>
+                                <span>E-Mails via<br>Gruppenpostf&auml;cher</span>
+                            </div>
+                            <div class="slide-bu-proc-arrow">&rarr;</div>
+                            <div class="slide-bu-proc-node slide-bu-proc-system">
+                                <span>Postkorbsystem</span>
+                            </div>
+                            <div class="slide-bu-proc-arrow">&rarr;</div>
+                            <div class="slide-bu-proc-node slide-bu-proc-manual">
+                                <span>Manuelle Pr&uuml;fung</span>
+                                <span class="slide-bu-proc-pain">3&ndash;4 Schritte</span>
+                            </div>
+                            <div class="slide-bu-proc-arrow">&rarr;</div>
+                            <div class="slide-bu-proc-node slide-bu-proc-ai-limited">
+                                <span>ERGO GPT</span>
+                                <span class="slide-bu-proc-pain">Begrenzt</span>
+                            </div>
+                            <div class="slide-bu-proc-arrow">&rarr;</div>
+                            <div class="slide-bu-proc-node slide-bu-proc-output">
+                                <span>Robotics / RPA</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="slide-bu-proc-row">
+                        <div class="slide-bu-proc-label slide-bu-proc-label-soll">SOLL</div>
+                        <div class="slide-bu-proc-chain">
+                            <div class="slide-bu-proc-inputs-group">
+                                <div class="slide-bu-proc-node slide-bu-proc-input">
+                                    <span class="slide-bu-proc-icon">&#9993;</span>
+                                    <span>E-Mails via<br>Gruppenpostf&auml;cher</span>
+                                </div>
+                                <div class="slide-bu-proc-node slide-bu-proc-formular">
+                                    <span class="slide-bu-proc-icon">&#9783;</span>
+                                    <span>Strukturiertes<br>Formular / API</span>
+                                    <span class="slide-bu-proc-new">NEU</span>
+                                </div>
+                            </div>
+                            <div class="slide-bu-proc-arrow">&rarr;</div>
+                            <div class="slide-bu-proc-node slide-bu-proc-ki-agent">
+                                <span class="slide-bu-proc-icon">&#x1F916;</span>
+                                <span>KI-Agent<br>(Interim)</span>
+                            </div>
+                            <div class="slide-bu-proc-arrow">&rarr;</div>
+                            <div class="slide-bu-proc-node slide-bu-proc-auto">
+                                <span>Auto. Klassifikation<br>&amp; Extraktion</span>
+                            </div>
+                            <div class="slide-bu-proc-arrow">&rarr;</div>
+                            <div class="slide-bu-proc-node slide-bu-proc-output">
+                                <span>Robotics / RPA</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -2232,6 +2239,12 @@ ERGO Maklerservice</div>
     <!-- ============================================ -->
     <section class="view" id="view-slide-plan">
         <div class="slide-cv-fullscreen">
+
+            <!-- Export Buttons -->
+            <div class="slide-export-btns">
+                <button class="slide-export-btn" onclick="this.classList.add('slide-export-btn-active'); exportBUSlides('T-12')" title="Diese Slide als PPTX exportieren">&#x2B07; PPTX</button>
+                <button class="slide-export-btn slide-export-btn-both" onclick="this.classList.add('slide-export-btn-active'); exportBUSlides('both')" title="Beide Slides (T-11 + T-12) exportieren">Beide Slides</button>
+            </div>
 
             <!-- ZONE 1: Title -->
             <div class="slide-cv-title-zone">
@@ -2381,26 +2394,19 @@ ERGO Maklerservice</div>
                                     <td>Manager</td>
                                     <td class="pp-util-high">&#10003;</td>
                                     <td class="pp-util-high">&#10003;</td>
-                                    <td class="pp-util-high">&#10003;</td>
+                                    <td class="pp-util-mid">&#10003;</td>
                                 </tr>
                                 <tr>
                                     <td><strong>Fachkonzeption &amp; Prozess</strong></td>
                                     <td>Senior Consultant</td>
                                     <td class="pp-util-full">&#10003;</td>
-                                    <td class="pp-util-mid">&#10003;</td>
-                                    <td class="pp-util-mid">&#10003;</td>
+                                    <td class="pp-util-none">&ndash;</td>
+                                    <td class="pp-util-none">&ndash;</td>
                                 </tr>
                                 <tr>
                                     <td><strong>KI / Data Engineer</strong></td>
                                     <td>Consultant</td>
-                                    <td class="pp-util-low">anteilig</td>
                                     <td class="pp-util-full">&#10003;</td>
-                                    <td class="pp-util-high">&#10003;</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>IT-Integration</strong></td>
-                                    <td>Consultant</td>
-                                    <td class="pp-util-none">&ndash;</td>
                                     <td class="pp-util-full">&#10003;</td>
                                     <td class="pp-util-mid">&#10003;</td>
                                 </tr>
@@ -2419,17 +2425,25 @@ ERGO Maklerservice</div>
                             <div class="slide-plan-staff-kpi">
                                 <div class="slide-plan-staff-kpi-phase">Phase 1</div>
                                 <div class="slide-plan-staff-kpi-val">3 Pers.</div>
-                                <div class="slide-plan-staff-kpi-detail">1 M + 1 SC + 1 C<br>+ Junior Support</div>
+                                <div class="slide-plan-staff-kpi-detail">1&nbsp;M + 1&nbsp;SC + 1&nbsp;C<br>+ Junior Support</div>
+                                <div class="slide-plan-staff-kpi-pt">~140 PT</div>
                             </div>
                             <div class="slide-plan-staff-kpi slide-plan-staff-kpi-peak">
                                 <div class="slide-plan-staff-kpi-phase">Phase 2</div>
-                                <div class="slide-plan-staff-kpi-val">5 Pers.</div>
-                                <div class="slide-plan-staff-kpi-detail">+2 IT/KI Consultants<br>+ Junior Support</div>
+                                <div class="slide-plan-staff-kpi-val">2 Pers.</div>
+                                <div class="slide-plan-staff-kpi-detail">1&nbsp;M + 1&nbsp;KI/Data Eng.<br>+ Junior Support</div>
+                                <div class="slide-plan-staff-kpi-pt">~125 PT</div>
                             </div>
                             <div class="slide-plan-staff-kpi">
                                 <div class="slide-plan-staff-kpi-phase">Phase 3</div>
-                                <div class="slide-plan-staff-kpi-val">3&ndash;4 Pers.</div>
-                                <div class="slide-plan-staff-kpi-detail">Ramp-down<br>+ Hyper-Care</div>
+                                <div class="slide-plan-staff-kpi-val">2&ndash;1 Pers.</div>
+                                <div class="slide-plan-staff-kpi-detail">Ramp-down<br>+ 1 Hyper-Care</div>
+                                <div class="slide-plan-staff-kpi-pt">~45 PT</div>
+                            </div>
+                            <div class="slide-plan-staff-kpi slide-plan-staff-kpi-total">
+                                <div class="slide-plan-staff-kpi-phase">GESAMT</div>
+                                <div class="slide-plan-staff-kpi-val">~310 PT</div>
+                                <div class="slide-plan-staff-kpi-detail">20 Wochen Laufzeit</div>
                             </div>
                         </div>
                     </div>

@@ -5456,40 +5456,23 @@ body {
     font-weight: 600;
 }
 
-/* 3-row body: bullets + bullets + process diagram */
-.bestand-page .slide-bu-body-3row {
-    grid-template-columns: 1fr 1fr !important;
-    grid-template-rows: auto auto !important;
-}
-
-/* -- Process Diagram (full-width bottom row) -- */
-.bestand-page .slide-bu-process-diagram {
-    grid-column: 1 / -1;
-    display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
+/* -- Inline Process Diagram (within columns) -- */
+.bestand-page .slide-bu-proc-inline {
+    margin-top: 0.75rem;
     background: #f8f9fa;
     border: 1px solid #e5e7eb;
     border-radius: 8px;
-    padding: 0.85rem 1.2rem;
+    padding: 0.6rem 0.75rem;
 }
 
-.bestand-page .slide-bu-proc-row {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-}
-
-.bestand-page .slide-bu-proc-label {
-    writing-mode: horizontal-tb;
+.bestand-page .slide-bu-proc-inline-label {
     font-size: 0.89rem;
     font-weight: 800;
     letter-spacing: 0.06em;
-    padding: 0.35rem 0.65rem;
+    padding: 0.2rem 0.6rem;
     border-radius: 4px;
-    min-width: 3.2rem;
-    text-align: center;
-    flex-shrink: 0;
+    display: inline-block;
+    margin-bottom: 0.5rem;
 }
 
 .bestand-page .slide-bu-proc-label-ist {
@@ -5502,64 +5485,88 @@ body {
     color: white;
 }
 
-.bestand-page .slide-bu-proc-chain {
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-    flex: 1;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-}
-
-.bestand-page .slide-bu-proc-node {
+/* Vertical process chain */
+.bestand-page .slide-bu-proc-chain-vertical {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    text-align: center;
-    padding: 0.45rem 0.6rem;
-    border-radius: 6px;
-    border: 1.5px solid #e5e7eb;
-    background: white;
-    min-width: 100px;
-    flex-shrink: 0;
-    position: relative;
-    gap: 0.15rem;
+    align-items: stretch;
+    gap: 0;
 }
 
-.bestand-page .slide-bu-proc-node span {
+.bestand-page .slide-bu-proc-vnode {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.3rem 0.6rem;
+    border-radius: 5px;
+    border: 1.5px solid #e5e7eb;
+    background: white;
+    position: relative;
+}
+
+.bestand-page .slide-bu-proc-vnode span {
     font-size: 0.89rem;
     color: #374151;
     line-height: 1.3;
 }
 
-.bestand-page .slide-bu-proc-icon {
-    font-size: 1.15rem !important;
+.bestand-page .slide-bu-proc-vnum {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #e5e7eb;
+    color: #374151 !important;
+    font-size: 0.78rem !important;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
 }
 
+.bestand-page .slide-bu-proc-varrow,
+.bestand-page .slide-bu-proc-varrow-long {
+    text-align: center;
+    font-size: 0.89rem;
+    color: #97999B;
+    padding: 0.05rem 0;
+    line-height: 1;
+}
+
+.bestand-page .slide-bu-proc-varrow-long {
+    padding: 0.3rem 0;
+}
+
+/* Node color variants */
 .bestand-page .slide-bu-proc-input {
     border-color: #00A3E0;
     background: #f0f9ff;
 }
+.bestand-page .slide-bu-proc-input .slide-bu-proc-vnum { background: #00A3E0; color: white !important; }
 
 .bestand-page .slide-bu-proc-system {
     border-color: #0D8390;
     background: #f0fdfa;
 }
+.bestand-page .slide-bu-proc-system .slide-bu-proc-vnum { background: #0D8390; color: white !important; }
 
 .bestand-page .slide-bu-proc-manual {
     border-color: #ED8B00;
     background: #fffbf0;
 }
+.bestand-page .slide-bu-proc-manual .slide-bu-proc-vnum { background: #ED8B00; color: white !important; }
 
 .bestand-page .slide-bu-proc-ai-limited {
     border-color: #C8102E;
     background: #fef2f2;
 }
+.bestand-page .slide-bu-proc-ai-limited .slide-bu-proc-vnum { background: #C8102E; color: white !important; }
 
 .bestand-page .slide-bu-proc-output {
     border-color: #046A38;
     background: #f0fdf4;
 }
+.bestand-page .slide-bu-proc-output .slide-bu-proc-vnum { background: #046A38; color: white !important; }
 
 .bestand-page .slide-bu-proc-ki-agent {
     border-color: #86BC25;
@@ -5579,12 +5586,13 @@ body {
 }
 
 .bestand-page .slide-bu-proc-pain {
-    font-size: 0.89rem !important;
+    font-size: 0.78rem !important;
     font-weight: 600;
     color: #C8102E !important;
     background: #fee2e2;
     padding: 1px 5px;
     border-radius: 3px;
+    margin-left: auto;
 }
 
 .bestand-page .slide-bu-proc-new {
@@ -5600,16 +5608,20 @@ body {
     letter-spacing: 0.04em;
 }
 
-.bestand-page .slide-bu-proc-arrow {
-    font-size: 1.2rem;
-    color: #97999B;
-    flex-shrink: 0;
+/* SOLL dual-path layout */
+.bestand-page .slide-bu-proc-soll-dual {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.6rem;
 }
 
-.bestand-page .slide-bu-proc-inputs-group {
-    display: flex;
-    flex-direction: column;
-    gap: 0.35rem;
+.bestand-page .slide-bu-proc-path-label {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #53565A;
+    margin-bottom: 0.3rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
 }
 
 /* -- T-12 KPI PT and Total card -- */

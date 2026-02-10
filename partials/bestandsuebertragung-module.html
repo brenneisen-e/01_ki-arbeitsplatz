@@ -2122,9 +2122,9 @@ ERGO Maklerservice</div>
             <div class="slide-cv-divider"></div>
 
             <!-- ZONE 3: Body -->
-            <div class="slide-cv-body slide-bu-body-3row">
+            <div class="slide-cv-body">
 
-                <!-- Linke Seite: Ausgangslage -->
+                <!-- Linke Seite: Ausgangslage + IST-Prozess -->
                 <div class="slide-cv-left">
                     <h3 class="slide-cv-section-title">AUSGANGSLAGE (IST)</h3>
                     <ul class="slide-cv-bullets slide-bu-bullets">
@@ -2141,9 +2141,42 @@ ERGO Maklerservice</div>
                             <strong>Unstrukturierte Eingangsdaten</strong> &ndash; Freitext-E-Mails, heterogene Anh&auml;nge (PDF, Word, Excel) und fehlende Standardisierung erschweren die automatisierte Verarbeitung
                         </li>
                     </ul>
+
+                    <!-- IST-Prozess -->
+                    <div class="slide-bu-proc-inline">
+                        <div class="slide-bu-proc-inline-label slide-bu-proc-label-ist">IST-PROZESS</div>
+                        <div class="slide-bu-proc-chain-vertical">
+                            <div class="slide-bu-proc-vnode slide-bu-proc-input">
+                                <span class="slide-bu-proc-vnum">1</span>
+                                <span>E-Mails via Gruppenpostf&auml;cher</span>
+                            </div>
+                            <div class="slide-bu-proc-varrow">&darr;</div>
+                            <div class="slide-bu-proc-vnode slide-bu-proc-system">
+                                <span class="slide-bu-proc-vnum">2</span>
+                                <span>Postkorbsystem</span>
+                            </div>
+                            <div class="slide-bu-proc-varrow">&darr;</div>
+                            <div class="slide-bu-proc-vnode slide-bu-proc-manual">
+                                <span class="slide-bu-proc-vnum">3</span>
+                                <span>Manuelle Pr&uuml;fung</span>
+                                <span class="slide-bu-proc-pain">3&ndash;4 Schritte</span>
+                            </div>
+                            <div class="slide-bu-proc-varrow">&darr;</div>
+                            <div class="slide-bu-proc-vnode slide-bu-proc-ai-limited">
+                                <span class="slide-bu-proc-vnum">4</span>
+                                <span>ERGO GPT</span>
+                                <span class="slide-bu-proc-pain">Begrenzt</span>
+                            </div>
+                            <div class="slide-bu-proc-varrow">&darr;</div>
+                            <div class="slide-bu-proc-vnode slide-bu-proc-output">
+                                <span class="slide-bu-proc-vnum">5</span>
+                                <span>Robotics / RPA</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Rechte Seite: Zielbild -->
+                <!-- Rechte Seite: Zielbild + SOLL-Prozess -->
                 <div class="slide-cv-right">
                     <h3 class="slide-cv-section-title slide-cv-section-title-right">ZIELBILD</h3>
                     <ul class="slide-cv-bullets slide-bu-bullets">
@@ -2151,7 +2184,7 @@ ERGO Maklerservice</div>
                             <strong>Interimsl&ouml;sung: KI-Agent f&uuml;r unstrukturierte E-Mails</strong> &ndash; pragmatischer Einsatz eines KI-Agenten fr&uuml;h in der Prozesskette zur automatisierten Verarbeitung aller eingehenden E-Mails inkl. Anh&auml;nge (Word, Excel, PDF, Vollmachten)
                         </li>
                         <li>
-                            <strong>Zielbild: Strukturiertes Formular &amp; API</strong> &ndash; insbesondere Gro&szlig;makler liefern B&Uuml;-Daten k&uuml;nftig &uuml;ber ein standardisiertes Online-Formular oder eine API &ndash; unstrukturierte Eingangsdaten werden damit an der Quelle eliminiert
+                            <strong>Zielbild: Strukturiertes Formular &amp; API</strong> &ndash; insbesondere Gro&szlig;makler liefern B&Uuml;-Daten k&uuml;nftig &uuml;ber ein standardisiertes Online-Formular oder eine API &ndash; unstrukturierte Eingangsdaten werden an der Quelle eliminiert
                         </li>
                         <li>
                             <strong>Hoher Automatisierungsgrad</strong> &ndash; Standardvorg&auml;nge vollautomatisch klassifiziert, extrahiert und an Robotics &uuml;bergeben. Manuelle Pr&uuml;fung nur noch f&uuml;r Sonderf&auml;lle
@@ -2163,63 +2196,45 @@ ERGO Maklerservice</div>
                             <strong>Durchlaufzeit von Tagen auf Minuten</strong> &ndash; KI-Erkennung von Vollmachten, automatisches Splitting von Multi-Vertr&auml;gen und direkte JSON-Ausgabe f&uuml;r Robotics
                         </li>
                     </ul>
-                </div>
 
-                <!-- Prozessbild: IST vs. SOLL (volle Breite) -->
-                <div class="slide-bu-process-diagram">
-                    <div class="slide-bu-proc-row">
-                        <div class="slide-bu-proc-label slide-bu-proc-label-ist">IST</div>
-                        <div class="slide-bu-proc-chain">
-                            <div class="slide-bu-proc-node slide-bu-proc-input">
-                                <span class="slide-bu-proc-icon">&#9993;</span>
-                                <span>E-Mails via<br>Gruppenpostf&auml;cher</span>
-                            </div>
-                            <div class="slide-bu-proc-arrow">&rarr;</div>
-                            <div class="slide-bu-proc-node slide-bu-proc-system">
-                                <span>Postkorbsystem</span>
-                            </div>
-                            <div class="slide-bu-proc-arrow">&rarr;</div>
-                            <div class="slide-bu-proc-node slide-bu-proc-manual">
-                                <span>Manuelle Pr&uuml;fung</span>
-                                <span class="slide-bu-proc-pain">3&ndash;4 Schritte</span>
-                            </div>
-                            <div class="slide-bu-proc-arrow">&rarr;</div>
-                            <div class="slide-bu-proc-node slide-bu-proc-ai-limited">
-                                <span>ERGO GPT</span>
-                                <span class="slide-bu-proc-pain">Begrenzt</span>
-                            </div>
-                            <div class="slide-bu-proc-arrow">&rarr;</div>
-                            <div class="slide-bu-proc-node slide-bu-proc-output">
-                                <span>Robotics / RPA</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="slide-bu-proc-row">
-                        <div class="slide-bu-proc-label slide-bu-proc-label-soll">SOLL</div>
-                        <div class="slide-bu-proc-chain">
-                            <div class="slide-bu-proc-inputs-group">
-                                <div class="slide-bu-proc-node slide-bu-proc-input">
-                                    <span class="slide-bu-proc-icon">&#9993;</span>
-                                    <span>E-Mails via<br>Gruppenpostf&auml;cher</span>
-                                </div>
-                                <div class="slide-bu-proc-node slide-bu-proc-formular">
-                                    <span class="slide-bu-proc-icon">&#9783;</span>
-                                    <span>Strukturiertes<br>Formular / API</span>
-                                    <span class="slide-bu-proc-new">NEU</span>
+                    <!-- SOLL-Prozess: zwei Pfade -->
+                    <div class="slide-bu-proc-inline">
+                        <div class="slide-bu-proc-inline-label slide-bu-proc-label-soll">SOLL-PROZESS</div>
+                        <div class="slide-bu-proc-soll-dual">
+                            <!-- Pfad 1: E-Mails → KI-Agent → Robotics -->
+                            <div class="slide-bu-proc-path">
+                                <div class="slide-bu-proc-path-label">Pfad 1: Interim</div>
+                                <div class="slide-bu-proc-chain-vertical">
+                                    <div class="slide-bu-proc-vnode slide-bu-proc-input">
+                                        <span>E-Mails via Gruppenpostf&auml;cher</span>
+                                    </div>
+                                    <div class="slide-bu-proc-varrow">&darr;</div>
+                                    <div class="slide-bu-proc-vnode slide-bu-proc-ki-agent">
+                                        <span>KI-Agent (Interim)</span>
+                                    </div>
+                                    <div class="slide-bu-proc-varrow">&darr;</div>
+                                    <div class="slide-bu-proc-vnode slide-bu-proc-auto">
+                                        <span>Auto. Klassifikation</span>
+                                    </div>
+                                    <div class="slide-bu-proc-varrow">&darr;</div>
+                                    <div class="slide-bu-proc-vnode slide-bu-proc-output">
+                                        <span>Robotics / RPA</span>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="slide-bu-proc-arrow">&rarr;</div>
-                            <div class="slide-bu-proc-node slide-bu-proc-ki-agent">
-                                <span class="slide-bu-proc-icon">&#x1F916;</span>
-                                <span>KI-Agent<br>(Interim)</span>
-                            </div>
-                            <div class="slide-bu-proc-arrow">&rarr;</div>
-                            <div class="slide-bu-proc-node slide-bu-proc-auto">
-                                <span>Auto. Klassifikation<br>&amp; Extraktion</span>
-                            </div>
-                            <div class="slide-bu-proc-arrow">&rarr;</div>
-                            <div class="slide-bu-proc-node slide-bu-proc-output">
-                                <span>Robotics / RPA</span>
+                            <!-- Pfad 2: Formular → direkt Robotics -->
+                            <div class="slide-bu-proc-path">
+                                <div class="slide-bu-proc-path-label">Pfad 2: Zielbild</div>
+                                <div class="slide-bu-proc-chain-vertical">
+                                    <div class="slide-bu-proc-vnode slide-bu-proc-formular">
+                                        <span>Formular / API</span>
+                                        <span class="slide-bu-proc-new">NEU</span>
+                                    </div>
+                                    <div class="slide-bu-proc-varrow-long">&darr;</div>
+                                    <div class="slide-bu-proc-vnode slide-bu-proc-output">
+                                        <span>Robotics / RPA</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

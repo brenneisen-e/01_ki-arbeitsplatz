@@ -134,8 +134,8 @@ function fillHeader(agentur, agenturData) {
     if (idHeader) idHeader.textContent = agentur.id;
     if (statusHeader) statusHeader.textContent = 'Aktiv';
 
-    // Standard-Profilbild für Max Mustermann
-    const defaultPhoto = 'https://raw.githubusercontent.com/brenneisen-e/VSTEike/main/AdobeStock_1091012713.jpeg';
+    // Standard-Profilbild für Max Mustermann (lokal + GitHub-Fallback)
+    const defaultPhoto = 'assets/images/AdobeStock_1091012713.jpeg';
 
     // Lade Profilbild (gespeichert oder Standard)
     const savedPhoto = localStorage.getItem('agenturPhoto');

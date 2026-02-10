@@ -31,15 +31,29 @@ var impulseData = [
         { label: 'Erkannte Situation', value: 'Kfz-Vertrag endet 30.11.2025, Wechselm\u00F6glichkeit' },
         { label: 'Aktueller Tarif', value: 'Allianz Premium, SF12, \u20AC720/Jahr' },
         { label: 'Empfehlung', value: 'Vergleichsangebot mit ca. \u20AC180/Jahr Ersparnis' }
-      ]
+      ],
+      vergleich: {
+        title: 'Vergleich: Bestehend vs. Angebot',
+        cols: ['Merkmal', 'Allianz (aktuell)', 'Unser Angebot'],
+        rows: [
+          ['Jahrespr\u00E4mie', '\u20AC720', { text: '\u20AC540', highlight: true }],
+          ['Vollkasko SB', '\u20AC300', '\u20AC300'],
+          ['GAP-Deckung', 'Ja', 'Ja'],
+          ['Mardersch\u00E4den', 'Ja', 'Ja'],
+          ['Auslandsschutz', 'EU', { text: 'Weltweit', highlight: true }]
+        ]
+      }
     },
     { id: 'kb-bu', title: 'BU-Absicherung pr\u00FCfen', desc: 'Einkommensst\u00E4rke vs. BU-Rente pr\u00FCfen, ggf. erh\u00F6hen', kategorie: 'anpassung', prioritaet: 'medium', source: 'Bestandsdaten',
       icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="20" height="20"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>',
       herleitung: [
-        { label: 'Datenquelle', value: 'Bestandsdaten + Open Finance Gehalt' },
-        { label: 'Erkannte Situation', value: 'Nettoeinkommen \u20AC3.834 vs. BU-Rente \u20AC1.500 (39%)' },
-        { label: 'Empfehlung', value: 'BU-Rente auf mind. 60% erh\u00F6hen (\u20AC2.300)' }
-      ]
+        { label: 'Datenquelle', value: 'PSD2 (Gehaltsdaten) + Eigener Vertrag (BU)' },
+        { label: 'Netto-Gehalt', value: '\u20AC3.680/Monat (aus Zahlungsverkehrsdaten)' },
+        { label: 'Aktuelle BU-Absicherung', value: '\u20AC1.500/Monat (eigener Vertrag)' },
+        { label: 'Deckungsl\u00FCcke', value: '\u20AC2.180/Monat (nur 41% abgesichert)', warn: true }
+      ],
+      deckungslueckeBar: { pct: 41, label: '41% abgesichert' },
+      empfehlung: 'Empfohlene Aufstockung: \u20AC2.200/Monat zus\u00E4tzlich. Gesch\u00E4tzte Mehrpr\u00E4mie: ca. \u20AC120\u2013150/Monat.'
     },
     { id: 'kb-rs', title: 'Rechtsschutz Cross-Sell', desc: 'Kein Rechtsschutz vorhanden, Familie mit Immobilienbesitz', kategorie: 'whitespots', prioritaet: 'medium', source: 'Bestandsdaten',
       icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="20" height="20"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>',
@@ -70,9 +84,24 @@ var impulseData = [
       icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="20" height="20"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>',
       herleitung: [
         { label: 'Datenquelle', value: 'Open Finance - Kreditdaten (Targobank)' },
-        { label: 'Erkannte Situation', value: 'Restschuld \u20AC12.500, Zinssatz 9,0% p.a., noch 36 Mon. Laufzeit' },
-        { label: 'Empfehlung', value: 'Umschuldung zu Santander (ERGO-Partner) mit 4,9% p.a., Ersparnis ca. \u20AC750' }
-      ]
+        { label: 'Aktueller Kredit', value: 'Targobank Konsumentenkredit, \u20AC12.500 Restschuld' },
+        { label: 'Aktueller Zinssatz', value: '9,0% p.a. (\u00FCberdurchschnittlich hoch)', warn: true },
+        { label: 'Monatliche Rate', value: '\u20AC405/Monat, noch 36 Monate Laufzeit' },
+        { label: 'Bonit\u00E4t', value: 'Sehr gut (regelm\u00E4\u00DFiges Gehalt, keine Zahlungsausf\u00E4lle)' }
+      ],
+      vergleich: {
+        title: 'Vergleich: Bestehend vs. Umschuldungsangebot',
+        cols: ['Merkmal', 'Targobank (aktuell)', 'Santander (Angebot)'],
+        rows: [
+          ['Restschuld', '\u20AC12.500', '\u20AC12.500'],
+          ['Zinssatz p.a.', { text: '9,0%', warn: true }, { text: '4,9%', highlight: true }],
+          ['Monatliche Rate', '\u20AC405', { text: '\u20AC384', highlight: true }],
+          ['Restlaufzeit', '36 Monate', '36 Monate'],
+          ['Gesamtkosten', '\u20AC14.580', { text: '\u20AC13.824', highlight: true }],
+          ['Ersparnis', '\u2013', { text: '\u20AC756', highlight: true, bold: true }]
+        ]
+      },
+      empfehlung: 'Santander BestCredit \u2013 ERGO Kooperationspartner mit Sonderkonditionen: 4,9% p.a., Ersparnis \u20AC756, kostenlose Sondertilgungen m\u00F6glich.'
     }
 ];
 
@@ -145,11 +174,45 @@ function renderImpulseKanban() {
         return items.map(function(i) {
             var herleitungHtml = '';
             if (i.herleitung && i.herleitung.length > 0) {
+                // Herleitung rows
+                var hRows = i.herleitung.map(function(h) {
+                    var valStyle = h.warn ? ' style="color:#dc2626;"' : '';
+                    return '<div class="kanban-detail-row"><span class="kanban-detail-label">' + h.label + '</span><span class="kanban-detail-value"' + valStyle + '>' + h.value + '</span></div>';
+                }).join('');
+
+                // Deckungslücke-Bar
+                var barHtml = '';
+                if (i.deckungslueckeBar) {
+                    barHtml = '<div class="deckungsluecke-bar" style="margin:8px 0;"><div class="deckungsluecke-bar-filled" style="width:' + i.deckungslueckeBar.pct + '%;"></div><span class="deckungsluecke-bar-label">' + i.deckungslueckeBar.label + '</span></div>';
+                }
+
+                // Vergleichstabelle
+                var vergleichHtml = '';
+                if (i.vergleich) {
+                    var vRows = i.vergleich.rows.map(function(row) {
+                        return '<tr>' + row.map(function(cell, idx) {
+                            if (typeof cell === 'object') {
+                                var st = cell.highlight ? ' style="color:#16a34a;"' : (cell.warn ? ' style="color:#dc2626;"' : '');
+                                return '<td' + st + '><strong>' + cell.text + '</strong></td>';
+                            }
+                            return idx === 0 ? '<td>' + cell + '</td>' : '<td>' + cell + '</td>';
+                        }).join('') + '</tr>';
+                    }).join('');
+                    vergleichHtml = '<div style="margin-top:10px;"><div class="kanban-detail-title">' + i.vergleich.title + '</div>' +
+                        '<table class="comparison-table" style="margin-top:6px;font-size:12px;"><thead><tr>' +
+                        i.vergleich.cols.map(function(c) { return '<th>' + c + '</th>'; }).join('') +
+                        '</tr></thead><tbody>' + vRows + '</tbody></table></div>';
+                }
+
+                // Empfehlung
+                var empfHtml = '';
+                if (i.empfehlung) {
+                    empfHtml = '<div style="margin-top:8px;"><div class="kanban-detail-title">Empfehlung</div><p style="margin:4px 0 0;font-size:12px;color:#334155;">' + i.empfehlung + '</p></div>';
+                }
+
                 herleitungHtml = '<div class="kanban-detail" id="kanban-detail-' + i.id + '" style="display:none;">' +
                     '<div class="kanban-detail-title">Herleitung</div>' +
-                    i.herleitung.map(function(h) {
-                        return '<div class="kanban-detail-row"><span class="kanban-detail-label">' + h.label + '</span><span class="kanban-detail-value">' + h.value + '</span></div>';
-                    }).join('') +
+                    hRows + barHtml + vergleichHtml + empfHtml +
                     '<div class="kanban-detail-actions">' +
                     '<button class="action-btn primary small icon-only" onclick="event.stopPropagation()" title="Angebot erstellen">' + actionIcons.angebot + '</button>' +
                     '<button class="action-btn secondary small icon-only" onclick="event.stopPropagation()" title="Termin vereinbaren">' + actionIcons.termin + '</button></div></div>';
@@ -191,20 +254,56 @@ function renderImpulseTable() {
         var prioLabel = i.prioritaet === 'high' ? 'Hoch' : (i.prioritaet === 'medium' ? 'Mittel' : 'Niedrig');
         var katLabel = i.kategorie === 'whitespots' ? 'Neugesch\u00E4ft' : 'Anpassung';
 
-        // Detail-Zeile mit Herleitung + Actions
+        // Detail-Zeile mit Herleitung + Vergleich + Empfehlung + Actions
         var detailHtml = '';
         if (i.herleitung && i.herleitung.length > 0) {
-            detailHtml = '<tr class="impulse-table-detail" id="table-detail-' + i.id + '">' +
-                '<td colspan="6"><div class="impulse-table-detail-inner">' +
-                '<div class="impulse-table-herleitung">' +
+            // Herleitung
+            var herleitungHtml = '<div class="impulse-table-herleitung">' +
                 '<div class="kanban-detail-title">Herleitung</div>' +
                 i.herleitung.map(function(h) {
-                    return '<div class="kanban-detail-row"><span class="kanban-detail-label">' + h.label + '</span><span class="kanban-detail-value">' + h.value + '</span></div>';
+                    var valStyle = h.warn ? ' style="color:#dc2626;"' : '';
+                    return '<div class="kanban-detail-row"><span class="kanban-detail-label">' + h.label + '</span><span class="kanban-detail-value"' + valStyle + '>' + h.value + '</span></div>';
                 }).join('') +
-                '</div>' +
+                '</div>';
+
+            // Deckungslücke-Bar (z.B. BU)
+            var barHtml = '';
+            if (i.deckungslueckeBar) {
+                barHtml = '<div class="deckungsluecke-bar" style="margin:12px 0;"><div class="deckungsluecke-bar-filled" style="width:' + i.deckungslueckeBar.pct + '%;"></div><span class="deckungsluecke-bar-label">' + i.deckungslueckeBar.label + '</span></div>';
+            }
+
+            // Vergleichstabelle (z.B. KFZ, Umschuldung)
+            var vergleichHtml = '';
+            if (i.vergleich) {
+                var vRows = i.vergleich.rows.map(function(row) {
+                    var cells = row.map(function(cell, idx) {
+                        if (idx === 0) return '<td>' + (typeof cell === 'object' && cell.bold ? '<strong>' + cell.text + '</strong>' : cell) + '</td>';
+                        if (typeof cell === 'object') {
+                            var style = cell.highlight ? ' style="color:#16a34a;"' : (cell.warn ? ' style="color:#dc2626;"' : '');
+                            return '<td' + style + '>' + (cell.bold ? '<strong>' + cell.text + '</strong>' : '<strong>' + cell.text + '</strong>') + '</td>';
+                        }
+                        return '<td>' + cell + '</td>';
+                    }).join('');
+                    return '<tr>' + cells + '</tr>';
+                }).join('');
+                vergleichHtml = '<div style="margin-top:16px;"><div class="kanban-detail-title">' + i.vergleich.title + '</div>' +
+                    '<table class="comparison-table" style="margin-top:8px;">' +
+                    '<thead><tr>' + i.vergleich.cols.map(function(c) { return '<th>' + c + '</th>'; }).join('') + '</tr></thead>' +
+                    '<tbody>' + vRows + '</tbody></table></div>';
+            }
+
+            // Empfehlung
+            var empfehlungHtml = '';
+            if (i.empfehlung) {
+                empfehlungHtml = '<div style="margin-top:12px;"><div class="kanban-detail-title">Empfehlung</div><p style="margin:6px 0 0;color:#334155;">' + i.empfehlung + '</p></div>';
+            }
+
+            detailHtml = '<tr class="impulse-table-detail" id="table-detail-' + i.id + '">' +
+                '<td colspan="6"><div class="impulse-table-detail-inner">' +
+                herleitungHtml + barHtml + vergleichHtml + empfehlungHtml +
                 '<div class="impulse-table-actions">' +
-                '<button class="action-btn primary small icon-only" onclick="event.stopPropagation()" title="Angebot erstellen">' + actionIcons.angebot + '</button>' +
-                '<button class="action-btn secondary small icon-only" onclick="event.stopPropagation()" title="Termin vereinbaren">' + actionIcons.termin + '</button>' +
+                '<button class="action-btn primary small" onclick="event.stopPropagation()">' + actionIcons.angebot + ' Angebot erstellen</button>' +
+                '<button class="action-btn secondary small" onclick="event.stopPropagation()">' + actionIcons.termin + ' Termin vereinbaren</button>' +
                 '</div></div></td></tr>';
         }
 

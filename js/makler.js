@@ -77,8 +77,12 @@ function applyMaklerModus() {
     // Header title
     var titleEl = document.getElementById('agenturPageTitle');
     if (titleEl) {
-        titleEl.textContent = maklerModus ? 'Maklerteam: Gesundheit & Soziales NRW' : 'Agentur: Max Mustermann';
+        titleEl.textContent = maklerModus ? 'Makler B2B' : 'Agentur: Max Mustermann';
     }
+    var subtitleId = document.getElementById('agenturIdHeader');
+    var subtitleStatus = document.getElementById('agenturStatusHeader');
+    if (subtitleId) subtitleId.textContent = maklerModus ? 'Gesundheit & Soziales NRW' : 'VM00001';
+    if (subtitleStatus) subtitleStatus.textContent = maklerModus ? 'Ecclesia Gruppe' : 'Aktiv';
 }
 window.applyMaklerModus = applyMaklerModus;
 
@@ -593,21 +597,91 @@ function openMaklerKundenDetail(kundeId) {
 }
 window.openMaklerKundenDetail = openMaklerKundenDetail;
 
-function fillMaklerDetail(kunde) {
-    // Shared header
-    var headerTitle = document.getElementById('kundenHeaderTitle');
-    if (headerTitle) headerTitle.textContent = 'Maklerteam: Gesundheit & Soziales NRW';
-    var headerId = document.getElementById('kundenHeaderId');
-    if (headerId) headerId.textContent = 'Makler B2B';
+// Saved original HTML for restoration
+var _origA02HeaderTabs = null;
+var _origKundenTabs = null;
+var _origStickyBarRight = null;
+var _origDropdownHTML = null;
+var _maklerDetailActive = false;
 
-    // Hide customer dropdown, show institution name instead
+function fillMaklerDetail(kunde) {
+    _maklerDetailActive = true;
+
+    // ============================
+    // 1) SHARED HEADER (top bar)
+    // ============================
+    var headerTitle = document.getElementById('kundenHeaderTitle');
+    if (headerTitle) headerTitle.textContent = 'Makler B2B';
+    var headerId = document.getElementById('kundenHeaderId');
+    if (headerId) headerId.textContent = 'GS NRW | Ecclesia Gruppe';
+
+    // Customer dropdown → institution selector
     var dropdown = document.querySelector('.kunden-switch-dropdown');
     if (dropdown) {
-        dropdown.setAttribute('data-orig-display', dropdown.style.display || '');
-        dropdown.innerHTML = '<label>Institution:</label><span style="font-weight:600;font-size:14px;color:#1e293b">' + kunde.name + ' (' + kunde.id + ')</span>';
+        if (!_origDropdownHTML) _origDropdownHTML = dropdown.innerHTML;
+        var opts = maklerKunden.map(function(k) {
+            var sel = k.id === kunde.id ? ' selected' : '';
+            return '<option value="' + k.id + '"' + sel + '>' + k.name + ' (' + k.id + ')</option>';
+        }).join('');
+        dropdown.innerHTML = '<label>Institution:</label><select id="maklerKundenSwitchSelect" onchange="switchMaklerKundeDropdown(this.value)" style="font-weight:600;font-size:13px;color:#1e293b;border:1px solid #e2e8f0;border-radius:6px;padding:4px 8px;background:#fff;max-width:320px">' + opts + '</select>';
     }
 
-    // Name + ID
+    // ============================
+    // 2) A-02 HEADER TABS → Makler tabs
+    // ============================
+    var a02Tabs = document.querySelector('#kundenDetailPage .agentur-header-tabs');
+    if (a02Tabs) {
+        if (!_origA02HeaderTabs) _origA02HeaderTabs = a02Tabs.innerHTML;
+        a02Tabs.innerHTML =
+            '<button class="agentur-tab" onclick="navigateToMaklerTab(\'uebersicht\')">' +
+                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg> Übersicht</button>' +
+            '<button class="agentur-tab" onclick="navigateToMaklerTab(\'stammdaten\')">' +
+                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Stammdaten</button>' +
+            '<button class="agentur-tab" onclick="navigateToMaklerTab(\'neugeschaeft\')">' +
+                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg> Neugeschäft</button>' +
+            '<button class="agentur-tab" onclick="navigateToMaklerTab(\'bestand\')">' +
+                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg> Bestand</button>' +
+            '<button class="agentur-tab" onclick="navigateToMaklerTab(\'versicherermix\')">' +
+                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0110 10"/><line x1="12" y1="12" x2="12" y2="2"/><line x1="12" y1="12" x2="22" y2="12"/></svg> Versicherer-Mix</button>' +
+            '<button class="agentur-tab" onclick="navigateToMaklerTab(\'renewal\')">' +
+                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> Renewals</button>' +
+            '<button class="agentur-tab" onclick="navigateToMaklerTab(\'schaden\')">' +
+                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg> Schäden</button>' +
+            '<button class="agentur-tab" onclick="navigateToMaklerTab(\'deckungsluecken\')">' +
+                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Deckungslücken</button>' +
+            '<div class="agentur-tab-divider"></div>' +
+            '<button class="agentur-tab active" onclick="navigateToMaklerTab(\'kunden\')">' +
+                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg> Kunden</button>' +
+            '<button class="agentur-tab" onclick="navigateToMaklerTab(\'potentiale\')">' +
+                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Potentiale</button>';
+    }
+
+    // ============================
+    // 3) A-10 INNER TABS → B2B tabs
+    // ============================
+    var kundenTabs = document.querySelector('#kundenDetailPage .kunden-tabs');
+    if (kundenTabs) {
+        if (!_origKundenTabs) _origKundenTabs = kundenTabs.innerHTML;
+        kundenTabs.innerHTML =
+            '<button class="kunden-tab active" data-tab="stammdaten" onclick="switchKundenTab(\'stammdaten\')">' +
+                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Stammdaten</button>' +
+            '<button class="kunden-tab" data-tab="vertraege" onclick="switchKundenTab(\'vertraege\')">' +
+                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> Verträge</button>' +
+            '<button class="kunden-tab" data-tab="schadenhistorie" onclick="switchKundenTab(\'schadenhistorie\')">' +
+                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg> Schadenhistorie</button>' +
+            '<button class="kunden-tab" data-tab="deckungsluecken" onclick="switchKundenTab(\'deckungsluecken\')">' +
+                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Deckungslücken</button>' +
+            '<button class="kunden-tab" data-tab="renewal" onclick="switchKundenTab(\'renewal\')">' +
+                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> Renewal-Ampel</button>' +
+            '<button class="kunden-tab" data-tab="ansprechpartner" onclick="switchKundenTab(\'ansprechpartner\')">' +
+                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg> Ansprechpartner</button>' +
+            '<button class="kunden-tab" data-tab="b2bpotentiale" onclick="switchKundenTab(\'b2bpotentiale\')">' +
+                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Potentiale</button>';
+    }
+
+    // ============================
+    // 4) NAME + ID + PHOTO
+    // ============================
     var nameEl = document.getElementById('kundenName');
     if (nameEl) nameEl.textContent = kunde.name;
     var idEl = document.getElementById('kundenVermittlerId');
@@ -627,7 +701,9 @@ function fillMaklerDetail(kunde) {
         foto.innerHTML = '<span class="makler-segment-photo-icon">' + kunde.segmentIcon + '</span>';
     }
 
-    // Stammdaten → Makler-Stammdaten umschalten
+    // ============================
+    // 5) STAMMDATEN → Makler-Stammdaten
+    // ============================
     var privatStamm = document.getElementById('privatStammdaten');
     var maklerStamm = document.getElementById('maklerStammdaten');
     if (privatStamm) privatStamm.style.display = 'none';
@@ -643,21 +719,17 @@ function fillMaklerDetail(kunde) {
         document.getElementById('mkKeyContact').textContent = kunde.keyContact || '—';
         document.getElementById('mkRisikoklasse').textContent = kunde.risikoklasse || '—';
         document.getElementById('mkKundeSeit').textContent = kunde.kundeSeit || '—';
-
-        // Risikoklasse-Farbe
         var rkEl = document.getElementById('mkRisikoklasse');
-        if (rkEl) {
-            rkEl.className = 'info-value risikoklasse-badge rk-' + (kunde.risikoklasse || 'C').toLowerCase();
-        }
+        if (rkEl) rkEl.className = 'info-value risikoklasse-badge rk-' + (kunde.risikoklasse || 'C').toLowerCase();
     }
 
-    // Verträge (B2B) - Tabellenkopf anpassen
+    // ============================
+    // 6) VERTRÄGE TAB - B2B Tabellenkopf
+    // ============================
     var vertraegeTable = document.getElementById('betreuteVertraegeTable');
     if (vertraegeTable) {
         var thead = vertraegeTable.querySelector('thead tr');
-        if (thead) {
-            thead.innerHTML = '<th>Sparte</th><th>Versicherer</th><th class="text-right">Prämie/a</th><th>Deckungssumme</th><th>SB</th><th>Ablauf</th><th>Schadenquote</th>';
-        }
+        if (thead) thead.innerHTML = '<th>Sparte</th><th>Versicherer</th><th class="text-right">Prämie/a</th><th>Deckungssumme</th><th>SB</th><th>Ablauf</th><th>Schadenquote</th>';
     }
     var vertraegeBody = document.getElementById('kundenVertraege');
     if (vertraegeBody && kunde.vertraegeDetail) {
@@ -676,63 +748,133 @@ function fillMaklerDetail(kunde) {
         }).join('');
     }
 
-    // Hide irrelevant tabs, show Makler tabs
-    document.querySelectorAll('.kunden-tab').forEach(function(tab) {
-        var tabName = tab.getAttribute('data-tab');
-        if (['fida', 'impulse', 'finanzplanung', 'kommunikation'].includes(tabName)) {
-            tab.style.display = 'none';
-        }
-    });
+    // ============================
+    // 7) RENDER B2B TAB CONTENT
+    // ============================
+    // Schadenhistorie in eigenen Tab
+    renderB2bSchadenhistorie(kunde);
+    // Deckungslücken in eigenen Tab
+    renderB2bDeckungsluecken(kunde);
+    // Renewal-Ampel in eigenen Tab
+    renderB2bRenewal(kunde);
+    // Ansprechpartner
+    renderB2bAnsprechpartner(kunde);
+    // Potentiale
+    renderB2bPotentiale(kunde);
 
-    // Schadenhistorie rendern (in neuem Tab-Bereich)
-    renderMaklerSchadenhistorie(kunde);
-    renderMaklerDeckungsluecken(kunde);
-    renderMaklerRenewalAmpel(kunde);
-
+    // ============================
+    // 8) HIDE AO-ONLY ELEMENTS
+    // ============================
     // NPS/Scores ausblenden
     var npsWrapper = document.getElementById('kundenNpsWrapper');
-    if (npsWrapper) npsWrapper.closest('.info-item').style.display = 'none';
+    if (npsWrapper) { var npsItem = npsWrapper.closest('.info-item'); if (npsItem) npsItem.style.display = 'none'; }
     ['kundenRisikoscore', 'kundenBonitaetsscore', 'kundenTiere', 'kundenArbeitgeber', 'kundenBeschaeftigtSeit'].forEach(function(id) {
         var el = document.getElementById(id);
-        if (el) {
-            var item = el.closest('.info-item');
-            if (item) item.style.display = 'none';
-        }
+        if (el) { var item = el.closest('.info-item'); if (item) item.style.display = 'none'; }
     });
-
-    // CLV ausblenden im Makler-Modus
     var clvCard = document.getElementById('clvDetailCard');
     if (clvCard) clvCard.style.display = 'none';
     var clvBadge = document.getElementById('clvHeaderBadge');
     if (clvBadge) clvBadge.style.display = 'none';
 
-    // Makler-spezifische Karten anzeigen
+    // Hide old Makler cards in Stammdaten (they now have their own tabs)
     var schadenCard = document.getElementById('maklerSchadenCard');
-    if (schadenCard) schadenCard.style.display = '';
+    if (schadenCard) schadenCard.style.display = 'none';
     var dlCard = document.getElementById('maklerDeckungslueckenCard');
-    if (dlCard) dlCard.style.display = '';
+    if (dlCard) dlCard.style.display = 'none';
     var renewalCard = document.getElementById('maklerRenewalCard');
-    if (renewalCard) renewalCard.style.display = '';
+    if (renewalCard) renewalCard.style.display = 'none';
 
-    // Sticky bar anpassen
+    // ============================
+    // 9) STICKY BAR → B2B KPIs
+    // ============================
     updateMaklerStickyBar(kunde);
 
-    // Aktivieren des Stammdaten-Tabs
+    // ============================
+    // 10) ACTIVATE STAMMDATEN TAB
+    // ============================
     if (typeof switchKundenTab === 'function') switchKundenTab('stammdaten');
 }
 
 function updateMaklerStickyBar(kunde) {
-    var nameEl = document.getElementById('kundeBarName');
+    var nameEl = document.getElementById('kundeBarNameB');
     if (nameEl) nameEl.textContent = kunde.name;
-    var idEl = document.getElementById('kundeBarId');
+    var idEl = document.getElementById('kundeBarIdB');
     if (idEl) idEl.textContent = kunde.id;
+
+    // Replace NPS with Segment
+    var npsLabel = document.querySelector('#kundenDetailPage .kunde-sticky-kpi:nth-child(1) .kunde-sticky-kpi-label');
     var npsEl = document.getElementById('kundeBarNpsB');
+    if (npsLabel) npsLabel.textContent = 'Segment';
     if (npsEl) npsEl.innerHTML = '<span class="makler-segment-badge-sm">' + kunde.segmentIcon + ' ' + kunde.segment + '</span>';
-    var clvEl = document.getElementById('kundeBarCLV');
+
+    // Replace CLV with Prämienvolumen
+    var clvLabel = document.querySelector('#kundenDetailPage .kunde-sticky-kpi:nth-child(2) .kunde-sticky-kpi-label');
+    var clvEl = document.getElementById('kundeBarClvB');
+    if (clvLabel) clvLabel.textContent = 'Prämie';
     if (clvEl) clvEl.textContent = kunde.praemieDisplay;
-    var segEl = document.getElementById('kundeBarSegment');
-    if (segEl) segEl.textContent = 'Deckung: ' + kunde.deckungsquote + '%';
+
+    // Replace Segment with Deckungsquote
+    var segLabel = document.querySelector('#kundenDetailPage .kunde-sticky-kpi:nth-child(3) .kunde-sticky-kpi-label');
+    var segEl = document.getElementById('kundeBarSegmentB');
+    if (segLabel) segLabel.textContent = 'Deckung';
+    if (segEl) segEl.textContent = kunde.deckungsquote + '%';
 }
+
+// Restore AO kundenDetail state
+function restoreAOKundenDetail() {
+    if (!_maklerDetailActive) return;
+    _maklerDetailActive = false;
+
+    var a02Tabs = document.querySelector('#kundenDetailPage .agentur-header-tabs');
+    if (a02Tabs && _origA02HeaderTabs) a02Tabs.innerHTML = _origA02HeaderTabs;
+
+    var kundenTabs = document.querySelector('#kundenDetailPage .kunden-tabs');
+    if (kundenTabs && _origKundenTabs) kundenTabs.innerHTML = _origKundenTabs;
+
+    var dropdown = document.querySelector('.kunden-switch-dropdown');
+    if (dropdown && _origDropdownHTML) dropdown.innerHTML = _origDropdownHTML;
+
+    // Restore sticky bar labels
+    var npsLabel = document.querySelector('#kundenDetailPage .kunde-sticky-kpi:nth-child(1) .kunde-sticky-kpi-label');
+    if (npsLabel) npsLabel.textContent = 'NPS';
+    var clvLabel = document.querySelector('#kundenDetailPage .kunde-sticky-kpi:nth-child(2) .kunde-sticky-kpi-label');
+    if (clvLabel) clvLabel.textContent = 'CLV';
+    var segLabel = document.querySelector('#kundenDetailPage .kunde-sticky-kpi:nth-child(3) .kunde-sticky-kpi-label');
+    if (segLabel) segLabel.textContent = 'Segment';
+
+    // Restore hidden AO elements
+    var privatStamm = document.getElementById('privatStammdaten');
+    if (privatStamm) privatStamm.style.display = '';
+    var maklerStamm = document.getElementById('maklerStammdaten');
+    if (maklerStamm) maklerStamm.style.display = 'none';
+
+    var clvCard = document.getElementById('clvDetailCard');
+    if (clvCard) clvCard.style.display = '';
+    var clvBadge = document.getElementById('clvHeaderBadge');
+    if (clvBadge) clvBadge.style.display = '';
+
+    // Show AO-specific tabs
+    document.querySelectorAll('.kunden-tab').forEach(function(tab) { tab.style.display = ''; });
+}
+window.restoreAOKundenDetail = restoreAOKundenDetail;
+
+// Navigate from A-10 back to A-02 Makler tab
+function navigateToMaklerTab(tabName) {
+    document.getElementById('kundenDetailPage').style.display = 'none';
+    var agenturOverview = document.getElementById('agenturOverview');
+    if (agenturOverview) agenturOverview.style.display = 'block';
+    if (typeof showMaklerTab === 'function') showMaklerTab(tabName);
+    document.dispatchEvent(new CustomEvent('viewChanged', { detail: { module: 'versicherung', view: 'agentursicht' } }));
+}
+window.navigateToMaklerTab = navigateToMaklerTab;
+
+// Switch Makler customer from dropdown on A-10
+function switchMaklerKundeDropdown(kundeId) {
+    if (!kundeId) return;
+    openMaklerKundenDetail(kundeId);
+}
+window.switchMaklerKundeDropdown = switchMaklerKundeDropdown;
 
 // ========================================
 // SCHADENHISTORIE RENDERING
@@ -843,6 +985,220 @@ function renderVersichererMix() {
     container.innerHTML = '<div class="bezahlen-donut-container"><div class="bezahlen-donut-chart">'+donut+'</div><div class="bezahlen-donut-legend">'+legend+'</div></div>';
 }
 window.renderVersichererMix = renderVersichererMix;
+
+// ========================================
+// B2B A-10 TAB RENDERERS (separate tabs)
+// ========================================
+
+function renderB2bSchadenhistorie(kunde) {
+    var container = document.getElementById('b2bSchadenContent');
+    if (!container) return;
+    if (!kunde.schadenhistorie || kunde.schadenhistorie.length === 0) {
+        container.innerHTML = '<p class="text-muted">Keine Schadenhistorie vorhanden.</p>';
+        return;
+    }
+
+    var rows = kunde.schadenhistorie.map(function(s) {
+        var qClass = s.quote > 65 ? 'schaden-hoch' : (s.quote > 50 ? 'schaden-mittel' : 'schaden-niedrig');
+        return '<tr><td><strong>' + s.jahr + '</strong></td><td>' + s.anzahl + '</td>' +
+            '<td class="text-right">' + s.volumen.toLocaleString('de-DE') + ' €</td>' +
+            '<td><span class="' + qClass + '">' + s.quote + '%</span></td>' +
+            '<td>' + s.groesster + '</td></tr>';
+    }).join('');
+
+    // KPI summary
+    var totalSchaden = kunde.schadenhistorie.reduce(function(a, s) { return a + s.volumen; }, 0);
+    var avgQuote = Math.round(kunde.schadenhistorie.reduce(function(a, s) { return a + s.quote; }, 0) / kunde.schadenhistorie.length);
+    var trend = kunde.schadenhistorie.length >= 2 ? (kunde.schadenhistorie[0].quote - kunde.schadenhistorie[1].quote) : 0;
+    var trendClass = trend < 0 ? 'positive' : (trend > 0 ? 'negative' : '');
+    var trendText = trend < 0 ? (trend + '% ggü. VJ') : (trend > 0 ? '+' + trend + '% ggü. VJ' : '±0% ggü. VJ');
+
+    container.innerHTML =
+        '<div class="mk-kpi-row" style="display:flex;gap:24px;margin-bottom:20px">' +
+            '<div class="mk-kpi-box"><span class="mk-kpi-label">Gesamtvolumen (' + kunde.schadenhistorie.length + ' J.)</span><span class="mk-kpi-value">' + (totalSchaden >= 1000000 ? (totalSchaden / 1000000).toFixed(1) + ' Mio. €' : totalSchaden.toLocaleString('de-DE') + ' €') + '</span></div>' +
+            '<div class="mk-kpi-box"><span class="mk-kpi-label">Ø Schadenquote</span><span class="mk-kpi-value">' + avgQuote + '%</span></div>' +
+            '<div class="mk-kpi-box"><span class="mk-kpi-label">Trend aktuelles Jahr</span><span class="mk-kpi-value ' + trendClass + '">' + trendText + '</span></div>' +
+        '</div>' +
+        '<table class="makler-detail-table"><thead><tr><th>Jahr</th><th>Anzahl</th><th class="text-right">Volumen</th><th>Quote</th><th>Größter Einzelschaden</th></tr></thead><tbody>' + rows + '</tbody></table>';
+}
+
+function renderB2bDeckungsluecken(kunde) {
+    var container = document.getElementById('b2bDeckungslueckenContent');
+    if (!container) return;
+    if (!kunde.deckungsluecken || kunde.deckungsluecken.length === 0) {
+        container.innerHTML = '<p class="text-muted">Keine Deckungslücken identifiziert.</p>';
+        return;
+    }
+
+    var hoch = kunde.deckungsluecken.filter(function(d) { return d.prioritaet === 'Hoch'; }).length;
+    var mittel = kunde.deckungsluecken.filter(function(d) { return d.prioritaet === 'Mittel'; }).length;
+
+    var rows = kunde.deckungsluecken.map(function(d) {
+        var pClass = d.prioritaet === 'Hoch' ? 'prio-hoch' : (d.prioritaet === 'Mittel' ? 'prio-mittel' : 'prio-niedrig');
+        return '<tr><td><strong>' + d.risiko + '</strong></td>' +
+            '<td><span class="status-badge-dl">' + d.status + '</span></td>' +
+            '<td>' + d.empfehlung + '</td>' +
+            '<td><span class="prio-badge ' + pClass + '">' + d.prioritaet + '</span></td></tr>';
+    }).join('');
+
+    container.innerHTML =
+        '<div class="mk-kpi-row" style="display:flex;gap:24px;margin-bottom:20px">' +
+            '<div class="mk-kpi-box"><span class="mk-kpi-label">Gesamt</span><span class="mk-kpi-value">' + kunde.deckungsluecken.length + ' Lücken</span></div>' +
+            '<div class="mk-kpi-box"><span class="mk-kpi-label">Hohe Priorität</span><span class="mk-kpi-value negative">' + hoch + '</span></div>' +
+            '<div class="mk-kpi-box"><span class="mk-kpi-label">Mittlere Priorität</span><span class="mk-kpi-value">' + mittel + '</span></div>' +
+            '<div class="mk-kpi-box"><span class="mk-kpi-label">Deckungsquote</span><span class="mk-kpi-value">' + kunde.deckungsquote + '%</span></div>' +
+        '</div>' +
+        '<table class="makler-detail-table"><thead><tr><th>Risiko</th><th>Status</th><th>Empfehlung</th><th>Priorität</th></tr></thead><tbody>' + rows + '</tbody></table>';
+}
+
+function renderB2bRenewal(kunde) {
+    var container = document.getElementById('b2bRenewalContent');
+    if (!container) return;
+    if (!kunde.vertraegeDetail) { container.innerHTML = '<p class="text-muted">Keine Vertragsdaten vorhanden.</p>'; return; }
+
+    var now = new Date();
+    var d30 = new Date(now); d30.setDate(d30.getDate() + 30);
+    var d90 = new Date(now); d90.setDate(d90.getDate() + 90);
+    var d180 = new Date(now); d180.setDate(d180.getDate() + 180);
+
+    var rot = [], gelb = [], gruen = [], rest = [];
+    kunde.vertraegeDetail.forEach(function(v) {
+        if (v.ablauf === 'unbefristet') return;
+        var parts = v.ablauf.split('.');
+        var ablauf = new Date(parts[2], parseInt(parts[1]) - 1, parseInt(parts[0]));
+        var item = { sparte: v.sparte, versicherer: v.versicherer, praemie: v.praemie, ablauf: v.ablauf, schadenquote: v.schadenquote };
+        if (ablauf <= d30) rot.push(item);
+        else if (ablauf <= d90) gelb.push(item);
+        else if (ablauf <= d180) gruen.push(item);
+        else rest.push(item);
+    });
+
+    function renderGroup(label, items, cssClass) {
+        if (items.length === 0) return '<div class="renewal-group"><div class="renewal-group-label ' + cssClass + '">' + label + ' (0)</div></div>';
+        var rows = items.map(function(i) {
+            var sqText = i.schadenquote !== null && i.schadenquote !== undefined ? ' | SQ: ' + i.schadenquote + '%' : '';
+            return '<div class="renewal-item"><span class="renewal-sparte">' + i.sparte + '</span><span class="renewal-versicherer">' + i.versicherer + sqText + '</span><span class="renewal-ablauf">' + i.ablauf + '</span></div>';
+        }).join('');
+        return '<div class="renewal-group"><div class="renewal-group-label ' + cssClass + '">' + label + ' (' + items.length + ')</div>' + rows + '</div>';
+    }
+
+    container.innerHTML =
+        '<div class="mk-kpi-row" style="display:flex;gap:24px;margin-bottom:20px">' +
+            '<div class="mk-kpi-box"><span class="mk-kpi-label">Kritisch (≤30 Tage)</span><span class="mk-kpi-value negative">' + rot.length + '</span></div>' +
+            '<div class="mk-kpi-box"><span class="mk-kpi-label">Bald fällig (31-90)</span><span class="mk-kpi-value" style="color:#f59e0b">' + gelb.length + '</span></div>' +
+            '<div class="mk-kpi-box"><span class="mk-kpi-label">In 91-180 Tagen</span><span class="mk-kpi-value positive">' + gruen.length + '</span></div>' +
+            '<div class="mk-kpi-box"><span class="mk-kpi-label">Nächstes Renewal</span><span class="mk-kpi-value">' + kunde.naechstesRenewal + '</span></div>' +
+        '</div>' +
+        renderGroup('Kritisch – Nächste 30 Tage', rot, 'renewal-rot') +
+        renderGroup('Bald fällig – 31 bis 90 Tage', gelb, 'renewal-gelb') +
+        renderGroup('Geplant – 91 bis 180 Tage', gruen, 'renewal-gruen') +
+        renderGroup('Langfristig – >180 Tage', rest, 'renewal-gruen');
+}
+
+function renderB2bAnsprechpartner(kunde) {
+    var container = document.getElementById('b2bAnsprechpartnerContent');
+    if (!container) return;
+
+    // Generate Ansprechpartner from customer data
+    var contacts = [];
+    if (kunde.keyContact) {
+        var parts = kunde.keyContact.match(/^(.+?)(?:\s*\((.+?)\))?$/);
+        contacts.push({ name: parts ? parts[1] : kunde.keyContact, rolle: parts && parts[2] ? parts[2] : 'Hauptansprechpartner', typ: 'Entscheider', tel: '+49 5231 ' + (70000 + Math.floor(Math.random() * 9999)), email: (parts ? parts[1] : 'kontakt').toLowerCase().replace(/[^a-z]/g, '.').replace(/\.+/g, '.') + '@' + kunde.name.toLowerCase().replace(/[^a-z]/g, '').substring(0, 12) + '.de' });
+    }
+    // Add some typical contacts based on segment
+    if (kunde.segment === 'Gesundheitswesen') {
+        contacts.push({ name: 'Barbara Schäfer', rolle: 'Leiterin Einkauf & Vergabe', typ: 'Operativ', tel: '+49 5231 72-450', email: 'b.schaefer@' + kunde.name.toLowerCase().replace(/[^a-z]/g, '').substring(0, 12) + '.de' });
+        contacts.push({ name: 'Markus Dietrich', rolle: 'Facility Management', typ: 'Fachlich', tel: '+49 5231 72-280', email: 'm.dietrich@' + kunde.name.toLowerCase().replace(/[^a-z]/g, '').substring(0, 12) + '.de' });
+    } else if (kunde.segment === 'Kirche') {
+        contacts.push({ name: 'Renate Berger', rolle: 'Leiterin Finanzabteilung', typ: 'Operativ', tel: '+49 521 8321-500', email: 'r.berger@kirche-owl.de' });
+    } else {
+        contacts.push({ name: 'Petra Hoffmann', rolle: 'Assistenz Geschäftsführung', typ: 'Operativ', tel: '+49 5231 93-100', email: 'p.hoffmann@' + kunde.name.toLowerCase().replace(/[^a-z]/g, '').substring(0, 12) + '.de' });
+    }
+
+    var rows = contacts.map(function(c) {
+        var typBadge = c.typ === 'Entscheider' ? 'prio-hoch' : (c.typ === 'Operativ' ? 'prio-mittel' : 'prio-niedrig');
+        return '<tr>' +
+            '<td><strong>' + c.name + '</strong></td>' +
+            '<td>' + c.rolle + '</td>' +
+            '<td><span class="prio-badge ' + typBadge + '">' + c.typ + '</span></td>' +
+            '<td>' + c.tel + '</td>' +
+            '<td><a href="mailto:' + c.email + '" style="color:#3b82f6">' + c.email + '</a></td>' +
+            '</tr>';
+    }).join('');
+
+    container.innerHTML =
+        '<div class="mk-kpi-row" style="display:flex;gap:24px;margin-bottom:20px">' +
+            '<div class="mk-kpi-box"><span class="mk-kpi-label">Ansprechpartner</span><span class="mk-kpi-value">' + contacts.length + '</span></div>' +
+            '<div class="mk-kpi-box"><span class="mk-kpi-label">Key Contact</span><span class="mk-kpi-value" style="font-size:13px">' + (kunde.keyContact || '—') + '</span></div>' +
+            '<div class="mk-kpi-box"><span class="mk-kpi-label">Kunde seit</span><span class="mk-kpi-value">' + (kunde.kundeSeit || '—') + '</span></div>' +
+        '</div>' +
+        '<table class="makler-detail-table"><thead><tr><th>Name</th><th>Rolle / Funktion</th><th>Typ</th><th>Telefon</th><th>E-Mail</th></tr></thead><tbody>' + rows + '</tbody></table>';
+}
+
+function renderB2bPotentiale(kunde) {
+    var container = document.getElementById('b2bPotentialeContent');
+    if (!container) return;
+
+    // Generate potentials based on Deckungslücken and segment
+    var potentials = [];
+
+    // From Deckungslücken
+    if (kunde.deckungsluecken) {
+        kunde.deckungsluecken.forEach(function(d) {
+            if (d.prioritaet === 'Hoch' || d.prioritaet === 'Mittel') {
+                var estPraemie = d.prioritaet === 'Hoch' ? Math.round(kunde.praemie * 0.08) : Math.round(kunde.praemie * 0.04);
+                potentials.push({
+                    produkt: d.risiko,
+                    quelle: 'Deckungslücke',
+                    prioritaet: d.prioritaet,
+                    status: d.status,
+                    geschaetztePraemie: estPraemie,
+                    empfehlung: d.empfehlung
+                });
+            }
+        });
+    }
+
+    // Add segment-specific cross-selling
+    if (kunde.segment === 'Gesundheitswesen') {
+        potentials.push({ produkt: 'Erweiterter Haftpflicht-Rahmenvertrag', quelle: 'KI-Analyse', prioritaet: 'Mittel', status: 'Nicht angeboten', geschaetztePraemie: Math.round(kunde.praemie * 0.05), empfehlung: 'Aktuelle Trends in Klinik-Haftpflicht berücksichtigen' });
+        if (!kunde.vertraegeDetail || !kunde.vertraegeDetail.some(function(v) { return v.sparte.includes('bKV'); })) {
+            potentials.push({ produkt: 'betriebliche Krankenversicherung (bKV)', quelle: 'Cross-Selling', prioritaet: 'Mittel', status: 'Nicht versichert', geschaetztePraemie: Math.round(kunde.mitarbeitende * 50 * 12 * 0.3), empfehlung: 'Fachkräftemangel: bKV als Mitarbeiter-Bindungsinstrument' });
+        }
+    } else if (kunde.segment === 'Industrie & Gewerbe') {
+        potentials.push({ produkt: 'Erweiterte Produkthaftpflicht', quelle: 'KI-Analyse', prioritaet: 'Hoch', status: 'Prüfen', geschaetztePraemie: Math.round(kunde.praemie * 0.06), empfehlung: 'Produktrückruf-Absicherung international' });
+    } else if (kunde.segment === 'Transport & Logistik') {
+        potentials.push({ produkt: 'Warentransportversicherung (International)', quelle: 'KI-Analyse', prioritaet: 'Hoch', status: 'Ergänzung', geschaetztePraemie: Math.round(kunde.praemie * 0.07), empfehlung: 'Internationale Lieferketten absichern' });
+    }
+
+    if (potentials.length === 0) {
+        container.innerHTML = '<p class="text-muted">Aktuell keine Potentiale identifiziert.</p>';
+        return;
+    }
+
+    var totalPot = potentials.reduce(function(a, p) { return a + p.geschaetztePraemie; }, 0);
+    var hochCount = potentials.filter(function(p) { return p.prioritaet === 'Hoch'; }).length;
+
+    var rows = potentials.map(function(p) {
+        var pClass = p.prioritaet === 'Hoch' ? 'prio-hoch' : (p.prioritaet === 'Mittel' ? 'prio-mittel' : 'prio-niedrig');
+        var praemieText = p.geschaetztePraemie >= 1000000 ? (p.geschaetztePraemie / 1000000).toFixed(1) + ' Mio. €' : p.geschaetztePraemie.toLocaleString('de-DE') + ' €';
+        return '<tr>' +
+            '<td><strong>' + p.produkt + '</strong></td>' +
+            '<td><span class="status-badge-dl">' + p.quelle + '</span></td>' +
+            '<td><span class="prio-badge ' + pClass + '">' + p.prioritaet + '</span></td>' +
+            '<td class="text-right">' + praemieText + '</td>' +
+            '<td>' + p.empfehlung + '</td>' +
+            '</tr>';
+    }).join('');
+
+    container.innerHTML =
+        '<div class="mk-kpi-row" style="display:flex;gap:24px;margin-bottom:20px">' +
+            '<div class="mk-kpi-box"><span class="mk-kpi-label">Potentiale</span><span class="mk-kpi-value">' + potentials.length + '</span></div>' +
+            '<div class="mk-kpi-box"><span class="mk-kpi-label">Hohe Priorität</span><span class="mk-kpi-value negative">' + hochCount + '</span></div>' +
+            '<div class="mk-kpi-box"><span class="mk-kpi-label">Geschätztes Prämienvolumen</span><span class="mk-kpi-value positive">' + (totalPot >= 1000000 ? (totalPot / 1000000).toFixed(1) + ' Mio. €' : totalPot.toLocaleString('de-DE') + ' €') + '</span></div>' +
+        '</div>' +
+        '<table class="makler-detail-table"><thead><tr><th>Produkt / Risiko</th><th>Quelle</th><th>Priorität</th><th class="text-right">Geschätzte Prämie</th><th>Empfehlung</th></tr></thead><tbody>' + rows + '</tbody></table>';
+}
 
 // ========================================
 // MAKLER TAB SWITCHING

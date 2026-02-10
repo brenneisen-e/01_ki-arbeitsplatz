@@ -710,6 +710,7 @@ function askAgenturQuestion(question) {
  */
 function getAgenturChatResponse(question) {
     const q = question.toLowerCase();
+    const isMakler = typeof maklerModus !== 'undefined' && maklerModus;
 
     // Dynamische Datums-Helper
     const getDynamicDate = (daysFromNow) => {
@@ -723,6 +724,9 @@ function getAgenturChatResponse(question) {
 
     // Kunden-Button Helper mit optionaler Tab/Vertrag-Navigation
     const customerBtn = (name, id, tab, contractType) => {
+        if (isMakler) {
+            return `<button class="chat-customer-btn" onclick="openMaklerKundenDetail('${id}')">${name}</button>`;
+        }
         const params = tab
             ? `'${id}', '${tab}', '${contractType || ''}'`
             : `'${id}'`;
@@ -735,7 +739,13 @@ function getAgenturChatResponse(question) {
     };
 
     // Follow-up Vorschläge
-    const followUpSuggestions = `
+    const followUpSuggestions = isMakler ? `
+        <div class="chat-followup-suggestions">
+            <button onclick="askAgenturQuestion('Welche Renewals stehen in den nächsten 90 Tagen an?')">Anstehende Renewals?</button>
+            <button onclick="askAgenturQuestion('Welche Kunden haben Deckungslücken?')">Deckungslücken?</button>
+            <button onclick="showNeuePotentiale()">Neue Potentiale?</button>
+            <button onclick="askAgenturQuestion('Wie ist die aktuelle Schadenquote?')">Schadenquote?</button>
+        </div>` : `
         <div class="chat-followup-suggestions">
             <button onclick="askAgenturQuestion('Welche Verträge laufen in den nächsten 30 Tagen aus?')">Welche Verträge laufen bald aus?</button>
             <button onclick="askAgenturQuestion('Welche Kunden haben Cross-Selling-Potential?')">Wer hat Cross-Selling-Potential?</button>
@@ -748,6 +758,96 @@ function getAgenturChatResponse(question) {
                 Vertriebsbericht
             </button>
         </div>`;
+
+    // ========== MAKLER B2B RESPONSES ==========
+    if (isMakler) {
+        // Renewals
+        if (q.includes('renewal') || q.includes('ablaufend') || q.includes('vertrag') && q.includes('lauf') || q.includes('30 tag')) {
+            return `<strong>Anstehende Renewals (nächste 90 Tage):</strong><br><br>
+            <strong>Kritisch (≤30 Tage):</strong><br><br>
+            <div class="chat-customer-item">
+                ${customerBtn('Marienhospital Detmold', 'MK-GW-001')} Cyberversicherung (Hiscox) – 31.03.2026<br>
+                <span class="chat-recommendation">45.000 € Prämie – Erneuerung dringend einleiten</span>
+            </div>
+            <strong>Bald fällig (31-90 Tage):</strong><br><br>
+            <div class="chat-customer-item">
+                ${customerBtn('Kirchenkreis Lippe', 'MK-KI-003')} Gebäude-Rahmenvertrag – 01.04.2026<br>
+                <span class="chat-recommendation">620.000 € Gesamtprämie – Verhandlungen vorbereiten</span>
+            </div>
+            <div class="chat-customer-item">
+                ${customerBtn('RegioFracht OWL', 'MK-TL-003')} 3 Verträge – 01.04.2026<br>
+                <span class="chat-recommendation">190.000 € Prämie – Bündelung prüfen</span>
+            </div>
+            ${followUpSuggestions}`;
+        }
+
+        // Deckungslücken
+        if (q.includes('deckungslücke') || q.includes('deckungsluecke') || q.includes('lücke')) {
+            return `<strong>Deckungslücken-Analyse:</strong><br><br>
+            <strong>5 Kunden</strong> mit hoher Priorität:<br><br>
+            <div class="chat-customer-item">
+                ${customerBtn('Marienhospital Detmold', 'MK-GW-001')} 5 Deckungslücken<br>
+                <span class="chat-recommendation">Umwelthaftpflicht & Maschinenbruch fehlen – hohe Priorität</span>
+            </div>
+            <div class="chat-customer-item">
+                ${customerBtn('Reha-Zentrum Ostwestfalen', 'MK-GW-002')} 2 Deckungslücken<br>
+                <span class="chat-recommendation">Cyberversicherung & D&O fehlen komplett</span>
+            </div>
+            <div class="chat-customer-item">
+                ${customerBtn('Ev. Kirche von Westfalen', 'MK-KI-001')} 2 Deckungslücken<br>
+                <span class="chat-recommendation">Cyber nur teilweise, Missbrauchsprävention in Prüfung</span>
+            </div>
+            <br>Geschätztes Neugeschäft: <strong>~850.000 € p.a.</strong>
+            ${followUpSuggestions}`;
+        }
+
+        // Cross-Selling / Potential
+        if (q.includes('cross-selling') || q.includes('potential')) {
+            return `<strong>Cross-Selling Potentiale B2B:</strong><br><br>
+            <strong>Top 3 nach Prämienvolumen:</strong><br><br>
+            <div class="chat-customer-item">
+                ${customerBtn('Ev. Kirche von Westfalen', 'MK-KI-001')} Cyber-Rahmenvertrag<br>
+                <span class="chat-recommendation">1.900 Kirchengemeinden – geschätzt 1,0 Mio. € Prämie</span>
+            </div>
+            <div class="chat-customer-item">
+                ${customerBtn('Phoenix Contact', 'MK-IG-002')} Erweiterte Produkthaftpflicht<br>
+                <span class="chat-recommendation">Internationale Produktrückruf-Absicherung – ~570.000 € p.a.</span>
+            </div>
+            <div class="chat-customer-item">
+                ${customerBtn('Marienhospital Detmold', 'MK-GW-001')} Umwelthaftpflicht + Maschinenbruch<br>
+                <span class="chat-recommendation">Med. Großgeräte & Labor – ~190.000 € p.a.</span>
+            </div>
+            <br>Gesamtpotential: <strong>~1,8 Mio. € p.a.</strong>
+            ${followUpSuggestions}`;
+        }
+
+        // Schadenquote
+        if (q.includes('schadenquote') || q.includes('schaden') || q.includes('quote')) {
+            return `<strong>Schadenquoten-Übersicht:</strong><br><br>
+            <strong>Portfolio gesamt:</strong> 62% (Ziel: <65%)<br>
+            <strong>Vorjahr:</strong> 58%<br><br>
+            <strong>Auffällige Kunden:</strong><br><br>
+            <div class="chat-customer-item">
+                ${customerBtn('Emons Spedition', 'MK-TL-002')} Schadenquote <strong>62%</strong><br>
+                <span class="chat-recommendation">Kfz-Flotte auffällig – Schadenmanagement-Gespräch empfohlen</span>
+            </div>
+            <div class="chat-customer-item">
+                ${customerBtn('Marienhospital Detmold', 'MK-GW-001')} Schadenquote <strong>58%</strong><br>
+                <span class="chat-recommendation">Arzthaftpflicht-Schäden steigend – Trend beobachten</span>
+            </div>
+            <div class="chat-customer-item">
+                ${customerBtn('Boge Kompressoren', 'MK-IG-003')} Schadenquote <strong>55%</strong><br>
+                <span class="chat-recommendation">Betriebsunterbrechung – Prävention besprechen</span>
+            </div>
+            ${followUpSuggestions}`;
+        }
+
+        // Fallback B2B
+        return `Ich kann Ihnen bei folgenden Themen helfen:
+            ${followUpSuggestions}`;
+    }
+
+    // ========== AO PRIVATKUNDE RESPONSES ==========
 
     // Ablaufende Verträge - ECHTE Daten aus der Datenbank!
     if (q.includes('ablaufend') || q.includes('30 tag') || q.includes('vertrag') && q.includes('lauf')) {
@@ -1014,29 +1114,60 @@ function showNeuePotentialeContent() {
 
         const messageContent = botMsg.querySelector('.message-content');
 
-        // Potentiale nacheinander einblenden
-        const potentiale = [
-            {
-                name: 'Peter Schmidt',
-                title: 'Risikoleben fehlt',
-                desc: 'Baufinanzierung €285.000 ohne Absicherung'
-            },
-            {
-                name: 'Peter Schmidt',
-                title: 'BU-Nachversicherung',
-                desc: 'Nur 41% des Einkommens abgesichert'
-            },
-            {
-                name: 'Sabine König',
-                title: 'Kfz-Wechsel',
-                desc: 'Vertrag läuft bald aus, €200/Jahr Ersparnis möglich'
-            },
-            {
-                name: 'Thomas Weber',
-                title: 'Risikoleben fehlt',
-                desc: 'Familie unzureichend abgesichert'
-            }
-        ];
+        // Potentiale nacheinander einblenden - B2B vs AO
+        var potentiale;
+        if (typeof maklerModus !== 'undefined' && maklerModus) {
+            potentiale = [
+                {
+                    name: 'Marienhospital Detmold',
+                    title: 'Umwelthaftpflicht fehlt',
+                    desc: 'Labor & Gefahrstoffe nicht versichert – hohe Priorität'
+                },
+                {
+                    name: 'Marienhospital Detmold',
+                    title: 'Cyber-Renewal in 30 Tagen',
+                    desc: 'Hiscox-Vertrag läuft 31.03.2026 aus – Erneuerung einleiten'
+                },
+                {
+                    name: 'Reha-Zentrum Ostwestfalen',
+                    title: 'Cyberversicherung fehlt',
+                    desc: 'Patientendaten ungeschützt – dringend absichern'
+                },
+                {
+                    name: 'Ev. Kirche von Westfalen',
+                    title: 'Cyber-Rahmenvertrag',
+                    desc: 'Kirchenverwaltungen nur teilweise versichert – 12,5 Mio. € Bestand'
+                },
+                {
+                    name: 'Boge Kompressoren',
+                    title: '3 Renewals in 90 Tagen',
+                    desc: '680.000 € Prämienvolumen – Verhandlungen vorbereiten'
+                }
+            ];
+        } else {
+            potentiale = [
+                {
+                    name: 'Peter Schmidt',
+                    title: 'Risikoleben fehlt',
+                    desc: 'Baufinanzierung €285.000 ohne Absicherung'
+                },
+                {
+                    name: 'Peter Schmidt',
+                    title: 'BU-Nachversicherung',
+                    desc: 'Nur 41% des Einkommens abgesichert'
+                },
+                {
+                    name: 'Sabine König',
+                    title: 'Kfz-Wechsel',
+                    desc: 'Vertrag läuft bald aus, €200/Jahr Ersparnis möglich'
+                },
+                {
+                    name: 'Thomas Weber',
+                    title: 'Risikoleben fehlt',
+                    desc: 'Familie unzureichend abgesichert'
+                }
+            ];
+        }
 
         // Jedes Potential nacheinander mit 400ms Delay einblenden
         potentiale.forEach((potential, index) => {
@@ -1086,7 +1217,11 @@ function showNeuePotentialeContent() {
 
                         // Nach 1,5 Sekunden: Zum Potentiale-Tab wechseln
                         setTimeout(() => {
-                            showAgenturTab('potential');
+                            if (typeof maklerModus !== 'undefined' && maklerModus) {
+                                if (typeof showMaklerTab === 'function') showMaklerTab('potentiale');
+                            } else {
+                                showAgenturTab('potential');
+                            }
                             // Chat bleibt offen für weitere Interaktionen
                         }, 1500);
                     }, 300);

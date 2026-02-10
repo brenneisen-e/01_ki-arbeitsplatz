@@ -79,7 +79,9 @@ const PageIDTracker = {
             'vorlagen': 'T-07',            // E-Mail Vorlagen
             'prozess': 'T-08',             // Prozess
             'projektplan': 'T-09',          // Projektplan
-            'slide-cv': 'T-10'             // Slide CV Scanner
+            'slide-cv': 'T-10',            // Slide CV Scanner
+            'slide-bu': 'T-11',            // Slide BÜ Ausgangslage
+            'slide-plan': 'T-12'           // Slide Projektplan
         },
 
         // C - CV Scanner Module

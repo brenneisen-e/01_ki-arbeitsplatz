@@ -5247,6 +5247,539 @@ body {
 }
 
 /* ============================================ */
+/* Slide BÜ Ausgangslage (T-11) Styles */
+/* ============================================ */
+
+/* Process flow (horizontal) */
+.bestand-page .slide-bu-flow {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1.25rem;
+}
+
+.bestand-page .slide-bu-step {
+    flex: 1;
+    min-width: 130px;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    padding: 0.75rem 0.65rem 0.6rem;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.bestand-page .slide-bu-step-num {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #e5e7eb;
+    color: #374151;
+    font-size: 0.68rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.4rem;
+}
+
+.bestand-page .slide-bu-step-input .slide-bu-step-num { background: #dbeafe; color: #1e40af; }
+.bestand-page .slide-bu-step-system .slide-bu-step-num { background: #e0e7ff; color: #4338ca; }
+.bestand-page .slide-bu-step-manual .slide-bu-step-num { background: #fef3c7; color: #92400e; }
+.bestand-page .slide-bu-step-ai-limited .slide-bu-step-num { background: #fce7f3; color: #9d174d; }
+.bestand-page .slide-bu-step-output .slide-bu-step-num { background: #d1fae5; color: #065f46; }
+
+.bestand-page .slide-bu-step-label {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 0.2rem;
+}
+
+.bestand-page .slide-bu-step-desc {
+    font-size: 0.68rem;
+    color: #6b7280;
+    line-height: 1.45;
+    flex: 1;
+}
+
+.bestand-page .slide-bu-pain {
+    margin-top: 0.4rem;
+    font-size: 0.62rem;
+    font-weight: 600;
+    color: #dc2626;
+    background: #fee2e2;
+    padding: 2px 6px;
+    border-radius: 3px;
+    display: inline-block;
+    align-self: flex-start;
+}
+
+.bestand-page .slide-bu-arrow {
+    display: flex;
+    align-items: center;
+    padding: 0 0.2rem;
+    font-size: 1.2rem;
+    color: #9ca3af;
+    flex-shrink: 0;
+}
+
+/* Pain points grid */
+.bestand-page .slide-bu-painpoints {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+    padding: 0.85rem 1rem;
+}
+
+.bestand-page .slide-bu-painpoints h4 {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #991b1b;
+    margin: 0 0 0.5rem;
+}
+
+.bestand-page .slide-bu-pain-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.4rem 1rem;
+}
+
+.bestand-page .slide-bu-pain-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.4rem;
+    font-size: 0.78rem;
+    color: #991b1b;
+    line-height: 1.4;
+}
+
+.bestand-page .slide-bu-pain-item svg {
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+/* Bullets adjustment for BÜ slide */
+.bestand-page .slide-bu-bullets li {
+    font-size: 1rem;
+    padding-bottom: 0.75rem;
+}
+
+/* Compare table */
+.bestand-page .slide-bu-compare {
+    margin-top: 0.75rem;
+}
+
+.bestand-page .slide-bu-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.82rem;
+}
+
+.bestand-page .slide-bu-table th {
+    background: #f3f4f6;
+    padding: 0.4rem 0.6rem;
+    text-align: left;
+    font-weight: 700;
+    color: #374151;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    border-bottom: 2px solid #e5e7eb;
+}
+
+.bestand-page .slide-bu-table td {
+    padding: 0.35rem 0.6rem;
+    border-bottom: 1px solid #f3f4f6;
+    color: #374151;
+}
+
+.bestand-page .slide-bu-table td:first-child {
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.bestand-page .slide-bu-ist {
+    color: #dc2626 !important;
+}
+
+.bestand-page .slide-bu-soll {
+    color: #16a34a !important;
+    font-weight: 600;
+}
+
+/* ============================================ */
+/* Slide Projektplan (T-12) Styles */
+/* ============================================ */
+
+.bestand-page .slide-plan-body {
+    grid-template-columns: 1fr !important;
+    grid-template-rows: auto auto;
+    gap: 1.25rem !important;
+}
+
+.bestand-page .slide-plan-top,
+.bestand-page .slide-plan-bottom {
+    min-width: 0;
+}
+
+/* -- Gantt Chart -- */
+.bestand-page .slide-plan-gantt {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    overflow-x: auto;
+}
+
+.bestand-page .slide-plan-gantt-hd {
+    display: flex;
+    border-bottom: 2px solid #e5e7eb;
+    padding-bottom: 0.4rem;
+    margin-bottom: 0.3rem;
+}
+
+.bestand-page .slide-plan-gantt-lbl-col {
+    width: 260px;
+    min-width: 260px;
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding-right: 0.75rem;
+    font-size: 0.82rem;
+    color: #374151;
+}
+
+.bestand-page .slide-plan-gantt-lbl-col div {
+    display: flex;
+    flex-direction: column;
+}
+
+.bestand-page .slide-plan-gantt-lbl-col small {
+    font-size: 0.68rem;
+    color: #9ca3af;
+    font-weight: 400;
+}
+
+.bestand-page .slide-plan-gantt-track-col {
+    flex: 1;
+    display: flex;
+    position: relative;
+    min-width: 500px;
+    min-height: 28px;
+}
+
+.bestand-page .slide-plan-gantt-hd .slide-plan-gantt-track-col {
+    min-height: auto;
+}
+
+.bestand-page .slide-plan-gantt-hd .slide-plan-gantt-track-col span {
+    flex: 1;
+    text-align: center;
+    font-size: 0.62rem;
+    font-weight: 600;
+    color: #9ca3af;
+}
+
+.bestand-page .slide-plan-gantt-row {
+    display: flex;
+    align-items: center;
+    padding: 0.45rem 0;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.bestand-page .slide-plan-gantt-row:last-child {
+    border-bottom: none;
+}
+
+.bestand-page .slide-plan-phase-badge {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.72rem;
+    font-weight: 800;
+    color: white;
+    flex-shrink: 0;
+}
+
+.bestand-page .slide-plan-badge-1 { background: #3b82f6; }
+.bestand-page .slide-plan-badge-2 { background: #C8102E; }
+.bestand-page .slide-plan-badge-3 { background: #10b981; }
+
+/* Gantt bars */
+.bestand-page .slide-plan-gantt-track-col {
+    background: repeating-linear-gradient(
+        90deg,
+        #fafafa 0%, #fafafa 4.99%,
+        #f3f4f6 5%, #f3f4f6 5.01%
+    );
+    border-radius: 4px;
+}
+
+.bestand-page .slide-plan-bar {
+    position: absolute;
+    top: 2px;
+    height: 24px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.68rem;
+    font-weight: 600;
+    color: white;
+}
+
+.bestand-page .slide-plan-bar span {
+    white-space: nowrap;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+
+.bestand-page .slide-plan-bar-1 { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+.bestand-page .slide-plan-bar-2 { background: linear-gradient(135deg, #C8102E, #a00d24); }
+.bestand-page .slide-plan-bar-3 { background: linear-gradient(135deg, #10b981, #059669); }
+
+/* Milestones */
+.bestand-page .slide-plan-milestones-row {
+    border-top: 2px solid #e5e7eb;
+    padding-top: 0.5rem;
+}
+
+.bestand-page .slide-plan-ms-track {
+    min-height: 36px !important;
+}
+
+.bestand-page .slide-plan-ms {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transform: translateX(-50%);
+    top: -2px;
+}
+
+.bestand-page .slide-plan-ms span {
+    font-size: 1.2rem;
+    color: #C8102E;
+    line-height: 1;
+}
+
+.bestand-page .slide-plan-ms small {
+    font-size: 0.55rem;
+    color: #6b7280;
+    white-space: nowrap;
+    font-weight: 600;
+}
+
+/* -- Phase detail cards (inline) -- */
+.bestand-page .slide-plan-phases {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+}
+
+.bestand-page .slide-plan-phase-card {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    padding: 0.75rem;
+    border-top: 3px solid #e5e7eb;
+}
+
+.bestand-page .slide-plan-pc-1 { border-top-color: #3b82f6; }
+.bestand-page .slide-plan-pc-2 { border-top-color: #C8102E; }
+.bestand-page .slide-plan-pc-3 { border-top-color: #10b981; }
+
+.bestand-page .slide-plan-pc-head {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-bottom: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.bestand-page .slide-plan-pc-head strong {
+    font-size: 0.82rem;
+    color: #1f2937;
+}
+
+.bestand-page .slide-plan-pc-head small {
+    font-size: 0.68rem;
+    color: #9ca3af;
+    margin-left: auto;
+}
+
+.bestand-page .slide-plan-phase-card ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.bestand-page .slide-plan-phase-card ul li {
+    padding: 0.2rem 0 0.2rem 0.85rem;
+    position: relative;
+    font-size: 0.72rem;
+    color: #4b5563;
+    line-height: 1.4;
+}
+
+.bestand-page .slide-plan-phase-card ul li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.52rem;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: #d1d5db;
+}
+
+/* -- Staffing section -- */
+.bestand-page .slide-plan-staffing {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 1.25rem;
+    align-items: start;
+}
+
+.bestand-page .slide-plan-staff-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.82rem;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.bestand-page .slide-plan-staff-table th {
+    background: #f3f4f6;
+    padding: 0.5rem 0.65rem;
+    text-align: center;
+    font-weight: 700;
+    font-size: 0.75rem;
+    color: #374151;
+    border-bottom: 2px solid #e5e7eb;
+}
+
+.bestand-page .slide-plan-staff-table th:first-child,
+.bestand-page .slide-plan-staff-table th:nth-child(2) {
+    text-align: left;
+}
+
+.bestand-page .slide-plan-staff-table th small {
+    display: block;
+    font-weight: 400;
+    color: #9ca3af;
+    font-size: 0.62rem;
+}
+
+.bestand-page .slide-plan-staff-table td {
+    padding: 0.4rem 0.65rem;
+    text-align: center;
+    border-bottom: 1px solid #f3f4f6;
+    color: #374151;
+}
+
+.bestand-page .slide-plan-staff-table td:first-child,
+.bestand-page .slide-plan-staff-table td:nth-child(2) {
+    text-align: left;
+}
+
+/* Staffing KPI cards */
+.bestand-page .slide-plan-staff-kpis {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    min-width: 180px;
+}
+
+.bestand-page .slide-plan-staff-kpi {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    padding: 0.75rem;
+    text-align: center;
+}
+
+.bestand-page .slide-plan-staff-kpi-peak {
+    border: 2px solid #C8102E;
+    background: #fef2f2;
+}
+
+.bestand-page .slide-plan-staff-kpi-phase {
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #9ca3af;
+    letter-spacing: 0.04em;
+    margin-bottom: 0.2rem;
+}
+
+.bestand-page .slide-plan-staff-kpi-val {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #1f2937;
+    line-height: 1.2;
+}
+
+.bestand-page .slide-plan-staff-kpi-peak .slide-plan-staff-kpi-val {
+    color: #C8102E;
+}
+
+.bestand-page .slide-plan-staff-kpi-detail {
+    font-size: 0.65rem;
+    color: #6b7280;
+    line-height: 1.4;
+    margin-top: 0.15rem;
+}
+
+/* -- T-11 / T-12 Responsive -- */
+@media (max-width: 1200px) {
+    .bestand-page .slide-bu-flow {
+        flex-wrap: wrap;
+    }
+    .bestand-page .slide-bu-pain-grid {
+        grid-template-columns: 1fr;
+    }
+    .bestand-page .slide-plan-phases {
+        grid-template-columns: 1fr;
+    }
+    .bestand-page .slide-plan-staffing {
+        grid-template-columns: 1fr;
+    }
+    .bestand-page .slide-plan-staff-kpis {
+        flex-direction: row;
+    }
+    .bestand-page .slide-plan-staff-kpi {
+        flex: 1;
+    }
+}
+
+@media (max-width: 768px) {
+    .bestand-page .slide-bu-flow {
+        flex-direction: column;
+    }
+    .bestand-page .slide-bu-arrow {
+        transform: rotate(90deg);
+        padding: 0.2rem 0;
+    }
+    .bestand-page .slide-plan-gantt-lbl-col {
+        width: 160px;
+        min-width: 160px;
+    }
+    .bestand-page .slide-plan-staff-kpis {
+        flex-direction: column;
+    }
+}
+
+/* ============================================ */
 /* AI Landing Page Styles */
 /* ============================================ */
 

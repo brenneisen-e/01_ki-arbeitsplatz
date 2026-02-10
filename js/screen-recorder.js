@@ -12,7 +12,7 @@ var screenRecorder = {
         var self = this;
         // Tab-Aufnahme via getDisplayMedia
         navigator.mediaDevices.getDisplayMedia({
-            video: { mediaSource: 'tab', cursor: 'always' },
+            video: { mediaSource: 'tab', cursor: 'always', frameRate: { ideal: 30 } },
             audio: false,
             preferCurrentTab: true
         }).then(function(stream) {
@@ -20,7 +20,8 @@ var screenRecorder = {
             self.recordedChunks = [];
             self._usedMimeType = self._getMimeType();
             self.mediaRecorder = new MediaRecorder(stream, {
-                mimeType: self._usedMimeType
+                mimeType: self._usedMimeType,
+                videoBitsPerSecond: 20000000 // 20 Mbps – Vimeo empfiehlt 10-20 Mbps für 1080p
             });
             self.mediaRecorder.ondataavailable = function(e) {
                 if (e.data && e.data.size > 0) {
@@ -34,7 +35,7 @@ var screenRecorder = {
             stream.getVideoTracks()[0].onended = function() {
                 if (self.isRecording) self.stop();
             };
-            self.mediaRecorder.start(100); // 100ms chunks
+            self.mediaRecorder.start(1000); // 1s chunks für bessere Kompression
             self.isRecording = true;
             self._updateButton();
             self._enableClickRipples();

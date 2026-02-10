@@ -1144,16 +1144,45 @@ function renderB2bPotentiale(kunde) {
 
     // From Deckungslücken
     if (kunde.deckungsluecken) {
-        kunde.deckungsluecken.forEach(function(d) {
+        kunde.deckungsluecken.forEach(function(d, idx) {
             if (d.prioritaet === 'Hoch' || d.prioritaet === 'Mittel') {
                 var estPraemie = d.prioritaet === 'Hoch' ? Math.round(kunde.praemie * 0.08) : Math.round(kunde.praemie * 0.04);
+                // Generate rich detail data
+                var versicherer = [];
+                var naechsteSchritte = [];
+                if (d.risiko.includes('Umwelt')) {
+                    versicherer = ['Allianz Umwelthaftpflicht (Rahmenvertrag)', 'HDI Umwelthaftpflicht Spezial', 'AXA Eco-Protect'];
+                    naechsteSchritte = ['Risiko-Audit vor Ort durchführen', 'Laborbestände und Gefahrstoffklassen erfassen', 'Angebote bei 3 Versicherern einholen'];
+                } else if (d.risiko.includes('Maschinen')) {
+                    versicherer = ['Allianz Maschinen-Allgefahren', 'Zurich Medical Equipment Cover', 'Provinzial Medizintechnik-Paket'];
+                    naechsteSchritte = ['Inventarliste med. Großgeräte anfordern', 'Wartungsverträge prüfen', 'Versicherungssumme kalkulieren'];
+                } else if (d.risiko.includes('Cyber')) {
+                    versicherer = ['Hiscox CyberClear', 'AIG CyberEdge', 'Zurich Cyber-Police'];
+                    naechsteSchritte = ['IT-Sicherheitsaudit initiieren', 'Datenschutz-Compliance prüfen', 'Angebote einholen und vergleichen'];
+                } else if (d.risiko.includes('D&O') || d.risiko.includes('Organ')) {
+                    versicherer = ['Zurich D&O Executive', 'AIG Directors Shield', 'Chubb Management Liability'];
+                    naechsteSchritte = ['Gremienstruktur dokumentieren', 'Haftungsrisiken analysieren', 'Deckungssumme festlegen'];
+                } else if (d.risiko.includes('Pandemie') || d.risiko.includes('Epidemie')) {
+                    versicherer = ['Allianz BU-Erweiterung', 'Munich Re Parametric', 'Swiss Re Pandemic Cover'];
+                    naechsteSchritte = ['Aktuelle Sublimits prüfen', 'Pandemie-Szenario berechnen', 'Erweiterungsangebot verhandeln'];
+                } else if (d.risiko.includes('Missbrauch')) {
+                    versicherer = ['Ecclesia Missbrauchsprävention', 'Zurich Social Care', 'HDI Institutionen-Schutz'];
+                    naechsteSchritte = ['Präventionskonzept bewerten', 'Deckungsumfang definieren', 'Rahmenvertrag prüfen'];
+                } else {
+                    versicherer = ['Allianz Spezial-Police', 'HDI Firmenschutz', 'Zurich Industrie-Paket'];
+                    naechsteSchritte = ['Risikobewertung durchführen', 'Angebote einholen', 'Vorstandsgespräch vereinbaren'];
+                }
                 potentials.push({
+                    id: 'b2bpot-dl-' + idx,
                     produkt: d.risiko,
                     quelle: 'Deckungslücke',
                     prioritaet: d.prioritaet,
                     status: d.status,
                     geschaetztePraemie: estPraemie,
-                    empfehlung: d.empfehlung
+                    empfehlung: d.empfehlung,
+                    versicherer: versicherer,
+                    naechsteSchritte: naechsteSchritte,
+                    herleitung: 'Identifiziert durch Bestandsanalyse: ' + d.status + '. ' + d.empfehlung
                 });
             }
         });
@@ -1161,14 +1190,58 @@ function renderB2bPotentiale(kunde) {
 
     // Add segment-specific cross-selling
     if (kunde.segment === 'Gesundheitswesen') {
-        potentials.push({ produkt: 'Erweiterter Haftpflicht-Rahmenvertrag', quelle: 'KI-Analyse', prioritaet: 'Mittel', status: 'Nicht angeboten', geschaetztePraemie: Math.round(kunde.praemie * 0.05), empfehlung: 'Aktuelle Trends in Klinik-Haftpflicht berücksichtigen' });
+        potentials.push({
+            id: 'b2bpot-cs-1',
+            produkt: 'Erweiterter Haftpflicht-Rahmenvertrag',
+            quelle: 'KI-Analyse',
+            prioritaet: 'Mittel',
+            status: 'Nicht angeboten',
+            geschaetztePraemie: Math.round(kunde.praemie * 0.05),
+            empfehlung: 'Aktuelle Trends in Klinik-Haftpflicht berücksichtigen',
+            versicherer: ['EGAS Rahmenvertrag Plus', 'Allianz Klinik-Haftpflicht XL', 'HDI Medizinische Einrichtungen'],
+            naechsteSchritte: ['Aktuelle Haftpflichtdeckung analysieren', 'Gaps zu Branchenstandard identifizieren', 'Erweiterungsangebot erstellen'],
+            herleitung: 'KI-Analyse: Kliniken ähnlicher Größe haben 15% höhere Haftpflichtdeckung. Aktuelle Police unter Benchmark.'
+        });
         if (!kunde.vertraegeDetail || !kunde.vertraegeDetail.some(function(v) { return v.sparte.includes('bKV'); })) {
-            potentials.push({ produkt: 'betriebliche Krankenversicherung (bKV)', quelle: 'Cross-Selling', prioritaet: 'Mittel', status: 'Nicht versichert', geschaetztePraemie: Math.round(kunde.mitarbeitende * 50 * 12 * 0.3), empfehlung: 'Fachkräftemangel: bKV als Mitarbeiter-Bindungsinstrument' });
+            potentials.push({
+                id: 'b2bpot-cs-2',
+                produkt: 'betriebliche Krankenversicherung (bKV)',
+                quelle: 'Cross-Selling',
+                prioritaet: 'Mittel',
+                status: 'Nicht versichert',
+                geschaetztePraemie: Math.round(kunde.mitarbeitende * 50 * 12 * 0.3),
+                empfehlung: 'Fachkräftemangel: bKV als Mitarbeiter-Bindungsinstrument',
+                versicherer: ['DKV CompanyMed', 'Allianz bKV Konzept', 'Hallesche bKV-Komfort'],
+                naechsteSchritte: ['HR-Abteilung kontaktieren', 'Budget pro Mitarbeiter klären', 'Rahmenvertrag-Konditionen einholen'],
+                herleitung: 'Cross-Selling: ' + (kunde.mitarbeitende || 0).toLocaleString('de-DE') + ' Mitarbeitende ohne bKV. Fachkräftegewinnung als zentrales Thema identifiziert.'
+            });
         }
     } else if (kunde.segment === 'Industrie & Gewerbe') {
-        potentials.push({ produkt: 'Erweiterte Produkthaftpflicht', quelle: 'KI-Analyse', prioritaet: 'Hoch', status: 'Prüfen', geschaetztePraemie: Math.round(kunde.praemie * 0.06), empfehlung: 'Produktrückruf-Absicherung international' });
+        potentials.push({
+            id: 'b2bpot-cs-3',
+            produkt: 'Erweiterte Produkthaftpflicht',
+            quelle: 'KI-Analyse',
+            prioritaet: 'Hoch',
+            status: 'Prüfen',
+            geschaetztePraemie: Math.round(kunde.praemie * 0.06),
+            empfehlung: 'Produktrückruf-Absicherung international',
+            versicherer: ['Zurich Product Recall', 'AIG Produkt-Rückruf Global', 'Allianz Produkthaftpflicht International'],
+            naechsteSchritte: ['Exportmärkte und Produktportfolio analysieren', 'Rückruf-Szenarien durchspielen', 'Internationale Deckung prüfen'],
+            herleitung: 'KI-Analyse: Unternehmen mit internationaler Produktion in ' + (kunde.standorte || 0) + ' Standorten benötigt erweiterte Produkthaftpflicht inkl. Rückruf.'
+        });
     } else if (kunde.segment === 'Transport & Logistik') {
-        potentials.push({ produkt: 'Warentransportversicherung (International)', quelle: 'KI-Analyse', prioritaet: 'Hoch', status: 'Ergänzung', geschaetztePraemie: Math.round(kunde.praemie * 0.07), empfehlung: 'Internationale Lieferketten absichern' });
+        potentials.push({
+            id: 'b2bpot-cs-4',
+            produkt: 'Warentransportversicherung (International)',
+            quelle: 'KI-Analyse',
+            prioritaet: 'Hoch',
+            status: 'Ergänzung',
+            geschaetztePraemie: Math.round(kunde.praemie * 0.07),
+            empfehlung: 'Internationale Lieferketten absichern',
+            versicherer: ['Helvetia Transport International', 'Zurich Cargo Global', 'HDI Transportversicherung'],
+            naechsteSchritte: ['Transportvolumen und -routen analysieren', 'Aktuelle Warenversicherung prüfen', 'Lücken bei internationalen Transporten identifizieren'],
+            herleitung: 'KI-Analyse: ' + (kunde.standorte || 0) + ' Standorte international – Warentransport nur teilweise versichert.'
+        });
     }
 
     if (potentials.length === 0) {
@@ -1182,13 +1255,47 @@ function renderB2bPotentiale(kunde) {
     var rows = potentials.map(function(p) {
         var pClass = p.prioritaet === 'Hoch' ? 'prio-hoch' : (p.prioritaet === 'Mittel' ? 'prio-mittel' : 'prio-niedrig');
         var praemieText = p.geschaetztePraemie >= 1000000 ? (p.geschaetztePraemie / 1000000).toFixed(1) + ' Mio. €' : p.geschaetztePraemie.toLocaleString('de-DE') + ' €';
-        return '<tr>' +
+
+        // Versicherer list
+        var versichererHtml = (p.versicherer || []).map(function(v) {
+            return '<div style="display:flex;align-items:center;gap:6px;padding:3px 0"><svg viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" width="14" height="14"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> ' + v + '</div>';
+        }).join('');
+
+        // Nächste Schritte list
+        var schritteHtml = (p.naechsteSchritte || []).map(function(s, i) {
+            return '<div style="display:flex;align-items:flex-start;gap:6px;padding:3px 0"><span style="background:#e2e8f0;color:#475569;border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0">' + (i + 1) + '</span> ' + s + '</div>';
+        }).join('');
+
+        // Detail row
+        var detailHtml = '<tr class="impulse-table-detail" id="b2bpot-detail-' + p.id + '"><td colspan="6">' +
+            '<div class="impulse-table-detail-inner">' +
+                '<div class="impulse-table-herleitung" style="flex:1">' +
+                    '<div class="kanban-detail-title">Herleitung</div>' +
+                    '<div class="kanban-detail-row"><span class="kanban-detail-label">Quelle</span><span class="kanban-detail-value">' + p.quelle + '</span></div>' +
+                    '<div class="kanban-detail-row"><span class="kanban-detail-label">Status</span><span class="kanban-detail-value">' + p.status + '</span></div>' +
+                    '<div class="kanban-detail-row"><span class="kanban-detail-label">Analyse</span><span class="kanban-detail-value">' + (p.herleitung || p.empfehlung) + '</span></div>' +
+                    '<div style="margin-top:12px"><div class="kanban-detail-title">Versicherer-Empfehlungen</div>' + versichererHtml + '</div>' +
+                '</div>' +
+                '<div style="flex:1">' +
+                    '<div class="kanban-detail-title">Nächste Schritte</div>' + schritteHtml +
+                    '<div style="margin-top:14px"><div class="kanban-detail-title">Geschätzte Prämie</div>' +
+                    '<div style="font-size:20px;font-weight:700;color:#166534">' + praemieText + ' <span style="font-size:12px;font-weight:400;color:#64748b">p.a.</span></div></div>' +
+                '</div>' +
+                '<div class="impulse-table-actions">' +
+                    '<button class="action-btn icon-only primary small" onclick="event.stopPropagation()" title="Angebot erstellen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></button>' +
+                    '<button class="action-btn icon-only secondary small" onclick="event.stopPropagation()" title="Termin vereinbaren"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></button>' +
+                    '<button class="action-btn icon-only secondary small" onclick="event.stopPropagation()" title="E-Mail senden"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></button>' +
+                '</div>' +
+            '</div></td></tr>';
+
+        return '<tr class="impulse-table-row" onclick="toggleB2bPotDetail(\'' + p.id + '\')">' +
             '<td><strong>' + p.produkt + '</strong></td>' +
             '<td><span class="status-badge-dl">' + p.quelle + '</span></td>' +
             '<td><span class="prio-badge ' + pClass + '">' + p.prioritaet + '</span></td>' +
-            '<td class="text-right">' + praemieText + '</td>' +
+            '<td class="text-right"><strong>' + praemieText + '</strong></td>' +
             '<td>' + p.empfehlung + '</td>' +
-            '</tr>';
+            '<td class="impulse-table-expand-cell"><span class="impulse-table-expand" id="b2bpot-expand-' + p.id + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="6 9 12 15 18 9"/></svg></span></td>' +
+            '</tr>' + detailHtml;
     }).join('');
 
     container.innerHTML =
@@ -1197,8 +1304,18 @@ function renderB2bPotentiale(kunde) {
             '<div class="mk-kpi-box"><span class="mk-kpi-label">Hohe Priorität</span><span class="mk-kpi-value negative">' + hochCount + '</span></div>' +
             '<div class="mk-kpi-box"><span class="mk-kpi-label">Geschätztes Prämienvolumen</span><span class="mk-kpi-value positive">' + (totalPot >= 1000000 ? (totalPot / 1000000).toFixed(1) + ' Mio. €' : totalPot.toLocaleString('de-DE') + ' €') + '</span></div>' +
         '</div>' +
-        '<table class="makler-detail-table"><thead><tr><th>Produkt / Risiko</th><th>Quelle</th><th>Priorität</th><th class="text-right">Geschätzte Prämie</th><th>Empfehlung</th></tr></thead><tbody>' + rows + '</tbody></table>';
+        '<table class="impulse-table makler-detail-table"><thead><tr><th>Produkt / Risiko</th><th>Quelle</th><th>Priorität</th><th class="text-right">Geschätzte Prämie</th><th>Empfehlung</th><th></th></tr></thead><tbody>' + rows + '</tbody></table>';
 }
+
+function toggleB2bPotDetail(id) {
+    var detail = document.getElementById('b2bpot-detail-' + id);
+    var expand = document.getElementById('b2bpot-expand-' + id);
+    if (detail) {
+        detail.classList.toggle('open');
+        if (expand) expand.classList.toggle('open');
+    }
+}
+window.toggleB2bPotDetail = toggleB2bPotDetail;
 
 // ========================================
 // MAKLER TAB SWITCHING

@@ -708,7 +708,7 @@ function fillMaklerDetail(kunde) {
     var maklerStamm = document.getElementById('maklerStammdaten');
     if (privatStamm) privatStamm.style.display = 'none';
     if (maklerStamm) {
-        maklerStamm.style.display = '';
+        maklerStamm.style.display = 'grid';
         document.getElementById('mkBranche').textContent = kunde.branche || '—';
         document.getElementById('mkSegment').textContent = kunde.segment || '—';
         document.getElementById('mkMitarbeitende').textContent = kunde.mitarbeitende ? kunde.mitarbeitende.toLocaleString('de-DE') : '—';

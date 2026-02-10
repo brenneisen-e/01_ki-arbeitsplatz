@@ -92,8 +92,12 @@ function loadAgenturData(vermittlerId) {
     fillProvisionTab(agenturData);
     fillQualitaetTab(agenturData);
 
-    // Zeige Übersicht-Tab als ersten Tab
-    showAgenturTab('uebersicht');
+    // Zeige Übersicht-Tab als ersten Tab (oder Makler-Modus wenn aktiv)
+    if (typeof maklerModus !== 'undefined' && maklerModus) {
+        applyMaklerModus();
+    } else {
+        showAgenturTab('uebersicht');
+    }
 }
 
 /**
@@ -106,6 +110,8 @@ function showAgenturTab(tabName) {
         agenturHeader.querySelectorAll('.agentur-tab').forEach(tab => tab.classList.remove('active'));
     }
     document.querySelectorAll('.agentur-tab-content').forEach(content => content.classList.remove('active'));
+    // Also deactivate Makler tab content (avoid overlap)
+    document.querySelectorAll('.makler-tab-content').forEach(content => content.classList.remove('active'));
 
     // Gewählten Tab aktivieren
     const tabButton = document.querySelector(`.agentur-tab[onclick="showAgenturTab('${tabName}')"]`);

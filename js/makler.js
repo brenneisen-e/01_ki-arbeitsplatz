@@ -882,7 +882,7 @@ window.showMaklerTab = showMaklerTab;
 function renderMaklerUebersicht() {
     var container = document.getElementById('maklerUebersichtContent');
     if (!container) return;
-
+    try {
     // Top-5 Kunden nach Prämie
     var topKunden = maklerKunden.slice().sort(function(a, b) { return b.praemie - a.praemie; }).slice(0, 5);
     var topKundenRows = topKunden.map(function(k, i) {
@@ -957,10 +957,32 @@ function renderMaklerUebersicht() {
     var avgDeckung = (maklerKunden.reduce(function(s, k) { return s + k.deckungsquote; }, 0) / maklerKunden.length).toFixed(0);
     var avgSchaden = (maklerKunden.reduce(function(s, k) { return s + k.schadenquote; }, 0) / maklerKunden.length).toFixed(0);
 
+    // Top-3 Potentiale
+    var prioOrder = { 'Hoch': 0, 'Mittel': 1, 'Niedrig': 2 };
+    var topPotentiale = (typeof maklerPotentialeData !== 'undefined' ? maklerPotentialeData : []).slice().sort(function(a, b) {
+        return (prioOrder[a.prioritaet] || 2) - (prioOrder[b.prioritaet] || 2);
+    }).slice(0, 3);
+    var potentialeHtml = topPotentiale.map(function(p) {
+        var prioClass = p.prioritaet === 'Hoch' ? 'high' : (p.prioritaet === 'Mittel' ? 'medium' : 'low');
+        return '<div class="impuls-item clickable" onclick="openMaklerKundenDetail(\'' + p.kundeId + '\')">' +
+            '<div class="impuls-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>' +
+            '<div class="impuls-text"><strong>' + p.titel + '</strong><p>' + p.kunde + ' \u2013 ' + p.beschreibung + '</p></div>' +
+            '<span class="impuls-priority ' + prioClass + '">' + p.potentialPraemie + '</span></div>';
+    }).join('');
+
+    // Aufgaben (Tasks)
+    var aufgabenHtml =
+        '<div class="mk-aufgaben-liste">' +
+            '<div class="mk-aufgabe-item prio-rot"><div class="mk-aufgabe-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div><div class="mk-aufgabe-text"><strong>Cyber-Renewal Marienhospital</strong><span>Ablauf 31.03.2026 \u2013 Verhandlung mit Hiscox starten</span></div><span class="mk-aufgabe-frist frist-dringend">49 Tage</span></div>' +
+            '<div class="mk-aufgabe-item prio-rot"><div class="mk-aufgabe-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div class="mk-aufgabe-text"><strong>Umwelthaftpflicht-Angebot erstellen</strong><span>Marienhospital \u2013 Gesetzliche Anforderung seit 2024</span></div><span class="mk-aufgabe-frist frist-dringend">Offen</span></div>' +
+            '<div class="mk-aufgabe-item prio-gelb"><div class="mk-aufgabe-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div><div class="mk-aufgabe-text"><strong>Jahresgespr\u00E4ch Phoenix Contact</strong><span>Produkt-Haftpflicht US-Erweiterung vorbereiten</span></div><span class="mk-aufgabe-frist">15.02.2026</span></div>' +
+            '<div class="mk-aufgabe-item prio-gelb"><div class="mk-aufgabe-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div><div class="mk-aufgabe-text"><strong>Cyber-Rahmenvertrag Ev. Kirche</strong><span>Ausschreibungsunterlagen vorbereiten (1.900 Gemeinden)</span></div><span class="mk-aufgabe-frist">28.02.2026</span></div>' +
+            '<div class="mk-aufgabe-item"><div class="mk-aufgabe-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></div><div class="mk-aufgabe-text"><strong>bKV-Pr\u00E4sentation Diakonisches Werk</strong><span>Budget-Tarif-Vergleich f\u00FCr 4.500 Mitarbeitende</span></div><span class="mk-aufgabe-frist">10.03.2026</span></div>' +
+        '</div>';
+
     container.innerHTML =
         '<div class="mk-uebersicht-grid">' +
             '<div class="mk-uebersicht-main">' +
-                // Vertriebskennzahlen
                 '<div class="uebersicht-card">' +
                     '<div class="uebersicht-card-header"><h3>' +
                         '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>' +
@@ -968,11 +990,24 @@ function renderMaklerUebersicht() {
                     '<div class="kennzahlen-grid">' +
                         '<div class="kennzahl-item"><div class="kennzahl-value">' + maklerKunden.length + '</div><div class="kennzahl-label">Kunden</div><div class="kennzahl-trend positive">5 Segmente</div></div>' +
                         '<div class="kennzahl-item"><div class="kennzahl-value">' + totalVertraege + '</div><div class="kennzahl-label">Vertr\u00E4ge gesamt</div><div class="kennzahl-trend positive">\u00D8 ' + Math.round(totalVertraege / maklerKunden.length) + ' pro Kunde</div></div>' +
-                        '<div class="kennzahl-item"><div class="kennzahl-value">' + avgDeckung + '%</div><div class="kennzahl-label">\u00D8 Deckungsquote</div><div class="kennzahl-trend ' + (avgDeckung >= 80 ? 'positive' : 'neutral') + '">Ziel: 85%</div></div>' +
-                        '<div class="kennzahl-item"><div class="kennzahl-value">' + avgSchaden + '%</div><div class="kennzahl-label">\u00D8 Schadenquote</div><div class="kennzahl-trend ' + (avgSchaden < 65 ? 'positive' : 'negative') + '">Ziel: < 65%</div></div>' +
+                        '<div class="kennzahl-item"><div class="kennzahl-value">' + avgDeckung + '%</div><div class="kennzahl-label">\u00D8 Deckungsquote</div><div class="kennzahl-trend ' + (Number(avgDeckung) >= 80 ? 'positive' : 'neutral') + '">Ziel: 85%</div></div>' +
+                        '<div class="kennzahl-item"><div class="kennzahl-value">' + avgSchaden + '%</div><div class="kennzahl-label">\u00D8 Schadenquote</div><div class="kennzahl-trend ' + (Number(avgSchaden) < 65 ? 'positive' : 'negative') + '">Ziel: &lt; 65%</div></div>' +
                     '</div>' +
                 '</div>' +
-                // Top-5 Kunden
+                '<div class="uebersicht-card">' +
+                    '<div class="uebersicht-card-header"><h3>' +
+                        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>' +
+                        ' Aufgaben</h3></div>' +
+                    aufgabenHtml +
+                '</div>' +
+                '<div class="uebersicht-card potentiale-impuls-card">' +
+                    '<div class="uebersicht-card-header"><h3>' +
+                        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>' +
+                        ' Vertriebspotentiale</h3>' +
+                        '<a href="#" class="link-alle-anzeigen" onclick="showMaklerTab(\'potentiale\'); return false;">Alle ' + (typeof maklerPotentialeData !== 'undefined' ? maklerPotentialeData.length : 0) + ' Potentiale \u2192</a>' +
+                    '</div>' +
+                    potentialeHtml +
+                '</div>' +
                 '<div class="uebersicht-card">' +
                     '<div class="uebersicht-card-header"><h3>' +
                         '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>' +
@@ -982,7 +1017,6 @@ function renderMaklerUebersicht() {
                     '<table class="makler-detail-table"><thead><tr><th>#</th><th>Institution</th><th class="text-right">Pr\u00E4mie/a</th><th class="text-center">Vertr\u00E4ge</th><th>Schadenquote</th></tr></thead>' +
                     '<tbody>' + topKundenRows + '</tbody></table>' +
                 '</div>' +
-                // Anstehende Renewals
                 '<div class="uebersicht-card">' +
                     '<div class="uebersicht-card-header"><h3>' +
                         '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>' +
@@ -993,16 +1027,13 @@ function renderMaklerUebersicht() {
                     '<tbody>' + renewalRows + '</tbody></table>' +
                 '</div>' +
             '</div>' +
-            // Sidebar
             '<div class="mk-uebersicht-sidebar">' +
-                // Segment-Verteilung
                 '<div class="uebersicht-card">' +
                     '<div class="uebersicht-card-header"><h3>' +
                         '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0110 10"/><path d="M12 2v10h10"/></svg>' +
                         ' Segment-Verteilung</h3></div>' +
                     '<div class="mk-segment-chart">' + segmentBars + '</div>' +
                 '</div>' +
-                // Anstehende Termine
                 '<div class="uebersicht-card">' +
                     '<div class="uebersicht-card-header"><h3>' +
                         '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>' +
@@ -1014,19 +1045,21 @@ function renderMaklerUebersicht() {
                         '<div class="termin-item"><div class="termin-zeit"><span class="termin-tag">Mi, 15.01.</span><span class="termin-uhrzeit">11:00</span></div><div class="termin-details"><strong>Hellmann Logistics</strong><span>Flottenversicherung Review</span></div></div>' +
                     '</div>' +
                 '</div>' +
-                // Quick Actions
                 '<div class="uebersicht-card">' +
                     '<div class="uebersicht-card-header"><h3>' +
                         '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>' +
                         ' Schnellaktionen</h3></div>' +
                     '<div class="formulare-grid">' +
-                        '<button class="formular-btn" onclick="showMaklerTab(\'potentiale\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Potentiale pr\u00FCfen</button>' +
+                        '<button class="formular-btn" onclick="showMaklerTab(\'potentiale\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Potentiale</button>' +
                         '<button class="formular-btn" onclick="showMaklerTab(\'deckungsluecken\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Deckungsl\u00FCcken</button>' +
                         '<button class="formular-btn" onclick="showMaklerTab(\'versicherermix\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><circle cx="12" cy="12" r="10"/><path d="M12 2v20M2 12h20"/></svg> Versicherer-Mix</button>' +
                     '</div>' +
                 '</div>' +
             '</div>' +
         '</div>';
+    } catch(e) {
+        container.innerHTML = '<div style="padding:24px;color:#dc2626;background:#fef2f2;border-radius:8px"><strong>Fehler beim Rendern:</strong> ' + e.message + '</div>';
+    }
 }
 window.renderMaklerUebersicht = renderMaklerUebersicht;
 

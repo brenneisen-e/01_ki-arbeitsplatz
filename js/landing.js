@@ -3388,8 +3388,8 @@ async function loadSavedImages() {
             photoImg.style.display = 'block';
             if (photoPlaceholder) photoPlaceholder.style.display = 'none';
         } else {
-            // Fallback: Standard-Profilbild aus assets
-            photoImg.src = 'assets/images/default-profile.svg';
+            // Fallback: Standard-Profilbild für Max Mustermann
+            photoImg.src = 'assets/images/AdobeStock_1091012713.jpeg';
             photoImg.style.display = 'block';
             if (photoPlaceholder) photoPlaceholder.style.display = 'none';
         }
@@ -3408,8 +3408,12 @@ async function loadSavedImages() {
             photoImgSmall.src = configImages.profile;
             photoImgSmall.style.display = 'block';
             if (photoPlaceholderSmall) photoPlaceholderSmall.style.display = 'none';
+        } else {
+            // Fallback: Standard-Profilbild für Max Mustermann
+            photoImgSmall.src = 'assets/images/AdobeStock_1091012713.jpeg';
+            photoImgSmall.style.display = 'block';
+            if (photoPlaceholderSmall) photoPlaceholderSmall.style.display = 'none';
         }
-        // Kein SVG-Fallback hier - Placeholder bleibt sichtbar wenn kein Bild vorhanden
     }
 }
 

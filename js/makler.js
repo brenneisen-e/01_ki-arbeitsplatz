@@ -639,6 +639,7 @@ var _origA02HeaderTabs = null;
 var _origKundenTabs = null;
 var _origStickyBarRight = null;
 var _origDropdownHTML = null;
+var _origA10Subtitle = null;
 var _maklerDetailActive = false;
 
 function fillMaklerDetail(kunde) {
@@ -650,7 +651,35 @@ function fillMaklerDetail(kunde) {
     var headerTitle = document.getElementById('kundenHeaderTitle');
     if (headerTitle) headerTitle.textContent = 'GS NRW';
     var headerId = document.getElementById('kundenHeaderId');
-    if (headerId) headerId.textContent = 'Ecclesia Gruppe';
+    if (headerId) {
+        // Gesamte Subtitle-Zeile ersetzen (entfernt "| Aktiv"), wie bei A-02
+        var headerSubtitle = headerId.parentElement;
+        if (!_origA10Subtitle) _origA10Subtitle = headerSubtitle.innerHTML;
+        headerSubtitle.innerHTML = '<span id="kundenHeaderId">Ecclesia Gruppe</span>';
+    }
+
+    // A-10 Header-Foto: Gebäude-Icon statt Personen-Placeholder
+    var headerPhoto = document.getElementById('kundenHeaderPhoto');
+    if (headerPhoto) {
+        var hPlaceholder = headerPhoto.querySelector('.agentur-photo-placeholder-small');
+        var hImg = headerPhoto.querySelector('.agentur-photo-img-small');
+        if (hPlaceholder) hPlaceholder.style.display = 'none';
+        if (hImg) hImg.style.display = 'none';
+        if (!headerPhoto.querySelector('.makler-photo-icon')) {
+            var hIcon = document.createElement('svg');
+            hIcon.setAttribute('class', 'makler-photo-icon');
+            hIcon.setAttribute('viewBox', '0 0 24 24');
+            hIcon.setAttribute('fill', 'none');
+            hIcon.setAttribute('stroke', 'currentColor');
+            hIcon.setAttribute('stroke-width', '1.5');
+            hIcon.setAttribute('width', '24');
+            hIcon.setAttribute('height', '24');
+            hIcon.innerHTML = '<path d="M3 21h18M5 21V7l8-4v18M13 21V3l6 3v15M9 9v.01M9 12v.01M9 15v.01M9 18v.01M17 9v.01M17 12v.01M17 15v.01M17 18v.01"/>';
+            headerPhoto.appendChild(hIcon);
+        } else {
+            headerPhoto.querySelector('.makler-photo-icon').style.display = '';
+        }
+    }
 
     // Customer dropdown → institution selector
     var dropdown = document.querySelector('.kunden-switch-dropdown');
@@ -864,6 +893,21 @@ function restoreAOKundenDetail() {
 
     var dropdown = document.querySelector('.kunden-switch-dropdown');
     if (dropdown && _origDropdownHTML) dropdown.innerHTML = _origDropdownHTML;
+
+    // Restore A-10 subtitle
+    var headerId = document.getElementById('kundenHeaderId');
+    if (headerId && _origA10Subtitle) headerId.parentElement.innerHTML = _origA10Subtitle;
+
+    // Restore A-10 header photo
+    var headerPhoto = document.getElementById('kundenHeaderPhoto');
+    if (headerPhoto) {
+        var hPlaceholder = headerPhoto.querySelector('.agentur-photo-placeholder-small');
+        var hImg = headerPhoto.querySelector('.agentur-photo-img-small');
+        if (hPlaceholder) hPlaceholder.style.display = '';
+        if (hImg && hImg.getAttribute('src')) hImg.style.display = '';
+        var hIcon = headerPhoto.querySelector('.makler-photo-icon');
+        if (hIcon) hIcon.style.display = 'none';
+    }
 
     // Restore sticky bar labels
     var npsLabel = document.querySelector('#kundenDetailPage .kunde-sticky-kpi:nth-child(1) .kunde-sticky-kpi-label');

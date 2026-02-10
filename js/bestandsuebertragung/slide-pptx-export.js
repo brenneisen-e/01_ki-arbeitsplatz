@@ -92,6 +92,47 @@ function addSectionLabel(slide, text, x, y, color) {
     });
 }
 
+/**
+ * Renders a list of bullets with consistent spacing and aligned dots.
+ * @param {object} slide - PptxGenJS slide
+ * @param {Array} bullets - [{head, body}]
+ * @param {number} x - left edge
+ * @param {number} y - starting y
+ * @param {number} w - available width
+ * @param {string} dotColor - hex color for bullet dot
+ * @param {number} itemH - height per bullet item
+ * @param {number} gap - gap between items
+ * @returns {number} next y position after the last bullet
+ */
+function renderBullets(slide, bullets, x, y, w, dotColor, itemH, gap) {
+    const dotSize = 0.1;
+    const dotX = x;
+    const textX = x + 0.22;
+    const textW = w - 0.22;
+    // First line of 12pt text: line height ~0.19". Vertical center of first line ≈ 0.095"
+    const firstLineCenter = 0.095;
+
+    let curY = y;
+    bullets.forEach(b => {
+        // Bullet dot - centered with first line of text
+        slide.addShape('ellipse', {
+            x: dotX, y: curY + firstLineCenter - dotSize / 2, w: dotSize, h: dotSize,
+            fill: { color: dotColor }
+        });
+        // Text
+        slide.addText([
+            { text: b.head, options: { bold: true, fontSize: 12, color: C.black, fontFace: FONT } },
+            { text: ' \u2013 ' + b.body, options: { fontSize: 11, color: C.dkGray, fontFace: FONT } }
+        ], {
+            x: textX, y: curY, w: textW, h: itemH,
+            fontFace: FONT, valign: 'top', wrap: true, lineSpacingMultiple: 1.05,
+            paraSpaceAfter: 2
+        });
+        curY += itemH + gap;
+    });
+    return curY;
+}
+
 /* ================================================
    T-11: AUSGANGSLAGE & ZIELBILD
    ================================================ */
@@ -133,22 +174,7 @@ function buildSlide11(pres) {
         }
     ];
 
-    let bulletY = BY + 0.38;
-    const lBulletH = 0.68;
-    ausgangsBullets.forEach(b => {
-        slide.addShape('ellipse', {
-            x: LX, y: bulletY + 0.05, w: 0.12, h: 0.12,
-            fill: { color: C.dkGray }
-        });
-        slide.addText([
-            { text: b.head, options: { bold: true, fontSize: 12, color: C.black, fontFace: FONT } },
-            { text: ' \u2013 ' + b.body, options: { fontSize: 11, color: C.dkGray, fontFace: FONT } }
-        ], {
-            x: LX + 0.2, y: bulletY, w: LW - 0.2, h: lBulletH,
-            fontFace: FONT, valign: 'top', wrap: true, lineSpacingMultiple: 1.0
-        });
-        bulletY += lBulletH + 0.02;
-    });
+    let bulletY = renderBullets(slide, ausgangsBullets, LX, BY + 0.38, LW, C.dkGray, 0.65, 0.06);
 
     // ---- RIGHT COLUMN: Zielbild ----
     const RX = PX + LW + 0.35;
@@ -178,186 +204,172 @@ function buildSlide11(pres) {
         }
     ];
 
-    let rBulletY = BY + 0.38;
-    const rBulletH = 0.55;
-    zielbildBullets.forEach(b => {
-        slide.addShape('ellipse', {
-            x: RX, y: rBulletY + 0.05, w: 0.12, h: 0.12,
-            fill: { color: C.green }
-        });
-        slide.addText([
-            { text: b.head, options: { bold: true, fontSize: 12, color: C.black, fontFace: FONT } },
-            { text: ' \u2013 ' + b.body, options: { fontSize: 11, color: C.dkGray, fontFace: FONT } }
-        ], {
-            x: RX + 0.2, y: rBulletY, w: RW - 0.2, h: rBulletH,
-            fontFace: FONT, valign: 'top', wrap: true, lineSpacingMultiple: 1.0
-        });
-        rBulletY += rBulletH + 0.02;
-    });
+    let rBulletY = renderBullets(slide, zielbildBullets, RX, BY + 0.38, RW, C.green, 0.52, 0.06);
 
-    // ---- PROCESS DIAGRAM (full width, bottom) ----
-    const procY = 4.55;
-    const procH = 2.35;
-
-    // Background box
+    // ---- IST-PROZESS (under left column) ----
+    const istProcY = bulletY + 0.15;
+    // IST background box
     slide.addShape('roundRect', {
-        x: PX, y: procY, w: BW, h: procH,
+        x: LX, y: istProcY, w: LW, h: 2.05,
         rectRadius: 0.08,
         fill: { color: 'F8F9FA' },
         line: { color: C.ltGray, width: 0.5 }
     });
-
-    // -- IST row --
-    const istY = procY + 0.15;
-    const rowH = 0.9;
     // IST label
     slide.addShape('roundRect', {
-        x: PX + 0.15, y: istY + 0.2, w: 0.55, h: 0.45,
-        rectRadius: 0.05, fill: { color: C.dkGray }
+        x: LX + 0.1, y: istProcY + 0.1, w: 1.3, h: 0.28,
+        rectRadius: 0.04, fill: { color: C.dkGray }
     });
-    slide.addText('IST', {
-        x: PX + 0.15, y: istY + 0.2, w: 0.55, h: 0.45,
-        fontFace: FONT, fontSize: 11, bold: true, color: C.white,
+    slide.addText('IST-PROZESS', {
+        x: LX + 0.1, y: istProcY + 0.1, w: 1.3, h: 0.28,
+        fontFace: FONT, fontSize: 10, bold: true, color: C.white,
         align: 'center', valign: 'middle'
     });
 
-    const istNodes = [
-        { label: 'E-Mails via\nGruppenpostfächer', color: C.blue, bg: 'F0F9FF', w: 1.6 },
-        { label: 'Postkorbsystem', color: C.teal, bg: 'F0FDFA', w: 1.3 },
-        { label: 'Manuelle\nPrüfung', color: C.orange, bg: 'FFFBF0', w: 1.2, pain: '3\u20134 Schritte' },
-        { label: 'ERGO GPT', color: C.red, bg: 'FEF2F2', w: 1.1, pain: 'Begrenzt' },
-        { label: 'Robotics / RPA', color: C.dkGreen, bg: 'F0FDF4', w: 1.3 }
+    const istSteps = [
+        { num: '1', label: 'E-Mails via Gruppenpostfächer', color: C.blue, bg: 'F0F9FF' },
+        { num: '2', label: 'Postkorbsystem', color: C.teal, bg: 'F0FDFA' },
+        { num: '3', label: 'Manuelle Prüfung', color: C.orange, bg: 'FFFBF0', pain: '3\u20134 Schritte' },
+        { num: '4', label: 'ERGO GPT', color: C.red, bg: 'FEF2F2', pain: 'Begrenzt' },
+        { num: '5', label: 'Robotics / RPA', color: C.dkGreen, bg: 'F0FDF4' }
     ];
 
-    let nodeX = PX + 0.85;
-    const nodeH = 0.75;
-    istNodes.forEach((n, i) => {
+    let stepY = istProcY + 0.45;
+    const stepH = 0.27;
+    const stepGap = 0.04;
+    istSteps.forEach((s, i) => {
+        // Step bar
         slide.addShape('roundRect', {
-            x: nodeX, y: istY + 0.05, w: n.w, h: nodeH,
-            rectRadius: 0.06,
-            fill: { color: n.bg },
-            line: { color: n.color, width: 1.5 }
+            x: LX + 0.1, y: stepY, w: LW - 0.2, h: stepH,
+            rectRadius: 0.04,
+            fill: { color: s.bg }, line: { color: s.color, width: 1.5 }
         });
-        const textRuns = [{ text: n.label, options: { fontSize: 10, color: C.text, fontFace: FONT } }];
-        if (n.pain) {
-            textRuns.push({ text: '\n' + n.pain, options: { fontSize: 9, color: C.red, fontFace: FONT, bold: true } });
-        }
+        // Number circle
+        slide.addShape('ellipse', {
+            x: LX + 0.18, y: stepY + 0.03, w: 0.21, h: 0.21,
+            fill: { color: s.color }
+        });
+        slide.addText(s.num, {
+            x: LX + 0.18, y: stepY + 0.03, w: 0.21, h: 0.21,
+            fontFace: FONT, fontSize: 9, bold: true, color: C.white,
+            align: 'center', valign: 'middle'
+        });
+        // Label
+        const textRuns = [{ text: s.label, options: { fontSize: 10, color: C.text, fontFace: FONT } }];
         slide.addText(textRuns, {
-            x: nodeX, y: istY + 0.05, w: n.w, h: nodeH,
-            fontFace: FONT, align: 'center', valign: 'middle', wrap: true, lineSpacingMultiple: 0.9
+            x: LX + 0.48, y: stepY, w: LW - 1.2, h: stepH,
+            fontFace: FONT, valign: 'middle'
         });
-        if (i < istNodes.length - 1) {
-            slide.addText('\u2192', {
-                x: nodeX + n.w, y: istY + 0.2, w: 0.35, h: 0.4,
-                fontFace: FONT, fontSize: 14, color: C.mdGray, align: 'center', valign: 'middle'
+        // Pain tag
+        if (s.pain) {
+            slide.addText(s.pain, {
+                x: LX + LW - 1.2, y: stepY + 0.02, w: 1.0, h: stepH - 0.04,
+                fontFace: FONT, fontSize: 9, bold: true, color: C.red,
+                align: 'right', valign: 'middle'
             });
         }
-        nodeX += n.w + 0.35;
+        // Arrow
+        if (i < istSteps.length - 1) {
+            slide.addText('\u2193', {
+                x: LX + LW / 2 - 0.1, y: stepY + stepH - 0.02, w: 0.2, h: stepGap + 0.06,
+                fontFace: FONT, fontSize: 8, color: C.mdGray, align: 'center', valign: 'middle'
+            });
+        }
+        stepY += stepH + stepGap + 0.02;
     });
 
-    // -- SOLL row --
-    const sollY = procY + 1.2;
+    // ---- SOLL-PROZESS (under right column) ----
+    const sollProcY = rBulletY + 0.15;
+    // SOLL background box
+    slide.addShape('roundRect', {
+        x: RX, y: sollProcY, w: RW, h: 2.05,
+        rectRadius: 0.08,
+        fill: { color: 'F8F9FA' },
+        line: { color: C.ltGray, width: 0.5 }
+    });
     // SOLL label
     slide.addShape('roundRect', {
-        x: PX + 0.15, y: sollY + 0.25, w: 0.55, h: 0.45,
-        rectRadius: 0.05, fill: { color: C.green }
+        x: RX + 0.1, y: sollProcY + 0.1, w: 1.4, h: 0.28,
+        rectRadius: 0.04, fill: { color: C.green }
     });
-    slide.addText('SOLL', {
-        x: PX + 0.15, y: sollY + 0.25, w: 0.55, h: 0.45,
-        fontFace: FONT, fontSize: 11, bold: true, color: C.white,
+    slide.addText('SOLL-PROZESS', {
+        x: RX + 0.1, y: sollProcY + 0.1, w: 1.4, h: 0.28,
+        fontFace: FONT, fontSize: 10, bold: true, color: C.white,
         align: 'center', valign: 'middle'
     });
 
-    // SOLL inputs (stacked)
-    const sollInputX = PX + 0.85;
-    const sollInputW = 1.7;
-    // Email input
+    // Path labels
+    const pathW = (RW - 0.5) / 2;
+    slide.addText('PFAD 1: INTERIM', {
+        x: RX + 0.1, y: sollProcY + 0.45, w: pathW, h: 0.2,
+        fontFace: FONT, fontSize: 9, bold: true, color: C.dkGray
+    });
+    slide.addText('PFAD 2: ZIELBILD', {
+        x: RX + 0.2 + pathW, y: sollProcY + 0.45, w: pathW, h: 0.2,
+        fontFace: FONT, fontSize: 9, bold: true, color: C.dkGray
+    });
+
+    // Path 1: E-Mails → KI-Agent → Auto → Robotics
+    const p1X = RX + 0.1;
+    const p1Steps = [
+        { label: 'E-Mails via\nGruppenpostfächer', color: C.blue, bg: 'F0F9FF' },
+        { label: 'KI-Agent (Interim)', color: C.green, bg: 'F4FAE8' },
+        { label: 'Auto. Klassifikation', color: C.teal, bg: 'F0FDFA' },
+        { label: 'Robotics / RPA', color: C.dkGreen, bg: 'F0FDF4' }
+    ];
+    let p1Y = sollProcY + 0.68;
+    p1Steps.forEach((s, i) => {
+        slide.addShape('roundRect', {
+            x: p1X, y: p1Y, w: pathW, h: 0.25,
+            rectRadius: 0.04, fill: { color: s.bg }, line: { color: s.color, width: 1.5 }
+        });
+        slide.addText(s.label, {
+            x: p1X, y: p1Y, w: pathW, h: 0.25,
+            fontFace: FONT, fontSize: 9, color: C.text, align: 'center', valign: 'middle'
+        });
+        if (i < p1Steps.length - 1) {
+            slide.addText('\u2193', {
+                x: p1X + pathW / 2 - 0.1, y: p1Y + 0.22, w: 0.2, h: 0.12,
+                fontFace: FONT, fontSize: 8, color: C.mdGray, align: 'center', valign: 'middle'
+            });
+        }
+        p1Y += 0.33;
+    });
+
+    // Path 2: Formular → direkt Robotics
+    const p2X = RX + 0.2 + pathW;
+    let p2Y = sollProcY + 0.68;
+    // Formular node
     slide.addShape('roundRect', {
-        x: sollInputX, y: sollY, w: sollInputW, h: 0.45,
-        rectRadius: 0.06,
-        fill: { color: 'F0F9FF' }, line: { color: C.blue, width: 1.5 }
+        x: p2X, y: p2Y, w: pathW, h: 0.25,
+        rectRadius: 0.04, fill: { color: 'F0FDF4' }, line: { color: C.dkGreen, width: 2 }
     });
-    slide.addText('E-Mails via Gruppenpostfächer', {
-        x: sollInputX, y: sollY, w: sollInputW, h: 0.45,
-        fontFace: FONT, fontSize: 10, color: C.text, align: 'center', valign: 'middle'
-    });
-    // Formular input (NEW)
-    slide.addShape('roundRect', {
-        x: sollInputX, y: sollY + 0.52, w: sollInputW, h: 0.45,
-        rectRadius: 0.06,
-        fill: { color: 'F0FDF4' }, line: { color: C.dkGreen, width: 2 }
-    });
-    slide.addText('Strukturiertes Formular / API', {
-        x: sollInputX, y: sollY + 0.52, w: sollInputW, h: 0.45,
-        fontFace: FONT, fontSize: 10, color: C.text, align: 'center', valign: 'middle'
+    slide.addText('Formular / API', {
+        x: p2X, y: p2Y, w: pathW, h: 0.25,
+        fontFace: FONT, fontSize: 9, color: C.text, align: 'center', valign: 'middle', bold: true
     });
     // NEU badge
     slide.addShape('roundRect', {
-        x: sollInputX + sollInputW - 0.5, y: sollY + 0.45, w: 0.45, h: 0.2,
+        x: p2X + pathW - 0.4, y: p2Y - 0.08, w: 0.4, h: 0.18,
         rectRadius: 0.03, fill: { color: C.green }
     });
     slide.addText('NEU', {
-        x: sollInputX + sollInputW - 0.5, y: sollY + 0.45, w: 0.45, h: 0.2,
-        fontFace: FONT, fontSize: 8, bold: true, color: C.white, align: 'center', valign: 'middle'
+        x: p2X + pathW - 0.4, y: p2Y - 0.08, w: 0.4, h: 0.18,
+        fontFace: FONT, fontSize: 7, bold: true, color: C.white, align: 'center', valign: 'middle'
     });
-
-    // Arrow from inputs
-    const sollArrow1X = sollInputX + sollInputW;
-    slide.addText('\u2192', {
-        x: sollArrow1X, y: sollY + 0.3, w: 0.35, h: 0.4,
+    // Long arrow down
+    slide.addText('\u2193', {
+        x: p2X + pathW / 2 - 0.1, y: p2Y + 0.22, w: 0.2, h: 0.78,
         fontFace: FONT, fontSize: 14, color: C.mdGray, align: 'center', valign: 'middle'
     });
-
-    // KI-Agent node
-    const kiX = sollArrow1X + 0.35;
-    const kiW = 1.5;
+    // Robotics node (aligned with path 1's last node)
     slide.addShape('roundRect', {
-        x: kiX, y: sollY + 0.12, w: kiW, h: 0.75,
-        rectRadius: 0.06,
-        fill: { color: 'F4FAE8' }, line: { color: C.green, width: 2 }
-    });
-    slide.addText('KI-Agent\n(Interim)', {
-        x: kiX, y: sollY + 0.12, w: kiW, h: 0.75,
-        fontFace: FONT, fontSize: 11, color: C.text, align: 'center', valign: 'middle',
-        bold: true, wrap: true, lineSpacingMultiple: 0.9
-    });
-
-    // Arrow
-    slide.addText('\u2192', {
-        x: kiX + kiW, y: sollY + 0.3, w: 0.35, h: 0.4,
-        fontFace: FONT, fontSize: 14, color: C.mdGray, align: 'center', valign: 'middle'
-    });
-
-    // Auto classification node
-    const autoX = kiX + kiW + 0.35;
-    const autoW = 1.9;
-    slide.addShape('roundRect', {
-        x: autoX, y: sollY + 0.12, w: autoW, h: 0.75,
-        rectRadius: 0.06,
-        fill: { color: 'F0FDFA' }, line: { color: C.teal, width: 1.5 }
-    });
-    slide.addText('Auto. Klassifikation\n& Extraktion', {
-        x: autoX, y: sollY + 0.12, w: autoW, h: 0.75,
-        fontFace: FONT, fontSize: 10, color: C.text, align: 'center', valign: 'middle', wrap: true
-    });
-
-    // Arrow
-    slide.addText('\u2192', {
-        x: autoX + autoW, y: sollY + 0.3, w: 0.35, h: 0.4,
-        fontFace: FONT, fontSize: 14, color: C.mdGray, align: 'center', valign: 'middle'
-    });
-
-    // Robotics node
-    const robX = autoX + autoW + 0.35;
-    const robW = 1.3;
-    slide.addShape('roundRect', {
-        x: robX, y: sollY + 0.12, w: robW, h: 0.75,
-        rectRadius: 0.06,
-        fill: { color: 'F0FDF4' }, line: { color: C.dkGreen, width: 1.5 }
+        x: p2X, y: p1Y - 0.33, w: pathW, h: 0.25,
+        rectRadius: 0.04, fill: { color: 'F0FDF4' }, line: { color: C.dkGreen, width: 1.5 }
     });
     slide.addText('Robotics / RPA', {
-        x: robX, y: sollY + 0.12, w: robW, h: 0.75,
-        fontFace: FONT, fontSize: 10, color: C.text, align: 'center', valign: 'middle'
+        x: p2X, y: p1Y - 0.33, w: pathW, h: 0.25,
+        fontFace: FONT, fontSize: 9, color: C.text, align: 'center', valign: 'middle'
     });
 
     addFooter(slide);

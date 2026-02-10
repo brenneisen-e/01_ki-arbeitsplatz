@@ -7087,14 +7087,14 @@ button svg,
     left: 32px;
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 24px;
     z-index: 2;
 }
 
 .kunden-shared-header-info {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 16px;
 }
 
 /* Customer Switch Dropdown */

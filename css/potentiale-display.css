@@ -138,7 +138,7 @@
 }
 
 .kanban-detail-title {
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -151,7 +151,7 @@
     justify-content: space-between;
     gap: 8px;
     padding: 4px 0;
-    font-size: 12px;
+    font-size: 14px;
 }
 
 .kanban-detail-label {
@@ -184,6 +184,15 @@
 .action-btn.primary.small {
     background: #2d5016;
     color: white;
+}
+
+.action-btn.icon-only.primary {
+    background: #2d5016;
+    color: white;
+}
+
+.action-btn.icon-only.primary svg {
+    stroke: white;
 }
 
 .action-btn.secondary.small {
@@ -352,10 +361,11 @@
     display: flex;
     gap: 24px;
     align-items: flex-start;
-    padding: 12px 16px;
+    padding: 16px 20px;
     background: white;
     border-radius: 8px;
     border: 1px solid #e2e8f0;
+    font-size: 14px;
 }
 
 .impulse-table-herleitung {

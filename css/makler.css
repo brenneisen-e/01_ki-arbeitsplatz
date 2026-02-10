@@ -53,6 +53,11 @@
 /* ========================================
    MAKLER KPI KARTEN
    ======================================== */
+/* Makler has 5 KPIs → force single row */
+#maklerKpis {
+    grid-template-columns: repeat(5, 1fr) !important;
+}
+
 .makler-kpi-card {
     display: none;
     background: white;

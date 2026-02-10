@@ -856,6 +856,16 @@ function fillMaklerDetail(kunde) {
 }
 
 function updateMaklerStickyBar(kunde) {
+    // Sticky-Bar Icon: Gebäude statt Person für B2B
+    var stickyBarLeft = document.querySelector('.kunde-sticky-bar-left');
+    if (stickyBarLeft) {
+        var stickyIcon = stickyBarLeft.querySelector('svg');
+        if (stickyIcon) {
+            stickyIcon.innerHTML = '<path d="M3 21h18M5 21V7l8-4v18M13 21V3l6 3v15M9 9v.01M9 12v.01M9 15v.01M9 18v.01M17 9v.01M17 12v.01M17 15v.01M17 18v.01"/>';
+            stickyIcon.setAttribute('stroke-width', '1.5');
+        }
+    }
+
     var nameEl = document.getElementById('kundeBarNameB');
     if (nameEl) nameEl.textContent = kunde.name;
     var idEl = document.getElementById('kundeBarIdB');
@@ -916,6 +926,16 @@ function restoreAOKundenDetail() {
     if (clvLabel) clvLabel.textContent = 'CLV';
     var segLabel = document.querySelector('#kundenDetailPage .kunde-sticky-kpi:nth-child(3) .kunde-sticky-kpi-label');
     if (segLabel) segLabel.textContent = 'Segment';
+
+    // Restore sticky bar icon (Personen-SVG für AO)
+    var stickyBarLeft = document.querySelector('.kunde-sticky-bar-left');
+    if (stickyBarLeft) {
+        var stickyIcon = stickyBarLeft.querySelector('svg');
+        if (stickyIcon) {
+            stickyIcon.innerHTML = '<path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"></path><circle cx="12" cy="7" r="4"></circle>';
+            stickyIcon.setAttribute('stroke-width', '2');
+        }
+    }
 
     // Restore foto background (B2B sets grey, AO uses CSS default)
     var foto = document.querySelector('.kunden-foto');

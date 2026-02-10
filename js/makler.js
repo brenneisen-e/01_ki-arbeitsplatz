@@ -1499,10 +1499,35 @@ function renderMaklerUebersicht() {
     }).slice(0, 3);
     var potentialeHtml = topPotentiale.map(function(p) {
         var prioClass = p.prioritaet === 'Hoch' ? 'high' : (p.prioritaet === 'Mittel' ? 'medium' : 'low');
-        return '<div class="impuls-item clickable" onclick="openMaklerKundenDetail(\'' + p.kundeId + '\')">' +
+        var detailId = 'ub-pot-' + p.id;
+        return '<div class="impuls-item clickable" onclick="toggleUebersichtPotDetail(\'' + detailId + '\')">' +
             '<div class="impuls-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>' +
             '<div class="impuls-text"><strong>' + p.titel + '</strong><p>' + p.kunde + ' \u2013 ' + p.beschreibung + '</p></div>' +
-            '<span class="impuls-priority ' + prioClass + '">' + p.potentialPraemie + '</span></div>';
+            '<span class="impuls-priority ' + prioClass + '">' + p.potentialPraemie + '</span>' +
+            '<span class="impuls-expand" id="ub-pot-arrow-' + p.id + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="6 9 12 15 18 9"/></svg></span></div>' +
+            '<div class="impuls-detail" id="' + detailId + '" style="display:none;">' +
+                '<div class="impuls-detail-section">' +
+                    '<h4>Herleitung</h4>' +
+                    '<div class="herleitung-grid">' +
+                        '<div class="herleitung-item"><span class="herleitung-label">Kunde</span><span class="herleitung-value">' + p.kunde + '</span></div>' +
+                        '<div class="herleitung-item"><span class="herleitung-label">Kategorie</span><span class="herleitung-value">' + p.kategorie + '</span></div>' +
+                        '<div class="herleitung-item"><span class="herleitung-label">Quelle</span><span class="herleitung-value">' + p.quelle + '</span></div>' +
+                        '<div class="herleitung-item"><span class="herleitung-label">Analyse</span><span class="herleitung-value">' + p.herleitung + '</span></div>' +
+                        '<div class="herleitung-item"><span class="herleitung-label">Empfehlung</span><span class="herleitung-value">' + p.empfehlung + '</span></div>' +
+                        '<div class="herleitung-item"><span class="herleitung-label">Potential</span><span class="herleitung-value" style="color:#16a34a;font-weight:600;">' + p.potentialPraemie + '</span></div>' +
+                    '</div>' +
+                '</div>' +
+                '<div class="impuls-detail-section">' +
+                    '<div class="impuls-actions">' +
+                        '<button class="action-btn primary" onclick="openMaklerKundenDetail(\'' + p.kundeId + '\')">' +
+                            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>' +
+                            ' Zum Kunden</button>' +
+                        '<button class="action-btn secondary" onclick="showMaklerTab(\'potentiale\')">' +
+                            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>' +
+                            ' Alle Potentiale</button>' +
+                    '</div>' +
+                '</div>' +
+            '</div>';
     }).join('');
 
     // Aufgaben (Tasks)
@@ -1597,6 +1622,22 @@ function renderMaklerUebersicht() {
     }
 }
 window.renderMaklerUebersicht = renderMaklerUebersicht;
+
+// Toggle Potentiale-Detail auf der Übersichtsseite
+function toggleUebersichtPotDetail(id) {
+    var detail = document.getElementById(id);
+    if (!detail) return;
+    var arrowId = id.replace('ub-pot-', 'ub-pot-arrow-');
+    var arrow = document.getElementById(arrowId);
+    if (detail.style.display === 'none') {
+        detail.style.display = 'block';
+        if (arrow) arrow.classList.add('open');
+    } else {
+        detail.style.display = 'none';
+        if (arrow) arrow.classList.remove('open');
+    }
+}
+window.toggleUebersichtPotDetail = toggleUebersichtPotDetail;
 
 // ========================================
 // MAKLER RENEWAL OVERVIEW (A-02)

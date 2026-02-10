@@ -868,6 +868,9 @@ function showMaklerTab(tabName) {
 
     // Lazy-render
     if (tabName === 'uebersicht') renderMaklerUebersicht();
+    if (tabName === 'stammdaten') renderMaklerStammdaten();
+    if (tabName === 'neugeschaeft') renderMaklerNeugeschaeft();
+    if (tabName === 'bestand') renderMaklerBestand();
     if (tabName === 'potentiale') renderMaklerPotentiale();
     if (tabName === 'versicherermix') renderVersichererMix();
     if (tabName === 'renewal') renderMaklerRenewalOverview();
@@ -1358,6 +1361,107 @@ function toggleMaklerPotDetail(id) {
     }
 }
 window.toggleMaklerPotDetail = toggleMaklerPotDetail;
+
+// ========================================
+// MAKLER STAMMDATEN (Team-/Makler-Info)
+// ========================================
+function renderMaklerStammdaten() {
+    var container = document.getElementById('maklerStammdatenContent');
+    if (!container) return;
+
+    container.innerHTML =
+        '<h3 class="section-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Maklerteam-Stammdaten</h3>' +
+        '<div class="stammdaten-sections"><div class="stammdaten-section"><h3>Basis-Stammdaten</h3><div class="stammdaten-grid-new">' +
+            '<div class="stammdaten-item-new"><div class="stammdaten-label">Maklerhaus</div><div class="stammdaten-value">Ecclesia Gruppe</div></div>' +
+            '<div class="stammdaten-item-new"><div class="stammdaten-label">Team</div><div class="stammdaten-value">Gesundheit &amp; Soziales NRW</div></div>' +
+            '<div class="stammdaten-item-new"><div class="stammdaten-label">Teamleiter</div><div class="stammdaten-value">Dr. Stefan Krause</div></div>' +
+            '<div class="stammdaten-item-new"><div class="stammdaten-label">Adresse</div><div class="stammdaten-value">Klingenbergstra\u00DFe 4, 32758 Detmold</div></div>' +
+            '<div class="stammdaten-item-new"><div class="stammdaten-label">Telefon</div><div class="stammdaten-value">+49 5231 603-0</div></div>' +
+            '<div class="stammdaten-item-new"><div class="stammdaten-label">E-Mail</div><div class="stammdaten-value">gesundheit-nrw@ecclesia.de</div></div>' +
+            '<div class="stammdaten-item-new"><div class="stammdaten-label">IHK-Registrierung</div><div class="stammdaten-value">D-FXYZ-ABCDE-12</div></div>' +
+            '<div class="stammdaten-item-new"><div class="stammdaten-label">Mitarbeitende</div><div class="stammdaten-value">12 (davon 8 Kundenberater)</div></div>' +
+        '</div></div>' +
+        '<div class="stammdaten-section"><h3>Spezialisierung</h3><div class="stammdaten-grid-new">' +
+            '<div class="stammdaten-item-new"><div class="stammdaten-label">Segmente</div><div class="stammdaten-value">Gesundheitswesen, Kirche, Sozialwirtschaft, Industrie, Transport</div></div>' +
+            '<div class="stammdaten-item-new"><div class="stammdaten-label">Kooperationspartner</div><div class="stammdaten-value">EGAS (Arzthaftpflicht), Kravag (Flotte), Funk Gruppe (R\u00FCckversicherung)</div></div>' +
+            '<div class="stammdaten-item-new"><div class="stammdaten-label">Rahmenvertr\u00E4ge</div><div class="stammdaten-value">14 aktive Rahmenvertr\u00E4ge bei 8 Versicherern</div></div>' +
+            '<div class="stammdaten-item-new"><div class="stammdaten-label">Bestandsgr\u00F6\u00DFe</div><div class="stammdaten-value">' + maklerKunden.length + ' institutionelle Kunden, 68,5 Mio. \u20AC Pr\u00E4mienvolumen</div></div>' +
+        '</div></div></div>';
+}
+
+// ========================================
+// MAKLER NEUGESCHÄFT
+// ========================================
+function renderMaklerNeugeschaeft() {
+    var container = document.getElementById('maklerNeugeschaeftContent');
+    if (!container) return;
+
+    container.innerHTML =
+        '<h3 class="section-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg> Neugesch\u00E4ft YTD</h3>' +
+        '<div class="kennzahlen-grid" style="margin-bottom:24px">' +
+            '<div class="kennzahl-item"><div class="kennzahl-value">4,2 Mio. \u20AC</div><div class="kennzahl-label">Neugesch\u00E4ft Gesamt</div><div class="kennzahl-trend positive">+11,8% vs. VJ</div></div>' +
+            '<div class="kennzahl-item"><div class="kennzahl-value">18</div><div class="kennzahl-label">Neue Vertr\u00E4ge</div><div class="kennzahl-trend positive">+4 vs. VJ</div></div>' +
+            '<div class="kennzahl-item"><div class="kennzahl-value">3</div><div class="kennzahl-label">Neue Kunden</div><div class="kennzahl-trend positive">Ziel: 5/Jahr</div></div>' +
+            '<div class="kennzahl-item"><div class="kennzahl-value">233.000 \u20AC</div><div class="kennzahl-label">\u00D8 Pr\u00E4mie/Vertrag</div><div class="kennzahl-trend positive">+12%</div></div>' +
+        '</div>' +
+        '<table class="makler-detail-table"><thead><tr><th>Datum</th><th>Kunde</th><th>Sparte</th><th>Versicherer</th><th class="text-right">Pr\u00E4mie/a</th><th>Status</th></tr></thead><tbody>' +
+            '<tr class="clickable-row" onclick="openMaklerKundenDetail(\'MK-GW-001\')"><td>08.01.2026</td><td><strong>Marienhospital Detmold</strong></td><td>Cyberversicherung (Erweiterung)</td><td>Hiscox</td><td class="text-right">45.000 \u20AC</td><td><span class="prio-badge prio-hoch" style="background:#dcfce7;color:#166534">Policiert</span></td></tr>' +
+            '<tr class="clickable-row" onclick="openMaklerKundenDetail(\'MK-IG-002\')"><td>15.12.2025</td><td><strong>Phoenix Contact</strong></td><td>Betriebsunterbrechung (Erh\u00F6hung)</td><td>Allianz</td><td class="text-right">120.000 \u20AC</td><td><span class="prio-badge prio-hoch" style="background:#dcfce7;color:#166534">Policiert</span></td></tr>' +
+            '<tr class="clickable-row" onclick="openMaklerKundenDetail(\'MK-TL-003\')"><td>28.11.2025</td><td><strong>RegioFracht OWL</strong></td><td>Komplettpaket (Neukunde)</td><td>HDI / Kravag</td><td class="text-right">190.000 \u20AC</td><td><span class="prio-badge prio-hoch" style="background:#dcfce7;color:#166534">Policiert</span></td></tr>' +
+            '<tr><td>22.01.2026</td><td><strong>Ev. Kirche Westfalen</strong></td><td>Cyber-Rahmenvertrag</td><td>Ausschreibung</td><td class="text-right">180.000 \u20AC</td><td><span class="prio-badge prio-mittel" style="background:#fef3c7;color:#92400e">In Verhandlung</span></td></tr>' +
+            '<tr><td>05.02.2026</td><td><strong>Boge Kompressoren</strong></td><td>Maschinenbruch-Erweiterung</td><td>Allianz</td><td class="text-right">32.000 \u20AC</td><td><span class="prio-badge prio-mittel" style="background:#fef3c7;color:#92400e">Angebot offen</span></td></tr>' +
+            '<tr><td>10.02.2026</td><td><strong>Diakonisches Werk RWL</strong></td><td>bKV Rahmenvertrag</td><td>DKV / Signal</td><td class="text-right">95.000 \u20AC</td><td><span class="prio-badge prio-niedrig" style="background:#eff6ff;color:#1e40af">Erstgespr\u00E4ch</span></td></tr>' +
+        '</tbody></table>';
+}
+
+// ========================================
+// MAKLER BESTAND
+// ========================================
+function renderMaklerBestand() {
+    var container = document.getElementById('maklerBestandContent');
+    if (!container) return;
+
+    // Bestandsübersicht aus echten Daten
+    var segmentMap = {};
+    var totalPraemie = 0;
+    var totalVertraege = 0;
+    maklerKunden.forEach(function(k) {
+        if (!segmentMap[k.segment]) segmentMap[k.segment] = { praemie: 0, vertraege: 0, kunden: 0, avgSchaden: 0 };
+        segmentMap[k.segment].praemie += k.praemie;
+        segmentMap[k.segment].vertraege += k.vertraege;
+        segmentMap[k.segment].kunden++;
+        segmentMap[k.segment].avgSchaden += k.schadenquote;
+        totalPraemie += k.praemie;
+        totalVertraege += k.vertraege;
+    });
+
+    var segmentRows = Object.keys(segmentMap).sort(function(a, b) { return segmentMap[b].praemie - segmentMap[a].praemie; }).map(function(seg) {
+        var s = segmentMap[seg];
+        var avgSch = Math.round(s.avgSchaden / s.kunden);
+        var schadenClass = avgSch > 65 ? 'schaden-hoch' : (avgSch > 50 ? 'schaden-mittel' : 'schaden-niedrig');
+        var pct = (s.praemie / totalPraemie * 100).toFixed(1);
+        return '<tr>' +
+            '<td><strong>' + seg + '</strong></td>' +
+            '<td class="text-center">' + s.kunden + '</td>' +
+            '<td class="text-center">' + s.vertraege + '</td>' +
+            '<td class="text-right"><strong>' + (s.praemie >= 1000000 ? (s.praemie / 1000000).toFixed(1) + ' Mio. \u20AC' : s.praemie.toLocaleString('de-DE') + ' \u20AC') + '</strong></td>' +
+            '<td>' + pct + '%</td>' +
+            '<td><span class="' + schadenClass + '">' + avgSch + '%</span></td>' +
+            '</tr>';
+    }).join('');
+
+    container.innerHTML =
+        '<h3 class="section-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg> Bestand\u00FCbersicht</h3>' +
+        '<div class="kennzahlen-grid" style="margin-bottom:24px">' +
+            '<div class="kennzahl-item"><div class="kennzahl-value">68,5 Mio. \u20AC</div><div class="kennzahl-label">Gesamtbestand</div><div class="kennzahl-trend positive">+4,2% YoY</div></div>' +
+            '<div class="kennzahl-item"><div class="kennzahl-value">' + totalVertraege + '</div><div class="kennzahl-label">Vertr\u00E4ge aktiv</div><div class="kennzahl-trend positive">' + maklerKunden.length + ' Kunden</div></div>' +
+            '<div class="kennzahl-item"><div class="kennzahl-value">97,2%</div><div class="kennzahl-label">Retention Rate</div><div class="kennzahl-trend positive">Benchmark: 95%</div></div>' +
+            '<div class="kennzahl-item"><div class="kennzahl-value">5,8 Mio. \u20AC</div><div class="kennzahl-label">Courtage YTD</div><div class="kennzahl-trend">Ziel: 6,4 Mio.</div></div>' +
+        '</div>' +
+        '<h4 style="margin:0 0 12px;font-size:14px;color:#475569">Bestand nach Segment</h4>' +
+        '<table class="makler-detail-table"><thead><tr><th>Segment</th><th class="text-center">Kunden</th><th class="text-center">Vertr\u00E4ge</th><th class="text-right">Pr\u00E4mie/a</th><th>Anteil</th><th>\u00D8 Schadenquote</th></tr></thead>' +
+        '<tbody>' + segmentRows + '</tbody></table>';
+}
 
 // ========================================
 // INIT

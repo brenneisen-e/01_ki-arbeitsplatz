@@ -81,7 +81,7 @@ function applyMaklerModus() {
     }
     var subtitleId = document.getElementById('agenturIdHeader');
     var subtitleStatus = document.getElementById('agenturStatusHeader');
-    if (subtitleId) subtitleId.textContent = maklerModus ? 'Gesundheit & Soziales NRW' : 'VM00001';
+    if (subtitleId) subtitleId.textContent = maklerModus ? 'GS NRW' : 'VM00001';
     if (subtitleStatus) subtitleStatus.textContent = maklerModus ? 'Ecclesia Gruppe' : 'Aktiv';
 }
 window.applyMaklerModus = applyMaklerModus;

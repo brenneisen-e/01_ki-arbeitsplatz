@@ -1,0 +1,133 @@
+/* ========================================
+   SCREEN RECORDER - Aufnahme-Button & Klick-Ripples
+   ======================================== */
+
+/* Roter Aufnahme-Button (fixed, immer sichtbar) */
+#screenRecordBtn {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    z-index: 99999;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 3px solid #dc2626;
+    background: #dc2626;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(220, 38, 38, 0.4);
+}
+
+#screenRecordBtn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 16px rgba(220, 38, 38, 0.5);
+}
+
+/* Innerer Kreis / Quadrat */
+#screenRecordBtn .rec-inner {
+    width: 14px;
+    height: 14px;
+    background: white;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+/* Recording State: Quadrat statt Kreis + Pulsieren */
+#screenRecordBtn.recording .rec-inner {
+    border-radius: 3px;
+    width: 12px;
+    height: 12px;
+}
+
+#screenRecordBtn.recording {
+    animation: rec-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes rec-pulse {
+    0%, 100% { box-shadow: 0 2px 8px rgba(220, 38, 38, 0.4); }
+    50% { box-shadow: 0 2px 20px rgba(220, 38, 38, 0.8), 0 0 0 6px rgba(220, 38, 38, 0.15); }
+}
+
+/* Recording-Indikator-Text */
+#screenRecordBtn .rec-label {
+    position: absolute;
+    right: 44px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #dc2626;
+    color: white;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 12px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+    letter-spacing: 0.5px;
+}
+
+#screenRecordBtn.recording .rec-label {
+    opacity: 1;
+}
+
+/* ========================================
+   KLICK-RIPPLE EFFEKTE
+   ======================================== */
+
+.click-ripple {
+    position: fixed;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    border: 3px solid rgba(220, 38, 38, 0.6);
+    pointer-events: none;
+    z-index: 99998;
+    transform: translate(-50%, -50%);
+    animation: ripple-expand 0.7s ease-out forwards;
+}
+
+.click-ripple-dot {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(220, 38, 38, 0.7);
+    pointer-events: none;
+    z-index: 99998;
+    transform: translate(-50%, -50%);
+    animation: ripple-dot 0.5s ease-out forwards;
+}
+
+@keyframes ripple-expand {
+    0% {
+        width: 0;
+        height: 0;
+        opacity: 1;
+        border-width: 3px;
+    }
+    100% {
+        width: 80px;
+        height: 80px;
+        opacity: 0;
+        border-width: 1px;
+    }
+}
+
+@keyframes ripple-dot {
+    0% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0.8;
+    }
+    50% {
+        transform: translate(-50%, -50%) scale(1.5);
+        opacity: 0.5;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 0;
+    }
+}

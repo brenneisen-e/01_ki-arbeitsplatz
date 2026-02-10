@@ -88,6 +88,38 @@ function applyMaklerModus() {
             subtitleDiv.innerHTML = '<span id="agenturIdHeader">VM00001</span> | <span id="agenturStatusHeader">Aktiv</span>';
         }
     }
+
+    // A-02 Header-Foto: im Makler-Modus Gebäude-Icon statt persönlichem Foto
+    var photoContainer = document.getElementById('agenturPhotoSmall');
+    if (photoContainer) {
+        var photoImg = document.getElementById('agenturPhotoImgSmall');
+        var photoPlaceholder = photoContainer.querySelector('.agentur-photo-placeholder-small');
+        if (maklerModus) {
+            if (photoImg) photoImg.style.display = 'none';
+            if (photoPlaceholder) photoPlaceholder.style.display = 'none';
+            // Gebäude-Icon einfügen (falls noch nicht vorhanden)
+            if (!photoContainer.querySelector('.makler-photo-icon')) {
+                var icon = document.createElement('svg');
+                icon.setAttribute('class', 'makler-photo-icon');
+                icon.setAttribute('viewBox', '0 0 24 24');
+                icon.setAttribute('fill', 'none');
+                icon.setAttribute('stroke', 'currentColor');
+                icon.setAttribute('stroke-width', '1.5');
+                icon.setAttribute('width', '24');
+                icon.setAttribute('height', '24');
+                icon.innerHTML = '<path d="M3 21h18M5 21V7l8-4v18M13 21V3l6 3v15M9 9v.01M9 12v.01M9 15v.01M9 18v.01M17 9v.01M17 12v.01M17 15v.01M17 18v.01"/>';
+                photoContainer.appendChild(icon);
+            } else {
+                photoContainer.querySelector('.makler-photo-icon').style.display = '';
+            }
+        } else {
+            // AO: persönliches Foto/Placeholder wiederherstellen
+            if (photoPlaceholder) photoPlaceholder.style.display = '';
+            if (photoImg && photoImg.getAttribute('src')) photoImg.style.display = '';
+            var maklerIcon = photoContainer.querySelector('.makler-photo-icon');
+            if (maklerIcon) maklerIcon.style.display = 'none';
+        }
+    }
 }
 window.applyMaklerModus = applyMaklerModus;
 
@@ -616,9 +648,9 @@ function fillMaklerDetail(kunde) {
     // 1) SHARED HEADER (top bar)
     // ============================
     var headerTitle = document.getElementById('kundenHeaderTitle');
-    if (headerTitle) headerTitle.textContent = kunde.name;
+    if (headerTitle) headerTitle.textContent = 'GS NRW';
     var headerId = document.getElementById('kundenHeaderId');
-    if (headerId) headerId.textContent = kunde.id;
+    if (headerId) headerId.textContent = 'Ecclesia Gruppe';
 
     // Customer dropdown → institution selector
     var dropdown = document.querySelector('.kunden-switch-dropdown');

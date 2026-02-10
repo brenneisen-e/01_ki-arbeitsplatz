@@ -119,6 +119,43 @@ function navigateToVertrag(vertragName) {
 }
 window.navigateToVertrag = navigateToVertrag;
 
+// Navigation von "Hinweise aus Kontoumsätzen" zum Fressnapf-Umsatz
+function navigateToTierUmsaetze() {
+    // 1. Zum Open Finance Tab wechseln
+    switchKundenTab('fida');
+
+    // 2. Warten bis Content gerendert, dann Bezahlen rendern + Akkordeon öffnen + scrollen
+    setTimeout(function() {
+        // Sicherstellen dass Bezahlen-Content gerendert ist
+        if (typeof renderBezahlenContent === 'function') renderBezahlenContent();
+
+        setTimeout(function() {
+            // "Lebensmittel & Alltag" Akkordeon öffnen
+            var katId = 'Lebensmittel_&_Alltag';
+            var detail = document.getElementById('bezDetail_' + katId);
+            var arrow = document.getElementById('bezArrow_' + katId);
+            if (detail && !detail.classList.contains('open')) {
+                detail.classList.add('open');
+                if (arrow) arrow.classList.add('open');
+            }
+
+            // Fressnapf-Eintrag finden und highlighten
+            setTimeout(function() {
+                var txItems = document.querySelectorAll('.bezahlen-tx-item');
+                txItems.forEach(function(item) {
+                    item.classList.remove('highlight-vertrag');
+                    if (item.textContent.indexOf('Fressnapf') !== -1) {
+                        item.classList.add('highlight-vertrag');
+                        item.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        setTimeout(function() { item.classList.remove('highlight-vertrag'); }, 4000);
+                    }
+                });
+            }, 100);
+        }, 100);
+    }, 150);
+}
+window.navigateToTierUmsaetze = navigateToTierUmsaetze;
+
 // Akkordeon-Liste
 function buildAkkordeon() {
     return bezahlenData.map(function(cat) {

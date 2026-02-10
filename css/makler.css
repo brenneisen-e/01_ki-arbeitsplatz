@@ -531,6 +531,44 @@
     background: #fef2f2;
 }
 
+/* ========================================
+   B2B KPI BOXES (A-10 tabs)
+   ======================================== */
+.mk-kpi-row {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.mk-kpi-box {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 14px 20px;
+    background: #f8fafc;
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+    min-width: 120px;
+}
+
+.mk-kpi-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.mk-kpi-value {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.mk-kpi-value.positive { color: #16a34a; }
+.mk-kpi-value.negative { color: #dc2626; }
+
 @media (max-width: 1200px) {
     .mk-uebersicht-grid {
         grid-template-columns: 1fr;

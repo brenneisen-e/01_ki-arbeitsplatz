@@ -7002,6 +7002,13 @@ button svg,
     position: absolute;
     left: 32px;
     z-index: 2;
+    max-width: 280px;
+}
+
+.agentur-header-new > .agentur-header-left .agentur-page-title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 /* Tabs centered over full header width */

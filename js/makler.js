@@ -44,8 +44,8 @@ function applyMaklerModus() {
         headerTabs.querySelectorAll('.agentur-tab:not(.agentur-tab-makler)').forEach(function(el) {
             el.style.display = maklerModus ? 'none' : '';
         });
-        // Also hide divider
-        headerTabs.querySelectorAll('.agentur-tab-divider').forEach(function(el) {
+        // Hide only private dividers (not makler divider)
+        headerTabs.querySelectorAll('.agentur-tab-divider:not(.agentur-tab-makler)').forEach(function(el) {
             el.style.display = maklerModus ? 'none' : '';
         });
         headerTabs.querySelectorAll('.agentur-tab-makler').forEach(function(el) {

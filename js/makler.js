@@ -49,7 +49,12 @@ function applyMaklerModus() {
             el.style.display = maklerModus ? 'none' : '';
         });
         headerTabs.querySelectorAll('.agentur-tab-makler').forEach(function(el) {
-            el.style.display = maklerModus ? '' : 'none';
+            if (maklerModus) {
+                // Use explicit display values (empty string may not override inline style reliably)
+                el.style.display = el.classList.contains('agentur-tab-divider') ? 'block' : '';
+            } else {
+                el.style.display = 'none';
+            }
         });
     }
 
@@ -237,7 +242,15 @@ var maklerKunden = [
         schadenquote: 18,
         deckungsquote: 65,
         naechstesRenewal: '01.07.2026',
-        renewalStatus: 'gelb'
+        renewalStatus: 'gelb',
+        vertraegeDetail: [
+            { nr: 1, sparte: 'Arzthaftpflicht', versicherer: 'EGAS (Rahmenvertrag)', praemie: 28000, deckungssumme: '3 Mio. € p.P.', sb: '2.500 €', ablauf: '01.07.2026', schadenquote: 22 },
+            { nr: 2, sparte: 'Betriebshaftpflicht', versicherer: 'HDI', praemie: 22000, deckungssumme: '5 Mio. €', sb: '2.500 €', ablauf: '01.07.2026', schadenquote: 15 },
+            { nr: 3, sparte: 'Gebäudeversicherung', versicherer: 'Provinzial', praemie: 14000, deckungssumme: '4,5 Mio. €', sb: '5.000 €', ablauf: '31.12.2026', schadenquote: 8 },
+            { nr: 4, sparte: 'Cyberversicherung', versicherer: 'Hiscox', praemie: 9000, deckungssumme: '1 Mio. €', sb: '5.000 €', ablauf: '01.07.2026', schadenquote: 0 },
+            { nr: 5, sparte: 'Inhaltsversicherung', versicherer: 'Provinzial', praemie: 6000, deckungssumme: '800.000 €', sb: '2.500 €', ablauf: '31.12.2026', schadenquote: 5 },
+            { nr: 6, sparte: 'Rechtsschutz', versicherer: 'ARAG', praemie: 6000, deckungssumme: '500.000 €', sb: '1.000 €', ablauf: '01.07.2026', schadenquote: 12 }
+        ]
     },
     {
         name: 'Seniorenresidenz Sonnenhof',
@@ -259,7 +272,17 @@ var maklerKunden = [
         schadenquote: 35,
         deckungsquote: 80,
         naechstesRenewal: '31.12.2026',
-        renewalStatus: 'gruen'
+        renewalStatus: 'gruen',
+        vertraegeDetail: [
+            { nr: 1, sparte: 'Betriebshaftpflicht', versicherer: 'Allianz', praemie: 48000, deckungssumme: '10 Mio. €', sb: '5.000 €', ablauf: '31.12.2026', schadenquote: 32 },
+            { nr: 2, sparte: 'Gebäudeversicherung', versicherer: 'Provinzial', praemie: 38000, deckungssumme: '12 Mio. €', sb: '10.000 €', ablauf: '31.12.2026', schadenquote: 22 },
+            { nr: 3, sparte: 'bKV (220 MA)', versicherer: 'DKV', praemie: 32000, deckungssumme: 'Budget 600 €/MA', sb: '—', ablauf: '31.12.2026', schadenquote: 75 },
+            { nr: 4, sparte: 'Cyberversicherung', versicherer: 'Hiscox', praemie: 19000, deckungssumme: '2 Mio. €', sb: '10.000 €', ablauf: '31.12.2026', schadenquote: 0 },
+            { nr: 5, sparte: 'Kfz-Flotte (18 Fzg.)', versicherer: 'Kravag', praemie: 18000, deckungssumme: '—', sb: '500 €', ablauf: '01.01.2027', schadenquote: 45 },
+            { nr: 6, sparte: 'Inhaltsversicherung', versicherer: 'Provinzial', praemie: 15000, deckungssumme: '2 Mio. €', sb: '5.000 €', ablauf: '31.12.2026', schadenquote: 12 },
+            { nr: 7, sparte: 'D&O', versicherer: 'Zurich', praemie: 12000, deckungssumme: '2 Mio. €', sb: '10.000 €', ablauf: '31.12.2026', schadenquote: 0 },
+            { nr: 8, sparte: 'Rechtsschutz', versicherer: 'ARAG', praemie: 8000, deckungssumme: '500.000 €', sb: '1.000 €', ablauf: '31.12.2026', schadenquote: 18 }
+        ]
     },
     // Kirche
     {
@@ -318,7 +341,38 @@ var maklerKunden = [
         schadenquote: 44,
         deckungsquote: 88,
         naechstesRenewal: '01.01.2027',
-        renewalStatus: 'gruen'
+        renewalStatus: 'gruen',
+        vertraegeDetail: [
+            { nr: 1, sparte: 'Gebäudeversicherung (Rahmenvertrag)', versicherer: 'Provinzial / VGH', praemie: 3200000, deckungssumme: '1,4 Mrd. €', sb: '50.000 €', ablauf: '01.01.2027', schadenquote: 48 },
+            { nr: 2, sparte: 'Haftpflicht (Rahmenvertrag)', versicherer: 'Allianz', praemie: 1450000, deckungssumme: '30 Mio. €', sb: '25.000 €', ablauf: '01.01.2027', schadenquote: 35 },
+            { nr: 3, sparte: 'Kfz-Flotte (1.200 Fzg.)', versicherer: 'Kravag / R+V', praemie: 850000, deckungssumme: '—', sb: '1.000 €', ablauf: '01.01.2027', schadenquote: 62 },
+            { nr: 4, sparte: 'Inhaltsversicherung (Rahmenvertrag)', versicherer: 'Provinzial', praemie: 520000, deckungssumme: '120 Mio. €', sb: '25.000 €', ablauf: '01.01.2027', schadenquote: 28 },
+            { nr: 5, sparte: 'Glasversicherung (Kirchenfenster)', versicherer: 'VGH', praemie: 310000, deckungssumme: '85 Mio. €', sb: '5.000 €', ablauf: '01.01.2027', schadenquote: 32 },
+            { nr: 6, sparte: 'Betriebsunterbrechung', versicherer: 'Allianz', praemie: 240000, deckungssumme: '50 Mio. €', sb: '5 Tage', ablauf: '01.01.2027', schadenquote: 15 },
+            { nr: 7, sparte: 'Gruppenunfallversicherung', versicherer: 'VGH', praemie: 210000, deckungssumme: '200.000 € / 400.000 €', sb: '—', ablauf: '01.01.2027', schadenquote: 38 },
+            { nr: 8, sparte: 'Elektronikversicherung', versicherer: 'HDI', praemie: 175000, deckungssumme: '25 Mio. €', sb: '10.000 €', ablauf: '01.01.2027', schadenquote: 18 },
+            { nr: 9, sparte: 'Cyberversicherung', versicherer: 'Hiscox', praemie: 155000, deckungssumme: '10 Mio. €', sb: '25.000 €', ablauf: '01.01.2027', schadenquote: 5 },
+            { nr: 10, sparte: 'bAV (Rahmenvertrag)', versicherer: 'Allianz', praemie: 125000, deckungssumme: '—', sb: '—', ablauf: 'unbefristet', schadenquote: null },
+            { nr: 11, sparte: 'D&O Leitende', versicherer: 'Zurich', praemie: 125000, deckungssumme: '15 Mio. €', sb: '100.000 €', ablauf: '01.01.2027', schadenquote: 0 },
+            { nr: 12, sparte: 'Rechtsschutz', versicherer: 'ARAG', praemie: 110000, deckungssumme: '3 Mio. €', sb: '2.500 €', ablauf: '01.01.2027', schadenquote: 28 },
+            { nr: 13, sparte: 'Organhaftpflicht', versicherer: 'Zurich', praemie: 85000, deckungssumme: '10 Mio. €', sb: '50.000 €', ablauf: '01.01.2027', schadenquote: 0 },
+            { nr: 14, sparte: 'Bauherrenhaftpflicht', versicherer: 'HDI', praemie: 80000, deckungssumme: '10 Mio. €', sb: '10.000 €', ablauf: '01.01.2027', schadenquote: 22 },
+            { nr: 15, sparte: 'Kindergartenhaftpflicht', versicherer: 'R+V', praemie: 72000, deckungssumme: '5 Mio. €', sb: '2.500 €', ablauf: '01.01.2027', schadenquote: 45 },
+            { nr: 16, sparte: 'Vertrauensschaden', versicherer: 'Zurich', praemie: 68000, deckungssumme: '5 Mio. €', sb: '25.000 €', ablauf: '01.01.2027', schadenquote: 0 },
+            { nr: 17, sparte: 'Gewässerschadenhaftpflicht', versicherer: 'HDI', praemie: 60000, deckungssumme: '10 Mio. €', sb: '10.000 €', ablauf: '01.01.2027', schadenquote: 8 },
+            { nr: 18, sparte: 'Leitungswasserversicherung', versicherer: 'Provinzial', praemie: 58000, deckungssumme: '20 Mio. €', sb: '10.000 €', ablauf: '01.01.2027', schadenquote: 55 },
+            { nr: 19, sparte: 'Veranstaltungshaftpflicht', versicherer: 'R+V', praemie: 55000, deckungssumme: '5 Mio. €', sb: '2.500 €', ablauf: '01.01.2027', schadenquote: 18 },
+            { nr: 20, sparte: 'Montageversicherung', versicherer: 'ERGO', praemie: 55000, deckungssumme: '5 Mio. €', sb: '10.000 €', ablauf: '01.01.2027', schadenquote: 12 },
+            { nr: 21, sparte: 'Sturmversicherung (Zusatz)', versicherer: 'Provinzial', praemie: 52000, deckungssumme: '50 Mio. €', sb: '25.000 €', ablauf: '01.01.2027', schadenquote: 42 },
+            { nr: 22, sparte: 'Vermögensschadenhaftpflicht', versicherer: 'AXA', praemie: 44000, deckungssumme: '5 Mio. €', sb: '10.000 €', ablauf: '01.01.2027', schadenquote: 0 },
+            { nr: 23, sparte: 'Photovoltaikversicherung', versicherer: 'Generali', praemie: 38000, deckungssumme: '8 Mio. €', sb: '5.000 €', ablauf: '01.01.2027', schadenquote: 15 },
+            { nr: 24, sparte: 'Friedhofsunfallversicherung', versicherer: 'VGH', praemie: 35000, deckungssumme: '100.000 €', sb: '—', ablauf: '01.01.2027', schadenquote: 28 },
+            { nr: 25, sparte: 'Transportversicherung', versicherer: 'Helvetia', praemie: 35000, deckungssumme: '500.000 €', sb: '1.000 €', ablauf: '01.01.2027', schadenquote: 10 },
+            { nr: 26, sparte: 'Dienstfahrradversicherung', versicherer: 'R+V', praemie: 26000, deckungssumme: '5.000 € pro Rad', sb: '100 €', ablauf: '01.01.2027', schadenquote: 35 },
+            { nr: 27, sparte: 'Waldbrandversicherung', versicherer: 'Provinzial', praemie: 25000, deckungssumme: '5 Mio. €', sb: '10.000 €', ablauf: '01.01.2027', schadenquote: 0 },
+            { nr: 28, sparte: 'Reisegruppenversicherung', versicherer: 'ERGO', praemie: 22000, deckungssumme: '50.000 € p.P.', sb: '100 €', ablauf: '01.01.2027', schadenquote: 42 },
+            { nr: 29, sparte: 'Auslandskrankenversicherung', versicherer: 'DKV', praemie: 20000, deckungssumme: 'unbegrenzt', sb: '—', ablauf: '01.01.2027', schadenquote: 55 }
+        ]
     },
     {
         name: 'Kirchenkreis Auental',
@@ -340,7 +394,20 @@ var maklerKunden = [
         schadenquote: 38,
         deckungsquote: 75,
         naechstesRenewal: '01.04.2026',
-        renewalStatus: 'gelb'
+        renewalStatus: 'gelb',
+        vertraegeDetail: [
+            { nr: 1, sparte: 'Gebäudeversicherung (Rahmenvertrag)', versicherer: 'Provinzial', praemie: 245000, deckungssumme: '95 Mio. €', sb: '10.000 €', ablauf: '01.04.2026', schadenquote: 42 },
+            { nr: 2, sparte: 'Haftpflicht (Rahmenvertrag)', versicherer: 'HDI', praemie: 115000, deckungssumme: '10 Mio. €', sb: '5.000 €', ablauf: '01.04.2026', schadenquote: 32 },
+            { nr: 3, sparte: 'Kfz-Flotte (85 Fzg.)', versicherer: 'Kravag', praemie: 68000, deckungssumme: '—', sb: '500 €', ablauf: '01.01.2027', schadenquote: 58 },
+            { nr: 4, sparte: 'Inhaltsversicherung', versicherer: 'Provinzial', praemie: 52000, deckungssumme: '4 Mio. €', sb: '5.000 €', ablauf: '01.04.2026', schadenquote: 18 },
+            { nr: 5, sparte: 'Glasversicherung (Kirchenfenster)', versicherer: 'VGH', praemie: 38000, deckungssumme: '3 Mio. €', sb: '2.500 €', ablauf: '01.04.2026', schadenquote: 25 },
+            { nr: 6, sparte: 'Gruppenunfallversicherung', versicherer: 'VGH', praemie: 28000, deckungssumme: '100.000 € / 200.000 €', sb: '—', ablauf: '01.04.2026', schadenquote: 35 },
+            { nr: 7, sparte: 'Elektronikversicherung', versicherer: 'HDI', praemie: 22000, deckungssumme: '1,5 Mio. €', sb: '2.500 €', ablauf: '01.04.2026', schadenquote: 12 },
+            { nr: 8, sparte: 'Cyberversicherung', versicherer: 'Hiscox', praemie: 18000, deckungssumme: '1 Mio. €', sb: '5.000 €', ablauf: '01.04.2026', schadenquote: 0 },
+            { nr: 9, sparte: 'Rechtsschutz', versicherer: 'ARAG', praemie: 14000, deckungssumme: '500.000 €', sb: '1.000 €', ablauf: '01.04.2026', schadenquote: 22 },
+            { nr: 10, sparte: 'Gewässerschadenhaftpflicht', versicherer: 'HDI', praemie: 12000, deckungssumme: '3 Mio. €', sb: '2.500 €', ablauf: '01.04.2026', schadenquote: 0 },
+            { nr: 11, sparte: 'Veranstaltungshaftpflicht', versicherer: 'R+V', praemie: 8000, deckungssumme: '2 Mio. €', sb: '500 €', ablauf: '01.04.2026', schadenquote: 15 }
+        ]
     },
     // Sozialwirtschaft
     {
@@ -363,7 +430,25 @@ var maklerKunden = [
         schadenquote: 52,
         deckungsquote: 82,
         naechstesRenewal: '31.12.2026',
-        renewalStatus: 'gruen'
+        renewalStatus: 'gruen',
+        vertraegeDetail: [
+            { nr: 1, sparte: 'Betriebshaftpflicht (Rahmenvertrag)', versicherer: 'Allianz', praemie: 380000, deckungssumme: '20 Mio. €', sb: '10.000 €', ablauf: '31.12.2026', schadenquote: 45 },
+            { nr: 2, sparte: 'Gebäudeversicherung', versicherer: 'Provinzial', praemie: 320000, deckungssumme: '85 Mio. €', sb: '25.000 €', ablauf: '31.12.2026', schadenquote: 38 },
+            { nr: 3, sparte: 'Kfz-Flotte (320 Fzg.)', versicherer: 'Kravag', praemie: 185000, deckungssumme: '—', sb: '500 €', ablauf: '01.01.2027', schadenquote: 62 },
+            { nr: 4, sparte: 'Inhaltsversicherung', versicherer: 'Provinzial', praemie: 145000, deckungssumme: '18 Mio. €', sb: '10.000 €', ablauf: '31.12.2026', schadenquote: 25 },
+            { nr: 5, sparte: 'bKV (4.500 MA)', versicherer: 'DKV', praemie: 125000, deckungssumme: 'Budget 600 €/MA', sb: '—', ablauf: '31.12.2026', schadenquote: 78 },
+            { nr: 6, sparte: 'Betriebsunterbrechung', versicherer: 'Allianz', praemie: 120000, deckungssumme: '80 Mio. €', sb: '3 Tage', ablauf: '31.12.2026', schadenquote: 18 },
+            { nr: 7, sparte: 'Gruppenunfallversicherung', versicherer: 'VGH', praemie: 95000, deckungssumme: '200.000 € / 400.000 €', sb: '—', ablauf: '31.12.2026', schadenquote: 42 },
+            { nr: 8, sparte: 'Cyberversicherung', versicherer: 'Hiscox', praemie: 85000, deckungssumme: '5 Mio. €', sb: '15.000 €', ablauf: '31.12.2026', schadenquote: 5 },
+            { nr: 9, sparte: 'bAV (Rahmenvertrag)', versicherer: 'Allianz', praemie: 68000, deckungssumme: '—', sb: '—', ablauf: 'unbefristet', schadenquote: null },
+            { nr: 10, sparte: 'D&O', versicherer: 'Zurich', praemie: 65000, deckungssumme: '5 Mio. €', sb: '50.000 €', ablauf: '31.12.2026', schadenquote: 0 },
+            { nr: 11, sparte: 'Elektronikversicherung', versicherer: 'HDI', praemie: 58000, deckungssumme: '8 Mio. €', sb: '5.000 €', ablauf: '31.12.2026', schadenquote: 15 },
+            { nr: 12, sparte: 'Rechtsschutz', versicherer: 'ARAG', praemie: 42000, deckungssumme: '2 Mio. €', sb: '1.000 €', ablauf: '31.12.2026', schadenquote: 32 },
+            { nr: 13, sparte: 'Vertrauensschaden', versicherer: 'Zurich', praemie: 35000, deckungssumme: '2 Mio. €', sb: '10.000 €', ablauf: '31.12.2026', schadenquote: 0 },
+            { nr: 14, sparte: 'Vermögensschadenhaftpflicht', versicherer: 'AXA', praemie: 28000, deckungssumme: '5 Mio. €', sb: '10.000 €', ablauf: '31.12.2026', schadenquote: 0 },
+            { nr: 15, sparte: 'Transportversicherung', versicherer: 'Helvetia', praemie: 27000, deckungssumme: '1 Mio. €', sb: '1.000 €', ablauf: '31.12.2026', schadenquote: 15 },
+            { nr: 16, sparte: 'Gewässerschadenhaftpflicht', versicherer: 'HDI', praemie: 22000, deckungssumme: '5 Mio. €', sb: '5.000 €', ablauf: '31.12.2026', schadenquote: 0 }
+        ]
     },
     {
         name: 'Sozialwerkstätten Bergland',
@@ -385,7 +470,16 @@ var maklerKunden = [
         schadenquote: 32,
         deckungsquote: 70,
         naechstesRenewal: '30.06.2026',
-        renewalStatus: 'gelb'
+        renewalStatus: 'gelb',
+        vertraegeDetail: [
+            { nr: 1, sparte: 'Betriebshaftpflicht', versicherer: 'HDI', praemie: 72000, deckungssumme: '5 Mio. €', sb: '5.000 €', ablauf: '30.06.2026', schadenquote: 28 },
+            { nr: 2, sparte: 'Gebäudeversicherung', versicherer: 'VGH', praemie: 58000, deckungssumme: '15 Mio. €', sb: '10.000 €', ablauf: '31.12.2026', schadenquote: 22 },
+            { nr: 3, sparte: 'Maschinenversicherung', versicherer: 'Allianz', praemie: 42000, deckungssumme: '8 Mio. €', sb: '5.000 €', ablauf: '30.06.2026', schadenquote: 45 },
+            { nr: 4, sparte: 'Kfz-Flotte (45 Fzg.)', versicherer: 'Kravag', praemie: 35000, deckungssumme: '—', sb: '500 €', ablauf: '01.01.2027', schadenquote: 52 },
+            { nr: 5, sparte: 'Inhaltsversicherung', versicherer: 'VGH', praemie: 28000, deckungssumme: '3 Mio. €', sb: '5.000 €', ablauf: '31.12.2026', schadenquote: 15 },
+            { nr: 6, sparte: 'Elektronikversicherung', versicherer: 'HDI', praemie: 25000, deckungssumme: '2 Mio. €', sb: '2.500 €', ablauf: '30.06.2026', schadenquote: 18 },
+            { nr: 7, sparte: 'Gruppenunfallversicherung', versicherer: 'VGH', praemie: 20000, deckungssumme: '100.000 € / 200.000 €', sb: '—', ablauf: '30.06.2026', schadenquote: 35 }
+        ]
     },
     {
         name: 'Wohlfahrtswerk Kreisverband Auental',
@@ -407,7 +501,19 @@ var maklerKunden = [
         schadenquote: 40,
         deckungsquote: 74,
         naechstesRenewal: '31.12.2026',
-        renewalStatus: 'gruen'
+        renewalStatus: 'gruen',
+        vertraegeDetail: [
+            { nr: 1, sparte: 'Betriebshaftpflicht', versicherer: 'HDI', praemie: 95000, deckungssumme: '10 Mio. €', sb: '5.000 €', ablauf: '31.12.2026', schadenquote: 38 },
+            { nr: 2, sparte: 'Gebäudeversicherung', versicherer: 'Provinzial', praemie: 82000, deckungssumme: '22 Mio. €', sb: '10.000 €', ablauf: '31.12.2026', schadenquote: 28 },
+            { nr: 3, sparte: 'Kfz-Flotte (95 Fzg.)', versicherer: 'Kravag', praemie: 52000, deckungssumme: '—', sb: '500 €', ablauf: '01.01.2027', schadenquote: 55 },
+            { nr: 4, sparte: 'Inhaltsversicherung', versicherer: 'Provinzial', praemie: 38000, deckungssumme: '5 Mio. €', sb: '5.000 €', ablauf: '31.12.2026', schadenquote: 18 },
+            { nr: 5, sparte: 'Cyberversicherung', versicherer: 'Hiscox', praemie: 35000, deckungssumme: '2 Mio. €', sb: '10.000 €', ablauf: '31.12.2026', schadenquote: 0 },
+            { nr: 6, sparte: 'Gruppenunfallversicherung', versicherer: 'VGH', praemie: 32000, deckungssumme: '100.000 € / 200.000 €', sb: '—', ablauf: '31.12.2026', schadenquote: 42 },
+            { nr: 7, sparte: 'bKV (1.200 MA)', versicherer: 'DKV', praemie: 28000, deckungssumme: 'Budget 300 €/MA', sb: '—', ablauf: '31.12.2026', schadenquote: 72 },
+            { nr: 8, sparte: 'D&O', versicherer: 'Zurich', praemie: 22000, deckungssumme: '3 Mio. €', sb: '25.000 €', ablauf: '31.12.2026', schadenquote: 0 },
+            { nr: 9, sparte: 'Rechtsschutz', versicherer: 'ARAG', praemie: 18000, deckungssumme: '1 Mio. €', sb: '1.000 €', ablauf: '31.12.2026', schadenquote: 28 },
+            { nr: 10, sparte: 'Elektronikversicherung', versicherer: 'HDI', praemie: 18000, deckungssumme: '2 Mio. €', sb: '2.500 €', ablauf: '31.12.2026', schadenquote: 12 }
+        ]
     },
     // Industrie & Gewerbe
     {
@@ -430,7 +536,31 @@ var maklerKunden = [
         schadenquote: 45,
         deckungsquote: 85,
         naechstesRenewal: '31.12.2026',
-        renewalStatus: 'gruen'
+        renewalStatus: 'gruen',
+        vertraegeDetail: [
+            { nr: 1, sparte: 'Betriebshaftpflicht', versicherer: 'Allianz (60%) / Zurich (40%)', praemie: 580000, deckungssumme: '25 Mio. €', sb: '25.000 €', ablauf: '31.12.2026', schadenquote: 42 },
+            { nr: 2, sparte: 'Produkthaftpflicht', versicherer: 'Zurich', praemie: 420000, deckungssumme: '20 Mio. €', sb: '25.000 €', ablauf: '31.12.2026', schadenquote: 55 },
+            { nr: 3, sparte: 'Gebäudeversicherung', versicherer: 'Provinzial', praemie: 380000, deckungssumme: '180 Mio. €', sb: '50.000 €', ablauf: '31.12.2026', schadenquote: 28 },
+            { nr: 4, sparte: 'Betriebsunterbrechung', versicherer: 'Allianz', praemie: 350000, deckungssumme: '200 Mio. €', sb: '5 Tage', ablauf: '31.12.2026', schadenquote: 15 },
+            { nr: 5, sparte: 'Inhaltsversicherung', versicherer: 'Provinzial', praemie: 285000, deckungssumme: '45 Mio. €', sb: '25.000 €', ablauf: '31.12.2026', schadenquote: 20 },
+            { nr: 6, sparte: 'Maschinenversicherung', versicherer: 'Allianz', praemie: 220000, deckungssumme: '60 Mio. €', sb: '25.000 €', ablauf: '31.12.2026', schadenquote: 48 },
+            { nr: 7, sparte: 'Elektronikversicherung', versicherer: 'HDI', praemie: 195000, deckungssumme: '35 Mio. €', sb: '10.000 €', ablauf: '31.12.2026', schadenquote: 22 },
+            { nr: 8, sparte: 'Cyberversicherung', versicherer: 'Hiscox', praemie: 180000, deckungssumme: '10 Mio. €', sb: '25.000 €', ablauf: '31.12.2026', schadenquote: 8 },
+            { nr: 9, sparte: 'Kfz-Flotte (380 Fzg.)', versicherer: 'Kravag', praemie: 165000, deckungssumme: '—', sb: '500 €', ablauf: '01.01.2027', schadenquote: 62 },
+            { nr: 10, sparte: 'D&O', versicherer: 'Zurich', praemie: 145000, deckungssumme: '10 Mio. €', sb: '50.000 €', ablauf: '31.12.2026', schadenquote: 0 },
+            { nr: 11, sparte: 'Transportversicherung', versicherer: 'Helvetia', praemie: 125000, deckungssumme: '5 Mio. €', sb: '5.000 €', ablauf: '31.12.2026', schadenquote: 32 },
+            { nr: 12, sparte: 'bKV (5.200 MA)', versicherer: 'DKV', praemie: 120000, deckungssumme: 'Budget 600 €/MA', sb: '—', ablauf: '31.12.2026', schadenquote: 80 },
+            { nr: 13, sparte: 'Gruppenunfallversicherung', versicherer: 'VGH', praemie: 95000, deckungssumme: '200.000 € / 400.000 €', sb: '—', ablauf: '31.12.2026', schadenquote: 38 },
+            { nr: 14, sparte: 'Umwelthaftpflicht', versicherer: 'HDI', praemie: 85000, deckungssumme: '10 Mio. €', sb: '10.000 €', ablauf: '31.12.2026', schadenquote: 5 },
+            { nr: 15, sparte: 'bAV (Direktversicherung)', versicherer: 'Allianz', praemie: 85000, deckungssumme: '—', sb: '—', ablauf: 'unbefristet', schadenquote: null },
+            { nr: 16, sparte: 'Montageversicherung', versicherer: 'ERGO', praemie: 68000, deckungssumme: '8 Mio. €', sb: '10.000 €', ablauf: '31.12.2026', schadenquote: 25 },
+            { nr: 17, sparte: 'Rechtsschutz', versicherer: 'ARAG', praemie: 65000, deckungssumme: '2 Mio. €', sb: '2.500 €', ablauf: '31.12.2026', schadenquote: 30 },
+            { nr: 18, sparte: 'Vermögensschadenhaftpflicht', versicherer: 'AXA', praemie: 55000, deckungssumme: '5 Mio. €', sb: '10.000 €', ablauf: '31.12.2026', schadenquote: 0 },
+            { nr: 19, sparte: 'Exportkreditversicherung', versicherer: 'Euler Hermes', praemie: 52000, deckungssumme: '20 Mio. €', sb: '10 %', ablauf: '31.12.2026', schadenquote: 35 },
+            { nr: 20, sparte: 'Vertrauensschaden', versicherer: 'Zurich', praemie: 48000, deckungssumme: '3 Mio. €', sb: '15.000 €', ablauf: '31.12.2026', schadenquote: 0 },
+            { nr: 21, sparte: 'Feuer-BU (Zuschlag)', versicherer: 'Allianz', praemie: 42000, deckungssumme: '50 Mio. €', sb: '3 Tage', ablauf: '31.12.2026', schadenquote: 12 },
+            { nr: 22, sparte: 'Patentrechtsschutz', versicherer: 'ARAG', praemie: 40000, deckungssumme: '3 Mio. €', sb: '5.000 €', ablauf: '31.12.2026', schadenquote: 15 }
+        ]
     },
     {
         name: 'Nordlicht Automatisierung GmbH',
@@ -452,7 +582,40 @@ var maklerKunden = [
         schadenquote: 38,
         deckungsquote: 94,
         naechstesRenewal: '01.01.2027',
-        renewalStatus: 'gruen'
+        renewalStatus: 'gruen',
+        vertraegeDetail: [
+            { nr: 1, sparte: 'Betriebshaftpflicht (international)', versicherer: 'Allianz (60%) / Zurich (40%)', praemie: 1350000, deckungssumme: '50 Mio. €', sb: '50.000 €', ablauf: '01.01.2027', schadenquote: 35 },
+            { nr: 2, sparte: 'Produkthaftpflicht (international)', versicherer: 'Zurich', praemie: 1050000, deckungssumme: '50 Mio. €', sb: '50.000 €', ablauf: '01.01.2027', schadenquote: 42 },
+            { nr: 3, sparte: 'Gebäudeversicherung (Rahmenvertrag)', versicherer: 'Provinzial / VGH', praemie: 850000, deckungssumme: '680 Mio. €', sb: '100.000 €', ablauf: '01.01.2027', schadenquote: 28 },
+            { nr: 4, sparte: 'Betriebsunterbrechung', versicherer: 'Allianz', praemie: 680000, deckungssumme: '500 Mio. €', sb: '5 Tage', ablauf: '01.01.2027', schadenquote: 18 },
+            { nr: 5, sparte: 'Inhaltsversicherung', versicherer: 'Provinzial', praemie: 520000, deckungssumme: '120 Mio. €', sb: '50.000 €', ablauf: '01.01.2027', schadenquote: 22 },
+            { nr: 6, sparte: 'bKV (22.000 MA)', versicherer: 'DKV', praemie: 510000, deckungssumme: 'Budget 600 €/MA', sb: '—', ablauf: '01.01.2027', schadenquote: 78 },
+            { nr: 7, sparte: 'Maschinenversicherung', versicherer: 'Allianz', praemie: 480000, deckungssumme: '200 Mio. €', sb: '50.000 €', ablauf: '01.01.2027', schadenquote: 45 },
+            { nr: 8, sparte: 'Cyberversicherung', versicherer: 'Hiscox / AXA', praemie: 450000, deckungssumme: '25 Mio. €', sb: '100.000 €', ablauf: '01.01.2027', schadenquote: 12 },
+            { nr: 9, sparte: 'Kfz-Flotte (1.800 Fzg.)', versicherer: 'Kravag / R+V', praemie: 385000, deckungssumme: '—', sb: '1.000 €', ablauf: '01.01.2027', schadenquote: 58 },
+            { nr: 10, sparte: 'D&O', versicherer: 'Zurich', praemie: 380000, deckungssumme: '25 Mio. €', sb: '100.000 €', ablauf: '01.01.2027', schadenquote: 0 },
+            { nr: 11, sparte: 'Elektronikversicherung', versicherer: 'HDI', praemie: 350000, deckungssumme: '80 Mio. €', sb: '25.000 €', ablauf: '01.01.2027', schadenquote: 25 },
+            { nr: 12, sparte: 'bAV (Rahmenvertrag)', versicherer: 'Allianz', praemie: 350000, deckungssumme: '—', sb: '—', ablauf: 'unbefristet', schadenquote: null },
+            { nr: 13, sparte: 'Transportversicherung (international)', versicherer: 'Helvetia', praemie: 345000, deckungssumme: '10 Mio. €', sb: '10.000 €', ablauf: '01.01.2027', schadenquote: 38 },
+            { nr: 14, sparte: 'Gruppenunfallversicherung', versicherer: 'VGH', praemie: 210000, deckungssumme: '200.000 € / 400.000 €', sb: '—', ablauf: '01.01.2027', schadenquote: 35 },
+            { nr: 15, sparte: 'Umwelthaftpflicht', versicherer: 'HDI', praemie: 185000, deckungssumme: '20 Mio. €', sb: '25.000 €', ablauf: '01.01.2027', schadenquote: 8 },
+            { nr: 16, sparte: 'Exportkreditversicherung', versicherer: 'Euler Hermes', praemie: 165000, deckungssumme: '50 Mio. €', sb: '10 %', ablauf: '01.01.2027', schadenquote: 42 },
+            { nr: 17, sparte: 'Montageversicherung', versicherer: 'ERGO', praemie: 145000, deckungssumme: '15 Mio. €', sb: '25.000 €', ablauf: '01.01.2027', schadenquote: 32 },
+            { nr: 18, sparte: 'Rechtsschutz', versicherer: 'ARAG', praemie: 145000, deckungssumme: '5 Mio. €', sb: '5.000 €', ablauf: '01.01.2027', schadenquote: 28 },
+            { nr: 19, sparte: 'Bauleistungsversicherung', versicherer: 'Generali', praemie: 120000, deckungssumme: '20 Mio. €', sb: '25.000 €', ablauf: '01.01.2027', schadenquote: 15 },
+            { nr: 20, sparte: 'Vermögensschadenhaftpflicht', versicherer: 'AXA', praemie: 120000, deckungssumme: '10 Mio. €', sb: '25.000 €', ablauf: '01.01.2027', schadenquote: 5 },
+            { nr: 21, sparte: 'Rückrufkosten', versicherer: 'Zurich', praemie: 110000, deckungssumme: '10 Mio. €', sb: '50.000 €', ablauf: '01.01.2027', schadenquote: 22 },
+            { nr: 22, sparte: 'Patentrechtsschutz', versicherer: 'ARAG', praemie: 105000, deckungssumme: '5 Mio. €', sb: '10.000 €', ablauf: '01.01.2027', schadenquote: 18 },
+            { nr: 23, sparte: 'Vertrauensschaden', versicherer: 'Zurich', praemie: 95000, deckungssumme: '5 Mio. €', sb: '25.000 €', ablauf: '01.01.2027', schadenquote: 0 },
+            { nr: 24, sparte: 'Feuer-BU (Zuschlag)', versicherer: 'Allianz', praemie: 95000, deckungssumme: '100 Mio. €', sb: '5 Tage', ablauf: '01.01.2027', schadenquote: 10 },
+            { nr: 25, sparte: 'Auslandskrankenversicherung', versicherer: 'DKV', praemie: 75000, deckungssumme: 'unbegrenzt', sb: '—', ablauf: '01.01.2027', schadenquote: 55 },
+            { nr: 26, sparte: 'Gewässerschadenhaftpflicht', versicherer: 'HDI', praemie: 65000, deckungssumme: '10 Mio. €', sb: '10.000 €', ablauf: '01.01.2027', schadenquote: 0 },
+            { nr: 27, sparte: 'Managerrechtsschutz', versicherer: 'ARAG', praemie: 52000, deckungssumme: '3 Mio. €', sb: '5.000 €', ablauf: '01.01.2027', schadenquote: 15 },
+            { nr: 28, sparte: 'Luftfahrthaftpflicht (Drohnen)', versicherer: 'Allianz', praemie: 42000, deckungssumme: '3 Mio. €', sb: '5.000 €', ablauf: '01.01.2027', schadenquote: 0 },
+            { nr: 29, sparte: 'Messeversicherung', versicherer: 'ERGO', praemie: 38000, deckungssumme: '2 Mio. €', sb: '5.000 €', ablauf: '01.01.2027', schadenquote: 25 },
+            { nr: 30, sparte: 'Schlüsselverlustversicherung', versicherer: 'R+V', praemie: 18000, deckungssumme: '500.000 €', sb: '500 €', ablauf: '01.01.2027', schadenquote: 30 },
+            { nr: 31, sparte: 'Reisegepäckversicherung', versicherer: 'ERGO', praemie: 15000, deckungssumme: '10.000 € p.P.', sb: '100 €', ablauf: '01.01.2027', schadenquote: 40 }
+        ]
     },
     {
         name: 'Teutoburger Maschinenbau GmbH',
@@ -474,7 +637,21 @@ var maklerKunden = [
         schadenquote: 55,
         deckungsquote: 78,
         naechstesRenewal: '30.09.2026',
-        renewalStatus: 'gelb'
+        renewalStatus: 'gelb',
+        vertraegeDetail: [
+            { nr: 1, sparte: 'Betriebshaftpflicht', versicherer: 'Allianz', praemie: 135000, deckungssumme: '10 Mio. €', sb: '10.000 €', ablauf: '30.09.2026', schadenquote: 52 },
+            { nr: 2, sparte: 'Produkthaftpflicht', versicherer: 'Zurich', praemie: 98000, deckungssumme: '10 Mio. €', sb: '10.000 €', ablauf: '30.09.2026', schadenquote: 65 },
+            { nr: 3, sparte: 'Gebäudeversicherung', versicherer: 'Provinzial', praemie: 85000, deckungssumme: '32 Mio. €', sb: '15.000 €', ablauf: '31.12.2026', schadenquote: 28 },
+            { nr: 4, sparte: 'Maschinenversicherung', versicherer: 'Allianz', praemie: 72000, deckungssumme: '18 Mio. €', sb: '10.000 €', ablauf: '30.09.2026', schadenquote: 58 },
+            { nr: 5, sparte: 'Betriebsunterbrechung', versicherer: 'HDI', praemie: 68000, deckungssumme: '40 Mio. €', sb: '3 Tage', ablauf: '30.09.2026', schadenquote: 42 },
+            { nr: 6, sparte: 'Inhaltsversicherung', versicherer: 'Provinzial', praemie: 45000, deckungssumme: '8 Mio. €', sb: '5.000 €', ablauf: '31.12.2026', schadenquote: 22 },
+            { nr: 7, sparte: 'Kfz-Flotte (60 Fzg.)', versicherer: 'Kravag', praemie: 38000, deckungssumme: '—', sb: '500 €', ablauf: '01.01.2027', schadenquote: 62 },
+            { nr: 8, sparte: 'D&O', versicherer: 'Zurich', praemie: 32000, deckungssumme: '5 Mio. €', sb: '25.000 €', ablauf: '30.09.2026', schadenquote: 0 },
+            { nr: 9, sparte: 'Cyberversicherung', versicherer: 'Hiscox', praemie: 35000, deckungssumme: '3 Mio. €', sb: '10.000 €', ablauf: '30.09.2026', schadenquote: 0 },
+            { nr: 10, sparte: 'Transportversicherung', versicherer: 'Helvetia', praemie: 28000, deckungssumme: '1 Mio. €', sb: '2.500 €', ablauf: '30.09.2026', schadenquote: 35 },
+            { nr: 11, sparte: 'Elektronikversicherung', versicherer: 'HDI', praemie: 25000, deckungssumme: '4 Mio. €', sb: '2.500 €', ablauf: '31.12.2026', schadenquote: 18 },
+            { nr: 12, sparte: 'Rechtsschutz', versicherer: 'ARAG', praemie: 19000, deckungssumme: '1 Mio. €', sb: '1.000 €', ablauf: '30.09.2026', schadenquote: 28 }
+        ]
     },
     // Transport & Logistik
     {
@@ -497,7 +674,27 @@ var maklerKunden = [
         schadenquote: 58,
         deckungsquote: 88,
         naechstesRenewal: '01.01.2027',
-        renewalStatus: 'gruen'
+        renewalStatus: 'gruen',
+        vertraegeDetail: [
+            { nr: 1, sparte: 'Verkehrshaftpflicht (Rahmenvertrag)', versicherer: 'Zurich (50%) / R+V (50%)', praemie: 480000, deckungssumme: '20 Mio. €', sb: '25.000 €', ablauf: '01.01.2027', schadenquote: 62 },
+            { nr: 2, sparte: 'Betriebshaftpflicht', versicherer: 'Allianz', praemie: 320000, deckungssumme: '25 Mio. €', sb: '10.000 €', ablauf: '01.01.2027', schadenquote: 48 },
+            { nr: 3, sparte: 'Kfz-Flotte (4.500 Fzg.)', versicherer: 'Kravag / R+V', praemie: 385000, deckungssumme: '—', sb: '1.000 €', ablauf: '01.01.2027', schadenquote: 72 },
+            { nr: 4, sparte: 'Transportversicherung', versicherer: 'Helvetia', praemie: 245000, deckungssumme: '10 Mio. €', sb: '10.000 €', ablauf: '01.01.2027', schadenquote: 55 },
+            { nr: 5, sparte: 'Gebäudeversicherung', versicherer: 'Provinzial', praemie: 195000, deckungssumme: '85 Mio. €', sb: '25.000 €', ablauf: '01.01.2027', schadenquote: 32 },
+            { nr: 6, sparte: 'D&O', versicherer: 'Zurich', praemie: 85000, deckungssumme: '10 Mio. €', sb: '50.000 €', ablauf: '01.01.2027', schadenquote: 0 },
+            { nr: 7, sparte: 'Betriebsunterbrechung', versicherer: 'Allianz', praemie: 145000, deckungssumme: '100 Mio. €', sb: '3 Tage', ablauf: '01.01.2027', schadenquote: 22 },
+            { nr: 8, sparte: 'Cyberversicherung', versicherer: 'Hiscox', praemie: 95000, deckungssumme: '5 Mio. €', sb: '15.000 €', ablauf: '01.01.2027', schadenquote: 8 },
+            { nr: 9, sparte: 'Inhaltsversicherung', versicherer: 'Provinzial', praemie: 72000, deckungssumme: '15 Mio. €', sb: '10.000 €', ablauf: '01.01.2027', schadenquote: 18 },
+            { nr: 10, sparte: 'Umwelthaftpflicht', versicherer: 'HDI', praemie: 65000, deckungssumme: '10 Mio. €', sb: '10.000 €', ablauf: '01.01.2027', schadenquote: 5 },
+            { nr: 11, sparte: 'Rechtsschutz', versicherer: 'ARAG', praemie: 48000, deckungssumme: '2 Mio. €', sb: '2.500 €', ablauf: '01.01.2027', schadenquote: 35 },
+            { nr: 12, sparte: 'Elektronikversicherung', versicherer: 'HDI', praemie: 55000, deckungssumme: '8 Mio. €', sb: '5.000 €', ablauf: '01.01.2027', schadenquote: 15 },
+            { nr: 13, sparte: 'Maschinenversicherung', versicherer: 'Allianz', praemie: 42000, deckungssumme: '12 Mio. €', sb: '10.000 €', ablauf: '01.01.2027', schadenquote: 28 },
+            { nr: 14, sparte: 'Gruppenunfallversicherung', versicherer: 'VGH', praemie: 68000, deckungssumme: '200.000 € / 400.000 €', sb: '—', ablauf: '01.01.2027', schadenquote: 42 },
+            { nr: 15, sparte: 'bKV (12.500 MA)', versicherer: 'DKV', praemie: 38000, deckungssumme: 'Budget 300 €/MA', sb: '—', ablauf: '01.01.2027', schadenquote: 75 },
+            { nr: 16, sparte: 'Vertrauensschaden', versicherer: 'Zurich', praemie: 28000, deckungssumme: '3 Mio. €', sb: '15.000 €', ablauf: '01.01.2027', schadenquote: 0 },
+            { nr: 17, sparte: 'Vermögensschadenhaftpflicht', versicherer: 'AXA', praemie: 22000, deckungssumme: '5 Mio. €', sb: '10.000 €', ablauf: '01.01.2027', schadenquote: 0 },
+            { nr: 18, sparte: 'Lagerversicherung', versicherer: 'Generali', praemie: 12000, deckungssumme: '5 Mio. €', sb: '5.000 €', ablauf: '01.01.2027', schadenquote: 20 }
+        ]
     },
     {
         name: 'Weserland Spedition GmbH',
@@ -519,7 +716,20 @@ var maklerKunden = [
         schadenquote: 62,
         deckungsquote: 75,
         naechstesRenewal: '31.12.2026',
-        renewalStatus: 'gruen'
+        renewalStatus: 'gruen',
+        vertraegeDetail: [
+            { nr: 1, sparte: 'Verkehrshaftpflicht', versicherer: 'Zurich', praemie: 165000, deckungssumme: '5 Mio. €', sb: '5.000 €', ablauf: '31.12.2026', schadenquote: 58 },
+            { nr: 2, sparte: 'Betriebshaftpflicht', versicherer: 'HDI', praemie: 115000, deckungssumme: '10 Mio. €', sb: '5.000 €', ablauf: '31.12.2026', schadenquote: 48 },
+            { nr: 3, sparte: 'Kfz-Flotte (650 Fzg.)', versicherer: 'Kravag', praemie: 145000, deckungssumme: '—', sb: '500 €', ablauf: '01.01.2027', schadenquote: 72 },
+            { nr: 4, sparte: 'Transportversicherung', versicherer: 'Helvetia', praemie: 82000, deckungssumme: '2 Mio. €', sb: '2.500 €', ablauf: '31.12.2026', schadenquote: 55 },
+            { nr: 5, sparte: 'Gebäudeversicherung', versicherer: 'Provinzial', praemie: 68000, deckungssumme: '12 Mio. €', sb: '10.000 €', ablauf: '31.12.2026', schadenquote: 25 },
+            { nr: 6, sparte: 'Betriebsunterbrechung', versicherer: 'Allianz', praemie: 48000, deckungssumme: '20 Mio. €', sb: '3 Tage', ablauf: '31.12.2026', schadenquote: 18 },
+            { nr: 7, sparte: 'Inhaltsversicherung', versicherer: 'Provinzial', praemie: 32000, deckungssumme: '4 Mio. €', sb: '5.000 €', ablauf: '31.12.2026', schadenquote: 12 },
+            { nr: 8, sparte: 'D&O', versicherer: 'Zurich', praemie: 28000, deckungssumme: '3 Mio. €', sb: '25.000 €', ablauf: '31.12.2026', schadenquote: 0 },
+            { nr: 9, sparte: 'Cyberversicherung', versicherer: 'Hiscox', praemie: 22000, deckungssumme: '2 Mio. €', sb: '10.000 €', ablauf: '31.12.2026', schadenquote: 0 },
+            { nr: 10, sparte: 'Rechtsschutz', versicherer: 'ARAG', praemie: 18000, deckungssumme: '1 Mio. €', sb: '1.000 €', ablauf: '31.12.2026', schadenquote: 32 },
+            { nr: 11, sparte: 'Umwelthaftpflicht', versicherer: 'HDI', praemie: 17000, deckungssumme: '5 Mio. €', sb: '5.000 €', ablauf: '31.12.2026', schadenquote: 0 }
+        ]
     },
     {
         name: 'Lippeland Fracht GmbH',
@@ -541,7 +751,16 @@ var maklerKunden = [
         schadenquote: 48,
         deckungsquote: 62,
         naechstesRenewal: '01.04.2026',
-        renewalStatus: 'gelb'
+        renewalStatus: 'gelb',
+        vertraegeDetail: [
+            { nr: 1, sparte: 'Verkehrshaftpflicht', versicherer: 'R+V', praemie: 48000, deckungssumme: '2 Mio. €', sb: '2.500 €', ablauf: '01.04.2026', schadenquote: 52 },
+            { nr: 2, sparte: 'Betriebshaftpflicht', versicherer: 'HDI', praemie: 35000, deckungssumme: '5 Mio. €', sb: '2.500 €', ablauf: '01.04.2026', schadenquote: 38 },
+            { nr: 3, sparte: 'Kfz-Flotte (45 Fzg.)', versicherer: 'Kravag', praemie: 42000, deckungssumme: '—', sb: '500 €', ablauf: '01.01.2027', schadenquote: 65 },
+            { nr: 4, sparte: 'Transportversicherung', versicherer: 'Helvetia', praemie: 25000, deckungssumme: '500.000 €', sb: '1.000 €', ablauf: '01.04.2026', schadenquote: 42 },
+            { nr: 5, sparte: 'Gebäudeversicherung', versicherer: 'Provinzial', praemie: 22000, deckungssumme: '3,5 Mio. €', sb: '5.000 €', ablauf: '31.12.2026', schadenquote: 15 },
+            { nr: 6, sparte: 'Inhaltsversicherung', versicherer: 'Provinzial', praemie: 10000, deckungssumme: '800.000 €', sb: '2.500 €', ablauf: '31.12.2026', schadenquote: 8 },
+            { nr: 7, sparte: 'Rechtsschutz', versicherer: 'ARAG', praemie: 8000, deckungssumme: '500.000 €', sb: '1.000 €', ablauf: '01.04.2026', schadenquote: 22 }
+        ]
     }
 ];
 
@@ -757,20 +976,24 @@ function fillMaklerDetail(kunde) {
         if (thead) thead.innerHTML = '<th>Sparte</th><th>Versicherer</th><th class="text-right">Prämie/a</th><th>Deckungssumme</th><th>SB</th><th>Ablauf</th><th>Schadenquote</th>';
     }
     var vertraegeBody = document.getElementById('kundenVertraege');
-    if (vertraegeBody && kunde.vertraegeDetail) {
-        vertraegeBody.innerHTML = kunde.vertraegeDetail.map(function(v) {
-            var sqClass = v.schadenquote === null ? '' : (v.schadenquote > 65 ? 'schaden-hoch' : (v.schadenquote > 50 ? 'schaden-mittel' : 'schaden-niedrig'));
-            var sqText = v.schadenquote === null ? '—' : v.schadenquote + '%';
-            return '<tr>' +
-                '<td><strong>' + v.sparte + '</strong></td>' +
-                '<td>' + v.versicherer + '</td>' +
-                '<td class="text-right">' + (v.praemie >= 1000000 ? (v.praemie / 1000000).toFixed(1) + ' Mio. €' : v.praemie.toLocaleString('de-DE') + ' €') + '</td>' +
-                '<td>' + v.deckungssumme + '</td>' +
-                '<td>' + v.sb + '</td>' +
-                '<td>' + v.ablauf + '</td>' +
-                '<td><span class="' + sqClass + '">' + sqText + '</span></td>' +
-                '</tr>';
-        }).join('');
+    if (vertraegeBody) {
+        if (kunde.vertraegeDetail && kunde.vertraegeDetail.length > 0) {
+            vertraegeBody.innerHTML = kunde.vertraegeDetail.map(function(v) {
+                var sqClass = v.schadenquote === null ? '' : (v.schadenquote > 65 ? 'schaden-hoch' : (v.schadenquote > 50 ? 'schaden-mittel' : 'schaden-niedrig'));
+                var sqText = v.schadenquote === null ? '—' : v.schadenquote + '%';
+                return '<tr>' +
+                    '<td><strong>' + v.sparte + '</strong></td>' +
+                    '<td>' + v.versicherer + '</td>' +
+                    '<td class="text-right">' + (v.praemie >= 1000000 ? (v.praemie / 1000000).toFixed(1) + ' Mio. €' : v.praemie.toLocaleString('de-DE') + ' €') + '</td>' +
+                    '<td>' + v.deckungssumme + '</td>' +
+                    '<td>' + v.sb + '</td>' +
+                    '<td>' + v.ablauf + '</td>' +
+                    '<td><span class="' + sqClass + '">' + sqText + '</span></td>' +
+                    '</tr>';
+            }).join('');
+        } else {
+            vertraegeBody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:#94a3b8;padding:24px;">Keine Vertragsdaten hinterlegt</td></tr>';
+        }
     }
 
     // ============================

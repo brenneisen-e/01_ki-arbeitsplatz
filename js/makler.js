@@ -77,12 +77,17 @@ function applyMaklerModus() {
     // Header title
     var titleEl = document.getElementById('agenturPageTitle');
     if (titleEl) {
-        titleEl.textContent = maklerModus ? 'Makler B2B' : 'Agentur: Max Mustermann';
+        titleEl.textContent = maklerModus ? 'GS NRW' : 'Agentur: Max Mustermann';
     }
     var subtitleId = document.getElementById('agenturIdHeader');
-    var subtitleStatus = document.getElementById('agenturStatusHeader');
-    if (subtitleId) subtitleId.textContent = maklerModus ? 'GS NRW' : 'VM00001';
-    if (subtitleStatus) subtitleStatus.textContent = maklerModus ? 'Ecclesia Gruppe' : 'Aktiv';
+    if (subtitleId) {
+        var subtitleDiv = subtitleId.parentElement;
+        if (maklerModus) {
+            subtitleDiv.innerHTML = '<span id="agenturIdHeader">Ecclesia Gruppe</span>';
+        } else {
+            subtitleDiv.innerHTML = '<span id="agenturIdHeader">VM00001</span> | <span id="agenturStatusHeader">Aktiv</span>';
+        }
+    }
 }
 window.applyMaklerModus = applyMaklerModus;
 
@@ -112,7 +117,7 @@ var maklerSegmentIcons = {
 var maklerKunden = [
     // Gesundheitswesen
     {
-        name: 'Marienhospital Detmold GmbH',
+        name: 'Klinikum Lippetal GmbH',
         id: 'MK-GW-001',
         segment: 'Gesundheitswesen',
         segmentIcon: maklerSegmentIcons.gesundheitswesen,
@@ -121,7 +126,7 @@ var maklerKunden = [
         mitarbeitende: 1800,
         jahresumsatz: '185 Mio. €',
         standorte: 3,
-        traeger: 'Evangelisches Klinikum OWL gGmbH',
+        traeger: 'Klinikverbund Lippetal gGmbH',
         keyContact: 'Dr. Thomas Weinert (CFO)',
         risikoklasse: 'B',
         kundeSeit: '2008',
@@ -164,7 +169,7 @@ var maklerKunden = [
         ]
     },
     {
-        name: 'Reha-Zentrum Ostwestfalen',
+        name: 'Reha-Klinik Teutoburg',
         id: 'MK-GW-002',
         segment: 'Gesundheitswesen',
         segmentIcon: maklerSegmentIcons.gesundheitswesen,
@@ -199,7 +204,7 @@ var maklerKunden = [
         ]
     },
     {
-        name: 'MVZ Gesundheit Plus GmbH',
+        name: 'MVZ MediVita GmbH',
         id: 'MK-GW-003',
         segment: 'Gesundheitswesen',
         segmentIcon: maklerSegmentIcons.gesundheitswesen,
@@ -221,7 +226,7 @@ var maklerKunden = [
         renewalStatus: 'gelb'
     },
     {
-        name: 'Seniorenresidenz Am Kirchplatz',
+        name: 'Seniorenresidenz Sonnenhof',
         id: 'MK-GW-004',
         segment: 'Gesundheitswesen',
         segmentIcon: maklerSegmentIcons.gesundheitswesen,
@@ -230,7 +235,7 @@ var maklerKunden = [
         mitarbeitende: 220,
         jahresumsatz: '14 Mio. €',
         standorte: 1,
-        traeger: 'Diakonisches Werk',
+        traeger: 'Diakonisches Hilfswerk',
         keyContact: 'Heike Bergmann (Einrichtungsleiterin)',
         risikoklasse: 'B',
         kundeSeit: '2012',
@@ -244,7 +249,7 @@ var maklerKunden = [
     },
     // Kirche
     {
-        name: 'Evangelische Kirche von Westfalen',
+        name: 'Evangelische Landeskirche Teutoburg',
         id: 'MK-KI-001',
         segment: 'Kirche',
         segmentIcon: maklerSegmentIcons.kirche,
@@ -280,7 +285,7 @@ var maklerKunden = [
         ]
     },
     {
-        name: 'Bistum Paderborn',
+        name: 'Erzbistum Waldburg',
         id: 'MK-KI-002',
         segment: 'Kirche',
         segmentIcon: maklerSegmentIcons.kirche,
@@ -302,7 +307,7 @@ var maklerKunden = [
         renewalStatus: 'gruen'
     },
     {
-        name: 'Kirchenkreis Lippe',
+        name: 'Kirchenkreis Auental',
         id: 'MK-KI-003',
         segment: 'Kirche',
         segmentIcon: maklerSegmentIcons.kirche,
@@ -325,7 +330,7 @@ var maklerKunden = [
     },
     // Sozialwirtschaft
     {
-        name: 'Diakonisches Werk RWL',
+        name: 'Diakonisches Hilfswerk Westmark',
         id: 'MK-SW-001',
         segment: 'Sozialwirtschaft',
         segmentIcon: maklerSegmentIcons.sozialwirtschaft,
@@ -347,7 +352,7 @@ var maklerKunden = [
         renewalStatus: 'gruen'
     },
     {
-        name: 'Caritas-Werkstätten Paderborn',
+        name: 'Sozialwerkstätten Bergland',
         id: 'MK-SW-002',
         segment: 'Sozialwirtschaft',
         segmentIcon: maklerSegmentIcons.sozialwirtschaft,
@@ -356,7 +361,7 @@ var maklerKunden = [
         mitarbeitende: 800,
         jahresumsatz: '22 Mio. €',
         standorte: 4,
-        traeger: 'Caritasverband Paderborn',
+        traeger: 'Sozialverband Bergland',
         keyContact: 'Klaus Hentschel (Geschäftsführer)',
         risikoklasse: 'B',
         kundeSeit: '2011',
@@ -369,7 +374,7 @@ var maklerKunden = [
         renewalStatus: 'gelb'
     },
     {
-        name: 'AWO Kreisverband Detmold',
+        name: 'Wohlfahrtswerk Kreisverband Auental',
         id: 'MK-SW-003',
         segment: 'Sozialwirtschaft',
         segmentIcon: maklerSegmentIcons.sozialwirtschaft,
@@ -378,7 +383,7 @@ var maklerKunden = [
         mitarbeitende: 1200,
         jahresumsatz: '48 Mio. €',
         standorte: 12,
-        traeger: 'AWO Bundesverband',
+        traeger: 'Wohlfahrtswerk Bundesverband',
         keyContact: 'Ingrid Falk (Vorständin)',
         risikoklasse: 'B',
         kundeSeit: '2014',
@@ -392,7 +397,7 @@ var maklerKunden = [
     },
     // Industrie & Gewerbe
     {
-        name: 'Weidmüller Interface GmbH',
+        name: 'Westfalia Elektronik GmbH',
         id: 'MK-IG-001',
         segment: 'Industrie & Gewerbe',
         segmentIcon: maklerSegmentIcons.industrie,
@@ -414,7 +419,7 @@ var maklerKunden = [
         renewalStatus: 'gruen'
     },
     {
-        name: 'Phoenix Contact GmbH',
+        name: 'Nordlicht Automatisierung GmbH',
         id: 'MK-IG-002',
         segment: 'Industrie & Gewerbe',
         segmentIcon: maklerSegmentIcons.industrie,
@@ -424,7 +429,7 @@ var maklerKunden = [
         jahresumsatz: '3,4 Mrd. €',
         standorte: 55,
         traeger: 'Eigenständig (Blomberg)',
-        keyContact: 'Frank Stührenberg (CEO)',
+        keyContact: 'Dr. Marcus Kellner (CEO)',
         risikoklasse: 'A',
         kundeSeit: '2006',
         praemie: 9500000,
@@ -436,7 +441,7 @@ var maklerKunden = [
         renewalStatus: 'gruen'
     },
     {
-        name: 'Boge Kompressoren GmbH',
+        name: 'Teutoburger Maschinenbau GmbH',
         id: 'MK-IG-003',
         segment: 'Industrie & Gewerbe',
         segmentIcon: maklerSegmentIcons.industrie,
@@ -459,7 +464,7 @@ var maklerKunden = [
     },
     // Transport & Logistik
     {
-        name: 'Hellmann Worldwide Logistics',
+        name: 'Nordwest Cargo Logistics',
         id: 'MK-TL-001',
         segment: 'Transport & Logistik',
         segmentIcon: maklerSegmentIcons.transport,
@@ -469,7 +474,7 @@ var maklerKunden = [
         jahresumsatz: '4,2 Mrd. €',
         standorte: 260,
         traeger: 'Eigenständig (Osnabrück)',
-        keyContact: 'Reiner Heiken (CEO)',
+        keyContact: 'Stefan Brinkmann (CEO)',
         risikoklasse: 'B',
         kundeSeit: '2009',
         praemie: 2400000,
@@ -481,7 +486,7 @@ var maklerKunden = [
         renewalStatus: 'gruen'
     },
     {
-        name: 'Emons Spedition GmbH',
+        name: 'Weserland Spedition GmbH',
         id: 'MK-TL-002',
         segment: 'Transport & Logistik',
         segmentIcon: maklerSegmentIcons.transport,
@@ -491,7 +496,7 @@ var maklerKunden = [
         jahresumsatz: '380 Mio. €',
         standorte: 22,
         traeger: 'Eigenständig',
-        keyContact: 'Jürgen Emons (Geschäftsführer)',
+        keyContact: 'Thomas Hartwig (Geschäftsführer)',
         risikoklasse: 'B',
         kundeSeit: '2013',
         praemie: 740000,
@@ -503,7 +508,7 @@ var maklerKunden = [
         renewalStatus: 'gruen'
     },
     {
-        name: 'RegioFracht OWL GmbH',
+        name: 'Lippeland Fracht GmbH',
         id: 'MK-TL-003',
         segment: 'Transport & Logistik',
         segmentIcon: maklerSegmentIcons.transport,
@@ -1449,10 +1454,10 @@ function renderMaklerUebersicht() {
     // Aufgaben (Tasks)
     var aufgabenHtml =
         '<div class="mk-aufgaben-liste">' +
-            '<div class="mk-aufgabe-item prio-rot"><div class="mk-aufgabe-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div><div class="mk-aufgabe-text"><strong>Cyber-Renewal Marienhospital</strong><span>Ablauf 31.03.2026 \u2013 Verhandlung mit Hiscox starten</span></div><span class="mk-aufgabe-frist frist-dringend">49 Tage</span></div>' +
-            '<div class="mk-aufgabe-item prio-rot"><div class="mk-aufgabe-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div class="mk-aufgabe-text"><strong>Umwelthaftpflicht-Angebot erstellen</strong><span>Marienhospital \u2013 Gesetzliche Anforderung seit 2024</span></div><span class="mk-aufgabe-frist frist-dringend">Offen</span></div>' +
-            '<div class="mk-aufgabe-item prio-gelb"><div class="mk-aufgabe-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div><div class="mk-aufgabe-text"><strong>Jahresgespr\u00E4ch Phoenix Contact</strong><span>Produkt-Haftpflicht US-Erweiterung vorbereiten</span></div><span class="mk-aufgabe-frist">15.02.2026</span></div>' +
-            '<div class="mk-aufgabe-item prio-gelb"><div class="mk-aufgabe-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div><div class="mk-aufgabe-text"><strong>Cyber-Rahmenvertrag Ev. Kirche</strong><span>Ausschreibungsunterlagen vorbereiten (1.900 Gemeinden)</span></div><span class="mk-aufgabe-frist">28.02.2026</span></div>' +
+            '<div class="mk-aufgabe-item prio-rot"><div class="mk-aufgabe-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div><div class="mk-aufgabe-text"><strong>Cyber-Renewal Klinikum Lippetal</strong><span>Ablauf 31.03.2026 \u2013 Verhandlung mit Hiscox starten</span></div><span class="mk-aufgabe-frist frist-dringend">49 Tage</span></div>' +
+            '<div class="mk-aufgabe-item prio-rot"><div class="mk-aufgabe-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div class="mk-aufgabe-text"><strong>Umwelthaftpflicht-Angebot erstellen</strong><span>Klinikum Lippetal \u2013 Gesetzliche Anforderung seit 2024</span></div><span class="mk-aufgabe-frist frist-dringend">Offen</span></div>' +
+            '<div class="mk-aufgabe-item prio-gelb"><div class="mk-aufgabe-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div><div class="mk-aufgabe-text"><strong>Jahresgespr\u00E4ch Nordlicht Automatisierung</strong><span>Produkt-Haftpflicht US-Erweiterung vorbereiten</span></div><span class="mk-aufgabe-frist">15.02.2026</span></div>' +
+            '<div class="mk-aufgabe-item prio-gelb"><div class="mk-aufgabe-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div><div class="mk-aufgabe-text"><strong>Cyber-Rahmenvertrag Ev. Landeskirche</strong><span>Ausschreibungsunterlagen vorbereiten (1.900 Gemeinden)</span></div><span class="mk-aufgabe-frist">28.02.2026</span></div>' +
             '<div class="mk-aufgabe-item"><div class="mk-aufgabe-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></div><div class="mk-aufgabe-text"><strong>bKV-Pr\u00E4sentation Diakonisches Werk</strong><span>Budget-Tarif-Vergleich f\u00FCr 4.500 Mitarbeitende</span></div><span class="mk-aufgabe-frist">10.03.2026</span></div>' +
         '</div>';
 
@@ -1515,10 +1520,10 @@ function renderMaklerUebersicht() {
                         '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>' +
                         ' Anstehende Termine</h3></div>' +
                     '<div class="termine-liste">' +
-                        '<div class="termin-item heute"><div class="termin-zeit"><span class="termin-tag">Heute</span><span class="termin-uhrzeit">10:00</span></div><div class="termin-details"><strong>Marienhospital Detmold</strong><span>Jahresgespr\u00E4ch CFO Dr. Weinert</span></div></div>' +
-                        '<div class="termin-item"><div class="termin-zeit"><span class="termin-tag">Mo, 13.01.</span><span class="termin-uhrzeit">14:00</span></div><div class="termin-details"><strong>Ev. Kirche Westfalen</strong><span>Renewal-Verhandlung Geb\u00E4ude</span></div></div>' +
-                        '<div class="termin-item"><div class="termin-zeit"><span class="termin-tag">Di, 14.01.</span><span class="termin-uhrzeit">09:30</span></div><div class="termin-details"><strong>Phoenix Contact</strong><span>Cyber-Risiko Workshop</span></div></div>' +
-                        '<div class="termin-item"><div class="termin-zeit"><span class="termin-tag">Mi, 15.01.</span><span class="termin-uhrzeit">11:00</span></div><div class="termin-details"><strong>Hellmann Logistics</strong><span>Flottenversicherung Review</span></div></div>' +
+                        '<div class="termin-item heute"><div class="termin-zeit"><span class="termin-tag">Heute</span><span class="termin-uhrzeit">10:00</span></div><div class="termin-details"><strong>Klinikum Lippetal</strong><span>Jahresgespr\u00E4ch CFO Dr. Weinert</span></div></div>' +
+                        '<div class="termin-item"><div class="termin-zeit"><span class="termin-tag">Mo, 13.01.</span><span class="termin-uhrzeit">14:00</span></div><div class="termin-details"><strong>Ev. Landeskirche Teutoburg</strong><span>Renewal-Verhandlung Geb\u00E4ude</span></div></div>' +
+                        '<div class="termin-item"><div class="termin-zeit"><span class="termin-tag">Di, 14.01.</span><span class="termin-uhrzeit">09:30</span></div><div class="termin-details"><strong>Nordlicht Automatisierung</strong><span>Cyber-Risiko Workshop</span></div></div>' +
+                        '<div class="termin-item"><div class="termin-zeit"><span class="termin-tag">Mi, 15.01.</span><span class="termin-uhrzeit">11:00</span></div><div class="termin-details"><strong>Nordwest Cargo</strong><span>Flottenversicherung Review</span></div></div>' +
                     '</div>' +
                 '</div>' +
                 '<div class="uebersicht-card">' +
@@ -1640,7 +1645,7 @@ function renderMaklerDeckungslueckenOverview() {
 var maklerPotentialeData = [
     {
         id: 'mp-01',
-        kunde: 'Marienhospital Detmold GmbH',
+        kunde: 'Klinikum Lippetal GmbH',
         kundeId: 'MK-GW-001',
         titel: 'Umwelthaftpflicht fehlt',
         beschreibung: 'Labor und Gefahrstofflager ohne separate Umweltdeckung. Gesetzliche Pflicht seit 2024.',
@@ -1653,7 +1658,7 @@ var maklerPotentialeData = [
     },
     {
         id: 'mp-02',
-        kunde: 'Marienhospital Detmold GmbH',
+        kunde: 'Klinikum Lippetal GmbH',
         kundeId: 'MK-GW-001',
         titel: 'Maschinenbruch med. Gro\u00DFger\u00E4te',
         beschreibung: 'MRT, CT und OP-Robotik (da Vinci) nicht separat gegen Maschinenbruch versichert.',
@@ -1666,7 +1671,7 @@ var maklerPotentialeData = [
     },
     {
         id: 'mp-03',
-        kunde: 'Ev. Kirche von Westfalen',
+        kunde: 'Ev. Landeskirche Teutoburg',
         kundeId: 'MK-KI-001',
         titel: 'Cyber-Rahmenvertrag f\u00FCr Kirchenverwaltungen',
         beschreibung: 'Nur 12% der 1.900 Gemeinden haben Cyber-Schutz. Zentraler Rahmenvertrag m\u00F6glich.',
@@ -1679,7 +1684,7 @@ var maklerPotentialeData = [
     },
     {
         id: 'mp-04',
-        kunde: 'Phoenix Contact GmbH',
+        kunde: 'Nordlicht Automatisierung GmbH',
         kundeId: 'MK-IG-002',
         titel: 'Produkthaftpflicht-Erweiterung (US-Gesch\u00E4ft)',
         beschreibung: 'Wachsendes US-Gesch\u00E4ft (35% Umsatzanteil) erfordert US-Deckungserweiterung.',
@@ -1692,7 +1697,7 @@ var maklerPotentialeData = [
     },
     {
         id: 'mp-05',
-        kunde: 'Hellmann Worldwide Logistics',
+        kunde: 'Nordwest Cargo Logistics',
         kundeId: 'MK-TL-001',
         titel: 'Transportversicherung Erweiterung (Luftfracht)',
         beschreibung: 'Neues Luftfracht-Segment seit Q3/2025 nicht in bestehender Transport-Police abgedeckt.',
@@ -1705,7 +1710,7 @@ var maklerPotentialeData = [
     },
     {
         id: 'mp-06',
-        kunde: 'Diakonisches Werk RWL',
+        kunde: 'Diakonisches Hilfswerk Westmark',
         kundeId: 'MK-SW-001',
         titel: 'bKV f\u00FCr Mitarbeitende',
         beschreibung: '4.500 Mitarbeitende ohne betriebliche Krankenversicherung. Gutes Instrument gegen Fachkr\u00E4ftemangel.',
@@ -1718,7 +1723,7 @@ var maklerPotentialeData = [
     },
     {
         id: 'mp-07',
-        kunde: 'Boge Kompressoren GmbH',
+        kunde: 'Teutoburger Maschinenbau GmbH',
         kundeId: 'MK-IG-003',
         titel: 'Maschinenbruch + BU-Erweiterung',
         beschreibung: 'Neue CNC-Fertigungslinie (Invest 4,5 Mio. \u20AC) nicht in bestehender Police ber\u00FCcksichtigt.',
@@ -1731,7 +1736,7 @@ var maklerPotentialeData = [
     },
     {
         id: 'mp-08',
-        kunde: 'Reha-Zentrum Ostwestfalen',
+        kunde: 'Reha-Klinik Teutoburg',
         kundeId: 'MK-GW-002',
         titel: 'D&O-Versicherung fehlt',
         beschreibung: 'Keine Managerhaftpflicht trotz GmbH-Struktur und angestellten Gesch\u00E4ftsf\u00FChrern.',
@@ -1744,7 +1749,7 @@ var maklerPotentialeData = [
     },
     {
         id: 'mp-09',
-        kunde: 'Caritas-Werkst\u00E4tten Paderborn',
+        kunde: 'Sozialwerkstätten Bergland',
         kundeId: 'MK-SW-002',
         titel: 'Arbeitsst\u00E4ttenversicherung pr\u00FCfen',
         beschreibung: 'Werkst\u00E4tten mit erh\u00F6htem Unfallrisiko \u2013 aktuelle Deckung evtl. unzureichend.',
@@ -1757,7 +1762,7 @@ var maklerPotentialeData = [
     },
     {
         id: 'mp-10',
-        kunde: 'RegioFracht OWL GmbH',
+        kunde: 'Lippeland Fracht GmbH',
         kundeId: 'MK-TL-003',
         titel: 'Fuhrpark-Erweiterung absichern',
         beschreibung: '8 neue Lkw bestellt (Lieferung Q2/2026), noch nicht in Flottenpolice aufgenommen.',
@@ -1878,12 +1883,12 @@ function renderMaklerNeugeschaeft() {
             '<div class="kennzahl-item"><div class="kennzahl-value">233.000 \u20AC</div><div class="kennzahl-label">\u00D8 Pr\u00E4mie/Vertrag</div><div class="kennzahl-trend positive">+12%</div></div>' +
         '</div>' +
         '<table class="makler-detail-table"><thead><tr><th>Datum</th><th>Kunde</th><th>Sparte</th><th>Versicherer</th><th class="text-right">Pr\u00E4mie/a</th><th>Status</th></tr></thead><tbody>' +
-            '<tr class="clickable-row" onclick="openMaklerKundenDetail(\'MK-GW-001\')"><td>08.01.2026</td><td><strong>Marienhospital Detmold</strong></td><td>Cyberversicherung (Erweiterung)</td><td>Hiscox</td><td class="text-right">45.000 \u20AC</td><td><span class="prio-badge prio-hoch" style="background:#dcfce7;color:#166534">Policiert</span></td></tr>' +
-            '<tr class="clickable-row" onclick="openMaklerKundenDetail(\'MK-IG-002\')"><td>15.12.2025</td><td><strong>Phoenix Contact</strong></td><td>Betriebsunterbrechung (Erh\u00F6hung)</td><td>Allianz</td><td class="text-right">120.000 \u20AC</td><td><span class="prio-badge prio-hoch" style="background:#dcfce7;color:#166534">Policiert</span></td></tr>' +
-            '<tr class="clickable-row" onclick="openMaklerKundenDetail(\'MK-TL-003\')"><td>28.11.2025</td><td><strong>RegioFracht OWL</strong></td><td>Komplettpaket (Neukunde)</td><td>HDI / Kravag</td><td class="text-right">190.000 \u20AC</td><td><span class="prio-badge prio-hoch" style="background:#dcfce7;color:#166534">Policiert</span></td></tr>' +
-            '<tr><td>22.01.2026</td><td><strong>Ev. Kirche Westfalen</strong></td><td>Cyber-Rahmenvertrag</td><td>Ausschreibung</td><td class="text-right">180.000 \u20AC</td><td><span class="prio-badge prio-mittel" style="background:#fef3c7;color:#92400e">In Verhandlung</span></td></tr>' +
-            '<tr><td>05.02.2026</td><td><strong>Boge Kompressoren</strong></td><td>Maschinenbruch-Erweiterung</td><td>Allianz</td><td class="text-right">32.000 \u20AC</td><td><span class="prio-badge prio-mittel" style="background:#fef3c7;color:#92400e">Angebot offen</span></td></tr>' +
-            '<tr><td>10.02.2026</td><td><strong>Diakonisches Werk RWL</strong></td><td>bKV Rahmenvertrag</td><td>DKV / Signal</td><td class="text-right">95.000 \u20AC</td><td><span class="prio-badge prio-niedrig" style="background:#eff6ff;color:#1e40af">Erstgespr\u00E4ch</span></td></tr>' +
+            '<tr class="clickable-row" onclick="openMaklerKundenDetail(\'MK-GW-001\')"><td>08.01.2026</td><td><strong>Klinikum Lippetal</strong></td><td>Cyberversicherung (Erweiterung)</td><td>Hiscox</td><td class="text-right">45.000 \u20AC</td><td><span class="prio-badge prio-hoch" style="background:#dcfce7;color:#166534">Policiert</span></td></tr>' +
+            '<tr class="clickable-row" onclick="openMaklerKundenDetail(\'MK-IG-002\')"><td>15.12.2025</td><td><strong>Nordlicht Automatisierung</strong></td><td>Betriebsunterbrechung (Erh\u00F6hung)</td><td>Allianz</td><td class="text-right">120.000 \u20AC</td><td><span class="prio-badge prio-hoch" style="background:#dcfce7;color:#166534">Policiert</span></td></tr>' +
+            '<tr class="clickable-row" onclick="openMaklerKundenDetail(\'MK-TL-003\')"><td>28.11.2025</td><td><strong>Lippeland Fracht</strong></td><td>Komplettpaket (Neukunde)</td><td>HDI / Kravag</td><td class="text-right">190.000 \u20AC</td><td><span class="prio-badge prio-hoch" style="background:#dcfce7;color:#166534">Policiert</span></td></tr>' +
+            '<tr><td>22.01.2026</td><td><strong>Ev. Landeskirche Teutoburg</strong></td><td>Cyber-Rahmenvertrag</td><td>Ausschreibung</td><td class="text-right">180.000 \u20AC</td><td><span class="prio-badge prio-mittel" style="background:#fef3c7;color:#92400e">In Verhandlung</span></td></tr>' +
+            '<tr><td>05.02.2026</td><td><strong>Teutoburger Maschinenbau</strong></td><td>Maschinenbruch-Erweiterung</td><td>Allianz</td><td class="text-right">32.000 \u20AC</td><td><span class="prio-badge prio-mittel" style="background:#fef3c7;color:#92400e">Angebot offen</span></td></tr>' +
+            '<tr><td>10.02.2026</td><td><strong>Diakonisches Hilfswerk Westmark</strong></td><td>bKV Rahmenvertrag</td><td>DKV / Signal</td><td class="text-right">95.000 \u20AC</td><td><span class="prio-badge prio-niedrig" style="background:#eff6ff;color:#1e40af">Erstgespr\u00E4ch</span></td></tr>' +
         '</tbody></table>';
 }
 

@@ -766,16 +766,16 @@ function getAgenturChatResponse(question) {
             return `<strong>Anstehende Renewals (nächste 90 Tage):</strong><br><br>
             <strong>Kritisch (≤30 Tage):</strong><br><br>
             <div class="chat-customer-item">
-                ${customerBtn('Marienhospital Detmold', 'MK-GW-001')} Cyberversicherung (Hiscox) – 31.03.2026<br>
+                ${customerBtn('Klinikum Lippetal', 'MK-GW-001')} Cyberversicherung (Hiscox) – 31.03.2026<br>
                 <span class="chat-recommendation">45.000 € Prämie – Erneuerung dringend einleiten</span>
             </div>
             <strong>Bald fällig (31-90 Tage):</strong><br><br>
             <div class="chat-customer-item">
-                ${customerBtn('Kirchenkreis Lippe', 'MK-KI-003')} Gebäude-Rahmenvertrag – 01.04.2026<br>
+                ${customerBtn('Kirchenkreis Auental', 'MK-KI-003')} Gebäude-Rahmenvertrag – 01.04.2026<br>
                 <span class="chat-recommendation">620.000 € Gesamtprämie – Verhandlungen vorbereiten</span>
             </div>
             <div class="chat-customer-item">
-                ${customerBtn('RegioFracht OWL', 'MK-TL-003')} 3 Verträge – 01.04.2026<br>
+                ${customerBtn('Lippeland Fracht', 'MK-TL-003')} 3 Verträge – 01.04.2026<br>
                 <span class="chat-recommendation">190.000 € Prämie – Bündelung prüfen</span>
             </div>
             ${followUpSuggestions}`;
@@ -786,15 +786,15 @@ function getAgenturChatResponse(question) {
             return `<strong>Deckungslücken-Analyse:</strong><br><br>
             <strong>5 Kunden</strong> mit hoher Priorität:<br><br>
             <div class="chat-customer-item">
-                ${customerBtn('Marienhospital Detmold', 'MK-GW-001')} 5 Deckungslücken<br>
+                ${customerBtn('Klinikum Lippetal', 'MK-GW-001')} 5 Deckungslücken<br>
                 <span class="chat-recommendation">Umwelthaftpflicht & Maschinenbruch fehlen – hohe Priorität</span>
             </div>
             <div class="chat-customer-item">
-                ${customerBtn('Reha-Zentrum Ostwestfalen', 'MK-GW-002')} 2 Deckungslücken<br>
+                ${customerBtn('Reha-Klinik Teutoburg', 'MK-GW-002')} 2 Deckungslücken<br>
                 <span class="chat-recommendation">Cyberversicherung & D&O fehlen komplett</span>
             </div>
             <div class="chat-customer-item">
-                ${customerBtn('Ev. Kirche von Westfalen', 'MK-KI-001')} 2 Deckungslücken<br>
+                ${customerBtn('Ev. Landeskirche Teutoburg', 'MK-KI-001')} 2 Deckungslücken<br>
                 <span class="chat-recommendation">Cyber nur teilweise, Missbrauchsprävention in Prüfung</span>
             </div>
             <br>Geschätztes Neugeschäft: <strong>~850.000 € p.a.</strong>
@@ -806,15 +806,15 @@ function getAgenturChatResponse(question) {
             return `<strong>Cross-Selling Potentiale B2B:</strong><br><br>
             <strong>Top 3 nach Prämienvolumen:</strong><br><br>
             <div class="chat-customer-item">
-                ${customerBtn('Ev. Kirche von Westfalen', 'MK-KI-001')} Cyber-Rahmenvertrag<br>
+                ${customerBtn('Ev. Landeskirche Teutoburg', 'MK-KI-001')} Cyber-Rahmenvertrag<br>
                 <span class="chat-recommendation">1.900 Kirchengemeinden – geschätzt 1,0 Mio. € Prämie</span>
             </div>
             <div class="chat-customer-item">
-                ${customerBtn('Phoenix Contact', 'MK-IG-002')} Erweiterte Produkthaftpflicht<br>
+                ${customerBtn('Nordlicht Automatisierung', 'MK-IG-002')} Erweiterte Produkthaftpflicht<br>
                 <span class="chat-recommendation">Internationale Produktrückruf-Absicherung – ~570.000 € p.a.</span>
             </div>
             <div class="chat-customer-item">
-                ${customerBtn('Marienhospital Detmold', 'MK-GW-001')} Umwelthaftpflicht + Maschinenbruch<br>
+                ${customerBtn('Klinikum Lippetal', 'MK-GW-001')} Umwelthaftpflicht + Maschinenbruch<br>
                 <span class="chat-recommendation">Med. Großgeräte & Labor – ~190.000 € p.a.</span>
             </div>
             <br>Gesamtpotential: <strong>~1,8 Mio. € p.a.</strong>
@@ -828,15 +828,15 @@ function getAgenturChatResponse(question) {
             <strong>Vorjahr:</strong> 58%<br><br>
             <strong>Auffällige Kunden:</strong><br><br>
             <div class="chat-customer-item">
-                ${customerBtn('Emons Spedition', 'MK-TL-002')} Schadenquote <strong>62%</strong><br>
+                ${customerBtn('Weserland Spedition', 'MK-TL-002')} Schadenquote <strong>62%</strong><br>
                 <span class="chat-recommendation">Kfz-Flotte auffällig – Schadenmanagement-Gespräch empfohlen</span>
             </div>
             <div class="chat-customer-item">
-                ${customerBtn('Marienhospital Detmold', 'MK-GW-001')} Schadenquote <strong>58%</strong><br>
+                ${customerBtn('Klinikum Lippetal', 'MK-GW-001')} Schadenquote <strong>58%</strong><br>
                 <span class="chat-recommendation">Arzthaftpflicht-Schäden steigend – Trend beobachten</span>
             </div>
             <div class="chat-customer-item">
-                ${customerBtn('Boge Kompressoren', 'MK-IG-003')} Schadenquote <strong>55%</strong><br>
+                ${customerBtn('Teutoburger Maschinenbau', 'MK-IG-003')} Schadenquote <strong>55%</strong><br>
                 <span class="chat-recommendation">Betriebsunterbrechung – Prävention besprechen</span>
             </div>
             ${followUpSuggestions}`;
@@ -1119,27 +1119,27 @@ function showNeuePotentialeContent() {
         if (typeof maklerModus !== 'undefined' && maklerModus) {
             potentiale = [
                 {
-                    name: 'Marienhospital Detmold',
+                    name: 'Klinikum Lippetal',
                     title: 'Umwelthaftpflicht fehlt',
                     desc: 'Labor & Gefahrstoffe nicht versichert – hohe Priorität'
                 },
                 {
-                    name: 'Marienhospital Detmold',
+                    name: 'Klinikum Lippetal',
                     title: 'Cyber-Renewal in 30 Tagen',
                     desc: 'Hiscox-Vertrag läuft 31.03.2026 aus – Erneuerung einleiten'
                 },
                 {
-                    name: 'Reha-Zentrum Ostwestfalen',
+                    name: 'Reha-Klinik Teutoburg',
                     title: 'Cyberversicherung fehlt',
                     desc: 'Patientendaten ungeschützt – dringend absichern'
                 },
                 {
-                    name: 'Ev. Kirche von Westfalen',
+                    name: 'Ev. Landeskirche Teutoburg',
                     title: 'Cyber-Rahmenvertrag',
                     desc: 'Kirchenverwaltungen nur teilweise versichert – 12,5 Mio. € Bestand'
                 },
                 {
-                    name: 'Boge Kompressoren',
+                    name: 'Teutoburger Maschinenbau',
                     title: '3 Renewals in 90 Tagen',
                     desc: '680.000 € Prämienvolumen – Verhandlungen vorbereiten'
                 }

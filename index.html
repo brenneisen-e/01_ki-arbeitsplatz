@@ -464,18 +464,22 @@
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
                         Potentiale
                     </button>
-                    <!-- Makler B2B Tabs (hidden by default) -->
+                    <!-- Makler B2B Tabs (hidden by default, AO-ähnliche Struktur) -->
                     <button class="agentur-tab agentur-tab-makler active" data-mktab="uebersicht" onclick="showMaklerTab('uebersicht')" style="display:none;">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
                         &Uuml;bersicht
                     </button>
-                    <button class="agentur-tab agentur-tab-makler" data-mktab="kunden" onclick="showMaklerTab('kunden')" style="display:none;">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
-                        Kunden
+                    <button class="agentur-tab agentur-tab-makler" data-mktab="stammdaten" onclick="showMaklerTab('stammdaten')" style="display:none;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                        Stammdaten
                     </button>
-                    <button class="agentur-tab agentur-tab-makler" data-mktab="potentiale" onclick="showMaklerTab('potentiale')" style="display:none;">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-                        Potentiale
+                    <button class="agentur-tab agentur-tab-makler" data-mktab="neugeschaeft" onclick="showMaklerTab('neugeschaeft')" style="display:none;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
+                        Neugesch&auml;ft
+                    </button>
+                    <button class="agentur-tab agentur-tab-makler" data-mktab="bestand" onclick="showMaklerTab('bestand')" style="display:none;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
+                        Bestand
                     </button>
                     <button class="agentur-tab agentur-tab-makler" data-mktab="versicherermix" onclick="showMaklerTab('versicherermix')" style="display:none;">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><circle cx="12" cy="12" r="10"/><path d="M12 2v20M2 12h20"/></svg>
@@ -492,6 +496,15 @@
                     <button class="agentur-tab agentur-tab-makler" data-mktab="deckungsluecken" onclick="showMaklerTab('deckungsluecken')" style="display:none;">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                         Deckungsl&uuml;cken
+                    </button>
+                    <div class="agentur-tab-divider agentur-tab-makler" style="display:none;"></div>
+                    <button class="agentur-tab agentur-tab-makler" data-mktab="kunden" onclick="showMaklerTab('kunden')" style="display:none;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+                        Kunden
+                    </button>
+                    <button class="agentur-tab agentur-tab-makler" data-mktab="potentiale" onclick="showMaklerTab('potentiale')" style="display:none;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                        Potentiale
                     </button>
                 </div>
                 <!-- Makler B2B Toggle (ganz rechts im Header) -->
@@ -1442,6 +1455,21 @@
                 <!-- Makler B2B Übersicht -->
                 <div class="makler-tab-content" id="tab-makler-uebersicht">
                     <div id="maklerUebersichtContent"></div>
+                </div>
+
+                <!-- Makler B2B Stammdaten -->
+                <div class="makler-tab-content" id="tab-makler-stammdaten">
+                    <div id="maklerStammdatenContent"></div>
+                </div>
+
+                <!-- Makler B2B Neugeschäft -->
+                <div class="makler-tab-content" id="tab-makler-neugeschaeft">
+                    <div id="maklerNeugeschaeftContent"></div>
+                </div>
+
+                <!-- Makler B2B Bestand -->
+                <div class="makler-tab-content" id="tab-makler-bestand">
+                    <div id="maklerBestandContent"></div>
                 </div>
 
                 <!-- Makler B2B Potentiale -->

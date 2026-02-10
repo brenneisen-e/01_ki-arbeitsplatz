@@ -4812,6 +4812,8 @@ body {
 
 /* ============================================ */
 /* Slide CV Scanner (T-10) Styles */
+/* Deloitte Palette: #86BC25, #046A38, #0D8390, #00A3E0, #53565A, #97999B */
+/* Min font-size: 0.89rem (~16px = 12pt PPT) */
 /* ============================================ */
 
 /* Fullscreen slide container per SLIDE_TEMPLATE_SPEC */
@@ -4887,7 +4889,7 @@ body {
 
 /* Section titles (green uppercase) */
 .bestand-page .slide-cv-section-title {
-    font-size: 0.875rem;
+    font-size: 0.89rem;
     font-weight: 700;
     color: #86BC25;
     text-transform: uppercase;
@@ -4930,7 +4932,7 @@ body {
     padding: 8px 12px;
     background: #f3f4f6;
     border-bottom: 1px solid #e5e7eb;
-    font-size: 0.75rem;
+    font-size: 0.89rem;
     font-weight: 600;
     color: #374151;
 }
@@ -4939,7 +4941,7 @@ body {
     padding: 10px 12px;
     flex: 1;
     overflow: hidden;
-    font-size: 0.72rem;
+    font-size: 0.89rem;
 }
 
 /* -- Mini Profile (Bewerber card) -- */
@@ -4956,12 +4958,12 @@ body {
     width: 36px;
     height: 36px;
     border-radius: 50%;
-    background: #C8102E;
+    background: #046A38;
     color: white;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.7rem;
+    font-size: 0.89rem;
     font-weight: 700;
     flex-shrink: 0;
 }
@@ -4973,13 +4975,13 @@ body {
 
 .bestand-page .slide-cv-mini-info strong {
     display: block;
-    font-size: 0.82rem;
+    font-size: 0.89rem;
     color: #1f2937;
 }
 
 .bestand-page .slide-cv-mini-info small {
-    color: #6b7280;
-    font-size: 0.62rem;
+    color: #53565A;
+    font-size: 0.89rem;
 }
 
 .bestand-page .slide-cv-mini-score {
@@ -4989,24 +4991,24 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.82rem;
+    font-size: 0.89rem;
     font-weight: 800;
     flex-shrink: 0;
 }
 
 .bestand-page .slide-cv-score-high {
-    background: #dcfce7;
-    color: #166534;
+    background: #e8f5d4;
+    color: #046A38;
 }
 
 .bestand-page .slide-cv-score-mid {
-    background: #fef3c7;
-    color: #92400e;
+    background: #e0f4ff;
+    color: #0D8390;
 }
 
 .bestand-page .slide-cv-score-low {
     background: #fee2e2;
-    color: #991b1b;
+    color: #C8102E;
 }
 
 /* Mini sections */
@@ -5015,9 +5017,9 @@ body {
 }
 
 .bestand-page .slide-cv-mini-label {
-    font-size: 0.58rem;
+    font-size: 0.89rem;
     font-weight: 700;
-    color: #9ca3af;
+    color: #53565A;
     text-transform: uppercase;
     letter-spacing: 0.06em;
     margin-bottom: 4px;
@@ -5029,8 +5031,8 @@ body {
 }
 
 .bestand-page .slide-cv-mini-text {
-    font-size: 0.65rem;
-    color: #4b5563;
+    font-size: 0.89rem;
+    color: #53565A;
     line-height: 1.5;
     margin: 0;
 }
@@ -5048,26 +5050,26 @@ body {
 }
 
 .bestand-page .slide-cv-match-title {
-    font-size: 0.65rem;
+    font-size: 0.89rem;
     font-weight: 600;
     color: #374151;
 }
 
 .bestand-page .slide-cv-match-badge {
-    font-size: 0.6rem;
+    font-size: 0.89rem;
     font-weight: 700;
     padding: 2px 6px;
     border-radius: 3px;
 }
 
 .bestand-page .slide-cv-match-high {
-    background: #dcfce7;
-    color: #166534;
+    background: #e8f5d4;
+    color: #046A38;
 }
 
 .bestand-page .slide-cv-match-mid {
-    background: #dbeafe;
-    color: #1e40af;
+    background: #e0f4ff;
+    color: #0D8390;
 }
 
 /* -- Dashboard mini (Recruiting card) -- */
@@ -5093,13 +5095,13 @@ body {
     line-height: 1.2;
 }
 
-.bestand-page .slide-cv-val-blue { color: #2563eb; }
-.bestand-page .slide-cv-val-green { color: #16a34a; }
-.bestand-page .slide-cv-val-red { color: #dc2626; }
+.bestand-page .slide-cv-val-blue { color: #00A3E0; }
+.bestand-page .slide-cv-val-green { color: #86BC25; }
+.bestand-page .slide-cv-val-red { color: #C8102E; }
 
 .bestand-page .slide-cv-dash-kpi-lbl {
-    font-size: 0.55rem;
-    color: #6b7280;
+    font-size: 0.89rem;
+    color: #53565A;
     margin-top: 1px;
 }
 
@@ -5127,7 +5129,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.68rem;
+    font-size: 0.89rem;
     font-weight: 800;
     flex-shrink: 0;
 }
@@ -5139,17 +5141,17 @@ body {
 
 .bestand-page .slide-cv-dash-info strong {
     display: block;
-    font-size: 0.72rem;
+    font-size: 0.89rem;
     color: #1f2937;
 }
 
 .bestand-page .slide-cv-dash-info small {
-    font-size: 0.58rem;
-    color: #9ca3af;
+    font-size: 0.89rem;
+    color: #97999B;
 }
 
 .bestand-page .slide-cv-dash-status {
-    font-size: 0.58rem;
+    font-size: 0.89rem;
     font-weight: 600;
     padding: 2px 8px;
     border-radius: 3px;
@@ -5157,18 +5159,18 @@ body {
 }
 
 .bestand-page .slide-cv-status-green {
-    background: #dcfce7;
-    color: #166534;
+    background: #e8f5d4;
+    color: #046A38;
 }
 
 .bestand-page .slide-cv-status-orange {
-    background: #fef3c7;
-    color: #92400e;
+    background: #e0f4ff;
+    color: #0D8390;
 }
 
 .bestand-page .slide-cv-status-red {
     background: #fee2e2;
-    color: #991b1b;
+    color: #C8102E;
 }
 
 /* -- Right side: Erläuterungen -- */
@@ -5211,8 +5213,8 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    font-size: 0.75rem;
-    color: #6B7280;
+    font-size: 0.89rem;
+    color: #97999B;
     border-top: 1px solid #e5e7eb;
     margin-top: auto;
     padding-top: 0.5rem;
@@ -5273,12 +5275,12 @@ body {
 }
 
 .bestand-page .slide-bu-step-num {
-    width: 22px;
-    height: 22px;
+    width: 24px;
+    height: 24px;
     border-radius: 50%;
     background: #e5e7eb;
     color: #374151;
-    font-size: 0.68rem;
+    font-size: 0.89rem;
     font-weight: 700;
     display: flex;
     align-items: center;
@@ -5286,31 +5288,31 @@ body {
     margin-bottom: 0.4rem;
 }
 
-.bestand-page .slide-bu-step-input .slide-bu-step-num { background: #dbeafe; color: #1e40af; }
-.bestand-page .slide-bu-step-system .slide-bu-step-num { background: #e0e7ff; color: #4338ca; }
-.bestand-page .slide-bu-step-manual .slide-bu-step-num { background: #fef3c7; color: #92400e; }
-.bestand-page .slide-bu-step-ai-limited .slide-bu-step-num { background: #fce7f3; color: #9d174d; }
-.bestand-page .slide-bu-step-output .slide-bu-step-num { background: #d1fae5; color: #065f46; }
+.bestand-page .slide-bu-step-input .slide-bu-step-num { background: #e0f4ff; color: #00A3E0; }
+.bestand-page .slide-bu-step-system .slide-bu-step-num { background: #e0f4ff; color: #0D8390; }
+.bestand-page .slide-bu-step-manual .slide-bu-step-num { background: #fff3e0; color: #ED8B00; }
+.bestand-page .slide-bu-step-ai-limited .slide-bu-step-num { background: #fee2e2; color: #C8102E; }
+.bestand-page .slide-bu-step-output .slide-bu-step-num { background: #e8f5d4; color: #046A38; }
 
 .bestand-page .slide-bu-step-label {
-    font-size: 0.82rem;
+    font-size: 0.89rem;
     font-weight: 700;
     color: #1f2937;
     margin-bottom: 0.2rem;
 }
 
 .bestand-page .slide-bu-step-desc {
-    font-size: 0.68rem;
-    color: #6b7280;
+    font-size: 0.89rem;
+    color: #53565A;
     line-height: 1.45;
     flex: 1;
 }
 
 .bestand-page .slide-bu-pain {
     margin-top: 0.4rem;
-    font-size: 0.62rem;
+    font-size: 0.89rem;
     font-weight: 600;
-    color: #dc2626;
+    color: #C8102E;
     background: #fee2e2;
     padding: 2px 6px;
     border-radius: 3px;
@@ -5323,7 +5325,7 @@ body {
     align-items: center;
     padding: 0 0.2rem;
     font-size: 1.2rem;
-    color: #9ca3af;
+    color: #97999B;
     flex-shrink: 0;
 }
 
@@ -5336,9 +5338,9 @@ body {
 }
 
 .bestand-page .slide-bu-painpoints h4 {
-    font-size: 0.82rem;
+    font-size: 0.89rem;
     font-weight: 700;
-    color: #991b1b;
+    color: #C8102E;
     margin: 0 0 0.5rem;
 }
 
@@ -5352,8 +5354,8 @@ body {
     display: flex;
     align-items: flex-start;
     gap: 0.4rem;
-    font-size: 0.78rem;
-    color: #991b1b;
+    font-size: 0.89rem;
+    color: #C8102E;
     line-height: 1.4;
 }
 
@@ -5376,7 +5378,7 @@ body {
 .bestand-page .slide-bu-table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 0.82rem;
+    font-size: 0.89rem;
 }
 
 .bestand-page .slide-bu-table th {
@@ -5385,7 +5387,7 @@ body {
     text-align: left;
     font-weight: 700;
     color: #374151;
-    font-size: 0.75rem;
+    font-size: 0.89rem;
     text-transform: uppercase;
     letter-spacing: 0.04em;
     border-bottom: 2px solid #e5e7eb;
@@ -5407,7 +5409,7 @@ body {
 }
 
 .bestand-page .slide-bu-soll {
-    color: #16a34a !important;
+    color: #86BC25 !important;
     font-weight: 600;
 }
 
@@ -5450,7 +5452,7 @@ body {
     align-items: center;
     gap: 0.55rem;
     padding-right: 0.75rem;
-    font-size: 0.82rem;
+    font-size: 0.89rem;
     color: #374151;
 }
 
@@ -5460,8 +5462,8 @@ body {
 }
 
 .bestand-page .slide-plan-gantt-lbl-col small {
-    font-size: 0.68rem;
-    color: #9ca3af;
+    font-size: 0.89rem;
+    color: #97999B;
     font-weight: 400;
 }
 
@@ -5480,9 +5482,9 @@ body {
 .bestand-page .slide-plan-gantt-hd .slide-plan-gantt-track-col span {
     flex: 1;
     text-align: center;
-    font-size: 0.62rem;
+    font-size: 0.89rem;
     font-weight: 600;
-    color: #9ca3af;
+    color: #97999B;
 }
 
 .bestand-page .slide-plan-gantt-row {
@@ -5497,21 +5499,21 @@ body {
 }
 
 .bestand-page .slide-plan-phase-badge {
-    width: 26px;
-    height: 26px;
+    width: 28px;
+    height: 28px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.72rem;
+    font-size: 0.89rem;
     font-weight: 800;
     color: white;
     flex-shrink: 0;
 }
 
-.bestand-page .slide-plan-badge-1 { background: #3b82f6; }
-.bestand-page .slide-plan-badge-2 { background: #C8102E; }
-.bestand-page .slide-plan-badge-3 { background: #10b981; }
+.bestand-page .slide-plan-badge-1 { background: #86BC25; }
+.bestand-page .slide-plan-badge-2 { background: #046A38; }
+.bestand-page .slide-plan-badge-3 { background: #0D8390; }
 
 /* Gantt bars */
 .bestand-page .slide-plan-gantt-track-col {
@@ -5531,7 +5533,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.68rem;
+    font-size: 0.89rem;
     font-weight: 600;
     color: white;
 }
@@ -5541,9 +5543,9 @@ body {
     text-shadow: 0 1px 2px rgba(0,0,0,0.2);
 }
 
-.bestand-page .slide-plan-bar-1 { background: linear-gradient(135deg, #3b82f6, #2563eb); }
-.bestand-page .slide-plan-bar-2 { background: linear-gradient(135deg, #C8102E, #a00d24); }
-.bestand-page .slide-plan-bar-3 { background: linear-gradient(135deg, #10b981, #059669); }
+.bestand-page .slide-plan-bar-1 { background: linear-gradient(135deg, #86BC25, #6a9a1f); }
+.bestand-page .slide-plan-bar-2 { background: linear-gradient(135deg, #046A38, #035530); }
+.bestand-page .slide-plan-bar-3 { background: linear-gradient(135deg, #0D8390, #0a6870); }
 
 /* Milestones */
 .bestand-page .slide-plan-milestones-row {
@@ -5566,13 +5568,13 @@ body {
 
 .bestand-page .slide-plan-ms span {
     font-size: 1.2rem;
-    color: #C8102E;
+    color: #046A38;
     line-height: 1;
 }
 
 .bestand-page .slide-plan-ms small {
-    font-size: 0.55rem;
-    color: #6b7280;
+    font-size: 0.89rem;
+    color: #53565A;
     white-space: nowrap;
     font-weight: 600;
 }
@@ -5592,9 +5594,9 @@ body {
     border-top: 3px solid #e5e7eb;
 }
 
-.bestand-page .slide-plan-pc-1 { border-top-color: #3b82f6; }
-.bestand-page .slide-plan-pc-2 { border-top-color: #C8102E; }
-.bestand-page .slide-plan-pc-3 { border-top-color: #10b981; }
+.bestand-page .slide-plan-pc-1 { border-top-color: #86BC25; }
+.bestand-page .slide-plan-pc-2 { border-top-color: #046A38; }
+.bestand-page .slide-plan-pc-3 { border-top-color: #0D8390; }
 
 .bestand-page .slide-plan-pc-head {
     display: flex;
@@ -5605,13 +5607,13 @@ body {
 }
 
 .bestand-page .slide-plan-pc-head strong {
-    font-size: 0.82rem;
+    font-size: 0.89rem;
     color: #1f2937;
 }
 
 .bestand-page .slide-plan-pc-head small {
-    font-size: 0.68rem;
-    color: #9ca3af;
+    font-size: 0.89rem;
+    color: #97999B;
     margin-left: auto;
 }
 
@@ -5624,8 +5626,8 @@ body {
 .bestand-page .slide-plan-phase-card ul li {
     padding: 0.2rem 0 0.2rem 0.85rem;
     position: relative;
-    font-size: 0.72rem;
-    color: #4b5563;
+    font-size: 0.89rem;
+    color: #53565A;
     line-height: 1.4;
 }
 
@@ -5651,7 +5653,7 @@ body {
 .bestand-page .slide-plan-staff-table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 0.82rem;
+    font-size: 0.89rem;
     background: white;
     border: 1px solid #e5e7eb;
     border-radius: 6px;
@@ -5663,7 +5665,7 @@ body {
     padding: 0.5rem 0.65rem;
     text-align: center;
     font-weight: 700;
-    font-size: 0.75rem;
+    font-size: 0.89rem;
     color: #374151;
     border-bottom: 2px solid #e5e7eb;
 }
@@ -5676,8 +5678,8 @@ body {
 .bestand-page .slide-plan-staff-table th small {
     display: block;
     font-weight: 400;
-    color: #9ca3af;
-    font-size: 0.62rem;
+    color: #97999B;
+    font-size: 0.89rem;
 }
 
 .bestand-page .slide-plan-staff-table td {
@@ -5709,15 +5711,15 @@ body {
 }
 
 .bestand-page .slide-plan-staff-kpi-peak {
-    border: 2px solid #C8102E;
-    background: #fef2f2;
+    border: 2px solid #86BC25;
+    background: #f4fae8;
 }
 
 .bestand-page .slide-plan-staff-kpi-phase {
-    font-size: 0.68rem;
+    font-size: 0.89rem;
     font-weight: 700;
     text-transform: uppercase;
-    color: #9ca3af;
+    color: #97999B;
     letter-spacing: 0.04em;
     margin-bottom: 0.2rem;
 }
@@ -5730,12 +5732,12 @@ body {
 }
 
 .bestand-page .slide-plan-staff-kpi-peak .slide-plan-staff-kpi-val {
-    color: #C8102E;
+    color: #86BC25;
 }
 
 .bestand-page .slide-plan-staff-kpi-detail {
-    font-size: 0.65rem;
-    color: #6b7280;
+    font-size: 0.89rem;
+    color: #53565A;
     line-height: 1.4;
     margin-top: 0.15rem;
 }

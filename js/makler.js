@@ -616,9 +616,9 @@ function fillMaklerDetail(kunde) {
     // 1) SHARED HEADER (top bar)
     // ============================
     var headerTitle = document.getElementById('kundenHeaderTitle');
-    if (headerTitle) headerTitle.textContent = 'Makler B2B';
+    if (headerTitle) headerTitle.textContent = kunde.name;
     var headerId = document.getElementById('kundenHeaderId');
-    if (headerId) headerId.textContent = 'GS NRW | Ecclesia Gruppe';
+    if (headerId) headerId.textContent = kunde.id;
 
     // Customer dropdown → institution selector
     var dropdown = document.querySelector('.kunden-switch-dropdown');
@@ -692,18 +692,11 @@ function fillMaklerDetail(kunde) {
     var idEl = document.getElementById('kundenVermittlerId');
     if (idEl) idEl.textContent = kunde.id;
 
-    // Foto → Segment-Icon
+    // Foto → Platzhalter-Icon (Gebäude)
     var foto = document.querySelector('.kunden-foto');
     if (foto) {
-        var segColor = '';
-        if (kunde.segment === 'Gesundheitswesen') segColor = '#3b82f6';
-        else if (kunde.segment === 'Kirche') segColor = '#8b5cf6';
-        else if (kunde.segment === 'Sozialwirtschaft') segColor = '#f59e0b';
-        else if (kunde.segment === 'Industrie & Gewerbe') segColor = '#64748b';
-        else if (kunde.segment === 'Transport & Logistik') segColor = '#22c55e';
-        else segColor = '#3b82f6';
-        foto.style.background = segColor;
-        foto.innerHTML = '<span class="makler-segment-photo-icon">' + kunde.segmentIcon + '</span>';
+        foto.style.background = '#94a3b8';
+        foto.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="48" height="48" style="color:#fff"><path d="M3 21h18M5 21V7l8-4v18M13 21V3l6 3v15M9 9v.01M9 12v.01M9 15v.01M9 18v.01M17 9v.01M17 12v.01M17 15v.01M17 18v.01"/></svg>';
     }
 
     // ============================
@@ -847,6 +840,10 @@ function restoreAOKundenDetail() {
     if (clvLabel) clvLabel.textContent = 'CLV';
     var segLabel = document.querySelector('#kundenDetailPage .kunde-sticky-kpi:nth-child(3) .kunde-sticky-kpi-label');
     if (segLabel) segLabel.textContent = 'Segment';
+
+    // Restore foto background (B2B sets grey, AO uses CSS default)
+    var foto = document.querySelector('.kunden-foto');
+    if (foto) foto.style.background = '';
 
     // Restore hidden AO elements
     var privatStamm = document.getElementById('privatStammdaten');

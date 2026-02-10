@@ -48,8 +48,8 @@
     <link rel="stylesheet" href="css/screen-recorder.css?v=20260210">
 </head>
 <body>
-  <!-- Bildschirmaufnahme-Button (fixed, immer sichtbar) -->
-  <div id="screenRecordBtn" onclick="toggleScreenRecord()" title="Bildschirmaufnahme starten">
+  <!-- Bildschirmaufnahme-Button (fixed, default hidden) -->
+  <div id="screenRecordBtn" onclick="toggleScreenRecord()" title="Bildschirmaufnahme starten" style="display:none;">
       <span class="rec-inner"></span>
       <span class="rec-label">REC</span>
   </div>
@@ -399,6 +399,19 @@
                     </div>
                     <div class="upload-mode-hint" id="uploadModeHint" style="display: none;">
                         Klicke auf das Logo oder Profilbild um eigene Bilder hochzuladen.
+                    </div>
+
+                    <!-- Bildschirmaufnahme Toggle -->
+                    <div class="settings-item mock-toggle">
+                        <svg class="settings-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <circle cx="12" cy="12" r="3" fill="currentColor"></circle>
+                        </svg>
+                        <span>Bildschirmaufnahme</span>
+                        <div class="toggle-switch">
+                            <input type="checkbox" id="screenRecordToggle" onchange="toggleScreenRecordVisibility()">
+                            <label for="screenRecordToggle"></label>
+                        </div>
                     </div>
                 </div>
             </div>

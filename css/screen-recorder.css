@@ -2,11 +2,11 @@
    SCREEN RECORDER - Aufnahme-Button & Klick-Ripples
    ======================================== */
 
-/* Roter Aufnahme-Button (fixed, immer sichtbar) */
+/* Roter Aufnahme-Button (fixed, unten links) */
 #screenRecordBtn {
     position: fixed;
-    top: 16px;
-    right: 16px;
+    bottom: 20px;
+    left: 20px;
     z-index: 99999;
     width: 36px;
     height: 36px;
@@ -35,26 +35,35 @@
     transition: all 0.3s ease;
 }
 
-/* Recording State: Quadrat statt Kreis + Pulsieren */
+/* Recording-State: fast unsichtbar damit es nicht im Video ist */
+#screenRecordBtn.recording {
+    opacity: 0.06;
+    transform: scale(0.7);
+    animation: none;
+    box-shadow: none;
+    border-color: transparent;
+    background: transparent;
+}
+
+/* Beim Hovern kurz sichtbar machen zum Stoppen */
+#screenRecordBtn.recording:hover {
+    opacity: 1;
+    transform: scale(1);
+    background: #dc2626;
+    border-color: #dc2626;
+    box-shadow: 0 4px 16px rgba(220, 38, 38, 0.5);
+}
+
 #screenRecordBtn.recording .rec-inner {
     border-radius: 3px;
     width: 12px;
     height: 12px;
 }
 
-#screenRecordBtn.recording {
-    animation: rec-pulse 1.5s ease-in-out infinite;
-}
-
-@keyframes rec-pulse {
-    0%, 100% { box-shadow: 0 2px 8px rgba(220, 38, 38, 0.4); }
-    50% { box-shadow: 0 2px 20px rgba(220, 38, 38, 0.8), 0 0 0 6px rgba(220, 38, 38, 0.15); }
-}
-
 /* Recording-Indikator-Text */
 #screenRecordBtn .rec-label {
     position: absolute;
-    right: 44px;
+    left: 44px;
     top: 50%;
     transform: translateY(-50%);
     background: #dc2626;
@@ -70,7 +79,8 @@
     letter-spacing: 0.5px;
 }
 
-#screenRecordBtn.recording .rec-label {
+/* Label nur beim Hover im Recording-Modus zeigen */
+#screenRecordBtn.recording:hover .rec-label {
     opacity: 1;
 }
 

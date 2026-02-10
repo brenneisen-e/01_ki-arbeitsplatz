@@ -454,6 +454,83 @@
     text-align: right;
 }
 
+/* Aufgaben-Liste */
+.mk-aufgaben-liste {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.mk-aufgabe-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.15s;
+    border-left: 3px solid #e2e8f0;
+}
+
+.mk-aufgabe-item:hover {
+    background: #f1f5f9;
+}
+
+.mk-aufgabe-item.prio-rot {
+    border-left-color: #ef4444;
+    background: #fef2f2;
+}
+
+.mk-aufgabe-item.prio-gelb {
+    border-left-color: #f59e0b;
+    background: #fffbeb;
+}
+
+.mk-aufgabe-icon {
+    color: #64748b;
+    flex-shrink: 0;
+}
+
+.mk-aufgabe-item.prio-rot .mk-aufgabe-icon {
+    color: #ef4444;
+}
+
+.mk-aufgabe-item.prio-gelb .mk-aufgabe-icon {
+    color: #f59e0b;
+}
+
+.mk-aufgabe-text {
+    flex: 1;
+    min-width: 0;
+}
+
+.mk-aufgabe-text strong {
+    display: block;
+    font-size: 13px;
+    color: #1e293b;
+    margin-bottom: 2px;
+}
+
+.mk-aufgabe-text span {
+    font-size: 12px;
+    color: #64748b;
+}
+
+.mk-aufgabe-frist {
+    font-size: 12px;
+    font-weight: 600;
+    color: #64748b;
+    white-space: nowrap;
+    padding: 2px 8px;
+    border-radius: 6px;
+    background: #f1f5f9;
+}
+
+.mk-aufgabe-frist.frist-dringend {
+    color: #dc2626;
+    background: #fef2f2;
+}
+
 @media (max-width: 1200px) {
     .mk-uebersicht-grid {
         grid-template-columns: 1fr;

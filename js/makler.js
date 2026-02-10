@@ -17,10 +17,9 @@ function toggleMaklerModus() {
     applyMaklerModus();
 
     // Falls A-10 offen: zurück zur Liste
-    var a10 = document.getElementById('kundenDetailPanel');
-    if (a10 && a10.classList.contains('active')) {
-        var backBtn = document.querySelector('.back-to-list');
-        if (backBtn) backBtn.click();
+    var a10 = document.getElementById('kundenDetailPage');
+    if (a10 && a10.style.display !== 'none') {
+        if (typeof closeKundenDetail === 'function') closeKundenDetail();
     }
 
     localStorage.setItem('maklerModus', maklerModus ? '1' : '0');
@@ -60,11 +59,10 @@ function applyMaklerModus() {
         document.querySelectorAll('.agentur-tab-content').forEach(function(el) {
             el.classList.remove('active');
         });
-        // Show Makler kundenliste
-        if (maklerListe) { maklerListe.style.display = ''; maklerListe.classList.add('active'); }
+        if (maklerListe) maklerListe.style.display = '';
         if (privatListe) privatListe.style.display = 'none';
-        // Render Makler list
-        renderMaklerKundenliste();
+        // Show Übersicht as default tab
+        showMaklerTab('uebersicht');
     } else {
         // Show private, hide Makler
         if (maklerListe) { maklerListe.style.display = 'none'; maklerListe.classList.remove('active'); }
@@ -541,7 +539,7 @@ function renderMaklerKundenliste() {
             '<td class="text-right"><strong>' + k.praemieDisplay + '</strong></td>' +
             '<td class="text-center">' + k.vertraege + '</td>' +
             '<td><span class="' + schadenClass + '">' + k.schadenquote + '%</span></td>' +
-            '<td><div class="deckung-mini-bar"><div class="deckung-mini-fill" style="width:' + k.deckungsquote + '%"></div><span>' + k.deckungsquote + '%</span></div></td>' +
+            '<td><div class="deckung-mini-bar"><div><div class="deckung-mini-fill" style="width:' + k.deckungsquote + '%"></div></div><span>' + k.deckungsquote + '%</span></div></td>' +
             '<td><span class="renewal-badge ' + renewalClass + '">' + k.naechstesRenewal + '</span></td>' +
             '</tr>';
     }).join('');
@@ -563,22 +561,52 @@ function openMaklerKundenDetail(kundeId) {
     var kunde = maklerKunden.find(function(k) { return k.id === kundeId; });
     if (!kunde) return;
 
-    // Switch to A-10
-    if (typeof openKundenDetail === 'function') {
-        // Use existing navigation to show detail panel
-        var detailPanel = document.getElementById('kundenDetailPanel');
-        var agenturPage = document.querySelector('.agentur-page-new');
-        if (detailPanel && agenturPage) {
-            agenturPage.classList.remove('active');
-            detailPanel.classList.add('active');
-        }
+    // Remember we came from Agentursicht for back-navigation
+    if (typeof previousViewBeforeKundenDetail !== 'undefined') {
+        previousViewBeforeKundenDetail = 'agentursicht';
+    }
+
+    // Hide all pages, show kundenDetailPage
+    var agenturOverview = document.getElementById('agenturOverview');
+    var kundenDetailPage = document.getElementById('kundenDetailPage');
+    var landingPage = document.getElementById('landingPage');
+    var mainApp = document.getElementById('mainApp');
+    var potentialAnalyse = document.getElementById('potentialAnalysePage');
+
+    if (landingPage) landingPage.style.display = 'none';
+    if (mainApp) mainApp.style.display = 'none';
+    if (potentialAnalyse) potentialAnalyse.style.display = 'none';
+    if (agenturOverview) agenturOverview.style.display = 'none';
+
+    if (kundenDetailPage) {
+        kundenDetailPage.style.display = 'block';
+        kundenDetailPage.classList.remove('makler-view', 'ao-view');
+        kundenDetailPage.classList.add('makler-view');
     }
 
     fillMaklerDetail(kunde);
+
+    // Dispatch event for Page ID Tracker
+    document.dispatchEvent(new CustomEvent('viewChanged', {
+        detail: { module: 'versicherung', view: 'kundendetail' }
+    }));
 }
 window.openMaklerKundenDetail = openMaklerKundenDetail;
 
 function fillMaklerDetail(kunde) {
+    // Shared header
+    var headerTitle = document.getElementById('kundenHeaderTitle');
+    if (headerTitle) headerTitle.textContent = 'Maklerteam: Gesundheit & Soziales NRW';
+    var headerId = document.getElementById('kundenHeaderId');
+    if (headerId) headerId.textContent = 'Makler B2B';
+
+    // Hide customer dropdown, show institution name instead
+    var dropdown = document.querySelector('.kunden-switch-dropdown');
+    if (dropdown) {
+        dropdown.setAttribute('data-orig-display', dropdown.style.display || '');
+        dropdown.innerHTML = '<label>Institution:</label><span style="font-weight:600;font-size:14px;color:#1e293b">' + kunde.name + ' (' + kunde.id + ')</span>';
+    }
+
     // Name + ID
     var nameEl = document.getElementById('kundenName');
     if (nameEl) nameEl.textContent = kunde.name;
@@ -587,7 +615,17 @@ function fillMaklerDetail(kunde) {
 
     // Foto → Segment-Icon
     var foto = document.querySelector('.kunden-foto');
-    if (foto) foto.innerHTML = '<span class="makler-segment-photo-icon">' + kunde.segmentIcon + '</span>';
+    if (foto) {
+        var segColor = '';
+        if (kunde.segment === 'Gesundheitswesen') segColor = '#3b82f6';
+        else if (kunde.segment === 'Kirche') segColor = '#8b5cf6';
+        else if (kunde.segment === 'Sozialwirtschaft') segColor = '#f59e0b';
+        else if (kunde.segment === 'Industrie & Gewerbe') segColor = '#64748b';
+        else if (kunde.segment === 'Transport & Logistik') segColor = '#22c55e';
+        else segColor = '#3b82f6';
+        foto.style.background = segColor;
+        foto.innerHTML = '<span class="makler-segment-photo-icon">' + kunde.segmentIcon + '</span>';
+    }
 
     // Stammdaten → Makler-Stammdaten umschalten
     var privatStamm = document.getElementById('privatStammdaten');
@@ -821,7 +859,6 @@ function showMaklerTab(tabName) {
     if (btn) btn.classList.add('active');
 
     if (tabName === 'kunden') {
-        // Show Makler kundenliste
         if (maklerListe) maklerListe.classList.add('active');
         renderMaklerKundenliste();
     } else {
@@ -830,9 +867,464 @@ function showMaklerTab(tabName) {
     }
 
     // Lazy-render
+    if (tabName === 'uebersicht') renderMaklerUebersicht();
+    if (tabName === 'potentiale') renderMaklerPotentiale();
     if (tabName === 'versicherermix') renderVersichererMix();
+    if (tabName === 'renewal') renderMaklerRenewalOverview();
+    if (tabName === 'schaden') renderMaklerSchadenOverview();
+    if (tabName === 'deckungsluecken') renderMaklerDeckungslueckenOverview();
 }
 window.showMaklerTab = showMaklerTab;
+
+// ========================================
+// MAKLER ÜBERSICHT (Dashboard)
+// ========================================
+function renderMaklerUebersicht() {
+    var container = document.getElementById('maklerUebersichtContent');
+    if (!container) return;
+
+    // Top-5 Kunden nach Prämie
+    var topKunden = maklerKunden.slice().sort(function(a, b) { return b.praemie - a.praemie; }).slice(0, 5);
+    var topKundenRows = topKunden.map(function(k, i) {
+        var schadenClass = k.schadenquote > 65 ? 'schaden-hoch' : (k.schadenquote > 50 ? 'schaden-mittel' : 'schaden-niedrig');
+        return '<tr class="clickable-row" onclick="openMaklerKundenDetail(\'' + k.id + '\')">' +
+            '<td><strong>' + (i + 1) + '.</strong></td>' +
+            '<td><strong>' + k.name + '</strong><br><span style="font-size:11px;color:#64748b">' + k.segment + '</span></td>' +
+            '<td class="text-right"><strong>' + k.praemieDisplay + '</strong></td>' +
+            '<td class="text-center">' + k.vertraege + '</td>' +
+            '<td><span class="' + schadenClass + '">' + k.schadenquote + '%</span></td>' +
+            '</tr>';
+    }).join('');
+
+    // Anstehende Renewals (nächste 90 Tage)
+    var now = new Date();
+    var d90 = new Date(now); d90.setDate(d90.getDate() + 90);
+    var renewals = [];
+    maklerKunden.forEach(function(k) {
+        if (!k.vertraegeDetail) return;
+        k.vertraegeDetail.forEach(function(v) {
+            if (v.ablauf === 'unbefristet') return;
+            var parts = v.ablauf.split('.');
+            var ablauf = new Date(parts[2], parseInt(parts[1]) - 1, parseInt(parts[0]));
+            if (ablauf <= d90 && ablauf >= now) {
+                renewals.push({ kunde: k.name, kundeId: k.id, sparte: v.sparte, ablauf: v.ablauf, praemie: v.praemie, ablaufDate: ablauf });
+            }
+        });
+    });
+    renewals.sort(function(a, b) { return a.ablaufDate - b.ablaufDate; });
+    var renewalRows = renewals.slice(0, 8).map(function(r) {
+        var daysLeft = Math.ceil((r.ablaufDate - now) / (1000 * 60 * 60 * 24));
+        var urgencyClass = daysLeft <= 30 ? 'renewal-rot' : 'renewal-gelb';
+        return '<tr class="clickable-row" onclick="openMaklerKundenDetail(\'' + r.kundeId + '\')">' +
+            '<td><span class="renewal-badge ' + urgencyClass + '">' + r.ablauf + '</span></td>' +
+            '<td><strong>' + r.kunde + '</strong></td>' +
+            '<td>' + r.sparte + '</td>' +
+            '<td class="text-right">' + (r.praemie >= 1000000 ? (r.praemie / 1000000).toFixed(1) + ' Mio. \u20AC' : r.praemie.toLocaleString('de-DE') + ' \u20AC') + '</td>' +
+            '</tr>';
+    }).join('');
+    if (renewalRows === '') renewalRows = '<tr><td colspan="4" class="text-muted">Keine Renewals in den n\u00E4chsten 90 Tagen</td></tr>';
+
+    // Segment-Verteilung berechnen
+    var segmentMap = {};
+    var totalPraemie = 0;
+    maklerKunden.forEach(function(k) {
+        if (!segmentMap[k.segment]) segmentMap[k.segment] = { praemie: 0, count: 0 };
+        segmentMap[k.segment].praemie += k.praemie;
+        segmentMap[k.segment].count++;
+        totalPraemie += k.praemie;
+    });
+    var segmentColors = {
+        'Gesundheitswesen': '#3b82f6',
+        'Kirche': '#8b5cf6',
+        'Sozialwirtschaft': '#f59e0b',
+        'Industrie & Gewerbe': '#64748b',
+        'Transport & Logistik': '#22c55e'
+    };
+    var segmentItems = Object.keys(segmentMap).map(function(seg) {
+        return { name: seg, praemie: segmentMap[seg].praemie, count: segmentMap[seg].count, color: segmentColors[seg] || '#94a3b8' };
+    }).sort(function(a, b) { return b.praemie - a.praemie; });
+
+    var segmentBars = segmentItems.map(function(s) {
+        var pct = (s.praemie / totalPraemie * 100).toFixed(1);
+        return '<div class="mk-segment-row">' +
+            '<span class="mk-segment-label"><span class="mk-segment-dot" style="background:' + s.color + '"></span>' + s.name + ' (' + s.count + ')</span>' +
+            '<div class="mk-segment-bar-track"><div class="mk-segment-bar-fill" style="width:' + pct + '%;background:' + s.color + '"></div></div>' +
+            '<span class="mk-segment-value">' + pct + '%</span></div>';
+    }).join('');
+
+    // Gesamtkennzahlen
+    var totalVertraege = maklerKunden.reduce(function(s, k) { return s + k.vertraege; }, 0);
+    var avgDeckung = (maklerKunden.reduce(function(s, k) { return s + k.deckungsquote; }, 0) / maklerKunden.length).toFixed(0);
+    var avgSchaden = (maklerKunden.reduce(function(s, k) { return s + k.schadenquote; }, 0) / maklerKunden.length).toFixed(0);
+
+    container.innerHTML =
+        '<div class="mk-uebersicht-grid">' +
+            '<div class="mk-uebersicht-main">' +
+                // Vertriebskennzahlen
+                '<div class="uebersicht-card">' +
+                    '<div class="uebersicht-card-header"><h3>' +
+                        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>' +
+                        ' Vertriebskennzahlen</h3></div>' +
+                    '<div class="kennzahlen-grid">' +
+                        '<div class="kennzahl-item"><div class="kennzahl-value">' + maklerKunden.length + '</div><div class="kennzahl-label">Kunden</div><div class="kennzahl-trend positive">5 Segmente</div></div>' +
+                        '<div class="kennzahl-item"><div class="kennzahl-value">' + totalVertraege + '</div><div class="kennzahl-label">Vertr\u00E4ge gesamt</div><div class="kennzahl-trend positive">\u00D8 ' + Math.round(totalVertraege / maklerKunden.length) + ' pro Kunde</div></div>' +
+                        '<div class="kennzahl-item"><div class="kennzahl-value">' + avgDeckung + '%</div><div class="kennzahl-label">\u00D8 Deckungsquote</div><div class="kennzahl-trend ' + (avgDeckung >= 80 ? 'positive' : 'neutral') + '">Ziel: 85%</div></div>' +
+                        '<div class="kennzahl-item"><div class="kennzahl-value">' + avgSchaden + '%</div><div class="kennzahl-label">\u00D8 Schadenquote</div><div class="kennzahl-trend ' + (avgSchaden < 65 ? 'positive' : 'negative') + '">Ziel: < 65%</div></div>' +
+                    '</div>' +
+                '</div>' +
+                // Top-5 Kunden
+                '<div class="uebersicht-card">' +
+                    '<div class="uebersicht-card-header"><h3>' +
+                        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>' +
+                        ' Top-5 Kunden (Pr\u00E4mienvolumen)</h3>' +
+                        '<a href="#" class="link-alle-anzeigen" onclick="showMaklerTab(\'kunden\'); return false;">Alle ' + maklerKunden.length + ' Kunden \u2192</a>' +
+                    '</div>' +
+                    '<table class="makler-detail-table"><thead><tr><th>#</th><th>Institution</th><th class="text-right">Pr\u00E4mie/a</th><th class="text-center">Vertr\u00E4ge</th><th>Schadenquote</th></tr></thead>' +
+                    '<tbody>' + topKundenRows + '</tbody></table>' +
+                '</div>' +
+                // Anstehende Renewals
+                '<div class="uebersicht-card">' +
+                    '<div class="uebersicht-card-header"><h3>' +
+                        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>' +
+                        ' Anstehende Renewals (90 Tage)</h3>' +
+                        '<a href="#" class="link-alle-anzeigen" onclick="showMaklerTab(\'renewal\'); return false;">Alle Renewals \u2192</a>' +
+                    '</div>' +
+                    '<table class="makler-detail-table"><thead><tr><th>Ablauf</th><th>Kunde</th><th>Sparte</th><th class="text-right">Pr\u00E4mie</th></tr></thead>' +
+                    '<tbody>' + renewalRows + '</tbody></table>' +
+                '</div>' +
+            '</div>' +
+            // Sidebar
+            '<div class="mk-uebersicht-sidebar">' +
+                // Segment-Verteilung
+                '<div class="uebersicht-card">' +
+                    '<div class="uebersicht-card-header"><h3>' +
+                        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0110 10"/><path d="M12 2v10h10"/></svg>' +
+                        ' Segment-Verteilung</h3></div>' +
+                    '<div class="mk-segment-chart">' + segmentBars + '</div>' +
+                '</div>' +
+                // Anstehende Termine
+                '<div class="uebersicht-card">' +
+                    '<div class="uebersicht-card-header"><h3>' +
+                        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>' +
+                        ' Anstehende Termine</h3></div>' +
+                    '<div class="termine-liste">' +
+                        '<div class="termin-item heute"><div class="termin-zeit"><span class="termin-tag">Heute</span><span class="termin-uhrzeit">10:00</span></div><div class="termin-details"><strong>Marienhospital Detmold</strong><span>Jahresgespr\u00E4ch CFO Dr. Weinert</span></div></div>' +
+                        '<div class="termin-item"><div class="termin-zeit"><span class="termin-tag">Mo, 13.01.</span><span class="termin-uhrzeit">14:00</span></div><div class="termin-details"><strong>Ev. Kirche Westfalen</strong><span>Renewal-Verhandlung Geb\u00E4ude</span></div></div>' +
+                        '<div class="termin-item"><div class="termin-zeit"><span class="termin-tag">Di, 14.01.</span><span class="termin-uhrzeit">09:30</span></div><div class="termin-details"><strong>Phoenix Contact</strong><span>Cyber-Risiko Workshop</span></div></div>' +
+                        '<div class="termin-item"><div class="termin-zeit"><span class="termin-tag">Mi, 15.01.</span><span class="termin-uhrzeit">11:00</span></div><div class="termin-details"><strong>Hellmann Logistics</strong><span>Flottenversicherung Review</span></div></div>' +
+                    '</div>' +
+                '</div>' +
+                // Quick Actions
+                '<div class="uebersicht-card">' +
+                    '<div class="uebersicht-card-header"><h3>' +
+                        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>' +
+                        ' Schnellaktionen</h3></div>' +
+                    '<div class="formulare-grid">' +
+                        '<button class="formular-btn" onclick="showMaklerTab(\'potentiale\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Potentiale pr\u00FCfen</button>' +
+                        '<button class="formular-btn" onclick="showMaklerTab(\'deckungsluecken\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Deckungsl\u00FCcken</button>' +
+                        '<button class="formular-btn" onclick="showMaklerTab(\'versicherermix\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><circle cx="12" cy="12" r="10"/><path d="M12 2v20M2 12h20"/></svg> Versicherer-Mix</button>' +
+                    '</div>' +
+                '</div>' +
+            '</div>' +
+        '</div>';
+}
+window.renderMaklerUebersicht = renderMaklerUebersicht;
+
+// ========================================
+// MAKLER RENEWAL OVERVIEW (A-02)
+// ========================================
+function renderMaklerRenewalOverview() {
+    var container = document.getElementById('maklerRenewalOverview');
+    if (!container) return;
+
+    var now = new Date();
+    var d30 = new Date(now); d30.setDate(d30.getDate() + 30);
+    var d90 = new Date(now); d90.setDate(d90.getDate() + 90);
+    var d180 = new Date(now); d180.setDate(d180.getDate() + 180);
+
+    var rot = [], gelb = [], gruen = [];
+    maklerKunden.forEach(function(k) {
+        if (!k.vertraegeDetail) return;
+        k.vertraegeDetail.forEach(function(v) {
+            if (v.ablauf === 'unbefristet') return;
+            var parts = v.ablauf.split('.');
+            var ablauf = new Date(parts[2], parseInt(parts[1]) - 1, parseInt(parts[0]));
+            var item = { kunde: k.name, kundeId: k.id, sparte: v.sparte, versicherer: v.versicherer, praemie: v.praemie, ablauf: v.ablauf };
+            if (ablauf <= d30) rot.push(item);
+            else if (ablauf <= d90) gelb.push(item);
+            else if (ablauf <= d180) gruen.push(item);
+        });
+    });
+
+    function renderGroup(label, items, cssClass) {
+        if (items.length === 0) return '<div class="renewal-group"><div class="renewal-group-label ' + cssClass + '">' + label + ' (0)</div></div>';
+        var rows = items.map(function(i) {
+            return '<div class="renewal-item" style="cursor:pointer" onclick="openMaklerKundenDetail(\'' + i.kundeId + '\')">' +
+                '<span class="renewal-sparte">' + i.sparte + '</span>' +
+                '<span class="renewal-versicherer">' + i.kunde + '</span>' +
+                '<span class="renewal-ablauf">' + i.ablauf + '</span></div>';
+        }).join('');
+        return '<div class="renewal-group"><div class="renewal-group-label ' + cssClass + '">' + label + ' (' + items.length + ')</div>' + rows + '</div>';
+    }
+
+    container.innerHTML = renderGroup('N\u00E4chste 30 Tage', rot, 'renewal-rot') +
+        renderGroup('31 \u2013 90 Tage', gelb, 'renewal-gelb') +
+        renderGroup('91 \u2013 180 Tage', gruen, 'renewal-gruen');
+}
+
+// ========================================
+// MAKLER SCHADEN OVERVIEW (A-02)
+// ========================================
+function renderMaklerSchadenOverview() {
+    var container = document.getElementById('maklerSchadenOverview');
+    if (!container) return;
+
+    var rows = maklerKunden.filter(function(k) { return k.schadenhistorie && k.schadenhistorie.length > 0; }).map(function(k) {
+        var latest = k.schadenhistorie[0];
+        var qClass = latest.quote > 65 ? 'schaden-hoch' : (latest.quote > 50 ? 'schaden-mittel' : 'schaden-niedrig');
+        return '<tr class="clickable-row" onclick="openMaklerKundenDetail(\'' + k.id + '\')">' +
+            '<td><strong>' + k.name + '</strong></td>' +
+            '<td>' + k.segment + '</td>' +
+            '<td class="text-center">' + latest.anzahl + '</td>' +
+            '<td class="text-right">' + latest.volumen.toLocaleString('de-DE') + ' \u20AC</td>' +
+            '<td><span class="' + qClass + '">' + latest.quote + '%</span></td>' +
+            '<td>' + latest.groesster + '</td></tr>';
+    }).join('');
+
+    container.innerHTML = '<table class="makler-detail-table"><thead><tr><th>Institution</th><th>Segment</th><th class="text-center">Sch\u00E4den (' + new Date().getFullYear() + ')</th><th class="text-right">Volumen</th><th>Quote</th><th>Gr\u00F6\u00DFter Schaden</th></tr></thead><tbody>' + rows + '</tbody></table>';
+}
+
+// ========================================
+// MAKLER DECKUNGSLÜCKEN OVERVIEW (A-02)
+// ========================================
+function renderMaklerDeckungslueckenOverview() {
+    var container = document.getElementById('maklerDeckungslueckenOverview');
+    if (!container) return;
+
+    var allGaps = [];
+    maklerKunden.forEach(function(k) {
+        if (!k.deckungsluecken) return;
+        k.deckungsluecken.forEach(function(d) {
+            allGaps.push({ kunde: k.name, kundeId: k.id, segment: k.segment, risiko: d.risiko, status: d.status, empfehlung: d.empfehlung, prioritaet: d.prioritaet });
+        });
+    });
+    // Sort by priority
+    var prioOrder = { 'Hoch': 0, 'Mittel': 1, 'Niedrig': 2 };
+    allGaps.sort(function(a, b) { return (prioOrder[a.prioritaet] || 2) - (prioOrder[b.prioritaet] || 2); });
+
+    var rows = allGaps.map(function(g) {
+        var pClass = g.prioritaet === 'Hoch' ? 'prio-hoch' : (g.prioritaet === 'Mittel' ? 'prio-mittel' : 'prio-niedrig');
+        return '<tr class="clickable-row" onclick="openMaklerKundenDetail(\'' + g.kundeId + '\')">' +
+            '<td><span class="prio-badge ' + pClass + '">' + g.prioritaet + '</span></td>' +
+            '<td><strong>' + g.kunde + '</strong></td>' +
+            '<td>' + g.risiko + '</td>' +
+            '<td><span class="status-badge-dl">' + g.status + '</span></td>' +
+            '<td>' + g.empfehlung + '</td></tr>';
+    }).join('');
+
+    container.innerHTML = '<table class="makler-detail-table"><thead><tr><th>Prio</th><th>Institution</th><th>Risiko</th><th>Status</th><th>Empfehlung</th></tr></thead><tbody>' + rows + '</tbody></table>';
+}
+
+// ========================================
+// MAKLER POTENTIALE (B2B Cross-Selling)
+// ========================================
+var maklerPotentialeData = [
+    {
+        id: 'mp-01',
+        kunde: 'Marienhospital Detmold GmbH',
+        kundeId: 'MK-GW-001',
+        titel: 'Umwelthaftpflicht fehlt',
+        beschreibung: 'Labor und Gefahrstofflager ohne separate Umweltdeckung. Gesetzliche Pflicht seit 2024.',
+        kategorie: 'Deckungsl\u00FCcke',
+        prioritaet: 'Hoch',
+        potentialPraemie: '45.000 \u20AC/a',
+        quelle: 'Risikoanalyse',
+        herleitung: 'Labor mit Gefahrstoffen (Klasse 3+4), Radiologie mit Kontrastmitteln, Zytostatikazubereitung \u2013 separate Umwelthaftpflicht gesetzlich empfohlen.',
+        empfehlung: 'Umwelthaftpflichtversicherung mit Deckungssumme 5 Mio. \u20AC'
+    },
+    {
+        id: 'mp-02',
+        kunde: 'Marienhospital Detmold GmbH',
+        kundeId: 'MK-GW-001',
+        titel: 'Maschinenbruch med. Gro\u00DFger\u00E4te',
+        beschreibung: 'MRT, CT und OP-Robotik (da Vinci) nicht separat gegen Maschinenbruch versichert.',
+        kategorie: 'Deckungsl\u00FCcke',
+        prioritaet: 'Hoch',
+        potentialPraemie: '28.000 \u20AC/a',
+        quelle: 'Bestandsanalyse',
+        herleitung: 'Ger\u00E4tewert > 8 Mio. \u20AC (MRT: 2,5 Mio., CT: 1,8 Mio., da Vinci: 3,2 Mio.). Nur \u00FCber Inhaltsversicherung gedeckt \u2013 Sublimit 500.000 \u20AC.',
+        empfehlung: 'Separate Maschinenbruchversicherung mit Neuwertentsch\u00E4digung'
+    },
+    {
+        id: 'mp-03',
+        kunde: 'Ev. Kirche von Westfalen',
+        kundeId: 'MK-KI-001',
+        titel: 'Cyber-Rahmenvertrag f\u00FCr Kirchenverwaltungen',
+        beschreibung: 'Nur 12% der 1.900 Gemeinden haben Cyber-Schutz. Zentraler Rahmenvertrag m\u00F6glich.',
+        kategorie: 'Cross-Selling',
+        prioritaet: 'Hoch',
+        potentialPraemie: '180.000 \u20AC/a',
+        quelle: 'Marktanalyse',
+        herleitung: '1.900 Kirchengemeinden mit zunehmender Digitalisierung (Kirchenb\u00FCros, Meldewesen, Spendenverwaltung). Aktuell nur 228 Gemeinden mit Cyber-Deckung.',
+        empfehlung: 'Rahmenvertrag Cyber mit Gruppenrabatt, Mindestdeckung 500.000 \u20AC pro Gemeinde'
+    },
+    {
+        id: 'mp-04',
+        kunde: 'Phoenix Contact GmbH',
+        kundeId: 'MK-IG-002',
+        titel: 'Produkthaftpflicht-Erweiterung (US-Gesch\u00E4ft)',
+        beschreibung: 'Wachsendes US-Gesch\u00E4ft (35% Umsatzanteil) erfordert US-Deckungserweiterung.',
+        kategorie: 'Anpassung',
+        prioritaet: 'Hoch',
+        potentialPraemie: '120.000 \u20AC/a',
+        quelle: 'Gesch\u00E4ftsbericht',
+        herleitung: 'US-Umsatz 2025: 1,2 Mrd. \u20AC (+18% YoY). Aktuelle Produkthaftpflicht nur mit europ\u00E4ischem Geltungsbereich. US Product Liability separat erforderlich.',
+        empfehlung: 'US Product Liability Policy, Deckungssumme $25 Mio., mit R\u00FCckrufkostendeckung'
+    },
+    {
+        id: 'mp-05',
+        kunde: 'Hellmann Worldwide Logistics',
+        kundeId: 'MK-TL-001',
+        titel: 'Transportversicherung Erweiterung (Luftfracht)',
+        beschreibung: 'Neues Luftfracht-Segment seit Q3/2025 nicht in bestehender Transport-Police abgedeckt.',
+        kategorie: 'Anpassung',
+        prioritaet: 'Mittel',
+        potentialPraemie: '85.000 \u20AC/a',
+        quelle: 'Kundenmeldung',
+        herleitung: 'Neue Luftfrachtstrecken (Frankfurt-Shanghai, M\u00FCnchen-Chicago). Bestehende Police deckt nur See- und Landtransport.',
+        empfehlung: 'Erweiterung Transportpolice um Luftfrachtdeckung, oder separate Luftfracht-Cargo-Police'
+    },
+    {
+        id: 'mp-06',
+        kunde: 'Diakonisches Werk RWL',
+        kundeId: 'MK-SW-001',
+        titel: 'bKV f\u00FCr Mitarbeitende',
+        beschreibung: '4.500 Mitarbeitende ohne betriebliche Krankenversicherung. Gutes Instrument gegen Fachkr\u00E4ftemangel.',
+        kategorie: 'Cross-Selling',
+        prioritaet: 'Mittel',
+        potentialPraemie: '95.000 \u20AC/a',
+        quelle: 'Markttrend',
+        herleitung: 'Hohe Fluktuation im Pflegebereich (18% p.a.). bKV als Mitarbeiterbindungsinstrument. Vergleichbare Tr\u00E4ger haben 15% geringere Fluktuation mit bKV.',
+        empfehlung: 'bKV-Rahmenvertrag Budget-Tarif 300\u20AC/MA, mit Zahnzusatz und Vorsorge'
+    },
+    {
+        id: 'mp-07',
+        kunde: 'Boge Kompressoren GmbH',
+        kundeId: 'MK-IG-003',
+        titel: 'Maschinenbruch + BU-Erweiterung',
+        beschreibung: 'Neue CNC-Fertigungslinie (Invest 4,5 Mio. \u20AC) nicht in bestehender Police ber\u00FCcksichtigt.',
+        kategorie: 'Anpassung',
+        prioritaet: 'Mittel',
+        potentialPraemie: '32.000 \u20AC/a',
+        quelle: 'Kundengespr\u00E4ch',
+        herleitung: 'CNC-Investition Q2/2025. Bestehende Maschinenbruch-VSU nur bis 2 Mio. \u20AC. Betriebsunterbrechung bei Ausfall der Linie: gesch\u00E4tzt 500.000 \u20AC/Monat.',
+        empfehlung: 'Erh\u00F6hung Maschinenbruch-VSU auf 8 Mio. \u20AC, BU-Nachhaftung auf 12 Monate'
+    },
+    {
+        id: 'mp-08',
+        kunde: 'Reha-Zentrum Ostwestfalen',
+        kundeId: 'MK-GW-002',
+        titel: 'D&O-Versicherung fehlt',
+        beschreibung: 'Keine Managerhaftpflicht trotz GmbH-Struktur und angestellten Gesch\u00E4ftsf\u00FChrern.',
+        kategorie: 'Deckungsl\u00FCcke',
+        prioritaet: 'Mittel',
+        potentialPraemie: '8.500 \u20AC/a',
+        quelle: 'Risikoanalyse',
+        herleitung: 'GmbH mit 3 Gesch\u00E4ftsf\u00FChrern, 280 Mitarbeitenden, 32 Mio. \u20AC Umsatz. Pers\u00F6nliche Haftung der GF nicht abgesichert.',
+        empfehlung: 'D&O-Versicherung, Deckungssumme 3 Mio. \u20AC'
+    },
+    {
+        id: 'mp-09',
+        kunde: 'Caritas-Werkst\u00E4tten Paderborn',
+        kundeId: 'MK-SW-002',
+        titel: 'Arbeitsst\u00E4ttenversicherung pr\u00FCfen',
+        beschreibung: 'Werkst\u00E4tten mit erh\u00F6htem Unfallrisiko \u2013 aktuelle Deckung evtl. unzureichend.',
+        kategorie: 'Anpassung',
+        prioritaet: 'Niedrig',
+        potentialPraemie: '12.000 \u20AC/a',
+        quelle: 'Bestandsanalyse',
+        herleitung: '4 Werkstatt-Standorte mit Holz-, Metall- und Textilverarbeitung. Besch\u00E4ftigte mit Behinderung (480 Pl\u00E4tze). Erh\u00F6htes Betriebsrisiko.',
+        empfehlung: 'Pr\u00FCfung der Betriebshaftpflicht auf erweiterten Personenkreis'
+    },
+    {
+        id: 'mp-10',
+        kunde: 'RegioFracht OWL GmbH',
+        kundeId: 'MK-TL-003',
+        titel: 'Fuhrpark-Erweiterung absichern',
+        beschreibung: '8 neue Lkw bestellt (Lieferung Q2/2026), noch nicht in Flottenpolice aufgenommen.',
+        kategorie: 'Cross-Selling',
+        prioritaet: 'Niedrig',
+        potentialPraemie: '18.000 \u20AC/a',
+        quelle: 'Kundenmeldung',
+        herleitung: 'Aktuelle Flotte: 22 Fahrzeuge. Erweiterung auf 30 Fahrzeuge geplant. Neue Strecke OWL-Hamburg.',
+        empfehlung: 'Erweiterung Flottenpolice, ggf. Neuausschreibung bei > 25 Fahrzeugen'
+    }
+];
+
+function renderMaklerPotentiale() {
+    var container = document.getElementById('maklerPotentialeContent');
+    if (!container) return;
+
+    var prioOrder = { 'Hoch': 0, 'Mittel': 1, 'Niedrig': 2 };
+    var sorted = maklerPotentialeData.slice().sort(function(a, b) { return (prioOrder[a.prioritaet] || 2) - (prioOrder[b.prioritaet] || 2); });
+
+    var rows = sorted.map(function(p) {
+        var prioClass = p.prioritaet === 'Hoch' ? 'prio-hoch' : (p.prioritaet === 'Mittel' ? 'prio-mittel' : 'prio-niedrig');
+        var katClass = p.kategorie === 'Deckungsl\u00FCcke' ? 'whitespots' : (p.kategorie === 'Anpassung' ? 'anpassung' : 'whitespots');
+
+        var detailHtml = '<tr class="impulse-table-detail" id="mk-pot-detail-' + p.id + '">' +
+            '<td colspan="7"><div class="impulse-table-detail-inner">' +
+                '<div class="impulse-table-herleitung">' +
+                    '<div class="kanban-detail-title">Herleitung</div>' +
+                    '<div class="kanban-detail-row"><span class="kanban-detail-label">Quelle</span><span class="kanban-detail-value">' + p.quelle + '</span></div>' +
+                    '<div class="kanban-detail-row"><span class="kanban-detail-label">Analyse</span><span class="kanban-detail-value">' + p.herleitung + '</span></div>' +
+                    '<div class="kanban-detail-row"><span class="kanban-detail-label">Empfehlung</span><span class="kanban-detail-value" style="color:#166534;font-weight:600">' + p.empfehlung + '</span></div>' +
+                '</div>' +
+                '<div class="impulse-table-actions">' +
+                    '<button class="action-btn icon-only primary small" onclick="event.stopPropagation(); openMaklerKundenDetail(\'' + p.kundeId + '\')" title="Kunde \u00F6ffnen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>' +
+                    '<button class="action-btn icon-only secondary small" title="Termin vereinbaren"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></button>' +
+                    '<button class="action-btn icon-only secondary small" title="Angebot erstellen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></button>' +
+                '</div>' +
+            '</div></td></tr>';
+
+        return '<tr class="impulse-table-row" onclick="toggleMaklerPotDetail(\'' + p.id + '\')">' +
+            '<td><span class="prio-badge ' + prioClass + '">' + p.prioritaet + '</span></td>' +
+            '<td><strong>' + p.titel + '</strong><div class="impulse-table-desc">' + p.beschreibung + '</div></td>' +
+            '<td>' + p.kunde + '</td>' +
+            '<td><span class="impulse-kat-badge ' + katClass + '">' + p.kategorie + '</span></td>' +
+            '<td class="text-right"><strong>' + p.potentialPraemie + '</strong></td>' +
+            '<td class="impulse-table-expand-cell"><span class="impulse-table-expand" id="mk-pot-expand-' + p.id + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="6 9 12 15 18 9"/></svg></span></td>' +
+            '</tr>' + detailHtml;
+    }).join('');
+
+    var totalPotential = sorted.reduce(function(sum, p) {
+        var num = parseInt(p.potentialPraemie.replace(/[^\d]/g, ''));
+        return sum + num;
+    }, 0);
+
+    container.innerHTML =
+        '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">' +
+            '<h3 class="section-title" style="margin:0">' +
+                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>' +
+                ' Potentiale & Cross-Selling (' + sorted.length + ')' +
+            '</h3>' +
+            '<span style="font-size:14px;font-weight:700;color:#166534;background:#dcfce7;padding:4px 12px;border-radius:8px">Gesamt-Potential: ' + totalPotential.toLocaleString('de-DE') + ' \u20AC/a</span>' +
+        '</div>' +
+        '<table class="impulse-table"><thead><tr>' +
+            '<th>Prio</th><th>Potential</th><th>Kunde</th><th>Kategorie</th><th class="text-right">Pr\u00E4mie</th><th></th>' +
+        '</tr></thead><tbody>' + rows + '</tbody></table>';
+}
+window.renderMaklerPotentiale = renderMaklerPotentiale;
+
+function toggleMaklerPotDetail(id) {
+    var detail = document.getElementById('mk-pot-detail-' + id);
+    var expand = document.getElementById('mk-pot-expand-' + id);
+    if (detail) {
+        detail.classList.toggle('open');
+        if (expand) expand.classList.toggle('open');
+    }
+}
+window.toggleMaklerPotDetail = toggleMaklerPotDetail;
 
 // ========================================
 // INIT

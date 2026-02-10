@@ -465,9 +465,17 @@
                         Potentiale
                     </button>
                     <!-- Makler B2B Tabs (hidden by default) -->
-                    <button class="agentur-tab agentur-tab-makler active" data-mktab="kunden" onclick="showMaklerTab('kunden')" style="display:none;">
+                    <button class="agentur-tab agentur-tab-makler active" data-mktab="uebersicht" onclick="showMaklerTab('uebersicht')" style="display:none;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                        &Uuml;bersicht
+                    </button>
+                    <button class="agentur-tab agentur-tab-makler" data-mktab="kunden" onclick="showMaklerTab('kunden')" style="display:none;">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
                         Kunden
+                    </button>
+                    <button class="agentur-tab agentur-tab-makler" data-mktab="potentiale" onclick="showMaklerTab('potentiale')" style="display:none;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                        Potentiale
                     </button>
                     <button class="agentur-tab agentur-tab-makler" data-mktab="versicherermix" onclick="showMaklerTab('versicherermix')" style="display:none;">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><circle cx="12" cy="12" r="10"/><path d="M12 2v20M2 12h20"/></svg>
@@ -1429,6 +1437,16 @@
                         </thead>
                         <tbody id="maklerKundenlisteBody"></tbody>
                     </table>
+                </div>
+
+                <!-- Makler B2B Übersicht -->
+                <div class="makler-tab-content" id="tab-makler-uebersicht">
+                    <div id="maklerUebersichtContent"></div>
+                </div>
+
+                <!-- Makler B2B Potentiale -->
+                <div class="makler-tab-content" id="tab-makler-potentiale">
+                    <div id="maklerPotentialeContent"></div>
                 </div>
 
                 <!-- Makler B2B A-02 Tabs -->

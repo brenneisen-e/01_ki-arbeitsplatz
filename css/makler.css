@@ -379,3 +379,83 @@
     font-style: italic;
     padding: 20px;
 }
+
+/* ========================================
+   MAKLER ÜBERSICHT GRID
+   ======================================== */
+.mk-uebersicht-grid {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 24px;
+}
+
+.mk-uebersicht-main {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.mk-uebersicht-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Segment-Verteilung Bars */
+.mk-segment-chart {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 4px 0;
+}
+
+.mk-segment-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.mk-segment-label {
+    font-size: 12px;
+    color: #475569;
+    min-width: 140px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+}
+
+.mk-segment-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.mk-segment-bar-track {
+    flex: 1;
+    height: 8px;
+    background: #e2e8f0;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.mk-segment-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.4s ease;
+}
+
+.mk-segment-value {
+    font-size: 12px;
+    font-weight: 700;
+    color: #334155;
+    min-width: 40px;
+    text-align: right;
+}
+
+@media (max-width: 1200px) {
+    .mk-uebersicht-grid {
+        grid-template-columns: 1fr;
+    }
+}

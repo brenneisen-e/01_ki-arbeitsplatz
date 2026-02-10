@@ -92,32 +92,14 @@ function applyMaklerModus() {
     // A-02 Header-Foto: im Makler-Modus Gebäude-Icon statt persönlichem Foto
     var photoContainer = document.getElementById('agenturPhotoSmall');
     if (photoContainer) {
-        var photoImg = document.getElementById('agenturPhotoImgSmall');
-        var photoPlaceholder = photoContainer.querySelector('.agentur-photo-placeholder-small');
         if (maklerModus) {
-            if (photoImg) photoImg.style.display = 'none';
-            if (photoPlaceholder) photoPlaceholder.style.display = 'none';
-            // Gebäude-Icon einfügen (falls noch nicht vorhanden)
-            if (!photoContainer.querySelector('.makler-photo-icon')) {
-                var icon = document.createElement('svg');
-                icon.setAttribute('class', 'makler-photo-icon');
-                icon.setAttribute('viewBox', '0 0 24 24');
-                icon.setAttribute('fill', 'none');
-                icon.setAttribute('stroke', 'currentColor');
-                icon.setAttribute('stroke-width', '1.5');
-                icon.setAttribute('width', '24');
-                icon.setAttribute('height', '24');
-                icon.innerHTML = '<path d="M3 21h18M5 21V7l8-4v18M13 21V3l6 3v15M9 9v.01M9 12v.01M9 15v.01M9 18v.01M17 9v.01M17 12v.01M17 15v.01M17 18v.01"/>';
-                photoContainer.appendChild(icon);
-            } else {
-                photoContainer.querySelector('.makler-photo-icon').style.display = '';
-            }
+            if (!photoContainer._origHTML) photoContainer._origHTML = photoContainer.innerHTML;
+            photoContainer.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" width="22" height="22" style="margin:auto;display:block;"><path d="M3 21h18M5 21V7l8-4v18M13 21V3l6 3v15M9 9v.01M9 12v.01M9 15v.01M9 18v.01M17 9v.01M17 12v.01M17 15v.01M17 18v.01"/></svg>';
         } else {
-            // AO: persönliches Foto/Placeholder wiederherstellen
-            if (photoPlaceholder) photoPlaceholder.style.display = '';
-            if (photoImg && photoImg.getAttribute('src')) photoImg.style.display = '';
-            var maklerIcon = photoContainer.querySelector('.makler-photo-icon');
-            if (maklerIcon) maklerIcon.style.display = 'none';
+            // AO: Original-Foto/Placeholder wiederherstellen
+            if (photoContainer._origHTML) {
+                photoContainer.innerHTML = photoContainer._origHTML;
+            }
         }
     }
 }
@@ -661,24 +643,8 @@ function fillMaklerDetail(kunde) {
     // A-10 Header-Foto: Gebäude-Icon statt Personen-Placeholder
     var headerPhoto = document.getElementById('kundenHeaderPhoto');
     if (headerPhoto) {
-        var hPlaceholder = headerPhoto.querySelector('.agentur-photo-placeholder-small');
-        var hImg = headerPhoto.querySelector('.agentur-photo-img-small');
-        if (hPlaceholder) hPlaceholder.style.display = 'none';
-        if (hImg) hImg.style.display = 'none';
-        if (!headerPhoto.querySelector('.makler-photo-icon')) {
-            var hIcon = document.createElement('svg');
-            hIcon.setAttribute('class', 'makler-photo-icon');
-            hIcon.setAttribute('viewBox', '0 0 24 24');
-            hIcon.setAttribute('fill', 'none');
-            hIcon.setAttribute('stroke', 'currentColor');
-            hIcon.setAttribute('stroke-width', '1.5');
-            hIcon.setAttribute('width', '24');
-            hIcon.setAttribute('height', '24');
-            hIcon.innerHTML = '<path d="M3 21h18M5 21V7l8-4v18M13 21V3l6 3v15M9 9v.01M9 12v.01M9 15v.01M9 18v.01M17 9v.01M17 12v.01M17 15v.01M17 18v.01"/>';
-            headerPhoto.appendChild(hIcon);
-        } else {
-            headerPhoto.querySelector('.makler-photo-icon').style.display = '';
-        }
+        if (!headerPhoto._origHTML) headerPhoto._origHTML = headerPhoto.innerHTML;
+        headerPhoto.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" width="22" height="22" style="margin:auto;display:block;"><path d="M3 21h18M5 21V7l8-4v18M13 21V3l6 3v15M9 9v.01M9 12v.01M9 15v.01M9 18v.01M17 9v.01M17 12v.01M17 15v.01M17 18v.01"/></svg>';
     }
 
     // Customer dropdown → institution selector
@@ -715,7 +681,6 @@ function fillMaklerDetail(kunde) {
                 '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg> Schäden</button>' +
             '<button class="agentur-tab" onclick="navigateToMaklerTab(\'deckungsluecken\')">' +
                 '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Deckungslücken</button>' +
-            '<div class="agentur-tab-divider"></div>' +
             '<button class="agentur-tab active" onclick="navigateToMaklerTab(\'kunden\')">' +
                 '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg> Kunden</button>' +
             '<button class="agentur-tab" onclick="navigateToMaklerTab(\'potentiale\')">' +
@@ -910,13 +875,8 @@ function restoreAOKundenDetail() {
 
     // Restore A-10 header photo
     var headerPhoto = document.getElementById('kundenHeaderPhoto');
-    if (headerPhoto) {
-        var hPlaceholder = headerPhoto.querySelector('.agentur-photo-placeholder-small');
-        var hImg = headerPhoto.querySelector('.agentur-photo-img-small');
-        if (hPlaceholder) hPlaceholder.style.display = '';
-        if (hImg && hImg.getAttribute('src')) hImg.style.display = '';
-        var hIcon = headerPhoto.querySelector('.makler-photo-icon');
-        if (hIcon) hIcon.style.display = 'none';
+    if (headerPhoto && headerPhoto._origHTML) {
+        headerPhoto.innerHTML = headerPhoto._origHTML;
     }
 
     // Restore sticky bar labels

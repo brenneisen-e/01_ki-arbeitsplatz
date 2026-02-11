@@ -125,7 +125,7 @@ function buildSlide11(pres) {
     ]);
     addSubtitle(slide,
         'Sechsstellige Anzahl jährlicher Bestandsübertragungen über Gruppenpostfächer \u2013 heute überwiegend manuell geprüft. ' +
-        'Pragmatischer Aufbau einer KI-Interimslösung für unstrukturierte E-Mails bei gleichzeitiger Entwicklung eines strukturierten Formulars und einer API als Zielbild.'
+        'Pragmatischer Aufbau einer KI-Lösung für unstrukturierte E-Mails, ergänzt durch ein strukturiertes Formular und eine API für standardisierte Eingänge.'
     );
     addDivider(slide);
 
@@ -162,7 +162,7 @@ function buildSlide11(pres) {
 
     const zielbildBullets = [
         {
-            head: 'Interimslösung: KI-Agent für unstrukturierte E-Mails',
+            head: 'KI-Agent für unstrukturierte E-Mails',
             body: 'Pragmatischer Einsatz eines KI-Agenten zur Verarbeitung aller eingehenden E-Mails inkl. Anhänge (Word, Excel, PDF, Vollmachten)'
         },
         {
@@ -278,11 +278,11 @@ function buildSlide11(pres) {
 
     // Path labels
     const pathW = (RW - 0.5) / 2;
-    slide.addText('PFAD 1: INTERIM', {
+    slide.addText('PFAD 1: E-MAIL-KANAL', {
         x: RX + 0.1, y: sollProcY + 0.45, w: pathW, h: 0.2,
         fontFace: FONT, fontSize: 9, bold: true, color: C.dkGray
     });
-    slide.addText('PFAD 2: ZIELBILD', {
+    slide.addText('PFAD 2: FORMULAR-KANAL', {
         x: RX + 0.2 + pathW, y: sollProcY + 0.45, w: pathW, h: 0.2,
         fontFace: FONT, fontSize: 9, bold: true, color: C.dkGray
     });
@@ -291,7 +291,7 @@ function buildSlide11(pres) {
     const p1X = RX + 0.1;
     const p1Steps = [
         { label: 'E-Mails via\nGruppenpostfächer', color: C.green, bg: 'F4FAE8' },
-        { label: 'KI-Agent (Interim)', color: C.green, bg: 'F4FAE8' },
+        { label: 'KI-Agent', color: C.green, bg: 'F4FAE8' },
         { label: 'Auto. Klassifikation', color: C.dkGreen, bg: 'F0FDF4' },
         { label: 'Robotics / RPA', color: C.dkGreen, bg: 'F0FDF4' }
     ];
@@ -681,3 +681,26 @@ export async function exportBUSlides(which) {
 
 // Expose to window for onclick handlers
 window.exportBUSlides = exportBUSlides;
+
+/* ================================================
+   PROCESS VIEW TOGGLE (Listenansicht / Flussdiagramm)
+   ================================================ */
+function toggleProcView(btn, view) {
+    const container = btn.closest('.slide-cv-fullscreen');
+    if (!container) return;
+    const inlines = container.querySelectorAll('.slide-bu-proc-inline');
+    const flowchart = container.querySelector('.slide-bu-flowchart');
+    const btns = container.querySelectorAll('.slide-bu-proc-toggle-btn');
+
+    btns.forEach(b => b.classList.remove('slide-bu-proc-toggle-active'));
+    btn.classList.add('slide-bu-proc-toggle-active');
+
+    if (view === 'flow') {
+        inlines.forEach(el => { el.style.display = 'none'; });
+        if (flowchart) flowchart.style.display = 'block';
+    } else {
+        inlines.forEach(el => { el.style.display = ''; });
+        if (flowchart) flowchart.style.display = 'none';
+    }
+}
+window.toggleProcView = toggleProcView;

@@ -125,7 +125,7 @@ function buildSlide11(pres) {
     ]);
     addSubtitle(slide,
         'Sechsstellige Anzahl jährlicher Bestandsübertragungen über Gruppenpostfächer \u2013 heute überwiegend manuell geprüft. ' +
-        'Pragmatischer Aufbau einer KI-Lösung für unstrukturierte E-Mails, ergänzt durch ein strukturiertes Formular und eine API für standardisierte Eingänge.'
+        'Pragmatischer Aufbau einer KI-Lösung für unstrukturierte E-Mails. Parallel wird evaluiert, ob ein strukturiertes Formular und eine API als zusätzlicher Eingangskanal den Automatisierungsgrad weiter steigern können.'
     );
     addDivider(slide);
 
@@ -166,8 +166,8 @@ function buildSlide11(pres) {
             body: 'Pragmatischer Einsatz eines KI-Agenten zur Verarbeitung aller eingehenden E-Mails inkl. Anhänge (Word, Excel, PDF, Vollmachten)'
         },
         {
-            head: 'Zielbild: Strukturiertes Formular & API',
-            body: 'Großmakler liefern BÜ-Daten künftig über ein standardisiertes Online-Formular oder eine API \u2013 unstrukturierte Eingangsdaten werden eliminiert'
+            head: 'Evaluierung: Strukturiertes Formular & API',
+            body: 'Im Projekt wird erarbeitet und bewertet, ob Großmakler BÜ-Daten künftig über ein standardisiertes Formular oder eine API liefern können \u2013 und damit unstrukturierte Eingangsdaten an der Quelle reduziert werden'
         },
         {
             head: 'Hoher Automatisierungsgrad',
@@ -175,7 +175,7 @@ function buildSlide11(pres) {
         },
         {
             head: 'Bewertung der Lösungsoptionen',
-            body: 'KI-Agent auf ERGO-Plattform (A) vs. Deloitte External API (B) vs. Formular/API als Zielbild'
+            body: 'KI-Agent auf ERGO-Plattform (A) vs. Deloitte External API (B); parallel Machbarkeitsanalyse für Formular/API-Kanal'
         },
         {
             head: 'Durchlaufzeit von Tagen auf Minuten',
@@ -282,7 +282,7 @@ function buildSlide11(pres) {
         x: RX + 0.1, y: sollProcY + 0.45, w: pathW, h: 0.2,
         fontFace: FONT, fontSize: 9, bold: true, color: C.dkGray
     });
-    slide.addText('PFAD 2: FORMULAR-KANAL', {
+    slide.addText('PFAD 2: FORMULAR (EVALUIERUNG)', {
         x: RX + 0.2 + pathW, y: sollProcY + 0.45, w: pathW, h: 0.2,
         fontFace: FONT, fontSize: 9, bold: true, color: C.dkGray
     });
@@ -331,7 +331,7 @@ function buildSlide11(pres) {
         x: p2X + pathW - 0.4, y: p2Y - 0.08, w: 0.4, h: 0.18,
         rectRadius: 0.03, fill: { color: C.green }
     });
-    slide.addText('NEU', {
+    slide.addText('OPTION', {
         x: p2X + pathW - 0.4, y: p2Y - 0.08, w: 0.4, h: 0.18,
         fontFace: FONT, fontSize: 7, bold: true, color: C.white, align: 'center', valign: 'middle'
     });

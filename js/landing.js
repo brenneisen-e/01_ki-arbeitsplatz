@@ -624,7 +624,7 @@ function startSpeechRecognition(micBtn, chatInput) {
             chatInput.style.height = chatInput.scrollHeight + 'px';
         }
 
-        // Debounce: nach 2s Stille automatisch absenden
+        // Debounce: nach 1s Stille automatisch absenden
         if (speechSendTimer) clearTimeout(speechSendTimer);
         speechSendTimer = setTimeout(() => {
             if (isRecording && chatInput && chatInput.value.trim()) {
@@ -632,7 +632,7 @@ function startSpeechRecognition(micBtn, chatInput) {
                 if (voiceRecognition) { voiceRecognition.stop(); voiceRecognition = null; }
                 setTimeout(() => { sendLandingChatMessage(); }, 300);
             }
-        }, 2000);
+        }, 1000);
     };
 
     voiceRecognition.onend = () => {

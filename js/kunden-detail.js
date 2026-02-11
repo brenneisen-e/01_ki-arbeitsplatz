@@ -194,7 +194,8 @@ function closeKundenDetail() {
 
     // Gehe zurück zur vorherigen View
     if (previousViewBeforeKundenDetail === 'landing') {
-        document.getElementById('landingPage').style.display = 'block';
+        document.getElementById('landingPage').style.display = 'flex';
+        window.scrollTo(0, 0);
         console.log('Zurück zur Landing Page (M-01)');
 
         // Dispatch event for Page ID Tracker

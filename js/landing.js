@@ -528,14 +528,24 @@ function initLandingChat() {
 let voiceRecognition = null;
 let isRecording = false;
 
+function stopRecordingUI() {
+    const micBtn = document.getElementById('landingChatMic');
+    const chatInput = document.getElementById('landingChatInput');
+    isRecording = false;
+    if (micBtn) micBtn.classList.remove('recording');
+    if (chatInput) {
+        chatInput.readOnly = false;
+        chatInput.style.borderColor = '';
+    }
+}
+
 function toggleVoiceInput() {
     const micBtn = document.getElementById('landingChatMic');
     const chatInput = document.getElementById('landingChatInput');
 
     if (isRecording) {
         if (voiceRecognition) voiceRecognition.stop();
-        isRecording = false;
-        if (micBtn) micBtn.classList.remove('recording');
+        stopRecordingUI();
         return;
     }
 
@@ -544,6 +554,7 @@ function toggleVoiceInput() {
         // Fallback: simulate realistic voice recording for demo
         if (micBtn) micBtn.classList.add('recording');
         isRecording = true;
+        if (chatInput) { chatInput.readOnly = true; chatInput.style.borderColor = '#ef4444'; }
         const demoText = 'Gib mir aktuelle Vertriebspotentiale';
         let charIndex = 0;
 
@@ -558,19 +569,16 @@ function toggleVoiceInput() {
                     charIndex++;
                 } else {
                     clearInterval(typeInterval);
-                    // Stop recording animation
-                    isRecording = false;
-                    if (micBtn) micBtn.classList.remove('recording');
+                    stopRecordingUI();
                     // Auto-send after short pause
-                    setTimeout(() => {
-                        sendLandingChatMessage();
-                    }, 600);
+                    setTimeout(() => { sendLandingChatMessage(); }, 300);
                 }
             }, 65);
         }, 1500);
         return;
     }
 
+    // Real Speech Recognition (Chrome/Edge)
     voiceRecognition = new SpeechRecognition();
     voiceRecognition.lang = 'de-DE';
     voiceRecognition.continuous = false;
@@ -579,9 +587,11 @@ function toggleVoiceInput() {
     voiceRecognition.onstart = () => {
         isRecording = true;
         if (micBtn) micBtn.classList.add('recording');
+        if (chatInput) { chatInput.readOnly = true; chatInput.style.borderColor = '#ef4444'; }
     };
 
     voiceRecognition.onresult = (event) => {
+        // Live-Transkription ins Eingabefeld
         const transcript = Array.from(event.results)
             .map(result => result[0].transcript)
             .join('');
@@ -590,24 +600,29 @@ function toggleVoiceInput() {
             chatInput.style.height = 'auto';
             chatInput.style.height = chatInput.scrollHeight + 'px';
         }
+
+        // Bei finalem Ergebnis: automatisch abschicken
+        if (event.results[0].isFinal) {
+            stopRecordingUI();
+            if (voiceRecognition) { voiceRecognition.stop(); voiceRecognition = null; }
+            setTimeout(() => { sendLandingChatMessage(); }, 300);
+        }
     };
 
     voiceRecognition.onend = () => {
-        isRecording = false;
-        if (micBtn) micBtn.classList.remove('recording');
-        // Auto-send recognized text after short pause
+        // Falls onresult mit isFinal schon gesendet hat, nichts tun
+        if (!isRecording) return;
+        stopRecordingUI();
+        // Text vorhanden aber nicht final gesendet? Trotzdem senden
         if (chatInput && chatInput.value.trim()) {
-            setTimeout(() => {
-                sendLandingChatMessage();
-            }, 600);
+            setTimeout(() => { sendLandingChatMessage(); }, 300);
         }
     };
 
     voiceRecognition.onerror = (event) => {
         console.warn('Speech recognition error:', event.error);
-        isRecording = false;
-        if (micBtn) micBtn.classList.remove('recording');
-        // On error, fill demo text so user can still test
+        stopRecordingUI();
+        // Bei no-speech oder Fehler: Demo-Text einfüllen
         if (chatInput && !chatInput.value.trim()) {
             chatInput.value = 'Gib mir aktuelle Vertriebspotentiale';
             chatInput.style.height = 'auto';

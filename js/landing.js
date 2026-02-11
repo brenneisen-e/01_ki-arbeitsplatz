@@ -597,11 +597,13 @@ function toggleVoiceInput() {
         });
 }
 
+let speechSendTimer = null;
+
 function startSpeechRecognition(micBtn, chatInput) {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     voiceRecognition = new SpeechRecognition();
     voiceRecognition.lang = 'de-DE';
-    voiceRecognition.continuous = false;
+    voiceRecognition.continuous = true;
     voiceRecognition.interimResults = true;
 
     voiceRecognition.onstart = () => {
@@ -611,32 +613,41 @@ function startSpeechRecognition(micBtn, chatInput) {
     };
 
     voiceRecognition.onresult = (event) => {
-        const transcript = Array.from(event.results)
-            .map(result => result[0].transcript)
-            .join('');
+        // Alle Ergebnisse zusammenbauen (interim + final)
+        let transcript = '';
+        for (let i = 0; i < event.results.length; i++) {
+            transcript += event.results[i][0].transcript;
+        }
         if (chatInput) {
             chatInput.value = transcript;
             chatInput.style.height = 'auto';
             chatInput.style.height = chatInput.scrollHeight + 'px';
         }
 
-        if (event.results[0].isFinal) {
-            stopRecordingUI();
-            if (voiceRecognition) { voiceRecognition.stop(); voiceRecognition = null; }
-            setTimeout(() => { sendLandingChatMessage(); }, 300);
-        }
+        // Debounce: nach 2s Stille automatisch absenden
+        if (speechSendTimer) clearTimeout(speechSendTimer);
+        speechSendTimer = setTimeout(() => {
+            if (isRecording && chatInput && chatInput.value.trim()) {
+                stopRecordingUI();
+                if (voiceRecognition) { voiceRecognition.stop(); voiceRecognition = null; }
+                setTimeout(() => { sendLandingChatMessage(); }, 300);
+            }
+        }, 2000);
     };
 
     voiceRecognition.onend = () => {
+        // continuous mode kann unerwartet enden - nicht sofort senden
         if (!isRecording) return;
-        stopRecordingUI();
-        if (chatInput && chatInput.value.trim()) {
+        // Warte noch kurz ob der Timer schon senden will
+        if (!speechSendTimer && chatInput && chatInput.value.trim()) {
+            stopRecordingUI();
             setTimeout(() => { sendLandingChatMessage(); }, 300);
         }
     };
 
     voiceRecognition.onerror = (event) => {
         console.warn('Speech recognition error:', event.error);
+        if (speechSendTimer) { clearTimeout(speechSendTimer); speechSendTimer = null; }
         stopRecordingUI();
         voiceRecognition = null;
         if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {

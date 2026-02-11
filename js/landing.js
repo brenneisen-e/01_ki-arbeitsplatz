@@ -539,6 +539,33 @@ function stopRecordingUI() {
     }
 }
 
+function runDemoVoiceInput() {
+    const micBtn = document.getElementById('landingChatMic');
+    const chatInput = document.getElementById('landingChatInput');
+    if (micBtn) micBtn.classList.add('recording');
+    isRecording = true;
+    if (chatInput) { chatInput.readOnly = true; chatInput.style.borderColor = '#ef4444'; chatInput.value = ''; }
+    const demoText = 'Gib mir aktuelle Vertriebspotentiale';
+    let charIndex = 0;
+
+    // Wait 1.5s simulating "listening", then gradually type text
+    setTimeout(() => {
+        const typeInterval = setInterval(() => {
+            if (!isRecording) { clearInterval(typeInterval); return; }
+            if (charIndex < demoText.length) {
+                chatInput.value = demoText.substring(0, charIndex + 1);
+                chatInput.style.height = 'auto';
+                chatInput.style.height = chatInput.scrollHeight + 'px';
+                charIndex++;
+            } else {
+                clearInterval(typeInterval);
+                stopRecordingUI();
+                setTimeout(() => { sendLandingChatMessage(); }, 300);
+            }
+        }, 65);
+    }, 1500);
+}
+
 function toggleVoiceInput() {
     const micBtn = document.getElementById('landingChatMic');
     const chatInput = document.getElementById('landingChatInput');
@@ -551,34 +578,27 @@ function toggleVoiceInput() {
 
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) {
-        // Fallback: simulate realistic voice recording for demo
-        if (micBtn) micBtn.classList.add('recording');
-        isRecording = true;
-        if (chatInput) { chatInput.readOnly = true; chatInput.style.borderColor = '#ef4444'; }
-        const demoText = 'Gib mir aktuelle Vertriebspotentiale';
-        let charIndex = 0;
-
-        // Wait 1.5s simulating "listening", then gradually type text
-        setTimeout(() => {
-            const typeInterval = setInterval(() => {
-                if (!isRecording) { clearInterval(typeInterval); return; }
-                if (charIndex < demoText.length) {
-                    chatInput.value = demoText.substring(0, charIndex + 1);
-                    chatInput.style.height = 'auto';
-                    chatInput.style.height = chatInput.scrollHeight + 'px';
-                    charIndex++;
-                } else {
-                    clearInterval(typeInterval);
-                    stopRecordingUI();
-                    // Auto-send after short pause
-                    setTimeout(() => { sendLandingChatMessage(); }, 300);
-                }
-            }, 65);
-        }, 1500);
+        runDemoVoiceInput();
         return;
     }
 
-    // Real Speech Recognition (Chrome/Edge)
+    // Erst Mikrofon-Berechtigung explizit anfragen (triggert Browser-Prompt)
+    // Dann SpeechRecognition starten
+    navigator.mediaDevices.getUserMedia({ audio: true })
+        .then(stream => {
+            // Mikrofon sofort wieder freigeben (wir brauchen nur die Berechtigung)
+            stream.getTracks().forEach(track => track.stop());
+            startSpeechRecognition(micBtn, chatInput);
+        })
+        .catch(err => {
+            console.warn('Mikrofon-Zugriff verweigert:', err.message);
+            // Berechtigung verweigert → Demo-Fallback
+            runDemoVoiceInput();
+        });
+}
+
+function startSpeechRecognition(micBtn, chatInput) {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     voiceRecognition = new SpeechRecognition();
     voiceRecognition.lang = 'de-DE';
     voiceRecognition.continuous = false;
@@ -591,7 +611,6 @@ function toggleVoiceInput() {
     };
 
     voiceRecognition.onresult = (event) => {
-        // Live-Transkription ins Eingabefeld
         const transcript = Array.from(event.results)
             .map(result => result[0].transcript)
             .join('');
@@ -601,7 +620,6 @@ function toggleVoiceInput() {
             chatInput.style.height = chatInput.scrollHeight + 'px';
         }
 
-        // Bei finalem Ergebnis: automatisch abschicken
         if (event.results[0].isFinal) {
             stopRecordingUI();
             if (voiceRecognition) { voiceRecognition.stop(); voiceRecognition = null; }
@@ -610,10 +628,8 @@ function toggleVoiceInput() {
     };
 
     voiceRecognition.onend = () => {
-        // Falls onresult mit isFinal schon gesendet hat, nichts tun
         if (!isRecording) return;
         stopRecordingUI();
-        // Text vorhanden aber nicht final gesendet? Trotzdem senden
         if (chatInput && chatInput.value.trim()) {
             setTimeout(() => { sendLandingChatMessage(); }, 300);
         }
@@ -622,11 +638,9 @@ function toggleVoiceInput() {
     voiceRecognition.onerror = (event) => {
         console.warn('Speech recognition error:', event.error);
         stopRecordingUI();
-        // Bei no-speech oder Fehler: Demo-Text einfüllen
-        if (chatInput && !chatInput.value.trim()) {
-            chatInput.value = 'Gib mir aktuelle Vertriebspotentiale';
-            chatInput.style.height = 'auto';
-            chatInput.style.height = chatInput.scrollHeight + 'px';
+        voiceRecognition = null;
+        if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
+            runDemoVoiceInput();
         }
     };
 

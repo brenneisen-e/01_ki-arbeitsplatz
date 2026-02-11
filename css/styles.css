@@ -9438,45 +9438,6 @@ button svg,
     color: #1e293b;
 }
 
-/* NPS Style Switcher */
-.nps-style-switcher {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    margin-bottom: 12px;
-    padding: 8px 16px;
-    background: #1e293b;
-    border-radius: 10px;
-    user-select: none;
-}
-
-.nps-style-arrow {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 28px;
-    height: 28px;
-    border: none;
-    border-radius: 6px;
-    background: rgba(255, 255, 255, 0.15);
-    color: white;
-    cursor: pointer;
-    transition: background 0.2s;
-}
-
-.nps-style-arrow:hover {
-    background: rgba(255, 255, 255, 0.3);
-}
-
-.nps-style-label {
-    font-size: 13px;
-    font-weight: 600;
-    color: white;
-    min-width: 220px;
-    text-align: center;
-}
-
 /* NPS Style 1: Fortschrittsbalken */
 .nps-bar {
     display: flex;

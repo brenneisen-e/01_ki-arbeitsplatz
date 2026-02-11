@@ -4092,24 +4092,9 @@ function filterKundenliste(searchText) {
 window.filterKundenliste = filterKundenliste;
 
 // ========================================
-// NPS DISPLAY STYLE SWITCHER
+// NPS DISPLAY STYLE (fixed: Fortschrittsbalken)
 // ========================================
 var currentNpsStyle = 0;
-var npsStyles = [
-    'Option 1: Fortschrittsbalken',
-    'Option 2: Pill-Badge mit Label',
-    'Option 3: Sterne-Rating',
-    'Option 4: Mini-Tacho',
-    'Option 5: Emoji + Zahl'
-];
-
-function switchNpsStyle(direction) {
-    currentNpsStyle = (currentNpsStyle + direction + npsStyles.length) % npsStyles.length;
-    var label = document.getElementById('npsStyleLabel');
-    if (label) label.textContent = npsStyles[currentNpsStyle];
-    renderNpsStyleAll();
-}
-window.switchNpsStyle = switchNpsStyle;
 
 function getNpsCategory(score) {
     if (score >= 9) return 'promoter';

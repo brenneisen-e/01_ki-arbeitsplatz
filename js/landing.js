@@ -523,6 +523,110 @@ function initLandingChat() {
 }
 
 // ========================================
+// GOOGLE CLOUD SPEECH-TO-TEXT
+// ========================================
+function getSpeechApiKey() {
+    return localStorage.getItem('google_speech_api_key') || '';
+}
+
+function saveSpeechApiKey() {
+    const input = document.getElementById('speechApiKeyInput');
+    const status = document.getElementById('speechApiKeyStatus');
+    if (!input) return;
+    const key = input.value.trim();
+    if (key && key.startsWith('AIza')) {
+        localStorage.setItem('google_speech_api_key', key);
+        if (status) { status.className = 'api-token-status success'; status.textContent = '✅ Google Cloud Key gespeichert – Speech-to-Text aktiv'; }
+    } else if (!key) {
+        localStorage.removeItem('google_speech_api_key');
+        if (status) { status.className = 'api-token-status'; status.textContent = 'Key entfernt – Browser Speech API wird genutzt'; }
+    } else {
+        if (status) { status.className = 'api-token-status error'; status.textContent = '❌ Ungültiger Key (muss mit "AIza" beginnen)'; }
+    }
+}
+
+let mediaRecorder = null;
+let audioChunks = [];
+
+function startCloudRecording(micBtn, chatInput) {
+    navigator.mediaDevices.getUserMedia({ audio: { sampleRate: 48000, channelCount: 1 } })
+        .then(stream => {
+            isRecording = true;
+            if (micBtn) micBtn.classList.add('recording');
+            if (chatInput) { chatInput.readOnly = true; chatInput.style.borderColor = '#ef4444'; chatInput.value = ''; chatInput.placeholder = 'Höre zu...'; }
+
+            audioChunks = [];
+            mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm;codecs=opus' });
+
+            mediaRecorder.ondataavailable = (event) => {
+                if (event.data.size > 0) audioChunks.push(event.data);
+            };
+
+            mediaRecorder.onstop = async () => {
+                stream.getTracks().forEach(track => track.stop());
+                if (audioChunks.length === 0) { stopRecordingUI(); return; }
+
+                const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                if (chatInput) { chatInput.placeholder = 'Transkribiere...'; }
+
+                try {
+                    // Audio zu Base64 konvertieren
+                    const arrayBuffer = await audioBlob.arrayBuffer();
+                    const base64Audio = btoa(String.fromCharCode(...new Uint8Array(arrayBuffer)));
+
+                    const response = await fetch('https://speech.googleapis.com/v1/speech:recognize?key=' + getSpeechApiKey(), {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            config: {
+                                encoding: 'WEBM_OPUS',
+                                sampleRateHertz: 48000,
+                                languageCode: 'de-DE',
+                                model: 'latest_long',
+                                enableAutomaticPunctuation: true
+                            },
+                            audio: { content: base64Audio }
+                        })
+                    });
+
+                    if (!response.ok) {
+                        const errData = await response.json().catch(() => ({}));
+                        throw new Error('Google Speech API Fehler: ' + response.status + ' ' + (errData.error?.message || ''));
+                    }
+                    const data = await response.json();
+
+                    // Alle Ergebnisse zusammenbauen
+                    let transcript = '';
+                    if (data.results) {
+                        transcript = data.results.map(r => r.alternatives[0]?.transcript || '').join(' ');
+                    }
+
+                    if (chatInput) {
+                        chatInput.value = transcript;
+                        chatInput.style.height = 'auto';
+                        chatInput.style.height = chatInput.scrollHeight + 'px';
+                        chatInput.placeholder = 'Frag mich etwas...';
+                    }
+                    stopRecordingUI();
+                    if (transcript.trim()) {
+                        setTimeout(() => { sendLandingChatMessage(); }, 300);
+                    }
+                } catch (err) {
+                    console.error('Google Speech Fehler:', err);
+                    stopRecordingUI();
+                    if (chatInput) chatInput.placeholder = 'Frag mich etwas...';
+                }
+            };
+
+            mediaRecorder.start();
+        })
+        .catch(err => {
+            console.warn('Mikrofon-Zugriff verweigert:', err.message);
+            runDemoVoiceInput();
+        });
+}
+
+// ========================================
 // VOICE INPUT (Microphone Button)
 // ========================================
 let voiceRecognition = null;
@@ -571,22 +675,31 @@ function toggleVoiceInput() {
     const chatInput = document.getElementById('landingChatInput');
 
     if (isRecording) {
+        // Cloud Recording: Aufnahme stoppen → löst mediaRecorder.onstop aus
+        if (mediaRecorder && mediaRecorder.state === 'recording') {
+            mediaRecorder.stop();
+            return;
+        }
         if (voiceRecognition) voiceRecognition.stop();
         stopRecordingUI();
         return;
     }
 
+    // Google Cloud Speech-to-Text wenn API Key vorhanden
+    if (getSpeechApiKey()) {
+        startCloudRecording(micBtn, chatInput);
+        return;
+    }
+
+    // Fallback: Browser Speech API
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) {
         runDemoVoiceInput();
         return;
     }
 
-    // Erst Mikrofon-Berechtigung explizit anfragen (triggert Browser-Prompt)
-    // Dann SpeechRecognition starten
     navigator.mediaDevices.getUserMedia({ audio: true })
         .then(stream => {
-            // Mikrofon sofort wieder freigeben (wir brauchen nur die Berechtigung)
             stream.getTracks().forEach(track => track.stop());
             startSpeechRecognition(micBtn, chatInput);
         })
@@ -597,11 +710,13 @@ function toggleVoiceInput() {
         });
 }
 
+let speechSendTimer = null;
+
 function startSpeechRecognition(micBtn, chatInput) {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     voiceRecognition = new SpeechRecognition();
     voiceRecognition.lang = 'de-DE';
-    voiceRecognition.continuous = false;
+    voiceRecognition.continuous = true;
     voiceRecognition.interimResults = true;
 
     voiceRecognition.onstart = () => {
@@ -611,32 +726,41 @@ function startSpeechRecognition(micBtn, chatInput) {
     };
 
     voiceRecognition.onresult = (event) => {
-        const transcript = Array.from(event.results)
-            .map(result => result[0].transcript)
-            .join('');
+        // Alle Ergebnisse zusammenbauen (interim + final)
+        let transcript = '';
+        for (let i = 0; i < event.results.length; i++) {
+            transcript += event.results[i][0].transcript;
+        }
         if (chatInput) {
             chatInput.value = transcript;
             chatInput.style.height = 'auto';
             chatInput.style.height = chatInput.scrollHeight + 'px';
         }
 
-        if (event.results[0].isFinal) {
-            stopRecordingUI();
-            if (voiceRecognition) { voiceRecognition.stop(); voiceRecognition = null; }
-            setTimeout(() => { sendLandingChatMessage(); }, 300);
-        }
+        // Debounce: nach 1s Stille automatisch absenden
+        if (speechSendTimer) clearTimeout(speechSendTimer);
+        speechSendTimer = setTimeout(() => {
+            if (isRecording && chatInput && chatInput.value.trim()) {
+                stopRecordingUI();
+                if (voiceRecognition) { voiceRecognition.stop(); voiceRecognition = null; }
+                setTimeout(() => { sendLandingChatMessage(); }, 300);
+            }
+        }, 1000);
     };
 
     voiceRecognition.onend = () => {
+        // continuous mode kann unerwartet enden - nicht sofort senden
         if (!isRecording) return;
-        stopRecordingUI();
-        if (chatInput && chatInput.value.trim()) {
+        // Warte noch kurz ob der Timer schon senden will
+        if (!speechSendTimer && chatInput && chatInput.value.trim()) {
+            stopRecordingUI();
             setTimeout(() => { sendLandingChatMessage(); }, 300);
         }
     };
 
     voiceRecognition.onerror = (event) => {
         console.warn('Speech recognition error:', event.error);
+        if (speechSendTimer) { clearTimeout(speechSendTimer); speechSendTimer = null; }
         stopRecordingUI();
         voiceRecognition = null;
         if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
@@ -710,6 +834,18 @@ function closeDualView() {
 window.openKundenDetailDualView = openKundenDetailDualView;
 window.closeDualView = closeDualView;
 window.toggleVoiceInput = toggleVoiceInput;
+window.saveSpeechApiKey = saveSpeechApiKey;
+
+// Google Cloud Speech Key Status beim Laden anzeigen
+(function() {
+    const key = getSpeechApiKey();
+    setTimeout(() => {
+        const input = document.getElementById('speechApiKeyInput');
+        const status = document.getElementById('speechApiKeyStatus');
+        if (key && input) { input.value = key; }
+        if (key && status) { status.className = 'api-token-status success'; status.textContent = '✅ Google Cloud Speech-to-Text aktiv'; }
+    }, 500);
+})();
 
 // Send message in landing chat - NUTZT GLEICHE LOGIK WIE DASHBOARD
 async function sendLandingChatMessage() {

@@ -377,7 +377,7 @@
                         <div id="apiTokenStatus" class="api-token-status"></div>
                     </div>
 
-                    <!-- OpenAI API Key (für Whisper Speech-to-Text) -->
+                    <!-- Google Cloud Speech-to-Text API Key -->
                     <div class="settings-api-section">
                         <div class="settings-item-header">
                             <svg class="settings-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -386,24 +386,24 @@
                                 <line x1="12" y1="19" x2="12" y2="23"></line>
                                 <line x1="8" y1="23" x2="16" y2="23"></line>
                             </svg>
-                            <span>OpenAI Whisper (Speech-to-Text)</span>
+                            <span>Google Cloud Speech-to-Text</span>
                         </div>
                         <div class="api-token-input-wrapper">
                             <input
                                 type="password"
-                                id="openaiKeyInput"
+                                id="speechApiKeyInput"
                                 class="api-token-input"
-                                placeholder="sk-... (OpenAI API Key)"
+                                placeholder="AIza... (Google Cloud API Key)"
                             />
-                            <button id="openaiKeyToggle" class="api-token-toggle" title="Anzeigen/Verbergen" onclick="document.getElementById('openaiKeyInput').type = document.getElementById('openaiKeyInput').type === 'password' ? 'text' : 'password'">
+                            <button class="api-token-toggle" title="Anzeigen/Verbergen" onclick="document.getElementById('speechApiKeyInput').type = document.getElementById('speechApiKeyInput').type === 'password' ? 'text' : 'password'">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
                                     <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                                     <circle cx="12" cy="12" r="3"></circle>
                                 </svg>
                             </button>
-                            <button class="api-token-save" onclick="saveOpenAIKey()">Speichern</button>
+                            <button class="api-token-save" onclick="saveSpeechApiKey()">Speichern</button>
                         </div>
-                        <div id="openaiKeyStatus" class="api-token-status"></div>
+                        <div id="speechApiKeyStatus" class="api-token-status"></div>
                     </div>
 
                     <!-- Demo Tour Button -->
@@ -5630,7 +5630,7 @@
     <script src="js/main.js?v=20260108d"></script>
     <script src="js/chat.js"></script>
     <script src="js/agentur-overview.js"></script>
-    <script src="js/landing.js?v=20260211j"></script>
+    <script src="js/landing.js?v=20260211k"></script>
     <!-- Modularisierte JS-Module -->
     <script src="js/nps-display.js?v=20260209"></script>
     <script src="js/kunden-detail.js?v=20260209"></script>

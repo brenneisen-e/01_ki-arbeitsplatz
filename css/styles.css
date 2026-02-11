@@ -676,9 +676,9 @@
     width: 40px;
     height: 40px;
     border: none;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: #86BC25;
     color: white;
-    border-radius: 8px;
+    border-radius: 50%;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -705,10 +705,10 @@
 .landing-chat-mic {
     width: 40px;
     height: 40px;
-    border: 1px solid #cbd5e1;
-    background: white;
-    color: #64748b;
-    border-radius: 8px;
+    border: none;
+    background: #e5e7eb;
+    color: #6b7280;
+    border-radius: 50%;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -718,14 +718,12 @@
 }
 
 .landing-chat-mic:hover {
-    background: #f1f5f9;
-    border-color: #94a3b8;
-    color: #334155;
+    background: #d1d5db;
+    color: #374151;
 }
 
 .landing-chat-mic.recording {
     background: #fee2e2;
-    border-color: #ef4444;
     color: #ef4444;
     animation: mic-pulse 1.5s ease-in-out infinite;
 }

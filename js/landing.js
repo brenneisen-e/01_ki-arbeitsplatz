@@ -547,145 +547,158 @@ function saveSpeechApiKey() {
 
 let mediaRecorder = null;
 let audioChunks = [];
+let cloudAudioCtx = null;
+let isStopped = false;
 
-let liveRecognition = null;
+// Helper: Blob → Base64 (chunk-safe)
+async function blobToBase64(blob) {
+    const buf = await blob.arrayBuffer();
+    const bytes = new Uint8Array(buf);
+    let binary = '';
+    for (let i = 0; i < bytes.length; i += 8192) {
+        binary += String.fromCharCode.apply(null, bytes.subarray(i, i + 8192));
+    }
+    return btoa(binary);
+}
+
+// Helper: Audio-Blob an Google STT senden, Transkript zurückgeben
+async function transcribeBlob(blob) {
+    const base64 = await blobToBase64(blob);
+    const res = await fetch('https://speech.googleapis.com/v1/speech:recognize?key=' + getSpeechApiKey(), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            config: {
+                encoding: 'WEBM_OPUS',
+                sampleRateHertz: 48000,
+                languageCode: 'de-DE',
+                model: 'latest_long',
+                enableAutomaticPunctuation: true
+            },
+            audio: { content: base64 }
+        })
+    });
+    const data = await res.json();
+    return (data.results || []).map(r => r.alternatives && r.alternatives[0] ? r.alternatives[0].transcript : '').filter(Boolean).join(' ');
+}
 
 function startCloudRecording(micBtn, chatInput) {
     navigator.mediaDevices.getUserMedia({ audio: { sampleRate: 48000, channelCount: 1 } })
         .then(stream => {
             isRecording = true;
+            isStopped = false;
             if (micBtn) micBtn.classList.add('recording');
             if (chatInput) { chatInput.readOnly = true; chatInput.style.borderColor = '#ef4444'; chatInput.value = ''; chatInput.placeholder = 'Höre zu...'; }
 
-            // 1) MediaRecorder für Google Cloud (genaues Endergebnis)
             audioChunks = [];
-            mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm;codecs=opus' });
+            const mimeType = MediaRecorder.isTypeSupported('audio/webm;codecs=opus') ? 'audio/webm;codecs=opus' : 'audio/webm';
+            mediaRecorder = new MediaRecorder(stream, { mimeType: mimeType });
 
-            mediaRecorder.ondataavailable = (event) => {
-                if (event.data.size > 0) audioChunks.push(event.data);
-            };
+            // --- Silence Detection via Web Audio API ---
+            cloudAudioCtx = new AudioContext();
+            const source = cloudAudioCtx.createMediaStreamSource(stream);
+            const analyser = cloudAudioCtx.createAnalyser();
+            analyser.fftSize = 512;
+            source.connect(analyser);
+            const dataArray = new Uint8Array(analyser.frequencyBinCount);
 
-            mediaRecorder.onstop = async () => {
-                stream.getTracks().forEach(track => track.stop());
-                // Live-Recognition auch stoppen
-                if (liveRecognition) { try { liveRecognition.abort(); } catch(e) {} liveRecognition = null; }
+            let hasSpoken = false;
+            let silenceStart = null;
+            const SILENCE_THRESHOLD = 8;
+            const SILENCE_DURATION = 1000; // 1s Stille → Auto-Stop
 
-                if (audioChunks.length === 0) { stopRecordingUI(); return; }
+            function checkSilence() {
+                if (isStopped) return;
+                analyser.getByteTimeDomainData(dataArray);
+                let sum = 0;
+                for (let i = 0; i < dataArray.length; i++) {
+                    const val = (dataArray[i] - 128) / 128;
+                    sum += val * val;
+                }
+                const rms = Math.sqrt(sum / dataArray.length) * 100;
 
-                const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-                if (chatInput) { chatInput.placeholder = 'Transkribiere...'; chatInput.value = chatInput.value ? chatInput.value + ' ...' : '...'; }
+                if (rms >= SILENCE_THRESHOLD) {
+                    hasSpoken = true;
+                    silenceStart = null;
+                } else if (hasSpoken) {
+                    if (!silenceStart) silenceStart = Date.now();
+                    if (Date.now() - silenceStart >= SILENCE_DURATION) {
+                        // 1s Stille → automatisch stoppen
+                        isStopped = true;
+                        if (mediaRecorder.state === 'recording') mediaRecorder.stop();
+                        try { cloudAudioCtx.close(); } catch(_) {}
+                        return;
+                    }
+                }
+                requestAnimationFrame(checkSilence);
+            }
+            setTimeout(() => requestAnimationFrame(checkSilence), 300);
+
+            // --- Interim Live-Transkription ---
+            let interimBusy = false;
+
+            mediaRecorder.ondataavailable = async (e) => {
+                if (e.data.size > 0) audioChunks.push(e.data);
+
+                // Keine Interim-Requests wenn gestoppt oder bereits in-flight
+                if (isStopped || interimBusy) return;
+                interimBusy = true;
 
                 try {
-                    const arrayBuffer = await audioBlob.arrayBuffer();
-                    const bytes = new Uint8Array(arrayBuffer);
-                    let binary = '';
-                    for (let i = 0; i < bytes.length; i += 8192) {
-                        binary += String.fromCharCode.apply(null, bytes.subarray(i, i + 8192));
+                    const blob = new Blob(audioChunks, { type: 'audio/webm;codecs=opus' });
+                    const transcript = await transcribeBlob(blob);
+                    if (transcript && !isStopped && chatInput) {
+                        chatInput.value = transcript;
+                        chatInput.style.height = 'auto';
+                        chatInput.style.height = chatInput.scrollHeight + 'px';
                     }
-                    const base64Audio = btoa(binary);
+                } catch (err) {
+                    console.error('Interim STT Fehler:', err);
+                }
+                interimBusy = false;
+            };
 
-                    const response = await fetch('https://speech.googleapis.com/v1/speech:recognize?key=' + getSpeechApiKey(), {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            config: {
-                                encoding: 'WEBM_OPUS',
-                                sampleRateHertz: 48000,
-                                languageCode: 'de-DE',
-                                model: 'latest_long',
-                                enableAutomaticPunctuation: true
-                            },
-                            audio: { content: base64Audio }
-                        })
-                    });
+            // --- Finales Ergebnis bei Stop ---
+            mediaRecorder.onstop = async () => {
+                stream.getTracks().forEach(t => t.stop());
+                try { cloudAudioCtx.close(); } catch(_) {}
 
-                    if (!response.ok) {
-                        const errData = await response.json().catch(() => ({}));
-                        throw new Error('Google Speech API Fehler: ' + response.status + ' ' + (errData.error?.message || ''));
-                    }
-                    const data = await response.json();
+                const blob = new Blob(audioChunks, { type: 'audio/webm;codecs=opus' });
+                if (blob.size === 0) { stopRecordingUI(); return; }
 
-                    let transcript = '';
-                    if (data.results) {
-                        transcript = data.results.map(r => r.alternatives[0]?.transcript || '').join(' ');
-                    }
+                if (chatInput) { chatInput.placeholder = 'Transkribiere...'; }
 
-                    // Google Cloud Ergebnis ersetzt den Live-Text (genauer)
+                try {
+                    const transcript = await transcribeBlob(blob);
                     if (chatInput) {
-                        chatInput.value = transcript || chatInput.value.replace(' ...', '');
+                        chatInput.value = transcript || '';
                         chatInput.style.height = 'auto';
                         chatInput.style.height = chatInput.scrollHeight + 'px';
                         chatInput.placeholder = 'Frag mich etwas...';
                     }
                     stopRecordingUI();
-                    const finalText = chatInput ? chatInput.value.trim() : '';
-                    if (finalText) {
+                    if (transcript && transcript.trim()) {
                         setTimeout(() => { sendLandingChatMessage(); }, 300);
                     }
                 } catch (err) {
-                    console.error('Google Speech Fehler:', err);
-                    // Bei Fehler: Live-Text behalten und trotzdem senden
+                    console.error('Final STT Fehler:', err);
                     stopRecordingUI();
                     if (chatInput) chatInput.placeholder = 'Frag mich etwas...';
-                    const fallbackText = chatInput ? chatInput.value.replace(' ...', '').trim() : '';
-                    if (fallbackText) {
+                    // Fallback: Interim-Text trotzdem senden
+                    const fallback = chatInput ? chatInput.value.trim() : '';
+                    if (fallback) {
                         setTimeout(() => { sendLandingChatMessage(); }, 300);
                     }
                 }
             };
 
-            mediaRecorder.start();
-
-            // 2) Browser SpeechRecognition für Live-Anzeige (parallel)
-            startLivePreview(chatInput);
+            // 500ms Timeslice → alle 0,5s wird ondataavailable gefeuert
+            mediaRecorder.start(500);
         })
         .catch(err => {
             console.warn('Mikrofon-Zugriff verweigert:', err.message);
             runDemoVoiceInput();
         });
-}
-
-function startLivePreview(chatInput) {
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SpeechRecognition) return; // Kein Live-Preview möglich
-
-    liveRecognition = new SpeechRecognition();
-    liveRecognition.lang = 'de-DE';
-    liveRecognition.continuous = true;
-    liveRecognition.interimResults = true;
-
-    liveRecognition.onresult = (event) => {
-        if (!isRecording) return;
-        let transcript = '';
-        for (let i = 0; i < event.results.length; i++) {
-            transcript += event.results[i][0].transcript;
-        }
-        if (chatInput && transcript) {
-            chatInput.value = transcript;
-            chatInput.style.height = 'auto';
-            chatInput.style.height = chatInput.scrollHeight + 'px';
-        }
-    };
-
-    liveRecognition.onend = () => {
-        // continuous mode kann unerwartet enden - neu starten solange Aufnahme läuft
-        if (isRecording && liveRecognition) {
-            try { liveRecognition.start(); } catch(e) {}
-        }
-    };
-
-    liveRecognition.onerror = (event) => {
-        console.warn('Live-Preview Speech error:', event.error);
-        // Nicht kritisch - Google Cloud liefert trotzdem das Ergebnis
-        liveRecognition = null;
-    };
-
-    try {
-        liveRecognition.start();
-    } catch(e) {
-        console.warn('Live-Preview konnte nicht gestartet werden:', e.message);
-        liveRecognition = null;
-    }
 }
 
 // ========================================
@@ -737,10 +750,11 @@ function toggleVoiceInput() {
     const chatInput = document.getElementById('landingChatInput');
 
     if (isRecording) {
-        // Cloud Recording: Aufnahme stoppen → löst mediaRecorder.onstop aus (inkl. Google Cloud + Auto-Send)
+        // Cloud Recording: manuell stoppen → löst mediaRecorder.onstop aus (finaler Google Cloud Request + Auto-Send)
         if (mediaRecorder && mediaRecorder.state === 'recording') {
-            if (liveRecognition) { try { liveRecognition.abort(); } catch(e) {} liveRecognition = null; }
+            isStopped = true;
             mediaRecorder.stop();
+            try { if (cloudAudioCtx) cloudAudioCtx.close(); } catch(_) {}
             return;
         }
         if (voiceRecognition) voiceRecognition.stop();

@@ -5333,7 +5333,7 @@ body {
 
 .bestand-page .slide-bu-step-input .slide-bu-step-num { background: #e0f4ff; color: #00A3E0; }
 .bestand-page .slide-bu-step-system .slide-bu-step-num { background: #e0f4ff; color: #0D8390; }
-.bestand-page .slide-bu-step-manual .slide-bu-step-num { background: #fff3e0; color: #ED8B00; }
+.bestand-page .slide-bu-step-manual .slide-bu-step-num { background: #f3f4f6; color: #97999B; }
 .bestand-page .slide-bu-step-ai-limited .slide-bu-step-num { background: #fee2e2; color: #C8102E; }
 .bestand-page .slide-bu-step-output .slide-bu-step-num { background: #e8f5d4; color: #046A38; }
 
@@ -5551,10 +5551,10 @@ body {
 .bestand-page .slide-bu-proc-system .slide-bu-proc-vnum { background: #0D8390; color: white !important; }
 
 .bestand-page .slide-bu-proc-manual {
-    border-color: #ED8B00;
-    background: #fffbf0;
+    border-color: #97999B;
+    background: #f3f4f6;
 }
-.bestand-page .slide-bu-proc-manual .slide-bu-proc-vnum { background: #ED8B00; color: white !important; }
+.bestand-page .slide-bu-proc-manual .slide-bu-proc-vnum { background: #97999B; color: white !important; }
 
 .bestand-page .slide-bu-proc-ai-limited {
     border-color: #C8102E;
@@ -5593,6 +5593,28 @@ body {
     padding: 1px 5px;
     border-radius: 3px;
     margin-left: auto;
+}
+
+.bestand-page .slide-bu-proc-tag-manual {
+    font-size: 0.72rem !important;
+    font-weight: 700;
+    color: white !important;
+    background: #97999B;
+    padding: 1px 6px;
+    border-radius: 3px;
+    margin-left: auto;
+    letter-spacing: 0.03em;
+}
+
+.bestand-page .slide-bu-proc-tag-auto {
+    font-size: 0.72rem !important;
+    font-weight: 700;
+    color: white !important;
+    background: #86BC25;
+    padding: 1px 6px;
+    border-radius: 3px;
+    margin-left: auto;
+    letter-spacing: 0.03em;
 }
 
 .bestand-page .slide-bu-proc-new {

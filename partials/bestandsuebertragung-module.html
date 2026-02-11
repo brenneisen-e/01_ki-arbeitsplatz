@@ -2142,35 +2142,39 @@ ERGO Maklerservice</div>
                         </li>
                     </ul>
 
-                    <!-- IST-Prozess -->
+                    <!-- IST-Prozess: nahezu vollständig manuell -->
                     <div class="slide-bu-proc-inline">
                         <div class="slide-bu-proc-inline-label slide-bu-proc-label-ist">IST-PROZESS</div>
                         <div class="slide-bu-proc-chain-vertical">
-                            <div class="slide-bu-proc-vnode slide-bu-proc-input">
+                            <div class="slide-bu-proc-vnode slide-bu-proc-manual">
                                 <span class="slide-bu-proc-vnum">1</span>
-                                <span>E-Mails via Gruppenpostf&auml;cher</span>
+                                <span>E-Mail-Eingang</span>
+                                <span class="slide-bu-proc-tag-manual">Manuell</span>
                             </div>
                             <div class="slide-bu-proc-varrow">&darr;</div>
-                            <div class="slide-bu-proc-vnode slide-bu-proc-system">
+                            <div class="slide-bu-proc-vnode slide-bu-proc-manual">
                                 <span class="slide-bu-proc-vnum">2</span>
                                 <span>Postkorbsystem</span>
+                                <span class="slide-bu-proc-tag-manual">Manuell</span>
                             </div>
                             <div class="slide-bu-proc-varrow">&darr;</div>
                             <div class="slide-bu-proc-vnode slide-bu-proc-manual">
                                 <span class="slide-bu-proc-vnum">3</span>
                                 <span>Manuelle Pr&uuml;fung</span>
+                                <span class="slide-bu-proc-tag-manual">Manuell</span>
                                 <span class="slide-bu-proc-pain">3&ndash;4 Schritte</span>
                             </div>
                             <div class="slide-bu-proc-varrow">&darr;</div>
                             <div class="slide-bu-proc-vnode slide-bu-proc-ai-limited">
                                 <span class="slide-bu-proc-vnum">4</span>
-                                <span>ERGO GPT</span>
+                                <span>ERGO GPT (nur Sonderf&auml;lle)</span>
                                 <span class="slide-bu-proc-pain">Begrenzt</span>
                             </div>
                             <div class="slide-bu-proc-varrow">&darr;</div>
                             <div class="slide-bu-proc-vnode slide-bu-proc-output">
                                 <span class="slide-bu-proc-vnum">5</span>
                                 <span>Robotics / RPA</span>
+                                <span class="slide-bu-proc-tag-auto">Automatisch</span>
                             </div>
                         </div>
                     </div>
@@ -2205,20 +2209,24 @@ ERGO Maklerservice</div>
                             <div class="slide-bu-proc-path">
                                 <div class="slide-bu-proc-path-label">Pfad 1: Interim</div>
                                 <div class="slide-bu-proc-chain-vertical">
-                                    <div class="slide-bu-proc-vnode slide-bu-proc-input">
+                                    <div class="slide-bu-proc-vnode slide-bu-proc-output">
                                         <span>E-Mails via Gruppenpostf&auml;cher</span>
+                                        <span class="slide-bu-proc-tag-auto">Automatisch</span>
                                     </div>
                                     <div class="slide-bu-proc-varrow">&darr;</div>
-                                    <div class="slide-bu-proc-vnode slide-bu-proc-ki-agent">
+                                    <div class="slide-bu-proc-vnode slide-bu-proc-output">
                                         <span>KI-Agent (Interim)</span>
+                                        <span class="slide-bu-proc-tag-auto">Automatisch</span>
                                     </div>
                                     <div class="slide-bu-proc-varrow">&darr;</div>
-                                    <div class="slide-bu-proc-vnode slide-bu-proc-auto">
+                                    <div class="slide-bu-proc-vnode slide-bu-proc-output">
                                         <span>Auto. Klassifikation</span>
+                                        <span class="slide-bu-proc-tag-auto">Automatisch</span>
                                     </div>
                                     <div class="slide-bu-proc-varrow">&darr;</div>
                                     <div class="slide-bu-proc-vnode slide-bu-proc-output">
                                         <span>Robotics / RPA</span>
+                                        <span class="slide-bu-proc-tag-auto">Automatisch</span>
                                     </div>
                                 </div>
                             </div>
@@ -2226,13 +2234,14 @@ ERGO Maklerservice</div>
                             <div class="slide-bu-proc-path">
                                 <div class="slide-bu-proc-path-label">Pfad 2: Zielbild</div>
                                 <div class="slide-bu-proc-chain-vertical">
-                                    <div class="slide-bu-proc-vnode slide-bu-proc-formular">
+                                    <div class="slide-bu-proc-vnode slide-bu-proc-output">
                                         <span>Formular / API</span>
                                         <span class="slide-bu-proc-new">NEU</span>
                                     </div>
                                     <div class="slide-bu-proc-varrow-long">&darr;</div>
                                     <div class="slide-bu-proc-vnode slide-bu-proc-output">
                                         <span>Robotics / RPA</span>
+                                        <span class="slide-bu-proc-tag-auto">Automatisch</span>
                                     </div>
                                 </div>
                             </div>

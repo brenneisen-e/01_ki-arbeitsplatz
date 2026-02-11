@@ -93,40 +93,19 @@ function addSectionLabel(slide, text, x, y, color) {
 }
 
 /**
- * Renders a list of bullets with consistent spacing and aligned dots.
- * @param {object} slide - PptxGenJS slide
- * @param {Array} bullets - [{head, body}]
- * @param {number} x - left edge
- * @param {number} y - starting y
- * @param {number} w - available width
- * @param {string} dotColor - hex color for bullet dot
- * @param {number} itemH - height per bullet item
- * @param {number} gap - gap between items
+ * Renders a list of bullets using native PptxGenJS bullet formatting.
  * @returns {number} next y position after the last bullet
  */
 function renderBullets(slide, bullets, x, y, w, dotColor, itemH, gap) {
-    const dotSize = 0.1;
-    const dotX = x;
-    const textX = x + 0.22;
-    const textW = w - 0.22;
-    // First line of 12pt text: line height ~0.19". Vertical center of first line ≈ 0.095"
-    const firstLineCenter = 0.095;
-
     let curY = y;
     bullets.forEach(b => {
-        // Bullet dot - centered with first line of text
-        slide.addShape('ellipse', {
-            x: dotX, y: curY + firstLineCenter - dotSize / 2, w: dotSize, h: dotSize,
-            fill: { color: dotColor }
-        });
-        // Text
         slide.addText([
-            { text: b.head, options: { bold: true, fontSize: 12, color: C.black, fontFace: FONT } },
-            { text: ' \u2013 ' + b.body, options: { fontSize: 11, color: C.dkGray, fontFace: FONT } }
+            { text: b.head, options: { bold: true, fontSize: 12, color: C.black, fontFace: FONT, bullet: { type: 'bullet', color: dotColor } } },
+            { text: ' \u2013 ' + b.body, options: { fontSize: 11, color: C.dkGray, fontFace: FONT, breakType: 'none' } }
         ], {
-            x: textX, y: curY, w: textW, h: itemH,
+            x: x, y: curY, w: w, h: itemH,
             fontFace: FONT, valign: 'top', wrap: true, lineSpacingMultiple: 1.05,
-            paraSpaceAfter: 2
+            indentLevel: 0
         });
         curY += itemH + gap;
     });
@@ -226,12 +205,13 @@ function buildSlide11(pres) {
         align: 'center', valign: 'middle'
     });
 
+    // IST: fast alles manuell (grau), KI begrenzt (rot), nur Robotics automatisiert (grün)
     const istSteps = [
-        { num: '1', label: 'E-Mails via Gruppenpostfächer', color: C.blue, bg: 'F0F9FF' },
-        { num: '2', label: 'Postkorbsystem', color: C.teal, bg: 'F0FDFA' },
-        { num: '3', label: 'Manuelle Prüfung', color: C.orange, bg: 'FFFBF0', pain: '3\u20134 Schritte' },
-        { num: '4', label: 'ERGO GPT', color: C.red, bg: 'FEF2F2', pain: 'Begrenzt' },
-        { num: '5', label: 'Robotics / RPA', color: C.dkGreen, bg: 'F0FDF4' }
+        { num: '1', label: 'E-Mail-Eingang', color: C.mdGray, bg: 'F3F4F6', tag: 'Manuell' },
+        { num: '2', label: 'Postkorbsystem', color: C.mdGray, bg: 'F3F4F6', tag: 'Manuell' },
+        { num: '3', label: 'Manuelle Prüfung', color: C.dkGray, bg: 'EBEBEB', tag: 'Manuell', pain: '3\u20134 Schritte' },
+        { num: '4', label: 'ERGO GPT (nur Sonderfälle)', color: C.red, bg: 'FEF2F2', tag: 'Begrenzt' },
+        { num: '5', label: 'Robotics / RPA', color: C.dkGreen, bg: 'F0FDF4', tag: 'Automatisch' }
     ];
 
     let stepY = istProcY + 0.45;
@@ -255,19 +235,17 @@ function buildSlide11(pres) {
             align: 'center', valign: 'middle'
         });
         // Label
-        const textRuns = [{ text: s.label, options: { fontSize: 10, color: C.text, fontFace: FONT } }];
-        slide.addText(textRuns, {
-            x: LX + 0.48, y: stepY, w: LW - 1.2, h: stepH,
-            fontFace: FONT, valign: 'middle'
+        slide.addText(s.label, {
+            x: LX + 0.48, y: stepY, w: LW - 1.8, h: stepH,
+            fontFace: FONT, fontSize: 10, color: C.text, valign: 'middle'
         });
-        // Pain tag
-        if (s.pain) {
-            slide.addText(s.pain, {
-                x: LX + LW - 1.2, y: stepY + 0.02, w: 1.0, h: stepH - 0.04,
-                fontFace: FONT, fontSize: 9, bold: true, color: C.red,
-                align: 'right', valign: 'middle'
-            });
-        }
+        // Tag (Manuell / Begrenzt / Automatisch)
+        const tagColor = s.pain ? C.red : s.tag === 'Automatisch' ? C.dkGreen : C.mdGray;
+        slide.addText(s.pain || s.tag, {
+            x: LX + LW - 1.4, y: stepY + 0.02, w: 1.2, h: stepH - 0.04,
+            fontFace: FONT, fontSize: 9, bold: true, color: tagColor,
+            align: 'right', valign: 'middle'
+        });
         // Arrow
         if (i < istSteps.length - 1) {
             slide.addText('\u2193', {
@@ -309,12 +287,12 @@ function buildSlide11(pres) {
         fontFace: FONT, fontSize: 9, bold: true, color: C.dkGray
     });
 
-    // Path 1: E-Mails → KI-Agent → Auto → Robotics
+    // Path 1: E-Mails → KI-Agent → Auto → Robotics (all green = automated)
     const p1X = RX + 0.1;
     const p1Steps = [
-        { label: 'E-Mails via\nGruppenpostfächer', color: C.blue, bg: 'F0F9FF' },
+        { label: 'E-Mails via\nGruppenpostfächer', color: C.green, bg: 'F4FAE8' },
         { label: 'KI-Agent (Interim)', color: C.green, bg: 'F4FAE8' },
-        { label: 'Auto. Klassifikation', color: C.teal, bg: 'F0FDFA' },
+        { label: 'Auto. Klassifikation', color: C.dkGreen, bg: 'F0FDF4' },
         { label: 'Robotics / RPA', color: C.dkGreen, bg: 'F0FDF4' }
     ];
     let p1Y = sollProcY + 0.68;

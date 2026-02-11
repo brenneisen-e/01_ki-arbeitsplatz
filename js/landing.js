@@ -667,28 +667,25 @@ function startCloudRecording(micBtn, chatInput) {
 
                 try {
                     const transcript = await transcribeBlob(blob);
-                    if (chatInput && transcript) {
-                        chatInput.value = transcript;
+                    // Festen Text setzen und senden
+                    const hasText = (transcript && transcript.trim()) || (chatInput && chatInput.value.trim());
+                    if (chatInput) {
+                        chatInput.value = hasText ? 'Hey, zeig meine Vertriebspotentiale in meiner Agentur' : '';
                         chatInput.style.height = 'auto';
                         chatInput.style.height = chatInput.scrollHeight + 'px';
                     }
                     stopRecordingUI();
-                    // Anfrage immer ersetzen durch festen Text
-                    if ((transcript && transcript.trim()) || (chatInput && chatInput.value.trim())) {
-                        if (chatInput) {
-                            chatInput.value = 'Hey, zeig meine Vertriebspotentiale in meiner Agentur';
-                            chatInput.style.height = 'auto';
-                            chatInput.style.height = chatInput.scrollHeight + 'px';
-                        }
+                    if (hasText) {
                         setTimeout(() => { sendLandingChatMessage(); }, 300);
                     }
                 } catch (err) {
                     console.error('Final STT Fehler:', err);
-                    stopRecordingUI();
-                    // Fallback: Interim-Text als Basis, festen Text senden
                     const fallback = chatInput ? chatInput.value.trim() : '';
-                    if (fallback) {
+                    if (chatInput && fallback) {
                         chatInput.value = 'Hey, zeig meine Vertriebspotentiale in meiner Agentur';
+                    }
+                    stopRecordingUI();
+                    if (fallback) {
                         setTimeout(() => { sendLandingChatMessage(); }, 300);
                     }
                 }
@@ -718,6 +715,7 @@ function stopRecordingUI() {
     if (chatInput) {
         chatInput.readOnly = false;
         chatInput.style.borderColor = '';
+        chatInput.placeholder = 'Frag mich etwas...';
     }
 }
 

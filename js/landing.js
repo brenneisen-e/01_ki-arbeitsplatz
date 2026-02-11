@@ -570,9 +570,14 @@ function startCloudRecording(micBtn, chatInput) {
                 if (chatInput) { chatInput.placeholder = 'Transkribiere...'; }
 
                 try {
-                    // Audio zu Base64 konvertieren
+                    // Audio zu Base64 konvertieren (chunked, um Stack Overflow zu vermeiden)
                     const arrayBuffer = await audioBlob.arrayBuffer();
-                    const base64Audio = btoa(String.fromCharCode(...new Uint8Array(arrayBuffer)));
+                    const bytes = new Uint8Array(arrayBuffer);
+                    let binary = '';
+                    for (let i = 0; i < bytes.length; i += 8192) {
+                        binary += String.fromCharCode.apply(null, bytes.subarray(i, i + 8192));
+                    }
+                    const base64Audio = btoa(binary);
 
                     const response = await fetch('https://speech.googleapis.com/v1/speech:recognize?key=' + getSpeechApiKey(), {
                         method: 'POST',

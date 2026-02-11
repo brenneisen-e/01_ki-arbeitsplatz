@@ -547,78 +547,153 @@ function saveSpeechApiKey() {
 
 let mediaRecorder = null;
 let audioChunks = [];
+let cloudAudioCtx = null;
+let isStopped = false;
+
+// Helper: Blob → Base64 (chunk-safe)
+async function blobToBase64(blob) {
+    const buf = await blob.arrayBuffer();
+    const bytes = new Uint8Array(buf);
+    let binary = '';
+    for (let i = 0; i < bytes.length; i += 8192) {
+        binary += String.fromCharCode.apply(null, bytes.subarray(i, i + 8192));
+    }
+    return btoa(binary);
+}
+
+// Helper: Audio-Blob an Google STT senden, Transkript zurückgeben
+async function transcribeBlob(blob) {
+    const base64 = await blobToBase64(blob);
+    const res = await fetch('https://speech.googleapis.com/v1/speech:recognize?key=' + getSpeechApiKey(), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            config: {
+                encoding: 'WEBM_OPUS',
+                sampleRateHertz: 48000,
+                languageCode: 'de-DE',
+                model: 'latest_long',
+                enableAutomaticPunctuation: true
+            },
+            audio: { content: base64 }
+        })
+    });
+    const data = await res.json();
+    return (data.results || []).map(r => r.alternatives && r.alternatives[0] ? r.alternatives[0].transcript : '').filter(Boolean).join(' ');
+}
 
 function startCloudRecording(micBtn, chatInput) {
     navigator.mediaDevices.getUserMedia({ audio: { sampleRate: 48000, channelCount: 1 } })
         .then(stream => {
             isRecording = true;
+            isStopped = false;
             if (micBtn) micBtn.classList.add('recording');
             if (chatInput) { chatInput.readOnly = true; chatInput.style.borderColor = '#ef4444'; chatInput.value = ''; chatInput.placeholder = 'Höre zu...'; }
 
             audioChunks = [];
-            mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm;codecs=opus' });
+            const mimeType = MediaRecorder.isTypeSupported('audio/webm;codecs=opus') ? 'audio/webm;codecs=opus' : 'audio/webm';
+            mediaRecorder = new MediaRecorder(stream, { mimeType: mimeType });
 
-            mediaRecorder.ondataavailable = (event) => {
-                if (event.data.size > 0) audioChunks.push(event.data);
+            // --- Silence Detection via Web Audio API ---
+            cloudAudioCtx = new AudioContext();
+            const source = cloudAudioCtx.createMediaStreamSource(stream);
+            const analyser = cloudAudioCtx.createAnalyser();
+            analyser.fftSize = 512;
+            source.connect(analyser);
+            const dataArray = new Uint8Array(analyser.frequencyBinCount);
+
+            let hasSpoken = false;
+            let silenceStart = null;
+            const SILENCE_THRESHOLD = 8;
+            const SILENCE_DURATION = 1000; // 1s Stille → Auto-Stop
+
+            function checkSilence() {
+                if (isStopped) return;
+                analyser.getByteTimeDomainData(dataArray);
+                let sum = 0;
+                for (let i = 0; i < dataArray.length; i++) {
+                    const val = (dataArray[i] - 128) / 128;
+                    sum += val * val;
+                }
+                const rms = Math.sqrt(sum / dataArray.length) * 100;
+
+                if (rms >= SILENCE_THRESHOLD) {
+                    hasSpoken = true;
+                    silenceStart = null;
+                } else if (hasSpoken) {
+                    if (!silenceStart) silenceStart = Date.now();
+                    if (Date.now() - silenceStart >= SILENCE_DURATION) {
+                        // 1s Stille → automatisch stoppen
+                        isStopped = true;
+                        if (mediaRecorder.state === 'recording') mediaRecorder.stop();
+                        try { cloudAudioCtx.close(); } catch(_) {}
+                        return;
+                    }
+                }
+                requestAnimationFrame(checkSilence);
+            }
+            setTimeout(() => requestAnimationFrame(checkSilence), 300);
+
+            // --- Interim Live-Transkription ---
+            let interimBusy = false;
+
+            mediaRecorder.ondataavailable = async (e) => {
+                if (e.data.size > 0) audioChunks.push(e.data);
+
+                // Keine Interim-Requests wenn gestoppt oder bereits in-flight
+                if (isStopped || interimBusy) return;
+                interimBusy = true;
+
+                try {
+                    const blob = new Blob(audioChunks, { type: 'audio/webm;codecs=opus' });
+                    const transcript = await transcribeBlob(blob);
+                    if (transcript && !isStopped && chatInput) {
+                        chatInput.value = transcript;
+                        chatInput.style.height = 'auto';
+                        chatInput.style.height = chatInput.scrollHeight + 'px';
+                    }
+                } catch (err) {
+                    console.error('Interim STT Fehler:', err);
+                }
+                interimBusy = false;
             };
 
+            // --- Finales Ergebnis bei Stop ---
             mediaRecorder.onstop = async () => {
-                stream.getTracks().forEach(track => track.stop());
-                if (audioChunks.length === 0) { stopRecordingUI(); return; }
+                stream.getTracks().forEach(t => t.stop());
+                try { cloudAudioCtx.close(); } catch(_) {}
 
-                const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                const blob = new Blob(audioChunks, { type: 'audio/webm;codecs=opus' });
+                if (blob.size === 0) { stopRecordingUI(); return; }
+
                 if (chatInput) { chatInput.placeholder = 'Transkribiere...'; }
 
                 try {
-                    // Audio zu Base64 konvertieren
-                    const arrayBuffer = await audioBlob.arrayBuffer();
-                    const base64Audio = btoa(String.fromCharCode(...new Uint8Array(arrayBuffer)));
-
-                    const response = await fetch('https://speech.googleapis.com/v1/speech:recognize?key=' + getSpeechApiKey(), {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            config: {
-                                encoding: 'WEBM_OPUS',
-                                sampleRateHertz: 48000,
-                                languageCode: 'de-DE',
-                                model: 'latest_long',
-                                enableAutomaticPunctuation: true
-                            },
-                            audio: { content: base64Audio }
-                        })
-                    });
-
-                    if (!response.ok) {
-                        const errData = await response.json().catch(() => ({}));
-                        throw new Error('Google Speech API Fehler: ' + response.status + ' ' + (errData.error?.message || ''));
-                    }
-                    const data = await response.json();
-
-                    // Alle Ergebnisse zusammenbauen
-                    let transcript = '';
-                    if (data.results) {
-                        transcript = data.results.map(r => r.alternatives[0]?.transcript || '').join(' ');
-                    }
-
+                    const transcript = await transcribeBlob(blob);
                     if (chatInput) {
-                        chatInput.value = transcript;
+                        chatInput.value = transcript || '';
                         chatInput.style.height = 'auto';
                         chatInput.style.height = chatInput.scrollHeight + 'px';
                         chatInput.placeholder = 'Frag mich etwas...';
                     }
                     stopRecordingUI();
-                    if (transcript.trim()) {
+                    if (transcript && transcript.trim()) {
                         setTimeout(() => { sendLandingChatMessage(); }, 300);
                     }
                 } catch (err) {
-                    console.error('Google Speech Fehler:', err);
+                    console.error('Final STT Fehler:', err);
                     stopRecordingUI();
                     if (chatInput) chatInput.placeholder = 'Frag mich etwas...';
+                    // Fallback: Interim-Text trotzdem senden
+                    const fallback = chatInput ? chatInput.value.trim() : '';
+                    if (fallback) {
+                        setTimeout(() => { sendLandingChatMessage(); }, 300);
+                    }
                 }
             };
 
-            mediaRecorder.start();
+            // 500ms Timeslice → alle 0,5s wird ondataavailable gefeuert
+            mediaRecorder.start(500);
         })
         .catch(err => {
             console.warn('Mikrofon-Zugriff verweigert:', err.message);
@@ -675,9 +750,11 @@ function toggleVoiceInput() {
     const chatInput = document.getElementById('landingChatInput');
 
     if (isRecording) {
-        // Cloud Recording: Aufnahme stoppen → löst mediaRecorder.onstop aus
+        // Cloud Recording: manuell stoppen → löst mediaRecorder.onstop aus (finaler Google Cloud Request + Auto-Send)
         if (mediaRecorder && mediaRecorder.state === 'recording') {
+            isStopped = true;
             mediaRecorder.stop();
+            try { if (cloudAudioCtx) cloudAudioCtx.close(); } catch(_) {}
             return;
         }
         if (voiceRecognition) voiceRecognition.stop();

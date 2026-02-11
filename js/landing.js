@@ -2200,6 +2200,17 @@ function backToRegionsView() {
     }
 }
 
+// Toggle Modules
+function toggleModules() {
+    const container = document.getElementById('modulesContainer');
+    const btn = document.getElementById('modulesToggle');
+    if (!container || !btn) return;
+
+    const isOpen = container.style.display !== 'none';
+    container.style.display = isOpen ? 'none' : 'block';
+    btn.classList.toggle('open', !isOpen);
+}
+
 // Toggle Settings Box
 let settingsUnlocked = false;
 

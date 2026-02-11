@@ -733,6 +733,53 @@
     50% { box-shadow: 0 0 0 8px rgba(239, 68, 68, 0); }
 }
 
+/* Module Toggle Button */
+.modules-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 10px 16px;
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    color: #475569;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-bottom: 12px;
+}
+
+.modules-toggle:hover {
+    background: #e2e8f0;
+    color: #1e293b;
+}
+
+.modules-toggle.open {
+    background: #86BC25;
+    color: white;
+    border-color: #86BC25;
+}
+
+.modules-toggle .modules-chevron {
+    transition: transform 0.3s;
+}
+
+.modules-toggle.open .modules-chevron {
+    transform: rotate(180deg);
+}
+
+.modules-container {
+    animation: modulesSlideDown 0.3s ease-out;
+}
+
+@keyframes modulesSlideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
 /* Vertriebspotentiale Chat Response */
 .chat-potentiale-list {
     display: flex;

@@ -1,0 +1,116 @@
+/* css/kunden-detail.css - Kundendetail Page (A-10) */
+/* Extracted from styles.css for modularity */
+
+/* ========================================
+   KUNDENDETAIL PAGE
+   ======================================== */
+
+.kunden-page {
+    min-height: 100vh;
+    background: #f8fafc;
+    padding: 24px;
+}
+
+.kunden-header {
+    max-width: 1200px;
+    margin: 0 auto 24px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.kunden-page-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1e293b;
+    flex: 1;
+}
+
+.kunden-content {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.kunden-card {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e2e8f0;
+    margin-bottom: 24px;
+    overflow: hidden;
+}
+
+.kunden-card-header {
+    padding: 20px 24px;
+    background: #f8fdf5;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.kunden-card-header.fida {
+    background: #eff6ff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.kunden-card-header h2 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0;
+}
+
+.consent-info {
+    font-size: 12px;
+    font-weight: 600;
+    color: #166534;
+    background: #dcfce7;
+    padding: 4px 12px;
+    border-radius: 12px;
+}
+
+.kunden-stammdaten {
+    display: flex;
+    gap: 40px;
+    padding: 24px;
+}
+
+.kunden-foto-container {
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.kunden-foto {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: #f1f5f9;
+    border: 3px solid #86BC25;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+    position: relative;
+    overflow: hidden;
+}
+
+.kunden-foto svg {
+    width: 48px;
+    height: 48px;
+    color: #64748b;
+}
+
+.kunden-foto-container h3 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 4px;
+}
+
+.kunden-id {
+    font-size: 14px;
+    color: #64748b;
+    font-weight: 500;
+}
+

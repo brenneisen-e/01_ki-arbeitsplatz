@@ -1,0 +1,179 @@
+/* css/stammdaten-extras.css - Stammdaten Extras (Tiere, Scores, Tab Divider) */
+/* Extracted from styles.css for modularity */
+
+/* ========================================
+   STAMMDATEN: Tiere Badges
+   ======================================== */
+.tier-unknown-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #fef3c7;
+    color: #92400e;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, box-shadow 0.2s;
+}
+
+.tier-unknown-badge:hover {
+    background: #fde68a;
+    box-shadow: 0 2px 8px rgba(146, 64, 14, 0.15);
+}
+
+.tier-none-badge {
+    display: inline-flex;
+    align-items: center;
+    color: #94a3b8;
+    font-size: 13px;
+    font-style: italic;
+}
+
+.tier-known-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #dbeafe;
+    color: #1e40af;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+/* ========================================
+   STAMMDATEN: Score Bars (Risiko + Bonität)
+   ======================================== */
+.score-bar-display {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+}
+
+.score-bar-track {
+    flex: 1;
+    height: 8px;
+    background: #e2e8f0;
+    border-radius: 4px;
+    overflow: hidden;
+    max-width: 120px;
+}
+
+.score-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.4s ease;
+}
+
+.score-bar-value {
+    font-size: 14px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.score-bar-value small {
+    font-weight: 500;
+    font-size: 12px;
+    opacity: 0.8;
+}
+
+/* ========================================
+   RISIKOSCORE TOOLTIP
+   ======================================== */
+.risiko-tooltip-trigger {
+    display: inline-flex;
+    align-items: center;
+    color: #94a3b8;
+    cursor: help;
+    position: relative;
+    margin-left: 6px;
+    vertical-align: middle;
+}
+
+.risiko-tooltip-trigger:hover .risiko-tooltip-content,
+.risiko-tooltip-trigger:focus .risiko-tooltip-content {
+    display: block;
+}
+
+.risiko-tooltip-content {
+    display: none;
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1e293b;
+    color: white;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 12px;
+    line-height: 1.5;
+    min-width: 260px;
+    max-width: 340px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+    z-index: 100;
+    white-space: normal;
+}
+
+.risiko-tooltip-content::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: #1e293b;
+}
+
+.risiko-tooltip-title {
+    font-weight: 700;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #94a3b8;
+    margin-bottom: 6px;
+}
+
+.risiko-tooltip-item {
+    padding: 2px 0;
+    font-size: 12px;
+}
+
+/* ========================================
+   SCHADENHISTORIE BADGES
+   ======================================== */
+.schaden-status-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.schaden-status-badge.reguliert {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.schaden-status-badge.offen {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.schaden-status-badge.abgelehnt {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+/* ========================================
+   TAB DIVIDER: Kunden | Potentiale getrennt
+   ======================================== */
+.agentur-tab-divider {
+    width: 1px;
+    background: rgba(255, 255, 255, 0.35);
+    margin: 4px 6px;
+    align-self: stretch;
+    min-height: 24px;
+}

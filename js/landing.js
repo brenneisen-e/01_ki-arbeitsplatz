@@ -2172,11 +2172,29 @@ function backToRegionsView() {
 }
 
 // Toggle Settings Box
+let settingsUnlocked = false;
+
 function toggleSettings() {
     const settingsBox = document.querySelector('.settings-collapsible');
-    if (settingsBox) {
-        settingsBox.classList.toggle('open');
+    if (!settingsBox) return;
+
+    // If already open, just close
+    if (settingsBox.classList.contains('open')) {
+        settingsBox.classList.remove('open');
+        return;
     }
+
+    // If not yet unlocked, require password
+    if (!settingsUnlocked) {
+        const pw = prompt('Passwort eingeben:');
+        if (pw !== 'brenneisen') {
+            if (pw !== null) alert('Falsches Passwort.');
+            return;
+        }
+        settingsUnlocked = true;
+    }
+
+    settingsBox.classList.add('open');
 }
 
 // Benutzername speichern und aktualisieren

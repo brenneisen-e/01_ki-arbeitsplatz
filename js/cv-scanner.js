@@ -484,8 +484,8 @@ function switchCVMode(mode) {
     // Update chat buttons
     initCVChat();
 
-    document.dispatchEvent(new CustomEvent('viewChanged', {
-        detail: { view: mode }
+    document.dispatchEvent(new CustomEvent('moduleChanged', {
+        detail: { module: 'cv-scanner', view: mode }
     }));
 }
 

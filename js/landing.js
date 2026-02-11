@@ -585,10 +585,7 @@ async function transcribeBlob(blob) {
 function startCloudRecording(micBtn, chatInput) {
     navigator.mediaDevices.getUserMedia({ audio: { sampleRate: 48000, channelCount: 1 } })
         .then(stream => {
-            isRecording = true;
             isStopped = false;
-            if (micBtn) micBtn.classList.add('recording');
-            if (chatInput) { chatInput.readOnly = true; chatInput.style.borderColor = '#ef4444'; chatInput.value = ''; chatInput.placeholder = 'Höre zu...'; }
 
             audioChunks = [];
             const mimeType = MediaRecorder.isTypeSupported('audio/webm;codecs=opus') ? 'audio/webm;codecs=opus' : 'audio/webm';
@@ -666,27 +663,32 @@ function startCloudRecording(micBtn, chatInput) {
                 const blob = new Blob(audioChunks, { type: 'audio/webm;codecs=opus' });
                 if (blob.size === 0) { stopRecordingUI(); return; }
 
-                if (chatInput) { chatInput.placeholder = 'Transkribiere...'; }
+                // Interim-Text bleibt sichtbar während finaler Request läuft
 
                 try {
                     const transcript = await transcribeBlob(blob);
-                    if (chatInput) {
-                        chatInput.value = transcript || '';
+                    if (chatInput && transcript) {
+                        chatInput.value = transcript;
                         chatInput.style.height = 'auto';
                         chatInput.style.height = chatInput.scrollHeight + 'px';
-                        chatInput.placeholder = 'Frag mich etwas...';
                     }
                     stopRecordingUI();
-                    if (transcript && transcript.trim()) {
+                    // Anfrage immer ersetzen durch festen Text
+                    if ((transcript && transcript.trim()) || (chatInput && chatInput.value.trim())) {
+                        if (chatInput) {
+                            chatInput.value = 'Hey, zeig meine Vertriebspotentiale in meiner Agentur';
+                            chatInput.style.height = 'auto';
+                            chatInput.style.height = chatInput.scrollHeight + 'px';
+                        }
                         setTimeout(() => { sendLandingChatMessage(); }, 300);
                     }
                 } catch (err) {
                     console.error('Final STT Fehler:', err);
                     stopRecordingUI();
-                    if (chatInput) chatInput.placeholder = 'Frag mich etwas...';
-                    // Fallback: Interim-Text trotzdem senden
+                    // Fallback: Interim-Text als Basis, festen Text senden
                     const fallback = chatInput ? chatInput.value.trim() : '';
                     if (fallback) {
+                        chatInput.value = 'Hey, zeig meine Vertriebspotentiale in meiner Agentur';
                         setTimeout(() => { sendLandingChatMessage(); }, 300);
                     }
                 }
@@ -697,6 +699,7 @@ function startCloudRecording(micBtn, chatInput) {
         })
         .catch(err => {
             console.warn('Mikrofon-Zugriff verweigert:', err.message);
+            stopRecordingUI();
             runDemoVoiceInput();
         });
 }
@@ -724,7 +727,7 @@ function runDemoVoiceInput() {
     if (micBtn) micBtn.classList.add('recording');
     isRecording = true;
     if (chatInput) { chatInput.readOnly = true; chatInput.style.borderColor = '#ef4444'; chatInput.value = ''; }
-    const demoText = 'Gib mir aktuelle Vertriebspotentiale';
+    const demoText = 'Hey, zeig meine Vertriebspotentiale in meiner Agentur';
     let charIndex = 0;
 
     // Wait 1.5s simulating "listening", then gradually type text
@@ -761,6 +764,11 @@ function toggleVoiceInput() {
         stopRecordingUI();
         return;
     }
+
+    // Sofort visuelles Feedback (rot) BEVOR getUserMedia
+    isRecording = true;
+    if (micBtn) micBtn.classList.add('recording');
+    if (chatInput) { chatInput.readOnly = true; chatInput.style.borderColor = '#ef4444'; chatInput.value = ''; chatInput.placeholder = 'Höre zu...'; }
 
     // Google Cloud Speech-to-Text wenn API Key vorhanden
     if (getSpeechApiKey()) {

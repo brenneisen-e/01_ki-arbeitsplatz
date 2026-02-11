@@ -523,6 +523,94 @@ function initLandingChat() {
 }
 
 // ========================================
+// OPENAI WHISPER (Speech-to-Text)
+// ========================================
+function getOpenAIKey() {
+    return localStorage.getItem('openai_api_key') || '';
+}
+
+function saveOpenAIKey() {
+    const input = document.getElementById('openaiKeyInput');
+    const status = document.getElementById('openaiKeyStatus');
+    if (!input) return;
+    const key = input.value.trim();
+    if (key && key.startsWith('sk-')) {
+        localStorage.setItem('openai_api_key', key);
+        if (status) { status.className = 'api-token-status success'; status.textContent = '✅ OpenAI Key gespeichert – Whisper aktiv'; }
+    } else if (!key) {
+        localStorage.removeItem('openai_api_key');
+        if (status) { status.className = 'api-token-status'; status.textContent = 'Key entfernt – Browser Speech API wird genutzt'; }
+    } else {
+        if (status) { status.className = 'api-token-status error'; status.textContent = '❌ Ungültiger Key (muss mit "sk-" beginnen)'; }
+    }
+}
+
+let mediaRecorder = null;
+let audioChunks = [];
+
+function startWhisperRecording(micBtn, chatInput) {
+    navigator.mediaDevices.getUserMedia({ audio: true })
+        .then(stream => {
+            isRecording = true;
+            if (micBtn) micBtn.classList.add('recording');
+            if (chatInput) { chatInput.readOnly = true; chatInput.style.borderColor = '#ef4444'; chatInput.value = ''; chatInput.placeholder = 'Höre zu...'; }
+
+            audioChunks = [];
+            mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm;codecs=opus' });
+
+            mediaRecorder.ondataavailable = (event) => {
+                if (event.data.size > 0) audioChunks.push(event.data);
+            };
+
+            mediaRecorder.onstop = async () => {
+                stream.getTracks().forEach(track => track.stop());
+                if (audioChunks.length === 0) { stopRecordingUI(); return; }
+
+                const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                if (chatInput) { chatInput.placeholder = 'Transkribiere...'; }
+
+                try {
+                    const formData = new FormData();
+                    formData.append('file', audioBlob, 'audio.webm');
+                    formData.append('model', 'whisper-1');
+                    formData.append('language', 'de');
+
+                    const response = await fetch('https://api.openai.com/v1/audio/transcriptions', {
+                        method: 'POST',
+                        headers: { 'Authorization': 'Bearer ' + getOpenAIKey() },
+                        body: formData
+                    });
+
+                    if (!response.ok) throw new Error('Whisper API Fehler: ' + response.status);
+                    const data = await response.json();
+                    const transcript = data.text || '';
+
+                    if (chatInput) {
+                        chatInput.value = transcript;
+                        chatInput.style.height = 'auto';
+                        chatInput.style.height = chatInput.scrollHeight + 'px';
+                        chatInput.placeholder = 'Frag mich etwas...';
+                    }
+                    stopRecordingUI();
+                    if (transcript.trim()) {
+                        setTimeout(() => { sendLandingChatMessage(); }, 300);
+                    }
+                } catch (err) {
+                    console.error('Whisper Fehler:', err);
+                    stopRecordingUI();
+                    if (chatInput) chatInput.placeholder = 'Frag mich etwas...';
+                }
+            };
+
+            mediaRecorder.start();
+        })
+        .catch(err => {
+            console.warn('Mikrofon-Zugriff verweigert:', err.message);
+            runDemoVoiceInput();
+        });
+}
+
+// ========================================
 // VOICE INPUT (Microphone Button)
 // ========================================
 let voiceRecognition = null;
@@ -571,22 +659,31 @@ function toggleVoiceInput() {
     const chatInput = document.getElementById('landingChatInput');
 
     if (isRecording) {
+        // Whisper: Aufnahme stoppen → löst mediaRecorder.onstop aus
+        if (mediaRecorder && mediaRecorder.state === 'recording') {
+            mediaRecorder.stop();
+            return;
+        }
         if (voiceRecognition) voiceRecognition.stop();
         stopRecordingUI();
         return;
     }
 
+    // Whisper-Modus wenn OpenAI Key vorhanden
+    if (getOpenAIKey()) {
+        startWhisperRecording(micBtn, chatInput);
+        return;
+    }
+
+    // Fallback: Browser Speech API
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) {
         runDemoVoiceInput();
         return;
     }
 
-    // Erst Mikrofon-Berechtigung explizit anfragen (triggert Browser-Prompt)
-    // Dann SpeechRecognition starten
     navigator.mediaDevices.getUserMedia({ audio: true })
         .then(stream => {
-            // Mikrofon sofort wieder freigeben (wir brauchen nur die Berechtigung)
             stream.getTracks().forEach(track => track.stop());
             startSpeechRecognition(micBtn, chatInput);
         })
@@ -721,6 +818,18 @@ function closeDualView() {
 window.openKundenDetailDualView = openKundenDetailDualView;
 window.closeDualView = closeDualView;
 window.toggleVoiceInput = toggleVoiceInput;
+window.saveOpenAIKey = saveOpenAIKey;
+
+// OpenAI Key Status beim Laden anzeigen
+(function() {
+    const key = getOpenAIKey();
+    setTimeout(() => {
+        const input = document.getElementById('openaiKeyInput');
+        const status = document.getElementById('openaiKeyStatus');
+        if (key && input) { input.value = key; }
+        if (key && status) { status.className = 'api-token-status success'; status.textContent = '✅ Whisper aktiv – Spracheingabe via OpenAI'; }
+    }, 500);
+})();
 
 // Send message in landing chat - NUTZT GLEICHE LOGIK WIE DASHBOARD
 async function sendLandingChatMessage() {

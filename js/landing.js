@@ -548,6 +548,8 @@ function saveSpeechApiKey() {
 let mediaRecorder = null;
 let audioChunks = [];
 
+let liveRecognition = null;
+
 function startCloudRecording(micBtn, chatInput) {
     navigator.mediaDevices.getUserMedia({ audio: { sampleRate: 48000, channelCount: 1 } })
         .then(stream => {
@@ -555,6 +557,7 @@ function startCloudRecording(micBtn, chatInput) {
             if (micBtn) micBtn.classList.add('recording');
             if (chatInput) { chatInput.readOnly = true; chatInput.style.borderColor = '#ef4444'; chatInput.value = ''; chatInput.placeholder = 'Höre zu...'; }
 
+            // 1) MediaRecorder für Google Cloud (genaues Endergebnis)
             audioChunks = [];
             mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm;codecs=opus' });
 
@@ -564,13 +567,15 @@ function startCloudRecording(micBtn, chatInput) {
 
             mediaRecorder.onstop = async () => {
                 stream.getTracks().forEach(track => track.stop());
+                // Live-Recognition auch stoppen
+                if (liveRecognition) { try { liveRecognition.abort(); } catch(e) {} liveRecognition = null; }
+
                 if (audioChunks.length === 0) { stopRecordingUI(); return; }
 
                 const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-                if (chatInput) { chatInput.placeholder = 'Transkribiere...'; }
+                if (chatInput) { chatInput.placeholder = 'Transkribiere...'; chatInput.value = chatInput.value ? chatInput.value + ' ...' : '...'; }
 
                 try {
-                    // Audio zu Base64 konvertieren (chunked, um Stack Overflow zu vermeiden)
                     const arrayBuffer = await audioBlob.arrayBuffer();
                     const bytes = new Uint8Array(arrayBuffer);
                     let binary = '';
@@ -600,35 +605,87 @@ function startCloudRecording(micBtn, chatInput) {
                     }
                     const data = await response.json();
 
-                    // Alle Ergebnisse zusammenbauen
                     let transcript = '';
                     if (data.results) {
                         transcript = data.results.map(r => r.alternatives[0]?.transcript || '').join(' ');
                     }
 
+                    // Google Cloud Ergebnis ersetzt den Live-Text (genauer)
                     if (chatInput) {
-                        chatInput.value = transcript;
+                        chatInput.value = transcript || chatInput.value.replace(' ...', '');
                         chatInput.style.height = 'auto';
                         chatInput.style.height = chatInput.scrollHeight + 'px';
                         chatInput.placeholder = 'Frag mich etwas...';
                     }
                     stopRecordingUI();
-                    if (transcript.trim()) {
+                    const finalText = chatInput ? chatInput.value.trim() : '';
+                    if (finalText) {
                         setTimeout(() => { sendLandingChatMessage(); }, 300);
                     }
                 } catch (err) {
                     console.error('Google Speech Fehler:', err);
+                    // Bei Fehler: Live-Text behalten und trotzdem senden
                     stopRecordingUI();
                     if (chatInput) chatInput.placeholder = 'Frag mich etwas...';
+                    const fallbackText = chatInput ? chatInput.value.replace(' ...', '').trim() : '';
+                    if (fallbackText) {
+                        setTimeout(() => { sendLandingChatMessage(); }, 300);
+                    }
                 }
             };
 
             mediaRecorder.start();
+
+            // 2) Browser SpeechRecognition für Live-Anzeige (parallel)
+            startLivePreview(chatInput);
         })
         .catch(err => {
             console.warn('Mikrofon-Zugriff verweigert:', err.message);
             runDemoVoiceInput();
         });
+}
+
+function startLivePreview(chatInput) {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) return; // Kein Live-Preview möglich
+
+    liveRecognition = new SpeechRecognition();
+    liveRecognition.lang = 'de-DE';
+    liveRecognition.continuous = true;
+    liveRecognition.interimResults = true;
+
+    liveRecognition.onresult = (event) => {
+        if (!isRecording) return;
+        let transcript = '';
+        for (let i = 0; i < event.results.length; i++) {
+            transcript += event.results[i][0].transcript;
+        }
+        if (chatInput && transcript) {
+            chatInput.value = transcript;
+            chatInput.style.height = 'auto';
+            chatInput.style.height = chatInput.scrollHeight + 'px';
+        }
+    };
+
+    liveRecognition.onend = () => {
+        // continuous mode kann unerwartet enden - neu starten solange Aufnahme läuft
+        if (isRecording && liveRecognition) {
+            try { liveRecognition.start(); } catch(e) {}
+        }
+    };
+
+    liveRecognition.onerror = (event) => {
+        console.warn('Live-Preview Speech error:', event.error);
+        // Nicht kritisch - Google Cloud liefert trotzdem das Ergebnis
+        liveRecognition = null;
+    };
+
+    try {
+        liveRecognition.start();
+    } catch(e) {
+        console.warn('Live-Preview konnte nicht gestartet werden:', e.message);
+        liveRecognition = null;
+    }
 }
 
 // ========================================
@@ -680,8 +737,9 @@ function toggleVoiceInput() {
     const chatInput = document.getElementById('landingChatInput');
 
     if (isRecording) {
-        // Cloud Recording: Aufnahme stoppen → löst mediaRecorder.onstop aus
+        // Cloud Recording: Aufnahme stoppen → löst mediaRecorder.onstop aus (inkl. Google Cloud + Auto-Send)
         if (mediaRecorder && mediaRecorder.state === 'recording') {
+            if (liveRecognition) { try { liveRecognition.abort(); } catch(e) {} liveRecognition = null; }
             mediaRecorder.stop();
             return;
         }

@@ -749,6 +749,7 @@
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s;
+    margin-top: 24px;
     margin-bottom: 12px;
 }
 

@@ -541,18 +541,33 @@ function toggleVoiceInput() {
 
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) {
-        // Fallback: simulate voice input for demo
+        // Fallback: simulate realistic voice recording for demo
         if (micBtn) micBtn.classList.add('recording');
         isRecording = true;
+        const demoText = 'Gib mir aktuelle Vertriebspotentiale';
+        let charIndex = 0;
+
+        // Wait 1.5s simulating "listening", then gradually type text
         setTimeout(() => {
-            if (chatInput) {
-                chatInput.value = 'Gib mir aktuelle Vertriebspotentiale';
-                chatInput.style.height = 'auto';
-                chatInput.style.height = chatInput.scrollHeight + 'px';
-            }
-            isRecording = false;
-            if (micBtn) micBtn.classList.remove('recording');
-        }, 2000);
+            const typeInterval = setInterval(() => {
+                if (!isRecording) { clearInterval(typeInterval); return; }
+                if (charIndex < demoText.length) {
+                    chatInput.value = demoText.substring(0, charIndex + 1);
+                    chatInput.style.height = 'auto';
+                    chatInput.style.height = chatInput.scrollHeight + 'px';
+                    charIndex++;
+                } else {
+                    clearInterval(typeInterval);
+                    // Stop recording animation
+                    isRecording = false;
+                    if (micBtn) micBtn.classList.remove('recording');
+                    // Auto-send after short pause
+                    setTimeout(() => {
+                        sendLandingChatMessage();
+                    }, 600);
+                }
+            }, 65);
+        }, 1500);
         return;
     }
 
@@ -580,8 +595,11 @@ function toggleVoiceInput() {
     voiceRecognition.onend = () => {
         isRecording = false;
         if (micBtn) micBtn.classList.remove('recording');
+        // Auto-send recognized text after short pause
         if (chatInput && chatInput.value.trim()) {
-            sendLandingChatMessage();
+            setTimeout(() => {
+                sendLandingChatMessage();
+            }, 600);
         }
     };
 
@@ -589,7 +607,8 @@ function toggleVoiceInput() {
         console.warn('Speech recognition error:', event.error);
         isRecording = false;
         if (micBtn) micBtn.classList.remove('recording');
-        if (chatInput) {
+        // On error, fill demo text so user can still test
+        if (chatInput && !chatInput.value.trim()) {
             chatInput.value = 'Gib mir aktuelle Vertriebspotentiale';
             chatInput.style.height = 'auto';
             chatInput.style.height = chatInput.scrollHeight + 'px';
@@ -634,16 +653,9 @@ function openKundenDetailDualView(kundenName, vermittlerId) {
         if (tabStammdaten) tabStammdaten.classList.add('active', 'dual-visible');
         if (tabImpulse) tabImpulse.classList.add('active', 'dual-visible');
 
-        const existingBanner = document.querySelector('.kunden-dual-view-banner');
-        if (!existingBanner) {
-            const banner = document.createElement('div');
-            banner.className = 'kunden-dual-view-banner';
-            banner.innerHTML = `
-                <span>Duale Ansicht: Stammdaten & Potentiale</span>
-                <button class="close-dual-view" onclick="closeDualView()">Einzelansicht</button>
-            `;
-            kundenContent.parentNode.insertBefore(banner, kundenContent);
-        }
+        // Add class to page for full-width dual layout
+        const kundenPage = document.getElementById('kundenDetailPage');
+        if (kundenPage) kundenPage.classList.add('dual-view-active');
 
         console.log('Dual View aktiviert: Stammdaten + Potentiale');
     }, 300);
@@ -658,8 +670,8 @@ function closeDualView() {
         content.classList.remove('dual-visible');
     });
 
-    const banner = document.querySelector('.kunden-dual-view-banner');
-    if (banner) banner.remove();
+    const kundenPage = document.getElementById('kundenDetailPage');
+    if (kundenPage) kundenPage.classList.remove('dual-view-active');
 
     if (typeof switchKundenTab === 'function') {
         switchKundenTab('stammdaten');
@@ -698,7 +710,7 @@ async function sendLandingChatMessage() {
         if (isUsingMockMode()) {
             // Mock response
             console.log('Mock-Modus - Generiere Test-Antwort');
-            await new Promise(resolve => setTimeout(resolve, 1000));
+            await new Promise(resolve => setTimeout(resolve, 2500));
             const mockResponse = generateLandingMockResponse(message);
             hideLandingChatTyping();
             addLandingChatMessage('assistant', mockResponse);
@@ -888,60 +900,7 @@ function generateLandingMockResponse(message) {
         (lowerMessage.includes('potenziale') && !lowerMessage.includes('option'))) {
 
         return `Hallo Eike, sehr gerne. Ich habe folgende Vertriebspotentiale identifiziert:
-
-<div class="chat-potentiale-list">
-<div class="chat-potentiale-item">
-<div class="kunde-info">
-<div class="kunde-avatar">PS</div>
-<div class="kunde-details">
-<span class="kunde-name">Peter Schmidt</span>
-<span class="kunde-potential multiple">Mehrere Potentiale erkannt</span>
-</div>
-</div>
-<button class="kunde-btn" onclick="openKundenDetailDualView('Peter Schmidt', 'KD00001')">Zum Kunden</button>
-</div>
-<div class="chat-potentiale-item">
-<div class="kunde-info">
-<div class="kunde-avatar">AM</div>
-<div class="kunde-details">
-<span class="kunde-name">Anna Müller</span>
-<span class="kunde-potential">Kfz-Versicherung – Wechselpotential</span>
-</div>
-</div>
-<button class="kunde-btn" onclick="openKundenDetailDualView('Anna Müller', 'KD00042')">Zum Kunden</button>
-</div>
-<div class="chat-potentiale-item">
-<div class="kunde-info">
-<div class="kunde-avatar">TW</div>
-<div class="kunde-details">
-<span class="kunde-name">Thomas Weber</span>
-<span class="kunde-potential">BU-Versicherung – Deckungslücke</span>
-</div>
-</div>
-<button class="kunde-btn" onclick="openKundenDetailDualView('Thomas Weber', 'KD00087')">Zum Kunden</button>
-</div>
-<div class="chat-potentiale-item">
-<div class="kunde-info">
-<div class="kunde-avatar">SK</div>
-<div class="kunde-details">
-<span class="kunde-name">Sandra Koch</span>
-<span class="kunde-potential">Hausratversicherung – Cross-Selling</span>
-</div>
-</div>
-<button class="kunde-btn" onclick="openKundenDetailDualView('Sandra Koch', 'KD00023')">Zum Kunden</button>
-</div>
-<div class="chat-potentiale-item">
-<div class="kunde-info">
-<div class="kunde-avatar">MF</div>
-<div class="kunde-details">
-<span class="kunde-name">Michael Fischer</span>
-<span class="kunde-potential">Altersvorsorge – Nachholbedarf</span>
-</div>
-</div>
-<button class="kunde-btn" onclick="openKundenDetailDualView('Michael Fischer', 'KD00056')">Zum Kunden</button>
-</div>
-</div>
-
+<div class="chat-potentiale-list"><div class="chat-potentiale-item"><div class="kunde-info"><div class="kunde-avatar">PS</div><div class="kunde-details"><span class="kunde-name">Peter Schmidt</span><span class="kunde-potential multiple">Mehrere Potentiale erkannt</span><span class="kunde-desc">KFZ, BU & Hausrat – Vertragslücken identifiziert</span></div></div><button class="kunde-btn" onclick="openKundenDetailDualView('Peter Schmidt', 'KD00001')">Zum Kunden</button></div><div class="chat-potentiale-item"><div class="kunde-info"><div class="kunde-avatar">AM</div><div class="kunde-details"><span class="kunde-name">Anna Müller</span><span class="kunde-potential">Kfz-Versicherung – Wechselpotential</span><span class="kunde-desc">Vertrag läuft 12/2026 aus, Angebot erstellen</span></div></div><button class="kunde-btn" onclick="openKundenDetailDualView('Anna Müller', 'KD00042')">Zum Kunden</button></div><div class="chat-potentiale-item"><div class="kunde-info"><div class="kunde-avatar">TW</div><div class="kunde-details"><span class="kunde-name">Thomas Weber</span><span class="kunde-potential">BU-Versicherung – Deckungslücke</span><span class="kunde-desc">Aktuelle Absicherung deckt nur 60% des Nettoeinkommens</span></div></div><button class="kunde-btn" onclick="openKundenDetailDualView('Thomas Weber', 'KD00087')">Zum Kunden</button></div><div class="chat-potentiale-item"><div class="kunde-info"><div class="kunde-avatar">SK</div><div class="kunde-details"><span class="kunde-name">Sandra Koch</span><span class="kunde-potential">Hausratversicherung – Cross-Selling</span><span class="kunde-desc">Bestandskundin Leben, kein Sachvertrag vorhanden</span></div></div><button class="kunde-btn" onclick="openKundenDetailDualView('Sandra Koch', 'KD00023')">Zum Kunden</button></div><div class="chat-potentiale-item"><div class="kunde-info"><div class="kunde-avatar">MF</div><div class="kunde-details"><span class="kunde-name">Michael Fischer</span><span class="kunde-potential">Altersvorsorge – Nachholbedarf</span><span class="kunde-desc">38 Jahre, keine private Altersvorsorge, hohe Sparquote</span></div></div><button class="kunde-btn" onclick="openKundenDetailDualView('Michael Fischer', 'KD00056')">Zum Kunden</button></div></div>
 Klicke auf **"Zum Kunden"** um die Details und Potentiale einzusehen.`;
     }
 
@@ -1191,10 +1150,14 @@ function addLandingChatMessage(role, content) {
             .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
             .replace(/`(.*?)`/g, '<code>$1</code>');
 
-        // Only replace newlines with <br> in non-HTML content
+        // Smart newline handling: don't convert \n inside HTML blocks
         if (content.includes('<div')) {
-            formattedContent = formattedContent.replace(/(^[^<]+)/g, (match) => match.replace(/\n/g, '<br>'));
-            formattedContent = formattedContent.replace(/(<\/div>\s*\n?)([^<]+)$/g, (match, tag, text) => tag + text.replace(/\n/g, '<br>'));
+            const htmlStart = formattedContent.indexOf('<div');
+            const htmlEnd = formattedContent.lastIndexOf('</div>') + 6;
+            const textBefore = formattedContent.substring(0, htmlStart).replace(/\n/g, '<br>');
+            const htmlBlock = formattedContent.substring(htmlStart, htmlEnd);
+            const textAfter = formattedContent.substring(htmlEnd).replace(/\n/g, '<br>');
+            formattedContent = textBefore + htmlBlock + textAfter;
         } else {
             formattedContent = formattedContent.replace(/\n/g, '<br>');
         }

@@ -498,6 +498,172 @@ function initLandingChat() {
     console.log('Landing Chat initialisiert');
 }
 
+// ========================================
+// VOICE INPUT (Microphone Button)
+// ========================================
+let voiceRecognition = null;
+let isRecording = false;
+
+function toggleVoiceInput() {
+    const micBtn = document.getElementById('landingChatMic');
+    const chatInput = document.getElementById('landingChatInput');
+
+    if (isRecording) {
+        // Stop recording
+        if (voiceRecognition) {
+            voiceRecognition.stop();
+        }
+        isRecording = false;
+        if (micBtn) micBtn.classList.remove('recording');
+        return;
+    }
+
+    // Check browser support
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+        // Fallback: simulate voice input for demo
+        if (micBtn) micBtn.classList.add('recording');
+        isRecording = true;
+        setTimeout(() => {
+            if (chatInput) {
+                chatInput.value = 'Gib mir aktuelle Vertriebspotentiale';
+                chatInput.style.height = 'auto';
+                chatInput.style.height = chatInput.scrollHeight + 'px';
+            }
+            isRecording = false;
+            if (micBtn) micBtn.classList.remove('recording');
+        }, 2000);
+        return;
+    }
+
+    // Start recognition
+    voiceRecognition = new SpeechRecognition();
+    voiceRecognition.lang = 'de-DE';
+    voiceRecognition.continuous = false;
+    voiceRecognition.interimResults = true;
+
+    voiceRecognition.onstart = () => {
+        isRecording = true;
+        if (micBtn) micBtn.classList.add('recording');
+    };
+
+    voiceRecognition.onresult = (event) => {
+        const transcript = Array.from(event.results)
+            .map(result => result[0].transcript)
+            .join('');
+        if (chatInput) {
+            chatInput.value = transcript;
+            chatInput.style.height = 'auto';
+            chatInput.style.height = chatInput.scrollHeight + 'px';
+        }
+    };
+
+    voiceRecognition.onend = () => {
+        isRecording = false;
+        if (micBtn) micBtn.classList.remove('recording');
+        // Auto-send if we got text
+        if (chatInput && chatInput.value.trim()) {
+            sendLandingChatMessage();
+        }
+    };
+
+    voiceRecognition.onerror = (event) => {
+        console.warn('Speech recognition error:', event.error);
+        isRecording = false;
+        if (micBtn) micBtn.classList.remove('recording');
+        // Fallback: demo mode
+        if (chatInput) {
+            chatInput.value = 'Gib mir aktuelle Vertriebspotentiale';
+            chatInput.style.height = 'auto';
+            chatInput.style.height = chatInput.scrollHeight + 'px';
+        }
+    };
+
+    voiceRecognition.start();
+}
+
+// ========================================
+// DUAL VIEW: Stammdaten + Potentiale nebeneinander
+// ========================================
+function openKundenDetailDualView(kundenName, vermittlerId) {
+    // Track that we came from landing (M-01 chat)
+    previousViewBeforeKundenDetail = 'landing';
+
+    // First, open the customer detail page normally
+    openKundenDetail(kundenName, vermittlerId);
+
+    // Wait for the page to load, then activate dual view
+    setTimeout(() => {
+        const kundenContent = document.querySelector('.kunden-content');
+        if (!kundenContent) return;
+
+        // Add dual-view class
+        kundenContent.classList.add('dual-view');
+
+        // Remove all active states from tabs
+        document.querySelectorAll('.kunden-tab').forEach(tab => tab.classList.remove('active'));
+        document.querySelectorAll('.kunden-tab-content').forEach(content => {
+            content.classList.remove('active');
+            content.classList.remove('dual-visible');
+        });
+
+        // Activate both Stammdaten and Potentiale (Impulse) tabs visually
+        const stammdatenTab = document.querySelector('.kunden-tab[data-tab="stammdaten"]');
+        const impulseTab = document.querySelector('.kunden-tab[data-tab="impulse"]');
+        if (stammdatenTab) stammdatenTab.classList.add('active');
+        if (impulseTab) impulseTab.classList.add('active');
+
+        // Show both tab contents
+        const tabStammdaten = document.getElementById('tabStammdaten');
+        const tabImpulse = document.getElementById('tabImpulse');
+        if (tabStammdaten) {
+            tabStammdaten.classList.add('active', 'dual-visible');
+        }
+        if (tabImpulse) {
+            tabImpulse.classList.add('active', 'dual-visible');
+        }
+
+        // Add dual-view banner above the content
+        const existingBanner = document.querySelector('.kunden-dual-view-banner');
+        if (!existingBanner) {
+            const banner = document.createElement('div');
+            banner.className = 'kunden-dual-view-banner';
+            banner.innerHTML = `
+                <span>Duale Ansicht: Stammdaten & Potentiale</span>
+                <button class="close-dual-view" onclick="closeDualView()">Einzelansicht</button>
+            `;
+            kundenContent.parentNode.insertBefore(banner, kundenContent);
+        }
+
+        console.log('Dual View aktiviert: Stammdaten + Potentiale');
+    }, 300);
+}
+
+function closeDualView() {
+    const kundenContent = document.querySelector('.kunden-content');
+    if (!kundenContent) return;
+
+    // Remove dual-view class
+    kundenContent.classList.remove('dual-view');
+
+    // Remove dual-visible from all
+    document.querySelectorAll('.kunden-tab-content').forEach(content => {
+        content.classList.remove('dual-visible');
+    });
+
+    // Remove banner
+    const banner = document.querySelector('.kunden-dual-view-banner');
+    if (banner) banner.remove();
+
+    // Switch to Stammdaten tab
+    switchKundenTab('stammdaten');
+}
+
+// Make functions globally available
+window.openKundenDetailDualView = openKundenDetailDualView;
+window.closeDualView = closeDualView;
+window.toggleVoiceInput = toggleVoiceInput;
+
 // Send message in landing chat - NUTZT GLEICHE LOGIK WIE DASHBOARD
 async function sendLandingChatMessage() {
     const chatInput = document.getElementById('landingChatInput');
@@ -707,6 +873,71 @@ AGGREGIERTE DATEN:
 // Generate mock response - VERBESSERT
 function generateLandingMockResponse(message) {
     const lowerMessage = message.toLowerCase();
+
+    // ========================================
+    // VERTRIEBSPOTENTIALE - Kunden mit Potentialen
+    // ========================================
+    if (lowerMessage.includes('vertriebspotentiale') || lowerMessage.includes('vertriebspotenziale') ||
+        (lowerMessage.includes('potentiale') && !lowerMessage.includes('option')) ||
+        (lowerMessage.includes('potenziale') && !lowerMessage.includes('option'))) {
+
+        return `Hallo Eike, sehr gerne. Ich habe folgende Vertriebspotentiale identifiziert:
+
+<div class="chat-potentiale-list">
+<div class="chat-potentiale-item">
+<div class="kunde-info">
+<div class="kunde-avatar">PS</div>
+<div class="kunde-details">
+<span class="kunde-name">Peter Schmidt</span>
+<span class="kunde-potential multiple">Mehrere Potentiale erkannt</span>
+</div>
+</div>
+<button class="kunde-btn" onclick="openKundenDetailDualView('Peter Schmidt', 'KD00001')">Zum Kunden</button>
+</div>
+<div class="chat-potentiale-item">
+<div class="kunde-info">
+<div class="kunde-avatar">AM</div>
+<div class="kunde-details">
+<span class="kunde-name">Anna Müller</span>
+<span class="kunde-potential">Kfz-Versicherung – Wechselpotential</span>
+</div>
+</div>
+<button class="kunde-btn" onclick="openKundenDetailDualView('Anna Müller', 'KD00042')">Zum Kunden</button>
+</div>
+<div class="chat-potentiale-item">
+<div class="kunde-info">
+<div class="kunde-avatar">TW</div>
+<div class="kunde-details">
+<span class="kunde-name">Thomas Weber</span>
+<span class="kunde-potential">BU-Versicherung – Deckungslücke</span>
+</div>
+</div>
+<button class="kunde-btn" onclick="openKundenDetailDualView('Thomas Weber', 'KD00087')">Zum Kunden</button>
+</div>
+<div class="chat-potentiale-item">
+<div class="kunde-info">
+<div class="kunde-avatar">SK</div>
+<div class="kunde-details">
+<span class="kunde-name">Sandra Koch</span>
+<span class="kunde-potential">Hausratversicherung – Cross-Selling</span>
+</div>
+</div>
+<button class="kunde-btn" onclick="openKundenDetailDualView('Sandra Koch', 'KD00023')">Zum Kunden</button>
+</div>
+<div class="chat-potentiale-item">
+<div class="kunde-info">
+<div class="kunde-avatar">MF</div>
+<div class="kunde-details">
+<span class="kunde-name">Michael Fischer</span>
+<span class="kunde-potential">Altersvorsorge – Nachholbedarf</span>
+</div>
+</div>
+<button class="kunde-btn" onclick="openKundenDetailDualView('Michael Fischer', 'KD00056')">Zum Kunden</button>
+</div>
+</div>
+
+Klicke auf **"Zum Kunden"** um die Details und Potentiale einzusehen.`;
+    }
 
     // ========================================
     // SAMPLE QUESTIONS - Hardcoded Responses
@@ -952,9 +1183,17 @@ function addLandingChatMessage(role, content) {
         // Format content (basic markdown support)
         let formattedContent = content
             .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-            .replace(/`(.*?)`/g, '<code>$1</code>')
-            .replace(/\n/g, '<br>')
-            .replace(/• /g, '<br>• ');
+            .replace(/`(.*?)`/g, '<code>$1</code>');
+
+        // Only replace newlines with <br> in non-HTML content
+        if (content.includes('<div')) {
+            // Content has HTML blocks - only add <br> to text outside HTML
+            formattedContent = formattedContent.replace(/(^[^<]+)/g, (match) => match.replace(/\n/g, '<br>'));
+            formattedContent = formattedContent.replace(/(<\/div>\s*\n?)([^<]+)$/g, (match, tag, text) => tag + text.replace(/\n/g, '<br>'));
+        } else {
+            formattedContent = formattedContent.replace(/\n/g, '<br>');
+        }
+        formattedContent = formattedContent.replace(/• /g, '<br>• ');
 
         responseContainer.innerHTML = `
             <div class="landing-response-card">
@@ -3943,8 +4182,19 @@ function updateOpenFinanceTable(mode) {
 function closeKundenDetail() {
     document.getElementById('kundenDetailPage').style.display = 'none';
 
+    // Remove dual view if active
+    closeDualView();
+
     // Gehe zurück zur vorherigen View
-    if (previousViewBeforeKundenDetail === 'agentursicht') {
+    if (previousViewBeforeKundenDetail === 'landing') {
+        document.getElementById('landingPage').style.display = 'block';
+        console.log('Zurück zur Landing Page (M-01)');
+
+        // Dispatch event for Page ID Tracker
+        document.dispatchEvent(new CustomEvent('viewChanged', {
+            detail: { module: 'main', view: 'landing' }
+        }));
+    } else if (previousViewBeforeKundenDetail === 'agentursicht') {
         const agenturOverview = document.getElementById('agenturOverview');
         if (agenturOverview) {
             agenturOverview.style.display = 'block';

@@ -189,8 +189,19 @@ function updateOpenFinanceTable(mode) {
 function closeKundenDetail() {
     document.getElementById('kundenDetailPage').style.display = 'none';
 
+    // Remove dual view if active
+    if (typeof closeDualView === 'function') closeDualView();
+
     // Gehe zurück zur vorherigen View
-    if (previousViewBeforeKundenDetail === 'agentursicht') {
+    if (previousViewBeforeKundenDetail === 'landing') {
+        document.getElementById('landingPage').style.display = 'block';
+        console.log('Zurück zur Landing Page (M-01)');
+
+        // Dispatch event for Page ID Tracker
+        document.dispatchEvent(new CustomEvent('viewChanged', {
+            detail: { module: 'main', view: 'landing' }
+        }));
+    } else if (previousViewBeforeKundenDetail === 'agentursicht') {
         const agenturOverview = document.getElementById('agenturOverview');
         if (agenturOverview) {
             agenturOverview.style.display = 'block';

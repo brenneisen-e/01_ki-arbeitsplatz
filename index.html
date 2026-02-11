@@ -167,6 +167,23 @@
                     <div class="landing-chat-response" id="landingChatResponse" style="display: none;"></div>
                 </div>
 
+                <!-- Module Toggle Button -->
+                <button class="modules-toggle" id="modulesToggle" onclick="toggleModules()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                        <rect x="3" y="3" width="7" height="7" rx="1"></rect>
+                        <rect x="14" y="3" width="7" height="7" rx="1"></rect>
+                        <rect x="14" y="14" width="7" height="7" rx="1"></rect>
+                        <rect x="3" y="14" width="7" height="7" rx="1"></rect>
+                    </svg>
+                    <span>Module</span>
+                    <svg class="modules-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                </button>
+
+                <!-- Collapsible Module Container -->
+                <div class="modules-container" id="modulesContainer" style="display: none;">
+
                 <!-- Navigation Boxen - Hauptbereiche -->
                 <div class="navigation-boxes">
                     <button class="nav-box" onclick="openDashboard()">
@@ -266,6 +283,8 @@
                         </button>
                     </div>
                 </div>
+
+                </div><!-- /modulesContainer -->
 
                 <div class="landing-chat-messages" id="landingChatMessages">
                     <!-- Messages werden hier eingefügt -->
@@ -5582,7 +5601,7 @@
     <script src="js/main.js?v=20260108d"></script>
     <script src="js/chat.js"></script>
     <script src="js/agentur-overview.js"></script>
-    <script src="js/landing.js?v=20260211f"></script>
+    <script src="js/landing.js?v=20260211g"></script>
     <!-- Modularisierte JS-Module -->
     <script src="js/nps-display.js?v=20260209"></script>
     <script src="js/kunden-detail.js?v=20260209"></script>

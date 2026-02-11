@@ -942,8 +942,7 @@ async function sendLandingChatMessage() {
         return;
     }
     
-    // Clear input
-    chatInput.value = '';
+    // Input-Text stehen lassen (nicht leeren)
     chatInput.style.height = 'auto';
     
     // Add user message

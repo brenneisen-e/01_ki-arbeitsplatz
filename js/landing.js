@@ -582,7 +582,23 @@ function toggleVoiceInput() {
         return;
     }
 
-    // Real Speech Recognition (Chrome/Edge)
+    // Erst Mikrofon-Berechtigung explizit anfragen (triggert Browser-Prompt)
+    // Dann SpeechRecognition starten
+    navigator.mediaDevices.getUserMedia({ audio: true })
+        .then(stream => {
+            // Mikrofon sofort wieder freigeben (wir brauchen nur die Berechtigung)
+            stream.getTracks().forEach(track => track.stop());
+            startSpeechRecognition(micBtn, chatInput);
+        })
+        .catch(err => {
+            console.warn('Mikrofon-Zugriff verweigert:', err.message);
+            // Berechtigung verweigert → Demo-Fallback
+            runDemoVoiceInput();
+        });
+}
+
+function startSpeechRecognition(micBtn, chatInput) {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     voiceRecognition = new SpeechRecognition();
     voiceRecognition.lang = 'de-DE';
     voiceRecognition.continuous = false;
@@ -623,9 +639,9 @@ function toggleVoiceInput() {
         console.warn('Speech recognition error:', event.error);
         stopRecordingUI();
         voiceRecognition = null;
-        // not-allowed = Mikrofon blockiert (Edge Tracking Prevention)
-        // Fallback auf Demo-Modus mit Tipp-Animation
-        runDemoVoiceInput();
+        if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
+            runDemoVoiceInput();
+        }
     };
 
     voiceRecognition.start();

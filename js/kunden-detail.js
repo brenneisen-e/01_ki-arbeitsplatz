@@ -898,6 +898,12 @@ function fillKundenDetail(kundenName, vermittlerId) {
 // ========================================
 
 function switchKundenTab(tabName) {
+    // Exit dual-view when user clicks any tab manually
+    if (typeof closeDualView === 'function') {
+        const kundenContent = document.querySelector('.kunden-content.dual-view');
+        if (kundenContent) closeDualView();
+    }
+
     // Alle Tabs deaktivieren
     document.querySelectorAll('.kunden-tab').forEach(tab => {
         tab.classList.remove('active');

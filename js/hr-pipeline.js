@@ -282,6 +282,48 @@ function getHPMatchBadges(profile, position) {
 
 const HP_ALL_APPLICANTS = [
     { ...HP_PROFILES.max, status: 'recommended', appliedDate: '2026-02-03', appliedPositionId: 1 },
+    {
+        id: 'miller', name: 'Susan Miller', initials: 'SM', age: 29, city: 'Berlin', region: 'berlin', appliedDate: '2026-02-16', appliedPositionId: 2,
+        experience: '3 Jahre Versicherungsvertrieb (Ping An, China)', experienceYears: 3,
+        education: 'MBA Finance, University of Shanghai',
+        skills: ['Finanzanalyse', 'Vertrieb', 'Data Analytics', 'Kundenberatung'],
+        certifications: ['MBA Finance (Shanghai)', 'Insurance License (China)'],
+        insuranceFlags: {
+            green: ['3J Versicherungserfahrung (Ping An)', 'MBA Finance', 'Analytische Stärke'],
+            red: ['KO: Keine Deutschkenntnisse', 'Keine deutsche §34d', 'Keine IDD-Weiterbildung', 'Ausländische Qualifikation nicht anerkannt']
+        },
+        strengths: ['3J Versicherungserfahrung', 'MBA Finance', 'Analytische Kompetenz', 'Englisch verhandlungssicher'],
+        weaknesses: ['KO: Keine Deutschkenntnisse', 'Keine deutsche §34d Qualifikation', 'Qualifikation nicht anerkannt', 'Keine IDD-Weiterbildung'],
+        scores: { vertrieb: 55, branche: 40, qualifikation: 20, standort: 60, softskills: 50 },
+        totalScore: 38, status: 'rejected',
+        koKriterium: 'Keine Deutschkenntnisse — Für Versicherungsvertrieb in Deutschland sind Deutschkenntnisse (mind. B2) zwingend erforderlich.',
+        summary: 'Internationale Versicherungserfahrung (Ping An, China) und MBA Finance. KO-Kriterium: Keine Deutschkenntnisse. Für kundennahen Versicherungsvertrieb in Deutschland sind Deutschkenntnisse (mind. B2) zwingend erforderlich. Empfehlung: Ablehnung. Bei Erwerb von Deutschkenntnissen (B2+) und IHK §34d erneute Prüfung möglich.',
+        waterfall: [
+            { label: '3J Versicherungserfahrung (Ping An)', points: 10, type: 'positive' },
+            { label: 'MBA Finance', points: 8, type: 'positive' },
+            { label: 'Analytische Kompetenz', points: 5, type: 'positive' },
+            { label: 'KO: Keine Deutschkenntnisse', points: -30, type: 'negative' },
+            { label: 'Keine deutsche §34d', points: -15, type: 'negative' },
+            { label: 'Qualifikation nicht anerkannt', points: -10, type: 'negative' },
+            { label: 'Keine IDD-Weiterbildung', points: -5, type: 'negative' }
+        ],
+        counterfactual: 'Bei Erwerb von Deutschkenntnissen (B2+) und Bestehen der IHK §34d-Prüfung könnte der Score von 38 auf ca. 72 steigen.',
+        interviewQuestions: {
+            background: [{ q: 'Beschreiben Sie Ihre Erfahrung bei Ping An Insurance in China.', why: 'Verifizierung der internationalen Versicherungserfahrung' }],
+            behavioral: [{ q: 'Wie haben Sie in der Vergangenheit Sprachbarrieren im Kundenkontakt überwunden?', why: 'Umgang mit der Hauptschwäche' }],
+            technical: [{ q: 'Welche Unterschiede sehen Sie zwischen dem chinesischen und deutschen Versicherungsmarkt?', why: 'Marktverständnis und Anpassungsfähigkeit' }]
+        },
+        skillGap: {
+            dimensions: [
+                { label: 'Regulatorik', current: 15, required: 80 },
+                { label: 'Vertriebserfahrung', current: 55, required: 85 },
+                { label: 'Spartenkenntnis', current: 30, required: 75 },
+                { label: 'Digital-Kompetenz', current: 75, required: 80 },
+                { label: 'Sprachkompetenz', current: 10, required: 90 }
+            ],
+            training: 'Voraussetzungen für erneute Prüfung: 1) Deutsch B2-Zertifikat (Goethe-Institut, ca. 12 Monate), 2) IHK §34d Sachkundeprüfung, 3) Anerkennung ausländischer Qualifikation.'
+        }
+    },
     { ...HP_PROFILES.sarah, status: 'review', appliedDate: '2026-02-07', appliedPositionId: 5 },
     { ...HP_PROFILES.thomas, status: 'rejected', appliedDate: '2026-01-22', appliedPositionId: 4 },
     {
@@ -467,48 +509,6 @@ const HP_ALL_APPLICANTS = [
             { label: 'Keine Weiterbildungen', points: -5, type: 'negative' }
         ],
         counterfactual: 'Quereinsteiger-Programm → Score 42 auf ca. 58. Zusätzliche kaufm. Qualifikation nötig.'
-    },
-    {
-        id: 'chen', name: 'Wei Chen', initials: 'WC', age: 29, city: 'Berlin', region: 'berlin', appliedDate: '2026-02-16', appliedPositionId: 2,
-        experience: '3 Jahre Versicherungsvertrieb (Ping An, China)', experienceYears: 3,
-        education: 'MBA Finance, University of Shanghai',
-        skills: ['Finanzanalyse', 'Vertrieb', 'Data Analytics', 'Kundenberatung'],
-        certifications: ['MBA Finance (Shanghai)', 'Insurance License (China)'],
-        insuranceFlags: {
-            green: ['3J Versicherungserfahrung (Ping An)', 'MBA Finance', 'Analytische Stärke'],
-            red: ['KO: Keine Deutschkenntnisse', 'Keine deutsche §34d', 'Keine IDD-Weiterbildung', 'Ausländische Qualifikation nicht anerkannt']
-        },
-        strengths: ['3J Versicherungserfahrung', 'MBA Finance', 'Analytische Kompetenz', 'Englisch verhandlungssicher'],
-        weaknesses: ['KO: Keine Deutschkenntnisse', 'Keine deutsche §34d Qualifikation', 'Qualifikation nicht anerkannt', 'Keine IDD-Weiterbildung'],
-        scores: { vertrieb: 55, branche: 40, qualifikation: 20, standort: 60, softskills: 50 },
-        totalScore: 38, status: 'rejected',
-        koKriterium: 'Keine Deutschkenntnisse — Für Versicherungsvertrieb in Deutschland sind Deutschkenntnisse (mind. B2) zwingend erforderlich.',
-        summary: 'Internationale Versicherungserfahrung (Ping An, China) und MBA Finance. KO-Kriterium: Keine Deutschkenntnisse. Für kundennahen Versicherungsvertrieb in Deutschland sind Deutschkenntnisse (mind. B2) zwingend erforderlich. Empfehlung: Ablehnung. Bei Erwerb von Deutschkenntnissen (B2+) und IHK §34d erneute Prüfung möglich.',
-        waterfall: [
-            { label: '3J Versicherungserfahrung (Ping An)', points: 10, type: 'positive' },
-            { label: 'MBA Finance', points: 8, type: 'positive' },
-            { label: 'Analytische Kompetenz', points: 5, type: 'positive' },
-            { label: 'KO: Keine Deutschkenntnisse', points: -30, type: 'negative' },
-            { label: 'Keine deutsche §34d', points: -15, type: 'negative' },
-            { label: 'Qualifikation nicht anerkannt', points: -10, type: 'negative' },
-            { label: 'Keine IDD-Weiterbildung', points: -5, type: 'negative' }
-        ],
-        counterfactual: 'Bei Erwerb von Deutschkenntnissen (B2+) und Bestehen der IHK §34d-Prüfung könnte der Score von 38 auf ca. 72 steigen.',
-        interviewQuestions: {
-            background: [{ q: 'Beschreiben Sie Ihre Erfahrung bei Ping An Insurance in China.', why: 'Verifizierung der internationalen Versicherungserfahrung' }],
-            behavioral: [{ q: 'Wie haben Sie in der Vergangenheit Sprachbarrieren im Kundenkontakt überwunden?', why: 'Umgang mit der Hauptschwäche' }],
-            technical: [{ q: 'Welche Unterschiede sehen Sie zwischen dem chinesischen und deutschen Versicherungsmarkt?', why: 'Marktverständnis und Anpassungsfähigkeit' }]
-        },
-        skillGap: {
-            dimensions: [
-                { label: 'Regulatorik', current: 15, required: 80 },
-                { label: 'Vertriebserfahrung', current: 55, required: 85 },
-                { label: 'Spartenkenntnis', current: 30, required: 75 },
-                { label: 'Digital-Kompetenz', current: 75, required: 80 },
-                { label: 'Sprachkompetenz', current: 10, required: 90 }
-            ],
-            training: 'Voraussetzungen für erneute Prüfung: 1) Deutsch B2-Zertifikat (Goethe-Institut, ca. 12 Monate), 2) IHK §34d Sachkundeprüfung, 3) Anerkennung ausländischer Qualifikation.'
-        }
     }
 ];
 
@@ -1135,7 +1135,7 @@ function renderHPDashboard() {
                 </div>
                 <div class="hp-applicant-status">
                     <span class="hp-status-badge ${applicant.status}">${statusLabel}</span>
-                    ${applicant.koKriterium ? '<span class="hp-status-badge" style="background:#fef2f2;color:#DC2626;border:1px solid #fecaca;font-weight:700">KO</span>' : ''}
+                    ${applicant.koKriterium ? '<span class="hp-status-badge" style="background:#fef2f2;color:#DC2626;border:1px solid #fecaca;font-weight:700">Kritischer Ablehnungsgrund (&bdquo;KO&ldquo;)</span>' : ''}
                 </div>
             </div>`;
     }).join('');
@@ -1265,7 +1265,7 @@ function openHPDetail(applicantId) {
         <div style="background:#fef2f2;border:2px solid #DC2626;border-radius:var(--radius-md);padding:var(--space-4) var(--space-5);margin-bottom:var(--space-6);display:flex;align-items:flex-start;gap:var(--space-3);">
             <svg viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2" width="24" height="24" style="flex-shrink:0;margin-top:2px"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
             <div>
-                <div style="font-weight:700;color:#DC2626;font-size:var(--font-base);margin-bottom:var(--space-1)">KO-Kriterium</div>
+                <div style="font-weight:700;color:#DC2626;font-size:var(--font-base);margin-bottom:var(--space-1)">Kritischer Ablehnungsgrund (&bdquo;KO&ldquo;)</div>
                 <div style="color:#991b1b;font-size:var(--font-sm)">${applicant.koKriterium}</div>
             </div>
         </div>` : ''}
@@ -1436,7 +1436,7 @@ function showHPActionWorkflow(type) {
                         </button>
                         <button class="hp-workflow-option" data-value="ko" onclick="hpSelectOption(this)">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-                            KO-Kriterium erfüllt
+                            Kritischer Ablehnungsgrund
                         </button>
                     </div>
                 </div>

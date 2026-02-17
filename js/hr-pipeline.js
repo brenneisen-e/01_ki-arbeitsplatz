@@ -58,17 +58,17 @@ const HP_PROFILES = {
         experience: '8 Jahre Versicherungsvertrieb (Allianz AO)',
         experienceYears: 8,
         education: 'BWL-Studium (B.A.), IHK Versicherungsfachmann',
-        skills: ['Kundenakquise', 'Bestandsmanagement', 'Führungserfahrung', 'Vertriebssteuerung', 'Cross-Selling'],
+        skills: ['Kundenakquise', 'Bestandsmanagement', 'Führungserfahrung', 'Vertriebssteuerung', 'Kundenbindung'],
         certifications: ['IHK Versicherungsfachmann (§34d)', 'BWL Bachelor (DQR 6)', 'IDD Weiterbildung 2024'],
         insuranceFlags: {
-            green: ['8J Allianz AO-Erfahrung', 'IHK §34d qualifiziert', 'Bestandsgröße 2.4 Mio €', 'Cross-Selling-Quote 34%'],
+            green: ['8J Allianz AO-Erfahrung', 'IHK §34d qualifiziert', 'Bestandsgröße 2.4 Mio €', 'Ø 115% Zielerreichung'],
             red: ['Kein Fachwirt IHK']
         },
         strengths: ['Kundenakquise', 'Bestandsmanagement', 'Führungserfahrung (3 MA)', 'IHK-qualifiziert', 'Allianz AO-Erfahrung'],
         weaknesses: ['Keine ERGO-Erfahrung', 'Kein Fachwirt IHK'],
         scores: { vertrieb: 95, branche: 90, qualifikation: 88, standort: 92, softskills: 85 },
         totalScore: 92,
-        summary: '8 Jahre fundierte Vertriebserfahrung in der Allianz Ausschließlichkeitsorganisation. IHK-Qualifikation nach §34d, nachgewiesene Führungskompetenz über 3 Mitarbeiter und Bestandsvolumen von 2,4 Mio €. Idealer Kandidat für die Agenturleitung. Cross-Selling-Quote von 34% liegt deutlich über dem Branchendurchschnitt.',
+        summary: '8 Jahre fundierte Vertriebserfahrung in der Allianz Ausschließlichkeitsorganisation. IHK-Qualifikation nach §34d, nachgewiesene Führungskompetenz über 3 Mitarbeiter und Bestandsvolumen von 2,4 Mio €. Durchschnittliche Zielerreichung von 115% belegt überdurchschnittliche Vertriebsleistung. Idealer Kandidat für die Agenturleitung.',
         radarData: [95, 90, 88, 92, 85],
         waterfall: [
             { label: 'IHK Versicherungsfachmann §34d', points: 18, type: 'positive' },
@@ -76,7 +76,7 @@ const HP_PROFILES = {
             { label: 'Bestandsgröße 2,4 Mio €', points: 14, type: 'positive' },
             { label: 'Führungserfahrung (3 MA)', points: 12, type: 'positive' },
             { label: 'BWL-Studium (DQR 6)', points: 10, type: 'positive' },
-            { label: 'Cross-Selling-Quote 34%', points: 8, type: 'positive' },
+            { label: 'Ø 115% Zielerreichung', points: 8, type: 'positive' },
             { label: 'IDD Weiterbildung aktuell', points: 5, type: 'positive' },
             { label: 'Standort Düsseldorf (Match)', points: 7, type: 'positive' },
             { label: 'Kein Fachwirt IHK', points: -7, type: 'negative' },
@@ -89,7 +89,7 @@ const HP_PROFILES = {
                 { q: 'Wie haben Sie Ihr Bestandsvolumen von 2,4 Mio € aufgebaut? Welche Akquise-Strategien waren am erfolgreichsten?', why: 'Quantifizierung der Vertriebsleistung und strategisches Denken' }
             ],
             behavioral: [
-                { q: 'Erzählen Sie von einer Situation, in der Sie eine Deckungslücke bei einem Bestandskunden identifiziert haben. Wie sind Sie vorgegangen?', why: 'STAR-Methode: Bedarfsanalyse-Kompetenz und Cross-Selling-Fähigkeit' },
+                { q: 'Erzählen Sie von einer Situation, in der Sie eine Deckungslücke bei einem Bestandskunden identifiziert haben. Wie sind Sie vorgegangen?', why: 'STAR-Methode: Bedarfsanalyse-Kompetenz und Beratungsqualität' },
                 { q: 'Beschreiben Sie eine Herausforderung bei der Führung Ihres 3-köpfigen Teams. Wie haben Sie diese gelöst?', why: 'Führungskompetenz und Konfliktlösungsfähigkeit für Agenturleiter-Rolle' }
             ],
             technical: [
@@ -750,7 +750,7 @@ const HP_CHAT_RESPONSES = {
         followUp: [{ label: 'Zurück zum Start', icon: 'home', action: 'start' }]
     },
     detail_max: {
-        text: 'Max Berger (34, Düsseldorf) — Score: 92\n\n- 8J Allianz AO, Bestand 2,4 Mio €\n- IHK §34d, BWL Bachelor, IDD aktuell\n- Führung: 3 MA, Cross-Selling 34%\n- Empfohlen: Agenturleiter Düsseldorf\n\nKI-Empfehlung: Sofortige Einladung.',
+        text: 'Max Berger (34, Düsseldorf) — Score: 92\n\n- 8J Allianz AO, Bestand 2,4 Mio €\n- IHK §34d, BWL Bachelor, IDD aktuell\n- Führung: 3 MA, Ø 115% Zielerreichung\n- Empfohlen: Agenturleiter Düsseldorf\n\nKI-Empfehlung: Sofortige Einladung.',
         followUp: [
             { label: 'Einladen', icon: 'check', action: 'top_kandidaten' },
             { label: 'Zurück zum Start', icon: 'home', action: 'start' }
@@ -814,6 +814,14 @@ function initHRPipeline() {
         dropzone.addEventListener('drop', (e) => { e.preventDefault(); dropzone.classList.remove('dragover'); loadHPDemoProfile('max'); });
     }
     initHPChat();
+    // Auto-expand chat on first load
+    setTimeout(() => {
+        const chatWindow = document.getElementById('hpChatWindow');
+        if (chatWindow && !chatWindow.classList.contains('open')) {
+            hpChatOpen = true;
+            chatWindow.classList.add('open');
+        }
+    }, 300);
 }
 
 // ========================================
@@ -950,7 +958,7 @@ function renderHPProfileCard(profile) {
         <div class="hp-profile-body">
             <div class="hp-profile-section">
                 <h4>Berufserfahrung</h4>
-                <p style="font-size:var(--font-sm);color:var(--text-secondary);margin:0;">${profile.experience}</p>
+                <p style="font-size:var(--font-base);color:var(--text-secondary);margin:0;">${profile.experience}</p>
             </div>
             <div class="hp-profile-section">
                 <h4>Ausbildung & Zertifikate</h4>
@@ -1012,7 +1020,7 @@ function drawHPRadarChart(profile) {
         },
         options: {
             responsive: true, maintainAspectRatio: true,
-            scales: { r: { beginAtZero: true, max: 100, ticks: { stepSize: 25, font: { size: 10 }, backdropColor: 'transparent' }, pointLabels: { font: { size: 11, weight: '500' }, color: '#475569' }, grid: { color: 'rgba(0,0,0,0.06)' }, angleLines: { color: 'rgba(0,0,0,0.06)' } } },
+            scales: { r: { beginAtZero: true, max: 100, ticks: { stepSize: 25, font: { size: 12 }, backdropColor: 'transparent' }, pointLabels: { font: { size: 14, weight: '500' }, color: '#475569' }, grid: { color: 'rgba(0,0,0,0.06)' }, angleLines: { color: 'rgba(0,0,0,0.06)' } } },
             plugins: { legend: { display: false } },
             animation: { duration: 800, easing: 'easeOutQuart' }
         }
@@ -1120,7 +1128,7 @@ function renderHPDashboard() {
             <div class="hp-applicant-card ${applicant.status === 'rejected' ? 'rejection' : ''} ${isBlind ? 'blind' : ''}" data-region="${applicant.region}" data-score="${applicant.totalScore}" data-status="${applicant.status}" onclick="openHPDetail('${applicant.id}')">
                 <div class="hp-applicant-score ${scoreClass}">${applicant.totalScore}</div>
                 <div class="hp-applicant-info">
-                    <h4>${isBlind ? 'Kandidat/in #' + applicant.id.toUpperCase() : applicant.name}</h4>
+                    <h4>${isBlind ? 'Kandidat/in #' + getBlindId(applicant.id) : applicant.name}</h4>
                     <div class="hp-applicant-location">${isBlind ? applicant.region.toUpperCase() : applicant.city + ' | ' + applicant.age + ' Jahre'}</div>
                     ${appliedPos && !isBlind ? `<div style="font-size:var(--font-xs);color:var(--text-tertiary);margin-top:var(--space-1);display:flex;align-items:center;gap:var(--space-2);flex-wrap:wrap;">
                         <span>${appliedDateFormatted}</span>
@@ -1159,6 +1167,11 @@ function filterHPApplicants() {
 // ========================================
 // BLIND SCREENING
 // ========================================
+
+function getBlindId(applicantId) {
+    const idx = HP_ALL_APPLICANTS.findIndex(a => a.id === applicantId);
+    return String(idx + 1).padStart(3, '0');
+}
 
 function toggleHPBlindScreening() {
     hpBlindScreening = document.getElementById('hpBlindToggle')?.checked || false;
@@ -1224,7 +1237,7 @@ function openHPDetail(applicantId) {
     hpCurrentDetailApplicant = applicant;
 
     const isBlind = hpBlindScreening;
-    document.getElementById('hpDetailName').textContent = isBlind ? 'Kandidat/in #' + applicant.id.toUpperCase() : applicant.name;
+    document.getElementById('hpDetailName').textContent = isBlind ? 'Kandidat/in #' + getBlindId(applicant.id) : applicant.name;
     const body = document.getElementById('hpDetailBody');
 
     const scoreCategories = [
@@ -1237,9 +1250,9 @@ function openHPDetail(applicantId) {
 
     body.innerHTML = `
         <div style="display:flex;gap:var(--space-4);margin-bottom:var(--space-6);align-items:center;">
-            ${!isBlind && applicant.photo ? `<img src="${applicant.photo}" alt="${applicant.name}" class="hp-profile-avatar-large" style="width:56px;height:56px;border-radius:50%;object-fit:cover;">` : `<div class="hp-profile-avatar-large">${isBlind ? '#' + applicant.id.toUpperCase().charAt(0) : applicant.initials}</div>`}
+            ${!isBlind && applicant.photo ? `<img src="${applicant.photo}" alt="${applicant.name}" class="hp-profile-avatar-large" style="width:56px;height:56px;border-radius:50%;object-fit:cover;">` : `<div class="hp-profile-avatar-large">${isBlind ? '#' + getBlindId(applicant.id) : applicant.initials}</div>`}
             <div>
-                <div style="font-size:var(--font-lg);font-weight:var(--font-bold);color:var(--text-primary);">${isBlind ? 'Kandidat/in #' + applicant.id.toUpperCase() : applicant.name}</div>
+                <div style="font-size:var(--font-lg);font-weight:var(--font-bold);color:var(--text-primary);">${isBlind ? 'Kandidat/in #' + getBlindId(applicant.id) : applicant.name}</div>
                 <div style="font-size:var(--font-sm);color:var(--text-secondary);">${isBlind ? applicant.region.toUpperCase() + ' | — Jahre | ' + applicant.experience : applicant.city + ' | ' + applicant.age + ' Jahre | ' + applicant.experience}</div>
                 ${(applicant.certifications || []).length ? `<div class="hp-tags" style="margin-top:var(--space-2)">${applicant.certifications.map(c => `<span class="hp-tag cert">${c}</span>`).join('')}</div>` : ''}
                 ${(() => {
@@ -1793,7 +1806,7 @@ function toggleHPSideBySide() {
         if (iframe) iframe.src = '';
         if (btnText) btnText.textContent = 'Original-CV';
     } else {
-        if (iframe) iframe.src = 'cv/max-berger-cv.html';
+        if (iframe) iframe.src = 'cv/Lebenslauf_Max_Berger.pdf';
         cvPane.classList.add('visible');
         panel.classList.add('side-by-side');
         if (btnText) btnText.textContent = 'CV ausblenden';
@@ -1824,7 +1837,7 @@ function toggleHPSideBySide() {
                         }
                         .cv-name, .cv-footer { visibility: hidden !important; }
                         .cv-name::after {
-                            content: 'Kandidat/in #MAX';
+                            content: 'Kandidat/in #${getBlindId(applicant.id)}';
                             visibility: visible;
                             display: block;
                         }

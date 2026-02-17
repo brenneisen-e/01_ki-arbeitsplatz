@@ -210,21 +210,24 @@
     display: inline-flex;
     align-items: center;
     gap: var(--space-2);
-    padding: var(--space-2) var(--space-3);
-    background: none;
+    padding: var(--space-3) var(--space-5);
+    background: var(--primary);
     border: none;
-    color: var(--text-secondary);
-    font-size: var(--font-sm);
+    color: white;
+    font-size: var(--font-base);
+    font-weight: var(--font-semibold);
     font-family: inherit;
     cursor: pointer;
-    border-radius: var(--radius-md);
-    margin-bottom: var(--space-3);
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--space-4);
     transition: all 0.2s;
+    box-shadow: var(--shadow-sm);
 }
 
 .hp-back-to-landing:hover {
-    color: var(--primary);
-    background: var(--gray-50);
+    background: var(--primary-dark, #a00d26);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
 }
 
 /* ========================================
@@ -800,6 +803,19 @@
     font-weight: var(--font-bold);
 }
 
+.hp-photo-hover {
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    z-index: 1;
+}
+
+.hp-photo-hover:hover {
+    transform: scale(3);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+    z-index: 100;
+}
+
 .hp-profile-info {
     flex: 1;
 }
@@ -886,6 +902,11 @@
 .hp-tag.flag-red {
     background: rgba(220, 38, 38, 0.08);
     color: #DC2626;
+}
+
+.hp-tag.flag-neutral {
+    background: rgba(156, 163, 175, 0.12);
+    color: #6B7280;
 }
 
 /* KI Summary with typewriter cursor */
@@ -996,6 +1017,10 @@
     background: linear-gradient(90deg, #DC2626, rgba(220, 38, 38, 0.7));
 }
 
+.hp-waterfall-fill.neutral {
+    background: linear-gradient(90deg, #9CA3AF, rgba(156, 163, 175, 0.7));
+}
+
 .hp-waterfall-value {
     min-width: 60px;
     text-align: right;
@@ -1005,6 +1030,7 @@
 
 .hp-waterfall-value.positive { color: #16A34A; }
 .hp-waterfall-value.negative { color: #DC2626; }
+.hp-waterfall-value.neutral { color: #9CA3AF; }
 
 /* Counterfactual suggestion */
 .hp-counterfactual {

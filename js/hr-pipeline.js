@@ -62,10 +62,12 @@ const HP_PROFILES = {
         certifications: ['IHK Versicherungsfachmann (§34d)', 'BWL Bachelor (DQR 6)', 'IDD Weiterbildung 2024'],
         insuranceFlags: {
             green: ['8J Allianz AO-Erfahrung', 'IHK §34d qualifiziert', 'Bestandsgröße 2.4 Mio €', 'Ø 115% Zielerreichung'],
-            red: ['Kein Fachwirt IHK']
+            red: ['Kein Fachwirt IHK'],
+            neutral: ['Keine ERGO-Erfahrung']
         },
         strengths: ['Kundenakquise', 'Bestandsmanagement', 'Führungserfahrung (3 MA)', 'IHK-qualifiziert', 'Allianz AO-Erfahrung'],
-        weaknesses: ['Keine ERGO-Erfahrung', 'Kein Fachwirt IHK'],
+        weaknesses: ['Kein Fachwirt IHK'],
+        neutrals: ['Keine ERGO-Erfahrung'],
         scores: { vertrieb: 95, branche: 90, qualifikation: 88, standort: 92, softskills: 85 },
         totalScore: 92,
         summary: '8 Jahre fundierte Vertriebserfahrung in der Allianz Ausschließlichkeitsorganisation. IHK-Qualifikation nach §34d, nachgewiesene Führungskompetenz über 3 Mitarbeiter und Bestandsvolumen von 2,4 Mio €. Durchschnittliche Zielerreichung von 115% belegt überdurchschnittliche Vertriebsleistung. Idealer Kandidat für die Agenturleitung.',
@@ -80,7 +82,7 @@ const HP_PROFILES = {
             { label: 'IDD Weiterbildung aktuell', points: 5, type: 'positive' },
             { label: 'Standort Düsseldorf (Match)', points: 7, type: 'positive' },
             { label: 'Kein Fachwirt IHK', points: -7, type: 'negative' },
-            { label: 'Keine ERGO-Erfahrung', points: -3, type: 'negative' }
+            { label: 'Keine ERGO-Erfahrung', points: -3, type: 'neutral' }
         ],
         linkedinInsights: [
             { text: '520+ Kontakte im Versicherungs- und Finanzsektor', detail: 'Starkes Branchennetzwerk in der DACH-Region' },
@@ -126,10 +128,12 @@ const HP_PROFILES = {
         certifications: ['Ausbildung Einzelhandelskauffrau (DQR 4)', 'Weiterbildung Vertrieb'],
         insuranceFlags: {
             green: ['Teamführungserfahrung (5 MA)', 'Vertriebsaffinität', 'Kommunikationsstärke'],
-            red: ['Keine Versicherungserfahrung', 'Keine IHK §34d', 'Branchenwechsel']
+            red: ['Keine Versicherungserfahrung', 'Keine IHK §34d'],
+            neutral: ['Branchenwechsel']
         },
         strengths: ['Teamführungserfahrung', 'Kommunikationsstärke', 'Vertriebsaffinität', 'Kundenorientierung'],
-        weaknesses: ['Keine Versicherungserfahrung', 'Keine IHK-Qualifikation', 'Branchenwechsel'],
+        weaknesses: ['Keine Versicherungserfahrung', 'Keine IHK-Qualifikation'],
+        neutrals: ['Branchenwechsel'],
         scores: { vertrieb: 65, branche: 35, qualifikation: 55, standort: 88, softskills: 82 },
         totalScore: 68,
         summary: 'Motivierte Quereinsteigerin mit 4 Jahren Teamleitungserfahrung im Einzelhandel bei MediaMarkt. Führungskompetenz über 5 Mitarbeiter und ausgeprägte Kommunikationsstärke als solide Grundlage für den Versicherungsvertrieb. Fehlende §34d-Qualifikation kann über ERGO Trainee-Programm (6 Monate, IHK-Sachkundeprüfung inklusive) erworben werden.',
@@ -143,7 +147,7 @@ const HP_PROFILES = {
             { label: 'Kaufmännische Ausbildung', points: 5, type: 'positive' },
             { label: 'Keine Versicherungserfahrung', points: -12, type: 'negative' },
             { label: 'Keine IHK §34d Qualifikation', points: -10, type: 'negative' },
-            { label: 'Branchenwechsel-Risiko', points: -5, type: 'negative' }
+            { label: 'Branchenwechsel', points: -5, type: 'neutral' }
         ],
         counterfactual: 'Nach Abschluss der IHK-Sachkundeprüfung §34d (über ERGO Trainee-Programm, 6 Monate) steigt der Score von 68 auf 82. Prognose erstes Jahr Neugeschäft: 180.000 € Bestandsaufbau.',
         interviewQuestions: {
@@ -338,10 +342,11 @@ const HP_ALL_APPLICANTS = [
         certifications: ['IHK Versicherungsfachfrau (§34d)', 'BWL Bachelor', 'Fachwirt IHK (in Arbeit)'],
         insuranceFlags: {
             green: ['5J HDI Maklervertrieb', 'IHK §34d', 'Fachwirt in Arbeit', 'B2B-Erfahrung'],
-            red: ['Kein Außendienst']
+            neutral: ['Kein Außendienst']
         },
         strengths: ['5J Maklertätigkeit HDI', 'IHK-qualifiziert', 'Führungserfahrung', 'Fachwirt in Arbeit'],
-        weaknesses: ['Kein Außendienst-Erfahrung'],
+        weaknesses: [],
+        neutrals: ['Kein Außendienst-Erfahrung'],
         scores: { vertrieb: 85, branche: 88, qualifikation: 90, standort: 85, softskills: 80 },
         totalScore: 88, status: 'recommended',
         summary: '5 Jahre Erfahrung im HDI-Maklervertrieb mit IHK-Qualifikation. Fachwirt in Arbeit und Führungserfahrung machen sie zur idealen Kandidatin für die Maklerbetreuung.',
@@ -351,7 +356,7 @@ const HP_ALL_APPLICANTS = [
             { label: 'Fachwirt IHK (in Arbeit)', points: 12, type: 'positive' },
             { label: 'B2B-Beziehungsmanagement', points: 10, type: 'positive' },
             { label: 'BWL-Studium', points: 8, type: 'positive' },
-            { label: 'Kein AO-Erfahrung', points: -5, type: 'negative' }
+            { label: 'Kein AO-Erfahrung', points: -5, type: 'neutral' }
         ],
         counterfactual: 'Nach Abschluss des Fachwirt IHK (voraussichtlich Q3 2026) steigt der Score von 88 auf 94.',
         interviewQuestions: {
@@ -378,10 +383,12 @@ const HP_ALL_APPLICANTS = [
         certifications: ['Bankkaufmann (DQR 4)', '§34f GewO (Finanzanlagen)', 'Weiterbildung Finanzberatung'],
         insuranceFlags: {
             green: ['6J Bankvertrieb Sparkasse', '§34f qualifiziert', 'Cross-Selling-Erfahrung'],
-            red: ['Keine §34d', 'Kein direkter Versicherungsvertrieb']
+            red: ['Keine §34d'],
+            neutral: ['Kein direkter Versicherungsvertrieb']
         },
         strengths: ['6J Bankvertrieb', '§34f qualifiziert', 'Finanzberatung', 'Quereinsteiger Versicherung'],
-        weaknesses: ['Keine direkte Versicherungserfahrung', 'Keine §34d'],
+        weaknesses: ['Keine §34d'],
+        neutrals: ['Keine direkte Versicherungserfahrung'],
         scores: { vertrieb: 82, branche: 65, qualifikation: 78, standort: 80, softskills: 78 },
         totalScore: 84, status: 'recommended',
         summary: '6 Jahre Bankvertriebserfahrung bei der Sparkasse mit §34f-Qualifikation. Starker Vertriebshintergrund qualifiziert ihn hervorragend als Quereinsteiger in den Versicherungsvertrieb.',
@@ -391,7 +398,7 @@ const HP_ALL_APPLICANTS = [
             { label: 'Cross-Selling-Erfahrung', points: 8, type: 'positive' },
             { label: 'Finanzberatungskompetenz', points: 10, type: 'positive' },
             { label: 'Keine §34d Qualifikation', points: -8, type: 'negative' },
-            { label: 'Kein Versicherungsvertrieb', points: -6, type: 'negative' }
+            { label: 'Kein Versicherungsvertrieb', points: -6, type: 'neutral' }
         ],
         counterfactual: 'Nach Erwerb der IHK-Sachkundeprüfung §34d (ca. 3 Monate) steigt der Score von 84 auf 91.',
         interviewQuestions: {
@@ -417,7 +424,8 @@ const HP_ALL_APPLICANTS = [
         skills: ['Kundenservice', 'Kommunikation', 'Problemlösung'],
         certifications: ['Kauffrau für Büromanagement (DQR 4)'],
         strengths: ['Kommunikationsstärke', 'Junges Talent', 'Serviceorientiert'],
-        weaknesses: ['Wenig Vertriebserfahrung', 'Keine Branchenkenntnisse', 'Kurze Berufserfahrung'],
+        weaknesses: ['Wenig Vertriebserfahrung'],
+        neutrals: ['Keine Branchenkenntnisse', 'Kurze Berufserfahrung'],
         scores: { vertrieb: 45, branche: 20, qualifikation: 50, standort: 78, softskills: 72 },
         totalScore: 62, status: 'review',
         summary: 'Kundenservice-Erfahrung und Kommunikationsstärke vorhanden. Für den Einstieg in den Versicherungsvertrieb wird Trainee-Programm empfohlen, um Vertriebskompetenz gezielt aufzubauen.',
@@ -426,8 +434,8 @@ const HP_ALL_APPLICANTS = [
             { label: 'Kundenservice-Erfahrung', points: 7, type: 'positive' },
             { label: 'Kommunikationsstärke', points: 6, type: 'positive' },
             { label: 'Wenig Vertriebserfahrung', points: -10, type: 'negative' },
-            { label: 'Keine Branchenkenntnisse', points: -8, type: 'negative' },
-            { label: 'Keine §34d', points: -6, type: 'negative' }
+            { label: 'Keine Branchenkenntnisse', points: -8, type: 'neutral' },
+            { label: 'Keine §34d (Trainee)', points: -6, type: 'neutral' }
         ],
         counterfactual: 'ERGO Trainee-Programm (6 Monate) würde Score von 62 auf 78 steigern.'
     },
@@ -932,6 +940,7 @@ function renderHPProfileCard(profile) {
     const certTags = (profile.certifications || []).map(c => `<span class="hp-tag cert">${c}</span>`).join('');
     const greenFlags = (profile.insuranceFlags?.green || []).map(f => `<span class="hp-tag flag-green">${f}</span>`).join('');
     const redFlags = (profile.insuranceFlags?.red || []).map(f => `<span class="hp-tag flag-red">${f}</span>`).join('');
+    const neutralFlags = (profile.insuranceFlags?.neutral || []).map(f => `<span class="hp-tag flag-neutral">${f}</span>`).join('');
     const linkedinBadge = '<span class="hp-linkedin-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>LinkedIn</span>';
     const useLinkedin = document.getElementById('hpLinkedinToggle')?.checked;
     const linkedinHTML = useLinkedin && profile.linkedinInsights ? `
@@ -987,7 +996,7 @@ function renderHPProfileCard(profile) {
             </div>
             <div class="hp-profile-section">
                 <h4>Versicherungs-Indikatoren</h4>
-                <div class="hp-tags">${greenFlags}${redFlags}</div>
+                <div class="hp-tags">${greenFlags}${redFlags}${neutralFlags}</div>
             </div>
             ${linkedinHTML}
             <div class="hp-profile-section">
@@ -1014,10 +1023,11 @@ function renderHPWaterfallHTML(waterfall) {
     const maxPoints = Math.max(...waterfall.map(w => Math.abs(w.points)));
     const bars = waterfall.map(w => {
         const pct = (Math.abs(w.points) / maxPoints) * 100;
+        const typeClass = w.type === 'positive' ? 'positive' : w.type === 'neutral' ? 'neutral' : 'negative';
         return `<div class="hp-waterfall-bar">
             <div class="hp-waterfall-label">${w.label}</div>
-            <div class="hp-waterfall-track"><div class="hp-waterfall-fill ${w.type === 'positive' ? 'positive' : 'negative'}" style="width:${pct}%"></div></div>
-            <div class="hp-waterfall-value ${w.type === 'positive' ? 'positive' : 'negative'}">${w.type === 'positive' ? '+' : ''}${w.points}</div>
+            <div class="hp-waterfall-track"><div class="hp-waterfall-fill ${typeClass}" style="width:${pct}%"></div></div>
+            <div class="hp-waterfall-value ${typeClass}">${w.type === 'positive' ? '+' : ''}${w.points}</div>
         </div>`;
     }).join('');
     return `<div class="hp-waterfall" style="grid-column: 1 / -1;"><h4>Score-Erklärung (SHAP-Analyse)</h4>${bars}</div>`;
@@ -1272,7 +1282,7 @@ function openHPDetail(applicantId) {
 
     body.innerHTML = `
         <div style="display:flex;gap:var(--space-4);margin-bottom:var(--space-6);align-items:center;">
-            ${!isBlind && applicant.photo ? `<img src="${applicant.photo}" alt="${applicant.name}" class="hp-profile-avatar-large" style="width:56px;height:56px;border-radius:50%;object-fit:cover;">` : `<div class="hp-profile-avatar-large">${isBlind ? '#' + getBlindId(applicant.id) : applicant.initials}</div>`}
+            ${!isBlind && applicant.photo ? `<img src="${applicant.photo}" alt="${applicant.name}" class="hp-profile-avatar-large hp-photo-hover" style="width:56px;height:56px;border-radius:50%;object-fit:cover;">` : `<div class="hp-profile-avatar-large">${isBlind ? '#' + getBlindId(applicant.id) : applicant.initials}</div>`}
             <div>
                 <div style="font-size:var(--font-lg);font-weight:var(--font-bold);color:var(--text-primary);">${isBlind ? 'Kandidat/in #' + getBlindId(applicant.id) : applicant.name}</div>
                 <div style="font-size:var(--font-sm);color:var(--text-secondary);">${isBlind ? applicant.region.toUpperCase() + ' | — Jahre | ' + applicant.experience : applicant.city + ' | ' + applicant.age + ' Jahre | ' + applicant.experience}</div>
@@ -1331,7 +1341,7 @@ function openHPDetail(applicantId) {
 
         <div class="hp-strengths-weaknesses" style="margin-top:var(--space-6);">
             <div class="hp-sw-section strengths"><h4>Stärken</h4><ul class="hp-sw-list">${(applicant.strengths || []).map(s => `<li><svg viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>${s}</li>`).join('')}</ul></div>
-            <div class="hp-sw-section weaknesses"><h4>Schwächen</h4><ul class="hp-sw-list">${(applicant.weaknesses || []).map(w => `<li><svg viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>${w}</li>`).join('')}</ul></div>
+            <div class="hp-sw-section weaknesses"><h4>Schwächen</h4><ul class="hp-sw-list">${(applicant.weaknesses || []).map(w => `<li><svg viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>${w}</li>`).join('')}${(applicant.neutrals || []).map(n => `<li style="color:var(--text-tertiary)"><svg viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="8" y1="12" x2="16" y2="12"></line></svg>${n}</li>`).join('')}</ul></div>
         </div>`;
 
     // Show PDF button only for Max Berger (who has a CV PDF)

@@ -68,7 +68,7 @@ const HP_PROFILES = {
         weaknesses: ['Keine ERGO-Erfahrung', 'Kein Fachwirt IHK'],
         scores: { vertrieb: 95, branche: 90, qualifikation: 88, standort: 92, softskills: 85 },
         totalScore: 92,
-        summary: 'Herr Berger, Sie bringen 8 Jahre fundierte Vertriebserfahrung in der Allianz Ausschließlichkeitsorganisation mit. Ihre IHK-Qualifikation nach §34d, nachgewiesene Führungskompetenz über 3 Mitarbeiter und ein Bestandsvolumen von 2,4 Mio € machen Sie zu einem idealen Kandidaten für die Agenturleitung. Ihre Cross-Selling-Quote von 34% liegt deutlich über dem Branchendurchschnitt.',
+        summary: '8 Jahre fundierte Vertriebserfahrung in der Allianz Ausschließlichkeitsorganisation. IHK-Qualifikation nach §34d, nachgewiesene Führungskompetenz über 3 Mitarbeiter und Bestandsvolumen von 2,4 Mio €. Idealer Kandidat für die Agenturleitung. Cross-Selling-Quote von 34% liegt deutlich über dem Branchendurchschnitt.',
         radarData: [95, 90, 88, 92, 85],
         waterfall: [
             { label: 'IHK Versicherungsfachmann §34d', points: 18, type: 'positive' },
@@ -128,7 +128,7 @@ const HP_PROFILES = {
         weaknesses: ['Keine Versicherungserfahrung', 'Keine IHK-Qualifikation', 'Branchenwechsel'],
         scores: { vertrieb: 65, branche: 35, qualifikation: 55, standort: 88, softskills: 82 },
         totalScore: 68,
-        summary: 'Frau Klein, Sie sind eine motivierte Quereinsteigerin mit 4 Jahren Teamleitungserfahrung im Einzelhandel bei MediaMarkt. Ihre Führungskompetenz über 5 Mitarbeiter und ausgeprägte Kommunikationsstärke bilden eine solide Grundlage für den Versicherungsvertrieb. Die fehlende §34d-Qualifikation können Sie über unser ERGO Trainee-Programm (6 Monate, IHK-Sachkundeprüfung inklusive) erwerben.',
+        summary: 'Motivierte Quereinsteigerin mit 4 Jahren Teamleitungserfahrung im Einzelhandel bei MediaMarkt. Führungskompetenz über 5 Mitarbeiter und ausgeprägte Kommunikationsstärke als solide Grundlage für den Versicherungsvertrieb. Fehlende §34d-Qualifikation kann über ERGO Trainee-Programm (6 Monate, IHK-Sachkundeprüfung inklusive) erworben werden.',
         radarData: [65, 35, 55, 88, 82],
         waterfall: [
             { label: 'Teamführung (5 MA)', points: 12, type: 'positive' },
@@ -187,7 +187,7 @@ const HP_PROFILES = {
         weaknesses: ['Keine Vertriebserfahrung', 'Keine Branchenkenntnisse', 'Keine kaufmännische Ausbildung', 'Fehlende Kundenorientierung', 'Standort ohne offene Stellen'],
         scores: { vertrieb: 10, branche: 5, qualifikation: 25, standort: 20, softskills: 35 },
         totalScore: 31,
-        summary: 'Herr Wendt, Sie verfügen über 20 Jahre Erfahrung in der Kommunalverwaltung, jedoch ohne Bezug zum Vertrieb oder zur Versicherungsbranche. Ihnen fehlen grundlegende Voraussetzungen wie §34d-Qualifikation, Vertriebserfahrung und Kundenorientierung. Ihr Standort Flensburg bietet aktuell keine offenen Positionen. Unser Quereinsteiger-Programm wäre für Sie der einzige Einstiegspfad.',
+        summary: '20 Jahre Erfahrung in der Kommunalverwaltung, jedoch ohne Bezug zum Vertrieb oder zur Versicherungsbranche. Es fehlen grundlegende Voraussetzungen: §34d-Qualifikation, Vertriebserfahrung und Kundenorientierung. Standort Flensburg bietet aktuell keine offenen Positionen. Quereinsteiger-Programm wäre einziger Einstiegspfad.',
         radarData: [10, 5, 25, 20, 35],
         rejected: true,
         rejectionText: 'Auf Basis Ihres Profils können wir Ihnen derzeit leider keine passende Vertriebsposition empfehlen. Es fehlen grundlegende Voraussetzungen: keine Vertriebserfahrung, keine §34d-Qualifikation, keine Branchenkenntnisse im Versicherungsbereich.',
@@ -298,7 +298,7 @@ const HP_ALL_APPLICANTS = [
         weaknesses: ['Kein Außendienst-Erfahrung'],
         scores: { vertrieb: 85, branche: 88, qualifikation: 90, standort: 85, softskills: 80 },
         totalScore: 88, status: 'recommended',
-        summary: 'Frau Hoffmann, Sie bringen 5 Jahre Erfahrung im HDI-Maklervertrieb mit IHK-Qualifikation mit. Ihr Fachwirt in Arbeit und Ihre Führungserfahrung machen Sie zur idealen Kandidatin für die Maklerbetreuung.',
+        summary: '5 Jahre Erfahrung im HDI-Maklervertrieb mit IHK-Qualifikation. Fachwirt in Arbeit und Führungserfahrung machen sie zur idealen Kandidatin für die Maklerbetreuung.',
         waterfall: [
             { label: 'IHK Versicherungsfachfrau §34d', points: 18, type: 'positive' },
             { label: '5 Jahre HDI Maklervertrieb', points: 15, type: 'positive' },
@@ -338,7 +338,7 @@ const HP_ALL_APPLICANTS = [
         weaknesses: ['Keine direkte Versicherungserfahrung', 'Keine §34d'],
         scores: { vertrieb: 82, branche: 65, qualifikation: 78, standort: 80, softskills: 78 },
         totalScore: 84, status: 'recommended',
-        summary: 'Herr Scholz, Sie verfügen über 6 Jahre Bankvertriebserfahrung bei der Sparkasse und eine §34f-Qualifikation. Ihr starker Vertriebshintergrund qualifiziert Sie hervorragend als Quereinsteiger in den Versicherungsvertrieb.',
+        summary: '6 Jahre Bankvertriebserfahrung bei der Sparkasse mit §34f-Qualifikation. Starker Vertriebshintergrund qualifiziert ihn hervorragend als Quereinsteiger in den Versicherungsvertrieb.',
         waterfall: [
             { label: '§34f GewO (Finanzanlagen)', points: 12, type: 'positive' },
             { label: '6 Jahre Bankvertrieb', points: 14, type: 'positive' },
@@ -374,7 +374,7 @@ const HP_ALL_APPLICANTS = [
         weaknesses: ['Wenig Vertriebserfahrung', 'Keine Branchenkenntnisse', 'Kurze Berufserfahrung'],
         scores: { vertrieb: 45, branche: 20, qualifikation: 50, standort: 78, softskills: 72 },
         totalScore: 62, status: 'review',
-        summary: 'Frau Weber, Sie bringen Kundenservice-Erfahrung und Kommunikationsstärke mit. Für Ihren Einstieg in den Versicherungsvertrieb empfehlen wir Ihnen unser Trainee-Programm, um Ihre Vertriebskompetenz gezielt aufzubauen.',
+        summary: 'Kundenservice-Erfahrung und Kommunikationsstärke vorhanden. Für den Einstieg in den Versicherungsvertrieb wird Trainee-Programm empfohlen, um Vertriebskompetenz gezielt aufzubauen.',
         waterfall: [
             { label: 'Kaufmännische Ausbildung', points: 8, type: 'positive' },
             { label: 'Kundenservice-Erfahrung', points: 7, type: 'positive' },
@@ -395,7 +395,7 @@ const HP_ALL_APPLICANTS = [
         weaknesses: ['Keine Versicherungsbranche', 'Häufige Arbeitgeberwechsel'],
         scores: { vertrieb: 78, branche: 30, qualifikation: 55, standort: 85, softskills: 75 },
         totalScore: 72, status: 'review',
-        summary: 'Herr Müller, Sie verfügen über starke Akquise-Erfahrung im Außendienst. Ihre Vertriebskompetenz lässt sich gut auf den Versicherungsbereich übertragen — die IHK-Sachkundeprüfung §34d wäre Ihr nächster Schritt.',
+        summary: 'Starke Akquise-Erfahrung im Außendienst. Vertriebskompetenz lässt sich gut auf den Versicherungsbereich übertragen — IHK-Sachkundeprüfung §34d wäre nächster Schritt.',
         waterfall: [
             { label: '12 Jahre Außendienst', points: 14, type: 'positive' },
             { label: 'Neukundengewinnung', points: 10, type: 'positive' },
@@ -416,7 +416,7 @@ const HP_ALL_APPLICANTS = [
         weaknesses: ['Nur Praktikumserfahrung', 'Berufsanfängerin'],
         scores: { vertrieb: 35, branche: 55, qualifikation: 65, standort: 90, softskills: 70 },
         totalScore: 65, status: 'review',
-        summary: 'Frau Krause, Sie befinden sich auf einem guten Weg mit Ihrem laufenden IHK-Sachkundenachweis und dem Versicherungspraktikum bei R+V. Nach Abschluss Ihrer Qualifikation stehen Ihnen attraktive Einstiegsmöglichkeiten offen.',
+        summary: 'Auf gutem Weg mit laufendem IHK-Sachkundenachweis und Versicherungspraktikum bei R+V. Nach Abschluss der Qualifikation stehen attraktive Einstiegsmöglichkeiten offen.',
         waterfall: [
             { label: 'BWL-Studium (DQR 6)', points: 10, type: 'positive' },
             { label: 'R+V Praktikum', points: 8, type: 'positive' },
@@ -437,7 +437,7 @@ const HP_ALL_APPLICANTS = [
         weaknesses: ['Keine Vertriebserfahrung', 'Keine relevante Qualifikation', 'Lücken im Lebenslauf', 'Fehlende Nachweise'],
         scores: { vertrieb: 10, branche: 5, qualifikation: 15, standort: 45, softskills: 30 },
         totalScore: 38, status: 'rejected',
-        summary: 'Herr Bergmann, Ihr Profil weist derzeit keine Vertriebserfahrung und keine versicherungsrelevante Qualifikation auf. Wir empfehlen Ihnen, zunächst grundlegende Vertriebserfahrung zu sammeln und die IHK-Sachkundeprüfung §34d anzustreben.',
+        summary: 'Profil weist derzeit keine Vertriebserfahrung und keine versicherungsrelevante Qualifikation auf. Empfehlung: Zunächst grundlegende Vertriebserfahrung sammeln und IHK-Sachkundeprüfung §34d anstreben.',
         waterfall: [
             { label: 'Zuverlässigkeit', points: 4, type: 'positive' },
             { label: 'Keine Vertriebserfahrung', points: -18, type: 'negative' },
@@ -457,7 +457,7 @@ const HP_ALL_APPLICANTS = [
         weaknesses: ['Keine Vertriebserfahrung', 'Keine kaufm. Qualifikation', 'Beschäftigungslücke', 'Fehlende Weiterbildungen'],
         scores: { vertrieb: 20, branche: 5, qualifikation: 15, standort: 35, softskills: 45 },
         totalScore: 42, status: 'rejected',
-        summary: 'Frau Richter, Sie bringen Erfahrung aus dem Gastgewerbe mit. Für eine Tätigkeit im Versicherungsvertrieb empfehlen wir Ihnen unser Quereinsteiger-Programm mit integrierter IHK-Sachkundeprüfung §34d.',
+        summary: 'Erfahrung aus dem Gastgewerbe vorhanden. Für eine Tätigkeit im Versicherungsvertrieb wird Quereinsteiger-Programm mit integrierter IHK-Sachkundeprüfung §34d empfohlen.',
         waterfall: [
             { label: 'Kundenumgang', points: 5, type: 'positive' },
             { label: 'Belastbarkeit', points: 3, type: 'positive' },
@@ -483,7 +483,7 @@ const HP_ALL_APPLICANTS = [
         scores: { vertrieb: 55, branche: 40, qualifikation: 20, standort: 60, softskills: 50 },
         totalScore: 38, status: 'rejected',
         koKriterium: 'Keine Deutschkenntnisse — Für Versicherungsvertrieb in Deutschland sind Deutschkenntnisse (mind. B2) zwingend erforderlich.',
-        summary: 'Herr Chen, Sie verfügen über internationale Versicherungserfahrung (Ping An, China) und einen MBA Finance. Jedoch liegt ein KO-Kriterium vor: Keine Deutschkenntnisse. Für kundennahen Versicherungsvertrieb in Deutschland sind Deutschkenntnisse (mindestens B2) zwingend erforderlich. Empfehlung: Ablehnung. Bei Erwerb von Deutschkenntnissen (B2+) und IHK §34d ist eine erneute Prüfung möglich.',
+        summary: 'Internationale Versicherungserfahrung (Ping An, China) und MBA Finance. KO-Kriterium: Keine Deutschkenntnisse. Für kundennahen Versicherungsvertrieb in Deutschland sind Deutschkenntnisse (mind. B2) zwingend erforderlich. Empfehlung: Ablehnung. Bei Erwerb von Deutschkenntnissen (B2+) und IHK §34d erneute Prüfung möglich.',
         waterfall: [
             { label: '3J Versicherungserfahrung (Ping An)', points: 10, type: 'positive' },
             { label: 'MBA Finance', points: 8, type: 'positive' },
@@ -1118,11 +1118,12 @@ function renderHPDashboard() {
 
         return `
             <div class="hp-applicant-card ${applicant.status === 'rejected' ? 'rejection' : ''} ${isBlind ? 'blind' : ''}" data-region="${applicant.region}" data-score="${applicant.totalScore}" data-status="${applicant.status}" onclick="openHPDetail('${applicant.id}')">
-                <input type="checkbox" class="hp-compare-check" onclick="event.stopPropagation(); toggleHPCompareCandidate('${applicant.id}')" ${hpSelectedForCompare.has(applicant.id) ? 'checked' : ''} title="Zum Vergleich auswählen">
                 <div class="hp-applicant-score ${scoreClass}">${applicant.totalScore}</div>
-                ${!isBlind && applicant.photo ? `<img src="${applicant.photo}" alt="${applicant.name}" style="width:48px;height:48px;border-radius:50%;object-fit:cover;flex-shrink:0;">` : ''}
                 <div class="hp-applicant-info">
-                    <h4>${isBlind ? 'Kandidat/in #' + applicant.id.toUpperCase() : applicant.name}</h4>
+                    <div style="display:flex;align-items:center;gap:var(--space-3);margin-bottom:var(--space-1);">
+                        ${!isBlind && applicant.photo ? `<img src="${applicant.photo}" alt="${applicant.name}" style="width:36px;height:36px;border-radius:50%;object-fit:cover;flex-shrink:0;">` : ''}
+                        <h4 style="margin:0">${isBlind ? 'Kandidat/in #' + applicant.id.toUpperCase() : applicant.name}</h4>
+                    </div>
                     <div class="hp-applicant-location">${isBlind ? applicant.region.toUpperCase() : applicant.city + ' | ' + applicant.age + ' Jahre'}</div>
                     ${appliedPos && !isBlind ? `<div style="font-size:var(--font-xs);color:var(--text-tertiary);margin-top:var(--space-1);display:flex;align-items:center;gap:var(--space-2);flex-wrap:wrap;">
                         <span>${appliedDateFormatted}</span>

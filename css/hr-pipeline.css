@@ -1434,17 +1434,6 @@
     border-color: rgba(220, 38, 38, 0.3);
 }
 
-/* Compare checkbox */
-.hp-compare-check {
-    position: absolute;
-    top: var(--space-3);
-    right: var(--space-3);
-    width: 20px;
-    height: 20px;
-    accent-color: var(--primary);
-    cursor: pointer;
-}
-
 .hp-applicant-card {
     position: relative;
 }
@@ -1561,10 +1550,6 @@
     width: 100%;
     box-shadow: var(--shadow-xl);
     animation: hpFadeIn 0.3s ease;
-}
-
-.hp-compare-panel {
-    max-width: 1100px;
 }
 
 .hp-detail-header {
@@ -2256,10 +2241,6 @@
     .hp-waterfall-label {
         width: 120px;
         min-width: 120px;
-    }
-
-    .hp-compare-panel {
-        max-width: 100%;
     }
 
     .hp-landing-hero {

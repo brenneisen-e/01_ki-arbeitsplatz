@@ -58,6 +58,12 @@
                 </svg>
                 Recruiting Dashboard
             </button>
+            <button class="hp-mode-btn" data-mode="cockpit" onclick="switchHPMode('cockpit')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                </svg>
+                HR-Cockpit
+            </button>
         </div>
     </div>
 
@@ -519,6 +525,369 @@
                     </svg>
                     Jetzt bewerben
                 </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===========================
+         HR-COCKPIT MODE (H-03)
+         =========================== -->
+    <div id="hpCockpitMode" class="hp-cockpit-section">
+        <!-- Cockpit Sub-Navigation -->
+        <div class="hc-subnav">
+            <button class="hc-subnav-btn active" data-view="overview" onclick="switchHCView('overview')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect></svg>
+                Gesamtübersicht
+            </button>
+            <button class="hc-subnav-btn" data-view="regions" onclick="switchHCView('regions')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                Regionen-Vergleich
+            </button>
+            <button class="hc-subnav-btn" data-view="unit" onclick="switchHCView('unit')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 00-3-3.87"></path><path d="M16 3.13a4 4 0 010 7.75"></path></svg>
+                Einheiten-Detail
+            </button>
+            <button class="hc-subnav-btn" data-view="earlywarning" onclick="switchHCView('earlywarning')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                Frühwarnsystem
+            </button>
+        </div>
+
+        <!-- DSGVO Compliance Banner -->
+        <div class="hc-compliance-banner">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+            <span>HR-Cockpit — Frühwarnsystem für Vertriebsorganisationen. Alle Daten pseudonymisiert gemäß DSGVO Art. 25. Mindestgruppengröße: 10 Personen. Human-in-the-Loop gem. Art. 22 DSGVO.</span>
+        </div>
+
+        <!-- ===== SUB-VIEW 1: Gesamtübersicht ===== -->
+        <div id="hcOverview" class="hc-view active">
+            <!-- KPI Card Row -->
+            <div class="hc-kpi-row" id="hcKpiRow">
+                <!-- Filled dynamically -->
+            </div>
+
+            <!-- Main Content Grid -->
+            <div class="hc-overview-grid">
+                <!-- Germany Map -->
+                <div class="hc-panel hc-map-panel">
+                    <div class="hc-panel-header">
+                        <h3>Regionaldirektionen — Gesundheitsscore</h3>
+                        <span class="hc-panel-badge">Klicken für Details</span>
+                    </div>
+                    <div class="hc-germany-map" id="hcGermanyMap">
+                        <!-- SVG Map filled dynamically -->
+                    </div>
+                </div>
+
+                <!-- Flight Risk Distribution + Alerts -->
+                <div class="hc-panel-stack">
+                    <!-- Flight Risk Donut -->
+                    <div class="hc-panel">
+                        <div class="hc-panel-header">
+                            <h3>Flight-Risk Verteilung</h3>
+                        </div>
+                        <div class="hc-donut-container" id="hcFlightRiskDonut">
+                            <!-- Filled dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- Alerts Panel -->
+                    <div class="hc-panel">
+                        <div class="hc-panel-header">
+                            <h3>Aktuelle Warnungen</h3>
+                            <span class="hc-alert-count" id="hcAlertCount">0</span>
+                        </div>
+                        <div class="hc-alerts-list" id="hcAlertsList">
+                            <!-- Filled dynamically -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Risk Movers Table -->
+            <div class="hc-panel hc-full-width">
+                <div class="hc-panel-header">
+                    <h3>Risk Movers — Größte Score-Veränderungen</h3>
+                    <div class="hc-table-controls">
+                        <select id="hcMoversFilter" onchange="renderHCRiskMovers()">
+                            <option value="all">Alle Änderungen</option>
+                            <option value="up">Nur Verschlechterungen ↑</option>
+                            <option value="down">Nur Verbesserungen ↓</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="hc-table-wrapper">
+                    <table class="hc-table" id="hcRiskMoversTable">
+                        <thead>
+                            <tr>
+                                <th>Kennung</th>
+                                <th>Regionaldirektion</th>
+                                <th>Aktueller Score</th>
+                                <th>Vorheriger Score</th>
+                                <th>Veränderung</th>
+                                <th>Top-Risikofaktor</th>
+                            </tr>
+                        </thead>
+                        <tbody id="hcRiskMoversBody">
+                            <!-- Filled dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== SUB-VIEW 2: Regionen-Vergleich ===== -->
+        <div id="hcRegions" class="hc-view">
+            <!-- Heat Map Matrix -->
+            <div class="hc-panel hc-full-width">
+                <div class="hc-panel-header">
+                    <h3>Organisations-Gesundheit — Heat Map</h3>
+                    <span class="hc-panel-subtitle">Regionaldirektionen × Gesundheitsdimensionen</span>
+                </div>
+                <div class="hc-heatmap-wrapper">
+                    <table class="hc-heatmap" id="hcHeatmapTable">
+                        <thead>
+                            <tr>
+                                <th>Regionaldirektion</th>
+                                <th>Gesamt</th>
+                                <th>Fluktuation</th>
+                                <th>Vakanzen</th>
+                                <th>Engagement</th>
+                                <th>Nachwuchs</th>
+                                <th>Produktion</th>
+                                <th>Stornoquote</th>
+                            </tr>
+                        </thead>
+                        <tbody id="hcHeatmapBody">
+                            <!-- Filled dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- League Table with Sparklines -->
+            <div class="hc-panel hc-full-width">
+                <div class="hc-panel-header">
+                    <h3>Rangliste — 12-Monats-Trends</h3>
+                </div>
+                <div class="hc-table-wrapper">
+                    <table class="hc-table" id="hcLeagueTable">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Regionaldirektion</th>
+                                <th>Health Score</th>
+                                <th>Trend (12M)</th>
+                                <th>Vermittler</th>
+                                <th>Fluktuation</th>
+                                <th>Vakanzen</th>
+                            </tr>
+                        </thead>
+                        <tbody id="hcLeagueBody">
+                            <!-- Filled dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Radar Chart for selected RD -->
+            <div class="hc-panel hc-full-width">
+                <div class="hc-panel-header">
+                    <h3>Regionaldirektion-Profil vs. Benchmark</h3>
+                    <select id="hcRadarSelect" onchange="renderHCRadarChart()">
+                        <!-- Options filled dynamically -->
+                    </select>
+                </div>
+                <div class="hc-radar-container">
+                    <canvas id="hcRadarChart" width="400" height="300"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== SUB-VIEW 3: Einheiten-Detail ===== -->
+        <div id="hcUnit" class="hc-view">
+            <!-- Unit Selector -->
+            <div class="hc-unit-selector">
+                <label>Regionaldirektion:</label>
+                <select id="hcUnitRDSelect" onchange="renderHCUnitDetail()">
+                    <!-- Options filled dynamically -->
+                </select>
+            </div>
+
+            <!-- Unit Scorecard -->
+            <div class="hc-panel hc-full-width">
+                <div class="hc-panel-header">
+                    <h3 id="hcUnitTitle">Einheiten-Scorecard</h3>
+                </div>
+                <div class="hc-unit-scorecard" id="hcUnitScorecard">
+                    <!-- Filled dynamically -->
+                </div>
+            </div>
+
+            <!-- Team Composition + Risk Distribution -->
+            <div class="hc-unit-grid">
+                <div class="hc-panel">
+                    <div class="hc-panel-header">
+                        <h3>Altersverteilung</h3>
+                    </div>
+                    <div class="hc-chart-container" id="hcAgeDistribution">
+                        <!-- Filled dynamically -->
+                    </div>
+                </div>
+                <div class="hc-panel">
+                    <div class="hc-panel-header">
+                        <h3>Tenure-Verteilung</h3>
+                    </div>
+                    <div class="hc-chart-container" id="hcTenureDistribution">
+                        <!-- Filled dynamically -->
+                    </div>
+                </div>
+                <div class="hc-panel">
+                    <div class="hc-panel-header">
+                        <h3>Flight-Risk in Einheit</h3>
+                    </div>
+                    <div class="hc-chart-container" id="hcUnitRiskDist">
+                        <!-- Filled dynamically -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stayers vs Leavers -->
+            <div class="hc-panel hc-full-width">
+                <div class="hc-panel-header">
+                    <h3>Stayers vs. Leavers — Engagement-Vergleich</h3>
+                </div>
+                <div class="hc-stayers-leavers" id="hcStayersLeavers">
+                    <!-- Filled dynamically -->
+                </div>
+            </div>
+
+            <!-- Contagion Watch -->
+            <div class="hc-panel hc-full-width hc-contagion-panel" id="hcContagionPanel">
+                <div class="hc-panel-header">
+                    <h3>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                        Contagion Watch — 135-Tage-Fenster
+                    </h3>
+                </div>
+                <div class="hc-contagion-content" id="hcContagionContent">
+                    <!-- Filled dynamically -->
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== SUB-VIEW 4: Frühwarnsystem ===== -->
+        <div id="hcEarlyWarning" class="hc-view">
+            <!-- Active Alerts -->
+            <div class="hc-panel hc-full-width">
+                <div class="hc-panel-header">
+                    <h3>Aktive Frühwarnungen</h3>
+                    <div class="hc-ew-filters">
+                        <select id="hcEWFilterTier" onchange="renderHCEarlyWarnings()">
+                            <option value="all">Alle Stufen</option>
+                            <option value="red">Rot (Hoch)</option>
+                            <option value="amber">Gelb (Mittel)</option>
+                        </select>
+                        <select id="hcEWFilterRD" onchange="renderHCEarlyWarnings()">
+                            <option value="all">Alle Regionen</option>
+                            <!-- Options filled dynamically -->
+                        </select>
+                    </div>
+                </div>
+                <div class="hc-ew-grid" id="hcEWGrid">
+                    <!-- Filled dynamically -->
+                </div>
+            </div>
+
+            <!-- SHAP Explanation -->
+            <div class="hc-panel hc-full-width">
+                <div class="hc-panel-header">
+                    <h3>Score-Erklärung (SHAP-Analyse)</h3>
+                    <select id="hcShapSelect" onchange="renderHCShapExplanation()">
+                        <!-- Options filled dynamically -->
+                    </select>
+                </div>
+                <div class="hc-shap-container" id="hcShapContainer">
+                    <div class="hc-shap-placeholder">Wählen Sie einen Vermittler aus der Liste oben, um die Score-Erklärung anzuzeigen.</div>
+                </div>
+            </div>
+
+            <!-- Retention Action Tracker (Kanban) -->
+            <div class="hc-panel hc-full-width">
+                <div class="hc-panel-header">
+                    <h3>Retention-Maßnahmen Tracker</h3>
+                </div>
+                <div class="hc-kanban" id="hcKanban">
+                    <div class="hc-kanban-col" data-status="identified">
+                        <div class="hc-kanban-col-header">
+                            <span class="hc-kanban-dot red"></span>
+                            Identifiziert
+                            <span class="hc-kanban-count" id="hcKanbanCount1">0</span>
+                        </div>
+                        <div class="hc-kanban-cards" id="hcKanbanCol1">
+                            <!-- Filled dynamically -->
+                        </div>
+                    </div>
+                    <div class="hc-kanban-col" data-status="scheduled">
+                        <div class="hc-kanban-col-header">
+                            <span class="hc-kanban-dot amber"></span>
+                            Bleibegespräch geplant
+                            <span class="hc-kanban-count" id="hcKanbanCount2">0</span>
+                        </div>
+                        <div class="hc-kanban-cards" id="hcKanbanCol2">
+                            <!-- Filled dynamically -->
+                        </div>
+                    </div>
+                    <div class="hc-kanban-col" data-status="action">
+                        <div class="hc-kanban-col-header">
+                            <span class="hc-kanban-dot blue"></span>
+                            Maßnahme eingeleitet
+                            <span class="hc-kanban-count" id="hcKanbanCount3">0</span>
+                        </div>
+                        <div class="hc-kanban-cards" id="hcKanbanCol3">
+                            <!-- Filled dynamically -->
+                        </div>
+                    </div>
+                    <div class="hc-kanban-col" data-status="resolved">
+                        <div class="hc-kanban-col-header">
+                            <span class="hc-kanban-dot green"></span>
+                            Ergebnis dokumentiert
+                            <span class="hc-kanban-count" id="hcKanbanCount4">0</span>
+                        </div>
+                        <div class="hc-kanban-cards" id="hcKanbanCol4">
+                            <!-- Filled dynamically -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Model Performance -->
+            <div class="hc-panel hc-full-width">
+                <div class="hc-panel-header">
+                    <h3>Modell-Performance</h3>
+                </div>
+                <div class="hc-model-perf" id="hcModelPerf">
+                    <div class="hc-perf-metric">
+                        <div class="hc-perf-label">AUC-ROC</div>
+                        <div class="hc-perf-value green">0.87</div>
+                        <div class="hc-perf-desc">Trennschärfe des Vorhersagemodells</div>
+                    </div>
+                    <div class="hc-perf-metric">
+                        <div class="hc-perf-label">Precision (Rot)</div>
+                        <div class="hc-perf-value">78%</div>
+                        <div class="hc-perf-desc">Anteil korrekter Rot-Einstufungen</div>
+                    </div>
+                    <div class="hc-perf-metric">
+                        <div class="hc-perf-label">Recall (Rot)</div>
+                        <div class="hc-perf-value">82%</div>
+                        <div class="hc-perf-desc">Anteil erkannter Abgänge</div>
+                    </div>
+                    <div class="hc-perf-metric">
+                        <div class="hc-perf-label">Vorhersagezeitraum</div>
+                        <div class="hc-perf-value blue">Ø 4.2 Monate</div>
+                        <div class="hc-perf-desc">Durchschnittliche Vorwarnzeit</div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

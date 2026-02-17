@@ -847,16 +847,26 @@ function switchHPMode(mode) {
     });
     const bewerberSection = document.getElementById('hpBewerberMode');
     const arbeitgeberSection = document.getElementById('hpArbeitgeberMode');
+    const cockpitSection = document.getElementById('hpCockpitMode');
 
     if (mode === 'bewerber') {
         if (bewerberSection) bewerberSection.style.display = 'block';
         if (arbeitgeberSection) arbeitgeberSection.classList.remove('active');
-    } else {
+        if (cockpitSection) cockpitSection.classList.remove('active');
+    } else if (mode === 'arbeitgeber') {
         if (bewerberSection) bewerberSection.style.display = 'none';
+        if (cockpitSection) cockpitSection.classList.remove('active');
         if (arbeitgeberSection) {
             arbeitgeberSection.classList.add('active');
             renderHPDashboard();
             setTimeout(() => { animateHPKPICounters(); drawHPSparklines(); }, 100);
+        }
+    } else if (mode === 'cockpit') {
+        if (bewerberSection) bewerberSection.style.display = 'none';
+        if (arbeitgeberSection) arbeitgeberSection.classList.remove('active');
+        if (cockpitSection) {
+            cockpitSection.classList.add('active');
+            initHRCockpit();
         }
     }
     // Auto-expand chat on mode switch
@@ -1894,6 +1904,893 @@ function toggleHPSideBySide() {
     }
 }
 
+// ========================================
+// HR-COCKPIT (H-03) — Frühwarnsystem
+// ========================================
+
+let hcInitialized = false;
+let hcCurrentView = 'overview';
+let hcSelectedRD = null;
+
+// --- Regionaldirektionen Demo Data ---
+const HC_REGIONALDIREKTIONEN = [
+    { id: 'rd_nrw_west', name: 'RD Düsseldorf', region: 'NRW West', lat: 51.23, lng: 6.78, headcount: 87, budgeted: 95, employed: 12 },
+    { id: 'rd_nrw_ost', name: 'RD Dortmund', region: 'NRW Ost', lat: 51.51, lng: 7.47, headcount: 72, budgeted: 80, employed: 10 },
+    { id: 'rd_nrw_sued', name: 'RD Köln', region: 'NRW Süd', lat: 50.94, lng: 6.96, headcount: 94, budgeted: 100, employed: 14 },
+    { id: 'rd_nord_west', name: 'RD Hamburg', region: 'Nord-West', lat: 53.55, lng: 9.99, headcount: 65, budgeted: 78, employed: 8 },
+    { id: 'rd_nord_ost', name: 'RD Berlin', region: 'Nord-Ost', lat: 52.52, lng: 13.40, headcount: 58, budgeted: 70, employed: 9 },
+    { id: 'rd_mitte_west', name: 'RD Frankfurt', region: 'Mitte-West', lat: 50.11, lng: 8.68, headcount: 81, budgeted: 88, employed: 11 },
+    { id: 'rd_mitte_ost', name: 'RD Erfurt', region: 'Mitte-Ost', lat: 50.98, lng: 11.03, headcount: 42, budgeted: 55, employed: 6 },
+    { id: 'rd_sued_west', name: 'RD Stuttgart', region: 'Süd-West', lat: 48.78, lng: 9.18, headcount: 76, budgeted: 82, employed: 10 },
+    { id: 'rd_sued_ost', name: 'RD München', region: 'Süd-Ost', lat: 48.14, lng: 11.58, headcount: 91, budgeted: 95, employed: 13 },
+    { id: 'rd_nord_mitte', name: 'RD Hannover', region: 'Nord-Mitte', lat: 52.37, lng: 9.74, headcount: 54, budgeted: 65, employed: 7 },
+    { id: 'rd_sued_mitte', name: 'RD Nürnberg', region: 'Süd-Mitte', lat: 49.45, lng: 11.08, headcount: 63, budgeted: 70, employed: 8 },
+    { id: 'rd_ost', name: 'RD Dresden', region: 'Ost', lat: 51.05, lng: 13.74, headcount: 38, budgeted: 50, employed: 5 }
+];
+
+// Generate health metrics per RD
+function generateHCMetrics() {
+    const profiles = [
+        { bias: 'good', count: 4 },
+        { bias: 'average', count: 5 },
+        { bias: 'bad', count: 3 }
+    ];
+    let profileIdx = 0;
+    let profileCount = 0;
+
+    return HC_REGIONALDIREKTIONEN.map((rd, i) => {
+        if (profileCount >= profiles[profileIdx].count) {
+            profileIdx = Math.min(profileIdx + 1, profiles.length - 1);
+            profileCount = 0;
+        }
+        profileCount++;
+        const bias = profiles[profileIdx].bias;
+
+        const base = bias === 'good' ? 75 : bias === 'average' ? 55 : 30;
+        const variance = () => Math.round((Math.random() - 0.5) * 20);
+
+        const retention = Math.min(100, Math.max(0, base + variance() + 5));
+        const staffing = Math.min(100, Math.max(0, base + variance()));
+        const engagement = Math.min(100, Math.max(0, base + variance() + 3));
+        const demographics = Math.min(100, Math.max(0, base + variance() - 5));
+        const production = Math.min(100, Math.max(0, base + variance() + 2));
+        const quality = Math.min(100, Math.max(0, base + variance()));
+
+        const composite = Math.round(
+            retention * 0.25 + staffing * 0.15 + engagement * 0.20 +
+            demographics * 0.10 + production * 0.15 + quality * 0.15
+        );
+
+        const turnoverRate = bias === 'good' ? (5 + Math.random() * 4) : bias === 'average' ? (9 + Math.random() * 5) : (14 + Math.random() * 6);
+        const vacancyRate = ((rd.budgeted - rd.headcount) / rd.budgeted * 100);
+
+        // Generate 12-month trend
+        const trend = [];
+        let trendVal = composite;
+        for (let m = 0; m < 12; m++) {
+            trendVal = Math.min(100, Math.max(0, trendVal + (Math.random() - 0.5) * 8));
+            trend.push(Math.round(trendVal));
+        }
+
+        return {
+            ...rd,
+            metrics: { retention, staffing, engagement, demographics, production, quality },
+            composite,
+            turnoverRate: Math.round(turnoverRate * 10) / 10,
+            vacancyRate: Math.round(vacancyRate * 10) / 10,
+            trend,
+            tier: composite >= 75 ? 'green' : composite >= 40 ? 'amber' : 'red'
+        };
+    });
+}
+
+// Generate synthetic agents
+function generateHCAgents(rdData) {
+    const agents = [];
+    const firstNames = ['Alexander','Benjamin','Christian','Daniel','Erik','Felix','Georg','Hans','Ingo','Jürgen','Klaus','Lars','Martin','Norbert','Oliver','Peter','Ralf','Stefan','Thomas','Uwe','Werner','Andreas','Bernd','Dieter','Frank','Holger','Michael','Rainer','Volker','Wolfgang','Anna','Barbara','Christine','Doris','Elisabeth','Franziska','Gabriele','Heike','Ingrid','Julia','Karin','Lena','Maria','Nina','Petra','Rita','Sandra','Tanja','Ursula','Vera'];
+    const lastNames = ['Müller','Schmidt','Schneider','Fischer','Weber','Meyer','Wagner','Becker','Schulz','Hoffmann','Schäfer','Koch','Bauer','Richter','Klein','Wolf','Schröder','Neumann','Schwarz','Zimmermann','Braun','Krüger','Hofmann','Hartmann','Lange','Werner','Krause','Lehmann','Schmitt','König'];
+    const riskFactors = [
+        'Monate seit letzter Beförderung', 'Provisionsrückgang >20%', 'Stornoquote über Durchschnitt',
+        'Team-Abgänge (Contagion)', 'Engagement-Score rückläufig', 'IDD-Weiterbildung unvollständig',
+        'Zielerfüllung <70%', 'Keine freiwillige Weiterbildung', 'CRM-Aktivität rückläufig',
+        'Compa-Ratio <0.80', 'Wettbewerber-Recruiting aktiv', 'Manager-Wechsel <180 Tage'
+    ];
+
+    let agentId = 1;
+    rdData.forEach(rd => {
+        const count = rd.headcount;
+        for (let a = 0; a < count; a++) {
+            const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
+            const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
+            const age = Math.round(53.7 + (Math.random() - 0.5) * 16 + (Math.random() > 0.956 ? -25 : 0));
+            const tenure = Math.max(1, Math.round(age > 50 ? 10 + Math.random() * 20 : Math.random() * 6));
+            const employed = a < rd.employed;
+
+            // Flight risk score based on RD health
+            let riskBase = rd.tier === 'red' ? 55 : rd.tier === 'amber' ? 35 : 15;
+            const riskScore = Math.min(99, Math.max(1, Math.round(riskBase + (Math.random() - 0.4) * 40)));
+            const prevScore = Math.min(99, Math.max(1, Math.round(riskScore + (Math.random() - 0.5) * 20)));
+            const riskTier = riskScore >= 60 ? 'red' : riskScore >= 30 ? 'amber' : 'green';
+
+            // Top SHAP factors
+            const shapFactors = [];
+            const shuffled = [...riskFactors].sort(() => Math.random() - 0.5);
+            for (let f = 0; f < 5; f++) {
+                const contrib = riskTier === 'red' ? (Math.random() * 0.3 + 0.05) : (Math.random() * 0.2 - 0.05);
+                shapFactors.push({ factor: shuffled[f], value: Math.round(contrib * 100) / 100 });
+            }
+            shapFactors.sort((a, b) => Math.abs(b.value) - Math.abs(a.value));
+
+            agents.push({
+                id: `V-${String(agentId).padStart(4, '0')}`,
+                name: `${firstName} ${lastName}`,
+                rdId: rd.id,
+                rdName: rd.name,
+                age: Math.min(67, Math.max(22, age)),
+                tenure,
+                employed,
+                riskScore,
+                prevScore,
+                riskTier,
+                change: riskScore - prevScore,
+                topFactor: shapFactors[0]?.factor || 'Keine Auffälligkeiten',
+                shapFactors
+            });
+            agentId++;
+        }
+    });
+    return agents;
+}
+
+// Generate alerts
+function generateHCAlerts(agents, rdData) {
+    const alerts = [];
+    const highRiskAgents = agents.filter(a => a.riskTier === 'red').slice(0, 8);
+    highRiskAgents.forEach((a, i) => {
+        alerts.push({
+            type: 'flight_risk',
+            severity: 'red',
+            title: `Hohe Fluktuation: ${a.id}`,
+            desc: `Score ${a.riskScore}% — Top-Faktor: ${a.topFactor}`,
+            rd: a.rdName,
+            daysAgo: Math.floor(Math.random() * 14)
+        });
+    });
+
+    const criticalRDs = rdData.filter(r => r.tier === 'red');
+    criticalRDs.forEach(rd => {
+        alerts.push({
+            type: 'unit_health',
+            severity: 'amber',
+            title: `Kritischer Gesundheitsscore: ${rd.name}`,
+            desc: `Composite Score ${rd.composite}/100 — unter Schwellenwert 40`,
+            rd: rd.name,
+            daysAgo: Math.floor(Math.random() * 7)
+        });
+    });
+
+    // Contagion alerts
+    const contagionRDs = rdData.slice(0, 3);
+    contagionRDs.forEach(rd => {
+        alerts.push({
+            type: 'contagion',
+            severity: 'amber',
+            title: `Contagion-Fenster: ${rd.name}`,
+            desc: `Abgang vor ${Math.floor(Math.random() * 80 + 20)} Tagen — 135-Tage-Watch aktiv`,
+            rd: rd.name,
+            daysAgo: Math.floor(Math.random() * 80 + 20)
+        });
+    });
+
+    return alerts.sort((a, b) => a.daysAgo - b.daysAgo);
+}
+
+// Generate Kanban retention actions
+function generateHCKanban(agents) {
+    const highRisk = agents.filter(a => a.riskTier === 'red');
+    const kanban = { identified: [], scheduled: [], action: [], resolved: [] };
+
+    highRisk.slice(0, 5).forEach(a => {
+        kanban.identified.push({ id: a.id, rd: a.rdName, tier: 'red', days: Math.floor(Math.random() * 10 + 1), assignee: a.rdName.replace('RD ', 'RDL ') });
+    });
+    highRisk.slice(5, 9).forEach(a => {
+        kanban.scheduled.push({ id: a.id, rd: a.rdName, tier: 'red', days: Math.floor(Math.random() * 20 + 5), assignee: a.rdName.replace('RD ', 'RDL ') });
+    });
+    highRisk.slice(9, 12).forEach(a => {
+        kanban.action.push({ id: a.id, rd: a.rdName, tier: 'amber', days: Math.floor(Math.random() * 30 + 15), assignee: a.rdName.replace('RD ', 'RDL '), action: ['Provisionsanpassung', 'Karrieregespräch', 'Mentoring-Programm'][Math.floor(Math.random() * 3)] });
+    });
+    highRisk.slice(12, 15).forEach(a => {
+        kanban.resolved.push({ id: a.id, rd: a.rdName, tier: 'green', days: Math.floor(Math.random() * 60 + 30), result: ['Verbleib — Provisionserhöhung', 'Verbleib — interne Beförderung', 'Ausgeschieden'][Math.floor(Math.random() * 3)] });
+    });
+
+    return kanban;
+}
+
+// Stored data
+let hcRDData = [];
+let hcAgents = [];
+let hcAlerts = [];
+let hcKanban = {};
+
+function initHRCockpit() {
+    if (!hcInitialized) {
+        hcRDData = generateHCMetrics();
+        hcAgents = generateHCAgents(hcRDData);
+        hcAlerts = generateHCAlerts(hcAgents, hcRDData);
+        hcKanban = generateHCKanban(hcAgents);
+        hcInitialized = true;
+
+        // Populate selectors
+        populateHCSelectors();
+    }
+    switchHCView(hcCurrentView);
+}
+
+function populateHCSelectors() {
+    const rdSelect = document.getElementById('hcUnitRDSelect');
+    const radarSelect = document.getElementById('hcRadarSelect');
+    const ewFilterRD = document.getElementById('hcEWFilterRD');
+    const shapSelect = document.getElementById('hcShapSelect');
+
+    [rdSelect, radarSelect].forEach(sel => {
+        if (!sel) return;
+        sel.innerHTML = '';
+        hcRDData.forEach(rd => {
+            const opt = document.createElement('option');
+            opt.value = rd.id;
+            opt.textContent = `${rd.name} (${rd.composite}/100)`;
+            sel.appendChild(opt);
+        });
+    });
+
+    if (ewFilterRD) {
+        const allOpt = ewFilterRD.querySelector('option[value="all"]');
+        ewFilterRD.innerHTML = '';
+        if (allOpt) ewFilterRD.appendChild(allOpt);
+        else { const o = document.createElement('option'); o.value = 'all'; o.textContent = 'Alle Regionen'; ewFilterRD.appendChild(o); }
+        hcRDData.forEach(rd => {
+            const opt = document.createElement('option');
+            opt.value = rd.id;
+            opt.textContent = rd.name;
+            ewFilterRD.appendChild(opt);
+        });
+    }
+
+    if (shapSelect) {
+        shapSelect.innerHTML = '<option value="">— Vermittler wählen —</option>';
+        hcAgents.filter(a => a.riskTier === 'red').slice(0, 20).forEach(a => {
+            const opt = document.createElement('option');
+            opt.value = a.id;
+            opt.textContent = `${a.id} — Score ${a.riskScore}% (${a.rdName})`;
+            shapSelect.appendChild(opt);
+        });
+    }
+}
+
+function switchHCView(view) {
+    hcCurrentView = view;
+    document.querySelectorAll('.hc-subnav-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.view === view);
+    });
+    document.querySelectorAll('.hc-view').forEach(v => v.classList.remove('active'));
+
+    const viewMap = { overview: 'hcOverview', regions: 'hcRegions', unit: 'hcUnit', earlywarning: 'hcEarlyWarning' };
+    const el = document.getElementById(viewMap[view]);
+    if (el) el.classList.add('active');
+
+    if (view === 'overview') renderHCOverview();
+    else if (view === 'regions') renderHCRegions();
+    else if (view === 'unit') renderHCUnitDetail();
+    else if (view === 'earlywarning') renderHCEarlyWarnings();
+}
+
+// --- RENDER: Overview ---
+function renderHCOverview() {
+    renderHCKPIs();
+    renderHCMap();
+    renderHCFlightRiskDonut();
+    renderHCAlerts();
+    renderHCRiskMovers();
+}
+
+function renderHCKPIs() {
+    const totalAgents = hcAgents.length;
+    const redCount = hcAgents.filter(a => a.riskTier === 'red').length;
+    const amberCount = hcAgents.filter(a => a.riskTier === 'amber').length;
+    const greenCount = hcAgents.filter(a => a.riskTier === 'green').length;
+    const avgTurnover = (hcRDData.reduce((s, r) => s + r.turnoverRate, 0) / hcRDData.length).toFixed(1);
+    const avgEngagement = Math.round(hcRDData.reduce((s, r) => s + r.metrics.engagement, 0) / hcRDData.length);
+    const nachwuchsQuote = ((hcAgents.filter(a => a.age < 35).length / totalAgents) * 100).toFixed(1);
+    const avgTenure = (hcAgents.reduce((s, a) => s + a.tenure, 0) / totalAgents).toFixed(1);
+    const totalVacanzen = hcRDData.reduce((s, r) => s + (r.budgeted - r.headcount), 0);
+
+    const kpis = [
+        { label: 'Vermittlerbestand', value: totalAgents, trend: '-3.2%', trendDir: 'down', color: '' },
+        { label: 'Fluktuationsquote', value: avgTurnover + '%', trend: '+1.1%', trendDir: 'down', color: parseFloat(avgTurnover) > 12 ? 'red' : '' },
+        { label: 'Nachwuchsquote', value: nachwuchsQuote + '%', trend: '-0.8%', trendDir: 'down', color: parseFloat(nachwuchsQuote) < 10 ? 'red' : '' },
+        { label: 'Ø Verweildauer', value: avgTenure + ' J.', trend: '+0.3J', trendDir: 'up', color: '' },
+        { label: 'Engagement Score', value: avgEngagement + '/100', trend: '-2 Pkt.', trendDir: 'down', color: avgEngagement < 50 ? 'red' : avgEngagement < 70 ? 'amber' : 'green' },
+        { label: 'Flight Risk (Rot)', value: redCount, trend: '+4', trendDir: 'down', color: 'red' },
+        { label: 'Vakanzenquote', value: totalVacanzen + ' offen', trend: '+3', trendDir: 'down', color: '' },
+        { label: 'Stornoquote (Ø)', value: '2.8%', trend: '+0.1%', trendDir: 'down', color: '' }
+    ];
+
+    const container = document.getElementById('hcKpiRow');
+    if (!container) return;
+    container.innerHTML = kpis.map(k => `
+        <div class="hc-kpi-card">
+            <div class="hc-kpi-label">${k.label}</div>
+            <div class="hc-kpi-value ${k.color}">${k.value}</div>
+            <div class="hc-kpi-trend ${k.trendDir === 'up' ? 'up' : 'down'}">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12">
+                    ${k.trendDir === 'up' ? '<polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>' : '<polyline points="23 18 13.5 8.5 8.5 13.5 1 6"></polyline>'}
+                </svg>
+                ${k.trend}
+            </div>
+        </div>
+    `).join('');
+}
+
+function renderHCMap() {
+    const container = document.getElementById('hcGermanyMap');
+    if (!container) return;
+
+    // Simplified Germany map with RD positions
+    const width = 320;
+    const height = 440;
+    const padding = 20;
+
+    // Convert lat/lng to simple x,y (approximate Mercator for Germany)
+    function project(lat, lng) {
+        const minLat = 47.3, maxLat = 55.0, minLng = 5.9, maxLng = 15.0;
+        const x = padding + ((lng - minLng) / (maxLng - minLng)) * (width - 2 * padding);
+        const y = padding + ((maxLat - lat) / (maxLat - minLat)) * (height - 2 * padding);
+        return { x, y };
+    }
+
+    let svg = `<svg viewBox="0 0 ${width} ${height}" class="hc-map-svg">`;
+    // Germany outline (simplified)
+    svg += `<path d="M160,10 L200,20 L230,50 L250,80 L260,120 L280,160 L290,200 L280,240 L260,260 L240,280 L230,310 L220,340 L200,370 L180,390 L160,400 L140,410 L120,400 L100,380 L80,350 L60,310 L50,270 L40,230 L45,190 L55,150 L70,120 L85,90 L100,60 L120,35 L140,18 Z" fill="var(--surface-elevated)" stroke="var(--border)" stroke-width="1.5"/>`;
+
+    // RD circles
+    hcRDData.forEach(rd => {
+        const pos = project(rd.lat, rd.lng);
+        const color = rd.tier === 'green' ? '#16A34A' : rd.tier === 'amber' ? '#D97706' : '#DC2626';
+        const r = Math.max(12, Math.min(22, rd.headcount / 5));
+        svg += `<circle cx="${pos.x}" cy="${pos.y}" r="${r}" fill="${color}" opacity="0.8" stroke="white" stroke-width="2" class="hc-map-dot" onclick="selectHCRegion('${rd.id}')" data-rd="${rd.id}"/>`;
+        svg += `<text x="${pos.x}" y="${pos.y + 1}" text-anchor="middle" dominant-baseline="central" fill="white" font-size="9" font-weight="bold" pointer-events="none">${rd.composite}</text>`;
+    });
+    svg += `</svg>`;
+
+    // Legend
+    svg += `<div class="hc-map-legend">
+        <span class="hc-legend-item"><span class="hc-legend-dot" style="background:#16A34A"></span>Gesund (75+)</span>
+        <span class="hc-legend-item"><span class="hc-legend-dot" style="background:#D97706"></span>Gefährdet (40–74)</span>
+        <span class="hc-legend-item"><span class="hc-legend-dot" style="background:#DC2626"></span>Kritisch (<40)</span>
+    </div>`;
+
+    container.innerHTML = svg;
+}
+
+function selectHCRegion(rdId) {
+    hcSelectedRD = rdId;
+    const rdSelect = document.getElementById('hcUnitRDSelect');
+    if (rdSelect) rdSelect.value = rdId;
+    switchHCView('unit');
+}
+
+function renderHCFlightRiskDonut() {
+    const container = document.getElementById('hcFlightRiskDonut');
+    if (!container) return;
+
+    const total = hcAgents.length;
+    const red = hcAgents.filter(a => a.riskTier === 'red').length;
+    const amber = hcAgents.filter(a => a.riskTier === 'amber').length;
+    const green = hcAgents.filter(a => a.riskTier === 'green').length;
+
+    const redPct = red / total;
+    const amberPct = amber / total;
+    const greenPct = green / total;
+
+    const r = 70;
+    const cx = 90;
+    const cy = 90;
+    const circumference = 2 * Math.PI * r;
+
+    const redLen = circumference * redPct;
+    const amberLen = circumference * amberPct;
+    const greenLen = circumference * greenPct;
+
+    const redOffset = 0;
+    const amberOffset = redLen;
+    const greenOffset = redLen + amberLen;
+
+    container.innerHTML = `
+        <svg viewBox="0 0 180 180" class="hc-donut-svg">
+            <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#DC2626" stroke-width="24"
+                stroke-dasharray="${redLen} ${circumference - redLen}" stroke-dashoffset="${circumference / 4}" />
+            <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#D97706" stroke-width="24"
+                stroke-dasharray="${amberLen} ${circumference - amberLen}" stroke-dashoffset="${circumference / 4 - redLen}" />
+            <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#16A34A" stroke-width="24"
+                stroke-dasharray="${greenLen} ${circumference - greenLen}" stroke-dashoffset="${circumference / 4 - redLen - amberLen}" />
+            <text x="${cx}" y="${cy - 6}" text-anchor="middle" class="hc-donut-total">${total}</text>
+            <text x="${cx}" y="${cy + 10}" text-anchor="middle" class="hc-donut-label">Vermittler</text>
+        </svg>
+        <div class="hc-donut-legend">
+            <div class="hc-donut-legend-item"><span class="hc-legend-dot" style="background:#DC2626"></span>Hoch: ${red} (${(redPct * 100).toFixed(0)}%)</div>
+            <div class="hc-donut-legend-item"><span class="hc-legend-dot" style="background:#D97706"></span>Mittel: ${amber} (${(amberPct * 100).toFixed(0)}%)</div>
+            <div class="hc-donut-legend-item"><span class="hc-legend-dot" style="background:#16A34A"></span>Niedrig: ${green} (${(greenPct * 100).toFixed(0)}%)</div>
+        </div>
+    `;
+}
+
+function renderHCAlerts() {
+    const container = document.getElementById('hcAlertsList');
+    const countEl = document.getElementById('hcAlertCount');
+    if (!container) return;
+
+    if (countEl) countEl.textContent = hcAlerts.length;
+
+    container.innerHTML = hcAlerts.slice(0, 8).map(a => `
+        <div class="hc-alert-item ${a.severity}">
+            <div class="hc-alert-icon">
+                ${a.type === 'flight_risk' ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="18" y1="8" x2="23" y2="13"/><line x1="23" y1="8" x2="18" y2="13"/></svg>'
+                : a.type === 'contagion' ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>'
+                : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>'}
+            </div>
+            <div class="hc-alert-content">
+                <div class="hc-alert-title">${a.title}</div>
+                <div class="hc-alert-desc">${a.desc}</div>
+            </div>
+            <div class="hc-alert-meta">
+                <span class="hc-alert-rd">${a.rd}</span>
+                <span class="hc-alert-time">vor ${a.daysAgo}T</span>
+            </div>
+        </div>
+    `).join('');
+}
+
+function renderHCRiskMovers() {
+    const tbody = document.getElementById('hcRiskMoversBody');
+    if (!tbody) return;
+
+    const filter = document.getElementById('hcMoversFilter')?.value || 'all';
+    let movers = hcAgents.filter(a => Math.abs(a.change) > 10);
+
+    if (filter === 'up') movers = movers.filter(a => a.change > 0);
+    else if (filter === 'down') movers = movers.filter(a => a.change < 0);
+
+    movers.sort((a, b) => Math.abs(b.change) - Math.abs(a.change));
+
+    tbody.innerHTML = movers.slice(0, 15).map(a => `
+        <tr class="${a.change > 0 ? 'hc-row-risk-up' : 'hc-row-risk-down'}">
+            <td><strong>${a.id}</strong></td>
+            <td>${a.rdName}</td>
+            <td><span class="hc-risk-badge ${a.riskTier}">${a.riskScore}%</span></td>
+            <td>${a.prevScore}%</td>
+            <td class="${a.change > 0 ? 'hc-change-up' : 'hc-change-down'}">${a.change > 0 ? '↑' : '↓'} ${Math.abs(a.change)} Pkt.</td>
+            <td>${a.topFactor}</td>
+        </tr>
+    `).join('');
+}
+
+// --- RENDER: Regions ---
+function renderHCRegions() {
+    renderHCHeatmap();
+    renderHCLeagueTable();
+    renderHCRadarChart();
+}
+
+function renderHCHeatmap() {
+    const tbody = document.getElementById('hcHeatmapBody');
+    if (!tbody) return;
+
+    const sorted = [...hcRDData].sort((a, b) => b.composite - a.composite);
+
+    tbody.innerHTML = sorted.map(rd => {
+        const dims = ['retention', 'staffing', 'engagement', 'demographics', 'production', 'quality'];
+        return `<tr>
+            <td><strong>${rd.name}</strong><br><span class="hc-hm-region">${rd.region}</span></td>
+            <td class="hc-hm-cell ${hcHeatColor(rd.composite)}">${rd.composite}</td>
+            ${dims.map(d => `<td class="hc-hm-cell ${hcHeatColor(rd.metrics[d])}">${rd.metrics[d]}</td>`).join('')}
+        </tr>`;
+    }).join('');
+}
+
+function hcHeatColor(val) {
+    if (val >= 75) return 'hc-heat-green';
+    if (val >= 60) return 'hc-heat-lime';
+    if (val >= 40) return 'hc-heat-yellow';
+    if (val >= 25) return 'hc-heat-orange';
+    return 'hc-heat-red';
+}
+
+function renderHCLeagueTable() {
+    const tbody = document.getElementById('hcLeagueBody');
+    if (!tbody) return;
+
+    const sorted = [...hcRDData].sort((a, b) => b.composite - a.composite);
+
+    tbody.innerHTML = sorted.map((rd, i) => {
+        const sparkline = renderHCSparklineSVG(rd.trend, 80, 24);
+        return `<tr onclick="selectHCRegion('${rd.id}')" style="cursor:pointer">
+            <td>${i + 1}</td>
+            <td><strong>${rd.name}</strong></td>
+            <td><span class="hc-risk-badge ${rd.tier}">${rd.composite}</span></td>
+            <td>${sparkline}</td>
+            <td>${rd.headcount}</td>
+            <td>${rd.turnoverRate}%</td>
+            <td>${rd.vacancyRate.toFixed(1)}%</td>
+        </tr>`;
+    }).join('');
+}
+
+function renderHCSparklineSVG(data, width, height) {
+    if (!data || data.length < 2) return '';
+    const min = Math.min(...data) - 5;
+    const max = Math.max(...data) + 5;
+    const range = max - min || 1;
+    const points = data.map((v, i) => {
+        const x = (i / (data.length - 1)) * width;
+        const y = height - ((v - min) / range) * height;
+        return `${x},${y}`;
+    }).join(' ');
+
+    const lastVal = data[data.length - 1];
+    const color = lastVal >= 75 ? '#16A34A' : lastVal >= 40 ? '#D97706' : '#DC2626';
+    return `<svg width="${width}" height="${height}" class="hc-sparkline-svg"><polyline points="${points}" fill="none" stroke="${color}" stroke-width="1.5"/></svg>`;
+}
+
+function renderHCRadarChart() {
+    const canvas = document.getElementById('hcRadarChart');
+    if (!canvas || typeof Chart === 'undefined') return;
+
+    const rdId = document.getElementById('hcRadarSelect')?.value;
+    const rd = hcRDData.find(r => r.id === rdId) || hcRDData[0];
+    if (!rd) return;
+
+    // Average benchmark
+    const avg = {};
+    ['retention', 'staffing', 'engagement', 'demographics', 'production', 'quality'].forEach(k => {
+        avg[k] = Math.round(hcRDData.reduce((s, r) => s + r.metrics[k], 0) / hcRDData.length);
+    });
+
+    if (canvas._hcChart) canvas._hcChart.destroy();
+
+    canvas._hcChart = new Chart(canvas, {
+        type: 'radar',
+        data: {
+            labels: ['Retention', 'Besetzung', 'Engagement', 'Nachwuchs', 'Produktion', 'Qualität'],
+            datasets: [
+                {
+                    label: rd.name,
+                    data: [rd.metrics.retention, rd.metrics.staffing, rd.metrics.engagement, rd.metrics.demographics, rd.metrics.production, rd.metrics.quality],
+                    borderColor: '#C8102E',
+                    backgroundColor: 'rgba(200,16,46,0.1)',
+                    borderWidth: 2,
+                    pointRadius: 3
+                },
+                {
+                    label: 'Benchmark (Ø)',
+                    data: [avg.retention, avg.staffing, avg.engagement, avg.demographics, avg.production, avg.quality],
+                    borderColor: '#6B7280',
+                    backgroundColor: 'rgba(107,114,128,0.05)',
+                    borderWidth: 1.5,
+                    borderDash: [4, 4],
+                    pointRadius: 2
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: { r: { min: 0, max: 100, ticks: { stepSize: 25, display: false }, grid: { color: 'rgba(0,0,0,0.08)' } } },
+            plugins: { legend: { position: 'bottom' } }
+        }
+    });
+}
+
+// --- RENDER: Unit Detail ---
+function renderHCUnitDetail() {
+    const rdId = document.getElementById('hcUnitRDSelect')?.value || hcRDData[0]?.id;
+    const rd = hcRDData.find(r => r.id === rdId);
+    if (!rd) return;
+
+    const unitAgents = hcAgents.filter(a => a.rdId === rdId);
+    const title = document.getElementById('hcUnitTitle');
+    if (title) title.textContent = `${rd.name} — Einheiten-Scorecard`;
+
+    // Scorecard
+    const scorecard = document.getElementById('hcUnitScorecard');
+    if (scorecard) {
+        const dims = [
+            { label: 'Retention', value: rd.metrics.retention, weight: '25%' },
+            { label: 'Besetzung', value: rd.metrics.staffing, weight: '15%' },
+            { label: 'Engagement', value: rd.metrics.engagement, weight: '20%' },
+            { label: 'Nachwuchs', value: rd.metrics.demographics, weight: '10%' },
+            { label: 'Produktion', value: rd.metrics.production, weight: '15%' },
+            { label: 'Qualität', value: rd.metrics.quality, weight: '15%' }
+        ];
+        scorecard.innerHTML = `
+            <div class="hc-scorecard-header">
+                <div class="hc-scorecard-composite ${rd.tier}">
+                    <div class="hc-scorecard-score">${rd.composite}</div>
+                    <div class="hc-scorecard-label">Gesamt</div>
+                </div>
+                <div class="hc-scorecard-meta">
+                    <div><strong>${rd.headcount}</strong> Vermittler (${rd.employed} angestellt, ${rd.headcount - rd.employed} selbständig)</div>
+                    <div>Fluktuation: <strong>${rd.turnoverRate}%</strong> | Vakanzen: <strong>${rd.budgeted - rd.headcount}</strong> (${rd.vacancyRate.toFixed(1)}%)</div>
+                    <div>Region: ${rd.region}</div>
+                </div>
+            </div>
+            <div class="hc-scorecard-dims">
+                ${dims.map(d => `
+                    <div class="hc-scorecard-dim">
+                        <div class="hc-scorecard-dim-header">
+                            <span>${d.label}</span>
+                            <span class="hc-scorecard-weight">${d.weight}</span>
+                        </div>
+                        <div class="hc-progress-bar">
+                            <div class="hc-progress-fill ${d.value >= 75 ? 'green' : d.value >= 40 ? 'amber' : 'red'}" style="width:${d.value}%"></div>
+                        </div>
+                        <div class="hc-scorecard-dim-value">${d.value}/100</div>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+    }
+
+    // Age distribution
+    renderHCBarChart('hcAgeDistribution', unitAgents, 'age', [
+        { label: '<30', min: 0, max: 30 },
+        { label: '30–39', min: 30, max: 40 },
+        { label: '40–49', min: 40, max: 50 },
+        { label: '50–59', min: 50, max: 60 },
+        { label: '60+', min: 60, max: 100 }
+    ]);
+
+    // Tenure distribution
+    renderHCBarChart('hcTenureDistribution', unitAgents, 'tenure', [
+        { label: '<2J', min: 0, max: 2 },
+        { label: '2–5J', min: 2, max: 6 },
+        { label: '5–10J', min: 6, max: 11 },
+        { label: '10–20J', min: 11, max: 21 },
+        { label: '20+J', min: 21, max: 100 }
+    ]);
+
+    // Risk distribution
+    const riskDist = document.getElementById('hcUnitRiskDist');
+    if (riskDist) {
+        const red = unitAgents.filter(a => a.riskTier === 'red').length;
+        const amber = unitAgents.filter(a => a.riskTier === 'amber').length;
+        const green = unitAgents.filter(a => a.riskTier === 'green').length;
+        const total = unitAgents.length;
+        riskDist.innerHTML = `
+            <div class="hc-risk-stacked">
+                <div class="hc-risk-bar-segment red" style="width:${(red/total*100).toFixed(1)}%" title="Hoch: ${red}"></div>
+                <div class="hc-risk-bar-segment amber" style="width:${(amber/total*100).toFixed(1)}%" title="Mittel: ${amber}"></div>
+                <div class="hc-risk-bar-segment green" style="width:${(green/total*100).toFixed(1)}%" title="Niedrig: ${green}"></div>
+            </div>
+            <div class="hc-risk-labels">
+                <span class="red">Hoch: ${red} (${(red/total*100).toFixed(0)}%)</span>
+                <span class="amber">Mittel: ${amber} (${(amber/total*100).toFixed(0)}%)</span>
+                <span class="green">Niedrig: ${green} (${(green/total*100).toFixed(0)}%)</span>
+            </div>
+        `;
+    }
+
+    // Stayers vs Leavers
+    renderHCStayersLeavers(unitAgents);
+
+    // Contagion
+    renderHCContagion(rd, unitAgents);
+}
+
+function renderHCBarChart(containerId, agents, field, buckets) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    const counts = buckets.map(b => agents.filter(a => a[field] >= b.min && a[field] < b.max).length);
+    const maxCount = Math.max(...counts, 1);
+
+    container.innerHTML = `
+        <div class="hc-bar-chart">
+            ${buckets.map((b, i) => `
+                <div class="hc-bar-col">
+                    <div class="hc-bar-value">${counts[i]}</div>
+                    <div class="hc-bar" style="height:${(counts[i]/maxCount*100).toFixed(0)}%"></div>
+                    <div class="hc-bar-label">${b.label}</div>
+                </div>
+            `).join('')}
+        </div>
+    `;
+}
+
+function renderHCStayersLeavers(unitAgents) {
+    const container = document.getElementById('hcStayersLeavers');
+    if (!container) return;
+
+    const dims = ['Engagement', 'Vergütung', 'Karriere', 'Manager', 'Work-Life-Balance'];
+    const stayerScores = dims.map(() => 60 + Math.floor(Math.random() * 25));
+    const leaverScores = dims.map((_, i) => Math.max(20, stayerScores[i] - 15 - Math.floor(Math.random() * 15)));
+
+    container.innerHTML = `
+        <div class="hc-sl-chart">
+            ${dims.map((d, i) => `
+                <div class="hc-sl-row">
+                    <div class="hc-sl-dim">${d}</div>
+                    <div class="hc-sl-bars">
+                        <div class="hc-sl-bar stayer" style="width:${stayerScores[i]}%"><span>${stayerScores[i]}</span></div>
+                        <div class="hc-sl-bar leaver" style="width:${leaverScores[i]}%"><span>${leaverScores[i]}</span></div>
+                    </div>
+                </div>
+            `).join('')}
+        </div>
+        <div class="hc-sl-legend">
+            <span class="hc-sl-legend-item"><span class="hc-legend-dot" style="background:#16A34A"></span>Aktive Vermittler</span>
+            <span class="hc-sl-legend-item"><span class="hc-legend-dot" style="background:#DC2626"></span>Ausgeschiedene (12M)</span>
+        </div>
+    `;
+}
+
+function renderHCContagion(rd, unitAgents) {
+    const panel = document.getElementById('hcContagionPanel');
+    const content = document.getElementById('hcContagionContent');
+    if (!panel || !content) return;
+
+    const hasContagion = rd.tier !== 'green' && Math.random() > 0.3;
+
+    if (!hasContagion) {
+        panel.style.display = 'none';
+        return;
+    }
+    panel.style.display = 'block';
+
+    const daysAgo = Math.floor(Math.random() * 100 + 10);
+    const daysRemaining = Math.max(0, 135 - daysAgo);
+    const affectedCount = Math.floor(Math.random() * 5 + 2);
+
+    content.innerHTML = `
+        <div class="hc-contagion-info">
+            <div class="hc-contagion-timer">
+                <div class="hc-contagion-days">${daysRemaining}</div>
+                <div class="hc-contagion-days-label">Tage verbleibend</div>
+            </div>
+            <div class="hc-contagion-details">
+                <p><strong>Abgang vor ${daysAgo} Tagen</strong> — 135-Tage-Beobachtungsfenster aktiv</p>
+                <p>${affectedCount} Team-Mitglieder mit erhöhter Sensitivität überwacht</p>
+                <p>Erhöhte Abgangswahrscheinlichkeit: <strong>+7–25%</strong> (Visier-Studie)</p>
+            </div>
+        </div>
+        <div class="hc-contagion-progress">
+            <div class="hc-contagion-bar" style="width:${(daysAgo/135*100).toFixed(0)}%"></div>
+        </div>
+    `;
+}
+
+// --- RENDER: Early Warning ---
+function renderHCEarlyWarnings() {
+    renderHCEWGrid();
+    renderHCKanban();
+}
+
+function renderHCEWGrid() {
+    const grid = document.getElementById('hcEWGrid');
+    if (!grid) return;
+
+    const tierFilter = document.getElementById('hcEWFilterTier')?.value || 'all';
+    const rdFilter = document.getElementById('hcEWFilterRD')?.value || 'all';
+
+    let agents = hcAgents.filter(a => a.riskTier !== 'green');
+    if (tierFilter === 'red') agents = agents.filter(a => a.riskTier === 'red');
+    if (tierFilter === 'amber') agents = agents.filter(a => a.riskTier === 'amber');
+    if (rdFilter !== 'all') agents = agents.filter(a => a.rdId === rdFilter);
+
+    agents.sort((a, b) => b.riskScore - a.riskScore);
+
+    grid.innerHTML = agents.slice(0, 24).map(a => `
+        <div class="hc-ew-card ${a.riskTier}" onclick="showHCShapForAgent('${a.id}')">
+            <div class="hc-ew-card-header">
+                <span class="hc-ew-id">${a.id}</span>
+                <span class="hc-risk-badge ${a.riskTier}">${a.riskScore}%</span>
+            </div>
+            <div class="hc-ew-card-rd">${a.rdName}</div>
+            <div class="hc-ew-card-meta">${a.employed ? 'Angestellt' : 'Selbständig'} · ${a.tenure}J Tenure · ${a.age}J</div>
+            <div class="hc-ew-card-factor">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                ${a.topFactor}
+            </div>
+            <div class="hc-ew-card-change ${a.change > 0 ? 'up' : 'down'}">${a.change > 0 ? '↑' : '↓'} ${Math.abs(a.change)} Pkt.</div>
+        </div>
+    `).join('');
+}
+
+function showHCShapForAgent(agentId) {
+    const select = document.getElementById('hcShapSelect');
+    if (select) {
+        select.value = agentId;
+        renderHCShapExplanation();
+    }
+    // Scroll to SHAP
+    document.getElementById('hcShapContainer')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function renderHCShapExplanation() {
+    const container = document.getElementById('hcShapContainer');
+    const agentId = document.getElementById('hcShapSelect')?.value;
+    if (!container || !agentId) {
+        if (container) container.innerHTML = '<div class="hc-shap-placeholder">Wählen Sie einen Vermittler aus der Liste oben, um die Score-Erklärung anzuzeigen.</div>';
+        return;
+    }
+
+    const agent = hcAgents.find(a => a.id === agentId);
+    if (!agent) return;
+
+    const baseRisk = 15; // average baseline
+    const maxBarWidth = 200;
+    const maxAbsVal = Math.max(...agent.shapFactors.map(f => Math.abs(f.value)), 0.01);
+
+    container.innerHTML = `
+        <div class="hc-shap-header">
+            <div class="hc-shap-agent">
+                <strong>${agent.id}</strong> — ${agent.rdName} · ${agent.employed ? 'Angestellt' : 'Selbständig'} · ${agent.age}J · ${agent.tenure}J Tenure
+            </div>
+            <div class="hc-shap-score">
+                Flight-Risk Score: <span class="hc-risk-badge ${agent.riskTier}">${agent.riskScore}%</span>
+            </div>
+        </div>
+        <div class="hc-shap-chart">
+            <div class="hc-shap-baseline">
+                <span>Basis-Risiko: ${baseRisk}%</span>
+                <div class="hc-shap-baseline-line"></div>
+            </div>
+            ${agent.shapFactors.map(f => {
+                const isPositive = f.value > 0;
+                const barWidth = Math.round((Math.abs(f.value) / maxAbsVal) * maxBarWidth);
+                return `
+                    <div class="hc-shap-row">
+                        <div class="hc-shap-factor">${f.factor}</div>
+                        <div class="hc-shap-bar-area">
+                            ${isPositive
+                                ? `<div class="hc-shap-bar positive" style="width:${barWidth}px">${f.value > 0 ? '+' : ''}${f.value}</div>`
+                                : `<div class="hc-shap-bar negative" style="width:${barWidth}px">${f.value}</div>`
+                            }
+                        </div>
+                    </div>
+                `;
+            }).join('')}
+        </div>
+        <div class="hc-shap-footer">
+            <span class="hc-shap-legend negative">← Risiko senkend</span>
+            <span class="hc-shap-legend positive">Risiko erhöhend →</span>
+        </div>
+    `;
+}
+
+function renderHCKanban() {
+    ['identified', 'scheduled', 'action', 'resolved'].forEach((status, i) => {
+        const col = document.getElementById(`hcKanbanCol${i + 1}`);
+        const count = document.getElementById(`hcKanbanCount${i + 1}`);
+        const items = hcKanban[status] || [];
+        if (count) count.textContent = items.length;
+        if (!col) return;
+
+        col.innerHTML = items.map(item => `
+            <div class="hc-kanban-card ${item.tier || ''}">
+                <div class="hc-kanban-card-header">
+                    <strong>${item.id}</strong>
+                    ${item.tier ? `<span class="hc-risk-badge ${item.tier}">${item.tier === 'red' ? 'Hoch' : item.tier === 'amber' ? 'Mittel' : 'Gelöst'}</span>` : ''}
+                </div>
+                <div class="hc-kanban-card-rd">${item.rd}</div>
+                ${item.assignee ? `<div class="hc-kanban-card-assignee">→ ${item.assignee}</div>` : ''}
+                ${item.action ? `<div class="hc-kanban-card-action">${item.action}</div>` : ''}
+                ${item.result ? `<div class="hc-kanban-card-result">${item.result}</div>` : ''}
+                <div class="hc-kanban-card-days">${item.days} Tage</div>
+            </div>
+        `).join('');
+    });
+}
+
 window.openHRPipeline = openHRPipeline;
 window.closeHRPipeline = closeHRPipeline;
 window.switchHPMode = switchHPMode;
@@ -1918,3 +2815,11 @@ window.closeHPInterviewQuestions = closeHPInterviewQuestions;
 window.toggleHPSideBySide = toggleHPSideBySide;
 window.openHPJobDetail = openHPJobDetail;
 window.closeHPJobDetail = closeHPJobDetail;
+window.switchHCView = switchHCView;
+window.renderHCRiskMovers = renderHCRiskMovers;
+window.renderHCRadarChart = renderHCRadarChart;
+window.renderHCUnitDetail = renderHCUnitDetail;
+window.renderHCEarlyWarnings = renderHCEarlyWarnings;
+window.renderHCShapExplanation = renderHCShapExplanation;
+window.selectHCRegion = selectHCRegion;
+window.showHCShapForAgent = showHCShapForAgent;

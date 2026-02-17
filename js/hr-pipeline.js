@@ -1324,9 +1324,236 @@ function closeHPDetail() {
 
 function hpDetailAction(action) {
     const name = hpCurrentDetailApplicant?.name || 'Kandidat';
-    if (action === 'einladen') { showHPToast(`${name} wurde zum Gespräch eingeladen`, 'success'); closeHPDetail(); }
-    else if (action === 'ablehnen') { showHPToast(`Absage an ${name} wurde vermerkt`, 'warning'); closeHPDetail(); }
-    else if (action === 'merken') { showHPToast(`${name} wurde vorgemerkt`, 'info'); }
+    if (action === 'merken') { showHPToast(`${name} wurde vorgemerkt`, 'info'); return; }
+
+    if (action === 'einladen') {
+        showHPActionWorkflow('einladen');
+    } else if (action === 'ablehnen') {
+        showHPActionWorkflow('ablehnen');
+    }
+}
+
+function showHPActionWorkflow(type) {
+    const applicant = hpCurrentDetailApplicant;
+    const name = applicant?.name || 'Kandidat';
+    const actionsDiv = document.querySelector('.hp-detail-actions');
+    if (!actionsDiv) return;
+
+    if (type === 'einladen') {
+        actionsDiv.innerHTML = `
+            <div class="hp-workflow-panel">
+                <div class="hp-workflow-header">
+                    <h4>Einladung für ${name}</h4>
+                    <button class="hp-workflow-close" onclick="resetHPDetailActions()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                    </button>
+                </div>
+
+                <div class="hp-workflow-step">
+                    <label class="hp-workflow-label">Gesprächsformat</label>
+                    <div class="hp-workflow-options" id="hpInviteType">
+                        <button class="hp-workflow-option selected" data-value="video" onclick="hpSelectOption(this)">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+                            Video-Interview
+                        </button>
+                        <button class="hp-workflow-option" data-value="telefon" onclick="hpSelectOption(this)">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+                            Telefoninterview
+                        </button>
+                        <button class="hp-workflow-option" data-value="vor-ort" onclick="hpSelectOption(this)">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                            Vor-Ort-Gespräch
+                        </button>
+                    </div>
+                </div>
+
+                <div class="hp-workflow-step">
+                    <label class="hp-workflow-label">Terminvorschlag</label>
+                    <div class="hp-workflow-options" id="hpInviteDate">
+                        ${generateHPDateOptions().map((d, i) => `<button class="hp-workflow-option${i === 0 ? ' selected' : ''}" data-value="${d.value}" onclick="hpSelectOption(this)">${d.label}</button>`).join('')}
+                    </div>
+                </div>
+
+                <div class="hp-workflow-step">
+                    <label class="hp-workflow-label">Interviewer</label>
+                    <div class="hp-workflow-options" id="hpInviteInterviewer">
+                        <button class="hp-workflow-option selected" data-value="mueller" onclick="hpSelectOption(this)">
+                            <span class="hp-workflow-avatar">SM</span>
+                            Sandra Müller<span class="hp-workflow-role">Teamleiterin Recruiting</span>
+                        </button>
+                        <button class="hp-workflow-option" data-value="fischer" onclick="hpSelectOption(this)">
+                            <span class="hp-workflow-avatar">MF</span>
+                            Martin Fischer<span class="hp-workflow-role">Abteilungsleiter Vertrieb</span>
+                        </button>
+                        <button class="hp-workflow-option" data-value="schmidt" onclick="hpSelectOption(this)">
+                            <span class="hp-workflow-avatar">KS</span>
+                            Katrin Schmidt<span class="hp-workflow-role">HR Business Partner</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="hp-workflow-step">
+                    <label class="hp-workflow-label">Notiz an den Kandidaten</label>
+                    <textarea class="hp-workflow-textarea" id="hpInviteNote" placeholder="Optionale Nachricht zur Einladung..." rows="2"></textarea>
+                </div>
+
+                <div class="hp-workflow-actions">
+                    <button class="hp-action-btn" onclick="resetHPDetailActions()">Abbrechen</button>
+                    <button class="hp-action-btn primary" onclick="confirmHPInvite()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M22 2L11 13"/><path d="M22 2L15 22l-4-9-9-4z"/></svg>
+                        Einladung senden
+                    </button>
+                </div>
+            </div>`;
+    } else if (type === 'ablehnen') {
+        actionsDiv.innerHTML = `
+            <div class="hp-workflow-panel rejection">
+                <div class="hp-workflow-header">
+                    <h4>Absage für ${name}</h4>
+                    <button class="hp-workflow-close" onclick="resetHPDetailActions()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                    </button>
+                </div>
+
+                <div class="hp-workflow-step">
+                    <label class="hp-workflow-label">Ablehnungsgrund</label>
+                    <div class="hp-workflow-options vertical" id="hpRejectReason">
+                        <button class="hp-workflow-option selected" data-value="qualifikation" onclick="hpSelectOption(this)">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                            Qualifikation nicht ausreichend
+                        </button>
+                        <button class="hp-workflow-option" data-value="branche" onclick="hpSelectOption(this)">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+                            Fehlende Branchenerfahrung
+                        </button>
+                        <button class="hp-workflow-option" data-value="standort" onclick="hpSelectOption(this)">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                            Standort nicht passend
+                        </button>
+                        <button class="hp-workflow-option" data-value="besetzt" onclick="hpSelectOption(this)">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 12l2 2 4-4"/></svg>
+                            Position bereits besetzt
+                        </button>
+                        <button class="hp-workflow-option" data-value="ko" onclick="hpSelectOption(this)">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                            KO-Kriterium erfüllt
+                        </button>
+                    </div>
+                </div>
+
+                <div class="hp-workflow-step">
+                    <label class="hp-workflow-label">E-Mail-Vorlage</label>
+                    <div class="hp-workflow-options" id="hpRejectTemplate">
+                        <button class="hp-workflow-option selected" data-value="standard" onclick="hpSelectOption(this); hpUpdateRejectPreview()">
+                            Standard-Absage
+                        </button>
+                        <button class="hp-workflow-option" data-value="talentpool" onclick="hpSelectOption(this); hpUpdateRejectPreview()">
+                            Absage + Talent-Pool
+                        </button>
+                        <button class="hp-workflow-option" data-value="empfehlung" onclick="hpSelectOption(this); hpUpdateRejectPreview()">
+                            Absage + Empfehlung
+                        </button>
+                    </div>
+                </div>
+
+                <div class="hp-workflow-step">
+                    <label class="hp-workflow-label">Vorschau</label>
+                    <div class="hp-workflow-preview" id="hpRejectPreview">
+                        ${getHPRejectPreview('standard', name)}
+                    </div>
+                </div>
+
+                <div class="hp-workflow-actions">
+                    <button class="hp-action-btn" onclick="resetHPDetailActions()">Abbrechen</button>
+                    <button class="hp-action-btn danger" onclick="confirmHPReject()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M22 2L11 13"/><path d="M22 2L15 22l-4-9-9-4z"/></svg>
+                        Absage senden
+                    </button>
+                </div>
+            </div>`;
+    }
+}
+
+function hpSelectOption(btn) {
+    const group = btn.parentElement;
+    group.querySelectorAll('.hp-workflow-option').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+}
+
+function generateHPDateOptions() {
+    const options = [];
+    const now = new Date();
+    const dayNames = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
+    const times = ['10:00', '14:00', '11:00'];
+    let count = 0;
+    for (let i = 1; count < 3; i++) {
+        const d = new Date(now);
+        d.setDate(d.getDate() + i);
+        if (d.getDay() === 0 || d.getDay() === 6) continue;
+        options.push({
+            value: d.toISOString().split('T')[0],
+            label: `${dayNames[d.getDay()]}, ${d.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit' })} · ${times[count]} Uhr`
+        });
+        count++;
+    }
+    return options;
+}
+
+function getHPRejectPreview(template, name) {
+    const templates = {
+        standard: `Sehr geehrte/r ${name},\n\nvielen Dank für Ihre Bewerbung und Ihr Interesse an ERGO. Nach sorgfältiger Prüfung müssen wir Ihnen leider mitteilen, dass wir uns für andere Kandidat/innen entschieden haben.\n\nWir wünschen Ihnen für Ihre berufliche Zukunft alles Gute.\n\nMit freundlichen Grüßen\nERGO Recruiting Team`,
+        talentpool: `Sehr geehrte/r ${name},\n\nvielen Dank für Ihre Bewerbung. Leider können wir Ihnen aktuell keine passende Position anbieten. Ihr Profil hat uns jedoch überzeugt — wir möchten Sie gerne in unseren Talent-Pool aufnehmen und Sie kontaktieren, sobald eine geeignete Stelle frei wird.\n\nMit freundlichen Grüßen\nERGO Recruiting Team`,
+        empfehlung: `Sehr geehrte/r ${name},\n\nvielen Dank für Ihre Bewerbung. Für die ausgeschriebene Position können wir Ihnen leider kein Angebot machen. Wir empfehlen Ihnen jedoch, sich auf andere offene Stellen in unserem Karriereportal umzusehen, die besser zu Ihrem Profil passen könnten.\n\nMit freundlichen Grüßen\nERGO Recruiting Team`
+    };
+    return `<div class="hp-email-preview">${(templates[template] || templates.standard).replace(/\n/g, '<br>')}</div>`;
+}
+
+function hpUpdateRejectPreview() {
+    const name = hpCurrentDetailApplicant?.name || 'Kandidat';
+    const selected = document.querySelector('#hpRejectTemplate .hp-workflow-option.selected');
+    const template = selected?.dataset.value || 'standard';
+    const preview = document.getElementById('hpRejectPreview');
+    if (preview) preview.innerHTML = getHPRejectPreview(template, name);
+}
+
+function confirmHPInvite() {
+    const name = hpCurrentDetailApplicant?.name || 'Kandidat';
+    const type = document.querySelector('#hpInviteType .selected')?.dataset.value || 'video';
+    const date = document.querySelector('#hpInviteDate .selected')?.textContent.trim() || '';
+    const interviewer = document.querySelector('#hpInviteInterviewer .selected')?.textContent.trim().split('\n')[0] || '';
+    const typeLabels = { video: 'Video-Interview', telefon: 'Telefoninterview', 'vor-ort': 'Vor-Ort-Gespräch' };
+    showHPToast(`${typeLabels[type]} mit ${name} geplant: ${date}`, 'success');
+    closeHPDetail();
+}
+
+function confirmHPReject() {
+    const name = hpCurrentDetailApplicant?.name || 'Kandidat';
+    const template = document.querySelector('#hpRejectTemplate .selected')?.dataset.value || 'standard';
+    const templateLabels = { standard: 'Standard-Absage', talentpool: 'Absage mit Talent-Pool-Aufnahme', empfehlung: 'Absage mit Stellenempfehlung' };
+    showHPToast(`${templateLabels[template]} an ${name} gesendet`, 'warning');
+    closeHPDetail();
+}
+
+function resetHPDetailActions() {
+    const actionsDiv = document.querySelector('.hp-detail-actions');
+    if (!actionsDiv) return;
+    actionsDiv.innerHTML = `
+        <button class="hp-action-btn primary" onclick="hpDetailAction('einladen')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+            Einladen
+        </button>
+        <button class="hp-action-btn danger" onclick="hpDetailAction('ablehnen')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
+            Ablehnen
+        </button>
+        <button class="hp-action-btn" onclick="hpDetailAction('merken')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"></path></svg>
+            Merken
+        </button>
+        <button class="hp-action-btn" onclick="generateHPInterviewQuestions()" title="KI-generierte Interviewfragen">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+            Interviewfragen
+        </button>`;
 }
 
 // ========================================

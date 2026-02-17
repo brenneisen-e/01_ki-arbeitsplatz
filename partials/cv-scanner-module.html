@@ -1,5 +1,8 @@
-<!-- CV Scanner Module: KI-gestütztes Bewerbermanagement -->
+<!-- CV Scanner Module: KI-gestütztes Bewerbermanagement (Enhanced) -->
 <div class="cv-scanner-page">
+    <!-- Toast Container -->
+    <div id="cvToastContainer" class="cv-toast-container"></div>
+
     <!-- Module Header -->
     <div class="cv-scanner-header">
         <div class="cv-scanner-header-left">
@@ -24,6 +27,18 @@
                     <div class="cv-scanner-subtitle">KI-gestütztes Bewerbermanagement</div>
                 </div>
             </div>
+        </div>
+
+        <!-- Compliance Badge -->
+        <div class="cv-compliance-badges">
+            <span class="cv-compliance-badge" title="EU AI Act konform - Hochrisiko-KI nach Anhang III, Nr. 4">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                EU AI Act
+            </span>
+            <span class="cv-compliance-badge" title="DSGVO-konform mit Human-in-the-Loop">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                DSGVO
+            </span>
         </div>
 
         <!-- Mode Toggle -->
@@ -119,12 +134,18 @@
 
         <!-- Results Section -->
         <div id="cvResultsSection" class="cv-results-section">
+            <!-- DSGVO Banner -->
+            <div class="cv-dsgvo-banner">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                KI-gestützte Vorauswahl — Die finale Bewertung und Entscheidung wird stets durch qualifiziertes Personal getroffen.
+            </div>
+
             <!-- Profile Card -->
             <div class="cv-profile-card" id="cvProfileCard">
                 <!-- Filled dynamically -->
             </div>
 
-            <!-- Rejection Notice (only for rejected profiles) -->
+            <!-- Rejection Notice -->
             <div class="cv-rejection-notice" id="cvRejectionNotice">
                 <div class="cv-rejection-icon">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
@@ -170,23 +191,62 @@
          ARBEITGEBER MODE
          =========================== -->
     <div id="cvArbeitgeberMode" class="cv-employer-section">
+        <!-- Toolbar -->
+        <div class="cv-employer-toolbar">
+            <div class="cv-employer-toolbar-left">
+                <h3 class="cv-employer-section-title">Recruiting Dashboard</h3>
+            </div>
+            <div class="cv-employer-toolbar-right">
+                <label class="cv-blind-toggle" title="Anonymisierte Ansicht (AGG-konform)">
+                    <input type="checkbox" id="cvBlindToggle" onchange="toggleBlindScreening()">
+                    <span class="cv-blind-toggle-slider"></span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
+                    Blind Screening
+                </label>
+                <button class="cv-action-btn" id="cvCompareBtn" onclick="openCVCompare()" style="display:none;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                    Vergleichen (<span id="cvCompareCount">0</span>)
+                </button>
+            </div>
+        </div>
+
         <!-- KPI Bar -->
         <div class="cv-kpi-bar">
             <div class="cv-kpi-card">
                 <div class="cv-kpi-label">Bewerbungen</div>
-                <div class="cv-kpi-value" id="cvKpiBewerbungen">47</div>
+                <div class="cv-kpi-value" id="cvKpiBewerbungen" data-target="47">0</div>
+                <div class="cv-kpi-trend up">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline></svg>
+                    +12% vs. Vormonat
+                </div>
+                <canvas class="cv-sparkline" id="cvSparkline1" width="120" height="32"></canvas>
             </div>
             <div class="cv-kpi-card">
                 <div class="cv-kpi-label">Durchschn. Score</div>
-                <div class="cv-kpi-value blue" id="cvKpiScore">68</div>
+                <div class="cv-kpi-value blue" id="cvKpiScore" data-target="68">0</div>
+                <div class="cv-kpi-trend up">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline></svg>
+                    +3 Punkte
+                </div>
+                <canvas class="cv-sparkline" id="cvSparkline2" width="120" height="32"></canvas>
             </div>
             <div class="cv-kpi-card">
                 <div class="cv-kpi-label">Empfohlene Kandidaten</div>
-                <div class="cv-kpi-value green" id="cvKpiEmpfohlen">12</div>
+                <div class="cv-kpi-value green" id="cvKpiEmpfohlen" data-target="12">0</div>
+                <div class="cv-kpi-trend up">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline></svg>
+                    +4 diese Woche
+                </div>
+                <canvas class="cv-sparkline" id="cvSparkline3" width="120" height="32"></canvas>
             </div>
             <div class="cv-kpi-card">
                 <div class="cv-kpi-label">Ablehnungsquote</div>
-                <div class="cv-kpi-value red" id="cvKpiAblehnung">34%</div>
+                <div class="cv-kpi-value red" id="cvKpiAblehnung" data-target="34" data-suffix="%">0%</div>
+                <div class="cv-kpi-trend down">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"></polyline></svg>
+                    -5% (verbessert)
+                </div>
+                <canvas class="cv-sparkline" id="cvSparkline4" width="120" height="32"></canvas>
             </div>
         </div>
 
@@ -257,6 +317,54 @@
                     </svg>
                     Merken
                 </button>
+                <button class="cv-action-btn" onclick="generateInterviewQuestions()" title="KI-generierte Interviewfragen">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"></path>
+                        <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                    </svg>
+                    Interviewfragen
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===========================
+         COMPARISON OVERLAY
+         =========================== -->
+    <div class="cv-detail-overlay" id="cvCompareOverlay" onclick="if(event.target===this)closeCVCompare()">
+        <div class="cv-detail-panel cv-compare-panel">
+            <div class="cv-detail-header">
+                <h3>Kandidatenvergleich</h3>
+                <button class="cv-detail-close" onclick="closeCVCompare()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="cv-detail-body" id="cvCompareBody">
+                <!-- Filled dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ===========================
+         INTERVIEW QUESTIONS OVERLAY
+         =========================== -->
+    <div class="cv-detail-overlay" id="cvInterviewOverlay" onclick="if(event.target===this)closeInterviewQuestions()">
+        <div class="cv-detail-panel">
+            <div class="cv-detail-header">
+                <h3>KI-generierte Interviewfragen</h3>
+                <button class="cv-detail-close" onclick="closeInterviewQuestions()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="cv-detail-body" id="cvInterviewBody">
+                <!-- Filled dynamically -->
             </div>
         </div>
     </div>

@@ -8,7 +8,7 @@
     <style>
         :root {
             --blue: #1e4d91;
-            --green: #C8102E;
+            --green: #4aaa48;
             --dark: #1a1a2e;
             --light: #fafafa;
             --gray: #4a4a5a;
@@ -126,76 +126,75 @@
 
         /* Main Content */
         .main {
-            padding: 30px 35px;
+            padding: 40px;
         }
 
         .main h1 {
             font-family: 'Playfair Display', serif;
-            font-size: 2rem;
+            font-size: 2.2rem;
             font-weight: 400;
             color: var(--dark);
         }
 
         .main .subtitle {
             color: var(--green);
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             letter-spacing: 2px;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
         }
 
         .section {
-            margin-bottom: 16px;
+            margin-bottom: 25px;
         }
 
         .section h2 {
-            font-size: 0.65rem;
+            font-size: 0.7rem;
             letter-spacing: 2px;
             text-transform: uppercase;
             color: var(--dark);
-            margin-bottom: 10px;
-            padding-bottom: 6px;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
             border-bottom: 2px solid var(--green);
         }
 
         .summary {
-            font-size: 0.8rem;
-            line-height: 1.6;
+            font-size: 0.9rem;
+            line-height: 1.7;
             color: var(--gray);
         }
 
         .exp-item {
-            margin-bottom: 12px;
+            margin-bottom: 18px;
         }
 
         .exp-item .role {
             font-weight: 600;
-            font-size: 0.85rem;
         }
 
         .exp-item .meta {
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             color: var(--green);
-            margin: 1px 0 3px;
+            margin: 2px 0 5px;
         }
 
         .exp-item .desc {
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             color: var(--gray);
-            line-height: 1.4;
+            line-height: 1.5;
         }
 
         /* Sidebar */
         .sidebar {
             background: var(--blue);
             color: white;
-            padding: 25px 18px;
+            padding: 30px 20px;
         }
 
         .photo {
-            width: 160px;
-            height: 160px;
-            min-width: 160px;
-            min-height: 160px;
+            width: 180px;
+            height: 180px;
+            min-width: 180px;
+            min-height: 180px;
             object-fit: cover;
             object-position: center top;
             border-radius: 50%;
@@ -204,17 +203,17 @@
             left: 0;
             z-index: 2;
         }
-
+        
         .photo-container {
-            width: 160px;
-            height: 160px;
-            margin: 0 auto 15px;
+            width: 180px;
+            height: 180px;
+            margin: 0 auto 20px;
             position: relative;
         }
-
+        
         .photo-placeholder {
-            width: 160px;
-            height: 160px;
+            width: 180px;
+            height: 180px;
             border-radius: 50%;
             background: rgba(255,255,255,0.2);
             border: 2px dashed rgba(255,255,255,0.5);
@@ -232,36 +231,36 @@
             left: 0;
             z-index: 1;
         }
-
+        
         .photo-placeholder:hover {
             background: rgba(255,255,255,0.3);
             border-color: rgba(255,255,255,0.8);
         }
 
         .sidebar-section {
-            margin-bottom: 14px;
+            margin-bottom: 18px;
         }
 
         .sidebar-section h3 {
-            font-size: 0.55rem;
+            font-size: 0.6rem;
             letter-spacing: 1.5px;
             text-transform: uppercase;
-            margin-bottom: 6px;
+            margin-bottom: 8px;
             opacity: 0.8;
         }
 
         .contact-item {
             display: flex;
             align-items: center;
-            gap: 6px;
-            font-size: 0.7rem;
-            margin-bottom: 4px;
+            gap: 8px;
+            font-size: 0.75rem;
+            margin-bottom: 5px;
             line-height: 1.3;
         }
 
         .skill-item {
-            font-size: 0.65rem;
-            padding: 1px 0;
+            font-size: 0.7rem;
+            padding: 2px 0;
             opacity: 0.9;
             line-height: 1.3;
         }
@@ -278,8 +277,8 @@
         }
 
         .reference-item {
-            font-size: 0.65rem;
-            margin-bottom: 6px;
+            font-size: 0.7rem;
+            margin-bottom: 8px;
             line-height: 1.3;
         }
 
@@ -295,11 +294,6 @@
             opacity: 0.7;
             font-size: 0.65rem;
         }
-
-        /* Blind mode classes for iframe injection */
-        .cv-photo-wrapper { position: relative; }
-        .cv-name {}
-        .cv-footer {}
 
         @media print {
             body {
@@ -333,7 +327,7 @@
             <label for="sidebarColor">Sidebar:</label>
             <input type="color" id="sidebarColor" value="#1e4d91">
             <label for="accentColor">Akzente:</label>
-            <input type="color" id="accentColor" value="#C8102E">
+            <input type="color" id="accentColor" value="#4aaa48">
             <button class="download-btn" onclick="downloadPDF()">
                 <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                 Als PDF herunterladen
@@ -344,11 +338,11 @@
             <div class="cv-page" id="cvPage">
                 <div class="main">
                     <h1 class="cv-name">Max Berger</h1>
-                    <div class="subtitle">VERSICHERUNGSFACHMANN (IHK) &bull; AGENTURLEITER</div>
+                    <div class="subtitle">VERSICHERUNGSFACHMANN (IHK) · AGENTURLEITER</div>
 
                     <div class="section">
                         <h2>Profil</h2>
-                        <p class="summary">Erfahrener Versicherungsvertriebsprofi mit 8 Jahren in der Allianz Ausschließlichkeitsorganisation. Nachgewiesene Führungskompetenz mit einem Team von 3 Mitarbeitern und einem Bestandsvolumen von 2,4 Mio €. Hohe Abschlussstärke mit einer Cross-Selling-Quote von 34%, deutlich über dem Branchendurchschnitt. Strategisch denkend, kundenorientiert und bereit für den nächsten Karriereschritt in der Agenturleitung.</p>
+                        <p class="summary">Erfahrener Versicherungsvertriebsprofi mit 8 Jahren in der Allianz Ausschließlichkeitsorganisation. Nachgewiesene Führungskompetenz mit einem Team von 3 Mitarbeitern und einem Bestandsvolumen von 2,4 Mio €. Cross-Selling-Quote von 34%, deutlich über dem Branchendurchschnitt. Strategisch denkend, kundenorientiert und bereit für den nächsten Karriereschritt.</p>
                     </div>
 
                     <div class="section">
@@ -356,20 +350,20 @@
 
                         <div class="exp-item">
                             <div class="role">Agenturleiter (stellv.) &amp; Teamleiter</div>
-                            <div class="meta">Allianz Generalvertretung Düsseldorf | 2021 &ndash; heute</div>
-                            <div class="desc">Leitung eines 3-köpfigen Vertriebsteams in der Ausschließlichkeitsorganisation. Verantwortung für Bestandsmanagement (2,4 Mio € Bestandsvolumen). Strategische Neukundenakquise mit Fokus auf Cross-Selling (Quote: 34%). Durchführung von Beratungsgesprächen in allen Kompositsparten, Leben und Kranken. Coaching und Einarbeitung neuer Vertriebsmitarbeiter.</div>
+                            <div class="meta">Allianz Generalvertretung Düsseldorf | 2021 – heute</div>
+                            <div class="desc">Leitung eines 3-köpfigen Vertriebsteams in der Ausschließlichkeitsorganisation. Verantwortung für Bestandsmanagement (2,4 Mio € Bestandsvolumen). Strategische Neukundenakquise mit Fokus auf Cross-Selling (Quote: 34%). Beratungsgespräche in allen Kompositsparten, Leben und Kranken.</div>
                         </div>
 
                         <div class="exp-item">
                             <div class="role">Versicherungsfachmann im Außendienst</div>
-                            <div class="meta">Allianz Generalvertretung Düsseldorf | 2018 &ndash; 2021</div>
-                            <div class="desc">Eigenverantwortliche Betreuung eines Kundenstamms von 800+ Privat- und Gewerbekunden. Bestandspflege und systematische Bedarfsanalysen. Regelmäßige Übertreffen der Vertriebsziele (Ø 115% Zielerreichung). Aufbau langfristiger Kundenbeziehungen im Raum Düsseldorf/NRW.</div>
+                            <div class="meta">Allianz Generalvertretung Düsseldorf | 2018 – 2021</div>
+                            <div class="desc">Eigenverantwortliche Betreuung von 800+ Privat- und Gewerbekunden. Systematische Bedarfsanalysen und Bestandspflege. Regelmäßiges Übertreffen der Vertriebsziele (Ø 115% Zielerreichung).</div>
                         </div>
 
                         <div class="exp-item">
                             <div class="role">Trainee Versicherungsvertrieb</div>
-                            <div class="meta">Allianz AG, Bereich AO NRW | 2016 &ndash; 2018</div>
-                            <div class="desc">18-monatiges Trainee-Programm mit Stationen in Kundenservice, Schadensbearbeitung und Vertrieb. Abschluss der IHK-Sachkundeprüfung Versicherungsfachmann §34d. Praxisnahe Ausbildung in Beratungstechniken und Verkaufsgesprächen.</div>
+                            <div class="meta">Allianz AG, Bereich AO NRW | 2016 – 2018</div>
+                            <div class="desc">18-monatiges Trainee-Programm mit Stationen in Kundenservice, Schadensbearbeitung und Vertrieb. Abschluss IHK-Sachkundeprüfung Versicherungsfachmann §34d.</div>
                         </div>
                     </div>
 
@@ -379,7 +373,7 @@
                         <div class="exp-item">
                             <div class="role">Bachelor of Arts, Betriebswirtschaftslehre</div>
                             <div class="meta">Heinrich-Heine-Universität Düsseldorf, 2016</div>
-                            <div class="desc">Schwerpunkt: Marketing &amp; Vertrieb | Abschluss: 2,1<br>Bachelorarbeit: „Digitalisierung im Versicherungsvertrieb — Chancen und Herausforderungen für den Außendienst"</div>
+                            <div class="desc">Schwerpunkt: Marketing &amp; Vertrieb | Abschluss: 2,1<br>Thesis: „Digitalisierung im Versicherungsvertrieb – Chancen und Herausforderungen für den Außendienst"</div>
                         </div>
                     </div>
 
@@ -399,16 +393,16 @@
                         </div>
                     </div>
                 </div>
-
+                
                 <div class="sidebar">
                     <div class="photo-container cv-photo-wrapper">
-                        <img class="photo cv-photo" id="cvPhoto" src="" alt="Max Berger" style="display:none;">
+                        <img class="photo cv-photo" id="cvPhoto" src="" alt="Max Berger" style="display: none;">
                         <div class="photo-placeholder" id="photoPlaceholder" onclick="document.getElementById('photoInput').click()">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="40" height="40"><circle cx="12" cy="8" r="4"></circle><path d="M4 20c0-4 4-6 8-6s8 2 8 6"></path></svg>
                             <span>Foto wählen</span>
                         </div>
                     </div>
-                    <input type="file" id="photoInput" accept="image/*" style="display:none;">
+                    <input type="file" id="photoInput" accept="image/*" style="display: none;">
 
                     <div class="sidebar-section">
                         <h3>Kontakt</h3>
@@ -466,7 +460,7 @@
                         <h3>Highlights</h3>
                         <div class="skill-item skill-with-icon">
                             <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-                            <span>Cross-Selling-Quote 34% (Branchenschnitt: 18%)</span>
+                            <span>Cross-Selling-Quote 34%</span>
                         </div>
                         <div class="skill-item skill-with-icon">
                             <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
@@ -501,6 +495,9 @@
     </div>
 
     <script>
+        // Photo as base64
+        const photoData = "";
+        
         // When loaded inside an iframe, hide controls and show CV directly
         if (window.self !== window.top) {
             document.querySelector('.header').style.display = 'none';
@@ -516,39 +513,30 @@
             document.body.style.padding = '0';
         }
 
-        // Photo upload
+        // Photo file input handler
         document.getElementById('photoInput').addEventListener('change', function(e) {
             const file = e.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = function(ev) {
-                const img = document.getElementById('cvPhoto');
-                img.src = ev.target.result;
-                img.style.display = 'block';
-            };
-            reader.readAsDataURL(file);
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const img = document.getElementById('cvPhoto');
+                    img.src = event.target.result;
+                    img.style.display = 'block';
+                    document.getElementById('photoPlaceholder').style.display = 'none';
+                };
+                reader.readAsDataURL(file);
+            }
         });
-
+        
         // Color pickers
         document.getElementById('sidebarColor').addEventListener('input', (e) => {
             document.querySelector('.sidebar').style.background = e.target.value;
         });
-
+        
         document.getElementById('accentColor').addEventListener('input', (e) => {
             document.documentElement.style.setProperty('--green', e.target.value);
             document.querySelector('.download-btn').style.background = e.target.value;
         });
-
-        // Helper: load external script
-        function loadScript(src) {
-            return new Promise((resolve, reject) => {
-                const s = document.createElement('script');
-                s.src = src;
-                s.onload = resolve;
-                s.onerror = reject;
-                document.head.appendChild(s);
-            });
-        }
 
         // PDF Download
         async function downloadPDF() {
@@ -585,9 +573,4 @@
                 alert('PDF-Erstellung fehlgeschlagen.');
             }
 
-            btn.innerHTML = '<svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Als PDF herunterladen';
-            btn.disabled = false;
-        }
-    </script>
-</body>
-</html>
+            btn.innerHTML = '<svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline poi

@@ -1120,10 +1120,7 @@ function renderHPDashboard() {
             <div class="hp-applicant-card ${applicant.status === 'rejected' ? 'rejection' : ''} ${isBlind ? 'blind' : ''}" data-region="${applicant.region}" data-score="${applicant.totalScore}" data-status="${applicant.status}" onclick="openHPDetail('${applicant.id}')">
                 <div class="hp-applicant-score ${scoreClass}">${applicant.totalScore}</div>
                 <div class="hp-applicant-info">
-                    <div style="display:flex;align-items:center;gap:var(--space-3);margin-bottom:var(--space-1);">
-                        ${!isBlind && applicant.photo ? `<img src="${applicant.photo}" alt="${applicant.name}" style="width:36px;height:36px;border-radius:50%;object-fit:cover;flex-shrink:0;">` : ''}
-                        <h4 style="margin:0">${isBlind ? 'Kandidat/in #' + applicant.id.toUpperCase() : applicant.name}</h4>
-                    </div>
+                    <h4>${isBlind ? 'Kandidat/in #' + applicant.id.toUpperCase() : applicant.name}</h4>
                     <div class="hp-applicant-location">${isBlind ? applicant.region.toUpperCase() : applicant.city + ' | ' + applicant.age + ' Jahre'}</div>
                     ${appliedPos && !isBlind ? `<div style="font-size:var(--font-xs);color:var(--text-tertiary);margin-top:var(--space-1);display:flex;align-items:center;gap:var(--space-2);flex-wrap:wrap;">
                         <span>${appliedDateFormatted}</span>

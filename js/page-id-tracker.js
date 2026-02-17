@@ -9,7 +9,6 @@
  * P = PMO Toolbox
  * R = Risikoscoring
  * T = Bestandsübertragung (Portfolio Transfer)
- * C = CV Scanner (Bewerbermanagement)
  * H = HR Pipeline (Recruiting & Bewerbermanagement)
  */
 
@@ -83,12 +82,6 @@ const PageIDTracker = {
             'slide-cv': 'T-10',            // Slide CV Scanner
             'slide-bu': 'T-11',            // Slide BÜ Ausgangslage
             'slide-plan': 'T-12'           // Slide Projektplan
-        },
-
-        // C - CV Scanner Module
-        'cv-scanner': {
-            'bewerber': 'C-01',             // Bewerber-Portal
-            'arbeitgeber': 'C-02'           // Recruiting Dashboard
         },
 
         // H - HR Pipeline Module
@@ -204,7 +197,6 @@ const PageIDTracker = {
             { id: 'pmoToolboxModule', name: 'pmo-toolbox' },
             { id: 'risikoscoringModule', name: 'risikoscoring' },
             { id: 'bestandsuebertragungModule', name: 'bestandsuebertragung' },
-            { id: 'cvScannerModule', name: 'cv-scanner' },
             { id: 'hrPipelineModule', name: 'hr-pipeline' }
         ];
 

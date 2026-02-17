@@ -20,6 +20,29 @@ let hpSelectedForCompare = new Set();
 let hpCurrentDetailApplicant = null;
 
 // ========================================
+// BLIND SCREENING HELPER
+// ========================================
+
+function anonymizeText(text, applicant) {
+    if (!text || !applicant) return text;
+    let result = text;
+    // Replace full name
+    if (applicant.name) result = result.replace(new RegExp(applicant.name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'), 'Kandidat/in');
+    // Replace last name (e.g. "Herr Berger" -> "Kandidat/in", "Frau Klein" -> "Kandidat/in")
+    const parts = (applicant.name || '').split(' ');
+    if (parts.length >= 2) {
+        const lastName = parts[parts.length - 1];
+        result = result.replace(new RegExp('(?:Herr|Frau)\\s+' + lastName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'), 'Kandidat/in');
+        result = result.replace(new RegExp(lastName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'), 'Kandidat/in');
+    }
+    // Replace city with region
+    if (applicant.city) result = result.replace(new RegExp(applicant.city.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'), applicant.region?.toUpperCase() || 'Region');
+    // Replace age
+    if (applicant.age) result = result.replace(new RegExp(applicant.age + '\\s*Jahre', 'g'), '— Jahre');
+    return result;
+}
+
+// ========================================
 // DEMO DATA - Enhanced Bewerber Profiles
 // ========================================
 
@@ -28,6 +51,7 @@ const HP_PROFILES = {
         id: 'max',
         name: 'Max Berger',
         initials: 'MB',
+        photo: 'AdobeStock_624564221.jpeg',
         age: 34,
         city: 'Düsseldorf',
         region: 'nrw',
@@ -44,7 +68,7 @@ const HP_PROFILES = {
         weaknesses: ['Keine ERGO-Erfahrung', 'Kein Fachwirt IHK'],
         scores: { vertrieb: 95, branche: 90, qualifikation: 88, standort: 92, softskills: 85 },
         totalScore: 92,
-        summary: 'Max Berger bringt 8 Jahre fundierte Vertriebserfahrung in der Allianz Ausschließlichkeitsorganisation mit. Seine IHK-Qualifikation nach §34d, nachgewiesene Führungskompetenz über 3 Mitarbeiter und ein Bestandsvolumen von 2,4 Mio € machen ihn zu einem idealen Kandidaten für die Agenturleitung. Seine Cross-Selling-Quote von 34% liegt deutlich über dem Branchendurchschnitt.',
+        summary: 'Herr Berger, Sie bringen 8 Jahre fundierte Vertriebserfahrung in der Allianz Ausschließlichkeitsorganisation mit. Ihre IHK-Qualifikation nach §34d, nachgewiesene Führungskompetenz über 3 Mitarbeiter und ein Bestandsvolumen von 2,4 Mio € machen Sie zu einem idealen Kandidaten für die Agenturleitung. Ihre Cross-Selling-Quote von 34% liegt deutlich über dem Branchendurchschnitt.',
         radarData: [95, 90, 88, 92, 85],
         waterfall: [
             { label: 'IHK Versicherungsfachmann §34d', points: 18, type: 'positive' },
@@ -104,7 +128,7 @@ const HP_PROFILES = {
         weaknesses: ['Keine Versicherungserfahrung', 'Keine IHK-Qualifikation', 'Branchenwechsel'],
         scores: { vertrieb: 65, branche: 35, qualifikation: 55, standort: 88, softskills: 82 },
         totalScore: 68,
-        summary: 'Sarah Klein ist eine motivierte Quereinsteigerin mit 4 Jahren Teamleitungserfahrung im Einzelhandel bei MediaMarkt. Ihre Führungskompetenz über 5 Mitarbeiter und ausgeprägte Kommunikationsstärke bilden eine solide Grundlage für den Versicherungsvertrieb. Die fehlende §34d-Qualifikation kann über das ERGO Trainee-Programm (6 Monate, IHK-Sachkundeprüfung inklusive) erworben werden.',
+        summary: 'Frau Klein, Sie sind eine motivierte Quereinsteigerin mit 4 Jahren Teamleitungserfahrung im Einzelhandel bei MediaMarkt. Ihre Führungskompetenz über 5 Mitarbeiter und ausgeprägte Kommunikationsstärke bilden eine solide Grundlage für den Versicherungsvertrieb. Die fehlende §34d-Qualifikation können Sie über unser ERGO Trainee-Programm (6 Monate, IHK-Sachkundeprüfung inklusive) erwerben.',
         radarData: [65, 35, 55, 88, 82],
         waterfall: [
             { label: 'Teamführung (5 MA)', points: 12, type: 'positive' },
@@ -163,7 +187,7 @@ const HP_PROFILES = {
         weaknesses: ['Keine Vertriebserfahrung', 'Keine Branchenkenntnisse', 'Keine kaufmännische Ausbildung', 'Fehlende Kundenorientierung', 'Standort ohne offene Stellen'],
         scores: { vertrieb: 10, branche: 5, qualifikation: 25, standort: 20, softskills: 35 },
         totalScore: 31,
-        summary: 'Thomas Wendt verfügt über 20 Jahre Erfahrung in der Kommunalverwaltung, jedoch ohne jeglichen Bezug zum Vertrieb oder zur Versicherungsbranche. Es fehlen grundlegende Voraussetzungen wie §34d-Qualifikation, Vertriebserfahrung und Kundenorientierung. Der Standort Flensburg bietet aktuell keine offenen Positionen. Eine direkte Empfehlung ist nicht möglich — das Quereinsteiger-Programm wäre der einzige Einstiegspfad.',
+        summary: 'Herr Wendt, Sie verfügen über 20 Jahre Erfahrung in der Kommunalverwaltung, jedoch ohne Bezug zum Vertrieb oder zur Versicherungsbranche. Ihnen fehlen grundlegende Voraussetzungen wie §34d-Qualifikation, Vertriebserfahrung und Kundenorientierung. Ihr Standort Flensburg bietet aktuell keine offenen Positionen. Unser Quereinsteiger-Programm wäre für Sie der einzige Einstiegspfad.',
         radarData: [10, 5, 25, 20, 35],
         rejected: true,
         rejectionText: 'Auf Basis Ihres Profils können wir Ihnen derzeit leider keine passende Vertriebsposition empfehlen. Es fehlen grundlegende Voraussetzungen: keine Vertriebserfahrung, keine §34d-Qualifikation, keine Branchenkenntnisse im Versicherungsbereich.',
@@ -207,14 +231,14 @@ const HP_PROFILES = {
 // ========================================
 
 const HP_POSITIONS = [
-    { id: 1, title: 'Agenturleiter', city: 'Düsseldorf', region: 'nrw', type: 'Führung', requirements: 'Fachwirt IHK (min.), §34d, 5+ Jahre AO-Vertrieb, Führungserfahrung, Portfoliomanagement' },
-    { id: 2, title: 'Vertriebsspezialist Leben', city: 'Köln', region: 'nrw', type: 'Spezialist', requirements: 'IHK §34d, Erfahrung Lebensversicherung/bAV, Beratungskompetenz' },
-    { id: 3, title: 'Maklerbetreuer', city: 'Essen', region: 'nrw', type: 'Betreuung', requirements: 'Spartenübergreifende Produktkenntnis, B2B-Erfahrung, Courtage-Verständnis' },
-    { id: 4, title: 'Ausschließlichkeitsvermittler', city: 'Dortmund', region: 'nrw', type: 'Vertrieb', requirements: 'IHK §34d (min. Sachkundeprüfung), Vertriebsaffinität, Eigeninitiative' },
-    { id: 5, title: 'Trainee Vertrieb', city: 'Köln', region: 'nrw', type: 'Einstieg', requirements: 'Vertriebsaffinität, Kommunikationsstärke, Lernbereitschaft — IHK §34d wird im Programm erworben' },
-    { id: 6, title: 'Vertriebspartner Sach/HUK', city: 'Bonn', region: 'nrw', type: 'Vertrieb', requirements: 'IHK §34d, Erfahrung Sachversicherung, Bedarfsanalyse-Kompetenz' },
-    { id: 7, title: 'Bezirksdirektor', city: 'Münster', region: 'nrw', type: 'Führung', requirements: 'Fachwirt/Betriebswirt DVA, 8+ Jahre Vertrieb, Führung >5 MA, strategisches Denken' },
-    { id: 8, title: 'Kundenberater Innendienst', city: 'Hamburg', region: 'nord', type: 'Beratung', requirements: 'Kaufm. Ausbildung, Kommunikationsstärke, Versicherungskenntnisse' }
+    { id: 1, title: 'Agenturleiter', city: 'Düsseldorf', region: 'nrw', type: 'Führung', requirements: 'Fachwirt IHK (min.), §34d, 5+ Jahre AO-Vertrieb, Führungserfahrung, Portfoliomanagement', description: 'Als Agenturleiter/in übernehmen Sie die Verantwortung für eine eigenständige ERGO Versicherungsagentur in Düsseldorf. Sie führen ein Team von Vertriebsmitarbeitern, entwickeln Vertriebsstrategien und bauen den Kundenbestand in Ihrer Region systematisch aus.\n\nIhre Aufgaben:\n- Eigenverantwortliche Leitung einer ERGO Agentur mit Umsatzverantwortung\n- Führung, Motivation und Entwicklung eines Teams von 3-5 Vertriebsmitarbeitern\n- Akquise von Neukunden und Ausbau des Bestandskundengeschäfts\n- Durchführung von Bedarfsanalysen und ganzheitliche Kundenberatung über alle Sparten\n- Umsetzung regionaler Vertriebskampagnen und Marktbearbeitung\n\nWas wir erwarten:\n- Mindestens 5 Jahre Erfahrung im Versicherungsvertrieb (AO oder Makler)\n- IHK-Qualifikation nach §34d GewO, idealerweise Fachwirt für Versicherungen\n- Nachgewiesene Führungserfahrung und unternehmerisches Denken\n- Ausgeprägte Akquise-Stärke und Bestandsmanagement-Kompetenz', benefits: ['Attraktives Fixgehalt + Provision', 'Firmenwagen auch zur privaten Nutzung', 'Betriebliche Altersvorsorge', 'Weiterbildungsmöglichkeiten (DVA)', 'Eigenständige Agenturführung'] },
+    { id: 2, title: 'Vertriebsspezialist Leben', city: 'Köln', region: 'nrw', type: 'Spezialist', requirements: 'IHK §34d, Erfahrung Lebensversicherung/bAV, Beratungskompetenz', description: 'Als Vertriebsspezialist/in Leben beraten Sie anspruchsvolle Kunden zu Lebensversicherungen, betrieblicher Altersvorsorge und biometrischen Risiken. Sie sind die fachliche Ansprechperson für unsere Agenturen in der Region Köln.\n\nIhre Aufgaben:\n- Spezialisierte Beratung in den Bereichen Lebensversicherung, bAV und Biometrie\n- Fachliche Unterstützung der ERGO Agenturen bei komplexen Beratungsfällen\n- Durchführung von Firmenkunden-Präsentationen zur betrieblichen Altersvorsorge\n- Entwicklung individueller Vorsorgekonzepte für gehobene Privatkunden\n- Schulung und Coaching von Vertriebspartnern im Bereich Leben\n\nWas wir erwarten:\n- IHK-Qualifikation nach §34d und fundierte Erfahrung in der Lebensversicherung\n- Sehr gute Kenntnisse in bAV, Biometrie und Altersvorsorge\n- Beratungskompetenz und sicheres Auftreten bei Firmenkunden\n- Analytisches Denkvermögen und Freude an komplexen Beratungssituationen', benefits: ['Überdurchschnittliche Vergütung', 'Fachkarriere-Perspektive', 'Firmenwagen', 'Umfangreiche Weiterbildung', 'Flexible Arbeitszeiten'] },
+    { id: 3, title: 'Maklerbetreuer', city: 'Essen', region: 'nrw', type: 'Betreuung', requirements: 'Spartenübergreifende Produktkenntnis, B2B-Erfahrung, Courtage-Verständnis', description: 'Als Maklerbetreuer/in sind Sie die zentrale Schnittstelle zwischen ERGO und unseren Versicherungsmaklern in der Region Essen/Ruhrgebiet. Sie pflegen bestehende Maklerbeziehungen und gewinnen neue Partner für den ERGO Maklervertrieb.\n\nIhre Aufgaben:\n- Betreuung und Ausbau eines Maklerportfolios von ca. 80-120 Maklern\n- Akquise neuer Maklerpartner und Aufbau langfristiger Geschäftsbeziehungen\n- Spartenübergreifende Produktberatung und Angebotserstellung\n- Durchführung von Maklerschulungen und Produktpräsentationen\n- Courtage-Management und Vertragsverhandlungen\n\nWas wir erwarten:\n- Spartenübergreifende Produktkenntnis im Versicherungsbereich\n- Erfahrung im B2B-Vertrieb, idealerweise im Maklergeschäft\n- Ausgeprägte Netzwerk-Fähigkeiten und Verhandlungsgeschick\n- Verständnis für Courtage-Modelle und Makleranforderungen', benefits: ['Attraktives Grundgehalt + Bonus', 'Firmenwagen', 'Home-Office-Möglichkeit', 'Betriebliche Altersvorsorge', 'Netzwerk-Events'] },
+    { id: 4, title: 'Ausschließlichkeitsvermittler', city: 'Dortmund', region: 'nrw', type: 'Vertrieb', requirements: 'IHK §34d (min. Sachkundeprüfung), Vertriebsaffinität, Eigeninitiative', description: 'Als Ausschließlichkeitsvermittler/in vertreten Sie die ERGO exklusiv in Dortmund und Umgebung. Sie beraten Privat- und Gewerbekunden umfassend zu allen Versicherungs- und Vorsorgeprodukten der ERGO Gruppe.\n\nIhre Aufgaben:\n- Ganzheitliche Beratung von Privat- und Gewerbekunden\n- Aktive Neukundenakquise und systematischer Bestandsaufbau\n- Cross-Selling über alle ERGO Produktsparten\n- Schadenservice und Kundenbetreuung als persönlicher Ansprechpartner\n- Teilnahme an regionalen Vertriebsaktionen und Messen\n\nWas wir erwarten:\n- IHK-Sachkundeprüfung §34d oder vergleichbare Qualifikation\n- Hohe Vertriebsaffinität und Eigeninitiative\n- Kundenorientierung und Beratungskompetenz\n- Unternehmerisches Denken und Selbstständigkeit', benefits: ['Leistungsgerechte Provision', 'Bestandssicherung', 'Umfassende Produktpalette', 'Marketing-Unterstützung', 'ERGO Markenbekanntheit'] },
+    { id: 5, title: 'Trainee Vertrieb', city: 'Köln', region: 'nrw', type: 'Einstieg', requirements: 'Vertriebsaffinität, Kommunikationsstärke, Lernbereitschaft — IHK §34d wird im Programm erworben', description: 'Unser Trainee-Programm bietet Ihnen den idealen Einstieg in den Versicherungsvertrieb bei ERGO. In 6 Monaten werden Sie systematisch auf Ihre zukünftige Rolle als Vertriebspartner vorbereitet — inklusive IHK-Sachkundeprüfung.\n\nIhre Aufgaben:\n- Teilnahme am strukturierten Ausbildungsprogramm (Theorie und Praxis)\n- Begleitung erfahrener Vertriebspartner im Tagesgeschäft\n- Erwerb der IHK-Sachkundeprüfung §34d (Kosten werden übernommen)\n- Erste eigene Kundenberatungen unter Anleitung eines Mentors\n- Aufbau eines eigenen Kundenportfolios ab dem 4. Monat\n\nWas wir erwarten:\n- Ausgeprägte Vertriebsaffinität und Kommunikationsstärke\n- Hohe Lernbereitschaft und Eigeninitiative\n- Abgeschlossene kaufmännische Ausbildung oder vergleichbar\n- Freude am Umgang mit Menschen und Beratungssituationen', benefits: ['Garantierte Vergütung während der Ausbildung', 'IHK-Prüfung inklusive', 'Persönlicher Mentor', 'Übernahmegarantie bei Erfolg', 'Karriereperspektive Agenturleitung'] },
+    { id: 6, title: 'Vertriebspartner Sach/HUK', city: 'Bonn', region: 'nrw', type: 'Vertrieb', requirements: 'IHK §34d, Erfahrung Sachversicherung, Bedarfsanalyse-Kompetenz', description: 'Als Vertriebspartner/in Sach/HUK sind Sie spezialisiert auf Sachversicherungen, Haftpflicht-, Unfall- und Kfz-Versicherungen. Sie beraten Privat- und Gewerbekunden in Bonn und Umgebung.\n\nIhre Aufgaben:\n- Beratung und Verkauf von Sach-, Haftpflicht-, Unfall- und Kfz-Versicherungen\n- Durchführung von Bedarfsanalysen und Deckungskonzepten\n- Betreuung und Ausbau eines bestehenden Kundenportfolios\n- Schadenmanagement und Unterstützung bei der Schadenregulierung\n- Cross-Selling in weitere ERGO Produktsparten\n\nWas wir erwarten:\n- IHK-Qualifikation nach §34d GewO\n- Erfahrung im Bereich Sachversicherung und Kompositgeschäft\n- Kompetenz in der Bedarfsanalyse und Risikoeinschätzung\n- Kundenorientierung und serviceorientiertes Arbeiten', benefits: ['Attraktive Provisionsregelung', 'Bestandsübernahme möglich', 'Digitale Beratungstools', 'Weiterbildungsangebote', 'Betriebliche Altersvorsorge'] },
+    { id: 7, title: 'Bezirksdirektor', city: 'Münster', region: 'nrw', type: 'Führung', requirements: 'Fachwirt/Betriebswirt DVA, 8+ Jahre Vertrieb, Führung >5 MA, strategisches Denken', description: 'Als Bezirksdirektor/in übernehmen Sie die strategische und operative Verantwortung für mehrere ERGO Agenturen in der Region Münster/Münsterland. Sie steuern den Vertrieb, entwickeln Ihre Führungskräfte und verantworten die Zielerreichung Ihres Bezirks.\n\nIhre Aufgaben:\n- Strategische Leitung eines Vertriebsbezirks mit mehreren Agenturen\n- Führung und Entwicklung von Agenturleitern und Vertriebspartnern\n- Verantwortung für Umsatz-, Bestands- und Neugeschäftsziele\n- Rekrutierung und Onboarding neuer Vertriebspartner\n- Regionale Marktanalyse und Entwicklung von Vertriebsstrategien\n\nWas wir erwarten:\n- Mindestens 8 Jahre Erfahrung im Versicherungsvertrieb\n- Nachgewiesene Führungserfahrung über mindestens 5 Mitarbeiter\n- Fachwirt oder Betriebswirt DVA (oder vergleichbar)\n- Strategisches Denkvermögen und unternehmerische Kompetenz', benefits: ['Überdurchschnittliches Fixgehalt + Tantiemen', 'Firmenwagen der Oberklasse', 'Betriebliche Altersvorsorge', 'Managemententwicklungsprogramm', 'Breiter Gestaltungsspielraum'] },
+    { id: 8, title: 'Kundenberater Innendienst', city: 'Hamburg', region: 'nord', type: 'Beratung', requirements: 'Kaufm. Ausbildung, Kommunikationsstärke, Versicherungskenntnisse', description: 'Als Kundenberater/in im Innendienst sind Sie die erste Ansprechperson für unsere Kunden in Hamburg. Sie beraten telefonisch und digital zu allen Versicherungsfragen und unterstützen unsere Agenturen im Tagesgeschäft.\n\nIhre Aufgaben:\n- Telefonische und digitale Kundenberatung zu allen Versicherungssparten\n- Bearbeitung von Kundenanfragen, Vertragsänderungen und Angebotserstellung\n- Unterstützung der Außendienst-Agenturen bei Serviceanliegen\n- Terminvereinbarung und Vorbereitung für Beratungsgespräche\n- Dokumentation und Pflege der Kundendaten im CRM-System\n\nWas wir erwarten:\n- Abgeschlossene kaufmännische Ausbildung, idealerweise Versicherungskaufmann/-frau\n- Ausgeprägte Kommunikationsstärke und Serviceorientierung\n- Grundlegende Versicherungskenntnisse\n- Sicherer Umgang mit digitalen Tools und CRM-Systemen', benefits: ['Festes Gehalt mit Bonuskomponente', 'Flexible Arbeitszeiten', 'Home-Office möglich', 'Betriebliche Altersvorsorge', '30 Tage Urlaub'] }
 ];
 
 const HP_DISTANCES = {
@@ -257,11 +281,11 @@ function getHPMatchBadges(profile, position) {
 // ========================================
 
 const HP_ALL_APPLICANTS = [
-    { ...HP_PROFILES.max, status: 'recommended' },
-    { ...HP_PROFILES.sarah, status: 'review' },
-    { ...HP_PROFILES.thomas, status: 'rejected' },
+    { ...HP_PROFILES.max, status: 'recommended', appliedDate: '2026-02-03', appliedPositionId: 1 },
+    { ...HP_PROFILES.sarah, status: 'review', appliedDate: '2026-02-07', appliedPositionId: 5 },
+    { ...HP_PROFILES.thomas, status: 'rejected', appliedDate: '2026-01-22', appliedPositionId: 4 },
     {
-        id: 'julia', name: 'Julia Hoffmann', initials: 'JH', age: 31, city: 'Essen', region: 'nrw',
+        id: 'julia', name: 'Julia Hoffmann', initials: 'JH', age: 31, city: 'Essen', region: 'nrw', appliedDate: '2026-02-10', appliedPositionId: 3,
         experience: '5 Jahre Maklertätigkeit (HDI)', experienceYears: 5,
         education: 'BWL-Studium, IHK Versicherungsfachfrau, Fachwirt i.A.',
         skills: ['Maklerbetreuung', 'Verhandlung', 'Führungserfahrung', 'Courtage-Management'],
@@ -274,7 +298,7 @@ const HP_ALL_APPLICANTS = [
         weaknesses: ['Kein Außendienst-Erfahrung'],
         scores: { vertrieb: 85, branche: 88, qualifikation: 90, standort: 85, softskills: 80 },
         totalScore: 88, status: 'recommended',
-        summary: 'Erfahrene Versicherungsmaklerin mit IHK-Qualifikation bei HDI. Fachwirt in Arbeit. Ideal für Maklerbetreuung.',
+        summary: 'Frau Hoffmann, Sie bringen 5 Jahre Erfahrung im HDI-Maklervertrieb mit IHK-Qualifikation mit. Ihr Fachwirt in Arbeit und Ihre Führungserfahrung machen Sie zur idealen Kandidatin für die Maklerbetreuung.',
         waterfall: [
             { label: 'IHK Versicherungsfachfrau §34d', points: 18, type: 'positive' },
             { label: '5 Jahre HDI Maklervertrieb', points: 15, type: 'positive' },
@@ -301,7 +325,7 @@ const HP_ALL_APPLICANTS = [
         }
     },
     {
-        id: 'markus', name: 'Markus Scholz', initials: 'MS', age: 38, city: 'Bonn', region: 'nrw',
+        id: 'markus', name: 'Markus Scholz', initials: 'MS', age: 38, city: 'Bonn', region: 'nrw', appliedDate: '2026-02-12', appliedPositionId: 6,
         experience: '6 Jahre Bankvertrieb (Sparkasse), §34f', experienceYears: 6,
         education: 'Bankkaufmann, Weiterbildung Finanzberatung, §34f GewO',
         skills: ['Finanzberatung', 'Kundenakquise', 'Cross-Selling', 'Anlageberatung'],
@@ -314,7 +338,7 @@ const HP_ALL_APPLICANTS = [
         weaknesses: ['Keine direkte Versicherungserfahrung', 'Keine §34d'],
         scores: { vertrieb: 82, branche: 65, qualifikation: 78, standort: 80, softskills: 78 },
         totalScore: 84, status: 'recommended',
-        summary: 'Erfahrener Bankberater mit §34f und starkem Vertriebshintergrund. Quereinsteiger aus dem Finanzbereich.',
+        summary: 'Herr Scholz, Sie verfügen über 6 Jahre Bankvertriebserfahrung bei der Sparkasse und eine §34f-Qualifikation. Ihr starker Vertriebshintergrund qualifiziert Sie hervorragend als Quereinsteiger in den Versicherungsvertrieb.',
         waterfall: [
             { label: '§34f GewO (Finanzanlagen)', points: 12, type: 'positive' },
             { label: '6 Jahre Bankvertrieb', points: 14, type: 'positive' },
@@ -341,7 +365,7 @@ const HP_ALL_APPLICANTS = [
         }
     },
     {
-        id: 'anna', name: 'Anna Weber', initials: 'AW', age: 26, city: 'Dortmund', region: 'nrw',
+        id: 'anna', name: 'Anna Weber', initials: 'AW', age: 26, city: 'Dortmund', region: 'nrw', appliedDate: '2026-02-14', appliedPositionId: 5,
         experience: '2 Jahre Kundenservice (Telekom)', experienceYears: 2,
         education: 'Kauffrau für Büromanagement',
         skills: ['Kundenservice', 'Kommunikation', 'Problemlösung'],
@@ -350,7 +374,7 @@ const HP_ALL_APPLICANTS = [
         weaknesses: ['Wenig Vertriebserfahrung', 'Keine Branchenkenntnisse', 'Kurze Berufserfahrung'],
         scores: { vertrieb: 45, branche: 20, qualifikation: 50, standort: 78, softskills: 72 },
         totalScore: 62, status: 'review',
-        summary: 'Junge Berufseinsteigerin mit Kundenservice-Erfahrung. Potenzial vorhanden, aber wenig Vertriebserfahrung.',
+        summary: 'Frau Weber, Sie bringen Kundenservice-Erfahrung und Kommunikationsstärke mit. Für Ihren Einstieg in den Versicherungsvertrieb empfehlen wir Ihnen unser Trainee-Programm, um Ihre Vertriebskompetenz gezielt aufzubauen.',
         waterfall: [
             { label: 'Kaufmännische Ausbildung', points: 8, type: 'positive' },
             { label: 'Kundenservice-Erfahrung', points: 7, type: 'positive' },
@@ -362,7 +386,7 @@ const HP_ALL_APPLICANTS = [
         counterfactual: 'ERGO Trainee-Programm (6 Monate) würde Score von 62 auf 78 steigern.'
     },
     {
-        id: 'peter', name: 'Peter Müller', initials: 'PM', age: 45, city: 'Köln', region: 'nrw',
+        id: 'peter', name: 'Peter Müller', initials: 'PM', age: 45, city: 'Köln', region: 'nrw', appliedDate: '2026-01-28', appliedPositionId: 4,
         experience: '12 Jahre Außendienst (verschiedene Branchen)', experienceYears: 12,
         education: 'Industriekaufmann',
         skills: ['Außendienst', 'Neukundengewinnung', 'Verhandlung', 'Key Account'],
@@ -371,7 +395,7 @@ const HP_ALL_APPLICANTS = [
         weaknesses: ['Keine Versicherungsbranche', 'Häufige Arbeitgeberwechsel'],
         scores: { vertrieb: 78, branche: 30, qualifikation: 55, standort: 85, softskills: 75 },
         totalScore: 72, status: 'review',
-        summary: 'Erfahrener Außendienstler mit starker Akquise-Leistung. Branchenwechsel aus Industrie möglich.',
+        summary: 'Herr Müller, Sie verfügen über starke Akquise-Erfahrung im Außendienst. Ihre Vertriebskompetenz lässt sich gut auf den Versicherungsbereich übertragen — die IHK-Sachkundeprüfung §34d wäre Ihr nächster Schritt.',
         waterfall: [
             { label: '12 Jahre Außendienst', points: 14, type: 'positive' },
             { label: 'Neukundengewinnung', points: 10, type: 'positive' },
@@ -383,7 +407,7 @@ const HP_ALL_APPLICANTS = [
         counterfactual: 'IHK-Sachkundeprüfung §34d (3 Monate) + stabile Vertragslaufzeit → Score 72 auf 85.'
     },
     {
-        id: 'lisa', name: 'Lisa Krause', initials: 'LK', age: 24, city: 'Düsseldorf', region: 'nrw',
+        id: 'lisa', name: 'Lisa Krause', initials: 'LK', age: 24, city: 'Düsseldorf', region: 'nrw', appliedDate: '2026-02-15', appliedPositionId: 5,
         experience: '1 Jahr Praktikum Versicherung (R+V)', experienceYears: 1,
         education: 'BWL-Studium (Bachelor), laufend IHK §34d',
         skills: ['Versicherungswissen', 'Analyse', 'Digital affin'],
@@ -392,7 +416,7 @@ const HP_ALL_APPLICANTS = [
         weaknesses: ['Nur Praktikumserfahrung', 'Berufsanfängerin'],
         scores: { vertrieb: 35, branche: 55, qualifikation: 65, standort: 90, softskills: 70 },
         totalScore: 65, status: 'review',
-        summary: 'Berufsanfängerin mit Versicherungspraktikum bei R+V und laufender IHK-Qualifikation. Hohes Potenzial.',
+        summary: 'Frau Krause, Sie befinden sich auf einem guten Weg mit Ihrem laufenden IHK-Sachkundenachweis und dem Versicherungspraktikum bei R+V. Nach Abschluss Ihrer Qualifikation stehen Ihnen attraktive Einstiegsmöglichkeiten offen.',
         waterfall: [
             { label: 'BWL-Studium (DQR 6)', points: 10, type: 'positive' },
             { label: 'R+V Praktikum', points: 8, type: 'positive' },
@@ -404,7 +428,7 @@ const HP_ALL_APPLICANTS = [
         counterfactual: 'Nach IHK §34d Abschluss (Q2 2026) und 1 Jahr Berufserfahrung → Score 65 auf 82.'
     },
     {
-        id: 'frank', name: 'Frank Bergmann', initials: 'FB', age: 48, city: 'Hamburg', region: 'nord',
+        id: 'frank', name: 'Frank Bergmann', initials: 'FB', age: 48, city: 'Hamburg', region: 'nord', appliedDate: '2026-01-15', appliedPositionId: 8,
         experience: 'Keine relevante Erfahrung, zuletzt Lagerlogistik', experienceYears: 0,
         education: 'Hauptschulabschluss, Ausbildung Lagerfachkraft',
         skills: ['Logistik', 'Organisation'],
@@ -413,7 +437,7 @@ const HP_ALL_APPLICANTS = [
         weaknesses: ['Keine Vertriebserfahrung', 'Keine relevante Qualifikation', 'Lücken im Lebenslauf', 'Fehlende Nachweise'],
         scores: { vertrieb: 10, branche: 5, qualifikation: 15, standort: 45, softskills: 30 },
         totalScore: 38, status: 'rejected',
-        summary: 'Bewerber ohne Vertriebserfahrung und ohne relevante Qualifikation. Erhebliche Lücken im Lebenslauf.',
+        summary: 'Herr Bergmann, Ihr Profil weist derzeit keine Vertriebserfahrung und keine versicherungsrelevante Qualifikation auf. Wir empfehlen Ihnen, zunächst grundlegende Vertriebserfahrung zu sammeln und die IHK-Sachkundeprüfung §34d anzustreben.',
         waterfall: [
             { label: 'Zuverlässigkeit', points: 4, type: 'positive' },
             { label: 'Keine Vertriebserfahrung', points: -18, type: 'negative' },
@@ -424,7 +448,7 @@ const HP_ALL_APPLICANTS = [
         counterfactual: 'Quereinsteiger-Programm + Standort Hamburg → Score 38 auf maximal 55.'
     },
     {
-        id: 'sabine', name: 'Sabine Richter', initials: 'SR', age: 35, city: 'Bremen', region: 'nord',
+        id: 'sabine', name: 'Sabine Richter', initials: 'SR', age: 35, city: 'Bremen', region: 'nord', appliedDate: '2026-02-01', appliedPositionId: 4,
         experience: '3 Jahre Gastgewerbe, danach 2 Jahre arbeitslos', experienceYears: 3,
         education: 'Realschulabschluss',
         skills: ['Gastronomie', 'Kundenumgang'],
@@ -433,7 +457,7 @@ const HP_ALL_APPLICANTS = [
         weaknesses: ['Keine Vertriebserfahrung', 'Keine kaufm. Qualifikation', 'Beschäftigungslücke', 'Fehlende Weiterbildungen'],
         scores: { vertrieb: 20, branche: 5, qualifikation: 15, standort: 35, softskills: 45 },
         totalScore: 42, status: 'rejected',
-        summary: 'Bewerberin mit Gastgewerbe-Hintergrund und Beschäftigungslücke. Keine vertriebsrelevante Qualifikation.',
+        summary: 'Frau Richter, Sie bringen Erfahrung aus dem Gastgewerbe mit. Für eine Tätigkeit im Versicherungsvertrieb empfehlen wir Ihnen unser Quereinsteiger-Programm mit integrierter IHK-Sachkundeprüfung §34d.',
         waterfall: [
             { label: 'Kundenumgang', points: 5, type: 'positive' },
             { label: 'Belastbarkeit', points: 3, type: 'positive' },
@@ -443,6 +467,48 @@ const HP_ALL_APPLICANTS = [
             { label: 'Keine Weiterbildungen', points: -5, type: 'negative' }
         ],
         counterfactual: 'Quereinsteiger-Programm → Score 42 auf ca. 58. Zusätzliche kaufm. Qualifikation nötig.'
+    },
+    {
+        id: 'chen', name: 'Wei Chen', initials: 'WC', age: 29, city: 'Berlin', region: 'berlin', appliedDate: '2026-02-16', appliedPositionId: 2,
+        experience: '3 Jahre Versicherungsvertrieb (Ping An, China)', experienceYears: 3,
+        education: 'MBA Finance, University of Shanghai',
+        skills: ['Finanzanalyse', 'Vertrieb', 'Data Analytics', 'Kundenberatung'],
+        certifications: ['MBA Finance (Shanghai)', 'Insurance License (China)'],
+        insuranceFlags: {
+            green: ['3J Versicherungserfahrung (Ping An)', 'MBA Finance', 'Analytische Stärke'],
+            red: ['KO: Keine Deutschkenntnisse', 'Keine deutsche §34d', 'Keine IDD-Weiterbildung', 'Ausländische Qualifikation nicht anerkannt']
+        },
+        strengths: ['3J Versicherungserfahrung', 'MBA Finance', 'Analytische Kompetenz', 'Englisch verhandlungssicher'],
+        weaknesses: ['KO: Keine Deutschkenntnisse', 'Keine deutsche §34d Qualifikation', 'Qualifikation nicht anerkannt', 'Keine IDD-Weiterbildung'],
+        scores: { vertrieb: 55, branche: 40, qualifikation: 20, standort: 60, softskills: 50 },
+        totalScore: 38, status: 'rejected',
+        koKriterium: 'Keine Deutschkenntnisse — Für Versicherungsvertrieb in Deutschland sind Deutschkenntnisse (mind. B2) zwingend erforderlich.',
+        summary: 'Herr Chen, Sie verfügen über internationale Versicherungserfahrung (Ping An, China) und einen MBA Finance. Jedoch liegt ein KO-Kriterium vor: Keine Deutschkenntnisse. Für kundennahen Versicherungsvertrieb in Deutschland sind Deutschkenntnisse (mindestens B2) zwingend erforderlich. Empfehlung: Ablehnung. Bei Erwerb von Deutschkenntnissen (B2+) und IHK §34d ist eine erneute Prüfung möglich.',
+        waterfall: [
+            { label: '3J Versicherungserfahrung (Ping An)', points: 10, type: 'positive' },
+            { label: 'MBA Finance', points: 8, type: 'positive' },
+            { label: 'Analytische Kompetenz', points: 5, type: 'positive' },
+            { label: 'KO: Keine Deutschkenntnisse', points: -30, type: 'negative' },
+            { label: 'Keine deutsche §34d', points: -15, type: 'negative' },
+            { label: 'Qualifikation nicht anerkannt', points: -10, type: 'negative' },
+            { label: 'Keine IDD-Weiterbildung', points: -5, type: 'negative' }
+        ],
+        counterfactual: 'Bei Erwerb von Deutschkenntnissen (B2+) und Bestehen der IHK §34d-Prüfung könnte der Score von 38 auf ca. 72 steigen.',
+        interviewQuestions: {
+            background: [{ q: 'Beschreiben Sie Ihre Erfahrung bei Ping An Insurance in China.', why: 'Verifizierung der internationalen Versicherungserfahrung' }],
+            behavioral: [{ q: 'Wie haben Sie in der Vergangenheit Sprachbarrieren im Kundenkontakt überwunden?', why: 'Umgang mit der Hauptschwäche' }],
+            technical: [{ q: 'Welche Unterschiede sehen Sie zwischen dem chinesischen und deutschen Versicherungsmarkt?', why: 'Marktverständnis und Anpassungsfähigkeit' }]
+        },
+        skillGap: {
+            dimensions: [
+                { label: 'Regulatorik', current: 15, required: 80 },
+                { label: 'Vertriebserfahrung', current: 55, required: 85 },
+                { label: 'Spartenkenntnis', current: 30, required: 75 },
+                { label: 'Digital-Kompetenz', current: 75, required: 80 },
+                { label: 'Sprachkompetenz', current: 10, required: 90 }
+            ],
+            training: 'Voraussetzungen für erneute Prüfung: 1) Deutsch B2-Zertifikat (Goethe-Institut, ca. 12 Monate), 2) IHK §34d Sachkundeprüfung, 3) Anerkennung ausländischer Qualifikation.'
+        }
     }
 ];
 
@@ -701,7 +767,7 @@ async function openHRPipeline() {
     if (landingPage) landingPage.style.display = 'none';
     const mainApp = document.getElementById('mainApp');
     if (mainApp) mainApp.style.display = 'none';
-    ['bankenModule', 'risikoscoringModule', 'bestandsuebertragungModule', 'pmoToolboxModule', 'cvScannerModule'].forEach(id => {
+    ['bankenModule', 'risikoscoringModule', 'bestandsuebertragungModule', 'pmoToolboxModule'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.style.display = 'none';
     });
@@ -772,15 +838,15 @@ function switchHPMode(mode) {
             renderHPDashboard();
             setTimeout(() => { animateHPKPICounters(); drawHPSparklines(); }, 100);
         }
-        // Auto-expand chat in employer mode
-        setTimeout(() => {
-            const chatWindow = document.getElementById('hpChatWindow');
-            if (chatWindow && !chatWindow.classList.contains('open')) {
-                hpChatOpen = true;
-                chatWindow.classList.add('open');
-            }
-        }, 300);
     }
+    // Auto-expand chat on mode switch
+    setTimeout(() => {
+        const chatWindow = document.getElementById('hpChatWindow');
+        if (chatWindow && !chatWindow.classList.contains('open')) {
+            hpChatOpen = true;
+            chatWindow.classList.add('open');
+        }
+    }, 300);
     initHPChat();
     document.dispatchEvent(new CustomEvent('moduleChanged', { detail: { module: 'hr-pipeline', view: mode } }));
 }
@@ -855,7 +921,7 @@ function renderHPProfileCard(profile) {
 
     card.innerHTML = `
         <div class="hp-profile-header">
-            <div class="hp-profile-avatar-large">${profile.initials}</div>
+            ${profile.photo ? `<img src="${profile.photo}" alt="${profile.name}" class="hp-profile-avatar-large" style="width:56px;height:56px;border-radius:50%;object-fit:cover;">` : `<div class="hp-profile-avatar-large">${profile.initials}</div>`}
             <div class="hp-profile-info">
                 <h2>${profile.name}</h2>
                 <div class="hp-profile-meta">
@@ -971,7 +1037,7 @@ function renderHPMatchCard(match, idx) {
     const circumference = Math.round(2 * Math.PI * 24);
     const offset = Math.round(circumference * (1 - match.score / 100));
     return `
-        <div class="hp-match-card ${match.recommended ? 'recommended' : ''}">
+        <div class="hp-match-card ${match.recommended ? 'recommended' : ''}" onclick="openHPJobDetail(${match.position.id})">
             <div class="hp-match-card-header">
                 <div class="hp-match-title-area">
                     <div class="hp-match-title">
@@ -989,7 +1055,7 @@ function renderHPMatchCard(match, idx) {
                 </div>
             </div>
             <div class="hp-match-badges">${match.badges.map(b => `<span class="hp-match-badge ${b.color}">${b.text}</span>`).join('')}</div>
-            <button class="hp-match-expand-btn" onclick="toggleHPMatchDetails(${idx})">
+            <button class="hp-match-expand-btn" onclick="event.stopPropagation(); toggleHPMatchDetails(${idx})">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="6 9 12 15 18 9"></polyline></svg>
                 Details anzeigen
             </button>
@@ -1047,19 +1113,28 @@ function renderHPDashboard() {
         const scoreClass = applicant.totalScore >= 80 ? 'high' : applicant.totalScore >= 60 ? 'mid' : 'low';
         const statusLabel = applicant.status === 'recommended' ? 'Empfohlen' : applicant.status === 'review' ? 'Prüfen' : 'Ablehnung empfohlen';
         const isBlind = hpBlindScreening;
+        const appliedPos = applicant.appliedPositionId ? HP_POSITIONS.find(p => p.id === applicant.appliedPositionId) : null;
+        const appliedDateFormatted = applicant.appliedDate ? new Date(applicant.appliedDate).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' }) : '';
 
         return `
             <div class="hp-applicant-card ${applicant.status === 'rejected' ? 'rejection' : ''} ${isBlind ? 'blind' : ''}" data-region="${applicant.region}" data-score="${applicant.totalScore}" data-status="${applicant.status}" onclick="openHPDetail('${applicant.id}')">
                 <input type="checkbox" class="hp-compare-check" onclick="event.stopPropagation(); toggleHPCompareCandidate('${applicant.id}')" ${hpSelectedForCompare.has(applicant.id) ? 'checked' : ''} title="Zum Vergleich auswählen">
                 <div class="hp-applicant-score ${scoreClass}">${applicant.totalScore}</div>
+                ${!isBlind && applicant.photo ? `<img src="${applicant.photo}" alt="${applicant.name}" style="width:48px;height:48px;border-radius:50%;object-fit:cover;flex-shrink:0;">` : ''}
                 <div class="hp-applicant-info">
                     <h4>${isBlind ? 'Kandidat/in #' + applicant.id.toUpperCase() : applicant.name}</h4>
                     <div class="hp-applicant-location">${isBlind ? applicant.region.toUpperCase() : applicant.city + ' | ' + applicant.age + ' Jahre'}</div>
-                    <div class="hp-applicant-summary">${applicant.summary || ''}</div>
+                    ${appliedPos && !isBlind ? `<div style="font-size:var(--font-xs);color:var(--text-tertiary);margin-top:var(--space-1);display:flex;align-items:center;gap:var(--space-2);flex-wrap:wrap;">
+                        <span>${appliedDateFormatted}</span>
+                        <span style="color:var(--border)">|</span>
+                        <span class="hp-tag" style="cursor:pointer;font-size:var(--font-xs)" onclick="event.stopPropagation(); openHPJobDetail(${appliedPos.id})" title="Stellenbeschreibung anzeigen">${appliedPos.title}, ${appliedPos.city}</span>
+                    </div>` : ''}
+                    <div class="hp-applicant-summary">${isBlind ? anonymizeText(applicant.summary, applicant) : (applicant.summary || '')}</div>
                     <div class="hp-tags">${(applicant.strengths || []).slice(0, 3).map(s => `<span class="hp-tag">${s}</span>`).join('')}</div>
                 </div>
                 <div class="hp-applicant-status">
                     <span class="hp-status-badge ${applicant.status}">${statusLabel}</span>
+                    ${applicant.koKriterium ? '<span class="hp-status-badge" style="background:#fef2f2;color:#DC2626;border:1px solid #fecaca;font-weight:700">KO</span>' : ''}
                 </div>
             </div>`;
     }).join('');
@@ -1150,7 +1225,8 @@ function openHPDetail(applicantId) {
     if (!applicant) return;
     hpCurrentDetailApplicant = applicant;
 
-    document.getElementById('hpDetailName').textContent = applicant.name;
+    const isBlind = hpBlindScreening;
+    document.getElementById('hpDetailName').textContent = isBlind ? 'Kandidat/in #' + applicant.id.toUpperCase() : applicant.name;
     const body = document.getElementById('hpDetailBody');
 
     const scoreCategories = [
@@ -1163,16 +1239,35 @@ function openHPDetail(applicantId) {
 
     body.innerHTML = `
         <div style="display:flex;gap:var(--space-4);margin-bottom:var(--space-6);align-items:center;">
-            <div class="hp-profile-avatar-large">${applicant.initials}</div>
+            ${!isBlind && applicant.photo ? `<img src="${applicant.photo}" alt="${applicant.name}" class="hp-profile-avatar-large" style="width:56px;height:56px;border-radius:50%;object-fit:cover;">` : `<div class="hp-profile-avatar-large">${isBlind ? '#' + applicant.id.toUpperCase().charAt(0) : applicant.initials}</div>`}
             <div>
-                <div style="font-size:var(--font-lg);font-weight:var(--font-bold);color:var(--text-primary);">${applicant.name}</div>
-                <div style="font-size:var(--font-sm);color:var(--text-secondary);">${applicant.city} | ${applicant.age} Jahre | ${applicant.experience}</div>
+                <div style="font-size:var(--font-lg);font-weight:var(--font-bold);color:var(--text-primary);">${isBlind ? 'Kandidat/in #' + applicant.id.toUpperCase() : applicant.name}</div>
+                <div style="font-size:var(--font-sm);color:var(--text-secondary);">${isBlind ? applicant.region.toUpperCase() + ' | — Jahre | ' + applicant.experience : applicant.city + ' | ' + applicant.age + ' Jahre | ' + applicant.experience}</div>
                 ${(applicant.certifications || []).length ? `<div class="hp-tags" style="margin-top:var(--space-2)">${applicant.certifications.map(c => `<span class="hp-tag cert">${c}</span>`).join('')}</div>` : ''}
+                ${(() => {
+                    const pos = applicant.appliedPositionId ? HP_POSITIONS.find(p => p.id === applicant.appliedPositionId) : null;
+                    const dateStr = applicant.appliedDate ? new Date(applicant.appliedDate).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' }) : '';
+                    return pos ? `<div style="font-size:var(--font-xs);color:var(--text-tertiary);margin-top:var(--space-2);display:flex;align-items:center;gap:var(--space-2);">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                        Bewerbung vom ${dateStr}
+                        <span style="color:var(--border)">|</span>
+                        <span style="cursor:pointer;color:var(--primary);text-decoration:underline;" onclick="event.stopPropagation(); openHPJobDetail(${pos.id})">${pos.title}, ${pos.city}</span>
+                    </div>` : '';
+                })()}
             </div>
             <div class="hp-applicant-score ${applicant.totalScore >= 80 ? 'high' : applicant.totalScore >= 60 ? 'mid' : 'low'}" style="margin-left:auto;width:56px;height:56px;font-size:var(--font-lg);">${applicant.totalScore}</div>
         </div>
 
-        <div class="hp-ki-summary" style="margin-bottom:var(--space-6);"><strong>KI-Zusammenfassung:</strong> ${applicant.summary}</div>
+        <div class="hp-ki-summary" style="margin-bottom:var(--space-6);"><strong>KI-Zusammenfassung:</strong> ${isBlind ? anonymizeText(applicant.summary, applicant) : applicant.summary}</div>
+
+        ${applicant.koKriterium ? `
+        <div style="background:#fef2f2;border:2px solid #DC2626;border-radius:var(--radius-md);padding:var(--space-4) var(--space-5);margin-bottom:var(--space-6);display:flex;align-items:flex-start;gap:var(--space-3);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2" width="24" height="24" style="flex-shrink:0;margin-top:2px"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            <div>
+                <div style="font-weight:700;color:#DC2626;font-size:var(--font-base);margin-bottom:var(--space-1)">KO-Kriterium</div>
+                <div style="color:#991b1b;font-size:var(--font-sm)">${applicant.koKriterium}</div>
+            </div>
+        </div>` : ''}
 
         ${applicant.waterfall ? renderHPWaterfallHTML(applicant.waterfall) : ''}
 
@@ -1195,7 +1290,7 @@ function openHPDetail(applicantId) {
 
     // Show PDF button only for Max Berger (who has a CV PDF)
     const pdfBtn = document.getElementById('hpPdfBtn');
-    if (pdfBtn) pdfBtn.style.display = applicant.id === 'max' ? '' : 'none';
+    if (pdfBtn) pdfBtn.style.display = applicant.id === 'max' ? 'inline-flex' : 'none';
 
     document.getElementById('hpDetailOverlay').classList.add('active');
 }
@@ -1218,6 +1313,12 @@ function renderHPSkillGapHTML(skillGap) {
 
 function closeHPDetail() {
     document.getElementById('hpDetailOverlay')?.classList.remove('active');
+    const panel = document.getElementById('hpDetailPanel');
+    const cvPane = document.getElementById('hpDetailCV');
+    const iframe = document.getElementById('hpPdfFrame');
+    if (panel) panel.classList.remove('side-by-side');
+    if (cvPane) cvPane.classList.remove('visible');
+    if (iframe) iframe.src = '';
 }
 
 function hpDetailAction(action) {
@@ -1263,6 +1364,70 @@ function generateHPInterviewQuestions() {
 
 function closeHPInterviewQuestions() {
     document.getElementById('hpInterviewOverlay')?.classList.remove('active');
+}
+
+// ========================================
+// JOB DETAIL OVERLAY
+// ========================================
+
+function openHPJobDetail(positionId) {
+    const position = HP_POSITIONS.find(p => p.id === positionId);
+    if (!position) return;
+
+    const overlay = document.getElementById('hpJobDetailOverlay');
+    const titleEl = document.getElementById('hpJobDetailTitle');
+    const body = document.getElementById('hpJobDetailBody');
+
+    titleEl.textContent = position.title;
+
+    const descriptionHTML = (position.description || '').replace(/\n/g, '<br>');
+
+    body.innerHTML = `
+        <div class="hp-job-detail-meta">
+            <div class="hp-job-detail-meta-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                ${position.city}
+            </div>
+            <div class="hp-job-detail-meta-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"></path></svg>
+                ${position.type}
+            </div>
+            <div class="hp-job-detail-meta-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                Vollzeit
+            </div>
+        </div>
+
+        <div class="hp-job-detail-section">
+            <h4>Stellenbeschreibung</h4>
+            <div class="hp-job-detail-description">${descriptionHTML}</div>
+        </div>
+
+        <div class="hp-job-detail-section">
+            <h4>Anforderungen</h4>
+            <p style="font-size: var(--font-sm); color: var(--text-secondary); line-height: var(--leading-relaxed);">${position.requirements}</p>
+        </div>
+
+        ${position.benefits && position.benefits.length ? `
+        <div class="hp-job-detail-section">
+            <h4>Wir bieten</h4>
+            <ul class="hp-job-benefits">
+                ${position.benefits.map(b => `
+                    <li class="hp-job-benefit-tag">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        ${b}
+                    </li>
+                `).join('')}
+            </ul>
+        </div>` : ''}
+    `;
+
+    overlay.classList.add('active');
+}
+
+function closeHPJobDetail() {
+    const overlay = document.getElementById('hpJobDetailOverlay');
+    if (overlay) overlay.classList.remove('active');
 }
 
 // ========================================
@@ -1385,21 +1550,65 @@ function filterHPByRecommended() {
 }
 
 // ========================================
-// PDF PREVIEW
+// SIDE-BY-SIDE CV PREVIEW
 // ========================================
 
-function showCVPdfPreview() {
+function toggleHPSideBySide() {
     const applicant = hpCurrentDetailApplicant;
     if (!applicant || applicant.id !== 'max') return;
-    const iframe = document.getElementById('hpPdfFrame');
-    if (iframe) iframe.src = 'cv/max-berger-cv.html';
-    document.getElementById('hpPdfOverlay')?.classList.add('active');
-}
 
-function closeCVPdfPreview() {
-    document.getElementById('hpPdfOverlay')?.classList.remove('active');
+    const panel = document.getElementById('hpDetailPanel');
+    const cvPane = document.getElementById('hpDetailCV');
     const iframe = document.getElementById('hpPdfFrame');
-    if (iframe) iframe.src = '';
+    const btnText = document.getElementById('hpPdfBtnText');
+
+    if (cvPane.classList.contains('visible')) {
+        cvPane.classList.remove('visible');
+        panel.classList.remove('side-by-side');
+        if (iframe) iframe.src = '';
+        if (btnText) btnText.textContent = 'Original-CV';
+    } else {
+        if (iframe) iframe.src = 'cv/max-berger-cv.html';
+        cvPane.classList.add('visible');
+        panel.classList.add('side-by-side');
+        if (btnText) btnText.textContent = 'CV ausblenden';
+
+        // In blind mode: hide photo and name in the CV iframe
+        if (hpBlindScreening && iframe) {
+            iframe.onload = function() {
+                try {
+                    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                    const style = iframeDoc.createElement('style');
+                    style.textContent = `
+                        .cv-photo-wrapper { position: relative; }
+                        .cv-photo { filter: blur(20px) brightness(0.7) !important; }
+                        .cv-photo-wrapper::after {
+                            content: 'ANONYMISIERT';
+                            position: absolute;
+                            top: 50%;
+                            left: 50%;
+                            transform: translate(-50%, -50%);
+                            background: rgba(200,16,46,0.9);
+                            color: white;
+                            padding: 8px 16px;
+                            border-radius: 8px;
+                            font-size: 11px;
+                            font-weight: 700;
+                            letter-spacing: 2px;
+                            pointer-events: none;
+                        }
+                        .cv-name, .cv-footer { visibility: hidden !important; }
+                        .cv-name::after {
+                            content: 'Kandidat/in #MAX';
+                            visibility: visible;
+                            display: block;
+                        }
+                    `;
+                    iframeDoc.head.appendChild(style);
+                } catch(e) { /* cross-origin fallback */ }
+            };
+        }
+    }
 }
 
 window.openHRPipeline = openHRPipeline;
@@ -1423,5 +1632,6 @@ window.openHPCompare = openHPCompare;
 window.closeHPCompare = closeHPCompare;
 window.generateHPInterviewQuestions = generateHPInterviewQuestions;
 window.closeHPInterviewQuestions = closeHPInterviewQuestions;
-window.showCVPdfPreview = showCVPdfPreview;
-window.closeCVPdfPreview = closeCVPdfPreview;
+window.toggleHPSideBySide = toggleHPSideBySide;
+window.openHPJobDetail = openHPJobDetail;
+window.closeHPJobDetail = closeHPJobDetail;

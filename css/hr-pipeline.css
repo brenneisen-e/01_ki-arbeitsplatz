@@ -210,21 +210,24 @@
     display: inline-flex;
     align-items: center;
     gap: var(--space-2);
-    padding: var(--space-2) var(--space-3);
-    background: none;
+    padding: var(--space-3) var(--space-5);
+    background: var(--primary);
     border: none;
-    color: var(--text-secondary);
-    font-size: var(--font-sm);
+    color: white;
+    font-size: var(--font-base);
+    font-weight: var(--font-semibold);
     font-family: inherit;
     cursor: pointer;
-    border-radius: var(--radius-md);
-    margin-bottom: var(--space-3);
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--space-4);
     transition: all 0.2s;
+    box-shadow: var(--shadow-sm);
 }
 
 .hp-back-to-landing:hover {
-    color: var(--primary);
-    background: var(--gray-50);
+    background: var(--primary-dark, #a00d26);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
 }
 
 /* ========================================

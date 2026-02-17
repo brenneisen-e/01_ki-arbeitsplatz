@@ -731,14 +731,14 @@
 .hp-profile-meta-item {
     display: flex;
     align-items: center;
-    gap: var(--space-1);
-    font-size: var(--font-sm);
+    gap: var(--space-2);
+    font-size: var(--font-base);
     color: var(--text-secondary);
 }
 
 .hp-profile-meta-item svg {
-    width: 14px;
-    height: 14px;
+    width: 16px;
+    height: 16px;
     color: var(--text-tertiary);
 }
 
@@ -750,7 +750,7 @@
 }
 
 .hp-profile-section h4 {
-    font-size: var(--font-sm);
+    font-size: var(--font-base);
     font-weight: var(--font-semibold);
     color: var(--text-tertiary);
     text-transform: uppercase;
@@ -771,7 +771,7 @@
     padding: var(--space-1) var(--space-3);
     background: var(--gray-100);
     border-radius: var(--radius-full);
-    font-size: var(--font-xs);
+    font-size: var(--font-sm);
     font-weight: var(--font-medium);
     color: var(--text-secondary);
     transition: all var(--transition-fast);
@@ -833,7 +833,7 @@
 /* Radar Chart Container */
 .hp-radar-container {
     width: 100%;
-    max-width: 280px;
+    max-width: 340px;
     aspect-ratio: 1;
     margin: 0 auto;
 }
@@ -1130,7 +1130,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: var(--font-sm);
+    font-size: var(--font-base);
     font-weight: var(--font-bold);
     color: var(--text-primary);
 }

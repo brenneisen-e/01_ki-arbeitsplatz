@@ -58,17 +58,17 @@ const HP_PROFILES = {
         experience: '8 Jahre Versicherungsvertrieb (Allianz AO)',
         experienceYears: 8,
         education: 'BWL-Studium (B.A.), IHK Versicherungsfachmann',
-        skills: ['Kundenakquise', 'Bestandsmanagement', 'Führungserfahrung', 'Vertriebssteuerung', 'Cross-Selling'],
+        skills: ['Kundenakquise', 'Bestandsmanagement', 'Führungserfahrung', 'Vertriebssteuerung', 'Kundenbindung'],
         certifications: ['IHK Versicherungsfachmann (§34d)', 'BWL Bachelor (DQR 6)', 'IDD Weiterbildung 2024'],
         insuranceFlags: {
-            green: ['8J Allianz AO-Erfahrung', 'IHK §34d qualifiziert', 'Bestandsgröße 2.4 Mio €', 'Cross-Selling-Quote 34%'],
+            green: ['8J Allianz AO-Erfahrung', 'IHK §34d qualifiziert', 'Bestandsgröße 2.4 Mio €', 'Ø 115% Zielerreichung'],
             red: ['Kein Fachwirt IHK']
         },
         strengths: ['Kundenakquise', 'Bestandsmanagement', 'Führungserfahrung (3 MA)', 'IHK-qualifiziert', 'Allianz AO-Erfahrung'],
         weaknesses: ['Keine ERGO-Erfahrung', 'Kein Fachwirt IHK'],
         scores: { vertrieb: 95, branche: 90, qualifikation: 88, standort: 92, softskills: 85 },
         totalScore: 92,
-        summary: '8 Jahre fundierte Vertriebserfahrung in der Allianz Ausschließlichkeitsorganisation. IHK-Qualifikation nach §34d, nachgewiesene Führungskompetenz über 3 Mitarbeiter und Bestandsvolumen von 2,4 Mio €. Idealer Kandidat für die Agenturleitung. Cross-Selling-Quote von 34% liegt deutlich über dem Branchendurchschnitt.',
+        summary: '8 Jahre fundierte Vertriebserfahrung in der Allianz Ausschließlichkeitsorganisation. IHK-Qualifikation nach §34d, nachgewiesene Führungskompetenz über 3 Mitarbeiter und Bestandsvolumen von 2,4 Mio €. Durchschnittliche Zielerreichung von 115% belegt überdurchschnittliche Vertriebsleistung. Idealer Kandidat für die Agenturleitung.',
         radarData: [95, 90, 88, 92, 85],
         waterfall: [
             { label: 'IHK Versicherungsfachmann §34d', points: 18, type: 'positive' },
@@ -76,7 +76,7 @@ const HP_PROFILES = {
             { label: 'Bestandsgröße 2,4 Mio €', points: 14, type: 'positive' },
             { label: 'Führungserfahrung (3 MA)', points: 12, type: 'positive' },
             { label: 'BWL-Studium (DQR 6)', points: 10, type: 'positive' },
-            { label: 'Cross-Selling-Quote 34%', points: 8, type: 'positive' },
+            { label: 'Ø 115% Zielerreichung', points: 8, type: 'positive' },
             { label: 'IDD Weiterbildung aktuell', points: 5, type: 'positive' },
             { label: 'Standort Düsseldorf (Match)', points: 7, type: 'positive' },
             { label: 'Kein Fachwirt IHK', points: -7, type: 'negative' },
@@ -89,7 +89,7 @@ const HP_PROFILES = {
                 { q: 'Wie haben Sie Ihr Bestandsvolumen von 2,4 Mio € aufgebaut? Welche Akquise-Strategien waren am erfolgreichsten?', why: 'Quantifizierung der Vertriebsleistung und strategisches Denken' }
             ],
             behavioral: [
-                { q: 'Erzählen Sie von einer Situation, in der Sie eine Deckungslücke bei einem Bestandskunden identifiziert haben. Wie sind Sie vorgegangen?', why: 'STAR-Methode: Bedarfsanalyse-Kompetenz und Cross-Selling-Fähigkeit' },
+                { q: 'Erzählen Sie von einer Situation, in der Sie eine Deckungslücke bei einem Bestandskunden identifiziert haben. Wie sind Sie vorgegangen?', why: 'STAR-Methode: Bedarfsanalyse-Kompetenz und Beratungsqualität' },
                 { q: 'Beschreiben Sie eine Herausforderung bei der Führung Ihres 3-köpfigen Teams. Wie haben Sie diese gelöst?', why: 'Führungskompetenz und Konfliktlösungsfähigkeit für Agenturleiter-Rolle' }
             ],
             technical: [
@@ -750,7 +750,7 @@ const HP_CHAT_RESPONSES = {
         followUp: [{ label: 'Zurück zum Start', icon: 'home', action: 'start' }]
     },
     detail_max: {
-        text: 'Max Berger (34, Düsseldorf) — Score: 92\n\n- 8J Allianz AO, Bestand 2,4 Mio €\n- IHK §34d, BWL Bachelor, IDD aktuell\n- Führung: 3 MA, Cross-Selling 34%\n- Empfohlen: Agenturleiter Düsseldorf\n\nKI-Empfehlung: Sofortige Einladung.',
+        text: 'Max Berger (34, Düsseldorf) — Score: 92\n\n- 8J Allianz AO, Bestand 2,4 Mio €\n- IHK §34d, BWL Bachelor, IDD aktuell\n- Führung: 3 MA, Ø 115% Zielerreichung\n- Empfohlen: Agenturleiter Düsseldorf\n\nKI-Empfehlung: Sofortige Einladung.',
         followUp: [
             { label: 'Einladen', icon: 'check', action: 'top_kandidaten' },
             { label: 'Zurück zum Start', icon: 'home', action: 'start' }
@@ -958,7 +958,7 @@ function renderHPProfileCard(profile) {
         <div class="hp-profile-body">
             <div class="hp-profile-section">
                 <h4>Berufserfahrung</h4>
-                <p style="font-size:var(--font-sm);color:var(--text-secondary);margin:0;">${profile.experience}</p>
+                <p style="font-size:var(--font-base);color:var(--text-secondary);margin:0;">${profile.experience}</p>
             </div>
             <div class="hp-profile-section">
                 <h4>Ausbildung & Zertifikate</h4>
@@ -1020,7 +1020,7 @@ function drawHPRadarChart(profile) {
         },
         options: {
             responsive: true, maintainAspectRatio: true,
-            scales: { r: { beginAtZero: true, max: 100, ticks: { stepSize: 25, font: { size: 10 }, backdropColor: 'transparent' }, pointLabels: { font: { size: 11, weight: '500' }, color: '#475569' }, grid: { color: 'rgba(0,0,0,0.06)' }, angleLines: { color: 'rgba(0,0,0,0.06)' } } },
+            scales: { r: { beginAtZero: true, max: 100, ticks: { stepSize: 25, font: { size: 12 }, backdropColor: 'transparent' }, pointLabels: { font: { size: 14, weight: '500' }, color: '#475569' }, grid: { color: 'rgba(0,0,0,0.06)' }, angleLines: { color: 'rgba(0,0,0,0.06)' } } },
             plugins: { legend: { display: false } },
             animation: { duration: 800, easing: 'easeOutQuart' }
         }

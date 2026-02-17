@@ -85,8 +85,8 @@ const HP_PROFILES = {
             { label: 'Keine ERGO-Erfahrung', points: -3, type: 'neutral' }
         ],
         linkedinInsights: [
-            { text: '520+ Kontakte im Versicherungs- und Finanzsektor', detail: 'Starkes Branchennetzwerk in der DACH-Region' },
-            { text: 'Empfohlen für „Vertriebsführung" von 12 Kontakten', detail: 'Bestätigt Führungskompetenz durch Peer-Endorsements' }
+            { text: 'Nebentätigkeit: Dozent IHK Düsseldorf (seit 2023)', detail: 'Hält Seminare zu Versicherungsvertrieb — im CV nicht erwähnt, zeigt Fachexpertise und Engagement' },
+            { text: 'Empfohlen für „Vertriebsführung" von 12 Kontakten', detail: '520+ Kontakte im Versicherungs- und Finanzsektor bestätigen starkes Branchennetzwerk' }
         ],
         counterfactual: 'Wenn dieser Kandidat den Fachwirt für Versicherungen und Finanzen IHK (Bachelor Professional, DQR 6) abschließt, steigt sein Score von 92 auf 97. Empfehlung: DVA-Programm (24 Monate berufsbegleitend, ca. 3.500 €).',
         interviewQuestions: {

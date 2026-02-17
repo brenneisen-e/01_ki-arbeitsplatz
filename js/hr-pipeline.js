@@ -82,6 +82,10 @@ const HP_PROFILES = {
             { label: 'Kein Fachwirt IHK', points: -7, type: 'negative' },
             { label: 'Keine ERGO-Erfahrung', points: -3, type: 'negative' }
         ],
+        linkedinInsights: [
+            { text: '520+ Kontakte im Versicherungs- und Finanzsektor', detail: 'Starkes Branchennetzwerk in der DACH-Region' },
+            { text: 'Empfohlen für „Vertriebsführung" von 12 Kontakten', detail: 'Bestätigt Führungskompetenz durch Peer-Endorsements' }
+        ],
         counterfactual: 'Wenn dieser Kandidat den Fachwirt für Versicherungen und Finanzen IHK (Bachelor Professional, DQR 6) abschließt, steigt sein Score von 92 auf 97. Empfehlung: DVA-Programm (24 Monate berufsbegleitend, ca. 3.500 €).',
         interviewQuestions: {
             background: [
@@ -876,12 +880,14 @@ function loadHPDemoProfile(profileId) {
 
     const bar = document.getElementById('hpLoadingBar');
     const status = document.getElementById('hpLoadingStatus');
+    const useLinkedin = document.getElementById('hpLinkedinToggle')?.checked;
     const steps = [
-        { pct: 15, text: 'Dokument wird verarbeitet...' },
-        { pct: 30, text: 'Textextraktion läuft...' },
-        { pct: 50, text: 'Qualifikationen werden erkannt (§34d, IHK, Fachwirt)...' },
-        { pct: 70, text: 'Versicherungs-Branchenerfahrung wird analysiert...' },
-        { pct: 85, text: 'Stellenabgleich wird durchgeführt...' },
+        { pct: 12, text: 'Dokument wird verarbeitet...' },
+        { pct: 25, text: 'Textextraktion läuft...' },
+        { pct: 40, text: 'Qualifikationen werden erkannt (§34d, IHK, Fachwirt)...' },
+        { pct: 55, text: 'Versicherungs-Branchenerfahrung wird analysiert...' },
+        ...(useLinkedin ? [{ pct: 68, text: 'LinkedIn-Profil wird analysiert...' }, { pct: 78, text: 'Social-Media-Netzwerk wird ausgewertet...' }] : []),
+        { pct: 88, text: 'Stellenabgleich wird durchgeführt...' },
         { pct: 95, text: 'SHAP-Erklärung wird generiert...' },
         { pct: 100, text: 'Analyse abgeschlossen!' }
     ];
@@ -926,6 +932,21 @@ function renderHPProfileCard(profile) {
     const certTags = (profile.certifications || []).map(c => `<span class="hp-tag cert">${c}</span>`).join('');
     const greenFlags = (profile.insuranceFlags?.green || []).map(f => `<span class="hp-tag flag-green">${f}</span>`).join('');
     const redFlags = (profile.insuranceFlags?.red || []).map(f => `<span class="hp-tag flag-red">${f}</span>`).join('');
+    const linkedinBadge = '<span class="hp-linkedin-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>LinkedIn</span>';
+    const useLinkedin = document.getElementById('hpLinkedinToggle')?.checked;
+    const linkedinHTML = useLinkedin && profile.linkedinInsights ? `
+        <div class="hp-profile-section" style="grid-column: 1 / -1;">
+            <h4>LinkedIn-Erkenntnisse ${linkedinBadge}</h4>
+            ${profile.linkedinInsights.map(i => `
+                <div class="hp-linkedin-insight">
+                    <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16" style="color:#0A66C2;flex-shrink:0;margin-top:2px"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+                    <div>
+                        <div class="hp-linkedin-insight-text">${i.text}</div>
+                        <div class="hp-linkedin-insight-detail">${i.detail}</div>
+                    </div>
+                </div>
+            `).join('')}
+        </div>` : '';
 
     card.innerHTML = `
         <div class="hp-profile-header">
@@ -968,6 +989,7 @@ function renderHPProfileCard(profile) {
                 <h4>Versicherungs-Indikatoren</h4>
                 <div class="hp-tags">${greenFlags}${redFlags}</div>
             </div>
+            ${linkedinHTML}
             <div class="hp-profile-section">
                 <h4>Stärken-Profil</h4>
                 <canvas id="hpRadarChart" class="hp-radar-container"></canvas>
@@ -1270,6 +1292,19 @@ function openHPDetail(applicantId) {
         </div>
 
         <div class="hp-ki-summary" style="margin-bottom:var(--space-6);"><strong>KI-Zusammenfassung:</strong> ${isBlind ? anonymizeText(applicant.summary, applicant) : applicant.summary}</div>
+
+        ${applicant.linkedinInsights ? `
+        <div style="margin-bottom:var(--space-6);">
+            <h4 style="font-size:var(--font-sm);font-weight:var(--font-semibold);color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:var(--space-3);display:flex;align-items:center;gap:var(--space-2);">LinkedIn-Erkenntnisse <span class="hp-linkedin-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>LinkedIn</span></h4>
+            ${applicant.linkedinInsights.map(i => `
+                <div class="hp-linkedin-insight">
+                    <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16" style="color:#0A66C2;flex-shrink:0;margin-top:2px"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+                    <div>
+                        <div class="hp-linkedin-insight-text">${i.text}</div>
+                        <div class="hp-linkedin-insight-detail">${i.detail}</div>
+                    </div>
+                </div>`).join('')}
+        </div>` : ''}
 
         ${applicant.koKriterium ? `
         <div style="background:#fef2f2;border:2px solid #DC2626;border-radius:var(--radius-md);padding:var(--space-4) var(--space-5);margin-bottom:var(--space-6);display:flex;align-items:flex-start;gap:var(--space-3);">

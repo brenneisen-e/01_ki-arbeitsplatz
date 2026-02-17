@@ -339,6 +339,66 @@
     color: var(--text-muted);
 }
 
+.hp-linkedin-toggle {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--font-sm);
+    color: var(--text-secondary);
+    cursor: pointer;
+    margin-top: var(--space-3);
+}
+
+.hp-linkedin-toggle input[type="checkbox"] {
+    accent-color: #0A66C2;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+.hp-linkedin-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 8px;
+    background: rgba(10, 102, 194, 0.08);
+    color: #0A66C2;
+    border: 1px solid rgba(10, 102, 194, 0.2);
+    border-radius: var(--radius-full);
+    font-size: var(--font-xs);
+    font-weight: var(--font-medium);
+    white-space: nowrap;
+}
+
+.hp-linkedin-badge svg {
+    width: 12px;
+    height: 12px;
+    flex-shrink: 0;
+}
+
+.hp-linkedin-insight {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3);
+    padding: var(--space-3) var(--space-4);
+    background: rgba(10, 102, 194, 0.04);
+    border: 1px solid rgba(10, 102, 194, 0.12);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-2);
+}
+
+.hp-linkedin-insight-text {
+    font-size: var(--font-sm);
+    color: var(--text-primary);
+    font-weight: var(--font-medium);
+}
+
+.hp-linkedin-insight-detail {
+    font-size: var(--font-xs);
+    color: var(--text-secondary);
+    margin-top: 2px;
+}
+
 .hp-landing-hero-visual {
     flex-shrink: 0;
 }
@@ -466,6 +526,36 @@
 .hp-demo-profiles {
     margin-top: var(--space-6);
     padding-top: var(--space-6);
+}
+
+.hp-demo-toggle {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+}
+
+.hp-demo-chevron {
+    position: relative;
+    transition: transform 0.2s;
+    color: var(--text-muted);
+}
+
+.hp-demo-profiles.collapsed .hp-demo-chevron {
+    transform: rotate(-90deg);
+}
+
+.hp-demo-content {
+    transition: all 0.3s ease;
+    overflow: hidden;
+    max-height: 300px;
+}
+
+.hp-demo-profiles.collapsed .hp-demo-content {
+    max-height: 0;
+    opacity: 0;
+    margin-top: 0;
 }
 
 .hp-demo-divider {

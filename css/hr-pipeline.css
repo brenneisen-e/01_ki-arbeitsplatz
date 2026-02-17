@@ -2506,7 +2506,8 @@
 .hp-detail-cv {
     display: none;
     width: 0;
-    border-left: 1px solid var(--border);
+    border-left: 3px solid var(--gray-300, #d1d5db);
+    box-shadow: -4px 0 12px rgba(0, 0, 0, 0.08);
     flex-direction: column;
     overflow: hidden;
     transition: width 0.3s ease;

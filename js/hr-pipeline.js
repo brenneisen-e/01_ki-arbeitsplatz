@@ -105,11 +105,11 @@ const HP_PROFILES = {
         },
         skillGap: {
             dimensions: [
-                { label: 'Regulatorik', current: 85, required: 80 },
-                { label: 'Vertriebserfahrung', current: 95, required: 85 },
-                { label: 'Spartenkenntnis', current: 80, required: 75 },
-                { label: 'Digital-Kompetenz', current: 70, required: 80 },
-                { label: 'Führungskompetenz', current: 78, required: 85 }
+                { label: 'Regulatorik', current: 85, required: 80, reason: 'IHK §34d vorhanden, IDD aktuell — Fachwirt fehlt für höhere Einstufung' },
+                { label: 'Vertriebserfahrung', current: 95, required: 85, reason: '8 Jahre AO mit nachweislich 2,4 Mio € Bestand und 115% Zielerreichung' },
+                { label: 'Spartenkenntnis', current: 80, required: 75, reason: 'Komposit/Leben/Kranken im CV belegt, bAV-Tiefe nicht erkennbar' },
+                { label: 'Digital-Kompetenz', current: 70, required: 80, reason: 'Keine Erwähnung digitaler Tools (CRM, BiPRO, Vergleichsrechner) im CV' },
+                { label: 'Führungskompetenz', current: 78, required: 85, reason: '3 MA geführt — für Agenturleitung (5+ MA) ausbaufähig' }
             ],
             training: 'Empfehlung: Fachwirt für Versicherungen und Finanzen IHK (DVA, 24 Monate, ~3.500 €) → Score-Steigerung: +5 Punkte. ROI: Weiterbildungskosten 3.500 € vs. externe Neubesetzung ~18.000 €.'
         }
@@ -166,11 +166,11 @@ const HP_PROFILES = {
         },
         skillGap: {
             dimensions: [
-                { label: 'Regulatorik', current: 20, required: 80 },
-                { label: 'Vertriebserfahrung', current: 65, required: 70 },
-                { label: 'Spartenkenntnis', current: 15, required: 60 },
-                { label: 'Digital-Kompetenz', current: 75, required: 65 },
-                { label: 'Führungskompetenz', current: 72, required: 60 }
+                { label: 'Regulatorik', current: 20, required: 80, reason: 'Keine §34d oder IHK-Qualifikation — muss im Trainee-Programm erworben werden' },
+                { label: 'Vertriebserfahrung', current: 65, required: 70, reason: '4 Jahre Einzelhandel mit Umsatzverantwortung — Versicherungsvertrieb fehlt' },
+                { label: 'Spartenkenntnis', current: 15, required: 60, reason: 'Kein Bezug zu Versicherungsprodukten im bisherigen Werdegang' },
+                { label: 'Digital-Kompetenz', current: 75, required: 65, reason: 'MediaMarkt-Erfahrung zeigt Umgang mit digitalen Systemen und POS' },
+                { label: 'Führungskompetenz', current: 72, required: 60, reason: 'Teamleitung 5 MA bei MediaMarkt — übertragbare Führungserfahrung' }
             ],
             training: 'Empfehlung: ERGO Trainee-Programm (6 Monate, IHK §34d inkl.) → Score-Steigerung: +14 Punkte. ROI: Trainee-Kosten ~12.000 € vs. externe Besetzung erfahrener Kandidat ~22.000 €.'
         }
@@ -223,11 +223,11 @@ const HP_PROFILES = {
         },
         skillGap: {
             dimensions: [
-                { label: 'Regulatorik', current: 5, required: 80 },
-                { label: 'Vertriebserfahrung', current: 10, required: 70 },
-                { label: 'Spartenkenntnis', current: 5, required: 60 },
-                { label: 'Digital-Kompetenz', current: 30, required: 65 },
-                { label: 'Führungskompetenz', current: 15, required: 40 }
+                { label: 'Regulatorik', current: 5, required: 80, reason: 'Keine versicherungsrelevante Qualifikation oder Weiterbildung vorhanden' },
+                { label: 'Vertriebserfahrung', current: 10, required: 70, reason: 'Lagermitarbeiter ohne Kundenkontakt — keine Vertriebserfahrung erkennbar' },
+                { label: 'Spartenkenntnis', current: 5, required: 60, reason: 'Kein Bezug zur Versicherungs- oder Finanzbranche im Werdegang' },
+                { label: 'Digital-Kompetenz', current: 30, required: 65, reason: 'Grundlegende PC-Kenntnisse aus Lagerverwaltung — keine CRM/Vertriebstools' },
+                { label: 'Führungskompetenz', current: 15, required: 40, reason: 'Keine Führungsverantwortung im bisherigen Werdegang nachweisbar' }
             ],
             training: 'Erhebliche Lücken in allen Dimensionen. Mindestens Quereinsteiger-Programm (6 Monate) + Standortwechsel erforderlich. Geschätzte Gesamtinvestition: ~15.000 € bei unsicherer Erfolgsquote.'
         }
@@ -323,11 +323,11 @@ const HP_ALL_APPLICANTS = [
         },
         skillGap: {
             dimensions: [
-                { label: 'Regulatorik', current: 15, required: 80 },
-                { label: 'Vertriebserfahrung', current: 55, required: 85 },
-                { label: 'Spartenkenntnis', current: 30, required: 75 },
-                { label: 'Digital-Kompetenz', current: 75, required: 80 },
-                { label: 'Sprachkompetenz', current: 10, required: 90 }
+                { label: 'Regulatorik', current: 15, required: 80, reason: 'Chinesische Zertifikate in Deutschland nicht anerkannt, §34d fehlt' },
+                { label: 'Vertriebserfahrung', current: 55, required: 85, reason: '3 Jahre Ping An Insurance — Erfahrung vorhanden, aber nicht im deutschen Markt' },
+                { label: 'Spartenkenntnis', current: 30, required: 75, reason: 'Nur Lebensversicherung in China — deutsches Produktportfolio unbekannt' },
+                { label: 'Digital-Kompetenz', current: 75, required: 80, reason: 'Digitale Affinität aus Tech-Markt China, aber deutsche Tools (BiPRO etc.) fehlen' },
+                { label: 'Sprachkompetenz', current: 10, required: 90, reason: 'KO-Kriterium: Keine Deutschkenntnisse für Kundenkontakt im Vertrieb' }
             ],
             training: 'Voraussetzungen für erneute Prüfung: 1) Deutsch B2-Zertifikat (Goethe-Institut, ca. 12 Monate), 2) IHK §34d Sachkundeprüfung, 3) Anerkennung ausländischer Qualifikation.'
         }
@@ -366,11 +366,11 @@ const HP_ALL_APPLICANTS = [
         },
         skillGap: {
             dimensions: [
-                { label: 'Regulatorik', current: 88, required: 80 },
-                { label: 'Vertriebserfahrung', current: 85, required: 85 },
-                { label: 'Spartenkenntnis', current: 82, required: 80 },
-                { label: 'Digital-Kompetenz', current: 72, required: 75 },
-                { label: 'Führungskompetenz', current: 70, required: 70 }
+                { label: 'Regulatorik', current: 88, required: 80, reason: 'IHK §34d vorhanden, Fachwirt in Arbeit — überdurchschnittlich qualifiziert' },
+                { label: 'Vertriebserfahrung', current: 85, required: 85, reason: '5 Jahre HDI-Maklervertrieb mit B2B-Fokus — Sollwert exakt erreicht' },
+                { label: 'Spartenkenntnis', current: 82, required: 80, reason: 'Spartenübergreifende Beratung bei HDI nachgewiesen, Komposit + Leben' },
+                { label: 'Digital-Kompetenz', current: 72, required: 75, reason: 'Grundlegende CRM-Kenntnisse, BiPRO und digitale Vergleichsrechner fehlen' },
+                { label: 'Führungskompetenz', current: 70, required: 70, reason: 'Erfahrung in der Maklerbetreuung — indirekte Führung vorhanden' }
             ],
             training: 'Fachwirt IHK abschließen (bereits in Arbeit). Minimaler Handlungsbedarf.'
         }
@@ -408,11 +408,11 @@ const HP_ALL_APPLICANTS = [
         },
         skillGap: {
             dimensions: [
-                { label: 'Regulatorik', current: 60, required: 80 },
-                { label: 'Vertriebserfahrung', current: 82, required: 75 },
-                { label: 'Spartenkenntnis', current: 45, required: 70 },
-                { label: 'Digital-Kompetenz', current: 68, required: 65 },
-                { label: 'Führungskompetenz', current: 55, required: 50 }
+                { label: 'Regulatorik', current: 60, required: 80, reason: '§34f vorhanden, §34d fehlt — Umschulung nötig, aber verwandte Grundlage' },
+                { label: 'Vertriebserfahrung', current: 82, required: 75, reason: '6 Jahre aktiver Bankvertrieb bei Sparkasse mit Beratungserfahrung' },
+                { label: 'Spartenkenntnis', current: 45, required: 70, reason: 'Nur Finanzanlageprodukte bekannt — Komposit/Leben/Kranken fehlen' },
+                { label: 'Digital-Kompetenz', current: 68, required: 65, reason: 'Sparkassen-CRM und Online-Banking-Tools — versicherungsspezifische Tools fehlen' },
+                { label: 'Führungskompetenz', current: 55, required: 50, reason: 'Informelle Mentoring-Rolle im Team, keine direkte Personalverantwortung' }
             ],
             training: '§34d Sachkundeprüfung (3 Monate) + Spartenkenntnis-Schulung (ERGO intern, 2 Wochen).'
         }
@@ -1362,7 +1362,7 @@ function renderHPSkillGapHTML(skillGap) {
                 <div class="hp-skill-gap-required" style="left:${d.required}%" title="Anforderung: ${d.required}%"></div>
             </div>
             <div class="hp-skill-gap-pct" style="color:${color}">${gap > 0 ? '-' + gap + '%' : 'OK'}</div>
-        </div>`;
+        </div>${d.reason ? `<div class="hp-skill-gap-reason"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>${d.reason}</div>` : ''}`;
     }).join('');
     return `<div class="hp-skill-gap"><h4>Skill-Gap-Analyse (Ist vs. Soll)</h4>${rows}${skillGap.training ? `<div class="hp-training-rec"><strong>Weiterbildungsempfehlung:</strong> ${skillGap.training}</div>` : ''}</div>`;
 }

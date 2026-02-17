@@ -80,14 +80,54 @@ const CV_PROFILES = {
 // ========================================
 
 const CV_POSITIONS = [
-    { id: 1, title: 'Agenturleiter', city: 'Düsseldorf', region: 'nrw', type: 'Führung', requirements: 'Min. 5 Jahre Vertriebserfahrung, Führungskompetenz, IHK §34d' },
-    { id: 2, title: 'Vertriebsspezialist Leben', city: 'Köln', region: 'nrw', type: 'Spezialist', requirements: 'Erfahrung Lebensversicherung, Beratungskompetenz, IHK §34d' },
-    { id: 3, title: 'Maklerbetreuer', city: 'Essen', region: 'nrw', type: 'Betreuung', requirements: 'Netzwerk-Fähigkeiten, Branchenkenntnis, Verhandlungsgeschick' },
-    { id: 4, title: 'Ausschließlichkeitsvermittler', city: 'Dortmund', region: 'nrw', type: 'Vertrieb', requirements: 'Vertriebsaffinität, Eigeninitiative, Kundenorientierung' },
-    { id: 5, title: 'Trainee Vertrieb', city: 'Köln', region: 'nrw', type: 'Einstieg', requirements: 'Vertriebsaffinität, Kommunikationsstärke, Lernbereitschaft' },
-    { id: 6, title: 'Vertriebspartner Sach/HUK', city: 'Bonn', region: 'nrw', type: 'Vertrieb', requirements: 'Erfahrung Sachversicherung, Kundenberatung' },
-    { id: 7, title: 'Bezirksdirektor', city: 'Münster', region: 'nrw', type: 'Führung', requirements: 'Min. 8 Jahre Vertrieb, Führung >5 MA, strategisches Denken' },
-    { id: 8, title: 'Kundenberater Innendienst', city: 'Hamburg', region: 'nord', type: 'Beratung', requirements: 'Kommunikationsstärke, Serviceorientierung, Versicherungskenntnisse' }
+    {
+        id: 1, title: 'Agenturleiter', city: 'Düsseldorf', region: 'nrw', type: 'Führung',
+        requirements: 'Min. 5 Jahre Vertriebserfahrung, Führungskompetenz, IHK §34d',
+        description: 'Als Agenturleiter/in übernehmen Sie die Verantwortung für eine eigenständige ERGO Versicherungsagentur in Düsseldorf. Sie führen ein Team von Vertriebsmitarbeitern, entwickeln Vertriebsstrategien und bauen den Kundenbestand in Ihrer Region systematisch aus.\n\nIhre Aufgaben:\n- Eigenverantwortliche Leitung einer ERGO Agentur mit Umsatzverantwortung\n- Führung, Motivation und Entwicklung eines Teams von 3-5 Vertriebsmitarbeitern\n- Akquise von Neukunden und Ausbau des Bestandskundengeschäfts\n- Durchführung von Bedarfsanalysen und ganzheitliche Kundenberatung über alle Sparten\n- Umsetzung regionaler Vertriebskampagnen und Marktbearbeitung\n\nWas wir erwarten:\n- Mindestens 5 Jahre Erfahrung im Versicherungsvertrieb (AO oder Makler)\n- IHK-Qualifikation nach §34d GewO, idealerweise Fachwirt für Versicherungen\n- Nachgewiesene Führungserfahrung und unternehmerisches Denken\n- Ausgeprägte Akquise-Stärke und Bestandsmanagement-Kompetenz',
+        benefits: ['Attraktives Fixgehalt + Provision', 'Firmenwagen auch zur privaten Nutzung', 'Betriebliche Altersvorsorge', 'Weiterbildungsmöglichkeiten (DVA)', 'Eigenständige Agenturführung']
+    },
+    {
+        id: 2, title: 'Vertriebsspezialist Leben', city: 'Köln', region: 'nrw', type: 'Spezialist',
+        requirements: 'Erfahrung Lebensversicherung, Beratungskompetenz, IHK §34d',
+        description: 'Als Vertriebsspezialist/in Leben beraten Sie anspruchsvolle Kunden zu Lebensversicherungen, betrieblicher Altersvorsorge und biometrischen Risiken. Sie sind die fachliche Ansprechperson für unsere Agenturen in der Region Köln.\n\nIhre Aufgaben:\n- Spezialisierte Beratung in den Bereichen Lebensversicherung, bAV und Biometrie\n- Fachliche Unterstützung der ERGO Agenturen bei komplexen Beratungsfällen\n- Durchführung von Firmenkunden-Präsentationen zur betrieblichen Altersvorsorge\n- Entwicklung individueller Vorsorgekonzepte für gehobene Privatkunden\n- Schulung und Coaching von Vertriebspartnern im Bereich Leben\n\nWas wir erwarten:\n- IHK-Qualifikation nach §34d und fundierte Erfahrung in der Lebensversicherung\n- Sehr gute Kenntnisse in bAV, Biometrie und Altersvorsorge\n- Beratungskompetenz und sicheres Auftreten bei Firmenkunden\n- Analytisches Denkvermögen und Freude an komplexen Beratungssituationen',
+        benefits: ['Überdurchschnittliche Vergütung', 'Fachkarriere-Perspektive', 'Firmenwagen', 'Umfangreiche Weiterbildung', 'Flexible Arbeitszeiten']
+    },
+    {
+        id: 3, title: 'Maklerbetreuer', city: 'Essen', region: 'nrw', type: 'Betreuung',
+        requirements: 'Netzwerk-Fähigkeiten, Branchenkenntnis, Verhandlungsgeschick',
+        description: 'Als Maklerbetreuer/in sind Sie die zentrale Schnittstelle zwischen ERGO und unseren Versicherungsmaklern in der Region Essen/Ruhrgebiet. Sie pflegen bestehende Maklerbeziehungen und gewinnen neue Partner für den ERGO Maklervertrieb.\n\nIhre Aufgaben:\n- Betreuung und Ausbau eines Maklerportfolios von ca. 80-120 Maklern\n- Akquise neuer Maklerpartner und Aufbau langfristiger Geschäftsbeziehungen\n- Spartenübergreifende Produktberatung und Angebotserstellung\n- Durchführung von Maklerschulungen und Produktpräsentationen\n- Courtage-Management und Vertragsverhandlungen\n\nWas wir erwarten:\n- Spartenübergreifende Produktkenntnis im Versicherungsbereich\n- Erfahrung im B2B-Vertrieb, idealerweise im Maklergeschäft\n- Ausgeprägte Netzwerk-Fähigkeiten und Verhandlungsgeschick\n- Verständnis für Courtage-Modelle und Makleranforderungen',
+        benefits: ['Attraktives Grundgehalt + Bonus', 'Firmenwagen', 'Home-Office-Möglichkeit', 'Betriebliche Altersvorsorge', 'Netzwerk-Events']
+    },
+    {
+        id: 4, title: 'Ausschließlichkeitsvermittler', city: 'Dortmund', region: 'nrw', type: 'Vertrieb',
+        requirements: 'Vertriebsaffinität, Eigeninitiative, Kundenorientierung',
+        description: 'Als Ausschließlichkeitsvermittler/in vertreten Sie die ERGO exklusiv in Dortmund und Umgebung. Sie beraten Privat- und Gewerbekunden umfassend zu allen Versicherungs- und Vorsorgeprodukten der ERGO Gruppe.\n\nIhre Aufgaben:\n- Ganzheitliche Beratung von Privat- und Gewerbekunden\n- Aktive Neukundenakquise und systematischer Bestandsaufbau\n- Cross-Selling über alle ERGO Produktsparten\n- Schadenservice und Kundenbetreuung als persönlicher Ansprechpartner\n- Teilnahme an regionalen Vertriebsaktionen und Messen\n\nWas wir erwarten:\n- IHK-Sachkundeprüfung §34d oder vergleichbare Qualifikation\n- Hohe Vertriebsaffinität und Eigeninitiative\n- Kundenorientierung und Beratungskompetenz\n- Unternehmerisches Denken und Selbstständigkeit',
+        benefits: ['Leistungsgerechte Provision', 'Bestandssicherung', 'Umfassende Produktpalette', 'Marketing-Unterstützung', 'ERGO Markenbekanntheit']
+    },
+    {
+        id: 5, title: 'Trainee Vertrieb', city: 'Köln', region: 'nrw', type: 'Einstieg',
+        requirements: 'Vertriebsaffinität, Kommunikationsstärke, Lernbereitschaft',
+        description: 'Unser Trainee-Programm bietet Ihnen den idealen Einstieg in den Versicherungsvertrieb bei ERGO. In 6 Monaten werden Sie systematisch auf Ihre zukünftige Rolle als Vertriebspartner vorbereitet — inklusive IHK-Sachkundeprüfung.\n\nIhre Aufgaben:\n- Teilnahme am strukturierten Ausbildungsprogramm (Theorie und Praxis)\n- Begleitung erfahrener Vertriebspartner im Tagesgeschäft\n- Erwerb der IHK-Sachkundeprüfung §34d (Kosten werden übernommen)\n- Erste eigene Kundenberatungen unter Anleitung eines Mentors\n- Aufbau eines eigenen Kundenportfolios ab dem 4. Monat\n\nWas wir erwarten:\n- Ausgeprägte Vertriebsaffinität und Kommunikationsstärke\n- Hohe Lernbereitschaft und Eigeninitiative\n- Abgeschlossene kaufmännische Ausbildung oder vergleichbar\n- Freude am Umgang mit Menschen und Beratungssituationen',
+        benefits: ['Garantierte Vergütung während der Ausbildung', 'IHK-Prüfung inklusive', 'Persönlicher Mentor', 'Übernahmegarantie bei Erfolg', 'Karriereperspektive Agenturleitung']
+    },
+    {
+        id: 6, title: 'Vertriebspartner Sach/HUK', city: 'Bonn', region: 'nrw', type: 'Vertrieb',
+        requirements: 'Erfahrung Sachversicherung, Kundenberatung',
+        description: 'Als Vertriebspartner/in Sach/HUK sind Sie spezialisiert auf Sachversicherungen, Haftpflicht-, Unfall- und Kfz-Versicherungen. Sie beraten Privat- und Gewerbekunden in Bonn und Umgebung.\n\nIhre Aufgaben:\n- Beratung und Verkauf von Sach-, Haftpflicht-, Unfall- und Kfz-Versicherungen\n- Durchführung von Bedarfsanalysen und Deckungskonzepten\n- Betreuung und Ausbau eines bestehenden Kundenportfolios\n- Schadenmanagement und Unterstützung bei der Schadenregulierung\n- Cross-Selling in weitere ERGO Produktsparten\n\nWas wir erwarten:\n- IHK-Qualifikation nach §34d GewO\n- Erfahrung im Bereich Sachversicherung und Kompositgeschäft\n- Kompetenz in der Bedarfsanalyse und Risikoeinschätzung\n- Kundenorientierung und serviceorientiertes Arbeiten',
+        benefits: ['Attraktive Provisionsregelung', 'Bestandsübernahme möglich', 'Digitale Beratungstools', 'Weiterbildungsangebote', 'Betriebliche Altersvorsorge']
+    },
+    {
+        id: 7, title: 'Bezirksdirektor', city: 'Münster', region: 'nrw', type: 'Führung',
+        requirements: 'Min. 8 Jahre Vertrieb, Führung >5 MA, strategisches Denken',
+        description: 'Als Bezirksdirektor/in übernehmen Sie die strategische und operative Verantwortung für mehrere ERGO Agenturen in der Region Münster/Münsterland. Sie steuern den Vertrieb, entwickeln Ihre Führungskräfte und verantworten die Zielerreichung Ihres Bezirks.\n\nIhre Aufgaben:\n- Strategische Leitung eines Vertriebsbezirks mit mehreren Agenturen\n- Führung und Entwicklung von Agenturleitern und Vertriebspartnern\n- Verantwortung für Umsatz-, Bestands- und Neugeschäftsziele\n- Rekrutierung und Onboarding neuer Vertriebspartner\n- Regionale Marktanalyse und Entwicklung von Vertriebsstrategien\n\nWas wir erwarten:\n- Mindestens 8 Jahre Erfahrung im Versicherungsvertrieb\n- Nachgewiesene Führungserfahrung über mindestens 5 Mitarbeiter\n- Fachwirt oder Betriebswirt DVA (oder vergleichbar)\n- Strategisches Denkvermögen und unternehmerische Kompetenz',
+        benefits: ['Überdurchschnittliches Fixgehalt + Tantiemen', 'Firmenwagen der Oberklasse', 'Betriebliche Altersvorsorge', 'Managemententwicklungsprogramm', 'Breiter Gestaltungsspielraum']
+    },
+    {
+        id: 8, title: 'Kundenberater Innendienst', city: 'Hamburg', region: 'nord', type: 'Beratung',
+        requirements: 'Kommunikationsstärke, Serviceorientierung, Versicherungskenntnisse',
+        description: 'Als Kundenberater/in im Innendienst sind Sie die erste Ansprechperson für unsere Kunden in Hamburg. Sie beraten telefonisch und digital zu allen Versicherungsfragen und unterstützen unsere Agenturen im Tagesgeschäft.\n\nIhre Aufgaben:\n- Telefonische und digitale Kundenberatung zu allen Versicherungssparten\n- Bearbeitung von Kundenanfragen, Vertragsänderungen und Angebotserstellung\n- Unterstützung der Außendienst-Agenturen bei Serviceanliegen\n- Terminvereinbarung und Vorbereitung für Beratungsgespräche\n- Dokumentation und Pflege der Kundendaten im CRM-System\n\nWas wir erwarten:\n- Abgeschlossene kaufmännische Ausbildung, idealerweise Versicherungskaufmann/-frau\n- Ausgeprägte Kommunikationsstärke und Serviceorientierung\n- Grundlegende Versicherungskenntnisse\n- Sicherer Umgang mit digitalen Tools und CRM-Systemen',
+        benefits: ['Festes Gehalt mit Bonuskomponente', 'Flexible Arbeitszeiten', 'Home-Office möglich', 'Betriebliche Altersvorsorge', '30 Tage Urlaub']
+    }
 ];
 
 // Distance matrix (approx. km from profile city to position city)
@@ -141,7 +181,7 @@ const CV_ALL_APPLICANTS = [
         weaknesses: ['Kein Außendienst-Erfahrung'],
         scores: { vertrieb: 85, branche: 88, qualifikation: 90, standort: 85, softskills: 80 },
         totalScore: 88, status: 'recommended',
-        summary: 'Erfahrene Versicherungsmaklerin mit IHK-Qualifikation und Führungserfahrung. Ideal für Maklerbetreuung.'
+        summary: 'Frau Hoffmann, Sie bringen 5 Jahre Erfahrung im HDI-Maklervertrieb mit IHK-Qualifikation mit. Ihre Führungserfahrung und Ihr Fachwirt in Arbeit machen Sie zur idealen Kandidatin für die Maklerbetreuung.'
     },
     {
         id: 'markus', name: 'Markus Scholz', initials: 'MS', age: 38, city: 'Bonn', region: 'nrw',
@@ -152,7 +192,7 @@ const CV_ALL_APPLICANTS = [
         weaknesses: ['Keine direkte Versicherungserfahrung'],
         scores: { vertrieb: 82, branche: 65, qualifikation: 78, standort: 80, softskills: 78 },
         totalScore: 84, status: 'recommended',
-        summary: 'Erfahrener Bankberater mit starkem Vertriebshintergrund. Guter Quereinsteiger aus dem Finanzbereich.'
+        summary: 'Herr Scholz, Sie verfügen über 6 Jahre Bankvertriebserfahrung bei der Sparkasse und eine §34f-Qualifikation. Ihr starker Vertriebshintergrund und Ihre Finanzexpertise qualifizieren Sie hervorragend als Quereinsteiger in den Versicherungsvertrieb.'
     },
     {
         id: 'anna', name: 'Anna Weber', initials: 'AW', age: 26, city: 'Dortmund', region: 'nrw',
@@ -163,7 +203,7 @@ const CV_ALL_APPLICANTS = [
         weaknesses: ['Wenig Vertriebserfahrung', 'Keine Branchenkenntnisse', 'Kurze Berufserfahrung'],
         scores: { vertrieb: 45, branche: 20, qualifikation: 50, standort: 78, softskills: 72 },
         totalScore: 62, status: 'review',
-        summary: 'Junge Berufseinsteigerin mit Kundenservice-Erfahrung. Potenzial vorhanden, aber wenig Vertriebserfahrung.'
+        summary: 'Frau Weber, Sie bringen Kundenservice-Erfahrung und Kommunikationsstärke mit. Für den Einstieg in den Versicherungsvertrieb empfehlen wir Ihnen unser Trainee-Programm, um Ihre Vertriebskompetenz gezielt aufzubauen.'
     },
     {
         id: 'peter', name: 'Peter Müller', initials: 'PM', age: 45, city: 'Köln', region: 'nrw',
@@ -174,7 +214,7 @@ const CV_ALL_APPLICANTS = [
         weaknesses: ['Keine Versicherungsbranche', 'Häufige Arbeitgeberwechsel'],
         scores: { vertrieb: 78, branche: 30, qualifikation: 55, standort: 85, softskills: 75 },
         totalScore: 72, status: 'review',
-        summary: 'Erfahrener Außendienstler mit starker Akquise-Leistung. Branchenwechsel aus Industrie möglich.'
+        summary: 'Herr Müller, Sie verfügen über starke Akquise-Erfahrung im Außendienst. Ihre Vertriebskompetenz lässt sich gut auf den Versicherungsbereich übertragen – die IHK-Sachkundeprüfung §34d wäre Ihr nächster Schritt.'
     },
     {
         id: 'lisa', name: 'Lisa Krause', initials: 'LK', age: 24, city: 'Düsseldorf', region: 'nrw',
@@ -185,7 +225,7 @@ const CV_ALL_APPLICANTS = [
         weaknesses: ['Nur Praktikumserfahrung', 'Berufsanfängerin'],
         scores: { vertrieb: 35, branche: 55, qualifikation: 65, standort: 90, softskills: 70 },
         totalScore: 65, status: 'review',
-        summary: 'Berufsanfängerin mit Versicherungspraktikum und laufender IHK-Qualifikation. Hohes Potenzial.'
+        summary: 'Frau Krause, Sie befinden sich auf einem guten Weg mit Ihrem laufenden IHK-Sachkundenachweis und dem Versicherungspraktikum. Nach Abschluss Ihrer Qualifikation stehen Ihnen attraktive Einstiegsmöglichkeiten offen.'
     },
     {
         id: 'frank', name: 'Frank Bergmann', initials: 'FB', age: 48, city: 'Hamburg', region: 'nord',
@@ -196,7 +236,7 @@ const CV_ALL_APPLICANTS = [
         weaknesses: ['Keine Vertriebserfahrung', 'Keine relevante Qualifikation', 'Lücken im Lebenslauf', 'Fehlende Nachweise'],
         scores: { vertrieb: 10, branche: 5, qualifikation: 15, standort: 45, softskills: 30 },
         totalScore: 38, status: 'rejected',
-        summary: 'Bewerber ohne Vertriebserfahrung und ohne relevante Qualifikation. Erhebliche Lücken im Lebenslauf.'
+        summary: 'Herr Bergmann, Ihr Profil weist derzeit keine Vertriebserfahrung und keine versicherungsrelevante Qualifikation auf. Wir empfehlen Ihnen, zunächst grundlegende Vertriebserfahrung zu sammeln und die IHK-Sachkundeprüfung §34d anzustreben.'
     },
     {
         id: 'sabine', name: 'Sabine Richter', initials: 'SR', age: 35, city: 'Bremen', region: 'nord',
@@ -207,7 +247,7 @@ const CV_ALL_APPLICANTS = [
         weaknesses: ['Keine Vertriebserfahrung', 'Keine kaufmännische Qualifikation', 'Beschäftigungslücke', 'Fehlende Weiterbildungen'],
         scores: { vertrieb: 20, branche: 5, qualifikation: 15, standort: 35, softskills: 45 },
         totalScore: 42, status: 'rejected',
-        summary: 'Bewerberin mit Gastgewerbe-Hintergrund und Beschäftigungslücke. Keine vertriebsrelevante Qualifikation.'
+        summary: 'Frau Richter, Sie bringen Erfahrung aus dem Gastgewerbe mit. Für eine Tätigkeit im Versicherungsvertrieb empfehlen wir Ihnen unser Quereinsteiger-Programm mit integrierter IHK-Sachkundeprüfung §34d.'
     }
 ];
 
@@ -691,7 +731,7 @@ function renderCVMatches(profile) {
         const offset = Math.round(circumference * (1 - match.score / 100));
 
         return `
-            <div class="cv-match-card ${match.recommended ? 'recommended' : ''}">
+            <div class="cv-match-card ${match.recommended ? 'recommended' : ''}" onclick="openCVJobDetail(${match.position.id})">
                 <div class="cv-match-card-header">
                     <div class="cv-match-title-area">
                         <div class="cv-match-title">
@@ -715,7 +755,7 @@ function renderCVMatches(profile) {
                 <div class="cv-match-badges">
                     ${match.badges.map(b => `<span class="cv-match-badge ${b.color}">${b.text}</span>`).join('')}
                 </div>
-                <button class="cv-match-expand-btn" onclick="toggleMatchDetails(${idx})">
+                <button class="cv-match-expand-btn" onclick="event.stopPropagation(); toggleMatchDetails(${idx})">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
                         <polyline points="6 9 12 15 18 9"></polyline>
                     </svg>
@@ -769,7 +809,7 @@ function sortCVMatches(sortBy) {
         const offset = Math.round(circumference * (1 - match.score / 100));
 
         return `
-            <div class="cv-match-card ${match.recommended ? 'recommended' : ''}">
+            <div class="cv-match-card ${match.recommended ? 'recommended' : ''}" onclick="openCVJobDetail(${match.position.id})">
                 <div class="cv-match-card-header">
                     <div class="cv-match-title-area">
                         <div class="cv-match-title">
@@ -793,7 +833,7 @@ function sortCVMatches(sortBy) {
                 <div class="cv-match-badges">
                     ${match.badges.map(b => `<span class="cv-match-badge ${b.color}">${b.text}</span>`).join('')}
                 </div>
-                <button class="cv-match-expand-btn" onclick="toggleMatchDetails(${idx})">
+                <button class="cv-match-expand-btn" onclick="event.stopPropagation(); toggleMatchDetails(${idx})">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
                         <polyline points="6 9 12 15 18 9"></polyline>
                     </svg>
@@ -967,6 +1007,90 @@ function cvDetailAction(action) {
 }
 
 // ========================================
+// JOB DETAIL OVERLAY
+// ========================================
+
+function openCVJobDetail(positionId) {
+    const position = CV_POSITIONS.find(p => p.id === positionId);
+    if (!position) return;
+
+    const overlay = document.getElementById('cvJobDetailOverlay');
+    const titleEl = document.getElementById('cvJobDetailTitle');
+    const body = document.getElementById('cvJobDetailBody');
+
+    titleEl.textContent = position.title;
+
+    const descriptionHTML = (position.description || '').replace(/\n/g, '<br>');
+
+    body.innerHTML = `
+        <div class="cv-job-detail-meta">
+            <div class="cv-job-detail-meta-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                ${position.city}
+            </div>
+            <div class="cv-job-detail-meta-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"></path></svg>
+                ${position.type}
+            </div>
+            <div class="cv-job-detail-meta-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                Vollzeit
+            </div>
+        </div>
+
+        <div class="cv-job-detail-section">
+            <h4>Stellenbeschreibung</h4>
+            <div class="cv-job-detail-description">${descriptionHTML}</div>
+        </div>
+
+        <div class="cv-job-detail-section">
+            <h4>Anforderungen</h4>
+            <p style="font-size: var(--font-sm); color: var(--text-secondary); line-height: var(--leading-relaxed);">${position.requirements}</p>
+        </div>
+
+        ${position.benefits && position.benefits.length ? `
+        <div class="cv-job-detail-section">
+            <h4>Wir bieten</h4>
+            <ul class="cv-job-benefits">
+                ${position.benefits.map(b => `
+                    <li class="cv-job-benefit-tag">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        ${b}
+                    </li>
+                `).join('')}
+            </ul>
+        </div>` : ''}
+    `;
+
+    overlay.classList.add('active');
+}
+
+function closeCVJobDetail() {
+    const overlay = document.getElementById('cvJobDetailOverlay');
+    if (overlay) overlay.classList.remove('active');
+}
+
+// ========================================
+// TOAST NOTIFICATIONS
+// ========================================
+
+function showCVToast(message, type) {
+    type = type || 'info';
+    const container = document.getElementById('cvToastContainer');
+    if (!container) return;
+    const icons = {
+        success: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>',
+        info: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>',
+        warning: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>'
+    };
+    const toast = document.createElement('div');
+    toast.className = 'cv-toast ' + type;
+    toast.innerHTML = (icons[type] || icons.info) + '<span>' + message + '</span>';
+    container.appendChild(toast);
+    setTimeout(function() { toast.remove(); }, 3000);
+}
+
+// ========================================
 // CHATBOT
 // ========================================
 
@@ -1124,5 +1248,8 @@ window.filterCVApplicants = filterCVApplicants;
 window.openCVDetail = openCVDetail;
 window.closeCVDetail = closeCVDetail;
 window.cvDetailAction = cvDetailAction;
+window.openCVJobDetail = openCVJobDetail;
+window.closeCVJobDetail = closeCVJobDetail;
+window.showCVToast = showCVToast;
 window.toggleCVChat = toggleCVChat;
 window.cvChatAction = cvChatAction;

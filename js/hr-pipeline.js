@@ -1801,7 +1801,7 @@ function toggleHPSideBySide() {
         if (iframe) iframe.src = '';
         if (btnText) btnText.textContent = 'Original-CV';
     } else {
-        if (iframe) iframe.src = 'cv/max-berger-cv.html';
+        if (iframe) iframe.src = 'cv/Lebenslauf_Max_Berger.pdf';
         cvPane.classList.add('visible');
         panel.classList.add('side-by-side');
         if (btnText) btnText.textContent = 'CV ausblenden';

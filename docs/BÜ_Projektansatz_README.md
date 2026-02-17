@@ -102,6 +102,40 @@ Parallel: **Machbarkeitsanalyse für Formular/API-Kanal** als ergänzende Option
 
 ---
 
+## Konkrete Ergebnisse (Deliverables)
+
+### Nach Phase 1 – Woche 8
+
+| ID | Deliverable | Beschreibung |
+|---|---|---|
+| D1.1 | **Fachkonzept-Dokument** | Vollständiges IST/SOLL-Prozessmodell inkl. Volumenanalyse und Prozesslandkarte |
+| D1.2 | **Business Case** | ROI-Berechnung, Amortisationsanalyse und Kosten-Nutzen-Bewertung der Automatisierung |
+| D1.3 | **Architekturentscheidung** | Bewertungsmatrix KI-Agent (Option A vs. B) und Machbarkeitsanalyse Formular/API-Kanal |
+| D1.4 | **Anforderungskatalog** | Funktionale & nicht-funktionale Anforderungen, priorisiert nach MoSCoW |
+| D1.5 | **Projekthandbuch** | Governance-Struktur, RACI-Matrix und Kommunikationsplan |
+
+### Nach Phase 2 – Woche 16
+
+| ID | Deliverable | Beschreibung |
+|---|---|---|
+| D2.1 | **PoC KI-Agent** | Funktionsfähiger Prototyp für E-Mail-Klassifikation und Anhang-Extraktion (Word, PDF, Excel) |
+| D2.2 | **Produktionsreifer KI-Agent** | Vollständige Pipeline mit JSON-Ausgabe für Robotics/RPA-Anbindung |
+| D2.3 | **Integrationskonzept** | Technische Spezifikation der Schnittstellen zu Postkorbsystem & RPA |
+| D2.4 | **Formular-/API-Spezifikation** | Schnittstellendefinition für den Großmakler-Kanal (OpenAPI/Swagger) |
+| D2.5 | **Sicherheits- & Datenschutzkonzept** | DSGVO-Bewertung, Datenverarbeitungsverzeichnis und Risikoanalyse |
+
+### Nach Phase 3 – Woche 20
+
+| ID | Deliverable | Beschreibung |
+|---|---|---|
+| D3.1 | **Testbericht & Abnahmeprotokoll** | Ergebnisse Integrationstests und UAT mit formaler Abnahme |
+| D3.2 | **Qualitätsreport KI-Erkennung** | Precision/Recall-Metriken je Vorgangstyp, Konfidenz-Schwellwerte |
+| D3.3 | **Pilotbericht** | Auswertung des Echtbetriebs mit Volumendaten, Fehlerquoten und Durchlaufzeiten |
+| D3.4 | **Schulungsunterlagen & Betriebshandbuch** | Anwender-Dokumentation und Runbook für ERGO-Team |
+| D3.5 | **Übergabedokumentation** | Eskalationsmatrix, SLA-Definition und Hyper-Care-Protokoll |
+
+---
+
 ## Staffing & Ressourcen
 
 ### Deloitte-Team

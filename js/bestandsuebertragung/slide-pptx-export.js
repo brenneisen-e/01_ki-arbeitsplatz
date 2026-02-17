@@ -539,8 +539,96 @@ function buildSlide12(pres) {
         });
     });
 
+    // ---- DELIVERABLES SECTION ----
+    const delLabelY = cardY + cardH + 0.12;
+    addSectionLabel(slide, 'KONKRETE ERGEBNISSE (DELIVERABLES)', PX, delLabelY, C.dkGray);
+
+    const delY = delLabelY + 0.32;
+    const delW = (BW - 0.4) / 3;
+    const delH = 1.55;
+
+    const deliverables = [
+        {
+            title: 'Nach Phase 1', period: 'Woche 8', color: C.green,
+            items: [
+                { id: 'D1.1', label: 'Fachkonzept-Dokument', desc: 'IST/SOLL-Prozessmodell, Volumenanalyse' },
+                { id: 'D1.2', label: 'Business Case', desc: 'ROI-Berechnung, Amortisationsanalyse' },
+                { id: 'D1.3', label: 'Architekturentscheidung', desc: 'Bewertungsmatrix Option A vs. B' },
+                { id: 'D1.4', label: 'Anforderungskatalog', desc: 'Funktional & nicht-funktional (MoSCoW)' },
+                { id: 'D1.5', label: 'Projekthandbuch', desc: 'Governance, RACI, Kommunikationsplan' }
+            ]
+        },
+        {
+            title: 'Nach Phase 2', period: 'Woche 16', color: C.dkGreen,
+            items: [
+                { id: 'D2.1', label: 'PoC KI-Agent', desc: 'E-Mail-Klassifikation + Anhang-Extraktion' },
+                { id: 'D2.2', label: 'Produktionsreifer KI-Agent', desc: 'JSON-Ausgabe f\u00fcr Robotics/RPA' },
+                { id: 'D2.3', label: 'Integrationskonzept', desc: 'Postkorbsystem & RPA-Schnittstelle' },
+                { id: 'D2.4', label: 'Formular-/API-Spezifikation', desc: 'OpenAPI/Swagger f\u00fcr Gro\u00dfmakler' },
+                { id: 'D2.5', label: 'Sicherheits- & Datenschutzkonzept', desc: 'DSGVO, Risikoanalyse' }
+            ]
+        },
+        {
+            title: 'Nach Phase 3', period: 'Woche 20', color: C.teal,
+            items: [
+                { id: 'D3.1', label: 'Testbericht & Abnahmeprotokoll', desc: 'Integrationstests & UAT' },
+                { id: 'D3.2', label: 'Qualit\u00e4tsreport KI-Erkennung', desc: 'Precision/Recall je Vorgangstyp' },
+                { id: 'D3.3', label: 'Pilotbericht', desc: 'Echtbetrieb, Fehlerquoten, Durchlaufzeiten' },
+                { id: 'D3.4', label: 'Schulungsunterlagen & Betriebshandbuch', desc: 'Runbook f\u00fcr ERGO-Team' },
+                { id: 'D3.5', label: '\u00dcbergabedokumentation', desc: 'Eskalationsmatrix, SLA, Hyper-Care' }
+            ]
+        }
+    ];
+
+    deliverables.forEach((del, i) => {
+        const dx = PX + i * (delW + 0.2);
+        // Card background
+        slide.addShape('roundRect', {
+            x: dx, y: delY, w: delW, h: delH,
+            rectRadius: 0.06,
+            fill: { color: C.white },
+            line: { color: C.ltGray, width: 0.5 }
+        });
+        // Left accent bar
+        slide.addShape('rect', {
+            x: dx, y: delY, w: 0.05, h: delH,
+            fill: { color: del.color }
+        });
+        // Header
+        slide.addText([
+            { text: del.title, options: { bold: true, fontSize: 11, color: C.black, fontFace: FONT } },
+            { text: '  ' + del.period, options: { fontSize: 10, color: C.mdGray, fontFace: FONT } }
+        ], {
+            x: dx + 0.12, y: delY + 0.06, w: delW - 0.24, h: 0.22,
+            fontFace: FONT, valign: 'middle'
+        });
+        // Deliverable items
+        let itemY = delY + 0.3;
+        del.items.forEach(item => {
+            // ID badge
+            slide.addShape('roundRect', {
+                x: dx + 0.12, y: itemY + 0.01, w: 0.38, h: 0.17,
+                rectRadius: 0.03, fill: { color: del.color }
+            });
+            slide.addText(item.id, {
+                x: dx + 0.12, y: itemY + 0.01, w: 0.38, h: 0.17,
+                fontFace: FONT, fontSize: 7, bold: true, color: C.white,
+                align: 'center', valign: 'middle'
+            });
+            // Label + description
+            slide.addText([
+                { text: item.label, options: { bold: true, fontSize: 9, color: C.black, fontFace: FONT } },
+                { text: ' \u2013 ' + item.desc, options: { fontSize: 8.5, color: C.dkGray, fontFace: FONT } }
+            ], {
+                x: dx + 0.55, y: itemY, w: delW - 0.7, h: 0.24,
+                fontFace: FONT, valign: 'top', wrap: true, lineSpacingMultiple: 0.95
+            });
+            itemY += 0.245;
+        });
+    });
+
     // ---- STAFFING SECTION ----
-    const staffSectionY = cardY + cardH + 0.15;
+    const staffSectionY = delY + delH + 0.15;
     slide.addText('DELOITTE-TEAM & STAFFING', {
         x: PX, y: staffSectionY, w: BW, h: 0.22,
         fontFace: FONT, fontSize: 11, bold: true, color: C.dkGray, letterSpacing: 1

@@ -88,6 +88,11 @@
                         <span class="hp-landing-formats">PDF oder DOCX</span>
                         <input type="file" id="hpFileInput" accept=".pdf,.docx" onchange="handleHPUpload(event)" style="display:none">
                     </div>
+                    <label class="hp-linkedin-toggle" for="hpLinkedinToggle">
+                        <input type="checkbox" id="hpLinkedinToggle" checked>
+                        <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16" style="color:#0A66C2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+                        <span>LinkedIn &amp; Social-Media-Profile automatisch analysieren</span>
+                    </label>
                 </div>
                 <div class="hp-landing-hero-visual">
                     <div class="hp-landing-stats">
@@ -165,28 +170,31 @@
                 </div>
             </div>
 
-            <!-- Demo Profiles (less prominent) -->
+            <!-- Demo Profiles (collapsible) -->
             <div class="hp-demo-profiles">
-                <div class="hp-demo-divider">
+                <div class="hp-demo-divider hp-demo-toggle" onclick="this.parentElement.classList.toggle('collapsed')">
                     <span>Demo-Modus</span>
+                    <svg class="hp-demo-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="6 9 12 15 18 9"></polyline></svg>
                 </div>
-                <p class="hp-demo-hint">Testen Sie die KI-Analyse mit einem vorgefertigten Profil:</p>
-                <div class="hp-demo-grid">
-                    <button class="hp-demo-btn score-high" onclick="loadHPDemoProfile('max')">
-                        <div class="hp-demo-avatar">MB</div>
-                        <span class="name">Max Berger</span>
-                        <span class="role">Top-Kandidat</span>
-                    </button>
-                    <button class="hp-demo-btn score-mid" onclick="loadHPDemoProfile('sarah')">
-                        <div class="hp-demo-avatar">SK</div>
-                        <span class="name">Sarah Klein</span>
-                        <span class="role">Quereinsteigerin</span>
-                    </button>
-                    <button class="hp-demo-btn score-low" onclick="loadHPDemoProfile('thomas')">
-                        <div class="hp-demo-avatar">TW</div>
-                        <span class="name">Thomas Wendt</span>
-                        <span class="role">Ablehnung</span>
-                    </button>
+                <div class="hp-demo-content">
+                    <p class="hp-demo-hint">Testen Sie die KI-Analyse mit einem vorgefertigten Profil:</p>
+                    <div class="hp-demo-grid">
+                        <button class="hp-demo-btn score-high" onclick="loadHPDemoProfile('max')">
+                            <div class="hp-demo-avatar">MB</div>
+                            <span class="name">Max Berger</span>
+                            <span class="role">Top-Kandidat</span>
+                        </button>
+                        <button class="hp-demo-btn score-mid" onclick="loadHPDemoProfile('sarah')">
+                            <div class="hp-demo-avatar">SK</div>
+                            <span class="name">Sarah Klein</span>
+                            <span class="role">Quereinsteigerin</span>
+                        </button>
+                        <button class="hp-demo-btn score-low" onclick="loadHPDemoProfile('thomas')">
+                            <div class="hp-demo-avatar">TW</div>
+                            <span class="name">Thomas Wendt</span>
+                            <span class="role">Ablehnung</span>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

@@ -32,7 +32,7 @@ const CV_PROFILES = {
         weaknesses: ['Keine ERGO-Erfahrung', 'Wechselbereitschaft unklar'],
         scores: { vertrieb: 95, branche: 90, qualifikation: 88, standort: 92, softskills: 85 },
         totalScore: 92,
-        summary: 'Max Berger bringt 8 Jahre fundierte Vertriebserfahrung im Versicherungsaußendienst mit. Seine IHK-Qualifikation, nachgewiesene Führungskompetenz und starke Akquise-Leistung machen ihn zu einem idealen Kandidaten für leitende Vertriebspositionen. Seine Erfahrung bei der Allianz zeigt Branchentreue und Kompetenz im Bestandsmanagement.',
+        summary: 'Herr Berger, Sie bringen 8 Jahre fundierte Vertriebserfahrung im Versicherungsaußendienst mit. Ihre IHK-Qualifikation, nachgewiesene Führungskompetenz und starke Akquise-Leistung machen Sie zu einem idealen Kandidaten für leitende Vertriebspositionen. Ihre Erfahrung bei der Allianz zeigt Branchentreue und Kompetenz im Bestandsmanagement.',
         radarData: [95, 90, 88, 92, 85]
     },
     sarah: {
@@ -50,7 +50,7 @@ const CV_PROFILES = {
         weaknesses: ['Keine Versicherungserfahrung', 'Keine IHK-Qualifikation', 'Branchenwechsel'],
         scores: { vertrieb: 65, branche: 35, qualifikation: 55, standort: 88, softskills: 82 },
         totalScore: 68,
-        summary: 'Sarah Klein ist eine motivierte Quereinsteigerin mit solider Vertriebserfahrung aus dem Einzelhandel. Ihre Führungskompetenz und ausgeprägte Kommunikationsstärke sind wertvolle Grundlagen für den Versicherungsvertrieb. Fehlende Branchenkenntnisse können durch das ERGO Trainee-Programm kompensiert werden.',
+        summary: 'Frau Klein, Sie sind eine motivierte Quereinsteigerin mit solider Vertriebserfahrung aus dem Einzelhandel. Ihre Führungskompetenz und ausgeprägte Kommunikationsstärke sind wertvolle Grundlagen für den Versicherungsvertrieb. Fehlende Branchenkenntnisse können Sie durch unser ERGO Trainee-Programm kompensieren.',
         radarData: [65, 35, 55, 88, 82]
     },
     thomas: {
@@ -68,7 +68,7 @@ const CV_PROFILES = {
         weaknesses: ['Keine Vertriebserfahrung', 'Keine Branchenkenntnisse', 'Keine kaufmännische Ausbildung', 'Fehlende Kundenorientierung', 'Standort ohne offene Stellen'],
         scores: { vertrieb: 10, branche: 5, qualifikation: 25, standort: 20, softskills: 35 },
         totalScore: 31,
-        summary: 'Thomas Wendt verfügt über 20 Jahre Erfahrung in der Kommunalverwaltung, jedoch ohne jeglichen Bezug zum Vertrieb oder zur Versicherungsbranche. Es fehlen grundlegende Voraussetzungen wie Vertriebserfahrung, kaufmännisches Wissen und Kundenorientierung. Eine Empfehlung für eine Vertriebsposition ist derzeit nicht möglich.',
+        summary: 'Herr Wendt, Sie verfügen über 20 Jahre Erfahrung in der Kommunalverwaltung, jedoch ohne jeglichen Bezug zum Vertrieb oder zur Versicherungsbranche. Es fehlen Ihnen grundlegende Voraussetzungen wie Vertriebserfahrung, kaufmännisches Wissen und Kundenorientierung. Wir können Ihnen derzeit leider keine Vertriebsposition empfehlen.',
         radarData: [10, 5, 25, 20, 35],
         rejected: true,
         rejectionText: 'Auf Basis Ihres Profils können wir Ihnen derzeit leider keine passende Vertriebsposition empfehlen. Es fehlen grundlegende Voraussetzungen: keine Vertriebserfahrung, keine Branchenkenntnisse im Versicherungsbereich und keine kaufmännische Ausbildung.'
@@ -381,7 +381,7 @@ async function openCVScanner() {
     if (mainApp) mainApp.style.display = 'none';
 
     // Hide other modules
-    ['bankenModule', 'risikoscoringModule', 'bestandsuebertragungModule', 'pmoToolboxModule'].forEach(id => {
+    ['bankenModule', 'risikoscoringModule', 'bestandsuebertragungModule', 'pmoToolboxModule', 'hrPipelineModule'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.style.display = 'none';
     });
@@ -594,25 +594,25 @@ function renderProfileCard(profile) {
         </div>
         <div class="cv-profile-body">
             <div class="cv-profile-section">
-                <h4>Berufserfahrung</h4>
-                <p style="font-size: var(--font-sm); color: var(--text-secondary); margin: 0;">${profile.experience}</p>
+                <h4>Ihre Berufserfahrung</h4>
+                <p style="font-size: var(--font-base); color: var(--text-secondary); margin: 0;">${profile.experience}</p>
             </div>
             <div class="cv-profile-section">
-                <h4>Ausbildung</h4>
-                <p style="font-size: var(--font-sm); color: var(--text-secondary); margin: 0;">${profile.education}</p>
+                <h4>Ihre Ausbildung</h4>
+                <p style="font-size: var(--font-base); color: var(--text-secondary); margin: 0;">${profile.education}</p>
             </div>
             <div class="cv-profile-section">
-                <h4>Kernkompetenzen</h4>
+                <h4>Ihre Kernkompetenzen</h4>
                 <div class="cv-tags">
                     ${profile.skills.map(s => `<span class="cv-tag">${s}</span>`).join('')}
                 </div>
             </div>
             <div class="cv-profile-section">
-                <h4>Stärken-Profil</h4>
+                <h4>Ihr Stärken-Profil</h4>
                 <canvas id="cvRadarChart" class="cv-radar-container"></canvas>
             </div>
-            <div class="cv-ki-summary">
-                <strong>KI-Zusammenfassung:</strong> ${profile.summary}
+            <div class="cv-ki-summary" style="font-size: var(--font-base);">
+                <strong>Unsere KI-Einschätzung für Sie:</strong> ${profile.summary}
             </div>
         </div>
     `;
@@ -980,7 +980,7 @@ function initCVChat() {
     buttonsContainer.innerHTML = '';
 
     // Welcome message
-    addCVChatBubble('bot', 'Hallo! Ich bin der ERGO KI-Recruiting-Assistent. Wie kann ich Ihnen helfen?');
+    addCVChatBubble('bot', 'Hallo! Ich bin Ihr ERGO KI-Recruiting-Assistent. Wie kann ich Ihnen weiterhelfen?');
 
     // Show mode-specific buttons
     const buttons = cvCurrentMode === 'bewerber' ? CV_CHAT_BEWERBER_START : CV_CHAT_ARBEITGEBER_START;

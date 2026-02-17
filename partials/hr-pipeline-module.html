@@ -1,0 +1,448 @@
+<!-- HR Pipeline Module: KI-gestütztes Recruiting & Bewerbermanagement -->
+<div class="hp-scanner-page">
+    <!-- Toast Container -->
+    <div id="hpToastContainer" class="hp-toast-container"></div>
+
+    <!-- Module Header -->
+    <div class="hp-scanner-header">
+        <div class="hp-scanner-header-left">
+            <button class="back-button" onclick="closeHRPipeline()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+                Zurück
+            </button>
+            <div class="hp-scanner-header-info">
+                <div class="hp-scanner-logo-small">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
+                        <path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"></path>
+                        <circle cx="8.5" cy="7" r="4"></circle>
+                        <line x1="20" y1="8" x2="20" y2="14"></line>
+                        <line x1="23" y1="11" x2="17" y2="11"></line>
+                    </svg>
+                </div>
+                <div class="hp-scanner-header-text">
+                    <h1 class="hp-scanner-page-title">HR Pipeline</h1>
+                    <div class="hp-scanner-subtitle">KI-gestütztes Recruiting & Bewerbermanagement</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Compliance Badge -->
+        <div class="hp-compliance-badges">
+            <span class="hp-compliance-badge" title="EU AI Act konform - Hochrisiko-KI nach Anhang III, Nr. 4">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                EU AI Act
+            </span>
+            <span class="hp-compliance-badge" title="DSGVO-konform mit Human-in-the-Loop">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                DSGVO
+            </span>
+        </div>
+
+        <!-- Mode Toggle -->
+        <div class="hp-mode-toggle">
+            <button class="hp-mode-btn active" data-mode="bewerber" onclick="switchHPMode('bewerber')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+                Bewerber-Portal
+            </button>
+            <button class="hp-mode-btn" data-mode="arbeitgeber" onclick="switchHPMode('arbeitgeber')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="3" y1="9" x2="21" y2="9"></line>
+                    <line x1="9" y1="21" x2="9" y2="9"></line>
+                </svg>
+                Recruiting Dashboard
+            </button>
+        </div>
+    </div>
+
+    <!-- ===========================
+         BEWERBER MODE
+         =========================== -->
+    <div id="hpBewerberMode" class="hp-bewerber-section">
+        <!-- Upload Section -->
+        <div id="hpUploadSection" class="hp-upload-section">
+            <div class="hp-upload-welcome">
+                <h2>Finden Sie Ihre passende Vertriebsposition bei ERGO</h2>
+                <p>Laden Sie Ihren Lebenslauf hoch und unsere KI findet die besten Stellen für Sie.</p>
+            </div>
+
+            <div class="hp-dropzone" id="hpDropzone" onclick="document.getElementById('hpFileInput').click()">
+                <svg class="hp-dropzone-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"></path>
+                    <polyline points="17 8 12 3 7 8"></polyline>
+                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                </svg>
+                <h3>Lebenslauf hochladen</h3>
+                <p>Datei hierher ziehen oder klicken zum Auswählen</p>
+                <div class="format-badges">
+                    <span class="format-badge">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12">
+                            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                        </svg>
+                        PDF
+                    </span>
+                    <span class="format-badge">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12">
+                            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                        </svg>
+                        DOCX
+                    </span>
+                </div>
+                <input type="file" id="hpFileInput" accept=".pdf,.docx" onchange="handleHPUpload(event)">
+            </div>
+
+            <!-- Demo Profiles -->
+            <div class="hp-demo-profiles">
+                <h4>oder Demo-Profil auswählen</h4>
+                <div class="hp-demo-grid">
+                    <button class="hp-demo-btn score-high" onclick="loadHPDemoProfile('max')">
+                        <div class="hp-demo-avatar">MB</div>
+                        <span class="name">Max Berger</span>
+                        <span class="role">Top-Kandidat</span>
+                    </button>
+                    <button class="hp-demo-btn score-mid" onclick="loadHPDemoProfile('sarah')">
+                        <div class="hp-demo-avatar">SK</div>
+                        <span class="name">Sarah Klein</span>
+                        <span class="role">Quereinsteigerin</span>
+                    </button>
+                    <button class="hp-demo-btn score-low" onclick="loadHPDemoProfile('thomas')">
+                        <div class="hp-demo-avatar">TW</div>
+                        <span class="name">Thomas Wendt</span>
+                        <span class="role">Ablehnung</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading Animation -->
+        <div id="hpLoadingSection" class="hp-loading-section">
+            <div class="hp-loading-spinner"></div>
+            <h3>KI analysiert Ihren Lebenslauf...</h3>
+            <div class="hp-loading-bar">
+                <div class="hp-loading-bar-fill" id="hpLoadingBar"></div>
+            </div>
+            <div class="hp-loading-status" id="hpLoadingStatus">Dokument wird verarbeitet...</div>
+        </div>
+
+        <!-- Results Section -->
+        <div id="hpResultsSection" class="hp-results-section">
+            <!-- DSGVO Banner -->
+            <div class="hp-dsgvo-banner">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                KI-gestützte Vorauswahl — Die finale Bewertung und Entscheidung wird stets durch qualifiziertes Personal getroffen.
+            </div>
+
+            <!-- Profile Card -->
+            <div class="hp-profile-card" id="hpProfileCard">
+                <!-- Filled dynamically -->
+            </div>
+
+            <!-- Rejection Notice -->
+            <div class="hp-rejection-notice" id="hpRejectionNotice">
+                <div class="hp-rejection-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                    </svg>
+                </div>
+                <div>
+                    <h4>Derzeit keine passende Position verfügbar</h4>
+                    <p id="hpRejectionText"></p>
+                    <span class="hp-alt-suggestion" onclick="hpChatAction('quereinsteiger')">Informieren Sie sich über unser Quereinsteiger-Programm</span>
+                </div>
+            </div>
+
+            <!-- Job Matches -->
+            <div class="hp-matches-header">
+                <h3>Stellenvorschläge</h3>
+                <div class="hp-matches-sort">
+                    <label>Sortieren:</label>
+                    <select id="hpSortSelect" onchange="sortHPMatches(this.value)">
+                        <option value="score">Match-Score</option>
+                        <option value="distance">Entfernung</option>
+                        <option value="region">Region</option>
+                    </select>
+                </div>
+            </div>
+            <div id="hpMatchesList">
+                <!-- Job match cards filled dynamically -->
+            </div>
+
+            <button class="back-button" style="margin-top: var(--space-6);" onclick="resetHPBewerber()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+                Neuen Lebenslauf hochladen
+            </button>
+        </div>
+    </div>
+
+    <!-- ===========================
+         ARBEITGEBER MODE
+         =========================== -->
+    <div id="hpArbeitgeberMode" class="hp-employer-section">
+        <!-- Toolbar -->
+        <div class="hp-employer-toolbar">
+            <div class="hp-employer-toolbar-left">
+                <h3 class="hp-employer-section-title">Recruiting Dashboard</h3>
+            </div>
+            <div class="hp-employer-toolbar-right">
+                <label class="hp-blind-toggle" title="Anonymisierte Ansicht (AGG-konform)">
+                    <input type="checkbox" id="hpBlindToggle" onchange="toggleHPBlindScreening()">
+                    <span class="hp-blind-toggle-slider"></span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
+                    Blind Screening
+                </label>
+                <button class="hp-action-btn" id="hpCompareBtn" onclick="openHPCompare()" style="display:none;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                    Vergleichen (<span id="hpCompareCount">0</span>)
+                </button>
+            </div>
+        </div>
+
+        <!-- KPI Bar -->
+        <div class="hp-kpi-bar">
+            <div class="hp-kpi-card">
+                <div class="hp-kpi-label">Bewerbungen</div>
+                <div class="hp-kpi-value" id="hpKpiBewerbungen" data-target="47">0</div>
+                <div class="hp-kpi-trend up">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline></svg>
+                    +12% vs. Vormonat
+                </div>
+                <canvas class="hp-sparkline" id="hpSparkline1" width="120" height="32"></canvas>
+            </div>
+            <div class="hp-kpi-card">
+                <div class="hp-kpi-label">Durchschn. Score</div>
+                <div class="hp-kpi-value blue" id="hpKpiScore" data-target="68">0</div>
+                <div class="hp-kpi-trend up">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline></svg>
+                    +3 Punkte
+                </div>
+                <canvas class="hp-sparkline" id="hpSparkline2" width="120" height="32"></canvas>
+            </div>
+            <div class="hp-kpi-card clickable" onclick="filterHPByRecommended()" style="cursor:pointer" title="Klicken zum Filtern">
+                <div class="hp-kpi-label">Empfohlene Kandidaten</div>
+                <div class="hp-kpi-value green" id="hpKpiEmpfohlen" data-target="12">0</div>
+                <div class="hp-kpi-trend up">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline></svg>
+                    +4 diese Woche
+                </div>
+                <canvas class="hp-sparkline" id="hpSparkline3" width="120" height="32"></canvas>
+            </div>
+            <div class="hp-kpi-card">
+                <div class="hp-kpi-label">Ablehnungsquote</div>
+                <div class="hp-kpi-value red" id="hpKpiAblehnung" data-target="34" data-suffix="%">0%</div>
+                <div class="hp-kpi-trend down">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"></polyline></svg>
+                    -5% (verbessert)
+                </div>
+                <canvas class="hp-sparkline" id="hpSparkline4" width="120" height="32"></canvas>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="hp-filters">
+            <select class="hp-filter-select" id="hpFilterRegion" onchange="filterHPApplicants()">
+                <option value="">Alle Regionen</option>
+                <option value="nrw">Nordrhein-Westfalen</option>
+                <option value="nord">Norddeutschland</option>
+                <option value="sued">Süddeutschland</option>
+            </select>
+            <select class="hp-filter-select" id="hpFilterScore" onchange="filterHPApplicants()">
+                <option value="">Alle Scores</option>
+                <option value="high">Score > 80</option>
+                <option value="mid">Score 60-80</option>
+                <option value="low">Score &lt; 60</option>
+            </select>
+            <select class="hp-filter-select" id="hpFilterStatus" onchange="filterHPApplicants()">
+                <option value="">Alle Status</option>
+                <option value="recommended">Empfohlen</option>
+                <option value="review">Prüfen</option>
+                <option value="rejected">Ablehnung empfohlen</option>
+            </select>
+        </div>
+
+        <!-- Applicant Grid -->
+        <div class="hp-applicant-grid" id="hpApplicantGrid">
+            <!-- Filled dynamically -->
+        </div>
+    </div>
+
+    <!-- ===========================
+         DETAIL OVERLAY (Arbeitgeber)
+         =========================== -->
+    <div class="hp-detail-overlay" id="hpDetailOverlay" onclick="if(event.target===this)closeHPDetail()">
+        <div class="hp-detail-panel">
+            <div class="hp-detail-header">
+                <h3 id="hpDetailName">Bewerber-Detail</h3>
+                <button class="hp-detail-close" onclick="closeHPDetail()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="hp-detail-body" id="hpDetailBody">
+                <!-- Filled dynamically -->
+            </div>
+            <div class="hp-detail-actions">
+                <button class="hp-action-btn primary" onclick="hpDetailAction('einladen')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 11.08V12a10 10 0 11-5.93-9.14"></path>
+                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                    </svg>
+                    Einladen
+                </button>
+                <button class="hp-action-btn danger" onclick="hpDetailAction('ablehnen')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="15" y1="9" x2="9" y2="15"></line>
+                        <line x1="9" y1="9" x2="15" y2="15"></line>
+                    </svg>
+                    Ablehnen
+                </button>
+                <button class="hp-action-btn" onclick="hpDetailAction('merken')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"></path>
+                    </svg>
+                    Merken
+                </button>
+                <button class="hp-action-btn" onclick="generateHPInterviewQuestions()" title="KI-generierte Interviewfragen">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"></path>
+                        <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                    </svg>
+                    Interviewfragen
+                </button>
+                <button class="hp-action-btn" onclick="showCVPdfPreview()" id="hpPdfBtn" style="display:none" title="Original-CV anzeigen">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                    </svg>
+                    Original-CV
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===========================
+         COMPARISON OVERLAY
+         =========================== -->
+    <div class="hp-detail-overlay" id="hpCompareOverlay" onclick="if(event.target===this)closeHPCompare()">
+        <div class="hp-detail-panel hp-compare-panel">
+            <div class="hp-detail-header">
+                <h3>Kandidatenvergleich</h3>
+                <button class="hp-detail-close" onclick="closeHPCompare()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="hp-detail-body" id="hpCompareBody">
+                <!-- Filled dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ===========================
+         INTERVIEW QUESTIONS OVERLAY
+         =========================== -->
+    <div class="hp-detail-overlay" id="hpInterviewOverlay" onclick="if(event.target===this)closeHPInterviewQuestions()">
+        <div class="hp-detail-panel">
+            <div class="hp-detail-header">
+                <h3>KI-generierte Interviewfragen</h3>
+                <button class="hp-detail-close" onclick="closeHPInterviewQuestions()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="hp-detail-body" id="hpInterviewBody">
+                <!-- Filled dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ===========================
+         PDF PREVIEW OVERLAY
+         =========================== -->
+    <div class="hp-detail-overlay" id="hpPdfOverlay" onclick="if(event.target===this)closeCVPdfPreview()">
+        <div class="hp-detail-panel hp-pdf-panel">
+            <div class="hp-detail-header">
+                <h3>Original-Bewerbung</h3>
+                <button class="hp-detail-close" onclick="closeCVPdfPreview()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="hp-detail-body" style="padding:0;height:calc(100% - 56px);">
+                <iframe id="hpPdfFrame" style="width:100%;height:100%;border:none;"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===========================
+         CHATBOT
+         =========================== -->
+    <button class="hp-chat-toggle" id="hpChatToggle" onclick="toggleHPChat()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"></path>
+        </svg>
+    </button>
+
+    <div class="hp-chat-window" id="hpChatWindow">
+        <div class="hp-chat-header">
+            <div class="hp-chat-bot-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="11" width="18" height="10" rx="2"></rect>
+                    <circle cx="12" cy="5" r="2"></circle>
+                    <path d="M12 7v4"></path>
+                    <line x1="8" y1="16" x2="8" y2="16"></line>
+                    <line x1="16" y1="16" x2="16" y2="16"></line>
+                </svg>
+            </div>
+            <div class="hp-chat-header-text">
+                <h4>ERGO KI-Assistent</h4>
+                <span>Recruiting-Unterstützung</span>
+            </div>
+            <button class="hp-chat-close" onclick="toggleHPChat()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+        <div class="hp-chat-messages" id="hpChatMessages">
+            <!-- Messages filled dynamically -->
+        </div>
+        <div class="hp-chat-buttons" id="hpChatButtons">
+            <!-- Buttons filled dynamically -->
+        </div>
+        <div class="hp-chat-input-area">
+            <div class="hp-chat-input-wrapper">
+                <input type="text" placeholder="Demo-Modus -- bitte Buttons nutzen" disabled>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16" style="color: var(--text-muted)">
+                    <line x1="22" y1="2" x2="11" y2="13"></line>
+                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                </svg>
+            </div>
+        </div>
+    </div>
+</div>

@@ -3642,6 +3642,13 @@
     color: var(--text-primary);
 }
 
+.hc-ew-vid {
+    font-size: var(--font-xs);
+    color: var(--text-tertiary);
+    font-weight: normal;
+    margin-left: var(--space-1);
+}
+
 .hc-ew-card-rd {
     font-size: var(--font-sm);
     color: var(--text-secondary);

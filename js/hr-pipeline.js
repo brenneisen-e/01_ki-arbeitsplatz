@@ -1997,9 +1997,10 @@ function generateHCAgents(rdData) {
     const lastNames = ['Müller','Schmidt','Schneider','Fischer','Weber','Meyer','Wagner','Becker','Schulz','Hoffmann','Schäfer','Koch','Bauer','Richter','Klein','Wolf','Schröder','Neumann','Schwarz','Zimmermann','Braun','Krüger','Hofmann','Hartmann','Lange','Werner','Krause','Lehmann','Schmitt','König'];
     const riskFactors = [
         'Monate seit letzter Beförderung', 'Provisionsrückgang >20%', 'Stornoquote über Durchschnitt',
-        'Team-Abgänge (Contagion)', 'Engagement-Score rückläufig', 'IDD-Weiterbildung unvollständig',
+        'Team-Abgänge (Ansteckungseffekt)', 'Engagement-Score rückläufig', 'IDD-Weiterbildung unvollständig',
         'Zielerfüllung <70%', 'Keine freiwillige Weiterbildung', 'CRM-Aktivität rückläufig',
-        'Compa-Ratio <0.80', 'Wettbewerber-Recruiting aktiv', 'Manager-Wechsel <180 Tage'
+        'Compa-Ratio <0.80', 'Wettbewerber-Recruiting aktiv', 'Manager-Wechsel <180 Tage',
+        'Zugehörigkeit <12 Monate — Einarbeitungsphase', 'Zugehörigkeit <24 Monate — Frühfluktuation'
     ];
 
     let agentId = 1;
@@ -2009,16 +2010,34 @@ function generateHCAgents(rdData) {
             const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
             const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
             const age = Math.round(53.7 + (Math.random() - 0.5) * 16 + (Math.random() > 0.956 ? -25 : 0));
-            const tenure = Math.max(1, Math.round(age > 50 ? 10 + Math.random() * 20 : Math.random() * 6));
-            // Flight risk score based on RD health
+            // Realistic tenure distribution with many short-tenure agents
+            // ~20% <1 year, ~15% 1-2 years, ~20% 2-5 years, rest longer
+            const tenureRoll = Math.random();
+            let tenure;
+            if (tenureRoll < 0.20) tenure = Math.round(Math.random() * 10 + 1) / 10; // 0.1–1.0 years
+            else if (tenureRoll < 0.35) tenure = Math.round((1 + Math.random() * 10)) / 10 + 1; // 1.1–2.0 years
+            else if (tenureRoll < 0.55) tenure = Math.round(2 + Math.random() * 3); // 2–5 years
+            else if (age > 50) tenure = Math.round(10 + Math.random() * 20); // long-tenure seniors
+            else tenure = Math.round(3 + Math.random() * 8); // 3–11 years
+
+            // Flight risk score based on RD health — short tenure increases risk
             let riskBase = rd.tier === 'red' ? 55 : rd.tier === 'amber' ? 35 : 15;
+            if (tenure <= 1) riskBase += 15;
+            else if (tenure <= 2) riskBase += 8;
             const riskScore = Math.min(99, Math.max(1, Math.round(riskBase + (Math.random() - 0.4) * 40)));
             const prevScore = Math.min(99, Math.max(1, Math.round(riskScore + (Math.random() - 0.5) * 20)));
             const riskTier = riskScore >= 60 ? 'red' : riskScore >= 30 ? 'amber' : 'green';
 
-            // Top SHAP factors
+            // Top SHAP factors — short tenure agents get tenure-related factors first
             const shapFactors = [];
-            const shuffled = [...riskFactors].sort(() => Math.random() - 0.5);
+            let shuffled;
+            if (tenure <= 1) {
+                shuffled = ['Zugehörigkeit <12 Monate — Einarbeitungsphase', ...riskFactors.filter(f => !f.startsWith('Zugehörigkeit <')).sort(() => Math.random() - 0.5)];
+            } else if (tenure <= 2) {
+                shuffled = ['Zugehörigkeit <24 Monate — Frühfluktuation', ...riskFactors.filter(f => !f.startsWith('Zugehörigkeit <')).sort(() => Math.random() - 0.5)];
+            } else {
+                shuffled = [...riskFactors.filter(f => !f.startsWith('Zugehörigkeit <'))].sort(() => Math.random() - 0.5);
+            }
             for (let f = 0; f < 5; f++) {
                 const contrib = riskTier === 'red' ? (Math.random() * 0.3 + 0.05) : (Math.random() * 0.2 - 0.05);
                 shapFactors.push({ factor: shuffled[f], value: Math.round(contrib * 100) / 100 });
@@ -2053,7 +2072,7 @@ function generateHCAlerts(agents, rdData) {
         alerts.push({
             type: 'flight_risk',
             severity: 'red',
-            title: `Hohe Fluktuation: ${a.id}`,
+            title: `Hohes Abgangsrisiko: ${a.name} (${a.id})`,
             desc: `Score ${a.riskScore}% — Top-Faktor: ${a.topFactor}`,
             rd: a.rdName,
             daysAgo: Math.floor(Math.random() * 14)
@@ -2078,8 +2097,8 @@ function generateHCAlerts(agents, rdData) {
         alerts.push({
             type: 'contagion',
             severity: 'amber',
-            title: `Contagion-Fenster: ${rd.name}`,
-            desc: `Abgang vor ${Math.floor(Math.random() * 80 + 20)} Tagen — 135-Tage-Watch aktiv`,
+            title: `Ansteckungseffekt: ${rd.name}`,
+            desc: `Abgang vor ${Math.floor(Math.random() * 80 + 20)} Tagen — 135-Tage-Beobachtung aktiv`,
             rd: rd.name,
             daysAgo: Math.floor(Math.random() * 80 + 20)
         });
@@ -2214,10 +2233,10 @@ function renderHCKPIs() {
             icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="8.5" cy="7" r="4"/><path d="M20 8v6M23 11h-6"/></svg>',
             cols: 4,
             kpis: [
-                { label: 'Handelsvertreter (§84 HGB)', value: totalAgents.toLocaleString('de-DE'), desc: 'Aktive Ausschließlichkeitsvermittler im ERGO Vertrieb Deutschland', trend: '-3,2% vs. Vorjahr', trendDir: 'down', color: '' },
+                { label: 'AO-Vermittler (§84 HGB)', value: totalAgents.toLocaleString('de-DE'), desc: 'Aktive Ausschließlichkeitsvermittler im ERGO Vertrieb Deutschland', trend: '-3,2% vs. Vorjahr', trendDir: 'down', color: '' },
                 { label: 'Vakanzen', value: totalVacanzen + ' offen', desc: 'Unbesetzte Planstellen über alle 12 Regionaldirektionen', trend: '+12 vs. Vorquartal', trendDir: 'down', color: totalVacanzen > 400 ? 'red' : '' },
                 { label: 'Nachwuchsquote (<35 J.)', value: nachwuchsQuote + '%', desc: 'Anteil Vermittler unter 35 Jahren am Gesamtbestand', trend: '-0,8 Pp. vs. Vorjahr', trendDir: 'down', color: parseFloat(nachwuchsQuote) < 10 ? 'red' : '' },
-                { label: 'Ø Verweildauer', value: avgTenure + ' Jahre', desc: 'Durchschnittliche Betriebszugehörigkeit aller Handelsvertreter', trend: '+0,3J vs. Vorjahr', trendDir: 'up', color: '' }
+                { label: 'Ø Unternehmenszugehörigkeit', value: avgTenure + ' Jahre', desc: 'Durchschnittliche Unternehmenszugehörigkeit aller AO-Vermittler', trend: '+0,3J vs. Vorjahr', trendDir: 'up', color: '' }
             ]
         },
         {
@@ -2225,8 +2244,8 @@ function renderHCKPIs() {
             icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
             cols: 4,
             kpis: [
-                { label: 'Flight Risk (Rot)', value: redCount.toLocaleString('de-DE'), desc: 'Vermittler mit Abgangswahrscheinlichkeit ≥60% (KI-Modell)', trend: '+' + Math.round(redCount * 0.08) + ' vs. Vormonat', trendDir: 'down', color: 'red' },
-                { label: 'Flight Risk (Gelb)', value: amberCount.toLocaleString('de-DE'), desc: 'Vermittler mit Abgangswahrscheinlichkeit 30–59%', trend: '+' + Math.round(amberCount * 0.04) + ' vs. Vormonat', trendDir: 'down', color: 'amber' },
+                { label: 'Abgangsrisiko (Rot)', value: redCount.toLocaleString('de-DE'), desc: 'Vermittler mit Abgangswahrscheinlichkeit ≥60% (KI-Modell)', trend: '+' + Math.round(redCount * 0.08) + ' vs. Vormonat', trendDir: 'down', color: 'red' },
+                { label: 'Abgangsrisiko (Gelb)', value: amberCount.toLocaleString('de-DE'), desc: 'Vermittler mit Abgangswahrscheinlichkeit 30–59%', trend: '+' + Math.round(amberCount * 0.04) + ' vs. Vormonat', trendDir: 'down', color: 'amber' },
                 { label: 'Fluktuationsquote', value: avgTurnover + '%', desc: 'Ø Abgangsrate der letzten 12 Monate über alle RDs', trend: '+1,1 Pp. vs. Vorjahr', trendDir: 'down', color: parseFloat(avgTurnover) > 12 ? 'red' : '' },
                 { label: 'Stornoquote', value: '2,8%', desc: 'Durchschnittliche Vertragsstornierungen im Vermittlerbestand', trend: '+0,1 Pp. vs. Vorjahr', trendDir: 'down', color: '' }
             ]
@@ -2237,8 +2256,8 @@ function renderHCKPIs() {
             cols: 3,
             kpis: [
                 { label: 'Engagement Score', value: avgEngagement + '/100', desc: 'Gewichteter Index aus Weiterbildung, CRM-Aktivität und Vertriebsinitiative', trend: '-2 Pkt. vs. Vormonat', trendDir: 'down', color: avgEngagement < 50 ? 'red' : avgEngagement < 70 ? 'amber' : 'green' },
-                { label: 'Composite Health Score', value: avgComposite + '/100', desc: 'Ø Gesundheitsscore aller RDs (6 Dimensionen gewichtet)', trend: '-1,5 Pkt. vs. Vorquartal', trendDir: 'down', color: avgComposite < 50 ? 'red' : avgComposite < 70 ? 'amber' : 'green' },
-                { label: 'RDs im roten Bereich', value: hcRDData.filter(r => r.tier === 'red').length + ' von ' + hcRDData.length, desc: 'Regionaldirektionen mit Health-Score unter 40', trend: '', trendDir: 'down', color: hcRDData.filter(r => r.tier === 'red').length > 3 ? 'red' : '' }
+                { label: 'Gesundheitsindex (Gesamt)', value: avgComposite + '/100', desc: 'Ø Gesundheitsscore aller RDs (6 Dimensionen gewichtet)', trend: '-1,5 Pkt. vs. Vorquartal', trendDir: 'down', color: avgComposite < 50 ? 'red' : avgComposite < 70 ? 'amber' : 'green' },
+                { label: 'RDs im roten Bereich', value: hcRDData.filter(r => r.tier === 'red').length + ' von ' + hcRDData.length, desc: 'Regionaldirektionen mit Gesundheitsscore unter 40', trend: '', trendDir: 'down', color: hcRDData.filter(r => r.tier === 'red').length > 3 ? 'red' : '' }
             ]
         }
     ];
@@ -2647,7 +2666,7 @@ function renderHCUnitDetail() {
                     <div class="hc-scorecard-label">Gesamt</div>
                 </div>
                 <div class="hc-scorecard-meta">
-                    <div><strong>${rd.headcount}</strong> Handelsvertreter (§84 HGB)</div>
+                    <div><strong>${rd.headcount}</strong> AO-Vermittler (§84 HGB)</div>
                     <div>Fluktuation: <strong>${rd.turnoverRate}%</strong> | Vakanzen: <strong>${rd.budgeted - rd.headcount}</strong> (${rd.vacancyRate.toFixed(1)}%)</div>
                     <div>Region: ${rd.region}</div>
                 </div>
@@ -2732,10 +2751,10 @@ function renderHCUnitEWGrid(unitAgents) {
     grid.innerHTML = riskAgents.slice(0, 12).map(a => `
         <div class="hc-ew-card ${a.riskTier}" onclick="showHCUnitShapForAgent('${a.id}')">
             <div class="hc-ew-card-header">
-                <span class="hc-ew-id">${a.id}</span>
+                <span class="hc-ew-id">${a.name}</span><span class="hc-ew-vid">${a.id}</span>
                 <span class="hc-risk-badge ${a.riskTier}">${a.riskScore}%</span>
             </div>
-            <div class="hc-ew-card-meta">§84 HGB · ${a.tenure}J Tenure · ${a.age}J</div>
+            <div class="hc-ew-card-meta">AO-Vermittler · ${a.tenure}J Zugehörigkeit · ${a.age} Jahre</div>
             <div class="hc-ew-card-factor">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
                 ${a.topFactor}
@@ -2800,10 +2819,10 @@ function showHCUnitShapForAgent(agentId) {
     container.innerHTML = `
         <div class="hc-shap-header">
             <div class="hc-shap-agent">
-                <strong>${agent.id}</strong> — ${agent.rdName} · §84 HGB · ${agent.age}J · ${agent.tenure}J Tenure
+                <strong>${agent.name}</strong> <span style="color:var(--text-tertiary)">(${agent.id})</span> — ${agent.rdName} · AO-Vermittler · ${agent.age} Jahre · ${agent.tenure}J Zugehörigkeit
             </div>
             <div class="hc-shap-score">
-                Flight-Risk Score: <span class="hc-risk-badge ${agent.riskTier}">${agent.riskScore}%</span>
+                Abgangsrisiko: <span class="hc-risk-badge ${agent.riskTier}">${agent.riskScore}%</span>
             </div>
         </div>
         <div class="hc-shap-chart">
@@ -2941,11 +2960,11 @@ function renderHCEWGrid() {
     grid.innerHTML = agents.slice(0, 24).map(a => `
         <div class="hc-ew-card ${a.riskTier}" onclick="showHCShapForAgent('${a.id}')">
             <div class="hc-ew-card-header">
-                <span class="hc-ew-id">${a.id}</span>
+                <span class="hc-ew-id">${a.name}</span><span class="hc-ew-vid">${a.id}</span>
                 <span class="hc-risk-badge ${a.riskTier}">${a.riskScore}%</span>
             </div>
             <div class="hc-ew-card-rd">${a.rdName}</div>
-            <div class="hc-ew-card-meta">§84 HGB · ${a.tenure}J Tenure · ${a.age}J</div>
+            <div class="hc-ew-card-meta">AO-Vermittler · ${a.tenure}J Zugehörigkeit · ${a.age} Jahre</div>
             <div class="hc-ew-card-factor">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
                 ${a.topFactor}
@@ -2985,10 +3004,10 @@ function renderHCShapExplanation() {
     container.innerHTML = `
         <div class="hc-shap-header">
             <div class="hc-shap-agent">
-                <strong>${agent.id}</strong> — ${agent.rdName} · §84 HGB · ${agent.age}J · ${agent.tenure}J Tenure
+                <strong>${agent.name}</strong> <span style="color:var(--text-tertiary)">(${agent.id})</span> — ${agent.rdName} · AO-Vermittler · ${agent.age} Jahre · ${agent.tenure}J Zugehörigkeit
             </div>
             <div class="hc-shap-score">
-                Flight-Risk Score: <span class="hc-risk-badge ${agent.riskTier}">${agent.riskScore}%</span>
+                Abgangsrisiko: <span class="hc-risk-badge ${agent.riskTier}">${agent.riskScore}%</span>
             </div>
         </div>
         <div class="hc-shap-chart">
@@ -3029,7 +3048,7 @@ const HC_KI_RECOMMENDATIONS = {
             { action: 'Prüfung der Qualifikation zum Agenturleiter / Mehrfachagenten — Entwicklungsplan erstellen', timeline: '2 Wochen', responsible: 'Personalentwicklung' },
             { action: 'Einbindung als Mentor für Nachwuchsvermittler zur Wertschätzung und Verantwortungsausweitung', timeline: '4 Wochen', responsible: 'Regionaldirektion' }
         ],
-        rationale: 'Fehlende Aufstiegsperspektive ist einer der stärksten Prädiktoren für Abgänge bei erfahrenen Handelsvertretern. Ein proaktives Karrieregespräch kann die Abgangswahrscheinlichkeit um bis zu 35% senken (Visier-Studie 2024).'
+        rationale: 'Fehlende Aufstiegsperspektive ist einer der stärksten Prädiktoren für Abgänge bei erfahrenen AO-Vermittlern. Ein proaktives Karrieregespräch kann die Abgangswahrscheinlichkeit um bis zu 35% senken (Visier-Studie 2024).'
     },
     'Provisionsrückgang >20%': {
         title: 'Vertriebsleistung stabilisieren',
@@ -3040,7 +3059,7 @@ const HC_KI_RECOMMENDATIONS = {
             { action: 'Temporäre Sonderprovisionsregelung / Bestandssicherungsprämie prüfen', timeline: '2 Wochen', responsible: 'Vertriebsleitung' },
             { action: 'Lead-Paket aus zentralem Marketing für Neukundenakquise bereitstellen', timeline: '1 Woche', responsible: 'Marketing' }
         ],
-        rationale: 'Ein signifikanter Provisionsrückgang bedroht die wirtschaftliche Existenzgrundlage des Handelsvertreters und ist häufig der Auslöser für einen Wechsel zur Konkurrenz. Sofortige Unterstützung bei der Geschäftsentwicklung ist essenziell.'
+        rationale: 'Ein signifikanter Provisionsrückgang bedroht die wirtschaftliche Existenzgrundlage des AO-Vermittlers und ist häufig der Auslöser für einen Wechsel zur Konkurrenz. Sofortige Unterstützung bei der Geschäftsentwicklung ist essenziell.'
     },
     'Stornoquote über Durchschnitt': {
         title: 'Beratungsqualität stärken',
@@ -3052,8 +3071,8 @@ const HC_KI_RECOMMENDATIONS = {
         ],
         rationale: 'Hohe Stornoquoten deuten auf Beratungsdefizite hin, die sowohl den Vermittler finanziell belasten als auch das Vertrauensverhältnis zur Organisation gefährden. Gezielte Qualifizierung kann die Stornoquote um 20–30% reduzieren.'
     },
-    'Team-Abgänge (Contagion)': {
-        title: 'Contagion-Effekt eindämmen',
+    'Team-Abgänge (Ansteckungseffekt)': {
+        title: 'Ansteckungseffekt eindämmen',
         urgency: 'hoch',
         measures: [
             { action: 'Sofortiges Stabilisierungsgespräch mit allen betroffenen Teammitgliedern (135-Tage-Fenster)', timeline: 'Sofort', responsible: 'Vertriebsdirektor' },
@@ -3127,7 +3146,7 @@ const HC_KI_RECOMMENDATIONS = {
         urgency: 'kritisch',
         measures: [
             { action: 'Vertrauliches Gespräch: Wertschätzung ausdrücken und Zukunftsperspektive aufzeigen', timeline: 'Sofort', responsible: 'Vertriebsdirektor' },
-            { action: 'Retention-Bonus oder Bindungsprämie prüfen (im Rahmen des Handelsvertreterverhältnisses)', timeline: '1 Woche', responsible: 'Vertriebsleitung' },
+            { action: 'Retention-Bonus oder Bindungsprämie prüfen (im Rahmen des AO-Vertragsverhältnisses)', timeline: '1 Woche', responsible: 'Vertriebsleitung' },
             { action: 'Exklusive Entwicklungsmöglichkeiten aufzeigen (z.B. Agenturleitung, Spezialistenrolle)', timeline: '1 Woche', responsible: 'Vertriebsdirektor' }
         ],
         rationale: 'Aktives Wettbewerber-Recruiting signalisiert akute Abgangsgefahr. Ohne schnelle Intervention beträgt die Abgangswahrscheinlichkeit innerhalb von 90 Tagen über 50%. Jeder Tag zählt.'
@@ -3141,6 +3160,29 @@ const HC_KI_RECOMMENDATIONS = {
             { action: 'Stabilisierungsphase: Keine großen strukturellen Veränderungen in den ersten 6 Monaten', timeline: 'Fortlaufend', responsible: 'Regionaldirektion' }
         ],
         rationale: 'Ein Führungswechsel ist ein kritischer Moment. Die Qualität der neuen Beziehung entscheidet maßgeblich über die weitere Bindung. Innerhalb der ersten 180 Tage ist die Abgangswahrscheinlichkeit um 15–20% erhöht.'
+    },
+    'Zugehörigkeit <12 Monate — Einarbeitungsphase': {
+        title: 'Einarbeitung intensivieren',
+        urgency: 'kritisch',
+        measures: [
+            { action: 'Einarbeitungsstatus prüfen: Wurden alle Meilensteine des Einarbeitungsplans erreicht?', timeline: 'Sofort', responsible: 'Vertriebsdirektor' },
+            { action: 'Persönlichen Paten (erfahrener Vermittler) zuordnen — wöchentliche Tandem-Termine', timeline: 'Sofort', responsible: 'Regionaldirektion' },
+            { action: 'Kurzfristige Produktivitätsziele definieren (erste Abschlüsse, Bestandsübernahme, Cross-Selling)', timeline: '1 Woche', responsible: 'Vertriebscoach' },
+            { action: 'Bestandszuweisung / Lead-Paket sicherstellen — wirtschaftliche Grundlage in der Startphase', timeline: '1 Woche', responsible: 'Vertriebssteuerung' },
+            { action: 'Regelmäßiges Feedback-Gespräch (14-tägig) mit VD — Erwartungsabgleich und Motivation', timeline: 'Fortlaufend', responsible: 'Vertriebsdirektor' }
+        ],
+        rationale: 'Die ersten 12 Monate sind die kritischste Phase für neue AO-Vermittler. Branchenweit verlassen 30–40% der Neuzugänge die Organisation innerhalb des ersten Jahres. Eine strukturierte Einarbeitung mit Patenmodell kann die Frühfluktuation um bis zu 50% senken.'
+    },
+    'Zugehörigkeit <24 Monate — Frühfluktuation': {
+        title: 'Frühfluktuation verhindern',
+        urgency: 'hoch',
+        measures: [
+            { action: 'Standortbestimmung: Hat der Vermittler die Anlaufphase wirtschaftlich überstanden?', timeline: 'Sofort', responsible: 'Vertriebsdirektor' },
+            { action: 'Vertriebscoaching intensivieren — Fokus auf eigenständige Kundenakquise und Bestandsaufbau', timeline: '1 Woche', responsible: 'Vertriebscoach' },
+            { action: 'Netzwerk-Integration: Einbindung in regionale Vertriebsgruppen und Erfahrungsaustausch', timeline: '2 Wochen', responsible: 'Regionaldirektion' },
+            { action: 'Entwicklungsplan für die nächsten 12 Monate gemeinsam erarbeiten — klare Perspektive aufzeigen', timeline: '2 Wochen', responsible: 'Vertriebsdirektor' }
+        ],
+        rationale: 'Vermittler mit 1–2 Jahren Zugehörigkeit befinden sich in der Übergangsphase zwischen Aufbau und Etablierung. Fehlende Erfolgserlebnisse oder mangelnde Integration führen häufig zur Kündigung. Gezielte Unterstützung in dieser Phase ist entscheidend für die langfristige Bindung.'
     }
 };
 
@@ -3164,7 +3206,7 @@ function renderHCKIRecommendation(agentId) {
         content.innerHTML = `
             <div class="hc-ki-rec-agent">
                 <span class="hc-risk-badge ${agent.riskTier}">${agent.riskScore}%</span>
-                <strong>${agent.id}</strong> — ${agent.rdName} · §84 HGB
+                <strong>${agent.name}</strong> <span style="color:var(--text-tertiary)">(${agent.id})</span> — ${agent.rdName} · AO-Vermittler
             </div>
             <div class="hc-ki-rec-body">
                 <div class="hc-ki-rec-title">Allgemeine Retention-Empfehlung</div>
@@ -3180,7 +3222,7 @@ function renderHCKIRecommendation(agentId) {
     content.innerHTML = `
         <div class="hc-ki-rec-agent">
             <span class="hc-risk-badge ${agent.riskTier}">${agent.riskScore}%</span>
-            <strong>${agent.id}</strong> — ${agent.rdName} · §84 HGB · ${agent.age}J · ${agent.tenure}J Tenure
+            <strong>${agent.name}</strong> <span style="color:var(--text-tertiary)">(${agent.id})</span> — ${agent.rdName} · AO-Vermittler · ${agent.age} Jahre · ${agent.tenure}J Zugehörigkeit
         </div>
         <div class="hc-ki-rec-body">
             <div class="hc-ki-rec-header">

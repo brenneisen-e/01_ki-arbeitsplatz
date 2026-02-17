@@ -1128,7 +1128,7 @@ function renderHPDashboard() {
             <div class="hp-applicant-card ${applicant.status === 'rejected' ? 'rejection' : ''} ${isBlind ? 'blind' : ''}" data-region="${applicant.region}" data-score="${applicant.totalScore}" data-status="${applicant.status}" onclick="openHPDetail('${applicant.id}')">
                 <div class="hp-applicant-score ${scoreClass}">${applicant.totalScore}</div>
                 <div class="hp-applicant-info">
-                    <h4>${isBlind ? 'Kandidat/in #' + applicant.id.toUpperCase() : applicant.name}</h4>
+                    <h4>${isBlind ? 'Kandidat/in #' + getBlindId(applicant.id) : applicant.name}</h4>
                     <div class="hp-applicant-location">${isBlind ? applicant.region.toUpperCase() : applicant.city + ' | ' + applicant.age + ' Jahre'}</div>
                     ${appliedPos && !isBlind ? `<div style="font-size:var(--font-xs);color:var(--text-tertiary);margin-top:var(--space-1);display:flex;align-items:center;gap:var(--space-2);flex-wrap:wrap;">
                         <span>${appliedDateFormatted}</span>
@@ -1167,6 +1167,11 @@ function filterHPApplicants() {
 // ========================================
 // BLIND SCREENING
 // ========================================
+
+function getBlindId(applicantId) {
+    const idx = HP_ALL_APPLICANTS.findIndex(a => a.id === applicantId);
+    return String(idx + 1).padStart(3, '0');
+}
 
 function toggleHPBlindScreening() {
     hpBlindScreening = document.getElementById('hpBlindToggle')?.checked || false;
@@ -1232,7 +1237,7 @@ function openHPDetail(applicantId) {
     hpCurrentDetailApplicant = applicant;
 
     const isBlind = hpBlindScreening;
-    document.getElementById('hpDetailName').textContent = isBlind ? 'Kandidat/in #' + applicant.id.toUpperCase() : applicant.name;
+    document.getElementById('hpDetailName').textContent = isBlind ? 'Kandidat/in #' + getBlindId(applicant.id) : applicant.name;
     const body = document.getElementById('hpDetailBody');
 
     const scoreCategories = [
@@ -1245,9 +1250,9 @@ function openHPDetail(applicantId) {
 
     body.innerHTML = `
         <div style="display:flex;gap:var(--space-4);margin-bottom:var(--space-6);align-items:center;">
-            ${!isBlind && applicant.photo ? `<img src="${applicant.photo}" alt="${applicant.name}" class="hp-profile-avatar-large" style="width:56px;height:56px;border-radius:50%;object-fit:cover;">` : `<div class="hp-profile-avatar-large">${isBlind ? '#' + applicant.id.toUpperCase().charAt(0) : applicant.initials}</div>`}
+            ${!isBlind && applicant.photo ? `<img src="${applicant.photo}" alt="${applicant.name}" class="hp-profile-avatar-large" style="width:56px;height:56px;border-radius:50%;object-fit:cover;">` : `<div class="hp-profile-avatar-large">${isBlind ? '#' + getBlindId(applicant.id) : applicant.initials}</div>`}
             <div>
-                <div style="font-size:var(--font-lg);font-weight:var(--font-bold);color:var(--text-primary);">${isBlind ? 'Kandidat/in #' + applicant.id.toUpperCase() : applicant.name}</div>
+                <div style="font-size:var(--font-lg);font-weight:var(--font-bold);color:var(--text-primary);">${isBlind ? 'Kandidat/in #' + getBlindId(applicant.id) : applicant.name}</div>
                 <div style="font-size:var(--font-sm);color:var(--text-secondary);">${isBlind ? applicant.region.toUpperCase() + ' | — Jahre | ' + applicant.experience : applicant.city + ' | ' + applicant.age + ' Jahre | ' + applicant.experience}</div>
                 ${(applicant.certifications || []).length ? `<div class="hp-tags" style="margin-top:var(--space-2)">${applicant.certifications.map(c => `<span class="hp-tag cert">${c}</span>`).join('')}</div>` : ''}
                 ${(() => {
@@ -1832,7 +1837,7 @@ function toggleHPSideBySide() {
                         }
                         .cv-name, .cv-footer { visibility: hidden !important; }
                         .cv-name::after {
-                            content: 'Kandidat/in #MAX';
+                            content: 'Kandidat/in #${getBlindId(applicant.id)}';
                             visibility: visible;
                             display: block;
                         }

@@ -126,75 +126,76 @@
 
         /* Main Content */
         .main {
-            padding: 40px;
+            padding: 30px 35px;
         }
 
         .main h1 {
             font-family: 'Playfair Display', serif;
-            font-size: 2.2rem;
+            font-size: 2rem;
             font-weight: 400;
             color: var(--dark);
         }
 
         .main .subtitle {
             color: var(--green);
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             letter-spacing: 2px;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
         }
 
         .section {
-            margin-bottom: 25px;
+            margin-bottom: 16px;
         }
 
         .section h2 {
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             letter-spacing: 2px;
             text-transform: uppercase;
             color: var(--dark);
-            margin-bottom: 15px;
-            padding-bottom: 8px;
+            margin-bottom: 10px;
+            padding-bottom: 6px;
             border-bottom: 2px solid var(--green);
         }
 
         .summary {
-            font-size: 0.9rem;
-            line-height: 1.7;
+            font-size: 0.8rem;
+            line-height: 1.6;
             color: var(--gray);
         }
 
         .exp-item {
-            margin-bottom: 18px;
+            margin-bottom: 12px;
         }
 
         .exp-item .role {
             font-weight: 600;
+            font-size: 0.85rem;
         }
 
         .exp-item .meta {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: var(--green);
-            margin: 2px 0 5px;
+            margin: 1px 0 3px;
         }
 
         .exp-item .desc {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: var(--gray);
-            line-height: 1.5;
+            line-height: 1.4;
         }
 
         /* Sidebar */
         .sidebar {
             background: var(--blue);
             color: white;
-            padding: 30px 20px;
+            padding: 25px 18px;
         }
 
         .photo {
-            width: 180px;
-            height: 180px;
-            min-width: 180px;
-            min-height: 180px;
+            width: 160px;
+            height: 160px;
+            min-width: 160px;
+            min-height: 160px;
             object-fit: cover;
             object-position: center top;
             border-radius: 50%;
@@ -205,36 +206,62 @@
         }
 
         .photo-container {
-            width: 180px;
-            height: 180px;
-            margin: 0 auto 20px;
+            width: 160px;
+            height: 160px;
+            margin: 0 auto 15px;
             position: relative;
         }
 
+        .photo-placeholder {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            border: 2px dashed rgba(255,255,255,0.5);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: rgba(255,255,255,0.8);
+            font-size: 12px;
+            gap: 8px;
+            transition: all 0.3s;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+
+        .photo-placeholder:hover {
+            background: rgba(255,255,255,0.3);
+            border-color: rgba(255,255,255,0.8);
+        }
+
         .sidebar-section {
-            margin-bottom: 18px;
+            margin-bottom: 14px;
         }
 
         .sidebar-section h3 {
-            font-size: 0.6rem;
+            font-size: 0.55rem;
             letter-spacing: 1.5px;
             text-transform: uppercase;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             opacity: 0.8;
         }
 
         .contact-item {
             display: flex;
             align-items: center;
-            gap: 8px;
-            font-size: 0.75rem;
-            margin-bottom: 5px;
+            gap: 6px;
+            font-size: 0.7rem;
+            margin-bottom: 4px;
             line-height: 1.3;
         }
 
         .skill-item {
-            font-size: 0.7rem;
-            padding: 2px 0;
+            font-size: 0.65rem;
+            padding: 1px 0;
             opacity: 0.9;
             line-height: 1.3;
         }
@@ -251,8 +278,8 @@
         }
 
         .reference-item {
-            font-size: 0.7rem;
-            margin-bottom: 8px;
+            font-size: 0.65rem;
+            margin-bottom: 6px;
             line-height: 1.3;
         }
 
@@ -375,8 +402,13 @@
 
                 <div class="sidebar">
                     <div class="photo-container cv-photo-wrapper">
-                        <img class="photo cv-photo" id="cvPhoto" src="../AdobeStock_624564221.jpeg" alt="Max Berger">
+                        <img class="photo cv-photo" id="cvPhoto" src="" alt="Max Berger" style="display:none;">
+                        <div class="photo-placeholder" id="photoPlaceholder" onclick="document.getElementById('photoInput').click()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="40" height="40"><circle cx="12" cy="8" r="4"></circle><path d="M4 20c0-4 4-6 8-6s8 2 8 6"></path></svg>
+                            <span>Foto wählen</span>
+                        </div>
                     </div>
+                    <input type="file" id="photoInput" accept="image/*" style="display:none;">
 
                     <div class="sidebar-section">
                         <h3>Kontakt</h3>
@@ -483,6 +515,19 @@
             document.body.style.background = 'white';
             document.body.style.padding = '0';
         }
+
+        // Photo upload
+        document.getElementById('photoInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(ev) {
+                const img = document.getElementById('cvPhoto');
+                img.src = ev.target.result;
+                img.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        });
 
         // Color pickers
         document.getElementById('sidebarColor').addEventListener('input', (e) => {

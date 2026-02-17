@@ -814,6 +814,14 @@ function initHRPipeline() {
         dropzone.addEventListener('drop', (e) => { e.preventDefault(); dropzone.classList.remove('dragover'); loadHPDemoProfile('max'); });
     }
     initHPChat();
+    // Auto-expand chat on first load
+    setTimeout(() => {
+        const chatWindow = document.getElementById('hpChatWindow');
+        if (chatWindow && !chatWindow.classList.contains('open')) {
+            hpChatOpen = true;
+            chatWindow.classList.add('open');
+        }
+    }, 300);
 }
 
 // ========================================

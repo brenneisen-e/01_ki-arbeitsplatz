@@ -1934,6 +1934,15 @@ HC_REGIONALDIREKTIONEN.forEach(rd => {
     (rd.states || []).forEach(s => { HC_STATE_TO_RD[s] = rd.id; });
 });
 
+// Format tenure for display: <1 Jahr → Monate, sonst Jahre
+function formatTenure(t) {
+    if (t < 1) {
+        const months = Math.max(1, Math.round(t * 12));
+        return months + ' Mon.';
+    }
+    return Math.round(t) + 'J';
+}
+
 // Generate health metrics per RD
 function generateHCMetrics() {
     const profiles = [
@@ -2000,7 +2009,7 @@ function generateHCAgents(rdData) {
         'Team-Abgänge (Ansteckungseffekt)', 'Engagement-Score rückläufig', 'IDD-Weiterbildung unvollständig',
         'Zielerfüllung <70%', 'Keine freiwillige Weiterbildung', 'CRM-Aktivität rückläufig',
         'Compa-Ratio <0.80', 'Wettbewerber-Recruiting aktiv', 'Manager-Wechsel <180 Tage',
-        'Zugehörigkeit <12 Monate — Einarbeitungsphase', 'Zugehörigkeit <24 Monate — Frühfluktuation'
+        'Zugehörigkeit <3 Monate — Frühfluktuation', 'Zugehörigkeit <12 Monate — Einarbeitungsphase', 'Zugehörigkeit <24 Monate — kritische Phase'
     ];
 
     let agentId = 1;
@@ -2010,19 +2019,19 @@ function generateHCAgents(rdData) {
             const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
             const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
             const age = Math.round(53.7 + (Math.random() - 0.5) * 16 + (Math.random() > 0.956 ? -25 : 0));
-            // Realistic tenure distribution with many short-tenure agents
-            // ~20% <1 year, ~15% 1-2 years, ~20% 2-5 years, rest longer
+            // Zugehörigkeitsverteilung: 33% Frühfluktuation (<3 Mon.), 60% <2 Jahre
             const tenureRoll = Math.random();
             let tenure;
-            if (tenureRoll < 0.20) tenure = Math.round(Math.random() * 10 + 1) / 10; // 0.1–1.0 years
-            else if (tenureRoll < 0.35) tenure = Math.round((1 + Math.random() * 10)) / 10 + 1; // 1.1–2.0 years
-            else if (tenureRoll < 0.55) tenure = Math.round(2 + Math.random() * 3); // 2–5 years
-            else if (age > 50) tenure = Math.round(10 + Math.random() * 20); // long-tenure seniors
-            else tenure = Math.round(3 + Math.random() * 8); // 3–11 years
+            if (tenureRoll < 0.33) tenure = Math.round(Math.random() * 2.5 * 10 + 1) / 120; // 0–3 Monate (in Jahren: 0.01–0.25)
+            else if (tenureRoll < 0.60) tenure = Math.round((0.25 + Math.random() * 1.75) * 100) / 100; // 3–24 Monate (0.25–2.0 Jahre)
+            else if (tenureRoll < 0.80) tenure = Math.round(2 + Math.random() * 6); // 2–8 Jahre
+            else if (age > 50) tenure = Math.round(8 + Math.random() * 20); // langjährige AO-Vermittler
+            else tenure = Math.round(3 + Math.random() * 10); // 3–13 Jahre
 
-            // Flight risk score based on RD health — short tenure increases risk
+            // Abgangsrisiko basierend auf RD-Gesundheit — kurze Zugehörigkeit erhöht Risiko
             let riskBase = rd.tier === 'red' ? 55 : rd.tier === 'amber' ? 35 : 15;
-            if (tenure <= 1) riskBase += 15;
+            if (tenure < 0.25) riskBase += 20; // <3 Monate: sehr hohes Risiko
+            else if (tenure <= 1) riskBase += 15;
             else if (tenure <= 2) riskBase += 8;
             const riskScore = Math.min(99, Math.max(1, Math.round(riskBase + (Math.random() - 0.4) * 40)));
             const prevScore = Math.min(99, Math.max(1, Math.round(riskScore + (Math.random() - 0.5) * 20)));
@@ -2031,10 +2040,12 @@ function generateHCAgents(rdData) {
             // Top SHAP factors — short tenure agents get tenure-related factors first
             const shapFactors = [];
             let shuffled;
-            if (tenure <= 1) {
+            if (tenure < 0.25) {
+                shuffled = ['Zugehörigkeit <3 Monate — Frühfluktuation', ...riskFactors.filter(f => !f.startsWith('Zugehörigkeit <')).sort(() => Math.random() - 0.5)];
+            } else if (tenure <= 1) {
                 shuffled = ['Zugehörigkeit <12 Monate — Einarbeitungsphase', ...riskFactors.filter(f => !f.startsWith('Zugehörigkeit <')).sort(() => Math.random() - 0.5)];
             } else if (tenure <= 2) {
-                shuffled = ['Zugehörigkeit <24 Monate — Frühfluktuation', ...riskFactors.filter(f => !f.startsWith('Zugehörigkeit <')).sort(() => Math.random() - 0.5)];
+                shuffled = ['Zugehörigkeit <24 Monate — kritische Phase', ...riskFactors.filter(f => !f.startsWith('Zugehörigkeit <')).sort(() => Math.random() - 0.5)];
             } else {
                 shuffled = [...riskFactors.filter(f => !f.startsWith('Zugehörigkeit <'))].sort(() => Math.random() - 0.5);
             }
@@ -2754,7 +2765,7 @@ function renderHCUnitEWGrid(unitAgents) {
                 <span class="hc-ew-id">${a.name}</span><span class="hc-ew-vid">${a.id}</span>
                 <span class="hc-risk-badge ${a.riskTier}">${a.riskScore}%</span>
             </div>
-            <div class="hc-ew-card-meta">AO-Vermittler · ${a.tenure}J Zugehörigkeit · ${a.age} Jahre</div>
+            <div class="hc-ew-card-meta">AO-Vermittler · ${formatTenure(a.tenure)} Zugehörigkeit · ${a.age} Jahre</div>
             <div class="hc-ew-card-factor">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
                 ${a.topFactor}
@@ -2819,7 +2830,7 @@ function showHCUnitShapForAgent(agentId) {
     container.innerHTML = `
         <div class="hc-shap-header">
             <div class="hc-shap-agent">
-                <strong>${agent.name}</strong> <span style="color:var(--text-tertiary)">(${agent.id})</span> — ${agent.rdName} · AO-Vermittler · ${agent.age} Jahre · ${agent.tenure}J Zugehörigkeit
+                <strong>${agent.name}</strong> <span style="color:var(--text-tertiary)">(${agent.id})</span> — ${agent.rdName} · AO-Vermittler · ${agent.age} Jahre · ${formatTenure(agent.tenure)} Zugehörigkeit
             </div>
             <div class="hc-shap-score">
                 Abgangsrisiko: <span class="hc-risk-badge ${agent.riskTier}">${agent.riskScore}%</span>
@@ -2964,7 +2975,7 @@ function renderHCEWGrid() {
                 <span class="hc-risk-badge ${a.riskTier}">${a.riskScore}%</span>
             </div>
             <div class="hc-ew-card-rd">${a.rdName}</div>
-            <div class="hc-ew-card-meta">AO-Vermittler · ${a.tenure}J Zugehörigkeit · ${a.age} Jahre</div>
+            <div class="hc-ew-card-meta">AO-Vermittler · ${formatTenure(a.tenure)} Zugehörigkeit · ${a.age} Jahre</div>
             <div class="hc-ew-card-factor">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
                 ${a.topFactor}
@@ -3004,7 +3015,7 @@ function renderHCShapExplanation() {
     container.innerHTML = `
         <div class="hc-shap-header">
             <div class="hc-shap-agent">
-                <strong>${agent.name}</strong> <span style="color:var(--text-tertiary)">(${agent.id})</span> — ${agent.rdName} · AO-Vermittler · ${agent.age} Jahre · ${agent.tenure}J Zugehörigkeit
+                <strong>${agent.name}</strong> <span style="color:var(--text-tertiary)">(${agent.id})</span> — ${agent.rdName} · AO-Vermittler · ${agent.age} Jahre · ${formatTenure(agent.tenure)} Zugehörigkeit
             </div>
             <div class="hc-shap-score">
                 Abgangsrisiko: <span class="hc-risk-badge ${agent.riskTier}">${agent.riskScore}%</span>
@@ -3161,6 +3172,18 @@ const HC_KI_RECOMMENDATIONS = {
         ],
         rationale: 'Ein Führungswechsel ist ein kritischer Moment. Die Qualität der neuen Beziehung entscheidet maßgeblich über die weitere Bindung. Innerhalb der ersten 180 Tage ist die Abgangswahrscheinlichkeit um 15–20% erhöht.'
     },
+    'Zugehörigkeit <3 Monate — Frühfluktuation': {
+        title: 'Sofort-Intervention: Frühfluktuation verhindern',
+        urgency: 'kritisch',
+        measures: [
+            { action: 'Sofortiges persönliches Gespräch mit dem neuen AO-Vermittler — Erwartungen und erste Erfahrungen abgleichen', timeline: 'Sofort (24h)', responsible: 'Vertriebsdirektor' },
+            { action: 'Erfahrenen Paten-Vermittler aus der Einheit fest zuordnen — täglicher Austausch in den ersten Wochen', timeline: 'Sofort', responsible: 'Regionaldirektion' },
+            { action: 'Wirtschaftliche Startabsicherung prüfen: Bestandszuweisung, Startprovisionen, Lead-Pakete', timeline: '48 Stunden', responsible: 'Vertriebssteuerung' },
+            { action: 'Strukturierten Einarbeitungsplan mit Wochenmeilensteinen aufsetzen und nachhalten', timeline: '1 Woche', responsible: 'Vertriebscoach' },
+            { action: 'Wöchentliches Check-in mit VD fest im Kalender verankern — mindestens für die ersten 90 Tage', timeline: 'Fortlaufend', responsible: 'Vertriebsdirektor' }
+        ],
+        rationale: 'Die ersten 3 Monate sind die kritischste Phase: 33% der AO-Vermittler verlassen die Organisation bereits in dieser Frühphase. Die häufigsten Ursachen sind fehlende wirtschaftliche Perspektive, mangelnde Betreuung und unerfüllte Erwartungen. Sofortige, intensive Begleitung kann die Frühfluktuation nachweislich um bis zu 50% senken.'
+    },
     'Zugehörigkeit <12 Monate — Einarbeitungsphase': {
         title: 'Einarbeitung intensivieren',
         urgency: 'kritisch',
@@ -3173,8 +3196,8 @@ const HC_KI_RECOMMENDATIONS = {
         ],
         rationale: 'Die ersten 12 Monate sind die kritischste Phase für neue AO-Vermittler. Branchenweit verlassen 30–40% der Neuzugänge die Organisation innerhalb des ersten Jahres. Eine strukturierte Einarbeitung mit Patenmodell kann die Frühfluktuation um bis zu 50% senken.'
     },
-    'Zugehörigkeit <24 Monate — Frühfluktuation': {
-        title: 'Frühfluktuation verhindern',
+    'Zugehörigkeit <24 Monate — kritische Phase': {
+        title: 'Stabilisierung in der Aufbauphase',
         urgency: 'hoch',
         measures: [
             { action: 'Standortbestimmung: Hat der Vermittler die Anlaufphase wirtschaftlich überstanden?', timeline: 'Sofort', responsible: 'Vertriebsdirektor' },
@@ -3182,7 +3205,7 @@ const HC_KI_RECOMMENDATIONS = {
             { action: 'Netzwerk-Integration: Einbindung in regionale Vertriebsgruppen und Erfahrungsaustausch', timeline: '2 Wochen', responsible: 'Regionaldirektion' },
             { action: 'Entwicklungsplan für die nächsten 12 Monate gemeinsam erarbeiten — klare Perspektive aufzeigen', timeline: '2 Wochen', responsible: 'Vertriebsdirektor' }
         ],
-        rationale: 'Vermittler mit 1–2 Jahren Zugehörigkeit befinden sich in der Übergangsphase zwischen Aufbau und Etablierung. Fehlende Erfolgserlebnisse oder mangelnde Integration führen häufig zur Kündigung. Gezielte Unterstützung in dieser Phase ist entscheidend für die langfristige Bindung.'
+        rationale: 'Insgesamt verlassen 60% der AO-Vermittler die Organisation innerhalb der ersten 2 Jahre. Vermittler in der Aufbauphase (12–24 Monate) brauchen gezielte Unterstützung beim Übergang von der Einarbeitung zur Eigenständigkeit. Fehlende Erfolgserlebnisse oder mangelnde Integration führen häufig zur Kündigung.'
     }
 };
 
@@ -3222,7 +3245,7 @@ function renderHCKIRecommendation(agentId) {
     content.innerHTML = `
         <div class="hc-ki-rec-agent">
             <span class="hc-risk-badge ${agent.riskTier}">${agent.riskScore}%</span>
-            <strong>${agent.name}</strong> <span style="color:var(--text-tertiary)">(${agent.id})</span> — ${agent.rdName} · AO-Vermittler · ${agent.age} Jahre · ${agent.tenure}J Zugehörigkeit
+            <strong>${agent.name}</strong> <span style="color:var(--text-tertiary)">(${agent.id})</span> — ${agent.rdName} · AO-Vermittler · ${agent.age} Jahre · ${formatTenure(agent.tenure)} Zugehörigkeit
         </div>
         <div class="hc-ki-rec-body">
             <div class="hc-ki-rec-header">

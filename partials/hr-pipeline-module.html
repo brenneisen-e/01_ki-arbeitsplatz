@@ -278,64 +278,84 @@
         </div>
 
         <!-- KPI Bar -->
-        <div class="hp-kpi-bar">
-            <div class="hp-kpi-card">
-                <div class="hp-kpi-label">Bewerbungen <span style="font-weight:400;color:var(--text-muted)">(letzte 30 Tage)</span></div>
-                <div class="hp-kpi-value" id="hpKpiBewerbungen" data-target="47">0</div>
-                <div class="hp-kpi-trend up">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline></svg>
-                    +12% vs. Vormonat
-                </div>
-                <canvas class="hp-sparkline" id="hpSparkline1" width="120" height="32"></canvas>
+        <div class="hp-kpi-section">
+            <div class="hp-kpi-group-label">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="8.5" cy="7" r="4"/><path d="M20 8v6M23 11h-6"/></svg>
+                Bewerbungseingang
             </div>
-            <div class="hp-kpi-card">
-                <div class="hp-kpi-label">Durchschn. Score</div>
-                <div class="hp-kpi-value blue" id="hpKpiScore" data-target="68" data-suffix="/100">0/100</div>
-                <div class="hp-kpi-trend up">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline></svg>
-                    +3 Punkte
+            <div class="hp-kpi-bar" style="grid-template-columns: repeat(3, 1fr);">
+                <div class="hp-kpi-card">
+                    <div class="hp-kpi-label">Bewerbungen</div>
+                    <div class="hp-kpi-value" id="hpKpiBewerbungen" data-target="47">0</div>
+                    <div class="hp-kpi-desc">Eingegangene Bewerbungen der letzten 30 Tage</div>
+                    <div class="hp-kpi-trend up">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline></svg>
+                        +12% vs. Vormonat
+                    </div>
+                    <canvas class="hp-sparkline" id="hpSparkline1" width="120" height="32"></canvas>
                 </div>
-                <canvas class="hp-sparkline" id="hpSparkline2" width="120" height="32"></canvas>
-            </div>
-            <div class="hp-kpi-card clickable" onclick="filterHPByRecommended()" style="cursor:pointer" title="Klicken zum Filtern">
-                <div class="hp-kpi-label">Empfohlene Kandidaten</div>
-                <div class="hp-kpi-value green" id="hpKpiEmpfohlen" data-target="12">0</div>
-                <div class="hp-kpi-trend up">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline></svg>
-                    +4 diese Woche
+                <div class="hp-kpi-card">
+                    <div class="hp-kpi-label">Durchschnittlicher Score</div>
+                    <div class="hp-kpi-value blue" id="hpKpiScore" data-target="68" data-suffix="/100">0/100</div>
+                    <div class="hp-kpi-desc">Mittlerer KI-Score aller Bewerbungen (max. 100)</div>
+                    <div class="hp-kpi-trend up">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline></svg>
+                        +3 Punkte
+                    </div>
+                    <canvas class="hp-sparkline" id="hpSparkline2" width="120" height="32"></canvas>
                 </div>
-                <canvas class="hp-sparkline" id="hpSparkline3" width="120" height="32"></canvas>
-            </div>
-            <div class="hp-kpi-card">
-                <div class="hp-kpi-label">Eingeladen</div>
-                <div class="hp-kpi-value blue" id="hpKpiEingeladen" data-target="58" data-suffix="%">0%</div>
-                <div class="hp-kpi-trend up">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline></svg>
-                    +6% vs. Vormonat
-                </div>
-            </div>
-            <div class="hp-kpi-card">
-                <div class="hp-kpi-label">Angebot unterbreitet</div>
-                <div class="hp-kpi-value" id="hpKpiAngebot" data-target="23" data-suffix="%">0%</div>
-                <div class="hp-kpi-trend up">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline></svg>
-                    +2% vs. Vormonat
+                <div class="hp-kpi-card clickable" onclick="filterHPByRecommended()" style="cursor:pointer" title="Klicken zum Filtern">
+                    <div class="hp-kpi-label">Empfohlene Kandidaten</div>
+                    <div class="hp-kpi-value green" id="hpKpiEmpfohlen" data-target="12">0</div>
+                    <div class="hp-kpi-desc">Kandidaten mit KI-Empfehlung &bdquo;Einladen&ldquo;</div>
+                    <div class="hp-kpi-trend up">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline></svg>
+                        +4 diese Woche
+                    </div>
+                    <canvas class="hp-sparkline" id="hpSparkline3" width="120" height="32"></canvas>
                 </div>
             </div>
-            <div class="hp-kpi-card">
-                <div class="hp-kpi-label">Eingestellt</div>
-                <div class="hp-kpi-value green" id="hpKpiEingestellt" data-target="15" data-suffix="%">0%</div>
-                <div class="hp-kpi-trend up">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline></svg>
-                    +3% vs. Vormonat
-                </div>
+
+            <div class="hp-kpi-group-label">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                Recruiting-Pipeline
             </div>
-            <div class="hp-kpi-card">
-                <div class="hp-kpi-label">KI-Genauigkeit <span style="font-weight:400;color:var(--text-muted)">(12 Mon.)</span></div>
-                <div class="hp-kpi-value green" id="hpKpiGenauigkeit" data-target="94" data-suffix=",7%">0%</div>
-                <div class="hp-kpi-trend up">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline></svg>
-                    KI-Empfehlung übernommen
+            <div class="hp-kpi-bar" style="grid-template-columns: repeat(4, 1fr);">
+                <div class="hp-kpi-card">
+                    <div class="hp-kpi-label">Eingeladen</div>
+                    <div class="hp-kpi-value blue" id="hpKpiEingeladen" data-target="58" data-suffix="%">0%</div>
+                    <div class="hp-kpi-desc">Anteil Bewerber mit Einladung zum Gespräch</div>
+                    <div class="hp-kpi-trend up">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline></svg>
+                        +6% vs. Vormonat
+                    </div>
+                </div>
+                <div class="hp-kpi-card">
+                    <div class="hp-kpi-label">Angebot unterbreitet</div>
+                    <div class="hp-kpi-value" id="hpKpiAngebot" data-target="23" data-suffix="%">0%</div>
+                    <div class="hp-kpi-desc">Anteil Bewerber, die ein Vertragsangebot erhalten</div>
+                    <div class="hp-kpi-trend up">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline></svg>
+                        +2% vs. Vormonat
+                    </div>
+                </div>
+                <div class="hp-kpi-card">
+                    <div class="hp-kpi-label">Eingestellt</div>
+                    <div class="hp-kpi-value green" id="hpKpiEingestellt" data-target="15" data-suffix="%">0%</div>
+                    <div class="hp-kpi-desc">Anteil Bewerber mit unterschriebenem Vertrag</div>
+                    <div class="hp-kpi-trend up">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline></svg>
+                        +3% vs. Vormonat
+                    </div>
+                </div>
+                <div class="hp-kpi-card">
+                    <div class="hp-kpi-label">KI-Genauigkeit</div>
+                    <div class="hp-kpi-value green" id="hpKpiGenauigkeit" data-target="94" data-suffix=",7%">0%</div>
+                    <div class="hp-kpi-desc">Recruiter-Übernahme der KI-Empfehlung (12 Monate)</div>
+                    <div class="hp-kpi-trend up">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline></svg>
+                        +1,2% vs. Vorjahr
+                    </div>
                 </div>
             </div>
         </div>

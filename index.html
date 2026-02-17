@@ -32,7 +32,6 @@
     <link rel="stylesheet" href="css/bestandsuebertragung-vst.css?v=20251217">
     <link rel="stylesheet" href="css/guided-tour.css?v=20251217">
     <link rel="stylesheet" href="css/sales-report.css?v=20260122">
-    <link rel="stylesheet" href="css/cv-scanner.css?v=20260209">
     <link rel="stylesheet" href="css/hr-pipeline.css?v=20260217">
     <link rel="stylesheet" href="css/makler.css?v=20260209">
     <!-- Modularisierte CSS-Module -->
@@ -272,15 +271,6 @@
                                 <line x1="9" y1="21" x2="9" y2="9"></line>
                             </svg>
                             <span>PMO Toolbox</span>
-                        </button>
-                        <button class="nav-box nav-box-small" onclick="openCVScanner()">
-                            <svg class="nav-box-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path>
-                                <polyline points="14 2 14 8 20 8"></polyline>
-                                <path d="M12 18v-6"></path>
-                                <path d="M9 15l3-3 3 3"></path>
-                            </svg>
-                            <span>CV Scanner</span>
                         </button>
                         <button class="nav-box nav-box-small" onclick="openHRPipeline()">
                             <svg class="nav-box-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -5618,16 +5608,6 @@
   </div>
 
   <!-- ========================================
-     CV SCANNER MODULE - KI-gestütztes Bewerbermanagement
-     ======================================== -->
-  <div id="cvScannerModule" class="module-content" style="display: none;">
-    <div class="module-loading">
-      <div class="loading-spinner"></div>
-      <p>CV Scanner wird geladen...</p>
-    </div>
-  </div>
-
-  <!-- ========================================
      HR PIPELINE MODULE - KI-gestütztes Recruiting & Bewerbermanagement
      ======================================== -->
   <div id="hrPipelineModule" class="module-content" style="display: none;">
@@ -5668,8 +5648,6 @@
     <script src="js/banken-chat.js?v=20251217"></script>
     <script src="js/risikoscoring.js?v=20251217"></script>
     <script src="js/provisionssimulation.js?v=20251216"></script>
-    <!-- CV Scanner Module -->
-    <script src="js/cv-scanner.js?v=20260209"></script>
     <!-- HR Pipeline Module -->
     <script src="js/hr-pipeline.js?v=20260217"></script>
     <!-- Page ID Tracker -->

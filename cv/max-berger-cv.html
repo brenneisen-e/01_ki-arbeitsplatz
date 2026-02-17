@@ -1,766 +1,548 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Lebenslauf — Max Berger</title>
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lebenslauf - Max Berger</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Work+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --blue: #1e4d91;
+            --green: #C8102E;
+            --dark: #1a1a2e;
+            --light: #fafafa;
+            --gray: #4a4a5a;
+            --gray-light: #e5e7eb;
+        }
 
-  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-  :root {
-    --ergo-red: #C8102E;
-    --ergo-dark: #9B0B22;
-    --sidebar-bg: #111827;
-    --sidebar-text: #e2e8f0;
-    --sidebar-muted: #94a3b8;
-    --sidebar-accent: #f87171;
-    --main-bg: #ffffff;
-    --text-primary: #0f172a;
-    --text-secondary: #475569;
-    --text-muted: #64748b;
-    --border: #e2e8f0;
-    --accent-bg: #fef2f2;
-    --accent-border: #fecaca;
-  }
+        body {
+            font-family: 'Work Sans', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
 
-  body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    color: var(--text-primary);
-    background: #f1f5f9;
-    line-height: 1.6;
-    font-size: 13.5px;
-    -webkit-font-smoothing: antialiased;
-  }
+        .app-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
 
-  .cv-page {
-    display: grid;
-    grid-template-columns: 260px 1fr;
-    max-width: 900px;
-    margin: 0 auto;
-    background: var(--main-bg);
-    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
-    min-height: 100vh;
-  }
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 20px;
+        }
 
-  /* ========================================
-     SIDEBAR
-     ======================================== */
-  .cv-sidebar {
-    background: var(--sidebar-bg);
-    color: var(--sidebar-text);
-    padding: 40px 28px 32px;
-    display: flex;
-    flex-direction: column;
-    gap: 28px;
-  }
+        .header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
 
-  .cv-photo-wrapper {
-    text-align: center;
-  }
+        .controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 20px;
+            background: white;
+            padding: 15px 25px;
+            border-radius: 25px;
+            flex-wrap: wrap;
+        }
 
-  .cv-photo {
-    width: 160px;
-    height: 190px;
-    border-radius: 12px;
-    object-fit: cover;
-    border: 3px solid rgba(255,255,255,0.15);
-    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
-  }
+        .controls label {
+            font-weight: 500;
+            color: var(--dark);
+        }
 
-  .cv-sidebar-section {
-    border-top: 1px solid rgba(255,255,255,0.08);
-    padding-top: 20px;
-  }
+        .controls input[type="color"] {
+            width: 40px;
+            height: 40px;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            overflow: hidden;
+        }
 
-  .cv-sidebar-title {
-    font-size: 10px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    color: var(--sidebar-accent);
-    margin-bottom: 14px;
-  }
+        .download-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-family: 'Work Sans', sans-serif;
+            font-weight: 500;
+            background: var(--green);
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
 
-  .cv-contact-list {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
 
-  .cv-contact-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    font-size: 12.5px;
-    color: var(--sidebar-muted);
-    line-height: 1.4;
-  }
+        .download-btn .icon {
+            width: 18px;
+            height: 18px;
+        }
 
-  .cv-contact-icon {
-    width: 15px;
-    height: 15px;
-    flex-shrink: 0;
-    color: var(--sidebar-accent);
-    margin-top: 1px;
-  }
+        .preview-container {
+            background: #c0c0c0;
+            padding: 40px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+        }
 
-  /* Sidebar skill bars */
-  .cv-skill-row {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    margin-bottom: 10px;
-  }
+        /* CV Page */
+        .cv-page {
+            width: 210mm;
+            height: 297mm;
+            background: white;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.3);
+            display: grid;
+            grid-template-columns: 1fr 75mm;
+            position: relative;
+            overflow: hidden;
+        }
 
-  .cv-skill-row:last-child { margin-bottom: 0; }
+        .icon {
+            width: 12px;
+            height: 12px;
+            display: inline-block;
+            vertical-align: middle;
+            flex-shrink: 0;
+        }
 
-  .cv-skill-label {
-    display: flex;
-    justify-content: space-between;
-    font-size: 12px;
-    color: var(--sidebar-muted);
-  }
+        /* Main Content */
+        .main {
+            padding: 40px;
+        }
 
-  .cv-skill-pct {
-    font-weight: 600;
-    color: var(--sidebar-text);
-    font-size: 11px;
-  }
+        .main h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            font-weight: 400;
+            color: var(--dark);
+        }
 
-  .cv-skill-track {
-    height: 5px;
-    background: rgba(255,255,255,0.08);
-    border-radius: 3px;
-    overflow: hidden;
-  }
+        .main .subtitle {
+            color: var(--green);
+            font-size: 0.85rem;
+            letter-spacing: 2px;
+            margin-bottom: 30px;
+        }
 
-  .cv-skill-fill {
-    height: 100%;
-    border-radius: 3px;
-    background: linear-gradient(90deg, var(--ergo-red), #f87171);
-  }
+        .section {
+            margin-bottom: 25px;
+        }
 
-  /* Sidebar language */
-  .cv-lang-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 6px 0;
-    border-bottom: 1px solid rgba(255,255,255,0.04);
-    font-size: 12.5px;
-  }
+        .section h2 {
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--dark);
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--green);
+        }
 
-  .cv-lang-item:last-child { border-bottom: none; }
+        .summary {
+            font-size: 0.9rem;
+            line-height: 1.7;
+            color: var(--gray);
+        }
 
-  .cv-lang-name {
-    color: var(--sidebar-text);
-    font-weight: 500;
-  }
+        .exp-item {
+            margin-bottom: 18px;
+        }
 
-  .cv-lang-level {
-    color: var(--sidebar-muted);
-    font-size: 11px;
-  }
+        .exp-item .role {
+            font-weight: 600;
+        }
 
-  .cv-lang-dots {
-    display: flex;
-    gap: 4px;
-    margin-top: 4px;
-  }
+        .exp-item .meta {
+            font-size: 0.8rem;
+            color: var(--green);
+            margin: 2px 0 5px;
+        }
 
-  .cv-lang-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.12);
-  }
+        .exp-item .desc {
+            font-size: 0.8rem;
+            color: var(--gray);
+            line-height: 1.5;
+        }
 
-  .cv-lang-dot.filled {
-    background: var(--sidebar-accent);
-  }
+        /* Sidebar */
+        .sidebar {
+            background: var(--blue);
+            color: white;
+            padding: 30px 20px;
+        }
 
-  /* Sidebar interests */
-  .cv-interest-list {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
+        .photo {
+            width: 180px;
+            height: 180px;
+            min-width: 180px;
+            min-height: 180px;
+            object-fit: cover;
+            object-position: center top;
+            border-radius: 50%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 2;
+        }
 
-  .cv-interest-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 8px;
-    font-size: 12px;
-    color: var(--sidebar-muted);
-    line-height: 1.4;
-  }
+        .photo-container {
+            width: 180px;
+            height: 180px;
+            margin: 0 auto 20px;
+            position: relative;
+        }
 
-  .cv-interest-icon {
-    width: 14px;
-    height: 14px;
-    flex-shrink: 0;
-    color: var(--sidebar-accent);
-    margin-top: 1px;
-  }
+        .sidebar-section {
+            margin-bottom: 18px;
+        }
 
-  /* ========================================
-     MAIN CONTENT
-     ======================================== */
-  .cv-main {
-    padding: 44px 44px 36px;
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-  }
+        .sidebar-section h3 {
+            font-size: 0.6rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            opacity: 0.8;
+        }
 
-  /* Header */
-  .cv-header {
-    margin-bottom: 32px;
-    padding-bottom: 24px;
-    border-bottom: 3px solid var(--ergo-red);
-  }
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.75rem;
+            margin-bottom: 5px;
+            line-height: 1.3;
+        }
 
-  .cv-name {
-    font-size: 32px;
-    font-weight: 800;
-    color: var(--text-primary);
-    line-height: 1.1;
-    letter-spacing: -0.5px;
-  }
+        .skill-item {
+            font-size: 0.7rem;
+            padding: 2px 0;
+            opacity: 0.9;
+            line-height: 1.3;
+        }
 
-  .cv-title-position {
-    font-size: 15px;
-    font-weight: 500;
-    color: var(--ergo-red);
-    margin-top: 6px;
-  }
+        .skill-with-icon {
+            display: flex;
+            align-items: flex-start;
+            gap: 5px;
+        }
 
-  .cv-intro {
-    margin-top: 14px;
-    font-size: 13px;
-    color: var(--text-secondary);
-    line-height: 1.7;
-    max-width: 520px;
-  }
+        .skill-with-icon .icon {
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
 
-  /* Section */
-  .cv-section {
-    margin-bottom: 28px;
-  }
+        .reference-item {
+            font-size: 0.7rem;
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
 
-  .cv-section-title {
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    color: var(--ergo-red);
-    margin-bottom: 16px;
-    padding-bottom: 8px;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
+        .reference-item .ref-name {
+            font-weight: 600;
+        }
 
-  .cv-section-icon {
-    width: 16px;
-    height: 16px;
-    color: var(--ergo-red);
-  }
+        .reference-item .ref-title {
+            opacity: 0.8;
+        }
 
-  /* Timeline entry */
-  .cv-timeline {
-    position: relative;
-    padding-left: 20px;
-  }
+        .reference-item .ref-email {
+            opacity: 0.7;
+            font-size: 0.65rem;
+        }
 
-  .cv-timeline::before {
-    content: '';
-    position: absolute;
-    left: 4px;
-    top: 8px;
-    bottom: 8px;
-    width: 2px;
-    background: var(--border);
-  }
+        /* Blind mode classes for iframe injection */
+        .cv-photo-wrapper { position: relative; }
+        .cv-name {}
+        .cv-footer {}
 
-  .cv-entry {
-    position: relative;
-    margin-bottom: 22px;
-    padding-bottom: 2px;
-  }
-
-  .cv-entry:last-child { margin-bottom: 0; }
-
-  .cv-entry::before {
-    content: '';
-    position: absolute;
-    left: -20px;
-    top: 7px;
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: var(--main-bg);
-    border: 2px solid var(--ergo-red);
-    z-index: 1;
-  }
-
-  .cv-entry.current::before {
-    background: var(--ergo-red);
-    box-shadow: 0 0 0 3px rgba(200,16,46,0.15);
-  }
-
-  .cv-entry-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 12px;
-    margin-bottom: 3px;
-  }
-
-  .cv-entry-title {
-    font-size: 14.5px;
-    font-weight: 700;
-    color: var(--text-primary);
-  }
-
-  .cv-entry-date {
-    font-size: 11px;
-    font-weight: 600;
-    color: var(--text-muted);
-    white-space: nowrap;
-    background: #f8fafc;
-    padding: 2px 10px;
-    border-radius: 12px;
-    border: 1px solid var(--border);
-  }
-
-  .cv-entry-company {
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--text-secondary);
-    margin-bottom: 8px;
-  }
-
-  .cv-entry-details {
-    font-size: 12.5px;
-    color: var(--text-muted);
-    line-height: 1.6;
-    list-style: none;
-  }
-
-  .cv-entry-details li {
-    margin-bottom: 3px;
-    position: relative;
-    padding-left: 16px;
-  }
-
-  .cv-entry-details li::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 8px;
-    width: 6px;
-    height: 6px;
-    border-radius: 1px;
-    background: var(--ergo-red);
-    opacity: 0.5;
-    transform: rotate(45deg);
-  }
-
-  /* Certifications */
-  .cv-cert-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-
-  .cv-cert-tag {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 6px 14px;
-    background: var(--accent-bg);
-    border: 1px solid var(--accent-border);
-    border-radius: 24px;
-    font-size: 12px;
-    font-weight: 500;
-    color: #991b1b;
-    transition: transform 0.15s;
-  }
-
-  .cv-cert-icon {
-    width: 13px;
-    height: 13px;
-    color: var(--ergo-red);
-  }
-
-  /* Key Figures */
-  .cv-kpi-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-    margin-bottom: 28px;
-  }
-
-  .cv-kpi {
-    text-align: center;
-    padding: 16px 12px;
-    background: linear-gradient(135deg, #fef2f2, #fff1f2);
-    border-radius: 12px;
-    border: 1px solid var(--accent-border);
-  }
-
-  .cv-kpi-value {
-    font-size: 22px;
-    font-weight: 800;
-    color: var(--ergo-red);
-    line-height: 1;
-  }
-
-  .cv-kpi-label {
-    font-size: 11px;
-    color: var(--text-muted);
-    margin-top: 4px;
-    font-weight: 500;
-  }
-
-  /* Footer */
-  .cv-footer {
-    margin-top: auto;
-    padding-top: 20px;
-    border-top: 1px solid var(--border);
-    font-size: 12px;
-    color: var(--text-muted);
-    text-align: right;
-  }
-
-  /* Print */
-  @media print {
-    body { background: white; }
-    .cv-page {
-      box-shadow: none;
-      max-width: none;
-    }
-  }
-
-  /* Responsive for iframe */
-  @media (max-width: 700px) {
-    .cv-page {
-      grid-template-columns: 1fr;
-    }
-    .cv-sidebar {
-      padding: 24px;
-      flex-direction: row;
-      flex-wrap: wrap;
-      gap: 16px;
-    }
-    .cv-photo { width: 100px; height: 120px; }
-    .cv-main { padding: 24px; }
-    .cv-kpi-grid { grid-template-columns: repeat(2, 1fr); }
-  }
-</style>
+        @media print {
+            body {
+                background: none;
+                padding: 0;
+            }
+            .header, .controls {
+                display: none !important;
+            }
+            .preview-container {
+                padding: 0;
+                background: none;
+            }
+            .cv-page {
+                box-shadow: none;
+            }
+            @page {
+                size: A4;
+                margin: 0;
+            }
+        }
+    </style>
 </head>
 <body>
-
-<div class="cv-page">
-  <!-- ========================================
-       SIDEBAR
-       ======================================== -->
-  <aside class="cv-sidebar">
-    <div class="cv-photo-wrapper">
-      <img src="../AdobeStock_624564221.jpeg" alt="Max Berger" class="cv-photo">
-    </div>
-
-    <!-- Kontakt -->
-    <div class="cv-sidebar-section">
-      <div class="cv-sidebar-title">Kontakt</div>
-      <ul class="cv-contact-list">
-        <li class="cv-contact-item">
-          <svg class="cv-contact-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-          Grafenberger Allee 48<br>40237 Düsseldorf
-        </li>
-        <li class="cv-contact-item">
-          <svg class="cv-contact-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
-          +49 211 4738 291
-        </li>
-        <li class="cv-contact-item">
-          <svg class="cv-contact-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22 6 12 13 2 6"/></svg>
-          max.berger@email.de
-        </li>
-        <li class="cv-contact-item">
-          <svg class="cv-contact-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-          15.03.1991, Krefeld
-        </li>
-        <li class="cv-contact-item">
-          <svg class="cv-contact-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
-          linkedin.com/in/maxberger
-        </li>
-        <li class="cv-contact-item">
-          <svg class="cv-contact-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-          verheiratet, 1 Kind
-        </li>
-      </ul>
-    </div>
-
-    <!-- Kompetenzen -->
-    <div class="cv-sidebar-section">
-      <div class="cv-sidebar-title">Kompetenzen</div>
-      <div class="cv-skill-row">
-        <div class="cv-skill-label"><span>Kundenakquise</span><span class="cv-skill-pct">95%</span></div>
-        <div class="cv-skill-track"><div class="cv-skill-fill" style="width:95%"></div></div>
-      </div>
-      <div class="cv-skill-row">
-        <div class="cv-skill-label"><span>Bedarfsanalyse</span><span class="cv-skill-pct">92%</span></div>
-        <div class="cv-skill-track"><div class="cv-skill-fill" style="width:92%"></div></div>
-      </div>
-      <div class="cv-skill-row">
-        <div class="cv-skill-label"><span>Bestandsmanagement</span><span class="cv-skill-pct">90%</span></div>
-        <div class="cv-skill-track"><div class="cv-skill-fill" style="width:90%"></div></div>
-      </div>
-      <div class="cv-skill-row">
-        <div class="cv-skill-label"><span>Cross-Selling</span><span class="cv-skill-pct">88%</span></div>
-        <div class="cv-skill-track"><div class="cv-skill-fill" style="width:88%"></div></div>
-      </div>
-      <div class="cv-skill-row">
-        <div class="cv-skill-label"><span>Verhandlungsführung</span><span class="cv-skill-pct">85%</span></div>
-        <div class="cv-skill-track"><div class="cv-skill-fill" style="width:85%"></div></div>
-      </div>
-      <div class="cv-skill-row">
-        <div class="cv-skill-label"><span>Vertriebssteuerung</span><span class="cv-skill-pct">85%</span></div>
-        <div class="cv-skill-track"><div class="cv-skill-fill" style="width:85%"></div></div>
-      </div>
-      <div class="cv-skill-row">
-        <div class="cv-skill-label"><span>Mitarbeiterführung</span><span class="cv-skill-pct">80%</span></div>
-        <div class="cv-skill-track"><div class="cv-skill-fill" style="width:80%"></div></div>
-      </div>
-      <div class="cv-skill-row">
-        <div class="cv-skill-label"><span>Digitale Tools / CRM</span><span class="cv-skill-pct">70%</span></div>
-        <div class="cv-skill-track"><div class="cv-skill-fill" style="width:70%"></div></div>
-      </div>
-    </div>
-
-    <!-- Sprachen -->
-    <div class="cv-sidebar-section">
-      <div class="cv-sidebar-title">Sprachen</div>
-      <div class="cv-lang-item">
-        <div>
-          <div class="cv-lang-name">Deutsch</div>
-          <div class="cv-lang-dots">
-            <div class="cv-lang-dot filled"></div>
-            <div class="cv-lang-dot filled"></div>
-            <div class="cv-lang-dot filled"></div>
-            <div class="cv-lang-dot filled"></div>
-            <div class="cv-lang-dot filled"></div>
-          </div>
-        </div>
-        <span class="cv-lang-level">Muttersprache</span>
-      </div>
-      <div class="cv-lang-item">
-        <div>
-          <div class="cv-lang-name">Englisch</div>
-          <div class="cv-lang-dots">
-            <div class="cv-lang-dot filled"></div>
-            <div class="cv-lang-dot filled"></div>
-            <div class="cv-lang-dot filled"></div>
-            <div class="cv-lang-dot filled"></div>
-            <div class="cv-lang-dot"></div>
-          </div>
-        </div>
-        <span class="cv-lang-level">B2 / C1</span>
-      </div>
-      <div class="cv-lang-item">
-        <div>
-          <div class="cv-lang-name">Türkisch</div>
-          <div class="cv-lang-dots">
-            <div class="cv-lang-dot filled"></div>
-            <div class="cv-lang-dot filled"></div>
-            <div class="cv-lang-dot"></div>
-            <div class="cv-lang-dot"></div>
-            <div class="cv-lang-dot"></div>
-          </div>
-        </div>
-        <span class="cv-lang-level">A2</span>
-      </div>
-    </div>
-
-    <!-- Interessen -->
-    <div class="cv-sidebar-section">
-      <div class="cv-sidebar-title">Interessen</div>
-      <ul class="cv-interest-list">
-        <li class="cv-interest-item">
-          <svg class="cv-interest-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-          Marathon (PB: 3:42h)
-        </li>
-        <li class="cv-interest-item">
-          <svg class="cv-interest-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
-          Ehrenamtliches Coaching, Gründerzentrum Düsseldorf
-        </li>
-        <li class="cv-interest-item">
-          <svg class="cv-interest-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
-          Wirtschaftsliteratur &amp; Podcasts
-        </li>
-      </ul>
-    </div>
-  </aside>
-
-  <!-- ========================================
-       MAIN CONTENT
-       ======================================== -->
-  <main class="cv-main">
-    <!-- Header -->
-    <div class="cv-header">
-      <div class="cv-name">Max Berger</div>
-      <div class="cv-title-position">Vertriebsleiter Versicherung / Agenturleiter</div>
-      <p class="cv-intro">
-        Erfahrener Vertriebsprofi mit 8 Jahren im Versicherungsaußendienst der Allianz AO.
-        Nachgewiesene Expertise in Bestandsaufbau, Teamführung und spartenübergreifender Beratung.
-        IHK-qualifiziert nach §34d GewO mit einem persönlichen Bestandsvolumen von 2,4 Mio.&nbsp;€.
-      </p>
-    </div>
-
-    <!-- KPIs -->
-    <div class="cv-kpi-grid">
-      <div class="cv-kpi">
-        <div class="cv-kpi-value">8</div>
-        <div class="cv-kpi-label">Jahre Erfahrung</div>
-      </div>
-      <div class="cv-kpi">
-        <div class="cv-kpi-value">2,4M€</div>
-        <div class="cv-kpi-label">Bestandsvolumen</div>
-      </div>
-      <div class="cv-kpi">
-        <div class="cv-kpi-value">34%</div>
-        <div class="cv-kpi-label">Cross-Selling-Quote</div>
-      </div>
-    </div>
-
-    <!-- Berufserfahrung -->
-    <div class="cv-section">
-      <div class="cv-section-title">
-        <svg class="cv-section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
-        Berufserfahrung
-      </div>
-      <div class="cv-timeline">
-        <div class="cv-entry current">
-          <div class="cv-entry-header">
-            <div class="cv-entry-title">Vertriebsleiter Außendienst</div>
-            <div class="cv-entry-date">04/2020 — heute</div>
-          </div>
-          <div class="cv-entry-company">Allianz Beratungs- und Vertriebs-AG, Düsseldorf</div>
-          <ul class="cv-entry-details">
-            <li>Leitung eines 3-köpfigen Vertriebsteams im Segment Privatkunden</li>
-            <li>Aufbau und Ausbau des Bestandsvolumens auf 2,4 Mio.&nbsp;€</li>
-            <li>Cross-Selling-Quote 34% (Branchendurchschnitt: 22%)</li>
-            <li>Akquise von Ø 15 Neukunden/Monat durch systematische Bedarfsanalyse</li>
-            <li>Spartenübergreifende Beratung: Leben, Sach/HUK, bAV, Kranken</li>
-          </ul>
+    <div class="app-container">
+        <div class="header">
+            <h1>CV Builder</h1>
         </div>
 
-        <div class="cv-entry">
-          <div class="cv-entry-header">
-            <div class="cv-entry-title">Versicherungskaufmann Außendienst</div>
-            <div class="cv-entry-date">08/2016 — 03/2020</div>
-          </div>
-          <div class="cv-entry-company">Allianz Beratungs- und Vertriebs-AG, Düsseldorf</div>
-          <ul class="cv-entry-details">
-            <li>Selbstständige Betreuung von ca. 800 Bestandskunden</li>
-            <li>Bestandsaufbau von 0 auf 1,2 Mio.&nbsp;€ in 4 Jahren</li>
-            <li>Individuelle Risikoabsicherung und Vorsorgeberatung</li>
-            <li>Regelmäßige Top-10-Platzierung im Bezirksranking NRW</li>
-          </ul>
+        <div class="controls">
+            <label for="sidebarColor">Sidebar:</label>
+            <input type="color" id="sidebarColor" value="#1e4d91">
+            <label for="accentColor">Akzente:</label>
+            <input type="color" id="accentColor" value="#C8102E">
+            <button class="download-btn" onclick="downloadPDF()">
+                <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Als PDF herunterladen
+            </button>
         </div>
 
-        <div class="cv-entry">
-          <div class="cv-entry-header">
-            <div class="cv-entry-title">Praktikum Vertriebsinnendienst</div>
-            <div class="cv-entry-date">02/2015 — 07/2015</div>
-          </div>
-          <div class="cv-entry-company">ERGO Versicherung AG, Düsseldorf</div>
-          <ul class="cv-entry-details">
-            <li>Unterstützung Angebotserstellung und Vertragsverwaltung</li>
-            <li>Kundenkorrespondenz und Schadensbearbeitung</li>
-          </ul>
+        <div class="preview-container">
+            <div class="cv-page" id="cvPage">
+                <div class="main">
+                    <h1 class="cv-name">Max Berger</h1>
+                    <div class="subtitle">VERSICHERUNGSFACHMANN (IHK) &bull; AGENTURLEITER</div>
+
+                    <div class="section">
+                        <h2>Profil</h2>
+                        <p class="summary">Erfahrener Versicherungsvertriebsprofi mit 8 Jahren in der Allianz Ausschließlichkeitsorganisation. Nachgewiesene Führungskompetenz mit einem Team von 3 Mitarbeitern und einem Bestandsvolumen von 2,4 Mio €. Hohe Abschlussstärke mit einer Cross-Selling-Quote von 34%, deutlich über dem Branchendurchschnitt. Strategisch denkend, kundenorientiert und bereit für den nächsten Karriereschritt in der Agenturleitung.</p>
+                    </div>
+
+                    <div class="section">
+                        <h2>Berufserfahrung</h2>
+
+                        <div class="exp-item">
+                            <div class="role">Agenturleiter (stellv.) &amp; Teamleiter</div>
+                            <div class="meta">Allianz Generalvertretung Düsseldorf | 2021 &ndash; heute</div>
+                            <div class="desc">Leitung eines 3-köpfigen Vertriebsteams in der Ausschließlichkeitsorganisation. Verantwortung für Bestandsmanagement (2,4 Mio € Bestandsvolumen). Strategische Neukundenakquise mit Fokus auf Cross-Selling (Quote: 34%). Durchführung von Beratungsgesprächen in allen Kompositsparten, Leben und Kranken. Coaching und Einarbeitung neuer Vertriebsmitarbeiter.</div>
+                        </div>
+
+                        <div class="exp-item">
+                            <div class="role">Versicherungsfachmann im Außendienst</div>
+                            <div class="meta">Allianz Generalvertretung Düsseldorf | 2018 &ndash; 2021</div>
+                            <div class="desc">Eigenverantwortliche Betreuung eines Kundenstamms von 800+ Privat- und Gewerbekunden. Bestandspflege und systematische Bedarfsanalysen. Regelmäßige Übertreffen der Vertriebsziele (Ø 115% Zielerreichung). Aufbau langfristiger Kundenbeziehungen im Raum Düsseldorf/NRW.</div>
+                        </div>
+
+                        <div class="exp-item">
+                            <div class="role">Trainee Versicherungsvertrieb</div>
+                            <div class="meta">Allianz AG, Bereich AO NRW | 2016 &ndash; 2018</div>
+                            <div class="desc">18-monatiges Trainee-Programm mit Stationen in Kundenservice, Schadensbearbeitung und Vertrieb. Abschluss der IHK-Sachkundeprüfung Versicherungsfachmann §34d. Praxisnahe Ausbildung in Beratungstechniken und Verkaufsgesprächen.</div>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <h2>Ausbildung</h2>
+
+                        <div class="exp-item">
+                            <div class="role">Bachelor of Arts, Betriebswirtschaftslehre</div>
+                            <div class="meta">Heinrich-Heine-Universität Düsseldorf, 2016</div>
+                            <div class="desc">Schwerpunkt: Marketing &amp; Vertrieb | Abschluss: 2,1<br>Bachelorarbeit: „Digitalisierung im Versicherungsvertrieb — Chancen und Herausforderungen für den Außendienst"</div>
+                        </div>
+                    </div>
+
+                    <div class="section cv-footer">
+                        <h2>Weiterbildung</h2>
+                        <div class="exp-item">
+                            <div class="role">IDD-konforme Weiterbildung 2024</div>
+                            <div class="meta">15 Stunden | Allianz Akademie</div>
+                        </div>
+                        <div class="exp-item">
+                            <div class="role">Führungskräfte-Entwicklungsprogramm</div>
+                            <div class="meta">Allianz Management Institut | 2022</div>
+                        </div>
+                        <div class="exp-item">
+                            <div class="role">Zertifikat: Digitale Beratung &amp; Online-Abschluss</div>
+                            <div class="meta">Allianz Digital Campus | 2021</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sidebar">
+                    <div class="photo-container cv-photo-wrapper">
+                        <img class="photo cv-photo" id="cvPhoto" src="../AdobeStock_624564221.jpeg" alt="Max Berger">
+                    </div>
+
+                    <div class="sidebar-section">
+                        <h3>Kontakt</h3>
+                        <div class="contact-item">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                            0176 4432 8891
+                        </div>
+                        <div class="contact-item">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                            max.berger&#64;email.de
+                        </div>
+                        <div class="contact-item">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                            40225 Düsseldorf
+                        </div>
+                        <div class="contact-item">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+                            linkedin.com/in/maxberger
+                        </div>
+                    </div>
+
+                    <div class="sidebar-section">
+                        <h3>Fachkompetenz</h3>
+                        <div class="skill-item">Kundenakquise &amp; Neugeschäft</div>
+                        <div class="skill-item">Bestandsmanagement</div>
+                        <div class="skill-item">Cross-Selling &amp; Upselling</div>
+                        <div class="skill-item">Vertriebssteuerung &amp; KPIs</div>
+                        <div class="skill-item">Teamführung &amp; Coaching</div>
+                        <div class="skill-item">Beratung Komposit/Leben/Kranken</div>
+                    </div>
+
+                    <div class="sidebar-section">
+                        <h3>Zertifizierungen</h3>
+                        <div class="skill-item skill-with-icon">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                            <span>IHK Versicherungsfachmann (§34d)</span>
+                        </div>
+                        <div class="skill-item skill-with-icon">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                            <span>BWL Bachelor (DQR 6)</span>
+                        </div>
+                        <div class="skill-item skill-with-icon">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                            <span>IDD Weiterbildung 2024</span>
+                        </div>
+                    </div>
+
+                    <div class="sidebar-section">
+                        <h3>Sprachen</h3>
+                        <div class="skill-item">Deutsch (Muttersprache)</div>
+                        <div class="skill-item">Englisch (Verhandlungssicher)</div>
+                    </div>
+
+                    <div class="sidebar-section">
+                        <h3>Highlights</h3>
+                        <div class="skill-item skill-with-icon">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                            <span>Cross-Selling-Quote 34% (Branchenschnitt: 18%)</span>
+                        </div>
+                        <div class="skill-item skill-with-icon">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                            <span>Führung 3 Vertriebsmitarbeiter</span>
+                        </div>
+                        <div class="skill-item skill-with-icon">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                            <span>Bestandsvolumen 2,4 Mio €</span>
+                        </div>
+                        <div class="skill-item skill-with-icon">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
+                            <span>Ø 115% Zielerreichung</span>
+                        </div>
+                    </div>
+
+                    <div class="sidebar-section">
+                        <h3>Referenzen</h3>
+                        <div class="reference-item">
+                            <div class="ref-name">Stefan Hoffmann</div>
+                            <div class="ref-title">Agenturleiter, Allianz Düsseldorf</div>
+                            <div class="ref-email">s.hoffmann&#64;allianz-duesseldorf.de</div>
+                        </div>
+                        <div class="reference-item">
+                            <div class="ref-name">Dr. Petra Winkler</div>
+                            <div class="ref-title">Vertriebsdirektorin NRW, Allianz</div>
+                            <div class="ref-email">petra.winkler&#64;allianz.de</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
 
-    <!-- Ausbildung -->
-    <div class="cv-section">
-      <div class="cv-section-title">
-        <svg class="cv-section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 1.66 2.69 3 6 3s6-1.34 6-3v-5"/></svg>
-        Ausbildung
-      </div>
-      <div class="cv-timeline">
-        <div class="cv-entry">
-          <div class="cv-entry-header">
-            <div class="cv-entry-title">Betriebswirtschaftslehre (B.A.)</div>
-            <div class="cv-entry-date">10/2011 — 09/2015</div>
-          </div>
-          <div class="cv-entry-company">Heinrich-Heine-Universität Düsseldorf</div>
-          <ul class="cv-entry-details">
-            <li>Schwerpunkt: Marketing &amp; Vertriebsmanagement</li>
-            <li>Bachelorarbeit: „Digitalisierung im Versicherungsvertrieb" (Note 1,7)</li>
-            <li>Abschlussnote: 2,1</li>
-          </ul>
-        </div>
+    <script>
+        // When loaded inside an iframe, hide controls and show CV directly
+        if (window.self !== window.top) {
+            document.querySelector('.header').style.display = 'none';
+            document.querySelector('.controls').style.display = 'none';
+            const container = document.querySelector('.preview-container');
+            container.style.background = 'none';
+            container.style.padding = '0';
+            const page = document.querySelector('.cv-page');
+            page.style.width = '100%';
+            page.style.height = 'auto';
+            page.style.boxShadow = 'none';
+            document.body.style.background = 'white';
+            document.body.style.padding = '0';
+        }
 
-        <div class="cv-entry">
-          <div class="cv-entry-header">
-            <div class="cv-entry-title">Abitur</div>
-            <div class="cv-entry-date">2011</div>
-          </div>
-          <div class="cv-entry-company">Gymnasium Am Stadtpark, Krefeld</div>
-          <ul class="cv-entry-details">
-            <li>Leistungskurse: Mathematik, Wirtschaft — Note: 2,3</li>
-          </ul>
-        </div>
-      </div>
-    </div>
+        // Color pickers
+        document.getElementById('sidebarColor').addEventListener('input', (e) => {
+            document.querySelector('.sidebar').style.background = e.target.value;
+        });
 
-    <!-- Zertifikate -->
-    <div class="cv-section">
-      <div class="cv-section-title">
-        <svg class="cv-section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-        Zertifikate &amp; Qualifikationen
-      </div>
-      <div class="cv-cert-grid">
-        <span class="cv-cert-tag">
-          <svg class="cv-cert-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-          IHK Versicherungsfachmann (§34d GewO)
-        </span>
-        <span class="cv-cert-tag">
-          <svg class="cv-cert-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 1.66 2.69 3 6 3s6-1.34 6-3v-5"/></svg>
-          BWL Bachelor of Arts (DQR 6)
-        </span>
-        <span class="cv-cert-tag">
-          <svg class="cv-cert-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-          IDD Weiterbildung 2024 (15 Std.)
-        </span>
-        <span class="cv-cert-tag">
-          <svg class="cv-cert-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-          IDD Weiterbildung 2023 (15 Std.)
-        </span>
-        <span class="cv-cert-tag">
-          <svg class="cv-cert-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
-          Zertifikat bAV-Spezialist (DVA)
-        </span>
-        <span class="cv-cert-tag">
-          <svg class="cv-cert-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
-          Führungskräftetraining Allianz Akademie
-        </span>
-      </div>
-    </div>
+        document.getElementById('accentColor').addEventListener('input', (e) => {
+            document.documentElement.style.setProperty('--green', e.target.value);
+            document.querySelector('.download-btn').style.background = e.target.value;
+        });
 
-    <div class="cv-footer">
-      Düsseldorf, 10. Februar 2026 &mdash; Max Berger
-    </div>
-  </main>
-</div>
+        // Helper: load external script
+        function loadScript(src) {
+            return new Promise((resolve, reject) => {
+                const s = document.createElement('script');
+                s.src = src;
+                s.onload = resolve;
+                s.onerror = reject;
+                document.head.appendChild(s);
+            });
+        }
 
+        // PDF Download
+        async function downloadPDF() {
+            const btn = document.querySelector('.download-btn');
+            btn.textContent = 'Wird erstellt...';
+            btn.disabled = true;
+
+            if (!window.html2canvas) {
+                await loadScript('https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js');
+            }
+            if (!window.jspdf) {
+                await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js');
+            }
+
+            const element = document.getElementById('cvPage');
+
+            try {
+                const canvas = await html2canvas(element, {
+                    scale: 3,
+                    useCORS: true,
+                    logging: false,
+                    backgroundColor: '#ffffff',
+                    width: element.scrollWidth,
+                    height: element.scrollHeight
+                });
+
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF('p', 'mm', 'a4');
+                const imgData = canvas.toDataURL('image/jpeg', 0.95);
+                pdf.addImage(imgData, 'JPEG', 0, 0, 210, 297);
+                pdf.save('Lebenslauf_Max_Berger.pdf');
+            } catch (error) {
+                console.error('PDF Error:', error);
+                alert('PDF-Erstellung fehlgeschlagen.');
+            }
+
+            btn.innerHTML = '<svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Als PDF herunterladen';
+            btn.disabled = false;
+        }
+    </script>
 </body>
 </html>

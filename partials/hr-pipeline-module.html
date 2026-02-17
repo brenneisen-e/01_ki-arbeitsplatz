@@ -561,8 +561,8 @@
 
         <!-- ===== SUB-VIEW 1: Gesamtübersicht ===== -->
         <div id="hcOverview" class="hc-view active">
-            <!-- KPI Card Row -->
-            <div class="hc-kpi-row" id="hcKpiRow">
+            <!-- KPI Section (grouped like H-02) -->
+            <div class="hc-kpi-section" id="hcKpiSection">
                 <!-- Filled dynamically -->
             </div>
 
@@ -762,6 +762,22 @@
                 </div>
             </div>
 
+            <!-- Unit Early Warnings -->
+            <div class="hc-panel hc-full-width">
+                <div class="hc-panel-header">
+                    <h3>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                        Frühwarnungen in dieser Einheit
+                    </h3>
+                </div>
+                <div class="hc-ew-grid" id="hcUnitEWGrid">
+                    <!-- Filled dynamically -->
+                </div>
+                <div class="hc-shap-container" id="hcUnitShapContainer" style="margin-top: var(--space-4);">
+                    <!-- Filled when agent is clicked -->
+                </div>
+            </div>
+
             <!-- Contagion Watch -->
             <div class="hc-panel hc-full-width hc-contagion-panel" id="hcContagionPanel">
                 <div class="hc-panel-header">
@@ -795,6 +811,20 @@
                     </div>
                 </div>
                 <div class="hc-ew-grid" id="hcEWGrid">
+                    <!-- Filled dynamically -->
+                </div>
+            </div>
+
+            <!-- KI-Maßnahmenempfehlung -->
+            <div class="hc-panel hc-full-width hc-ki-recommendation-panel" id="hcKIRecommendationPanel" style="display:none;">
+                <div class="hc-panel-header">
+                    <h3>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                        KI-Maßnahmenempfehlung
+                    </h3>
+                    <button class="hc-btn-close" onclick="document.getElementById('hcKIRecommendationPanel').style.display='none'">&times;</button>
+                </div>
+                <div id="hcKIRecommendationContent">
                     <!-- Filled dynamically -->
                 </div>
             </div>

@@ -1914,19 +1914,25 @@ let hcSelectedRD = null;
 
 // --- Regionaldirektionen Demo Data ---
 const HC_REGIONALDIREKTIONEN = [
-    { id: 'rd_nrw_west', name: 'RD Düsseldorf', region: 'NRW West', lat: 51.23, lng: 6.78, headcount: 87, budgeted: 95, employed: 12 },
-    { id: 'rd_nrw_ost', name: 'RD Dortmund', region: 'NRW Ost', lat: 51.51, lng: 7.47, headcount: 72, budgeted: 80, employed: 10 },
-    { id: 'rd_nrw_sued', name: 'RD Köln', region: 'NRW Süd', lat: 50.94, lng: 6.96, headcount: 94, budgeted: 100, employed: 14 },
-    { id: 'rd_nord_west', name: 'RD Hamburg', region: 'Nord-West', lat: 53.55, lng: 9.99, headcount: 65, budgeted: 78, employed: 8 },
-    { id: 'rd_nord_ost', name: 'RD Berlin', region: 'Nord-Ost', lat: 52.52, lng: 13.40, headcount: 58, budgeted: 70, employed: 9 },
-    { id: 'rd_mitte_west', name: 'RD Frankfurt', region: 'Mitte-West', lat: 50.11, lng: 8.68, headcount: 81, budgeted: 88, employed: 11 },
-    { id: 'rd_mitte_ost', name: 'RD Erfurt', region: 'Mitte-Ost', lat: 50.98, lng: 11.03, headcount: 42, budgeted: 55, employed: 6 },
-    { id: 'rd_sued_west', name: 'RD Stuttgart', region: 'Süd-West', lat: 48.78, lng: 9.18, headcount: 76, budgeted: 82, employed: 10 },
-    { id: 'rd_sued_ost', name: 'RD München', region: 'Süd-Ost', lat: 48.14, lng: 11.58, headcount: 91, budgeted: 95, employed: 13 },
-    { id: 'rd_nord_mitte', name: 'RD Hannover', region: 'Nord-Mitte', lat: 52.37, lng: 9.74, headcount: 54, budgeted: 65, employed: 7 },
-    { id: 'rd_sued_mitte', name: 'RD Nürnberg', region: 'Süd-Mitte', lat: 49.45, lng: 11.08, headcount: 63, budgeted: 70, employed: 8 },
-    { id: 'rd_ost', name: 'RD Dresden', region: 'Ost', lat: 51.05, lng: 13.74, headcount: 38, budgeted: 50, employed: 5 }
+    { id: 'rd_nrw_west', name: 'RD Düsseldorf', region: 'NRW West', lat: 51.23, lng: 6.78, headcount: 580, budgeted: 620, states: ['Nordrhein-Westfalen'] },
+    { id: 'rd_nrw_ost', name: 'RD Dortmund', region: 'NRW Ost', lat: 51.51, lng: 7.47, headcount: 460, budgeted: 500, states: [] },
+    { id: 'rd_nrw_sued', name: 'RD Köln', region: 'NRW Süd', lat: 50.94, lng: 6.96, headcount: 520, budgeted: 560, states: ['Rheinland-Pfalz', 'Saarland'] },
+    { id: 'rd_nord_west', name: 'RD Hamburg', region: 'Nord-West', lat: 53.55, lng: 9.99, headcount: 390, budgeted: 430, states: ['Hamburg', 'Bremen', 'Schleswig-Holstein'] },
+    { id: 'rd_nord_ost', name: 'RD Berlin', region: 'Nord-Ost', lat: 52.52, lng: 13.40, headcount: 340, budgeted: 390, states: ['Berlin', 'Brandenburg', 'Mecklenburg-Vorpommern'] },
+    { id: 'rd_mitte_west', name: 'RD Frankfurt', region: 'Mitte-West', lat: 50.11, lng: 8.68, headcount: 480, budgeted: 520, states: ['Hessen'] },
+    { id: 'rd_mitte_ost', name: 'RD Erfurt', region: 'Mitte-Ost', lat: 50.98, lng: 11.03, headcount: 250, budgeted: 310, states: ['Thüringen', 'Sachsen-Anhalt'] },
+    { id: 'rd_sued_west', name: 'RD Stuttgart', region: 'Süd-West', lat: 48.78, lng: 9.18, headcount: 470, budgeted: 510, states: ['Baden-Württemberg'] },
+    { id: 'rd_sued_ost', name: 'RD München', region: 'Süd-Ost', lat: 48.14, lng: 11.58, headcount: 560, budgeted: 600, states: ['Bayern'] },
+    { id: 'rd_nord_mitte', name: 'RD Hannover', region: 'Nord-Mitte', lat: 52.37, lng: 9.74, headcount: 350, budgeted: 400, states: ['Niedersachsen'] },
+    { id: 'rd_sued_mitte', name: 'RD Nürnberg', region: 'Süd-Mitte', lat: 49.45, lng: 11.08, headcount: 380, budgeted: 420, states: [] },
+    { id: 'rd_ost', name: 'RD Dresden', region: 'Ost', lat: 51.05, lng: 13.74, headcount: 220, budgeted: 280, states: ['Sachsen'] }
 ];
+
+// Map Bundesland name → RD id for coloring the map
+const HC_STATE_TO_RD = {};
+HC_REGIONALDIREKTIONEN.forEach(rd => {
+    (rd.states || []).forEach(s => { HC_STATE_TO_RD[s] = rd.id; });
+});
 
 // Generate health metrics per RD
 function generateHCMetrics() {
@@ -2004,8 +2010,6 @@ function generateHCAgents(rdData) {
             const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
             const age = Math.round(53.7 + (Math.random() - 0.5) * 16 + (Math.random() > 0.956 ? -25 : 0));
             const tenure = Math.max(1, Math.round(age > 50 ? 10 + Math.random() * 20 : Math.random() * 6));
-            const employed = a < rd.employed;
-
             // Flight risk score based on RD health
             let riskBase = rd.tier === 'red' ? 55 : rd.tier === 'amber' ? 35 : 15;
             const riskScore = Math.min(99, Math.max(1, Math.round(riskBase + (Math.random() - 0.4) * 40)));
@@ -2028,7 +2032,6 @@ function generateHCAgents(rdData) {
                 rdName: rd.name,
                 age: Math.min(67, Math.max(22, age)),
                 tenure,
-                employed,
                 riskScore,
                 prevScore,
                 riskTier,
@@ -2203,73 +2206,199 @@ function renderHCKPIs() {
     const nachwuchsQuote = ((hcAgents.filter(a => a.age < 35).length / totalAgents) * 100).toFixed(1);
     const avgTenure = (hcAgents.reduce((s, a) => s + a.tenure, 0) / totalAgents).toFixed(1);
     const totalVacanzen = hcRDData.reduce((s, r) => s + (r.budgeted - r.headcount), 0);
+    const avgComposite = Math.round(hcRDData.reduce((s, r) => s + r.composite, 0) / hcRDData.length);
 
-    const kpis = [
-        { label: 'Vermittlerbestand', value: totalAgents, trend: '-3.2%', trendDir: 'down', color: '' },
-        { label: 'Fluktuationsquote', value: avgTurnover + '%', trend: '+1.1%', trendDir: 'down', color: parseFloat(avgTurnover) > 12 ? 'red' : '' },
-        { label: 'Nachwuchsquote', value: nachwuchsQuote + '%', trend: '-0.8%', trendDir: 'down', color: parseFloat(nachwuchsQuote) < 10 ? 'red' : '' },
-        { label: 'Ø Verweildauer', value: avgTenure + ' J.', trend: '+0.3J', trendDir: 'up', color: '' },
-        { label: 'Engagement Score', value: avgEngagement + '/100', trend: '-2 Pkt.', trendDir: 'down', color: avgEngagement < 50 ? 'red' : avgEngagement < 70 ? 'amber' : 'green' },
-        { label: 'Flight Risk (Rot)', value: redCount, trend: '+4', trendDir: 'down', color: 'red' },
-        { label: 'Vakanzenquote', value: totalVacanzen + ' offen', trend: '+3', trendDir: 'down', color: '' },
-        { label: 'Stornoquote (Ø)', value: '2.8%', trend: '+0.1%', trendDir: 'down', color: '' }
+    const groups = [
+        {
+            label: 'Vermittlerbestand',
+            icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="8.5" cy="7" r="4"/><path d="M20 8v6M23 11h-6"/></svg>',
+            cols: 4,
+            kpis: [
+                { label: 'Handelsvertreter (§84 HGB)', value: totalAgents.toLocaleString('de-DE'), desc: 'Aktive Ausschließlichkeitsvermittler im ERGO Vertrieb Deutschland', trend: '-3,2% vs. Vorjahr', trendDir: 'down', color: '' },
+                { label: 'Vakanzen', value: totalVacanzen + ' offen', desc: 'Unbesetzte Planstellen über alle 12 Regionaldirektionen', trend: '+12 vs. Vorquartal', trendDir: 'down', color: totalVacanzen > 400 ? 'red' : '' },
+                { label: 'Nachwuchsquote (<35 J.)', value: nachwuchsQuote + '%', desc: 'Anteil Vermittler unter 35 Jahren am Gesamtbestand', trend: '-0,8 Pp. vs. Vorjahr', trendDir: 'down', color: parseFloat(nachwuchsQuote) < 10 ? 'red' : '' },
+                { label: 'Ø Verweildauer', value: avgTenure + ' Jahre', desc: 'Durchschnittliche Betriebszugehörigkeit aller Handelsvertreter', trend: '+0,3J vs. Vorjahr', trendDir: 'up', color: '' }
+            ]
+        },
+        {
+            label: 'Risikoanalyse & Fluktuation',
+            icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
+            cols: 4,
+            kpis: [
+                { label: 'Flight Risk (Rot)', value: redCount.toLocaleString('de-DE'), desc: 'Vermittler mit Abgangswahrscheinlichkeit ≥60% (KI-Modell)', trend: '+' + Math.round(redCount * 0.08) + ' vs. Vormonat', trendDir: 'down', color: 'red' },
+                { label: 'Flight Risk (Gelb)', value: amberCount.toLocaleString('de-DE'), desc: 'Vermittler mit Abgangswahrscheinlichkeit 30–59%', trend: '+' + Math.round(amberCount * 0.04) + ' vs. Vormonat', trendDir: 'down', color: 'amber' },
+                { label: 'Fluktuationsquote', value: avgTurnover + '%', desc: 'Ø Abgangsrate der letzten 12 Monate über alle RDs', trend: '+1,1 Pp. vs. Vorjahr', trendDir: 'down', color: parseFloat(avgTurnover) > 12 ? 'red' : '' },
+                { label: 'Stornoquote', value: '2,8%', desc: 'Durchschnittliche Vertragsstornierungen im Vermittlerbestand', trend: '+0,1 Pp. vs. Vorjahr', trendDir: 'down', color: '' }
+            ]
+        },
+        {
+            label: 'Engagement & Gesundheitsscore',
+            icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>',
+            cols: 3,
+            kpis: [
+                { label: 'Engagement Score', value: avgEngagement + '/100', desc: 'Gewichteter Index aus Weiterbildung, CRM-Aktivität und Vertriebsinitiative', trend: '-2 Pkt. vs. Vormonat', trendDir: 'down', color: avgEngagement < 50 ? 'red' : avgEngagement < 70 ? 'amber' : 'green' },
+                { label: 'Composite Health Score', value: avgComposite + '/100', desc: 'Ø Gesundheitsscore aller RDs (6 Dimensionen gewichtet)', trend: '-1,5 Pkt. vs. Vorquartal', trendDir: 'down', color: avgComposite < 50 ? 'red' : avgComposite < 70 ? 'amber' : 'green' },
+                { label: 'RDs im roten Bereich', value: hcRDData.filter(r => r.tier === 'red').length + ' von ' + hcRDData.length, desc: 'Regionaldirektionen mit Health-Score unter 40', trend: '', trendDir: 'down', color: hcRDData.filter(r => r.tier === 'red').length > 3 ? 'red' : '' }
+            ]
+        }
     ];
 
-    const container = document.getElementById('hcKpiRow');
+    const container = document.getElementById('hcKpiSection');
     if (!container) return;
-    container.innerHTML = kpis.map(k => `
-        <div class="hc-kpi-card">
-            <div class="hc-kpi-label">${k.label}</div>
-            <div class="hc-kpi-value ${k.color}">${k.value}</div>
-            <div class="hc-kpi-trend ${k.trendDir === 'up' ? 'up' : 'down'}">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12">
-                    ${k.trendDir === 'up' ? '<polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>' : '<polyline points="23 18 13.5 8.5 8.5 13.5 1 6"></polyline>'}
-                </svg>
-                ${k.trend}
-            </div>
+    container.innerHTML = groups.map(g => `
+        <div class="hc-kpi-group-label">
+            ${g.icon} ${g.label}
+        </div>
+        <div class="hc-kpi-row" style="grid-template-columns: repeat(${g.cols}, 1fr);">
+            ${g.kpis.map(k => `
+                <div class="hc-kpi-card">
+                    <div class="hc-kpi-label">${k.label}</div>
+                    <div class="hc-kpi-value ${k.color}">${k.value}</div>
+                    <div class="hc-kpi-desc">${k.desc}</div>
+                    ${k.trend ? `<div class="hc-kpi-trend ${k.trendDir === 'up' ? 'up' : 'down'}">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12">
+                            ${k.trendDir === 'up' ? '<polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>' : '<polyline points="23 18 13.5 8.5 8.5 13.5 1 6"></polyline>'}
+                        </svg>
+                        ${k.trend}
+                    </div>` : ''}
+                </div>
+            `).join('')}
         </div>
     `).join('');
 }
 
-function renderHCMap() {
+async function renderHCMap() {
     const container = document.getElementById('hcGermanyMap');
-    if (!container) return;
+    if (!container || typeof d3 === 'undefined') return;
 
-    // Simplified Germany map with RD positions
-    const width = 320;
-    const height = 440;
-    const padding = 20;
+    container.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:300px;color:var(--text-tertiary)">Karte wird geladen...</div>';
 
-    // Convert lat/lng to simple x,y (approximate Mercator for Germany)
-    function project(lat, lng) {
-        const minLat = 47.3, maxLat = 55.0, minLng = 5.9, maxLng = 15.0;
-        const x = padding + ((lng - minLng) / (maxLng - minLng)) * (width - 2 * padding);
-        const y = padding + ((maxLat - lat) / (maxLat - minLat)) * (height - 2 * padding);
-        return { x, y };
+    const width = 380;
+    const height = 500;
+
+    try {
+        const geojson = await d3.json('assets/geo/bundeslaender.geo.json');
+
+        container.innerHTML = '';
+
+        // Build RD lookup by state name
+        const stateRDMap = {};
+        hcRDData.forEach(rd => {
+            const origRD = HC_REGIONALDIREKTIONEN.find(r => r.id === rd.id);
+            if (origRD && origRD.states) {
+                origRD.states.forEach(s => { stateRDMap[s] = rd; });
+            }
+        });
+
+        const svg = d3.select(container)
+            .append('svg')
+            .attr('width', '100%')
+            .attr('viewBox', `0 0 ${width} ${height}`)
+            .attr('class', 'hc-map-svg');
+
+        svg.append('rect')
+            .attr('width', width)
+            .attr('height', height)
+            .attr('fill', 'var(--surface, #f8fafc)')
+            .attr('rx', 8);
+
+        const projection = d3.geoMercator().fitSize([width - 20, height - 20], geojson);
+        const pathGen = d3.geoPath().projection(projection);
+
+        // Tooltip div
+        let tooltip = d3.select(container).select('.hc-map-tooltip');
+        if (tooltip.empty()) {
+            tooltip = d3.select(container).append('div').attr('class', 'hc-map-tooltip');
+        }
+
+        // Draw states
+        svg.append('g')
+            .selectAll('path')
+            .data(geojson.features)
+            .enter()
+            .append('path')
+            .attr('d', pathGen)
+            .attr('fill', d => {
+                const rd = stateRDMap[d.properties.name];
+                if (!rd) return '#e5e7eb';
+                return rd.tier === 'green' ? 'rgba(22,163,74,0.35)' : rd.tier === 'amber' ? 'rgba(217,119,6,0.35)' : 'rgba(220,38,38,0.35)';
+            })
+            .attr('stroke', '#94a3b8')
+            .attr('stroke-width', 1)
+            .style('cursor', d => stateRDMap[d.properties.name] ? 'pointer' : 'default')
+            .on('mouseenter', function(event, d) {
+                const rd = stateRDMap[d.properties.name];
+                d3.select(this).attr('stroke-width', 2.5).attr('stroke', rd ? '#0ea5e9' : '#94a3b8');
+                if (rd) {
+                    d3.select(this).style('filter', 'drop-shadow(0 2px 6px rgba(14,165,233,0.4))');
+                    tooltip.html(`
+                        <div style="font-weight:700;margin-bottom:4px">${rd.name}</div>
+                        <div style="font-size:11px;color:#64748b;margin-bottom:6px">${d.properties.name}</div>
+                        <div style="display:flex;gap:12px;font-size:12px">
+                            <span>Score: <b style="color:${rd.tier === 'green' ? '#16A34A' : rd.tier === 'amber' ? '#D97706' : '#DC2626'}">${rd.composite}</b></span>
+                            <span>Vermittler: <b>${rd.headcount}</b></span>
+                        </div>
+                        <div style="font-size:12px;margin-top:4px">Fluktuation: <b>${rd.turnoverRate}%</b> · Vakanzen: <b>${rd.vacancyRate.toFixed(1)}%</b></div>
+                    `).style('display', 'block')
+                      .style('left', (event.offsetX + 15) + 'px')
+                      .style('top', (event.offsetY - 10) + 'px');
+                }
+            })
+            .on('mouseleave', function(event, d) {
+                const rd = stateRDMap[d.properties.name];
+                d3.select(this).attr('stroke-width', 1).attr('stroke', '#94a3b8').style('filter', 'none');
+                tooltip.style('display', 'none');
+            })
+            .on('click', function(event, d) {
+                const rd = stateRDMap[d.properties.name];
+                if (rd) selectHCRegion(rd.id);
+            });
+
+        // RD markers (circles at city positions)
+        const markerGroup = svg.append('g');
+        hcRDData.forEach(rd => {
+            const origRD = HC_REGIONALDIREKTIONEN.find(r => r.id === rd.id);
+            if (!origRD) return;
+            const [cx, cy] = projection([origRD.lng, origRD.lat]);
+            const color = rd.tier === 'green' ? '#16A34A' : rd.tier === 'amber' ? '#D97706' : '#DC2626';
+            const r = Math.max(10, Math.min(18, rd.headcount / 6));
+
+            markerGroup.append('circle')
+                .attr('cx', cx).attr('cy', cy).attr('r', r)
+                .attr('fill', color).attr('opacity', 0.9)
+                .attr('stroke', 'white').attr('stroke-width', 2)
+                .style('cursor', 'pointer')
+                .style('filter', 'drop-shadow(0 1px 3px rgba(0,0,0,0.2))')
+                .on('click', () => selectHCRegion(rd.id));
+
+            markerGroup.append('text')
+                .attr('x', cx).attr('y', cy + 1)
+                .attr('text-anchor', 'middle')
+                .attr('dominant-baseline', 'central')
+                .attr('fill', 'white')
+                .attr('font-size', '9px')
+                .attr('font-weight', 'bold')
+                .style('pointer-events', 'none')
+                .text(rd.composite);
+        });
+
+    } catch (error) {
+        console.error('HC Map error:', error);
+        container.innerHTML = '<div style="text-align:center;color:var(--text-tertiary);padding:2rem">Karte konnte nicht geladen werden</div>';
     }
 
-    let svg = `<svg viewBox="0 0 ${width} ${height}" class="hc-map-svg">`;
-    // Germany outline (simplified)
-    svg += `<path d="M160,10 L200,20 L230,50 L250,80 L260,120 L280,160 L290,200 L280,240 L260,260 L240,280 L230,310 L220,340 L200,370 L180,390 L160,400 L140,410 L120,400 L100,380 L80,350 L60,310 L50,270 L40,230 L45,190 L55,150 L70,120 L85,90 L100,60 L120,35 L140,18 Z" fill="var(--surface-elevated)" stroke="var(--border)" stroke-width="1.5"/>`;
-
-    // RD circles
-    hcRDData.forEach(rd => {
-        const pos = project(rd.lat, rd.lng);
-        const color = rd.tier === 'green' ? '#16A34A' : rd.tier === 'amber' ? '#D97706' : '#DC2626';
-        const r = Math.max(12, Math.min(22, rd.headcount / 5));
-        svg += `<circle cx="${pos.x}" cy="${pos.y}" r="${r}" fill="${color}" opacity="0.8" stroke="white" stroke-width="2" class="hc-map-dot" onclick="selectHCRegion('${rd.id}')" data-rd="${rd.id}"/>`;
-        svg += `<text x="${pos.x}" y="${pos.y + 1}" text-anchor="middle" dominant-baseline="central" fill="white" font-size="9" font-weight="bold" pointer-events="none">${rd.composite}</text>`;
-    });
-    svg += `</svg>`;
-
-    // Legend
-    svg += `<div class="hc-map-legend">
-        <span class="hc-legend-item"><span class="hc-legend-dot" style="background:#16A34A"></span>Gesund (75+)</span>
-        <span class="hc-legend-item"><span class="hc-legend-dot" style="background:#D97706"></span>Gefährdet (40–74)</span>
-        <span class="hc-legend-item"><span class="hc-legend-dot" style="background:#DC2626"></span>Kritisch (<40)</span>
-    </div>`;
-
-    container.innerHTML = svg;
+    // Legend (appended below SVG)
+    let legend = container.querySelector('.hc-map-legend');
+    if (!legend) {
+        legend = document.createElement('div');
+        legend.className = 'hc-map-legend';
+        legend.innerHTML = `
+            <span class="hc-legend-item"><span class="hc-legend-dot" style="background:#16A34A"></span>Gesund (75+)</span>
+            <span class="hc-legend-item"><span class="hc-legend-dot" style="background:#D97706"></span>Gefährdet (40–74)</span>
+            <span class="hc-legend-item"><span class="hc-legend-dot" style="background:#DC2626"></span>Kritisch (<40)</span>
+        `;
+        container.appendChild(legend);
+    }
 }
 
 function selectHCRegion(rdId) {
@@ -2518,7 +2647,7 @@ function renderHCUnitDetail() {
                     <div class="hc-scorecard-label">Gesamt</div>
                 </div>
                 <div class="hc-scorecard-meta">
-                    <div><strong>${rd.headcount}</strong> Vermittler (${rd.employed} angestellt, ${rd.headcount - rd.employed} selbständig)</div>
+                    <div><strong>${rd.headcount}</strong> Handelsvertreter (§84 HGB)</div>
                     <div>Fluktuation: <strong>${rd.turnoverRate}%</strong> | Vakanzen: <strong>${rd.budgeted - rd.headcount}</strong> (${rd.vacancyRate.toFixed(1)}%)</div>
                     <div>Region: ${rd.region}</div>
                 </div>
@@ -2582,8 +2711,129 @@ function renderHCUnitDetail() {
     // Stayers vs Leavers
     renderHCStayersLeavers(unitAgents);
 
+    // Unit Early Warnings
+    renderHCUnitEWGrid(unitAgents);
+
     // Contagion
     renderHCContagion(rd, unitAgents);
+}
+
+function renderHCUnitEWGrid(unitAgents) {
+    const grid = document.getElementById('hcUnitEWGrid');
+    if (!grid) return;
+
+    const riskAgents = unitAgents.filter(a => a.riskTier !== 'green').sort((a, b) => b.riskScore - a.riskScore);
+
+    if (riskAgents.length === 0) {
+        grid.innerHTML = '<div style="padding:var(--space-4);color:var(--text-tertiary);text-align:center">Keine aktiven Frühwarnungen in dieser Einheit.</div>';
+        return;
+    }
+
+    grid.innerHTML = riskAgents.slice(0, 12).map(a => `
+        <div class="hc-ew-card ${a.riskTier}" onclick="showHCUnitShapForAgent('${a.id}')">
+            <div class="hc-ew-card-header">
+                <span class="hc-ew-id">${a.id}</span>
+                <span class="hc-risk-badge ${a.riskTier}">${a.riskScore}%</span>
+            </div>
+            <div class="hc-ew-card-meta">§84 HGB · ${a.tenure}J Tenure · ${a.age}J</div>
+            <div class="hc-ew-card-factor">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                ${a.topFactor}
+            </div>
+            <div class="hc-ew-card-change ${a.change > 0 ? 'up' : 'down'}">${a.change > 0 ? '↑' : '↓'} ${Math.abs(a.change)} Pkt.</div>
+        </div>
+    `).join('');
+}
+
+function showHCUnitShapForAgent(agentId) {
+    const container = document.getElementById('hcUnitShapContainer');
+    const agent = hcAgents.find(a => a.id === agentId);
+    if (!container || !agent) return;
+
+    const baseRisk = 15;
+    const maxAbsVal = Math.max(...agent.shapFactors.map(f => Math.abs(f.value)), 0.01);
+    const maxBarWidth = 200;
+
+    // Get KI recommendation
+    const riskFactors = agent.shapFactors.filter(f => f.value > 0).sort((a, b) => b.value - a.value);
+    const topFactor = riskFactors[0]?.factor || agent.topFactor;
+    const recommendation = HC_KI_RECOMMENDATIONS[topFactor];
+    const additionalFactors = riskFactors.slice(1, 3).map(f => f.factor);
+
+    const recHTML = recommendation ? `
+        <div class="hc-ki-rec-inline" style="margin-top:var(--space-4);border-top:1px solid var(--border);padding-top:var(--space-4);">
+            <div class="hc-ki-rec-header">
+                <div class="hc-ki-rec-title">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                    KI-Empfehlung: ${recommendation.title}
+                </div>
+                <span class="hc-ki-rec-urgency ${recommendation.urgency}">${recommendation.urgency === 'kritisch' ? 'Kritisch' : recommendation.urgency === 'hoch' ? 'Hohe Priorität' : recommendation.urgency === 'mittel' ? 'Mittlere Priorität' : 'Niedrige Priorität'}</span>
+            </div>
+            <div class="hc-ki-rec-trigger" style="margin:var(--space-2) 0">
+                <strong>Auslöser:</strong> ${topFactor}
+                ${additionalFactors.length > 0 ? ` · Weitere: ${additionalFactors.join(', ')}` : ''}
+            </div>
+            <div class="hc-ki-rec-measures">
+                ${recommendation.measures.map((m, i) => `
+                    <div class="hc-ki-rec-measure">
+                        <div class="hc-ki-rec-measure-num">${i + 1}</div>
+                        <div class="hc-ki-rec-measure-content">
+                            <div class="hc-ki-rec-measure-action">${m.action}</div>
+                            <div class="hc-ki-rec-measure-meta">
+                                <span>Zeitrahmen: <strong>${m.timeline}</strong></span>
+                                <span>Verantwortlich: <strong>${m.responsible}</strong></span>
+                            </div>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+            <div class="hc-ki-rec-rationale">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                <span>${recommendation.rationale}</span>
+            </div>
+            <div class="hc-ki-rec-footer">
+                <span class="hc-ki-rec-disclaimer">KI-generierte Empfehlung — keine automatisierte Entscheidung (Art. 22 DSGVO)</span>
+            </div>
+        </div>
+    ` : '';
+
+    container.innerHTML = `
+        <div class="hc-shap-header">
+            <div class="hc-shap-agent">
+                <strong>${agent.id}</strong> — ${agent.rdName} · §84 HGB · ${agent.age}J · ${agent.tenure}J Tenure
+            </div>
+            <div class="hc-shap-score">
+                Flight-Risk Score: <span class="hc-risk-badge ${agent.riskTier}">${agent.riskScore}%</span>
+            </div>
+        </div>
+        <div class="hc-shap-chart">
+            <div class="hc-shap-baseline">
+                <span>Basis-Risiko: ${baseRisk}%</span>
+                <div class="hc-shap-baseline-line"></div>
+            </div>
+            ${agent.shapFactors.map(f => {
+                const isPositive = f.value > 0;
+                const barWidth = Math.round((Math.abs(f.value) / maxAbsVal) * maxBarWidth);
+                return `
+                    <div class="hc-shap-row">
+                        <div class="hc-shap-factor">${f.factor}</div>
+                        <div class="hc-shap-bar-area">
+                            ${isPositive
+                                ? `<div class="hc-shap-bar positive" style="width:${barWidth}px">${f.value > 0 ? '+' : ''}${f.value}</div>`
+                                : `<div class="hc-shap-bar negative" style="width:${barWidth}px">${f.value}</div>`
+                            }
+                        </div>
+                    </div>
+                `;
+            }).join('')}
+        </div>
+        <div class="hc-shap-footer">
+            <span class="hc-shap-legend negative">← Risiko senkend</span>
+            <span class="hc-shap-legend positive">Risiko erhöhend →</span>
+        </div>
+        ${recHTML}
+    `;
+    container.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
 
 function renderHCBarChart(containerId, agents, field, buckets) {
@@ -2695,7 +2945,7 @@ function renderHCEWGrid() {
                 <span class="hc-risk-badge ${a.riskTier}">${a.riskScore}%</span>
             </div>
             <div class="hc-ew-card-rd">${a.rdName}</div>
-            <div class="hc-ew-card-meta">${a.employed ? 'Angestellt' : 'Selbständig'} · ${a.tenure}J Tenure · ${a.age}J</div>
+            <div class="hc-ew-card-meta">§84 HGB · ${a.tenure}J Tenure · ${a.age}J</div>
             <div class="hc-ew-card-factor">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
                 ${a.topFactor}
@@ -2711,8 +2961,10 @@ function showHCShapForAgent(agentId) {
         select.value = agentId;
         renderHCShapExplanation();
     }
-    // Scroll to SHAP
-    document.getElementById('hcShapContainer')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    // Show KI recommendation
+    renderHCKIRecommendation(agentId);
+    // Scroll to recommendation panel
+    document.getElementById('hcKIRecommendationPanel')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
 
 function renderHCShapExplanation() {
@@ -2733,7 +2985,7 @@ function renderHCShapExplanation() {
     container.innerHTML = `
         <div class="hc-shap-header">
             <div class="hc-shap-agent">
-                <strong>${agent.id}</strong> — ${agent.rdName} · ${agent.employed ? 'Angestellt' : 'Selbständig'} · ${agent.age}J · ${agent.tenure}J Tenure
+                <strong>${agent.id}</strong> — ${agent.rdName} · §84 HGB · ${agent.age}J · ${agent.tenure}J Tenure
             </div>
             <div class="hc-shap-score">
                 Flight-Risk Score: <span class="hc-risk-badge ${agent.riskTier}">${agent.riskScore}%</span>
@@ -2763,6 +3015,204 @@ function renderHCShapExplanation() {
         <div class="hc-shap-footer">
             <span class="hc-shap-legend negative">← Risiko senkend</span>
             <span class="hc-shap-legend positive">Risiko erhöhend →</span>
+        </div>
+    `;
+}
+
+// --- KI-Maßnahmenempfehlung ---
+const HC_KI_RECOMMENDATIONS = {
+    'Monate seit letzter Beförderung': {
+        title: 'Karriereperspektive eröffnen',
+        urgency: 'hoch',
+        measures: [
+            { action: 'Persönliches Karrieregespräch mit Vertriebsdirektor innerhalb von 5 Werktagen vereinbaren', timeline: 'Sofort', responsible: 'Vertriebsdirektor' },
+            { action: 'Prüfung der Qualifikation zum Agenturleiter / Mehrfachagenten — Entwicklungsplan erstellen', timeline: '2 Wochen', responsible: 'Personalentwicklung' },
+            { action: 'Einbindung als Mentor für Nachwuchsvermittler zur Wertschätzung und Verantwortungsausweitung', timeline: '4 Wochen', responsible: 'Regionaldirektion' }
+        ],
+        rationale: 'Fehlende Aufstiegsperspektive ist einer der stärksten Prädiktoren für Abgänge bei erfahrenen Handelsvertretern. Ein proaktives Karrieregespräch kann die Abgangswahrscheinlichkeit um bis zu 35% senken (Visier-Studie 2024).'
+    },
+    'Provisionsrückgang >20%': {
+        title: 'Vertriebsleistung stabilisieren',
+        urgency: 'hoch',
+        measures: [
+            { action: 'Individuelle Bestandsanalyse durchführen — Ursachen des Provisionsrückgangs identifizieren', timeline: 'Sofort', responsible: 'Vertriebscoach' },
+            { action: 'Gezieltes Cross-Selling-Coaching für unterrepräsentierte Sparten (z.B. bAV, Gewerbe)', timeline: '1 Woche', responsible: 'Vertriebscoach' },
+            { action: 'Temporäre Sonderprovisionsregelung / Bestandssicherungsprämie prüfen', timeline: '2 Wochen', responsible: 'Vertriebsleitung' },
+            { action: 'Lead-Paket aus zentralem Marketing für Neukundenakquise bereitstellen', timeline: '1 Woche', responsible: 'Marketing' }
+        ],
+        rationale: 'Ein signifikanter Provisionsrückgang bedroht die wirtschaftliche Existenzgrundlage des Handelsvertreters und ist häufig der Auslöser für einen Wechsel zur Konkurrenz. Sofortige Unterstützung bei der Geschäftsentwicklung ist essenziell.'
+    },
+    'Stornoquote über Durchschnitt': {
+        title: 'Beratungsqualität stärken',
+        urgency: 'mittel',
+        measures: [
+            { action: 'Stornogründe-Analyse der letzten 6 Monate — Muster identifizieren', timeline: 'Sofort', responsible: 'Qualitätsmanagement' },
+            { action: 'Bedarfsanalyse-Workshop: Sicherstellung vollständiger Kundenberatung nach DIN 77230', timeline: '2 Wochen', responsible: 'Vertriebscoach' },
+            { action: 'Bestandspflegeprogramm implementieren — automatisierte Kontaktpunkte für Bestandskunden', timeline: '4 Wochen', responsible: 'CRM-Team' }
+        ],
+        rationale: 'Hohe Stornoquoten deuten auf Beratungsdefizite hin, die sowohl den Vermittler finanziell belasten als auch das Vertrauensverhältnis zur Organisation gefährden. Gezielte Qualifizierung kann die Stornoquote um 20–30% reduzieren.'
+    },
+    'Team-Abgänge (Contagion)': {
+        title: 'Contagion-Effekt eindämmen',
+        urgency: 'hoch',
+        measures: [
+            { action: 'Sofortiges Stabilisierungsgespräch mit allen betroffenen Teammitgliedern (135-Tage-Fenster)', timeline: 'Sofort', responsible: 'Vertriebsdirektor' },
+            { action: 'Teambuilding-Maßnahme organisieren — Zusammenhalt stärken', timeline: '1 Woche', responsible: 'Regionaldirektion' },
+            { action: 'Abgangsursache des ehemaligen Kollegen transparent kommunizieren (soweit möglich)', timeline: 'Sofort', responsible: 'Vertriebsdirektor' },
+            { action: 'Erhöhte Kontaktfrequenz des VD für die Dauer des Beobachtungsfensters', timeline: 'Fortlaufend', responsible: 'Vertriebsdirektor' }
+        ],
+        rationale: 'Nach dem Abgang eines Teamkollegen steigt die Abgangswahrscheinlichkeit der verbleibenden Mitglieder um 7–25% (Visier-Studie). Proaktive Kommunikation und Stabilisierung sind im 135-Tage-Fenster entscheidend.'
+    },
+    'Engagement-Score rückläufig': {
+        title: 'Engagement reaktivieren',
+        urgency: 'mittel',
+        measures: [
+            { action: 'Persönliches Gespräch: Ursachen für Motivationsverlust erfragen', timeline: 'Sofort', responsible: 'Vertriebsdirektor' },
+            { action: 'Individuelle Zielsetzung mit dem Vermittler gemeinsam überarbeiten — erreichbare Etappenziele', timeline: '1 Woche', responsible: 'Vertriebsdirektor' },
+            { action: 'Einladung zu Vertriebs-Events, Wettbewerben oder Best-Practice-Austausch', timeline: '2 Wochen', responsible: 'Regionaldirektion' }
+        ],
+        rationale: 'Rückläufiges Engagement geht einem Abgang häufig 3–6 Monate voraus. Frühzeitiges Ansprechen und Einbeziehung in attraktive Aktivitäten können die Bindung signifikant erhöhen.'
+    },
+    'IDD-Weiterbildung unvollständig': {
+        title: 'Weiterbildungspflicht sicherstellen',
+        urgency: 'mittel',
+        measures: [
+            { action: 'Aktuellen Weiterbildungsstand prüfen und fehlende Stunden identifizieren', timeline: 'Sofort', responsible: 'Vertriebsassistenz' },
+            { action: 'Individuellen Weiterbildungsplan erstellen — Online- und Präsenzangebote kombinieren', timeline: '1 Woche', responsible: 'Personalentwicklung' },
+            { action: 'Erinnerungssystem aktivieren und Deadline-Management einrichten', timeline: '1 Woche', responsible: 'Vertriebsassistenz' }
+        ],
+        rationale: 'Die IDD-Weiterbildungspflicht (15 Stunden/Jahr) ist gesetzlich vorgeschrieben. Unvollständige Weiterbildung gefährdet die Vermittlerzulassung und kann als Zeichen mangelnden Organisationsinteresses gedeutet werden.'
+    },
+    'Zielerfüllung <70%': {
+        title: 'Vertriebsperformance steigern',
+        urgency: 'hoch',
+        measures: [
+            { action: 'Wöchentliches Performance-Coaching mit konkreten Aktivitätenzielen einrichten', timeline: 'Sofort', responsible: 'Vertriebscoach' },
+            { action: 'Best-Practice-Sharing: Tandem-Bildung mit Top-Performer aus der Einheit', timeline: '1 Woche', responsible: 'Regionaldirektion' },
+            { action: 'Überprüfung der Gebietszuordnung — ggf. Marktpotenzial-Analyse', timeline: '2 Wochen', responsible: 'Vertriebssteuerung' }
+        ],
+        rationale: 'Dauerhafte Zielunterschreitung führt zu wirtschaftlichem Druck und Frustration. Individuelle Unterstützung kombiniert mit realistischer Zielsetzung kann den Vermittler in 60% der Fälle wieder auf Kurs bringen.'
+    },
+    'Keine freiwillige Weiterbildung': {
+        title: 'Entwicklungsbereitschaft fördern',
+        urgency: 'niedrig',
+        measures: [
+            { action: 'Attraktive Weiterbildungsangebote vorstellen (z.B. Fachwirt, Spezialistenmodule)', timeline: '2 Wochen', responsible: 'Personalentwicklung' },
+            { action: 'Finanzielle Förderung oder Provisionsfreistellung für Qualifizierung anbieten', timeline: '4 Wochen', responsible: 'Vertriebsleitung' }
+        ],
+        rationale: 'Fehlende Lernbereitschaft kann auf Stagnation oder innere Kündigung hindeuten. Zielgerichtete Angebote mit klarem wirtschaftlichen Nutzen erhöhen die Akzeptanz.'
+    },
+    'CRM-Aktivität rückläufig': {
+        title: 'Digitale Vertriebsunterstützung verbessern',
+        urgency: 'mittel',
+        measures: [
+            { action: 'CRM-Nutzungsanalyse: Welche Funktionen werden nicht genutzt? Schulungsbedarf ermitteln', timeline: '1 Woche', responsible: 'Digitalisierung' },
+            { action: 'Individuelles CRM-Training vor Ort mit Praxisbezug', timeline: '2 Wochen', responsible: 'IT-Support' },
+            { action: 'Workflow-Vereinfachung im CRM prüfen — Hürden abbauen', timeline: '4 Wochen', responsible: 'Digitalisierung' }
+        ],
+        rationale: 'Rückläufige CRM-Aktivität korreliert stark mit nachlassendem Engagement und sinkender Produktivität. Oft liegt die Ursache in Usability-Problemen oder mangelnder Schulung.'
+    },
+    'Compa-Ratio <0.80': {
+        title: 'Vergütungssituation prüfen',
+        urgency: 'hoch',
+        measures: [
+            { action: 'Provisionssituation im Vergleich zum Markt und zur internen Peergroup analysieren', timeline: 'Sofort', responsible: 'Vertriebssteuerung' },
+            { action: 'Bestandsumverteilung oder zusätzliche Vertriebsgebiete prüfen', timeline: '2 Wochen', responsible: 'Regionaldirektion' },
+            { action: 'Gespräch über Sonderleistungen: Büromiete, Technikausstattung, Marketingbudget', timeline: '2 Wochen', responsible: 'Vertriebsdirektor' }
+        ],
+        rationale: 'Eine Compa-Ratio unter 0,80 bedeutet, dass der Vermittler deutlich unter dem Marktdurchschnitt verdient. Dies ist einer der stärksten Abwanderungstreiber und muss dringend adressiert werden.'
+    },
+    'Wettbewerber-Recruiting aktiv': {
+        title: 'Abwerbung abwehren',
+        urgency: 'kritisch',
+        measures: [
+            { action: 'Vertrauliches Gespräch: Wertschätzung ausdrücken und Zukunftsperspektive aufzeigen', timeline: 'Sofort', responsible: 'Vertriebsdirektor' },
+            { action: 'Retention-Bonus oder Bindungsprämie prüfen (im Rahmen des Handelsvertreterverhältnisses)', timeline: '1 Woche', responsible: 'Vertriebsleitung' },
+            { action: 'Exklusive Entwicklungsmöglichkeiten aufzeigen (z.B. Agenturleitung, Spezialistenrolle)', timeline: '1 Woche', responsible: 'Vertriebsdirektor' }
+        ],
+        rationale: 'Aktives Wettbewerber-Recruiting signalisiert akute Abgangsgefahr. Ohne schnelle Intervention beträgt die Abgangswahrscheinlichkeit innerhalb von 90 Tagen über 50%. Jeder Tag zählt.'
+    },
+    'Manager-Wechsel <180 Tage': {
+        title: 'Beziehungsaufbau nach Führungswechsel',
+        urgency: 'mittel',
+        measures: [
+            { action: 'Neuer VD: Kennenlern-Besuche vor Ort mit allen Vermittlern der Einheit', timeline: 'Sofort', responsible: 'Vertriebsdirektor' },
+            { action: 'Individuelle Erwartungsgespräche: Bisherige Arbeitsweise, Wünsche, Sorgen', timeline: '2 Wochen', responsible: 'Vertriebsdirektor' },
+            { action: 'Stabilisierungsphase: Keine großen strukturellen Veränderungen in den ersten 6 Monaten', timeline: 'Fortlaufend', responsible: 'Regionaldirektion' }
+        ],
+        rationale: 'Ein Führungswechsel ist ein kritischer Moment. Die Qualität der neuen Beziehung entscheidet maßgeblich über die weitere Bindung. Innerhalb der ersten 180 Tage ist die Abgangswahrscheinlichkeit um 15–20% erhöht.'
+    }
+};
+
+function renderHCKIRecommendation(agentId) {
+    const panel = document.getElementById('hcKIRecommendationPanel');
+    const content = document.getElementById('hcKIRecommendationContent');
+    if (!panel || !content) return;
+
+    const agent = hcAgents.find(a => a.id === agentId);
+    if (!agent) { panel.style.display = 'none'; return; }
+
+    panel.style.display = 'block';
+
+    // Get top risk-increasing factors
+    const riskFactors = agent.shapFactors.filter(f => f.value > 0).sort((a, b) => b.value - a.value);
+    const topFactor = riskFactors[0]?.factor || agent.topFactor;
+    const recommendation = HC_KI_RECOMMENDATIONS[topFactor];
+
+    if (!recommendation) {
+        // Fallback generic recommendation
+        content.innerHTML = `
+            <div class="hc-ki-rec-agent">
+                <span class="hc-risk-badge ${agent.riskTier}">${agent.riskScore}%</span>
+                <strong>${agent.id}</strong> — ${agent.rdName} · §84 HGB
+            </div>
+            <div class="hc-ki-rec-body">
+                <div class="hc-ki-rec-title">Allgemeine Retention-Empfehlung</div>
+                <p class="hc-ki-rec-rationale">Für diesen Vermittler sollte zeitnah ein persönliches Gespräch mit dem Vertriebsdirektor vereinbart werden, um die individuelle Situation zu analysieren und passende Maßnahmen abzuleiten.</p>
+            </div>
+        `;
+        return;
+    }
+
+    // Collect additional factors for context
+    const additionalFactors = riskFactors.slice(1, 3).map(f => f.factor);
+
+    content.innerHTML = `
+        <div class="hc-ki-rec-agent">
+            <span class="hc-risk-badge ${agent.riskTier}">${agent.riskScore}%</span>
+            <strong>${agent.id}</strong> — ${agent.rdName} · §84 HGB · ${agent.age}J · ${agent.tenure}J Tenure
+        </div>
+        <div class="hc-ki-rec-body">
+            <div class="hc-ki-rec-header">
+                <div class="hc-ki-rec-title">${recommendation.title}</div>
+                <span class="hc-ki-rec-urgency ${recommendation.urgency}">${recommendation.urgency === 'kritisch' ? 'Kritisch' : recommendation.urgency === 'hoch' ? 'Hohe Priorität' : recommendation.urgency === 'mittel' ? 'Mittlere Priorität' : 'Niedrige Priorität'}</span>
+            </div>
+            <div class="hc-ki-rec-trigger">
+                <strong>Auslöser:</strong> ${topFactor}
+                ${additionalFactors.length > 0 ? `<br><span style="color:var(--text-tertiary)">Weitere Risikofaktoren: ${additionalFactors.join(', ')}</span>` : ''}
+            </div>
+            <div class="hc-ki-rec-measures">
+                <div class="hc-ki-rec-measures-title">Empfohlene Maßnahmen:</div>
+                ${recommendation.measures.map((m, i) => `
+                    <div class="hc-ki-rec-measure">
+                        <div class="hc-ki-rec-measure-num">${i + 1}</div>
+                        <div class="hc-ki-rec-measure-content">
+                            <div class="hc-ki-rec-measure-action">${m.action}</div>
+                            <div class="hc-ki-rec-measure-meta">
+                                <span>Zeitrahmen: <strong>${m.timeline}</strong></span>
+                                <span>Verantwortlich: <strong>${m.responsible}</strong></span>
+                            </div>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+            <div class="hc-ki-rec-rationale">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                <span>${recommendation.rationale}</span>
+            </div>
+        </div>
+        <div class="hc-ki-rec-footer">
+            <span class="hc-ki-rec-disclaimer">KI-generierte Empfehlung auf Basis der SHAP-Faktoranalyse — keine automatisierte Entscheidung (Art. 22 DSGVO)</span>
         </div>
     `;
 }
@@ -2823,3 +3273,5 @@ window.renderHCEarlyWarnings = renderHCEarlyWarnings;
 window.renderHCShapExplanation = renderHCShapExplanation;
 window.selectHCRegion = selectHCRegion;
 window.showHCShapForAgent = showHCShapForAgent;
+window.showHCUnitShapForAgent = showHCUnitShapForAgent;
+window.renderHCKIRecommendation = renderHCKIRecommendation;

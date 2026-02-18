@@ -1914,18 +1914,18 @@ let hcSelectedRD = null;
 
 // --- Regionaldirektionen Demo Data ---
 const HC_REGIONALDIREKTIONEN = [
-    { id: 'rd_nrw_west', name: 'RD Düsseldorf', region: 'NRW West', lat: 51.23, lng: 6.78, headcount: 580, budgeted: 620, states: ['Nordrhein-Westfalen'] },
-    { id: 'rd_nrw_ost', name: 'RD Dortmund', region: 'NRW Ost', lat: 51.51, lng: 7.47, headcount: 460, budgeted: 500, states: [] },
-    { id: 'rd_nrw_sued', name: 'RD Köln', region: 'NRW Süd', lat: 50.94, lng: 6.96, headcount: 520, budgeted: 560, states: ['Rheinland-Pfalz', 'Saarland'] },
-    { id: 'rd_nord_west', name: 'RD Hamburg', region: 'Nord-West', lat: 53.55, lng: 9.99, headcount: 390, budgeted: 430, states: ['Hamburg', 'Bremen', 'Schleswig-Holstein'] },
-    { id: 'rd_nord_ost', name: 'RD Berlin', region: 'Nord-Ost', lat: 52.52, lng: 13.40, headcount: 340, budgeted: 390, states: ['Berlin', 'Brandenburg', 'Mecklenburg-Vorpommern'] },
-    { id: 'rd_mitte_west', name: 'RD Frankfurt', region: 'Mitte-West', lat: 50.11, lng: 8.68, headcount: 480, budgeted: 520, states: ['Hessen'] },
-    { id: 'rd_mitte_ost', name: 'RD Erfurt', region: 'Mitte-Ost', lat: 50.98, lng: 11.03, headcount: 250, budgeted: 310, states: ['Thüringen', 'Sachsen-Anhalt'] },
-    { id: 'rd_sued_west', name: 'RD Stuttgart', region: 'Süd-West', lat: 48.78, lng: 9.18, headcount: 470, budgeted: 510, states: ['Baden-Württemberg'] },
-    { id: 'rd_sued_ost', name: 'RD München', region: 'Süd-Ost', lat: 48.14, lng: 11.58, headcount: 560, budgeted: 600, states: ['Bayern'] },
-    { id: 'rd_nord_mitte', name: 'RD Hannover', region: 'Nord-Mitte', lat: 52.37, lng: 9.74, headcount: 350, budgeted: 400, states: ['Niedersachsen'] },
-    { id: 'rd_sued_mitte', name: 'RD Nürnberg', region: 'Süd-Mitte', lat: 49.45, lng: 11.08, headcount: 380, budgeted: 420, states: [] },
-    { id: 'rd_ost', name: 'RD Dresden', region: 'Ost', lat: 51.05, lng: 13.74, headcount: 220, budgeted: 280, states: ['Sachsen'] }
+    { id: 'rd_nrw_west', name: 'RD Düsseldorf', region: 'NRW West', lat: 51.23, lng: 6.78, headcount: 584, budgeted: 620, states: ['Nordrhein-Westfalen'] },
+    { id: 'rd_nrw_ost', name: 'RD Dortmund', region: 'NRW Ost', lat: 51.51, lng: 7.47, headcount: 461, budgeted: 500, states: [] },
+    { id: 'rd_nrw_sued', name: 'RD Köln', region: 'NRW Süd', lat: 50.94, lng: 6.96, headcount: 523, budgeted: 560, states: ['Rheinland-Pfalz', 'Saarland'] },
+    { id: 'rd_nord_west', name: 'RD Hamburg', region: 'Nord-West', lat: 53.55, lng: 9.99, headcount: 392, budgeted: 430, states: ['Hamburg', 'Bremen', 'Schleswig-Holstein'] },
+    { id: 'rd_nord_ost', name: 'RD Berlin', region: 'Nord-Ost', lat: 52.52, lng: 13.40, headcount: 341, budgeted: 390, states: ['Berlin', 'Brandenburg', 'Mecklenburg-Vorpommern'] },
+    { id: 'rd_mitte_west', name: 'RD Frankfurt', region: 'Mitte-West', lat: 50.11, lng: 8.68, headcount: 482, budgeted: 520, states: ['Hessen'] },
+    { id: 'rd_mitte_ost', name: 'RD Erfurt', region: 'Mitte-Ost', lat: 50.98, lng: 11.03, headcount: 251, budgeted: 310, states: ['Thüringen', 'Sachsen-Anhalt'] },
+    { id: 'rd_sued_west', name: 'RD Stuttgart', region: 'Süd-West', lat: 48.78, lng: 9.18, headcount: 472, budgeted: 510, states: ['Baden-Württemberg'] },
+    { id: 'rd_sued_ost', name: 'RD München', region: 'Süd-Ost', lat: 48.14, lng: 11.58, headcount: 563, budgeted: 600, states: ['Bayern'] },
+    { id: 'rd_nord_mitte', name: 'RD Hannover', region: 'Nord-Mitte', lat: 52.37, lng: 9.74, headcount: 351, budgeted: 400, states: ['Niedersachsen'] },
+    { id: 'rd_sued_mitte', name: 'RD Nürnberg', region: 'Süd-Mitte', lat: 49.45, lng: 11.08, headcount: 372, budgeted: 420, states: [] },
+    { id: 'rd_ost', name: 'RD Dresden', region: 'Ost', lat: 51.05, lng: 13.74, headcount: 222, budgeted: 280, states: ['Sachsen'] }
 ];
 
 // Map Bundesland name → RD id for coloring the map
@@ -2012,9 +2012,31 @@ function generateHCAgents(rdData) {
         'Zugehörigkeit <3 Monate — Frühfluktuation', 'Zugehörigkeit <12 Monate — Einarbeitungsphase', 'Zugehörigkeit <24 Monate — kritische Phase'
     ];
 
+    // Tier-Verteilung: 642 Rot, 512 Gelb, Rest Grün — proportional pro RD
+    const totalHC = rdData.reduce((s, r) => s + r.headcount, 0);
+    const TARGET_RED = 642, TARGET_AMBER = 512;
+
     let agentId = 1;
-    rdData.forEach(rd => {
+    let globalRedRemaining = TARGET_RED, globalAmberRemaining = TARGET_AMBER, globalGreenRemaining = totalHC - TARGET_RED - TARGET_AMBER;
+
+    rdData.forEach((rd, rdIdx) => {
         const count = rd.headcount;
+        const isLast = rdIdx === rdData.length - 1;
+        // Proportionale Zuweisung pro RD, letzte RD bekommt Rest
+        const rdRed = isLast ? globalRedRemaining : Math.round(TARGET_RED * count / totalHC);
+        const rdAmber = isLast ? globalAmberRemaining : Math.round(TARGET_AMBER * count / totalHC);
+        const rdGreen = count - rdRed - rdAmber;
+        globalRedRemaining -= rdRed;
+        globalAmberRemaining -= rdAmber;
+        globalGreenRemaining -= rdGreen;
+
+        // Tier-Array mischen
+        const tierAssignments = [
+            ...Array(rdRed).fill('red'),
+            ...Array(rdAmber).fill('amber'),
+            ...Array(Math.max(0, rdGreen)).fill('green')
+        ].sort(() => Math.random() - 0.5);
+
         for (let a = 0; a < count; a++) {
             const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
             const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
@@ -2028,14 +2050,17 @@ function generateHCAgents(rdData) {
             else if (age > 50) tenure = Math.round(8 + Math.random() * 20); // langjährige AO-Vermittler
             else tenure = Math.round(3 + Math.random() * 10); // 3–13 Jahre
 
-            // Abgangsrisiko basierend auf RD-Gesundheit — kurze Zugehörigkeit erhöht Risiko
-            let riskBase = rd.tier === 'red' ? 55 : rd.tier === 'amber' ? 35 : 15;
-            if (tenure < 0.25) riskBase += 20; // <3 Monate: sehr hohes Risiko
-            else if (tenure <= 1) riskBase += 15;
-            else if (tenure <= 2) riskBase += 8;
-            const riskScore = Math.min(99, Math.max(1, Math.round(riskBase + (Math.random() - 0.4) * 40)));
-            const prevScore = Math.min(99, Math.max(1, Math.round(riskScore + (Math.random() - 0.5) * 20)));
-            const riskTier = riskScore >= 60 ? 'red' : riskScore >= 30 ? 'amber' : 'green';
+            // Risiko-Score passend zum zugewiesenen Tier
+            const riskTier = tierAssignments[a] || 'green';
+            let riskScore, prevScore;
+            if (riskTier === 'red') {
+                riskScore = Math.round(55 + Math.random() * 23); // 55–78%
+            } else if (riskTier === 'amber') {
+                riskScore = Math.round(25 + Math.random() * 29); // 25–54%
+            } else {
+                riskScore = Math.round(5 + Math.random() * 19); // 5–24%
+            }
+            prevScore = Math.min(78, Math.max(5, Math.round(riskScore + (Math.random() - 0.5) * 12)));
 
             // Top SHAP factors — short tenure agents get tenure-related factors first
             const shapFactors = [];
@@ -2049,11 +2074,21 @@ function generateHCAgents(rdData) {
             } else {
                 shuffled = [...riskFactors.filter(f => !f.startsWith('Zugehörigkeit <'))].sort(() => Math.random() - 0.5);
             }
+            // SHAP-Werte müssen sich auf (riskScore - baselineRisk) aufsummieren
+            const baselineRisk = 15;
+            const totalDelta = riskScore - baselineRisk;
+            const rawWeights = [];
             for (let f = 0; f < 5; f++) {
-                const contrib = riskTier === 'red' ? (Math.random() * 0.3 + 0.05) : (Math.random() * 0.2 - 0.05);
-                shapFactors.push({ factor: shuffled[f], value: Math.round(contrib * 100) / 100 });
+                // Ersten 2 Faktoren stärker gewichten
+                const w = f < 2 ? (0.5 + Math.random() * 0.5) : (0.1 + Math.random() * 0.3);
+                rawWeights.push(riskTier === 'green' && f >= 2 ? -w * 0.5 : w);
             }
-            shapFactors.sort((a, b) => Math.abs(b.value) - Math.abs(a.value));
+            const rawSum = rawWeights.reduce((s, w) => s + w, 0);
+            for (let f = 0; f < 5; f++) {
+                const scaledVal = (rawWeights[f] / rawSum) * totalDelta;
+                shapFactors.push({ factor: shuffled[f], value: Math.round(scaledVal * 10) / 10 });
+            }
+            shapFactors.sort((a, b) => b.value - a.value);
 
             agents.push({
                 id: `V-${String(agentId).padStart(4, '0')}`,
@@ -2234,7 +2269,7 @@ function renderHCKPIs() {
     const avgTurnover = (hcRDData.reduce((s, r) => s + r.turnoverRate, 0) / hcRDData.length).toFixed(1);
     const avgEngagement = Math.round(hcRDData.reduce((s, r) => s + r.metrics.engagement, 0) / hcRDData.length);
     const nachwuchsQuote = ((hcAgents.filter(a => a.age < 35).length / totalAgents) * 100).toFixed(1);
-    const avgTenure = (hcAgents.reduce((s, a) => s + a.tenure, 0) / totalAgents).toFixed(1);
+    const avgTenure = '7,2';
     const totalVacanzen = hcRDData.reduce((s, r) => s + (r.budgeted - r.headcount), 0);
     const avgComposite = Math.round(hcRDData.reduce((s, r) => s + r.composite, 0) / hcRDData.length);
 
@@ -2255,8 +2290,8 @@ function renderHCKPIs() {
             icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
             cols: 4,
             kpis: [
-                { label: 'Abgangsrisiko (Rot)', value: redCount.toLocaleString('de-DE'), desc: 'Vermittler mit Abgangswahrscheinlichkeit ≥60% (KI-Modell)', trend: '+' + Math.round(redCount * 0.08) + ' vs. Vormonat', trendDir: 'down', color: 'red' },
-                { label: 'Abgangsrisiko (Gelb)', value: amberCount.toLocaleString('de-DE'), desc: 'Vermittler mit Abgangswahrscheinlichkeit 30–59%', trend: '+' + Math.round(amberCount * 0.04) + ' vs. Vormonat', trendDir: 'down', color: 'amber' },
+                { label: 'Abgangsrisiko (Rot)', value: redCount.toLocaleString('de-DE'), desc: 'Vermittler mit Abgangswahrscheinlichkeit ≥55% (KI-Modell)', trend: '+' + Math.round(redCount * 0.08) + ' vs. Vormonat', trendDir: 'down', color: 'red' },
+                { label: 'Abgangsrisiko (Gelb)', value: amberCount.toLocaleString('de-DE'), desc: 'Vermittler mit Abgangswahrscheinlichkeit 25–54%', trend: '+' + Math.round(amberCount * 0.04) + ' vs. Vormonat', trendDir: 'down', color: 'amber' },
                 { label: 'Fluktuationsquote', value: avgTurnover + '%', desc: 'Ø Abgangsrate der letzten 12 Monate über alle RDs', trend: '+1,1 Pp. vs. Vorjahr', trendDir: 'down', color: parseFloat(avgTurnover) > 12 ? 'red' : '' },
                 { label: 'Stornoquote', value: '2,8%', desc: 'Durchschnittliche Vertragsstornierungen im Vermittlerbestand', trend: '+0,1 Pp. vs. Vorjahr', trendDir: 'down', color: '' }
             ]
@@ -2827,6 +2862,15 @@ function showHCUnitShapForAgent(agentId) {
         </div>
     ` : '';
 
+    // Waterfall: Basis → kumulative Faktoren → Endergebnis
+    const scale = 3.2; // px pro Prozentpunkt
+    let cumulative = baseRisk;
+    const waterfallRows = agent.shapFactors.map(f => {
+        const startPct = cumulative;
+        cumulative += f.value;
+        return { ...f, startPct, endPct: cumulative };
+    });
+
     container.innerHTML = `
         <div class="hc-shap-header">
             <div class="hc-shap-agent">
@@ -2836,30 +2880,41 @@ function showHCUnitShapForAgent(agentId) {
                 Abgangsrisiko: <span class="hc-risk-badge ${agent.riskTier}">${agent.riskScore}%</span>
             </div>
         </div>
-        <div class="hc-shap-chart">
-            <div class="hc-shap-baseline">
-                <span>Basis-Risiko: ${baseRisk}%</span>
-                <div class="hc-shap-baseline-line"></div>
+        <div class="hc-shap-waterfall">
+            <div class="hc-wf-row hc-wf-base">
+                <div class="hc-wf-label">Durchschnittliches Abgangsrisiko</div>
+                <div class="hc-wf-bar-area">
+                    <div class="hc-wf-bar base" style="margin-left:0;width:${Math.round(baseRisk * scale)}px">
+                        <span class="hc-wf-val">${baseRisk}%</span>
+                    </div>
+                </div>
             </div>
-            ${agent.shapFactors.map(f => {
-                const isPositive = f.value > 0;
-                const barWidth = Math.round((Math.abs(f.value) / maxAbsVal) * maxBarWidth);
+            ${waterfallRows.map(r => {
+                const left = Math.round(Math.min(r.startPct, r.endPct) * scale);
+                const width = Math.max(Math.round(Math.abs(r.value) * scale), 2);
+                const isPos = r.value > 0;
+                const sign = isPos ? '+' : '';
                 return `
-                    <div class="hc-shap-row">
-                        <div class="hc-shap-factor">${f.factor}</div>
-                        <div class="hc-shap-bar-area">
-                            ${isPositive
-                                ? `<div class="hc-shap-bar positive" style="width:${barWidth}px">${f.value > 0 ? '+' : ''}${f.value}</div>`
-                                : `<div class="hc-shap-bar negative" style="width:${barWidth}px">${f.value}</div>`
-                            }
+                    <div class="hc-wf-row">
+                        <div class="hc-wf-label">${r.factor}</div>
+                        <div class="hc-wf-bar-area">
+                            <div class="hc-wf-connector" style="left:${Math.round(r.startPct * scale)}px"></div>
+                            <div class="hc-wf-bar ${isPos ? 'increase' : 'decrease'}" style="margin-left:${left}px;width:${width}px">
+                                <span class="hc-wf-val">${sign}${r.value}</span>
+                            </div>
                         </div>
                     </div>
                 `;
             }).join('')}
-        </div>
-        <div class="hc-shap-footer">
-            <span class="hc-shap-legend negative">← Risiko senkend</span>
-            <span class="hc-shap-legend positive">Risiko erhöhend →</span>
+            <div class="hc-wf-row hc-wf-result">
+                <div class="hc-wf-label"><strong>Abgangsrisiko</strong></div>
+                <div class="hc-wf-bar-area">
+                    <div class="hc-wf-connector" style="left:${Math.round(cumulative * scale)}px"></div>
+                    <div class="hc-wf-bar result ${agent.riskTier}" style="margin-left:0;width:${Math.round(agent.riskScore * scale)}px">
+                        <span class="hc-wf-val">${agent.riskScore}%</span>
+                    </div>
+                </div>
+            </div>
         </div>
         ${recHTML}
     `;
@@ -3008,9 +3063,14 @@ function renderHCShapExplanation() {
     const agent = hcAgents.find(a => a.id === agentId);
     if (!agent) return;
 
-    const baseRisk = 15; // average baseline
-    const maxBarWidth = 200;
-    const maxAbsVal = Math.max(...agent.shapFactors.map(f => Math.abs(f.value)), 0.01);
+    const baseRisk = 15;
+    const scale = 3.2;
+    let cumulative = baseRisk;
+    const waterfallRows = agent.shapFactors.map(f => {
+        const startPct = cumulative;
+        cumulative += f.value;
+        return { ...f, startPct, endPct: cumulative };
+    });
 
     container.innerHTML = `
         <div class="hc-shap-header">
@@ -3021,30 +3081,41 @@ function renderHCShapExplanation() {
                 Abgangsrisiko: <span class="hc-risk-badge ${agent.riskTier}">${agent.riskScore}%</span>
             </div>
         </div>
-        <div class="hc-shap-chart">
-            <div class="hc-shap-baseline">
-                <span>Basis-Risiko: ${baseRisk}%</span>
-                <div class="hc-shap-baseline-line"></div>
+        <div class="hc-shap-waterfall">
+            <div class="hc-wf-row hc-wf-base">
+                <div class="hc-wf-label">Durchschnittliches Abgangsrisiko</div>
+                <div class="hc-wf-bar-area">
+                    <div class="hc-wf-bar base" style="margin-left:0;width:${Math.round(baseRisk * scale)}px">
+                        <span class="hc-wf-val">${baseRisk}%</span>
+                    </div>
+                </div>
             </div>
-            ${agent.shapFactors.map(f => {
-                const isPositive = f.value > 0;
-                const barWidth = Math.round((Math.abs(f.value) / maxAbsVal) * maxBarWidth);
+            ${waterfallRows.map(r => {
+                const left = Math.round(Math.min(r.startPct, r.endPct) * scale);
+                const width = Math.max(Math.round(Math.abs(r.value) * scale), 2);
+                const isPos = r.value > 0;
+                const sign = isPos ? '+' : '';
                 return `
-                    <div class="hc-shap-row">
-                        <div class="hc-shap-factor">${f.factor}</div>
-                        <div class="hc-shap-bar-area">
-                            ${isPositive
-                                ? `<div class="hc-shap-bar positive" style="width:${barWidth}px">${f.value > 0 ? '+' : ''}${f.value}</div>`
-                                : `<div class="hc-shap-bar negative" style="width:${barWidth}px">${f.value}</div>`
-                            }
+                    <div class="hc-wf-row">
+                        <div class="hc-wf-label">${r.factor}</div>
+                        <div class="hc-wf-bar-area">
+                            <div class="hc-wf-connector" style="left:${Math.round(r.startPct * scale)}px"></div>
+                            <div class="hc-wf-bar ${isPos ? 'increase' : 'decrease'}" style="margin-left:${left}px;width:${width}px">
+                                <span class="hc-wf-val">${sign}${r.value}</span>
+                            </div>
                         </div>
                     </div>
                 `;
             }).join('')}
-        </div>
-        <div class="hc-shap-footer">
-            <span class="hc-shap-legend negative">← Risiko senkend</span>
-            <span class="hc-shap-legend positive">Risiko erhöhend →</span>
+            <div class="hc-wf-row hc-wf-result">
+                <div class="hc-wf-label"><strong>Abgangsrisiko</strong></div>
+                <div class="hc-wf-bar-area">
+                    <div class="hc-wf-connector" style="left:${Math.round(cumulative * scale)}px"></div>
+                    <div class="hc-wf-bar result ${agent.riskTier}" style="margin-left:0;width:${Math.round(agent.riskScore * scale)}px">
+                        <span class="hc-wf-val">${agent.riskScore}%</span>
+                    </div>
+                </div>
+            </div>
         </div>
     `;
 }
@@ -3209,6 +3280,66 @@ const HC_KI_RECOMMENDATIONS = {
     }
 };
 
+// KI-Zusammenfassung für eine Person generieren
+function generateKISummary(agent) {
+    const tenureStr = formatTenure(agent.tenure);
+    const riskFactors = agent.shapFactors.filter(f => f.value > 0).sort((a, b) => b.value - a.value);
+    const topFactors = riskFactors.slice(0, 3).map(f => f.factor);
+    const protectiveFactors = agent.shapFactors.filter(f => f.value < 0).map(f => f.factor);
+
+    // Tenure-Kontext
+    let tenureContext;
+    if (agent.tenure < 0.25) {
+        tenureContext = `befindet sich mit ${tenureStr} Zugehörigkeit noch in der kritischen Frühphase`;
+    } else if (agent.tenure < 1) {
+        tenureContext = `befindet sich mit ${tenureStr} Zugehörigkeit noch in der Einarbeitungsphase`;
+    } else if (agent.tenure < 2) {
+        tenureContext = `ist seit ${tenureStr} in der Aufbauphase und noch nicht vollständig etabliert`;
+    } else if (agent.tenure < 5) {
+        tenureContext = `ist mit ${tenureStr} Zugehörigkeit ein etablierter Vermittler im Bestand`;
+    } else {
+        tenureContext = `gehört mit ${tenureStr} Zugehörigkeit zu den erfahrenen Vermittlern der Organisation`;
+    }
+
+    // Risiko-Kontext
+    let riskContext;
+    if (agent.riskTier === 'red') {
+        riskContext = `Das Abgangsrisiko liegt mit ${agent.riskScore}% im kritischen Bereich.`;
+    } else if (agent.riskTier === 'amber') {
+        riskContext = `Das Abgangsrisiko liegt mit ${agent.riskScore}% im erhöhten Bereich und sollte beobachtet werden.`;
+    } else {
+        riskContext = `Das Abgangsrisiko liegt mit ${agent.riskScore}% im grünen Bereich.`;
+    }
+
+    // Trend
+    const trendDelta = agent.riskScore - agent.prevScore;
+    let trendText = '';
+    if (Math.abs(trendDelta) >= 3) {
+        trendText = trendDelta > 0
+            ? ` Im Vergleich zum Vormonat ist das Risiko um ${Math.abs(trendDelta)} Prozentpunkte gestiegen, was auf eine aktive Verschlechterung der Situation hindeutet.`
+            : ` Im Vergleich zum Vormonat ist das Risiko um ${Math.abs(trendDelta)} Prozentpunkte gesunken.`;
+    }
+
+    // Faktoren-Text
+    let factorText = '';
+    if (topFactors.length > 0) {
+        factorText = ` Die stärksten Risikotreiber sind: ${topFactors.join(', ')}.`;
+    }
+    if (protectiveFactors.length > 0) {
+        factorText += ` Stabilisierend wirken: ${protectiveFactors.join(', ')}.`;
+    }
+
+    // Alterskontext
+    let ageText = '';
+    if (agent.age < 30) {
+        ageText = ` Als jüngerer Vermittler (${agent.age} J.) ist die Wechselbereitschaft grundsätzlich höher — gezielte Bindungsmaßnahmen sind besonders wichtig.`;
+    } else if (agent.age > 58) {
+        ageText = ` Mit ${agent.age} Jahren nähert sich der Vermittler dem Ruhestand — eine frühzeitige Nachfolgeplanung sollte eingeleitet werden.`;
+    }
+
+    return `${agent.name} ${tenureContext} und ist der ${agent.rdName} zugeordnet. ${riskContext}${trendText}${factorText}${ageText}`;
+}
+
 function renderHCKIRecommendation(agentId) {
     const panel = document.getElementById('hcKIRecommendationPanel');
     const content = document.getElementById('hcKIRecommendationContent');
@@ -3219,18 +3350,31 @@ function renderHCKIRecommendation(agentId) {
 
     panel.style.display = 'block';
 
+    // KI-Zusammenfassung generieren
+    const kiSummary = generateKISummary(agent);
+
     // Get top risk-increasing factors
     const riskFactors = agent.shapFactors.filter(f => f.value > 0).sort((a, b) => b.value - a.value);
     const topFactor = riskFactors[0]?.factor || agent.topFactor;
     const recommendation = HC_KI_RECOMMENDATIONS[topFactor];
 
+    const summaryHTML = `
+        <div class="hc-ki-summary">
+            <div class="hc-ki-summary-header">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M12 2a4 4 0 014 4c0 1.95-1.4 3.58-3.25 3.93L12 22l-.75-12.07A4.001 4.001 0 0112 2z"/><circle cx="12" cy="6" r="1"/></svg>
+                KI-Analyse
+            </div>
+            <p class="hc-ki-summary-text">${kiSummary}</p>
+        </div>
+    `;
+
     if (!recommendation) {
-        // Fallback generic recommendation
         content.innerHTML = `
             <div class="hc-ki-rec-agent">
                 <span class="hc-risk-badge ${agent.riskTier}">${agent.riskScore}%</span>
                 <strong>${agent.name}</strong> <span style="color:var(--text-tertiary)">(${agent.id})</span> — ${agent.rdName} · AO-Vermittler
             </div>
+            ${summaryHTML}
             <div class="hc-ki-rec-body">
                 <div class="hc-ki-rec-title">Allgemeine Retention-Empfehlung</div>
                 <p class="hc-ki-rec-rationale">Für diesen Vermittler sollte zeitnah ein persönliches Gespräch mit dem Vertriebsdirektor vereinbart werden, um die individuelle Situation zu analysieren und passende Maßnahmen abzuleiten.</p>
@@ -3239,7 +3383,6 @@ function renderHCKIRecommendation(agentId) {
         return;
     }
 
-    // Collect additional factors for context
     const additionalFactors = riskFactors.slice(1, 3).map(f => f.factor);
 
     content.innerHTML = `
@@ -3247,6 +3390,7 @@ function renderHCKIRecommendation(agentId) {
             <span class="hc-risk-badge ${agent.riskTier}">${agent.riskScore}%</span>
             <strong>${agent.name}</strong> <span style="color:var(--text-tertiary)">(${agent.id})</span> — ${agent.rdName} · AO-Vermittler · ${agent.age} Jahre · ${formatTenure(agent.tenure)} Zugehörigkeit
         </div>
+        ${summaryHTML}
         <div class="hc-ki-rec-body">
             <div class="hc-ki-rec-header">
                 <div class="hc-ki-rec-title">${recommendation.title}</div>

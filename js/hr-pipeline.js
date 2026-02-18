@@ -2004,13 +2004,128 @@ function generateHCAgents(rdData) {
     const agents = [];
     const firstNames = ['Alexander','Benjamin','Christian','Daniel','Erik','Felix','Georg','Hans','Ingo','Jürgen','Klaus','Lars','Martin','Norbert','Oliver','Peter','Ralf','Stefan','Thomas','Uwe','Werner','Andreas','Bernd','Dieter','Frank','Holger','Michael','Rainer','Volker','Wolfgang','Anna','Barbara','Christine','Doris','Elisabeth','Franziska','Gabriele','Heike','Ingrid','Julia','Karin','Lena','Maria','Nina','Petra','Rita','Sandra','Tanja','Ursula','Vera'];
     const lastNames = ['Müller','Schmidt','Schneider','Fischer','Weber','Meyer','Wagner','Becker','Schulz','Hoffmann','Schäfer','Koch','Bauer','Richter','Klein','Wolf','Schröder','Neumann','Schwarz','Zimmermann','Braun','Krüger','Hofmann','Hartmann','Lange','Werner','Krause','Lehmann','Schmitt','König'];
-    const riskFactors = [
-        'Monate seit letzter Beförderung', 'Provisionsrückgang >20%', 'Stornoquote über Durchschnitt',
-        'Team-Abgänge (Ansteckungseffekt)', 'Engagement-Score rückläufig', 'IDD-Weiterbildung unvollständig',
-        'Zielerfüllung <70%', 'Keine freiwillige Weiterbildung', 'CRM-Aktivität rückläufig',
-        'Compa-Ratio <0.80', 'Wettbewerber-Recruiting aktiv', 'Manager-Wechsel <180 Tage',
-        'Zugehörigkeit <3 Monate — Frühfluktuation', 'Zugehörigkeit <12 Monate — Einarbeitungsphase', 'Zugehörigkeit <24 Monate — kritische Phase'
-    ];
+    // Tenure-abhängige Risikofaktoren — nur Faktoren die für die jeweilige Lebensphase sinnvoll sind
+    const factorsByTenure = {
+        // <3 Monate: Onboarding-Phase — kein Track Record, kein Bestand, keine Beförderungshistorie
+        earlyOnboarding: {
+            primary: 'Zugehörigkeit <3 Monate — Frühfluktuation',
+            pool: [
+                'Zufriedenheit Onboarding-Prozess (letzte Umfrage: niedrig)',
+                'Einschätzung Führungskraft: Integration gefährdet',
+                'Erwartungslücke Vergütung vs. Realität',
+                'Kein Pate/Mentor zugewiesen',
+                'Noch kein erster Abschluss erzielt',
+                'Geografische Entfernung zum Team/Büro',
+                'Wettbewerber-Recruiting aktiv (Branche)',
+                'Vorherige Branchenerfahrung: gering'
+            ]
+        },
+        // 3–12 Monate: Einarbeitung — erste Erfahrungen, noch kein stabiler Bestand
+        onboarding: {
+            primary: 'Zugehörigkeit <12 Monate — Einarbeitungsphase',
+            pool: [
+                'Zufriedenheit letzte Mitarbeiterumfrage: unterdurchschnittlich',
+                'Einschätzung Führungskraft: Entwicklung unter Plan',
+                'Bestandsaufbau hinter Erwartung',
+                'Erste Stornierungen im jungen Bestand',
+                'Geringe Teilnahme an Teamveranstaltungen',
+                'Unregelmäßige CRM-Nutzung',
+                'Startfinanzierung / Zuschüsse laufen aus',
+                'Team-Abgänge (Ansteckungseffekt)',
+                'Manager-Wechsel <180 Tage',
+                'Wettbewerber-Recruiting aktiv'
+            ]
+        },
+        // 1–2 Jahre: Aufbauphase — erste eigene Ergebnisse, Stabilisierung
+        building: {
+            primary: 'Zugehörigkeit <24 Monate — kritische Phase',
+            pool: [
+                'Zufriedenheit letzte Mitarbeiterumfrage: unterdurchschnittlich',
+                'Einschätzung Führungskraft: Leistungsentwicklung stagniert',
+                'Provisionsrückgang vs. Vorquartal',
+                'Zielerfüllung <70%',
+                'Stornoquote über Durchschnitt',
+                'Bestandsgröße unter Peergroup-Niveau',
+                'CRM-Aktivität rückläufig',
+                'Team-Abgänge (Ansteckungseffekt)',
+                'Manager-Wechsel <180 Tage',
+                'Wettbewerber-Recruiting aktiv',
+                'Geringe Netzwerk-Integration in der Region'
+            ]
+        },
+        // 2–5 Jahre: Etablierungsphase — vollständiger Leistungsvergleich möglich
+        established: {
+            pool: [
+                'Zufriedenheit letzte Mitarbeiterumfrage: unterdurchschnittlich',
+                'Einschätzung Führungskraft: Motivationsrückgang',
+                'Provisionsrückgang >20%',
+                'Stornoquote über Durchschnitt',
+                'Zielerfüllung <70%',
+                'Engagement-Score rückläufig',
+                'CRM-Aktivität rückläufig',
+                'IDD-Weiterbildung unvollständig',
+                'Team-Abgänge (Ansteckungseffekt)',
+                'Manager-Wechsel <180 Tage',
+                'Compa-Ratio <0.80',
+                'Wettbewerber-Recruiting aktiv',
+                'Keine freiwillige Weiterbildung seit 18 Mon.'
+            ]
+        },
+        // >5 Jahre: Erfahrene Vermittler — voller Feature-Set
+        senior: {
+            pool: [
+                'Einschätzung Führungskraft: Motivationsrückgang',
+                'Zufriedenheit letzte Mitarbeiterumfrage: unterdurchschnittlich',
+                'Monate seit letzter Beförderung',
+                'Provisionsrückgang >20%',
+                'Stornoquote über Durchschnitt',
+                'Zielerfüllung <70%',
+                'Engagement-Score rückläufig',
+                'CRM-Aktivität rückläufig',
+                'IDD-Weiterbildung unvollständig',
+                'Keine freiwillige Weiterbildung seit 18 Mon.',
+                'Team-Abgänge (Ansteckungseffekt)',
+                'Manager-Wechsel <180 Tage',
+                'Compa-Ratio <0.80',
+                'Wettbewerber-Recruiting aktiv',
+                'Fehlende Karriereperspektive / Stagnation'
+            ]
+        }
+    };
+
+    // Schutzfaktoren je Tenure-Gruppe
+    const protectiveByTenure = {
+        earlyOnboarding: [
+            'Pate/Mentor aktiv zugewiesen',
+            'Strukturierter Einarbeitungsplan vorhanden',
+            'Startfinanzierung gesichert'
+        ],
+        onboarding: [
+            'Regelmäßige VD-Feedbackgespräche',
+            'Erste Abschlüsse erzielt',
+            'Hohe Teamintegration',
+            'Bestandszuweisung erfolgt'
+        ],
+        building: [
+            'Provisionen steigend',
+            'Zufriedenheit letzte Umfrage: hoch',
+            'Aktive Teilnahme an Weiterbildung',
+            'Stabiler Bestandsaufbau'
+        ],
+        established: [
+            'Hohe Zufriedenheit (letzte Umfrage)',
+            'Überdurchschnittliche Zielerreichung',
+            'Aktive Weiterbildungsteilnahme',
+            'Starke Kundenbeziehungen (niedr. Storno)'
+        ],
+        senior: [
+            'Hohe Zufriedenheit (letzte Umfrage)',
+            'Mentorrolle für Nachwuchs',
+            'Überdurchschnittliche Zielerreichung',
+            'Langjährige stabile Kundenbeziehungen',
+            'Regionale Verwurzelung'
+        ]
+    };
 
     // Tier-Verteilung: 642 Rot, 512 Gelb, Rest Grün — proportional pro RD
     const totalHC = rdData.reduce((s, r) => s + r.headcount, 0);
@@ -2062,31 +2177,64 @@ function generateHCAgents(rdData) {
             }
             prevScore = Math.min(78, Math.max(5, Math.round(riskScore + (Math.random() - 0.5) * 12)));
 
-            // Top SHAP factors — short tenure agents get tenure-related factors first
+            // Tenure-Gruppe bestimmen
+            let tenureGroup, tenureKey;
+            if (tenure < 0.25) { tenureGroup = factorsByTenure.earlyOnboarding; tenureKey = 'earlyOnboarding'; }
+            else if (tenure < 1) { tenureGroup = factorsByTenure.onboarding; tenureKey = 'onboarding'; }
+            else if (tenure < 2) { tenureGroup = factorsByTenure.building; tenureKey = 'building'; }
+            else if (tenure < 5) { tenureGroup = factorsByTenure.established; tenureKey = 'established'; }
+            else { tenureGroup = factorsByTenure.senior; tenureKey = 'senior'; }
+
+            // Risiko-erhöhende Faktoren zusammenstellen
+            const primaryFactor = tenureGroup.primary || null;
+            const shuffledPool = [...tenureGroup.pool].sort(() => Math.random() - 0.5);
+            const riskFactorList = primaryFactor
+                ? [primaryFactor, ...shuffledPool]
+                : shuffledPool;
+
+            // Schutzfaktoren für die Tenure-Gruppe
+            const protPool = [...(protectiveByTenure[tenureKey] || [])].sort(() => Math.random() - 0.5);
+
+            // SHAP-Werte: müssen sich auf (riskScore - baselineRisk) aufsummieren
             const shapFactors = [];
-            let shuffled;
-            if (tenure < 0.25) {
-                shuffled = ['Zugehörigkeit <3 Monate — Frühfluktuation', ...riskFactors.filter(f => !f.startsWith('Zugehörigkeit <')).sort(() => Math.random() - 0.5)];
-            } else if (tenure <= 1) {
-                shuffled = ['Zugehörigkeit <12 Monate — Einarbeitungsphase', ...riskFactors.filter(f => !f.startsWith('Zugehörigkeit <')).sort(() => Math.random() - 0.5)];
-            } else if (tenure <= 2) {
-                shuffled = ['Zugehörigkeit <24 Monate — kritische Phase', ...riskFactors.filter(f => !f.startsWith('Zugehörigkeit <')).sort(() => Math.random() - 0.5)];
-            } else {
-                shuffled = [...riskFactors.filter(f => !f.startsWith('Zugehörigkeit <'))].sort(() => Math.random() - 0.5);
-            }
-            // SHAP-Werte müssen sich auf (riskScore - baselineRisk) aufsummieren
             const baselineRisk = 15;
             const totalDelta = riskScore - baselineRisk;
+
+            // Bei Grün: 3 Risiko + 2 Schutzfaktoren; bei Gelb: 4+1; bei Rot: 5+0
+            const numRisk = riskTier === 'red' ? 5 : riskTier === 'amber' ? 4 : 3;
+            const numProt = 5 - numRisk;
+
+            // Gewichte berechnen
             const rawWeights = [];
             for (let f = 0; f < 5; f++) {
-                // Ersten 2 Faktoren stärker gewichten
-                const w = f < 2 ? (0.5 + Math.random() * 0.5) : (0.1 + Math.random() * 0.3);
-                rawWeights.push(riskTier === 'green' && f >= 2 ? -w * 0.5 : w);
+                if (f < numRisk) {
+                    // Risiko-erhöhend: abnehmende Stärke
+                    const w = f < 2 ? (0.5 + Math.random() * 0.5) : (0.15 + Math.random() * 0.25);
+                    rawWeights.push(w);
+                } else {
+                    // Schutzfaktor: negativ
+                    const w = 0.1 + Math.random() * 0.2;
+                    rawWeights.push(-w);
+                }
             }
-            const rawSum = rawWeights.reduce((s, w) => s + w, 0);
+            const posSum = rawWeights.filter(w => w > 0).reduce((s, w) => s + w, 0);
+            const negSum = Math.abs(rawWeights.filter(w => w < 0).reduce((s, w) => s + w, 0));
+
+            // Positive Faktoren skalieren auf totalDelta + Ausgleichsbetrag für negative
+            const negBudget = numProt > 0 ? Math.abs(totalDelta) * 0.15 : 0;
+            const posBudget = totalDelta + negBudget;
+
             for (let f = 0; f < 5; f++) {
-                const scaledVal = (rawWeights[f] / rawSum) * totalDelta;
-                shapFactors.push({ factor: shuffled[f], value: Math.round(scaledVal * 10) / 10 });
+                let scaledVal;
+                if (rawWeights[f] > 0) {
+                    scaledVal = (rawWeights[f] / posSum) * posBudget;
+                } else {
+                    scaledVal = negSum > 0 ? (rawWeights[f] / negSum) * -negBudget : 0;
+                }
+                const factor = f < numRisk
+                    ? riskFactorList[f] || riskFactorList[riskFactorList.length - 1]
+                    : protPool[f - numRisk] || 'Stabile Rahmenbedingungen';
+                shapFactors.push({ factor, value: Math.round(scaledVal * 10) / 10 });
             }
             shapFactors.sort((a, b) => b.value - a.value);
 
@@ -3122,161 +3270,378 @@ function renderHCShapExplanation() {
 
 // --- KI-Maßnahmenempfehlung ---
 const HC_KI_RECOMMENDATIONS = {
-    'Monate seit letzter Beförderung': {
-        title: 'Karriereperspektive eröffnen',
-        urgency: 'hoch',
-        measures: [
-            { action: 'Persönliches Karrieregespräch mit Vertriebsdirektor innerhalb von 5 Werktagen vereinbaren', timeline: 'Sofort', responsible: 'Vertriebsdirektor' },
-            { action: 'Prüfung der Qualifikation zum Agenturleiter / Mehrfachagenten — Entwicklungsplan erstellen', timeline: '2 Wochen', responsible: 'Personalentwicklung' },
-            { action: 'Einbindung als Mentor für Nachwuchsvermittler zur Wertschätzung und Verantwortungsausweitung', timeline: '4 Wochen', responsible: 'Regionaldirektion' }
-        ],
-        rationale: 'Fehlende Aufstiegsperspektive ist einer der stärksten Prädiktoren für Abgänge bei erfahrenen AO-Vermittlern. Ein proaktives Karrieregespräch kann die Abgangswahrscheinlichkeit um bis zu 35% senken (Visier-Studie 2024).'
-    },
-    'Provisionsrückgang >20%': {
-        title: 'Vertriebsleistung stabilisieren',
-        urgency: 'hoch',
-        measures: [
-            { action: 'Individuelle Bestandsanalyse durchführen — Ursachen des Provisionsrückgangs identifizieren', timeline: 'Sofort', responsible: 'Vertriebscoach' },
-            { action: 'Gezieltes Cross-Selling-Coaching für unterrepräsentierte Sparten (z.B. bAV, Gewerbe)', timeline: '1 Woche', responsible: 'Vertriebscoach' },
-            { action: 'Temporäre Sonderprovisionsregelung / Bestandssicherungsprämie prüfen', timeline: '2 Wochen', responsible: 'Vertriebsleitung' },
-            { action: 'Lead-Paket aus zentralem Marketing für Neukundenakquise bereitstellen', timeline: '1 Woche', responsible: 'Marketing' }
-        ],
-        rationale: 'Ein signifikanter Provisionsrückgang bedroht die wirtschaftliche Existenzgrundlage des AO-Vermittlers und ist häufig der Auslöser für einen Wechsel zur Konkurrenz. Sofortige Unterstützung bei der Geschäftsentwicklung ist essenziell.'
-    },
-    'Stornoquote über Durchschnitt': {
-        title: 'Beratungsqualität stärken',
-        urgency: 'mittel',
-        measures: [
-            { action: 'Stornogründe-Analyse der letzten 6 Monate — Muster identifizieren', timeline: 'Sofort', responsible: 'Qualitätsmanagement' },
-            { action: 'Bedarfsanalyse-Workshop: Sicherstellung vollständiger Kundenberatung nach DIN 77230', timeline: '2 Wochen', responsible: 'Vertriebscoach' },
-            { action: 'Bestandspflegeprogramm implementieren — automatisierte Kontaktpunkte für Bestandskunden', timeline: '4 Wochen', responsible: 'CRM-Team' }
-        ],
-        rationale: 'Hohe Stornoquoten deuten auf Beratungsdefizite hin, die sowohl den Vermittler finanziell belasten als auch das Vertrauensverhältnis zur Organisation gefährden. Gezielte Qualifizierung kann die Stornoquote um 20–30% reduzieren.'
-    },
-    'Team-Abgänge (Ansteckungseffekt)': {
-        title: 'Ansteckungseffekt eindämmen',
-        urgency: 'hoch',
-        measures: [
-            { action: 'Sofortiges Stabilisierungsgespräch mit allen betroffenen Teammitgliedern (135-Tage-Fenster)', timeline: 'Sofort', responsible: 'Vertriebsdirektor' },
-            { action: 'Teambuilding-Maßnahme organisieren — Zusammenhalt stärken', timeline: '1 Woche', responsible: 'Regionaldirektion' },
-            { action: 'Abgangsursache des ehemaligen Kollegen transparent kommunizieren (soweit möglich)', timeline: 'Sofort', responsible: 'Vertriebsdirektor' },
-            { action: 'Erhöhte Kontaktfrequenz des VD für die Dauer des Beobachtungsfensters', timeline: 'Fortlaufend', responsible: 'Vertriebsdirektor' }
-        ],
-        rationale: 'Nach dem Abgang eines Teamkollegen steigt die Abgangswahrscheinlichkeit der verbleibenden Mitglieder um 7–25% (Visier-Studie). Proaktive Kommunikation und Stabilisierung sind im 135-Tage-Fenster entscheidend.'
-    },
-    'Engagement-Score rückläufig': {
-        title: 'Engagement reaktivieren',
-        urgency: 'mittel',
-        measures: [
-            { action: 'Persönliches Gespräch: Ursachen für Motivationsverlust erfragen', timeline: 'Sofort', responsible: 'Vertriebsdirektor' },
-            { action: 'Individuelle Zielsetzung mit dem Vermittler gemeinsam überarbeiten — erreichbare Etappenziele', timeline: '1 Woche', responsible: 'Vertriebsdirektor' },
-            { action: 'Einladung zu Vertriebs-Events, Wettbewerben oder Best-Practice-Austausch', timeline: '2 Wochen', responsible: 'Regionaldirektion' }
-        ],
-        rationale: 'Rückläufiges Engagement geht einem Abgang häufig 3–6 Monate voraus. Frühzeitiges Ansprechen und Einbeziehung in attraktive Aktivitäten können die Bindung signifikant erhöhen.'
-    },
-    'IDD-Weiterbildung unvollständig': {
-        title: 'Weiterbildungspflicht sicherstellen',
-        urgency: 'mittel',
-        measures: [
-            { action: 'Aktuellen Weiterbildungsstand prüfen und fehlende Stunden identifizieren', timeline: 'Sofort', responsible: 'Vertriebsassistenz' },
-            { action: 'Individuellen Weiterbildungsplan erstellen — Online- und Präsenzangebote kombinieren', timeline: '1 Woche', responsible: 'Personalentwicklung' },
-            { action: 'Erinnerungssystem aktivieren und Deadline-Management einrichten', timeline: '1 Woche', responsible: 'Vertriebsassistenz' }
-        ],
-        rationale: 'Die IDD-Weiterbildungspflicht (15 Stunden/Jahr) ist gesetzlich vorgeschrieben. Unvollständige Weiterbildung gefährdet die Vermittlerzulassung und kann als Zeichen mangelnden Organisationsinteresses gedeutet werden.'
-    },
-    'Zielerfüllung <70%': {
-        title: 'Vertriebsperformance steigern',
-        urgency: 'hoch',
-        measures: [
-            { action: 'Wöchentliches Performance-Coaching mit konkreten Aktivitätenzielen einrichten', timeline: 'Sofort', responsible: 'Vertriebscoach' },
-            { action: 'Best-Practice-Sharing: Tandem-Bildung mit Top-Performer aus der Einheit', timeline: '1 Woche', responsible: 'Regionaldirektion' },
-            { action: 'Überprüfung der Gebietszuordnung — ggf. Marktpotenzial-Analyse', timeline: '2 Wochen', responsible: 'Vertriebssteuerung' }
-        ],
-        rationale: 'Dauerhafte Zielunterschreitung führt zu wirtschaftlichem Druck und Frustration. Individuelle Unterstützung kombiniert mit realistischer Zielsetzung kann den Vermittler in 60% der Fälle wieder auf Kurs bringen.'
-    },
-    'Keine freiwillige Weiterbildung': {
-        title: 'Entwicklungsbereitschaft fördern',
-        urgency: 'niedrig',
-        measures: [
-            { action: 'Attraktive Weiterbildungsangebote vorstellen (z.B. Fachwirt, Spezialistenmodule)', timeline: '2 Wochen', responsible: 'Personalentwicklung' },
-            { action: 'Finanzielle Förderung oder Provisionsfreistellung für Qualifizierung anbieten', timeline: '4 Wochen', responsible: 'Vertriebsleitung' }
-        ],
-        rationale: 'Fehlende Lernbereitschaft kann auf Stagnation oder innere Kündigung hindeuten. Zielgerichtete Angebote mit klarem wirtschaftlichen Nutzen erhöhen die Akzeptanz.'
-    },
-    'CRM-Aktivität rückläufig': {
-        title: 'Digitale Vertriebsunterstützung verbessern',
-        urgency: 'mittel',
-        measures: [
-            { action: 'CRM-Nutzungsanalyse: Welche Funktionen werden nicht genutzt? Schulungsbedarf ermitteln', timeline: '1 Woche', responsible: 'Digitalisierung' },
-            { action: 'Individuelles CRM-Training vor Ort mit Praxisbezug', timeline: '2 Wochen', responsible: 'IT-Support' },
-            { action: 'Workflow-Vereinfachung im CRM prüfen — Hürden abbauen', timeline: '4 Wochen', responsible: 'Digitalisierung' }
-        ],
-        rationale: 'Rückläufige CRM-Aktivität korreliert stark mit nachlassendem Engagement und sinkender Produktivität. Oft liegt die Ursache in Usability-Problemen oder mangelnder Schulung.'
-    },
-    'Compa-Ratio <0.80': {
-        title: 'Vergütungssituation prüfen',
-        urgency: 'hoch',
-        measures: [
-            { action: 'Provisionssituation im Vergleich zum Markt und zur internen Peergroup analysieren', timeline: 'Sofort', responsible: 'Vertriebssteuerung' },
-            { action: 'Bestandsumverteilung oder zusätzliche Vertriebsgebiete prüfen', timeline: '2 Wochen', responsible: 'Regionaldirektion' },
-            { action: 'Gespräch über Sonderleistungen: Büromiete, Technikausstattung, Marketingbudget', timeline: '2 Wochen', responsible: 'Vertriebsdirektor' }
-        ],
-        rationale: 'Eine Compa-Ratio unter 0,80 bedeutet, dass der Vermittler deutlich unter dem Marktdurchschnitt verdient. Dies ist einer der stärksten Abwanderungstreiber und muss dringend adressiert werden.'
-    },
-    'Wettbewerber-Recruiting aktiv': {
-        title: 'Abwerbung abwehren',
-        urgency: 'kritisch',
-        measures: [
-            { action: 'Vertrauliches Gespräch: Wertschätzung ausdrücken und Zukunftsperspektive aufzeigen', timeline: 'Sofort', responsible: 'Vertriebsdirektor' },
-            { action: 'Retention-Bonus oder Bindungsprämie prüfen (im Rahmen des AO-Vertragsverhältnisses)', timeline: '1 Woche', responsible: 'Vertriebsleitung' },
-            { action: 'Exklusive Entwicklungsmöglichkeiten aufzeigen (z.B. Agenturleitung, Spezialistenrolle)', timeline: '1 Woche', responsible: 'Vertriebsdirektor' }
-        ],
-        rationale: 'Aktives Wettbewerber-Recruiting signalisiert akute Abgangsgefahr. Ohne schnelle Intervention beträgt die Abgangswahrscheinlichkeit innerhalb von 90 Tagen über 50%. Jeder Tag zählt.'
-    },
-    'Manager-Wechsel <180 Tage': {
-        title: 'Beziehungsaufbau nach Führungswechsel',
-        urgency: 'mittel',
-        measures: [
-            { action: 'Neuer VD: Kennenlern-Besuche vor Ort mit allen Vermittlern der Einheit', timeline: 'Sofort', responsible: 'Vertriebsdirektor' },
-            { action: 'Individuelle Erwartungsgespräche: Bisherige Arbeitsweise, Wünsche, Sorgen', timeline: '2 Wochen', responsible: 'Vertriebsdirektor' },
-            { action: 'Stabilisierungsphase: Keine großen strukturellen Veränderungen in den ersten 6 Monaten', timeline: 'Fortlaufend', responsible: 'Regionaldirektion' }
-        ],
-        rationale: 'Ein Führungswechsel ist ein kritischer Moment. Die Qualität der neuen Beziehung entscheidet maßgeblich über die weitere Bindung. Innerhalb der ersten 180 Tage ist die Abgangswahrscheinlichkeit um 15–20% erhöht.'
-    },
+    // === Frühphase (<3 Monate) ===
     'Zugehörigkeit <3 Monate — Frühfluktuation': {
         title: 'Sofort-Intervention: Frühfluktuation verhindern',
         urgency: 'kritisch',
         measures: [
-            { action: 'Sofortiges persönliches Gespräch mit dem neuen AO-Vermittler — Erwartungen und erste Erfahrungen abgleichen', timeline: 'Sofort (24h)', responsible: 'Vertriebsdirektor' },
-            { action: 'Erfahrenen Paten-Vermittler aus der Einheit fest zuordnen — täglicher Austausch in den ersten Wochen', timeline: 'Sofort', responsible: 'Regionaldirektion' },
+            { action: 'Sofortiges persönliches Gespräch — Erwartungen und erste Erfahrungen abgleichen', timeline: 'Sofort (24h)', responsible: 'Vertriebsdirektor' },
+            { action: 'Erfahrenen Paten-Vermittler fest zuordnen — täglicher Austausch in den ersten Wochen', timeline: 'Sofort', responsible: 'Regionaldirektion' },
             { action: 'Wirtschaftliche Startabsicherung prüfen: Bestandszuweisung, Startprovisionen, Lead-Pakete', timeline: '48 Stunden', responsible: 'Vertriebssteuerung' },
             { action: 'Strukturierten Einarbeitungsplan mit Wochenmeilensteinen aufsetzen und nachhalten', timeline: '1 Woche', responsible: 'Vertriebscoach' },
             { action: 'Wöchentliches Check-in mit VD fest im Kalender verankern — mindestens für die ersten 90 Tage', timeline: 'Fortlaufend', responsible: 'Vertriebsdirektor' }
         ],
-        rationale: 'Die ersten 3 Monate sind die kritischste Phase: 33% der AO-Vermittler verlassen die Organisation bereits in dieser Frühphase. Die häufigsten Ursachen sind fehlende wirtschaftliche Perspektive, mangelnde Betreuung und unerfüllte Erwartungen. Sofortige, intensive Begleitung kann die Frühfluktuation nachweislich um bis zu 50% senken.'
+        rationale: 'Die ersten 3 Monate sind die kritischste Phase: 33% der AO-Vermittler verlassen die Organisation in dieser Frühphase. Häufigste Ursachen: fehlende wirtschaftliche Perspektive, mangelnde Betreuung, unerfüllte Erwartungen.'
     },
+    'Zufriedenheit Onboarding-Prozess (letzte Umfrage: niedrig)': {
+        title: 'Onboarding-Erlebnis sofort verbessern',
+        urgency: 'kritisch',
+        measures: [
+            { action: 'Persönliches Feedbackgespräch: Was konkret hat nicht funktioniert?', timeline: 'Sofort', responsible: 'Vertriebsdirektor' },
+            { action: 'Onboarding-Checkliste für diesen Vermittler individuell nacharbeiten', timeline: '1 Woche', responsible: 'Vertriebscoach' },
+            { action: 'Rückmeldung an das zentrale Onboarding-Team zur Prozessoptimierung', timeline: '2 Wochen', responsible: 'Personalentwicklung' }
+        ],
+        rationale: 'Negative Onboarding-Erfahrungen sind der stärkste Frühindikator für Abgänge in den ersten 90 Tagen. 70% der Vermittler, die den Onboarding-Prozess negativ bewerten, verlassen das Unternehmen innerhalb von 6 Monaten.'
+    },
+    'Einschätzung Führungskraft: Integration gefährdet': {
+        title: 'Integration durch Führungskraft begleiten',
+        urgency: 'kritisch',
+        measures: [
+            { action: 'VD-Gespräch mit konkretem Integrationsplan: Was fehlt dem Vermittler?', timeline: 'Sofort', responsible: 'Vertriebsdirektor' },
+            { action: 'Teamintegration aktiv fördern: Einbindung in gemeinsame Kundenbesuche und Teamrunden', timeline: '1 Woche', responsible: 'Regionaldirektion' },
+            { action: 'Paten-Tandem intensivieren oder neuen Paten zuweisen', timeline: '1 Woche', responsible: 'Vertriebsdirektor' }
+        ],
+        rationale: 'Die Einschätzung der direkten Führungskraft ist der valideste Frühindikator für Abgangsrisiken. Wenn der VD die Integration als gefährdet einstuft, liegt die Abgangswahrscheinlichkeit bei über 60%.'
+    },
+    'Erwartungslücke Vergütung vs. Realität': {
+        title: 'Erwartungsmanagement und Startunterstützung',
+        urgency: 'hoch',
+        measures: [
+            { action: 'Transparentes Gespräch: Realistische Einkommenserwartung für die ersten 12 Monate aufzeigen', timeline: 'Sofort', responsible: 'Vertriebsdirektor' },
+            { action: 'Startfinanzierung und Zuschussregelungen prüfen und ggf. nachbessern', timeline: '1 Woche', responsible: 'Vertriebssteuerung' },
+            { action: 'Kurzfristige Erfolgsaussichten aufzeigen: schnell erzielbare Abschlüsse identifizieren', timeline: '1 Woche', responsible: 'Vertriebscoach' }
+        ],
+        rationale: 'Enttäuschte Verdiensterwartungen sind der häufigste Grund für Frühfluktuation. Ehrliches Erwartungsmanagement kombiniert mit wirtschaftlicher Startunterstützung kann die Abgangsquote um 30% senken.'
+    },
+    'Kein Pate/Mentor zugewiesen': {
+        title: 'Patenmodell umgehend aktivieren',
+        urgency: 'kritisch',
+        measures: [
+            { action: 'Sofort erfahrenen Paten aus der Einheit zuweisen (Top-Performer mit Mentoring-Eignung)', timeline: 'Sofort', responsible: 'Vertriebsdirektor' },
+            { action: 'Erste gemeinsame Bestandsbearbeitung und Kundenbesuche planen', timeline: '1 Woche', responsible: 'Pate/Mentor' },
+            { action: 'Regelmäßige Tandem-Termine (mind. 2x/Woche) fest einrichten', timeline: '1 Woche', responsible: 'Regionaldirektion' }
+        ],
+        rationale: 'Neue Vermittler ohne Patenbegleitung haben eine 2,5x höhere Abgangswahrscheinlichkeit. Ein strukturiertes Patenmodell ist der wirksamste Hebel zur Senkung der Frühfluktuation.'
+    },
+    'Noch kein erster Abschluss erzielt': {
+        title: 'Schnelle Erfolgserlebnisse ermöglichen',
+        urgency: 'hoch',
+        measures: [
+            { action: 'Einfache Abschlussmöglichkeiten identifizieren (z.B. Bestandsübernahme, Familien-/Freundeskreis)', timeline: 'Sofort', responsible: 'Vertriebscoach' },
+            { action: 'Gemeinsame Erstberatung mit erfahrenem Kollegen oder VD durchführen', timeline: '1 Woche', responsible: 'Vertriebsdirektor' },
+            { action: 'Kurzfristiges Aktivitätenziel setzen: 10 Beratungstermine in 2 Wochen', timeline: '1 Woche', responsible: 'Vertriebscoach' }
+        ],
+        rationale: 'Der erste Abschluss hat eine enorme psychologische Wirkung. Vermittler die innerhalb der ersten 6 Wochen keinen Abschluss erzielen, verlassen das Unternehmen mit 55% Wahrscheinlichkeit.'
+    },
+    'Geografische Entfernung zum Team/Büro': {
+        title: 'Anbindung trotz Distanz sicherstellen',
+        urgency: 'mittel',
+        measures: [
+            { action: 'Regelmäßige Video-Calls mit VD und Teamkollegen einrichten', timeline: '1 Woche', responsible: 'Vertriebsdirektor' },
+            { action: 'Monatliche Präsenz-Termine im Büro/Team fest einplanen', timeline: '2 Wochen', responsible: 'Regionaldirektion' },
+            { action: 'Digitale Zusammenarbeit stärken: Einbindung in Team-Chat und gemeinsame Projekte', timeline: '1 Woche', responsible: 'Vertriebsdirektor' }
+        ],
+        rationale: 'Vermittler mit großer Entfernung zum nächsten Teambüro haben ein 1,4x höheres Abgangsrisiko durch Isolation. Regelmäßiger Kontakt — auch digital — ist entscheidend.'
+    },
+    'Vorherige Branchenerfahrung: gering': {
+        title: 'Branchenspezifische Einarbeitung intensivieren',
+        urgency: 'mittel',
+        measures: [
+            { action: 'Zusätzliches Produkttraining für Kernsparten (Leben, Sach, Vorsorge) ansetzen', timeline: '1 Woche', responsible: 'Vertriebscoach' },
+            { action: 'Hospitationen bei erfahrenen Vermittlern organisieren', timeline: '2 Wochen', responsible: 'Regionaldirektion' },
+            { action: 'Beratungsleitfäden und Gesprächsvorlagen bereitstellen', timeline: '1 Woche', responsible: 'Vertriebscoach' }
+        ],
+        rationale: 'Quereinsteiger ohne Versicherungserfahrung haben eine doppelt so hohe Frühfluktuation. Gezielte Zusatzqualifizierung in den ersten Monaten kann dies signifikant reduzieren.'
+    },
+
+    // === Einarbeitung (3–12 Monate) ===
     'Zugehörigkeit <12 Monate — Einarbeitungsphase': {
         title: 'Einarbeitung intensivieren',
         urgency: 'kritisch',
         measures: [
-            { action: 'Einarbeitungsstatus prüfen: Wurden alle Meilensteine des Einarbeitungsplans erreicht?', timeline: 'Sofort', responsible: 'Vertriebsdirektor' },
+            { action: 'Einarbeitungsstatus prüfen: Wurden alle Meilensteine erreicht?', timeline: 'Sofort', responsible: 'Vertriebsdirektor' },
             { action: 'Persönlichen Paten (erfahrener Vermittler) zuordnen — wöchentliche Tandem-Termine', timeline: 'Sofort', responsible: 'Regionaldirektion' },
-            { action: 'Kurzfristige Produktivitätsziele definieren (erste Abschlüsse, Bestandsübernahme, Cross-Selling)', timeline: '1 Woche', responsible: 'Vertriebscoach' },
-            { action: 'Bestandszuweisung / Lead-Paket sicherstellen — wirtschaftliche Grundlage in der Startphase', timeline: '1 Woche', responsible: 'Vertriebssteuerung' },
-            { action: 'Regelmäßiges Feedback-Gespräch (14-tägig) mit VD — Erwartungsabgleich und Motivation', timeline: 'Fortlaufend', responsible: 'Vertriebsdirektor' }
+            { action: 'Kurzfristige Produktivitätsziele definieren (erste Abschlüsse, Bestandsübernahme)', timeline: '1 Woche', responsible: 'Vertriebscoach' },
+            { action: 'Bestandszuweisung / Lead-Paket sicherstellen', timeline: '1 Woche', responsible: 'Vertriebssteuerung' },
+            { action: 'Regelmäßiges Feedback-Gespräch (14-tägig) mit VD', timeline: 'Fortlaufend', responsible: 'Vertriebsdirektor' }
         ],
-        rationale: 'Die ersten 12 Monate sind die kritischste Phase für neue AO-Vermittler. Branchenweit verlassen 30–40% der Neuzugänge die Organisation innerhalb des ersten Jahres. Eine strukturierte Einarbeitung mit Patenmodell kann die Frühfluktuation um bis zu 50% senken.'
+        rationale: 'Die ersten 12 Monate sind die kritischste Phase. Branchenweit verlassen 30–40% der Neuzugänge innerhalb des ersten Jahres. Strukturierte Einarbeitung mit Patenmodell kann die Frühfluktuation um bis zu 50% senken.'
     },
+    'Zufriedenheit letzte Mitarbeiterumfrage: unterdurchschnittlich': {
+        title: 'Unzufriedenheit adressieren',
+        urgency: 'hoch',
+        measures: [
+            { action: 'Vertrauliches Einzelgespräch: Konkrete Ursachen der Unzufriedenheit erfragen', timeline: 'Sofort', responsible: 'Vertriebsdirektor' },
+            { action: 'Quick Wins identifizieren: Welche Themen können sofort verbessert werden?', timeline: '1 Woche', responsible: 'Vertriebsdirektor' },
+            { action: 'Strukturelle Themen (Prozesse, Tools, Unterstützung) an die RD-Leitung eskalieren', timeline: '2 Wochen', responsible: 'Regionaldirektion' }
+        ],
+        rationale: 'Niedrige Zufriedenheit in Mitarbeiterbefragungen ist ein starker Prädiktor für Abgänge. Vermittler die ihre Zufriedenheit als „unterdurchschnittlich" bewerten, haben ein 3x höheres Abgangsrisiko in den folgenden 12 Monaten.'
+    },
+    'Einschätzung Führungskraft: Entwicklung unter Plan': {
+        title: 'Entwicklungsplan anpassen',
+        urgency: 'hoch',
+        measures: [
+            { action: 'Gemeinsame Standortbestimmung: Wo steht der Vermittler vs. Plan?', timeline: 'Sofort', responsible: 'Vertriebsdirektor' },
+            { action: 'Konkreten Aufholplan mit erreichbaren Zwischenzielen erarbeiten', timeline: '1 Woche', responsible: 'Vertriebscoach' },
+            { action: 'Zusätzliche Ressourcen bereitstellen: Leads, Coaching-Stunden, Tandem-Begleitung', timeline: '1 Woche', responsible: 'Regionaldirektion' }
+        ],
+        rationale: 'Die Führungskraft-Einschätzung ist der valideste Indikator. Wenn die Entwicklung als „unter Plan" eingestuft wird, ist proaktives Coaching entscheidend um den Vermittler auf Kurs zu bringen.'
+    },
+    'Bestandsaufbau hinter Erwartung': {
+        title: 'Bestandsaufbau beschleunigen',
+        urgency: 'hoch',
+        measures: [
+            { action: 'Bestandszuweisung aus auslaufenden Verträgen oder verwaisten Beständen prüfen', timeline: 'Sofort', responsible: 'Vertriebssteuerung' },
+            { action: 'Gezielte Akquisitionsstrategie mit dem Vermittler erarbeiten', timeline: '1 Woche', responsible: 'Vertriebscoach' },
+            { action: 'Lead-Pakete aus zentralem Marketing bereitstellen', timeline: '1 Woche', responsible: 'Marketing' }
+        ],
+        rationale: 'Ein zu langsamer Bestandsaufbau gefährdet die wirtschaftliche Grundlage. Ohne ausreichenden Bestand sinkt die Bindungsmotivation massiv.'
+    },
+    'Erste Stornierungen im jungen Bestand': {
+        title: 'Beratungsqualität sicherstellen',
+        urgency: 'mittel',
+        measures: [
+            { action: 'Stornierte Verträge analysieren: Beratungsfehler oder Kundenumstände?', timeline: 'Sofort', responsible: 'Vertriebscoach' },
+            { action: 'Nachschulung zur bedarfsgerechten Beratung (DIN 77230)', timeline: '2 Wochen', responsible: 'Vertriebscoach' },
+            { action: 'Begleitung bei den nächsten 3 Kundenterminen zur Qualitätssicherung', timeline: '2 Wochen', responsible: 'Pate/Mentor' }
+        ],
+        rationale: 'Frühe Stornierungen sind ein Warnsignal für die Beratungsqualität und belasten den Vermittler finanziell und psychologisch in einer ohnehin fragilen Phase.'
+    },
+    'Geringe Teilnahme an Teamveranstaltungen': {
+        title: 'Teamanbindung stärken',
+        urgency: 'mittel',
+        measures: [
+            { action: 'Persönlich einladen und Bedeutung der Vernetzung erklären', timeline: 'Sofort', responsible: 'Vertriebsdirektor' },
+            { action: 'Buddy-System: Festen Teamkollegen als Begleitung für Veranstaltungen zuweisen', timeline: '1 Woche', responsible: 'Regionaldirektion' },
+            { action: 'Veranstaltungsformat prüfen: Sind Zeiten und Inhalte für Neulinge geeignet?', timeline: '2 Wochen', responsible: 'Regionaldirektion' }
+        ],
+        rationale: 'Soziale Isolation ist einer der stärksten Abgangstreiber in den ersten 12 Monaten. Vermittler mit starker Teamanbindung haben eine 40% höhere Verbleibwahrscheinlichkeit.'
+    },
+    'Startfinanzierung / Zuschüsse laufen aus': {
+        title: 'Wirtschaftliche Übergangslösung prüfen',
+        urgency: 'hoch',
+        measures: [
+            { action: 'Aktuelle Ertragssituation bewerten: Kann der Vermittler sich selbst tragen?', timeline: 'Sofort', responsible: 'Vertriebssteuerung' },
+            { action: 'Verlängerung oder Anpassung der Startfinanzierung prüfen', timeline: '1 Woche', responsible: 'Vertriebsleitung' },
+            { action: 'Zusätzliche Ertragsquellen erschließen (Bestandsübernahmen, Cross-Selling-Potenziale)', timeline: '1 Woche', responsible: 'Vertriebscoach' }
+        ],
+        rationale: 'Das Auslaufen der Startfinanzierung ist ein kritischer Moment. Vermittler die zu diesem Zeitpunkt wirtschaftlich noch nicht tragfähig sind, verlassen die Organisation mit 70% Wahrscheinlichkeit.'
+    },
+    'Unregelmäßige CRM-Nutzung': {
+        title: 'Digitale Arbeitsweise etablieren',
+        urgency: 'mittel',
+        measures: [
+            { action: 'CRM-Nutzung analysieren: Wo hakt es? Schulungsbedarf ermitteln', timeline: '1 Woche', responsible: 'IT-Support' },
+            { action: 'Praxisnahes CRM-Training (kein Frontalunterricht) vor Ort durchführen', timeline: '2 Wochen', responsible: 'Digitalisierung' },
+            { action: 'Festen Ansprechpartner für CRM-Fragen zuweisen', timeline: '1 Woche', responsible: 'Vertriebsdirektor' }
+        ],
+        rationale: 'Unregelmäßige CRM-Nutzung deutet auf mangelnde Integration in die Arbeitsabläufe hin und ist ein Frühindikator für Disengagement.'
+    },
+
+    // === Aufbauphase (1–2 Jahre) ===
     'Zugehörigkeit <24 Monate — kritische Phase': {
         title: 'Stabilisierung in der Aufbauphase',
         urgency: 'hoch',
         measures: [
             { action: 'Standortbestimmung: Hat der Vermittler die Anlaufphase wirtschaftlich überstanden?', timeline: 'Sofort', responsible: 'Vertriebsdirektor' },
             { action: 'Vertriebscoaching intensivieren — Fokus auf eigenständige Kundenakquise und Bestandsaufbau', timeline: '1 Woche', responsible: 'Vertriebscoach' },
-            { action: 'Netzwerk-Integration: Einbindung in regionale Vertriebsgruppen und Erfahrungsaustausch', timeline: '2 Wochen', responsible: 'Regionaldirektion' },
-            { action: 'Entwicklungsplan für die nächsten 12 Monate gemeinsam erarbeiten — klare Perspektive aufzeigen', timeline: '2 Wochen', responsible: 'Vertriebsdirektor' }
+            { action: 'Netzwerk-Integration: Einbindung in regionale Vertriebsgruppen', timeline: '2 Wochen', responsible: 'Regionaldirektion' },
+            { action: 'Entwicklungsplan für die nächsten 12 Monate gemeinsam erarbeiten', timeline: '2 Wochen', responsible: 'Vertriebsdirektor' }
         ],
-        rationale: 'Insgesamt verlassen 60% der AO-Vermittler die Organisation innerhalb der ersten 2 Jahre. Vermittler in der Aufbauphase (12–24 Monate) brauchen gezielte Unterstützung beim Übergang von der Einarbeitung zur Eigenständigkeit. Fehlende Erfolgserlebnisse oder mangelnde Integration führen häufig zur Kündigung.'
+        rationale: '60% der AO-Vermittler verlassen die Organisation innerhalb der ersten 2 Jahre. Die Aufbauphase (12–24 Monate) erfordert den Übergang von Einarbeitung zur Eigenständigkeit.'
+    },
+    'Einschätzung Führungskraft: Leistungsentwicklung stagniert': {
+        title: 'Leistungsstagnation durchbrechen',
+        urgency: 'hoch',
+        measures: [
+            { action: 'Ursachenanalyse mit VD: Motivation, Können oder Rahmenbedingungen?', timeline: 'Sofort', responsible: 'Vertriebsdirektor' },
+            { action: 'Individuelles Intensiv-Coaching: 4 Wochen mit wöchentlicher Begleitung', timeline: '1 Woche', responsible: 'Vertriebscoach' },
+            { action: 'Neue Impulse setzen: Spartenrotation, Hospitationen, Best-Practice-Tandem', timeline: '2 Wochen', responsible: 'Regionaldirektion' }
+        ],
+        rationale: 'Stagnation in der Aufbauphase ist ein starkes Abwanderungssignal. Wenn die Führungskraft eine Stagnation erkennt, muss schnell gehandelt werden — sonst manifestiert sich die Unzufriedenheit.'
+    },
+    'Provisionsrückgang vs. Vorquartal': {
+        title: 'Provisionsrückgang stoppen',
+        urgency: 'hoch',
+        measures: [
+            { action: 'Ursachenanalyse: Welche Sparten/Kundengruppen sind rückläufig?', timeline: 'Sofort', responsible: 'Vertriebscoach' },
+            { action: 'Gezieltes Cross-Selling-Coaching für unterrepräsentierte Sparten', timeline: '1 Woche', responsible: 'Vertriebscoach' },
+            { action: 'Lead-Paket für Neukundenakquise bereitstellen', timeline: '1 Woche', responsible: 'Marketing' }
+        ],
+        rationale: 'Ein Provisionsrückgang in der Aufbauphase bedroht die wirtschaftliche Konsolidierung und ist häufig der Auslöser für einen Wechsel.'
+    },
+    'Bestandsgröße unter Peergroup-Niveau': {
+        title: 'Bestandsaufbau beschleunigen',
+        urgency: 'mittel',
+        measures: [
+            { action: 'Bestandsvergleich mit Peergroup aufbereiten: Wo liegt die Lücke?', timeline: '1 Woche', responsible: 'Vertriebssteuerung' },
+            { action: 'Verwaiste Bestände oder Lead-Pakete zur Überbrückung zuweisen', timeline: '1 Woche', responsible: 'Regionaldirektion' },
+            { action: 'Akquise-Strategie mit Fokus auf nachhaltigem Bestandsaufbau erarbeiten', timeline: '2 Wochen', responsible: 'Vertriebscoach' }
+        ],
+        rationale: 'Ein unterdurchschnittlicher Bestand nach 1–2 Jahren deutet auf strukturelle Probleme in der Akquise hin und erhöht das Abgangsrisiko durch wirtschaftlichen Druck.'
+    },
+    'Geringe Netzwerk-Integration in der Region': {
+        title: 'Regionale Vernetzung fördern',
+        urgency: 'mittel',
+        measures: [
+            { action: 'Einbindung in regionale Vertriebsgruppen und Erfahrungsaustausch', timeline: '1 Woche', responsible: 'Regionaldirektion' },
+            { action: 'Gemeinsame Veranstaltungen mit Kooperationspartnern (Makler, Banken, Steuerberater)', timeline: '4 Wochen', responsible: 'Vertriebsdirektor' },
+            { action: 'Lokale Marketinginitiative unterstützen (Sponsoring, Veranstaltungen)', timeline: '4 Wochen', responsible: 'Marketing' }
+        ],
+        rationale: 'Regionale Verwurzelung und ein stabiles lokales Netzwerk sind entscheidend für den langfristigen Vertriebserfolg und die Bindung an den Standort.'
+    },
+
+    // === Etablierte Vermittler (2–5 Jahre) und Senior (>5 Jahre) ===
+    'Einschätzung Führungskraft: Motivationsrückgang': {
+        title: 'Motivation und Perspektive erneuern',
+        urgency: 'hoch',
+        measures: [
+            { action: 'Vertrauensvolles Vier-Augen-Gespräch: Was belastet den Vermittler?', timeline: 'Sofort', responsible: 'Vertriebsdirektor' },
+            { action: 'Neue Impulse: Spezialisierung, Mentoring-Rolle, Projektverantwortung anbieten', timeline: '2 Wochen', responsible: 'Regionaldirektion' },
+            { action: 'Work-Life-Balance prüfen: Flexible Arbeitsmodelle oder Entlastung möglich?', timeline: '2 Wochen', responsible: 'Vertriebsdirektor' }
+        ],
+        rationale: 'Wenn die Führungskraft einen Motivationsrückgang erkennt, liegt häufig eine innere Kündigung vor. Ohne Intervention folgt der faktische Abgang innerhalb von 6–12 Monaten.'
+    },
+    'Monate seit letzter Beförderung': {
+        title: 'Karriereperspektive eröffnen',
+        urgency: 'hoch',
+        measures: [
+            { action: 'Persönliches Karrieregespräch innerhalb von 5 Werktagen', timeline: 'Sofort', responsible: 'Vertriebsdirektor' },
+            { action: 'Prüfung der Qualifikation zum Agenturleiter / Mehrfachagenten', timeline: '2 Wochen', responsible: 'Personalentwicklung' },
+            { action: 'Einbindung als Mentor für Nachwuchsvermittler', timeline: '4 Wochen', responsible: 'Regionaldirektion' }
+        ],
+        rationale: 'Fehlende Aufstiegsperspektive ist einer der stärksten Prädiktoren für Abgänge bei erfahrenen AO-Vermittlern. Ein proaktives Karrieregespräch kann die Abgangswahrscheinlichkeit um bis zu 35% senken.'
+    },
+    'Fehlende Karriereperspektive / Stagnation': {
+        title: 'Karriereperspektive eröffnen',
+        urgency: 'hoch',
+        measures: [
+            { action: 'Persönliches Karrieregespräch: Wo sieht sich der Vermittler in 3 Jahren?', timeline: 'Sofort', responsible: 'Vertriebsdirektor' },
+            { action: 'Entwicklungspfade aufzeigen: Agenturleitung, Spezialisierung, Mehrfachagent', timeline: '2 Wochen', responsible: 'Personalentwicklung' },
+            { action: 'Verantwortungsbereich erweitern: Mentoring, Projektleitung, Fachexpertise', timeline: '4 Wochen', responsible: 'Regionaldirektion' }
+        ],
+        rationale: 'Erfahrene Vermittler die keine Perspektive mehr sehen, sind besonders anfällig für Abwerbung durch Wettbewerber. Neue Herausforderungen und Anerkennung sind entscheidend.'
+    },
+    'Provisionsrückgang >20%': {
+        title: 'Vertriebsleistung stabilisieren',
+        urgency: 'hoch',
+        measures: [
+            { action: 'Individuelle Bestandsanalyse — Ursachen des Provisionsrückgangs identifizieren', timeline: 'Sofort', responsible: 'Vertriebscoach' },
+            { action: 'Gezieltes Cross-Selling-Coaching für unterrepräsentierte Sparten', timeline: '1 Woche', responsible: 'Vertriebscoach' },
+            { action: 'Temporäre Sonderprovisionsregelung / Bestandssicherungsprämie prüfen', timeline: '2 Wochen', responsible: 'Vertriebsleitung' },
+            { action: 'Lead-Paket aus zentralem Marketing bereitstellen', timeline: '1 Woche', responsible: 'Marketing' }
+        ],
+        rationale: 'Ein Provisionsrückgang >20% bedroht die wirtschaftliche Grundlage und ist häufig Auslöser für einen Wechsel zur Konkurrenz.'
+    },
+    'Stornoquote über Durchschnitt': {
+        title: 'Beratungsqualität stärken',
+        urgency: 'mittel',
+        measures: [
+            { action: 'Stornogründe-Analyse der letzten 6 Monate — Muster identifizieren', timeline: 'Sofort', responsible: 'Qualitätsmanagement' },
+            { action: 'Bedarfsanalyse-Workshop: Kundenberatung nach DIN 77230 sicherstellen', timeline: '2 Wochen', responsible: 'Vertriebscoach' },
+            { action: 'Bestandspflegeprogramm: automatisierte Kontaktpunkte für Bestandskunden', timeline: '4 Wochen', responsible: 'CRM-Team' }
+        ],
+        rationale: 'Hohe Stornoquoten belasten den Vermittler finanziell und gefährden das Vertrauensverhältnis. Gezielte Qualifizierung kann die Stornoquote um 20–30% senken.'
+    },
+    'Zielerfüllung <70%': {
+        title: 'Vertriebsperformance steigern',
+        urgency: 'hoch',
+        measures: [
+            { action: 'Wöchentliches Performance-Coaching mit konkreten Aktivitätenzielen', timeline: 'Sofort', responsible: 'Vertriebscoach' },
+            { action: 'Best-Practice-Sharing: Tandem-Bildung mit Top-Performer', timeline: '1 Woche', responsible: 'Regionaldirektion' },
+            { action: 'Überprüfung der Gebietszuordnung — ggf. Marktpotenzial-Analyse', timeline: '2 Wochen', responsible: 'Vertriebssteuerung' }
+        ],
+        rationale: 'Dauerhafte Zielunterschreitung führt zu wirtschaftlichem Druck und Frustration. Individuelle Unterstützung kann den Vermittler in 60% der Fälle wieder auf Kurs bringen.'
+    },
+    'Engagement-Score rückläufig': {
+        title: 'Engagement reaktivieren',
+        urgency: 'mittel',
+        measures: [
+            { action: 'Persönliches Gespräch: Ursachen für Motivationsverlust erfragen', timeline: 'Sofort', responsible: 'Vertriebsdirektor' },
+            { action: 'Individuelle Zielsetzung gemeinsam überarbeiten — erreichbare Etappenziele', timeline: '1 Woche', responsible: 'Vertriebsdirektor' },
+            { action: 'Einladung zu Vertriebs-Events, Wettbewerben oder Best-Practice-Austausch', timeline: '2 Wochen', responsible: 'Regionaldirektion' }
+        ],
+        rationale: 'Rückläufiges Engagement geht einem Abgang häufig 3–6 Monate voraus. Frühzeitiges Ansprechen kann die Bindung signifikant erhöhen.'
+    },
+    'CRM-Aktivität rückläufig': {
+        title: 'Digitale Vertriebsunterstützung verbessern',
+        urgency: 'mittel',
+        measures: [
+            { action: 'CRM-Nutzungsanalyse: Schulungsbedarf ermitteln', timeline: '1 Woche', responsible: 'Digitalisierung' },
+            { action: 'Individuelles CRM-Training vor Ort mit Praxisbezug', timeline: '2 Wochen', responsible: 'IT-Support' },
+            { action: 'Workflow-Vereinfachung im CRM prüfen — Hürden abbauen', timeline: '4 Wochen', responsible: 'Digitalisierung' }
+        ],
+        rationale: 'Rückläufige CRM-Aktivität korreliert stark mit nachlassendem Engagement und sinkender Produktivität.'
+    },
+    'IDD-Weiterbildung unvollständig': {
+        title: 'Weiterbildungspflicht sicherstellen',
+        urgency: 'mittel',
+        measures: [
+            { action: 'Aktuellen Weiterbildungsstand prüfen und fehlende Stunden identifizieren', timeline: 'Sofort', responsible: 'Vertriebsassistenz' },
+            { action: 'Individuellen Weiterbildungsplan erstellen', timeline: '1 Woche', responsible: 'Personalentwicklung' },
+            { action: 'Erinnerungssystem aktivieren', timeline: '1 Woche', responsible: 'Vertriebsassistenz' }
+        ],
+        rationale: 'Die IDD-Weiterbildungspflicht (15 Stunden/Jahr) ist gesetzlich vorgeschrieben. Unvollständige Weiterbildung gefährdet die Vermittlerzulassung.'
+    },
+    'Keine freiwillige Weiterbildung seit 18 Mon.': {
+        title: 'Entwicklungsbereitschaft fördern',
+        urgency: 'niedrig',
+        measures: [
+            { action: 'Attraktive Weiterbildungsangebote vorstellen (Fachwirt, Spezialistenmodule)', timeline: '2 Wochen', responsible: 'Personalentwicklung' },
+            { action: 'Finanzielle Förderung oder Provisionsfreistellung für Qualifizierung anbieten', timeline: '4 Wochen', responsible: 'Vertriebsleitung' }
+        ],
+        rationale: 'Fehlende Lernbereitschaft über längere Zeit kann auf innere Kündigung hindeuten. Zielgerichtete Angebote mit wirtschaftlichem Nutzen erhöhen die Akzeptanz.'
+    },
+    'Compa-Ratio <0.80': {
+        title: 'Vergütungssituation prüfen',
+        urgency: 'hoch',
+        measures: [
+            { action: 'Provisionssituation im Vergleich zum Markt und Peergroup analysieren', timeline: 'Sofort', responsible: 'Vertriebssteuerung' },
+            { action: 'Bestandsumverteilung oder zusätzliche Vertriebsgebiete prüfen', timeline: '2 Wochen', responsible: 'Regionaldirektion' },
+            { action: 'Gespräch über Sonderleistungen: Büromiete, Technik, Marketingbudget', timeline: '2 Wochen', responsible: 'Vertriebsdirektor' }
+        ],
+        rationale: 'Eine Compa-Ratio unter 0,80 bedeutet deutlich unter Marktdurchschnitt — einer der stärksten Abwanderungstreiber.'
+    },
+    'Team-Abgänge (Ansteckungseffekt)': {
+        title: 'Ansteckungseffekt eindämmen',
+        urgency: 'hoch',
+        measures: [
+            { action: 'Sofortiges Stabilisierungsgespräch mit allen betroffenen Teammitgliedern', timeline: 'Sofort', responsible: 'Vertriebsdirektor' },
+            { action: 'Teambuilding-Maßnahme organisieren', timeline: '1 Woche', responsible: 'Regionaldirektion' },
+            { action: 'Abgangsursache transparent kommunizieren (soweit möglich)', timeline: 'Sofort', responsible: 'Vertriebsdirektor' },
+            { action: 'Erhöhte Kontaktfrequenz für die Dauer des Beobachtungsfensters', timeline: 'Fortlaufend', responsible: 'Vertriebsdirektor' }
+        ],
+        rationale: 'Nach Teamabgängen steigt die Abgangswahrscheinlichkeit der verbleibenden Mitglieder um 7–25%. Proaktive Kommunikation im 135-Tage-Fenster ist entscheidend.'
+    },
+    'Manager-Wechsel <180 Tage': {
+        title: 'Beziehungsaufbau nach Führungswechsel',
+        urgency: 'mittel',
+        measures: [
+            { action: 'Neuer VD: Kennenlern-Besuche vor Ort mit allen Vermittlern', timeline: 'Sofort', responsible: 'Vertriebsdirektor' },
+            { action: 'Individuelle Erwartungsgespräche: Arbeitsweise, Wünsche, Sorgen', timeline: '2 Wochen', responsible: 'Vertriebsdirektor' },
+            { action: 'Stabilisierungsphase: Keine großen strukturellen Veränderungen in den ersten 6 Monaten', timeline: 'Fortlaufend', responsible: 'Regionaldirektion' }
+        ],
+        rationale: 'Ein Führungswechsel ist ein kritischer Moment. Innerhalb der ersten 180 Tage ist die Abgangswahrscheinlichkeit um 15–20% erhöht.'
+    },
+    'Wettbewerber-Recruiting aktiv': {
+        title: 'Abwerbung abwehren',
+        urgency: 'kritisch',
+        measures: [
+            { action: 'Vertrauliches Gespräch: Wertschätzung ausdrücken und Zukunftsperspektive aufzeigen', timeline: 'Sofort', responsible: 'Vertriebsdirektor' },
+            { action: 'Retention-Bonus oder Bindungsprämie prüfen', timeline: '1 Woche', responsible: 'Vertriebsleitung' },
+            { action: 'Exklusive Entwicklungsmöglichkeiten aufzeigen (Agenturleitung, Spezialistenrolle)', timeline: '1 Woche', responsible: 'Vertriebsdirektor' }
+        ],
+        rationale: 'Aktives Wettbewerber-Recruiting signalisiert akute Abgangsgefahr. Ohne schnelle Intervention beträgt die Abgangswahrscheinlichkeit innerhalb von 90 Tagen über 50%.'
+    },
+    'Wettbewerber-Recruiting aktiv (Branche)': {
+        title: 'Abwerbungsgefahr in der Branche begegnen',
+        urgency: 'hoch',
+        measures: [
+            { action: 'Marktbeobachtung: Welche Wettbewerber rekrutieren aktiv in der Region?', timeline: 'Sofort', responsible: 'Regionaldirektion' },
+            { action: 'Präventiv-Gespräch mit dem Vermittler: Bindungsfaktoren stärken', timeline: '1 Woche', responsible: 'Vertriebsdirektor' },
+            { action: 'Vergleich der eigenen Konditionen mit Wettbewerber-Angeboten', timeline: '2 Wochen', responsible: 'Vertriebssteuerung' }
+        ],
+        rationale: 'In Phasen aktiver Wettbewerber-Abwerbung sind besonders neue Vermittler gefährdet, die noch keine starke Bindung aufgebaut haben.'
     }
 };
 

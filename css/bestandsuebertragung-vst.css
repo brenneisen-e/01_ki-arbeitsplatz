@@ -6086,6 +6086,88 @@ body {
     background: #d1d5db;
 }
 
+/* -- Deliverables section -- */
+.bestand-page .slide-plan-deliverables {
+    margin-top: 1.25rem;
+}
+
+.bestand-page .slide-plan-del-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+}
+
+.bestand-page .slide-plan-del-card {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    padding: 0.75rem;
+    border-left: 3px solid #e5e7eb;
+}
+
+.bestand-page .slide-plan-del-1 { border-left-color: #86BC25; }
+.bestand-page .slide-plan-del-2 { border-left-color: #046A38; }
+.bestand-page .slide-plan-del-3 { border-left-color: #0D8390; }
+
+.bestand-page .slide-plan-del-head {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-bottom: 0.5rem;
+}
+
+.bestand-page .slide-plan-del-head strong {
+    font-size: 0.89rem;
+    color: #1f2937;
+}
+
+.bestand-page .slide-plan-del-head small {
+    font-size: 0.89rem;
+    color: #97999B;
+    margin-left: auto;
+}
+
+.bestand-page .slide-plan-del-card ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.bestand-page .slide-plan-del-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding: 0.3rem 0;
+    font-size: 0.89rem;
+    color: #53565A;
+    line-height: 1.4;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.bestand-page .slide-plan-del-item:last-child {
+    border-bottom: none;
+}
+
+.bestand-page .slide-plan-del-id {
+    flex-shrink: 0;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: white;
+    background: #97999B;
+    border-radius: 3px;
+    padding: 0.1rem 0.35rem;
+    margin-top: 0.1rem;
+    letter-spacing: 0.02em;
+}
+
+.bestand-page .slide-plan-del-1 .slide-plan-del-id { background: #86BC25; }
+.bestand-page .slide-plan-del-2 .slide-plan-del-id { background: #046A38; }
+.bestand-page .slide-plan-del-3 .slide-plan-del-id { background: #0D8390; }
+
+.bestand-page .slide-plan-del-item strong {
+    color: #1f2937;
+}
+
 /* -- Staffing section -- */
 .bestand-page .slide-plan-staffing {
     display: grid;
@@ -6195,6 +6277,9 @@ body {
         grid-template-columns: 1fr;
     }
     .bestand-page .slide-plan-phases {
+        grid-template-columns: 1fr;
+    }
+    .bestand-page .slide-plan-del-grid {
         grid-template-columns: 1fr;
     }
     .bestand-page .slide-plan-staffing {

@@ -9,7 +9,7 @@
  * P = PMO Toolbox
  * R = Risikoscoring
  * T = Bestandsübertragung (Portfolio Transfer)
- * C = CV Scanner (Bewerbermanagement)
+ * H = HR Pipeline (Recruiting & Bewerbermanagement)
  */
 
 const PageIDTracker = {
@@ -84,10 +84,10 @@ const PageIDTracker = {
             'slide-plan': 'T-12'           // Slide Projektplan
         },
 
-        // C - CV Scanner Module
-        'cv-scanner': {
-            'bewerber': 'C-01',             // Bewerber-Portal
-            'arbeitgeber': 'C-02'           // Recruiting Dashboard
+        // H - HR Pipeline Module
+        'hr-pipeline': {
+            'bewerber': 'H-01',             // Bewerber-Portal
+            'arbeitgeber': 'H-02'           // Recruiting Dashboard
         }
     },
 
@@ -197,7 +197,7 @@ const PageIDTracker = {
             { id: 'pmoToolboxModule', name: 'pmo-toolbox' },
             { id: 'risikoscoringModule', name: 'risikoscoring' },
             { id: 'bestandsuebertragungModule', name: 'bestandsuebertragung' },
-            { id: 'cvScannerModule', name: 'cv-scanner' }
+            { id: 'hrPipelineModule', name: 'hr-pipeline' }
         ];
 
         for (const module of modules) {
@@ -235,6 +235,8 @@ const PageIDTracker = {
                 return this.getBestandsuebertragungView();
             case 'cv-scanner':
                 return this.getCVScannerView();
+            case 'hr-pipeline':
+                return this.getHRPipelineView();
             default:
                 return 'landing';
         }
@@ -380,6 +382,14 @@ const PageIDTracker = {
 
     getCVScannerView() {
         const arbeitgeberMode = document.getElementById('cvArbeitgeberMode');
+        if (arbeitgeberMode && arbeitgeberMode.classList.contains('active')) {
+            return 'arbeitgeber';
+        }
+        return 'bewerber';
+    },
+
+    getHRPipelineView() {
+        const arbeitgeberMode = document.getElementById('hpArbeitgeberMode');
         if (arbeitgeberMode && arbeitgeberMode.classList.contains('active')) {
             return 'arbeitgeber';
         }

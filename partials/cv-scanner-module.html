@@ -119,6 +119,17 @@
 
         <!-- Results Section -->
         <div id="cvResultsSection" class="cv-results-section">
+            <!-- Results Toolbar -->
+            <div class="cv-results-toolbar" style="display: flex; justify-content: flex-end; margin-bottom: var(--space-4);">
+                <button class="back-button" onclick="resetCVBewerber()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                        <line x1="19" y1="12" x2="5" y2="12"></line>
+                        <polyline points="12 19 5 12 12 5"></polyline>
+                    </svg>
+                    Neuen Lebenslauf hochladen
+                </button>
+            </div>
+
             <!-- Profile Card -->
             <div class="cv-profile-card" id="cvProfileCard">
                 <!-- Filled dynamically -->
@@ -156,13 +167,6 @@
                 <!-- Job match cards filled dynamically -->
             </div>
 
-            <button class="back-button" style="margin-top: var(--space-6);" onclick="resetCVBewerber()">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
-                    <line x1="19" y1="12" x2="5" y2="12"></line>
-                    <polyline points="12 19 5 12 12 5"></polyline>
-                </svg>
-                Neuen Lebenslauf hochladen
-            </button>
         </div>
     </div>
 
@@ -260,6 +264,38 @@
             </div>
         </div>
     </div>
+
+    <!-- ===========================
+         JOB DETAIL OVERLAY (Bewerber)
+         =========================== -->
+    <div class="cv-detail-overlay" id="cvJobDetailOverlay" onclick="if(event.target===this)closeCVJobDetail()">
+        <div class="cv-detail-panel">
+            <div class="cv-detail-header">
+                <h3 id="cvJobDetailTitle">Stellendetails</h3>
+                <button class="cv-detail-close" onclick="closeCVJobDetail()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="cv-detail-body" id="cvJobDetailBody">
+                <!-- Filled dynamically -->
+            </div>
+            <div class="cv-detail-actions">
+                <button class="cv-action-btn cv-apply-btn" onclick="closeCVJobDetail(); showCVToast('Bewerbung wurde erfolgreich eingereicht!', 'success')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 11.08V12a10 10 0 11-5.93-9.14"></path>
+                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                    </svg>
+                    Jetzt bewerben
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="cvToastContainer" class="cv-toast-container"></div>
 
     <!-- ===========================
          CHATBOT

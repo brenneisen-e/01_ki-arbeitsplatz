@@ -11,9 +11,7 @@
 
 - Unterstützung bei der Erfassung und Strukturierung der fachlichen Anforderungen zur Demaskierung des Blindpools, inkl. Ableitung je Workstream
 
-- Unterstützung bei der Erstellung technischer Konzepte für die gegenseitige Stammdatenanlage und -spiegelung in beiden Systemwelten
-
-- Unterstützung bei der Erstellung technischer Konzepte für Anpassungen an SSTs, Servicelayer und Umsystemen
+- Unterstützung bei der Erstellung technischer Konzepte für Stammdatenanlage, -spiegelung sowie Anpassungen an SSTs, Servicelayer und Umsystemen
 
 - Unterstützung bei der Erstellung eines Meilensteinplans inkl. MVP-Schnitt zum 30.06.2026 mit Back-to-Front-Planung
 

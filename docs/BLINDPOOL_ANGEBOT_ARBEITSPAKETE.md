@@ -43,17 +43,15 @@
 
 ### Deloitte Tätigkeiten & Unterstützung
 
-**Simulation & Kalibrierung:**
+**Steuerung:**
 
-- Unterstützung bei der Datenerhebung als Basis für die Simulation der Auswirkungen der Blindpool-Demaskierung auf die Vergütungsströme beider ex-Vertriebe
+- Unterstützung bei der operativen Gesamtprojektsteuerung der Taskforce Blindpool, inkl. Workstream-übergreifender Koordination und Gremienarbeit (SteerCo, Taskforceleitung)
 
-- Unterstützung beim Aufbau und Etablieren eines toolbasierten Simulationsmodells zur Abbildung der veränderten Provisionsprozesse nach Demaskierung (individuelle Vermittlernummern statt Sammelvermittler-Nr.)
+- Unterstützung beim Sicherstellen des notwendigen Projektfortschritts entlang des Meilensteinplans, inkl. Tracking und Management des kritischen Pfads bis MVP 30.06.2026
 
-- Unterstützung bei der Simulation der Vergütungselemente AP/FP Komposit unter Berücksichtigung der neuen Blindpool-Logik (0%-Provision auf indiv. Allis-Nr., Differenzprovision auf BK-Allis-Nr., Generalvertreterlogik)
+- Informationsbereitstellung für Gremienunterlagen und Entscheidungsvorlagen
 
-- Unterstützung bei der Kalibrierung der Überleitungssätze entsprechend der Reversestufen für die demaskierten Vermittlerstrukturen
-
-- Selektive Durchführung von segmentspezifischen Sonderanalysen (SHUK, Leben, Kranken) zur Überprüfung der Auswirkungen der Demaskierung auf die Segmentkalkulation
+- Inhaltliche Unterstützung bei der Vorbereitung von Gremien (SteerCo, Taskforceleitung)
 
 **Test- & Einführungsmanagement:**
 
@@ -67,35 +65,17 @@
 
 - Unterstützung bei der Vorbereitung und Durchführung von Abnahmetests (Business QA) mit den Fachbereichen beider ex-Vertriebe
 
-**Steuerung & Reporting:**
-
-- Informationsbereitstellung für Gremienunterlagen und Verhandlungen mit der Interessenvertretung
-
-- Inhaltliche Unterstützung bei der Vorbereitung von Gremien (SteerCo, Taskforceleitung)
-
-- Statusreporting und Tracking des kritischen Pfads bis MVP 30.06.2026
-
-- Optional: Entwicklung eines Umstellungstools und Begleitung der Verhandlungen mit der Interessenvertretung
-
 ### BG Beistellleistungen
-
-- Bereitstellung nötiger Zahlen und Daten als Basis für die Simulation, bestmöglich fester Ansprechpartner in der Vertriebssteuerung
-
-- Verfügbarkeit von historischen Produktionsdaten auf Vermittlerebene aus beiden Systemwelten (FS-ICM und 3PAllis)
-
-- Bereitstellung von Aktuaren aus allen Unternehmensbereichen, insb. SHUK, zur Validierung der Simulationsergebnisse
-
-- Abnahme des Simulationstools durch BG Aktuariat und Vertriebssteuerung
-
-- Fachliche Vorgaben und Entscheidungen zur Angleichung der Provisionsmodelle im Kontext der Demaskierung
-
-- Bereitstellung eines Verhandlungsteams zur Beratung der Veränderungen mit dem Interessensverband
 
 - Bereitstellung von Testumgebungen in beiden Systemwelten (FS-ICM und 3PAllis) inkl. repräsentativer Testdaten für Vermittler-Stammdaten und Provisionsfälle
 
 - Verfügbarkeit von fachlichen Testern aus beiden ex-Vertrieben mit Kenntnis der jeweiligen Provisionsprozesse und Umsysteme
 
+- Bereitstellung von Akzeptanzkriterien und fachlichen Abnahmeentscheidungen durch die verantwortlichen Fachbereiche je Workstream
+
 - Sicherstellung der Verfügbarkeit der IT-Verantwortlichen für SST, Servicelayer und Umsysteme während der Testphasen
+
+- Bereitstellung aktueller Vermittler-Stammdaten und Hierarchiedaten aus adesso Partner, FS-ICM und 3PA als Basis für Testfälle
 
 - Zeitnahe Klärung und Entscheidung bei im Test identifizierten fachlichen oder technischen Abweichungen
 

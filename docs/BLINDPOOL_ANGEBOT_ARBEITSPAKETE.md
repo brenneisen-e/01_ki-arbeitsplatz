@@ -39,7 +39,7 @@
 
 ---
 
-## B. Test und Steuerung
+## B. Steuerung und Test
 
 ### Deloitte Tätigkeiten & Unterstützung
 

@@ -792,7 +792,7 @@ function getAgenturChatResponse(question) {
 
         // Renewals
         if (q.includes('renewal') || q.includes('q2') || q.includes('ablaufend')) {
-            return `<strong>Anstehende Renewals (Gewerbemakler Rhein-Main):</strong><br><br>
+            return `<strong>Anstehende Renewals (Niederlassung Rhein-Main):</strong><br><br>
             <strong>Handlungsbedarf:</strong><br><br>
             <div class="chat-customer-item">
                 ${mrhCustomerBtn('Rhein-Main Maschinenbau', 'MRH-001')} Betriebshaftpflicht — 01.04.2026<br>
@@ -815,13 +815,12 @@ function getAgenturChatResponse(question) {
             ${mrhFollowUp}`;
         }
 
-        // Ecclesia vs MRH
+        // Ecclesia vs Gewerbemakler
         if (q.includes('ecclesia') || q.includes('unterschied') || q.includes('vergleich')) {
             return `<strong>Gewerbemakler vs. Ecclesia — Kernunterschiede:</strong><br><br>
-            <strong>Geschäftsmodell:</strong> Gewerbemakler hat 3 Säulen (Insurance + Benefits + Finance) vs. Ecclesia rein Versicherung<br><br>
-            <strong>Kundenbasis:</strong> Gewerbemakler bedient B2B + gehobene Privatkunden (500-2.000 Kunden, 20+ Specialties), Ecclesia nur B2B (80-250 Institutionen, 5 Segmente)<br><br>
-            <strong>KPI-Logik:</strong> Gewerbemakler trackt zusätzlich bAV-Durchdringung, Finance-Cross-Sell und Acquisition-Pipeline<br><br>
-            <strong>Eigentümer:</strong> 51% Gründer + 49% PE (AnaCap/TA Associates) vs. kirchlich-ökumenisch
+            <strong>Kundenbasis:</strong> Gewerbemakler bedient B2B + gehobene Privatkunden (500–2.000 Kunden, 20+ Specialties), Ecclesia nur B2B (80–250 Institutionen, 5 Segmente)<br><br>
+            <strong>Schwerpunkte:</strong> Gewerbemakler branchenübergreifend (Industrie, Real Estate, Mobilität), Ecclesia fokussiert auf Sozialwirtschaft und Kirche<br><br>
+            <strong>Eigentümerstruktur:</strong> PE-gestützt vs. kirchlich-ökumenisch
             ${mrhFollowUp}`;
         }
 
@@ -853,25 +852,23 @@ function getAgenturChatResponse(question) {
             ${mrhFollowUp}`;
         }
 
-        // Kreditversicherung
-        if (q.includes('kredit') || q.includes('finance')) {
-            return `<strong>Finance-Portfolio Übersicht:</strong><br><br>
-            Gesamt-Finance-Courtage: <strong>2,8 Mio. €</strong> (+22% YoY)<br><br>
-            <strong>Kreditversicherung:</strong> 3 Mandanten (Euler Hermes, Coface, Atradius)<br>
-            <strong>Leasing:</strong> 19,2 Mio. € Volumen über FM LeasingPartner<br>
-            <strong>Avale:</strong> 12,7 Mio. € (Nordpark + Hessenbau)<br>
-            <strong>Factoring:</strong> TechParts über BNP Paribas, 2,1 Mio./Mon.
+        // Bestand / Portfolio
+        if (q.includes('kredit') || q.includes('finance') || q.includes('bestand')) {
+            return `<strong>Bestandsübersicht Niederlassung Rhein-Main:</strong><br><br>
+            Gesamtbestand: <strong>42,3 Mio. €</strong> (+6,1% YoY)<br><br>
+            <strong>Top-Kunden:</strong><br>
+            ${mrhCustomerBtn('Nordpark Projektentwicklung', 'MRH-003')} 680.000 € Prämie<br>
+            ${mrhCustomerBtn('Rhein-Main Maschinenbau', 'MRH-001')} 420.000 € Prämie<br>
+            ${mrhCustomerBtn('Rhein-Main Verkehr', 'MRH-009')} 380.000 € Prämie
             ${mrhFollowUp}`;
         }
 
         // Fallback MRH
         return `Ich kann Ihnen als Gewerbemakler 360°-Assistent bei folgenden Themen helfen:
-            <br>• Specialty-Wissen (20+ Branchen)
-            <br>• bAV-Beratung & Durchdringung
-            <br>• Kreditversicherung & Finance
-            <br>• W&I/M&A-Policen
-            <br>• Cross-Sell zwischen Insurance, Benefits & Finance
-            <br>• Renewal-Management
+            <br>• Kundenübersicht und Bestandsanalysen
+            <br>• Renewal-Management und Fristen
+            <br>• Deckungslücken und Potentiale
+            <br>• Schadenquoten und Risikobewertung
             ${mrhFollowUp}`;
     }
 

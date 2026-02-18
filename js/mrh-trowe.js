@@ -472,7 +472,7 @@ function applyMRHModus() {
     if (privatKpis) privatKpis.style.display = 'none';
     if (maklerKpis) maklerKpis.style.display = 'none';
     if (mrhKpis) mrhKpis.style.display = '';
-    if (mrhBadges) mrhBadges.style.display = 'flex';
+    if (mrhBadges) mrhBadges.style.display = 'none';
 
     // Tabs: hide AO + Makler, show MRH
     var headerTabs = document.querySelector('.agentur-page-new .agentur-header-tabs');
@@ -508,12 +508,7 @@ function applyMRHModus() {
     var subtitleId = document.getElementById('agenturIdHeader');
     if (subtitleId) {
         var subtitleDiv = subtitleId.parentElement;
-        subtitleDiv.innerHTML = '<span id="agenturIdHeader">Gewerbemakler</span>' +
-            '<div class="mrh-subheadline" id="mrhSubheadline">' +
-                '<span class="mrh-subheadline-tag">Insurance</span>' +
-                '<span class="mrh-subheadline-tag">Benefits</span>' +
-                '<span class="mrh-subheadline-tag">Finance</span>' +
-            '</div>';
+        subtitleDiv.innerHTML = '<span id="agenturIdHeader">Gewerbemakler 360°</span>';
     }
 
     // Photo: modern office icon with 360° badge
@@ -531,13 +526,11 @@ function applyMRHModus() {
         chatBody.innerHTML =
             '<div class="agentur-chat-welcome">' +
                 '<h4>Gewerbemakler 360° Assistent</h4>' +
-                '<p>Fragen Sie mich zu Kunden, Specialties, bAV, Finance oder Cross-Sell.</p>' +
+                '<p>Fragen Sie mich zu Kunden, Renewals, Bestand oder Potentialen.</p>' +
                 '<div class="welcome-examples">' +
-                    '<button class="example-btn" onclick="askAgenturQuestion(\'Welche Kunden haben Potential für bAV?\')">bAV-Potential</button>' +
                     '<button class="example-btn" onclick="askAgenturQuestion(\'Welche Renewals stehen im Q2 an?\')">Q2 Renewals</button>' +
                     '<button class="example-btn" onclick="showNeuePotentiale()">Neue Potentiale</button>' +
-                    '<button class="example-btn" onclick="askAgenturQuestion(\'Wie ist die Cross-Sell-Pipeline?\')">Cross-Sell Pipeline</button>' +
-                    '<button class="example-btn" onclick="askAgenturQuestion(\'Zeige Finance-Portfolio\')">Finance-Portfolio</button>' +
+                    '<button class="example-btn" onclick="askAgenturQuestion(\'Zeige Bestandsübersicht\')">Bestand</button>' +
                 '</div>' +
             '</div>';
     }
@@ -639,57 +632,29 @@ function renderMRHUebersicht() {
     // Top 5 by total (insurance)
     var topKunden = mrhKunden.slice().sort(function(a, b) { return b.insurance.praemie - a.insurance.praemie; }).slice(0, 5);
     var topKundenRows = topKunden.map(function(k, i) {
-        var saeulenTags = '<span class="mrh-saeulen-tag insurance">I</span>';
-        if (k.benefits.aktiv) saeulenTags += '<span class="mrh-saeulen-tag benefits">B</span>';
-        if (k.finance.aktiv) saeulenTags += '<span class="mrh-saeulen-tag finance">F</span>';
         return '<tr class="clickable-row" onclick="openMRHKundenDetail(\'' + k.id + '\')">' +
             '<td><strong>' + (i+1) + '.</strong></td>' +
-            '<td><strong>' + k.name + '</strong><br><span style="font-size:11px;color:#64748b">' + k.specialty + '</span></td>' +
-            '<td>' + saeulenTags + '</td>' +
+            '<td><strong>' + k.name + '</strong></td>' +
+            '<td><span class="mrh-specialty-badge ' + k.specialtyClass + '" style="font-size:11px">' + k.specialtyIcon + ' ' + k.specialty + '</span></td>' +
             '<td class="text-right"><strong>' + k.insurance.praemieDisplay + '</strong></td>' +
             '</tr>';
     }).join('');
 
     container.innerHTML =
-        '<div class="mrh-drei-saeulen-grid">' +
-            '<div class="mrh-saeulen-card insurance">' +
-                '<div class="mrh-saeulen-card-header"><div class="saeulen-icon insurance"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><h4>Insurance</h4></div>' +
-                '<div class="mrh-saeulen-metric"><span class="metric-label">Bestandsprämie</span><span class="metric-value">42,3 Mio. €</span></div>' +
-                '<div class="mrh-saeulen-metric"><span class="metric-label">Neugeschäft YTD</span><span class="metric-value">8,7 Mio. €</span></div>' +
-                '<div class="mrh-saeulen-metric"><span class="metric-label">Kunden</span><span class="metric-value">' + mrhKunden.length + '</span></div>' +
-                '<div class="mrh-saeulen-metric"><span class="metric-label">Ø Verträge/Kunde</span><span class="metric-value">' + Math.round(mrhKunden.reduce(function(s,k){return s+k.insurance.vertraege;},0)/mrhKunden.length) + '</span></div>' +
-            '</div>' +
-            '<div class="mrh-saeulen-card benefits">' +
-                '<div class="mrh-saeulen-card-header"><div class="saeulen-icon benefits"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M12 10l4-4"/></svg></div><h4>Benefits & Pensions</h4></div>' +
-                '<div class="mrh-saeulen-metric"><span class="metric-label">bAV-Volumen</span><span class="metric-value">12,1 Mio. €</span></div>' +
-                '<div class="mrh-saeulen-metric"><span class="metric-label">Durchdringung B2B</span><span class="metric-value">38% (Ziel: 55%)</span></div>' +
-                '<div class="mrh-saeulen-metric"><span class="metric-label">Kunden mit bAV</span><span class="metric-value">' + bavKunden.length + ' / ' + b2bKunden.length + '</span></div>' +
-                '<div class="mrh-saeulen-metric"><span class="metric-label">P·LIVE aktiv</span><span class="metric-value">3 Mandanten</span></div>' +
-            '</div>' +
-            '<div class="mrh-saeulen-card finance">' +
-                '<div class="mrh-saeulen-card-header"><div class="saeulen-icon finance"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div><h4>Finance</h4></div>' +
-                '<div class="mrh-saeulen-metric"><span class="metric-label">Finance-Courtage</span><span class="metric-value">2,8 Mio. €</span></div>' +
-                '<div class="mrh-saeulen-metric"><span class="metric-label">Kunden mit Finance</span><span class="metric-value">' + financeKunden.length + ' / ' + mrhKunden.length + '</span></div>' +
-                '<div class="mrh-saeulen-metric"><span class="metric-label">Leasing-Volumen</span><span class="metric-value">19,2 Mio. €</span></div>' +
-                '<div class="mrh-saeulen-metric"><span class="metric-label">Avale/Bürgschaften</span><span class="metric-value">12,7 Mio. €</span></div>' +
-            '</div>' +
-        '</div>' +
         '<div class="mk-uebersicht-grid">' +
             '<div class="mk-uebersicht-main">' +
                 '<div class="uebersicht-card">' +
-                    '<div class="uebersicht-card-header"><h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg> Top-Kunden nach Gesamtcourtage</h3>' +
-                        '<a href="#" class="link-alle-anzeigen" onclick="showMRHTab(\'kunden\'); return false;">Alle ' + mrhKunden.length + ' Kunden →</a>' +
+                    '<div class="uebersicht-card-header"><h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg> Top-Kunden nach Prämie</h3>' +
+                        '<a href="#" class="link-alle-anzeigen" onclick="showMRHTab(\'kunden\'); return false;">Alle ' + mrhKunden.length + ' Kunden &rarr;</a>' +
                     '</div>' +
-                    '<table class="makler-detail-table"><thead><tr><th>#</th><th>Kunde</th><th>Säulen</th><th class="text-right">Insurance-Prämie</th></tr></thead><tbody>' + topKundenRows + '</tbody></table>' +
+                    '<table class="makler-detail-table"><thead><tr><th>#</th><th>Kunde</th><th>Specialty</th><th class="text-right">Prämie</th></tr></thead><tbody>' + topKundenRows + '</tbody></table>' +
                 '</div>' +
                 '<div class="uebersicht-card">' +
-                    '<div class="uebersicht-card-header"><h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M16 3h5v5M4 20L21 3M21 16v5h-5M14 14l7 7M3 8V3h5M10 10L3 3"/></svg> Cross-Sell-Highlights</h3>' +
-                        '<a href="#" class="link-alle-anzeigen" onclick="showMRHTab(\'crosssell\'); return false;">Alle Cross-Sells →</a>' +
-                    '</div>' +
+                    '<div class="uebersicht-card-header"><h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Aktuelle Handlungsempfehlungen</h3></div>' +
                     '<div style="padding:4px 0;">' +
-                        '<div class="mrh-crosssell-example"><strong>Rhein-Main Maschinenbau:</strong> 340 MA, Prämie 420k, kein bAV — geschätztes Potential 85k bAV-Volumen/Jahr</div>' +
-                        '<div class="mrh-crosssell-example" style="margin-top:8px"><strong>Hessenlog Spedition:</strong> 210 MA, kein bAV — einfaches Modell als Bindungsinstrument</div>' +
-                        '<div class="mrh-crosssell-example" style="margin-top:8px"><strong>FM-Leasing CNC-Fräszentrum 1,4 Mio.:</strong> Keine technische Versicherung abgeschlossen</div>' +
+                        '<div class="mrh-crosssell-example"><strong>Rhein-Main Maschinenbau:</strong> Renewal BH 01.04.2026 — Allianz hat 15% Erhöhung angekündigt, Alternativangebote einholen</div>' +
+                        '<div class="mrh-crosssell-example" style="margin-top:8px"><strong>Hessenlog Spedition:</strong> Flottenversicherung prüfen — 45 Fahrzeuge, aktuell Einzelpolicen</div>' +
+                        '<div class="mrh-crosssell-example" style="margin-top:8px"><strong>DigiCore Solutions:</strong> Cyber-Versicherung erweitern — internationale SaaS-Risiken nicht abgedeckt</div>' +
                     '</div>' +
                 '</div>' +
             '</div>' +
@@ -699,19 +664,18 @@ function renderMRHUebersicht() {
                     '<div style="font-size:13px;color:#475569;">' +
                         '<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #f1f5f9"><span>Leiter</span><strong>Thomas Bergmann</strong></div>' +
                         '<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #f1f5f9"><span>Mitarbeitende</span><strong>42</strong></div>' +
-                        '<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #f1f5f9"><span>davon Insurance</span><strong>28</strong></div>' +
-                        '<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #f1f5f9"><span>davon Benefits</span><strong>8</strong></div>' +
-                        '<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #f1f5f9"><span>davon Finance</span><strong>6</strong></div>' +
-                        '<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #f1f5f9"><span>Kunden gesamt</span><strong>487 (68 Privat)</strong></div>' +
+                        '<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #f1f5f9"><span>Kunden gesamt</span><strong>487</strong></div>' +
                         '<div style="display:flex;justify-content:space-between;padding:4px 0;"><span>Schwerpunkte</span><strong>Real Estate, Maschinenbau</strong></div>' +
                     '</div>' +
                 '</div>' +
                 '<div class="uebersicht-card">' +
-                    '<div class="uebersicht-card-header"><h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/><line x1="12" y1="2" x2="12" y2="5"/></svg> Acquisition-Pipeline</h3></div>' +
+                    '<div class="uebersicht-card-header"><h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> Anstehende Renewals</h3>' +
+                        '<a href="#" class="link-alle-anzeigen" onclick="showMRHTab(\'renewal\'); return false;">Alle Renewals &rarr;</a>' +
+                    '</div>' +
                     '<div style="font-size:13px;color:#475569;">' +
-                        '<div style="padding:8px 12px;background:#f8fafc;border-radius:8px;margin-bottom:6px;border-left:3px solid #86BC25"><strong>Maklerhaus Südhessen</strong><br><span style="font-size:11px;color:#64748b">Bewertungsphase — 12 MA, ~2,5 Mio. Bestand</span></div>' +
-                        '<div style="padding:8px 12px;background:#f8fafc;border-radius:8px;margin-bottom:6px;border-left:3px solid #f59e0b"><strong>VersicherungsKontor Main-Taunus</strong><br><span style="font-size:11px;color:#64748b">Due Diligence — 8 MA, ~1,8 Mio. Bestand</span></div>' +
-                        '<div style="padding:8px 12px;background:#f8fafc;border-radius:8px;border-left:3px solid #94a3b8"><strong>Assekuranz Darmstadt GmbH</strong><br><span style="font-size:11px;color:#64748b">Erstkontakt — 5 MA, ~900k Bestand</span></div>' +
+                        '<div style="padding:8px 12px;background:#f8fafc;border-radius:8px;margin-bottom:6px;border-left:3px solid #ef4444"><strong>Rhein-Main Maschinenbau</strong><br><span style="font-size:11px;color:#64748b">BH 420k — 01.04.2026</span></div>' +
+                        '<div style="padding:8px 12px;background:#f8fafc;border-radius:8px;margin-bottom:6px;border-left:3px solid #f59e0b"><strong>Rhein-Main Verkehr</strong><br><span style="font-size:11px;color:#64748b">Flotte + BH 1,45 Mio. — 01.07.2026</span></div>' +
+                        '<div style="padding:8px 12px;background:#f8fafc;border-radius:8px;border-left:3px solid #86BC25"><strong>DigiCore Solutions</strong><br><span style="font-size:11px;color:#64748b">Cyber 85k — 30.06.2026</span></div>' +
                     '</div>' +
                 '</div>' +
             '</div>' +
@@ -1037,7 +1001,7 @@ function fillMRHDetail(kunde) {
     if (headerId) {
         var headerSubtitle = headerId.parentElement;
         if (!_origA10SubtitleMRH) _origA10SubtitleMRH = headerSubtitle.innerHTML;
-        headerSubtitle.innerHTML = '<span id="kundenHeaderId">Gewerbemakler</span>';
+        headerSubtitle.innerHTML = '<span id="kundenHeaderId">Gewerbemakler 360°</span>';
     }
 
     // Photo
@@ -1065,12 +1029,10 @@ function fillMRHDetail(kunde) {
         if (!_origA02HeaderTabsMRH) _origA02HeaderTabsMRH = a02Tabs.innerHTML;
         a02Tabs.innerHTML =
             '<button class="agentur-tab" onclick="navigateToMRHTab(\'uebersicht\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg> Übersicht</button>' +
-            '<button class="agentur-tab" onclick="navigateToMRHTab(\'specialtymix\')">Specialty-Mix</button>' +
-            '<button class="agentur-tab" onclick="navigateToMRHTab(\'bav\')">bAV</button>' +
-            '<button class="agentur-tab" onclick="navigateToMRHTab(\'finance\')">Finance</button>' +
-            '<button class="agentur-tab" onclick="navigateToMRHTab(\'crosssell\')">Cross-Sell</button>' +
-            '<div class="agentur-tab-divider"></div>' +
-            '<button class="agentur-tab active" onclick="navigateToMRHTab(\'kunden\')">Kunden</button>';
+            '<button class="agentur-tab active" onclick="navigateToMRHTab(\'kunden\')">Kunden</button>' +
+            '<button class="agentur-tab" onclick="navigateToMRHTab(\'bestand\')">Bestand</button>' +
+            '<button class="agentur-tab" onclick="navigateToMRHTab(\'renewal\')">Renewals</button>' +
+            '<button class="agentur-tab" onclick="navigateToMRHTab(\'potentiale\')">Potentiale</button>';
     }
 
     // 3) Inner tabs for MRH
@@ -1079,12 +1041,11 @@ function fillMRHDetail(kunde) {
         if (!_origKundenTabsMRH) _origKundenTabsMRH = kundenTabs.innerHTML;
         kundenTabs.innerHTML =
             '<button class="kunden-tab active" data-tab="stammdaten" onclick="switchKundenTab(\'stammdaten\')">Stammdaten</button>' +
-            '<button class="kunden-tab" data-tab="vertraege" onclick="switchKundenTab(\'vertraege\')">Verträge (Insurance)</button>' +
+            '<button class="kunden-tab" data-tab="vertraege" onclick="switchKundenTab(\'vertraege\')">Verträge</button>' +
             '<button class="kunden-tab" data-tab="schadenhistorie" onclick="switchKundenTab(\'schadenhistorie\')">Schadenhistorie</button>' +
             '<button class="kunden-tab" data-tab="deckungsluecken" onclick="switchKundenTab(\'deckungsluecken\')">Deckungslücken</button>' +
             '<button class="kunden-tab" data-tab="renewal" onclick="switchKundenTab(\'renewal\')">Renewal</button>' +
-            '<button class="kunden-tab" data-tab="ansprechpartner" onclick="switchKundenTab(\'ansprechpartner\')">Ansprechpartner</button>' +
-            '<button class="kunden-tab" data-tab="b2bpotentiale" onclick="switchKundenTab(\'b2bpotentiale\')">Cross-Sell</button>';
+            '<button class="kunden-tab" data-tab="ansprechpartner" onclick="switchKundenTab(\'ansprechpartner\')">Ansprechpartner</button>';
     }
 
     // 4) Name, ID, Photo

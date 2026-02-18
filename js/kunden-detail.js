@@ -47,8 +47,9 @@ function openKundenDetail(kundenName, vermittlerId) {
     document.getElementById('potentialAnalysePage').style.display = 'none';
     if (agenturOverview) agenturOverview.style.display = 'none';
 
-    // Restore AO tabs if Makler was active
+    // Restore AO tabs if Makler/MRH was active
     if (typeof restoreAOKundenDetail === 'function') restoreAOKundenDetail();
+    if (typeof restoreMRHKundenDetail === 'function') restoreMRHKundenDetail();
 
     // Zeige Kundendetail-Seite
     const kundenDetail = document.getElementById('kundenDetailPage');

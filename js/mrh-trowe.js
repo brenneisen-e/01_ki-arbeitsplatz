@@ -1,0 +1,1303 @@
+// js/mrh-trowe.js - MRH Trowe 360° Modus
+// PE-gestützter Konsolidierer: Insurance + Benefits + Finance
+
+// ========================================
+// GLOBAL VIEW MODE STATE
+// ========================================
+var viewMode = 'ao'; // 'ao' | 'ecclesia' | 'mrh'
+
+function setViewMode(mode) {
+    viewMode = mode;
+
+    // Update selector buttons
+    document.querySelectorAll('.view-mode-btn').forEach(function(btn) {
+        btn.classList.toggle('active', btn.dataset.mode === mode);
+    });
+
+    // Backward compat: keep maklerModus in sync
+    if (typeof maklerModus !== 'undefined') {
+        maklerModus = (mode === 'ecclesia');
+    }
+
+    applyViewMode();
+
+    // Close A-10 if open
+    var a10 = document.getElementById('kundenDetailPage');
+    if (a10 && a10.style.display !== 'none') {
+        if (typeof closeKundenDetail === 'function') closeKundenDetail();
+    }
+
+    localStorage.setItem('viewMode', mode);
+}
+window.setViewMode = setViewMode;
+
+function applyViewMode() {
+    if (viewMode === 'ao') {
+        applyAOModus();
+    } else if (viewMode === 'ecclesia') {
+        // Reuse existing Makler logic
+        if (typeof maklerModus !== 'undefined') maklerModus = true;
+        if (typeof applyMaklerModus === 'function') applyMaklerModus();
+    } else if (viewMode === 'mrh') {
+        applyMRHModus();
+    }
+}
+window.applyViewMode = applyViewMode;
+
+function applyAOModus() {
+    if (typeof maklerModus !== 'undefined') maklerModus = false;
+
+    // KPIs
+    var privatKpis = document.querySelector('.cockpit-kpis:not(#maklerKpis):not(#mrhKpis)');
+    var maklerKpis = document.getElementById('maklerKpis');
+    var mrhKpis = document.getElementById('mrhKpis');
+    var mrhBadges = document.getElementById('mrhSaeulenBadges');
+    if (privatKpis) privatKpis.style.display = '';
+    if (maklerKpis) maklerKpis.style.display = 'none';
+    if (mrhKpis) mrhKpis.style.display = 'none';
+    if (mrhBadges) mrhBadges.style.display = 'none';
+
+    // Tabs: show AO, hide Makler + MRH
+    var headerTabs = document.querySelector('.agentur-page-new .agentur-header-tabs');
+    if (headerTabs) {
+        headerTabs.querySelectorAll('.agentur-tab:not(.agentur-tab-makler):not(.agentur-tab-mrh)').forEach(function(el) {
+            el.style.display = '';
+        });
+        headerTabs.querySelectorAll('.agentur-tab-divider:not(.agentur-tab-makler):not(.agentur-tab-mrh)').forEach(function(el) {
+            el.style.display = '';
+        });
+        headerTabs.querySelectorAll('.agentur-tab-makler').forEach(function(el) { el.style.display = 'none'; });
+        headerTabs.querySelectorAll('.agentur-tab-mrh').forEach(function(el) { el.style.display = 'none'; });
+    }
+
+    // Kundenlisten
+    var privatListe = document.getElementById('tab-kundenliste');
+    var maklerListe = document.getElementById('tab-kundenliste-makler');
+    var mrhListe = document.getElementById('tab-kundenliste-mrh');
+    if (privatListe) privatListe.style.display = '';
+    if (maklerListe) { maklerListe.style.display = 'none'; maklerListe.classList.remove('active'); }
+    if (mrhListe) { mrhListe.style.display = 'none'; mrhListe.classList.remove('active'); }
+
+    // Hide MRH/Makler tab contents
+    document.querySelectorAll('.makler-tab-content').forEach(function(el) { el.classList.remove('active'); });
+    document.querySelectorAll('.mrh-tab-content').forEach(function(el) { el.classList.remove('active'); });
+
+    // Header
+    var titleEl = document.getElementById('agenturPageTitle');
+    if (titleEl) titleEl.textContent = 'Agentur: Max Mustermann';
+    var subtitleId = document.getElementById('agenturIdHeader');
+    if (subtitleId) {
+        var subtitleDiv = subtitleId.parentElement;
+        subtitleDiv.innerHTML = '<span id="agenturIdHeader">VM00001</span> | <span id="agenturStatusHeader">Aktiv</span>';
+    }
+    // Remove subheadline
+    var subheadline = document.getElementById('mrhSubheadline');
+    if (subheadline) subheadline.style.display = 'none';
+
+    // Photo
+    var photoContainer = document.getElementById('agenturPhotoSmall');
+    if (photoContainer && photoContainer._origHTML) {
+        photoContainer.innerHTML = photoContainer._origHTML;
+    }
+
+    if (typeof showAgenturTab === 'function') showAgenturTab('uebersicht');
+}
+window.applyAOModus = applyAOModus;
+
+
+// ========================================
+// MRH SPECIALTY ICONS
+// ========================================
+var mrhSpecialtyIcons = {
+    maschinenbau: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>',
+    realEstate: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M3 21h18M5 21V7l8-4v18M13 21V3l6 3v15M9 9v.01M9 12v.01M9 15v.01M9 18v.01M17 9v.01M17 12v.01M17 15v.01M17 18v.01"/></svg>',
+    kfzMotor: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M14 16H9m10 0h3v-3.15a1 1 0 00-.84-.99L16 11l-2.7-3.6a1 1 0 00-.8-.4H5.24a2 2 0 00-1.8 1.1l-.8 1.63A6 6 0 002 12.28V16h3"/><circle cx="6.5" cy="16.5" r="2.5"/><circle cx="16.5" cy="16.5" r="2.5"/></svg>',
+    logistik: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M1 3h15v13H1z"/><path d="M16 8h4l3 4v4h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>',
+    itHightech: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>',
+    healthcare: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>',
+    rechtsanwaelte: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M12 3v18M3 7l9-4 9 4M3 7v4a9 9 0 009 9 9 9 0 009-9V7"/></svg>',
+    bauHandwerk: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M2 20h20M4 20V10l8-6 8 6v10"/><path d="M9 20v-6h6v6"/></svg>',
+    eventsSport: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><path d="M3 10h18"/><path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01"/></svg>',
+    touristik: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M17.8 19.2L16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/></svg>',
+    fineArt: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><circle cx="13.5" cy="6.5" r="2.5"/><path d="M17 3a2.83 2.83 0 014 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>',
+    wiMA: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M20 6L9 17l-5-5"/></svg>',
+    oepnv: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M8 6v6M16 6v6M2 12h20M6 18h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v10a2 2 0 002 2zM6 18l-2 2M18 18l2 2"/></svg>',
+    privatkunde: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>'
+};
+
+
+// ========================================
+// MRH MOCK-KUNDEN (15+ aus 7+ Specialties)
+// ========================================
+var mrhKunden = [
+    {
+        name: 'Rhein-Main Maschinenbau GmbH', id: 'MRH-001', typ: 'B2B',
+        specialty: 'Maschinenbau', specialtyClass: 'specialty-maschinenbau', specialtyIcon: mrhSpecialtyIcons.maschinenbau,
+        branche: 'Sondermaschinenbau', mitarbeitende: 340, jahresumsatz: '78 Mio. EUR',
+        standorte: 'Frankfurt, Hanau, Bratislava', gesellschaftsform: 'GmbH',
+        eigentuemer: 'Familienbesitz (3. Generation)',
+        keyContacts: ['CFO Markus Schäfer', 'Prokuristin Lisa Wendel (Einkauf)', 'BR-Vors. Jürgen Kalt'],
+        beziehungsstatus: 'Bestand', beraterInsurance: 'Frank Moser', beraterBenefits: '—', beraterFinance: 'Nina Hecht',
+        insurance: { praemie: 420000, praemieDisplay: '420.000 €', vertraege: 11, renewalDate: '01.04.2026', renewalStatus: 'gelb' },
+        benefits: { aktiv: false, bavVolumen: '—', durchdringung: '0%', hinweis: 'Cross-Sell-Potential hoch (340 MA)' },
+        finance: { aktiv: true, kreditvers: 'Euler Hermes (Obligo 12 Mio.)', avale: '2 Avale à 500k (Zurich)', leasing: 'CNC-Fräszentrum 1,4 Mio. in Pipeline', courtage: '45.000 €' },
+        vertraegeDetail: [
+            { sparte: 'Betriebshaftpflicht', versicherer: 'Allianz', praemie: 95000, ds: '1,8 Mio. €', ablauf: '01.04.2026', saeule: 'I' },
+            { sparte: 'Sach/Feuer', versicherer: 'Zurich', praemie: 78000, ds: '45 Mio. €', ablauf: '31.12.2026', saeule: 'I' },
+            { sparte: 'Maschinenbruch', versicherer: 'HDI', praemie: 42000, ds: '8 Mio. €', ablauf: '31.12.2026', saeule: 'I' },
+            { sparte: 'D&O', versicherer: 'AIG', praemie: 28000, ds: '5 Mio. €', ablauf: '31.12.2026', saeule: 'I' },
+            { sparte: 'Cyber', versicherer: 'Hiscox', praemie: 35000, ds: '3 Mio. €', ablauf: '30.06.2026', saeule: 'I' },
+            { sparte: 'Kfz-Flotte (38 Fzg.)', versicherer: 'Helvetia', praemie: 48000, ds: '—', ablauf: '01.01.2027', saeule: 'I' },
+            { sparte: 'Kreditversicherung', versicherer: 'Euler Hermes', praemie: 38000, ds: '12 Mio. Obligo', ablauf: '31.12.2026', saeule: 'F' }
+        ],
+        schadenhistorie: [
+            { jahr: 2025, beschreibung: 'Cyber-Vorfall (abgewehrt)', betrag: 22000 },
+            { jahr: 2024, beschreibung: 'Haftpflicht Montageunfall', betrag: 95000 },
+            { jahr: 2023, beschreibung: 'Maschinenbruch', betrag: 180000 }
+        ],
+        deckungsluecken: ['Produktrückruf nicht versichert (Export 25%)', 'Vertrauensschaden fehlt', 'Umwelthaftpflicht DS zu niedrig'],
+        timeline: [
+            { datum: '10.01.2026', saeule: 'insurance', text: 'Renewal-Gespräch BH vorbereitet', person: 'Frank Moser' },
+            { datum: '15.12.2025', saeule: 'finance', text: 'CNC-Leasing-Anfrage eingegangen', person: 'Nina Hecht' },
+            { datum: '20.11.2025', saeule: 'insurance', text: 'Cyber-Vorfall gemeldet & reguliert', person: 'Frank Moser' }
+        ]
+    },
+    {
+        name: 'TechParts Zulieferer GmbH', id: 'MRH-002', typ: 'B2B',
+        specialty: 'Automotive', specialtyClass: 'specialty-automotive', specialtyIcon: mrhSpecialtyIcons.maschinenbau,
+        branche: 'Automobilzulieferer, Kunststoffspritzguss', mitarbeitende: 185, jahresumsatz: '34 Mio. EUR',
+        standorte: 'Offenbach', gesellschaftsform: 'GmbH', eigentuemer: 'PE 35%, Gründerfamilie 65%',
+        keyContacts: ['GF Dr. Claudia Voss', 'Leiter Finanzen Oliver Brandt'],
+        beziehungsstatus: 'Wachstum', beraterInsurance: 'Frank Moser', beraterBenefits: 'Katja Lurse', beraterFinance: 'Nina Hecht',
+        insurance: { praemie: 195000, praemieDisplay: '195.000 €', vertraege: 8, renewalDate: '31.12.2026', renewalStatus: 'gruen' },
+        benefits: { aktiv: true, bavVolumen: '680.000 €', durchdringung: '60%', hinweis: 'P·LIVE aktiv, 112 MA teilnehmend' },
+        finance: { aktiv: true, kreditvers: 'Coface (Obligo 8 Mio.)', avale: '—', leasing: 'Spritzgussmaschine 850k', courtage: '32.000 €' },
+        vertraegeDetail: [
+            { sparte: 'Betriebshaftpflicht', versicherer: 'HDI', praemie: 55000, ds: '5 Mio. €', ablauf: '31.12.2026', saeule: 'I' },
+            { sparte: 'bAV (Pensionsfonds)', versicherer: 'Allianz', praemie: 0, ds: '680k Volumen', ablauf: 'unbefristet', saeule: 'B' },
+            { sparte: 'Kreditversicherung', versicherer: 'Coface', praemie: 28000, ds: '8 Mio. Obligo', ablauf: '31.12.2026', saeule: 'F' },
+            { sparte: 'Factoring', versicherer: 'BNP Paribas', praemie: 0, ds: '2,1 Mio./Mon.', ablauf: '31.12.2026', saeule: 'F' }
+        ],
+        schadenhistorie: [],
+        deckungsluecken: ['Keine W&I für geplante Add-on-Akquisition'],
+        timeline: [
+            { datum: '05.01.2026', saeule: 'benefits', text: 'P·LIVE Quartalsbericht erstellt', person: 'Katja Lurse' },
+            { datum: '01.12.2025', saeule: 'finance', text: 'Factoring-Vertrag verlängert', person: 'Nina Hecht' }
+        ]
+    },
+    {
+        name: 'Nordpark Projektentwicklung AG', id: 'MRH-003', typ: 'B2B',
+        specialty: 'Real Estate', specialtyClass: 'specialty-real-estate', specialtyIcon: mrhSpecialtyIcons.realEstate,
+        branche: 'Immobilienentwicklung', mitarbeitende: 45, jahresumsatz: '120 Mio. EUR (Projektvolumen)',
+        standorte: 'Frankfurt, Wiesbaden', gesellschaftsform: 'AG (SDAX)', eigentuemer: 'Börsennotiert',
+        keyContacts: ['Vorstand Kai Fischer', 'Risikomanagerin Dr. Anna Bergholz'],
+        beziehungsstatus: 'Bestand', beraterInsurance: 'Thomas Bergmann', beraterBenefits: 'Katja Lurse', beraterFinance: 'Nina Hecht',
+        insurance: { praemie: 680000, praemieDisplay: '680.000 €', vertraege: 9, renewalDate: '30.06.2026', renewalStatus: 'gruen' },
+        benefits: { aktiv: true, bavVolumen: '1,2 Mio. €', durchdringung: 'Vorstand + leit. Angestellte', hinweis: 'U-Kasse über Heubeck' },
+        finance: { aktiv: true, kreditvers: '—', avale: '8,5 Mio. (Vertragserfüllung, Gewährleistung)', leasing: '—', courtage: '120.000 €' },
+        vertraegeDetail: [
+            { sparte: 'Bauleistung (4 Projekte)', versicherer: 'Zurich', praemie: 280000, ds: '45 Mio. €', ablauf: 'projektbezogen', saeule: 'I' },
+            { sparte: 'D&O', versicherer: 'AIG', praemie: 65000, ds: '10 Mio. €', ablauf: '31.12.2026', saeule: 'I' },
+            { sparte: 'Avale', versicherer: 'Zurich/R+V', praemie: 0, ds: '8,5 Mio. €', ablauf: 'projektbezogen', saeule: 'F' }
+        ],
+        schadenhistorie: [{ jahr: 2024, beschreibung: 'Bauverzögerung Mainufer HP-Schaden', betrag: 340000 }],
+        deckungsluecken: ['Keine Fertigstellungsgarantie-Versicherung für Großprojekt'],
+        timeline: [
+            { datum: '08.01.2026', saeule: 'finance', text: 'Debt Advisory Projektfinanzierung 35 Mio. gestartet', person: 'Nina Hecht' },
+            { datum: '15.11.2025', saeule: 'insurance', text: 'Bauleistungsversicherung neues Projekt abgeschlossen', person: 'Thomas Bergmann' }
+        ]
+    },
+    {
+        name: 'AutoZentrum Rhein-Main GmbH & Co. KG', id: 'MRH-004', typ: 'B2B',
+        specialty: 'Kfz/Motor', specialtyClass: 'specialty-kfz-motor', specialtyIcon: mrhSpecialtyIcons.kfzMotor,
+        branche: 'Autohaus-Gruppe (VW, Audi, Škoda)', mitarbeitende: 280, jahresumsatz: '195 Mio. EUR',
+        standorte: '4 Standorte Rhein-Main', gesellschaftsform: 'GmbH & Co. KG', eigentuemer: 'Familienbesitz',
+        keyContacts: ['GF Michael Weber', 'Betriebsleiter je Standort'],
+        beziehungsstatus: 'Bestand', beraterInsurance: 'Frank Moser', beraterBenefits: 'Katja Lurse', beraterFinance: 'Nina Hecht',
+        insurance: { praemie: 310000, praemieDisplay: '310.000 €', vertraege: 14, renewalDate: '01.01.2027', renewalStatus: 'gruen' },
+        benefits: { aktiv: true, bavVolumen: '950.000 €', durchdringung: '64% (180 MA)', hinweis: 'Gruppenvertrag Zurich + JobRad' },
+        finance: { aktiv: true, kreditvers: '—', avale: '—', leasing: 'Werkstattausstattung 450k', courtage: '18.000 €' },
+        vertraegeDetail: [
+            { sparte: 'Kfz-Handel/Probefahrt', versicherer: 'Kravag', praemie: 85000, ds: '—', ablauf: '01.01.2027', saeule: 'I' },
+            { sparte: 'Vorführwagen-Flotte (120)', versicherer: 'Kravag', praemie: 72000, ds: '—', ablauf: '01.01.2027', saeule: 'I' },
+            { sparte: 'bAV Gruppenvertrag', versicherer: 'Zurich', praemie: 0, ds: '950k Volumen', ablauf: 'unbefristet', saeule: 'B' }
+        ],
+        schadenhistorie: [],
+        deckungsluecken: ['GAP-Versicherung für Leasingrückläufer nicht abgedeckt'],
+        timeline: [
+            { datum: '12.01.2026', saeule: 'benefits', text: 'JobRad-Verlängerung verhandelt', person: 'Katja Lurse' }
+        ]
+    },
+    {
+        name: 'Hessenlog Spedition GmbH', id: 'MRH-005', typ: 'B2B',
+        specialty: 'Logistik', specialtyClass: 'specialty-logistik', specialtyIcon: mrhSpecialtyIcons.logistik,
+        branche: 'Stückgut/Lagerlogistik, 62 LKW', mitarbeitende: 210, jahresumsatz: '48 Mio. EUR',
+        standorte: 'Frankfurt', gesellschaftsform: 'GmbH', eigentuemer: 'Familienbesitz',
+        keyContacts: ['GF Thomas Ritter', 'Disponentin Sabine Kraft'],
+        beziehungsstatus: 'Bestand', beraterInsurance: 'Frank Moser', beraterBenefits: '—', beraterFinance: 'Nina Hecht',
+        insurance: { praemie: 280000, praemieDisplay: '280.000 €', vertraege: 6, renewalDate: '01.01.2027', renewalStatus: 'gruen' },
+        benefits: { aktiv: false, bavVolumen: '—', durchdringung: '0%', hinweis: 'Hohe Fluktuation — einfaches Modell möglich' },
+        finance: { aktiv: true, kreditvers: '—', avale: '—', leasing: '8 neue LKW (2,8 Mio.)', courtage: '28.000 €' },
+        vertraegeDetail: [
+            { sparte: 'Frachtführerhaftpflicht', versicherer: 'HDI', praemie: 65000, ds: '5 Mio. €', ablauf: '01.01.2027', saeule: 'I' },
+            { sparte: 'Kfz-Flotte (62 LKW + 18 Trailer)', versicherer: 'Kravag', praemie: 120000, ds: '—', ablauf: '01.01.2027', saeule: 'I' },
+            { sparte: 'Leasing 8 LKW', versicherer: 'FM LeasingPartner', praemie: 0, ds: '2,8 Mio.', ablauf: '31.12.2030', saeule: 'F' }
+        ],
+        schadenhistorie: [],
+        deckungsluecken: ['Keine Ladungsversicherung für temperaturgeführte Transporte'],
+        timeline: []
+    },
+    {
+        name: 'Kanzlei Becker, Weber & Partner', id: 'MRH-006', typ: 'B2B',
+        specialty: 'Rechtsanwälte', specialtyClass: 'specialty-rechtsanwaelte', specialtyIcon: mrhSpecialtyIcons.rechtsanwaelte,
+        branche: 'Wirtschaftskanzlei (18 Partner, 45 Associates)', mitarbeitende: 120, jahresumsatz: '28 Mio. EUR',
+        standorte: 'Frankfurt', gesellschaftsform: 'PartGmbB', eigentuemer: 'Partnerschaft',
+        keyContacts: ['Managing Partner Dr. Becker', 'CFO-Office Frau Lenz'],
+        beziehungsstatus: 'Bestand', beraterInsurance: 'Thomas Bergmann', beraterBenefits: 'Katja Lurse', beraterFinance: '—',
+        insurance: { praemie: 145000, praemieDisplay: '145.000 €', vertraege: 6, renewalDate: '31.12.2026', renewalStatus: 'gruen' },
+        benefits: { aktiv: true, bavVolumen: '520.000 €', durchdringung: 'Partner + Associates', hinweis: 'Rückdeckung Partner, DV Associates' },
+        finance: { aktiv: false, kreditvers: '—', avale: '—', leasing: '—', courtage: '—' },
+        vertraegeDetail: [
+            { sparte: 'Vermögensschaden-HP', versicherer: 'Allianz', praemie: 68000, ds: '10 Mio. €', ablauf: '31.12.2026', saeule: 'I' },
+            { sparte: 'Cyber', versicherer: 'Hiscox', praemie: 22000, ds: '2 Mio. €', ablauf: '31.12.2026', saeule: 'I' },
+            { sparte: 'bAV Partner (Rückdeckung)', versicherer: 'Allianz', praemie: 0, ds: '520k Volumen', ablauf: 'unbefristet', saeule: 'B' }
+        ],
+        schadenhistorie: [],
+        deckungsluecken: ['Keine Vertrauensschadenversicherung für Mandantengelder auf Anderkonto'],
+        timeline: []
+    },
+    {
+        name: 'DigiCore Solutions GmbH', id: 'MRH-007', typ: 'B2B',
+        specialty: 'IT/Hightech', specialtyClass: 'specialty-it-hightech', specialtyIcon: mrhSpecialtyIcons.itHightech,
+        branche: 'Software, Cloud, KI-Lösungen', mitarbeitende: 95, jahresumsatz: '18 Mio. EUR',
+        standorte: 'Frankfurt', gesellschaftsform: 'GmbH', eigentuemer: 'Gründer 70%, Angel 30%',
+        keyContacts: ['CEO Jan Richter', 'COO Maria Santos'],
+        beziehungsstatus: 'Wachstum', beraterInsurance: 'Frank Moser', beraterBenefits: 'Katja Lurse', beraterFinance: '—',
+        insurance: { praemie: 82000, praemieDisplay: '82.000 €', vertraege: 6, renewalDate: '31.12.2026', renewalStatus: 'gruen' },
+        benefits: { aktiv: true, bavVolumen: '380.000 €', durchdringung: '78%', hinweis: 'P·LIVE aktiv, Recruiting-Instrument' },
+        finance: { aktiv: false, kreditvers: 'SaaS-Forderungen in Prüfung', avale: '—', leasing: '—', courtage: '—' },
+        vertraegeDetail: [
+            { sparte: 'IT-Haftpflicht/E&O', versicherer: 'Markel', praemie: 32000, ds: '5 Mio. €', ablauf: '31.12.2026', saeule: 'I' },
+            { sparte: 'Cyber', versicherer: 'Hiscox', praemie: 18000, ds: '3 Mio. €', ablauf: '31.12.2026', saeule: 'I' },
+            { sparte: 'bAV (P·LIVE)', versicherer: 'Zurich', praemie: 0, ds: '380k Volumen', ablauf: 'unbefristet', saeule: 'B' }
+        ],
+        schadenhistorie: [],
+        deckungsluecken: ['Keine IP-Schutzversicherung (Patent-Trolling bei KI-Produkten)'],
+        timeline: [
+            { datum: '03.01.2026', saeule: 'benefits', text: 'P·LIVE Jahresbericht erstellt — 78% Teilnahme', person: 'Katja Lurse' }
+        ]
+    },
+    {
+        name: 'Medicum Rhein-Main MVZ GmbH', id: 'MRH-008', typ: 'B2B',
+        specialty: 'Healthcare', specialtyClass: 'specialty-healthcare', specialtyIcon: mrhSpecialtyIcons.healthcare,
+        branche: 'MVZ, 8 Standorte, 22 Ärzte', mitarbeitende: 140, jahresumsatz: '—',
+        standorte: '8 Standorte Rhein-Main', gesellschaftsform: 'GmbH', eigentuemer: 'Ärztegemeinschaft',
+        keyContacts: ['Ärztl. Leitung Dr. Hoffmann', 'Verwaltungsleiterin Kirsten Bauer'],
+        beziehungsstatus: 'Bestand', beraterInsurance: 'Thomas Bergmann', beraterBenefits: 'Katja Lurse', beraterFinance: 'Nina Hecht',
+        insurance: { praemie: 165000, praemieDisplay: '165.000 €', vertraege: 6, renewalDate: '31.12.2026', renewalStatus: 'gruen' },
+        benefits: { aktiv: true, bavVolumen: '890.000 €', durchdringung: 'Ärzte + Verwaltung', hinweis: 'Versorgungswerk-Optimierung' },
+        finance: { aktiv: true, kreditvers: '—', avale: '—', leasing: 'Medizintechnik (MRT, CT) 3,2 Mio.', courtage: '48.000 €' },
+        vertraegeDetail: [
+            { sparte: 'Berufshaftpflicht Ärzte', versicherer: 'HDI', praemie: 72000, ds: '5 Mio. € p.P.', ablauf: '31.12.2026', saeule: 'I' },
+            { sparte: 'Leasing Medizintechnik', versicherer: 'FM LeasingPartner', praemie: 0, ds: '3,2 Mio.', ablauf: '31.12.2030', saeule: 'F' }
+        ],
+        schadenhistorie: [],
+        deckungsluecken: ['Keine Vertrauensschadenversicherung (Abrechnungsbetrug-Risiko)'],
+        timeline: []
+    },
+    {
+        name: 'MainEvent GmbH', id: 'MRH-009', typ: 'B2B',
+        specialty: 'Events/Sport', specialtyClass: 'specialty-events-sport', specialtyIcon: mrhSpecialtyIcons.eventsSport,
+        branche: 'Veranstaltungsagentur, Festivals', mitarbeitende: 35, jahresumsatz: '12 Mio. EUR',
+        standorte: 'Frankfurt', gesellschaftsform: 'GmbH', eigentuemer: 'Gründerin',
+        keyContacts: ['GF Sandra Hahn'],
+        beziehungsstatus: 'Bestand', beraterInsurance: 'Frank Moser', beraterBenefits: '—', beraterFinance: '—',
+        insurance: { praemie: 95000, praemieDisplay: '95.000 €', vertraege: 5, renewalDate: '31.12.2026', renewalStatus: 'gruen' },
+        benefits: { aktiv: false, bavVolumen: '—', durchdringung: '0%', hinweis: 'Hohe Fluktuation' },
+        finance: { aktiv: false, kreditvers: '—', avale: '—', leasing: '—', courtage: '—' },
+        vertraegeDetail: [
+            { sparte: 'Veranstalterhaftpflicht', versicherer: 'Allianz', praemie: 42000, ds: '5 Mio. €', ablauf: '31.12.2026', saeule: 'I' },
+            { sparte: 'Ausfallversicherung', versicherer: 'Lloyd\'s', praemie: 28000, ds: '2 Mio. €', ablauf: '31.12.2026', saeule: 'I' }
+        ],
+        schadenhistorie: [],
+        deckungsluecken: ['Keine Pandemie-/Force-Majeure-Deckung'],
+        timeline: []
+    },
+    {
+        name: 'TravelStar Reiseveranstalter GmbH', id: 'MRH-010', typ: 'B2B',
+        specialty: 'Touristik', specialtyClass: 'specialty-touristik', specialtyIcon: mrhSpecialtyIcons.touristik,
+        branche: 'Reiseveranstalter', mitarbeitende: 60, jahresumsatz: '45 Mio. EUR',
+        standorte: 'Frankfurt', gesellschaftsform: 'GmbH', eigentuemer: 'Gründerfamilie',
+        keyContacts: ['GF Peter Klose', 'Produktmanagerin Tanja Schmidt'],
+        beziehungsstatus: 'Bestand', beraterInsurance: 'Frank Moser', beraterBenefits: 'Katja Lurse', beraterFinance: 'Nina Hecht',
+        insurance: { praemie: 120000, praemieDisplay: '120.000 €', vertraege: 5, renewalDate: '31.12.2026', renewalStatus: 'gruen' },
+        benefits: { aktiv: true, bavVolumen: '180.000 €', durchdringung: 'Kleines Modell', hinweis: '' },
+        finance: { aktiv: true, kreditvers: 'Kreditvers. Hotelvorauszahlungen', avale: '—', leasing: '—', courtage: '12.000 €' },
+        vertraegeDetail: [
+            { sparte: 'Reiseveranstalter-HP', versicherer: 'MDT travel', praemie: 48000, ds: '5 Mio. €', ablauf: '31.12.2026', saeule: 'I' },
+            { sparte: 'Insolvenzversicherung §651r', versicherer: 'Zurich', praemie: 35000, ds: 'gesetzlich', ablauf: '31.12.2026', saeule: 'I' }
+        ],
+        schadenhistorie: [],
+        deckungsluecken: ['Keine Reiseleiter-Berufshaftpflicht für Freelancer-Guides'],
+        timeline: []
+    },
+    {
+        name: 'Familie Kessler', id: 'MRH-011', typ: 'Privat',
+        specialty: 'Fine Art & Lifestyle', specialtyClass: 'specialty-fine-art', specialtyIcon: mrhSpecialtyIcons.fineArt,
+        branche: 'HNW-Familie, Kunstsammlung', mitarbeitende: null, jahresumsatz: '—',
+        standorte: 'Frankfurt', gesellschaftsform: '—', eigentuemer: '—',
+        keyContacts: ['Dr. Hans Kessler', 'Monika Kessler'],
+        beziehungsstatus: 'Bestand', beraterInsurance: 'Thomas Bergmann', beraterBenefits: 'Katja Lurse', beraterFinance: '—',
+        insurance: { praemie: 48000, praemieDisplay: '48.000 €', vertraege: 7, renewalDate: '31.12.2026', renewalStatus: 'gruen' },
+        benefits: { aktiv: true, bavVolumen: '—', durchdringung: '—', hinweis: 'Private Altersvorsorge Rürup über Lurse' },
+        finance: { aktiv: false, kreditvers: '—', avale: '—', leasing: '—', courtage: '—' },
+        vertraegeDetail: [
+            { sparte: 'Kunstversicherung All-Risk', versicherer: 'AXA Art', praemie: 18000, ds: '2,8 Mio. €', ablauf: '31.12.2026', saeule: 'I' },
+            { sparte: 'Wohngebäude (3 Obj.)', versicherer: 'VHV', praemie: 12000, ds: '2,4 Mio. €', ablauf: '31.12.2026', saeule: 'I' },
+            { sparte: 'Kfz (inkl. Oldtimer 911)', versicherer: 'Allianz', praemie: 8500, ds: '—', ablauf: '01.01.2027', saeule: 'I' }
+        ],
+        schadenhistorie: [],
+        deckungsluecken: ['Keine Kidnap & Ransom (regelmäßige Reisen in Risikogebiete)'],
+        timeline: []
+    },
+    {
+        name: 'Dr. Stefan Brandes', id: 'MRH-012', typ: 'Privat',
+        specialty: 'Privatkunden (Unternehmer)', specialtyClass: 'specialty-privatkunden', specialtyIcon: mrhSpecialtyIcons.privatkunde,
+        branche: 'GF DigiCore Solutions, privat', mitarbeitende: null, jahresumsatz: '—',
+        standorte: 'Frankfurt', gesellschaftsform: '—', eigentuemer: '—',
+        keyContacts: ['Dr. Stefan Brandes', 'Sarah Brandes'],
+        beziehungsstatus: 'Bestand', beraterInsurance: 'Frank Moser', beraterBenefits: 'Katja Lurse', beraterFinance: '—',
+        insurance: { praemie: 22000, praemieDisplay: '22.000 €', vertraege: 7, renewalDate: '31.12.2026', renewalStatus: 'gruen' },
+        benefits: { aktiv: true, bavVolumen: '—', durchdringung: '—', hinweis: 'GF-Versorgung über U-Kasse (verknüpft mit DigiCore)' },
+        finance: { aktiv: false, kreditvers: '—', avale: '—', leasing: '—', courtage: '—' },
+        vertraegeDetail: [
+            { sparte: 'PHV Premium', versicherer: 'Allianz', praemie: 5500, ds: '50 Mio. €', ablauf: '31.12.2026', saeule: 'I' },
+            { sparte: 'Berufsunfähigkeit', versicherer: 'Swiss Life', praemie: 4800, ds: '5.000 €/Mon.', ablauf: 'unbefristet', saeule: 'I' }
+        ],
+        schadenhistorie: [],
+        deckungsluecken: [],
+        timeline: [
+            { datum: '15.12.2025', saeule: 'benefits', text: 'GF-Versorgung U-Kasse Review (Cross-Link DigiCore)', person: 'Katja Lurse' }
+        ]
+    },
+    {
+        name: 'Hessenbau Generalunternehmer GmbH', id: 'MRH-013', typ: 'B2B',
+        specialty: 'Bau/Handwerk', specialtyClass: 'specialty-bau-handwerk', specialtyIcon: mrhSpecialtyIcons.bauHandwerk,
+        branche: 'Generalunternehmer, Wohn-/Gewerbebau', mitarbeitende: 160, jahresumsatz: '52 Mio. EUR',
+        standorte: 'Frankfurt', gesellschaftsform: 'GmbH', eigentuemer: 'Familienbesitz',
+        keyContacts: ['GF Ralf Schuster', 'Bauleiter-Team'],
+        beziehungsstatus: 'Wachstum', beraterInsurance: 'Frank Moser', beraterBenefits: 'Katja Lurse', beraterFinance: 'Nina Hecht',
+        insurance: { praemie: 290000, praemieDisplay: '290.000 €', vertraege: 9, renewalDate: '31.12.2026', renewalStatus: 'gruen' },
+        benefits: { aktiv: true, bavVolumen: '320.000 €', durchdringung: 'Im Aufbau über Lurse', hinweis: 'Bindungsinstrument gewerbliche MA' },
+        finance: { aktiv: true, kreditvers: '—', avale: '4,2 Mio. (Vertragserfüllung, Gewährleistung)', leasing: 'Baumaschinen 1,8 Mio.', courtage: '65.000 €' },
+        vertraegeDetail: [
+            { sparte: 'Bauwesenversicherung', versicherer: 'Zurich', praemie: 85000, ds: '25 Mio. €', ablauf: 'projektbezogen', saeule: 'I' },
+            { sparte: 'Betriebshaftpflicht Bau', versicherer: 'HDI', praemie: 62000, ds: '10 Mio. €', ablauf: '31.12.2026', saeule: 'I' },
+            { sparte: 'Avale', versicherer: 'R+V', praemie: 0, ds: '4,2 Mio.', ablauf: 'projektbezogen', saeule: 'F' },
+            { sparte: 'Leasing Baumaschinen', versicherer: 'FM LeasingPartner', praemie: 0, ds: '1,8 Mio.', ablauf: '31.12.2029', saeule: 'F' }
+        ],
+        schadenhistorie: [],
+        deckungsluecken: ['Keine Baufertigstellungsversicherung > 10 Mio.'],
+        timeline: [
+            { datum: '08.01.2026', saeule: 'benefits', text: 'bAV-Aufbau Phase 2 gestartet', person: 'Katja Lurse' }
+        ]
+    },
+    {
+        name: 'Alphatech Holding GmbH', id: 'MRH-014', typ: 'B2B',
+        specialty: 'W&I / M&A', specialtyClass: 'specialty-w-i-m-a', specialtyIcon: mrhSpecialtyIcons.wiMA,
+        branche: 'Beteiligungsgesellschaft, 5 Portfoliounternehmen', mitarbeitende: 12, jahresumsatz: '—',
+        standorte: 'Frankfurt', gesellschaftsform: 'GmbH', eigentuemer: 'PE-Fund',
+        keyContacts: ['Managing Partner Florian Stein', 'Legal Counsel Dr. Jens Merkel'],
+        beziehungsstatus: 'Wachstum', beraterInsurance: 'Thomas Bergmann', beraterBenefits: 'Katja Lurse', beraterFinance: 'Nina Hecht',
+        insurance: { praemie: 85000, praemieDisplay: '85.000 €', vertraege: 3, renewalDate: '31.12.2026', renewalStatus: 'gruen' },
+        benefits: { aktiv: true, bavVolumen: '—', durchdringung: 'Portfoliounternehmen zentral', hinweis: 'bAV zentral gesteuert' },
+        finance: { aktiv: true, kreditvers: 'Portfolio-Ebene', avale: '—', leasing: '—', courtage: '35.000 €' },
+        vertraegeDetail: [
+            { sparte: 'D&O Holding + Portfolio', versicherer: 'AIG', praemie: 55000, ds: '15 Mio. €', ablauf: '31.12.2026', saeule: 'I' },
+            { sparte: 'W&I Buy-Side Transaktion A', versicherer: 'MRH Specialty', praemie: 0, ds: '8 Mio. €', ablauf: 'abgeschlossen', saeule: 'I' },
+            { sparte: 'W&I Buy-Side Transaktion B', versicherer: 'MRH Specialty', praemie: 0, ds: '5 Mio. €', ablauf: 'abgeschlossen', saeule: 'I' },
+            { sparte: 'W&I Sell-Side Transaktion C', versicherer: 'MRH Specialty', praemie: 0, ds: '12 Mio. €', ablauf: 'abgeschlossen', saeule: 'I' }
+        ],
+        schadenhistorie: [],
+        deckungsluecken: [],
+        timeline: [
+            { datum: '02.01.2026', saeule: 'finance', text: 'Debt Advisory für nächste Akquisition gestartet', person: 'Nina Hecht' }
+        ]
+    },
+    {
+        name: 'Rhein-Main Verkehr GmbH', id: 'MRH-015', typ: 'B2B',
+        specialty: 'ÖPNV/SPNV', specialtyClass: 'specialty-oepnv-spnv', specialtyIcon: mrhSpecialtyIcons.oepnv,
+        branche: 'ÖPNV, 180 Busse, 3 Straßenbahnlinien', mitarbeitende: 620, jahresumsatz: '95 Mio. EUR',
+        standorte: 'Frankfurt', gesellschaftsform: 'GmbH', eigentuemer: 'Kommunal',
+        keyContacts: ['Vorstand Klaus Wendt', 'Abt.leit. Versicherung Maria Engel'],
+        beziehungsstatus: 'Bestand', beraterInsurance: 'Thomas Bergmann', beraterBenefits: 'Katja Lurse', beraterFinance: 'Nina Hecht',
+        insurance: { praemie: 1450000, praemieDisplay: '1,45 Mio. €', vertraege: 8, renewalDate: '01.07.2026', renewalStatus: 'gelb' },
+        benefits: { aktiv: true, bavVolumen: '4,8 Mio. €', durchdringung: '620 MA (ZVK + Aufstockung)', hinweis: 'Heubeck-Gutachten jährlich' },
+        finance: { aktiv: true, kreditvers: '—', avale: '—', leasing: '20 E-Busse (9,5 Mio.)', courtage: '142.000 €' },
+        vertraegeDetail: [
+            { sparte: 'Kfz-Flotte (180 Busse + 45 Bahn)', versicherer: 'Kravag/Allianz', praemie: 680000, ds: '—', ablauf: '01.07.2026', saeule: 'I' },
+            { sparte: 'Betriebshaftpflicht ÖPNV', versicherer: 'HDI', praemie: 320000, ds: '25 Mio. €', ablauf: '01.07.2026', saeule: 'I' },
+            { sparte: 'bAV (ZVK + Aufstockung)', versicherer: 'Heubeck/Allianz', praemie: 0, ds: '4,8 Mio. Volumen', ablauf: 'unbefristet', saeule: 'B' },
+            { sparte: 'Leasing 20 E-Busse', versicherer: 'FM LeasingPartner', praemie: 0, ds: '9,5 Mio.', ablauf: '31.12.2033', saeule: 'F' }
+        ],
+        schadenhistorie: [
+            { jahr: 2025, beschreibung: 'Kollision Bus/PKW — Personenschaden', betrag: 85000 },
+            { jahr: 2024, beschreibung: 'Vandalismus an 3 Haltestellen', betrag: 42000 }
+        ],
+        deckungsluecken: ['Keine Betriebsunterbrechung für Cyberangriff auf Leittechnik'],
+        timeline: [
+            { datum: '15.01.2026', saeule: 'finance', text: 'E-Bus-Leasing Tranche 2 in Verhandlung', person: 'Nina Hecht' },
+            { datum: '10.01.2026', saeule: 'insurance', text: 'Renewal-Vorbereitung Flotte/BH gestartet', person: 'Thomas Bergmann' },
+            { datum: '01.12.2025', saeule: 'benefits', text: 'Heubeck-Gutachten 2025 abgeschlossen', person: 'Katja Lurse' }
+        ]
+    }
+];
+
+
+// ========================================
+// APPLY MRH MODUS
+// ========================================
+function applyMRHModus() {
+    // KPIs
+    var privatKpis = document.querySelector('.cockpit-kpis:not(#maklerKpis):not(#mrhKpis)');
+    var maklerKpis = document.getElementById('maklerKpis');
+    var mrhKpis = document.getElementById('mrhKpis');
+    var mrhBadges = document.getElementById('mrhSaeulenBadges');
+    if (privatKpis) privatKpis.style.display = 'none';
+    if (maklerKpis) maklerKpis.style.display = 'none';
+    if (mrhKpis) mrhKpis.style.display = '';
+    if (mrhBadges) mrhBadges.style.display = 'flex';
+
+    // Tabs: hide AO + Makler, show MRH
+    var headerTabs = document.querySelector('.agentur-page-new .agentur-header-tabs');
+    if (headerTabs) {
+        headerTabs.querySelectorAll('.agentur-tab:not(.agentur-tab-makler):not(.agentur-tab-mrh)').forEach(function(el) {
+            el.style.display = 'none';
+        });
+        headerTabs.querySelectorAll('.agentur-tab-divider:not(.agentur-tab-makler):not(.agentur-tab-mrh)').forEach(function(el) {
+            el.style.display = 'none';
+        });
+        headerTabs.querySelectorAll('.agentur-tab-makler').forEach(function(el) { el.style.display = 'none'; });
+        headerTabs.querySelectorAll('.agentur-tab-mrh').forEach(function(el) {
+            el.style.display = el.classList.contains('agentur-tab-divider') ? 'block' : '';
+        });
+    }
+
+    // Kundenlisten
+    var privatListe = document.getElementById('tab-kundenliste');
+    var maklerListe = document.getElementById('tab-kundenliste-makler');
+    var mrhListe = document.getElementById('tab-kundenliste-mrh');
+    if (privatListe) privatListe.style.display = 'none';
+    if (maklerListe) { maklerListe.style.display = 'none'; maklerListe.classList.remove('active'); }
+    if (mrhListe) mrhListe.style.display = '';
+
+    // Hide AO + Makler tab contents
+    document.querySelectorAll('.agentur-tab-content').forEach(function(el) { el.classList.remove('active'); });
+    document.querySelectorAll('.makler-tab-content').forEach(function(el) { el.classList.remove('active'); });
+    if (privatListe) privatListe.style.display = 'none';
+
+    // Header
+    var titleEl = document.getElementById('agenturPageTitle');
+    if (titleEl) titleEl.textContent = 'Niederlassung Rhein-Main';
+    var subtitleId = document.getElementById('agenturIdHeader');
+    if (subtitleId) {
+        var subtitleDiv = subtitleId.parentElement;
+        subtitleDiv.innerHTML = '<span id="agenturIdHeader">MRH Trowe</span>' +
+            '<div class="mrh-subheadline" id="mrhSubheadline">' +
+                '<span class="mrh-subheadline-tag">Insurance</span>' +
+                '<span class="mrh-subheadline-tag">Benefits</span>' +
+                '<span class="mrh-subheadline-tag">Finance</span>' +
+            '</div>';
+    }
+
+    // Photo: modern office icon with 360° badge
+    var photoContainer = document.getElementById('agenturPhotoSmall');
+    if (photoContainer) {
+        if (!photoContainer._origHTML) photoContainer._origHTML = photoContainer.innerHTML;
+        photoContainer.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" width="22" height="22" style="margin:auto;display:block;"><path d="M3 21h18M5 21V7l8-4v18M13 21V3l6 3v15"/><circle cx="18" cy="8" r="3" fill="rgba(134,188,37,0.8)" stroke="none"/><text x="18" y="9.5" text-anchor="middle" font-size="4" fill="white" stroke="none" font-weight="bold">360</text></svg>';
+    }
+
+    // Show MRH Übersicht as default
+    showMRHTab('uebersicht');
+}
+window.applyMRHModus = applyMRHModus;
+
+// ========================================
+// MRH TAB SWITCHING
+// ========================================
+function showMRHTab(tabName) {
+    document.querySelectorAll('.mrh-tab-content').forEach(function(el) { el.classList.remove('active'); });
+    document.querySelectorAll('.agentur-tab-mrh').forEach(function(el) { el.classList.remove('active'); });
+
+    var mrhListe = document.getElementById('tab-kundenliste-mrh');
+    if (mrhListe) mrhListe.classList.remove('active');
+
+    var btn = document.querySelector('.agentur-tab-mrh[data-mrhtab="' + tabName + '"]');
+    if (btn) btn.classList.add('active');
+
+    if (tabName === 'kunden') {
+        if (mrhListe) mrhListe.classList.add('active');
+        renderMRHKundenliste();
+    } else {
+        var tab = document.getElementById('tab-mrh-' + tabName);
+        if (tab) tab.classList.add('active');
+    }
+
+    // Lazy-render
+    if (tabName === 'uebersicht') renderMRHUebersicht();
+    if (tabName === 'specialtymix') renderSpecialtyMap();
+    if (tabName === 'bav') renderBAVDashboard();
+    if (tabName === 'finance') renderFinancePortfolio();
+    if (tabName === 'crosssell') renderCrossSellMatrix();
+    if (tabName === 'renewal') renderMRHRenewals();
+    if (tabName === 'schaden') renderMRHSchaden();
+    if (tabName === 'stammdaten') renderMRHStammdaten();
+    if (tabName === 'neugeschaeft') renderMRHNeugeschaeft();
+    if (tabName === 'bestand') renderMRHBestand();
+    if (tabName === 'potentiale') renderMRHPotentiale();
+}
+window.showMRHTab = showMRHTab;
+
+// ========================================
+// MRH KUNDENLISTE
+// ========================================
+function renderMRHKundenliste() {
+    var tbody = document.getElementById('mrhKundenlisteBody');
+    if (!tbody) return;
+
+    tbody.innerHTML = mrhKunden.map(function(k) {
+        var saeulenTags = '<span class="mrh-saeulen-tag insurance">I</span>';
+        if (k.benefits.aktiv) saeulenTags += '<span class="mrh-saeulen-tag benefits">B</span>';
+        if (k.finance.aktiv) saeulenTags += '<span class="mrh-saeulen-tag finance">F</span>';
+
+        var renewalClass = 'renewal-' + (k.insurance.renewalStatus || 'gruen');
+        var bavText = k.benefits.aktiv ? k.benefits.bavVolumen : '<span class="text-muted">—</span>';
+        var finText = k.finance.aktiv && k.finance.courtage !== '—' ? k.finance.courtage : '<span class="text-muted">—</span>';
+        var typBadge = k.typ === 'Privat' ? ' <span style="font-size:10px;color:#94a3b8">(Privat)</span>' : '';
+
+        return '<tr class="clickable-row" onclick="openMRHKundenDetail(\'' + k.id + '\')">' +
+            '<td><strong>' + k.name + '</strong>' + typBadge + '</td>' +
+            '<td><span class="mrh-specialty-badge ' + k.specialtyClass + '">' + k.specialtyIcon + ' ' + k.specialty + '</span></td>' +
+            '<td>' + saeulenTags + '</td>' +
+            '<td class="text-right"><strong>' + k.insurance.praemieDisplay + '</strong></td>' +
+            '<td class="text-right">' + bavText + '</td>' +
+            '<td class="text-right">' + finText + '</td>' +
+            '<td><span class="renewal-badge ' + renewalClass + '">' + k.insurance.renewalDate + '</span></td>' +
+            '</tr>';
+    }).join('');
+}
+window.renderMRHKundenliste = renderMRHKundenliste;
+
+function filterMRHKundenliste(searchText) {
+    var rows = document.querySelectorAll('#mrhKundenlisteBody tr');
+    var term = searchText.toLowerCase();
+    rows.forEach(function(row) {
+        row.style.display = row.textContent.toLowerCase().includes(term) ? '' : 'none';
+    });
+}
+window.filterMRHKundenliste = filterMRHKundenliste;
+
+
+// ========================================
+// MRH ÜBERSICHT (3-Säulen-Dashboard)
+// ========================================
+function renderMRHUebersicht() {
+    var container = document.getElementById('mrhUebersichtContent');
+    if (!container) return;
+
+    // Calculate totals
+    var totalInsurance = mrhKunden.reduce(function(s, k) { return s + k.insurance.praemie; }, 0);
+    var b2bKunden = mrhKunden.filter(function(k) { return k.typ === 'B2B'; });
+    var bavKunden = mrhKunden.filter(function(k) { return k.benefits.aktiv; });
+    var financeKunden = mrhKunden.filter(function(k) { return k.finance.aktiv; });
+
+    // Top 5 by total (insurance)
+    var topKunden = mrhKunden.slice().sort(function(a, b) { return b.insurance.praemie - a.insurance.praemie; }).slice(0, 5);
+    var topKundenRows = topKunden.map(function(k, i) {
+        var saeulenTags = '<span class="mrh-saeulen-tag insurance">I</span>';
+        if (k.benefits.aktiv) saeulenTags += '<span class="mrh-saeulen-tag benefits">B</span>';
+        if (k.finance.aktiv) saeulenTags += '<span class="mrh-saeulen-tag finance">F</span>';
+        return '<tr class="clickable-row" onclick="openMRHKundenDetail(\'' + k.id + '\')">' +
+            '<td><strong>' + (i+1) + '.</strong></td>' +
+            '<td><strong>' + k.name + '</strong><br><span style="font-size:11px;color:#64748b">' + k.specialty + '</span></td>' +
+            '<td>' + saeulenTags + '</td>' +
+            '<td class="text-right"><strong>' + k.insurance.praemieDisplay + '</strong></td>' +
+            '</tr>';
+    }).join('');
+
+    container.innerHTML =
+        '<div class="mrh-drei-saeulen-grid">' +
+            '<div class="mrh-saeulen-card insurance">' +
+                '<div class="mrh-saeulen-card-header"><div class="saeulen-icon insurance"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><h4>Insurance</h4></div>' +
+                '<div class="mrh-saeulen-metric"><span class="metric-label">Bestandsprämie</span><span class="metric-value">42,3 Mio. €</span></div>' +
+                '<div class="mrh-saeulen-metric"><span class="metric-label">Neugeschäft YTD</span><span class="metric-value">8,7 Mio. €</span></div>' +
+                '<div class="mrh-saeulen-metric"><span class="metric-label">Kunden</span><span class="metric-value">' + mrhKunden.length + '</span></div>' +
+                '<div class="mrh-saeulen-metric"><span class="metric-label">Ø Verträge/Kunde</span><span class="metric-value">' + Math.round(mrhKunden.reduce(function(s,k){return s+k.insurance.vertraege;},0)/mrhKunden.length) + '</span></div>' +
+            '</div>' +
+            '<div class="mrh-saeulen-card benefits">' +
+                '<div class="mrh-saeulen-card-header"><div class="saeulen-icon benefits"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M12 10l4-4"/></svg></div><h4>Benefits & Pensions</h4></div>' +
+                '<div class="mrh-saeulen-metric"><span class="metric-label">bAV-Volumen</span><span class="metric-value">12,1 Mio. €</span></div>' +
+                '<div class="mrh-saeulen-metric"><span class="metric-label">Durchdringung B2B</span><span class="metric-value">38% (Ziel: 55%)</span></div>' +
+                '<div class="mrh-saeulen-metric"><span class="metric-label">Kunden mit bAV</span><span class="metric-value">' + bavKunden.length + ' / ' + b2bKunden.length + '</span></div>' +
+                '<div class="mrh-saeulen-metric"><span class="metric-label">P·LIVE aktiv</span><span class="metric-value">3 Mandanten</span></div>' +
+            '</div>' +
+            '<div class="mrh-saeulen-card finance">' +
+                '<div class="mrh-saeulen-card-header"><div class="saeulen-icon finance"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div><h4>Finance</h4></div>' +
+                '<div class="mrh-saeulen-metric"><span class="metric-label">Finance-Courtage</span><span class="metric-value">2,8 Mio. €</span></div>' +
+                '<div class="mrh-saeulen-metric"><span class="metric-label">Kunden mit Finance</span><span class="metric-value">' + financeKunden.length + ' / ' + mrhKunden.length + '</span></div>' +
+                '<div class="mrh-saeulen-metric"><span class="metric-label">Leasing-Volumen</span><span class="metric-value">19,2 Mio. €</span></div>' +
+                '<div class="mrh-saeulen-metric"><span class="metric-label">Avale/Bürgschaften</span><span class="metric-value">12,7 Mio. €</span></div>' +
+            '</div>' +
+        '</div>' +
+        '<div class="mk-uebersicht-grid">' +
+            '<div class="mk-uebersicht-main">' +
+                '<div class="uebersicht-card">' +
+                    '<div class="uebersicht-card-header"><h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg> Top-Kunden nach Gesamtcourtage</h3>' +
+                        '<a href="#" class="link-alle-anzeigen" onclick="showMRHTab(\'kunden\'); return false;">Alle ' + mrhKunden.length + ' Kunden →</a>' +
+                    '</div>' +
+                    '<table class="makler-detail-table"><thead><tr><th>#</th><th>Kunde</th><th>Säulen</th><th class="text-right">Insurance-Prämie</th></tr></thead><tbody>' + topKundenRows + '</tbody></table>' +
+                '</div>' +
+                '<div class="uebersicht-card">' +
+                    '<div class="uebersicht-card-header"><h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M16 3h5v5M4 20L21 3M21 16v5h-5M14 14l7 7M3 8V3h5M10 10L3 3"/></svg> Cross-Sell-Highlights</h3>' +
+                        '<a href="#" class="link-alle-anzeigen" onclick="showMRHTab(\'crosssell\'); return false;">Alle Cross-Sells →</a>' +
+                    '</div>' +
+                    '<div style="padding:4px 0;">' +
+                        '<div class="mrh-crosssell-example"><strong>Rhein-Main Maschinenbau:</strong> 340 MA, Prämie 420k, kein bAV — geschätztes Potential 85k bAV-Volumen/Jahr</div>' +
+                        '<div class="mrh-crosssell-example" style="margin-top:8px"><strong>Hessenlog Spedition:</strong> 210 MA, kein bAV — einfaches Modell als Bindungsinstrument</div>' +
+                        '<div class="mrh-crosssell-example" style="margin-top:8px"><strong>FM-Leasing CNC-Fräszentrum 1,4 Mio.:</strong> Keine technische Versicherung abgeschlossen</div>' +
+                    '</div>' +
+                '</div>' +
+            '</div>' +
+            '<div class="mk-uebersicht-sidebar">' +
+                '<div class="uebersicht-card">' +
+                    '<div class="uebersicht-card-header"><h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg> Niederlassungs-Profil</h3></div>' +
+                    '<div style="font-size:13px;color:#475569;">' +
+                        '<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #f1f5f9"><span>Leiter</span><strong>Thomas Bergmann</strong></div>' +
+                        '<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #f1f5f9"><span>Mitarbeitende</span><strong>42</strong></div>' +
+                        '<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #f1f5f9"><span>davon Insurance</span><strong>28</strong></div>' +
+                        '<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #f1f5f9"><span>davon Benefits</span><strong>8</strong></div>' +
+                        '<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #f1f5f9"><span>davon Finance</span><strong>6</strong></div>' +
+                        '<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #f1f5f9"><span>Kunden gesamt</span><strong>487 (68 Privat)</strong></div>' +
+                        '<div style="display:flex;justify-content:space-between;padding:4px 0;"><span>Schwerpunkte</span><strong>Real Estate, Maschinenbau</strong></div>' +
+                    '</div>' +
+                '</div>' +
+                '<div class="uebersicht-card">' +
+                    '<div class="uebersicht-card-header"><h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/><line x1="12" y1="2" x2="12" y2="5"/></svg> Acquisition-Pipeline</h3></div>' +
+                    '<div style="font-size:13px;color:#475569;">' +
+                        '<div style="padding:8px 12px;background:#f8fafc;border-radius:8px;margin-bottom:6px;border-left:3px solid #86BC25"><strong>Maklerhaus Südhessen</strong><br><span style="font-size:11px;color:#64748b">Bewertungsphase — 12 MA, ~2,5 Mio. Bestand</span></div>' +
+                        '<div style="padding:8px 12px;background:#f8fafc;border-radius:8px;margin-bottom:6px;border-left:3px solid #f59e0b"><strong>VersicherungsKontor Main-Taunus</strong><br><span style="font-size:11px;color:#64748b">Due Diligence — 8 MA, ~1,8 Mio. Bestand</span></div>' +
+                        '<div style="padding:8px 12px;background:#f8fafc;border-radius:8px;border-left:3px solid #94a3b8"><strong>Assekuranz Darmstadt GmbH</strong><br><span style="font-size:11px;color:#64748b">Erstkontakt — 5 MA, ~900k Bestand</span></div>' +
+                    '</div>' +
+                '</div>' +
+            '</div>' +
+        '</div>';
+}
+window.renderMRHUebersicht = renderMRHUebersicht;
+
+
+// ========================================
+// SPECIALTY-MIX (Treemap)
+// ========================================
+function renderSpecialtyMap() {
+    var container = document.getElementById('mrhSpecialtyContent');
+    if (!container) return;
+
+    var specialties = [
+        { name: 'Industrie & Gewerbe', sub: 'Maschinenbau, Chemie, Automotive', pct: 28, color: '#475569', bg: '#f1f5f9', large: true },
+        { name: 'Real Estate', sub: 'Immobilien, Projektentwickler', pct: 18, color: '#92400e', bg: '#fef3c7' },
+        { name: 'Mobilität & Transport', sub: 'Kfz-Flotten, ÖPNV, Logistik', pct: 15, color: '#0369a1', bg: '#e0f2fe' },
+        { name: 'Professional Services', sub: 'Anwälte, IT/Hightech', pct: 12, color: '#6d28d9', bg: '#ede9fe' },
+        { name: 'Privatkunden (HNW)', sub: 'Unternehmer, Fine Art', pct: 10, color: '#166534', bg: '#f0fdf4' },
+        { name: 'Healthcare', sub: 'MVZ, Medizintechnik', pct: 8, color: '#be185d', bg: '#fce7f3' },
+        { name: 'Spezialrisiken', sub: 'Events, Touristik, W&I/M&A', pct: 9, color: '#c2410c', bg: '#fff7ed' }
+    ];
+
+    var items = specialties.map(function(s) {
+        return '<div class="mrh-treemap-item' + (s.large ? ' large' : '') + '" style="background:' + s.bg + ';color:' + s.color + '">' +
+            '<div class="treemap-label">' + s.name + '</div>' +
+            '<div class="treemap-pct">' + s.pct + '%</div>' +
+            '<div class="treemap-specialties">' + s.sub + '</div>' +
+        '</div>';
+    }).join('');
+
+    container.innerHTML = '<div class="mrh-treemap-container">' + items + '</div>';
+}
+window.renderSpecialtyMap = renderSpecialtyMap;
+
+// ========================================
+// BAV DASHBOARD
+// ========================================
+function renderBAVDashboard() {
+    var container = document.getElementById('mrhBAVContent');
+    if (!container) return;
+
+    var bavKunden = mrhKunden.filter(function(k) { return k.benefits.aktiv && k.typ === 'B2B'; });
+    var noBavKunden = mrhKunden.filter(function(k) { return !k.benefits.aktiv && k.typ === 'B2B' && k.mitarbeitende && k.mitarbeitende >= 50; });
+
+    var pipelineRows = [
+        { kunde: 'Rhein-Main Maschinenbau GmbH', status: 'Angebot', ma: 340, potential: '85.000 €/a' },
+        { kunde: 'Hessenlog Spedition GmbH', status: 'Erstkontakt', ma: 210, potential: '42.000 €/a' }
+    ].map(function(p) {
+        var statusClass = p.status === 'Angebot' ? 'renewal-gelb' : 'renewal-gruen';
+        return '<tr><td><strong>' + p.kunde + '</strong></td><td>' + p.ma + ' MA</td><td><span class="renewal-badge ' + statusClass + '">' + p.status + '</span></td><td class="text-right"><strong>' + p.potential + '</strong></td></tr>';
+    }).join('');
+
+    var crossSellRows = noBavKunden.map(function(k) {
+        return '<tr class="clickable-row" onclick="openMRHKundenDetail(\'' + k.id + '\')"><td><strong>' + k.name + '</strong></td><td>' + (k.mitarbeitende || '—') + ' MA</td><td>' + k.insurance.praemieDisplay + '</td><td><span class="prio-badge prio-hoch">Cross-Sell</span></td></tr>';
+    }).join('');
+
+    container.innerHTML =
+        '<div class="mrh-bav-grid">' +
+            '<div class="mrh-bav-card">' +
+                '<h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Durchdringungsquote</h4>' +
+                '<div style="font-size:28px;font-weight:800;color:#26890D">38%</div>' +
+                '<div style="font-size:12px;color:#64748b;margin-bottom:8px">Ziel: 55% der B2B-Kunden mit bAV</div>' +
+                '<div class="mrh-durchdringung-bar"><div class="mrh-durchdringung-fill" style="width:38%"></div><div class="mrh-durchdringung-target" style="left:55%"></div></div>' +
+                '<div class="mrh-durchdringung-labels"><span>0%</span><span style="color:#dc2626">Ziel 55%</span><span>100%</span></div>' +
+            '</div>' +
+            '<div class="mrh-bav-card">' +
+                '<h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg> bAV-Volumen nach Durchführungsweg</h4>' +
+                '<div style="font-size:13px">' +
+                    '<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #f1f5f9"><span>Direktversicherung</span><strong>4,2 Mio. €</strong></div>' +
+                    '<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #f1f5f9"><span>Unterstützungskasse</span><strong>3,8 Mio. €</strong></div>' +
+                    '<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #f1f5f9"><span>Pensionsfonds</span><strong>2,4 Mio. €</strong></div>' +
+                    '<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #f1f5f9"><span>Pensionskasse (ZVK)</span><strong>1,2 Mio. €</strong></div>' +
+                    '<div style="display:flex;justify-content:space-between;padding:4px 0;font-weight:700;color:#26890D"><span>Gesamt</span><strong>12,1 Mio. €</strong></div>' +
+                '</div>' +
+            '</div>' +
+            '<div class="mrh-bav-card">' +
+                '<h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg> bAV-Pipeline</h4>' +
+                '<table class="makler-detail-table"><thead><tr><th>Kunde</th><th>MA</th><th>Status</th><th class="text-right">Potential</th></tr></thead><tbody>' + pipelineRows + '</tbody></table>' +
+            '</div>' +
+            '<div class="mrh-bav-card">' +
+                '<h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M16 3h5v5M4 20L21 3"/></svg> Cross-Sell: Insurance → Benefits</h4>' +
+                '<p style="font-size:12px;color:#64748b;margin:0 0 8px">B2B-Kunden mit ≥50 MA ohne bAV-Mandat:</p>' +
+                '<table class="makler-detail-table"><thead><tr><th>Kunde</th><th>MA</th><th>Prämie</th><th>Status</th></tr></thead><tbody>' + crossSellRows + '</tbody></table>' +
+            '</div>' +
+        '</div>';
+}
+window.renderBAVDashboard = renderBAVDashboard;
+
+// ========================================
+// FINANCE PORTFOLIO
+// ========================================
+function renderFinancePortfolio() {
+    var container = document.getElementById('mrhFinanceContent');
+    if (!container) return;
+
+    container.innerHTML =
+        '<div class="mk-kpi-row">' +
+            '<div class="mk-kpi-box"><span class="mk-kpi-label">Gesamt-Finance-Courtage</span><span class="mk-kpi-value" style="color:#ED8B00">2,8 Mio. €</span></div>' +
+            '<div class="mk-kpi-box"><span class="mk-kpi-label">Kreditversicherung</span><span class="mk-kpi-value">820k €</span></div>' +
+            '<div class="mk-kpi-box"><span class="mk-kpi-label">Avale/Bürgschaften</span><span class="mk-kpi-value">12,7 Mio. €</span></div>' +
+            '<div class="mk-kpi-box"><span class="mk-kpi-label">Leasing-Volumen</span><span class="mk-kpi-value">19,2 Mio. €</span></div>' +
+        '</div>' +
+        '<div class="mrh-finance-grid">' +
+            '<div class="mrh-finance-card">' +
+                '<h4>Kreditversicherung</h4>' +
+                '<table class="makler-detail-table"><thead><tr><th>Kunde</th><th>Versicherer</th><th class="text-right">Obligo</th></tr></thead><tbody>' +
+                    '<tr><td>Rhein-Main Maschinenbau</td><td>Euler Hermes</td><td class="text-right">12 Mio. €</td></tr>' +
+                    '<tr><td>TechParts Zulieferer</td><td>Coface</td><td class="text-right">8 Mio. €</td></tr>' +
+                    '<tr><td>TravelStar Reiseveranstalter</td><td>Atradius</td><td class="text-right">3 Mio. €</td></tr>' +
+                '</tbody></table>' +
+            '</div>' +
+            '<div class="mrh-finance-card">' +
+                '<h4>Avale / Bürgschaften</h4>' +
+                '<table class="makler-detail-table"><thead><tr><th>Kunde</th><th>Typ</th><th class="text-right">Volumen</th></tr></thead><tbody>' +
+                    '<tr><td>Nordpark Projektentwicklung</td><td>Vertragserfüllung</td><td class="text-right">8,5 Mio. €</td></tr>' +
+                    '<tr><td>Hessenbau GU</td><td>Gewährleistung</td><td class="text-right">4,2 Mio. €</td></tr>' +
+                '</tbody></table>' +
+            '</div>' +
+            '<div class="mrh-finance-card">' +
+                '<h4>Leasing (FM LeasingPartner)</h4>' +
+                '<table class="makler-detail-table"><thead><tr><th>Kunde</th><th>Objekt</th><th class="text-right">Volumen</th></tr></thead><tbody>' +
+                    '<tr><td>Rhein-Main Verkehr</td><td>20 E-Busse</td><td class="text-right">9,5 Mio. €</td></tr>' +
+                    '<tr><td>Medicum MVZ</td><td>MRT, CT</td><td class="text-right">3,2 Mio. €</td></tr>' +
+                    '<tr><td>Hessenlog</td><td>8 LKW</td><td class="text-right">2,8 Mio. €</td></tr>' +
+                    '<tr><td>Hessenbau</td><td>Baumaschinen</td><td class="text-right">1,8 Mio. €</td></tr>' +
+                '</tbody></table>' +
+            '</div>' +
+            '<div class="mrh-finance-card">' +
+                '<h4>Factoring</h4>' +
+                '<table class="makler-detail-table"><thead><tr><th>Kunde</th><th>Anbieter</th><th class="text-right">Volumen/Mon.</th></tr></thead><tbody>' +
+                    '<tr><td>TechParts Zulieferer</td><td>BNP Paribas</td><td class="text-right">2,1 Mio. €</td></tr>' +
+                '</tbody></table>' +
+            '</div>' +
+            '<div class="mrh-finance-card">' +
+                '<h4>Debt Advisory</h4>' +
+                '<table class="makler-detail-table"><thead><tr><th>Kunde</th><th>Mandat</th><th>Status</th></tr></thead><tbody>' +
+                    '<tr><td>Nordpark Projektentwicklung</td><td>Projektfinanzierung 35 Mio.</td><td><span class="renewal-badge renewal-gelb">Pipeline</span></td></tr>' +
+                    '<tr><td>Alphatech Holding</td><td>Akquisitionsfinanzierung</td><td><span class="renewal-badge renewal-gelb">Pipeline</span></td></tr>' +
+                '</tbody></table>' +
+            '</div>' +
+            '<div class="mrh-finance-card">' +
+                '<h4>Trend YoY</h4>' +
+                '<div style="font-size:13px">' +
+                    '<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #f1f5f9"><span>2024</span><strong>2,3 Mio. €</strong></div>' +
+                    '<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #f1f5f9"><span>2025</span><strong>2,8 Mio. €</strong></div>' +
+                    '<div style="display:flex;justify-content:space-between;padding:4px 0;color:#16a34a;font-weight:700"><span>Wachstum</span><strong>+22%</strong></div>' +
+                '</div>' +
+            '</div>' +
+        '</div>';
+}
+window.renderFinancePortfolio = renderFinancePortfolio;
+
+// ========================================
+// CROSS-SELL MATRIX
+// ========================================
+function renderCrossSellMatrix() {
+    var container = document.getElementById('mrhCrossSellContent');
+    if (!container) return;
+
+    container.innerHTML =
+        '<div class="mk-kpi-row">' +
+            '<div class="mk-kpi-box"><span class="mk-kpi-label">Cross-Sell-Potentiale</span><span class="mk-kpi-value">12</span></div>' +
+            '<div class="mk-kpi-box"><span class="mk-kpi-label">Geschätztes Volumen</span><span class="mk-kpi-value positive">~450k €/a</span></div>' +
+        '</div>' +
+        '<div class="mrh-crosssell-grid">' +
+            '<div class="mrh-crosssell-card">' +
+                '<div class="mrh-crosssell-direction"><span class="mrh-saeulen-tag insurance">Insurance</span><span class="mrh-crosssell-arrow">→</span><span class="mrh-saeulen-tag benefits">Benefits</span></div>' +
+                '<p style="font-size:12px;color:#64748b;margin:0 0 8px">B2B-Kunden mit >100 MA ohne bAV-Mandat</p>' +
+                '<div class="mrh-crosssell-example"><strong>Rhein-Main Maschinenbau GmbH:</strong> 340 MA, Versicherungsprämie 420k, kein bAV — geschätztes Potential 85k bAV-Volumen/Jahr</div>' +
+                '<div class="mrh-crosssell-example" style="margin-top:6px"><strong>Hessenlog Spedition GmbH:</strong> 210 MA, kein bAV — einfaches Bindungsmodell möglich</div>' +
+            '</div>' +
+            '<div class="mrh-crosssell-card">' +
+                '<div class="mrh-crosssell-direction"><span class="mrh-saeulen-tag insurance">Insurance</span><span class="mrh-crosssell-arrow">→</span><span class="mrh-saeulen-tag finance">Finance</span></div>' +
+                '<p style="font-size:12px;color:#64748b;margin:0 0 8px">Kunden mit Lieferantenabhängigkeit ohne Kreditversicherung</p>' +
+                '<div class="mrh-crosssell-example"><strong>DigiCore Solutions GmbH:</strong> SaaS-Forderungen international — Kreditversicherungsprüfung läuft</div>' +
+            '</div>' +
+            '<div class="mrh-crosssell-card">' +
+                '<div class="mrh-crosssell-direction"><span class="mrh-saeulen-tag benefits">Benefits</span><span class="mrh-crosssell-arrow">→</span><span class="mrh-saeulen-tag insurance">Insurance</span></div>' +
+                '<p style="font-size:12px;color:#64748b;margin:0 0 8px">bAV-Mandant ohne Sachversicherung</p>' +
+                '<div class="mrh-crosssell-example"><strong>Dr. Stefan Brandes:</strong> bAV-Mandat über DigiCore, Kunstsammlung privat nicht versichert</div>' +
+            '</div>' +
+            '<div class="mrh-crosssell-card">' +
+                '<div class="mrh-crosssell-direction"><span class="mrh-saeulen-tag finance">Finance</span><span class="mrh-crosssell-arrow">→</span><span class="mrh-saeulen-tag insurance">Insurance</span></div>' +
+                '<p style="font-size:12px;color:#64748b;margin:0 0 8px">Leasing-Kunde ohne Maschinenbruch/BU</p>' +
+                '<div class="mrh-crosssell-example"><strong>Rhein-Main Maschinenbau:</strong> CNC-Leasing-Anfrage 1,4 Mio. — keine technische Versicherung für Neumaschine</div>' +
+            '</div>' +
+        '</div>';
+}
+window.renderCrossSellMatrix = renderCrossSellMatrix;
+
+
+// ========================================
+// MRH RENEWALS, SCHADEN, STAMMDATEN, etc.
+// ========================================
+function renderMRHRenewals() {
+    var container = document.getElementById('mrhRenewalContent');
+    if (!container) return;
+    var gelb = mrhKunden.filter(function(k) { return k.insurance.renewalStatus === 'gelb'; });
+    var gruen = mrhKunden.filter(function(k) { return k.insurance.renewalStatus === 'gruen'; });
+
+    function renderGroup(label, items, cssClass) {
+        if (items.length === 0) return '<div class="renewal-group"><div class="renewal-group-label ' + cssClass + '">' + label + ' (0)</div></div>';
+        var rows = items.map(function(k) {
+            return '<div class="renewal-item"><span class="renewal-sparte">' + k.name + '</span><span class="renewal-versicherer">' + k.specialty + '</span><span class="renewal-ablauf">' + k.insurance.renewalDate + ' — ' + k.insurance.praemieDisplay + '</span></div>';
+        }).join('');
+        return '<div class="renewal-group"><div class="renewal-group-label ' + cssClass + '">' + label + ' (' + items.length + ')</div>' + rows + '</div>';
+    }
+
+    container.innerHTML = renderGroup('Handlungsbedarf (gelb)', gelb, 'renewal-gelb') + renderGroup('Im Plan (grün)', gruen, 'renewal-gruen');
+}
+window.renderMRHRenewals = renderMRHRenewals;
+
+function renderMRHSchaden() {
+    var container = document.getElementById('mrhSchadenContent');
+    if (!container) return;
+    var allSchaden = [];
+    mrhKunden.forEach(function(k) {
+        if (k.schadenhistorie) {
+            k.schadenhistorie.forEach(function(s) {
+                allSchaden.push({ kunde: k.name, kundeId: k.id, jahr: s.jahr, beschreibung: s.beschreibung, betrag: s.betrag });
+            });
+        }
+    });
+    allSchaden.sort(function(a, b) { return b.jahr - a.jahr || b.betrag - a.betrag; });
+    var rows = allSchaden.map(function(s) {
+        return '<tr class="clickable-row" onclick="openMRHKundenDetail(\'' + s.kundeId + '\')"><td><strong>' + s.jahr + '</strong></td><td>' + s.kunde + '</td><td>' + s.beschreibung + '</td><td class="text-right"><strong>' + s.betrag.toLocaleString('de-DE') + ' €</strong></td></tr>';
+    }).join('');
+    if (!rows) rows = '<tr><td colspan="4" class="text-muted">Keine Schäden verzeichnet</td></tr>';
+    container.innerHTML = '<table class="makler-detail-table"><thead><tr><th>Jahr</th><th>Kunde</th><th>Beschreibung</th><th class="text-right">Betrag</th></tr></thead><tbody>' + rows + '</tbody></table>';
+}
+window.renderMRHSchaden = renderMRHSchaden;
+
+function renderMRHStammdaten() {
+    var container = document.getElementById('mrhStammdatenContent');
+    if (!container) return;
+    container.innerHTML =
+        '<div class="uebersicht-card"><div class="uebersicht-card-header"><h3>Niederlassungs-Stammdaten</h3></div>' +
+        '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;font-size:13px;color:#475569">' +
+            '<div><span style="color:#94a3b8;font-size:11px;text-transform:uppercase">Name</span><br><strong>Niederlassung Rhein-Main</strong></div>' +
+            '<div><span style="color:#94a3b8;font-size:11px;text-transform:uppercase">Standort</span><br><strong>Frankfurt am Main</strong></div>' +
+            '<div><span style="color:#94a3b8;font-size:11px;text-transform:uppercase">Leiter</span><br><strong>Thomas Bergmann</strong></div>' +
+            '<div><span style="color:#94a3b8;font-size:11px;text-transform:uppercase">Mitarbeitende</span><br><strong>42 (28 Insurance, 8 Benefits, 6 Finance)</strong></div>' +
+            '<div><span style="color:#94a3b8;font-size:11px;text-transform:uppercase">Kunden gesamt</span><br><strong>487 (davon 68 Privat)</strong></div>' +
+            '<div><span style="color:#94a3b8;font-size:11px;text-transform:uppercase">Schwerpunkte</span><br><strong>Real Estate, Maschinenbau, Professional Services, Kfz/Motor</strong></div>' +
+        '</div></div>';
+}
+function renderMRHNeugeschaeft() {
+    var container = document.getElementById('mrhNeugeschaeftContent');
+    if (!container) return;
+    container.innerHTML = '<div class="uebersicht-card"><div class="uebersicht-card-header"><h3>Neugeschäft YTD — 8,7 Mio. €</h3></div><p style="color:#64748b;font-size:13px">Aufgeteilt nach Säulen: Insurance 6,2 Mio. € | Benefits 1,8 Mio. € | Finance 0,7 Mio. €</p></div>';
+}
+function renderMRHBestand() {
+    var container = document.getElementById('mrhBestandContent');
+    if (!container) return;
+    var rows = mrhKunden.map(function(k) {
+        return '<tr class="clickable-row" onclick="openMRHKundenDetail(\'' + k.id + '\')"><td><strong>' + k.name + '</strong></td><td>' + k.specialty + '</td><td class="text-right">' + k.insurance.praemieDisplay + '</td><td class="text-center">' + k.insurance.vertraege + '</td></tr>';
+    }).join('');
+    container.innerHTML = '<table class="makler-detail-table"><thead><tr><th>Kunde</th><th>Specialty</th><th class="text-right">Prämie/a</th><th class="text-center">Verträge</th></tr></thead><tbody>' + rows + '</tbody></table>';
+}
+function renderMRHPotentiale() {
+    var container = document.getElementById('mrhPotentialeContent');
+    if (!container) return;
+    var pots = [];
+    mrhKunden.forEach(function(k) {
+        if (k.deckungsluecken && k.deckungsluecken.length > 0) {
+            k.deckungsluecken.forEach(function(d) { pots.push({ kunde: k.name, kundeId: k.id, luecke: d }); });
+        }
+    });
+    var rows = pots.map(function(p) {
+        return '<tr class="clickable-row" onclick="openMRHKundenDetail(\'' + p.kundeId + '\')"><td><strong>' + p.kunde + '</strong></td><td>' + p.luecke + '</td><td><span class="prio-badge prio-hoch">Hoch</span></td></tr>';
+    }).join('');
+    container.innerHTML = '<div class="uebersicht-card"><div class="uebersicht-card-header"><h3>Deckungslücken & Potentiale</h3></div>' +
+        '<table class="makler-detail-table"><thead><tr><th>Kunde</th><th>Deckungslücke / Potential</th><th>Priorität</th></tr></thead><tbody>' + rows + '</tbody></table></div>';
+}
+
+
+// ========================================
+// A-10 KUNDEN-DETAIL (MRH Modus)
+// ========================================
+var _mrhDetailActive = false;
+var _origA02HeaderTabsMRH = null;
+var _origKundenTabsMRH = null;
+var _origDropdownMRH = null;
+var _origA10SubtitleMRH = null;
+
+function openMRHKundenDetail(kundeId) {
+    var kunde = mrhKunden.find(function(k) { return k.id === kundeId; });
+    if (!kunde) return;
+
+    if (typeof previousViewBeforeKundenDetail !== 'undefined') {
+        previousViewBeforeKundenDetail = 'agentursicht';
+    }
+
+    // Hide all pages
+    ['landingPage','mainApp','potentialAnalysePage','agenturOverview'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) el.style.display = 'none';
+    });
+
+    var kundenDetailPage = document.getElementById('kundenDetailPage');
+    if (kundenDetailPage) {
+        kundenDetailPage.style.display = 'block';
+        kundenDetailPage.classList.remove('makler-view','ao-view');
+        kundenDetailPage.classList.add('makler-view');
+    }
+
+    fillMRHDetail(kunde);
+
+    document.dispatchEvent(new CustomEvent('viewChanged', { detail: { module: 'versicherung', view: 'kundendetail' } }));
+}
+window.openMRHKundenDetail = openMRHKundenDetail;
+
+function fillMRHDetail(kunde) {
+    _mrhDetailActive = true;
+
+    // 1) Shared header
+    var headerTitle = document.getElementById('kundenHeaderTitle');
+    if (headerTitle) headerTitle.textContent = 'Niederlassung Rhein-Main';
+    var headerId = document.getElementById('kundenHeaderId');
+    if (headerId) {
+        var headerSubtitle = headerId.parentElement;
+        if (!_origA10SubtitleMRH) _origA10SubtitleMRH = headerSubtitle.innerHTML;
+        headerSubtitle.innerHTML = '<span id="kundenHeaderId">MRH Trowe</span>';
+    }
+
+    // Photo
+    var headerPhoto = document.getElementById('kundenHeaderPhoto');
+    if (headerPhoto) {
+        if (!headerPhoto._origHTML) headerPhoto._origHTML = headerPhoto.innerHTML;
+        headerPhoto.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" width="22" height="22" style="margin:auto;display:block;"><path d="M3 21h18M5 21V7l8-4v18M13 21V3l6 3v15"/><circle cx="18" cy="8" r="3" fill="rgba(134,188,37,0.8)" stroke="none"/><text x="18" y="9.5" text-anchor="middle" font-size="4" fill="white" stroke="none" font-weight="bold">360</text></svg>';
+    }
+
+    // Customer dropdown
+    var dropdown = document.querySelector('.kunden-switch-dropdown');
+    if (dropdown) {
+        if (!_origDropdownMRH) _origDropdownMRH = dropdown.innerHTML;
+        var opts = mrhKunden.map(function(k) {
+            var sel = k.id === kunde.id ? ' selected' : '';
+            var label = k.typ === 'Privat' ? k.name + ' (Privat)' : k.name;
+            return '<option value="' + k.id + '"' + sel + '>' + label + '</option>';
+        }).join('');
+        dropdown.innerHTML = '<label>Kunde:</label><select id="mrhKundenSwitchSelect" onchange="switchMRHKundeDropdown(this.value)" style="font-weight:600;font-size:13px;color:#1e293b;border:1px solid #e2e8f0;border-radius:6px;padding:4px 8px;background:#fff;max-width:320px">' + opts + '</select>';
+    }
+
+    // 2) A-02 header tabs → MRH tabs (navigate back)
+    var a02Tabs = document.querySelector('#kundenDetailPage .agentur-header-tabs');
+    if (a02Tabs) {
+        if (!_origA02HeaderTabsMRH) _origA02HeaderTabsMRH = a02Tabs.innerHTML;
+        a02Tabs.innerHTML =
+            '<button class="agentur-tab" onclick="navigateToMRHTab(\'uebersicht\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg> Übersicht</button>' +
+            '<button class="agentur-tab" onclick="navigateToMRHTab(\'specialtymix\')">Specialty-Mix</button>' +
+            '<button class="agentur-tab" onclick="navigateToMRHTab(\'bav\')">bAV</button>' +
+            '<button class="agentur-tab" onclick="navigateToMRHTab(\'finance\')">Finance</button>' +
+            '<button class="agentur-tab" onclick="navigateToMRHTab(\'crosssell\')">Cross-Sell</button>' +
+            '<div class="agentur-tab-divider"></div>' +
+            '<button class="agentur-tab active" onclick="navigateToMRHTab(\'kunden\')">Kunden</button>';
+    }
+
+    // 3) Inner tabs for MRH
+    var kundenTabs = document.querySelector('#kundenDetailPage .kunden-tabs');
+    if (kundenTabs) {
+        if (!_origKundenTabsMRH) _origKundenTabsMRH = kundenTabs.innerHTML;
+        kundenTabs.innerHTML =
+            '<button class="kunden-tab active" data-tab="stammdaten" onclick="switchKundenTab(\'stammdaten\')">Stammdaten</button>' +
+            '<button class="kunden-tab" data-tab="vertraege" onclick="switchKundenTab(\'vertraege\')">Verträge (Insurance)</button>' +
+            '<button class="kunden-tab" data-tab="schadenhistorie" onclick="switchKundenTab(\'schadenhistorie\')">Schadenhistorie</button>' +
+            '<button class="kunden-tab" data-tab="deckungsluecken" onclick="switchKundenTab(\'deckungsluecken\')">Deckungslücken</button>' +
+            '<button class="kunden-tab" data-tab="renewal" onclick="switchKundenTab(\'renewal\')">Renewal</button>' +
+            '<button class="kunden-tab" data-tab="ansprechpartner" onclick="switchKundenTab(\'ansprechpartner\')">Ansprechpartner</button>' +
+            '<button class="kunden-tab" data-tab="b2bpotentiale" onclick="switchKundenTab(\'b2bpotentiale\')">Cross-Sell</button>';
+    }
+
+    // 4) Name, ID, Photo
+    var nameEl = document.getElementById('kundenName');
+    if (nameEl) nameEl.textContent = kunde.name;
+    var idEl = document.getElementById('kundenVermittlerId');
+    if (idEl) idEl.textContent = kunde.id;
+
+    var foto = document.querySelector('.kunden-foto');
+    if (foto) {
+        foto.style.background = kunde.typ === 'Privat' ? '#64748b' : '#0076A8';
+        var icon = kunde.specialtyIcon || mrhSpecialtyIcons.privatkunde;
+        foto.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;color:white">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="48" height="48" style="color:#fff">' + icon.replace(/<svg[^>]*>/, '').replace(/<\/svg>/, '') + '</svg></div>';
+    }
+
+    // 5) Stammdaten: hide private, show MRH-stammdaten in maklerStammdaten container
+    var privatStamm = document.getElementById('privatStammdaten');
+    var maklerStamm = document.getElementById('maklerStammdaten');
+    if (privatStamm) privatStamm.style.display = 'none';
+    if (maklerStamm) {
+        maklerStamm.style.display = 'grid';
+        var mkB = document.getElementById('mkBranche'); if (mkB) mkB.textContent = kunde.branche || '—';
+        var mkS = document.getElementById('mkSegment'); if (mkS) mkS.textContent = kunde.specialty || '—';
+        var mkM = document.getElementById('mkMitarbeitende'); if (mkM) mkM.textContent = kunde.mitarbeitende ? kunde.mitarbeitende.toLocaleString('de-DE') : '—';
+        var mkJ = document.getElementById('mkJahresumsatz'); if (mkJ) mkJ.textContent = kunde.jahresumsatz || '—';
+        var mkBe = document.getElementById('mkBetten'); if (mkBe) mkBe.textContent = kunde.standorte || '—';
+        var mkSt = document.getElementById('mkStandorte'); if (mkSt) mkSt.textContent = kunde.eigentuemer || '—';
+        var mkT = document.getElementById('mkTraeger'); if (mkT) mkT.textContent = kunde.gesellschaftsform || '—';
+        var mkK = document.getElementById('mkKeyContact'); if (mkK) mkK.textContent = (kunde.keyContacts || []).join(', ') || '—';
+        var mkR = document.getElementById('mkRisikoklasse'); if (mkR) { mkR.textContent = kunde.beziehungsstatus || '—'; mkR.className = 'info-value'; }
+        var mkKs = document.getElementById('mkKundeSeit'); if (mkKs) mkKs.textContent = '—';
+    }
+
+    // 6) Inject 3-Säulen-Karten above stammdaten
+    var stammdatenTab = document.getElementById('tab-stammdaten-content') || (maklerStamm ? maklerStamm.parentElement : null);
+    var existingSaeulen = document.getElementById('mrhA10SaeulenGrid');
+    if (existingSaeulen) existingSaeulen.remove();
+
+    if (maklerStamm) {
+        var saeulenHtml = '<div class="mrh-a10-saeulen-grid" id="mrhA10SaeulenGrid">' +
+            '<div class="mrh-a10-saeulen-card insurance">' +
+                '<h5><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Insurance</h5>' +
+                '<div class="mrh-a10-saeulen-metric"><span class="label">Prämie</span><span class="value">' + kunde.insurance.praemieDisplay + '</span></div>' +
+                '<div class="mrh-a10-saeulen-metric"><span class="label">Verträge</span><span class="value">' + kunde.insurance.vertraege + '</span></div>' +
+                '<div class="mrh-a10-saeulen-metric"><span class="label">Renewal</span><span class="value">' + kunde.insurance.renewalDate + '</span></div>' +
+            '</div>' +
+            '<div class="mrh-a10-saeulen-card benefits' + (!kunde.benefits.aktiv ? ' inactive' : '') + '">' +
+                '<h5><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg> Benefits</h5>' +
+                '<div class="mrh-a10-saeulen-metric"><span class="label">bAV-Volumen</span><span class="value">' + (kunde.benefits.bavVolumen || '—') + '</span></div>' +
+                '<div class="mrh-a10-saeulen-metric"><span class="label">Durchdringung</span><span class="value">' + (kunde.benefits.durchdringung || '—') + '</span></div>' +
+                '<div class="mrh-a10-saeulen-metric"><span class="label">Status</span><span class="value">' + (kunde.benefits.aktiv ? 'Aktiv' : 'Kein Mandat') + '</span></div>' +
+            '</div>' +
+            '<div class="mrh-a10-saeulen-card finance' + (!kunde.finance.aktiv ? ' inactive' : '') + '">' +
+                '<h5><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg> Finance</h5>' +
+                '<div class="mrh-a10-saeulen-metric"><span class="label">Kreditvers.</span><span class="value">' + (kunde.finance.kreditvers || '—') + '</span></div>' +
+                '<div class="mrh-a10-saeulen-metric"><span class="label">Leasing</span><span class="value">' + (kunde.finance.leasing || '—') + '</span></div>' +
+                '<div class="mrh-a10-saeulen-metric"><span class="label">Courtage</span><span class="value">' + (kunde.finance.courtage || '—') + '</span></div>' +
+            '</div>' +
+        '</div>';
+        maklerStamm.insertAdjacentHTML('beforebegin', saeulenHtml);
+    }
+
+    // 7) Verträge table
+    var vertraegeBody = document.getElementById('kundenVertraege');
+    var vertraegeTable = document.getElementById('betreuteVertraegeTable');
+    if (vertraegeTable) {
+        var thead = vertraegeTable.querySelector('thead tr');
+        if (thead) thead.innerHTML = '<th>Sparte</th><th>Versicherer</th><th class="text-right">Prämie/a</th><th>DS</th><th>Ablauf</th><th>Säule</th>';
+    }
+    if (vertraegeBody) {
+        if (kunde.vertraegeDetail && kunde.vertraegeDetail.length > 0) {
+            vertraegeBody.innerHTML = kunde.vertraegeDetail.map(function(v) {
+                var saeuleClass = v.saeule === 'I' ? 'insurance' : (v.saeule === 'B' ? 'benefits' : 'finance');
+                return '<tr><td><strong>' + v.sparte + '</strong></td><td>' + v.versicherer + '</td>' +
+                    '<td class="text-right">' + (v.praemie > 0 ? v.praemie.toLocaleString('de-DE') + ' €' : '—') + '</td>' +
+                    '<td>' + v.ds + '</td><td>' + v.ablauf + '</td>' +
+                    '<td><span class="mrh-saeulen-tag ' + saeuleClass + '">' + v.saeule + '</span></td></tr>';
+            }).join('');
+        } else {
+            vertraegeBody.innerHTML = '<tr><td colspan="6" class="text-muted">Keine Vertragsdaten</td></tr>';
+        }
+    }
+
+    // 8) Render B2B tab content (reuse existing renderers where possible)
+    if (typeof renderB2bSchadenhistorie === 'function') {
+        var schadenData = { schadenhistorie: (kunde.schadenhistorie || []).map(function(s) { return { jahr: s.jahr, anzahl: 1, volumen: s.betrag, quote: 0, groesster: s.beschreibung }; }) };
+        renderB2bSchadenhistorie(schadenData);
+    }
+    if (typeof renderB2bDeckungsluecken === 'function') {
+        var dlData = { deckungsluecken: (kunde.deckungsluecken || []).map(function(d) { return { risiko: d, status: 'Nicht versichert', empfehlung: 'Prüfung empfohlen', prioritaet: 'Hoch' }; }) };
+        renderB2bDeckungsluecken(dlData);
+    }
+    // Renewal
+    if (typeof renderB2bRenewal === 'function') {
+        var renewalData = { vertraegeDetail: (kunde.vertraegeDetail || []).map(function(v) { return { sparte: v.sparte, versicherer: v.versicherer, praemie: v.praemie, ablauf: v.ablauf }; }) };
+        renderB2bRenewal(renewalData);
+    }
+    // Ansprechpartner
+    if (typeof renderB2bAnsprechpartner === 'function') {
+        renderB2bAnsprechpartner({ keyContacts: kunde.keyContacts, beraterInsurance: kunde.beraterInsurance, beraterBenefits: kunde.beraterBenefits, beraterFinance: kunde.beraterFinance });
+    }
+    // Cross-Sell Potentials in b2bpotentiale tab
+    var b2bPotContent = document.getElementById('b2bPotentialeContent');
+    if (b2bPotContent) {
+        var crossSellHtml = '';
+        if (!kunde.benefits.aktiv && kunde.mitarbeitende && kunde.mitarbeitende > 50) {
+            crossSellHtml += '<div class="mrh-crosssell-example"><strong>Insurance → Benefits:</strong> ' + kunde.mitarbeitende + ' MA ohne bAV — Cross-Sell-Potential</div>';
+        }
+        if (kunde.deckungsluecken && kunde.deckungsluecken.length > 0) {
+            crossSellHtml += kunde.deckungsluecken.map(function(d) { return '<div class="mrh-crosssell-example" style="margin-top:6px"><strong>Deckungslücke:</strong> ' + d + '</div>'; }).join('');
+        }
+        if (!crossSellHtml) crossSellHtml = '<p class="text-muted">Keine Cross-Sell-Potentiale identifiziert</p>';
+        b2bPotContent.innerHTML = crossSellHtml;
+    }
+
+    // Render Relationship Timeline into Ansprechpartner tab
+    var apContent = document.getElementById('b2bAnsprechpartnerContent');
+    if (apContent && kunde.timeline && kunde.timeline.length > 0) {
+        var timelineHtml = '<h4 style="margin-top:20px;font-size:14px;font-weight:700;color:#1e293b">Relationship-Timeline</h4><div class="mrh-timeline">';
+        kunde.timeline.forEach(function(t) {
+            timelineHtml += '<div class="mrh-timeline-item ' + t.saeule + '">' +
+                '<div class="mrh-timeline-date">' + t.datum + '</div>' +
+                '<div class="mrh-timeline-text">' + t.text + '</div>' +
+                '<div class="mrh-timeline-person">' + t.person + '</div>' +
+            '</div>';
+        });
+        timelineHtml += '</div>';
+        apContent.innerHTML += timelineHtml;
+    }
+
+    // 9) Hide AO-only elements
+    var npsWrapper = document.getElementById('kundenNpsWrapper');
+    if (npsWrapper) { var npsItem = npsWrapper.closest('.info-item'); if (npsItem) npsItem.style.display = 'none'; }
+    ['kundenRisikoscore','kundenBonitaetsscore','kundenTiere','kundenArbeitgeber','kundenBeschaeftigtSeit'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) { var item = el.closest('.info-item'); if (item) item.style.display = 'none'; }
+    });
+    var clvCard = document.getElementById('clvDetailCard');
+    if (clvCard) clvCard.style.display = 'none';
+    var clvBadge = document.getElementById('clvHeaderBadge');
+    if (clvBadge) clvBadge.style.display = 'none';
+    var schadenCard = document.getElementById('maklerSchadenCard');
+    if (schadenCard) schadenCard.style.display = 'none';
+    var dlCard = document.getElementById('maklerDeckungslueckenCard');
+    if (dlCard) dlCard.style.display = 'none';
+    var renewalCard = document.getElementById('maklerRenewalCard');
+    if (renewalCard) renewalCard.style.display = 'none';
+
+    // 10) Sticky bar
+    updateMRHStickyBar(kunde);
+
+    // 11) Default tab
+    if (typeof switchKundenTab === 'function') switchKundenTab('stammdaten');
+}
+
+function updateMRHStickyBar(kunde) {
+    var nameEl = document.getElementById('kundeBarNameB');
+    if (nameEl) nameEl.textContent = kunde.name;
+    var idEl = document.getElementById('kundeBarIdB');
+    if (idEl) idEl.textContent = kunde.id;
+
+    var npsLabel = document.querySelector('#kundenDetailPage .kunde-sticky-kpi:nth-child(1) .kunde-sticky-kpi-label');
+    var npsEl = document.getElementById('kundeBarNpsB');
+    if (npsLabel) npsLabel.textContent = 'Specialty';
+    if (npsEl) npsEl.innerHTML = '<span class="mrh-specialty-badge ' + kunde.specialtyClass + '" style="font-size:10px">' + kunde.specialtyIcon + ' ' + kunde.specialty + '</span>';
+
+    var clvLabel = document.querySelector('#kundenDetailPage .kunde-sticky-kpi:nth-child(2) .kunde-sticky-kpi-label');
+    var clvEl = document.getElementById('kundeBarClvB');
+    if (clvLabel) clvLabel.textContent = 'Prämie';
+    if (clvEl) clvEl.textContent = kunde.insurance.praemieDisplay;
+
+    var segLabel = document.querySelector('#kundenDetailPage .kunde-sticky-kpi:nth-child(3) .kunde-sticky-kpi-label');
+    var segEl = document.getElementById('kundeBarSegmentB');
+    if (segLabel) segLabel.textContent = 'Säulen';
+    if (segEl) {
+        var tags = '<span class="mrh-saeulen-tag insurance">I</span>';
+        if (kunde.benefits.aktiv) tags += '<span class="mrh-saeulen-tag benefits">B</span>';
+        if (kunde.finance.aktiv) tags += '<span class="mrh-saeulen-tag finance">F</span>';
+        segEl.innerHTML = tags;
+    }
+}
+
+// Restore MRH detail
+function restoreMRHKundenDetail() {
+    if (!_mrhDetailActive) return;
+    _mrhDetailActive = false;
+
+    var a02Tabs = document.querySelector('#kundenDetailPage .agentur-header-tabs');
+    if (a02Tabs && _origA02HeaderTabsMRH) a02Tabs.innerHTML = _origA02HeaderTabsMRH;
+    var kundenTabs = document.querySelector('#kundenDetailPage .kunden-tabs');
+    if (kundenTabs && _origKundenTabsMRH) kundenTabs.innerHTML = _origKundenTabsMRH;
+    var dropdown = document.querySelector('.kunden-switch-dropdown');
+    if (dropdown && _origDropdownMRH) dropdown.innerHTML = _origDropdownMRH;
+    var headerId = document.getElementById('kundenHeaderId');
+    if (headerId && _origA10SubtitleMRH) headerId.parentElement.innerHTML = _origA10SubtitleMRH;
+    var headerPhoto = document.getElementById('kundenHeaderPhoto');
+    if (headerPhoto && headerPhoto._origHTML) headerPhoto.innerHTML = headerPhoto._origHTML;
+
+    var saeulen = document.getElementById('mrhA10SaeulenGrid');
+    if (saeulen) saeulen.remove();
+
+    var foto = document.querySelector('.kunden-foto');
+    if (foto) foto.style.background = '';
+}
+window.restoreMRHKundenDetail = restoreMRHKundenDetail;
+
+function navigateToMRHTab(tabName) {
+    document.getElementById('kundenDetailPage').style.display = 'none';
+    var agenturOverview = document.getElementById('agenturOverview');
+    if (agenturOverview) agenturOverview.style.display = 'block';
+    showMRHTab(tabName);
+    document.dispatchEvent(new CustomEvent('viewChanged', { detail: { module: 'versicherung', view: 'agentursicht' } }));
+}
+window.navigateToMRHTab = navigateToMRHTab;
+
+function switchMRHKundeDropdown(kundeId) {
+    if (!kundeId) return;
+    openMRHKundenDetail(kundeId);
+}
+window.switchMRHKundeDropdown = switchMRHKundeDropdown;
+
+// ========================================
+// INIT: Restore viewMode from localStorage
+// ========================================
+(function() {
+    var saved = localStorage.getItem('viewMode');
+    if (saved && (saved === 'ao' || saved === 'ecclesia' || saved === 'mrh')) {
+        viewMode = saved;
+    }
+    // Apply on next tick (after DOM ready)
+    setTimeout(function() {
+        document.querySelectorAll('.view-mode-btn').forEach(function(btn) {
+            btn.classList.toggle('active', btn.dataset.mode === viewMode);
+        });
+        if (viewMode !== 'ao') {
+            applyViewMode();
+        }
+    }, 100);
+})();
+

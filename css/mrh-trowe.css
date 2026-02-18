@@ -1,0 +1,589 @@
+/* css/mrh-trowe.css - MRH Trowe 360° Modus Styles */
+
+/* ========================================
+   3-WEGE MODUS SELECTOR (ersetzt Toggle)
+   ======================================== */
+.view-mode-selector {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    position: absolute;
+    right: 32px;
+    z-index: 2;
+    background: rgba(255,255,255,0.15);
+    border-radius: 8px;
+    padding: 2px;
+}
+
+.view-mode-btn {
+    padding: 5px 12px;
+    border: none;
+    background: transparent;
+    color: rgba(255,255,255,0.7);
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.view-mode-btn:hover {
+    background: rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.9);
+}
+
+.view-mode-btn.active {
+    background: #86BC25;
+    color: #fff;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+/* ========================================
+   MRH KPI KARTEN
+   ======================================== */
+#mrhKpis {
+    grid-template-columns: repeat(6, 1fr) !important;
+}
+
+.mrh-kpi-card {
+    display: none;
+    background: white;
+    border-radius: 12px;
+    padding: 18px 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    border: 1px solid #e2e8f0;
+}
+
+.mrh-kpi-card .cockpit-kpi-icon.mrh-bav { background: #dcfce7; color: #26890D; }
+.mrh-kpi-card .cockpit-kpi-icon.mrh-finance { background: #fff7ed; color: #ED8B00; }
+.mrh-kpi-card .cockpit-kpi-icon.mrh-pipeline { background: #f1f5f9; color: #64748b; }
+
+/* ========================================
+   SÄULEN-BADGES (Insurance / Benefits / Finance)
+   ======================================== */
+.mrh-saeulen-badges {
+    display: flex;
+    gap: 12px;
+    padding: 0 0 8px 0;
+}
+
+.mrh-saeulen-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+}
+
+.mrh-saeulen-badge.insurance {
+    background: #e0f2fe;
+    color: #0076A8;
+    border: 1px solid #bae6fd;
+}
+
+.mrh-saeulen-badge.benefits {
+    background: #dcfce7;
+    color: #26890D;
+    border: 1px solid #bbf7d0;
+}
+
+.mrh-saeulen-badge.finance {
+    background: #fff7ed;
+    color: #ED8B00;
+    border: 1px solid #fed7aa;
+}
+
+/* Inline Säulen-Tags in Kundenliste */
+.mrh-saeulen-tag {
+    display: inline-block;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    margin-right: 3px;
+}
+
+.mrh-saeulen-tag.insurance { background: #e0f2fe; color: #0076A8; }
+.mrh-saeulen-tag.benefits { background: #dcfce7; color: #26890D; }
+.mrh-saeulen-tag.finance { background: #fff7ed; color: #ED8B00; }
+
+/* ========================================
+   MRH TAB CONTENT
+   ======================================== */
+.agentur-tab-mrh {
+    display: none;
+}
+
+.mrh-tab-content {
+    display: none;
+    padding: 24px;
+}
+
+.mrh-tab-content.active {
+    display: block;
+}
+
+/* ========================================
+   SPECIALTY-SEGMENT BADGES
+   ======================================== */
+.mrh-specialty-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.specialty-maschinenbau { background: #f1f5f9; color: #334155; }
+.specialty-real-estate { background: #fef3c7; color: #92400e; }
+.specialty-kfz-motor { background: #e0f2fe; color: #0369a1; }
+.specialty-logistik { background: #dcfce7; color: #166534; }
+.specialty-it-hightech { background: #ede9fe; color: #6d28d9; }
+.specialty-healthcare { background: #fce7f3; color: #be185d; }
+.specialty-rechtsanwaelte { background: #f1f5f9; color: #475569; }
+.specialty-bau-handwerk { background: #fef3c7; color: #78350f; }
+.specialty-events-sport { background: #fff7ed; color: #c2410c; }
+.specialty-touristik { background: #e0f2fe; color: #0c4a6e; }
+.specialty-fine-art { background: #fdf2f8; color: #9d174d; }
+.specialty-privatkunden { background: #f0fdf4; color: #166534; }
+.specialty-w-i-m-a { background: #f1f5f9; color: #1e293b; }
+.specialty-oepnv-spnv { background: #dbeafe; color: #1e40af; }
+.specialty-automotive { background: #f1f5f9; color: #334155; }
+
+/* ========================================
+   SPECIALTY-MIX TREEMAP
+   ======================================== */
+.mrh-treemap-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-top: 16px;
+}
+
+.mrh-treemap-item {
+    padding: 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+    border: 1px solid rgba(0,0,0,0.06);
+    position: relative;
+    overflow: hidden;
+}
+
+.mrh-treemap-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.mrh-treemap-item .treemap-label {
+    font-size: 13px;
+    font-weight: 700;
+    color: inherit;
+    margin-bottom: 4px;
+}
+
+.mrh-treemap-item .treemap-pct {
+    font-size: 22px;
+    font-weight: 800;
+    opacity: 0.8;
+}
+
+.mrh-treemap-item .treemap-specialties {
+    font-size: 11px;
+    opacity: 0.7;
+    margin-top: 4px;
+}
+
+.mrh-treemap-item.large {
+    grid-column: span 2;
+    grid-row: span 2;
+}
+
+/* ========================================
+   3-SÄULEN DASHBOARD (Übersicht)
+   ======================================== */
+.mrh-drei-saeulen-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.mrh-saeulen-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    border: 2px solid #e2e8f0;
+    transition: border-color 0.2s;
+}
+
+.mrh-saeulen-card.insurance { border-top: 3px solid #0076A8; }
+.mrh-saeulen-card.benefits { border-top: 3px solid #26890D; }
+.mrh-saeulen-card.finance { border-top: 3px solid #ED8B00; }
+
+.mrh-saeulen-card-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.mrh-saeulen-card-header .saeulen-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mrh-saeulen-card-header .saeulen-icon.insurance { background: #e0f2fe; color: #0076A8; }
+.mrh-saeulen-card-header .saeulen-icon.benefits { background: #dcfce7; color: #26890D; }
+.mrh-saeulen-card-header .saeulen-icon.finance { background: #fff7ed; color: #ED8B00; }
+
+.mrh-saeulen-card-header h4 {
+    font-size: 14px;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0;
+}
+
+.mrh-saeulen-metric {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    border-bottom: 1px solid #f1f5f9;
+    font-size: 13px;
+}
+
+.mrh-saeulen-metric:last-child {
+    border-bottom: none;
+}
+
+.mrh-saeulen-metric .metric-label {
+    color: #64748b;
+}
+
+.mrh-saeulen-metric .metric-value {
+    font-weight: 700;
+    color: #1e293b;
+}
+
+/* ========================================
+   BAV DASHBOARD
+   ======================================== */
+.mrh-bav-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+}
+
+.mrh-bav-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid #e2e8f0;
+}
+
+.mrh-bav-card h4 {
+    font-size: 13px;
+    font-weight: 700;
+    color: #26890D;
+    margin: 0 0 12px 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.mrh-durchdringung-bar {
+    height: 24px;
+    background: #e2e8f0;
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+    margin-top: 8px;
+}
+
+.mrh-durchdringung-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #26890D, #4ade80);
+    border-radius: 12px;
+    transition: width 0.5s ease;
+}
+
+.mrh-durchdringung-target {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 2px;
+    background: #dc2626;
+}
+
+.mrh-durchdringung-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 4px;
+    font-size: 11px;
+    color: #64748b;
+}
+
+/* ========================================
+   FINANCE PORTFOLIO
+   ======================================== */
+.mrh-finance-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
+
+.mrh-finance-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid #e2e8f0;
+    border-left: 3px solid #ED8B00;
+}
+
+.mrh-finance-card h4 {
+    font-size: 13px;
+    font-weight: 700;
+    color: #ED8B00;
+    margin: 0 0 12px 0;
+}
+
+/* ========================================
+   CROSS-SELL MATRIX
+   ======================================== */
+.mrh-crosssell-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+}
+
+.mrh-crosssell-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid #e2e8f0;
+    cursor: pointer;
+    transition: box-shadow 0.15s;
+}
+
+.mrh-crosssell-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.mrh-crosssell-direction {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.mrh-crosssell-arrow {
+    color: #94a3b8;
+}
+
+.mrh-crosssell-example {
+    background: #f8fafc;
+    border-radius: 8px;
+    padding: 12px;
+    font-size: 12px;
+    color: #475569;
+    margin-top: 8px;
+    border-left: 3px solid #86BC25;
+}
+
+.mrh-crosssell-example strong {
+    color: #1e293b;
+}
+
+/* ========================================
+   RELATIONSHIP TIMELINE (A-10)
+   ======================================== */
+.mrh-timeline {
+    position: relative;
+    padding-left: 24px;
+    margin-top: 16px;
+}
+
+.mrh-timeline::before {
+    content: '';
+    position: absolute;
+    left: 8px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #e2e8f0;
+}
+
+.mrh-timeline-item {
+    position: relative;
+    padding: 8px 0 16px 16px;
+}
+
+.mrh-timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -20px;
+    top: 12px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 2px solid #e2e8f0;
+    background: white;
+}
+
+.mrh-timeline-item.insurance::before { border-color: #0076A8; background: #e0f2fe; }
+.mrh-timeline-item.benefits::before { border-color: #26890D; background: #dcfce7; }
+.mrh-timeline-item.finance::before { border-color: #ED8B00; background: #fff7ed; }
+
+.mrh-timeline-date {
+    font-size: 11px;
+    font-weight: 600;
+    color: #94a3b8;
+}
+
+.mrh-timeline-text {
+    font-size: 13px;
+    color: #1e293b;
+    margin-top: 2px;
+}
+
+.mrh-timeline-person {
+    font-size: 11px;
+    color: #64748b;
+    margin-top: 2px;
+}
+
+/* ========================================
+   A-10 DREI-SÄULEN-KARTEN
+   ======================================== */
+.mrh-a10-saeulen-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin: 16px 0;
+}
+
+.mrh-a10-saeulen-card {
+    border-radius: 12px;
+    padding: 16px;
+    border: 1px solid #e2e8f0;
+}
+
+.mrh-a10-saeulen-card.insurance {
+    background: #f0f9ff;
+    border-left: 3px solid #0076A8;
+}
+
+.mrh-a10-saeulen-card.benefits {
+    background: #f0fdf4;
+    border-left: 3px solid #26890D;
+}
+
+.mrh-a10-saeulen-card.finance {
+    background: #fffbeb;
+    border-left: 3px solid #ED8B00;
+}
+
+.mrh-a10-saeulen-card.inactive {
+    opacity: 0.5;
+    background: #f8fafc;
+}
+
+.mrh-a10-saeulen-card h5 {
+    font-size: 12px;
+    font-weight: 700;
+    margin: 0 0 8px 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.mrh-a10-saeulen-card.insurance h5 { color: #0076A8; }
+.mrh-a10-saeulen-card.benefits h5 { color: #26890D; }
+.mrh-a10-saeulen-card.finance h5 { color: #ED8B00; }
+
+.mrh-a10-saeulen-metric {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    padding: 3px 0;
+}
+
+.mrh-a10-saeulen-metric .label { color: #64748b; }
+.mrh-a10-saeulen-metric .value { font-weight: 600; color: #1e293b; }
+
+/* ========================================
+   MRH HEADER SUBHEADLINE
+   ======================================== */
+.mrh-subheadline {
+    display: flex;
+    gap: 8px;
+    margin-top: 4px;
+}
+
+.mrh-subheadline-tag {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: rgba(255,255,255,0.2);
+    color: rgba(255,255,255,0.9);
+}
+
+/* ========================================
+   MRH KUNDENLISTE TABLE
+   ======================================== */
+.mrh-kundenliste-table .text-right {
+    text-align: right;
+}
+
+.mrh-kundenliste-table .text-muted {
+    color: #94a3b8;
+    font-size: 12px;
+}
+
+/* ========================================
+   RESPONSIVE
+   ======================================== */
+@media (max-width: 1400px) {
+    #mrhKpis {
+        grid-template-columns: repeat(3, 1fr) !important;
+    }
+    .mrh-drei-saeulen-grid {
+        grid-template-columns: 1fr;
+    }
+    .mrh-finance-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .mrh-a10-saeulen-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 1200px) {
+    .view-mode-selector {
+        position: relative;
+        right: auto;
+        margin-left: auto;
+    }
+    .mrh-treemap-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .mrh-bav-grid {
+        grid-template-columns: 1fr;
+    }
+}

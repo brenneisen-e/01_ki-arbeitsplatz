@@ -92,8 +92,10 @@ function loadAgenturData(vermittlerId) {
     fillProvisionTab(agenturData);
     fillQualitaetTab(agenturData);
 
-    // Zeige Übersicht-Tab als ersten Tab (oder Makler-Modus wenn aktiv)
-    if (typeof maklerModus !== 'undefined' && maklerModus) {
+    // Zeige Übersicht-Tab als ersten Tab (oder Makler/MRH-Modus wenn aktiv)
+    if (typeof viewMode !== 'undefined' && viewMode !== 'ao') {
+        applyViewMode();
+    } else if (typeof maklerModus !== 'undefined' && maklerModus) {
         applyMaklerModus();
     } else {
         showAgenturTab('uebersicht');
@@ -710,7 +712,8 @@ function askAgenturQuestion(question) {
  */
 function getAgenturChatResponse(question) {
     const q = question.toLowerCase();
-    const isMakler = typeof maklerModus !== 'undefined' && maklerModus;
+    const isMRH = typeof viewMode !== 'undefined' && viewMode === 'mrh';
+    const isMakler = isMRH ? false : (typeof maklerModus !== 'undefined' && maklerModus);
 
     // Dynamische Datums-Helper
     const getDynamicDate = (daysFromNow) => {
@@ -758,6 +761,119 @@ function getAgenturChatResponse(question) {
                 Vertriebsbericht
             </button>
         </div>`;
+
+    // ========== MRH TROWE 360° RESPONSES ==========
+    if (isMRH) {
+        const mrhFollowUp = `
+            <div class="chat-followup-suggestions">
+                <button onclick="askAgenturQuestion('Welche Kunden haben Potential für bAV?')">bAV-Potential?</button>
+                <button onclick="askAgenturQuestion('Welche Renewals stehen im Q2 an?')">Q2 Renewals?</button>
+                <button onclick="askAgenturQuestion('Was unterscheidet uns von Ecclesia?')">Ecclesia vs. MRH?</button>
+                <button onclick="askAgenturQuestion('Wie ist die Cross-Sell-Pipeline?')">Cross-Sell?</button>
+            </div>`;
+
+        const mrhCustomerBtn = (name, id) => `<button class="chat-customer-btn" onclick="openMRHKundenDetail('${id}')">${name}</button>`;
+
+        // bAV / Benefits
+        if (q.includes('bav') || q.includes('benefit') || q.includes('potential für bav') || q.includes('pension')) {
+            return `<strong>bAV-Potentiale (Insurance → Benefits):</strong><br><br>
+            B2B-Kunden mit >100 MA ohne Benefits-Mandat:<br><br>
+            <div class="chat-customer-item">
+                ${mrhCustomerBtn('Rhein-Main Maschinenbau', 'MRH-001')} 340 MA, Prämie 420k, kein bAV<br>
+                <span class="chat-recommendation">Geschätztes Potential: 85k bAV-Volumen/Jahr — Steuerberater-Lösung ablösen</span>
+            </div>
+            <div class="chat-customer-item">
+                ${mrhCustomerBtn('Hessenlog Spedition', 'MRH-005')} 210 MA, kein bAV<br>
+                <span class="chat-recommendation">Einfaches Modell als Bindungsinstrument gegen Fluktuation</span>
+            </div>
+            <br>Aktuelle Durchdringung: <strong>38%</strong> (Ziel: 55%)
+            ${mrhFollowUp}`;
+        }
+
+        // Renewals
+        if (q.includes('renewal') || q.includes('q2') || q.includes('ablaufend')) {
+            return `<strong>Anstehende Renewals (MRH Trowe Rhein-Main):</strong><br><br>
+            <strong>Handlungsbedarf:</strong><br><br>
+            <div class="chat-customer-item">
+                ${mrhCustomerBtn('Rhein-Main Maschinenbau', 'MRH-001')} Betriebshaftpflicht — 01.04.2026<br>
+                <span class="chat-recommendation">420k Prämie — Allianz hat 15% Erhöhung angekündigt</span>
+            </div>
+            <div class="chat-customer-item">
+                ${mrhCustomerBtn('Rhein-Main Verkehr', 'MRH-015')} Flotte + BH ÖPNV — 01.07.2026<br>
+                <span class="chat-recommendation">1,45 Mio. Prämie — größtes Renewal des Halbjahres</span>
+            </div>
+            ${mrhFollowUp}`;
+        }
+
+        // Cross-Sell
+        if (q.includes('cross-sell') || q.includes('cross sell') || q.includes('pipeline')) {
+            return `<strong>Cross-Sell-Pipeline (3 Säulen):</strong><br><br>
+            <strong>Insurance → Benefits:</strong> 3 Kunden mit >100 MA ohne bAV<br>
+            <strong>Insurance → Finance:</strong> DigiCore SaaS-Kreditversicherung in Prüfung<br>
+            <strong>Finance → Insurance:</strong> CNC-Leasing 1,4 Mio. ohne technische Versicherung<br><br>
+            Geschätztes Gesamtpotential: <strong>~450k €/a</strong>
+            ${mrhFollowUp}`;
+        }
+
+        // Ecclesia vs MRH
+        if (q.includes('ecclesia') || q.includes('unterschied') || q.includes('vergleich')) {
+            return `<strong>MRH Trowe vs. Ecclesia — Kernunterschiede:</strong><br><br>
+            <strong>Geschäftsmodell:</strong> MRH hat 3 Säulen (Insurance + Benefits + Finance) vs. Ecclesia rein Versicherung<br><br>
+            <strong>Kundenbasis:</strong> MRH bedient B2B + gehobene Privatkunden (500-2.000 Kunden, 20+ Specialties), Ecclesia nur B2B (80-250 Institutionen, 5 Segmente)<br><br>
+            <strong>KPI-Logik:</strong> MRH trackt zusätzlich bAV-Durchdringung, Finance-Cross-Sell und Acquisition-Pipeline<br><br>
+            <strong>Eigentümer:</strong> 51% Gründer + 49% PE (AnaCap/TA Associates) vs. kirchlich-ökumenisch
+            ${mrhFollowUp}`;
+        }
+
+        // Specialty / Autohaus / Deckung
+        if (q.includes('autohaus') || q.includes('kfz') || q.includes('deckung') && q.includes('typisch')) {
+            return `<strong>Specialty-Wissen: Autohaus / Kfz-Motor</strong><br><br>
+            Typische Deckungen für Autohäuser:<br>
+            • Kfz-Handel inkl. Probefahrtrisiko<br>
+            • Vorführwagen-Flotte<br>
+            • Werkstatt-Inhaltsversicherung<br>
+            • Transportversicherung Neuwagen<br>
+            • GAP-Versicherung Leasingrückläufer<br>
+            • Cyber (Kundendaten, DMS)<br><br>
+            <div class="chat-customer-item">
+                ${mrhCustomerBtn('AutoZentrum Rhein-Main', 'MRH-004')} Prämie 310k, 14 Verträge<br>
+                <span class="chat-recommendation">GAP-Versicherung fehlt — Deckungslücke</span>
+            </div>
+            ${mrhFollowUp}`;
+        }
+
+        // W&I
+        if (q.includes('w&i') || q.includes('warranty') || q.includes('m&a') || q.includes('deal')) {
+            return `<strong>W&I-Policen (Warranty & Indemnity):</strong><br><br>
+            Pricing-Logik: ca. <strong>1–1,5%</strong> der Deckungssumme<br><br>
+            <div class="chat-customer-item">
+                ${mrhCustomerBtn('Alphatech Holding', 'MRH-014')} 3 abgeschlossene W&I-Policen<br>
+                <span class="chat-recommendation">Buy-Side 8 Mio. + 5 Mio., Sell-Side 12 Mio. — über MRH Specialty M&A</span>
+            </div>
+            ${mrhFollowUp}`;
+        }
+
+        // Kreditversicherung
+        if (q.includes('kredit') || q.includes('finance')) {
+            return `<strong>Finance-Portfolio Übersicht:</strong><br><br>
+            Gesamt-Finance-Courtage: <strong>2,8 Mio. €</strong> (+22% YoY)<br><br>
+            <strong>Kreditversicherung:</strong> 3 Mandanten (Euler Hermes, Coface, Atradius)<br>
+            <strong>Leasing:</strong> 19,2 Mio. € Volumen über FM LeasingPartner<br>
+            <strong>Avale:</strong> 12,7 Mio. € (Nordpark + Hessenbau)<br>
+            <strong>Factoring:</strong> TechParts über BNP Paribas, 2,1 Mio./Mon.
+            ${mrhFollowUp}`;
+        }
+
+        // Fallback MRH
+        return `Ich kann Ihnen als MRH Trowe 360°-Assistent bei folgenden Themen helfen:
+            <br>• Specialty-Wissen (20+ Branchen)
+            <br>• bAV-Beratung & Durchdringung
+            <br>• Kreditversicherung & Finance
+            <br>• W&I/M&A-Policen
+            <br>• Cross-Sell zwischen Insurance, Benefits & Finance
+            <br>• Renewal-Management
+            ${mrhFollowUp}`;
+    }
 
     // ========== MAKLER B2B RESPONSES ==========
     if (isMakler) {

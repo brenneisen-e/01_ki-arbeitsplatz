@@ -7,45 +7,56 @@
 var maklerModus = false;
 
 function toggleMaklerModus() {
+    // Legacy: delegate to 3-way setViewMode if available
+    if (typeof setViewMode === 'function') {
+        setViewMode(maklerModus ? 'ao' : 'ecclesia');
+        return;
+    }
     maklerModus = !maklerModus;
-    var toggle = document.getElementById('maklerToggle');
-    var label = document.getElementById('maklerToggleLabel');
-    if (toggle) toggle.classList.toggle('active', maklerModus);
-    if (label) label.textContent = maklerModus ? 'Makler B2B' : 'Privatkunde (AO)';
-
-    // A-02: KPIs + Kundenliste + Tabs umschalten
     applyMaklerModus();
-
-    // Falls A-10 offen: zurück zur Liste
     var a10 = document.getElementById('kundenDetailPage');
     if (a10 && a10.style.display !== 'none') {
         if (typeof closeKundenDetail === 'function') closeKundenDetail();
     }
-
     localStorage.setItem('maklerModus', maklerModus ? '1' : '0');
 }
 window.toggleMaklerModus = toggleMaklerModus;
 
 function applyMaklerModus() {
-    // KPIs: hide private, show Makler (and vice versa)
-    var privatKpis = document.querySelector('.cockpit-kpis:not(#maklerKpis)');
+    // KPIs: hide private + MRH, show Makler (and vice versa)
+    var privatKpis = document.querySelector('.cockpit-kpis:not(#maklerKpis):not(#mrhKpis)');
     var maklerKpis = document.getElementById('maklerKpis');
+    var mrhKpis = document.getElementById('mrhKpis');
+    var mrhBadges = document.getElementById('mrhSaeulenBadges');
     if (privatKpis) privatKpis.style.display = maklerModus ? 'none' : '';
     if (maklerKpis) maklerKpis.style.display = maklerModus ? '' : 'none';
+    if (mrhKpis) mrhKpis.style.display = 'none';
+    if (mrhBadges) mrhBadges.style.display = 'none';
+
+    // Remove MRH subheadline if present
+    var mrhSub = document.getElementById('mrhSubheadline');
+    if (mrhSub) mrhSub.style.display = 'none';
 
     // Kundenliste: swap private/Makler when tab-kundenliste is active
     var privatListe = document.getElementById('tab-kundenliste');
     var maklerListe = document.getElementById('tab-kundenliste-makler');
+    var mrhListe = document.getElementById('tab-kundenliste-mrh');
+    if (mrhListe) { mrhListe.style.display = 'none'; mrhListe.classList.remove('active'); }
 
-    // A-02 Tab-Buttons: hide private tabs, show Makler tabs
+    // Hide MRH tab contents
+    document.querySelectorAll('.mrh-tab-content').forEach(function(el) { el.classList.remove('active'); });
+
+    // A-02 Tab-Buttons: hide private + MRH tabs, show Makler tabs
     var headerTabs = document.querySelector('.agentur-page-new .agentur-header-tabs');
     if (headerTabs) {
+        // Hide MRH tabs
+        headerTabs.querySelectorAll('.agentur-tab-mrh').forEach(function(el) { el.style.display = 'none'; });
         // Hide all normal tabs in Makler mode, show Makler tabs
-        headerTabs.querySelectorAll('.agentur-tab:not(.agentur-tab-makler)').forEach(function(el) {
+        headerTabs.querySelectorAll('.agentur-tab:not(.agentur-tab-makler):not(.agentur-tab-mrh)').forEach(function(el) {
             el.style.display = maklerModus ? 'none' : '';
         });
-        // Hide only private dividers (not makler divider)
-        headerTabs.querySelectorAll('.agentur-tab-divider:not(.agentur-tab-makler)').forEach(function(el) {
+        // Hide only private dividers (not makler/mrh dividers)
+        headerTabs.querySelectorAll('.agentur-tab-divider:not(.agentur-tab-makler):not(.agentur-tab-mrh)').forEach(function(el) {
             el.style.display = maklerModus ? 'none' : '';
         });
         headerTabs.querySelectorAll('.agentur-tab-makler').forEach(function(el) {

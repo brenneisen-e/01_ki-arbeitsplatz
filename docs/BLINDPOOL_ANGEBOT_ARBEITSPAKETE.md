@@ -9,33 +9,33 @@
 
 ### Deloitte Tätigkeiten & Unterstützung
 
-- Unterstützung bei der Erfassung und Strukturierung der fachlichen Anforderungen zur Demaskierung des Blindpools, inkl. Ableitung der Anforderungen je Workstream (Stammdaten, Provision, Integration, Segment/Bestand)
+- Unterstützung bei der Erfassung und Strukturierung der fachlichen Anforderungen zur Demaskierung des Blindpools, inkl. Ableitung je Workstream
 
-- Unterstützung bei der Erstellung technischer Konzepte für die gegenseitige Stammdatenanlage und -spiegelung in der ex-Barmenia und ex-Gothaer Systemwelt (adesso Partner / FS-ICM sowie 3PAllis / G-Partner)
+- Unterstützung bei der Erstellung technischer Konzepte für die gegenseitige Stammdatenanlage und -spiegelung in beiden Systemwelten
 
-- Unterstützung bei der Erstellung technischer Konzepte für die notwendigen Anpassungen an SSTs, Servicelayer und Umsystemen in beiden Systemwelten
+- Unterstützung bei der Erstellung technischer Konzepte für Anpassungen an SSTs, Servicelayer und Umsystemen
 
-- Unterstützung bei der Erstellung eines detaillierten Meilensteinplans inkl. MVP-Schnitt zum 30.06.2026 mit Back-to-Front-Planung und Identifikation des kritischen Pfads
+- Unterstützung bei der Erstellung eines Meilensteinplans inkl. MVP-Schnitt zum 30.06.2026 mit Back-to-Front-Planung
 
-- Management von Abhängigkeiten und Schnittstellen zu parallelen Vorhaben (insb. Stammdaten-Synchronisation, laufende Hypercare ICM2026, Systemupdates FS-ICM)
+- Management von Abhängigkeiten und Schnittstellen zu parallelen Vorhaben (insb. Stammdaten-Sync, Hypercare ICM2026, Systemupdates FS-ICM)
 
-- Beratung und Unterstützung der Taskforceleitung bei der Entscheidungsvorbereitung, inkl. Erstellung von Entscheidungsvorlagen und Gremiendokumenten für SteerCo
+- Unterstützung der Taskforceleitung bei der Entscheidungsvorbereitung, inkl. Entscheidungsvorlagen und Gremiendokumente für SteerCo
 
-- Qualitätssicherung der Konzeptergebnisse und Sicherstellung einer standardnahen, zielarchitektur-konformen Umsetzung (Zwischenschritt Richtung Zielbild Option 3)
+- Qualitätssicherung der Konzeptergebnisse und Sicherstellung einer standardnahen, zielarchitektur-konformen Umsetzung
 
 ### BG Beistellleistungen
 
 - Einsetzen einer technischen Programmleitung und eines fachlichen Leads mit Entscheidungskompetenz auf Taskforce-Ebene
 
-- Priorisierung der Taskforce Blindpool als Prio-0-Vorhaben mit Vorfahrt bei Ressourcenkonflikten gegenüber anderen Initiativen
+- Priorisierung der Taskforce Blindpool als Prio-0-Vorhaben mit Vorfahrt bei Ressourcenkonflikten
 
-- Bereitstellung der notwendigen Fachexpertise aus beiden Systemwelten (Stammdaten ex-B. und ex-G., Provisionsprozesse, SST/Servicelayer)
+- Bereitstellung der notwendigen Fachexpertise aus beiden Systemwelten (Stammdaten, Provisionsprozesse, SST/Servicelayer)
 
-- Bereitstellung der aktuellen Dokumentation zu Datenmodellen, Blindpool-Logik, Schnittstellen und bestehenden Sonderlösungen in beiden Systemwelten
+- Bereitstellung der aktuellen Dokumentation zu Datenmodellen, Blindpool-Logik, Schnittstellen und Sonderlösungen
 
-- Fachliche und technische Entscheidungsverantwortung sowie Bereitschaft, Entscheidungen schnell, pragmatisch und konsequent zu treffen und umzusetzen
+- Fachliche und technische Entscheidungsverantwortung sowie Bereitschaft zu schnellen, pragmatischen Entscheidungen
 
-- Sicherstellung der Verfügbarkeit der identifizierten Ansprechpartner und Wissensträger je Workstream (gemäß Taskforce-Governance)
+- Sicherstellung der Verfügbarkeit der Ansprechpartner und Wissensträger je Workstream (gemäß Taskforce-Governance)
 
 ---
 
@@ -45,9 +45,9 @@
 
 **Steuerung:**
 
-- Unterstützung bei der operativen Gesamtprojektsteuerung der Taskforce Blindpool, inkl. Workstream-übergreifender Koordination und Gremienarbeit (SteerCo, Taskforceleitung)
+- Unterstützung bei der operativen Gesamtprojektsteuerung der Taskforce Blindpool, inkl. Workstream-übergreifender Koordination
 
-- Unterstützung beim Sicherstellen des notwendigen Projektfortschritts entlang des Meilensteinplans, inkl. Tracking und Management des kritischen Pfads bis MVP 30.06.2026
+- Unterstützung beim Sicherstellen des Projektfortschritts entlang des Meilensteinplans, inkl. Tracking des kritischen Pfads bis MVP 30.06.2026
 
 - Informationsbereitstellung für Gremienunterlagen und Entscheidungsvorlagen
 
@@ -55,29 +55,29 @@
 
 **Test- & Einführungsmanagement:**
 
-- Unterstützung bei der Konzeption und Durchführung des Gesamtintegrationstests für die Demaskierung: Validierung der gegenseitigen Stammdatenanlage, Mapping-Logik (BP-ID <-> VPT-Nr., BD-VM-Nr. <-> Allis-Nr.) und Provisionsprozesse in beiden Systemwelten
+- Unterstützung bei Konzeption und Durchführung des Gesamtintegrationstests für die Demaskierung des Blindpools
 
-- Unterstützung bei der Planung und Durchführung von End-to-End-Integrationstests entlang der Prozesskette (Antragsstrecke, Blindpool, Provisionsberechnung, Abrechnung, Umsysteme)
+- Unterstützung bei der Planung und Durchführung von E2E-Integrationstests entlang der Prozesskette (Antrag bis Abrechnung)
 
-- Unterstützung bei der Definition und Umsetzung von Testszenarien für die Umstellung etablierter Blindpool-Regeln auf individuelle Vermittlernummern, inkl. Prüfung der Auswirkungen auf Rabattkonten, Bestandssichten und CRM
+- Unterstützung bei Definition von Testszenarien für die Umstellung auf individuelle Vermittlernummern, inkl. Auswirkungen auf Rabattkonten und CRM
 
-- Unterstützung bei der Konzeption eines Einführungs- und Schulungsplans für die demaskierte Blindpool-Lösung, inkl. Durchführung von Schulungen für die betroffenen Fachbereiche beider ex-Vertriebe
+- Unterstützung bei der Konzeption eines Einführungs- und Schulungsplans für die demaskierte Blindpool-Lösung, inkl. Schulungen
 
-- Unterstützung bei der Vorbereitung und Durchführung von Abnahmetests (Business QA) mit den Fachbereichen beider ex-Vertriebe
+- Unterstützung bei Vorbereitung und Durchführung von Abnahmetests (Business QA) mit beiden ex-Vertrieben
 
 ### BG Beistellleistungen
 
-- Bereitstellung von Testumgebungen in beiden Systemwelten (FS-ICM und 3PAllis) inkl. repräsentativer Testdaten für Vermittler-Stammdaten und Provisionsfälle
+- Bereitstellung von Testumgebungen in beiden Systemwelten (FS-ICM und 3PAllis) inkl. repräsentativer Testdaten
 
-- Verfügbarkeit von fachlichen Testern aus beiden ex-Vertrieben mit Kenntnis der jeweiligen Provisionsprozesse und Umsysteme
+- Verfügbarkeit von fachlichen Testern aus beiden ex-Vertrieben mit Kenntnis der Provisionsprozesse
 
-- Bereitstellung von Akzeptanzkriterien und fachlichen Abnahmeentscheidungen durch die verantwortlichen Fachbereiche je Workstream
+- Bereitstellung von Akzeptanzkriterien und fachlichen Abnahmeentscheidungen je Workstream
 
 - Sicherstellung der Verfügbarkeit der IT-Verantwortlichen für SST, Servicelayer und Umsysteme während der Testphasen
 
-- Bereitstellung aktueller Vermittler-Stammdaten und Hierarchiedaten aus adesso Partner, FS-ICM und 3PA als Basis für Testfälle
+- Bereitstellung aktueller Vermittler-Stamm- und Hierarchiedaten aus adesso Partner, FS-ICM und 3PA als Testbasis
 
-- Zeitnahe Klärung und Entscheidung bei im Test identifizierten fachlichen oder technischen Abweichungen
+- Zeitnahe Klärung und Entscheidung bei im Test identifizierten Abweichungen
 
 ---
 
@@ -85,36 +85,36 @@
 
 ### Deloitte Tätigkeiten & Unterstützung
 
-- Unterstützung bei der fachlichen und technischen Konzeption der gegenseitigen Vermittler-Stammdatenanlage: Definition der Nummernkreise, Mapping-Regeln (BP-ID <-> VPT-Nr., BD-VM-Nr. <-> Allis-Nr.) und Dublettenverhinderung
+- Unterstützung bei der Konzeption der gegenseitigen Vermittler-Stammdatenanlage: Nummernkreise, Mapping-Regeln und Dublettenverhinderung
 
-- Unterstützung bei der Konzeption und Umsetzung der Anpassungen an SST und Servicelayer zur Versorgung der Umsysteme mit individuellen Vermittlerdaten (Ablösung der Sammelvermittler-Nr.-Sonderlösungen)
+- Unterstützung bei Anpassungen an SST und Servicelayer zur Versorgung der Umsysteme mit individuellen Vermittlerdaten
 
-- Unterstützung bei der Definition und Anpassung der Provisionsprozesse für die demaskierte Blindpool-Lösung in beiden Systemwelten (0%-Provision auf indiv. Allis-Nr., Differenzprovision auf BK-Allis-Nr., Generalvertreterlogik)
+- Unterstützung bei Definition und Anpassung der Provisionsprozesse für die demaskierte Blindpool-Lösung in beiden Systemwelten
 
-- Unterstützung bei der Anforderungsdefinition inkl. Akzeptanzkriterien in JIRA / agilem Arbeitstool für alle Workstreams (Stammdaten, Integration, Provision, Blindpool/Querschnitt-IT)
+- Unterstützung bei der Anforderungsdefinition inkl. Akzeptanzkriterien in JIRA für alle Workstreams
 
-- Unterstützung bei der Konzeption und Umsetzung des Vermittler-Auskunftsservices im Servicelayer (Bereitstellung von Vermittlerinformationen an TAA und Bestandssysteme aus G-Partner und 3PA)
+- Unterstützung bei Konzeption und Umsetzung des Vermittler-Auskunftsservices im Servicelayer
 
-- Unterstützung bei der Überprüfung und Anpassung der Antragsstrecken (TAA) zur Ablösung der bisherigen Blindpool-Eingabelogik (Fremdordnungsmerkmal) hin zu individuellen Vermittlernummern
+- Unterstützung bei Überprüfung und Anpassung der Antragsstrecken (TAA) zur Ablösung der Blindpool-Eingabelogik
 
-- Unterstützung bei der Anlage und Konfiguration individueller Rabattkonten für die neu angelegten silofremden Vermittler
+- Unterstützung bei der Anlage individueller Rabattkonten für neu angelegte silofremde Vermittler
 
-- Unterstützung bei der Vorbereitung und Durchführung fachlicher Tests entlang der demaskierten Provisionsprozesse (ex-B. VM-Perspektive und ex-G. VM-Perspektive)
+- Unterstützung bei Vorbereitung und Durchführung fachlicher Tests entlang der demaskierten Provisionsprozesse
 
 ### BG Beistellleistungen
 
-- Bereitstellung der führenden Systeme und Zugänge: adesso Partner und FS-ICM für Stammdaten und Vertriebsorganisation, 3PAllis / G-Partner für ex-Gothaer Systemwelt
+- Bereitstellung der führenden Systeme und Zugänge: adesso Partner, FS-ICM, 3PAllis / G-Partner
 
-- Bereitstellung von Product Ownern je Workstream für die fachliche Abnahme der Anforderungen und Umsetzungsergebnisse
+- Bereitstellung von Product Ownern je Workstream für fachliche Abnahme
 
-- Bereitstellung der vollständigen Dokumentation zu bestehenden Blindpool-Regeln, Mapping-Logiken (Fremdordnungsmerkmal auf Vermittlernummer) und Sonderlösungen in beiden Systemwelten
+- Bereitstellung der Dokumentation zu Blindpool-Regeln, Mapping-Logiken und Sonderlösungen
 
-- Bereitstellung der aktuellen Vermittler-Stammdaten und Hierarchiedaten aus adesso Partner / FS-ICM sowie 3PA als Basis für die gegenseitige Anlage
+- Bereitstellung der Vermittler-Stamm- und Hierarchiedaten aus adesso Partner / FS-ICM sowie 3PA
 
-- Verfügbarkeit der IT-Verantwortlichen für SST und Servicelayer in beiden Systemwelten (ex-B. und ex-G.) für enge Zusammenarbeit bei der technischen Umsetzung
+- Verfügbarkeit der IT-Verantwortlichen für SST und Servicelayer in beiden Systemwelten
 
-- Klärung und Entscheidung zu ggf. notwendigen vertraglichen Anpassungen (insb. Rabattkonditionen, Provisionsregelwerk für neu angelegte Vermittler)
+- Klärung und Entscheidung zu vertraglichen Anpassungen (insb. Rabattkonditionen, Provisionsregelwerk)
 
-- Sicherstellung der engen Zusammenarbeit zwischen Fach und IT, sowohl intern als auch mit externen Partnern, insb. in den Workstreams Stammdaten, Blindpool/Querschnitt-IT und Provision
+- Sicherstellung der engen Zusammenarbeit zwischen Fach und IT, intern und extern
 
-- Verfügbarkeit von Fachexpertise aus den Segmenten (SHUK, Leben, Kranken) zur Validierung der Auswirkungen der Demaskierung auf segmentspezifische Prozesse (Neugeschäftssteuerung, Bestandsmanagement, Vertriebskommunikation)
+- Verfügbarkeit von Fachexpertise aus den Segmenten (SHUK, Leben, Kranken) zur Validierung der Demaskierungs-Auswirkungen

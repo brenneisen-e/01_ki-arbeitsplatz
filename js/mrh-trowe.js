@@ -1,4 +1,4 @@
-// js/mrh-trowe.js - MRH Trowe 360° Modus
+// js/mrh-trowe.js - Gewerbemakler 360° Modus
 // PE-gestützter Konsolidierer: Insurance + Benefits + Finance
 
 // ========================================
@@ -98,6 +98,12 @@ function applyAOModus() {
     var photoContainer = document.getElementById('agenturPhotoSmall');
     if (photoContainer && photoContainer._origHTML) {
         photoContainer.innerHTML = photoContainer._origHTML;
+    }
+
+    // Restore AO chat welcome message
+    var chatBody = document.getElementById('agenturChatBody');
+    if (chatBody && chatBody._origWelcomeHTML) {
+        chatBody.innerHTML = chatBody._origWelcomeHTML;
     }
 
     if (typeof showAgenturTab === 'function') showAgenturTab('uebersicht');
@@ -502,7 +508,7 @@ function applyMRHModus() {
     var subtitleId = document.getElementById('agenturIdHeader');
     if (subtitleId) {
         var subtitleDiv = subtitleId.parentElement;
-        subtitleDiv.innerHTML = '<span id="agenturIdHeader">MRH Trowe</span>' +
+        subtitleDiv.innerHTML = '<span id="agenturIdHeader">Gewerbemakler</span>' +
             '<div class="mrh-subheadline" id="mrhSubheadline">' +
                 '<span class="mrh-subheadline-tag">Insurance</span>' +
                 '<span class="mrh-subheadline-tag">Benefits</span>' +
@@ -515,6 +521,25 @@ function applyMRHModus() {
     if (photoContainer) {
         if (!photoContainer._origHTML) photoContainer._origHTML = photoContainer.innerHTML;
         photoContainer.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" width="22" height="22" style="margin:auto;display:block;"><path d="M3 21h18M5 21V7l8-4v18M13 21V3l6 3v15"/><circle cx="18" cy="8" r="3" fill="rgba(134,188,37,0.8)" stroke="none"/><text x="18" y="9.5" text-anchor="middle" font-size="4" fill="white" stroke="none" font-weight="bold">360</text></svg>';
+    }
+
+    // Reset chat welcome message for MRH mode
+    var chatBody = document.getElementById('agenturChatBody');
+    if (chatBody) {
+        // Save original AO welcome if not yet saved
+        if (!chatBody._origWelcomeHTML) chatBody._origWelcomeHTML = chatBody.innerHTML;
+        chatBody.innerHTML =
+            '<div class="agentur-chat-welcome">' +
+                '<h4>Gewerbemakler 360° Assistent</h4>' +
+                '<p>Fragen Sie mich zu Kunden, Specialties, bAV, Finance oder Cross-Sell.</p>' +
+                '<div class="welcome-examples">' +
+                    '<button class="example-btn" onclick="askAgenturQuestion(\'Welche Kunden haben Potential für bAV?\')">bAV-Potential</button>' +
+                    '<button class="example-btn" onclick="askAgenturQuestion(\'Welche Renewals stehen im Q2 an?\')">Q2 Renewals</button>' +
+                    '<button class="example-btn" onclick="showNeuePotentiale()">Neue Potentiale</button>' +
+                    '<button class="example-btn" onclick="askAgenturQuestion(\'Wie ist die Cross-Sell-Pipeline?\')">Cross-Sell Pipeline</button>' +
+                    '<button class="example-btn" onclick="askAgenturQuestion(\'Zeige Finance-Portfolio\')">Finance-Portfolio</button>' +
+                '</div>' +
+            '</div>';
     }
 
     // Show MRH Übersicht as default
@@ -1012,7 +1037,7 @@ function fillMRHDetail(kunde) {
     if (headerId) {
         var headerSubtitle = headerId.parentElement;
         if (!_origA10SubtitleMRH) _origA10SubtitleMRH = headerSubtitle.innerHTML;
-        headerSubtitle.innerHTML = '<span id="kundenHeaderId">MRH Trowe</span>';
+        headerSubtitle.innerHTML = '<span id="kundenHeaderId">Gewerbemakler</span>';
     }
 
     // Photo

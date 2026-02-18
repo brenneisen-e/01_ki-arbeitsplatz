@@ -792,7 +792,7 @@ function getAgenturChatResponse(question) {
 
         // Renewals
         if (q.includes('renewal') || q.includes('q2') || q.includes('ablaufend')) {
-            return `<strong>Anstehende Renewals (MRH Trowe Rhein-Main):</strong><br><br>
+            return `<strong>Anstehende Renewals (Gewerbemakler Rhein-Main):</strong><br><br>
             <strong>Handlungsbedarf:</strong><br><br>
             <div class="chat-customer-item">
                 ${mrhCustomerBtn('Rhein-Main Maschinenbau', 'MRH-001')} Betriebshaftpflicht — 01.04.2026<br>
@@ -817,10 +817,10 @@ function getAgenturChatResponse(question) {
 
         // Ecclesia vs MRH
         if (q.includes('ecclesia') || q.includes('unterschied') || q.includes('vergleich')) {
-            return `<strong>MRH Trowe vs. Ecclesia — Kernunterschiede:</strong><br><br>
-            <strong>Geschäftsmodell:</strong> MRH hat 3 Säulen (Insurance + Benefits + Finance) vs. Ecclesia rein Versicherung<br><br>
-            <strong>Kundenbasis:</strong> MRH bedient B2B + gehobene Privatkunden (500-2.000 Kunden, 20+ Specialties), Ecclesia nur B2B (80-250 Institutionen, 5 Segmente)<br><br>
-            <strong>KPI-Logik:</strong> MRH trackt zusätzlich bAV-Durchdringung, Finance-Cross-Sell und Acquisition-Pipeline<br><br>
+            return `<strong>Gewerbemakler vs. Ecclesia — Kernunterschiede:</strong><br><br>
+            <strong>Geschäftsmodell:</strong> Gewerbemakler hat 3 Säulen (Insurance + Benefits + Finance) vs. Ecclesia rein Versicherung<br><br>
+            <strong>Kundenbasis:</strong> Gewerbemakler bedient B2B + gehobene Privatkunden (500-2.000 Kunden, 20+ Specialties), Ecclesia nur B2B (80-250 Institutionen, 5 Segmente)<br><br>
+            <strong>KPI-Logik:</strong> Gewerbemakler trackt zusätzlich bAV-Durchdringung, Finance-Cross-Sell und Acquisition-Pipeline<br><br>
             <strong>Eigentümer:</strong> 51% Gründer + 49% PE (AnaCap/TA Associates) vs. kirchlich-ökumenisch
             ${mrhFollowUp}`;
         }
@@ -865,7 +865,7 @@ function getAgenturChatResponse(question) {
         }
 
         // Fallback MRH
-        return `Ich kann Ihnen als MRH Trowe 360°-Assistent bei folgenden Themen helfen:
+        return `Ich kann Ihnen als Gewerbemakler 360°-Assistent bei folgenden Themen helfen:
             <br>• Specialty-Wissen (20+ Branchen)
             <br>• bAV-Beratung & Durchdringung
             <br>• Kreditversicherung & Finance
@@ -1230,9 +1230,38 @@ function showNeuePotentialeContent() {
 
         const messageContent = botMsg.querySelector('.message-content');
 
-        // Potentiale nacheinander einblenden - B2B vs AO
+        // Potentiale nacheinander einblenden - MRH vs B2B vs AO
         var potentiale;
-        if (typeof maklerModus !== 'undefined' && maklerModus) {
+        const isMRHMode = typeof viewMode !== 'undefined' && viewMode === 'mrh';
+        if (isMRHMode) {
+            potentiale = [
+                {
+                    name: 'Rhein-Main Maschinenbau',
+                    title: 'bAV fehlt (340 MA)',
+                    desc: 'Cross-Sell Insurance → Benefits: geschätztes Potential 85k bAV-Volumen/Jahr'
+                },
+                {
+                    name: 'Rhein-Main Maschinenbau',
+                    title: 'Renewal BH 01.04.2026',
+                    desc: '420k Prämie — Allianz hat 15% Erhöhung angekündigt'
+                },
+                {
+                    name: 'Hessenlog Spedition',
+                    title: 'bAV fehlt (210 MA)',
+                    desc: 'Einfaches Bindungsmodell gegen Fluktuation möglich'
+                },
+                {
+                    name: 'DigiCore Solutions',
+                    title: 'Kreditversicherung prüfen',
+                    desc: 'SaaS-Forderungen international — Finance Cross-Sell'
+                },
+                {
+                    name: 'Rhein-Main Verkehr',
+                    title: 'Renewal Flotte + BH ÖPNV 01.07.2026',
+                    desc: '1,45 Mio. Prämie — größtes Renewal des Halbjahres'
+                }
+            ];
+        } else if (typeof maklerModus !== 'undefined' && maklerModus) {
             potentiale = [
                 {
                     name: 'Klinikum Lippetal',
@@ -1333,7 +1362,9 @@ function showNeuePotentialeContent() {
 
                         // Nach 1,5 Sekunden: Zum Potentiale-Tab wechseln
                         setTimeout(() => {
-                            if (typeof maklerModus !== 'undefined' && maklerModus) {
+                            if (typeof viewMode !== 'undefined' && viewMode === 'mrh') {
+                                if (typeof showMRHTab === 'function') showMRHTab('potentiale');
+                            } else if (typeof maklerModus !== 'undefined' && maklerModus) {
                                 if (typeof showMaklerTab === 'function') showMaklerTab('potentiale');
                             } else {
                                 showAgenturTab('potential');

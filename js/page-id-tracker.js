@@ -33,7 +33,8 @@ const PageIDTracker = {
             'eigeneDaten': 'A-07',          // Eigene Daten Tab
             'chat': 'A-08',                 // KI-Chat Versicherung (Mock-Daten)
             'finanzplanung': 'A-09',        // Finanzplanung
-            'kundendetail': 'A-10'          // Kunden-Detailansicht
+            'kundendetail': 'A-10',         // Kunden-Detailansicht
+            'bgav-umstellung': 'A-11'      // BGAV Vertragsumstellung Simulationsergebnisse
         },
 
         // B - Banken Module
@@ -155,6 +156,12 @@ const PageIDTracker = {
     },
 
     getCurrentModule() {
+        // Check if we're on BGAV Umstellung page (belongs to versicherung module)
+        const bgavPage = document.getElementById('bgavUmstellungPage');
+        if (bgavPage && bgavPage.style.display !== 'none') {
+            return 'versicherung';
+        }
+
         // Check if we're on Kundendetail page (belongs to versicherung module)
         const kundenDetailPage = document.getElementById('kundenDetailPage');
         if (kundenDetailPage && kundenDetailPage.style.display !== 'none') {
@@ -243,6 +250,12 @@ const PageIDTracker = {
     },
 
     getVersicherungView() {
+        // Check if BGAV Umstellung page is visible
+        const bgavPage = document.getElementById('bgavUmstellungPage');
+        if (bgavPage && bgavPage.style.display !== 'none') {
+            return 'bgav-umstellung';
+        }
+
         // Check if chat is visible (expanded)
         const chatContainer = document.getElementById('chatContainer');
         if (chatContainer && chatContainer.classList.contains('expanded')) {

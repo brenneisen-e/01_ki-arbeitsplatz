@@ -1041,12 +1041,14 @@
 }
 
 .bgav-ub-sidebar {
-    background: linear-gradient(180deg, #0C2340 0%, #0f2d52 100%);
-    color: #e2e8f0;
+    background: linear-gradient(180deg, #7c2d12 0%, #9a3412 50%, #7c2d12 100%);
+    color: #fef2e8;
     padding: 24px 18px;
     border-radius: 12px 0 0 12px;
     display: flex;
     flex-direction: column;
+    border: 3px solid #ea580c;
+    border-right: none;
 }
 
 .bgav-ub-vz-select {
@@ -1064,7 +1066,7 @@
     appearance: none;
 }
 
-.bgav-ub-vz-select option { background: #0C2340; color: white; }
+.bgav-ub-vz-select option { background: #7c2d12; color: white; }
 
 .bgav-ub-vz-name {
     font-size: 16px;

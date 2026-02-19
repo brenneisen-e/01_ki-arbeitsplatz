@@ -205,8 +205,10 @@
         updateSimulationResults();
         setupSliders();
         renderLeistungsstufen();
-        renderUebersichtTab();
         initBgavChat();
+
+        // Render Übersicht charts after DOM is visible
+        setTimeout(renderUebersichtTab, 200);
 
         // Page ID update
         if (typeof PageIDTracker !== 'undefined') {
@@ -271,6 +273,14 @@
         document.querySelectorAll('.bgav-tab-content').forEach(c => c.classList.remove('active'));
         const activeContent = document.getElementById('bgavContent_' + tabName);
         if (activeContent) activeContent.classList.add('active');
+
+        // Render charts after tab is visible (Chart.js needs visible canvas)
+        if (tabName === 'uebersicht') {
+            setTimeout(renderUebersichtTab, 50);
+        }
+        if (tabName === 'simulation') {
+            setTimeout(() => updateSimulationResults(), 50);
+        }
     }
 
     window.switchBgavTab = switchBgavTab;

@@ -1249,19 +1249,20 @@ function fillMRHDetail(kunde) {
             renderB2bAnsprechpartner({ name: kunde.name, segment: kunde.specialty, keyContact: (kunde.keyContacts || [])[0], keyContacts: kunde.keyContacts, beraterInsurance: kunde.beraterInsurance, beraterBenefits: kunde.beraterBenefits, beraterFinance: kunde.beraterFinance });
         }
     } catch(e) { console.warn('MRH: B2B tab render error (non-critical):', e); }
-    // Cross-Sell Potentials in b2bpotentiale tab
-    var b2bPotContent = document.getElementById('b2bPotentialeContent');
-    if (b2bPotContent) {
-        var crossSellHtml = '';
-        if (!kunde.benefits.aktiv && kunde.mitarbeitende && kunde.mitarbeitende > 50) {
-            crossSellHtml += '<div class="mrh-crosssell-example"><strong>Insurance → Benefits:</strong> ' + kunde.mitarbeitende + ' MA ohne bAV — Cross-Sell-Potential</div>';
+    // Cross-Sell Potentials in b2bpotentiale tab (use B2B renderer for expandable rows)
+    try {
+        if (typeof renderB2bPotentiale === 'function') {
+            var standorteCount = (kunde.standorte || '').split(',').length;
+            renderB2bPotentiale({
+                deckungsluecken: (kunde.deckungsluecken || []).map(function(d) { return { risiko: d, status: 'Nicht versichert', empfehlung: 'Prüfung empfohlen', prioritaet: 'Hoch' }; }),
+                praemie: kunde.insurance ? kunde.insurance.praemie : 0,
+                segment: kunde.specialty || '',
+                mitarbeitende: kunde.mitarbeitende || 0,
+                vertraegeDetail: kunde.vertraegeDetail || [],
+                standorte: standorteCount
+            });
         }
-        if (kunde.deckungsluecken && kunde.deckungsluecken.length > 0) {
-            crossSellHtml += kunde.deckungsluecken.map(function(d) { return '<div class="mrh-crosssell-example" style="margin-top:6px"><strong>Deckungslücke:</strong> ' + d + '</div>'; }).join('');
-        }
-        if (!crossSellHtml) crossSellHtml = '<p class="text-muted">Keine Cross-Sell-Potentiale identifiziert</p>';
-        b2bPotContent.innerHTML = crossSellHtml;
-    }
+    } catch(e) { console.warn('MRH: Potentiale render error (non-critical):', e); }
 
     // Render Relationship Timeline into Ansprechpartner tab
     var apContent = document.getElementById('b2bAnsprechpartnerContent');

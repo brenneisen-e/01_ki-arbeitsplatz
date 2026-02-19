@@ -2634,6 +2634,17 @@ window.addEventListener('DOMContentLoaded', function() {
 
         console.log('Welcome Chat angezeigt');
 
+        // Check if URL hash points to a deep-link route → navigate there instead of landing
+        var initialHash = window.location.hash.replace('#', '') || '/';
+        if (initialHash !== '/' && initialHash !== '/landing' && window.AppRouter) {
+            var route = window.AppRouter.routes[initialHash];
+            if (route) {
+                console.log('Deep-link detected:', initialHash, '→ navigating directly');
+                window.AppRouter.handleHashChange();
+                return; // Skip landing page setup
+            }
+        }
+
         // Dispatch event for Page ID Tracker (M-01)
         document.dispatchEvent(new CustomEvent('moduleChanged', {
             detail: { module: 'main', view: 'landing' }

@@ -59,7 +59,7 @@
                 if (hash !== '/' && hash !== '/landing') {
                     this.handleHashChange();
                 }
-            }, 2000);
+            }, 800);
 
             console.log('Router initialized. Routes:', Object.keys(this.routes).length);
         },
@@ -169,13 +169,14 @@
     // Global access
     window.AppRouter = Router;
 
-    // Init after DOM is ready and other scripts have loaded
+    // Init immediately so routes are available for deep-link checks,
+    // but defer hash handling to allow modules to load
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', () => {
-            setTimeout(() => Router.init(), 500);
+            Router.init();
         });
     } else {
-        setTimeout(() => Router.init(), 500);
+        Router.init();
     }
 
 })();

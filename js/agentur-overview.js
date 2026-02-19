@@ -805,7 +805,7 @@ function getAgenturChatResponse(question) {
         }
 
         // Renewals
-        if (q.includes('renewal') || q.includes('q2') || q.includes('ablaufend')) {
+        if (q.includes('renewal') || q.includes('q2') || q.includes('ablaufend') || q.includes('vertrag') && q.includes('lauf') || q.includes('30 tag') || q.includes('auslauf') || q.includes('frist')) {
             return `<strong>Anstehende Renewals (Niederlassung Rhein-Main):</strong><br><br>
             <strong>Handlungsbedarf:</strong><br><br>
             <div class="chat-customer-item">

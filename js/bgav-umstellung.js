@@ -467,7 +467,7 @@
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                animation: { duration: 400 },
+                animation: { duration: 0 },
                 plugins: {
                     legend: {
                         display: true,
@@ -702,6 +702,7 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    animation: { duration: 0 },
                     layout: { padding: { left: 14, right: 4, top: 4 } },
                     plugins: {
                         legend: { display: false },
@@ -890,6 +891,7 @@
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
+                animation: { duration: 0 },
                 plugins: {
                     legend: { position: 'top', labels: { font: { size: 12, weight: '600' }, usePointStyle: true, padding: 16 } },
                     tooltip: { callbacks: { label: function(c) { return c.dataset.label + ': ' + formatEuro(c.raw); } } }

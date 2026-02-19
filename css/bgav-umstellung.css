@@ -761,7 +761,7 @@
    ======================================== */
 .bgav-sim-grid {
     display: grid;
-    grid-template-columns: 300px 1fr;
+    grid-template-columns: 360px 1fr;
     gap: 0;
     margin-top: 0;
     min-height: 600px;
@@ -771,7 +771,7 @@
 .bgav-sim-stammdaten {
     background: linear-gradient(180deg, #0C2340 0%, #0f2d52 100%);
     color: #e2e8f0;
-    padding: 28px 22px;
+    padding: 32px 28px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -798,9 +798,9 @@
     background: rgba(255,255,255,0.08);
     border: 1px solid rgba(255,255,255,0.15);
     color: white;
-    font-size: 17px;
+    font-size: 20px;
     font-weight: 700;
-    padding: 6px 12px;
+    padding: 8px 14px;
     border-radius: 6px;
     text-align: center;
     width: 100%;
@@ -816,7 +816,7 @@
 }
 
 .bgav-sim-stamm-role {
-    font-size: 15px;
+    font-size: 17px;
     color: rgba(255,255,255,0.55);
     margin-bottom: 20px;
     text-align: center;
@@ -830,9 +830,9 @@
 .bgav-sim-stamm-row {
     display: flex;
     justify-content: space-between;
-    padding: 7px 0;
+    padding: 8px 0;
     border-bottom: 1px solid rgba(255,255,255,0.06);
-    font-size: 15px;
+    font-size: 17px;
 }
 
 .bgav-sim-stamm-row .stamm-label {
@@ -844,7 +844,7 @@
     color: #e2e8f0;
     font-weight: 600;
     font-family: 'SF Mono', 'Consolas', monospace;
-    font-size: 15px;
+    font-size: 17px;
 }
 
 .bgav-sim-stamm-divider {
@@ -855,7 +855,7 @@
 }
 
 .bgav-sim-stamm-section-title {
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 600;
     color: rgba(255,255,255,0.7);
     text-align: center;
@@ -895,13 +895,13 @@
 .stamm-compare-dot.neu { background: #00A3E0; }
 
 .stamm-compare-label {
-    font-size: 12px;
+    font-size: 14px;
     color: rgba(255,255,255,0.5);
     font-weight: 500;
 }
 
 .stamm-compare-val {
-    font-size: 16px;
+    font-size: 18px;
     font-weight: 700;
     color: rgba(255,255,255,0.85);
     font-family: 'SF Mono', 'Consolas', monospace;
@@ -1501,7 +1501,7 @@
     height: 100%;
     border-radius: 4px;
     background: linear-gradient(90deg, #f59e0b, #ef4444);
-    transition: width 0.5s ease;
+    transition: width 0.1s ease;
 }
 
 .sparte-goal-bar-fill.reached {

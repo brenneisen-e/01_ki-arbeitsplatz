@@ -745,7 +745,7 @@
     background: rgba(255,255,255,0.08);
     border: 1px solid rgba(255,255,255,0.15);
     color: white;
-    font-size: 15px;
+    font-size: 17px;
     font-weight: 700;
     padding: 6px 12px;
     border-radius: 6px;
@@ -763,7 +763,7 @@
 }
 
 .bgav-sim-stamm-role {
-    font-size: 12px;
+    font-size: 13px;
     color: rgba(255,255,255,0.55);
     margin-bottom: 20px;
     text-align: center;
@@ -777,9 +777,9 @@
 .bgav-sim-stamm-row {
     display: flex;
     justify-content: space-between;
-    padding: 5px 0;
+    padding: 6px 0;
     border-bottom: 1px solid rgba(255,255,255,0.06);
-    font-size: 12px;
+    font-size: 13px;
 }
 
 .bgav-sim-stamm-row .stamm-label {
@@ -791,7 +791,7 @@
     color: #e2e8f0;
     font-weight: 600;
     font-family: 'SF Mono', 'Consolas', monospace;
-    font-size: 11.5px;
+    font-size: 13px;
 }
 
 .bgav-sim-stamm-divider {
@@ -862,7 +862,7 @@
 }
 
 .stamm-chart-val {
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 700;
     color: rgba(255,255,255,0.8);
     text-align: center;
@@ -903,12 +903,12 @@
     padding: 0 8px;
 }
 
-/* ---- Right main content ---- */
+/* ---- Right main content (blue border = Einzelergebnisse) ---- */
 .bgav-sim-main {
     padding: 20px 24px;
     background: #f8fafc;
     border-radius: 0 12px 12px 0;
-    border: 1px solid #e2e8f0;
+    border: 3px solid #00A3E0;
     border-left: none;
 }
 
@@ -1028,6 +1028,320 @@
 .bgav-sim-card .sim-sub {
     font-size: 12px;
     color: #94a3b8;
+}
+
+/* ========================================
+   ÜBERSICHT TAB - Orange Layout (PDF Page 2)
+   ======================================== */
+.bgav-ub-grid {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 0;
+    min-height: 600px;
+}
+
+.bgav-ub-sidebar {
+    background: linear-gradient(180deg, #0C2340 0%, #0f2d52 100%);
+    color: #e2e8f0;
+    padding: 24px 18px;
+    border-radius: 12px 0 0 12px;
+    display: flex;
+    flex-direction: column;
+}
+
+.bgav-ub-vz-select {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: white;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 8px 12px;
+    border-radius: 6px;
+    width: 100%;
+    cursor: pointer;
+    margin-bottom: 14px;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.bgav-ub-vz-select option { background: #0C2340; color: white; }
+
+.bgav-ub-vz-name {
+    font-size: 16px;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 14px;
+}
+
+.bgav-ub-vz-fields {
+    margin-bottom: 12px;
+}
+
+.bgav-ub-vz-row {
+    font-size: 13px;
+    padding: 4px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.bgav-ub-vz-row .vz-label { color: rgba(255,255,255,0.5); }
+.bgav-ub-vz-row .vz-value { color: #e2e8f0; font-weight: 600; }
+
+.bgav-ub-vz-note {
+    font-size: 11px;
+    color: rgba(255,255,255,0.45);
+    background: rgba(255,255,255,0.04);
+    border-radius: 6px;
+    padding: 8px 10px;
+    margin-bottom: 14px;
+    line-height: 1.4;
+}
+
+.bgav-ub-vz-note strong { color: rgba(255,255,255,0.65); font-size: 11px; }
+.bgav-ub-vz-note ul { margin: 4px 0 0 16px; padding: 0; }
+
+.bgav-ub-vz-divider {
+    width: 80%;
+    height: 1px;
+    background: rgba(255,255,255,0.1);
+    margin: 8px auto 14px;
+}
+
+.bgav-ub-vz-chart-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.7);
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.bgav-ub-vz-chart {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 8px;
+}
+
+.bgav-ub-vz-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    justify-content: center;
+    margin-top: auto;
+}
+
+.vz-legend-item {
+    font-size: 10px;
+    color: rgba(255,255,255,0.5);
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+
+.vz-dot { width: 8px; height: 8px; border-radius: 2px; display: inline-block; }
+.vz-dot.null { background: #94a3b8; }
+.vz-dot.neg { background: #ef4444; }
+.vz-dot.low { background: #f59e0b; }
+.vz-dot.mid { background: #3b82f6; }
+.vz-dot.high { background: #22c55e; }
+
+/* Main content area with orange border */
+.bgav-ub-main {
+    border: 3px solid #ea580c;
+    border-radius: 0 12px 12px 0;
+    background: white;
+    padding: 20px;
+    overflow-x: auto;
+}
+
+.bgav-ub-main-header {
+    text-align: center;
+    margin-bottom: 16px;
+}
+
+.bgav-ub-main-header h3 {
+    font-size: 18px;
+    font-weight: 800;
+    color: #0C2340;
+    margin: 0;
+}
+
+.bgav-ub-main-header p {
+    font-size: 13px;
+    color: #64748b;
+    margin: 2px 0 0;
+}
+
+.bgav-ub-table-section { margin-bottom: 20px; }
+
+.bgav-ub-table-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #0C2340;
+    margin-bottom: 8px;
+    padding: 6px 12px;
+    background: #f1f5f9;
+    border-radius: 6px;
+}
+
+.bgav-ub-table { font-size: 12px; }
+.bgav-ub-table th { font-size: 11px; white-space: nowrap; }
+.bgav-ub-table .th-group { text-align: center; border-bottom: 2px solid #e2e8f0; }
+
+.bgav-ub-charts-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.bgav-ub-chart-box {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 14px;
+}
+
+.bgav-ub-chart-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: #0C2340;
+    margin-bottom: 10px;
+}
+
+.bgav-ub-charts-inner {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+.bgav-ub-chart-item { text-align: center; }
+
+.bgav-ub-chart-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #475569;
+    margin-bottom: 6px;
+}
+
+.bgav-ub-bottom-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.bgav-ub-small-table {
+    font-size: 11px;
+}
+
+.bgav-ub-small-table th, .bgav-ub-small-table td {
+    padding: 4px 8px;
+}
+
+.bgav-ub-disclaimer { background: #fffbeb; border-color: #fde68a; }
+
+.bgav-ub-disclaimer-text {
+    font-size: 11px;
+    color: #475569;
+    line-height: 1.5;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.bgav-ub-disclaimer-text p { margin: 0 0 6px; }
+.bgav-ub-disclaimer-text strong { color: #1e293b; }
+
+.bgav-ub-info-link {
+    font-size: 12px;
+    color: #64748b;
+    padding: 8px 0;
+}
+
+.bgav-ub-info-link a {
+    color: #00A3E0;
+    word-break: break-all;
+}
+
+/* ========================================
+   LEISTUNGSSTUFEN (Provisionssimulation)
+   ======================================== */
+.bgav-ls-section { margin-top: 20px; }
+
+.bgav-ls-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+}
+
+.bgav-ls-card {
+    border: 2px dashed #cbd5e1;
+    border-radius: 10px;
+    padding: 16px;
+    text-align: center;
+    position: relative;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.bgav-ls-card.reached {
+    border-style: solid;
+    border-color: #22c55e;
+    background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+}
+
+.bgav-ls-card.reached .ls-check {
+    display: flex;
+}
+
+.bgav-ls-card.current {
+    border-color: #00A3E0;
+    border-style: solid;
+    box-shadow: 0 0 0 3px rgba(0, 163, 224, 0.15);
+}
+
+.ls-check {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    width: 22px;
+    height: 22px;
+    background: #22c55e;
+    color: white;
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.ls-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: #0C2340;
+    margin-bottom: 4px;
+}
+
+.ls-range {
+    font-size: 11px;
+    color: #64748b;
+    margin-bottom: 8px;
+}
+
+.ls-factor {
+    font-size: 20px;
+    font-weight: 800;
+    color: #0C2340;
+}
+
+.bgav-ls-card.reached .ls-factor { color: #16a34a; }
+
+.ls-rates {
+    font-size: 10px;
+    color: #94a3b8;
+    margin-top: 6px;
+    line-height: 1.4;
 }
 
 /* ========================================
@@ -1579,12 +1893,16 @@
    ======================================== */
 @media (max-width: 1400px) {
     .bgav-kpi-row { grid-template-columns: repeat(2, 1fr); }
-    .bgav-roadmap { grid-template-columns: repeat(2, 1fr); }
-    .bgav-options-grid { grid-template-columns: 1fr; }
     .bgav-sim-grid { grid-template-columns: 1fr; }
     .bgav-sim-stammdaten { border-radius: 12px 12px 0 0; }
     .bgav-sim-main { border-radius: 0 0 12px 12px; border-left: 1px solid #e2e8f0; border-top: none; }
     .bgav-sim-sliders-row { grid-template-columns: 1fr; }
+    .bgav-ub-grid { grid-template-columns: 1fr; }
+    .bgav-ub-sidebar { border-radius: 12px 12px 0 0; }
+    .bgav-ub-main { border-radius: 0 0 12px 12px; }
+    .bgav-ub-bottom-row { grid-template-columns: 1fr; }
+    .bgav-ub-charts-row { grid-template-columns: 1fr; }
+    .bgav-ls-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
 @media (max-width: 768px) {

@@ -5804,164 +5804,145 @@
             <span class="tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg></span>
             Provisionssimulation
         </div>
-        <div class="bgav-tab" data-tab="roadmap">
-            <span class="tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg></span>
-            Roadmap 2026 ff.
-            <span class="tab-badge">8</span>
-        </div>
-        <div class="bgav-tab" data-tab="blindpool">
-            <span class="tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 00-3-3.87"></path><path d="M16 3.13a4 4 0 010 7.75"></path></svg></span>
-            Blindpool & Stammdaten
-        </div>
-        <div class="bgav-tab" data-tab="technik">
-            <span class="tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06"></path></svg></span>
-            Technische Grundlagen
-        </div>
     </div>
 
     <!-- ================================
          TAB 1: ÜBERSICHT
          ================================ -->
     <div id="bgavContent_uebersicht" class="bgav-tab-content active">
+        <div class="bgav-ub-grid">
+            <!-- LEFT: Dark VZ Sidebar -->
+            <div class="bgav-ub-sidebar">
+                <select class="bgav-ub-vz-select">
+                    <option>Vertriebszentrum K&ouml;ln</option>
+                    <option>Vertriebszentrum D&uuml;sseldorf</option>
+                    <option>Vertriebszentrum M&uuml;nchen</option>
+                    <option>Vertriebszentrum Hamburg</option>
+                </select>
 
-        <!-- KPI Row -->
-        <div class="bgav-kpi-row">
-            <div class="bgav-kpi-card status-info">
-                <div class="kpi-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-                </div>
-                <div class="kpi-label">Aktuell: Alt-Modell</div>
-                <div class="kpi-value" id="bgavKpi_altGesamt">42.800 &euro;</div>
-                <div class="kpi-change">Jahresprovision gesamt</div>
-            </div>
-            <div class="bgav-kpi-card status-success">
-                <div class="kpi-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
-                </div>
-                <div class="kpi-label">Neu: BGAV-Modell</div>
-                <div class="kpi-value" id="bgavKpi_bgavGesamt">44.520 &euro;</div>
-                <div class="kpi-change positive">Simulierte Jahresprovision</div>
-            </div>
-            <div class="bgav-kpi-card status-success" id="bgavKpiDeltaCard">
-                <div class="kpi-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 5 5 12"></polyline></svg>
-                </div>
-                <div class="kpi-label">Delta (&Delta;)</div>
-                <div class="kpi-value" id="bgavKpi_delta">+1.720 &euro;</div>
-                <div class="kpi-change positive" id="bgavKpi_deltaPercent">+4.0%</div>
-            </div>
-            <div class="bgav-kpi-card status-warning">
-                <div class="kpi-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><path d="M18 20V10"></path><path d="M12 20V4"></path><path d="M6 20v-6"></path></svg>
-                </div>
-                <div class="kpi-label">Karrierestufe</div>
-                <div class="kpi-value" id="bgavKpi_karriere">Premium</div>
-                <div class="kpi-change" id="bgavKpi_karriereFactor">Faktor 1.00x</div>
-            </div>
-        </div>
+                <div class="bgav-ub-vz-name">Vertriebszentrum K&ouml;ln</div>
 
-        <!-- ICM2026 Status Section -->
-        <div class="bgav-two-col">
-            <div class="bgav-section">
-                <div class="bgav-section-header">
-                    <div class="bgav-section-title">
-                        <div class="title-icon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                <div class="bgav-ub-vz-fields">
+                    <div class="bgav-ub-vz-row"><span class="vz-label">VZ-Leiter:</span> <span class="vz-value">Marc Hintze</span></div>
+                    <div class="bgav-ub-vz-row"><span class="vz-label">Bezirksleiter:</span> <span class="vz-value">-</span></div>
+                </div>
+
+                <div class="bgav-ub-vz-note">
+                    <strong>Keine Berücksichtigung in der Simulation:</strong>
+                    <ul><li>Angestellte Vermittler</li></ul>
+                </div>
+
+                <div class="bgav-ub-vz-divider"></div>
+
+                <div class="bgav-ub-vz-chart-title">Vergleich Ergebnisse Alt vs. Neu je AGT</div>
+                <div class="bgav-ub-vz-chart">
+                    <canvas id="bgavUbVzChart" width="220" height="160"></canvas>
+                </div>
+                <div class="bgav-ub-vz-legend">
+                    <span class="vz-legend-item"><span class="vz-dot null"></span> (Null)</span>
+                    <span class="vz-legend-item"><span class="vz-dot neg"></span> &lt; 0%</span>
+                    <span class="vz-legend-item"><span class="vz-dot low"></span> 0-5%</span>
+                    <span class="vz-legend-item"><span class="vz-dot mid"></span> 5-10%</span>
+                    <span class="vz-legend-item"><span class="vz-dot high"></span> &gt; 10%</span>
+                </div>
+            </div>
+
+            <!-- RIGHT: Main content with orange border -->
+            <div class="bgav-ub-main">
+                <div class="bgav-ub-main-header">
+                    <h3>Vergleich Umstellung</h3>
+                    <p>Rechnerische Simulationsergebnisse</p>
+                </div>
+
+                <!-- Simulationsergebnisse Table -->
+                <div class="bgav-ub-table-section">
+                    <div class="bgav-ub-table-title">Simulationsergebnisse</div>
+                    <div class="bgav-table-wrapper">
+                        <table class="bgav-table bgav-ub-table">
+                            <thead>
+                                <tr>
+                                    <th rowspan="2" style="min-width:60px;"></th>
+                                    <th rowspan="2">Vermittler</th>
+                                    <th rowspan="2">Status</th>
+                                    <th colspan="2" class="th-group">Vergütung AP</th>
+                                    <th colspan="2" class="th-group">Vergütung FP</th>
+                                    <th rowspan="2">Sonst. Erfolgsabh. Vergütung</th>
+                                    <th rowspan="2">Zuschüsse</th>
+                                    <th rowspan="2">Zusatzverg.</th>
+                                    <th rowspan="2">Vergütung Alt</th>
+                                    <th rowspan="2">Simulierte Vergütung</th>
+                                    <th rowspan="2">Gesamtdifferenz</th>
+                                </tr>
+                                <tr>
+                                    <th>Alt</th>
+                                    <th>Neu</th>
+                                    <th>Alt</th>
+                                    <th>Neu</th>
+                                </tr>
+                            </thead>
+                            <tbody id="bgavUbTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Charts Row -->
+                <div class="bgav-ub-charts-row">
+                    <div class="bgav-ub-chart-box">
+                        <div class="bgav-ub-chart-title">Anzahl Vermittler mit jeweiliger Provisionseinstufung (AP)</div>
+                        <div class="bgav-ub-charts-inner">
+                            <div class="bgav-ub-chart-item">
+                                <div class="bgav-ub-chart-label">S/U ohne KFZ</div>
+                                <canvas id="bgavUbChartSU" height="140"></canvas>
+                            </div>
+                            <div class="bgav-ub-chart-item">
+                                <div class="bgav-ub-chart-label">KV</div>
+                                <canvas id="bgavUbChartKV" height="140"></canvas>
+                            </div>
+                            <div class="bgav-ub-chart-item">
+                                <div class="bgav-ub-chart-label">LV</div>
+                                <canvas id="bgavUbChartLV" height="140"></canvas>
+                            </div>
                         </div>
-                        ICM2026 GoLive &ndash; Aktueller Status
                     </div>
-                    <span class="bgav-section-badge">Live seit Jan 2026</span>
+                    <div class="bgav-ub-chart-box">
+                        <div class="bgav-ub-chart-title">Übersicht Agenturfunktionen</div>
+                        <canvas id="bgavUbChartAgentur" height="160"></canvas>
+                    </div>
                 </div>
-                <ul class="bgav-checklist">
-                    <li><span class="check-icon done">&#10003;</span> Einführung AP/FP für SHUK in FS-ICM inkl. Konditionssätze</li>
-                    <li><span class="check-icon done">&#10003;</span> Einheitliche Reverse- &amp; Karrierestufen (Fahrstuhllogik)</li>
-                    <li><span class="check-icon done">&#10003;</span> Mitverdienerstrukturen inkl. Untervermittlerlogik</li>
-                    <li><span class="check-icon done">&#10003;</span> Anbindung FS-ICM an Blindpool-Lösung (3PA)</li>
-                    <li><span class="check-icon done">&#10003;</span> Provisionsseitige Einführung neues BG-Produktportfolio</li>
-                    <li><span class="check-icon done">&#10003;</span> Anpassung der Absatzwertung</li>
-                    <li><span class="check-icon done">&#10003;</span> Verhandlung &amp; Vertragsaktion mit Interessensvertretungen</li>
-                </ul>
-            </div>
 
-            <div class="bgav-section">
-                <div class="bgav-section-header">
-                    <div class="bgav-section-title">
-                        <div class="title-icon" style="background: linear-gradient(135deg, #ea580c, #f97316);">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                <!-- Bottom Row: Productivity table + Zuschüsse chart + Disclaimer -->
+                <div class="bgav-ub-bottom-row">
+                    <div class="bgav-ub-chart-box">
+                        <div class="bgav-ub-chart-title">Anzahl Vermittler mit erreichtem Produktionsstandard</div>
+                        <table class="bgav-table bgav-ub-small-table">
+                            <thead>
+                                <tr><th></th><th>&lt; MPL</th><th>MPL</th><th>1. LS</th><th>2. LS</th><th>3. LS</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>S/U inkl. Tier</td><td>29</td><td>10</td><td>10</td><td>7</td><td>8</td></tr>
+                                <tr><td>Kfz</td><td>57</td><td>2</td><td>4</td><td></td><td>1</td></tr>
+                                <tr><td>LV</td><td>44</td><td>6</td><td>8</td><td>4</td><td>1</td></tr>
+                                <tr><td>KV</td><td>17</td><td>4</td><td>13</td><td>6</td><td>24</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="bgav-ub-chart-box">
+                        <div class="bgav-ub-chart-title">Vergleich &ndash; allgemeine Zuschüsse</div>
+                        <canvas id="bgavUbChartZuschuesse" height="180"></canvas>
+                    </div>
+                    <div class="bgav-ub-chart-box bgav-ub-disclaimer">
+                        <div class="bgav-ub-chart-title">Disclaimer</div>
+                        <div class="bgav-ub-disclaimer-text">
+                            <p><strong>Hinweis:</strong> Diese Darstellung dient der Veranschaulichung eines Vergleichs zwischen der bisherigen Vergütung (gemäß Ist-Daten der Referenzzeiträume <strong>01.07.2023&ndash;30.06.2024</strong> und <strong>01.07.2024&ndash;30.06.2025</strong>) und einer simulierten Anwendung des neuen Provisionsmodells.</p>
+                            <p>Die Agentur- und Provisions-Einstufung in der Simulation erfolgt auf Basis des <strong>Durchschnitts der beiden Referenzzeiträume</strong>.</p>
+                            <p>Für die Bestandsprovisionen aus Altverträgen gilt ein <strong>Bestandsschutz</strong>. Das bedeutet, dass die neuen Provisionsarten ausschließlich für Neugeschäft ab dem Umstellungszeitpunkt <strong>01.01.2026</strong> gelten.</p>
                         </div>
-                        Offene Herausforderungen
                     </div>
-                    <span class="bgav-section-badge" style="background:#fef2f2; color:#dc2626; border-color:#fecaca;">6 offen</span>
                 </div>
-                <ul class="bgav-checklist">
-                    <li><span class="check-icon blocked">!</span> <strong>Fach:</strong> Keine identische vertragliche Grundlage für ex-B. &amp; ex-G. VM</li>
-                    <li><span class="check-icon blocked">!</span> <strong>Fach:</strong> Keine Mitverdienerkonstrukte zwischen ex-B. &amp; ex-G. VM</li>
-                    <li><span class="check-icon pending">&#x25CB;</span> <strong>Fach:</strong> Keine Provision nach Bestandsübertragungen</li>
-                    <li><span class="check-icon pending">&#x25CB;</span> <strong>Fach:</strong> Getrennte VM-Stammdatenhaltung (maskierter Blindpool)</li>
-                    <li><span class="check-icon blocked">!</span> <strong>IT:</strong> Zwei aktive, technische Provisionssysteme parallel</li>
-                    <li><span class="check-icon pending">&#x25CB;</span> <strong>IT:</strong> Keine direkte Anbindung FS-ICM an ex-G. Bestandssysteme</li>
-                </ul>
-            </div>
-        </div>
 
-        <!-- Provisionsthemen Overview Cards -->
-        <div class="bgav-section">
-            <div class="bgav-section-header">
-                <div class="bgav-section-title">
-                    <div class="title-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
-                    </div>
-                    Überblick Provisionsthemen 2026 ff.
-                </div>
-            </div>
-            <div class="bgav-roadmap">
-                <div class="bgav-roadmap-item fachlich">
-                    <div class="item-number">I</div>
-                    <h4>Auflösen vertr. Defizite der Sammelvermittlernr.</h4>
-                    <p>Gegenseitige Stammdatenanlage &amp; Pflege; Demaskierung Blindpool; Umbau SST, Servicelayer &amp; Umsysteme</p>
-                    <span class="item-tag">Taskforce Blindpool</span>
-                </div>
-                <div class="bgav-roadmap-item fachlich">
-                    <div class="item-number">II</div>
-                    <h4>Silo-übergreifende Bestandsübertragung</h4>
-                    <p>Eindeutige Bestandszuordnung &amp; Provisionierung; Anpassung Prüfservice und Berechnungslogik</p>
-                    <span class="item-tag">abh. von I</span>
-                </div>
-                <div class="bgav-roadmap-item fachlich">
-                    <div class="item-number">III</div>
-                    <h4>Eine Vergütung &ndash; fachliche Konzeption &amp; Roadmap</h4>
-                    <p>Zielbild FS-ICM als gesamthafte BG-Lösung; stufenweise Transition nach Sparten</p>
-                    <span class="item-tag">Strategisch</span>
-                </div>
-                <div class="bgav-roadmap-item fachlich optional">
-                    <div class="item-number">IV</div>
-                    <h4>Vereinheitlichung Abrechnung &amp; Note</h4>
-                    <p>Gemeinsame Abrechnung inkl. einer gemeinsamen Provisionsnote für beide ex-Vertriebe</p>
-                    <span class="item-tag">Optional, abh. von II</span>
-                </div>
-                <div class="bgav-roadmap-item technisch">
-                    <div class="item-number">V</div>
-                    <h4>Systemupdates FS-ICM</h4>
-                    <p>Update NetWeaver; EHP-Aktualisierung; Aktivierung ILM zur Archivierung</p>
-                    <span class="item-tag">Technisch</span>
-                </div>
-                <div class="bgav-roadmap-item technisch">
-                    <div class="item-number">VI</div>
-                    <h4>Technische Performance-Optimierung</h4>
-                    <p>Code-Optimierungen, Performanceverbesserung, Vorbereitung Archivierung (ILM)</p>
-                    <span class="item-tag">Technisch</span>
-                </div>
-                <div class="bgav-roadmap-item technisch optional">
-                    <div class="item-number">VII</div>
-                    <h4>Anpassung Vertriebsreporting</h4>
-                    <p>Ausgliederung Absatzeinheiten-Wertung aus FS-ICM nach SAS</p>
-                    <span class="item-tag">Optional</span>
-                </div>
-                <div class="bgav-roadmap-item technisch">
-                    <div class="item-number">VIII</div>
-                    <h4>S/4HANA &amp; Journey-to-Cloud</h4>
-                    <p>Konzeption u. Entscheidung J2C sowie S/4HANA Upgrade</p>
-                    <span class="item-tag">Technisch</span>
+                <!-- Info Link -->
+                <div class="bgav-ub-info-link">
+                    Infomaterial BGAV: <a href="https://www.barmenia24.de/deu/b24_ein_exklusivvertrieb_1/uebersicht.xhtml" target="_blank">https://www.barmenia24.de/deu/b24_ein_exklusivvertrieb_1/uebersicht.xhtml</a>
                 </div>
             </div>
         </div>
@@ -6132,233 +6113,26 @@
                         </table>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
 
-    <!-- ================================
-         TAB 3: ROADMAP 2026 ff.
-         ================================ -->
-    <div id="bgavContent_roadmap" class="bgav-tab-content">
-        <div class="bgav-section">
-            <div class="bgav-section-header">
-                <div class="bgav-section-title">
-                    <div class="title-icon" style="background: linear-gradient(135deg, #0C2340, #00A3E0);">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                <!-- Leistungsstufen -->
+                <div class="bgav-section bgav-ls-section">
+                    <div class="bgav-section-header">
+                        <div class="bgav-section-title">Leistungsstufen &ndash; Provisionseinstufung</div>
                     </div>
-                    Initiale Projektplanung &bdquo;Provision&ldquo; 2026 ff.
-                </div>
-                <span class="bgav-section-badge">Themen sind untereinander abhängig</span>
-            </div>
-            <div id="bgavGanttContainer"></div>
-        </div>
-
-        <!-- Fachliche Anforderungen Detail -->
-        <div class="bgav-two-col" style="margin-top: 24px;">
-            <div class="bgav-section">
-                <div class="bgav-section-header">
-                    <div class="bgav-section-title" style="color: #ea580c;">I. Auflösen vertr. Defizite der Sammelvermittlernr.</div>
-                    <span class="bgav-section-badge" style="background:#fef3c7; color:#d97706; border-color:#fde68a;">Aktive Taskforce</span>
-                </div>
-                <p style="font-size: 13px; color: #475569; line-height: 1.6; margin-bottom: 16px;">
-                    <strong>Anforderung:</strong> Auflösen der vertrieblichen Einschränkungen der aktuellen Sammelvermittlernr.-Lösung. Aufbau 1:1 Beziehung zwischen VM und VM-Nr.
-                </p>
-                <ul class="bgav-checklist">
-                    <li><span class="check-icon pending">&#x25CB;</span> Gegenseitige Anlage der Vermittler in beiden Systemwelten</li>
-                    <li><span class="check-icon pending">&#x25CB;</span> Anpassung der SST &amp; des Servicelayers</li>
-                    <li><span class="check-icon pending">&#x25CB;</span> Überprüfung und Anpassung der Umsysteme</li>
-                    <li><span class="check-icon pending">&#x25CB;</span> Anlage der Rabattkonten für neuangelegte Vermittler</li>
-                    <li><span class="check-icon pending">&#x25CB;</span> Laufende Pflege/Sync. der Stammdaten</li>
-                </ul>
-            </div>
-
-            <div class="bgav-section">
-                <div class="bgav-section-header">
-                    <div class="bgav-section-title" style="color: #00A3E0;">II. Silo-übergreifende Bestandsübertragung</div>
-                    <span class="bgav-section-badge">Abhängig von I</span>
-                </div>
-                <p style="font-size: 13px; color: #475569; line-height: 1.6; margin-bottom: 16px;">
-                    <strong>Anforderung:</strong> Bestandsübertragung soll für BG-Exklusiv-Vertriebe möglich sein und korrekt provisioniert werden.
-                </p>
-                <ul class="bgav-checklist">
-                    <li><span class="check-icon pending">&#x25CB;</span> Definition Provisionsregelwerk (GeVos, Storno, Minderung, Teilung)</li>
-                    <li><span class="check-icon pending">&#x25CB;</span> Anpassung Prüfservices (FS-ICM oder 3PA)</li>
-                    <li><span class="check-icon pending">&#x25CB;</span> Anpassung Berechnungslogik Alt und Neu</li>
-                    <li><span class="check-icon pending">&#x25CB;</span> Bekanntmachung nicht verkaufsoffener Produkte</li>
-                    <li><span class="check-icon pending">&#x25CB;</span> Durchführung vollumfänglicher Tests</li>
-                </ul>
-            </div>
-        </div>
-    </div>
-
-    <!-- ================================
-         TAB 4: BLINDPOOL & STAMMDATEN
-         ================================ -->
-    <div id="bgavContent_blindpool" class="bgav-tab-content">
-
-        <!-- Options Grid -->
-        <div class="bgav-section">
-            <div class="bgav-section-header">
-                <div class="bgav-section-title">
-                    <div class="title-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-                    </div>
-                    Deep Dive &ndash; Optionenraum
-                </div>
-            </div>
-            <div class="bgav-options-grid">
-                <div class="bgav-option-card rejected">
-                    <div class="option-number">1</div>
-                    <div class="option-title">Blindpool unverändert, Rabattvolumen erhöht</div>
-                    <div class="option-desc">Bestehender maskierter Blindpool bleibt, die pauschale Rabattmöglichkeit wird erhöht.</div>
-                    <div class="option-verdict negative">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
-                        Produktkalkulation nicht haltbar
+                    <div class="bgav-ls-grid" id="bgavLeistungsstufenGrid">
+                        <!-- Filled by JS -->
                     </div>
                 </div>
-                <div class="bgav-option-card rejected">
-                    <div class="option-number">2</div>
-                    <div class="option-title">Ex-B. Produktportfolio bleibt verkaufsoffen</div>
-                    <div class="option-desc">Beide Portfolios bleiben vollständig verkaufsoffen für ex-B. Vermittler.</div>
-                    <div class="option-verdict negative">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
-                        Verstößt gegen BaFin-Vorgaben
-                    </div>
-                </div>
-                <div class="bgav-option-card">
-                    <div class="option-number">3</div>
-                    <div class="option-title">Ex-B. Partnersystem führend (Langfristig)</div>
-                    <div class="option-desc">Aufbau beider Vertriebe in adesso Partner und FS-ICM; Anbindung ex-G. Systeme.</div>
-                    <div class="option-verdict negative">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"></path></svg>
-                        Sehr hoher technischer Aufwand
-                    </div>
-                </div>
-                <div class="bgav-option-card recommended">
-                    <div class="option-number">4</div>
-                    <div class="option-title">Gegenseitige Stammdatenanlage &amp; Demaskierung</div>
-                    <div class="option-desc">Gegenseitige Anlage VM-Stammdaten mit silo-eigenen VM-Nummern. Führend: adesso Partner für Stammdaten, FS-ICM für Vertriebsorganisation.</div>
-                    <div class="option-verdict positive">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-                        Kurzfristig realisierbar &ndash; Empfehlung!
-                    </div>
-                </div>
-            </div>
-        </div>
 
-        <!-- Blindpool Process -->
-        <div class="bgav-section">
-            <div class="bgav-section-header">
-                <div class="bgav-section-title">
-                    <div class="title-icon" style="background: linear-gradient(135deg, #7c3aed, #a855f7);">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                <!-- 5-Jahres Perspektive -->
+                <div class="bgav-section">
+                    <div class="bgav-section-header">
+                        <div class="bgav-section-title">Provisionseinnahmen &ndash; 5-Jahres-Perspektive</div>
                     </div>
-                    AS-IS Integration via Blindpool
+                    <div style="height: 280px; position: relative;">
+                        <canvas id="bgavSim5YearChart"></canvas>
+                    </div>
                 </div>
-            </div>
-            <div class="bgav-flow">
-                <div class="bgav-flow-node active-node"><div class="node-title">adesso Partner</div><div class="node-desc">Stammdaten</div></div>
-                <div class="bgav-flow-arrow">&rarr;</div>
-                <div class="bgav-flow-node active-node"><div class="node-title">FS-ICM</div><div class="node-desc">BGAV Provision</div></div>
-                <div class="bgav-flow-arrow">&rarr;</div>
-                <div class="bgav-flow-node"><div class="node-title">Blindpool</div><div class="node-desc">Datendrehscheibe</div></div>
-                <div class="bgav-flow-arrow">&rarr;</div>
-                <div class="bgav-flow-node"><div class="node-title">3P/Allis</div><div class="node-desc">ex-G. Provision</div></div>
-                <div class="bgav-flow-arrow">&rarr;</div>
-                <div class="bgav-flow-node"><div class="node-title">SAP FI</div><div class="node-desc">Abrechnung</div></div>
-            </div>
-            <p style="font-size: 13px; color: #475569; text-align: center; margin-top: 8px; line-height: 1.6;">
-                Der Blindpool fungiert als zentrale Datendrehscheibe, welche die Provisionsdaten der ursprünglichen Systeme aufnimmt und konsistent in die Datenlogik der anderen Systemwelt umwandelt.
-                Vermittler nutzen eine <strong>Sammelvermittlernummer + Fremdordnungsmerkmal</strong>.
-            </p>
-        </div>
-
-        <!-- Datenmodell Mapping -->
-        <div class="bgav-two-col">
-            <div class="bgav-section">
-                <div class="bgav-section-header">
-                    <div class="bgav-section-title">Ex-Barmenia Datenmodell</div>
-                </div>
-                <ul class="bgav-info-list">
-                    <li><span class="info-label">Partner-ID</span><span class="info-value">ADM-Nr. 8-stellig + BP-ID 10-stellig</span></li>
-                    <li><span class="info-label">Pro Rolle</span><span class="info-value">1 Provisionsvertrag &#8594; 1 BD-VM-Nr.</span></li>
-                    <li><span class="info-label">Schlüssel</span><span class="info-value">BD-Vermittlernummer (xxxx/xxxx)</span></li>
-                    <li><span class="info-label">Systeme</span><span class="info-value">adesso Partner + SAP FS-ICM</span></li>
-                </ul>
-            </div>
-            <div class="bgav-section">
-                <div class="bgav-section-header">
-                    <div class="bgav-section-title">Ex-Gothaer Datenmodell</div>
-                </div>
-                <ul class="bgav-info-list">
-                    <li><span class="info-label">Partner-ID</span><span class="info-value">VPT-Nr. 10-stellig alphanumerisch</span></li>
-                    <li><span class="info-label">Pro VPT</span><span class="info-value">n Allis-Nummern (7-stellig)</span></li>
-                    <li><span class="info-label">Je Allis</span><span class="info-value">1 VD-AGT-Nr. + 1 GL-Bestandskennz.</span></li>
-                    <li><span class="info-label">Systeme</span><span class="info-value">3PAllis + Partner</span></li>
-                </ul>
-            </div>
-        </div>
-    </div>
-
-    <!-- ================================
-         TAB 5: TECHNISCHE GRUNDLAGEN
-         ================================ -->
-    <div id="bgavContent_technik" class="bgav-tab-content">
-        <div class="bgav-two-col">
-            <div class="bgav-section">
-                <div class="bgav-section-header">
-                    <div class="bgav-section-title" style="color: #7c3aed;">V. Systemupdates FS-ICM</div>
-                </div>
-                <p style="font-size: 13px; color: #475569; line-height: 1.6; margin-bottom: 12px;">
-                    <strong>Anforderung:</strong> Sicherheitsupdate der Netweaver- und EHP-Version + Einführung ILM zur Archivierung.
-                </p>
-                <ul class="bgav-checklist">
-                    <li><span class="check-icon pending">&#x25CB;</span> Hochpatchen NetWeaver auf 7.4/7.5</li>
-                    <li><span class="check-icon pending">&#x25CB;</span> Aktivierung Enhancement Package 8</li>
-                    <li><span class="check-icon pending">&#x25CB;</span> Einführung ILM (Archivierung)</li>
-                </ul>
-            </div>
-            <div class="bgav-section">
-                <div class="bgav-section-header">
-                    <div class="bgav-section-title" style="color: #7c3aed;">VI. Technische Performance-Optimierung</div>
-                </div>
-                <p style="font-size: 13px; color: #475569; line-height: 1.6; margin-bottom: 12px;">
-                    <strong>Anforderung:</strong> Performance des laufenden FS-ICM soll optimiert und Systemstabilität verbessert werden.
-                </p>
-                <ul class="bgav-checklist">
-                    <li><span class="check-icon pending">&#x25CB;</span> Analyse Performance-Engpässe</li>
-                    <li><span class="check-icon pending">&#x25CB;</span> Optimierung Schnittstellen &amp; Laufzeiten</li>
-                    <li><span class="check-icon pending">&#x25CB;</span> Programmlogik-Re-Design</li>
-                    <li><span class="check-icon pending">&#x25CB;</span> Vorbereitung Archivierung (ILM)</li>
-                </ul>
-            </div>
-            <div class="bgav-section">
-                <div class="bgav-section-header">
-                    <div class="bgav-section-title" style="color: #7c3aed;">VIII. S/4HANA &amp; Journey-to-Cloud</div>
-                </div>
-                <p style="font-size: 13px; color: #475569; line-height: 1.6; margin-bottom: 12px;">
-                    <strong>Anforderung:</strong> Upgrade von FS-ICM (R/3) auf S/4HANA bis Ende 2027 &ndash; J2C zur Harmonisierung.
-                </p>
-                <ul class="bgav-checklist">
-                    <li><span class="check-icon pending">&#x25CB;</span> Konzeption J2C P02 vs. P00 RISE</li>
-                    <li><span class="check-icon pending">&#x25CB;</span> Analyse S/4HANA Überführung</li>
-                    <li><span class="check-icon pending">&#x25CB;</span> ATC-Checks &amp; Code-Anpassungen</li>
-                    <li><span class="check-icon pending">&#x25CB;</span> Umfangreiche Tests aller Funktionalitäten</li>
-                </ul>
-            </div>
-            <div class="bgav-section">
-                <div class="bgav-section-header">
-                    <div class="bgav-section-title" style="color: #7c3aed;">VII. Anpassung Vertriebsreporting</div>
-                    <span class="bgav-section-badge" style="background:#f1f5f9; color:#64748b;">Optional</span>
-                </div>
-                <p style="font-size: 13px; color: #475569; line-height: 1.6; margin-bottom: 12px;">
-                    <strong>Anforderung:</strong> Absatzeinheiten-Berechnung architekturell nach SAS ausgliedern.
-                </p>
-                <ul class="bgav-checklist">
-                    <li><span class="check-icon pending">&#x25CB;</span> Architekturentscheidung SAS vs. DWH</li>
-                    <li><span class="check-icon pending">&#x25CB;</span> Definition Bewertungslogik</li>
-                    <li><span class="check-icon pending">&#x25CB;</span> Umsetzung in SAS</li>
-                </ul>
             </div>
         </div>
     </div>

@@ -214,9 +214,10 @@
     }
 
     // ========================================
-    // VERMITTLER PHOTO COPY FROM A-02
+    // VERMITTLER PHOTO COPY
     // ========================================
     function copyVermittlerPhoto() {
+        // Copy to header bar
         const sourceImg = document.getElementById('agenturPhotoImgSmall');
         const targetImg = document.getElementById('bgavVermittlerPhoto');
         const targetPlaceholder = document.getElementById('bgavVermittlerPhotoPlaceholder');
@@ -229,6 +230,19 @@
             if (targetPlaceholder) {
                 targetPlaceholder.style.display = 'none';
             }
+        }
+
+        // Copy to simulation Stammdaten sidebar (use Peter Schmidt photo from A-10)
+        const simPhoto = document.getElementById('bgavSimPhoto');
+        const simPlaceholder = document.getElementById('bgavSimPhotoPlaceholder');
+        const photoSrc = 'AdobeStock_624564221.jpeg';
+
+        if (simPhoto) {
+            simPhoto.src = photoSrc;
+            simPhoto.style.display = 'block';
+        }
+        if (simPlaceholder) {
+            simPlaceholder.style.display = 'none';
         }
     }
 
@@ -336,11 +350,40 @@
         setText('bgavKpi_karriere', stufe.label);
         setText('bgavKpi_karriereFactor', 'Faktor ' + stufe.factor.toFixed(2) + 'x');
 
+        // Update simulation tab KPI cards (tab 2)
+        setText('bgavKpi_altGesamt2', formatEuro(results.alt.total));
+        setText('bgavKpi_bgavGesamt2', formatEuro(results.bgav.total));
+        setText('bgavKpi_delta2', (delta >= 0 ? '+' : '') + formatEuro(delta));
+        setText('bgavKpi_karriere2', stufe.label);
+        const deltaCard2 = document.getElementById('bgavKpiDeltaCard2');
+        if (deltaCard2) {
+            deltaCard2.className = 'bgav-kpi-card ' + (delta >= 0 ? 'status-success' : 'status-danger');
+        }
+
+        // Update Stammdaten sidebar mini bar chart
+        updateStammdatenChart(results);
+
         // Update detail table
         updateSimDetailTable(results);
 
         // Update chart
         renderSimChart(results);
+    }
+
+    function updateStammdatenChart(results) {
+        const barAlt = document.getElementById('bgavStammBarAlt');
+        const barNeu = document.getElementById('bgavStammBarNeu');
+        const valAlt = document.getElementById('bgavStammValAlt');
+        const valNeu = document.getElementById('bgavStammValNeu');
+
+        if (!barAlt || !barNeu) return;
+
+        const maxVal = Math.max(results.alt.total, results.bgav.total, 1);
+        barAlt.style.height = Math.round((results.alt.total / maxVal) * 100) + '%';
+        barNeu.style.height = Math.round((results.bgav.total / maxVal) * 100) + '%';
+
+        if (valAlt) valAlt.textContent = formatEuro(results.alt.total);
+        if (valNeu) valNeu.textContent = formatEuro(results.bgav.total);
     }
 
     function updateSimDetailTable(results) {
@@ -838,12 +881,24 @@ Die Stufe basiert auf dem Gesamtproduktionsvolumen (Neugeschäft + Bestand) übe
         const bgavPage = document.getElementById('bgavUmstellungPage');
         if (bgavPage) bgavPage.style.display = 'none';
 
-        // Show landing page
+        // Reset zoom that BGAV may have applied
+        document.documentElement.style.zoom = '';
+        document.documentElement.style.transform = '';
+        document.documentElement.style.transformOrigin = '';
+
+        // Show landing page (flex for proper centering)
         const landing = document.getElementById('landingPage');
-        if (landing) landing.style.display = 'block';
+        if (landing) landing.style.display = 'flex';
+
+        // Re-apply landing zoom if available
+        if (typeof applyAutoZoom === 'function') {
+            setTimeout(applyAutoZoom, 50);
+        }
 
         // Reset URL hash
-        if (window.history && window.history.pushState) {
+        if (window.AppRouter) {
+            AppRouter.navigate('/landing');
+        } else if (window.history && window.history.pushState) {
             window.history.pushState({ view: 'landing' }, '', '#/');
         }
 

@@ -53,6 +53,9 @@
         resizeTimer = setTimeout(applyAutoZoom, 100);
     }
 
+    // Export for other modules to re-apply zoom
+    window.applyAutoZoom = applyAutoZoom;
+
     // Sofort beim Laden + bei Resize (debounced)
     applyAutoZoom();
     window.addEventListener('resize', onResize);
@@ -516,6 +519,14 @@ function backToLanding() {
     // BGAV page verstecken
     const bgavPage = document.getElementById('bgavUmstellungPage');
     if (bgavPage) bgavPage.style.display = 'none';
+
+    // Reset any zoom overrides from sub-tools (e.g. BGAV)
+    document.documentElement.style.zoom = '';
+    document.documentElement.style.transform = '';
+    document.documentElement.style.transformOrigin = '';
+    if (typeof applyAutoZoom === 'function') {
+        setTimeout(applyAutoZoom, 50);
+    }
 
     // Landing Page anzeigen
     if (landingPage) {

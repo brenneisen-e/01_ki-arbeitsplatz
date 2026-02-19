@@ -5971,65 +5971,135 @@
          TAB 2: PROVISIONSSIMULATION
          ================================ -->
     <div id="bgavContent_simulation" class="bgav-tab-content">
-
-        <div class="bgav-kpi-row">
-            <div class="bgav-kpi-card status-info">
-                <div class="kpi-label">Alt-Modell Gesamt</div>
-                <div class="kpi-value" id="bgavKpi_altGesamt2">-</div>
-            </div>
-            <div class="bgav-kpi-card status-success">
-                <div class="kpi-label">BGAV Gesamt</div>
-                <div class="kpi-value" id="bgavKpi_bgavGesamt2">-</div>
-            </div>
-            <div class="bgav-kpi-card status-success" id="bgavKpiDeltaCard2">
-                <div class="kpi-label">Delta</div>
-                <div class="kpi-value" id="bgavKpi_delta2">-</div>
-            </div>
-            <div class="bgav-kpi-card status-warning">
-                <div class="kpi-label">Karrierestufe</div>
-                <div class="kpi-value" id="bgavKpi_karriere2">Premium</div>
-            </div>
-        </div>
-
         <div class="bgav-sim-grid">
-            <!-- Sidebar: Sliders -->
-            <div class="bgav-sim-sidebar">
-                <h4>
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line><line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line><line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line><line x1="1" y1="14" x2="7" y2="14"></line><line x1="9" y1="8" x2="15" y2="8"></line><line x1="17" y1="16" x2="23" y2="16"></line></svg>
-                    Parameter anpassen
-                </h4>
+            <!-- LEFT: Dark Stammdaten Sidebar (like PDF) -->
+            <div class="bgav-sim-stammdaten">
+                <div class="bgav-sim-stamm-photo" id="bgavSimPhotoContainer">
+                    <svg id="bgavSimPhotoPlaceholder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="40" height="40">
+                        <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    <img id="bgavSimPhoto" style="display:none; width:60px; height:60px; border-radius:50%; object-fit:cover; border: 2px solid #00A3E0;" alt="">
+                </div>
+                <select class="bgav-sim-stamm-select" onchange="/* Vermittler wechseln */">
+                    <option>Max Mustermann</option>
+                </select>
+                <div class="bgav-sim-stamm-role" id="bgavSimRole">Leiter des Service-Centers</div>
 
-                <div class="bgav-slider-group">
-                    <label>Neugeschäft Leben <span id="bgavSliderVal_produktionLeben">150.000 &euro;</span></label>
-                    <input type="range" class="bgav-sim-slider" data-field="produktionLeben" min="0" max="500000" step="10000" value="150000">
-                </div>
-                <div class="bgav-slider-group">
-                    <label>Neugeschäft Kranken <span id="bgavSliderVal_produktionKranken">80.000 &euro;</span></label>
-                    <input type="range" class="bgav-sim-slider" data-field="produktionKranken" min="0" max="300000" step="5000" value="80000">
-                </div>
-                <div class="bgav-slider-group">
-                    <label>Neugeschäft Schaden <span id="bgavSliderVal_produktionSchaden">120.000 &euro;</span></label>
-                    <input type="range" class="bgav-sim-slider" data-field="produktionSchaden" min="0" max="500000" step="10000" value="120000">
+                <div class="bgav-sim-stamm-fields">
+                    <div class="bgav-sim-stamm-row">
+                        <span class="stamm-label">Status:</span>
+                        <span class="stamm-value" id="bgavSimStatus">Offen</span>
+                    </div>
+                    <div class="bgav-sim-stamm-row">
+                        <span class="stamm-label">Gesamtstand:</span>
+                        <span class="stamm-value" id="bgavSimStand">04.12.2025</span>
+                    </div>
+                    <div class="bgav-sim-stamm-row">
+                        <span class="stamm-label">BD-Nummer:</span>
+                        <span class="stamm-value" id="bgavSimBDNr">0000001</span>
+                    </div>
+                    <div class="bgav-sim-stamm-row">
+                        <span class="stamm-label">Eintrittsdatum:</span>
+                        <span class="stamm-value" id="bgavSimEintritt">01.01.2090</span>
+                    </div>
+                    <div class="bgav-sim-stamm-row">
+                        <span class="stamm-label">Agenturstatus:</span>
+                        <span class="stamm-value" id="bgavSimAgentur">Ab 01.01.2026</span>
+                    </div>
                 </div>
 
-                <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 16px 0;">
+                <div class="bgav-sim-stamm-divider"></div>
 
-                <div class="bgav-slider-group">
-                    <label>Bestand Leben <span id="bgavSliderVal_bestandLeben">450.000 &euro;</span></label>
-                    <input type="range" class="bgav-sim-slider" data-field="bestandLeben" min="0" max="2000000" step="50000" value="450000">
+                <div class="bgav-sim-stamm-section-title">
+                    Veränderung Vergütung ggü.<br>Durchschnitt WJ 23/24 und 24/25<br><span style="font-size:11px; opacity:0.7;">(simuliert)</span>
                 </div>
-                <div class="bgav-slider-group">
-                    <label>Bestand Kranken <span id="bgavSliderVal_bestandKranken">220.000 &euro;</span></label>
-                    <input type="range" class="bgav-sim-slider" data-field="bestandKranken" min="0" max="1000000" step="10000" value="220000">
+
+                <!-- Mini comparison bar chart -->
+                <div class="bgav-sim-stamm-chart">
+                    <div class="stamm-chart-bars">
+                        <div class="stamm-chart-bar-group">
+                            <div class="stamm-chart-bar alt" id="bgavStammBarAlt" style="height: 70%;"></div>
+                            <div class="stamm-chart-label">Alt</div>
+                        </div>
+                        <div class="stamm-chart-bar-group">
+                            <div class="stamm-chart-bar neu" id="bgavStammBarNeu" style="height: 80%;"></div>
+                            <div class="stamm-chart-label">Neu</div>
+                        </div>
+                    </div>
+                    <div class="stamm-chart-values">
+                        <div class="stamm-chart-val" id="bgavStammValAlt">42.800 &euro;</div>
+                        <div class="stamm-chart-val highlight" id="bgavStammValNeu">44.520 &euro;</div>
+                    </div>
                 </div>
-                <div class="bgav-slider-group">
-                    <label>Bestand Schaden <span id="bgavSliderVal_bestandSchaden">380.000 &euro;</span></label>
-                    <input type="range" class="bgav-sim-slider" data-field="bestandSchaden" min="0" max="1500000" step="10000" value="380000">
+
+                <div class="bgav-sim-stamm-legend">
+                    <span class="legend-dot alt"></span> Alt (rechnerisch)
+                    <span class="legend-dot neu"></span> Neu (simuliert)
+                </div>
+
+                <div class="bgav-sim-stamm-footnote">
+                    Vergleich Durchschnitt Wertungsjahre 23/24 und 24/25 mit simulierter Neuregelung
                 </div>
             </div>
 
-            <!-- Main Content: Chart + Table -->
-            <div>
+            <!-- RIGHT: Main simulation content -->
+            <div class="bgav-sim-main">
+                <!-- KPI Row -->
+                <div class="bgav-kpi-row">
+                    <div class="bgav-kpi-card status-info">
+                        <div class="kpi-label">Alt-Modell Gesamt</div>
+                        <div class="kpi-value" id="bgavKpi_altGesamt2">-</div>
+                    </div>
+                    <div class="bgav-kpi-card status-success">
+                        <div class="kpi-label">BGAV Gesamt</div>
+                        <div class="kpi-value" id="bgavKpi_bgavGesamt2">-</div>
+                    </div>
+                    <div class="bgav-kpi-card status-success" id="bgavKpiDeltaCard2">
+                        <div class="kpi-label">Delta</div>
+                        <div class="kpi-value" id="bgavKpi_delta2">-</div>
+                    </div>
+                    <div class="bgav-kpi-card status-warning">
+                        <div class="kpi-label">Karrierestufe</div>
+                        <div class="kpi-value" id="bgavKpi_karriere2">Premium</div>
+                    </div>
+                </div>
+
+                <!-- Sliders row -->
+                <div class="bgav-sim-sliders-row">
+                    <div class="bgav-sim-slider-block">
+                        <h4>Neugeschäft (Produktion)</h4>
+                        <div class="bgav-slider-group">
+                            <label>Leben <span id="bgavSliderVal_produktionLeben">150.000 &euro;</span></label>
+                            <input type="range" class="bgav-sim-slider" data-field="produktionLeben" min="0" max="500000" step="10000" value="150000">
+                        </div>
+                        <div class="bgav-slider-group">
+                            <label>Kranken <span id="bgavSliderVal_produktionKranken">80.000 &euro;</span></label>
+                            <input type="range" class="bgav-sim-slider" data-field="produktionKranken" min="0" max="300000" step="5000" value="80000">
+                        </div>
+                        <div class="bgav-slider-group">
+                            <label>Schaden <span id="bgavSliderVal_produktionSchaden">120.000 &euro;</span></label>
+                            <input type="range" class="bgav-sim-slider" data-field="produktionSchaden" min="0" max="500000" step="10000" value="120000">
+                        </div>
+                    </div>
+                    <div class="bgav-sim-slider-block">
+                        <h4>Bestandsprovisionen</h4>
+                        <div class="bgav-slider-group">
+                            <label>Leben <span id="bgavSliderVal_bestandLeben">450.000 &euro;</span></label>
+                            <input type="range" class="bgav-sim-slider" data-field="bestandLeben" min="0" max="2000000" step="50000" value="450000">
+                        </div>
+                        <div class="bgav-slider-group">
+                            <label>Kranken <span id="bgavSliderVal_bestandKranken">220.000 &euro;</span></label>
+                            <input type="range" class="bgav-sim-slider" data-field="bestandKranken" min="0" max="1000000" step="10000" value="220000">
+                        </div>
+                        <div class="bgav-slider-group">
+                            <label>Schaden <span id="bgavSliderVal_bestandSchaden">380.000 &euro;</span></label>
+                            <input type="range" class="bgav-sim-slider" data-field="bestandSchaden" min="0" max="1500000" step="10000" value="380000">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chart -->
                 <div class="bgav-section" style="margin-bottom: 20px;">
                     <div class="bgav-section-header">
                         <div class="bgav-section-title">Vergleich Alt-Modell vs. BGAV</div>
@@ -6038,6 +6108,8 @@
                         <canvas id="bgavSimChart"></canvas>
                     </div>
                 </div>
+
+                <!-- Detail Table -->
                 <div class="bgav-section">
                     <div class="bgav-section-header">
                         <div class="bgav-section-title">Detailansicht nach Sparten</div>

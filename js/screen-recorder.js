@@ -67,15 +67,14 @@ var screenRecorder = {
         }
     },
 
-    // Bestes verfügbares Format (MP4 bevorzugt)
+    // Bestes verfügbares Format (WebM bevorzugt – zuverlässiger mit MediaRecorder + Timeslice)
     _getMimeType: function() {
         var types = [
-            'video/mp4;codecs=avc1',
-            'video/mp4;codecs=avc1.42E01E',
-            'video/mp4',
             'video/webm;codecs=vp9',
             'video/webm;codecs=vp8',
-            'video/webm'
+            'video/webm',
+            'video/mp4;codecs=avc1',
+            'video/mp4'
         ];
         for (var i = 0; i < types.length; i++) {
             if (MediaRecorder.isTypeSupported(types[i])) return types[i];

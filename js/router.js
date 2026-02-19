@@ -65,30 +65,32 @@
                     var lp = document.getElementById('landingPage');
                     if (lp) {
                         lp.style.display = 'none';
-                        lp.setAttribute('data-deeplink-hidden', 'true');
                     }
 
-                    // Attempt navigation at multiple intervals for robustness
-                    // (target view function may not be available immediately)
+                    // Attempt navigation at multiple intervals for robustness.
+                    // navigateToView returns true only when the view function
+                    // actually existed and was called.
                     var self = this;
                     var navigated = false;
                     function attemptDeepLink() {
                         if (navigated) return;
-                        try {
-                            self.handleHashChange();
+                        var ok = self.navigateToView(route.view, false);
+                        if (ok) {
                             navigated = true;
-                            console.log('Router: Deep-link navigation successful →', initialHash);
-                            // Re-hide landing page in case something showed it
-                            var lp2 = document.getElementById('landingPage');
-                            if (lp2) lp2.style.display = 'none';
-                        } catch (e) {
-                            console.warn('Router: Deep-link attempt failed, will retry', e);
+                            self.currentRoute = initialHash;
+                            console.log('Router: Deep-link navigation OK →', initialHash);
+                        } else {
+                            console.log('Router: Deep-link view not ready, will retry →', route.view);
                         }
+                        // Always keep landing hidden
+                        var lp2 = document.getElementById('landingPage');
+                        if (lp2) lp2.style.display = 'none';
                     }
-                    setTimeout(attemptDeepLink, 300);
-                    setTimeout(attemptDeepLink, 800);
-                    setTimeout(attemptDeepLink, 2000);
-                    setTimeout(attemptDeepLink, 4000);
+                    setTimeout(attemptDeepLink, 100);
+                    setTimeout(attemptDeepLink, 500);
+                    setTimeout(attemptDeepLink, 1500);
+                    setTimeout(attemptDeepLink, 3000);
+                    setTimeout(attemptDeepLink, 5000);
                 }
             }
 
@@ -149,46 +151,29 @@
             this.navigateToView(route.view, false);
         },
 
-        // Navigate to a named view by calling its open function
-        navigateToView(viewName, updateHash = true) {
-            switch (viewName) {
-                case 'landing':
-                    if (typeof backToLanding === 'function') backToLanding();
-                    break;
-                case 'dashboard':
-                    if (typeof openDashboard === 'function') openDashboard();
-                    break;
-                case 'agentursicht':
-                    if (typeof openAgenturView === 'function') openAgenturView();
-                    break;
-                case 'potentialanalyse':
-                    if (typeof openPotentialAnalyse === 'function') openPotentialAnalyse();
-                    break;
-                case 'kundendetail':
-                    // Can't navigate directly without customer context
-                    if (typeof backToLanding === 'function') backToLanding();
-                    break;
-                case 'bgav-umstellung':
-                    if (typeof openBgavTool === 'function') openBgavTool();
-                    break;
-                case 'banken':
-                    if (typeof switchModule === 'function') switchModule('banken');
-                    break;
-                case 'risikoscoring':
-                    if (typeof openRisikoscoring === 'function') openRisikoscoring();
-                    break;
-                case 'bestandsuebertragung':
-                    if (typeof openBestandsuebertragung === 'function') openBestandsuebertragung();
-                    break;
-                case 'pmo-toolbox':
-                    if (typeof openPMOToolbox === 'function') openPMOToolbox();
-                    break;
-                case 'hr-pipeline':
-                    if (typeof openHRPipeline === 'function') openHRPipeline();
-                    break;
-                default:
-                    console.warn('Router: No handler for view:', viewName);
+        // Navigate to a named view by calling its open function.
+        // Returns true if the view function existed and was called.
+        navigateToView(viewName, updateHash) {
+            var fnMap = {
+                'landing':              function() { return typeof backToLanding === 'function' ? (backToLanding(), true) : false; },
+                'dashboard':            function() { return typeof openDashboard === 'function' ? (openDashboard(), true) : false; },
+                'agentursicht':         function() { return typeof openAgenturView === 'function' ? (openAgenturView(), true) : false; },
+                'potentialanalyse':     function() { return typeof openPotentialAnalyse === 'function' ? (openPotentialAnalyse(), true) : false; },
+                'kundendetail':         function() { return typeof backToLanding === 'function' ? (backToLanding(), true) : false; },
+                'bgav-umstellung':      function() { return typeof openBgavTool === 'function' ? (openBgavTool(), true) : false; },
+                'banken':               function() { return typeof switchModule === 'function' ? (switchModule('banken'), true) : false; },
+                'risikoscoring':        function() { return typeof openRisikoscoring === 'function' ? (openRisikoscoring(), true) : false; },
+                'bestandsuebertragung': function() { return typeof openBestandsuebertragung === 'function' ? (openBestandsuebertragung(), true) : false; },
+                'pmo-toolbox':          function() { return typeof openPMOToolbox === 'function' ? (openPMOToolbox(), true) : false; },
+                'hr-pipeline':          function() { return typeof openHRPipeline === 'function' ? (openHRPipeline(), true) : false; }
+            };
+
+            var handler = fnMap[viewName];
+            if (handler) {
+                return handler();
             }
+            console.warn('Router: No handler for view:', viewName);
+            return false;
         },
 
         // Get current route info

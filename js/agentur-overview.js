@@ -97,8 +97,8 @@ function loadAgenturData(vermittlerId) {
     fillProvisionTab(agenturData);
     fillQualitaetTab(agenturData);
 
-    // Zeige Übersicht-Tab als ersten Tab (oder Makler/MRH-Modus wenn aktiv)
-    if (typeof viewMode !== 'undefined' && viewMode !== 'ao') {
+    // Zeige Übersicht-Tab als ersten Tab und wende View-Mode an
+    if (typeof viewMode !== 'undefined') {
         applyViewMode();
     } else if (typeof maklerModus !== 'undefined' && maklerModus) {
         applyMaklerModus();

@@ -205,8 +205,10 @@
         updateSimulationResults();
         setupSliders();
         renderLeistungsstufen();
-        renderUebersichtTab();
         initBgavChat();
+
+        // Render Übersicht charts after DOM is visible
+        setTimeout(renderUebersichtTab, 200);
 
         // Page ID update
         if (typeof PageIDTracker !== 'undefined') {
@@ -271,6 +273,14 @@
         document.querySelectorAll('.bgav-tab-content').forEach(c => c.classList.remove('active'));
         const activeContent = document.getElementById('bgavContent_' + tabName);
         if (activeContent) activeContent.classList.add('active');
+
+        // Render charts after tab is visible (Chart.js needs visible canvas)
+        if (tabName === 'uebersicht') {
+            setTimeout(renderUebersichtTab, 50);
+        }
+        if (tabName === 'simulation') {
+            setTimeout(() => updateSimulationResults(), 50);
+        }
     }
 
     window.switchBgavTab = switchBgavTab;
@@ -460,6 +470,41 @@
     // ========================================
     // CHART RENDERING
     // ========================================
+    // Leistungsstufen threshold plugin for Chart.js
+    const leistungsstufenPlugin = {
+        id: 'leistungsstufenLines',
+        afterDraw(chart) {
+            const thresholds = chart.options.plugins.leistungsstufenLines;
+            if (!thresholds || !thresholds.lines) return;
+
+            const { ctx, chartArea: { left, right }, scales: { y } } = chart;
+            ctx.save();
+
+            thresholds.lines.forEach(line => {
+                const yPos = y.getPixelForValue(line.value);
+                if (yPos < chart.chartArea.top || yPos > chart.chartArea.bottom) return;
+
+                // Dashed line
+                ctx.beginPath();
+                ctx.setLineDash([6, 4]);
+                ctx.lineWidth = 1.5;
+                ctx.strokeStyle = line.color || 'rgba(0, 163, 224, 0.6)';
+                ctx.moveTo(left, yPos);
+                ctx.lineTo(right, yPos);
+                ctx.stroke();
+                ctx.setLineDash([]);
+
+                // Label
+                ctx.fillStyle = line.color || 'rgba(0, 163, 224, 0.8)';
+                ctx.font = 'bold 10px system-ui, sans-serif';
+                ctx.textAlign = 'right';
+                ctx.fillText(line.label, right - 4, yPos - 4);
+            });
+
+            ctx.restore();
+        }
+    };
+
     function renderSimChart(results) {
         const canvas = document.getElementById('bgavSimChart');
         if (!canvas) return;
@@ -469,9 +514,24 @@
             window._bgavSimChart.destroy();
         }
 
+        // Calculate max value for Leistungsstufen thresholds
+        const maxVal = Math.max(
+            results.alt.leben.total, results.alt.kranken.total, results.alt.schaden.total,
+            results.bgav.leben.total, results.bgav.kranken.total, results.bgav.schaden.total
+        );
+
+        // Leistungsstufen thresholds (proportional to data range)
+        const lsLines = [
+            { label: 'MPL', value: maxVal * 0.20, color: 'rgba(148, 163, 184, 0.5)' },
+            { label: '1. LS', value: maxVal * 0.40, color: 'rgba(0, 163, 224, 0.45)' },
+            { label: '2. LS', value: maxVal * 0.60, color: 'rgba(0, 163, 224, 0.55)' },
+            { label: '3. LS', value: maxVal * 0.80, color: 'rgba(0, 163, 224, 0.7)' }
+        ];
+
         const ctx = canvas.getContext('2d');
         window._bgavSimChart = new Chart(ctx, {
             type: 'bar',
+            plugins: [leistungsstufenPlugin],
             data: {
                 labels: ['Leben', 'Kranken', 'Schaden/Unfall'],
                 datasets: [
@@ -511,6 +571,9 @@
                                 return context.dataset.label + ': ' + formatEuro(context.raw);
                             }
                         }
+                    },
+                    leistungsstufenLines: {
+                        lines: lsLines
                     }
                 },
                 scales: {

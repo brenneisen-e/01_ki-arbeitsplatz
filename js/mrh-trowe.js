@@ -21,10 +21,22 @@ function setViewMode(mode) {
 
     applyViewMode();
 
-    // Close A-10 if open
+    // Close A-10 if open and update URL based on which page is visible
     var a10 = document.getElementById('kundenDetailPage');
     if (a10 && a10.style.display !== 'none') {
         if (typeof closeKundenDetail === 'function') closeKundenDetail();
+    }
+
+    // Update URL to reflect the active view mode on A-02
+    var agenturPage = document.getElementById('agenturOverview');
+    if (agenturPage && agenturPage.style.display !== 'none' && window.AppRouter) {
+        if (mode === 'ecclesia') {
+            AppRouter.navigate('/agentur-b2b');
+        } else if (mode === 'mrh') {
+            AppRouter.navigate('/agentur-gewerbe');
+        } else {
+            AppRouter.navigate('/agentur');
+        }
     }
 
     localStorage.setItem('viewMode', mode);
@@ -1130,22 +1142,27 @@ function fillMRHDetail(kunde) {
             '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="48" height="48" style="color:#fff">' + icon.replace(/<svg[^>]*>/, '').replace(/<\/svg>/, '') + '</svg></div>';
     }
 
-    // 5) Stammdaten: hide private, show MRH-stammdaten in maklerStammdaten container
+    // 5) Stammdaten: hide private + B2B, show MRH-specific stammdaten
     var privatStamm = document.getElementById('privatStammdaten');
     var maklerStamm = document.getElementById('maklerStammdaten');
+    var mrhStamm = document.getElementById('mrhStammdatenA10');
     if (privatStamm) privatStamm.style.display = 'none';
-    if (maklerStamm) {
-        maklerStamm.style.display = 'grid';
-        var mkB = document.getElementById('mkBranche'); if (mkB) mkB.textContent = kunde.branche || '—';
-        var mkS = document.getElementById('mkSegment'); if (mkS) mkS.textContent = kunde.specialty || '—';
-        var mkM = document.getElementById('mkMitarbeitende'); if (mkM) mkM.textContent = kunde.mitarbeitende ? kunde.mitarbeitende.toLocaleString('de-DE') : '—';
-        var mkJ = document.getElementById('mkJahresumsatz'); if (mkJ) mkJ.textContent = kunde.jahresumsatz || '—';
-        var mkBe = document.getElementById('mkBetten'); if (mkBe) mkBe.textContent = kunde.standorte || '—';
-        var mkSt = document.getElementById('mkStandorte'); if (mkSt) mkSt.textContent = kunde.eigentuemer || '—';
-        var mkT = document.getElementById('mkTraeger'); if (mkT) mkT.textContent = kunde.gesellschaftsform || '—';
-        var mkK = document.getElementById('mkKeyContact'); if (mkK) mkK.textContent = (kunde.keyContacts || []).join(', ') || '—';
-        var mkR = document.getElementById('mkRisikoklasse'); if (mkR) { mkR.textContent = kunde.beziehungsstatus || '—'; mkR.className = 'info-value'; }
-        var mkKs = document.getElementById('mkKundeSeit'); if (mkKs) mkKs.textContent = '—';
+    if (maklerStamm) maklerStamm.style.display = 'none';
+    if (mrhStamm) {
+        mrhStamm.style.display = 'grid';
+        var s = function(id, val) { var el = document.getElementById(id); if (el) el.textContent = val || '—'; };
+        s('mrhBranche', kunde.branche);
+        s('mrhSpecialty', kunde.specialty);
+        s('mrhMitarbeitende', kunde.mitarbeitende ? kunde.mitarbeitende.toLocaleString('de-DE') : null);
+        s('mrhJahresumsatz', kunde.jahresumsatz);
+        s('mrhStandorte', kunde.standorte);
+        s('mrhGesellschaftsform', kunde.gesellschaftsform);
+        s('mrhEigentuemer', kunde.eigentuemer);
+        s('mrhKeyContacts', (kunde.keyContacts || []).join(', '));
+        s('mrhBeziehung', kunde.beziehungsstatus);
+        s('mrhBeraterIns', kunde.beraterInsurance);
+        s('mrhBeraterBen', kunde.beraterBenefits);
+        s('mrhBeraterFin', kunde.beraterFinance);
     }
 
     // 6) Inject 3-Säulen-Karten above stammdaten
@@ -1153,7 +1170,7 @@ function fillMRHDetail(kunde) {
     var existingSaeulen = document.getElementById('mrhA10SaeulenGrid');
     if (existingSaeulen) existingSaeulen.remove();
 
-    if (maklerStamm) {
+    if (mrhStamm) {
         var saeulenHtml = '<div class="mrh-a10-saeulen-grid" id="mrhA10SaeulenGrid">' +
             '<div class="mrh-a10-saeulen-card insurance">' +
                 '<h5><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Insurance</h5>' +
@@ -1174,7 +1191,7 @@ function fillMRHDetail(kunde) {
                 '<div class="mrh-a10-saeulen-metric"><span class="label">Courtage</span><span class="value">' + (kunde.finance.courtage || '—') + '</span></div>' +
             '</div>' +
         '</div>';
-        maklerStamm.insertAdjacentHTML('beforebegin', saeulenHtml);
+        mrhStamm.insertAdjacentHTML('beforebegin', saeulenHtml);
     }
 
     // 7) Verträge table
@@ -1326,6 +1343,10 @@ function restoreMRHKundenDetail() {
 
     var saeulen = document.getElementById('mrhA10SaeulenGrid');
     if (saeulen) saeulen.remove();
+
+    // Hide MRH-specific stammdaten
+    var mrhStamm = document.getElementById('mrhStammdatenA10');
+    if (mrhStamm) mrhStamm.style.display = 'none';
 
     var foto = document.querySelector('.kunden-foto');
     if (foto) foto.style.background = '';

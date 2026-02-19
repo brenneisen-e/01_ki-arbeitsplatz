@@ -1232,23 +1232,23 @@ function fillMRHDetail(kunde) {
     }
 
     // 8) Render B2B tab content (reuse existing renderers where possible)
-    if (typeof renderB2bSchadenhistorie === 'function') {
-        var schadenData = { schadenhistorie: (kunde.schadenhistorie || []).map(function(s) { return { jahr: s.jahr, anzahl: 1, volumen: s.betrag, quote: 0, groesster: s.beschreibung }; }) };
-        renderB2bSchadenhistorie(schadenData);
-    }
-    if (typeof renderB2bDeckungsluecken === 'function') {
-        var dlData = { deckungsluecken: (kunde.deckungsluecken || []).map(function(d) { return { risiko: d, status: 'Nicht versichert', empfehlung: 'Prüfung empfohlen', prioritaet: 'Hoch' }; }) };
-        renderB2bDeckungsluecken(dlData);
-    }
-    // Renewal
-    if (typeof renderB2bRenewal === 'function') {
-        var renewalData = { vertraegeDetail: (kunde.vertraegeDetail || []).map(function(v) { return { sparte: v.sparte, versicherer: v.versicherer, praemie: v.praemie, ablauf: v.ablauf }; }) };
-        renderB2bRenewal(renewalData);
-    }
-    // Ansprechpartner
-    if (typeof renderB2bAnsprechpartner === 'function') {
-        renderB2bAnsprechpartner({ keyContacts: kunde.keyContacts, beraterInsurance: kunde.beraterInsurance, beraterBenefits: kunde.beraterBenefits, beraterFinance: kunde.beraterFinance });
-    }
+    try {
+        if (typeof renderB2bSchadenhistorie === 'function') {
+            var schadenData = { schadenhistorie: (kunde.schadenhistorie || []).map(function(s) { return { jahr: s.jahr, anzahl: 1, volumen: s.betrag, quote: 0, groesster: s.beschreibung }; }) };
+            renderB2bSchadenhistorie(schadenData);
+        }
+        if (typeof renderB2bDeckungsluecken === 'function') {
+            var dlData = { deckungsluecken: (kunde.deckungsluecken || []).map(function(d) { return { risiko: d, status: 'Nicht versichert', empfehlung: 'Prüfung empfohlen', prioritaet: 'Hoch' }; }) };
+            renderB2bDeckungsluecken(dlData);
+        }
+        if (typeof renderB2bRenewal === 'function') {
+            var renewalData = { vertraegeDetail: (kunde.vertraegeDetail || []).map(function(v) { return { sparte: v.sparte, versicherer: v.versicherer, praemie: v.praemie, ablauf: v.ablauf }; }) };
+            renderB2bRenewal(renewalData);
+        }
+        if (typeof renderB2bAnsprechpartner === 'function') {
+            renderB2bAnsprechpartner({ name: kunde.name, segment: kunde.specialty, keyContact: (kunde.keyContacts || [])[0], keyContacts: kunde.keyContacts, beraterInsurance: kunde.beraterInsurance, beraterBenefits: kunde.beraterBenefits, beraterFinance: kunde.beraterFinance });
+        }
+    } catch(e) { console.warn('MRH: B2B tab render error (non-critical):', e); }
     // Cross-Sell Potentials in b2bpotentiale tab
     var b2bPotContent = document.getElementById('b2bPotentialeContent');
     if (b2bPotContent) {

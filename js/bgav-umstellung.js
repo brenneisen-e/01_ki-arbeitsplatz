@@ -623,15 +623,6 @@
                 ctx.textBaseline = 'bottom';
                 ctx.fillStyle = reached ? level.color : '#94a3b8';
                 ctx.fillText(level.label + ' ' + formatEuro(level.min), left + 3, yPos - 4);
-
-                // Checkmark on y-axis if reached
-                if (reached) {
-                    ctx.font = 'bold 12px system-ui, sans-serif';
-                    ctx.textAlign = 'center';
-                    ctx.textBaseline = 'middle';
-                    ctx.fillStyle = '#16a34a';
-                    ctx.fillText('\u2713', left - 12, yPos);
-                }
             });
 
             ctx.restore();

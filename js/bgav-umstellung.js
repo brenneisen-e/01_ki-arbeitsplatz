@@ -484,8 +484,9 @@
                         }
                     },
                     tooltip: {
+                        ...bgavTooltipStyle,
                         callbacks: {
-                            label: function(c) { return c.dataset.label + ': ' + formatEuro(c.raw); }
+                            label: function(c) { return ' ' + c.dataset.label + ':  ' + formatEuro(c.raw); }
                         }
                     }
                 },
@@ -710,9 +711,13 @@
                     plugins: {
                         legend: { display: false },
                         tooltip: {
+                            ...bgavTooltipStyle,
                             callbacks: {
+                                title: function(items) {
+                                    return items[0].label;
+                                },
                                 label: function(context) {
-                                    return formatEuro(context.raw);
+                                    return ' Provision:  ' + formatEuro(context.raw);
                                 }
                             }
                         },
@@ -897,7 +902,7 @@
                 animation: { duration: 0 },
                 plugins: {
                     legend: { position: 'top', labels: { font: { size: 12, weight: '600' }, usePointStyle: true, padding: 16 } },
-                    tooltip: { callbacks: { label: function(c) { return c.dataset.label + ': ' + formatEuro(c.raw); } } }
+                    tooltip: { ...bgavTooltipStyle, callbacks: { label: function(c) { return ' ' + c.dataset.label + ':  ' + formatEuro(c.raw); } } }
                 },
                 scales: {
                     y: {
@@ -1077,7 +1082,7 @@
                 maintainAspectRatio: false,
                 plugins: {
                     legend: { position: 'top', labels: { font: { size: 10 }, usePointStyle: true, padding: 10 } },
-                    tooltip: { callbacks: { label: function(c) { return c.dataset.label + ': ' + formatEuro(c.raw); } } }
+                    tooltip: { ...bgavTooltipStyle, callbacks: { label: function(c) { return ' ' + c.dataset.label + ':  ' + formatEuro(c.raw); } } }
                 },
                 scales: {
                     y: { beginAtZero: true, stacked: true, ticks: { callback: function(v) { return formatEuro(v); }, font: { size: 9 } }, grid: { color: 'rgba(0,0,0,0.04)' } },
@@ -1322,6 +1327,25 @@ Die Stufe basiert auf dem Gesamtproduktionsvolumen (Neugeschäft + Bestand) übe
         body.appendChild(div);
         body.scrollTop = body.scrollHeight;
     }
+
+    // ========================================
+    // SHARED TOOLTIP STYLE
+    // ========================================
+    const bgavTooltipStyle = {
+        backgroundColor: '#0C2340',
+        titleColor: '#fff',
+        bodyColor: '#e2e8f0',
+        borderColor: 'rgba(0, 163, 224, 0.3)',
+        borderWidth: 1,
+        cornerRadius: 8,
+        padding: 12,
+        titleFont: { size: 13, weight: '700' },
+        bodyFont: { size: 13, weight: '500' },
+        displayColors: true,
+        boxPadding: 4,
+        caretSize: 6,
+        caretPadding: 8
+    };
 
     // ========================================
     // UTILITY FUNCTIONS

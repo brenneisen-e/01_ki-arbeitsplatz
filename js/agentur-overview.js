@@ -144,6 +144,12 @@ function fillHeader(agentur, agenturData) {
     // Standard-Profilbild für Max Mustermann (lokal + GitHub-Fallback)
     const defaultPhoto = 'assets/images/AdobeStock_1091012713.jpeg';
 
+    // Restore photo container if B2B/MRH replaced it with an icon
+    const photoContainer = document.getElementById('agenturPhotoSmall');
+    if (photoContainer && photoContainer._origHTML) {
+        photoContainer.innerHTML = photoContainer._origHTML;
+    }
+
     // Lade Profilbild (gespeichert oder Standard)
     const savedPhoto = localStorage.getItem('agenturPhoto');
     const photoImgSmall = document.getElementById('agenturPhotoImgSmall');

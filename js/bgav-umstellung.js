@@ -588,73 +588,91 @@
         if (origH) canvas.height = parseInt(origH);
     }
 
-    // Per-bar goal marker plugin for Chart.js
+    // Per-bar goal marker plugin for Chart.js (elegant, integrated style)
     const sparteZielPlugin = {
         id: 'sparteZielMarkers',
-        afterDraw(chart) {
+        afterDatasetsDraw(chart) {
             const goals = chart.options.plugins.sparteZielMarkers;
             if (!goals || !goals.targets) return;
 
-            const { ctx, chartArea: { top, bottom } } = chart;
+            const { ctx, chartArea: { left, right, top, bottom } } = chart;
             const yScale = chart.scales.y;
-            const meta = chart.getDatasetMeta(1); // BGAV dataset (index 1)
-            if (!meta || !meta.data) return;
+            const altMeta = chart.getDatasetMeta(0);
+            const bgavMeta = chart.getDatasetMeta(1);
+            if (!bgavMeta || !bgavMeta.data) return;
 
             ctx.save();
 
             goals.targets.forEach((target, i) => {
-                if (i >= meta.data.length) return;
-                const bar = meta.data[i];
+                if (i >= bgavMeta.data.length) return;
+                const bgavBar = bgavMeta.data[i];
+                const altBar = altMeta.data[i];
                 const bgavVal = chart.data.datasets[1].data[i];
                 const reached = bgavVal >= target.value;
-
-                // Draw goal line marker across the bar group
                 const yPos = yScale.getPixelForValue(target.value);
-                if (yPos < top || yPos > bottom) { ctx.restore(); return; }
 
-                const barLeft = bar.x - bar.width * 1.8;
-                const barRight = bar.x + bar.width * 0.8;
+                if (yPos < top - 5 || yPos > bottom + 5) return;
 
-                // Dashed goal line
+                // Small triangle marker on left edge of chart area
+                const triSize = 5;
                 ctx.beginPath();
-                ctx.setLineDash([4, 3]);
-                ctx.lineWidth = 2;
-                ctx.strokeStyle = reached ? 'rgba(34, 197, 94, 0.8)' : 'rgba(239, 68, 68, 0.5)';
-                ctx.moveTo(barLeft, yPos);
-                ctx.lineTo(barRight, yPos);
+                ctx.moveTo(left - 1, yPos - triSize);
+                ctx.lineTo(left + triSize + 2, yPos);
+                ctx.lineTo(left - 1, yPos + triSize);
+                ctx.closePath();
+                ctx.fillStyle = reached ? '#22c55e' : '#f97316';
+                ctx.fill();
+
+                // Subtle thin line across chart area
+                ctx.beginPath();
+                ctx.setLineDash([2, 4]);
+                ctx.lineWidth = 1;
+                ctx.strokeStyle = reached ? 'rgba(34, 197, 94, 0.25)' : 'rgba(249, 115, 22, 0.2)';
+                ctx.moveTo(left + triSize + 2, yPos);
+                ctx.lineTo(right, yPos);
                 ctx.stroke();
                 ctx.setLineDash([]);
 
-                // Goal label
-                ctx.font = 'bold 9px system-ui, sans-serif';
+                // Small pill label near the right edge
+                const labelText = formatEuro(target.value);
+                ctx.font = '600 9px system-ui, sans-serif';
+                const textW = ctx.measureText(labelText).width;
+                const pillW = textW + 10;
+                const pillH = 16;
+                const pillX = right - pillW - 2;
+                const pillY = yPos - pillH / 2;
+
+                // Pill background
+                const radius = pillH / 2;
+                ctx.beginPath();
+                ctx.moveTo(pillX + radius, pillY);
+                ctx.lineTo(pillX + pillW - radius, pillY);
+                ctx.arcTo(pillX + pillW, pillY, pillX + pillW, pillY + radius, radius);
+                ctx.arcTo(pillX + pillW, pillY + pillH, pillX + pillW - radius, pillY + pillH, radius);
+                ctx.lineTo(pillX + radius, pillY + pillH);
+                ctx.arcTo(pillX, pillY + pillH, pillX, pillY + radius, radius);
+                ctx.arcTo(pillX, pillY, pillX + radius, pillY, radius);
+                ctx.closePath();
+                ctx.fillStyle = reached ? 'rgba(34, 197, 94, 0.12)' : 'rgba(249, 115, 22, 0.1)';
+                ctx.fill();
+                ctx.strokeStyle = reached ? 'rgba(34, 197, 94, 0.4)' : 'rgba(249, 115, 22, 0.35)';
+                ctx.lineWidth = 1;
+                ctx.stroke();
+
+                // Pill text
+                ctx.fillStyle = reached ? '#16a34a' : '#c2410c';
                 ctx.textAlign = 'center';
-                ctx.fillStyle = reached ? 'rgba(34, 197, 94, 0.9)' : 'rgba(239, 68, 68, 0.7)';
-                ctx.fillText('Ziel ' + formatEuro(target.value), (barLeft + barRight) / 2, yPos - 5);
+                ctx.textBaseline = 'middle';
+                ctx.fillText(labelText, pillX + pillW / 2, pillY + pillH / 2);
 
-                // Achievement badge when goal is reached
+                // Value label above the BGAV bar (showing actual value + status)
                 if (reached) {
-                    const badgeX = bar.x;
-                    const badgeY = Math.min(bar.y - 14, yPos - 18);
-
-                    // Green circle with checkmark
-                    ctx.beginPath();
-                    ctx.arc(badgeX, badgeY, 10, 0, Math.PI * 2);
-                    ctx.fillStyle = '#22c55e';
-                    ctx.fill();
-                    ctx.strokeStyle = '#fff';
-                    ctx.lineWidth = 1.5;
-                    ctx.stroke();
-
-                    // Checkmark
-                    ctx.beginPath();
-                    ctx.strokeStyle = '#fff';
-                    ctx.lineWidth = 2;
-                    ctx.lineCap = 'round';
-                    ctx.lineJoin = 'round';
-                    ctx.moveTo(badgeX - 4, badgeY);
-                    ctx.lineTo(badgeX - 1, badgeY + 3);
-                    ctx.lineTo(badgeX + 5, badgeY - 4);
-                    ctx.stroke();
+                    const barTopY = bgavBar.y;
+                    ctx.font = 'bold 10px system-ui, sans-serif';
+                    ctx.fillStyle = '#16a34a';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'bottom';
+                    ctx.fillText('\u2713', bgavBar.x, barTopY - 4);
                 }
             });
 

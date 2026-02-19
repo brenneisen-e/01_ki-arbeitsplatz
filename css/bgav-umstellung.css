@@ -998,24 +998,14 @@
 
 .bgav-slider-default-mark {
     position: absolute;
-    bottom: -2px;
-    width: 2px;
-    height: 10px;
-    background: #ea580c;
-    border-radius: 1px;
+    bottom: 0;
+    width: 0;
+    height: 0;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-bottom: 6px solid #ea580c;
     pointer-events: none;
-}
-
-.bgav-slider-default-mark::after {
-    content: 'Ref.';
-    position: absolute;
-    top: 12px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 8px;
-    color: #ea580c;
-    font-weight: 600;
-    white-space: nowrap;
+    opacity: 0.6;
 }
 
 .bgav-sim-sliders-info {

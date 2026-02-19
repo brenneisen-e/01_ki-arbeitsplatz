@@ -5996,27 +5996,26 @@
                     Veränderung Vergütung ggü.<br>Durchschnitt WJ 23/24 und 24/25<br><span style="font-size:11px; opacity:0.7;">(simuliert)</span>
                 </div>
 
-                <!-- Mini comparison bar chart -->
-                <div class="bgav-sim-stamm-chart">
-                    <div class="stamm-chart-bars">
-                        <div class="stamm-chart-bar-group">
-                            <div class="stamm-chart-bar alt" id="bgavStammBarAlt" style="height: 70%;"></div>
-                            <div class="stamm-chart-label">Alt</div>
-                        </div>
-                        <div class="stamm-chart-bar-group">
-                            <div class="stamm-chart-bar neu" id="bgavStammBarNeu" style="height: 80%;"></div>
-                            <div class="stamm-chart-label">Neu</div>
-                        </div>
+                <!-- Comparison chart (Canvas) -->
+                <div class="bgav-sim-stamm-chart-wrap">
+                    <canvas id="bgavStammCompareChart" height="180"></canvas>
+                </div>
+                <div class="bgav-sim-stamm-compare-vals">
+                    <div class="stamm-compare-item">
+                        <span class="stamm-compare-dot alt"></span>
+                        <span class="stamm-compare-label">Alt</span>
+                        <span class="stamm-compare-val" id="bgavStammValAlt">42.800 &euro;</span>
                     </div>
-                    <div class="stamm-chart-values">
-                        <div class="stamm-chart-val" id="bgavStammValAlt">42.800 &euro;</div>
-                        <div class="stamm-chart-val highlight" id="bgavStammValNeu">44.520 &euro;</div>
+                    <div class="stamm-compare-item">
+                        <span class="stamm-compare-dot neu"></span>
+                        <span class="stamm-compare-label">Neu</span>
+                        <span class="stamm-compare-val highlight" id="bgavStammValNeu">44.520 &euro;</span>
                     </div>
                 </div>
-
-                <div class="bgav-sim-stamm-legend">
-                    <span class="legend-dot alt"></span> Alt (rechnerisch)
-                    <span class="legend-dot neu"></span> Neu (simuliert)
+                <div class="bgav-sim-stamm-delta" id="bgavStammDelta">
+                    <span class="stamm-delta-arrow">&#9650;</span>
+                    <span class="stamm-delta-val" id="bgavStammDeltaVal">+1.720 &euro;</span>
+                    <span class="stamm-delta-pct" id="bgavStammDeltaPct">(+4,0%)</span>
                 </div>
 
                 <div class="bgav-sim-stamm-footnote">
@@ -6047,35 +6046,44 @@
                 </div>
 
                 <!-- Sliders row -->
+                <div class="bgav-sim-sliders-info">
+                    Voreinstellung gem&auml;&szlig; Produktion im Referenzzeitraum 01.01.2025 &ndash; 31.12.2025
+                </div>
                 <div class="bgav-sim-sliders-row">
                     <div class="bgav-sim-slider-block">
                         <h4>Neugeschäft (Produktion)</h4>
                         <div class="bgav-slider-group">
                             <label>Leben <span id="bgavSliderVal_produktionLeben">150.000 &euro;</span></label>
-                            <input type="range" class="bgav-sim-slider" data-field="produktionLeben" min="0" max="500000" step="10000" value="150000">
+                            <input type="range" class="bgav-sim-slider" data-field="produktionLeben" data-default="150000" min="0" max="500000" step="10000" value="150000">
+                            <div class="bgav-slider-default-mark" data-field="produktionLeben"></div>
                         </div>
                         <div class="bgav-slider-group">
                             <label>Kranken <span id="bgavSliderVal_produktionKranken">80.000 &euro;</span></label>
-                            <input type="range" class="bgav-sim-slider" data-field="produktionKranken" min="0" max="300000" step="5000" value="80000">
+                            <input type="range" class="bgav-sim-slider" data-field="produktionKranken" data-default="80000" min="0" max="300000" step="5000" value="80000">
+                            <div class="bgav-slider-default-mark" data-field="produktionKranken"></div>
                         </div>
                         <div class="bgav-slider-group">
                             <label>Schaden <span id="bgavSliderVal_produktionSchaden">120.000 &euro;</span></label>
-                            <input type="range" class="bgav-sim-slider" data-field="produktionSchaden" min="0" max="500000" step="10000" value="120000">
+                            <input type="range" class="bgav-sim-slider" data-field="produktionSchaden" data-default="120000" min="0" max="500000" step="10000" value="120000">
+                            <div class="bgav-slider-default-mark" data-field="produktionSchaden"></div>
                         </div>
                     </div>
                     <div class="bgav-sim-slider-block">
                         <h4>Bestandsprovisionen</h4>
                         <div class="bgav-slider-group">
                             <label>Leben <span id="bgavSliderVal_bestandLeben">450.000 &euro;</span></label>
-                            <input type="range" class="bgav-sim-slider" data-field="bestandLeben" min="0" max="2000000" step="50000" value="450000">
+                            <input type="range" class="bgav-sim-slider" data-field="bestandLeben" data-default="450000" min="0" max="2000000" step="50000" value="450000">
+                            <div class="bgav-slider-default-mark" data-field="bestandLeben"></div>
                         </div>
                         <div class="bgav-slider-group">
                             <label>Kranken <span id="bgavSliderVal_bestandKranken">220.000 &euro;</span></label>
-                            <input type="range" class="bgav-sim-slider" data-field="bestandKranken" min="0" max="1000000" step="10000" value="220000">
+                            <input type="range" class="bgav-sim-slider" data-field="bestandKranken" data-default="220000" min="0" max="1000000" step="10000" value="220000">
+                            <div class="bgav-slider-default-mark" data-field="bestandKranken"></div>
                         </div>
                         <div class="bgav-slider-group">
                             <label>Schaden <span id="bgavSliderVal_bestandSchaden">380.000 &euro;</span></label>
-                            <input type="range" class="bgav-sim-slider" data-field="bestandSchaden" min="0" max="1500000" step="10000" value="380000">
+                            <input type="range" class="bgav-sim-slider" data-field="bestandSchaden" data-default="380000" min="0" max="1500000" step="10000" value="380000">
+                            <div class="bgav-slider-default-mark" data-field="bestandSchaden"></div>
                         </div>
                     </div>
                 </div>

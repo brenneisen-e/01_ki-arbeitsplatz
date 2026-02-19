@@ -1181,12 +1181,12 @@ function fillMRHDetail(kunde) {
         s('mrhBeraterFin', kunde.beraterFinance);
     }
 
-    // 6) Inject 3-Säulen-Karten above stammdaten
-    var stammdatenTab = document.getElementById('tab-stammdaten-content') || (maklerStamm ? maklerStamm.parentElement : null);
+    // 6) Inject 3-Säulen-Karten above stammdaten-card (outside kunden-stammdaten to preserve 2-col layout)
+    var stammdatenCard = mrhStamm ? mrhStamm.closest('.stammdaten-card') : null;
     var existingSaeulen = document.getElementById('mrhA10SaeulenGrid');
     if (existingSaeulen) existingSaeulen.remove();
 
-    if (mrhStamm) {
+    if (stammdatenCard) {
         var saeulenHtml = '<div class="mrh-a10-saeulen-grid" id="mrhA10SaeulenGrid">' +
             '<div class="mrh-a10-saeulen-card insurance">' +
                 '<h5><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Insurance</h5>' +
@@ -1207,7 +1207,7 @@ function fillMRHDetail(kunde) {
                 '<div class="mrh-a10-saeulen-metric"><span class="label">Courtage</span><span class="value">' + (kunde.finance.courtage || '—') + '</span></div>' +
             '</div>' +
         '</div>';
-        mrhStamm.insertAdjacentHTML('beforebegin', saeulenHtml);
+        stammdatenCard.insertAdjacentHTML('beforebegin', saeulenHtml);
     }
 
     // 7) Verträge table

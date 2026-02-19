@@ -131,7 +131,7 @@
     // BGAV SIMULATION STATE
     // ========================================
     const bgavState = {
-        currentTab: 'uebersicht',
+        currentTab: 'simulation',
         vermittler: {
             name: 'Max Mustermann',
             id: 'BD-VM 0055/0310',
@@ -229,7 +229,10 @@
         renderLeistungsstufen();
         initBgavChat();
 
-        // Render Übersicht charts after DOM is visible
+        // Default to Provisionssimulation tab
+        switchBgavTab('simulation');
+
+        // Render Übersicht charts lazily (when user switches to that tab)
         setTimeout(renderUebersichtTab, 200);
 
         // Page ID update

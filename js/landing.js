@@ -2568,28 +2568,16 @@ function openAgenturView() {
 
     // Prüfe ob Daten vorhanden sind
     const rawData = window.dailyRawData || (typeof dailyRawData !== 'undefined' ? dailyRawData : null);
+    const agenturen = (rawData && rawData.length > 0 && typeof getAgenturen === 'function') ? getAgenturen() : [];
 
-    if (!rawData || rawData.length === 0) {
-        // Keine Daten - zeige Hinweis
-        addLandingChatMessage('assistant', '⚠️ **Bitte lade zuerst Daten hoch.**\n\nUm die Agenturansicht zu nutzen, benötigst du CSV-Daten mit Vermittler-Informationen.\n\nKlicke auf "Settings" und dann auf "CSV Upload" oder "Test-Daten generieren".');
-        return;
-    }
-
-    // Daten vorhanden - zeige erste Agentur oder lass User wählen
-    const agenturen = typeof getAgenturen === 'function' ? getAgenturen() : [];
-
-    if (agenturen.length > 0) {
-        // Zeige erste Agentur
-        const firstAgentur = agenturen[0];
-        if (typeof showAgenturOverview === 'function') {
-            showAgenturOverview(firstAgentur.id);
-        } else {
-            // Fallback: Öffne Dashboard mit Agentur-Filter
-            setAgenturFilter(firstAgentur.id);
-            openDashboard();
-        }
+    if (agenturen.length > 0 && typeof showAgenturOverview === 'function') {
+        // CSV-Daten vorhanden - zeige erste Agentur
+        showAgenturOverview(agenturen[0].id);
+    } else if (typeof showAgenturOverview === 'function') {
+        // Keine CSV-Daten — trotzdem navigieren (MRH/B2B haben eigene Mock-Daten)
+        showAgenturOverview('DEMO-001');
     } else {
-        addLandingChatMessage('assistant', '⚠️ Keine Agenturen in den Daten gefunden. Bitte überprüfe deine CSV-Datei.');
+        addLandingChatMessage('assistant', '⚠️ Agenturansicht konnte nicht geladen werden.');
     }
 }
 

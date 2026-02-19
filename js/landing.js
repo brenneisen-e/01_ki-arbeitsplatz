@@ -309,6 +309,10 @@ function openDashboard() {
         landingPage.style.display = 'none';
     }
 
+    // Hide BGAV page if open
+    const bgavPage = document.getElementById('bgavUmstellungPage');
+    if (bgavPage) bgavPage.style.display = 'none';
+
     // Show main app
     const mainApp = document.getElementById('mainApp');
     if (mainApp) {
@@ -319,6 +323,9 @@ function openDashboard() {
             detail: { module: 'versicherung', view: 'dashboard' }
         }));
     }
+
+    // Update URL route
+    if (window.AppRouter) AppRouter.navigate('/dashboard');
 
     // Initialize dashboard
     setTimeout(function() {
@@ -506,6 +513,10 @@ function backToLanding() {
     if (kundenDetailPage) kundenDetailPage.style.display = 'none';
     if (billingCheckPage) billingCheckPage.style.display = 'none';
 
+    // BGAV page verstecken
+    const bgavPage = document.getElementById('bgavUmstellungPage');
+    if (bgavPage) bgavPage.style.display = 'none';
+
     // Landing Page anzeigen
     if (landingPage) {
         landingPage.style.display = 'flex';
@@ -515,6 +526,9 @@ function backToLanding() {
             detail: { module: 'main', view: 'landing' }
         }));
     }
+
+    // Update URL route
+    if (window.AppRouter) AppRouter.navigate('/landing');
 
     // Reset the landing chat response container (clear loading indicator)
     const responseContainer = document.getElementById('landingChatResponse');
@@ -2707,6 +2721,9 @@ async function openRisikoscoring() {
             }
         }
     }
+
+    // Update URL route
+    if (window.AppRouter) AppRouter.navigate('/risikoscoring');
 }
 
 function closeRisikoscoring() {
@@ -2723,6 +2740,9 @@ function closeRisikoscoring() {
     if (landingPage) {
         landingPage.style.display = 'flex';
     }
+
+    // Update URL route
+    if (window.AppRouter) AppRouter.navigate('/landing');
 }
 
 // ========================================
@@ -2904,6 +2924,9 @@ async function openBestandsuebertragung() {
     if (window.PageIDTracker) {
         window.PageIDTracker.updatePageId('bestandsuebertragung', 'dashboard');
     }
+
+    // Update URL route
+    if (window.AppRouter) AppRouter.navigate('/bestandsuebertragung');
 }
 
 function closeBestandsuebertragung() {
@@ -2984,6 +3007,9 @@ function closeBestandsuebertragung() {
     if (welcomeChat) {
         welcomeChat.style.display = 'block';
     }
+
+    // Update URL route
+    if (window.AppRouter) AppRouter.navigate('/landing');
 
     // Dispatch event to update Page ID back to M-01
     setTimeout(() => {
@@ -3105,6 +3131,9 @@ async function openPMOToolbox() {
             }
         }
     }
+
+    // Update URL route
+    if (window.AppRouter) AppRouter.navigate('/pmo-toolbox');
 }
 
 function closePMOToolbox() {
@@ -3185,6 +3214,9 @@ function closePMOToolbox() {
     if (welcomeChat) {
         welcomeChat.style.display = 'block';
     }
+
+    // Update URL route
+    if (window.AppRouter) AppRouter.navigate('/landing');
 
     // Dispatch event to update Page ID back to M-01
     // Use setTimeout to ensure DOM is updated first
@@ -3961,6 +3993,8 @@ function openPotentialAnalyse() {
     if (agenturOverview) agenturOverview.style.display = 'none';
     const kundenDetail = document.getElementById('kundenDetailPage');
     if (kundenDetail) kundenDetail.style.display = 'none';
+    const bgavPage = document.getElementById('bgavUmstellungPage');
+    if (bgavPage) bgavPage.style.display = 'none';
 
     // Zeige Potentialanalyse
     document.getElementById('potentialAnalysePage').style.display = 'block';
@@ -3973,6 +4007,9 @@ function openPotentialAnalyse() {
     document.dispatchEvent(new CustomEvent('viewChanged', {
         detail: { module: 'versicherung', view: 'potentialanalyse' }
     }));
+
+    // Update URL route
+    if (window.AppRouter) AppRouter.navigate('/potentialanalyse');
 }
 
 function openPotentialAnalyseWithFilter(productId, productName) {

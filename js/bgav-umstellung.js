@@ -209,7 +209,7 @@
 
         // Page ID update
         if (typeof PageIDTracker !== 'undefined') {
-            PageIDTracker.setPageId('M-01');
+            PageIDTracker.setPageId('A-11');
         }
     }
 
@@ -821,10 +821,17 @@ Die Stufe basiert auf dem Gesamtproduktionsvolumen (Neugeschäft + Bestand) übe
             initBgavUmstellung();
         }
 
-        // Update page ID
-        document.dispatchEvent(new CustomEvent('viewChanged', {
-            detail: { module: 'versicherung', view: 'bgav-umstellung' }
-        }));
+        // Set URL hash
+        if (window.history && window.history.pushState) {
+            window.history.pushState({ view: 'bgav-umstellung' }, '', '#/bgav-umstellung');
+        }
+
+        // Force page ID update after init (init also sets it, but ensure timing)
+        setTimeout(() => {
+            if (typeof PageIDTracker !== 'undefined') {
+                PageIDTracker.setPageId('A-11');
+            }
+        }, 50);
     }
 
     function closeBgavTool() {
@@ -835,9 +842,14 @@ Die Stufe basiert auf dem Gesamtproduktionsvolumen (Neugeschäft + Bestand) übe
         const landing = document.getElementById('landingPage');
         if (landing) landing.style.display = 'block';
 
-        document.dispatchEvent(new CustomEvent('viewChanged', {
-            detail: { module: 'main', view: 'landing' }
-        }));
+        // Reset URL hash
+        if (window.history && window.history.pushState) {
+            window.history.pushState({ view: 'landing' }, '', '#/');
+        }
+
+        if (typeof PageIDTracker !== 'undefined') {
+            PageIDTracker.setPageId('M-01');
+        }
     }
 
     // ========================================

@@ -1319,6 +1319,13 @@ function switchModule(moduleName) {
         detail: { module: moduleName }
     }));
 
+    // Update URL route
+    if (window.AppRouter && moduleName === 'banken') {
+        AppRouter.navigate('/banken');
+    } else if (window.AppRouter && moduleName === 'versicherung') {
+        AppRouter.navigate('/landing');
+    }
+
     console.log('Switched to module:', moduleName);
 }
 

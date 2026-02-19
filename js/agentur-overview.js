@@ -31,6 +31,8 @@ function showAgenturOverview(vermittlerId) {
     if (billingCheckPage) billingCheckPage.style.display = 'none';
     if (potentialPage) potentialPage.style.display = 'none';
     if (kundenDetail) kundenDetail.style.display = 'none';
+    const bgavPage = document.getElementById('bgavUmstellungPage');
+    if (bgavPage) bgavPage.style.display = 'none';
     if (agenturOverview) agenturOverview.style.display = 'block';
 
     // Öffne den Agentur-Chat automatisch (Vertriebs-Assistent)
@@ -53,6 +55,9 @@ function showAgenturOverview(vermittlerId) {
     document.dispatchEvent(new CustomEvent('viewChanged', {
         detail: { module: 'versicherung', view: 'agentursicht' }
     }));
+
+    // Update URL route
+    if (window.AppRouter) AppRouter.navigate('/agentur');
 }
 
 /**
@@ -450,6 +455,9 @@ function backFromAgentur() {
     document.dispatchEvent(new CustomEvent('viewChanged', {
         detail: { module: 'versicherung', view: 'landing' }
     }));
+
+    // Update URL route
+    if (window.AppRouter) AppRouter.navigate('/landing');
 }
 
 // ========================================

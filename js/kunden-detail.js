@@ -264,8 +264,17 @@ function updateKundenSharedHeader(kundenName, vermittlerId) {
     const sourceImg = document.getElementById('agenturPhotoImgSmall');
     const targetImg = document.getElementById('kundenHeaderPhotoImg');
     const targetPlaceholder = document.querySelector('#kundenHeaderPhoto .agentur-photo-placeholder-small');
-    if (sourceImg && sourceImg.style.display !== 'none' && targetImg) {
-        targetImg.src = sourceImg.src;
+
+    // Try source image first, fall back to localStorage or default photo
+    let photoSrc = null;
+    if (sourceImg && sourceImg.src && sourceImg.style.display !== 'none') {
+        photoSrc = sourceImg.src;
+    } else {
+        photoSrc = localStorage.getItem('agenturPhoto') || 'assets/images/AdobeStock_1091012713.jpeg';
+    }
+
+    if (targetImg && photoSrc) {
+        targetImg.src = photoSrc;
         targetImg.style.display = 'block';
         if (targetPlaceholder) targetPlaceholder.style.display = 'none';
     }

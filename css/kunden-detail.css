@@ -28,7 +28,7 @@
 }
 
 .kunden-content {
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 0 auto;
 }
 
@@ -42,7 +42,7 @@
 }
 
 .kunden-card-header {
-    padding: 20px 24px;
+    padding: 18px 32px;
     background: #f8fdf5;
     border-bottom: 1px solid #e2e8f0;
 }
@@ -73,7 +73,7 @@
 .kunden-stammdaten {
     display: flex;
     gap: 40px;
-    padding: 24px;
+    padding: 28px 32px;
 }
 
 .kunden-foto-container {

@@ -290,13 +290,13 @@
     flex: 1;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
+    gap: 20px 28px;
 }
 
 .kunden-info-grid .info-item {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 6px;
 }
 
 .kunden-info-grid .info-item.full-width {

@@ -2614,6 +2614,16 @@ window.handleSingleRegionQuery = handleSingleRegionQuery;
 window.addEventListener('DOMContentLoaded', function() {
     console.log('Landing Page wird geladen...');
 
+    // IMMEDIATE deep-link check – hide landing page before anything else renders
+    var _deepLinkHash = window.location.hash.replace('#', '') || '/';
+    var _isDeepLink = (_deepLinkHash !== '/' && _deepLinkHash !== '/landing' &&
+        window.AppRouter && window.AppRouter.routes[_deepLinkHash]);
+    if (_isDeepLink) {
+        console.log('Deep-link detected early:', _deepLinkHash);
+        var lp = document.getElementById('landingPage');
+        if (lp) lp.style.display = 'none';
+    }
+
     // Benutzername aus localStorage laden
     loadUserName();
 
@@ -2630,20 +2640,16 @@ window.addEventListener('DOMContentLoaded', function() {
         const welcomeChat = document.getElementById('welcomeChat');
 
         if (loadingAnim) loadingAnim.style.display = 'none';
-        if (welcomeChat) welcomeChat.style.display = 'block';
 
-        console.log('Welcome Chat angezeigt');
-
-        // Check if URL hash points to a deep-link route → navigate there instead of landing
-        var initialHash = window.location.hash.replace('#', '') || '/';
-        if (initialHash !== '/' && initialHash !== '/landing' && window.AppRouter) {
-            var route = window.AppRouter.routes[initialHash];
-            if (route) {
-                console.log('Deep-link detected:', initialHash, '→ navigating directly');
-                window.AppRouter.handleHashChange();
-                return; // Skip landing page setup
-            }
+        // Deep-link: navigate to target route, skip landing setup
+        if (_isDeepLink) {
+            console.log('Deep-link navigating to:', _deepLinkHash);
+            window.AppRouter.handleHashChange();
+            return;
         }
+
+        if (welcomeChat) welcomeChat.style.display = 'block';
+        console.log('Welcome Chat angezeigt');
 
         // Dispatch event for Page ID Tracker (M-01)
         document.dispatchEvent(new CustomEvent('moduleChanged', {

@@ -324,8 +324,8 @@
 
 #maklerStammdaten .info-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 16px;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 20px 28px;
 }
 
 .risikoklasse-badge {
@@ -339,6 +339,38 @@
 .rk-a { background: #dcfce7; color: #166534; }
 .rk-b { background: #fef3c7; color: #92400e; }
 .rk-c { background: #fee2e2; color: #dc2626; }
+
+/* ========================================
+   MAKLER / MRH A-10 STAMMDATEN OVERRIDES
+   ======================================== */
+.makler-view .kunden-stammdaten {
+    gap: 48px;
+    padding: 32px 36px;
+}
+
+.makler-view .kunden-card-header {
+    background: #f8fafc;
+}
+
+.makler-view .kunden-foto {
+    width: 100px;
+    height: 100px;
+}
+
+.makler-view #maklerStammdaten .info-grid {
+    gap: 22px 32px;
+}
+
+.makler-view #maklerStammdaten .info-label {
+    font-size: 11px;
+    letter-spacing: 0.8px;
+    margin-bottom: 2px;
+}
+
+.makler-view #maklerStammdaten .info-value {
+    font-size: 14px;
+    line-height: 1.4;
+}
 
 /* ========================================
    MAKLER A-10 VERTRÄGE TABLE OVERRIDE

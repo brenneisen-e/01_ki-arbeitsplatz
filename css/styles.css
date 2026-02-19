@@ -4293,10 +4293,10 @@ button svg,
    ======================================== */
 
 .kunden-tabs {
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 0 auto 24px;
     display: flex;
-    gap: 8px;
+    gap: 6px;
     padding: 0 24px;
 }
 

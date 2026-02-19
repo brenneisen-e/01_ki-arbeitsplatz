@@ -183,11 +183,26 @@
         { key: 'top', label: 'Top', min: 500000, max: Infinity, factor: 1.10 }
     ];
 
-    // Per-Sparte Ziele (individual goals for Leben, Kranken, Schaden/Unfall)
-    const sparteZiele = {
-        leben:   { label: 'Leben',          ziel: 4000,  color: '#3b82f6' },
-        kranken: { label: 'Kranken',        ziel: 5500,  color: '#8b5cf6' },
-        schaden: { label: 'Schaden/Unfall', ziel: 20000, color: '#f59e0b' }
+    // Per-Sparte Leistungsstufen (multiple tiers per segment)
+    const sparteLevels = {
+        leben: [
+            { key: 'LS1', label: 'LS 1', min: 2000,  color: '#94a3b8' },
+            { key: 'LS2', label: 'LS 2', min: 4000,  color: '#3b82f6' },
+            { key: 'LS3', label: 'LS 3', min: 6000,  color: '#8b5cf6' },
+            { key: 'LS4', label: 'LS 4', min: 8000,  color: '#f59e0b' }
+        ],
+        kranken: [
+            { key: 'LS1', label: 'LS 1', min: 3000,  color: '#94a3b8' },
+            { key: 'LS2', label: 'LS 2', min: 5500,  color: '#3b82f6' },
+            { key: 'LS3', label: 'LS 3', min: 8000,  color: '#8b5cf6' },
+            { key: 'LS4', label: 'LS 4', min: 12000, color: '#f59e0b' }
+        ],
+        schaden: [
+            { key: 'LS1', label: 'LS 1', min: 10000, color: '#94a3b8' },
+            { key: 'LS2', label: 'LS 2', min: 20000, color: '#3b82f6' },
+            { key: 'LS3', label: 'LS 3', min: 30000, color: '#8b5cf6' },
+            { key: 'LS4', label: 'LS 4', min: 45000, color: '#f59e0b' }
+        ]
     };
 
     // ========================================
@@ -543,33 +558,21 @@
             slider.addEventListener('input', function() {
                 const field = this.dataset.field;
                 const value = parseInt(this.value);
+                const defaultVal = parseInt(this.dataset.default);
                 bgavState.simulation[field] = value;
 
-                // Update display
+                // Update display – show ref value when slider differs from default
                 const display = document.getElementById('bgavSliderVal_' + field);
-                if (display) display.textContent = formatEuro(value);
+                if (display) {
+                    if (value !== defaultVal) {
+                        display.innerHTML = formatEuro(value) + ' <span class="bgav-slider-ref">(Ref: ' + formatEuro(defaultVal) + ')</span>';
+                    } else {
+                        display.textContent = formatEuro(value);
+                    }
+                }
 
                 updateSimulationResults();
             });
-        });
-
-        // Position default marks on sliders
-        positionDefaultMarks();
-    }
-
-    function positionDefaultMarks() {
-        document.querySelectorAll('.bgav-slider-default-mark').forEach(mark => {
-            const field = mark.dataset.field;
-            const slider = document.querySelector(`.bgav-sim-slider[data-field="${field}"]`);
-            if (!slider) return;
-
-            const defaultVal = parseInt(slider.dataset.default) || parseInt(slider.value);
-            const min = parseInt(slider.min);
-            const max = parseInt(slider.max);
-            const pct = ((defaultVal - min) / (max - min)) * 100;
-
-            // Account for thumb width (~9px each side)
-            mark.style.left = `calc(${pct}% - ${(pct / 100) * 18 - 9}px)`;
         });
     }
 
@@ -588,45 +591,48 @@
         if (origH) canvas.height = parseInt(origH);
     }
 
-    // Goal line plugin – draws a prominent dashed Ziel-line + label on y-axis
-    const goalLinePlugin = {
-        id: 'goalLine',
+    // Multi-level Leistungsstufen plugin – draws multiple LS lines per chart
+    const lsLinesPlugin = {
+        id: 'lsLines',
         afterDraw(chart) {
-            const cfg = chart.options.plugins.goalLine;
-            if (!cfg) return;
+            const cfg = chart.options.plugins.lsLines;
+            if (!cfg || !cfg.levels) return;
 
             const { ctx, chartArea: { left, right, top, bottom }, scales: { y } } = chart;
-            const yPos = y.getPixelForValue(cfg.value);
-            if (yPos < top - 5 || yPos > bottom + 5) return;
-
             ctx.save();
 
-            // Dashed goal line – prominent
-            ctx.beginPath();
-            ctx.setLineDash([6, 4]);
-            ctx.lineWidth = 2;
-            ctx.strokeStyle = cfg.reached ? '#16a34a' : '#ea580c';
-            ctx.moveTo(left, yPos);
-            ctx.lineTo(right, yPos);
-            ctx.stroke();
-            ctx.setLineDash([]);
+            cfg.levels.forEach(level => {
+                const yPos = y.getPixelForValue(level.min);
+                if (yPos < top - 5 || yPos > bottom + 5) return;
 
-            // Label on the left, next to y-axis
-            const label = 'Ziel ' + formatEuro(cfg.value);
-            ctx.font = 'bold 10px system-ui, sans-serif';
-            ctx.textAlign = 'left';
-            ctx.textBaseline = 'bottom';
-            ctx.fillStyle = cfg.reached ? '#16a34a' : '#ea580c';
-            ctx.fillText(label, left + 4, yPos - 5);
+                const reached = cfg.currentValue >= level.min;
 
-            // Checkmark on y-axis when goal is reached
-            if (cfg.reached) {
-                ctx.font = 'bold 13px system-ui, sans-serif';
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                ctx.fillStyle = '#16a34a';
-                ctx.fillText('\u2713', left - 14, yPos);
-            }
+                // Dashed LS line
+                ctx.beginPath();
+                ctx.setLineDash([6, 3]);
+                ctx.lineWidth = 1.5;
+                ctx.strokeStyle = reached ? level.color : '#cbd5e1';
+                ctx.moveTo(left, yPos);
+                ctx.lineTo(right, yPos);
+                ctx.stroke();
+                ctx.setLineDash([]);
+
+                // LS label on left side above line
+                ctx.font = 'bold 10px system-ui, sans-serif';
+                ctx.textAlign = 'left';
+                ctx.textBaseline = 'bottom';
+                ctx.fillStyle = reached ? level.color : '#94a3b8';
+                ctx.fillText(level.label + ' ' + formatEuro(level.min), left + 3, yPos - 4);
+
+                // Checkmark on y-axis if reached
+                if (reached) {
+                    ctx.font = 'bold 12px system-ui, sans-serif';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillStyle = '#16a34a';
+                    ctx.fillText('\u2713', left - 12, yPos);
+                }
+            });
 
             ctx.restore();
         }
@@ -654,35 +660,44 @@
 
             const altVal  = results.alt[sp.key].total;
             const bgavVal = results.bgav[sp.key].total;
-            const ziel    = sparteZiele[sp.key].ziel;
-            const reached = bgavVal >= ziel;
-            const delta   = bgavVal - altVal;
+            const levels  = sparteLevels[sp.key];
+            const highestReached = [...levels].reverse().find(l => bgavVal >= l.min);
+            const highestLevel = levels[levels.length - 1];
 
-            // Update badge
+            // Update badge – show which LS level was reached
             const badge = document.getElementById(sp.badgeId);
             if (badge) {
-                badge.className = 'bgav-sparte-badge ' + (reached ? 'reached' : 'open');
-                badge.innerHTML = reached ? '\u2713 Ziel erreicht' : 'Ziel offen';
+                if (highestReached) {
+                    badge.className = 'bgav-sparte-badge reached';
+                    badge.textContent = highestReached.label;
+                } else {
+                    badge.className = 'bgav-sparte-badge open';
+                    badge.textContent = 'unter LS 1';
+                }
             }
 
-            // Y-axis max: at least 120% of goal or max value
-            const yMax = Math.max(ziel * 1.3, altVal * 1.2, bgavVal * 1.2);
+            // Y-axis max: at least 115% of highest level or max value
+            const yMax = Math.max(highestLevel.min * 1.15, altVal * 1.15, bgavVal * 1.15);
+
+            // BGAV bar color based on highest reached level
+            const bgavBorderColor = highestReached ? highestReached.color : '#00A3E0';
+            const bgavBg = highestReached ? highestReached.color + 'b3' : 'rgba(0, 163, 224, 0.7)';
 
             const ctx = canvas.getContext('2d');
             _sparteCharts[sp.key] = new Chart(ctx, {
                 type: 'bar',
-                plugins: [goalLinePlugin],
+                plugins: [lsLinesPlugin],
                 data: {
                     labels: ['Alt-Modell', 'BGAV'],
                     datasets: [{
                         data: [altVal, bgavVal],
                         backgroundColor: [
                             'rgba(148, 163, 184, 0.65)',
-                            reached ? 'rgba(34, 197, 94, 0.7)' : 'rgba(0, 163, 224, 0.7)'
+                            bgavBg
                         ],
                         borderColor: [
                             '#94a3b8',
-                            reached ? '#16a34a' : '#00A3E0'
+                            bgavBorderColor
                         ],
                         borderWidth: [1, 2],
                         borderRadius: 6,
@@ -693,7 +708,7 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    layout: { padding: { left: 16, right: 4, top: 4 } },
+                    layout: { padding: { left: 14, right: 4, top: 4 } },
                     plugins: {
                         legend: { display: false },
                         tooltip: {
@@ -703,7 +718,10 @@
                                 }
                             }
                         },
-                        goalLine: { value: ziel, reached: reached }
+                        lsLines: {
+                            levels: levels,
+                            currentValue: bgavVal
+                        }
                     },
                     scales: {
                         y: {
@@ -753,32 +771,34 @@
             </div>`;
         });
 
-        // Per-Sparte Ziele section
+        // Per-Sparte Leistungsstufen section
+        const sparteLabels = { leben: 'Leben', kranken: 'Kranken', schaden: 'Schaden/Unfall' };
         html += `<div class="bgav-ls-sparte-goals">`;
-        const sparteResults = {
-            leben:   results.bgav.leben.total,
-            kranken: results.bgav.kranken.total,
-            schaden: results.bgav.schaden.total
-        };
 
-        Object.keys(sparteZiele).forEach(key => {
-            const z = sparteZiele[key];
-            const current = sparteResults[key];
-            const reached = current >= z.ziel;
-            const pct = Math.min((current / z.ziel) * 100, 100);
+        Object.keys(sparteLevels).forEach(key => {
+            const levels = sparteLevels[key];
+            const current = results.bgav[key].total;
+            const highestReached = [...levels].reverse().find(l => current >= l.min);
+            const topLevel = levels[levels.length - 1];
+            const pct = Math.min((current / topLevel.min) * 100, 100);
 
-            html += `<div class="bgav-ls-sparte-card ${reached ? 'reached' : ''}">
+            html += `<div class="bgav-ls-sparte-card ${highestReached ? 'reached' : ''}">
                 <div class="sparte-goal-header">
-                    <span class="sparte-goal-name">${z.label}</span>
-                    <span class="sparte-goal-badge ${reached ? 'reached' : ''}">${reached ? '&#10003; Erreicht' : 'Offen'}</span>
+                    <span class="sparte-goal-name">${sparteLabels[key]}</span>
+                    <span class="sparte-goal-badge ${highestReached ? 'reached' : ''}">${highestReached ? highestReached.label : 'unter LS 1'}</span>
                 </div>
                 <div class="sparte-goal-bar-track">
-                    <div class="sparte-goal-bar-fill ${reached ? 'reached' : ''}" style="width: ${pct}%"></div>
+                    <div class="sparte-goal-bar-fill ${highestReached ? 'reached' : ''}" style="width: ${pct}%; background: ${highestReached ? highestReached.color : '#e2e8f0'}"></div>
                 </div>
                 <div class="sparte-goal-values">
                     <span>${formatEuro(current)}</span>
-                    <span>Ziel: ${formatEuro(z.ziel)}</span>
+                    <span>N&auml;chste: ${highestReached && highestReached.key !== topLevel.key
+                        ? formatEuro(levels[levels.indexOf(highestReached) + 1].min)
+                        : highestReached ? 'Max erreicht' : formatEuro(levels[0].min)}</span>
                 </div>
+                <div class="sparte-ls-steps">${levels.map(l =>
+                    `<span class="sparte-ls-step ${current >= l.min ? 'active' : ''}" style="${current >= l.min ? 'color:' + l.color : ''}">${l.label}</span>`
+                ).join('')}</div>
             </div>`;
         });
         html += `</div>`;

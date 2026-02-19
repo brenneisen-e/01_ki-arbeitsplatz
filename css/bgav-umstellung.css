@@ -1027,31 +1027,11 @@
     box-shadow: 0 4px 12px rgba(0,0,0,0.25);
 }
 
-/* Slider default mark */
-.bgav-slider-group {
-    position: relative;
-}
-
-.bgav-slider-default-mark {
-    position: absolute;
-    bottom: 2px;
-    width: 2px;
-    height: 12px;
-    background: #94a3b8;
-    border-radius: 1px;
-    pointer-events: none;
-}
-
-.bgav-slider-default-mark::before {
-    content: '';
-    position: absolute;
-    top: -3px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: #94a3b8;
+/* Slider reference value label (shown when slider differs from default) */
+.bgav-slider-ref {
+    font-size: 10px;
+    font-weight: 500;
+    color: #94a3b8;
 }
 
 .bgav-sim-sliders-info {
@@ -1517,6 +1497,29 @@
     font-size: 11px;
     color: #64748b;
     font-weight: 500;
+}
+
+.sparte-ls-steps {
+    display: flex;
+    gap: 6px;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid #f1f5f9;
+}
+
+.sparte-ls-step {
+    flex: 1;
+    text-align: center;
+    font-size: 10px;
+    font-weight: 700;
+    color: #cbd5e1;
+    padding: 2px 0;
+    border-radius: 4px;
+    background: #f8fafc;
+}
+
+.sparte-ls-step.active {
+    background: #f0fdf4;
 }
 
 /* ========================================

@@ -3,25 +3,65 @@
 // ========================================
 // AUTO-ZOOM: Seite proportional skalieren
 // Optimiert für 27 Zoll (1920px Breite)
+// Verbessert: Fallback für Firefox (transform), debounced resize
 // ========================================
 (function() {
     var DESIGN_WIDTH = 1920;
-    var MIN_ZOOM = 0.55; // Nicht kleiner als 55%
+    var MIN_ZOOM = 0.52; // Nicht kleiner als 52%
+    var resizeTimer = null;
+    var supportsZoom = 'zoom' in document.documentElement.style && !/firefox/i.test(navigator.userAgent);
 
     function applyAutoZoom() {
+        // Nutze screen.width statt innerWidth für konsistentere Ergebnisse
+        // innerWidth ändert sich bei Zoom - screen.width bleibt stabil
+        var screenW = window.screen.width;
         var vw = window.innerWidth;
-        if (vw >= DESIGN_WIDTH) {
-            document.documentElement.style.zoom = '1';
+
+        // Verwende den effektiveren Wert
+        var referenceWidth = Math.max(vw, screenW > 2500 ? DESIGN_WIDTH : vw);
+
+        if (referenceWidth >= DESIGN_WIDTH) {
+            if (supportsZoom) {
+                document.documentElement.style.zoom = '1';
+                document.body.style.transform = '';
+                document.body.style.transformOrigin = '';
+                document.body.style.width = '';
+            }
+            return;
+        }
+
+        var zoom = Math.max(referenceWidth / DESIGN_WIDTH, MIN_ZOOM);
+
+        if (supportsZoom) {
+            // Chrome/Edge/Safari: CSS zoom property
+            document.documentElement.style.zoom = String(zoom);
+            document.body.style.transform = '';
+            document.body.style.transformOrigin = '';
+            document.body.style.width = '';
         } else {
-            var zoom = Math.max(vw / DESIGN_WIDTH, MIN_ZOOM);
-            document.documentElement.style.zoom = zoom;
+            // Firefox fallback: CSS transform
+            document.documentElement.style.zoom = '';
+            document.body.style.transformOrigin = 'top left';
+            document.body.style.transform = 'scale(' + zoom + ')';
+            document.body.style.width = (100 / zoom) + '%';
         }
     }
 
-    // Sofort beim Laden + bei Resize
+    // Debounced resize handler
+    function onResize() {
+        if (resizeTimer) clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(applyAutoZoom, 100);
+    }
+
+    // Sofort beim Laden + bei Resize (debounced)
     applyAutoZoom();
-    window.addEventListener('resize', applyAutoZoom);
+    window.addEventListener('resize', onResize);
     window.addEventListener('DOMContentLoaded', applyAutoZoom);
+
+    // Re-apply after all resources loaded (fonts etc. können Layout ändern)
+    window.addEventListener('load', function() {
+        setTimeout(applyAutoZoom, 200);
+    });
 })();
 
 // ========================================

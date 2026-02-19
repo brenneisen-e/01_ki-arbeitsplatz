@@ -347,26 +347,11 @@
     cursor: default;
 }
 
-.bgav-kpi-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    border-radius: 14px 14px 0 0;
-}
-
 .bgav-kpi-card:hover {
     transform: translateY(-4px);
     box-shadow: 0 12px 32px rgba(0,0,0,0.12);
     border-color: transparent;
 }
-
-.bgav-kpi-card.status-success::before { background: linear-gradient(90deg, #16a34a, #22c55e); }
-.bgav-kpi-card.status-warning::before { background: linear-gradient(90deg, #ea580c, #f97316); }
-.bgav-kpi-card.status-info::before { background: linear-gradient(90deg, #0C2340, #00A3E0); }
-.bgav-kpi-card.status-danger::before { background: linear-gradient(90deg, #dc2626, #ef4444); }
 
 .bgav-kpi-card .kpi-icon {
     width: 44px;
@@ -711,6 +696,38 @@
 
 .bgav-table tbody tr {
     transition: all 0.2s ease;
+}
+
+/* Provisionssätze table */
+.bgav-rates-table thead th {
+    text-align: center;
+    text-transform: none;
+    letter-spacing: 0;
+}
+
+.bgav-rates-table thead th:first-child {
+    text-align: left;
+}
+
+.bgav-rates-table thead .th-group-alt { background: #f1f5f9; }
+.bgav-rates-table thead .th-group-bgav { background: #eff6ff; }
+.bgav-rates-table thead .th-group-delta { background: #f8fafc; }
+
+.bgav-rates-table tbody td {
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+}
+
+.bgav-rates-table tbody td:first-child {
+    text-align: left;
+    font-weight: 700;
+}
+
+.bgav-rates-note {
+    margin-top: 10px;
+    font-size: 11px;
+    color: #94a3b8;
+    line-height: 1.5;
 }
 
 .bgav-table tbody tr:hover {

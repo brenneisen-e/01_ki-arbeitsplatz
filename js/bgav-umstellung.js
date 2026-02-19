@@ -405,6 +405,9 @@
         // Update chart
         renderSimChart(results);
 
+        // Update provision rates table
+        renderRatesTable();
+
         // Update Leistungsstufen
         renderLeistungsstufen();
 
@@ -732,6 +735,47 @@
                 }
             });
         });
+    }
+
+    // ========================================
+    // PROVISIONSSÄTZE TABLE
+    // ========================================
+    function renderRatesTable() {
+        const tbody = document.getElementById('bgavRatesTableBody');
+        const note = document.getElementById('bgavRatesNote');
+        if (!tbody) return;
+
+        const stufe = getKarriereFactor();
+        const sparten = [
+            { key: 'leben',   label: 'Leben' },
+            { key: 'kranken', label: 'Kranken' },
+            { key: 'schaden', label: 'Schaden/Unfall' }
+        ];
+
+        let html = '';
+        sparten.forEach(sp => {
+            const alt = bgavRates.altModell[sp.key];
+            const bgav = bgavRates.bgav[sp.key];
+            const dAP = bgav.ap - alt.ap;
+            const dBP = bgav.bp - alt.bp;
+
+            html += `<tr>
+                <td>${sp.label}</td>
+                <td>${alt.ap.toFixed(1)} %</td>
+                <td>${alt.bp.toFixed(2)} %</td>
+                <td style="font-weight:700">${bgav.ap.toFixed(1)} %</td>
+                <td style="font-weight:700">${bgav.bp.toFixed(2)} %</td>
+                <td style="color:${dAP >= 0 ? '#16a34a' : '#dc2626'}">${dAP >= 0 ? '+' : ''}${dAP.toFixed(1)} %</td>
+                <td style="color:${dBP >= 0 ? '#16a34a' : '#dc2626'}">${dBP >= 0 ? '+' : ''}${dBP.toFixed(2)} %</td>
+            </tr>`;
+        });
+
+        tbody.innerHTML = html;
+
+        if (note) {
+            note.innerHTML = 'AP = Abschlussprovision auf Neugesch\u00E4ft \u00B7 BP = Bestandsprovision \u00B7 ' +
+                'Karrierestufe <strong>' + stufe.label + '</strong> (' + stufe.factor.toFixed(2) + 'x) wird auf AP angerechnet';
+        }
     }
 
     // ========================================

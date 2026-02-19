@@ -6092,13 +6092,34 @@
                     </div>
                 </div>
 
-                <!-- Chart -->
-                <div class="bgav-section" style="margin-bottom: 20px;">
-                    <div class="bgav-section-header">
-                        <div class="bgav-section-title">Vergleich Alt-Modell vs. BGAV</div>
+                <!-- Charts per Sparte -->
+                <div class="bgav-charts-grid">
+                    <div class="bgav-section bgav-sparte-chart-box" style="margin-bottom: 0;">
+                        <div class="bgav-section-header" style="margin-bottom: 12px; padding-bottom: 10px;">
+                            <div class="bgav-section-title" style="font-size: 14px;">Leben</div>
+                            <span class="bgav-sparte-badge" id="bgavSparteBadgeLeben"></span>
+                        </div>
+                        <div style="height: 220px; position: relative;">
+                            <canvas id="bgavSimChartLeben"></canvas>
+                        </div>
                     </div>
-                    <div style="height: 300px; position: relative;">
-                        <canvas id="bgavSimChart"></canvas>
+                    <div class="bgav-section bgav-sparte-chart-box" style="margin-bottom: 0;">
+                        <div class="bgav-section-header" style="margin-bottom: 12px; padding-bottom: 10px;">
+                            <div class="bgav-section-title" style="font-size: 14px;">Kranken</div>
+                            <span class="bgav-sparte-badge" id="bgavSparteBadgeKranken"></span>
+                        </div>
+                        <div style="height: 220px; position: relative;">
+                            <canvas id="bgavSimChartKranken"></canvas>
+                        </div>
+                    </div>
+                    <div class="bgav-section bgav-sparte-chart-box" style="margin-bottom: 0;">
+                        <div class="bgav-section-header" style="margin-bottom: 12px; padding-bottom: 10px;">
+                            <div class="bgav-section-title" style="font-size: 14px;">Schaden/Unfall</div>
+                            <span class="bgav-sparte-badge" id="bgavSparteBadgeSchaden"></span>
+                        </div>
+                        <div style="height: 220px; position: relative;">
+                            <canvas id="bgavSimChartSchaden"></canvas>
+                        </div>
                     </div>
                 </div>
 

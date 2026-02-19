@@ -204,7 +204,8 @@
         // Load initial data
         updateSimulationResults();
         setupSliders();
-        renderGanttChart();
+        renderLeistungsstufen();
+        renderUebersichtTab();
         initBgavChat();
 
         // Page ID update
@@ -368,6 +369,12 @@
 
         // Update chart
         renderSimChart(results);
+
+        // Update Leistungsstufen
+        renderLeistungsstufen();
+
+        // Update 5-year projection
+        render5YearChart(results);
     }
 
     function updateStammdatenChart(results) {
@@ -527,70 +534,267 @@
     // ========================================
     // GANTT CHART RENDERING
     // ========================================
-    function renderGanttChart() {
-        const container = document.getElementById('bgavGanttContainer');
-        if (!container) return;
+    // ========================================
+    // LEISTUNGSSTUFEN RENDERING
+    // ========================================
+    function renderLeistungsstufen() {
+        const grid = document.getElementById('bgavLeistungsstufenGrid');
+        if (!grid) return;
 
-        const items = [
-            { label: 'I. Defizite Sammel-VM-Nr.', tag: 'fachlich', start: 0, end: 5, color: '#0C2340' },
-            { label: 'II. Silo-übergr. BÜ', tag: 'fachlich', start: 2, end: 8, color: '#1a6aa7' },
-            { label: 'III. Eine Vergütung', tag: 'fachlich', start: 1, end: 12, color: '#00A3E0' },
-            { label: 'IV. Vereinheitl. Abr.', tag: 'fachlich', start: 6, end: 10, color: '#38bdf8' },
-            { label: 'V. Systemupdates FS-ICM', tag: 'technisch', start: 0, end: 6, color: '#7c3aed' },
-            { label: 'VI. Performance-Opt.', tag: 'technisch', start: 2, end: 8, color: '#a78bfa' },
-            { label: 'VII. Vertriebsreporting', tag: 'technisch', start: 5, end: 9, color: '#c4b5fd' },
-            { label: 'VIII. S/4HANA & J2C', tag: 'technisch', start: 4, end: 12, color: '#8b5cf6' }
-        ];
+        const stufe = getKarriereFactor();
+        let html = '';
 
-        const months = ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'];
+        karriereStufen.forEach(s => {
+            const reached = getTotalProduction() >= s.min;
+            const isCurrent = s.key === stufe.key;
+            const maxLabel = s.max === Infinity ? '+' : formatEuro(s.max);
 
-        let html = '<div class="bgav-gantt">';
-
-        // Header
-        html += '<div class="bgav-gantt-header">';
-        html += '<div class="gantt-label">Thema</div>';
-        html += '<div class="gantt-year" style="grid-column: 2 / 7;">2026</div>';
-        html += '<div class="gantt-year" style="grid-column: 7 / 11;">2027</div>';
-        html += '<div class="gantt-year" style="grid-column: 11 / 14;">2028 ff.</div>';
-        html += '</div>';
-
-        // Month labels
-        html += '<div class="bgav-gantt-header" style="margin-bottom: 8px;">';
-        html += '<div class="gantt-label"></div>';
-        for (let i = 0; i < 12; i++) {
-            html += `<div style="text-align:center; font-size:10px; color:#94a3b8; font-weight:600;">${months[i]}</div>`;
-        }
-        html += '</div>';
-
-        // Rows
-        items.forEach(item => {
-            html += '<div class="bgav-gantt-row">';
-            html += `<div class="row-label">
-                <span class="label-tag ${item.tag}">${item.tag === 'fachlich' ? 'F' : 'T'}</span>
-                ${item.label}
+            html += `<div class="bgav-ls-card ${reached ? 'reached' : ''} ${isCurrent ? 'current' : ''}">
+                <div class="ls-check">&#10003;</div>
+                <div class="ls-name">${s.label}</div>
+                <div class="ls-range">${formatEuro(s.min)} &ndash; ${maxLabel}</div>
+                <div class="ls-factor">${s.factor.toFixed(2)}x</div>
+                <div class="ls-rates">Provisionsfaktor auf AP</div>
             </div>`;
-
-            for (let i = 0; i < 12; i++) {
-                if (i === item.start) {
-                    const span = item.end - item.start;
-                    html += `<div style="grid-column: ${i + 2} / ${item.end + 2};">
-                        <div class="bgav-gantt-bar ${item.tag}" style="background: linear-gradient(90deg, ${item.color}, ${item.color}dd);" title="${item.label}: Monat ${item.start + 1} - ${item.end}">
-                            ${span > 2 ? item.label.split('.')[0] + '.' : ''}
-                        </div>
-                    </div>`;
-                    break;
-                } else if (i > item.start && i < item.end) {
-                    continue;
-                } else {
-                    html += '<div></div>';
-                }
-            }
-
-            html += '</div>';
         });
 
-        html += '</div>';
-        container.innerHTML = html;
+        grid.innerHTML = html;
+    }
+
+    // ========================================
+    // 5-JAHRES PERSPEKTIVE CHART
+    // ========================================
+    function render5YearChart(results) {
+        const canvas = document.getElementById('bgavSim5YearChart');
+        if (!canvas) return;
+
+        if (window._bgav5YearChart) window._bgav5YearChart.destroy();
+
+        const altTotal = results.alt.total;
+        const bgavTotal = results.bgav.total;
+        // Simulate 5-year growth: Alt flat, BGAV grows with compounding bestand
+        const years = ['2026', '2027', '2028', '2029', '2030'];
+        const altData = years.map((_, i) => Math.round(altTotal * (1 + i * 0.01)));
+        const bgavData = years.map((_, i) => Math.round(bgavTotal * (1 + i * 0.035)));
+
+        window._bgav5YearChart = new Chart(canvas.getContext('2d'), {
+            type: 'line',
+            data: {
+                labels: years,
+                datasets: [
+                    {
+                        label: 'Alt-Modell',
+                        data: altData,
+                        borderColor: '#94a3b8',
+                        backgroundColor: 'rgba(148,163,184,0.1)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.3,
+                        pointRadius: 4,
+                        pointBackgroundColor: '#94a3b8'
+                    },
+                    {
+                        label: 'BGAV-Modell',
+                        data: bgavData,
+                        borderColor: '#00A3E0',
+                        backgroundColor: 'rgba(0,163,224,0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.3,
+                        pointRadius: 5,
+                        pointBackgroundColor: '#00A3E0'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'top', labels: { font: { size: 12, weight: '600' }, usePointStyle: true, padding: 16 } },
+                    tooltip: { callbacks: { label: function(c) { return c.dataset.label + ': ' + formatEuro(c.raw); } } }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        ticks: { callback: function(v) { return formatEuro(v); }, font: { size: 11 } },
+                        grid: { color: 'rgba(0,0,0,0.04)' }
+                    },
+                    x: { grid: { display: false }, ticks: { font: { size: 12, weight: '600' } } }
+                }
+            }
+        });
+    }
+
+    // ========================================
+    // ÜBERSICHT TAB (PDF Page 2)
+    // ========================================
+    const mockVermittler = [
+        { nr: '00601257', name: 'Alexander Schreibling', status: 'Vertrag unterz./nicht eingegangen', apAlt: null, apNeu: null, fpAlt: null, fpNeu: null, sonst: null, zusch: null, zusatz: null, vergAlt: null, vergSim: null, diff: 0 },
+        { nr: '00601013', name: 'Ali Haydar Koc', status: 'Vertrag unterz./nicht eingegangen', apAlt: 17815, apNeu: 21561, fpAlt: 54565, fpNeu: 56431, sonst: null, zusch: 1500, zusatz: 1500, vergAlt: 73879, vergSim: 79492, diff: 5613 },
+        { nr: '00601167', name: 'Amira Harrami', status: 'Austritt', apAlt: 4502, apNeu: 3723, fpAlt: 10914, fpNeu: 11116, sonst: null, zusch: null, zusatz: null, vergAlt: 15416, vergSim: 14839, diff: -577 },
+        { nr: '00600152', name: 'Anders OHG', status: 'Vertrag unterz./nicht eingegangen', apAlt: 146285, apNeu: 195287, fpAlt: 194038, fpNeu: 194038, sonst: null, zusch: 12000, zusatz: 27400, vergAlt: 401723, vergSim: 401324, diff: 21601 },
+        { nr: '00601174', name: 'Andre Caspar', status: 'Vertrag erneuert (Tranche 3)', apAlt: 1491760, apNeu: 1542575, fpAlt: 2646883, fpNeu: 2648883, sonst: null, zusch: 3702630, zusatz: 24000, vergAlt: 7867273, vergSim: 4215458, diff: -3651815 },
+        { nr: '00601246', name: 'Andrea Salamone', status: 'Vertrag unterz./nicht eingegangen', apAlt: 6665, apNeu: 10107, fpAlt: 5374, fpNeu: 4021, sonst: null, zusch: null, zusatz: null, vergAlt: 12039, vergSim: 33328, diff: 2089 },
+        { nr: '00600565', name: 'Anne Schulte-Gosewinkel', status: 'Vertrag unterz./nicht eingegangen', apAlt: 28842, apNeu: 38840, fpAlt: 51500, fpNeu: 57509, sonst: null, zusch: 6000, zusatz: null, vergAlt: 92350, vergSim: 96349, diff: 3999 },
+        { nr: '00601261', name: 'Apostolos Konstantinidis', status: 'Vertrag unterz./nicht eingegangen', apAlt: 1127, apNeu: 2039, fpAlt: 215, fpNeu: 215, sonst: null, zusch: 24000, zusatz: null, vergAlt: 25341, vergSim: 27153, diff: 1812 },
+        { nr: '00601271', name: 'Ardit Bytyqi', status: 'Vertrag unterz./nicht eingegangen', apAlt: null, apNeu: 0, fpAlt: null, fpNeu: 0, sonst: null, zusch: 24000, zusatz: null, vergAlt: 24000, vergSim: 24000, diff: 0 },
+        { nr: '00601144', name: 'Becker Finanz GmbH und Co. KG', status: 'Vertrag erneuert (Tranche 3)', apAlt: 159869, apNeu: 417276, fpAlt: 238897, fpNeu: 239758, sonst: 86158, zusch: 129600, zusatz: 25000, vergAlt: 639524, vergSim: 726633, diff: 87109 },
+        { nr: '00601266', name: 'Bertan Edes', status: 'Austritt', apAlt: null, apNeu: 0, fpAlt: null, fpNeu: 0, sonst: null, zusch: null, zusatz: null, vergAlt: 19200, vergSim: null, diff: -19200 },
+    ];
+
+    function renderUebersichtTab() {
+        renderUbVermittlerTable();
+        renderUbVzChart();
+        renderUbDistributionCharts();
+        renderUbZuschuesseChart();
+    }
+
+    function renderUbVermittlerTable() {
+        const tbody = document.getElementById('bgavUbTableBody');
+        if (!tbody) return;
+
+        let html = '';
+        mockVermittler.forEach(vm => {
+            const diffClass = vm.diff > 0 ? 'color:#16a34a' : vm.diff < 0 ? 'color:#dc2626' : '';
+            const diffSign = vm.diff > 0 ? '+' : '';
+            html += `<tr>
+                <td style="font-size:10px; color:#94a3b8;">${vm.nr}</td>
+                <td><strong>${vm.name}</strong></td>
+                <td style="font-size:10px;">${vm.status}</td>
+                <td>${vm.apAlt != null ? formatEuro(vm.apAlt) : '&ndash;'}</td>
+                <td>${vm.apNeu != null ? formatEuro(vm.apNeu) : '&ndash;'}</td>
+                <td>${vm.fpAlt != null ? formatEuro(vm.fpAlt) : '&ndash;'}</td>
+                <td>${vm.fpNeu != null ? formatEuro(vm.fpNeu) : '&ndash;'}</td>
+                <td>${vm.sonst != null ? formatEuro(vm.sonst) : '&ndash;'}</td>
+                <td>${vm.zusch != null ? formatEuro(vm.zusch) : '&ndash;'}</td>
+                <td>${vm.zusatz != null ? formatEuro(vm.zusatz) : '&ndash;'}</td>
+                <td>${vm.vergAlt != null ? formatEuro(vm.vergAlt) : '&ndash;'}</td>
+                <td>${vm.vergSim != null ? formatEuro(vm.vergSim) : '&ndash;'}</td>
+                <td style="font-weight:700; ${diffClass}">${diffSign}${formatEuro(vm.diff)}</td>
+            </tr>`;
+        });
+        tbody.innerHTML = html;
+    }
+
+    function renderUbVzChart() {
+        const canvas = document.getElementById('bgavUbVzChart');
+        if (!canvas) return;
+        if (window._bgavUbVzChart) window._bgavUbVzChart.destroy();
+
+        window._bgavUbVzChart = new Chart(canvas.getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: ['(Null)', '< 0%', '0-5%', '5-10%', '> 10%'],
+                datasets: [{
+                    data: [4, 15, 12, 18, 19],
+                    backgroundColor: ['#94a3b8', '#ef4444', '#f59e0b', '#3b82f6', '#22c55e'],
+                    borderRadius: 4,
+                    barPercentage: 0.7
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { beginAtZero: true, ticks: { font: { size: 10 }, color: 'rgba(255,255,255,0.5)' }, grid: { color: 'rgba(255,255,255,0.06)' } },
+                    x: { ticks: { font: { size: 9 }, color: 'rgba(255,255,255,0.5)' }, grid: { display: false } }
+                }
+            }
+        });
+    }
+
+    function renderUbDistributionCharts() {
+        const configs = [
+            { id: 'bgavUbChartSU', labels: ['40%','60%','70%','80%','90%'], data: [28, 13, 13, 7, 3] },
+            { id: 'bgavUbChartKV', labels: ['3,75MB','5,25MB','6,25MB','6,75MB','7,25MB'], data: [20, 24, 10, 5, 5] },
+            { id: 'bgavUbChartLV', labels: ['1,5%','2,0%','2,3%','2,5%','2,7%'], data: [29, 24, 13, 7, 5] }
+        ];
+
+        configs.forEach(cfg => {
+            const canvas = document.getElementById(cfg.id);
+            if (!canvas) return;
+            const key = '_bgav_' + cfg.id;
+            if (window[key]) window[key].destroy();
+
+            window[key] = new Chart(canvas.getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: cfg.labels,
+                    datasets: [{
+                        data: cfg.data,
+                        backgroundColor: '#0C2340',
+                        borderRadius: 3,
+                        barPercentage: 0.6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true, ticks: { font: { size: 9 } }, grid: { color: 'rgba(0,0,0,0.04)' } },
+                        x: { ticks: { font: { size: 8 }, maxRotation: 45 }, grid: { display: false } }
+                    }
+                }
+            });
+        });
+
+        // Agenturfunktionen chart
+        const aCanvas = document.getElementById('bgavUbChartAgentur');
+        if (aCanvas) {
+            if (window._bgavUbAgentur) window._bgavUbAgentur.destroy();
+            window._bgavUbAgentur = new Chart(aCanvas.getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: ['GST', 'HGST', 'GA I', 'BD II', 'BD I'],
+                    datasets: [{
+                        data: [26, 12, 12, 11, 11],
+                        backgroundColor: '#0C2340',
+                        borderRadius: 3,
+                        barPercentage: 0.6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true, ticks: { font: { size: 9 } }, grid: { color: 'rgba(0,0,0,0.04)' } },
+                        x: { ticks: { font: { size: 10, weight: '600' } }, grid: { display: false } }
+                    }
+                }
+            });
+        }
+    }
+
+    function renderUbZuschuesseChart() {
+        const canvas = document.getElementById('bgavUbChartZuschuesse');
+        if (!canvas) return;
+        if (window._bgavUbZusch) window._bgavUbZusch.destroy();
+
+        window._bgavUbZusch = new Chart(canvas.getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: ['Alt', 'Neu'],
+                datasets: [
+                    { label: 'Allgemeiner Zuschuss', data: [736395, 595285], backgroundColor: '#334155', borderRadius: 4 },
+                    { label: 'Bürozuschuss', data: [101835, 101835], backgroundColor: '#00A3E0', borderRadius: 4 }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'top', labels: { font: { size: 10 }, usePointStyle: true, padding: 10 } },
+                    tooltip: { callbacks: { label: function(c) { return c.dataset.label + ': ' + formatEuro(c.raw); } } }
+                },
+                scales: {
+                    y: { beginAtZero: true, stacked: true, ticks: { callback: function(v) { return formatEuro(v); }, font: { size: 9 } }, grid: { color: 'rgba(0,0,0,0.04)' } },
+                    x: { stacked: true, ticks: { font: { size: 12, weight: '700' } }, grid: { display: false } }
+                }
+            }
+        });
     }
 
     // ========================================

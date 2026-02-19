@@ -1044,6 +1044,9 @@ function openMRHKundenDetail(kundeId) {
     fillMRHDetail(kunde);
 
     document.dispatchEvent(new CustomEvent('viewChanged', { detail: { module: 'versicherung', view: 'kundendetail' } }));
+
+    // Update URL route to A-10c (Kunden-Detail Gewerbe)
+    if (window.AppRouter) AppRouter.navigate('/kundendetail-gewerbe');
 }
 window.openMRHKundenDetail = openMRHKundenDetail;
 

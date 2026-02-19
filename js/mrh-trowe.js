@@ -169,29 +169,6 @@ var mrhKunden = [
         ]
     },
     {
-        name: 'TechParts Zulieferer GmbH', id: 'MRH-002', typ: 'B2B',
-        specialty: 'Automotive', specialtyClass: 'specialty-automotive', specialtyIcon: mrhSpecialtyIcons.maschinenbau,
-        branche: 'Automobilzulieferer, Kunststoffspritzguss', mitarbeitende: 185, jahresumsatz: '34 Mio. EUR',
-        standorte: 'Offenbach', gesellschaftsform: 'GmbH', eigentuemer: 'PE 35%, Gründerfamilie 65%',
-        keyContacts: ['GF Dr. Claudia Voss', 'Leiter Finanzen Oliver Brandt'],
-        beziehungsstatus: 'Wachstum', beraterInsurance: 'Frank Moser', beraterBenefits: 'Katja Lurse', beraterFinance: 'Nina Hecht',
-        insurance: { praemie: 195000, praemieDisplay: '195.000 €', vertraege: 8, renewalDate: '31.12.2026', renewalStatus: 'gruen' },
-        benefits: { aktiv: true, bavVolumen: '680.000 €', durchdringung: '60%', hinweis: 'P·LIVE aktiv, 112 MA teilnehmend' },
-        finance: { aktiv: true, kreditvers: 'Coface (Obligo 8 Mio.)', avale: '—', leasing: 'Spritzgussmaschine 850k', courtage: '32.000 €' },
-        vertraegeDetail: [
-            { sparte: 'Betriebshaftpflicht', versicherer: 'HDI', praemie: 55000, ds: '5 Mio. €', ablauf: '31.12.2026', saeule: 'I' },
-            { sparte: 'bAV (Pensionsfonds)', versicherer: 'Allianz', praemie: 0, ds: '680k Volumen', ablauf: 'unbefristet', saeule: 'B' },
-            { sparte: 'Kreditversicherung', versicherer: 'Coface', praemie: 28000, ds: '8 Mio. Obligo', ablauf: '31.12.2026', saeule: 'F' },
-            { sparte: 'Factoring', versicherer: 'BNP Paribas', praemie: 0, ds: '2,1 Mio./Mon.', ablauf: '31.12.2026', saeule: 'F' }
-        ],
-        schadenhistorie: [],
-        deckungsluecken: ['Keine W&I für geplante Add-on-Akquisition'],
-        timeline: [
-            { datum: '05.01.2026', saeule: 'benefits', text: 'P·LIVE Quartalsbericht erstellt', person: 'Katja Lurse' },
-            { datum: '01.12.2025', saeule: 'finance', text: 'Factoring-Vertrag verlängert', person: 'Nina Hecht' }
-        ]
-    },
-    {
         name: 'Nordpark Projektentwicklung AG', id: 'MRH-003', typ: 'B2B',
         specialty: 'Real Estate', specialtyClass: 'specialty-real-estate', specialtyIcon: mrhSpecialtyIcons.realEstate,
         branche: 'Immobilienentwicklung', mitarbeitende: 45, jahresumsatz: '120 Mio. EUR (Projektvolumen)',
@@ -214,27 +191,6 @@ var mrhKunden = [
         ]
     },
     {
-        name: 'AutoZentrum Rhein-Main GmbH & Co. KG', id: 'MRH-004', typ: 'B2B',
-        specialty: 'Kfz/Motor', specialtyClass: 'specialty-kfz-motor', specialtyIcon: mrhSpecialtyIcons.kfzMotor,
-        branche: 'Autohaus-Gruppe (VW, Audi, Škoda)', mitarbeitende: 280, jahresumsatz: '195 Mio. EUR',
-        standorte: '4 Standorte Rhein-Main', gesellschaftsform: 'GmbH & Co. KG', eigentuemer: 'Familienbesitz',
-        keyContacts: ['GF Michael Weber', 'Betriebsleiter je Standort'],
-        beziehungsstatus: 'Bestand', beraterInsurance: 'Frank Moser', beraterBenefits: 'Katja Lurse', beraterFinance: 'Nina Hecht',
-        insurance: { praemie: 310000, praemieDisplay: '310.000 €', vertraege: 14, renewalDate: '01.01.2027', renewalStatus: 'gruen' },
-        benefits: { aktiv: true, bavVolumen: '950.000 €', durchdringung: '64% (180 MA)', hinweis: 'Gruppenvertrag Zurich + JobRad' },
-        finance: { aktiv: true, kreditvers: '—', avale: '—', leasing: 'Werkstattausstattung 450k', courtage: '18.000 €' },
-        vertraegeDetail: [
-            { sparte: 'Kfz-Handel/Probefahrt', versicherer: 'Kravag', praemie: 85000, ds: '—', ablauf: '01.01.2027', saeule: 'I' },
-            { sparte: 'Vorführwagen-Flotte (120)', versicherer: 'Kravag', praemie: 72000, ds: '—', ablauf: '01.01.2027', saeule: 'I' },
-            { sparte: 'bAV Gruppenvertrag', versicherer: 'Zurich', praemie: 0, ds: '950k Volumen', ablauf: 'unbefristet', saeule: 'B' }
-        ],
-        schadenhistorie: [],
-        deckungsluecken: ['GAP-Versicherung für Leasingrückläufer nicht abgedeckt'],
-        timeline: [
-            { datum: '12.01.2026', saeule: 'benefits', text: 'JobRad-Verlängerung verhandelt', person: 'Katja Lurse' }
-        ]
-    },
-    {
         name: 'Hessenlog Spedition GmbH', id: 'MRH-005', typ: 'B2B',
         specialty: 'Logistik', specialtyClass: 'specialty-logistik', specialtyIcon: mrhSpecialtyIcons.logistik,
         branche: 'Stückgut/Lagerlogistik, 62 LKW', mitarbeitende: 210, jahresumsatz: '48 Mio. EUR',
@@ -251,25 +207,6 @@ var mrhKunden = [
         ],
         schadenhistorie: [],
         deckungsluecken: ['Keine Ladungsversicherung für temperaturgeführte Transporte'],
-        timeline: []
-    },
-    {
-        name: 'Kanzlei Becker, Weber & Partner', id: 'MRH-006', typ: 'B2B',
-        specialty: 'Rechtsanwälte', specialtyClass: 'specialty-rechtsanwaelte', specialtyIcon: mrhSpecialtyIcons.rechtsanwaelte,
-        branche: 'Wirtschaftskanzlei (18 Partner, 45 Associates)', mitarbeitende: 120, jahresumsatz: '28 Mio. EUR',
-        standorte: 'Frankfurt', gesellschaftsform: 'PartGmbB', eigentuemer: 'Partnerschaft',
-        keyContacts: ['Managing Partner Dr. Becker', 'CFO-Office Frau Lenz'],
-        beziehungsstatus: 'Bestand', beraterInsurance: 'Thomas Bergmann', beraterBenefits: 'Katja Lurse', beraterFinance: '—',
-        insurance: { praemie: 145000, praemieDisplay: '145.000 €', vertraege: 6, renewalDate: '31.12.2026', renewalStatus: 'gruen' },
-        benefits: { aktiv: true, bavVolumen: '520.000 €', durchdringung: 'Partner + Associates', hinweis: 'Rückdeckung Partner, DV Associates' },
-        finance: { aktiv: false, kreditvers: '—', avale: '—', leasing: '—', courtage: '—' },
-        vertraegeDetail: [
-            { sparte: 'Vermögensschaden-HP', versicherer: 'Allianz', praemie: 68000, ds: '10 Mio. €', ablauf: '31.12.2026', saeule: 'I' },
-            { sparte: 'Cyber', versicherer: 'Hiscox', praemie: 22000, ds: '2 Mio. €', ablauf: '31.12.2026', saeule: 'I' },
-            { sparte: 'bAV Partner (Rückdeckung)', versicherer: 'Allianz', praemie: 0, ds: '520k Volumen', ablauf: 'unbefristet', saeule: 'B' }
-        ],
-        schadenhistorie: [],
-        deckungsluecken: ['Keine Vertrauensschadenversicherung für Mandantengelder auf Anderkonto'],
         timeline: []
     },
     {
@@ -312,81 +249,6 @@ var mrhKunden = [
         timeline: []
     },
     {
-        name: 'MainEvent GmbH', id: 'MRH-009', typ: 'B2B',
-        specialty: 'Events/Sport', specialtyClass: 'specialty-events-sport', specialtyIcon: mrhSpecialtyIcons.eventsSport,
-        branche: 'Veranstaltungsagentur, Festivals', mitarbeitende: 35, jahresumsatz: '12 Mio. EUR',
-        standorte: 'Frankfurt', gesellschaftsform: 'GmbH', eigentuemer: 'Gründerin',
-        keyContacts: ['GF Sandra Hahn'],
-        beziehungsstatus: 'Bestand', beraterInsurance: 'Frank Moser', beraterBenefits: '—', beraterFinance: '—',
-        insurance: { praemie: 95000, praemieDisplay: '95.000 €', vertraege: 5, renewalDate: '31.12.2026', renewalStatus: 'gruen' },
-        benefits: { aktiv: false, bavVolumen: '—', durchdringung: '0%', hinweis: 'Hohe Fluktuation' },
-        finance: { aktiv: false, kreditvers: '—', avale: '—', leasing: '—', courtage: '—' },
-        vertraegeDetail: [
-            { sparte: 'Veranstalterhaftpflicht', versicherer: 'Allianz', praemie: 42000, ds: '5 Mio. €', ablauf: '31.12.2026', saeule: 'I' },
-            { sparte: 'Ausfallversicherung', versicherer: 'Lloyd\'s', praemie: 28000, ds: '2 Mio. €', ablauf: '31.12.2026', saeule: 'I' }
-        ],
-        schadenhistorie: [],
-        deckungsluecken: ['Keine Pandemie-/Force-Majeure-Deckung'],
-        timeline: []
-    },
-    {
-        name: 'TravelStar Reiseveranstalter GmbH', id: 'MRH-010', typ: 'B2B',
-        specialty: 'Touristik', specialtyClass: 'specialty-touristik', specialtyIcon: mrhSpecialtyIcons.touristik,
-        branche: 'Reiseveranstalter', mitarbeitende: 60, jahresumsatz: '45 Mio. EUR',
-        standorte: 'Frankfurt', gesellschaftsform: 'GmbH', eigentuemer: 'Gründerfamilie',
-        keyContacts: ['GF Peter Klose', 'Produktmanagerin Tanja Schmidt'],
-        beziehungsstatus: 'Bestand', beraterInsurance: 'Frank Moser', beraterBenefits: 'Katja Lurse', beraterFinance: 'Nina Hecht',
-        insurance: { praemie: 120000, praemieDisplay: '120.000 €', vertraege: 5, renewalDate: '31.12.2026', renewalStatus: 'gruen' },
-        benefits: { aktiv: true, bavVolumen: '180.000 €', durchdringung: 'Kleines Modell', hinweis: '' },
-        finance: { aktiv: true, kreditvers: 'Kreditvers. Hotelvorauszahlungen', avale: '—', leasing: '—', courtage: '12.000 €' },
-        vertraegeDetail: [
-            { sparte: 'Reiseveranstalter-HP', versicherer: 'MDT travel', praemie: 48000, ds: '5 Mio. €', ablauf: '31.12.2026', saeule: 'I' },
-            { sparte: 'Insolvenzversicherung §651r', versicherer: 'Zurich', praemie: 35000, ds: 'gesetzlich', ablauf: '31.12.2026', saeule: 'I' }
-        ],
-        schadenhistorie: [],
-        deckungsluecken: ['Keine Reiseleiter-Berufshaftpflicht für Freelancer-Guides'],
-        timeline: []
-    },
-    {
-        name: 'Familie Kessler', id: 'MRH-011', typ: 'Privat',
-        specialty: 'Fine Art & Lifestyle', specialtyClass: 'specialty-fine-art', specialtyIcon: mrhSpecialtyIcons.fineArt,
-        branche: 'HNW-Familie, Kunstsammlung', mitarbeitende: null, jahresumsatz: '—',
-        standorte: 'Frankfurt', gesellschaftsform: '—', eigentuemer: '—',
-        keyContacts: ['Dr. Hans Kessler', 'Monika Kessler'],
-        beziehungsstatus: 'Bestand', beraterInsurance: 'Thomas Bergmann', beraterBenefits: 'Katja Lurse', beraterFinance: '—',
-        insurance: { praemie: 48000, praemieDisplay: '48.000 €', vertraege: 7, renewalDate: '31.12.2026', renewalStatus: 'gruen' },
-        benefits: { aktiv: true, bavVolumen: '—', durchdringung: '—', hinweis: 'Private Altersvorsorge Rürup über Lurse' },
-        finance: { aktiv: false, kreditvers: '—', avale: '—', leasing: '—', courtage: '—' },
-        vertraegeDetail: [
-            { sparte: 'Kunstversicherung All-Risk', versicherer: 'AXA Art', praemie: 18000, ds: '2,8 Mio. €', ablauf: '31.12.2026', saeule: 'I' },
-            { sparte: 'Wohngebäude (3 Obj.)', versicherer: 'VHV', praemie: 12000, ds: '2,4 Mio. €', ablauf: '31.12.2026', saeule: 'I' },
-            { sparte: 'Kfz (inkl. Oldtimer 911)', versicherer: 'Allianz', praemie: 8500, ds: '—', ablauf: '01.01.2027', saeule: 'I' }
-        ],
-        schadenhistorie: [],
-        deckungsluecken: ['Keine Kidnap & Ransom (regelmäßige Reisen in Risikogebiete)'],
-        timeline: []
-    },
-    {
-        name: 'Dr. Stefan Brandes', id: 'MRH-012', typ: 'Privat',
-        specialty: 'Privatkunden (Unternehmer)', specialtyClass: 'specialty-privatkunden', specialtyIcon: mrhSpecialtyIcons.privatkunde,
-        branche: 'GF DigiCore Solutions, privat', mitarbeitende: null, jahresumsatz: '—',
-        standorte: 'Frankfurt', gesellschaftsform: '—', eigentuemer: '—',
-        keyContacts: ['Dr. Stefan Brandes', 'Sarah Brandes'],
-        beziehungsstatus: 'Bestand', beraterInsurance: 'Frank Moser', beraterBenefits: 'Katja Lurse', beraterFinance: '—',
-        insurance: { praemie: 22000, praemieDisplay: '22.000 €', vertraege: 7, renewalDate: '31.12.2026', renewalStatus: 'gruen' },
-        benefits: { aktiv: true, bavVolumen: '—', durchdringung: '—', hinweis: 'GF-Versorgung über U-Kasse (verknüpft mit DigiCore)' },
-        finance: { aktiv: false, kreditvers: '—', avale: '—', leasing: '—', courtage: '—' },
-        vertraegeDetail: [
-            { sparte: 'PHV Premium', versicherer: 'Allianz', praemie: 5500, ds: '50 Mio. €', ablauf: '31.12.2026', saeule: 'I' },
-            { sparte: 'Berufsunfähigkeit', versicherer: 'Swiss Life', praemie: 4800, ds: '5.000 €/Mon.', ablauf: 'unbefristet', saeule: 'I' }
-        ],
-        schadenhistorie: [],
-        deckungsluecken: [],
-        timeline: [
-            { datum: '15.12.2025', saeule: 'benefits', text: 'GF-Versorgung U-Kasse Review (Cross-Link DigiCore)', person: 'Katja Lurse' }
-        ]
-    },
-    {
         name: 'Hessenbau Generalunternehmer GmbH', id: 'MRH-013', typ: 'B2B',
         specialty: 'Bau/Handwerk', specialtyClass: 'specialty-bau-handwerk', specialtyIcon: mrhSpecialtyIcons.bauHandwerk,
         branche: 'Generalunternehmer, Wohn-/Gewerbebau', mitarbeitende: 160, jahresumsatz: '52 Mio. EUR',
@@ -406,28 +268,6 @@ var mrhKunden = [
         deckungsluecken: ['Keine Baufertigstellungsversicherung > 10 Mio.'],
         timeline: [
             { datum: '08.01.2026', saeule: 'benefits', text: 'bAV-Aufbau Phase 2 gestartet', person: 'Katja Lurse' }
-        ]
-    },
-    {
-        name: 'Alphatech Holding GmbH', id: 'MRH-014', typ: 'B2B',
-        specialty: 'W&I / M&A', specialtyClass: 'specialty-w-i-m-a', specialtyIcon: mrhSpecialtyIcons.wiMA,
-        branche: 'Beteiligungsgesellschaft, 5 Portfoliounternehmen', mitarbeitende: 12, jahresumsatz: '—',
-        standorte: 'Frankfurt', gesellschaftsform: 'GmbH', eigentuemer: 'PE-Fund',
-        keyContacts: ['Managing Partner Florian Stein', 'Legal Counsel Dr. Jens Merkel'],
-        beziehungsstatus: 'Wachstum', beraterInsurance: 'Thomas Bergmann', beraterBenefits: 'Katja Lurse', beraterFinance: 'Nina Hecht',
-        insurance: { praemie: 85000, praemieDisplay: '85.000 €', vertraege: 3, renewalDate: '31.12.2026', renewalStatus: 'gruen' },
-        benefits: { aktiv: true, bavVolumen: '—', durchdringung: 'Portfoliounternehmen zentral', hinweis: 'bAV zentral gesteuert' },
-        finance: { aktiv: true, kreditvers: 'Portfolio-Ebene', avale: '—', leasing: '—', courtage: '35.000 €' },
-        vertraegeDetail: [
-            { sparte: 'D&O Holding + Portfolio', versicherer: 'AIG', praemie: 55000, ds: '15 Mio. €', ablauf: '31.12.2026', saeule: 'I' },
-            { sparte: 'W&I Buy-Side Transaktion A', versicherer: 'MRH Specialty', praemie: 0, ds: '8 Mio. €', ablauf: 'abgeschlossen', saeule: 'I' },
-            { sparte: 'W&I Buy-Side Transaktion B', versicherer: 'MRH Specialty', praemie: 0, ds: '5 Mio. €', ablauf: 'abgeschlossen', saeule: 'I' },
-            { sparte: 'W&I Sell-Side Transaktion C', versicherer: 'MRH Specialty', praemie: 0, ds: '12 Mio. €', ablauf: 'abgeschlossen', saeule: 'I' }
-        ],
-        schadenhistorie: [],
-        deckungsluecken: [],
-        timeline: [
-            { datum: '02.01.2026', saeule: 'finance', text: 'Debt Advisory für nächste Akquisition gestartet', person: 'Nina Hecht' }
         ]
     },
     {
@@ -673,16 +513,12 @@ function renderMRHUebersicht() {
     });
     var segmentColors = {
         'Maschinenbau': '#64748b',
-        'Automotive': '#475569',
         'Real Estate': '#92400e',
-        'Kfz-Motor': '#0369a1',
         'IT/Hightech': '#6d28d9',
         'Logistik': '#22c55e',
         'Healthcare': '#be185d',
-        'ÖPNV': '#0369a1',
-        'Fine Art': '#c2410c',
-        'Rechtsanwälte': '#4338ca',
-        'Bau & Handwerk': '#b45309'
+        'Bau/Handwerk': '#b45309',
+        'ÖPNV/SPNV': '#0369a1'
     };
     var segmentItems = Object.keys(segmentMap).map(function(seg) {
         return { name: seg, praemie: segmentMap[seg].praemie, count: segmentMap[seg].count, color: segmentColors[seg] || '#94a3b8' };
@@ -715,11 +551,11 @@ function renderMRHUebersicht() {
             '<div class="impuls-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>' +
             '<div class="impuls-text"><strong>Produktrückruf-Versicherung</strong><p>Rhein-Main Maschinenbau \u2013 Export 25%, aktuell kein Produktrückruf versichert</p></div>' +
             '<span class="impuls-priority high">~35.000 €/a</span></div>' +
-        '<div class="impuls-item clickable" onclick="openMRHKundenDetail(\'MRH-007\')">' +
+        '<div class="impuls-item clickable" onclick="openMRHKundenDetail(\'MRH-005\')">' +
             '<div class="impuls-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>' +
             '<div class="impuls-text"><strong>Flottenversicherung Bündelung</strong><p>Hessenlog Spedition \u2013 45 Fahrzeuge in Einzelpolicen, Bündelungspotential</p></div>' +
             '<span class="impuls-priority medium">~28.000 €/a</span></div>' +
-        '<div class="impuls-item clickable" onclick="openMRHKundenDetail(\'MRH-010\')">' +
+        '<div class="impuls-item clickable" onclick="openMRHKundenDetail(\'MRH-007\')">' +
             '<div class="impuls-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>' +
             '<div class="impuls-text"><strong>Cyber-Erweiterung International</strong><p>DigiCore Solutions \u2013 Internationale SaaS-Risiken, aktuelle Deckung nur DE</p></div>' +
             '<span class="impuls-priority high">~45.000 €/a</span></div>';

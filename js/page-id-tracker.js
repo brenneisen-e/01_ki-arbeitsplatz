@@ -25,7 +25,9 @@ const PageIDTracker = {
         // A - Versicherung Module
         versicherung: {
             'landing': 'A-01',              // Agentur-Auswahl
-            'agentursicht': 'A-02',         // Vermittler-Overview
+            'agentursicht': 'A-02',         // Vermittler-Overview (AO)
+            'agentursicht-b2b': 'A-02b',    // Vermittler-Overview (Makler B2B)
+            'agentursicht-mrh': 'A-02c',    // Vermittler-Overview (Gewerbemakler 360°)
             'dashboard': 'A-03',            // Gesamtsicht (9 KPI-Boxen Dashboard)
             'kundenliste': 'A-04',          // Kunden-Übersicht (Tabellen-Ansicht)
             'potentialanalyse': 'A-05',     // Potentialanalyse
@@ -33,7 +35,9 @@ const PageIDTracker = {
             'eigeneDaten': 'A-07',          // Eigene Daten Tab
             'chat': 'A-08',                 // KI-Chat Versicherung (Mock-Daten)
             'finanzplanung': 'A-09',        // Finanzplanung
-            'kundendetail': 'A-10',         // Kunden-Detailansicht
+            'kundendetail': 'A-10',         // Kunden-Detailansicht (AO)
+            'kundendetail-b2b': 'A-10b',    // Kunden-Detail (Makler B2B)
+            'kundendetail-mrh': 'A-10c',    // Kunden-Detail (Gewerbemakler 360°)
             'bgav-uebersicht': 'A-11',      // BGAV Übersicht (Vermittler-Tabelle + Charts)
             'bgav-umstellung': 'A-12'       // BGAV Simulation (Provisions-Rechner)
         },

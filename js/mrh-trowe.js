@@ -1326,9 +1326,7 @@ window.switchMRHKundeDropdown = switchMRHKundeDropdown;
         document.querySelectorAll('.view-mode-btn').forEach(function(btn) {
             btn.classList.toggle('active', btn.dataset.mode === viewMode);
         });
-        if (viewMode !== 'ao') {
-            applyViewMode();
-        }
+        applyViewMode();
     }, 100);
 })();
 

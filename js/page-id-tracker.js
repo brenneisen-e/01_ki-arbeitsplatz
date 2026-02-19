@@ -262,6 +262,11 @@ const PageIDTracker = {
             return 'chat';
         }
 
+        // Check if on kunden detail page (before agentursicht – A-10 takes priority)
+        if (document.getElementById('kundenDetailPage')?.style.display === 'block') {
+            return 'kundendetail';
+        }
+
         // Check if on landing page
         if (document.getElementById('agenturGrid')?.style.display !== 'none') {
             return 'landing';
@@ -270,11 +275,6 @@ const PageIDTracker = {
         // Check if on agentursicht
         if (document.getElementById('agenturOverview')?.style.display !== 'none') {
             return 'agentursicht';
-        }
-
-        // Check if on kunden detail page
-        if (document.getElementById('kundenDetailPage')?.style.display !== 'none') {
-            return 'kundendetail';
         }
 
         // Check if on potentialanalyse

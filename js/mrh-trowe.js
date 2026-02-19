@@ -1263,11 +1263,13 @@ function fillMRHDetail(kunde) {
     var renewalCard = document.getElementById('maklerRenewalCard');
     if (renewalCard) renewalCard.style.display = 'none';
 
-    // 10) Sticky bar
-    updateMRHStickyBar(kunde);
-
-    // 11) Default tab
+    // 10) Default tab
     if (typeof switchKundenTab === 'function') switchKundenTab('stammdaten');
+
+    // 11) Sticky bar – update last to ensure no other function resets it
+    updateMRHStickyBar(kunde);
+    // Also set after a short delay in case other scripts reset the values
+    setTimeout(function() { updateMRHStickyBar(kunde); }, 100);
 }
 
 function updateMRHStickyBar(kunde) {
@@ -1276,24 +1278,33 @@ function updateMRHStickyBar(kunde) {
     var idEl = document.getElementById('kundeBarIdB');
     if (idEl) idEl.textContent = kunde.id;
 
-    var npsLabel = document.querySelector('#kundenDetailPage .kunde-sticky-kpi:nth-child(1) .kunde-sticky-kpi-label');
-    var npsEl = document.getElementById('kundeBarNpsB');
-    if (npsLabel) npsLabel.textContent = 'Specialty';
-    if (npsEl) npsEl.innerHTML = '<span class="mrh-specialty-badge ' + kunde.specialtyClass + '" style="font-size:10px">' + kunde.specialtyIcon + ' ' + kunde.specialty + '</span>';
-
-    var clvLabel = document.querySelector('#kundenDetailPage .kunde-sticky-kpi:nth-child(2) .kunde-sticky-kpi-label');
-    var clvEl = document.getElementById('kundeBarClvB');
-    if (clvLabel) clvLabel.textContent = 'Prämie';
-    if (clvEl) clvEl.textContent = kunde.insurance.praemieDisplay;
-
-    var segLabel = document.querySelector('#kundenDetailPage .kunde-sticky-kpi:nth-child(3) .kunde-sticky-kpi-label');
-    var segEl = document.getElementById('kundeBarSegmentB');
-    if (segLabel) segLabel.textContent = 'Säulen';
-    if (segEl) {
-        var tags = '<span class="mrh-saeulen-tag insurance">I</span>';
-        if (kunde.benefits.aktiv) tags += '<span class="mrh-saeulen-tag benefits">B</span>';
-        if (kunde.finance.aktiv) tags += '<span class="mrh-saeulen-tag finance">F</span>';
-        segEl.innerHTML = tags;
+    // Update labels and values via parent container to avoid nth-child issues
+    var stickyBar = document.getElementById('kundeOptionB');
+    if (stickyBar) {
+        var kpis = stickyBar.querySelectorAll('.kunde-sticky-kpi');
+        if (kpis[0]) {
+            var label0 = kpis[0].querySelector('.kunde-sticky-kpi-label');
+            if (label0) label0.textContent = 'Specialty';
+            var npsEl = document.getElementById('kundeBarNpsB');
+            if (npsEl) npsEl.innerHTML = '<span class="mrh-specialty-badge ' + (kunde.specialtyClass || '') + '" style="font-size:10px">' + (kunde.specialtyIcon || '') + ' ' + (kunde.specialty || '') + '</span>';
+        }
+        if (kpis[1]) {
+            var label1 = kpis[1].querySelector('.kunde-sticky-kpi-label');
+            if (label1) label1.textContent = 'Prämie';
+            var clvEl = document.getElementById('kundeBarClvB');
+            if (clvEl) clvEl.textContent = kunde.insurance ? kunde.insurance.praemieDisplay : '—';
+        }
+        if (kpis[2]) {
+            var label2 = kpis[2].querySelector('.kunde-sticky-kpi-label');
+            if (label2) label2.textContent = 'Säulen';
+            var segEl = document.getElementById('kundeBarSegmentB');
+            if (segEl) {
+                var tags = '<span class="mrh-saeulen-tag insurance">I</span>';
+                if (kunde.benefits && kunde.benefits.aktiv) tags += '<span class="mrh-saeulen-tag benefits">B</span>';
+                if (kunde.finance && kunde.finance.aktiv) tags += '<span class="mrh-saeulen-tag finance">F</span>';
+                segEl.innerHTML = tags;
+            }
+        }
     }
 }
 

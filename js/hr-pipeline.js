@@ -805,6 +805,9 @@ async function openHRPipeline() {
     }
 
     document.dispatchEvent(new CustomEvent('moduleChanged', { detail: { module: 'hr-pipeline', view: 'bewerber' } }));
+
+    // Update URL route
+    if (window.AppRouter) AppRouter.navigate('/hr-pipeline');
 }
 
 function closeHRPipeline() {
@@ -816,6 +819,9 @@ function closeHRPipeline() {
     const landingPage = document.getElementById('landingPage');
     if (landingPage) landingPage.style.display = 'flex';
     document.dispatchEvent(new CustomEvent('moduleChanged', { detail: { module: 'main', view: 'landing' } }));
+
+    // Update URL route
+    if (window.AppRouter) AppRouter.navigate('/landing');
 }
 
 function initHRPipeline() {

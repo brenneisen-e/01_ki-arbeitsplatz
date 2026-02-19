@@ -83,6 +83,9 @@ function openKundenDetail(kundenName, vermittlerId) {
             detail: { module: 'versicherung', view: 'kundendetail' }
         }));
     }
+
+    // Update URL route
+    if (window.AppRouter) AppRouter.navigate('/kundendetail');
 }
 
 // Initialisiert den FIDA-Status in der Kundendetail-Seite
@@ -203,6 +206,9 @@ function closeKundenDetail() {
         document.dispatchEvent(new CustomEvent('viewChanged', {
             detail: { module: 'main', view: 'landing' }
         }));
+
+        // Update URL route
+        if (window.AppRouter) AppRouter.navigate('/landing');
     } else if (previousViewBeforeKundenDetail === 'agentursicht') {
         const agenturOverview = document.getElementById('agenturOverview');
         if (agenturOverview) {
@@ -213,6 +219,9 @@ function closeKundenDetail() {
             document.dispatchEvent(new CustomEvent('viewChanged', {
                 detail: { module: 'versicherung', view: 'agentursicht' }
             }));
+
+            // Update URL route
+            if (window.AppRouter) AppRouter.navigate('/agentur');
         }
     } else {
         // Default: Potentialanalyse
@@ -223,6 +232,9 @@ function closeKundenDetail() {
         document.dispatchEvent(new CustomEvent('viewChanged', {
             detail: { module: 'versicherung', view: 'potentialanalyse' }
         }));
+
+        // Update URL route
+        if (window.AppRouter) AppRouter.navigate('/potentialanalyse');
     }
 }
 

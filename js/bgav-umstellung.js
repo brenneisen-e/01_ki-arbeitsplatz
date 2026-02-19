@@ -588,225 +588,140 @@
         if (origH) canvas.height = parseInt(origH);
     }
 
-    // Per-bar goal marker plugin for Chart.js (elegant, integrated style)
-    const sparteZielPlugin = {
-        id: 'sparteZielMarkers',
-        afterDatasetsDraw(chart) {
-            const goals = chart.options.plugins.sparteZielMarkers;
-            if (!goals || !goals.targets) return;
+    // Goal line plugin – draws a prominent dashed Ziel-line + label on y-axis
+    const goalLinePlugin = {
+        id: 'goalLine',
+        afterDraw(chart) {
+            const cfg = chart.options.plugins.goalLine;
+            if (!cfg) return;
 
-            const { ctx, chartArea: { left, right, top, bottom } } = chart;
-            const yScale = chart.scales.y;
-            const altMeta = chart.getDatasetMeta(0);
-            const bgavMeta = chart.getDatasetMeta(1);
-            if (!bgavMeta || !bgavMeta.data) return;
+            const { ctx, chartArea: { left, right, top, bottom }, scales: { y } } = chart;
+            const yPos = y.getPixelForValue(cfg.value);
+            if (yPos < top - 5 || yPos > bottom + 5) return;
 
             ctx.save();
 
-            goals.targets.forEach((target, i) => {
-                if (i >= bgavMeta.data.length) return;
-                const bgavBar = bgavMeta.data[i];
-                const altBar = altMeta.data[i];
-                const bgavVal = chart.data.datasets[1].data[i];
-                const reached = bgavVal >= target.value;
-                const yPos = yScale.getPixelForValue(target.value);
+            // Dashed goal line – prominent
+            ctx.beginPath();
+            ctx.setLineDash([6, 4]);
+            ctx.lineWidth = 2;
+            ctx.strokeStyle = cfg.reached ? '#16a34a' : '#ea580c';
+            ctx.moveTo(left, yPos);
+            ctx.lineTo(right, yPos);
+            ctx.stroke();
+            ctx.setLineDash([]);
 
-                if (yPos < top - 5 || yPos > bottom + 5) return;
+            // Label on the left, next to y-axis
+            const label = 'Ziel ' + formatEuro(cfg.value);
+            ctx.font = 'bold 10px system-ui, sans-serif';
+            ctx.textAlign = 'left';
+            ctx.textBaseline = 'bottom';
+            ctx.fillStyle = cfg.reached ? '#16a34a' : '#ea580c';
+            ctx.fillText(label, left + 4, yPos - 5);
 
-                // Small triangle marker on left edge of chart area
-                const triSize = 5;
-                ctx.beginPath();
-                ctx.moveTo(left - 1, yPos - triSize);
-                ctx.lineTo(left + triSize + 2, yPos);
-                ctx.lineTo(left - 1, yPos + triSize);
-                ctx.closePath();
-                ctx.fillStyle = reached ? '#22c55e' : '#f97316';
-                ctx.fill();
-
-                // Subtle thin line across chart area
-                ctx.beginPath();
-                ctx.setLineDash([2, 4]);
-                ctx.lineWidth = 1;
-                ctx.strokeStyle = reached ? 'rgba(34, 197, 94, 0.25)' : 'rgba(249, 115, 22, 0.2)';
-                ctx.moveTo(left + triSize + 2, yPos);
-                ctx.lineTo(right, yPos);
-                ctx.stroke();
-                ctx.setLineDash([]);
-
-                // Small pill label near the right edge
-                const labelText = formatEuro(target.value);
-                ctx.font = '600 9px system-ui, sans-serif';
-                const textW = ctx.measureText(labelText).width;
-                const pillW = textW + 10;
-                const pillH = 16;
-                const pillX = right - pillW - 2;
-                const pillY = yPos - pillH / 2;
-
-                // Pill background
-                const radius = pillH / 2;
-                ctx.beginPath();
-                ctx.moveTo(pillX + radius, pillY);
-                ctx.lineTo(pillX + pillW - radius, pillY);
-                ctx.arcTo(pillX + pillW, pillY, pillX + pillW, pillY + radius, radius);
-                ctx.arcTo(pillX + pillW, pillY + pillH, pillX + pillW - radius, pillY + pillH, radius);
-                ctx.lineTo(pillX + radius, pillY + pillH);
-                ctx.arcTo(pillX, pillY + pillH, pillX, pillY + radius, radius);
-                ctx.arcTo(pillX, pillY, pillX + radius, pillY, radius);
-                ctx.closePath();
-                ctx.fillStyle = reached ? 'rgba(34, 197, 94, 0.12)' : 'rgba(249, 115, 22, 0.1)';
-                ctx.fill();
-                ctx.strokeStyle = reached ? 'rgba(34, 197, 94, 0.4)' : 'rgba(249, 115, 22, 0.35)';
-                ctx.lineWidth = 1;
-                ctx.stroke();
-
-                // Pill text
-                ctx.fillStyle = reached ? '#16a34a' : '#c2410c';
+            // Checkmark on y-axis when goal is reached
+            if (cfg.reached) {
+                ctx.font = 'bold 13px system-ui, sans-serif';
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
-                ctx.fillText(labelText, pillX + pillW / 2, pillY + pillH / 2);
-
-                // Value label above the BGAV bar (showing actual value + status)
-                if (reached) {
-                    const barTopY = bgavBar.y;
-                    ctx.font = 'bold 10px system-ui, sans-serif';
-                    ctx.fillStyle = '#16a34a';
-                    ctx.textAlign = 'center';
-                    ctx.textBaseline = 'bottom';
-                    ctx.fillText('\u2713', bgavBar.x, barTopY - 4);
-                }
-            });
+                ctx.fillStyle = '#16a34a';
+                ctx.fillText('\u2713', left - 14, yPos);
+            }
 
             ctx.restore();
         }
     };
 
-    // Leistungsstufen threshold plugin for Chart.js
-    const leistungsstufenPlugin = {
-        id: 'leistungsstufenLines',
-        afterDraw(chart) {
-            const thresholds = chart.options.plugins.leistungsstufenLines;
-            if (!thresholds || !thresholds.lines) return;
-
-            const { ctx, chartArea: { left, right }, scales: { y } } = chart;
-            ctx.save();
-
-            thresholds.lines.forEach(line => {
-                const yPos = y.getPixelForValue(line.value);
-                if (yPos < chart.chartArea.top || yPos > chart.chartArea.bottom) return;
-
-                // Dashed line
-                ctx.beginPath();
-                ctx.setLineDash([6, 4]);
-                ctx.lineWidth = 1.5;
-                ctx.strokeStyle = line.color || 'rgba(0, 163, 224, 0.6)';
-                ctx.moveTo(left, yPos);
-                ctx.lineTo(right, yPos);
-                ctx.stroke();
-                ctx.setLineDash([]);
-
-                // Label
-                ctx.fillStyle = line.color || 'rgba(0, 163, 224, 0.8)';
-                ctx.font = 'bold 10px system-ui, sans-serif';
-                ctx.textAlign = 'right';
-                ctx.fillText(line.label, right - 4, yPos - 4);
-            });
-
-            ctx.restore();
-        }
-    };
+    // Store chart instances
+    const _sparteCharts = {};
 
     function renderSimChart(results) {
-        const canvas = document.getElementById('bgavSimChart');
-        if (!canvas) return;
-
-        // Destroy existing chart
-        if (window._bgavSimChart) {
-            window._bgavSimChart.destroy();
-        }
-        resetCanvas(canvas);
-
-        // Per-Sparte goal targets
-        const sparteTargets = [
-            { value: sparteZiele.leben.ziel,   label: sparteZiele.leben.label },
-            { value: sparteZiele.kranken.ziel,  label: sparteZiele.kranken.label },
-            { value: sparteZiele.schaden.ziel,  label: sparteZiele.schaden.label }
+        const sparten = [
+            { key: 'leben',   canvasId: 'bgavSimChartLeben',   badgeId: 'bgavSparteBadgeLeben' },
+            { key: 'kranken', canvasId: 'bgavSimChartKranken', badgeId: 'bgavSparteBadgeKranken' },
+            { key: 'schaden', canvasId: 'bgavSimChartSchaden', badgeId: 'bgavSparteBadgeSchaden' }
         ];
 
-        // BGAV bar colors: green glow when goal reached, default blue
-        const bgavValues = [results.bgav.leben.total, results.bgav.kranken.total, results.bgav.schaden.total];
-        const bgavBgColors = bgavValues.map((val, i) =>
-            val >= sparteTargets[i].value ? 'rgba(34, 197, 94, 0.75)' : 'rgba(0, 163, 224, 0.7)'
-        );
-        const bgavBorderColors = bgavValues.map((val, i) =>
-            val >= sparteTargets[i].value ? '#16a34a' : '#00A3E0'
-        );
+        sparten.forEach(sp => {
+            const canvas = document.getElementById(sp.canvasId);
+            if (!canvas) return;
 
-        const ctx = canvas.getContext('2d');
-        window._bgavSimChart = new Chart(ctx, {
-            type: 'bar',
-            plugins: [leistungsstufenPlugin, sparteZielPlugin],
-            data: {
-                labels: ['Leben', 'Kranken', 'Schaden/Unfall'],
-                datasets: [
-                    {
-                        label: 'Alt-Modell (AP+BP)',
-                        data: [results.alt.leben.total, results.alt.kranken.total, results.alt.schaden.total],
-                        backgroundColor: 'rgba(148, 163, 184, 0.7)',
-                        borderColor: '#94a3b8',
-                        borderWidth: 1,
+            // Destroy existing chart
+            if (_sparteCharts[sp.key]) {
+                _sparteCharts[sp.key].destroy();
+            }
+            resetCanvas(canvas);
+
+            const altVal  = results.alt[sp.key].total;
+            const bgavVal = results.bgav[sp.key].total;
+            const ziel    = sparteZiele[sp.key].ziel;
+            const reached = bgavVal >= ziel;
+            const delta   = bgavVal - altVal;
+
+            // Update badge
+            const badge = document.getElementById(sp.badgeId);
+            if (badge) {
+                badge.className = 'bgav-sparte-badge ' + (reached ? 'reached' : 'open');
+                badge.innerHTML = reached ? '\u2713 Ziel erreicht' : 'Ziel offen';
+            }
+
+            // Y-axis max: at least 120% of goal or max value
+            const yMax = Math.max(ziel * 1.3, altVal * 1.2, bgavVal * 1.2);
+
+            const ctx = canvas.getContext('2d');
+            _sparteCharts[sp.key] = new Chart(ctx, {
+                type: 'bar',
+                plugins: [goalLinePlugin],
+                data: {
+                    labels: ['Alt-Modell', 'BGAV'],
+                    datasets: [{
+                        data: [altVal, bgavVal],
+                        backgroundColor: [
+                            'rgba(148, 163, 184, 0.65)',
+                            reached ? 'rgba(34, 197, 94, 0.7)' : 'rgba(0, 163, 224, 0.7)'
+                        ],
+                        borderColor: [
+                            '#94a3b8',
+                            reached ? '#16a34a' : '#00A3E0'
+                        ],
+                        borderWidth: [1, 2],
                         borderRadius: 6,
-                        barPercentage: 0.4,
+                        barPercentage: 0.55,
                         categoryPercentage: 0.7
-                    },
-                    {
-                        label: 'BGAV-Modell (AP+BP)',
-                        data: bgavValues,
-                        backgroundColor: bgavBgColors,
-                        borderColor: bgavBorderColors,
-                        borderWidth: 2,
-                        borderRadius: 6,
-                        barPercentage: 0.4,
-                        categoryPercentage: 0.7
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        position: 'top',
-                        labels: { font: { size: 12, weight: '600' }, usePointStyle: true, padding: 16 }
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                return context.dataset.label + ': ' + formatEuro(context.raw);
-                            }
-                        }
-                    },
-                    leistungsstufenLines: {
-                        lines: [] // Removed generic lines, using per-Sparte goals instead
-                    },
-                    sparteZielMarkers: {
-                        targets: sparteTargets
-                    }
+                    }]
                 },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            callback: function(value) { return formatEuro(value); },
-                            font: { size: 11 }
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    layout: { padding: { left: 16, right: 4, top: 4 } },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return formatEuro(context.raw);
+                                }
+                            }
                         },
-                        grid: { color: '#f1f5f9' }
+                        goalLine: { value: ziel, reached: reached }
                     },
-                    x: {
-                        grid: { display: false },
-                        ticks: { font: { size: 12, weight: '600' } }
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: Math.ceil(yMax / 1000) * 1000,
+                            ticks: {
+                                callback: function(value) { return formatEuro(value); },
+                                font: { size: 10 }
+                            },
+                            grid: { color: '#f1f5f9' }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { font: { size: 11, weight: '600' } }
+                        }
                     }
                 }
-            }
+            });
         });
     }
 

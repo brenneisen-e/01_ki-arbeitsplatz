@@ -428,6 +428,42 @@
     box-shadow: 0 6px 24px rgba(0,0,0,0.08);
 }
 
+/* Charts grid – one box per Sparte */
+.bgav-charts-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-bottom: 20px;
+}
+
+.bgav-sparte-chart-box {
+    padding: 16px 18px;
+}
+
+.bgav-sparte-badge {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 10px;
+    border-radius: 20px;
+    white-space: nowrap;
+}
+
+.bgav-sparte-badge.reached {
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+.bgav-sparte-badge.open {
+    background: #fff7ed;
+    color: #c2410c;
+}
+
+@media (max-width: 900px) {
+    .bgav-charts-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
 .bgav-section-header {
     display: flex;
     justify-content: space-between;
@@ -998,14 +1034,24 @@
 
 .bgav-slider-default-mark {
     position: absolute;
-    bottom: 0;
-    width: 0;
-    height: 0;
-    border-left: 4px solid transparent;
-    border-right: 4px solid transparent;
-    border-bottom: 6px solid #ea580c;
+    bottom: 2px;
+    width: 2px;
+    height: 12px;
+    background: #94a3b8;
+    border-radius: 1px;
     pointer-events: none;
-    opacity: 0.6;
+}
+
+.bgav-slider-default-mark::before {
+    content: '';
+    position: absolute;
+    top: -3px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #94a3b8;
 }
 
 .bgav-sim-sliders-info {

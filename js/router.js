@@ -28,7 +28,8 @@
         viewToRoute: {},
 
         currentRoute: '/',
-        isNavigating: false,  // Prevent re-entry during navigation
+        isNavigating: false,
+        deepLinkTarget: null,  // Set when a deep-link is detected on page load
 
         init() {
             // Build reverse map
@@ -52,16 +53,51 @@
                 }
             });
 
-            // Handle initial hash on page load (after everything is initialized)
-            // Delay to allow all modules to load first
-            setTimeout(() => {
-                const hash = window.location.hash.replace('#', '') || '/';
-                if (hash !== '/' && hash !== '/landing') {
-                    this.handleHashChange();
+            // Deep-link detection on page load
+            const initialHash = window.location.hash.replace('#', '') || '/';
+            if (initialHash !== '/' && initialHash !== '/landing') {
+                const route = this.routes[initialHash];
+                if (route) {
+                    this.deepLinkTarget = { hash: initialHash, view: route.view };
+                    console.log('Router: Deep-link detected →', initialHash);
+
+                    // IMMEDIATELY hide landing page (before any async code runs)
+                    var lp = document.getElementById('landingPage');
+                    if (lp) {
+                        lp.style.display = 'none';
+                        lp.setAttribute('data-deeplink-hidden', 'true');
+                    }
+
+                    // Attempt navigation at multiple intervals for robustness
+                    // (target view function may not be available immediately)
+                    var self = this;
+                    var navigated = false;
+                    function attemptDeepLink() {
+                        if (navigated) return;
+                        try {
+                            self.handleHashChange();
+                            navigated = true;
+                            console.log('Router: Deep-link navigation successful →', initialHash);
+                            // Re-hide landing page in case something showed it
+                            var lp2 = document.getElementById('landingPage');
+                            if (lp2) lp2.style.display = 'none';
+                        } catch (e) {
+                            console.warn('Router: Deep-link attempt failed, will retry', e);
+                        }
+                    }
+                    setTimeout(attemptDeepLink, 300);
+                    setTimeout(attemptDeepLink, 800);
+                    setTimeout(attemptDeepLink, 2000);
+                    setTimeout(attemptDeepLink, 4000);
                 }
-            }, 800);
+            }
 
             console.log('Router initialized. Routes:', Object.keys(this.routes).length);
+        },
+
+        // Check if we're in a deep-link page load (used by landing.js to skip setup)
+        isDeepLink() {
+            return this.deepLinkTarget !== null;
         },
 
         // Navigate to a route (called from code)

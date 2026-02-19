@@ -2614,12 +2614,17 @@ window.handleSingleRegionQuery = handleSingleRegionQuery;
 window.addEventListener('DOMContentLoaded', function() {
     console.log('Landing Page wird geladen...');
 
-    // IMMEDIATE deep-link check – hide landing page before anything else renders
-    var _deepLinkHash = window.location.hash.replace('#', '') || '/';
-    var _isDeepLink = (_deepLinkHash !== '/' && _deepLinkHash !== '/landing' &&
-        window.AppRouter && window.AppRouter.routes[_deepLinkHash]);
+    // Check if Router detected a deep-link → skip landing page entirely
+    var _isDeepLink = (window.AppRouter && window.AppRouter.isDeepLink && window.AppRouter.isDeepLink());
+    if (!_isDeepLink) {
+        // Fallback: also check hash directly
+        var _h = window.location.hash.replace('#', '') || '/';
+        _isDeepLink = (_h !== '/' && _h !== '/landing' &&
+            window.AppRouter && window.AppRouter.routes && window.AppRouter.routes[_h]);
+    }
+
     if (_isDeepLink) {
-        console.log('Deep-link detected early:', _deepLinkHash);
+        console.log('Deep-link mode: skipping landing page setup');
         var lp = document.getElementById('landingPage');
         if (lp) lp.style.display = 'none';
     }
@@ -2635,19 +2640,22 @@ window.addEventListener('DOMContentLoaded', function() {
         // Daten geladen - Navigation aktivieren
         setNavigationEnabled(true);
 
-        // Loading Animation ausblenden und Welcome Chat zeigen
+        // Loading Animation ausblenden
         const loadingAnim = document.getElementById('loadingAnimation');
-        const welcomeChat = document.getElementById('welcomeChat');
-
         if (loadingAnim) loadingAnim.style.display = 'none';
 
         // Deep-link: navigate to target route, skip landing setup
-        if (_isDeepLink) {
-            console.log('Deep-link navigating to:', _deepLinkHash);
-            window.AppRouter.handleHashChange();
+        if (_isDeepLink || (window.AppRouter && window.AppRouter.isDeepLink && window.AppRouter.isDeepLink())) {
+            console.log('Deep-link: CSV loaded, triggering navigation');
+            // Re-hide landing page and let router handle the rest
+            var lp = document.getElementById('landingPage');
+            if (lp) lp.style.display = 'none';
+            if (window.AppRouter) window.AppRouter.handleHashChange();
             return;
         }
 
+        // Normal landing page flow
+        const welcomeChat = document.getElementById('welcomeChat');
         if (welcomeChat) welcomeChat.style.display = 'block';
         console.log('Welcome Chat angezeigt');
 

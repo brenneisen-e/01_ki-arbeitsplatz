@@ -1046,11 +1046,20 @@ function openMRHKundenDetail(kundeId) {
 
     fillMRHDetail(kunde);
 
-    // Update Page ID to A-10c (Kunden-Detail Gewerbe 360°)
+    // Force page ID to A-10c via multiple mechanisms
+    if (typeof PageIDTracker !== 'undefined') PageIDTracker.setPageId('A-10c');
     document.dispatchEvent(new CustomEvent('viewChanged', { detail: { module: 'versicherung', view: 'kundendetail-mrh' } }));
-
-    // Update URL route to A-10c
     if (window.AppRouter) AppRouter.navigate('/kundendetail-gewerbe');
+
+    // Ensure sticky bar, CLV hiding, and page ID persist after any async resets
+    setTimeout(function() {
+        updateMRHStickyBar(kunde);
+        var clvCard = document.getElementById('clvDetailCard');
+        if (clvCard) clvCard.style.display = 'none';
+        var clvBadge = document.getElementById('clvHeaderBadge');
+        if (clvBadge) clvBadge.style.display = 'none';
+        if (typeof PageIDTracker !== 'undefined') PageIDTracker.setPageId('A-10c');
+    }, 300);
 }
 window.openMRHKundenDetail = openMRHKundenDetail;
 

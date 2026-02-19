@@ -34,7 +34,8 @@ const PageIDTracker = {
             'chat': 'A-08',                 // KI-Chat Versicherung (Mock-Daten)
             'finanzplanung': 'A-09',        // Finanzplanung
             'kundendetail': 'A-10',         // Kunden-Detailansicht
-            'bgav-umstellung': 'A-11'      // BGAV Vertragsumstellung Simulationsergebnisse
+            'bgav-uebersicht': 'A-11',      // BGAV Übersicht (Vermittler-Tabelle + Charts)
+            'bgav-umstellung': 'A-12'       // BGAV Simulation (Provisions-Rechner)
         },
 
         // B - Banken Module

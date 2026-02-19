@@ -683,6 +683,18 @@ function openKundenDetailDualView(kundenName, vermittlerId) {
         previousViewBeforeKundenDetail = 'landing';
     }
 
+    // Sicherstellen, dass der A-02 Header "Max Mustermann" zeigt (nicht Makler-Header),
+    // da updateKundenSharedHeader() diese Werte auf A-10 kopiert.
+    var titleEl = document.getElementById('agenturPageTitle');
+    var subtitleId = document.getElementById('agenturIdHeader');
+    if (titleEl) titleEl.textContent = 'Agentur: Max Mustermann';
+    if (subtitleId) {
+        var subtitleDiv = subtitleId.parentElement;
+        if (subtitleDiv) {
+            subtitleDiv.innerHTML = '<span id="agenturIdHeader">VM00001</span> | <span id="agenturStatusHeader">Aktiv</span>';
+        }
+    }
+
     // Open customer detail page normally
     openKundenDetail(kundenName, vermittlerId);
 

@@ -302,6 +302,15 @@
         const activeContent = document.getElementById('bgavContent_' + tabName);
         if (activeContent) activeContent.classList.add('active');
 
+        // Update URL hash & page ID when switching tabs manually
+        if (tabName === 'uebersicht') {
+            if (window.AppRouter) AppRouter.navigate('/bgav-uebersicht');
+            if (typeof PageIDTracker !== 'undefined') PageIDTracker.setPageId('A-11');
+        } else if (tabName === 'simulation') {
+            if (window.AppRouter) AppRouter.navigate('/bgav-umstellung');
+            if (typeof PageIDTracker !== 'undefined') PageIDTracker.setPageId('A-12');
+        }
+
         // Render Übersicht charts only once (on first visit), not on every tab switch
         if (tabName === 'uebersicht' && !window._bgavUbVzChart) {
             setTimeout(renderUebersichtTab, 50);
@@ -1367,30 +1376,53 @@ Die Stufe basiert auf dem Gesamtproduktionsvolumen (Neugeschäft + Bestand) übe
     // ========================================
     // NAVIGATION: Open/Close BGAV Tool
     // ========================================
-    function openBgavTool() {
-        // Hide all other pages
+
+    // Shared helper: show BGAV page and hide everything else
+    function showBgavPage() {
         const pages = ['landingPage', 'agenturOverview', 'mainApp', 'kundenDetailPage', 'potentialAnalysePage', 'billingCheckPage'];
         pages.forEach(id => {
             const el = document.getElementById(id);
             if (el) el.style.display = 'none';
         });
-
-        // Show BGAV page
         const bgavPage = document.getElementById('bgavUmstellungPage');
         if (bgavPage) {
             bgavPage.style.display = 'block';
             initBgavUmstellung();
         }
+    }
 
-        // Set URL hash
-        if (window.history && window.history.pushState) {
-            window.history.pushState({ view: 'bgav-umstellung' }, '', '#/bgav-umstellung');
+    // A-11: BGAV Übersicht (Vermittler-Tabelle + Charts)
+    function openBgavUebersicht() {
+        showBgavPage();
+        switchBgavTab('uebersicht');
+
+        if (window.AppRouter) {
+            AppRouter.navigate('/bgav-uebersicht');
+        } else if (window.history && window.history.pushState) {
+            window.history.pushState({ view: 'bgav-uebersicht' }, '', '#/bgav-uebersicht');
         }
 
-        // Force page ID update after init (init also sets it, but ensure timing)
         setTimeout(() => {
             if (typeof PageIDTracker !== 'undefined') {
                 PageIDTracker.setPageId('A-11');
+            }
+        }, 50);
+    }
+
+    // A-12: BGAV Simulation (Provisions-Rechner)
+    function openBgavTool() {
+        showBgavPage();
+        switchBgavTab('simulation');
+
+        if (window.AppRouter) {
+            AppRouter.navigate('/bgav-umstellung');
+        } else if (window.history && window.history.pushState) {
+            window.history.pushState({ view: 'bgav-umstellung' }, '', '#/bgav-umstellung');
+        }
+
+        setTimeout(() => {
+            if (typeof PageIDTracker !== 'undefined') {
+                PageIDTracker.setPageId('A-12');
             }
         }, 50);
     }
@@ -1428,6 +1460,7 @@ Die Stufe basiert auf dem Gesamtproduktionsvolumen (Neugeschäft + Bestand) übe
     // ========================================
     // EXPORT GLOBALS
     // ========================================
+    window.openBgavUebersicht = openBgavUebersicht;
     window.openBgavTool = openBgavTool;
     window.closeBgavTool = closeBgavTool;
     window.initBgavUmstellung = initBgavUmstellung;

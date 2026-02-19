@@ -183,6 +183,13 @@
         { key: 'top', label: 'Top', min: 500000, max: Infinity, factor: 1.10 }
     ];
 
+    // Per-Sparte Ziele (individual goals for Leben, Kranken, Schaden/Unfall)
+    const sparteZiele = {
+        leben:   { label: 'Leben',          ziel: 4000,  color: '#3b82f6' },
+        kranken: { label: 'Kranken',        ziel: 5500,  color: '#8b5cf6' },
+        schaden: { label: 'Schaden/Unfall', ziel: 20000, color: '#f59e0b' }
+    };
+
     // ========================================
     // INIT
     // ========================================
@@ -252,7 +259,10 @@
     // ========================================
     // TAB NAVIGATION
     // ========================================
+    let bgavTabsInitialized = false;
     function setupBgavTabs() {
+        if (bgavTabsInitialized) return;
+        bgavTabsInitialized = true;
         document.querySelectorAll('.bgav-tab').forEach(tab => {
             tab.addEventListener('click', function() {
                 const target = this.dataset.tab;
@@ -274,8 +284,8 @@
         const activeContent = document.getElementById('bgavContent_' + tabName);
         if (activeContent) activeContent.classList.add('active');
 
-        // Render charts after tab is visible (Chart.js needs visible canvas)
-        if (tabName === 'uebersicht') {
+        // Render Übersicht charts only once (on first visit), not on every tab switch
+        if (tabName === 'uebersicht' && !window._bgavUbVzChart) {
             setTimeout(renderUebersichtTab, 50);
         }
         if (tabName === 'simulation') {
@@ -388,19 +398,96 @@
     }
 
     function updateStammdatenChart(results) {
-        const barAlt = document.getElementById('bgavStammBarAlt');
-        const barNeu = document.getElementById('bgavStammBarNeu');
+        const canvas = document.getElementById('bgavStammCompareChart');
         const valAlt = document.getElementById('bgavStammValAlt');
         const valNeu = document.getElementById('bgavStammValNeu');
+        const deltaVal = document.getElementById('bgavStammDeltaVal');
+        const deltaPct = document.getElementById('bgavStammDeltaPct');
+        const deltaWrap = document.getElementById('bgavStammDelta');
 
-        if (!barAlt || !barNeu) return;
-
-        const maxVal = Math.max(results.alt.total, results.bgav.total, 1);
-        barAlt.style.height = Math.round((results.alt.total / maxVal) * 100) + '%';
-        barNeu.style.height = Math.round((results.bgav.total / maxVal) * 100) + '%';
-
+        // Update values
         if (valAlt) valAlt.textContent = formatEuro(results.alt.total);
         if (valNeu) valNeu.textContent = formatEuro(results.bgav.total);
+
+        // Update delta
+        const delta = results.bgav.total - results.alt.total;
+        const pct = results.alt.total > 0 ? ((delta / results.alt.total) * 100) : 0;
+        if (deltaVal) deltaVal.textContent = (delta >= 0 ? '+' : '') + formatEuro(delta);
+        if (deltaPct) deltaPct.textContent = '(' + (pct >= 0 ? '+' : '') + pct.toFixed(1) + '%)';
+        if (deltaWrap) {
+            deltaWrap.classList.toggle('negative', delta < 0);
+        }
+
+        // Render Chart.js bar chart
+        if (!canvas) return;
+        if (window._bgavStammChart) window._bgavStammChart.destroy();
+        resetCanvas(canvas);
+
+        window._bgavStammChart = new Chart(canvas.getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: ['Leben', 'Kranken', 'S/U'],
+                datasets: [
+                    {
+                        label: 'Alt',
+                        data: [results.alt.leben.total, results.alt.kranken.total, results.alt.schaden.total],
+                        backgroundColor: 'rgba(148, 163, 184, 0.5)',
+                        borderRadius: 4,
+                        barPercentage: 0.5,
+                        categoryPercentage: 0.7
+                    },
+                    {
+                        label: 'Neu',
+                        data: [results.bgav.leben.total, results.bgav.kranken.total, results.bgav.schaden.total],
+                        backgroundColor: 'rgba(0, 163, 224, 0.8)',
+                        borderRadius: 4,
+                        barPercentage: 0.5,
+                        categoryPercentage: 0.7
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                animation: { duration: 400 },
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top',
+                        labels: {
+                            color: 'rgba(255,255,255,0.6)',
+                            font: { size: 10, weight: '600' },
+                            usePointStyle: true,
+                            padding: 8,
+                            boxWidth: 8
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(c) { return c.dataset.label + ': ' + formatEuro(c.raw); }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            color: 'rgba(255,255,255,0.4)',
+                            font: { size: 9 },
+                            callback: function(v) { return (v / 1000) + 'k'; }
+                        },
+                        grid: { color: 'rgba(255,255,255,0.06)' }
+                    },
+                    x: {
+                        ticks: {
+                            color: 'rgba(255,255,255,0.5)',
+                            font: { size: 10, weight: '600' }
+                        },
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
     }
 
     function updateSimDetailTable(results) {
@@ -465,11 +552,116 @@
                 updateSimulationResults();
             });
         });
+
+        // Position default marks on sliders
+        positionDefaultMarks();
+    }
+
+    function positionDefaultMarks() {
+        document.querySelectorAll('.bgav-slider-default-mark').forEach(mark => {
+            const field = mark.dataset.field;
+            const slider = document.querySelector(`.bgav-sim-slider[data-field="${field}"]`);
+            if (!slider) return;
+
+            const defaultVal = parseInt(slider.dataset.default) || parseInt(slider.value);
+            const min = parseInt(slider.min);
+            const max = parseInt(slider.max);
+            const pct = ((defaultVal - min) / (max - min)) * 100;
+
+            // Account for thumb width (~9px each side)
+            mark.style.left = `calc(${pct}% - ${(pct / 100) * 18 - 9}px)`;
+        });
     }
 
     // ========================================
     // CHART RENDERING
     // ========================================
+    // Helper: Reset canvas to original dimensions before Chart.js re-creates
+    function resetCanvas(canvas) {
+        // Remove inline styles that Chart.js adds (width/height)
+        canvas.style.width = '';
+        canvas.style.height = '';
+        // Restore original attribute dimensions
+        const origW = canvas.getAttribute('width');
+        const origH = canvas.getAttribute('height');
+        if (origW) canvas.width = parseInt(origW);
+        if (origH) canvas.height = parseInt(origH);
+    }
+
+    // Per-bar goal marker plugin for Chart.js
+    const sparteZielPlugin = {
+        id: 'sparteZielMarkers',
+        afterDraw(chart) {
+            const goals = chart.options.plugins.sparteZielMarkers;
+            if (!goals || !goals.targets) return;
+
+            const { ctx, chartArea: { top, bottom } } = chart;
+            const yScale = chart.scales.y;
+            const meta = chart.getDatasetMeta(1); // BGAV dataset (index 1)
+            if (!meta || !meta.data) return;
+
+            ctx.save();
+
+            goals.targets.forEach((target, i) => {
+                if (i >= meta.data.length) return;
+                const bar = meta.data[i];
+                const bgavVal = chart.data.datasets[1].data[i];
+                const reached = bgavVal >= target.value;
+
+                // Draw goal line marker across the bar group
+                const yPos = yScale.getPixelForValue(target.value);
+                if (yPos < top || yPos > bottom) { ctx.restore(); return; }
+
+                const barLeft = bar.x - bar.width * 1.8;
+                const barRight = bar.x + bar.width * 0.8;
+
+                // Dashed goal line
+                ctx.beginPath();
+                ctx.setLineDash([4, 3]);
+                ctx.lineWidth = 2;
+                ctx.strokeStyle = reached ? 'rgba(34, 197, 94, 0.8)' : 'rgba(239, 68, 68, 0.5)';
+                ctx.moveTo(barLeft, yPos);
+                ctx.lineTo(barRight, yPos);
+                ctx.stroke();
+                ctx.setLineDash([]);
+
+                // Goal label
+                ctx.font = 'bold 9px system-ui, sans-serif';
+                ctx.textAlign = 'center';
+                ctx.fillStyle = reached ? 'rgba(34, 197, 94, 0.9)' : 'rgba(239, 68, 68, 0.7)';
+                ctx.fillText('Ziel ' + formatEuro(target.value), (barLeft + barRight) / 2, yPos - 5);
+
+                // Achievement badge when goal is reached
+                if (reached) {
+                    const badgeX = bar.x;
+                    const badgeY = Math.min(bar.y - 14, yPos - 18);
+
+                    // Green circle with checkmark
+                    ctx.beginPath();
+                    ctx.arc(badgeX, badgeY, 10, 0, Math.PI * 2);
+                    ctx.fillStyle = '#22c55e';
+                    ctx.fill();
+                    ctx.strokeStyle = '#fff';
+                    ctx.lineWidth = 1.5;
+                    ctx.stroke();
+
+                    // Checkmark
+                    ctx.beginPath();
+                    ctx.strokeStyle = '#fff';
+                    ctx.lineWidth = 2;
+                    ctx.lineCap = 'round';
+                    ctx.lineJoin = 'round';
+                    ctx.moveTo(badgeX - 4, badgeY);
+                    ctx.lineTo(badgeX - 1, badgeY + 3);
+                    ctx.lineTo(badgeX + 5, badgeY - 4);
+                    ctx.stroke();
+                }
+            });
+
+            ctx.restore();
+        }
+    };
+
     // Leistungsstufen threshold plugin for Chart.js
     const leistungsstufenPlugin = {
         id: 'leistungsstufenLines',
@@ -513,25 +705,28 @@
         if (window._bgavSimChart) {
             window._bgavSimChart.destroy();
         }
+        resetCanvas(canvas);
 
-        // Calculate max value for Leistungsstufen thresholds
-        const maxVal = Math.max(
-            results.alt.leben.total, results.alt.kranken.total, results.alt.schaden.total,
-            results.bgav.leben.total, results.bgav.kranken.total, results.bgav.schaden.total
-        );
-
-        // Leistungsstufen thresholds (proportional to data range)
-        const lsLines = [
-            { label: 'MPL', value: maxVal * 0.20, color: 'rgba(148, 163, 184, 0.5)' },
-            { label: '1. LS', value: maxVal * 0.40, color: 'rgba(0, 163, 224, 0.45)' },
-            { label: '2. LS', value: maxVal * 0.60, color: 'rgba(0, 163, 224, 0.55)' },
-            { label: '3. LS', value: maxVal * 0.80, color: 'rgba(0, 163, 224, 0.7)' }
+        // Per-Sparte goal targets
+        const sparteTargets = [
+            { value: sparteZiele.leben.ziel,   label: sparteZiele.leben.label },
+            { value: sparteZiele.kranken.ziel,  label: sparteZiele.kranken.label },
+            { value: sparteZiele.schaden.ziel,  label: sparteZiele.schaden.label }
         ];
+
+        // BGAV bar colors: green glow when goal reached, default blue
+        const bgavValues = [results.bgav.leben.total, results.bgav.kranken.total, results.bgav.schaden.total];
+        const bgavBgColors = bgavValues.map((val, i) =>
+            val >= sparteTargets[i].value ? 'rgba(34, 197, 94, 0.75)' : 'rgba(0, 163, 224, 0.7)'
+        );
+        const bgavBorderColors = bgavValues.map((val, i) =>
+            val >= sparteTargets[i].value ? '#16a34a' : '#00A3E0'
+        );
 
         const ctx = canvas.getContext('2d');
         window._bgavSimChart = new Chart(ctx, {
             type: 'bar',
-            plugins: [leistungsstufenPlugin],
+            plugins: [leistungsstufenPlugin, sparteZielPlugin],
             data: {
                 labels: ['Leben', 'Kranken', 'Schaden/Unfall'],
                 datasets: [
@@ -547,10 +742,10 @@
                     },
                     {
                         label: 'BGAV-Modell (AP+BP)',
-                        data: [results.bgav.leben.total, results.bgav.kranken.total, results.bgav.schaden.total],
-                        backgroundColor: 'rgba(0, 163, 224, 0.7)',
-                        borderColor: '#00A3E0',
-                        borderWidth: 1,
+                        data: bgavValues,
+                        backgroundColor: bgavBgColors,
+                        borderColor: bgavBorderColors,
+                        borderWidth: 2,
                         borderRadius: 6,
                         barPercentage: 0.4,
                         categoryPercentage: 0.7
@@ -573,7 +768,10 @@
                         }
                     },
                     leistungsstufenLines: {
-                        lines: lsLines
+                        lines: [] // Removed generic lines, using per-Sparte goals instead
+                    },
+                    sparteZielMarkers: {
+                        targets: sparteTargets
                     }
                 },
                 scales: {
@@ -605,6 +803,7 @@
         if (!grid) return;
 
         const stufe = getKarriereFactor();
+        const results = calculateProvisions();
         let html = '';
 
         karriereStufen.forEach(s => {
@@ -621,6 +820,36 @@
             </div>`;
         });
 
+        // Per-Sparte Ziele section
+        html += `<div class="bgav-ls-sparte-goals">`;
+        const sparteResults = {
+            leben:   results.bgav.leben.total,
+            kranken: results.bgav.kranken.total,
+            schaden: results.bgav.schaden.total
+        };
+
+        Object.keys(sparteZiele).forEach(key => {
+            const z = sparteZiele[key];
+            const current = sparteResults[key];
+            const reached = current >= z.ziel;
+            const pct = Math.min((current / z.ziel) * 100, 100);
+
+            html += `<div class="bgav-ls-sparte-card ${reached ? 'reached' : ''}">
+                <div class="sparte-goal-header">
+                    <span class="sparte-goal-name">${z.label}</span>
+                    <span class="sparte-goal-badge ${reached ? 'reached' : ''}">${reached ? '&#10003; Erreicht' : 'Offen'}</span>
+                </div>
+                <div class="sparte-goal-bar-track">
+                    <div class="sparte-goal-bar-fill ${reached ? 'reached' : ''}" style="width: ${pct}%"></div>
+                </div>
+                <div class="sparte-goal-values">
+                    <span>${formatEuro(current)}</span>
+                    <span>Ziel: ${formatEuro(z.ziel)}</span>
+                </div>
+            </div>`;
+        });
+        html += `</div>`;
+
         grid.innerHTML = html;
     }
 
@@ -632,6 +861,7 @@
         if (!canvas) return;
 
         if (window._bgav5YearChart) window._bgav5YearChart.destroy();
+        resetCanvas(canvas);
 
         const altTotal = results.alt.total;
         const bgavTotal = results.bgav.total;
@@ -743,6 +973,7 @@
         const canvas = document.getElementById('bgavUbVzChart');
         if (!canvas) return;
         if (window._bgavUbVzChart) window._bgavUbVzChart.destroy();
+        resetCanvas(canvas);
 
         window._bgavUbVzChart = new Chart(canvas.getContext('2d'), {
             type: 'bar',
@@ -779,6 +1010,7 @@
             if (!canvas) return;
             const key = '_bgav_' + cfg.id;
             if (window[key]) window[key].destroy();
+            resetCanvas(canvas);
 
             window[key] = new Chart(canvas.getContext('2d'), {
                 type: 'bar',
@@ -807,6 +1039,7 @@
         const aCanvas = document.getElementById('bgavUbChartAgentur');
         if (aCanvas) {
             if (window._bgavUbAgentur) window._bgavUbAgentur.destroy();
+            resetCanvas(aCanvas);
             window._bgavUbAgentur = new Chart(aCanvas.getContext('2d'), {
                 type: 'bar',
                 data: {
@@ -835,6 +1068,7 @@
         const canvas = document.getElementById('bgavUbChartZuschuesse');
         if (!canvas) return;
         if (window._bgavUbZusch) window._bgavUbZusch.destroy();
+        resetCanvas(canvas);
 
         window._bgavUbZusch = new Chart(canvas.getContext('2d'), {
             type: 'bar',

@@ -1117,7 +1117,8 @@
 }
 
 .bgav-ub-vz-chart {
-    flex: 1;
+    position: relative;
+    height: 160px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1202,6 +1203,8 @@
     border: 1px solid #e2e8f0;
     border-radius: 8px;
     padding: 14px;
+    position: relative;
+    overflow: hidden;
 }
 
 .bgav-ub-chart-title {
@@ -1217,7 +1220,16 @@
     gap: 12px;
 }
 
-.bgav-ub-chart-item { text-align: center; }
+.bgav-ub-chart-item {
+    text-align: center;
+    position: relative;
+    height: 170px;
+}
+
+.bgav-ub-chart-item canvas,
+.bgav-ub-chart-box canvas {
+    max-height: 100%;
+}
 
 .bgav-ub-chart-label {
     font-size: 11px;

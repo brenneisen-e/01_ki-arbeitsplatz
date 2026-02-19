@@ -252,7 +252,10 @@
     // ========================================
     // TAB NAVIGATION
     // ========================================
+    let bgavTabsInitialized = false;
     function setupBgavTabs() {
+        if (bgavTabsInitialized) return;
+        bgavTabsInitialized = true;
         document.querySelectorAll('.bgav-tab').forEach(tab => {
             tab.addEventListener('click', function() {
                 const target = this.dataset.tab;
@@ -274,8 +277,8 @@
         const activeContent = document.getElementById('bgavContent_' + tabName);
         if (activeContent) activeContent.classList.add('active');
 
-        // Render charts after tab is visible (Chart.js needs visible canvas)
-        if (tabName === 'uebersicht') {
+        // Render Übersicht charts only once (on first visit), not on every tab switch
+        if (tabName === 'uebersicht' && !window._bgavUbVzChart) {
             setTimeout(renderUebersichtTab, 50);
         }
         if (tabName === 'simulation') {
@@ -470,6 +473,18 @@
     // ========================================
     // CHART RENDERING
     // ========================================
+    // Helper: Reset canvas to original dimensions before Chart.js re-creates
+    function resetCanvas(canvas) {
+        // Remove inline styles that Chart.js adds (width/height)
+        canvas.style.width = '';
+        canvas.style.height = '';
+        // Restore original attribute dimensions
+        const origW = canvas.getAttribute('width');
+        const origH = canvas.getAttribute('height');
+        if (origW) canvas.width = parseInt(origW);
+        if (origH) canvas.height = parseInt(origH);
+    }
+
     // Leistungsstufen threshold plugin for Chart.js
     const leistungsstufenPlugin = {
         id: 'leistungsstufenLines',
@@ -513,6 +528,7 @@
         if (window._bgavSimChart) {
             window._bgavSimChart.destroy();
         }
+        resetCanvas(canvas);
 
         // Calculate max value for Leistungsstufen thresholds
         const maxVal = Math.max(
@@ -632,6 +648,7 @@
         if (!canvas) return;
 
         if (window._bgav5YearChart) window._bgav5YearChart.destroy();
+        resetCanvas(canvas);
 
         const altTotal = results.alt.total;
         const bgavTotal = results.bgav.total;
@@ -743,6 +760,7 @@
         const canvas = document.getElementById('bgavUbVzChart');
         if (!canvas) return;
         if (window._bgavUbVzChart) window._bgavUbVzChart.destroy();
+        resetCanvas(canvas);
 
         window._bgavUbVzChart = new Chart(canvas.getContext('2d'), {
             type: 'bar',
@@ -779,6 +797,7 @@
             if (!canvas) return;
             const key = '_bgav_' + cfg.id;
             if (window[key]) window[key].destroy();
+            resetCanvas(canvas);
 
             window[key] = new Chart(canvas.getContext('2d'), {
                 type: 'bar',
@@ -807,6 +826,7 @@
         const aCanvas = document.getElementById('bgavUbChartAgentur');
         if (aCanvas) {
             if (window._bgavUbAgentur) window._bgavUbAgentur.destroy();
+            resetCanvas(aCanvas);
             window._bgavUbAgentur = new Chart(aCanvas.getContext('2d'), {
                 type: 'bar',
                 data: {
@@ -835,6 +855,7 @@
         const canvas = document.getElementById('bgavUbChartZuschuesse');
         if (!canvas) return;
         if (window._bgavUbZusch) window._bgavUbZusch.destroy();
+        resetCanvas(canvas);
 
         window._bgavUbZusch = new Chart(canvas.getContext('2d'), {
             type: 'bar',

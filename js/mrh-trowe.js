@@ -1028,6 +1028,9 @@ function openMRHKundenDetail(kundeId) {
         previousViewBeforeKundenDetail = 'agentursicht';
     }
 
+    // Clean up any prior B2B/AO kundendetail state before applying MRH
+    if (typeof restoreAOKundenDetail === 'function') restoreAOKundenDetail();
+
     // Hide all pages
     ['landingPage','mainApp','potentialAnalysePage','agenturOverview'].forEach(function(id) {
         var el = document.getElementById(id);
@@ -1043,9 +1046,10 @@ function openMRHKundenDetail(kundeId) {
 
     fillMRHDetail(kunde);
 
-    document.dispatchEvent(new CustomEvent('viewChanged', { detail: { module: 'versicherung', view: 'kundendetail' } }));
+    // Update Page ID to A-10c (Kunden-Detail Gewerbe 360°)
+    document.dispatchEvent(new CustomEvent('viewChanged', { detail: { module: 'versicherung', view: 'kundendetail-mrh' } }));
 
-    // Update URL route to A-10c (Kunden-Detail Gewerbe)
+    // Update URL route to A-10c
     if (window.AppRouter) AppRouter.navigate('/kundendetail-gewerbe');
 }
 window.openMRHKundenDetail = openMRHKundenDetail;
@@ -1361,7 +1365,8 @@ function navigateToMRHTab(tabName) {
     var agenturOverview = document.getElementById('agenturOverview');
     if (agenturOverview) agenturOverview.style.display = 'block';
     showMRHTab(tabName);
-    document.dispatchEvent(new CustomEvent('viewChanged', { detail: { module: 'versicherung', view: 'agentursicht' } }));
+    document.dispatchEvent(new CustomEvent('viewChanged', { detail: { module: 'versicherung', view: 'agentursicht-mrh' } }));
+    if (window.AppRouter) AppRouter.navigate('/agentur-gewerbe');
 }
 window.navigateToMRHTab = navigateToMRHTab;
 

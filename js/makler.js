@@ -819,6 +819,9 @@ function openMaklerKundenDetail(kundeId) {
         previousViewBeforeKundenDetail = 'agentursicht';
     }
 
+    // Clean up any prior MRH kundendetail state before applying B2B
+    if (typeof restoreMRHKundenDetail === 'function') restoreMRHKundenDetail();
+
     // Hide all pages, show kundenDetailPage
     var agenturOverview = document.getElementById('agenturOverview');
     var kundenDetailPage = document.getElementById('kundenDetailPage');
@@ -839,10 +842,13 @@ function openMaklerKundenDetail(kundeId) {
 
     fillMaklerDetail(kunde);
 
-    // Dispatch event for Page ID Tracker
+    // Update Page ID to A-10b (Kunden-Detail B2B)
     document.dispatchEvent(new CustomEvent('viewChanged', {
-        detail: { module: 'versicherung', view: 'kundendetail' }
+        detail: { module: 'versicherung', view: 'kundendetail-b2b' }
     }));
+
+    // Update URL route to A-10b
+    if (window.AppRouter) AppRouter.navigate('/kundendetail-b2b');
 }
 window.openMaklerKundenDetail = openMaklerKundenDetail;
 
@@ -1152,13 +1158,14 @@ function restoreAOKundenDetail() {
 }
 window.restoreAOKundenDetail = restoreAOKundenDetail;
 
-// Navigate from A-10 back to A-02 Makler tab
+// Navigate from A-10b back to A-02b Makler tab
 function navigateToMaklerTab(tabName) {
     document.getElementById('kundenDetailPage').style.display = 'none';
     var agenturOverview = document.getElementById('agenturOverview');
     if (agenturOverview) agenturOverview.style.display = 'block';
     if (typeof showMaklerTab === 'function') showMaklerTab(tabName);
-    document.dispatchEvent(new CustomEvent('viewChanged', { detail: { module: 'versicherung', view: 'agentursicht' } }));
+    document.dispatchEvent(new CustomEvent('viewChanged', { detail: { module: 'versicherung', view: 'agentursicht-b2b' } }));
+    if (window.AppRouter) AppRouter.navigate('/agentur-b2b');
 }
 window.navigateToMaklerTab = navigateToMaklerTab;
 

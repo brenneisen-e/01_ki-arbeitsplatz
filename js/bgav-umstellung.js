@@ -1420,6 +1420,28 @@ Die Stufe basiert auf dem Gesamtproduktionsvolumen (Neugeschäft + Bestand) übe
             window.history.pushState({ view: 'bgav-umstellung' }, '', '#/bgav-umstellung');
         }
 
+        // Chat-Widget automatisch aufklappen
+        setTimeout(() => {
+            const widget = document.getElementById('bgavChatWidget');
+            const toggle = document.getElementById('bgavChatToggle');
+            const input = document.getElementById('bgavChatInput');
+            if (widget) {
+                widget.classList.remove('hidden');
+                if (toggle) toggle.style.display = 'none';
+                if (input) input.focus();
+                // Welcome-Nachricht falls noch keine Nachrichten
+                if (bgavState.chatMessages.length === 0) {
+                    addBgavChatMessage('bot', `Willkommen zum **BGAV-Umstellungsassistenten**! Ich kann Ihnen bei Fragen zur Vertragsumstellung auf das neue Provisionsmodell BGAV helfen.\n\nWorüber möchten Sie mehr erfahren?`);
+                    addBgavChatSuggestions([
+                        'Wie ändert sich meine Provision?',
+                        'Was ist der Blindpool?',
+                        'Zeitplan der Umstellung',
+                        'ICM2026 Status'
+                    ]);
+                }
+            }
+        }, 100);
+
         setTimeout(() => {
             if (typeof PageIDTracker !== 'undefined') {
                 PageIDTracker.setPageId('A-12');

@@ -608,7 +608,7 @@
     // Multi-level Leistungsstufen plugin – draws multiple LS lines per chart
     const lsLinesPlugin = {
         id: 'lsLines',
-        afterDraw(chart) {
+        beforeDatasetsDraw(chart) {
             const cfg = chart.options.plugins.lsLines;
             if (!cfg || !cfg.levels) return;
 
@@ -631,12 +631,12 @@
                 ctx.stroke();
                 ctx.setLineDash([]);
 
-                // LS label on left side above line
-                ctx.font = 'bold 10px system-ui, sans-serif';
-                ctx.textAlign = 'left';
+                // LS label on right side above line
+                ctx.font = 'bold 11px system-ui, sans-serif';
+                ctx.textAlign = 'right';
                 ctx.textBaseline = 'bottom';
                 ctx.fillStyle = reached ? level.color : '#94a3b8';
-                ctx.fillText(level.label + ' ' + formatEuro(level.min), left + 3, yPos - 4);
+                ctx.fillText(level.label + ' ' + formatEuro(level.min), right - 4, yPos - 5);
             });
 
             ctx.restore();
@@ -1210,7 +1210,7 @@ Die Stufe basiert auf dem Gesamtproduktionsvolumen (Neugeschäft + Bestand) übe
 
             // Initial welcome message
             if (bgavState.chatMessages.length === 0) {
-                addBgavChatMessage('bot', `Willkommen zum **BGAV-Umstellungsassistenten**! Ich kann Ihnen bei Fragen zur Vertragsumstellung auf das neue Provisionsmodell BGAV helfen.\n\nWorüber möchten Sie mehr erfahren?`);
+                addBgavChatMessage('bot welcome', `Willkommen zum **BGAV-Umstellungsassistenten**! Ich kann Ihnen bei Fragen zur Vertragsumstellung auf das neue Provisionsmodell BGAV helfen.\n\nWorüber möchten Sie mehr erfahren?`);
                 addBgavChatSuggestions([
                     'Wie ändert sich meine Provision?',
                     'Was ist der Blindpool?',
@@ -1342,16 +1342,16 @@ Die Stufe basiert auf dem Gesamtproduktionsvolumen (Neugeschäft + Bestand) übe
         backgroundColor: '#0C2340',
         titleColor: '#fff',
         bodyColor: '#e2e8f0',
-        borderColor: 'rgba(0, 163, 224, 0.3)',
-        borderWidth: 1,
-        cornerRadius: 8,
-        padding: 12,
-        titleFont: { size: 13, weight: '700' },
-        bodyFont: { size: 13, weight: '500' },
+        borderColor: 'rgba(0, 163, 224, 0.5)',
+        borderWidth: 2,
+        cornerRadius: 10,
+        padding: 18,
+        titleFont: { size: 16, weight: '700' },
+        bodyFont: { size: 15, weight: '500' },
         displayColors: true,
-        boxPadding: 4,
-        caretSize: 6,
-        caretPadding: 8
+        boxPadding: 6,
+        caretSize: 10,
+        caretPadding: 12
     };
 
     // ========================================

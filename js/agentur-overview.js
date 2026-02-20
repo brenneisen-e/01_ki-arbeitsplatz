@@ -75,27 +75,25 @@ function loadAgenturData(vermittlerId) {
     const agentur = agenturen.find(a => a.id === vermittlerId);
 
     if (!agentur) {
-        console.error('Agentur nicht gefunden:', vermittlerId);
-        alert('Agentur nicht gefunden: ' + vermittlerId);
-        backFromAgentur();
-        return;
+        console.warn('Agentur nicht gefunden:', vermittlerId, '— View-Mode wird trotzdem angewendet');
+        // Kein alert/backFromAgentur — MRH/B2B Modi haben eigene Mock-Daten
+    } else {
+        // Hole detaillierte Daten
+        const agenturData = typeof getAgenturData === 'function' ? getAgenturData(vermittlerId) : null;
+
+        console.log('Agentur gefunden:', agentur);
+        console.log('Agentur Daten:', agenturData);
+
+        // Fülle alle Bereiche
+        fillHeader(agentur, agenturData);
+        fillCockpitKPIs(agenturData);
+        fillStammdaten(agentur, agenturData);
+        fillNeugeschaeftTab(agenturData);
+        fillBestandTab(agenturData);
+        fillStornoTab(agenturData);
+        fillProvisionTab(agenturData);
+        fillQualitaetTab(agenturData);
     }
-
-    // Hole detaillierte Daten
-    const agenturData = typeof getAgenturData === 'function' ? getAgenturData(vermittlerId) : null;
-
-    console.log('Agentur gefunden:', agentur);
-    console.log('Agentur Daten:', agenturData);
-
-    // Fülle alle Bereiche
-    fillHeader(agentur, agenturData);
-    fillCockpitKPIs(agenturData);
-    fillStammdaten(agentur, agenturData);
-    fillNeugeschaeftTab(agenturData);
-    fillBestandTab(agenturData);
-    fillStornoTab(agenturData);
-    fillProvisionTab(agenturData);
-    fillQualitaetTab(agenturData);
 
     // Zeige Übersicht-Tab als ersten Tab und wende View-Mode an
     if (typeof viewMode !== 'undefined') {

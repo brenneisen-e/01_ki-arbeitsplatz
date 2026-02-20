@@ -588,7 +588,7 @@ function initLandingChat() {
 }
 
 // ========================================
-// GOOGLE CLOUD SPEECH-TO-TEXT
+// GOOGLE CLOUD SPEECH-TO-TEXT (kept for settings compatibility)
 // ========================================
 function getSpeechApiKey() {
     return localStorage.getItem('google_speech_api_key') || '';
@@ -610,167 +610,14 @@ function saveSpeechApiKey() {
     }
 }
 
-let mediaRecorder = null;
-let audioChunks = [];
-let cloudAudioCtx = null;
-let isStopped = false;
-
-// Helper: Blob → Base64 (chunk-safe)
-async function blobToBase64(blob) {
-    const buf = await blob.arrayBuffer();
-    const bytes = new Uint8Array(buf);
-    let binary = '';
-    for (let i = 0; i < bytes.length; i += 8192) {
-        binary += String.fromCharCode.apply(null, bytes.subarray(i, i + 8192));
-    }
-    return btoa(binary);
-}
-
-// Helper: Audio-Blob an Google STT senden, Transkript zurückgeben
-async function transcribeBlob(blob) {
-    const base64 = await blobToBase64(blob);
-    const res = await fetch('https://speech.googleapis.com/v1/speech:recognize?key=' + getSpeechApiKey(), {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            config: {
-                encoding: 'WEBM_OPUS',
-                sampleRateHertz: 48000,
-                languageCode: 'de-DE',
-                model: 'latest_long',
-                enableAutomaticPunctuation: true
-            },
-            audio: { content: base64 }
-        })
-    });
-    const data = await res.json();
-    return (data.results || []).map(r => r.alternatives && r.alternatives[0] ? r.alternatives[0].transcript : '').filter(Boolean).join(' ');
-}
-
-function startCloudRecording(micBtn, chatInput) {
-    navigator.mediaDevices.getUserMedia({ audio: { sampleRate: 48000, channelCount: 1 } })
-        .then(stream => {
-            isStopped = false;
-
-            audioChunks = [];
-            const mimeType = MediaRecorder.isTypeSupported('audio/webm;codecs=opus') ? 'audio/webm;codecs=opus' : 'audio/webm';
-            mediaRecorder = new MediaRecorder(stream, { mimeType: mimeType });
-
-            // --- Silence Detection via Web Audio API ---
-            cloudAudioCtx = new AudioContext();
-            const source = cloudAudioCtx.createMediaStreamSource(stream);
-            const analyser = cloudAudioCtx.createAnalyser();
-            analyser.fftSize = 512;
-            source.connect(analyser);
-            const dataArray = new Uint8Array(analyser.frequencyBinCount);
-
-            let hasSpoken = false;
-            let silenceStart = null;
-            const SILENCE_THRESHOLD = 8;
-            const SILENCE_DURATION = 1000; // 1s Stille → Auto-Stop
-
-            function checkSilence() {
-                if (isStopped) return;
-                analyser.getByteTimeDomainData(dataArray);
-                let sum = 0;
-                for (let i = 0; i < dataArray.length; i++) {
-                    const val = (dataArray[i] - 128) / 128;
-                    sum += val * val;
-                }
-                const rms = Math.sqrt(sum / dataArray.length) * 100;
-
-                if (rms >= SILENCE_THRESHOLD) {
-                    hasSpoken = true;
-                    silenceStart = null;
-                } else if (hasSpoken) {
-                    if (!silenceStart) silenceStart = Date.now();
-                    if (Date.now() - silenceStart >= SILENCE_DURATION) {
-                        // 1s Stille → automatisch stoppen
-                        isStopped = true;
-                        if (mediaRecorder.state === 'recording') mediaRecorder.stop();
-                        try { cloudAudioCtx.close(); } catch(_) {}
-                        return;
-                    }
-                }
-                requestAnimationFrame(checkSilence);
-            }
-            setTimeout(() => requestAnimationFrame(checkSilence), 300);
-
-            // --- Interim Live-Transkription ---
-            let interimBusy = false;
-
-            mediaRecorder.ondataavailable = async (e) => {
-                if (e.data.size > 0) audioChunks.push(e.data);
-
-                // Keine Interim-Requests wenn gestoppt oder bereits in-flight
-                if (isStopped || interimBusy) return;
-                interimBusy = true;
-
-                try {
-                    const blob = new Blob(audioChunks, { type: 'audio/webm;codecs=opus' });
-                    const transcript = await transcribeBlob(blob);
-                    if (transcript && !isStopped && chatInput) {
-                        chatInput.value = transcript;
-                        chatInput.style.height = 'auto';
-                        chatInput.style.height = chatInput.scrollHeight + 'px';
-                    }
-                } catch (err) {
-                    console.error('Interim STT Fehler:', err);
-                }
-                interimBusy = false;
-            };
-
-            // --- Finales Ergebnis bei Stop ---
-            mediaRecorder.onstop = async () => {
-                stream.getTracks().forEach(t => t.stop());
-                try { cloudAudioCtx.close(); } catch(_) {}
-
-                const blob = new Blob(audioChunks, { type: 'audio/webm;codecs=opus' });
-                if (blob.size === 0) { stopRecordingUI(); return; }
-
-                // Interim-Text bleibt sichtbar während finaler Request läuft
-
-                try {
-                    const transcript = await transcribeBlob(blob);
-                    // Festen Text setzen und senden
-                    const hasText = (transcript && transcript.trim()) || (chatInput && chatInput.value.trim());
-                    if (chatInput) {
-                        chatInput.value = hasText ? 'Hey, zeig meine Vertriebspotentiale in meiner Agentur' : '';
-                        chatInput.style.height = 'auto';
-                        chatInput.style.height = chatInput.scrollHeight + 'px';
-                    }
-                    stopRecordingUI();
-                    if (hasText) {
-                        setTimeout(() => { sendLandingChatMessage(); }, 300);
-                    }
-                } catch (err) {
-                    console.error('Final STT Fehler:', err);
-                    const fallback = chatInput ? chatInput.value.trim() : '';
-                    if (chatInput && fallback) {
-                        chatInput.value = 'Hey, zeig meine Vertriebspotentiale in meiner Agentur';
-                    }
-                    stopRecordingUI();
-                    if (fallback) {
-                        setTimeout(() => { sendLandingChatMessage(); }, 300);
-                    }
-                }
-            };
-
-            // 500ms Timeslice → alle 0,5s wird ondataavailable gefeuert
-            mediaRecorder.start(500);
-        })
-        .catch(err => {
-            console.warn('Mikrofon-Zugriff verweigert:', err.message);
-            stopRecordingUI();
-            runDemoVoiceInput();
-        });
-}
-
 // ========================================
-// VOICE INPUT (Microphone Button)
+// VOICE INPUT (Microphone Button) — Simuliert (wie eikecase Intro.jsx)
+// Kein echtes Mikrofon nötig. Komplett gescriptete Sequenz.
 // ========================================
-let voiceRecognition = null;
 let isRecording = false;
+
+const FAKE_INTERIM_TEXT = 'hey, zeig meine';
+const FAKE_FULL_TEXT = 'Hey, zeig meine Vertriebspotentiale in meiner Agentur';
 
 function stopRecordingUI() {
     const micBtn = document.getElementById('landingChatMic');
@@ -784,139 +631,47 @@ function stopRecordingUI() {
     }
 }
 
-function runDemoVoiceInput() {
-    const micBtn = document.getElementById('landingChatMic');
-    const chatInput = document.getElementById('landingChatInput');
-    if (micBtn) micBtn.classList.add('recording');
-    isRecording = true;
-    if (chatInput) { chatInput.readOnly = true; chatInput.style.borderColor = '#ef4444'; chatInput.value = ''; }
-    const demoText = 'Hey, zeig meine Vertriebspotentiale in meiner Agentur';
-    let charIndex = 0;
-
-    // Wait 1.5s simulating "listening", then gradually type text
-    setTimeout(() => {
-        const typeInterval = setInterval(() => {
-            if (!isRecording) { clearInterval(typeInterval); return; }
-            if (charIndex < demoText.length) {
-                chatInput.value = demoText.substring(0, charIndex + 1);
-                chatInput.style.height = 'auto';
-                chatInput.style.height = chatInput.scrollHeight + 'px';
-                charIndex++;
-            } else {
-                clearInterval(typeInterval);
-                stopRecordingUI();
-                setTimeout(() => { sendLandingChatMessage(); }, 300);
-            }
-        }, 65);
-    }, 1500);
-}
-
 function toggleVoiceInput() {
+    if (isRecording) return; // Während Aufnahme ignorieren
+
     const micBtn = document.getElementById('landingChatMic');
     const chatInput = document.getElementById('landingChatInput');
 
-    if (isRecording) {
-        // Cloud Recording: manuell stoppen → löst mediaRecorder.onstop aus (finaler Google Cloud Request + Auto-Send)
-        if (mediaRecorder && mediaRecorder.state === 'recording') {
-            isStopped = true;
-            mediaRecorder.stop();
-            try { if (cloudAudioCtx) cloudAudioCtx.close(); } catch(_) {}
-            return;
-        }
-        if (voiceRecognition) voiceRecognition.stop();
-        stopRecordingUI();
-        return;
-    }
-
-    // Sofort visuelles Feedback (rot) BEVOR getUserMedia
+    // Sofort: Recording starten, Input leeren
     isRecording = true;
     if (micBtn) micBtn.classList.add('recording');
-    if (chatInput) { chatInput.readOnly = true; chatInput.style.borderColor = '#ef4444'; chatInput.value = ''; chatInput.placeholder = 'Höre zu...'; }
-
-    // Google Cloud Speech-to-Text wenn API Key vorhanden
-    if (getSpeechApiKey()) {
-        startCloudRecording(micBtn, chatInput);
-        return;
+    if (chatInput) {
+        chatInput.readOnly = true;
+        chatInput.style.borderColor = '#ef4444';
+        chatInput.value = '';
+        chatInput.placeholder = 'Höre zu...';
     }
 
-    // Fallback: Browser Speech API
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SpeechRecognition) {
-        runDemoVoiceInput();
-        return;
-    }
-
-    navigator.mediaDevices.getUserMedia({ audio: true })
-        .then(stream => {
-            stream.getTracks().forEach(track => track.stop());
-            startSpeechRecognition(micBtn, chatInput);
-        })
-        .catch(err => {
-            console.warn('Mikrofon-Zugriff verweigert:', err.message);
-            // Berechtigung verweigert → Demo-Fallback
-            runDemoVoiceInput();
-        });
-}
-
-let speechSendTimer = null;
-
-function startSpeechRecognition(micBtn, chatInput) {
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    voiceRecognition = new SpeechRecognition();
-    voiceRecognition.lang = 'de-DE';
-    voiceRecognition.continuous = true;
-    voiceRecognition.interimResults = true;
-
-    voiceRecognition.onstart = () => {
-        isRecording = true;
-        if (micBtn) micBtn.classList.add('recording');
-        if (chatInput) { chatInput.readOnly = true; chatInput.style.borderColor = '#ef4444'; }
-    };
-
-    voiceRecognition.onresult = (event) => {
-        // Alle Ergebnisse zusammenbauen (interim + final)
-        let transcript = '';
-        for (let i = 0; i < event.results.length; i++) {
-            transcript += event.results[i][0].transcript;
-        }
+    // Nach 3s: Zwischentext erscheint (simulierte Live-Transkription)
+    setTimeout(() => {
+        if (!isRecording) return;
         if (chatInput) {
-            chatInput.value = transcript;
+            chatInput.value = FAKE_INTERIM_TEXT;
             chatInput.style.height = 'auto';
             chatInput.style.height = chatInput.scrollHeight + 'px';
         }
+    }, 3000);
 
-        // Debounce: nach 1s Stille automatisch absenden
-        if (speechSendTimer) clearTimeout(speechSendTimer);
-        speechSendTimer = setTimeout(() => {
-            if (isRecording && chatInput && chatInput.value.trim()) {
-                stopRecordingUI();
-                if (voiceRecognition) { voiceRecognition.stop(); voiceRecognition = null; }
-                setTimeout(() => { sendLandingChatMessage(); }, 300);
-            }
-        }, 1000);
-    };
-
-    voiceRecognition.onend = () => {
-        // continuous mode kann unerwartet enden - nicht sofort senden
+    // Nach 4.5s: Voller Text + Recording stoppt
+    setTimeout(() => {
         if (!isRecording) return;
-        // Warte noch kurz ob der Timer schon senden will
-        if (!speechSendTimer && chatInput && chatInput.value.trim()) {
-            stopRecordingUI();
-            setTimeout(() => { sendLandingChatMessage(); }, 300);
+        if (chatInput) {
+            chatInput.value = FAKE_FULL_TEXT;
+            chatInput.style.height = 'auto';
+            chatInput.style.height = chatInput.scrollHeight + 'px';
         }
-    };
-
-    voiceRecognition.onerror = (event) => {
-        console.warn('Speech recognition error:', event.error);
-        if (speechSendTimer) { clearTimeout(speechSendTimer); speechSendTimer = null; }
         stopRecordingUI();
-        voiceRecognition = null;
-        if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
-            runDemoVoiceInput();
-        }
-    };
+    }, 4500);
 
-    voiceRecognition.start();
+    // Nach 5s: Auto-Submit
+    setTimeout(() => {
+        sendLandingChatMessage();
+    }, 5000);
 }
 
 // ========================================
@@ -926,6 +681,18 @@ function openKundenDetailDualView(kundenName, vermittlerId) {
     // Track that we came from landing (M-01 chat)
     if (typeof previousViewBeforeKundenDetail !== 'undefined') {
         previousViewBeforeKundenDetail = 'landing';
+    }
+
+    // Sicherstellen, dass der A-02 Header "Max Mustermann" zeigt (nicht Makler-Header),
+    // da updateKundenSharedHeader() diese Werte auf A-10 kopiert.
+    var titleEl = document.getElementById('agenturPageTitle');
+    var subtitleId = document.getElementById('agenturIdHeader');
+    if (titleEl) titleEl.textContent = 'Agentur: Max Mustermann';
+    if (subtitleId) {
+        var subtitleDiv = subtitleId.parentElement;
+        if (subtitleDiv) {
+            subtitleDiv.innerHTML = '<span id="agenturIdHeader">VM00001</span> | <span id="agenturStatusHeader">Aktiv</span>';
+        }
     }
 
     // Open customer detail page normally
@@ -2568,28 +2335,16 @@ function openAgenturView() {
 
     // Prüfe ob Daten vorhanden sind
     const rawData = window.dailyRawData || (typeof dailyRawData !== 'undefined' ? dailyRawData : null);
+    const agenturen = (rawData && rawData.length > 0 && typeof getAgenturen === 'function') ? getAgenturen() : [];
 
-    if (!rawData || rawData.length === 0) {
-        // Keine Daten - zeige Hinweis
-        addLandingChatMessage('assistant', '⚠️ **Bitte lade zuerst Daten hoch.**\n\nUm die Agenturansicht zu nutzen, benötigst du CSV-Daten mit Vermittler-Informationen.\n\nKlicke auf "Settings" und dann auf "CSV Upload" oder "Test-Daten generieren".');
-        return;
-    }
-
-    // Daten vorhanden - zeige erste Agentur oder lass User wählen
-    const agenturen = typeof getAgenturen === 'function' ? getAgenturen() : [];
-
-    if (agenturen.length > 0) {
-        // Zeige erste Agentur
-        const firstAgentur = agenturen[0];
-        if (typeof showAgenturOverview === 'function') {
-            showAgenturOverview(firstAgentur.id);
-        } else {
-            // Fallback: Öffne Dashboard mit Agentur-Filter
-            setAgenturFilter(firstAgentur.id);
-            openDashboard();
-        }
+    if (agenturen.length > 0 && typeof showAgenturOverview === 'function') {
+        // CSV-Daten vorhanden - zeige erste Agentur
+        showAgenturOverview(agenturen[0].id);
+    } else if (typeof showAgenturOverview === 'function') {
+        // Keine CSV-Daten — trotzdem navigieren (MRH/B2B haben eigene Mock-Daten)
+        showAgenturOverview('DEMO-001');
     } else {
-        addLandingChatMessage('assistant', '⚠️ Keine Agenturen in den Daten gefunden. Bitte überprüfe deine CSV-Datei.');
+        addLandingChatMessage('assistant', '⚠️ Agenturansicht konnte nicht geladen werden.');
     }
 }
 

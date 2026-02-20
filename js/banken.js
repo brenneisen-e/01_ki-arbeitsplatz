@@ -1314,6 +1314,13 @@ function switchModule(moduleName) {
         loadBankenModule();
     }
 
+    // Load Asset Management module dynamically when first accessed
+    if (moduleName === 'asset') {
+        if (typeof openAssetManagement === 'function') {
+            openAssetManagement();
+        }
+    }
+
     // Dispatch event for Page ID Tracker
     document.dispatchEvent(new CustomEvent('moduleChanged', {
         detail: { module: moduleName }
@@ -1322,6 +1329,8 @@ function switchModule(moduleName) {
     // Update URL route
     if (window.AppRouter && moduleName === 'banken') {
         AppRouter.navigate('/banken');
+    } else if (window.AppRouter && moduleName === 'asset') {
+        AppRouter.navigate('/asset-management');
     } else if (window.AppRouter && moduleName === 'versicherung') {
         AppRouter.navigate('/landing');
     }

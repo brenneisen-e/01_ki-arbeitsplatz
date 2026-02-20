@@ -1691,8 +1691,8 @@
     position: fixed;
     bottom: 24px;
     right: 24px;
-    width: 420px;
-    height: 520px;
+    width: 630px;
+    height: 780px;
     background: white;
     border-radius: 20px;
     box-shadow: 0 20px 60px rgba(0,0,0,0.2);
@@ -1712,9 +1712,9 @@
 }
 
 .bgav-chat-header {
-    background: linear-gradient(135deg, #0C2340 0%, #1a4a7a 100%);
+    background: linear-gradient(135deg, #00A3E0 0%, #0077B6 100%);
     color: white;
-    padding: 18px 20px;
+    padding: 22px 24px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -1739,13 +1739,13 @@
 }
 
 .bgav-chat-header-info h4 {
-    font-size: 20px;
+    font-size: 24px;
     font-weight: 700;
     margin: 0;
 }
 
 .bgav-chat-header-info span {
-    font-size: 14px;
+    font-size: 16px;
     opacity: 0.8;
 }
 
@@ -1771,19 +1771,26 @@
 .bgav-chat-body {
     flex: 1;
     overflow-y: auto;
-    padding: 16px;
+    padding: 20px;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 14px;
 }
 
 .bgav-chat-msg {
     max-width: 85%;
-    padding: 12px 16px;
+    padding: 14px 18px;
     border-radius: 14px;
-    font-size: 13px;
+    font-size: 15px;
     line-height: 1.6;
     animation: msgSlideIn 0.3s ease;
+}
+
+.bgav-chat-msg.welcome {
+    font-size: 26px;
+    line-height: 1.5;
+    padding: 20px 24px;
+    max-width: 95%;
 }
 
 @keyframes msgSlideIn {
@@ -1815,9 +1822,9 @@
 .bgav-chat-suggestions button {
     background: white;
     border: 1px solid #e2e8f0;
-    padding: 6px 12px;
-    border-radius: 8px;
-    font-size: 11px;
+    padding: 10px 16px;
+    border-radius: 10px;
+    font-size: 14px;
     cursor: pointer;
     transition: all 0.2s;
     color: #0C2340;
@@ -1831,10 +1838,10 @@
 }
 
 .bgav-chat-footer {
-    padding: 12px 16px;
+    padding: 16px 20px;
     border-top: 1px solid #e2e8f0;
     display: flex;
-    gap: 8px;
+    gap: 10px;
     flex-shrink: 0;
 }
 
@@ -1842,8 +1849,8 @@
     flex: 1;
     border: 2px solid #e2e8f0;
     border-radius: 12px;
-    padding: 10px 16px;
-    font-size: 13px;
+    padding: 14px 18px;
+    font-size: 15px;
     outline: none;
     transition: border-color 0.2s;
     font-family: inherit;
@@ -1858,8 +1865,8 @@
     background: linear-gradient(135deg, #0C2340, #1a4a7a);
     color: white;
     border: none;
-    width: 42px;
-    height: 42px;
+    width: 50px;
+    height: 50px;
     border-radius: 12px;
     cursor: pointer;
     transition: all 0.2s;
@@ -2105,5 +2112,5 @@
     .bgav-two-col { grid-template-columns: 1fr; }
     .bgav-three-col { grid-template-columns: 1fr; }
     .bgav-roadmap { grid-template-columns: 1fr; }
-    .bgav-chat-widget { width: calc(100% - 32px); right: 16px; bottom: 16px; }
+    .bgav-chat-widget { width: calc(100% - 32px); max-height: 85vh; right: 16px; bottom: 16px; }
 }

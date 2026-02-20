@@ -245,25 +245,23 @@
     // VERMITTLER PHOTO COPY
     // ========================================
     function copyVermittlerPhoto() {
+        const photoSrc = 'AdobeStock_624564221.jpeg';
+
         // Copy to header bar
-        const sourceImg = document.getElementById('agenturPhotoImgSmall');
         const targetImg = document.getElementById('bgavVermittlerPhoto');
         const targetPlaceholder = document.getElementById('bgavVermittlerPhotoPlaceholder');
 
-        if (sourceImg && sourceImg.style.display !== 'none' && sourceImg.src) {
-            if (targetImg) {
-                targetImg.src = sourceImg.src;
-                targetImg.style.display = 'block';
-            }
-            if (targetPlaceholder) {
-                targetPlaceholder.style.display = 'none';
-            }
+        if (targetImg) {
+            targetImg.src = photoSrc;
+            targetImg.style.display = 'block';
+        }
+        if (targetPlaceholder) {
+            targetPlaceholder.style.display = 'none';
         }
 
-        // Copy to simulation Stammdaten sidebar (use Peter Schmidt photo from A-10)
+        // Copy to simulation Stammdaten sidebar
         const simPhoto = document.getElementById('bgavSimPhoto');
         const simPlaceholder = document.getElementById('bgavSimPhotoPlaceholder');
-        const photoSrc = 'AdobeStock_624564221.jpeg';
 
         if (simPhoto) {
             simPhoto.src = photoSrc;

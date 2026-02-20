@@ -1787,10 +1787,10 @@
 }
 
 .bgav-chat-msg.welcome {
-    font-size: 26px;
-    line-height: 1.5;
-    padding: 20px 24px;
-    max-width: 95%;
+    font-size: 36px;
+    line-height: 1.45;
+    padding: 28px 32px;
+    max-width: 100%;
 }
 
 @keyframes msgSlideIn {

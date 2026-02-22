@@ -2478,6 +2478,12 @@ async function openRisikoscoring() {
         bankenModule.style.display = 'none';
     }
 
+    // Hide asset module if visible
+    const assetModuleRS = document.getElementById('assetModule');
+    if (assetModuleRS) {
+        assetModuleRS.style.display = 'none';
+    }
+
     // Hide CV Scanner if visible
     const cvModule = document.getElementById('cvScannerModule');
     if (cvModule) {
@@ -2636,6 +2642,11 @@ async function openBestandsuebertragung() {
         bankenModule.style.display = 'none';
     }
 
+    const assetModuleBU = document.getElementById('assetModule');
+    if (assetModuleBU) {
+        assetModuleBU.style.display = 'none';
+    }
+
     const rsModule = document.getElementById('risikoscoringModule');
     if (rsModule) {
         rsModule.style.display = 'none';
@@ -2733,6 +2744,11 @@ function closeBestandsuebertragung() {
     const bankenModule = document.getElementById('bankenModule');
     if (bankenModule) {
         bankenModule.style.display = 'none';
+    }
+
+    const assetModuleCB = document.getElementById('assetModule');
+    if (assetModuleCB) {
+        assetModuleCB.style.display = 'none';
     }
 
     const risikoscoringModule = document.getElementById('risikoscoringModule');
@@ -2852,6 +2868,11 @@ async function openPMOToolbox() {
         bankenModule.style.display = 'none';
     }
 
+    const assetModulePMO = document.getElementById('assetModule');
+    if (assetModulePMO) {
+        assetModulePMO.style.display = 'none';
+    }
+
     const rsModule = document.getElementById('risikoscoringModule');
     if (rsModule) {
         rsModule.style.display = 'none';
@@ -2940,6 +2961,11 @@ function closePMOToolbox() {
     const bankenModule = document.getElementById('bankenModule');
     if (bankenModule) {
         bankenModule.style.display = 'none';
+    }
+
+    const assetModuleCP = document.getElementById('assetModule');
+    if (assetModuleCP) {
+        assetModuleCP.style.display = 'none';
     }
 
     const risikoscoringModule = document.getElementById('risikoscoringModule');

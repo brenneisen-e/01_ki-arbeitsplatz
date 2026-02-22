@@ -516,6 +516,29 @@ function backToLanding() {
     if (kundenDetailPage) kundenDetailPage.style.display = 'none';
     if (billingCheckPage) billingCheckPage.style.display = 'none';
 
+    // Asset Management Module verstecken
+    const assetModule = document.getElementById('assetModule');
+    if (assetModule) {
+        assetModule.style.display = 'none';
+        assetModule.classList.remove('active');
+    }
+
+    // Alle Module-Contents deaktivieren und Versicherung reaktivieren
+    document.querySelectorAll('.module-content').forEach(function(el) {
+        el.classList.remove('active');
+    });
+    const versicherungModule = document.getElementById('versicherungModule');
+    if (versicherungModule) versicherungModule.classList.add('active');
+
+    // Module-Tabs zurücksetzen
+    document.querySelectorAll('.module-tab').forEach(function(tab) {
+        tab.classList.remove('active');
+        if (tab.dataset.module === 'versicherung') tab.classList.add('active');
+    });
+
+    // localStorage zurücksetzen damit beim Reload nicht Asset Management öffnet
+    localStorage.setItem('currentModule', 'versicherung');
+
     // BGAV page verstecken
     const bgavPage = document.getElementById('bgavUmstellungPage');
     if (bgavPage) bgavPage.style.display = 'none';

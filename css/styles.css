@@ -2698,6 +2698,46 @@ select:focus, .dropdown-button:focus {
 }
 
 /* ========================================
+   SCREENSHOT BUTTON (fixed, unten rechts)
+   ======================================== */
+
+#screenshotBtn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 10001;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(100, 116, 139, 0.15);
+    color: rgba(71, 85, 105, 0.6);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+#screenshotBtn:hover {
+    background: rgba(100, 116, 139, 0.3);
+    color: rgba(71, 85, 105, 0.9);
+    transform: scale(1.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+#screenshotBtn svg {
+    width: 18px;
+    height: 18px;
+}
+
+#screenshotBtn.taking {
+    transform: scale(0.9);
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+/* ========================================
    v18.3: Landing Page Verbesserungen
    ======================================== */
 

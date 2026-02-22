@@ -1,35 +1,32 @@
 /* ========================================
    ASSET MANAGEMENT MODULE
    Portfolio Management Dashboard
-   Dark Finance Terminal Theme
+   Light Theme (matching other modules)
    ======================================== */
-
-/* Google Fonts Import */
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
 
 /* ========================================
-   CSS VARIABLES
+   CSS VARIABLES (scoped to #assetModule)
    ======================================== */
-:root {
-    --am-bg-primary: #0F1117;
-    --am-bg-secondary: #1A1D27;
-    --am-bg-card: #252836;
-    --am-bg-hover: #2A2D3A;
-    --am-bg-input: #1E2030;
-    --am-border: #2E3142;
-    --am-border-light: #383B4E;
-    --am-text-primary: #E8E9ED;
-    --am-text-secondary: #9DA0AE;
-    --am-text-muted: #6B6E7D;
+#assetModule {
+    --am-bg-primary: #f8fafc;
+    --am-bg-secondary: #ffffff;
+    --am-bg-card: #f1f5f9;
+    --am-bg-hover: #e2e8f0;
+    --am-bg-input: #ffffff;
+    --am-border: #e2e8f0;
+    --am-border-light: #cbd5e1;
+    --am-text-primary: #1e293b;
+    --am-text-secondary: #64748b;
+    --am-text-muted: #94a3b8;
     --am-accent-blue: #3B82F6;
-    --am-accent-cyan: #06B6D4;
-    --am-accent-green: #10B981;
-    --am-accent-amber: #F59E0B;
-    --am-accent-red: #EF4444;
-    --am-accent-orange: #F97316;
-    --am-font-body: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    --am-accent-cyan: #0891B2;
+    --am-accent-green: #059669;
+    --am-accent-amber: #D97706;
+    --am-accent-red: #DC2626;
+    --am-accent-orange: #EA580C;
+    --am-font-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     --am-font-mono: 'IBM Plex Mono', 'Consolas', monospace;
-    --am-row-height: 34px;
+    --am-row-height: 38px;
     --am-font-size-xs: 11px;
     --am-font-size-sm: 12px;
     --am-font-size-base: 13px;
@@ -49,8 +46,11 @@
     font-family: var(--am-font-body);
     font-size: var(--am-font-size-base);
     min-height: 100vh;
-    display: flex;
     flex-direction: column;
+}
+
+#assetModule.active {
+    display: flex;
 }
 
 #assetModule * {
@@ -71,10 +71,10 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 16px;
-    height: 44px;
-    background: var(--am-bg-secondary);
-    border-bottom: 1px solid var(--am-border);
+    padding: 0 32px;
+    height: 52px;
+    background: #2d5016;
+    border-bottom: none;
     flex-shrink: 0;
 }
 
@@ -87,7 +87,7 @@
 .am-logo {
     font-size: var(--am-font-size-lg);
     font-weight: 600;
-    color: var(--am-text-primary);
+    color: #ffffff;
     letter-spacing: -0.3px;
     display: flex;
     align-items: center;
@@ -95,27 +95,32 @@
 }
 
 .am-logo svg {
-    color: var(--am-accent-blue);
+    color: #86BC25;
 }
 
 .am-header-select {
-    background: var(--am-bg-input);
-    border: 1px solid var(--am-border);
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.25);
     border-radius: 4px;
-    color: var(--am-text-primary);
+    color: #ffffff;
     font-family: var(--am-font-body);
     font-size: var(--am-font-size-sm);
     padding: 4px 24px 4px 8px;
     cursor: pointer;
     appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%239DA0AE' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%2364748b' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 8px center;
 }
 
 .am-header-select:focus {
     outline: none;
-    border-color: var(--am-accent-blue);
+    border-color: rgba(255,255,255,0.5);
+}
+
+.am-header-select option {
+    background: #ffffff;
+    color: #1e293b;
 }
 
 .am-header-right {
@@ -130,7 +135,7 @@
     gap: 6px;
     font-size: var(--am-font-size-xs);
     font-weight: 600;
-    color: var(--am-accent-green);
+    color: #86BC25;
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
@@ -139,7 +144,7 @@
     width: 7px;
     height: 7px;
     border-radius: 50%;
-    background: var(--am-accent-green);
+    background: #86BC25;
     animation: am-pulse 2s ease-in-out infinite;
 }
 
@@ -150,14 +155,14 @@
 
 .am-last-updated {
     font-size: var(--am-font-size-xs);
-    color: var(--am-text-muted);
+    color: rgba(255,255,255,0.6);
     font-family: var(--am-font-mono);
 }
 
 .am-header-btn {
     background: none;
     border: none;
-    color: var(--am-text-secondary);
+    color: rgba(255,255,255,0.7);
     cursor: pointer;
     padding: 4px;
     border-radius: 4px;
@@ -168,29 +173,30 @@
 }
 
 .am-header-btn:hover {
-    color: var(--am-text-primary);
-    background: var(--am-bg-hover);
+    color: #ffffff;
+    background: rgba(255,255,255,0.1);
 }
 
 .am-back-btn {
-    background: var(--am-bg-input);
-    border: 1px solid var(--am-border);
-    border-radius: 4px;
-    color: var(--am-text-secondary);
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 6px;
+    color: #ffffff;
     cursor: pointer;
-    padding: 4px 10px;
+    padding: 6px 14px;
     font-family: var(--am-font-body);
-    font-size: var(--am-font-size-xs);
+    font-size: var(--am-font-size-sm);
+    font-weight: 500;
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 6px;
     transition: all 0.15s;
 }
 
 .am-back-btn:hover {
-    color: var(--am-text-primary);
-    border-color: var(--am-accent-blue);
-    background: rgba(59, 130, 246, 0.1);
+    color: #ffffff;
+    background: rgba(255,255,255,0.2);
+    border-color: rgba(255,255,255,0.4);
 }
 
 /* ========================================
@@ -199,8 +205,8 @@
 .am-filter-bar {
     display: flex;
     align-items: center;
-    padding: 0 16px;
-    height: 40px;
+    padding: 0 32px;
+    height: 44px;
     background: var(--am-bg-secondary);
     border-bottom: 1px solid var(--am-border);
     gap: 12px;
@@ -262,7 +268,7 @@
 }
 
 .am-filter-chip {
-    background: var(--am-bg-input);
+    background: var(--am-bg-primary);
     border: 1px solid var(--am-border);
     border-radius: 12px;
     color: var(--am-text-secondary);
@@ -291,8 +297,8 @@
 .am-tab-nav {
     display: flex;
     align-items: center;
-    padding: 0 16px;
-    height: 38px;
+    padding: 0 32px;
+    height: 42px;
     background: var(--am-bg-secondary);
     border-bottom: 1px solid var(--am-border);
     gap: 0;
@@ -319,7 +325,7 @@
 
 .am-tab:hover {
     color: var(--am-text-primary);
-    background: rgba(255,255,255,0.03);
+    background: rgba(0,0,0,0.03);
 }
 
 .am-tab.active {
@@ -444,7 +450,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 6px 16px;
+    padding: 8px 16px;
     background: var(--am-bg-card);
     border-bottom: 1px solid var(--am-border);
     cursor: pointer;
@@ -529,7 +535,7 @@
 .am-table td {
     padding: 0 8px;
     height: var(--am-row-height);
-    border-bottom: 1px solid rgba(46, 49, 66, 0.5);
+    border-bottom: 1px solid var(--am-border);
     font-size: var(--am-font-size-sm);
     white-space: nowrap;
     overflow: hidden;
@@ -604,7 +610,7 @@
 }
 
 .am-badge-grey {
-    background: rgba(107, 110, 125, 0.2);
+    background: rgba(100, 116, 139, 0.12);
     color: var(--am-text-secondary);
 }
 
@@ -919,7 +925,7 @@
     align-items: center;
     justify-content: space-between;
     padding: 6px 0;
-    border-bottom: 1px solid rgba(46, 49, 66, 0.4);
+    border-bottom: 1px solid var(--am-border);
     font-size: var(--am-font-size-xs);
 }
 
@@ -1056,7 +1062,7 @@
 }
 
 .am-chat-data-table th {
-    background: rgba(255,255,255,0.05);
+    background: var(--am-bg-card);
     padding: 4px 6px;
     text-align: left;
     color: var(--am-text-muted);
@@ -1068,7 +1074,7 @@
 
 .am-chat-data-table td {
     padding: 4px 6px;
-    border-bottom: 1px solid rgba(46, 49, 66, 0.3);
+    border-bottom: 1px solid var(--am-border);
     font-family: var(--am-font-mono);
     color: var(--am-text-secondary);
 }
@@ -1369,7 +1375,7 @@
     align-items: center;
     justify-content: center;
     height: 100vh;
-    background: var(--am-bg-primary);
+    background: #ffffff;
     gap: 16px;
 }
 

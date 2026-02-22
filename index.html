@@ -57,6 +57,14 @@
       <span class="rec-label">REC</span>
   </div>
 
+  <!-- Screenshot-Button (fixed, unten rechts, default hidden) -->
+  <div id="screenshotBtn" onclick="takeScreenshot()" title="Screenshot erstellen" style="display:none;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"></path>
+          <circle cx="12" cy="13" r="4"></circle>
+      </svg>
+  </div>
+
   <!-- ========================================
      VERSICHERUNG MODULE
      ======================================== -->
@@ -476,6 +484,19 @@
                         <div class="toggle-switch">
                             <input type="checkbox" id="screenRecordToggle" onchange="toggleScreenRecordVisibility()">
                             <label for="screenRecordToggle"></label>
+                        </div>
+                    </div>
+
+                    <!-- Screenshot Toggle -->
+                    <div class="settings-item mock-toggle">
+                        <svg class="settings-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"></path>
+                            <circle cx="12" cy="13" r="4"></circle>
+                        </svg>
+                        <span>Screenshot</span>
+                        <div class="toggle-switch">
+                            <input type="checkbox" id="screenshotToggle" onchange="toggleScreenshotVisibility()">
+                            <label for="screenshotToggle"></label>
                         </div>
                     </div>
                 </div>
@@ -6375,6 +6396,7 @@
     <script src="js/makler.js?v=20260219"></script>
     <script src="js/mrh-trowe.js?v=20260219"></script>
     <script src="js/screen-recorder.js?v=20260219"></script>
+    <script src="js/screenshot.js"></script>
     <script src="js/sales-report.js?v=20260122"></script>
     <script src="js/finanzplanung.js?v=20251216"></script>
     <script src="js/banken.js?v=20251223b"></script>

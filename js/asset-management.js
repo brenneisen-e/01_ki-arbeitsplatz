@@ -58,32 +58,34 @@ var assetModuleLoaded = false;
         'Price correction', 'FX rate change', 'Settlement failure'
     ];
 
+    var PM_NAMES = ['John Smith', 'Sarah Johnson', 'Michael Chen'];
+
     var PORTFOLIOS = [
-        { id: 'S0174903', name: 'UBS (LUX) Thematic Opportunities Equity', model: 'MESGAAWY1', ccy: 'USD', aum: 245300000, cashTarget: 0.85, cashDrift: -0.12, cashActual: 0.73 },
-        { id: 'S0174901', name: 'UBS (LUX) AI and Robotics Equity Fund', model: 'MESGAASH', ccy: 'USD', aum: 187600000, cashTarget: 1.20, cashDrift: 0.05, cashActual: 1.25 },
-        { id: 'S0174905', name: 'UBS D.L100 Security Equity Fund', model: 'MESGBBR1', ccy: 'EUR', aum: 92400000, cashTarget: 0.50, cashDrift: -0.08, cashActual: 0.42 },
-        { id: 'S0174907', name: 'UBS D.L100 All Rounder Equity Fund', model: 'MESGBBR2', ccy: 'EUR', aum: 134800000, cashTarget: 0.65, cashDrift: 0.03, cashActual: 0.68 },
-        { id: 'S0174909', name: 'UBS (CH) Global Leaders Equity', model: 'MESGCCW1', ccy: 'CHF', aum: 312500000, cashTarget: 1.00, cashDrift: -0.15, cashActual: 0.85 },
-        { id: 'S0174911', name: 'UBS (LUX) Sustainable Climate Equity', model: 'MESGDDX1', ccy: 'EUR', aum: 78900000, cashTarget: 0.45, cashDrift: 0.02, cashActual: 0.47 },
-        { id: 'S0174913', name: 'UBS (LUX) Digital Health Equity Fund', model: 'MESGDDX2', ccy: 'USD', aum: 156200000, cashTarget: 0.90, cashDrift: -0.11, cashActual: 0.79 },
-        { id: 'S0174915', name: 'UBS (GB) UK Opportunities Equity', model: 'MESGEEY1', ccy: 'GBP', aum: 203700000, cashTarget: 0.75, cashDrift: 0.08, cashActual: 0.83 },
-        { id: 'S0174917', name: 'UBS (LUX) China Innovation Equity', model: 'MESGEEY2', ccy: 'USD', aum: 67800000, cashTarget: 1.50, cashDrift: -0.09, cashActual: 1.41 },
-        { id: 'S0174919', name: 'UBS (CH) Swiss Mid Cap Equity', model: 'MESGFFZ1', ccy: 'CHF', aum: 445600000, cashTarget: 0.30, cashDrift: 0.01, cashActual: 0.31 },
-        { id: 'S0174921', name: 'UBS (LUX) European Value Equity', model: 'MESGFFZ2', ccy: 'EUR', aum: 289100000, cashTarget: 0.60, cashDrift: -0.05, cashActual: 0.55 },
-        { id: 'S0174923', name: 'UBS (LUX) Asia Pacific Growth Equity', model: 'MESGGGW1', ccy: 'USD', aum: 118400000, cashTarget: 1.10, cashDrift: 0.10, cashActual: 1.20 },
-        { id: 'S0174925', name: 'UBS (LUX) Global Dividend Kings Fund', model: 'MESGGGW2', ccy: 'USD', aum: 356700000, cashTarget: 0.80, cashDrift: -0.04, cashActual: 0.76 },
-        { id: 'S0174927', name: 'UBS (DE) Germany Blue Chip Equity', model: 'MESGHHY1', ccy: 'EUR', aum: 198300000, cashTarget: 0.55, cashDrift: 0.06, cashActual: 0.61 },
-        { id: 'S0174929', name: 'UBS (LUX) FinTech Innovation Equity', model: 'MESGHHY2', ccy: 'USD', aum: 54200000, cashTarget: 2.00, cashDrift: -0.13, cashActual: 1.87 },
-        { id: 'S0174931', name: 'UBS (LUX) Infrastructure Equity Fund', model: 'MESGIIZ1', ccy: 'EUR', aum: 267900000, cashTarget: 0.70, cashDrift: 0.04, cashActual: 0.74 },
-        { id: 'S0174933', name: 'UBS (LUX) Clean Energy Transition Equity', model: 'MESGIIZ2', ccy: 'USD', aum: 143500000, cashTarget: 0.95, cashDrift: -0.07, cashActual: 0.88 },
-        { id: 'S0174935', name: 'UBS (CH) Swiss Large Cap Equity', model: 'MESGJJW1', ccy: 'CHF', aum: 498200000, cashTarget: 0.35, cashDrift: 0.02, cashActual: 0.37 },
-        { id: 'S0174937', name: 'UBS (LUX) Emerging Markets Leaders Equity', model: 'MESGJJW2', ccy: 'USD', aum: 87600000, cashTarget: 1.30, cashDrift: -0.10, cashActual: 1.20 },
-        { id: 'S0174939', name: 'UBS (LUX) US Quality Growth Equity', model: 'MESGKKX1', ccy: 'USD', aum: 412800000, cashTarget: 0.40, cashDrift: 0.01, cashActual: 0.41 },
-        { id: 'S0174941', name: 'UBS (GB) UK Small Cap Equity Fund', model: 'MESGKKX2', ccy: 'GBP', aum: 34500000, cashTarget: 1.80, cashDrift: -0.06, cashActual: 1.74 },
-        { id: 'S0174943', name: 'UBS (LUX) Metaverse & Web3 Equity', model: 'MESGLLY1', ccy: 'USD', aum: 28900000, cashTarget: 1.60, cashDrift: 0.09, cashActual: 1.69 },
-        { id: 'S0174945', name: 'UBS (LUX) Nordic Equity Opportunities', model: 'MESGLLY2', ccy: 'EUR', aum: 76300000, cashTarget: 0.50, cashDrift: -0.03, cashActual: 0.47 },
-        { id: 'S0174947', name: 'UBS (LUX) Japan Select Equity Fund', model: 'MESGMMZ1', ccy: 'USD', aum: 165400000, cashTarget: 0.75, cashDrift: 0.07, cashActual: 0.82 },
-        { id: 'S0174949', name: 'UBS (LUX) Global Biotech Equity Fund', model: 'MESGMMZ2', ccy: 'USD', aum: 93100000, cashTarget: 1.40, cashDrift: -0.14, cashActual: 1.26 }
+        { id: 'S0174903', name: 'UBS (LUX) Thematic Opportunities Equity', model: 'MESGAAWY1', ccy: 'USD', aum: 245300000, cashTarget: 0.85, cashDrift: -0.12, cashActual: 0.73, assetClass: 'Active EQ', pm: 'John Smith' },
+        { id: 'S0174901', name: 'UBS (LUX) AI and Robotics Equity Fund', model: 'MESGAASH', ccy: 'USD', aum: 187600000, cashTarget: 1.20, cashDrift: 0.05, cashActual: 1.25, assetClass: 'Active EQ', pm: 'Sarah Johnson' },
+        { id: 'S0174905', name: 'UBS D.L100 Security Equity Fund', model: 'MESGBBR1', ccy: 'EUR', aum: 92400000, cashTarget: 0.50, cashDrift: -0.08, cashActual: 0.42, assetClass: 'Fixed Income', pm: 'Michael Chen' },
+        { id: 'S0174907', name: 'UBS D.L100 All Rounder Equity Fund', model: 'MESGBBR2', ccy: 'EUR', aum: 134800000, cashTarget: 0.65, cashDrift: 0.03, cashActual: 0.68, assetClass: 'Multi Asset', pm: 'John Smith' },
+        { id: 'S0174909', name: 'UBS (CH) Global Leaders Equity', model: 'MESGCCW1', ccy: 'CHF', aum: 312500000, cashTarget: 1.00, cashDrift: -0.15, cashActual: 0.85, assetClass: 'Active EQ', pm: 'Sarah Johnson' },
+        { id: 'S0174911', name: 'UBS (LUX) Sustainable Climate Equity', model: 'MESGDDX1', ccy: 'EUR', aum: 78900000, cashTarget: 0.45, cashDrift: 0.02, cashActual: 0.47, assetClass: 'Active EQ', pm: 'Michael Chen' },
+        { id: 'S0174913', name: 'UBS (LUX) Digital Health Equity Fund', model: 'MESGDDX2', ccy: 'USD', aum: 156200000, cashTarget: 0.90, cashDrift: -0.11, cashActual: 0.79, assetClass: 'Active EQ', pm: 'John Smith' },
+        { id: 'S0174915', name: 'UBS (GB) UK Opportunities Equity', model: 'MESGEEY1', ccy: 'GBP', aum: 203700000, cashTarget: 0.75, cashDrift: 0.08, cashActual: 0.83, assetClass: 'Multi Asset', pm: 'Sarah Johnson' },
+        { id: 'S0174917', name: 'UBS (LUX) China Innovation Equity', model: 'MESGEEY2', ccy: 'USD', aum: 67800000, cashTarget: 1.50, cashDrift: -0.09, cashActual: 1.41, assetClass: 'Active EQ', pm: 'Michael Chen' },
+        { id: 'S0174919', name: 'UBS (CH) Swiss Mid Cap Equity', model: 'MESGFFZ1', ccy: 'CHF', aum: 445600000, cashTarget: 0.30, cashDrift: 0.01, cashActual: 0.31, assetClass: 'Active EQ', pm: 'John Smith' },
+        { id: 'S0174921', name: 'UBS (LUX) European Value Equity', model: 'MESGFFZ2', ccy: 'EUR', aum: 289100000, cashTarget: 0.60, cashDrift: -0.05, cashActual: 0.55, assetClass: 'Fixed Income', pm: 'Sarah Johnson' },
+        { id: 'S0174923', name: 'UBS (LUX) Asia Pacific Growth Equity', model: 'MESGGGW1', ccy: 'USD', aum: 118400000, cashTarget: 1.10, cashDrift: 0.10, cashActual: 1.20, assetClass: 'Active EQ', pm: 'Michael Chen' },
+        { id: 'S0174925', name: 'UBS (LUX) Global Dividend Kings Fund', model: 'MESGGGW2', ccy: 'USD', aum: 356700000, cashTarget: 0.80, cashDrift: -0.04, cashActual: 0.76, assetClass: 'Multi Asset', pm: 'John Smith' },
+        { id: 'S0174927', name: 'UBS (DE) Germany Blue Chip Equity', model: 'MESGHHY1', ccy: 'EUR', aum: 198300000, cashTarget: 0.55, cashDrift: 0.06, cashActual: 0.61, assetClass: 'Active EQ', pm: 'Sarah Johnson' },
+        { id: 'S0174929', name: 'UBS (LUX) FinTech Innovation Equity', model: 'MESGHHY2', ccy: 'USD', aum: 54200000, cashTarget: 2.00, cashDrift: -0.13, cashActual: 1.87, assetClass: 'Active EQ', pm: 'Michael Chen' },
+        { id: 'S0174931', name: 'UBS (LUX) Infrastructure Equity Fund', model: 'MESGIIZ1', ccy: 'EUR', aum: 267900000, cashTarget: 0.70, cashDrift: 0.04, cashActual: 0.74, assetClass: 'Fixed Income', pm: 'John Smith' },
+        { id: 'S0174933', name: 'UBS (LUX) Clean Energy Transition Equity', model: 'MESGIIZ2', ccy: 'USD', aum: 143500000, cashTarget: 0.95, cashDrift: -0.07, cashActual: 0.88, assetClass: 'Multi Asset', pm: 'Sarah Johnson' },
+        { id: 'S0174935', name: 'UBS (CH) Swiss Large Cap Equity', model: 'MESGJJW1', ccy: 'CHF', aum: 498200000, cashTarget: 0.35, cashDrift: 0.02, cashActual: 0.37, assetClass: 'Active EQ', pm: 'Michael Chen' },
+        { id: 'S0174937', name: 'UBS (LUX) Emerging Markets Leaders Equity', model: 'MESGJJW2', ccy: 'USD', aum: 87600000, cashTarget: 1.30, cashDrift: -0.10, cashActual: 1.20, assetClass: 'Active EQ', pm: 'John Smith' },
+        { id: 'S0174939', name: 'UBS (LUX) US Quality Growth Equity', model: 'MESGKKX1', ccy: 'USD', aum: 412800000, cashTarget: 0.40, cashDrift: 0.01, cashActual: 0.41, assetClass: 'Active EQ', pm: 'Sarah Johnson' },
+        { id: 'S0174941', name: 'UBS (GB) UK Small Cap Equity Fund', model: 'MESGKKX2', ccy: 'GBP', aum: 34500000, cashTarget: 1.80, cashDrift: -0.06, cashActual: 1.74, assetClass: 'Fixed Income', pm: 'Michael Chen' },
+        { id: 'S0174943', name: 'UBS (LUX) Metaverse & Web3 Equity', model: 'MESGLLY1', ccy: 'USD', aum: 28900000, cashTarget: 1.60, cashDrift: 0.09, cashActual: 1.69, assetClass: 'Active EQ', pm: 'John Smith' },
+        { id: 'S0174945', name: 'UBS (LUX) Nordic Equity Opportunities', model: 'MESGLLY2', ccy: 'EUR', aum: 76300000, cashTarget: 0.50, cashDrift: -0.03, cashActual: 0.47, assetClass: 'Multi Asset', pm: 'Sarah Johnson' },
+        { id: 'S0174947', name: 'UBS (LUX) Japan Select Equity Fund', model: 'MESGMMZ1', ccy: 'USD', aum: 165400000, cashTarget: 0.75, cashDrift: 0.07, cashActual: 0.82, assetClass: 'Multi Asset', pm: 'Michael Chen' },
+        { id: 'S0174949', name: 'UBS (LUX) Global Biotech Equity Fund', model: 'MESGMMZ2', ccy: 'USD', aum: 93100000, cashTarget: 1.40, cashDrift: -0.14, cashActual: 1.26, assetClass: 'Fixed Income', pm: 'John Smith' }
     ];
 
     // Event Monitor Data
@@ -236,6 +238,8 @@ var assetModuleLoaded = false;
     var state = {
         activeTab: 'eventMonitor',
         activeSidebar: 'portfolio',
+        assetClass: 'Active EQ',
+        pm: 'All',
         selectedPortfolio: null,
         selectedRowIndex: null,
         panelMode: null, // 'detail' | 'chatbot' | null
@@ -310,23 +314,46 @@ var assetModuleLoaded = false;
     }
 
     // ========================================
+    // PORTFOLIO FILTERING (Asset Class + PM)
+    // ========================================
+
+    function portfolioMatchesFilters(portfolio) {
+        if (state.assetClass && portfolio.assetClass !== state.assetClass) return false;
+        if (state.pm && state.pm !== 'All' && portfolio.pm !== state.pm) return false;
+        return true;
+    }
+
+    function getFilteredPortfolios() {
+        return PORTFOLIOS.filter(portfolioMatchesFilters);
+    }
+
+    // ========================================
     // RENDER: HEADER BAR
     // ========================================
 
     function renderHeader() {
+        var assetClasses = ['Active EQ', 'Fixed Income', 'Multi Asset'];
+        var assetOpts = assetClasses.map(function(ac) {
+            return '<option' + (state.assetClass === ac ? ' selected' : '') + '>' + ac + '</option>';
+        }).join('');
+
+        var pmOpts = '<option' + (state.pm === 'All' ? ' selected' : '') + '>All</option>';
+        pmOpts += PM_NAMES.map(function(name) {
+            return '<option' + (state.pm === name ? ' selected' : '') + '>' + name + '</option>';
+        }).join('');
+
+        var filteredCount = getFilteredPortfolios().length;
+
         return '<div class="am-header">' +
             '<div class="am-header-left">' +
                 '<div class="am-logo">' + ICONS.chart + ' Active Equities</div>' +
-                '<select class="am-header-select">' +
-                    '<option>Active EQ</option>' +
-                    '<option>Fixed Income</option>' +
-                    '<option>Multi Asset</option>' +
+                '<select class="am-header-select" onchange="amSetAssetClass(this.value)">' +
+                    assetOpts +
                 '</select>' +
-                '<select class="am-header-select">' +
-                    '<option>John Smith</option>' +
-                    '<option>Sarah Johnson</option>' +
-                    '<option>Michael Chen</option>' +
+                '<select class="am-header-select" onchange="amSetPm(this.value)">' +
+                    pmOpts +
                 '</select>' +
+                '<span class="am-filter-count">' + filteredCount + ' / ' + PORTFOLIOS.length + '</span>' +
             '</div>' +
             '<div class="am-header-right">' +
                 '<div class="am-live-indicator"><div class="am-live-dot"></div>LIVE</div>' +
@@ -357,7 +384,7 @@ var assetModuleLoaded = false;
 
         return '<div class="am-filter-bar">' +
             '<span class="am-filter-label">Portfolios:</span>' +
-            '<span class="am-filter-value">All (198)</span>' +
+            '<span class="am-filter-value">' + getFilteredPortfolios().length + ' of ' + PORTFOLIOS.length + '</span>' +
             '<div class="am-filter-divider"></div>' +
             '<span class="am-filter-label">Incl. OIS orders:</span>' +
             '<select class="am-header-select" style="font-size:11px;padding:2px 20px 2px 6px;">' +
@@ -646,6 +673,7 @@ var assetModuleLoaded = false;
     function filterEventData(data) {
         return data.filter(function(row) {
             var p = row.portfolio;
+            if (!portfolioMatchesFilters(p)) return false;
             if (state.searchQuery) {
                 var q = state.searchQuery.toLowerCase();
                 if (p.name.toLowerCase().indexOf(q) === -1 && p.id.toLowerCase().indexOf(q) === -1) return false;
@@ -682,6 +710,7 @@ var assetModuleLoaded = false;
 
         var filtered = CASHFLOW_DATA.filter(function(row) {
             var p = row.portfolio;
+            if (!portfolioMatchesFilters(p)) return false;
             if (state.searchQuery) {
                 var q = state.searchQuery.toLowerCase();
                 if (p.name.toLowerCase().indexOf(q) === -1 && p.id.toLowerCase().indexOf(q) === -1) return false;
@@ -773,6 +802,7 @@ var assetModuleLoaded = false;
 
             SOD_ALERT_DATA.forEach(function(row, idx) {
                 var p = row.portfolio;
+                if (!portfolioMatchesFilters(p)) return;
                 var selectedCls = (state.selectedRowIndex === 'sod-' + idx) ? ' selected' : '';
                 var changeCls = row.changePct < 0 ? 'negative' : (row.changePct > 0 ? 'positive' : '');
 
@@ -844,6 +874,7 @@ var assetModuleLoaded = false;
             '</tr></thead><tbody>';
 
         var filtered = SOD_ITEM_CHANGES.filter(function(row) {
+            if (!portfolioMatchesFilters(row.portfolio)) return false;
             if (state.searchQuery) {
                 var q = state.searchQuery.toLowerCase();
                 if (row.portfolio.name.toLowerCase().indexOf(q) === -1 &&
@@ -895,6 +926,7 @@ var assetModuleLoaded = false;
             '</tr></thead><tbody>';
 
         var filtered = ONGOING_ORDERS.filter(function(row) {
+            if (!portfolioMatchesFilters(row.portfolio)) return false;
             if (state.searchQuery) {
                 var q = state.searchQuery.toLowerCase();
                 if (row.portfolio.name.toLowerCase().indexOf(q) === -1 &&
@@ -947,6 +979,7 @@ var assetModuleLoaded = false;
             '</tr></thead><tbody>';
 
         var filtered = PORTFOLIOS.filter(function(p) {
+            if (!portfolioMatchesFilters(p)) return false;
             if (state.searchQuery) {
                 var q = state.searchQuery.toLowerCase();
                 if (p.name.toLowerCase().indexOf(q) === -1 && p.id.toLowerCase().indexOf(q) === -1) return false;
@@ -1019,7 +1052,7 @@ var assetModuleLoaded = false;
     // ========================================
 
     function renderCashDriftTable() {
-        var drifted = PORTFOLIOS.filter(function(p) { return Math.abs(p.cashDrift) > 0.05; });
+        var drifted = PORTFOLIOS.filter(function(p) { return portfolioMatchesFilters(p) && Math.abs(p.cashDrift) > 0.05; });
         var html = '<div class="am-table-container">';
         html += '<table class="am-table"><thead><tr>' +
             '<th class="am-col-id">Portfolio ID</th>' +
@@ -1214,6 +1247,7 @@ var assetModuleLoaded = false;
             '</tr></thead><tbody>';
 
         var filtered = PORTFOLIOS.filter(function(p) {
+            if (!portfolioMatchesFilters(p)) return false;
             if (state.searchQuery) {
                 var q = state.searchQuery.toLowerCase();
                 if (p.name.toLowerCase().indexOf(q) === -1 && p.id.toLowerCase().indexOf(q) === -1 && p.model.toLowerCase().indexOf(q) === -1) return false;
@@ -1405,6 +1439,7 @@ var assetModuleLoaded = false;
             '</tr></thead><tbody>';
 
         var filtered = trades.filter(function(t) {
+            if (!portfolioMatchesFilters(t.portfolio)) return false;
             if (state.searchQuery) {
                 var q = state.searchQuery.toLowerCase();
                 if (t.portfolio.id.toLowerCase().indexOf(q) === -1 && t.security.toLowerCase().indexOf(q) === -1) return false;
@@ -1482,10 +1517,13 @@ var assetModuleLoaded = false;
     // ========================================
 
     function renderAmOverviewContent() {
-        var totalAum = PORTFOLIOS.reduce(function(s, p) { return s + p.aum; }, 0);
-        var avgDrift = PORTFOLIOS.reduce(function(s, p) { return s + Math.abs(p.cashDrift); }, 0) / PORTFOLIOS.length;
-        var breaches = PORTFOLIOS.filter(function(p) { return Math.abs(p.cashDrift) > 0.10; }).length;
-        var activeEvents = EVENT_MONITOR_DATA.incoming.length + EVENT_MONITOR_DATA.attention.length;
+        var fp = getFilteredPortfolios();
+        var totalAum = fp.reduce(function(s, p) { return s + p.aum; }, 0);
+        var avgDrift = fp.length > 0 ? fp.reduce(function(s, p) { return s + Math.abs(p.cashDrift); }, 0) / fp.length : 0;
+        var breaches = fp.filter(function(p) { return Math.abs(p.cashDrift) > 0.10; }).length;
+        var filteredIncoming = EVENT_MONITOR_DATA.incoming.filter(function(r) { return portfolioMatchesFilters(r.portfolio); });
+        var filteredAttention = EVENT_MONITOR_DATA.attention.filter(function(r) { return portfolioMatchesFilters(r.portfolio); });
+        var activeEvents = filteredIncoming.length + filteredAttention.length;
 
         var html = '<div class="am-overview-grid">';
 
@@ -1493,13 +1531,13 @@ var assetModuleLoaded = false;
         html += '<div class="am-overview-card">' +
             '<div class="am-overview-card-label">Total AUM</div>' +
             '<div class="am-overview-card-value">' + formatAum(totalAum) + '</div>' +
-            '<div class="am-overview-card-sub">' + PORTFOLIOS.length + ' portfolios</div>' +
+            '<div class="am-overview-card-sub">' + fp.length + ' portfolios</div>' +
         '</div>';
 
         html += '<div class="am-overview-card">' +
             '<div class="am-overview-card-label">Active Events</div>' +
             '<div class="am-overview-card-value" style="color:var(--am-amber)">' + activeEvents + '</div>' +
-            '<div class="am-overview-card-sub">' + EVENT_MONITOR_DATA.incoming.length + ' incoming / ' + EVENT_MONITOR_DATA.attention.length + ' attention</div>' +
+            '<div class="am-overview-card-sub">' + filteredIncoming.length + ' incoming / ' + filteredAttention.length + ' attention</div>' +
         '</div>';
 
         html += '<div class="am-overview-card">' +
@@ -1508,10 +1546,11 @@ var assetModuleLoaded = false;
             '<div class="am-overview-card-sub">' + breaches + ' breach' + (breaches !== 1 ? 'es' : '') + '</div>' +
         '</div>';
 
+        var filteredOrders = ONGOING_ORDERS.filter(function(o) { return portfolioMatchesFilters(o.portfolio); });
         html += '<div class="am-overview-card">' +
             '<div class="am-overview-card-label">Ongoing Orders</div>' +
-            '<div class="am-overview-card-value">' + ONGOING_ORDERS.length + '</div>' +
-            '<div class="am-overview-card-sub">' + ONGOING_ORDERS.filter(function(o) { return o.status === 'Working'; }).length + ' working</div>' +
+            '<div class="am-overview-card-value">' + filteredOrders.length + '</div>' +
+            '<div class="am-overview-card-sub">' + filteredOrders.filter(function(o) { return o.status === 'Working'; }).length + ' working</div>' +
         '</div>';
 
         html += '</div>';
@@ -1528,7 +1567,7 @@ var assetModuleLoaded = false;
             '</tr></thead><tbody>';
 
         var ccyGroups = {};
-        PORTFOLIOS.forEach(function(p) {
+        fp.forEach(function(p) {
             if (!ccyGroups[p.ccy]) ccyGroups[p.ccy] = { count: 0, aum: 0, cashSum: 0, driftSum: 0 };
             ccyGroups[p.ccy].count++;
             ccyGroups[p.ccy].aum += p.aum;
@@ -2099,6 +2138,24 @@ var assetModuleLoaded = false;
     // ========================================
     // EVENT HANDLERS
     // ========================================
+
+    // Asset Class filter
+    window.amSetAssetClass = function(value) {
+        state.assetClass = value;
+        state.selectedPortfolio = null;
+        state.selectedRowIndex = null;
+        state.panelMode = null;
+        renderAll();
+    };
+
+    // PM filter
+    window.amSetPm = function(value) {
+        state.pm = value;
+        state.selectedPortfolio = null;
+        state.selectedRowIndex = null;
+        state.panelMode = null;
+        renderAll();
+    };
 
     // Tab switching
     window.amSwitchTab = function(tab) {

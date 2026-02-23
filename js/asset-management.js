@@ -235,6 +235,7 @@ var assetModuleLoaded = false;
     // ========================================
     var state = {
         activeTab: 'eventMonitor',
+        activeSidebar: 'portfolio',
         selectedPortfolio: null,
         selectedRowIndex: null,
         panelMode: null, // 'detail' | 'chatbot' | null
@@ -400,19 +401,20 @@ var assetModuleLoaded = false;
 
     function renderSidebar() {
         var items = [
-            { icon: 'portfolio', label: 'Portfolio', active: true },
-            { icon: 'cash', label: 'Cash', active: false },
-            { icon: 'currency', label: 'Currency', active: false },
-            { icon: 'strategy', label: 'Strategy', active: false },
-            { icon: 'optimizer', label: 'Optimizer', active: false },
-            { icon: 'am', label: 'AM', active: false },
-            { icon: 'corc', label: 'CORC', active: false }
+            { key: 'portfolio', icon: 'portfolio', label: 'Portfolio' },
+            { key: 'cash', icon: 'cash', label: 'Cash' },
+            { key: 'currency', icon: 'currency', label: 'Currency' },
+            { key: 'strategy', icon: 'strategy', label: 'Strategy' },
+            { key: 'optimizer', icon: 'optimizer', label: 'Optimizer' },
+            { key: 'am', icon: 'am', label: 'AM' },
+            { key: 'corc', icon: 'corc', label: 'CORC' }
         ];
 
         var itemsHtml = items.map(function(item) {
-            return '<button class="am-sidebar-item' + (item.active ? ' active' : '') + '">' +
+            var isActive = state.activeSidebar === item.key;
+            return '<button class="am-sidebar-item' + (isActive ? ' active' : '') + '" onclick="amSwitchSidebar(\'' + item.key + '\')">' +
                 ICONS[item.icon] +
-                '<span class="am-sidebar-tooltip">' + item.label + '</span>' +
+                '<span class="am-sidebar-label">' + item.label + '</span>' +
             '</button>';
         }).join('');
 
@@ -1181,6 +1183,16 @@ var assetModuleLoaded = false;
         state.chatMessages = [];
         state.sortColumn = null;
         state.sortDirection = 'asc';
+        renderAll();
+    };
+
+    // Sidebar navigation
+    window.amSwitchSidebar = function(key) {
+        state.activeSidebar = key;
+        state.selectedPortfolio = null;
+        state.selectedRowIndex = null;
+        state.panelMode = null;
+        state.chatMessages = [];
         renderAll();
     };
 

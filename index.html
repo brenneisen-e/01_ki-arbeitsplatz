@@ -34,6 +34,7 @@
     <link rel="stylesheet" href="css/sales-report.css?v=20260122">
     <link rel="stylesheet" href="css/hr-pipeline.css?v=20260217">
     <link rel="stylesheet" href="css/asset-management.css?v=20260220">
+    <link rel="stylesheet" href="css/am-prod-mode.css?v=20260223">
     <link rel="stylesheet" href="css/makler.css?v=20260209">
     <link rel="stylesheet" href="css/mrh-trowe.css?v=20260219">
     <!-- Modularisierte CSS-Module -->
@@ -497,6 +498,19 @@
                         <div class="toggle-switch">
                             <input type="checkbox" id="screenshotToggle" onchange="toggleScreenshotVisibility()">
                             <label for="screenshotToggle"></label>
+                        </div>
+                    </div>
+
+                    <!-- AM-01 Prod Modus Toggle -->
+                    <div class="settings-item mock-toggle">
+                        <svg class="settings-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                            <path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"></path>
+                        </svg>
+                        <span>AM-01 Prod Modus</span>
+                        <div class="toggle-switch">
+                            <input type="checkbox" id="amProdModeToggle" onchange="toggleAmProdMode()">
+                            <label for="amProdModeToggle"></label>
                         </div>
                     </div>
                 </div>
@@ -6406,6 +6420,7 @@
     <script src="js/banken.js?v=20251223b"></script>
     <script src="js/banken-chat.js?v=20251217"></script>
     <script src="js/asset-management.js?v=20260220"></script>
+    <script src="js/am-prod-mode.js?v=20260223"></script>
     <script src="js/risikoscoring.js?v=20251217"></script>
     <script src="js/provisionssimulation.js?v=20251216"></script>
     <!-- BGAV Vertragsumstellung Tool -->

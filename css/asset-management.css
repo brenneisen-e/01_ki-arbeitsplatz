@@ -1397,6 +1397,45 @@
 }
 
 /* ========================================
+   AM OVERVIEW CARDS
+   ======================================== */
+.am-overview-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    padding: 0;
+}
+
+.am-overview-card {
+    background: var(--am-bg-secondary);
+    border: 1px solid var(--am-border);
+    border-radius: 8px;
+    padding: 16px 20px;
+}
+
+.am-overview-card-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--am-text-secondary);
+    margin-bottom: 6px;
+}
+
+.am-overview-card-value {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--am-text-primary);
+    font-family: 'SF Mono', 'Consolas', 'Monaco', monospace;
+    line-height: 1.2;
+}
+
+.am-overview-card-sub {
+    font-size: 11px;
+    color: var(--am-text-muted);
+    margin-top: 4px;
+}
+
+/* ========================================
    RESPONSIVE (horizontal scroll for narrow viewports)
    ======================================== */
 @media (max-width: 1200px) {

@@ -376,20 +376,61 @@ var assetModuleLoaded = false;
     // RENDER: TAB NAVIGATION
     // ========================================
 
-    function renderTabNav() {
-        var tabs = [
+    // Tabs per sidebar section
+    var SIDEBAR_TABS = {
+        portfolio: [
             { key: 'eventMonitor', label: 'Event Monitor', badge: '4', alert: true },
             { key: 'sodAlert', label: 'SOD Alert', badge: '6', alert: true },
             { key: 'sodItemChanges', label: 'SOD Item Changes', badge: '52', alert: false },
             { key: 'cashflows', label: 'Cashflows', badge: '12', alert: false },
             { key: 'ongoingOrders', label: 'Ongoing Orders', badge: '58', alert: false }
-        ];
+        ],
+        cash: [
+            { key: 'cashBalances', label: 'Cash Balances', badge: String(PORTFOLIOS.length), alert: false },
+            { key: 'cashProjection', label: 'Cash Projection', badge: '5', alert: false },
+            { key: 'cashDrift', label: 'Cash Drift', badge: String(PORTFOLIOS.filter(function(p) { return Math.abs(p.cashDrift) > 0.05; }).length), alert: true }
+        ],
+        currency: [
+            { key: 'fxExposure', label: 'FX Exposure', badge: '4', alert: false },
+            { key: 'hedging', label: 'Hedging Ratios', badge: '2', alert: true },
+            { key: 'fxOrders', label: 'FX Orders', badge: '8', alert: false }
+        ],
+        strategy: [
+            { key: 'modelAllocation', label: 'Model Allocation', badge: String(PORTFOLIOS.length), alert: false },
+            { key: 'trackingError', label: 'Tracking Error', badge: '3', alert: true },
+            { key: 'rebalancing', label: 'Rebalancing Queue', badge: '4', alert: false }
+        ],
+        optimizer: [
+            { key: 'optimizerQueue', label: 'Optimizer Queue', badge: '7', alert: false },
+            { key: 'tradeList', label: 'Trade List', badge: '34', alert: false },
+            { key: 'constraints', label: 'Constraints', badge: '2', alert: true }
+        ],
+        am: [
+            { key: 'amOverview', label: 'AM Overview', badge: '', alert: false },
+            { key: 'amTasks', label: 'Tasks', badge: '12', alert: true },
+            { key: 'amReporting', label: 'Reporting', badge: '3', alert: false }
+        ],
+        corc: [
+            { key: 'compliance', label: 'Compliance', badge: '5', alert: true },
+            { key: 'riskMonitor', label: 'Risk Monitor', badge: '8', alert: true },
+            { key: 'controls', label: 'Controls', badge: '14', alert: false }
+        ]
+    };
+
+    function getDefaultTab(sidebarKey) {
+        var tabs = SIDEBAR_TABS[sidebarKey];
+        return tabs && tabs.length > 0 ? tabs[0].key : 'eventMonitor';
+    }
+
+    function renderTabNav() {
+        var tabs = SIDEBAR_TABS[state.activeSidebar] || SIDEBAR_TABS.portfolio;
 
         var tabsHtml = tabs.map(function(t) {
             var cls = 'am-tab' + (state.activeTab === t.key ? ' active' : '');
             var badgeCls = 'am-tab-badge' + (t.alert ? ' alert' : '');
+            var badgeHtml = t.badge ? '<span class="' + badgeCls + '">' + t.badge + '</span>' : '';
             return '<button class="' + cls + '" onclick="amSwitchTab(\'' + t.key + '\')">' +
-                t.label + '<span class="' + badgeCls + '">' + t.badge + '</span></button>';
+                t.label + badgeHtml + '</button>';
         }).join('');
 
         return '<div class="am-tab-nav">' + tabsHtml + '</div>';
@@ -888,6 +929,860 @@ var assetModuleLoaded = false;
 
 
     // ========================================
+    // SIDEBAR: CASH — Cash Balances
+    // ========================================
+
+    function renderCashBalancesTable() {
+        var html = '<div class="am-table-container">';
+        html += '<table class="am-table"><thead><tr>' +
+            '<th class="am-col-id" onclick="amSort(\'id\')">Portfolio ID' + renderSortIcon('id') + '</th>' +
+            '<th class="am-col-name" onclick="amSort(\'name\')">Name' + renderSortIcon('name') + '</th>' +
+            '<th class="am-col-ccy">CCY</th>' +
+            '<th style="width:120px;text-align:right">Market Value</th>' +
+            '<th style="width:100px;text-align:right">Cash Balance</th>' +
+            '<th style="width:80px;text-align:right">Cash %</th>' +
+            '<th style="width:80px;text-align:right">Target %</th>' +
+            '<th style="width:80px;text-align:right">Drift %</th>' +
+            '<th style="width:100px">Status</th>' +
+            '</tr></thead><tbody>';
+
+        var filtered = PORTFOLIOS.filter(function(p) {
+            if (state.searchQuery) {
+                var q = state.searchQuery.toLowerCase();
+                if (p.name.toLowerCase().indexOf(q) === -1 && p.id.toLowerCase().indexOf(q) === -1) return false;
+            }
+            return true;
+        });
+
+        filtered.forEach(function(p) {
+            var driftCls = p.cashDrift < 0 ? 'negative' : (p.cashDrift > 0 ? 'positive' : '');
+            var cashBal = p.aum * p.cashActual / 100;
+            var statusText = Math.abs(p.cashDrift) > 0.10 ? 'Breach' : (Math.abs(p.cashDrift) > 0.05 ? 'Warning' : 'OK');
+            var statusColor = Math.abs(p.cashDrift) > 0.10 ? 'red' : (Math.abs(p.cashDrift) > 0.05 ? 'amber' : 'green');
+
+            html += '<tr>' +
+                '<td class="am-col-id"><span class="am-mono">' + p.id + '</span></td>' +
+                '<td class="am-col-name">' + escapeHtml(p.name) + '</td>' +
+                '<td class="am-col-ccy"><span class="am-mono">' + p.ccy + '</span></td>' +
+                '<td style="text-align:right"><span class="am-num">' + formatAum(p.aum) + '</span></td>' +
+                '<td style="text-align:right"><span class="am-num">' + formatCurrency(cashBal, p.ccy) + '</span></td>' +
+                '<td style="text-align:right"><span class="am-num">' + p.cashActual.toFixed(2) + '%</span></td>' +
+                '<td style="text-align:right"><span class="am-num">' + p.cashTarget.toFixed(2) + '%</span></td>' +
+                '<td style="text-align:right"><span class="am-num ' + driftCls + '">' + (p.cashDrift >= 0 ? '+' : '') + p.cashDrift.toFixed(2) + '%</span></td>' +
+                '<td>' + renderBadge(statusText, statusColor) + '</td>' +
+            '</tr>';
+        });
+
+        html += '</tbody></table></div>';
+        return html;
+    }
+
+    // ========================================
+    // SIDEBAR: CASH — Cash Projection
+    // ========================================
+
+    function renderCashProjectionTable() {
+        var projDays = ['+1D', '+2D', '+3D', '+1W', '+2W'];
+        var html = '<div class="am-table-container">';
+        html += '<table class="am-table"><thead><tr>' +
+            '<th class="am-col-id">Portfolio ID</th>' +
+            '<th class="am-col-name">Name</th>' +
+            '<th class="am-col-ccy">CCY</th>' +
+            '<th style="width:100px;text-align:right">Current Cash</th>';
+        projDays.forEach(function(d) { html += '<th style="width:90px;text-align:right">' + d + '</th>'; });
+        html += '</tr></thead><tbody>';
+
+        var subset = PORTFOLIOS.slice(0, 5);
+        subset.forEach(function(p) {
+            var cashNow = p.aum * p.cashActual / 100;
+            html += '<tr>' +
+                '<td class="am-col-id"><span class="am-mono">' + p.id + '</span></td>' +
+                '<td class="am-col-name">' + escapeHtml(p.name) + '</td>' +
+                '<td class="am-col-ccy"><span class="am-mono">' + p.ccy + '</span></td>' +
+                '<td style="text-align:right"><span class="am-num">' + formatCurrency(cashNow, p.ccy) + '</span></td>';
+            var running = cashNow;
+            projDays.forEach(function() {
+                var delta = (Math.random() - 0.4) * cashNow * 0.05;
+                running += delta;
+                var cls = delta < 0 ? 'negative' : 'positive';
+                html += '<td style="text-align:right"><span class="am-num ' + cls + '">' + formatCurrency(running, p.ccy) + '</span></td>';
+            });
+            html += '</tr>';
+        });
+
+        html += '</tbody></table></div>';
+        return html;
+    }
+
+    // ========================================
+    // SIDEBAR: CASH — Cash Drift
+    // ========================================
+
+    function renderCashDriftTable() {
+        var drifted = PORTFOLIOS.filter(function(p) { return Math.abs(p.cashDrift) > 0.05; });
+        var html = '<div class="am-table-container">';
+        html += '<table class="am-table"><thead><tr>' +
+            '<th class="am-col-id">Portfolio ID</th>' +
+            '<th class="am-col-name">Name</th>' +
+            '<th class="am-col-ccy">CCY</th>' +
+            '<th style="width:80px;text-align:right">Target %</th>' +
+            '<th style="width:80px;text-align:right">Actual %</th>' +
+            '<th style="width:80px;text-align:right">Drift %</th>' +
+            '<th style="width:120px">Severity</th>' +
+            '<th style="width:160px">Action</th>' +
+            '</tr></thead><tbody>';
+
+        drifted.forEach(function(p, idx) {
+            var driftCls = p.cashDrift < 0 ? 'negative' : 'positive';
+            var severity = Math.abs(p.cashDrift) > 0.10 ? 'Critical' : 'Warning';
+            var sevColor = severity === 'Critical' ? 'red' : 'amber';
+
+            html += '<tr>' +
+                '<td class="am-col-id"><span class="am-mono">' + p.id + '</span></td>' +
+                '<td class="am-col-name">' + escapeHtml(p.name) + '</td>' +
+                '<td class="am-col-ccy"><span class="am-mono">' + p.ccy + '</span></td>' +
+                '<td style="text-align:right"><span class="am-num">' + p.cashTarget.toFixed(2) + '%</span></td>' +
+                '<td style="text-align:right"><span class="am-num">' + p.cashActual.toFixed(2) + '%</span></td>' +
+                '<td style="text-align:right"><span class="am-num ' + driftCls + '">' + (p.cashDrift >= 0 ? '+' : '') + p.cashDrift.toFixed(2) + '%</span></td>' +
+                '<td>' + renderBadge(severity, sevColor) + '</td>' +
+                '<td><button class="am-action-btn primary" onclick="event.stopPropagation()">Rebalance</button></td>' +
+            '</tr>';
+        });
+
+        html += '</tbody></table></div>';
+        return html;
+    }
+
+
+    // ========================================
+    // SIDEBAR: CURRENCY — FX Exposure
+    // ========================================
+
+    var FX_CURRENCIES = ['USD', 'EUR', 'CHF', 'GBP'];
+
+    function renderFxExposureTable() {
+        var ccyTotals = {};
+        PORTFOLIOS.forEach(function(p) {
+            if (!ccyTotals[p.ccy]) ccyTotals[p.ccy] = { count: 0, aum: 0 };
+            ccyTotals[p.ccy].count++;
+            ccyTotals[p.ccy].aum += p.aum;
+        });
+        var totalAum = PORTFOLIOS.reduce(function(s, p) { return s + p.aum; }, 0);
+
+        var html = '<div class="am-table-container">';
+        html += '<table class="am-table"><thead><tr>' +
+            '<th style="width:80px">Currency</th>' +
+            '<th style="width:80px;text-align:right">Portfolios</th>' +
+            '<th style="width:140px;text-align:right">Total AUM</th>' +
+            '<th style="width:100px;text-align:right">Weight %</th>' +
+            '<th style="width:160px">Allocation</th>' +
+            '<th style="width:100px;text-align:right">FX Rate (vs USD)</th>' +
+            '<th style="width:100px;text-align:right">1D Change</th>' +
+            '</tr></thead><tbody>';
+
+        var fxRates = { USD: 1.0000, EUR: 1.0842, CHF: 0.8921, GBP: 1.2714 };
+        var fxChanges = { USD: 0.00, EUR: -0.12, CHF: +0.08, GBP: -0.05 };
+
+        FX_CURRENCIES.forEach(function(ccy) {
+            var data = ccyTotals[ccy] || { count: 0, aum: 0 };
+            var weight = totalAum > 0 ? (data.aum / totalAum * 100) : 0;
+            var changeCls = fxChanges[ccy] < 0 ? 'negative' : (fxChanges[ccy] > 0 ? 'positive' : '');
+            var barWidth = Math.min(weight, 100);
+
+            html += '<tr>' +
+                '<td><span class="am-mono" style="font-weight:600">' + ccy + '</span></td>' +
+                '<td style="text-align:right"><span class="am-num">' + data.count + '</span></td>' +
+                '<td style="text-align:right"><span class="am-num">' + formatAum(data.aum) + '</span></td>' +
+                '<td style="text-align:right"><span class="am-num">' + weight.toFixed(1) + '%</span></td>' +
+                '<td><div class="am-fill-bar"><div class="am-fill-bar-track"><div class="am-fill-bar-fill" style="width:' + barWidth + '%"></div></div></div></td>' +
+                '<td style="text-align:right"><span class="am-mono">' + fxRates[ccy].toFixed(4) + '</span></td>' +
+                '<td style="text-align:right"><span class="am-num ' + changeCls + '">' + (fxChanges[ccy] >= 0 ? '+' : '') + fxChanges[ccy].toFixed(2) + '%</span></td>' +
+            '</tr>';
+        });
+
+        html += '</tbody></table></div>';
+        return html;
+    }
+
+    // ========================================
+    // SIDEBAR: CURRENCY — Hedging Ratios
+    // ========================================
+
+    function renderHedgingTable() {
+        var hedgeData = [
+            { pair: 'EUR/USD', target: 100, actual: 97.8, notional: '142M', status: 'Below Threshold' },
+            { pair: 'CHF/USD', target: 100, actual: 99.2, notional: '256M', status: 'OK' },
+            { pair: 'GBP/USD', target: 95, actual: 94.1, notional: '48M', status: 'Below Threshold' },
+            { pair: 'JPY/USD', target: 100, actual: 100.0, notional: '33M', status: 'OK' }
+        ];
+
+        var html = '<div class="am-table-container">';
+        html += '<table class="am-table"><thead><tr>' +
+            '<th style="width:100px">CCY Pair</th>' +
+            '<th style="width:100px;text-align:right">Target Ratio</th>' +
+            '<th style="width:100px;text-align:right">Actual Ratio</th>' +
+            '<th style="width:100px;text-align:right">Gap</th>' +
+            '<th style="width:120px;text-align:right">Notional</th>' +
+            '<th style="width:120px">Status</th>' +
+            '<th style="width:160px">Action</th>' +
+            '</tr></thead><tbody>';
+
+        hedgeData.forEach(function(row) {
+            var gap = row.actual - row.target;
+            var gapCls = gap < 0 ? 'negative' : (gap > 0 ? 'positive' : '');
+            var statusColor = row.status === 'OK' ? 'green' : 'amber';
+
+            html += '<tr>' +
+                '<td><span class="am-mono" style="font-weight:600">' + row.pair + '</span></td>' +
+                '<td style="text-align:right"><span class="am-num">' + row.target.toFixed(1) + '%</span></td>' +
+                '<td style="text-align:right"><span class="am-num">' + row.actual.toFixed(1) + '%</span></td>' +
+                '<td style="text-align:right"><span class="am-num ' + gapCls + '">' + (gap >= 0 ? '+' : '') + gap.toFixed(1) + '%</span></td>' +
+                '<td style="text-align:right"><span class="am-num">' + row.notional + '</span></td>' +
+                '<td>' + renderBadge(row.status, statusColor) + '</td>' +
+                '<td>' + (row.status !== 'OK' ? '<button class="am-action-btn primary" onclick="event.stopPropagation()">Adjust Hedge</button>' : '') + '</td>' +
+            '</tr>';
+        });
+
+        html += '</tbody></table></div>';
+        return html;
+    }
+
+    // ========================================
+    // SIDEBAR: CURRENCY — FX Orders
+    // ========================================
+
+    function renderFxOrdersTable() {
+        var fxOrders = [
+            { id: 'FX-001', pair: 'EUR/USD', side: 'Buy', notional: '5.2M EUR', rate: 1.0842, status: 'Working', trader: 'M. Weber', ts: '09:14:22' },
+            { id: 'FX-002', pair: 'CHF/USD', side: 'Sell', notional: '3.8M CHF', rate: 0.8921, status: 'Filled', trader: 'S. Chen', ts: '08:55:10' },
+            { id: 'FX-003', pair: 'GBP/USD', side: 'Buy', notional: '1.5M GBP', rate: 1.2714, status: 'Working', trader: 'A. Patel', ts: '09:32:45' },
+            { id: 'FX-004', pair: 'EUR/CHF', side: 'Sell', notional: '7.1M EUR', rate: 1.2150, status: 'Partially Filled', trader: 'J. Mueller', ts: '09:01:33' },
+            { id: 'FX-005', pair: 'USD/JPY', side: 'Buy', notional: '12.0M USD', rate: 149.82, status: 'Pending', trader: 'K. Tanaka', ts: '10:05:17' },
+            { id: 'FX-006', pair: 'GBP/EUR', side: 'Sell', notional: '2.3M GBP', rate: 0.8515, status: 'Working', trader: 'L. Rossi', ts: '09:47:02' },
+            { id: 'FX-007', pair: 'EUR/USD', side: 'Buy', notional: '8.9M EUR', rate: 1.0838, status: 'Filled', trader: 'M. Weber', ts: '08:22:41' },
+            { id: 'FX-008', pair: 'CHF/USD', side: 'Buy', notional: '4.6M CHF', rate: 0.8925, status: 'Working', trader: 'S. Chen', ts: '10:11:55' }
+        ];
+
+        var html = '<div class="am-table-container">';
+        html += '<table class="am-table"><thead><tr>' +
+            '<th style="width:80px">Order ID</th>' +
+            '<th style="width:90px">CCY Pair</th>' +
+            '<th style="width:60px">Side</th>' +
+            '<th style="width:120px;text-align:right">Notional</th>' +
+            '<th style="width:90px;text-align:right">Rate</th>' +
+            '<th style="width:110px">Status</th>' +
+            '<th style="width:90px">Trader</th>' +
+            '<th style="width:80px">Timestamp</th>' +
+            '</tr></thead><tbody>';
+
+        fxOrders.forEach(function(row) {
+            var sideBadge = row.side === 'Buy' ? 'green' : 'red';
+            var statusColor = row.status === 'Filled' ? 'green' : (row.status === 'Partially Filled' ? 'cyan' : (row.status === 'Working' ? 'blue' : 'grey'));
+
+            html += '<tr>' +
+                '<td><span class="am-mono">' + row.id + '</span></td>' +
+                '<td><span class="am-mono">' + row.pair + '</span></td>' +
+                '<td>' + renderBadge(row.side, sideBadge) + '</td>' +
+                '<td style="text-align:right"><span class="am-num">' + row.notional + '</span></td>' +
+                '<td style="text-align:right"><span class="am-mono">' + row.rate.toFixed(4) + '</span></td>' +
+                '<td>' + renderBadge(row.status, statusColor) + '</td>' +
+                '<td>' + row.trader + '</td>' +
+                '<td><span class="am-mono">' + row.ts + '</span></td>' +
+            '</tr>';
+        });
+
+        html += '</tbody></table></div>';
+        return html;
+    }
+
+
+    // ========================================
+    // SIDEBAR: STRATEGY — Model Allocation
+    // ========================================
+
+    function renderModelAllocationTable() {
+        var html = '<div class="am-table-container">';
+        html += '<table class="am-table"><thead><tr>' +
+            '<th class="am-col-id">Portfolio ID</th>' +
+            '<th class="am-col-name">Name</th>' +
+            '<th style="width:100px">Model</th>' +
+            '<th class="am-col-ccy">CCY</th>' +
+            '<th style="width:120px;text-align:right">AUM</th>' +
+            '<th style="width:80px;text-align:right">Positions</th>' +
+            '<th style="width:100px;text-align:right">Active Wt.</th>' +
+            '<th style="width:100px">Benchmark</th>' +
+            '</tr></thead><tbody>';
+
+        var filtered = PORTFOLIOS.filter(function(p) {
+            if (state.searchQuery) {
+                var q = state.searchQuery.toLowerCase();
+                if (p.name.toLowerCase().indexOf(q) === -1 && p.id.toLowerCase().indexOf(q) === -1 && p.model.toLowerCase().indexOf(q) === -1) return false;
+            }
+            return true;
+        });
+
+        filtered.forEach(function(p, idx) {
+            var positions = 80 + (idx * 7) % 120;
+            var activeWt = ((idx * 3.7 + 1.2) % 8 - 4).toFixed(2);
+            var activeWtCls = parseFloat(activeWt) < 0 ? 'negative' : 'positive';
+            var benchmarks = ['MSCI World', 'MSCI ACWI', 'SPI', 'STOXX Europe 600', 'FTSE 100', 'S&P 500'];
+
+            html += '<tr>' +
+                '<td class="am-col-id"><span class="am-mono">' + p.id + '</span></td>' +
+                '<td class="am-col-name">' + escapeHtml(p.name) + '</td>' +
+                '<td><span class="am-mono">' + p.model + '</span></td>' +
+                '<td class="am-col-ccy"><span class="am-mono">' + p.ccy + '</span></td>' +
+                '<td style="text-align:right"><span class="am-num">' + formatAum(p.aum) + '</span></td>' +
+                '<td style="text-align:right"><span class="am-num">' + positions + '</span></td>' +
+                '<td style="text-align:right"><span class="am-num ' + activeWtCls + '">' + (parseFloat(activeWt) >= 0 ? '+' : '') + activeWt + '%</span></td>' +
+                '<td>' + benchmarks[idx % benchmarks.length] + '</td>' +
+            '</tr>';
+        });
+
+        html += '</tbody></table></div>';
+        return html;
+    }
+
+    // ========================================
+    // SIDEBAR: STRATEGY — Tracking Error
+    // ========================================
+
+    function renderTrackingErrorTable() {
+        var teData = [
+            { portfolio: PORTFOLIOS[0], te: 2.34, limit: 3.00, utilization: 78.0, status: 'OK' },
+            { portfolio: PORTFOLIOS[4], te: 2.91, limit: 3.00, utilization: 97.0, status: 'Near Limit' },
+            { portfolio: PORTFOLIOS[14], te: 3.12, limit: 3.00, utilization: 104.0, status: 'Breach' }
+        ];
+
+        var html = '<div class="am-table-container">';
+        html += '<table class="am-table"><thead><tr>' +
+            '<th class="am-col-id">Portfolio ID</th>' +
+            '<th class="am-col-name">Name</th>' +
+            '<th style="width:100px;text-align:right">TE (ex-ante)</th>' +
+            '<th style="width:80px;text-align:right">Limit</th>' +
+            '<th style="width:120px">Utilization</th>' +
+            '<th style="width:100px">Status</th>' +
+            '<th style="width:160px">Action</th>' +
+            '</tr></thead><tbody>';
+
+        teData.forEach(function(row) {
+            var statusColor = row.status === 'Breach' ? 'red' : (row.status === 'Near Limit' ? 'amber' : 'green');
+            var barWidth = Math.min(row.utilization, 100);
+
+            html += '<tr>' +
+                '<td class="am-col-id"><span class="am-mono">' + row.portfolio.id + '</span></td>' +
+                '<td class="am-col-name">' + escapeHtml(row.portfolio.name) + '</td>' +
+                '<td style="text-align:right"><span class="am-num">' + row.te.toFixed(2) + '%</span></td>' +
+                '<td style="text-align:right"><span class="am-num">' + row.limit.toFixed(2) + '%</span></td>' +
+                '<td><div class="am-fill-bar"><div class="am-fill-bar-track"><div class="am-fill-bar-fill" style="width:' + barWidth + '%;background:' + (row.utilization > 100 ? 'var(--am-red)' : (row.utilization > 90 ? 'var(--am-amber)' : 'var(--am-green)')) + '"></div></div><span class="am-fill-bar-text">' + row.utilization.toFixed(0) + '%</span></div></td>' +
+                '<td>' + renderBadge(row.status, statusColor) + '</td>' +
+                '<td>' + (row.status !== 'OK' ? '<button class="am-action-btn primary" onclick="event.stopPropagation()">Review</button>' : '') + '</td>' +
+            '</tr>';
+        });
+
+        html += '</tbody></table></div>';
+        return html;
+    }
+
+    // ========================================
+    // SIDEBAR: STRATEGY — Rebalancing Queue
+    // ========================================
+
+    function renderRebalancingTable() {
+        var rebalData = [
+            { portfolio: PORTFOLIOS[8], trigger: 'Drift > 5%', priority: 'critical', status: 'Pending', trades: 14, scheduled: '11:00' },
+            { portfolio: PORTFOLIOS[12], trigger: 'Cash Drift', priority: 'warning', status: 'Queued', trades: 8, scheduled: '11:30' },
+            { portfolio: PORTFOLIOS[3], trigger: 'Model Change', priority: 'warning', status: 'Queued', trades: 22, scheduled: '12:00' },
+            { portfolio: PORTFOLIOS[16], trigger: 'Periodic', priority: 'info', status: 'Scheduled', trades: 6, scheduled: '14:00' }
+        ];
+
+        var html = '<div class="am-table-container">';
+        html += '<table class="am-table"><thead><tr>' +
+            '<th class="am-col-id">Portfolio ID</th>' +
+            '<th class="am-col-name">Name</th>' +
+            '<th style="width:100px">Trigger</th>' +
+            '<th style="width:80px">Priority</th>' +
+            '<th style="width:100px">Status</th>' +
+            '<th style="width:80px;text-align:right">Est. Trades</th>' +
+            '<th style="width:90px">Scheduled</th>' +
+            '<th style="width:160px">Action</th>' +
+            '</tr></thead><tbody>';
+
+        rebalData.forEach(function(row) {
+            var statusColor = row.status === 'Pending' ? 'amber' : (row.status === 'Queued' ? 'blue' : 'grey');
+
+            html += '<tr>' +
+                '<td class="am-col-id"><span class="am-mono">' + row.portfolio.id + '</span></td>' +
+                '<td class="am-col-name">' + escapeHtml(row.portfolio.name) + '</td>' +
+                '<td>' + row.trigger + '</td>' +
+                '<td>' + renderPriorityIcon(row.priority) + '</td>' +
+                '<td>' + renderBadge(row.status, statusColor) + '</td>' +
+                '<td style="text-align:right"><span class="am-num">' + row.trades + '</span></td>' +
+                '<td><span class="am-mono">' + row.scheduled + '</span></td>' +
+                '<td><button class="am-action-btn primary" onclick="event.stopPropagation()">Run Optimizer</button></td>' +
+            '</tr>';
+        });
+
+        html += '</tbody></table></div>';
+        return html;
+    }
+
+
+    // ========================================
+    // SIDEBAR: OPTIMIZER — Optimizer Queue
+    // ========================================
+
+    function renderOptimizerQueueTable() {
+        var queueData = [
+            { portfolio: PORTFOLIOS[0], reason: 'Cashflow -2.5M', status: 'Running', progress: 72, startedAt: '09:42:15', estComplete: '09:44:00' },
+            { portfolio: PORTFOLIOS[1], reason: 'Cashflow +5.0M', status: 'Completed', progress: 100, startedAt: '09:38:01', estComplete: '09:40:22' },
+            { portfolio: PORTFOLIOS[8], reason: 'Rebalance', status: 'Queued', progress: 0, startedAt: '--', estComplete: '~09:46' },
+            { portfolio: PORTFOLIOS[12], reason: 'Cash Drift', status: 'Queued', progress: 0, startedAt: '--', estComplete: '~09:48' },
+            { portfolio: PORTFOLIOS[3], reason: 'Model Change', status: 'Queued', progress: 0, startedAt: '--', estComplete: '~09:50' },
+            { portfolio: PORTFOLIOS[16], reason: 'Periodic Rebal.', status: 'Scheduled', progress: 0, startedAt: '--', estComplete: '14:00' },
+            { portfolio: PORTFOLIOS[6], reason: 'Cashflow -1.8M', status: 'Completed', progress: 100, startedAt: '09:30:10', estComplete: '09:32:44' }
+        ];
+
+        var html = '<div class="am-table-container">';
+        html += '<table class="am-table"><thead><tr>' +
+            '<th class="am-col-id">Portfolio ID</th>' +
+            '<th class="am-col-name">Name</th>' +
+            '<th style="width:120px">Reason</th>' +
+            '<th style="width:100px">Status</th>' +
+            '<th style="width:140px">Progress</th>' +
+            '<th style="width:90px">Started</th>' +
+            '<th style="width:90px">Est. Complete</th>' +
+            '</tr></thead><tbody>';
+
+        queueData.forEach(function(row) {
+            var statusColor = row.status === 'Completed' ? 'green' : (row.status === 'Running' ? 'blue' : (row.status === 'Queued' ? 'amber' : 'grey'));
+
+            html += '<tr>' +
+                '<td class="am-col-id"><span class="am-mono">' + row.portfolio.id + '</span></td>' +
+                '<td class="am-col-name">' + escapeHtml(row.portfolio.name) + '</td>' +
+                '<td>' + row.reason + '</td>' +
+                '<td>' + renderBadge(row.status, statusColor) + '</td>' +
+                '<td><div class="am-fill-bar"><div class="am-fill-bar-track"><div class="am-fill-bar-fill" style="width:' + row.progress + '%"></div></div><span class="am-fill-bar-text">' + row.progress + '%</span></div></td>' +
+                '<td><span class="am-mono">' + row.startedAt + '</span></td>' +
+                '<td><span class="am-mono">' + row.estComplete + '</span></td>' +
+            '</tr>';
+        });
+
+        html += '</tbody></table></div>';
+        return html;
+    }
+
+    // ========================================
+    // SIDEBAR: OPTIMIZER — Trade List
+    // ========================================
+
+    function renderTradeListTable() {
+        var trades = [];
+        var tradeSecurities = ['AAPL US', 'MSFT US', 'NESN SW', 'NOVN SW', 'ASML NA', 'MC FP', 'ROG SW', 'SAP GR', 'AMZN US', 'NVDA US'];
+        var tradeSides = ['Buy', 'Sell'];
+        for (var ti = 0; ti < 34; ti++) {
+            var pfIdx = ti % PORTFOLIOS.length;
+            trades.push({
+                portfolio: PORTFOLIOS[pfIdx],
+                security: tradeSecurities[ti % tradeSecurities.length],
+                side: tradeSides[ti % 2],
+                quantity: Math.floor(Math.random() * 20000) + 500,
+                targetWt: ((Math.random() * 4) + 0.5).toFixed(2),
+                currentWt: ((Math.random() * 4) + 0.5).toFixed(2),
+                status: ti < 12 ? 'Ready' : (ti < 24 ? 'Pending Approval' : 'Draft')
+            });
+        }
+
+        var html = '<div class="am-table-container">';
+        html += '<table class="am-table"><thead><tr>' +
+            '<th class="am-col-id">Portfolio</th>' +
+            '<th style="width:90px">Security</th>' +
+            '<th style="width:60px">Side</th>' +
+            '<th style="width:80px;text-align:right">Quantity</th>' +
+            '<th style="width:90px;text-align:right">Current Wt.</th>' +
+            '<th style="width:90px;text-align:right">Target Wt.</th>' +
+            '<th style="width:110px">Status</th>' +
+            '</tr></thead><tbody>';
+
+        var filtered = trades.filter(function(t) {
+            if (state.searchQuery) {
+                var q = state.searchQuery.toLowerCase();
+                if (t.portfolio.id.toLowerCase().indexOf(q) === -1 && t.security.toLowerCase().indexOf(q) === -1) return false;
+            }
+            return true;
+        });
+
+        filtered.forEach(function(row) {
+            var sideBadge = row.side === 'Buy' ? 'green' : 'red';
+            var statusColor = row.status === 'Ready' ? 'green' : (row.status === 'Pending Approval' ? 'amber' : 'grey');
+
+            html += '<tr>' +
+                '<td class="am-col-id"><span class="am-mono">' + row.portfolio.id + '</span></td>' +
+                '<td><span class="am-mono">' + row.security + '</span></td>' +
+                '<td>' + renderBadge(row.side, sideBadge) + '</td>' +
+                '<td style="text-align:right"><span class="am-num">' + formatNumber(row.quantity) + '</span></td>' +
+                '<td style="text-align:right"><span class="am-num">' + row.currentWt + '%</span></td>' +
+                '<td style="text-align:right"><span class="am-num">' + row.targetWt + '%</span></td>' +
+                '<td>' + renderBadge(row.status, statusColor) + '</td>' +
+            '</tr>';
+        });
+
+        html += '</tbody></table></div>';
+        return html;
+    }
+
+    // ========================================
+    // SIDEBAR: OPTIMIZER — Constraints
+    // ========================================
+
+    function renderConstraintsTable() {
+        var constraints = [
+            { name: 'Max Single Position', type: 'Hard', limit: '5.00%', current: '4.82%', utilization: 96.4, status: 'Near Limit' },
+            { name: 'Max Sector Weight', type: 'Hard', limit: '25.00%', current: '23.10%', utilization: 92.4, status: 'Near Limit' },
+            { name: 'Min Cash Holding', type: 'Hard', limit: '0.30%', current: '0.73%', utilization: 41.1, status: 'OK' },
+            { name: 'Max Tracking Error', type: 'Soft', limit: '3.00%', current: '2.34%', utilization: 78.0, status: 'OK' },
+            { name: 'Max Turnover (annual)', type: 'Soft', limit: '80.00%', current: '62.50%', utilization: 78.1, status: 'OK' },
+            { name: 'ESG Score Floor', type: 'Hard', limit: '6.0', current: '7.2', utilization: 83.3, status: 'OK' },
+            { name: 'Max Country Weight', type: 'Soft', limit: '40.00%', current: '38.90%', utilization: 97.3, status: 'Near Limit' },
+            { name: 'Min # Holdings', type: 'Hard', limit: '40', current: '87', utilization: 45.9, status: 'OK' }
+        ];
+
+        var html = '<div class="am-table-container">';
+        html += '<table class="am-table"><thead><tr>' +
+            '<th style="width:200px">Constraint</th>' +
+            '<th style="width:60px">Type</th>' +
+            '<th style="width:100px;text-align:right">Limit</th>' +
+            '<th style="width:100px;text-align:right">Current</th>' +
+            '<th style="width:140px">Utilization</th>' +
+            '<th style="width:100px">Status</th>' +
+            '</tr></thead><tbody>';
+
+        constraints.forEach(function(row) {
+            var statusColor = row.status === 'Near Limit' ? 'amber' : 'green';
+            var typeBadge = row.type === 'Hard' ? 'red' : 'blue';
+            var barColor = row.utilization > 95 ? 'var(--am-amber)' : 'var(--am-green)';
+
+            html += '<tr>' +
+                '<td>' + row.name + '</td>' +
+                '<td>' + renderBadge(row.type, typeBadge) + '</td>' +
+                '<td style="text-align:right"><span class="am-num">' + row.limit + '</span></td>' +
+                '<td style="text-align:right"><span class="am-num">' + row.current + '</span></td>' +
+                '<td><div class="am-fill-bar"><div class="am-fill-bar-track"><div class="am-fill-bar-fill" style="width:' + Math.min(row.utilization, 100) + '%;background:' + barColor + '"></div></div><span class="am-fill-bar-text">' + row.utilization.toFixed(1) + '%</span></div></td>' +
+                '<td>' + renderBadge(row.status, statusColor) + '</td>' +
+            '</tr>';
+        });
+
+        html += '</tbody></table></div>';
+        return html;
+    }
+
+
+    // ========================================
+    // SIDEBAR: AM — Overview
+    // ========================================
+
+    function renderAmOverviewContent() {
+        var totalAum = PORTFOLIOS.reduce(function(s, p) { return s + p.aum; }, 0);
+        var avgDrift = PORTFOLIOS.reduce(function(s, p) { return s + Math.abs(p.cashDrift); }, 0) / PORTFOLIOS.length;
+        var breaches = PORTFOLIOS.filter(function(p) { return Math.abs(p.cashDrift) > 0.10; }).length;
+        var activeEvents = EVENT_MONITOR_DATA.incoming.length + EVENT_MONITOR_DATA.attention.length;
+
+        var html = '<div class="am-overview-grid">';
+
+        // Summary cards
+        html += '<div class="am-overview-card">' +
+            '<div class="am-overview-card-label">Total AUM</div>' +
+            '<div class="am-overview-card-value">' + formatAum(totalAum) + '</div>' +
+            '<div class="am-overview-card-sub">' + PORTFOLIOS.length + ' portfolios</div>' +
+        '</div>';
+
+        html += '<div class="am-overview-card">' +
+            '<div class="am-overview-card-label">Active Events</div>' +
+            '<div class="am-overview-card-value" style="color:var(--am-amber)">' + activeEvents + '</div>' +
+            '<div class="am-overview-card-sub">' + EVENT_MONITOR_DATA.incoming.length + ' incoming / ' + EVENT_MONITOR_DATA.attention.length + ' attention</div>' +
+        '</div>';
+
+        html += '<div class="am-overview-card">' +
+            '<div class="am-overview-card-label">Cash Drift (avg)</div>' +
+            '<div class="am-overview-card-value">' + avgDrift.toFixed(2) + '%</div>' +
+            '<div class="am-overview-card-sub">' + breaches + ' breach' + (breaches !== 1 ? 'es' : '') + '</div>' +
+        '</div>';
+
+        html += '<div class="am-overview-card">' +
+            '<div class="am-overview-card-label">Ongoing Orders</div>' +
+            '<div class="am-overview-card-value">' + ONGOING_ORDERS.length + '</div>' +
+            '<div class="am-overview-card-sub">' + ONGOING_ORDERS.filter(function(o) { return o.status === 'Working'; }).length + ' working</div>' +
+        '</div>';
+
+        html += '</div>';
+
+        // Portfolios by currency breakdown
+        html += '<div class="am-table-container" style="margin-top:16px">';
+        html += '<div style="padding:8px 12px;color:var(--am-text-secondary);font-size:11px;text-transform:uppercase;letter-spacing:0.5px">Portfolio Summary by Currency</div>';
+        html += '<table class="am-table"><thead><tr>' +
+            '<th style="width:80px">Currency</th>' +
+            '<th style="width:80px;text-align:right">Count</th>' +
+            '<th style="width:140px;text-align:right">Total AUM</th>' +
+            '<th style="width:100px;text-align:right">Avg Cash %</th>' +
+            '<th style="width:100px;text-align:right">Avg Drift %</th>' +
+            '</tr></thead><tbody>';
+
+        var ccyGroups = {};
+        PORTFOLIOS.forEach(function(p) {
+            if (!ccyGroups[p.ccy]) ccyGroups[p.ccy] = { count: 0, aum: 0, cashSum: 0, driftSum: 0 };
+            ccyGroups[p.ccy].count++;
+            ccyGroups[p.ccy].aum += p.aum;
+            ccyGroups[p.ccy].cashSum += p.cashActual;
+            ccyGroups[p.ccy].driftSum += p.cashDrift;
+        });
+
+        Object.keys(ccyGroups).sort().forEach(function(ccy) {
+            var g = ccyGroups[ccy];
+            var avgCash = g.cashSum / g.count;
+            var avgDr = g.driftSum / g.count;
+            var driftCls = avgDr < 0 ? 'negative' : (avgDr > 0 ? 'positive' : '');
+
+            html += '<tr>' +
+                '<td><span class="am-mono" style="font-weight:600">' + ccy + '</span></td>' +
+                '<td style="text-align:right"><span class="am-num">' + g.count + '</span></td>' +
+                '<td style="text-align:right"><span class="am-num">' + formatAum(g.aum) + '</span></td>' +
+                '<td style="text-align:right"><span class="am-num">' + avgCash.toFixed(2) + '%</span></td>' +
+                '<td style="text-align:right"><span class="am-num ' + driftCls + '">' + (avgDr >= 0 ? '+' : '') + avgDr.toFixed(2) + '%</span></td>' +
+            '</tr>';
+        });
+
+        html += '</tbody></table></div>';
+        return html;
+    }
+
+    // ========================================
+    // SIDEBAR: AM — Tasks
+    // ========================================
+
+    function renderAmTasksTable() {
+        var tasks = [
+            { id: 'T-001', title: 'Review SOD breaks for S0174909', assignee: 'J. Smith', priority: 'critical', status: 'Open', due: '10:30', category: 'SOD' },
+            { id: 'T-002', title: 'Approve PTC for AI & Robotics Fund', assignee: 'S. Johnson', priority: 'critical', status: 'Open', due: '11:00', category: 'PTC' },
+            { id: 'T-003', title: 'Investigate cash drift on FinTech Fund', assignee: 'M. Chen', priority: 'warning', status: 'In Progress', due: '11:30', category: 'Cash' },
+            { id: 'T-004', title: 'Send orders for UK Opportunities', assignee: 'J. Smith', priority: 'warning', status: 'Open', due: '12:00', category: 'Orders' },
+            { id: 'T-005', title: 'Rebalance China Innovation Equity', assignee: 'S. Johnson', priority: 'warning', status: 'Queued', due: '13:00', category: 'Rebal' },
+            { id: 'T-006', title: 'FX hedge adjustment EUR/USD', assignee: 'M. Chen', priority: 'info', status: 'Queued', due: '14:00', category: 'FX' },
+            { id: 'T-007', title: 'Monthly reporting — Swiss Large Cap', assignee: 'J. Smith', priority: 'info', status: 'Open', due: 'EOD', category: 'Report' },
+            { id: 'T-008', title: 'Compliance check — ESG scoring', assignee: 'S. Johnson', priority: 'info', status: 'In Progress', due: 'EOD', category: 'Compl.' },
+            { id: 'T-009', title: 'Review new model allocation changes', assignee: 'M. Chen', priority: 'warning', status: 'Open', due: '15:00', category: 'Model' },
+            { id: 'T-010', title: 'Validate cashflow for Nordic Equity', assignee: 'J. Smith', priority: 'info', status: 'Queued', due: '16:00', category: 'Cash' },
+            { id: 'T-011', title: 'Update benchmark for Japan Select', assignee: 'S. Johnson', priority: 'info', status: 'Queued', due: 'EOD', category: 'Model' },
+            { id: 'T-012', title: 'End-of-day reconciliation prep', assignee: 'M. Chen', priority: 'info', status: 'Queued', due: '17:00', category: 'Recon' }
+        ];
+
+        var html = '<div class="am-table-container">';
+        html += '<table class="am-table"><thead><tr>' +
+            '<th style="width:60px">Task ID</th>' +
+            '<th style="min-width:240px">Description</th>' +
+            '<th style="width:70px">Category</th>' +
+            '<th style="width:100px">Assignee</th>' +
+            '<th style="width:60px">Priority</th>' +
+            '<th style="width:100px">Status</th>' +
+            '<th style="width:60px">Due</th>' +
+            '</tr></thead><tbody>';
+
+        tasks.forEach(function(row) {
+            var statusColor = row.status === 'Open' ? 'amber' : (row.status === 'In Progress' ? 'blue' : 'grey');
+            var catColor = row.category === 'SOD' ? 'red' : (row.category === 'PTC' ? 'cyan' : (row.category === 'Cash' ? 'blue' : (row.category === 'Orders' ? 'green' : 'grey')));
+
+            html += '<tr>' +
+                '<td><span class="am-mono">' + row.id + '</span></td>' +
+                '<td>' + row.title + '</td>' +
+                '<td>' + renderBadge(row.category, catColor) + '</td>' +
+                '<td>' + row.assignee + '</td>' +
+                '<td>' + renderPriorityIcon(row.priority) + '</td>' +
+                '<td>' + renderBadge(row.status, statusColor) + '</td>' +
+                '<td><span class="am-mono">' + row.due + '</span></td>' +
+            '</tr>';
+        });
+
+        html += '</tbody></table></div>';
+        return html;
+    }
+
+    // ========================================
+    // SIDEBAR: AM — Reporting
+    // ========================================
+
+    function renderAmReportingTable() {
+        var reports = [
+            { name: 'Daily NAV Report', type: 'Daily', lastRun: '09:15:00', status: 'Completed', recipients: 3 },
+            { name: 'Cash Position Summary', type: 'Daily', lastRun: '09:20:00', status: 'Completed', recipients: 5 },
+            { name: 'Weekly Performance Attribution', type: 'Weekly', lastRun: '2025-06-16', status: 'Scheduled', recipients: 8 }
+        ];
+
+        var html = '<div class="am-table-container">';
+        html += '<table class="am-table"><thead><tr>' +
+            '<th style="min-width:240px">Report Name</th>' +
+            '<th style="width:80px">Frequency</th>' +
+            '<th style="width:120px">Last Run</th>' +
+            '<th style="width:100px">Status</th>' +
+            '<th style="width:80px;text-align:right">Recipients</th>' +
+            '<th style="width:160px">Action</th>' +
+            '</tr></thead><tbody>';
+
+        reports.forEach(function(row) {
+            var statusColor = row.status === 'Completed' ? 'green' : (row.status === 'Scheduled' ? 'blue' : 'grey');
+
+            html += '<tr>' +
+                '<td>' + row.name + '</td>' +
+                '<td>' + renderBadge(row.type, 'grey') + '</td>' +
+                '<td><span class="am-mono">' + row.lastRun + '</span></td>' +
+                '<td>' + renderBadge(row.status, statusColor) + '</td>' +
+                '<td style="text-align:right"><span class="am-num">' + row.recipients + '</span></td>' +
+                '<td><button class="am-action-btn" onclick="event.stopPropagation()">Run Now</button> <button class="am-action-btn" onclick="event.stopPropagation()">Download</button></td>' +
+            '</tr>';
+        });
+
+        html += '</tbody></table></div>';
+        return html;
+    }
+
+
+    // ========================================
+    // SIDEBAR: CORC — Compliance
+    // ========================================
+
+    function renderComplianceTable() {
+        var complianceData = [
+            { rule: 'Max Single Position 5%', portfolio: PORTFOLIOS[0], current: '4.82%', limit: '5.00%', status: 'OK', lastCheck: '09:45' },
+            { rule: 'ESG Score >= 6.0', portfolio: PORTFOLIOS[11], current: '5.8', limit: '6.0', status: 'Breach', lastCheck: '09:45' },
+            { rule: 'Sanctioned Securities', portfolio: PORTFOLIOS[4], current: '0', limit: '0', status: 'OK', lastCheck: '09:45' },
+            { rule: 'Max Leverage 1.0x', portfolio: PORTFOLIOS[14], current: '1.02x', limit: '1.00x', status: 'Breach', lastCheck: '09:40' },
+            { rule: 'Min Diversification (40 pos.)', portfolio: PORTFOLIOS[20], current: '38', limit: '40', status: 'Warning', lastCheck: '09:45' }
+        ];
+
+        var html = '<div class="am-table-container">';
+        html += '<table class="am-table"><thead><tr>' +
+            '<th style="min-width:200px">Rule</th>' +
+            '<th class="am-col-id">Portfolio</th>' +
+            '<th class="am-col-name">Name</th>' +
+            '<th style="width:80px;text-align:right">Current</th>' +
+            '<th style="width:80px;text-align:right">Limit</th>' +
+            '<th style="width:100px">Status</th>' +
+            '<th style="width:80px">Last Check</th>' +
+            '</tr></thead><tbody>';
+
+        complianceData.forEach(function(row) {
+            var statusColor = row.status === 'Breach' ? 'red' : (row.status === 'Warning' ? 'amber' : 'green');
+
+            html += '<tr>' +
+                '<td>' + row.rule + '</td>' +
+                '<td class="am-col-id"><span class="am-mono">' + row.portfolio.id + '</span></td>' +
+                '<td class="am-col-name">' + escapeHtml(row.portfolio.name) + '</td>' +
+                '<td style="text-align:right"><span class="am-num">' + row.current + '</span></td>' +
+                '<td style="text-align:right"><span class="am-num">' + row.limit + '</span></td>' +
+                '<td>' + renderBadge(row.status, statusColor) + '</td>' +
+                '<td><span class="am-mono">' + row.lastCheck + '</span></td>' +
+            '</tr>';
+        });
+
+        html += '</tbody></table></div>';
+        return html;
+    }
+
+    // ========================================
+    // SIDEBAR: CORC — Risk Monitor
+    // ========================================
+
+    function renderRiskMonitorTable() {
+        var riskData = [
+            { metric: 'Portfolio VaR (95%)', portfolio: PORTFOLIOS[0], value: '1.42%', limit: '2.00%', utilization: 71, status: 'OK' },
+            { metric: 'Portfolio VaR (95%)', portfolio: PORTFOLIOS[4], value: '1.89%', limit: '2.00%', utilization: 94.5, status: 'Near Limit' },
+            { metric: 'Tracking Error', portfolio: PORTFOLIOS[14], value: '3.12%', limit: '3.00%', utilization: 104, status: 'Breach' },
+            { metric: 'Beta to Benchmark', portfolio: PORTFOLIOS[1], value: '1.15', limit: '1.20', utilization: 95.8, status: 'Near Limit' },
+            { metric: 'Concentration Risk', portfolio: PORTFOLIOS[8], value: '18.4%', limit: '20.0%', utilization: 92, status: 'OK' },
+            { metric: 'Liquidity Score', portfolio: PORTFOLIOS[20], value: '72', limit: '80', utilization: 90, status: 'Near Limit' },
+            { metric: 'Counterparty Exp.', portfolio: PORTFOLIOS[12], value: '8.2%', limit: '10.0%', utilization: 82, status: 'OK' },
+            { metric: 'FX Exposure (unhedged)', portfolio: PORTFOLIOS[16], value: '4.1%', limit: '5.0%', utilization: 82, status: 'OK' }
+        ];
+
+        var html = '<div class="am-table-container">';
+        html += '<table class="am-table"><thead><tr>' +
+            '<th style="width:180px">Risk Metric</th>' +
+            '<th class="am-col-id">Portfolio</th>' +
+            '<th class="am-col-name">Name</th>' +
+            '<th style="width:80px;text-align:right">Value</th>' +
+            '<th style="width:80px;text-align:right">Limit</th>' +
+            '<th style="width:140px">Utilization</th>' +
+            '<th style="width:100px">Status</th>' +
+            '</tr></thead><tbody>';
+
+        riskData.forEach(function(row) {
+            var statusColor = row.status === 'Breach' ? 'red' : (row.status === 'Near Limit' ? 'amber' : 'green');
+            var barColor = row.utilization > 100 ? 'var(--am-red)' : (row.utilization > 90 ? 'var(--am-amber)' : 'var(--am-green)');
+
+            html += '<tr>' +
+                '<td>' + row.metric + '</td>' +
+                '<td class="am-col-id"><span class="am-mono">' + row.portfolio.id + '</span></td>' +
+                '<td class="am-col-name">' + escapeHtml(row.portfolio.name) + '</td>' +
+                '<td style="text-align:right"><span class="am-num">' + row.value + '</span></td>' +
+                '<td style="text-align:right"><span class="am-num">' + row.limit + '</span></td>' +
+                '<td><div class="am-fill-bar"><div class="am-fill-bar-track"><div class="am-fill-bar-fill" style="width:' + Math.min(row.utilization, 100) + '%;background:' + barColor + '"></div></div><span class="am-fill-bar-text">' + row.utilization.toFixed(0) + '%</span></div></td>' +
+                '<td>' + renderBadge(row.status, statusColor) + '</td>' +
+            '</tr>';
+        });
+
+        html += '</tbody></table></div>';
+        return html;
+    }
+
+    // ========================================
+    // SIDEBAR: CORC — Controls
+    // ========================================
+
+    function renderControlsTable() {
+        var controls = [
+            { id: 'CTL-001', name: '4-Eye Principle — Order Approval', frequency: 'Per Trade', lastExec: '09:42', result: 'Pass', owner: 'J. Smith' },
+            { id: 'CTL-002', name: 'SOD Reconciliation', frequency: 'Daily', lastExec: '07:00', result: 'Pass', owner: 'Ops Team' },
+            { id: 'CTL-003', name: 'NAV Validation', frequency: 'Daily', lastExec: '08:15', result: 'Pass', owner: 'Ops Team' },
+            { id: 'CTL-004', name: 'Trade Limit Check', frequency: 'Per Trade', lastExec: '09:38', result: 'Pass', owner: 'Risk Team' },
+            { id: 'CTL-005', name: 'Pre-Trade Compliance', frequency: 'Per Trade', lastExec: '09:42', result: 'Fail', owner: 'Compliance' },
+            { id: 'CTL-006', name: 'Cash Balance Verification', frequency: 'Daily', lastExec: '08:30', result: 'Pass', owner: 'Ops Team' },
+            { id: 'CTL-007', name: 'FX Rate Source Validation', frequency: 'Daily', lastExec: '07:15', result: 'Pass', owner: 'Ops Team' },
+            { id: 'CTL-008', name: 'Corporate Action Processing', frequency: 'Daily', lastExec: '08:00', result: 'Warning', owner: 'Ops Team' },
+            { id: 'CTL-009', name: 'Benchmark Data Quality', frequency: 'Daily', lastExec: '07:30', result: 'Pass', owner: 'Data Team' },
+            { id: 'CTL-010', name: 'Position Limit Monitoring', frequency: 'Continuous', lastExec: '09:45', result: 'Pass', owner: 'Risk Team' },
+            { id: 'CTL-011', name: 'Settlement Instruction Check', frequency: 'Per Trade', lastExec: '09:40', result: 'Pass', owner: 'Ops Team' },
+            { id: 'CTL-012', name: 'Pricing Source Comparison', frequency: 'Daily', lastExec: '08:45', result: 'Pass', owner: 'Data Team' },
+            { id: 'CTL-013', name: 'Regulatory Exposure Report', frequency: 'Weekly', lastExec: '2025-06-16', result: 'Pass', owner: 'Compliance' },
+            { id: 'CTL-014', name: 'Client Mandate Compliance', frequency: 'Daily', lastExec: '09:00', result: 'Warning', owner: 'Compliance' }
+        ];
+
+        var html = '<div class="am-table-container">';
+        html += '<table class="am-table"><thead><tr>' +
+            '<th style="width:70px">Control ID</th>' +
+            '<th style="min-width:240px">Control Name</th>' +
+            '<th style="width:90px">Frequency</th>' +
+            '<th style="width:100px">Last Executed</th>' +
+            '<th style="width:80px">Result</th>' +
+            '<th style="width:100px">Owner</th>' +
+            '</tr></thead><tbody>';
+
+        controls.forEach(function(row) {
+            var resultColor = row.result === 'Pass' ? 'green' : (row.result === 'Fail' ? 'red' : 'amber');
+
+            html += '<tr>' +
+                '<td><span class="am-mono">' + row.id + '</span></td>' +
+                '<td>' + row.name + '</td>' +
+                '<td>' + renderBadge(row.frequency, 'grey') + '</td>' +
+                '<td><span class="am-mono">' + row.lastExec + '</span></td>' +
+                '<td>' + renderBadge(row.result, resultColor) + '</td>' +
+                '<td>' + row.owner + '</td>' +
+            '</tr>';
+        });
+
+        html += '</tbody></table></div>';
+        return html;
+    }
+
+
+    // ========================================
     // DETAIL PANEL (Right Side)
     // ========================================
 
@@ -1079,15 +1974,46 @@ var assetModuleLoaded = false;
     // ========================================
 
     function renderContent() {
-        var contentHtml = '';
-        switch (state.activeTab) {
-            case 'eventMonitor': contentHtml = renderEventMonitorTable(); break;
-            case 'cashflows': contentHtml = renderCashflowsTable(); break;
-            case 'sodAlert': contentHtml = renderSodAlertTable(); break;
-            case 'sodItemChanges': contentHtml = renderSodItemChangesTable(); break;
-            case 'ongoingOrders': contentHtml = renderOngoingOrdersTable(); break;
+        // Portfolio sidebar uses the original tab-based routing
+        if (state.activeSidebar === 'portfolio') {
+            switch (state.activeTab) {
+                case 'eventMonitor': return renderEventMonitorTable();
+                case 'cashflows': return renderCashflowsTable();
+                case 'sodAlert': return renderSodAlertTable();
+                case 'sodItemChanges': return renderSodItemChangesTable();
+                case 'ongoingOrders': return renderOngoingOrdersTable();
+            }
+            return '';
         }
-        return contentHtml;
+
+        // Other sidebar sections dispatch by activeTab
+        switch (state.activeTab) {
+            // Cash
+            case 'cashBalances': return renderCashBalancesTable();
+            case 'cashProjection': return renderCashProjectionTable();
+            case 'cashDrift': return renderCashDriftTable();
+            // Currency
+            case 'fxExposure': return renderFxExposureTable();
+            case 'hedging': return renderHedgingTable();
+            case 'fxOrders': return renderFxOrdersTable();
+            // Strategy
+            case 'modelAllocation': return renderModelAllocationTable();
+            case 'trackingError': return renderTrackingErrorTable();
+            case 'rebalancing': return renderRebalancingTable();
+            // Optimizer
+            case 'optimizerQueue': return renderOptimizerQueueTable();
+            case 'tradeList': return renderTradeListTable();
+            case 'constraints': return renderConstraintsTable();
+            // AM
+            case 'amOverview': return renderAmOverviewContent();
+            case 'amTasks': return renderAmTasksTable();
+            case 'amReporting': return renderAmReportingTable();
+            // CORC
+            case 'compliance': return renderComplianceTable();
+            case 'riskMonitor': return renderRiskMonitorTable();
+            case 'controls': return renderControlsTable();
+        }
+        return '';
     }
 
     function renderAll() {
@@ -1189,10 +2115,13 @@ var assetModuleLoaded = false;
     // Sidebar navigation
     window.amSwitchSidebar = function(key) {
         state.activeSidebar = key;
+        state.activeTab = getDefaultTab(key);
         state.selectedPortfolio = null;
         state.selectedRowIndex = null;
         state.panelMode = null;
         state.chatMessages = [];
+        state.searchQuery = '';
+        state.activeFilter = 'all';
         renderAll();
     };
 

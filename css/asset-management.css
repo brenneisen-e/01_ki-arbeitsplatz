@@ -123,6 +123,12 @@
     color: #1e293b;
 }
 
+.am-filter-count {
+    font-size: 11px;
+    color: var(--am-text-muted);
+    font-family: 'SF Mono', 'Consolas', 'Monaco', monospace;
+}
+
 .am-header-right {
     display: flex;
     align-items: center;

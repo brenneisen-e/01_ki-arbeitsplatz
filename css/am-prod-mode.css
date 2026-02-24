@@ -577,6 +577,14 @@
     border-radius: 12px;
     font-size: 11px;
     font-weight: 500;
+    cursor: default;
+    transition: all 0.15s ease;
+}
+
+.amp-action-badge:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+    filter: brightness(0.95);
 }
 
 .amp-action-draft {
@@ -584,9 +592,17 @@
     color: #475569;
 }
 
+.amp-action-draft:hover {
+    background: #E2E8F0;
+}
+
 .amp-action-awaiting-approval {
     background: #FEF3C7;
     color: #92400E;
+}
+
+.amp-action-awaiting-approval:hover {
+    background: #FDE68A;
 }
 
 .amp-action-ptc-complete,
@@ -595,10 +611,20 @@
     color: #1E40AF;
 }
 
+.amp-action-ptc-complete:hover,
+.amp-action-publish-cash-\&-check-portfolio:hover {
+    background: #BFDBFE;
+}
+
 .amp-action-trading,
 .amp-action-completed {
     background: #D1FAE5;
     color: #065F46;
+}
+
+.amp-action-trading:hover,
+.amp-action-completed:hover {
+    background: #A7F3D0;
 }
 
 .amp-action-investigating,
@@ -606,6 +632,12 @@
 .amp-action-optimize-portfolio {
     background: #E0E7FF;
     color: #3730A3;
+}
+
+.amp-action-investigating:hover,
+.amp-action-optimizing:hover,
+.amp-action-optimize-portfolio:hover {
+    background: #C7D2FE;
 }
 
 /* Amount */

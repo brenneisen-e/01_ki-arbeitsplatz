@@ -317,6 +317,57 @@
     height: 100% !important;
 }
 
+/* Custom Chart Tooltip */
+#amp-chart-tooltip {
+    position: absolute;
+    z-index: 99999;
+    background: #0f172a;
+    border: 1px solid rgba(148, 163, 184, 0.15);
+    border-radius: 10px;
+    padding: 10px 14px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.15s ease, transform 0.15s ease;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    min-width: 100px;
+    backdrop-filter: blur(8px);
+}
+
+#amp-chart-tooltip .amp-tt-title {
+    font-size: 11px;
+    font-weight: 500;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+}
+
+#amp-chart-tooltip .amp-tt-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 2px 0;
+}
+
+#amp-chart-tooltip .amp-tt-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+#amp-chart-tooltip .amp-tt-value {
+    font-size: 13px;
+    font-weight: 600;
+    color: #f1f5f9;
+    font-family: 'IBM Plex Mono', 'Consolas', monospace;
+    white-space: nowrap;
+}
+
 /* Donut row */
 .amp-wk-donut-row {
     display: flex;

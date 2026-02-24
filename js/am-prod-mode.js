@@ -255,12 +255,83 @@
             if (c && typeof c.destroy === 'function') c.destroy();
         });
         welcomeCharts = [];
+        // Remove custom tooltip element
+        var tt = document.getElementById('amp-chart-tooltip');
+        if (tt) tt.remove();
+    }
+
+    // Custom HTML tooltip handler for Chart.js
+    function externalTooltipHandler(context) {
+        var tooltipModel = context.tooltip;
+        var tooltipEl = document.getElementById('amp-chart-tooltip');
+
+        if (!tooltipEl) {
+            tooltipEl = document.createElement('div');
+            tooltipEl.id = 'amp-chart-tooltip';
+            document.body.appendChild(tooltipEl);
+        }
+
+        // Hide if no tooltip
+        if (tooltipModel.opacity === 0) {
+            tooltipEl.style.opacity = '0';
+            tooltipEl.style.pointerEvents = 'none';
+            return;
+        }
+
+        // Build content
+        var html = '';
+        if (tooltipModel.title && tooltipModel.title.length) {
+            html += '<div class="amp-tt-title">' + tooltipModel.title[0] + '</div>';
+        }
+
+        if (tooltipModel.body) {
+            tooltipModel.body.forEach(function(bodyItem, i) {
+                var colors = tooltipModel.labelColors ? tooltipModel.labelColors[i] : null;
+                var colorDot = '';
+                if (colors && colors.backgroundColor) {
+                    colorDot = '<span class="amp-tt-dot" style="background:' + colors.backgroundColor + '"></span>';
+                }
+                var lines = bodyItem.lines || [];
+                lines.forEach(function(line) {
+                    html += '<div class="amp-tt-row">' + colorDot + '<span class="amp-tt-value">' + line + '</span></div>';
+                });
+            });
+        }
+
+        tooltipEl.innerHTML = html;
+        tooltipEl.style.opacity = '1';
+        tooltipEl.style.pointerEvents = 'none';
+
+        // Position
+        var chartRect = context.chart.canvas.getBoundingClientRect();
+        var tooltipWidth = tooltipEl.offsetWidth;
+        var tooltipHeight = tooltipEl.offsetHeight;
+        var left = chartRect.left + window.scrollX + tooltipModel.caretX;
+        var top = chartRect.top + window.scrollY + tooltipModel.caretY;
+
+        // Keep tooltip within viewport
+        if (left + tooltipWidth / 2 > window.innerWidth - 8) {
+            left = window.innerWidth - tooltipWidth - 8;
+        } else if (left - tooltipWidth / 2 < 8) {
+            left = 8;
+        } else {
+            left = left - tooltipWidth / 2;
+        }
+        top = top - tooltipHeight - 12;
+
+        tooltipEl.style.left = left + 'px';
+        tooltipEl.style.top = top + 'px';
     }
 
     function initWelcomeCharts() {
         if (typeof Chart === 'undefined') return;
 
         destroyWelcomeCharts();
+
+        var sharedTooltip = {
+            enabled: false,
+            external: externalTooltipHandler
+        };
 
         // --- AUM Line Chart ---
         var aumCanvas = document.getElementById('ampChartAum');
@@ -294,20 +365,14 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    interaction: { mode: 'index', intersect: false },
                     plugins: {
                         legend: { display: false },
                         tooltip: {
-                            backgroundColor: 'rgba(15, 23, 42, 0.95)',
-                            borderColor: 'rgba(148, 163, 184, 0.2)',
-                            borderWidth: 1,
-                            titleColor: '#94a3b8',
-                            bodyColor: '#60a5fa',
-                            bodyFont: { weight: '600' },
-                            padding: { top: 8, bottom: 8, left: 12, right: 12 },
-                            cornerRadius: 8,
-                            displayColors: false,
+                            enabled: false,
+                            external: externalTooltipHandler,
                             callbacks: {
-                                label: function(ctx) { return '\u20AC' + ctx.parsed.y.toFixed(2) + 'B'; }
+                                label: function(ctx) { return '\u20AC ' + ctx.parsed.y.toFixed(2) + 'B'; }
                             }
                         }
                     },
@@ -353,17 +418,10 @@
                     plugins: {
                         legend: { display: false },
                         tooltip: {
-                            backgroundColor: 'rgba(15, 23, 42, 0.95)',
-                            borderColor: 'rgba(148, 163, 184, 0.2)',
-                            borderWidth: 1,
-                            titleColor: '#94a3b8',
-                            bodyColor: '#e2e8f0',
-                            bodyFont: { weight: '600' },
-                            padding: { top: 8, bottom: 8, left: 12, right: 12 },
-                            cornerRadius: 8,
-                            displayColors: false,
+                            enabled: false,
+                            external: externalTooltipHandler,
                             callbacks: {
-                                label: function(ctx) { return '\u20AC' + ctx.parsed.y.toFixed(1) + 'M'; }
+                                label: function(ctx) { return '\u20AC ' + ctx.parsed.y.toFixed(1) + 'M'; }
                             }
                         }
                     },
@@ -406,15 +464,15 @@
                     plugins: {
                         legend: { display: false },
                         tooltip: {
-                            backgroundColor: 'rgba(15, 23, 42, 0.95)',
-                            borderColor: 'rgba(148, 163, 184, 0.2)',
-                            borderWidth: 1,
-                            titleColor: '#94a3b8',
-                            bodyColor: '#e2e8f0',
-                            bodyFont: { weight: '600' },
-                            padding: { top: 8, bottom: 8, left: 12, right: 12 },
-                            cornerRadius: 8,
-                            displayColors: true
+                            enabled: false,
+                            external: externalTooltipHandler,
+                            callbacks: {
+                                label: function(ctx) {
+                                    var total = ctx.dataset.data.reduce(function(a, b) { return a + b; }, 0);
+                                    var pct = ((ctx.parsed / total) * 100).toFixed(0);
+                                    return ctx.label + ': ' + ctx.parsed + ' (' + pct + '%)';
+                                }
+                            }
                         }
                     }
                 }
@@ -637,7 +695,42 @@
             renderProdMode();
             return;
         }
-        chatContainer.innerHTML = renderChatWidget();
+
+        // If chat is being toggled (open/close), we need to replace the whole widget
+        var existingPanel = chatContainer.querySelector('.amp-chat-panel');
+        if (!chatOpen || !existingPanel) {
+            chatContainer.innerHTML = renderChatWidget();
+            return;
+        }
+
+        // Chat is open and panel exists: only update the message body to avoid re-triggering animations
+        var body = document.getElementById('ampChatBody');
+        if (!body) {
+            chatContainer.innerHTML = renderChatWidget();
+            return;
+        }
+
+        var messagesHtml = chatMessages.map(function(msg) {
+            return '<div class="amp-chat-msg amp-chat-' + msg.role + '">' +
+                (msg.role === 'assistant' ? '<div class="amp-chat-avatar">' + ICONS.bot + '</div>' : '') +
+                '<div class="amp-chat-bubble">' + msg.html + '</div>' +
+            '</div>';
+        }).join('');
+
+        var suggestionsHtml = chatMessages.length === 0 ? (
+            '<div class="amp-chat-suggestions">' +
+                CHAT_SUGGESTIONS.map(function(s) {
+                    return '<button class="amp-chat-suggestion" onclick="ampSendChat(\'' + escapeAttr(s) + '\')">' + s + '</button>';
+                }).join('') +
+            '</div>'
+        ) : '';
+
+        body.innerHTML =
+            (chatMessages.length === 0 ? '<div class="amp-chat-welcome"><p>How can I help you today?</p></div>' : '') +
+            messagesHtml +
+            suggestionsHtml;
+
+        body.scrollTop = body.scrollHeight;
     }
 
     function renderTabs() {

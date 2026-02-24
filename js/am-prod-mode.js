@@ -12,6 +12,7 @@
     // ========================================
     var prodModeActive = false;
     var currentView = 'welcome'; // welcome | dashboard
+    var activeTab = 'eventMonitor'; // eventMonitor | cashflows | sod | portfolios
     var chatOpen = false;
     var chatMessages = [];
     var workflowExpandedId = null;
@@ -227,45 +228,295 @@
     // START / DASHBOARD SCREEN
     // ========================================
 
-    function renderDashboardScreen() {
-        var attentionWfs = WORKFLOWS.filter(function(w) { return w.status === 'attention'; });
-        var completedWfs = WORKFLOWS.filter(function(w) { return w.status === 'completed'; });
+    // Tab definitions
+    var TABS = [
+        { key: 'eventMonitor', label: 'Event Monitor' },
+        { key: 'cashflows', label: 'Cashflows' },
+        { key: 'sod', label: 'SOD' },
+        { key: 'portfolios', label: 'Portfolios' }
+    ];
 
+    // Cashflow mock data
+    var CASHFLOW_PROD_DATA = [
+        { id: 'CF-001', portfolio: 'AI and Robotics Equity Fund', portfolioId: 'S0174901', type: 'Inflow', amount: 5000000, ccy: 'USD', valueDate: '24.02.2026', status: 'Pending', steps: 1, totalSteps: 3 },
+        { id: 'CF-002', portfolio: 'Security Equity Fund', portfolioId: 'S0174905', type: 'Inflow', amount: 3200000, ccy: 'EUR', valueDate: '24.02.2026', status: 'Draft', steps: 0, totalSteps: 3 },
+        { id: 'CF-003', portfolio: 'Infrastructure Equity Fund', portfolioId: 'S0174931', type: 'Inflow', amount: 1200000, ccy: 'EUR', valueDate: '25.02.2026', status: 'PTC complete', steps: 2, totalSteps: 3 },
+        { id: 'CF-004', portfolio: 'Thematic Opportunities Equity', portfolioId: 'S0174903', type: 'Outflow', amount: -2500000, ccy: 'USD', valueDate: '24.02.2026', status: 'Ready to send', steps: 3, totalSteps: 3 },
+        { id: 'CF-005', portfolio: 'Energy Evolution Fund', portfolioId: 'S0174933', type: 'Outflow', amount: -950000, ccy: 'USD', valueDate: '25.02.2026', status: 'Trading', steps: 3, totalSteps: 3 },
+        { id: 'CF-006', portfolio: 'Global Leaders Equity', portfolioId: 'S0174909', type: 'Inflow', amount: 4100000, ccy: 'CHF', valueDate: '26.02.2026', status: 'Pending', steps: 0, totalSteps: 3 },
+        { id: 'CF-007', portfolio: 'Digital Health Equity Fund', portfolioId: 'S0174913', type: 'Inflow', amount: 2800000, ccy: 'USD', valueDate: '24.02.2026', status: 'Draft', steps: 1, totalSteps: 3 },
+        { id: 'CF-008', portfolio: 'FinTech Innovation Equity', portfolioId: 'S0174917', type: 'Outflow', amount: -1600000, ccy: 'EUR', valueDate: '25.02.2026', status: 'PTC complete', steps: 2, totalSteps: 3 }
+    ];
+
+    // SOD mock data
+    var SOD_DATA = [
+        { portfolio: 'AI and Robotics Equity Fund', portfolioId: 'S0174901', changeReason: 'NAV recalculation', severity: 'high', autoResolved: false, items: 3 },
+        { portfolio: 'Global Leaders Equity', portfolioId: 'S0174909', changeReason: 'Position mismatch', severity: 'high', autoResolved: false, items: 1 },
+        { portfolio: 'Thematic Opportunities Equity', portfolioId: 'S0174903', changeReason: 'FX rate update', severity: 'medium', autoResolved: true, items: 2 },
+        { portfolio: 'Security Equity Fund', portfolioId: 'S0174905', changeReason: 'Corporate action', severity: 'medium', autoResolved: true, items: 1 },
+        { portfolio: 'Infrastructure Equity Fund', portfolioId: 'S0174931', changeReason: 'Cash reconciliation', severity: 'low', autoResolved: true, items: 4 },
+        { portfolio: 'Energy Evolution Fund', portfolioId: 'S0174933', changeReason: 'Benchmark change', severity: 'low', autoResolved: true, items: 1 }
+    ];
+
+    // Portfolio overview mock data
+    var PORTFOLIO_DATA = [
+        { id: 'S0174901', name: 'AI and Robotics Equity Fund', pm: 'Doreen Duenscheude', ccy: 'USD', aum: 245600000, cashPct: 1.23, driftPct: -0.12, status: 'Trade required', orders: 12 },
+        { id: 'S0174905', name: 'Security Equity Fund', pm: 'Doreen Duenscheude', ccy: 'EUR', aum: 189300000, cashPct: 0.95, driftPct: 0.05, status: 'Active', orders: 5 },
+        { id: 'S0174903', name: 'Thematic Opportunities Equity', pm: 'Doreen Duenscheude', ccy: 'USD', aum: 312400000, cashPct: 0.73, driftPct: -0.15, status: 'PTC pending', orders: 8 },
+        { id: 'S0174931', name: 'Infrastructure Equity Fund', pm: 'Doreen Duenscheude', ccy: 'EUR', aum: 156700000, cashPct: 2.10, driftPct: 0.10, status: 'Active', orders: 0 },
+        { id: 'S0174933', name: 'Energy Evolution Fund', pm: 'Doreen Duenscheude', ccy: 'USD', aum: 98200000, cashPct: 1.87, driftPct: -0.03, status: 'Trading', orders: 3 },
+        { id: 'S0174909', name: 'Global Leaders Equity', pm: 'Doreen Duenscheude', ccy: 'CHF', aum: 421500000, cashPct: 0.85, driftPct: -0.22, status: 'SOD break', orders: 0 },
+        { id: 'S0174913', name: 'Digital Health Equity Fund', pm: 'Doreen Duenscheude', ccy: 'USD', aum: 134800000, cashPct: 1.54, driftPct: 0.08, status: 'Rebalancing', orders: 6 },
+        { id: 'S0174917', name: 'FinTech Innovation Equity', pm: 'Doreen Duenscheude', ccy: 'EUR', aum: 267900000, cashPct: 2.00, driftPct: -0.13, status: 'Active', orders: 0 }
+    ];
+
+    function renderDashboardScreen() {
         return '<div class="amp-dashboard">' +
             renderDashboardHeader() +
             '<div class="amp-dashboard-body">' +
-                '<div class="amp-dashboard-tabs">' +
-                    '<button class="amp-tab active">Event Monitor</button>' +
-                    '<button class="amp-tab">Cashflows</button>' +
-                    '<button class="amp-tab">SOD</button>' +
-                    '<button class="amp-tab">Portfolios</button>' +
-                '</div>' +
-                '<div class="amp-kpi-row">' +
-                    renderKpiCard('Live Portfolios', '735', 'neutral') +
-                    renderKpiCard('Requires Attention', String(attentionWfs.length), 'warning') +
-                    renderKpiCard('Draft Orders', '12', 'info') +
-                    renderKpiCard('Cash Changes', '8', 'info') +
-                    renderKpiCard('Completed Today', String(completedWfs.length), 'success') +
-                '</div>' +
-                '<div class="amp-workflow-sections">' +
-                    '<div class="amp-workflow-section">' +
-                        '<div class="amp-section-header">' +
-                            '<h3 class="amp-section-title">' + ICONS.alertTriangle + ' Requires Attention</h3>' +
-                            '<span class="amp-section-badge attention">' + attentionWfs.length + '</span>' +
-                        '</div>' +
-                        renderWorkflowTable(attentionWfs) +
-                    '</div>' +
-                    '<div class="amp-workflow-section">' +
-                        '<div class="amp-section-header">' +
-                            '<h3 class="amp-section-title">' + ICONS.check + ' Completed</h3>' +
-                            '<span class="amp-section-badge completed">' + completedWfs.length + '</span>' +
-                        '</div>' +
-                        renderWorkflowTable(completedWfs) +
-                    '</div>' +
-                '</div>' +
+                renderTabs() +
+                renderTabContent() +
             '</div>' +
             renderChatWidget() +
         '</div>';
+    }
+
+    function renderTabs() {
+        var tabsHtml = TABS.map(function(tab) {
+            return '<button class="amp-tab' + (activeTab === tab.key ? ' active' : '') +
+                '" onclick="ampSwitchTab(\'' + tab.key + '\')">' + tab.label + '</button>';
+        }).join('');
+
+        return '<div class="amp-dashboard-tabs">' + tabsHtml + '</div>';
+    }
+
+    function renderTabContent() {
+        switch (activeTab) {
+            case 'eventMonitor': return renderEventMonitorTab();
+            case 'cashflows': return renderCashflowsTab();
+            case 'sod': return renderSodTab();
+            case 'portfolios': return renderPortfoliosTab();
+            default: return renderEventMonitorTab();
+        }
+    }
+
+    // --- Event Monitor Tab (original workflow view) ---
+    function renderEventMonitorTab() {
+        var attentionWfs = WORKFLOWS.filter(function(w) { return w.status === 'attention'; });
+        var completedWfs = WORKFLOWS.filter(function(w) { return w.status === 'completed'; });
+
+        return '<div class="amp-tab-content amp-fade-in">' +
+            '<div class="amp-kpi-row">' +
+                renderKpiCard('Live Portfolios', '735', 'neutral') +
+                renderKpiCard('Requires Attention', String(attentionWfs.length), 'warning') +
+                renderKpiCard('Draft Orders', '12', 'info') +
+                renderKpiCard('Cash Changes', '8', 'info') +
+                renderKpiCard('Completed Today', String(completedWfs.length), 'success') +
+            '</div>' +
+            '<div class="amp-workflow-sections">' +
+                '<div class="amp-workflow-section">' +
+                    '<div class="amp-section-header">' +
+                        '<h3 class="amp-section-title">' + ICONS.alertTriangle + ' Requires Attention</h3>' +
+                        '<span class="amp-section-badge attention">' + attentionWfs.length + '</span>' +
+                    '</div>' +
+                    renderWorkflowTable(attentionWfs) +
+                '</div>' +
+                '<div class="amp-workflow-section">' +
+                    '<div class="amp-section-header">' +
+                        '<h3 class="amp-section-title">' + ICONS.check + ' Completed</h3>' +
+                        '<span class="amp-section-badge completed">' + completedWfs.length + '</span>' +
+                    '</div>' +
+                    renderWorkflowTable(completedWfs) +
+                '</div>' +
+            '</div>' +
+        '</div>';
+    }
+
+    // --- Cashflows Tab ---
+    function renderCashflowsTab() {
+        var pending = CASHFLOW_PROD_DATA.filter(function(c) { return c.status !== 'Trading'; });
+        var completed = CASHFLOW_PROD_DATA.filter(function(c) { return c.status === 'Trading'; });
+        var totalInflow = CASHFLOW_PROD_DATA.filter(function(c) { return c.amount > 0; })
+            .reduce(function(s, c) { return s + c.amount; }, 0);
+        var totalOutflow = CASHFLOW_PROD_DATA.filter(function(c) { return c.amount < 0; })
+            .reduce(function(s, c) { return s + c.amount; }, 0);
+
+        return '<div class="amp-tab-content amp-fade-in">' +
+            '<div class="amp-kpi-row">' +
+                renderKpiCard('Total Cashflows', String(CASHFLOW_PROD_DATA.length), 'neutral') +
+                renderKpiCard('Inflows', formatCompact(totalInflow), 'success') +
+                renderKpiCard('Outflows', formatCompact(Math.abs(totalOutflow)), 'warning') +
+                renderKpiCard('Pending', String(pending.length), 'info') +
+                renderKpiCard('Completed', String(completed.length), 'success') +
+            '</div>' +
+            '<div class="amp-workflow-sections">' +
+                '<div class="amp-workflow-section">' +
+                    '<div class="amp-section-header">' +
+                        '<h3 class="amp-section-title">' + ICONS.alertTriangle + ' Pending Cashflows</h3>' +
+                        '<span class="amp-section-badge attention">' + pending.length + '</span>' +
+                    '</div>' +
+                    renderCashflowTable(pending) +
+                '</div>' +
+                '<div class="amp-workflow-section">' +
+                    '<div class="amp-section-header">' +
+                        '<h3 class="amp-section-title">' + ICONS.check + ' Completed</h3>' +
+                        '<span class="amp-section-badge completed">' + completed.length + '</span>' +
+                    '</div>' +
+                    renderCashflowTable(completed) +
+                '</div>' +
+            '</div>' +
+        '</div>';
+    }
+
+    function renderCashflowTable(data) {
+        if (!data.length) return '<div class="amp-no-data">No cashflows</div>';
+
+        var rows = data.map(function(cf) {
+            var amountStr = formatAmount(cf.amount, cf.ccy);
+            var statusCls = cf.status === 'Trading' ? 'trading' :
+                           cf.status === 'PTC complete' ? 'ptc-complete' :
+                           cf.status === 'Ready to send' ? 'ptc-complete' :
+                           cf.status === 'Draft' ? 'draft' : 'pending';
+
+            return '<tr class="amp-wf-row">' +
+                '<td class="amp-wf-id">' + cf.id + '</td>' +
+                '<td class="amp-wf-portfolio">' + cf.portfolio + '</td>' +
+                '<td><span class="amp-event-badge ' + (cf.amount > 0 ? 'amp-event-cashflow' : 'amp-event-sod') + '">' + cf.type + '</span></td>' +
+                '<td class="amp-wf-amount">' + amountStr + '</td>' +
+                '<td>' + cf.valueDate + '</td>' +
+                '<td><span class="amp-action-badge amp-action-' + statusCls + '">' + cf.status + '</span></td>' +
+                '<td class="amp-wf-progress">' + renderProgressSteps(cf.steps, cf.totalSteps) + '</td>' +
+            '</tr>';
+        }).join('');
+
+        return '<div class="amp-table-wrapper">' +
+            '<table class="amp-wf-table">' +
+                '<thead><tr>' +
+                    '<th>ID</th><th>Portfolio</th><th>Type</th><th>Amount</th><th>Value Date</th><th>Status</th><th>Progress</th>' +
+                '</tr></thead>' +
+                '<tbody>' + rows + '</tbody>' +
+            '</table>' +
+        '</div>';
+    }
+
+    // --- SOD Tab ---
+    function renderSodTab() {
+        var unresolved = SOD_DATA.filter(function(s) { return !s.autoResolved; });
+        var resolved = SOD_DATA.filter(function(s) { return s.autoResolved; });
+
+        return '<div class="amp-tab-content amp-fade-in">' +
+            '<div class="amp-kpi-row">' +
+                renderKpiCard('SOD Alerts', String(SOD_DATA.length), 'neutral') +
+                renderKpiCard('Manual Review', String(unresolved.length), 'warning') +
+                renderKpiCard('Auto-Resolved', String(resolved.length), 'success') +
+                renderKpiCard('Total Items', String(SOD_DATA.reduce(function(s, d) { return s + d.items; }, 0)), 'info') +
+                renderKpiCard('High Severity', String(SOD_DATA.filter(function(s) { return s.severity === 'high'; }).length), 'warning') +
+            '</div>' +
+            '<div class="amp-workflow-sections">' +
+                '<div class="amp-workflow-section">' +
+                    '<div class="amp-section-header">' +
+                        '<h3 class="amp-section-title">' + ICONS.alertTriangle + ' Requires Manual Review</h3>' +
+                        '<span class="amp-section-badge attention">' + unresolved.length + '</span>' +
+                    '</div>' +
+                    renderSodTable(unresolved) +
+                '</div>' +
+                '<div class="amp-workflow-section">' +
+                    '<div class="amp-section-header">' +
+                        '<h3 class="amp-section-title">' + ICONS.check + ' Auto-Resolved</h3>' +
+                        '<span class="amp-section-badge completed">' + resolved.length + '</span>' +
+                    '</div>' +
+                    renderSodTable(resolved) +
+                '</div>' +
+            '</div>' +
+        '</div>';
+    }
+
+    function renderSodTable(data) {
+        if (!data.length) return '<div class="amp-no-data">No SOD alerts</div>';
+
+        var rows = data.map(function(sod) {
+            var sevCls = sod.severity === 'high' ? 'amp-event-sod' :
+                        sod.severity === 'medium' ? 'amp-event-rebalance' : 'amp-event-cashflow';
+            var statusLabel = sod.autoResolved ? 'Auto-Resolved' : 'Manual Review';
+            var statusCls = sod.autoResolved ? 'amp-action-trading' : 'amp-action-awaiting-approval';
+
+            return '<tr class="amp-wf-row">' +
+                '<td class="amp-wf-id">' + sod.portfolioId + '</td>' +
+                '<td class="amp-wf-portfolio">' + sod.portfolio + '</td>' +
+                '<td>' + sod.changeReason + '</td>' +
+                '<td><span class="amp-event-badge ' + sevCls + '">' + sod.severity.charAt(0).toUpperCase() + sod.severity.slice(1) + '</span></td>' +
+                '<td>' + sod.items + ' item' + (sod.items > 1 ? 's' : '') + '</td>' +
+                '<td><span class="amp-action-badge ' + statusCls + '">' + statusLabel + '</span></td>' +
+            '</tr>';
+        }).join('');
+
+        return '<div class="amp-table-wrapper">' +
+            '<table class="amp-wf-table">' +
+                '<thead><tr>' +
+                    '<th>Portfolio ID</th><th>Portfolio</th><th>Change Reason</th><th>Severity</th><th>Items</th><th>Status</th>' +
+                '</tr></thead>' +
+                '<tbody>' + rows + '</tbody>' +
+            '</table>' +
+        '</div>';
+    }
+
+    // --- Portfolios Tab ---
+    function renderPortfoliosTab() {
+        var activeCount = PORTFOLIO_DATA.filter(function(p) { return p.status === 'Active'; }).length;
+        var totalAum = PORTFOLIO_DATA.reduce(function(s, p) { return s + p.aum; }, 0);
+
+        return '<div class="amp-tab-content amp-fade-in">' +
+            '<div class="amp-kpi-row">' +
+                renderKpiCard('Total Portfolios', String(PORTFOLIO_DATA.length), 'neutral') +
+                renderKpiCard('Total AUM', formatCompact(totalAum), 'info') +
+                renderKpiCard('Active', String(activeCount), 'success') +
+                renderKpiCard('With Orders', String(PORTFOLIO_DATA.filter(function(p) { return p.orders > 0; }).length), 'info') +
+                renderKpiCard('Avg Cash %', (PORTFOLIO_DATA.reduce(function(s, p) { return s + p.cashPct; }, 0) / PORTFOLIO_DATA.length).toFixed(2) + '%', 'neutral') +
+            '</div>' +
+            '<div class="amp-workflow-section">' +
+                renderPortfolioTable() +
+            '</div>' +
+        '</div>';
+    }
+
+    function renderPortfolioTable() {
+        var rows = PORTFOLIO_DATA.map(function(p) {
+            var statusCls = p.status === 'Active' ? 'amp-action-trading' :
+                           p.status === 'Trading' ? 'amp-action-trading' :
+                           p.status === 'Trade required' ? 'amp-action-awaiting-approval' :
+                           p.status === 'PTC pending' ? 'amp-action-ptc-complete' :
+                           p.status === 'SOD break' ? 'amp-action-awaiting-approval' :
+                           p.status === 'Rebalancing' ? 'amp-action-investigating' : 'amp-action-draft';
+            var driftCls = p.driftPct < -0.1 ? 'negative' : p.driftPct > 0.1 ? 'positive' : '';
+
+            return '<tr class="amp-wf-row">' +
+                '<td class="amp-wf-id">' + p.id + '</td>' +
+                '<td class="amp-wf-portfolio">' + p.name + '</td>' +
+                '<td>' + p.ccy + '</td>' +
+                '<td class="amp-wf-amount"><span class="amp-amount">' + formatCompact(p.aum) + '</span></td>' +
+                '<td>' + p.cashPct.toFixed(2) + '%</td>' +
+                '<td><span class="amp-amount ' + driftCls + '">' + (p.driftPct >= 0 ? '+' : '') + p.driftPct.toFixed(2) + '%</span></td>' +
+                '<td><span class="amp-action-badge ' + statusCls + '">' + p.status + '</span></td>' +
+                '<td>' + (p.orders > 0 ? p.orders : '-') + '</td>' +
+            '</tr>';
+        }).join('');
+
+        return '<div class="amp-table-wrapper">' +
+            '<table class="amp-wf-table">' +
+                '<thead><tr>' +
+                    '<th>ID</th><th>Portfolio</th><th>CCY</th><th>AUM</th><th>Cash %</th><th>Drift</th><th>Status</th><th>Orders</th>' +
+                '</tr></thead>' +
+                '<tbody>' + rows + '</tbody>' +
+            '</table>' +
+        '</div>';
+    }
+
+    function formatCompact(val) {
+        var abs = Math.abs(val);
+        if (abs >= 1000000000) return (val / 1000000000).toFixed(1) + 'B';
+        if (abs >= 1000000) return (val / 1000000).toFixed(1) + 'M';
+        if (abs >= 1000) return (val / 1000).toFixed(0) + 'K';
+        return String(val);
     }
 
     function renderDashboardHeader() {
@@ -533,6 +784,12 @@
     // ========================================
     // GLOBAL ACTIONS
     // ========================================
+
+    window.ampSwitchTab = function(tabKey) {
+        activeTab = tabKey;
+        workflowExpandedId = null;
+        renderProdMode();
+    };
 
     window.ampEnterDashboard = function() {
         currentView = 'loading';

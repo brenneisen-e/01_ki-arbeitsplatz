@@ -10,7 +10,7 @@
     // ========================================
     // STATE
     // ========================================
-    var prodModeActive = false;
+    var prodModeActive = true;
     var currentView = 'welcome'; // welcome | dashboard
     var activeTab = 'eventMonitor'; // eventMonitor | cashflows | sod | portfolios
     var chatOpen = true;
@@ -179,29 +179,6 @@
         chart: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>'
     };
 
-    // ========================================
-    // TOGGLE HANDLER
-    // ========================================
-
-    window.toggleAmProdMode = function() {
-        var toggle = document.getElementById('amProdModeToggle');
-        prodModeActive = toggle ? toggle.checked : false;
-        localStorage.setItem('amProdMode', prodModeActive ? '1' : '0');
-
-        // If asset module is currently visible, re-render
-        var assetModule = document.getElementById('assetModule');
-        if (assetModule && assetModule.style.display !== 'none') {
-            if (prodModeActive) {
-                currentView = 'welcome';
-                renderProdMode();
-            } else {
-                // Restore original asset module
-                if (typeof window.openAssetManagement === 'function') {
-                    window.openAssetManagement();
-                }
-            }
-        }
-    };
 
     // ========================================
     // WELCOME SCREEN (Rich Dashboard Landing)
@@ -1852,22 +1829,14 @@
     // HOOK INTO ASSET MODULE OPEN
     // ========================================
 
-    var originalOpenAssetManagement = window.openAssetManagement;
-
     window.openAssetManagement = function() {
-        if (prodModeActive) {
-            var container = document.getElementById('assetModule');
-            if (container) container.style.display = '';
-            currentView = 'welcome';
-            chatMessages = [];
-            chatOpen = true;
-            workflowExpandedId = null;
-            renderProdMode();
-        } else {
-            if (typeof originalOpenAssetManagement === 'function') {
-                originalOpenAssetManagement();
-            }
-        }
+        var container = document.getElementById('assetModule');
+        if (container) container.style.display = '';
+        currentView = 'welcome';
+        chatMessages = [];
+        chatOpen = true;
+        workflowExpandedId = null;
+        renderProdMode();
     };
 
     // ========================================
@@ -1875,11 +1844,8 @@
     // ========================================
 
     function init() {
-        // Restore toggle state from localStorage
-        var savedState = localStorage.getItem('amProdMode');
-        prodModeActive = savedState === '1';
-        var toggle = document.getElementById('amProdModeToggle');
-        if (toggle) toggle.checked = prodModeActive;
+        // Prod mode is always active for Asset Management
+        prodModeActive = true;
     }
 
     // Init on DOMContentLoaded or immediately if already loaded

@@ -62,39 +62,77 @@ In den **Settings** (Zahnrad-Icon auf der Startseite) gibt es den Toggle **"AM-0
 
 ## Sichten (Views)
 
-### 1. Welcome Screen ("Welcome Doreen")
+### 1. Welcome Screen ("Welcome" — Rich Dashboard Landing)
 Erste Sicht nach Klick auf die Asset Management Kachel (bei aktivem Prod Modus).
+Dunkles Theme mit Glassmorphism-Karten, SVG-Charts und gestaffelter Einblend-Animation.
+Inspiriert von A.03 KPI-Chart-Darstellung (Farben, Card-Design, Layoutstruktur).
 
-**Layout (zentriert, vertikal):**
+**Layout (max-width 1100px, zentriert):**
 ```
-┌─────────────────────────────────────────┐
-│                                         │
-│            [Profilbild rund]            │
-│          Doreen Duenscheude             │
-│                                         │
-│          Welcome Doreen                 │
-│       Doreen Duenscheude                │
-│         Portfolio Manager               │
-│                                         │
-│  ┌──────────┐ ┌──────────┐ ┌──────────┐│
-│  │   735    │ │    5     │ │    12    ││
-│  │Live Port.│ │Req.Attn. │ │Draft Ord.││
-│  └──────────┘ └──────────┘ └──────────┘│
-│                                         │
-│       [ Enter Dashboard  → ]            │
-│                                         │
-└─────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────────┐
+│  ░░░░░░░ Background: Grid-Pattern + Glow ░░░░░░░               │
+│                                                                  │
+│                       [Profilbild rund]                          │
+│                          Welcome                                 │
+│               Monday, February 24, 2026                          │
+│         Doreen Duenscheude  [Portfolio Manager]                  │
+│                                                                  │
+│  ┌──────────────┐ ┌──────────────┐ ┌──────────────┐ ┌──────────┐│
+│  │     735      │ │      5       │ │      12      │ │    8     ││
+│  │LIVE PORTF.   │ │REQ. ATTENTION│ │ DRAFT ORDERS │ │CASH CHGS ││
+│  │+3 since yest.│ │2 high prio.  │ │€4.2M volume  │ │€12.4M in ││
+│  └──────────────┘ └──────────────┘ └──────────────┘ └──────────┘│
+│                                                                  │
+│  ┌─────────── AUM ───────────┐ ┌── CASHFLOWS ──┐ ┌── WORKFLOW ─┐│
+│  │ €2.41B            ▲+1.7%  │ │ €4.3M net     │ │ 65 total    ││
+│  │  ╭─╮     ╭──╮            │ │ ██  ██  ██    │ │   ╭───╮     ││
+│  │ ╭╯ ╰─╮ ╭╯  ╰╮           │ │ In  Out Net   │ │  ╭╯   ╰╮   ││
+│  │╭╯    ╰─╯    ╰╮          │ │               │ │  ╰╮   ╭╯   ││
+│  │Mo Di Mi Do Fr │ │               │ │   ╰───╯     ││
+│  └───────────────────────────┘ └────────────────┘ └─────────────┘│
+│                                                                  │
+│  ┌ YESTERDAY'S HIGHLIGHTS ─────────────────────────────────────┐ │
+│  │ ✓ 42 workflows completed   ⚠ 3 SOD breaks   ↗ AUM +1.7%   │ │
+│  └─────────────────────────────────────────────────────────────┘ │
+│                                                                  │
+│                  [ Enter Dashboard  → ]                           │
+│                                                                  │
+└──────────────────────────────────────────────────────────────────┘
 ```
 
-- **Profilbild**: Rundes Foto von Doreen Duenscheude (1623835026886.jpg)
-- **Titel**: "Welcome Doreen" (h1)
-- **Untertitel**: "Doreen Duenscheude" (Vollname)
-- **Rolle**: "Portfolio Manager"
-- **3 KPI-Kacheln** (nebeneinander):
-  - Live Portfolios: **735**
-  - Requires Attention: **5**
-  - Draft Orders: **12**
-- **Button**: "Enter Dashboard →" → startet Loading-Animation
+**Header:**
+- **Profilbild**: Rundes Foto von Doreen Duenscheude (56×56px, blauer Glow-Schatten)
+- **Titel**: "Welcome" (42px, font-weight 300, hell)
+- **Datum**: Dynamisch generiert, uppercase, Letter-Spacing
+- **User-Info**: "Doreen Duenscheude" + Badge "Portfolio Manager"
+
+**4 KPI-Kacheln** (Grid 4 Spalten, Glassmorphism):
+- Live Portfolios: **735** — "+3 since yesterday"
+- Requires Attention: **5** — "2 high priority" (Akzent-Karte, gold/gelb)
+- Draft Orders: **12** — "€4.2M total volume"
+- Cash Changes: **8** — "€12.4M inflows"
+
+**3 Chart-Karten** (Grid 1.4fr 0.8fr 0.8fr):
+1. **AUM — Last 5 Days** (SVG Line Chart):
+   - Headline: €2.41B, Badge: ▲+1.7% (grün)
+   - Daten: Mon 2.31, Tue 2.34, Wed 2.29, Thu 2.37, Fri 2.41
+   - Gradient-Fill unter der Linie, blaue Punkte
+2. **Yesterday's Cashflows** (SVG Bar Chart):
+   - Headline: €4.3M net
+   - 3 Balken: Inflows €12.4M (grün), Outflows €8.1M (rot), Net €4.3M (blau)
+   - Abgerundete Ecken oben
+3. **Workflow Status** (SVG Donut Chart):
+   - Headline: 65 total
+   - Donut: Completed 42 (grün), In Progress 18 (blau), Attention 5 (gelb)
+   - Legende rechts neben Donut
+
+**Yesterday's Highlights** (3 Items horizontal):
+- ✓ "42 workflows completed automatically" (grünes Check-Icon)
+- ⚠ "3 SOD breaks resolved, 2 pending" (gelbes Alert-Icon)
+- ↗ "AUM grew +1.7% to €2.41B" (blaues Trend-Icon)
+
+**Button**: "Enter Dashboard →" → startet Loading-Animation
+- Blauer Gradient, Glow-Shadow, Hover: lift + stärkerer Glow
 
 ### 2. Loading Screen
 Übergangsanimation nach Klick auf "Enter Dashboard".

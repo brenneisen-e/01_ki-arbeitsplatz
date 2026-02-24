@@ -203,35 +203,277 @@
     };
 
     // ========================================
-    // WELCOME SCREEN
+    // WELCOME SCREEN (Rich Dashboard Landing)
     // ========================================
 
+    // Welcome screen data
+    var WELCOME_AUM_TREND = [
+        { day: 'Mon', aum: 2.31 },
+        { day: 'Tue', aum: 2.34 },
+        { day: 'Wed', aum: 2.29 },
+        { day: 'Thu', aum: 2.37 },
+        { day: 'Fri', aum: 2.41 }
+    ];
+
+    var WELCOME_CASHFLOW_DATA = [
+        { name: 'Inflows', value: 12.4, color: '#4ade80' },
+        { name: 'Outflows', value: 8.1, color: '#f87171' },
+        { name: 'Net', value: 4.3, color: '#60a5fa' }
+    ];
+
+    var WELCOME_WORKFLOW_PIE = [
+        { name: 'Completed', value: 42, color: '#4ade80' },
+        { name: 'In Progress', value: 18, color: '#60a5fa' },
+        { name: 'Attention', value: 5, color: '#fbbf24' }
+    ];
+
+    var WELCOME_KPIS = [
+        { label: 'LIVE PORTFOLIOS', value: '735', sub: '+3 since yesterday', accent: false },
+        { label: 'REQUIRES ATTENTION', value: '5', sub: '2 high priority', accent: true },
+        { label: 'DRAFT ORDERS', value: '12', sub: '\u20AC4.2M total volume', accent: false },
+        { label: 'CASH CHANGES', value: '8', sub: '\u20AC12.4M inflows', accent: false }
+    ];
+
+    var WELCOME_HIGHLIGHTS = [
+        { icon: 'check', text: '42 workflows completed automatically' },
+        { icon: 'alert', text: '3 SOD breaks resolved, 2 pending' },
+        { icon: 'trend', text: 'AUM grew +1.7% to \u20AC2.41B' }
+    ];
+
+    var HIGHLIGHT_ICONS = {
+        check: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>',
+        alert: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>',
+        trend: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>'
+    };
+
+    function buildAumSvgChart() {
+        var data = WELCOME_AUM_TREND;
+        var w = 280, h = 100, padL = 35, padR = 10, padT = 10, padB = 25;
+        var chartW = w - padL - padR;
+        var chartH = h - padT - padB;
+        var minVal = 2.24, maxVal = 2.46;
+        var range = maxVal - minVal;
+
+        // Build polyline points
+        var points = data.map(function(d, i) {
+            var x = padL + (i / (data.length - 1)) * chartW;
+            var y = padT + chartH - ((d.aum - minVal) / range) * chartH;
+            return x + ',' + y;
+        });
+
+        // Build area fill
+        var areaPoints = points.join(' ') +
+            ' ' + (padL + chartW) + ',' + (padT + chartH) +
+            ' ' + padL + ',' + (padT + chartH);
+
+        // Y-axis labels
+        var yLabels = [2.25, 2.30, 2.35, 2.40, 2.45];
+        var yLabelsSvg = yLabels.map(function(v) {
+            var y = padT + chartH - ((v - minVal) / range) * chartH;
+            return '<text x="' + (padL - 4) + '" y="' + (y + 3) + '" text-anchor="end" fill="#475569" font-size="9">' + v.toFixed(2) + '</text>' +
+                '<line x1="' + padL + '" y1="' + y + '" x2="' + (w - padR) + '" y2="' + y + '" stroke="rgba(148,163,184,0.08)" stroke-width="1"/>';
+        }).join('');
+
+        // X-axis labels
+        var xLabelsSvg = data.map(function(d, i) {
+            var x = padL + (i / (data.length - 1)) * chartW;
+            return '<text x="' + x + '" y="' + (h - 5) + '" text-anchor="middle" fill="#475569" font-size="9">' + d.day + '</text>';
+        }).join('');
+
+        // Dots
+        var dotsSvg = data.map(function(d, i) {
+            var x = padL + (i / (data.length - 1)) * chartW;
+            var y = padT + chartH - ((d.aum - minVal) / range) * chartH;
+            return '<circle cx="' + x + '" cy="' + y + '" r="3.5" fill="#0f172a" stroke="#3b82f6" stroke-width="2"/>';
+        }).join('');
+
+        return '<svg width="100%" viewBox="0 0 ' + w + ' ' + h + '" preserveAspectRatio="xMidYMid meet">' +
+            '<defs><linearGradient id="aumGrad" x1="0" y1="0" x2="0" y2="1">' +
+                '<stop offset="0%" stop-color="#3b82f6" stop-opacity="0.25"/>' +
+                '<stop offset="100%" stop-color="#3b82f6" stop-opacity="0"/>' +
+            '</linearGradient></defs>' +
+            yLabelsSvg +
+            xLabelsSvg +
+            '<polygon points="' + areaPoints + '" fill="url(#aumGrad)"/>' +
+            '<polyline points="' + points.join(' ') + '" fill="none" stroke="#3b82f6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>' +
+            dotsSvg +
+        '</svg>';
+    }
+
+    function buildCashflowSvgChart() {
+        var data = WELCOME_CASHFLOW_DATA;
+        var w = 200, h = 100, padL = 30, padR = 10, padT = 8, padB = 22;
+        var chartW = w - padL - padR;
+        var chartH = h - padT - padB;
+        var maxVal = 14;
+        var barW = 30;
+        var gap = (chartW - barW * data.length) / (data.length + 1);
+
+        var barsSvg = data.map(function(d, i) {
+            var x = padL + gap + i * (barW + gap);
+            var barH = (d.value / maxVal) * chartH;
+            var y = padT + chartH - barH;
+            var radius = 5;
+            return '<path d="M' + x + ',' + (y + radius) +
+                ' Q' + x + ',' + y + ' ' + (x + radius) + ',' + y +
+                ' L' + (x + barW - radius) + ',' + y +
+                ' Q' + (x + barW) + ',' + y + ' ' + (x + barW) + ',' + (y + radius) +
+                ' L' + (x + barW) + ',' + (padT + chartH) +
+                ' L' + x + ',' + (padT + chartH) + ' Z" fill="' + d.color + '" fill-opacity="0.7"/>' +
+                '<text x="' + (x + barW / 2) + '" y="' + (h - 5) + '" text-anchor="middle" fill="#475569" font-size="9">' + d.name + '</text>';
+        }).join('');
+
+        // Y-axis
+        var yTicks = [0, 5, 10];
+        var yLabelsSvg = yTicks.map(function(v) {
+            var y = padT + chartH - (v / maxVal) * chartH;
+            return '<text x="' + (padL - 4) + '" y="' + (y + 3) + '" text-anchor="end" fill="#475569" font-size="9">' + v + '</text>' +
+                '<line x1="' + padL + '" y1="' + y + '" x2="' + (w - padR) + '" y2="' + y + '" stroke="rgba(148,163,184,0.06)" stroke-width="1"/>';
+        }).join('');
+
+        return '<svg width="100%" viewBox="0 0 ' + w + ' ' + h + '" preserveAspectRatio="xMidYMid meet">' +
+            yLabelsSvg + barsSvg +
+        '</svg>';
+    }
+
+    function buildWorkflowDonutSvg() {
+        var data = WELCOME_WORKFLOW_PIE;
+        var total = data.reduce(function(s, d) { return s + d.value; }, 0);
+        var cx = 52, cy = 52, outerR = 48, innerR = 32;
+        var startAngle = -90;
+
+        var slices = data.map(function(d) {
+            var angle = (d.value / total) * 360;
+            var endAngle = startAngle + angle;
+            var padding = 1.5; // gap between slices
+
+            var start1 = (startAngle + padding) * Math.PI / 180;
+            var end1 = (endAngle - padding) * Math.PI / 180;
+
+            var x1 = cx + outerR * Math.cos(start1);
+            var y1 = cy + outerR * Math.sin(start1);
+            var x2 = cx + outerR * Math.cos(end1);
+            var y2 = cy + outerR * Math.sin(end1);
+            var x3 = cx + innerR * Math.cos(end1);
+            var y3 = cy + innerR * Math.sin(end1);
+            var x4 = cx + innerR * Math.cos(start1);
+            var y4 = cy + innerR * Math.sin(start1);
+            var largeArc = angle > 180 ? 1 : 0;
+
+            var path = 'M' + x1 + ',' + y1 +
+                ' A' + outerR + ',' + outerR + ' 0 ' + largeArc + ',1 ' + x2 + ',' + y2 +
+                ' L' + x3 + ',' + y3 +
+                ' A' + innerR + ',' + innerR + ' 0 ' + largeArc + ',0 ' + x4 + ',' + y4 + ' Z';
+
+            startAngle = endAngle;
+            return '<path d="' + path + '" fill="' + d.color + '" fill-opacity="0.75"/>';
+        }).join('');
+
+        return '<svg width="104" height="104" viewBox="0 0 104 104">' + slices + '</svg>';
+    }
+
     function renderWelcomeScreen() {
-        return '<div class="amp-welcome-screen">' +
-            '<div class="amp-welcome-content">' +
-                '<div class="amp-welcome-photo-wrapper">' +
-                    '<img src="' + PROFILE.photo + '" alt="' + PROFILE.fullName + '" class="amp-welcome-photo" />' +
+        var today = new Date();
+        var dateStr = today.toLocaleDateString('en-US', {
+            weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+        });
+
+        // KPI cards
+        var kpiHtml = WELCOME_KPIS.map(function(kpi) {
+            var cls = kpi.accent ? ' amp-wk-kpi-accent' : '';
+            return '<div class="amp-wk-kpi-card' + cls + '">' +
+                '<div class="amp-wk-kpi-value">' + kpi.value + '</div>' +
+                '<div class="amp-wk-kpi-label">' + kpi.label + '</div>' +
+                '<div class="amp-wk-kpi-sub">' + kpi.sub + '</div>' +
+            '</div>';
+        }).join('');
+
+        // Highlights
+        var highlightsHtml = WELCOME_HIGHLIGHTS.map(function(h) {
+            return '<div class="amp-wk-highlight-item">' +
+                '<div class="amp-wk-highlight-icon">' + HIGHLIGHT_ICONS[h.icon] + '</div>' +
+                '<span>' + h.text + '</span>' +
+            '</div>';
+        }).join('');
+
+        // Workflow pie legend
+        var pieLegend = WELCOME_WORKFLOW_PIE.map(function(item) {
+            return '<div class="amp-wk-pie-legend-item">' +
+                '<div class="amp-wk-pie-legend-dot" style="background:' + item.color + '"></div>' +
+                '<span>' + item.name + ' <strong>' + item.value + '</strong></span>' +
+            '</div>';
+        }).join('');
+
+        return '<div class="amp-wk-screen">' +
+            // Background grid
+            '<div class="amp-wk-bg-grid"></div>' +
+            '<div class="amp-wk-bg-glow"></div>' +
+
+            '<div class="amp-wk-container">' +
+                // Header
+                '<div class="amp-wk-header">' +
+                    '<div class="amp-wk-avatar">' +
+                        '<img src="' + PROFILE.photo + '" alt="' + PROFILE.fullName + '" />' +
+                    '</div>' +
+                    '<h1 class="amp-wk-title">Welcome</h1>' +
+                    '<div class="amp-wk-date">' + dateStr + '</div>' +
+                    '<div class="amp-wk-user-info">' +
+                        '<span class="amp-wk-user-name">' + PROFILE.fullName + '</span>' +
+                        '<span class="amp-wk-user-role">' + PROFILE.role + '</span>' +
+                    '</div>' +
                 '</div>' +
-                '<h1 class="amp-welcome-title">Welcome ' + PROFILE.name + '</h1>' +
-                '<p class="amp-welcome-subtitle">' + PROFILE.fullName + '</p>' +
-                '<p class="amp-welcome-role">' + PROFILE.role + '</p>' +
-                '<div class="amp-welcome-stats">' +
-                    '<div class="amp-welcome-stat">' +
-                        '<span class="amp-welcome-stat-value">735</span>' +
-                        '<span class="amp-welcome-stat-label">Live Portfolios</span>' +
+
+                // KPI Row
+                '<div class="amp-wk-kpi-row">' + kpiHtml + '</div>' +
+
+                // Charts Row
+                '<div class="amp-wk-charts-row">' +
+                    // AUM Trend
+                    '<div class="amp-wk-chart-card amp-wk-chart-wide">' +
+                        '<div class="amp-wk-chart-header">' +
+                            '<div>' +
+                                '<div class="amp-wk-chart-label">AUM \u2014 LAST 5 DAYS</div>' +
+                                '<div class="amp-wk-chart-value">\u20AC2.41B</div>' +
+                            '</div>' +
+                            '<div class="amp-wk-chart-badge-up">' +
+                                '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="18 15 12 9 6 15"></polyline></svg>' +
+                                '+1.7%' +
+                            '</div>' +
+                        '</div>' +
+                        '<div class="amp-wk-chart-body">' + buildAumSvgChart() + '</div>' +
                     '</div>' +
-                    '<div class="amp-welcome-stat">' +
-                        '<span class="amp-welcome-stat-value">5</span>' +
-                        '<span class="amp-welcome-stat-label">Requires Attention</span>' +
+
+                    // Cashflows
+                    '<div class="amp-wk-chart-card">' +
+                        '<div class="amp-wk-chart-label">YESTERDAY\u2019S CASHFLOWS</div>' +
+                        '<div class="amp-wk-chart-value">\u20AC4.3M <span class="amp-wk-chart-value-sub">net</span></div>' +
+                        '<div class="amp-wk-chart-body">' + buildCashflowSvgChart() + '</div>' +
                     '</div>' +
-                    '<div class="amp-welcome-stat">' +
-                        '<span class="amp-welcome-stat-value">12</span>' +
-                        '<span class="amp-welcome-stat-label">Draft Orders</span>' +
+
+                    // Workflow Status
+                    '<div class="amp-wk-chart-card">' +
+                        '<div class="amp-wk-chart-label">WORKFLOW STATUS</div>' +
+                        '<div class="amp-wk-chart-value">65 <span class="amp-wk-chart-value-sub">total</span></div>' +
+                        '<div class="amp-wk-donut-row">' +
+                            '<div class="amp-wk-donut-chart">' + buildWorkflowDonutSvg() + '</div>' +
+                            '<div class="amp-wk-pie-legend">' + pieLegend + '</div>' +
+                        '</div>' +
                     '</div>' +
                 '</div>' +
-                '<button class="amp-welcome-enter-btn" onclick="ampEnterDashboard()">' +
-                    'Enter Dashboard ' + ICONS.chevronRight +
-                '</button>' +
+
+                // Yesterday Highlights
+                '<div class="amp-wk-highlights">' +
+                    '<div class="amp-wk-highlights-label">YESTERDAY\u2019S HIGHLIGHTS</div>' +
+                    '<div class="amp-wk-highlights-row">' + highlightsHtml + '</div>' +
+                '</div>' +
+
+                // CTA
+                '<div class="amp-wk-cta">' +
+                    '<button class="amp-wk-enter-btn" onclick="ampEnterDashboard()">' +
+                        'Enter Dashboard' +
+                        '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>' +
+                    '</button>' +
+                '</div>' +
             '</div>' +
         '</div>';
     }

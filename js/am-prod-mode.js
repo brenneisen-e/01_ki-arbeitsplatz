@@ -430,7 +430,7 @@
         // KPI cards
         var kpiHtml = WELCOME_KPIS.map(function(kpi) {
             var cls = kpi.accent ? ' amp-wk-kpi-accent' : '';
-            return '<div class="amp-wk-kpi-card' + cls + '">' +
+            return '<div class="amp-wk-kpi-card' + cls + '" onclick="ampEnterDashboard()">' +
                 '<div class="amp-wk-kpi-value">' + kpi.value + '</div>' +
                 '<div class="amp-wk-kpi-label">' + kpi.label + '</div>' +
                 '<div class="amp-wk-kpi-sub">' + kpi.sub + '</div>' +

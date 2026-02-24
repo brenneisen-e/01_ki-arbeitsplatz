@@ -577,6 +577,14 @@
     border-radius: 12px;
     font-size: 11px;
     font-weight: 500;
+    cursor: default;
+    transition: all 0.15s ease;
+}
+
+.amp-action-badge:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+    filter: brightness(0.95);
 }
 
 .amp-action-draft {
@@ -584,9 +592,17 @@
     color: #475569;
 }
 
+.amp-action-draft:hover {
+    background: #E2E8F0;
+}
+
 .amp-action-awaiting-approval {
     background: #FEF3C7;
     color: #92400E;
+}
+
+.amp-action-awaiting-approval:hover {
+    background: #FDE68A;
 }
 
 .amp-action-ptc-complete,
@@ -595,10 +611,20 @@
     color: #1E40AF;
 }
 
+.amp-action-ptc-complete:hover,
+.amp-action-publish-cash-\&-check-portfolio:hover {
+    background: #BFDBFE;
+}
+
 .amp-action-trading,
 .amp-action-completed {
     background: #D1FAE5;
     color: #065F46;
+}
+
+.amp-action-trading:hover,
+.amp-action-completed:hover {
+    background: #A7F3D0;
 }
 
 .amp-action-investigating,
@@ -606,6 +632,12 @@
 .amp-action-optimize-portfolio {
     background: #E0E7FF;
     color: #3730A3;
+}
+
+.amp-action-investigating:hover,
+.amp-action-optimizing:hover,
+.amp-action-optimize-portfolio:hover {
+    background: #C7D2FE;
 }
 
 /* Amount */
@@ -913,8 +945,8 @@
     bottom: 24px;
     right: 24px;
     z-index: 9001;
-    width: 400px;
-    height: 520px;
+    width: 520px;
+    height: 640px;
     background: #fff;
     border: 1px solid #e2e8f0;
     border-radius: 16px;
@@ -938,7 +970,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 600;
 }
 
@@ -973,9 +1005,9 @@
 
 .amp-chat-welcome {
     text-align: center;
-    padding: 24px 16px 8px;
+    padding: 32px 16px 12px;
     color: #64748b;
-    font-size: 15px;
+    font-size: 18px;
 }
 
 .amp-chat-suggestions {
@@ -986,11 +1018,11 @@
 }
 
 .amp-chat-suggestion {
-    padding: 10px 14px;
+    padding: 12px 16px;
     background: #f1f5f9;
     border: 1px solid #e2e8f0;
     border-radius: 10px;
-    font-size: 13px;
+    font-size: 15px;
     color: #1e293b;
     cursor: pointer;
     text-align: left;
@@ -1029,8 +1061,8 @@
 }
 
 .amp-chat-bubble {
-    padding: 10px 14px;
-    font-size: 13px;
+    padding: 12px 16px;
+    font-size: 15px;
     line-height: 1.5;
 }
 
@@ -1063,20 +1095,21 @@
 }
 
 .amp-chat-table th {
-    padding: 6px 8px;
+    padding: 8px 10px;
     text-align: left;
     font-weight: 600;
     color: #64748b;
     border-bottom: 1px solid #e2e8f0;
-    font-size: 11px;
+    font-size: 12px;
     text-transform: uppercase;
     letter-spacing: 0.3px;
 }
 
 .amp-chat-table td {
-    padding: 6px 8px;
+    padding: 8px 10px;
     border-bottom: 1px solid #f1f5f9;
     color: #1e293b;
+    font-size: 13px;
 }
 
 /* Chat input */
@@ -1091,10 +1124,10 @@
 
 .amp-chat-input {
     flex: 1;
-    padding: 10px 14px;
+    padding: 12px 16px;
     border: 1px solid #e2e8f0;
     border-radius: 10px;
-    font-size: 13px;
+    font-size: 15px;
     color: #1e293b;
     background: #f8fafc;
     outline: none;
@@ -1138,6 +1171,365 @@
 }
 
 /* ========================================
+   ACTION BADGE CLICKABLE
+   ======================================== */
+.amp-action-clickable {
+    cursor: pointer;
+}
+
+/* ========================================
+   ACTION MODAL
+   ======================================== */
+.amp-modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 10001;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(2px);
+}
+
+.amp-modal {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+    width: 520px;
+    max-width: 90vw;
+    max-height: 85vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.amp-modal-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 20px 24px 16px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.amp-modal-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0 0 4px;
+}
+
+.amp-modal-subtitle {
+    font-size: 12px;
+    color: #64748b;
+    font-family: 'IBM Plex Mono', 'Consolas', monospace;
+}
+
+.amp-modal-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: #f1f5f9;
+    border: none;
+    border-radius: 8px;
+    color: #64748b;
+    cursor: pointer;
+    transition: all 0.15s;
+    flex-shrink: 0;
+}
+
+.amp-modal-close:hover {
+    background: #e2e8f0;
+    color: #1e293b;
+}
+
+.amp-modal-body {
+    padding: 20px 24px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.amp-modal-info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 20px;
+}
+
+.amp-modal-info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.amp-modal-info-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.amp-modal-section {
+    margin-bottom: 18px;
+}
+
+.amp-modal-section h4 {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0 0 10px;
+}
+
+.amp-modal-desc {
+    font-size: 13px;
+    color: #64748b;
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* Modal steps timeline */
+.amp-modal-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    position: relative;
+}
+
+.amp-modal-step {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    font-size: 13px;
+    color: #64748b;
+    position: relative;
+}
+
+.amp-modal-step:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: 23px;
+    top: 32px;
+    width: 2px;
+    height: calc(100% - 16px);
+    background: #e2e8f0;
+}
+
+.amp-modal-step.completed::after {
+    background: #059669;
+}
+
+.amp-modal-step-icon {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    flex-shrink: 0;
+    z-index: 1;
+}
+
+.amp-modal-step.completed .amp-modal-step-icon {
+    background: #D1FAE5;
+    color: #059669;
+}
+
+.amp-modal-step.completed span {
+    color: #059669;
+    font-weight: 500;
+}
+
+.amp-modal-step.current .amp-modal-step-icon {
+    background: #DBEAFE;
+    color: #3B82F6;
+}
+
+.amp-modal-step.current span {
+    color: #1e293b;
+    font-weight: 600;
+}
+
+.amp-modal-step.upcoming .amp-modal-step-icon {
+    background: #f1f5f9;
+    color: #94a3b8;
+}
+
+/* Next action preview */
+.amp-modal-next-preview {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+}
+
+.amp-modal-next-action {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #2d5016;
+}
+
+/* Modal footer */
+.amp-modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 16px 24px;
+    border-top: 1px solid #e2e8f0;
+    background: #f8fafc;
+}
+
+.amp-modal-approve-btn {
+    min-width: 160px;
+}
+
+.amp-modal-confirm-btn {
+    min-width: 180px;
+}
+
+/* Modal confirmation */
+.amp-modal-confirmation {
+    text-align: center;
+    padding: 8px 0;
+}
+
+.amp-modal-confirm-icon {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+    background: #D1FAE5;
+    border-radius: 50%;
+    color: #059669;
+}
+
+.amp-modal-confirm-icon svg {
+    width: 24px;
+    height: 24px;
+}
+
+.amp-modal-confirmation h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0 0 20px;
+}
+
+.amp-modal-confirm-details {
+    text-align: left;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.amp-modal-confirm-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 16px;
+    font-size: 13px;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.amp-modal-confirm-row:last-child {
+    border-bottom: none;
+}
+
+.amp-modal-confirm-row span {
+    color: #64748b;
+}
+
+.amp-modal-confirm-row strong {
+    color: #1e293b;
+    font-weight: 600;
+}
+
+/* Modal loading */
+.amp-modal-loading {
+    text-align: center;
+    padding: 40px 0;
+}
+
+.amp-modal-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid #e2e8f0;
+    border-top-color: #2d5016;
+    border-radius: 50%;
+    margin: 0 auto 16px;
+    animation: ampSpin 0.8s linear infinite;
+}
+
+@keyframes ampSpin {
+    to { transform: rotate(360deg); }
+}
+
+.amp-modal-loading-text {
+    font-size: 13px;
+    color: #64748b;
+    margin: 0;
+}
+
+/* Modal success */
+.amp-modal-success {
+    text-align: center;
+    padding: 8px 0;
+}
+
+.amp-modal-success-icon {
+    width: 56px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+    background: #D1FAE5;
+    border-radius: 50%;
+    color: #059669;
+}
+
+.amp-modal-success-icon svg {
+    width: 28px;
+    height: 28px;
+}
+
+.amp-modal-success h3 {
+    font-size: 20px;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0 0 6px;
+}
+
+.amp-modal-success p {
+    font-size: 13px;
+    color: #64748b;
+    margin: 0 0 24px;
+}
+
+.amp-modal-transition {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+.amp-modal-arrow {
+    color: #94a3b8;
+    display: flex;
+}
+
+/* ========================================
    RESPONSIVE
    ======================================== */
 @media (max-width: 1024px) {
@@ -1153,6 +1545,7 @@
 
     .amp-chat-panel {
         width: calc(100vw - 32px);
+        height: 500px;
         right: 16px;
         bottom: 16px;
     }

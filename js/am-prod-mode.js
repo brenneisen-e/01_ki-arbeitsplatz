@@ -625,8 +625,19 @@
                 renderTabs() +
                 renderTabContent() +
             '</div>' +
-            renderChatWidget() +
+            '<div id="ampChatContainer">' + renderChatWidget() + '</div>' +
         '</div>';
+    }
+
+    // Update only the chat widget without re-rendering the entire page
+    function renderChatOnly() {
+        var chatContainer = document.getElementById('ampChatContainer');
+        if (!chatContainer) {
+            // Fallback: full re-render if container not found
+            renderProdMode();
+            return;
+        }
+        chatContainer.innerHTML = renderChatWidget();
     }
 
     function renderTabs() {
@@ -1538,7 +1549,7 @@
             '<span class="amp-chat-thinking-label">Thinking...</span>' +
         '</div>';
         chatMessages.push({ role: 'assistant', html: thinkingHtml });
-        renderProdMode();
+        renderChatOnly();
 
         var body = document.getElementById('ampChatBody');
         if (body) body.scrollTop = body.scrollHeight;
@@ -1578,7 +1589,7 @@
             '</div>';
 
             chatMessages[chatMessages.length - 1] = { role: 'assistant', html: html };
-            renderProdMode();
+            renderChatOnly();
 
             setTimeout(function() {
                 var body2 = document.getElementById('ampChatBody');
@@ -1669,7 +1680,7 @@
 
     window.ampToggleChat = function() {
         chatOpen = !chatOpen;
-        renderProdMode();
+        renderChatOnly();
         if (chatOpen) {
             var input = document.getElementById('ampChatInput');
             if (input) input.focus();
@@ -1692,7 +1703,7 @@
             '<span class="amp-chat-thinking-label">Thinking...</span>' +
         '</div>';
         chatMessages.push({ role: 'assistant', html: thinkingHtml });
-        renderProdMode();
+        renderChatOnly();
 
         // Scroll to bottom
         var body = document.getElementById('ampChatBody');
@@ -1737,7 +1748,7 @@
 
             // Replace thinking message with real response
             chatMessages[chatMessages.length - 1] = { role: 'assistant', html: responseHtml };
-            renderProdMode();
+            renderChatOnly();
 
             var body2 = document.getElementById('ampChatBody');
             if (body2) body2.scrollTop = body2.scrollHeight;

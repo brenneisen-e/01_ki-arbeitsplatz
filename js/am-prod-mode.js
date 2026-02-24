@@ -13,7 +13,7 @@
     var prodModeActive = false;
     var currentView = 'welcome'; // welcome | dashboard
     var activeTab = 'eventMonitor'; // eventMonitor | cashflows | sod | portfolios
-    var chatOpen = false;
+    var chatOpen = true;
     var chatMessages = [];
     var workflowExpandedId = null;
     var contextMenuTarget = null;
@@ -563,7 +563,7 @@
                     '<span class="amp-event-badge amp-event-' + stepType + '">' + wf.event + '</span>' +
                 '</td>' +
                 '<td class="amp-wf-action">' +
-                    '<span class="amp-action-badge amp-action-' + wf.action.toLowerCase().replace(/\s+/g, '-') + '">' + wf.action + '</span>' +
+                    '<span class="amp-action-badge amp-action-clickable amp-action-' + wf.action.toLowerCase().replace(/\s+/g, '-') + '" onclick="event.stopPropagation(); ampShowActionModal(\'' + wf.id + '\')">' + wf.action + '</span>' +
                 '</td>' +
                 '<td class="amp-wf-progress">' +
                     renderProgressSteps(wf.step, wf.totalSteps) +
@@ -782,8 +782,254 @@
     }
 
     // ========================================
+    // ACTION MODAL
+    // ========================================
+
+    function getStepType(wf) {
+        return wf.event.toLowerCase().indexOf('cash') >= 0 ? 'cashflow' :
+               wf.event.toLowerCase().indexOf('sod') >= 0 ? 'sod' : 'rebalance';
+    }
+
+    function getNextAction(wf) {
+        var stepType = getStepType(wf);
+        var steps = WORKFLOW_STEPS[stepType];
+        var nextStep = wf.step + 1;
+        if (nextStep >= wf.totalSteps) return { label: 'Trading', final: true };
+        if (steps[nextStep]) return { label: steps[nextStep].label, final: false };
+        return { label: 'Next Step', final: false };
+    }
+
+    function buildModalSummary(wf) {
+        var stepType = getStepType(wf);
+        var steps = WORKFLOW_STEPS[stepType];
+        var currentStepLabel = steps[wf.step] ? steps[wf.step].label : wf.action;
+        var nextAction = getNextAction(wf);
+        var amountStr = wf.amount !== 0 ? formatAmount(wf.amount, wf.ccy) : '-';
+
+        return {
+            currentStepLabel: currentStepLabel,
+            nextAction: nextAction,
+            amountStr: amountStr,
+            stepType: stepType,
+            steps: steps
+        };
+    }
+
+    function showActionModal(wfId) {
+        var wf = WORKFLOWS.filter(function(w) { return w.id === wfId; })[0];
+        if (!wf) return;
+
+        removeActionModal();
+        var info = buildModalSummary(wf);
+
+        // Build steps timeline for modal
+        var stepsHtml = info.steps.map(function(step, idx) {
+            var status = idx < wf.step ? 'completed' :
+                        idx === wf.step ? 'current' : 'upcoming';
+            var icon = status === 'completed' ? ICONS.check :
+                      status === 'current' ? '<div class="amp-step-pulse"></div>' :
+                      ICONS.clock;
+            return '<div class="amp-modal-step ' + status + '">' +
+                '<div class="amp-modal-step-icon">' + icon + '</div>' +
+                '<span>' + step.label + '</span>' +
+            '</div>';
+        }).join('');
+
+        var overlay = document.createElement('div');
+        overlay.className = 'amp-modal-overlay';
+        overlay.id = 'ampModalOverlay';
+        overlay.onclick = function(e) { if (e.target === overlay) removeActionModal(); };
+
+        var modal = document.createElement('div');
+        modal.className = 'amp-modal amp-slide-up';
+        modal.id = 'ampModal';
+
+        modal.innerHTML =
+            '<div class="amp-modal-header">' +
+                '<div>' +
+                    '<h2 class="amp-modal-title">' + wf.portfolio + '</h2>' +
+                    '<span class="amp-modal-subtitle">' + wf.id + ' &middot; ' + wf.portfolioId + '</span>' +
+                '</div>' +
+                '<button class="amp-modal-close" onclick="ampCloseModal()">' + ICONS.x + '</button>' +
+            '</div>' +
+            '<div class="amp-modal-body" id="ampModalBody">' +
+                '<div class="amp-modal-info-grid">' +
+                    '<div class="amp-modal-info-item">' +
+                        '<span class="amp-modal-info-label">Event</span>' +
+                        '<span class="amp-event-badge amp-event-' + info.stepType + '">' + wf.event + '</span>' +
+                    '</div>' +
+                    '<div class="amp-modal-info-item">' +
+                        '<span class="amp-modal-info-label">Current Action</span>' +
+                        '<span class="amp-action-badge amp-action-' + wf.action.toLowerCase().replace(/\s+/g, '-') + '">' + wf.action + '</span>' +
+                    '</div>' +
+                    '<div class="amp-modal-info-item">' +
+                        '<span class="amp-modal-info-label">Amount</span>' +
+                        '<span>' + info.amountStr + '</span>' +
+                    '</div>' +
+                    '<div class="amp-modal-info-item">' +
+                        '<span class="amp-modal-info-label">Progress</span>' +
+                        '<span>' + wf.step + ' / ' + wf.totalSteps + ' steps</span>' +
+                    '</div>' +
+                '</div>' +
+                '<div class="amp-modal-section">' +
+                    '<h4>Workflow Progress</h4>' +
+                    '<div class="amp-modal-steps">' + stepsHtml + '</div>' +
+                '</div>' +
+                '<div class="amp-modal-section">' +
+                    '<h4>Current Step: ' + info.currentStepLabel + '</h4>' +
+                    '<p class="amp-modal-desc">This step ' + (wf.status === 'attention' ? 'requires your approval to proceed.' : 'has been completed successfully.') + '</p>' +
+                '</div>' +
+                (wf.status === 'attention' ?
+                    '<div class="amp-modal-next-preview">' +
+                        '<span class="amp-modal-info-label">Next action after approval:</span>' +
+                        '<span class="amp-modal-next-action">' + (info.nextAction.final ? ICONS.check : ICONS.chevronRight) + ' ' + info.nextAction.label + '</span>' +
+                    '</div>' : '') +
+            '</div>' +
+            '<div class="amp-modal-footer" id="ampModalFooter">' +
+                (wf.status === 'attention' ?
+                    '<button class="amp-action-secondary" onclick="ampCloseModal()">Cancel</button>' +
+                    '<button class="amp-action-primary amp-modal-approve-btn" onclick="ampModalApprove(\'' + wf.id + '\')">Approve & Advance</button>' :
+                    '<button class="amp-action-secondary" onclick="ampCloseModal()">Close</button>') +
+            '</div>';
+
+        overlay.appendChild(modal);
+        document.body.appendChild(overlay);
+    }
+
+    function showModalConfirmation(wfId) {
+        var wf = WORKFLOWS.filter(function(w) { return w.id === wfId; })[0];
+        if (!wf) return;
+
+        var info = buildModalSummary(wf);
+        var body = document.getElementById('ampModalBody');
+        var footer = document.getElementById('ampModalFooter');
+        if (!body || !footer) return;
+
+        // Show confirmation summary
+        body.innerHTML =
+            '<div class="amp-modal-confirmation amp-fade-in">' +
+                '<div class="amp-modal-confirm-icon">' + ICONS.check + '</div>' +
+                '<h3>Approval Confirmed</h3>' +
+                '<div class="amp-modal-confirm-details">' +
+                    '<div class="amp-modal-confirm-row">' +
+                        '<span>Workflow</span><strong>' + wf.id + '</strong>' +
+                    '</div>' +
+                    '<div class="amp-modal-confirm-row">' +
+                        '<span>Portfolio</span><strong>' + wf.portfolio + '</strong>' +
+                    '</div>' +
+                    '<div class="amp-modal-confirm-row">' +
+                        '<span>Previous Action</span><strong>' + wf.action + '</strong>' +
+                    '</div>' +
+                    '<div class="amp-modal-confirm-row">' +
+                        '<span>New Action</span><strong>' + info.nextAction.label + '</strong>' +
+                    '</div>' +
+                    (wf.amount !== 0 ? '<div class="amp-modal-confirm-row"><span>Amount</span><strong>' + info.amountStr + '</strong></div>' : '') +
+                '</div>' +
+            '</div>';
+
+        footer.innerHTML =
+            '<button class="amp-action-primary amp-modal-confirm-btn" onclick="ampModalExecute(\'' + wfId + '\')">' +
+                'Confirm & Execute' +
+            '</button>';
+    }
+
+    function showModalLoading(wfId, callback) {
+        var body = document.getElementById('ampModalBody');
+        var footer = document.getElementById('ampModalFooter');
+        if (!body || !footer) return callback();
+
+        footer.innerHTML = '';
+
+        body.innerHTML =
+            '<div class="amp-modal-loading amp-fade-in">' +
+                '<div class="amp-modal-spinner"></div>' +
+                '<p class="amp-modal-loading-text">Processing workflow...</p>' +
+            '</div>';
+
+        // Simulate processing
+        var texts = ['Validating approval...', 'Updating workflow status...', 'Syncing changes...'];
+        var idx = 0;
+        var interval = setInterval(function() {
+            idx++;
+            var textEl = body.querySelector('.amp-modal-loading-text');
+            if (textEl && texts[idx]) textEl.textContent = texts[idx];
+            if (idx >= texts.length) {
+                clearInterval(interval);
+                callback();
+            }
+        }, 600);
+    }
+
+    function showModalSuccess(wf, prevAction, newAction) {
+        var body = document.getElementById('ampModalBody');
+        var footer = document.getElementById('ampModalFooter');
+        if (!body || !footer) return;
+
+        body.innerHTML =
+            '<div class="amp-modal-success amp-fade-in">' +
+                '<div class="amp-modal-success-icon">' + ICONS.check + '</div>' +
+                '<h3>Workflow Updated</h3>' +
+                '<p>' + wf.portfolio + '</p>' +
+                '<div class="amp-modal-transition">' +
+                    '<span class="amp-action-badge amp-action-' + prevAction.toLowerCase().replace(/\s+/g, '-') + '">' + prevAction + '</span>' +
+                    '<span class="amp-modal-arrow">' + ICONS.chevronRight + '</span>' +
+                    '<span class="amp-action-badge amp-action-' + newAction.toLowerCase().replace(/\s+/g, '-') + '">' + newAction + '</span>' +
+                '</div>' +
+            '</div>';
+
+        footer.innerHTML =
+            '<button class="amp-action-primary" onclick="ampCloseModal()">Done</button>';
+    }
+
+    function removeActionModal() {
+        var overlay = document.getElementById('ampModalOverlay');
+        if (overlay) overlay.remove();
+    }
+
+    // ========================================
     // GLOBAL ACTIONS
     // ========================================
+
+    window.ampShowActionModal = function(wfId) {
+        showActionModal(wfId);
+    };
+
+    window.ampCloseModal = function() {
+        removeActionModal();
+    };
+
+    window.ampModalApprove = function(wfId) {
+        showModalConfirmation(wfId);
+    };
+
+    window.ampModalExecute = function(wfId) {
+        var wf = WORKFLOWS.filter(function(w) { return w.id === wfId; })[0];
+        if (!wf) return;
+
+        var prevAction = wf.action;
+        var nextInfo = getNextAction(wf);
+
+        showModalLoading(wfId, function() {
+            // Actually advance the workflow
+            wf.step = Math.min(wf.step + 1, wf.totalSteps);
+            if (wf.step >= wf.totalSteps) {
+                wf.status = 'completed';
+                wf.action = 'Trading';
+            } else {
+                var stepType = getStepType(wf);
+                var steps = WORKFLOW_STEPS[stepType];
+                if (steps[wf.step]) {
+                    wf.action = steps[wf.step].label;
+                }
+            }
+            workflowExpandedId = null;
+
+            showModalSuccess(wf, prevAction, wf.action);
+
+            // Re-render table behind modal so it's updated when modal closes
+            renderProdMode();
+        });
+    };
 
     window.ampSwitchTab = function(tabKey) {
         activeTab = tabKey;
@@ -908,7 +1154,7 @@
             if (container) container.style.display = '';
             currentView = 'welcome';
             chatMessages = [];
-            chatOpen = false;
+            chatOpen = true;
             workflowExpandedId = null;
             renderProdMode();
         } else {

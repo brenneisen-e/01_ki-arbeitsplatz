@@ -637,7 +637,42 @@
             renderProdMode();
             return;
         }
-        chatContainer.innerHTML = renderChatWidget();
+
+        // If chat is being toggled (open/close), we need to replace the whole widget
+        var existingPanel = chatContainer.querySelector('.amp-chat-panel');
+        if (!chatOpen || !existingPanel) {
+            chatContainer.innerHTML = renderChatWidget();
+            return;
+        }
+
+        // Chat is open and panel exists: only update the message body to avoid re-triggering animations
+        var body = document.getElementById('ampChatBody');
+        if (!body) {
+            chatContainer.innerHTML = renderChatWidget();
+            return;
+        }
+
+        var messagesHtml = chatMessages.map(function(msg) {
+            return '<div class="amp-chat-msg amp-chat-' + msg.role + '">' +
+                (msg.role === 'assistant' ? '<div class="amp-chat-avatar">' + ICONS.bot + '</div>' : '') +
+                '<div class="amp-chat-bubble">' + msg.html + '</div>' +
+            '</div>';
+        }).join('');
+
+        var suggestionsHtml = chatMessages.length === 0 ? (
+            '<div class="amp-chat-suggestions">' +
+                CHAT_SUGGESTIONS.map(function(s) {
+                    return '<button class="amp-chat-suggestion" onclick="ampSendChat(\'' + escapeAttr(s) + '\')">' + s + '</button>';
+                }).join('') +
+            '</div>'
+        ) : '';
+
+        body.innerHTML =
+            (chatMessages.length === 0 ? '<div class="amp-chat-welcome"><p>How can I help you today?</p></div>' : '') +
+            messagesHtml +
+            suggestionsHtml;
+
+        body.scrollTop = body.scrollHeight;
     }
 
     function renderTabs() {

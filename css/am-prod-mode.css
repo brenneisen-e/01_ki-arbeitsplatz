@@ -279,10 +279,13 @@
 
 .amp-wk-chart-body {
     margin-top: 4px;
+    position: relative;
+    height: 120px;
 }
 
-.amp-wk-chart-body svg {
-    display: block;
+.amp-wk-chart-body canvas {
+    width: 100% !important;
+    height: 100% !important;
 }
 
 /* Donut row */
@@ -294,8 +297,15 @@
     margin-top: 8px;
 }
 
-.amp-wk-donut-chart svg {
-    display: block;
+.amp-wk-donut-chart {
+    width: 110px;
+    height: 110px;
+    position: relative;
+}
+
+.amp-wk-donut-chart canvas {
+    width: 100% !important;
+    height: 100% !important;
 }
 
 .amp-wk-pie-legend {

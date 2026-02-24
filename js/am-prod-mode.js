@@ -246,130 +246,179 @@
         trend: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>'
     };
 
-    function buildAumSvgChart() {
-        var data = WELCOME_AUM_TREND;
-        var w = 280, h = 100, padL = 35, padR = 10, padT = 10, padB = 25;
-        var chartW = w - padL - padR;
-        var chartH = h - padT - padB;
-        var minVal = 2.24, maxVal = 2.46;
-        var range = maxVal - minVal;
+    // Chart.js instance references (for cleanup)
+    var welcomeCharts = [];
 
-        // Build polyline points
-        var points = data.map(function(d, i) {
-            var x = padL + (i / (data.length - 1)) * chartW;
-            var y = padT + chartH - ((d.aum - minVal) / range) * chartH;
-            return x + ',' + y;
+    function destroyWelcomeCharts() {
+        welcomeCharts.forEach(function(c) {
+            if (c && typeof c.destroy === 'function') c.destroy();
         });
-
-        // Build area fill
-        var areaPoints = points.join(' ') +
-            ' ' + (padL + chartW) + ',' + (padT + chartH) +
-            ' ' + padL + ',' + (padT + chartH);
-
-        // Y-axis labels
-        var yLabels = [2.25, 2.30, 2.35, 2.40, 2.45];
-        var yLabelsSvg = yLabels.map(function(v) {
-            var y = padT + chartH - ((v - minVal) / range) * chartH;
-            return '<text x="' + (padL - 4) + '" y="' + (y + 3) + '" text-anchor="end" fill="#475569" font-size="9">' + v.toFixed(2) + '</text>' +
-                '<line x1="' + padL + '" y1="' + y + '" x2="' + (w - padR) + '" y2="' + y + '" stroke="rgba(148,163,184,0.08)" stroke-width="1"/>';
-        }).join('');
-
-        // X-axis labels
-        var xLabelsSvg = data.map(function(d, i) {
-            var x = padL + (i / (data.length - 1)) * chartW;
-            return '<text x="' + x + '" y="' + (h - 5) + '" text-anchor="middle" fill="#475569" font-size="9">' + d.day + '</text>';
-        }).join('');
-
-        // Dots
-        var dotsSvg = data.map(function(d, i) {
-            var x = padL + (i / (data.length - 1)) * chartW;
-            var y = padT + chartH - ((d.aum - minVal) / range) * chartH;
-            return '<circle cx="' + x + '" cy="' + y + '" r="3.5" fill="#0f172a" stroke="#3b82f6" stroke-width="2"/>';
-        }).join('');
-
-        return '<svg width="100%" viewBox="0 0 ' + w + ' ' + h + '" preserveAspectRatio="xMidYMid meet">' +
-            '<defs><linearGradient id="aumGrad" x1="0" y1="0" x2="0" y2="1">' +
-                '<stop offset="0%" stop-color="#3b82f6" stop-opacity="0.25"/>' +
-                '<stop offset="100%" stop-color="#3b82f6" stop-opacity="0"/>' +
-            '</linearGradient></defs>' +
-            yLabelsSvg +
-            xLabelsSvg +
-            '<polygon points="' + areaPoints + '" fill="url(#aumGrad)"/>' +
-            '<polyline points="' + points.join(' ') + '" fill="none" stroke="#3b82f6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>' +
-            dotsSvg +
-        '</svg>';
+        welcomeCharts = [];
     }
 
-    function buildCashflowSvgChart() {
-        var data = WELCOME_CASHFLOW_DATA;
-        var w = 200, h = 100, padL = 30, padR = 10, padT = 8, padB = 22;
-        var chartW = w - padL - padR;
-        var chartH = h - padT - padB;
-        var maxVal = 14;
-        var barW = 30;
-        var gap = (chartW - barW * data.length) / (data.length + 1);
+    function initWelcomeCharts() {
+        if (typeof Chart === 'undefined') return;
 
-        var barsSvg = data.map(function(d, i) {
-            var x = padL + gap + i * (barW + gap);
-            var barH = (d.value / maxVal) * chartH;
-            var y = padT + chartH - barH;
-            var radius = 5;
-            return '<path d="M' + x + ',' + (y + radius) +
-                ' Q' + x + ',' + y + ' ' + (x + radius) + ',' + y +
-                ' L' + (x + barW - radius) + ',' + y +
-                ' Q' + (x + barW) + ',' + y + ' ' + (x + barW) + ',' + (y + radius) +
-                ' L' + (x + barW) + ',' + (padT + chartH) +
-                ' L' + x + ',' + (padT + chartH) + ' Z" fill="' + d.color + '" fill-opacity="0.7"/>' +
-                '<text x="' + (x + barW / 2) + '" y="' + (h - 5) + '" text-anchor="middle" fill="#475569" font-size="9">' + d.name + '</text>';
-        }).join('');
+        destroyWelcomeCharts();
 
-        // Y-axis
-        var yTicks = [0, 5, 10];
-        var yLabelsSvg = yTicks.map(function(v) {
-            var y = padT + chartH - (v / maxVal) * chartH;
-            return '<text x="' + (padL - 4) + '" y="' + (y + 3) + '" text-anchor="end" fill="#475569" font-size="9">' + v + '</text>' +
-                '<line x1="' + padL + '" y1="' + y + '" x2="' + (w - padR) + '" y2="' + y + '" stroke="rgba(148,163,184,0.06)" stroke-width="1"/>';
-        }).join('');
+        // --- AUM Line Chart ---
+        var aumCanvas = document.getElementById('ampChartAum');
+        if (aumCanvas) {
+            var aumCtx = aumCanvas.getContext('2d');
+            var gradient = aumCtx.createLinearGradient(0, 0, 0, aumCanvas.height);
+            gradient.addColorStop(0, 'rgba(59, 130, 246, 0.3)');
+            gradient.addColorStop(1, 'rgba(59, 130, 246, 0)');
 
-        return '<svg width="100%" viewBox="0 0 ' + w + ' ' + h + '" preserveAspectRatio="xMidYMid meet">' +
-            yLabelsSvg + barsSvg +
-        '</svg>';
-    }
+            welcomeCharts.push(new Chart(aumCtx, {
+                type: 'line',
+                data: {
+                    labels: WELCOME_AUM_TREND.map(function(d) { return d.day; }),
+                    datasets: [{
+                        label: 'AUM',
+                        data: WELCOME_AUM_TREND.map(function(d) { return d.aum; }),
+                        borderColor: '#3b82f6',
+                        backgroundColor: gradient,
+                        fill: true,
+                        tension: 0.3,
+                        pointRadius: 4,
+                        pointBackgroundColor: '#0f172a',
+                        pointBorderColor: '#3b82f6',
+                        pointBorderWidth: 2,
+                        pointHoverRadius: 6,
+                        pointHoverBackgroundColor: '#3b82f6',
+                        pointHoverBorderColor: '#0f172a',
+                        borderWidth: 2.5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: 'rgba(15, 23, 42, 0.95)',
+                            borderColor: 'rgba(148, 163, 184, 0.2)',
+                            borderWidth: 1,
+                            titleColor: '#94a3b8',
+                            bodyColor: '#60a5fa',
+                            bodyFont: { weight: '600' },
+                            padding: { top: 8, bottom: 8, left: 12, right: 12 },
+                            cornerRadius: 8,
+                            displayColors: false,
+                            callbacks: {
+                                label: function(ctx) { return '\u20AC' + ctx.parsed.y.toFixed(2) + 'B'; }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            display: true,
+                            grid: { display: false },
+                            ticks: { color: '#475569', font: { size: 11 }, maxRotation: 0 },
+                            border: { display: false }
+                        },
+                        y: {
+                            display: true,
+                            grid: { color: 'rgba(148, 163, 184, 0.08)', drawBorder: false },
+                            ticks: { color: '#475569', font: { size: 11 }, callback: function(v) { return v.toFixed(2); } },
+                            border: { display: false },
+                            min: 2.24,
+                            max: 2.46
+                        }
+                    }
+                }
+            }));
+        }
 
-    function buildWorkflowDonutSvg() {
-        var data = WELCOME_WORKFLOW_PIE;
-        var total = data.reduce(function(s, d) { return s + d.value; }, 0);
-        var cx = 52, cy = 52, outerR = 48, innerR = 32;
-        var startAngle = -90;
+        // --- Cashflow Bar Chart ---
+        var cfCanvas = document.getElementById('ampChartCashflow');
+        if (cfCanvas) {
+            welcomeCharts.push(new Chart(cfCanvas.getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: WELCOME_CASHFLOW_DATA.map(function(d) { return d.name; }),
+                    datasets: [{
+                        data: WELCOME_CASHFLOW_DATA.map(function(d) { return d.value; }),
+                        backgroundColor: WELCOME_CASHFLOW_DATA.map(function(d) { return d.color; }),
+                        borderWidth: 0,
+                        borderRadius: 6,
+                        barPercentage: 0.6,
+                        categoryPercentage: 0.7
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: 'rgba(15, 23, 42, 0.95)',
+                            borderColor: 'rgba(148, 163, 184, 0.2)',
+                            borderWidth: 1,
+                            titleColor: '#94a3b8',
+                            bodyColor: '#e2e8f0',
+                            bodyFont: { weight: '600' },
+                            padding: { top: 8, bottom: 8, left: 12, right: 12 },
+                            cornerRadius: 8,
+                            displayColors: false,
+                            callbacks: {
+                                label: function(ctx) { return '\u20AC' + ctx.parsed.y.toFixed(1) + 'M'; }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            display: true,
+                            grid: { display: false },
+                            ticks: { color: '#475569', font: { size: 10 }, maxRotation: 0 },
+                            border: { display: false }
+                        },
+                        y: {
+                            display: true,
+                            grid: { color: 'rgba(148, 163, 184, 0.06)', drawBorder: false },
+                            ticks: { color: '#475569', font: { size: 10 } },
+                            border: { display: false },
+                            beginAtZero: true
+                        }
+                    }
+                }
+            }));
+        }
 
-        var slices = data.map(function(d) {
-            var angle = (d.value / total) * 360;
-            var endAngle = startAngle + angle;
-            var padding = 1.5; // gap between slices
-
-            var start1 = (startAngle + padding) * Math.PI / 180;
-            var end1 = (endAngle - padding) * Math.PI / 180;
-
-            var x1 = cx + outerR * Math.cos(start1);
-            var y1 = cy + outerR * Math.sin(start1);
-            var x2 = cx + outerR * Math.cos(end1);
-            var y2 = cy + outerR * Math.sin(end1);
-            var x3 = cx + innerR * Math.cos(end1);
-            var y3 = cy + innerR * Math.sin(end1);
-            var x4 = cx + innerR * Math.cos(start1);
-            var y4 = cy + innerR * Math.sin(start1);
-            var largeArc = angle > 180 ? 1 : 0;
-
-            var path = 'M' + x1 + ',' + y1 +
-                ' A' + outerR + ',' + outerR + ' 0 ' + largeArc + ',1 ' + x2 + ',' + y2 +
-                ' L' + x3 + ',' + y3 +
-                ' A' + innerR + ',' + innerR + ' 0 ' + largeArc + ',0 ' + x4 + ',' + y4 + ' Z';
-
-            startAngle = endAngle;
-            return '<path d="' + path + '" fill="' + d.color + '" fill-opacity="0.75"/>';
-        }).join('');
-
-        return '<svg width="104" height="104" viewBox="0 0 104 104">' + slices + '</svg>';
+        // --- Workflow Doughnut Chart ---
+        var wfCanvas = document.getElementById('ampChartWorkflow');
+        if (wfCanvas) {
+            welcomeCharts.push(new Chart(wfCanvas.getContext('2d'), {
+                type: 'doughnut',
+                data: {
+                    labels: WELCOME_WORKFLOW_PIE.map(function(d) { return d.name; }),
+                    datasets: [{
+                        data: WELCOME_WORKFLOW_PIE.map(function(d) { return d.value; }),
+                        backgroundColor: WELCOME_WORKFLOW_PIE.map(function(d) { return d.color; }),
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '60%',
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: 'rgba(15, 23, 42, 0.95)',
+                            borderColor: 'rgba(148, 163, 184, 0.2)',
+                            borderWidth: 1,
+                            titleColor: '#94a3b8',
+                            bodyColor: '#e2e8f0',
+                            bodyFont: { weight: '600' },
+                            padding: { top: 8, bottom: 8, left: 12, right: 12 },
+                            cornerRadius: 8,
+                            displayColors: true
+                        }
+                    }
+                }
+            }));
+        }
     }
 
     function renderWelcomeScreen() {
@@ -440,14 +489,14 @@
                                 '+1.7%' +
                             '</div>' +
                         '</div>' +
-                        '<div class="amp-wk-chart-body">' + buildAumSvgChart() + '</div>' +
+                        '<div class="amp-wk-chart-body"><canvas id="ampChartAum"></canvas></div>' +
                     '</div>' +
 
                     // Cashflows
                     '<div class="amp-wk-chart-card">' +
                         '<div class="amp-wk-chart-label">YESTERDAY\u2019S CASHFLOWS</div>' +
                         '<div class="amp-wk-chart-value">\u20AC4.3M <span class="amp-wk-chart-value-sub">net</span></div>' +
-                        '<div class="amp-wk-chart-body">' + buildCashflowSvgChart() + '</div>' +
+                        '<div class="amp-wk-chart-body"><canvas id="ampChartCashflow"></canvas></div>' +
                     '</div>' +
 
                     // Workflow Status
@@ -455,7 +504,7 @@
                         '<div class="amp-wk-chart-label">WORKFLOW STATUS</div>' +
                         '<div class="amp-wk-chart-value">65 <span class="amp-wk-chart-value-sub">total</span></div>' +
                         '<div class="amp-wk-donut-row">' +
-                            '<div class="amp-wk-donut-chart">' + buildWorkflowDonutSvg() + '</div>' +
+                            '<div class="amp-wk-donut-chart"><canvas id="ampChartWorkflow"></canvas></div>' +
                             '<div class="amp-wk-pie-legend">' + pieLegend + '</div>' +
                         '</div>' +
                     '</div>' +
@@ -1089,8 +1138,12 @@
         var container = document.getElementById('assetModule');
         if (!container) return;
 
+        destroyWelcomeCharts();
+
         if (currentView === 'welcome') {
             container.innerHTML = renderWelcomeScreen();
+            // Init Chart.js charts after DOM is ready
+            setTimeout(initWelcomeCharts, 50);
         } else {
             container.innerHTML = renderDashboardScreen();
         }

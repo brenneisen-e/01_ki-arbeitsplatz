@@ -62,18 +62,81 @@ In den **Settings** (Zahnrad-Icon auf der Startseite) gibt es den Toggle **"AM-0
 
 ## Sichten (Views)
 
-### 1. Welcome Screen
-- Profilbild von Doreen Duenscheude
-- "Welcome Doreen" mit Name und Rolle (Portfolio Manager)
-- Drei KPI-Kacheln: Live Portfolios (735), Requires Attention (5), Draft Orders (12)
-- Button "Enter Dashboard" zum Weiter
+### 1. Welcome Screen ("Welcome Doreen")
+Erste Sicht nach Klick auf die Asset Management Kachel (bei aktivem Prod Modus).
+
+**Layout (zentriert, vertikal):**
+```
+┌─────────────────────────────────────────┐
+│                                         │
+│            [Profilbild rund]            │
+│          Doreen Duenscheude             │
+│                                         │
+│          Welcome Doreen                 │
+│       Doreen Duenscheude                │
+│         Portfolio Manager               │
+│                                         │
+│  ┌──────────┐ ┌──────────┐ ┌──────────┐│
+│  │   735    │ │    5     │ │    12    ││
+│  │Live Port.│ │Req.Attn. │ │Draft Ord.││
+│  └──────────┘ └──────────┘ └──────────┘│
+│                                         │
+│       [ Enter Dashboard  → ]            │
+│                                         │
+└─────────────────────────────────────────┘
+```
+
+- **Profilbild**: Rundes Foto von Doreen Duenscheude (1623835026886.jpg)
+- **Titel**: "Welcome Doreen" (h1)
+- **Untertitel**: "Doreen Duenscheude" (Vollname)
+- **Rolle**: "Portfolio Manager"
+- **3 KPI-Kacheln** (nebeneinander):
+  - Live Portfolios: **735**
+  - Requires Attention: **5**
+  - Draft Orders: **12**
+- **Button**: "Enter Dashboard →" → startet Loading-Animation
 
 ### 2. Loading Screen
-- Progress-Bar mit Statusmeldungen (Loading portfolio data, Connecting to event monitor, etc.)
-- Automatischer Übergang zum Dashboard (zeitgesteuert, 5 Steps à 350ms)
+Übergangsanimation nach Klick auf "Enter Dashboard".
+
+**Layout:**
+```
+┌─────────────────────────────────────────┐
+│                                         │
+│         [Chart-Icon]                    │
+│  Portfolio Management Dashboard         │
+│                                         │
+│  ████████████████░░░░░░░░  65%          │
+│  Syncing cashflow data...               │
+│                                         │
+└─────────────────────────────────────────┘
+```
+
+- **Logo**: Chart-Icon + "Portfolio Management Dashboard"
+- **Progress-Bar**: Füllt sich schrittweise (5 Steps à 350ms):
+  1. 20% — "Loading portfolio data..."
+  2. 45% — "Connecting to event monitor..."
+  3. 65% — "Syncing cashflow data..."
+  4. 85% — "Preparing workflows..."
+  5. 100% — "Ready"
+- Nach 100%: 300ms Pause → automatischer Übergang zum Dashboard
 - Kein Error State (Demo-Kontext)
 
 ### 3. Dashboard - Event Monitor Tab
+Hauptansicht nach dem Loading. Header mit Profil-Info oben rechts.
+
+**Dashboard-Header:**
+```
+┌─────────────────────────────────────────┐
+│ [Chart] Active Equities  ●LIVE   [Avatar] Doreen  [← Back] │
+└─────────────────────────────────────────┘
+```
+- Links: "Active Equities" Logo + grüner LIVE-Punkt
+- Rechts: Profilbild + "Doreen" + "Back"-Button (zurück zur Startseite)
+
+**Tab-Leiste:** Event Monitor | Cashflows | SOD | Portfolios
+
+**Inhalt:**
 - **KPI-Zeile**: Live Portfolios, Requires Attention, Draft Orders, Cash Changes, Completed Today
 - **Requires Attention Tabelle**: Workflows mit `status: attention` oder `status: paused`
 - **Completed Tabelle**: Abgeschlossene Workflows

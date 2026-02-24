@@ -17,6 +17,7 @@
     var chatMessages = [];
     var workflowExpandedId = null;
     var contextMenuTarget = null;
+    var lastApprovedWfId = null;
 
     // Profile data
     var PROFILE = {
@@ -732,7 +733,10 @@
             var clickAttr = matchingWf ?
                 ' onclick="ampShowActionModal(\'' + matchingWf.id + '\')" style="cursor:pointer"' : '';
 
-            return '<tr class="amp-wf-row"' + clickAttr + '>' +
+            // Flash row if matching workflow was just approved
+            var cfFlash = (lastApprovedWfId && matchingWf && matchingWf.id === lastApprovedWfId) ? ' amp-flash' : '';
+
+            return '<tr class="amp-wf-row' + cfFlash + '"' + clickAttr + '>' +
                 '<td class="amp-wf-id">' + cf.id + '</td>' +
                 '<td class="amp-wf-portfolio">' + cf.portfolio + '</td>' +
                 '<td><span class="amp-event-badge ' + (cf.amount > 0 ? 'amp-event-cashflow' : 'amp-event-sod') + '">' + cf.type + '</span></td>' +
@@ -884,6 +888,10 @@
                 '<div class="amp-dash-live"><div class="amp-live-dot"></div>LIVE</div>' +
             '</div>' +
             '<div class="amp-dash-header-right">' +
+                '<div class="amp-live-clock">' +
+                    '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>' +
+                    '<span id="ampLiveClock"></span>' +
+                '</div>' +
                 '<div class="amp-dash-user">' +
                     '<img src="' + PROFILE.photo + '" alt="" class="amp-dash-avatar" />' +
                     '<span>' + PROFILE.name + '</span>' +
@@ -891,6 +899,28 @@
                 '<button class="amp-back-btn" onclick="backToLanding()">' + ICONS.arrowLeft + ' Back</button>' +
             '</div>' +
         '</div>';
+    }
+
+    // Live clock
+    var clockInterval = null;
+
+    function startLiveClock() {
+        if (clockInterval) clearInterval(clockInterval);
+        function updateClock() {
+            var el = document.getElementById('ampLiveClock');
+            if (!el) return;
+            var now = new Date();
+            var h = String(now.getHours()).padStart(2, '0');
+            var m = String(now.getMinutes()).padStart(2, '0');
+            var s = String(now.getSeconds()).padStart(2, '0');
+            el.textContent = h + ':' + m + ':' + s;
+        }
+        updateClock();
+        clockInterval = setInterval(updateClock, 1000);
+    }
+
+    function stopLiveClock() {
+        if (clockInterval) { clearInterval(clockInterval); clockInterval = null; }
     }
 
     function renderKpiCard(label, value, type) {
@@ -914,7 +944,8 @@
             var isExpanded = workflowExpandedId === wf.id;
             var amountStr = wf.amount !== 0 ? formatAmount(wf.amount, wf.ccy) : '-';
 
-            var row = '<tr class="amp-wf-row' + (isExpanded ? ' expanded' : '') + '" onclick="ampToggleWorkflow(\'' + wf.id + '\')">' +
+            var flashCls = (lastApprovedWfId && wf.id === lastApprovedWfId) ? ' amp-flash' : '';
+            var row = '<tr class="amp-wf-row' + (isExpanded ? ' expanded' : '') + flashCls + '" onclick="ampToggleWorkflow(\'' + wf.id + '\')">' +
                 '<td class="amp-wf-id">' + wf.id + '</td>' +
                 '<td class="amp-wf-portfolio">' + wf.portfolio + '</td>' +
                 '<td class="amp-wf-event">' +
@@ -1141,11 +1172,13 @@
         destroyWelcomeCharts();
 
         if (currentView === 'welcome') {
+            stopLiveClock();
             container.innerHTML = renderWelcomeScreen();
             // Init Chart.js charts after DOM is ready
             setTimeout(initWelcomeCharts, 50);
         } else {
             container.innerHTML = renderDashboardScreen();
+            startLiveClock();
         }
     }
 
@@ -1442,6 +1475,13 @@
 
     window.ampCloseModal = function() {
         removeActionModal();
+
+        // Re-render and flash the approved row now that modal is gone
+        if (lastApprovedWfId) {
+            renderProdMode();
+            // Clear flash after animation completes
+            setTimeout(function() { lastApprovedWfId = null; }, 2500);
+        }
     };
 
     window.ampModalApprove = function(wfId) {
@@ -1472,10 +1512,10 @@
             }
             workflowExpandedId = null;
 
-            showModalSuccess(wf, prevAction, wf.action);
+            // Store for flash highlight — triggered when modal closes
+            lastApprovedWfId = wfId;
 
-            // Re-render table behind modal so it's updated when modal closes
-            renderProdMode();
+            showModalSuccess(wf, prevAction, wf.action);
         });
     };
 
@@ -1487,47 +1527,61 @@
         var userMsg = 'Analyze SOD break for ' + portfolioName + ' (' + portfolioId + ') - ' + changeReason;
         chatMessages.push({ role: 'user', html: escapeHtml(userMsg) });
 
-        // Check for portfolio-specific SOD response
-        var response = CHAT_RESPONSES['sod:' + portfolioId];
-        if (!response) {
-            response = {
-                text: 'SOD Break Analysis for ' + portfolioName + ' (' + portfolioId + '):',
-                table: [{ reason: changeReason, status: 'Under Investigation', action: 'Pending Review' }],
-                followUp: 'Suggested actions: "mark as change reason A", "mark as change reason B", or investigate further.'
-            };
-        }
-
-        // Build response HTML
-        var html = '<p>' + response.text + '</p>';
-        if (response.table && response.table.length) {
-            var keys = Object.keys(response.table[0]);
-            html += '<table class="amp-chat-table"><thead><tr>' +
-                keys.map(function(k) { return '<th>' + k.charAt(0).toUpperCase() + k.slice(1) + '</th>'; }).join('') +
-                '</tr></thead><tbody>' +
-                response.table.map(function(row) {
-                    return '<tr>' + keys.map(function(k) { return '<td>' + row[k] + '</td>'; }).join('') + '</tr>';
-                }).join('') +
-                '</tbody></table>';
-        }
-        if (response.followUp) {
-            html += '<p class="amp-chat-followup">' + response.followUp + '</p>';
-        }
-
-        // Add action buttons for SOD
-        html += '<div class="amp-chat-sod-actions">' +
-            '<button class="amp-chat-action-btn" onclick="ampSendChat(\'mark as change reason A for ' + escapeAttr(portfolioId) + '\')">Mark as Change Reason A</button>' +
-            '<button class="amp-chat-action-btn" onclick="ampSendChat(\'mark as change reason B for ' + escapeAttr(portfolioId) + '\')">Mark as Change Reason B</button>' +
+        // Show thinking indicator first
+        var thinkingHtml = '<div class="amp-chat-thinking">' +
+            '<div class="amp-chat-thinking-dot"></div>' +
+            '<div class="amp-chat-thinking-dot"></div>' +
+            '<div class="amp-chat-thinking-dot"></div>' +
+            '<span class="amp-chat-thinking-label">Thinking...</span>' +
         '</div>';
-
-        chatMessages.push({ role: 'assistant', html: html });
-
+        chatMessages.push({ role: 'assistant', html: thinkingHtml });
         renderProdMode();
 
-        // Scroll chat to bottom
+        var body = document.getElementById('ampChatBody');
+        if (body) body.scrollTop = body.scrollHeight;
+
+        // Replace with real response after delay
         setTimeout(function() {
-            var body = document.getElementById('ampChatBody');
-            if (body) body.scrollTop = body.scrollHeight;
-        }, 50);
+            // Check for portfolio-specific SOD response
+            var response = CHAT_RESPONSES['sod:' + portfolioId];
+            if (!response) {
+                response = {
+                    text: 'SOD Break Analysis for ' + portfolioName + ' (' + portfolioId + '):',
+                    table: [{ reason: changeReason, status: 'Under Investigation', action: 'Pending Review' }],
+                    followUp: 'Suggested actions: "mark as change reason A", "mark as change reason B", or investigate further.'
+                };
+            }
+
+            // Build response HTML
+            var html = '<p>' + response.text + '</p>';
+            if (response.table && response.table.length) {
+                var keys = Object.keys(response.table[0]);
+                html += '<table class="amp-chat-table"><thead><tr>' +
+                    keys.map(function(k) { return '<th>' + k.charAt(0).toUpperCase() + k.slice(1) + '</th>'; }).join('') +
+                    '</tr></thead><tbody>' +
+                    response.table.map(function(row) {
+                        return '<tr>' + keys.map(function(k) { return '<td>' + row[k] + '</td>'; }).join('') + '</tr>';
+                    }).join('') +
+                    '</tbody></table>';
+            }
+            if (response.followUp) {
+                html += '<p class="amp-chat-followup">' + response.followUp + '</p>';
+            }
+
+            // Add action buttons for SOD
+            html += '<div class="amp-chat-sod-actions">' +
+                '<button class="amp-chat-action-btn" onclick="ampSendChat(\'mark as change reason A for ' + escapeAttr(portfolioId) + '\')">Mark as Change Reason A</button>' +
+                '<button class="amp-chat-action-btn" onclick="ampSendChat(\'mark as change reason B for ' + escapeAttr(portfolioId) + '\')">Mark as Change Reason B</button>' +
+            '</div>';
+
+            chatMessages[chatMessages.length - 1] = { role: 'assistant', html: html };
+            renderProdMode();
+
+            setTimeout(function() {
+                var body2 = document.getElementById('ampChatBody');
+                if (body2) body2.scrollTop = body2.scrollHeight;
+            }, 50);
+        }, 1400);
     };
 
     window.ampSwitchTab = function(tabKey) {
@@ -1618,13 +1672,23 @@
 
         // Add user message
         chatMessages.push({ role: 'user', html: escapeHtml(msg) });
+
+        // Add thinking indicator
+        var thinkingHtml = '<div class="amp-chat-thinking">' +
+            '<div class="amp-chat-thinking-dot"></div>' +
+            '<div class="amp-chat-thinking-dot"></div>' +
+            '<div class="amp-chat-thinking-dot"></div>' +
+            '<span class="amp-chat-thinking-label">Thinking...</span>' +
+        '</div>';
+        chatMessages.push({ role: 'assistant', html: thinkingHtml });
         renderProdMode();
 
         // Scroll to bottom
         var body = document.getElementById('ampChatBody');
         if (body) body.scrollTop = body.scrollHeight;
 
-        // Typing indicator
+        // Simulate thinking delay, then replace with real response
+        var thinkDelay = 1200 + Math.random() * 800;
         setTimeout(function() {
             // Find matching response
             var responseKey = null;
@@ -1660,12 +1724,13 @@
                 '</div>';
             }
 
-            chatMessages.push({ role: 'assistant', html: responseHtml });
+            // Replace thinking message with real response
+            chatMessages[chatMessages.length - 1] = { role: 'assistant', html: responseHtml };
             renderProdMode();
 
             var body2 = document.getElementById('ampChatBody');
             if (body2) body2.scrollTop = body2.scrollHeight;
-        }, 800);
+        }, thinkDelay);
     };
 
     // ========================================

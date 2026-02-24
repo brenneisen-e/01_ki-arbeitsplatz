@@ -1475,6 +1475,13 @@
 
     window.ampCloseModal = function() {
         removeActionModal();
+
+        // Re-render and flash the approved row now that modal is gone
+        if (lastApprovedWfId) {
+            renderProdMode();
+            // Clear flash after animation completes
+            setTimeout(function() { lastApprovedWfId = null; }, 2500);
+        }
     };
 
     window.ampModalApprove = function(wfId) {
@@ -1505,16 +1512,10 @@
             }
             workflowExpandedId = null;
 
-            // Mark for flash highlight in Trading table
+            // Store for flash highlight — triggered when modal closes
             lastApprovedWfId = wfId;
 
             showModalSuccess(wf, prevAction, wf.action);
-
-            // Re-render table behind modal so it's updated when modal closes
-            renderProdMode();
-
-            // Clear flash after animation completes
-            setTimeout(function() { lastApprovedWfId = null; }, 2500);
         });
     };
 

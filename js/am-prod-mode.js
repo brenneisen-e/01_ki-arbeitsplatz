@@ -625,8 +625,19 @@
                 renderTabs() +
                 renderTabContent() +
             '</div>' +
-            renderChatWidget() +
+            '<div id="ampChatContainer">' + renderChatWidget() + '</div>' +
         '</div>';
+    }
+
+    // Update only the chat widget without re-rendering the entire page
+    function renderChatOnly() {
+        var chatContainer = document.getElementById('ampChatContainer');
+        if (!chatContainer) {
+            // Fallback: full re-render if container not found
+            renderProdMode();
+            return;
+        }
+        chatContainer.innerHTML = renderChatWidget();
     }
 
     function renderTabs() {
@@ -655,11 +666,11 @@
 
         return '<div class="amp-tab-content amp-fade-in">' +
             '<div class="amp-kpi-row">' +
-                renderKpiCard('Live Portfolios', '735', 'neutral') +
-                renderKpiCard('Requires Attention', String(attentionWfs.length), 'warning') +
-                renderKpiCard('Draft Orders', '12', 'info') +
-                renderKpiCard('Cash Changes', '8', 'info') +
-                renderKpiCard('Completed Today', String(completedWfs.length), 'success') +
+                renderKpiCard('Live Portfolios', '735', 'neutral', "ampSwitchTab('portfolios')") +
+                renderKpiCard('Requires Attention', String(attentionWfs.length), 'warning', "ampScrollToSection('attention')") +
+                renderKpiCard('Draft Orders', '12', 'info', "ampScrollToSection('attention')") +
+                renderKpiCard('Cash Changes', '8', 'info', "ampSwitchTab('cashflows')") +
+                renderKpiCard('Completed Today', String(completedWfs.length), 'success', "ampScrollToSection('completed')") +
             '</div>' +
             '<div class="amp-workflow-sections">' +
                 '<div class="amp-workflow-section">' +
@@ -747,8 +758,9 @@
             '</tr>';
         }).join('');
 
+        var cfFlashingCls = lastApprovedWfId ? ' amp-flashing' : '';
         return '<div class="amp-table-wrapper">' +
-            '<table class="amp-wf-table">' +
+            '<table class="amp-wf-table' + cfFlashingCls + '">' +
                 '<thead><tr>' +
                     '<th>ID</th><th>Portfolio</th><th>Type</th><th>Amount</th><th>Value Date</th><th>Status</th><th>Progress</th>' +
                 '</tr></thead>' +
@@ -923,8 +935,9 @@
         if (clockInterval) { clearInterval(clockInterval); clockInterval = null; }
     }
 
-    function renderKpiCard(label, value, type) {
-        return '<div class="amp-kpi-card amp-kpi-' + type + '">' +
+    function renderKpiCard(label, value, type, onclick) {
+        var clickAttr = onclick ? ' onclick="' + onclick + '"' : '';
+        return '<div class="amp-kpi-card amp-kpi-' + type + '"' + clickAttr + '>' +
             '<div class="amp-kpi-value">' + value + '</div>' +
             '<div class="amp-kpi-label">' + label + '</div>' +
         '</div>';
@@ -985,8 +998,9 @@
             return row;
         }).join('');
 
+        var flashingCls = lastApprovedWfId ? ' amp-flashing' : '';
         return '<div class="amp-table-wrapper">' +
-            '<table class="amp-wf-table">' +
+            '<table class="amp-wf-table' + flashingCls + '">' +
                 '<thead><tr>' +
                     '<th>Workflow ID</th>' +
                     '<th>Portfolio</th>' +
@@ -1479,8 +1493,8 @@
         // Re-render and flash the approved row now that modal is gone
         if (lastApprovedWfId) {
             renderProdMode();
-            // Clear flash after animation completes
-            setTimeout(function() { lastApprovedWfId = null; }, 2500);
+            // Clear flash after animation completes (4s animation + buffer)
+            setTimeout(function() { lastApprovedWfId = null; renderProdMode(); }, 4500);
         }
     };
 
@@ -1535,7 +1549,7 @@
             '<span class="amp-chat-thinking-label">Thinking...</span>' +
         '</div>';
         chatMessages.push({ role: 'assistant', html: thinkingHtml });
-        renderProdMode();
+        renderChatOnly();
 
         var body = document.getElementById('ampChatBody');
         if (body) body.scrollTop = body.scrollHeight;
@@ -1575,7 +1589,7 @@
             '</div>';
 
             chatMessages[chatMessages.length - 1] = { role: 'assistant', html: html };
-            renderProdMode();
+            renderChatOnly();
 
             setTimeout(function() {
                 var body2 = document.getElementById('ampChatBody');
@@ -1588,6 +1602,14 @@
         activeTab = tabKey;
         workflowExpandedId = null;
         renderProdMode();
+    };
+
+    window.ampScrollToSection = function(sectionType) {
+        var sections = document.querySelectorAll('.amp-workflow-section');
+        var targetIndex = sectionType === 'completed' ? 1 : 0;
+        if (sections[targetIndex]) {
+            sections[targetIndex].scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
     };
 
     window.ampEnterDashboard = function() {
@@ -1658,7 +1680,7 @@
 
     window.ampToggleChat = function() {
         chatOpen = !chatOpen;
-        renderProdMode();
+        renderChatOnly();
         if (chatOpen) {
             var input = document.getElementById('ampChatInput');
             if (input) input.focus();
@@ -1681,7 +1703,7 @@
             '<span class="amp-chat-thinking-label">Thinking...</span>' +
         '</div>';
         chatMessages.push({ role: 'assistant', html: thinkingHtml });
-        renderProdMode();
+        renderChatOnly();
 
         // Scroll to bottom
         var body = document.getElementById('ampChatBody');
@@ -1726,7 +1748,7 @@
 
             // Replace thinking message with real response
             chatMessages[chatMessages.length - 1] = { role: 'assistant', html: responseHtml };
-            renderProdMode();
+            renderChatOnly();
 
             var body2 = document.getElementById('ampChatBody');
             if (body2) body2.scrollTop = body2.scrollHeight;

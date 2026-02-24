@@ -28,12 +28,12 @@
 
     // Workflow data based on PDF concept
     var WORKFLOWS = [
-        { id: 'WF-039237', portfolio: 'AI and Robotics Equity Fund', portfolioId: 'S0174901', event: 'Cash inflow', action: 'Draft', step: 0, totalSteps: 3, status: 'attention', amount: 5000000, ccy: 'USD' },
-        { id: 'WF-039345', portfolio: 'Security Equity Fund', portfolioId: 'S0174905', event: 'Cash inflow', action: 'Awaiting approval', step: 1, totalSteps: 3, status: 'attention', amount: 3200000, ccy: 'EUR' },
-        { id: 'WF-039770', portfolio: 'Thematic Opportunities Equity', portfolioId: 'S0174903', event: 'Cash inflow', action: 'PTC complete', step: 2, totalSteps: 3, status: 'attention', amount: -2500000, ccy: 'USD' },
-        { id: 'WF-039107', portfolio: 'Infrastructure Equity Fund', portfolioId: 'S0174931', event: 'Cash inflow', action: 'Trading', step: 3, totalSteps: 3, status: 'completed', amount: 1200000, ccy: 'EUR' },
-        { id: 'WF-032015', portfolio: 'Energy Evolution Fund', portfolioId: 'S0174933', event: 'Cash inflow', action: 'Trading', step: 3, totalSteps: 3, status: 'completed', amount: -950000, ccy: 'USD' },
-        { id: 'WF-035012', portfolio: 'AI and Robotics Equity Fund', portfolioId: 'S0174901', event: 'Cash inflow', action: 'Trading', step: 3, totalSteps: 3, status: 'completed', amount: 7500000, ccy: 'USD' },
+        { id: 'WF-039237', portfolio: 'AI and Robotics Equity Fund', portfolioId: 'S0174901', event: 'Cash inflow', action: 'Draft', step: 0, totalSteps: 6, status: 'attention', amount: 5000000, ccy: 'USD' },
+        { id: 'WF-039345', portfolio: 'Security Equity Fund', portfolioId: 'S0174905', event: 'Cash inflow', action: 'Awaiting approval', step: 1, totalSteps: 6, status: 'attention', amount: 3200000, ccy: 'EUR' },
+        { id: 'WF-039770', portfolio: 'Thematic Opportunities Equity', portfolioId: 'S0174903', event: 'Cash inflow', action: 'Approve PTC overrides', step: 4, totalSteps: 6, status: 'attention', amount: -2500000, ccy: 'USD' },
+        { id: 'WF-039107', portfolio: 'Infrastructure Equity Fund', portfolioId: 'S0174931', event: 'Cash inflow', action: 'Completed', step: 6, totalSteps: 6, status: 'completed', amount: 1200000, ccy: 'EUR' },
+        { id: 'WF-032015', portfolio: 'Energy Evolution Fund', portfolioId: 'S0174933', event: 'Cash inflow', action: 'Completed', step: 6, totalSteps: 6, status: 'completed', amount: -950000, ccy: 'USD' },
+        { id: 'WF-035012', portfolio: 'AI and Robotics Equity Fund', portfolioId: 'S0174901', event: 'Cash inflow', action: 'Completed', step: 6, totalSteps: 6, status: 'completed', amount: 7500000, ccy: 'USD' },
         { id: 'WF-039890', portfolio: 'Global Leaders Equity', portfolioId: 'S0174909', event: 'SOD Break', action: 'Investigating', step: 1, totalSteps: 2, status: 'attention', amount: 0, ccy: 'CHF' },
         { id: 'WF-039901', portfolio: 'Digital Health Equity Fund', portfolioId: 'S0174913', event: 'Rebalance', action: 'Optimizing', step: 1, totalSteps: 3, status: 'attention', amount: 0, ccy: 'USD' }
     ];
@@ -41,10 +41,13 @@
     // Workflow step definitions
     var WORKFLOW_STEPS = {
         cashflow: [
-            { label: 'Wait for all cashflows', icon: 'clock' },
-            { label: 'Publish cash & check portfolio', icon: 'check' },
-            { label: 'Optimize portfolio', icon: 'zap' },
-            { label: 'Run PTC', icon: 'shield' }
+            { label: 'Wait for all cashflows', icon: 'clock', auto: true },
+            { label: 'Publish cash & check portfolio', icon: 'check', auto: true },
+            { label: 'Optimize portfolio', icon: 'zap', auto: true },
+            { label: 'Run PTC', icon: 'shield', auto: true },
+            { label: 'Approve PTC overrides', icon: 'check', auto: false },
+            { label: 'Request 4-eye check', icon: 'eye', auto: false },
+            { label: 'Send orders', icon: 'send', auto: false }
         ],
         sod: [
             { label: 'Investigate change', icon: 'search' },
@@ -98,6 +101,26 @@
                 { portfolio: 'Global Leaders Equity', target: '1.00%', actual: '0.85%', drift: '-0.15%' },
                 { portfolio: 'FinTech Innovation Equity', target: '2.00%', actual: '1.87%', drift: '-0.13%' }
             ]
+        },
+        'mark as change reason': {
+            text: 'Change reason has been marked. The SOD break will be re-evaluated with the updated classification.',
+            table: []
+        },
+        'sod:S0174901': {
+            text: 'SOD Break Analysis for AI and Robotics Equity Fund (S0174901):',
+            table: [
+                { item: 'NAV Delta', expected: '$245.6M', actual: '$244.9M', diff: '-$0.7M' },
+                { item: 'Position Count', expected: '142', actual: '143', diff: '+1' },
+                { item: 'Cash Balance', expected: '$3.02M', actual: '$2.85M', diff: '-$0.17M' }
+            ],
+            followUp: 'Suggested actions: Mark as change reason A (NAV recalculation), or investigate further with "show position details S0174901"'
+        },
+        'sod:S0174909': {
+            text: 'SOD Break Analysis for Global Leaders Equity (S0174909):',
+            table: [
+                { item: 'Position', expected: 'NESN.SW x 15,200', actual: 'NESN.SW x 15,350', diff: '+150 shares' }
+            ],
+            followUp: 'This appears to be a position mismatch from a late settlement. Suggested: Mark as change reason B (Settlement lag), or "show trade history S0174909"'
         }
     };
 
@@ -302,7 +325,7 @@
 
     // --- Event Monitor Tab (original workflow view) ---
     function renderEventMonitorTab() {
-        var attentionWfs = WORKFLOWS.filter(function(w) { return w.status === 'attention'; });
+        var attentionWfs = WORKFLOWS.filter(function(w) { return w.status === 'attention' || w.status === 'paused'; });
         var completedWfs = WORKFLOWS.filter(function(w) { return w.status === 'completed'; });
 
         return '<div class="amp-tab-content amp-fade-in">' +
@@ -378,7 +401,14 @@
                            cf.status === 'Ready to send' ? 'ptc-complete' :
                            cf.status === 'Draft' ? 'draft' : 'pending';
 
-            return '<tr class="amp-wf-row">' +
+            // Find matching workflow for this cashflow
+            var matchingWf = WORKFLOWS.filter(function(w) {
+                return w.portfolioId === cf.portfolioId && w.event.toLowerCase().indexOf('cash') >= 0;
+            })[0];
+            var clickAttr = matchingWf ?
+                ' onclick="ampShowActionModal(\'' + matchingWf.id + '\')" style="cursor:pointer"' : '';
+
+            return '<tr class="amp-wf-row"' + clickAttr + '>' +
                 '<td class="amp-wf-id">' + cf.id + '</td>' +
                 '<td class="amp-wf-portfolio">' + cf.portfolio + '</td>' +
                 '<td><span class="amp-event-badge ' + (cf.amount > 0 ? 'amp-event-cashflow' : 'amp-event-sod') + '">' + cf.type + '</span></td>' +
@@ -440,7 +470,11 @@
             var statusLabel = sod.autoResolved ? 'Auto-Resolved' : 'Manual Review';
             var statusCls = sod.autoResolved ? 'amp-action-trading' : 'amp-action-awaiting-approval';
 
-            return '<tr class="amp-wf-row">' +
+            // For unresolved SOD items, clicking opens chatbot with prepopulated prompt
+            var clickAttr = !sod.autoResolved ?
+                ' onclick="ampOpenSodChat(\'' + escapeAttr(sod.portfolio) + '\', \'' + escapeAttr(sod.changeReason) + '\', \'' + escapeAttr(sod.portfolioId) + '\')" style="cursor:pointer"' : '';
+
+            return '<tr class="amp-wf-row"' + clickAttr + '>' +
                 '<td class="amp-wf-id">' + sod.portfolioId + '</td>' +
                 '<td class="amp-wf-portfolio">' + sod.portfolio + '</td>' +
                 '<td>' + sod.changeReason + '</td>' +
@@ -723,7 +757,7 @@
 
         return '<div class="amp-chat-panel amp-slide-up">' +
             '<div class="amp-chat-header">' +
-                '<div class="amp-chat-header-left">' + ICONS.bot + ' <span>Portfolio Assistant</span></div>' +
+                '<div class="amp-chat-header-left">' + ICONS.bot + ' <span>Active Equities Agent</span></div>' +
                 '<button class="amp-chat-close" onclick="ampToggleChat()">' + ICONS.x + '</button>' +
             '</div>' +
             '<div class="amp-chat-body" id="ampChatBody">' +
@@ -732,7 +766,7 @@
                 suggestionsHtml +
             '</div>' +
             '<div class="amp-chat-input-area">' +
-                '<input type="text" class="amp-chat-input" id="ampChatInput" placeholder="Ask about your portfolios..." onkeydown="if(event.key===\'Enter\')ampSendChat()" />' +
+                '<input type="text" class="amp-chat-input" id="ampChatInput" placeholder="Ask me about portfolios, cashflows, or workflows..." onkeydown="if(event.key===\'Enter\')ampSendChat()" />' +
                 '<button class="amp-chat-send" onclick="ampSendChat()">' + ICONS.send + '</button>' +
             '</div>' +
         '</div>';
@@ -794,7 +828,7 @@
         var stepType = getStepType(wf);
         var steps = WORKFLOW_STEPS[stepType];
         var nextStep = wf.step + 1;
-        if (nextStep >= wf.totalSteps) return { label: 'Trading', final: true };
+        if (nextStep >= wf.totalSteps) return { label: 'Completed', final: true };
         if (steps[nextStep]) return { label: steps[nextStep].label, final: false };
         return { label: 'Next Step', final: false };
     }
@@ -829,9 +863,12 @@
             var icon = status === 'completed' ? ICONS.check :
                       status === 'current' ? '<div class="amp-step-pulse"></div>' :
                       ICONS.clock;
+            var autoTag = step.auto !== false ?
+                '<span class="amp-step-tag amp-step-tag-auto">Auto</span>' :
+                '<span class="amp-step-tag amp-step-tag-manual">Manual</span>';
             return '<div class="amp-modal-step ' + status + '">' +
                 '<div class="amp-modal-step-icon">' + icon + '</div>' +
-                '<span>' + step.label + '</span>' +
+                '<span>' + step.label + '</span>' + autoTag +
             '</div>';
         }).join('');
 
@@ -1014,7 +1051,7 @@
             wf.step = Math.min(wf.step + 1, wf.totalSteps);
             if (wf.step >= wf.totalSteps) {
                 wf.status = 'completed';
-                wf.action = 'Trading';
+                wf.action = 'Completed';
             } else {
                 var stepType = getStepType(wf);
                 var steps = WORKFLOW_STEPS[stepType];
@@ -1029,6 +1066,57 @@
             // Re-render table behind modal so it's updated when modal closes
             renderProdMode();
         });
+    };
+
+    window.ampOpenSodChat = function(portfolioName, changeReason, portfolioId) {
+        // Open chatbot with prepopulated SOD analysis
+        chatOpen = true;
+
+        // Add the SOD analysis as a system-initiated chat
+        var userMsg = 'Analyze SOD break for ' + portfolioName + ' (' + portfolioId + ') - ' + changeReason;
+        chatMessages.push({ role: 'user', html: escapeHtml(userMsg) });
+
+        // Check for portfolio-specific SOD response
+        var response = CHAT_RESPONSES['sod:' + portfolioId];
+        if (!response) {
+            response = {
+                text: 'SOD Break Analysis for ' + portfolioName + ' (' + portfolioId + '):',
+                table: [{ reason: changeReason, status: 'Under Investigation', action: 'Pending Review' }],
+                followUp: 'Suggested actions: "mark as change reason A", "mark as change reason B", or investigate further.'
+            };
+        }
+
+        // Build response HTML
+        var html = '<p>' + response.text + '</p>';
+        if (response.table && response.table.length) {
+            var keys = Object.keys(response.table[0]);
+            html += '<table class="amp-chat-table"><thead><tr>' +
+                keys.map(function(k) { return '<th>' + k.charAt(0).toUpperCase() + k.slice(1) + '</th>'; }).join('') +
+                '</tr></thead><tbody>' +
+                response.table.map(function(row) {
+                    return '<tr>' + keys.map(function(k) { return '<td>' + row[k] + '</td>'; }).join('') + '</tr>';
+                }).join('') +
+                '</tbody></table>';
+        }
+        if (response.followUp) {
+            html += '<p class="amp-chat-followup">' + response.followUp + '</p>';
+        }
+
+        // Add action buttons for SOD
+        html += '<div class="amp-chat-sod-actions">' +
+            '<button class="amp-chat-action-btn" onclick="ampSendChat(\'mark as change reason A for ' + escapeAttr(portfolioId) + '\')">Mark as Change Reason A</button>' +
+            '<button class="amp-chat-action-btn" onclick="ampSendChat(\'mark as change reason B for ' + escapeAttr(portfolioId) + '\')">Mark as Change Reason B</button>' +
+        '</div>';
+
+        chatMessages.push({ role: 'assistant', html: html });
+
+        renderProdMode();
+
+        // Scroll chat to bottom
+        setTimeout(function() {
+            var body = document.getElementById('ampChatBody');
+            if (body) body.scrollTop = body.scrollHeight;
+        }, 50);
     };
 
     window.ampSwitchTab = function(tabKey) {
@@ -1062,7 +1150,25 @@
         if (!wf) return;
 
         if (action === 'advance') {
-            ampAdvanceWorkflow(wfId);
+            ampShowActionModal(wfId);
+        } else if (action === 'view') {
+            // Switch to Portfolios tab and highlight the portfolio
+            activeTab = 'portfolios';
+            workflowExpandedId = null;
+            renderProdMode();
+        } else if (action === 'pause') {
+            wf.status = 'paused';
+            wf.action = 'Paused';
+            workflowExpandedId = null;
+            renderProdMode();
+        } else if (action === 'reset') {
+            wf.step = 0;
+            wf.status = 'attention';
+            var stepType = getStepType(wf);
+            var steps = WORKFLOW_STEPS[stepType];
+            wf.action = steps[0] ? steps[0].label : 'Draft';
+            workflowExpandedId = null;
+            renderProdMode();
         }
     };
 
@@ -1073,10 +1179,9 @@
         wf.step = Math.min(wf.step + 1, wf.totalSteps);
         if (wf.step >= wf.totalSteps) {
             wf.status = 'completed';
-            wf.action = 'Trading';
+            wf.action = 'Completed';
         } else {
-            var stepType = wf.event.toLowerCase().indexOf('cash') >= 0 ? 'cashflow' :
-                          wf.event.toLowerCase().indexOf('sod') >= 0 ? 'sod' : 'rebalance';
+            var stepType = getStepType(wf);
             var steps = WORKFLOW_STEPS[stepType];
             if (steps[wf.step]) {
                 wf.action = steps[wf.step].label;

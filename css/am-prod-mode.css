@@ -627,6 +627,15 @@
     background: #A7F3D0;
 }
 
+.amp-action-paused {
+    background: #FEF3C7;
+    color: #92400E;
+}
+
+.amp-action-paused:hover {
+    background: #FDE68A;
+}
+
 .amp-action-investigating,
 .amp-action-optimizing,
 .amp-action-optimize-portfolio {
@@ -649,6 +658,25 @@
 
 .amp-amount.positive { color: #059669; }
 .amp-amount.negative { color: #DC2626; }
+
+/* Manual step action badges */
+.amp-action-approve-ptc-overrides {
+    background: #FEF3C7;
+    color: #92400E;
+}
+.amp-action-approve-ptc-overrides:hover { background: #FDE68A; }
+
+.amp-action-request-4-eye-check {
+    background: #FEE2E2;
+    color: #991B1B;
+}
+.amp-action-request-4-eye-check:hover { background: #FECACA; }
+
+.amp-action-send-orders {
+    background: #D1FAE5;
+    color: #065F46;
+}
+.amp-action-send-orders:hover { background: #A7F3D0; }
 
 /* ========================================
    PROGRESS STEPS
@@ -1160,6 +1188,59 @@
 
 .amp-chat-send:hover {
     background: #3d6b1e;
+}
+
+/* Chat SOD actions */
+.amp-chat-sod-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+}
+
+.amp-chat-action-btn {
+    padding: 6px 14px;
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    border-radius: 8px;
+    color: #166534;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.amp-chat-action-btn:hover {
+    background: #dcfce7;
+    border-color: #86efac;
+}
+
+.amp-chat-followup {
+    font-size: 12px;
+    color: #64748b;
+    font-style: italic;
+    margin-top: 8px;
+}
+
+/* Step tags (Auto/Manual) */
+.amp-step-tag {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-left: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.amp-step-tag-auto {
+    background: #DBEAFE;
+    color: #1D4ED8;
+}
+
+.amp-step-tag-manual {
+    background: #FEF3C7;
+    color: #92400E;
 }
 
 /* No data */

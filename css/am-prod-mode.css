@@ -800,11 +800,42 @@
 
 .amp-wf-row {
     cursor: pointer;
-    transition: background 0.1s;
+    transition: all 0.2s ease;
 }
 
 .amp-wf-row:hover {
-    background: #f8fafc;
+    background: #86BC25;
+}
+
+.amp-wf-row:hover td {
+    color: #ffffff;
+}
+
+.amp-wf-row:hover .amp-wf-id {
+    color: #ffffff;
+}
+
+.amp-wf-row:hover .amp-event-badge {
+    background: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+}
+
+.amp-wf-row:hover .amp-action-badge {
+    background: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+}
+
+.amp-wf-row:hover .amp-ctx-btn {
+    color: #ffffff;
+}
+
+.amp-wf-row:hover .amp-step-dot {
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+.amp-wf-row:hover .amp-step-done {
+    background: #ffffff;
+    border-color: #ffffff;
 }
 
 .amp-wf-row.expanded {

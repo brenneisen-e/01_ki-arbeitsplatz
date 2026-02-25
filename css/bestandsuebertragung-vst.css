@@ -6268,6 +6268,430 @@ body {
     margin-top: 0.15rem;
 }
 
+/* ============================================ */
+/* Slide APE-Prognose (T-13) Styles */
+/* ============================================ */
+
+/* WIP Badge */
+.bestand-page .slide-ape-wip {
+    position: absolute;
+    top: 0.75rem;
+    right: 1.5rem;
+    background: #FFC107;
+    color: #000;
+    font-size: 0.82rem;
+    font-weight: 800;
+    padding: 0.3rem 0.75rem;
+    border-radius: 4px;
+    letter-spacing: 0.05em;
+    z-index: 20;
+}
+
+/* Action title styling */
+.bestand-page .slide-ape-action-title {
+    font-style: italic;
+    border-bottom: 2px solid #86BC25;
+    padding-bottom: 0.5rem;
+}
+
+/* Body layout override for T-13 (keep two-column from slide-cv-body) */
+.bestand-page .slide-ape-body {
+    grid-template-columns: 58% 42% !important;
+}
+
+/* -- Left side: Chart area -- */
+.bestand-page .slide-ape-left {
+    min-width: 0;
+}
+
+.bestand-page .slide-ape-chart {
+    position: relative;
+    display: flex;
+    align-items: stretch;
+    height: 340px;
+    margin-bottom: 1rem;
+    padding-left: 2.5rem;
+}
+
+.bestand-page .slide-ape-yaxis {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 2.2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding-right: 0.4rem;
+    font-size: 0.75rem;
+    color: #97999B;
+    font-weight: 600;
+}
+
+.bestand-page .slide-ape-yaxis-label {
+    position: absolute;
+    left: -0.5rem;
+    top: 50%;
+    transform: rotate(-90deg) translateX(-50%);
+    transform-origin: 0 0;
+    font-size: 0.75rem;
+    color: #97999B;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+}
+
+.bestand-page .slide-ape-chart-area {
+    flex: 1;
+    position: relative;
+    border-left: 2px solid #d1d5db;
+    border-bottom: 2px solid #d1d5db;
+}
+
+/* Grid lines */
+.bestand-page .slide-ape-grid {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+
+.bestand-page .slide-ape-gridline {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: #f3f4f6;
+}
+
+/* Dashed average line */
+.bestand-page .slide-ape-avg-line {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 0;
+    border-top: 2px dashed #53565A;
+    z-index: 5;
+}
+
+.bestand-page .slide-ape-avg-label {
+    position: absolute;
+    right: 0;
+    top: -1.2rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #53565A;
+    background: white;
+    padding: 0 0.3rem;
+}
+
+/* Bar container */
+.bestand-page .slide-ape-bars {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-end;
+    padding: 0 1.5rem;
+}
+
+/* Bar group */
+.bestand-page .slide-ape-bar-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    width: 28%;
+}
+
+/* Arrow indicators */
+.bestand-page .slide-ape-bar-arrow {
+    font-size: 1.2rem;
+    margin-bottom: 0.2rem;
+    line-height: 1;
+}
+
+.bestand-page .slide-ape-arrow-down {
+    color: #C8102E;
+}
+
+.bestand-page .slide-ape-arrow-up {
+    color: #86BC25;
+}
+
+/* Individual bar */
+.bestand-page .slide-ape-bar {
+    width: 100%;
+    max-width: 100px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 4px 4px 0 0;
+    overflow: hidden;
+    position: relative;
+}
+
+/* Segments */
+.bestand-page .slide-ape-segment {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 20px;
+    transition: opacity 0.2s;
+}
+
+.bestand-page .slide-ape-segment:hover {
+    opacity: 0.85;
+}
+
+.bestand-page .slide-ape-seg-val {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: white;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.25);
+    white-space: nowrap;
+}
+
+/* Status Quo bar segments */
+.bestand-page .slide-ape-seg-top {
+    background: #046A38;
+}
+
+.bestand-page .slide-ape-seg-bottom {
+    background: #ED8B00;
+}
+
+/* Ohne Maßnahmen bar segments */
+.bestand-page .slide-ape-bar-ohne {
+    border: 2px solid #C8102E;
+    border-bottom: none;
+}
+
+.bestand-page .slide-ape-seg-ohne-top {
+    background: #e57373;
+}
+
+.bestand-page .slide-ape-seg-ohne-bottom {
+    background: #C8102E;
+}
+
+/* Mit Maßnahmen bar segments */
+.bestand-page .slide-ape-seg-mit-top {
+    background: #86BC25;
+}
+
+.bestand-page .slide-ape-seg-mit-mid {
+    background: #046A38;
+}
+
+.bestand-page .slide-ape-seg-mit-bottom {
+    background: #6a9a1f;
+}
+
+/* Bar labels (below bars) */
+.bestand-page .slide-ape-bar-label {
+    text-align: center;
+    font-size: 0.82rem;
+    color: #374151;
+    margin-top: 0.4rem;
+    line-height: 1.3;
+}
+
+.bestand-page .slide-ape-bar-label strong {
+    font-weight: 700;
+}
+
+/* Average labels below bars */
+.bestand-page .slide-ape-bar-avg {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #53565A;
+    margin-top: 0.15rem;
+}
+
+.bestand-page .slide-ape-avg-red {
+    color: #C8102E;
+}
+
+.bestand-page .slide-ape-avg-green {
+    color: #86BC25;
+}
+
+/* Callout labels */
+.bestand-page .slide-ape-bar-callout {
+    position: absolute;
+    top: -2.6rem;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 0.2rem 0.5rem;
+    border-radius: 3px;
+    white-space: nowrap;
+    z-index: 10;
+}
+
+.bestand-page .slide-ape-callout-red {
+    background: #fee2e2;
+    color: #C8102E;
+    border: 1px solid #fca5a5;
+}
+
+.bestand-page .slide-ape-callout-green {
+    background: #e8f5d4;
+    color: #046A38;
+    border: 1px solid #86BC25;
+}
+
+/* Legend */
+.bestand-page .slide-ape-legend {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+    padding: 0.6rem 0;
+    border-top: 1px solid #e5e7eb;
+}
+
+.bestand-page .slide-ape-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.82rem;
+    color: #53565A;
+}
+
+.bestand-page .slide-ape-legend-line {
+    display: inline-block;
+    width: 20px;
+    height: 3px;
+    border-radius: 2px;
+}
+
+.bestand-page .slide-ape-legend-green { background: #86BC25; }
+.bestand-page .slide-ape-legend-red { background: #C8102E; }
+.bestand-page .slide-ape-legend-blue { background: #046A38; }
+.bestand-page .slide-ape-legend-orange { background: #ED8B00; }
+
+/* -- Right side: Arbeitspakete -- */
+.bestand-page .slide-ape-right {
+    padding-left: 1rem;
+}
+
+.bestand-page .slide-ape-ap {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    padding: 0.75rem;
+    margin-bottom: 0.75rem;
+    border-left: 4px solid #e5e7eb;
+}
+
+.bestand-page .slide-ape-ap-blue { border-left-color: #0076A8; }
+.bestand-page .slide-ape-ap-orange { border-left-color: #ED8B00; }
+.bestand-page .slide-ape-ap-green { border-left-color: #86BC25; }
+
+.bestand-page .slide-ape-ap-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.6rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.bestand-page .slide-ape-ap-header strong {
+    font-size: 0.95rem;
+    color: #1f2937;
+}
+
+.bestand-page .slide-ape-ap-badge {
+    font-size: 0.72rem;
+    font-weight: 800;
+    color: white;
+    padding: 0.15rem 0.5rem;
+    border-radius: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    white-space: nowrap;
+}
+
+.bestand-page .slide-ape-badge-blue { background: #0076A8; }
+.bestand-page .slide-ape-badge-orange { background: #ED8B00; }
+.bestand-page .slide-ape-badge-green { background: #86BC25; }
+
+.bestand-page .slide-ape-ap-items {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.bestand-page .slide-ape-ap-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    color: #53565A;
+    line-height: 1.45;
+}
+
+.bestand-page .slide-ape-ap-item strong {
+    color: #1f2937;
+}
+
+.bestand-page .slide-ape-ap-num {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: white;
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+}
+
+.bestand-page .slide-ape-num-blue { background: #0076A8; }
+.bestand-page .slide-ape-num-orange { background: #ED8B00; }
+.bestand-page .slide-ape-num-green { background: #86BC25; }
+
+/* Green footer bar */
+.bestand-page .slide-ape-footer-bar {
+    background: #86BC25;
+    color: white;
+    font-size: 0.85rem;
+    font-weight: 500;
+    line-height: 1.5;
+    padding: 0.75rem 1.25rem;
+    border-radius: 4px;
+    margin-top: 1rem;
+}
+
+/* -- T-13 Responsive -- */
+@media (max-width: 1200px) {
+    .bestand-page .slide-ape-body {
+        grid-template-columns: 1fr !important;
+    }
+    .bestand-page .slide-ape-right {
+        padding-left: 0;
+    }
+    .bestand-page .slide-ape-chart {
+        height: 280px;
+    }
+}
+
+@media (max-width: 768px) {
+    .bestand-page .slide-ape-chart {
+        height: 220px;
+    }
+    .bestand-page .slide-ape-legend {
+        flex-wrap: wrap;
+        gap: 0.75rem;
+    }
+    .bestand-page .slide-ape-bar-callout {
+        display: none;
+    }
+}
+
 /* -- T-11 / T-12 Responsive -- */
 @media (max-width: 1200px) {
     .bestand-page .slide-bu-flow {

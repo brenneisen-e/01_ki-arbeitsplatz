@@ -6397,7 +6397,7 @@ body {
     position: absolute;
     inset: 0;
     display: flex;
-    align-items: flex-end;
+    align-items: stretch;
     padding: 0 0.5rem;
     z-index: 3;
 }
@@ -6406,9 +6406,6 @@ body {
 .bestand-page .slide-ape-wf-col {
     flex: 1;
     position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
     min-width: 0;
 }
 
@@ -6537,6 +6534,7 @@ body {
     position: absolute;
     left: -8px;
     right: -8px;
+    bottom: var(--conn-y, 0);
     height: 1px;
     background: #c0c2c4;
 }

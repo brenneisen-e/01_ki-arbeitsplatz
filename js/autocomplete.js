@@ -39,6 +39,13 @@ const quickCommands = [
     { pattern: 'filter zurücksetzen', label: 'Alle Filter zurücksetzen', action: 'clearFilters', icon: 'x' },
 ];
 
+// Zusammenfassung-Vorschläge
+const zusammenfassungSuggestions = [
+    { pattern: 'zusammenfassung heutiger tag', label: 'Zusammenfassung heutiger Tag', action: 'zusammenfassungHeute', icon: 'summary' },
+    { pattern: 'zusammenfassung meiner vertriebsschancen', label: 'Zusammenfassung meiner Vertriebsschancen', action: 'zusammenfassungVertriebsschancen', icon: 'summary' },
+    { pattern: 'zusammenfassung der aktuellen vertriebskampagnen', label: 'Zusammenfassung der aktuellen Vertriebskampagnen', action: 'zusammenfassungKampagnen', icon: 'summary' },
+];
+
 function setupAutocomplete() {
     const chatInput = document.getElementById('landingChatInput');
     const suggestionsContainer = document.getElementById('autocompleteSuggestions');
@@ -83,7 +90,20 @@ function setupAutocomplete() {
             }
         }
 
-        // 2b. Wenn "pot..." eingegeben wird (Beginn von "potential"), zeige alle Potentiale
+        // 2b. Zusammenfassung-Vorschläge (wenn "zus..." eingegeben wird)
+        if (value.startsWith('zus')) {
+            const zusammenfassungMatches = zusammenfassungSuggestions.filter(s =>
+                s.pattern.includes(value) || s.label.toLowerCase().includes(value)
+            ).map(s => ({
+                type: 'zusammenfassung',
+                label: s.label,
+                action: s.action,
+                icon: s.icon
+            }));
+            suggestions = suggestions.concat(zusammenfassungMatches);
+        }
+
+        // 2c. Wenn "pot..." eingegeben wird (Beginn von "potential"), zeige alle Potentiale
         if (value.startsWith('pot') && !value.includes(' ')) {
             // Zeige alle Potential-Produkte als Vorschläge
             const allPotentials = potentialProducts.slice(0, 5).map(p => ({
@@ -206,7 +226,8 @@ function getIcon(iconType) {
         chart: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="20" x2="12" y2="10"></line><line x1="18" y1="20" x2="18" y2="4"></line><line x1="6" y1="20" x2="6" y2="16"></line></svg>',
         grid: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>',
         help: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>',
-        x: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>'
+        x: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>',
+        summary: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>'
     };
     return icons[iconType] || icons.user;
 }
@@ -254,6 +275,9 @@ function executeSuggestion(element) {
         if (typeof openPotentialAnalyseWithFilter === 'function') {
             openPotentialAnalyseWithFilter(id, name);
         }
+    } else if (type === 'zusammenfassung') {
+        // Zusammenfassung-Befehle ausführen
+        executeZusammenfassung(action, label);
     } else if (type === 'command') {
         // Quick Command ausführen
         if (action === 'openDashboard' && typeof openDashboard === 'function') {
@@ -370,6 +394,78 @@ function selectSuggestion(id, name) {
         selectPotentialSuggestion(id, name);
     } else {
         selectAgentSuggestion(id, name);
+    }
+}
+
+// ========================================
+// ZUSAMMENFASSUNG-BEFEHLE
+// ========================================
+
+function executeZusammenfassung(action, label) {
+    console.log('Zusammenfassung ausführen:', action);
+
+    // Zeige Thinking-Animation im Chat
+    if (typeof showLandingChatTyping === 'function') {
+        showLandingChatTyping();
+    }
+
+    if (action === 'zusammenfassungHeute') {
+        // "Zusammenfassung heutiger Tag" → Thinking, dann zu A-02 navigieren
+        setTimeout(function() {
+            if (typeof showAgenturOverview === 'function') {
+                // Verwende erste Agentur oder Demo-ID
+                const agenturen = (typeof getAgenturen === 'function') ? getAgenturen() : [];
+                const vermittlerId = (agenturen.length > 0) ? agenturen[0].id : 'DEMO-001';
+                showAgenturOverview(vermittlerId);
+            } else if (typeof openAgenturView === 'function') {
+                openAgenturView();
+            }
+        }, 2000);
+    } else if (action === 'zusammenfassungVertriebsschancen') {
+        // "Zusammenfassung meiner Vertriebsschancen" → Mock-Antwort im Chat
+        setTimeout(function() {
+            if (typeof hideLandingChatTyping === 'function') hideLandingChatTyping();
+            if (typeof addLandingChatMessage === 'function') {
+                addLandingChatMessage('assistant', `**Zusammenfassung Ihrer Vertriebsschancen:**
+
+**Top-Chancen diese Woche:**
+• **Peter Schmidt** – KFZ & BU-Versicherung, Vertragslücken identifiziert
+• **Anna Müller** – Kfz-Vertrag läuft 12/2026 aus, Wechselpotential
+• **Thomas Weber** – BU-Deckungslücke (nur 60% Nettoeinkommen)
+• **Sandra Koch** – Cross-Selling Hausrat (Bestandskundin Leben)
+
+**Offene Potentiale:** 23 Kunden mit identifizierten Lücken
+**Geschätztes Prämienvolumen:** €45.800
+
+👉 Tippe **"Vertriebspotentiale"** für die vollständige Liste.`);
+            }
+        }, 2500);
+    } else if (action === 'zusammenfassungKampagnen') {
+        // "Zusammenfassung der aktuellen Vertriebskampagnen" → Mock-Antwort im Chat
+        setTimeout(function() {
+            if (typeof hideLandingChatTyping === 'function') hideLandingChatTyping();
+            if (typeof addLandingChatMessage === 'function') {
+                addLandingChatMessage('assistant', `**Aktuelle Vertriebskampagnen:**
+
+**1. Kfz-Wechselkampagne (Herbst 2025)**
+• Status: Aktiv | Zielgruppe: 1.240 Kunden
+• Erfolgsquote: 18,3% | Abschlüsse: 227
+
+**2. BU-Offensive Q1/2026**
+• Status: Aktiv | Zielgruppe: 890 Kunden
+• Erfolgsquote: 12,1% | Abschlüsse: 108
+
+**3. Cross-Selling Sachversicherung**
+• Status: Laufend | Zielgruppe: 2.100 Kunden
+• Erfolgsquote: 9,7% | Abschlüsse: 204
+
+**4. Altersvorsorge-Check**
+• Status: In Planung | Zielgruppe: 1.500 Kunden
+• Start: März 2026
+
+**Gesamt-Performance:** 539 Abschlüsse aus 4.230 Kontakten (12,7%)`);
+            }
+        }, 2500);
     }
 }
 

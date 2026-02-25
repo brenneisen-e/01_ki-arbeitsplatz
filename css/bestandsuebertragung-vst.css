@@ -6374,17 +6374,16 @@ body {
     position: relative;
 }
 
-/* ====== STATUS QUO CLUSTER ====== */
+/* ====== CLUSTER COLUMNS (shared) ====== */
 .bestand-page .slide-ape-cluster-col {
-    flex: 1.3;
-    max-width: 160px;
+    flex: 1.4;
+    max-width: 170px;
 }
 
-/* Each cluster bar absolutely positioned (same as main bars) */
+/* Each cluster bar absolutely positioned */
 .bestand-page .slide-ape-cluster-bar {
     position: absolute;
     bottom: 0;
-    width: 55px;
     border-radius: 4px 4px 0 0;
     display: flex;
     align-items: center;
@@ -6393,63 +6392,73 @@ body {
     transition: box-shadow 0.2s ease;
 }
 
-.bestand-page .slide-ape-cbar-blue {
-    background: #003D6B;
-    right: calc(50% + 4px);
-}
-
-.bestand-page .slide-ape-cbar-orange {
-    background: #ED8B00;
-    left: calc(50% + 4px);
-}
-
 .bestand-page .slide-ape-cbar-val {
-    font-size: 1rem;
+    font-size: 0.92rem;
     font-weight: 800;
     color: white;
     text-shadow: 0 1px 2px rgba(0,0,0,0.3);
     white-space: nowrap;
 }
 
+/* --- CLUSTER 1: Status Quo 2026 (⅓ blue / ⅔ orange) --- */
+/* Blue: ⅓ width = 44px, positioned left of center */
+.bestand-page .slide-ape-cbar-blue {
+    width: 44px;
+    background: #003D6B;
+    right: calc(50% + 2px);
+}
+
+/* Orange: ⅔ width = 92px, positioned right of center */
+.bestand-page .slide-ape-cbar-orange {
+    width: 92px;
+    background: #ED8B00;
+    left: calc(50% - 46px + 46px);
+    left: calc(50% + 2px);
+}
+
 /* Individual bar labels (under each cluster bar) */
 .bestand-page .slide-ape-cluster-lbl {
     position: absolute;
-    bottom: -2.2rem;
-    width: 55px;
+    bottom: -1.6rem;
     text-align: center;
-}
-
-.bestand-page .slide-ape-clbl-left {
-    right: calc(50% + 4px);
-}
-
-.bestand-page .slide-ape-clbl-right {
-    left: calc(50% + 4px);
+    font-size: 0.62rem;
+    font-weight: 700;
+    color: #97999B;
+    z-index: 5;
 }
 
 .bestand-page .slide-ape-cluster-lbl span {
     display: block;
-    font-size: 0.62rem;
-    color: #97999B;
-    line-height: 1.2;
+    line-height: 1.3;
 }
 
 .bestand-page .slide-ape-cluster-lbl strong {
     display: block;
-    font-size: 0.7rem;
+    font-size: 0.68rem;
     font-weight: 700;
     color: #374151;
-    line-height: 1.2;
+    line-height: 1.3;
+}
+
+/* Cluster 1 label positions */
+.bestand-page .slide-ape-clbl-left {
+    right: calc(50% + 2px);
+    width: 44px;
+}
+
+.bestand-page .slide-ape-clbl-right {
+    left: calc(50% + 2px);
+    width: 92px;
 }
 
 /* Bracket spanning both bars */
 .bestand-page .slide-ape-cluster-bracket {
     position: absolute;
-    bottom: -3.1rem;
+    bottom: -2.8rem;
     left: 50%;
     transform: translateX(-50%);
-    width: 118px;
-    height: 8px;
+    width: 140px;
+    height: 7px;
     border-bottom: 2px solid #53565A;
     border-left: 2px solid #53565A;
     border-right: 2px solid #53565A;
@@ -6459,9 +6468,9 @@ body {
     content: '';
     position: absolute;
     left: 50%;
-    bottom: -6px;
+    bottom: -5px;
     width: 2px;
-    height: 6px;
+    height: 5px;
     background: #53565A;
     transform: translateX(-50%);
 }
@@ -6469,7 +6478,7 @@ body {
 /* Combined label below bracket */
 .bestand-page .slide-ape-cluster-avg {
     position: absolute;
-    bottom: -4.8rem;
+    bottom: -4.4rem;
     left: 50%;
     transform: translateX(-50%);
     text-align: center;
@@ -6491,13 +6500,84 @@ body {
     line-height: 1.3;
 }
 
-/* ====== MAIN BARS (red + green) ====== */
+/* --- CLUSTER 2: 2030 ohne Maßnahmen (⅙ blue-faded / ⅚ red) --- */
+.bestand-page .slide-ape-cluster2-col {
+    flex: 1.4;
+}
+
+/* Blue faded: ⅙ width = 23px */
+.bestand-page .slide-ape-c2bar-blue {
+    width: 23px;
+    background: #003D6B;
+    opacity: 0.4;
+    right: calc(50% + 2px);
+}
+
+/* Red: ⅚ width = 113px */
+.bestand-page .slide-ape-c2bar-red {
+    width: 113px;
+    background: #E31937;
+    left: calc(50% + 2px);
+}
+
+/* Cluster 2 label positions */
+.bestand-page .slide-ape-c2lbl-left {
+    right: calc(50% + 2px);
+    width: 23px;
+}
+
+.bestand-page .slide-ape-c2lbl-right {
+    left: calc(50% + 2px);
+    width: 113px;
+}
+
+/* Cluster 2 bracket (red) */
+.bestand-page .slide-ape-c2-bracket {
+    border-color: #E31937;
+}
+
+.bestand-page .slide-ape-c2-bracket::after {
+    background: #E31937;
+}
+
+/* Cluster 2 avg label (red) */
+.bestand-page .slide-ape-c2-avg-val {
+    color: #E31937 !important;
+}
+
+/* Callout box above cluster 2 */
+.bestand-page .slide-ape-callout {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: calc(46% + 24px);
+    width: max-content;
+    max-width: 140px;
+    background: #fff;
+    border: 1.5px solid #E31937;
+    border-radius: 4px;
+    padding: 0.3rem 0.45rem;
+    font-size: 0.68rem;
+    line-height: 1.35;
+    color: #53565A;
+    text-align: center;
+    z-index: 6;
+    pointer-events: none;
+}
+
+/* Red arrow above cluster 2 */
+.bestand-page .slide-ape-arrow-down {
+    color: #E31937;
+    bottom: calc(46% + 60px);
+}
+
+/* ====== GREEN GOAL BAR (Element 4) ====== */
 .bestand-page .slide-ape-bar {
     position: absolute;
     bottom: 0;
     left: 50%;
     transform: translateX(-50%);
-    width: 90px;
+    width: 100px;
     border-radius: 4px 4px 0 0;
     display: flex;
     align-items: center;
@@ -6512,7 +6592,6 @@ body {
     filter: brightness(1.06);
 }
 
-/* Value text inside bars */
 .bestand-page .slide-ape-bar-val {
     font-size: 1.15rem;
     font-weight: 800;
@@ -6521,16 +6600,11 @@ body {
     white-space: nowrap;
 }
 
-/* Bar colors */
-.bestand-page .slide-ape-bar-red {
-    background: #E31937;
-}
-
 .bestand-page .slide-ape-bar-green {
     background: linear-gradient(180deg, #86BC25 0%, #6a9a1f 100%);
 }
 
-/* Arrows above bars */
+/* Arrows above elements */
 .bestand-page .slide-ape-bar-arrow {
     position: absolute;
     left: 50%;
@@ -6541,37 +6615,12 @@ body {
     line-height: 1;
 }
 
-.bestand-page .slide-ape-arrow-down {
-    color: #E31937;
-    bottom: calc(40% + 4px);
-}
-
 .bestand-page .slide-ape-arrow-up {
     color: #86BC25;
     bottom: calc(85% + 4px);
 }
 
-/* Callout box near red bar */
-.bestand-page .slide-ape-callout {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    bottom: calc(40% + 28px);
-    width: max-content;
-    max-width: 120px;
-    background: #fff;
-    border: 1.5px solid #E31937;
-    border-radius: 4px;
-    padding: 0.3rem 0.45rem;
-    font-size: 0.68rem;
-    line-height: 1.35;
-    color: #53565A;
-    text-align: center;
-    z-index: 6;
-    pointer-events: none;
-}
-
-/* Labels below main bars */
+/* Labels below green bar */
 .bestand-page .slide-ape-bar-lbl {
     position: absolute;
     bottom: -2.5rem;
@@ -6600,7 +6649,7 @@ body {
 
 /* ====== UPLIFT BRIDGE (2 blocks) ====== */
 .bestand-page .slide-ape-bridge-col {
-    flex: 0 0 105px;
+    flex: 0 0 100px;
     position: relative;
 }
 
@@ -6608,8 +6657,8 @@ body {
     position: absolute;
     left: 0;
     right: 0;
-    bottom: 40%;
-    height: 45%;
+    bottom: 44%;
+    height: 41%;
     display: flex;
     flex-direction: column-reverse;
     gap: 2px;
@@ -6868,17 +6917,9 @@ body {
     .bestand-page .slide-ape-bar-lbl,
     .bestand-page .slide-ape-cluster-lbl,
     .bestand-page .slide-ape-cluster-bracket,
-    .bestand-page .slide-ape-cluster-avg {
+    .bestand-page .slide-ape-cluster-avg,
+    .bestand-page .slide-ape-callout {
         display: none;
-    }
-    .bestand-page .slide-ape-cluster-bar {
-        width: 36px;
-    }
-    .bestand-page .slide-ape-cbar-blue {
-        right: calc(50% + 2px);
-    }
-    .bestand-page .slide-ape-cbar-orange {
-        left: calc(50% + 2px);
     }
     .bestand-page .slide-ape-cbar-val {
         font-size: 0.7rem;

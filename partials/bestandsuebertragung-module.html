@@ -2701,7 +2701,7 @@ ERGO Maklerservice</div>
             <!-- ZONE 3: Body – two columns -->
             <div class="slide-cv-body slide-ape-body">
 
-                <!-- LEFT SIDE (~58%): 3-Bar Chart -->
+                <!-- LEFT SIDE (~58%): Chart -->
                 <div class="slide-ape-left">
                     <h3 class="slide-cv-section-title slide-ape-section-green">PROGNOSTIZIERTE &Oslash; APE-ENTWICKLUNG PRO VERMITTLER</h3>
 
@@ -2709,38 +2709,58 @@ ERGO Maklerservice</div>
                         <div class="slide-ape-chart-area">
 
                             <!-- Reference line: &Oslash; heute 110 TEUR -->
-                            <div class="slide-ape-ref-line slide-ape-ref-110" style="bottom:55%">
+                            <div class="slide-ape-ref-line slide-ape-ref-110" style="bottom:56%">
                                 <span class="slide-ape-ref-label slide-ape-ref-label-gray">&Oslash; heute: 110 TEUR</span>
                             </div>
 
                             <!-- Reference line: Ziel 2030 180 TEUR -->
-                            <div class="slide-ape-ref-line slide-ape-ref-180" style="bottom:90%">
+                            <div class="slide-ape-ref-line slide-ape-ref-180" style="bottom:92%">
                                 <span class="slide-ape-ref-label slide-ape-ref-label-green">Ziel 2030: 180 TEUR</span>
                             </div>
 
-                            <!-- === 3 BARS + UPLIFT BRIDGE === -->
+                            <!-- === BARS + BRIDGE === -->
                             <div class="slide-ape-bars">
 
-                                <!-- BAR 1: Status Quo 2026 -->
-                                <div class="slide-ape-bar-col">
-                                    <div class="slide-ape-bar slide-ape-bar-sq" style="height:55%">
-                                        <span class="slide-ape-bar-val">&Oslash; 110 TEUR</span>
+                                <!-- ELEMENT 1: STATUS QUO CLUSTER -->
+                                <div class="slide-ape-bar-col slide-ape-cluster-col">
+                                    <div class="slide-ape-cluster">
+                                        <!-- &frac13; Bestands-VP (dunkelblau, ~180 TEUR) -->
+                                        <div class="slide-ape-cluster-bar slide-ape-cbar-blue" style="height:92%">
+                                            <span class="slide-ape-cbar-val">~180</span>
+                                        </div>
+                                        <!-- &frac23; New Gen (orange, &le;90 TEUR) -->
+                                        <div class="slide-ape-cluster-bar slide-ape-cbar-orange" style="height:46%">
+                                            <span class="slide-ape-cbar-val">&le; 90</span>
+                                        </div>
                                     </div>
-                                    <div class="slide-ape-bar-lbl">
-                                        <strong>Status Quo</strong>
-                                        <span class="slide-ape-bar-sub">2026</span>
-                                        <span class="slide-ape-bar-foot">&#8532; VP &le; 90 TEUR | &#8531; VP ~ 180 TEUR</span>
+                                    <!-- Individual bar labels -->
+                                    <div class="slide-ape-cluster-lbls">
+                                        <div class="slide-ape-cluster-lbl">
+                                            <span>&#8531; VP</span>
+                                            <strong>Bestand</strong>
+                                        </div>
+                                        <div class="slide-ape-cluster-lbl">
+                                            <span>&#8532; VP</span>
+                                            <strong>New Gen</strong>
+                                        </div>
+                                    </div>
+                                    <!-- Bracket spanning both bars -->
+                                    <div class="slide-ape-cluster-bracket"></div>
+                                    <!-- Combined label -->
+                                    <div class="slide-ape-cluster-avg">
+                                        <strong>&Oslash; 110 TEUR</strong>
+                                        <span>Status Quo 2026</span>
                                     </div>
                                 </div>
 
-                                <!-- BAR 2: 2030 ohne Ma&szlig;nahmen -->
+                                <!-- ELEMENT 2: 2030 ohne Ma&szlig;nahmen (rot) -->
                                 <div class="slide-ape-bar-col">
                                     <div class="slide-ape-bar-arrow slide-ape-arrow-down">&#9660;</div>
-                                    <div class="slide-ape-bar slide-ape-bar-red" style="height:36%">
-                                        <span class="slide-ape-bar-val">&lt; 110 TEUR</span>
+                                    <div class="slide-ape-bar slide-ape-bar-red" style="height:40%">
+                                        <span class="slide-ape-bar-val">&lt; 110</span>
                                     </div>
                                     <div class="slide-ape-callout">
-                                        Top-VPs gehen in Rente,<br>New Joiner noch nicht produktiv
+                                        Top-VPs gehen in Rente,<br>Nachwuchs nicht produktiv genug
                                     </div>
                                     <div class="slide-ape-bar-lbl">
                                         <strong>2030</strong>
@@ -2748,32 +2768,27 @@ ERGO Maklerservice</div>
                                     </div>
                                 </div>
 
-                                <!-- UPLIFT BRIDGE between Bar 2 and Bar 3 -->
+                                <!-- ELEMENT 3: UPLIFT-BR&Uuml;CKE (2 Bl&ouml;cke) -->
                                 <div class="slide-ape-bridge-col">
                                     <div class="slide-ape-bridge">
-                                        <!-- Block 1 (bottom, largest &ndash; NextGen / AP 2) -->
+                                        <!-- Block unten (gr&ouml;&szlig;er &ndash; NextGen / AP 2, ~57%) -->
                                         <div class="slide-ape-bridge-block slide-ape-bridge-nextgen" data-ap="2">
                                             <strong>NextGen</strong>
                                             <span>Retention &amp; Ramp-up</span>
                                         </div>
-                                        <!-- Block 2 (middle &ndash; VermittlerPlus / AP 3) -->
+                                        <!-- Block oben (kleiner &ndash; VermittlerPlus / AP 3, ~43%) -->
                                         <div class="slide-ape-bridge-block slide-ape-bridge-vplus" data-ap="3">
                                             <strong>VermittlerPlus</strong>
                                             <span>Aktivphase verl&auml;ngern</span>
                                         </div>
-                                        <!-- Block 3 (top, smallest &ndash; Data4All / AP 1) -->
-                                        <div class="slide-ape-bridge-block slide-ape-bridge-data" data-ap="1">
-                                            <strong>Data4All</strong>
-                                            <span>Steuerung &amp; Transparenz</span>
-                                        </div>
                                     </div>
                                 </div>
 
-                                <!-- BAR 3: 2030 mit Ma&szlig;nahmen -->
+                                <!-- ELEMENT 4: 2030 mit Ma&szlig;nahmen (gr&uuml;n) -->
                                 <div class="slide-ape-bar-col">
                                     <div class="slide-ape-bar-arrow slide-ape-arrow-up">&#9650;</div>
                                     <div class="slide-ape-bar slide-ape-bar-green" style="height:85%">
-                                        <span class="slide-ape-bar-val">&rarr; 180 TEUR</span>
+                                        <span class="slide-ape-bar-val">&rarr; 180</span>
                                     </div>
                                     <div class="slide-ape-bar-lbl">
                                         <strong>2030</strong>
@@ -2796,8 +2811,8 @@ ERGO Maklerservice</div>
                             Ohne Ma&szlig;nahmen
                         </div>
                         <div class="slide-ape-legend-item">
-                            <span class="slide-ape-legend-swatch" style="background:#1A3F6B"></span>
-                            Bestands VPs
+                            <span class="slide-ape-legend-swatch" style="background:#003D6B"></span>
+                            Bestands-VPs
                         </div>
                         <div class="slide-ape-legend-item">
                             <span class="slide-ape-legend-swatch" style="background:#ED8B00"></span>

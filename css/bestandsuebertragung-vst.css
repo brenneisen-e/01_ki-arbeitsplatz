@@ -6305,15 +6305,15 @@ body {
     align-items: start;
 }
 
-/* ====== LEFT: 3-Bar Chart ====== */
+/* ====== LEFT: Chart ====== */
 .bestand-page .slide-ape-left {
     min-width: 0;
 }
 
 .bestand-page .slide-ape-chart {
     position: relative;
-    height: 380px;
-    margin-bottom: 3.5rem;
+    height: 360px;
+    margin-bottom: 5rem;
 }
 
 /* Chart area – clean, no axes, only bottom baseline */
@@ -6346,7 +6346,7 @@ body {
     position: absolute;
     right: 0.2rem;
     top: -1.1rem;
-    font-size: 0.68rem;
+    font-size: 0.7rem;
     font-weight: 700;
     background: white;
     padding: 0 0.25rem;
@@ -6356,7 +6356,7 @@ body {
 .bestand-page .slide-ape-ref-label-green { color: #046A38; }
 .bestand-page .slide-ape-ref-label-gray  { color: #53565A; }
 
-/* ====== 3-BAR CONTAINER ====== */
+/* ====== BARS CONTAINER ====== */
 .bestand-page .slide-ape-bars {
     position: absolute;
     inset: 0;
@@ -6367,20 +6367,143 @@ body {
     z-index: 3;
 }
 
-/* Column for each bar */
+/* Generic bar column */
 .bestand-page .slide-ape-bar-col {
     flex: 1;
-    max-width: 140px;
+    max-width: 130px;
     position: relative;
 }
 
-/* ====== BAR (the actual colored block) ====== */
+/* ====== STATUS QUO CLUSTER ====== */
+.bestand-page .slide-ape-cluster-col {
+    flex: 1.3;
+    max-width: 160px;
+}
+
+.bestand-page .slide-ape-cluster {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    height: 100%;
+    width: 118px;
+}
+
+.bestand-page .slide-ape-cluster-bar {
+    width: 55px;
+    border-radius: 4px 4px 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: box-shadow 0.2s ease;
+}
+
+.bestand-page .slide-ape-cbar-blue {
+    background: #003D6B;
+}
+
+.bestand-page .slide-ape-cbar-orange {
+    background: #ED8B00;
+}
+
+.bestand-page .slide-ape-cbar-val {
+    font-size: 1rem;
+    font-weight: 800;
+    color: white;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    white-space: nowrap;
+}
+
+/* Individual bar labels (under each cluster bar) */
+.bestand-page .slide-ape-cluster-lbls {
+    position: absolute;
+    bottom: -2.2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    width: 118px;
+}
+
+.bestand-page .slide-ape-cluster-lbl {
+    width: 55px;
+    text-align: center;
+}
+
+.bestand-page .slide-ape-cluster-lbl span {
+    display: block;
+    font-size: 0.62rem;
+    color: #97999B;
+    line-height: 1.2;
+}
+
+.bestand-page .slide-ape-cluster-lbl strong {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #374151;
+    line-height: 1.2;
+}
+
+/* Bracket spanning both bars */
+.bestand-page .slide-ape-cluster-bracket {
+    position: absolute;
+    bottom: -3.1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 118px;
+    height: 8px;
+    border-bottom: 2px solid #53565A;
+    border-left: 2px solid #53565A;
+    border-right: 2px solid #53565A;
+}
+
+.bestand-page .slide-ape-cluster-bracket::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: -6px;
+    width: 2px;
+    height: 6px;
+    background: #53565A;
+    transform: translateX(-50%);
+}
+
+/* Combined label below bracket */
+.bestand-page .slide-ape-cluster-avg {
+    position: absolute;
+    bottom: -4.8rem;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    white-space: nowrap;
+}
+
+.bestand-page .slide-ape-cluster-avg strong {
+    display: block;
+    font-size: 0.88rem;
+    font-weight: 800;
+    color: #374151;
+    line-height: 1.3;
+}
+
+.bestand-page .slide-ape-cluster-avg span {
+    display: block;
+    font-size: 0.7rem;
+    color: #97999B;
+    line-height: 1.3;
+}
+
+/* ====== MAIN BARS (red + green) ====== */
 .bestand-page .slide-ape-bar {
     position: absolute;
     bottom: 0;
     left: 50%;
     transform: translateX(-50%);
-    width: 96px;
+    width: 90px;
     border-radius: 4px 4px 0 0;
     display: flex;
     align-items: center;
@@ -6397,7 +6520,7 @@ body {
 
 /* Value text inside bars */
 .bestand-page .slide-ape-bar-val {
-    font-size: 1.25rem;
+    font-size: 1.15rem;
     font-weight: 800;
     color: white;
     text-shadow: 0 1px 3px rgba(0,0,0,0.35);
@@ -6405,10 +6528,6 @@ body {
 }
 
 /* Bar colors */
-.bestand-page .slide-ape-bar-sq {
-    background: #333333;
-}
-
 .bestand-page .slide-ape-bar-red {
     background: #E31937;
 }
@@ -6430,7 +6549,7 @@ body {
 
 .bestand-page .slide-ape-arrow-down {
     color: #E31937;
-    bottom: calc(36% + 4px);
+    bottom: calc(40% + 4px);
 }
 
 .bestand-page .slide-ape-arrow-up {
@@ -6438,19 +6557,19 @@ body {
     bottom: calc(85% + 4px);
 }
 
-/* Callout box near bar 2 */
+/* Callout box near red bar */
 .bestand-page .slide-ape-callout {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
-    bottom: calc(36% + 28px);
+    bottom: calc(40% + 28px);
     width: max-content;
-    max-width: 160px;
+    max-width: 120px;
     background: #fff;
     border: 1.5px solid #E31937;
     border-radius: 4px;
-    padding: 0.35rem 0.5rem;
-    font-size: 0.65rem;
+    padding: 0.3rem 0.45rem;
+    font-size: 0.68rem;
     line-height: 1.35;
     color: #53565A;
     text-align: center;
@@ -6458,10 +6577,10 @@ body {
     pointer-events: none;
 }
 
-/* Labels below bars */
+/* Labels below main bars */
 .bestand-page .slide-ape-bar-lbl {
     position: absolute;
-    bottom: -3.2rem;
+    bottom: -2.5rem;
     left: 50%;
     transform: translateX(-50%);
     text-align: center;
@@ -6479,23 +6598,15 @@ body {
 
 .bestand-page .slide-ape-bar-sub {
     display: block;
-    font-size: 0.68rem;
+    font-size: 0.7rem;
     color: #97999B;
     line-height: 1.25;
     margin-top: 0.1rem;
 }
 
-.bestand-page .slide-ape-bar-foot {
-    display: block;
-    font-size: 0.58rem;
-    color: #b0b3b5;
-    line-height: 1.2;
-    margin-top: 0.15rem;
-}
-
-/* ====== UPLIFT BRIDGE ====== */
+/* ====== UPLIFT BRIDGE (2 blocks) ====== */
 .bestand-page .slide-ape-bridge-col {
-    flex: 0 0 110px;
+    flex: 0 0 105px;
     position: relative;
 }
 
@@ -6503,32 +6614,32 @@ body {
     position: absolute;
     left: 0;
     right: 0;
-    bottom: 36%;
-    height: 49%;
+    bottom: 40%;
+    height: 45%;
     display: flex;
     flex-direction: column-reverse;
     gap: 2px;
     z-index: 4;
 }
 
-/* Left connector: dashed line from bridge bottom to bar 2 top */
+/* Left connector: dashed line from bridge bottom to red bar top */
 .bestand-page .slide-ape-bridge::before {
     content: '';
     position: absolute;
     bottom: 0;
-    left: -16px;
-    width: 16px;
+    left: -14px;
+    width: 14px;
     height: 0;
     border-top: 1.5px dashed #c0c2c4;
 }
 
-/* Right connector: dashed line from bridge top to bar 3 top */
+/* Right connector: dashed line from bridge top to green bar top */
 .bestand-page .slide-ape-bridge::after {
     content: '';
     position: absolute;
     top: 0;
-    right: -16px;
-    width: 16px;
+    right: -14px;
+    width: 14px;
     height: 0;
     border-top: 1.5px dashed #c0c2c4;
 }
@@ -6540,7 +6651,7 @@ body {
     align-items: center;
     justify-content: center;
     border-radius: 3px;
-    padding: 0.3rem 0.4rem;
+    padding: 0.35rem 0.4rem;
     text-align: center;
     cursor: default;
     transition: box-shadow 0.2s ease, filter 0.2s ease;
@@ -6559,7 +6670,7 @@ body {
 }
 
 .bestand-page .slide-ape-bridge-block strong {
-    font-size: 0.72rem;
+    font-size: 0.82rem;
     font-weight: 800;
     color: white;
     line-height: 1.2;
@@ -6567,27 +6678,21 @@ body {
 }
 
 .bestand-page .slide-ape-bridge-block span {
-    font-size: 0.58rem;
+    font-size: 0.62rem;
     color: rgba(255,255,255,0.9);
     line-height: 1.2;
 }
 
-/* Block 1 – NextGen (bottom, largest, 40%) */
+/* Block 1 – NextGen (bottom, larger ~57%) */
 .bestand-page .slide-ape-bridge-nextgen {
-    flex: 40;
+    flex: 57;
     background: #ED8B00;
 }
 
-/* Block 2 – VermittlerPlus (middle, 35%) */
+/* Block 2 – VermittlerPlus (top, smaller ~43%) */
 .bestand-page .slide-ape-bridge-vplus {
-    flex: 35;
+    flex: 43;
     background: #046A38;
-}
-
-/* Block 3 – Data4All (top, smallest, 25%) */
-.bestand-page .slide-ape-bridge-data {
-    flex: 25;
-    background: #86BC25;
 }
 
 /* ====== LEGEND ====== */
@@ -6647,9 +6752,12 @@ body {
 }
 
 /* AP color variants */
+/* AP 1 – Data4All: Fundament/Enabler, visually subtler */
 .bestand-page .slide-ape-ap-1 {
     border-left-color: #86BC25;
-    background: linear-gradient(90deg, #fafef4 0%, #fafbfc 30%);
+    border-left-width: 3px;
+    background: linear-gradient(90deg, #fafef4 0%, #fafbfc 20%);
+    opacity: 0.88;
 }
 
 .bestand-page .slide-ape-ap-2 {
@@ -6746,13 +6854,13 @@ body {
         padding-left: 0;
     }
     .bestand-page .slide-ape-chart {
-        height: 320px;
+        height: 300px;
     }
 }
 
 @media (max-width: 768px) {
     .bestand-page .slide-ape-chart {
-        height: 250px;
+        height: 240px;
     }
     .bestand-page .slide-ape-legend {
         gap: 0.5rem;
@@ -6763,14 +6871,27 @@ body {
     .bestand-page .slide-ape-bar-val {
         font-size: 0.85rem;
     }
-    .bestand-page .slide-ape-bar-lbl {
+    .bestand-page .slide-ape-bar-lbl,
+    .bestand-page .slide-ape-cluster-lbls,
+    .bestand-page .slide-ape-cluster-bracket,
+    .bestand-page .slide-ape-cluster-avg {
         display: none;
     }
+    .bestand-page .slide-ape-cluster {
+        width: 80px;
+        gap: 4px;
+    }
+    .bestand-page .slide-ape-cluster-bar {
+        width: 38px;
+    }
+    .bestand-page .slide-ape-cbar-val {
+        font-size: 0.7rem;
+    }
     .bestand-page .slide-ape-bridge-col {
-        flex: 0 0 70px;
+        flex: 0 0 65px;
     }
     .bestand-page .slide-ape-bridge-block strong {
-        font-size: 0.6rem;
+        font-size: 0.62rem;
     }
     .bestand-page .slide-ape-bridge-block span {
         display: none;

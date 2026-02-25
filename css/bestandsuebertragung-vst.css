@@ -6380,33 +6380,27 @@ body {
     max-width: 160px;
 }
 
-.bestand-page .slide-ape-cluster {
+/* Each cluster bar absolutely positioned (same as main bars) */
+.bestand-page .slide-ape-cluster-bar {
     position: absolute;
     bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    align-items: flex-end;
-    gap: 8px;
-    height: 100%;
-    width: 118px;
-}
-
-.bestand-page .slide-ape-cluster-bar {
     width: 55px;
     border-radius: 4px 4px 0 0;
     display: flex;
     align-items: center;
     justify-content: center;
+    z-index: 4;
     transition: box-shadow 0.2s ease;
 }
 
 .bestand-page .slide-ape-cbar-blue {
     background: #003D6B;
+    right: calc(50% + 4px);
 }
 
 .bestand-page .slide-ape-cbar-orange {
     background: #ED8B00;
+    left: calc(50% + 4px);
 }
 
 .bestand-page .slide-ape-cbar-val {
@@ -6418,19 +6412,19 @@ body {
 }
 
 /* Individual bar labels (under each cluster bar) */
-.bestand-page .slide-ape-cluster-lbls {
+.bestand-page .slide-ape-cluster-lbl {
     position: absolute;
     bottom: -2.2rem;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 8px;
-    width: 118px;
-}
-
-.bestand-page .slide-ape-cluster-lbl {
     width: 55px;
     text-align: center;
+}
+
+.bestand-page .slide-ape-clbl-left {
+    right: calc(50% + 4px);
+}
+
+.bestand-page .slide-ape-clbl-right {
+    left: calc(50% + 4px);
 }
 
 .bestand-page .slide-ape-cluster-lbl span {
@@ -6872,17 +6866,19 @@ body {
         font-size: 0.85rem;
     }
     .bestand-page .slide-ape-bar-lbl,
-    .bestand-page .slide-ape-cluster-lbls,
+    .bestand-page .slide-ape-cluster-lbl,
     .bestand-page .slide-ape-cluster-bracket,
     .bestand-page .slide-ape-cluster-avg {
         display: none;
     }
-    .bestand-page .slide-ape-cluster {
-        width: 80px;
-        gap: 4px;
-    }
     .bestand-page .slide-ape-cluster-bar {
-        width: 38px;
+        width: 36px;
+    }
+    .bestand-page .slide-ape-cbar-blue {
+        right: calc(50% + 2px);
+    }
+    .bestand-page .slide-ape-cbar-orange {
+        left: calc(50% + 2px);
     }
     .bestand-page .slide-ape-cbar-val {
         font-size: 0.7rem;

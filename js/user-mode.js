@@ -138,7 +138,8 @@ function updateWelcomeMessage(mode) {
     const chatBubble = document.querySelector('.welcome-message .chat-bubble p strong');
     if (chatBubble) {
         if (mode === 'vertrieb') {
-            chatBubble.textContent = 'Willkommen zurück Eike, was kann ich für dich tun?';
+            const userName = localStorage.getItem('userName') || 'Max';
+            chatBubble.textContent = 'Willkommen zurück ' + userName + ', was kann ich für dich tun?';
         } else if (mode === 'pva') {
             chatBubble.textContent = 'Willkommen zurück Anja, was kann ich für dich tun?';
         }

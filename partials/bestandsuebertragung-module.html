@@ -2677,7 +2677,7 @@ ERGO Maklerservice</div>
     </section>
 
     <!-- ============================================ -->
-    <!-- VIEW: Slide APE-Prognose (T-13) -->
+    <!-- VIEW: Slide APE-Prognose (T-13) – Waterfall -->
     <!-- ============================================ -->
     <section class="view" id="view-slide-ape">
         <div class="slide-cv-fullscreen slide-ape-page">
@@ -2690,7 +2690,7 @@ ERGO Maklerservice</div>
                 <h1 class="slide-cv-h1"><strong>HR Excellence</strong> | Handlungsbedarfe</h1>
             </div>
 
-            <!-- ZONE 2: Subtitle / Action Title -->
+            <!-- ZONE 2: Action Title -->
             <div class="slide-cv-subtitle-zone">
                 <h2 class="slide-cv-h2 slide-ape-action-title">Gezielte HR-Ma&szlig;nahmen in Onboarding, Retention und Aktivphasenverl&auml;ngerung sichern die Vertriebskapazit&auml;t und wirken auf kontinuierliche Erh&ouml;hung der APE pro Vermittler</h2>
             </div>
@@ -2701,119 +2701,176 @@ ERGO Maklerservice</div>
             <!-- ZONE 3: Body – two columns -->
             <div class="slide-cv-body slide-ape-body">
 
-                <!-- LEFT SIDE (~58%): Chart -->
+                <!-- LEFT SIDE (~58%): Waterfall Chart -->
                 <div class="slide-ape-left">
-                    <h3 class="slide-cv-section-title slide-ape-section-green">Prognostizierte &Oslash; APE-Entwicklung pro Vermittler</h3>
+                    <h3 class="slide-cv-section-title slide-ape-section-green">Prognostizierte &Oslash; APE-Entwicklung pro Vermittler (TEUR)</h3>
 
-                    <!-- Chart container -->
                     <div class="slide-ape-chart">
-                        <!-- Y-Axis Labels -->
+                        <!-- Y-Axis -->
                         <div class="slide-ape-yaxis">
                             <span>200</span>
-                            <span>180</span>
                             <span>160</span>
-                            <span>140</span>
                             <span>120</span>
-                            <span>100</span>
                             <span>80</span>
-                            <span>60</span>
                             <span>40</span>
-                            <span>20</span>
                             <span>0</span>
                         </div>
-                        <div class="slide-ape-yaxis-label">TEUR</div>
 
                         <!-- Chart Area -->
                         <div class="slide-ape-chart-area">
-                            <!-- Grid lines -->
+                            <!-- Grid lines at 40, 80, 120, 160, 200 -->
                             <div class="slide-ape-grid">
-                                <div class="slide-ape-gridline" style="bottom:100%"></div>
-                                <div class="slide-ape-gridline" style="bottom:90%"></div>
-                                <div class="slide-ape-gridline" style="bottom:80%"></div>
-                                <div class="slide-ape-gridline" style="bottom:70%"></div>
-                                <div class="slide-ape-gridline" style="bottom:60%"></div>
-                                <div class="slide-ape-gridline" style="bottom:50%"></div>
-                                <div class="slide-ape-gridline" style="bottom:40%"></div>
-                                <div class="slide-ape-gridline" style="bottom:30%"></div>
                                 <div class="slide-ape-gridline" style="bottom:20%"></div>
-                                <div class="slide-ape-gridline" style="bottom:10%"></div>
-                                <div class="slide-ape-gridline" style="bottom:0%"></div>
+                                <div class="slide-ape-gridline" style="bottom:40%"></div>
+                                <div class="slide-ape-gridline" style="bottom:60%"></div>
+                                <div class="slide-ape-gridline" style="bottom:80%"></div>
+                                <div class="slide-ape-gridline" style="bottom:100%"></div>
                             </div>
 
-                            <!-- Dashed reference line at 180 TEUR (90% of 200) -->
+                            <!-- Reference line: Ziel 180 TEUR (90%) -->
                             <div class="slide-ape-ref-line slide-ape-ref-target" style="bottom:90%">
                                 <span class="slide-ape-ref-label slide-ape-ref-label-green">Ziel 2030: 180 TEUR</span>
                             </div>
 
-                            <!-- Dashed reference line at 110 TEUR (55% of 200) -->
-                            <div class="slide-ape-ref-line slide-ape-ref-today" style="bottom:55%">
-                                <span class="slide-ape-ref-label slide-ape-ref-label-gray">&Oslash; heute</span>
+                            <!-- Reference line: Ohne Ma&szlig;nahmen 65 TEUR (32.5%) -->
+                            <div class="slide-ape-ref-line slide-ape-ref-low" style="bottom:32.5%">
+                                <span class="slide-ape-ref-label slide-ape-ref-label-red">&Oslash; ohne Ma&szlig;nahmen: ~65 TEUR</span>
                             </div>
 
-                            <!-- Bar Group -->
-                            <div class="slide-ape-bars">
+                            <!-- === WATERFALL BLOCKS === -->
+                            <div class="slide-ape-wf">
 
-                                <!-- Balken 1: Status Quo 2026 -->
-                                <div class="slide-ape-bar-group">
-                                    <div class="slide-ape-bar slide-ape-bar-sq" style="height:55%" title="Status Quo 2026: &Oslash; 110 TEUR&#10;2/3 VP &le; 90 TEUR | 1/3 VP ~180 TEUR">
-                                        <span class="slide-ape-bar-val">&Oslash; 110</span>
+                                <!-- Block 1: Status Quo – base bar from 0 to 110 (55%) -->
+                                <div class="slide-ape-wf-col">
+                                    <div class="slide-ape-wf-block slide-ape-wf-start" data-ap="" style="bottom:0%;height:55%">
+                                        <span class="slide-ape-wf-val">110</span>
                                     </div>
-                                    <div class="slide-ape-bar-label">Status Quo<br><strong>2026</strong></div>
-                                    <div class="slide-ape-bar-sub">2/3 VP &le; 90 TEUR | 1/3 VP ~180 TEUR</div>
+                                    <div class="slide-ape-wf-lbl">
+                                        <strong>Status Quo 2026</strong>
+                                        <span class="slide-ape-wf-sub">&Oslash; APE heute</span>
+                                        <span class="slide-ape-wf-foot">2/3 VP &le;90 | 1/3 VP ~180</span>
+                                    </div>
                                 </div>
 
-                                <!-- Balken 2: 2030 ohne Maßnahmen -->
-                                <div class="slide-ape-bar-group">
-                                    <div class="slide-ape-bar-callout slide-ape-callout-red">Top-VPs gehen, New Joiner<br>dr&uuml;cken den Schnitt</div>
-                                    <div class="slide-ape-bar-arrow slide-ape-arrow-down">&#x25BC;</div>
-                                    <div class="slide-ape-bar slide-ape-bar-ohne" style="height:43%" title="2030 ohne Ma&szlig;nahmen: &Oslash; ~86 TEUR">
-                                        <span class="slide-ape-bar-val">&Oslash; ~86</span>
+                                <!-- Connector: 110 → 110 (top of block 1 to top of block 2) -->
+                                <div class="slide-ape-wf-conn" style="bottom:55%"></div>
+
+                                <!-- Block 2: Altersbedingte Abg&auml;nge – falls from 110 to 80 -->
+                                <div class="slide-ape-wf-col">
+                                    <div class="slide-ape-wf-block slide-ape-wf-fall-1" data-ap="" style="bottom:40%;height:15%">
+                                        <span class="slide-ape-wf-val">&minus;30</span>
                                     </div>
-                                    <div class="slide-ape-bar-label">2030<br><strong>ohne Ma&szlig;n.</strong></div>
+                                    <div class="slide-ape-wf-lbl">
+                                        <strong>Altersbedingte Abg&auml;nge</strong>
+                                        <span class="slide-ape-wf-sub">Top-VPs (&Oslash;54 J.) gehen in Rente</span>
+                                    </div>
                                 </div>
 
-                                <!-- Uplift arrow between bar 2 and 3 -->
-                                <div class="slide-ape-uplift">
-                                    <div class="slide-ape-uplift-arrow">
-                                        <svg viewBox="0 0 40 120" width="40" height="120" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M20 115 L20 10" stroke="#86BC25" stroke-width="3" stroke-dasharray="6 4"/>
-                                            <path d="M10 25 L20 5 L30 25" stroke="#86BC25" stroke-width="3" fill="none" stroke-linejoin="round"/>
-                                        </svg>
+                                <!-- Connector: 80 → 80 -->
+                                <div class="slide-ape-wf-conn" style="bottom:40%"></div>
+
+                                <!-- Block 3: Fr&uuml;hfluktuation – falls from 80 to 65 -->
+                                <div class="slide-ape-wf-col">
+                                    <div class="slide-ape-wf-block slide-ape-wf-fall-2" data-ap="" style="bottom:32.5%;height:7.5%">
+                                        <span class="slide-ape-wf-val">&minus;15</span>
                                     </div>
-                                    <div class="slide-ape-uplift-label">+84 TEUR<br>durch Ma&szlig;nahmen</div>
+                                    <div class="slide-ape-wf-lbl">
+                                        <strong>Fr&uuml;hfluktuation New Joiner</strong>
+                                        <span class="slide-ape-wf-sub">25% Absprung, 91 Tage bis Vertrag</span>
+                                    </div>
                                 </div>
 
-                                <!-- Balken 3: 2030 mit Maßnahmen -->
-                                <div class="slide-ape-bar-group">
-                                    <div class="slide-ape-bar-callout slide-ape-callout-green">Bestand stabilisieren +<br>New Joiner bef&auml;higen</div>
-                                    <div class="slide-ape-bar-arrow slide-ape-arrow-up">&#x25B2;</div>
-                                    <div class="slide-ape-bar slide-ape-bar-mit" style="height:85%" title="2030 mit Ma&szlig;nahmen: &Oslash; ~170 TEUR">
-                                        <span class="slide-ape-bar-val">&Oslash; ~170</span>
+                                <!-- Visual break: dashed vertical separator -->
+                                <div class="slide-ape-wf-sep">
+                                    <span class="slide-ape-wf-sep-l">ohne<br>Ma&szlig;n.</span>
+                                    <span class="slide-ape-wf-sep-r">mit<br>Ma&szlig;n.</span>
+                                </div>
+
+                                <!-- Block 4: NextGen – rises from 65 to 105 -->
+                                <div class="slide-ape-wf-col">
+                                    <div class="slide-ape-wf-block slide-ape-wf-rise-nextgen" data-ap="2" style="bottom:32.5%;height:20%">
+                                        <span class="slide-ape-wf-val">+40</span>
                                     </div>
-                                    <div class="slide-ape-bar-label">2030<br><strong>mit Ma&szlig;n.</strong></div>
+                                    <div class="slide-ape-wf-lbl">
+                                        <strong>NextGen</strong>
+                                        <span class="slide-ape-wf-sub">Retention &amp; Ramp-up</span>
+                                    </div>
+                                </div>
+
+                                <!-- Connector: 105 → 105 -->
+                                <div class="slide-ape-wf-conn" style="bottom:52.5%"></div>
+
+                                <!-- Block 5: VermittlerPlus – rises from 105 to 140 -->
+                                <div class="slide-ape-wf-col">
+                                    <div class="slide-ape-wf-block slide-ape-wf-rise-vplus" data-ap="3" style="bottom:52.5%;height:17.5%">
+                                        <span class="slide-ape-wf-val">+35</span>
+                                    </div>
+                                    <div class="slide-ape-wf-lbl">
+                                        <strong>VermittlerPlus</strong>
+                                        <span class="slide-ape-wf-sub">Aktivphase &amp; &Uuml;bergabe</span>
+                                    </div>
+                                </div>
+
+                                <!-- Connector: 140 → 140 -->
+                                <div class="slide-ape-wf-conn" style="bottom:70%"></div>
+
+                                <!-- Block 6: Data4All – rises from 140 to 165 -->
+                                <div class="slide-ape-wf-col">
+                                    <div class="slide-ape-wf-block slide-ape-wf-rise-data" data-ap="1" style="bottom:70%;height:12.5%">
+                                        <span class="slide-ape-wf-val">+25</span>
+                                    </div>
+                                    <div class="slide-ape-wf-lbl">
+                                        <strong>Data4All</strong>
+                                        <span class="slide-ape-wf-sub">Steuerung &amp; Simulation</span>
+                                    </div>
+                                </div>
+
+                                <!-- Connector: 165 → 165 -->
+                                <div class="slide-ape-wf-conn" style="bottom:82.5%"></div>
+
+                                <!-- Block 7: Ziel 2030 – base bar from 0 to 165 -->
+                                <div class="slide-ape-wf-col">
+                                    <div class="slide-ape-wf-block slide-ape-wf-end" data-ap="" style="bottom:0%;height:82.5%">
+                                        <span class="slide-ape-wf-val">~165</span>
+                                    </div>
+                                    <div class="slide-ape-wf-lbl">
+                                        <strong>2030 mit Ma&szlig;n.</strong>
+                                        <span class="slide-ape-wf-sub">&Oslash; APE Ziel</span>
+                                    </div>
                                 </div>
 
                             </div>
+
+                            <!-- Delta annotation bracket -->
+                            <div class="slide-ape-wf-delta">
+                                <div class="slide-ape-wf-delta-line"></div>
+                                <div class="slide-ape-wf-delta-label">&Delta; +100 TEUR durch Ma&szlig;nahmen</div>
+                            </div>
+
                         </div>
                     </div>
 
-                    <!-- Legende -->
+                    <!-- Legend -->
                     <div class="slide-ape-legend">
                         <div class="slide-ape-legend-item">
-                            <span class="slide-ape-legend-line slide-ape-legend-green"></span>
-                            Mit Ma&szlig;nahmen
+                            <span class="slide-ape-legend-swatch" style="background:#333"></span>
+                            Status Quo
                         </div>
                         <div class="slide-ape-legend-item">
-                            <span class="slide-ape-legend-line slide-ape-legend-red"></span>
-                            Ohne Ma&szlig;nahmen
+                            <span class="slide-ape-legend-swatch" style="background:#E31937"></span>
+                            Erosion
                         </div>
                         <div class="slide-ape-legend-item">
-                            <span class="slide-ape-legend-line slide-ape-legend-blue"></span>
-                            Bestands VPs
+                            <span class="slide-ape-legend-swatch" style="background:#ED8B00"></span>
+                            NextGen (AP 2)
                         </div>
                         <div class="slide-ape-legend-item">
-                            <span class="slide-ape-legend-line slide-ape-legend-orange"></span>
-                            New Joiner
+                            <span class="slide-ape-legend-swatch" style="background:#046A38"></span>
+                            VermittlerPlus (AP 3)
+                        </div>
+                        <div class="slide-ape-legend-item">
+                            <span class="slide-ape-legend-swatch" style="background:#86BC25"></span>
+                            Data4All (AP 1)
                         </div>
                     </div>
                 </div>
@@ -2823,7 +2880,7 @@ ERGO Maklerservice</div>
                     <h3 class="slide-cv-section-title">Arbeitspakete</h3>
 
                     <!-- AP 1 – Data4All -->
-                    <div class="slide-ape-ap slide-ape-ap-1">
+                    <div class="slide-ape-ap slide-ape-ap-1" data-ap="1">
                         <div class="slide-ape-ap-header">
                             <span class="slide-ape-ap-badge slide-ape-badge-1">AP 1</span>
                             <strong>Data4All</strong>
@@ -2847,7 +2904,7 @@ ERGO Maklerservice</div>
                     </div>
 
                     <!-- AP 2 – NextGen -->
-                    <div class="slide-ape-ap slide-ape-ap-2">
+                    <div class="slide-ape-ap slide-ape-ap-2" data-ap="2">
                         <div class="slide-ape-ap-header">
                             <span class="slide-ape-ap-badge slide-ape-badge-2">AP 2</span>
                             <strong>NextGen</strong>
@@ -2871,7 +2928,7 @@ ERGO Maklerservice</div>
                     </div>
 
                     <!-- AP 3 – VermittlerPlus -->
-                    <div class="slide-ape-ap slide-ape-ap-3">
+                    <div class="slide-ape-ap slide-ape-ap-3" data-ap="3">
                         <div class="slide-ape-ap-header">
                             <span class="slide-ape-ap-badge slide-ape-badge-3">AP 3</span>
                             <strong>VermittlerPlus</strong>

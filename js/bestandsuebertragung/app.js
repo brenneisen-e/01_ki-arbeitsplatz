@@ -157,6 +157,46 @@ function setupEventListeners() {
     document.getElementById('validationModal')?.addEventListener('click', (e) => {
         if (e.target.id === 'validationModal') UI.closeValidationModal();
     });
+
+    // T-13 Waterfall ↔ AP cross-hover interaction
+    setupWaterfallHover();
+}
+
+/**
+ * Waterfall chart ↔ AP box cross-highlight on hover
+ */
+function setupWaterfallHover() {
+    const page = document.querySelector('.slide-ape-page');
+    if (!page) return;
+
+    const blocks = page.querySelectorAll('.slide-ape-wf-block[data-ap]');
+    const apBoxes = page.querySelectorAll('.slide-ape-ap[data-ap]');
+
+    function highlight(apId) {
+        blocks.forEach(b => {
+            if (b.dataset.ap === apId) b.classList.add('wf-highlight');
+        });
+        apBoxes.forEach(a => {
+            if (a.dataset.ap === apId) a.classList.add('ap-highlight');
+        });
+    }
+
+    function clearAll() {
+        blocks.forEach(b => b.classList.remove('wf-highlight'));
+        apBoxes.forEach(a => a.classList.remove('ap-highlight'));
+    }
+
+    blocks.forEach(block => {
+        if (!block.dataset.ap) return;
+        block.addEventListener('mouseenter', () => highlight(block.dataset.ap));
+        block.addEventListener('mouseleave', clearAll);
+    });
+
+    apBoxes.forEach(box => {
+        if (!box.dataset.ap) return;
+        box.addEventListener('mouseenter', () => highlight(box.dataset.ap));
+        box.addEventListener('mouseleave', clearAll);
+    });
 }
 
 /**

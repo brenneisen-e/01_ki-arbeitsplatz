@@ -163,13 +163,13 @@ function setupEventListeners() {
 }
 
 /**
- * Waterfall chart ↔ AP box cross-highlight on hover
+ * Bridge block ↔ AP box cross-highlight on hover
  */
 function setupWaterfallHover() {
     const page = document.querySelector('.slide-ape-page');
     if (!page) return;
 
-    const blocks = page.querySelectorAll('.slide-ape-wf-block[data-ap]');
+    const blocks = page.querySelectorAll('.slide-ape-bridge-block[data-ap]');
     const apBoxes = page.querySelectorAll('.slide-ape-ap[data-ap]');
 
     function highlight(apId) {

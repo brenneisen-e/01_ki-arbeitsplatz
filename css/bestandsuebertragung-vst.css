@@ -6269,7 +6269,7 @@ body {
 }
 
 /* ============================================ */
-/* Slide APE-Prognose (T-13) – WATERFALL CHART  */
+/* Slide APE-Prognose (T-13) – 3 BARS + BRIDGE  */
 /* ============================================ */
 
 /* WIP Badge */
@@ -6277,7 +6277,7 @@ body {
     position: absolute;
     top: 0.75rem;
     right: 1.5rem;
-    background: #FFC107;
+    background: #FFD200;
     color: #000;
     font-size: 0.82rem;
     font-weight: 800;
@@ -6287,11 +6287,10 @@ body {
     z-index: 20;
 }
 
-/* Action title */
+/* Action title (italic, green underline) */
 .bestand-page .slide-ape-action-title {
     font-style: italic;
-    border-bottom: 2px solid #86BC25;
-    padding-bottom: 0.5rem;
+    color: #046A38;
 }
 
 /* Section title green */
@@ -6306,61 +6305,26 @@ body {
     align-items: start;
 }
 
-/* ====== LEFT: Waterfall Chart ====== */
+/* ====== LEFT: 3-Bar Chart ====== */
 .bestand-page .slide-ape-left {
     min-width: 0;
 }
 
 .bestand-page .slide-ape-chart {
     position: relative;
-    display: flex;
-    align-items: stretch;
     height: 380px;
-    margin-bottom: 0.5rem;
-    padding-left: 2.5rem;
+    margin-bottom: 3.5rem;
 }
 
-/* Y-Axis (6 labels: 0,40,80,120,160,200) */
-.bestand-page .slide-ape-yaxis {
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 2.2rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: flex-end;
-    padding-right: 0.35rem;
-    font-size: 0.7rem;
-    color: #97999B;
-    font-weight: 600;
-}
-
-/* Chart area */
+/* Chart area – clean, no axes, only bottom baseline */
 .bestand-page .slide-ape-chart-area {
-    flex: 1;
     position: relative;
-    border-left: 2px solid #d1d5db;
+    width: 100%;
+    height: 100%;
     border-bottom: 2px solid #d1d5db;
 }
 
-/* Grid lines */
-.bestand-page .slide-ape-grid {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-}
-
-.bestand-page .slide-ape-gridline {
-    position: absolute;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: #eeeff1;
-}
-
-/* Dashed reference lines */
+/* ====== REFERENCE LINES ====== */
 .bestand-page .slide-ape-ref-line {
     position: absolute;
     left: 0;
@@ -6370,12 +6334,12 @@ body {
     pointer-events: none;
 }
 
-.bestand-page .slide-ape-ref-target {
-    border-top: 1.5px dashed #046A38;
+.bestand-page .slide-ape-ref-110 {
+    border-top: 1.5px dashed #53565A;
 }
 
-.bestand-page .slide-ape-ref-low {
-    border-top: 1.5px dashed #E31937;
+.bestand-page .slide-ape-ref-180 {
+    border-top: 1.5px dashed #046A38;
 }
 
 .bestand-page .slide-ape-ref-label {
@@ -6390,32 +6354,34 @@ body {
 }
 
 .bestand-page .slide-ape-ref-label-green { color: #046A38; }
-.bestand-page .slide-ape-ref-label-red { color: #E31937; }
+.bestand-page .slide-ape-ref-label-gray  { color: #53565A; }
 
-/* ====== WATERFALL CONTAINER ====== */
-.bestand-page .slide-ape-wf {
+/* ====== 3-BAR CONTAINER ====== */
+.bestand-page .slide-ape-bars {
     position: absolute;
     inset: 0;
     display: flex;
     align-items: stretch;
-    padding: 0 0.5rem;
+    justify-content: center;
+    gap: 0;
     z-index: 3;
 }
 
-/* Column for each block */
-.bestand-page .slide-ape-wf-col {
+/* Column for each bar */
+.bestand-page .slide-ape-bar-col {
     flex: 1;
+    max-width: 140px;
     position: relative;
-    min-width: 0;
 }
 
-/* Waterfall block (bar) */
-.bestand-page .slide-ape-wf-block {
+/* ====== BAR (the actual colored block) ====== */
+.bestand-page .slide-ape-bar {
     position: absolute;
+    bottom: 0;
     left: 50%;
     transform: translateX(-50%);
-    width: 70px;
-    border-radius: 3px;
+    width: 96px;
+    border-radius: 4px 4px 0 0;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -6424,195 +6390,204 @@ body {
     z-index: 4;
 }
 
-.bestand-page .slide-ape-wf-block:hover {
-    box-shadow: 0 4px 16px rgba(0,0,0,0.2);
-    filter: brightness(1.08);
+.bestand-page .slide-ape-bar:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+    filter: brightness(1.06);
 }
 
-/* Highlight state for cross-hover */
-.bestand-page .slide-ape-wf-block.wf-highlight {
-    box-shadow: 0 4px 20px rgba(0,0,0,0.25);
-    filter: brightness(1.12);
-}
-
-/* Value text inside blocks */
-.bestand-page .slide-ape-wf-val {
-    font-size: 1.1rem;
+/* Value text inside bars */
+.bestand-page .slide-ape-bar-val {
+    font-size: 1.25rem;
     font-weight: 800;
     color: white;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    text-shadow: 0 1px 3px rgba(0,0,0,0.35);
     white-space: nowrap;
 }
 
-/* Block colors */
-.bestand-page .slide-ape-wf-start {
+/* Bar colors */
+.bestand-page .slide-ape-bar-sq {
     background: #333333;
-    border-radius: 3px 3px 0 0;
 }
 
-.bestand-page .slide-ape-wf-fall-1 {
+.bestand-page .slide-ape-bar-red {
     background: #E31937;
 }
 
-.bestand-page .slide-ape-wf-fall-2 {
-    background: #F04E5E;
-}
-
-.bestand-page .slide-ape-wf-rise-nextgen {
-    background: #ED8B00;
-}
-
-.bestand-page .slide-ape-wf-rise-vplus {
-    background: #046A38;
-}
-
-.bestand-page .slide-ape-wf-rise-data {
-    background: #86BC25;
-}
-
-.bestand-page .slide-ape-wf-end {
+.bestand-page .slide-ape-bar-green {
     background: linear-gradient(180deg, #86BC25 0%, #6a9a1f 100%);
-    border-radius: 3px 3px 0 0;
 }
 
-/* Labels below blocks */
-.bestand-page .slide-ape-wf-lbl {
+/* Arrows above bars */
+.bestand-page .slide-ape-bar-arrow {
     position: absolute;
-    bottom: -3.6rem;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 1.4rem;
+    font-weight: 800;
+    z-index: 5;
+    line-height: 1;
+}
+
+.bestand-page .slide-ape-arrow-down {
+    color: #E31937;
+    bottom: calc(36% + 4px);
+}
+
+.bestand-page .slide-ape-arrow-up {
+    color: #86BC25;
+    bottom: calc(85% + 4px);
+}
+
+/* Callout box near bar 2 */
+.bestand-page .slide-ape-callout {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: calc(36% + 28px);
+    width: max-content;
+    max-width: 160px;
+    background: #fff;
+    border: 1.5px solid #E31937;
+    border-radius: 4px;
+    padding: 0.35rem 0.5rem;
+    font-size: 0.65rem;
+    line-height: 1.35;
+    color: #53565A;
+    text-align: center;
+    z-index: 6;
+    pointer-events: none;
+}
+
+/* Labels below bars */
+.bestand-page .slide-ape-bar-lbl {
+    position: absolute;
+    bottom: -3.2rem;
     left: 50%;
     transform: translateX(-50%);
     text-align: center;
     width: max-content;
-    max-width: 110px;
+    max-width: 130px;
 }
 
-.bestand-page .slide-ape-wf-lbl strong {
+.bestand-page .slide-ape-bar-lbl strong {
     display: block;
-    font-size: 0.72rem;
+    font-size: 0.78rem;
     font-weight: 700;
     color: #374151;
     line-height: 1.25;
 }
 
-.bestand-page .slide-ape-wf-sub {
+.bestand-page .slide-ape-bar-sub {
     display: block;
-    font-size: 0.62rem;
+    font-size: 0.68rem;
     color: #97999B;
     line-height: 1.25;
     margin-top: 0.1rem;
 }
 
-.bestand-page .slide-ape-wf-foot {
+.bestand-page .slide-ape-bar-foot {
     display: block;
     font-size: 0.58rem;
     color: #b0b3b5;
     line-height: 1.2;
-    margin-top: 0.1rem;
+    margin-top: 0.15rem;
 }
 
-/* Connector lines between blocks */
-.bestand-page .slide-ape-wf-conn {
-    position: absolute;
-    width: 1px;
-    height: 0;
-    border-top: 1px solid #c0c2c4;
-    z-index: 2;
-    pointer-events: none;
-}
-
-/* Connectors as flex spacers with absolute horizontal line */
-.bestand-page .slide-ape-wf > .slide-ape-wf-conn {
-    flex: 0 0 1px;
-    align-self: stretch;
+/* ====== UPLIFT BRIDGE ====== */
+.bestand-page .slide-ape-bridge-col {
+    flex: 0 0 110px;
     position: relative;
-    width: auto;
-    border-top: none;
 }
 
-.bestand-page .slide-ape-wf > .slide-ape-wf-conn::after {
-    content: '';
+.bestand-page .slide-ape-bridge {
     position: absolute;
-    left: -8px;
-    right: -8px;
-    bottom: var(--conn-y, 0);
-    height: 1px;
-    background: #c0c2c4;
-}
-
-/* Vertical separator between erosion and aufbau */
-.bestand-page .slide-ape-wf-sep {
-    flex: 0 0 28px;
-    position: relative;
-    align-self: stretch;
-}
-
-.bestand-page .slide-ape-wf-sep::before {
-    content: '';
-    position: absolute;
-    left: 50%;
-    top: 5%;
-    bottom: 5%;
-    width: 0;
-    border-left: 2px dashed #d1d5db;
-}
-
-.bestand-page .slide-ape-wf-sep-l,
-.bestand-page .slide-ape-wf-sep-r {
-    position: absolute;
-    top: 2%;
-    font-size: 0.58rem;
-    font-weight: 700;
-    color: #97999B;
-    text-transform: uppercase;
-    letter-spacing: 0.03em;
-    line-height: 1.25;
-    text-align: center;
-}
-
-.bestand-page .slide-ape-wf-sep-l {
-    right: calc(50% + 6px);
-}
-
-.bestand-page .slide-ape-wf-sep-r {
-    left: calc(50% + 6px);
-}
-
-/* Delta annotation bracket (right side of chart area) */
-.bestand-page .slide-ape-wf-delta {
-    position: absolute;
-    right: -0.5rem;
-    bottom: 32.5%;
-    height: 50%;
-    width: 2.5rem;
-    z-index: 6;
-    pointer-events: none;
-    display: flex;
-    align-items: center;
-}
-
-.bestand-page .slide-ape-wf-delta-line {
-    position: absolute;
+    left: 0;
     right: 0;
-    top: 0;
-    bottom: 0;
-    width: 10px;
-    border: 2px solid #86BC25;
-    border-left: none;
-    border-radius: 0 4px 4px 0;
+    bottom: 36%;
+    height: 49%;
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 2px;
+    z-index: 4;
 }
 
-.bestand-page .slide-ape-wf-delta-label {
+/* Left connector: dashed line from bridge bottom to bar 2 top */
+.bestand-page .slide-ape-bridge::before {
+    content: '';
     position: absolute;
-    right: 16px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 0.65rem;
+    bottom: 0;
+    left: -16px;
+    width: 16px;
+    height: 0;
+    border-top: 1.5px dashed #c0c2c4;
+}
+
+/* Right connector: dashed line from bridge top to bar 3 top */
+.bestand-page .slide-ape-bridge::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: -16px;
+    width: 16px;
+    height: 0;
+    border-top: 1.5px dashed #c0c2c4;
+}
+
+/* Bridge blocks (stacked bottom-to-top) */
+.bestand-page .slide-ape-bridge-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 3px;
+    padding: 0.3rem 0.4rem;
+    text-align: center;
+    cursor: default;
+    transition: box-shadow 0.2s ease, filter 0.2s ease;
+    overflow: hidden;
+}
+
+.bestand-page .slide-ape-bridge-block:hover {
+    box-shadow: 0 3px 12px rgba(0,0,0,0.2);
+    filter: brightness(1.08);
+}
+
+/* Highlight state for cross-hover */
+.bestand-page .slide-ape-bridge-block.wf-highlight {
+    box-shadow: 0 4px 18px rgba(0,0,0,0.25);
+    filter: brightness(1.12);
+}
+
+.bestand-page .slide-ape-bridge-block strong {
+    font-size: 0.72rem;
     font-weight: 800;
-    color: #86BC25;
-    white-space: nowrap;
-    writing-mode: vertical-rl;
-    text-orientation: mixed;
-    letter-spacing: 0.02em;
+    color: white;
+    line-height: 1.2;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+}
+
+.bestand-page .slide-ape-bridge-block span {
+    font-size: 0.58rem;
+    color: rgba(255,255,255,0.9);
+    line-height: 1.2;
+}
+
+/* Block 1 – NextGen (bottom, largest, 40%) */
+.bestand-page .slide-ape-bridge-nextgen {
+    flex: 40;
+    background: #ED8B00;
+}
+
+/* Block 2 – VermittlerPlus (middle, 35%) */
+.bestand-page .slide-ape-bridge-vplus {
+    flex: 35;
+    background: #046A38;
+}
+
+/* Block 3 – Data4All (top, smallest, 25%) */
+.bestand-page .slide-ape-bridge-data {
+    flex: 25;
+    background: #86BC25;
 }
 
 /* ====== LEGEND ====== */
@@ -6708,7 +6683,7 @@ body {
     font-weight: 800;
     color: white;
     padding: 0.18rem 0.5rem;
-    border-radius: 10px;
+    border-radius: 4px;
     text-transform: uppercase;
     letter-spacing: 0.03em;
     white-space: nowrap;
@@ -6773,9 +6748,6 @@ body {
     .bestand-page .slide-ape-chart {
         height: 320px;
     }
-    .bestand-page .slide-ape-wf-delta {
-        display: none;
-    }
 }
 
 @media (max-width: 768px) {
@@ -6785,17 +6757,23 @@ body {
     .bestand-page .slide-ape-legend {
         gap: 0.5rem;
     }
-    .bestand-page .slide-ape-wf-block {
-        width: 44px;
+    .bestand-page .slide-ape-bar {
+        width: 60px;
     }
-    .bestand-page .slide-ape-wf-val {
-        font-size: 0.75rem;
+    .bestand-page .slide-ape-bar-val {
+        font-size: 0.85rem;
     }
-    .bestand-page .slide-ape-wf-lbl {
+    .bestand-page .slide-ape-bar-lbl {
         display: none;
     }
-    .bestand-page .slide-ape-wf-sep {
-        flex: 0 0 12px;
+    .bestand-page .slide-ape-bridge-col {
+        flex: 0 0 70px;
+    }
+    .bestand-page .slide-ape-bridge-block strong {
+        font-size: 0.6rem;
+    }
+    .bestand-page .slide-ape-bridge-block span {
+        display: none;
     }
 }
 

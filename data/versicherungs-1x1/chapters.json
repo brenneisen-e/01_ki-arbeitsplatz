@@ -10,32 +10,82 @@
         "value": 254,
         "unit": "Mrd. €",
         "label": "Beitragsvolumen des deutschen Versicherungsmarktes 2025",
-        "trend": { "direction": "up", "value": "+6,6% vs. 2024" }
+        "trend": {
+          "direction": "up",
+          "value": "+6,6% vs. 2024"
+        }
       },
       "quickStats": [
-        { "value": 470, "label": "Versicherer", "unit": "" },
-        { "value": 488, "label": "Verträge", "unit": "Mio." },
-        { "value": 1.9, "label": "Kapitalanlagen", "unit": "Bio. €" }
+        {
+          "value": 470,
+          "label": "Versicherer",
+          "unit": ""
+        },
+        {
+          "value": 488,
+          "label": "Verträge",
+          "unit": "Mio."
+        },
+        {
+          "value": 1.9,
+          "label": "Kapitalanlagen",
+          "unit": "Bio. €"
+        }
       ],
       "levels": {
         "level1": [
           {
             "type": "paragraph",
-            "content": "Der deutsche Versicherungsmarkt gliedert sich in drei Hauptsegmente: <strong>Schaden-/Unfallversicherung (S/U)</strong>, <strong>Lebensversicherung (Leben)</strong> und <strong>Private Krankenversicherung (PKV)</strong>. Erstmals seit 1996 hat die S/U-Sparte 2024 die Lebensversicherung beim Beitragsvolumen überholt — ein struktureller Wendepunkt."
+            "content": "Der deutsche Versicherungsmarkt gliedert sich in drei Hauptsegmente: <strong>Schaden-/Unfallversicherung (S/U)</strong>, <strong>Lebensversicherung (Leben)</strong> und <strong>Private Krankenversicherung (PKV)</strong>. Erstmals seit 1996<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">1</span><span class=\"v1x1-cite-tooltip\">GDV Jahrbuch 2024, S. 12</span></span> hat die S/U-Sparte 2024 die Lebensversicherung beim Beitragsvolumen überholt — ein struktureller Wendepunkt."
           },
           {
             "type": "paragraph",
-            "content": "Die Branche zählt rund <strong>470 GDV-Mitgliedsunternehmen</strong>, die etwa 97% des Marktes abdecken, sowie <strong>473.780 Erwerbstätige</strong> (davon 290.080 Angestellte und 183.700 selbstständige Vermittler). Insgesamt bestehen in Deutschland rund <strong>488 Millionen Versicherungsverträge</strong>, und die Kapitalanlagen der Branche belaufen sich auf ca. <strong>€1,9 Billionen</strong>."
+            "content": "Die Branche zählt rund <strong>470 GDV-Mitgliedsunternehmen<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">2</span><span class=\"v1x1-cite-tooltip\">GDV Statistisches Taschenbuch 2024/2025</span></span></strong>, die etwa 97% des Marktes abdecken, sowie <strong>473.780 Erwerbstätige<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">3</span><span class=\"v1x1-cite-tooltip\">GDV Jahrbuch 2024, Kapitel Beschäftigung</span></span></strong> (davon 290.080 Angestellte und 183.700 selbstständige Vermittler). Insgesamt bestehen in Deutschland rund <strong>488 Millionen Versicherungsverträge<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">4</span><span class=\"v1x1-cite-tooltip\">GDV Statistisches Taschenbuch 2024/2025</span></span></strong>, und die Kapitalanlagen der Branche belaufen sich auf ca. <strong>€1,9 Billionen</strong>.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">5</span><span class=\"v1x1-cite-tooltip\">BaFin Jahresbericht 2024, Kapitalanlagen der Versicherungswirtschaft</span></span>"
           },
           {
             "type": "table",
             "title": "Beitragsvolumen nach Segmenten",
-            "headers": ["Jahr", "Gesamt", "Leben", "S/U", "PKV", "Wachstum"],
+            "headers": [
+              "Jahr",
+              "Gesamt",
+              "Leben",
+              "S/U",
+              "PKV",
+              "Wachstum"
+            ],
             "rows": [
-              ["2022", "€223 Mrd.", "€97 Mrd.", "€79 Mrd.", "€47 Mrd.", "+0,4%"],
-              ["2023", "€226 Mrd.", "€92 Mrd.", "€86 Mrd.", "€48 Mrd.", "+1,4%"],
-              ["2024", "€238 Mrd.", "€95 Mrd.", "€92 Mrd.", "€52 Mrd.", "+5,3%"],
-              ["2025", "€254 Mrd.", "~€100 Mrd.", "~€100 Mrd.", "~€56 Mrd.", "+6,6%"]
+              [
+                "2022",
+                "€223 Mrd.",
+                "€97 Mrd.",
+                "€79 Mrd.",
+                "€47 Mrd.",
+                "+0,4%"
+              ],
+              [
+                "2023",
+                "€226 Mrd.",
+                "€92 Mrd.",
+                "€86 Mrd.",
+                "€48 Mrd.",
+                "+1,4%"
+              ],
+              [
+                "2024",
+                "€238 Mrd.",
+                "€95 Mrd.",
+                "€92 Mrd.",
+                "€52 Mrd.",
+                "+5,3%"
+              ],
+              [
+                "2025",
+                "€254 Mrd.",
+                "~€100 Mrd.",
+                "~€100 Mrd.",
+                "~€56 Mrd.",
+                "+6,6%"
+              ]
             ],
             "sortable": true
           }
@@ -44,7 +94,7 @@
           {
             "type": "paragraph",
             "title": "Dynamik nach Segmenten",
-            "content": "Die <strong>Kfz-Versicherung</strong> war der wichtigste Wachstumstreiber im S/U-Bereich mit +13,4% Prämienwachstum in 2025 und einer Combined Ratio von <strong>96%</strong> — erstmals seit Jahren wieder profitabel nach einem Tiefpunkt von 111%+ in 2023."
+            "content": "Die <strong>Kfz-Versicherung</strong> war der wichtigste Wachstumstreiber im S/U-Bereich mit +13,4% Prämienwachstum<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">6</span><span class=\"v1x1-cite-tooltip\">GDV Marktausblick 2025, Schaden-/Unfallversicherung</span></span> in 2025 und einer Combined Ratio von <strong>96%</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">7</span><span class=\"v1x1-cite-tooltip\">Deloitte Insurance Monitor Q4/2024</span></span> — erstmals seit Jahren wieder profitabel nach einem Tiefpunkt von 111%+ in 2023<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">8</span><span class=\"v1x1-cite-tooltip\">BaFin Statistik Erstversicherungsunternehmen 2023</span></span>."
           },
           {
             "type": "paragraph",
@@ -73,14 +123,42 @@
           {
             "type": "table",
             "title": "Globale Marktanteile Versicherung",
-            "headers": ["Land", "Marktanteil", "Rang"],
+            "headers": [
+              "Land",
+              "Marktanteil",
+              "Rang"
+            ],
             "rows": [
-              ["USA", "44,9%", "1"],
-              ["China", "10,1%", "2"],
-              ["UK", "5,2%", "3"],
-              ["Japan", "5,0%", "4"],
-              ["Frankreich", "3,9%", "5"],
-              ["Deutschland", "3,4%", "6"]
+              [
+                "USA",
+                "44,9%",
+                "1"
+              ],
+              [
+                "China",
+                "10,1%",
+                "2"
+              ],
+              [
+                "UK",
+                "5,2%",
+                "3"
+              ],
+              [
+                "Japan",
+                "5,0%",
+                "4"
+              ],
+              [
+                "Frankreich",
+                "3,9%",
+                "5"
+              ],
+              [
+                "Deutschland",
+                "3,4%",
+                "6"
+              ]
             ],
             "sortable": false
           }
@@ -89,19 +167,33 @@
       "quiz": [
         {
           "question": "Wie hoch war das Beitragsvolumen des deutschen Versicherungsmarktes 2025?",
-          "options": ["€226 Mrd.", "€238 Mrd.", "€254 Mrd.", "€280 Mrd."],
+          "options": [
+            "€226 Mrd.",
+            "€238 Mrd.",
+            "€254 Mrd.",
+            "€280 Mrd."
+          ],
           "correct": 2,
           "explanation": "Das Beitragsvolumen lag 2025 bei rund €254 Mrd. — ein Wachstum von 6,6% gegenüber dem Vorjahr."
         },
         {
           "question": "Welches Segment hat 2024 erstmals die Lebensversicherung beim Beitragsvolumen überholt?",
-          "options": ["Private Krankenversicherung", "Schaden-/Unfallversicherung", "Rückversicherung"],
+          "options": [
+            "Private Krankenversicherung",
+            "Schaden-/Unfallversicherung",
+            "Rückversicherung"
+          ],
           "correct": 1,
           "explanation": "Erstmals seit 1996 übertrifft das S/U-Segment die Lebensversicherung — ein struktureller Wendepunkt."
         },
         {
           "question": "Welchen globalen Marktanteil hält Deutschland im Versicherungsmarkt?",
-          "options": ["1,8%", "3,4%", "5,2%", "7,1%"],
+          "options": [
+            "1,8%",
+            "3,4%",
+            "5,2%",
+            "7,1%"
+          ],
           "correct": 1,
           "explanation": "Deutschland hält 3,4% des globalen Versicherungsmarktes und ist damit der sechstgrößte Markt weltweit."
         }
@@ -117,12 +209,27 @@
         "value": 17.4,
         "unit": "%",
         "label": "Marktanteil der Allianz — größter deutscher Versicherer",
-        "trend": { "direction": "up", "value": "€42,1 Mrd. GBE" }
+        "trend": {
+          "direction": "up",
+          "value": "€42,1 Mrd. GBE"
+        }
       },
       "quickStats": [
-        { "value": 67, "label": "Top-10-Konzentration", "unit": "%" },
-        { "value": 71, "label": "Versicherungsgruppen", "unit": ">€50M" },
-        { "value": 8.6, "label": "BarmeniaGothaer", "unit": "Mrd. €" }
+        {
+          "value": 67,
+          "label": "Top-10-Konzentration",
+          "unit": "%"
+        },
+        {
+          "value": 71,
+          "label": "Versicherungsgruppen",
+          "unit": ">€50M"
+        },
+        {
+          "value": 8.6,
+          "label": "BarmeniaGothaer",
+          "unit": "Mrd. €"
+        }
       ],
       "levels": {
         "level1": [
@@ -133,12 +240,37 @@
           {
             "type": "table",
             "title": "Top-Versicherer nach Segmenten",
-            "headers": ["Rang", "Leben", "PKV", "S/U"],
+            "headers": [
+              "Rang",
+              "Leben",
+              "PKV",
+              "S/U"
+            ],
             "rows": [
-              ["1", "Allianz (26,6%)", "Debeka (16,3%)", "Allianz (13,7%)"],
-              ["2", "Generali (9,0%)", "ERGO/DKV (12,2%)", "HUK-Coburg (7,2%)"],
-              ["3", "R+V (8,0%)", "Allianz PKV", "R+V"],
-              ["Top-10", "~75%", "78,2%", "~67%"]
+              [
+                "1",
+                "Allianz (26,6%)",
+                "Debeka (16,3%)",
+                "Allianz (13,7%)"
+              ],
+              [
+                "2",
+                "Generali (9,0%)",
+                "ERGO/DKV (12,2%)",
+                "HUK-Coburg (7,2%)"
+              ],
+              [
+                "3",
+                "R+V (8,0%)",
+                "Allianz PKV",
+                "R+V"
+              ],
+              [
+                "Top-10",
+                "~75%",
+                "78,2%",
+                "~67%"
+              ]
             ],
             "sortable": false
           }
@@ -155,7 +287,7 @@
           },
           {
             "type": "paragraph",
-            "content": "<strong>Öffentlich-rechtliche Versicherer</strong> sind im Sparkassen-Ökosystem verankert und halten zusammen rund <strong>10% Marktanteil</strong>. Dazu zählen die Versicherungskammer Bayern (~€9,3 Mrd.), Provinzial, SV SparkassenVersicherung und VGH."
+            "content": "<strong>Öffentlich-rechtliche Versicherer</strong> sind im Sparkassen-Ökosystem verankert und halten zusammen rund <strong>10% Marktanteil<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">3</span><span class=\"v1x1-cite-tooltip\">Versicherungskammer Bayern Geschäftsbericht 2024</span></span></strong>. Dazu zählen die Versicherungskammer Bayern (~€9,3 Mrd.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">4</span><span class=\"v1x1-cite-tooltip\">Versicherungskammer Bayern Geschäftsbericht 2024</span></span>), Provinzial, SV SparkassenVersicherung und VGH."
           },
           {
             "type": "callout",
@@ -167,7 +299,7 @@
           {
             "type": "paragraph",
             "title": "Konsolidierung und M&A: Die große Fusionswelle",
-            "content": "Die <strong>BarmeniaGothaer-Fusion</strong> war die größte Versicherungsfusion in Deutschland seit über 20 Jahren. Die kombinierte Gruppe erreichte 2024 Prämieneinnahmen von <strong>€8,6 Mrd.</strong> mit 7.500 Mitarbeitern und Kapitalanlagen von €50 Mrd."
+            "content": "Die <strong>BarmeniaGothaer-Fusion</strong> war die größte Versicherungsfusion in Deutschland seit über 20 Jahren. Die kombinierte Gruppe erreichte 2024 Prämieneinnahmen von <strong>€8,6 Mrd.</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">5</span><span class=\"v1x1-cite-tooltip\">BarmeniaGothaer Pressemitteilung, Januar 2025</span></span> mit 7.500 Mitarbeitern<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">6</span><span class=\"v1x1-cite-tooltip\">BarmeniaGothaer Pressemitteilung, Januar 2025</span></span> und Kapitalanlagen von €50 Mrd.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">7</span><span class=\"v1x1-cite-tooltip\">BarmeniaGothaer Geschäftsbericht 2024</span></span>"
           },
           {
             "type": "paragraph",
@@ -183,13 +315,22 @@
       "quiz": [
         {
           "question": "Welcher Versicherer hat den größten Marktanteil in Deutschland?",
-          "options": ["R+V", "ERGO", "Allianz", "HUK-Coburg"],
+          "options": [
+            "R+V",
+            "ERGO",
+            "Allianz",
+            "HUK-Coburg"
+          ],
           "correct": 2,
           "explanation": "Die Allianz-Gruppe dominiert mit 17,39% Marktanteil und €42,1 Mrd. GBE in Deutschland."
         },
         {
           "question": "Was bedeutet die Rechtsform VVaG?",
-          "options": ["Versicherungs-Verband auf Geschäftsbasis", "Versicherungsverein auf Gegenseitigkeit", "Verbundene Versicherungs-Aktiengesellschaft"],
+          "options": [
+            "Versicherungs-Verband auf Geschäftsbasis",
+            "Versicherungsverein auf Gegenseitigkeit",
+            "Verbundene Versicherungs-Aktiengesellschaft"
+          ],
           "correct": 1,
           "explanation": "Beim VVaG sind die Versicherungsnehmer zugleich Mitglieder und Eigentümer — ohne externe Aktionäre."
         }
@@ -205,12 +346,27 @@
         "value": 84,
         "unit": "Mio.",
         "label": "Lebensversicherungsverträge in Deutschland",
-        "trend": { "direction": "up", "value": "davon 46 Mio. Renten" }
+        "trend": {
+          "direction": "up",
+          "value": "davon 46 Mio. Renten"
+        }
       },
       "quickStats": [
-        { "value": 8.79, "label": "PKV-Vollversicherte", "unit": "Mio." },
-        { "value": 355, "label": "Alterungsrückst.", "unit": "Mrd. €" },
-        { "value": 600, "label": "Cyber-Prämien", "unit": "Mio. €" }
+        {
+          "value": 8.79,
+          "label": "PKV-Vollversicherte",
+          "unit": "Mio."
+        },
+        {
+          "value": 355,
+          "label": "Alterungsrückst.",
+          "unit": "Mrd. €"
+        },
+        {
+          "value": 600,
+          "label": "Cyber-Prämien",
+          "unit": "Mio. €"
+        }
       ],
       "levels": {
         "level1": [
@@ -259,13 +415,21 @@
       "quiz": [
         {
           "question": "Wie viele Lebensversicherungsverträge bestehen in Deutschland?",
-          "options": ["42 Millionen", "84 Millionen", "120 Millionen"],
+          "options": [
+            "42 Millionen",
+            "84 Millionen",
+            "120 Millionen"
+          ],
           "correct": 1,
           "explanation": "In Deutschland bestehen rund 84 Millionen Lebensversicherungsverträge, davon 46 Millionen Rentenversicherungen."
         },
         {
           "question": "Welcher Anteil der Gebäude hat Elementarschadenversicherung?",
-          "options": ["25-30%", "50-52%", "75-80%"],
+          "options": [
+            "25-30%",
+            "50-52%",
+            "75-80%"
+          ],
           "correct": 1,
           "explanation": "Nur 50-52% der Gebäude haben Elementarschutz — Ausnahme Baden-Württemberg mit ~94%."
         }
@@ -281,12 +445,27 @@
         "value": 80,
         "unit": "%",
         "label": "aller Verträge werden mit persönlicher Beratung abgeschlossen",
-        "trend": { "direction": "down", "value": "Digital: 3% bei Leben" }
+        "trend": {
+          "direction": "down",
+          "value": "Digital: 3% bei Leben"
+        }
       },
       "quickStats": [
-        { "value": 44.4, "label": "AO-Anteil Kfz", "unit": "%" },
-        { "value": 87, "label": "Check24-Nutzung", "unit": "%" },
-        { "value": 18000, "label": "DVAG-Berater", "unit": "" }
+        {
+          "value": 44.4,
+          "label": "AO-Anteil Kfz",
+          "unit": "%"
+        },
+        {
+          "value": 87,
+          "label": "Check24-Nutzung",
+          "unit": "%"
+        },
+        {
+          "value": 18000,
+          "label": "DVAG-Berater",
+          "unit": ""
+        }
       ],
       "levels": {
         "level1": [
@@ -297,13 +476,43 @@
           {
             "type": "table",
             "title": "Vertriebskanäle im Überblick",
-            "headers": ["Kanal", "Kfz (2024)", "Leben (2023)", "Charakteristik"],
+            "headers": [
+              "Kanal",
+              "Kfz (2024)",
+              "Leben (2023)",
+              "Charakteristik"
+            ],
             "rows": [
-              ["AO / Einfirmenvermittler", "44,4%", "~39%", "Größter Kanal; an einen Versicherer gebunden"],
-              ["Makler / Mehrfachagenten", "26,1%", "~29%", "Sachwalter des Kunden; dominant bei Industrie"],
-              ["Bancassurance", "2,3%", "~18%", "Sparkassen→Provinzial; Volksbanken→R+V"],
-              ["Direktvertrieb", "20,2%", "~3%", "HUK24, CosmosDirekt, FRIDAY"],
-              ["Strukturvertriebe", "im AO", "signifikant", "DVAG, MLP, OVB, Swiss Life Select"]
+              [
+                "AO / Einfirmenvermittler",
+                "44,4%",
+                "~39%",
+                "Größter Kanal; an einen Versicherer gebunden"
+              ],
+              [
+                "Makler / Mehrfachagenten",
+                "26,1%",
+                "~29%",
+                "Sachwalter des Kunden; dominant bei Industrie"
+              ],
+              [
+                "Bancassurance",
+                "2,3%",
+                "~18%",
+                "Sparkassen→Provinzial; Volksbanken→R+V"
+              ],
+              [
+                "Direktvertrieb",
+                "20,2%",
+                "~3%",
+                "HUK24, CosmosDirekt, FRIDAY"
+              ],
+              [
+                "Strukturvertriebe",
+                "im AO",
+                "signifikant",
+                "DVAG, MLP, OVB, Swiss Life Select"
+              ]
             ],
             "sortable": false
           }
@@ -335,13 +544,21 @@
       "quiz": [
         {
           "question": "Wie viel Prozent der Lebensversicherungen werden digital abgeschlossen?",
-          "options": ["~3%", "~15%", "~29%"],
+          "options": [
+            "~3%",
+            "~15%",
+            "~29%"
+          ],
           "correct": 0,
           "explanation": "Nur etwa 3% der Lebensversicherungen werden digital abgeschlossen — der niedrigste Digitalanteil aller Sparten."
         },
         {
           "question": "Welchen Anteil der Portalnutzer hat Check24?",
-          "options": ["55%", "72%", "87%"],
+          "options": [
+            "55%",
+            "72%",
+            "87%"
+          ],
           "correct": 2,
           "explanation": "Check24 erreicht 87% der Vergleichsportal-Nutzer und hat damit eine nahezu monopolartige Stellung."
         }
@@ -357,12 +574,27 @@
         "value": 40,
         "unit": "‰",
         "label": "Typischer Makler-Provisionssatz in der Lebensversicherung",
-        "trend": { "direction": "down", "value": "LVRG-Deckel: 25‰" }
+        "trend": {
+          "direction": "down",
+          "value": "LVRG-Deckel: 25‰"
+        }
       },
       "quickStats": [
-        { "value": 5, "label": "Stornohaftung", "unit": "Jahre" },
-        { "value": 7, "label": "PKV-Provision", "unit": "MB" },
-        { "value": 25, "label": "Höchstzillmersatz", "unit": "‰" }
+        {
+          "value": 5,
+          "label": "Stornohaftung",
+          "unit": "Jahre"
+        },
+        {
+          "value": 7,
+          "label": "PKV-Provision",
+          "unit": "MB"
+        },
+        {
+          "value": 25,
+          "label": "Höchstzillmersatz",
+          "unit": "‰"
+        }
       ],
       "levels": {
         "level1": [
@@ -385,11 +617,31 @@
           {
             "type": "table",
             "title": "Provisionsübersicht nach Sparten",
-            "headers": ["Sparte", "Bemessungsgrundlage", "Abschlussprovision", "Bestandsprovision"],
+            "headers": [
+              "Sparte",
+              "Bemessungsgrundlage",
+              "Abschlussprovision",
+              "Bestandsprovision"
+            ],
             "rows": [
-              ["Leben", "Promille der BWS", "25–50‰", "1–2% Jahresbeitrag"],
-              ["PKV", "Vielfaches Monatsbeitrag", "5–9 MB", "~2% Jahresbeitrag"],
-              ["Komposit/Sach", "% Nettojahresbeitrag", "Minimal", "15–25% (Kfz: 5–10%)"]
+              [
+                "Leben",
+                "Promille der BWS",
+                "25–50‰",
+                "1–2% Jahresbeitrag"
+              ],
+              [
+                "PKV",
+                "Vielfaches Monatsbeitrag",
+                "5–9 MB",
+                "~2% Jahresbeitrag"
+              ],
+              [
+                "Komposit/Sach",
+                "% Nettojahresbeitrag",
+                "Minimal",
+                "15–25% (Kfz: 5–10%)"
+              ]
             ],
             "sortable": false
           },
@@ -419,13 +671,21 @@
       "quiz": [
         {
           "question": "Was ist die BWS bei einer Lebensversicherung?",
-          "options": ["Brutto-Wertschöpfungs-Summe", "Bewertungssumme (Monatsbeitrag × 12 × Laufzeit)", "Beitrags-Wirkungs-Saldo"],
+          "options": [
+            "Brutto-Wertschöpfungs-Summe",
+            "Bewertungssumme (Monatsbeitrag × 12 × Laufzeit)",
+            "Beitrags-Wirkungs-Saldo"
+          ],
           "correct": 1,
           "explanation": "BWS = Bewertungssumme = Monatsbeitrag × 12 × Laufzeit. Sie bildet die Bemessungsgrundlage für die Provision."
         },
         {
           "question": "Wie lange beträgt die gesetzliche Stornohaftung?",
-          "options": ["3 Jahre", "5 Jahre", "7 Jahre"],
+          "options": [
+            "3 Jahre",
+            "5 Jahre",
+            "7 Jahre"
+          ],
           "correct": 1,
           "explanation": "§ 49 VAG schreibt eine Stornohaftung von 5 Jahren vor — in der Praxis beträgt die durchschnittliche Haftungszeit sogar 5,8 Jahre."
         }
@@ -441,12 +701,27 @@
         "value": 99.5,
         "unit": "%",
         "label": "VaR-Konfidenzniveau bei Solvency II (SCR)",
-        "trend": { "direction": "up", "value": "200-Jahres-Ereignis" }
+        "trend": {
+          "direction": "up",
+          "value": "200-Jahres-Ereignis"
+        }
       },
       "quickStats": [
-        { "value": 1.0, "label": "Höchstrechnungszins", "unit": "%" },
-        { "value": 15, "label": "Weiterbildung/Jahr", "unit": "Std." },
-        { "value": 90, "label": "Min. Risikoüberschuss", "unit": "%" }
+        {
+          "value": 1.0,
+          "label": "Höchstrechnungszins",
+          "unit": "%"
+        },
+        {
+          "value": 15,
+          "label": "Weiterbildung/Jahr",
+          "unit": "Std."
+        },
+        {
+          "value": 90,
+          "label": "Min. Risikoüberschuss",
+          "unit": "%"
+        }
       ],
       "levels": {
         "level1": [
@@ -495,13 +770,21 @@
       "quiz": [
         {
           "question": "Welches Konfidenzniveau verlangt Solvency II für das SCR?",
-          "options": ["95,0%", "99,0%", "99,5%"],
+          "options": [
+            "95,0%",
+            "99,0%",
+            "99,5%"
+          ],
           "correct": 2,
           "explanation": "Das SCR basiert auf einem 99,5%-VaR über ein Jahr — das entspricht dem Überstehen eines 200-Jahres-Ereignisses."
         },
         {
           "question": "Wie hoch ist der Höchstrechnungszins seit 1.1.2025?",
-          "options": ["0,25%", "0,50%", "1,00%"],
+          "options": [
+            "0,25%",
+            "0,50%",
+            "1,00%"
+          ],
           "correct": 2,
           "explanation": "Der Höchstrechnungszins wurde erstmals seit über 30 Jahren auf 1,0% angehoben — die erste Erhöhung seit der Einführung 1994."
         }
@@ -517,12 +800,27 @@
         "value": 6.2,
         "unit": "Mrd. €",
         "label": "IT-Aufwand der Versicherungsbranche (Rekord 2023)",
-        "trend": { "direction": "up", "value": "Digitalisierung treibt" }
+        "trend": {
+          "direction": "up",
+          "value": "Digitalisierung treibt"
+        }
       },
       "quickStats": [
-        { "value": 6500, "label": "DAV-Mitglieder", "unit": "" },
-        { "value": 60, "label": "Dunkelverarbeitung", "unit": "%" },
-        { "value": 3.4, "label": "Viridium-Policen", "unit": "Mio." }
+        {
+          "value": 6500,
+          "label": "DAV-Mitglieder",
+          "unit": ""
+        },
+        {
+          "value": 60,
+          "label": "Dunkelverarbeitung",
+          "unit": "%"
+        },
+        {
+          "value": 3.4,
+          "label": "Viridium-Policen",
+          "unit": "Mio."
+        }
       ],
       "levels": {
         "level1": [
@@ -566,7 +864,11 @@
       "quiz": [
         {
           "question": "Welches IT-System dominiert als De-facto-Standard für In-/Exkasso?",
-          "options": ["Guidewire BillingCenter", "SAP FS-CD", "adesso in|sure"],
+          "options": [
+            "Guidewire BillingCenter",
+            "SAP FS-CD",
+            "adesso in|sure"
+          ],
           "correct": 1,
           "explanation": "SAP FS-CD (Collections & Disbursements) hat sich als De-facto-Standard für In-/Exkasso bei deutschen Versicherern etabliert."
         }
@@ -582,12 +884,27 @@
         "value": 21,
         "unit": "%",
         "label": "der Stellenausschreibungen mit KI-Relevanz (vorher: 5%)",
-        "trend": { "direction": "up", "value": "4× in einem Jahr" }
+        "trend": {
+          "direction": "up",
+          "value": "4× in einem Jahr"
+        }
       },
       "quickStats": [
-        { "value": 0, "label": "InsurTech-Gründungen 2024", "unit": "" },
-        { "value": 4.5, "label": "wefox Peak-Bewertung", "unit": "Mrd. €" },
-        { "value": 1000, "label": "ERGO KI-Stellenabbau", "unit": "bis 2030" }
+        {
+          "value": 0,
+          "label": "InsurTech-Gründungen 2024",
+          "unit": ""
+        },
+        {
+          "value": 4.5,
+          "label": "wefox Peak-Bewertung",
+          "unit": "Mrd. €"
+        },
+        {
+          "value": 1000,
+          "label": "ERGO KI-Stellenabbau",
+          "unit": "bis 2030"
+        }
       ],
       "levels": {
         "level1": [
@@ -627,13 +944,21 @@
       "quiz": [
         {
           "question": "Wie viele InsurTech-Neugründungen gab es 2024 in Deutschland?",
-          "options": ["5", "2", "0"],
+          "options": [
+            "5",
+            "2",
+            "0"
+          ],
           "correct": 2,
           "explanation": "2024 gab es null neue InsurTech-Gründungen — nach einem Peak von 32 in 2018 eine dramatische Bereinigung."
         },
         {
           "question": "Welches Unternehmen war einst mit €4,5 Mrd. bewertet und verließ dann den deutschen Markt?",
-          "options": ["Element Insurance", "wefox", "Getsafe"],
+          "options": [
+            "Element Insurance",
+            "wefox",
+            "Getsafe"
+          ],
           "correct": 1,
           "explanation": "wefox war mit €4,5 Mrd. bewertet, stürzte nach Manipulationsvorwürfen ab und verließ den deutschen Markt im Juni 2024."
         }
@@ -649,12 +974,27 @@
         "value": 21548,
         "unit": "",
         "label": "Beschwerden beim Versicherungsombudsmann 2024 (Rekord)",
-        "trend": { "direction": "up", "value": "+19,5% vs. 2023" }
+        "trend": {
+          "direction": "up",
+          "value": "+19,5% vs. 2023"
+        }
       },
       "quickStats": [
-        { "value": 470, "label": "GDV-Mitglieder", "unit": "" },
-        { "value": 15.4, "label": "GDV-Lobbybudget", "unit": "Mio. €" },
-        { "value": 10000, "label": "Ombuds-Bindung", "unit": "€" }
+        {
+          "value": 470,
+          "label": "GDV-Mitglieder",
+          "unit": ""
+        },
+        {
+          "value": 15.4,
+          "label": "GDV-Lobbybudget",
+          "unit": "Mio. €"
+        },
+        {
+          "value": 10000,
+          "label": "Ombuds-Bindung",
+          "unit": "€"
+        }
       ],
       "levels": {
         "level1": [
@@ -694,7 +1034,11 @@
       "quiz": [
         {
           "question": "Bis zu welchem Streitwert sind Entscheidungen des Ombudsmanns bindend?",
-          "options": ["€5.000", "€10.000", "€25.000"],
+          "options": [
+            "€5.000",
+            "€10.000",
+            "€25.000"
+          ],
           "correct": 1,
           "explanation": "Entscheidungen des Versicherungsombudsmanns sind bis €10.000 Streitwert bindend für Versicherer — für Verbraucher sind sie nie bindend."
         }
@@ -702,34 +1046,118 @@
     }
   ],
   "glossary": [
-    { "term": "AO", "definition": "Ausschließlichkeitsorganisation — Vermittler, die exklusiv für einen Versicherer arbeiten." },
-    { "term": "bAV", "definition": "Betriebliche Altersversorgung — Altersvorsorge über den Arbeitgeber mit fünf Durchführungswegen." },
-    { "term": "BaFin", "definition": "Bundesanstalt für Finanzdienstleistungsaufsicht — die deutsche Finanzaufsichtsbehörde." },
-    { "term": "BWS", "definition": "Bewertungssumme — Monatsbeitrag × 12 × Laufzeit. Bemessungsgrundlage für Lebensversicherungs-Provisionen." },
-    { "term": "Combined Ratio", "definition": "Schadenquote + Kostenquote. Werte unter 100% bedeuten versicherungstechnischen Gewinn." },
-    { "term": "Courtage", "definition": "Vergütung für Versicherungsmakler (Sachwalter des Kunden), im Gegensatz zur Provision für Vertreter." },
-    { "term": "DAV", "definition": "Deutsche Aktuarvereinigung — Berufsverband der Aktuare mit ~6.500 Mitgliedern." },
-    { "term": "DORA", "definition": "Digital Operational Resilience Act — EU-Verordnung zur digitalen operationalen Resilienz im Finanzsektor." },
-    { "term": "EIOPA", "definition": "European Insurance and Occupational Pensions Authority — die europäische Versicherungsaufsichtsbehörde mit Sitz in Frankfurt." },
-    { "term": "FIDA", "definition": "Financial Data Access — EU-Verordnung zum standardisierten Datenzugang im Finanzsektor über APIs." },
-    { "term": "FRIDA", "definition": "Free Insurance Data Initiative — deutsche Industrieinitiative für offene Versicherungsdaten-Standards." },
-    { "term": "GBE", "definition": "Gebuchte Bruttoeinnahmen — Gesamtprämien vor Rückversicherungsabgabe." },
-    { "term": "GDV", "definition": "Gesamtverband der Deutschen Versicherungswirtschaft — der Branchenverband mit ~470 Mitgliedern." },
-    { "term": "GKV", "definition": "Gesetzliche Krankenversicherung — das Solidarsystem für ~74,5 Mio. Versicherte." },
-    { "term": "Höchstrechnungszins", "definition": "Die maximale Garantieverzinsung bei Lebensversicherungen — seit 1.1.2025 bei 1,0%." },
-    { "term": "IDD", "definition": "Insurance Distribution Directive — EU-Richtlinie zur Versicherungsvertriebsregulierung." },
-    { "term": "LVRG", "definition": "Lebensversicherungsreformgesetz 2014 — senkte u.a. den Höchstzillmersatz auf 25‰." },
-    { "term": "MCR", "definition": "Minimum Capital Requirement — die absolute Kapitaluntergrenze unter Solvency II." },
-    { "term": "ORSA", "definition": "Own Risk and Solvency Assessment — unternehmenseigene Risiko- und Solvabilitätsbeurteilung." },
-    { "term": "PKV", "definition": "Private Krankenversicherung — Äquivalenzprinzip, 8,79 Mio. Vollversicherte (2025)." },
-    { "term": "Run-off", "definition": "Abwicklung geschlossener Versicherungsbestände durch spezialisierte Plattformen wie Viridium." },
-    { "term": "SCR", "definition": "Solvency Capital Requirement — Solvenzkapitalanforderung basierend auf 99,5%-VaR." },
-    { "term": "SFCR", "definition": "Solvency and Financial Condition Report — öffentlicher Bericht unter Solvency II Säule 3." },
-    { "term": "S/U", "definition": "Schaden-/Unfallversicherung — Komposit-Segment inkl. Kfz, Haftpflicht, Sach, etc." },
-    { "term": "Stornohaftung", "definition": "Pflicht zur Provisionsrückzahlung bei Vertragsstornierung innerhalb von 5 Jahren (§ 49 VAG)." },
-    { "term": "VAG", "definition": "Versicherungsaufsichtsgesetz — Grundlage der Unternehmensaufsicht mit Spartentrennung (§ 8)." },
-    { "term": "VVaG", "definition": "Versicherungsverein auf Gegenseitigkeit — Rechtsform, bei der Kunden zugleich Eigentümer sind." },
-    { "term": "VVG", "definition": "Versicherungsvertragsgesetz — regelt die Beziehung zwischen Versicherer und Versicherungsnehmer." }
+    {
+      "term": "AO",
+      "definition": "Ausschließlichkeitsorganisation — Vermittler, die exklusiv für einen Versicherer arbeiten."
+    },
+    {
+      "term": "bAV",
+      "definition": "Betriebliche Altersversorgung — Altersvorsorge über den Arbeitgeber mit fünf Durchführungswegen."
+    },
+    {
+      "term": "BaFin",
+      "definition": "Bundesanstalt für Finanzdienstleistungsaufsicht — die deutsche Finanzaufsichtsbehörde."
+    },
+    {
+      "term": "BWS",
+      "definition": "Bewertungssumme — Monatsbeitrag × 12 × Laufzeit. Bemessungsgrundlage für Lebensversicherungs-Provisionen."
+    },
+    {
+      "term": "Combined Ratio",
+      "definition": "Schadenquote + Kostenquote. Werte unter 100% bedeuten versicherungstechnischen Gewinn."
+    },
+    {
+      "term": "Courtage",
+      "definition": "Vergütung für Versicherungsmakler (Sachwalter des Kunden), im Gegensatz zur Provision für Vertreter."
+    },
+    {
+      "term": "DAV",
+      "definition": "Deutsche Aktuarvereinigung — Berufsverband der Aktuare mit ~6.500 Mitgliedern."
+    },
+    {
+      "term": "DORA",
+      "definition": "Digital Operational Resilience Act — EU-Verordnung zur digitalen operationalen Resilienz im Finanzsektor."
+    },
+    {
+      "term": "EIOPA",
+      "definition": "European Insurance and Occupational Pensions Authority — die europäische Versicherungsaufsichtsbehörde mit Sitz in Frankfurt."
+    },
+    {
+      "term": "FIDA",
+      "definition": "Financial Data Access — EU-Verordnung zum standardisierten Datenzugang im Finanzsektor über APIs."
+    },
+    {
+      "term": "FRIDA",
+      "definition": "Free Insurance Data Initiative — deutsche Industrieinitiative für offene Versicherungsdaten-Standards."
+    },
+    {
+      "term": "GBE",
+      "definition": "Gebuchte Bruttoeinnahmen — Gesamtprämien vor Rückversicherungsabgabe."
+    },
+    {
+      "term": "GDV",
+      "definition": "Gesamtverband der Deutschen Versicherungswirtschaft — der Branchenverband mit ~470 Mitgliedern."
+    },
+    {
+      "term": "GKV",
+      "definition": "Gesetzliche Krankenversicherung — das Solidarsystem für ~74,5 Mio. Versicherte."
+    },
+    {
+      "term": "Höchstrechnungszins",
+      "definition": "Die maximale Garantieverzinsung bei Lebensversicherungen — seit 1.1.2025 bei 1,0%."
+    },
+    {
+      "term": "IDD",
+      "definition": "Insurance Distribution Directive — EU-Richtlinie zur Versicherungsvertriebsregulierung."
+    },
+    {
+      "term": "LVRG",
+      "definition": "Lebensversicherungsreformgesetz 2014 — senkte u.a. den Höchstzillmersatz auf 25‰."
+    },
+    {
+      "term": "MCR",
+      "definition": "Minimum Capital Requirement — die absolute Kapitaluntergrenze unter Solvency II."
+    },
+    {
+      "term": "ORSA",
+      "definition": "Own Risk and Solvency Assessment — unternehmenseigene Risiko- und Solvabilitätsbeurteilung."
+    },
+    {
+      "term": "PKV",
+      "definition": "Private Krankenversicherung — Äquivalenzprinzip, 8,79 Mio. Vollversicherte (2025)."
+    },
+    {
+      "term": "Run-off",
+      "definition": "Abwicklung geschlossener Versicherungsbestände durch spezialisierte Plattformen wie Viridium."
+    },
+    {
+      "term": "SCR",
+      "definition": "Solvency Capital Requirement — Solvenzkapitalanforderung basierend auf 99,5%-VaR."
+    },
+    {
+      "term": "SFCR",
+      "definition": "Solvency and Financial Condition Report — öffentlicher Bericht unter Solvency II Säule 3."
+    },
+    {
+      "term": "S/U",
+      "definition": "Schaden-/Unfallversicherung — Komposit-Segment inkl. Kfz, Haftpflicht, Sach, etc."
+    },
+    {
+      "term": "Stornohaftung",
+      "definition": "Pflicht zur Provisionsrückzahlung bei Vertragsstornierung innerhalb von 5 Jahren (§ 49 VAG)."
+    },
+    {
+      "term": "VAG",
+      "definition": "Versicherungsaufsichtsgesetz — Grundlage der Unternehmensaufsicht mit Spartentrennung (§ 8)."
+    },
+    {
+      "term": "VVaG",
+      "definition": "Versicherungsverein auf Gegenseitigkeit — Rechtsform, bei der Kunden zugleich Eigentümer sind."
+    },
+    {
+      "term": "VVG",
+      "definition": "Versicherungsvertragsgesetz — regelt die Beziehung zwischen Versicherer und Versicherungsnehmer."
+    }
   ],
   "lastUpdated": "2026-02-26",
   "version": "1.0"

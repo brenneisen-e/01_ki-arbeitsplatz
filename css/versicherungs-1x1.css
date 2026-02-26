@@ -22,9 +22,9 @@
   --v1x1-success: #10B981;
   --v1x1-warning: #F59E0B;
   --v1x1-info: #3B82F6;
-  --v1x1-content-max: 820px;
-  --v1x1-header-height: 56px;
-  --v1x1-topnav-height: 52px;
+  --v1x1-content-max: 100%;
+  --v1x1-header-height: 64px;
+  --v1x1-topnav-height: 56px;
   --v1x1-font-display: 'Aptos', 'Segoe UI', system-ui, -apple-system, sans-serif;
   --v1x1-font-heading: 'Aptos', 'Segoe UI', system-ui, -apple-system, sans-serif;
   --v1x1-font-body: 'Aptos', 'Segoe UI', system-ui, -apple-system, sans-serif;
@@ -47,8 +47,8 @@
   background: var(--v1x1-bg);
   color: var(--v1x1-text-primary);
   font-family: var(--v1x1-font-body);
-  font-size: 16px;
-  line-height: 1.65;
+  font-size: 18px;
+  line-height: 1.7;
 }
 
 /* ========================================
@@ -93,7 +93,7 @@
 
 .v1x1-brand {
   font-family: var(--v1x1-font-heading);
-  font-size: 18px;
+  font-size: 22px;
   font-weight: 700;
   color: var(--v1x1-text-primary);
   letter-spacing: -0.02em;
@@ -135,13 +135,13 @@
 }
 .v1x1-search-input {
   width: 100%;
-  height: 36px;
-  padding: 0 12px 0 34px;
+  height: 40px;
+  padding: 0 14px 0 36px;
   border: 1px solid var(--v1x1-border);
   border-radius: 8px;
   background: var(--v1x1-surface);
   font-family: var(--v1x1-font-body);
-  font-size: 13px;
+  font-size: 15px;
   color: var(--v1x1-text-primary);
   outline: none;
   transition: border-color 150ms ease, box-shadow 150ms ease;
@@ -198,7 +198,7 @@
   gap: 8px;
 }
 .v1x1-progress-label {
-  font-size: 12px;
+  font-size: 14px;
   color: var(--v1x1-text-tertiary);
   white-space: nowrap;
 }
@@ -216,7 +216,7 @@
   transition: width 500ms ease;
 }
 .v1x1-progress-value {
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--v1x1-text-secondary);
   min-width: 28px;
@@ -254,13 +254,13 @@
 .v1x1-topnav-item {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 12px 14px;
+  gap: 8px;
+  padding: 14px 16px;
   border: none;
   background: transparent;
   color: var(--v1x1-nav-text);
   font-family: var(--v1x1-font-body);
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 500;
   white-space: nowrap;
   cursor: pointer;
@@ -342,12 +342,12 @@
    ======================================== */
 .v1x1-content {
   min-width: 0;
-  padding: 40px 24px 80px;
+  padding: 40px 48px 80px;
   overflow-x: hidden;
 }
 .v1x1-content-inner {
-  max-width: var(--v1x1-content-max);
-  margin: 0 auto;
+  width: 100%;
+  max-width: none;
 }
 
 /* ========================================
@@ -380,24 +380,24 @@
   color: var(--v1x1-text-secondary);
 }
 .v1x1-welcome-label {
-  font-size: 15px;
+  font-size: 18px;
   color: var(--v1x1-text-secondary);
   margin-top: 8px;
 }
 .v1x1-welcome-intro {
-  font-size: 16px;
-  line-height: 1.7;
+  font-size: 18px;
+  line-height: 1.75;
   color: var(--v1x1-text-secondary);
   text-align: center;
-  max-width: 600px;
+  max-width: 900px;
   margin: 0 auto 40px;
 }
 
 /* Chapter Grid */
 .v1x1-chapter-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
 }
 .v1x1-chapter-card {
   display: flex;
@@ -435,13 +435,13 @@
   margin-bottom: 4px;
 }
 .v1x1-chapter-card-title {
-  font-size: 15px;
+  font-size: 17px;
   font-weight: 600;
   color: var(--v1x1-text-primary);
   line-height: 1.3;
 }
 .v1x1-chapter-card-subtitle {
-  font-size: 12px;
+  font-size: 14px;
   color: var(--v1x1-text-tertiary);
   margin-top: 4px;
   line-height: 1.4;
@@ -529,7 +529,7 @@
   color: #DC2626;
 }
 .v1x1-hero-stat-label {
-  font-size: 15px;
+  font-size: 17px;
   color: var(--v1x1-text-secondary);
   margin-top: 12px;
   line-height: 1.5;
@@ -591,7 +591,7 @@
   border-radius: 10px;
   background: var(--v1x1-bg);
   font-family: var(--v1x1-font-heading);
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 600;
   color: var(--v1x1-text-primary);
   cursor: pointer;
@@ -641,7 +641,7 @@
   border-radius: 10px;
   background: var(--v1x1-bg);
   font-family: var(--v1x1-font-heading);
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 600;
   color: var(--v1x1-text-primary);
   cursor: pointer;
@@ -687,9 +687,9 @@
 
 /* Paragraph */
 .v1x1-paragraph {
-  margin-bottom: 16px;
-  font-size: 15px;
-  line-height: 1.7;
+  margin-bottom: 20px;
+  font-size: 17px;
+  line-height: 1.75;
   color: #4B5563;
 }
 .v1x1-paragraph strong {
@@ -700,7 +700,7 @@
 /* Section Title within level */
 .v1x1-section-title {
   font-family: var(--v1x1-font-heading);
-  font-size: 18px;
+  font-size: 22px;
   font-weight: 600;
   color: var(--v1x1-text-primary);
   margin: 0 0 12px;
@@ -711,11 +711,11 @@
 .v1x1-callout {
   display: flex;
   gap: 12px;
-  padding: 14px 16px;
+  padding: 16px 20px;
   border-radius: 10px;
-  margin-bottom: 16px;
-  font-size: 14px;
-  line-height: 1.6;
+  margin-bottom: 20px;
+  font-size: 16px;
+  line-height: 1.7;
 }
 .v1x1-callout-icon {
   flex-shrink: 0;
@@ -759,7 +759,7 @@
 .v1x1-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 14px;
+  font-size: 16px;
 }
 .v1x1-table th {
   padding: 10px 14px;
@@ -781,10 +781,10 @@
   color: var(--v1x1-text-primary);
 }
 .v1x1-table td {
-  padding: 10px 14px;
+  padding: 12px 16px;
   border-bottom: 1px solid var(--v1x1-border);
   font-family: var(--v1x1-font-mono);
-  font-size: 13px;
+  font-size: 15px;
   color: #374151;
 }
 .v1x1-table tr:last-child td {
@@ -994,7 +994,7 @@
 }
 .v1x1-wissenscheck-title {
   font-family: var(--v1x1-font-heading);
-  font-size: 24px;
+  font-size: 28px;
   font-weight: 700;
   color: var(--v1x1-text-primary);
   display: flex;
@@ -1004,7 +1004,7 @@
   margin: 0 0 8px;
 }
 .v1x1-wissenscheck-subtitle {
-  font-size: 15px;
+  font-size: 17px;
   color: var(--v1x1-text-secondary);
   margin: 0;
 }
@@ -1019,14 +1019,14 @@
 .v1x1-wissenscheck-card {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 10px 14px;
+  gap: 10px;
+  padding: 12px 16px;
   border: 1px solid var(--v1x1-border);
   border-radius: 10px;
   background: var(--v1x1-bg);
   cursor: pointer;
   font-family: var(--v1x1-font-body);
-  font-size: 13px;
+  font-size: 15px;
   color: var(--v1x1-text-secondary);
   transition: all 200ms ease;
 }
@@ -1098,7 +1098,7 @@
   font-weight: 500;
 }
 .v1x1-quiz-question {
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 500;
   color: var(--v1x1-text-primary);
   line-height: 1.5;
@@ -1119,7 +1119,7 @@
   border-radius: 10px;
   background: var(--v1x1-bg);
   cursor: pointer;
-  font-size: 14px;
+  font-size: 16px;
   color: var(--v1x1-text-primary);
   transition: all 200ms ease;
 }
@@ -1212,7 +1212,7 @@
   background: var(--v1x1-bg);
   color: var(--v1x1-text-secondary);
   font-family: var(--v1x1-font-body);
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 500;
   cursor: pointer;
   transition: all 200ms ease;

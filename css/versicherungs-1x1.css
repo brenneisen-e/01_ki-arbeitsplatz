@@ -30,9 +30,9 @@
   --v1x1-font-body: 'Aptos', 'Segoe UI', system-ui, -apple-system, sans-serif;
   --v1x1-font-mono: 'SF Mono', 'Monaco', 'Consolas', monospace;
   /* Deloitte colors for nav */
-  --v1x1-nav-bg: #1B5E20;
-  --v1x1-nav-text: rgba(255, 255, 255, 0.85);
-  --v1x1-nav-hover: rgba(255, 255, 255, 0.12);
+  --v1x1-nav-bg: #1a1a2e;
+  --v1x1-nav-text: #c8c8d4;
+  --v1x1-nav-hover: rgba(134, 188, 37, 0.15);
   --v1x1-nav-active-bg: #86BC25;
   --v1x1-nav-active-text: #FFFFFF;
 }
@@ -230,7 +230,8 @@
   top: var(--v1x1-header-height);
   z-index: 99;
   background: var(--v1x1-nav-bg);
-  box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+  border-bottom: 2px solid #86BC25;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 }
 
 .v1x1-topnav-chapters {
@@ -240,8 +241,8 @@
 .v1x1-topnav-scroll {
   display: flex;
   align-items: center;
-  gap: 4px;
-  padding: 8px 16px;
+  gap: 2px;
+  padding: 0 16px;
   overflow-x: auto;
   scrollbar-width: none;
   -ms-overflow-style: none;

@@ -28,6 +28,7 @@
             '/bestandsuebertragung':{ view: 'bestandsuebertragung', pageId: 'T-01', title: 'Bestandsübertragung' },
             '/pmo-toolbox':         { view: 'pmo-toolbox',          pageId: 'P-01', title: 'PMO Toolbox' },
             '/hr-pipeline':         { view: 'hr-pipeline',          pageId: 'H-01', title: 'HR Pipeline' },
+            '/versicherungs-1x1':   { view: 'versicherungs-1x1',    pageId: 'V-01', title: 'Versicherungs-1×1' },
         },
 
         // Reverse map: view name → hash route
@@ -177,7 +178,8 @@
                 'risikoscoring':        function() { return typeof openRisikoscoring === 'function' ? (openRisikoscoring(), true) : false; },
                 'bestandsuebertragung': function() { return typeof openBestandsuebertragung === 'function' ? (openBestandsuebertragung(), true) : false; },
                 'pmo-toolbox':          function() { return typeof openPMOToolbox === 'function' ? (openPMOToolbox(), true) : false; },
-                'hr-pipeline':          function() { return typeof openHRPipeline === 'function' ? (openHRPipeline(), true) : false; }
+                'hr-pipeline':          function() { return typeof openHRPipeline === 'function' ? (openHRPipeline(), true) : false; },
+                'versicherungs-1x1':    function() { return typeof openVersicherungs1x1 === 'function' ? (openVersicherungs1x1(), true) : false; }
             };
 
             var handler = fnMap[viewName];

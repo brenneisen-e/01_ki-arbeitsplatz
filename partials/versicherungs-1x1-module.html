@@ -1,0 +1,104 @@
+<!-- Versicherungs-1×1 Knowledge Module -->
+<div class="v1x1-module">
+  <!-- Header -->
+  <div class="v1x1-header">
+    <div class="v1x1-header-left">
+      <button class="v1x1-back-btn" onclick="closeVersicherungs1x1()" title="Zurück zur Startseite">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+      </button>
+      <h1 class="v1x1-brand">Versicherungs-1×1</h1>
+    </div>
+    <div class="v1x1-header-right">
+      <div class="v1x1-search-wrapper">
+        <svg class="v1x1-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="text" class="v1x1-search-input" id="v1x1SearchInput" placeholder="Begriffe suchen..." autocomplete="off">
+        <div class="v1x1-search-results" id="v1x1SearchResults" style="display:none;"></div>
+      </div>
+      <div class="v1x1-progress-wrapper">
+        <span class="v1x1-progress-label">Fortschritt</span>
+        <div class="v1x1-progress-bar">
+          <div class="v1x1-progress-fill" id="v1x1ProgressFill" style="width:0%"></div>
+        </div>
+        <span class="v1x1-progress-value" id="v1x1ProgressValue">0%</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Layout: Sidebar + Content -->
+  <div class="v1x1-layout">
+    <!-- Sidebar -->
+    <nav class="v1x1-sidebar" id="v1x1Sidebar">
+      <div class="v1x1-sidebar-chapters" id="v1x1SidebarChapters">
+        <!-- Populated by JS -->
+      </div>
+      <div class="v1x1-sidebar-divider"></div>
+      <div class="v1x1-sidebar-links">
+        <button class="v1x1-sidebar-link" onclick="V1x1.showGlossary()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="18" height="18">
+            <path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"></path>
+            <path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"></path>
+          </svg>
+          <span>Glossar</span>
+        </button>
+      </div>
+    </nav>
+
+    <!-- Mobile Sidebar Toggle -->
+    <button class="v1x1-sidebar-toggle" id="v1x1SidebarToggle" onclick="V1x1.toggleSidebar()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+      </svg>
+    </button>
+    <!-- Mobile Sidebar Backdrop -->
+    <div class="v1x1-sidebar-backdrop" id="v1x1SidebarBackdrop" onclick="V1x1.toggleSidebar()" style="display:none;"></div>
+
+    <!-- Content Area -->
+    <main class="v1x1-content" id="v1x1Content">
+      <!-- Chapter content rendered by JS -->
+      <div class="v1x1-content-inner" id="v1x1ContentInner">
+        <!-- Welcome / Overview (shown initially) -->
+        <div class="v1x1-welcome" id="v1x1Welcome">
+          <div class="v1x1-welcome-hero">
+            <div class="v1x1-welcome-stat">
+              <span class="v1x1-welcome-number" data-target="254">0</span>
+              <span class="v1x1-welcome-unit">Mrd. €</span>
+            </div>
+            <p class="v1x1-welcome-label">Beitragsvolumen des deutschen Versicherungsmarktes 2025</p>
+          </div>
+          <p class="v1x1-welcome-intro">
+            Das Versicherungs-1×1 vermittelt das Branchenwissen, das neue Strategieberater im Bereich Monitor/Strategy benötigen — von den Grundlagen über Vertiefungswissen bis hin zu Experten-Level-Insights.
+          </p>
+          <div class="v1x1-chapter-grid" id="v1x1ChapterGrid">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Glossary Overlay -->
+  <div class="v1x1-glossary-overlay" id="v1x1GlossaryOverlay" style="display:none;">
+    <div class="v1x1-glossary-panel">
+      <div class="v1x1-glossary-header">
+        <h2>Glossar</h2>
+        <button class="v1x1-glossary-close" onclick="V1x1.closeGlossary()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <input type="text" class="v1x1-glossary-search" id="v1x1GlossarySearch" placeholder="Begriff suchen...">
+      <div class="v1x1-glossary-list" id="v1x1GlossaryList">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+  </div>
+</div>

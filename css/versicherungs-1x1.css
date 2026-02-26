@@ -254,7 +254,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 8px 16px;
+  padding: 14px 16px;
   border: none;
   background: transparent;
   color: var(--v1x1-nav-text);
@@ -264,20 +264,22 @@
   white-space: nowrap;
   cursor: pointer;
   transition: all 200ms ease;
-  border-radius: 8px;
+  border-bottom: 3px solid transparent;
   position: relative;
 }
 
 .v1x1-topnav-item:hover {
   color: #ffffff;
-  background: rgba(255, 255, 255, 0.15);
+  background: var(--v1x1-nav-hover);
+  border-bottom-color: rgba(134, 188, 37, 0.5);
+  transform: translateY(-1px);
 }
 
 .v1x1-topnav-item.active {
-  color: #ffffff;
-  background: var(--v1x1-nav-active-bg);
+  color: var(--v1x1-nav-active-text);
+  background: rgba(134, 188, 37, 0.2);
+  border-bottom-color: #86BC25;
   font-weight: 600;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
 }
 
 .v1x1-topnav-item.visited .v1x1-topnav-dot {
@@ -315,21 +317,23 @@
   margin: 0 4px;
 }
 
-/* Special tabs: Quiz & Glossar — same pill style, just different active color */
+/* Special tabs: Quiz & Glossar */
 .v1x1-topnav-quiz:hover {
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(16, 185, 129, 0.15);
+  border-bottom-color: rgba(16, 185, 129, 0.5);
 }
 .v1x1-topnav-quiz.active {
-  background: #10B981;
-  color: #ffffff;
+  background: rgba(16, 185, 129, 0.2);
+  border-bottom-color: #10B981;
 }
 
 .v1x1-topnav-glossar:hover {
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(59, 130, 246, 0.15);
+  border-bottom-color: rgba(59, 130, 246, 0.5);
 }
 .v1x1-topnav-glossar.active {
-  background: #3B82F6;
-  color: #ffffff;
+  background: rgba(59, 130, 246, 0.2);
+  border-bottom-color: #3B82F6;
 }
 
 /* ========================================

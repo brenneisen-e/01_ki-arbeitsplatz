@@ -17,12 +17,12 @@
       },
       "quickStats": [
         {
-          "value": 470,
-          "label": "Versicherer",
+          "value": 349,
+          "label": "Versicherer (BaFin)",
           "unit": ""
         },
         {
-          "value": 488,
+          "value": 501.5,
           "label": "Verträge",
           "unit": "Mio."
         },
@@ -88,6 +88,47 @@
               ]
             ],
             "sortable": true
+          },
+          {
+            "type": "table",
+            "caption": "Beitragseinnahmen der dt. Versicherungswirtschaft 2020–2025",
+            "columns": [
+              "Jahr",
+              "Gesamt (Mrd. €)",
+              "Veränderung"
+            ],
+            "rows": [
+              [
+                "2020",
+                "223,3",
+                "—"
+              ],
+              [
+                "2021",
+                "222,2",
+                "−0,5 %"
+              ],
+              [
+                "2022",
+                "225,9",
+                "+1,7 %"
+              ],
+              [
+                "2023",
+                "226,2",
+                "+0,1 %"
+              ],
+              [
+                "2024",
+                "237,9",
+                "+5,2 %"
+              ],
+              [
+                "2025",
+                "253,6",
+                "+6,6 %"
+              ]
+            ]
           }
         ],
         "level2": [
@@ -108,6 +149,52 @@
             "type": "callout",
             "variant": "info",
             "content": "Die Combined Ratio (Schadenquote + Kostenquote) ist die zentrale Profitabilitätskennzahl in der S/U-Versicherung. Werte unter 100% bedeuten versicherungstechnischen Gewinn."
+          },
+          {
+            "type": "table",
+            "caption": "Vertragsbestand 2025 nach Sparten",
+            "columns": [
+              "Sparte",
+              "Verträge (Mio.)"
+            ],
+            "rows": [
+              [
+                "Kfz-Versicherung",
+                "132"
+              ],
+              [
+                "Lebensversicherung",
+                "83"
+              ],
+              [
+                "Allg. Haftpflicht",
+                "51"
+              ],
+              [
+                "PKV (gesamt)",
+                "41"
+              ],
+              [
+                "Hausrat",
+                "27"
+              ],
+              [
+                "Rechtsschutz",
+                "26"
+              ],
+              [
+                "Unfallversicherung",
+                "25"
+              ],
+              [
+                "Wohngebäude",
+                "19"
+              ]
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": "Die Versicherungswirtschaft beschäftigte 2024 insgesamt <strong>480.200 Erwerbstätige</strong> — davon 298.480 Angestellte und 181.760 selbstständige Vermittler. Im Innendienst stiegen die Beschäftigtenzahlen um +2,4%, der angestellte Außendienst wuchs erstmals seit Jahren leicht (+1,7%). Die Zahl der <strong>Auszubildenden stieg um +7,5%</strong> auf 11.400. Im Vermittlerregister waren zum 1. Januar 2025 noch <strong>181.761 Versicherungsvermittler</strong> registriert — ein kontinuierlicher Rückgang (2009: über 260.000). Das Durchschnittsalter der AO-Vermittler liegt bei über 48 Jahren, bei Maklern sogar bei <strong>57,1 Jahren</strong> — ein massives Nachwuchsproblem."
           }
         ],
         "level3": [
@@ -161,6 +248,44 @@
               ]
             ],
             "sortable": false
+          },
+          {
+            "type": "table",
+            "caption": "Kapitalanlagen-Allokation der dt. Versicherungswirtschaft (1,889 Bio. €)",
+            "columns": [
+              "Assetklasse",
+              "Anteil"
+            ],
+            "rows": [
+              [
+                "Renten (inkl. über Fonds)",
+                "75,8 %"
+              ],
+              [
+                "Beteiligungen",
+                "12,2 %"
+              ],
+              [
+                "Aktien",
+                "5,1 %"
+              ],
+              [
+                "Immobilien",
+                "4,8 %"
+              ],
+              [
+                "Sonstige",
+                "2,1 %"
+              ]
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": "Alternative Anlagen gewinnen an Bedeutung: <strong>112 Mrd. Euro</strong> in Infrastruktur und <strong>80 Mrd. Euro</strong> in Private Equity. Unter BaFin-Aufsicht standen im August 2025 noch <strong>349 Versicherungsunternehmen</strong>: 79 Lebensversicherer, 199 Schaden-/Unfallversicherer, 43 Krankenversicherer und 28 Rückversicherer. Hinzu kommen 121 Pensionskassen, 34 Pensionsfonds und 26 Sterbekassen. Die Konsolidierung ist dramatisch: Um 1980 gab es noch rund 810 VU unter Bundesaufsicht — der Rückgang beträgt damit über <strong>55%</strong>."
+          },
+          {
+            "type": "callout",
+            "content": "Die Combined Ratio der S/U-Versicherung verbesserte sich 2025 dramatisch auf <strong>91%</strong> (2024: 96,4%, 2023: ~101%). In der Kfz-Versicherung kehrte die Branche mit einer CR von <strong>96%</strong> erstmals seit Jahren in die Gewinnzone zurück (2024: 104%, 2023: 111%). Die Wohngebäudeversicherung erreichte 90% — nur das sechste profitable Jahr seit 2002. Treiber war das Ausbleiben größerer Naturkatastrophen."
           }
         ]
       },
@@ -273,6 +398,10 @@
               ]
             ],
             "sortable": false
+          },
+          {
+            "type": "paragraph",
+            "content": "Die <strong>Munich Re Gruppe</strong> (inkl. ERGO mit 20,8 Mrd. € Insurance Revenue) erzielte 2024 ein Rekordergebnis von <strong>5,671 Mrd. € Nettogewinn</strong> bei einer Eigenkapitalrendite von 18,2%. Die <strong>R+V Versicherung</strong> als genossenschaftlicher Versicherer der Volks- und Raiffeisenbanken erreicht rund 19–20 Mrd. €, gefolgt von <strong>Debeka</strong> (15–16 Mrd. €, PKV-Marktführer mit 16,3%) und <strong>Generali Deutschland</strong> (15+ Mrd. €, exklusiv vertrieben über DVAG). Die <strong>HUK-Coburg</strong> ist als VVaG mit 8–8,5 Mrd. € Deutschlands größter Autoversicherer mit über 13 Mio. Kunden."
           }
         ],
         "level2": [
@@ -293,6 +422,14 @@
             "type": "callout",
             "variant": "tip",
             "content": "Die VVaG-Struktur macht Konsolidierung „extrem schwer“, wie Linklaters-Partner Broichhausen betont — ein wichtiger Faktor bei M&A-Überlegungen."
+          },
+          {
+            "type": "paragraph",
+            "content": "Die elf öffentlichen Erstversicherungsgruppen erzielten 2024 Beiträge von <strong>23,4 Mrd. €</strong> (ca. 10% Gesamtmarktanteil, 14,9% in S/U). Die <strong>Versicherungskammer Bayern</strong> ist mit rund 9,5 Mrd. € der größte, gefolgt vom <strong>Provinzial Konzern</strong> (7+ Mrd. €, entstanden 2020 aus der Fusion von Provinzial Rheinland und NordWest) und der <strong>SV SparkassenVersicherung</strong> (Baden-Württemberg, Hessen, Thüringen, Sachsen). Über 3.100 eigene Geschäftsstellen plus mehr als 10.000 Sparkassenfilialen erreichen <strong>jeden dritten Bundesbürger</strong> als Kunden."
+          },
+          {
+            "type": "paragraph",
+            "content": "<strong>AXA Deutschland</strong> erreicht 11–12 Mrd. € Beiträge. <strong>Zurich</strong> (5,9 Mrd. €) plant den Verkauf des LV-Altbestands. <strong>Talanx/HDI</strong> (48+ Mrd. € Konzern) ist über die Tochter <strong>Hannover Rück</strong> als zweitgrößter Rückversicherer der Welt (26,4 Mrd. €) einer der wichtigsten globalen Player."
           }
         ],
         "level3": [
@@ -309,6 +446,10 @@
             "type": "callout",
             "variant": "info",
             "content": "Das Handelsblatt titelte im Februar 2026: „2026 könnte das M&A-Jahr der Versicherer werden.“ Weitere Deals: SDK/Stuttgarter-Fusion, FRIDAY-Verkauf an Allianz Direct, Element-Insurance-Insolvenz."
+          },
+          {
+            "type": "paragraph",
+            "content": "Drei Plattformen dominieren den deutschen Bestandsabwicklungsmarkt (Run-off). <strong>Viridium</strong> ist die größte mit 3,4 Mio. Verträgen und 67–68 Mrd. € Kapitalanlagen. <strong>Frankfurter Leben</strong> (Fosun) hat mit sechs abgeschlossenen Deals die meisten Transaktionen. <strong>Athora</strong> (Apollo-backed) scheiterte an der Übernahme des AXA-Bestands (900.000 Verträge), will aber perspektivisch sogar Neugeschäft schreiben. Als Gegentrend kehrte <strong>„Die Bayerische“</strong> als erster Versicherer nach 15 Jahren Run-off ins Neugeschäft zurück."
           }
         ]
       },
@@ -382,6 +523,10 @@
             "type": "callout",
             "variant": "info",
             "content": "In der Kfz-Versicherung bestimmen Typklassen (~33.000 Fahrzeugmodelle), Regionalklassen (412+ Zulassungsbezirke) und Schadenfreiheitsklassen die Prämie."
+          },
+          {
+            "type": "paragraph",
+            "content": "Die Anhebung des <strong>Höchstrechnungszinses auf 1,0% ab 2025</strong> — die erste Erhöhung seit über 30 Jahren — hat die Attraktivität garantiebasierter Produkte wiederbelebt. Der branchenweite Durchschnitt der laufenden Verzinsung stieg 2025 auf <strong>2,53%</strong>, die Gesamtverzinsung auf <strong>3,19%</strong>. Spitzenreiter wie DEVK Verein erreichen bis 4,1% Gesamtverzinsung. Der <strong>3-Topf-Hybrid</strong> (Sicherungsvermögen, Wertsicherungsfonds, freie Fondsanlage) macht mittlerweile <strong>28% der Gesamtbeiträge</strong> und über 27% der Neuverträge aus."
           }
         ],
         "level2": [
@@ -398,6 +543,50 @@
             "type": "callout",
             "variant": "warning",
             "content": "Wetterbedingte Versicherungsschäden beliefen sich 2024 auf €4,5 Mrd. — die Elementarschaden-Pflichtversicherung wird eines der wichtigsten Regulierungsthemen der nächsten Jahre."
+          },
+          {
+            "type": "table",
+            "caption": "bAV-Deckungsmittel nach Durchführungsweg (2023, gesamt 727,9 Mrd. €)",
+            "columns": [
+              "Durchführungsweg",
+              "Deckungsmittel",
+              "Anteil"
+            ],
+            "rows": [
+              [
+                "Direktzusage",
+                "336 Mrd. €",
+                "46,2 %"
+              ],
+              [
+                "Pensionskassen",
+                "210 Mrd. €",
+                "28,9 %"
+              ],
+              [
+                "Direktversicherungen",
+                "81 Mrd. €",
+                "11,1 %"
+              ],
+              [
+                "Pensionsfonds",
+                "60 Mrd. €",
+                "8,2 %"
+              ],
+              [
+                "Unterstützungskassen",
+                "41 Mrd. €",
+                "5,6 %"
+              ]
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": "Steuerlich sind 2025 bAV-Beiträge bis <strong>7.728 €/Jahr</strong> (8% BBG RV) steuerfrei und bis 3.864 €/Jahr (4% BBG) sozialversicherungsfrei. Der verpflichtende Arbeitgeberzuschuss beträgt 15% bei SV-Ersparnis. Das <strong>zweite Betriebsrentenstärkungsgesetz (BRSG II)</strong> trat teilweise im Januar 2026 in Kraft: Es öffnet das Sozialpartnermodell für alle Beschäftigten, ermöglicht Opting-Out auch ohne Tarifvertrag und erhöht die Geringverdienerförderung ab 2027 auf maximal <strong>360 €/Jahr</strong>."
+          },
+          {
+            "type": "paragraph",
+            "content": "Die PKV-Vollversicherung setzt Einkommen über der <strong>Jahresarbeitsentgeltgrenze</strong> voraus (2025: 73.800 €; 2026: 77.400 €). Die Kalkulation folgt dem <strong>Äquivalenzprinzip</strong>: individuelle, risikogerechte Beiträge im Kapitaldeckungsverfahren mit Alterungsrückstellungen. Der gesetzliche <strong>10%-Zuschlag</strong> (§149 VAG) für 21- bis 60-Jährige fließt in die Alterungsrückstellungen und entlastet ab dem 65. Lebensjahr. Das <strong>Beitragsanpassungsverfahren</strong> (§203 VVG) wird ausgelöst, wenn die kalkulierten Versicherungsleistungen um mindestens 10% von den tatsächlichen abweichen."
           }
         ],
         "level3": [
@@ -409,6 +598,18 @@
           {
             "type": "paragraph",
             "content": "Die Debeka ist mit ~2,55 Mio. Vollversicherten und 31% der Neuzugänge klarer PKV-Marktführer. Die <strong>Alterungsrückstellungen</strong> der PKV betragen <strong>€355,4 Mrd.</strong> (2025) — ein massiver demografischer Puffer. Die betriebliche Krankenversicherung (bKV) entwickelt sich als wachsender Employee-Benefit-Trend."
+          },
+          {
+            "type": "paragraph",
+            "content": "In der <strong>Kfz-Versicherung</strong> berechnet der GDV jährlich <strong>Typklassen</strong> für rund 33.000 Automodelle (16 Klassen Haftpflicht, 24 Teilkasko, 25 Vollkasko) und <strong>Regionalklassen</strong> für 413 Zulassungsbezirke. Das SF-Klassensystem (SF 0 bis SF 50) gewährt Rabatte von bis zu 85%. <strong>Telematik-Tarife</strong> nutzen rund 16% der Autofahrer, wobei Allianz und HUK-Coburg zusammen 90% des Telematik-Marktes abdecken. Der durchschnittliche Kfz-Haftpflichtschaden stieg von 2.500 € (2014) auf <strong>4.000 €</strong> (2024) — ein Anstieg von 60%."
+          },
+          {
+            "type": "paragraph",
+            "content": "Die PKV bietet drei Sozialtarife: Der <strong>Standardtarif</strong> (geschlossen seit 2009, ca. 53.000 Versicherte), der <strong>Basistarif</strong> (Kontrahierungszwang, GKV-Leistungsniveau, Höchstbeitrag 2026: 1.017 €/Monat) und der <strong>Notlagentarif</strong> (§153 VAG, nur Akutversorgung bei Zahlungsunfähigkeit). Die durchschnittliche PKV-Beitragserhöhung 2026 lag bei rund <strong>13%</strong>. Bei <strong>Indexpolicen</strong> kaufen die Überschüsse jährlich Optionen auf einen Aktienindex. Im Cap-Modell wird die monatliche Performance gedeckelt (typisch 3,5–4%), im Partizipationsquoten-Modell ein fester Prozentsatz der positiven Performance weitergegeben (65–80%). Die durchschnittliche Indexrendite 2025 lag bei <strong>3,4%</strong>."
+          },
+          {
+            "type": "paragraph",
+            "content": "Die <strong>D&amp;O-Versicherung</strong> unterliegt dem Pflichtselbstbehalt nach §93 AktG (mindestens 10% des Schadens, mindestens 1,5-faches der festen Jahresvergütung). Die <strong>Rechtsschutzversicherung</strong> erreichte 2024 einen Bestand von 25,7 Mio. Policen bei durchschnittlich 205 € Jahresprämie und einer CR von 90,3%. Die <strong>Überschussbeteiligung</strong> in der LV speist sich aus drei Quellen: Kapitalanlageergebnis (Mindestbeteiligung der VN: 90%), Risikoergebnis (90%) und übriges Ergebnis (50%). Die Zinszusatzreserve, in der Niedrigzinsphase auf rund <strong>96 Mrd. €</strong> aufgebaut, wird seit 2024 schrittweise aufgelöst — 2024 flossen bereits 5 Mrd. € zurück."
           }
         ]
       },
@@ -515,6 +716,10 @@
               ]
             ],
             "sortable": false
+          },
+          {
+            "type": "paragraph",
+            "content": "Das deutsche <strong>Bancassurance-Volumen</strong> erreichte 2023 rund <strong>23,5 Mrd. €</strong>, davon 75% in der Lebensversicherung. Die drei Kernkooperationen (Sparkassen→öffentliche Versicherer, Volksbanken→R+V, Commerzbank→Allianz) vereinen <strong>75% des Bancassurance-Neugeschäfts</strong>. Im europäischen Vergleich ist der deutsche Bankvertrieb schwach: Weniger als jede fünfte Lebensversicherung wird über Banken verkauft, verglichen mit 80% in Portugal und 65% in Frankreich."
           }
         ],
         "level2": [
@@ -527,6 +732,14 @@
             "type": "callout",
             "variant": "warning",
             "content": "Check24 listet nur 38 von 89 Privathaftpflichtversicherern — große Anbieter wie Allianz, HUK-Coburg und CosmosDirekt fehlen. 55% der Kunden nutzen Portalergebnisse als Verhandlungsbasis."
+          },
+          {
+            "type": "paragraph",
+            "content": "Die <strong>DVAG</strong> erzielte 2024 einen Rekordumsatz von <strong>2,504 Mrd. €</strong> (+8,5%) und ein Ergebnis von 541 Mio. €. Rund 18.000 hauptberufliche Vermögensberater betreuen 8 Mio. Kunden in exklusiver Bindung an Generali. Der Umsatz hat sich in zehn Jahren mehr als verdoppelt. <strong>Swiss Life Deutschland</strong> (Swiss Life Select, Tecis, Horbach, Proventus) erreichte 725 Mio. € Provisionserlöse mit knapp 6.000 Beratern. <strong>MLP</strong> fokussiert Akademiker mit 844 Mio. € Provisionserlöse und 2.055 Beratern."
+          },
+          {
+            "type": "paragraph",
+            "content": "<strong>Versicherungsmakler</strong> (46.938 registriert) agieren als „treuhänderähnliche Sachwalter“ des Kunden (BGH 1985). Sie unterliegen umfassenden Beratungspflichten nach §§60–68 VVG und müssen eine Vermögensschadenhaftpflichtversicherung von mindestens <strong>1,13 Mio. €</strong> vorhalten. International dominieren <strong>Marsh</strong> (22,7 Mrd. USD Umsatz), <strong>Aon</strong> (13,4 Mrd. USD, 1.700 Mitarbeiter in Deutschland) und <strong>WTW</strong>."
           }
         ],
         "level3": [
@@ -538,6 +751,14 @@
           {
             "type": "paragraph",
             "content": "Die BaFin untersagte Check24 in 2024 das Angebot selbststrukturierter Versicherungsprodukte (kostenloser Kreditschutz als unerlaubtes Versicherungsgeschäft). Die regulatorische Zukunft der Plattformökonomie im Versicherungsvertrieb bleibt spannend."
+          },
+          {
+            "type": "paragraph",
+            "content": "Bei den <strong>Maklerpools</strong> führt <strong>Fonds Finanz</strong> mit 76,6 Mio. € Rohertrag und 28.000 angebundenen Partnern. Die genossenschaftliche <strong>VEMA</strong> erzielte 461 Mio. € Gesamtprovisionsvolumen. <strong>blau direkt</strong> positioniert sich als Technologieführer mit +46,8% Rohertragswachstum. Die <strong>Allianz</strong> unterhält mit geschätzt 8.000+ Vertretern die größte AO. Mehrere Versicherer starten AO-Offensiven: HDI plant aktives Wachstum, die Nürnberger will ihre Vertreterzahl verdoppeln, Inter strebt 350 Partner bis 2026 an."
+          },
+          {
+            "type": "paragraph",
+            "content": "Der Gesamtanteil <strong>digitaler Abschlüsse</strong> lag 2024 bei <strong>22%</strong>. Kfz führt mit 29%, gefolgt von PKV-Zusatz (27%). Lebensversicherungen werden zu nur <strong>3%</strong> online abgeschlossen. Laut Bitkom haben <strong>83% der Deutschen</strong> bereits mindestens eine Versicherung online abgeschlossen. Vergleichsportale sind mit 62% der meistgenutzte digitale Kanal. <strong>Clark</strong> erreichte mit Allianz X als größtem Minderheitsgesellschafter Unicorn-Status (über 1 Mrd. € Bewertung) und über 600.000 Kunden."
           }
         ]
       },
@@ -649,6 +870,10 @@
             "type": "callout",
             "variant": "tip",
             "content": "Rechenbeispiel: Vertrag 35 Jahre, €150/Monat, 40‰ → BWS = 35 × 12 × €150 = €63.000 → Abschlussprovision = €2.520."
+          },
+          {
+            "type": "paragraph",
+            "content": "In der <strong>PKV</strong> sind <strong>6–9 Monatsbeiträge</strong> als Abschlussprovision üblich: Bei 300 € Monatsbeitrag ergibt das rund 2.100 €. In der <strong>Sachversicherung</strong> erhalten Makler typisch <strong>15–25% des Nettojahresbeitrags</strong> als laufende Courtage; in Kfz nur 5–10%. Die BaFin ermittelte 2018 einen Durchschnitt von <strong>32,5‰</strong>. Dabei erhalten 30% des Neugeschäfts Provisionen über 40‰, einzelne Vermittler erreichen über 70‰."
           }
         ],
         "level3": [
@@ -665,6 +890,14 @@
             "type": "callout",
             "variant": "warning",
             "content": "Bei Fusionen ist die Vergütungsharmonisierung eine der komplexesten PMI-Aufgaben: unterschiedliche Promillesätze, Bemessungsgrundlagen und Courtagezusagen müssen über Jahre angeglichen werden."
+          },
+          {
+            "type": "paragraph",
+            "content": "Die <strong>Honorarberatung</strong> nach §34d Abs. 2 GewO fristet ein Nischendasein: Nur <strong>321 registrierte Versicherungsberater</strong> stehen fast 182.000 Vermittlern gegenüber. Der Neugeschäftsanteil von Nettotarifen in der Lebensversicherung beträgt nur <strong>0,65%</strong>. 13 von 25 befragten Versicherern (52%) bieten Nettotarife an. Bei <strong>Restschuldversicherungen</strong> gilt seit 2022 ein <strong>2,5%-Deckel</strong> auf den abgesicherten Darlehensbetrag (§50a VAG). Die Provisionen sanken dort von über 50% auf durchschnittlich <strong>26% der Prämie</strong>."
+          },
+          {
+            "type": "callout",
+            "content": "Rechenbeispiel Stornohaftung: Bei 3.360 € Abschlussprovision und Kündigung nach 3 Jahren: verdiente Provision = 3.360 × 3/5 = 2.016 €; <strong>Rückforderung: 1.344 €</strong>. In der Praxis haften Vermittler durchschnittlich 5,8 Jahre (AO) bis 6,1 Jahre (Makler). Versicherer behalten typisch 10–15% der Abschlussprovision als Stornoreserve ein."
           }
         ]
       },
@@ -737,6 +970,10 @@
             "type": "callout",
             "variant": "info",
             "content": "Solvency II (seit 1.1.2016) ist das dreisäulige EU-Aufsichtssystem: Säule 1 (Kapital), Säule 2 (Governance), Säule 3 (Berichtspflichten)."
+          },
+          {
+            "type": "paragraph",
+            "content": "Zentrale VVG-Normen im Detail: §§19–22 regeln die <strong>vorvertragliche Anzeigepflicht</strong> (5 Jahre Rücktrittsrecht, 10 Jahre bei Arglist). §28 normiert die <strong>Obliegenheiten</strong> mit quotaler Kürzung bei grober Fahrlässigkeit — das Ende des „Alles-oder-Nichts-Prinzips“. §203 regelt das <strong>PKV-Beitragsanpassungsverfahren</strong> mit Treuhänder-Zustimmungspflicht: Eine Anpassung wird ausgelöst, wenn die kalkulierten Versicherungsleistungen um mindestens 10% von den tatsächlichen abweichen."
           }
         ],
         "level2": [
@@ -748,6 +985,14 @@
           {
             "type": "paragraph",
             "content": "Die <strong>Insurance Distribution Directive (IDD)</strong> differenziert zwischen gebundenen Vermittlern, ungebundenen Vermittlern/Maklern und Versicherungsberatern (Honorarbasis). Die Erlaubnis erfordert IHK-Sachkundenachweis, Zuverlässigkeit, geordnete Vermögensverhältnisse und eine Berufshaftpflicht (~€1,3 Mio.)."
+          },
+          {
+            "type": "paragraph",
+            "content": "Die durchschnittlichen <strong>Solvency-II-Bedeckungsquoten</strong> lagen Ende 2024 bei <strong>295% (Leben)</strong>, <strong>260% (S/U)</strong> und <strong>293% (Rückversicherung)</strong>. Ohne Übergangsmaßnahmen erreichten nur drei Lebensversicherer keine 100%-Quote. Der <strong>Solvency II Review</strong> (Richtlinie 2025/2, Anwendung ab 30. Januar 2027) bringt wesentliche Änderungen: Die Volatilitätsanpassung wird von 65% auf <strong>85%</strong> des Credit-Spreads angehoben. Die Risikomarge sinkt von 6% auf <strong>4,75%</strong> Kostensatz. Für <strong>kleine und nicht-komplexe Versicherer (SNCU)</strong> gelten Erleichterungen bei Governance, Reporting und ORSA (nur alle 2 Jahre)."
+          },
+          {
+            "type": "paragraph",
+            "content": "<strong>DORA</strong> (Digital Operational Resilience Act) gilt seit dem 17. Januar 2025 unmittelbar und ohne Übergangsfrist. Die fünf Kernbereiche — IKT-Risikomanagement, Incident Reporting, Third-Party Risk Management, Resilienztests und Informationsaustausch — stellen Versicherer vor erhebliche Herausforderungen. Laut Horváth-Studie haben 75% der Versicherer die IKT-Risikokontrollfunktion operationalisiert, aber weniger als 40% verfügen über ein konsolidiertes IT-System-Inventar. Bußgelder drohen bis <strong>5 Mio. €</strong>."
           }
         ],
         "level3": [
@@ -764,6 +1009,56 @@
             "type": "callout",
             "variant": "warning",
             "content": "Die Solvency-II-Review trat am 29.1.2025 in Kraft (Umsetzungsfrist: 30.1.2027) — mit vereinfachten Anforderungen für SNCUs und expliziter ESG-Integration."
+          },
+          {
+            "type": "table",
+            "caption": "Höchstrechnungszins-Chronologie",
+            "columns": [
+              "Zeitraum",
+              "Höchstrechnungszins"
+            ],
+            "rows": [
+              [
+                "1994–2000",
+                "4,00 %"
+              ],
+              [
+                "2000–2003",
+                "3,25 %"
+              ],
+              [
+                "2004–2006",
+                "2,75 %"
+              ],
+              [
+                "2007–2011",
+                "2,25 %"
+              ],
+              [
+                "2012–2014",
+                "1,75 %"
+              ],
+              [
+                "2015–2016",
+                "1,25 %"
+              ],
+              [
+                "2017–2021",
+                "0,90 %"
+              ],
+              [
+                "2022–2024",
+                "0,25 %"
+              ],
+              [
+                "ab 2025",
+                "1,00 %"
+              ]
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": "Bei <strong>ESG</strong> müssen Versicherer seit August 2022 Nachhaltigkeitspräferenzen bei Versicherungsanlageprodukten abfragen. Die SFDR unterscheidet <strong>Art.-6-</strong> (Standard), <strong>Art.-8-Produkte</strong> („hellgrüne“) und <strong>Art.-9-Produkte</strong> („dunkelgrüne“). Die EU-Taxonomie verpflichtet zur Offenlegung des Taxonomie-Alignments der Kapitalanlagen. Der Solvency II Review verlangt erstmals <strong>Nachhaltigkeitsrisikopläne</strong> und Klimaszenarien im ORSA. Die IDD-Umsetzung über §34d GewO schreibt eine <strong>15-Stunden-Weiterbildungspflicht</strong> vor, überwacht von der IHK (Bußgeld bis 3.000 €)."
           }
         ]
       },
@@ -831,6 +1126,14 @@
           {
             "type": "paragraph",
             "content": "Die <strong>Dunkelverarbeitung</strong> (Straight-Through Processing) automatisiert Standardvorgänge vollständig ohne menschliches Eingreifen — über 60% der deutschen Versicherer setzen sie aktiv ein."
+          },
+          {
+            "type": "paragraph",
+            "content": "Die Tarifkalkulation folgt dem Schema: Risikoprämie + Kosten + Sicherheits-/Gewinnzuschlag. Zentrale Sterbetafeln sind die <strong>DAV 2004T</strong> (für Risiko-Lebensversicherung) und <strong>DAV 2004R</strong> (für Rentenversicherung mit Trendprojektion). Der Verantwortliche Aktuar nach <strong>§141 VAG</strong> stellt die Angemessenheit der Deckungsrückstellungen sicher. Die Reservierung umfasst IBNR-Reserven, Deckungsrückstellungen und Best Estimates unter Solvency II."
+          },
+          {
+            "type": "paragraph",
+            "content": "Das <strong>HIS</strong> (Hinweis- und Informationssystem, seit Oktober 2025 bei Besurance HIS GmbH) dient der Betrugsprävention: Bei LV-Summen über <strong>100.000 €</strong> und BU-Renten über <strong>9.000 €/Jahr</strong> erfolgt verdachtsunabhängige Meldung. Speicherdauer maximal 5 Jahre, verlängerbar auf 10. Die branchenweite <strong>Dunkelverarbeitungsquote</strong> (STP) lag 2023 bei <strong>19,1%</strong> aller Neuverträge. Best-Practice-Versicherer wie der Münchener Verein erreichen <strong>90%</strong> bei Online-Krankenzusatzanträgen."
           }
         ],
         "level2": [
@@ -846,6 +1149,10 @@
           {
             "type": "paragraph",
             "content": "Die <strong>adesso/in|sure Ecosphere</strong> bietet eine Java-basierte, cloud-fähige Alternative. Die adesso-Tochter AFIDA betreibt eine cloudbasierte SaaS-Plattform speziell für Run-off/BPO."
+          },
+          {
+            "type": "paragraph",
+            "content": "In der Schadenbearbeitung verursacht <strong>Versicherungsbetrug</strong> geschätzt <strong>5 Mrd. € jährlich</strong>. KI-basierte Fraud Detection gewinnt rapide an Bedeutung: Die HUK-Coburg identifiziert über KI <strong>40% aller Verdachtsfälle</strong> — mit fünffach höheren Einsparungen als Personalkosten. Automatisierte Regressprüfung und KI-gestützte Schadenscanner (z.B. VHV für Hagelschäden) werden zunehmend Standard."
           }
         ],
         "level3": [
@@ -858,6 +1165,10 @@
             "type": "callout",
             "variant": "tip",
             "content": "Willis Towers Watson erwartet „mindestens eine Run-off-Transaktion pro Jahr“ in Deutschland über die nächsten 5 Jahre — ein wachsendes Beratungsfeld."
+          },
+          {
+            "type": "paragraph",
+            "content": "Deutschland hat europaweit den <strong>höchsten Bedarf an Mainframe/COBOL-Skills</strong>. Bis zu <strong>50–60% des IT-Budgets</strong> fließen in Pflege und Wartung von Altsystemen. Typische Kernsystemmigrationsprojekte dauern <strong>3–7 Jahre</strong> bei Kosten von <strong>50–200 Mio. €</strong>. Eine PwC-Studie unter 41 DACH-Versicherern zeigt: 20% bleiben bei Legacy, 22% modernisieren schrittweise, 24% tauschen komplett aus. Neun von zehn Versicherern setzen bei der Erneuerung auf <strong>Standardsoftware</strong> statt Eigenentwicklung."
           }
         ]
       },
@@ -915,6 +1226,10 @@
           {
             "type": "paragraph",
             "content": "Die deutsche <strong>InsurTech-Landschaft</strong> hat eine dramatische Bereinigung erlebt. Nach 32 Neugründungen in 2018 gab es 2024 <strong>null neue InsurTech-Gründungen</strong>."
+          },
+          {
+            "type": "paragraph",
+            "content": "Die <strong>Allianz</strong> reguliert einfache Vollkaskoschäden innerhalb eines Tages vollautomatisiert über Smartphone-Fotos. <strong>ERGO</strong> betreibt konzernweit über 120 KI-Use-Cases und setzt seit 2024 ein internes „ERGO GPT“ ein. <strong>VHV</strong> automatisiert Hagelschadenverarbeitung mittels KI-gestützter Scanner. Der <strong>EU AI Act</strong> (August 2024) stuft KI in der Lebens- und Krankenversicherung für Risikobewertung und Prämienbestimmung als <strong>Hochrisiko-Anwendung</strong> ein. McKinsey schätzt, dass bis 2030 <strong>30% der Arbeitsstunden</strong> automatisierbar und die Betriebskosten um bis zu 40% senkbar sind."
           }
         ],
         "level2": [
@@ -927,6 +1242,10 @@
             "type": "callout",
             "variant": "warning",
             "content": "Der InsurTech-Hype ist vorbei — die Überlebenden müssen Profitabilität beweisen. Die BaFin ist deutlich strenger geworden bei der Lizenzierung und Aufsicht."
+          },
+          {
+            "type": "paragraph",
+            "content": "Einige InsurTech-Lichtblicke: <strong>Clark</strong> erzielte erstmals ein positives operatives Ergebnis (Umsatz über 135 Mio. €). <strong>Getsafe</strong> schrieb 2024 als erstes deutsches InsurTech schwarze Zahlen (25,6 Mio. € Prämien). Die Konsolidierungskette Coya→Luko→Getsafe illustriert den „Winner takes all“-Trend. <strong>Embedded Insurance</strong> — die nahtlose Integration von Versicherungsschutz in Kaufprozesse — wächst zweistellig. Laut DataHorizzon Research erreicht der globale Markt 2033 <strong>512 Mrd. USD</strong> (CAGR 22,6%). In Deutschland zeigt eine Nordlight-Studie <strong>33% Akzeptanz</strong> bei Verbrauchern."
           }
         ],
         "level3": [
@@ -938,6 +1257,14 @@
           {
             "type": "paragraph",
             "content": "<strong>Parametrische Versicherungen</strong> nutzen messbare Trigger für automatische Auszahlung ohne Schadenprüfung. Relevant für Rhein-Logistik (223 Mio. Tonnen/Jahr), Dürredeckung (3.500+ Wetterstationen) und parametrische Cyber-Deckungen."
+          },
+          {
+            "type": "paragraph",
+            "content": "Der <strong>FIDA-Verordnungsentwurf</strong> der EU-Kommission (Juni 2023) erweitert das Open-Banking-Konzept auf Versicherungen: Versicherer müssen auf Kundenwunsch Drittanbietern digitalen Zugang zu Finanzdaten gewähren. Betroffen sind Non-Life (ohne Gesundheit), IBIP-Produkte und betriebliche Altersversorgung. Die Verabschiedung wird 2025/2026 erwartet, die phasenweise Umsetzung ab 2027. Die <strong>FRIDA-Initiative</strong> mit über 40 Mitgliedern (HDI, ALH Gruppe, adesso) entwickelt Open-Source-APIs als Blaupause."
+          },
+          {
+            "type": "paragraph",
+            "content": "Der deutsche <strong>Cyber-Versicherungsmarkt</strong> wuchs von 85 Mio. € (2019) auf über <strong>600 Mio. €</strong> (2024). Langfristprognosen sehen bis zu <strong>15–26 Mrd. €</strong> bis 2036 — was die Kfz-Versicherung als volumenstärkste Sparte ablösen könnte. Das systemische Kumulrisiko bleibt die größte Sorge: Der CrowdStrike-Ausfall im Juli 2024 war ein Warnsignal. Munich Re beziffert den globalen Cyber-Markt 2025 auf <strong>16,3 Mrd. USD</strong>. <strong>AXA XL</strong> bietet klimabedingte parametrische Deckungen, <strong>Descartes Underwriting</strong> startete 2024 die erste parametrische Cyber-Deckung in Deutschland."
           }
         ]
       },
@@ -1005,6 +1332,10 @@
           {
             "type": "paragraph",
             "content": "Die <strong>BaFin</strong> (Exekutivdirektorin Versicherungsaufsicht: Julia Wiens) überwacht Solvenz und Wohlverhalten. <strong>EIOPA</strong> in Frankfurt setzt als EU-Behörde die einheitliche europäische Aufsicht durch."
+          },
+          {
+            "type": "paragraph",
+            "content": "Der GDV gibt jährlich rund <strong>15 Mio. €</strong> für Lobbyarbeit aus, beschäftigt 93 Lobbyisten und war 2024 an <strong>86 Gesetzen und Verordnungen</strong> beteiligt. Tochtergesellschaften betreiben den Zentralruf der Autoversicherer, die eVB-Nummer und das Verbraucherportal dieversicherer.de. Die BaFin setzt Mystery Shopping ein (160 Testkäufe bei Restschuldversicherungen 2022) und kündigt Provisionsrichtwerte für fondsgebundene LV an. <strong>13 Lebensversicherer</strong> stehen wegen hoher Effektivkosten oder Stornoquoten unter besonderer Beobachtung."
           }
         ],
         "level2": [
@@ -1017,6 +1348,10 @@
             "type": "callout",
             "variant": "info",
             "content": "Die Vermittlerverbände AfW, BVK und BDVM vertreten unterschiedliche Interessen — besonders sichtbar in der Provisionsdeckel-Debatte, wo der BDVM überraschend einen Deckel bei 25‰ forderte."
+          },
+          {
+            "type": "paragraph",
+            "content": "<strong>EIOPA</strong> (Frankfurt, Vorsitzende Petra Hielkema) führte 2024 einen Stresstest mit 48 Unternehmen durch, darunter sieben deutsche Gruppen (Allianz, Munich Re, Talanx, R+V, Debeka, VKB, Viridium). Ergebnis: Die Branche ist insgesamt <strong>robust und gut kapitalisiert</strong>. Der separate <strong>PKV-Ombudsmann</strong> (Prof. Schlegel) erhielt 6.891 Anträge. Stärkster Beschwerden-Anstieg: Kfz-Haftpflicht (+66,7%)."
           }
         ],
         "level3": [
@@ -1028,6 +1363,10 @@
           {
             "type": "paragraph",
             "content": "Der GDV ist mit ~€15,4 Mio. Jahresbudget und 151-160 Berliner Lobbyisten einer der schlagkräftigsten Branchenverbände Deutschlands. Er setzt die Agenda bei Themen wie Elementarschadenpflicht, Digitalisierung und Nachhaltigkeitsregulierung."
+          },
+          {
+            "type": "paragraph",
+            "content": "Die <strong>Deutsche Aktuarvereinigung</strong> (6.500–6.700 Mitglieder, Vorsitzende seit 2025: Susanna Adelhardt) gibt die Höchstrechnungszins-Empfehlung ab und verantwortet die Aktuarausbildung (6 Fächer Grundwissen + 2 Spezialwissen). Unter den Vermittlerverbänden vertritt der <strong>AfW</strong> rund 40.000 Makler, der <strong>BVK</strong> fokussiert mit 12.500 Direkt- und 40.000 Organmitgliedern die AO-Interessen, und der <strong>BDVM</strong> spricht für Großmakler. Der <strong>PKV-Verband</strong> (Vorsitzender Thomas Brahm) vertritt alle privaten Krankenversicherer — 2024 mit 8,74 Mio. Vollversicherten und 50,2 Mrd. € Beiträgen."
           }
         ]
       },

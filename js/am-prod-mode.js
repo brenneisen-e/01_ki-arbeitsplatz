@@ -22,7 +22,7 @@
     // Profile data
     var PROFILE = {
         name: 'Doreen',
-        fullName: 'Doreen Duenscheude',
+        fullName: 'Doreen Duenschede',
         role: 'Portfolio Manager',
         photo: '1623835026886.jpg'
     };
@@ -643,14 +643,14 @@
 
     // Portfolio overview mock data
     var PORTFOLIO_DATA = [
-        { id: 'S0174901', name: 'AI and Robotics Equity Fund', pm: 'Doreen Duenscheude', ccy: 'USD', aum: 245600000, cashPct: 1.23, driftPct: -0.12, status: 'Trade required', orders: 12 },
-        { id: 'S0174905', name: 'Security Equity Fund', pm: 'Doreen Duenscheude', ccy: 'EUR', aum: 189300000, cashPct: 0.95, driftPct: 0.05, status: 'Active', orders: 5 },
-        { id: 'S0174903', name: 'Thematic Opportunities Equity', pm: 'Doreen Duenscheude', ccy: 'USD', aum: 312400000, cashPct: 0.73, driftPct: -0.15, status: 'PTC pending', orders: 8 },
-        { id: 'S0174931', name: 'Infrastructure Equity Fund', pm: 'Doreen Duenscheude', ccy: 'EUR', aum: 156700000, cashPct: 2.10, driftPct: 0.10, status: 'Active', orders: 0 },
-        { id: 'S0174933', name: 'Energy Evolution Fund', pm: 'Doreen Duenscheude', ccy: 'USD', aum: 98200000, cashPct: 1.87, driftPct: -0.03, status: 'Trading', orders: 3 },
-        { id: 'S0174909', name: 'Global Leaders Equity', pm: 'Doreen Duenscheude', ccy: 'CHF', aum: 421500000, cashPct: 0.85, driftPct: -0.22, status: 'SOD break', orders: 0 },
-        { id: 'S0174913', name: 'Digital Health Equity Fund', pm: 'Doreen Duenscheude', ccy: 'USD', aum: 134800000, cashPct: 1.54, driftPct: 0.08, status: 'Rebalancing', orders: 6 },
-        { id: 'S0174917', name: 'FinTech Innovation Equity', pm: 'Doreen Duenscheude', ccy: 'EUR', aum: 267900000, cashPct: 2.00, driftPct: -0.13, status: 'Active', orders: 0 }
+        { id: 'S0174901', name: 'AI and Robotics Equity Fund', pm: 'Doreen Duenschede', ccy: 'USD', aum: 245600000, cashPct: 1.23, driftPct: -0.12, status: 'Trade required', orders: 12 },
+        { id: 'S0174905', name: 'Security Equity Fund', pm: 'Doreen Duenschede', ccy: 'EUR', aum: 189300000, cashPct: 0.95, driftPct: 0.05, status: 'Active', orders: 5 },
+        { id: 'S0174903', name: 'Thematic Opportunities Equity', pm: 'Doreen Duenschede', ccy: 'USD', aum: 312400000, cashPct: 0.73, driftPct: -0.15, status: 'PTC pending', orders: 8 },
+        { id: 'S0174931', name: 'Infrastructure Equity Fund', pm: 'Doreen Duenschede', ccy: 'EUR', aum: 156700000, cashPct: 2.10, driftPct: 0.10, status: 'Active', orders: 0 },
+        { id: 'S0174933', name: 'Energy Evolution Fund', pm: 'Doreen Duenschede', ccy: 'USD', aum: 98200000, cashPct: 1.87, driftPct: -0.03, status: 'Trading', orders: 3 },
+        { id: 'S0174909', name: 'Global Leaders Equity', pm: 'Doreen Duenschede', ccy: 'CHF', aum: 421500000, cashPct: 0.85, driftPct: -0.22, status: 'SOD break', orders: 0 },
+        { id: 'S0174913', name: 'Digital Health Equity Fund', pm: 'Doreen Duenschede', ccy: 'USD', aum: 134800000, cashPct: 1.54, driftPct: 0.08, status: 'Rebalancing', orders: 6 },
+        { id: 'S0174917', name: 'FinTech Innovation Equity', pm: 'Doreen Duenschede', ccy: 'EUR', aum: 267900000, cashPct: 2.00, driftPct: -0.13, status: 'Active', orders: 0 }
     ];
 
     function renderDashboardScreen() {

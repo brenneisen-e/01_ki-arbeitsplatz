@@ -75,7 +75,7 @@ Inspiriert von A.03 KPI-Chart-Darstellung (Farben, Card-Design, Layoutstruktur).
 │                       [Profilbild rund]                          │
 │                          Welcome                                 │
 │               Monday, February 24, 2026                          │
-│         Doreen Duenscheude  [Portfolio Manager]                  │
+│         Doreen Duenschede  [Portfolio Manager]                  │
 │                                                                  │
 │  ┌──────────────┐ ┌──────────────┐ ┌──────────────┐ ┌──────────┐│
 │  │     735      │ │      5       │ │      12      │ │    8     ││
@@ -101,10 +101,10 @@ Inspiriert von A.03 KPI-Chart-Darstellung (Farben, Card-Design, Layoutstruktur).
 ```
 
 **Header:**
-- **Profilbild**: Rundes Foto von Doreen Duenscheude (56×56px, blauer Glow-Schatten)
+- **Profilbild**: Rundes Foto von Doreen Duenschede (56×56px, blauer Glow-Schatten)
 - **Titel**: "Welcome" (42px, font-weight 300, hell)
 - **Datum**: Dynamisch generiert, uppercase, Letter-Spacing
-- **User-Info**: "Doreen Duenscheude" + Badge "Portfolio Manager"
+- **User-Info**: "Doreen Duenschede" + Badge "Portfolio Manager"
 
 **4 KPI-Kacheln** (Grid 4 Spalten, Glassmorphism):
 - Live Portfolios: **735** — "+3 since yesterday"

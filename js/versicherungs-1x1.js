@@ -14,38 +14,20 @@
   var quizAnswered = {};
   var currentView = 'overview'; // 'overview' | 'chapter' | 'wissenscheck'
 
-  // Progress tracking (localStorage)
-  var STORAGE_KEY = 'v1x1_progress';
-
-  function loadProgress() {
-    try {
-      var data = localStorage.getItem(STORAGE_KEY);
-      return data ? JSON.parse(data) : { visited: [], quizScores: {} };
-    } catch (e) {
-      return { visited: [], quizScores: {} };
-    }
-  }
-
-  function saveProgress(progress) {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
-    } catch (e) { /* ignore */ }
-  }
+  // Progress tracking — per session only (resets each time the module is opened)
+  var sessionVisited = [];
 
   function markChapterVisited(chapterId) {
-    var progress = loadProgress();
-    if (progress.visited.indexOf(chapterId) === -1) {
-      progress.visited.push(chapterId);
-      saveProgress(progress);
+    if (sessionVisited.indexOf(chapterId) === -1) {
+      sessionVisited.push(chapterId);
     }
     updateProgressUI();
   }
 
   function updateProgressUI() {
     if (!moduleData) return;
-    var progress = loadProgress();
     var total = moduleData.chapters.length;
-    var visited = progress.visited.length;
+    var visited = sessionVisited.length;
     var pct = total > 0 ? Math.round((visited / total) * 100) : 0;
 
     var fill = document.getElementById('v1x1ProgressFill');
@@ -57,7 +39,7 @@
     moduleData.chapters.forEach(function(ch) {
       var item = document.querySelector('.v1x1-topnav-item[data-chapter="' + ch.id + '"]');
       if (item) {
-        if (progress.visited.indexOf(ch.id) !== -1) {
+        if (sessionVisited.indexOf(ch.id) !== -1) {
           item.classList.add('visited');
         }
       }
@@ -966,6 +948,9 @@
   }
 
   async function initModule() {
+    // Reset session progress every time the module is opened
+    sessionVisited = [];
+
     if (moduleLoaded && moduleData) {
       showOverview();
       updateProgressUI();

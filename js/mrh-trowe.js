@@ -96,7 +96,7 @@ function applyAOModus() {
 
     // Header
     var titleEl = document.getElementById('agenturPageTitle');
-    if (titleEl) titleEl.textContent = 'Agentur: Max Mustermann';
+    if (titleEl) titleEl.textContent = 'Agentur: Maria Musterfrau';
     var subtitleId = document.getElementById('agenturIdHeader');
     if (subtitleId) {
         var subtitleDiv = subtitleId.parentElement;

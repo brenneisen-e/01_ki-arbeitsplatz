@@ -373,12 +373,12 @@ ${sorted.map((a, i) => {
 • Kfz zeigt beste Verbesserung (-0.8%)`;
     }
 
-    // "Filtere nach Max Mustermann" (specific handling with real filter)
-    if (lowerMessage.includes('filtere') && (lowerMessage.includes('max') || lowerMessage.includes('mustermann'))) {
+    // "Filtere nach Maria Musterfrau" (specific handling with real filter)
+    if (lowerMessage.includes('filtere') && (lowerMessage.includes('maria') || lowerMessage.includes('musterfrau'))) {
         if (typeof setAgenturFilter === 'function') {
             setAgenturFilter('VM00001');
         }
-        return `**Filter gesetzt: Max Mustermann (VM00001)**
+        return `**Filter gesetzt: Maria Musterfrau (VM00001)**
 
 Das Dashboard zeigt jetzt die Daten für diese Agentur.
 
@@ -509,9 +509,9 @@ Die Tabelle zeigt jetzt diese Vermittler mit detaillierter KI-Analyse.
 
     // Filter commands
     if (lowerMessage.includes('filter') || lowerMessage.includes('zeig')) {
-        if (lowerMessage.includes('max') || lowerMessage.includes('mustermann')) {
+        if (lowerMessage.includes('maria') || lowerMessage.includes('musterfrau')) {
             setAgenturFilter('VM00001');
-            return `**Filter gesetzt:** Max Mustermann (VM00001)\n\nDas Dashboard zeigt jetzt nur noch Daten dieser Agentur.`;
+            return `**Filter gesetzt:** Maria Musterfrau (VM00001)\n\nDas Dashboard zeigt jetzt nur noch Daten dieser Agentur.`;
         }
         if (lowerMessage.includes('makler')) {
             setSiloFilter('Makler');
@@ -531,7 +531,7 @@ Die Tabelle zeigt jetzt diese Vermittler mit detaillierter KI-Analyse.
     }
 
     // Default response
-    return `Ich habe Ihre Frage verstanden: "${message}"\n\n**Verfügbare Abfragen:**\n• "Top 5 Vermittler nach Neugeschäft"\n• "Welches Bundesland hat die beste Performance?"\n• "Wie entwickelt sich der NPS Score?"\n• "Vergleiche Makler vs. Ausschließlichkeit"\n• "Stornoquoten nach Segment"\n• "Filtere nach Max Mustermann"`;
+    return `Ich habe Ihre Frage verstanden: "${message}"\n\n**Verfügbare Abfragen:**\n• "Top 5 Vermittler nach Neugeschäft"\n• "Welches Bundesland hat die beste Performance?"\n• "Wie entwickelt sich der NPS Score?"\n• "Vergleiche Makler vs. Ausschließlichkeit"\n• "Stornoquoten nach Segment"\n• "Filtere nach Maria Musterfrau"`;
 }
 
 // Send to API (via Worker or direct)
@@ -547,7 +547,7 @@ async function sendToClaude(message) {
 VERFÜGBARE FUNKTIONEN:
 1. setAgenturFilter(vermittler_id) - Filtert Dashboard nach Agentur
    - Verwende IMMER die Vermittler-ID (z.B. 'VM00001'), NIEMALS den Namen!
-   - Beispiel: setAgenturFilter('VM00001') für Max Mustermann
+   - Beispiel: setAgenturFilter('VM00001') für Maria Musterfrau
    - Nach dem Filtern erhältst du automatisch die gefilterten Daten zur Analyse
 
 2. setSiloFilter(silo) - Filtert nach Silo
@@ -567,12 +567,12 @@ VERFÜGBARE FUNKTIONEN:
    - Nutze diese Funktion bei Fragen wie "Zeige Top 5 Vermittler"
 
 7. showAgenturOverview(vermittler_id) - NEU! Zeigt detaillierte Agentur-Übersichtsseite
-   - Beispiel: showAgenturOverview('VM00001') für Max Mustermann
+   - Beispiel: showAgenturOverview('VM00001') für Maria Musterfrau
    - Zeigt: Stammdaten, Foto, KPI-Dashboard mit Balken, Vertragshistorie
    - Nutze diese Funktion bei Fragen wie:
-     * "Übersicht Agentur Max Mustermann"
+     * "Übersicht Agentur Maria Musterfrau"
      * "Zeige mir Details zu VM00001"
-     * "Agentur-Profil von Max Mustermann"
+     * "Agentur-Profil von Maria Musterfrau"
    - WICHTIG: Verwende IMMER die Vermittler-ID, nicht den Namen!
 
 WICHTIG beim Filtern:

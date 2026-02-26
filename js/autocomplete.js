@@ -5,7 +5,7 @@
 // ========================================
 
 const mockAgents = [
-    { id: 'VM00001', name: 'Max Mustermann' },
+    { id: 'VM00001', name: 'Maria Musterfrau' },
     { id: 'VM00002', name: 'Maria Schmidt' },
     { id: 'VM00003', name: 'Michael Weber' },
     { id: 'VM00004', name: 'Martina Fischer' },

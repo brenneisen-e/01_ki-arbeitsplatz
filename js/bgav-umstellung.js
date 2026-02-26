@@ -133,7 +133,7 @@
     const bgavState = {
         currentTab: 'simulation',
         vermittler: {
-            name: 'Maria Musterfrau',
+            name: 'Dila Yorulmaz',
             id: 'BD-VM 0055/0310',
             vpt: 'VPT9957912',
             allis: '0123456',

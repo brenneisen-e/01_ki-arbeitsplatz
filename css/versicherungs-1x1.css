@@ -94,6 +94,20 @@
   margin: 0;
 }
 
+.v1x1-header-center {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+}
+
+.v1x1-monitor-deloitte-logo {
+  height: 32px;
+  width: auto;
+  object-fit: contain;
+}
+
 .v1x1-header-right {
   display: flex;
   align-items: center;

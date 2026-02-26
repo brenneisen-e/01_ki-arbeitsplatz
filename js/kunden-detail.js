@@ -270,7 +270,7 @@ function updateKundenSharedHeader(kundenName, vermittlerId) {
     if (sourceImg && sourceImg.src && sourceImg.style.display !== 'none') {
         photoSrc = sourceImg.src;
     } else {
-        photoSrc = localStorage.getItem('agenturPhoto') || 'assets/images/maria-musterfrau.png';
+        photoSrc = localStorage.getItem('agenturPhoto') || 'assets/images/1598528971693.jpg';
     }
 
     if (targetImg && photoSrc) {

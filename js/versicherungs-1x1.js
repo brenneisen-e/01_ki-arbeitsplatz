@@ -364,19 +364,20 @@
   }
 
   function renderTable(block) {
+    var headers = block.headers || block.columns || [];
     var html = '<div class="v1x1-table-wrapper">';
-    if (block.title) {
-      html += '<div class="v1x1-table-title">' + escapeHtml(block.title) + '</div>';
+    if (block.title || block.caption) {
+      html += '<div class="v1x1-table-title">' + escapeHtml(block.title || block.caption) + '</div>';
     }
     html += '<table class="v1x1-table">';
     html += '<thead><tr>';
-    block.headers.forEach(function(h) {
+    headers.forEach(function(h) {
       var cls = block.sortable ? ' class="sortable"' : '';
       html += '<th' + cls + '>' + escapeHtml(h) + '</th>';
     });
     html += '</tr></thead>';
     html += '<tbody>';
-    block.rows.forEach(function(row) {
+    (block.rows || []).forEach(function(row) {
       html += '<tr>';
       row.forEach(function(cell) {
         html += '<td>' + escapeHtml(cell) + '</td>';

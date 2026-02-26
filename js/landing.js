@@ -4166,3 +4166,80 @@ function filterPotentials(productId) {
 window.togglePotentialGroup = togglePotentialGroup;
 
 // ========================================
+// VERSICHERUNGS-1×1 MODULE
+// ========================================
+
+let versicherungs1x1Loaded = false;
+
+async function openVersicherungs1x1() {
+    console.log('Versicherungs-1×1 öffnen...');
+
+    // Hide landing page
+    const landingPage = document.getElementById('landingPage');
+    if (landingPage) landingPage.style.display = 'none';
+
+    // Hide main app if visible
+    const mainApp = document.getElementById('mainApp');
+    if (mainApp) mainApp.style.display = 'none';
+
+    // Hide other modules
+    ['bankenModule', 'assetModule', 'cvScannerModule', 'risikoscoringModule',
+     'bestandsuebertragungModule', 'pmoToolboxModule', 'hrPipelineModule'].forEach(function(id) {
+        const el = document.getElementById(id);
+        if (el) el.style.display = 'none';
+    });
+
+    // Show versicherungs-1x1 module
+    const v1x1Module = document.getElementById('versicherungs1x1Module');
+    if (v1x1Module) {
+        v1x1Module.style.display = 'block';
+
+        // Load content if not already loaded
+        if (!versicherungs1x1Loaded) {
+            try {
+                const response = await fetch('partials/versicherungs-1x1-module.html');
+                if (response.ok) {
+                    const html = await response.text();
+                    v1x1Module.innerHTML = html;
+                    versicherungs1x1Loaded = true;
+
+                    // Initialize the module
+                    if (typeof V1x1 !== 'undefined' && V1x1.init) {
+                        V1x1.init();
+                    }
+                    console.log('Versicherungs-1×1 Modul geladen');
+                } else {
+                    v1x1Module.innerHTML = '<div class="error-message">Fehler beim Laden des Versicherungs-1×1-Moduls</div>';
+                }
+            } catch (error) {
+                console.error('Error loading Versicherungs-1×1 module:', error);
+                v1x1Module.innerHTML = '<div class="error-message">Fehler beim Laden des Versicherungs-1×1-Moduls</div>';
+            }
+        } else {
+            // Module already loaded — re-init display
+            if (typeof V1x1 !== 'undefined' && V1x1.init) {
+                V1x1.init();
+            }
+        }
+    }
+
+    // Update URL route
+    if (window.AppRouter) AppRouter.navigate('/versicherungs-1x1');
+}
+
+function closeVersicherungs1x1() {
+    console.log('Versicherungs-1×1 schließen...');
+
+    // Hide versicherungs-1x1 module
+    const v1x1Module = document.getElementById('versicherungs1x1Module');
+    if (v1x1Module) v1x1Module.style.display = 'none';
+
+    // Show landing page (use flex for proper centering)
+    const landingPage = document.getElementById('landingPage');
+    if (landingPage) landingPage.style.display = 'flex';
+
+    // Update URL route
+    if (window.AppRouter) AppRouter.navigate('/landing');
+}
+
+// ========================================

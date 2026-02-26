@@ -71,7 +71,7 @@ const DemoData = (function() {
                 pvValidated: daysAgo(35),
                 exported: daysAgo(25)
             },
-            exported: { date: daysAgo(25), by: "Maria Musterfrau" },
+            exported: { date: daysAgo(25), by: "Dila Yorulmaz" },
             messages: [
                 {
                     entryID: 'msg-001-a',
@@ -1334,7 +1334,7 @@ Versicherungsmaklerin`
                 date: daysAgo(0),
                 type: 'import',
                 count: 6,
-                user: 'Maria Musterfrau'
+                user: 'Dila Yorulmaz'
             },
             {
                 date: daysAgo(15),
@@ -1346,7 +1346,7 @@ Versicherungsmaklerin`
                 date: daysAgo(30),
                 type: 'import',
                 count: 20,
-                user: 'Maria Musterfrau'
+                user: 'Dila Yorulmaz'
             }
         ];
     }

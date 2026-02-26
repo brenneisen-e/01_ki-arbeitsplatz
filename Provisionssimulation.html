@@ -835,7 +835,7 @@
                 <div class="form-group">
                     <label>Vermittler auswählen</label>
                     <select id="vermittlerSelect" onchange="updateVermittlerData()">
-                        <option value="1">Maria Musterfrau 🟢 (Neugeschäft-Champion)</option>
+                        <option value="1">Dila Yorulmaz 🟢 (Neugeschäft-Champion)</option>
                         <option value="2">Anna Schmidt 🟢 (Wachstums-Vermittler)</option>
                         <option value="3">Peter Klein 🟢 (Starter mit Dynamik)</option>
                         <option value="4">Thomas Weber 🔴 (Bestandsmanager)</option>
@@ -1826,7 +1826,7 @@
         // Mock Data - Angepasst für realistische Excel-basierte Provisionssätze
         const vermittlerData = {
             1: { 
-                name: "Maria Musterfrau", 
+                name: "Dila Yorulmaz", 
                 klasse: "Groß", 
                 neuLeben: 450000,      
                 neuKranken: 280000, 
@@ -1881,11 +1881,11 @@
         function generateAllVermittler() {
             const vermittler = [];
             
-            // 40x Maria Musterfrau (Neugeschäft-Champion)
+            // 40x Dila Yorulmaz (Neugeschäft-Champion)
             for (let i = 0; i < 40; i++) {
                 vermittler.push({
                     id: `max_${i}`,
-                    name: 'Maria Musterfrau',
+                    name: 'Dila Yorulmaz',
                     klasse: 'gross',
                     neuLeben: 450000,
                     neuKranken: 280000,

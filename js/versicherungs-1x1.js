@@ -12,6 +12,7 @@
   var currentChapter = null;
   var currentQuizIndex = 0;
   var quizAnswered = {};
+  var currentView = 'overview'; // 'overview' | 'chapter' | 'wissenscheck'
 
   // Progress tracking (localStorage)
   var STORAGE_KEY = 'v1x1_progress';
@@ -52,9 +53,9 @@
     if (fill) fill.style.width = pct + '%';
     if (value) value.textContent = pct + '%';
 
-    // Update sidebar visited dots
+    // Update topnav visited dots
     moduleData.chapters.forEach(function(ch) {
-      var item = document.querySelector('[data-chapter="' + ch.id + '"]');
+      var item = document.querySelector('.v1x1-topnav-item[data-chapter="' + ch.id + '"]');
       if (item) {
         if (progress.visited.indexOf(ch.id) !== -1) {
           item.classList.add('visited');
@@ -67,15 +68,15 @@
   // SVG ICONS (Lucide-style, inline)
   // ========================================
   var icons = {
-    'bar-chart-3': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="18" height="18"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>',
-    'building-2': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="18" height="18"><path d="M6 22V4a2 2 0 012-2h8a2 2 0 012 2v18Z"/><path d="M6 12H4a2 2 0 00-2 2v6a2 2 0 002 2h2"/><path d="M18 9h2a2 2 0 012 2v9a2 2 0 01-2 2h-2"/><path d="M10 6h4"/><path d="M10 10h4"/><path d="M10 14h4"/><path d="M10 18h4"/></svg>',
-    'shield-check': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="18" height="18"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>',
-    'network': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="18" height="18"><rect x="16" y="16" width="6" height="6" rx="1"/><rect x="2" y="16" width="6" height="6" rx="1"/><rect x="9" y="2" width="6" height="6" rx="1"/><path d="M5 16v-3a1 1 0 011-1h12a1 1 0 011 1v3"/><path d="M12 12V8"/></svg>',
-    'banknote': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="18" height="18"><rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg>',
-    'scale': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="18" height="18"><path d="M8 21h8"/><path d="M12 17V3"/><path d="M2 11l4-7 4 7"/><path d="M14 11l4-7 4 7"/></svg>',
-    'settings-2': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="18" height="18"><path d="M20 7h-9"/><path d="M14 17H5"/><circle cx="17" cy="17" r="3"/><circle cx="7" cy="7" r="3"/></svg>',
-    'rocket': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="18" height="18"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 00-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 012-3.95A12.88 12.88 0 0122 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 01-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg>',
-    'landmark': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="18" height="18"><line x1="3" x2="21" y1="22" y2="22"/><line x1="6" x2="6" y1="18" y2="11"/><line x1="10" x2="10" y1="18" y2="11"/><line x1="14" x2="14" y1="18" y2="11"/><line x1="18" x2="18" y1="18" y2="11"/><polygon points="12 2 20 7 4 7"/></svg>',
+    'bar-chart-3': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>',
+    'building-2': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><path d="M6 22V4a2 2 0 012-2h8a2 2 0 012 2v18Z"/><path d="M6 12H4a2 2 0 00-2 2v6a2 2 0 002 2h2"/><path d="M18 9h2a2 2 0 012 2v9a2 2 0 01-2 2h-2"/><path d="M10 6h4"/><path d="M10 10h4"/><path d="M10 14h4"/><path d="M10 18h4"/></svg>',
+    'shield-check': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>',
+    'network': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><rect x="16" y="16" width="6" height="6" rx="1"/><rect x="2" y="16" width="6" height="6" rx="1"/><rect x="9" y="2" width="6" height="6" rx="1"/><path d="M5 16v-3a1 1 0 011-1h12a1 1 0 011 1v3"/><path d="M12 12V8"/></svg>',
+    'banknote': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg>',
+    'scale': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><path d="M8 21h8"/><path d="M12 17V3"/><path d="M2 11l4-7 4 7"/><path d="M14 11l4-7 4 7"/></svg>',
+    'settings-2': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><path d="M20 7h-9"/><path d="M14 17H5"/><circle cx="17" cy="17" r="3"/><circle cx="7" cy="7" r="3"/></svg>',
+    'rocket': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 00-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 012-3.95A12.88 12.88 0 0122 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 01-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg>',
+    'landmark': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><line x1="3" x2="21" y1="22" y2="22"/><line x1="6" x2="6" y1="18" y2="11"/><line x1="10" x2="10" y1="18" y2="11"/><line x1="14" x2="14" y1="18" y2="11"/><line x1="18" x2="18" y1="18" y2="11"/><polygon points="12 2 20 7 4 7"/></svg>',
     'chevron-down': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="6 9 12 15 18 9"></polyline></svg>',
     'chevron-left': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="15 18 9 12 15 6"></polyline></svg>',
     'chevron-right': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="9 18 15 12 9 6"></polyline></svg>',
@@ -96,24 +97,38 @@
   }
 
   // ========================================
-  // RENDER FUNCTIONS
+  // TOP NAVIGATION
   // ========================================
 
-  function renderSidebar() {
-    var container = document.getElementById('v1x1SidebarChapters');
+  function setActiveNav(target) {
+    var items = document.querySelectorAll('.v1x1-topnav-item');
+    items.forEach(function(item) {
+      item.classList.remove('active');
+      if (item.getAttribute('data-target') === target || item.getAttribute('data-chapter') === target) {
+        item.classList.add('active');
+      }
+    });
+  }
+
+  function renderTopNav() {
+    var container = document.getElementById('v1x1TopNavChapters');
     if (!container || !moduleData) return;
 
     var html = '';
     moduleData.chapters.forEach(function(ch, i) {
       var num = String(i + 1).padStart(2, '0');
-      html += '<button class="v1x1-sidebar-item" data-chapter="' + ch.id + '" onclick="V1x1.openChapter(\'' + ch.id + '\')">';
-      html += '<span class="v1x1-sidebar-item-icon">' + getIcon(ch.icon) + '</span>';
-      html += '<span>' + ch.title + '</span>';
-      html += '<span class="v1x1-visited-dot"></span>';
+      html += '<button class="v1x1-topnav-item" data-chapter="' + ch.id + '" onclick="V1x1.openChapter(\'' + ch.id + '\')">';
+      html += '<span class="v1x1-topnav-icon">' + getIcon(ch.icon) + '</span>';
+      html += '<span class="v1x1-topnav-label">' + num + '. ' + ch.title + '</span>';
+      html += '<span class="v1x1-topnav-dot"></span>';
       html += '</button>';
     });
     container.innerHTML = html;
   }
+
+  // ========================================
+  // RENDER FUNCTIONS
+  // ========================================
 
   function renderChapterGrid() {
     var container = document.getElementById('v1x1ChapterGrid');
@@ -164,7 +179,7 @@
   }
 
   // ========================================
-  // CHAPTER RENDERING
+  // CHAPTER RENDERING (without quiz)
   // ========================================
 
   function openChapter(chapterId) {
@@ -182,20 +197,13 @@
     if (!chapter) return;
 
     currentChapter = chapter;
-    currentQuizIndex = 0;
-    quizAnswered = {};
+    currentView = 'chapter';
 
     // Mark as visited
     markChapterVisited(chapterId);
 
-    // Update sidebar active
-    var sidebarItems = document.querySelectorAll('.v1x1-sidebar-item');
-    sidebarItems.forEach(function(item) {
-      item.classList.remove('active');
-      if (item.getAttribute('data-chapter') === chapterId) {
-        item.classList.add('active');
-      }
-    });
+    // Update top nav active state
+    setActiveNav(chapterId);
 
     // Render chapter content
     var contentInner = document.getElementById('v1x1ContentInner');
@@ -293,12 +301,7 @@
       html += '</div>';
     }
 
-    // Quiz
-    if (chapter.quiz && chapter.quiz.length) {
-      html += '<div class="v1x1-quiz" id="v1x1Quiz">';
-      html += renderQuiz(chapter.quiz, 0);
-      html += '</div>';
-    }
+    // NO quiz here — it's in the Wissenscheck tab now
 
     // Chapter Navigation (Prev/Next)
     html += renderChapterNav(chapterIndex);
@@ -337,12 +340,6 @@
     // Init market bars if present
     if (chapter.id === '02-marktteilnehmer') {
       setTimeout(animateMarketBars, 300);
-    }
-
-    // Close mobile sidebar if open
-    var sidebar = document.getElementById('v1x1Sidebar');
-    if (sidebar && sidebar.classList.contains('open')) {
-      toggleSidebar();
     }
   }
 
@@ -550,7 +547,84 @@
   }
 
   // ========================================
-  // QUIZ
+  // WISSENSCHECK (separate tab)
+  // ========================================
+
+  var wissencheckChapterIndex = 0;
+
+  function openWissencheck() {
+    if (!moduleData) return;
+    currentView = 'wissenscheck';
+    currentChapter = null;
+    currentQuizIndex = 0;
+    quizAnswered = {};
+    wissencheckChapterIndex = 0;
+
+    setActiveNav('wissenscheck');
+
+    var contentInner = document.getElementById('v1x1ContentInner');
+    if (!contentInner) return;
+
+    renderWissencheckView(contentInner);
+
+    var content = document.getElementById('v1x1Content');
+    if (content) content.scrollTop = 0;
+  }
+
+  function renderWissencheckView(container) {
+    var html = '<div class="v1x1-wissenscheck">';
+
+    html += '<div class="v1x1-wissenscheck-header">';
+    html += '<h2 class="v1x1-wissenscheck-title">';
+    html += '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>';
+    html += ' Wissenscheck';
+    html += '</h2>';
+    html += '<p class="v1x1-wissenscheck-subtitle">Teste dein Wissen zu allen Kapiteln</p>';
+    html += '</div>';
+
+    // Chapter selector cards
+    html += '<div class="v1x1-wissenscheck-chapters">';
+    moduleData.chapters.forEach(function(ch, i) {
+      var hasQuiz = ch.quiz && ch.quiz.length > 0;
+      var num = String(i + 1).padStart(2, '0');
+      var cls = 'v1x1-wissenscheck-card' + (hasQuiz ? '' : ' disabled') + (i === wissencheckChapterIndex ? ' active' : '');
+      html += '<button class="' + cls + '" ' + (hasQuiz ? 'onclick="V1x1.selectWissencheckChapter(' + i + ')"' : '') + '>';
+      html += '<span class="v1x1-wissenscheck-card-icon">' + getIcon(ch.icon) + '</span>';
+      html += '<span class="v1x1-wissenscheck-card-label">' + num + '. ' + escapeHtml(ch.title) + '</span>';
+      if (hasQuiz) {
+        html += '<span class="v1x1-wissenscheck-card-count">' + ch.quiz.length + ' Fragen</span>';
+      } else {
+        html += '<span class="v1x1-wissenscheck-card-count">Keine Fragen</span>';
+      }
+      html += '</button>';
+    });
+    html += '</div>';
+
+    // Quiz area
+    var selectedChapter = moduleData.chapters[wissencheckChapterIndex];
+    if (selectedChapter && selectedChapter.quiz && selectedChapter.quiz.length > 0) {
+      html += '<div class="v1x1-wissenscheck-quiz" id="v1x1WissencheckQuiz">';
+      html += renderQuiz(selectedChapter.quiz, 0);
+      html += '</div>';
+    }
+
+    html += '</div>';
+    container.innerHTML = html;
+  }
+
+  function selectWissencheckChapter(index) {
+    wissencheckChapterIndex = index;
+    currentQuizIndex = 0;
+    quizAnswered = {};
+
+    var contentInner = document.getElementById('v1x1ContentInner');
+    if (contentInner) {
+      renderWissencheckView(contentInner);
+    }
+  }
+
+  // ========================================
+  // QUIZ RENDERING
   // ========================================
 
   function renderQuiz(questions, index) {
@@ -613,10 +687,11 @@
 
     // Show explanation
     var feedback = document.getElementById('v1x1QuizFeedback');
-    if (feedback && currentChapter && currentChapter.quiz && currentChapter.quiz[currentQuizIndex]) {
-      var q = currentChapter.quiz[currentQuizIndex];
+    var quizChapter = moduleData.chapters[wissencheckChapterIndex];
+    if (feedback && quizChapter && quizChapter.quiz && quizChapter.quiz[currentQuizIndex]) {
+      var q = quizChapter.quiz[currentQuizIndex];
       var html = '<div class="v1x1-quiz-explanation">' + escapeHtml(q.explanation) + '</div>';
-      if (currentQuizIndex < currentChapter.quiz.length - 1) {
+      if (currentQuizIndex < quizChapter.quiz.length - 1) {
         html += '<button class="v1x1-quiz-next-btn" onclick="V1x1.nextQuizQuestion()">Nächste Frage ' + getIcon('chevron-right') + '</button>';
       } else {
         html += '<button class="v1x1-quiz-next-btn" onclick="V1x1.nextQuizQuestion()">Ergebnis anzeigen ' + getIcon('chevron-right') + '</button>';
@@ -627,18 +702,20 @@
 
   function nextQuizQuestion() {
     currentQuizIndex++;
-    var quizContainer = document.getElementById('v1x1Quiz');
-    if (quizContainer && currentChapter && currentChapter.quiz) {
-      quizContainer.innerHTML = renderQuiz(currentChapter.quiz, currentQuizIndex);
+    var quizContainer = document.getElementById('v1x1WissencheckQuiz');
+    var quizChapter = moduleData.chapters[wissencheckChapterIndex];
+    if (quizContainer && quizChapter && quizChapter.quiz) {
+      quizContainer.innerHTML = renderQuiz(quizChapter.quiz, currentQuizIndex);
     }
   }
 
   function restartQuiz() {
     currentQuizIndex = 0;
     quizAnswered = {};
-    var quizContainer = document.getElementById('v1x1Quiz');
-    if (quizContainer && currentChapter && currentChapter.quiz) {
-      quizContainer.innerHTML = renderQuiz(currentChapter.quiz, 0);
+    var quizContainer = document.getElementById('v1x1WissencheckQuiz');
+    var quizChapter = moduleData.chapters[wissencheckChapterIndex];
+    if (quizContainer && quizChapter && quizChapter.quiz) {
+      quizContainer.innerHTML = renderQuiz(quizChapter.quiz, 0);
     }
   }
 
@@ -686,7 +763,6 @@
     body.classList.toggle('open');
     if (body.classList.contains('open')) {
       initScrollReveal();
-      // Update level indicator
       var dots = document.querySelectorAll('.v1x1-level-dot');
       if (dots.length >= 2) dots[1].classList.add('active-2');
     }
@@ -702,19 +778,6 @@
       var dots = document.querySelectorAll('.v1x1-level-dot');
       if (dots.length >= 3) dots[2].classList.add('active-3');
     }
-  }
-
-  // ========================================
-  // SIDEBAR TOGGLE (Mobile)
-  // ========================================
-
-  function toggleSidebar() {
-    var sidebar = document.getElementById('v1x1Sidebar');
-    var backdrop = document.getElementById('v1x1SidebarBackdrop');
-    if (!sidebar) return;
-    var isOpen = sidebar.classList.contains('open');
-    sidebar.classList.toggle('open');
-    if (backdrop) backdrop.style.display = isOpen ? 'none' : 'block';
   }
 
   // ========================================
@@ -877,6 +940,9 @@
 
   function showOverview() {
     currentChapter = null;
+    currentView = 'overview';
+    setActiveNav('overview');
+
     var contentInner = document.getElementById('v1x1ContentInner');
     if (!contentInner) return;
 
@@ -896,10 +962,6 @@
 
     renderChapterGrid();
     renderWelcomeCountUp();
-
-    // Clear sidebar active
-    var sidebarItems = document.querySelectorAll('.v1x1-sidebar-item');
-    sidebarItems.forEach(function(item) { item.classList.remove('active'); });
   }
 
   async function initModule() {
@@ -916,7 +978,7 @@
       moduleLoaded = true;
       console.log('Versicherungs-1×1: Data loaded', moduleData.chapters.length, 'chapters');
 
-      renderSidebar();
+      renderTopNav();
       renderChapterGrid();
       renderWelcomeCountUp();
       updateProgressUI();
@@ -940,9 +1002,10 @@
     init: initModule,
     openChapter: openChapter,
     showOverview: showOverview,
+    openWissencheck: openWissencheck,
+    selectWissencheckChapter: selectWissencheckChapter,
     toggleLevel2: toggleLevel2,
     toggleLevel3: toggleLevel3,
-    toggleSidebar: toggleSidebar,
     showGlossary: showGlossary,
     closeGlossary: closeGlossary,
     answerQuiz: answerQuiz,

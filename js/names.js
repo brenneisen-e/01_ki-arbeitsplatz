@@ -51,8 +51,8 @@ function generateRandomName() {
 function generateUniqueNames(count) {
     const names = new Set();
 
-    // Maria Musterfrau als ersten Namen hinzufügen
-    names.add('Maria Musterfrau');
+    // Dila Yorulmaz als ersten Namen hinzufügen
+    names.add('Dila Yorulmaz');
 
     // Weitere Namen generieren bis wir die gewünschte Anzahl haben
     let attempts = 0;

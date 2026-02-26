@@ -93,7 +93,7 @@ function applyMaklerModus() {
     // Header title
     var titleEl = document.getElementById('agenturPageTitle');
     if (titleEl) {
-        titleEl.textContent = maklerModus ? 'GS NRW' : 'Agentur: Max Mustermann';
+        titleEl.textContent = maklerModus ? 'GS NRW' : 'Agentur: Maria Musterfrau';
     }
     var subtitleId = document.getElementById('agenturIdHeader');
     if (subtitleId) {

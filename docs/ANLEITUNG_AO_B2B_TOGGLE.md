@@ -17,7 +17,7 @@ Ganz rechts im Header-Bereich der A-02-Seite. Er zeigt den aktuellen Modus als L
 
 | Bereich | Privatkunde (AO) | Makler (B2B) |
 |---|---|---|
-| **Header** | "Agentur: Max Mustermann" / VM00001 | "GS NRW" / Ecclesia Gruppe |
+| **Header** | "Agentur: Maria Musterfrau" / VM00001 | "GS NRW" / Ecclesia Gruppe |
 | **Foto** | Personen-Avatar | Gebäude-Icon |
 | **KPIs** | Gesamtbestand, Neugeschäft YTD, Storno-Quote, Zielerreichung | Bestandsprämie 68,5 Mio., Neugeschäft, Courtage, Retention, Schadenquote |
 | **Tabs** | Übersicht, Stammdaten, Neugeschäft, Bestand, **Storno, Vergütung, Qualität** \| Kunden, Potentiale | Übersicht, Stammdaten, Neugeschäft, Bestand, **Versicherer-Mix, Renewals, Schäden, Deckungslücken** \| Kunden, Potentiale |

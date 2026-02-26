@@ -4,7 +4,7 @@
 // DEMO-DATEN FÜR ABSCHLÜSSE
 // ========================================
 
-// Demo-Abschlüsse für Max Mustermann (VM00001)
+// Demo-Abschlüsse für Maria Musterfrau (VM00001)
 const demoAbschluesse = [
     {
         id: 'AB-2026-001',

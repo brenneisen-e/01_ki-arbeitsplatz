@@ -139,8 +139,8 @@ function fillHeader(agentur, agenturData) {
     if (idHeader) idHeader.textContent = agentur.id;
     if (statusHeader) statusHeader.textContent = 'Aktiv';
 
-    // Standard-Profilbild für Max Mustermann (lokal + GitHub-Fallback)
-    const defaultPhoto = 'assets/images/AdobeStock_1091012713.jpeg';
+    // Standard-Profilbild für Maria Musterfrau
+    const defaultPhoto = 'assets/images/maria-musterfrau.png';
 
     // Restore photo container if B2B/MRH replaced it with an icon
     const photoContainer = document.getElementById('agenturPhotoSmall');

@@ -706,11 +706,11 @@ function openKundenDetailDualView(kundenName, vermittlerId) {
         previousViewBeforeKundenDetail = 'landing';
     }
 
-    // Sicherstellen, dass der A-02 Header "Max Mustermann" zeigt (nicht Makler-Header),
+    // Sicherstellen, dass der A-02 Header "Maria Musterfrau" zeigt (nicht Makler-Header),
     // da updateKundenSharedHeader() diese Werte auf A-10 kopiert.
     var titleEl = document.getElementById('agenturPageTitle');
     var subtitleId = document.getElementById('agenturIdHeader');
-    if (titleEl) titleEl.textContent = 'Agentur: Max Mustermann';
+    if (titleEl) titleEl.textContent = 'Agentur: Maria Musterfrau';
     if (subtitleId) {
         var subtitleDiv = subtitleId.parentElement;
         if (subtitleDiv) {
@@ -847,7 +847,7 @@ async function sendLandingMessageToClaude(message) {
 VERFÜGBARE FUNKTIONEN:
 1. setAgenturFilter(vermittler_id) - Filtert Dashboard nach Agentur
    - Verwende IMMER die Vermittler-ID (z.B. 'VM00001'), NIEMALS den Namen!
-   - Beispiel: setAgenturFilter('VM00001') für Max Mustermann
+   - Beispiel: setAgenturFilter('VM00001') für Maria Musterfrau
 
 2. setSiloFilter(silo) - Filtert nach Silo
    - Gültige Werte: 'Ausschließlichkeit', 'Makler', 'Direktvertrieb', 'Banken'
@@ -860,9 +860,9 @@ VERFÜGBARE FUNKTIONEN:
 5. clearAllFilters() - Setzt alle Filter zurück
 
 6. showAgenturOverview(vermittler_id) - Zeigt detaillierte Agentur-Übersichtsseite
-   - Beispiel: showAgenturOverview('VM00001') für Max Mustermann
+   - Beispiel: showAgenturOverview('VM00001') für Maria Musterfrau
    - Zeigt: Stammdaten, Foto, KPI-Dashboard mit Balken, Vertragshistorie
-   - Nutze diese Funktion bei Fragen wie "Übersicht Agentur Max Mustermann"
+   - Nutze diese Funktion bei Fragen wie "Übersicht Agentur Maria Musterfrau"
    - WICHTIG: Verwende IMMER die Vermittler-ID, nicht den Namen!
 
 WICHTIG:
@@ -1001,7 +1001,7 @@ function generateLandingMockResponse(message) {
         (lowerMessage.includes('potentiale') && !lowerMessage.includes('option')) ||
         (lowerMessage.includes('potenziale') && !lowerMessage.includes('option'))) {
 
-        const userName = localStorage.getItem('userName') || 'Max';
+        const userName = localStorage.getItem('userName') || 'Maria';
         return `Hallo ${userName}, sehr gerne. Ich habe folgende Vertriebspotentiale identifiziert:
 <div class="chat-potentiale-list"><div class="chat-potentiale-item"><div class="kunde-info"><div class="kunde-avatar">PS</div><div class="kunde-details"><span class="kunde-name">Peter Schmidt</span><span class="kunde-potential multiple">Mehrere Potentiale erkannt</span><span class="kunde-desc">KFZ, BU & Hausrat – Vertragslücken identifiziert</span></div></div><button class="kunde-btn" onclick="openKundenDetailDualView('Peter Schmidt', 'KD00001')">Zum Kunden</button></div><div class="chat-potentiale-item"><div class="kunde-info"><div class="kunde-avatar">AM</div><div class="kunde-details"><span class="kunde-name">Anna Müller</span><span class="kunde-potential">Kfz-Versicherung – Wechselpotential</span><span class="kunde-desc">Vertrag läuft 12/2026 aus, Angebot erstellen</span></div></div><button class="kunde-btn" onclick="openKundenDetailDualView('Anna Müller', 'KD00042')">Zum Kunden</button></div><div class="chat-potentiale-item"><div class="kunde-info"><div class="kunde-avatar">TW</div><div class="kunde-details"><span class="kunde-name">Thomas Weber</span><span class="kunde-potential">BU-Versicherung – Deckungslücke</span><span class="kunde-desc">Aktuelle Absicherung deckt nur 60% des Nettoeinkommens</span></div></div><button class="kunde-btn" onclick="openKundenDetailDualView('Thomas Weber', 'KD00087')">Zum Kunden</button></div><div class="chat-potentiale-item"><div class="kunde-info"><div class="kunde-avatar">SK</div><div class="kunde-details"><span class="kunde-name">Sandra Koch</span><span class="kunde-potential">Hausratversicherung – Cross-Selling</span><span class="kunde-desc">Bestandskundin Leben, kein Sachvertrag vorhanden</span></div></div><button class="kunde-btn" onclick="openKundenDetailDualView('Sandra Koch', 'KD00023')">Zum Kunden</button></div><div class="chat-potentiale-item"><div class="kunde-info"><div class="kunde-avatar">MF</div><div class="kunde-details"><span class="kunde-name">Michael Fischer</span><span class="kunde-potential">Altersvorsorge – Nachholbedarf</span><span class="kunde-desc">38 Jahre, keine private Altersvorsorge, hohe Sparquote</span></div></div><button class="kunde-btn" onclick="openKundenDetailDualView('Michael Fischer', 'KD00056')">Zum Kunden</button></div></div>
 Klicke auf **"Zum Kunden"** um die Details und Potentiale einzusehen.`;
@@ -3173,7 +3173,7 @@ function generateFallbackDemoCSV() {
     ];
 
     const namen = [
-        'Max Mustermann', 'Emma Ludwig', 'Thomas Schneider', 'Anna Fischer',
+        'Maria Musterfrau', 'Emma Ludwig', 'Thomas Schneider', 'Anna Fischer',
         'Michael Weber', 'Sophie Wagner', 'Andreas Becker', 'Laura Hoffmann',
         'Stefan Schulz', 'Marie Koch', 'Christian Werner', 'Julia Braun',
         'Markus Lehmann', 'Katharina Schmitt', 'Daniel Krüger', 'Lisa Hartmann',
@@ -3760,8 +3760,8 @@ async function loadSavedImages() {
             photoImg.style.display = 'block';
             if (photoPlaceholder) photoPlaceholder.style.display = 'none';
         } else {
-            // Fallback: Standard-Profilbild für Max Mustermann
-            photoImg.src = 'assets/images/AdobeStock_1091012713.jpeg';
+            // Fallback: Standard-Profilbild für Maria Musterfrau
+            photoImg.src = 'assets/images/maria-musterfrau.png';
             photoImg.style.display = 'block';
             if (photoPlaceholder) photoPlaceholder.style.display = 'none';
         }
@@ -3781,8 +3781,8 @@ async function loadSavedImages() {
             photoImgSmall.style.display = 'block';
             if (photoPlaceholderSmall) photoPlaceholderSmall.style.display = 'none';
         } else {
-            // Fallback: Standard-Profilbild für Max Mustermann
-            photoImgSmall.src = 'assets/images/AdobeStock_1091012713.jpeg';
+            // Fallback: Standard-Profilbild für Maria Musterfrau
+            photoImgSmall.src = 'assets/images/maria-musterfrau.png';
             photoImgSmall.style.display = 'block';
             if (photoPlaceholderSmall) photoPlaceholderSmall.style.display = 'none';
         }

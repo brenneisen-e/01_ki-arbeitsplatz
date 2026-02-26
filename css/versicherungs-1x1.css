@@ -234,6 +234,10 @@
   box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 }
 
+.v1x1-topnav-chapters {
+  display: contents;
+}
+
 .v1x1-topnav-scroll {
   display: flex;
   align-items: center;

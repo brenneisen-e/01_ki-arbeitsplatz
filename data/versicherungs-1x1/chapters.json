@@ -494,7 +494,7 @@
       },
       "quickStats": [
         {
-          "value": 8.79,
+          "value": 8.74,
           "label": "PKV-Vollversicherte",
           "unit": "Mio."
         },
@@ -513,7 +513,7 @@
         "level1": [
           {
             "type": "paragraph",
-            "content": "Der deutsche Versicherungsmarkt ist mit <strong>238 Mrd. € Beitragseinnahmen</strong> (2024) und rund <strong>488 Millionen Verträgen</strong> der sechstgrößte Erstversicherungsmarkt weltweit und der zweitgrößte Rückversicherungsstandort. Die Branche beschäftigt knapp 474.000 Menschen und verwaltet Kapitalanlagen von <strong>1,86 Billionen Euro</strong>. Dieser Report liefert einen systematischen Überblick über sämtliche Versicherungssparten und -produkte des deutschen Markts – von klassischer Lebensversicherung über Cyber-Policen bis zu parametrischen Innovationen – inklusive aktueller Marktdaten, Tarifmerkmale und regulatorischer Rahmenbedingungen."
+            "content": "Der deutsche Versicherungsmarkt ist mit <strong>238 Mrd. € Beitragseinnahmen</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">1</span><span class=\"v1x1-cite-tooltip\">GDV Jahrbuch 2024, S. 8</span></span> (2024) und rund <strong>488 Millionen Verträgen</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">2</span><span class=\"v1x1-cite-tooltip\">GDV Statistisches Taschenbuch 2024/2025</span></span> der sechstgrößte Erstversicherungsmarkt weltweit und der zweitgrößte Rückversicherungsstandort. Die Branche beschäftigt knapp 474.000 Menschen und verwaltet Kapitalanlagen von <strong>1,86 Billionen Euro</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">3</span><span class=\"v1x1-cite-tooltip\">BaFin Jahresbericht 2024, Kapitalanlagen</span></span>. Dieser Report liefert einen systematischen Überblick über sämtliche Versicherungssparten und -produkte des deutschen Markts – von klassischer Lebensversicherung über Cyber-Policen bis zu parametrischen Innovationen – inklusive aktueller Marktdaten, Tarifmerkmale und regulatorischer Rahmenbedingungen."
           },
           {
             "type": "paragraph",
@@ -522,7 +522,7 @@
           },
           {
             "type": "paragraph",
-            "content": "<strong>Überschussbeteiligung</strong> speist sich aus drei Quellen: Kapitalanlageüberschüsse (Anlageertrag übersteigt Garantiezins), Risikoüberschüsse (geringere Sterblichkeit als kalkuliert) und Kostenüberschüsse. Die branchenweite laufende Verzinsung lag 2024 bei durchschnittlich <strong>2,77 %</strong> (Assekurata), die Gesamtverzinsung inklusive Schlussüberschüssen bei einzelnen Anbietern bei bis zu 3,6 %. Steuerlich profitieren Verträge ab 2005 von der <strong>12/62-Regel</strong>: Bei Laufzeit von mindestens 12 Jahren und Auszahlung ab dem 62. Lebensjahr werden nur 50 % der Erträge besteuert."
+            "content": "<strong>Überschussbeteiligung</strong> speist sich aus drei Quellen: Kapitalanlageüberschüsse (Anlageertrag übersteigt Garantiezins), Risikoüberschüsse (geringere Sterblichkeit als kalkuliert) und Kostenüberschüsse. Die branchenweite laufende Verzinsung lag 2024 bei durchschnittlich <strong>2,77 %</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">4</span><span class=\"v1x1-cite-tooltip\">Assekurata Marktstudie Überschussbeteiligung 2024</span></span> (Assekurata), die Gesamtverzinsung inklusive Schlussüberschüssen bei einzelnen Anbietern bei bis zu 3,6 %. Steuerlich profitieren Verträge ab 2005 von der <strong>12/62-Regel</strong>: Bei Laufzeit von mindestens 12 Jahren und Auszahlung ab dem 62. Lebensjahr werden nur 50 % der Erträge besteuert."
           },
           {
             "type": "paragraph",
@@ -531,7 +531,7 @@
           },
           {
             "type": "paragraph",
-            "content": "Bei der fondsgebundenen Lebensversicherung werden Beiträge in vom Versicherungsnehmer gewählte Investmentfonds investiert – ohne Garantiezins, aber mit höheren Renditechancen. Der steuerliche Vorteil liegt im „Versicherungsmantel\": Während der Laufzeit fallen keine Abgeltungssteuern auf Fondserträge an. Die BaFin ermittelte gewichtete Effektivkosten von durchschnittlich <strong>1,90 % p.a.</strong>, wobei der Median bei 1,64 % liegt. Der Trend geht zu <strong>Hybrid-Produkten</strong> (Neue Klassik), die klassischen Deckungsstock mit Fondsanlage kombinieren und modifizierte Garantien bieten (60–80 % Beitragserhalt statt 100 %).",
+            "content": "Bei der fondsgebundenen Lebensversicherung werden Beiträge in vom Versicherungsnehmer gewählte Investmentfonds investiert – ohne Garantiezins, aber mit höheren Renditechancen. Der steuerliche Vorteil liegt im „Versicherungsmantel\": Während der Laufzeit fallen keine Abgeltungssteuern auf Fondserträge an. Die BaFin ermittelte gewichtete Effektivkosten von durchschnittlich <strong>1,90 % p.a.</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">5</span><span class=\"v1x1-cite-tooltip\">BaFin Marktstudie Effektivkosten Lebensversicherung 2023</span></span>, wobei der Median bei 1,64 % liegt. Der Trend geht zu <strong>Hybrid-Produkten</strong> (Neue Klassik), die klassischen Deckungsstock mit Fondsanlage kombinieren und modifizierte Garantien bieten (60–80 % Beitragserhalt statt 100 %).",
             "title": "Fondsgebundene Lebensversicherung und Hybrid-Produkte"
           },
           {
@@ -541,7 +541,7 @@
           },
           {
             "type": "paragraph",
-            "content": "Die Riester-Rente mit ihren Zulagen (<strong>175 € Grundzulage</strong>, <strong>300 € pro Kind</strong>) steckt in einer tiefen Krise. Nur noch rund <strong>41.000 Neuverträge</strong> wurden 2023 abgeschlossen – ein Rückgang von über 60 % gegenüber den Spitzenjahren. Allein von Januar bis August 2025 wurden 220.000 Verträge gekündigt. Von insgesamt 15 Millionen Verträgen im Bestand dürften 20–25 % beitragsfrei gestellt sein.",
+            "content": "Die Riester-Rente mit ihren Zulagen (<strong>175 € Grundzulage</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">6</span><span class=\"v1x1-cite-tooltip\">BMF Riester-Förderung, § 84 EStG</span></span>, <strong>300 € pro Kind</strong>) steckt in einer tiefen Krise. Nur noch rund <strong>41.000 Neuverträge</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">7</span><span class=\"v1x1-cite-tooltip\">GDV Lebensversicherung in Zahlen 2023/2024</span></span> wurden 2023 abgeschlossen – ein Rückgang von über 60 % gegenüber den Spitzenjahren. Allein von Januar bis August 2025 wurden 220.000 Verträge gekündigt. Von insgesamt 15 Millionen Verträgen im Bestand dürften 20–25 % beitragsfrei gestellt sein.",
             "title": "Riester-Rente vor grundlegender Reform"
           },
           {
@@ -550,7 +550,7 @@
           },
           {
             "type": "paragraph",
-            "content": "Die Basisrente ist seit 2023 zu <strong>100 % als Sonderausgabe absetzbar</strong> (Höchstbetrag 2026: <strong>30.826 €/61.652 €</strong> für Ledige/Verheiratete). Sie ist die einzige staatlich geförderte Altersvorsorge für Selbständige. Im Gegenzug unterliegt die Rente der nachgelagerten Besteuerung (2026: 84 % steuerpflichtig, bis 2058 ansteigend auf 100 %). Kapitalwahlrecht besteht nicht – ausschließlich lebenslange Verrentung ab frühestens 62 Jahren ist möglich. Die Rente ist weder vererbbar noch beleihbar, gilt aber als Schonvermögen bei Sozialleistungen.",
+            "content": "Die Basisrente ist seit 2023 zu <strong>100 % als Sonderausgabe absetzbar</strong> (Höchstbetrag 2026: <strong>30.826 €/61.652 €</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">8</span><span class=\"v1x1-cite-tooltip\">BMF Schreiben v. 06.12.2025, Vorsorgeaufwendungen</span></span> für Ledige/Verheiratete). Sie ist die einzige staatlich geförderte Altersvorsorge für Selbständige. Im Gegenzug unterliegt die Rente der nachgelagerten Besteuerung (2026: 84 % steuerpflichtig, bis 2058 ansteigend auf 100 %). Kapitalwahlrecht besteht nicht – ausschließlich lebenslange Verrentung ab frühestens 62 Jahren ist möglich. Die Rente ist weder vererbbar noch beleihbar, gilt aber als Schonvermögen bei Sozialleistungen.",
             "title": "Rürup-Rente als Instrument für Selbständige"
           },
           {
@@ -560,11 +560,13 @@
           },
           {
             "type": "paragraph",
-            "content": "<strong>Lebensversicherung in Zahlen (2024):</strong> Beitragseinnahmen <strong>94,6 Mrd. €</strong> (+2,8 %), davon Einmalbeiträge 28 Mrd. € (+10 %). Bestand <strong>84 Mio. Verträge</strong>, davon über 46 Mio. Rentenversicherungen. Auszahlungen 101,8 Mrd. € – rund 279 Mio. € pro Tag. Leistungsverpflichtungen insgesamt: 1.186 Mrd. €."
-          },
+            "content": "<strong>Lebensversicherung in Zahlen (2024):</strong> Beitragseinnahmen <strong>94,6 Mrd. €</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">9</span><span class=\"v1x1-cite-tooltip\">GDV Statistik Lebensversicherung 2024</span></span> (+2,8 %), davon Einmalbeiträge 28 Mrd. € (+10 %). Bestand <strong>84 Mio. Verträge</strong>, davon über 46 Mio. Rentenversicherungen. Auszahlungen 101,8 Mrd. € – rund 279 Mio. € pro Tag. Leistungsverpflichtungen insgesamt: 1.186 Mrd. €."
+          }
+        ],
+        "level2": [
           {
             "type": "paragraph",
-            "content": "Berufsunfähig im Sinne des § 172 VVG ist, wer seinen zuletzt ausgeübten Beruf aufgrund von Krankheit oder Körperverletzung zu <strong>mindestens 50 %</strong> nicht mehr ausüben kann und dieser Zustand voraussichtlich mindestens <strong>sechs Monate</strong> andauert. Die BU-Versicherung zahlt dann eine monatliche Rente bis zum vereinbarten Endalter (typisch 67 Jahre).",
+            "content": "Berufsunfähig im Sinne des § 172 VVG ist, wer seinen zuletzt ausgeübten Beruf aufgrund von Krankheit oder Körperverletzung zu <strong>mindestens 50 %</strong> nicht mehr ausüben<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">10</span><span class=\"v1x1-cite-tooltip\">VVG § 172 Abs. 2</span></span> kann und dieser Zustand voraussichtlich mindestens <strong>sechs Monate</strong> andauert. Die BU-Versicherung zahlt dann eine monatliche Rente bis zum vereinbarten Endalter (typisch 67 Jahre).",
             "title": "Die BU-Versicherung als Goldstandard der Einkommenssicherung"
           },
           {
@@ -577,12 +579,12 @@
           },
           {
             "type": "paragraph",
-            "content": "Die branchenweite Leistungsquote liegt bei <strong>rund 80 %</strong> (GDV). Franke & Bornberg ermittelten 2023 eine Quote von 78,04 % bei zehn großen Versicherern. Spitzenreiter ist R+V mit <strong>91,74 %</strong>. Hauptablehnungsgrund ist mit 44 % das Nicht-Erreichen des 50-%-BU-Grades. Nur 2,1 % der Fälle landen vor Gericht. Psychische Erkrankungen sind mit <strong>38 %</strong> die häufigste BU-Ursache, gefolgt von Krebs (19 %) und Erkrankungen des Bewegungsapparats (16 %).",
+            "content": "Die branchenweite Leistungsquote liegt bei <strong>rund 80 %</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">11</span><span class=\"v1x1-cite-tooltip\">GDV Leistungspraxis BU-Versicherung 2023</span></span> (GDV). Franke & Bornberg ermittelten 2023 eine Quote von 78,04 %<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">12</span><span class=\"v1x1-cite-tooltip\">Franke & Bornberg BU-Leistungsstudie 2023</span></span> bei zehn großen Versicherern. Spitzenreiter ist R+V mit <strong>91,74 %</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">13</span><span class=\"v1x1-cite-tooltip\">Franke & Bornberg BU-Leistungsstudie 2023, Einzelauswertung R+V</span></span>. Hauptablehnungsgrund ist mit 44 % das Nicht-Erreichen des 50-%-BU-Grades. Nur 2,1 % der Fälle landen vor Gericht. Psychische Erkrankungen sind mit <strong>38 %</strong> die häufigste BU-Ursache<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">14</span><span class=\"v1x1-cite-tooltip\">GDV Berufsunfähigkeit Statistik 2024</span></span>, gefolgt von Krebs (19 %) und Erkrankungen des Bewegungsapparats (16 %).",
             "title": "Leistungsquoten widerlegen das Vorurteil der Nicht-Zahlung"
           },
           {
             "type": "paragraph",
-            "content": "Seit 2001 gibt es keinen gesetzlichen BU-Schutz mehr für nach 1961 Geborene. Die staatliche Erwerbsminderungsrente beträgt durchschnittlich nur <strong>1.041 €/Monat</strong> – deutlich unter dem Grundsicherungsniveau."
+            "content": "Seit 2001 gibt es keinen gesetzlichen BU-Schutz mehr für nach 1961 Geborene. Die staatliche Erwerbsminderungsrente beträgt durchschnittlich nur <strong>1.041 €/Monat</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">15</span><span class=\"v1x1-cite-tooltip\">Deutsche Rentenversicherung Rentenbestand 2024</span></span> – deutlich unter dem Grundsicherungsniveau."
           },
           {
             "type": "paragraph",
@@ -591,11 +593,11 @@
           },
           {
             "type": "paragraph",
-            "content": "<strong>Marktdurchdringung BU:</strong> Ca. <strong>14,5 Mio. Verträge</strong> im Bestand, aber <strong>unter 30 %</strong> der Erwerbstätigen sind abgesichert. Jeder vierte Erwerbstätige wird im Berufsleben mindestens einmal berufsunfähig. Das durchschnittliche BU-Eintrittsalter liegt bei 48 Jahren."
+            "content": "<strong>Marktdurchdringung BU:</strong> Ca. <strong>14,5 Mio. Verträge</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">16</span><span class=\"v1x1-cite-tooltip\">GDV bAV- und BU-Bestandsstatistik 2024</span></span> im Bestand, aber <strong>unter 30 %</strong> der Erwerbstätigen sind abgesichert. Jeder vierte Erwerbstätige wird im Berufsleben mindestens einmal berufsunfähig. Das durchschnittliche BU-Eintrittsalter liegt bei 48 Jahren."
           },
           {
             "type": "paragraph",
-            "content": "Die betriebliche Altersversorgung (bAV) kennt in Deutschland fünf gesetzlich verankerte Durchführungswege. Die <strong>Direktversicherung</strong> ist der häufigste Weg für KMU: Der Arbeitgeber schließt eine Lebens- oder Rentenversicherung zugunsten des Arbeitnehmers ab. Mit <strong>8,81 Mio. Verträgen</strong> (Ende 2024, Allzeithoch) und geringem Verwaltungsaufwand setzt 87 % des Mittelstands auf diesen Weg. Beiträge sind nach § 3 Nr. 63 EStG bis 8 % der Beitragsbemessungsgrenze (2026: <strong>8.112 €/Jahr</strong>) steuerfrei und bis 4 % sozialversicherungsfrei.",
+            "content": "Die betriebliche Altersversorgung (bAV) kennt in Deutschland fünf gesetzlich verankerte Durchführungswege. Die <strong>Direktversicherung</strong> ist der häufigste Weg für KMU: Der Arbeitgeber schließt eine Lebens- oder Rentenversicherung zugunsten des Arbeitnehmers ab. Mit <strong>8,81 Mio. Verträgen</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">17</span><span class=\"v1x1-cite-tooltip\">GDV bAV-Report 2024</span></span> (Ende 2024, Allzeithoch) und geringem Verwaltungsaufwand setzt 87 % des Mittelstands auf diesen Weg. Beiträge sind nach § 3 Nr. 63 EStG bis 8 % der Beitragsbemessungsgrenze (2026: <strong>8.112 €/Jahr</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">18</span><span class=\"v1x1-cite-tooltip\">BMF, Beitragsbemessungsgrenze 2026</span></span>) steuerfrei und bis 4 % sozialversicherungsfrei.",
             "title": "Direktversicherung und Pensionskasse dominieren bei KMU"
           },
           {
@@ -614,18 +616,16 @@
           },
           {
             "type": "paragraph",
-            "content": "<strong>bAV-Markt insgesamt:</strong> <strong>727,9 Mrd. €</strong> Gesamtdeckungsmittel (2023). Verbreitungsquote: <strong>51,9 %</strong> der sozialversicherungspflichtig Beschäftigten – Tendenz stagnierend. 16,55 Mio. Verträge bei Lebensversicherern. Der PSVaG sichert bei Insolvenz ab (Beitragssatz 2024: 0,4 ‰). Sofortige gesetzliche Unverfallbarkeit gilt bei Entgeltumwandlung; bei arbeitgeberfinanzierter bAV nach 3 Jahren und Mindestalter 21 (seit 2018)."
-          }
-        ],
-        "level2": [
+            "content": "<strong>bAV-Markt insgesamt:</strong> <strong>727,9 Mrd. €</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">19</span><span class=\"v1x1-cite-tooltip\">aba Statistikreihe 2023, Gesamtdeckungsmittel bAV</span></span> Gesamtdeckungsmittel (2023). Verbreitungsquote: <strong>51,9 %</strong> der sozialversicherungspflichtig<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">20</span><span class=\"v1x1-cite-tooltip\">BMAS Forschungsbericht Verbreitung bAV 2023</span></span> Beschäftigten – Tendenz stagnierend. 16,55 Mio. Verträge bei Lebensversicherern. Der PSVaG sichert bei Insolvenz ab (Beitragssatz 2024: 0,4 ‰). Sofortige gesetzliche Unverfallbarkeit gilt bei Entgeltumwandlung; bei arbeitgeberfinanzierter bAV nach 3 Jahren und Mindestalter 21 (seit 2018)."
+          },
           {
             "type": "paragraph",
-            "content": "Die PKV-Vollversicherung steht Beamten, Selbständigen und Angestellten oberhalb der <strong>Versicherungspflichtgrenze</strong> (2025: <strong>73.800 €</strong>, 2026: <strong>77.400 €</strong>) offen. Ende 2024 waren <strong>8,74 Mio. Menschen</strong> vollversichert – ein leichtes Plus nach Jahren des Rückgangs. Tarife setzen sich modular aus den Bausteinen ambulant, stationär und Zahn zusammen. Der seit 2009 verpflichtende <strong>Basistarif</strong> bietet GKV-vergleichbare Leistungen mit Kontrahierungszwang und Beitragsbegrenzung (2026 max. <strong>1.017 €/Monat</strong>).",
+            "content": "Die PKV-Vollversicherung steht Beamten, Selbständigen und Angestellten oberhalb der <strong>Versicherungspflichtgrenze</strong> (2025: <strong>73.800 €</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">21</span><span class=\"v1x1-cite-tooltip\">BMF Sozialversicherungsrechengrößen 2025</span></span>, 2026: <strong>77.400 €</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">22</span><span class=\"v1x1-cite-tooltip\">BMF Sozialversicherungsrechengrößen 2026</span></span>) offen. Ende 2024 waren <strong>8,74 Mio. Menschen</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">23</span><span class=\"v1x1-cite-tooltip\">PKV-Verband Zahlenbericht 2024</span></span> vollversichert – ein leichtes Plus nach Jahren des Rückgangs. Tarife setzen sich modular aus den Bausteinen ambulant, stationär und Zahn zusammen. Der seit 2009 verpflichtende <strong>Basistarif</strong> bietet GKV-vergleichbare Leistungen mit Kontrahierungszwang und Beitragsbegrenzung (2026 max. <strong>1.017 €/Monat</strong>).",
             "title": "Vollversicherung wächst wieder leicht"
           },
           {
             "type": "paragraph",
-            "content": "Die Zahl der Zusatzversicherungen stieg 2024 auf <strong>31,2 Mio.</strong> (+4,5 %). Zugpferd ist die <strong>Zahnzusatzversicherung</strong> mit über 17,8 Mio. Versicherten. Premium-Tarife erstatten bis zu 100 % der Zahnersatzkosten ab ca. 16 €/Monat, meist mit Summenstaffelung in den ersten Jahren. Stationäre Zusatzversicherungen ermöglichen Chefarztbehandlung und Einbettzimmer. Die <strong>betriebliche Krankenversicherung (bKV)</strong> erreichte 2024 bereits <strong>2,4 Mio. Beschäftigte</strong> (+15,8 %).",
+            "content": "Die Zahl der Zusatzversicherungen stieg 2024 auf <strong>31,2 Mio.</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">24</span><span class=\"v1x1-cite-tooltip\">PKV-Verband Zahlenbericht 2024, Zusatzversicherungen</span></span> (+4,5 %). Zugpferd ist die <strong>Zahnzusatzversicherung</strong> mit über 17,8 Mio. Versicherten. Premium-Tarife erstatten bis zu 100 % der Zahnersatzkosten ab ca. 16 €/Monat, meist mit Summenstaffelung in den ersten Jahren. Stationäre Zusatzversicherungen ermöglichen Chefarztbehandlung und Einbettzimmer. Die <strong>betriebliche Krankenversicherung (bKV)</strong> erreichte 2024 bereits <strong>2,4 Mio. Beschäftigte</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">25</span><span class=\"v1x1-cite-tooltip\">PKV-Verband bKV-Report 2024</span></span> (+15,8 %).",
             "title": "Zusatzversicherungen boomen"
           },
           {
@@ -671,7 +671,7 @@
           },
           {
             "type": "paragraph",
-            "content": "Die <strong>Wohngebäudeversicherung</strong> schützt die Gebäudesubstanz gegen dieselben Grundgefahren. Der <strong>gleitende Neuwert</strong> mit dem Wert 1914 als Berechnungsbasis passt die Versicherungssumme automatisch an steigende Baukosten an. Nur <strong>54 % aller Wohngebäude</strong> haben Elementarschutz – der Koalitionsvertrag 2025 sieht eine <strong>Pflichtversicherung mit Opt-out-Möglichkeit</strong> und staatlicher Rückversicherung vor. Die Wohngebäudeversicherung war 2024 mit einer CR von <strong>102 %</strong> erneut defizitär; seit 2002 wurde die Gewinnzone nur viermal erreicht. Versicherte Naturkatastrophenschäden lagen 2024 bei <strong>5,7 Mrd. €</strong> (langjähriger Schnitt: 4,2 Mrd. €)."
+            "content": "Die <strong>Wohngebäudeversicherung</strong> schützt die Gebäudesubstanz gegen dieselben Grundgefahren. Der <strong>gleitende Neuwert</strong> mit dem Wert 1914 als Berechnungsbasis passt die Versicherungssumme automatisch an steigende Baukosten an. Nur <strong>54 % aller Wohngebäude</strong> haben Elementarschutz – der Koalitionsvertrag 2025 sieht eine <strong>Pflichtversicherung mit Opt-out-Möglichkeit</strong> und staatlicher Rückversicherung vor. Die Wohngebäudeversicherung war 2024 mit einer CR von <strong>102 %</strong> erneut defizitär; seit 2002 wurde die Gewinnzone nur viermal erreicht. Versicherte Naturkatastrophenschäden lagen 2024 bei <strong>5,7 Mrd. €</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">26</span><span class=\"v1x1-cite-tooltip\">GDV Naturgefahrenreport 2024</span></span> (langjähriger Schnitt: 4,2 Mrd. €)."
           },
           {
             "type": "paragraph",
@@ -681,7 +681,9 @@
           {
             "type": "paragraph",
             "content": "Die <strong>Rechtsschutzversicherung</strong> bietet modular Privat-, Berufs-, Verkehrs- und Wohnrechtsschutz. Standard-Wartezeiten betragen <strong>drei Monate</strong> (Verkehr: sofort). Bei Ablehnung der Deckungszusage wegen mangelnder Erfolgsaussicht steht dem Versicherten ein <strong>Stichentscheid</strong> (§ 128 VVG) zu. Typische Ausschlüsse betreffen Baustreitigkeiten, Kapitalanlagen und vorsätzliche Straftaten."
-          },
+          }
+        ],
+        "level3": [
           {
             "type": "paragraph",
             "content": "Die Betriebshaftpflichtversicherung deckt Personen-, Sach- und Vermögensfolgeschäden aus der Geschäftstätigkeit. Marktübliche Deckungssummen liegen bei <strong>5–10 Mio. € pauschal</strong> für Gewerbebetriebe, bei Industrieunternehmen bis 50 Mio. €. Die Sparte erzielte 2024 exzellente Ergebnisse mit einer Combined Ratio von nur <strong>86 %</strong> bei 8,7 Mrd. € Prämien. Die Produkthaftpflicht ist häufig integriert; die neue <strong>EU-Produkthaftungsrichtlinie</strong> (Dezember 2024) erweitert die Haftung auf digitale Produkte und KI-Systeme. Die <strong>PFAS-Regulierung</strong> (Ewigkeitschemikalien) schafft neue Unsicherheit im Haftpflichtbereich.",
@@ -712,7 +714,7 @@
           },
           {
             "type": "paragraph",
-            "content": "Das GDV-erfasste Prämienvolumen stieg 2024 auf <strong>330 Mio. €</strong> – nach 50-%-Wachstumsjahren nur noch einstellig. Rund <strong>261.000 Verträge</strong> bestehen. Die Combined Ratio verbesserte sich 2024 auf <strong>80,7 %</strong> (nach 97 % im Vorjahr). Marktführer ist <strong>Hiscox</strong> (ca. 30 % Favoritennennungen bei Maklern), gefolgt von Markel (20 %) und VHV (8 %). Spezialisierte Assekuradeure wie CyberDirekt, Stoik und Eye Security bieten integrierte Lösungen aus Versicherung und IT-Sicherheitssoftware.",
+            "content": "Das GDV-erfasste Prämienvolumen stieg 2024 auf <strong>330 Mio. €</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">27</span><span class=\"v1x1-cite-tooltip\">GDV Cyberversicherung Marktstatistik 2024</span></span> – nach 50-%-Wachstumsjahren nur noch einstellig. Rund <strong>261.000 Verträge</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">28</span><span class=\"v1x1-cite-tooltip\">GDV Cyberversicherung Marktstatistik 2024</span></span> bestehen. Die Combined Ratio verbesserte sich 2024 auf <strong>80,7 %</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">29</span><span class=\"v1x1-cite-tooltip\">GDV Cyberversicherung Combined Ratio 2024</span></span> (nach 97 % im Vorjahr). Marktführer ist <strong>Hiscox</strong> (ca. 30 % Favoritennennungen bei Maklern), gefolgt von Markel (20 %) und VHV (8 %). Spezialisierte Assekuradeure wie CyberDirekt, Stoik und Eye Security bieten integrierte Lösungen aus Versicherung und IT-Sicherheitssoftware.",
             "title": "Markt wächst langsamer, aber profitabel"
           },
           {
@@ -727,9 +729,7 @@
           {
             "type": "paragraph",
             "content": "<strong>Global:</strong> Der Cyberversicherungsmarkt erreichte 2024 ca. <strong>15,3 Mrd. USD</strong>, davon Europa 3,3 Mrd. USD. Munich Re prognostiziert eine Verdopplung auf über 30 Mrd. USD bis 2030."
-          }
-        ],
-        "level3": [
+          },
           {
             "type": "paragraph",
             "content": "Parametrische Versicherungen lösen die Auszahlung eines vorab definierten Betrags aus, sobald ein objektiv messbarer Parameter einen Schwellenwert überschreitet – ohne individuellen Schadensnachweis. Anwendungsfälle reichen von Dürre-Versicherungen für Landwirte über Flugverspätungsdeckungen bis zu Erdbebenabsicherungen. <strong>Descartes Underwriting</strong> (Frankfurt) kombiniert Satellitenbilder und Machine Learning für parametrische Policen (Prämienvolumen über 100 Mio. USD). <strong>Baloise</strong> führte 2024 parametrische Module in der Reiseversicherung ein. Der zentrale Nachteil bleibt das <strong>Basisrisiko</strong>: Der Parameter kann eintreten, ohne dass ein tatsächlicher Schaden vorliegt – oder umgekehrt.",
@@ -821,7 +821,7 @@
           "question": "Welcher Anteil der Gebäude hat Elementarschadenversicherung?",
           "options": [
             "25-30%",
-            "50-52%",
+            "~54%",
             "75-80%"
           ],
           "correct": 1,
@@ -1014,16 +1014,16 @@
         "level1": [
           {
             "type": "paragraph",
-            "content": "Der deutsche Versicherungsvertrieb wird nach wie vor überwiegend durch Provisionen finanziert – ein System, das sich trotz intensiver regulatorischer Debatten und europäischer Reformbestrebungen als bemerkenswert stabil erweist. <strong>Rund 99 % des Versicherungsvertriebs in Deutschland basieren auf Provisionsmodellen</strong>, während die Honorarberatung mit weniger als 1 % Marktanteil eine Randerscheinung bleibt. Die zentrale Spannung des Systems liegt zwischen der ökonomischen Notwendigkeit, Vermittler für ihre Beratungsleistung angemessen zu vergüten, und dem regulatorischen Anspruch, Fehlanreize zum Nachteil der Kunden zu vermeiden. Seit dem Lebensversicherungsreformgesetz (LVRG) von 2015 und der IDD-Umsetzung 2018 hat sich die Vergütungslandschaft spürbar gewandelt: Die Abschlussprovisionen in der Lebensversicherung sind moderat gesunken, Bestandsprovisionen gewinnen an Bedeutung, und die BaFin hat mit ihrer Wohlverhaltensaufsicht ein wirkungsvolles Instrument geschaffen, um kostenintensive Ausreißer zu adressieren. Dieses Kapitel analysiert sämtliche Vergütungsformen, Berechnungsgrundlagen und regulatorische Rahmenbedingungen des deutschen Versicherungsvertriebs."
+            "content": "Der deutsche Versicherungsvertrieb wird nach wie vor überwiegend durch Provisionen finanziert – ein System, das sich trotz intensiver regulatorischer Debatten und europäischer Reformbestrebungen als bemerkenswert stabil erweist. <strong>Rund 99 % des Versicherungsvertriebs<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">1</span><span class=\"v1x1-cite-tooltip\">BaFin Marktuntersuchung Vertriebsvergütung 2019</span></span> in Deutschland basieren auf Provisionsmodellen</strong>, während die Honorarberatung mit weniger als 1 % Marktanteil eine Randerscheinung bleibt. Die zentrale Spannung des Systems liegt zwischen der ökonomischen Notwendigkeit, Vermittler für ihre Beratungsleistung angemessen zu vergüten, und dem regulatorischen Anspruch, Fehlanreize zum Nachteil der Kunden zu vermeiden. Seit dem Lebensversicherungsreformgesetz (LVRG) von 2015 und der IDD-Umsetzung 2018 hat sich die Vergütungslandschaft spürbar gewandelt: Die Abschlussprovisionen in der Lebensversicherung sind moderat gesunken, Bestandsprovisionen gewinnen an Bedeutung, und die BaFin hat mit ihrer Wohlverhaltensaufsicht ein wirkungsvolles Instrument geschaffen, um kostenintensive Ausreißer zu adressieren. Dieses Kapitel analysiert sämtliche Vergütungsformen, Berechnungsgrundlagen und regulatorische Rahmenbedingungen des deutschen Versicherungsvertriebs."
           },
           {
             "type": "paragraph",
             "content": "Die Vergütung im Versicherungsvertrieb ruht auf zwei Säulen: der <strong>Abschlussprovision</strong> als einmaliger Vergütung für die Vermittlung eines neuen Vertrags und der <strong>Bestandsprovision</strong> als laufender Vergütung für die kontinuierliche Betreuung bestehender Verträge.",
-            "title": "1. Abschlussprovision und Bestandsprovision als Grundpfeiler der Vergütung"
+            "title": "Abschlussprovision und Bestandsprovision als Grundpfeiler der Vergütung"
           },
           {
             "type": "paragraph",
-            "content": "<strong>Die Abschlussprovision (AP)</strong> wird bei Zustandekommen eines Versicherungsvertrags fällig und vergütet die Akquisitionsleistung des Vermittlers – Beratung, Bedarfsanalyse, Angebotserstellung und Vertragsabschluss. In der Lebensversicherung wird sie typischerweise als Einmalbetrag vorschüssig ausgezahlt, obwohl sie sich wirtschaftlich auf die gesamte Vertragslaufzeit bezieht. Dieses Vorauszahlungsprinzip macht die Stornohaftung erforderlich, da der Vermittler bei vorzeitiger Vertragsbeendigung anteilig zurückzahlen muss. Die Abschlussprovision beträgt bei Lebensversicherungen typischerweise <strong>25–50 Promille der Bewertungssumme</strong>, was bei einem Vertrag mit 200 Euro Monatsbeitrag und 35 Jahren Laufzeit einer einmaligen Zahlung von rund 2.500 bis 4.200 Euro entspricht."
+            "content": "<strong>Die Abschlussprovision (AP)</strong> wird bei Zustandekommen eines Versicherungsvertrags fällig und vergütet die Akquisitionsleistung des Vermittlers – Beratung, Bedarfsanalyse, Angebotserstellung und Vertragsabschluss. In der Lebensversicherung wird sie typischerweise als Einmalbetrag vorschüssig ausgezahlt, obwohl sie sich wirtschaftlich auf die gesamte Vertragslaufzeit bezieht. Dieses Vorauszahlungsprinzip macht die Stornohaftung erforderlich, da der Vermittler bei vorzeitiger Vertragsbeendigung anteilig zurückzahlen muss. Die Abschlussprovision beträgt bei Lebensversicherungen typischerweise <strong>25–50 Promille der Bewertungssumme</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">2</span><span class=\"v1x1-cite-tooltip\">BaFin-Erhebung Abschlussvergütungen 2018/2019</span></span>, was bei einem Vertrag mit 200 Euro Monatsbeitrag und 35 Jahren Laufzeit einer einmaligen Zahlung von rund 2.500 bis 4.200 Euro entspricht."
           },
           {
             "type": "paragraph",
@@ -1040,7 +1040,7 @@
           {
             "type": "paragraph",
             "content": "Obwohl die Begriffe im Alltag oft synonym verwendet werden, unterscheiden sich Courtage und Provision rechtlich und wirtschaftlich fundamental.",
-            "title": "2. Courtage des Maklers versus Provision des Vertreters"
+            "title": "Courtage des Maklers versus Provision des Vertreters"
           },
           {
             "type": "paragraph",
@@ -1093,16 +1093,18 @@
           },
           {
             "type": "paragraph",
-            "content": "In der Praxis liegen die <strong>Netto-Vergütungssätze</strong> auf ähnlichem Niveau. Der wesentliche Unterschied: Vertreter erhalten eine höhere Abschlussprovision plus niedrigere Bestandsprovision plus Sachleistungen, während Makler eine gleichmäßiger verteilte Courtage ohne Sachzuwendungen erhalten. Die BaFin-Erhebung 2018/2019 zeigte marktanteilsgewichtete Durchschnittswerte der Abschlussprovision von <strong>36,6 ‰</strong> für Ausschließlichkeitsvertreter, <strong>52,1 ‰</strong> für Mehrfachvertreter und <strong>40,2 ‰</strong> für Makler – wobei die höheren Makler- und Mehrfachvertreterwerte auf die Nutzung spezieller Maklerpools und Sondertarife zurückzuführen sind."
-          },
+            "content": "In der Praxis liegen die <strong>Netto-Vergütungssätze</strong> auf ähnlichem Niveau. Der wesentliche Unterschied: Vertreter erhalten eine höhere Abschlussprovision plus niedrigere Bestandsprovision plus Sachleistungen, während Makler eine gleichmäßiger verteilte Courtage ohne Sachzuwendungen erhalten. Die BaFin-Erhebung 2018/2019 zeigte marktanteilsgewichtete Durchschnittswerte der Abschlussprovision von <strong>36,6 ‰</strong> für Ausschließlichkeitsvertreter<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">3</span><span class=\"v1x1-cite-tooltip\">BaFin-Erhebung Abschlussvergütungen 2018/2019</span></span>, <strong>52,1 ‰</strong> für Mehrfachvertreter<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">4</span><span class=\"v1x1-cite-tooltip\">BaFin-Erhebung Abschlussvergütungen 2018/2019</span></span> und <strong>40,2 ‰</strong> für Makler<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">5</span><span class=\"v1x1-cite-tooltip\">BaFin-Erhebung Abschlussvergütungen 2018/2019</span></span> – wobei die höheren Makler- und Mehrfachvertreterwerte auf die Nutzung spezieller Maklerpools und Sondertarife zurückzuführen sind."
+          }
+        ],
+        "level2": [
           {
             "type": "paragraph",
             "content": "Die Stornohaftung verpflichtet den Vermittler zur anteiligen Rückzahlung vorschüssig erhaltener Provisionen, wenn ein vermittelter Vertrag innerhalb einer festgelegten Frist vorzeitig beendet wird – durch Kündigung, Beitragsfreistellung, Rücktritt oder Widerruf.",
-            "title": "3. Die Stornohaftung als Qualitätssicherungsinstrument"
+            "title": "Die Stornohaftung als Qualitätssicherungsinstrument"
           },
           {
             "type": "paragraph",
-            "content": "<strong>Rechtliche Grundlage</strong> ist primär <strong>§ 49 Abs. 1 VAG</strong>, der vorschreibt, dass Versicherer bei Kündigung innerhalb der ersten fünf Jahre sicherstellen müssen, dass der Vermittler die Provision nur bis zur Höhe des Betrags einbehält, der bei <strong>gleichmäßiger Verteilung über fünf Jahre</strong> angefallen wäre. Dies bedeutet eine lineare, zeitanteilige Verdienung: Pro Monat gilt 1/60 der Gesamtprovision als verdient. Ergänzend regelt <strong>§ 92 Abs. 4 HGB</strong>, dass der Provisionsanspruch des Versicherungsvertreters erst mit Zahlung der Prämie durch den Kunden entsteht."
+            "content": "<strong>Rechtliche Grundlage</strong> ist primär <strong>§ 49 Abs. 1 VAG</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">6</span><span class=\"v1x1-cite-tooltip\">Versicherungsaufsichtsgesetz (VAG) i.d.F. 2016</span></span>, der vorschreibt, dass Versicherer bei Kündigung innerhalb der ersten fünf Jahre sicherstellen müssen, dass der Vermittler die Provision nur bis zur Höhe des Betrags einbehält, der bei <strong>gleichmäßiger Verteilung über fünf Jahre</strong> angefallen wäre. Dies bedeutet eine lineare, zeitanteilige Verdienung: Pro Monat gilt 1/60 der Gesamtprovision als verdient. Ergänzend regelt <strong>§ 92 Abs. 4 HGB</strong>, dass der Provisionsanspruch des Versicherungsvertreters erst mit Zahlung der Prämie durch den Kunden entsteht."
           },
           {
             "type": "paragraph",
@@ -1110,7 +1112,7 @@
           },
           {
             "type": "paragraph",
-            "content": "In der Praxis weichen die tatsächlichen Haftungszeiten erheblich vom gesetzlichen Minimum ab. Die <strong>BVK-Strukturanalyse 2022/23</strong> ergab durchschnittliche Haftungszeiten von <strong>5,8 Jahren bei Einfirmenvertretern</strong>, <strong>5,9 Jahren bei Mehrfachvertretern</strong> und <strong>6,1 Jahren bei Maklern</strong>. Rund 25 % aller Vermittler haften länger als die gesetzlichen fünf Jahre; in Strukturvertrieben werden teils <strong>7 bis 10 Jahre</strong> vertraglich durchgesetzt."
+            "content": "In der Praxis weichen die tatsächlichen Haftungszeiten erheblich vom gesetzlichen Minimum ab. Die <strong>BVK-Strukturanalyse 2022/23</strong> ergab durchschnittliche Haftungszeiten von <strong>5,8 Jahren bei Einfirmenvertretern</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">7</span><span class=\"v1x1-cite-tooltip\">BVK-Strukturanalyse Vermittler 2022/23</span></span>, <strong>5,9 Jahren bei Mehrfachvertretern</strong> und <strong>6,1 Jahren bei Maklern</strong>. Rund 25 % aller Vermittler haften länger als die gesetzlichen fünf Jahre; in Strukturvertrieben werden teils <strong>7 bis 10 Jahre</strong> vertraglich durchgesetzt."
           },
           {
             "type": "paragraph",
@@ -1123,18 +1125,16 @@
           },
           {
             "type": "paragraph",
-            "content": "Die <strong>aktuellen Stornoquoten</strong> in der Lebensversicherung bewegen sich auf moderatem Niveau: Der GDV meldete für 2024 eine Quote von <strong>2,72 % nach Verträgen</strong>, wobei fondsgebundene Policen mit <strong>3,69 %</strong> die höchsten und klassische Lebensversicherungen mit <strong>1,83 %</strong> die niedrigsten Werte aufweisen. Die Spanne am Markt reicht von 0,64 % (WGV) bis 8,39 % (Targo). BaFin-Exekutivdirektorin Julia Wiens warnte: Bei konstantem Storno von rund 3,5 % pro Jahr habe nach etwa 20 Jahren die Hälfte der Kunden vorzeitig beendet."
+            "content": "Die <strong>aktuellen Stornoquoten</strong> in der Lebensversicherung bewegen sich auf moderatem Niveau: Der GDV meldete für 2024 eine Quote von <strong>2,72 % nach Verträgen</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">8</span><span class=\"v1x1-cite-tooltip\">GDV Lebensversicherung Stornoquoten 2024</span></span>, wobei fondsgebundene Policen mit <strong>3,69 %</strong> die höchsten<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">9</span><span class=\"v1x1-cite-tooltip\">GDV Stornoquoten Lebensversicherung 2024, fondsgebunden</span></span> und klassische Lebensversicherungen mit <strong>1,83 %</strong> die niedrigsten Werte aufweisen. Die Spanne am Markt reicht von 0,64 % (WGV) bis 8,39 % (Targo). BaFin-Exekutivdirektorin Julia Wiens warnte: Bei konstantem Storno von rund 3,5 % pro Jahr habe nach etwa 20 Jahren die Hälfte der Kunden vorzeitig beendet."
           },
           {
             "type": "paragraph",
             "content": "Ein zentraler Aspekt der Stornohaftung ist die <strong>Nachbearbeitungspflicht des Versicherers</strong>: Der BGH entschied (VIII ZR 310/09), dass der Versicherer eigene Stornoabwehrmaßnahmen ergreifen oder den Vermittler rechtzeitig über drohende Stornierungen informieren muss. Unterlässt er dies, besteht der Provisionsanspruch trotz Storno fort."
-          }
-        ],
-        "level2": [
+          },
           {
             "type": "paragraph",
             "content": "Die Dynamikprovision ist eine Abschlussprovision auf Beitragserhöhungen, die durch vertraglich vereinbarte Dynamikklauseln in Lebens-, Renten- und BU-Versicherungen ausgelöst werden. Jede dynamische Erhöhung wird provisionsrechtlich behandelt wie ein <strong>neuer Vertragsabschluss</strong> (Novation). Die Berechnung erfolgt auf der <strong>Differenz-Bewertungssumme</strong>:",
-            "title": "4. Dynamikprovision – Vergütung auf automatische Beitragserhöhungen"
+            "title": "Dynamikprovision – Vergütung auf automatische Beitragserhöhungen"
           },
           {
             "type": "callout",
@@ -1153,11 +1153,11 @@
           {
             "type": "paragraph",
             "content": "Die Vergütungshöhen variieren erheblich zwischen den Versicherungssparten und hängen von Vertriebsweg, Gesellschaft, Pool-Anbindung und individueller Verhandlungsposition ab. Die folgende Übersicht zeigt die marktüblichen Bandbreiten auf Basis von BaFin-Erhebungen, Branchenstudien und Maklerpool-Daten (Stand 2024/2025).",
-            "title": "5. Typische Provisionssätze nach Versicherungssparten"
+            "title": "Typische Provisionssätze nach Versicherungssparten"
           },
           {
             "type": "paragraph",
-            "content": "Die Abschlussprovision wird in <strong>Promille der Bewertungssumme</strong> berechnet. Die marktübliche Bandbreite liegt bei <strong>25–50 ‰</strong>, wobei der marktanteilsgewichtete Durchschnitt laut BaFin-Erhebung 2018/2019 bei <strong>38,2 ‰</strong> lag (Ausschließlichkeit: 36,6 ‰; Mehrfachvertreter: 52,1 ‰; Makler: 40,2 ‰). Die Willis-Towers-Watson-Studie 2017 ermittelte nach dem LVRG niedrigere Durchschnittswerte: Makler 32,1 ‰, Mehrfachvertreter 30,7 ‰. Einzelne Tarife – etwa Risikolebensversicherungen der Zurich Life Assurance – erreichen Spitzenwerte bis 90 ‰. Die Bestandsprovision beträgt typischerweise <strong>1–2 % des Jahresbeitrags</strong>.",
+            "content": "Die Abschlussprovision wird in <strong>Promille der Bewertungssumme</strong> berechnet. Die marktübliche Bandbreite liegt bei <strong>25–50 ‰</strong>, wobei der marktanteilsgewichtete Durchschnitt laut BaFin-Erhebung 2018/2019 bei <strong>38,2 ‰</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">10</span><span class=\"v1x1-cite-tooltip\">BaFin-Erhebung Abschlussvergütungen 2018/2019, Gesamtmarkt</span></span> lag (Ausschließlichkeit: 36,6 ‰; Mehrfachvertreter: 52,1 ‰; Makler: 40,2 ‰). Die Willis-Towers-Watson-Studie 2017 ermittelte nach dem LVRG niedrigere Durchschnittswerte: Makler 32,1 ‰<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">11</span><span class=\"v1x1-cite-tooltip\">Willis Towers Watson Vergütungsstudie 2017</span></span>, Mehrfachvertreter 30,7 ‰. Einzelne Tarife – etwa Risikolebensversicherungen der Zurich Life Assurance – erreichen Spitzenwerte bis 90 ‰. Die Bestandsprovision beträgt typischerweise <strong>1–2 % des Jahresbeitrags</strong>.",
             "title": "Lebens- und Rentenversicherung"
           },
           {
@@ -1167,7 +1167,7 @@
           },
           {
             "type": "paragraph",
-            "content": "Die PKV-Abschlussprovision wird in <strong>Monatsbeiträgen (MB)</strong> berechnet und ist gesetzlich auf <strong>maximal 9 Monatsbeiträge</strong> gedeckelt (§ 50 VAG). Die marktübliche Bandbreite liegt bei <strong>6–9 MB</strong>, der Durchschnitt bei Maklern bei etwa 7 MB. Zusätzlich werden 1,8 MB auf die Pflegepflichtversicherung gezahlt. Bei einem Monatsbeitrag von 350 Euro ergibt sich eine Abschlussprovision von rund <strong>2.450–3.150 Euro</strong>. Die Bestandsprovision beträgt <strong>1–2 % des Jahresbeitrags</strong>, typischerweise erst ab dem 2. oder 3. Vertragsjahr. KV-Zusatzversicherungen werden mit bis zu <strong>10 MB</strong> vergütet.",
+            "content": "Die PKV-Abschlussprovision wird in <strong>Monatsbeiträgen (MB)</strong> berechnet und ist gesetzlich auf <strong>maximal 9 Monatsbeiträge</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">12</span><span class=\"v1x1-cite-tooltip\">VAG § 50</span></span> gedeckelt (§ 50 VAG). Die marktübliche Bandbreite liegt bei <strong>6–9 MB</strong>, der Durchschnitt bei Maklern bei etwa 7 MB. Zusätzlich werden 1,8 MB auf die Pflegepflichtversicherung gezahlt. Bei einem Monatsbeitrag von 350 Euro ergibt sich eine Abschlussprovision von rund <strong>2.450–3.150 Euro</strong>. Die Bestandsprovision beträgt <strong>1–2 % des Jahresbeitrags</strong>, typischerweise erst ab dem 2. oder 3. Vertragsjahr. KV-Zusatzversicherungen werden mit bis zu <strong>10 MB</strong> vergütet.",
             "title": "Private Krankenversicherung"
           },
           {
@@ -1229,7 +1229,7 @@
           {
             "type": "paragraph",
             "content": "Die Debatte um eine gesetzliche Begrenzung der Lebensversicherungsprovisionen prägt die Branche seit über einem Jahrzehnt. Im Zentrum stehen das <strong>Lebensversicherungsreformgesetz (LVRG)</strong> von 2015, der gescheiterte Referentenentwurf eines Provisionsdeckels von 2019 und die EU-Retail-Investment-Strategy.",
-            "title": "6. Der Provisionsdeckel zwischen politischem Scheitern und aufsichtlicher Praxis"
+            "title": "Der Provisionsdeckel zwischen politischem Scheitern und aufsichtlicher Praxis"
           },
           {
             "type": "paragraph",
@@ -1261,7 +1261,7 @@
           {
             "type": "paragraph",
             "content": "Nettotarife sind Versicherungstarife, deren Prämien keinen Provisionsanteil enthalten. Die BaFin definiert sie als „abschlusskostenfreie Tarife, in die namentlich keine Provision eingerechnet wird.\" Statt eingerechneter Provision schließt der Kunde mit dem Berater eine separate Honorarvereinbarung – es bestehen damit zwei unabhängige Verträge.",
-            "title": "7. Nettotarife und Honorarberatung bleiben Nischenphänomene"
+            "title": "Nettotarife und Honorarberatung bleiben Nischenphänomene"
           },
           {
             "type": "paragraph",
@@ -1280,7 +1280,7 @@
           {
             "type": "paragraph",
             "content": "Die <strong>Bewertungssumme (BWS)</strong> ist die zentrale Rechengröße für Abschlussprovisionen in der Lebensversicherung. Die Grundformel lautet:",
-            "title": "8. Bewertungssumme und Berechnungsmechanik der Provision"
+            "title": "Bewertungssumme und Berechnungsmechanik der Provision"
           },
           {
             "type": "callout",
@@ -1303,7 +1303,7 @@
           {
             "type": "paragraph",
             "content": "Der Wandel der Vergütungsmodelle wird von drei Kräften getrieben: regulatorischem Druck, Digitalisierung und demografischem Wandel.",
-            "title": "9. Wie Digitalisierung und Regulierung die Vergütungsstrukturen verändern"
+            "title": "Wie Digitalisierung und Regulierung die Vergütungsstrukturen verändern"
           },
           {
             "type": "paragraph",
@@ -1320,7 +1320,7 @@
           {
             "type": "paragraph",
             "content": "<strong>Superprovisionen</strong> (auch Overrides, Leitungsvergütungen oder Differenzprovisionen) sind Vergütungen, die an übergeordnete Führungskräfte im Strukturvertrieb für Geschäfte gezahlt werden, die organisatorisch untergeordnete Vermittler abgeschlossen haben. Sie bilden den ökonomischen Kern des Strukturvertriebsmodells.",
-            "title": "10. Superprovisionen und das Geschäftsmodell der Strukturvertriebe"
+            "title": "Superprovisionen und das Geschäftsmodell der Strukturvertriebe"
           },
           {
             "type": "paragraph",
@@ -1332,7 +1332,7 @@
           },
           {
             "type": "paragraph",
-            "content": "Zur <strong>Swiss-Life-Gruppe</strong> gehören die Vertriebe Swiss Life Select (ehem. AWD), Tecis, Horbach und ProVentus mit zusammen rund <strong>674 Millionen Euro Provisionen</strong> (2023) und über 250 Produktpartnern. MLP betont, kein klassischer Strukturvertrieb zu sein, setzt aber ebenfalls auf ein provisionsbasiertes Modell mit Fokus auf Akademiker."
+            "content": "Zur <strong>Swiss-Life-Gruppe</strong> gehören die Vertriebe Swiss Life Select (ehem. AWD), Tecis, Horbach und ProVentus mit zusammen rund <strong>674 Millionen Euro Provisionen</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">13</span><span class=\"v1x1-cite-tooltip\">Swiss Life Deutschland Geschäftsbericht 2023</span></span> (2023) und über 250 Produktpartnern. MLP betont, kein klassischer Strukturvertrieb zu sein, setzt aber ebenfalls auf ein provisionsbasiertes Modell mit Fokus auf Akademiker."
           },
           {
             "type": "paragraph",
@@ -1420,8 +1420,8 @@
           },
           {
             "type": "paragraph",
-            "content": "Das VVG vom 23. November 2007 (BGBl. I S. 2631), zuletzt geändert durch Art. 5 G v. 16.1.2026, regelt die privatrechtliche Beziehung zwischen Versicherungsnehmer (VN), Versicherer und Vermittler. Es gliedert sich in <strong>drei Teile mit 216 Paragraphen</strong>: Teil 1 enthält allgemeine Vorschriften für alle Versicherungszweige (§§ 1–99), Teil 2 regelt einzelne Sparten von der Haftpflicht- über die Lebens- bis zur Krankenversicherung (§§ 100–208), Teil 3 umfasst Schlussvorschriften (§§ 209–216). Die meisten Normen sind <strong>halbzwingend</strong> – Abweichungen zum Nachteil des VN sind nur bei Großrisiken (§ 210 Abs. 2) und laufender Versicherung zulässig.",
-            "title": "1. Das Versicherungsvertragsgesetz prägt den gesamten Lebenszyklus eines Vertrags"
+            "content": "Das VVG vom 23. November 2007 (BGBl. I S. 2631), zuletzt geändert durch Art. 5 G v. 16.1.2026, regelt die privatrechtliche Beziehung zwischen Versicherungsnehmer (VN), Versicherer und Vermittler. Es gliedert sich in <strong>drei Teile mit 216 Paragraphen</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">1</span><span class=\"v1x1-cite-tooltip\">VVG i.d.F. v. 16.1.2026, BGBl. I S. 2631</span></span>: Teil 1 enthält allgemeine Vorschriften für alle Versicherungszweige (§§ 1–99), Teil 2 regelt einzelne Sparten von der Haftpflicht- über die Lebens- bis zur Krankenversicherung (§§ 100–208), Teil 3 umfasst Schlussvorschriften (§§ 209–216). Die meisten Normen sind <strong>halbzwingend</strong> – Abweichungen zum Nachteil des VN sind nur bei Großrisiken (§ 210 Abs. 2) und laufender Versicherung zulässig.",
+            "title": "Das Versicherungsvertragsgesetz prägt den gesamten Lebenszyklus eines Vertrags"
           },
           {
             "type": "paragraph",
@@ -1435,13 +1435,13 @@
           },
           {
             "type": "paragraph",
-            "content": "Das Widerrufsrecht (§ 8 VVG) beträgt <strong>14 Tage</strong>, bei Lebensversicherungen <strong>30 Tage</strong> (§ 152 Abs. 1). Die Frist beginnt erst, wenn dem VN alle erforderlichen Unterlagen einschließlich einer deutlich gestalteten Widerrufsbelehrung zugegangen sind. Fehlt eine ordnungsgemäße Belehrung, entsteht ein <strong>„ewiges Widerrufsrecht\"</strong> – vom BGH mehrfach bestätigt (IV ZR 76/11; IV ZR 384/14). Bei der vorvertraglichen Anzeigepflicht (§§ 19–22) differenziert das Gesetz nach Verschuldensgrad: Einfache Fahrlässigkeit führt nur zu einem Kündigungsrecht mit Monatsfrist, grobe Fahrlässigkeit erlaubt den Rücktritt (wobei eine Vertragsanpassung vorrangig ist), Vorsatz begründet Leistungsfreiheit mit zehnjähriger Ausübungsfrist, und Arglist ermöglicht die Anfechtung nach § 123 BGB. Vertragliche Obliegenheiten (§ 28 VVG) folgen derselben abgestuften Systematik – ergänzt um eine <strong>Belehrungsobliegenheit</strong> des Versicherers: Ohne gesonderten Hinweis in Textform auf die Rechtsfolgen nach Eintritt des Versicherungsfalls entfällt die Leistungsfreiheit.",
+            "content": "Das Widerrufsrecht (§ 8 VVG) beträgt <strong>14 Tage</strong>, bei Lebensversicherungen <strong>30 Tage</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">2</span><span class=\"v1x1-cite-tooltip\">VVG § 8 Abs. 1, § 152 Abs. 1</span></span> (§ 152 Abs. 1). Die Frist beginnt erst, wenn dem VN alle erforderlichen Unterlagen einschließlich einer deutlich gestalteten Widerrufsbelehrung zugegangen sind. Fehlt eine ordnungsgemäße Belehrung, entsteht ein <strong>„ewiges Widerrufsrecht\"</strong> – vom BGH mehrfach bestätigt (IV ZR 76/11; IV ZR 384/14). Bei der vorvertraglichen Anzeigepflicht (§§ 19–22) differenziert das Gesetz nach Verschuldensgrad: Einfache Fahrlässigkeit führt nur zu einem Kündigungsrecht mit Monatsfrist, grobe Fahrlässigkeit erlaubt den Rücktritt (wobei eine Vertragsanpassung vorrangig ist), Vorsatz begründet Leistungsfreiheit mit zehnjähriger Ausübungsfrist, und Arglist ermöglicht die Anfechtung nach § 123 BGB. Vertragliche Obliegenheiten (§ 28 VVG) folgen derselben abgestuften Systematik – ergänzt um eine <strong>Belehrungsobliegenheit</strong> des Versicherers: Ohne gesonderten Hinweis in Textform auf die Rechtsfolgen nach Eintritt des Versicherungsfalls entfällt die Leistungsfreiheit.",
             "title": "Widerruf, Anzeigepflicht und Obliegenheiten in der Praxis"
           },
           {
             "type": "paragraph",
             "content": "Das Versicherungsaufsichtsgesetz (VAG) in seiner aktuellen Fassung trat am <strong>1. Januar 2016</strong> in Kraft und setzt die EU-Richtlinie 2009/138/EG (Solvency II) in nationales Recht um. Es gliedert sich in sechs Teile: Allgemeine Vorschriften (§§ 1–7a), Erst- und Rückversicherung (§§ 8–220) als Kernstück, Versicherungsvereine auf Gegenseitigkeit (§§ 171–210), Einrichtungen der betrieblichen Altersversorgung (§§ 232–244), Gruppenaufsicht (§§ 245–293) und Aufsichtsvorschriften (§§ 294–355). <strong>§ 294 VAG</strong> definiert das Hauptziel: Schutz der Versicherungsnehmer und Begünstigten. Ergänzt wird das VAG durch die unmittelbar geltende Delegierte Verordnung (EU) 2015/35 (Level 2) sowie EIOPA-Leitlinien (Level 3).",
-            "title": "2. VAG und Solvency II: das aufsichtsrechtliche Fundament"
+            "title": "VAG und Solvency II: das aufsichtsrechtliche Fundament"
           },
           {
             "type": "paragraph",
@@ -1449,12 +1449,12 @@
           },
           {
             "type": "paragraph",
-            "content": "Das <strong>Solvency Capital Requirement (SCR)</strong> entspricht dem Value-at-Risk der Basiseigenmittel zu einem Konfidenzniveau von <strong>99,5 %</strong> über ein Jahr (§ 97 VAG) – ein Versicherer muss also ein Extremereignis überstehen können, das statistisch nur alle 200 Jahre eintritt. Die <strong>Standardformel</strong> (§§ 96–110 VAG) aggregiert fünf Risikomodule (Nichtleben, Leben, Kranken, Markt, Gegenparteiausfall) zu einer Basissolvabilitätskapitalanforderung (BSCR), addiert operationelles Risiko (§ 107) und berücksichtigt die Verlustausgleichsfähigkeit versicherungstechnischer Rückstellungen und latenter Steuern (§ 108). Versicherer können alternativ ein <strong>internes Modell</strong> nutzen (§§ 111–121), das einer aufwändigen BaFin-Genehmigung bedarf. Zum Solvency-II-Start 2016 hatten 15 Versicherer ein vollständiges und 17 ein partielles internes Modell genehmigt bekommen – bei 342 Solvency-II-pflichtigen Unternehmen. Die große Mehrheit (2024: <strong>67 von 79 Lebensversicherern</strong>) nutzt die Standardformel.",
+            "content": "Das <strong>Solvency Capital Requirement (SCR)</strong> entspricht dem Value-at-Risk der Basiseigenmittel zu einem Konfidenzniveau von <strong>99,5 %</strong> über ein Jahr<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">3</span><span class=\"v1x1-cite-tooltip\">Solvency-II-RL 2009/138/EG Art. 101; VAG § 97</span></span> (§ 97 VAG) – ein Versicherer muss also ein Extremereignis überstehen können, das statistisch nur alle 200 Jahre eintritt. Die <strong>Standardformel</strong> (§§ 96–110 VAG) aggregiert fünf Risikomodule (Nichtleben, Leben, Kranken, Markt, Gegenparteiausfall) zu einer Basissolvabilitätskapitalanforderung (BSCR), addiert operationelles Risiko (§ 107) und berücksichtigt die Verlustausgleichsfähigkeit versicherungstechnischer Rückstellungen und latenter Steuern (§ 108). Versicherer können alternativ ein <strong>internes Modell</strong> nutzen (§§ 111–121), das einer aufwändigen BaFin-Genehmigung bedarf. Zum Solvency-II-Start 2016 hatten 15 Versicherer ein vollständiges und 17 ein partielles internes Modell genehmigt bekommen – bei 342 Solvency-II-pflichtigen Unternehmen. Die große Mehrheit (2024: <strong>67 von 79 Lebensversicherern</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">4</span><span class=\"v1x1-cite-tooltip\">BaFin Statistik Erstversicherungsunternehmen 2024</span></span>) nutzt die Standardformel.",
             "title": "Säule 1 quantifiziert die Kapitalstärke"
           },
           {
             "type": "paragraph",
-            "content": "Das <strong>Minimum Capital Requirement (MCR)</strong> bildet die absolute Untergrenze (§ 122 VAG), berechnet als einfaches Faktormodell und begrenzt auf <strong>25–45 % des SCR</strong>. Die absoluten Untergrenzen betragen 3,7 Mio. EUR (Leben) bzw. 2,5 Mio. EUR (Nichtleben). Eine Unterschreitung des MCR löst die schwerwiegendsten Aufsichtsmaßnahmen bis zum Entzug der Geschäftserlaubnis aus."
+            "content": "Das <strong>Minimum Capital Requirement (MCR)</strong> bildet die absolute Untergrenze (§ 122 VAG), berechnet als einfaches Faktormodell und begrenzt auf <strong>25–45 % des SCR</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">5</span><span class=\"v1x1-cite-tooltip\">VAG § 122; Del. VO (EU) 2015/35 Art. 248–253</span></span>. Die absoluten Untergrenzen betragen 3,7 Mio. EUR (Leben) bzw. 2,5 Mio. EUR (Nichtleben). Eine Unterschreitung des MCR löst die schwerwiegendsten Aufsichtsmaßnahmen bis zum Entzug der Geschäftserlaubnis aus."
           },
           {
             "type": "paragraph",
@@ -1472,40 +1472,40 @@
           },
           {
             "type": "paragraph",
-            "content": "Die durchschnittlichen Bedeckungsquoten zum <strong>31.12.2024</strong> (inklusive Übergangsmaßnahmen und Volatilitätsanpassung) betrugen: <strong>Lebensversicherung 295 %</strong>, <strong>Schaden/Unfall 260 %</strong> und <strong>Rückversicherung 293 %</strong>. Der augenscheinliche Rückgang der Lebensversicherungsquote von 479 % (2023) auf 295 % erklärt sich durch eine BaFin-angeordnete Neuberechnung des <strong>Rückstellungstransitionals</strong> (§ 352 VAG) zum 30.6.2024, bei der die meisten Unternehmen den Wert null ansetzen mussten. Die ökonomische Basisquote ohne Übergangsmaßnahmen blieb stabil – rund drei Viertel der Lebensversicherer erfüllen die SCR-Anforderung bereits ohne jede Hilfsmaßnahme. Von den 76 Lebensversicherern nutzten 2024 allerdings noch <strong>44 das Rückstellungstransitional</strong> und 22 die Volatilitätsanpassung; nur sieben verzichteten vollständig auf Hilfen. Die Übergangsmaßnahmen laufen spätestens zum <strong>1. Januar 2032</strong> aus.",
+            "content": "Die durchschnittlichen Bedeckungsquoten zum <strong>31.12.2024</strong> (inklusive Übergangsmaßnahmen und Volatilitätsanpassung) betrugen: <strong>Lebensversicherung 295 %</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">6</span><span class=\"v1x1-cite-tooltip\">BaFin Solvenzquoten 31.12.2024</span></span>, <strong>Schaden/Unfall 260 %</strong> und <strong>Rückversicherung 293 %</strong>. Der augenscheinliche Rückgang der Lebensversicherungsquote von 479 % (2023) auf 295 % erklärt sich durch eine BaFin-angeordnete Neuberechnung des <strong>Rückstellungstransitionals</strong> (§ 352 VAG) zum 30.6.2024, bei der die meisten Unternehmen den Wert null ansetzen mussten. Die ökonomische Basisquote ohne Übergangsmaßnahmen blieb stabil – rund drei Viertel der Lebensversicherer erfüllen die SCR-Anforderung bereits ohne jede Hilfsmaßnahme. Von den 76 Lebensversicherern nutzten 2024 allerdings noch <strong>44 das Rückstellungstransitional</strong> und 22 die Volatilitätsanpassung; nur sieben verzichteten vollständig auf Hilfen. Die Übergangsmaßnahmen laufen spätestens zum <strong>1. Januar 2032</strong> aus.",
             "title": "Aktuelle SCR-Quoten und der Einfluss der Übergangsmaßnahmen"
           },
           {
             "type": "paragraph",
             "content": "Das <strong>Proportionalitätsprinzip</strong> erlaubt eine risikoangemessene Anwendung der Anforderungen. Ab 2027 wird es durch die Solvency-II-Reform in drei Kategorien formalisiert: <strong>SNCUs</strong> (Small and Non-Complex Undertakings, ca. 40 deutsche Versicherer mit unter 1 % Marktanteil) erhalten automatische Erleichterungen; die Mehrheit (ca. 75 %) kann sieben von zehn Erleichterungen mit BaFin-Genehmigung nutzen."
-          },
-          {
-            "type": "paragraph",
-            "content": "Die <strong>Insurance Distribution Directive</strong> (EU-Richtlinie 2016/97) wurde in Deutschland durch das IDD-Umsetzungsgesetz vom 20. Juli 2017 zum <strong>23. Februar 2018</strong> in Kraft gesetzt. Anders als die Vorgängerrichtlinie IMD (2002/92/EG) erfasst die IDD <strong>alle Vertriebskanäle</strong> – einschließlich des Direktvertriebs der Versicherer. Umgesetzt wurde sie in der GewO (§ 34d), im VVG (§§ 7a, 7b, 7c), im VAG (§ 23) und in der vollständig neu gefassten VersVermV (in Kraft seit 20. Dezember 2018).",
-            "title": "3. Die IDD hat den Versicherungsvertrieb grundlegend transformiert"
-          },
-          {
-            "type": "paragraph",
-            "content": "Die <strong>Weiterbildungspflicht</strong> (§ 34d Abs. 9 GewO i. V. m. § 7 VersVermV) verlangt <strong>15 Zeitstunden pro Kalenderjahr</strong> von allen Erlaubnisinhabern, gebundenen Vertretern und unmittelbar mitwirkenden Beschäftigten. Die Dokumentation ist fünf Jahre aufzubewahren; IHKs führen stichprobenartige Kontrollen durch. Ausgenommen sind produktakzessorische Vermittler (§ 34d Abs. 6 GewO, die allerdings nach § 48 Abs. 2 VAG zu Fortbildungen verpflichtet sind) und Annexvermittler (§ 34d Abs. 8 GewO)."
-          },
-          {
-            "type": "paragraph",
-            "content": "Das <strong>Product Oversight and Governance</strong> (POG)-Verfahren (§ 23 Abs. 1a–1d VAG, ergänzt durch die Delegierte Verordnung (EU) 2017/2358) verpflichtet Produkthersteller, vor dem Vertrieb einen <strong>Zielmarkt</strong> festzulegen, einschlägige Risiken zu bewerten, die Vertriebsstrategie dem Zielmarkt anzupassen und das Produkt mindestens jährlich zu überprüfen. Alle Vertreiber müssen über Produkt und Zielmarkt informiert werden (§ 23 Abs. 1c VAG). Die <strong>Cross-Selling-Regeln</strong> (§ 7a VVG) verlangen beim Paketverkauf gesonderte Kosten- und Gebührennachweise für jeden Bestandteil sowie – bei Versicherung als Zusatzprodukt – die Möglichkeit des getrennten Erwerbs. Seit dem 1. Januar 2025 (ZuFinG) dürfen Restschuldversicherungsverträge erst <strong>frühestens eine Woche</strong> nach dem Darlehensabschluss geschlossen werden (§ 7a Abs. 5 VVG), bei Verstoß droht Nichtigkeit."
           }
         ],
         "level2": [
           {
             "type": "paragraph",
+            "content": "Die <strong>Insurance Distribution Directive</strong> (EU-Richtlinie 2016/97) wurde in Deutschland durch das IDD-Umsetzungsgesetz vom 20. Juli 2017 zum <strong>23. Februar 2018</strong> in Kraft gesetzt. Anders als die Vorgängerrichtlinie IMD (2002/92/EG) erfasst die IDD <strong>alle Vertriebskanäle</strong> – einschließlich des Direktvertriebs der Versicherer. Umgesetzt wurde sie in der GewO (§ 34d), im VVG (§§ 7a, 7b, 7c), im VAG (§ 23) und in der vollständig neu gefassten VersVermV (in Kraft seit 20. Dezember 2018).",
+            "title": "Die IDD hat den Versicherungsvertrieb grundlegend transformiert"
+          },
+          {
+            "type": "paragraph",
+            "content": "Die <strong>Weiterbildungspflicht</strong> (§ 34d Abs. 9 GewO i. V. m. § 7 VersVermV) verlangt <strong>15 Zeitstunden pro Kalenderjahr</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">7</span><span class=\"v1x1-cite-tooltip\">VersVermV § 7 i.V.m. § 34d Abs. 9 GewO</span></span> von allen Erlaubnisinhabern, gebundenen Vertretern und unmittelbar mitwirkenden Beschäftigten. Die Dokumentation ist fünf Jahre aufzubewahren; IHKs führen stichprobenartige Kontrollen durch. Ausgenommen sind produktakzessorische Vermittler (§ 34d Abs. 6 GewO, die allerdings nach § 48 Abs. 2 VAG zu Fortbildungen verpflichtet sind) und Annexvermittler (§ 34d Abs. 8 GewO)."
+          },
+          {
+            "type": "paragraph",
+            "content": "Das <strong>Product Oversight and Governance</strong> (POG)-Verfahren (§ 23 Abs. 1a–1d VAG, ergänzt durch die Delegierte Verordnung (EU) 2017/2358) verpflichtet Produkthersteller, vor dem Vertrieb einen <strong>Zielmarkt</strong> festzulegen, einschlägige Risiken zu bewerten, die Vertriebsstrategie dem Zielmarkt anzupassen und das Produkt mindestens jährlich zu überprüfen. Alle Vertreiber müssen über Produkt und Zielmarkt informiert werden (§ 23 Abs. 1c VAG). Die <strong>Cross-Selling-Regeln</strong> (§ 7a VVG) verlangen beim Paketverkauf gesonderte Kosten- und Gebührennachweise für jeden Bestandteil sowie – bei Versicherung als Zusatzprodukt – die Möglichkeit des getrennten Erwerbs. Seit dem 1. Januar 2025 (ZuFinG) dürfen Restschuldversicherungsverträge erst <strong>frühestens eine Woche</strong> nach dem Darlehensabschluss geschlossen werden (§ 7a Abs. 5 VVG), bei Verstoß droht Nichtigkeit."
+          },
+          {
+            "type": "paragraph",
             "content": "Das deutsche Vermittlerrecht unterscheidet drei Grundtypen. Der <strong>Versicherungsmakler</strong> (§ 59 Abs. 3 VVG) handelt im Lager des Kunden, muss eine hinreichende Zahl von Versicherern zugrunde legen (§ 60 VVG) und genießt eine <strong>Sachwalterstellung</strong> mit entsprechend hoher Haftung. Der <strong>Versicherungsvertreter</strong> (§ 59 Abs. 2 VVG) ist im Lager des Versicherers tätig – als gebundener Vertreter (Ausschließlichkeit) oder als Mehrfachagent. Der <strong>Versicherungsberater</strong> (§ 59 Abs. 4 VVG) arbeitet ausschließlich auf Honorarbasis, darf keine Provisionen annehmen und muss vorrangig Nettoprodukte anbieten. Ein Parallelverbot untersagt die gleichzeitige Tätigkeit als Vermittler und Berater (§ 34d Abs. 3 GewO).",
-            "title": "4. Drei Vermittlertypen mit klar unterschiedlichen Pflichten"
+            "title": "Drei Vermittlertypen mit klar unterschiedlichen Pflichten"
           },
           {
             "type": "paragraph",
-            "content": "Die <strong>Erlaubnispflicht</strong> nach § 34d Abs. 1 GewO verlangt Zuverlässigkeit, geordnete Vermögensverhältnisse, eine Berufshaftpflichtversicherung (Mindestdeckungssummen: <strong>1.564.610 € je Schadenfall</strong> und <strong>2.315.610 € jährlich</strong> nach EIOPA-Anpassung) und den Sachkundenachweis. Dieser wird durch die IHK-Sachkundeprüfung („Geprüfte/r Fachmann/frau für Versicherungsvermittlung\") oder gleichgestellte Qualifikationen (u. a. Versicherungskaufmann, Fachwirt für Versicherungen und Finanzen) erbracht. Gebundene Vertreter (§ 34d Abs. 7 GewO) benötigen keine eigene Erlaubnis – das Versicherungsunternehmen übernimmt die volle Haftung."
+            "content": "Die <strong>Erlaubnispflicht</strong> nach § 34d Abs. 1 GewO verlangt Zuverlässigkeit, geordnete Vermögensverhältnisse, eine Berufshaftpflichtversicherung (Mindestdeckungssummen: <strong>1.564.610 € je Schadenfall</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">8</span><span class=\"v1x1-cite-tooltip\">EIOPA-Anpassung, Del. VO (EU) 2019/1935</span></span> und <strong>2.315.610 € jährlich</strong> nach EIOPA-Anpassung) und den Sachkundenachweis. Dieser wird durch die IHK-Sachkundeprüfung („Geprüfte/r Fachmann/frau für Versicherungsvermittlung\") oder gleichgestellte Qualifikationen (u. a. Versicherungskaufmann, Fachwirt für Versicherungen und Finanzen) erbracht. Gebundene Vertreter (§ 34d Abs. 7 GewO) benötigen keine eigene Erlaubnis – das Versicherungsunternehmen übernimmt die volle Haftung."
           },
           {
             "type": "paragraph",
-            "content": "Im <strong>Vermittlerregister</strong> (www.vermittlerregister.info, § 11a GewO) waren zum <strong>1. Oktober 2025</strong> insgesamt <strong>179.426 Versicherungsvermittler und -berater</strong> registriert – ein Rückgang von rund 2.300 seit Jahresbeginn und fast 60.000 weniger als 2014 (239.300). Gegen diesen Trend wächst die Maklerschaft stetig: <strong>46.885 Makler</strong> markierten einen neuen Rekordstand, während Vertreter mit Erlaubnis auf <strong>27.072</strong> sanken. Versicherungsberater bilden mit rund <strong>320 Einträgen</strong> die kleinste Gruppe."
+            "content": "Im <strong>Vermittlerregister</strong> (www.vermittlerregister.info, § 11a GewO) waren zum <strong>1. Oktober 2025</strong> insgesamt <strong>179.426 Versicherungsvermittler und -berater</strong> registriert – ein Rückgang von rund 2.300 seit Jahresbeginn und fast 60.000 weniger als 2014 (239.300). Gegen diesen Trend wächst die Maklerschaft stetig: <strong>46.885 Makler</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">9</span><span class=\"v1x1-cite-tooltip\">DIHK Vermittlerregister, Stand 1.10.2025</span></span> markierten einen neuen Rekordstand, während Vertreter mit Erlaubnis auf <strong>27.072</strong> sanken. Versicherungsberater bilden mit rund <strong>320 Einträgen</strong> die kleinste Gruppe."
           },
           {
             "type": "paragraph",
@@ -1514,7 +1514,7 @@
           {
             "type": "paragraph",
             "content": "Die <strong>Bundesanstalt für Finanzdienstleistungsaufsicht (BaFin)</strong>, gegründet am 1. Mai 2002, beaufsichtigt als bundesunmittelbare Anstalt des öffentlichen Rechts alle wirtschaftlich bedeutenden Versicherungsunternehmen. Die Rechtsgrundlagen bilden das FinDAG (§ 4 Abs. 1a: Schutz kollektiver Verbraucherinteressen) und das VAG. Der Geschäftsbereich Versicherungs- und Pensionsfondsaufsicht (VA) wird seit dem 1. Januar 2024 von Exekutivdirektorin <strong>Julia Wiens</strong> geleitet. Die BaFin verfügt über weitreichende Instrumente: Prüfungen vor Ort, Anordnungen zur Mängelbeseitigung, Bestellung von <strong>Sonderbeauftragten</strong> (§ 307 VAG, eines der schärfsten Instrumente), Abberufung von Geschäftsleitern (§ 303 VAG) bis hin zum Entzug der Geschäftserlaubnis.",
-            "title": "5. BaFin-Aufsicht zwischen Solvenz- und Marktverhaltenskontrolle"
+            "title": "BaFin-Aufsicht zwischen Solvenz- und Marktverhaltenskontrolle"
           },
           {
             "type": "paragraph",
@@ -1526,25 +1526,25 @@
           },
           {
             "type": "paragraph",
-            "content": "Die <strong>Marktverhaltensaufsicht</strong> prüft auf drei Ebenen: Produktnutzen, Beratungsqualität am Point of Sale und fairer Umgang in der Leistungsregulierung. Die BaFin hat 2024 <strong>13 Lebensversicherer</strong> geprüft und bei einigen Effektivkosten von über 4 % festgestellt – Produkte ohne angemessenen Kundennutzen wurden vom Markt genommen. Für 2025/2026 weitet die BaFin die Prüfung auf Schaden- und Unfallversicherung aus, mit Fokus auf <strong>Price-Walking</strong> (nicht-risikobasierte Preisdifferenzierung bei Bestandskunden). Die <strong>BaFin-Beschwerdestatistik 2024</strong> weist einen drastischen Anstieg bei Kfz-Versicherungen aus: <strong>2.434 Beschwerden</strong> (+57 % gegenüber 2023).",
+            "content": "Die <strong>Marktverhaltensaufsicht</strong> prüft auf drei Ebenen: Produktnutzen, Beratungsqualität am Point of Sale und fairer Umgang in der Leistungsregulierung. Die BaFin hat 2024 <strong>13 Lebensversicherer</strong> geprüft<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">10</span><span class=\"v1x1-cite-tooltip\">BaFin Journal 12/2024, Wohlverhaltensaufsicht</span></span> und bei einigen Effektivkosten von über 4 % festgestellt – Produkte ohne angemessenen Kundennutzen wurden vom Markt genommen. Für 2025/2026 weitet die BaFin die Prüfung auf Schaden- und Unfallversicherung aus, mit Fokus auf <strong>Price-Walking</strong> (nicht-risikobasierte Preisdifferenzierung bei Bestandskunden). Die <strong>BaFin-Beschwerdestatistik 2024</strong> weist einen drastischen Anstieg bei Kfz-Versicherungen aus: <strong>2.434 Beschwerden</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">11</span><span class=\"v1x1-cite-tooltip\">BaFin Beschwerdestatistik 2024, Kfz-Versicherung</span></span> (+57 % gegenüber 2023).",
             "title": "Wohlverhaltensaufsicht gewinnt an Schärfe"
           },
           {
             "type": "paragraph",
-            "content": "Das BaFin-Dokument <strong>„Risiken im Fokus 2025\"</strong> (28. Januar 2025) identifiziert sechs Fokusrisiken, darunter Immobilienmarktkorrekturen, Unternehmenskreditausfälle und Cyber-Vorfälle. Erstmals nicht mehr genannt wird das Zinsänderungsrisiko – ein Signal der Normalisierung. In den <strong>„Risiken im Fokus 2026\"</strong> (28. Januar 2026) werden erstmals drei explizite <strong>Verbraucherrisiken</strong> benannt: kapitalbildende Lebensversicherungen mit überhöhten Kosten, drohende Überschuldung (5,7 Mio. Betroffene) und Finfluencer-getriebene Investitionen. Im Bereich der Finanzstabilität wurden in den ersten drei Quartalen 2025 bereits <strong>525 schwerwiegende IKT-Vorfälle</strong> unter DORA gemeldet.",
+            "content": "Das BaFin-Dokument <strong>„Risiken im Fokus 2025\"</strong> (28. Januar 2025) identifiziert sechs Fokusrisiken, darunter Immobilienmarktkorrekturen, Unternehmenskreditausfälle und Cyber-Vorfälle. Erstmals nicht mehr genannt wird das Zinsänderungsrisiko – ein Signal der Normalisierung. In den <strong>„Risiken im Fokus 2026\"</strong> (28. Januar 2026) werden erstmals drei explizite <strong>Verbraucherrisiken</strong> benannt: kapitalbildende Lebensversicherungen mit überhöhten Kosten, drohende Überschuldung (5,7 Mio. Betroffene) und Finfluencer-getriebene Investitionen. Im Bereich der Finanzstabilität wurden in den ersten drei Quartalen 2025 bereits <strong>525 schwerwiegende IKT-Vorfälle</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">12</span><span class=\"v1x1-cite-tooltip\">BaFin Risiken im Fokus 2026, DORA-Meldungen Q1–Q3/2025</span></span> unter DORA gemeldet.",
             "title": "Aufsichtsschwerpunkte 2025 und 2026"
-          },
-          {
-            "type": "paragraph",
-            "content": "Das <strong>IPID</strong> (Insurance Product Information Document, § 4 VVG-InfoV) folgt einem EU-weit standardisierten Format nach Durchführungsverordnung (EU) 2017/1469 und fasst auf maximal zwei Seiten Art der Versicherung, Prämie, Leistungsumfang, Ausschlüsse und Obliegenheiten zusammen. Für versicherungsbasierte Anlageprodukte gilt stattdessen das <strong>PRIIP-KID</strong> nach Verordnung (EU) 1286/2014. Die <strong>VVG-InfoV</strong> (Verordnung vom 18. Dezember 2007) konkretisiert die Informationspflichten nach § 7 VVG: § 1 regelt die allgemeinen Pflichtangaben, § 2 erweitert diese für Lebensversicherungen um einkalkulierte Abschlusskosten, Rückkaufswerte und Überschussbeteiligung, § 3 fordert bei Krankenversicherung eine Beitragsentwicklungsprognose und eine 10-Jahres-Übersicht. Die <strong>DL-InfoV</strong> ist für Versicherungsvermittlung und -beratung ausdrücklich <strong>nicht anwendbar</strong> (Art. 2 Abs. 2 RL 2006/123/EG) – diese unterliegen den spezielleren Pflichten des VVG und der VVG-InfoV.",
-            "title": "6. Verbraucherschutz durch Transparenz, Schlichtung und Information"
-          },
-          {
-            "type": "paragraph",
-            "content": "Der <strong>Versicherungsombudsmann</strong> (Rechtsgrundlage § 214 VVG, anerkannt als Verbraucherschlichtungsstelle nach VSBG) verzeichnete 2024 ein <strong>Rekordjahr</strong>: <strong>21.548 Beschwerdeeingänge</strong> (+19,5 % gegenüber 2023), davon 15.659 zulässig. Die Erfolgsquote für Beschwerdeführer betrug <strong>52,4 %</strong> in Nicht-Lebensversicherungssparten und <strong>34,4 %</strong> in der Lebensversicherung. Entscheidungen bis 10.000 € sind für den Versicherer verbindlich; das Verfahren ist für Verbraucher kostenlos. Seit April 2024 leitet die frühere BVerfG-Richterin <strong>Dr. Sibylle Kessal-Wulf</strong> das Amt."
           }
         ],
         "level3": [
+          {
+            "type": "paragraph",
+            "content": "Das <strong>IPID</strong> (Insurance Product Information Document, § 4 VVG-InfoV) folgt einem EU-weit standardisierten Format nach Durchführungsverordnung (EU) 2017/1469 und fasst auf maximal zwei Seiten Art der Versicherung, Prämie, Leistungsumfang, Ausschlüsse und Obliegenheiten zusammen. Für versicherungsbasierte Anlageprodukte gilt stattdessen das <strong>PRIIP-KID</strong> nach Verordnung (EU) 1286/2014. Die <strong>VVG-InfoV</strong> (Verordnung vom 18. Dezember 2007) konkretisiert die Informationspflichten nach § 7 VVG: § 1 regelt die allgemeinen Pflichtangaben, § 2 erweitert diese für Lebensversicherungen um einkalkulierte Abschlusskosten, Rückkaufswerte und Überschussbeteiligung, § 3 fordert bei Krankenversicherung eine Beitragsentwicklungsprognose und eine 10-Jahres-Übersicht. Die <strong>DL-InfoV</strong> ist für Versicherungsvermittlung und -beratung ausdrücklich <strong>nicht anwendbar</strong> (Art. 2 Abs. 2 RL 2006/123/EG) – diese unterliegen den spezielleren Pflichten des VVG und der VVG-InfoV.",
+            "title": "Verbraucherschutz durch Transparenz, Schlichtung und Information"
+          },
+          {
+            "type": "paragraph",
+            "content": "Der <strong>Versicherungsombudsmann</strong> (Rechtsgrundlage § 214 VVG, anerkannt als Verbraucherschlichtungsstelle nach VSBG) verzeichnete 2024 ein <strong>Rekordjahr</strong>: <strong>21.548 Beschwerdeeingänge</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">13</span><span class=\"v1x1-cite-tooltip\">Versicherungsombudsmann Jahresbericht 2024</span></span> (+19,5 % gegenüber 2023), davon 15.659 zulässig. Die Erfolgsquote für Beschwerdeführer betrug <strong>52,4 %</strong> in Nicht-Lebens<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">14</span><span class=\"v1x1-cite-tooltip\">Versicherungsombudsmann Jahresbericht 2024</span></span>versicherungssparten und <strong>34,4 %</strong> in der Lebensversicherung. Entscheidungen bis 10.000 € sind für den Versicherer verbindlich; das Verfahren ist für Verbraucher kostenlos. Seit April 2024 leitet die frühere BVerfG-Richterin <strong>Dr. Sibylle Kessal-Wulf</strong> das Amt."
+          },
           {
             "type": "paragraph",
             "content": "Die <strong>Financial Data Access Verordnung (FIDA)</strong>, von der EU-Kommission am 28. Juni 2023 vorgeschlagen, soll einen „Open Finance\"-Raum schaffen. Versicherer ab 250 Mitarbeitern oder 50 Mio. EUR Umsatz müssten Kundendaten autorisierten Drittanbietern über standardisierte APIs bereitstellen. Die Umsetzung ist in drei Phasen geplant: Kfz-Versicherungsdaten (Q4 2027), Versicherungsanlageprodukte (Q3 2028), übrige Nicht-Lebensprodukte (Q3 2029). Der erste Trilog fand im April 2025 statt; die <strong>Verabschiedung wird im 1. Halbjahr 2026</strong> erwartet. Der GDV schätzt, dass EU-weit circa <strong>400 Millionen Versicherungsverträge</strong> in standardisierte Formate überführt werden müssten.",
@@ -1646,7 +1646,7 @@
         "level1": [
           {
             "type": "paragraph",
-            "content": "Die Wertschöpfungskette eines deutschen Versicherers umfasst elf zentrale Glieder – von der Produktentwicklung über das Schadenmanagement bis zur IT-Modernisierung – und befindet sich 2025 in einem tiefgreifenden Transformationsprozess. <strong>Künstliche Intelligenz, die Zinswende und regulatorischer Druck</strong> verändern jedes einzelne Glied dieser Kette fundamental. Mit <strong>238 Mrd. € Beitragseinnahmen</strong> (2024, +5,3 %) und über <strong>1,6 Billionen € Kapitalanlagen</strong> gehört die deutsche Versicherungswirtschaft zu den größten Europas – und steht zugleich vor der Herausforderung, Altsysteme, steigende Schadenkosten und wachsende Kundenerwartungen gleichzeitig zu bewältigen. Dieser Report analysiert alle Stufen der Wertschöpfungskette mit aktuellen Zahlen, Praxisbeispielen und Marktdaten."
+            "content": "Die Wertschöpfungskette eines deutschen Versicherers umfasst elf zentrale Glieder – von der Produktentwicklung über das Schadenmanagement bis zur IT-Modernisierung – und befindet sich 2025 in einem tiefgreifenden Transformationsprozess. <strong>Künstliche Intelligenz, die Zinswende und regulatorischer Druck</strong> verändern jedes einzelne Glied dieser Kette fundamental. Mit <strong>238 Mrd. € Beitragseinnahmen</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">1</span><span class=\"v1x1-cite-tooltip\">GDV Jahrbuch 2024</span></span> (2024, +5,3 %) und über <strong>1,6 Billionen € Kapitalanlagen</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">2</span><span class=\"v1x1-cite-tooltip\">BaFin Statistik Kapitalanlagen 2024</span></span> gehört die deutsche Versicherungswirtschaft zu den größten Europas – und steht zugleich vor der Herausforderung, Altsysteme, steigende Schadenkosten und wachsende Kundenerwartungen gleichzeitig zu bewältigen. Dieser Report analysiert alle Stufen der Wertschöpfungskette mit aktuellen Zahlen, Praxisbeispielen und Marktdaten."
           },
           {
             "type": "paragraph",
@@ -1655,7 +1655,7 @@
           },
           {
             "type": "paragraph",
-            "content": "Design Thinking und das Scaled Agile Framework (SAFe) haben sich als Standard etabliert. Cross-funktionale Teams arbeiten in 3-Monats-Zyklen mit 2-wöchigen Sprints. Low-Code-Plattformen wie Cleos ermöglichen eine Time-to-Market von <strong>unter zwei Wochen</strong> für neue Produkte mit vollständiger digitaler Journey – ein Quantensprung gegenüber der klassischen Entwicklungsdauer von 6 bis 18 Monaten. <strong>87 % der Versicherer</strong> setzen inzwischen auf modulare Baukastensysteme statt starrer Paketprodukte. Neodigital bietet einen digitalen Produktkonfigurator als Insurance-as-a-Service, Die Bayerische hat ihre Gebäudeversicherung in drei Tarifabstufungen mit vier Bausteinen aufgestellt, und ERGO setzt bei der Hausratversicherung auf modulare Struktur.",
+            "content": "Design Thinking und das Scaled Agile Framework (SAFe) haben sich als Standard etabliert. Cross-funktionale Teams arbeiten in 3-Monats-Zyklen mit 2-wöchigen Sprints. Low-Code-Plattformen wie Cleos ermöglichen eine Time-to-Market von <strong>unter zwei Wochen</strong> für neue Produkte mit vollständiger digitaler Journey – ein Quantensprung gegenüber der klassischen Entwicklungsdauer von 6 bis 18 Monaten. <strong>87 % der Versicherer</strong> setzen<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">3</span><span class=\"v1x1-cite-tooltip\">msg/Lünendonk Insurance IT-Studie 2024</span></span> inzwischen auf modulare Baukastensysteme statt starrer Paketprodukte. Neodigital bietet einen digitalen Produktkonfigurator als Insurance-as-a-Service, Die Bayerische hat ihre Gebäudeversicherung in drei Tarifabstufungen mit vier Bausteinen aufgestellt, und ERGO setzt bei der Hausratversicherung auf modulare Struktur.",
             "title": "Agile Methoden und modulare Tarife"
           },
           {
@@ -1670,12 +1670,12 @@
           },
           {
             "type": "paragraph",
-            "content": "Die Dunkelverarbeitungsquote – der Anteil fallabschließend bearbeiteter Vorgänge ohne Sachbearbeitereingriff – zeigt den Grad der Automatisierung. Laut GDV-Erhebung 2023 liegt sie bei <strong>33,5 % in der Sach- und Unfallversicherung</strong>, 32,5 % in der Krankenversicherung und 24,1 % bei Kfz-Neuverträgen. Der Münchener Verein erreicht in der Online-Krankenzusatzversicherung sogar <strong>90 % Dunkelverarbeitung</strong>. Laut Accenture verbringen Underwriter jedoch noch fast die Hälfte ihrer Arbeitszeit mit administrativen Aufgaben.",
+            "content": "Die Dunkelverarbeitungsquote – der Anteil fallabschließend bearbeiteter Vorgänge ohne Sachbearbeitereingriff – zeigt den Grad der Automatisierung. Laut GDV-Erhebung 2023 liegt sie bei <strong>33,5 % in der Sach- und Unfallversicherung</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">4</span><span class=\"v1x1-cite-tooltip\">GDV Digitalisierungserhebung 2023</span></span>, 32,5 % in der Krankenversicherung und 24,1 % bei Kfz-Neuverträgen. Der Münchener Verein erreicht in der Online-Krankenzusatzversicherung sogar <strong>90 % Dunkelverarbeitung</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">5</span><span class=\"v1x1-cite-tooltip\">Münchener Verein Unternehmensbericht 2024</span></span>. Laut Accenture verbringen Underwriter jedoch noch fast die Hälfte ihrer Arbeitszeit mit administrativen Aufgaben.",
             "title": "Automatisierung und KI-Einsatz"
           },
           {
             "type": "paragraph",
-            "content": "Munich Re hat mit der <strong>MIRA Digital Suite</strong> das marktführende System für automatisiertes Underwriting in der Lebensversicherung geschaffen: Über 400 spezialisierte Risikokalkulatoren decken mehr als 4.600 Beeinträchtigungen ab. MIRA PoS ermöglicht automatisierte Risikoprüfung am Point of Sale. Swiss Life Deutschland erreichte als Pilotpartner eine Akzeptanzrate bei Ärzten von 93 %. Die HUK-COBURG-Lebensversicherung setzt seit 2011 auf Tele-Underwriting und seit 2015 auf Munich-Re-Automatisierungslösungen. <strong>68 % der Versicherer weltweit</strong> nutzen bereits KI, in Deutschland sind die häufigsten Anwendungsfelder Schadenmeldung (59 %) und Vertragsanalyse (41 %)."
+            "content": "Munich Re hat mit der <strong>MIRA Digital Suite</strong> das marktführende System für automatisiertes Underwriting in der Lebensversicherung geschaffen: Über 400 spezialisierte Risikokalkulatoren decken mehr als 4.600 Beeinträchtigungen ab. MIRA PoS ermöglicht automatisierte Risikoprüfung am Point of Sale. Swiss Life Deutschland erreichte als Pilotpartner eine Akzeptanzrate bei Ärzten von 93 %. Die HUK-COBURG-Lebensversicherung setzt seit 2011 auf Tele-Underwriting und seit 2015 auf Munich-Re-Automatisierungslösungen. <strong>68 % der Versicherer weltweit</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">6</span><span class=\"v1x1-cite-tooltip\">Accenture Insurance Technology Vision 2024</span></span> nutzen bereits KI, in Deutschland sind die häufigsten Anwendungsfelder Schadenmeldung (59 %) und Vertragsanalyse (41 %)."
           },
           {
             "type": "paragraph",
@@ -1684,7 +1684,7 @@
           },
           {
             "type": "paragraph",
-            "content": "Im Bestandsführungssystemmarkt dominieren wenige spezialisierte Anbieter. <strong>msg life</strong> (msg.Life Factory) ist klarer Marktführer im Lebensversicherungsbereich mit über 40 Jahren Erfahrung und Kunden wie ERGO, R+V, DEVK, AXA und Canada Life. <strong>adesso insurance solutions</strong> bietet mit der in|sure Ecosphere eine spartenübergreifende Alternative und hat für SOKA-BAU <strong>1,94 Millionen Policen</strong> migriert. Guidewire dominiert den internationalen P&C-Markt mit über 570 Kunden, expandiert aber zunehmend im DACH-Raum. Bemerkenswert: <strong>9 von 10 Versicherern</strong> setzen bei Erneuerungen inzwischen auf Standardsoftware statt Eigenentwicklungen."
+            "content": "Im Bestandsführungssystemmarkt dominieren wenige spezialisierte Anbieter. <strong>msg life</strong> (msg.Life Factory) ist klarer Marktführer im Lebensversicherungsbereich mit über 40 Jahren Erfahrung und Kunden wie ERGO, R+V, DEVK, AXA und Canada Life. <strong>adesso insurance solutions</strong> bietet mit der in|sure Ecosphere eine spartenübergreifende Alternative und hat für SOKA-BAU <strong>1,94 Millionen Policen</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">7</span><span class=\"v1x1-cite-tooltip\">adesso Projektbericht SOKA-BAU Migration 2024</span></span> migriert. Guidewire dominiert den internationalen P&C-Markt mit über 570 Kunden, expandiert aber zunehmend im DACH-Raum. Bemerkenswert: <strong>9 von 10 Versicherern</strong> setzen bei Erneuerungen inzwischen auf Standardsoftware statt Eigenentwicklungen."
           },
           {
             "type": "paragraph",
@@ -1693,8 +1693,10 @@
           },
           {
             "type": "paragraph",
-            "content": "Bei den Kundenportalen liegt die Allianz mit dem höchsten Digital Touchpoint Index (44) vorn, gefolgt von HUK-COBURG (30) und ERGO (27). „Meine Allianz\" nutzen über <strong>5 Millionen Kunden</strong>, „Meine HUK\" über 4 Millionen. Der Anteil der Kundenkommunikation über Online-Portale hat sich von 10 % (2019) auf <strong>22 % (2023)</strong> mehr als verdoppelt, während der Papierpostanteil von 36 % auf 23 % sank. Ab Juni 2025 müssen Versicherer ihre Portale gemäß dem Barrierefreiheitsstärkungsgesetz (BFSG) barrierefrei gestalten."
-          },
+            "content": "Bei den Kundenportalen liegt die Allianz mit dem höchsten Digital Touchpoint Index (44) vorn, gefolgt von HUK-COBURG (30) und ERGO (27). „Meine Allianz\" nutzen über <strong>5 Millionen Kunden</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">8</span><span class=\"v1x1-cite-tooltip\">Allianz Deutschland Digitalbericht 2024</span></span>, „Meine HUK\" über 4 Millionen. Der Anteil der Kundenkommunikation über Online-Portale hat sich von 10 % (2019) auf <strong>22 % (2023)</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">9</span><span class=\"v1x1-cite-tooltip\">GDV Digitalreport Versicherung 2024</span></span> mehr als verdoppelt, während der Papierpostanteil von 36 % auf 23 % sank. Ab Juni 2025 müssen Versicherer ihre Portale gemäß dem Barrierefreiheitsstärkungsgesetz (BFSG) barrierefrei gestalten."
+          }
+        ],
+        "level2": [
           {
             "type": "paragraph",
             "content": "Der Schadenprozess folgt einer standardisierten Kette: Schadenmeldung (FNOL), Deckungsprüfung, Begutachtung, Regulierung, Auszahlung und gegebenenfalls Regress. Die Prüffrist bei Kfz-Haftpflichtschäden beträgt laut Rechtsprechung <strong>4 bis 6 Wochen</strong>, bei KI-gestützter Regulierung (Allianz) können einfache Vollkaskoschäden bereits innerhalb eines Tages erledigt werden.",
@@ -1702,11 +1704,11 @@
           },
           {
             "type": "paragraph",
-            "content": "Die Kfz-Versicherung erlebte 2023 ein Schockjahr: Die Combined Ratio erreichte <strong>112,2 %</strong> – kein einziger der 50 größten Versicherer blieb unter 100 %. Haupttreiber waren der durchschnittliche Kfz-Sachschaden von 3.700 € (+8,6 %), steigende Ersatzteilpreise (+6,2 %) und höhere Werkstatt-Stundensätze. 2024 verbesserte sich die Situation auf <strong>106,56 %</strong> durch massive Prämienerhöhungen, und für 2025 prognostiziert der GDV eine Rückkehr auf ca. 97 %. Zum Vergleich: Die Allianz erzielte global eine P&C Combined Ratio von 93,4 % und einen Operating Profit von 7,9 Mrd. € (+14,3 %)."
+            "content": "Die Kfz-Versicherung erlebte 2023 ein Schockjahr: Die Combined Ratio erreichte <strong>112,2 %</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">10</span><span class=\"v1x1-cite-tooltip\">BaFin Statistik Kfz-Versicherung 2023</span></span> – kein einziger der 50 größten Versicherer blieb unter 100 %. Haupttreiber waren der durchschnittliche Kfz-Sachschaden von 3.700 € (+8,6 %), steigende Ersatzteilpreise (+6,2 %) und höhere Werkstatt-Stundensätze. 2024 verbesserte sich die Situation auf <strong>106,56 %</strong> durch massive Prämienerhöhungen, und für 2025 prognostiziert der GDV eine Rückkehr auf ca. 97 %. Zum Vergleich: Die Allianz erzielte global eine P&C Combined Ratio von 93,4 % und einen Operating Profit von 7,9 Mrd. € (+14,3 %)."
           },
           {
             "type": "paragraph",
-            "content": "Schadensteuerung – die Lenkung von Reparaturen in Partnerwerkstätten mit Rahmenverträgen – ist ein zentrales Kostensenkungsinstrument. Die HUK-COBURG betreibt mit über <strong>1.800 Partnerwerkstätten</strong> das größte Werkstattnetz Deutschlands. Rund 9 Millionen Kunden haben den Classic-Tarif mit Werkstattbindung gewählt, über 7 Millionen Schäden wurden bereits über Partnerwerkstätten reguliert. 2025 führte die HUK erstmals ein digitales Angebotsverfahren für Stundensätze ein.",
+            "content": "Schadensteuerung – die Lenkung von Reparaturen in Partnerwerkstätten mit Rahmenverträgen – ist ein zentrales Kostensenkungsinstrument. Die HUK-COBURG betreibt mit über <strong>1.800 Partnerwerkstätten</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">11</span><span class=\"v1x1-cite-tooltip\">HUK-COBURG Geschäftsbericht 2024</span></span> das größte Werkstattnetz Deutschlands. Rund 9 Millionen Kunden haben den Classic-Tarif mit Werkstattbindung gewählt, über 7 Millionen Schäden wurden bereits über Partnerwerkstätten reguliert. 2025 führte die HUK erstmals ein digitales Angebotsverfahren für Stundensätze ein.",
             "title": "Schadensteuerung als Wettbewerbsinstrument"
           },
           {
@@ -1715,18 +1717,16 @@
           },
           {
             "type": "paragraph",
-            "content": "Versicherungsbetrug verursacht jährlich Schäden von über <strong>6 Milliarden Euro</strong> (GDV, 2024). Etwa 10 % aller Schadenmeldungen gelten als dubios, die Hälfte davon in der Kfz-Versicherung. Generative KI verschärft das Problem durch zunehmend realistische gefälschte Schadenfotos. Das Berliner Start-up Vaarhaft hat mit dem „Fraud Scanner\" eine Lösung entwickelt, die KI-generierte und manipulierte Bilder in Sekundenschnelle erkennt – die LVM Versicherung hat den Scanner per API integriert.",
+            "content": "Versicherungsbetrug verursacht jährlich Schäden von über <strong>6 Milliarden Euro</strong> (GDV<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">12</span><span class=\"v1x1-cite-tooltip\">GDV Betrugsstatistik Versicherung 2024</span></span>, 2024). Etwa 10 % aller Schadenmeldungen gelten als dubios, die Hälfte davon in der Kfz-Versicherung. Generative KI verschärft das Problem durch zunehmend realistische gefälschte Schadenfotos. Das Berliner Start-up Vaarhaft hat mit dem „Fraud Scanner\" eine Lösung entwickelt, die KI-generierte und manipulierte Bilder in Sekundenschnelle erkennt – die LVM Versicherung hat den Scanner per API integriert.",
             "title": "Betrugserkennung und Digitalisierung"
           },
           {
             "type": "paragraph",
-            "content": "ERGO setzt gruppenweit über <strong>100 KI-Anwendungen</strong> ein: Die Automatisierungsrate bei Dokumentenklassifikation in der Krankenversicherung stieg auf über 90 %, ein Hagel-Bot nimmt Schadenmeldungen per Sprache entgegen, und CamCom Technologies liefert KI-basierte Vorinspektionen mit einem Large Vision Model, trainiert mit über 450 Mio. Bildern. Der „Insurance Copilot\" der Allianz konsolidiert Daten, analysiert Dokumente und schlägt „next best actions\" vor. R+V nutzt eine KI-basierte Schadenprognose von carexpert direkt in der Kunden-App. Laut EIOPA nutzen bereits <strong>50 % der europäischen Sachversicherer</strong> KI im Schadenmanagement."
-          }
-        ],
-        "level2": [
+            "content": "ERGO setzt gruppenweit über <strong>100 KI-Anwendungen</strong> ein: Die Automatisierungsrate bei Dokumentenklassifikation in der Krankenversicherung stieg auf über 90 %, ein Hagel-Bot nimmt Schadenmeldungen per Sprache entgegen, und CamCom Technologies liefert KI-basierte Vorinspektionen mit einem Large Vision Model, trainiert mit über 450 Mio. Bildern. Der „Insurance Copilot\" der Allianz konsolidiert Daten, analysiert Dokumente und schlägt „next best actions\" vor. R+V nutzt eine KI-basierte Schadenprognose von carexpert direkt in der Kunden-App. Laut EIOPA nutzen bereits <strong>50 % der europäischen Sachversicherer</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">13</span><span class=\"v1x1-cite-tooltip\">EIOPA AI Governance Report 2024</span></span> KI im Schadenmanagement."
+          },
           {
             "type": "paragraph",
-            "content": "E-Mail ist mit <strong>58 % Nutzungsrate</strong> der beliebteste Kontaktkanal deutscher Versicherungskunden (KUBUS-Studie 2025), gefolgt vom Brief (47 %, stark rückläufig) und Telefon. Der Net Promoter Score der Branche erreichte 2025 mit <strong>49 Punkten</strong> einen neuen Höchstwert (2024: 46). Die durchschnittliche Schulnote verbesserte sich auf 1,98. Im DISQ-Ranking „Versicherer des Jahres 2025\" belegte der Münchener Verein den Spitzenplatz (80,4 Punkte, „sehr gut\"), gefolgt von VPV (höchster NPS: +73,6) und Adam Riese (niedrigste Ärgernisquote: 8,7 %).",
+            "content": "E-Mail ist mit <strong>58 % Nutzungsrate</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">14</span><span class=\"v1x1-cite-tooltip\">MSR Consulting Versicherungskanalstudie 2024</span></span> der beliebteste Kontaktkanal deutscher Versicherungskunden (KUBUS-Studie 2025), gefolgt vom Brief (47 %, stark rückläufig) und Telefon. Der Net Promoter Score der Branche erreichte 2025 mit <strong>49 Punkten</strong> einen neuen Höchstwert (2024: 46). Die durchschnittliche Schulnote verbesserte sich auf 1,98. Im DISQ-Ranking „Versicherer des Jahres 2025\" belegte der Münchener Verein den Spitzenplatz (80,4 Punkte, „sehr gut\"), gefolgt von VPV (höchster NPS: +73,6) und Adam Riese (niedrigste Ärgernisquote: 8,7 %).",
             "title": "Kanäle und Zufriedenheit"
           },
           {
@@ -1741,17 +1741,17 @@
           },
           {
             "type": "paragraph",
-            "content": "Deutsche Erstversicherer verwalteten zum 31.12.2024 Kapitalanlagen von <strong>1.603,8 Mrd. €</strong> (HGB-Buchwerte): Lebensversicherer 1.015,5 Mrd. €, private Krankenversicherer 372,3 Mrd. € und Schaden-/Unfallversicherer 216,1 Mrd. €. Die Asset Allocation bleibt konservativ: <strong>75,8 % Renten/Anleihen</strong>, 12,2 % Beteiligungen, 5,1 % Aktien, 4,8 % Immobilien. Die niedrige Aktienquote resultiert aus Solvency-II-Eigenkapitalanforderungen von 39–49 % für Aktien, die eine renditehemmende Wirkung entfalten.",
+            "content": "Deutsche Erstversicherer verwalteten zum 31.12.2024 Kapitalanlagen von <strong>1.603,8 Mrd. €</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">15</span><span class=\"v1x1-cite-tooltip\">BaFin Statistik Kapitalanlagen 31.12.2024, HGB-Buchwerte</span></span> (HGB-Buchwerte): Lebensversicherer 1.015,5 Mrd. €, private Krankenversicherer 372,3 Mrd. € und Schaden-/Unfallversicherer 216,1 Mrd. €. Die Asset Allocation bleibt konservativ: <strong>75,8 % Renten/Anleihen</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">16</span><span class=\"v1x1-cite-tooltip\">BaFin Jahresbericht 2024, Asset Allocation</span></span>, 12,2 % Beteiligungen, 5,1 % Aktien, 4,8 % Immobilien. Die niedrige Aktienquote resultiert aus Solvency-II-Eigenkapitalanforderungen von 39–49 % für Aktien, die eine renditehemmende Wirkung entfalten.",
             "title": "1,6 Billionen Euro unter Verwaltung"
           },
           {
             "type": "paragraph",
-            "content": "Der Höchstrechnungszins wurde zum 1. Januar 2025 auf <strong>1,0 %</strong> angehoben – die <strong>erste Erhöhung seit über 30 Jahren</strong>. In der Niedrigzinsphase hatte die Branche die Zinszusatzreserve (ZZR) auf einen Höchststand von circa 96 Mrd. € (Ende 2021) aufgebaut. Seit 2022 findet ein Abbau statt: 2024 flossen branchenweit rund <strong>5 Mrd. €</strong> zurück – erstmals war keine Nachreservierung nötig. Der ZZR-Bestand liegt Ende 2024 bei circa 84 Mrd. €. Diese Rückflüsse gehören den Versicherten und fließen in höhere Überschussbeteiligungen: Die durchschnittliche laufende Verzinsung stieg von ~2,0 % (2022) auf <strong>~2,52 % (2025)</strong>.",
+            "content": "Der Höchstrechnungszins wurde zum 1. Januar 2025 auf <strong>1,0 %</strong> angehoben<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">17</span><span class=\"v1x1-cite-tooltip\">DAV-Empfehlung 11/2023; BMF-VO v. 30.10.2024</span></span> – die <strong>erste Erhöhung seit über 30 Jahren</strong>. In der Niedrigzinsphase hatte die Branche die Zinszusatzreserve (ZZR) auf einen Höchststand von circa 96 Mrd. € (Ende 2021) aufgebaut. Seit 2022 findet ein Abbau statt: 2024 flossen branchenweit rund <strong>5 Mrd. €</strong> zurück<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">18</span><span class=\"v1x1-cite-tooltip\">BaFin Statistik ZZR-Entwicklung 2024</span></span> – erstmals war keine Nachreservierung nötig. Der ZZR-Bestand liegt Ende 2024 bei circa 84 Mrd. €. Diese Rückflüsse gehören den Versicherten und fließen in höhere Überschussbeteiligungen: Die durchschnittliche laufende Verzinsung stieg von ~2,0 % (2022) auf <strong>~2,52 % (2025)</strong>.",
             "title": "Garantiezins und Zinszusatzreserve"
           },
           {
             "type": "paragraph",
-            "content": "Die Basisquote (SCR ohne Übergangsmaßnahmen) liegt im Durchschnitt bei circa <strong>357 %</strong> (Assekurata) und damit deutlich über dem Minimum von 100 %. Die BaFin ordnete 2024 eine Neuberechnung des Rückstellungstransitionals an, was den optischen Rückgang der Quote mit Übergangsmaßnahmen von 663,5 % auf 340,3 % erklärt – die tatsächliche Kapitalausstattung bleibt robust. Die Zinswende seit 2022 (EZB-Leitzins: von 0 % auf max. 4,5 %, dann Senkung auf 2,15 %) wirkt positiv auf Wiederanlagerenditen, schuf aber durch stille Lasten bei niedrig verzinsten Altanleihen temporären Abschreibungsbedarf. Die Allianz Lebensversicherung verwaltet ein Sicherungsvermögen von circa <strong>261 Mrd. €</strong> und investiert gezielt in Infrastruktur, erneuerbare Energien und Private Debt.",
+            "content": "Die Basisquote (SCR ohne Übergangsmaßnahmen) liegt im Durchschnitt bei circa <strong>357 %</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">19</span><span class=\"v1x1-cite-tooltip\">Assekurata Solvenz-Studie Lebensversicherung 2025</span></span> (Assekurata) und damit deutlich über dem Minimum von 100 %. Die BaFin ordnete 2024 eine Neuberechnung des Rückstellungstransitionals an, was den optischen Rückgang der Quote mit Übergangsmaßnahmen von 663,5 % auf 340,3 % erklärt – die tatsächliche Kapitalausstattung bleibt robust. Die Zinswende seit 2022 (EZB-Leitzins: von 0 % auf max. 4,5 %, dann Senkung auf 2,15 %) wirkt positiv auf Wiederanlagerenditen, schuf aber durch stille Lasten bei niedrig verzinsten Altanleihen temporären Abschreibungsbedarf. Die Allianz Lebensversicherung verwaltet ein Sicherungsvermögen von circa <strong>261 Mrd. €</strong> und investiert gezielt in Infrastruktur, erneuerbare Energien und Private Debt.",
             "title": "Solvenzquoten und Zinswende-Effekte"
           },
           {
@@ -1761,21 +1761,23 @@
           },
           {
             "type": "paragraph",
-            "content": "<strong>Munich Re</strong> erzielte 2024 einen Konzerngewinn von <strong>5,7 Mrd. €</strong> und 2025 sogar 6,1 Mrd. € – trotz der LA-Waldbrände mit circa 800 Mio. € Belastung. Die Combined Ratio im Nichtleben-Rückversicherungsgeschäft lag bei exzellenten 77,3 %, die Solvency-II-Quote bei 287 %. Die Dividende stieg für 2025 auf 24 € je Aktie. Im AM Best-Ranking steht Munich Re mit 32,6 Mrd. USD Brutto-Rückversicherungseinnahmen an zweiter Stelle weltweit.",
+            "content": "<strong>Munich Re</strong> erzielte 2024 einen Konzerngewinn von <strong>5,7 Mrd. €</strong> und 2025 sogar 6,1 Mrd. €<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">20</span><span class=\"v1x1-cite-tooltip\">Munich Re Geschäftsbericht 2024/2025</span></span> – trotz der LA-Waldbrände mit circa 800 Mio. € Belastung. Die Combined Ratio im Nichtleben-Rückversicherungsgeschäft lag bei exzellenten 77,3 %, die Solvency-II-Quote bei 287 %. Die Dividende stieg für 2025 auf 24 € je Aktie. Im AM Best-Ranking steht Munich Re mit 32,6 Mrd. USD Brutto-Rückversicherungseinnahmen an zweiter Stelle weltweit.",
             "title": "Munich Re und Hannover Re an der Weltspitze"
           },
           {
             "type": "paragraph",
-            "content": "<strong>Hannover Rück</strong>, der drittgrößte Rückversicherer der Welt, steigerte den Nettogewinn 2024 auf <strong>2,3 Mrd. €</strong> (+28 %) bei einer Combined Ratio von 86,6 %. Bei der Erneuerung zum 1.1.2025 wuchs das erneuerte Volumen um 7,6 % auf 11 Mrd. €, wobei die risikoadjustierten Preise um 2,1 % nachgaben. Die starke Nachfrage nach kapitalentlastenden Lösungen in der strukturierten Rückversicherung hält an."
+            "content": "<strong>Hannover Rück</strong>, der drittgrößte Rückversicherer der Welt, steigerte den Nettogewinn 2024 auf <strong>2,3 Mrd. €</strong> (+28 %)<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">21</span><span class=\"v1x1-cite-tooltip\">Hannover Rück Geschäftsbericht 2024</span></span> bei einer Combined Ratio von 86,6 %. Bei der Erneuerung zum 1.1.2025 wuchs das erneuerte Volumen um 7,6 % auf 11 Mrd. €, wobei die risikoadjustierten Preise um 2,1 % nachgaben. Die starke Nachfrage nach kapitalentlastenden Lösungen in der strukturierten Rückversicherung hält an."
           },
           {
             "type": "paragraph",
-            "content": "Der Cat-Bond-Markt erlebte 2025 ein Rekordjahr: Gesamtemissionen von <strong>25,6 Mrd. USD</strong> (+45 % gegenüber 2024), ausstehendes Volumen <strong>61,3 Mrd. USD</strong>. Deutsche Versicherer sind aktiv: Die Allianz begebte im Dezember 2023 den Cat Bond „Blue Sky Re DAC\" über <strong>250 Mio. €</strong> für europäische Windsturmrisiken. Die Versicherungskammer Bayern folgte als erster öffentlicher Versicherer mit <strong>175 Mio. €</strong>, und die SV SparkassenVersicherung platzierte im Mai 2025 den innovativen Debüt-Bond „Liongate Re\" über <strong>100 Mio. USD</strong> gemeinsam mit dem japanischen Zenkyoren – mit zwei unterschiedlichen Triggern für deutsche Erdbeben- und japanische Erdbebenrisiken. Zum 1.1.2026 kam es zu weiterer Preiserweichung: Property-Cat-Rückversicherungspreise sanken um <strong>10–20 %</strong> bei schadenfreien Programmen, getrieben von einem Rekord-Rückversicherungskapital von circa 838 Mrd. USD.",
+            "content": "Der Cat-Bond-Markt erlebte 2025 ein Rekordjahr: Gesamtemissionen von <strong>25,6 Mrd. USD</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">22</span><span class=\"v1x1-cite-tooltip\">Artemis Cat Bond & ILS Market Report Q4/2025</span></span> (+45 % gegenüber 2024), ausstehendes Volumen <strong>61,3 Mrd. USD</strong>. Deutsche Versicherer sind aktiv: Die Allianz begebte im Dezember 2023 den Cat Bond „Blue Sky Re DAC\" über <strong>250 Mio. €</strong> für europäische Windsturm<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">23</span><span class=\"v1x1-cite-tooltip\">Allianz Blue Sky Re DAC Prospekt 12/2023</span></span>risiken. Die Versicherungskammer Bayern folgte als erster öffentlicher Versicherer mit <strong>175 Mio. €</strong>, und die SV SparkassenVersicherung platzierte im Mai 2025 den innovativen Debüt-Bond „Liongate Re\" über <strong>100 Mio. USD</strong> gemeinsam mit dem japanischen Zenkyoren – mit zwei unterschiedlichen Triggern für deutsche Erdbeben- und japanische Erdbebenrisiken. Zum 1.1.2026 kam es zu weiterer Preiserweichung: Property-Cat-Rückversicherungspreise sanken um <strong>10–20 %</strong> bei schadenfreien Programmen, getrieben von einem Rekord-Rückversicherungskapital von circa 838 Mrd. USD.",
             "title": "Cat Bonds erreichen Rekordhöhen"
-          },
+          }
+        ],
+        "level3": [
           {
             "type": "paragraph",
-            "content": "Run-off bezeichnet das Einstellen des Neugeschäfts und die kosteneffiziente Fortführung von Altbeständen – ein wachsendes Geschäftsfeld, getrieben durch Garantiezins-Altlasten, IT-Modernisierungsbedarf und Solvency-II-Kosten. <strong>Viridium</strong>, der deutsche Marktführer, verwaltet circa <strong>68 Mrd. € Assets under Management</strong> und über 3,2 Millionen Verträge – rund 5 % des Lebensversicherungsmarktes. Im August 2025 übernahm ein Konsortium aus Allianz, BlackRock und T&D Holdings (größter Anteil: 29,9 %) die Viridium-Anteile von Cinven für eine Bewertung von circa <strong>3,5 Mrd. €</strong>.",
+            "content": "Run-off bezeichnet das Einstellen des Neugeschäfts und die kosteneffiziente Fortführung von Altbeständen – ein wachsendes Geschäftsfeld, getrieben durch Garantiezins-Altlasten, IT-Modernisierungsbedarf und Solvency-II-Kosten. <strong>Viridium</strong>, der deutsche Marktführer, verwaltet circa <strong>68 Mrd. € Assets under Management</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">24</span><span class=\"v1x1-cite-tooltip\">Viridium Geschäftsbericht 2024</span></span> und über 3,2 Millionen Verträge – rund 5 % des Lebensversicherungsmarktes. Im August 2025 übernahm ein Konsortium aus Allianz, BlackRock und T&D Holdings (größter Anteil: 29,9 %) die Viridium-Anteile von Cinven für eine Bewertung von circa <strong>3,5 Mrd. €</strong>.",
             "title": "Marktstruktur und Akteure"
           },
           {
@@ -1785,13 +1787,11 @@
           {
             "type": "paragraph",
             "content": "Die regulatorischen Rahmenbedingungen sind streng: §13 VAG verlangt BaFin-Genehmigung für jede Bestandsübertragung, wobei Belange der Versicherten gewahrt und die Überschussbeteiligung mindestens gleich hoch bleiben muss. Versicherungsnehmer haben kein Mitspracherecht."
-          }
-        ],
-        "level3": [
+          },
           {
             "type": "paragraph",
             "content": "Deutsche Versicherer lagern zunehmend IT-Betrieb, Kundenservice, Schadenregulierung, Druckdienstleistungen und Dokumentenmanagement aus. Laut einer Sopra-Steria-Studie erhoffen sich <strong>89 % der Führungskräfte</strong> Kosteneinsparungen, 70 % mehr Freiraum für das Kerngeschäft. Die regulatorischen Anforderungen sind erheblich: §32 VAG verpflichtet Versicherer, trotz Ausgliederung die volle Verantwortung zu behalten. Die MaGo (Mindestanforderungen an die Geschäftsorganisation, BaFin-Rundschreiben 2/2017) verlangt eine Risikoanalyse vor jedem Outsourcing und bei Schlüsselfunktionen einen Ausgliederungsbeauftragten. Seit Januar 2025 verschärft <strong>DORA</strong> (Digital Operational Resilience Act) die Anforderungen an IKT-Drittdienstleister-Management.",
-            "title": "9. Outsourcing: Regulierter Balanceakt zwischen Effizienz und Kontrolle"
+            "title": "Outsourcing: Regulierter Balanceakt zwischen Effizienz und Kontrolle"
           },
           {
             "type": "paragraph",
@@ -1799,7 +1799,7 @@
           },
           {
             "type": "paragraph",
-            "content": "Deutschland gehört weltweit zu den Märkten mit der höchsten Dichte an Altsystemen. Viele Versicherer betreiben COBOL-basierte Mainframe-Systeme aus den 1960er–80er Jahren. <strong>Bis zu 70 % des IT-Budgets</strong> fließen in den Betrieb dieser Legacy-Systeme. Laut PwC-Studie 2024 (41 Versicherer) wollen <strong>75 % der DACH-Versicherer</strong> in den nächsten drei Jahren mindestens ein Kernsystem austauschen. Die durchschnittliche IT-Kostenquote liegt bei <strong>2,74 %</strong> der Prämieneinnahmen. Ein gravierendes Problem: 83 % der IT-Mitarbeitenden sind zwischen 40 und 50 Jahre alt, COBOL-Expertise stirbt aus.",
+            "content": "Deutschland gehört weltweit zu den Märkten mit der höchsten Dichte an Altsystemen. Viele Versicherer betreiben COBOL-basierte Mainframe-Systeme aus den 1960er–80er Jahren. <strong>Bis zu 70 % des IT-Budgets</strong> fließen in den Betrieb dieser Legacy-Systeme. Laut PwC-Studie 2024 (41 Versicherer) wollen <strong>75 % der DACH-Versicherer</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">25</span><span class=\"v1x1-cite-tooltip\">PwC Insurance IT-Studie DACH 2024</span></span> in den nächsten drei Jahren mindestens ein Kernsystem austauschen. Die durchschnittliche IT-Kostenquote liegt bei <strong>2,74 %</strong> der Prämieneinnahmen. Ein gravierendes Problem: 83 % der IT-Mitarbeitenden sind zwischen 40 und 50 Jahre alt, COBOL-Expertise stirbt aus.",
             "title": "Das Legacy-Problem"
           },
           {
@@ -1814,7 +1814,7 @@
           {
             "type": "paragraph",
             "content": "Unternehmensberatungen setzen an nahezu jedem Glied der Versicherungs-Wertschöpfungskette an. Der deutsche Beratungsmarkt umfasst insgesamt circa <strong>51,5 Mrd. €</strong> (BDU 2024), wobei Versicherungen als stark regulierte, technologieintensive Branche überdurchschnittlich beratungsintensiv sind.",
-            "title": "11. Beratung entlang der Wertschöpfungskette"
+            "title": "Beratung entlang der Wertschöpfungskette"
           },
           {
             "type": "paragraph",
@@ -1892,7 +1892,7 @@
           },
           {
             "type": "paragraph",
-            "content": "Künstliche Intelligenz hat in der deutschen Versicherungswirtschaft die Phase der Pilotprojekte verlassen und wird zunehmend in produktive Kernprozesse integriert. Laut einer EIOPA-Erhebung setzen <strong>50 % der europäischen Nicht-Leben-Versicherer</strong> bereits KI-Modelle in Produktion ein, weitere 30–39 % planen die Adoption innerhalb von drei Jahren. In Deutschland nutzen <strong>44 % der Finanzdienstleister und Versicherer</strong> KI allerdings noch nur in einzelnen Teilbereichen – eine flächendeckende Integration bleibt die Ausnahme.",
+            "content": "Künstliche Intelligenz hat in der deutschen Versicherungswirtschaft die Phase der Pilotprojekte verlassen und wird zunehmend in produktive Kernprozesse integriert. Laut einer EIOPA-Erhebung setzen <strong>50 % der europäischen Nicht-Leben-Versicherer</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">1</span><span class=\"v1x1-cite-tooltip\">EIOPA AI Governance in Insurance Report 2024</span></span> bereits KI-Modelle in Produktion ein, weitere 30–39 % planen die Adoption innerhalb von drei Jahren. In Deutschland nutzen <strong>44 % der Finanzdienstleister und Versicherer</strong> KI allerdings noch nur in einzelnen Teilbereichen – eine flächendeckende Integration bleibt die Ausnahme.",
             "title": "Einsatzfelder reichen vom Underwriting bis zur Betrugserkennung"
           },
           {
@@ -1909,7 +1909,7 @@
           },
           {
             "type": "paragraph",
-            "content": "Die Automatisierungsquoten steigen spürbar. Laut GDV-Erhebung werden <strong>33,5 % der Geschäftsprozesse</strong> bei Sach- und Unfallversicherern vollmaschinell abgewickelt (2009: nur 23 %). In der Krankenversicherung liegt die Dunkelverarbeitungsquote bei <strong>32,5 %</strong> (2019: 18,5 %). Bei Kfz-Vertragsabschlüssen laufen <strong>24,1 %</strong> ohne menschliches Zutun. Die Nürnberger Versicherung konnte ihre Dunkelverarbeitungsquote durch LLM-Technologien in einer hybriden Architektur deutlich steigern. Experten prognostizieren, dass Claims Automation mit Vision Language Models die Dunkelverarbeitung von 25 % auf <strong>70–85 %</strong> anheben kann – bei <strong>40–60 % Kostenreduktion</strong>.",
+            "content": "Die Automatisierungsquoten steigen spürbar. Laut GDV-Erhebung werden <strong>33,5 % der Geschäftsprozesse</strong> bei Sach- und Unfallversicherern vollmaschinell abgewickelt (2009: nur 23 %). In der Krankenversicherung liegt die Dunkelverarbeitungsquote bei <strong>32,5 %</strong> (2019: 18,5 %)<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">2</span><span class=\"v1x1-cite-tooltip\">GDV Digitalisierungserhebung Versicherung 2024</span></span>. Bei Kfz-Vertragsabschlüssen laufen <strong>24,1 %</strong> ohne menschliches Zutun. Die Nürnberger Versicherung konnte ihre Dunkelverarbeitungsquote durch LLM-Technologien in einer hybriden Architektur deutlich steigern. Experten prognostizieren, dass Claims Automation mit Vision Language Models die Dunkelverarbeitung von 25 % auf <strong>70–85 %</strong> anheben kann – bei <strong>40–60 % Kostenreduktion</strong>.",
             "title": "Dunkelverarbeitung macht große Fortschritte"
           },
           {
@@ -1932,7 +1932,7 @@
           },
           {
             "type": "paragraph",
-            "content": "ERGO startete im August 2024 mit O2 Telefónica ein Embedded-Insurance-Angebot: „O2 Care | Mobility\" bietet eine Mobilitätsgarantie für 4,99 Euro pro Monat, buchbar für O2-Postpaid-Kunden und abgerechnet über die bestehende Mobilfunkrechnung. O2 agiert dabei als gebundener Versicherungsvertreter nach § 34d Abs. 7 GewO. <strong>Hepster</strong> aus Rostock hat sich als führender deutscher Embedded-Insurance-Anbieter etabliert: Die API-basierte Plattform bedient über <strong>3.000 B2B-Partner</strong> und <strong>260.000 Kunden</strong> in Bereichen von E-Bike über Elektronik bis Haustiere. Simplesurance, Spezialist für Geräteversicherungen, wurde 2022 von Allianz X übernommen."
+            "content": "ERGO startete im August 2024 mit O2 Telefónica ein Embedded-Insurance-Angebot: „O2 Care | Mobility\" bietet eine Mobilitätsgarantie für 4,99 Euro pro Monat, buchbar für O2-Postpaid-Kunden und abgerechnet über die bestehende Mobilfunkrechnung. O2 agiert dabei als gebundener Versicherungsvertreter nach § 34d Abs. 7 GewO. <strong>Hepster</strong> aus Rostock hat sich als führender deutscher Embedded-Insurance-Anbieter etabliert: Die API-basierte Plattform bedient über <strong>3.000 B2B-Partner</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">3</span><span class=\"v1x1-cite-tooltip\">Hepster Unternehmensangaben 2024</span></span> und <strong>260.000 Kunden</strong> in Bereichen von E-Bike über Elektronik bis Haustiere. Simplesurance, Spezialist für Geräteversicherungen, wurde 2022 von Allianz X übernommen."
           },
           {
             "type": "paragraph",
@@ -1947,7 +1947,9 @@
             "type": "paragraph",
             "content": "Die regulatorische Einordnung ist entscheidend für die Praxis. Das <strong>häufigste Modell</strong> ist der gebundene Versicherungsvertreter (§ 34d Abs. 7 Nr. 1 GewO), bei dem der Plattformbetreiber exklusiv für ein Versicherungsunternehmen tätig ist und keine eigene Erlaubnis benötigt. Alternativ kommt der <strong>produktakzessorische Vermittler</strong> (§ 34d Abs. 6 GewO) infrage – etwa ein Autohaus, das Kfz-Versicherung zum Fahrzeugverkauf vermittelt. Die BaFin definiert den <strong>Tippgeber</strong> als jemanden, der lediglich Kontakt zwischen Kunde und Versicherer herstellt, ohne zu beraten oder am Vertragsabschluss mitzuwirken. Ein Tippgeber darf keine konkreten Produktinformationen geben und fällt nicht unter die Vermittlerregulierung. Die IDD verlangt vor jedem Abschluss einen Demands-and-Needs-Test sowie die Vorlage des IPID-Dokuments. Die BaFin beobachtet zudem die britische „Consumer Duty\" als mögliches Vorbild für strengere Anforderungen an Add-On-Produkte.",
             "title": "Regulatorische Einordnung zwischen Tippgeber und Vermittler"
-          },
+          }
+        ],
+        "level2": [
           {
             "type": "paragraph",
             "content": "Die Financial Data Access Regulation (FIDA) ist der ambitionierte Versuch der EU-Kommission, das Open-Banking-Prinzip der PSD2 auf Versicherungen, Altersvorsorge und Investments auszuweiten. Der Verordnungsentwurf wurde am 28. Juni 2023 veröffentlicht und soll Versicherer verpflichten, Kundendaten über standardisierte APIs bereitzustellen – <strong>unverzüglich, unentgeltlich, kontinuierlich und in Echtzeit</strong>. Betroffen sind Nicht-Lebensversicherungsprodukte, versicherungsbasierte Anlageprodukte (IBIPs) sowie private und betriebliche Altersvorsorge. Kranken- und Gesundheitsversicherungsdaten sind explizit ausgenommen. EU-weit wären potenziell rund <strong>400 Millionen Versicherungsverträge</strong> betroffen.",
@@ -1969,9 +1971,7 @@
           {
             "type": "paragraph",
             "content": "Für <strong>Vergleichsportale</strong> könnte FIDA ein Paradigmenwechsel sein: Statt auf manuelle Kundeneingaben angewiesen zu sein, könnten Portale mit Kundeneinwilligung direkt auf Bestandsdaten zugreifen und vollständigere Vergleiche ermöglichen. Die Sorge etablierter Versicherer: Sie könnten zu „reinen Datenlieferanten für große Tech-Konzerne\" werden, während diese kaum vergleichbaren Verpflichtungen unterliegen."
-          }
-        ],
-        "level2": [
+          },
           {
             "type": "paragraph",
             "content": "Parametrische Versicherungen revolutionieren die Schadenregulierung, indem sie auf Basis einer vordefinierten Messgröße auszahlen – etwa Erdbebenstärke, Regenmenge, Windgeschwindigkeit oder Pegelstand. Eine unabhängige Institution ermittelt die Intensität des Ereignisses, und bei Überschreitung des Schwellenwerts erfolgt die automatische Auszahlung ohne individuellen Schadennachweis. Die Vorteile sind offensichtlich: schnellere Regulierung (Tage statt Wochen), vollständige Transparenz und kein Interpretationsspielraum. Der Nachteil ist das <strong>Basisrisiko</strong> – die mögliche Diskrepanz zwischen tatsächlichem Schaden und parametrischer Auszahlung.",
@@ -2002,7 +2002,7 @@
           },
           {
             "type": "paragraph",
-            "content": "Der GDV-Nachhaltigkeitsbericht 2025 zeigt signifikante Fortschritte: Das Volumen explizit nachhaltig klassifizierter Kapitalanlagen stieg auf <strong>184 Mrd. Euro</strong> (ca. 10 % des Gesamtportfolios), gegenüber 163 Mrd. Euro im Vorjahr. Der CO₂-Fußabdruck sank auf <strong>47 Tonnen CO₂ pro investierte Million Euro</strong> – ein Rückgang von 23 % gegenüber dem Vorjahr und 27 % seit 2021. In erneuerbare Energien fließen <strong>23 Mrd. Euro</strong>, die anteilig rund 23,5 Mrd. kWh sauberen Strom erzeugen – etwa 17 % des Verbrauchs aller deutschen Privathaushalte. An der Erhebung beteiligten sich <strong>218 Versicherer</strong>, die rund 85 % des Kapitalanlagevolumens repräsentieren.",
+            "content": "Der GDV-Nachhaltigkeitsbericht 2025 zeigt signifikante Fortschritte: Das Volumen explizit nachhaltig klassifizierter Kapitalanlagen stieg auf <strong>184 Mrd. Euro</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">4</span><span class=\"v1x1-cite-tooltip\">GDV Nachhaltigkeitsbericht 2025, ESG-Kapitalanlagen</span></span> (ca. 10 % des Gesamtportfolios), gegenüber 163 Mrd. Euro im Vorjahr. Der CO₂-Fußabdruck sank auf <strong>47 Tonnen CO₂ pro investierte Million Euro</strong> – ein Rückgang von 23 % gegenüber dem Vorjahr und 27 % seit 2021. In erneuerbare Energien fließen <strong>23 Mrd. Euro</strong>, die anteilig rund 23,5 Mrd. kWh sauberen Strom erzeugen – etwa 17 % des Verbrauchs aller deutschen Privathaushalte. An der Erhebung beteiligten sich <strong>218 Versicherer</strong>, die rund 85 % des Kapitalanlagevolumens repräsentieren.",
             "title": "Deutsche Versicherer investieren 184 Milliarden Euro nachhaltig"
           },
           {
@@ -2015,12 +2015,12 @@
           },
           {
             "type": "paragraph",
-            "content": "Die versicherten Elementarschäden in Deutschland beliefen sich 2024 auf <strong>5,7 Mrd. Euro</strong> – auf dem hohen Niveau des Vorjahres. Allein Starkregenereignisse und Überschwemmungen verursachten <strong>2,6 Mrd. Euro</strong>, rund eine Milliarde über dem langjährigen Durchschnitt. Global erreichten die Gesamtschäden laut Munich Re <strong>320 Mrd. USD</strong> (deutlich über dem inflationsbereinigten 30-Jahres-Schnitt von 181 Mrd. USD), davon waren <strong>140 Mrd. USD</strong> versichert – das drittteuerste Jahr seit 1980. Das IÖW prognostiziert, dass die volkswirtschaftlichen Kosten in Deutschland je nach Erwärmungsszenario auf <strong>280–900 Mrd. Euro bis Mitte des Jahrhunderts</strong> steigen könnten.",
+            "content": "Die versicherten Elementarschäden in Deutschland beliefen sich 2024 auf <strong>5,7 Mrd. Euro</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">5</span><span class=\"v1x1-cite-tooltip\">GDV Naturgefahrenreport 2024</span></span> – auf dem hohen Niveau des Vorjahres. Allein Starkregenereignisse und Überschwemmungen verursachten <strong>2,6 Mrd. Euro</strong>, rund eine Milliarde über dem langjährigen Durchschnitt. Global erreichten die Gesamtschäden laut Munich Re <strong>320 Mrd. USD</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">1</span><span class=\"v1x1-cite-tooltip\">Munich Re NatCatSERVICE, Naturkatastrophen Bilanz 2024</span></span> (deutlich über dem inflationsbereinigten 30-Jahres-Schnitt von 181 Mrd. USD), davon waren <strong>140 Mrd. USD</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">2</span><span class=\"v1x1-cite-tooltip\">Munich Re NatCatSERVICE, Naturkatastrophen Bilanz 2024</span></span> versichert – das drittteuerste Jahr seit 1980. Das IÖW prognostiziert, dass die volkswirtschaftlichen Kosten in Deutschland je nach Erwärmungsszenario auf <strong>280–900 Mrd. Euro bis Mitte des Jahrhunderts</strong> steigen könnten.",
             "title": "Klimarisiken treiben die versicherten Schäden auf neue Höhen"
           },
           {
             "type": "paragraph",
-            "content": "Die Ahrtal-Flutkatastrophe vom Juli 2021 mit über <strong>180 Todesopfern</strong> und rund <strong>8,75 Mrd. Euro</strong> versicherten Schäden bei 206.000 Schadenfällen (Gesamtschäden über 40 Mrd. Euro) war der Katalysator für eine Debatte, die seit Jahrzehnten ergebnislos geführt wurde. Der Versicherungsgrad bei Elementarschäden lag bundesweit bei nur rund <strong>57 % der Wohngebäude</strong> (2024), wobei die regionalen Unterschiede enorm sind: Baden-Württemberg erreicht dank der historischen Versicherungspflicht (bis 1994) <strong>94 %</strong>, Rheinland-Pfalz nur <strong>46 %</strong>, einige Bundesländer lediglich rund 30 %. Zum Vergleich: Die Sturm-/Hagel-Versicherungsdichte beträgt <strong>96 %</strong>.",
+            "content": "Die Ahrtal-Flutkatastrophe vom Juli 2021 mit über <strong>180 Todesopfern</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">6</span><span class=\"v1x1-cite-tooltip\">Bundesregierung Flutkatastrophe Ahrtal Bilanz 2022</span></span> und rund <strong>8,75 Mrd. Euro</strong> versicherten<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">7</span><span class=\"v1x1-cite-tooltip\">GDV Schadenstatistik Flut 2021</span></span> Schäden bei 206.000 Schadenfällen (Gesamtschäden über 40 Mrd. Euro) war der Katalysator für eine Debatte, die seit Jahrzehnten ergebnislos geführt wurde. Der Versicherungsgrad bei Elementarschäden lag bundesweit bei nur rund <strong>57 % der Wohngebäude</strong> (2024), wobei die regionalen Unterschiede enorm sind: Baden-Württemberg erreicht dank der historischen Versicherungspflicht (bis 1994) <strong>94 %</strong>, Rheinland-Pfalz nur <strong>46 %</strong>, einige Bundesländer lediglich rund 30 %. Zum Vergleich: Die Sturm-/Hagel-Versicherungsdichte beträgt <strong>96 %</strong>.",
             "title": "Die Ahrtal-Flut erzwang die politische Wende"
           },
           {
@@ -2045,11 +2045,11 @@
           },
           {
             "type": "paragraph",
-            "content": "Der digitale Vertrieb wächst stetig: <strong>22 % aller Versicherungsverträge</strong> wurden 2024 digital abgeschlossen, bei Kfz-Versicherungen sogar <strong>29 %</strong>. Die klassische Ausschließlichkeitsorganisation (AO) bleibt mit rund 41 % in der Sachversicherung der stärkste Kanal, schrumpft aber langfristig. Laut GDV kommen von allen digital abgeschlossenen Privatkundenverträgen rund <strong>40 % als Embedded Insurance</strong> zustande."
+            "content": "Der digitale Vertrieb wächst stetig: <strong>22 % aller Versicherungsverträge</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">8</span><span class=\"v1x1-cite-tooltip\">GDV Digitalreport Versicherung 2024</span></span> wurden 2024 digital abgeschlossen, bei Kfz-Versicherungen sogar <strong>29 %</strong>. Die klassische Ausschließlichkeitsorganisation (AO) bleibt mit rund 41 % in der Sachversicherung der stärkste Kanal, schrumpft aber langfristig. Laut GDV kommen von allen digital abgeschlossenen Privatkundenverträgen rund <strong>40 % als Embedded Insurance</strong> zustande."
           },
           {
             "type": "paragraph",
-            "content": "Die InsurTech-Landschaft hat eine dramatische Bereinigung erlebt. <strong>Wefox</strong>, einstmals höchstbewertetes europäisches InsurTech mit <strong>4,5 Mrd. Euro Bewertung</strong> (2022), wurde 2024 auf nur noch <strong>500 Mio. Euro</strong> abgewertet – ein Einbruch von 90 %. Gründer Julian Teicke trat im März 2024 als CEO zurück, das deutsche Geschäft wurde weitgehend eingestellt, die Versicherungstochter verkauft. <strong>Element Insurance</strong> musste im März 2025 Insolvenz anmelden. <strong>Getsafe</strong> gibt seine BaFin-Lizenz zurück und operiert künftig nur als Assekuradeur, der Bestand wird an die Provinzial-Tochter Andsafe übertragen. <strong>Friday</strong> wurde an Allianz Direct verkauft.",
+            "content": "Die InsurTech-Landschaft hat eine dramatische Bereinigung erlebt. <strong>Wefox</strong>, einstmals höchstbewertetes europäisches InsurTech mit <strong>4,5 Mrd. Euro Bewertung</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">9</span><span class=\"v1x1-cite-tooltip\">Bloomberg/wefox Series-C Finanzierungsrunde 09/2022</span></span> (2022), wurde 2024 auf nur noch <strong>500 Mio. Euro</strong> abgewertet – ein Einbruch von 90 %. Gründer Julian Teicke trat im März 2024 als CEO zurück, das deutsche Geschäft wurde weitgehend eingestellt, die Versicherungstochter verkauft. <strong>Element Insurance</strong> musste im März 2025 Insolvenz anmelden. <strong>Getsafe</strong> gibt seine BaFin-Lizenz zurück und operiert künftig nur als Assekuradeur, der Bestand wird an die Provinzial-Tochter Andsafe übertragen. <strong>Friday</strong> wurde an Allianz Direct verkauft.",
             "title": "InsurTech-Konsolidierung als Warnsignal"
           },
           {
@@ -2058,12 +2058,12 @@
           },
           {
             "type": "paragraph",
-            "content": "International setzen <strong>Ping An</strong> und <strong>ZhongAn</strong> die Maßstäbe. Ping An hat sich vom klassischen Versicherer zum Technologie-Konglomerat gewandelt: Über <strong>400 Mio. registrierte Nutzer</strong> bei Ping An Health, 63 % der 227 Mio. Retail-Kunden nutzen Ökosystem-Services, und Kunden im Ökosystem halten 3,3 Verträge pro Person – dreimal mehr als Nicht-Ökosystem-Kunden. <strong>ZhongAn</strong>, der erste reine Online-Versicherer der Welt (gegründet 2013 von Jack Ma, Pony Ma und Mingzhe Ma), hat über <strong>500 Mio. Nutzer</strong> und mehr als 9 Mrd. Policen ausgegeben. Am Singles Day verkauft Taobao über ZhongAn mehr als <strong>100 Mio. Retouren-Versicherungspolicen</strong> an einem einzigen Tag. <strong>Lemonade</strong> in den USA erreichte 2024 erstmals einen positiven adjustierten Free Cash Flow von <strong>48 Mio. USD</strong> bei <strong>526,5 Mio. USD Umsatz</strong> (+23 %) und 2,4 Mio. Kunden – EBITDA-Profitabilität wird für Q4 2026 erwartet.",
+            "content": "International setzen <strong>Ping An</strong> und <strong>ZhongAn</strong> die Maßstäbe. Ping An hat sich vom klassischen Versicherer zum Technologie-Konglomerat gewandelt: Über <strong>400 Mio. registrierte Nutzer</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">4</span><span class=\"v1x1-cite-tooltip\">Ping An Annual Report 2024</span></span> bei Ping An Health, 63 % der 227 Mio. Retail-Kunden nutzen Ökosystem-Services, und Kunden im Ökosystem halten 3,3 Verträge pro Person – dreimal mehr als Nicht-Ökosystem-Kunden. <strong>ZhongAn</strong>, der erste reine Online-Versicherer der Welt (gegründet 2013 von Jack Ma, Pony Ma und Mingzhe Ma), hat über <strong>500 Mio. Nutzer</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">5</span><span class=\"v1x1-cite-tooltip\">ZhongAn Online P&C Insurance Annual Report 2024</span></span> und mehr als 9 Mrd. Policen ausgegeben. Am Singles Day verkauft Taobao über ZhongAn mehr als <strong>100 Mio. Retouren-Versicherungspolicen</strong> an einem einzigen Tag. <strong>Lemonade</strong> in den USA erreichte 2024 erstmals einen positiven adjustierten Free Cash Flow von <strong>48 Mio. USD</strong> bei <strong>526,5 Mio. USD Umsatz</strong> (+23 %) und 2,4 Mio. Kunden – EBITDA-Profitabilität wird für Q4 2026 erwartet.",
             "title": "Ökosystem-Modelle aus China als Referenz"
           },
           {
             "type": "paragraph",
-            "content": "Der europäische Versicherungs-M&A-Markt erreichte 2024 mit <strong>694 angekündigten Transaktionen</strong> ein Rekordniveau – über 20 % mehr als im Vorjahr. In der DACH-Region wurden <strong>106 Deals</strong> registriert, ein Fünffaches gegenüber 2020. Der deutsche Markt mit seinen über 350 Versicherern und 46.000 Maklern ist im europäischen Vergleich extrem fragmentiert – die Top 5 halten weniger als 55 % Marktanteil, in vielen anderen Ländern deutlich mehr.",
+            "content": "Der europäische Versicherungs-M&A-Markt erreichte 2024 mit <strong>694 angekündigten Transaktionen</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">10</span><span class=\"v1x1-cite-tooltip\">PwC Insurance M&A Report Europe 2024</span></span> ein Rekordniveau – über 20 % mehr als im Vorjahr. In der DACH-Region wurden <strong>106 Deals</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">3</span><span class=\"v1x1-cite-tooltip\">DACH Insurance M&A Monitor 2024</span></span> registriert, ein Fünffaches gegenüber 2020. Der deutsche Markt mit seinen über 350 Versicherern und 46.000 Maklern ist im europäischen Vergleich extrem fragmentiert – die Top 5 halten weniger als 55 % Marktanteil, in vielen anderen Ländern deutlich mehr.",
             "title": "Rekordniveau bei Versicherungstransaktionen"
           },
           {
@@ -2162,12 +2162,12 @@
           },
           {
             "type": "paragraph",
-            "content": "Der <strong>Gesamtverband der Deutschen Versicherungswirtschaft (GDV)</strong> ist die Dachorganisation der privaten Versicherer in Deutschland, gegründet 1948 in Köln und seit 1998 mit Hauptsitz in Berlin. Mit <strong>rund 462 Mitgliedsunternehmen</strong>, die zusammen circa 488 Millionen Versicherungsverträge verwalten und ein Kapitalanlageportfolio von <strong>1,9 Billionen Euro</strong> halten, repräsentiert der GDV nahezu den gesamten privaten Versicherungsmarkt.",
-            "title": "1. Der GDV als politisches Sprachrohr der Branche"
+            "content": "Der <strong>Gesamtverband der Deutschen Versicherungswirtschaft (GDV)</strong> ist die Dachorganisation der privaten Versicherer in Deutschland, gegründet 1948 in Köln und seit 1998 mit Hauptsitz in Berlin. Mit <strong>rund 462 Mitgliedsunternehmen</strong>, die zusammen circa 488 Millionen Versicherungsverträge verwalten und ein Kapitalanlageportfolio von <strong>1,9 Billionen Euro</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">1</span><span class=\"v1x1-cite-tooltip\">BaFin Statistik Kapitalanlagen 2024</span></span> halten, repräsentiert der GDV nahezu den gesamten privaten Versicherungsmarkt.",
+            "title": "Der GDV als politisches Sprachrohr der Branche"
           },
           {
             "type": "paragraph",
-            "content": "<strong>Präsident</strong> ist seit September 2022 <strong>Dr. Norbert Rollinger</strong> (CEO der R+V Versicherung), <strong>Hauptgeschäftsführer</strong> ist <strong>Jörg Asmussen</strong>, der zuvor Staatssekretär im Bundesfinanzministerium war. Der GDV beschäftigt rund 200 Mitarbeiter und unterhält ein jährliches Lobbybudget von circa <strong>15 Millionen Euro</strong> mit 93 registrierten Lobbyisten. Im Lobbyregister des Bundestages war der GDV zwischen März und November 2024 an 86 Gesetzen und Verordnungen beteiligt."
+            "content": "<strong>Präsident</strong> ist seit September 2022 <strong>Dr. Norbert Rollinger</strong> (CEO der R+V Versicherung), <strong>Hauptgeschäftsführer</strong> ist <strong>Jörg Asmussen</strong>, der zuvor Staatssekretär im Bundesfinanzministerium war. Der GDV beschäftigt rund 200 Mitarbeiter und unterhält ein jährliches Lobbybudget von circa <strong>15 Millionen Euro</strong> mit 93<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">2</span><span class=\"v1x1-cite-tooltip\">Lobbyregister Bundestag, GDV e.V. Eintrag 2024</span></span> registrierten Lobbyisten. Im Lobbyregister des Bundestages war der GDV zwischen März und November 2024 an 86 Gesetzen und Verordnungen beteiligt."
           },
           {
             "type": "paragraph",
@@ -2183,12 +2183,12 @@
           },
           {
             "type": "paragraph",
-            "content": "Die <strong>Bundesanstalt für Finanzdienstleistungsaufsicht (BaFin)</strong> ist Deutschlands integrierte Finanzaufsichtsbehörde, gegründet am 1. Mai 2002 durch Zusammenlegung dreier Vorgängerbehörden. Mit Doppelsitz in <strong>Bonn und Frankfurt am Main</strong> und rund <strong>2.700–2.800 Mitarbeitern</strong> beaufsichtigt sie Banken, Versicherer, Wertpapierfirmen und Pensionsfonds. Die BaFin finanziert sich <strong>vollständig durch Umlagen</strong> der beaufsichtigten Unternehmen – ohne Bundesmittel – mit einem Jahresbudget im Bereich von 370–400 Millionen Euro.",
-            "title": "2. BaFin – Aufsicht mit wachsendem Fokus auf Wohlverhalten"
+            "content": "Die <strong>Bundesanstalt für Finanzdienstleistungsaufsicht (BaFin)</strong> ist Deutschlands integrierte Finanzaufsichtsbehörde, gegründet am 1. Mai 2002 durch Zusammenlegung dreier Vorgängerbehörden. Mit Doppelsitz in <strong>Bonn und Frankfurt am Main</strong> und rund <strong>2.700–2.800 Mitarbeitern</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">3</span><span class=\"v1x1-cite-tooltip\">BaFin Jahresbericht 2024, Organisation</span></span> beaufsichtigt sie Banken, Versicherer, Wertpapierfirmen und Pensionsfonds. Die BaFin finanziert sich <strong>vollständig durch Umlagen</strong> der beaufsichtigten Unternehmen – ohne Bundesmittel – mit einem Jahresbudget im Bereich von 370–400 Millionen Euro.",
+            "title": "BaFin – Aufsicht mit wachsendem Fokus auf Wohlverhalten"
           },
           {
             "type": "paragraph",
-            "content": "<strong>Präsident</strong> ist seit August 2021 <strong>Mark Branson</strong> (ehemals CEO der Schweizer FINMA), dessen Vertrag im Dezember 2024 bis Mitte 2029 verlängert wurde. Die Versicherungsaufsicht leitet <strong>Exekutivdirektorin Julia Wiens</strong>, die zugleich im Management Board der EIOPA sitzt. Die Rechtsgrundlage bildet das <strong>Versicherungsaufsichtsgesetz (VAG)</strong>, das die EU-Solvency-II-Richtlinie umsetzt. Oberstes Ziel gemäß § 294 VAG: der <strong>Schutz der Versicherungsnehmer</strong>."
+            "content": "<strong>Präsident</strong> ist seit August 2021 <strong>Mark Branson</strong> (ehemals CEO der Schweizer FINMA), dessen Vertrag im Dezember 2024 bis Mitte 2029 verlängert wurde. Die Versicherungsaufsicht leitet <strong>Exekutivdirektorin Julia Wiens</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">4</span><span class=\"v1x1-cite-tooltip\">BaFin Pressemitteilung 01.01.2024</span></span>, die zugleich im Management Board der EIOPA sitzt. Die Rechtsgrundlage bildet das <strong>Versicherungsaufsichtsgesetz (VAG)</strong>, das die EU-Solvency-II-Richtlinie umsetzt. Oberstes Ziel gemäß § 294 VAG: der <strong>Schutz der Versicherungsnehmer</strong>."
           },
           {
             "type": "paragraph",
@@ -2204,8 +2204,8 @@
           },
           {
             "type": "paragraph",
-            "content": "Die <strong>European Insurance and Occupational Pensions Authority (EIOPA)</strong> mit Sitz in Frankfurt am Main ist eine der drei Europäischen Aufsichtsbehörden (ESAs) im Europäischen System der Finanzaufsicht. Seit dem 1. September 2021 leitet <strong>Petra Hielkema</strong> (zuvor Direktorin Versicherungsaufsicht bei der niederländischen Zentralbank DNB) als Vorsitzende die Behörde mit rund <strong>200–250 Mitarbeitern</strong> und einem Jahresbudget von circa <strong>30–35 Millionen Euro</strong>, finanziert zu 40 % aus dem EU-Haushalt und zu 60 % durch Beiträge der Mitgliedstaaten.",
-            "title": "3. EIOPA setzt den europäischen Regulierungsrahmen"
+            "content": "Die <strong>European Insurance and Occupational Pensions Authority (EIOPA)</strong> mit Sitz in Frankfurt am Main ist eine der drei Europäischen Aufsichtsbehörden (ESAs) im Europäischen System der Finanzaufsicht. Seit dem 1. September 2021 leitet <strong>Petra Hielkema</strong> (zuvor Direktorin Versicherungsaufsicht bei der niederländischen Zentralbank DNB) als Vorsitzende die Behörde mit rund <strong>200–250 Mitarbeitern</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">5</span><span class=\"v1x1-cite-tooltip\">EIOPA Annual Report 2024</span></span> und einem Jahresbudget von circa <strong>30–35 Millionen Euro</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">6</span><span class=\"v1x1-cite-tooltip\">EIOPA Annual Report 2024, Budget</span></span>, finanziert zu 40 % aus dem EU-Haushalt und zu 60 % durch Beiträge der Mitgliedstaaten.",
+            "title": "EIOPA setzt den europäischen Regulierungsrahmen"
           },
           {
             "type": "paragraph",
@@ -2227,7 +2227,7 @@
         "level2": [
           {
             "type": "paragraph",
-            "content": "Der <strong>AfW – Bundesverband Finanzdienstleistung e.V.</strong>, gegründet 1992 mit Sitz in Berlin, vertritt als reiner Berufsverband ausschließlich <strong>unabhängige Finanzberater und Makler</strong>. Mit <strong>2.117 Mitgliedern</strong> (Stand Juni 2025) – davon rund 1.056 natürliche und 1.061 juristische Personen – repräsentiert er circa <strong>40.000 Versicherungs-, Anlage- und Darlehensvermittler</strong>. Der dreiköpfige Vorstand um <strong>Norman Wirth</strong> (geschäftsführend), Frank Rottenbacher und Franziska Geusen betreibt Lobbyarbeit mit einem Jahresbudget von rund 130.000–140.000 Euro.",
+            "content": "Der <strong>AfW – Bundesverband Finanzdienstleistung e.V.</strong>, gegründet 1992 mit Sitz in Berlin, vertritt als reiner Berufsverband ausschließlich <strong>unabhängige Finanzberater und Makler</strong>. Mit <strong>2.117 Mitgliedern</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">7</span><span class=\"v1x1-cite-tooltip\">AfW Mitgliederstatistik Juni 2025</span></span> (Stand Juni 2025) – davon rund 1.056 natürliche und 1.061 juristische Personen – repräsentiert er circa <strong>40.000 Versicherungs-, Anlage- und Darlehensvermittler</strong>. Der dreiköpfige Vorstand um <strong>Norman Wirth</strong> (geschäftsführend), Frank Rottenbacher und Franziska Geusen betreibt Lobbyarbeit mit einem Jahresbudget von rund 130.000–140.000 Euro.",
             "title": "AfW – Stimme der unabhängigen Berater"
           },
           {
@@ -2251,7 +2251,7 @@
           {
             "type": "paragraph",
             "content": "Das <strong>DIHK/IHK-System</strong> – die Deutsche Industrie- und Handelskammer als Dachorganisation von 79 lokalen IHKs – bildet die administrative Grundlage des Vermittlermarktes. Der DIHK betreibt das zentrale <strong>Vermittlerregister</strong> unter vermittlerregister.info.",
-            "title": "5. IHK-System: Zulassung, Prüfung und Weiterbildung"
+            "title": "IHK-System: Zulassung, Prüfung und Weiterbildung"
           },
           {
             "type": "paragraph",
@@ -2264,15 +2264,15 @@
           {
             "type": "paragraph",
             "content": "Der <strong>Versicherungsombudsmann e.V.</strong> (seit 2024 korrekt: die Ombudsfrau) ist die staatlich anerkannte Verbraucherschlichtungsstelle für Versicherungsstreitigkeiten, gegründet 2001 mit Sitz in Berlin. <strong>315 Versicherer</strong> sind Mitglieder – das entspricht rund 95 % aller im Privatkundengeschäft tätigen Unternehmen. Seit dem 1. April 2024 leitet <strong>Dr. Sibylle Kessal-Wulf</strong> – ehemalige Richterin am Bundesgerichtshof und am Bundesverfassungsgericht – das Amt.",
-            "title": "6. Der Versicherungsombudsmann als kostenlose Schlichtungsinstanz"
+            "title": "Der Versicherungsombudsmann als kostenlose Schlichtungsinstanz"
           },
           {
             "type": "paragraph",
-            "content": "Das Jahr 2024 brachte mit <strong>21.548 eingegangenen Beschwerden</strong> einen neuen Rekord seit Gründung – ein Plus von <strong>19,5 %</strong> gegenüber dem Vorjahr. Die Kfz-Versicherung verursacht das größte Beschwerdeaufkommen, gefolgt von Lebensversicherung (dominiert von Widerspruchs-/Widerrufsfällen), Rechtsschutz- und Hausratversicherung. Auffällig: Beschwerden über mangelhafte oder vollständig ausbleibende Kommunikation der Versicherer nehmen deutlich zu."
+            "content": "Das Jahr 2024 brachte mit <strong>21.548 eingegangenen Beschwerden</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">8</span><span class=\"v1x1-cite-tooltip\">Versicherungsombudsmann Jahresbericht 2024</span></span> einen neuen Rekord seit Gründung – ein Plus von <strong>19,5 %</strong> gegenüber dem Vorjahr. Die Kfz-Versicherung verursacht das größte Beschwerdeaufkommen, gefolgt von Lebensversicherung (dominiert von Widerspruchs-/Widerrufsfällen), Rechtsschutz- und Hausratversicherung. Auffällig: Beschwerden über mangelhafte oder vollständig ausbleibende Kommunikation der Versicherer nehmen deutlich zu."
           },
           {
             "type": "paragraph",
-            "content": "Das Verfahren ist für Verbraucher <strong>kostenlos</strong>. Bis zu einem Streitwert von <strong>10.000 Euro</strong> sind die Entscheidungen der Ombudsfrau für den Versicherer <strong>bindend</strong>; zwischen 10.000 und 100.000 Euro werden Empfehlungen ausgesprochen. Die durchschnittliche Bearbeitungsdauer stieg 2024 auf <strong>68,3 Tage</strong> (85,9 Tage bei zulässigen Beschwerden). Bei zulässigen Beschwerden in Sachversicherungen liegt die <strong>Erfolgsquote der Verbraucher bei über 50 %</strong>, in der Lebensversicherung bei 35 %. Wichtig für Vermittler: Auch Beschwerden gegen <strong>Versicherungsvermittler</strong> werden bearbeitet (334 Fälle in 2024), allerdings ohne Bindungswirkung."
+            "content": "Das Verfahren ist für Verbraucher <strong>kostenlos</strong>. Bis zu einem Streitwert von <strong>10.000 Euro</strong> sind die Entscheidungen der Ombudsfrau für den Versicherer <strong>bindend</strong>; zwischen 10.000 und 100.000 Euro werden Empfehlungen ausgesprochen. Die durchschnittliche Bearbeitungsdauer stieg 2024 auf <strong>68,3 Tage</strong> (85,9 Tage bei zulässigen Beschwerden). Bei zulässigen Beschwerden in Sachversicherungen liegt die <strong>Erfolgsquote der Verbraucher bei über 50 %</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">9</span><span class=\"v1x1-cite-tooltip\">Versicherungsombudsmann Jahresbericht 2024</span></span>, in der Lebensversicherung bei 35 %. Wichtig für Vermittler: Auch Beschwerden gegen <strong>Versicherungsvermittler</strong> werden bearbeitet (334 Fälle in 2024), allerdings ohne Bindungswirkung."
           },
           {
             "type": "paragraph",
@@ -2280,12 +2280,12 @@
           },
           {
             "type": "paragraph",
-            "content": "Der <strong>Verband der Privaten Krankenversicherung e.V.</strong>, gegründet 1947 in Köln, vertritt <strong>39 ordentliche Mitgliedsunternehmen</strong> (davon 33 mit Krankheitsvollversicherung), die nahezu 100 % des PKV-Marktes abdecken. <strong>Vorsitzender</strong> ist seit Januar 2023 <strong>Thomas Brahm</strong> (CEO der Debeka), <strong>Verbandsdirektor</strong> ist <strong>Dr. Florian Reuther</strong>.",
-            "title": "7. Der PKV-Verband zwischen Wachstum und politischem Druck"
+            "content": "Der <strong>Verband der Privaten Krankenversicherung e.V.</strong>, gegründet 1947 in Köln, vertritt <strong>39 ordentliche Mitgliedsunternehmen</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">1</span><span class=\"v1x1-cite-tooltip\">PKV-Verband Mitgliederverzeichnis 2024</span></span> (davon 33 mit Krankheitsvollversicherung), die nahezu 100 % des PKV-Marktes abdecken. <strong>Vorsitzender</strong> ist seit Januar 2023 <strong>Thomas Brahm</strong> (CEO der Debeka), <strong>Verbandsdirektor</strong> ist <strong>Dr. Florian Reuther</strong>.",
+            "title": "Der PKV-Verband zwischen Wachstum und politischem Druck"
           },
           {
             "type": "paragraph",
-            "content": "Die Branchenzahlen 2025 zeigen robustes Wachstum: <strong>8,79 Millionen Vollversicherte</strong> (+0,5 %), <strong>40,8 Millionen Verträge</strong> insgesamt (inklusive 31,98 Millionen Zusatzversicherungen), <strong>Beitragseinnahmen von 54,4 Milliarden Euro</strong> (+7,3 %) und <strong>Alterungsrückstellungen von 355,4 Milliarden Euro</strong>. Die betriebliche Krankenversicherung (bKV) wuchs 2024 um 15,8 % auf 2,4 Millionen versicherte Arbeitnehmer – ein dynamisches Beratungsfeld für Makler."
+            "content": "Die Branchenzahlen 2025 zeigen robustes Wachstum: <strong>8,79 Millionen Vollversicherte</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">10</span><span class=\"v1x1-cite-tooltip\">PKV-Verband Zahlenbericht 2024</span></span> (+0,5 %), <strong>40,8 Millionen Verträge</strong> insgesamt (inklusive 31,98 Millionen Zusatzversicherungen), <strong>Beitragseinnahmen von 54,4 Milliarden Euro</strong> (+7,3 %) und <strong>Alterungsrückstellungen von 355,4 Milliarden Euro</strong>. Die betriebliche Krankenversicherung (bKV) wuchs 2024 um 15,8 % auf 2,4 Millionen versicherte Arbeitnehmer – ein dynamisches Beratungsfeld für Makler."
           },
           {
             "type": "paragraph",
@@ -2299,8 +2299,8 @@
         "level3": [
           {
             "type": "paragraph",
-            "content": "Die <strong>Deutsche Aktuarvereinigung e.V. (DAV)</strong>, 1993 in Köln gegründet, ist die Berufsorganisation der Versicherungsmathematiker in Deutschland mit rund <strong>6.700 Mitgliedern</strong> und über 60 Arbeitsgruppen. <strong>Präsidentin</strong> ist seit April 2025 <strong>Susanna Adelhardt</strong>. Jedes Mitglied trägt den geschützten Titel „Aktuar DAV\" und muss jährlich 20 Weiterbildungsstunden nachweisen.",
-            "title": "8. Die Deutsche Aktuarvereinigung und der Höchstrechnungszins"
+            "content": "Die <strong>Deutsche Aktuarvereinigung e.V. (DAV)</strong>, 1993 in Köln gegründet, ist die Berufsorganisation der Versicherungsmathematiker in Deutschland mit rund <strong>6.700 Mitgliedern</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">11</span><span class=\"v1x1-cite-tooltip\">DAV Jahresbericht 2024</span></span> und über 60 Arbeitsgruppen. <strong>Präsidentin</strong> ist seit April 2025 <strong>Susanna Adelhardt</strong>. Jedes Mitglied trägt den geschützten Titel „Aktuar DAV\" und muss jährlich 20 Weiterbildungsstunden nachweisen.",
+            "title": "Die Deutsche Aktuarvereinigung und der Höchstrechnungszins"
           },
           {
             "type": "paragraph",
@@ -2308,7 +2308,7 @@
           },
           {
             "type": "paragraph",
-            "content": "Die öffentlich sichtbarste Funktion der DAV ist die jährliche <strong>Empfehlung zum Höchstrechnungszins</strong>. Nach einem historischen Tief von 0,25 % (2022–2024) empfahl die DAV im November 2023 eine Anhebung auf <strong>1,0 % ab dem 1. Januar 2025</strong> – die erste Erhöhung seit 1994. Für 2026 und 2027 wurde die Empfehlung von 1,0 % jeweils bestätigt. Diese Entscheidung beeinflusst direkt die Garantien in Lebensversicherungsprodukten und damit die Beratungspraxis."
+            "content": "Die öffentlich sichtbarste Funktion der DAV ist die jährliche <strong>Empfehlung zum Höchstrechnungszins</strong>. Nach einem historischen Tief von 0,25 % (2022–2024) empfahl die DAV im November 2023 eine Anhebung auf <strong>1,0 % ab dem 1. Januar 2025</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">12</span><span class=\"v1x1-cite-tooltip\">DAV-Empfehlung 11/2023; BMF-VO v. 30.10.2024</span></span> – die erste Erhöhung seit 1994. Für 2026 und 2027 wurde die Empfehlung von 1,0 % jeweils bestätigt. Diese Entscheidung beeinflusst direkt die Garantien in Lebensversicherungsprodukten und damit die Beratungspraxis."
           },
           {
             "type": "paragraph",
@@ -2321,7 +2321,7 @@
           {
             "type": "paragraph",
             "content": "Das deutsche Versicherungsrating-Ökosystem besteht aus drei spezialisierten Analysehäusern, die sich komplementär ergänzen, sowie vier internationalen Agenturen für die Finanzkraftbewertung.",
-            "title": "9. Rating-Agenturen: Drei deutsche Spezialisten und die internationale Ergänzung"
+            "title": "Rating-Agenturen: Drei deutsche Spezialisten und die internationale Ergänzung"
           },
           {
             "type": "paragraph",
@@ -2391,7 +2391,7 @@
           {
             "type": "paragraph",
             "content": "Der <strong>Arbeitskreis Beratungsprozesse e.V.</strong> (gegründet 2004) entwickelt standardisierte Beratungswerkzeuge – vom Maklervertrag über Risikoanalysebögen bis zu Beratungsleitfäden – und war maßgeblich an der Entstehung der <strong>DIN 77230 „Basis-Finanzanalyse für Privathaushalte\"</strong> beteiligt. Diese 2019 veröffentlichte Norm definiert 42 standardisierte Finanzthemen und wird mittlerweile von rund 25 % der Vermittler genutzt. Ergänzend wird an der DIN 77235 für Gewerbetreibende gearbeitet.",
-            "title": "10. Weitere Institutionen im Ökosystem"
+            "title": "Weitere Institutionen im Ökosystem"
           },
           {
             "type": "paragraph",

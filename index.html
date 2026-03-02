@@ -1444,7 +1444,7 @@
                                     </h3>
                                 </div>
                                 <div class="abrechnungen-liste">
-                                    <div class="abrechnung-item" onclick="openAbrechnung('2024-12')">
+                                    <div class="abrechnung-item" id="abrechnungItem1" onclick="openAbrechnung('2024-12')">
                                         <div class="abrechnung-info">
                                             <div class="abrechnung-icon">
                                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
@@ -1453,13 +1453,13 @@
                                                 </svg>
                                             </div>
                                             <div class="abrechnung-details">
-                                                <span class="abrechnung-monat">Dezember 2024</span>
-                                                <span class="abrechnung-datum">Erstellt: 03.01.2025</span>
+                                                <span class="abrechnung-monat" id="abrechnungMonat1">Dezember 2024</span>
+                                                <span class="abrechnung-datum" id="abrechnungDatum1">Erstellt: 03.01.2025</span>
                                             </div>
                                         </div>
                                         <span class="abrechnung-betrag">€4.280</span>
                                     </div>
-                                    <div class="abrechnung-item" onclick="openAbrechnung('2024-11')">
+                                    <div class="abrechnung-item" id="abrechnungItem2" onclick="openAbrechnung('2024-11')">
                                         <div class="abrechnung-info">
                                             <div class="abrechnung-icon">
                                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
@@ -1468,13 +1468,13 @@
                                                 </svg>
                                             </div>
                                             <div class="abrechnung-details">
-                                                <span class="abrechnung-monat">November 2024</span>
-                                                <span class="abrechnung-datum">Erstellt: 02.12.2024</span>
+                                                <span class="abrechnung-monat" id="abrechnungMonat2">November 2024</span>
+                                                <span class="abrechnung-datum" id="abrechnungDatum2">Erstellt: 02.12.2024</span>
                                             </div>
                                         </div>
                                         <span class="abrechnung-betrag">€3.890</span>
                                     </div>
-                                    <div class="abrechnung-item" onclick="openAbrechnung('2024-10')">
+                                    <div class="abrechnung-item" id="abrechnungItem3" onclick="openAbrechnung('2024-10')">
                                         <div class="abrechnung-info">
                                             <div class="abrechnung-icon">
                                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
@@ -1483,8 +1483,8 @@
                                                 </svg>
                                             </div>
                                             <div class="abrechnung-details">
-                                                <span class="abrechnung-monat">Oktober 2024</span>
-                                                <span class="abrechnung-datum">Erstellt: 04.11.2024</span>
+                                                <span class="abrechnung-monat" id="abrechnungMonat3">Oktober 2024</span>
+                                                <span class="abrechnung-datum" id="abrechnungDatum3">Erstellt: 04.11.2024</span>
                                             </div>
                                         </div>
                                         <span class="abrechnung-betrag">€4.120</span>
@@ -1988,6 +1988,49 @@
                         <h3>Spartenverteilung Neugeschäft</h3>
                         <div class="sparten-bars" id="spartenNeugeschaeft"></div>
                     </div>
+
+                    <!-- Vertragstabelle Neugeschäft -->
+                    <div class="vertrags-tabelle-section">
+                        <h3 class="section-title">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                                <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                                <line x1="16" y1="13" x2="8" y2="13"></line>
+                                <line x1="16" y1="17" x2="8" y2="17"></line>
+                            </svg>
+                            Verträge Neugeschäft
+                        </h3>
+                        <div class="vertrags-toolbar">
+                            <div class="vertrags-search">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                                <input type="text" placeholder="Vertrag oder Kunde suchen..." oninput="searchVertraege('neugeschaeft')">
+                            </div>
+                            <div class="fida-filter-row">
+                                <button class="fida-filter-btn active" data-filter="alle" onclick="filterVertraegeSparte('neugeschaeft','alle')">Alle</button>
+                                <button class="fida-filter-btn" data-filter="leben" onclick="filterVertraegeSparte('neugeschaeft','leben')">Leben</button>
+                                <button class="fida-filter-btn" data-filter="kranken" onclick="filterVertraegeSparte('neugeschaeft','kranken')">Kranken</button>
+                                <button class="fida-filter-btn" data-filter="schaden" onclick="filterVertraegeSparte('neugeschaeft','schaden')">Schaden</button>
+                                <button class="fida-filter-btn" data-filter="kfz" onclick="filterVertraegeSparte('neugeschaeft','kfz')">Kfz</button>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="fida-cases-table vertrags-table">
+                                <thead>
+                                    <tr>
+                                        <th>Vertragsnr.</th>
+                                        <th>Kunde</th>
+                                        <th>Kunden-ID</th>
+                                        <th>Sparte</th>
+                                        <th>Produkt</th>
+                                        <th>Jahresbeitrag</th>
+                                        <th>Status</th>
+                                        <th>Antragsdatum</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="neugeschaeftTableBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Tab Content: Bestand -->
@@ -2019,6 +2062,46 @@
                             <div class="kpi-detail-sub">Vertragsdichte</div>
                         </div>
                     </div>
+
+                    <!-- Vertragstabelle Bestand -->
+                    <div class="vertrags-tabelle-section">
+                        <h3 class="section-title">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                                <path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"></path>
+                            </svg>
+                            Bestandsverträge
+                        </h3>
+                        <div class="vertrags-toolbar">
+                            <div class="vertrags-search">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                                <input type="text" placeholder="Vertrag oder Kunde suchen..." oninput="searchVertraege('bestand')">
+                            </div>
+                            <div class="fida-filter-row">
+                                <button class="fida-filter-btn active" data-filter="alle" onclick="filterVertraegeSparte('bestand','alle')">Alle</button>
+                                <button class="fida-filter-btn" data-filter="leben" onclick="filterVertraegeSparte('bestand','leben')">Leben</button>
+                                <button class="fida-filter-btn" data-filter="kranken" onclick="filterVertraegeSparte('bestand','kranken')">Kranken</button>
+                                <button class="fida-filter-btn" data-filter="schaden" onclick="filterVertraegeSparte('bestand','schaden')">Schaden</button>
+                                <button class="fida-filter-btn" data-filter="kfz" onclick="filterVertraegeSparte('bestand','kfz')">Kfz</button>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="fida-cases-table vertrags-table">
+                                <thead>
+                                    <tr>
+                                        <th>Vertragsnr.</th>
+                                        <th>Kunde</th>
+                                        <th>Kunden-ID</th>
+                                        <th>Sparte</th>
+                                        <th>Produkt</th>
+                                        <th>Jahresbeitrag</th>
+                                        <th>Vertragsbeginn</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="bestandTableBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Tab Content: Storno -->
@@ -2043,6 +2126,47 @@
                     <div class="storno-reasons">
                         <h3>Storno-Gründe</h3>
                         <div class="storno-reason-list" id="stornoGruende"></div>
+                    </div>
+
+                    <!-- Vertragstabelle Storno -->
+                    <div class="vertrags-tabelle-section">
+                        <h3 class="section-title">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="15" y1="9" x2="9" y2="15"></line>
+                                <line x1="9" y1="9" x2="15" y2="15"></line>
+                            </svg>
+                            Stornierte Verträge
+                        </h3>
+                        <div class="vertrags-toolbar">
+                            <div class="vertrags-search">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                                <input type="text" placeholder="Vertrag oder Kunde suchen..." oninput="searchVertraege('storno')">
+                            </div>
+                            <div class="fida-filter-row">
+                                <button class="fida-filter-btn active" data-filter="alle" onclick="filterStornoTyp('alle')">Alle</button>
+                                <button class="fida-filter-btn" data-filter="frueh" onclick="filterStornoTyp('frueh')">Frühstorno</button>
+                                <button class="fida-filter-btn" data-filter="spaet" onclick="filterStornoTyp('spaet')">Spätstorno</button>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="fida-cases-table vertrags-table">
+                                <thead>
+                                    <tr>
+                                        <th>Vertragsnr.</th>
+                                        <th>Kunde</th>
+                                        <th>Kunden-ID</th>
+                                        <th>Sparte</th>
+                                        <th>Produkt</th>
+                                        <th>Jahresbeitrag</th>
+                                        <th>Stornodatum</th>
+                                        <th>Stornogrund</th>
+                                        <th>Typ</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="stornoTableBody"></tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
 
@@ -3234,6 +3358,70 @@
                 </div>
             </div>
         </div>
+
+    <!-- Vertragsdetail Modal -->
+    <div class="vertrag-detail-modal" id="vertragDetailModal" style="display:none;">
+        <div class="modal-overlay" onclick="closeVertragDetail()"></div>
+        <div class="modal-content vertrag-modal-content">
+            <div class="modal-header">
+                <div class="modal-title-row">
+                    <h2 id="vertragDetailTitle">Vertrag: NG-2026-001</h2>
+                    <span class="vertrag-status-badge" id="vertragDetailStatus">Policiert</span>
+                </div>
+                <button class="modal-close" onclick="closeVertragDetail()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body vertrag-detail-body">
+                <div class="vertrag-detail-grid">
+                    <div class="vertrag-detail-section">
+                        <h4>Vertragsdaten</h4>
+                        <div class="detail-row"><span class="detail-label">Vertragsnr.</span><strong id="vdVertragsnr">-</strong></div>
+                        <div class="detail-row"><span class="detail-label">Sparte</span><strong id="vdSparte">-</strong></div>
+                        <div class="detail-row"><span class="detail-label">Produkt</span><strong id="vdProdukt">-</strong></div>
+                        <div class="detail-row"><span class="detail-label">Versicherer</span><strong id="vdVersicherer">-</strong></div>
+                        <div class="detail-row"><span class="detail-label">Status</span><strong id="vdStatus">-</strong></div>
+                    </div>
+                    <div class="vertrag-detail-section">
+                        <h4>Finanzen</h4>
+                        <div class="detail-row"><span class="detail-label">Jahresbeitrag</span><strong id="vdJahresbeitrag">-</strong></div>
+                        <div class="detail-row"><span class="detail-label">Zahlweise</span><strong id="vdZahlweise">-</strong></div>
+                        <div class="detail-row"><span class="detail-label">Provision</span><strong id="vdProvision">-</strong></div>
+                    </div>
+                    <div class="vertrag-detail-section">
+                        <h4>Laufzeit</h4>
+                        <div class="detail-row"><span class="detail-label">Vertragsbeginn</span><strong id="vdBeginn">-</strong></div>
+                        <div class="detail-row"><span class="detail-label">Hauptfälligkeit</span><strong id="vdFaelligkeit">-</strong></div>
+                        <div class="detail-row"><span class="detail-label">Laufzeit</span><strong id="vdLaufzeit">-</strong></div>
+                    </div>
+                    <div class="vertrag-detail-section">
+                        <h4>Kunde</h4>
+                        <div class="detail-row"><span class="detail-label">Name</span><strong id="vdKunde">-</strong></div>
+                        <div class="detail-row"><span class="detail-label">Kunden-ID</span><strong id="vdKundenId">-</strong></div>
+                        <button class="action-btn primary" id="vdKundeBtn">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                                <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"></path>
+                                <circle cx="12" cy="7" r="4"></circle>
+                            </svg>
+                            Kunden-Detail öffnen
+                        </button>
+                    </div>
+                </div>
+                <!-- Storno-Informationen (nur bei Storno-Verträgen sichtbar) -->
+                <div class="vertrag-detail-section storno-info" id="vdStornoSection" style="display:none;">
+                    <h4>Storno-Informationen</h4>
+                    <div class="storno-detail-row">
+                        <div class="detail-row"><span class="detail-label">Stornodatum</span><strong id="vdStornodatum">-</strong></div>
+                        <div class="detail-row"><span class="detail-label">Stornogrund</span><strong id="vdStornogrund">-</strong></div>
+                        <div class="detail-row"><span class="detail-label">Storno-Typ</span><strong id="vdStornoTyp">-</strong></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     </div>
 

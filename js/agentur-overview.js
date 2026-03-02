@@ -195,6 +195,20 @@ function updateDynamicDates() {
                   + now.getFullYear();
         pipelineZeitraum.textContent = 'Zeitraum: ' + jahresanfang + ' – ' + heute;
     }
+
+    // Provisionsabrechnungen dynamisch (Vormonat, Vor-Vormonat, Vor-Vor-Vormonat)
+    var monatsnamen = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
+    for (var m = 1; m <= 3; m++) {
+        var abrMonat = new Date(now.getFullYear(), now.getMonth() - m, 1);
+        var erstelltTag = 2 + Math.floor(Math.random() * 4); // 2.-5. des Folgemonats
+        var erstelltDatum = new Date(abrMonat.getFullYear(), abrMonat.getMonth() + 1, erstelltTag);
+
+        var monatEl = document.getElementById('abrechnungMonat' + m);
+        if (monatEl) monatEl.textContent = monatsnamen[abrMonat.getMonth()] + ' ' + abrMonat.getFullYear();
+
+        var datumEl = document.getElementById('abrechnungDatum' + m);
+        if (datumEl) datumEl.textContent = 'Erstellt: ' + String(erstelltDatum.getDate()).padStart(2,'0') + '.' + String(erstelltDatum.getMonth()+1).padStart(2,'0') + '.' + erstelltDatum.getFullYear();
+    }
 }
 
 /**
@@ -386,6 +400,10 @@ function fillNeugeschaeftTab(agenturData) {
             </div>
         `).join('');
     }
+
+    // Vertragstabelle befüllen
+    if (mockNeugeschaeft.length === 0) generateMockVertraege();
+    fillNeugeschaeftTable();
 }
 
 /**
@@ -403,6 +421,10 @@ function fillBestandTab(agenturData) {
     setElementText('bestandWachstum', `${wachstum > 0 ? '+' : ''}${wachstum}%`);
     setElementText('bestandKunden', kunden.toLocaleString('de-DE'));
     setElementText('bestandDichte', dichte);
+
+    // Vertragstabelle befüllen
+    if (mockBestand.length === 0) generateMockVertraege();
+    fillBestandTable();
 }
 
 /**
@@ -436,6 +458,10 @@ function fillStornoTab(agenturData) {
             </div>
         `).join('');
     }
+
+    // Vertragstabelle befüllen
+    if (mockStorno.length === 0) generateMockVertraege();
+    fillStornoTable();
 }
 
 /**
@@ -477,6 +503,300 @@ function fillQualitaetTab(agenturData) {
     setElementText('qualDoku', `${doku}%`);
     setElementText('qualUnderwriting', `${underwriting.toFixed(0)}%`);
 }
+
+// ========================================
+// VERTRAGSTABELLEN - Mock-Daten & Funktionen
+// ========================================
+
+var mockNeugeschaeft = [];
+var mockBestand = [];
+var mockStorno = [];
+
+var kundenPool = [
+    { name: 'Peter Schmidt', id: 'KD00001' },
+    { name: 'Amira König', id: 'KD00002' },
+    { name: 'Thomas Weber', id: 'KD00003' },
+    { name: 'Anna Hoffmann', id: 'KD00004' },
+    { name: 'Michael Braun', id: 'KD00005' },
+    { name: 'Lisa Müller', id: 'KD00006' },
+    { name: 'Matthias Engel', id: 'KD00007' },
+    { name: 'Christian Bauer', id: 'KD00008' },
+    { name: 'Martin Wolf', id: 'KD00009' },
+    { name: 'Eva Hartmann', id: 'KD00010' }
+];
+
+var produkteMap = {
+    leben: [
+        { produkt: 'BU Comfort Plus', versicherer: 'Allianz' },
+        { produkt: 'Risikolebensversicherung', versicherer: 'Zurich' },
+        { produkt: 'Fondsrente InvestFlex', versicherer: 'HDI' },
+        { produkt: 'Kapitallebensversicherung', versicherer: 'Generali' }
+    ],
+    kranken: [
+        { produkt: 'Krankentagegeld Premium', versicherer: 'DKV' },
+        { produkt: 'Zahnzusatz ZahnFit', versicherer: 'Allianz' },
+        { produkt: 'PKV Komfort-Tarif', versicherer: 'Debeka' },
+        { produkt: 'Pflegezusatzversicherung', versicherer: 'Signal Iduna' }
+    ],
+    schaden: [
+        { produkt: 'Hausratversicherung Premium', versicherer: 'AXA' },
+        { produkt: 'Wohngebäudeversicherung', versicherer: 'Provinzial' },
+        { produkt: 'Privathaftpflicht Comfort', versicherer: 'HDI' },
+        { produkt: 'Rechtsschutzversicherung', versicherer: 'ARAG' }
+    ],
+    kfz: [
+        { produkt: 'Kfz-Vollkasko Plus', versicherer: 'HUK-Coburg' },
+        { produkt: 'Kfz-Haftpflicht', versicherer: 'Allianz' },
+        { produkt: 'Kfz-Teilkasko', versicherer: 'VHV' },
+        { produkt: 'Nutzfahrzeug-Vollkasko', versicherer: 'Zurich' }
+    ]
+};
+
+var spartenKeys = ['leben', 'kranken', 'schaden', 'kfz'];
+var spartenLabels = { leben: 'Leben', kranken: 'Kranken', schaden: 'Schaden', kfz: 'Kfz' };
+var zahlweisen = ['Monatlich', 'Vierteljährlich', 'Halbjährlich', 'Jährlich'];
+var stornoGruende = ['Preis / zu teuer', 'Wettbewerber', 'Leistung unzureichend', 'Finanzielle Gründe', 'Kein Bedarf mehr'];
+
+function fmtDatum(d) {
+    return String(d.getDate()).padStart(2, '0') + '.' + String(d.getMonth() + 1).padStart(2, '0') + '.' + d.getFullYear();
+}
+
+function fmtEuro(val) {
+    return '€' + val.toLocaleString('de-DE', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+}
+
+function randomItem(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+function generateMockVertraege() {
+    var now = new Date();
+
+    // Neugeschäft
+    mockNeugeschaeft = [];
+    for (var i = 0; i < 18; i++) {
+        var sparte = spartenKeys[i % 4];
+        var prod = randomItem(produkteMap[sparte]);
+        var kunde = kundenPool[i % kundenPool.length];
+        var beitrag = Math.floor(300 + Math.random() * 4700);
+        var daysAgo = Math.floor(Math.random() * 90);
+        var antragDate = new Date(now); antragDate.setDate(antragDate.getDate() - daysAgo);
+        var statusArr = ['Policiert', 'Policiert', 'Policiert', 'Antrag', 'Antrag', 'Abgelehnt'];
+        var provFaktor = sparte === 'leben' ? 5 : (sparte === 'kranken' ? 3 : (sparte === 'kfz' ? 0.2 : 0.25));
+        mockNeugeschaeft.push({
+            vertragsnr: 'NG-' + now.getFullYear() + '-' + String(i + 1).padStart(3, '0'),
+            kunde: kunde.name, kundenId: kunde.id,
+            sparte: sparte, sparteLabel: spartenLabels[sparte],
+            produkt: prod.produkt, versicherer: prod.versicherer,
+            jahresbeitrag: beitrag, status: randomItem(statusArr),
+            antragsdatum: antragDate, antragsdatumStr: fmtDatum(antragDate),
+            zahlweise: randomItem(zahlweisen),
+            provision: Math.floor(beitrag * provFaktor),
+            vertragsbeginn: antragDate, vertragsbeginnStr: fmtDatum(antragDate),
+            hauptfaelligkeit: '01.01.' + (now.getFullYear() + 1),
+            laufzeit: (1 + Math.floor(Math.random() * 5)) + ' Jahre'
+        });
+    }
+
+    // Bestand
+    mockBestand = [];
+    for (var j = 0; j < 28; j++) {
+        var spB = spartenKeys[j % 4];
+        var prodB = randomItem(produkteMap[spB]);
+        var kundeB = kundenPool[j % kundenPool.length];
+        var beitragB = Math.floor(200 + Math.random() * 3800);
+        var yearsAgo = 1 + Math.floor(Math.random() * 9);
+        var beginnB = new Date(now.getFullYear() - yearsAgo, Math.floor(Math.random() * 12), 1 + Math.floor(Math.random() * 28));
+        var provFaktorB = spB === 'leben' ? 5 : (spB === 'kranken' ? 3 : (spB === 'kfz' ? 0.2 : 0.25));
+        mockBestand.push({
+            vertragsnr: 'BS-' + (now.getFullYear() - yearsAgo) + '-' + String(j + 1).padStart(3, '0'),
+            kunde: kundeB.name, kundenId: kundeB.id,
+            sparte: spB, sparteLabel: spartenLabels[spB],
+            produkt: prodB.produkt, versicherer: prodB.versicherer,
+            jahresbeitrag: beitragB, status: Math.random() > 0.1 ? 'Aktiv' : 'Ruhend',
+            vertragsbeginn: beginnB, vertragsbeginnStr: fmtDatum(beginnB),
+            zahlweise: randomItem(zahlweisen),
+            provision: Math.floor(beitragB * provFaktorB),
+            hauptfaelligkeit: '01.01.' + (now.getFullYear() + 1),
+            laufzeit: yearsAgo + ' Jahre'
+        });
+    }
+
+    // Storno
+    mockStorno = [];
+    for (var k = 0; k < 11; k++) {
+        var spS = spartenKeys[k % 4];
+        var prodS = randomItem(produkteMap[spS]);
+        var kundeS = kundenPool[k % kundenPool.length];
+        var beitragS = Math.floor(300 + Math.random() * 3500);
+        var stornoDaysAgo = Math.floor(Math.random() * 180);
+        var stornoDate = new Date(now); stornoDate.setDate(stornoDate.getDate() - stornoDaysAgo);
+        var istFrueh = Math.random() > 0.5;
+        var provFaktorS = spS === 'leben' ? 5 : (spS === 'kranken' ? 3 : (spS === 'kfz' ? 0.2 : 0.25));
+        mockStorno.push({
+            vertragsnr: 'ST-' + now.getFullYear() + '-' + String(k + 1).padStart(3, '0'),
+            kunde: kundeS.name, kundenId: kundeS.id,
+            sparte: spS, sparteLabel: spartenLabels[spS],
+            produkt: prodS.produkt, versicherer: prodS.versicherer,
+            jahresbeitrag: beitragS, status: 'Storniert',
+            stornodatum: stornoDate, stornodatumStr: fmtDatum(stornoDate),
+            stornogrund: randomItem(stornoGruende),
+            stornoTyp: istFrueh ? 'Frühstorno' : 'Spätstorno',
+            stornoTypClass: istFrueh ? 'frueh' : 'spaet',
+            zahlweise: randomItem(zahlweisen),
+            provision: Math.floor(beitragS * provFaktorS),
+            vertragsbeginn: stornoDate, vertragsbeginnStr: fmtDatum(stornoDate),
+            hauptfaelligkeit: '-',
+            laufzeit: '-'
+        });
+    }
+}
+
+function fillNeugeschaeftTable() {
+    var tb = document.getElementById('neugeschaeftTableBody');
+    if (!tb) return;
+    tb.innerHTML = mockNeugeschaeft.map(function(v, i) {
+        var statusClass = v.status === 'Policiert' ? 'active' : (v.status === 'Abgelehnt' ? 'storniert' : 'antrag');
+        return '<tr class="clickable-row" data-sparte="' + v.sparte + '" onclick="openVertragDetail(' + i + ',\'ng\')">' +
+            '<td>' + v.vertragsnr + '</td>' +
+            '<td><strong>' + v.kunde + '</strong></td>' +
+            '<td>' + v.kundenId + '</td>' +
+            '<td><span class="sparten-badge ' + v.sparte + '">' + v.sparteLabel + '</span></td>' +
+            '<td>' + v.produkt + '</td>' +
+            '<td><strong>' + fmtEuro(v.jahresbeitrag) + '</strong></td>' +
+            '<td><span class="status-badge ' + statusClass + '">' + v.status + '</span></td>' +
+            '<td>' + v.antragsdatumStr + '</td></tr>';
+    }).join('');
+}
+
+function fillBestandTable() {
+    var tb = document.getElementById('bestandTableBody');
+    if (!tb) return;
+    tb.innerHTML = mockBestand.map(function(v, i) {
+        var statusClass = v.status === 'Aktiv' ? 'active' : 'ruhend';
+        return '<tr class="clickable-row" data-sparte="' + v.sparte + '" onclick="openVertragDetail(' + i + ',\'bs\')">' +
+            '<td>' + v.vertragsnr + '</td>' +
+            '<td><strong>' + v.kunde + '</strong></td>' +
+            '<td>' + v.kundenId + '</td>' +
+            '<td><span class="sparten-badge ' + v.sparte + '">' + v.sparteLabel + '</span></td>' +
+            '<td>' + v.produkt + '</td>' +
+            '<td><strong>' + fmtEuro(v.jahresbeitrag) + '</strong></td>' +
+            '<td>' + v.vertragsbeginnStr + '</td>' +
+            '<td><span class="status-badge ' + statusClass + '">' + v.status + '</span></td></tr>';
+    }).join('');
+}
+
+function fillStornoTable() {
+    var tb = document.getElementById('stornoTableBody');
+    if (!tb) return;
+    tb.innerHTML = mockStorno.map(function(v, i) {
+        return '<tr class="clickable-row" data-stornotyp="' + v.stornoTypClass + '" data-sparte="' + v.sparte + '" onclick="openVertragDetail(' + i + ',\'st\')">' +
+            '<td>' + v.vertragsnr + '</td>' +
+            '<td><strong>' + v.kunde + '</strong></td>' +
+            '<td>' + v.kundenId + '</td>' +
+            '<td><span class="sparten-badge ' + v.sparte + '">' + v.sparteLabel + '</span></td>' +
+            '<td>' + v.produkt + '</td>' +
+            '<td><strong>' + fmtEuro(v.jahresbeitrag) + '</strong></td>' +
+            '<td>' + v.stornodatumStr + '</td>' +
+            '<td>' + v.stornogrund + '</td>' +
+            '<td><span class="storno-typ-badge ' + v.stornoTypClass + '">' + v.stornoTyp + '</span></td></tr>';
+    }).join('');
+}
+
+function filterVertraegeSparte(tabName, sparte) {
+    var section = document.getElementById('tab-' + tabName);
+    if (!section) return;
+    section.querySelectorAll('.fida-filter-btn').forEach(function(b) { b.classList.remove('active'); });
+    var clicked = section.querySelector('.fida-filter-btn[data-filter="' + sparte + '"]');
+    if (clicked) clicked.classList.add('active');
+    var rows = section.querySelectorAll('tbody tr');
+    rows.forEach(function(row) {
+        if (sparte === 'alle') { row.style.display = ''; }
+        else { row.style.display = row.getAttribute('data-sparte') === sparte ? '' : 'none'; }
+    });
+}
+
+function filterStornoTyp(typ) {
+    var section = document.getElementById('tab-storno');
+    if (!section) return;
+    section.querySelectorAll('.fida-filter-btn').forEach(function(b) { b.classList.remove('active'); });
+    var clicked = section.querySelector('.fida-filter-btn[data-filter="' + typ + '"]');
+    if (clicked) clicked.classList.add('active');
+    var rows = section.querySelectorAll('tbody tr');
+    rows.forEach(function(row) {
+        if (typ === 'alle') { row.style.display = ''; }
+        else { row.style.display = row.getAttribute('data-stornotyp') === typ ? '' : 'none'; }
+    });
+}
+
+function searchVertraege(tabName) {
+    var section = document.getElementById('tab-' + tabName);
+    if (!section) return;
+    var input = section.querySelector('.vertrags-search input');
+    if (!input) return;
+    var q = input.value.toLowerCase();
+    var rows = section.querySelectorAll('tbody tr');
+    rows.forEach(function(row) {
+        row.style.display = row.textContent.toLowerCase().indexOf(q) >= 0 ? '' : 'none';
+    });
+}
+
+// Vertragsdetail Modal
+function openVertragDetail(idx, typ) {
+    var v;
+    if (typ === 'ng') v = mockNeugeschaeft[idx];
+    else if (typ === 'bs') v = mockBestand[idx];
+    else if (typ === 'st') v = mockStorno[idx];
+    if (!v) return;
+
+    var modal = document.getElementById('vertragDetailModal');
+    if (!modal) return;
+    modal.style.display = 'flex';
+
+    setElementText('vertragDetailTitle', 'Vertrag: ' + v.vertragsnr);
+    var statusEl = document.getElementById('vertragDetailStatus');
+    if (statusEl) { statusEl.textContent = v.status; statusEl.className = 'vertrag-status-badge status-badge ' + (v.status === 'Policiert' || v.status === 'Aktiv' ? 'active' : (v.status === 'Storniert' ? 'storniert' : 'antrag')); }
+
+    setElementText('vdVertragsnr', v.vertragsnr);
+    setElementText('vdSparte', v.sparteLabel);
+    setElementText('vdProdukt', v.produkt);
+    setElementText('vdVersicherer', v.versicherer);
+    setElementText('vdStatus', v.status);
+    setElementText('vdJahresbeitrag', fmtEuro(v.jahresbeitrag));
+    setElementText('vdZahlweise', v.zahlweise);
+    setElementText('vdProvision', fmtEuro(v.provision));
+    setElementText('vdBeginn', v.vertragsbeginnStr);
+    setElementText('vdFaelligkeit', v.hauptfaelligkeit);
+    setElementText('vdLaufzeit', v.laufzeit);
+    setElementText('vdKunde', v.kunde);
+    setElementText('vdKundenId', v.kundenId);
+
+    var kundeBtn = document.getElementById('vdKundeBtn');
+    if (kundeBtn) {
+        kundeBtn.onclick = function() { closeVertragDetail(); openKundenDetail(v.kunde, v.kundenId); };
+    }
+
+    var stornoSection = document.getElementById('vdStornoSection');
+    if (stornoSection) {
+        if (typ === 'st') {
+            stornoSection.style.display = 'block';
+            setElementText('vdStornodatum', v.stornodatumStr);
+            setElementText('vdStornogrund', v.stornogrund);
+            setElementText('vdStornoTyp', v.stornoTyp);
+        } else {
+            stornoSection.style.display = 'none';
+        }
+    }
+}
+
+function closeVertragDetail() {
+    var modal = document.getElementById('vertragDetailModal');
+    if (modal) modal.style.display = 'none';
+}
+
+window.openVertragDetail = openVertragDetail;
+window.closeVertragDetail = closeVertragDetail;
+window.filterVertraegeSparte = filterVertraegeSparte;
+window.filterStornoTyp = filterStornoTyp;
+window.searchVertraege = searchVertraege;
 
 /**
  * Hilfs-Funktionen

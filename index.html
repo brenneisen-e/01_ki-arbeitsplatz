@@ -3485,7 +3485,7 @@
                                     <span class="info-value" id="kundenBeschaeftigtSeit">01.03.2016</span>
                                 </div>
                                 <div class="info-item full-width">
-                                    <span class="info-label">Tiere</span>
+                                    <span class="info-label">Haustier</span>
                                     <div class="info-value" id="kundenTiere">
                                         <span class="tier-unknown-badge" id="kundenTiereBadge"
                                             title="Aus Open Finance Kontoumsätzen wurden Hinweise auf Tierhaltung erkannt (z.B. Fressnapf, Tierarzt). Klicken Sie hier, um zu den Umsätzen zu navigieren."
@@ -3493,6 +3493,34 @@
                                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
                                             Hinweise aus Kontoums&auml;tzen
                                         </span>
+                                    </div>
+                                    <!-- Haustier-Eingabeformular -->
+                                    <div class="tier-edit-section" id="tierEditSection">
+                                        <div class="tier-edit-row">
+                                            <label class="tier-edit-label">Art</label>
+                                            <select id="tierArtSelect" class="tier-edit-input" onchange="onTierArtChange()">
+                                                <option value="">-- Bitte w&auml;hlen --</option>
+                                                <option value="Hund">Hund</option>
+                                                <option value="Katze">Katze</option>
+                                            </select>
+                                        </div>
+                                        <div class="tier-edit-row" id="tierDetailsRow" style="display:none;">
+                                            <div class="tier-detail-fields">
+                                                <div>
+                                                    <label class="tier-edit-label">Name</label>
+                                                    <input type="text" id="tierNameInput" class="tier-edit-input" placeholder="z.B. Bella" />
+                                                </div>
+                                                <div>
+                                                    <label class="tier-edit-label">Alter</label>
+                                                    <input type="number" id="tierAlterInput" class="tier-edit-input" placeholder="Jahre" min="0" max="30" />
+                                                </div>
+                                                <button class="tier-save-btn" onclick="saveTierInfo()">
+                                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>
+                                                    Speichern
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="tier-saved-info" id="tierSavedInfo" style="display:none;"></div>
                                     </div>
                                 </div>
                                 <div class="info-item">

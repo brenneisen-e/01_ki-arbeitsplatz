@@ -29,11 +29,14 @@ var bezahlenData = [
     { name: 'Kredit & Finanzierung', amount: 330, color: '#b8a9e2', icon: bezahlenIcons.kredit, items: [
         { name: 'Hypothek Sparkasse', amount: 330, datum: '05.11.2025', badge: 'luecke' }
     ]},
-    { name: 'Lebensmittel & Alltag', amount: 320, color: '#f0c78a', icon: bezahlenIcons.lebensmittel, items: [
+    { name: 'Lebensmittel & Alltag', amount: 418, color: '#f0c78a', icon: bezahlenIcons.lebensmittel, items: [
         { name: 'REWE Supermarkt', amount: 145, datum: '08.11.2025' },
         { name: 'EDEKA', amount: 95, datum: '15.11.2025' },
         { name: 'dm Drogerie', amount: 35, datum: '10.11.2025' },
-        { name: 'Fressnapf Tiernahrung', amount: 45, datum: '12.11.2025', badge: 'insight', insight: 'Tierhalter \u2013 Haftpflicht/KV?' }
+        { name: 'Fressnapf Tiernahrung', amount: 45, datum: '12.11.2025', badge: 'insight', insight: 'Tierhalter \u2013 Haftpflicht/KV?', tierRelevant: true },
+        { name: 'Fressnapf Online', amount: 38, datum: '19.11.2025', badge: 'insight', insight: 'Tierhalter \u2013 Haftpflicht/KV?', tierRelevant: true },
+        { name: 'Fressnapf Tiernahrung', amount: 32, datum: '25.10.2025', badge: 'insight', insight: 'Tierhalter \u2013 Haftpflicht/KV?', tierRelevant: true },
+        { name: 'Fressnapf Filiale', amount: 28, datum: '03.10.2025', badge: 'insight', insight: 'Tierhalter \u2013 Haftpflicht/KV?', tierRelevant: true }
     ]},
     { name: 'Mobilit\u00E4t', amount: 130, color: '#f0a0a0', icon: bezahlenIcons.mobilitaet, items: [
         { name: 'ARAL Tankstelle', amount: 85, datum: '06.11.2025' },
@@ -119,7 +122,7 @@ function navigateToVertrag(vertragName) {
 }
 window.navigateToVertrag = navigateToVertrag;
 
-// Navigation von "Hinweise aus Kontoumsätzen" zum Fressnapf-Umsatz
+// Navigation von "Hinweise aus Kontoumsätzen" zu allen Fressnapf-Umsätzen
 function navigateToTierUmsaetze() {
     // 1. Zum Open Finance Tab wechseln
     switchKundenTab('fida');
@@ -139,17 +142,21 @@ function navigateToTierUmsaetze() {
                 if (arrow) arrow.classList.add('open');
             }
 
-            // Fressnapf-Eintrag finden und highlighten
+            // ALLE Fressnapf-Einträge finden und highlighten
             setTimeout(function() {
                 var txItems = document.querySelectorAll('.bezahlen-tx-item');
+                var firstMatch = null;
                 txItems.forEach(function(item) {
                     item.classList.remove('highlight-vertrag');
                     if (item.textContent.indexOf('Fressnapf') !== -1) {
                         item.classList.add('highlight-vertrag');
-                        item.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                        setTimeout(function() { item.classList.remove('highlight-vertrag'); }, 4000);
+                        if (!firstMatch) firstMatch = item;
+                        setTimeout(function() { item.classList.remove('highlight-vertrag'); }, 5000);
                     }
                 });
+                if (firstMatch) {
+                    firstMatch.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
             }, 100);
         }, 100);
     }, 150);

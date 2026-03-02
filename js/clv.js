@@ -14,7 +14,7 @@ const clvKundenParameter = {
         empfehlungsPotenzial: 3,
         trendVorjahr: 0.12
     },
-    'Sabine König': {
+    'Amira König': {
         haltedauerJahre: 10,
         stornoRisiko: 0.10,
         crossSellingJahresPraemie: 540,

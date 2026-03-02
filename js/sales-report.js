@@ -24,7 +24,7 @@ const demoAbschluesse = [
     {
         id: 'AB-2026-002',
         datum: '2026-01-15',
-        versicherungsnehmer: 'Sabine König',
+        versicherungsnehmer: 'Amira König',
         produkt: 'Berufsunfähigkeitsversicherung',
         tarif: 'BU Comfort',
         antragsnummer: 'ANT-2026-00138',

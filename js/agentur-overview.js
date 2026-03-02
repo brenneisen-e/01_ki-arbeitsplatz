@@ -593,7 +593,7 @@ function filterFidaCases(status) {
  */
 const kundenMapping = {
     'KD00001': 'Peter Schmidt',
-    'KD00002': 'Sabine König',
+    'KD00002': 'Amira König',
     'KD00003': 'Thomas Weber',
     'KD00004': 'Maria Schneider',
     'KD00005': 'Andreas Müller',
@@ -1037,7 +1037,7 @@ function getAgenturChatResponse(question) {
         return `<strong>Ablaufende Verträge (nächste 60 Tage):</strong><br><br>
         <strong>1 Eigener Vertrag</strong> zur Verlängerung:<br><br>
         <div class="chat-customer-item">
-            ${customerBtn('Sabine König', 'KD00002', 'vertraege', 'leben')} Risikoleben bei <strong>ERGO</strong> (${getDynamicDate(21)})<br>
+            ${customerBtn('Amira König', 'KD00002', 'vertraege', 'leben')} Risikoleben bei <strong>ERGO</strong> (${getDynamicDate(21)})<br>
             ${vertragBadge(false)}
             <span class="chat-recommendation">Vertragsverlängerung vorbereiten – Beitragsanpassung +3.2% kommunizieren</span>
         </div>
@@ -1065,7 +1065,7 @@ function getAgenturChatResponse(question) {
             <span class="chat-recommendation">Baufinanzierung €285.000 – Absicherung dringend empfohlen</span>
         </div>
         <div class="chat-customer-item">
-            ${customerBtn('Sabine König', 'KD00002', 'stammdaten', '')} (38 J.) – 2 Kinder, selbstständig<br>
+            ${customerBtn('Amira König', 'KD00002', 'stammdaten', '')} (38 J.) – 2 Kinder, selbstständig<br>
             <span class="chat-recommendation">Geschätzte Prämie: €1.200/Jahr</span>
         </div>
         <br>Gesamtpotential: <strong>€3.000/Jahr</strong>
@@ -1369,7 +1369,7 @@ function showNeuePotentialeContent() {
                     desc: 'Nur 41% des Einkommens abgesichert'
                 },
                 {
-                    name: 'Sabine König',
+                    name: 'Amira König',
                     title: 'Kfz-Wechsel',
                     desc: 'Vertrag läuft bald aus, €200/Jahr Ersparnis möglich'
                 },

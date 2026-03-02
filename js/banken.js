@@ -2617,9 +2617,9 @@ function getFullCustomerData(customerId) {
             }
         },
         'K-2024-6234': {
-            name: 'Fischer, Maria', type: 'Privat', rechtsform: 'Privatperson',
+            name: 'Danzig, Sabine', type: 'Privat', rechtsform: 'Privatperson',
             adresse: 'Rosenstraße 12, 50667 Köln', telefon: '+49 221 334455',
-            email: 'm.fischer@web.de', ansprechpartner: 'Maria Fischer',
+            email: 's.danzig@web.de', ansprechpartner: 'Sabine Danzig',
             branche: 'Rentnerin', restschuld: 3200, status: 'Aktiv',
             statusBadge: 'warning', statusText: 'Teilzahlung €780 eingegangen am 18.12.2025',
             krediteAnzahl: 2, gesamtforderung: 3200, monatsrate: 180, ueberfaellig: 0,
@@ -6413,7 +6413,7 @@ function generateDemoCustomerFile() {
         { name: 'Müller Maschinenbau GmbH', street: 'Industriestraße 45', zip: '70173', city: 'Stuttgart', iban: 'DE89 3704 0044 0532 0130 00', amount: 47850.00, dueDate: '2024-10-15', type: 'Gewerbe' },
         { name: 'Hans Schmidt', street: 'Hauptstraße 12', zip: '80331', city: 'München', iban: 'DE91 1000 0000 0123 4567 89', amount: 3420.50, dueDate: '2024-11-01', type: 'Privat' },
         { name: 'Weber & Söhne KG', street: 'Am Marktplatz 8', zip: '50667', city: 'Köln', iban: 'DE75 3705 0198 0012 3456 78', amount: 125000.00, dueDate: '2024-09-30', type: 'Gewerbe' },
-        { name: 'Maria Fischer', street: 'Gartenweg 23', zip: '60311', city: 'Frankfurt', iban: 'DE44 5001 0517 5407 3249 31', amount: 8750.00, dueDate: '2024-10-20', type: 'Privat' },
+        { name: 'Sabine Danzig', street: 'Gartenweg 23', zip: '60311', city: 'Frankfurt', iban: 'DE44 5001 0517 5407 3249 31', amount: 8750.00, dueDate: '2024-10-20', type: 'Privat' },
         { name: 'Autohaus Berger GmbH', street: 'Berliner Allee 100', zip: '40210', city: 'Düsseldorf', iban: 'DE68 2105 0170 0012 3456 78', amount: 89300.00, dueDate: '2024-08-15', type: 'Gewerbe' }
     ];
 

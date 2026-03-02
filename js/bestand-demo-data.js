@@ -170,7 +170,7 @@ Versicherungsmaklerin`
             id: 'case-003',
             createdAt: daysAgo(25),
             updatedAt: daysAgo(10),
-            kunde: { name: "Fischer, Maria", source: "auto", confidence: 0.96 },
+            kunde: { name: "Danzig, Sabine", source: "auto", confidence: 0.96 },
             versicherungsnummer: { value: "ERG-9087654", source: "auto", confidence: 0.98 },
             gueltigkeitsdatum: { value: "15.01.2026", source: "auto", confidence: 0.90 },
             status: 'export-bereit',
@@ -187,12 +187,12 @@ Versicherungsmaklerin`
                 {
                     entryID: 'msg-003-a',
                     folder: 'sent',
-                    subject: 'Bestandsübertragung Fischer Hausrat ERG-9087654',
+                    subject: 'Bestandsübertragung Danzig Hausrat ERG-9087654',
                     senderEmail: MAKLER[2].email,
                     receivedTime: daysAgo(25),
                     bodyPlain: `Guten Tag,
 
-bitte übertragen Sie den Hausratvertrag ERG-9087654 der Kundin Maria Fischer in unseren Bestand.
+bitte übertragen Sie den Hausratvertrag ERG-9087654 der Kundin Sabine Danzig in unseren Bestand.
 
 Gewünschter Termin: 15.01.2026
 
@@ -205,12 +205,12 @@ Versicherungsmakler`
                 {
                     entryID: 'msg-003-b',
                     folder: 'inbox',
-                    subject: 'Bestätigung Bestandsübertragung Fischer',
+                    subject: 'Bestätigung Bestandsübertragung Danzig',
                     senderEmail: 'maklerservice@ergo.de',
                     receivedTime: daysAgo(12),
                     bodyPlain: `Sehr geehrter Herr Hofmann,
 
-die Bestandsübertragung für Maria Fischer (ERG-9087654) wurde durchgeführt.
+die Bestandsübertragung für Sabine Danzig (ERG-9087654) wurde durchgeführt.
 
 Wirksam ab: 15.01.2026
 

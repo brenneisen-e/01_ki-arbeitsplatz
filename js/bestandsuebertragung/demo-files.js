@@ -791,7 +791,7 @@ Tel.: 0228-6654321`,
                 ['Hofmann, Klaus', 'Ringstr. 12, 40213 D\u00fcsseldorf', '03.02.1965', 'ERG-4512490', 'KFZ', 'angefragt', 'Sandra Schmidt'],
                 ['Lehmann, Anna', 'Gartenweg 3, 40225 D\u00fcsseldorf', '19.11.1988', 'ERG-4523001', 'Haftpflicht', 'angefragt', 'Sandra Schmidt'],
                 ['Richter, Peter', 'Am Markt 7, 40212 D\u00fcsseldorf', '07.06.1958', 'ERG-4530022', 'Hausrat', 'in Bearbeitung', 'Sandra Schmidt'],
-                ['Fischer, Maria', 'Waldstr. 19, 40229 D\u00fcsseldorf', '25.09.1991', 'ERG-4534100', 'BU', 'angefragt', 'Sandra Schmidt'],
+                ['Danzig, Sabine', 'Waldstr. 19, 40229 D\u00fcsseldorf', '25.09.1991', 'ERG-4534100', 'BU', 'angefragt', 'Sandra Schmidt'],
             ]);
             return createEml({
                 from: '"Sandra Schmidt" <sandra.schmidt@schmidt-makler.de>',
@@ -806,7 +806,7 @@ Die Excel-Datei enth\u00e4lt 5 Kunden mit den jeweiligen Vertragsdaten und dem a
 Gew\u00fcnschtes \u00dcbertragungsdatum: 01.03.2026
 
 F\u00fcr die Kunden Weber und Richter liegen die Maklervollmachten bereits vor.
-Für Hofmann, Lehmann und Fischer folgen diese in den nächsten Tagen.
+Für Hofmann, Lehmann und Danzig folgen diese in den nächsten Tagen.
 
 Bei Rückfragen stehe ich gerne zur Verfügung.
 
@@ -996,15 +996,15 @@ Tel.: 0221-4488770`,
         }
     },
     {
-        id: 'teilweise_fischer',
+        id: 'teilweise_danzig',
         category: 'email-edge',
-        title: 'Teilweise vollst\u00e4ndig \u2013 Fischer (Haftpflicht + Unfall)',
+        title: 'Teilweise vollst\u00e4ndig \u2013 Danzig (Haftpflicht + Unfall)',
         description: 'Haftpflicht mit VS-Nr vollst\u00e4ndig, Unfall ohne VS-Nr \u2013 teilweise vollst\u00e4ndig.',
         tags: ['EML', 'DOCX', 'VS-Nr fehlt', 'Teilweise'],
-        filename: '12_Teilweise_Fischer.eml',
+        filename: '12_Teilweise_Danzig.eml',
         generate() {
             const vollmacht = buildMaklervollmacht(
-                'Maria Fischer', '25.09.1991',
+                'Sabine Danzig', '25.09.1991',
                 'Waldstr. 19, 40229 D\u00fcsseldorf',
                 'J\u00fcrgen Becker', 'Becker & Partner Makler',
                 'D\u00fcsseldorf', '14.01.2026',
@@ -1013,18 +1013,18 @@ Tel.: 0221-4488770`,
             return createEml({
                 from: '"J\u00fcrgen Becker" <juergen.becker@becker-partner.de>',
                 to: 'maklerservice@ergo.de',
-                subject: 'Bestands\u00fcbertragung Fischer \u2013 Haftpflicht und Unfall',
+                subject: 'Bestands\u00fcbertragung Danzig \u2013 Haftpflicht und Unfall',
                 date: 'Wed, 15 Jan 2026 10:45:00 +0100',
                 body: `Sehr geehrte Damen und Herren,
 
-f\u00fcr unsere Kundin Maria Fischer beantragen wir die \u00dcbertragung folgender Vertr\u00e4ge:
+f\u00fcr unsere Kundin Sabine Danzig beantragen wir die \u00dcbertragung folgender Vertr\u00e4ge:
 
 1. Haftpflichtversicherung, VS-Nr. ERG-4534201
    Gew\u00fcnschtes \u00dcbertragungsdatum: 01.04.2026
 
 2. Unfallversicherung
    Gew\u00fcnschtes \u00dcbertragungsdatum: 01.04.2026
-   Die Versicherungsnummer liegt uns aktuell leider nicht vor. Frau Fischer wird diese nachreichen.
+   Die Versicherungsnummer liegt uns aktuell leider nicht vor. Frau Danzig wird diese nachreichen.
 
 Die unterschriebene Maklervollmacht liegt bei.
 
@@ -1035,7 +1035,7 @@ Becker & Partner Makler
 Graf-Adolf-Str. 88, 40210 D\u00fcsseldorf
 Tel.: 0211-9912345`,
                 attachments: [{
-                    filename: 'Maklervollmacht_Fischer.docx',
+                    filename: 'Maklervollmacht_Danzig.docx',
                     mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
                     data: vollmacht
                 }]

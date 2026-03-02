@@ -748,10 +748,10 @@ function fillKundenDetail(kundenName, vermittlerId) {
     const kundenFoto = document.querySelector('.kunden-foto');
     if (kundenFoto) {
         var kundenFotos = {
-            'Peter Schmidt': 'AdobeStock_624564221.jpeg',
-            'Amira König': 'AdobeStock_252262042.jpeg',
-            'Thomas Weber': 'AdobeStock_361342769.jpeg',
-            'Sabine Danzig': 'AdobeStock_612932760.jpeg'
+            'Peter Schmidt': 'assets/images/AdobeStock_624564221.jpeg',
+            'Amira König': 'assets/images/AdobeStock_252262042.jpeg',
+            'Thomas Weber': 'assets/images/AdobeStock_361342769.jpeg',
+            'Sabine Danzig': 'assets/images/AdobeStock_612932760.jpeg'
         };
         if (kundenFotos[kundenName]) {
             kundenFoto.innerHTML = `<img src="${kundenFotos[kundenName]}" alt="${kundenName}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;

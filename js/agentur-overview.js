@@ -861,18 +861,39 @@ function fillNeugeschaeftTable() {
 function fillBestandTable() {
     var tb = document.getElementById('bestandTableBody');
     if (!tb) return;
-    tb.innerHTML = mockBestand.map(function(v, i) {
-        var statusClass = v.status === 'Aktiv' ? 'active' : 'ruhend';
-        return '<tr class="clickable-row" data-sparte="' + v.sparte + '" onclick="openVertragDetail(' + i + ',\'bs\')">' +
-            '<td>' + v.vertragsnr + '</td>' +
-            '<td><strong>' + v.kunde + '</strong></td>' +
-            '<td>' + v.kundenId + '</td>' +
-            '<td><span class="sparten-badge ' + v.sparte + '">' + v.sparteLabel + '</span></td>' +
-            '<td>' + v.produkt + '</td>' +
-            '<td><strong>' + fmtEuro(v.jahresbeitrag) + '</strong></td>' +
-            '<td>' + v.vertragsbeginnStr + '</td>' +
-            '<td><span class="status-badge ' + statusClass + '">' + v.status + '</span></td></tr>';
-    }).join('');
+
+    // Nach Kunden gruppieren (wie Neugeschäft)
+    var kundenMap = {};
+    var kundenOrder = [];
+    mockBestand.forEach(function(v, i) {
+        v._bsIdx = i;
+        if (!kundenMap[v.kundenId]) {
+            kundenMap[v.kundenId] = { kunde: v.kunde, kundenId: v.kundenId, vertraege: [] };
+            kundenOrder.push(v.kundenId);
+        }
+        kundenMap[v.kundenId].vertraege.push(v);
+    });
+
+    var html = '';
+    kundenOrder.forEach(function(kid) {
+        var g = kundenMap[kid];
+        var anzahl = g.vertraege.length;
+        var gesamtBeitrag = g.vertraege.reduce(function(s, v) { return s + v.jahresbeitrag; }, 0);
+        html += '<tr class="ng-kunde-header-row" data-kundenid="' + kid + '">' +
+            '<td colspan="6"><strong>' + g.kunde + '</strong> <span class="ng-kunde-meta">' + kid + ' &middot; ' + anzahl + ' Vertrag' + (anzahl > 1 ? 'e' : '') + ' &middot; Gesamt: ' + fmtEuro(gesamtBeitrag) + '</span></td>' +
+            '</tr>';
+        g.vertraege.forEach(function(v) {
+            var statusClass = v.status === 'Aktiv' ? 'active' : 'ruhend';
+            html += '<tr class="clickable-row" data-sparte="' + v.sparte + '" data-kundenid="' + kid + '" data-bs-idx="' + v._bsIdx + '" onclick="openVertragDetail(' + v._bsIdx + ',\'bs\')">' +
+                '<td>' + v.vertragsnr + '</td>' +
+                '<td><span class="sparten-badge ' + v.sparte + '">' + v.sparteLabel + '</span> ' + v.produkt + '</td>' +
+                '<td>' + v.versicherer + '</td>' +
+                '<td><strong>' + fmtEuro(v.jahresbeitrag) + '</strong> <span class="ng-zahlweise-label">' + v.zahlweise + '</span></td>' +
+                '<td>' + v.vertragsbeginnStr + '</td>' +
+                '<td><span class="status-badge ' + statusClass + '">' + v.status + '</span></td></tr>';
+        });
+    });
+    tb.innerHTML = html;
 }
 
 function fillStornoTable() {
@@ -900,7 +921,7 @@ function filterVertraegeSparte(tabName, sparte) {
     if (clicked) clicked.classList.add('active');
 
     var rows = section.querySelectorAll('tbody tr');
-    if (tabName === 'neugeschaeft') {
+    if (tabName === 'neugeschaeft' || tabName === 'bestand') {
         // Tabelle mit Kunden-Header-Rows
         var visibleKunden = {};
         rows.forEach(function(row) {
@@ -946,7 +967,7 @@ function searchVertraege(tabName) {
     var q = input.value.toLowerCase();
 
     var rows = section.querySelectorAll('tbody tr');
-    if (tabName === 'neugeschaeft') {
+    if (tabName === 'neugeschaeft' || tabName === 'bestand') {
         var visibleKunden = {};
         rows.forEach(function(row) {
             if (row.classList.contains('ng-kunde-header-row')) return;
@@ -990,11 +1011,25 @@ function filterBestandZeitraum(zeitraum) {
     else if (zeitraum === '5j') cutoff = new Date(now.getFullYear() - 5, now.getMonth(), now.getDate());
 
     var rows = section.querySelectorAll('#bestandTableBody tr');
-    rows.forEach(function(row, idx) {
-        if (!cutoff || zeitraum === 'alle') { row.style.display = ''; return; }
-        var v = mockBestand[idx];
+    var visibleKunden = {};
+    rows.forEach(function(row) {
+        if (row.classList.contains('ng-kunde-header-row')) return;
+        if (!cutoff || zeitraum === 'alle') {
+            row.style.display = '';
+            visibleKunden[row.getAttribute('data-kundenid')] = true;
+            return;
+        }
+        var bsIdx = parseInt(row.getAttribute('data-bs-idx'));
+        var v = mockBestand[bsIdx];
         if (v && v.vertragsbeginn) {
-            row.style.display = v.vertragsbeginn >= cutoff ? '' : 'none';
+            var match = v.vertragsbeginn >= cutoff;
+            row.style.display = match ? '' : 'none';
+            if (match) visibleKunden[row.getAttribute('data-kundenid')] = true;
+        }
+    });
+    rows.forEach(function(row) {
+        if (row.classList.contains('ng-kunde-header-row')) {
+            row.style.display = visibleKunden[row.getAttribute('data-kundenid')] ? '' : 'none';
         }
     });
 }

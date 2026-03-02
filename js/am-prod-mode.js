@@ -24,7 +24,7 @@
         name: 'Doreen',
         fullName: 'Doreen Duenschede',
         role: 'Portfolio Manager',
-        photo: '1623835026886.jpg'
+        photo: 'assets/images/1623835026886.jpg'
     };
 
     // Second approver for 4-eye workflows

@@ -245,7 +245,7 @@
     // VERMITTLER PHOTO COPY
     // ========================================
     function copyVermittlerPhoto() {
-        const photoSrc = 'AdobeStock_624564221.jpeg';
+        const photoSrc = 'assets/images/AdobeStock_624564221.jpeg';
 
         // Copy to header bar
         const targetImg = document.getElementById('bgavVermittlerPhoto');

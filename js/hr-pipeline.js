@@ -51,7 +51,7 @@ const HP_PROFILES = {
         id: 'max',
         name: 'Max Berger',
         initials: 'MB',
-        photo: 'AdobeStock_624564221.jpeg',
+        photo: 'assets/images/AdobeStock_624564221.jpeg',
         age: 34,
         city: 'Düsseldorf',
         region: 'nrw',

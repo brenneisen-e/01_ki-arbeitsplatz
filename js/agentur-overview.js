@@ -691,7 +691,18 @@ var kundenBestandVertraege = [
     { kunde: 'Martin Wolf', kundenId: 'KD00009', typ: 'Wohngebäudeversicherung', versicherer: 'VHV', details: 'Vers.-Summe: €380.000, inkl. Elementar', praemie: '€520/Jahr', beginn: '01.07.2016', status: 'Aktiv' },
     // Eva Hartmann KD00010
     { kunde: 'Eva Hartmann', kundenId: 'KD00010', typ: 'Berufsunfähigkeitsversicherung', versicherer: 'ERGO', details: 'BU-Rente: €1.000/Mon., Endalter 67 - Aufstockung empfohlen', praemie: '€68/Mon.', beginn: '01.09.2019', status: 'Aktiv' },
-    { kunde: 'Eva Hartmann', kundenId: 'KD00010', typ: 'Betriebshaftpflicht', versicherer: 'Hiscox', details: '€2 Mio. Deckung, Freelancer-Tarif', praemie: '€290/Jahr', beginn: '01.01.2020', status: 'Aktiv' }
+    { kunde: 'Eva Hartmann', kundenId: 'KD00010', typ: 'Betriebshaftpflicht', versicherer: 'Hiscox', details: '€2 Mio. Deckung, Freelancer-Tarif', praemie: '€290/Jahr', beginn: '01.01.2020', status: 'Aktiv' },
+    // Neugeschäft-Kunden (Bestandsverträge)
+    { kunde: 'Ralf Dietrich', kundenId: 'KD00026', typ: 'Wohngebäudeversicherung', versicherer: 'AXA', details: 'Vers.-Summe: €380.000, inkl. Elementar', praemie: '€420/Jahr', beginn: '01.05.2020', status: 'Aktiv' },
+    { kunde: 'Ingrid Sommer', kundenId: 'KD00027', typ: 'Berufsunfähigkeitsversicherung', versicherer: 'ERGO', details: 'BU-Rente: €1.500/Mon., Endalter 67', praemie: '€92/Mon.', beginn: '01.11.2018', status: 'Aktiv' },
+    { kunde: 'Dirk Hoffmann', kundenId: 'KD00028', typ: 'Berufsunfähigkeitsversicherung', versicherer: 'Alte Leipziger', details: 'BU-Rente: €2.200/Mon., Endalter 67', praemie: '€135/Mon.', beginn: '01.02.2017', status: 'Aktiv' },
+    { kunde: 'Karin Albrecht', kundenId: 'KD00029', typ: 'Risikolebensversicherung', versicherer: 'ERGO', details: 'Vers.-Summe: €200.000, Laufzeit bis 2042', praemie: '€20/Mon.', beginn: '01.06.2019', status: 'Aktiv' },
+    { kunde: 'Bernd Schuster', kundenId: 'KD00030', typ: 'Rechtsschutzversicherung', versicherer: 'ERGO', details: 'Familie, inkl. Beruf & Verkehr', praemie: '€350/Jahr', beginn: '01.01.2021', status: 'Aktiv' },
+    { kunde: 'Andrea Haas', kundenId: 'KD00031', typ: 'Privathaftpflichtversicherung', versicherer: 'Allianz', details: 'Single, €50 Mio. Deckung', praemie: '€70/Jahr', beginn: '01.08.2022', status: 'Aktiv' },
+    { kunde: 'Holger Friedrich', kundenId: 'KD00032', typ: 'Wohngebäudeversicherung', versicherer: 'Generali', details: 'Vers.-Summe: €300.000, gleitender Neuwert', praemie: '€380/Jahr', beginn: '01.03.2019', status: 'Aktiv' },
+    { kunde: 'Sabine Stein', kundenId: 'KD00033', typ: 'Berufsunfähigkeitsversicherung', versicherer: 'HDI', details: 'BU-Rente: €1.800/Mon., Endalter 67', praemie: '€105/Mon.', beginn: '01.07.2020', status: 'Aktiv' },
+    { kunde: 'Norbert Keller', kundenId: 'KD00034', typ: 'Unfallversicherung', versicherer: 'ERGO', details: 'Invalidität €120.000, Progression 300%', praemie: '€210/Jahr', beginn: '01.04.2018', status: 'Aktiv' },
+    { kunde: 'Ulrike Maier', kundenId: 'KD00035', typ: 'Berufsunfähigkeitsversicherung', versicherer: 'Zurich', details: 'BU-Rente: €1.600/Mon., Endalter 67', praemie: '€88/Mon.', beginn: '01.10.2021', status: 'Aktiv' }
 ];
 
 function generateMockVertraege() {
@@ -726,24 +737,23 @@ function generateMockVertraege() {
     // ======== NEUGESCHÄFT: Neue Verträge für bestehende Kunden (letzte 90 Tage) ========
     mockNeugeschaeft = [];
     var ngVertraege = [
-        { kunde: 'Peter Schmidt', kundenId: 'KD00001', typ: 'Kfz-Versicherung', versicherer: 'Allianz', details: 'Kfz-Vollkasko, SF-Klasse 12, VW Golf', praemie: '€720/Jahr', daysAgo: 5, status: 'Policiert' },
-        { kunde: 'Peter Schmidt', kundenId: 'KD00001', typ: 'Hausratversicherung', versicherer: 'AXA', details: 'Vers.-Summe: €80.000, inkl. Fahrrad', praemie: '€185/Jahr', daysAgo: 22, status: 'Policiert' },
-        { kunde: 'Amira König', kundenId: 'KD00002', typ: 'Zahnzusatzversicherung', versicherer: 'DKV', details: 'Zahnersatz 90%, Prophylaxe 100%', praemie: '€32/Mon.', daysAgo: 12, status: 'Policiert' },
-        { kunde: 'Thomas Weber', kundenId: 'KD00003', typ: 'Berufsunfähigkeitsversicherung', versicherer: 'HDI', details: 'BU-Rente: €2.000/Mon., Endalter 67', praemie: '€125/Mon.', daysAgo: 8, status: 'Antrag' },
-        { kunde: 'Thomas Weber', kundenId: 'KD00003', typ: 'Hausratversicherung', versicherer: 'Allianz', details: 'Vers.-Summe: €45.000, Single-Haushalt', praemie: '€95/Jahr', daysAgo: 30, status: 'Policiert' },
-        { kunde: 'Anna Hoffmann', kundenId: 'KD00004', typ: 'Unfallversicherung', versicherer: 'Zurich', details: 'Familie, Invalidität €200.000', praemie: '€280/Jahr', daysAgo: 15, status: 'Policiert' },
-        { kunde: 'Anna Hoffmann', kundenId: 'KD00004', typ: 'Pflegezusatzversicherung', versicherer: 'Signal Iduna', details: 'Pflege-Bahr, €600/Mon.', praemie: '€45/Mon.', daysAgo: 45, status: 'Policiert' },
-        { kunde: 'Michael Braun', kundenId: 'KD00005', typ: 'Kfz-Versicherung', versicherer: 'HUK-Coburg', details: 'Kfz-Vollkasko, Mercedes E-Klasse', praemie: '€1.450/Jahr', daysAgo: 3, status: 'Antrag' },
-        { kunde: 'Lisa Müller', kundenId: 'KD00006', typ: 'Privathaftpflichtversicherung', versicherer: 'HDI', details: 'Single mit Partner, €50 Mio. Deckung', praemie: '€75/Jahr', daysAgo: 18, status: 'Policiert' },
-        { kunde: 'Lisa Müller', kundenId: 'KD00006', typ: 'Krankentagegeld', versicherer: 'DKV', details: 'Ab 43. Tag, €100/Tag', praemie: '€55/Mon.', daysAgo: 25, status: 'Policiert' },
-        { kunde: 'Matthias Engel', kundenId: 'KD00007', typ: 'Kfz-Versicherung', versicherer: 'VHV', details: 'Kfz-Teilkasko, VW Passat', praemie: '€480/Jahr', daysAgo: 35, status: 'Policiert' },
-        { kunde: 'Christian Bauer', kundenId: 'KD00008', typ: 'Berufsunfähigkeitsversicherung', versicherer: 'Nürnberger', details: 'BU-Rente: €1.800/Mon., Endalter 67', praemie: '€98/Mon.', daysAgo: 10, status: 'Antrag' },
-        { kunde: 'Christian Bauer', kundenId: 'KD00008', typ: 'Hausratversicherung', versicherer: 'Generali', details: 'Vers.-Summe: €60.000, Single', praemie: '€110/Jahr', daysAgo: 42, status: 'Policiert' },
-        { kunde: 'Martin Wolf', kundenId: 'KD00009', typ: 'Rechtsschutzversicherung', versicherer: 'ARAG', details: 'Familie, inkl. Beruf & Verkehr', praemie: '€420/Jahr', daysAgo: 20, status: 'Policiert' },
-        { kunde: 'Eva Hartmann', kundenId: 'KD00010', typ: 'Krankenversicherung Zusatz', versicherer: 'Debeka', details: 'Heilpraktiker & Sehhilfen', praemie: '€28/Mon.', daysAgo: 7, status: 'Policiert' },
-        { kunde: 'Eva Hartmann', kundenId: 'KD00010', typ: 'Unfallversicherung', versicherer: 'Zurich', details: 'Invalidität €100.000, Progression 225%', praemie: '€195/Jahr', daysAgo: 55, status: 'Abgelehnt' },
-        { kunde: 'Amira König', kundenId: 'KD00002', typ: 'Rechtsschutzversicherung', versicherer: 'ARAG', details: 'Beruf & Privat, €250 SB', praemie: '€310/Jahr', daysAgo: 60, status: 'Policiert' },
-        { kunde: 'Michael Braun', kundenId: 'KD00005', typ: 'Unfallversicherung', versicherer: 'Helvetia', details: 'Geschäftsführer, Invalidität €300.000', praemie: '€450/Jahr', daysAgo: 50, status: 'Policiert' }
+        { kunde: 'Ralf Dietrich', kundenId: 'KD00026', typ: 'Berufsunfähigkeitsversicherung', versicherer: 'HDI', details: 'BU-Rente: €2.000/Mon., Endalter 67', praemie: '€125/Mon.', daysAgo: 5, status: 'Policiert' },
+        { kunde: 'Ralf Dietrich', kundenId: 'KD00026', typ: 'Privathaftpflichtversicherung', versicherer: 'HDI', details: 'Familie, €50 Mio. Deckung', praemie: '€85/Jahr', daysAgo: 5, status: 'Policiert' },
+        { kunde: 'Ingrid Sommer', kundenId: 'KD00027', typ: 'Zahnzusatzversicherung', versicherer: 'DKV', details: 'Zahnersatz 90%, Prophylaxe 100%', praemie: '€32/Mon.', daysAgo: 8, status: 'Policiert' },
+        { kunde: 'Ingrid Sommer', kundenId: 'KD00027', typ: 'Hausratversicherung', versicherer: 'Allianz', details: 'Vers.-Summe: €65.000, inkl. Fahrrad', praemie: '€130/Jahr', daysAgo: 12, status: 'Policiert' },
+        { kunde: 'Dirk Hoffmann', kundenId: 'KD00028', typ: 'Kfz-Versicherung', versicherer: 'HUK-Coburg', details: 'Kfz-Vollkasko, SF-Klasse 8, BMW 3er', praemie: '€980/Jahr', daysAgo: 10, status: 'Antrag' },
+        { kunde: 'Dirk Hoffmann', kundenId: 'KD00028', typ: 'Rechtsschutzversicherung', versicherer: 'ARAG', details: 'Familie, inkl. Beruf & Verkehr', praemie: '€420/Jahr', daysAgo: 18, status: 'Policiert' },
+        { kunde: 'Karin Albrecht', kundenId: 'KD00029', typ: 'Unfallversicherung', versicherer: 'Zurich', details: 'Familie, Invalidität €200.000', praemie: '€280/Jahr', daysAgo: 15, status: 'Policiert' },
+        { kunde: 'Karin Albrecht', kundenId: 'KD00029', typ: 'Pflegezusatzversicherung', versicherer: 'Signal Iduna', details: 'Pflege-Bahr, €600/Mon.', praemie: '€45/Mon.', daysAgo: 20, status: 'Policiert' },
+        { kunde: 'Bernd Schuster', kundenId: 'KD00030', typ: 'Wohngebäudeversicherung', versicherer: 'VHV', details: 'Vers.-Summe: €520.000, inkl. Elementar', praemie: '€580/Jahr', daysAgo: 22, status: 'Policiert' },
+        { kunde: 'Andrea Haas', kundenId: 'KD00031', typ: 'Krankentagegeld', versicherer: 'DKV', details: 'Ab 43. Tag, €100/Tag', praemie: '€55/Mon.', daysAgo: 25, status: 'Policiert' },
+        { kunde: 'Andrea Haas', kundenId: 'KD00031', typ: 'Berufsunfähigkeitsversicherung', versicherer: 'Nürnberger', details: 'BU-Rente: €1.800/Mon., Endalter 67', praemie: '€98/Mon.', daysAgo: 30, status: 'Antrag' },
+        { kunde: 'Holger Friedrich', kundenId: 'KD00032', typ: 'Kfz-Versicherung', versicherer: 'VHV', details: 'Kfz-Teilkasko, VW Passat', praemie: '€480/Jahr', daysAgo: 35, status: 'Policiert' },
+        { kunde: 'Sabine Stein', kundenId: 'KD00033', typ: 'Risikolebensversicherung', versicherer: 'ERGO', details: 'Vers.-Summe: €250.000, Laufzeit bis 2050', praemie: '€22/Mon.', daysAgo: 38, status: 'Policiert' },
+        { kunde: 'Norbert Keller', kundenId: 'KD00034', typ: 'Hausratversicherung', versicherer: 'Generali', details: 'Vers.-Summe: €60.000, Single', praemie: '€110/Jahr', daysAgo: 42, status: 'Policiert' },
+        { kunde: 'Norbert Keller', kundenId: 'KD00034', typ: 'Krankenversicherung Zusatz', versicherer: 'Debeka', details: 'Heilpraktiker & Sehhilfen', praemie: '€28/Mon.', daysAgo: 45, status: 'Policiert' },
+        { kunde: 'Ulrike Maier', kundenId: 'KD00035', typ: 'Unfallversicherung', versicherer: 'Helvetia', details: 'Invalidität €150.000, Progression 350%', praemie: '€220/Jahr', daysAgo: 50, status: 'Policiert' },
+        { kunde: 'Ulrike Maier', kundenId: 'KD00035', typ: 'Privathaftpflichtversicherung', versicherer: 'Allianz', details: 'Single mit Partner, €50 Mio.', praemie: '€75/Jahr', daysAgo: 55, status: 'Policiert' }
     ];
 
     ngVertraege.forEach(function(v, i) {
@@ -931,8 +941,10 @@ function openVertragDetail(idx, typ) {
     if (!v) return;
 
     var modal = document.getElementById('vertragDetailModal');
-    if (!modal) return;
+    if (!modal) { console.error('vertragDetailModal nicht gefunden'); return; }
     modal.style.display = 'flex';
+    modal.style.visibility = 'visible';
+    modal.style.opacity = '1';
 
     setElementText('vertragDetailTitle', 'Vertrag: ' + v.vertragsnr);
     var statusEl = document.getElementById('vertragDetailStatus');
@@ -972,7 +984,10 @@ function openVertragDetail(idx, typ) {
 
 function closeVertragDetail() {
     var modal = document.getElementById('vertragDetailModal');
-    if (modal) modal.style.display = 'none';
+    if (modal) {
+        modal.style.display = 'none';
+        modal.style.visibility = 'hidden';
+    }
 }
 
 window.openVertragDetail = openVertragDetail;

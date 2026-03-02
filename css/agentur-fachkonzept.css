@@ -1889,7 +1889,7 @@
 }
 
 /* Potentiale-Tab: gleicher Abstand wie cockpit-kpis zum Header */
-#tab-potential > .kpi-detail-grid {
+.agentur-tab-content > .kpi-detail-grid {
     margin-top: 24px;
 }
 
@@ -2174,7 +2174,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    z-index: 1000;
+    z-index: 10000;
     display: flex;
     align-items: center;
     justify-content: center;

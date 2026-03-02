@@ -1100,16 +1100,102 @@ function closeAllAngebotMenus() {
     document.removeEventListener('click', closeAllAngebotMenus);
 }
 
-function angebotAction(typ) {
+function angebotAction(typ, el) {
     closeAllAngebotMenus();
-    var labels = {
-        pdf: 'PDF wird generiert...',
-        entwurf: 'Entwurf gespeichert.',
-        vergleich: 'Tarifvergleich wird gestartet...'
-    };
-    alert(labels[typ] || 'Aktion: ' + typ);
+    var wrapper = el ? el.closest('.angebot-dropdown-wrapper') : null;
+    var produkt = wrapper ? wrapper.getAttribute('data-produkt') : 'Versicherung';
+    var empfehlung = wrapper ? wrapper.getAttribute('data-empfehlung') : '';
+
+    if (typ === 'pdf') {
+        showAngebotToast('loading', 'PDF wird generiert: ' + produkt + '...');
+        setTimeout(function() {
+            showAngebotToast('success', 'PDF erstellt: Angebot ' + produkt + ' für Peter Schmidt');
+        }, 1800);
+    } else if (typ === 'entwurf') {
+        showAngebotToast('success', 'Entwurf gespeichert: ' + produkt);
+    } else if (typ === 'vergleich') {
+        openTarifvergleich(produkt, empfehlung);
+    }
 }
 window.angebotAction = angebotAction;
+
+function showAngebotToast(type, message) {
+    var toast = document.getElementById('angebotToast');
+    if (!toast) return;
+    var icon = type === 'success'
+        ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>'
+        : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18" class="angebot-toast-spinner"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>';
+    toast.className = 'angebot-toast ' + type + ' show';
+    toast.innerHTML = '<div class="angebot-toast-icon">' + icon + '</div><span>' + message + '</span>';
+    if (type === 'success') {
+        setTimeout(function() { toast.classList.remove('show'); }, 3500);
+    }
+}
+
+function openTarifvergleich(produkt, empfehlung) {
+    var modal = document.getElementById('tarifvergleichModal');
+    if (!modal) return;
+    var title = document.getElementById('tvModalTitle');
+    var body = document.getElementById('tvModalBody');
+    if (title) title.textContent = 'Tarifvergleich: ' + produkt;
+
+    var tarife = getTarifData(produkt);
+    var html = '<div class="tv-empfehlung"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg> <strong>Empfehlung:</strong> ' + (empfehlung || produkt) + '</div>';
+    html += '<table class="tv-table"><thead><tr><th>Versicherer</th><th>Tarif</th><th>Beitrag</th><th>Leistung</th><th>Bewertung</th><th></th></tr></thead><tbody>';
+    tarife.forEach(function(t) {
+        var stars = '';
+        for (var s = 0; s < 5; s++) { stars += s < t.rating ? '<span class="tv-star filled">★</span>' : '<span class="tv-star">☆</span>'; }
+        html += '<tr' + (t.empfohlen ? ' class="tv-empfohlen"' : '') + '>' +
+            '<td><strong>' + t.versicherer + '</strong></td>' +
+            '<td>' + t.tarif + '</td>' +
+            '<td><strong>' + t.beitrag + '</strong></td>' +
+            '<td>' + t.leistung + '</td>' +
+            '<td class="tv-stars">' + stars + '</td>' +
+            '<td>' + (t.empfohlen ? '<span class="tv-badge-empfohlen">Empfohlen</span>' : '') + '</td>' +
+            '</tr>';
+    });
+    html += '</tbody></table>';
+    if (body) body.innerHTML = html;
+
+    modal.style.display = 'flex';
+}
+
+function closeTarifvergleich() {
+    var modal = document.getElementById('tarifvergleichModal');
+    if (modal) modal.style.display = 'none';
+}
+window.openTarifvergleich = openTarifvergleich;
+window.closeTarifvergleich = closeTarifvergleich;
+
+function getTarifData(produkt) {
+    var tarifSets = {
+        'Risikolebensversicherung': [
+            { versicherer: 'Hannoversche', tarif: 'T1 Plus', beitrag: '€18/Mon.', leistung: '€300.000, 20 J.', rating: 5, empfohlen: true },
+            { versicherer: 'CosmosDirekt', tarif: 'Risiko Comfort', beitrag: '€21/Mon.', leistung: '€300.000, 20 J.', rating: 4, empfohlen: false },
+            { versicherer: 'HUK-Coburg', tarif: 'Risiko PLUS', beitrag: '€24/Mon.', leistung: '€300.000, 20 J.', rating: 4, empfohlen: false },
+            { versicherer: 'ERGO', tarif: 'RisikoLeben Premium', beitrag: '€28/Mon.', leistung: '€300.000, 20 J., Unfall +', rating: 3, empfohlen: false }
+        ],
+        'Fondsgebundene Rentenversicherung': [
+            { versicherer: 'Alte Leipziger', tarif: 'FR10 Fonds', beitrag: '€250/Mon.', leistung: 'ETF-basiert, Steuervorteil', rating: 5, empfohlen: true },
+            { versicherer: 'Condor', tarif: 'C78 Comfort', beitrag: '€250/Mon.', leistung: 'Fondsgeb., flex. Entnahme', rating: 4, empfohlen: false },
+            { versicherer: 'Allianz', tarif: 'InvestFlex', beitrag: '€260/Mon.', leistung: 'Garantie + Fondsanlage', rating: 4, empfohlen: false },
+            { versicherer: 'Zurich', tarif: 'VorsorgePlus', beitrag: '€245/Mon.', leistung: 'Fondsgeb., Todesfallschutz', rating: 3, empfohlen: false }
+        ],
+        'Kfz-Versicherung': [
+            { versicherer: 'HDI', tarif: 'Kfz-Vollkasko Comfort', beitrag: '€52/Mon.', leistung: 'VK, SF8, Weltweit', rating: 5, empfohlen: true },
+            { versicherer: 'HUK-Coburg', tarif: 'VK Plus', beitrag: '€48/Mon.', leistung: 'VK, SF8, EU-Schutz', rating: 4, empfohlen: false },
+            { versicherer: 'Allianz', tarif: 'AutoBest', beitrag: '€58/Mon.', leistung: 'VK, Neupreis 24 Mon.', rating: 4, empfohlen: false },
+            { versicherer: 'VHV', tarif: 'Klassik-Garant', beitrag: '€45/Mon.', leistung: 'VK, SF8, Basis', rating: 3, empfohlen: false }
+        ],
+        'BU-Nachversicherung': [
+            { versicherer: 'ERGO', tarif: 'BU Premium Protect', beitrag: '€145/Mon.', leistung: '€3.700/Mon., NVG', rating: 5, empfohlen: true },
+            { versicherer: 'Alte Leipziger', tarif: 'BU10 Plus', beitrag: '€138/Mon.', leistung: '€3.700/Mon., AU-Klausel', rating: 5, empfohlen: false },
+            { versicherer: 'HDI', tarif: 'EGO Top', beitrag: '€155/Mon.', leistung: '€3.700/Mon., Infektionsklausel', rating: 4, empfohlen: false },
+            { versicherer: 'Nürnberger', tarif: 'BU Premium', beitrag: '€142/Mon.', leistung: '€3.700/Mon., Dienstunfähigkeit', rating: 4, empfohlen: false }
+        ]
+    };
+    return tarifSets[produkt] || tarifSets['Risikolebensversicherung'];
+}
 
 // ========================================
 // KUNDEN TAB NAVIGATION

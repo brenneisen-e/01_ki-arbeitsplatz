@@ -820,8 +820,8 @@ function generateMockVertraege() {
 }
 
 function fillNeugeschaeftTable() {
-    var container = document.getElementById('ngKundenAccordion');
-    if (!container) return;
+    var tb = document.getElementById('neugeschaeftTableBody');
+    if (!tb) return;
 
     // Nach Kunden gruppieren
     var kundenMap = {};
@@ -835,63 +835,28 @@ function fillNeugeschaeftTable() {
         kundenMap[v.kundenId].vertraege.push(v);
     });
 
-    container.innerHTML = kundenOrder.map(function(kid) {
+    var html = '';
+    kundenOrder.forEach(function(kid) {
         var g = kundenMap[kid];
         var anzahl = g.vertraege.length;
         var gesamtBeitrag = g.vertraege.reduce(function(s, v) { return s + v.jahresbeitrag; }, 0);
-        var sparten = g.vertraege.map(function(v) {
-            return '<span class="sparten-badge ' + v.sparte + '">' + v.sparteLabel + '</span>';
-        }).join(' ');
-
-        var rows = g.vertraege.map(function(v) {
+        html += '<tr class="ng-kunde-header-row" data-kundenid="' + kid + '">' +
+            '<td colspan="6"><strong>' + g.kunde + '</strong> <span class="ng-kunde-meta">' + kid + ' &middot; ' + anzahl + ' Vertrag' + (anzahl > 1 ? 'e' : '') + ' &middot; Gesamt: ' + fmtEuro(gesamtBeitrag) + '</span></td>' +
+            '</tr>';
+        g.vertraege.forEach(function(v) {
             var statusClass = v.status === 'Policiert' ? 'active' : (v.status === 'Abgelehnt' ? 'storniert' : 'antrag');
-            return '<div class="ng-vertrag-row" onclick="openVertragDetail(' + v._ngIdx + ',\'ng\')">' +
-                '<div class="ng-vertrag-cell ng-vertrag-nr">' + v.vertragsnr + '</div>' +
-                '<div class="ng-vertrag-cell ng-vertrag-produkt"><span class="sparten-badge ' + v.sparte + '">' + v.sparteLabel + '</span> ' + v.produkt + '</div>' +
-                '<div class="ng-vertrag-cell ng-vertrag-versicherer">' + v.versicherer + '</div>' +
-                '<div class="ng-vertrag-cell ng-vertrag-beitrag"><strong>' + fmtEuro(v.jahresbeitrag) + '</strong><span class="ng-zahlweise">' + v.zahlweise + '</span></div>' +
-                '<div class="ng-vertrag-cell ng-vertrag-status"><span class="status-badge ' + statusClass + '">' + v.status + '</span></div>' +
-                '<div class="ng-vertrag-cell ng-vertrag-datum">' + v.antragsdatumStr + '</div>' +
-                '</div>';
-        }).join('');
-
-        return '<div class="ng-kunde-group" data-kundenid="' + kid + '">' +
-            '<div class="ng-kunde-header" onclick="toggleNgKunde(\'' + kid + '\')">' +
-                '<div class="ng-kunde-header-left">' +
-                    '<svg class="ng-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="6 9 12 15 18 9"/></svg>' +
-                    '<div class="ng-kunde-avatar">' + g.kunde.charAt(0) + '</div>' +
-                    '<div class="ng-kunde-info">' +
-                        '<span class="ng-kunde-name">' + g.kunde + '</span>' +
-                        '<span class="ng-kunde-id">' + kid + '</span>' +
-                    '</div>' +
-                '</div>' +
-                '<div class="ng-kunde-header-right">' +
-                    '<span class="ng-kunde-sparten">' + sparten + '</span>' +
-                    '<span class="ng-kunde-anzahl">' + anzahl + ' Vertrag' + (anzahl > 1 ? 'e' : '') + '</span>' +
-                    '<span class="ng-kunde-beitrag">' + fmtEuro(gesamtBeitrag) + '</span>' +
-                '</div>' +
-            '</div>' +
-            '<div class="ng-kunde-body" id="ngBody_' + kid + '">' +
-                '<div class="ng-vertrag-header-row">' +
-                    '<div class="ng-vertrag-cell">Vertragsnr.</div>' +
-                    '<div class="ng-vertrag-cell">Sparte / Produkt</div>' +
-                    '<div class="ng-vertrag-cell">Versicherer</div>' +
-                    '<div class="ng-vertrag-cell">Jahresbeitrag</div>' +
-                    '<div class="ng-vertrag-cell">Status</div>' +
-                    '<div class="ng-vertrag-cell">Antragsdatum</div>' +
-                '</div>' +
-                rows +
-            '</div>' +
-        '</div>';
-    }).join('');
+            html += '<tr class="clickable-row" data-sparte="' + v.sparte + '" data-kundenid="' + kid + '" onclick="openVertragDetail(' + v._ngIdx + ',\'ng\')">' +
+                '<td>' + v.vertragsnr + '</td>' +
+                '<td><span class="sparten-badge ' + v.sparte + '">' + v.sparteLabel + '</span> ' + v.produkt + '</td>' +
+                '<td>' + v.versicherer + '</td>' +
+                '<td><strong>' + fmtEuro(v.jahresbeitrag) + '</strong> <span class="ng-zahlweise-label">' + v.zahlweise + '</span></td>' +
+                '<td><span class="status-badge ' + statusClass + '">' + v.status + '</span></td>' +
+                '<td>' + v.antragsdatumStr + '</td>' +
+                '</tr>';
+        });
+    });
+    tb.innerHTML = html;
 }
-
-function toggleNgKunde(kundenId) {
-    var group = document.querySelector('.ng-kunde-group[data-kundenid="' + kundenId + '"]');
-    if (!group) return;
-    group.classList.toggle('open');
-}
-window.toggleNgKunde = toggleNgKunde;
 
 function fillBestandTable() {
     var tb = document.getElementById('bestandTableBody');
@@ -934,18 +899,25 @@ function filterVertraegeSparte(tabName, sparte) {
     var clicked = section.querySelector('.fida-filter-btn[data-filter="' + sparte + '"]');
     if (clicked) clicked.classList.add('active');
 
+    var rows = section.querySelectorAll('tbody tr');
     if (tabName === 'neugeschaeft') {
-        // Accordion: Kunden-Gruppen filtern
-        section.querySelectorAll('.ng-kunde-group').forEach(function(group) {
-            if (sparte === 'alle') { group.style.display = ''; return; }
-            var hasSparte = false;
-            group.querySelectorAll('.sparten-badge').forEach(function(b) {
-                if (b.classList.contains(sparte)) hasSparte = true;
-            });
-            group.style.display = hasSparte ? '' : 'none';
+        // Tabelle mit Kunden-Header-Rows
+        var visibleKunden = {};
+        rows.forEach(function(row) {
+            if (row.classList.contains('ng-kunde-header-row')) return;
+            if (sparte === 'alle') { row.style.display = ''; visibleKunden[row.getAttribute('data-kundenid')] = true; }
+            else {
+                var match = row.getAttribute('data-sparte') === sparte;
+                row.style.display = match ? '' : 'none';
+                if (match) visibleKunden[row.getAttribute('data-kundenid')] = true;
+            }
+        });
+        rows.forEach(function(row) {
+            if (row.classList.contains('ng-kunde-header-row')) {
+                row.style.display = visibleKunden[row.getAttribute('data-kundenid')] ? '' : 'none';
+            }
         });
     } else {
-        var rows = section.querySelectorAll('tbody tr');
         rows.forEach(function(row) {
             if (sparte === 'alle') { row.style.display = ''; }
             else { row.style.display = row.getAttribute('data-sparte') === sparte ? '' : 'none'; }
@@ -973,12 +945,31 @@ function searchVertraege(tabName) {
     if (!input) return;
     var q = input.value.toLowerCase();
 
+    var rows = section.querySelectorAll('tbody tr');
     if (tabName === 'neugeschaeft') {
-        section.querySelectorAll('.ng-kunde-group').forEach(function(group) {
-            group.style.display = group.textContent.toLowerCase().indexOf(q) >= 0 ? '' : 'none';
+        var visibleKunden = {};
+        rows.forEach(function(row) {
+            if (row.classList.contains('ng-kunde-header-row')) return;
+            var match = row.textContent.toLowerCase().indexOf(q) >= 0;
+            row.style.display = match ? '' : 'none';
+            if (match) visibleKunden[row.getAttribute('data-kundenid')] = true;
+        });
+        // Auch Header-Row nach Kundenname durchsuchen
+        rows.forEach(function(row) {
+            if (row.classList.contains('ng-kunde-header-row')) {
+                if (row.textContent.toLowerCase().indexOf(q) >= 0) {
+                    visibleKunden[row.getAttribute('data-kundenid')] = true;
+                }
+                row.style.display = visibleKunden[row.getAttribute('data-kundenid')] ? '' : 'none';
+            }
+        });
+        // Wenn Kunden-Header matched, alle Verträge dieses Kunden anzeigen
+        rows.forEach(function(row) {
+            if (!row.classList.contains('ng-kunde-header-row') && visibleKunden[row.getAttribute('data-kundenid')]) {
+                row.style.display = '';
+            }
         });
     } else {
-        var rows = section.querySelectorAll('tbody tr');
         rows.forEach(function(row) {
             row.style.display = row.textContent.toLowerCase().indexOf(q) >= 0 ? '' : 'none';
         });
@@ -1020,8 +1011,7 @@ function openVertragDetail(idx, typ) {
     var modal = document.getElementById('vertragDetailModal');
     if (!modal) { console.error('vertragDetailModal nicht gefunden'); return; }
     modal.style.display = 'flex';
-    modal.style.visibility = 'visible';
-    modal.style.opacity = '1';
+    document.body.style.overflow = 'hidden';
 
     setElementText('vertragDetailTitle', 'Vertrag: ' + v.vertragsnr);
     var statusEl = document.getElementById('vertragDetailStatus');
@@ -1063,9 +1053,17 @@ function closeVertragDetail() {
     var modal = document.getElementById('vertragDetailModal');
     if (modal) {
         modal.style.display = 'none';
-        modal.style.visibility = 'hidden';
     }
+    document.body.style.overflow = '';
 }
+
+// ESC schließt offene Modals
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeVertragDetail();
+        if (typeof closeTarifvergleich === 'function') closeTarifvergleich();
+    }
+});
 
 window.openVertragDetail = openVertragDetail;
 window.closeVertragDetail = closeVertragDetail;

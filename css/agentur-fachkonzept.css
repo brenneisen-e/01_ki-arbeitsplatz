@@ -2094,194 +2094,30 @@
 /* ========================================
    NEUGESCHÄFT: Kunden-Accordion
    ======================================== */
-.ng-kunden-accordion {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.ng-kunde-group {
-    background: white;
-    border: 1px solid #e2e8f0;
-    border-radius: 12px;
-    overflow: hidden;
-    transition: box-shadow 0.2s;
-}
-
-.ng-kunde-group:hover {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-}
-
-.ng-kunde-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 14px 18px;
-    cursor: pointer;
-    transition: background 0.15s;
-    gap: 16px;
-}
-
-.ng-kunde-header:hover {
-    background: #f8fafc;
-}
-
-.ng-kunde-header-left {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    min-width: 0;
-}
-
-.ng-chevron {
-    flex-shrink: 0;
-    color: #94a3b8;
-    transition: transform 0.25s ease;
-}
-
-.ng-kunde-group.open .ng-chevron {
-    transform: rotate(180deg);
-}
-
-.ng-kunde-avatar {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #86BC25 0%, #6fa31e 100%);
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 15px;
-    font-weight: 700;
-    flex-shrink: 0;
-}
-
-.ng-kunde-info {
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-}
-
-.ng-kunde-name {
+/* Neugeschäft: Kunden-Gruppen in Tabelle */
+.ng-kunde-header-row td {
+    background: #f0f9e8;
+    padding: 10px 14px !important;
+    border-bottom: 2px solid #d1e7b8 !important;
     font-size: 14px;
-    font-weight: 700;
+}
+
+.ng-kunde-header-row td strong {
     color: #1e293b;
+    font-weight: 700;
 }
 
-.ng-kunde-id {
-    font-size: 11px;
-    color: #94a3b8;
-    font-weight: 500;
-}
-
-.ng-kunde-header-right {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    flex-shrink: 0;
-}
-
-.ng-kunde-sparten {
-    display: flex;
-    gap: 4px;
-}
-
-.ng-kunde-anzahl {
+.ng-kunde-meta {
     font-size: 12px;
     color: #64748b;
-    background: #f1f5f9;
-    padding: 3px 10px;
-    border-radius: 12px;
-    font-weight: 500;
-    white-space: nowrap;
+    font-weight: 400;
+    margin-left: 10px;
 }
 
-.ng-kunde-beitrag {
-    font-size: 14px;
-    font-weight: 700;
-    color: #1e293b;
-    white-space: nowrap;
-    min-width: 80px;
-    text-align: right;
-}
-
-/* Accordion body */
-.ng-kunde-body {
-    display: none;
-    border-top: 1px solid #e2e8f0;
-    background: #fafbfc;
-    padding: 0;
-}
-
-.ng-kunde-group.open .ng-kunde-body {
-    display: block;
-}
-
-.ng-vertrag-header-row {
-    display: grid;
-    grid-template-columns: 120px 1fr 120px 130px 90px 110px;
-    padding: 8px 18px;
-    font-size: 11px;
-    font-weight: 600;
-    color: #64748b;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    border-bottom: 1px solid #e2e8f0;
-    background: #f1f5f9;
-}
-
-.ng-vertrag-row {
-    display: grid;
-    grid-template-columns: 120px 1fr 120px 130px 90px 110px;
-    padding: 12px 18px;
-    align-items: center;
-    border-bottom: 1px solid #f1f5f9;
-    cursor: pointer;
-    transition: background 0.15s;
-    font-size: 13px;
-    color: #334155;
-}
-
-.ng-vertrag-row:last-child {
-    border-bottom: none;
-}
-
-.ng-vertrag-row:hover {
-    background: #f0fdf4;
-}
-
-.ng-vertrag-cell {
-    min-width: 0;
-}
-
-.ng-vertrag-nr {
-    font-size: 12px;
-    color: #64748b;
-    font-family: monospace;
-}
-
-.ng-vertrag-produkt {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-wrap: wrap;
-}
-
-.ng-vertrag-beitrag {
-    display: flex;
-    flex-direction: column;
-}
-
-.ng-zahlweise {
+.ng-zahlweise-label {
     font-size: 11px;
     color: #94a3b8;
     font-weight: 400;
-}
-
-.ng-vertrag-datum {
-    font-size: 12px;
-    color: #64748b;
 }
 
 /* Sparten-Badges */

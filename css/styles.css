@@ -5779,6 +5779,204 @@ button svg,
     color: #86BC25;
 }
 
+/* ========================================
+   ANGEBOT TOAST NOTIFICATION
+   ======================================== */
+.angebot-toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 22px;
+    background: #1e293b;
+    color: white;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 500;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+    z-index: 20000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.angebot-toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+    pointer-events: auto;
+}
+
+.angebot-toast.success {
+    background: #166534;
+}
+
+.angebot-toast.loading {
+    background: #1e40af;
+}
+
+.angebot-toast-icon {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+@keyframes toastSpin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.angebot-toast-spinner {
+    animation: toastSpin 1.2s linear infinite;
+}
+
+/* ========================================
+   TARIFVERGLEICH MODAL
+   ======================================== */
+.tarifvergleich-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.tarifvergleich-modal .modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+}
+
+.tarifvergleich-modal-content {
+    position: relative;
+    z-index: 1;
+    background: white;
+    border-radius: 16px;
+    max-width: 900px;
+    width: 92%;
+    max-height: 85vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+    animation: modalSlideIn 0.25s ease-out;
+}
+
+.tarifvergleich-modal .modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px;
+    border-bottom: 1px solid #e2e8f0;
+    background: #f8fafc;
+    border-radius: 16px 16px 0 0;
+}
+
+.tarifvergleich-modal .modal-close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #64748b;
+    padding: 4px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.tarifvergleich-modal .modal-close:hover {
+    background: #e2e8f0;
+    color: #1e293b;
+}
+
+.tarifvergleich-body {
+    padding: 24px;
+}
+
+.tv-empfehlung {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    background: #f0f9e8;
+    border: 1px solid #d1e7b8;
+    border-radius: 10px;
+    font-size: 14px;
+    color: #3d6b0e;
+    margin-bottom: 20px;
+}
+
+.tv-empfehlung svg {
+    color: #86BC25;
+    flex-shrink: 0;
+}
+
+.tv-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 13px;
+}
+
+.tv-table thead th {
+    text-align: left;
+    padding: 10px 14px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #64748b;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.tv-table tbody td {
+    padding: 14px;
+    border-bottom: 1px solid #f1f5f9;
+    vertical-align: middle;
+}
+
+.tv-table tbody tr:hover {
+    background: #f8fafc;
+}
+
+.tv-table tbody tr.tv-empfohlen {
+    background: #f0f9e8;
+}
+
+.tv-table tbody tr.tv-empfohlen:hover {
+    background: #e5f5d5;
+}
+
+.tv-stars {
+    white-space: nowrap;
+}
+
+.tv-star {
+    font-size: 14px;
+    color: #cbd5e1;
+}
+
+.tv-star.filled {
+    color: #f59e0b;
+}
+
+.tv-badge-empfohlen {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 10px;
+    background: #86BC25;
+    color: white;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+}
+
 .impuls-actions .action-btn.secondary {
     background: white;
     color: #1e293b;

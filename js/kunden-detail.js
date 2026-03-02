@@ -923,22 +923,23 @@ function fillKundenDetail(kundenName, vermittlerId) {
 // ========================================
 
 function getTierStorageKey() {
-    // Pro Kunde einen eigenen Key
     var kundenName = document.getElementById('kundenHeaderTitle');
     var name = kundenName ? kundenName.textContent.replace('Kunde: ', '').trim() : 'default';
     return 'tierInfo_' + name;
 }
 
-function initTierForm() {
-    var editSection = document.getElementById('tierEditSection');
-    if (!editSection) return;
+// SVG-Icons für Hund und Katze (einfarbig, modern)
+var tierSvgIcons = {
+    Hund: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><path d="M10 5.172C10 3.782 8.884 2.5 7.5 2.5S5 3.782 5 5.172c0 1.39 2.5 4.328 2.5 4.328S10 6.562 10 5.172z"/><path d="M19 5.172C19 3.782 17.884 2.5 16.5 2.5S14 3.782 14 5.172c0 1.39 2.5 4.328 2.5 4.328S19 6.562 19 5.172z"/><path d="M12 22c-4-3-8-6.58-8-10.5a4 4 0 018 0 4 4 0 018 0c0 3.92-4 7.5-8 10.5z"/></svg>',
+    Katze: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><path d="M12 22c-4-3-8-6.58-8-10.5a4 4 0 018 0 4 4 0 018 0c0 3.92-4 7.5-8 10.5z"/><path d="M10 5.172C10 3.782 8.884 2.5 7.5 2.5S5 3.782 5 5.172c0 1.39 2.5 4.328 2.5 4.328S10 6.562 10 5.172z"/><path d="M19 5.172C19 3.782 17.884 2.5 16.5 2.5S14 3.782 14 5.172c0 1.39 2.5 4.328 2.5 4.328S19 6.562 19 5.172z"/></svg>'
+};
 
-    // Prüfen ob bereits Tierdaten gespeichert sind
+function initTierForm() {
     var saved = localStorage.getItem(getTierStorageKey());
     if (saved) {
         try {
             var data = JSON.parse(saved);
-            showSavedTierInfo(data);
+            showSavedTierDisplay(data);
         } catch(e) { /* ignore */ }
     }
 }
@@ -947,12 +948,7 @@ function onTierArtChange() {
     var select = document.getElementById('tierArtSelect');
     var detailsRow = document.getElementById('tierDetailsRow');
     if (!select || !detailsRow) return;
-
-    if (select.value) {
-        detailsRow.style.display = 'block';
-    } else {
-        detailsRow.style.display = 'none';
-    }
+    detailsRow.style.display = select.value ? 'block' : 'none';
 }
 window.onTierArtChange = onTierArtChange;
 
@@ -969,47 +965,67 @@ function saveTierInfo() {
     };
 
     localStorage.setItem(getTierStorageKey(), JSON.stringify(data));
-    showSavedTierInfo(data);
+    showSavedTierDisplay(data);
 }
 window.saveTierInfo = saveTierInfo;
 
-function showSavedTierInfo(data) {
-    var savedDiv = document.getElementById('tierSavedInfo');
+function showSavedTierDisplay(data) {
+    var display = document.getElementById('tierDisplay');
+    var badge = document.getElementById('tierDisplayBadge');
+    var editSection = document.getElementById('tierEditSection');
+    var hintBadge = document.getElementById('kundenTiereBadge');
+
+    if (!display || !badge) return;
+
+    var icon = tierSvgIcons[data.art] || tierSvgIcons.Hund;
+    var text = data.art;
+    if (data.name) text += ' \u201E' + data.name + '\u201C';
+    if (data.alter) text += ', ' + data.alter + ' J.';
+
+    badge.innerHTML = '<span class="tier-display-icon">' + icon + '</span><span>' + text + '</span>';
+    display.style.display = 'flex';
+
+    // Formular komplett verstecken
+    if (editSection) editSection.style.display = 'none';
+    // Hinweis-Badge verstecken
+    if (hintBadge) hintBadge.style.display = 'none';
+}
+
+function editTierInfo() {
+    var display = document.getElementById('tierDisplay');
     var editSection = document.getElementById('tierEditSection');
     var detailsRow = document.getElementById('tierDetailsRow');
-    var artSelect = document.getElementById('tierArtSelect');
 
-    if (!savedDiv) return;
+    // Badge-Ansicht verstecken, Formular zeigen
+    if (display) display.style.display = 'none';
+    if (editSection) editSection.style.display = 'block';
 
-    var icon = data.art === 'Hund' ? '\uD83D\uDC36' : '\uD83D\uDC31';
-    var text = icon + ' ' + data.art;
-    if (data.name) text += ' &bdquo;' + data.name + '&ldquo;';
-    if (data.alter) text += ', ' + data.alter + ' Jahre';
-
-    savedDiv.innerHTML = '<span class="tier-saved-icon">' + icon + '</span> ' +
-        '<span>' + (data.art + (data.name ? ' \u201E' + data.name + '\u201C' : '') + (data.alter ? ', ' + data.alter + ' J.' : '')) + '</span>' +
-        '<button class="tier-remove-btn" onclick="removeTierInfo()" title="Entfernen">\u2715</button>';
-    savedDiv.style.display = 'inline-flex';
-
-    // Formular-Felder vorbelegen, aber verstecken
-    if (artSelect) artSelect.value = data.art;
-    if (detailsRow) detailsRow.style.display = 'none';
-
-    // Badge aktualisieren
-    var badge = document.getElementById('kundenTiereBadge');
-    if (badge) badge.style.display = 'none';
+    // Felder vorbelegen aus localStorage
+    var saved = localStorage.getItem(getTierStorageKey());
+    if (saved) {
+        try {
+            var data = JSON.parse(saved);
+            var artSelect = document.getElementById('tierArtSelect');
+            var nameInput = document.getElementById('tierNameInput');
+            var alterInput = document.getElementById('tierAlterInput');
+            if (artSelect) artSelect.value = data.art || '';
+            if (nameInput) nameInput.value = data.name || '';
+            if (alterInput) alterInput.value = data.alter || '';
+            if (detailsRow) detailsRow.style.display = data.art ? 'block' : 'none';
+        } catch(e) { /* ignore */ }
+    }
 }
+window.editTierInfo = editTierInfo;
 
 function removeTierInfo() {
     localStorage.removeItem(getTierStorageKey());
-    var savedDiv = document.getElementById('tierSavedInfo');
-    if (savedDiv) {
-        savedDiv.style.display = 'none';
-        savedDiv.innerHTML = '';
-    }
+    var display = document.getElementById('tierDisplay');
+    var editSection = document.getElementById('tierEditSection');
+    if (display) display.style.display = 'none';
+    if (editSection) editSection.style.display = 'block';
     // Badge wieder anzeigen
-    var badge = document.getElementById('kundenTiereBadge');
-    if (badge) badge.style.display = '';
+    var hintBadge = document.getElementById('kundenTiereBadge');
+    if (hintBadge) hintBadge.style.display = '';
     // Formular zurücksetzen
     var artSelect = document.getElementById('tierArtSelect');
     var detailsRow = document.getElementById('tierDetailsRow');

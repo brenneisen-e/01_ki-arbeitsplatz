@@ -444,11 +444,11 @@ function fillKundenDetail(kundenName, vermittlerId) {
                 { anbieter: 'DWS', typ: 'Depot', info: 'Fondssparen' }
             ]
         },
-        'Sabine König': {
+        'Amira König': {
             geburtsdatum: '08.11.1979',
             adresse: 'Lindenweg 7, 60329 Frankfurt',
             telefon: '+49 69 7654321',
-            email: 'sabine.koenig@email.de',
+            email: 'amira.koenig@email.de',
             beruf: 'Lehrerin',
             familienstand: 'Geschieden',
             arbeitgeber: 'Stadtverwaltung Köln',
@@ -747,8 +747,14 @@ function fillKundenDetail(kundenName, vermittlerId) {
     // Kundenfoto setzen
     const kundenFoto = document.querySelector('.kunden-foto');
     if (kundenFoto) {
-        if (kundenName === 'Peter Schmidt') {
-            kundenFoto.innerHTML = `<img src="AdobeStock_624564221.jpeg" alt="Peter Schmidt" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
+        var kundenFotos = {
+            'Peter Schmidt': 'AdobeStock_624564221.jpeg',
+            'Amira König': 'AdobeStock_252262042.jpeg',
+            'Thomas Weber': 'AdobeStock_361342769.jpeg',
+            'Sabine Danzig': 'AdobeStock_612932760.jpeg'
+        };
+        if (kundenFotos[kundenName]) {
+            kundenFoto.innerHTML = `<img src="${kundenFotos[kundenName]}" alt="${kundenName}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
         } else {
             kundenFoto.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"></path>

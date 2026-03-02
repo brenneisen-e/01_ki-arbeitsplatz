@@ -21,7 +21,7 @@ Ganz rechts im Header-Bereich der A-02-Seite. Er zeigt den aktuellen Modus als L
 | **Foto** | Personen-Avatar | Gebäude-Icon |
 | **KPIs** | Gesamtbestand, Neugeschäft YTD, Storno-Quote, Zielerreichung | Bestandsprämie 68,5 Mio., Neugeschäft, Courtage, Retention, Schadenquote |
 | **Tabs** | Übersicht, Stammdaten, Neugeschäft, Bestand, **Storno, Vergütung, Qualität** \| Kunden, Potentiale | Übersicht, Stammdaten, Neugeschäft, Bestand, **Versicherer-Mix, Renewals, Schäden, Deckungslücken** \| Kunden, Potentiale |
-| **Kundenliste** | Privatpersonen (Peter Schmidt, Sabine König...) | Institutionen (Klinikum Lippetal, Ev. Landeskirche...) mit Segment-Icons |
+| **Kundenliste** | Privatpersonen (Peter Schmidt, Amira König...) | Institutionen (Klinikum Lippetal, Ev. Landeskirche...) mit Segment-Icons |
 | **Übersicht** | Agentur-Dashboard | Vertriebskennzahlen, Top-5-Kunden, Aufgaben, Renewals, Segmentverteilung |
 | **Chat-Assistent** | Antworten zu Ablauf, Cross-Selling LV, Privatkundenthemen | Antworten zu Renewals, Deckungslücken, Schadenquoten, B2B-Potentiale |
 

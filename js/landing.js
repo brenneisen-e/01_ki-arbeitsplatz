@@ -706,11 +706,11 @@ function openKundenDetailDualView(kundenName, vermittlerId) {
         previousViewBeforeKundenDetail = 'landing';
     }
 
-    // Sicherstellen, dass der A-02 Header "Dila Yorulmaz" zeigt (nicht Makler-Header),
+    // Sicherstellen, dass der A-02 Header "Maria Musterfrau" zeigt (nicht Makler-Header),
     // da updateKundenSharedHeader() diese Werte auf A-10 kopiert.
     var titleEl = document.getElementById('agenturPageTitle');
     var subtitleId = document.getElementById('agenturIdHeader');
-    if (titleEl) titleEl.textContent = 'Agentur: Dila Yorulmaz';
+    if (titleEl) titleEl.textContent = 'Agentur: Maria Musterfrau';
     if (subtitleId) {
         var subtitleDiv = subtitleId.parentElement;
         if (subtitleDiv) {
@@ -847,7 +847,7 @@ async function sendLandingMessageToClaude(message) {
 VERFÜGBARE FUNKTIONEN:
 1. setAgenturFilter(vermittler_id) - Filtert Dashboard nach Agentur
    - Verwende IMMER die Vermittler-ID (z.B. 'VM00001'), NIEMALS den Namen!
-   - Beispiel: setAgenturFilter('VM00001') für Dila Yorulmaz
+   - Beispiel: setAgenturFilter('VM00001') für Maria Musterfrau
 
 2. setSiloFilter(silo) - Filtert nach Silo
    - Gültige Werte: 'Ausschließlichkeit', 'Makler', 'Direktvertrieb', 'Banken'
@@ -860,9 +860,9 @@ VERFÜGBARE FUNKTIONEN:
 5. clearAllFilters() - Setzt alle Filter zurück
 
 6. showAgenturOverview(vermittler_id) - Zeigt detaillierte Agentur-Übersichtsseite
-   - Beispiel: showAgenturOverview('VM00001') für Dila Yorulmaz
+   - Beispiel: showAgenturOverview('VM00001') für Maria Musterfrau
    - Zeigt: Stammdaten, Foto, KPI-Dashboard mit Balken, Vertragshistorie
-   - Nutze diese Funktion bei Fragen wie "Übersicht Agentur Dila Yorulmaz"
+   - Nutze diese Funktion bei Fragen wie "Übersicht Agentur Maria Musterfrau"
    - WICHTIG: Verwende IMMER die Vermittler-ID, nicht den Namen!
 
 WICHTIG:
@@ -3173,7 +3173,7 @@ function generateFallbackDemoCSV() {
     ];
 
     const namen = [
-        'Dila Yorulmaz', 'Emma Ludwig', 'Thomas Schneider', 'Anna Fischer',
+        'Maria Musterfrau', 'Emma Ludwig', 'Thomas Schneider', 'Anna Fischer',
         'Michael Weber', 'Sophie Wagner', 'Andreas Becker', 'Laura Hoffmann',
         'Stefan Schulz', 'Marie Koch', 'Christian Werner', 'Julia Braun',
         'Markus Lehmann', 'Katharina Schmitt', 'Daniel Krüger', 'Lisa Hartmann',
@@ -3760,8 +3760,8 @@ async function loadSavedImages() {
             photoImg.style.display = 'block';
             if (photoPlaceholder) photoPlaceholder.style.display = 'none';
         } else {
-            // Fallback: Standard-Profilbild für Dila Yorulmaz
-            photoImg.src = 'assets/images/1598528971693.jpg';
+            // Fallback: Standard-Profilbild für Maria Musterfrau
+            photoImg.src = 'assets/images/maria-musterfrau.png';
             photoImg.style.display = 'block';
             if (photoPlaceholder) photoPlaceholder.style.display = 'none';
         }
@@ -3781,8 +3781,8 @@ async function loadSavedImages() {
             photoImgSmall.style.display = 'block';
             if (photoPlaceholderSmall) photoPlaceholderSmall.style.display = 'none';
         } else {
-            // Fallback: Standard-Profilbild für Dila Yorulmaz
-            photoImgSmall.src = 'assets/images/1598528971693.jpg';
+            // Fallback: Standard-Profilbild für Maria Musterfrau
+            photoImgSmall.src = 'assets/images/maria-musterfrau.png';
             photoImgSmall.style.display = 'block';
             if (photoPlaceholderSmall) photoPlaceholderSmall.style.display = 'none';
         }

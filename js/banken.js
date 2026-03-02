@@ -6545,7 +6545,7 @@ function generateDemoCustomerFile() {
     ctx.fillStyle = '#64748b';
     ctx.font = '10px Arial';
     ctx.fillText('Musterbank AG | Bankstraße 1 | 10115 Berlin | Tel: +49 30 12345-0 | forderung@musterbank.de', 40, 1080);
-    ctx.fillText('Geschäftsführer: Dr. Dila Yorulmaz | Amtsgericht Berlin HRB 12345 | USt-IdNr.: DE123456789', 40, 1095);
+    ctx.fillText('Geschäftsführer: Dr. Maria Musterfrau | Amtsgericht Berlin HRB 12345 | USt-IdNr.: DE123456789', 40, 1095);
 
     // Add QR code placeholder
     ctx.fillStyle = '#1e293b';
@@ -6934,7 +6934,7 @@ Aussehen: Overlay-Modal in der Bildschirmmitte
 │  │     ┌───────────────┐          ██████████████░░░░ 75%               │    │
 │  │     │               │                                               │    │
 │  │     │    Bild/PDF   │          Erkannte Daten:                      │    │
-│  │     │               │          ✓ Name: Dila Yorulmaz               │    │
+│  │     │               │          ✓ Name: Maria Musterfrau               │    │
 │  │     └───────────────┘          ✓ Adresse: Musterstr. 1              │    │
 │  │                                ✓ Geburtsdatum: 01.01.1980            │    │
 │  │                                ✓ IBAN: DE89...                       │    │

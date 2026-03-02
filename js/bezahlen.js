@@ -49,36 +49,31 @@ function generateBezahlenData() {
                 { datum: vvvmTag(3), amount: 72 }
             ]}
         ]},
-        { name: 'Versicherungen', amount: 520, color: '#7ecba1', icon: bezahlenIcons.versicherungen, items: [
+        { name: 'Versicherungen', amount: 530, color: '#7ecba1', icon: bezahlenIcons.versicherungen, items: [
             { name: 'Berufsunf\u00E4higkeit (ERGO)', amount: 89, datum: vmTag(1), badge: 'bekannt', vertragName: 'BU-Versicherung', recurring: true, recurringLabel: 'monatlich', history: [
                 { datum: vmTag(1), amount: 89 },
                 { datum: vvmTag(1), amount: 89 },
                 { datum: vvvmTag(1), amount: 89 }
             ]},
-            { name: 'Wohngeb\u00E4ude (VHV)', amount: 38, datum: vmTag(1), badge: 'bekannt', vertragName: 'Wohngeb\u00E4udeversicherung', recurring: true, recurringLabel: 'monatlich', history: [
-                { datum: vmTag(1), amount: 38 },
-                { datum: vvmTag(1), amount: 38 },
-                { datum: vvvmTag(1), amount: 38 }
+            { name: 'Wohngeb\u00E4ude (VHV)', amount: 450, datum: vmTag(1), badge: 'bekannt', vertragName: 'Wohngeb\u00E4udeversicherung', recurring: true, recurringLabel: 'j\u00E4hrlich', history: [
+                { datum: vmTag(1), amount: 450 }
             ]},
-            { name: 'Kfz-Versicherung (Allianz)', amount: 60, datum: vmTag(1), badge: 'unbekannt', recurring: true, recurringLabel: 'monatlich', history: [
-                { datum: vmTag(1), amount: 60 },
-                { datum: vvmTag(1), amount: 60 },
-                { datum: vvvmTag(1), amount: 60 }
+            { name: 'Kfz-Versicherung (Allianz)', amount: 720, datum: vvmTag(15), badge: 'bekannt', vertragName: 'Kfz-Versicherung', recurring: true, recurringLabel: 'j\u00E4hrlich', history: [
+                { datum: vvmTag(15), amount: 720 }
             ]},
-            { name: 'Private Haftpflicht', amount: 12, datum: vmTag(1), badge: 'bekannt', vertragName: 'Privathaftpflicht', recurring: true, recurringLabel: 'monatlich', history: [
-                { datum: vmTag(1), amount: 12 },
-                { datum: vvmTag(1), amount: 12 },
-                { datum: vvvmTag(1), amount: 12 }
+            { name: 'Private Haftpflicht (HDI)', amount: 72, datum: vvvmTag(1), badge: 'unbekannt', recurring: true, recurringLabel: 'j\u00E4hrlich', history: [
+                { datum: vvvmTag(1), amount: 72 }
             ]},
-            { name: 'Rechtsschutz', amount: 25, datum: vmTag(1), badge: 'unbekannt', recurring: true, recurringLabel: 'monatlich', history: [
-                { datum: vmTag(1), amount: 25 },
-                { datum: vvmTag(1), amount: 25 },
-                { datum: vvvmTag(1), amount: 25 }
+            { name: 'Rechtsschutz (ARAG)', amount: 310, datum: vvmTag(1), badge: 'unbekannt', recurring: true, recurringLabel: 'j\u00E4hrlich', history: [
+                { datum: vvmTag(1), amount: 310 }
             ]},
-            { name: 'Krankenversicherung', amount: 296, datum: vmTag(1), badge: 'bekannt', vertragName: 'Krankenversicherung', recurring: true, recurringLabel: 'monatlich', history: [
+            { name: 'Krankenversicherung (DAK)', amount: 296, datum: vmTag(1), badge: 'unbekannt', recurring: true, recurringLabel: 'monatlich', history: [
                 { datum: vmTag(1), amount: 296 },
                 { datum: vvmTag(1), amount: 296 },
                 { datum: vvvmTag(1), amount: 296 }
+            ]},
+            { name: 'Hausrat (AXA)', amount: 185, datum: vvvmTag(10), badge: 'bekannt', vertragName: 'Hausratversicherung', recurring: true, recurringLabel: 'j\u00E4hrlich', history: [
+                { datum: vvvmTag(10), amount: 185 }
             ]}
         ]},
         { name: 'Kredit & Finanzierung', amount: 330, color: '#b8a9e2', icon: bezahlenIcons.kredit, items: [
@@ -188,23 +183,27 @@ function buildTxItems(cat) {
         // Recurring-Cluster: zeige Badge + aufklappbare Historie
         var recurringBadge = '';
         var recurringDetail = '';
-        if (tx.recurring && tx.history && tx.history.length > 1) {
+        if (tx.recurring && tx.recurringLabel) {
             var clusterId = cat.name.replace(/\s/g, '_') + '_' + txIdx;
-            recurringBadge = '<span class="bezahlen-recurring-badge" onclick="event.stopPropagation(); toggleRecurringCluster(\'' + clusterId + '\')" title="Wiederkehrende Zahlung erkannt">' +
+            recurringBadge = '<span class="bezahlen-recurring-badge' + (tx.history && tx.history.length > 1 ? '' : ' no-expand') + '"' +
+                (tx.history && tx.history.length > 1 ? ' onclick="event.stopPropagation(); toggleRecurringCluster(\'' + clusterId + '\')"' : '') +
+                ' title="Wiederkehrende Zahlung erkannt">' +
                 '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg> ' +
                 tx.recurringLabel + '</span>';
-            recurringDetail = '<div class="bezahlen-recurring-detail" id="recurringDetail_' + clusterId + '">' +
-                '<div class="recurring-detail-header">' +
-                    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg> ' +
-                    'Erkannt als <strong>' + tx.recurringLabel + '</strong> \u2013 letzte ' + tx.history.length + ' Abbuchungen:' +
-                '</div>' +
-                tx.history.map(function(h) {
-                    return '<div class="recurring-history-item">' +
-                        '<span class="recurring-history-datum">' + h.datum + '</span>' +
-                        '<span class="recurring-history-amount">\u20AC' + h.amount + '</span>' +
-                    '</div>';
-                }).join('') +
-            '</div>';
+            if (tx.history && tx.history.length > 1) {
+                recurringDetail = '<div class="bezahlen-recurring-detail" id="recurringDetail_' + clusterId + '">' +
+                    '<div class="recurring-detail-header">' +
+                        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg> ' +
+                        'Erkannt als <strong>' + tx.recurringLabel + '</strong> \u2013 letzte ' + tx.history.length + ' Abbuchungen:' +
+                    '</div>' +
+                    tx.history.map(function(h) {
+                        return '<div class="recurring-history-item">' +
+                            '<span class="recurring-history-datum">' + h.datum + '</span>' +
+                            '<span class="recurring-history-amount">\u20AC' + h.amount + '</span>' +
+                        '</div>';
+                    }).join('') +
+                '</div>';
+            }
         }
 
         return '<div class="bezahlen-tx-item' + (tx.recurring ? ' has-recurring' : '') + '">' +

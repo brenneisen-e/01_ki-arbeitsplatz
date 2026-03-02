@@ -289,6 +289,14 @@
     box-shadow: 0 1px 4px rgba(99, 102, 241, 0.15);
 }
 
+.bezahlen-recurring-badge.no-expand {
+    cursor: default;
+}
+
+.bezahlen-recurring-badge.no-expand:hover {
+    box-shadow: none;
+}
+
 .bezahlen-recurring-badge svg {
     flex-shrink: 0;
 }

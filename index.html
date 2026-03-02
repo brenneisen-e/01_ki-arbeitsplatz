@@ -2063,6 +2063,20 @@
                         </div>
                     </div>
 
+                    <!-- Zeitraum-Filter Bestand -->
+                    <div class="zeitraum-filter-bar">
+                        <div class="zeitraum-label">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                            Zeitraum:
+                        </div>
+                        <div class="zeitraum-buttons">
+                            <button class="zeitraum-btn" onclick="filterBestandZeitraum('1j')">1 Jahr</button>
+                            <button class="zeitraum-btn" onclick="filterBestandZeitraum('3j')">3 Jahre</button>
+                            <button class="zeitraum-btn" onclick="filterBestandZeitraum('5j')">5 Jahre</button>
+                            <button class="zeitraum-btn active" onclick="filterBestandZeitraum('alle')">Alle</button>
+                        </div>
+                    </div>
+
                     <!-- Vertragstabelle Bestand -->
                     <div class="vertrags-tabelle-section">
                         <h3 class="section-title">
@@ -2696,7 +2710,7 @@
                         <div class="kpi-detail-card">
                             <div class="kpi-detail-header">Beschwerdequote</div>
                             <div class="kpi-detail-value" id="qualBeschwerden">0</div>
-                            <div class="kpi-detail-sub">Pro 1.000 Verträge</div>
+                            <div class="kpi-detail-sub">Pro 1.000 Vertr&auml;ge</div>
                         </div>
                         <div class="kpi-detail-card">
                             <div class="kpi-detail-header">IDD-Compliance</div>
@@ -2706,17 +2720,58 @@
                         <div class="kpi-detail-card">
                             <div class="kpi-detail-header">Schulungsstatus</div>
                             <div class="kpi-detail-value" id="qualSchulung">0/15h</div>
-                            <div class="kpi-detail-sub">Weiterbildung (§34d GewO)</div>
+                            <div class="kpi-detail-sub">Weiterbildung (&sect;34d GewO)</div>
                         </div>
                         <div class="kpi-detail-card">
                             <div class="kpi-detail-header">Dokumentationsquote</div>
                             <div class="kpi-detail-value" id="qualDoku">0%</div>
-                            <div class="kpi-detail-sub">Vollständige Protokolle</div>
+                            <div class="kpi-detail-sub">Vollst&auml;ndige Protokolle</div>
                         </div>
                         <div class="kpi-detail-card">
                             <div class="kpi-detail-header">Underwriting-Quote</div>
                             <div class="kpi-detail-value" id="qualUnderwriting">0%</div>
                             <div class="kpi-detail-sub">Annahme-Quote</div>
+                        </div>
+                    </div>
+
+                    <!-- Qualität: Zwei-Spalten-Layout -->
+                    <div class="qual-two-col">
+                        <!-- Linke Spalte: Beschwerden-Trend + Schulungsfortschritt -->
+                        <div class="qual-col">
+                            <div class="qual-section-card">
+                                <h3 class="qual-section-title">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                                    Beschwerden-Trend (6 Monate)
+                                </h3>
+                                <div class="qual-trend-chart" id="qualTrendChart"></div>
+                            </div>
+
+                            <div class="qual-section-card">
+                                <h3 class="qual-section-title">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+                                    Schulungsfortschritt
+                                </h3>
+                                <div class="qual-schulung-list" id="qualSchulungList"></div>
+                            </div>
+                        </div>
+
+                        <!-- Rechte Spalte: Compliance-Checkliste + Letzte Prüfungen -->
+                        <div class="qual-col">
+                            <div class="qual-section-card">
+                                <h3 class="qual-section-title">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                                    Compliance-Checkliste
+                                </h3>
+                                <div class="qual-checklist" id="qualChecklist"></div>
+                            </div>
+
+                            <div class="qual-section-card">
+                                <h3 class="qual-section-title">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                                    Letzte Qualit&auml;tspr&uuml;fungen
+                                </h3>
+                                <div class="qual-pruefungen-list" id="qualPruefungen"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -3735,45 +3790,63 @@
                                 <div class="info-item full-width">
                                     <span class="info-label">Haustier</span>
                                     <div class="info-value" id="kundenTiere">
-                                        <span class="tier-unknown-badge" id="kundenTiereBadge"
-                                            title="Aus Open Finance Kontoumsätzen wurden Hinweise auf Tierhaltung erkannt (z.B. Fressnapf, Tierarzt). Klicken Sie hier, um zu den Umsätzen zu navigieren."
-                                            onclick="navigateToTierUmsaetze()">
-                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-                                            Hinweise aus Kontoums&auml;tzen
-                                        </span>
+                                        <div class="tier-hint-row" id="tierHintRow">
+                                            <span class="tier-unknown-badge" id="kundenTiereBadge"
+                                                title="Aus Open Finance Kontoumsätzen wurden Hinweise auf Tierhaltung erkannt (z.B. Fressnapf, Tierarzt). Klicken Sie hier, um zu den Umsätzen zu navigieren."
+                                                onclick="navigateToTierUmsaetze()">
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                                                Hinweise aus Kontoums&auml;tzen
+                                            </span>
+                                            <button class="tier-confirm-btn" id="tierConfirmBtn" onclick="openTierPopup()" title="Best&auml;tigen &amp; Haustier angeben">
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg>
+                                            </button>
+                                        </div>
                                     </div>
                                     <!-- Gespeicherte Tier-Info (Badge-Ansicht) -->
                                     <div class="tier-display" id="tierDisplay" style="display:none;">
                                         <div class="tier-display-badge" id="tierDisplayBadge"></div>
-                                        <button class="tier-edit-pencil" onclick="editTierInfo()" title="Bearbeiten">
+                                        <button class="tier-edit-pencil" onclick="openTierPopup(true)" title="Bearbeiten">
                                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                                         </button>
                                     </div>
-                                    <!-- Haustier-Eingabeformular (versteckt nach Speichern) -->
-                                    <div class="tier-edit-section" id="tierEditSection">
-                                        <div class="tier-edit-row">
-                                            <label class="tier-edit-label">Art</label>
-                                            <select id="tierArtSelect" class="tier-edit-input" onchange="onTierArtChange()">
-                                                <option value="">-- Bitte w&auml;hlen --</option>
-                                                <option value="Hund">Hund</option>
-                                                <option value="Katze">Katze</option>
-                                            </select>
+                                    <!-- Haustier-Popup (wird per JS angezeigt) -->
+                                    <div class="tier-popup-overlay" id="tierPopupOverlay" style="display:none;" onclick="closeTierPopup()"></div>
+                                    <div class="tier-popup" id="tierPopup" style="display:none;">
+                                        <div class="tier-popup-header">
+                                            <span class="tier-popup-title">
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="18" height="18"><ellipse cx="7" cy="4" rx="2" ry="2.5"/><ellipse cx="17" cy="4" rx="2" ry="2.5"/><ellipse cx="4" cy="10" rx="2" ry="2.5"/><ellipse cx="20" cy="10" rx="2" ry="2.5"/><path d="M12 22c-3 0-7-3-7-7a7 7 0 0114 0c0 4-4 7-7 7z"/></svg>
+                                                Haustier angeben
+                                            </span>
+                                            <button class="tier-popup-close" onclick="closeTierPopup()">&times;</button>
                                         </div>
-                                        <div class="tier-edit-row" id="tierDetailsRow" style="display:none;">
-                                            <div class="tier-detail-fields">
-                                                <div>
-                                                    <label class="tier-edit-label">Name</label>
-                                                    <input type="text" id="tierNameInput" class="tier-edit-input" placeholder="z.B. Bella" />
-                                                </div>
-                                                <div>
-                                                    <label class="tier-edit-label">Alter</label>
-                                                    <input type="number" id="tierAlterInput" class="tier-edit-input" placeholder="Jahre" min="0" max="30" />
-                                                </div>
-                                                <button class="tier-save-btn" onclick="saveTierInfo()">
-                                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>
-                                                    Speichern
-                                                </button>
+                                        <div class="tier-popup-body">
+                                            <div class="tier-edit-row">
+                                                <label class="tier-edit-label">Art</label>
+                                                <select id="tierArtSelect" class="tier-edit-input" onchange="onTierArtChange()">
+                                                    <option value="">-- Bitte w&auml;hlen --</option>
+                                                    <option value="Hund">Hund</option>
+                                                    <option value="Katze">Katze</option>
+                                                </select>
                                             </div>
+                                            <div class="tier-edit-row" id="tierDetailsRow" style="display:none;">
+                                                <div class="tier-detail-fields">
+                                                    <div>
+                                                        <label class="tier-edit-label">Name</label>
+                                                        <input type="text" id="tierNameInput" class="tier-edit-input" placeholder="z.B. Bella" />
+                                                    </div>
+                                                    <div>
+                                                        <label class="tier-edit-label">Alter</label>
+                                                        <input type="number" id="tierAlterInput" class="tier-edit-input" placeholder="Jahre" min="0" max="30" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tier-popup-footer">
+                                            <button class="tier-popup-cancel" onclick="closeTierPopup()">Abbrechen</button>
+                                            <button class="tier-save-btn" onclick="saveTierInfo()">
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>
+                                                Speichern
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -4545,13 +4618,29 @@
                                 <div class="impuls-detail-section">
                                     <h4>Aktionen</h4>
                                     <div class="impuls-actions">
-                                        <button class="action-btn primary">
-                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
-                                                <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path>
-                                                <polyline points="14 2 14 8 20 8"></polyline>
-                                            </svg>
-                                            Angebot erstellen & versenden
-                                        </button>
+                                        <div class="angebot-dropdown-wrapper">
+                                            <button class="action-btn primary angebot-erstellen-btn" onclick="toggleAngebotMenu(event, this)">
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                                                    <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path>
+                                                    <polyline points="14 2 14 8 20 8"></polyline>
+                                                </svg>
+                                                Angebot erstellen
+                                            </button>
+                                            <div class="angebot-context-menu" style="display:none;">
+                                                <div class="angebot-menu-item" onclick="angebotAction('pdf')">
+                                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                                                    PDF generieren
+                                                </div>
+                                                <div class="angebot-menu-item" onclick="angebotAction('entwurf')">
+                                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                                                    Als Entwurf speichern
+                                                </div>
+                                                <div class="angebot-menu-item" onclick="angebotAction('vergleich')">
+                                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                                                    Tarifvergleich starten
+                                                </div>
+                                            </div>
+                                        </div>
                                         <button class="action-btn secondary">
                                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
                                                 <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
@@ -4603,13 +4692,29 @@
                                 <div class="impuls-detail-section">
                                     <h4>Aktionen</h4>
                                     <div class="impuls-actions">
-                                        <button class="action-btn primary">
-                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
-                                                <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path>
-                                                <polyline points="14 2 14 8 20 8"></polyline>
-                                            </svg>
-                                            Angebot erstellen & versenden
-                                        </button>
+                                        <div class="angebot-dropdown-wrapper">
+                                            <button class="action-btn primary angebot-erstellen-btn" onclick="toggleAngebotMenu(event, this)">
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                                                    <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path>
+                                                    <polyline points="14 2 14 8 20 8"></polyline>
+                                                </svg>
+                                                Angebot erstellen
+                                            </button>
+                                            <div class="angebot-context-menu" style="display:none;">
+                                                <div class="angebot-menu-item" onclick="angebotAction('pdf')">
+                                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                                                    PDF generieren
+                                                </div>
+                                                <div class="angebot-menu-item" onclick="angebotAction('entwurf')">
+                                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                                                    Als Entwurf speichern
+                                                </div>
+                                                <div class="angebot-menu-item" onclick="angebotAction('vergleich')">
+                                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                                                    Tarifvergleich starten
+                                                </div>
+                                            </div>
+                                        </div>
                                         <button class="action-btn secondary">
                                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
                                                 <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
@@ -4716,13 +4821,29 @@
                                 <div class="impuls-detail-section">
                                     <h4>Aktionen</h4>
                                     <div class="impuls-actions">
-                                        <button class="action-btn primary">
-                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
-                                                <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path>
-                                                <polyline points="14 2 14 8 20 8"></polyline>
-                                            </svg>
-                                            Angebot erstellen & versenden
-                                        </button>
+                                        <div class="angebot-dropdown-wrapper">
+                                            <button class="action-btn primary angebot-erstellen-btn" onclick="toggleAngebotMenu(event, this)">
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                                                    <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path>
+                                                    <polyline points="14 2 14 8 20 8"></polyline>
+                                                </svg>
+                                                Angebot erstellen
+                                            </button>
+                                            <div class="angebot-context-menu" style="display:none;">
+                                                <div class="angebot-menu-item" onclick="angebotAction('pdf')">
+                                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                                                    PDF generieren
+                                                </div>
+                                                <div class="angebot-menu-item" onclick="angebotAction('entwurf')">
+                                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                                                    Als Entwurf speichern
+                                                </div>
+                                                <div class="angebot-menu-item" onclick="angebotAction('vergleich')">
+                                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                                                    Tarifvergleich starten
+                                                </div>
+                                            </div>
+                                        </div>
                                         <button class="action-btn secondary">
                                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
                                                 <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
@@ -4793,13 +4914,29 @@
                                 <div class="impuls-detail-section">
                                     <h4>Aktionen</h4>
                                     <div class="impuls-actions">
-                                        <button class="action-btn primary">
-                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
-                                                <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path>
-                                                <polyline points="14 2 14 8 20 8"></polyline>
-                                            </svg>
-                                            Angebot erstellen & versenden
-                                        </button>
+                                        <div class="angebot-dropdown-wrapper">
+                                            <button class="action-btn primary angebot-erstellen-btn" onclick="toggleAngebotMenu(event, this)">
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                                                    <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path>
+                                                    <polyline points="14 2 14 8 20 8"></polyline>
+                                                </svg>
+                                                Angebot erstellen
+                                            </button>
+                                            <div class="angebot-context-menu" style="display:none;">
+                                                <div class="angebot-menu-item" onclick="angebotAction('pdf')">
+                                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                                                    PDF generieren
+                                                </div>
+                                                <div class="angebot-menu-item" onclick="angebotAction('entwurf')">
+                                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                                                    Als Entwurf speichern
+                                                </div>
+                                                <div class="angebot-menu-item" onclick="angebotAction('vergleich')">
+                                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                                                    Tarifvergleich starten
+                                                </div>
+                                            </div>
+                                        </div>
                                         <button class="action-btn secondary">
                                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
                                                 <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>

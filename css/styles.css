@@ -5717,7 +5717,66 @@ button svg,
 
 .impuls-actions .action-btn.primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(134, 188, 37, 0.3);
+    box-shadow: 0 4px 12px rgba(134, 188, 37, 0.35);
+    background: linear-gradient(135deg, #6fa31e 0%, #5a8a18 100%);
+}
+
+.impuls-actions .action-btn.primary:hover svg {
+    stroke: white;
+}
+
+/* Angebot Erstellen Dropdown */
+.angebot-dropdown-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.angebot-context-menu {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(0, 0, 0, 0.04);
+    z-index: 100;
+    min-width: 200px;
+    padding: 6px;
+    animation: angebotMenuIn 0.15s ease-out;
+}
+
+@keyframes angebotMenuIn {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.angebot-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #334155;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+    white-space: nowrap;
+}
+
+.angebot-menu-item:hover {
+    background: #f0f9e8;
+    color: #3d6b0e;
+}
+
+.angebot-menu-item svg {
+    flex-shrink: 0;
+    color: #64748b;
+    transition: color 0.15s;
+}
+
+.angebot-menu-item:hover svg {
+    color: #86BC25;
 }
 
 .impuls-actions .action-btn.secondary {

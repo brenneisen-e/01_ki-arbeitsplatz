@@ -231,10 +231,10 @@ function showAgenturTab(tabName) {
     if (tabButton) tabButton.classList.add('active');
     if (tabContent) tabContent.classList.add('active');
 
-    // Cockpit-KPIs (Gesamtbestand etc.) bei Potentiale-Tab ausblenden
+    // Cockpit-KPIs (Gesamtbestand etc.) nur in Übersicht anzeigen
     var cockpitKpis = document.querySelector('.cockpit-kpis:not(#maklerKpis)');
     if (cockpitKpis) {
-        cockpitKpis.style.display = (tabName === 'potential') ? 'none' : '';
+        cockpitKpis.style.display = (tabName === 'uebersicht') ? '' : 'none';
     }
 }
 
@@ -381,24 +381,35 @@ function fillNeugeschaeftTab(agenturData) {
     setElementText('ngDurchschnitt', formatCurrency(durchschnitt));
     setElementText('ngCrossSelling', `${crossSelling}%`);
 
-    // Spartenverteilung
+    // Spartenverteilung als Donut-Chart
     const spartenContainer = document.getElementById('spartenNeugeschaeft');
     if (spartenContainer) {
         const sparten = [
-            { name: 'Leben', value: 35 + Math.random() * 15, class: 'leben' },
-            { name: 'Kranken', value: 20 + Math.random() * 10, class: 'kranken' },
-            { name: 'Schaden', value: 25 + Math.random() * 10, class: 'schaden' },
-            { name: 'Kfz', value: 10 + Math.random() * 10, class: 'kfz' }
+            { name: 'Leben', value: 35 + Math.random() * 15, color: '#2563eb' },
+            { name: 'Kranken', value: 20 + Math.random() * 10, color: '#16a34a' },
+            { name: 'Schaden', value: 25 + Math.random() * 10, color: '#9333ea' },
+            { name: 'Kfz', value: 10 + Math.random() * 10, color: '#f59e0b' }
         ];
-
-        spartenContainer.innerHTML = sparten.map(s => `
-            <div class="sparten-bar-item">
-                <div class="sparten-bar-label">${s.name}</div>
-                <div class="sparten-bar-track">
-                    <div class="sparten-bar-fill ${s.class}" style="width: ${s.value}%">${s.value.toFixed(0)}%</div>
-                </div>
-            </div>
-        `).join('');
+        const total = sparten.reduce((s, sp) => s + sp.value, 0);
+        // Donut SVG
+        const size = 140, sw = 22, cx = size/2, cy = size/2, r = size/2 - sw/2 - 4;
+        const circ = 2 * Math.PI * r;
+        let offset = 0;
+        let paths = '';
+        sparten.forEach(sp => {
+            const pct = sp.value / total;
+            const dash = pct * circ;
+            paths += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${sp.color}" stroke-width="${sw}" stroke-dasharray="${dash} ${circ - dash}" stroke-dashoffset="${-offset}" transform="rotate(-90 ${cx} ${cy})" stroke-linecap="round"/>`;
+            offset += dash;
+        });
+        const donutSvg = `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">${paths}<text x="${cx}" y="${cy + 5}" text-anchor="middle" font-size="15" font-weight="700" fill="#1e293b">${antraege}</text><text x="${cx}" y="${cy + 19}" text-anchor="middle" font-size="10" fill="#94a3b8">Anträge</text></svg>`;
+        // Legende
+        const legend = sparten.map(sp => {
+            const pct = (sp.value / total * 100).toFixed(0);
+            const count = Math.round(antraege * sp.value / total);
+            return `<div class="sparten-legend-item"><span class="sparten-legend-dot" style="background:${sp.color}"></span><span class="sparten-legend-name">${sp.name}</span><span class="sparten-legend-val"><strong>${pct}%</strong> (${count})</span></div>`;
+        }).join('');
+        spartenContainer.innerHTML = `<div class="sparten-donut-layout"><div class="sparten-donut-svg">${donutSvg}</div><div class="sparten-legend">${legend}</div></div>`;
     }
 
     // Vertragstabelle befüllen
@@ -444,19 +455,28 @@ function fillStornoTab(agenturData) {
     const gruendeContainer = document.getElementById('stornoGruende');
     if (gruendeContainer) {
         const gruende = [
-            { name: 'Preis / zu teuer', count: Math.floor(Math.random() * 30) + 20 },
-            { name: 'Wettbewerber', count: Math.floor(Math.random() * 20) + 15 },
-            { name: 'Leistung nicht zufrieden', count: Math.floor(Math.random() * 15) + 10 },
-            { name: 'Finanzielle Gründe', count: Math.floor(Math.random() * 15) + 8 },
-            { name: 'Kein Bedarf mehr', count: Math.floor(Math.random() * 10) + 5 }
+            { name: 'Preis / zu teuer', count: Math.floor(Math.random() * 30) + 20, color: '#ef4444' },
+            { name: 'Wettbewerber', count: Math.floor(Math.random() * 20) + 15, color: '#f97316' },
+            { name: 'Leistung nicht zufrieden', count: Math.floor(Math.random() * 15) + 10, color: '#eab308' },
+            { name: 'Finanzielle Gründe', count: Math.floor(Math.random() * 15) + 8, color: '#8b5cf6' },
+            { name: 'Kein Bedarf mehr', count: Math.floor(Math.random() * 10) + 5, color: '#94a3b8' }
         ];
+        const maxCount = Math.max(...gruende.map(g => g.count));
+        const totalCount = gruende.reduce((s, g) => s + g.count, 0);
 
-        gruendeContainer.innerHTML = gruende.map(g => `
-            <div class="storno-reason-item">
-                <span class="storno-reason-name">${g.name}</span>
-                <span class="storno-reason-count">${g.count}</span>
-            </div>
-        `).join('');
+        gruendeContainer.innerHTML = gruende.map(g => {
+            const pct = (g.count / totalCount * 100).toFixed(0);
+            const barWidth = (g.count / maxCount * 100).toFixed(0);
+            return `<div class="storno-reason-item">
+                <div class="storno-reason-top">
+                    <span class="storno-reason-name">${g.name}</span>
+                    <span class="storno-reason-stats"><strong>${g.count}</strong> Verträge · ${pct}%</span>
+                </div>
+                <div class="storno-reason-bar-track">
+                    <div class="storno-reason-bar-fill" style="width:${barWidth}%; background:${g.color};"></div>
+                </div>
+            </div>`;
+        }).join('');
     }
 
     // Vertragstabelle befüllen
@@ -502,6 +522,94 @@ function fillQualitaetTab(agenturData) {
     setElementText('qualSchulung', `${schulung}/15h`);
     setElementText('qualDoku', `${doku}%`);
     setElementText('qualUnderwriting', `${underwriting.toFixed(0)}%`);
+
+    // Beschwerden-Trend (6 Monate)
+    const trendEl = document.getElementById('qualTrendChart');
+    if (trendEl) {
+        const monate = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
+        const now = new Date();
+        const trendData = [];
+        for (let i = 5; i >= 0; i--) {
+            const m = new Date(now.getFullYear(), now.getMonth() - i, 1);
+            const val = +(Math.random() * 3 + 0.5).toFixed(1);
+            trendData.push({ monat: monate[m.getMonth()].substring(0, 3), val: val });
+        }
+        const maxVal = Math.max(...trendData.map(d => d.val), 4);
+        trendEl.innerHTML = trendData.map(d => {
+            const h = Math.round((d.val / maxVal) * 90);
+            const color = d.val < 1.5 ? '#16a34a' : (d.val < 2.5 ? '#d97706' : '#dc2626');
+            return '<div class="qual-trend-bar-group">' +
+                '<div class="qual-trend-bar" style="height:' + h + 'px;background:' + color + ';">' +
+                '<span class="qual-trend-value">' + d.val + '</span></div>' +
+                '<span class="qual-trend-label">' + d.monat + '</span></div>';
+        }).join('');
+    }
+
+    // Schulungsfortschritt
+    const schulungList = document.getElementById('qualSchulungList');
+    if (schulungList) {
+        const kurse = [
+            { name: 'IDD-Weiterbildung', stunden: schulung, max: 15, color: '#86BC25' },
+            { name: 'Produktschulung Leben', stunden: Math.min(Math.floor(Math.random() * 5 + 3), 6), max: 6, color: '#3b82f6' },
+            { name: 'Datenschutz (DSGVO)', stunden: 2, max: 2, color: '#8b5cf6' },
+            { name: 'Geldwäscheprävention', stunden: Math.floor(Math.random() * 2 + 1), max: 2, color: '#f59e0b' },
+            { name: 'Digitale Beratungskompetenz', stunden: Math.floor(Math.random() * 3 + 1), max: 4, color: '#06b6d4' }
+        ];
+        schulungList.innerHTML = kurse.map(k => {
+            const pct = Math.round((k.stunden / k.max) * 100);
+            return '<div class="qual-schulung-item">' +
+                '<div class="qual-schulung-top"><span class="qual-schulung-name">' + k.name + '</span>' +
+                '<span class="qual-schulung-hours">' + k.stunden + '/' + k.max + 'h (' + pct + '%)</span></div>' +
+                '<div class="qual-schulung-bar"><div class="qual-schulung-bar-fill" style="width:' + pct + '%;background:' + k.color + ';"></div></div>' +
+                '</div>';
+        }).join('');
+    }
+
+    // Compliance-Checkliste
+    const checkEl = document.getElementById('qualChecklist');
+    if (checkEl) {
+        const checks = [
+            { text: 'Beratungsdokumentation vollständig', status: 'ok', label: 'Erfüllt' },
+            { text: 'Interessenkonflikt-Erklärung aktuell', status: 'ok', label: 'Erfüllt' },
+            { text: 'Beschwerdemanagement-Prozess', status: 'ok', label: 'Erfüllt' },
+            { text: 'Produktfreigabeverfahren (POG)', status: 'ok', label: 'Erfüllt' },
+            { text: 'Nachhaltigkeitspräferenzen (ESG)', status: 'warn', label: 'Teilweise' },
+            { text: 'Zielmarktbestimmung dokumentiert', status: 'ok', label: 'Erfüllt' },
+            { text: 'Vergütungstransparenz (§48a VAG)', status: 'ok', label: 'Erfüllt' }
+        ];
+        const icons = {
+            ok: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="12" height="12"><polyline points="20 6 9 17 4 12"/></svg>',
+            warn: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="12" height="12"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
+            fail: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="12" height="12"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>'
+        };
+        checkEl.innerHTML = checks.map(c => {
+            return '<div class="qual-check-item">' +
+                '<div class="qual-check-icon ' + c.status + '">' + icons[c.status] + '</div>' +
+                '<span class="qual-check-text">' + c.text + '</span>' +
+                '<span class="qual-check-status ' + c.status + '">' + c.label + '</span></div>';
+        }).join('');
+    }
+
+    // Letzte Qualitätsprüfungen
+    const pruefEl = document.getElementById('qualPruefungen');
+    if (pruefEl) {
+        const now = new Date();
+        const fmt = d => d.getDate().toString().padStart(2,'0') + '.' + (d.getMonth()+1).toString().padStart(2,'0') + '.' + d.getFullYear();
+        const pruefungen = [
+            { datum: new Date(now.getFullYear(), now.getMonth(), now.getDate() - 5), text: 'IDD-Jahresaudit Beratungsdoku', ergebnis: 'bestanden', label: 'Bestanden' },
+            { datum: new Date(now.getFullYear(), now.getMonth(), now.getDate() - 18), text: 'Stichprobe Risikoanalysen Q1', ergebnis: 'bestanden', label: 'Bestanden' },
+            { datum: new Date(now.getFullYear(), now.getMonth() - 1, 12), text: 'DSGVO-Konformitätsprüfung', ergebnis: 'teilweise', label: 'Teilweise' },
+            { datum: new Date(now.getFullYear(), now.getMonth() - 1, 3), text: 'ESG-Beratungspflicht Audit', ergebnis: 'teilweise', label: 'Nacharbeit' },
+            { datum: new Date(now.getFullYear(), now.getMonth() - 2, 20), text: 'GwG-Prüfung Identifikation', ergebnis: 'bestanden', label: 'Bestanden' },
+            { datum: new Date(now.getFullYear(), now.getMonth() - 2, 8), text: 'Beschwerdemanagement Review', ergebnis: 'bestanden', label: 'Bestanden' }
+        ];
+        pruefEl.innerHTML = pruefungen.map(p => {
+            return '<div class="qual-pruefung-item">' +
+                '<span class="qual-pruefung-datum">' + fmt(p.datum) + '</span>' +
+                '<span class="qual-pruefung-text">' + p.text + '</span>' +
+                '<span class="qual-pruefung-ergebnis ' + p.ergebnis + '">' + p.label + '</span></div>';
+        }).join('');
+    }
 }
 
 // ========================================
@@ -789,6 +897,30 @@ function searchVertraege(tabName) {
         row.style.display = row.textContent.toLowerCase().indexOf(q) >= 0 ? '' : 'none';
     });
 }
+
+// Bestand Zeitraum-Filter
+function filterBestandZeitraum(zeitraum) {
+    var section = document.getElementById('tab-bestand');
+    if (!section) return;
+    section.querySelectorAll('.zeitraum-btn').forEach(function(b) { b.classList.remove('active'); });
+    if (event && event.target) event.target.classList.add('active');
+
+    var now = new Date();
+    var cutoff = null;
+    if (zeitraum === '1j') cutoff = new Date(now.getFullYear() - 1, now.getMonth(), now.getDate());
+    else if (zeitraum === '3j') cutoff = new Date(now.getFullYear() - 3, now.getMonth(), now.getDate());
+    else if (zeitraum === '5j') cutoff = new Date(now.getFullYear() - 5, now.getMonth(), now.getDate());
+
+    var rows = section.querySelectorAll('#bestandTableBody tr');
+    rows.forEach(function(row, idx) {
+        if (!cutoff || zeitraum === 'alle') { row.style.display = ''; return; }
+        var v = mockBestand[idx];
+        if (v && v.vertragsbeginn) {
+            row.style.display = v.vertragsbeginn >= cutoff ? '' : 'none';
+        }
+    });
+}
+window.filterBestandZeitraum = filterBestandZeitraum;
 
 // Vertragsdetail Modal
 function openVertragDetail(idx, typ) {

@@ -819,18 +819,18 @@ function fillKundenDetail(kundenName, vermittlerId) {
     const beschaeftigtEl = document.getElementById('kundenBeschaeftigtSeit');
     if (beschaeftigtEl) beschaeftigtEl.textContent = kunde.beschaeftigtSeit || '—';
 
-    // Tiere - Badge + Eingabeformular
+    // Tiere - Badge + Bestätigungs-Button
+    const tierHintRow = document.getElementById('tierHintRow');
     const tiereEl = document.getElementById('kundenTiere');
     if (tiereEl) {
         if (kunde.tiere === 'unbekannt') {
-            tiereEl.innerHTML = '<span class="tier-unknown-badge" id="kundenTiereBadge" ' +
-                'title="Aus Open Finance Kontoumsätzen wurden Hinweise auf Tierhaltung erkannt (z.B. Fressnapf, Tierarzt). Klicken Sie hier, um zu den Umsätzen zu navigieren." ' +
-                'onclick="navigateToTierUmsaetze()">' +
-                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> ' +
-                'Hinweise aus Kontoumsätzen</span>';
+            // Hinweise-Badge + Confirm-Button anzeigen (HTML ist bereits im Template)
+            if (tierHintRow) tierHintRow.style.display = 'flex';
         } else if (kunde.tiere === 'keine') {
+            if (tierHintRow) tierHintRow.style.display = 'none';
             tiereEl.innerHTML = '<span class="tier-none-badge">Keine bekannt</span>';
         } else {
+            if (tierHintRow) tierHintRow.style.display = 'none';
             tiereEl.innerHTML = '<span class="tier-known-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><ellipse cx="7" cy="4" rx="2" ry="2.5"/><ellipse cx="17" cy="4" rx="2" ry="2.5"/><ellipse cx="4" cy="10" rx="2" ry="2.5"/><ellipse cx="20" cy="10" rx="2" ry="2.5"/><path d="M12 22c-3 0-7-3-7-7a7 7 0 0114 0c0 4-4 7-7 7z"/></svg> ' +
                 kunde.tiere + '</span>';
         }
@@ -978,8 +978,7 @@ window.saveTierInfo = saveTierInfo;
 function showSavedTierDisplay(data) {
     var display = document.getElementById('tierDisplay');
     var badge = document.getElementById('tierDisplayBadge');
-    var editSection = document.getElementById('tierEditSection');
-    var hintBadge = document.getElementById('kundenTiereBadge');
+    var tierHintRow = document.getElementById('tierHintRow');
 
     if (!display || !badge) return;
 
@@ -991,47 +990,68 @@ function showSavedTierDisplay(data) {
     badge.innerHTML = '<span class="tier-display-icon">' + icon + '</span><span>' + text + '</span>';
     display.style.display = 'flex';
 
-    // Formular komplett verstecken
-    if (editSection) editSection.style.display = 'none';
-    // Hinweis-Badge verstecken
-    if (hintBadge) hintBadge.style.display = 'none';
+    // Hinweis-Zeile verstecken
+    if (tierHintRow) tierHintRow.style.display = 'none';
+
+    // Popup schließen
+    closeTierPopup();
 }
 
-function editTierInfo() {
-    var display = document.getElementById('tierDisplay');
-    var editSection = document.getElementById('tierEditSection');
-    var detailsRow = document.getElementById('tierDetailsRow');
+function openTierPopup(isEdit) {
+    var overlay = document.getElementById('tierPopupOverlay');
+    var popup = document.getElementById('tierPopup');
+    if (!overlay || !popup) return;
 
-    // Badge-Ansicht verstecken, Formular zeigen
-    if (display) display.style.display = 'none';
-    if (editSection) editSection.style.display = 'block';
+    overlay.style.display = 'block';
+    popup.style.display = 'block';
 
-    // Felder vorbelegen aus localStorage
-    var saved = localStorage.getItem(getTierStorageKey());
-    if (saved) {
-        try {
-            var data = JSON.parse(saved);
-            var artSelect = document.getElementById('tierArtSelect');
-            var nameInput = document.getElementById('tierNameInput');
-            var alterInput = document.getElementById('tierAlterInput');
-            if (artSelect) artSelect.value = data.art || '';
-            if (nameInput) nameInput.value = data.name || '';
-            if (alterInput) alterInput.value = data.alter || '';
-            if (detailsRow) detailsRow.style.display = data.art ? 'block' : 'none';
-        } catch(e) { /* ignore */ }
+    // Felder vorbelegen wenn edit
+    if (isEdit) {
+        var saved = localStorage.getItem(getTierStorageKey());
+        if (saved) {
+            try {
+                var data = JSON.parse(saved);
+                var artSelect = document.getElementById('tierArtSelect');
+                var nameInput = document.getElementById('tierNameInput');
+                var alterInput = document.getElementById('tierAlterInput');
+                var detailsRow = document.getElementById('tierDetailsRow');
+                if (artSelect) artSelect.value = data.art || '';
+                if (nameInput) nameInput.value = data.name || '';
+                if (alterInput) alterInput.value = data.alter || '';
+                if (detailsRow) detailsRow.style.display = data.art ? 'block' : 'none';
+            } catch(e) { /* ignore */ }
+        }
+    } else {
+        // Reset form
+        var artSelect = document.getElementById('tierArtSelect');
+        var nameInput = document.getElementById('tierNameInput');
+        var alterInput = document.getElementById('tierAlterInput');
+        var detailsRow = document.getElementById('tierDetailsRow');
+        if (artSelect) artSelect.value = '';
+        if (nameInput) nameInput.value = '';
+        if (alterInput) alterInput.value = '';
+        if (detailsRow) detailsRow.style.display = 'none';
     }
 }
-window.editTierInfo = editTierInfo;
+window.openTierPopup = openTierPopup;
+
+function closeTierPopup() {
+    var overlay = document.getElementById('tierPopupOverlay');
+    var popup = document.getElementById('tierPopup');
+    if (overlay) overlay.style.display = 'none';
+    if (popup) popup.style.display = 'none';
+}
+window.closeTierPopup = closeTierPopup;
 
 function removeTierInfo() {
     localStorage.removeItem(getTierStorageKey());
     var display = document.getElementById('tierDisplay');
-    var editSection = document.getElementById('tierEditSection');
     if (display) display.style.display = 'none';
-    if (editSection) editSection.style.display = 'block';
-    // Badge wieder anzeigen
-    var hintBadge = document.getElementById('kundenTiereBadge');
-    if (hintBadge) hintBadge.style.display = '';
+    // Hint-Zeile wieder anzeigen
+    var tierHintRow = document.getElementById('tierHintRow');
+    if (tierHintRow) tierHintRow.style.display = 'flex';
+    // Popup schließen
+    closeTierPopup();
     // Formular zurücksetzen
     var artSelect = document.getElementById('tierArtSelect');
     var detailsRow = document.getElementById('tierDetailsRow');
@@ -1043,6 +1063,53 @@ function removeTierInfo() {
     if (alterInput) alterInput.value = '';
 }
 window.removeTierInfo = removeTierInfo;
+
+// ========================================
+// ANGEBOT ERSTELLEN - KONTEXTMENÜ
+// ========================================
+
+function toggleAngebotMenu(event, btn) {
+    event.stopPropagation();
+    var wrapper = btn.closest('.angebot-dropdown-wrapper');
+    if (!wrapper) return;
+    var menu = wrapper.querySelector('.angebot-context-menu');
+    if (!menu) return;
+
+    // Alle anderen offenen Menüs schließen
+    document.querySelectorAll('.angebot-context-menu').forEach(function(m) {
+        if (m !== menu) m.style.display = 'none';
+    });
+
+    // Toggle
+    if (menu.style.display === 'none' || !menu.style.display) {
+        menu.style.display = 'block';
+        // Klick außerhalb schließt das Menü
+        setTimeout(function() {
+            document.addEventListener('click', closeAllAngebotMenus);
+        }, 0);
+    } else {
+        menu.style.display = 'none';
+    }
+}
+window.toggleAngebotMenu = toggleAngebotMenu;
+
+function closeAllAngebotMenus() {
+    document.querySelectorAll('.angebot-context-menu').forEach(function(m) {
+        m.style.display = 'none';
+    });
+    document.removeEventListener('click', closeAllAngebotMenus);
+}
+
+function angebotAction(typ) {
+    closeAllAngebotMenus();
+    var labels = {
+        pdf: 'PDF wird generiert...',
+        entwurf: 'Entwurf gespeichert.',
+        vergleich: 'Tarifvergleich wird gestartet...'
+    };
+    alert(labels[typ] || 'Aktion: ' + typ);
+}
+window.angebotAction = angebotAction;
 
 // ========================================
 // KUNDEN TAB NAVIGATION

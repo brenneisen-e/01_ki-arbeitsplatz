@@ -162,6 +162,29 @@ function updateDynamicDates() {
             }
         }
     }
+
+    // Letzte Aktion Zellen dynamisch befüllen (mit Jahreszahl)
+    var letzteAktionCells = document.querySelectorAll('.letzte-aktion');
+    letzteAktionCells.forEach(function(cell) {
+        var action = cell.getAttribute('data-action');
+        var daysAgo = parseInt(cell.getAttribute('data-days-ago'), 10);
+        if (action === null || isNaN(daysAgo)) return;
+
+        var actionDate = new Date(now);
+        actionDate.setDate(actionDate.getDate() - daysAgo);
+
+        var label;
+        if (daysAgo === 0) {
+            label = 'heute';
+        } else if (daysAgo === 1) {
+            label = 'gestern';
+        } else {
+            label = String(actionDate.getDate()).padStart(2, '0') + '.'
+                  + String(actionDate.getMonth() + 1).padStart(2, '0') + '.'
+                  + actionDate.getFullYear();
+        }
+        cell.textContent = action + ' (' + label + ')';
+    });
 }
 
 /**
@@ -183,6 +206,12 @@ function showAgenturTab(tabName) {
 
     if (tabButton) tabButton.classList.add('active');
     if (tabContent) tabContent.classList.add('active');
+
+    // Cockpit-KPIs (Gesamtbestand etc.) bei Potentiale-Tab ausblenden
+    var cockpitKpis = document.querySelector('.cockpit-kpis:not(#maklerKpis)');
+    if (cockpitKpis) {
+        cockpitKpis.style.display = (tabName === 'potential') ? 'none' : '';
+    }
 }
 
 /**

@@ -1521,6 +1521,36 @@
     box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
 
+.kpi-detail-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+.kpi-detail-icon.consent {
+    background: #ecfdf5;
+    color: #059669;
+}
+
+.kpi-detail-icon.potentiale {
+    background: #eff6ff;
+    color: #2563eb;
+}
+
+.kpi-detail-icon.praemien {
+    background: #fffbeb;
+    color: #d97706;
+}
+
+.kpi-detail-icon.conversion {
+    background: #f5f3ff;
+    color: #7c3aed;
+}
+
 .kpi-detail-card.highlight {
     border-top-color: #86BC25;
     background: linear-gradient(180deg, #f8fdf5 0%, white 100%);

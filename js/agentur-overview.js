@@ -820,21 +820,78 @@ function generateMockVertraege() {
 }
 
 function fillNeugeschaeftTable() {
-    var tb = document.getElementById('neugeschaeftTableBody');
-    if (!tb) return;
-    tb.innerHTML = mockNeugeschaeft.map(function(v, i) {
-        var statusClass = v.status === 'Policiert' ? 'active' : (v.status === 'Abgelehnt' ? 'storniert' : 'antrag');
-        return '<tr class="clickable-row" data-sparte="' + v.sparte + '" onclick="openVertragDetail(' + i + ',\'ng\')">' +
-            '<td>' + v.vertragsnr + '</td>' +
-            '<td><strong>' + v.kunde + '</strong></td>' +
-            '<td>' + v.kundenId + '</td>' +
-            '<td><span class="sparten-badge ' + v.sparte + '">' + v.sparteLabel + '</span></td>' +
-            '<td>' + v.produkt + '</td>' +
-            '<td><strong>' + fmtEuro(v.jahresbeitrag) + '</strong></td>' +
-            '<td><span class="status-badge ' + statusClass + '">' + v.status + '</span></td>' +
-            '<td>' + v.antragsdatumStr + '</td></tr>';
+    var container = document.getElementById('ngKundenAccordion');
+    if (!container) return;
+
+    // Nach Kunden gruppieren
+    var kundenMap = {};
+    var kundenOrder = [];
+    mockNeugeschaeft.forEach(function(v, i) {
+        v._ngIdx = i;
+        if (!kundenMap[v.kundenId]) {
+            kundenMap[v.kundenId] = { kunde: v.kunde, kundenId: v.kundenId, vertraege: [] };
+            kundenOrder.push(v.kundenId);
+        }
+        kundenMap[v.kundenId].vertraege.push(v);
+    });
+
+    container.innerHTML = kundenOrder.map(function(kid) {
+        var g = kundenMap[kid];
+        var anzahl = g.vertraege.length;
+        var gesamtBeitrag = g.vertraege.reduce(function(s, v) { return s + v.jahresbeitrag; }, 0);
+        var sparten = g.vertraege.map(function(v) {
+            return '<span class="sparten-badge ' + v.sparte + '">' + v.sparteLabel + '</span>';
+        }).join(' ');
+
+        var rows = g.vertraege.map(function(v) {
+            var statusClass = v.status === 'Policiert' ? 'active' : (v.status === 'Abgelehnt' ? 'storniert' : 'antrag');
+            return '<div class="ng-vertrag-row" onclick="openVertragDetail(' + v._ngIdx + ',\'ng\')">' +
+                '<div class="ng-vertrag-cell ng-vertrag-nr">' + v.vertragsnr + '</div>' +
+                '<div class="ng-vertrag-cell ng-vertrag-produkt"><span class="sparten-badge ' + v.sparte + '">' + v.sparteLabel + '</span> ' + v.produkt + '</div>' +
+                '<div class="ng-vertrag-cell ng-vertrag-versicherer">' + v.versicherer + '</div>' +
+                '<div class="ng-vertrag-cell ng-vertrag-beitrag"><strong>' + fmtEuro(v.jahresbeitrag) + '</strong><span class="ng-zahlweise">' + v.zahlweise + '</span></div>' +
+                '<div class="ng-vertrag-cell ng-vertrag-status"><span class="status-badge ' + statusClass + '">' + v.status + '</span></div>' +
+                '<div class="ng-vertrag-cell ng-vertrag-datum">' + v.antragsdatumStr + '</div>' +
+                '</div>';
+        }).join('');
+
+        return '<div class="ng-kunde-group" data-kundenid="' + kid + '">' +
+            '<div class="ng-kunde-header" onclick="toggleNgKunde(\'' + kid + '\')">' +
+                '<div class="ng-kunde-header-left">' +
+                    '<svg class="ng-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="6 9 12 15 18 9"/></svg>' +
+                    '<div class="ng-kunde-avatar">' + g.kunde.charAt(0) + '</div>' +
+                    '<div class="ng-kunde-info">' +
+                        '<span class="ng-kunde-name">' + g.kunde + '</span>' +
+                        '<span class="ng-kunde-id">' + kid + '</span>' +
+                    '</div>' +
+                '</div>' +
+                '<div class="ng-kunde-header-right">' +
+                    '<span class="ng-kunde-sparten">' + sparten + '</span>' +
+                    '<span class="ng-kunde-anzahl">' + anzahl + ' Vertrag' + (anzahl > 1 ? 'e' : '') + '</span>' +
+                    '<span class="ng-kunde-beitrag">' + fmtEuro(gesamtBeitrag) + '</span>' +
+                '</div>' +
+            '</div>' +
+            '<div class="ng-kunde-body" id="ngBody_' + kid + '">' +
+                '<div class="ng-vertrag-header-row">' +
+                    '<div class="ng-vertrag-cell">Vertragsnr.</div>' +
+                    '<div class="ng-vertrag-cell">Sparte / Produkt</div>' +
+                    '<div class="ng-vertrag-cell">Versicherer</div>' +
+                    '<div class="ng-vertrag-cell">Jahresbeitrag</div>' +
+                    '<div class="ng-vertrag-cell">Status</div>' +
+                    '<div class="ng-vertrag-cell">Antragsdatum</div>' +
+                '</div>' +
+                rows +
+            '</div>' +
+        '</div>';
     }).join('');
 }
+
+function toggleNgKunde(kundenId) {
+    var group = document.querySelector('.ng-kunde-group[data-kundenid="' + kundenId + '"]');
+    if (!group) return;
+    group.classList.toggle('open');
+}
+window.toggleNgKunde = toggleNgKunde;
 
 function fillBestandTable() {
     var tb = document.getElementById('bestandTableBody');
@@ -876,11 +933,24 @@ function filterVertraegeSparte(tabName, sparte) {
     section.querySelectorAll('.fida-filter-btn').forEach(function(b) { b.classList.remove('active'); });
     var clicked = section.querySelector('.fida-filter-btn[data-filter="' + sparte + '"]');
     if (clicked) clicked.classList.add('active');
-    var rows = section.querySelectorAll('tbody tr');
-    rows.forEach(function(row) {
-        if (sparte === 'alle') { row.style.display = ''; }
-        else { row.style.display = row.getAttribute('data-sparte') === sparte ? '' : 'none'; }
-    });
+
+    if (tabName === 'neugeschaeft') {
+        // Accordion: Kunden-Gruppen filtern
+        section.querySelectorAll('.ng-kunde-group').forEach(function(group) {
+            if (sparte === 'alle') { group.style.display = ''; return; }
+            var hasSparte = false;
+            group.querySelectorAll('.sparten-badge').forEach(function(b) {
+                if (b.classList.contains(sparte)) hasSparte = true;
+            });
+            group.style.display = hasSparte ? '' : 'none';
+        });
+    } else {
+        var rows = section.querySelectorAll('tbody tr');
+        rows.forEach(function(row) {
+            if (sparte === 'alle') { row.style.display = ''; }
+            else { row.style.display = row.getAttribute('data-sparte') === sparte ? '' : 'none'; }
+        });
+    }
 }
 
 function filterStornoTyp(typ) {
@@ -902,10 +972,17 @@ function searchVertraege(tabName) {
     var input = section.querySelector('.vertrags-search input');
     if (!input) return;
     var q = input.value.toLowerCase();
-    var rows = section.querySelectorAll('tbody tr');
-    rows.forEach(function(row) {
-        row.style.display = row.textContent.toLowerCase().indexOf(q) >= 0 ? '' : 'none';
-    });
+
+    if (tabName === 'neugeschaeft') {
+        section.querySelectorAll('.ng-kunde-group').forEach(function(group) {
+            group.style.display = group.textContent.toLowerCase().indexOf(q) >= 0 ? '' : 'none';
+        });
+    } else {
+        var rows = section.querySelectorAll('tbody tr');
+        rows.forEach(function(row) {
+            row.style.display = row.textContent.toLowerCase().indexOf(q) >= 0 ? '' : 'none';
+        });
+    }
 }
 
 // Bestand Zeitraum-Filter

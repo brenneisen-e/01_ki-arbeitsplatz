@@ -816,7 +816,7 @@
                 </div>
                 <div class="cockpit-kpi-card makler-kpi-card" style="display:flex;">
                     <div class="cockpit-kpi-icon courtage">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 5a8 8 0 00-12 7 8 8 0 0012 7"/><line x1="4" y1="10" x2="16" y2="10"/><line x1="4" y1="14" x2="16" y2="14"/></svg>
                     </div>
                     <div class="cockpit-kpi-content">
                         <div class="cockpit-kpi-value">7,2 Mio. &euro;</div>
@@ -2013,23 +2013,7 @@
                                 <button class="fida-filter-btn" data-filter="kfz" onclick="filterVertraegeSparte('neugeschaeft','kfz')">Kfz</button>
                             </div>
                         </div>
-                        <div class="table-responsive">
-                            <table class="fida-cases-table vertrags-table">
-                                <thead>
-                                    <tr>
-                                        <th>Vertragsnr.</th>
-                                        <th>Kunde</th>
-                                        <th>Kunden-ID</th>
-                                        <th>Sparte</th>
-                                        <th>Produkt</th>
-                                        <th>Jahresbeitrag</th>
-                                        <th>Status</th>
-                                        <th>Antragsdatum</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="neugeschaeftTableBody"></tbody>
-                            </table>
-                        </div>
+                        <div class="ng-kunden-accordion" id="ngKundenAccordion"></div>
                     </div>
                 </div>
 
@@ -2214,8 +2198,9 @@
                     <div class="provision-simulation-section" id="provisionSimulation">
                         <div class="provision-simulation-header">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22">
-                                <line x1="12" y1="1" x2="12" y2="23"></line>
-                                <path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"></path>
+                                <path d="M18 5a8 8 0 00-12 7 8 8 0 0012 7"></path>
+                                <line x1="4" y1="10" x2="16" y2="10"></line>
+                                <line x1="4" y1="14" x2="16" y2="14"></line>
                             </svg>
                             <h3>Provisionsmodell-Simulation</h3>
                             <span class="header-badge">AlphaProtect vs BetaCare</span>
@@ -2496,8 +2481,9 @@
                                 <div class="company-kpi-card cost">
                                     <div class="company-kpi-icon">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
-                                            <line x1="12" y1="1" x2="12" y2="23"></line>
-                                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                                            <path d="M18 5a8 8 0 00-12 7 8 8 0 0012 7"></path>
+                                            <line x1="4" y1="10" x2="16" y2="10"></line>
+                                            <line x1="4" y1="14" x2="16" y2="14"></line>
                                         </svg>
                                     </div>
                                     <div class="company-kpi-content">
@@ -2509,8 +2495,9 @@
                                 <div class="company-kpi-card cost">
                                     <div class="company-kpi-icon">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
-                                            <line x1="12" y1="1" x2="12" y2="23"></line>
-                                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                                            <path d="M18 5a8 8 0 00-12 7 8 8 0 0012 7"></path>
+                                            <line x1="4" y1="10" x2="16" y2="10"></line>
+                                            <line x1="4" y1="14" x2="16" y2="14"></line>
                                         </svg>
                                     </div>
                                     <div class="company-kpi-content">
@@ -2806,8 +2793,9 @@
                         <div class="kpi-detail-card">
                             <div class="kpi-detail-icon praemien">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22">
-                                    <line x1="12" y1="1" x2="12" y2="23"></line>
-                                    <path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"></path>
+                                    <path d="M18 5a8 8 0 00-12 7 8 8 0 0012 7"></path>
+                                    <line x1="4" y1="10" x2="16" y2="10"></line>
+                                    <line x1="4" y1="14" x2="16" y2="14"></line>
                                 </svg>
                             </div>
                             <div class="kpi-detail-header">Geschätztes Prämienvolumen</div>
@@ -5177,8 +5165,9 @@
                         <div class="kunden-card-header">
                             <h2>
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
-                                    <line x1="12" y1="1" x2="12" y2="23"></line>
-                                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                                    <path d="M18 5a8 8 0 00-12 7 8 8 0 0012 7"></path>
+                                    <line x1="4" y1="10" x2="16" y2="10"></line>
+                                    <line x1="4" y1="14" x2="16" y2="14"></line>
                                 </svg>
                                 Monatliche Liquidität
                             </h2>
@@ -5243,7 +5232,7 @@
                             <div class="liquiditaet-row ergebnis">
                                 <div class="liquiditaet-label bold">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
-                                        <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                                        <path d="M18 5a8 8 0 0 0-12 7 8 8 0 0 0 12 7"></path><line x1="4" y1="10" x2="16" y2="10"></line><line x1="4" y1="14" x2="16" y2="14"></line>
                                     </svg>
                                     = Freies Einkommen
                                 </div>

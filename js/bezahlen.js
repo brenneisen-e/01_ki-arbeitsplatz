@@ -11,48 +11,128 @@ var bezahlenIcons = {
     freizeit: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>'
 };
 
-// Pastel-Farben für den Donut
-var bezahlenData = [
-    { name: 'Wohnen', amount: 1390, color: '#93b8e8', icon: bezahlenIcons.wohnen, items: [
-        { name: 'Miete Wohnung', amount: 1200, datum: '01.11.2025', badge: 'versichert' },
-        { name: 'Nebenkosten', amount: 120, datum: '01.11.2025' },
-        { name: 'Strom/Gas EnBW', amount: 70, datum: '03.11.2025' }
-    ]},
-    { name: 'Versicherungen', amount: 520, color: '#7ecba1', icon: bezahlenIcons.versicherungen, items: [
-        { name: 'Berufsunf\u00E4higkeit (ERGO)', amount: 89, datum: '01.11.2025', badge: 'bekannt', vertragName: 'BU-Versicherung' },
-        { name: 'Wohngeb\u00E4ude (VHV)', amount: 38, datum: '01.11.2025', badge: 'bekannt', vertragName: 'Wohngeb\u00E4udeversicherung' },
-        { name: 'Kfz-Versicherung (Allianz)', amount: 60, datum: '01.11.2025', badge: 'unbekannt' },
-        { name: 'Private Haftpflicht', amount: 12, datum: '01.11.2025', badge: 'bekannt', vertragName: 'Privathaftpflicht' },
-        { name: 'Rechtsschutz', amount: 25, datum: '01.11.2025', badge: 'unbekannt' },
-        { name: 'Krankenversicherung', amount: 296, datum: '01.11.2025', badge: 'bekannt', vertragName: 'Krankenversicherung' }
-    ]},
-    { name: 'Kredit & Finanzierung', amount: 330, color: '#b8a9e2', icon: bezahlenIcons.kredit, items: [
-        { name: 'Hypothek Sparkasse', amount: 330, datum: '05.11.2025', badge: 'luecke' }
-    ]},
-    { name: 'Lebensmittel & Alltag', amount: 418, color: '#f0c78a', icon: bezahlenIcons.lebensmittel, items: [
-        { name: 'REWE Supermarkt', amount: 145, datum: '08.11.2025' },
-        { name: 'EDEKA', amount: 95, datum: '15.11.2025' },
-        { name: 'dm Drogerie', amount: 35, datum: '10.11.2025' },
-        { name: 'Fressnapf Tiernahrung', amount: 45, datum: '12.11.2025', badge: 'tier-hint', insight: 'Haustier erkannt \u2013 Versicherung pr\u00FCfen', tierRelevant: true },
-        { name: 'Fressnapf Online', amount: 38, datum: '19.11.2025', badge: 'tier-marker', tierRelevant: true },
-        { name: 'Fressnapf Tiernahrung', amount: 32, datum: '25.10.2025', badge: 'tier-marker', tierRelevant: true },
-        { name: 'Fressnapf Filiale', amount: 28, datum: '03.10.2025', badge: 'tier-marker', tierRelevant: true }
-    ]},
-    { name: 'Mobilit\u00E4t', amount: 130, color: '#f0a0a0', icon: bezahlenIcons.mobilitaet, items: [
-        { name: 'ARAL Tankstelle', amount: 85, datum: '06.11.2025' },
-        { name: 'ADAC Mitgliedschaft', amount: 30, datum: '01.11.2025' },
-        { name: 'Parkhaus Innenstadt', amount: 15, datum: '09.11.2025' }
-    ]},
-    { name: 'Freizeit & Hobbies', amount: 200, color: '#8fd4e6', icon: bezahlenIcons.freizeit, items: [
-        { name: 'Restaurant / Lieferdienst', amount: 80, datum: '11.11.2025' },
-        { name: 'Netflix / Spotify', amount: 30, datum: '01.11.2025' },
-        { name: 'FitX Fitness', amount: 40, datum: '01.11.2025' },
-        { name: 'Skydive Academy Stuttgart', amount: 25, datum: '14.11.2025', badge: 'insight', insight: 'Risikosport \u2013 Unfallvers. pr\u00FCfen!' },
-        { name: 'Bungee Events GmbH', amount: 25, datum: '22.10.2025', badge: 'insight', insight: 'Extremsport \u2013 Risikopr\u00FCfung BU?' }
-    ]}
-];
+// Hilfsfunktion: Datum formatieren
+function bezFmtDatum(d) {
+    return String(d.getDate()).padStart(2, '0') + '.' + String(d.getMonth() + 1).padStart(2, '0') + '.' + d.getFullYear();
+}
+
+// Dynamische Daten generieren - alle Daten relativ zum aktuellen Monat
+function generateBezahlenData() {
+    var now = new Date();
+    // Vormonat als Hauptmonat (aktueller Abrechnungsmonat)
+    var vm = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+    var vvm = new Date(now.getFullYear(), now.getMonth() - 2, 1); // Vor-Vormonat
+    var vvvm = new Date(now.getFullYear(), now.getMonth() - 3, 1); // Vor-Vor-Vormonat
+
+    // Hilfsfunktion: Tag im Vormonat
+    function vmTag(tag) { return bezFmtDatum(new Date(vm.getFullYear(), vm.getMonth(), tag)); }
+    // Hilfsfunktion: Tag im Vor-Vormonat
+    function vvmTag(tag) { return bezFmtDatum(new Date(vvm.getFullYear(), vvm.getMonth(), tag)); }
+    // Hilfsfunktion: Tag im Vor-Vor-Vormonat
+    function vvvmTag(tag) { return bezFmtDatum(new Date(vvvm.getFullYear(), vvvm.getMonth(), tag)); }
+
+    return [
+        { name: 'Wohnen', amount: 1390, color: '#93b8e8', icon: bezahlenIcons.wohnen, items: [
+            { name: 'Miete Wohnung', amount: 1200, datum: vmTag(1), badge: 'versichert', recurring: true, recurringLabel: 'monatlich', history: [
+                { datum: vmTag(1), amount: 1200 },
+                { datum: vvmTag(1), amount: 1200 },
+                { datum: vvvmTag(1), amount: 1200 }
+            ]},
+            { name: 'Nebenkosten', amount: 120, datum: vmTag(1), recurring: true, recurringLabel: 'monatlich', history: [
+                { datum: vmTag(1), amount: 120 },
+                { datum: vvmTag(1), amount: 120 },
+                { datum: vvvmTag(1), amount: 120 }
+            ]},
+            { name: 'Strom/Gas EnBW', amount: 70, datum: vmTag(3), recurring: true, recurringLabel: 'monatlich', history: [
+                { datum: vmTag(3), amount: 70 },
+                { datum: vvmTag(3), amount: 68 },
+                { datum: vvvmTag(3), amount: 72 }
+            ]}
+        ]},
+        { name: 'Versicherungen', amount: 520, color: '#7ecba1', icon: bezahlenIcons.versicherungen, items: [
+            { name: 'Berufsunf\u00E4higkeit (ERGO)', amount: 89, datum: vmTag(1), badge: 'bekannt', vertragName: 'BU-Versicherung', recurring: true, recurringLabel: 'monatlich', history: [
+                { datum: vmTag(1), amount: 89 },
+                { datum: vvmTag(1), amount: 89 },
+                { datum: vvvmTag(1), amount: 89 }
+            ]},
+            { name: 'Wohngeb\u00E4ude (VHV)', amount: 38, datum: vmTag(1), badge: 'bekannt', vertragName: 'Wohngeb\u00E4udeversicherung', recurring: true, recurringLabel: 'monatlich', history: [
+                { datum: vmTag(1), amount: 38 },
+                { datum: vvmTag(1), amount: 38 },
+                { datum: vvvmTag(1), amount: 38 }
+            ]},
+            { name: 'Kfz-Versicherung (Allianz)', amount: 60, datum: vmTag(1), badge: 'unbekannt', recurring: true, recurringLabel: 'monatlich', history: [
+                { datum: vmTag(1), amount: 60 },
+                { datum: vvmTag(1), amount: 60 },
+                { datum: vvvmTag(1), amount: 60 }
+            ]},
+            { name: 'Private Haftpflicht', amount: 12, datum: vmTag(1), badge: 'bekannt', vertragName: 'Privathaftpflicht', recurring: true, recurringLabel: 'monatlich', history: [
+                { datum: vmTag(1), amount: 12 },
+                { datum: vvmTag(1), amount: 12 },
+                { datum: vvvmTag(1), amount: 12 }
+            ]},
+            { name: 'Rechtsschutz', amount: 25, datum: vmTag(1), badge: 'unbekannt', recurring: true, recurringLabel: 'monatlich', history: [
+                { datum: vmTag(1), amount: 25 },
+                { datum: vvmTag(1), amount: 25 },
+                { datum: vvvmTag(1), amount: 25 }
+            ]},
+            { name: 'Krankenversicherung', amount: 296, datum: vmTag(1), badge: 'bekannt', vertragName: 'Krankenversicherung', recurring: true, recurringLabel: 'monatlich', history: [
+                { datum: vmTag(1), amount: 296 },
+                { datum: vvmTag(1), amount: 296 },
+                { datum: vvvmTag(1), amount: 296 }
+            ]}
+        ]},
+        { name: 'Kredit & Finanzierung', amount: 330, color: '#b8a9e2', icon: bezahlenIcons.kredit, items: [
+            { name: 'Hypothek Sparkasse', amount: 330, datum: vmTag(5), badge: 'luecke', recurring: true, recurringLabel: 'monatlich', history: [
+                { datum: vmTag(5), amount: 330 },
+                { datum: vvmTag(5), amount: 330 },
+                { datum: vvvmTag(5), amount: 330 }
+            ]}
+        ]},
+        { name: 'Lebensmittel & Alltag', amount: 418, color: '#f0c78a', icon: bezahlenIcons.lebensmittel, items: [
+            { name: 'REWE Supermarkt', amount: 145, datum: vmTag(8) },
+            { name: 'EDEKA', amount: 95, datum: vmTag(15) },
+            { name: 'dm Drogerie', amount: 35, datum: vmTag(10) },
+            { name: 'Fressnapf Tiernahrung', amount: 45, datum: vmTag(12), badge: 'tier-hint', insight: 'Haustier erkannt \u2013 Versicherung pr\u00FCfen', tierRelevant: true, recurring: true, recurringLabel: 'monatlich', history: [
+                { datum: vmTag(12), amount: 45 },
+                { datum: vvmTag(25), amount: 32 },
+                { datum: vvvmTag(3), amount: 28 }
+            ]},
+            { name: 'Fressnapf Online', amount: 38, datum: vmTag(19), badge: 'tier-marker', tierRelevant: true },
+            { name: 'Fressnapf Tiernahrung', amount: 32, datum: vvmTag(25), badge: 'tier-marker', tierRelevant: true },
+            { name: 'Fressnapf Filiale', amount: 28, datum: vvvmTag(3), badge: 'tier-marker', tierRelevant: true }
+        ]},
+        { name: 'Mobilit\u00E4t', amount: 130, color: '#f0a0a0', icon: bezahlenIcons.mobilitaet, items: [
+            { name: 'ARAL Tankstelle', amount: 85, datum: vmTag(6) },
+            { name: 'ADAC Mitgliedschaft', amount: 30, datum: vmTag(1), recurring: true, recurringLabel: 'monatlich', history: [
+                { datum: vmTag(1), amount: 30 },
+                { datum: vvmTag(1), amount: 30 },
+                { datum: vvvmTag(1), amount: 30 }
+            ]},
+            { name: 'Parkhaus Innenstadt', amount: 15, datum: vmTag(9) }
+        ]},
+        { name: 'Freizeit & Hobbies', amount: 200, color: '#8fd4e6', icon: bezahlenIcons.freizeit, items: [
+            { name: 'Restaurant / Lieferdienst', amount: 80, datum: vmTag(11) },
+            { name: 'Netflix / Spotify', amount: 30, datum: vmTag(1), recurring: true, recurringLabel: 'monatlich', history: [
+                { datum: vmTag(1), amount: 30 },
+                { datum: vvmTag(1), amount: 30 },
+                { datum: vvvmTag(1), amount: 30 }
+            ]},
+            { name: 'FitX Fitness', amount: 40, datum: vmTag(1), recurring: true, recurringLabel: 'monatlich', history: [
+                { datum: vmTag(1), amount: 40 },
+                { datum: vvmTag(1), amount: 40 },
+                { datum: vvvmTag(1), amount: 40 }
+            ]},
+            { name: 'Skydive Academy Stuttgart', amount: 25, datum: vmTag(14), badge: 'insight', insight: 'Risikosport \u2013 Unfallvers. pr\u00FCfen!' },
+            { name: 'Bungee Events GmbH', amount: 25, datum: vvmTag(22), badge: 'insight', insight: 'Extremsport \u2013 Risikopr\u00FCfung BU?' }
+        ]}
+    ];
+}
+
+// Pastel-Farben für den Donut - dynamisch generiert
+var bezahlenData = generateBezahlenData();
 
 function renderBezahlenContent() {
+    bezahlenData = generateBezahlenData();
     var container = document.getElementById('bezahlenContent');
     if (!container) return;
     var total = bezahlenData.reduce(function(s, c) { return s + c.amount; }, 0);
@@ -87,9 +167,9 @@ function buildDonutSvg(total, svgSize, strokeW) {
         '<text x="'+cx+'" y="'+(cy+12)+'" text-anchor="middle" font-size="'+(svgSize>120?10:9)+'" fill="#94a3b8">/Monat</text></svg>';
 }
 
-// Einzelne Transaktion HTML
+// Einzelne Transaktion HTML - mit Recurring-Cluster-Support
 function buildTxItems(cat) {
-    return cat.items.map(function(tx) {
+    return cat.items.map(function(tx, txIdx) {
         var badge = '';
         if (tx.badge === 'bekannt') {
             badge = '<span class="bezahlen-tx-badge bekannt" onclick="event.stopPropagation(); navigateToVertrag(\'' + (tx.vertragName || tx.name).replace(/'/g, "\\'") + '\')" title="In Betreuten Vertr\u00E4gen bekannt \u2013 Klicken zum Anzeigen">bekannt</span>';
@@ -102,10 +182,50 @@ function buildTxItems(cat) {
         if (tx.badge === 'insight') badge = '<span class="bezahlen-tx-badge insight">\u26A0 ' + (tx.insight || '') + '</span>';
         if (tx.badge === 'tier-hint') badge = '<span class="bezahlen-tx-badge tier-hint"><svg viewBox="0 0 24 24" fill="currentColor" width="12" height="12"><path d="M12 22c-4-3-8-6.58-8-10.5a4 4 0 018 0 4 4 0 018 0c0 3.92-4 7.5-8 10.5z"/><path d="M10 5.17C10 3.78 8.88 2.5 7.5 2.5S5 3.78 5 5.17c0 1.39 2.5 4.33 2.5 4.33S10 6.56 10 5.17z"/><path d="M19 5.17C19 3.78 17.88 2.5 16.5 2.5S14 3.78 14 5.17c0 1.39 2.5 4.33 2.5 4.33S19 6.56 19 5.17z"/></svg> ' + (tx.insight || '') + '</span>';
         if (tx.badge === 'tier-marker') badge = '<span class="bezahlen-tx-badge tier-marker"><svg viewBox="0 0 24 24" fill="currentColor" width="11" height="11"><path d="M12 22c-4-3-8-6.58-8-10.5a4 4 0 018 0 4 4 0 018 0c0 3.92-4 7.5-8 10.5z"/><path d="M10 5.17C10 3.78 8.88 2.5 7.5 2.5S5 3.78 5 5.17c0 1.39 2.5 4.33 2.5 4.33S10 6.56 10 5.17z"/><path d="M19 5.17C19 3.78 17.88 2.5 16.5 2.5S14 3.78 14 5.17c0 1.39 2.5 4.33 2.5 4.33S19 6.56 19 5.17z"/></svg> Tierbedarf</span>';
+
         var datum = tx.datum ? '<span class="bezahlen-tx-datum">' + tx.datum + '</span>' : '';
-        return '<div class="bezahlen-tx-item"><span class="bezahlen-tx-name">' + tx.name + datum + '</span><span class="bezahlen-tx-amount">\u20AC' + tx.amount + badge + '</span></div>';
+
+        // Recurring-Cluster: zeige Badge + aufklappbare Historie
+        var recurringBadge = '';
+        var recurringDetail = '';
+        if (tx.recurring && tx.history && tx.history.length > 1) {
+            var clusterId = cat.name.replace(/\s/g, '_') + '_' + txIdx;
+            recurringBadge = '<span class="bezahlen-recurring-badge" onclick="event.stopPropagation(); toggleRecurringCluster(\'' + clusterId + '\')" title="Wiederkehrende Zahlung erkannt">' +
+                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg> ' +
+                tx.recurringLabel + '</span>';
+            recurringDetail = '<div class="bezahlen-recurring-detail" id="recurringDetail_' + clusterId + '">' +
+                '<div class="recurring-detail-header">' +
+                    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg> ' +
+                    'Erkannt als <strong>' + tx.recurringLabel + '</strong> \u2013 letzte ' + tx.history.length + ' Abbuchungen:' +
+                '</div>' +
+                tx.history.map(function(h) {
+                    return '<div class="recurring-history-item">' +
+                        '<span class="recurring-history-datum">' + h.datum + '</span>' +
+                        '<span class="recurring-history-amount">\u20AC' + h.amount + '</span>' +
+                    '</div>';
+                }).join('') +
+            '</div>';
+        }
+
+        return '<div class="bezahlen-tx-item' + (tx.recurring ? ' has-recurring' : '') + '">' +
+            '<span class="bezahlen-tx-name">' + tx.name + datum + recurringBadge + '</span>' +
+            '<span class="bezahlen-tx-amount">\u20AC' + tx.amount + badge + '</span>' +
+            '</div>' + recurringDetail;
     }).join('');
 }
+
+// Toggle Recurring-Cluster
+function toggleRecurringCluster(clusterId) {
+    var detail = document.getElementById('recurringDetail_' + clusterId);
+    if (detail) {
+        if (detail.classList.contains('open')) {
+            detail.classList.remove('open');
+        } else {
+            detail.classList.add('open');
+        }
+    }
+}
+window.toggleRecurringCluster = toggleRecurringCluster;
 
 // Navigation zu Betreute Verträge mit Highlight
 function navigateToVertrag(vertragName) {

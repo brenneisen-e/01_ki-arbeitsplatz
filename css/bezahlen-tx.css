@@ -263,6 +263,86 @@
     display: flex;
     align-items: center;
     gap: 6px;
+    flex-wrap: wrap;
+}
+
+/* Recurring Payment Cluster */
+.bezahlen-recurring-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10px;
+    font-weight: 600;
+    color: #6366f1;
+    background: #eef2ff;
+    border: 1px solid #c7d2fe;
+    padding: 2px 8px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.bezahlen-recurring-badge:hover {
+    background: #e0e7ff;
+    border-color: #a5b4fc;
+    box-shadow: 0 1px 4px rgba(99, 102, 241, 0.15);
+}
+
+.bezahlen-recurring-badge svg {
+    flex-shrink: 0;
+}
+
+.bezahlen-recurring-detail {
+    display: none;
+    margin: 0 0 6px 0;
+    padding: 10px 14px;
+    background: #f8faff;
+    border: 1px solid #e0e7ff;
+    border-radius: 8px;
+    font-size: 13px;
+}
+
+.bezahlen-recurring-detail.open {
+    display: block;
+}
+
+.recurring-detail-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: #6366f1;
+    margin-bottom: 8px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #e0e7ff;
+}
+
+.recurring-detail-header svg {
+    flex-shrink: 0;
+    color: #6366f1;
+}
+
+.recurring-history-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 0;
+    font-size: 12px;
+    color: #475569;
+}
+
+.recurring-history-item + .recurring-history-item {
+    border-top: 1px solid #f1f5f9;
+}
+
+.recurring-history-datum {
+    color: #94a3b8;
+}
+
+.recurring-history-amount {
+    font-weight: 600;
+    color: #1e293b;
 }
 
 /* Donut Variant Sub-Switcher */

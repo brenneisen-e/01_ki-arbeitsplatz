@@ -231,10 +231,10 @@ function showAgenturTab(tabName) {
     if (tabButton) tabButton.classList.add('active');
     if (tabContent) tabContent.classList.add('active');
 
-    // Cockpit-KPIs (Gesamtbestand etc.) bei Potentiale-Tab ausblenden
+    // Cockpit-KPIs (Gesamtbestand etc.) nur in Übersicht anzeigen
     var cockpitKpis = document.querySelector('.cockpit-kpis:not(#maklerKpis)');
     if (cockpitKpis) {
-        cockpitKpis.style.display = (tabName === 'potential') ? 'none' : '';
+        cockpitKpis.style.display = (tabName === 'uebersicht') ? '' : 'none';
     }
 }
 

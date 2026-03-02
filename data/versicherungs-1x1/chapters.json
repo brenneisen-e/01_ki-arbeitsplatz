@@ -36,15 +36,20 @@
         "level1": [
           {
             "type": "paragraph",
-            "content": "Der deutsche Versicherungsmarkt gliedert sich in drei Hauptsegmente: <strong>Schaden-/Unfallversicherung (S/U)</strong>, <strong>Lebensversicherung (Leben)</strong> und <strong>Private Krankenversicherung (PKV)</strong>. Erstmals seit 1996<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">1</span><span class=\"v1x1-cite-tooltip\">GDV Jahrbuch 2024, S. 12</span></span> hat die S/U-Sparte 2024 die Lebensversicherung beim Beitragsvolumen überholt — ein struktureller Wendepunkt."
+            "content": "Der deutsche Versicherungsmarkt gliedert sich in drei Hauptsegmente: <strong>Schaden-/Unfallversicherung (S/U)</strong>, <strong>Lebensversicherung (Leben)</strong> und <strong>Private Krankenversicherung (PKV)</strong>. Erstmals seit 1996<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">1</span><span class=\"v1x1-cite-tooltip\">GDV Jahrbuch 2024, S. 12</span></span> hat die S/U-Sparte 2024 die Lebensversicherung beim Beitragsvolumen überholt — ein struktureller Wendepunkt, der die veränderte Risikolandschaft mit steigenden Elementarschäden und Kfz-Kosten widerspiegelt."
           },
           {
             "type": "paragraph",
-            "content": "Die Branche zählt rund <strong>470 GDV-Mitgliedsunternehmen<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">2</span><span class=\"v1x1-cite-tooltip\">GDV Statistisches Taschenbuch 2024/2025</span></span></strong>, die etwa 97% des Marktes abdecken, sowie <strong>473.780 Erwerbstätige<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">3</span><span class=\"v1x1-cite-tooltip\">GDV Jahrbuch 2024, Kapitel Beschäftigung</span></span></strong> (davon 290.080 Angestellte und 183.700 selbstständige Vermittler). Insgesamt bestehen in Deutschland rund <strong>488 Millionen Versicherungsverträge<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">4</span><span class=\"v1x1-cite-tooltip\">GDV Statistisches Taschenbuch 2024/2025</span></span></strong>, und die Kapitalanlagen der Branche belaufen sich auf ca. <strong>€1,9 Billionen</strong>.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">5</span><span class=\"v1x1-cite-tooltip\">BaFin Jahresbericht 2024, Kapitalanlagen der Versicherungswirtschaft</span></span>"
+            "content": "Die Branche zählt rund <strong>470 GDV-Mitgliedsunternehmen</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">2</span><span class=\"v1x1-cite-tooltip\">GDV Statistisches Taschenbuch 2024/2025</span></span>, die etwa 97% des Marktes abdecken, sowie <strong>473.780 Erwerbstätige</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">3</span><span class=\"v1x1-cite-tooltip\">GDV Jahrbuch 2024, Kapitel Beschäftigung</span></span> (davon 290.080 Angestellte und 183.700 selbstständige Vermittler). Insgesamt bestehen in Deutschland rund <strong>500 Millionen Versicherungsverträge</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">4</span><span class=\"v1x1-cite-tooltip\">GDV Statistisches Taschenbuch 2024/2025</span></span>, und die Kapitalanlagen der Branche belaufen sich auf ca. <strong>€1,9 Billionen</strong>.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">5</span><span class=\"v1x1-cite-tooltip\">BaFin Jahresbericht 2024, Kapitalanlagen der Versicherungswirtschaft</span></span>"
+          },
+          {
+            "type": "paragraph",
+            "content": "Das Beitragsaufkommen hat sich in den vergangenen zwei Jahrzehnten von rund 160 Milliarden Euro (2005) auf <strong>254 Milliarden Euro (2025)</strong> gesteigert. Besonders dynamisch verliefen die Jahre 2024 und 2025 mit Wachstumsraten von 5,3 bzw. 6,6 Prozent, während das durchschnittliche nominale Wachstum im Zeitraum 2005–2020 bei lediglich rund 2% pro Jahr lag. Für 2026 prognostiziert der GDV ein moderateres Wachstum von 4,7% auf rund 266 Milliarden Euro.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">6</span><span class=\"v1x1-cite-tooltip\">GDV Jahresmedienkonferenz Februar 2026</span></span>",
+            "title": "Beitragseinnahmen auf Rekordniveau"
           },
           {
             "type": "table",
-            "title": "Beitragsvolumen nach Segmenten",
+            "title": "Beitragsvolumen nach Segmenten (Mrd. €)",
             "headers": [
               "Jahr",
               "Gesamt",
@@ -55,12 +60,28 @@
             ],
             "rows": [
               [
-                "2022",
+                "2020",
                 "€223 Mrd.",
+                "€98 Mrd.",
+                "€75 Mrd.",
+                "€46 Mrd.",
+                "—"
+              ],
+              [
+                "2021",
+                "€222 Mrd.",
+                "€96 Mrd.",
+                "€77 Mrd.",
+                "€46 Mrd.",
+                "-0,5%"
+              ],
+              [
+                "2022",
+                "€226 Mrd.",
                 "€97 Mrd.",
                 "€79 Mrd.",
                 "€47 Mrd.",
-                "+0,4%"
+                "+1,7%"
               ],
               [
                 "2023",
@@ -68,7 +89,7 @@
                 "€92 Mrd.",
                 "€86 Mrd.",
                 "€48 Mrd.",
-                "+1,4%"
+                "+0,1%"
               ],
               [
                 "2024",
@@ -90,60 +111,83 @@
             "sortable": true
           },
           {
+            "type": "paragraph",
+            "content": "Die Profitabilität der S/U-Versicherung unterliegt starken Schwankungen. Die <strong>Combined Ratio</strong> (Schaden-Kosten-Quote) lag 2024 bei <strong>96,1%</strong> und markierte damit die Rückkehr in die versicherungstechnische Gewinnzone.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">7</span><span class=\"v1x1-cite-tooltip\">GDV Jahresmedienkonferenz 2025</span></span> Die Kfz-Versicherung — mit 33,9 Mrd. € Beiträgen das volumenstärkste Einzelsegment — hatte 2023 mit einer CR von 111,3% den Tiefpunkt erreicht und erholte sich 2024 auf rund 106%. Für 2025 wird eine CR von etwa 97% prognostiziert, getrieben durch ein Beitragsplus von 13,4%.",
+            "title": "Profitabilität und Schadenquoten"
+          },
+          {
             "type": "table",
-            "caption": "Beitragseinnahmen der dt. Versicherungswirtschaft 2020–2025",
-            "columns": [
-              "Jahr",
-              "Gesamt (Mrd. €)",
-              "Veränderung"
+            "title": "Combined Ratios nach Sparten",
+            "headers": [
+              "Sparte",
+              "CR 2022",
+              "CR 2023",
+              "CR 2024"
             ],
             "rows": [
               [
-                "2020",
-                "223,3",
-                "—"
+                "Gesamt S/U",
+                "96,5%",
+                "98,8%",
+                "96,1%"
               ],
               [
-                "2021",
-                "222,2",
-                "−0,5 %"
+                "Kfz gesamt",
+                "102,4%",
+                "111,3%",
+                "~106%"
               ],
               [
-                "2022",
-                "225,9",
-                "+1,7 %"
+                "Wohngebäude",
+                "107,0%",
+                "103,3%",
+                "~99,6%"
               ],
               [
-                "2023",
-                "226,2",
-                "+0,1 %"
+                "Allg. Haftpflicht",
+                "~84%",
+                "~82%",
+                "stabil"
               ],
               [
-                "2024",
-                "237,9",
-                "+5,2 %"
+                "Unfallversicherung",
+                "73,8%",
+                "74,5%",
+                "75,3%"
               ],
               [
-                "2025",
-                "253,6",
-                "+6,6 %"
+                "Rechtsschutz",
+                "~88%",
+                "~90%",
+                "~91%"
               ]
-            ]
+            ],
+            "sortable": true
+          },
+          {
+            "type": "callout",
+            "variant": "info",
+            "content": "Die <strong>Combined Ratio</strong> (Schadenquote + Kostenquote) ist die zentrale Profitabilitätskennzahl in der S/U-Versicherung. Werte unter 100% bedeuten versicherungstechnischen Gewinn. Die Wohngebäudeversicherung war seit 2002 nur in vier Jahren profitabel."
+          },
+          {
+            "type": "paragraph",
+            "content": "Die Versicherungswirtschaft beschäftigte 2024 insgesamt <strong>480.200 Erwerbstätige</strong> — davon 298.480 Angestellte und 181.760 selbstständige Vermittler. Die Zahl der Auszubildenden stieg um +7,5% auf 11.400. Im Vermittlerregister waren zum 1. Januar 2025 noch <strong>181.761 Vermittler</strong> registriert — ein kontinuierlicher Rückgang (2009: über 260.000). Das Durchschnittsalter der AO-Vermittler liegt bei über 48 Jahren, bei Maklern sogar bei <strong>57,1 Jahren</strong> — ein massives Nachwuchsproblem.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">8</span><span class=\"v1x1-cite-tooltip\">GDV Jahrbuch 2024 / DIHK Vermittlerregister</span></span>",
+            "title": "Beschäftigung in der Branche"
           }
         ],
         "level2": [
           {
             "type": "paragraph",
-            "title": "Dynamik nach Segmenten",
-            "content": "Die <strong>Kfz-Versicherung</strong> war der wichtigste Wachstumstreiber im S/U-Bereich mit +13,4% Prämienwachstum<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">6</span><span class=\"v1x1-cite-tooltip\">GDV Marktausblick 2025, Schaden-/Unfallversicherung</span></span> in 2025 und einer Combined Ratio von <strong>96%</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">7</span><span class=\"v1x1-cite-tooltip\">Deloitte Insurance Monitor Q4/2024</span></span> — erstmals seit Jahren wieder profitabel nach einem Tiefpunkt von 111%+ in 2023<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">8</span><span class=\"v1x1-cite-tooltip\">BaFin Statistik Erstversicherungsunternehmen 2023</span></span>."
+            "content": "Die <strong>Kfz-Versicherung</strong> war der wichtigste Wachstumstreiber im S/U-Bereich mit +13,4% Prämienwachstum<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">9</span><span class=\"v1x1-cite-tooltip\">GDV Marktausblick 2025</span></span> in 2025 und einer Combined Ratio von <strong>96%</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">10</span><span class=\"v1x1-cite-tooltip\">Deloitte Insurance Monitor Q4/2024</span></span> — erstmals seit Jahren wieder profitabel. Der durchschnittliche Kfz-Schaden stieg von 2.400 Euro (2013) auf <strong>3.700 Euro</strong> (2023) — ein Plus von 54% in zehn Jahren, getrieben durch teurere Ersatzteile, höhere Stundenverrechnungssätze und komplexere Elektrofahrzeug-Reparaturen.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">11</span><span class=\"v1x1-cite-tooltip\">Assekurata Kfz-Marktanalyse 2024</span></span>",
+            "title": "Dynamik nach Segmenten"
           },
           {
             "type": "paragraph",
-            "content": "Die <strong>Lebensversicherung</strong> erholt sich langsam: Das Einmalbeitragsgeschäft wuchs 2025 um +24,2%, während laufende Beiträge stagnieren. Die Anhebung des <strong>Höchstrechnungszinses auf 1,0% ab Januar 2025</strong> — die erste Erhöhung seit über 30 Jahren — hat neue Impulse gesetzt."
+            "content": "Die <strong>Lebensversicherung</strong> erholt sich langsam: Das Einmalbeitragsgeschäft wuchs 2025 um +24,2%, während laufende Beiträge stagnieren. Die Anhebung des <strong>Höchstrechnungszinses auf 1,0% ab Januar 2025</strong> — die erste Erhöhung seit über 30 Jahren — hat neue Impulse gesetzt.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">12</span><span class=\"v1x1-cite-tooltip\">DAV/BMF</span></span> Die Zinszusatzreserve (ZZR) wird aufgelöst: auf ihrem Höchststand 2021 belief sie sich auf rund <strong>96 Milliarden Euro</strong>; 2024 flossen bei den 50 größten Lebensversicherern geschätzt 3,4 Mrd. € zurück. Die durchschnittliche laufende Verzinsung stieg auf etwa <strong>2,4–2,5%</strong> (2024)."
           },
           {
             "type": "paragraph",
-            "content": "Die PKV wuchs 2025 um +7,3%, getrieben durch steigende Gesundheitskosten und eine wachsende Pflegeversicherung (+10,5%)."
+            "content": "Die PKV wuchs 2025 um +7,3%, getrieben durch steigende Gesundheitskosten und eine wachsende Pflegeversicherung (+10,5%). Die Versicherungspflichtgrenze lag 2025 bei <strong>73.800 €</strong> Jahresbruttoeinkommen. Aktuell sind <strong>8,79 Mio. Personen</strong> vollversichert in der PKV, ein Wert der seit Jahren stabil bleibt.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">13</span><span class=\"v1x1-cite-tooltip\">PKV-Verband Zahlenbericht 2024</span></span>"
           },
           {
             "type": "callout",
@@ -152,8 +196,8 @@
           },
           {
             "type": "table",
-            "caption": "Vertragsbestand 2025 nach Sparten",
-            "columns": [
+            "title": "Vertragsbestand 2025 nach Sparten",
+            "headers": [
               "Sparte",
               "Verträge (Mio.)"
             ],
@@ -190,102 +234,178 @@
                 "Wohngebäude",
                 "19"
               ]
-            ]
+            ],
+            "sortable": true
           },
           {
             "type": "paragraph",
-            "content": "Die Versicherungswirtschaft beschäftigte 2024 insgesamt <strong>480.200 Erwerbstätige</strong> — davon 298.480 Angestellte und 181.760 selbstständige Vermittler. Im Innendienst stiegen die Beschäftigtenzahlen um +2,4%, der angestellte Außendienst wuchs erstmals seit Jahren leicht (+1,7%). Die Zahl der <strong>Auszubildenden stieg um +7,5%</strong> auf 11.400. Im Vermittlerregister waren zum 1. Januar 2025 noch <strong>181.761 Versicherungsvermittler</strong> registriert — ein kontinuierlicher Rückgang (2009: über 260.000). Das Durchschnittsalter der AO-Vermittler liegt bei über 48 Jahren, bei Maklern sogar bei <strong>57,1 Jahren</strong> — ein massives Nachwuchsproblem."
+            "content": "Die Versicherungswirtschaft beschäftigte 2024 insgesamt <strong>480.200 Erwerbstätige</strong> — davon 298.480 Angestellte und 181.760 selbstständige Vermittler. Im Innendienst stiegen die Beschäftigtenzahlen um +2,4%, der angestellte Außendienst wuchs erstmals seit Jahren leicht (+1,7%). Die Zahl der <strong>Auszubildenden stieg um +7,5%</strong> auf 11.400. Im Vermittlerregister waren zum 1. Januar 2025 noch <strong>181.761 Versicherungsvermittler</strong> registriert — ein kontinuierlicher Rückgang (2009: über 260.000)."
+          },
+          {
+            "type": "paragraph",
+            "content": "Die Konsolidierung schreitet voran: Von <strong>810 Versicherungsunternehmen</strong> (1980) sind noch rund <strong>490 unter BaFin-Aufsicht</strong>. Unter den 349 eigentlichen Versicherern befinden sich 79 Lebensversicherer, 43 Krankenversicherer, 199 S/U-Versicherer und 28 Rückversicherer. Die <strong>Fusion von Barmenia und Gothaer</strong> im Jahr 2024 war die größte Versichererfusion seit über zwei Jahrzehnten: 8,6 Mrd. € Beitragseinnahmen, 8 Mio. Kunden, 50 Mrd. € Kapitalanlagen.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">14</span><span class=\"v1x1-cite-tooltip\">Handelsblatt / GDV Statistik</span></span>",
+            "title": "Konsolidierung: Von 810 auf unter 500 Versicherer"
+          },
+          {
+            "type": "paragraph",
+            "content": "Der wachsende <strong>Run-off-Sektor</strong> für Lebensversicherungsbestände ist ein Spezifikum des deutschen Markts. Die drei aktiven Bestandsmanager — <strong>Viridium Gruppe</strong> (3,2 Mio. Verträge, 68 Mrd. € AuM), <strong>Athora Deutschland</strong> und die <strong>Frankfurter-Leben-Gruppe</strong> — haben Millionen von Policen übernommen. Im August 2025 wechselte Viridium selbst den Eigentümer: Ein Konsortium aus Allianz, BlackRock, T&D Holdings, Generali Financial Holdings und Hannover Rück übernahm das Unternehmen von Cinven.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">15</span><span class=\"v1x1-cite-tooltip\">Versicherungsmonitor / Versicherungsbote</span></span>",
+            "title": "Run-off als Strukturphänomen"
           }
         ],
         "level3": [
           {
             "type": "paragraph",
-            "title": "Internationale Einordnung",
-            "content": "Deutschland hält einen <strong>globalen Marktanteil von 3,4%</strong> (nach USA 44,9%, China 10,1%, UK 5,2%, Japan 5,0%, Frankreich 3,9%). Im Rückversicherungsmarkt liegt Deutschland mit <strong>19,7% Weltmarktanteil</strong> auf Platz 2 hinter den USA (24,5%)."
-          },
-          {
-            "type": "paragraph",
-            "content": "Sechs deutsche Versicherungsgruppen zählen zu den Top 25 in Europa: Allianz (€97,8 Mrd. Insurance Revenue), Talanx/HDI (€22,7 Mrd.), ERGO (€20,8 Mrd.), Debeka (€13,2 Mrd.), R+V (€12,2 Mrd.) und HUK-Coburg (~€10 Mrd.). Der IT-Aufwand der Branche erreichte 2023 mit <strong>€6,2 Mrd.</strong> einen Rekordwert."
+            "content": "Deutschland hält einen <strong>globalen Marktanteil von 3,4%</strong> (nach USA 45,5%, China 10,0%, UK 6,2%, Japan 4,3%, Frankreich 3,7%). Im Rückversicherungsmarkt liegt Deutschland mit <strong>19,7% Weltmarktanteil</strong> auf Platz 2 hinter den USA. Die Versicherungsdurchdringung (Prämien/BIP) beträgt rund <strong>5,5–6,0%</strong> und liegt damit unter dem OECD-Durchschnitt von 6,2%.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">16</span><span class=\"v1x1-cite-tooltip\">Swiss Re sigma No. 2/2025 via NAIC</span></span>",
+            "title": "Internationale Einordnung"
           },
           {
             "type": "table",
-            "title": "Globale Marktanteile Versicherung",
+            "title": "Top-10 Versicherungsmärkte weltweit 2024",
             "headers": [
+              "Rang",
               "Land",
-              "Marktanteil",
-              "Rang"
+              "Prämien (Mrd. USD)",
+              "Weltmarktanteil"
             ],
             "rows": [
               [
+                "1",
                 "USA",
-                "44,9%",
-                "1"
+                "3.585",
+                "45,5%"
               ],
               [
+                "2",
                 "China",
-                "10,1%",
-                "2"
+                "792",
+                "10,0%"
               ],
               [
-                "UK",
-                "5,2%",
-                "3"
+                "3",
+                "Vereinigtes Königreich",
+                "485",
+                "6,2%"
               ],
               [
+                "4",
                 "Japan",
-                "5,0%",
-                "4"
+                "339",
+                "4,3%"
               ],
               [
+                "5",
                 "Frankreich",
-                "3,9%",
-                "5"
+                "292",
+                "3,7%"
               ],
               [
+                "6",
                 "Deutschland",
-                "3,4%",
-                "6"
+                "266",
+                "3,4%"
+              ],
+              [
+                "7",
+                "Kanada",
+                "181",
+                "2,3%"
+              ],
+              [
+                "8",
+                "Italien",
+                "180",
+                "2,3%"
+              ],
+              [
+                "9",
+                "Südkorea",
+                "176",
+                "2,2%"
+              ],
+              [
+                "10",
+                "Indien",
+                "141",
+                "1,8%"
+              ]
+            ],
+            "sortable": true
+          },
+          {
+            "type": "paragraph",
+            "content": "Die <strong>Versicherungsdichte</strong> (Prämien pro Kopf) beträgt in Deutschland rund <strong>3.150 US-Dollar</strong> und liegt deutlich über dem Weltdurchschnitt von 943 USD, aber unter den Werten der USA (~10.700 USD), des UK (~7.200 USD) und der Schweiz (~7.100 USD). Langfristig verliert Westeuropa Marktanteile: In der letzten Dekade büßte die Region laut Allianz Global Insurance Report 6,7 Prozentpunkte Weltmarktanteil ein. Swiss Re prognostiziert, dass Indien den deutschen Markt bis circa 2032 überholen wird.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">17</span><span class=\"v1x1-cite-tooltip\">Swiss Re sigma / Allianz Global Insurance Report 2024</span></span>"
+          },
+          {
+            "type": "paragraph",
+            "content": "Die <strong>Solvenzquoten</strong> der Lebensversicherer haben sich durch die Zinswende dramatisch verbessert. Die durchschnittliche Basisquote (ohne Übergangsmaßnahmen) lag 2024 bei rund <strong>309%</strong>, bei einer Spannweite von 104% (Concordia Oeco) bis über 730% (LVM). Seit Mitte 2022 können erstmals alle Lebensversicherer auch ohne Übergangsmaßnahmen die 100%-Hürde reißen.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">18</span><span class=\"v1x1-cite-tooltip\">BaFin Fachartikel: Lebensversicherer – Wenn Zinsen steigen</span></span>",
+            "title": "Solvenzquoten und Zinswende"
+          },
+          {
+            "type": "table",
+            "title": "Höchstrechnungszins-Entwicklung",
+            "headers": [
+              "Zeitraum",
+              "Höchstrechnungszins"
+            ],
+            "rows": [
+              [
+                "07/1994 – 06/2000",
+                "4,00%"
+              ],
+              [
+                "07/2000 – 12/2003",
+                "3,25%"
+              ],
+              [
+                "01/2004 – 12/2006",
+                "2,75%"
+              ],
+              [
+                "01/2007 – 12/2011",
+                "2,25%"
+              ],
+              [
+                "01/2012 – 12/2014",
+                "1,75%"
+              ],
+              [
+                "01/2015 – 12/2016",
+                "1,25%"
+              ],
+              [
+                "01/2017 – 12/2021",
+                "0,90%"
+              ],
+              [
+                "01/2022 – 12/2024",
+                "0,25%"
+              ],
+              [
+                "ab 01/2025",
+                "1,00%"
               ]
             ],
             "sortable": false
           },
           {
-            "type": "table",
-            "caption": "Kapitalanlagen-Allokation der dt. Versicherungswirtschaft (1,889 Bio. €)",
-            "columns": [
-              "Assetklasse",
-              "Anteil"
-            ],
-            "rows": [
-              [
-                "Renten (inkl. über Fonds)",
-                "75,8 %"
-              ],
-              [
-                "Beteiligungen",
-                "12,2 %"
-              ],
-              [
-                "Aktien",
-                "5,1 %"
-              ],
-              [
-                "Immobilien",
-                "4,8 %"
-              ],
-              [
-                "Sonstige",
-                "2,1 %"
-              ]
-            ]
-          },
-          {
             "type": "paragraph",
-            "content": "Alternative Anlagen gewinnen an Bedeutung: <strong>112 Mrd. Euro</strong> in Infrastruktur und <strong>80 Mrd. Euro</strong> in Private Equity. Unter BaFin-Aufsicht standen im August 2025 noch <strong>349 Versicherungsunternehmen</strong>: 79 Lebensversicherer, 199 Schaden-/Unfallversicherer, 43 Krankenversicherer und 28 Rückversicherer. Hinzu kommen 121 Pensionskassen, 34 Pensionsfonds und 26 Sterbekassen. Die Konsolidierung ist dramatisch: Um 1980 gab es noch rund 810 VU unter Bundesaufsicht — der Rückgang beträgt damit über <strong>55%</strong>."
+            "content": "<strong>Elementarschäden und Klimawandel</strong> haben die Schadenlandschaft verändert. Das Ahrtal-Hochwasser 2021 mit versicherten Schäden von rund 8–9 Mrd. € war ein Wendepunkt. Seitdem liegen die jährlichen Naturgefahrenschäden auf erhöhtem Niveau: Sowohl 2023 als auch 2024 beliefen sich die versicherten Schäden auf jeweils <strong>5,7 Mrd. €</strong>. Nur <strong>57%</strong> der Wohngebäude sind gegen Elementargefahren versichert.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">19</span><span class=\"v1x1-cite-tooltip\">GDV Naturgefahrenstatistik 2024</span></span>",
+            "title": "Klimawandel und Elementarschäden"
           },
           {
             "type": "callout",
-            "content": "Die Combined Ratio der S/U-Versicherung verbesserte sich 2025 dramatisch auf <strong>91%</strong> (2024: 96,4%, 2023: ~101%). In der Kfz-Versicherung kehrte die Branche mit einer CR von <strong>96%</strong> erstmals seit Jahren in die Gewinnzone zurück (2024: 104%, 2023: 111%). Die Wohngebäudeversicherung erreichte 90% — nur das sechste profitable Jahr seit 2002. Treiber war das Ausbleiben größerer Naturkatastrophen."
+            "variant": "warning",
+            "content": "Der <strong>Koalitionsvertrag 2025</strong> (CDU/CSU und SPD) sieht erstmals die Einführung einer <strong>Pflichtversicherung gegen Elementarschäden</strong> für Wohngebäude vor, einschließlich einer staatlichen Rückversicherung für rund 1% der Gebäude in hochexponierten Lagen."
+          },
+          {
+            "type": "paragraph",
+            "content": "Die <strong>Dunkelverarbeitungsquote</strong> — der Anteil vollautomatisch abgewickelter Geschäftsvorfälle — stieg in der S/U von 23% (2019) auf <strong>33,5%</strong> (2023), in der Krankenversicherung von 18,5 auf <strong>32,5%</strong>. Der digitale Vertrieb wächst stetig: <strong>19,1%</strong> aller Privatversicherungen wurden 2023 ohne menschliche Beratung online abgeschlossen. <strong>Check24</strong> dominiert mit 80% Marktanteil unter Vergleichsportalen.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">20</span><span class=\"v1x1-cite-tooltip\">GDV Digitaler Versicherungsvertrieb / Kubus-Studie</span></span>",
+            "title": "Digitalisierung"
+          },
+          {
+            "type": "paragraph",
+            "content": "Die <strong>InsurTech-Szene</strong> hat eine drastische Bereinigung durchlaufen. Von 32 Neugründungen im Jahr 2018 gab es 2024 <strong>keine einzige Neugründung</strong> mehr im DACH-Raum. <strong>Wefox</strong> (einst €4,5 Mrd. bewertet) leitete 2024 die Zerschlagung ein. <strong>Element Insurance</strong> meldete Anfang 2025 Insolvenz an. Positive Ausnahmen: <strong>Clark</strong> (2023 erstmals profitabel, 135 Mio. € Umsatz, >2 Mio. Kunden) und <strong>Getsafe</strong> (2024 erstmals profitabel).<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">21</span><span class=\"v1x1-cite-tooltip\">Versicherungstech-Magazin / Cash-online</span></span>",
+            "title": "InsurTech-Bereinigung"
           }
         ]
       },
@@ -360,96 +480,270 @@
         "level1": [
           {
             "type": "paragraph",
-            "content": "Die Allianz-Gruppe dominiert mit <strong>17,39% Marktanteil</strong> (€42,1 Mrd. GBE in Deutschland). Die Top 10 kontrollieren zusammen <strong>67%</strong> des Marktes, während 71 Versicherungsgruppen mit >€50 Mio. Prämien existieren — über zwei Drittel davon mit weniger als 1% Marktanteil."
+            "content": "Der deutsche Versicherungsmarkt wird von einer Handvoll großer Gruppen dominiert, weist aber gleichzeitig eine bemerkenswerte Vielfalt an Geschäftsmodellen, Rechtsformen und Spezialisierungen auf. An der Spitze steht die <strong>Allianz</strong> als mit Abstand größter deutscher Versicherer und einer der weltgrößten Versicherungskonzerne. Dahinter folgt eine Gruppe von Unternehmen mit 5–10% Marktanteil, bevor sich ein langer Schwanz kleinerer Spezialisten und Regionalversicherer anschließt.",
+            "title": "Die Versicherer-Landschaft"
+          },
+          {
+            "type": "paragraph",
+            "content": "Der Markt unterscheidet vier große Rechtsform-Kategorien: <strong>Aktiengesellschaften (AG)</strong> wie Allianz, ERGO oder Generali, die oft Teil internationaler Konzerne sind; <strong>Versicherungsvereine auf Gegenseitigkeit (VVaG)</strong> wie HUK-COBURG, Debeka oder DEVK, bei denen die Versicherungsnehmer zugleich Mitglieder sind; <strong>öffentlich-rechtliche Versicherer</strong> der Sparkassen-Finanzgruppe wie Provinzial, SV SparkassenVersicherung oder VGH; sowie eine Reihe von <strong>InsurTechs und Digitalversicherern</strong>, die seit 2015 den Markt betreten haben."
+          },
+          {
+            "type": "paragraph",
+            "content": "Im Rückversicherungsmarkt nimmt Deutschland eine <strong>globale Sonderstellung</strong> ein: Die Munich Re ist der weltweit größte Rückversicherer, Hannover Rück (Talanx-Konzern) liegt auf Platz 3 weltweit. Deutschland zeichnet rund <strong>19,7% des globalen Rückversicherungsgeschäfts</strong>.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">1</span><span class=\"v1x1-cite-tooltip\">Swiss Re sigma / AM Best Global Reinsurance Report 2024</span></span>"
           },
           {
             "type": "table",
-            "title": "Top-Versicherer nach Segmenten",
+            "title": "Top-10 Versicherer Deutschland nach Beitragseinnahmen 2024",
             "headers": [
               "Rang",
-              "Leben",
-              "PKV",
-              "S/U"
+              "Versicherungsgruppe",
+              "Beiträge (Mrd. €)",
+              "Marktanteil",
+              "Rechtsform"
             ],
             "rows": [
               [
                 "1",
-                "Allianz (26,6%)",
-                "Debeka (16,3%)",
-                "Allianz (13,7%)"
+                "Allianz",
+                "~41,5",
+                "~17,4%",
+                "AG"
               ],
               [
                 "2",
-                "Generali (9,0%)",
-                "ERGO/DKV (12,2%)",
-                "HUK-Coburg (7,2%)"
+                "R+V (Genossenschaftl. FinanzGruppe)",
+                "~19,0",
+                "~8,0%",
+                "AG (VR-Verbund)"
               ],
               [
                 "3",
-                "R+V (8,0%)",
-                "Allianz PKV",
-                "R+V"
+                "ERGO (Munich Re)",
+                "~17,2",
+                "~7,2%",
+                "AG (Konzern)"
               ],
               [
-                "Top-10",
-                "~75%",
-                "78,2%",
-                "~67%"
+                "4",
+                "HUK-COBURG",
+                "~17,0",
+                "~7,1%",
+                "VVaG"
+              ],
+              [
+                "5",
+                "Debeka",
+                "~14,5",
+                "~6,1%",
+                "VVaG"
+              ],
+              [
+                "6",
+                "Talanx/HDI",
+                "~13,8",
+                "~5,8%",
+                "AG"
+              ],
+              [
+                "7",
+                "Generali Deutschland",
+                "~13,1",
+                "~5,5%",
+                "AG (ital. Konzern)"
+              ],
+              [
+                "8",
+                "Zurich Deutschland",
+                "~9,5",
+                "~4,0%",
+                "AG (schweiz. Konzern)"
+              ],
+              [
+                "9",
+                "AXA Deutschland",
+                "~9,0",
+                "~3,8%",
+                "AG (franz. Konzern)"
+              ],
+              [
+                "10",
+                "BarmeniaGothaer",
+                "~8,6",
+                "~3,6%",
+                "VVaG (Fusion 2024)"
+              ]
+            ],
+            "sortable": true
+          }
+        ],
+        "level2": [
+          {
+            "type": "paragraph",
+            "content": "Die <strong>Allianz SE</strong> ist Europas größter Versicherer und global unter den Top 3. In Deutschland umfasst die Gruppe die Allianz Versicherungs-AG (Komposit), Allianz Lebensversicherungs-AG und Allianz Private Krankenversicherungs-AG. Die AO umfasst ca. 8.000 hauptberufliche Vertreter. Besonderheit: Die Allianz hat mit <strong>Allianz Direct</strong> einen eigenen Digitalversicherer aufgebaut und den FRIDAY-Bestand (Baloise) übernommen.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">2</span><span class=\"v1x1-cite-tooltip\">Allianz Geschäftsbericht 2024</span></span>",
+            "title": "Erstversicherer — Die Großen im Detail"
+          },
+          {
+            "type": "paragraph",
+            "content": "Die <strong>R+V Versicherung</strong> ist der Versicherer der genossenschaftlichen FinanzGruppe (Volks- und Raiffeisenbanken). Durch den exklusiven Bankzugang hat R+V eine starke Position im Bancassurance — insbesondere beim Einmalbeitragsgeschäft in der Lebensversicherung. Die Gruppe umfasst auch die Condor (Maklervertrieb) und die KRAVAG (Transport/Kfz)."
+          },
+          {
+            "type": "paragraph",
+            "content": "Die <strong>ERGO Group</strong> gehört zum Munich-Re-Konzern — eine weltweit einzigartige Konstellation, bei der Erst- und Rückversicherung unter einem Dach vereint sind. ERGO umfasst die Marken ERGO, DKV (Kranken) und ERGO Reiseversicherung. Mit <strong>ERGO Direkt</strong> betreibt ERGO einen etablierten Direktversicherer."
+          },
+          {
+            "type": "paragraph",
+            "content": "Die <strong>HUK-COBURG</strong> ist als VVaG der Kostenführer im deutschen Kfz-Markt und Marktführer in der Kfz-Versicherung. Mit HUK24 betreibt sie einen der erfolgreichsten Direktversicherer (>2 Mio. Kfz-Verträge). Die HUK-COBURG verzichtet bewusst auf Präsenz bei Vergleichsportalen und setzt auf Preisführerschaft."
+          },
+          {
+            "type": "paragraph",
+            "content": "Die <strong>Debeka</strong> ist als VVaG der mit Abstand größte deutsche Krankenversicherer (PKV-Marktführer) mit einem einzigartigen Modell: angestellter Außendienst statt freier Vermittler. Rund 16.000 Mitarbeiter betreuen über 7 Mio. Mitglieder. Die Debeka dominiert den öffentlichen Dienst als Zielgruppe."
+          },
+          {
+            "type": "paragraph",
+            "content": "Weitere bedeutende Erstversicherer: <strong>Talanx/HDI</strong> (börsennotiert, international breit aufgestellt, Hannover Rück als Konzerntochter), <strong>Generali Deutschland</strong> (Teil des italienischen Generali-Konzerns, hat den Lebensbestand an Viridium verkauft), <strong>Zurich Deutschland</strong> (Schweizer Mutterkonzern, stark im Firmengeschäft), <strong>AXA Deutschland</strong> (französischer Mutterkonzern, Allspartenversicherer), <strong>BarmeniaGothaer</strong> (2024 fusioniert, gemeinsam ~8,6 Mrd. € Beiträge, 8 Mio. Kunden).<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">3</span><span class=\"v1x1-cite-tooltip\">GDV / Geschäftsberichte der Top-Versicherer 2024</span></span>"
+          },
+          {
+            "type": "table",
+            "title": "Top-5 nach ausgewählten Sparten 2024",
+            "headers": [
+              "Sparte",
+              "#1",
+              "#2",
+              "#3",
+              "#4",
+              "#5"
+            ],
+            "rows": [
+              [
+                "Kfz",
+                "HUK-COBURG",
+                "Allianz",
+                "AXA",
+                "Generali",
+                "ERGO"
+              ],
+              [
+                "Leben",
+                "Allianz",
+                "R+V",
+                "Bayern-Versicherung",
+                "Generali",
+                "Debeka"
+              ],
+              [
+                "PKV Voll",
+                "Debeka",
+                "DKV/ERGO",
+                "Allianz",
+                "Signal Iduna",
+                "AXA"
+              ],
+              [
+                "Wohngebäude",
+                "Allianz",
+                "Provinzial",
+                "SV Sparkasse",
+                "R+V",
+                "VGH"
+              ],
+              [
+                "Gewerbe/Industrie",
+                "Allianz",
+                "HDI",
+                "Zurich",
+                "AXA",
+                "R+V"
+              ]
+            ],
+            "sortable": true
+          },
+          {
+            "type": "paragraph",
+            "content": "Die <strong>Rückversicherer</strong> nehmen in Deutschland eine globale Spitzenstellung ein. Die <strong>Munich Re</strong> (Münchener Rückversicherungs-Gesellschaft) ist mit rund <strong>44 Mrd. € Bruttoprämien</strong> (2024, Rückversicherungssegment) der weltweit größte Rückversicherer. Die <strong>Hannover Rück</strong> (Talanx-Konzern) liegt mit ~28 Mrd. € auf Platz 3 weltweit (nach Swiss Re). Rückversicherer übernehmen Risiken von Erstversicherern und ermöglichen diesen damit eine bessere Kapitalsteuerung. Man unterscheidet <strong>proportionale</strong> (Quote, Summenexzedent) und <strong>nicht-proportionale</strong> (Schadenexzedent, Stop Loss) Rückversicherung.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">4</span><span class=\"v1x1-cite-tooltip\">AM Best Global Reinsurance Report 2024</span></span>",
+            "title": "Rückversicherer — Globale Champions"
+          },
+          {
+            "type": "paragraph",
+            "content": "Die <strong>öffentlich-rechtlichen Versicherer</strong> der Sparkassen-Finanzgruppe sind durch regionalen Fokus und exklusiven Sparkassen-Vertrieb gekennzeichnet. Nach der Fusion der Provinzial Rheinland und Provinzial NordWest ist die <strong>Provinzial</strong> mit rund 6,5 Mrd. € Beiträgen der größte öffentliche Versicherer. Weitere wichtige Player: <strong>SV SparkassenVersicherung</strong> (Baden-Württemberg/Hessen), <strong>VGH</strong> (Niedersachsen), <strong>Bayerische Versicherungskammer</strong>. Die Rechtsform als Anstalt des öffentlichen Rechts sorgt für Besonderheiten: keine Ausschüttung an Aktionäre, Gewährträgerhaftung durch Sparkassen.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">5</span><span class=\"v1x1-cite-tooltip\">DSGV / Sparkassen-Finanzgruppe</span></span>",
+            "title": "Öffentlich-Rechtliche Versicherer"
+          },
+          {
+            "type": "paragraph",
+            "content": "Die <strong>Versicherungsvereine auf Gegenseitigkeit (VVaG)</strong> sind eine im internationalen Vergleich typisch deutsche Rechtsform. Anders als bei einer AG gibt es keine Aktionäre — die <strong>Versicherungsnehmer sind zugleich Mitglieder</strong> und Eigentümer. Vorteile: langfristige Orientierung ohne Quartalsdenken, oft günstigere Prämien durch Beitragsrückerstattungen. Wichtige VVaGs: <strong>HUK-COBURG</strong> (Kfz-Marktführer), <strong>Debeka</strong> (PKV-Marktführer), <strong>DEVK</strong> (Eisenbahner-Tradition), <strong>LVM</strong> (Westfalen), <strong>Alte Leipziger</strong> (Hallesche, stark in bAV und PKV), <strong>Stuttgarter</strong>, <strong>Continentale</strong>.",
+            "title": "VVaG — Versicherungsverein auf Gegenseitigkeit"
+          },
+          {
+            "type": "paragraph",
+            "content": "Die <strong>Marktkonzentration</strong> variiert stark nach Sparten. In der PKV ist die Konzentration am höchsten: Die Top 5 vereinen rund <strong>55%</strong> des Marktes. In der Kfz-Versicherung halten die Top 5 etwa <strong>40%</strong>, in der Lebensversicherung rund <strong>45%</strong>. Trotz der Konsolidierung (von 810 auf ~490 Unternehmen) bleibt der deutsche Markt im europäischen Vergleich <strong>relativ fragmentiert</strong> — 71 Versicherungsgruppen haben jeweils über 50 Mio. € Prämien, aber zwei Drittel davon halten weniger als 1% Marktanteil.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">6</span><span class=\"v1x1-cite-tooltip\">GDV / BaFin Statistik Erstversicherungsunternehmen</span></span>",
+            "title": "Marktkonzentration"
+          }
+        ],
+        "level3": [
+          {
+            "type": "paragraph",
+            "content": "Die <strong>InsurTech-Landschaft</strong> hat nach der Euphorie 2018–2021 eine drastische Bereinigung durchlaufen. Von 32 Neugründungen in 2018 gab es 2024 keine einzige mehr. Die verbliebenen ~146 InsurTechs teilen sich in B2B-Enabler (Mehrheit) und wenige B2C-Player. <strong>Wefox</strong> (einst €4,5 Mrd. bewertet) zerschlug sich 2024; <strong>Element Insurance</strong> ging 2025 insolvent. Positive Beispiele: <strong>Clark</strong> (2023 profitabel, 135 Mio. € Umsatz, >2 Mio. Kunden), <strong>Getsafe</strong> (2024 profitabel, aber BaFin-Lizenz zurückgegeben → MGA), <strong>andsafe</strong> (Provinzial, profitabler Gewerbe-Digitalversicherer), <strong>Neodigital</strong> (Technologie-Plattform für andere Versicherer).<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">7</span><span class=\"v1x1-cite-tooltip\">Versicherungstech-Magazin / Cash-online</span></span>",
+            "title": "InsurTechs und neue Player"
+          },
+          {
+            "type": "paragraph",
+            "content": "<strong>Check24</strong> und <strong>Verivox</strong> haben als Vergleichsportale eine mächtige Vertriebsposition aufgebaut. Check24 dominiert mit <strong>80–87% Marktanteil</strong> unter Portalnutzern, 48% aller Versicherungsentscheider haben die Plattform genutzt. Bei 18–39-Jährigen sind es 56%. Check24 investierte 2023 rund <strong>196 Mio. € in Werbung</strong>. Verivox wurde im März 2025 von ProSiebenSat.1 an die italienische Mavriq-Gruppe für rund <strong>232 Mio. €</strong> verkauft."
+          },
+          {
+            "type": "table",
+            "title": "InsurTech-Übersicht (Auswahl)",
+            "headers": [
+              "Unternehmen",
+              "Modell",
+              "Status 2025"
+            ],
+            "rows": [
+              [
+                "Clark",
+                "Digitaler Makler / App",
+                "Profitabel, >2 Mio. Kunden"
+              ],
+              [
+                "Getsafe",
+                "MGA (ehem. Vollversicherer)",
+                "Profitabel, BaFin-Lizenz zurückgegeben"
+              ],
+              [
+                "Neodigital",
+                "White-Label-Technologie",
+                "B2B-Plattform, stabil"
+              ],
+              [
+                "andsafe",
+                "Gewerbe-Digitalversicherer",
+                "Profitabel (Provinzial-Tochter)"
+              ],
+              [
+                "wefox",
+                "Makler-Plattform",
+                "Zerschlagung, Rückzug aus DE"
+              ],
+              [
+                "Element",
+                "API-first Versicherer",
+                "Insolvenz Anfang 2025"
+              ],
+              [
+                "FRIDAY",
+                "Kfz-Digitalversicherer",
+                "An Allianz Direct verkauft"
+              ],
+              [
+                "Deutsche Familienversicherung",
+                "Digitalversicherer",
+                "Börsennotiert, wachsend"
               ]
             ],
             "sortable": false
           },
           {
             "type": "paragraph",
-            "content": "Die <strong>Munich Re Gruppe</strong> (inkl. ERGO mit 20,8 Mrd. € Insurance Revenue) erzielte 2024 ein Rekordergebnis von <strong>5,671 Mrd. € Nettogewinn</strong> bei einer Eigenkapitalrendite von 18,2%. Die <strong>R+V Versicherung</strong> als genossenschaftlicher Versicherer der Volks- und Raiffeisenbanken erreicht rund 19–20 Mrd. €, gefolgt von <strong>Debeka</strong> (15–16 Mrd. €, PKV-Marktführer mit 16,3%) und <strong>Generali Deutschland</strong> (15+ Mrd. €, exklusiv vertrieben über DVAG). Die <strong>HUK-Coburg</strong> ist als VVaG mit 8–8,5 Mrd. € Deutschlands größter Autoversicherer mit über 13 Mio. Kunden."
-          }
-        ],
-        "level2": [
-          {
-            "type": "paragraph",
-            "title": "Geschäftsmodelle und Rechtsformen",
-            "content": "Drei zentrale Rechtsformen prägen den Markt. Die <strong>Aktiengesellschaft (AG)</strong> ist die klassische Form börsennotierter Versicherer wie Allianz SE, Talanx AG und Generali Deutschland AG — gewinnorientiert mit Aktionärsinteressen."
-          },
-          {
-            "type": "paragraph",
-            "content": "Der <strong>Versicherungsverein auf Gegenseitigkeit (VVaG)</strong> kennt keine externen Aktionäre; Versicherungsnehmer sind zugleich Mitglieder und Eigentümer. Wichtige VVaGs sind HUK-Coburg, Debeka, R+V, LVM und die neu fusionierte BarmeniaGothaer."
-          },
-          {
-            "type": "paragraph",
-            "content": "<strong>Öffentlich-rechtliche Versicherer</strong> sind im Sparkassen-Ökosystem verankert und halten zusammen rund <strong>10% Marktanteil<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">3</span><span class=\"v1x1-cite-tooltip\">Versicherungskammer Bayern Geschäftsbericht 2024</span></span></strong>. Dazu zählen die Versicherungskammer Bayern (~€9,3 Mrd.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">4</span><span class=\"v1x1-cite-tooltip\">Versicherungskammer Bayern Geschäftsbericht 2024</span></span>), Provinzial, SV SparkassenVersicherung und VGH."
-          },
-          {
-            "type": "callout",
-            "variant": "tip",
-            "content": "Die VVaG-Struktur macht Konsolidierung „extrem schwer“, wie Linklaters-Partner Broichhausen betont — ein wichtiger Faktor bei M&A-Überlegungen."
-          },
-          {
-            "type": "paragraph",
-            "content": "Die elf öffentlichen Erstversicherungsgruppen erzielten 2024 Beiträge von <strong>23,4 Mrd. €</strong> (ca. 10% Gesamtmarktanteil, 14,9% in S/U). Die <strong>Versicherungskammer Bayern</strong> ist mit rund 9,5 Mrd. € der größte, gefolgt vom <strong>Provinzial Konzern</strong> (7+ Mrd. €, entstanden 2020 aus der Fusion von Provinzial Rheinland und NordWest) und der <strong>SV SparkassenVersicherung</strong> (Baden-Württemberg, Hessen, Thüringen, Sachsen). Über 3.100 eigene Geschäftsstellen plus mehr als 10.000 Sparkassenfilialen erreichen <strong>jeden dritten Bundesbürger</strong> als Kunden."
-          },
-          {
-            "type": "paragraph",
-            "content": "<strong>AXA Deutschland</strong> erreicht 11–12 Mrd. € Beiträge. <strong>Zurich</strong> (5,9 Mrd. €) plant den Verkauf des LV-Altbestands. <strong>Talanx/HDI</strong> (48+ Mrd. € Konzern) ist über die Tochter <strong>Hannover Rück</strong> als zweitgrößter Rückversicherer der Welt (26,4 Mrd. €) einer der wichtigsten globalen Player."
-          }
-        ],
-        "level3": [
-          {
-            "type": "paragraph",
-            "title": "Konsolidierung und M&A: Die große Fusionswelle",
-            "content": "Die <strong>BarmeniaGothaer-Fusion</strong> war die größte Versicherungsfusion in Deutschland seit über 20 Jahren. Die kombinierte Gruppe erreichte 2024 Prämieneinnahmen von <strong>€8,6 Mrd.</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">5</span><span class=\"v1x1-cite-tooltip\">BarmeniaGothaer Pressemitteilung, Januar 2025</span></span> mit 7.500 Mitarbeitern<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">6</span><span class=\"v1x1-cite-tooltip\">BarmeniaGothaer Pressemitteilung, Januar 2025</span></span> und Kapitalanlagen von €50 Mrd.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">7</span><span class=\"v1x1-cite-tooltip\">BarmeniaGothaer Geschäftsbericht 2024</span></span>"
-          },
-          {
-            "type": "paragraph",
-            "content": "Der <strong>Viridium-Deal</strong> (€3,5 Mrd.) war eine der größten Transaktionen im europäischen Lebensversicherungsmarkt: Ein von Allianz angeführtes Konsortium übernahm 70% der Anteile. Viridium verwaltet als Deutschlands größter Bestandsspezialist 3,4 Millionen Lebensversicherungspolicen."
-          },
-          {
-            "type": "callout",
-            "variant": "info",
-            "content": "Das Handelsblatt titelte im Februar 2026: „2026 könnte das M&A-Jahr der Versicherer werden.“ Weitere Deals: SDK/Stuttgarter-Fusion, FRIDAY-Verkauf an Allianz Direct, Element-Insurance-Insolvenz."
-          },
-          {
-            "type": "paragraph",
-            "content": "Drei Plattformen dominieren den deutschen Bestandsabwicklungsmarkt (Run-off). <strong>Viridium</strong> ist die größte mit 3,4 Mio. Verträgen und 67–68 Mrd. € Kapitalanlagen. <strong>Frankfurter Leben</strong> (Fosun) hat mit sechs abgeschlossenen Deals die meisten Transaktionen. <strong>Athora</strong> (Apollo-backed) scheiterte an der Übernahme des AXA-Bestands (900.000 Verträge), will aber perspektivisch sogar Neugeschäft schreiben. Als Gegentrend kehrte <strong>„Die Bayerische“</strong> als erster Versicherer nach 15 Jahren Run-off ins Neugeschäft zurück."
+            "content": "Die Konzernstrukturen im deutschen Markt sind komplex. Drei Beispiele: (1) Der <strong>Allianz-Konzern</strong> umfasst Allianz Versicherung, Allianz Leben, Allianz PKV, Allianz Direct, Allianz Global Corporate & Specialty (AGCS) und Euler Hermes (Kreditversicherung). (2) Der <strong>Talanx-Konzern</strong> (Hauptaktionär: HDI VVaG) umfasst HDI (Privat/Firmen), Hannover Rück (Rückversicherung), neue leben, PB Versicherungen und Ampega (Asset Management). (3) Der <strong>Munich-Re-Konzern</strong> vereint Munich Re (Rückversicherung), ERGO (Erstversicherung inkl. DKV und ERGO Reiseversicherung) und MEAG (Asset Management).<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">8</span><span class=\"v1x1-cite-tooltip\">Geschäftsberichte Allianz, Talanx, Munich Re 2024</span></span>",
+            "title": "Konzernstrukturen im Detail"
           }
         ]
       },
@@ -865,93 +1159,170 @@
         "level1": [
           {
             "type": "paragraph",
-            "content": "Der Vertriebsmix des deutschen Versicherungsmarktes ist bemerkenswert stabil — trotz Digitalisierung werden <strong>~80% aller Verträge weiterhin mit persönlicher Beratung</strong> abgeschlossen. Der digitale Anteil liegt bei 29% in Kfz, 27% bei PKV-Zusatz, aber nur <strong>3% bei der Lebensversicherung</strong>."
+            "content": "Der deutsche Versicherungsvertrieb ist ein differenziertes Mehrkanalmodell, das sich grundlegend von den meisten europäischen Nachbarländern unterscheidet. Während in Frankreich, Spanien oder Italien der Bankvertrieb (Bancassurance) bis zu <strong>75%</strong> der Lebensversicherungen ausmacht, setzt Deutschland auf eine Mischung aus personengebundenen und digitalen Kanälen.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">1</span><span class=\"v1x1-cite-tooltip\">Insurance Europe / GDV-Vertriebswegestatistik 2024</span></span>",
+            "title": "Die sieben Vertriebskanäle"
+          },
+          {
+            "type": "paragraph",
+            "content": "Die <strong>Ausschließlichkeitsorganisation (AO)</strong> bildet das Rückgrat des Vertriebs. AO-Vertreter arbeiten als Handelsvertreter nach §84 HGB exklusiv für einen Versicherer. Große AOs: Allianz (~8.000 Vertreter), ERGO, Generali, HUK-COBURG und LVM. Im Vermittlerregister sind noch rund <strong>97.000 gebundene Vertreter</strong> erfasst — erstmals unter der symbolischen 100.000er-Marke. 2011 waren es noch über 130.000."
+          },
+          {
+            "type": "paragraph",
+            "content": "Unabhängige <strong>Versicherungsmakler</strong> (§34d Abs. 1 GewO) agieren als Sachwalter des Kunden und erreichen mit <strong>46.951 Maklern</strong> (Januar 2026) einen historischen Rekordstand. Über 90% arbeiten mit mindestens einem Maklerpool zusammen. Die größten Pools: Fonds Finanz (341 Mio. € Umsatz, +17%), blau direkt (251 Mio. €, +31%), VEMA (461 Mio. € Gesamtprovisionsvolumen). Der PE-getriebene Konsolidierungstrend beschleunigt sich: Fonds Finanz gehört Hg Capital, blau direkt Warburg Pincus.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">2</span><span class=\"v1x1-cite-tooltip\">DIHK-Vermittlerregister / DAS INVESTMENT</span></span>"
           },
           {
             "type": "table",
-            "title": "Vertriebskanäle im Überblick",
+            "title": "GDV-Vertriebswegestatistik 2024 — Neugeschäftsanteile",
             "headers": [
-              "Kanal",
-              "Kfz (2024)",
-              "Leben (2023)",
-              "Charakteristik"
+              "Sparte",
+              "AO",
+              "Makler",
+              "MFA",
+              "Banken",
+              "Direkt",
+              "Sonst."
             ],
             "rows": [
               [
-                "AO / Einfirmenvermittler",
+                "Leben",
+                "37,6%",
+                "29,8%",
+                "7,7%",
+                "19,4%",
+                "2,4%",
+                "3,1%"
+              ],
+              [
+                "PKV",
+                "53,4%",
+                "26,9%",
+                "3,8%",
+                "4,2%",
+                "10,0%",
+                "1,7%"
+              ],
+              [
+                "Sach/Unfall",
+                "41,1%",
+                "40,6%",
+                "3,8%",
+                "5,9%",
+                "4,9%",
+                "3,7%"
+              ],
+              [
+                "Kfz",
                 "44,4%",
-                "~39%",
-                "Größter Kanal; an einen Versicherer gebunden"
-              ],
-              [
-                "Makler / Mehrfachagenten",
-                "26,1%",
-                "~29%",
-                "Sachwalter des Kunden; dominant bei Industrie"
-              ],
-              [
-                "Bancassurance",
+                "23,4%",
+                "2,7%",
                 "2,3%",
-                "~18%",
-                "Sparkassen→Provinzial; Volksbanken→R+V"
-              ],
-              [
-                "Direktvertrieb",
                 "20,2%",
-                "~3%",
-                "HUK24, CosmosDirekt, FRIDAY"
+                "7,0%"
               ],
               [
-                "Strukturvertriebe",
-                "im AO",
-                "signifikant",
-                "DVAG, MLP, OVB, Swiss Life Select"
+                "Rechtsschutz",
+                "56,6%",
+                "19,4%",
+                "0,9%",
+                "6,4%",
+                "14,4%",
+                "2,3%"
+              ]
+            ],
+            "sortable": true
+          },
+          {
+            "type": "callout",
+            "variant": "info",
+            "content": "Im Sach/Unfall-Neugeschäft 2024 erreichten Makler mit <strong>40,6%</strong> fast Gleichstand mit der AO (41,1%) — vor zehn Jahren lag der Makleranteil noch bei rund 25%. In der Lebensversicherung überholten Makler bei laufenden Beiträgen erstmals die AO als führender Kanal."
+          }
+        ],
+        "level2": [
+          {
+            "type": "paragraph",
+            "content": "<strong>Bancassurance</strong> stützt sich auf historisch gewachsene Partnerschaften: Sparkassen mit den öffentlichen Versicherern (Provinzial, VKB, SV), Volks- und Raiffeisenbanken mit R+V, Commerzbank mit Allianz. In der Lebensversicherung erzielen Banken rund <strong>19% Neugeschäftsanteil</strong> nach Beitragssumme (GDV) bzw. sogar <strong>26% nach APE</strong> (WTW), dominieren beim Einmalbeitragsgeschäft mit <strong>41%</strong>. In Sach und PKV spielen sie mit unter 6% eine untergeordnete Rolle. Die JDC Group fungiert zunehmend als Technologieplattform für die Digitalisierung des Bankvertriebs.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">3</span><span class=\"v1x1-cite-tooltip\">WTW Vertriebsstudie 2024 / GDV</span></span>",
+            "title": "Bancassurance"
+          },
+          {
+            "type": "paragraph",
+            "content": "<strong>Direktversicherer</strong> vertreiben ohne Vermittler über Internet, Telefon und App. CosmosDirekt (Generali) ist mit rund 1,8 Mio. Kunden und ~2,5 Mrd. € Beiträgen Deutschlands größter Direktversicherer. HUK24 versichert über 2 Mio. Fahrzeuge. Der Direktvertrieb erreicht in der Kfz-Versicherung seinen Spitzenwert von <strong>20,2%</strong>, in der Lebensversicherung bleibt er mit 2,4% marginal — beratungsintensive Produkte erfordern persönlichen Kontakt.",
+            "title": "Direktvertrieb und Online"
+          },
+          {
+            "type": "paragraph",
+            "content": "Die <strong>Vergleichsportale</strong> haben eine de-facto-Monopolstellung. <strong>Check24</strong> vereint 80–87% aller Portalnutzer, investierte 2023 rund <strong>196 Mio. € in Werbung</strong>. 48% aller Versicherungsentscheider haben Check24 für Versicherungen genutzt, bei 18–39-Jährigen sind es 56%. Der digitale Abschlussanteil über alle Sparten stieg von 9% (2019) auf <strong>22%</strong> (2024)."
+          },
+          {
+            "type": "paragraph",
+            "content": "Von <strong>263.000 registrierten Vermittlern</strong> (2011) sind Anfang 2026 noch <strong>178.791</strong> übrig — ein Rückgang um 32%. Zwei Drittel aller Vermittler sind über 50 Jahre alt, das Durchschnittsalter der Makler liegt bei <strong>57 Jahren</strong>. Nur 3,8% sind unter 30. Die AO verliert systematisch Personal: Mitte 2025 fiel die Zahl erstmals unter 100.000. Gegen den Trend wächst die Maklerzahl — 2025 kamen 332 neue Makler hinzu.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">4</span><span class=\"v1x1-cite-tooltip\">DIHK-Vermittlerregister / Pfefferminzia</span></span>",
+            "title": "Vermittlerregister und Demografie"
+          },
+          {
+            "type": "table",
+            "title": "Vermittlerbestand nach Kategorie (§34d GewO)",
+            "headers": [
+              "Kategorie",
+              "Anzahl (Jan. 2026)",
+              "Trend"
+            ],
+            "rows": [
+              [
+                "Gebundene Vertreter (Abs. 7)",
+                "~97.000",
+                "↓↓ stark sinkend"
+              ],
+              [
+                "Versicherungsmakler (Abs. 1)",
+                "46.951",
+                "↑ Rekordhoch"
+              ],
+              [
+                "Mehrfachagenten (Abs. 1)",
+                "~27.000",
+                "↓ sinkend"
+              ],
+              [
+                "Produktakzess. Vermittler (Abs. 6)",
+                "~5.300",
+                "↑ leicht steigend"
+              ],
+              [
+                "Versicherungsberater (Abs. 2)",
+                "~326",
+                "→ stabil, marginal"
               ]
             ],
             "sortable": false
           },
           {
             "type": "paragraph",
-            "content": "Das deutsche <strong>Bancassurance-Volumen</strong> erreichte 2023 rund <strong>23,5 Mrd. €</strong>, davon 75% in der Lebensversicherung. Die drei Kernkooperationen (Sparkassen→öffentliche Versicherer, Volksbanken→R+V, Commerzbank→Allianz) vereinen <strong>75% des Bancassurance-Neugeschäfts</strong>. Im europäischen Vergleich ist der deutsche Bankvertrieb schwach: Weniger als jede fünfte Lebensversicherung wird über Banken verkauft, verglichen mit 80% in Portugal und 65% in Frankreich."
-          }
-        ],
-        "level2": [
-          {
-            "type": "paragraph",
-            "title": "Check24 und die Portalökonomie",
-            "content": "<strong>Check24</strong> hat mit einem Sichtbarkeitsindex von 219 eine nahezu monopolartige Stellung unter den Vergleichsportalen erreicht — <strong>87% der Portalnutzer</strong> verwenden Check24. Das Portal gibt geschätzt ~€50 Mio. pro Quartal für Werbung aus."
-          },
-          {
-            "type": "callout",
-            "variant": "warning",
-            "content": "Check24 listet nur 38 von 89 Privathaftpflichtversicherern — große Anbieter wie Allianz, HUK-Coburg und CosmosDirekt fehlen. 55% der Kunden nutzen Portalergebnisse als Verhandlungsbasis."
-          },
-          {
-            "type": "paragraph",
-            "content": "Die <strong>DVAG</strong> erzielte 2024 einen Rekordumsatz von <strong>2,504 Mrd. €</strong> (+8,5%) und ein Ergebnis von 541 Mio. €. Rund 18.000 hauptberufliche Vermögensberater betreuen 8 Mio. Kunden in exklusiver Bindung an Generali. Der Umsatz hat sich in zehn Jahren mehr als verdoppelt. <strong>Swiss Life Deutschland</strong> (Swiss Life Select, Tecis, Horbach, Proventus) erreichte 725 Mio. € Provisionserlöse mit knapp 6.000 Beratern. <strong>MLP</strong> fokussiert Akademiker mit 844 Mio. € Provisionserlöse und 2.055 Beratern."
-          },
-          {
-            "type": "paragraph",
-            "content": "<strong>Versicherungsmakler</strong> (46.938 registriert) agieren als „treuhänderähnliche Sachwalter“ des Kunden (BGH 1985). Sie unterliegen umfassenden Beratungspflichten nach §§60–68 VVG und müssen eine Vermögensschadenhaftpflichtversicherung von mindestens <strong>1,13 Mio. €</strong> vorhalten. International dominieren <strong>Marsh</strong> (22,7 Mrd. USD Umsatz), <strong>Aon</strong> (13,4 Mrd. USD, 1.700 Mitarbeiter in Deutschland) und <strong>WTW</strong>."
+            "content": "<strong>Embedded Insurance</strong> — die Integration von Versicherungen in Kaufprozesse — ist der jüngste Vertriebsweg. ERGO kooperiert seit August 2024 mit O2 Telefónica für Mobility- und Reiseversicherungen, simplesurance (Allianz Partners) ist in über 30 Ländern aktiv, Tesla bietet über Helvetia eine Anschlussgarantie an. Die Kundenakzeptanz ist noch verhalten: Laut Nordlight Research stehen 33% positiv, 28% ablehnend und 39% neutral gegenüber. Das globale Marktpotenzial wird auf bis zu <strong>512 Mrd. $ bis 2033</strong> geschätzt.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">5</span><span class=\"v1x1-cite-tooltip\">Nordlight Research / Allied Market Research</span></span>",
+            "title": "Embedded Insurance"
           }
         ],
         "level3": [
           {
             "type": "paragraph",
-            "title": "Strukturvertriebe im Detail",
-            "content": "Die <strong>DVAG</strong> (Deutsche Vermögensberatung) ist mit ~18.000 Beratern und ~€2,5 Mrd. Umsatz der größte Strukturvertrieb — exklusiv an Generali gebunden. Weitere wichtige Player: MLP (Akademiker-Segment), OVB (europaweit), Swiss Life Select (Multi-Company)."
+            "content": "Die Bewertung eines Vertriebswegs unterscheidet sich fundamental je nach Blickwinkel. <strong>Aus Versicherersicht</strong> bietet die AO maximale Steuerung, aber hohe Kosten. Im Maklervertrieb sind die Durchschnittsbeiträge höher: Laut WTW liegt der laufende Beitrag bei Makler-vermittelten Lebensversicherungen bei <strong>1.484 €</strong> vs. 1.271 € in der AO.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">6</span><span class=\"v1x1-cite-tooltip\">WTW Vertriebsstudie 2024</span></span>",
+            "title": "Vor- und Nachteile der Kanäle"
           },
           {
             "type": "paragraph",
-            "content": "Die BaFin untersagte Check24 in 2024 das Angebot selbststrukturierter Versicherungsprodukte (kostenloser Kreditschutz als unerlaubtes Versicherungsgeschäft). Die regulatorische Zukunft der Plattformökonomie im Versicherungsvertrieb bleibt spannend."
+            "content": "<strong>Aus Kundensicht</strong> garantiert der Makler die größte Unabhängigkeit (Sachwalter-Pflicht). Die AO bietet persönliche Nähe, ist aber auf das Produktportfolio eines Versicherers beschränkt. Vergleichsportale punkten mit Transparenz und Schnelligkeit, vernachlässigen aber komplexe Beratung: Nur 3% der Lebensversicherungen werden digital abgeschlossen."
           },
           {
             "type": "paragraph",
-            "content": "Bei den <strong>Maklerpools</strong> führt <strong>Fonds Finanz</strong> mit 76,6 Mio. € Rohertrag und 28.000 angebundenen Partnern. Die genossenschaftliche <strong>VEMA</strong> erzielte 461 Mio. € Gesamtprovisionsvolumen. <strong>blau direkt</strong> positioniert sich als Technologieführer mit +46,8% Rohertragswachstum. Die <strong>Allianz</strong> unterhält mit geschätzt 8.000+ Vertretern die größte AO. Mehrere Versicherer starten AO-Offensiven: HDI plant aktives Wachstum, die Nürnberger will ihre Vertreterzahl verdoppeln, Inter strebt 350 Partner bis 2026 an."
+            "content": "Die <strong>Konsolidierung im Maklermarkt</strong> beschleunigt sich dramatisch. PE-finanzierte Konsolidierer verändern die Landschaft: Die <strong>GGW Group</strong> überholte Ende 2024 Ecclesia als größtes deutsches Maklerhaus. Global (Köln) strebt einen Verkaufspreis von über 2 Mrd. € an. MRH Trowe wächst durch serielle Akquisitionen. Im Pool-Markt fusionierte blau direkt 2025 mit der Phönix-Maxpool-Gruppe. 2024 wurden im DACH-Raum <strong>106 M&A-Transaktionen</strong> im Vermittlersegment angekündigt.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">7</span><span class=\"v1x1-cite-tooltip\">Versicherungsmonitor / Handelsblatt</span></span>"
           },
           {
             "type": "paragraph",
-            "content": "Der Gesamtanteil <strong>digitaler Abschlüsse</strong> lag 2024 bei <strong>22%</strong>. Kfz führt mit 29%, gefolgt von PKV-Zusatz (27%). Lebensversicherungen werden zu nur <strong>3%</strong> online abgeschlossen. Laut Bitkom haben <strong>83% der Deutschen</strong> bereits mindestens eine Versicherung online abgeschlossen. Vergleichsportale sind mit 62% der meistgenutzte digitale Kanal. <strong>Clark</strong> erreichte mit Allianz X als größtem Minderheitsgesellschafter Unicorn-Status (über 1 Mrd. € Bewertung) und über 600.000 Kunden."
+            "content": "Drei Megatrends prägen die kommenden Jahre: <strong>(1) Die demografische Zeitbombe</strong> — in den nächsten 15 Jahren wird fast die Hälfte der heutigen Vermittlerschaft ausscheiden, was den Makleranteil mechanisch steigen lässt. <strong>(2) Die Plattformisierung</strong> — Maklerpools entwickeln sich zu technologischen Infrastrukturanbietern, PE-Kapital beschleunigt die Konsolidierung. <strong>(3) Die Hybridisierung</strong> — 78% der Verträge kamen 2024 noch mit persönlicher Unterstützung zustande, aber 37% der Kunden informieren sich vorab digital.",
+            "title": "Zukunft des Vertriebs"
+          },
+          {
+            "type": "callout",
+            "variant": "warning",
+            "content": "Rein digitale Disruption — wie von InsurTechs versprochen — hat sich als Illusion erwiesen. Das provisionsbasierte Beratungsmodell bleibt nach dem Scheitern des EU-Provisionsverbots (RIS) das Fundament des deutschen Vertriebs, steht aber unter wachsendem Transparenzdruck. Die Umsetzung in nationales Recht wird bis <strong>H2/2028</strong> erwartet."
           }
         ]
       },

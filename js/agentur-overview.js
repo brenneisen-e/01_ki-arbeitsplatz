@@ -512,47 +512,6 @@ var mockNeugeschaeft = [];
 var mockBestand = [];
 var mockStorno = [];
 
-var kundenPool = [
-    { name: 'Peter Schmidt', id: 'KD00001' },
-    { name: 'Amira König', id: 'KD00002' },
-    { name: 'Thomas Weber', id: 'KD00003' },
-    { name: 'Anna Hoffmann', id: 'KD00004' },
-    { name: 'Michael Braun', id: 'KD00005' },
-    { name: 'Lisa Müller', id: 'KD00006' },
-    { name: 'Matthias Engel', id: 'KD00007' },
-    { name: 'Christian Bauer', id: 'KD00008' },
-    { name: 'Martin Wolf', id: 'KD00009' },
-    { name: 'Eva Hartmann', id: 'KD00010' }
-];
-
-var produkteMap = {
-    leben: [
-        { produkt: 'BU Comfort Plus', versicherer: 'Allianz' },
-        { produkt: 'Risikolebensversicherung', versicherer: 'Zurich' },
-        { produkt: 'Fondsrente InvestFlex', versicherer: 'HDI' },
-        { produkt: 'Kapitallebensversicherung', versicherer: 'Generali' }
-    ],
-    kranken: [
-        { produkt: 'Krankentagegeld Premium', versicherer: 'DKV' },
-        { produkt: 'Zahnzusatz ZahnFit', versicherer: 'Allianz' },
-        { produkt: 'PKV Komfort-Tarif', versicherer: 'Debeka' },
-        { produkt: 'Pflegezusatzversicherung', versicherer: 'Signal Iduna' }
-    ],
-    schaden: [
-        { produkt: 'Hausratversicherung Premium', versicherer: 'AXA' },
-        { produkt: 'Wohngebäudeversicherung', versicherer: 'Provinzial' },
-        { produkt: 'Privathaftpflicht Comfort', versicherer: 'HDI' },
-        { produkt: 'Rechtsschutzversicherung', versicherer: 'ARAG' }
-    ],
-    kfz: [
-        { produkt: 'Kfz-Vollkasko Plus', versicherer: 'HUK-Coburg' },
-        { produkt: 'Kfz-Haftpflicht', versicherer: 'Allianz' },
-        { produkt: 'Kfz-Teilkasko', versicherer: 'VHV' },
-        { produkt: 'Nutzfahrzeug-Vollkasko', versicherer: 'Zurich' }
-    ]
-};
-
-var spartenKeys = ['leben', 'kranken', 'schaden', 'kfz'];
 var spartenLabels = { leben: 'Leben', kranken: 'Kranken', schaden: 'Schaden', kfz: 'Kfz' };
 var zahlweisen = ['Monatlich', 'Vierteljährlich', 'Halbjährlich', 'Jährlich'];
 var stornoGruende = ['Preis / zu teuer', 'Wettbewerber', 'Leistung unzureichend', 'Finanzielle Gründe', 'Kein Bedarf mehr'];
@@ -567,87 +526,179 @@ function fmtEuro(val) {
 
 function randomItem(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 
+// Sparten-Mapping aus Versicherungstyp
+function getSparte(typ) {
+    typ = (typ || '').toLowerCase();
+    if (typ.indexOf('leben') >= 0 || typ.indexOf('bu') >= 0 || typ.indexOf('berufsunf') >= 0 || typ.indexOf('risiko') >= 0) return 'leben';
+    if (typ.indexOf('kranken') >= 0 || typ.indexOf('pflege') >= 0 || typ.indexOf('zahn') >= 0) return 'kranken';
+    if (typ.indexOf('kfz') >= 0 || typ.indexOf('kasko') >= 0) return 'kfz';
+    return 'schaden'; // Haftpflicht, Wohngebäude, Rechtsschutz, Unfall, Betriebshaftpflicht etc.
+}
+
+// Jahresbeitrag aus Prämie-String berechnen
+function parsePraemie(praemieStr) {
+    if (!praemieStr) return 0;
+    var match = praemieStr.match(/[\d.,]+/);
+    if (!match) return 0;
+    var val = parseFloat(match[0].replace('.', '').replace(',', '.'));
+    if (praemieStr.indexOf('/Mon') >= 0) return Math.round(val * 12);
+    if (praemieStr.indexOf('/Jahr') >= 0) return Math.round(val);
+    return Math.round(val);
+}
+
+// Zahlweise aus Prämie-String ableiten
+function parseZahlweise(praemieStr) {
+    if (!praemieStr) return 'Jährlich';
+    if (praemieStr.indexOf('/Mon') >= 0) return 'Monatlich';
+    return 'Jährlich';
+}
+
+// Bestandsverträge aus den Demo-Kundendaten (identisch mit Kunden-Detail Betreute Verträge)
+var kundenBestandVertraege = [
+    // Peter Schmidt KD00001
+    { kunde: 'Peter Schmidt', kundenId: 'KD00001', typ: 'Berufsunfähigkeitsversicherung', versicherer: 'ERGO', details: 'BU-Rente: €1.500/Mon., Endalter 67, ohne Ausschlüsse', praemie: '€89/Mon.', beginn: '01.03.2018', status: 'Aktiv' },
+    { kunde: 'Peter Schmidt', kundenId: 'KD00001', typ: 'Wohngebäudeversicherung', versicherer: 'VHV', details: 'Vers.-Summe: €450.000, inkl. Elementar, gleitender Neuwert', praemie: '€450/Jahr', beginn: '15.06.2019', status: 'Aktiv' },
+    // Amira König KD00002
+    { kunde: 'Amira König', kundenId: 'KD00002', typ: 'Risikolebensversicherung', versicherer: 'ERGO', details: 'Vers.-Summe: €150.000, Laufzeit bis 02/2026', praemie: '€18/Mon.', beginn: '01.02.2016', status: 'Aktiv' },
+    { kunde: 'Amira König', kundenId: 'KD00002', typ: 'Berufsunfähigkeitsversicherung', versicherer: 'ERGO', details: 'BU-Rente: €1.800/Mon., Endalter 67', praemie: '€95/Mon.', beginn: '01.09.2015', status: 'Aktiv' },
+    { kunde: 'Amira König', kundenId: 'KD00002', typ: 'Unfallversicherung', versicherer: 'Helvetia', details: 'Invalidität €100.000, Progression 350%', praemie: '€180/Jahr', beginn: '01.01.2020', status: 'Aktiv' },
+    // Thomas Weber KD00003
+    { kunde: 'Thomas Weber', kundenId: 'KD00003', typ: 'Privathaftpflichtversicherung', versicherer: 'ERGO', details: 'Single, €50 Mio. Deckung', praemie: '€65/Jahr', beginn: '01.03.2021', status: 'Aktiv' },
+    // Anna Hoffmann KD00004
+    { kunde: 'Anna Hoffmann', kundenId: 'KD00004', typ: 'Risikolebensversicherung', versicherer: 'ERGO', details: 'Vers.-Summe: €300.000, Laufzeit bis 2045', praemie: '€25/Mon.', beginn: '01.07.2020', status: 'Aktiv' },
+    { kunde: 'Anna Hoffmann', kundenId: 'KD00004', typ: 'Berufsunfähigkeitsversicherung', versicherer: 'Alte Leipziger', details: 'BU-Rente: €2.000/Mon., Endalter 67', praemie: '€110/Mon.', beginn: '01.01.2019', status: 'Aktiv' },
+    // Michael Braun KD00005
+    { kunde: 'Michael Braun', kundenId: 'KD00005', typ: 'Berufsunfähigkeitsversicherung', versicherer: 'ERGO', details: 'BU-Rente: €3.500/Mon., Endalter 65', praemie: '€220/Mon.', beginn: '01.06.2010', status: 'Aktiv' },
+    { kunde: 'Michael Braun', kundenId: 'KD00005', typ: 'Wohngebäudeversicherung', versicherer: 'Axa', details: 'Vers.-Summe: €750.000, inkl. Elementar', praemie: '€680/Jahr', beginn: '01.01.2012', status: 'Aktiv' },
+    { kunde: 'Michael Braun', kundenId: 'KD00005', typ: 'Rechtsschutzversicherung', versicherer: 'ERGO', details: 'Premium inkl. Beruf, Verkehr, Privat', praemie: '€380/Jahr', beginn: '01.04.2018', status: 'Aktiv' },
+    // Lisa Müller KD00006
+    { kunde: 'Lisa Müller', kundenId: 'KD00006', typ: 'Berufsunfähigkeitsversicherung', versicherer: 'ERGO', details: 'BU-Rente: €2.500/Mon., Dienstunfähigkeitsklausel', praemie: '€145/Mon.', beginn: '01.08.2022', status: 'Aktiv' },
+    // Matthias Engel KD00007
+    { kunde: 'Matthias Engel', kundenId: 'KD00007', typ: 'Berufsunfähigkeitsversicherung', versicherer: 'Allianz', details: 'BU-Rente: €1.200/Mon., Endalter 65 - UNTERDECKT', praemie: '€75/Mon.', beginn: '01.04.2015', status: 'Aktiv' },
+    { kunde: 'Matthias Engel', kundenId: 'KD00007', typ: 'Privathaftpflichtversicherung', versicherer: 'ERGO', details: 'Familie, €50 Mio. Deckung', praemie: '€85/Jahr', beginn: '01.01.2018', status: 'Aktiv' },
+    // Christian Bauer KD00008
+    { kunde: 'Christian Bauer', kundenId: 'KD00008', typ: 'Rechtsschutzversicherung', versicherer: 'ERGO', details: 'Beruf & Privat, €300 SB', praemie: '€280/Jahr', beginn: '01.06.2021', status: 'Aktiv' },
+    // Martin Wolf KD00009
+    { kunde: 'Martin Wolf', kundenId: 'KD00009', typ: 'Unfallversicherung', versicherer: 'ERGO', details: 'Invalidität €150.000, Progression 500%', praemie: '€320/Jahr', beginn: '01.03.2017', status: 'Aktiv' },
+    { kunde: 'Martin Wolf', kundenId: 'KD00009', typ: 'Wohngebäudeversicherung', versicherer: 'VHV', details: 'Vers.-Summe: €380.000, inkl. Elementar', praemie: '€520/Jahr', beginn: '01.07.2016', status: 'Aktiv' },
+    // Eva Hartmann KD00010
+    { kunde: 'Eva Hartmann', kundenId: 'KD00010', typ: 'Berufsunfähigkeitsversicherung', versicherer: 'ERGO', details: 'BU-Rente: €1.000/Mon., Endalter 67 - Aufstockung empfohlen', praemie: '€68/Mon.', beginn: '01.09.2019', status: 'Aktiv' },
+    { kunde: 'Eva Hartmann', kundenId: 'KD00010', typ: 'Betriebshaftpflicht', versicherer: 'Hiscox', details: '€2 Mio. Deckung, Freelancer-Tarif', praemie: '€290/Jahr', beginn: '01.01.2020', status: 'Aktiv' }
+];
+
 function generateMockVertraege() {
     var now = new Date();
+    var bsNr = 1;
 
-    // Neugeschäft
+    // ======== BESTAND: Echte Verträge aus Kundendaten ========
+    mockBestand = [];
+    kundenBestandVertraege.forEach(function(v) {
+        var sparte = getSparte(v.typ);
+        var jahresbeitrag = parsePraemie(v.praemie);
+        var provFaktor = sparte === 'leben' ? 5 : (sparte === 'kranken' ? 3 : (sparte === 'kfz' ? 0.2 : 0.25));
+        // Beginn-Datum parsen
+        var bParts = v.beginn.split('.');
+        var beginnDate = new Date(parseInt(bParts[2]), parseInt(bParts[1]) - 1, parseInt(bParts[0]));
+        var laufzeit = now.getFullYear() - beginnDate.getFullYear();
+        mockBestand.push({
+            vertragsnr: 'BS-' + bParts[2] + '-' + String(bsNr++).padStart(3, '0'),
+            kunde: v.kunde, kundenId: v.kundenId,
+            sparte: sparte, sparteLabel: spartenLabels[sparte],
+            produkt: v.typ, versicherer: v.versicherer,
+            jahresbeitrag: jahresbeitrag, status: v.status,
+            vertragsbeginn: beginnDate, vertragsbeginnStr: v.beginn,
+            zahlweise: parseZahlweise(v.praemie),
+            provision: Math.floor(jahresbeitrag * provFaktor),
+            hauptfaelligkeit: '01.01.' + (now.getFullYear() + 1),
+            laufzeit: laufzeit + ' Jahre',
+            details: v.details
+        });
+    });
+
+    // ======== NEUGESCHÄFT: Neue Verträge für bestehende Kunden (letzte 90 Tage) ========
     mockNeugeschaeft = [];
-    for (var i = 0; i < 18; i++) {
-        var sparte = spartenKeys[i % 4];
-        var prod = randomItem(produkteMap[sparte]);
-        var kunde = kundenPool[i % kundenPool.length];
-        var beitrag = Math.floor(300 + Math.random() * 4700);
-        var daysAgo = Math.floor(Math.random() * 90);
-        var antragDate = new Date(now); antragDate.setDate(antragDate.getDate() - daysAgo);
-        var statusArr = ['Policiert', 'Policiert', 'Policiert', 'Antrag', 'Antrag', 'Abgelehnt'];
+    var ngVertraege = [
+        { kunde: 'Peter Schmidt', kundenId: 'KD00001', typ: 'Kfz-Versicherung', versicherer: 'Allianz', details: 'Kfz-Vollkasko, SF-Klasse 12, VW Golf', praemie: '€720/Jahr', daysAgo: 5, status: 'Policiert' },
+        { kunde: 'Peter Schmidt', kundenId: 'KD00001', typ: 'Hausratversicherung', versicherer: 'AXA', details: 'Vers.-Summe: €80.000, inkl. Fahrrad', praemie: '€185/Jahr', daysAgo: 22, status: 'Policiert' },
+        { kunde: 'Amira König', kundenId: 'KD00002', typ: 'Zahnzusatzversicherung', versicherer: 'DKV', details: 'Zahnersatz 90%, Prophylaxe 100%', praemie: '€32/Mon.', daysAgo: 12, status: 'Policiert' },
+        { kunde: 'Thomas Weber', kundenId: 'KD00003', typ: 'Berufsunfähigkeitsversicherung', versicherer: 'HDI', details: 'BU-Rente: €2.000/Mon., Endalter 67', praemie: '€125/Mon.', daysAgo: 8, status: 'Antrag' },
+        { kunde: 'Thomas Weber', kundenId: 'KD00003', typ: 'Hausratversicherung', versicherer: 'Allianz', details: 'Vers.-Summe: €45.000, Single-Haushalt', praemie: '€95/Jahr', daysAgo: 30, status: 'Policiert' },
+        { kunde: 'Anna Hoffmann', kundenId: 'KD00004', typ: 'Unfallversicherung', versicherer: 'Zurich', details: 'Familie, Invalidität €200.000', praemie: '€280/Jahr', daysAgo: 15, status: 'Policiert' },
+        { kunde: 'Anna Hoffmann', kundenId: 'KD00004', typ: 'Pflegezusatzversicherung', versicherer: 'Signal Iduna', details: 'Pflege-Bahr, €600/Mon.', praemie: '€45/Mon.', daysAgo: 45, status: 'Policiert' },
+        { kunde: 'Michael Braun', kundenId: 'KD00005', typ: 'Kfz-Versicherung', versicherer: 'HUK-Coburg', details: 'Kfz-Vollkasko, Mercedes E-Klasse', praemie: '€1.450/Jahr', daysAgo: 3, status: 'Antrag' },
+        { kunde: 'Lisa Müller', kundenId: 'KD00006', typ: 'Privathaftpflichtversicherung', versicherer: 'HDI', details: 'Single mit Partner, €50 Mio. Deckung', praemie: '€75/Jahr', daysAgo: 18, status: 'Policiert' },
+        { kunde: 'Lisa Müller', kundenId: 'KD00006', typ: 'Krankentagegeld', versicherer: 'DKV', details: 'Ab 43. Tag, €100/Tag', praemie: '€55/Mon.', daysAgo: 25, status: 'Policiert' },
+        { kunde: 'Matthias Engel', kundenId: 'KD00007', typ: 'Kfz-Versicherung', versicherer: 'VHV', details: 'Kfz-Teilkasko, VW Passat', praemie: '€480/Jahr', daysAgo: 35, status: 'Policiert' },
+        { kunde: 'Christian Bauer', kundenId: 'KD00008', typ: 'Berufsunfähigkeitsversicherung', versicherer: 'Nürnberger', details: 'BU-Rente: €1.800/Mon., Endalter 67', praemie: '€98/Mon.', daysAgo: 10, status: 'Antrag' },
+        { kunde: 'Christian Bauer', kundenId: 'KD00008', typ: 'Hausratversicherung', versicherer: 'Generali', details: 'Vers.-Summe: €60.000, Single', praemie: '€110/Jahr', daysAgo: 42, status: 'Policiert' },
+        { kunde: 'Martin Wolf', kundenId: 'KD00009', typ: 'Rechtsschutzversicherung', versicherer: 'ARAG', details: 'Familie, inkl. Beruf & Verkehr', praemie: '€420/Jahr', daysAgo: 20, status: 'Policiert' },
+        { kunde: 'Eva Hartmann', kundenId: 'KD00010', typ: 'Krankenversicherung Zusatz', versicherer: 'Debeka', details: 'Heilpraktiker & Sehhilfen', praemie: '€28/Mon.', daysAgo: 7, status: 'Policiert' },
+        { kunde: 'Eva Hartmann', kundenId: 'KD00010', typ: 'Unfallversicherung', versicherer: 'Zurich', details: 'Invalidität €100.000, Progression 225%', praemie: '€195/Jahr', daysAgo: 55, status: 'Abgelehnt' },
+        { kunde: 'Amira König', kundenId: 'KD00002', typ: 'Rechtsschutzversicherung', versicherer: 'ARAG', details: 'Beruf & Privat, €250 SB', praemie: '€310/Jahr', daysAgo: 60, status: 'Policiert' },
+        { kunde: 'Michael Braun', kundenId: 'KD00005', typ: 'Unfallversicherung', versicherer: 'Helvetia', details: 'Geschäftsführer, Invalidität €300.000', praemie: '€450/Jahr', daysAgo: 50, status: 'Policiert' }
+    ];
+
+    ngVertraege.forEach(function(v, i) {
+        var sparte = getSparte(v.typ);
+        var jahresbeitrag = parsePraemie(v.praemie);
+        var antragDate = new Date(now); antragDate.setDate(antragDate.getDate() - v.daysAgo);
         var provFaktor = sparte === 'leben' ? 5 : (sparte === 'kranken' ? 3 : (sparte === 'kfz' ? 0.2 : 0.25));
         mockNeugeschaeft.push({
             vertragsnr: 'NG-' + now.getFullYear() + '-' + String(i + 1).padStart(3, '0'),
-            kunde: kunde.name, kundenId: kunde.id,
+            kunde: v.kunde, kundenId: v.kundenId,
             sparte: sparte, sparteLabel: spartenLabels[sparte],
-            produkt: prod.produkt, versicherer: prod.versicherer,
-            jahresbeitrag: beitrag, status: randomItem(statusArr),
+            produkt: v.typ, versicherer: v.versicherer,
+            jahresbeitrag: jahresbeitrag, status: v.status,
             antragsdatum: antragDate, antragsdatumStr: fmtDatum(antragDate),
-            zahlweise: randomItem(zahlweisen),
-            provision: Math.floor(beitrag * provFaktor),
+            zahlweise: parseZahlweise(v.praemie),
+            provision: Math.floor(jahresbeitrag * provFaktor),
             vertragsbeginn: antragDate, vertragsbeginnStr: fmtDatum(antragDate),
             hauptfaelligkeit: '01.01.' + (now.getFullYear() + 1),
-            laufzeit: (1 + Math.floor(Math.random() * 5)) + ' Jahre'
+            laufzeit: '1 Jahr',
+            details: v.details
         });
-    }
+    });
 
-    // Bestand
-    mockBestand = [];
-    for (var j = 0; j < 28; j++) {
-        var spB = spartenKeys[j % 4];
-        var prodB = randomItem(produkteMap[spB]);
-        var kundeB = kundenPool[j % kundenPool.length];
-        var beitragB = Math.floor(200 + Math.random() * 3800);
-        var yearsAgo = 1 + Math.floor(Math.random() * 9);
-        var beginnB = new Date(now.getFullYear() - yearsAgo, Math.floor(Math.random() * 12), 1 + Math.floor(Math.random() * 28));
-        var provFaktorB = spB === 'leben' ? 5 : (spB === 'kranken' ? 3 : (spB === 'kfz' ? 0.2 : 0.25));
-        mockBestand.push({
-            vertragsnr: 'BS-' + (now.getFullYear() - yearsAgo) + '-' + String(j + 1).padStart(3, '0'),
-            kunde: kundeB.name, kundenId: kundeB.id,
-            sparte: spB, sparteLabel: spartenLabels[spB],
-            produkt: prodB.produkt, versicherer: prodB.versicherer,
-            jahresbeitrag: beitragB, status: Math.random() > 0.1 ? 'Aktiv' : 'Ruhend',
-            vertragsbeginn: beginnB, vertragsbeginnStr: fmtDatum(beginnB),
-            zahlweise: randomItem(zahlweisen),
-            provision: Math.floor(beitragB * provFaktorB),
-            hauptfaelligkeit: '01.01.' + (now.getFullYear() + 1),
-            laufzeit: yearsAgo + ' Jahre'
-        });
-    }
-
-    // Storno
+    // ======== STORNO: Stornierte Verträge für reale Kunden ========
     mockStorno = [];
-    for (var k = 0; k < 11; k++) {
-        var spS = spartenKeys[k % 4];
-        var prodS = randomItem(produkteMap[spS]);
-        var kundeS = kundenPool[k % kundenPool.length];
-        var beitragS = Math.floor(300 + Math.random() * 3500);
-        var stornoDaysAgo = Math.floor(Math.random() * 180);
-        var stornoDate = new Date(now); stornoDate.setDate(stornoDate.getDate() - stornoDaysAgo);
-        var istFrueh = Math.random() > 0.5;
-        var provFaktorS = spS === 'leben' ? 5 : (spS === 'kranken' ? 3 : (spS === 'kfz' ? 0.2 : 0.25));
+    // Storno-Verträge: bewusst ANDERE Kunden als auf der A-02 Übersicht
+    var stVertraege = [
+        { kunde: 'Herbert Lange', kundenId: 'KD00015', typ: 'Kfz-Versicherung', versicherer: 'HUK-Coburg', details: 'Kfz-Haftpflicht, alter Vertrag', praemie: '€580/Jahr', daysAgo: 30, grund: 'Wettbewerber', frueh: false },
+        { kunde: 'Sandra Richter', kundenId: 'KD00016', typ: 'Hausratversicherung', versicherer: 'AXA', details: 'Vers.-Summe: €40.000', praemie: '€120/Jahr', daysAgo: 60, grund: 'Kein Bedarf mehr', frueh: false },
+        { kunde: 'Frank Zimmermann', kundenId: 'KD00017', typ: 'Unfallversicherung', versicherer: 'Zurich', details: 'Basis-Tarif, Invalidität €50.000', praemie: '€150/Jahr', daysAgo: 15, grund: 'Preis / zu teuer', frueh: true },
+        { kunde: 'Monika Schwarz', kundenId: 'KD00018', typ: 'Privathaftpflichtversicherung', versicherer: 'HDI', details: 'Alter Tarif, €10 Mio. Deckung', praemie: '€95/Jahr', daysAgo: 90, grund: 'Wettbewerber', frueh: false },
+        { kunde: 'Werner Krüger', kundenId: 'KD00019', typ: 'Rechtsschutzversicherung', versicherer: 'ARAG', details: 'Privat, €500 SB', praemie: '€240/Jahr', daysAgo: 45, grund: 'Preis / zu teuer', frueh: true },
+        { kunde: 'Birgit Neumann', kundenId: 'KD00020', typ: 'Zahnzusatzversicherung', versicherer: 'DKV', details: 'Zahnersatz 60%', praemie: '€22/Mon.', daysAgo: 25, grund: 'Leistung unzureichend', frueh: true },
+        { kunde: 'Jürgen Fischer', kundenId: 'KD00021', typ: 'Kfz-Versicherung', versicherer: 'Allianz', details: 'Teilkasko, BMW 3er', praemie: '€380/Jahr', daysAgo: 75, grund: 'Wettbewerber', frueh: false },
+        { kunde: 'Klaus Wagner', kundenId: 'KD00022', typ: 'Berufsunfähigkeitsversicherung', versicherer: 'Generali', details: 'BU-Rente: €800/Mon.', praemie: '€180/Mon.', daysAgo: 120, grund: 'Finanzielle Gründe', frueh: true },
+        { kunde: 'Petra Schneider', kundenId: 'KD00023', typ: 'Rechtsschutzversicherung', versicherer: 'ERGO', details: 'Privat & Beruf', praemie: '€260/Jahr', daysAgo: 100, grund: 'Kein Bedarf mehr', frueh: false },
+        { kunde: 'Stefan Becker', kundenId: 'KD00024', typ: 'Kfz-Versicherung', versicherer: 'VHV', details: 'Kfz-Haftpflicht, Zweitwagen', praemie: '€350/Jahr', daysAgo: 40, grund: 'Preis / zu teuer', frueh: true },
+        { kunde: 'Susanne Vogel', kundenId: 'KD00025', typ: 'Zahnzusatzversicherung', versicherer: 'Allianz', details: 'Zahnersatz 70%, Prophylaxe', praemie: '€28/Mon.', daysAgo: 150, grund: 'Leistung unzureichend', frueh: false }
+    ];
+
+    stVertraege.forEach(function(v, i) {
+        var sparte = getSparte(v.typ);
+        var jahresbeitrag = parsePraemie(v.praemie);
+        var stornoDate = new Date(now); stornoDate.setDate(stornoDate.getDate() - v.daysAgo);
+        var provFaktor = sparte === 'leben' ? 5 : (sparte === 'kranken' ? 3 : (sparte === 'kfz' ? 0.2 : 0.25));
         mockStorno.push({
-            vertragsnr: 'ST-' + now.getFullYear() + '-' + String(k + 1).padStart(3, '0'),
-            kunde: kundeS.name, kundenId: kundeS.id,
-            sparte: spS, sparteLabel: spartenLabels[spS],
-            produkt: prodS.produkt, versicherer: prodS.versicherer,
-            jahresbeitrag: beitragS, status: 'Storniert',
+            vertragsnr: 'ST-' + now.getFullYear() + '-' + String(i + 1).padStart(3, '0'),
+            kunde: v.kunde, kundenId: v.kundenId,
+            sparte: sparte, sparteLabel: spartenLabels[sparte],
+            produkt: v.typ, versicherer: v.versicherer,
+            jahresbeitrag: jahresbeitrag, status: 'Storniert',
             stornodatum: stornoDate, stornodatumStr: fmtDatum(stornoDate),
-            stornogrund: randomItem(stornoGruende),
-            stornoTyp: istFrueh ? 'Frühstorno' : 'Spätstorno',
-            stornoTypClass: istFrueh ? 'frueh' : 'spaet',
-            zahlweise: randomItem(zahlweisen),
-            provision: Math.floor(beitragS * provFaktorS),
+            stornogrund: v.grund,
+            stornoTyp: v.frueh ? 'Frühstorno' : 'Spätstorno',
+            stornoTypClass: v.frueh ? 'frueh' : 'spaet',
+            zahlweise: parseZahlweise(v.praemie),
+            provision: Math.floor(jahresbeitrag * provFaktor),
             vertragsbeginn: stornoDate, vertragsbeginnStr: fmtDatum(stornoDate),
             hauptfaelligkeit: '-',
-            laufzeit: '-'
+            laufzeit: '-',
+            details: v.details
         });
-    }
+    });
 }
 
 function fillNeugeschaeftTable() {

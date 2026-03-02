@@ -1201,7 +1201,7 @@ function fillMRHDetail(kunde) {
                 '<div class="mrh-a10-saeulen-metric"><span class="label">Status</span><span class="value">' + (kunde.benefits.aktiv ? 'Aktiv' : 'Kein Mandat') + '</span></div>' +
             '</div>' +
             '<div class="mrh-a10-saeulen-card finance' + (!kunde.finance.aktiv ? ' inactive' : '') + '">' +
-                '<h5><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg> Finance</h5>' +
+                '<h5><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M18 5a8 8 0 00-12 7 8 8 0 0012 7"/><line x1="4" y1="10" x2="16" y2="10"/><line x1="4" y1="14" x2="16" y2="14"/></svg> Finance</h5>' +
                 '<div class="mrh-a10-saeulen-metric"><span class="label">Kreditvers.</span><span class="value">' + (kunde.finance.kreditvers || '—') + '</span></div>' +
                 '<div class="mrh-a10-saeulen-metric"><span class="label">Leasing</span><span class="value">' + (kunde.finance.leasing || '—') + '</span></div>' +
                 '<div class="mrh-a10-saeulen-metric"><span class="label">Courtage</span><span class="value">' + (kunde.finance.courtage || '—') + '</span></div>' +

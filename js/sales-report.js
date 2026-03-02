@@ -570,8 +570,7 @@ function renderKennzahlenSummary() {
         <div class="summary-card">
             <div class="summary-icon">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
-                    <line x1="12" y1="1" x2="12" y2="23"></line>
-                    <path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"></path>
+                    <path d="M18 5a8 8 0 00-12 7 8 8 0 0012 7"></path><line x1="4" y1="10" x2="16" y2="10"></line><line x1="4" y1="14" x2="16" y2="14"></line>
                 </svg>
             </div>
             <div class="summary-content">

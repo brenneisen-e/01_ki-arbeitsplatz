@@ -953,7 +953,7 @@
 .abschluss-item {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    gap: 14px;
     padding: 12px 14px;
     background: #f8fafc;
     border-radius: 8px;
@@ -991,6 +991,8 @@
     display: flex;
     flex-direction: column;
     gap: 2px;
+    flex: 1;
+    min-width: 0;
 }
 
 .abschluss-kunde {

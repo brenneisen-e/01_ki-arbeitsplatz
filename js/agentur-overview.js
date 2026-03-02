@@ -162,6 +162,7 @@ function updateDynamicDates() {
             }
         }
     }
+}
 
 /**
  * Tab-Wechsel Funktion

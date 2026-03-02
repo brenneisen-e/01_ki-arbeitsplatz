@@ -103,7 +103,65 @@ function loadAgenturData(vermittlerId) {
     } else {
         showAgenturTab('uebersicht');
     }
+
+    // Dynamische Daten in der Übersicht setzen
+    updateDynamicDates();
 }
+
+/**
+ * Setzt alle Termine, Aufgaben- und Abschluss-Daten dynamisch relativ zu heute
+ */
+function updateDynamicDates() {
+    var now = new Date();
+    var tage = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
+
+    // Hilfsfunktion: Datum formatieren als "Mo, 13.01."
+    function fmtTag(d) {
+        return tage[d.getDay()] + ', ' + String(d.getDate()).padStart(2, '0') + '.' + String(d.getMonth() + 1).padStart(2, '0') + '.';
+    }
+
+    // Heute-Termin: aktuelle Uhrzeit + 2 Stunden
+    var heuteZeit = document.getElementById('terminHeuteZeit');
+    if (heuteZeit) {
+        var plus2 = new Date(now.getTime() + 2 * 60 * 60 * 1000);
+        heuteZeit.textContent = String(plus2.getHours()).padStart(2, '0') + ':' + String(Math.floor(plus2.getMinutes() / 15) * 15).padStart(2, '0');
+    }
+
+    // Aufgabe 1: Heute + Uhrzeit
+    var aufgabeDue1 = document.getElementById('aufgabeDue1');
+    if (aufgabeDue1 && heuteZeit) {
+        aufgabeDue1.textContent = 'Heute, ' + (heuteZeit.textContent || '16:00');
+    }
+
+    // Termine Tag 1-3: morgen, übermorgen, +3 Tage
+    for (var i = 1; i <= 3; i++) {
+        var el = document.getElementById('terminTag' + i);
+        if (el) {
+            var d = new Date(now);
+            d.setDate(d.getDate() + i);
+            if (i === 1) {
+                el.textContent = 'Morgen';
+            } else {
+                el.textContent = fmtTag(d);
+            }
+        }
+    }
+
+    // Abschlüsse: Heute, Gestern, vor 3 Tagen, vor 4 Tagen
+    var abschlussOffsets = [0, -1, -3, -4];
+    var abschlussLabels = ['Heute', 'Gestern', null, null];
+    for (var j = 0; j < abschlussOffsets.length; j++) {
+        var el2 = document.getElementById('abschlussDatum' + (j + 1));
+        if (el2) {
+            if (abschlussLabels[j]) {
+                el2.textContent = abschlussLabels[j];
+            } else {
+                var d2 = new Date(now);
+                d2.setDate(d2.getDate() + abschlussOffsets[j]);
+                el2.textContent = fmtTag(d2);
+            }
+        }
+    }
 
 /**
  * Tab-Wechsel Funktion
@@ -1481,3 +1539,8 @@ window.toggleAgenturChat = toggleAgenturChat;
 window.hideAgenturChat = hideAgenturChat;
 window.showNeuePotentiale = showNeuePotentiale;
 window.toggleWeiterePotentiale = toggleWeiterePotentiale;
+
+// Dynamische Daten auch bei direktem Seitenaufruf setzen
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(updateDynamicDates, 200);
+});

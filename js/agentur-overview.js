@@ -185,6 +185,16 @@ function updateDynamicDates() {
         }
         cell.textContent = action + ' (' + label + ')';
     });
+
+    // Pipeline-Zeitraum setzen (01.01.YYYY – heute)
+    var pipelineZeitraum = document.getElementById('pipelineZeitraum');
+    if (pipelineZeitraum) {
+        var jahresanfang = '01.01.' + now.getFullYear();
+        var heute = String(now.getDate()).padStart(2, '0') + '.'
+                  + String(now.getMonth() + 1).padStart(2, '0') + '.'
+                  + now.getFullYear();
+        pipelineZeitraum.textContent = 'Zeitraum: ' + jahresanfang + ' – ' + heute;
+    }
 }
 
 /**
@@ -1569,6 +1579,15 @@ window.toggleAgenturChat = toggleAgenturChat;
 window.hideAgenturChat = hideAgenturChat;
 window.showNeuePotentiale = showNeuePotentiale;
 window.toggleWeiterePotentiale = toggleWeiterePotentiale;
+
+/**
+ * Setzt alle Demo-Daten zurück (localStorage löschen + Seite neu laden)
+ */
+function resetDemoData() {
+    localStorage.clear();
+    location.reload();
+}
+window.resetDemoData = resetDemoData;
 
 // Dynamische Daten auch bei direktem Seitenaufruf setzen
 document.addEventListener('DOMContentLoaded', function() {

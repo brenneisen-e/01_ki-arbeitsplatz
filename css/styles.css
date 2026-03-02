@@ -6063,6 +6063,16 @@ button svg,
     color: #64748b;
 }
 
+.pipeline-zeitraum {
+    font-size: 12px;
+    font-weight: 500;
+    color: #64748b;
+    background: #f1f5f9;
+    padding: 3px 10px;
+    border-radius: 6px;
+    margin-left: auto;
+}
+
 /* FIDA Pipeline */
 .fida-pipeline-section {
     background: white;

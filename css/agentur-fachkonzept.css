@@ -367,7 +367,18 @@
     background: #f8fafc;
     border-radius: 10px;
     border: 1px solid #f1f5f9;
-    transition: border-color 0.2s;
+    transition: all 0.2s;
+}
+
+.kennzahl-item.clickable {
+    cursor: pointer;
+}
+
+.kennzahl-item.clickable:hover {
+    border-color: #86BC25;
+    background: #f8fdf5;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(134, 188, 37, 0.15);
 }
 
 .kennzahl-item:hover {
@@ -635,6 +646,38 @@
     flex-direction: column;
     gap: 4px;
 }
+
+.aufgabe-meta {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 1px;
+}
+
+.aufgabe-kunde {
+    font-size: 12px;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.aufgabe-kid {
+    font-size: 10px;
+    color: #94a3b8;
+    font-weight: 500;
+}
+
+.aufgabe-kategorie {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 1px 6px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.kategorie-nachfassen { background: #fef3c7; color: #92400e; }
+.kategorie-angebot { background: #dbeafe; color: #1e40af; }
+.kategorie-intern { background: #f1f5f9; color: #64748b; }
 
 .aufgabe-content label {
     font-size: 13.5px;
@@ -1408,6 +1451,104 @@
     background: rgba(220, 38, 38, 0.1);
     border-left: 3px solid #dc2626;
     padding-left: 12px;
+}
+
+/* Neue Potentiale-Liste Struktur */
+.potentiale-liste-neu {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.potential-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    border-radius: 10px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.potential-card:hover {
+    background: #f1f5f9;
+    border-color: #cbd5e1;
+    transform: translateX(2px);
+}
+
+.potential-card.highlight {
+    background: #f0fdf4;
+    border-color: #86BC25;
+    border-left: 3px solid #86BC25;
+}
+
+.potential-card-left {
+    flex: 1;
+    min-width: 0;
+}
+
+.potential-kunde {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 2px;
+}
+
+.potential-kunde strong {
+    font-size: 14px;
+    color: #1e293b;
+}
+
+.potential-kunden-id {
+    font-size: 11px;
+    color: #94a3b8;
+    font-weight: 500;
+}
+
+.potential-produkt {
+    font-size: 13px;
+    font-weight: 600;
+    color: #2563eb;
+    margin-bottom: 2px;
+}
+
+.potential-beschreibung {
+    font-size: 12px;
+    color: #64748b;
+    line-height: 1.4;
+}
+
+.potential-card-right {
+    display: flex;
+    gap: 16px;
+    flex-shrink: 0;
+    margin-left: 20px;
+}
+
+.potential-kennzahl {
+    text-align: right;
+}
+
+.potential-kennzahl-label {
+    display: block;
+    font-size: 10px;
+    color: #94a3b8;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+}
+
+.potential-kennzahl-value {
+    display: block;
+    font-size: 14px;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.potential-kennzahl-value.prov {
+    color: #059669;
 }
 
 /* Responsive Übersicht */

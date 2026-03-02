@@ -2013,7 +2013,19 @@
                                 <button class="fida-filter-btn" data-filter="kfz" onclick="filterVertraegeSparte('neugeschaeft','kfz')">Kfz</button>
                             </div>
                         </div>
-                        <div class="ng-kunden-accordion" id="ngKundenAccordion"></div>
+                        <table class="fida-cases-table vertrags-table">
+                            <thead>
+                                <tr>
+                                    <th>Vertragsnr.</th>
+                                    <th>Sparte / Produkt</th>
+                                    <th>Versicherer</th>
+                                    <th>Jahresbeitrag</th>
+                                    <th>Status</th>
+                                    <th>Antragsdatum</th>
+                                </tr>
+                            </thead>
+                            <tbody id="neugeschaeftTableBody"></tbody>
+                        </table>
                     </div>
                 </div>
 
@@ -3402,7 +3414,9 @@
             </div>
         </div>
 
-    <!-- Vertragsdetail Modal -->
+    </div>
+
+    <!-- Vertragsdetail Modal (auf body-Ebene für korrektes z-index) -->
     <div class="vertrag-detail-modal" id="vertragDetailModal" style="display:none;">
         <div class="modal-overlay" onclick="closeVertragDetail()"></div>
         <div class="modal-content vertrag-modal-content">
@@ -3466,6 +3480,28 @@
         </div>
     </div>
 
+    <!-- Angebot Toast-Benachrichtigung -->
+    <div class="angebot-toast" id="angebotToast"></div>
+
+    <!-- Tarifvergleich Modal -->
+    <div class="tarifvergleich-modal" id="tarifvergleichModal" style="display:none;">
+        <div class="modal-overlay" onclick="closeTarifvergleich()"></div>
+        <div class="modal-content tarifvergleich-modal-content">
+            <div class="modal-header">
+                <div class="modal-title-row">
+                    <h2 id="tvModalTitle">Tarifvergleich</h2>
+                </div>
+                <button class="modal-close" onclick="closeTarifvergleich()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body tarifvergleich-body" id="tvModalBody">
+                <!-- Dynamisch befüllt -->
+            </div>
+        </div>
     </div>
 
     <!-- Floating AI Chat Widget für Agentur (außerhalb des agenturOverview für korrekte Fixed-Positionierung) -->
@@ -4606,7 +4642,7 @@
                                 <div class="impuls-detail-section">
                                     <h4>Aktionen</h4>
                                     <div class="impuls-actions">
-                                        <div class="angebot-dropdown-wrapper">
+                                        <div class="angebot-dropdown-wrapper" data-produkt="Risikolebensversicherung" data-empfehlung="€300.000 Versicherungssumme, 20 Jahre Laufzeit, ca. €25/Monat">
                                             <button class="action-btn primary angebot-erstellen-btn" onclick="toggleAngebotMenu(event, this)">
                                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
                                                     <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path>
@@ -4615,15 +4651,15 @@
                                                 Angebot erstellen
                                             </button>
                                             <div class="angebot-context-menu" style="display:none;">
-                                                <div class="angebot-menu-item" onclick="angebotAction('pdf')">
+                                                <div class="angebot-menu-item" onclick="angebotAction('pdf', this)">
                                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
                                                     PDF generieren
                                                 </div>
-                                                <div class="angebot-menu-item" onclick="angebotAction('entwurf')">
+                                                <div class="angebot-menu-item" onclick="angebotAction('entwurf', this)">
                                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                                                     Als Entwurf speichern
                                                 </div>
-                                                <div class="angebot-menu-item" onclick="angebotAction('vergleich')">
+                                                <div class="angebot-menu-item" onclick="angebotAction('vergleich', this)">
                                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
                                                     Tarifvergleich starten
                                                 </div>
@@ -4680,7 +4716,7 @@
                                 <div class="impuls-detail-section">
                                     <h4>Aktionen</h4>
                                     <div class="impuls-actions">
-                                        <div class="angebot-dropdown-wrapper">
+                                        <div class="angebot-dropdown-wrapper" data-produkt="Fondsgebundene Rentenversicherung" data-empfehlung="Steuervorteil + Todesfallschutz, Depot €85.000">
                                             <button class="action-btn primary angebot-erstellen-btn" onclick="toggleAngebotMenu(event, this)">
                                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
                                                     <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path>
@@ -4689,15 +4725,15 @@
                                                 Angebot erstellen
                                             </button>
                                             <div class="angebot-context-menu" style="display:none;">
-                                                <div class="angebot-menu-item" onclick="angebotAction('pdf')">
+                                                <div class="angebot-menu-item" onclick="angebotAction('pdf', this)">
                                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
                                                     PDF generieren
                                                 </div>
-                                                <div class="angebot-menu-item" onclick="angebotAction('entwurf')">
+                                                <div class="angebot-menu-item" onclick="angebotAction('entwurf', this)">
                                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                                                     Als Entwurf speichern
                                                 </div>
-                                                <div class="angebot-menu-item" onclick="angebotAction('vergleich')">
+                                                <div class="angebot-menu-item" onclick="angebotAction('vergleich', this)">
                                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
                                                     Tarifvergleich starten
                                                 </div>
@@ -4809,7 +4845,7 @@
                                 <div class="impuls-detail-section">
                                     <h4>Aktionen</h4>
                                     <div class="impuls-actions">
-                                        <div class="angebot-dropdown-wrapper">
+                                        <div class="angebot-dropdown-wrapper" data-produkt="Kfz-Versicherung" data-empfehlung="Wechsel zu HDI Kfz-Vollkasko, ca. €52/Monat (Ersparnis ~€8/Monat)">
                                             <button class="action-btn primary angebot-erstellen-btn" onclick="toggleAngebotMenu(event, this)">
                                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
                                                     <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path>
@@ -4818,15 +4854,15 @@
                                                 Angebot erstellen
                                             </button>
                                             <div class="angebot-context-menu" style="display:none;">
-                                                <div class="angebot-menu-item" onclick="angebotAction('pdf')">
+                                                <div class="angebot-menu-item" onclick="angebotAction('pdf', this)">
                                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
                                                     PDF generieren
                                                 </div>
-                                                <div class="angebot-menu-item" onclick="angebotAction('entwurf')">
+                                                <div class="angebot-menu-item" onclick="angebotAction('entwurf', this)">
                                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                                                     Als Entwurf speichern
                                                 </div>
-                                                <div class="angebot-menu-item" onclick="angebotAction('vergleich')">
+                                                <div class="angebot-menu-item" onclick="angebotAction('vergleich', this)">
                                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
                                                     Tarifvergleich starten
                                                 </div>
@@ -4902,7 +4938,7 @@
                                 <div class="impuls-detail-section">
                                     <h4>Aktionen</h4>
                                     <div class="impuls-actions">
-                                        <div class="angebot-dropdown-wrapper">
+                                        <div class="angebot-dropdown-wrapper" data-produkt="BU-Nachversicherung" data-empfehlung="Aufstockung auf €3.700/Monat, Mehrpr\u00e4mie ca. €120-150/Monat">
                                             <button class="action-btn primary angebot-erstellen-btn" onclick="toggleAngebotMenu(event, this)">
                                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
                                                     <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path>
@@ -4911,15 +4947,15 @@
                                                 Angebot erstellen
                                             </button>
                                             <div class="angebot-context-menu" style="display:none;">
-                                                <div class="angebot-menu-item" onclick="angebotAction('pdf')">
+                                                <div class="angebot-menu-item" onclick="angebotAction('pdf', this)">
                                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
                                                     PDF generieren
                                                 </div>
-                                                <div class="angebot-menu-item" onclick="angebotAction('entwurf')">
+                                                <div class="angebot-menu-item" onclick="angebotAction('entwurf', this)">
                                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                                                     Als Entwurf speichern
                                                 </div>
-                                                <div class="angebot-menu-item" onclick="angebotAction('vergleich')">
+                                                <div class="angebot-menu-item" onclick="angebotAction('vergleich', this)">
                                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
                                                     Tarifvergleich starten
                                                 </div>

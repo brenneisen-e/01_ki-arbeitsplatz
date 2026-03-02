@@ -8,11 +8,34 @@
     align-items: center;
     gap: 2px;
     position: absolute;
-    right: 32px;
+    right: 80px;
     z-index: 2;
     background: rgba(255,255,255,0.15);
     border-radius: 8px;
     padding: 2px;
+}
+
+.demo-reset-btn {
+    position: absolute;
+    right: 32px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 8px;
+    padding: 6px 8px;
+    color: rgba(255,255,255,0.8);
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.demo-reset-btn:hover {
+    background: rgba(255,255,255,0.25);
+    color: #fff;
 }
 
 .view-mode-btn {

@@ -2622,21 +2622,45 @@
                     <!-- Potentiale KPIs -->
                     <div class="kpi-detail-grid">
                         <div class="kpi-detail-card">
+                            <div class="kpi-detail-icon consent">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22">
+                                    <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"></path>
+                                    <circle cx="9" cy="7" r="4"></circle>
+                                    <path d="M23 21v-2a4 4 0 00-3-3.87"></path>
+                                    <path d="M16 3.13a4 4 0 010 7.75"></path>
+                                </svg>
+                            </div>
                             <div class="kpi-detail-header">Consent-Kunden</div>
                             <div class="kpi-detail-value" id="fidaConsentKunden">847</div>
                             <div class="kpi-detail-sub">von 1.234 Kunden (69%)</div>
                         </div>
                         <div class="kpi-detail-card">
+                            <div class="kpi-detail-icon potentiale">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22">
+                                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                                </svg>
+                            </div>
                             <div class="kpi-detail-header">Identifizierte Potentiale</div>
                             <div class="kpi-detail-value" id="fidaPotentiale">1.892</div>
                             <div class="kpi-detail-sub">Cross-/Upselling-Chancen</div>
                         </div>
                         <div class="kpi-detail-card">
+                            <div class="kpi-detail-icon praemien">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22">
+                                    <line x1="12" y1="1" x2="12" y2="23"></line>
+                                    <path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"></path>
+                                </svg>
+                            </div>
                             <div class="kpi-detail-header">Geschätztes Prämienvolumen</div>
                             <div class="kpi-detail-value" id="fidaPraemien">€284.500</div>
                             <div class="kpi-detail-sub">Jährliches Potential</div>
                         </div>
                         <div class="kpi-detail-card">
+                            <div class="kpi-detail-icon conversion">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22">
+                                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                                </svg>
+                            </div>
                             <div class="kpi-detail-header">Conversion-Rate</div>
                             <div class="kpi-detail-value" id="fidaConversion">12,4%</div>
                             <div class="kpi-detail-sub">Abgeschlossen / Bearbeitet</div>
@@ -2656,7 +2680,7 @@
                         <div class="fida-pipeline">
                             <div class="pipeline-stage">
                                 <div class="pipeline-count">423</div>
-                                <div class="pipeline-label">Neu identifiziert</div>
+                                <div class="pipeline-label">Durch OpenFinance-KI identifiziert</div>
                             </div>
                             <div class="pipeline-arrow">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
@@ -2727,8 +2751,8 @@
                                     <td><span class="potential-type uebergreifend">Übergreifend</span></td>
                                     <td><span class="fida-source-badge small">Open Finance</span></td>
                                     <td><strong>€8.500/Jahr</strong></td>
-                                    <td><span class="status-badge neu">Neu identifiziert</span></td>
-                                    <td>Open Finance Abgleich (heute)</td>
+                                    <td><span class="status-badge neu">Durch OpenFinance-KI identifiziert</span></td>
+                                    <td class="letzte-aktion" data-action="Open Finance Abgleich" data-days-ago="0"></td>
                                     <td>
                                         <button class="action-btn" title="Kundenakte öffnen" onclick="event.stopPropagation(); openKundenDetail('Peter Schmidt', 'KD00001')">
                                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
@@ -2745,7 +2769,7 @@
                                     <td><span class="fida-source-badge small">Versicherung</span></td>
                                     <td><strong>€650/Jahr</strong></td>
                                     <td><span class="status-badge angeschrieben">Angeschrieben</span></td>
-                                    <td>Brief versendet (25.11.)</td>
+                                    <td class="letzte-aktion" data-action="Brief versendet" data-days-ago="5"></td>
                                     <td>
                                         <button class="action-btn" title="Kundenakte öffnen" onclick="event.stopPropagation(); openKundenDetail('Amira König', 'KD00002')">
                                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
@@ -2761,8 +2785,8 @@
                                     <td><span class="potential-type risiko">Risikoleben fehlt</span></td>
                                     <td><span class="fida-source-badge small">Kredit</span></td>
                                     <td><strong>€1.800/Jahr</strong></td>
-                                    <td><span class="status-badge neu">Neu identifiziert</span></td>
-                                    <td>Open Finance Abgleich (30.11.)</td>
+                                    <td><span class="status-badge neu">Durch OpenFinance-KI identifiziert</span></td>
+                                    <td class="letzte-aktion" data-action="Open Finance Abgleich" data-days-ago="2"></td>
                                     <td>
                                         <button class="action-btn" title="Kundenakte öffnen" onclick="event.stopPropagation(); openKundenDetail('Thomas Weber', 'KD00003')">
                                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
@@ -2778,8 +2802,8 @@
                                     <td><span class="potential-type invest">Fondsrente</span></td>
                                     <td><span class="fida-source-badge small">Investment</span></td>
                                     <td><strong>€3.200/Jahr</strong></td>
-                                    <td><span class="status-badge neu">Neu identifiziert</span></td>
-                                    <td>Open Finance Abgleich (30.11.)</td>
+                                    <td><span class="status-badge neu">Durch OpenFinance-KI identifiziert</span></td>
+                                    <td class="letzte-aktion" data-action="Open Finance Abgleich" data-days-ago="2"></td>
                                     <td>
                                         <button class="action-btn" title="Kundenakte öffnen" onclick="event.stopPropagation(); openKundenDetail('Anna Hoffmann', 'KD00004')">
                                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
@@ -2796,7 +2820,7 @@
                                     <td><span class="fida-source-badge small">Versicherung</span></td>
                                     <td><strong>€420/Jahr</strong></td>
                                     <td><span class="status-badge abgeschlossen">Abgeschlossen</span></td>
-                                    <td>Vertrag policiert (27.11.)</td>
+                                    <td class="letzte-aktion" data-action="Vertrag policiert" data-days-ago="3"></td>
                                     <td>
                                         <button class="action-btn" title="Kundenakte öffnen" onclick="event.stopPropagation(); openKundenDetail('Michael Braun', 'KD00005')">
                                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
@@ -2813,7 +2837,7 @@
                                     <td><span class="fida-source-badge small">Versicherung</span></td>
                                     <td><strong>€1.200/Jahr</strong></td>
                                     <td><span class="status-badge termin">Termin 08.12.</span></td>
-                                    <td>Telefonat (01.12.)</td>
+                                    <td class="letzte-aktion" data-action="Telefonat" data-days-ago="1"></td>
                                     <td>
                                         <button class="action-btn" title="Kundenakte öffnen" onclick="event.stopPropagation(); openKundenDetail('Lisa Müller', 'KD00006')">
                                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
@@ -2829,8 +2853,8 @@
                                     <td><span class="potential-type bu">BU-Deckungslücke</span></td>
                                     <td><span class="fida-source-badge small">Bank</span></td>
                                     <td><strong>€3.600/Jahr</strong></td>
-                                    <td><span class="status-badge neu">Neu identifiziert</span></td>
-                                    <td>Open Finance Abgleich (02.12.)</td>
+                                    <td><span class="status-badge neu">Durch OpenFinance-KI identifiziert</span></td>
+                                    <td class="letzte-aktion" data-action="Open Finance Abgleich" data-days-ago="0"></td>
                                     <td>
                                         <button class="action-btn" title="Kundenakte öffnen" onclick="event.stopPropagation(); openKundenDetail('Matthias Engel', 'KD00007')">
                                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
@@ -2847,7 +2871,7 @@
                                     <td><span class="fida-source-badge small">Versicherung</span></td>
                                     <td><strong>€850/Jahr</strong></td>
                                     <td><span class="status-badge angeschrieben">Angeschrieben</span></td>
-                                    <td>E-Mail gesendet (29.11.)</td>
+                                    <td class="letzte-aktion" data-action="E-Mail gesendet" data-days-ago="3"></td>
                                     <td>
                                         <button class="action-btn" title="Kundenakte öffnen" onclick="event.stopPropagation(); openKundenDetail('Christian Bauer', 'KD00008')">
                                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
@@ -2863,8 +2887,8 @@
                                     <td><span class="potential-type kfz">Kfz-Nutzfahrzeug</span></td>
                                     <td><span class="fida-source-badge small">Versicherung</span></td>
                                     <td><strong>€1.400/Jahr</strong></td>
-                                    <td><span class="status-badge neu">Neu identifiziert</span></td>
-                                    <td>Open Finance Abgleich (02.12.)</td>
+                                    <td><span class="status-badge neu">Durch OpenFinance-KI identifiziert</span></td>
+                                    <td class="letzte-aktion" data-action="Open Finance Abgleich" data-days-ago="0"></td>
                                     <td>
                                         <button class="action-btn" title="Kundenakte öffnen" onclick="event.stopPropagation(); openKundenDetail('Martin Wolf', 'KD00009')">
                                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
@@ -2881,7 +2905,7 @@
                                     <td><span class="fida-source-badge small">Versicherung</span></td>
                                     <td><strong>€720/Jahr</strong></td>
                                     <td><span class="status-badge termin">Termin 10.12.</span></td>
-                                    <td>Rückruf vereinbart (03.12.)</td>
+                                    <td class="letzte-aktion" data-action="Rückruf vereinbart" data-days-ago="0"></td>
                                     <td>
                                         <button class="action-btn" title="Kundenakte öffnen" onclick="event.stopPropagation(); openKundenDetail('Eva Hartmann', 'KD00010')">
                                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">

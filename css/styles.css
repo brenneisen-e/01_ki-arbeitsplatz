@@ -6036,8 +6036,8 @@ button svg,
 
 /* FIDA Highlight Cards */
 .kpi-detail-card.fida-highlight {
-    border: 2px solid #10b981;
-    background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+    border-top: 3px solid #10b981;
+    background: white;
 }
 
 .kpi-detail-card.fida-highlight .kpi-detail-header {
@@ -6053,10 +6053,10 @@ button svg,
     display: flex;
     align-items: center;
     gap: 10px;
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 600;
     color: #1e293b;
-    margin-bottom: 16px;
+    margin-bottom: 12px;
 }
 
 .section-title svg {
@@ -6067,31 +6067,38 @@ button svg,
 .fida-pipeline-section {
     background: white;
     border-radius: 12px;
-    padding: 24px;
-    margin-top: 24px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    padding: 20px 24px;
+    margin-top: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
 }
 
 .fida-pipeline {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-    padding: 20px 0;
+    gap: 0;
+    padding: 12px 0;
 }
 
 .pipeline-stage {
     flex: 1;
     text-align: center;
-    padding: 16px;
+    padding: 16px 12px;
     background: #f8fafc;
-    border-radius: 12px;
-    transition: transform 0.2s, box-shadow 0.2s;
+    border-radius: 0;
+    transition: background 0.2s;
+    position: relative;
+}
+
+.pipeline-stage:first-child {
+    border-radius: 10px 0 0 10px;
+}
+
+.pipeline-stage:last-child {
+    border-radius: 0 10px 10px 0;
 }
 
 .pipeline-stage:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    background: #f1f5f9;
 }
 
 .pipeline-stage.success {
@@ -6099,10 +6106,10 @@ button svg,
 }
 
 .pipeline-count {
-    font-size: 32px;
+    font-size: 28px;
     font-weight: 700;
     color: #1e293b;
-    margin-bottom: 4px;
+    margin-bottom: 2px;
 }
 
 .pipeline-stage.success .pipeline-count {
@@ -6110,58 +6117,74 @@ button svg,
 }
 
 .pipeline-label {
-    font-size: 13px;
+    font-size: 12px;
     color: #64748b;
-    margin-bottom: 12px;
+    margin-bottom: 0;
 }
 
 .pipeline-bar {
-    height: 6px;
-    border-radius: 3px;
-    margin-top: 8px;
+    display: none;
 }
 
 .pipeline-arrow {
-    color: #cbd5e1;
+    color: #94a3b8;
     flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    padding: 0 2px;
+}
+
+.pipeline-arrow .conversion-rate {
+    font-size: 10px;
+    font-weight: 600;
+    color: #86BC25;
+    white-space: nowrap;
 }
 
 /* FIDA Cases Table Section */
 .fida-cases-section {
     background: white;
     border-radius: 12px;
-    padding: 24px;
-    margin-top: 24px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    padding: 20px 24px;
+    margin-top: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
 }
 
 .fida-filter-row {
     display: flex;
-    gap: 8px;
+    gap: 6px;
     margin-bottom: 16px;
     flex-wrap: wrap;
+    background: #f1f5f9;
+    padding: 4px;
+    border-radius: 10px;
+    width: fit-content;
 }
 
 .fida-filter-btn {
-    padding: 8px 16px;
-    border: 1px solid #e2e8f0;
-    background: white;
-    border-radius: 20px;
+    padding: 7px 16px;
+    border: none;
+    background: transparent;
+    border-radius: 8px;
     font-size: 13px;
     color: #64748b;
     cursor: pointer;
     transition: all 0.2s;
+    font-weight: 500;
 }
 
 .fida-filter-btn:hover {
-    border-color: #10b981;
-    color: #10b981;
+    color: #1e293b;
+    background: rgba(255,255,255,0.6);
 }
 
 .fida-filter-btn.active {
-    background: #10b981;
-    color: white;
-    border-color: #10b981;
+    background: white;
+    color: #1e293b;
+    font-weight: 600;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
 .fida-cases-table {
@@ -6171,25 +6194,33 @@ button svg,
 
 .fida-cases-table th {
     text-align: left;
-    padding: 12px 16px;
+    padding: 10px 14px;
     background: #f8fafc;
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 600;
     color: #64748b;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    border-bottom: 1px solid #e2e8f0;
+    border-bottom: 2px solid #e2e8f0;
 }
 
 .fida-cases-table td {
-    padding: 16px;
+    padding: 12px 14px;
     border-bottom: 1px solid #f1f5f9;
-    font-size: 14px;
+    font-size: 13px;
     color: #334155;
 }
 
+.fida-cases-table tbody tr {
+    transition: background 0.15s;
+}
+
+.fida-cases-table tbody tr:nth-child(even) {
+    background: #fafbfc;
+}
+
 .fida-cases-table tr:hover {
-    background: #f8fafc;
+    background: #f1f5f9;
 }
 
 /* Kunde Cell */
@@ -6230,50 +6261,51 @@ button svg,
 .potential-type {
     display: inline-flex;
     padding: 4px 10px;
-    border-radius: 12px;
-    font-size: 12px;
-    font-weight: 500;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
 }
 
 .potential-type.bu {
-    background: #fef3c7;
-    color: #92400e;
+    background: #fef9c3;
+    color: #854d0e;
 }
 
 .potential-type.kfz {
-    background: #dbeafe;
-    color: #1e40af;
+    background: #eff6ff;
+    color: #1d4ed8;
 }
 
 .potential-type.risiko {
-    background: #fee2e2;
-    color: #991b1b;
+    background: #fef2f2;
+    color: #b91c1c;
 }
 
 .potential-type.invest {
-    background: #d1fae5;
-    color: #065f46;
+    background: #ecfdf5;
+    color: #047857;
 }
 
 .potential-type.hausrat {
-    background: #e0e7ff;
-    color: #3730a3;
+    background: #eef2ff;
+    color: #4338ca;
 }
 
 .potential-type.alters {
-    background: #fce7f3;
-    color: #9d174d;
+    background: #fdf2f8;
+    color: #be185d;
 }
 
 .potential-type.uebergreifend {
-    background: linear-gradient(135deg, #86BC25 0%, #6fa31e 100%);
-    color: white;
-    font-weight: 600;
+    background: #f0fdf4;
+    color: #15803d;
+    border: 1px solid #bbf7d0;
 }
 
 .potential-type.kranken {
-    background: #fef9c3;
-    color: #854d0e;
+    background: #fefce8;
+    color: #a16207;
 }
 
 /* Pulse Animation für neue Zeilen */
@@ -6302,24 +6334,67 @@ button svg,
 }
 
 /* Status Badges for FIDA */
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
 .status-badge.neu {
     background: #f1f5f9;
     color: #475569;
 }
 
+.status-badge.neu::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #94a3b8;
+}
+
 .status-badge.angeschrieben {
-    background: #dbeafe;
-    color: #1e40af;
+    background: #eff6ff;
+    color: #1d4ed8;
+}
+
+.status-badge.angeschrieben::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #3b82f6;
 }
 
 .status-badge.termin {
-    background: #fef3c7;
-    color: #92400e;
+    background: #fefce8;
+    color: #a16207;
+}
+
+.status-badge.termin::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #f59e0b;
 }
 
 .status-badge.abgeschlossen {
-    background: #d1fae5;
-    color: #065f46;
+    background: #ecfdf5;
+    color: #047857;
+}
+
+.status-badge.abgeschlossen::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #10b981;
 }
 
 /* Action Button */
@@ -6354,24 +6429,30 @@ button svg,
 .auto-komm-section {
     background: white;
     border-radius: 12px;
-    padding: 24px;
-    margin-top: 24px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    padding: 20px 24px;
+    margin-top: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
 }
 
 .auto-komm-stats {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
+    gap: 12px;
 }
 
 .komm-stat {
     display: flex;
     align-items: center;
-    gap: 16px;
-    padding: 16px;
+    gap: 12px;
+    padding: 14px;
     background: #f8fafc;
-    border-radius: 12px;
+    border-radius: 10px;
+    border: 1px solid #f1f5f9;
+    transition: background 0.15s;
+}
+
+.komm-stat:hover {
+    background: #f1f5f9;
 }
 
 .komm-stat-icon {

@@ -33,10 +33,10 @@ var bezahlenData = [
         { name: 'REWE Supermarkt', amount: 145, datum: '08.11.2025' },
         { name: 'EDEKA', amount: 95, datum: '15.11.2025' },
         { name: 'dm Drogerie', amount: 35, datum: '10.11.2025' },
-        { name: 'Fressnapf Tiernahrung', amount: 45, datum: '12.11.2025', badge: 'insight', insight: 'Tierhalter \u2013 Haftpflicht/KV?', tierRelevant: true },
-        { name: 'Fressnapf Online', amount: 38, datum: '19.11.2025', badge: 'insight', insight: 'Tierhalter \u2013 Haftpflicht/KV?', tierRelevant: true },
-        { name: 'Fressnapf Tiernahrung', amount: 32, datum: '25.10.2025', badge: 'insight', insight: 'Tierhalter \u2013 Haftpflicht/KV?', tierRelevant: true },
-        { name: 'Fressnapf Filiale', amount: 28, datum: '03.10.2025', badge: 'insight', insight: 'Tierhalter \u2013 Haftpflicht/KV?', tierRelevant: true }
+        { name: 'Fressnapf Tiernahrung', amount: 45, datum: '12.11.2025', badge: 'tier-hint', insight: 'Haustier erkannt \u2013 Versicherung pr\u00FCfen', tierRelevant: true },
+        { name: 'Fressnapf Online', amount: 38, datum: '19.11.2025', badge: 'tier-marker', tierRelevant: true },
+        { name: 'Fressnapf Tiernahrung', amount: 32, datum: '25.10.2025', badge: 'tier-marker', tierRelevant: true },
+        { name: 'Fressnapf Filiale', amount: 28, datum: '03.10.2025', badge: 'tier-marker', tierRelevant: true }
     ]},
     { name: 'Mobilit\u00E4t', amount: 130, color: '#f0a0a0', icon: bezahlenIcons.mobilitaet, items: [
         { name: 'ARAL Tankstelle', amount: 85, datum: '06.11.2025' },
@@ -100,6 +100,8 @@ function buildTxItems(cat) {
         if (tx.badge === 'versichert') badge = '<span class="bezahlen-tx-badge versichert">Versichert</span>';
         if (tx.badge === 'luecke') badge = '<span class="bezahlen-tx-badge luecke">L\u00FCcke</span>';
         if (tx.badge === 'insight') badge = '<span class="bezahlen-tx-badge insight">\u26A0 ' + (tx.insight || '') + '</span>';
+        if (tx.badge === 'tier-hint') badge = '<span class="bezahlen-tx-badge tier-hint"><svg viewBox="0 0 24 24" fill="currentColor" width="12" height="12"><path d="M12 22c-4-3-8-6.58-8-10.5a4 4 0 018 0 4 4 0 018 0c0 3.92-4 7.5-8 10.5z"/><path d="M10 5.17C10 3.78 8.88 2.5 7.5 2.5S5 3.78 5 5.17c0 1.39 2.5 4.33 2.5 4.33S10 6.56 10 5.17z"/><path d="M19 5.17C19 3.78 17.88 2.5 16.5 2.5S14 3.78 14 5.17c0 1.39 2.5 4.33 2.5 4.33S19 6.56 19 5.17z"/></svg> ' + (tx.insight || '') + '</span>';
+        if (tx.badge === 'tier-marker') badge = '<span class="bezahlen-tx-badge tier-marker"><svg viewBox="0 0 24 24" fill="currentColor" width="11" height="11"><path d="M12 22c-4-3-8-6.58-8-10.5a4 4 0 018 0 4 4 0 018 0c0 3.92-4 7.5-8 10.5z"/><path d="M10 5.17C10 3.78 8.88 2.5 7.5 2.5S5 3.78 5 5.17c0 1.39 2.5 4.33 2.5 4.33S10 6.56 10 5.17z"/><path d="M19 5.17C19 3.78 17.88 2.5 16.5 2.5S14 3.78 14 5.17c0 1.39 2.5 4.33 2.5 4.33S19 6.56 19 5.17z"/></svg> Tierbedarf</span>';
         var datum = tx.datum ? '<span class="bezahlen-tx-datum">' + tx.datum + '</span>' : '';
         return '<div class="bezahlen-tx-item"><span class="bezahlen-tx-name">' + tx.name + datum + '</span><span class="bezahlen-tx-amount">\u20AC' + tx.amount + badge + '</span></div>';
     }).join('');

@@ -884,6 +884,7 @@
                                     <div class="kennzahl-item">
                                         <div class="kennzahl-value">68%</div>
                                         <div class="kennzahl-label">Abschlussquote</div>
+                                        <div class="kennzahl-bar"><div class="kennzahl-bar-fill" style="width:68%"></div></div>
                                         <div class="kennzahl-trend positive">+5%</div>
                                     </div>
                                 </div>
@@ -970,53 +971,59 @@
                                     </div>
                                 </div>
 
+                                <!-- Zweites Potential (direkt sichtbar) -->
+                                <div class="impuls-item clickable" onclick="toggleImpulsDetail('uebersicht-impuls-kfz')" style="margin-top: 8px;">
+                                    <div class="impuls-icon">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
+                                            <rect x="1" y="3" width="15" height="13" rx="2"></rect>
+                                            <path d="M16 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2"></path>
+                                            <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                                            <circle cx="18.5" cy="18.5" r="2.5"></circle>
+                                        </svg>
+                                    </div>
+                                    <div class="impuls-text">
+                                        <strong>Kfz-Wechsel: Sabine König</strong>
+                                        <p><span class="fida-source-badge small">Open Finance</span> Kfz bei Allianz läuft 30.11.2025 aus. Ersparnis ca. €180/Jahr möglich.</p>
+                                    </div>
+                                    <span class="impuls-priority medium">Mittlere Priorität</span>
+                                    <span class="impuls-expand">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                                            <polyline points="6 9 12 15 18 9"></polyline>
+                                        </svg>
+                                    </span>
+                                </div>
+                                <div class="impuls-detail" id="uebersicht-impuls-kfz" style="display: none;">
+                                    <div class="impuls-detail-section">
+                                        <h4>Herleitung des Impulses</h4>
+                                        <div class="herleitung-grid">
+                                            <div class="herleitung-item">
+                                                <span class="herleitung-label">Datenquelle</span>
+                                                <span class="herleitung-value">Open Finance - Versicherungsdaten (Allianz)</span>
+                                            </div>
+                                            <div class="herleitung-item">
+                                                <span class="herleitung-label">Aktueller Vertrag</span>
+                                                <span class="herleitung-value">Allianz Kfz-Vollkasko, €720/Jahr, SF-Klasse 12</span>
+                                            </div>
+                                            <div class="herleitung-item">
+                                                <span class="herleitung-label">Ablaufdatum</span>
+                                                <span class="herleitung-value">30.11.2025</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="impuls-actions">
+                                        <button class="action-btn primary" onclick="event.stopPropagation(); openKundenDetail('Sabine König', 'KD00002')">Kunden öffnen</button>
+                                    </div>
+                                </div>
+
                                 <!-- Weitere Potentiale (ausklappbar) -->
                                 <div class="weitere-potentiale-toggle" onclick="toggleWeiterePotentiale()">
-                                    <span class="weitere-badge">+10</span>
+                                    <span class="weitere-badge">+9</span>
                                     <span>Weitere Potentiale anzeigen</span>
                                     <svg class="toggle-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
                                         <polyline points="6 9 12 15 18 9"></polyline>
                                     </svg>
                                 </div>
                                 <div class="weitere-potentiale-liste" id="weiterePotentialeListe" style="display: none;">
-                                    <div class="impuls-item clickable" onclick="toggleImpulsDetail('uebersicht-impuls-kfz')">
-                                        <div class="impuls-icon">
-                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
-                                                <rect x="1" y="3" width="15" height="13" rx="2"></rect>
-                                                <path d="M16 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2"></path>
-                                                <circle cx="5.5" cy="18.5" r="2.5"></circle>
-                                                <circle cx="18.5" cy="18.5" r="2.5"></circle>
-                                            </svg>
-                                        </div>
-                                        <div class="impuls-text">
-                                            <strong>Kfz-Wechsel: Sabine König</strong>
-                                            <p><span class="fida-source-badge small">Open Finance</span> Kfz bei Allianz läuft 30.11.2025 aus. Ersparnis ca. €180/Jahr möglich.</p>
-                                        </div>
-                                        <span class="impuls-priority medium">Mittlere Priorität</span>
-                                    </div>
-                                    <div class="impuls-detail" id="uebersicht-impuls-kfz" style="display: none;">
-                                        <div class="impuls-detail-section">
-                                            <h4>Herleitung des Impulses</h4>
-                                            <div class="herleitung-grid">
-                                                <div class="herleitung-item">
-                                                    <span class="herleitung-label">Datenquelle</span>
-                                                    <span class="herleitung-value">Open Finance - Versicherungsdaten (Allianz)</span>
-                                                </div>
-                                                <div class="herleitung-item">
-                                                    <span class="herleitung-label">Aktueller Vertrag</span>
-                                                    <span class="herleitung-value">Allianz Kfz-Vollkasko, €720/Jahr, SF-Klasse 12</span>
-                                                </div>
-                                                <div class="herleitung-item">
-                                                    <span class="herleitung-label">Ablaufdatum</span>
-                                                    <span class="herleitung-value">30.11.2025</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="impuls-actions">
-                                            <button class="action-btn primary" onclick="event.stopPropagation(); openKundenDetail('Sabine König', 'KD00002')">Kunden öffnen</button>
-                                        </div>
-                                    </div>
-
                                     <div class="impuls-item clickable" onclick="toggleImpulsDetail('uebersicht-impuls-risiko')">
                                         <div class="impuls-icon">
                                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
@@ -1245,7 +1252,7 @@
                                         </div>
                                         <div class="aufgabe-content">
                                             <label for="aufgabe1">Rückruf Peter Schmidt - Beratungstermin</label>
-                                            <span class="aufgabe-due">Heute, 14:00</span>
+                                            <span class="aufgabe-due"><span class="due-badge urgent">Heute, 14:00</span></span>
                                         </div>
                                     </div>
                                     <div class="aufgabe-item priority-medium">
@@ -1254,7 +1261,7 @@
                                         </div>
                                         <div class="aufgabe-content">
                                             <label for="aufgabe2">Angebot Kfz-Versicherung für König erstellen</label>
-                                            <span class="aufgabe-due">Morgen</span>
+                                            <span class="aufgabe-due"><span class="due-badge warning">Morgen</span></span>
                                         </div>
                                     </div>
                                     <div class="aufgabe-item priority-low">
@@ -1263,7 +1270,7 @@
                                         </div>
                                         <div class="aufgabe-content">
                                             <label for="aufgabe3">Quartalsreporting vorbereiten</label>
-                                            <span class="aufgabe-due">Diese Woche</span>
+                                            <span class="aufgabe-due"><span class="due-badge normal">Diese Woche</span></span>
                                         </div>
                                     </div>
                                 </div>
@@ -1283,6 +1290,9 @@
                                 </div>
                                 <div class="abschluesse-liste">
                                     <div class="abschluss-item" onclick="openKundenDetail('Maria Fischer', 'KD00008')">
+                                        <div class="abschluss-type-icon leben">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+                                        </div>
                                         <div class="abschluss-info">
                                             <span class="abschluss-kunde">Maria Fischer</span>
                                             <span class="abschluss-produkt">Risikolebensversicherung</span>
@@ -1293,6 +1303,9 @@
                                         </div>
                                     </div>
                                     <div class="abschluss-item" onclick="openKundenDetail('Hans Müller', 'KD00009')">
+                                        <div class="abschluss-type-icon kfz">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 16H9m10 0h3v-3.15a1 1 0 00-.84-.99L16 11l-2.7-3.6a1 1 0 00-.8-.4H5.24a2 2 0 00-1.8 1.1l-.8 1.63A6 6 0 002 12.28V16h2.05"/><circle cx="6.5" cy="16.5" r="2.5"/><circle cx="16.5" cy="16.5" r="2.5"/></svg>
+                                        </div>
                                         <div class="abschluss-info">
                                             <span class="abschluss-kunde">Hans Müller</span>
                                             <span class="abschluss-produkt">Kfz-Versicherung (Wechsel)</span>
@@ -1303,6 +1316,9 @@
                                         </div>
                                     </div>
                                     <div class="abschluss-item" onclick="openKundenDetail('Familie Becker', 'KD00010')">
+                                        <div class="abschluss-type-icon hausrat">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                                        </div>
                                         <div class="abschluss-info">
                                             <span class="abschluss-kunde">Familie Becker</span>
                                             <span class="abschluss-produkt">Hausratversicherung</span>
@@ -1313,6 +1329,9 @@
                                         </div>
                                     </div>
                                     <div class="abschluss-item" onclick="openKundenDetail('Markus Braun', 'KD00011')">
+                                        <div class="abschluss-type-icon bu">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                                        </div>
                                         <div class="abschluss-info">
                                             <span class="abschluss-kunde">Markus Braun</span>
                                             <span class="abschluss-produkt">BU-Versicherung</span>
@@ -1348,6 +1367,7 @@
                                             <span class="termin-tag">Heute</span>
                                             <span class="termin-uhrzeit">14:00</span>
                                         </div>
+                                        <div class="termin-avatar">PS</div>
                                         <div class="termin-details">
                                             <strong>Peter Schmidt</strong>
                                             <span>Beratungsgespräch Vorsorge</span>
@@ -1358,6 +1378,7 @@
                                             <span class="termin-tag">Mo, 13.01.</span>
                                             <span class="termin-uhrzeit">10:30</span>
                                         </div>
+                                        <div class="termin-avatar" style="background: linear-gradient(135deg, #2563eb, #1d4ed8);">SK</div>
                                         <div class="termin-details">
                                             <strong>Sabine König</strong>
                                             <span>Kfz-Angebot besprechen</span>
@@ -1368,6 +1389,7 @@
                                             <span class="termin-tag">Di, 14.01.</span>
                                             <span class="termin-uhrzeit">09:00</span>
                                         </div>
+                                        <div class="termin-avatar" style="background: linear-gradient(135deg, #9333ea, #7c3aed);">TW</div>
                                         <div class="termin-details">
                                             <strong>Thomas Weber</strong>
                                             <span>Hausbesuch - Risikoabsicherung</span>
@@ -1378,6 +1400,7 @@
                                             <span class="termin-tag">Mi, 15.01.</span>
                                             <span class="termin-uhrzeit">15:00</span>
                                         </div>
+                                        <div class="termin-avatar" style="background: linear-gradient(135deg, #dc2626, #b91c1c);">MF</div>
                                         <div class="termin-details">
                                             <strong>Maria Fischer</strong>
                                             <span>Jahresgespräch</span>
@@ -1398,29 +1421,28 @@
                                     </h3>
                                 </div>
                                 <div class="formulare-grid">
-                                    <button class="formular-btn" onclick="openFormular('antrag-leben')">
+                                    <button class="formular-btn leben" onclick="openFormular('antrag-leben')">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
                                             <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"></path>
                                         </svg>
                                         Lebensversicherung
                                     </button>
-                                    <button class="formular-btn" onclick="openFormular('antrag-kfz')">
+                                    <button class="formular-btn kfz" onclick="openFormular('antrag-kfz')">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
-                                            <rect x="1" y="3" width="15" height="13" rx="2"></rect>
-                                            <path d="M16 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2"></path>
-                                            <circle cx="5.5" cy="18.5" r="2.5"></circle>
-                                            <circle cx="18.5" cy="18.5" r="2.5"></circle>
+                                            <path d="M14 16H9m10 0h3v-3.15a1 1 0 00-.84-.99L16 11l-2.7-3.6a1 1 0 00-.8-.4H5.24a2 2 0 00-1.8 1.1l-.8 1.63A6 6 0 002 12.28V16h2.05"></path>
+                                            <circle cx="6.5" cy="16.5" r="2.5"></circle>
+                                            <circle cx="16.5" cy="16.5" r="2.5"></circle>
                                         </svg>
                                         Kfz-Versicherung
                                     </button>
-                                    <button class="formular-btn" onclick="openFormular('antrag-sach')">
+                                    <button class="formular-btn sach" onclick="openFormular('antrag-sach')">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
                                             <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"></path>
                                             <polyline points="9 22 9 12 15 12 15 22"></polyline>
                                         </svg>
                                         Sachversicherung
                                     </button>
-                                    <button class="formular-btn" onclick="openFormular('schadenmeldung')">
+                                    <button class="formular-btn schaden" onclick="openFormular('schadenmeldung')">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
                                             <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"></path>
                                             <line x1="12" y1="9" x2="12" y2="13"></line>
@@ -1490,6 +1512,41 @@
                                     </div>
                                 </div>
                                 <a href="#" class="link-alle-anzeigen" onclick="showAgenturTab('provision'); return false;">Alle Abrechnungen anzeigen →</a>
+                            </div>
+
+                            <!-- Geburtstage diese Woche -->
+                            <div class="uebersicht-card">
+                                <div class="uebersicht-card-header">
+                                    <h3>
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                                            <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"></path>
+                                            <circle cx="12" cy="7" r="4"></circle>
+                                        </svg>
+                                        Geburtstage diese Woche
+                                    </h3>
+                                </div>
+                                <div class="geburtstage-liste">
+                                    <div class="geburtstag-item">
+                                        <div class="geburtstag-datum">
+                                            <span class="geburtstag-tag">Do</span>
+                                            <span class="geburtstag-nr">09.</span>
+                                        </div>
+                                        <div class="geburtstag-details">
+                                            <strong>Sabine König</strong>
+                                            <span>wird 42 Jahre</span>
+                                        </div>
+                                    </div>
+                                    <div class="geburtstag-item">
+                                        <div class="geburtstag-datum">
+                                            <span class="geburtstag-tag">Fr</span>
+                                            <span class="geburtstag-nr">10.</span>
+                                        </div>
+                                        <div class="geburtstag-details">
+                                            <strong>Thomas Weber</strong>
+                                            <span>wird 55 Jahre</span>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -3494,7 +3551,14 @@
                                             Hinweise aus Kontoums&auml;tzen
                                         </span>
                                     </div>
-                                    <!-- Haustier-Eingabeformular -->
+                                    <!-- Gespeicherte Tier-Info (Badge-Ansicht) -->
+                                    <div class="tier-display" id="tierDisplay" style="display:none;">
+                                        <div class="tier-display-badge" id="tierDisplayBadge"></div>
+                                        <button class="tier-edit-pencil" onclick="editTierInfo()" title="Bearbeiten">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                                        </button>
+                                    </div>
+                                    <!-- Haustier-Eingabeformular (versteckt nach Speichern) -->
                                     <div class="tier-edit-section" id="tierEditSection">
                                         <div class="tier-edit-row">
                                             <label class="tier-edit-label">Art</label>
@@ -3520,7 +3584,6 @@
                                                 </button>
                                             </div>
                                         </div>
-                                        <div class="tier-saved-info" id="tierSavedInfo" style="display:none;"></div>
                                     </div>
                                 </div>
                                 <div class="info-item">

@@ -118,39 +118,56 @@ input.tier-edit-input[type="number"] {
     background: #769e3c;
 }
 
-.tier-saved-info {
+/* Tier-Display (Badge-Ansicht nach Speichern) */
+.tier-display {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 6px;
+}
+
+.tier-display-badge {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    margin-top: 8px;
     padding: 6px 14px;
-    background: #ecfdf5;
-    border: 1px solid #a7f3d0;
-    border-radius: 8px;
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 20px;
     font-size: 13px;
-    color: #065f46;
-    font-weight: 500;
+    color: #1e40af;
+    font-weight: 600;
 }
 
-.tier-saved-info .tier-saved-icon {
-    font-size: 16px;
+.tier-display-icon {
+    display: inline-flex;
+    align-items: center;
+    color: #2563eb;
 }
 
-.tier-saved-info .tier-remove-btn {
-    margin-left: 8px;
-    background: none;
-    border: none;
+.tier-display-icon svg {
+    width: 16px;
+    height: 16px;
+}
+
+.tier-edit-pencil {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    background: #fff;
     color: #94a3b8;
     cursor: pointer;
-    font-size: 12px;
-    padding: 2px 6px;
-    border-radius: 4px;
-    transition: color 0.2s, background 0.2s;
+    transition: color 0.2s, border-color 0.2s, background 0.2s;
 }
 
-.tier-saved-info .tier-remove-btn:hover {
-    color: #dc2626;
-    background: #fee2e2;
+.tier-edit-pencil:hover {
+    color: #2563eb;
+    border-color: #93c5fd;
+    background: #eff6ff;
 }
 
 /* ========================================

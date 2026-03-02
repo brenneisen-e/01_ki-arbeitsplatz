@@ -92,7 +92,19 @@
     gap: 16px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.08);
     border: 1px solid #e2e8f0;
+    border-top: 3px solid #e2e8f0;
+    transition: box-shadow 0.2s, transform 0.15s;
 }
+
+.cockpit-kpi-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transform: translateY(-1px);
+}
+
+.cockpit-kpi-card:nth-child(1) { border-top-color: #2563eb; }
+.cockpit-kpi-card:nth-child(2) { border-top-color: #16a34a; }
+.cockpit-kpi-card:nth-child(3) { border-top-color: #dc2626; }
+.cockpit-kpi-card:nth-child(4) { border-top-color: #9333ea; }
 
 .cockpit-kpi-icon {
     width: 48px;
@@ -148,12 +160,14 @@
 }
 
 .cockpit-kpi-trend {
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 600;
     margin-top: 8px;
-    display: inline-block;
-    padding: 2px 8px;
-    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 10px;
+    border-radius: 6px;
 }
 
 .cockpit-kpi-trend.positive {
@@ -161,23 +175,35 @@
     color: #16a34a;
 }
 
+.cockpit-kpi-trend.positive::before {
+    content: '\2191';
+    font-size: 14px;
+    font-weight: 700;
+}
+
 .cockpit-kpi-trend.negative {
     background: #fee2e2;
     color: #dc2626;
 }
 
+.cockpit-kpi-trend.negative::before {
+    content: '\2193';
+    font-size: 14px;
+    font-weight: 700;
+}
+
 .cockpit-kpi-gauge {
-    height: 6px;
+    height: 10px;
     background: #e2e8f0;
-    border-radius: 3px;
+    border-radius: 5px;
     margin-top: 10px;
     overflow: hidden;
 }
 
 .cockpit-kpi-gauge .gauge-fill {
     height: 100%;
-    background: linear-gradient(90deg, #86BC25 0%, #6ba31c 100%);
-    border-radius: 3px;
+    background: linear-gradient(90deg, #dc2626 0%, #f59e0b 35%, #86BC25 65%, #16a34a 100%);
+    border-radius: 5px;
     transition: width 0.5s ease;
 }
 
@@ -337,13 +363,19 @@
 
 .kennzahl-item {
     text-align: center;
-    padding: 16px 12px;
+    padding: 18px 14px;
     background: #f8fafc;
     border-radius: 10px;
+    border: 1px solid #f1f5f9;
+    transition: border-color 0.2s;
+}
+
+.kennzahl-item:hover {
+    border-color: #e2e8f0;
 }
 
 .kennzahl-value {
-    font-size: 24px;
+    font-size: 26px;
     font-weight: 700;
     color: #1e293b;
 }
@@ -351,17 +383,37 @@
 .kennzahl-label {
     font-size: 12px;
     color: #64748b;
-    margin: 4px 0;
+    margin: 4px 0 6px;
 }
 
 .kennzahl-trend {
-    font-size: 11px;
-    font-weight: 500;
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    padding: 2px 8px;
+    border-radius: 4px;
 }
 
-.kennzahl-trend.positive { color: #16a34a; }
-.kennzahl-trend.negative { color: #dc2626; }
-.kennzahl-trend.neutral { color: #64748b; }
+.kennzahl-trend.positive { color: #16a34a; background: #dcfce7; }
+.kennzahl-trend.negative { color: #dc2626; background: #fee2e2; }
+.kennzahl-trend.neutral { color: #64748b; background: #f1f5f9; }
+
+.kennzahl-bar {
+    margin-top: 8px;
+    height: 6px;
+    background: #e2e8f0;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.kennzahl-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    background: linear-gradient(90deg, #86BC25, #6ba31c);
+    transition: width 0.4s ease;
+}
 
 /* Potentiale Liste */
 .potentiale-liste {
@@ -559,6 +611,30 @@
     color: #64748b;
 }
 
+.due-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 1px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.due-badge.urgent {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.due-badge.warning {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.due-badge.normal {
+    background: #f1f5f9;
+    color: #64748b;
+}
+
 /* Termine Liste */
 .termine-liste {
     display: flex;
@@ -569,9 +645,24 @@
 .termin-item {
     display: flex;
     gap: 14px;
-    padding: 12px;
-    border-radius: 8px;
+    padding: 14px;
+    border-radius: 10px;
     background: #f8fafc;
+    align-items: center;
+}
+
+.termin-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #86BC25, #6B9A1F);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 12px;
+    flex-shrink: 0;
 }
 
 .termin-item.heute {
@@ -641,14 +732,22 @@
 }
 
 .formular-btn svg {
-    color: #86BC25;
+    color: inherit;
 }
 
 .formular-btn:hover {
-    background: white;
-    border-color: #86BC25;
-    box-shadow: 0 2px 8px rgba(134, 188, 37, 0.15);
+    transform: translateY(-1px);
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
 }
+
+.formular-btn.leben { color: #be185d; border-color: #fce7f3; background: #fdf2f8; }
+.formular-btn.leben:hover { border-color: #f9a8d4; }
+.formular-btn.kfz { color: #2563eb; border-color: #dbeafe; background: #eff6ff; }
+.formular-btn.kfz:hover { border-color: #93c5fd; }
+.formular-btn.sach { color: #d97706; border-color: #fef3c7; background: #fffbeb; }
+.formular-btn.sach:hover { border-color: #fcd34d; }
+.formular-btn.schaden { color: #dc2626; border-color: #fee2e2; background: #fef2f2; }
+.formular-btn.schaden:hover { border-color: #fca5a5; }
 
 /* Agentur Chat Widget */
 .chat-widget-card {
@@ -815,7 +914,34 @@
     background: #f8fafc;
     border-radius: 8px;
     border-left: 3px solid #86BC25;
+    cursor: pointer;
+    transition: background 0.15s;
 }
+
+.abschluss-item:hover {
+    background: #f1f5f9;
+}
+
+.abschluss-type-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-right: 12px;
+}
+
+.abschluss-type-icon svg {
+    width: 16px;
+    height: 16px;
+}
+
+.abschluss-type-icon.leben { background: #fce7f3; color: #be185d; }
+.abschluss-type-icon.kfz { background: #dbeafe; color: #2563eb; }
+.abschluss-type-icon.hausrat { background: #fef3c7; color: #d97706; }
+.abschluss-type-icon.bu { background: #dcfce7; color: #16a34a; }
 
 .abschluss-info {
     display: flex;
@@ -912,6 +1038,61 @@
     font-size: 15px;
     font-weight: 600;
     color: #1e293b;
+}
+
+/* Geburtstage Liste */
+.geburtstage-liste {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.geburtstag-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 10px 12px;
+    background: #f8fafc;
+    border-radius: 8px;
+}
+
+.geburtstag-datum {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 40px;
+    padding: 4px 8px;
+    background: #fef3c7;
+    border-radius: 8px;
+}
+
+.geburtstag-tag {
+    font-size: 10px;
+    font-weight: 600;
+    color: #92400e;
+    text-transform: uppercase;
+}
+
+.geburtstag-nr {
+    font-size: 16px;
+    font-weight: 700;
+    color: #92400e;
+}
+
+.geburtstag-details {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.geburtstag-details strong {
+    font-size: 13px;
+    color: #1e293b;
+}
+
+.geburtstag-details span {
+    font-size: 12px;
+    color: #64748b;
 }
 
 /* Floating Agentur Chat Widget */

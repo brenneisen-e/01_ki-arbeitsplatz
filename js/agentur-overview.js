@@ -139,8 +139,8 @@ function fillHeader(agentur, agenturData) {
     if (idHeader) idHeader.textContent = agentur.id;
     if (statusHeader) statusHeader.textContent = 'Aktiv';
 
-    // Standard-Profilbild für Dila Yorulmaz
-    const defaultPhoto = 'assets/images/1598528971693.jpg';
+    // Standard-Profilbild für Maria Musterfrau
+    const defaultPhoto = 'assets/images/maria-musterfrau.png';
 
     // Restore photo container if B2B/MRH replaced it with an icon
     const photoContainer = document.getElementById('agenturPhotoSmall');

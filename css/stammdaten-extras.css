@@ -44,6 +44,116 @@
 }
 
 /* ========================================
+   HAUSTIER-EINGABEFORMULAR
+   ======================================== */
+.tier-edit-section {
+    margin-top: 8px;
+    width: 100%;
+}
+
+.tier-edit-row {
+    margin-top: 6px;
+}
+
+.tier-edit-label {
+    font-size: 12px;
+    color: #64748b;
+    font-weight: 500;
+    display: block;
+    margin-bottom: 3px;
+}
+
+.tier-edit-input {
+    padding: 6px 10px;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    font-size: 13px;
+    color: #1e293b;
+    background: #fff;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.tier-edit-input:focus {
+    border-color: #86b7fe;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
+}
+
+select.tier-edit-input {
+    min-width: 140px;
+    cursor: pointer;
+}
+
+input.tier-edit-input {
+    width: 100px;
+}
+
+input.tier-edit-input[type="number"] {
+    width: 70px;
+}
+
+.tier-detail-fields {
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.tier-save-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 14px;
+    background: #86b545;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.tier-save-btn:hover {
+    background: #769e3c;
+}
+
+.tier-saved-info {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
+    padding: 6px 14px;
+    background: #ecfdf5;
+    border: 1px solid #a7f3d0;
+    border-radius: 8px;
+    font-size: 13px;
+    color: #065f46;
+    font-weight: 500;
+}
+
+.tier-saved-info .tier-saved-icon {
+    font-size: 16px;
+}
+
+.tier-saved-info .tier-remove-btn {
+    margin-left: 8px;
+    background: none;
+    border: none;
+    color: #94a3b8;
+    cursor: pointer;
+    font-size: 12px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    transition: color 0.2s, background 0.2s;
+}
+
+.tier-saved-info .tier-remove-btn:hover {
+    color: #dc2626;
+    background: #fee2e2;
+}
+
+/* ========================================
    STAMMDATEN: Score Bars (Risiko + Bonität)
    ======================================== */
 .score-bar-display {

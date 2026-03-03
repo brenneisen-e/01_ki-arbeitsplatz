@@ -238,11 +238,6 @@
     html += '<div class="v1x1-chapter-hero">';
     html += '<div class="v1x1-chapter-meta">';
     html += '<span class="v1x1-chapter-counter">' + num + ' / ' + String(total).padStart(2, '0') + '</span>';
-    html += '<div class="v1x1-chapter-level-indicator">';
-    html += '<div class="v1x1-level-dot active-1"></div>';
-    html += '<div class="v1x1-level-dot active-2"></div>';
-    html += '<div class="v1x1-level-dot"></div>';
-    html += '</div>';
     html += '</div>';
 
     // Hero Stat
@@ -292,22 +287,24 @@
       if (chapter.id === '02-marktteilnehmer') html += renderMarketShareChart();
 
       if (chapter.levels.level2 && chapter.levels.level2.length) {
+        var l2title = getFirstBlockTitle(chapter.levels.level2, 'Vertiefung');
         html += '<div class="v1x1-level-section">';
-        html += '<button class="v1x1-level-2-trigger" onclick="V1x1.toggleLevel2(this)">';
-        html += '<span class="v1x1-level-badge">Level 2</span><span>Vertiefung aufklappen</span>';
-        html += '<span class="v1x1-level-2-chevron">' + getIcon('chevron-down') + '</span>';
+        html += '<button class="v1x1-section-trigger" onclick="V1x1.toggleSection(this)">';
+        html += '<span>' + escapeHtml(l2title) + '</span>';
+        html += '<span class="v1x1-section-chevron">' + getIcon('chevron-down') + '</span>';
         html += '</button>';
-        html += '<div class="v1x1-level-2-body" id="v1x1Level2Body">';
+        html += '<div class="v1x1-section-body">';
         html += renderContentBlocks(chapter.levels.level2);
         html += '</div></div>';
       }
       if (chapter.levels.level3 && chapter.levels.level3.length) {
+        var l3title = getFirstBlockTitle(chapter.levels.level3, 'Hintergrund & Details');
         html += '<div class="v1x1-level-section">';
-        html += '<button class="v1x1-level-3-trigger" onclick="V1x1.toggleLevel3(this)">';
-        html += '<span class="v1x1-level-badge">Level 3</span><span>Experten-Deep-Dive</span>';
-        html += '<span class="v1x1-level-2-chevron">' + getIcon('chevron-down') + '</span>';
+        html += '<button class="v1x1-section-trigger" onclick="V1x1.toggleSection(this)">';
+        html += '<span>' + escapeHtml(l3title) + '</span>';
+        html += '<span class="v1x1-section-chevron">' + getIcon('chevron-down') + '</span>';
         html += '</button>';
-        html += '<div class="v1x1-level-3-body" id="v1x1Level3Body">';
+        html += '<div class="v1x1-section-body">';
         html += renderContentBlocks(chapter.levels.level3);
         html += '</div></div>';
       }
@@ -1016,7 +1013,7 @@
         if (subNav) content.scrollTop = subNav.offsetTop - 60;
       }
       setTimeout(function() {
-        initCharts(sub);
+        initCharts(chapter);
         initD3Components(sub);
         initCountUpObservers();
         initGlossaryPopovers();
@@ -1045,28 +1042,27 @@
       html += '</div></div>';
     }
 
-    // Level 2 — Vertiefung Accordion
+    // Collapsible sections (formerly Level 2 / Level 3)
     if (sub.level2 && sub.level2.length) {
+      var l2title = sub.sectionTitle2 || getFirstBlockTitle(sub.level2, 'Vertiefung');
       html += '<div class="v1x1-level-section">';
-      html += '<button class="v1x1-level-2-trigger" onclick="V1x1.toggleLevel2(this)">';
-      html += '<span class="v1x1-level-badge">Level 2</span>';
-      html += '<span>Vertiefung aufklappen</span>';
-      html += '<span class="v1x1-level-2-chevron">' + getIcon('chevron-down') + '</span>';
+      html += '<button class="v1x1-section-trigger" onclick="V1x1.toggleSection(this)">';
+      html += '<span>' + escapeHtml(l2title) + '</span>';
+      html += '<span class="v1x1-section-chevron">' + getIcon('chevron-down') + '</span>';
       html += '</button>';
-      html += '<div class="v1x1-level-2-body" id="v1x1Level2Body">';
+      html += '<div class="v1x1-section-body">';
       html += renderContentBlocks(sub.level2);
       html += '</div></div>';
     }
 
-    // Level 3 — Experten-Deep-Dive Accordion
     if (sub.level3 && sub.level3.length) {
+      var l3title = sub.sectionTitle3 || getFirstBlockTitle(sub.level3, 'Hintergrund & Details');
       html += '<div class="v1x1-level-section">';
-      html += '<button class="v1x1-level-3-trigger" onclick="V1x1.toggleLevel3(this)">';
-      html += '<span class="v1x1-level-badge">Level 3</span>';
-      html += '<span>Experten-Deep-Dive</span>';
-      html += '<span class="v1x1-level-2-chevron">' + getIcon('chevron-down') + '</span>';
+      html += '<button class="v1x1-section-trigger" onclick="V1x1.toggleSection(this)">';
+      html += '<span>' + escapeHtml(l3title) + '</span>';
+      html += '<span class="v1x1-section-chevron">' + getIcon('chevron-down') + '</span>';
       html += '</button>';
-      html += '<div class="v1x1-level-3-body" id="v1x1Level3Body">';
+      html += '<div class="v1x1-section-body">';
       html += renderContentBlocks(sub.level3);
       html += '</div></div>';
     }
@@ -1111,28 +1107,21 @@
   // LEVEL TOGGLES
   // ========================================
 
-  function toggleLevel2(trigger) {
-    var body = document.getElementById('v1x1Level2Body');
+  function toggleSection(trigger) {
+    var body = trigger.nextElementSibling;
     if (!body) return;
     trigger.classList.toggle('open');
     body.classList.toggle('open');
-    if (body.classList.contains('open')) {
-      initScrollReveal();
-      var dots = document.querySelectorAll('.v1x1-level-dot');
-      if (dots.length >= 2) dots[1].classList.add('active-2');
-    }
+    if (body.classList.contains('open')) initScrollReveal();
   }
 
-  function toggleLevel3(trigger) {
-    var body = document.getElementById('v1x1Level3Body');
-    if (!body) return;
-    trigger.classList.toggle('open');
-    body.classList.toggle('open');
-    if (body.classList.contains('open')) {
-      initScrollReveal();
-      var dots = document.querySelectorAll('.v1x1-level-dot');
-      if (dots.length >= 3) dots[2].classList.add('active-3');
+  function getFirstBlockTitle(blocks, fallback) {
+    for (var i = 0; i < blocks.length; i++) {
+      var b = blocks[i];
+      var isChart = b.type === 'chartLine' || b.type === 'chartBar' || b.type === 'chartDonut';
+      if (b.title && !isChart) return b.title;
     }
+    return fallback;
   }
 
   // ========================================
@@ -1460,7 +1449,7 @@
     }
 
     try {
-      var response = await fetch('data/versicherungs-1x1/chapters.json?v=20260303g');
+      var response = await fetch('data/versicherungs-1x1/chapters.json?v=20260303i');
       if (!response.ok) throw new Error('Failed to load data');
       moduleData = await response.json();
       moduleLoaded = true;
@@ -2550,8 +2539,7 @@
     setWkModuleFilter: setWkModuleFilter,
     setWkMode: setWkMode,
     startWissenscheck: startWissenscheck,
-    toggleLevel2: toggleLevel2,
-    toggleLevel3: toggleLevel3,
+    toggleSection: toggleSection,
     showGlossary: showGlossary,
     closeGlossary: closeGlossary,
     filterGlossaryLetter: filterGlossaryLetter,

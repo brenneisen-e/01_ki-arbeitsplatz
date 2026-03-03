@@ -2791,3 +2791,189 @@
   .v1x1-wk-score-pct { font-size: 24px; }
   .v1x1-wk-question-card { padding: 20px 16px; }
 }
+
+/* ========================================
+   LANDING PAGE HERO
+   ======================================== */
+.v1x1-landing-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 56px 24px 48px;
+  background: linear-gradient(160deg, #001e33 0%, #003057 45%, #004f8b 100%);
+  border-radius: 16px;
+  margin-bottom: 40px;
+  position: relative;
+  overflow: hidden;
+}
+.v1x1-landing-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 70% 60% at 50% 0%, rgba(134,188,37,0.12) 0%, transparent 70%);
+  pointer-events: none;
+}
+.v1x1-landing-logo-wrap {
+  margin-bottom: 28px;
+  position: relative;
+}
+.v1x1-landing-logo {
+  height: 52px;
+  width: auto;
+  filter: brightness(0) invert(1);
+  opacity: 0.95;
+}
+.v1x1-landing-badge {
+  display: inline-block;
+  background: rgba(134,188,37,0.18);
+  color: #86BC25;
+  border: 1px solid rgba(134,188,37,0.35);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 5px 14px;
+  border-radius: 100px;
+  margin-bottom: 18px;
+}
+.v1x1-landing-title {
+  font-size: clamp(32px, 5vw, 52px);
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0 0 16px;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+.v1x1-landing-sub {
+  font-size: clamp(14px, 2vw, 17px);
+  color: rgba(255,255,255,0.72);
+  max-width: 680px;
+  line-height: 1.65;
+  margin: 0 auto 40px;
+}
+/* KPI strip */
+.v1x1-landing-kpis {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 12px;
+  padding: 20px 32px;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.v1x1-landing-kpi {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 0 28px;
+}
+.v1x1-landing-kpi-val {
+  font-size: 36px;
+  font-weight: 800;
+  color: #86BC25;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.v1x1-landing-kpi-unit {
+  font-size: 16px;
+  font-weight: 700;
+  color: #86BC25;
+  margin-left: 2px;
+}
+.v1x1-landing-kpi-label {
+  font-size: 11px;
+  color: rgba(255,255,255,0.55);
+  line-height: 1.4;
+  text-align: center;
+  margin-top: 2px;
+}
+.v1x1-landing-kpi-div {
+  width: 1px;
+  height: 40px;
+  background: rgba(255,255,255,0.15);
+  flex-shrink: 0;
+}
+/* Value pillars */
+.v1x1-landing-pillars {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 36px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.v1x1-landing-pillar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 10px;
+  padding: 12px 16px;
+  text-align: left;
+  min-width: 220px;
+}
+.v1x1-landing-pillar-icon {
+  flex-shrink: 0;
+  color: #86BC25;
+  opacity: 0.9;
+}
+.v1x1-landing-pillar-icon svg { width: 20px; height: 20px; }
+.v1x1-landing-pillar-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.v1x1-landing-pillar-text strong {
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+}
+.v1x1-landing-pillar-text span {
+  font-size: 11px;
+  color: rgba(255,255,255,0.5);
+  line-height: 1.4;
+}
+/* CTA button */
+.v1x1-landing-cta-row { display: flex; justify-content: center; }
+.v1x1-landing-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #86BC25;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  padding: 14px 32px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.12s;
+  letter-spacing: 0.01em;
+}
+.v1x1-landing-cta:hover { background: #78a921; transform: translateY(-1px); }
+.v1x1-landing-cta svg { width: 18px; height: 18px; }
+
+/* Chapter grid section heading */
+.v1x1-chapter-grid-section { padding: 0 0 40px; }
+.v1x1-section-heading {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--v1x1-text-primary, #111);
+  margin: 0 0 20px;
+  letter-spacing: -0.01em;
+}
+
+@media (max-width: 767px) {
+  .v1x1-landing-hero { padding: 36px 16px 32px; }
+  .v1x1-landing-kpis { padding: 16px; gap: 4px; }
+  .v1x1-landing-kpi { padding: 0 16px; }
+  .v1x1-landing-kpi-val { font-size: 28px; }
+  .v1x1-landing-kpi-div { height: 32px; }
+  .v1x1-landing-pillars { flex-direction: column; }
+  .v1x1-landing-pillar { min-width: unset; }
+}

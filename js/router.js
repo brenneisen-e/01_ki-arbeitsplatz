@@ -186,12 +186,12 @@
                 'pmo-toolbox':          function() { return typeof openPMOToolbox === 'function' ? (openPMOToolbox(), true) : false; },
                 'hr-pipeline':          function() { return typeof openHRPipeline === 'function' ? (openHRPipeline(), true) : false; },
                 'versicherungs-1x1':    function() { return typeof openVersicherungs1x1 === 'function' ? (openVersicherungs1x1(), true) : false; },
-                'berater-retail':       function() { return typeof openBeraterOverview === 'function' && typeof setBankViewMode === 'function' ? (setBankViewMode('retail'), openBeraterOverview(), true) : false; },
-                'berater-firmenkunde':  function() { return typeof openBeraterOverview === 'function' && typeof setBankViewMode === 'function' ? (setBankViewMode('firmenkunde'), openBeraterOverview(), true) : false; },
-                'berater-vermoegen':    function() { return typeof openBeraterOverview === 'function' && typeof setBankViewMode === 'function' ? (setBankViewMode('vermoegen'), openBeraterOverview(), true) : false; },
-                'kundendetail-bank':    function() { return typeof openBeraterOverview === 'function' ? (openBeraterOverview(), true) : false; },
-                'kundendetail-bank-fk': function() { return typeof openBeraterOverview === 'function' && typeof setBankViewMode === 'function' ? (setBankViewMode('firmenkunde'), openBeraterOverview(), true) : false; },
-                'kundendetail-bank-pb': function() { return typeof openBeraterOverview === 'function' && typeof setBankViewMode === 'function' ? (setBankViewMode('vermoegen'), openBeraterOverview(), true) : false; }
+                'berater-retail':       function() { return typeof showBeraterOverview === 'function' && typeof setBankViewMode === 'function' ? (setBankViewMode('retail'), showBeraterOverview(), true) : false; },
+                'berater-firmenkunde':  function() { return typeof showBeraterOverview === 'function' && typeof setBankViewMode === 'function' ? (setBankViewMode('firmenkunde'), showBeraterOverview(), true) : false; },
+                'berater-vermoegen':    function() { return typeof showBeraterOverview === 'function' && typeof setBankViewMode === 'function' ? (setBankViewMode('vermoegen'), showBeraterOverview(), true) : false; },
+                'kundendetail-bank':    function() { return typeof showBeraterOverview === 'function' ? (showBeraterOverview(), true) : false; },
+                'kundendetail-bank-fk': function() { return typeof showBeraterOverview === 'function' && typeof setBankViewMode === 'function' ? (setBankViewMode('firmenkunde'), showBeraterOverview(), true) : false; },
+                'kundendetail-bank-pb': function() { return typeof showBeraterOverview === 'function' && typeof setBankViewMode === 'function' ? (setBankViewMode('vermoegen'), showBeraterOverview(), true) : false; }
             };
 
             var handler = fnMap[viewName];

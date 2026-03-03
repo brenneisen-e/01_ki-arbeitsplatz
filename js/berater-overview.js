@@ -812,7 +812,6 @@ function askBeraterQuestion(question) {
 
 // ── WINDOW EXPORTS ──
 window.showBeraterOverview = showBeraterOverview;
-window.openBeraterOverview = showBeraterOverview; // alias used in landing nav + router
 window.backFromBeraterOverview = backFromBeraterOverview;
 window.setBankViewMode = setBankViewMode;
 window.showBeraterTab = showBeraterTab;

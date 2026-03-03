@@ -188,7 +188,7 @@ Alle drei gehoeren zur **Volksbank Mittelhessen eG**.
 
 ### B-02 Layout-Aufbau
 
-Die Berater-Uebersicht ist eine Single-Page-Ansicht mit dynamischem Content. Die gesamte Seite liegt im Container `#beraterOverviewPage` und wird ueber `openBeraterOverview()` sichtbar gemacht.
+Die Berater-Uebersicht ist eine Single-Page-Ansicht mit dynamischem Content. Die gesamte Seite liegt im Container `#beraterOverviewPage` und wird ueber `showBeraterOverview()` sichtbar gemacht.
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -1197,7 +1197,7 @@ User klickt "Zurueck" in B-10
 closeBankKundenDetail()
        │
        ├── 1. B-10 (#kundenDetailBankPage) verstecken
-       └── 2. openBeraterOverview() → B-02 anzeigen + Modus wiederherstellen
+       └── 2. showBeraterOverview() → B-02 anzeigen + Modus wiederherstellen
 ```
 
 ---
@@ -1338,7 +1338,7 @@ FIDA ist in jedem Modus auf Position 6 — immer orange hervorgehoben.
 | Funktion | Beschreibung |
 |----------|-------------|
 | `setBankViewMode(mode)` | Modus umschalten (retail/firmenkunde/vermoegen) |
-| `openBeraterOverview()` | B-02 anzeigen, andere Seiten verstecken |
+| `showBeraterOverview()` | B-02 anzeigen, andere Seiten verstecken |
 | `backFromBeraterOverview()` | Zurueck zur Landing Page |
 | `switchBeraterTab(tabId, mode)` | Tab wechseln in B-02 |
 | `bankViewMode` | Aktueller Modus (String) |
@@ -1397,14 +1397,14 @@ Die Landing Page bietet Kacheln fuer verschiedene Module. Der Klick auf eine Ban
 
 ```javascript
 // Router-Handler in navigateToView():
-'berater-retail':      → setBankViewMode('retail'), openBeraterOverview()
-'berater-firmenkunde': → setBankViewMode('firmenkunde'), openBeraterOverview()
-'berater-vermoegen':   → setBankViewMode('vermoegen'), openBeraterOverview()
+'berater-retail':      → setBankViewMode('retail'), showBeraterOverview()
+'berater-firmenkunde': → setBankViewMode('firmenkunde'), showBeraterOverview()
+'berater-vermoegen':   → setBankViewMode('vermoegen'), showBeraterOverview()
 ```
 
 ### Seiten die B-02 beim Oeffnen versteckt
 
-`openBeraterOverview()` blendet explizit folgende Container aus:
+`showBeraterOverview()` blendet explizit folgende Container aus:
 - `landingPage`, `mainApp`, `agenturOverview`, `potentialAnalysePage`
 - `kundenDetailPage`, `bgavUmstellungPage`, `billingCheckPage`
 - `bankenModule`, `assetModule`, `risikoscoringModule`

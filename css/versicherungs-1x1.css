@@ -1415,6 +1415,95 @@
 }
 
 /* ========================================
+   SUB-CHAPTER NAVIGATION
+   ======================================== */
+.v1x1-subtabs {
+  display: flex;
+  gap: 4px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: 4px 0 16px;
+  margin-bottom: 8px;
+  border-bottom: 2px solid var(--v1x1-border);
+  position: sticky;
+  top: 0;
+  background: var(--v1x1-bg);
+  z-index: 10;
+}
+.v1x1-subtabs::-webkit-scrollbar { display: none; }
+
+.v1x1-subtab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border: 1px solid var(--v1x1-border);
+  border-radius: 8px;
+  background: var(--v1x1-bg-secondary);
+  color: var(--v1x1-text-muted);
+  font-size: 13px;
+  font-weight: 500;
+  font-family: var(--v1x1-font-body);
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+}
+.v1x1-subtab:hover {
+  border-color: var(--v1x1-accent);
+  color: var(--v1x1-accent);
+  background: var(--v1x1-bg);
+}
+.v1x1-subtab.active {
+  background: var(--v1x1-accent);
+  border-color: var(--v1x1-accent);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(37,99,235,0.25);
+}
+.v1x1-subtab-icon {
+  display: flex;
+  align-items: center;
+  opacity: 0.8;
+}
+.v1x1-subtab.active .v1x1-subtab-icon { opacity: 1; }
+
+.v1x1-sub-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 20px 0 16px;
+  border-bottom: 1px solid var(--v1x1-border);
+  margin-bottom: 24px;
+}
+.v1x1-sub-header-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: var(--v1x1-accent-light, #EFF6FF);
+  color: var(--v1x1-accent);
+  flex-shrink: 0;
+}
+.v1x1-sub-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--v1x1-text);
+  margin: 0 0 4px;
+}
+.v1x1-sub-subtitle {
+  font-size: 14px;
+  color: var(--v1x1-text-muted);
+  margin: 0;
+}
+
+@media (max-width: 767px) {
+  .v1x1-subtab { padding: 7px 12px; font-size: 12px; }
+  .v1x1-sub-title { font-size: 17px; }
+}
+
+/* ========================================
    CHAPTER NAVIGATION (Prev/Next)
    ======================================== */
 .v1x1-chapter-nav {

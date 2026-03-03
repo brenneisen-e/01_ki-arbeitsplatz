@@ -575,6 +575,10 @@
   // ========================================
 
   var wissencheckChapterIndex = 0;
+  var wissencheckMode = 'all'; // 'all' | 'quick'
+  var wissencheckModuleFilter = 'all'; // 'all' | chapter index (number)
+  var wissencheckActiveQuestions = [];
+  var wissencheckCorrectByChapter = {};
 
   function openWissencheck() {
     if (!moduleData) return;
@@ -583,8 +587,13 @@
     currentQuizIndex = 0;
     quizAnswered = {};
     wissencheckChapterIndex = 0;
+    wissencheckMode = 'all';
+    wissencheckModuleFilter = 'all';
+    wissencheckActiveQuestions = [];
+    wissencheckCorrectByChapter = {};
 
     setActiveNav('wissenscheck');
+    renderBreadcrumb('Wissenscheck');
 
     var contentInner = document.getElementById('v1x1ContentInner');
     if (!contentInner) return;
@@ -603,76 +612,161 @@
     html += '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>';
     html += ' Wissenscheck';
     html += '</h2>';
-    html += '<p class="v1x1-wissenscheck-subtitle">Teste dein Wissen zu allen Kapiteln</p>';
+    html += '<p class="v1x1-wissenscheck-subtitle">Teste dein Wissen zu allen Kapiteln des Versicherungs-1×1</p>';
     html += '</div>';
+
+    // Filter bar: module + mode + start
+    html += '<div class="v1x1-wk-filters">';
+
+    // Module filter dropdown
+    html += '<div class="v1x1-wk-filter-group">';
+    html += '<label class="v1x1-wk-filter-label">Modul</label>';
+    html += '<select class="v1x1-wk-select" id="v1x1WkModuleSelect" onchange="V1x1.setWkModuleFilter(this.value)">';
+    html += '<option value="all"' + (wissencheckModuleFilter === 'all' ? ' selected' : '') + '>Alle Module</option>';
+    moduleData.chapters.forEach(function(ch, i) {
+      if (ch.quiz && ch.quiz.length > 0) {
+        html += '<option value="' + i + '"' + (wissencheckModuleFilter === i ? ' selected' : '') + '>';
+        html += String(i + 1).padStart(2, '0') + '. ' + escapeHtml(ch.title);
+        html += '</option>';
+      }
+    });
+    html += '</select>';
+    html += '</div>';
+
+    // Mode toggle
+    html += '<div class="v1x1-wk-filter-group">';
+    html += '<label class="v1x1-wk-filter-label">Modus</label>';
+    html += '<div class="v1x1-wk-mode-toggle">';
+    html += '<button class="v1x1-wk-mode-btn' + (wissencheckMode === 'all' ? ' active' : '') + '" onclick="V1x1.setWkMode(\'all\')">Alle Fragen</button>';
+    html += '<button class="v1x1-wk-mode-btn' + (wissencheckMode === 'quick' ? ' active' : '') + '" onclick="V1x1.setWkMode(\'quick\')">Quick-Check (10)</button>';
+    html += '</div>';
+    html += '</div>';
+
+    // Question count badge
+    var previewCount = getWkQuestions().length;
+    html += '<div class="v1x1-wk-filter-group">';
+    html += '<span class="v1x1-wk-count-badge">' + previewCount + ' Fragen</span>';
+    html += '</div>';
+
+    // Start button
+    html += '<div class="v1x1-wk-filter-group">';
+    html += '<button class="v1x1-wk-start-btn" onclick="V1x1.startWissenscheck()">';
+    html += getIcon('check') + ' Quiz starten';
+    html += '</button>';
+    html += '</div>';
+
+    html += '</div>'; // .v1x1-wk-filters
 
     // Chapter selector cards
     html += '<div class="v1x1-wissenscheck-chapters">';
     moduleData.chapters.forEach(function(ch, i) {
       var hasQuiz = ch.quiz && ch.quiz.length > 0;
-      var num = String(i + 1).padStart(2, '0');
-      var cls = 'v1x1-wissenscheck-card' + (hasQuiz ? '' : ' disabled') + (i === wissencheckChapterIndex ? ' active' : '');
-      html += '<button class="' + cls + '" ' + (hasQuiz ? 'onclick="V1x1.selectWissencheckChapter(' + i + ')"' : '') + '>';
+      var cls = 'v1x1-wissenscheck-card' + (hasQuiz ? '' : ' disabled') + (wissencheckModuleFilter === i ? ' active' : '');
+      html += '<button class="' + cls + '" ';
+      if (hasQuiz) html += 'onclick="V1x1.setWkModuleFilter(' + i + ')" ';
+      html += '>';
       html += '<span class="v1x1-wissenscheck-card-icon">' + getIcon(ch.icon) + '</span>';
-      html += '<span class="v1x1-wissenscheck-card-label">' + num + '. ' + escapeHtml(ch.title) + '</span>';
-      if (hasQuiz) {
-        html += '<span class="v1x1-wissenscheck-card-count">' + ch.quiz.length + ' Fragen</span>';
-      } else {
-        html += '<span class="v1x1-wissenscheck-card-count">Keine Fragen</span>';
-      }
+      html += '<span class="v1x1-wissenscheck-card-label">' + String(i + 1).padStart(2, '0') + '. ' + escapeHtml(ch.title) + '</span>';
+      html += '<span class="v1x1-wissenscheck-card-count">' + (hasQuiz ? ch.quiz.length + ' Fragen' : 'Keine Fragen') + '</span>';
       html += '</button>';
     });
     html += '</div>';
 
-    // Quiz area
-    var selectedChapter = moduleData.chapters[wissencheckChapterIndex];
-    if (selectedChapter && selectedChapter.quiz && selectedChapter.quiz.length > 0) {
-      html += '<div class="v1x1-wissenscheck-quiz" id="v1x1WissencheckQuiz">';
-      html += renderQuiz(selectedChapter.quiz, 0);
-      html += '</div>';
-    }
+    // Quiz render area
+    html += '<div class="v1x1-wissenscheck-quiz" id="v1x1WissencheckQuiz"></div>';
 
     html += '</div>';
     container.innerHTML = html;
   }
 
-  function selectWissencheckChapter(index) {
-    wissencheckChapterIndex = index;
-    currentQuizIndex = 0;
-    quizAnswered = {};
-
-    var contentInner = document.getElementById('v1x1ContentInner');
-    if (contentInner) {
-      renderWissencheckView(contentInner);
+  function getWkQuestions() {
+    if (!moduleData) return [];
+    var questions = [];
+    if (wissencheckModuleFilter === 'all') {
+      moduleData.chapters.forEach(function(ch) {
+        if (ch.quiz && ch.quiz.length > 0) {
+          ch.quiz.forEach(function(q) {
+            questions.push({ question: q.question, options: q.options, correct: q.correct, explanation: q.explanation, chapterId: ch.id, chapterTitle: ch.title });
+          });
+        }
+      });
+    } else {
+      var ch = moduleData.chapters[wissencheckModuleFilter];
+      if (ch && ch.quiz) {
+        ch.quiz.forEach(function(q) {
+          questions.push({ question: q.question, options: q.options, correct: q.correct, explanation: q.explanation, chapterId: ch.id, chapterTitle: ch.title });
+        });
+      }
     }
+    if (wissencheckMode === 'quick') {
+      questions = shuffleArray(questions).slice(0, 10);
+    }
+    return questions;
   }
 
-  // ========================================
-  // QUIZ RENDERING
-  // ========================================
+  function shuffleArray(arr) {
+    var a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+    }
+    return a;
+  }
 
-  function renderQuiz(questions, index) {
+  function setWkModuleFilter(value) {
+    wissencheckModuleFilter = (value === 'all') ? 'all' : parseInt(value, 10);
+    wissencheckActiveQuestions = [];
+    currentQuizIndex = 0;
+    quizAnswered = {};
+    var contentInner = document.getElementById('v1x1ContentInner');
+    if (contentInner) renderWissencheckView(contentInner);
+  }
+
+  function setWkMode(mode) {
+    wissencheckMode = mode;
+    wissencheckActiveQuestions = [];
+    currentQuizIndex = 0;
+    quizAnswered = {};
+    var contentInner = document.getElementById('v1x1ContentInner');
+    if (contentInner) renderWissencheckView(contentInner);
+  }
+
+  function startWissenscheck() {
+    wissencheckActiveQuestions = getWkQuestions();
+    currentQuizIndex = 0;
+    quizAnswered = {};
+    wissencheckCorrectByChapter = {};
+    var quizContainer = document.getElementById('v1x1WissencheckQuiz');
+    if (!quizContainer) return;
+    quizContainer.innerHTML = renderWkQuestion(wissencheckActiveQuestions, 0);
+    quizContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function selectWissencheckChapter(index) {
+    setWkModuleFilter(index);
+  }
+
+  function renderWkQuestion(questions, index) {
+    if (!questions || !questions.length) {
+      return '<p style="color:#9CA3AF;padding:24px;">Keine Fragen verfügbar.</p>';
+    }
     if (index >= questions.length) {
-      // Quiz complete
-      var correct = 0;
-      for (var k in quizAnswered) {
-        if (quizAnswered[k]) correct++;
-      }
-      var html = '<div class="v1x1-quiz-header">';
-      html += '<span class="v1x1-quiz-title">Wissenscheck abgeschlossen!</span>';
-      html += '</div>';
-      html += '<p class="v1x1-quiz-question">Du hast ' + correct + ' von ' + questions.length + ' Fragen richtig beantwortet.</p>';
-      html += '<button class="v1x1-quiz-next-btn" onclick="V1x1.restartQuiz()">Nochmal versuchen</button>';
-      return html;
+      return renderWkEndScreen(questions);
     }
 
     var q = questions[index];
-    var html = '<div class="v1x1-quiz-header">';
-    html += '<span class="v1x1-quiz-title">';
-    html += '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>';
-    html += ' Wissenscheck</span>';
-    html += '<span class="v1x1-quiz-counter">' + (index + 1) + ' / ' + questions.length + '</span>';
+    var total = questions.length;
+    var progress = Math.round((index / total) * 100);
+
+    var html = '<div class="v1x1-wk-question-card">';
+
+    html += '<div class="v1x1-wk-progress-header">';
+    html += '<span class="v1x1-wk-q-counter">Frage ' + (index + 1) + ' / ' + total + '</span>';
+    if (q.chapterTitle) {
+      html += '<span class="v1x1-wk-q-chapter">' + escapeHtml(q.chapterTitle) + '</span>';
+    }
     html += '</div>';
+    html += '<div class="v1x1-wk-progressbar"><div class="v1x1-wk-progressfill" style="width:' + progress + '%"></div></div>';
 
     html += '<p class="v1x1-quiz-question">' + escapeHtml(q.question) + '</p>';
     html += '<div class="v1x1-quiz-options" id="v1x1QuizOptions">';
@@ -685,14 +779,76 @@
     html += '</div>';
     html += '<div id="v1x1QuizFeedback"></div>';
 
+    html += '</div>';
     return html;
+  }
+
+  function renderWkEndScreen(questions) {
+    var correct = 0;
+    var chapterScores = {};
+    questions.forEach(function(q, i) {
+      var isCorrect = !!quizAnswered[i];
+      if (isCorrect) correct++;
+      var cid = q.chapterId || 'unknown';
+      if (!chapterScores[cid]) chapterScores[cid] = { title: q.chapterTitle || cid, correct: 0, total: 0 };
+      chapterScores[cid].total++;
+      if (isCorrect) chapterScores[cid].correct++;
+    });
+
+    var pct = questions.length > 0 ? Math.round((correct / questions.length) * 100) : 0;
+    var grade = pct >= 80 ? 'Ausgezeichnet!' : pct >= 60 ? 'Gut gemacht!' : pct >= 40 ? 'Ausbaufähig' : 'Weitermachen!';
+    var gradeColor = pct >= 80 ? '#059669' : pct >= 60 ? '#2563EB' : pct >= 40 ? '#D97706' : '#DC2626';
+
+    var html = '<div class="v1x1-wk-endscreen">';
+
+    html += '<div class="v1x1-wk-score-hero">';
+    html += '<div class="v1x1-wk-score-circle" style="border-color:' + gradeColor + ';color:' + gradeColor + '">';
+    html += '<span class="v1x1-wk-score-pct">' + pct + '%</span>';
+    html += '<span class="v1x1-wk-score-label">' + correct + ' / ' + questions.length + '</span>';
+    html += '</div>';
+    html += '<h3 class="v1x1-wk-grade" style="color:' + gradeColor + '">' + grade + '</h3>';
+    html += '</div>';
+
+    var chapterIds = Object.keys(chapterScores);
+    if (chapterIds.length > 1) {
+      html += '<div class="v1x1-wk-breakdown">';
+      html += '<h4 class="v1x1-wk-breakdown-title">Ergebnisse nach Modul</h4>';
+      chapterIds.forEach(function(cid) {
+        var cs = chapterScores[cid];
+        var cPct = Math.round((cs.correct / cs.total) * 100);
+        var barColor = cPct >= 80 ? '#059669' : cPct >= 60 ? '#2563EB' : cPct >= 40 ? '#D97706' : '#DC2626';
+        html += '<div class="v1x1-wk-breakdown-row">';
+        html += '<span class="v1x1-wk-breakdown-chapter">' + escapeHtml(cs.title) + '</span>';
+        html += '<div class="v1x1-wk-breakdown-bar-wrap">';
+        html += '<div class="v1x1-wk-breakdown-bar" style="width:' + cPct + '%;background:' + barColor + '"></div>';
+        html += '</div>';
+        html += '<span class="v1x1-wk-breakdown-score">' + cs.correct + '/' + cs.total + '</span>';
+        html += '</div>';
+      });
+      html += '</div>';
+    }
+
+    html += '<div class="v1x1-wk-end-actions">';
+    html += '<button class="v1x1-wk-start-btn" onclick="V1x1.restartQuiz()">' + getIcon('rotate-ccw') + ' Nochmals</button>';
+    html += '<button class="v1x1-wk-start-btn v1x1-wk-btn-outline" onclick="V1x1.openWissencheck()">' + getIcon('chevron-left') + ' Zurück zur Übersicht</button>';
+    html += '</div>';
+
+    html += '</div>';
+    return html;
+  }
+
+  // ========================================
+  // QUIZ RENDERING
+  // ========================================
+
+  function renderQuiz(questions, index) {
+    // Delegate to unified renderer
+    return renderWkQuestion(questions, index);
   }
 
   function answerQuiz(selected, correct) {
     var options = document.querySelectorAll('#v1x1QuizOptions .v1x1-quiz-option');
     if (!options.length) return;
-
-    // Prevent multiple answers
     if (options[0].classList.contains('disabled')) return;
 
     var isCorrect = selected === correct;
@@ -709,13 +865,14 @@
       }
     });
 
-    // Show explanation
     var feedback = document.getElementById('v1x1QuizFeedback');
-    var quizChapter = moduleData.chapters[wissencheckChapterIndex];
-    if (feedback && quizChapter && quizChapter.quiz && quizChapter.quiz[currentQuizIndex]) {
-      var q = quizChapter.quiz[currentQuizIndex];
-      var html = '<div class="v1x1-quiz-explanation">' + escapeHtml(q.explanation) + '</div>';
-      if (currentQuizIndex < quizChapter.quiz.length - 1) {
+    var questions = wissencheckActiveQuestions.length > 0
+      ? wissencheckActiveQuestions
+      : (moduleData.chapters[wissencheckChapterIndex] ? moduleData.chapters[wissencheckChapterIndex].quiz : []);
+    if (feedback && questions && questions[currentQuizIndex]) {
+      var q = questions[currentQuizIndex];
+      var html = '<div class="v1x1-quiz-explanation">' + escapeHtml(q.explanation || '') + '</div>';
+      if (currentQuizIndex < questions.length - 1) {
         html += '<button class="v1x1-quiz-next-btn" onclick="V1x1.nextQuizQuestion()">Nächste Frage ' + getIcon('chevron-right') + '</button>';
       } else {
         html += '<button class="v1x1-quiz-next-btn" onclick="V1x1.nextQuizQuestion()">Ergebnis anzeigen ' + getIcon('chevron-right') + '</button>';
@@ -727,9 +884,11 @@
   function nextQuizQuestion() {
     currentQuizIndex++;
     var quizContainer = document.getElementById('v1x1WissencheckQuiz');
-    var quizChapter = moduleData.chapters[wissencheckChapterIndex];
-    if (quizContainer && quizChapter && quizChapter.quiz) {
-      quizContainer.innerHTML = renderQuiz(quizChapter.quiz, currentQuizIndex);
+    var questions = wissencheckActiveQuestions.length > 0
+      ? wissencheckActiveQuestions
+      : (moduleData.chapters[wissencheckChapterIndex] ? moduleData.chapters[wissencheckChapterIndex].quiz : []);
+    if (quizContainer && questions) {
+      quizContainer.innerHTML = renderWkQuestion(questions, currentQuizIndex);
     }
   }
 
@@ -737,9 +896,11 @@
     currentQuizIndex = 0;
     quizAnswered = {};
     var quizContainer = document.getElementById('v1x1WissencheckQuiz');
-    var quizChapter = moduleData.chapters[wissencheckChapterIndex];
-    if (quizContainer && quizChapter && quizChapter.quiz) {
-      quizContainer.innerHTML = renderQuiz(quizChapter.quiz, 0);
+    var questions = wissencheckActiveQuestions.length > 0
+      ? wissencheckActiveQuestions
+      : (moduleData.chapters[wissencheckChapterIndex] ? moduleData.chapters[wissencheckChapterIndex].quiz : []);
+    if (quizContainer && questions) {
+      quizContainer.innerHTML = renderWkQuestion(questions, 0);
     }
   }
 
@@ -808,9 +969,16 @@
   // GLOSSARY
   // ========================================
 
+  var glossaryLetterFilter = '';
+  var glossaryTagFilter = 'all';
+
   function showGlossary() {
     var overlay = document.getElementById('v1x1GlossaryOverlay');
     if (overlay) overlay.style.display = 'flex';
+    glossaryLetterFilter = '';
+    glossaryTagFilter = 'all';
+    renderGlossaryAlpha();
+    renderGlossaryTabs();
     renderGlossaryList();
   }
 
@@ -819,23 +987,96 @@
     if (overlay) overlay.style.display = 'none';
   }
 
-  function renderGlossaryList(filter) {
+  function renderGlossaryAlpha() {
+    var container = document.getElementById('v1x1GlossaryAlpha');
+    if (!container || !moduleData) return;
+    var terms = moduleData.glossary || [];
+    var usedLetters = {};
+    terms.forEach(function(t) {
+      var l = t.term.charAt(0).toUpperCase();
+      usedLetters[l] = true;
+    });
+    var html = '<button class="v1x1-alpha-btn' + (!glossaryLetterFilter ? ' active' : '') + '" onclick="V1x1.filterGlossaryLetter(\'\')">Alle</button>';
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').forEach(function(l) {
+      var has = !!usedLetters[l];
+      html += '<button class="v1x1-alpha-btn' + (glossaryLetterFilter === l ? ' active' : '') + (has ? '' : ' disabled') + '"';
+      if (has) html += ' onclick="V1x1.filterGlossaryLetter(\'' + l + '\')"';
+      html += '>' + l + '</button>';
+    });
+    container.innerHTML = html;
+  }
+
+  function renderGlossaryTabs() {
+    var container = document.getElementById('v1x1GlossaryTabs');
+    if (!container || !moduleData) return;
+    var terms = moduleData.glossary || [];
+    var foundTags = {};
+    terms.forEach(function(t) {
+      if (t.tags) t.tags.forEach(function(tag) { foundTags[tag] = true; });
+    });
+    var tagOrder = ['all', 'Markt', 'Produkte', 'Vertrieb', 'Regulatorik', 'Finanzen', 'Technik'];
+    var html = '';
+    tagOrder.forEach(function(tag) {
+      if (tag === 'all' || foundTags[tag]) {
+        html += '<button class="v1x1-glossary-tab' + (glossaryTagFilter === tag ? ' active' : '') + '" onclick="V1x1.filterGlossaryTag(\'' + tag + '\')">' + (tag === 'all' ? 'Alle' : escapeHtml(tag)) + '</button>';
+        delete foundTags[tag];
+      }
+    });
+    Object.keys(foundTags).sort().forEach(function(tag) {
+      html += '<button class="v1x1-glossary-tab' + (glossaryTagFilter === tag ? ' active' : '') + '" onclick="V1x1.filterGlossaryTag(\'' + tag + '\')">' + escapeHtml(tag) + '</button>';
+    });
+    container.innerHTML = html;
+  }
+
+  function filterGlossaryLetter(letter) {
+    glossaryLetterFilter = letter;
+    renderGlossaryAlpha();
+    renderGlossaryList();
+  }
+
+  function filterGlossaryTag(tag) {
+    glossaryTagFilter = tag;
+    renderGlossaryTabs();
+    renderGlossaryList();
+  }
+
+  function renderGlossaryList(textFilter) {
     var container = document.getElementById('v1x1GlossaryList');
     if (!container || !moduleData) return;
 
-    var terms = moduleData.glossary || [];
-    if (filter) {
-      var f = filter.toLowerCase();
+    var terms = (moduleData.glossary || []).slice();
+
+    if (glossaryLetterFilter) {
+      var lf = glossaryLetterFilter;
+      terms = terms.filter(function(t) { return t.term.charAt(0).toUpperCase() === lf; });
+    }
+
+    if (glossaryTagFilter && glossaryTagFilter !== 'all') {
+      var tf = glossaryTagFilter;
+      terms = terms.filter(function(t) { return t.tags && t.tags.indexOf(tf) !== -1; });
+    }
+
+    if (textFilter) {
+      var f = textFilter.toLowerCase();
       terms = terms.filter(function(t) {
         return t.term.toLowerCase().indexOf(f) !== -1 || t.definition.toLowerCase().indexOf(f) !== -1;
       });
     }
+
+    terms.sort(function(a, b) { return a.term.localeCompare(b.term); });
 
     var html = '';
     terms.forEach(function(t) {
       html += '<div class="v1x1-glossary-entry">';
       html += '<div class="v1x1-glossary-term">' + escapeHtml(t.term) + '</div>';
       html += '<div class="v1x1-glossary-definition">' + escapeHtml(t.definition) + '</div>';
+      if (t.tags && t.tags.length) {
+        html += '<div class="v1x1-glossary-tags">';
+        t.tags.forEach(function(tag) {
+          html += '<span class="v1x1-glossary-tag" onclick="V1x1.filterGlossaryTag(\'' + escapeHtml(tag) + '\')">' + escapeHtml(tag) + '</span>';
+        });
+        html += '</div>';
+      }
       html += '</div>';
     });
     container.innerHTML = html || '<p style="color:#9CA3AF;font-size:14px;">Keine Treffer.</p>';
@@ -1838,10 +2079,15 @@
     showOverview: showOverview,
     openWissencheck: openWissencheck,
     selectWissencheckChapter: selectWissencheckChapter,
+    setWkModuleFilter: setWkModuleFilter,
+    setWkMode: setWkMode,
+    startWissenscheck: startWissenscheck,
     toggleLevel2: toggleLevel2,
     toggleLevel3: toggleLevel3,
     showGlossary: showGlossary,
     closeGlossary: closeGlossary,
+    filterGlossaryLetter: filterGlossaryLetter,
+    filterGlossaryTag: filterGlossaryTag,
     answerQuiz: answerQuiz,
     nextQuizQuestion: nextQuizQuestion,
     restartQuiz: restartQuiz,

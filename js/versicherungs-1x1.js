@@ -1346,7 +1346,7 @@
     }
 
     try {
-      var response = await fetch('data/versicherungs-1x1/chapters.json');
+      var response = await fetch('data/versicherungs-1x1/chapters.json?v=20260303');
       if (!response.ok) throw new Error('Failed to load data');
       moduleData = await response.json();
       moduleLoaded = true;

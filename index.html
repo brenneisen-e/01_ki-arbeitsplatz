@@ -52,7 +52,7 @@
     <link rel="stylesheet" href="css/stammdaten-extras.css?v=20260209">
     <link rel="stylesheet" href="css/screen-recorder.css?v=20260210">
     <link rel="stylesheet" href="css/bgav-umstellung.css?v=20260219">
-    <link rel="stylesheet" href="css/versicherungs-1x1.css?v=20260303h">
+    <link rel="stylesheet" href="css/versicherungs-1x1.css?v=20260226">
 </head>
 <body>
   <!-- Bildschirmaufnahme-Button (fixed, default hidden) -->
@@ -6839,260 +6839,572 @@
      B-02 BERATER-UEBERSICHT (Banking)
      ======================================== -->
   <div id="beraterOverviewPage" style="display: none;">
-    <div class="berater-overview-page">
-      <!-- Header -->
-      <div class="berater-header" style="background: linear-gradient(135deg, #003399 0%, #002266 100%); color: white; padding: 24px 32px; position: relative; display: flex; align-items: center;">
-        <button class="berater-back-btn" onclick="backFromBeraterOverview()" style="background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);border-radius:8px;padding:8px 14px;color:white;cursor:pointer;font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px;margin-right:16px;">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="15 18 9 12 15 6"></polyline></svg>
-          Zurueck
-        </button>
-        <div class="berater-header-info" style="flex:1;display:flex;align-items:center;gap:14px;">
-          <div id="beraterPhotoSmall" class="berater-photo-small" style="width:52px;height:52px;border-radius:50%;overflow:hidden;flex-shrink:0;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;">
-            <img id="beraterPhotoImg" src="assets/images/berater-thomas.jpg" alt="Foto" style="width:100%;height:100%;object-fit:cover;display:none;">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24" style="color:rgba(255,255,255,0.6);"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-          </div>
-          <div>
-            <h2 id="beraterHeaderName" style="font-size:22px;font-weight:700;margin:0;">Thomas Berger</h2>
-            <div id="beraterHeaderMeta" style="font-size:13px;color:rgba(255,255,255,0.75);margin-top:4px;">
-              <span>Berater-Nr. VB-40210</span><span style="margin-left:16px;">Volksbank Mittelhessen eG</span><span style="margin-left:16px;">Beratungscenter Giessen-Sued</span>
+    <div class="berater-page-new">
+        <!-- Header mit Back Button und Berater-Info (mirrors .agentur-header-new) -->
+        <div class="berater-header-new">
+            <div class="berater-header-left">
+                <button class="back-button" onclick="backFromBeraterOverview()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg> Zurueck</button>
+                <div class="agentur-header-info">
+                    <div class="agentur-photo-small" id="beraterPhotoSmall">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="agentur-photo-placeholder-small">
+                            <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                        <img id="beraterPhotoImgSmall" class="agentur-photo-img-small" style="display: none;" alt="Foto">
+                    </div>
+                    <div class="agentur-header-text">
+                        <h1 class="agentur-page-title" id="beraterPageTitle">Berater: Thomas Berger</h1>
+                        <div class="agentur-subtitle">
+                            <span id="beraterIdHeader">VB-40210</span> | <span id="beraterStatusHeader">Aktiv</span>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
+            <input type="file" id="beraterPhotoInput" accept="image/*" style="display: none;" onchange="handleBeraterPhotoUpload(event)">
+            <!-- Tab Navigation (im Header, zentriert) -->
+            <div class="agentur-header-tabs" id="beraterHeaderTabs">
+                <!-- === RETAIL TABS === -->
+                <button class="agentur-tab berater-tab-retail active" onclick="showBeraterTab('uebersicht')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                    Uebersicht
+                </button>
+                <button class="agentur-tab berater-tab-retail" onclick="showBeraterTab('stammdaten')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    Stammdaten
+                </button>
+                <button class="agentur-tab berater-tab-retail" onclick="showBeraterTab('neugeschaeft')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><line x1="12" y1="20" x2="12" y2="10"></line><line x1="18" y1="20" x2="18" y2="4"></line><line x1="6" y1="20" x2="6" y2="16"></line></svg>
+                    Neugeschaeft
+                </button>
+                <button class="agentur-tab berater-tab-retail" onclick="showBeraterTab('ertraege')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><circle cx="12" cy="12" r="10"></circle><text x="12" y="16" text-anchor="middle" fill="currentColor" stroke="none" font-size="12" font-weight="bold">&euro;</text></svg>
+                    Ertraege
+                </button>
+                <button class="agentur-tab berater-tab-retail" onclick="showBeraterTab('qualitaet')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                    Qualitaet
+                </button>
+                <div class="agentur-tab-divider berater-tab-retail"></div>
+                <button class="agentur-tab berater-tab-retail" onclick="showBeraterTab('kundenliste')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 00-3-3.87"></path><path d="M16 3.13a4 4 0 010 7.75"></path></svg>
+                    Kunden
+                </button>
+                <button class="agentur-tab berater-tab-retail" onclick="showBeraterTab('potentiale')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                    Potentiale
+                </button>
+                <!-- === FIRMENKUNDE TABS (hidden) === -->
+                <button class="agentur-tab berater-tab-fk active" onclick="showBeraterTab('uebersicht')" style="display:none;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                    Uebersicht
+                </button>
+                <button class="agentur-tab berater-tab-fk" onclick="showBeraterTab('kreditportfolio')" style="display:none;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
+                    Kreditportfolio
+                </button>
+                <button class="agentur-tab berater-tab-fk" onclick="showBeraterTab('neugeschaeft')" style="display:none;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
+                    Neugeschaeft
+                </button>
+                <button class="agentur-tab berater-tab-fk" onclick="showBeraterTab('branchenmix')" style="display:none;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"></path></svg>
+                    Branchenmix
+                </button>
+                <button class="agentur-tab berater-tab-fk" onclick="showBeraterTab('qualitaet')" style="display:none;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                    Qualitaet
+                </button>
+                <div class="agentur-tab-divider berater-tab-fk" style="display:none;"></div>
+                <button class="agentur-tab berater-tab-fk" onclick="showBeraterTab('kundenliste')" style="display:none;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                    Kunden
+                </button>
+                <button class="agentur-tab berater-tab-fk" onclick="showBeraterTab('potentiale')" style="display:none;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                    Potentiale
+                </button>
+                <!-- === VERMOEGEN TABS (hidden) === -->
+                <button class="agentur-tab berater-tab-vw active" onclick="showBeraterTab('uebersicht')" style="display:none;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                    Uebersicht
+                </button>
+                <button class="agentur-tab berater-tab-vw" onclick="showBeraterTab('portfolioallokation')" style="display:none;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><circle cx="12" cy="12" r="10"/><path d="M12 2v10l7 7"/></svg>
+                    Portfolio
+                </button>
+                <button class="agentur-tab berater-tab-vw" onclick="showBeraterTab('performance')" style="display:none;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+                    Performance
+                </button>
+                <button class="agentur-tab berater-tab-vw" onclick="showBeraterTab('nachfolge')" style="display:none;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    Nachfolge
+                </button>
+                <button class="agentur-tab berater-tab-vw" onclick="showBeraterTab('qualitaet')" style="display:none;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                    Qualitaet
+                </button>
+                <div class="agentur-tab-divider berater-tab-vw" style="display:none;"></div>
+                <button class="agentur-tab berater-tab-vw" onclick="showBeraterTab('kundenliste')" style="display:none;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                    Kunden
+                </button>
+                <button class="agentur-tab berater-tab-vw" onclick="showBeraterTab('potentiale')" style="display:none;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                    Potentiale
+                </button>
+            </div>
+            <!-- 3-Wege Modus-Selector -->
+            <div class="view-mode-selector" id="beraterViewModeSelector">
+                <button class="view-mode-btn active" data-mode="retail" onclick="setBankViewMode('retail')">VR Retail</button>
+                <button class="view-mode-btn" data-mode="firmenkunde" onclick="setBankViewMode('firmenkunde')">VR Firmenkunde</button>
+                <button class="view-mode-btn" data-mode="vermoegen" onclick="setBankViewMode('vermoegen')">VR Vermoegen</button>
+            </div>
+            <button class="demo-reset-btn" onclick="resetBeraterDemoData()" title="Demo-Daten zuruecksetzen">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                    <polyline points="23 4 23 10 17 10"></polyline>
+                    <path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"></path>
+                </svg>
+            </button>
         </div>
-        <!-- 3-Wege Modus Selector -->
-        <div class="bank-view-mode-selector">
-          <button class="bank-mode-btn active" data-mode="retail" onclick="setBankViewMode('retail')">VR Retail</button>
-          <button class="bank-mode-btn" data-mode="firmenkunde" onclick="setBankViewMode('firmenkunde')">VR Firmenkunde</button>
-          <button class="bank-mode-btn" data-mode="vermoegen" onclick="setBankViewMode('vermoegen')">VR Vermoegen</button>
-        </div>
-      </div>
 
-      <!-- TAB NAVIGATION BAR -->
-      <div id="beraterTabBar" class="berater-tab-bar">
-        <!-- Retail Tabs -->
-        <div data-bank-tab-set="retail" class="berater-tab-set" style="display:flex;">
-          <button class="berater-tab-btn active" data-tab="uebersicht" onclick="switchBeraterTab('uebersicht','retail')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
-            Uebersicht</button>
-          <button class="berater-tab-btn" data-tab="kundenportfolio" onclick="switchBeraterTab('kundenportfolio','retail')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-            Kundenportfolio</button>
-          <button class="berater-tab-btn" data-tab="neugeschaeft" onclick="switchBeraterTab('neugeschaeft','retail')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><line x1="12" y1="20" x2="12" y2="10"></line><line x1="18" y1="20" x2="18" y2="4"></line><line x1="6" y1="20" x2="6" y2="16"></line></svg>
-            Neugeschaeft</button>
-          <button class="berater-tab-btn" data-tab="ertraege" onclick="switchBeraterTab('ertraege','retail')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><circle cx="12" cy="12" r="10"></circle><text x="12" y="16" text-anchor="middle" fill="currentColor" stroke="none" font-size="12" font-weight="bold">&#8364;</text></svg>
-            Ertraege</button>
-          <button class="berater-tab-btn" data-tab="qualitaet" onclick="switchBeraterTab('qualitaet','retail')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-            Qualitaet</button>
-          <span class="berater-tab-divider">|</span>
-          <button class="berater-tab-btn" data-tab="kunden" onclick="switchBeraterTab('kunden','retail')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 00-3-3.87"></path><path d="M16 3.13a4 4 0 010 7.75"></path></svg>
-            Kunden</button>
-          <button class="berater-tab-btn" data-tab="potentiale" onclick="switchBeraterTab('potentiale','retail')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-            Potentiale</button>
+        <!-- Ebene 1: Cockpit-Uebersicht (Big Numbers) - RETAIL -->
+        <div class="cockpit-kpis" id="beraterRetailKpis">
+            <div class="cockpit-kpi-card">
+                <div class="cockpit-kpi-icon bestand">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                </div>
+                <div class="cockpit-kpi-content">
+                    <div class="cockpit-kpi-value" id="beraterKpiKunden">412</div>
+                    <div class="cockpit-kpi-label">Kundenstamm</div>
+                    <div class="cockpit-kpi-trend positive" id="beraterKpiKundenTrend">+18 gg. Vorjahr</div>
+                </div>
+            </div>
+            <div class="cockpit-kpi-card">
+                <div class="cockpit-kpi-icon neugeschaeft">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+                </div>
+                <div class="cockpit-kpi-content">
+                    <div class="cockpit-kpi-value" id="beraterKpiErtrag">&euro;248.500</div>
+                    <div class="cockpit-kpi-label">Ertrag YTD</div>
+                    <div class="cockpit-kpi-trend positive" id="beraterKpiErtragTrend">+8,2% gg. Vorjahr</div>
+                </div>
+            </div>
+            <div class="cockpit-kpi-card">
+                <div class="cockpit-kpi-icon storno">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+                </div>
+                <div class="cockpit-kpi-content">
+                    <div class="cockpit-kpi-value" id="beraterKpiCross">2,8</div>
+                    <div class="cockpit-kpi-label">Cross-Selling-Quote</div>
+                    <div class="cockpit-kpi-trend neutral" id="beraterKpiCrossTrend">Ziel: 4,0</div>
+                </div>
+            </div>
+            <div class="cockpit-kpi-card">
+                <div class="cockpit-kpi-icon ziel">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                </div>
+                <div class="cockpit-kpi-content">
+                    <div class="cockpit-kpi-value" id="beraterKpiFinPlan">38%</div>
+                    <div class="cockpit-kpi-label">VR-FinanzPlan-Quote</div>
+                    <div class="cockpit-kpi-gauge" id="beraterKpiFinPlanGauge">
+                        <div class="gauge-fill" style="width: 38%"></div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <!-- Firmenkunde Tabs -->
-        <div data-bank-tab-set="firmenkunde" class="berater-tab-set" style="display:none;">
-          <button class="berater-tab-btn active" data-tab="uebersicht" onclick="switchBeraterTab('uebersicht','firmenkunde')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
-            Uebersicht</button>
-          <button class="berater-tab-btn" data-tab="kreditportfolio" onclick="switchBeraterTab('kreditportfolio','firmenkunde')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
-            Kreditportfolio</button>
-          <button class="berater-tab-btn" data-tab="neugeschaeft" onclick="switchBeraterTab('neugeschaeft','firmenkunde')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><line x1="12" y1="20" x2="12" y2="10"></line><line x1="18" y1="20" x2="18" y2="4"></line><line x1="6" y1="20" x2="6" y2="16"></line></svg>
-            Neugeschaeft</button>
-          <button class="berater-tab-btn" data-tab="branchenmix" onclick="switchBeraterTab('branchenmix','firmenkunde')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"></path></svg>
-            Branchenmix</button>
-          <button class="berater-tab-btn" data-tab="qualitaet" onclick="switchBeraterTab('qualitaet','firmenkunde')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-            Qualitaet</button>
-          <span class="berater-tab-divider">|</span>
-          <button class="berater-tab-btn" data-tab="kunden" onclick="switchBeraterTab('kunden','firmenkunde')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
-            Kunden</button>
-          <button class="berater-tab-btn" data-tab="potentiale" onclick="switchBeraterTab('potentiale','firmenkunde')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-            Potentiale</button>
-        </div>
-        <!-- Vermoegen Tabs -->
-        <div data-bank-tab-set="vermoegen" class="berater-tab-set" style="display:none;">
-          <button class="berater-tab-btn active" data-tab="uebersicht" onclick="switchBeraterTab('uebersicht','vermoegen')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
-            Uebersicht</button>
-          <button class="berater-tab-btn" data-tab="portfolioallokation" onclick="switchBeraterTab('portfolioallokation','vermoegen')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><circle cx="12" cy="12" r="10"/><path d="M12 2v10l7 7"/></svg>
-            Portfolio</button>
-          <button class="berater-tab-btn" data-tab="performance" onclick="switchBeraterTab('performance','vermoegen')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
-            Performance</button>
-          <button class="berater-tab-btn" data-tab="nachfolge" onclick="switchBeraterTab('nachfolge','vermoegen')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-            Nachfolge</button>
-          <button class="berater-tab-btn" data-tab="qualitaet" onclick="switchBeraterTab('qualitaet','vermoegen')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-            Qualitaet</button>
-          <span class="berater-tab-divider">|</span>
-          <button class="berater-tab-btn" data-tab="kunden" onclick="switchBeraterTab('kunden','vermoegen')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
-            Kunden</button>
-          <button class="berater-tab-btn" data-tab="potentiale" onclick="switchBeraterTab('potentiale','vermoegen')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-            Potentiale</button>
-        </div>
-      </div>
 
-      <!-- TAB CONTENT AREA (dynamisch befuellt) -->
-      <div id="beraterTabContent" class="berater-tab-content-area"></div>
+        <!-- Cockpit KPIs - FIRMENKUNDE -->
+        <div class="cockpit-kpis" id="beraterFirmenKpis" style="display:none;">
+            <div class="cockpit-kpi-card">
+                <div class="cockpit-kpi-icon bestand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg></div>
+                <div class="cockpit-kpi-content">
+                    <div class="cockpit-kpi-value" id="beraterKpiKreditvol">&euro;42,5 Mio.</div>
+                    <div class="cockpit-kpi-label">Kreditvolumen</div>
+                    <div class="cockpit-kpi-trend positive">+6,1% YoY</div>
+                </div>
+            </div>
+            <div class="cockpit-kpi-card">
+                <div class="cockpit-kpi-icon neugeschaeft"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></div>
+                <div class="cockpit-kpi-content">
+                    <div class="cockpit-kpi-value" id="beraterKpiFkNg">&euro;6,8 Mio.</div>
+                    <div class="cockpit-kpi-label">Neugeschaeft YTD</div>
+                    <div class="cockpit-kpi-trend positive">3x Invest, 2x Betriebsmittel</div>
+                </div>
+            </div>
+            <div class="cockpit-kpi-card">
+                <div class="cockpit-kpi-icon ziel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
+                <div class="cockpit-kpi-content">
+                    <div class="cockpit-kpi-value" id="beraterKpiFkProv">&euro;385 Tsd.</div>
+                    <div class="cockpit-kpi-label">Provisionsertrag</div>
+                    <div class="cockpit-kpi-trend neutral">ZV + Ausland + Leasing</div>
+                </div>
+            </div>
+            <div class="cockpit-kpi-card">
+                <div class="cockpit-kpi-icon storno"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+                <div class="cockpit-kpi-content">
+                    <div class="cockpit-kpi-value" id="beraterKpiFkRisk">1,2%</div>
+                    <div class="cockpit-kpi-label">Ausfallrisiko</div>
+                    <div class="cockpit-kpi-trend positive">Benchmark: 2,1%</div>
+                </div>
+            </div>
+            <div class="cockpit-kpi-card">
+                <div class="cockpit-kpi-icon bestand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+                <div class="cockpit-kpi-content">
+                    <div class="cockpit-kpi-value" id="beraterKpiFkBind">96,5%</div>
+                    <div class="cockpit-kpi-label">Kundenbindung</div>
+                    <div class="cockpit-kpi-trend positive">Benchmark: 94%</div>
+                </div>
+            </div>
+        </div>
 
-      <!-- KPI Boxen: Retail (4) -->
-      <div id="retailKpis" data-bank-kpi-set="retail" class="cockpit-kpi-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;padding:24px 32px 16px;">
-        <div class="banking-kpi-card" style="display:flex;flex-direction:column;gap:8px;">
-          <div class="cockpit-kpi-icon bank-kunden"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
-          <div style="font-size:12px;color:#64748b;font-weight:500;text-transform:uppercase;">Kundenstamm</div>
-          <div style="font-size:24px;font-weight:700;color:#1e293b;">412</div>
-          <div style="font-size:12px;color:#94a3b8;">Aktive Kunden</div>
+        <!-- Cockpit KPIs - VERMOEGEN -->
+        <div class="cockpit-kpis" id="beraterVermoegenKpis" style="display:none;">
+            <div class="cockpit-kpi-card">
+                <div class="cockpit-kpi-icon bestand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg></div>
+                <div class="cockpit-kpi-content">
+                    <div class="cockpit-kpi-value" id="beraterKpiAum">&euro;85,2 Mio.</div>
+                    <div class="cockpit-kpi-label">AuM Gesamt</div>
+                    <div class="cockpit-kpi-trend positive">+12,4% YoY</div>
+                </div>
+            </div>
+            <div class="cockpit-kpi-card">
+                <div class="cockpit-kpi-icon neugeschaeft"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></div>
+                <div class="cockpit-kpi-content">
+                    <div class="cockpit-kpi-value" id="beraterKpiWpErtrag">&euro;420 Tsd.</div>
+                    <div class="cockpit-kpi-label">Provisions-Ertrag WP</div>
+                    <div class="cockpit-kpi-trend neutral">Depot + VV</div>
+                </div>
+            </div>
+            <div class="cockpit-kpi-card">
+                <div class="cockpit-kpi-icon ziel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+                <div class="cockpit-kpi-content">
+                    <div class="cockpit-kpi-value" id="beraterKpiVorsorge">&euro;185 Tsd.</div>
+                    <div class="cockpit-kpi-label">Vorsorge-Ertrag</div>
+                    <div class="cockpit-kpi-trend neutral">Altersvorsorge + Versicherung</div>
+                </div>
+            </div>
+            <div class="cockpit-kpi-card">
+                <div class="cockpit-kpi-icon neugeschaeft"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
+                <div class="cockpit-kpi-content">
+                    <div class="cockpit-kpi-value" id="beraterKpiPbGesamt">&euro;680 Tsd.</div>
+                    <div class="cockpit-kpi-label">Gesamt-Ertrag PB</div>
+                    <div class="cockpit-kpi-trend positive">+15,2% gg. Vorjahr</div>
+                </div>
+            </div>
         </div>
-        <div class="banking-kpi-card" style="display:flex;flex-direction:column;gap:8px;">
-          <div class="cockpit-kpi-icon bank-deposits"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
-          <div style="font-size:12px;color:#64748b;font-weight:500;text-transform:uppercase;">Ertrag YTD</div>
-          <div style="font-size:24px;font-weight:700;color:#1e293b;">248,5 Tsd.</div>
-          <div style="font-size:12px;color:#16a34a;">+8,2% gg. Vorjahr</div>
-        </div>
-        <div class="banking-kpi-card" style="display:flex;flex-direction:column;gap:8px;">
-          <div class="cockpit-kpi-icon bank-cross"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg></div>
-          <div style="font-size:12px;color:#64748b;font-weight:500;text-transform:uppercase;">Cross-Selling-Quote</div>
-          <div style="font-size:24px;font-weight:700;color:#1e293b;">2,8</div>
-          <div style="font-size:12px;color:#d97706;">Ziel: 4,0</div>
-        </div>
-        <div class="banking-kpi-card" style="display:flex;flex-direction:column;gap:8px;">
-          <div class="cockpit-kpi-icon bank-kredite"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
-          <div style="font-size:12px;color:#64748b;font-weight:500;text-transform:uppercase;">VR-FinanzPlan-Quote</div>
-          <div style="font-size:24px;font-weight:700;color:#1e293b;">38%</div>
-          <div style="font-size:12px;color:#d97706;">Ziel: 50%</div>
-        </div>
-      </div>
 
-      <!-- KPI Boxen: Firmenkunde (5) -->
-      <div id="firmenkundeKpis" data-bank-kpi-set="firmenkunde" class="cockpit-kpi-grid" style="display:none;grid-template-columns:repeat(5,1fr);gap:16px;padding:24px 32px 16px;">
-        <div class="banking-kpi-card" style="display:flex;flex-direction:column;gap:8px;">
-          <div class="cockpit-kpi-icon bank-volumen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg></div>
-          <div style="font-size:12px;color:#64748b;font-weight:500;text-transform:uppercase;">Kreditvolumen</div>
-          <div style="font-size:24px;font-weight:700;color:#1e293b;">42,5 Mio.</div>
-          <div style="font-size:12px;color:#16a34a;">+6,1% YoY</div>
-        </div>
-        <div class="banking-kpi-card" style="display:flex;flex-direction:column;gap:8px;">
-          <div class="cockpit-kpi-icon bank-firmen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></div>
-          <div style="font-size:12px;color:#64748b;font-weight:500;text-transform:uppercase;">Neugeschaeft YTD</div>
-          <div style="font-size:24px;font-weight:700;color:#1e293b;">6,8 Mio.</div>
-          <div style="font-size:12px;color:#94a3b8;">3x Investition, 2x Betriebsmittel</div>
-        </div>
-        <div class="banking-kpi-card" style="display:flex;flex-direction:column;gap:8px;">
-          <div class="cockpit-kpi-icon bank-rating"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
-          <div style="font-size:12px;color:#64748b;font-weight:500;text-transform:uppercase;">Provisionsertrag</div>
-          <div style="font-size:24px;font-weight:700;color:#1e293b;">385 Tsd.</div>
-          <div style="font-size:12px;color:#94a3b8;">ZV + Ausland + Leasing</div>
-        </div>
-        <div class="banking-kpi-card" style="display:flex;flex-direction:column;gap:8px;">
-          <div class="cockpit-kpi-icon bank-risiko"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
-          <div style="font-size:12px;color:#64748b;font-weight:500;text-transform:uppercase;">Ausfallrisiko</div>
-          <div style="font-size:24px;font-weight:700;color:#1e293b;">1,2%</div>
-          <div style="font-size:12px;color:#16a34a;">Benchmark: 2,1%</div>
-        </div>
-        <div class="banking-kpi-card" style="display:flex;flex-direction:column;gap:8px;">
-          <div class="cockpit-kpi-icon bank-kunden"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
-          <div style="font-size:12px;color:#64748b;font-weight:500;text-transform:uppercase;">Kundenbindung</div>
-          <div style="font-size:24px;font-weight:700;color:#1e293b;">96,5%</div>
-          <div style="font-size:12px;color:#16a34a;">Benchmark: 94%</div>
-        </div>
-      </div>
+        <!-- Hauptinhalt mit Tabs -->
+        <div class="agentur-main-content">
+            <!-- Tab Content: Uebersicht -->
+            <div class="agentur-tab-content active" id="berater-tab-uebersicht">
+                <div class="agentur-uebersicht-grid">
+                    <div class="agentur-uebersicht-main">
+                        <!-- Vertriebskennzahlen -->
+                        <div class="uebersicht-card">
+                            <div class="uebersicht-card-header">
+                                <h3>
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                                    Vertriebskennzahlen
+                                </h3>
+                                <div class="period-toggle">
+                                    <button class="period-btn active" onclick="toggleBeraterPeriod('week')">Woche</button>
+                                    <button class="period-btn" onclick="toggleBeraterPeriod('month')">Monat</button>
+                                </div>
+                            </div>
+                            <div class="kennzahlen-grid" id="beraterVertriebsKennzahlen">
+                                <div class="kennzahl-item clickable" onclick="showBeraterTab('neugeschaeft')">
+                                    <div class="kennzahl-value">18</div>
+                                    <div class="kennzahl-label">Abschluesse</div>
+                                    <div class="kennzahl-trend positive">+4 vs. Vorwoche</div>
+                                </div>
+                                <div class="kennzahl-item clickable" onclick="showBeraterTab('neugeschaeft')">
+                                    <div class="kennzahl-value">&euro;24.800</div>
+                                    <div class="kennzahl-label">Neugeschaeft</div>
+                                    <div class="kennzahl-trend positive">+15%</div>
+                                </div>
+                                <div class="kennzahl-item clickable" onclick="showBeraterTab('kundenliste')">
+                                    <div class="kennzahl-value">32</div>
+                                    <div class="kennzahl-label">Beratungen</div>
+                                    <div class="kennzahl-trend positive">+5</div>
+                                </div>
+                                <div class="kennzahl-item clickable" onclick="showBeraterTab('qualitaet')">
+                                    <div class="kennzahl-value">72%</div>
+                                    <div class="kennzahl-label">Abschlussquote</div>
+                                    <div class="kennzahl-trend positive">+8%</div>
+                                </div>
+                            </div>
+                        </div>
 
-      <!-- KPI Boxen: Vermoegen (4) -->
-      <div id="vermoegenKpis" data-bank-kpi-set="vermoegen" class="cockpit-kpi-grid" style="display:none;grid-template-columns:repeat(4,1fr);gap:16px;padding:24px 32px 16px;">
-        <div class="banking-kpi-card" style="display:flex;flex-direction:column;gap:8px;">
-          <div class="cockpit-kpi-icon bank-aum"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg></div>
-          <div style="font-size:12px;color:#64748b;font-weight:500;text-transform:uppercase;">AuM Gesamt</div>
-          <div style="font-size:24px;font-weight:700;color:#1e293b;">85,2 Mio.</div>
-          <div style="font-size:12px;color:#16a34a;">+12,4% YoY</div>
-        </div>
-        <div class="banking-kpi-card" style="display:flex;flex-direction:column;gap:8px;">
-          <div class="cockpit-kpi-icon bank-performance"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></div>
-          <div style="font-size:12px;color:#64748b;font-weight:500;text-transform:uppercase;">Provisions-Ertrag WP</div>
-          <div style="font-size:24px;font-weight:700;color:#1e293b;">420 Tsd.</div>
-          <div style="font-size:12px;color:#94a3b8;">Depot + Vermoegensverwaltung</div>
-        </div>
-        <div class="banking-kpi-card" style="display:flex;flex-direction:column;gap:8px;">
-          <div class="cockpit-kpi-icon bank-advisory"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
-          <div style="font-size:12px;color:#64748b;font-weight:500;text-transform:uppercase;">Vorsorge-Ertrag</div>
-          <div style="font-size:24px;font-weight:700;color:#1e293b;">185 Tsd.</div>
-          <div style="font-size:12px;color:#94a3b8;">Altersvorsorge + Versicherung</div>
-        </div>
-        <div class="banking-kpi-card" style="display:flex;flex-direction:column;gap:8px;">
-          <div class="cockpit-kpi-icon bank-zufluss"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
-          <div style="font-size:12px;color:#64748b;font-weight:500;text-transform:uppercase;">Gesamt-Ertrag PB</div>
-          <div style="font-size:24px;font-weight:700;color:#1e293b;">680 Tsd.</div>
-          <div style="font-size:12px;color:#16a34a;">+15,2% gg. Vorjahr</div>
-        </div>
-      </div>
+                        <!-- Vertriebspotentiale -->
+                        <div class="uebersicht-card potentiale-impuls-card">
+                            <div class="uebersicht-card-header">
+                                <h3>
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                                    Vertriebspotentiale
+                                </h3>
+                            </div>
+                            <div class="potentiale-liste-neu">
+                                <!-- 1. Klaus Fischer - Baufinanzierung -->
+                                <div class="potential-card" onclick="event.stopPropagation(); openBankKundenDetail('Klaus Fischer', 'KDB001')">
+                                    <div class="potential-card-left">
+                                        <div class="potential-kunde">
+                                            <strong>Klaus Fischer</strong>
+                                            <span class="potential-kunden-id">KDB001</span>
+                                            <span class="impuls-priority high">Hoch</span>
+                                        </div>
+                                        <div class="potential-produkt">Baufinanzierung Anschluss</div>
+                                        <div class="potential-beschreibung">Zinsbindung laeuft 09/2026 aus. Restschuld &euro;185.000. Guenstigere Konditionen moeglich.</div>
+                                    </div>
+                                    <div class="potential-card-right">
+                                        <div class="potential-kennzahl">
+                                            <span class="potential-kennzahl-label">Volumen</span>
+                                            <span class="potential-kennzahl-value">&euro;185.000</span>
+                                        </div>
+                                        <div class="potential-kennzahl">
+                                            <span class="potential-kennzahl-label">Ertrag</span>
+                                            <span class="potential-kennzahl-value prov">&euro;2.775</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- 2. Sandra Mueller - Altersvorsorge -->
+                                <div class="potential-card" onclick="event.stopPropagation(); openBankKundenDetail('Sandra Mueller', 'KDB002')">
+                                    <div class="potential-card-left">
+                                        <div class="potential-kunde">
+                                            <strong>Sandra Mueller</strong>
+                                            <span class="potential-kunden-id">KDB002</span>
+                                            <span class="impuls-priority high">Hoch</span>
+                                        </div>
+                                        <div class="potential-produkt">VR-FinanzPlan + Altersvorsorge</div>
+                                        <div class="potential-beschreibung">Hohe Sparquote &euro;1.800/Mon. ohne Altersvorsorge. Open Finance zeigt nur Tagesgeld.</div>
+                                    </div>
+                                    <div class="potential-card-right">
+                                        <div class="potential-kennzahl">
+                                            <span class="potential-kennzahl-label">Sparrate</span>
+                                            <span class="potential-kennzahl-value">&euro;500/Mon.</span>
+                                        </div>
+                                        <div class="potential-kennzahl">
+                                            <span class="potential-kennzahl-label">Ertrag</span>
+                                            <span class="potential-kennzahl-value prov">&euro;1.800</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- 3. Markus Wagner - Wertpapierdepot -->
+                                <div class="potential-card" onclick="event.stopPropagation(); openBankKundenDetail('Markus Wagner', 'KDB003')">
+                                    <div class="potential-card-left">
+                                        <div class="potential-kunde">
+                                            <strong>Markus Wagner</strong>
+                                            <span class="potential-kunden-id">KDB003</span>
+                                            <span class="impuls-priority medium">Mittel</span>
+                                        </div>
+                                        <div class="potential-produkt">Depot-Eroeffnung + ETF-Sparplan</div>
+                                        <div class="potential-beschreibung">Depot bei Neobroker entdeckt (Open Finance). Cross-Selling VR-Depot mit Beratung.</div>
+                                    </div>
+                                    <div class="potential-card-right">
+                                        <div class="potential-kennzahl">
+                                            <span class="potential-kennzahl-label">Volumen</span>
+                                            <span class="potential-kennzahl-value">&euro;45.000</span>
+                                        </div>
+                                        <div class="potential-kennzahl">
+                                            <span class="potential-kennzahl-label">Ertrag</span>
+                                            <span class="potential-kennzahl-value prov">&euro;675</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Weitere Potentiale (ausklappbar) -->
+                            <div class="weitere-potentiale-toggle" onclick="toggleBeraterWeiterePotentiale()">
+                                <span class="weitere-badge">+8</span>
+                                <span>Weitere Potentiale anzeigen</span>
+                                <svg class="toggle-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                            </div>
+                            <div class="weitere-potentiale-liste" id="beraterWeiterePotentialeListe" style="display: none;">
+                                <div class="potentiale-liste-neu" id="beraterWeiterePotentialeContent"></div>
+                            </div>
+                        </div>
 
-      <!-- Drei-Saeulen-Karten (nur VR Vermoegen) -->
-      <div id="beraterSaeulenGrid" class="banking-saeulen-grid" style="display:none;padding:0 32px 16px;">
-        <div class="banking-saeulen-card anlage">
-          <h5>Saeule I — Anlage</h5>
-          <div class="banking-saeulen-metric"><span class="label">Depot</span><span class="value">42,8 Mio. EUR</span></div>
-          <div class="banking-saeulen-metric"><span class="label">Vermoegensverwaltung</span><span class="value">28,4 Mio. EUR</span></div>
-          <div class="banking-saeulen-metric"><span class="label">Fonds</span><span class="value">14,0 Mio. EUR</span></div>
-        </div>
-        <div class="banking-saeulen-card vorsorge">
-          <h5>Saeule II — Vorsorge</h5>
-          <div class="banking-saeulen-metric"><span class="label">Altersvorsorge</span><span class="value">18,2 Mio. EUR</span></div>
-          <div class="banking-saeulen-metric"><span class="label">Versicherung</span><span class="value">8,4 Mio. EUR</span></div>
-          <div class="banking-saeulen-metric"><span class="label">Stiftung</span><span class="value">2 aktiv</span></div>
-        </div>
-        <div class="banking-saeulen-card nachfolge">
-          <h5>Saeule III — Nachfolge</h5>
-          <div class="banking-saeulen-metric"><span class="label">Testamentsvollstreckung</span><span class="value">3 Mandate</span></div>
-          <div class="banking-saeulen-metric"><span class="label">Generationenberatung</span><span class="value">2 aktiv</span></div>
-          <div class="banking-saeulen-metric"><span class="label">Immobilie</span><span class="value">4 Objekte</span></div>
-        </div>
-      </div>
+                        <!-- Aktuelle Aufgaben -->
+                        <div class="uebersicht-card">
+                            <div class="uebersicht-card-header">
+                                <h3>
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                                    Aktuelle Aufgaben
+                                </h3>
+                                <span class="badge-count urgent">4 offen</span>
+                            </div>
+                            <div class="aufgaben-liste" id="beraterAufgabenListe">
+                                <div class="aufgabe-item priority-high">
+                                    <div class="aufgabe-checkbox"><input type="checkbox" id="bAufgabe1"></div>
+                                    <div class="aufgabe-content">
+                                        <div class="aufgabe-meta">
+                                            <span class="aufgabe-kunde">Klaus Fischer</span>
+                                            <span class="aufgabe-kid">KDB001</span>
+                                            <span class="aufgabe-kategorie kategorie-nachfassen">Nachfassen</span>
+                                        </div>
+                                        <label for="bAufgabe1">Baufinanzierung Anschlussangebot nachfassen</label>
+                                        <span class="aufgabe-due"><span class="due-badge urgent">Heute</span></span>
+                                    </div>
+                                </div>
+                                <div class="aufgabe-item priority-high">
+                                    <div class="aufgabe-checkbox"><input type="checkbox" id="bAufgabe2"></div>
+                                    <div class="aufgabe-content">
+                                        <div class="aufgabe-meta">
+                                            <span class="aufgabe-kunde">Sandra Mueller</span>
+                                            <span class="aufgabe-kid">KDB002</span>
+                                            <span class="aufgabe-kategorie kategorie-beratung">Beratung</span>
+                                        </div>
+                                        <label for="bAufgabe2">VR-FinanzPlan-Gespraech vereinbaren</label>
+                                        <span class="aufgabe-due"><span class="due-badge warning">Morgen</span></span>
+                                    </div>
+                                </div>
+                                <div class="aufgabe-item priority-medium">
+                                    <div class="aufgabe-checkbox"><input type="checkbox" id="bAufgabe3"></div>
+                                    <div class="aufgabe-content">
+                                        <div class="aufgabe-meta">
+                                            <span class="aufgabe-kunde">Julia Becker</span>
+                                            <span class="aufgabe-kid">KDB004</span>
+                                            <span class="aufgabe-kategorie kategorie-nachfassen">Open Finance</span>
+                                        </div>
+                                        <label for="bAufgabe3">FIDA-Consent einholen fuer Drittbank-Analyse</label>
+                                        <span class="aufgabe-due"><span class="due-badge">Diese Woche</span></span>
+                                    </div>
+                                </div>
+                                <div class="aufgabe-item priority-low">
+                                    <div class="aufgabe-checkbox"><input type="checkbox" id="bAufgabe4"></div>
+                                    <div class="aufgabe-content">
+                                        <div class="aufgabe-meta">
+                                            <span class="aufgabe-kunde">Peter Hoffmann</span>
+                                            <span class="aufgabe-kid">KDB005</span>
+                                            <span class="aufgabe-kategorie kategorie-beratung">Jahresgespraech</span>
+                                        </div>
+                                        <label for="bAufgabe4">Jahres-Anlagegespraech vorbereiten</label>
+                                        <span class="aufgabe-due"><span class="due-badge">Naechste Woche</span></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
-      <!-- Kundenliste: Retail -->
-      <div data-bank-kunden-set="retail" style="padding:0 32px 24px;">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
-          <h3 style="font-size:16px;font-weight:700;color:#1e293b;margin:0;">Meine Kunden</h3>
-        </div>
-        <table class="banking-kundenliste-table">
-          <thead><tr><th>Kunde</th><th>Kunden-Nr.</th><th>Segment</th><th>Ort</th><th class="text-center">Produkte</th><th class="text-right">Ertrag YTD</th><th class="text-center">FinanzPlan</th></tr></thead>
-          <tbody id="retailKundenBody"></tbody>
-        </table>
-      </div>
+                        <!-- Aktuelle Berichte / Abrechnungen -->
+                        <div class="uebersicht-card">
+                            <div class="uebersicht-card-header">
+                                <h3>
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+                                    Aktuelle Berichte
+                                </h3>
+                            </div>
+                            <div class="abrechnungen-liste" id="beraterBerichteListe">
+                                <div class="abrechnung-item">
+                                    <div class="abrechnung-info">
+                                        <div class="abrechnung-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg></div>
+                                        <div class="abrechnung-details">
+                                            <span class="abrechnung-monat">Vertriebsbericht Februar 2026</span>
+                                            <span class="abrechnung-datum">Erstellt: 01.03.2026</span>
+                                        </div>
+                                    </div>
+                                    <span class="abrechnung-betrag">&euro;24.800</span>
+                                </div>
+                                <div class="abrechnung-item">
+                                    <div class="abrechnung-info">
+                                        <div class="abrechnung-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg></div>
+                                        <div class="abrechnung-details">
+                                            <span class="abrechnung-monat">Provisionsabrechnung Januar 2026</span>
+                                            <span class="abrechnung-datum">Erstellt: 15.02.2026</span>
+                                        </div>
+                                    </div>
+                                    <span class="abrechnung-betrag">&euro;18.920</span>
+                                </div>
+                                <div class="abrechnung-item">
+                                    <div class="abrechnung-info">
+                                        <div class="abrechnung-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg></div>
+                                        <div class="abrechnung-details">
+                                            <span class="abrechnung-monat">Open Finance Potentialanalyse</span>
+                                            <span class="abrechnung-datum">Erstellt: 28.02.2026</span>
+                                        </div>
+                                    </div>
+                                    <span class="abrechnung-betrag">12 Impulse</span>
+                                </div>
+                            </div>
+                            <a href="#" class="link-alle-anzeigen" onclick="showBeraterTab('ertraege'); return false;">Alle Berichte anzeigen &rarr;</a>
+                        </div>
 
-      <!-- Kundenliste: Firmenkunde -->
-      <div data-bank-kunden-set="firmenkunde" style="display:none;padding:0 32px 24px;">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
-          <h3 style="font-size:16px;font-weight:700;color:#1e293b;margin:0;">Meine Firmenkunden</h3>
-        </div>
-        <table class="banking-kundenliste-table">
-          <thead><tr><th>Firma</th><th>Kunden-Nr.</th><th>Branche</th><th>Ort</th><th class="text-right">Kreditvolumen</th><th>Rating</th><th class="text-right">Mitarbeiter</th></tr></thead>
-          <tbody id="firmenKundenBody"></tbody>
-        </table>
-      </div>
+                        <!-- Geburtstage diese Woche -->
+                        <div class="uebersicht-card">
+                            <div class="uebersicht-card-header">
+                                <h3>
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                                    Geburtstage diese Woche
+                                </h3>
+                            </div>
+                            <div class="geburtstage-liste" id="beraterGeburtstageListe">
+                                <div class="geburtstag-item">
+                                    <div class="geburtstag-datum"><span class="geburtstag-tag">Mi</span><span class="geburtstag-nr">05.</span></div>
+                                    <div class="geburtstag-details"><strong>Katharina Wolf</strong><span>wird 38 Jahre</span></div>
+                                </div>
+                                <div class="geburtstag-item">
+                                    <div class="geburtstag-datum"><span class="geburtstag-tag">Fr</span><span class="geburtstag-nr">07.</span></div>
+                                    <div class="geburtstag-details"><strong>Peter Hoffmann</strong><span>wird 52 Jahre</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-      <!-- Kundenliste: Vermoegen -->
-      <div data-bank-kunden-set="vermoegen" style="display:none;padding:0 32px 24px;">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
-          <h3 style="font-size:16px;font-weight:700;color:#1e293b;margin:0;">Meine Private-Banking-Kunden</h3>
-        </div>
-        <table class="banking-kundenliste-table">
-          <thead><tr><th>Kunde</th><th>Kunden-Nr.</th><th>Ort</th><th class="text-right">AuM</th><th class="text-right">Depot</th><th class="text-center">Nachfolge</th><th class="text-center">Stiftung</th></tr></thead>
-          <tbody id="vermoegenKundenBody"></tbody>
-        </table>
-      </div>
+            <!-- Tab Content: Stammdaten -->
+            <div class="agentur-tab-content" id="berater-tab-stammdaten"></div>
 
+            <!-- Tab Content: Neugeschaeft -->
+            <div class="agentur-tab-content" id="berater-tab-neugeschaeft">
+                <div class="uebersicht-card">
+                    <div class="uebersicht-card-header"><h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg> Neugeschaeft</h3></div>
+                    <div class="kennzahlen-grid" id="beraterNgKpis"></div>
+                </div>
+                <div class="uebersicht-card">
+                    <div class="uebersicht-card-header"><h3>Spartenverteilung</h3></div>
+                    <div id="beraterNgDonut" style="display:flex;align-items:center;gap:32px;padding:16px 0;"></div>
+                </div>
+                <div class="uebersicht-card">
+                    <div class="uebersicht-card-header"><h3>Letzte Abschluesse</h3><div class="kundenliste-search"><input type="text" id="beraterNgSearch" placeholder="Vertrag suchen..." oninput="filterBeraterNg()"></div></div>
+                    <table class="kundenliste-table"><thead><tr><th>Vertrag-Nr.</th><th>Produkt</th><th>Kunde</th><th class="text-right">Volumen</th><th>Status</th><th>Datum</th></tr></thead><tbody id="beraterNgTable"></tbody></table>
+                </div>
+            </div>
+
+            <!-- Tab Content: Ertraege -->
+            <div class="agentur-tab-content" id="berater-tab-ertraege"></div>
+
+            <!-- Tab Content: Kreditportfolio (FK) -->
+            <div class="agentur-tab-content" id="berater-tab-kreditportfolio"></div>
+
+            <!-- Tab Content: Branchenmix (FK) -->
+            <div class="agentur-tab-content" id="berater-tab-branchenmix"></div>
+
+            <!-- Tab Content: Portfolioallokation (VW) -->
+            <div class="agentur-tab-content" id="berater-tab-portfolioallokation"></div>
+
+            <!-- Tab Content: Performance (VW) -->
+            <div class="agentur-tab-content" id="berater-tab-performance"></div>
+
+            <!-- Tab Content: Nachfolge (VW) -->
+            <div class="agentur-tab-content" id="berater-tab-nachfolge"></div>
+
+            <!-- Tab Content: Qualitaet -->
+            <div class="agentur-tab-content" id="berater-tab-qualitaet"></div>
+
+            <!-- Tab Content: Kundenliste -->
+            <div class="agentur-tab-content" id="berater-tab-kundenliste">
+                <div class="kundenliste-header">
+                    <h3 class="section-title" id="beraterKundenTitle">Kunden (12)</h3>
+                    <div class="kundenliste-search"><input type="text" id="beraterKundenSearch" placeholder="Kunde suchen..." oninput="filterBeraterKunden()"></div>
+                </div>
+                <table class="kundenliste-table" id="beraterKundenTable">
+                    <thead><tr><th>Name</th><th>Kunden-ID</th><th>Geburtsdatum</th><th>Beruf</th><th class="text-center">Produkte</th><th class="text-right">Ertrag YTD</th><th class="text-center">FinanzPlan</th><th>Letzter Kontakt</th></tr></thead>
+                    <tbody id="beraterKundenBody"></tbody>
+                </table>
+            </div>
+
+            <!-- Tab Content: Potentiale -->
+            <div class="agentur-tab-content" id="berater-tab-potentiale"></div>
+        </div>
     </div>
   </div><!-- Ende B-02 BERATER OVERVIEW -->
 
@@ -7137,28 +7449,246 @@
   </div>
 
   <!-- ========================================
+  <!-- ========================================
      B-10 KUNDEN-DETAIL BANK
      ======================================== -->
   <div id="kundenDetailBankPage" style="display: none;">
-    <div class="kunden-detail-bank-page">
-      <!-- Header -->
-      <div style="background:linear-gradient(135deg,#003399 0%,#002266 100%);color:white;padding:20px 32px;display:flex;align-items:center;gap:16px;">
-        <div id="kdBankAvatar" style="width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;">TB</div>
-        <div style="flex:1;">
-          <h2 id="kdBankHeaderName" style="font-size:20px;font-weight:700;margin:0;">Kundenname</h2>
-          <div id="kdBankHeaderMeta" style="font-size:13px;color:rgba(255,255,255,0.7);margin-top:2px;">Kunden-ID | Ort</div>
+    <!-- Shared B-02 Header Tabs (Kunden active) -->
+    <div class="kunden-shared-header berater-shared-header">
+        <div class="kunden-shared-header-top">
+            <button class="back-button" onclick="closeBankKundenDetail()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                Zurueck
+            </button>
+            <div class="kunden-shared-header-info">
+                <div class="agentur-photo-small" id="bankKundenHeaderPhoto">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="agentur-photo-placeholder-small">
+                        <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    <img id="bankKundenHeaderPhotoImg" class="agentur-photo-img-small" style="display: none;" alt="Foto">
+                </div>
+                <div class="agentur-header-text">
+                    <h1 class="agentur-page-title" id="bankKundenHeaderTitle">Berater: Thomas Berger</h1>
+                    <div class="agentur-subtitle">
+                        <span id="bankKundenHeaderId">VB-40210</span> | <span>Aktiv</span>
+                    </div>
+                </div>
+            </div>
         </div>
-        <button onclick="closeBankKundenDetail()" style="background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);border-radius:8px;padding:8px 14px;color:white;cursor:pointer;font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px;">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="15 18 9 12 15 6"></polyline></svg>
-          Zurueck
-        </button>
-      </div>
-      <!-- Sticky Bar -->
-      <div id="kdBankStickyBar" class="bank-sticky-bar"></div>
-      <!-- Tabs -->
-      <div id="kdBankTabs" class="banking-detail-tabs" style="padding:0 32px;"></div>
-      <!-- Tab Content -->
-      <div id="kdBankContent" style="padding:24px 32px;"></div>
+        <div class="kunden-switch-dropdown">
+            <label>Kunde:</label>
+            <select id="bankKundenSwitchSelect" onchange="switchBankKundeDropdown(this.value)">
+                <option value="Klaus Fischer">Klaus Fischer</option>
+                <option value="Sandra Mueller">Sandra Mueller</option>
+                <option value="Markus Wagner">Markus Wagner</option>
+                <option value="Julia Becker">Julia Becker</option>
+                <option value="Peter Hoffmann">Peter Hoffmann</option>
+                <option value="Andrea Lang">Andrea Lang</option>
+                <option value="Thomas Klein">Thomas Klein</option>
+                <option value="Monika Richter">Monika Richter</option>
+                <option value="Stefan Braun">Stefan Braun</option>
+                <option value="Katharina Wolf">Katharina Wolf</option>
+                <option value="Juergen Peters">Juergen Peters</option>
+                <option value="Sabine Kraus">Sabine Kraus</option>
+            </select>
+        </div>
+        <div class="agentur-header-tabs">
+            <button class="agentur-tab" onclick="navigateToBeraterTab('uebersicht')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                Uebersicht
+            </button>
+            <button class="agentur-tab" onclick="navigateToBeraterTab('stammdaten')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                Stammdaten
+            </button>
+            <button class="agentur-tab" onclick="navigateToBeraterTab('neugeschaeft')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><line x1="12" y1="20" x2="12" y2="10"></line><line x1="18" y1="20" x2="18" y2="4"></line><line x1="6" y1="20" x2="6" y2="16"></line></svg>
+                Neugeschaeft
+            </button>
+            <button class="agentur-tab" onclick="navigateToBeraterTab('ertraege')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><circle cx="12" cy="12" r="10"></circle><text x="12" y="16" text-anchor="middle" fill="currentColor" stroke="none" font-size="12" font-weight="bold">&euro;</text></svg>
+                Ertraege
+            </button>
+            <button class="agentur-tab" onclick="navigateToBeraterTab('qualitaet')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                Qualitaet
+            </button>
+            <div class="agentur-tab-divider"></div>
+            <button class="agentur-tab active" onclick="navigateToBeraterTab('kundenliste')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 00-3-3.87"></path><path d="M16 3.13a4 4 0 010 7.75"></path></svg>
+                Kunden
+            </button>
+            <button class="agentur-tab" onclick="navigateToBeraterTab('potentiale')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                Potentiale
+            </button>
+        </div>
+    </div>
+
+    <!-- Sekundaere Sticky-Leiste -->
+    <div class="kunde-sticky-bar" id="bankKundeStickyBar">
+        <div class="kunde-sticky-bar-inner">
+            <div class="kunde-sticky-bar-left">
+                <div class="kunde-sticky-avatar" id="bankKundeStickyAvatar" style="width:28px;height:28px;border-radius:50%;overflow:hidden;"></div>
+                <span class="kunde-sticky-name" id="bankKundeBarName">Klaus Fischer</span>
+                <span class="kunde-sticky-kid" id="bankKundeBarId">KDB001</span>
+            </div>
+            <div class="kunde-sticky-bar-right">
+                <div class="kunde-sticky-kpi">
+                    <span class="kunde-sticky-kpi-label">NPS</span>
+                    <span class="nps-stars-display-small" id="bankKundeBarNps"></span>
+                </div>
+                <div class="kunde-sticky-kpi">
+                    <span class="kunde-sticky-kpi-label">CLV</span>
+                    <span class="kunde-sticky-kpi-value" id="bankKundeBarClv">&mdash;</span>
+                </div>
+                <div class="kunde-sticky-kpi">
+                    <span class="kunde-sticky-kpi-label">Segment</span>
+                    <span class="kunde-sticky-kpi-value" id="bankKundeBarSegment">&mdash;</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="kunden-page">
+        <!-- Tab Navigation -->
+        <div class="kunden-tabs" id="bankKundenTabs">
+            <button class="kunden-tab active" data-tab="stammdaten" onclick="switchBankKundenTab('stammdaten')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                Stammdaten
+            </button>
+            <button class="kunden-tab" data-tab="konten" onclick="switchBankKundenTab('konten')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+                Konten &amp; Produkte
+            </button>
+            <button class="kunden-tab fida-tab" data-tab="fida" onclick="switchBankKundenTab('fida')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"></path></svg>
+                Open Finance
+            </button>
+            <button class="kunden-tab impulse-tab" data-tab="impulse" onclick="switchBankKundenTab('impulse')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                Potentiale
+            </button>
+            <button class="kunden-tab finanzplanung-tab" data-tab="finanzplanung" onclick="switchBankKundenTab('finanzplanung')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><circle cx="12" cy="12" r="10"></circle><text x="12" y="16" text-anchor="middle" fill="currentColor" stroke="none" font-size="12" font-weight="bold">&euro;</text></svg>
+                Finanzplanung
+            </button>
+            <button class="kunden-tab" data-tab="kommunikation" onclick="switchBankKundenTab('kommunikation')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"></path></svg>
+                Kommunikation
+            </button>
+        </div>
+
+        <div class="kunden-content">
+            <!-- TAB: Stammdaten -->
+            <div id="bankTabStammdaten" class="kunden-tab-content active">
+                <div class="kunden-card stammdaten-card">
+                    <div class="kunden-card-header"><h2>Stammdaten</h2></div>
+                    <div class="kunden-stammdaten">
+                        <div class="kunden-foto-container">
+                            <div class="kunden-foto" id="bankKundenFoto">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                            </div>
+                            <h3 id="bankKundenName">Klaus Fischer</h3>
+                            <span class="kunden-id" id="bankKundenVermittlerId">KDB001</span>
+                            <div class="clv-header-badge" id="bankClvHeaderBadge">
+                                <div class="clv-badge-main">
+                                    <span class="clv-badge-label">CLV</span>
+                                    <span class="clv-badge-value" id="bankClvHeaderValue">&mdash;</span>
+                                </div>
+                                <span class="clv-badge-segment" id="bankClvHeaderSegment"></span>
+                                <span class="clv-badge-trend" id="bankClvHeaderTrend"></span>
+                            </div>
+                        </div>
+                        <div class="kunden-info-grid" id="bankPrivatStammdaten">
+                            <div class="info-item"><span class="info-label">Geburtsdatum</span><span class="info-value" id="bankKundenGeburtsdatum">12.05.1978</span></div>
+                            <div class="info-item"><span class="info-label">Adresse</span><span class="info-value" id="bankKundenAdresse">Hauptstrasse 45, 35390 Giessen</span></div>
+                            <div class="info-item"><span class="info-label">Telefon</span><span class="info-value" id="bankKundenTelefon">+49 641 98765</span></div>
+                            <div class="info-item"><span class="info-label">E-Mail</span><span class="info-value" id="bankKundenEmail">k.fischer@email.de</span></div>
+                            <div class="info-item"><span class="info-label">Beruf</span><span class="info-value" id="bankKundenBeruf">Maschinenbau-Ingenieur</span></div>
+                            <div class="info-item"><span class="info-label">Familienstand</span><span class="info-value" id="bankKundenFamilienstand">Verheiratet</span></div>
+                            <div class="info-item full-width"><span class="info-label">Kinder</span><div class="info-value" id="bankKundenKinder"><span class="kinder-badge">Lukas (12 Jahre)</span><span class="kinder-badge">Emma (9 Jahre)</span></div></div>
+                            <div class="info-item"><span class="info-label">Arbeitgeber</span><span class="info-value" id="bankKundenArbeitgeber">Continental AG</span></div>
+                            <div class="info-item"><span class="info-label">Beschaeftigt seit</span><span class="info-value" id="bankKundenBeschaeftigt">01.04.2008</span></div>
+                            <div class="info-item"><span class="info-label">Nettoeinkommen</span><span class="info-value" id="bankKundenEinkommen">&euro;4.850/Mon.</span></div>
+                            <div class="info-item"><span class="info-label">Risikoscore</span><div class="info-value" id="bankRisikoScoreDisplay"></div></div>
+                            <div class="info-item"><span class="info-label">Bonitaetsscore</span><div class="info-value" id="bankBonitaetScoreDisplay"></div></div>
+                            <div class="info-item"><span class="info-label">NPS</span><div class="info-value" id="bankKundenNpsBadge"></div></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- CLV Detail Card -->
+                <div class="kunden-card clv-detail-card" id="bankClvDetailCard">
+                    <div class="kunden-card-header"><h2>Customer Lifetime Value</h2></div>
+                    <div id="bankClvDetailContent"></div>
+                </div>
+            </div>
+
+            <!-- TAB: Konten & Produkte -->
+            <div id="bankTabKonten" class="kunden-tab-content">
+                <div class="kunden-card">
+                    <div class="kunden-card-header"><h2>Konten &amp; Produkte</h2><span class="info-badge" id="bankProdukteCount">0 Produkte</span></div>
+                    <table class="kunden-table"><thead><tr><th>Produkt</th><th>Details</th><th class="text-right">Volumen/Saldo</th><th>Eroeffnung</th><th>Status</th></tr></thead><tbody id="bankKundenKonten"></tbody></table>
+                </div>
+            </div>
+
+            <!-- TAB: Open Finance (FIDA) -->
+            <div id="bankTabFida" class="kunden-tab-content">
+                <div class="kunden-card fida-status-card">
+                    <div class="kunden-card-header"><h2>Open Finance Status</h2></div>
+                    <div id="bankFidaStatusGrid" class="fida-status-grid"></div>
+                </div>
+                <div class="kunden-card">
+                    <div class="kunden-card-header"><h2>Externe Bankverbindungen</h2></div>
+                    <table class="kunden-table"><thead><tr><th>Institut</th><th>Produkttyp</th><th>Info</th><th>Consent</th><th>Gueltig bis</th></tr></thead><tbody id="bankFidaVertraege"></tbody></table>
+                </div>
+                <div class="kunden-card bedarfsfeld-card" id="bankFidaBezahlen">
+                    <div class="kunden-card-header"><h2>Bezahlen</h2></div>
+                    <div id="bankFidaBezahlenContent"></div>
+                </div>
+                <div class="kunden-card bedarfsfeld-card" id="bankFidaSparen">
+                    <div class="kunden-card-header"><h2>Sparen &amp; Vorsorgen</h2></div>
+                    <div id="bankFidaSparenContent"></div>
+                </div>
+                <div class="kunden-card bedarfsfeld-card" id="bankFidaAbsichern">
+                    <div class="kunden-card-header"><h2>Absichern (Versicherungen)</h2></div>
+                    <div id="bankFidaAbsichernContent"></div>
+                </div>
+                <div class="kunden-card bedarfsfeld-card" id="bankFidaFinanzieren">
+                    <div class="kunden-card-header"><h2>Finanzieren</h2></div>
+                    <div id="bankFidaFinanzierenContent"></div>
+                </div>
+            </div>
+
+            <!-- TAB: Impulse/Potentiale -->
+            <div id="bankTabImpulse" class="kunden-tab-content">
+                <div class="kunden-card impulse-overview-card">
+                    <div class="kunden-card-header"><h2>KI-Vertriebsimpulse</h2></div>
+                    <div id="bankImpulseContent"></div>
+                </div>
+            </div>
+
+            <!-- TAB: Finanzplanung -->
+            <div id="bankTabFinanzplanung" class="kunden-tab-content">
+                <div class="kunden-card finanzplanung-card">
+                    <div class="kunden-card-header"><h2>Liquiditaets-Dashboard</h2></div>
+                    <div id="bankLiquiditaetContent"></div>
+                </div>
+                <div class="kunden-card finanzplanung-card">
+                    <div class="kunden-card-header"><h2>Sparziele</h2></div>
+                    <div id="bankSparzieleContent"></div>
+                </div>
+            </div>
+
+            <!-- TAB: Kommunikation -->
+            <div id="bankTabKommunikation" class="kunden-tab-content">
+                <div class="kunden-card">
+                    <div class="kunden-card-header"><h2>Kommunikationsverlauf</h2></div>
+                    <div class="kommunikation-timeline" id="bankKundenKommunikation"></div>
+                </div>
+            </div>
+        </div>
     </div>
   </div><!-- Ende B-10 KUNDEN DETAIL BANK -->
 
@@ -7215,7 +7745,7 @@
     <!-- HR Pipeline Module -->
     <script src="js/hr-pipeline.js?v=20260217"></script>
     <!-- Versicherungs-1×1 Knowledge Module -->
-    <script src="js/versicherungs-1x1.js?v=20260303h"></script>
+    <script src="js/versicherungs-1x1.js?v=20260226"></script>
     <!-- Page ID Tracker -->
     <script src="js/page-id-tracker.js?v=20260126"></script>
     <!-- Speaker Notes Teleprompter -->

@@ -10,6 +10,7 @@
   var moduleData = null;
   var moduleLoaded = false;
   var currentChapter = null;
+  var currentSubChapterId = null;
   var currentQuizIndex = 0;
   var quizAnswered = {};
   var currentView = 'overview'; // 'overview' | 'chapter' | 'wissenscheck'
@@ -73,7 +74,29 @@
     'check': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="12" height="12"><polyline points="20 6 9 17 4 12"></polyline></svg>',
     'info': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>',
     'alert-triangle': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
-    'lightbulb': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 006 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>'
+    'lightbulb': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 006 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>',
+    'heart': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>',
+    'alert-circle': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>',
+    'briefcase': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>',
+    'activity': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>',
+    'home': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>',
+    'cpu': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/></svg>',
+    'shield': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>',
+    'clock': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',
+    'refresh-cw': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>',
+    'trending-up': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>',
+    'file-text': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>',
+    'eye': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>',
+    'users': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
+    'car': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><path d="M5 17H3a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h13l4 4v4a2 2 0 0 1-2 2h-2"/><circle cx="7.5" cy="17.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/><line x1="10" y1="17" x2="15" y2="17"/></svg>',
+    'building': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><rect x="4" y="2" width="16" height="20"/><path d="M9 22V12h6v10"/><line x1="8" y1="7" x2="8" y2="7.01"/><line x1="12" y1="7" x2="12" y2="7.01"/><line x1="16" y1="7" x2="16" y2="7.01"/><line x1="8" y1="11" x2="8" y2="11.01"/><line x1="12" y1="11" x2="12" y2="11.01"/><line x1="16" y1="11" x2="16" y2="11.01"/></svg>',
+    'zap': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>',
+    'truck': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>',
+    'layers': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>',
+    'bar-chart-2': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>',
+    'pie-chart': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>',
+    'globe': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>',
+    'layout': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>'
   };
 
   function getIcon(name) {
@@ -189,6 +212,10 @@
     currentChapter = chapter;
     currentView = 'chapter';
 
+    // Reset sub-chapter, auto-select first if chapter has subChapters
+    currentSubChapterId = (chapter.subChapters && chapter.subChapters.length > 0)
+      ? chapter.subChapters[0].id : null;
+
     // Mark as visited
     markChapterVisited(chapterId);
 
@@ -235,7 +262,7 @@
 
     // Quick Stats
     if (chapter.quickStats && chapter.quickStats.length) {
-      html += '<div class="v1x1-quick-stats">';
+      html += '<div class="v1x1-quick-stats" id="v1x1QuickStats">';
       chapter.quickStats.forEach(function(qs) {
         html += '<div class="v1x1-quick-stat-card v1x1-reveal">';
         html += '<div><span class="v1x1-quick-stat-value" data-target="' + qs.value + '">0</span>';
@@ -249,52 +276,42 @@
 
     html += '</div>'; // /chapter-hero
 
-    // Level 1 — Grundlagen
-    html += '<div class="v1x1-level-section">';
-    html += '<div class="v1x1-level-1-content">';
-    html += renderContentBlocks(chapter.levels.level1);
-    html += '</div>';
-    html += '</div>';
-
-    // Provision Calculator for chapter 05
-    if (chapter.id === '05-verguetung-provision') {
-      html += renderProvisionCalculator();
-    }
-
-    // Market Share Chart for chapter 02
-    if (chapter.id === '02-marktteilnehmer') {
-      html += renderMarketShareChart();
-    }
-
-    // Level 2 — Vertiefung (Accordion)
-    if (chapter.levels.level2 && chapter.levels.level2.length) {
-      html += '<div class="v1x1-level-section">';
-      html += '<button class="v1x1-level-2-trigger" onclick="V1x1.toggleLevel2(this)">';
-      html += '<span class="v1x1-level-badge">Level 2</span>';
-      html += '<span>Vertiefung aufklappen</span>';
-      html += '<span class="v1x1-level-2-chevron">' + getIcon('chevron-down') + '</span>';
-      html += '</button>';
-      html += '<div class="v1x1-level-2-body" id="v1x1Level2Body">';
-      html += renderContentBlocks(chapter.levels.level2);
+    if (chapter.subChapters && chapter.subChapters.length > 0) {
+      // --- Sub-chapter navigation + content ---
+      html += renderSubChapterNav(chapter);
+      html += '<div id="v1x1SubContent">';
+      html += renderSubChapterContent(chapter.subChapters[0], chapter, chapterIndex);
       html += '</div>';
-      html += '</div>';
-    }
+    } else {
+      // --- Legacy: flat level 1/2/3 ---
+      html += '<div class="v1x1-level-section"><div class="v1x1-level-1-content">';
+      html += renderContentBlocks(chapter.levels.level1);
+      html += '</div></div>';
 
-    // Level 3 — Experten (Accordion)
-    if (chapter.levels.level3 && chapter.levels.level3.length) {
-      html += '<div class="v1x1-level-section">';
-      html += '<button class="v1x1-level-3-trigger" onclick="V1x1.toggleLevel3(this)">';
-      html += '<span class="v1x1-level-badge">Level 3</span>';
-      html += '<span>Experten-Deep-Dive</span>';
-      html += '<span class="v1x1-level-2-chevron">' + getIcon('chevron-down') + '</span>';
-      html += '</button>';
-      html += '<div class="v1x1-level-3-body" id="v1x1Level3Body">';
-      html += renderContentBlocks(chapter.levels.level3);
-      html += '</div>';
-      html += '</div>';
-    }
+      if (chapter.id === '05-verguetung-provision') html += renderProvisionCalculator();
+      if (chapter.id === '02-marktteilnehmer') html += renderMarketShareChart();
 
-    // NO quiz here — it's in the Wissenscheck tab now
+      if (chapter.levels.level2 && chapter.levels.level2.length) {
+        html += '<div class="v1x1-level-section">';
+        html += '<button class="v1x1-level-2-trigger" onclick="V1x1.toggleLevel2(this)">';
+        html += '<span class="v1x1-level-badge">Level 2</span><span>Vertiefung aufklappen</span>';
+        html += '<span class="v1x1-level-2-chevron">' + getIcon('chevron-down') + '</span>';
+        html += '</button>';
+        html += '<div class="v1x1-level-2-body" id="v1x1Level2Body">';
+        html += renderContentBlocks(chapter.levels.level2);
+        html += '</div></div>';
+      }
+      if (chapter.levels.level3 && chapter.levels.level3.length) {
+        html += '<div class="v1x1-level-section">';
+        html += '<button class="v1x1-level-3-trigger" onclick="V1x1.toggleLevel3(this)">';
+        html += '<span class="v1x1-level-badge">Level 3</span><span>Experten-Deep-Dive</span>';
+        html += '<span class="v1x1-level-2-chevron">' + getIcon('chevron-down') + '</span>';
+        html += '</button>';
+        html += '<div class="v1x1-level-3-body" id="v1x1Level3Body">';
+        html += renderContentBlocks(chapter.levels.level3);
+        html += '</div></div>';
+      }
+    }
 
     // Chapter Navigation (Prev/Next)
     html += renderChapterNav(chapterIndex);
@@ -341,6 +358,7 @@
       initD3Components(chapter);
       initCountUpObservers();
       initGlossaryPopovers();
+        initCiteLinks();
     }, 200);
   }
 
@@ -412,12 +430,29 @@
   }
 
   function renderCallout(block) {
-    var variant = block.variant || 'info';
+    var iconName = block.icon || block.variant || 'info';
+    var variant = (iconName === 'alert-circle' || iconName === 'warning') ? 'warning'
+                : (iconName === 'lightbulb' || iconName === 'tip') ? 'tip'
+                : 'info';
+    var iconHtml = icons[iconName] ? icons[iconName] : getCalloutIcon(variant);
     var html = '<div class="v1x1-callout ' + variant + '">';
-    html += '<span class="v1x1-callout-icon">' + getCalloutIcon(variant) + '</span>';
-    html += '<div>' + block.content + '</div>';
+    html += '<span class="v1x1-callout-icon">' + iconHtml + '</span>';
+    html += '<div>' + (block.text || block.content || '') + '</div>';
     html += '</div>';
     return html;
+  }
+
+  function renderSourceHtml(source, url) {
+    if (!source) return '';
+    var escaped = escapeHtml(source);
+    if (!url) return escaped;
+    return '<span class="v1x1-cite">' +
+      '<span class="v1x1-source-label">' + escaped + '</span>' +
+      '<span class="v1x1-cite-tooltip">' +
+        '<strong>' + escaped + '</strong><br>' +
+        '<a href="' + escapeHtml(url) + '" target="_blank" rel="noopener" class="v1x1-source-tooltip-link">→ Zur Quelle öffnen</a>' +
+      '</span>' +
+    '</span>';
   }
 
   // ========================================
@@ -905,6 +940,141 @@
   }
 
   // ========================================
+  // SUB-CHAPTER NAVIGATION
+  // ========================================
+
+  function renderSubChapterNav(chapter) {
+    var html = '<nav class="v1x1-subtabs" id="v1x1SubTabs">';
+    chapter.subChapters.forEach(function(sub) {
+      var isActive = sub.id === currentSubChapterId;
+      html += '<button class="v1x1-subtab' + (isActive ? ' active' : '') + '"';
+      html += ' data-subid="' + sub.id + '"';
+      html += ' onclick="V1x1.openSubChapter(\'' + chapter.id + '\',\'' + sub.id + '\')">';
+      if (sub.icon) html += '<span class="v1x1-subtab-icon">' + getIcon(sub.icon) + '</span>';
+      html += '<span>' + escapeHtml(sub.title) + '</span>';
+      html += '</button>';
+    });
+    html += '</nav>';
+    return html;
+  }
+
+  function openSubChapter(chapterId, subId) {
+    if (!moduleData) return;
+    var chapter = null, chapterIndex = -1;
+    for (var i = 0; i < moduleData.chapters.length; i++) {
+      if (moduleData.chapters[i].id === chapterId) { chapter = moduleData.chapters[i]; chapterIndex = i; break; }
+    }
+    if (!chapter || !chapter.subChapters) return;
+
+    var sub = null;
+    for (var j = 0; j < chapter.subChapters.length; j++) {
+      if (chapter.subChapters[j].id === subId) { sub = chapter.subChapters[j]; break; }
+    }
+    if (!sub) return;
+
+    currentSubChapterId = subId;
+
+    // Update quickStats if sub-chapter has its own
+    var statsArea = document.getElementById('v1x1QuickStats');
+    if (statsArea) {
+      var statsData = sub.quickStats || chapter.quickStats;
+      if (statsData && statsData.length) {
+        var statsHtml = '';
+        statsData.forEach(function(qs) {
+          statsHtml += '<div class="v1x1-quick-stat-card">';
+          statsHtml += '<div><span class="v1x1-quick-stat-value" data-target="' + qs.value + '">' + qs.value + '</span>';
+          if (qs.unit) statsHtml += ' <span class="v1x1-quick-stat-unit">' + escapeHtml(qs.unit) + '</span>';
+          statsHtml += '</div>';
+          statsHtml += '<div class="v1x1-quick-stat-label">' + escapeHtml(qs.label) + '</div>';
+          statsHtml += '</div>';
+        });
+        statsArea.innerHTML = statsHtml;
+        // Re-run count-up for new values
+        var newVals = statsArea.querySelectorAll('.v1x1-quick-stat-value');
+        newVals.forEach(function(el) {
+          var t = parseFloat(el.getAttribute('data-target'));
+          animateCountUp(el, 0, t, 800);
+        });
+      }
+    }
+
+    // Update tab active states
+    var tabs = document.querySelectorAll('.v1x1-subtab');
+    for (var k = 0; k < tabs.length; k++) {
+      tabs[k].classList.toggle('active', tabs[k].getAttribute('data-subid') === subId);
+    }
+    // Scroll active tab into view
+    var activeTab = document.querySelector('.v1x1-subtab.active');
+    if (activeTab) activeTab.scrollIntoView({ behavior: 'smooth', inline: 'nearest', block: 'nearest' });
+
+    var contentArea = document.getElementById('v1x1SubContent');
+    if (contentArea) {
+      contentArea.innerHTML = renderSubChapterContent(sub, chapter, chapterIndex);
+      var content = document.getElementById('v1x1Content');
+      if (content) {
+        var subNav = document.getElementById('v1x1SubTabs');
+        if (subNav) content.scrollTop = subNav.offsetTop - 60;
+      }
+      setTimeout(function() {
+        initCharts(sub);
+        initD3Components(sub);
+        initCountUpObservers();
+        initGlossaryPopovers();
+        initCiteLinks();
+        initScrollReveal();
+      }, 150);
+    }
+  }
+
+  function renderSubChapterContent(sub, chapter, chapterIndex) {
+    var html = '';
+
+    // Sub header
+    html += '<div class="v1x1-sub-header">';
+    if (sub.icon) html += '<span class="v1x1-sub-header-icon">' + getIcon(sub.icon) + '</span>';
+    html += '<div>';
+    html += '<h3 class="v1x1-sub-title">' + escapeHtml(sub.title) + '</h3>';
+    if (sub.subtitle) html += '<p class="v1x1-sub-subtitle">' + escapeHtml(sub.subtitle) + '</p>';
+    html += '</div>';
+    html += '</div>';
+
+    // Level 1 — immer sichtbar
+    if (sub.level1 && sub.level1.length) {
+      html += '<div class="v1x1-level-section"><div class="v1x1-level-1-content">';
+      html += renderContentBlocks(sub.level1);
+      html += '</div></div>';
+    }
+
+    // Level 2 — Vertiefung Accordion
+    if (sub.level2 && sub.level2.length) {
+      html += '<div class="v1x1-level-section">';
+      html += '<button class="v1x1-level-2-trigger" onclick="V1x1.toggleLevel2(this)">';
+      html += '<span class="v1x1-level-badge">Level 2</span>';
+      html += '<span>Vertiefung aufklappen</span>';
+      html += '<span class="v1x1-level-2-chevron">' + getIcon('chevron-down') + '</span>';
+      html += '</button>';
+      html += '<div class="v1x1-level-2-body" id="v1x1Level2Body">';
+      html += renderContentBlocks(sub.level2);
+      html += '</div></div>';
+    }
+
+    // Level 3 — Experten-Deep-Dive Accordion
+    if (sub.level3 && sub.level3.length) {
+      html += '<div class="v1x1-level-section">';
+      html += '<button class="v1x1-level-3-trigger" onclick="V1x1.toggleLevel3(this)">';
+      html += '<span class="v1x1-level-badge">Level 3</span>';
+      html += '<span>Experten-Deep-Dive</span>';
+      html += '<span class="v1x1-level-2-chevron">' + getIcon('chevron-down') + '</span>';
+      html += '</button>';
+      html += '<div class="v1x1-level-3-body" id="v1x1Level3Body">';
+      html += renderContentBlocks(sub.level3);
+      html += '</div></div>';
+    }
+
+    return html;
+  }
+
+  // ========================================
   // CHAPTER NAVIGATION
   // ========================================
 
@@ -1212,22 +1382,71 @@
     var contentInner = document.getElementById('v1x1ContentInner');
     if (!contentInner) return;
 
-    // Re-render the welcome view
     var html = '<div class="v1x1-welcome" id="v1x1Welcome">';
-    html += '<div class="v1x1-welcome-hero">';
-    html += '<div class="v1x1-welcome-stat">';
-    html += '<span class="v1x1-welcome-number" data-target="254">0</span>';
-    html += '<span class="v1x1-welcome-unit">Mrd. €</span>';
+
+    // ── Landing Page Hero ──
+    html += '<div class="v1x1-landing-hero">';
+    html += '<div class="v1x1-landing-logo-wrap">';
+    html += '<img src="assets/images/6364529b74a1f1454594542e_Monitor Deloitte Logo.png" alt="Monitor Deloitte" class="v1x1-landing-logo">';
     html += '</div>';
-    html += '<p class="v1x1-welcome-label">Beitragsvolumen des deutschen Versicherungsmarktes 2025</p>';
+    html += '<div class="v1x1-landing-badge">Insurance Strategy & Consulting</div>';
+    html += '<h1 class="v1x1-landing-title">Versicherungs-1×1</h1>';
+    html += '<p class="v1x1-landing-sub">Das strategische Wissensframework für neue Berater im Bereich Monitor Deloitte Insurance —<br>von regulatorischen Grundlagen über Vertriebsstrategien bis hin zu disruptiven Zukunftsthemen.</p>';
+
+    // KPI strip
+    html += '<div class="v1x1-landing-kpis">';
+    html += '<div class="v1x1-landing-kpi">';
+    html += '<span class="v1x1-landing-kpi-val" data-target="254">0</span><span class="v1x1-landing-kpi-unit">Mrd.&thinsp;€</span>';
+    html += '<div class="v1x1-landing-kpi-label">Beitragsvolumen<br>DE-Markt 2025</div>';
     html += '</div>';
-    html += '<p class="v1x1-welcome-intro">Das Versicherungs-1×1 vermittelt das Branchenwissen, das neue Strategieberater im Bereich Monitor/Strategy benötigen — von den Grundlagen über Vertiefungswissen bis hin zu Experten-Level-Insights.</p>';
+    html += '<div class="v1x1-landing-kpi-div"></div>';
+    html += '<div class="v1x1-landing-kpi">';
+    html += '<span class="v1x1-landing-kpi-val" data-target="9">0</span>';
+    html += '<div class="v1x1-landing-kpi-label">Strategische<br>Kapitel</div>';
+    html += '</div>';
+    html += '<div class="v1x1-landing-kpi-div"></div>';
+    html += '<div class="v1x1-landing-kpi">';
+    html += '<span class="v1x1-landing-kpi-val" data-target="48">0</span>';
+    html += '<div class="v1x1-landing-kpi-label">Lerneinheiten<br>mit 3 Levels</div>';
+    html += '</div>';
+    html += '<div class="v1x1-landing-kpi-div"></div>';
+    html += '<div class="v1x1-landing-kpi">';
+    html += '<span class="v1x1-landing-kpi-val" data-target="800">0</span><span class="v1x1-landing-kpi-unit">+</span>';
+    html += '<div class="v1x1-landing-kpi-label">Fakten, Kennzahlen<br>& Praxisbeispiele</div>';
+    html += '</div>';
+    html += '</div>'; // kpis
+
+    // Value pillars
+    html += '<div class="v1x1-landing-pillars">';
+    html += '<div class="v1x1-landing-pillar"><div class="v1x1-landing-pillar-icon">' + getIcon('layers') + '</div><div class="v1x1-landing-pillar-text"><strong>3 Wissensebenen</strong><span>Level 1 Basics · Level 2 Vertiefung · Level 3 Expert Deep-Dive</span></div></div>';
+    html += '<div class="v1x1-landing-pillar"><div class="v1x1-landing-pillar-icon">' + getIcon('check-circle') + '</div><div class="v1x1-landing-pillar-text"><strong>Integrierter Wissenscheck</strong><span>Wissen testen und Lücken gezielt schließen</span></div></div>';
+    html += '<div class="v1x1-landing-pillar"><div class="v1x1-landing-pillar-icon">' + getIcon('book-open') + '</div><div class="v1x1-landing-pillar-text"><strong>Praxisnahes Glossar</strong><span>Über 100 Fachbegriffe mit Kontext erklärt</span></div></div>';
+    html += '</div>'; // pillars
+
+    html += '<div class="v1x1-landing-cta-row">';
+    html += '<button class="v1x1-landing-cta" onclick="document.getElementById(\'v1x1ChapterGridWrap\').scrollIntoView({behavior:\'smooth\'})">';
+    html += getIcon('chevron-down') + ' Kapitel entdecken';
+    html += '</button>';
+    html += '</div>';
+
+    html += '</div>'; // landing-hero
+
+    // Chapter grid
+    html += '<div class="v1x1-chapter-grid-section" id="v1x1ChapterGridWrap">';
+    html += '<h2 class="v1x1-section-heading">Alle Kapitel im Überblick</h2>';
     html += '<div class="v1x1-chapter-grid" id="v1x1ChapterGrid"></div>';
     html += '</div>';
+
+    html += '</div>'; // v1x1-welcome
     contentInner.innerHTML = html;
 
     renderChapterGrid();
-    renderWelcomeCountUp();
+
+    // Animate KPI counters
+    var kpiEls = contentInner.querySelectorAll('.v1x1-landing-kpi-val[data-target]');
+    kpiEls.forEach(function(el) {
+      animateCountUp(el, 0, parseFloat(el.getAttribute('data-target')), 1200);
+    });
   }
 
   async function initModule() {
@@ -1241,15 +1460,14 @@
     }
 
     try {
-      var response = await fetch('data/versicherungs-1x1/chapters.json');
+      var response = await fetch('data/versicherungs-1x1/chapters.json?v=20260303g');
       if (!response.ok) throw new Error('Failed to load data');
       moduleData = await response.json();
       moduleLoaded = true;
       console.log('Versicherungs-1×1: Data loaded', moduleData.chapters.length, 'chapters');
 
       renderTopNav();
-      renderChapterGrid();
-      renderWelcomeCountUp();
+      showOverview();
       updateProgressUI();
       initSearch();
       initGlossarySearch();
@@ -1339,7 +1557,7 @@
     html += '<canvas id="' + canvasId + '" data-chart-key="' + escapeHtml(block.chartKey || '') + '" data-chart-type="' + escapeHtml(block.type || 'chartLine') + '"></canvas>';
     html += '</div>';
     if (block.source) {
-      html += '<div class="v1x1-chart-source">Quelle: ' + escapeHtml(block.source) + '</div>';
+      html += '<div class="v1x1-chart-source">Quelle: ' + renderSourceHtml(block.source, block.sourceUrl) + '</div>';
     }
     html += '</div>';
     return html;
@@ -1404,7 +1622,7 @@
       html += '<h3 class="v1x1-section-title">' + escapeHtml(block.title) + '</h3>';
     }
     if (block.source) {
-      html += '<div class="v1x1-chart-source" style="margin-bottom:8px;">Quelle: ' + escapeHtml(block.source) + '</div>';
+      html += '<div class="v1x1-chart-source" style="margin-bottom:8px;">Quelle: ' + renderSourceHtml(block.source, block.sourceUrl) + '</div>';
     }
     html += '<div class="v1x1-heatmap-wrapper">';
     html += '<table class="v1x1-heatmap-table">';
@@ -1571,7 +1789,7 @@
     html += '<div class="v1x1-trendradar-placeholder"><div class="v1x1-trendradar-loading">Trend-Radar wird geladen…</div></div>';
     html += '</div>';
     if (block.source) {
-      html += '<div class="v1x1-chart-source">Quelle: ' + escapeHtml(block.source) + '</div>';
+      html += '<div class="v1x1-chart-source">Quelle: ' + renderSourceHtml(block.source, block.sourceUrl) + '</div>';
     }
     html += '<div class="v1x1-trendradar-legend">';
     html += '<span class="v1x1-tr-ring adopt">Adopt</span>';
@@ -1857,9 +2075,14 @@
   // ========================================
 
   function renderComparisonTable(block) {
-    var columns = block.columns || [];
+    var rawCols = block.columns || [];
     var rows = block.rows || [];
     var highlight = block.highlightColumn || null;
+    // Normalize: columns can be [{key,label}] objects OR plain strings
+    var isSimple = rawCols.length > 0 && typeof rawCols[0] === 'string';
+    var columns = isSimple
+      ? rawCols.map(function(s, i) { return { key: i, label: s }; })
+      : rawCols;
     var html = '<div class="v1x1-comparison-table-wrapper">';
     if (block.title) {
       html += '<h3 class="v1x1-section-title">' + escapeHtml(block.title) + '</h3>';
@@ -1876,7 +2099,7 @@
       html += '<tr class="' + (ri % 2 === 0 ? 'even' : 'odd') + '">';
       columns.forEach(function(col) {
         var isHighlight = col.key === highlight;
-        var cellVal = row[col.key] !== undefined ? row[col.key] : '';
+        var cellVal = Array.isArray(row) ? (row[col.key] !== undefined ? row[col.key] : '') : (row[col.key] !== undefined ? row[col.key] : '');
         html += '<td class="' + (isHighlight ? 'highlight-col' : '') + '">' + escapeHtml(String(cellVal)) + '</td>';
       });
       html += '</tr>';
@@ -2000,6 +2223,250 @@
   // INLINE GLOSSARY POPOVERS
   // ========================================
 
+  // ========================================
+  // CITE LINK ENRICHMENT
+  // ========================================
+
+  // Exact-title → URL map (all 128 sources, researched individually)
+  var CITE_EXACT_MAP = {
+    // ── GDV ──────────────────────────────────────────────────────────────────
+    'GDV Statistisches Taschenbuch 2024/2025': 'https://www.gdv.de/resource/blob/152652/4a475238113e764d7dcfb9fd0f54dff1/statistiken-zur-deutschen-versicherungswirtschaft-taschenbuch-data.pdf',
+    'GDV Jahrbuch 2024': 'https://www.gdv.de/resource/blob/192950/70e31abd41fd96f5251fa62c3ad46b83/fakten-zur-versicherungswirtschaft-2025-download-data.pdf',
+    'GDV Jahrbuch 2024, S. 8': 'https://www.gdv.de/resource/blob/192950/70e31abd41fd96f5251fa62c3ad46b83/fakten-zur-versicherungswirtschaft-2025-download-data.pdf',
+    'GDV Jahrbuch 2024, S. 12': 'https://www.gdv.de/resource/blob/192950/70e31abd41fd96f5251fa62c3ad46b83/fakten-zur-versicherungswirtschaft-2025-download-data.pdf',
+    'GDV Jahrbuch 2024, Kapitel Beschäftigung': 'https://www.gdv.de/resource/blob/192950/70e31abd41fd96f5251fa62c3ad46b83/fakten-zur-versicherungswirtschaft-2025-download-data.pdf',
+    'GDV Jahrbuch 2024 / DIHK Vermittlerregister': 'https://www.gdv.de/resource/blob/192950/70e31abd41fd96f5251fa62c3ad46b83/fakten-zur-versicherungswirtschaft-2025-download-data.pdf',
+    'GDV Jahresmedienkonferenz 2025': 'https://www.gdv.de/gdv/events/gdv-jahresmedienkonferenz-vom-13-februar-2025-186314',
+    'GDV Jahresmedienkonferenz Februar 2026': 'https://www.gdv.de/gdv/medien/medieninformationen/versicherungswirtschaft-waechst-2025-deutlich-gedaempfter-ausblick-auf-2026-196066',
+    'GDV Naturgefahrenreport 2024': 'https://www.gdv.de/resource/blob/183526/d871a7bed27d5c99e20ab387ee393370/naturgefahrenreport-2024-download-data.pdf',
+    'GDV Naturgefahrenstatistik 2024': 'https://www.gdv.de/gdv/medien/medieninformationen/gdv-naturgefahrenstatistik-2024-hochwasserschaeden-mehr-als-verdoppelt-188734',
+    'GDV Schadenstatistik Flut 2021': 'https://www.gdv.de/gdv/medien/medieninformationen/flutkatastrophe-ahrtal-schadenregulierung-180752',
+    'GDV Lebensversicherung in Zahlen 2023/2024': 'https://www.gdv.de/resource/blob/188374/dde4d81192e583ac43e7e80a84aa6ac6/die-deutsche-lebensversicherung-in-zahlen-2025-publikation-pdf-data.pdf',
+    'GDV Statistik Lebensversicherung 2024': 'https://www.gdv.de/gdv/statistik/statistiken-zur-deutschen-versicherungswirtschaft-uebersicht/lebensversicherung',
+    'GDV Lebensversicherung Stornoquoten 2024': 'https://www.gdv.de/gdv/statistik/statistiken-zur-deutschen-versicherungswirtschaft-uebersicht/lebensversicherung',
+    'GDV Stornoquoten Lebensversicherung 2024, fondsgebunden': 'https://www.gdv.de/gdv/statistik/statistiken-zur-deutschen-versicherungswirtschaft-uebersicht/lebensversicherung',
+    'GDV Berufsunfähigkeit Statistik 2024': 'https://www.gdv.de/gdv/themen/leben/7-fakten-zur-berufsunfaehigkeitsversicherung-34338',
+    'GDV Leistungspraxis BU-Versicherung 2023': 'https://www.gdv.de/gdv/themen/leben/7-fakten-zur-berufsunfaehigkeitsversicherung-34338',
+    'GDV bAV-Report 2024': 'https://www.gdv.de/gdv/statistik/statistiken-zur-deutschen-versicherungswirtschaft-uebersicht/lebensversicherung/bestand-an-vertraegen-der-betrieblichen-altersvorsorge-bav--188644',
+    'GDV bAV- und BU-Bestandsstatistik 2024': 'https://www.gdv.de/gdv/statistik/statistiken-zur-deutschen-versicherungswirtschaft-uebersicht/lebensversicherung/bestand-an-vertraegen-der-betrieblichen-altersvorsorge-bav--188644',
+    'GDV Cyberversicherung Marktstatistik 2024': 'https://www.gdv.de/gdv/medien/medieninformationen/mehr-cyberschaeden-praevention-wichtiger-denn-je-181946',
+    'GDV Cyberversicherung Combined Ratio 2024': 'https://www.gdv.de/gdv/medien/medieninformationen/mehr-cyberschaeden-praevention-wichtiger-denn-je-181946',
+    'GDV Betrugsstatistik Versicherung 2024': 'https://www.gdv.de/gdv/themen/schaden-unfall/versicherungsbetrug',
+    'GDV Marktausblick 2025': 'https://www.gdv.de/gdv/medien/medieninformationen/versicherer-erwarten-2025-beitragswachstum-von-fuenf-prozent-auf-250-milliarden-euro-186304',
+    'GDV Nachhaltigkeitsbericht 2025, ESG-Kapitalanlagen': 'https://www.gdv.de/resource/blob/193502/754aa0b123cdfb811c66d7168d8457b3/gdv-nachhaltigkeitsbericht-2025-download-data.pdf',
+    'GDV Digitalisierungserhebung 2023': 'https://www.gdv.de/resource/blob/164228/6aedfd88c8a2a0b6cc3ab2823edadeb4/fokus-digitalisierung-nr-11-januar-2024-download-data.pdf',
+    'GDV Digitalisierungserhebung Versicherung 2024': 'https://www.gdv.de/gdv/medien/medieninformationen/gdv-statistik-jeder-fuenfte-versicherungsvertrag-wird-digital-abgeschlossen-189444',
+    'GDV Digitalreport Versicherung 2024': 'https://www.gdv.de/resource/blob/184010/4fcd3fad50f1cad1edbfd597e356df76/fokus-digitalisierung-digitalisierung-aber-sicher-data.pdf',
+    'GDV Digitaler Versicherungsvertrieb / Kubus-Studie': 'https://www.gdv.de/gdv/statistik/statistiken-zur-deutschen-versicherungswirtschaft-uebersicht/branche-insgesamt/anteile-der-vertriebswege-am-neugeschaeft-der-versicherungswirtschaft-137746',
+    'Insurance Europe / GDV-Vertriebswegestatistik 2024': 'https://www.gdv.de/gdv/statistik/statistiken-zur-deutschen-versicherungswirtschaft-uebersicht/branche-insgesamt/anteile-der-vertriebswege-am-neugeschaeft-der-versicherungswirtschaft-137746',
+    'GDV / BaFin Statistik Erstversicherungsunternehmen': 'https://www.bafin.de/DE/PublikationenDaten/Statistiken/Erstversicherung/erstversicherung_artikel.html',
+    'GDV / Geschäftsberichte der Top-Versicherer 2024': 'https://www.gdv.de/gdv/statistik/statistiken-zur-deutschen-versicherungswirtschaft-uebersicht',
+    'Lobbyregister Bundestag, GDV e.V. Eintrag 2024': 'https://www.lobbyregister.bundestag.de/suche/R000774',
+    'Handelsblatt / GDV Statistik': 'https://www.gdv.de/gdv/statistik',
+    'Geschäftsberichte Allianz, Talanx, Munich Re 2024': 'https://www.allianz.com/en/investor_relations/results-reports/annual-reports.html',
+    // ── BaFin ─────────────────────────────────────────────────────────────────
+    'BaFin Jahresbericht 2024, Kapitalanlagen': 'https://www.bafin.de/SharedDocs/Downloads/DE/Jahresbericht/dl_jb_2024.pdf?__blob=publicationFile&v=7',
+    'BaFin Jahresbericht 2024, Kapitalanlagen der Versicherungswirtschaft': 'https://www.bafin.de/SharedDocs/Downloads/DE/Jahresbericht/dl_jb_2024.pdf?__blob=publicationFile&v=7',
+    'BaFin Jahresbericht 2024, Asset Allocation': 'https://www.bafin.de/SharedDocs/Downloads/DE/Jahresbericht/dl_jb_2024.pdf?__blob=publicationFile&v=7',
+    'BaFin Jahresbericht 2024, Organisation': 'https://www.bafin.de/SharedDocs/Downloads/DE/Jahresbericht/dl_jb_2024.pdf?__blob=publicationFile&v=7',
+    'BaFin Statistik Erstversicherungsunternehmen 2024': 'https://www.bafin.de/DE/PublikationenDaten/Statistiken/Erstversicherung/erstversicherung_artikel.html',
+    'BaFin Statistik Kapitalanlagen 2024': 'https://www.bafin.de/DE/Aufsicht/VersichererPensionsfonds/Kapitalanlagen/kapitalanlagen_node.html',
+    'BaFin Statistik Kapitalanlagen 31.12.2024, HGB-Buchwerte': 'https://www.bafin.de/DE/Aufsicht/VersichererPensionsfonds/Kapitalanlagen/kapitalanlagen_node.html',
+    'BaFin Statistik Kfz-Versicherung 2023': 'https://www.bafin.de/DE/PublikationenDaten/Statistiken/Erstversicherung/erstversicherung_artikel.html',
+    'BaFin Beschwerdestatistik 2024, Kfz-Versicherung': 'https://www.bafin.de/SharedDocs/Downloads/DE/Statistik/Beschwerde/dl_st_2024_beschwerde.html',
+    'BaFin Statistik ZZR-Entwicklung 2024': 'https://www.bafin.de/DE/PublikationenDaten/Statistiken/Erstversicherung/erstversicherung_artikel.html',
+    'BaFin Solvenzquoten 31.12.2024': 'https://www.bafin.de/DE/Aufsicht/VersichererPensionsfonds/Eigenmittelanforderungen/SolvencyII/solvencyII_node.html',
+    'BaFin Marktstudie Effektivkosten Lebensversicherung 2023': 'https://www.bafin.de/SharedDocs/Veroeffentlichungen/DE/Fachartikel/2024/bafin_fachartikel_wohlverhalten.html',
+    'BaFin Fachartikel: Lebensversicherer – Wenn Zinsen steigen': 'https://www.bafin.de/SharedDocs/Veroeffentlichungen/DE/Fachartikel/2022/fa_bj_2203_Effektivkosten_Versicherer.html',
+    'BaFin Marktuntersuchung Vertriebsvergütung 2019': 'https://www.bafin.de/SharedDocs/Veroeffentlichungen/DE/Meldung/2019/meldung_191211_abschlussprovision_abfrage.html',
+    'BaFin-Erhebung Abschlussvergütungen 2018/2019': 'https://www.bafin.de/SharedDocs/Veroeffentlichungen/DE/Meldung/2019/meldung_191211_abschlussprovision_abfrage.html',
+    'BaFin-Erhebung Abschlussvergütungen 2018/2019, Gesamtmarkt': 'https://www.bafin.de/SharedDocs/Veroeffentlichungen/DE/Meldung/2019/meldung_191211_abschlussprovision_abfrage.html',
+    'BaFin Journal 12/2024, Wohlverhaltensaufsicht': 'https://www.bafin.de/SharedDocs/Veroeffentlichungen/DE/Fachartikel/2024/bafin_fachartikel_wohlverhalten.html',
+    'BaFin Pressemitteilung 01.01.2024': 'https://www.bafin.de/DE/PublikationenDaten/Jahresbericht/jahresbericht_node.html',
+    'BaFin Risiken im Fokus 2026, DORA-Meldungen Q1–Q3/2025': 'https://www.bafin.de/DE/Aufsicht/Fokusrisiken/Fokusrisiken_2026/fokusrisiken_2026_node.html',
+    // ── Gesetze ───────────────────────────────────────────────────────────────
+    'Versicherungsaufsichtsgesetz (VAG) i.d.F. 2016': 'https://www.gesetze-im-internet.de/vag_2016/',
+    'VAG § 50': 'https://www.gesetze-im-internet.de/vag_2016/__50.html',
+    'VAG § 122; Del. VO (EU) 2015/35 Art. 248–253': 'https://www.gesetze-im-internet.de/vag_2016/__122.html',
+    'Solvency-II-RL 2009/138/EG Art. 101; VAG § 97': 'https://eur-lex.europa.eu/legal-content/DE/TXT/HTML/?uri=CELEX:02009L0138-20250117',
+    'EIOPA-Anpassung, Del. VO (EU) 2019/1935': 'https://eur-lex.europa.eu/legal-content/DE/ALL/?uri=celex:32009L0138',
+    'VVG i.d.F. v. 16.1.2026, BGBl. I S. 2631': 'https://www.gesetze-im-internet.de/vvg_2008/',
+    'VVG § 8 Abs. 1, § 152 Abs. 1': 'https://www.gesetze-im-internet.de/vvg_2008/__8.html',
+    'VVG § 172 Abs. 2': 'https://www.gesetze-im-internet.de/vvg_2008/__172.html',
+    'VersVermV § 7 i.V.m. § 34d Abs. 9 GewO': 'https://www.gesetze-im-internet.de/versvermv_2018/__7.html',
+    // ── BMF / BMAS / DRV / DAV ────────────────────────────────────────────────
+    'BMF Riester-Förderung, § 84 EStG': 'https://www.gesetze-im-internet.de/estg/__84.html',
+    'BMF Schreiben v. 06.12.2025, Vorsorgeaufwendungen': 'https://www.bundesfinanzministerium.de/Content/DE/Downloads/BMF_Schreiben/Steuerarten/Einkommensteuer/index.html',
+    'BMF Sozialversicherungsrechengrößen 2025': 'https://www.gesetze-im-internet.de/svbezgrv_2025/',
+    'BMF Sozialversicherungsrechengrößen 2026': 'https://www.gesetze-im-internet.de/svbezgrv_2026/BJNR1160A0025.html',
+    'BMF, Beitragsbemessungsgrenze 2026': 'https://www.recht.bund.de/bgbl/1/2025/278/VO.html',
+    'DAV/BMF': 'https://aktuar.de/de/newsroom/detail/jahresrueckblick-2024-ein-starkes-jahr-fuer-dav-dgvfm-und-ivs/',
+    'DAV-Empfehlung 11/2023; BMF-VO v. 30.10.2024': 'https://aktuar.de/content/PDF/News/Pressemeldungen/2024_11_29_PM_HRZ.pdf',
+    'DAV Jahresbericht 2024': 'https://aktuar.de/de/newsroom/detail/jahresrueckblick-2024-ein-starkes-jahr-fuer-dav-dgvfm-und-ivs/',
+    'BMAS Forschungsbericht Verbreitung bAV 2023': 'https://www.bmas.de/DE/Service/Publikationen/Forschungsberichte/fb-651-arbeitgeber-traegerbefragung-betrieblichen-altersversorgung-2023.html',
+    'Deutsche Rentenversicherung Rentenbestand 2024': 'https://www.deutsche-rentenversicherung.de/SharedDocs/Downloads/DE/Statistiken-und-Berichte/statistikpublikationen/statistikband_rente.html',
+    // ── EIOPA / Rückversicherer ────────────────────────────────────────────────
+    'EIOPA Annual Report 2024': 'https://www.eiopa.europa.eu/document/download/3bc0b36b-d143-4315-b7d6-9d8dbb29e8c2_en?filename=eiopa-annual-report-2024.pdf',
+    'EIOPA Annual Report 2024, Budget': 'https://www.eiopa.europa.eu/document/download/3bc0b36b-d143-4315-b7d6-9d8dbb29e8c2_en?filename=eiopa-annual-report-2024.pdf',
+    'EIOPA AI Governance Report 2024': 'https://www.eiopa.europa.eu/document/download/88342342-a17f-4f88-842f-bf62c93012d6_en?filename=Opinion+on+Artificial+Intelligence+governance+and+risk+management.pdf',
+    'EIOPA AI Governance in Insurance Report 2024': 'https://www.eiopa.europa.eu/publications/opinion-artificial-intelligence-governance-and-risk-management_en',
+    'Munich Re Geschäftsbericht 2024/2025': 'https://www.munichre.com/content/dam/munichre/mrwebsiteslaunches/2024-annual-report/MunichRe-AG-Geschaeftsbericht-2024-de.pdf/_jcr_content/renditions/original./MunichRe-AG-Geschaeftsbericht-2024-de.pdf',
+    'Munich Re NatCatSERVICE, Naturkatastrophen Bilanz 2024': 'https://www.munichre.com/en/company/media-relations/media-information-and-corporate-news/media-information/2025/natural-disaster-figures-2024.html',
+    'Swiss Re sigma / AM Best Global Reinsurance Report 2024': 'https://www.swissre.com/institute/research/sigma-research.html',
+    'Swiss Re sigma / Allianz Global Insurance Report 2024': 'https://www.swissre.com/institute/research/sigma-research/sigma-2024-03-world-insurance-global-resilience.html',
+    'Swiss Re sigma No. 2/2025 via NAIC': 'https://www.swissre.com/institute/research/sigma-research/sigma-2025-02-world-insurance-riskier-fragmented-world.html',
+    'Hannover Rück Geschäftsbericht 2024': 'https://assets.hannover-re.com/asset/533267266226/document_jaieng01c51k1bgh7b536kf63s/2024_GBKonzern_d.pdf',
+    // ── Erstversicherer ────────────────────────────────────────────────────────
+    'Allianz Geschäftsbericht 2024': 'https://www.allianz.com/content/dam/onemarketing/azcom/Allianz_com/investor-relations/en/results-reports/annual-report/ar-2024/de-allianz-gruppe-geschaeftsbericht-2024.pdf',
+    'Allianz Deutschland Digitalbericht 2024': 'https://www.allianz.com/en/investor_relations/results-reports/annual-reports.html',
+    'Allianz Blue Sky Re DAC Prospekt 12/2023': 'https://www.allianz.com/en/investor_relations/results-reports/annual-reports.html',
+    'HUK-COBURG Geschäftsbericht 2024': 'https://www.huk.de/presse/mediathek/geschaeftsberichte.html',
+    'Swiss Life Deutschland Geschäftsbericht 2023': 'https://www.swisslife.de/content/dam/de/documents/6b/21364.pdf',
+    'Viridium Geschäftsbericht 2024': 'https://www.viridium-gruppe.com/en/media-center/press-releases/detail/viridium-group-successful-financial-year-2024-and-positioning-for-further-growth',
+    'Münchener Verein Unternehmensbericht 2024': 'https://www.muenchener-verein.de/unternehmen/presse-news/',
+    // ── Verbände ─────────────────────────────────────────────────────────────
+    'AfW Mitgliederstatistik Juni 2025': 'https://afw-verband.de/presse/',
+    'BVK-Strukturanalyse Vermittler 2022/23': 'https://www.bvk.de/themen/publikation/pressemitteilung/studie-betriebswirtschaftliche-strukturen-des-versicherungsvertriebs-bvk-strukturanalyse-2022-2023-erscheint.745/',
+    'PKV-Verband Zahlenbericht 2024': 'https://www.pkv.de/fileadmin/user_upload/PKV/3_PDFs/Publikationen/Zahlenbericht_2024.pdf',
+    'PKV-Verband Zahlenbericht 2024, Zusatzversicherungen': 'https://www.pkv.de/fileadmin/user_upload/PKV/3_PDFs/Publikationen/Zahlenbericht_2024.pdf',
+    'PKV-Verband bKV-Report 2024': 'https://www.pkv.de/verband/presse/pressemitteilungen/boom-bei-der-betrieblichen-krankenversicherung-erfolgsmodell-auch-fuer-bessere-pflege-vorsorge/',
+    'PKV-Verband Mitgliederverzeichnis 2024': 'https://www.pkv.de/verband/mitgliedsunternehmen/',
+    'DIHK Vermittlerregister, Stand 1.10.2025': 'https://www.dihk.de/de/serviceportal/fuer-gewerbetreibende-unternehmer/statistiken-und-bestandszahlen-zum-vermittlerregister-141724',
+    'DIHK-Vermittlerregister / DAS INVESTMENT': 'https://www.dihk.de/de/serviceportal/fuer-gewerbetreibende-unternehmer/statistiken-und-bestandszahlen-zum-vermittlerregister-141724',
+    'DIHK-Vermittlerregister / Pfefferminzia': 'https://www.dihk.de/de/serviceportal/fuer-gewerbetreibende-unternehmer/statistiken-und-bestandszahlen-zum-vermittlerregister-141724',
+    'aba Statistikreihe 2023, Gesamtdeckungsmittel bAV': 'https://www.aba-online.de/infothek/statistik/deckungsmittel',
+    'DSGV / Sparkassen-Finanzgruppe': 'https://www.dsgv.de/de/sparkassen-finanzgruppe/zahlen-und-fakten.html',
+    'Versicherungsombudsmann Jahresbericht 2024': 'https://www.versicherungsombudsmann.de/wp-content/uploads/Jahresbericht_2024.pdf',
+    // ── Consulting / Rating ───────────────────────────────────────────────────
+    'Assekurata Kfz-Marktanalyse 2024': 'https://www.assekurata.de/studien/',
+    'Assekurata Marktstudie Überschussbeteiligung 2024': 'https://www.assekurata.de/2024/05/22/die-22-assekurata-studie-zu-ueberschussbeteiligungen-und-garantien-trends-bei-fonds-und-indexpolicen/',
+    'Assekurata Solvenz-Studie Lebensversicherung 2025': 'https://www.assekurata.de/studien/',
+    'Franke & Bornberg BU-Leistungsstudie 2023': 'https://www.franke-bornberg.de/fb-news/pressemitteilungen/bu-leistungspraxisstudie-2023',
+    'Franke & Bornberg BU-Leistungsstudie 2023, Einzelauswertung R+V': 'https://www.franke-bornberg.de/fb-news/pressemitteilungen/bu-leistungspraxisstudie-2023',
+    'Deloitte Insurance Monitor Q4/2024': 'https://www.deloitte.com/us/en/insights/industry/financial-services/financial-services-industry-outlooks/insurance-industry-outlook-2024.html',
+    'PwC Insurance IT-Studie DACH 2024': 'https://www.pwc.de/de/versicherungen/digitalisierung-und-technologie.html',
+    'PwC Insurance M&A Report Europe 2024': 'https://www.pwc.com/gx/en/industries/financial-services/insurance/publications.html',
+    'WTW Vertriebsstudie 2024': 'https://www.willistowerswatson.com/de-DE/Insights/2024/11/vertriebswege-survey-leben-2024',
+    'WTW Vertriebsstudie 2024 / GDV': 'https://www.willistowerswatson.com/de-DE/Insights/2024/11/vertriebswege-survey-leben-2024',
+    'Willis Towers Watson Vergütungsstudie 2017': 'https://www.willistowerswatson.com/de-DE/Insights',
+    'MSR Consulting Versicherungskanalstudie 2024': 'https://www.msr-consulting.de/themen/versicherung/',
+    'AM Best Global Reinsurance Report 2024': 'https://web.ambest.com/ratings-services/industry-centers/reinsurance-information/reinsurance-research',
+    'Accenture Insurance Technology Vision 2024': 'https://www.accenture.com/content/dam/accenture/final/accenture-com/document-2/Accenture-Technology-Vision-2024-Executive-Summary-OL.pdf',
+    'msg/Lünendonk Insurance IT-Studie 2024': 'https://www.luenonk.de/studien/it-dienstleister/insurance/',
+    'DACH Insurance M&A Monitor 2024': 'https://www2.deloitte.com/de/de/pages/financial-services/articles/insurance-ma-monitor.html',
+    // ── InsurTech / International / Sonstige ─────────────────────────────────
+    'Ping An Annual Report 2024': 'https://group.pingan.com/investor_relations/results_and_presentations/2025/24-annual-results.html',
+    'ZhongAn Online P&C Insurance Annual Report 2024': 'https://www.zhongan.com/corporate/investor/?lang=en',
+    'Artemis Cat Bond & ILS Market Report Q4/2025': 'https://www.artemis.bm/wp-content/uploads/2026/01/catastrophe-bond-ils-market-report-q4-2025.pdf',
+    'Bloomberg/wefox Series-C Finanzierungsrunde 09/2022': 'https://www.wefox.com/en/press',
+    'Hepster Unternehmensangaben 2024': 'https://www.hepster.com/ueber-uns/',
+    'Nordlight Research / Allied Market Research': 'https://www.nordlight-research.com/publikationen/',
+    'Bundesregierung Flutkatastrophe Ahrtal Bilanz 2022': 'https://www.bundesregierung.de/breg-de/aktuelles/gedenken-flut-ahrtal-2364150',
+    'Versicherungsmonitor / Handelsblatt': 'https://www.handelsblatt.com/finanzen/versicherungen/',
+    'Versicherungsmonitor / Versicherungsbote': 'https://www.versicherungsbote.de/',
+    'Versicherungstech-Magazin / Cash-online': 'https://www.cash-online.de/versicherungen/',
+    'adesso Projektbericht SOKA-BAU Migration 2024': 'https://www.adesso.de/de/branchen/versicherung/index.jsp',
+    'DSGV / Sparkassen-Finanzgruppe': 'https://www.dsgv.de/de/sparkassen-finanzgruppe/zahlen-und-fakten.html'
+  };
+
+  // Prefix fallback map for sources not in exact map
+  var SOURCE_PREFIX_MAP = [
+    { prefix: 'GDV',            url: 'https://www.gdv.de/gdv/statistik' },
+    { prefix: 'BaFin',          url: 'https://www.bafin.de/SharedDocs/Downloads/DE/Jahresbericht/dl_jb_2024.pdf?__blob=publicationFile&v=7' },
+    { prefix: 'BMF',            url: 'https://www.bundesfinanzministerium.de' },
+    { prefix: 'BMAS',           url: 'https://www.bmas.de' },
+    { prefix: 'VAG',            url: 'https://www.gesetze-im-internet.de/vag_2016/' },
+    { prefix: 'VVG',            url: 'https://www.gesetze-im-internet.de/vvg_2008/' },
+    { prefix: 'VersVermV',      url: 'https://www.gesetze-im-internet.de/versvermv_2018/' },
+    { prefix: 'Solvency',       url: 'https://eur-lex.europa.eu/legal-content/DE/TXT/HTML/?uri=CELEX:02009L0138-20250117' },
+    { prefix: 'AfW',            url: 'https://afw-verband.de/presse/' },
+    { prefix: 'BVK',            url: 'https://www.bvk.de/themen/strukturanalyse/' },
+    { prefix: 'PKV',            url: 'https://www.pkv.de/wissen/pkv-zahlenportal/' },
+    { prefix: 'DIHK',           url: 'https://www.dihk.de/de/serviceportal/fuer-gewerbetreibende-unternehmer/statistiken-und-bestandszahlen-zum-vermittlerregister-141724' },
+    { prefix: 'aba',            url: 'https://www.aba-online.de/infothek/statistik/ueberblick' },
+    { prefix: 'DAV',            url: 'https://aktuar.de/de/newsroom/' },
+    { prefix: 'EIOPA',          url: 'https://www.eiopa.europa.eu/publications' },
+    { prefix: 'Munich Re',      url: 'https://www.munichre.com/en/company/investors/reports-and-presentations/annual-report.html' },
+    { prefix: 'Swiss Re',       url: 'https://www.swissre.com/institute/research/sigma-research.html' },
+    { prefix: 'Hannover',       url: 'https://www.hannover-re.com/de/investoren/ergebnisse-und-berichte/' },
+    { prefix: 'Allianz',        url: 'https://www.allianz.com/en/investor_relations/results-reports/annual-reports.html' },
+    { prefix: 'HUK',            url: 'https://www.huk.de/presse/mediathek/geschaeftsberichte.html' },
+    { prefix: 'Swiss Life',     url: 'https://www.swisslife.de/ueber-swiss-life/medienportal/mediathek/geschaeftsergebnisse.html' },
+    { prefix: 'Viridium',       url: 'https://www.viridium-gruppe.com/en/media-center/downloads' },
+    { prefix: 'Assekurata',     url: 'https://www.assekurata.de/studien/' },
+    { prefix: 'Franke',         url: 'https://www.franke-bornberg.de/fb-news/pressemitteilungen/bu-leistungspraxisstudie-2023' },
+    { prefix: 'Deloitte',       url: 'https://www.deloitte.com/global/en/Industries/insurance.html' },
+    { prefix: 'PwC',            url: 'https://www.pwc.de/de/versicherungen.html' },
+    { prefix: 'WTW',            url: 'https://www.willistowerswatson.com/de-DE/Insights' },
+    { prefix: 'Willis',         url: 'https://www.willistowerswatson.com/de-DE/Insights' },
+    { prefix: 'AM Best',        url: 'https://web.ambest.com/ratings-services/industry-centers/reinsurance-information/reinsurance-research' },
+    { prefix: 'Accenture',      url: 'https://www.accenture.com/us-en/insights/insurance' },
+    { prefix: 'Ping An',        url: 'https://group.pingan.com/investor_relations.html' },
+    { prefix: 'Artemis',        url: 'https://www.artemis.bm/catastrophe-bond-ils-market-reports/' },
+    { prefix: 'Versicherungsombudsmann', url: 'https://www.versicherungsombudsmann.de/downloads/' },
+    { prefix: 'Deutsche Rentenversicherung', url: 'https://www.deutsche-rentenversicherung.de/DRV/DE/Experten/Zahlen-und-Fakten/Statistiken-und-Berichte/statistiken-und-berichte_node.html' }
+  ];
+
+  function getCiteUrl(sourceText) {
+    // 1) exact match
+    if (CITE_EXACT_MAP[sourceText]) return CITE_EXACT_MAP[sourceText];
+    // 2) prefix match
+    for (var i = 0; i < SOURCE_PREFIX_MAP.length; i++) {
+      if (sourceText.indexOf(SOURCE_PREFIX_MAP[i].prefix) === 0) {
+        return SOURCE_PREFIX_MAP[i].url;
+      }
+    }
+    // 3) Google fallback
+    return 'https://www.google.com/search?q=' + encodeURIComponent(sourceText);
+  }
+
+  function initCiteLinks() {
+    var cites = document.querySelectorAll('.v1x1-cite');
+    cites.forEach(function(cite) {
+      var tooltip = cite.querySelector('.v1x1-cite-tooltip');
+      if (!tooltip || tooltip.querySelector('a')) return;
+
+      var sourceText = tooltip.textContent.trim();
+      var url = getCiteUrl(sourceText);
+
+      var link = document.createElement('a');
+      link.href = url;
+      link.target = '_blank';
+      link.rel = 'noopener noreferrer';
+      link.className = 'v1x1-source-tooltip-link';
+      link.textContent = '→ Quelle öffnen';
+      tooltip.appendChild(document.createElement('br'));
+      tooltip.appendChild(link);
+    });
+
+    // Click-to-pin: clicking the cite-num keeps tooltip open
+    var content = document.getElementById('v1x1ContentInner');
+    if (content && !content._citedelegated) {
+      content._citedelegated = true;
+      content.addEventListener('click', function(e) {
+        var num = e.target.closest('.v1x1-cite-num');
+        if (num) {
+          var parentCite = num.closest('.v1x1-cite');
+          var isOpen = parentCite.classList.contains('v1x1-cite-pinned');
+          // Close any open pins
+          document.querySelectorAll('.v1x1-cite-pinned').forEach(function(el) {
+            el.classList.remove('v1x1-cite-pinned');
+          });
+          if (!isOpen) parentCite.classList.add('v1x1-cite-pinned');
+          e.stopPropagation();
+        }
+        // Click on tooltip link - allow default navigation
+        if (e.target.closest('.v1x1-source-tooltip-link')) return;
+        // Click outside - close all pins
+        if (!e.target.closest('.v1x1-cite')) {
+          document.querySelectorAll('.v1x1-cite-pinned').forEach(function(el) {
+            el.classList.remove('v1x1-cite-pinned');
+          });
+        }
+      });
+    }
+  }
+
   function initGlossaryPopovers() {
     if (!moduleData || !moduleData.glossary) return;
     var termMap = {};
@@ -2076,6 +2543,7 @@
   window.V1x1 = {
     init: initModule,
     openChapter: openChapter,
+    openSubChapter: openSubChapter,
     showOverview: showOverview,
     openWissencheck: openWissencheck,
     selectWissencheckChapter: selectWissencheckChapter,

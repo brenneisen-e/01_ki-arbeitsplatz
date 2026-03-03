@@ -1409,7 +1409,7 @@
     }
 
     try {
-      var response = await fetch('data/versicherungs-1x1/chapters.json?v=20260303c');
+      var response = await fetch('data/versicherungs-1x1/chapters.json?v=20260303d');
       if (!response.ok) throw new Error('Failed to load data');
       moduleData = await response.json();
       moduleLoaded = true;
@@ -2025,9 +2025,14 @@
   // ========================================
 
   function renderComparisonTable(block) {
-    var columns = block.columns || [];
+    var rawCols = block.columns || [];
     var rows = block.rows || [];
     var highlight = block.highlightColumn || null;
+    // Normalize: columns can be [{key,label}] objects OR plain strings
+    var isSimple = rawCols.length > 0 && typeof rawCols[0] === 'string';
+    var columns = isSimple
+      ? rawCols.map(function(s, i) { return { key: i, label: s }; })
+      : rawCols;
     var html = '<div class="v1x1-comparison-table-wrapper">';
     if (block.title) {
       html += '<h3 class="v1x1-section-title">' + escapeHtml(block.title) + '</h3>';
@@ -2044,7 +2049,7 @@
       html += '<tr class="' + (ri % 2 === 0 ? 'even' : 'odd') + '">';
       columns.forEach(function(col) {
         var isHighlight = col.key === highlight;
-        var cellVal = row[col.key] !== undefined ? row[col.key] : '';
+        var cellVal = Array.isArray(row) ? (row[col.key] !== undefined ? row[col.key] : '') : (row[col.key] !== undefined ? row[col.key] : '');
         html += '<td class="' + (isHighlight ? 'highlight-col' : '') + '">' + escapeHtml(String(cellVal)) + '</td>';
       });
       html += '</tr>';

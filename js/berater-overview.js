@@ -128,6 +128,12 @@ function showBeraterOverview() {
     var chatToggle = document.getElementById('beraterChatToggle');
     if (chatToggle) chatToggle.style.display = 'flex';
     
+    // Update URL route based on current view mode
+    if (window.AppRouter) {
+        var routeMap = { 'retail': '/berater', 'firmenkunde': '/berater-firmenkunde', 'vermoegen': '/berater-vermoegen' };
+        AppRouter.navigate(routeMap[bankViewMode] || '/berater');
+    }
+
     // Dispatch event
     document.dispatchEvent(new CustomEvent('viewChanged', { detail: { view: 'beraterOverview' } }));
 }
@@ -172,6 +178,7 @@ function backFromBeraterOverview() {
     if (chatWidget) chatWidget.style.display = 'none';
     var landing = document.getElementById('landingPage');
     if (landing) landing.style.display = 'flex';
+    if (window.AppRouter) AppRouter.navigate('/landing');
     document.dispatchEvent(new CustomEvent('viewChanged', { detail: { view: 'landing' } }));
 }
 

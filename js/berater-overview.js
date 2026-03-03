@@ -88,8 +88,27 @@ function getInitialsBerater(name) {
 
 // ── INIT & SHOW OVERVIEW ──
 function showBeraterOverview() {
+    // Hide landing page and welcome chat
+    var landingPage = document.getElementById('landingPage');
+    if (landingPage) landingPage.style.display = 'none';
+    var welcomeChat = document.getElementById('welcomeChat');
+    if (welcomeChat) welcomeChat.style.display = 'none';
+
+    // Hide main app
+    var mainApp = document.getElementById('mainApp');
+    if (mainApp) mainApp.style.display = 'none';
+
+    // Hide all other modules
+    ['bankenModule', 'assetModule', 'cvScannerModule', 'risikoscoringModule',
+     'bestandsuebertragungModule', 'pmoToolboxModule', 'hrPipelineModule',
+     'versicherungs1x1Module', 'kundenDetailBankPage', 'bgavUmstellungPage'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) el.style.display = 'none';
+    });
+
+    // Show berater overview page
     document.getElementById('beraterOverviewPage').style.display = 'block';
-    
+
     // Load berater photo
     fillBeraterHeader();
     

@@ -10,6 +10,7 @@
   var moduleData = null;
   var moduleLoaded = false;
   var currentChapter = null;
+  var currentSubChapterId = null;
   var currentQuizIndex = 0;
   var quizAnswered = {};
   var currentView = 'overview'; // 'overview' | 'chapter' | 'wissenscheck'
@@ -189,6 +190,10 @@
     currentChapter = chapter;
     currentView = 'chapter';
 
+    // Reset sub-chapter, auto-select first if chapter has subChapters
+    currentSubChapterId = (chapter.subChapters && chapter.subChapters.length > 0)
+      ? chapter.subChapters[0].id : null;
+
     // Mark as visited
     markChapterVisited(chapterId);
 
@@ -249,52 +254,42 @@
 
     html += '</div>'; // /chapter-hero
 
-    // Level 1 — Grundlagen
-    html += '<div class="v1x1-level-section">';
-    html += '<div class="v1x1-level-1-content">';
-    html += renderContentBlocks(chapter.levels.level1);
-    html += '</div>';
-    html += '</div>';
-
-    // Provision Calculator for chapter 05
-    if (chapter.id === '05-verguetung-provision') {
-      html += renderProvisionCalculator();
-    }
-
-    // Market Share Chart for chapter 02
-    if (chapter.id === '02-marktteilnehmer') {
-      html += renderMarketShareChart();
-    }
-
-    // Level 2 — Vertiefung (Accordion)
-    if (chapter.levels.level2 && chapter.levels.level2.length) {
-      html += '<div class="v1x1-level-section">';
-      html += '<button class="v1x1-level-2-trigger" onclick="V1x1.toggleLevel2(this)">';
-      html += '<span class="v1x1-level-badge">Level 2</span>';
-      html += '<span>Vertiefung aufklappen</span>';
-      html += '<span class="v1x1-level-2-chevron">' + getIcon('chevron-down') + '</span>';
-      html += '</button>';
-      html += '<div class="v1x1-level-2-body" id="v1x1Level2Body">';
-      html += renderContentBlocks(chapter.levels.level2);
+    if (chapter.subChapters && chapter.subChapters.length > 0) {
+      // --- Sub-chapter navigation + content ---
+      html += renderSubChapterNav(chapter);
+      html += '<div id="v1x1SubContent">';
+      html += renderSubChapterContent(chapter.subChapters[0], chapter, chapterIndex);
       html += '</div>';
-      html += '</div>';
-    }
+    } else {
+      // --- Legacy: flat level 1/2/3 ---
+      html += '<div class="v1x1-level-section"><div class="v1x1-level-1-content">';
+      html += renderContentBlocks(chapter.levels.level1);
+      html += '</div></div>';
 
-    // Level 3 — Experten (Accordion)
-    if (chapter.levels.level3 && chapter.levels.level3.length) {
-      html += '<div class="v1x1-level-section">';
-      html += '<button class="v1x1-level-3-trigger" onclick="V1x1.toggleLevel3(this)">';
-      html += '<span class="v1x1-level-badge">Level 3</span>';
-      html += '<span>Experten-Deep-Dive</span>';
-      html += '<span class="v1x1-level-2-chevron">' + getIcon('chevron-down') + '</span>';
-      html += '</button>';
-      html += '<div class="v1x1-level-3-body" id="v1x1Level3Body">';
-      html += renderContentBlocks(chapter.levels.level3);
-      html += '</div>';
-      html += '</div>';
-    }
+      if (chapter.id === '05-verguetung-provision') html += renderProvisionCalculator();
+      if (chapter.id === '02-marktteilnehmer') html += renderMarketShareChart();
 
-    // NO quiz here — it's in the Wissenscheck tab now
+      if (chapter.levels.level2 && chapter.levels.level2.length) {
+        html += '<div class="v1x1-level-section">';
+        html += '<button class="v1x1-level-2-trigger" onclick="V1x1.toggleLevel2(this)">';
+        html += '<span class="v1x1-level-badge">Level 2</span><span>Vertiefung aufklappen</span>';
+        html += '<span class="v1x1-level-2-chevron">' + getIcon('chevron-down') + '</span>';
+        html += '</button>';
+        html += '<div class="v1x1-level-2-body" id="v1x1Level2Body">';
+        html += renderContentBlocks(chapter.levels.level2);
+        html += '</div></div>';
+      }
+      if (chapter.levels.level3 && chapter.levels.level3.length) {
+        html += '<div class="v1x1-level-section">';
+        html += '<button class="v1x1-level-3-trigger" onclick="V1x1.toggleLevel3(this)">';
+        html += '<span class="v1x1-level-badge">Level 3</span><span>Experten-Deep-Dive</span>';
+        html += '<span class="v1x1-level-2-chevron">' + getIcon('chevron-down') + '</span>';
+        html += '</button>';
+        html += '<div class="v1x1-level-3-body" id="v1x1Level3Body">';
+        html += renderContentBlocks(chapter.levels.level3);
+        html += '</div></div>';
+      }
+    }
 
     // Chapter Navigation (Prev/Next)
     html += renderChapterNav(chapterIndex);
@@ -902,6 +897,116 @@
     if (quizContainer && questions) {
       quizContainer.innerHTML = renderWkQuestion(questions, 0);
     }
+  }
+
+  // ========================================
+  // SUB-CHAPTER NAVIGATION
+  // ========================================
+
+  function renderSubChapterNav(chapter) {
+    var html = '<nav class="v1x1-subtabs" id="v1x1SubTabs">';
+    chapter.subChapters.forEach(function(sub) {
+      var isActive = sub.id === currentSubChapterId;
+      html += '<button class="v1x1-subtab' + (isActive ? ' active' : '') + '"';
+      html += ' data-subid="' + sub.id + '"';
+      html += ' onclick="V1x1.openSubChapter(\'' + chapter.id + '\',\'' + sub.id + '\')">';
+      if (sub.icon) html += '<span class="v1x1-subtab-icon">' + getIcon(sub.icon) + '</span>';
+      html += '<span>' + escapeHtml(sub.title) + '</span>';
+      html += '</button>';
+    });
+    html += '</nav>';
+    return html;
+  }
+
+  function openSubChapter(chapterId, subId) {
+    if (!moduleData) return;
+    var chapter = null, chapterIndex = -1;
+    for (var i = 0; i < moduleData.chapters.length; i++) {
+      if (moduleData.chapters[i].id === chapterId) { chapter = moduleData.chapters[i]; chapterIndex = i; break; }
+    }
+    if (!chapter || !chapter.subChapters) return;
+
+    var sub = null;
+    for (var j = 0; j < chapter.subChapters.length; j++) {
+      if (chapter.subChapters[j].id === subId) { sub = chapter.subChapters[j]; break; }
+    }
+    if (!sub) return;
+
+    currentSubChapterId = subId;
+
+    // Update tab active states
+    var tabs = document.querySelectorAll('.v1x1-subtab');
+    for (var k = 0; k < tabs.length; k++) {
+      tabs[k].classList.toggle('active', tabs[k].getAttribute('data-subid') === subId);
+    }
+    // Scroll active tab into view
+    var activeTab = document.querySelector('.v1x1-subtab.active');
+    if (activeTab) activeTab.scrollIntoView({ behavior: 'smooth', inline: 'nearest', block: 'nearest' });
+
+    var contentArea = document.getElementById('v1x1SubContent');
+    if (contentArea) {
+      contentArea.innerHTML = renderSubChapterContent(sub, chapter, chapterIndex);
+      var content = document.getElementById('v1x1Content');
+      if (content) {
+        var subNav = document.getElementById('v1x1SubTabs');
+        if (subNav) content.scrollTop = subNav.offsetTop - 60;
+      }
+      setTimeout(function() {
+        initCharts(sub);
+        initD3Components(sub);
+        initCountUpObservers();
+        initGlossaryPopovers();
+        initScrollReveal();
+      }, 150);
+    }
+  }
+
+  function renderSubChapterContent(sub, chapter, chapterIndex) {
+    var html = '';
+
+    // Sub header
+    html += '<div class="v1x1-sub-header">';
+    if (sub.icon) html += '<span class="v1x1-sub-header-icon">' + getIcon(sub.icon) + '</span>';
+    html += '<div>';
+    html += '<h3 class="v1x1-sub-title">' + escapeHtml(sub.title) + '</h3>';
+    if (sub.subtitle) html += '<p class="v1x1-sub-subtitle">' + escapeHtml(sub.subtitle) + '</p>';
+    html += '</div>';
+    html += '</div>';
+
+    // Level 1 — immer sichtbar
+    if (sub.level1 && sub.level1.length) {
+      html += '<div class="v1x1-level-section"><div class="v1x1-level-1-content">';
+      html += renderContentBlocks(sub.level1);
+      html += '</div></div>';
+    }
+
+    // Level 2 — Vertiefung Accordion
+    if (sub.level2 && sub.level2.length) {
+      html += '<div class="v1x1-level-section">';
+      html += '<button class="v1x1-level-2-trigger" onclick="V1x1.toggleLevel2(this)">';
+      html += '<span class="v1x1-level-badge">Level 2</span>';
+      html += '<span>Vertiefung aufklappen</span>';
+      html += '<span class="v1x1-level-2-chevron">' + getIcon('chevron-down') + '</span>';
+      html += '</button>';
+      html += '<div class="v1x1-level-2-body" id="v1x1Level2Body">';
+      html += renderContentBlocks(sub.level2);
+      html += '</div></div>';
+    }
+
+    // Level 3 — Experten-Deep-Dive Accordion
+    if (sub.level3 && sub.level3.length) {
+      html += '<div class="v1x1-level-section">';
+      html += '<button class="v1x1-level-3-trigger" onclick="V1x1.toggleLevel3(this)">';
+      html += '<span class="v1x1-level-badge">Level 3</span>';
+      html += '<span>Experten-Deep-Dive</span>';
+      html += '<span class="v1x1-level-2-chevron">' + getIcon('chevron-down') + '</span>';
+      html += '</button>';
+      html += '<div class="v1x1-level-3-body" id="v1x1Level3Body">';
+      html += renderContentBlocks(sub.level3);
+      html += '</div></div>';
+    }
+
+    return html;
   }
 
   // ========================================
@@ -2076,6 +2181,7 @@
   window.V1x1 = {
     init: initModule,
     openChapter: openChapter,
+    openSubChapter: openSubChapter,
     showOverview: showOverview,
     openWissencheck: openWissencheck,
     selectWissencheckChapter: selectWissencheckChapter,

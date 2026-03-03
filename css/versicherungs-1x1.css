@@ -471,21 +471,6 @@
   color: var(--v1x1-text-tertiary);
   font-weight: 500;
 }
-.v1x1-chapter-level-indicator {
-  display: flex;
-  gap: 4px;
-  margin-left: auto;
-}
-.v1x1-level-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--v1x1-border);
-  transition: background 300ms ease;
-}
-.v1x1-level-dot.active-1 { background: var(--v1x1-level-1); }
-.v1x1-level-dot.active-2 { background: var(--v1x1-level-2); }
-.v1x1-level-dot.active-3 { background: var(--v1x1-level-3); }
 
 /* Hero Stat */
 .v1x1-hero-stat {
@@ -580,105 +565,54 @@
   border-left: 3px solid var(--v1x1-level-1);
 }
 
-/* Level 2 — Accordion */
-.v1x1-level-2-trigger {
+/* Collapsible section trigger (replaces Level 2 / Level 3 accordions) */
+.v1x1-section-trigger {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   width: 100%;
-  padding: 14px 16px;
-  border: 1px solid var(--v1x1-border);
-  border-radius: 10px;
-  background: var(--v1x1-bg);
+  padding: 13px 16px;
+  border: none;
+  border-top: 1px solid var(--v1x1-border);
+  border-radius: 0;
+  background: transparent;
   font-family: var(--v1x1-font-heading);
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
-  color: var(--v1x1-text-primary);
+  color: var(--v1x1-text-secondary);
   cursor: pointer;
-  transition: all 200ms ease;
+  transition: color 180ms ease, background 180ms ease;
   margin-top: 24px;
+  text-align: left;
 }
-.v1x1-level-2-trigger:hover {
-  border-color: var(--v1x1-level-2);
-  background: rgba(245, 158, 11, 0.04);
+.v1x1-section-trigger:hover {
+  color: var(--v1x1-text-primary);
+  background: rgba(0,0,0,0.02);
 }
-.v1x1-level-2-trigger .v1x1-level-badge {
-  background: rgba(245, 158, 11, 0.1);
-  color: #D97706;
+.v1x1-section-trigger.open {
+  color: var(--v1x1-text-primary);
 }
-.v1x1-level-2-chevron {
+.v1x1-section-chevron {
   margin-left: auto;
+  flex-shrink: 0;
   transition: transform 250ms ease;
   color: var(--v1x1-text-tertiary);
 }
-.v1x1-level-2-trigger.open .v1x1-level-2-chevron {
+.v1x1-section-trigger.open .v1x1-section-chevron {
   transform: rotate(180deg);
 }
-.v1x1-level-2-body {
+.v1x1-section-body {
   overflow: hidden;
   max-height: 0;
   opacity: 0;
-  transition: max-height 350ms ease, opacity 250ms ease, padding 250ms ease;
-  padding-left: 16px;
-  border-left: 3px solid var(--v1x1-level-2);
-  margin-left: 0;
+  transition: max-height 400ms ease, opacity 250ms ease, padding 250ms ease;
+  padding-left: 0;
 }
-.v1x1-level-2-body.open {
-  max-height: 3000px;
+.v1x1-section-body.open {
+  max-height: 4000px;
   opacity: 1;
-  padding-top: 16px;
+  padding-top: 12px;
   padding-bottom: 8px;
-}
-
-/* Level 3 — link to deep-dive */
-.v1x1-level-3-trigger {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  width: 100%;
-  padding: 14px 16px;
-  border: 1px solid var(--v1x1-border);
-  border-radius: 10px;
-  background: var(--v1x1-bg);
-  font-family: var(--v1x1-font-heading);
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--v1x1-text-primary);
-  cursor: pointer;
-  transition: all 200ms ease;
-  margin-top: 12px;
-}
-.v1x1-level-3-trigger:hover {
-  border-color: var(--v1x1-level-3);
-  background: rgba(239, 68, 68, 0.04);
-}
-.v1x1-level-3-trigger .v1x1-level-badge {
-  background: rgba(239, 68, 68, 0.1);
-  color: #DC2626;
-}
-.v1x1-level-3-body {
-  overflow: hidden;
-  max-height: 0;
-  opacity: 0;
-  transition: max-height 350ms ease, opacity 250ms ease, padding 250ms ease;
-  padding-left: 16px;
-  border-left: 3px solid var(--v1x1-level-3);
-}
-.v1x1-level-3-body.open {
-  max-height: 3000px;
-  opacity: 1;
-  padding-top: 16px;
-  padding-bottom: 8px;
-}
-
-/* Level Badge */
-.v1x1-level-badge {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  padding: 3px 8px;
-  border-radius: 4px;
 }
 
 /* ========================================

@@ -1380,22 +1380,71 @@
     var contentInner = document.getElementById('v1x1ContentInner');
     if (!contentInner) return;
 
-    // Re-render the welcome view
     var html = '<div class="v1x1-welcome" id="v1x1Welcome">';
-    html += '<div class="v1x1-welcome-hero">';
-    html += '<div class="v1x1-welcome-stat">';
-    html += '<span class="v1x1-welcome-number" data-target="254">0</span>';
-    html += '<span class="v1x1-welcome-unit">Mrd. €</span>';
+
+    // ── Landing Page Hero ──
+    html += '<div class="v1x1-landing-hero">';
+    html += '<div class="v1x1-landing-logo-wrap">';
+    html += '<img src="assets/images/6364529b74a1f1454594542e_Monitor Deloitte Logo.png" alt="Monitor Deloitte" class="v1x1-landing-logo">';
     html += '</div>';
-    html += '<p class="v1x1-welcome-label">Beitragsvolumen des deutschen Versicherungsmarktes 2025</p>';
+    html += '<div class="v1x1-landing-badge">Insurance Strategy & Consulting</div>';
+    html += '<h1 class="v1x1-landing-title">Versicherungs-1×1</h1>';
+    html += '<p class="v1x1-landing-sub">Das strategische Wissensframework für neue Berater im Bereich Monitor Deloitte Insurance —<br>von regulatorischen Grundlagen über Vertriebsstrategien bis hin zu disruptiven Zukunftsthemen.</p>';
+
+    // KPI strip
+    html += '<div class="v1x1-landing-kpis">';
+    html += '<div class="v1x1-landing-kpi">';
+    html += '<span class="v1x1-landing-kpi-val" data-target="254">0</span><span class="v1x1-landing-kpi-unit">Mrd.&thinsp;€</span>';
+    html += '<div class="v1x1-landing-kpi-label">Beitragsvolumen<br>DE-Markt 2025</div>';
     html += '</div>';
-    html += '<p class="v1x1-welcome-intro">Das Versicherungs-1×1 vermittelt das Branchenwissen, das neue Strategieberater im Bereich Monitor/Strategy benötigen — von den Grundlagen über Vertiefungswissen bis hin zu Experten-Level-Insights.</p>';
+    html += '<div class="v1x1-landing-kpi-div"></div>';
+    html += '<div class="v1x1-landing-kpi">';
+    html += '<span class="v1x1-landing-kpi-val" data-target="9">0</span>';
+    html += '<div class="v1x1-landing-kpi-label">Strategische<br>Kapitel</div>';
+    html += '</div>';
+    html += '<div class="v1x1-landing-kpi-div"></div>';
+    html += '<div class="v1x1-landing-kpi">';
+    html += '<span class="v1x1-landing-kpi-val" data-target="48">0</span>';
+    html += '<div class="v1x1-landing-kpi-label">Lerneinheiten<br>mit 3 Levels</div>';
+    html += '</div>';
+    html += '<div class="v1x1-landing-kpi-div"></div>';
+    html += '<div class="v1x1-landing-kpi">';
+    html += '<span class="v1x1-landing-kpi-val" data-target="800">0</span><span class="v1x1-landing-kpi-unit">+</span>';
+    html += '<div class="v1x1-landing-kpi-label">Fakten, Kennzahlen<br>& Praxisbeispiele</div>';
+    html += '</div>';
+    html += '</div>'; // kpis
+
+    // Value pillars
+    html += '<div class="v1x1-landing-pillars">';
+    html += '<div class="v1x1-landing-pillar"><div class="v1x1-landing-pillar-icon">' + getIcon('layers') + '</div><div class="v1x1-landing-pillar-text"><strong>3 Wissensebenen</strong><span>Level 1 Basics · Level 2 Vertiefung · Level 3 Expert Deep-Dive</span></div></div>';
+    html += '<div class="v1x1-landing-pillar"><div class="v1x1-landing-pillar-icon">' + getIcon('check-circle') + '</div><div class="v1x1-landing-pillar-text"><strong>Integrierter Wissenscheck</strong><span>Wissen testen und Lücken gezielt schließen</span></div></div>';
+    html += '<div class="v1x1-landing-pillar"><div class="v1x1-landing-pillar-icon">' + getIcon('book-open') + '</div><div class="v1x1-landing-pillar-text"><strong>Praxisnahes Glossar</strong><span>Über 100 Fachbegriffe mit Kontext erklärt</span></div></div>';
+    html += '</div>'; // pillars
+
+    html += '<div class="v1x1-landing-cta-row">';
+    html += '<button class="v1x1-landing-cta" onclick="document.getElementById(\'v1x1ChapterGridWrap\').scrollIntoView({behavior:\'smooth\'})">';
+    html += getIcon('chevron-down') + ' Kapitel entdecken';
+    html += '</button>';
+    html += '</div>';
+
+    html += '</div>'; // landing-hero
+
+    // Chapter grid
+    html += '<div class="v1x1-chapter-grid-section" id="v1x1ChapterGridWrap">';
+    html += '<h2 class="v1x1-section-heading">Alle Kapitel im Überblick</h2>';
     html += '<div class="v1x1-chapter-grid" id="v1x1ChapterGrid"></div>';
     html += '</div>';
+
+    html += '</div>'; // v1x1-welcome
     contentInner.innerHTML = html;
 
     renderChapterGrid();
-    renderWelcomeCountUp();
+
+    // Animate KPI counters
+    var kpiEls = contentInner.querySelectorAll('.v1x1-landing-kpi-val[data-target]');
+    kpiEls.forEach(function(el) {
+      animateCountUp(el, 0, parseFloat(el.getAttribute('data-target')), 1200);
+    });
   }
 
   async function initModule() {
@@ -1409,15 +1458,14 @@
     }
 
     try {
-      var response = await fetch('data/versicherungs-1x1/chapters.json?v=20260303c');
+      var response = await fetch('data/versicherungs-1x1/chapters.json?v=20260303e');
       if (!response.ok) throw new Error('Failed to load data');
       moduleData = await response.json();
       moduleLoaded = true;
       console.log('Versicherungs-1×1: Data loaded', moduleData.chapters.length, 'chapters');
 
       renderTopNav();
-      renderChapterGrid();
-      renderWelcomeCountUp();
+      showOverview();
       updateProgressUI();
       initSearch();
       initGlossarySearch();
@@ -2025,9 +2073,14 @@
   // ========================================
 
   function renderComparisonTable(block) {
-    var columns = block.columns || [];
+    var rawCols = block.columns || [];
     var rows = block.rows || [];
     var highlight = block.highlightColumn || null;
+    // Normalize: columns can be [{key,label}] objects OR plain strings
+    var isSimple = rawCols.length > 0 && typeof rawCols[0] === 'string';
+    var columns = isSimple
+      ? rawCols.map(function(s, i) { return { key: i, label: s }; })
+      : rawCols;
     var html = '<div class="v1x1-comparison-table-wrapper">';
     if (block.title) {
       html += '<h3 class="v1x1-section-title">' + escapeHtml(block.title) + '</h3>';
@@ -2044,7 +2097,7 @@
       html += '<tr class="' + (ri % 2 === 0 ? 'even' : 'odd') + '">';
       columns.forEach(function(col) {
         var isHighlight = col.key === highlight;
-        var cellVal = row[col.key] !== undefined ? row[col.key] : '';
+        var cellVal = Array.isArray(row) ? (row[col.key] !== undefined ? row[col.key] : '') : (row[col.key] !== undefined ? row[col.key] : '');
         html += '<td class="' + (isHighlight ? 'highlight-col' : '') + '">' + escapeHtml(String(cellVal)) + '</td>';
       });
       html += '</tr>';

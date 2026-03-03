@@ -14,6 +14,14 @@
       <img src="assets/images/6364529b74a1f1454594542e_Monitor Deloitte Logo.png" alt="Monitor Deloitte" class="v1x1-monitor-deloitte-logo">
     </div>
     <div class="v1x1-header-right">
+      <button class="v1x1-cmdK-btn" onclick="V1x1.openSearchOverlay()" title="Suche (Ctrl+K)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <span class="v1x1-cmdK-label">Suchen</span>
+        <kbd class="v1x1-cmdK-badge">Ctrl+K</kbd>
+      </button>
       <div class="v1x1-search-wrapper">
         <svg class="v1x1-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
           <circle cx="11" cy="11" r="8"></circle>
@@ -57,6 +65,9 @@
     </div>
   </nav>
 
+  <!-- Breadcrumb -->
+  <div id="v1x1Breadcrumb" class="v1x1-breadcrumb-bar"></div>
+
   <!-- Content Area (full width, no sidebar) -->
   <main class="v1x1-content" id="v1x1Content">
     <div class="v1x1-content-inner" id="v1x1ContentInner">
@@ -91,10 +102,41 @@
           </svg>
         </button>
       </div>
+      <!-- A-Z navigation -->
+      <div class="v1x1-glossary-alpha" id="v1x1GlossaryAlpha">
+        <!-- Populated by JS -->
+      </div>
+      <!-- Thematic tabs -->
+      <div class="v1x1-glossary-tabs" id="v1x1GlossaryTabs">
+        <!-- Populated by JS -->
+      </div>
       <input type="text" class="v1x1-glossary-search" id="v1x1GlossarySearch" placeholder="Begriff suchen...">
       <div class="v1x1-glossary-list" id="v1x1GlossaryList">
         <!-- Populated by JS -->
       </div>
     </div>
+  </div>
+
+  <!-- Cmd+K Search Overlay -->
+  <div class="v1x1-search-overlay" id="v1x1SearchOverlay">
+    <div class="v1x1-sov-panel">
+      <div class="v1x1-sov-header">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="text" id="v1x1SearchOverlayInput" placeholder="Kapitel oder Begriff suchen…" autocomplete="off">
+        <button class="v1x1-sov-close" onclick="V1x1.closeSearchOverlay()">Esc</button>
+      </div>
+      <div class="v1x1-sov-results" id="v1x1SearchOverlayResults">
+        <div class="v1x1-sov-hint">Tippe um zu suchen — Kapitel, Glossar, Begriffe</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Inline Glossary Popover -->
+  <div class="v1x1-gloss-popover" id="v1x1GlossaryPopover" style="display:none;">
+    <div class="v1x1-gp-term"></div>
+    <div class="v1x1-gp-def"></div>
   </div>
 </div>

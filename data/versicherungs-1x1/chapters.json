@@ -173,6 +173,97 @@
             "type": "paragraph",
             "content": "Die Versicherungswirtschaft beschäftigte 2024 insgesamt <strong>480.200 Erwerbstätige</strong> — davon 298.480 Angestellte und 181.760 selbstständige Vermittler. Die Zahl der Auszubildenden stieg um +7,5% auf 11.400. Im Vermittlerregister waren zum 1. Januar 2025 noch <strong>181.761 Vermittler</strong> registriert — ein kontinuierlicher Rückgang (2009: über 260.000). Das Durchschnittsalter der AO-Vermittler liegt bei über 48 Jahren, bei Maklern sogar bei <strong>57,1 Jahren</strong> — ein massives Nachwuchsproblem.<span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">8</span><span class=\"v1x1-cite-tooltip\">GDV Jahrbuch 2024 / DIHK Vermittlerregister</span></span>",
             "title": "Beschäftigung in der Branche"
+          },
+          {
+            "type": "timeline",
+            "title": "Meilensteine des deutschen Versicherungsmarktes 1994–2025",
+            "events": [
+              {
+                "year": "1994",
+                "title": "Deregulierung",
+                "description": "Abschaffung staatlicher Tarifgenehmigung — freie Prämiengestaltung ab 1994.",
+                "type": "regulation"
+              },
+              {
+                "year": "2002",
+                "title": "VVG-Reform (Vorbereitung)",
+                "description": "Beginn der umfassenden Reform des Versicherungsvertragsgesetzes.",
+                "type": "regulation"
+              },
+              {
+                "year": "2007",
+                "title": "VVG-Neugestaltung",
+                "description": "Inkrafttreten des neuen VVG: Stärkung der Verbraucherrechte, Beratungspflichten.",
+                "type": "regulation"
+              },
+              {
+                "year": "2008",
+                "title": "Finanzkrise",
+                "description": "Globale Finanzkrise: Kapitalanlageportfolios unter Druck, Niedrigzinsphase beginnt.",
+                "type": "crisis"
+              },
+              {
+                "year": "2012",
+                "title": "Niedrigzins-Tal",
+                "description": "EZB-Leitzins auf historisch niedrigem Niveau. Lebensversicherer unter massivem Ertragsdruck.",
+                "type": "crisis"
+              },
+              {
+                "year": "2014",
+                "title": "LVRG",
+                "description": "Lebensversicherungsreformgesetz: Senkung Höchstzillmersatz, Überschussbeteiligungsreform.",
+                "type": "regulation"
+              },
+              {
+                "year": "2016",
+                "title": "Solvency II",
+                "description": "Europäisches Risikobasiertes Aufsichtsregime tritt in Kraft. Fundamentale Umstellung.",
+                "type": "regulation"
+              },
+              {
+                "year": "2018",
+                "title": "IDD",
+                "description": "Insurance Distribution Directive: EU-weit einheitliche Vertriebsstandards, PIBs, POG.",
+                "type": "regulation"
+              },
+              {
+                "year": "2020",
+                "title": "COVID-19",
+                "description": "Pandemie: Schadenzahlungen in Betriebsunterbrechung, Lebens-/Krankenzusatzsegment unter Druck.",
+                "type": "crisis"
+              },
+              {
+                "year": "2022",
+                "title": "Zinswende",
+                "description": "EZB erhöht Leitzinsen rapide. Lebensversicherer profitieren, Run-off-Portfolios unter Neubewertung.",
+                "type": "market"
+              },
+              {
+                "year": "2024",
+                "title": "S/U überholt Leben",
+                "description": "S/U-Sparte übersteigt Lebensversicherung beim Beitragsvolumen — erstmals seit 1996.",
+                "type": "market"
+              },
+              {
+                "year": "2025",
+                "title": "DORA & Höchstrechnungszins",
+                "description": "DORA gilt ab Januar 2025. Höchstrechnungszins auf 1,0% angehoben.",
+                "type": "regulation"
+              }
+            ]
+          },
+          {
+            "type": "chartLine",
+            "title": "Beitragsentwicklung nach Sparten 2015–2025",
+            "source": "GDV Jahrbuch 2024/2025",
+            "chartKey": "beitragsentwicklung"
+          },
+          {
+            "type": "chartBar",
+            "title": "Top-10 Versicherungsmärkte weltweit 2024",
+            "source": "Swiss Re Sigma 2024",
+            "chartKey": "internationalRanking",
+            "horizontal": true
           }
         ],
         "level2": [
@@ -441,8 +532,230 @@
           ],
           "correct": 1,
           "explanation": "Deutschland hält 3,4% des globalen Versicherungsmarktes und ist damit der sechstgrößte Markt weltweit."
+        },
+        {
+          "question": "Welche Sparte hat 2024 erstmals seit 1996 die Lebensversicherung beim Beitragsvolumen überholt?",
+          "options": [
+            "Private Krankenversicherung (PKV)",
+            "Schaden-/Unfallversicherung (S/U)",
+            "Rückversicherung",
+            "Transportversicherung"
+          ],
+          "correct": 1,
+          "explanation": "Die S/U-Sparte übertraf 2024 erstmals seit 1996 die Lebensversicherung beim Beitragsvolumen, getrieben von steigenden Elementarschäden und Kfz-Kosten."
+        },
+        {
+          "question": "Wie viele GDV-Mitgliedsunternehmen gibt es in Deutschland (ca.)?",
+          "options": [
+            "270",
+            "470",
+            "670",
+            "870"
+          ],
+          "correct": 1,
+          "explanation": "Rund 470 GDV-Mitgliedsunternehmen decken ca. 97% des deutschen Versicherungsmarktes ab."
+        },
+        {
+          "question": "Wie hoch sind die Kapitalanlagen der deutschen Versicherungswirtschaft (2025, ca.)?",
+          "options": [
+            "€400 Mrd.",
+            "€900 Mrd.",
+            "€1,9 Bio.",
+            "€3,5 Bio."
+          ],
+          "correct": 2,
+          "explanation": "Die Kapitalanlagen der deutschen Versicherungswirtschaft belaufen sich auf ca. €1,9 Billionen (2025)."
+        },
+        {
+          "question": "Wie viele Erwerbstätige zählt die deutsche Versicherungsbranche (ca.)?",
+          "options": [
+            "~120.000",
+            "~274.000",
+            "~474.000",
+            "~850.000"
+          ],
+          "correct": 2,
+          "explanation": "Die Branche beschäftigt ca. 473.780 Erwerbstätige, davon 290.080 Angestellte und 183.700 selbstständige Vermittler."
+        },
+        {
+          "question": "Was war der Höchstrechnungszins bei Lebensversicherungen ab 1.1.2025?",
+          "options": [
+            "0,25%",
+            "0,50%",
+            "1,00%",
+            "2,75%"
+          ],
+          "correct": 2,
+          "explanation": "Zum 1.1.2025 wurde der Höchstrechnungszins für Lebensversicherungen auf 1,0% angehoben (von vormals 0,25%)."
+        },
+        {
+          "question": "Welche Prognose gibt der GDV für das Beitragswachstum 2026 ab?",
+          "options": [
+            "1,5%",
+            "4,7%",
+            "8,3%",
+            "12,0%"
+          ],
+          "correct": 1,
+          "explanation": "Der GDV prognostiziert für 2026 ein moderateres Wachstum von 4,7% auf rund €266 Mrd."
+        },
+        {
+          "question": "Auf welchen Betrag stieg das deutsche Beitragsvolumen 2025?",
+          "options": [
+            "€189 Mrd.",
+            "€221 Mrd.",
+            "€254 Mrd.",
+            "€312 Mrd."
+          ],
+          "correct": 2,
+          "explanation": "2025 erreichte das Beitragsvolumen des deutschen Versicherungsmarktes ca. €254 Milliarden."
+        },
+        {
+          "question": "Wie viele Versicherungsverträge bestehen in Deutschland (ca.)?",
+          "options": [
+            "125 Mio.",
+            "250 Mio.",
+            "500 Mio.",
+            "1 Mrd."
+          ],
+          "correct": 2,
+          "explanation": "In Deutschland bestehen insgesamt rund 500 Millionen Versicherungsverträge."
         }
-      ]
+      ],
+      "chartData": {
+        "beitragsentwicklung": {
+          "type": "line",
+          "title": "Beitragsentwicklung nach Sparten 2015–2025 (Mrd. €)",
+          "labels": [
+            "2015",
+            "2016",
+            "2017",
+            "2018",
+            "2019",
+            "2020",
+            "2021",
+            "2022",
+            "2023",
+            "2024",
+            "2025"
+          ],
+          "datasets": [
+            {
+              "label": "Gesamt",
+              "data": [
+                192,
+                196,
+                199,
+                204,
+                211,
+                223,
+                222,
+                226,
+                238,
+                253,
+                254
+              ],
+              "borderColor": "#111827",
+              "backgroundColor": "rgba(17,24,39,0.06)",
+              "tension": 0.3
+            },
+            {
+              "label": "Leben",
+              "data": [
+                91,
+                90,
+                88,
+                87,
+                88,
+                98,
+                96,
+                90,
+                91,
+                93,
+                92
+              ],
+              "borderColor": "#2563EB",
+              "backgroundColor": "transparent",
+              "tension": 0.3
+            },
+            {
+              "label": "Schaden/Unfall",
+              "data": [
+                57,
+                61,
+                65,
+                70,
+                75,
+                75,
+                77,
+                85,
+                98,
+                109,
+                113
+              ],
+              "borderColor": "#10B981",
+              "backgroundColor": "transparent",
+              "tension": 0.3
+            },
+            {
+              "label": "PKV",
+              "data": [
+                36,
+                37,
+                38,
+                40,
+                42,
+                46,
+                46,
+                47,
+                48,
+                50,
+                52
+              ],
+              "borderColor": "#F59E0B",
+              "backgroundColor": "transparent",
+              "tension": 0.3
+            }
+          ]
+        },
+        "internationalRanking": {
+          "type": "bar",
+          "title": "Top-10 Versicherungsmärkte weltweit 2024 (Mrd. USD)",
+          "labels": [
+            "USA",
+            "China",
+            "Japan",
+            "UK",
+            "Frankreich",
+            "Deutschland",
+            "Südkorea",
+            "Kanada",
+            "Italien",
+            "Taiwan"
+          ],
+          "datasets": [
+            {
+              "label": "Beitragsvolumen (Mrd. USD)",
+              "data": [
+                2800,
+                780,
+                420,
+                350,
+                280,
+                260,
+                200,
+                170,
+                160,
+                130
+              ],
+              "backgroundColor": "#2563EB"
+            }
+          ],
+          "options": {
+            "indexAxis": "y"
+          }
+        }
+      }
     },
     {
       "id": "02-marktteilnehmer",
@@ -574,6 +887,38 @@
               ]
             ],
             "sortable": true
+          },
+          {
+            "type": "chartDonut",
+            "title": "Marktanteile Top-Versicherer (Gesamtmarkt 2024)",
+            "source": "GDV, BaFin Jahresbericht 2024",
+            "chartKey": "marktanteileGesamt"
+          },
+          {
+            "type": "infoKachelGrid",
+            "title": "InsurTech-Kategorien im Überblick",
+            "items": [
+              {
+                "icon": "shield-check",
+                "title": "Vollversicherer",
+                "description": "InsurTechs mit eigener BaFin-Lizenz, die eigenes Risiko zeichnen. Beispiele: Getsafe, Adam Riese."
+              },
+              {
+                "icon": "network",
+                "title": "MGA (Managing General Agent)",
+                "description": "Zeichnungsvolmacht eines Versicherers: eigene Tarife/Bedingungen ohne eigene Lizenz. Beispiele: Hepster, Kasko."
+              },
+              {
+                "icon": "settings-2",
+                "title": "Plattformen & Vergleicher",
+                "description": "Aggregatoren und Marktplätze: Check24, Verivox, Wefox als Intermediär-Plattform."
+              },
+              {
+                "icon": "rocket",
+                "title": "B2B-Tech-Anbieter",
+                "description": "Technologieanbieter für Versicherer: Guidewire, msg.Life, adesso insurance solutions, Lemonade-Technologie."
+              }
+            ]
           }
         ],
         "level2": [
@@ -768,8 +1113,139 @@
           ],
           "correct": 1,
           "explanation": "Beim VVaG sind die Versicherungsnehmer zugleich Mitglieder und Eigentümer — ohne externe Aktionäre."
+        },
+        {
+          "question": "Welchen Marktanteil hält die Allianz Gruppe im deutschen Gesamtmarkt (ca.)?",
+          "options": [
+            "~7%",
+            "~12%",
+            "~17%",
+            "~25%"
+          ],
+          "correct": 2,
+          "explanation": "Die Allianz hält ca. 17,4% Marktanteil im deutschen Gesamtversicherungsmarkt."
+        },
+        {
+          "question": "Welche Rechtsform hat die HUK-COBURG?",
+          "options": [
+            "Aktiengesellschaft (AG)",
+            "Versicherungsverein auf Gegenseitigkeit (VVaG)",
+            "Körperschaft des öffentlichen Rechts (KdöR)",
+            "GmbH"
+          ],
+          "correct": 1,
+          "explanation": "Die HUK-COBURG ist ein Versicherungsverein auf Gegenseitigkeit (VVaG). Bei dieser Rechtsform sind die Kunden zugleich Mitglieder."
+        },
+        {
+          "question": "Was ist ein InsurTech?",
+          "options": [
+            "Ein traditioneller Rückversicherer",
+            "Ein technologiegetriebenes Versicherungs-Start-up",
+            "Ein Maklerpool",
+            "Ein Versicherungsverband"
+          ],
+          "correct": 1,
+          "explanation": "InsurTechs sind technologiegetriebene Start-ups, die durch digitale Innovation den Versicherungsmarkt transformieren wollen."
+        },
+        {
+          "question": "Welchem Konzern gehört die HUK24 an?",
+          "options": [
+            "Allianz Gruppe",
+            "Talanx Gruppe",
+            "HUK-COBURG Gruppe",
+            "R+V Gruppe"
+          ],
+          "correct": 2,
+          "explanation": "HUK24 ist die Online-Versicherungstochter der HUK-COBURG Gruppe."
+        },
+        {
+          "question": "Welche Mindestanforderung gilt für die Aufsicht durch die BaFin?",
+          "options": [
+            "Mindestens 1.000 Versicherungsverträge",
+            "Mindestens €5 Mio. Grundkapital bei AG",
+            "Nur Unternehmen > €100 Mio. Prämienvolumen",
+            "Nur Erstversicherer"
+          ],
+          "correct": 1,
+          "explanation": "Versicherungs-AGs benötigen ein Mindestgrundkapital, das je nach Sparte zwischen €2,5 Mio. und €7,4 Mio. beträgt."
+        },
+        {
+          "question": "Was kennzeichnet eine Mutual (VVaG) gegenüber einer AG?",
+          "options": [
+            "Nur PKV-Betrieb erlaubt",
+            "Kunden sind gleichzeitig Eigentümer/Mitglieder",
+            "Keine Rückversicherung nötig",
+            "Befreiung von Solvency II"
+          ],
+          "correct": 1,
+          "explanation": "Bei einem Versicherungsverein auf Gegenseitigkeit (VVaG) sind die Versicherungsnehmer gleichzeitig Mitglieder des Vereins und damit Miteigentümer."
+        },
+        {
+          "question": "Wer ist der größte Rückversicherer weltweit?",
+          "options": [
+            "Swiss Re",
+            "Munich Re",
+            "Hanover Re",
+            "Gen Re"
+          ],
+          "correct": 1,
+          "explanation": "Munich Re (Münchener Rückversicherungs-Gesellschaft) ist der größte Rückversicherer der Welt nach Prämienvolumen."
+        },
+        {
+          "question": "Was ist ein Maklerpool?",
+          "options": [
+            "Eine Behörde zur Vermittleraufsicht",
+            "Ein Dienstleister, der Makler mit Produktzugang und Abwicklung unterstützt",
+            "Ein Zusammenschluss von Versicherern",
+            "Eine Art Rückversicherungspool"
+          ],
+          "correct": 1,
+          "explanation": "Ein Maklerpool ist ein Dienstleistungsunternehmen, das freien Versicherungsmaklern Produktzugang, Bestandsverwaltung, Courtagezahlungen und weitere Serviceleistungen bietet."
         }
-      ]
+      ],
+      "chartData": {
+        "marktanteileGesamt": {
+          "type": "doughnut",
+          "title": "Marktanteile Top-8 Versicherer (Gesamtmarkt, 2024)",
+          "labels": [
+            "Allianz",
+            "R+V",
+            "ERGO",
+            "HUK-COBURG",
+            "Debeka",
+            "Talanx/HDI",
+            "Generali",
+            "BarmeniaGothaer",
+            "Rest"
+          ],
+          "datasets": [
+            {
+              "data": [
+                17.4,
+                8.0,
+                7.2,
+                7.2,
+                6.1,
+                5.8,
+                5.5,
+                3.5,
+                39.3
+              ],
+              "backgroundColor": [
+                "#111827",
+                "#374151",
+                "#4B5563",
+                "#6B7280",
+                "#9CA3AF",
+                "#2563EB",
+                "#1D4ED8",
+                "#3B82F6",
+                "#E5E7EB"
+              ]
+            }
+          ]
+        }
+      }
     },
     {
       "id": "03-produktlandschaft",
@@ -1120,8 +1596,425 @@
           ],
           "correct": 1,
           "explanation": "Nur 50-52% der Gebäude haben Elementarschutz — Ausnahme Baden-Württemberg mit ~94%."
+        },
+        {
+          "question": "Welcher bAV-Durchführungsweg ist in Deutschland am häufigsten?",
+          "options": [
+            "Pensionsfonds",
+            "Direktversicherung",
+            "Unterstützungskasse",
+            "Pensionskasse"
+          ],
+          "correct": 1,
+          "explanation": "Die Direktversicherung (meist als Lebensversicherung durch den Arbeitgeber) ist der mit Abstand häufigste bAV-Durchführungsweg in Deutschland."
+        },
+        {
+          "question": "Was ist das Drei-Schichten-Modell der Altersvorsorge?",
+          "options": [
+            "GKV, PKV und bAV",
+            "Basisvorsorge, Zusatzvorsorge und private Vorsorge",
+            "Risikoleben, Kapitallebensversicherung und Rentenversicherung",
+            "AG, VVaG und KdöR"
+          ],
+          "correct": 1,
+          "explanation": "Das Drei-Schichten-Modell unterscheidet: 1. Basisvorsorge (Rürup, gesetzl. RV), 2. Geförderte Zusatzvorsorge (Riester, bAV), 3. Private Altersvorsorge (sonstige Kapitallebens- und Rentenversicherungen)."
+        },
+        {
+          "question": "Was ist der 'Combined Ratio' und welcher Wert signalisiert Profitabilität?",
+          "options": [
+            "Kostensatz / Schadenquote, < 50%",
+            "Schadenquote + Kostenquote, < 100%",
+            "Prämien / Kapitalanlagen, > 5%",
+            "Verwaltungskosten / Beiträge, < 20%"
+          ],
+          "correct": 1,
+          "explanation": "Der Combined Ratio = Schadenquote + Kostenquote. Ein Wert unter 100% bedeutet versicherungstechnischen Gewinn; über 100% einen Verlust."
+        },
+        {
+          "question": "Was versichert eine Betriebshaftpflichtversicherung?",
+          "options": [
+            "Schäden am eigenen Betriebsgebäude",
+            "Haftpflichtansprüche Dritter durch Betriebstätigkeit",
+            "Ausfall von Mitarbeitern durch Krankheit",
+            "Forderungsausfälle von Kunden"
+          ],
+          "correct": 1,
+          "explanation": "Die Betriebshaftpflichtversicherung schützt Unternehmen vor Schadensersatzforderungen Dritter, die durch die Betriebstätigkeit entstehen."
+        },
+        {
+          "question": "Was ist eine D&O-Versicherung?",
+          "options": [
+            "Dachdeckers- und Ofenbauer-Versicherung",
+            "Directors & Officers Liability — Haftpflicht für Manager",
+            "Diebstahl- und Ordnungswidrigkeiten-Versicherung",
+            "Digital & Online Protection"
+          ],
+          "correct": 1,
+          "explanation": "D&O (Directors & Officers) ist eine Vermögensschadenhaftpflichtversicherung für leitende Organe (Vorstand, Aufsichtsrat, Geschäftsführer)."
+        },
+        {
+          "question": "Was ist der 'Rückkaufswert' einer Lebensversicherung?",
+          "options": [
+            "Der garantierte Todesfallschutz",
+            "Der Auszahlungsbetrag bei vorzeitiger Kündigung",
+            "Die jährliche Bonusgutschrift",
+            "Der steuerfreie Anteil der Auszahlung"
+          ],
+          "correct": 1,
+          "explanation": "Der Rückkaufswert ist der Betrag, den der Versicherungsnehmer bei vorzeitiger Kündigung zurückerhält. Er ist in frühen Laufzeitjahren oft deutlich niedriger als die eingezahlten Beiträge."
+        },
+        {
+          "question": "Was unterscheidet die Kfz-Haftpflicht von der Kaskoversicherung?",
+          "options": [
+            "Kfz-Haftpflicht ist freiwillig, Kasko ist Pflicht",
+            "Kfz-Haftpflicht schützt Dritte, Kasko schützt das eigene Fahrzeug",
+            "Kfz-Haftpflicht gilt nur in Deutschland, Kasko europaweit",
+            "Kfz-Haftpflicht wird staatlich bezuschusst"
+          ],
+          "correct": 1,
+          "explanation": "Kfz-Haftpflicht ist gesetzlich vorgeschrieben und deckt Schäden an Dritten. Kaskoversicherungen (Teil- und Vollkasko) sind freiwillig und schützen das eigene Fahrzeug."
+        },
+        {
+          "question": "Was ist 'Cyber-Versicherung' im Kern?",
+          "options": [
+            "Versicherung des Internet-Anschlusses",
+            "Schutz vor finanziellen Folgen von IT-Angriffen und Datenverlust",
+            "Versicherung für IT-Unternehmen",
+            "Lebensversicherung für IT-Fachkräfte"
+          ],
+          "correct": 1,
+          "explanation": "Cyber-Versicherungen decken finanzielle Schäden durch Cyberangriffe, Datenverlust, Betriebsunterbrechungen und Haftpflichtansprüche aus Datenschutzverletzungen."
         }
-      ]
+      ],
+      "decisionTrees": {
+        "welcheVersicherung": {
+          "title": "Welche Versicherung brauche ich?",
+          "start": "beruf",
+          "nodes": {
+            "beruf": {
+              "question": "Bist du berufstätig?",
+              "options": [
+                {
+                  "label": "Ja, angestellt",
+                  "next": "angestellt_familie"
+                },
+                {
+                  "label": "Ja, selbstständig",
+                  "next": "selbstaendig_mitarbeiter"
+                },
+                {
+                  "label": "Student / Nicht berufstätig",
+                  "next": "student"
+                }
+              ]
+            },
+            "angestellt_familie": {
+              "question": "Hast du Familie / Kinder oder Partner mit gemeinsamem Haushalt?",
+              "options": [
+                {
+                  "label": "Ja, Familie",
+                  "next": "angestellt_familie_immobilie"
+                },
+                {
+                  "label": "Nein, Single",
+                  "next": "single_immobilie"
+                }
+              ]
+            },
+            "angestellt_familie_immobilie": {
+              "question": "Besitzt du eine Immobilie?",
+              "options": [
+                {
+                  "label": "Ja",
+                  "next": "result_familie_immo"
+                },
+                {
+                  "label": "Nein, zur Miete",
+                  "next": "result_familie_miete"
+                }
+              ]
+            },
+            "single_immobilie": {
+              "question": "Besitzt du eine Immobilie?",
+              "options": [
+                {
+                  "label": "Ja",
+                  "next": "result_single_immo"
+                },
+                {
+                  "label": "Nein, zur Miete",
+                  "next": "result_single_miete"
+                }
+              ]
+            },
+            "selbstaendig_mitarbeiter": {
+              "question": "Hast du Mitarbeiter?",
+              "options": [
+                {
+                  "label": "Ja, Arbeitgeber",
+                  "next": "result_selbst_arbeitgeber"
+                },
+                {
+                  "label": "Nein, Solo-Selbstständig",
+                  "next": "result_selbst_solo"
+                }
+              ]
+            },
+            "student": {
+              "question": "Bist du noch über Eltern haftpflichtversichert?",
+              "options": [
+                {
+                  "label": "Nein / Unsicher",
+                  "next": "result_student_eigen"
+                },
+                {
+                  "label": "Ja, noch über Eltern",
+                  "next": "result_student_eltern"
+                }
+              ]
+            },
+            "result_familie_immo": {
+              "result": true,
+              "title": "Empfehlung: Familie mit Eigenheim",
+              "icon": "shield-check",
+              "items": [
+                "Privathaftpflicht (Pflicht!)",
+                "Berufsunfähigkeitsversicherung (BU)",
+                "Risikolebensversicherung",
+                "Wohngebäudeversicherung",
+                "Hausratversicherung",
+                "Elementarschadenversicherung",
+                "Kfz (falls Auto vorhanden)",
+                "GKV-Ergänzung / Zahnzusatz"
+              ],
+              "note": "Für Familien besonders wichtig: BU und Risikoleben schützen vor finanziellem Einbruch bei Ausfall des Hauptverdieners."
+            },
+            "result_familie_miete": {
+              "result": true,
+              "title": "Empfehlung: Familie zur Miete",
+              "icon": "shield-check",
+              "items": [
+                "Privathaftpflicht (Pflicht!)",
+                "Berufsunfähigkeitsversicherung (BU)",
+                "Risikolebensversicherung",
+                "Hausratversicherung",
+                "Kfz (falls Auto vorhanden)",
+                "Kranken-Zusatzversicherung"
+              ],
+              "note": "Kein Wohngebäude nötig — das ist Sache des Vermieters. Hausrat schützt Ihren Hausstand."
+            },
+            "result_single_immo": {
+              "result": true,
+              "title": "Empfehlung: Single mit Eigenheim",
+              "icon": "shield-check",
+              "items": [
+                "Privathaftpflicht",
+                "Berufsunfähigkeitsversicherung (BU)",
+                "Wohngebäudeversicherung",
+                "Hausratversicherung",
+                "Elementarschadenversicherung",
+                "Kfz (falls Auto vorhanden)"
+              ],
+              "note": "Als Single sind die Prioritäten: Arbeitskraftabsicherung (BU) und Immobilienschutz (Wohngebäude)."
+            },
+            "result_single_miete": {
+              "result": true,
+              "title": "Empfehlung: Single zur Miete",
+              "icon": "shield-check",
+              "items": [
+                "Privathaftpflicht",
+                "Berufsunfähigkeitsversicherung (BU)",
+                "Hausratversicherung",
+                "Kfz (falls Auto vorhanden)"
+              ],
+              "note": "Kompakt und fokussiert — Haftpflicht und BU sind die zentralen Absicherungen für Singles."
+            },
+            "result_selbst_arbeitgeber": {
+              "result": true,
+              "title": "Empfehlung: Selbstständiger mit Mitarbeitern",
+              "icon": "shield-check",
+              "items": [
+                "Betriebshaftpflichtversicherung",
+                "D&O-Versicherung",
+                "Berufsunfähigkeitsversicherung (BU)",
+                "Private Krankenversicherung (PKV)",
+                "Cyber-Versicherung",
+                "Betriebsunterbrechungsversicherung",
+                "bAV für Mitarbeiter",
+                "Rechtsschutzversicherung (Arbeitsrecht)"
+              ],
+              "note": "Als Unternehmer mit Mitarbeitern ist das Risikobild deutlich breiter — professionelle Beratung empfohlen."
+            },
+            "result_selbst_solo": {
+              "result": true,
+              "title": "Empfehlung: Solo-Selbstständiger",
+              "icon": "shield-check",
+              "items": [
+                "Berufshaftpflichtversicherung",
+                "Berufsunfähigkeitsversicherung (BU)",
+                "Private Krankenversicherung (PKV)",
+                "Cyber-Versicherung (bei IT-Tätigkeit)",
+                "Altersvorsorge (Rürup-Rente)"
+              ],
+              "note": "Solo-Selbstständige haben keinen sozialen Schutz durch Arbeitgeber — alle Risiken müssen privat abgedeckt werden."
+            },
+            "result_student_eigen": {
+              "result": true,
+              "title": "Empfehlung: Student ohne Eltern-Haftpflicht",
+              "icon": "shield-check",
+              "items": [
+                "Privathaftpflichtversicherung (dringend!)",
+                "Hausratversicherung (günstig für Studenten)",
+                "GKV (über Eltern bis 25, dann eigenständig)"
+              ],
+              "note": "Privathaftpflicht ist das Wichtigste — ein Missgeschick kann sonst teuer werden."
+            },
+            "result_student_eltern": {
+              "result": true,
+              "title": "Empfehlung: Student über Eltern mitversichert",
+              "icon": "shield-check",
+              "items": [
+                "Status prüfen (bis 25 J. meist über Eltern)",
+                "Hausratversicherung für erste eigene Wohnung",
+                "GKV-Mitversicherung (solange < 25 und kein eigenes Einkommen)"
+              ],
+              "note": "Regelmäßig prüfen: Ab 25 Jahren oder bei Erwerbstätigkeit entfällt die beitragsfreie Mitversicherung."
+            }
+          }
+        },
+        "gkvPkv": {
+          "title": "GKV oder PKV — Was passt zu mir?",
+          "start": "einkommen",
+          "nodes": {
+            "einkommen": {
+              "question": "Wie hoch ist dein Brutto-Jahreseinkommen?",
+              "options": [
+                {
+                  "label": "Unter €66.150",
+                  "next": "result_gkv_pflicht"
+                },
+                {
+                  "label": "Über €66.150",
+                  "next": "alter"
+                }
+              ]
+            },
+            "alter": {
+              "question": "Wie alt bist du?",
+              "options": [
+                {
+                  "label": "Unter 35 Jahre",
+                  "next": "jung_vorerkrankungen"
+                },
+                {
+                  "label": "35–45 Jahre",
+                  "next": "mittel_familie"
+                },
+                {
+                  "label": "Über 45 Jahre",
+                  "next": "result_pkv_kritisch"
+                }
+              ]
+            },
+            "jung_vorerkrankungen": {
+              "question": "Hast du wesentliche Vorerkrankungen?",
+              "options": [
+                {
+                  "label": "Nein, gesund",
+                  "next": "result_pkv_attraktiv"
+                },
+                {
+                  "label": "Ja, Vorerkrankungen",
+                  "next": "result_gkv_sicher"
+                }
+              ]
+            },
+            "mittel_familie": {
+              "question": "Planst du eine Familie (Kinder)?",
+              "options": [
+                {
+                  "label": "Ja, Familiengründung",
+                  "next": "result_gkv_familie"
+                },
+                {
+                  "label": "Nein",
+                  "next": "result_pkv_pruefen"
+                }
+              ]
+            },
+            "result_gkv_pflicht": {
+              "result": true,
+              "title": "GKV: Versicherungspflicht",
+              "icon": "info",
+              "items": [
+                "Unterhalb der Versicherungspflichtgrenze (€66.150) besteht Versicherungspflicht in der GKV",
+                "Nur für Beamte, Selbstständige und sehr gut Verdienende ist PKV eine Option",
+                "Familienversicherung (beitragsfrei) für nicht erwerbstätige Ehepartner und Kinder"
+              ],
+              "note": "Prüfe ob du Beamter oder Selbstständiger bist — für diese Gruppen gelten Sonderregeln."
+            },
+            "result_pkv_attraktiv": {
+              "result": true,
+              "title": "PKV kann attraktiv sein",
+              "icon": "shield-check",
+              "items": [
+                "In jungen Jahren sind PKV-Beiträge oft günstiger als GKV",
+                "Bessere Leistungen: Chefarzt, Einbettzimmer, kürzere Wartezeiten",
+                "Wichtig: Alterungsrückstellungen beachten (Beiträge steigen im Alter)",
+                "Krankentagegeld für Einkommensabsicherung",
+                "Beitragsrückerstattung bei Gesundheit manche Tarife"
+              ],
+              "note": "Vergleiche konkrete Angebote. GKV-Familienmitversicherung entfällt in der PKV — Kinder und Partner müssen extra versichert werden."
+            },
+            "result_gkv_sicher": {
+              "result": true,
+              "title": "GKV ist oft sicherer",
+              "icon": "info",
+              "items": [
+                "PKV-Zugang bei Vorerkrankungen erschwert (Risikozuschläge oder Ausschlüsse)",
+                "GKV nimmt alle auf — kein Risikozuschlag, keine Ausschlüsse",
+                "Bei chronischen Erkrankungen ist GKV langfristig günstiger"
+              ],
+              "note": "Lass dir von einem unabhängigen Berater eine individuelle Berechnung erstellen."
+            },
+            "result_gkv_familie": {
+              "result": true,
+              "title": "GKV bietet Familienvorteile",
+              "icon": "info",
+              "items": [
+                "Beitragsfreie Mitversicherung nicht erwerbstätiger Ehepartner",
+                "Kinder kostenlos mitversichert",
+                "In der PKV müsste jedes Familienmitglied einzeln versichert werden"
+              ],
+              "note": "Bei zwei Verdienern und PKV: Jedes Familienmitglied zahlt eigenen PKV-Beitrag. Rechne durch, ob sich das lohnt."
+            },
+            "result_pkv_pruefen": {
+              "result": true,
+              "title": "PKV prüfen — im mittleren Alter",
+              "icon": "shield-check",
+              "items": [
+                "PKV-Wechsel noch möglich, aber Beiträge höher als in jungen Jahren",
+                "Vergleiche Leistungen und Beiträge im Alter (bis 65/Rente)",
+                "Alterungsrückstellungen: Beim Wechsel gehen aufgebaute Rückstellungen z.T. verloren",
+                "Portabilität beachten: Übertragungsklausel (§ 204 VVG)"
+              ],
+              "note": "Hol dir mehrere unabhängige Angebote und vergleiche Langzeitszenarien."
+            },
+            "result_pkv_kritisch": {
+              "result": true,
+              "title": "PKV-Wechsel > 45 — kritisch prüfen",
+              "icon": "alert-triangle",
+              "items": [
+                "PKV-Beiträge steigen mit dem Alter stark an",
+                "In der PKV gibt es keine Beitragsdeckelung wie in der GKV",
+                "Im Rentenalter kann PKV sehr teuer werden",
+                "Rückwechsel in die GKV ist im Rentenalter fast unmöglich"
+              ],
+              "note": "Bei einem Wechsel > 45 Jahren: Sehr sorgfältige Langfristplanung empfohlen. Lass dich von einem unabhängigen Berater (Honorar) beraten."
+            }
+          }
+        }
+      }
     },
     {
       "id": "04-vertriebswege",
@@ -1235,6 +2128,65 @@
             "type": "callout",
             "variant": "info",
             "content": "Im Sach/Unfall-Neugeschäft 2024 erreichten Makler mit <strong>40,6%</strong> fast Gleichstand mit der AO (41,1%) — vor zehn Jahren lag der Makleranteil noch bei rund 25%. In der Lebensversicherung überholten Makler bei laufenden Beiträgen erstmals die AO als führender Kanal."
+          },
+          {
+            "type": "heatmapGrid",
+            "title": "Marktanteil Vertriebsweg × Sparte (%, 2024)",
+            "source": "GDV, eigene Schätzungen",
+            "rows": [
+              "Ausschließlichkeit (AO)",
+              "Makler",
+              "Bancassurance",
+              "Direkt/Online"
+            ],
+            "columns": [
+              "Leben",
+              "PKV",
+              "Kfz",
+              "Haftpflicht",
+              "Hausrat",
+              "Gewerbe"
+            ],
+            "data": [
+              [
+                42,
+                15,
+                25,
+                35,
+                40,
+                20
+              ],
+              [
+                28,
+                40,
+                18,
+                30,
+                25,
+                55
+              ],
+              [
+                18,
+                5,
+                8,
+                5,
+                8,
+                3
+              ],
+              [
+                12,
+                40,
+                49,
+                30,
+                27,
+                22
+              ]
+            ]
+          },
+          {
+            "type": "chartBar",
+            "title": "Verschiebung der Vertriebsweganteile 2010–2024",
+            "source": "GDV Statistisches Taschenbuch",
+            "chartKey": "vertriebswegZeitreihe"
           }
         ],
         "level2": [
@@ -1346,8 +2298,334 @@
           ],
           "correct": 2,
           "explanation": "Check24 erreicht 87% der Vergleichsportal-Nutzer und hat damit eine nahezu monopolartige Stellung."
+        },
+        {
+          "question": "Welcher Vertriebsweg dominiert bei einfachen Kfz-Versicherungen?",
+          "options": [
+            "Ausschließlichkeitsorganisation (AO)",
+            "Makler",
+            "Online/Vergleichsportal",
+            "Bancassurance"
+          ],
+          "correct": 2,
+          "explanation": "Bei standardisierten Produkten wie Kfz-Versicherungen dominieren Vergleichsportale (Check24, Verivox) und Direktversicherer."
+        },
+        {
+          "question": "Was ist der Unterschied zwischen einem Versicherungsvertreter und einem Makler?",
+          "options": [
+            "Vertreter sind angestellt, Makler sind selbstständig",
+            "Vertreter vertreten eine/wenige Gesellschaft(en), Makler vertreten den Kunden und sind unabhängig",
+            "Vertreter dürfen keine Lebensversicherungen vermitteln",
+            "Kein wesentlicher Unterschied, nur unterschiedliche Titel"
+          ],
+          "correct": 1,
+          "explanation": "Ein Vertreter (AO/Mehrfachagent) arbeitet für Versicherungsgesellschaften. Ein Makler ist rechtlich gesehen der Treuhänder des Kunden und muss marktunabhängige Beratung bieten."
+        },
+        {
+          "question": "Was ist Bancassurance?",
+          "options": [
+            "Versicherung von Banken und Finanzinstituten",
+            "Vertrieb von Versicherungsprodukten über Bankfilialen",
+            "Eine Regulierungsbehörde für Banken und Versicherer",
+            "Eine spezielle Versicherung für Bankkredite"
+          ],
+          "correct": 1,
+          "explanation": "Bancassurance bezeichnet den Vertrieb von Versicherungsprodukten durch Banken, z.B. Lebens- und Restschuldversicherungen beim Kreditabschluss."
+        },
+        {
+          "question": "Was regelt die IDD (Insurance Distribution Directive)?",
+          "options": [
+            "Die Kapitalausstattung von Versicherern",
+            "Die Anforderungen an Versicherungsvertrieb und -beratung in der EU",
+            "Die Bilanzierung von Versicherungsverträgen",
+            "Den grenzüberschreitenden Versicherungsschutz"
+          ],
+          "correct": 1,
+          "explanation": "Die IDD (2018) setzt einheitliche Standards für den Versicherungsvertrieb: Beratungspflichten, Produktinformationsblätter, Interessenkonflikt-Management und Vergütungstransparenz."
+        },
+        {
+          "question": "Was ist ein Mehrfachagent?",
+          "options": [
+            "Ein Vertreter, der mehrere Kunden gleichzeitig betreut",
+            "Ein Vermittler, der für mehrere Versicherungsgesellschaften tätig ist (kein Makler)",
+            "Ein Makler mit mehreren Lizenzen",
+            "Ein ausländischer Versicherungsvermittler"
+          ],
+          "correct": 1,
+          "explanation": "Ein Mehrfachagent (auch: Mehrfachvertreter) ist für mehrere Versicherungsgesellschaften tätig, versteht sich aber als Vertreter dieser Gesellschaften — nicht als Treuhänder des Kunden wie ein Makler."
+        },
+        {
+          "question": "Was beschreibt 'Customer Journey' im Versicherungskontext?",
+          "options": [
+            "Die geografische Reiseversicherung",
+            "Den Weg des Kunden von Bedarfserkennung bis Vertragsabschluss und Betreuung",
+            "Das interne Onboarding neuer Kunden im Backoffice",
+            "Die Karrierestufen eines Versicherungsvermittlers"
+          ],
+          "correct": 1,
+          "explanation": "Customer Journey beschreibt alle Touchpoints eines Kunden mit dem Versicherer: Bedarfserkennung → Suche → Beratung → Angebot → Abschluss → Betreuung → Schaden/Leistung."
+        },
+        {
+          "question": "Was ist BiPRO im Versicherungsvertrieb?",
+          "options": [
+            "Ein Bundesverband für Provisionsregulierung",
+            "Ein Normierungsgremium für IT-Schnittstellen zwischen Maklern und Versicherern",
+            "Eine Ratingagentur für Versicherungsprodukte",
+            "Ein Bildungsinstitut für Versicherungsvermittler"
+          ],
+          "correct": 1,
+          "explanation": "BiPRO (Brancheninstitut für Prozessoptimierung) entwickelt standardisierte IT-Schnittstellen für den Datenaustausch zwischen Versicherern, Pools und Maklern."
+        },
+        {
+          "question": "Welcher Kanal wächst am stärksten im deutschen Versicherungsvertrieb?",
+          "options": [
+            "Ausschließlichkeitsorganisation (AO)",
+            "Makler",
+            "Online/Direkt-Kanal",
+            "Bancassurance"
+          ],
+          "correct": 2,
+          "explanation": "Der Online/Direkt-Kanal wächst am stärksten, getrieben durch Vergleichsportale, InsurTechs und Direct-to-Consumer-Strategien der traditionellen Versicherer."
         }
-      ]
+      ],
+      "chartData": {
+        "vertriebswegHeatmap": {
+          "title": "Marktanteil (%) Vertriebsweg × Sparte",
+          "rows": [
+            "Ausschließlichkeit (AO)",
+            "Makler",
+            "Bancassurance",
+            "Direkt/Online"
+          ],
+          "columns": [
+            "Leben",
+            "PKV",
+            "Kfz",
+            "Haftpflicht",
+            "Hausrat",
+            "Gewerbe"
+          ],
+          "data": [
+            [
+              42,
+              15,
+              25,
+              35,
+              40,
+              20
+            ],
+            [
+              28,
+              40,
+              18,
+              30,
+              25,
+              55
+            ],
+            [
+              18,
+              5,
+              8,
+              5,
+              8,
+              3
+            ],
+            [
+              12,
+              40,
+              49,
+              30,
+              27,
+              22
+            ]
+          ]
+        },
+        "vertriebswegZeitreihe": {
+          "type": "bar",
+          "title": "Vertriebsweganteile im Zeitverlauf 2010–2024 (%, ausgewählte Sparten)",
+          "labels": [
+            "2010",
+            "2013",
+            "2016",
+            "2019",
+            "2022",
+            "2024"
+          ],
+          "datasets": [
+            {
+              "label": "AO",
+              "data": [
+                52,
+                49,
+                46,
+                42,
+                38,
+                35
+              ],
+              "backgroundColor": "#2563EB"
+            },
+            {
+              "label": "Makler",
+              "data": [
+                22,
+                24,
+                25,
+                27,
+                28,
+                29
+              ],
+              "backgroundColor": "#10B981"
+            },
+            {
+              "label": "Online/Direkt",
+              "data": [
+                8,
+                11,
+                15,
+                20,
+                26,
+                29
+              ],
+              "backgroundColor": "#F59E0B"
+            },
+            {
+              "label": "Bancassurance",
+              "data": [
+                18,
+                16,
+                14,
+                11,
+                8,
+                7
+              ],
+              "backgroundColor": "#9CA3AF"
+            }
+          ],
+          "options": {
+            "scales": {
+              "x": {
+                "stacked": true
+              },
+              "y": {
+                "stacked": true
+              }
+            }
+          }
+        },
+        "sankeyData": {
+          "nodes": [
+            {
+              "id": "privat",
+              "label": "Privatkunden"
+            },
+            {
+              "id": "gewerbe",
+              "label": "Gewerbe"
+            },
+            {
+              "id": "industrie",
+              "label": "Industrie"
+            },
+            {
+              "id": "ao",
+              "label": "Ausschl.-Organisation"
+            },
+            {
+              "id": "makler",
+              "label": "Makler"
+            },
+            {
+              "id": "online",
+              "label": "Online/Direkt"
+            },
+            {
+              "id": "bank",
+              "label": "Bancassurance"
+            },
+            {
+              "id": "erstversicherer",
+              "label": "Erstversicherer"
+            }
+          ],
+          "links": [
+            {
+              "source": "privat",
+              "target": "ao",
+              "value": 35
+            },
+            {
+              "source": "privat",
+              "target": "makler",
+              "value": 20
+            },
+            {
+              "source": "privat",
+              "target": "online",
+              "value": 30
+            },
+            {
+              "source": "privat",
+              "target": "bank",
+              "value": 15
+            },
+            {
+              "source": "gewerbe",
+              "target": "ao",
+              "value": 20
+            },
+            {
+              "source": "gewerbe",
+              "target": "makler",
+              "value": 55
+            },
+            {
+              "source": "gewerbe",
+              "target": "online",
+              "value": 15
+            },
+            {
+              "source": "gewerbe",
+              "target": "bank",
+              "value": 10
+            },
+            {
+              "source": "industrie",
+              "target": "makler",
+              "value": 80
+            },
+            {
+              "source": "industrie",
+              "target": "ao",
+              "value": 15
+            },
+            {
+              "source": "industrie",
+              "target": "online",
+              "value": 5
+            },
+            {
+              "source": "ao",
+              "target": "erstversicherer",
+              "value": 70
+            },
+            {
+              "source": "makler",
+              "target": "erstversicherer",
+              "value": 155
+            },
+            {
+              "source": "online",
+              "target": "erstversicherer",
+              "value": 50
+            },
+            {
+              "source": "bank",
+              "target": "erstversicherer",
+              "value": 25
+            }
+          ]
+        }
+      }
     },
     {
       "id": "05-verguetung-provision",
@@ -1748,6 +3026,94 @@
           ],
           "correct": 1,
           "explanation": "§ 49 VAG schreibt eine Stornohaftung von 5 Jahren vor — in der Praxis beträgt die durchschnittliche Haftungszeit sogar 5,8 Jahre."
+        },
+        {
+          "question": "Was bedeutet 'Stornohaftung' für Vermittler?",
+          "options": [
+            "Pflicht, bei Vertragsende den Kunden zu informieren",
+            "Pflicht zur Provisionsrückzahlung bei Vertragsstornierung innerhalb der Haftungszeit",
+            "Haftung für fehlerhafte Beratung (§34d GewO)",
+            "Pflicht zur Stornoprävention"
+          ],
+          "correct": 1,
+          "explanation": "Stornohaftung bedeutet, dass ein Vermittler bereits ausgezahlte Provisionen zurückzahlen muss, wenn der Vertrag innerhalb der Stornohaftungszeit (üblicherweise 5 Jahre bei Leben) gekündigt wird."
+        },
+        {
+          "question": "Was ist der Unterschied zwischen Abschlussprovision (AP) und Bestandsprovision (BP)?",
+          "options": [
+            "AP ist für Makler, BP für Vertreter",
+            "AP wird einmalig beim Vertragsabschluss gezahlt, BP laufend solange der Vertrag besteht",
+            "AP gilt nur für Lebensversicherungen, BP für Sachversicherungen",
+            "Kein Unterschied, nur unterschiedliche Bezeichnungen"
+          ],
+          "correct": 1,
+          "explanation": "AP (Abschlussprovision) ist eine einmalige Vergütung beim Vertragsabschluss, oft als Promille der BWS berechnet. BP (Bestandsprovision) ist eine laufende Vergütung, solange der Vertrag im Bestand bleibt."
+        },
+        {
+          "question": "Was ist das 'LVRG' und was hat es verändert?",
+          "options": [
+            "Lebensversicherungsreformgesetz 2014, das u.a. die Überschussbeteiligung und den Höchstzillmersatz regulierte",
+            "Landesversicherungsrückstellungsgesetz für Rückdeckung",
+            "Leitfaden für Vermittlerregulierung und Grundsätze",
+            "Leistungsverordnung für Regelprovisionen und Garantien"
+          ],
+          "correct": 0,
+          "explanation": "Das LVRG (2014) regelte die Beteiligung der Kunden an Bewertungsreserven, senkte den Höchstzillmersatz auf 25‰ der BWS und stärkte die Kostentransparenz."
+        },
+        {
+          "question": "Was ist Courtage?",
+          "options": [
+            "Eine staatliche Vermittlungsgebühr",
+            "Die Vergütung eines Maklers, die vom Versicherer gezahlt wird",
+            "Ein Provision des Bancassurance-Vertriebs",
+            "Die Verwaltungsgebühr bei Maklerpools"
+          ],
+          "correct": 1,
+          "explanation": "Courtage ist die Bezeichnung für die Vergütung, die ein Versicherungsmakler vom Versicherer für die Vermittlung eines Vertrages erhält — funktional vergleichbar mit der Provision, aber aus Sicht des Maklers als 'Entlohnung für Treuhänderstellung'."
+        },
+        {
+          "question": "Wofür steht der Begriff 'BWS' im Provisionskontext?",
+          "options": [
+            "Basiswert für Sachversicherungen",
+            "Beitragssumme (bei Lebensversicherungen die Summe aller Beiträge über die Laufzeit)",
+            "Branchenweiter Warenkorb für Standardverträge",
+            "Berechnungsweise für Sonderprovisionen"
+          ],
+          "correct": 1,
+          "explanation": "BWS steht für Beitragssumme — bei Lebensversicherungen die Summe aller Beiträge über die gesamte Vertragslaufzeit. Sie dient als Bemessungsgrundlage für die Abschlussprovision."
+        },
+        {
+          "question": "Was ist ein Nettotarif / Honorarberatung?",
+          "options": [
+            "Ein Tarif ohne jegliche Kosten",
+            "Ein Versicherungsprodukt ohne einkalkulierte Vertriebskosten, bei dem der Berater ein separates Honorar berechnet",
+            "Ein Tarif für Nettovermittler im Bestandsgeschäft",
+            "Ein reduzierter Direkttarif bei Online-Abschluss"
+          ],
+          "correct": 1,
+          "explanation": "Nettotarife haben keine eingerechneten Provisionen. Der Berater wird durch ein separates Honorar des Kunden vergütet. Das Geschäftsmodell ist in Deutschland noch wenig verbreitet."
+        },
+        {
+          "question": "In welchem Bereich ist eine AP von ca. 40‰ der BWS typisch?",
+          "options": [
+            "Kfz-Versicherungen",
+            "PKV-Vollversicherung",
+            "Lebensversicherungen/Rentenversicherungen",
+            "Hausratversicherungen"
+          ],
+          "correct": 2,
+          "explanation": "Bei Lebens- und Rentenversicherungen liegt die Abschlussprovision typischerweise bei 30–50‰ der Beitragssumme (BWS). Der Höchstzillmersatz beträgt seit LVRG 25‰."
+        },
+        {
+          "question": "Was regelt § 49 VAG bezüglich Stornohaftung?",
+          "options": [
+            "Die Mindestlaufzeit von Lebensversicherungsverträgen",
+            "Die Rückforderung von Provisionen bei Stornierung, insbesondere die 5-Jahres-Haftungszeit",
+            "Das Verbot von Kick-back-Zahlungen",
+            "Die maximale Höhe der Abschlussprovision"
+          ],
+          "correct": 1,
+          "explanation": "§ 49 VAG regelt die Provisionsabgabeverbote und -rückforderungen. Die Stornohaftungszeit beträgt bei Lebensversicherungen i.d.R. 5 Jahre."
         }
       ]
     },
@@ -1849,6 +3215,49 @@
           {
             "type": "paragraph",
             "content": "Das <strong>Proportionalitätsprinzip</strong> erlaubt eine risikoangemessene Anwendung der Anforderungen. Ab 2027 wird es durch die Solvency-II-Reform in drei Kategorien formalisiert: <strong>SNCUs</strong> (Small and Non-Complex Undertakings, ca. 40 deutsche Versicherer mit unter 1 % Marktanteil) erhalten automatische Erleichterungen; die Mehrheit (ca. 75 %) kann sieben von zehn Erleichterungen mit BaFin-Genehmigung nutzen."
+          },
+          {
+            "type": "regulatoryPyramid",
+            "title": "Regulatorischer Rahmen: EU → Deutschland → Unternehmen",
+            "levels": [
+              {
+                "label": "EU-Ebene",
+                "color": "#2563EB",
+                "items": [
+                  "Solvency II-Richtlinie (2009/138/EG)",
+                  "IDD (Insurance Distribution Directive)",
+                  "DORA (Digital Operational Resilience Act)",
+                  "FIDA (Financial Data Access Regulation)",
+                  "Solvency II Delegierte Verordnung (DVO)",
+                  "PRIIP-Verordnung",
+                  "EU-Taxonomie / SFDR"
+                ]
+              },
+              {
+                "label": "Deutschland (Bundesebene)",
+                "color": "#10B981",
+                "items": [
+                  "VAG (Versicherungsaufsichtsgesetz)",
+                  "VVG (Versicherungsvertragsgesetz)",
+                  "GewO §§ 34d, 34e (Vermittlerregulierung)",
+                  "LVRG (Lebensversicherungsreformgesetz)",
+                  "GwG (Geldwäschegesetz)",
+                  "DSGVO-Umsetzungsgesetz"
+                ]
+              },
+              {
+                "label": "Unternehmensebene",
+                "color": "#F59E0B",
+                "items": [
+                  "AVB (Allgemeine Versicherungsbedingungen)",
+                  "ORSA (Eigene Risikobewertung)",
+                  "Interne Governance & Kontrollsysteme",
+                  "SFCR / QRT-Berichterstattung",
+                  "Produktentwicklungsprozesse (POG)",
+                  "IT-Sicherheitssysteme (DORA)"
+                ]
+              }
+            ]
           }
         ],
         "level2": [
@@ -1978,6 +3387,94 @@
           ],
           "correct": 2,
           "explanation": "Der Höchstrechnungszins wurde erstmals seit über 30 Jahren auf 1,0% angehoben — die erste Erhöhung seit der Einführung 1994."
+        },
+        {
+          "question": "Was regelt § 19 VVG?",
+          "options": [
+            "Die Mindestversicherungssummen",
+            "Die vorvertragliche Anzeigepflicht des Versicherungsnehmers",
+            "Das Kündigungsrecht bei Prämienmangel",
+            "Die Beratungspflichten des Vermittlers"
+          ],
+          "correct": 1,
+          "explanation": "§ 19 VVG regelt die vorvertragliche Anzeigepflicht: Der VN muss alle ihm bekannten, gefahrerheblichen Umstände wahrheitsgemäß angeben. Verletzungen können zur Leistungsfreiheit oder Vertragsanfechtung führen."
+        },
+        {
+          "question": "Auf welchem Quantil basiert die SCR-Berechnung unter Solvency II?",
+          "options": [
+            "85% Value-at-Risk",
+            "95% Value-at-Risk",
+            "99,5% Value-at-Risk",
+            "99,9% Value-at-Risk"
+          ],
+          "correct": 2,
+          "explanation": "Das Solvency Capital Requirement (SCR) unter Solvency II basiert auf einem 99,5%-VaR — d.h. das Kapital reicht, um Verluste aus allen Risiken über ein Jahr bis auf ein 1:200-Jahres-Ereignis abzudecken."
+        },
+        {
+          "question": "Was ist der SFCR?",
+          "options": [
+            "Solvency Fund Capital Report — interne Aufsichtsunterlage",
+            "Solvency and Financial Condition Report — öffentlicher Bericht über Solvabilität und Finanzlage",
+            "Statutory Framework Compliance Register",
+            "Schadenfall Controlling Report"
+          ],
+          "correct": 1,
+          "explanation": "Der SFCR (Solvency and Financial Condition Report) ist ein jährlicher, öffentlich zugänglicher Bericht, den alle Solvency-II-Unternehmen veröffentlichen müssen (Säule 3: Offenlegung)."
+        },
+        {
+          "question": "Wer beaufsichtigt die deutschen Versicherungsunternehmen auf Bundesebene?",
+          "options": [
+            "Bundesministerium der Finanzen (BMF)",
+            "Bundesanstalt für Finanzdienstleistungsaufsicht (BaFin)",
+            "Deutsche Bundesbank",
+            "GDV (Gesamtverband der Deutschen Versicherungswirtschaft)"
+          ],
+          "correct": 1,
+          "explanation": "Die BaFin (Bundesanstalt für Finanzdienstleistungsaufsicht) beaufsichtigt auf Bundesebene Versicherungsunternehmen, Banken und Wertpapierfirmen."
+        },
+        {
+          "question": "Was regelt die DORA-Verordnung?",
+          "options": [
+            "Datenschutz im Ombudsmannverfahren",
+            "Digitale operationale Resilienz im Finanzsektor (IT-Sicherheit, IKT-Risikomanagement)",
+            "Disclosure Of Reinsurance Arrangements",
+            "Direktversicherungs-Offenlegungs-Regelung für Arbeitgeber"
+          ],
+          "correct": 1,
+          "explanation": "DORA (Digital Operational Resilience Act) verpflichtet Finanzunternehmen inkl. Versicherer zu einheitlichen IKT-Risikomanagement-, Melde- und Test-Anforderungen. Gilt ab Januar 2025."
+        },
+        {
+          "question": "Was sind die drei Säulen von Solvency II?",
+          "options": [
+            "Mindestkapital, Risikoüberwachung, Offenlegung",
+            "Quantitative Anforderungen, Governance & Risikomanagement, Offenlegungspflichten",
+            "Erstversicherer, Rückversicherer, Captives",
+            "Lebens, Kranken, Schaden-Unfall"
+          ],
+          "correct": 1,
+          "explanation": "Solvency II basiert auf drei Säulen: Säule 1 (quantitative Kapitalanforderungen: SCR, MCR), Säule 2 (Governance und ORSA), Säule 3 (Berichterstattung: SFCR, QRT)."
+        },
+        {
+          "question": "Was ist das FIDA und welches Ziel verfolgt es?",
+          "options": [
+            "Finanzinstituts-Datenaustausch-Abkommen zwischen Deutschland und Österreich",
+            "Financial Data Access Regulation — schafft Open Insurance durch Datenzugang für Drittanbieter",
+            "Formular für individuelle Dokumentation von Altersvorsorge",
+            "Föderale Informations-Daten-Allianz der BaFin"
+          ],
+          "correct": 1,
+          "explanation": "FIDA (Financial Data Access Regulation) ist ein EU-Gesetzgebungsvorhaben, das den Kunden das Recht gibt, ihre Finanzdaten (inkl. Versicherungsdaten) an Drittanbieter weiterzugeben — 'Open Insurance' analog zu Open Banking."
+        },
+        {
+          "question": "Was besagt der 'Grundsatz der Spartentrennnung' im VAG?",
+          "options": [
+            "Lebens- und Schaden-/Unfallversicherung dürfen nicht im selben Unternehmen betrieben werden",
+            "Erst- und Rückversicherung müssen getrennt bilanziert werden",
+            "PKV und GKV-Ergänzungsversicherung müssen getrennt geführt werden",
+            "Direktversicherungen dürfen nicht in Pools eingegangen werden"
+          ],
+          "correct": 0,
+          "explanation": "§ 8 VAG schreibt die Spartentrennung vor: Ein Versicherungsunternehmen darf entweder Lebensversicherung oder Schaden-/Unfallversicherung betreiben, nicht beide. Ausnahme: kleine Versicherungsvereine."
         }
       ]
     },
@@ -2065,6 +3562,58 @@
           {
             "type": "paragraph",
             "content": "Bei den Kundenportalen liegt die Allianz mit dem höchsten Digital Touchpoint Index (44) vorn, gefolgt von HUK-COBURG (30) und ERGO (27). „Meine Allianz\" nutzen über <strong>5 Millionen Kunden</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">8</span><span class=\"v1x1-cite-tooltip\">Allianz Deutschland Digitalbericht 2024</span></span>, „Meine HUK\" über 4 Millionen. Der Anteil der Kundenkommunikation über Online-Portale hat sich von 10 % (2019) auf <strong>22 % (2023)</strong><span class=\"v1x1-cite\"><span class=\"v1x1-cite-num\">9</span><span class=\"v1x1-cite-tooltip\">GDV Digitalreport Versicherung 2024</span></span> mehr als verdoppelt, während der Papierpostanteil von 36 % auf 23 % sank. Ab Juni 2025 müssen Versicherer ihre Portale gemäß dem Barrierefreiheitsstärkungsgesetz (BFSG) barrierefrei gestalten."
+          },
+          {
+            "type": "valueChain",
+            "title": "Wertschöpfungskette in der Versicherungswirtschaft",
+            "steps": [
+              {
+                "id": "produktentwicklung",
+                "label": "Produkt­entwicklung",
+                "icon": "settings-2",
+                "description": "Marktanalyse, Bedarfsermittlung, Produktgestaltung (AVB, Deckungskonzepte), POG-Prozess, Aktuarielle Kalkulation, Zielmarktdefinition."
+              },
+              {
+                "id": "underwriting",
+                "label": "Underwriting",
+                "icon": "shield-check",
+                "description": "Risikoprüfung und -selektion, Antragsprüfung, Risikoklassifikation, Prämienberechnung, Zeichnungslimits, Rückversicherungsplanung."
+              },
+              {
+                "id": "vertrieb",
+                "label": "Vertrieb & Abschluss",
+                "icon": "network",
+                "description": "Kundenakquise über AO, Makler, Online, Bancassurance. Angebotserstellung, Beratungsdokumentation (IDD), Antragsbearbeitung."
+              },
+              {
+                "id": "vertragsverwaltung",
+                "label": "Vertrags­verwaltung",
+                "icon": "banknote",
+                "description": "Policenerstellung, Bestandspflege, Beitragsabrechnung, Vertragsänderungen, Bestandsprovisionierung, Mahnwesen."
+              },
+              {
+                "id": "schadenmanagement",
+                "label": "Schaden­management",
+                "icon": "alert-triangle",
+                "description": "Schadenmeldung, Schadenbewertung (Regulierung), Leistungsprüfung, Betrugserkennung, Reparatur/Wiederbeschaffung, Regressbearbeitung."
+              },
+              {
+                "id": "kapitalanlage",
+                "label": "Kapital­anlage",
+                "icon": "bar-chart-3",
+                "description": "ALM-Steuerung, Portfolio-Management (Anleihen, Aktien, Immobilien), Risikomanagement der Kapitalanlage, Regulierung (§§ 124-135 VAG)."
+              },
+              {
+                "id": "kundenservice",
+                "label": "Kunden­service",
+                "icon": "rocket",
+                "description": "Kundenbetreuung, Beschwerde-Management, Ombudsmann-Prozesse, Kundenbefragungen, Loyalitätsprogramme, Renewals."
+              }
+            ]
+          },
+          {
+            "type": "combinedRatioCalc",
+            "title": "Combined Ratio Rechner"
           }
         ],
         "level2": [
@@ -2220,6 +3769,105 @@
           ],
           "correct": 1,
           "explanation": "SAP FS-CD (Collections & Disbursements) hat sich als De-facto-Standard für In-/Exkasso bei deutschen Versicherern etabliert."
+        },
+        {
+          "question": "Was bedeutet eine Combined Ratio von 95%?",
+          "options": [
+            "5% Verlust",
+            "5% versicherungstechnischer Gewinn",
+            "95% Verlust",
+            "Ausgeglichenes Ergebnis"
+          ],
+          "correct": 1,
+          "explanation": "Combined Ratio = Schadenquote + Kostenquote. Bei 95% verbleiben 5% als versicherungstechnischer Gewinn — die technischen Prämien übersteigen Schäden + Kosten um 5%."
+        },
+        {
+          "question": "Was ist 'Dunkelverarbeitung' im Versicherungskontext?",
+          "options": [
+            "Verarbeitung vertraulicher Versicherungsdaten unter Datenschutz",
+            "Vollautomatische Bearbeitung von Vorgängen ohne manuelle Eingriffe",
+            "Nachtschichtarbeit im Backoffice",
+            "Verarbeitung von Black-Box-Algorithmen im Underwriting"
+          ],
+          "correct": 1,
+          "explanation": "Dunkelverarbeitung (Straight-Through-Processing) bezeichnet die vollautomatische Bearbeitung von Anträgen oder Schäden ohne jeden manuellen Eingriff — ein Kernziel der digitalen Transformation."
+        },
+        {
+          "question": "Was sind 'Kernsysteme' (Core Systems) in Versicherungsunternehmen?",
+          "options": [
+            "IT-Systeme für HR und Personalverwaltung",
+            "Bestandsverwaltungs-, Schadenmanagementsysteme und Vertragsverwaltungssoftware",
+            "ERP-Systeme für die Buchhaltung",
+            "Nur Kundendatenbankensysteme"
+          ],
+          "correct": 1,
+          "explanation": "Kernsysteme umfassen Bestandsverwaltungs- und Policenverwaltungssysteme (z.B. msg.Life, adesso insurance solutions, Guidewire) sowie Schadenmanagement-Systeme."
+        },
+        {
+          "question": "Was ist ein 'Run-off' im Versicherungskontext?",
+          "options": [
+            "Ein Schadenszenario für Katastrophenrisiken",
+            "Die geordnete Abwicklung geschlossener Versicherungsbestände",
+            "Das Auslaufen von Rückversicherungsverträgen",
+            "Der Rückgang des Neugeschäfts in einer Sparte"
+          ],
+          "correct": 1,
+          "explanation": "Run-off bezeichnet die Abwicklung von Versicherungsbeständen, für die kein Neugeschäft mehr gezeichnet wird. Spezialisierte Plattformen (Viridium, Monument Re) haben sich auf Run-off-Management spezialisiert."
+        },
+        {
+          "question": "Was misst die 'Schadenquote' (Loss Ratio)?",
+          "options": [
+            "Anteil der Verwaltungskosten an den Beitragseinnahmen",
+            "Verhältnis von Schadenaufwendungen zu verdienten Beitragseinnahmen",
+            "Häufigkeit von Großschäden pro Jahr",
+            "Quotient aus Schäden und Anzahl der Verträge"
+          ],
+          "correct": 1,
+          "explanation": "Loss Ratio = Schadenaufwendungen / verdiente Prämien. Ein Wert von 70% bedeutet, dass 70 Cent je Prämien-Euro für Schadenleistungen aufgewendet werden."
+        },
+        {
+          "question": "Welche Funktion hat das Underwriting?",
+          "options": [
+            "Die Buchhaltung der Versicherungsverträge",
+            "Risikobewertung, -selektion und Prämienberechnung für Neuanträge",
+            "Die Verwaltung des Kapitalanlageportfolios",
+            "Die Bearbeitung von Schadenmeldungen"
+          ],
+          "correct": 1,
+          "explanation": "Underwriting umfasst die Prüfung und Bewertung von Risiken, die Entscheidung über Annahme oder Ablehnung und die Festsetzung der Prämie und Bedingungen."
+        },
+        {
+          "question": "Was ist der Unterschied zwischen Erst- und Rückversicherung?",
+          "options": [
+            "Erstversicherung gilt nur in Deutschland, Rückversicherung global",
+            "Erstversicherer sichern Privatpersonen/Unternehmen ab; Rückversicherer sichern Erstversicherer ab",
+            "Rückversicherung ist freiwillig, Erstversicherung obligatorisch",
+            "Erstversicherung läuft 12 Monate, Rückversicherung mehrjährig"
+          ],
+          "correct": 1,
+          "explanation": "Erstversicherer (wie Allianz, HUK) stehen direkt zum Kunden. Rückversicherer (wie Munich Re, Swiss Re) übernehmen Teile der Risiken von Erstversicherern gegen Prämie."
+        },
+        {
+          "question": "Was ist 'Actuarial' (Aktuariat)?",
+          "options": [
+            "Die Buchhaltungsabteilung eines Versicherers",
+            "Mathematisch-statistische Analyse von Versicherungsrisiken für Preis- und Reservebildung",
+            "Das Beschwerdemanagement bei Kunden",
+            "Die externe Prüfung durch Wirtschaftsprüfer"
+          ],
+          "correct": 1,
+          "explanation": "Das Aktuariat (Actuarial Department) ist für die mathematisch-statistische Kalkulation von Prämien, Risikomodellen, versicherungstechnischen Rückstellungen und Stressszenarien verantwortlich."
+        },
+        {
+          "question": "Was ist 'Kapitalanlage-Management' bei Versicherern?",
+          "options": [
+            "Nur die Verwaltung eigener Immobilien",
+            "Anlage der Prämieneinnahmen und Rückstellungen in verschiedene Anlageklassen zur Erwirtschaftung von Kapitalerträgen",
+            "Verwaltung der Rückversicherungsverträge",
+            "Nur Tagesgeld und Staatsanleihen erlaubt"
+          ],
+          "correct": 1,
+          "explanation": "Versicherer verwalten riesige Kapitalanlagen (~€1,9 Bio. in Deutschland), die aus Prämien und Rückstellungen gespeist werden. Kapitalerträge sind besonders für Lebensversicherer eine wichtige Ertragsquelle."
         }
       ]
     },
@@ -2318,6 +3966,12 @@
             "type": "paragraph",
             "content": "Die regulatorische Einordnung ist entscheidend für die Praxis. Das <strong>häufigste Modell</strong> ist der gebundene Versicherungsvertreter (§ 34d Abs. 7 Nr. 1 GewO), bei dem der Plattformbetreiber exklusiv für ein Versicherungsunternehmen tätig ist und keine eigene Erlaubnis benötigt. Alternativ kommt der <strong>produktakzessorische Vermittler</strong> (§ 34d Abs. 6 GewO) infrage – etwa ein Autohaus, das Kfz-Versicherung zum Fahrzeugverkauf vermittelt. Die BaFin definiert den <strong>Tippgeber</strong> als jemanden, der lediglich Kontakt zwischen Kunde und Versicherer herstellt, ohne zu beraten oder am Vertragsabschluss mitzuwirken. Ein Tippgeber darf keine konkreten Produktinformationen geben und fällt nicht unter die Vermittlerregulierung. Die IDD verlangt vor jedem Abschluss einen Demands-and-Needs-Test sowie die Vorlage des IPID-Dokuments. Die BaFin beobachtet zudem die britische „Consumer Duty\" als mögliches Vorbild für strengere Anforderungen an Add-On-Produkte.",
             "title": "Regulatorische Einordnung zwischen Tippgeber und Vermittler"
+          },
+          {
+            "type": "trendRadar",
+            "title": "Trend-Radar Versicherungswirtschaft 2025",
+            "source": "Monitor Deloitte Analyse 2025",
+            "chartKey": "trendRadar"
           }
         ],
         "level2": [
@@ -2490,8 +4144,200 @@
           ],
           "correct": 1,
           "explanation": "wefox war mit €4,5 Mrd. bewertet, stürzte nach Manipulationsvorwürfen ab und verließ den deutschen Markt im Juni 2024."
+        },
+        {
+          "question": "Was ist FIDA?",
+          "options": [
+            "Finanzielle Innovations-und-Digitalisierungs-Arbeitsgruppe",
+            "Financial Data Access Regulation — EU-Regulation für Open Insurance",
+            "Föderales Informations-Datenaustauschsystem",
+            "Fonds für Infrastruktur und digitale Absicherung"
+          ],
+          "correct": 1,
+          "explanation": "FIDA (Financial Data Access Regulation) ermöglicht Kunden, ihre Versicherungsdaten an Drittanbieter weiterzugeben. Es ist die versicherungsseitige Erweiterung von Open Banking."
+        },
+        {
+          "question": "Was ist eine 'Embedded Insurance'?",
+          "options": [
+            "Eine in den Arbeitsvertrag eingebettete bAV",
+            "Integration von Versicherungsschutz direkt in den Kaufprozess eines Produkts/Diensts",
+            "Eine verdeckte Provision in Beiträgen",
+            "Eingebettete Rückversicherungsklauseln"
+          ],
+          "correct": 1,
+          "explanation": "Embedded Insurance bedeutet, Versicherungsschutz nahtlos in den Kaufprozess eines anderen Produkts zu integrieren (z.B. Kfz-Versicherung beim Autokauf, Reiseversicherung beim Ticketkauf)."
+        },
+        {
+          "question": "Was ist der Unterschied zwischen einer 'Plattform' und einem 'InsurTech-Vollversicherer'?",
+          "options": [
+            "Plattformen haben mehr Kapital als Vollversicherer",
+            "Plattformen vermitteln nur, Vollversicherer zeichnen eigenes Risiko mit BaFin-Lizenz",
+            "Plattformen agieren grenzüberschreitend, Vollversicherer nur national",
+            "Vollversicherer sind günstiger als Plattformen"
+          ],
+          "correct": 1,
+          "explanation": "InsurTech-Plattformen (wie Wefox, Friendsurance) sind technologiebasierte Vermittler ohne eigene Versicherungslizenz. InsurTech-Vollversicherer (wie Getsafe) haben eine eigene Lizenz und zeichnen Risiken selbst."
+        },
+        {
+          "question": "Welcher Megatrend hat den größten Einfluss auf Schadenzahlungen bei S/U-Versicherern?",
+          "options": [
+            "Digitalisierung",
+            "Demographischer Wandel",
+            "Klimawandel und Elementarschäden",
+            "Zinswende"
+          ],
+          "correct": 2,
+          "explanation": "Der Klimawandel führt zu häufigeren und schwereren Elementarereignissen (Starkregen, Überflutungen, Hitzewellen). Dies treibt die Schadenzahlungen und zwingt zu neuen Risikomodellen."
+        },
+        {
+          "question": "Was versteht man unter 'Telematics' in der Kfz-Versicherung?",
+          "options": [
+            "Telefonversicherung für Mobilfunkgeräte",
+            "Nutzungsbasierte Versicherung mit GPS/Fahrdaten-Tracking (Pay-how-you-drive)",
+            "Fernwartung von Fahrzeugsoftware durch den Versicherer",
+            "Telesales-Vertrieb von Kfz-Policen"
+          ],
+          "correct": 1,
+          "explanation": "Telematik-Tarife (Pay-how-you-drive, Pay-as-you-drive) nutzen GPS und Fahrdaten, um individuelle Fahrverhalten zu messen und die Prämie entsprechend anzupassen."
+        },
+        {
+          "question": "Was ist 'Generative KI' und wie wird sie in Versicherungen eingesetzt?",
+          "options": [
+            "Ausschließlich für Chatbots im Kundenservice",
+            "KI, die neue Inhalte generiert: Policentexte, Schadenbeschreibungen, Underwriting-Reports, Beratungsdialoge",
+            "Nur für Bildverarbeitung bei Schadengutachten",
+            "KI für die Generierung neuer Versicherungsprodukte"
+          ],
+          "correct": 1,
+          "explanation": "Generative KI (LLMs wie GPT-4) wird in Versicherungen für Dokumentenerstellung, automatisierte Beratungsdialoge, Schadenzusammenfassungen, Underwriting-Unterstützung und interne Wissenssysteme eingesetzt."
+        },
+        {
+          "question": "Was sind ESG-Kriterien und warum sind sie für Versicherer relevant?",
+          "options": [
+            "Ergänzende Solvabilität-Garantien, nicht direkt relevant",
+            "Environmental, Social, Governance — relevant für Kapitalanlagepolitik, Produktgestaltung und regulatorische Berichterstattung",
+            "Europäische Standard-Garantien für Versicherungsverträge",
+            "Einheitliche Scoring-Garantien im Vertrieb"
+          ],
+          "correct": 1,
+          "explanation": "ESG steht für Environmental, Social, Governance. Versicherer müssen ESG-Risiken in Kapitalanlagen (Taxonomie-Regulierung, SFDR) und Produkten berücksichtigen und darüber berichten."
+        },
+        {
+          "question": "Was bedeutet 'InsurTech' und in welche Hauptkategorien lassen sie sich einteilen?",
+          "options": [
+            "Nur Direktversicherer ohne Filialnetz",
+            "Technologiegetriebene Start-ups: Vollversicherer, MGA/Risikogeber, Plattformen/Vergleicher, B2B-Technologieanbieter",
+            "Nur digitale Vermittlerplattformen",
+            "Ausschließlich auf KI basierende Ratingunternehmen"
+          ],
+          "correct": 1,
+          "explanation": "InsurTechs lassen sich kategorisieren in: Vollversicherer mit eigener Lizenz (Getsafe), Managing General Agents (MGAs) wie Hepster, Plattformen/Vergleicher (Check24), und B2B-Tech-Anbieter (Novarica, msg.Life)."
         }
-      ]
+      ],
+      "chartData": {
+        "trendRadar": {
+          "rings": [
+            "Adopt",
+            "Trial",
+            "Assess",
+            "Hold"
+          ],
+          "segments": [
+            "KI & Daten",
+            "Plattform & Ökosystem",
+            "Regulatorik",
+            "Klimarisiken",
+            "Kapitalmarkt"
+          ],
+          "items": [
+            {
+              "label": "Generative KI (LLM)",
+              "ring": 0,
+              "segment": 0,
+              "description": "GPT-basierte Anwendungen in Underwriting, Claims, Beratung. Breite Piloten, erste Produktivsysteme."
+            },
+            {
+              "label": "Predictive Underwriting",
+              "ring": 0,
+              "segment": 0,
+              "description": "ML-Modelle für automatische Risikoklassifikation. Standard bei führenden Versicherern."
+            },
+            {
+              "label": "Embedded Insurance",
+              "ring": 1,
+              "segment": 1,
+              "description": "Integration in Kaufprozesse (Auto, E-Commerce). Wachstumsphase, Partnerschaften werden geschlossen."
+            },
+            {
+              "label": "Open Insurance (FIDA)",
+              "ring": 2,
+              "segment": 2,
+              "description": "EU-Regulierung noch in Entwicklung. Umsetzung erst ab 2026/2027 erwartet."
+            },
+            {
+              "label": "DORA Compliance",
+              "ring": 0,
+              "segment": 2,
+              "description": "Gilt seit Jan. 2025. Unmittelbarer Handlungsbedarf für alle regulierten Finanzunternehmen."
+            },
+            {
+              "label": "Klimarisikomodellierung",
+              "ring": 0,
+              "segment": 3,
+              "description": "Neue Modelle für Elementarrisiken (Flood, Wildfire) sind Wettbewerbsvorteil."
+            },
+            {
+              "label": "Telematics / UBI",
+              "ring": 1,
+              "segment": 0,
+              "description": "Pay-how-you-drive in der Kfz. Pilotphase in Deutschland, Mainstream in UK/USA."
+            },
+            {
+              "label": "Blockchain/DLT",
+              "ring": 3,
+              "segment": 1,
+              "description": "Smart Contracts für parametrische Versicherungen. Bisher kaum skalierbar."
+            },
+            {
+              "label": "ESG-Reporting (CSRD)",
+              "ring": 0,
+              "segment": 2,
+              "description": "CSRD-Berichtspflichten gelten für große Versicherer ab 2024/2025."
+            },
+            {
+              "label": "Parametrische Versicherung",
+              "ring": 1,
+              "segment": 3,
+              "description": "Auszahlung bei Eintritt definierter Parameter (Windgeschwindigkeit, Niederschlag). Wächst in Landwirtschaft und CAT."
+            },
+            {
+              "label": "Insurance-Linked Securities",
+              "ring": 2,
+              "segment": 4,
+              "description": "Cat Bonds und alternative Risikoübertragung. Institutionell etabliert, aber komplex."
+            },
+            {
+              "label": "Zinswende-Kapitalanlage",
+              "ring": 0,
+              "segment": 4,
+              "description": "Steigende Zinsen ermöglichen höhere Kapitalerträge. Wichtig für Lebensversicherer."
+            },
+            {
+              "label": "Autonomous Vehicles (AV)",
+              "rule": 2,
+              "ring": 2,
+              "segment": 0,
+              "description": "Automatisiertes Fahren verändert Haftungsverteilung. Langfristige Disruption für Kfz-Versicherung."
+            },
+            {
+              "label": "Cyber-Versicherung Wachstum",
+              "ring": 0,
+              "segment": 3,
+              "description": "Cyberrisiken wachsen exponentiell. Cyber-Prämien haben sich 2019-2024 verfünffacht."
+            }
+          ]
+        }
+      }
     },
     {
       "id": "09-verbaende-institutionen",
@@ -2593,6 +4439,37 @@
           {
             "type": "paragraph",
             "content": "Für den PEPP (Pan-European Personal Pension Product) konstatierte EIOPA eine sehr geringe Marktakzeptanz und unterstützt die im Rahmen der EU Savings and Investments Union vorgeschlagene Überprüfung. Beim Thema <strong>FIDA/Open Insurance</strong> begleitet EIOPA die laufenden Gesetzgebungsverfahren mit besonderem Fokus auf Verbraucherschutz. Zum <strong>Naturkatastrophen-Schutzdefizit</strong> warnt EIOPA, dass historisch <strong>75 % der wirtschaftlichen Schäden</strong> aus Naturkatastrophen in Europa unversichert blieben."
+          },
+          {
+            "type": "networkGraph",
+            "title": "Ökosystem: Verbände und Institutionen",
+            "chartKey": "networkGraph"
+          },
+          {
+            "type": "infoKachelGrid",
+            "title": "Wichtige Institutionen im Überblick",
+            "items": [
+              {
+                "icon": "scale",
+                "title": "BaFin",
+                "description": "Bundesaufsicht für Versicherungen, Banken, Wertpapiere. Beaufsichtigt ~350 Versicherungsunternehmen."
+              },
+              {
+                "icon": "landmark",
+                "title": "GDV",
+                "description": "~470 Mitgliedsunternehmen. Lobbying, Branchenstatistiken, Normierung (KFZ-Schäden), Katastrophenfonds."
+              },
+              {
+                "icon": "shield-check",
+                "title": "Ombudsmann",
+                "description": "Kostenlose Schlichtungsstelle. Jährlich ~20.000 Beschwerden, ~50% zugunsten des Kunden."
+              },
+              {
+                "icon": "bar-chart-3",
+                "title": "S&P / AM Best",
+                "description": "IFS-Ratings (Insurer Financial Strength). Für Industriekunden und Rückversicherung oft Zugangsbedingung."
+              }
+            ]
           }
         ],
         "level2": [
@@ -2789,26 +4666,377 @@
           ],
           "correct": 1,
           "explanation": "Entscheidungen des Versicherungsombudsmanns sind bis €10.000 Streitwert bindend für Versicherer — für Verbraucher sind sie nie bindend."
+        },
+        {
+          "question": "Was ist der Versicherungsombudsmann?",
+          "options": [
+            "Ein staatlicher Schlichter bei Versicherungsstreitigkeiten, finanziert durch Steuergelder",
+            "Eine unabhängige Schlichtungsstelle für Streitigkeiten zwischen Kunden und Versicherern, finanziert von der Branche",
+            "Ein Beauftragter der BaFin für Kundenbeschwerden",
+            "Ein GDV-Beamter für Regulierungsfragen"
+          ],
+          "correct": 1,
+          "explanation": "Der Versicherungsombudsmann e.V. ist eine vom GDV finanzierte, aber unabhängige Schlichtungsstelle. Kunden können dort kostenlos Streitigkeiten mit ihren Versicherern lösen lassen."
+        },
+        {
+          "question": "Wer ist Mitglied im GDV (Gesamtverband der Deutschen Versicherungswirtschaft)?",
+          "options": [
+            "Nur Lebensversicherer",
+            "Erstversicherer und Rückversicherer aller Sparten",
+            "Alle Vermittler und Makler",
+            "BaFin-regulierte Finanzdienstleister"
+          ],
+          "correct": 1,
+          "explanation": "Der GDV ist der Hauptverband der deutschen Versicherungswirtschaft. Mitglieder sind Erst- und Rückversicherer aller Sparten. Er vertritt die Brancheninteressen gegenüber Politik und Öffentlichkeit."
+        },
+        {
+          "question": "Was macht EIOPA?",
+          "options": [
+            "Sie beaufsichtigt direkt alle deutschen Versicherungsunternehmen",
+            "Sie ist die europäische Aufsichtsbehörde für Versicherungen und betriebliche Altersversorgung, koordiniert nationale Aufsichtsbehörden",
+            "Sie erstellt Versicherungsprodukte für EU-Staaten",
+            "Sie ist das europäische Pendant zum GDV"
+          ],
+          "correct": 1,
+          "explanation": "EIOPA (European Insurance and Occupational Pensions Authority) ist eine EU-Behörde, die Aufsichtsstandards setzt, Leitlinien herausgibt und nationale Behörden (wie die BaFin) koordiniert."
+        },
+        {
+          "question": "Was ist der Unterschied zwischen BdV und GDV?",
+          "options": [
+            "BdV ist der Verband der Versicherer, GDV der Verband der Vermittler",
+            "BdV (Bund der Versicherten) ist ein Verbraucherschutzverband, GDV der Branchenverband der Versicherungsunternehmen",
+            "BdV agiert auf EU-Ebene, GDV auf Bundesebene",
+            "BdV ist für Lebensversicherungen, GDV für Sachversicherungen"
+          ],
+          "correct": 1,
+          "explanation": "Der BdV (Bund der Versicherten e.V.) ist ein unabhängiger Verbraucherschutzverband, der Versicherungsnehmer berät und die Branche kritisch begleitet. Der GDV vertritt die Interessen der Versicherungsunternehmen."
+        },
+        {
+          "question": "Was sind die Ratingagenturen Standard & Poor's und AM Best im Versicherungskontext?",
+          "options": [
+            "Staatliche Aufsichtsbehörden für Kapitaladäquanz",
+            "Unabhängige Agenturen, die die Finanzkraft und Solvenz von Versicherern bewerten (Insurer Financial Strength Ratings)",
+            "Branchenverbände für Rückversicherer",
+            "Pflichtprüfer unter Solvency II Säule 3"
+          ],
+          "correct": 1,
+          "explanation": "S&P und AM Best bewerten die finanzielle Stärke (IFS = Insurer Financial Strength) von Versicherungsunternehmen. Diese Ratings sind wichtig für Geschäftsbeziehungen, besonders in der Rück- und Industrieversicherung."
+        },
+        {
+          "question": "Wer prüft, ob eine Solvenzquote ausreicht — BaFin oder EIOPA?",
+          "options": [
+            "Ausschließlich EIOPA auf EU-Ebene",
+            "Primär die BaFin als nationale Aufsichtsbehörde; EIOPA koordiniert und setzt Standards",
+            "Standard & Poor's im Rahmen des Ratingprozesses",
+            "Der Versicherungsombudsmann bei Kundenbeschwerden"
+          ],
+          "correct": 1,
+          "explanation": "Die BaFin ist als nationale Aufsichtsbehörde zuständig für die laufende Solvenzüberwachung deutscher Versicherer. EIOPA setzt die regulatorischen Standards und koordiniert EU-weit, greift aber nicht direkt in nationale Aufsicht ein."
+        },
+        {
+          "question": "Was ist der AfW – Bundesverband Finanzdienstleistung?",
+          "options": [
+            "Ein staatlicher Ausbildungsfonds für Versicherungsverkäufer",
+            "Ein Branchenverband, der die Interessen unabhängiger Finanz- und Versicherungsvermittler vertritt",
+            "Eine Regulierungsbehörde für Finanzdienstleister",
+            "Ein Weiterbildungsinstitut für Aktuare"
+          ],
+          "correct": 1,
+          "explanation": "Der AfW ist ein Branchenverband für unabhängige Finanz- und Versicherungsvermittler (Makler, Mehrfachagenten). Er vertritt deren Interessen gegenüber Politik und Regulierung."
+        },
+        {
+          "question": "Was ist die IVFP (Institut für Vorsorge und Finanzplanung)?",
+          "options": [
+            "Eine BaFin-Behörde für Altersvorsorge",
+            "Ein unabhängiges Forschungs- und Bewertungsinstitut für Altersvorsorge- und Versicherungsprodukte",
+            "Eine gesetzliche Pflichtprüfungsstelle",
+            "Der Interessenverband der Finanzplanerverbände"
+          ],
+          "correct": 1,
+          "explanation": "Das IVFP ist ein unabhängiges Institut, das Versicherungs- und Altersvorsorgeprodukte testet und bewertet. Seine Rankings und Ratings sind wichtige Qualitätssignale im Markt."
+        },
+        {
+          "question": "Was ist die PKV-Verband (Verband der Privaten Krankenversicherung)?",
+          "options": [
+            "Ein Beschwerdeorgan für PKV-Kunden",
+            "Der Spitzenverband der privaten Krankenversicherungsunternehmen in Deutschland",
+            "Eine staatliche Aufsichtsbehörde für PKV",
+            "Ein Zusammenschluss öffentlicher Krankenversicherungen"
+          ],
+          "correct": 1,
+          "explanation": "Der PKV-Verband ist der Spitzenverband der privaten Kranken- und Pflegeversicherer in Deutschland. Er vertritt die Interessen der PKV-Branche in Politik und Öffentlichkeit."
         }
-      ]
+      ],
+      "chartData": {
+        "networkGraph": {
+          "nodes": [
+            {
+              "id": "bafin",
+              "label": "BaFin",
+              "type": "aufsicht",
+              "description": "Bundesanstalt für Finanzdienstleistungsaufsicht — beaufsichtigt alle deutschen Versicherungsunternehmen"
+            },
+            {
+              "id": "eiopa",
+              "label": "EIOPA",
+              "type": "aufsicht",
+              "description": "EU-Aufsichtsbehörde für Versicherungen; setzt Solvency-II-Standards"
+            },
+            {
+              "id": "gdv",
+              "label": "GDV",
+              "type": "verband",
+              "description": "Gesamtverband der Deutschen Versicherungswirtschaft — Hauptlobbyverband der Branche"
+            },
+            {
+              "id": "pkv_verband",
+              "label": "PKV-Verband",
+              "type": "verband",
+              "description": "Spitzenverband der privaten Kranken- und Pflegeversicherer"
+            },
+            {
+              "id": "bdv",
+              "label": "BdV",
+              "type": "verbraucher",
+              "description": "Bund der Versicherten e.V. — Verbraucherschutzverband"
+            },
+            {
+              "id": "ombudsmann",
+              "label": "Ombudsmann",
+              "type": "schlichtung",
+              "description": "Unabhängige Schlichtungsstelle für Versicherungsstreitigkeiten"
+            },
+            {
+              "id": "sp",
+              "label": "S&P / AM Best",
+              "type": "rating",
+              "description": "Ratingagenturen für Finanzkraft von Versicherern (IFS-Rating)"
+            },
+            {
+              "id": "protektor",
+              "label": "Protektor",
+              "type": "sicherung",
+              "description": "Sicherungsfonds für Lebensversicherer — schützt Kunden bei Insolvenz"
+            },
+            {
+              "id": "afw",
+              "label": "AfW",
+              "type": "verband",
+              "description": "Bundesverband Finanzdienstleistung — Vertretung freier Vermittler"
+            },
+            {
+              "id": "ivfp",
+              "label": "IVFP",
+              "type": "rating",
+              "description": "Institut für Vorsorge und Finanzplanung — Produktratings und -tests"
+            }
+          ],
+          "links": [
+            {
+              "source": "eiopa",
+              "target": "bafin",
+              "label": "Setzt Standards für"
+            },
+            {
+              "source": "bafin",
+              "target": "gdv",
+              "label": "Reguliert Mitglieder von"
+            },
+            {
+              "source": "gdv",
+              "target": "pkv_verband",
+              "label": "Übergeordneter Verband"
+            },
+            {
+              "source": "bdv",
+              "target": "ombudsmann",
+              "label": "Verweist Verbraucher an"
+            },
+            {
+              "source": "bafin",
+              "target": "protektor",
+              "label": "Beaufsichtigt"
+            },
+            {
+              "source": "sp",
+              "target": "gdv",
+              "label": "Bewertet Mitglieder von"
+            },
+            {
+              "source": "afw",
+              "target": "gdv",
+              "label": "Kooperiert mit"
+            },
+            {
+              "source": "ivfp",
+              "target": "gdv",
+              "label": "Testet Produkte von Mitgliedern"
+            },
+            {
+              "source": "gdv",
+              "target": "ombudsmann",
+              "label": "Finanziert"
+            }
+          ]
+        }
+      }
     }
   ],
   "glossary": [
+    {
+      "term": "Abfindung",
+      "definition": "Einmalzahlung zur Ablösung laufender Leistungen (z.B. Rentenzahlung aus Haftpflichtschaden) durch eine Kapitalzahlung.",
+      "tags": [
+        "Produkte"
+      ]
+    },
+    {
+      "term": "Akquisitionskosten",
+      "definition": "Kosten für den Abschluss von Versicherungsverträgen: Provision, Marketing, Antragsbearbeitung. Aktivierbar und zu amortisieren.",
+      "tags": [
+        "Finanzen"
+      ]
+    },
+    {
+      "term": "Aktuar",
+      "definition": "Mathematiker/Statistiker, der Versicherungsrisiken modelliert, Prämien kalkuliert und Rückstellungen berechnet. Pflichtfunktion unter Solvency II.",
+      "tags": [
+        "Markt",
+        "Regulatorik"
+      ]
+    },
+    {
+      "term": "Alterungsrückstellung",
+      "definition": "Kapitalreserve der PKV, die in jungen Jahren aufgebaut wird, um steigende Leistungskosten im Alter zu dämpfen — das Gegenstück zum GKV-Solidarprinzip.",
+      "tags": [
+        "Produkte",
+        "PKV"
+      ]
+    },
+    {
+      "term": "Analogieschluss",
+      "definition": "Auslegung von Versicherungsbedingungen durch Analogie zu ähnlichen Fällen, wenn der Wortlaut unklar ist.",
+      "tags": [
+        "Regulatorik"
+      ]
+    },
     {
       "term": "AO",
       "definition": "Ausschließlichkeitsorganisation — Vermittler, die exklusiv für einen Versicherer arbeiten."
     },
     {
-      "term": "bAV",
-      "definition": "Betriebliche Altersversorgung — Altersvorsorge über den Arbeitgeber mit fünf Durchführungswegen."
+      "term": "Aquakultur-Versicherung",
+      "definition": "Spezialversicherung für Fischzucht- und Marikulturanlagen gegen Verluste durch Krankheiten, Umweltereignisse etc.",
+      "tags": [
+        "Produkte"
+      ]
+    },
+    {
+      "term": "Assekuradeur",
+      "definition": "Unternehmen, das im Auftrag von Versicherungsgesellschaften Risiken zeichnet, Bedingungen gestaltet und Prämien festsetzt — ähnlich einem MGA.",
+      "tags": [
+        "Markt",
+        "Vertrieb"
+      ]
+    },
+    {
+      "term": "Assekuranz",
+      "definition": "Veralteter Begriff für die Versicherungswirtschaft, heute noch in Firmennamen gebräuchlich (z.B. Assekuradeur).",
+      "tags": [
+        "Markt"
+      ]
+    },
+    {
+      "term": "Asset-Liability-Management (ALM)",
+      "definition": "Strategische Steuerung der Kapitalanlagen in Bezug auf die Fälligkeitsprofile der versicherungstechnischen Verbindlichkeiten.",
+      "tags": [
+        "Finanzen"
+      ]
+    },
+    {
+      "term": "Assistance-Leistung",
+      "definition": "Hilfeleistungen im Schadenfall, z.B. Pannenhilfe (Kfz), Notarzt-Service (Kranken), Handwerker-Sofortservice (Hausrat).",
+      "tags": [
+        "Produkte"
+      ]
+    },
+    {
+      "term": "Ausschließlichkeitsorganisation (AO)",
+      "definition": "Vertriebsorganisation von Versicherungsvertretern, die exklusiv für eine Versicherungsgesellschaft oder einen Konzern tätig sind.",
+      "tags": [
+        "Vertrieb"
+      ]
     },
     {
       "term": "BaFin",
       "definition": "Bundesanstalt für Finanzdienstleistungsaufsicht — die deutsche Finanzaufsichtsbehörde."
     },
     {
+      "term": "Bancassurance",
+      "definition": "Vertrieb von Versicherungsprodukten über Bankfilialen und -kanäle, z.B. Restschuldversicherungen beim Kreditabschluss.",
+      "tags": [
+        "Vertrieb"
+      ]
+    },
+    {
+      "term": "bAV",
+      "definition": "Betriebliche Altersversorgung — Altersvorsorge über den Arbeitgeber mit fünf Durchführungswegen."
+    },
+    {
+      "term": "Beitragsanpassung (BAP)",
+      "definition": "PKV-spezifisches Recht zur Prämienerhöhung bei gestiegenen Leistungsausgaben, geprüft vom unabhängigen Treuhänder.",
+      "tags": [
+        "Produkte",
+        "PKV",
+        "Regulatorik"
+      ]
+    },
+    {
+      "term": "Beitragsbemessungsgrenze",
+      "definition": "Einkommensgrenze, bis zu der GKV-Beiträge berechnet werden (2025: €66.150 p.a.). Oberhalb dieser Grenze ist ein Wechsel in die PKV möglich.",
+      "tags": [
+        "PKV",
+        "Regulatorik"
+      ]
+    },
+    {
+      "term": "Betriebliche Altersversorgung (bAV)",
+      "definition": "Durch den Arbeitgeber organisierte Altersvorsorge über eine der fünf Durchführungswege: Direktversicherung, Pensionskasse, Pensionsfonds, Unterstützungskasse, Direktzusage.",
+      "tags": [
+        "Produkte"
+      ]
+    },
+    {
+      "term": "Betriebsunterbrechungsversicherung (BU/BUV)",
+      "definition": "Schädigt ein Schadenfall den Betrieb (z.B. Brand), ersetzt die BUV entgangene Gewinne und laufende Fixkosten während des Ausfalls.",
+      "tags": [
+        "Produkte"
+      ]
+    },
+    {
+      "term": "Big Data & Predictive Analytics",
+      "definition": "Nutzung großer Datenmengen und KI für Underwriting, Schadenerkennung, Betrugserkennung und individuelle Tarifierung.",
+      "tags": [
+        "Zukunft"
+      ]
+    },
+    {
+      "term": "Biometrierisiken",
+      "definition": "Versicherbare Risiken, die am Menschen entstehen: Todesfall, Invalidität, Berufsunfähigkeit, Pflegebedürftigkeit.",
+      "tags": [
+        "Produkte"
+      ]
+    },
+    {
       "term": "BWS",
       "definition": "Bewertungssumme — Monatsbeitrag × 12 × Laufzeit. Bemessungsgrundlage für Lebensversicherungs-Provisionen."
+    },
+    {
+      "term": "Captive",
+      "definition": "Unternehmenseigene Versicherungsgesellschaft, die ausschließlich die Risiken des Mutterkonzerns übernimmt.",
+      "tags": [
+        "Markt"
+      ]
     },
     {
       "term": "Combined Ratio",
@@ -2819,8 +5047,29 @@
       "definition": "Vergütung für Versicherungsmakler (Sachwalter des Kunden), im Gegensatz zur Provision für Vertreter."
     },
     {
+      "term": "D&O-Versicherung",
+      "definition": "Directors & Officers Liability — Vermögensschadenhaftpflicht für leitende Organe (Vorstand, Aufsichtsrat, Geschäftsführer) bei schuldhaften Pflichtverletzungen.",
+      "tags": [
+        "Produkte"
+      ]
+    },
+    {
       "term": "DAV",
       "definition": "Deutsche Aktuarvereinigung — Berufsverband der Aktuare mit ~6.500 Mitgliedern."
+    },
+    {
+      "term": "Deckungsbeitrag",
+      "definition": "Differenz zwischen Prämieneinnahmen und Schadenaufwendungen vor Berücksichtigung von Verwaltungskosten.",
+      "tags": [
+        "Finanzen"
+      ]
+    },
+    {
+      "term": "Direktzusage",
+      "definition": "bAV-Durchführungsweg, bei dem der Arbeitgeber die Altersversorgung direkt aus eigenen Mitteln zusagt (keine externe Versicherung). Bilanzierungspflicht beim Arbeitgeber.",
+      "tags": [
+        "Produkte"
+      ]
     },
     {
       "term": "DORA",
@@ -2831,12 +5080,93 @@
       "definition": "European Insurance and Occupational Pensions Authority — die europäische Versicherungsaufsichtsbehörde mit Sitz in Frankfurt."
     },
     {
+      "term": "Elementarschadenversicherung",
+      "definition": "Ergänzung zur Wohngebäude-/Hausratversicherung für Schäden durch Überschwemmung, Erdrutsch, Erdbeben, Schneedruck. Optional, aber politisch zunehmend diskutiert.",
+      "tags": [
+        "Produkte"
+      ]
+    },
+    {
+      "term": "Embedded Insurance",
+      "definition": "Integration von Versicherungsschutz direkt in den Kaufprozess eines anderen Produkts (z.B. Reiseversicherung beim Ticketkauf, Geräteschutz beim Smartphone-Kauf).",
+      "tags": [
+        "Zukunft",
+        "Vertrieb"
+      ]
+    },
+    {
+      "term": "Erstversicherung",
+      "definition": "Versicherungsvertrag, der direkt zwischen Versicherungsnehmer und Versicherer (Erstversicherer) abgeschlossen wird — im Gegensatz zur Rückversicherung.",
+      "tags": [
+        "Markt"
+      ]
+    },
+    {
+      "term": "Excess of Loss (XL)",
+      "definition": "Rückversicherungsform: Der Rückversicherer übernimmt Schäden, die einen definierten Selbstbehalt (Priorität) übersteigen.",
+      "tags": [
+        "Markt"
+      ]
+    },
+    {
+      "term": "Fahrzeughaftung",
+      "definition": "Kfz-Halterhaftung gemäß § 7 StVG: Halter haftet für Schäden durch den Kfz-Betrieb, unabhängig von Verschulden (Gefährdungshaftung).",
+      "tags": [
+        "Produkte",
+        "Regulatorik"
+      ]
+    },
+    {
+      "term": "Fairness-Prinzip",
+      "definition": "Grundsatz, dass Versicherungsprodukte den tatsächlichen Risiken entsprechen und nicht zur Quersubventionierung verwendet werden.",
+      "tags": [
+        "Regulatorik"
+      ]
+    },
+    {
       "term": "FIDA",
       "definition": "Financial Data Access — EU-Verordnung zum standardisierten Datenzugang im Finanzsektor über APIs."
     },
     {
+      "term": "Finanzierungsmodell (GKV)",
+      "definition": "Die GKV finanziert sich durch einkommensabhängige Beiträge (Arbeitnehmer + Arbeitgeber) nach dem Solidarprinzip — Höherverdienende subventionieren Niedrigverdiener.",
+      "tags": [
+        "Produkte",
+        "PKV"
+      ]
+    },
+    {
+      "term": "Flottenversicherung",
+      "definition": "Versicherung mehrerer Fahrzeuge eines Unternehmens in einem Rahmenvertrag. Meist günstigere Konditionen durch Bündelung.",
+      "tags": [
+        "Produkte"
+      ]
+    },
+    {
+      "term": "Franchise",
+      "definition": "Selbstbeteiligung, bei der der Versicherungsschutz erst ab Überschreiten einer bestimmten Schadenhöhe (Franchise) einsetzt.",
+      "tags": [
+        "Produkte"
+      ]
+    },
+    {
       "term": "FRIDA",
       "definition": "Free Insurance Data Initiative — deutsche Industrieinitiative für offene Versicherungsdaten-Standards."
+    },
+    {
+      "term": "Fronting",
+      "definition": "Praxis, bei der ein lizenzierter Versicherer Risiken formal übernimmt und sie dann fast vollständig an eine nicht lizenzierte Captive rückversichert.",
+      "tags": [
+        "Markt"
+      ]
+    },
+    {
+      "term": "Garantiezins",
+      "definition": "Frühere Bezeichnung des Höchstrechnungszinses bei Lebensversicherungen. Ab 2025: 1,0%. War 2022–2024 bei 0,25%.",
+      "tags": [
+        "Produkte",
+        "Finanzen"
+      ]
     },
     {
       "term": "GBE",
@@ -2847,8 +5177,80 @@
       "definition": "Gesamtverband der Deutschen Versicherungswirtschaft — der Branchenverband mit ~470 Mitgliedern."
     },
     {
+      "term": "Gefahrengruppe",
+      "definition": "Kategorie gleichartiger Risiken, für die eine einheitliche Prämie kalkuliert wird. Grundlage der Risikoäquivalenz.",
+      "tags": [
+        "Produkte",
+        "Finanzen"
+      ]
+    },
+    {
+      "term": "Geldwäsche-Prävention (AML)",
+      "definition": "Anti-Money-Laundering — Pflichten für Versicherer, Geldwäsche über Versicherungsprodukte zu verhindern (AMLD, GwG).",
+      "tags": [
+        "Regulatorik"
+      ]
+    },
+    {
+      "term": "Genossenschaften (Versicherungsverein)",
+      "definition": "Demokratisch organisierte Versicherungsform (VVaG), bei der jeder Versicherungsnehmer Mitglied ist und ein Stimmrecht hat.",
+      "tags": [
+        "Markt"
+      ]
+    },
+    {
+      "term": "Gewinnbeteiligung (Überschussbeteiligung)",
+      "definition": "Anteil der Versicherungsnehmer an den erwirtschafteten Überschüssen eines Lebensversicherers. Besteht aus laufender und Schlussüberschussbeteiligung.",
+      "tags": [
+        "Produkte",
+        "Finanzen"
+      ]
+    },
+    {
       "term": "GKV",
       "definition": "Gesetzliche Krankenversicherung — das Solidarsystem für ~74,5 Mio. Versicherte."
+    },
+    {
+      "term": "Grüne Karte",
+      "definition": "Internationaler Versicherungsnachweis für Kfz-Haftpflicht bei Auslandsfahrten. Nachweis des Versicherungsschutzes für das Gastland.",
+      "tags": [
+        "Produkte"
+      ]
+    },
+    {
+      "term": "Haftpflichtversicherung",
+      "definition": "Deckt Schadensersatzansprüche Dritter, die durch den Versicherungsnehmer verursacht wurden (§ 823 BGB). Unterschieden in Privat-, Betriebs- und spezielle Haftpflicht.",
+      "tags": [
+        "Produkte"
+      ]
+    },
+    {
+      "term": "Haftungsfreistellung",
+      "definition": "Klausel, durch die der Versicherungsvertrag den Versicherer von bestimmten Risiken oder Schäden freistellt.",
+      "tags": [
+        "Produkte"
+      ]
+    },
+    {
+      "term": "Handelsbilanz vs. Steuerbilanz",
+      "definition": "Versicherer müssen sowohl HGB-Abschlüsse (Handelsbilanz) als auch steuerliche Bilanzen erstellen — mit unterschiedlichen Rückstellungsvorschriften.",
+      "tags": [
+        "Finanzen"
+      ]
+    },
+    {
+      "term": "Hochrisiko-Pools",
+      "definition": "Gemeinschaftliche Risikogemeinschaft für Risiken, die einzelne Versicherer nicht allein tragen können (z.B. Nuklearpool, Terrorpool).",
+      "tags": [
+        "Markt"
+      ]
+    },
+    {
+      "term": "Honorarberatung",
+      "definition": "Vergütungsmodell, bei dem der Berater ein transparentes Honorar vom Kunden erhält statt Provision vom Versicherer. Nettotarife ohne Vertriebskosten.",
+      "tags": [
+        "Vertrieb"
+      ]
     },
     {
       "term": "Höchstrechnungszins",
@@ -2859,44 +5261,556 @@
       "definition": "Insurance Distribution Directive — EU-Richtlinie zur Versicherungsvertriebsregulierung."
     },
     {
+      "term": "IFRS 17",
+      "definition": "Internationaler Rechnungslegungsstandard für Versicherungsverträge, ab 2023 verpflichtend. Ersetzt IFRS 4; erhöht Transparenz und Vergleichbarkeit.",
+      "tags": [
+        "Finanzen",
+        "Regulatorik"
+      ]
+    },
+    {
+      "term": "Inflation Guard",
+      "definition": "Automatische Anpassung der Versicherungssumme an die Inflation (Indexierung), um Unterversicherung zu vermeiden.",
+      "tags": [
+        "Produkte"
+      ]
+    },
+    {
+      "term": "InsurTech",
+      "definition": "Technologiegetriebene Start-ups, die traditionelle Versicherungsprozesse digitalisieren oder disruptieren. Kategorien: Vollversicherer, MGA, Plattform, B2B-Tech.",
+      "tags": [
+        "Zukunft",
+        "Markt"
+      ]
+    },
+    {
+      "term": "Invaliditätsversicherung",
+      "definition": "Absicherung des Risikos, dauerhaft erwerbsunfähig zu werden. Kern: Berufsunfähigkeitsversicherung (BU), Erwerbsminderungsschutz.",
+      "tags": [
+        "Produkte"
+      ]
+    },
+    {
+      "term": "Jahresabschluss",
+      "definition": "Pflichtpublikation nach HGB mit Bilanz, Gewinn-und-Verlust-Rechnung, Anhang und Lagebericht. Zusätzlich SFCR/QRT unter Solvency II.",
+      "tags": [
+        "Finanzen",
+        "Regulatorik"
+      ]
+    },
+    {
+      "term": "Kapitalanlagevorschriften",
+      "definition": "VAG §§ 124–135: Versicherer müssen Kapitalanlagen sicher, rentabel, liquide und diversifiziert anlegen (Prudent Person Principle). Keine Anlagelisten mehr.",
+      "tags": [
+        "Regulatorik",
+        "Finanzen"
+      ]
+    },
+    {
+      "term": "Kavaliersschaden",
+      "definition": "Umgangssprachlich für kleine Schäden, die Versicherte oft selbst tragen, um ihren Schadenfreiheitsrabatt zu erhalten.",
+      "tags": [
+        "Produkte"
+      ]
+    },
+    {
+      "term": "Klumpenrisiko",
+      "definition": "Konzentration gleichartiger Risiken in einem Bestand oder einer Region, die bei einem Katastrophenereignis gleichzeitig ausgelöst werden.",
+      "tags": [
+        "Finanzen",
+        "Markt"
+      ]
+    },
+    {
+      "term": "Kombination (Kombi-Produkt)",
+      "definition": "Versicherungsprodukt, das mehrere Deckungen in einem Vertrag bündelt, z.B. Hausrat + Privathaftpflicht, oder BU + Lebensversicherung.",
+      "tags": [
+        "Produkte"
+      ]
+    },
+    {
+      "term": "Korrespondenzversicherung",
+      "definition": "Grenzüberschreitender Versicherungsschutz über Niederlassungen oder Korrespondenzpartner in anderen Ländern.",
+      "tags": [
+        "Markt"
+      ]
+    },
+    {
+      "term": "Krankentagegeld",
+      "definition": "Tägliche Geldleistung im Krankheitsfall nach Ablauf einer Karenzzeit. PKV-Leistung für Selbstständige zur Sicherung des Einkommens bei Arbeitsunfähigkeit.",
+      "tags": [
+        "Produkte",
+        "PKV"
+      ]
+    },
+    {
+      "term": "Kulanz",
+      "definition": "Freiwillige Leistung des Versicherers, die über die vertragliche Pflicht hinausgeht, z.B. bei grenzwertigen Deckungsfragen im Kundensinteresse.",
+      "tags": [
+        "Markt"
+      ]
+    },
+    {
+      "term": "Kündigungsrecht",
+      "definition": "Recht von VN und Versicherer, den Vertrag zu beenden. Im VVG geregelt (§§ 19-22, 37-39). Besondere Regelungen nach Schaden.",
+      "tags": [
+        "Regulatorik",
+        "Produkte"
+      ]
+    },
+    {
+      "term": "Leistungsfreiheit",
+      "definition": "Der Versicherer ist von der Leistungspflicht befreit, z.B. bei Verletzung der Anzeigepflicht (§ 19 VVG) oder vorsätzlicher Herbeiführung des Versicherungsfalls.",
+      "tags": [
+        "Regulatorik",
+        "Produkte"
+      ]
+    },
+    {
       "term": "LVRG",
       "definition": "Lebensversicherungsreformgesetz 2014 — senkte u.a. den Höchstzillmersatz auf 25‰."
+    },
+    {
+      "term": "Makler",
+      "definition": "Unabhängiger Versicherungsvermittler, der rechtlich als Treuhänder des Kunden gilt und verpflichtet ist, marktunabhängig zu beraten (§ 59 VVG).",
+      "tags": [
+        "Vertrieb"
+      ]
+    },
+    {
+      "term": "Maklercourtage",
+      "definition": "Vergütung des Maklers durch den Versicherer. Bemessungsgrundlage und -sätze variieren stark nach Sparte und Produkt.",
+      "tags": [
+        "Vertrieb",
+        "Finanzen"
+      ]
+    },
+    {
+      "term": "Managing General Agent (MGA)",
+      "definition": "Unternehmen mit Vollmacht eines Versicherers zur eigenständigen Risikozeichnung, Tarif- und Bedingungsgestaltung in definierten Segmenten.",
+      "tags": [
+        "Markt",
+        "Vertrieb"
+      ]
     },
     {
       "term": "MCR",
       "definition": "Minimum Capital Requirement — die absolute Kapitaluntergrenze unter Solvency II."
     },
     {
+      "term": "Mehrfachagent",
+      "definition": "Vermittler, der für mehrere Versicherungsgesellschaften tätig ist, aber als deren Vertreter gilt — nicht als unabhängiger Makler.",
+      "tags": [
+        "Vertrieb"
+      ]
+    },
+    {
+      "term": "Mindestversicherungssummen",
+      "definition": "Gesetzlich vorgeschriebene Mindestdeckungen, z.B. Kfz-Haftpflicht: €7,5 Mio. Personenschäden, €1,22 Mio. Sachschäden.",
+      "tags": [
+        "Produkte",
+        "Regulatorik"
+      ]
+    },
+    {
+      "term": "Nettobeitrag",
+      "definition": "Der für die Risikodeckung benötigte Beitragsteil ohne Kosten- und Gewinnzuschläge. Grundlage der aktuariellen Kalkulation.",
+      "tags": [
+        "Finanzen"
+      ]
+    },
+    {
+      "term": "Nettotarif",
+      "definition": "Versicherungstarif ohne einkalkulierte Vertriebskosten. Voraussetzung für honorarbasierte Beratung und Direktvertrieb.",
+      "tags": [
+        "Produkte",
+        "Vertrieb"
+      ]
+    },
+    {
+      "term": "Neugeschäft",
+      "definition": "Alle im Berichtszeitraum neu abgeschlossenen Versicherungsverträge. Wichtige Kennzahl für Wachstum und Vertriebserfolg.",
+      "tags": [
+        "Markt",
+        "Finanzen"
+      ]
+    },
+    {
+      "term": "Niederlassungsfreiheit (EU)",
+      "definition": "EU-Recht erlaubt Versicherern, Niederlassungen in allen EU-Mitgliedstaaten zu betreiben. Basis für den europäischen Versicherungsbinnenmarkt.",
+      "tags": [
+        "Regulatorik",
+        "Markt"
+      ]
+    },
+    {
+      "term": "Obligatorische Rückversicherung",
+      "definition": "Automatische Rückversicherung aller Risiken eines Bestands in einem definierten Rahmen — im Gegensatz zur fakultativen Rückversicherung (Einzelfall).",
+      "tags": [
+        "Markt"
+      ]
+    },
+    {
+      "term": "Open Insurance",
+      "definition": "Konzept des offenen Datenzugangs für Versicherungsdaten durch Drittanbieter, analog zu Open Banking. Regulatorisch durch FIDA vorangetrieben.",
+      "tags": [
+        "Zukunft",
+        "Regulatorik"
+      ]
+    },
+    {
+      "term": "Optionaler Tarif",
+      "definition": "Tarif mit eingebetteten Optionen, z.B. Nachversicherungsgarantie ohne Gesundheitsprüfung bei Lebensereignissen (Hochzeit, Geburt).",
+      "tags": [
+        "Produkte"
+      ]
+    },
+    {
       "term": "ORSA",
       "definition": "Own Risk and Solvency Assessment — unternehmenseigene Risiko- und Solvabilitätsbeurteilung."
+    },
+    {
+      "term": "Outsouring (Dienstleistungsauslagerung)",
+      "definition": "Übertragung von Versicherungsprozessen (IT, Schadenbearbeitung, Aktuariat) an externe Dienstleister. Unter Solvency II mit Genehmigungspflichten.",
+      "tags": [
+        "Markt",
+        "Regulatorik"
+      ]
+    },
+    {
+      "term": "Pension (betriebliche)",
+      "definition": "Leistungen zur Altersversorgung, die der Arbeitgeber seinen Beschäftigten zusagt. Fünf Durchführungswege in Deutschland.",
+      "tags": [
+        "Produkte"
+      ]
+    },
+    {
+      "term": "Pflichtversicherung",
+      "definition": "Vom Gesetz- oder Verordnungsgeber vorgeschriebene Versicherung, z.B. Kfz-Haftpflicht, Berufshaftpflicht für Anwälte/Ärzte.",
+      "tags": [
+        "Produkte",
+        "Regulatorik"
+      ]
     },
     {
       "term": "PKV",
       "definition": "Private Krankenversicherung — Äquivalenzprinzip, 8,79 Mio. Vollversicherte (2025)."
     },
     {
+      "term": "POG (Product Oversight and Governance)",
+      "definition": "IDD-Anforderung: Versicherer und Vertreiber müssen Prozesse zur Produktentwicklung, Zielmarktdefinition und laufenden Produktüberwachung einrichten.",
+      "tags": [
+        "Regulatorik"
+      ]
+    },
+    {
+      "term": "Pool (Versicherungs-)",
+      "definition": "Gemeinschaftliche Risikoübernahme mehrerer Versicherer für Risiken, die einzeln nicht tragbar sind (z.B. Extremereignisse, Atomrisiko).",
+      "tags": [
+        "Markt"
+      ]
+    },
+    {
+      "term": "Portabilität (PKV)",
+      "definition": "Recht des PKV-Versicherten, beim Wechsel zu einem anderen PKV-Unternehmen einen Teil der Alterungsrückstellungen mitzunehmen (§ 204 VVG).",
+      "tags": [
+        "Produkte",
+        "PKV",
+        "Regulatorik"
+      ]
+    },
+    {
+      "term": "Privathaftpflichtversicherung",
+      "definition": "Absicherung privater Haftpflichtansprüche Dritter. In Deutschland eine der wichtigsten Grundversicherungen.",
+      "tags": [
+        "Produkte"
+      ]
+    },
+    {
+      "term": "Proportionale Rückversicherung",
+      "definition": "Form der Rückversicherung, bei der Prämien und Schäden anteilig zwischen Erst- und Rückversicherer geteilt werden (Quote Share, Surplus).",
+      "tags": [
+        "Markt"
+      ]
+    },
+    {
+      "term": "Provision",
+      "definition": "Vergütung für Vermittler beim Abschluss oder Bestand von Versicherungsverträgen. Haupttypen: Abschlussprovision (AP) und Bestandsprovision (BP).",
+      "tags": [
+        "Vertrieb",
+        "Finanzen"
+      ]
+    },
+    {
+      "term": "Provisionsabgabeverbot",
+      "definition": "In Deutschland ist es Versicherern und Vermittlern verboten, Teile der Provision an den Kunden weiterzugeben (§ 48b VAG, § 34d GewO).",
+      "tags": [
+        "Regulatorik",
+        "Vertrieb"
+      ]
+    },
+    {
+      "term": "Prämienkalkulation",
+      "definition": "Berechnung der Versicherungsprämie auf Basis von Risikostatistiken, Kostenstruktur, Gewinnerwartung und Wettbewerbssituation.",
+      "tags": [
+        "Finanzen"
+      ]
+    },
+    {
+      "term": "Quotenrückversicherung",
+      "definition": "Proportionale Rückversicherung: Prämien und Schäden eines Bestands werden nach einem festen Prozentsatz zwischen Erst- und Rückversicherer geteilt.",
+      "tags": [
+        "Markt"
+      ]
+    },
+    {
+      "term": "Rechtsschutzversicherung",
+      "definition": "Übernimmt Kosten für rechtliche Auseinandersetzungen (Anwalts- und Gerichtskosten). Unterschieden nach Lebensbereichen: Privat, Berufs, Verkehr, Miete.",
+      "tags": [
+        "Produkte"
+      ]
+    },
+    {
+      "term": "Rente (private Rentenversicherung)",
+      "definition": "Versicherungsprodukt, das gegen Einmalbeitrag oder laufende Prämie eine lebenslange oder zeitlich begrenzte Rentenzahlung garantiert.",
+      "tags": [
+        "Produkte"
+      ]
+    },
+    {
+      "term": "Reserven (versicherungstechnische Rückstellungen)",
+      "definition": "Bilanziell ausgewiesene Verpflichtungen für zukünftige Schäden und Leistungen. Wichtigste Typen: Schadenrückstellungen, Beitragsüberträge, Deckungsrückstellungen.",
+      "tags": [
+        "Finanzen"
+      ]
+    },
+    {
+      "term": "Riester-Rente",
+      "definition": "Staatlich geförderte private Altersvorsorge (seit 2002). Förderung durch direkte Zulagen und Sonderausgabenabzug. Reform (Reformdebatte) läuft seit Jahren.",
+      "tags": [
+        "Produkte"
+      ]
+    },
+    {
+      "term": "Risikoklasse",
+      "definition": "Kategorisierung eines Versicherungsnehmers anhand risikoerheblicher Merkmale (Alter, Vorschäden, Fahrzeugtyp) zur Prämienberechnung.",
+      "tags": [
+        "Finanzen"
+      ]
+    },
+    {
+      "term": "Risikolebensversicherung",
+      "definition": "Reine Todesfallabsicherung ohne Sparanteil. Günstigste Form des Todesfallschutzes, ideal für Familien und Kreditabsicherung.",
+      "tags": [
+        "Produkte"
+      ]
+    },
+    {
+      "term": "Risikoäquivalenz",
+      "definition": "Grundsatz, dass die Prämie dem individuellen Risiko entsprechen soll. Im Konflikt mit Solidarprinzip (GKV) und bestimmten Verbotsregelungen (Geschlecht in EU).",
+      "tags": [
+        "Finanzen",
+        "Regulatorik"
+      ]
+    },
+    {
       "term": "Run-off",
       "definition": "Abwicklung geschlossener Versicherungsbestände durch spezialisierte Plattformen wie Viridium."
-    },
-    {
-      "term": "SCR",
-      "definition": "Solvency Capital Requirement — Solvenzkapitalanforderung basierend auf 99,5%-VaR."
-    },
-    {
-      "term": "SFCR",
-      "definition": "Solvency and Financial Condition Report — öffentlicher Bericht unter Solvency II Säule 3."
     },
     {
       "term": "S/U",
       "definition": "Schaden-/Unfallversicherung — Komposit-Segment inkl. Kfz, Haftpflicht, Sach, etc."
     },
     {
+      "term": "Schadenmeldung",
+      "definition": "Meldung des Versicherungsfalls durch den Versicherungsnehmer beim Versicherer. Fristenregelungen im VVG.",
+      "tags": [
+        "Produkte"
+      ]
+    },
+    {
+      "term": "Schadensersatz",
+      "definition": "Haftpflichtrechtliche Verpflichtung zum Ausgleich des Schadens, den der Schädiger einem Dritten zugefügt hat (§§ 249 ff. BGB).",
+      "tags": [
+        "Regulatorik"
+      ]
+    },
+    {
+      "term": "SCR",
+      "definition": "Solvency Capital Requirement — Solvenzkapitalanforderung basierend auf 99,5%-VaR."
+    },
+    {
+      "term": "Selbstbehalt (SB)",
+      "definition": "Anteil des Schadens, den der Versicherungsnehmer selbst trägt. Reduziert die Prämie und steuert das Moral-Hazard-Risiko.",
+      "tags": [
+        "Produkte"
+      ]
+    },
+    {
+      "term": "SFCR",
+      "definition": "Solvency and Financial Condition Report — öffentlicher Bericht unter Solvency II Säule 3."
+    },
+    {
+      "term": "Solvenz",
+      "definition": "Fähigkeit eines Versicherungsunternehmens, seine Verbindlichkeiten jederzeit erfüllen zu können. Maßstab: SCR- und MCR-Erfüllung unter Solvency II.",
+      "tags": [
+        "Regulatorik",
+        "Finanzen"
+      ]
+    },
+    {
+      "term": "Spartentrennung",
+      "definition": "§ 8 VAG: Lebens- und Schaden-/Unfallversicherung dürfen nicht im selben Unternehmen betrieben werden. Kernprinzip des deutschen Aufsichtsrechts.",
+      "tags": [
+        "Regulatorik"
+      ]
+    },
+    {
+      "term": "Sterbewahrscheinlichkeit",
+      "definition": "Statistische Wahrscheinlichkeit, dass eine Person eines bestimmten Alters innerhalb eines Jahres stirbt. Grundlage der Lebensversicherungskalkulation (Sterbetafeln).",
+      "tags": [
+        "Finanzen"
+      ]
+    },
+    {
       "term": "Stornohaftung",
       "definition": "Pflicht zur Provisionsrückzahlung bei Vertragsstornierung innerhalb von 5 Jahren (§ 49 VAG)."
     },
     {
+      "term": "Stressszenario",
+      "definition": "Simulation extremer, aber plausibler Szenarien zur Prüfung der Kapitaladäquanz. Pflicht im ORSA-Prozess unter Solvency II.",
+      "tags": [
+        "Regulatorik",
+        "Finanzen"
+      ]
+    },
+    {
+      "term": "Technische Rückstellungen (Solvency II)",
+      "definition": "Beste Schätzung (Best Estimate) plus Risikomarge aller zukünftigen Verpflichtungen aus Versicherungsverträgen — nach Solvency-II-Methodik marktwertbasiert.",
+      "tags": [
+        "Finanzen",
+        "Regulatorik"
+      ]
+    },
+    {
+      "term": "Telematik-Versicherung",
+      "definition": "Nutzungsbasierte Versicherung, bei der GPS/Fahrtenmonitoring die Prämie bestimmt (Pay-how-you-drive, Pay-as-you-drive). Besonders in der Kfz-Sparte.",
+      "tags": [
+        "Zukunft",
+        "Produkte"
+      ]
+    },
+    {
+      "term": "Todesfallschutz",
+      "definition": "Versicherungsleistung, die im Todesfall des Versicherten an die Hinterbliebenen oder begünstigte Personen ausgezahlt wird.",
+      "tags": [
+        "Produkte"
+      ]
+    },
+    {
+      "term": "Transparenzanforderungen (IDD)",
+      "definition": "IDD verpflichtet Vermittler, alle Interessenkonflikte offenzulegen und Vergütungen auf Anfrage zu benennen. PIB (Produktinformationsblatt) für alle Versicherungsprodukte.",
+      "tags": [
+        "Regulatorik",
+        "Vertrieb"
+      ]
+    },
+    {
+      "term": "Treuhänder (PKV)",
+      "definition": "Unabhängige Fachperson, die PKV-Beitragsanpassungen prüft und genehmigt, bevor Versicherer sie durchführen dürfen.",
+      "tags": [
+        "PKV",
+        "Regulatorik"
+      ]
+    },
+    {
+      "term": "Underinsurance (Unterversicherung)",
+      "definition": "Versicherungssumme liegt unter dem tatsächlichen Wert. Im Schadenfall greift die anteilige Haftungsklausel — VN trägt einen Teil des Schadens selbst.",
+      "tags": [
+        "Produkte"
+      ]
+    },
+    {
+      "term": "Underwriting",
+      "definition": "Risikobewertung, -selektion und Prämienberechnung für Versicherungsanträge. Kern des versicherungstechnischen Geschäfts.",
+      "tags": [
+        "Markt"
+      ]
+    },
+    {
+      "term": "Unfallversicherung",
+      "definition": "Absicherung von Unfallfolgen (Invalidität, Tod, Krankenhausaufenthalt). Unterschieden in private UV und gesetzliche UV (Berufsgenossenschaft).",
+      "tags": [
+        "Produkte"
+      ]
+    },
+    {
+      "term": "Unit-Linked (Fondsgebundene Versicherung)",
+      "definition": "Lebensversicherung mit Kapitalanlage in Investmentfonds — das Kapitalmarktrisiko liegt beim Versicherungsnehmer. Kein Garantiezins.",
+      "tags": [
+        "Produkte"
+      ]
+    },
+    {
+      "term": "Unterstützungskasse",
+      "definition": "bAV-Durchführungsweg: externe Einrichtung ohne eigene Rechtsansprüche des Arbeitnehmers gegenüber der Kasse (nur gegenüber Arbeitgeber).",
+      "tags": [
+        "Produkte"
+      ]
+    },
+    {
       "term": "VAG",
       "definition": "Versicherungsaufsichtsgesetz — Grundlage der Unternehmensaufsicht mit Spartentrennung (§ 8)."
+    },
+    {
+      "term": "Versicherungsbetrug",
+      "definition": "Strafbare Handlung (§ 263 StGB): Vortäuschen eines nicht eingetretenen Versicherungsfalls oder Überversicherung, um Versicherungsleistung zu erschleichen.",
+      "tags": [
+        "Regulatorik"
+      ]
+    },
+    {
+      "term": "Versicherungsdichte",
+      "definition": "Prämieneinnahmen pro Einwohner. International vergleichende Kennzahl des wirtschaftlichen Entwicklungsniveaus eines Versicherungsmarkts.",
+      "tags": [
+        "Markt"
+      ]
+    },
+    {
+      "term": "Versicherungsdurchdringung",
+      "definition": "Verhältnis von Prämieneinnahmen zum BIP eines Landes. Deutschland: ca. 6%. Höher in UK und Niederlande.",
+      "tags": [
+        "Markt"
+      ]
+    },
+    {
+      "term": "Versicherungspflicht",
+      "definition": "Gesetzliche Pflicht zum Abschluss einer bestimmten Versicherung, z.B. Kfz-Haftpflicht, Berufshaftpflicht, Arbeitgeberversicherung.",
+      "tags": [
+        "Regulatorik",
+        "Produkte"
+      ]
+    },
+    {
+      "term": "Versicherungssumme",
+      "definition": "Im Versicherungsvertrag vereinbarter Maximalbetrag für die Versicherungsleistung. Nicht zu verwechseln mit Versicherungswert (tatsächlicher Wert).",
+      "tags": [
+        "Produkte"
+      ]
+    },
+    {
+      "term": "Versicherungswert",
+      "definition": "Der tatsächliche Wert des versicherten Interesses zum Zeitpunkt des Schadens. Basis für die Schadenbemessung und Unterversicherungsklausel.",
+      "tags": [
+        "Produkte"
+      ]
+    },
+    {
+      "term": "Vollkasko",
+      "definition": "Kfz-Versicherungsdeckung für eigenverschuldete und durch Fremdeinwirkung verursachte Schäden am eigenen Fahrzeug. Freiwillig, höhere Prämie als Teilkasko.",
+      "tags": [
+        "Produkte"
+      ]
     },
     {
       "term": "VVaG",
@@ -2905,6 +5819,104 @@
     {
       "term": "VVG",
       "definition": "Versicherungsvertragsgesetz — regelt die Beziehung zwischen Versicherer und Versicherungsnehmer."
+    },
+    {
+      "term": "Waiver of Premium",
+      "definition": "Klausel in Lebensversicherungen: Bei Eintritt von Berufsunfähigkeit entfällt die Beitragspflicht, der Versicherungsschutz bleibt bestehen.",
+      "tags": [
+        "Produkte"
+      ]
+    },
+    {
+      "term": "Wertpapierpensionsfonds",
+      "definition": "bAV-Durchführungsweg mit Anlage in Wertpapiere. Bietet Kapitalmarktchancen, aber auch -risiken für Arbeitnehmer.",
+      "tags": [
+        "Produkte"
+      ]
+    },
+    {
+      "term": "Wiederherstellungsklausel",
+      "definition": "Klausel in Sachversicherungen: Die Versicherungssumme wird nach einem Schaden automatisch wiederhergestellt, oft gegen Zusatzprämie.",
+      "tags": [
+        "Produkte"
+      ]
+    },
+    {
+      "term": "Wohngebäudeversicherung",
+      "definition": "Versicherung des Gebäudes gegen Feuer, Leitungswasser, Sturm/Hagel. Häufig Pflichtbedingung bei Immobilienfinanzierungen.",
+      "tags": [
+        "Produkte"
+      ]
+    },
+    {
+      "term": "Zahlungsunfähigkeit (Insolvenz)",
+      "definition": "Einstellung der Zahlungen durch den Versicherer. BaFin hat Eingriffsmöglichkeiten (§§ 137-140 VAG). Sicherungsfonds für bestimmte Sparten (Protektor für Leben).",
+      "tags": [
+        "Regulatorik"
+      ]
+    },
+    {
+      "term": "Zeichnungsrisiko",
+      "definition": "Risiko, dass die tatsächlichen Schäden die kalkulierten Prämien übersteigen. Kernrisiko im versicherungstechnischen Geschäft.",
+      "tags": [
+        "Finanzen",
+        "Markt"
+      ]
+    },
+    {
+      "term": "Zielmarkt",
+      "definition": "POG-Anforderung: Versicherer müssen für jedes Produkt eine Zielmarktdefinition erstellen, für die das Produkt geeignet ist.",
+      "tags": [
+        "Regulatorik",
+        "Produkte"
+      ]
+    },
+    {
+      "term": "Zillmerung",
+      "definition": "Verrechnungsverfahren, bei dem Abschlusskosten im ersten Vertragsjahr vorab aus dem Deckungskapital entnommen werden. Höchstzillmersatz: 25‰ BWS.",
+      "tags": [
+        "Finanzen",
+        "Regulatorik"
+      ]
+    },
+    {
+      "term": "Zinszusatzreserve (ZZR)",
+      "definition": "Zusätzliche Rückstellung für Lebensversicherer, wenn Marktzinsen unterhalb des Referenzzinssatzes liegen. Ab 2025 mit steigendem Zinsniveau teilweise rückgängig gemacht.",
+      "tags": [
+        "Finanzen"
+      ]
+    },
+    {
+      "term": "Zusatzversicherung (GKV-Ergänzung)",
+      "definition": "Private Versicherung zur Ergänzung der GKV-Leistungen, z.B. Zahnzusatz, stationäre Zusatzdeckung, Chefarztbehandlung.",
+      "tags": [
+        "Produkte",
+        "PKV"
+      ]
+    },
+    {
+      "term": "Zweckgesellschaft (SPV)",
+      "definition": "Special Purpose Vehicle — rechtliche Konstruktion, über die alternative Risikoübertragungen (Insurance-Linked Securities, Cat Bonds) strukturiert werden.",
+      "tags": [
+        "Finanzen",
+        "Markt"
+      ]
+    },
+    {
+      "term": "Ökosystem (Versicherungs-)",
+      "definition": "Netzwerk aus Versicherern, InsurTechs, Plattformen, Maklern, OEM-Partnern und Datenanbietern, das gemeinsam Versicherungsprodukte und -dienstleistungen erzeugt.",
+      "tags": [
+        "Zukunft",
+        "Markt"
+      ]
+    },
+    {
+      "term": "Überversicherung",
+      "definition": "Versicherungssumme übersteigt den tatsächlichen Wert des Interesses. Kein Gewinn möglich — VN erhält maximal den tatsächlichen Schaden (§ 74 VVG).",
+      "tags": [
+        "Produkte",
+        "Regulatorik"
+      ]
     }
   ],
   "lastUpdated": "2026-02-26",

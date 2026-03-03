@@ -52,6 +52,14 @@
   var icons = {
     'bar-chart-3': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>',
     'building-2': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><path d="M6 22V4a2 2 0 012-2h8a2 2 0 012 2v18Z"/><path d="M6 12H4a2 2 0 00-2 2v6a2 2 0 002 2h2"/><path d="M18 9h2a2 2 0 012 2v9a2 2 0 01-2 2h-2"/><path d="M10 6h4"/><path d="M10 10h4"/><path d="M10 14h4"/><path d="M10 18h4"/></svg>',
+    'package': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><path d="M16.5 9.4l-9-5.19"/><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 002 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>',
+    'git-branch': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 01-9 9"/></svg>',
+    'coins': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><circle cx="8" cy="8" r="6"/><path d="M18.09 10.37A6 6 0 1110.34 18"/><path d="M7 6h1v4"/><path d="M16.71 13.88l.7.71-2.82 2.82"/></svg>',
+    'arrow-up': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>',
+    'arrow-down': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>',
+    'rotate-ccw': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>',
+    'x': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>',
+    'search': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>',
     'shield-check': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>',
     'network': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><rect x="16" y="16" width="6" height="6" rx="1"/><rect x="2" y="16" width="6" height="6" rx="1"/><rect x="9" y="2" width="6" height="6" rx="1"/><path d="M5 16v-3a1 1 0 011-1h12a1 1 0 011 1v3"/><path d="M12 12V8"/></svg>',
     'banknote': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg>',
@@ -183,6 +191,9 @@
 
     // Mark as visited
     markChapterVisited(chapterId);
+
+    // Update breadcrumb
+    renderBreadcrumb(chapter.title);
 
     // Update top nav active state
     setActiveNav(chapterId);
@@ -323,6 +334,14 @@
     if (chapter.id === '02-marktteilnehmer') {
       setTimeout(animateMarketBars, 300);
     }
+
+    // Init Chart.js charts and D3 components
+    setTimeout(function() {
+      initCharts(chapter);
+      initD3Components(chapter);
+      initCountUpObservers();
+      initGlossaryPopovers();
+    }, 200);
   }
 
   function renderContentBlocks(blocks) {
@@ -339,6 +358,28 @@
         html += renderTable(block);
       } else if (block.type === 'callout') {
         html += renderCallout(block);
+      } else if (block.type === 'infoKachelGrid') {
+        html += renderInfoKachelGrid(block);
+      } else if (block.type === 'timeline') {
+        html += renderTimeline(block);
+      } else if (block.type === 'chartLine' || block.type === 'chartBar' || block.type === 'chartDonut') {
+        html += renderChartBlock(block, idx);
+      } else if (block.type === 'heatmapGrid') {
+        html += renderHeatmapGrid(block);
+      } else if (block.type === 'regulatoryPyramid') {
+        html += renderRegulatoryPyramid(block);
+      } else if (block.type === 'valueChain') {
+        html += renderValueChain(block);
+      } else if (block.type === 'combinedRatioCalc') {
+        html += renderCombinedRatioCalc(block);
+      } else if (block.type === 'trendRadar') {
+        html += renderTrendRadar(block);
+      } else if (block.type === 'networkGraph') {
+        html += renderNetworkGraph(block);
+      } else if (block.type === 'decisionTree') {
+        html += renderDecisionTreeBlock(block);
+      } else if (block.type === 'comparisonTable') {
+        html += renderComparisonTable(block);
       }
       html += '</div>';
     });
@@ -534,6 +575,10 @@
   // ========================================
 
   var wissencheckChapterIndex = 0;
+  var wissencheckMode = 'all'; // 'all' | 'quick'
+  var wissencheckModuleFilter = 'all'; // 'all' | chapter index (number)
+  var wissencheckActiveQuestions = [];
+  var wissencheckCorrectByChapter = {};
 
   function openWissencheck() {
     if (!moduleData) return;
@@ -542,8 +587,13 @@
     currentQuizIndex = 0;
     quizAnswered = {};
     wissencheckChapterIndex = 0;
+    wissencheckMode = 'all';
+    wissencheckModuleFilter = 'all';
+    wissencheckActiveQuestions = [];
+    wissencheckCorrectByChapter = {};
 
     setActiveNav('wissenscheck');
+    renderBreadcrumb('Wissenscheck');
 
     var contentInner = document.getElementById('v1x1ContentInner');
     if (!contentInner) return;
@@ -562,76 +612,161 @@
     html += '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>';
     html += ' Wissenscheck';
     html += '</h2>';
-    html += '<p class="v1x1-wissenscheck-subtitle">Teste dein Wissen zu allen Kapiteln</p>';
+    html += '<p class="v1x1-wissenscheck-subtitle">Teste dein Wissen zu allen Kapiteln des Versicherungs-1×1</p>';
     html += '</div>';
+
+    // Filter bar: module + mode + start
+    html += '<div class="v1x1-wk-filters">';
+
+    // Module filter dropdown
+    html += '<div class="v1x1-wk-filter-group">';
+    html += '<label class="v1x1-wk-filter-label">Modul</label>';
+    html += '<select class="v1x1-wk-select" id="v1x1WkModuleSelect" onchange="V1x1.setWkModuleFilter(this.value)">';
+    html += '<option value="all"' + (wissencheckModuleFilter === 'all' ? ' selected' : '') + '>Alle Module</option>';
+    moduleData.chapters.forEach(function(ch, i) {
+      if (ch.quiz && ch.quiz.length > 0) {
+        html += '<option value="' + i + '"' + (wissencheckModuleFilter === i ? ' selected' : '') + '>';
+        html += String(i + 1).padStart(2, '0') + '. ' + escapeHtml(ch.title);
+        html += '</option>';
+      }
+    });
+    html += '</select>';
+    html += '</div>';
+
+    // Mode toggle
+    html += '<div class="v1x1-wk-filter-group">';
+    html += '<label class="v1x1-wk-filter-label">Modus</label>';
+    html += '<div class="v1x1-wk-mode-toggle">';
+    html += '<button class="v1x1-wk-mode-btn' + (wissencheckMode === 'all' ? ' active' : '') + '" onclick="V1x1.setWkMode(\'all\')">Alle Fragen</button>';
+    html += '<button class="v1x1-wk-mode-btn' + (wissencheckMode === 'quick' ? ' active' : '') + '" onclick="V1x1.setWkMode(\'quick\')">Quick-Check (10)</button>';
+    html += '</div>';
+    html += '</div>';
+
+    // Question count badge
+    var previewCount = getWkQuestions().length;
+    html += '<div class="v1x1-wk-filter-group">';
+    html += '<span class="v1x1-wk-count-badge">' + previewCount + ' Fragen</span>';
+    html += '</div>';
+
+    // Start button
+    html += '<div class="v1x1-wk-filter-group">';
+    html += '<button class="v1x1-wk-start-btn" onclick="V1x1.startWissenscheck()">';
+    html += getIcon('check') + ' Quiz starten';
+    html += '</button>';
+    html += '</div>';
+
+    html += '</div>'; // .v1x1-wk-filters
 
     // Chapter selector cards
     html += '<div class="v1x1-wissenscheck-chapters">';
     moduleData.chapters.forEach(function(ch, i) {
       var hasQuiz = ch.quiz && ch.quiz.length > 0;
-      var num = String(i + 1).padStart(2, '0');
-      var cls = 'v1x1-wissenscheck-card' + (hasQuiz ? '' : ' disabled') + (i === wissencheckChapterIndex ? ' active' : '');
-      html += '<button class="' + cls + '" ' + (hasQuiz ? 'onclick="V1x1.selectWissencheckChapter(' + i + ')"' : '') + '>';
+      var cls = 'v1x1-wissenscheck-card' + (hasQuiz ? '' : ' disabled') + (wissencheckModuleFilter === i ? ' active' : '');
+      html += '<button class="' + cls + '" ';
+      if (hasQuiz) html += 'onclick="V1x1.setWkModuleFilter(' + i + ')" ';
+      html += '>';
       html += '<span class="v1x1-wissenscheck-card-icon">' + getIcon(ch.icon) + '</span>';
-      html += '<span class="v1x1-wissenscheck-card-label">' + num + '. ' + escapeHtml(ch.title) + '</span>';
-      if (hasQuiz) {
-        html += '<span class="v1x1-wissenscheck-card-count">' + ch.quiz.length + ' Fragen</span>';
-      } else {
-        html += '<span class="v1x1-wissenscheck-card-count">Keine Fragen</span>';
-      }
+      html += '<span class="v1x1-wissenscheck-card-label">' + String(i + 1).padStart(2, '0') + '. ' + escapeHtml(ch.title) + '</span>';
+      html += '<span class="v1x1-wissenscheck-card-count">' + (hasQuiz ? ch.quiz.length + ' Fragen' : 'Keine Fragen') + '</span>';
       html += '</button>';
     });
     html += '</div>';
 
-    // Quiz area
-    var selectedChapter = moduleData.chapters[wissencheckChapterIndex];
-    if (selectedChapter && selectedChapter.quiz && selectedChapter.quiz.length > 0) {
-      html += '<div class="v1x1-wissenscheck-quiz" id="v1x1WissencheckQuiz">';
-      html += renderQuiz(selectedChapter.quiz, 0);
-      html += '</div>';
-    }
+    // Quiz render area
+    html += '<div class="v1x1-wissenscheck-quiz" id="v1x1WissencheckQuiz"></div>';
 
     html += '</div>';
     container.innerHTML = html;
   }
 
-  function selectWissencheckChapter(index) {
-    wissencheckChapterIndex = index;
-    currentQuizIndex = 0;
-    quizAnswered = {};
-
-    var contentInner = document.getElementById('v1x1ContentInner');
-    if (contentInner) {
-      renderWissencheckView(contentInner);
+  function getWkQuestions() {
+    if (!moduleData) return [];
+    var questions = [];
+    if (wissencheckModuleFilter === 'all') {
+      moduleData.chapters.forEach(function(ch) {
+        if (ch.quiz && ch.quiz.length > 0) {
+          ch.quiz.forEach(function(q) {
+            questions.push({ question: q.question, options: q.options, correct: q.correct, explanation: q.explanation, chapterId: ch.id, chapterTitle: ch.title });
+          });
+        }
+      });
+    } else {
+      var ch = moduleData.chapters[wissencheckModuleFilter];
+      if (ch && ch.quiz) {
+        ch.quiz.forEach(function(q) {
+          questions.push({ question: q.question, options: q.options, correct: q.correct, explanation: q.explanation, chapterId: ch.id, chapterTitle: ch.title });
+        });
+      }
     }
+    if (wissencheckMode === 'quick') {
+      questions = shuffleArray(questions).slice(0, 10);
+    }
+    return questions;
   }
 
-  // ========================================
-  // QUIZ RENDERING
-  // ========================================
+  function shuffleArray(arr) {
+    var a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+    }
+    return a;
+  }
 
-  function renderQuiz(questions, index) {
+  function setWkModuleFilter(value) {
+    wissencheckModuleFilter = (value === 'all') ? 'all' : parseInt(value, 10);
+    wissencheckActiveQuestions = [];
+    currentQuizIndex = 0;
+    quizAnswered = {};
+    var contentInner = document.getElementById('v1x1ContentInner');
+    if (contentInner) renderWissencheckView(contentInner);
+  }
+
+  function setWkMode(mode) {
+    wissencheckMode = mode;
+    wissencheckActiveQuestions = [];
+    currentQuizIndex = 0;
+    quizAnswered = {};
+    var contentInner = document.getElementById('v1x1ContentInner');
+    if (contentInner) renderWissencheckView(contentInner);
+  }
+
+  function startWissenscheck() {
+    wissencheckActiveQuestions = getWkQuestions();
+    currentQuizIndex = 0;
+    quizAnswered = {};
+    wissencheckCorrectByChapter = {};
+    var quizContainer = document.getElementById('v1x1WissencheckQuiz');
+    if (!quizContainer) return;
+    quizContainer.innerHTML = renderWkQuestion(wissencheckActiveQuestions, 0);
+    quizContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function selectWissencheckChapter(index) {
+    setWkModuleFilter(index);
+  }
+
+  function renderWkQuestion(questions, index) {
+    if (!questions || !questions.length) {
+      return '<p style="color:#9CA3AF;padding:24px;">Keine Fragen verfügbar.</p>';
+    }
     if (index >= questions.length) {
-      // Quiz complete
-      var correct = 0;
-      for (var k in quizAnswered) {
-        if (quizAnswered[k]) correct++;
-      }
-      var html = '<div class="v1x1-quiz-header">';
-      html += '<span class="v1x1-quiz-title">Wissenscheck abgeschlossen!</span>';
-      html += '</div>';
-      html += '<p class="v1x1-quiz-question">Du hast ' + correct + ' von ' + questions.length + ' Fragen richtig beantwortet.</p>';
-      html += '<button class="v1x1-quiz-next-btn" onclick="V1x1.restartQuiz()">Nochmal versuchen</button>';
-      return html;
+      return renderWkEndScreen(questions);
     }
 
     var q = questions[index];
-    var html = '<div class="v1x1-quiz-header">';
-    html += '<span class="v1x1-quiz-title">';
-    html += '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>';
-    html += ' Wissenscheck</span>';
-    html += '<span class="v1x1-quiz-counter">' + (index + 1) + ' / ' + questions.length + '</span>';
+    var total = questions.length;
+    var progress = Math.round((index / total) * 100);
+
+    var html = '<div class="v1x1-wk-question-card">';
+
+    html += '<div class="v1x1-wk-progress-header">';
+    html += '<span class="v1x1-wk-q-counter">Frage ' + (index + 1) + ' / ' + total + '</span>';
+    if (q.chapterTitle) {
+      html += '<span class="v1x1-wk-q-chapter">' + escapeHtml(q.chapterTitle) + '</span>';
+    }
     html += '</div>';
+    html += '<div class="v1x1-wk-progressbar"><div class="v1x1-wk-progressfill" style="width:' + progress + '%"></div></div>';
 
     html += '<p class="v1x1-quiz-question">' + escapeHtml(q.question) + '</p>';
     html += '<div class="v1x1-quiz-options" id="v1x1QuizOptions">';
@@ -644,14 +779,76 @@
     html += '</div>';
     html += '<div id="v1x1QuizFeedback"></div>';
 
+    html += '</div>';
     return html;
+  }
+
+  function renderWkEndScreen(questions) {
+    var correct = 0;
+    var chapterScores = {};
+    questions.forEach(function(q, i) {
+      var isCorrect = !!quizAnswered[i];
+      if (isCorrect) correct++;
+      var cid = q.chapterId || 'unknown';
+      if (!chapterScores[cid]) chapterScores[cid] = { title: q.chapterTitle || cid, correct: 0, total: 0 };
+      chapterScores[cid].total++;
+      if (isCorrect) chapterScores[cid].correct++;
+    });
+
+    var pct = questions.length > 0 ? Math.round((correct / questions.length) * 100) : 0;
+    var grade = pct >= 80 ? 'Ausgezeichnet!' : pct >= 60 ? 'Gut gemacht!' : pct >= 40 ? 'Ausbaufähig' : 'Weitermachen!';
+    var gradeColor = pct >= 80 ? '#059669' : pct >= 60 ? '#2563EB' : pct >= 40 ? '#D97706' : '#DC2626';
+
+    var html = '<div class="v1x1-wk-endscreen">';
+
+    html += '<div class="v1x1-wk-score-hero">';
+    html += '<div class="v1x1-wk-score-circle" style="border-color:' + gradeColor + ';color:' + gradeColor + '">';
+    html += '<span class="v1x1-wk-score-pct">' + pct + '%</span>';
+    html += '<span class="v1x1-wk-score-label">' + correct + ' / ' + questions.length + '</span>';
+    html += '</div>';
+    html += '<h3 class="v1x1-wk-grade" style="color:' + gradeColor + '">' + grade + '</h3>';
+    html += '</div>';
+
+    var chapterIds = Object.keys(chapterScores);
+    if (chapterIds.length > 1) {
+      html += '<div class="v1x1-wk-breakdown">';
+      html += '<h4 class="v1x1-wk-breakdown-title">Ergebnisse nach Modul</h4>';
+      chapterIds.forEach(function(cid) {
+        var cs = chapterScores[cid];
+        var cPct = Math.round((cs.correct / cs.total) * 100);
+        var barColor = cPct >= 80 ? '#059669' : cPct >= 60 ? '#2563EB' : cPct >= 40 ? '#D97706' : '#DC2626';
+        html += '<div class="v1x1-wk-breakdown-row">';
+        html += '<span class="v1x1-wk-breakdown-chapter">' + escapeHtml(cs.title) + '</span>';
+        html += '<div class="v1x1-wk-breakdown-bar-wrap">';
+        html += '<div class="v1x1-wk-breakdown-bar" style="width:' + cPct + '%;background:' + barColor + '"></div>';
+        html += '</div>';
+        html += '<span class="v1x1-wk-breakdown-score">' + cs.correct + '/' + cs.total + '</span>';
+        html += '</div>';
+      });
+      html += '</div>';
+    }
+
+    html += '<div class="v1x1-wk-end-actions">';
+    html += '<button class="v1x1-wk-start-btn" onclick="V1x1.restartQuiz()">' + getIcon('rotate-ccw') + ' Nochmals</button>';
+    html += '<button class="v1x1-wk-start-btn v1x1-wk-btn-outline" onclick="V1x1.openWissencheck()">' + getIcon('chevron-left') + ' Zurück zur Übersicht</button>';
+    html += '</div>';
+
+    html += '</div>';
+    return html;
+  }
+
+  // ========================================
+  // QUIZ RENDERING
+  // ========================================
+
+  function renderQuiz(questions, index) {
+    // Delegate to unified renderer
+    return renderWkQuestion(questions, index);
   }
 
   function answerQuiz(selected, correct) {
     var options = document.querySelectorAll('#v1x1QuizOptions .v1x1-quiz-option');
     if (!options.length) return;
-
-    // Prevent multiple answers
     if (options[0].classList.contains('disabled')) return;
 
     var isCorrect = selected === correct;
@@ -668,13 +865,14 @@
       }
     });
 
-    // Show explanation
     var feedback = document.getElementById('v1x1QuizFeedback');
-    var quizChapter = moduleData.chapters[wissencheckChapterIndex];
-    if (feedback && quizChapter && quizChapter.quiz && quizChapter.quiz[currentQuizIndex]) {
-      var q = quizChapter.quiz[currentQuizIndex];
-      var html = '<div class="v1x1-quiz-explanation">' + escapeHtml(q.explanation) + '</div>';
-      if (currentQuizIndex < quizChapter.quiz.length - 1) {
+    var questions = wissencheckActiveQuestions.length > 0
+      ? wissencheckActiveQuestions
+      : (moduleData.chapters[wissencheckChapterIndex] ? moduleData.chapters[wissencheckChapterIndex].quiz : []);
+    if (feedback && questions && questions[currentQuizIndex]) {
+      var q = questions[currentQuizIndex];
+      var html = '<div class="v1x1-quiz-explanation">' + escapeHtml(q.explanation || '') + '</div>';
+      if (currentQuizIndex < questions.length - 1) {
         html += '<button class="v1x1-quiz-next-btn" onclick="V1x1.nextQuizQuestion()">Nächste Frage ' + getIcon('chevron-right') + '</button>';
       } else {
         html += '<button class="v1x1-quiz-next-btn" onclick="V1x1.nextQuizQuestion()">Ergebnis anzeigen ' + getIcon('chevron-right') + '</button>';
@@ -686,9 +884,11 @@
   function nextQuizQuestion() {
     currentQuizIndex++;
     var quizContainer = document.getElementById('v1x1WissencheckQuiz');
-    var quizChapter = moduleData.chapters[wissencheckChapterIndex];
-    if (quizContainer && quizChapter && quizChapter.quiz) {
-      quizContainer.innerHTML = renderQuiz(quizChapter.quiz, currentQuizIndex);
+    var questions = wissencheckActiveQuestions.length > 0
+      ? wissencheckActiveQuestions
+      : (moduleData.chapters[wissencheckChapterIndex] ? moduleData.chapters[wissencheckChapterIndex].quiz : []);
+    if (quizContainer && questions) {
+      quizContainer.innerHTML = renderWkQuestion(questions, currentQuizIndex);
     }
   }
 
@@ -696,9 +896,11 @@
     currentQuizIndex = 0;
     quizAnswered = {};
     var quizContainer = document.getElementById('v1x1WissencheckQuiz');
-    var quizChapter = moduleData.chapters[wissencheckChapterIndex];
-    if (quizContainer && quizChapter && quizChapter.quiz) {
-      quizContainer.innerHTML = renderQuiz(quizChapter.quiz, 0);
+    var questions = wissencheckActiveQuestions.length > 0
+      ? wissencheckActiveQuestions
+      : (moduleData.chapters[wissencheckChapterIndex] ? moduleData.chapters[wissencheckChapterIndex].quiz : []);
+    if (quizContainer && questions) {
+      quizContainer.innerHTML = renderWkQuestion(questions, 0);
     }
   }
 
@@ -767,9 +969,16 @@
   // GLOSSARY
   // ========================================
 
+  var glossaryLetterFilter = '';
+  var glossaryTagFilter = 'all';
+
   function showGlossary() {
     var overlay = document.getElementById('v1x1GlossaryOverlay');
     if (overlay) overlay.style.display = 'flex';
+    glossaryLetterFilter = '';
+    glossaryTagFilter = 'all';
+    renderGlossaryAlpha();
+    renderGlossaryTabs();
     renderGlossaryList();
   }
 
@@ -778,23 +987,96 @@
     if (overlay) overlay.style.display = 'none';
   }
 
-  function renderGlossaryList(filter) {
+  function renderGlossaryAlpha() {
+    var container = document.getElementById('v1x1GlossaryAlpha');
+    if (!container || !moduleData) return;
+    var terms = moduleData.glossary || [];
+    var usedLetters = {};
+    terms.forEach(function(t) {
+      var l = t.term.charAt(0).toUpperCase();
+      usedLetters[l] = true;
+    });
+    var html = '<button class="v1x1-alpha-btn' + (!glossaryLetterFilter ? ' active' : '') + '" onclick="V1x1.filterGlossaryLetter(\'\')">Alle</button>';
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').forEach(function(l) {
+      var has = !!usedLetters[l];
+      html += '<button class="v1x1-alpha-btn' + (glossaryLetterFilter === l ? ' active' : '') + (has ? '' : ' disabled') + '"';
+      if (has) html += ' onclick="V1x1.filterGlossaryLetter(\'' + l + '\')"';
+      html += '>' + l + '</button>';
+    });
+    container.innerHTML = html;
+  }
+
+  function renderGlossaryTabs() {
+    var container = document.getElementById('v1x1GlossaryTabs');
+    if (!container || !moduleData) return;
+    var terms = moduleData.glossary || [];
+    var foundTags = {};
+    terms.forEach(function(t) {
+      if (t.tags) t.tags.forEach(function(tag) { foundTags[tag] = true; });
+    });
+    var tagOrder = ['all', 'Markt', 'Produkte', 'Vertrieb', 'Regulatorik', 'Finanzen', 'Technik'];
+    var html = '';
+    tagOrder.forEach(function(tag) {
+      if (tag === 'all' || foundTags[tag]) {
+        html += '<button class="v1x1-glossary-tab' + (glossaryTagFilter === tag ? ' active' : '') + '" onclick="V1x1.filterGlossaryTag(\'' + tag + '\')">' + (tag === 'all' ? 'Alle' : escapeHtml(tag)) + '</button>';
+        delete foundTags[tag];
+      }
+    });
+    Object.keys(foundTags).sort().forEach(function(tag) {
+      html += '<button class="v1x1-glossary-tab' + (glossaryTagFilter === tag ? ' active' : '') + '" onclick="V1x1.filterGlossaryTag(\'' + tag + '\')">' + escapeHtml(tag) + '</button>';
+    });
+    container.innerHTML = html;
+  }
+
+  function filterGlossaryLetter(letter) {
+    glossaryLetterFilter = letter;
+    renderGlossaryAlpha();
+    renderGlossaryList();
+  }
+
+  function filterGlossaryTag(tag) {
+    glossaryTagFilter = tag;
+    renderGlossaryTabs();
+    renderGlossaryList();
+  }
+
+  function renderGlossaryList(textFilter) {
     var container = document.getElementById('v1x1GlossaryList');
     if (!container || !moduleData) return;
 
-    var terms = moduleData.glossary || [];
-    if (filter) {
-      var f = filter.toLowerCase();
+    var terms = (moduleData.glossary || []).slice();
+
+    if (glossaryLetterFilter) {
+      var lf = glossaryLetterFilter;
+      terms = terms.filter(function(t) { return t.term.charAt(0).toUpperCase() === lf; });
+    }
+
+    if (glossaryTagFilter && glossaryTagFilter !== 'all') {
+      var tf = glossaryTagFilter;
+      terms = terms.filter(function(t) { return t.tags && t.tags.indexOf(tf) !== -1; });
+    }
+
+    if (textFilter) {
+      var f = textFilter.toLowerCase();
       terms = terms.filter(function(t) {
         return t.term.toLowerCase().indexOf(f) !== -1 || t.definition.toLowerCase().indexOf(f) !== -1;
       });
     }
+
+    terms.sort(function(a, b) { return a.term.localeCompare(b.term); });
 
     var html = '';
     terms.forEach(function(t) {
       html += '<div class="v1x1-glossary-entry">';
       html += '<div class="v1x1-glossary-term">' + escapeHtml(t.term) + '</div>';
       html += '<div class="v1x1-glossary-definition">' + escapeHtml(t.definition) + '</div>';
+      if (t.tags && t.tags.length) {
+        html += '<div class="v1x1-glossary-tags">';
+        t.tags.forEach(function(tag) {
+          html += '<span class="v1x1-glossary-tag" onclick="V1x1.filterGlossaryTag(\'' + escapeHtml(tag) + '\')">' + escapeHtml(tag) + '</span>';
+        });
+        html += '</div>';
+      }
       html += '</div>';
     });
     container.innerHTML = html || '<p style="color:#9CA3AF;font-size:14px;">Keine Treffer.</p>';
@@ -925,6 +1207,7 @@
     currentChapter = null;
     currentView = 'overview';
     setActiveNav('overview');
+    renderBreadcrumb(null);
 
     var contentInner = document.getElementById('v1x1ContentInner');
     if (!contentInner) return;
@@ -970,6 +1253,8 @@
       updateProgressUI();
       initSearch();
       initGlossarySearch();
+      initGlobalSearch();
+      initSearchOverlay();
       initScrollReveal();
     } catch (err) {
       console.error('Versicherungs-1×1: Error loading data', err);
@@ -978,6 +1263,810 @@
         contentInner.innerHTML = '<div style="text-align:center;padding:60px 20px;color:#9CA3AF;">Fehler beim Laden der Daten. Bitte Seite neu laden.</div>';
       }
     }
+  }
+
+  // ========================================
+  // INFO KACHEL GRID
+  // ========================================
+
+  function renderInfoKachelGrid(block) {
+    var html = '<div class="v1x1-info-kachel-section">';
+    if (block.title) {
+      html += '<h3 class="v1x1-section-title">' + escapeHtml(block.title) + '</h3>';
+    }
+    html += '<div class="v1x1-info-kachel-grid">';
+    (block.items || []).forEach(function(item) {
+      html += '<div class="v1x1-info-kachel">';
+      html += '<div class="v1x1-info-kachel-icon">' + getIcon(item.icon || 'info') + '</div>';
+      html += '<div class="v1x1-info-kachel-title">' + escapeHtml(item.title) + '</div>';
+      html += '<div class="v1x1-info-kachel-desc">' + escapeHtml(item.description) + '</div>';
+      if (item.link) {
+        html += '<a class="v1x1-info-kachel-link" href="' + escapeHtml(item.link) + '" target="_blank">Mehr erfahren →</a>';
+      }
+      html += '</div>';
+    });
+    html += '</div></div>';
+    return html;
+  }
+
+  // ========================================
+  // TIMELINE
+  // ========================================
+
+  function renderTimeline(block) {
+    var html = '<div class="v1x1-timeline-section">';
+    if (block.title) {
+      html += '<h3 class="v1x1-section-title">' + escapeHtml(block.title) + '</h3>';
+    }
+    html += '<div class="v1x1-timeline">';
+    html += '<div class="v1x1-timeline-track">';
+    (block.events || []).forEach(function(ev, i) {
+      var typeClass = 'type-' + (ev.type || 'market');
+      html += '<div class="v1x1-timeline-event ' + typeClass + '" data-delay="' + Math.min(i, 4) + '">';
+      html += '<div class="v1x1-timeline-dot ' + typeClass + '"></div>';
+      html += '<div class="v1x1-timeline-year">' + escapeHtml(String(ev.year)) + '</div>';
+      html += '<div class="v1x1-timeline-content">';
+      html += '<div class="v1x1-timeline-title">' + escapeHtml(ev.title) + '</div>';
+      html += '<div class="v1x1-timeline-desc">' + escapeHtml(ev.description) + '</div>';
+      html += '</div></div>';
+    });
+    html += '</div>';
+    // Legend
+    html += '<div class="v1x1-timeline-legend">';
+    html += '<span class="v1x1-timeline-legend-item type-regulation">Regulatorik</span>';
+    html += '<span class="v1x1-timeline-legend-item type-market">Marktentwicklung</span>';
+    html += '<span class="v1x1-timeline-legend-item type-crisis">Krise</span>';
+    html += '<span class="v1x1-timeline-legend-item type-innovation">Innovation</span>';
+    html += '</div>';
+    html += '</div></div>';
+    return html;
+  }
+
+  // ========================================
+  // CHART BLOCKS (Chart.js)
+  // ========================================
+
+  var chartInstances = {};
+
+  function renderChartBlock(block, idx) {
+    var canvasId = 'v1x1Chart_' + (block.chartKey || idx) + '_' + Date.now();
+    var height = block.horizontal ? '320px' : '300px';
+    var html = '<div class="v1x1-chart-container">';
+    if (block.title) {
+      html += '<div class="v1x1-chart-title">' + escapeHtml(block.title) + '</div>';
+    }
+    html += '<div class="v1x1-chart-canvas-wrapper" style="position:relative;height:' + height + ';">';
+    html += '<canvas id="' + canvasId + '" data-chart-key="' + escapeHtml(block.chartKey || '') + '" data-chart-type="' + escapeHtml(block.type || 'chartLine') + '"></canvas>';
+    html += '</div>';
+    if (block.source) {
+      html += '<div class="v1x1-chart-source">Quelle: ' + escapeHtml(block.source) + '</div>';
+    }
+    html += '</div>';
+    return html;
+  }
+
+  function initCharts(chapter) {
+    if (typeof Chart === 'undefined') return;
+    var canvases = document.querySelectorAll('[id^="v1x1Chart_"]');
+    canvases.forEach(function(canvas) {
+      var chartKey = canvas.getAttribute('data-chart-key');
+      var chartType = canvas.getAttribute('data-chart-type');
+      if (!chartKey || !chapter || !chapter.chartData || !chapter.chartData[chartKey]) return;
+      // Destroy existing
+      if (chartInstances[canvas.id]) {
+        chartInstances[canvas.id].destroy();
+        delete chartInstances[canvas.id];
+      }
+      var cd = chapter.chartData[chartKey];
+      var type = cd.type || (chartType === 'chartDonut' ? 'doughnut' : chartType === 'chartBar' ? 'bar' : 'line');
+      var config = {
+        type: type,
+        data: { labels: cd.labels, datasets: cd.datasets },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: type === 'doughnut' ? 'right' : 'top', labels: { font: { size: 12 }, padding: 12 } }
+          },
+          scales: type === 'doughnut' ? {} : {
+            x: {
+              stacked: cd.options && cd.options.scales && cd.options.scales.x && cd.options.scales.x.stacked,
+              grid: { color: '#F3F4F6' },
+              ticks: { font: { size: 11 } }
+            },
+            y: {
+              stacked: cd.options && cd.options.scales && cd.options.scales.y && cd.options.scales.y.stacked,
+              beginAtZero: true,
+              grid: { color: '#F3F4F6' },
+              ticks: { font: { size: 11 } }
+            }
+          }
+        }
+      };
+      // Horizontal bar
+      if (cd.options && cd.options.indexAxis) {
+        config.options.indexAxis = cd.options.indexAxis;
+      }
+      chartInstances[canvas.id] = new Chart(canvas, config);
+    });
+  }
+
+  // ========================================
+  // HEATMAP GRID
+  // ========================================
+
+  function renderHeatmapGrid(block) {
+    var rows = block.rows || [];
+    var cols = block.columns || [];
+    var data = block.data || [];
+    var html = '<div class="v1x1-heatmap-section">';
+    if (block.title) {
+      html += '<h3 class="v1x1-section-title">' + escapeHtml(block.title) + '</h3>';
+    }
+    if (block.source) {
+      html += '<div class="v1x1-chart-source" style="margin-bottom:8px;">Quelle: ' + escapeHtml(block.source) + '</div>';
+    }
+    html += '<div class="v1x1-heatmap-wrapper">';
+    html += '<table class="v1x1-heatmap-table">';
+    // Header row
+    html += '<thead><tr><th class="v1x1-heatmap-corner"></th>';
+    cols.forEach(function(col) {
+      html += '<th class="v1x1-heatmap-col-header">' + escapeHtml(col) + '</th>';
+    });
+    html += '</tr></thead><tbody>';
+    // Data rows
+    rows.forEach(function(row, ri) {
+      html += '<tr>';
+      html += '<td class="v1x1-heatmap-row-header">' + escapeHtml(row) + '</td>';
+      (data[ri] || []).forEach(function(val) {
+        var intensity = val / 100;
+        var bg = 'rgba(37,99,235,' + (intensity * 0.8 + 0.05).toFixed(2) + ')';
+        var color = intensity > 0.4 ? 'white' : '#111827';
+        html += '<td class="v1x1-heatmap-cell" style="background:' + bg + ';color:' + color + ';" title="' + val + '%">' + val + '%</td>';
+      });
+      html += '</tr>';
+    });
+    html += '</tbody></table></div>';
+    // Color legend
+    html += '<div class="v1x1-heatmap-legend">';
+    html += '<span style="font-size:12px;color:#6B7280;">Intensität: </span>';
+    html += '<span class="v1x1-heatmap-legend-bar"></span>';
+    html += '<span style="font-size:11px;color:#9CA3AF;">niedrig → hoch</span>';
+    html += '</div>';
+    html += '</div>';
+    return html;
+  }
+
+  // ========================================
+  // REGULATORY PYRAMID (SVG)
+  // ========================================
+
+  function renderRegulatoryPyramid(block) {
+    var levels = block.levels || [];
+    var html = '<div class="v1x1-pyramid-section">';
+    if (block.title) {
+      html += '<h3 class="v1x1-section-title">' + escapeHtml(block.title) + '</h3>';
+    }
+    html += '<div class="v1x1-pyramid">';
+    levels.forEach(function(level, i) {
+      var isActive = i === 0;
+      html += '<div class="v1x1-pyramid-level" style="background:' + escapeHtml(level.color || '#E5E7EB') + '1A;border-color:' + escapeHtml(level.color || '#E5E7EB') + ';" onclick="V1x1.togglePyramidLevel(this)">';
+      html += '<div class="v1x1-pyramid-level-header">';
+      html += '<span class="v1x1-pyramid-level-label" style="color:' + escapeHtml(level.color || '#111827') + ';">' + escapeHtml(level.label) + '</span>';
+      html += '<span class="v1x1-pyramid-chevron">' + getIcon('chevron-down') + '</span>';
+      html += '</div>';
+      html += '<ul class="v1x1-pyramid-items">';
+      (level.items || []).forEach(function(item) {
+        html += '<li>' + escapeHtml(item) + '</li>';
+      });
+      html += '</ul></div>';
+    });
+    html += '</div></div>';
+    return html;
+  }
+
+  function togglePyramidLevel(el) {
+    el.classList.toggle('open');
+  }
+
+  // ========================================
+  // VALUE CHAIN (CSS-based)
+  // ========================================
+
+  function renderValueChain(block) {
+    var steps = block.steps || [];
+    var html = '<div class="v1x1-valuechain-section">';
+    if (block.title) {
+      html += '<h3 class="v1x1-section-title">' + escapeHtml(block.title) + '</h3>';
+    }
+    html += '<div class="v1x1-valuechain">';
+    steps.forEach(function(step, i) {
+      html += '<div class="v1x1-vc-step" onclick="V1x1.toggleVCStep(this)">';
+      html += '<div class="v1x1-vc-step-icon">' + getIcon(step.icon || 'settings-2') + '</div>';
+      html += '<div class="v1x1-vc-step-label">' + escapeHtml(step.label) + '</div>';
+      html += '<div class="v1x1-vc-step-detail">' + escapeHtml(step.description) + '</div>';
+      html += '</div>';
+      if (i < steps.length - 1) {
+        html += '<div class="v1x1-vc-arrow">' + getIcon('chevron-right') + '</div>';
+      }
+    });
+    html += '</div></div>';
+    return html;
+  }
+
+  function toggleVCStep(el) {
+    var allSteps = document.querySelectorAll('.v1x1-vc-step');
+    allSteps.forEach(function(s) {
+      if (s !== el) s.classList.remove('active');
+    });
+    el.classList.toggle('active');
+  }
+
+  // ========================================
+  // COMBINED RATIO CALCULATOR
+  // ========================================
+
+  function renderCombinedRatioCalc(block) {
+    var html = '<div class="v1x1-combined-ratio v1x1-reveal">';
+    html += '<div class="v1x1-calculator-title">Combined Ratio Rechner</div>';
+    html += '<div class="v1x1-cr-inputs">';
+
+    html += '<div class="v1x1-cr-slider-group">';
+    html += '<label class="v1x1-cr-label">Schadenquote (Loss Ratio)<span class="v1x1-cr-value" id="v1x1CRSchadenVal">65%</span></label>';
+    html += '<input type="range" class="v1x1-calc-slider" id="v1x1CRSchaden" min="30" max="120" value="65" oninput="V1x1.updateCombinedRatio()">';
+    html += '</div>';
+
+    html += '<div class="v1x1-cr-slider-group">';
+    html += '<label class="v1x1-cr-label">Kostenquote (Expense Ratio)<span class="v1x1-cr-value" id="v1x1CRKostenVal">28%</span></label>';
+    html += '<input type="range" class="v1x1-calc-slider" id="v1x1CRKosten" min="10" max="60" value="28" oninput="V1x1.updateCombinedRatio()">';
+    html += '</div>';
+
+    html += '</div>';
+    html += '<div id="v1x1CRResult" class="v1x1-cr-result v1x1-cr-green">';
+    html += '<span class="v1x1-cr-total-label">Combined Ratio</span>';
+    html += '<span class="v1x1-cr-total-value" id="v1x1CRTotal">93%</span>';
+    html += '<span class="v1x1-cr-interpretation" id="v1x1CRInterpret">Versicherungstechnischer Gewinn von 7%</span>';
+    html += '</div>';
+    html += '</div>';
+    return html;
+  }
+
+  function updateCombinedRatio() {
+    var schaden = parseInt(document.getElementById('v1x1CRSchaden').value) || 65;
+    var kosten = parseInt(document.getElementById('v1x1CRKosten').value) || 28;
+    var total = schaden + kosten;
+    var s = document.getElementById('v1x1CRSchadenVal');
+    var k = document.getElementById('v1x1CRKostenVal');
+    var t = document.getElementById('v1x1CRTotal');
+    var interp = document.getElementById('v1x1CRInterpret');
+    var result = document.getElementById('v1x1CRResult');
+    if (s) s.textContent = schaden + '%';
+    if (k) k.textContent = kosten + '%';
+    if (t) t.textContent = total + '%';
+    if (interp && result) {
+      if (total < 100) {
+        interp.textContent = 'Versicherungstechnischer Gewinn von ' + (100 - total) + '%';
+        result.className = 'v1x1-cr-result v1x1-cr-green';
+      } else if (total === 100) {
+        interp.textContent = 'Break-even — kein versicherungstechnischer Gewinn oder Verlust';
+        result.className = 'v1x1-cr-result v1x1-cr-neutral';
+      } else {
+        interp.textContent = 'Versicherungstechnischer Verlust von ' + (total - 100) + '%';
+        result.className = 'v1x1-cr-result v1x1-cr-red';
+      }
+    }
+  }
+
+  // ========================================
+  // TREND RADAR (SVG)
+  // ========================================
+
+  function renderTrendRadar(block) {
+    var radarId = 'v1x1TrendRadar_' + Date.now();
+    var html = '<div class="v1x1-trendradar-section">';
+    if (block.title) {
+      html += '<h3 class="v1x1-section-title">' + escapeHtml(block.title) + '</h3>';
+    }
+    html += '<div class="v1x1-trendradar-container" id="' + radarId + '" data-chart-key="' + escapeHtml(block.chartKey || '') + '">';
+    html += '<div class="v1x1-trendradar-placeholder"><div class="v1x1-trendradar-loading">Trend-Radar wird geladen…</div></div>';
+    html += '</div>';
+    if (block.source) {
+      html += '<div class="v1x1-chart-source">Quelle: ' + escapeHtml(block.source) + '</div>';
+    }
+    html += '<div class="v1x1-trendradar-legend">';
+    html += '<span class="v1x1-tr-ring adopt">Adopt</span>';
+    html += '<span class="v1x1-tr-ring trial">Trial</span>';
+    html += '<span class="v1x1-tr-ring assess">Assess</span>';
+    html += '<span class="v1x1-tr-ring hold">Hold</span>';
+    html += '</div>';
+    html += '<div class="v1x1-trendradar-items" id="' + radarId + '_items"></div>';
+    html += '</div>';
+    return html;
+  }
+
+  function initD3Components(chapter) {
+    if (!chapter || !chapter.chartData) return;
+
+    // Trend Radar
+    var radarContainers = document.querySelectorAll('[id^="v1x1TrendRadar_"]');
+    radarContainers.forEach(function(container) {
+      var key = container.getAttribute('data-chart-key');
+      if (!key || !chapter.chartData[key]) return;
+      var data = chapter.chartData[key];
+      buildTrendRadarSVG(container, data);
+    });
+
+    // Network Graph
+    var graphContainers = document.querySelectorAll('[id^="v1x1NetworkGraph_"]');
+    graphContainers.forEach(function(container) {
+      var key = container.getAttribute('data-chart-key');
+      if (!key || !chapter.chartData[key]) return;
+      buildNetworkGraph(container, chapter.chartData[key]);
+    });
+  }
+
+  function buildTrendRadarSVG(container, data) {
+    var rings = data.rings || ['Adopt','Trial','Assess','Hold'];
+    var segments = data.segments || [];
+    var items = data.items || [];
+    var W = Math.min(container.offsetWidth || 500, 500);
+    var H = W;
+    var cx = W / 2, cy = H / 2;
+    var maxR = W * 0.43;
+    var ringColors = ['rgba(16,185,129,0.1)','rgba(37,99,235,0.1)','rgba(245,158,11,0.1)','rgba(239,68,68,0.1)'];
+    var ringStroke = ['#10B981','#2563EB','#F59E0B','#EF4444'];
+
+    var svg = '<svg width="100%" viewBox="0 0 ' + W + ' ' + H + '" xmlns="http://www.w3.org/2000/svg" style="max-width:500px;display:block;margin:0 auto;">';
+    // Draw rings
+    rings.forEach(function(ring, ri) {
+      var r = maxR * ((rings.length - ri) / rings.length);
+      svg += '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" fill="' + ringColors[ri] + '" stroke="' + ringStroke[ri] + '" stroke-width="1.5" stroke-dasharray="4,2"/>';
+      svg += '<text x="' + cx + '" y="' + (cy - r + 14) + '" text-anchor="middle" font-size="10" fill="' + ringStroke[ri] + '" font-weight="600">' + escapeHtml(ring) + '</text>';
+    });
+    // Draw segment dividers
+    var numSeg = segments.length;
+    if (numSeg > 0) {
+      for (var si = 0; si < numSeg; si++) {
+        var angle = (si / numSeg) * 2 * Math.PI - Math.PI / 2;
+        svg += '<line x1="' + cx + '" y1="' + cy + '" x2="' + (cx + maxR * Math.cos(angle)) + '" y2="' + (cy + maxR * Math.sin(angle)) + '" stroke="#E5E7EB" stroke-width="1"/>';
+        // Segment label
+        var midAngle = ((si + 0.5) / numSeg) * 2 * Math.PI - Math.PI / 2;
+        var labelR = maxR + 20;
+        svg += '<text x="' + (cx + labelR * Math.cos(midAngle)) + '" y="' + (cy + labelR * Math.sin(midAngle) + 4) + '" text-anchor="middle" font-size="9" fill="#6B7280" font-weight="500">' + escapeHtml(segments[si] || '') + '</text>';
+      }
+    }
+    // Draw items
+    var segAngle = numSeg > 0 ? (2 * Math.PI / numSeg) : (2 * Math.PI);
+    items.forEach(function(item, ii) {
+      var seg = item.segment || 0;
+      var ring = item.ring !== undefined ? item.ring : 2;
+      var r = maxR * ((rings.length - ring - 0.5) / rings.length);
+      var baseAngle = (seg / numSeg) * 2 * Math.PI - Math.PI / 2;
+      var spreadAngle = baseAngle + (segAngle * 0.2) + (ii % 3) * (segAngle * 0.25);
+      var jitter = (ii * 37 % 20 - 10) / maxR;
+      var x = cx + (r + jitter) * Math.cos(spreadAngle);
+      var y = cy + (r + jitter) * Math.sin(spreadAngle);
+      var dotColor = ringStroke[ring] || '#6B7280';
+      svg += '<circle cx="' + x.toFixed(1) + '" cy="' + y.toFixed(1) + '" r="5" fill="' + dotColor + '" stroke="white" stroke-width="1.5" style="cursor:pointer;" />';
+    });
+    svg += '</svg>';
+    container.innerHTML = svg;
+
+    // Render item list below
+    var listEl = document.getElementById(container.id + '_items');
+    if (listEl) {
+      var ringLabels = rings;
+      var grouped = {};
+      items.forEach(function(item) {
+        var ring = item.ring !== undefined ? item.ring : 2;
+        var label = ringLabels[ring] || 'Unknown';
+        if (!grouped[label]) grouped[label] = [];
+        grouped[label].push(item);
+      });
+      var listHtml = '<div class="v1x1-tr-items-grid">';
+      Object.keys(grouped).forEach(function(ringLabel, ri) {
+        listHtml += '<div class="v1x1-tr-items-group">';
+        listHtml += '<div class="v1x1-tr-items-ring ' + ringLabel.toLowerCase() + '">' + escapeHtml(ringLabel) + '</div>';
+        grouped[ringLabel].forEach(function(item) {
+          listHtml += '<div class="v1x1-tr-item"><strong>' + escapeHtml(item.label) + '</strong> — ' + escapeHtml(item.description) + '</div>';
+        });
+        listHtml += '</div>';
+      });
+      listHtml += '</div>';
+      listEl.innerHTML = listHtml;
+    }
+  }
+
+  // ========================================
+  // NETWORK GRAPH (SVG, simplified)
+  // ========================================
+
+  function renderNetworkGraph(block) {
+    var graphId = 'v1x1NetworkGraph_' + Date.now();
+    var html = '<div class="v1x1-network-section">';
+    if (block.title) {
+      html += '<h3 class="v1x1-section-title">' + escapeHtml(block.title) + '</h3>';
+    }
+    html += '<div class="v1x1-network-container" id="' + graphId + '" data-chart-key="' + escapeHtml(block.chartKey || '') + '">';
+    html += '<div class="v1x1-trendradar-loading">Netzwerk wird geladen…</div>';
+    html += '</div>';
+    html += '</div>';
+    return html;
+  }
+
+  function buildNetworkGraph(container, data) {
+    var nodes = data.nodes || [];
+    var links = data.links || [];
+    var W = Math.min(container.offsetWidth || 600, 640);
+    var H = 400;
+    var typeColors = { aufsicht: '#EF4444', verband: '#2563EB', verbraucher: '#8B5CF6', schlichtung: '#10B981', rating: '#F59E0B', sicherung: '#6B7280' };
+
+    // Simple fixed layout
+    var positions = {};
+    var total = nodes.length;
+    nodes.forEach(function(node, i) {
+      var angle = (i / total) * 2 * Math.PI - Math.PI / 2;
+      var r = H * 0.35;
+      positions[node.id] = { x: W / 2 + r * Math.cos(angle), y: H / 2 + r * Math.sin(angle) };
+    });
+
+    var svg = '<svg width="100%" viewBox="0 0 ' + W + ' ' + H + '" xmlns="http://www.w3.org/2000/svg">';
+    // Draw links
+    links.forEach(function(link) {
+      var src = positions[link.source];
+      var tgt = positions[link.target];
+      if (!src || !tgt) return;
+      svg += '<line x1="' + src.x.toFixed(0) + '" y1="' + src.y.toFixed(0) + '" x2="' + tgt.x.toFixed(0) + '" y2="' + tgt.y.toFixed(0) + '" stroke="#E5E7EB" stroke-width="1.5"/>';
+    });
+    // Draw nodes
+    nodes.forEach(function(node) {
+      var pos = positions[node.id];
+      if (!pos) return;
+      var color = typeColors[node.type] || '#6B7280';
+      svg += '<circle cx="' + pos.x.toFixed(0) + '" cy="' + pos.y.toFixed(0) + '" r="18" fill="' + color + '" opacity="0.15" stroke="' + color + '" stroke-width="2"/>';
+      svg += '<text x="' + pos.x.toFixed(0) + '" y="' + (pos.y - 24).toFixed(0) + '" text-anchor="middle" font-size="11" font-weight="600" fill="#111827">' + escapeHtml(node.label) + '</text>';
+    });
+    svg += '</svg>';
+    container.innerHTML = svg;
+
+    // Node legend
+    var legend = '<div class="v1x1-network-legend">';
+    var typeLabels = { aufsicht: 'Aufsicht', verband: 'Verband', verbraucher: 'Verbraucher', schlichtung: 'Schlichtung', rating: 'Rating', sicherung: 'Sicherung' };
+    Object.entries(typeColors).forEach(function(entry) {
+      var type = entry[0], color = entry[1];
+      legend += '<span class="v1x1-network-legend-item"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:' + color + ';margin-right:4px;"></span>' + escapeHtml(typeLabels[type] || type) + '</span>';
+    });
+    legend += '</div>';
+    container.insertAdjacentHTML('afterend', legend);
+  }
+
+  // ========================================
+  // DECISION TREE (Interactive)
+  // ========================================
+
+  var dtState = {};
+
+  function renderDecisionTreeBlock(block) {
+    var chapter = currentChapter;
+    if (!chapter || !chapter.decisionTrees || !block.treeKey) return '';
+    var tree = chapter.decisionTrees[block.treeKey];
+    if (!tree) return '';
+    var dtId = 'v1x1DT_' + block.treeKey;
+    dtState[dtId] = { treeKey: block.treeKey, currentNode: tree.start, history: [], chapterId: chapter.id };
+    var html = '<div class="v1x1-dt-section">';
+    if (block.title || tree.title) {
+      html += '<h3 class="v1x1-section-title">' + escapeHtml(block.title || tree.title) + '</h3>';
+    }
+    html += '<div class="v1x1-decision-tree" id="' + dtId + '">';
+    html += renderDTNode(tree, tree.start, dtId);
+    html += '</div></div>';
+    return html;
+  }
+
+  function renderDTNode(tree, nodeId, dtId) {
+    var node = tree.nodes[nodeId];
+    if (!node) return '<p style="color:#9CA3AF;">Node nicht gefunden.</p>';
+    if (node.result) {
+      return renderDTResult(node, dtId);
+    }
+    var html = '<div class="v1x1-dt-question-card">';
+    html += '<p class="v1x1-dt-question">' + escapeHtml(node.question) + '</p>';
+    html += '<div class="v1x1-dt-options">';
+    (node.options || []).forEach(function(opt, i) {
+      html += '<button class="v1x1-dt-option" onclick="V1x1.dtSelectOption(\'' + dtId + '\',\'' + escapeHtml(opt.next) + '\')">';
+      html += escapeHtml(opt.label);
+      html += '</button>';
+    });
+    html += '</div>';
+    if (dtState[dtId] && dtState[dtId].history.length > 0) {
+      html += '<button class="v1x1-dt-back" onclick="V1x1.dtBack(\'' + dtId + '\')">' + getIcon('chevron-left') + ' Zurück</button>';
+    }
+    html += '</div>';
+    return html;
+  }
+
+  function renderDTResult(node, dtId) {
+    var html = '<div class="v1x1-dt-result">';
+    html += '<div class="v1x1-dt-result-icon">' + getIcon(node.icon || 'shield-check') + '</div>';
+    html += '<h4 class="v1x1-dt-result-title">' + escapeHtml(node.title) + '</h4>';
+    if (node.items && node.items.length) {
+      html += '<ul class="v1x1-dt-result-list">';
+      node.items.forEach(function(item) {
+        html += '<li>' + escapeHtml(item) + '</li>';
+      });
+      html += '</ul>';
+    }
+    if (node.note) {
+      html += '<p class="v1x1-dt-result-note">' + escapeHtml(node.note) + '</p>';
+    }
+    html += '<button class="v1x1-dt-restart" onclick="V1x1.dtRestart(\'' + dtId + '\')">' + getIcon('rotate-ccw') + ' Neu starten</button>';
+    html += '</div>';
+    return html;
+  }
+
+  function dtSelectOption(dtId, nextNodeId) {
+    var state = dtState[dtId];
+    if (!state) return;
+    var chapter = null;
+    for (var i = 0; i < moduleData.chapters.length; i++) {
+      if (moduleData.chapters[i].id === state.chapterId) { chapter = moduleData.chapters[i]; break; }
+    }
+    if (!chapter || !chapter.decisionTrees) return;
+    var tree = chapter.decisionTrees[state.treeKey];
+    if (!tree) return;
+    state.history.push(state.currentNode);
+    state.currentNode = nextNodeId;
+    var container = document.getElementById(dtId);
+    if (container) container.innerHTML = renderDTNode(tree, nextNodeId, dtId);
+  }
+
+  function dtBack(dtId) {
+    var state = dtState[dtId];
+    if (!state || !state.history.length) return;
+    var prev = state.history.pop();
+    state.currentNode = prev;
+    var chapter = null;
+    for (var i = 0; i < moduleData.chapters.length; i++) {
+      if (moduleData.chapters[i].id === state.chapterId) { chapter = moduleData.chapters[i]; break; }
+    }
+    if (!chapter || !chapter.decisionTrees) return;
+    var tree = chapter.decisionTrees[state.treeKey];
+    if (!tree) return;
+    var container = document.getElementById(dtId);
+    if (container) container.innerHTML = renderDTNode(tree, prev, dtId);
+  }
+
+  function dtRestart(dtId) {
+    var state = dtState[dtId];
+    if (!state) return;
+    var chapter = null;
+    for (var i = 0; i < moduleData.chapters.length; i++) {
+      if (moduleData.chapters[i].id === state.chapterId) { chapter = moduleData.chapters[i]; break; }
+    }
+    if (!chapter || !chapter.decisionTrees) return;
+    var tree = chapter.decisionTrees[state.treeKey];
+    if (!tree) return;
+    state.history = [];
+    state.currentNode = tree.start;
+    var container = document.getElementById(dtId);
+    if (container) container.innerHTML = renderDTNode(tree, tree.start, dtId);
+  }
+
+  // ========================================
+  // COMPARISON TABLE
+  // ========================================
+
+  function renderComparisonTable(block) {
+    var columns = block.columns || [];
+    var rows = block.rows || [];
+    var highlight = block.highlightColumn || null;
+    var html = '<div class="v1x1-comparison-table-wrapper">';
+    if (block.title) {
+      html += '<h3 class="v1x1-section-title">' + escapeHtml(block.title) + '</h3>';
+    }
+    html += '<div class="v1x1-comparison-scroll">';
+    html += '<table class="v1x1-comparison-table">';
+    html += '<thead><tr>';
+    columns.forEach(function(col) {
+      var isHighlight = col.key === highlight;
+      html += '<th class="' + (isHighlight ? 'highlight-col' : '') + '">' + escapeHtml(col.label) + '</th>';
+    });
+    html += '</tr></thead><tbody>';
+    rows.forEach(function(row, ri) {
+      html += '<tr class="' + (ri % 2 === 0 ? 'even' : 'odd') + '">';
+      columns.forEach(function(col) {
+        var isHighlight = col.key === highlight;
+        var cellVal = row[col.key] !== undefined ? row[col.key] : '';
+        html += '<td class="' + (isHighlight ? 'highlight-col' : '') + '">' + escapeHtml(String(cellVal)) + '</td>';
+      });
+      html += '</tr>';
+    });
+    html += '</tbody></table></div></div>';
+    return html;
+  }
+
+  // ========================================
+  // COUNTUP OBSERVERS
+  // ========================================
+
+  function initCountUpObservers() {
+    var targets = document.querySelectorAll('[data-countup]:not(.counted)');
+    if (!targets.length) return;
+    if ('IntersectionObserver' in window) {
+      var obs = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            var el = entry.target;
+            var target = parseFloat(el.getAttribute('data-countup')) || 0;
+            el.classList.add('counted');
+            animateCountUp(el, 0, target, 1000);
+            obs.unobserve(el);
+          }
+        });
+      }, { threshold: 0.5 });
+      targets.forEach(function(el) { obs.observe(el); });
+    }
+  }
+
+  // ========================================
+  // CMD+K SEARCH OVERLAY
+  // ========================================
+
+  var searchOverlayOpen = false;
+
+  function initGlobalSearch() {
+    document.addEventListener('keydown', function(e) {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        toggleSearchOverlay();
+      }
+      if (e.key === 'Escape' && searchOverlayOpen) {
+        closeSearchOverlay();
+      }
+    });
+  }
+
+  function toggleSearchOverlay() {
+    if (searchOverlayOpen) closeSearchOverlay();
+    else openSearchOverlay();
+  }
+
+  function openSearchOverlay() {
+    var overlay = document.getElementById('v1x1SearchOverlay');
+    if (!overlay) return;
+    overlay.classList.add('visible');
+    searchOverlayOpen = true;
+    var input = document.getElementById('v1x1SearchOverlayInput');
+    if (input) { input.value = ''; input.focus(); renderSearchOverlayResults(''); }
+  }
+
+  function closeSearchOverlay() {
+    var overlay = document.getElementById('v1x1SearchOverlay');
+    if (overlay) overlay.classList.remove('visible');
+    searchOverlayOpen = false;
+  }
+
+  function renderSearchOverlayResults(q) {
+    var container = document.getElementById('v1x1SearchOverlayResults');
+    if (!container || !moduleData) return;
+    if (!q || q.length < 1) {
+      container.innerHTML = '<div class="v1x1-sov-hint">Tippe um zu suchen — Kapitel, Glossar, Begriffe</div>';
+      return;
+    }
+    var ql = q.toLowerCase();
+    var results = [];
+    // Chapters
+    moduleData.chapters.forEach(function(ch) {
+      if (ch.title.toLowerCase().indexOf(ql) !== -1) {
+        results.push({ type: 'chapter', label: ch.title, sub: 'Kapitel', action: 'openChapter', arg: ch.id });
+      }
+    });
+    // Glossary
+    (moduleData.glossary || []).forEach(function(g) {
+      if (g.term.toLowerCase().indexOf(ql) !== -1 || g.definition.toLowerCase().indexOf(ql) !== -1) {
+        results.push({ type: 'glossary', label: g.term, sub: g.definition.substring(0, 80) + '…', action: 'showGlossary', arg: '' });
+      }
+    });
+    if (!results.length) {
+      container.innerHTML = '<div class="v1x1-sov-hint">Keine Treffer für „' + escapeHtml(q) + '"</div>';
+      return;
+    }
+    var html = '';
+    results.slice(0, 10).forEach(function(r, i) {
+      html += '<button class="v1x1-sov-result" onclick="V1x1.' + r.action + '(\'' + escapeHtml(r.arg) + '\');V1x1.closeSearchOverlay();">';
+      html += '<div class="v1x1-sov-result-type ' + r.type + '">' + (r.type === 'chapter' ? 'Kapitel' : 'Glossar') + '</div>';
+      html += '<div class="v1x1-sov-result-label">' + escapeHtml(r.label) + '</div>';
+      if (r.sub) html += '<div class="v1x1-sov-result-sub">' + escapeHtml(r.sub) + '</div>';
+      html += '</button>';
+    });
+    container.innerHTML = html;
+  }
+
+  function initSearchOverlay() {
+    var input = document.getElementById('v1x1SearchOverlayInput');
+    if (!input) return;
+    input.addEventListener('input', function() {
+      renderSearchOverlayResults(input.value.trim());
+    });
+    var overlay = document.getElementById('v1x1SearchOverlay');
+    if (overlay) {
+      overlay.addEventListener('click', function(e) {
+        if (e.target === overlay) closeSearchOverlay();
+      });
+    }
+  }
+
+  // ========================================
+  // INLINE GLOSSARY POPOVERS
+  // ========================================
+
+  function initGlossaryPopovers() {
+    if (!moduleData || !moduleData.glossary) return;
+    var termMap = {};
+    moduleData.glossary.forEach(function(g) {
+      termMap[g.term.toLowerCase()] = g;
+    });
+    var paragraphs = document.querySelectorAll('.v1x1-paragraph strong');
+    paragraphs.forEach(function(strong) {
+      var text = strong.textContent.trim().toLowerCase();
+      if (termMap[text]) {
+        var g = termMap[text];
+        strong.classList.add('v1x1-glossterm');
+        strong.setAttribute('data-definition', g.definition);
+        strong.setAttribute('tabindex', '0');
+      }
+    });
+    // Event delegation
+    var content = document.getElementById('v1x1ContentInner');
+    if (content && !content._glossarydelegated) {
+      content._glossarydelegated = true;
+      content.addEventListener('mouseenter', function(e) {
+        var el = e.target.closest('.v1x1-glossterm');
+        if (el) showGlossaryPopover(el);
+      }, true);
+      content.addEventListener('mouseleave', function(e) {
+        var el = e.target.closest('.v1x1-glossterm');
+        if (el) hideGlossaryPopover();
+      }, true);
+    }
+  }
+
+  function showGlossaryPopover(el) {
+    var popover = document.getElementById('v1x1GlossaryPopover');
+    if (!popover) return;
+    var def = el.getAttribute('data-definition');
+    var term = el.textContent;
+    popover.querySelector('.v1x1-gp-term').textContent = term;
+    popover.querySelector('.v1x1-gp-def').textContent = def;
+    var rect = el.getBoundingClientRect();
+    var moduleEl = document.querySelector('.v1x1-module');
+    var moduleRect = moduleEl ? moduleEl.getBoundingClientRect() : { top: 0, left: 0 };
+    popover.style.top = (rect.bottom - moduleRect.top + 8) + 'px';
+    popover.style.left = Math.min(rect.left - moduleRect.left, window.innerWidth - 340) + 'px';
+    popover.style.display = 'block';
+  }
+
+  function hideGlossaryPopover() {
+    var popover = document.getElementById('v1x1GlossaryPopover');
+    if (popover) popover.style.display = 'none';
+  }
+
+  // ========================================
+  // BREADCRUMB
+  // ========================================
+
+  function renderBreadcrumb(chapterTitle) {
+    var breadcrumb = document.getElementById('v1x1Breadcrumb');
+    if (!breadcrumb) return;
+    if (!chapterTitle) {
+      breadcrumb.innerHTML = '';
+      return;
+    }
+    breadcrumb.innerHTML = '<nav class="v1x1-breadcrumb">'
+      + '<button class="v1x1-breadcrumb-link" onclick="V1x1.showOverview()">Übersicht</button>'
+      + '<span class="v1x1-breadcrumb-sep">' + getIcon('chevron-right') + '</span>'
+      + '<span class="v1x1-breadcrumb-current">' + escapeHtml(chapterTitle) + '</span>'
+      + '</nav>';
   }
 
   // ========================================
@@ -990,14 +2079,27 @@
     showOverview: showOverview,
     openWissencheck: openWissencheck,
     selectWissencheckChapter: selectWissencheckChapter,
+    setWkModuleFilter: setWkModuleFilter,
+    setWkMode: setWkMode,
+    startWissenscheck: startWissenscheck,
     toggleLevel2: toggleLevel2,
     toggleLevel3: toggleLevel3,
     showGlossary: showGlossary,
     closeGlossary: closeGlossary,
+    filterGlossaryLetter: filterGlossaryLetter,
+    filterGlossaryTag: filterGlossaryTag,
     answerQuiz: answerQuiz,
     nextQuizQuestion: nextQuizQuestion,
     restartQuiz: restartQuiz,
-    updateCalc: updateCalc
+    updateCalc: updateCalc,
+    updateCombinedRatio: updateCombinedRatio,
+    togglePyramidLevel: togglePyramidLevel,
+    toggleVCStep: toggleVCStep,
+    dtSelectOption: dtSelectOption,
+    dtBack: dtBack,
+    dtRestart: dtRestart,
+    openSearchOverlay: openSearchOverlay,
+    closeSearchOverlay: closeSearchOverlay
   };
 
 })();

@@ -819,11 +819,11 @@
 }
 .v1x1-cite-tooltip {
   position: absolute;
-  bottom: calc(100% + 8px);
+  bottom: calc(100% + 2px);
   left: 50%;
   transform: translateX(-50%);
   width: 300px;
-  padding: 12px 14px;
+  padding: 12px 14px 10px;
   background: var(--v1x1-text-primary);
   color: white;
   font-size: 12px;
@@ -837,7 +837,8 @@
   white-space: normal;
   font-weight: 400;
 }
-.v1x1-cite:hover .v1x1-cite-tooltip {
+.v1x1-cite:hover .v1x1-cite-tooltip,
+.v1x1-cite-pinned .v1x1-cite-tooltip {
   opacity: 1;
   pointer-events: auto;
 }

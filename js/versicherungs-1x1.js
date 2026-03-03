@@ -358,6 +358,7 @@
       initD3Components(chapter);
       initCountUpObservers();
       initGlossaryPopovers();
+        initCiteLinks();
     }, 200);
   }
 
@@ -1019,6 +1020,7 @@
         initD3Components(sub);
         initCountUpObservers();
         initGlossaryPopovers();
+        initCiteLinks();
         initScrollReveal();
       }, 150);
     }
@@ -1458,7 +1460,7 @@
     }
 
     try {
-      var response = await fetch('data/versicherungs-1x1/chapters.json?v=20260303e');
+      var response = await fetch('data/versicherungs-1x1/chapters.json?v=20260303f');
       if (!response.ok) throw new Error('Failed to load data');
       moduleData = await response.json();
       moduleLoaded = true;
@@ -2220,6 +2222,84 @@
   // ========================================
   // INLINE GLOSSARY POPOVERS
   // ========================================
+
+  // ========================================
+  // CITE LINK ENRICHMENT
+  // ========================================
+
+  var SOURCE_URL_MAP = [
+    { prefix: 'GDV',          url: 'https://www.gdv.de/de/zahlen-und-fakten' },
+    { prefix: 'BaFin',        url: 'https://www.bafin.de/DE/PublikationenDaten/Jahresbericht' },
+    { prefix: 'BMF',          url: 'https://www.bundesfinanzministerium.de' },
+    { prefix: 'BMAS',         url: 'https://www.bmas.de' },
+    { prefix: 'AfW',          url: 'https://www.afw-bundesverband.de/presse-publikationen' },
+    { prefix: 'BVK',          url: 'https://www.bvk.de/presse/statistiken' },
+    { prefix: 'Assekurata',   url: 'https://www.assekurata.de/leistungsangebot/ratings' },
+    { prefix: 'Allianz',      url: 'https://www.allianz.com/de/investor_relations/berichte' },
+    { prefix: 'Munich Re',    url: 'https://www.munichre.com/de/unternehmen/medienservice/pressemitteilungen.html' },
+    { prefix: 'Swiss Re',     url: 'https://www.swissre.com/institute/research.html' },
+    { prefix: 'EIOPA',        url: 'https://www.eiopa.europa.eu/publications' },
+    { prefix: 'Accenture',    url: 'https://www.accenture.com/de-de/insights/insurance' },
+    { prefix: 'McKinsey',     url: 'https://www.mckinsey.com/industries/financial-services/our-insights' },
+    { prefix: 'AM Best',      url: 'https://www.ambest.com/research' },
+    { prefix: 'Stiftung',     url: 'https://www.stiftung-warentest.de' }
+  ];
+
+  function getCiteUrl(sourceText) {
+    for (var i = 0; i < SOURCE_URL_MAP.length; i++) {
+      if (sourceText.indexOf(SOURCE_URL_MAP[i].prefix) === 0) {
+        return SOURCE_URL_MAP[i].url;
+      }
+    }
+    return 'https://www.google.com/search?q=' + encodeURIComponent(sourceText);
+  }
+
+  function initCiteLinks() {
+    var cites = document.querySelectorAll('.v1x1-cite');
+    cites.forEach(function(cite) {
+      var tooltip = cite.querySelector('.v1x1-cite-tooltip');
+      if (!tooltip || tooltip.querySelector('a')) return;
+
+      var sourceText = tooltip.textContent.trim();
+      var url = getCiteUrl(sourceText);
+
+      var link = document.createElement('a');
+      link.href = url;
+      link.target = '_blank';
+      link.rel = 'noopener noreferrer';
+      link.className = 'v1x1-source-tooltip-link';
+      link.textContent = '→ Quelle öffnen';
+      tooltip.appendChild(document.createElement('br'));
+      tooltip.appendChild(link);
+    });
+
+    // Click-to-pin: clicking the cite-num keeps tooltip open
+    var content = document.getElementById('v1x1ContentInner');
+    if (content && !content._citedelegated) {
+      content._citedelegated = true;
+      content.addEventListener('click', function(e) {
+        var num = e.target.closest('.v1x1-cite-num');
+        if (num) {
+          var parentCite = num.closest('.v1x1-cite');
+          var isOpen = parentCite.classList.contains('v1x1-cite-pinned');
+          // Close any open pins
+          document.querySelectorAll('.v1x1-cite-pinned').forEach(function(el) {
+            el.classList.remove('v1x1-cite-pinned');
+          });
+          if (!isOpen) parentCite.classList.add('v1x1-cite-pinned');
+          e.stopPropagation();
+        }
+        // Click on tooltip link - allow default navigation
+        if (e.target.closest('.v1x1-source-tooltip-link')) return;
+        // Click outside - close all pins
+        if (!e.target.closest('.v1x1-cite')) {
+          document.querySelectorAll('.v1x1-cite-pinned').forEach(function(el) {
+            el.classList.remove('v1x1-cite-pinned');
+          });
+        }
+      });
+    }
+  }
 
   function initGlossaryPopovers() {
     if (!moduleData || !moduleData.glossary) return;

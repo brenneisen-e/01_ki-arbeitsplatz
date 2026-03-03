@@ -790,3 +790,629 @@
         width: 100%;
     }
 }
+
+/* ========================================
+   B-02 TAB BAR (Navigation)
+   ======================================== */
+.berater-tab-bar {
+    background: white;
+    border-bottom: 2px solid #e2e8f0;
+    padding: 0 32px;
+    display: flex;
+    align-items: center;
+}
+
+.berater-tab-set {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
+
+.berater-tab-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 12px 16px;
+    border: none;
+    background: transparent;
+    font-size: 13px;
+    font-weight: 600;
+    color: #64748b;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.berater-tab-btn:hover {
+    color: #334155;
+    background: #f8fafc;
+}
+
+.berater-tab-btn.active {
+    color: var(--bank-vr-blue);
+    border-bottom-color: var(--bank-vr-blue);
+}
+
+.berater-tab-btn svg {
+    flex-shrink: 0;
+}
+
+.berater-tab-divider {
+    color: #e2e8f0;
+    font-size: 18px;
+    margin: 0 6px;
+    user-select: none;
+}
+
+/* ========================================
+   B-02 TAB CONTENT AREA
+   ======================================== */
+.berater-tab-content-area {
+    min-height: 200px;
+}
+
+/* ========================================
+   B-02 DASHBOARD LAYOUT
+   ======================================== */
+.berater-dashboard {
+    padding: 24px 32px;
+}
+
+.berater-quick-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.berater-qs-card {
+    background: white;
+    border-radius: 12px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    border: 1px solid #e2e8f0;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.berater-qs-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.berater-qs-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.berater-qs-data {
+    display: flex;
+    flex-direction: column;
+}
+
+.berater-qs-value {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1e293b;
+    line-height: 1.2;
+}
+
+.berater-qs-label {
+    font-size: 11px;
+    color: #64748b;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.berater-dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+
+.berater-dashboard-col {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* ========================================
+   B-02 DASHBOARD CARDS
+   ======================================== */
+.berater-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    border: 1px solid #e2e8f0;
+}
+
+.berater-card-ki {
+    background: linear-gradient(135deg, #fefce8 0%, #fffbeb 100%);
+    border-color: #fde68a;
+}
+
+.berater-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.berater-card-header h4 {
+    font-size: 14px;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0;
+}
+
+.berater-card-badge {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.3px;
+}
+
+.berater-card-badge.positive {
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+.berater-card-badge.warning {
+    background: #fef3c7;
+    color: #d97706;
+}
+
+.berater-card-badge.ki {
+    background: rgba(255,102,0,0.1);
+    color: #FF6600;
+}
+
+/* ========================================
+   B-02 ACTIVITY FEED
+   ======================================== */
+.berater-activity-feed {
+    display: flex;
+    flex-direction: column;
+}
+
+.berater-activity-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.berater-activity-item:last-child {
+    border-bottom: none;
+}
+
+.berater-activity-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.berater-activity-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.berater-activity-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.berater-activity-meta {
+    font-size: 11px;
+    color: #64748b;
+    margin-top: 2px;
+}
+
+.berater-activity-date {
+    font-size: 11px;
+    color: #94a3b8;
+    white-space: nowrap;
+}
+
+/* ========================================
+   B-02 TERMINE LIST
+   ======================================== */
+.berater-termine-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.berater-termin-item {
+    display: flex;
+    gap: 16px;
+    padding: 10px 0;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.berater-termin-item:last-child {
+    border-bottom: none;
+}
+
+.berater-termin-zeit {
+    display: flex;
+    flex-direction: column;
+    min-width: 60px;
+}
+
+.berater-termin-tag {
+    font-size: 10px;
+    font-weight: 700;
+    color: #2563eb;
+    text-transform: uppercase;
+}
+
+.berater-termin-uhr {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.berater-termin-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.berater-termin-kunde {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.berater-termin-typ {
+    font-size: 11px;
+    color: #64748b;
+}
+
+/* ========================================
+   B-02 KI-PREVIEW + POTENTIALE CARDS
+   ======================================== */
+.berater-ki-preview-item {
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+}
+
+.berater-ki-preview-item:last-child {
+    border-bottom: none;
+}
+
+.berater-potential-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    border: 1px solid #e2e8f0;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.berater-potential-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+}
+
+/* ========================================
+   B-02 KPI ROW (Tab-intern)
+   ======================================== */
+.berater-kpi-row {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.berater-kpi-box {
+    flex: 1;
+    min-width: 140px;
+    background: white;
+    border-radius: 10px;
+    padding: 16px 20px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+
+.berater-kpi-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    margin-bottom: 4px;
+}
+
+.berater-kpi-value {
+    font-size: 22px;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+/* ========================================
+   B-02 CHIPS
+   ======================================== */
+.berater-chip {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    background: #f1f5f9;
+    color: #475569;
+    border: 1px solid #e2e8f0;
+}
+
+/* ========================================
+   B-02/B-10 CHAT WIDGET
+   ======================================== */
+.berater-chat-toggle {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #003399, #002266);
+    color: white;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(0,51,153,0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.berater-chat-toggle:hover {
+    transform: scale(1.08);
+    box-shadow: 0 6px 24px rgba(0,51,153,0.5);
+}
+
+.berater-chat-badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #dc2626;
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.berater-chat-widget {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 420px;
+    height: 540px;
+    border-radius: 16px;
+    background: white;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+    display: flex;
+    flex-direction: column;
+    z-index: 1001;
+    overflow: hidden;
+    border: 1px solid #e2e8f0;
+    animation: beraterChatSlideUp 0.3s ease;
+}
+
+@keyframes beraterChatSlideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.berater-chat-header {
+    background: linear-gradient(135deg, #003399, #002266);
+    padding: 14px 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.berater-chat-close {
+    background: rgba(255,255,255,0.15);
+    border: none;
+    border-radius: 6px;
+    padding: 4px;
+    color: white;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.berater-chat-close:hover {
+    background: rgba(255,255,255,0.25);
+}
+
+.berater-chat-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+}
+
+.berater-chat-welcome {
+    padding: 20px 0;
+}
+
+.berater-chat-examples {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.berater-example-btn {
+    padding: 8px 14px;
+    border-radius: 20px;
+    border: 1px solid #e2e8f0;
+    background: #f8fafc;
+    color: #334155;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.berater-example-btn:hover {
+    background: #003399;
+    color: white;
+    border-color: #003399;
+}
+
+.berater-chat-input-area {
+    display: flex;
+    gap: 8px;
+    padding: 12px 16px;
+    border-top: 1px solid #e2e8f0;
+    background: #f8fafc;
+    flex-shrink: 0;
+}
+
+.berater-chat-input {
+    flex: 1;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    font-size: 13px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.berater-chat-input:focus {
+    border-color: #003399;
+}
+
+.berater-chat-send {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    background: #003399;
+    color: white;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+}
+
+.berater-chat-send:hover {
+    background: #002266;
+}
+
+/* Chat Messages */
+.berater-chat-msg {
+    margin-bottom: 12px;
+    padding: 10px 14px;
+    border-radius: 12px;
+    font-size: 13px;
+    line-height: 1.5;
+    max-width: 90%;
+    animation: beraterMsgFade 0.3s ease;
+}
+
+@keyframes beraterMsgFade {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.berater-chat-user {
+    background: #003399;
+    color: white;
+    margin-left: auto;
+    border-bottom-right-radius: 4px;
+}
+
+.berater-chat-assistant {
+    background: #f1f5f9;
+    color: #1e293b;
+    border-bottom-left-radius: 4px;
+}
+
+.berater-chat-followup {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid rgba(0,0,0,0.06);
+    font-size: 11px;
+    color: #FF6600;
+    font-weight: 600;
+}
+
+/* ========================================
+   B-02 ANIMATIONS
+   ======================================== */
+@keyframes beraterFadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.berater-card {
+    animation: beraterFadeIn 0.4s ease;
+}
+
+.berater-qs-card {
+    animation: beraterFadeIn 0.3s ease;
+}
+
+.berater-potential-card {
+    animation: beraterFadeIn 0.4s ease;
+}
+
+/* ========================================
+   RESPONSIVE ADDITIONS
+   ======================================== */
+@media (max-width: 1200px) {
+    .berater-quick-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .berater-dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+    .berater-tab-btn {
+        padding: 10px 12px;
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 768px) {
+    .berater-quick-stats {
+        grid-template-columns: 1fr;
+    }
+    .berater-kpi-row {
+        flex-direction: column;
+    }
+    .berater-chat-widget {
+        width: calc(100vw - 32px);
+        right: 16px;
+        bottom: 16px;
+        height: 70vh;
+    }
+    .berater-tab-bar {
+        overflow-x: auto;
+        padding: 0 16px;
+    }
+}

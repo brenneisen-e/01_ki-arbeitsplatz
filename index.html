@@ -6846,10 +6846,16 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="15 18 9 12 15 6"></polyline></svg>
           Zurueck
         </button>
-        <div style="flex:1;">
-          <h2 id="beraterHeaderName" style="font-size:22px;font-weight:700;margin:0;">Thomas Berger</h2>
-          <div id="beraterHeaderMeta" style="font-size:13px;color:rgba(255,255,255,0.75);margin-top:4px;">
-            <span>Berater-Nr. VB-40210</span><span style="margin-left:16px;">Volksbank Mittelhessen eG</span><span style="margin-left:16px;">Beratungscenter Giessen-Sued</span>
+        <div class="berater-header-info" style="flex:1;display:flex;align-items:center;gap:14px;">
+          <div id="beraterPhotoSmall" class="berater-photo-small" style="width:52px;height:52px;border-radius:50%;overflow:hidden;flex-shrink:0;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;">
+            <img id="beraterPhotoImg" src="assets/images/berater-thomas.jpg" alt="Foto" style="width:100%;height:100%;object-fit:cover;display:none;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24" style="color:rgba(255,255,255,0.6);"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+          </div>
+          <div>
+            <h2 id="beraterHeaderName" style="font-size:22px;font-weight:700;margin:0;">Thomas Berger</h2>
+            <div id="beraterHeaderMeta" style="font-size:13px;color:rgba(255,255,255,0.75);margin-top:4px;">
+              <span>Berater-Nr. VB-40210</span><span style="margin-left:16px;">Volksbank Mittelhessen eG</span><span style="margin-left:16px;">Beratungscenter Giessen-Sued</span>
+            </div>
           </div>
         </div>
         <!-- 3-Wege Modus Selector -->
@@ -6859,6 +6865,88 @@
           <button class="bank-mode-btn" data-mode="vermoegen" onclick="setBankViewMode('vermoegen')">VR Vermoegen</button>
         </div>
       </div>
+
+      <!-- TAB NAVIGATION BAR -->
+      <div id="beraterTabBar" class="berater-tab-bar">
+        <!-- Retail Tabs -->
+        <div data-bank-tab-set="retail" class="berater-tab-set" style="display:flex;">
+          <button class="berater-tab-btn active" data-tab="uebersicht" onclick="switchBeraterTab('uebersicht','retail')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+            Uebersicht</button>
+          <button class="berater-tab-btn" data-tab="kundenportfolio" onclick="switchBeraterTab('kundenportfolio','retail')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            Kundenportfolio</button>
+          <button class="berater-tab-btn" data-tab="neugeschaeft" onclick="switchBeraterTab('neugeschaeft','retail')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><line x1="12" y1="20" x2="12" y2="10"></line><line x1="18" y1="20" x2="18" y2="4"></line><line x1="6" y1="20" x2="6" y2="16"></line></svg>
+            Neugeschaeft</button>
+          <button class="berater-tab-btn" data-tab="ertraege" onclick="switchBeraterTab('ertraege','retail')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><circle cx="12" cy="12" r="10"></circle><text x="12" y="16" text-anchor="middle" fill="currentColor" stroke="none" font-size="12" font-weight="bold">&#8364;</text></svg>
+            Ertraege</button>
+          <button class="berater-tab-btn" data-tab="qualitaet" onclick="switchBeraterTab('qualitaet','retail')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            Qualitaet</button>
+          <span class="berater-tab-divider">|</span>
+          <button class="berater-tab-btn" data-tab="kunden" onclick="switchBeraterTab('kunden','retail')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 00-3-3.87"></path><path d="M16 3.13a4 4 0 010 7.75"></path></svg>
+            Kunden</button>
+          <button class="berater-tab-btn" data-tab="potentiale" onclick="switchBeraterTab('potentiale','retail')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+            Potentiale</button>
+        </div>
+        <!-- Firmenkunde Tabs -->
+        <div data-bank-tab-set="firmenkunde" class="berater-tab-set" style="display:none;">
+          <button class="berater-tab-btn active" data-tab="uebersicht" onclick="switchBeraterTab('uebersicht','firmenkunde')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+            Uebersicht</button>
+          <button class="berater-tab-btn" data-tab="kreditportfolio" onclick="switchBeraterTab('kreditportfolio','firmenkunde')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
+            Kreditportfolio</button>
+          <button class="berater-tab-btn" data-tab="neugeschaeft" onclick="switchBeraterTab('neugeschaeft','firmenkunde')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><line x1="12" y1="20" x2="12" y2="10"></line><line x1="18" y1="20" x2="18" y2="4"></line><line x1="6" y1="20" x2="6" y2="16"></line></svg>
+            Neugeschaeft</button>
+          <button class="berater-tab-btn" data-tab="branchenmix" onclick="switchBeraterTab('branchenmix','firmenkunde')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"></path></svg>
+            Branchenmix</button>
+          <button class="berater-tab-btn" data-tab="qualitaet" onclick="switchBeraterTab('qualitaet','firmenkunde')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            Qualitaet</button>
+          <span class="berater-tab-divider">|</span>
+          <button class="berater-tab-btn" data-tab="kunden" onclick="switchBeraterTab('kunden','firmenkunde')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
+            Kunden</button>
+          <button class="berater-tab-btn" data-tab="potentiale" onclick="switchBeraterTab('potentiale','firmenkunde')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+            Potentiale</button>
+        </div>
+        <!-- Vermoegen Tabs -->
+        <div data-bank-tab-set="vermoegen" class="berater-tab-set" style="display:none;">
+          <button class="berater-tab-btn active" data-tab="uebersicht" onclick="switchBeraterTab('uebersicht','vermoegen')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+            Uebersicht</button>
+          <button class="berater-tab-btn" data-tab="portfolioallokation" onclick="switchBeraterTab('portfolioallokation','vermoegen')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><circle cx="12" cy="12" r="10"/><path d="M12 2v10l7 7"/></svg>
+            Portfolio</button>
+          <button class="berater-tab-btn" data-tab="performance" onclick="switchBeraterTab('performance','vermoegen')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+            Performance</button>
+          <button class="berater-tab-btn" data-tab="nachfolge" onclick="switchBeraterTab('nachfolge','vermoegen')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            Nachfolge</button>
+          <button class="berater-tab-btn" data-tab="qualitaet" onclick="switchBeraterTab('qualitaet','vermoegen')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            Qualitaet</button>
+          <span class="berater-tab-divider">|</span>
+          <button class="berater-tab-btn" data-tab="kunden" onclick="switchBeraterTab('kunden','vermoegen')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
+            Kunden</button>
+          <button class="berater-tab-btn" data-tab="potentiale" onclick="switchBeraterTab('potentiale','vermoegen')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+            Potentiale</button>
+        </div>
+      </div>
+
+      <!-- TAB CONTENT AREA (dynamisch befuellt) -->
+      <div id="beraterTabContent" class="berater-tab-content-area"></div>
 
       <!-- KPI Boxen: Retail (4) -->
       <div id="retailKpis" data-bank-kpi-set="retail" class="cockpit-kpi-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;padding:24px 32px 16px;">
@@ -7007,6 +7095,46 @@
 
     </div>
   </div><!-- Ende B-02 BERATER OVERVIEW -->
+
+  <!-- B-02/B-10 KI-Chat Widget (Floating) -->
+  <button id="beraterChatToggle" class="berater-chat-toggle" style="display:none;" onclick="toggleBeraterChat()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"></path></svg>
+    <span class="berater-chat-badge" id="beraterChatBadge" style="display:none;">1</span>
+  </button>
+  <div id="beraterChatWidget" class="berater-chat-widget" style="display:none;">
+    <div class="berater-chat-header">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#FF6600,#cc5200);display:flex;align-items:center;justify-content:center;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" width="16" height="16"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9c.26.604.852.997 1.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"></path></svg>
+        </div>
+        <div>
+          <div style="font-size:14px;font-weight:700;color:white;">KI-Beraterassistent</div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.6);">Open Finance | Vertriebssteuerung</div>
+        </div>
+      </div>
+      <button class="berater-chat-close" onclick="toggleBeraterChat()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+    </div>
+    <div class="berater-chat-body" id="beraterChatBody">
+      <div class="berater-chat-welcome">
+        <div style="font-size:14px;font-weight:700;color:#1e293b;margin-bottom:8px;">Willkommen beim KI-Beraterassistenten</div>
+        <div style="font-size:12px;color:#64748b;margin-bottom:16px;">Ich analysiere Ihr Kundenportfolio, identifiziere Cross-Selling-Potentiale und nutze Open-Finance-Daten fuer gezielte Empfehlungen.</div>
+        <div class="berater-chat-examples">
+          <button class="berater-example-btn" data-question="Top 5 Kunden nach Ertragspotenzial">Top 5 Ertragspotenzial</button>
+          <button class="berater-example-btn" data-question="Welche Kunden brauchen einen VR-FinanzPlan?">FinanzPlan-Potenziale</button>
+          <button class="berater-example-btn" data-question="Open Finance Analyse: Cross-Selling-Chancen">Open Finance Analyse</button>
+          <button class="berater-example-btn" data-question="Zeige Kunden mit Abwanderungsrisiko">Abwanderungsrisiko</button>
+        </div>
+      </div>
+    </div>
+    <div class="berater-chat-input-area">
+      <input type="text" id="beraterChatInput" class="berater-chat-input" placeholder="Fragen Sie den KI-Beraterassistenten...">
+      <button id="beraterChatSend" class="berater-chat-send" onclick="sendBeraterChatMessage()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+      </button>
+    </div>
+  </div>
 
   <!-- ========================================
      B-10 KUNDEN-DETAIL BANK

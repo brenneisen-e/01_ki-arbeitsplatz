@@ -74,7 +74,25 @@
     'check': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="12" height="12"><polyline points="20 6 9 17 4 12"></polyline></svg>',
     'info': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>',
     'alert-triangle': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
-    'lightbulb': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 006 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>'
+    'lightbulb': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 006 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>',
+    'heart': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>',
+    'alert-circle': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>',
+    'briefcase': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>',
+    'activity': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>',
+    'home': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>',
+    'cpu': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/></svg>',
+    'shield': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>',
+    'clock': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',
+    'refresh-cw': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>',
+    'trending-up': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>',
+    'file-text': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>',
+    'eye': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>',
+    'users': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
+    'car': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><path d="M5 17H3a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h13l4 4v4a2 2 0 0 1-2 2h-2"/><circle cx="7.5" cy="17.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/><line x1="10" y1="17" x2="15" y2="17"/></svg>',
+    'building': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><rect x="4" y="2" width="16" height="20"/><path d="M9 22V12h6v10"/><line x1="8" y1="7" x2="8" y2="7.01"/><line x1="12" y1="7" x2="12" y2="7.01"/><line x1="16" y1="7" x2="16" y2="7.01"/><line x1="8" y1="11" x2="8" y2="11.01"/><line x1="12" y1="11" x2="12" y2="11.01"/><line x1="16" y1="11" x2="16" y2="11.01"/></svg>',
+    'zap': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>',
+    'truck': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>',
+    'layers': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>'
   };
 
   function getIcon(name) {
@@ -240,7 +258,7 @@
 
     // Quick Stats
     if (chapter.quickStats && chapter.quickStats.length) {
-      html += '<div class="v1x1-quick-stats">';
+      html += '<div class="v1x1-quick-stats" id="v1x1QuickStats">';
       chapter.quickStats.forEach(function(qs) {
         html += '<div class="v1x1-quick-stat-card v1x1-reveal">';
         html += '<div><span class="v1x1-quick-stat-value" data-target="' + qs.value + '">0</span>';
@@ -407,12 +425,29 @@
   }
 
   function renderCallout(block) {
-    var variant = block.variant || 'info';
+    var iconName = block.icon || block.variant || 'info';
+    var variant = (iconName === 'alert-circle' || iconName === 'warning') ? 'warning'
+                : (iconName === 'lightbulb' || iconName === 'tip') ? 'tip'
+                : 'info';
+    var iconHtml = icons[iconName] ? icons[iconName] : getCalloutIcon(variant);
     var html = '<div class="v1x1-callout ' + variant + '">';
-    html += '<span class="v1x1-callout-icon">' + getCalloutIcon(variant) + '</span>';
-    html += '<div>' + block.content + '</div>';
+    html += '<span class="v1x1-callout-icon">' + iconHtml + '</span>';
+    html += '<div>' + (block.text || block.content || '') + '</div>';
     html += '</div>';
     return html;
+  }
+
+  function renderSourceHtml(source, url) {
+    if (!source) return '';
+    var escaped = escapeHtml(source);
+    if (!url) return escaped;
+    return '<span class="v1x1-cite">' +
+      '<span class="v1x1-source-label">' + escaped + '</span>' +
+      '<span class="v1x1-cite-tooltip">' +
+        '<strong>' + escaped + '</strong><br>' +
+        '<a href="' + escapeHtml(url) + '" target="_blank" rel="noopener" class="v1x1-source-tooltip-link">→ Zur Quelle öffnen</a>' +
+      '</span>' +
+    '</span>';
   }
 
   // ========================================
@@ -934,6 +969,30 @@
 
     currentSubChapterId = subId;
 
+    // Update quickStats if sub-chapter has its own
+    var statsArea = document.getElementById('v1x1QuickStats');
+    if (statsArea) {
+      var statsData = sub.quickStats || chapter.quickStats;
+      if (statsData && statsData.length) {
+        var statsHtml = '';
+        statsData.forEach(function(qs) {
+          statsHtml += '<div class="v1x1-quick-stat-card">';
+          statsHtml += '<div><span class="v1x1-quick-stat-value" data-target="' + qs.value + '">' + qs.value + '</span>';
+          if (qs.unit) statsHtml += ' <span class="v1x1-quick-stat-unit">' + escapeHtml(qs.unit) + '</span>';
+          statsHtml += '</div>';
+          statsHtml += '<div class="v1x1-quick-stat-label">' + escapeHtml(qs.label) + '</div>';
+          statsHtml += '</div>';
+        });
+        statsArea.innerHTML = statsHtml;
+        // Re-run count-up for new values
+        var newVals = statsArea.querySelectorAll('.v1x1-quick-stat-value');
+        newVals.forEach(function(el) {
+          var t = parseFloat(el.getAttribute('data-target'));
+          animateCountUp(el, 0, t, 800);
+        });
+      }
+    }
+
     // Update tab active states
     var tabs = document.querySelectorAll('.v1x1-subtab');
     for (var k = 0; k < tabs.length; k++) {
@@ -1346,7 +1405,7 @@
     }
 
     try {
-      var response = await fetch('data/versicherungs-1x1/chapters.json?v=20260303');
+      var response = await fetch('data/versicherungs-1x1/chapters.json?v=20260303b');
       if (!response.ok) throw new Error('Failed to load data');
       moduleData = await response.json();
       moduleLoaded = true;
@@ -1444,7 +1503,7 @@
     html += '<canvas id="' + canvasId + '" data-chart-key="' + escapeHtml(block.chartKey || '') + '" data-chart-type="' + escapeHtml(block.type || 'chartLine') + '"></canvas>';
     html += '</div>';
     if (block.source) {
-      html += '<div class="v1x1-chart-source">Quelle: ' + escapeHtml(block.source) + '</div>';
+      html += '<div class="v1x1-chart-source">Quelle: ' + renderSourceHtml(block.source, block.sourceUrl) + '</div>';
     }
     html += '</div>';
     return html;
@@ -1509,7 +1568,7 @@
       html += '<h3 class="v1x1-section-title">' + escapeHtml(block.title) + '</h3>';
     }
     if (block.source) {
-      html += '<div class="v1x1-chart-source" style="margin-bottom:8px;">Quelle: ' + escapeHtml(block.source) + '</div>';
+      html += '<div class="v1x1-chart-source" style="margin-bottom:8px;">Quelle: ' + renderSourceHtml(block.source, block.sourceUrl) + '</div>';
     }
     html += '<div class="v1x1-heatmap-wrapper">';
     html += '<table class="v1x1-heatmap-table">';
@@ -1676,7 +1735,7 @@
     html += '<div class="v1x1-trendradar-placeholder"><div class="v1x1-trendradar-loading">Trend-Radar wird geladen…</div></div>';
     html += '</div>';
     if (block.source) {
-      html += '<div class="v1x1-chart-source">Quelle: ' + escapeHtml(block.source) + '</div>';
+      html += '<div class="v1x1-chart-source">Quelle: ' + renderSourceHtml(block.source, block.sourceUrl) + '</div>';
     }
     html += '<div class="v1x1-trendradar-legend">';
     html += '<span class="v1x1-tr-ring adopt">Adopt</span>';

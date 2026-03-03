@@ -851,6 +851,23 @@
   border-top-color: var(--v1x1-text-primary);
 }
 
+/* Source label – clickable indicator */
+.v1x1-source-label {
+  cursor: pointer;
+  color: var(--v1x1-accent);
+  text-decoration: underline dotted;
+  text-decoration-color: var(--v1x1-accent);
+}
+.v1x1-source-tooltip-link {
+  color: #93c5fd;
+  text-decoration: underline;
+  display: inline-block;
+  margin-top: 4px;
+}
+.v1x1-source-tooltip-link:hover {
+  color: #bfdbfe;
+}
+
 /* ========================================
    PROVISION CALCULATOR
    ======================================== */

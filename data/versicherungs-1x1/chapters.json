@@ -256,14 +256,16 @@
             "type": "chartLine",
             "title": "Beitragsentwicklung nach Sparten 2015–2025",
             "source": "GDV Jahrbuch 2024/2025",
-            "chartKey": "beitragsentwicklung"
+            "chartKey": "beitragsentwicklung",
+            "sourceUrl": "https://www.gdv.de/gdv/publikationen/jahrbuch-der-deutschen-versicherungswirtschaft"
           },
           {
             "type": "chartBar",
             "title": "Top-10 Versicherungsmärkte weltweit 2024",
             "source": "Swiss Re Sigma 2024",
             "chartKey": "internationalRanking",
-            "horizontal": true
+            "horizontal": true,
+            "sourceUrl": "https://www.swissre.com/institute/research/sigma-research.html"
           }
         ],
         "level2": [
@@ -1177,14 +1179,16 @@
               "type": "chartLine",
               "title": "Beitragsentwicklung nach Sparten 2015–2025",
               "source": "GDV Jahrbuch 2024/2025",
-              "chartKey": "beitragsentwicklung"
+              "chartKey": "beitragsentwicklung",
+              "sourceUrl": "https://www.gdv.de/gdv/publikationen/jahrbuch-der-deutschen-versicherungswirtschaft"
             },
             {
               "type": "chartBar",
               "title": "Top-10 Versicherungsmärkte weltweit 2024",
               "source": "Swiss Re Sigma 2024",
               "chartKey": "internationalRanking",
-              "horizontal": true
+              "horizontal": true,
+              "sourceUrl": "https://www.swissre.com/institute/research/sigma-research.html"
             }
           ],
           "level2": [],
@@ -1472,7 +1476,8 @@
             "type": "chartDonut",
             "title": "Marktanteile Top-Versicherer (Gesamtmarkt 2024)",
             "source": "GDV, BaFin Jahresbericht 2024",
-            "chartKey": "marktanteileGesamt"
+            "chartKey": "marktanteileGesamt",
+            "sourceUrl": "https://www.gdv.de/gdv/publikationen/jahrbuch-der-deutschen-versicherungswirtschaft"
           },
           {
             "type": "infoKachelGrid",
@@ -1934,7 +1939,8 @@
               "type": "chartDonut",
               "title": "Marktanteile Top-Versicherer (Gesamtmarkt 2024)",
               "source": "GDV, BaFin Jahresbericht 2024",
-              "chartKey": "marktanteileGesamt"
+              "chartKey": "marktanteileGesamt",
+              "sourceUrl": "https://www.gdv.de/gdv/publikationen/jahrbuch-der-deutschen-versicherungswirtschaft"
             }
           ],
           "level2": [
@@ -2063,7 +2069,8 @@
               "type": "chartDonut",
               "title": "Marktanteile Top-Versicherer (Gesamtmarkt 2024)",
               "source": "GDV, BaFin Jahresbericht 2024",
-              "chartKey": "marktanteileGesamt"
+              "chartKey": "marktanteileGesamt",
+              "sourceUrl": "https://www.gdv.de/gdv/publikationen/jahrbuch-der-deutschen-versicherungswirtschaft"
             }
           ],
           "level2": [
@@ -3086,7 +3093,24 @@
             }
           ],
           "level2": [],
-          "level3": []
+          "level3": [],
+          "quickStats": [
+            {
+              "value": 238,
+              "label": "Beitragseinnahmen gesamt",
+              "unit": "Mrd. €"
+            },
+            {
+              "value": 488,
+              "label": "Versicherungsverträge",
+              "unit": "Mio."
+            },
+            {
+              "value": 220,
+              "label": "Produkttypen am Markt",
+              "unit": "+"
+            }
+          ]
         },
         {
           "id": "leben-rente",
@@ -3281,6 +3305,23 @@
                   "Nur Rentenleistung, nicht kapitalisierbar"
                 ]
               ]
+            }
+          ],
+          "quickStats": [
+            {
+              "value": 90,
+              "label": "Beitragseinnahmen Leben",
+              "unit": "Mrd. €"
+            },
+            {
+              "value": 84,
+              "label": "LV-Verträge in Deutschland",
+              "unit": "Mio."
+            },
+            {
+              "value": 41,
+              "label": "Riester-Neuverträge 2023",
+              "unit": "Tsd."
             }
           ]
         },
@@ -3532,6 +3573,23 @@
                 ]
               ]
             }
+          ],
+          "quickStats": [
+            {
+              "value": 25,
+              "label": "Arbeitnehmer werden BU",
+              "unit": "%"
+            },
+            {
+              "value": 50,
+              "label": "empf. BU-Rente des Nettoeinkommens",
+              "unit": "%"
+            },
+            {
+              "value": 1500,
+              "label": "empfohlene BU-Monatsrente",
+              "unit": "€"
+            }
           ]
         },
         {
@@ -3661,6 +3719,23 @@
             {
               "type": "paragraph",
               "content": "Der <strong>Pensions-Sicherungs-Verein (PSVaG)</strong> sichert als gesetzlicher Träger der Insolvenzsicherung alle bAV-Anwartschaften bei Direktzusage, Unterstützungskasse, Pensionsfonds und Pensionskassen ab. Beitragszahler sind die Arbeitgeber (2024: 3,0 Promille der gesicherten Versorgungsleistungen)."
+            }
+          ],
+          "quickStats": [
+            {
+              "value": 5,
+              "label": "bAV-Durchführungswege",
+              "unit": ""
+            },
+            {
+              "value": 3624,
+              "label": "steuerfreie Entgeltumwandlung",
+              "unit": "€/Jahr"
+            },
+            {
+              "value": 100,
+              "label": "Beitragsgarantie gesetzlich",
+              "unit": "%"
             }
           ]
         },
@@ -3835,6 +3910,23 @@
               "type": "paragraph",
               "content": "Unisex-Tarife seit 2012: Durch das Urteil des EuGH ist eine geschlechtsspezifische Tarifierung in der PKV verboten. Frauen zahlen seitdem höhere, Männer tendenziell niedrigere Beiträge als zuvor."
             }
+          ],
+          "quickStats": [
+            {
+              "value": 8.74,
+              "label": "PKV-Vollversicherte",
+              "unit": "Mio."
+            },
+            {
+              "value": 31.2,
+              "label": "Krankenzusatzversicherungen",
+              "unit": "Mio."
+            },
+            {
+              "value": 355,
+              "label": "PKV-Alterungsrückstellungen",
+              "unit": "Mrd. €"
+            }
           ]
         },
         {
@@ -3973,6 +4065,23 @@
             {
               "type": "paragraph",
               "content": "Naturgefahren und der Pflichtversicherungsdebatte: Nach der Ahrtal-Flut (2021) diskutiert die Politik eine Pflichtversicherung gegen Elementarschäden. Aktuell haben nur ~54% der deutschen Haushalte Elementarschutz."
+            }
+          ],
+          "quickStats": [
+            {
+              "value": 33.8,
+              "label": "Kfz-Beitragseinnahmen 2024",
+              "unit": "Mrd. €"
+            },
+            {
+              "value": 50,
+              "label": "empf. Haftpflicht-Deckung min.",
+              "unit": "Mio. €"
+            },
+            {
+              "value": 96,
+              "label": "Kfz Combined Ratio 2025",
+              "unit": "%"
             }
           ]
         },
@@ -4116,6 +4225,23 @@
               "type": "paragraph",
               "content": "<strong>Global:</strong> Der Cyberversicherungsmarkt erreichte 2024 ca. <strong>15,3 Mrd. USD</strong>, davon Europa 3,3 Mrd. USD. Munich Re prognostiziert eine Verdopplung auf über 30 Mrd. USD bis 2030."
             }
+          ],
+          "quickStats": [
+            {
+              "value": 5,
+              "label": "Mindestdeckung Betriebshaftpflicht",
+              "unit": "Mio. €"
+            },
+            {
+              "value": 600,
+              "label": "Cyber-Prämien Deutschland",
+              "unit": "Mio. €"
+            },
+            {
+              "value": 10,
+              "label": "Pflicht-Selbstbehalt D&O",
+              "unit": "%"
+            }
           ]
         },
         {
@@ -4212,6 +4338,23 @@
             {
               "type": "paragraph",
               "content": "Nach dem Boom 2018–2021 läuft die InsurTech-Bereinigung: Viele Startups, die auf reine Preisführerschaft oder einfache Aggregationsmodelle gesetzt haben, sind gescheitert oder wurden übernommen. Gewinner sind Enabler (B2B-Technologie für Versicherer) und spezialisierte Nischen."
+            }
+          ],
+          "quickStats": [
+            {
+              "value": 600,
+              "label": "Cyber-Prämien Deutschland",
+              "unit": "Mio. €"
+            },
+            {
+              "value": 70,
+              "label": "Embedded Insurance Prognose 2030",
+              "unit": "Mrd. USD"
+            },
+            {
+              "value": 45,
+              "label": "max. Telematik-Rabatt möglich",
+              "unit": "%"
             }
           ]
         }
@@ -4387,7 +4530,8 @@
             "type": "chartBar",
             "title": "Verschiebung der Vertriebsweganteile 2010–2024",
             "source": "GDV Statistisches Taschenbuch",
-            "chartKey": "vertriebswegZeitreihe"
+            "chartKey": "vertriebswegZeitreihe",
+            "sourceUrl": "https://www.gdv.de/gdv/publikationen/statistisches-taschenbuch"
           }
         ],
         "level2": [
@@ -4970,7 +5114,8 @@
               "type": "chartBar",
               "title": "Verschiebung der Vertriebsweganteile 2010–2024",
               "source": "GDV Statistisches Taschenbuch",
-              "chartKey": "vertriebswegZeitreihe"
+              "chartKey": "vertriebswegZeitreihe",
+              "sourceUrl": "https://www.gdv.de/gdv/publikationen/statistisches-taschenbuch"
             }
           ],
           "level2": [],
@@ -7590,7 +7735,8 @@
             "type": "trendRadar",
             "title": "Trend-Radar Versicherungswirtschaft 2025",
             "source": "Monitor Deloitte Analyse 2025",
-            "chartKey": "trendRadar"
+            "chartKey": "trendRadar",
+            "sourceUrl": "https://www2.deloitte.com/de/de/pages/financial-services/articles/insurance-industry-outlook.html"
           }
         ],
         "level2": [
@@ -8040,7 +8186,8 @@
               "type": "trendRadar",
               "title": "Trend-Radar Versicherungswirtschaft 2025",
               "source": "Monitor Deloitte Analyse 2025",
-              "chartKey": "trendRadar"
+              "chartKey": "trendRadar",
+              "sourceUrl": "https://www2.deloitte.com/de/de/pages/financial-services/articles/insurance-industry-outlook.html"
             }
           ],
           "level2": [

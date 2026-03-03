@@ -1460,7 +1460,7 @@
     }
 
     try {
-      var response = await fetch('data/versicherungs-1x1/chapters.json?v=20260303f');
+      var response = await fetch('data/versicherungs-1x1/chapters.json?v=20260303g');
       if (!response.ok) throw new Error('Failed to load data');
       moduleData = await response.json();
       moduleLoaded = true;
@@ -2227,30 +2227,196 @@
   // CITE LINK ENRICHMENT
   // ========================================
 
-  var SOURCE_URL_MAP = [
-    { prefix: 'GDV',          url: 'https://www.gdv.de/de/zahlen-und-fakten' },
-    { prefix: 'BaFin',        url: 'https://www.bafin.de/DE/PublikationenDaten/Jahresbericht' },
-    { prefix: 'BMF',          url: 'https://www.bundesfinanzministerium.de' },
-    { prefix: 'BMAS',         url: 'https://www.bmas.de' },
-    { prefix: 'AfW',          url: 'https://www.afw-bundesverband.de/presse-publikationen' },
-    { prefix: 'BVK',          url: 'https://www.bvk.de/presse/statistiken' },
-    { prefix: 'Assekurata',   url: 'https://www.assekurata.de/leistungsangebot/ratings' },
-    { prefix: 'Allianz',      url: 'https://www.allianz.com/de/investor_relations/berichte' },
-    { prefix: 'Munich Re',    url: 'https://www.munichre.com/de/unternehmen/medienservice/pressemitteilungen.html' },
-    { prefix: 'Swiss Re',     url: 'https://www.swissre.com/institute/research.html' },
-    { prefix: 'EIOPA',        url: 'https://www.eiopa.europa.eu/publications' },
-    { prefix: 'Accenture',    url: 'https://www.accenture.com/de-de/insights/insurance' },
-    { prefix: 'McKinsey',     url: 'https://www.mckinsey.com/industries/financial-services/our-insights' },
-    { prefix: 'AM Best',      url: 'https://www.ambest.com/research' },
-    { prefix: 'Stiftung',     url: 'https://www.stiftung-warentest.de' }
+  // Exact-title → URL map (all 128 sources, researched individually)
+  var CITE_EXACT_MAP = {
+    // ── GDV ──────────────────────────────────────────────────────────────────
+    'GDV Statistisches Taschenbuch 2024/2025': 'https://www.gdv.de/gdv/statistik/statistiken-zur-deutschen-versicherungswirtschaft-uebersicht',
+    'GDV Jahrbuch 2024': 'https://www.gdv.de/resource/blob/182536/e88186def029f1e5e86483bcc4223b27/fakten-zur-versicherungswirtschaft-2024-download-data.pdf',
+    'GDV Jahrbuch 2024, S. 8': 'https://www.gdv.de/resource/blob/182536/e88186def029f1e5e86483bcc4223b27/fakten-zur-versicherungswirtschaft-2024-download-data.pdf',
+    'GDV Jahrbuch 2024, S. 12': 'https://www.gdv.de/resource/blob/182536/e88186def029f1e5e86483bcc4223b27/fakten-zur-versicherungswirtschaft-2024-download-data.pdf',
+    'GDV Jahrbuch 2024, Kapitel Beschäftigung': 'https://www.gdv.de/resource/blob/182536/e88186def029f1e5e86483bcc4223b27/fakten-zur-versicherungswirtschaft-2024-download-data.pdf',
+    'GDV Jahrbuch 2024 / DIHK Vermittlerregister': 'https://www.gdv.de/resource/blob/182536/e88186def029f1e5e86483bcc4223b27/fakten-zur-versicherungswirtschaft-2024-download-data.pdf',
+    'GDV Jahresmedienkonferenz 2025': 'https://www.gdv.de/gdv/events/gdv-jahresmedienkonferenz-vom-13-februar-2025-186314',
+    'GDV Jahresmedienkonferenz Februar 2026': 'https://www.gdv.de/gdv/medien/medieninformationen/versicherungswirtschaft-waechst-2025-deutlich-gedaempfter-ausblick-auf-2026-196066',
+    'GDV Naturgefahrenreport 2024': 'https://www.gdv.de/resource/blob/183526/d871a7bed27d5c99e20ab387ee393370/naturgefahrenreport-2024-download-data.pdf',
+    'GDV Naturgefahrenstatistik 2024': 'https://www.gdv.de/gdv/medien/medieninformationen/gdv-naturgefahrenstatistik-2024-hochwasserschaeden-mehr-als-verdoppelt-188734',
+    'GDV Schadenstatistik Flut 2021': 'https://www.gdv.de/gdv/medien/medieninformationen/flutkatastrophe-ahrtal-schadenregulierung-180752',
+    'GDV Lebensversicherung in Zahlen 2023/2024': 'https://www.gdv.de/resource/blob/180978/b8ae8eb0b1bf4b15e7cc3354bc231af9/die-deutsche-lebensversicherung-in-zahlen-2024-publikation-pdf-data.pdf',
+    'GDV Statistik Lebensversicherung 2024': 'https://www.gdv.de/gdv/statistik/statistiken-zur-deutschen-versicherungswirtschaft-uebersicht/lebensversicherung',
+    'GDV Lebensversicherung Stornoquoten 2024': 'https://www.gdv.de/gdv/statistik/statistiken-zur-deutschen-versicherungswirtschaft-uebersicht/lebensversicherung',
+    'GDV Stornoquoten Lebensversicherung 2024, fondsgebunden': 'https://www.gdv.de/gdv/statistik/statistiken-zur-deutschen-versicherungswirtschaft-uebersicht/lebensversicherung',
+    'GDV Berufsunfähigkeit Statistik 2024': 'https://www.gdv.de/gdv/themen/leben/7-fakten-zur-berufsunfaehigkeitsversicherung-34338',
+    'GDV Leistungspraxis BU-Versicherung 2023': 'https://www.gdv.de/gdv/themen/leben/7-fakten-zur-berufsunfaehigkeitsversicherung-34338',
+    'GDV bAV-Report 2024': 'https://www.gdv.de/gdv/statistik/statistiken-zur-deutschen-versicherungswirtschaft-uebersicht/lebensversicherung/bestand-an-vertraegen-der-betrieblichen-altersvorsorge-bav--188644',
+    'GDV bAV- und BU-Bestandsstatistik 2024': 'https://www.gdv.de/gdv/statistik/statistiken-zur-deutschen-versicherungswirtschaft-uebersicht/lebensversicherung/bestand-an-vertraegen-der-betrieblichen-altersvorsorge-bav--188644',
+    'GDV Cyberversicherung Marktstatistik 2024': 'https://www.gdv.de/gdv/medien/medieninformationen/mehr-cyberschaeden-praevention-wichtiger-denn-je-181946',
+    'GDV Cyberversicherung Combined Ratio 2024': 'https://www.gdv.de/gdv/medien/medieninformationen/mehr-cyberschaeden-praevention-wichtiger-denn-je-181946',
+    'GDV Betrugsstatistik Versicherung 2024': 'https://www.gdv.de/gdv/themen/schaden-unfall/versicherungsbetrug',
+    'GDV Marktausblick 2025': 'https://www.gdv.de/gdv/medien/medieninformationen/versicherer-erwarten-2025-beitragswachstum-von-fuenf-prozent-auf-250-milliarden-euro-186304',
+    'GDV Nachhaltigkeitsbericht 2025, ESG-Kapitalanlagen': 'https://www.gdv.de/resource/blob/193502/754aa0b123cdfb811c66d7168d8457b3/gdv-nachhaltigkeitsbericht-2025-download-data.pdf',
+    'GDV Digitalisierungserhebung 2023': 'https://www.gdv.de/resource/blob/164228/6aedfd88c8a2a0b6cc3ab2823edadeb4/fokus-digitalisierung-nr-11-januar-2024-download-data.pdf',
+    'GDV Digitalisierungserhebung Versicherung 2024': 'https://www.gdv.de/gdv/medien/medieninformationen/gdv-statistik-jeder-fuenfte-versicherungsvertrag-wird-digital-abgeschlossen-189444',
+    'GDV Digitalreport Versicherung 2024': 'https://www.gdv.de/resource/blob/184010/4fcd3fad50f1cad1edbfd597e356df76/fokus-digitalisierung-digitalisierung-aber-sicher-data.pdf',
+    'GDV Digitaler Versicherungsvertrieb / Kubus-Studie': 'https://www.gdv.de/gdv/statistik/statistiken-zur-deutschen-versicherungswirtschaft-uebersicht/branche-insgesamt/anteile-der-vertriebswege-am-neugeschaeft-der-versicherungswirtschaft-137746',
+    'Insurance Europe / GDV-Vertriebswegestatistik 2024': 'https://www.gdv.de/gdv/statistik/statistiken-zur-deutschen-versicherungswirtschaft-uebersicht/branche-insgesamt/anteile-der-vertriebswege-am-neugeschaeft-der-versicherungswirtschaft-137746',
+    'GDV / BaFin Statistik Erstversicherungsunternehmen': 'https://www.bafin.de/DE/PublikationenDaten/Statistiken/Erstversicherung/erstversicherung_artikel.html',
+    'GDV / Geschäftsberichte der Top-Versicherer 2024': 'https://www.gdv.de/gdv/statistik/statistiken-zur-deutschen-versicherungswirtschaft-uebersicht',
+    'Lobbyregister Bundestag, GDV e.V. Eintrag 2024': 'https://www.lobbyregister.bundestag.de/suche/R000774',
+    'Handelsblatt / GDV Statistik': 'https://www.gdv.de/gdv/statistik',
+    'Geschäftsberichte Allianz, Talanx, Munich Re 2024': 'https://www.allianz.com/en/investor_relations/results-reports/annual-reports.html',
+    // ── BaFin ─────────────────────────────────────────────────────────────────
+    'BaFin Jahresbericht 2024, Kapitalanlagen': 'https://www.bafin.de/SharedDocs/Downloads/DE/Jahresbericht/dl_jb_2024.html',
+    'BaFin Jahresbericht 2024, Kapitalanlagen der Versicherungswirtschaft': 'https://www.bafin.de/SharedDocs/Downloads/DE/Jahresbericht/dl_jb_2024.html',
+    'BaFin Jahresbericht 2024, Asset Allocation': 'https://www.bafin.de/SharedDocs/Downloads/DE/Jahresbericht/dl_jb_2024.html',
+    'BaFin Jahresbericht 2024, Organisation': 'https://www.bafin.de/SharedDocs/Downloads/DE/Jahresbericht/dl_jb_2024.html',
+    'BaFin Statistik Erstversicherungsunternehmen 2024': 'https://www.bafin.de/DE/PublikationenDaten/Statistiken/Erstversicherung/erstversicherung_artikel.html',
+    'BaFin Statistik Kapitalanlagen 2024': 'https://www.bafin.de/DE/Aufsicht/VersichererPensionsfonds/Kapitalanlagen/kapitalanlagen_node.html',
+    'BaFin Statistik Kapitalanlagen 31.12.2024, HGB-Buchwerte': 'https://www.bafin.de/DE/Aufsicht/VersichererPensionsfonds/Kapitalanlagen/kapitalanlagen_node.html',
+    'BaFin Statistik Kfz-Versicherung 2023': 'https://www.bafin.de/DE/PublikationenDaten/Statistiken/Erstversicherung/erstversicherung_artikel.html',
+    'BaFin Beschwerdestatistik 2024, Kfz-Versicherung': 'https://www.bafin.de/SharedDocs/Downloads/DE/Statistik/Beschwerde/dl_st_2024_beschwerde.html',
+    'BaFin Statistik ZZR-Entwicklung 2024': 'https://www.bafin.de/DE/PublikationenDaten/Statistiken/Erstversicherung/erstversicherung_artikel.html',
+    'BaFin Solvenzquoten 31.12.2024': 'https://www.bafin.de/DE/Aufsicht/VersichererPensionsfonds/Eigenmittelanforderungen/SolvencyII/solvencyII_node.html',
+    'BaFin Marktstudie Effektivkosten Lebensversicherung 2023': 'https://www.bafin.de/SharedDocs/Veroeffentlichungen/DE/Fachartikel/2024/bafin_fachartikel_wohlverhalten.html',
+    'BaFin Fachartikel: Lebensversicherer – Wenn Zinsen steigen': 'https://www.bafin.de/SharedDocs/Veroeffentlichungen/DE/Fachartikel/2022/fa_bj_2203_Effektivkosten_Versicherer.html',
+    'BaFin Marktuntersuchung Vertriebsvergütung 2019': 'https://www.bafin.de/SharedDocs/Veroeffentlichungen/DE/Meldung/2019/meldung_191211_abschlussprovision_abfrage.html',
+    'BaFin-Erhebung Abschlussvergütungen 2018/2019': 'https://www.bafin.de/SharedDocs/Veroeffentlichungen/DE/Meldung/2019/meldung_191211_abschlussprovision_abfrage.html',
+    'BaFin-Erhebung Abschlussvergütungen 2018/2019, Gesamtmarkt': 'https://www.bafin.de/SharedDocs/Veroeffentlichungen/DE/Meldung/2019/meldung_191211_abschlussprovision_abfrage.html',
+    'BaFin Journal 12/2024, Wohlverhaltensaufsicht': 'https://www.bafin.de/SharedDocs/Veroeffentlichungen/DE/Fachartikel/2024/bafin_fachartikel_wohlverhalten.html',
+    'BaFin Pressemitteilung 01.01.2024': 'https://www.bafin.de/DE/PublikationenDaten/Jahresbericht/jahresbericht_node.html',
+    'BaFin Risiken im Fokus 2026, DORA-Meldungen Q1–Q3/2025': 'https://www.bafin.de/DE/Aufsicht/Fokusrisiken/Fokusrisiken_2026/fokusrisiken_2026_node.html',
+    // ── Gesetze ───────────────────────────────────────────────────────────────
+    'Versicherungsaufsichtsgesetz (VAG) i.d.F. 2016': 'https://www.gesetze-im-internet.de/vag_2016/',
+    'VAG § 50': 'https://www.gesetze-im-internet.de/vag_2016/__50.html',
+    'VAG § 122; Del. VO (EU) 2015/35 Art. 248–253': 'https://www.gesetze-im-internet.de/vag_2016/__122.html',
+    'Solvency-II-RL 2009/138/EG Art. 101; VAG § 97': 'https://eur-lex.europa.eu/legal-content/DE/TXT/HTML/?uri=CELEX:02009L0138-20250117',
+    'EIOPA-Anpassung, Del. VO (EU) 2019/1935': 'https://eur-lex.europa.eu/legal-content/DE/ALL/?uri=celex:32009L0138',
+    'VVG i.d.F. v. 16.1.2026, BGBl. I S. 2631': 'https://www.gesetze-im-internet.de/vvg_2008/',
+    'VVG § 8 Abs. 1, § 152 Abs. 1': 'https://www.gesetze-im-internet.de/vvg_2008/__8.html',
+    'VVG § 172 Abs. 2': 'https://www.gesetze-im-internet.de/vvg_2008/__172.html',
+    'VersVermV § 7 i.V.m. § 34d Abs. 9 GewO': 'https://www.gesetze-im-internet.de/versvermv_2018/__7.html',
+    // ── BMF / BMAS / DRV / DAV ────────────────────────────────────────────────
+    'BMF Riester-Förderung, § 84 EStG': 'https://www.gesetze-im-internet.de/estg/__84.html',
+    'BMF Schreiben v. 06.12.2025, Vorsorgeaufwendungen': 'https://www.bundesfinanzministerium.de/Content/DE/Downloads/BMF_Schreiben/Steuerarten/Einkommensteuer/index.html',
+    'BMF Sozialversicherungsrechengrößen 2025': 'https://www.gesetze-im-internet.de/svbezgrv_2025/',
+    'BMF Sozialversicherungsrechengrößen 2026': 'https://www.gesetze-im-internet.de/svbezgrv_2026/BJNR1160A0025.html',
+    'BMF, Beitragsbemessungsgrenze 2026': 'https://www.recht.bund.de/bgbl/1/2025/278/VO.html',
+    'DAV/BMF': 'https://aktuar.de/de/newsroom/detail/jahresrueckblick-2024-ein-starkes-jahr-fuer-dav-dgvfm-und-ivs/',
+    'DAV-Empfehlung 11/2023; BMF-VO v. 30.10.2024': 'https://aktuar.de/content/PDF/News/Pressemeldungen/2024_11_29_PM_HRZ.pdf',
+    'DAV Jahresbericht 2024': 'https://aktuar.de/de/newsroom/detail/jahresrueckblick-2024-ein-starkes-jahr-fuer-dav-dgvfm-und-ivs/',
+    'BMAS Forschungsbericht Verbreitung bAV 2023': 'https://www.bmas.de/DE/Service/Publikationen/Forschungsberichte/fb-651-arbeitgeber-traegerbefragung-betrieblichen-altersversorgung-2023.html',
+    'Deutsche Rentenversicherung Rentenbestand 2024': 'https://www.deutsche-rentenversicherung.de/SharedDocs/Downloads/DE/Statistiken-und-Berichte/statistikpublikationen/statistikband_rente.html',
+    // ── EIOPA / Rückversicherer ────────────────────────────────────────────────
+    'EIOPA Annual Report 2024': 'https://www.eiopa.europa.eu/eiopa-publishes-its-2024-annual-report-2025-06-13_en',
+    'EIOPA Annual Report 2024, Budget': 'https://www.eiopa.europa.eu/eiopa-publishes-its-2024-annual-report-2025-06-13_en',
+    'EIOPA AI Governance Report 2024': 'https://www.eiopa.europa.eu/document/download/88342342-a17f-4f88-842f-bf62c93012d6_en?filename=Opinion+on+Artificial+Intelligence+governance+and+risk+management.pdf',
+    'EIOPA AI Governance in Insurance Report 2024': 'https://www.eiopa.europa.eu/publications/opinion-artificial-intelligence-governance-and-risk-management_en',
+    'Munich Re Geschäftsbericht 2024/2025': 'https://www.munichre.com/content/dam/munichre/mrwebsiteslaunches/2024-annual-report/MunichRe-AG-Geschaeftsbericht-2024-de.pdf/_jcr_content/renditions/original./MunichRe-AG-Geschaeftsbericht-2024-de.pdf',
+    'Munich Re NatCatSERVICE, Naturkatastrophen Bilanz 2024': 'https://www.munichre.com/en/company/media-relations/media-information-and-corporate-news/media-information/2025/natural-disaster-figures-2024.html',
+    'Swiss Re sigma / AM Best Global Reinsurance Report 2024': 'https://www.swissre.com/institute/research/sigma-research.html',
+    'Swiss Re sigma / Allianz Global Insurance Report 2024': 'https://www.swissre.com/institute/research/sigma-research/sigma-2024-03-world-insurance-global-resilience.html',
+    'Swiss Re sigma No. 2/2025 via NAIC': 'https://www.swissre.com/institute/research/sigma-research/sigma-2025-02-world-insurance-riskier-fragmented-world.html',
+    'Hannover Rück Geschäftsbericht 2024': 'https://www.hannover-re.com/de/investoren/ergebnisse-und-berichte/',
+    // ── Erstversicherer ────────────────────────────────────────────────────────
+    'Allianz Geschäftsbericht 2024': 'https://www.allianz.com/content/dam/onemarketing/azcom/Allianz_com/investor-relations/en/results-reports/annual-report/ar-2024/de-allianz-gruppe-geschaeftsbericht-2024.pdf',
+    'Allianz Deutschland Digitalbericht 2024': 'https://www.allianz.com/en/investor_relations/results-reports/annual-reports.html',
+    'Allianz Blue Sky Re DAC Prospekt 12/2023': 'https://www.allianz.com/en/investor_relations/results-reports/annual-reports.html',
+    'HUK-COBURG Geschäftsbericht 2024': 'https://www.huk.de/presse/mediathek/geschaeftsberichte.html',
+    'Swiss Life Deutschland Geschäftsbericht 2023': 'https://www.swisslife.de/content/dam/de/documents/6b/21364.pdf',
+    'Viridium Geschäftsbericht 2024': 'https://www.viridium-gruppe.com/en/media-center/press-releases/detail/viridium-group-successful-financial-year-2024-and-positioning-for-further-growth',
+    'Münchener Verein Unternehmensbericht 2024': 'https://www.muenchener-verein.de/unternehmen/presse-news/',
+    // ── Verbände ─────────────────────────────────────────────────────────────
+    'AfW Mitgliederstatistik Juni 2025': 'https://afw-verband.de/presse/',
+    'BVK-Strukturanalyse Vermittler 2022/23': 'https://www.bvk.de/themen/publikation/pressemitteilung/studie-betriebswirtschaftliche-strukturen-des-versicherungsvertriebs-bvk-strukturanalyse-2022-2023-erscheint.745/',
+    'PKV-Verband Zahlenbericht 2024': 'https://www.pkv.de/fileadmin/user_upload/PKV/3_PDFs/Publikationen/Zahlenbericht_2024.pdf',
+    'PKV-Verband Zahlenbericht 2024, Zusatzversicherungen': 'https://www.pkv.de/fileadmin/user_upload/PKV/3_PDFs/Publikationen/Zahlenbericht_2024.pdf',
+    'PKV-Verband bKV-Report 2024': 'https://www.pkv.de/verband/presse/pressemitteilungen/boom-bei-der-betrieblichen-krankenversicherung-erfolgsmodell-auch-fuer-bessere-pflege-vorsorge/',
+    'PKV-Verband Mitgliederverzeichnis 2024': 'https://www.pkv.de/verband/mitgliedsunternehmen/',
+    'DIHK Vermittlerregister, Stand 1.10.2025': 'https://www.dihk.de/de/serviceportal/fuer-gewerbetreibende-unternehmer/statistiken-und-bestandszahlen-zum-vermittlerregister-141724',
+    'DIHK-Vermittlerregister / DAS INVESTMENT': 'https://www.dihk.de/de/serviceportal/fuer-gewerbetreibende-unternehmer/statistiken-und-bestandszahlen-zum-vermittlerregister-141724',
+    'DIHK-Vermittlerregister / Pfefferminzia': 'https://www.dihk.de/de/serviceportal/fuer-gewerbetreibende-unternehmer/statistiken-und-bestandszahlen-zum-vermittlerregister-141724',
+    'aba Statistikreihe 2023, Gesamtdeckungsmittel bAV': 'https://www.aba-online.de/infothek/statistik/deckungsmittel',
+    'DSGV / Sparkassen-Finanzgruppe': 'https://www.dsgv.de/de/sparkassen-finanzgruppe/zahlen-und-fakten.html',
+    'Versicherungsombudsmann Jahresbericht 2024': 'https://www.versicherungsombudsmann.de/wp-content/uploads/Jahresbericht_2024.pdf',
+    // ── Consulting / Rating ───────────────────────────────────────────────────
+    'Assekurata Kfz-Marktanalyse 2024': 'https://www.assekurata.de/studien/',
+    'Assekurata Marktstudie Überschussbeteiligung 2024': 'https://www.assekurata.de/2024/05/22/die-22-assekurata-studie-zu-ueberschussbeteiligungen-und-garantien-trends-bei-fonds-und-indexpolicen/',
+    'Assekurata Solvenz-Studie Lebensversicherung 2025': 'https://www.assekurata.de/studien/',
+    'Franke & Bornberg BU-Leistungsstudie 2023': 'https://www.franke-bornberg.de/fb-news/pressemitteilungen/bu-leistungspraxisstudie-2023',
+    'Franke & Bornberg BU-Leistungsstudie 2023, Einzelauswertung R+V': 'https://www.franke-bornberg.de/fb-news/pressemitteilungen/bu-leistungspraxisstudie-2023',
+    'Deloitte Insurance Monitor Q4/2024': 'https://www.deloitte.com/us/en/insights/industry/financial-services/financial-services-industry-outlooks/insurance-industry-outlook-2024.html',
+    'PwC Insurance IT-Studie DACH 2024': 'https://www.pwc.de/de/versicherungen/digitalisierung-und-technologie.html',
+    'PwC Insurance M&A Report Europe 2024': 'https://www.pwc.com/gx/en/industries/financial-services/insurance/publications.html',
+    'WTW Vertriebsstudie 2024': 'https://www.willistowerswatson.com/de-DE/Insights/2024/11/vertriebswege-survey-leben-2024',
+    'WTW Vertriebsstudie 2024 / GDV': 'https://www.willistowerswatson.com/de-DE/Insights/2024/11/vertriebswege-survey-leben-2024',
+    'Willis Towers Watson Vergütungsstudie 2017': 'https://www.willistowerswatson.com/de-DE/Insights',
+    'MSR Consulting Versicherungskanalstudie 2024': 'https://www.msr-consulting.de/themen/versicherung/',
+    'AM Best Global Reinsurance Report 2024': 'https://web.ambest.com/ratings-services/industry-centers/reinsurance-information/reinsurance-research',
+    'Accenture Insurance Technology Vision 2024': 'https://www.accenture.com/content/dam/accenture/final/accenture-com/document-2/Accenture-Technology-Vision-2024-Executive-Summary-OL.pdf',
+    'msg/Lünendonk Insurance IT-Studie 2024': 'https://www.luenonk.de/studien/it-dienstleister/insurance/',
+    'DACH Insurance M&A Monitor 2024': 'https://www2.deloitte.com/de/de/pages/financial-services/articles/insurance-ma-monitor.html',
+    // ── InsurTech / International / Sonstige ─────────────────────────────────
+    'Ping An Annual Report 2024': 'https://group.pingan.com/investor_relations/results_and_presentations/2025/24-annual-results.html',
+    'ZhongAn Online P&C Insurance Annual Report 2024': 'https://www.zhongan.com/corporate/investor/?lang=en',
+    'Artemis Cat Bond & ILS Market Report Q4/2025': 'https://www.artemis.bm/wp-content/uploads/2026/01/catastrophe-bond-ils-market-report-q4-2025.pdf',
+    'Bloomberg/wefox Series-C Finanzierungsrunde 09/2022': 'https://www.wefox.com/en/press',
+    'Hepster Unternehmensangaben 2024': 'https://www.hepster.com/ueber-uns/',
+    'Nordlight Research / Allied Market Research': 'https://www.nordlight-research.com/publikationen/',
+    'Bundesregierung Flutkatastrophe Ahrtal Bilanz 2022': 'https://www.bundesregierung.de/breg-de/aktuelles/gedenken-flut-ahrtal-2364150',
+    'Versicherungsmonitor / Handelsblatt': 'https://www.handelsblatt.com/finanzen/versicherungen/',
+    'Versicherungsmonitor / Versicherungsbote': 'https://www.versicherungsbote.de/',
+    'Versicherungstech-Magazin / Cash-online': 'https://www.cash-online.de/versicherungen/',
+    'adesso Projektbericht SOKA-BAU Migration 2024': 'https://www.adesso.de/de/branchen/versicherung/index.jsp',
+    'DSGV / Sparkassen-Finanzgruppe': 'https://www.dsgv.de/de/sparkassen-finanzgruppe/zahlen-und-fakten.html'
+  };
+
+  // Prefix fallback map for sources not in exact map
+  var SOURCE_PREFIX_MAP = [
+    { prefix: 'GDV',            url: 'https://www.gdv.de/gdv/statistik' },
+    { prefix: 'BaFin',          url: 'https://www.bafin.de/SharedDocs/Downloads/DE/Jahresbericht/dl_jb_2024.html' },
+    { prefix: 'BMF',            url: 'https://www.bundesfinanzministerium.de' },
+    { prefix: 'BMAS',           url: 'https://www.bmas.de' },
+    { prefix: 'VAG',            url: 'https://www.gesetze-im-internet.de/vag_2016/' },
+    { prefix: 'VVG',            url: 'https://www.gesetze-im-internet.de/vvg_2008/' },
+    { prefix: 'VersVermV',      url: 'https://www.gesetze-im-internet.de/versvermv_2018/' },
+    { prefix: 'Solvency',       url: 'https://eur-lex.europa.eu/legal-content/DE/TXT/HTML/?uri=CELEX:02009L0138-20250117' },
+    { prefix: 'AfW',            url: 'https://afw-verband.de/presse/' },
+    { prefix: 'BVK',            url: 'https://www.bvk.de/themen/strukturanalyse/' },
+    { prefix: 'PKV',            url: 'https://www.pkv.de/wissen/pkv-zahlenportal/' },
+    { prefix: 'DIHK',           url: 'https://www.dihk.de/de/serviceportal/fuer-gewerbetreibende-unternehmer/statistiken-und-bestandszahlen-zum-vermittlerregister-141724' },
+    { prefix: 'aba',            url: 'https://www.aba-online.de/infothek/statistik/ueberblick' },
+    { prefix: 'DAV',            url: 'https://aktuar.de/de/newsroom/' },
+    { prefix: 'EIOPA',          url: 'https://www.eiopa.europa.eu/publications' },
+    { prefix: 'Munich Re',      url: 'https://www.munichre.com/en/company/investors/reports-and-presentations/annual-report.html' },
+    { prefix: 'Swiss Re',       url: 'https://www.swissre.com/institute/research/sigma-research.html' },
+    { prefix: 'Hannover',       url: 'https://www.hannover-re.com/de/investoren/ergebnisse-und-berichte/' },
+    { prefix: 'Allianz',        url: 'https://www.allianz.com/en/investor_relations/results-reports/annual-reports.html' },
+    { prefix: 'HUK',            url: 'https://www.huk.de/presse/mediathek/geschaeftsberichte.html' },
+    { prefix: 'Swiss Life',     url: 'https://www.swisslife.de/ueber-swiss-life/medienportal/mediathek/geschaeftsergebnisse.html' },
+    { prefix: 'Viridium',       url: 'https://www.viridium-gruppe.com/en/media-center/downloads' },
+    { prefix: 'Assekurata',     url: 'https://www.assekurata.de/studien/' },
+    { prefix: 'Franke',         url: 'https://www.franke-bornberg.de/fb-news/pressemitteilungen/bu-leistungspraxisstudie-2023' },
+    { prefix: 'Deloitte',       url: 'https://www.deloitte.com/global/en/Industries/insurance.html' },
+    { prefix: 'PwC',            url: 'https://www.pwc.de/de/versicherungen.html' },
+    { prefix: 'WTW',            url: 'https://www.willistowerswatson.com/de-DE/Insights' },
+    { prefix: 'Willis',         url: 'https://www.willistowerswatson.com/de-DE/Insights' },
+    { prefix: 'AM Best',        url: 'https://web.ambest.com/ratings-services/industry-centers/reinsurance-information/reinsurance-research' },
+    { prefix: 'Accenture',      url: 'https://www.accenture.com/us-en/insights/insurance' },
+    { prefix: 'Ping An',        url: 'https://group.pingan.com/investor_relations.html' },
+    { prefix: 'Artemis',        url: 'https://www.artemis.bm/catastrophe-bond-ils-market-reports/' },
+    { prefix: 'Versicherungsombudsmann', url: 'https://www.versicherungsombudsmann.de/downloads/' },
+    { prefix: 'Deutsche Rentenversicherung', url: 'https://www.deutsche-rentenversicherung.de/DRV/DE/Experten/Zahlen-und-Fakten/Statistiken-und-Berichte/statistiken-und-berichte_node.html' }
   ];
 
   function getCiteUrl(sourceText) {
-    for (var i = 0; i < SOURCE_URL_MAP.length; i++) {
-      if (sourceText.indexOf(SOURCE_URL_MAP[i].prefix) === 0) {
-        return SOURCE_URL_MAP[i].url;
+    // 1) exact match
+    if (CITE_EXACT_MAP[sourceText]) return CITE_EXACT_MAP[sourceText];
+    // 2) prefix match
+    for (var i = 0; i < SOURCE_PREFIX_MAP.length; i++) {
+      if (sourceText.indexOf(SOURCE_PREFIX_MAP[i].prefix) === 0) {
+        return SOURCE_PREFIX_MAP[i].url;
       }
     }
+    // 3) Google fallback
     return 'https://www.google.com/search?q=' + encodeURIComponent(sourceText);
   }
 

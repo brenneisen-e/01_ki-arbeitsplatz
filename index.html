@@ -38,6 +38,7 @@
     <link rel="stylesheet" href="css/am-prod-mode.css?v=20260223">
     <link rel="stylesheet" href="css/makler.css?v=20260209">
     <link rel="stylesheet" href="css/mrh-trowe.css?v=20260219">
+    <link rel="stylesheet" href="css/banking-berater.css?v=20260302">
     <!-- Modularisierte CSS-Module -->
     <link rel="stylesheet" href="css/kunden-detail.css?v=20260209">
     <link rel="stylesheet" href="css/clv.css?v=20260209">
@@ -300,6 +301,13 @@
                                 <line x1="23" y1="11" x2="17" y2="11"></line>
                             </svg>
                             <span>HR Pipeline</span>
+                        </button>
+                        <button class="nav-box nav-box-small" onclick="openBeraterOverview()">
+                            <svg class="nav-box-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                                <path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"></path>
+                            </svg>
+                            <span>Bankberater-Ansicht</span>
                         </button>
                         <button class="nav-box nav-box-small" onclick="openVersicherungs1x1()">
                             <svg class="nav-box-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -6827,6 +6835,205 @@
     </div>
   </div>
 
+  <!-- ========================================
+     B-02 BERATER-UEBERSICHT (Banking)
+     ======================================== -->
+  <div id="beraterOverviewPage" style="display: none;">
+    <div class="berater-overview-page">
+      <!-- Header -->
+      <div class="berater-header" style="background: linear-gradient(135deg, #003399 0%, #002266 100%); color: white; padding: 24px 32px; position: relative; display: flex; align-items: center;">
+        <button class="berater-back-btn" onclick="backFromBeraterOverview()" style="background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);border-radius:8px;padding:8px 14px;color:white;cursor:pointer;font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px;margin-right:16px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="15 18 9 12 15 6"></polyline></svg>
+          Zurueck
+        </button>
+        <div style="flex:1;">
+          <h2 id="beraterHeaderName" style="font-size:22px;font-weight:700;margin:0;">Thomas Berger</h2>
+          <div id="beraterHeaderMeta" style="font-size:13px;color:rgba(255,255,255,0.75);margin-top:4px;">
+            <span>Berater-Nr. VB-40210</span><span style="margin-left:16px;">Volksbank Mittelhessen eG</span><span style="margin-left:16px;">Beratungscenter Giessen-Sued</span>
+          </div>
+        </div>
+        <!-- 3-Wege Modus Selector -->
+        <div class="bank-view-mode-selector">
+          <button class="bank-mode-btn active" data-mode="retail" onclick="setBankViewMode('retail')">VR Retail</button>
+          <button class="bank-mode-btn" data-mode="firmenkunde" onclick="setBankViewMode('firmenkunde')">VR Firmenkunde</button>
+          <button class="bank-mode-btn" data-mode="vermoegen" onclick="setBankViewMode('vermoegen')">VR Vermoegen</button>
+        </div>
+      </div>
+
+      <!-- KPI Boxen: Retail (4) -->
+      <div id="retailKpis" data-bank-kpi-set="retail" class="cockpit-kpi-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;padding:24px 32px 16px;">
+        <div class="banking-kpi-card" style="display:flex;flex-direction:column;gap:8px;">
+          <div class="cockpit-kpi-icon bank-kunden"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+          <div style="font-size:12px;color:#64748b;font-weight:500;text-transform:uppercase;">Kundenstamm</div>
+          <div style="font-size:24px;font-weight:700;color:#1e293b;">412</div>
+          <div style="font-size:12px;color:#94a3b8;">Aktive Kunden</div>
+        </div>
+        <div class="banking-kpi-card" style="display:flex;flex-direction:column;gap:8px;">
+          <div class="cockpit-kpi-icon bank-deposits"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
+          <div style="font-size:12px;color:#64748b;font-weight:500;text-transform:uppercase;">Ertrag YTD</div>
+          <div style="font-size:24px;font-weight:700;color:#1e293b;">248,5 Tsd.</div>
+          <div style="font-size:12px;color:#16a34a;">+8,2% gg. Vorjahr</div>
+        </div>
+        <div class="banking-kpi-card" style="display:flex;flex-direction:column;gap:8px;">
+          <div class="cockpit-kpi-icon bank-cross"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg></div>
+          <div style="font-size:12px;color:#64748b;font-weight:500;text-transform:uppercase;">Cross-Selling-Quote</div>
+          <div style="font-size:24px;font-weight:700;color:#1e293b;">2,8</div>
+          <div style="font-size:12px;color:#d97706;">Ziel: 4,0</div>
+        </div>
+        <div class="banking-kpi-card" style="display:flex;flex-direction:column;gap:8px;">
+          <div class="cockpit-kpi-icon bank-kredite"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+          <div style="font-size:12px;color:#64748b;font-weight:500;text-transform:uppercase;">VR-FinanzPlan-Quote</div>
+          <div style="font-size:24px;font-weight:700;color:#1e293b;">38%</div>
+          <div style="font-size:12px;color:#d97706;">Ziel: 50%</div>
+        </div>
+      </div>
+
+      <!-- KPI Boxen: Firmenkunde (5) -->
+      <div id="firmenkundeKpis" data-bank-kpi-set="firmenkunde" class="cockpit-kpi-grid" style="display:none;grid-template-columns:repeat(5,1fr);gap:16px;padding:24px 32px 16px;">
+        <div class="banking-kpi-card" style="display:flex;flex-direction:column;gap:8px;">
+          <div class="cockpit-kpi-icon bank-volumen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg></div>
+          <div style="font-size:12px;color:#64748b;font-weight:500;text-transform:uppercase;">Kreditvolumen</div>
+          <div style="font-size:24px;font-weight:700;color:#1e293b;">42,5 Mio.</div>
+          <div style="font-size:12px;color:#16a34a;">+6,1% YoY</div>
+        </div>
+        <div class="banking-kpi-card" style="display:flex;flex-direction:column;gap:8px;">
+          <div class="cockpit-kpi-icon bank-firmen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></div>
+          <div style="font-size:12px;color:#64748b;font-weight:500;text-transform:uppercase;">Neugeschaeft YTD</div>
+          <div style="font-size:24px;font-weight:700;color:#1e293b;">6,8 Mio.</div>
+          <div style="font-size:12px;color:#94a3b8;">3x Investition, 2x Betriebsmittel</div>
+        </div>
+        <div class="banking-kpi-card" style="display:flex;flex-direction:column;gap:8px;">
+          <div class="cockpit-kpi-icon bank-rating"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
+          <div style="font-size:12px;color:#64748b;font-weight:500;text-transform:uppercase;">Provisionsertrag</div>
+          <div style="font-size:24px;font-weight:700;color:#1e293b;">385 Tsd.</div>
+          <div style="font-size:12px;color:#94a3b8;">ZV + Ausland + Leasing</div>
+        </div>
+        <div class="banking-kpi-card" style="display:flex;flex-direction:column;gap:8px;">
+          <div class="cockpit-kpi-icon bank-risiko"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+          <div style="font-size:12px;color:#64748b;font-weight:500;text-transform:uppercase;">Ausfallrisiko</div>
+          <div style="font-size:24px;font-weight:700;color:#1e293b;">1,2%</div>
+          <div style="font-size:12px;color:#16a34a;">Benchmark: 2,1%</div>
+        </div>
+        <div class="banking-kpi-card" style="display:flex;flex-direction:column;gap:8px;">
+          <div class="cockpit-kpi-icon bank-kunden"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+          <div style="font-size:12px;color:#64748b;font-weight:500;text-transform:uppercase;">Kundenbindung</div>
+          <div style="font-size:24px;font-weight:700;color:#1e293b;">96,5%</div>
+          <div style="font-size:12px;color:#16a34a;">Benchmark: 94%</div>
+        </div>
+      </div>
+
+      <!-- KPI Boxen: Vermoegen (4) -->
+      <div id="vermoegenKpis" data-bank-kpi-set="vermoegen" class="cockpit-kpi-grid" style="display:none;grid-template-columns:repeat(4,1fr);gap:16px;padding:24px 32px 16px;">
+        <div class="banking-kpi-card" style="display:flex;flex-direction:column;gap:8px;">
+          <div class="cockpit-kpi-icon bank-aum"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg></div>
+          <div style="font-size:12px;color:#64748b;font-weight:500;text-transform:uppercase;">AuM Gesamt</div>
+          <div style="font-size:24px;font-weight:700;color:#1e293b;">85,2 Mio.</div>
+          <div style="font-size:12px;color:#16a34a;">+12,4% YoY</div>
+        </div>
+        <div class="banking-kpi-card" style="display:flex;flex-direction:column;gap:8px;">
+          <div class="cockpit-kpi-icon bank-performance"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></div>
+          <div style="font-size:12px;color:#64748b;font-weight:500;text-transform:uppercase;">Provisions-Ertrag WP</div>
+          <div style="font-size:24px;font-weight:700;color:#1e293b;">420 Tsd.</div>
+          <div style="font-size:12px;color:#94a3b8;">Depot + Vermoegensverwaltung</div>
+        </div>
+        <div class="banking-kpi-card" style="display:flex;flex-direction:column;gap:8px;">
+          <div class="cockpit-kpi-icon bank-advisory"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+          <div style="font-size:12px;color:#64748b;font-weight:500;text-transform:uppercase;">Vorsorge-Ertrag</div>
+          <div style="font-size:24px;font-weight:700;color:#1e293b;">185 Tsd.</div>
+          <div style="font-size:12px;color:#94a3b8;">Altersvorsorge + Versicherung</div>
+        </div>
+        <div class="banking-kpi-card" style="display:flex;flex-direction:column;gap:8px;">
+          <div class="cockpit-kpi-icon bank-zufluss"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
+          <div style="font-size:12px;color:#64748b;font-weight:500;text-transform:uppercase;">Gesamt-Ertrag PB</div>
+          <div style="font-size:24px;font-weight:700;color:#1e293b;">680 Tsd.</div>
+          <div style="font-size:12px;color:#16a34a;">+15,2% gg. Vorjahr</div>
+        </div>
+      </div>
+
+      <!-- Drei-Saeulen-Karten (nur VR Vermoegen) -->
+      <div id="beraterSaeulenGrid" class="banking-saeulen-grid" style="display:none;padding:0 32px 16px;">
+        <div class="banking-saeulen-card anlage">
+          <h5>Saeule I — Anlage</h5>
+          <div class="banking-saeulen-metric"><span class="label">Depot</span><span class="value">42,8 Mio. EUR</span></div>
+          <div class="banking-saeulen-metric"><span class="label">Vermoegensverwaltung</span><span class="value">28,4 Mio. EUR</span></div>
+          <div class="banking-saeulen-metric"><span class="label">Fonds</span><span class="value">14,0 Mio. EUR</span></div>
+        </div>
+        <div class="banking-saeulen-card vorsorge">
+          <h5>Saeule II — Vorsorge</h5>
+          <div class="banking-saeulen-metric"><span class="label">Altersvorsorge</span><span class="value">18,2 Mio. EUR</span></div>
+          <div class="banking-saeulen-metric"><span class="label">Versicherung</span><span class="value">8,4 Mio. EUR</span></div>
+          <div class="banking-saeulen-metric"><span class="label">Stiftung</span><span class="value">2 aktiv</span></div>
+        </div>
+        <div class="banking-saeulen-card nachfolge">
+          <h5>Saeule III — Nachfolge</h5>
+          <div class="banking-saeulen-metric"><span class="label">Testamentsvollstreckung</span><span class="value">3 Mandate</span></div>
+          <div class="banking-saeulen-metric"><span class="label">Generationenberatung</span><span class="value">2 aktiv</span></div>
+          <div class="banking-saeulen-metric"><span class="label">Immobilie</span><span class="value">4 Objekte</span></div>
+        </div>
+      </div>
+
+      <!-- Kundenliste: Retail -->
+      <div data-bank-kunden-set="retail" style="padding:0 32px 24px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+          <h3 style="font-size:16px;font-weight:700;color:#1e293b;margin:0;">Meine Kunden</h3>
+        </div>
+        <table class="banking-kundenliste-table">
+          <thead><tr><th>Kunde</th><th>Kunden-Nr.</th><th>Segment</th><th>Ort</th><th class="text-center">Produkte</th><th class="text-right">Ertrag YTD</th><th class="text-center">FinanzPlan</th></tr></thead>
+          <tbody id="retailKundenBody"></tbody>
+        </table>
+      </div>
+
+      <!-- Kundenliste: Firmenkunde -->
+      <div data-bank-kunden-set="firmenkunde" style="display:none;padding:0 32px 24px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+          <h3 style="font-size:16px;font-weight:700;color:#1e293b;margin:0;">Meine Firmenkunden</h3>
+        </div>
+        <table class="banking-kundenliste-table">
+          <thead><tr><th>Firma</th><th>Kunden-Nr.</th><th>Branche</th><th>Ort</th><th class="text-right">Kreditvolumen</th><th>Rating</th><th class="text-right">Mitarbeiter</th></tr></thead>
+          <tbody id="firmenKundenBody"></tbody>
+        </table>
+      </div>
+
+      <!-- Kundenliste: Vermoegen -->
+      <div data-bank-kunden-set="vermoegen" style="display:none;padding:0 32px 24px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+          <h3 style="font-size:16px;font-weight:700;color:#1e293b;margin:0;">Meine Private-Banking-Kunden</h3>
+        </div>
+        <table class="banking-kundenliste-table">
+          <thead><tr><th>Kunde</th><th>Kunden-Nr.</th><th>Ort</th><th class="text-right">AuM</th><th class="text-right">Depot</th><th class="text-center">Nachfolge</th><th class="text-center">Stiftung</th></tr></thead>
+          <tbody id="vermoegenKundenBody"></tbody>
+        </table>
+      </div>
+
+    </div>
+  </div><!-- Ende B-02 BERATER OVERVIEW -->
+
+  <!-- ========================================
+     B-10 KUNDEN-DETAIL BANK
+     ======================================== -->
+  <div id="kundenDetailBankPage" style="display: none;">
+    <div class="kunden-detail-bank-page">
+      <!-- Header -->
+      <div style="background:linear-gradient(135deg,#003399 0%,#002266 100%);color:white;padding:20px 32px;display:flex;align-items:center;gap:16px;">
+        <div id="kdBankAvatar" style="width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;">TB</div>
+        <div style="flex:1;">
+          <h2 id="kdBankHeaderName" style="font-size:20px;font-weight:700;margin:0;">Kundenname</h2>
+          <div id="kdBankHeaderMeta" style="font-size:13px;color:rgba(255,255,255,0.7);margin-top:2px;">Kunden-ID | Ort</div>
+        </div>
+        <button onclick="closeBankKundenDetail()" style="background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);border-radius:8px;padding:8px 14px;color:white;cursor:pointer;font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="15 18 9 12 15 6"></polyline></svg>
+          Zurueck
+        </button>
+      </div>
+      <!-- Sticky Bar -->
+      <div id="kdBankStickyBar" class="bank-sticky-bar"></div>
+      <!-- Tabs -->
+      <div id="kdBankTabs" class="banking-detail-tabs" style="padding:0 32px;"></div>
+      <!-- Tab Content -->
+      <div id="kdBankContent" style="padding:24px 32px;"></div>
+    </div>
+  </div><!-- Ende B-10 KUNDEN DETAIL BANK -->
+
   <!-- Page ID Display - Always visible on all pages and modules -->
   <div class="page-id-display" id="pageIdDisplay">M-01</div>
 
@@ -6862,6 +7069,9 @@
     <script src="js/user-mode.js?v=20260209"></script>
     <script src="js/makler.js?v=20260219"></script>
     <script src="js/mrh-trowe.js?v=20260219"></script>
+    <!-- B-02/B-10 Banking Berater Module -->
+    <script src="js/berater-overview.js?v=20260302"></script>
+    <script src="js/kunden-detail-bank.js?v=20260302"></script>
     <script src="js/screen-recorder.js?v=20260219"></script>
     <script src="js/screenshot.js"></script>
     <script src="js/sales-report.js?v=20260122"></script>

@@ -1,0 +1,792 @@
+/* css/banking-berater.css - Banking Berater B-02/B-10 Styles */
+
+/* ========================================
+   BANKING COLOR VARIABLES
+   ======================================== */
+:root {
+    --bank-vr-blue: #003399;
+    --bank-vr-orange: #FF6600;
+    --bank-retail-color: #2563eb;
+    --bank-firma-color: #16a34a;
+    --bank-pb-color: #d97706;
+    --bank-anlage-color: #2563eb;
+    --bank-vorsorge-color: #16a34a;
+    --bank-nachfolge-color: #d97706;
+}
+
+/* ========================================
+   B-02 MODE SELECTOR
+   ======================================== */
+.bank-view-mode-selector {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    position: absolute;
+    right: 80px;
+    z-index: 2;
+    background: rgba(255,255,255,0.15);
+    border-radius: 8px;
+    padding: 2px;
+}
+
+.bank-mode-btn {
+    padding: 5px 12px;
+    border: none;
+    background: transparent;
+    color: rgba(255,255,255,0.7);
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.bank-mode-btn:hover {
+    background: rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.9);
+}
+
+.bank-mode-btn.active {
+    background: var(--bank-vr-blue);
+    color: #fff;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+/* ========================================
+   B-02 KPI CARDS
+   ======================================== */
+#retailKpis,
+#firmenkundeKpis,
+#vermoegenKpis {
+    grid-template-columns: repeat(4, 1fr) !important;
+}
+
+.banking-kpi-card {
+    display: none;
+    background: white;
+    border-radius: 12px;
+    padding: 20px 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    border: 1px solid #e2e8f0;
+    transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.banking-kpi-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    transform: translateY(-2px);
+}
+
+.banking-kpi-card .cockpit-kpi-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Retail KPI Colors */
+.banking-kpi-card .cockpit-kpi-icon.bank-kunden { background: #dbeafe; color: #2563eb; }
+.banking-kpi-card .cockpit-kpi-icon.bank-deposits { background: #dcfce7; color: #16a34a; }
+.banking-kpi-card .cockpit-kpi-icon.bank-kredite { background: #fef3c7; color: #d97706; }
+.banking-kpi-card .cockpit-kpi-icon.bank-cross { background: #ede9fe; color: #7c3aed; }
+
+/* Firmenkunde KPI Colors */
+.banking-kpi-card .cockpit-kpi-icon.bank-firmen { background: #dcfce7; color: #16a34a; }
+.banking-kpi-card .cockpit-kpi-icon.bank-volumen { background: #dbeafe; color: #2563eb; }
+.banking-kpi-card .cockpit-kpi-icon.bank-rating { background: #fef3c7; color: #d97706; }
+.banking-kpi-card .cockpit-kpi-icon.bank-risiko { background: #fee2e2; color: #dc2626; }
+
+/* Vermoegen KPI Colors */
+.banking-kpi-card .cockpit-kpi-icon.bank-aum { background: #dbeafe; color: #2563eb; }
+.banking-kpi-card .cockpit-kpi-icon.bank-performance { background: #dcfce7; color: #16a34a; }
+.banking-kpi-card .cockpit-kpi-icon.bank-advisory { background: #fef3c7; color: #d97706; }
+.banking-kpi-card .cockpit-kpi-icon.bank-zufluss { background: #ede9fe; color: #7c3aed; }
+
+/* ========================================
+   B-02 TAB STYLES
+   ======================================== */
+.berater-tab-retail,
+.berater-tab-firma,
+.berater-tab-pb {
+    display: none;
+}
+
+.banking-tab-content {
+    display: none;
+    padding: 24px;
+}
+
+.banking-tab-content.active {
+    display: block;
+}
+
+/* ========================================
+   B-02 CUSTOMER LIST TABLES
+   ======================================== */
+.banking-kundenliste-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.banking-kundenliste-table th {
+    background: #f8fafc;
+    padding: 10px 12px;
+    text-align: left;
+    font-weight: 600;
+    color: #64748b;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    border-bottom: 2px solid #e2e8f0;
+    white-space: nowrap;
+}
+
+.banking-kundenliste-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #f1f5f9;
+    color: #334155;
+}
+
+.banking-kundenliste-table .text-right {
+    text-align: right;
+}
+
+.banking-kundenliste-table .text-center {
+    text-align: center;
+}
+
+.banking-kundenliste-table .clickable-row:hover {
+    background: #f8fafc;
+    cursor: pointer;
+}
+
+/* ========================================
+   BRANCH BADGES (Firmenkunden)
+   ======================================== */
+.branche-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.branche-handwerk { background: #fed7aa; color: #c2410c; }
+.branche-produktion { background: #bfdbfe; color: #1e40af; }
+.branche-handel { background: #bbf7d0; color: #166534; }
+.branche-it { background: #ddd6fe; color: #6d28d9; }
+.branche-landwirtschaft { background: #d9f99d; color: #3f6212; }
+.branche-heilberufe { background: #fbcfe8; color: #9f1239; }
+.branche-dienstleistung { background: #e2e8f0; color: #334155; }
+.branche-gastronomie { background: #fef3c7; color: #92400e; }
+.branche-immobilien { background: #fce7f3; color: #831843; }
+.branche-transport { background: #ccfbf1; color: #115e59; }
+
+/* ========================================
+   CUSTOMER SEGMENT BADGES (Retail)
+   ======================================== */
+.kundensegment-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.segment-basis { background: #f1f5f9; color: #475569; }
+.segment-komfort { background: #dbeafe; color: #1e40af; }
+.segment-premium { background: #fef3c7; color: #92400e; }
+.segment-exklusiv { background: #ede9fe; color: #6d28d9; }
+
+/* ========================================
+   PRODUCT MIX INDICATORS
+   ======================================== */
+.produktmix-dots {
+    display: flex;
+    gap: 3px;
+    align-items: center;
+}
+
+.produktmix-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #e2e8f0;
+}
+
+.produktmix-dot.active-giro { background: #2563eb; }
+.produktmix-dot.active-spar { background: #16a34a; }
+.produktmix-dot.active-kredit { background: #d97706; }
+.produktmix-dot.active-invest { background: #7c3aed; }
+.produktmix-dot.active-versich { background: #dc2626; }
+
+/* ========================================
+   B-10 STICKY BAR
+   ======================================== */
+.bank-sticky-bar {
+    position: sticky;
+    top: 0;
+    background: white;
+    border-bottom: 2px solid #e2e8f0;
+    padding: 12px 24px;
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    z-index: 10;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.bank-sticky-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.bank-sticky-photo {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.bank-sticky-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.bank-sticky-id {
+    font-size: 11px;
+    color: #64748b;
+}
+
+.bank-sticky-tabs {
+    display: flex;
+    gap: 4px;
+    margin-left: auto;
+}
+
+.bank-sticky-tab {
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #64748b;
+    cursor: pointer;
+    transition: all 0.15s;
+    background: transparent;
+}
+
+.bank-sticky-tab:hover {
+    background: #f1f5f9;
+    color: #334155;
+}
+
+.bank-sticky-tab.active {
+    background: var(--bank-vr-blue);
+    color: white;
+}
+
+/* ========================================
+   B-10 THREE-PILLAR CARDS (Vermoegen)
+   ======================================== */
+.banking-saeulen-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin: 20px 0 24px;
+}
+
+.banking-saeulen-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid #e2e8f0;
+    transition: box-shadow 0.2s;
+}
+
+.banking-saeulen-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.banking-saeulen-card.anlage {
+    border-left: 3px solid var(--bank-anlage-color);
+    background: #f0f9ff;
+}
+
+.banking-saeulen-card.vorsorge {
+    border-left: 3px solid var(--bank-vorsorge-color);
+    background: #f0fdf4;
+}
+
+.banking-saeulen-card.nachfolge {
+    border-left: 3px solid var(--bank-nachfolge-color);
+    background: #fffbeb;
+}
+
+.banking-saeulen-card h5 {
+    font-size: 14px;
+    font-weight: 700;
+    margin: 0 0 12px 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.banking-saeulen-card.anlage h5 { color: var(--bank-anlage-color); }
+.banking-saeulen-card.vorsorge h5 { color: var(--bank-vorsorge-color); }
+.banking-saeulen-card.nachfolge h5 { color: var(--bank-nachfolge-color); }
+
+.banking-saeulen-metric {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.04);
+}
+
+.banking-saeulen-metric:last-child {
+    border-bottom: none;
+}
+
+.banking-saeulen-metric .label { color: #64748b; }
+.banking-saeulen-metric .value { font-weight: 600; color: #1e293b; }
+
+/* ========================================
+   B-10 OPEN FINANCE PANEL
+   ======================================== */
+.open-finance-panel {
+    background: #0f172a;
+    border-radius: 12px;
+    padding: 24px;
+    margin: 24px 0;
+    color: white;
+}
+
+.open-finance-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.open-finance-header h4 {
+    font-size: 16px;
+    font-weight: 700;
+    margin: 0;
+    color: white;
+}
+
+.open-finance-badge {
+    background: rgba(255,102,0,0.2);
+    color: var(--bank-vr-orange);
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.open-finance-sources {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.of-source-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px;
+    padding: 14px;
+    transition: all 0.2s;
+}
+
+.of-source-card:hover {
+    background: rgba(255,255,255,0.08);
+    border-color: rgba(255,255,255,0.2);
+}
+
+.of-source-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.of-source-detail {
+    font-size: 11px;
+    color: rgba(255,255,255,0.6);
+}
+
+.of-source-status {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #22c55e;
+}
+
+.of-ki-recommendations {
+    margin-top: 16px;
+}
+
+.of-ki-recommendation {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,102,0,0.3);
+    border-left: 3px solid var(--bank-vr-orange);
+    border-radius: 8px;
+    padding: 14px;
+    margin-bottom: 10px;
+}
+
+.of-ki-recommendation:last-child {
+    margin-bottom: 0;
+}
+
+.of-ki-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.of-ki-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: white;
+}
+
+.of-ki-priority {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.of-ki-priority.high {
+    background: rgba(239,68,68,0.2);
+    color: #fca5a5;
+}
+
+.of-ki-priority.medium {
+    background: rgba(251,191,36,0.2);
+    color: #fcd34d;
+}
+
+.of-ki-priority.low {
+    background: rgba(34,197,94,0.2);
+    color: #86efac;
+}
+
+.of-ki-text {
+    font-size: 12px;
+    color: rgba(255,255,255,0.8);
+    line-height: 1.5;
+}
+
+.of-ki-potential {
+    font-size: 11px;
+    color: var(--bank-vr-orange);
+    font-weight: 600;
+    margin-top: 6px;
+}
+
+/* ========================================
+   B-10 DETAIL TABS
+   ======================================== */
+.banking-detail-tabs {
+    display: flex;
+    gap: 2px;
+    border-bottom: 2px solid #e2e8f0;
+    margin-bottom: 24px;
+}
+
+.banking-detail-tab {
+    padding: 10px 20px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #64748b;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.15s;
+    background: transparent;
+    border: none;
+}
+
+.banking-detail-tab:hover {
+    color: #334155;
+    background: #f8fafc;
+}
+
+.banking-detail-tab.active {
+    color: var(--bank-vr-blue);
+    border-bottom-color: var(--bank-vr-blue);
+}
+
+.banking-detail-content {
+    display: none;
+}
+
+.banking-detail-content.active {
+    display: block;
+}
+
+/* ========================================
+   B-10 STAMMDATEN GRID
+   ======================================== */
+.banking-stammdaten-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 20px 28px;
+}
+
+.banking-info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.banking-info-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.banking-info-value {
+    font-size: 14px;
+    color: #1e293b;
+    font-weight: 500;
+}
+
+/* ========================================
+   B-10 VERTRAEGE/KREDITE TABLES
+   ======================================== */
+.banking-detail-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin-top: 8px;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.banking-detail-table th {
+    background: #f8fafc;
+    padding: 10px 12px;
+    text-align: left;
+    font-weight: 600;
+    color: #64748b;
+    font-size: 11px;
+    text-transform: uppercase;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.banking-detail-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #f1f5f9;
+    color: #334155;
+}
+
+.banking-detail-table .text-right {
+    text-align: right;
+}
+
+.banking-detail-table tr:hover {
+    background: #f8fafc;
+}
+
+/* ========================================
+   B-10 RATING BADGES
+   ======================================== */
+.rating-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+/* Investment Grade */
+.rating-aaa { background: #dcfce7; color: #166534; }
+.rating-aa { background: #d9f99d; color: #3f6212; }
+.rating-a { background: #fef3c7; color: #92400e; }
+.rating-bbb { background: #fed7aa; color: #c2410c; }
+
+/* Non-Investment Grade */
+.rating-bb { background: #fecaca; color: #991b1b; }
+.rating-b { background: #fee2e2; color: #dc2626; }
+.rating-ccc { background: #fca5a5; color: #7f1d1d; }
+
+/* Unrated */
+.rating-unrated { background: #f1f5f9; color: #64748b; }
+
+/* ========================================
+   B-10 KPI BOXES (Detail Tabs)
+   ======================================== */
+.bank-kpi-row {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.bank-kpi-box {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 14px 20px;
+    background: #f8fafc;
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+    min-width: 140px;
+}
+
+.bank-kpi-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.bank-kpi-value {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.bank-kpi-value.positive { color: #16a34a; }
+.bank-kpi-value.negative { color: #dc2626; }
+.bank-kpi-value.neutral { color: #2563eb; }
+
+/* ========================================
+   AUSLASTUNG BAR (Kreditlinie)
+   ======================================== */
+.auslastung-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.auslastung-bar-track {
+    flex: 1;
+    height: 8px;
+    background: #e2e8f0;
+    border-radius: 4px;
+    overflow: hidden;
+    max-width: 120px;
+}
+
+.auslastung-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.4s ease;
+}
+
+.auslastung-bar-fill.low { background: #22c55e; }
+.auslastung-bar-fill.medium { background: #f59e0b; }
+.auslastung-bar-fill.high { background: #ef4444; }
+
+.auslastung-bar-text {
+    font-size: 12px;
+    font-weight: 600;
+    color: #475569;
+}
+
+/* ========================================
+   RESPONSIVE (Tablet)
+   ======================================== */
+@media (max-width: 1400px) {
+    #retailKpis,
+    #firmenkundeKpis,
+    #vermoegenKpis {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+
+    .banking-saeulen-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .open-finance-sources {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 1200px) {
+    .bank-view-mode-selector {
+        position: relative;
+        right: auto;
+        margin-left: auto;
+    }
+
+    .banking-kundenliste-table {
+        font-size: 12px;
+    }
+
+    .banking-kundenliste-table th,
+    .banking-kundenliste-table td {
+        padding: 8px 8px;
+    }
+
+    .banking-stammdaten-grid {
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 16px 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    #retailKpis,
+    #firmenkundeKpis,
+    #vermoegenKpis {
+        grid-template-columns: 1fr !important;
+    }
+
+    .bank-sticky-bar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .bank-sticky-tabs {
+        margin-left: 0;
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    .open-finance-sources {
+        grid-template-columns: 1fr;
+    }
+
+    .bank-kpi-row {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .bank-kpi-box {
+        width: 100%;
+    }
+}

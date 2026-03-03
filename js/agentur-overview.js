@@ -33,6 +33,11 @@ function showAgenturOverview(vermittlerId) {
     if (kundenDetail) kundenDetail.style.display = 'none';
     const bgavPage = document.getElementById('bgavUmstellungPage');
     if (bgavPage) bgavPage.style.display = 'none';
+    // Hide B-02/B-10 Banking Berater
+    var beraterPageAO = document.getElementById('beraterOverviewPage');
+    if (beraterPageAO) beraterPageAO.style.display = 'none';
+    var kdBankPageAO = document.getElementById('kundenDetailBankPage');
+    if (kdBankPageAO) kdBankPageAO.style.display = 'none';
     if (agenturOverview) agenturOverview.style.display = 'block';
 
     // Öffne den Agentur-Chat automatisch (Vertriebs-Assistent)

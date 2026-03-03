@@ -516,6 +516,12 @@ function backToLanding() {
     if (kundenDetailPage) kundenDetailPage.style.display = 'none';
     if (billingCheckPage) billingCheckPage.style.display = 'none';
 
+    // B-02/B-10 Banking Berater verstecken
+    var beraterOverviewPage = document.getElementById('beraterOverviewPage');
+    if (beraterOverviewPage) beraterOverviewPage.style.display = 'none';
+    var kundenDetailBankPage = document.getElementById('kundenDetailBankPage');
+    if (kundenDetailBankPage) kundenDetailBankPage.style.display = 'none';
+
     // Asset Management Module verstecken
     const assetModule = document.getElementById('assetModule');
     if (assetModule) {
@@ -2514,6 +2520,12 @@ async function openRisikoscoring() {
         cvModule.style.display = 'none';
     }
 
+    // Hide B-02/B-10 Banking Berater if visible
+    var beraterPageRS = document.getElementById('beraterOverviewPage');
+    if (beraterPageRS) beraterPageRS.style.display = 'none';
+    var kdBankPageRS = document.getElementById('kundenDetailBankPage');
+    if (kdBankPageRS) kdBankPageRS.style.display = 'none';
+
     // Show risikoscoring module
     const rsModule = document.getElementById('risikoscoringModule');
     if (rsModule) {
@@ -2685,6 +2697,12 @@ async function openBestandsuebertragung() {
     if (cvModule) {
         cvModule.style.display = 'none';
     }
+
+    // Hide B-02/B-10 Banking Berater
+    var beraterPageBU = document.getElementById('beraterOverviewPage');
+    if (beraterPageBU) beraterPageBU.style.display = 'none';
+    var kdBankPageBU = document.getElementById('kundenDetailBankPage');
+    if (kdBankPageBU) kdBankPageBU.style.display = 'none';
 
     // Show bestandsuebertragung module
     const bestandModule = document.getElementById('bestandsuebertragungModule');
@@ -2911,6 +2929,12 @@ async function openPMOToolbox() {
     if (cvModule) {
         cvModule.style.display = 'none';
     }
+
+    // Hide B-02/B-10 Banking Berater
+    var beraterPagePMO = document.getElementById('beraterOverviewPage');
+    if (beraterPagePMO) beraterPagePMO.style.display = 'none';
+    var kdBankPagePMO = document.getElementById('kundenDetailBankPage');
+    if (kdBankPagePMO) kdBankPagePMO.style.display = 'none';
 
     // Hide main chat widget and toggle (they should not appear in PMO Toolbox)
     const chatWidget = document.getElementById('chatWidget');
@@ -4184,7 +4208,8 @@ async function openVersicherungs1x1() {
 
     // Hide other modules
     ['bankenModule', 'assetModule', 'cvScannerModule', 'risikoscoringModule',
-     'bestandsuebertragungModule', 'pmoToolboxModule', 'hrPipelineModule'].forEach(function(id) {
+     'bestandsuebertragungModule', 'pmoToolboxModule', 'hrPipelineModule',
+     'beraterOverviewPage', 'kundenDetailBankPage'].forEach(function(id) {
         const el = document.getElementById(id);
         if (el) el.style.display = 'none';
     });

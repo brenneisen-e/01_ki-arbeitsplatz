@@ -779,7 +779,8 @@ async function openHRPipeline() {
     if (landingPage) landingPage.style.display = 'none';
     const mainApp = document.getElementById('mainApp');
     if (mainApp) mainApp.style.display = 'none';
-    ['bankenModule', 'assetModule', 'risikoscoringModule', 'bestandsuebertragungModule', 'pmoToolboxModule'].forEach(id => {
+    ['bankenModule', 'assetModule', 'risikoscoringModule', 'bestandsuebertragungModule', 'pmoToolboxModule',
+     'beraterOverviewPage', 'kundenDetailBankPage'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.style.display = 'none';
     });

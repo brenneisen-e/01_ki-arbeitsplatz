@@ -42,15 +42,25 @@ const PageIDTracker = {
             'bgav-umstellung': 'A-12'       // BGAV Simulation (Provisions-Rechner)
         },
 
-        // B - Banken Module
+        // B - Banken Module (Collections)
         banken: {
             'segmentierung': 'B-01',        // Segmentierung
-            'aufgaben': 'B-02',             // Aufgaben
+            'aufgaben': 'B-01b',            // Aufgaben (ehemals B-02, umbenannt fuer Berater-Modul)
             'npl': 'B-03',                  // NPL Dashboard
             'stage2': 'B-04',               // Stage 2 Ampel
             'crm-profile': 'B-05',          // CRM Profil
             'chat': 'B-06',                 // KI-Chat Banken (Mock-Daten)
             'customer-detail': 'B-07'       // Kunden-Detail
+        },
+
+        // B - Banken Berater Module (B-02/B-10)
+        bankenBerater: {
+            'berater-retail': 'B-02',       // Berater-Uebersicht (VR Retail)
+            'berater-firmenkunde': 'B-02b', // Berater-Uebersicht (VR Firmenkunde)
+            'berater-vermoegen': 'B-02c',   // Berater-Uebersicht (VR Vermoegen)
+            'kundendetail-bank': 'B-10',    // Kunden-Detail Bank (Retail)
+            'kundendetail-bank-fk': 'B-10b', // Kunden-Detail Bank (Firmenkunde)
+            'kundendetail-bank-pb': 'B-10c'  // Kunden-Detail Bank (Private Banking)
         },
 
         // P - PMO Toolbox Module
@@ -162,6 +172,16 @@ const PageIDTracker = {
     },
 
     getCurrentModule() {
+        // Check if we're on Berater Overview (B-02) or Kunden-Detail Bank (B-10)
+        const beraterOverviewPage = document.getElementById('beraterOverviewPage');
+        if (beraterOverviewPage && beraterOverviewPage.style.display !== 'none') {
+            return 'bankenBerater';
+        }
+        const kundenDetailBankPage = document.getElementById('kundenDetailBankPage');
+        if (kundenDetailBankPage && kundenDetailBankPage.style.display !== 'none') {
+            return 'bankenBerater';
+        }
+
         // Check if we're on BGAV Umstellung page (belongs to versicherung module)
         const bgavPage = document.getElementById('bgavUmstellungPage');
         if (bgavPage && bgavPage.style.display !== 'none') {
@@ -238,6 +258,8 @@ const PageIDTracker = {
                 return 'landing';
             case 'versicherung':
                 return this.getVersicherungView();
+            case 'bankenBerater':
+                return this.getBankenBeraterView();
             case 'banken':
                 return this.getBankenView();
             case 'pmo-toolbox':
@@ -349,6 +371,22 @@ const PageIDTracker = {
         }
 
         return 'segmentierung';
+    },
+
+    getBankenBeraterView() {
+        // Check if B-10 Kunden-Detail Bank is open
+        const kundenDetailBankPage = document.getElementById('kundenDetailBankPage');
+        if (kundenDetailBankPage && kundenDetailBankPage.style.display !== 'none') {
+            const mode = window._lastBankKundenMode || 'retail';
+            if (mode === 'firmenkunde') return 'kundendetail-bank-fk';
+            if (mode === 'vermoegen') return 'kundendetail-bank-pb';
+            return 'kundendetail-bank';
+        }
+        // B-02 Berater Overview
+        const bankMode = localStorage.getItem('bankViewMode') || 'retail';
+        if (bankMode === 'firmenkunde') return 'berater-firmenkunde';
+        if (bankMode === 'vermoegen') return 'berater-vermoegen';
+        return 'berater-retail';
     },
 
     getPMOView() {

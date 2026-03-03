@@ -117,16 +117,21 @@
         if (!kunde) return;
         var sd = retailStammdaten[kundenId] || {};
 
-        // Header
+        // Header mit Gradient-Avatar
         var header = document.getElementById('kdBankHeaderName');
         var meta = document.getElementById('kdBankHeaderMeta');
         var avatar = document.getElementById('kdBankAvatar');
         if (header) header.textContent = kunde.name;
-        if (meta) meta.textContent = kunde.id + ' | ' + kunde.ort + ' | ' + beraterLabel('retail');
-        if (avatar) avatar.textContent = kunde.name.split(' ').map(function(w) { return w[0]; }).join('');
+        if (meta) meta.innerHTML = '<span>' + kunde.id + '</span><span style="margin:0 8px;opacity:0.5;">|</span><span>' + kunde.ort + '</span><span style="margin:0 8px;opacity:0.5;">|</span><span>' + (kunde.segment || '') + '</span><span style="margin:0 8px;opacity:0.5;">|</span><span>' + beraterLabel('retail') + '</span>';
+        if (avatar) {
+            var bg = kunde.avatarBg || '#2563eb';
+            var initials = kunde.name.split(' ').map(function(w) { return w[0]; }).join('');
+            avatar.style.background = 'linear-gradient(135deg, ' + bg + ', ' + bg + 'cc)';
+            avatar.innerHTML = initials;
+        }
 
-        // Sticky Bar
-        fillStickyBar(kunde.name, kunde.id, 'Privatkundenberater Thomas Berger');
+        // Sticky Bar mit Avatar
+        fillStickyBar(kunde.name, kunde.id, 'Privatkundenberater Thomas Berger', kunde.avatarBg);
 
         // Tabs: Retail
         var tabsHtml = buildTabsHtml([
@@ -216,15 +221,18 @@
         var kunde = (window.bankFirmenKunden || []).find(function(k) { return k.id === kundenId; });
         if (!kunde) return;
 
-        // Header
+        // Header mit Firmen-Icon
         var header = document.getElementById('kdBankHeaderName');
         var meta = document.getElementById('kdBankHeaderMeta');
         var avatar = document.getElementById('kdBankAvatar');
         if (header) header.textContent = kunde.name;
-        if (meta) meta.textContent = kunde.id + ' | ' + kunde.ort + ' | ' + kunde.brancheLabel;
-        if (avatar) avatar.textContent = kunde.name.split(' ')[0][0];
+        if (meta) meta.innerHTML = '<span>' + kunde.id + '</span><span style="margin:0 8px;opacity:0.5;">|</span><span>' + kunde.ort + '</span><span style="margin:0 8px;opacity:0.5;">|</span><span>' + kunde.brancheLabel + '</span><span style="margin:0 8px;opacity:0.5;">|</span><span>' + beraterLabel('firmenkunde') + '</span>';
+        if (avatar) {
+            avatar.style.background = 'linear-gradient(135deg, #16a34a, #059669)';
+            avatar.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" width="24" height="24"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>';
+        }
 
-        fillStickyBar(kunde.name, kunde.id, 'FK-Beraterin Carola Weiss');
+        fillStickyBar(kunde.name, kunde.id, 'FK-Beraterin Carola Weiss', '#16a34a');
 
         // Tabs: Firmenkunde
         var tabsHtml = buildTabsHtml([
@@ -319,15 +327,21 @@
         var kunde = (window.bankVermoegenKunden || []).find(function(k) { return k.id === kundenId; });
         if (!kunde) return;
 
-        // Header
+        // Header mit Gradient-Avatar
         var header = document.getElementById('kdBankHeaderName');
         var meta = document.getElementById('kdBankHeaderMeta');
         var avatar = document.getElementById('kdBankAvatar');
         if (header) header.textContent = kunde.name;
-        if (meta) meta.textContent = kunde.id + ' | ' + kunde.ort + ' | Private Banking';
-        if (avatar) avatar.textContent = kunde.name.split(' ').map(function(w) { return w[0]; }).join('').substring(0, 2);
+        if (meta) meta.innerHTML = '<span>' + kunde.id + '</span><span style="margin:0 8px;opacity:0.5;">|</span><span>' + kunde.ort + '</span><span style="margin:0 8px;opacity:0.5;">|</span><span>' + (kunde.risikoklasse || 'Private Banking') + '</span><span style="margin:0 8px;opacity:0.5;">|</span><span>' + beraterLabel('vermoegen') + '</span>';
+        if (avatar) {
+            var bg = kunde.avatarBg || '#b45309';
+            var initials = kunde.name.replace(/Dr\.\s*/g, '').replace(/Prof\.\s*/g, '').split(/[\s\-]+/);
+            var ini = initials.length >= 2 ? (initials[0][0] + initials[initials.length-1][0]).toUpperCase() : kunde.name.substring(0,2).toUpperCase();
+            avatar.style.background = 'linear-gradient(135deg, ' + bg + ', ' + bg + 'cc)';
+            avatar.innerHTML = ini;
+        }
 
-        fillStickyBar(kunde.name, kunde.id, 'PB-Beraterin Dr. Julia Rademacher');
+        fillStickyBar(kunde.name, kunde.id, 'PB-Beraterin Dr. Julia Rademacher', kunde.avatarBg);
 
         // Tabs: Vermoegen
         var tabsHtml = buildTabsHtml([
@@ -515,10 +529,15 @@
     }
 
     // ── Helper: fillStickyBar ─────────────────
-    function fillStickyBar(name, id, berater) {
+    function fillStickyBar(name, id, berater, avatarBg) {
         var bar = document.getElementById('kdBankStickyBar');
         if (!bar) return;
-        bar.innerHTML = '<div class="bank-sticky-info"><div><div class="bank-sticky-name">' + name + '</div><div class="bank-sticky-id">' + id + ' | ' + berater + '</div></div></div>';
+        var initials = name.replace(/Dr\.\s*/g, '').replace(/Prof\.\s*/g, '').split(/[\s\-]+/);
+        var ini = initials.length >= 2 ? (initials[0][0] + initials[initials.length-1][0]).toUpperCase() : name.substring(0,2).toUpperCase();
+        var bg = avatarBg || '#003399';
+        bar.innerHTML = '<div class="bank-sticky-info">' +
+            '<div style="width:36px;height:36px;border-radius:8px;background:linear-gradient(135deg,' + bg + ',' + bg + 'cc);display:flex;align-items:center;justify-content:center;color:white;font-size:13px;font-weight:700;">' + ini + '</div>' +
+            '<div><div class="bank-sticky-name">' + name + '</div><div class="bank-sticky-id">' + id + ' | ' + berater + '</div></div></div>';
     }
 
     // ── Helper: beraterLabel ──────────────────

@@ -94,11 +94,7 @@ const PageIDTracker = {
             'architektur': 'T-06',         // Architektur
             'vorlagen': 'T-07',            // E-Mail Vorlagen
             'prozess': 'T-08',             // Prozess
-            'projektplan': 'T-09',          // Projektplan
-            'slide-cv': 'T-10',            // Slide CV Scanner
-            'slide-bu': 'T-11',            // Slide BÜ Ausgangslage
-            'slide-plan': 'T-12',          // Slide Projektplan
-            'slide-ape': 'T-13'            // Slide APE-Prognose
+            'projektplan': 'T-09'           // Projektplan
         },
 
         // H - HR Pipeline Module
@@ -421,7 +417,7 @@ const PageIDTracker = {
 
     getBestandsuebertragungView() {
         // Check active view in bestandsübertragung
-        const views = ['dashboard', 'vorgaenge', 'makler', 'emails', 'ai-upload', 'architektur', 'vorlagen', 'slide-cv', 'slide-bu', 'slide-plan', 'slide-ape'];
+        const views = ['dashboard', 'vorgaenge', 'makler', 'emails', 'ai-upload', 'architektur', 'vorlagen'];
         const container = document.querySelector('.bestand-page');
         if (container) {
             for (const view of views) {

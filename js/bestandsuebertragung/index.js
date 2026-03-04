@@ -13,7 +13,6 @@ export * as UI from './ui.js';
 export * as App from './app.js';
 export * as AIProcessor from './ai-processor.js';
 export * as AILanding from './ai-landing.js';
-export * as SlidePptxExport from './slide-pptx-export.js';
 
 // Import für Initialisierung
 import { init, refreshData } from './app.js';
@@ -25,7 +24,6 @@ import * as Matcher from './matcher.js';
 import * as Extractor from './extractor.js';
 import * as AIProcessor from './ai-processor.js';
 import * as AILanding from './ai-landing.js';
-import './slide-pptx-export.js';
 
 /**
  * Initialisiert die Bestandsübertragung-Anwendung

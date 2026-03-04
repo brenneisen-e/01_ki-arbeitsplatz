@@ -174,7 +174,7 @@ function scoreBgColor(score) {
 }
 
 function formatMetricValue(key, value) {
-  if (value == null || isNaN(value)) return '\u2013';
+  if (value == null || isNaN(value)) return '–';
   if (PERCENT_METRICS.includes(key)) {
     return formatNumber(value, 1) + ' %';
   }
@@ -663,8 +663,8 @@ function EigentuemerRating({
                   </h3>
                   <p className="text-xs text-text-muted">
                     {gf.funktion}
-                    {gf.anteil != null && ` \u00B7 ${gf.anteil}% Anteil`}
-                    {gf.erfahrung != null && ` \u00B7 ${gf.erfahrung} Jahre Erfahrung`}
+                    {gf.anteil != null && ` · ${gf.anteil}% Anteil`}
+                    {gf.erfahrung != null && ` · ${gf.erfahrung} Jahre Erfahrung`}
                   </p>
                 </div>
               </div>
@@ -675,7 +675,7 @@ function EigentuemerRating({
                   <span className="text-sm text-text-secondary">Schufa-Score</span>
                   <div className="flex items-center gap-2">
                     <span className="font-mono text-sm font-medium text-text-primary">
-                      {schufaVal != null ? formatNumber(schufaVal, 1) : '\u2013'}
+                      {schufaVal != null ? formatNumber(schufaVal, 1) : '–'}
                     </span>
                     {schufaSc != null && (
                       <span

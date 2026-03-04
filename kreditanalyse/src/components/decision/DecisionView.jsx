@@ -476,7 +476,7 @@ Empfehlung: Genehmigung unter den nachfolgend genannten Auflagen und Bedingungen
     const rows = [
       { label: 'Refinanzierungssatz (Swap)', value: refiSatz, set: setRefiSatz, min: 1, max: 5, step: 0.05 },
       { label: 'Liquiditätsrisikoprämie', value: liquiditaet, set: setLiquiditaet, min: 0, max: 0.5, step: 0.01, prefix: '+' },
-      { label: 'Standardrisikokosten (PD\u00D7LGD)', value: standardRisiko, set: setStandardRisiko, min: 0, max: 2, step: 0.05, prefix: '+' },
+      { label: 'Standardrisikokosten (PD×LGD)', value: standardRisiko, set: setStandardRisiko, min: 0, max: 2, step: 0.05, prefix: '+' },
       { label: 'Eigenkapitalkosten', value: eigenkapitalKosten, set: setEigenkapitalKosten, min: 0, max: 1, step: 0.05, prefix: '+' },
       { label: 'Betriebskosten', value: betriebsKosten, set: setBetriebsKosten, min: 0, max: 1, step: 0.05, prefix: '+' },
       { label: 'Gewinnmarge', value: gewinnMarge, set: setGewinnMarge, min: 0, max: 1, step: 0.05, prefix: '+' },

@@ -21,7 +21,7 @@ export default function DashboardView() {
       {/* Header row: title + view-mode toggle */}
       <div className="flex items-center justify-between">
         <h1 className="text-xl font-bold font-headline text-text-primary">
-          Kreditantr\u00E4ge \u00DCbersicht
+          Kreditanträge Übersicht
         </h1>
 
         {/* View-mode toggle group */}

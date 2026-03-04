@@ -55,7 +55,7 @@ const RATING_LIMITS = [
   { range: '1-3', label: 'bis 100%', max: 1.0 },
   { range: '4-6', label: 'max. 30-50%', max: 0.5 },
   { range: '7-9', label: 'max. 10-20%', max: 0.2 },
-  { range: '\u226510', label: 'Vollbesicherung', max: 0.0 },
+  { range: '≥10', label: 'Vollbesicherung', max: 0.0 },
 ];
 
 // =============================================================================
@@ -69,12 +69,12 @@ const RATING_LIMITS = [
  */
 const normalizeUmlauts = (str) =>
   str
-    .replace(/ae/g, '\u00e4')
-    .replace(/oe/g, '\u00f6')
-    .replace(/ue/g, '\u00fc')
-    .replace(/Ae/g, '\u00c4')
-    .replace(/Oe/g, '\u00d6')
-    .replace(/Ue/g, '\u00dc');
+    .replace(/ae/g, 'ä')
+    .replace(/oe/g, 'ö')
+    .replace(/ue/g, 'ü')
+    .replace(/Ae/g, 'Ä')
+    .replace(/Oe/g, 'Ö')
+    .replace(/Ue/g, 'Ü');
 
 /**
  * Look up haircut rate for a given collateral type.

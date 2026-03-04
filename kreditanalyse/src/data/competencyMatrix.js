@@ -11,22 +11,22 @@
  */
 
 export const competencyMatrix = {
-  "< 250.000 \u20AC": {
+  "< 250.000 €": {
     "1-5":  "Sachbearbeiter",
     "6-9":  "Abteilungsleiter",
     "10+":  "Bereichsleiter"
   },
-  "250.000\u2013750.000 \u20AC": {
+  "250.000–750.000 €": {
     "1-5":  "Abteilungsleiter",
     "6-9":  "Bereichsleiter",
     "10+":  "Vorstand"
   },
-  "750.000\u20132.500.000 \u20AC": {
+  "750.000–2.500.000 €": {
     "1-5":  "Bereichsleiter",
     "6-9":  "Vorstand",
     "10+":  "Gesamtvorstand"
   },
-  "> 2.500.000 \u20AC": {
+  "> 2.500.000 €": {
     "1-5":  "Vorstand",
     "6-9":  "Gesamtvorstand",
     "10+":  "Gesamtvorstand + AR"
@@ -66,10 +66,10 @@ const getRatingBereich = (ratingKlasse) => {
  * @returns {string} - Betrags-Bereich
  */
 const getBetragsBereich = (betrag) => {
-  if (betrag < 250000) return "< 250.000 \u20AC";
-  if (betrag < 750000) return "250.000\u2013750.000 \u20AC";
-  if (betrag < 2500000) return "750.000\u20132.500.000 \u20AC";
-  return "> 2.500.000 \u20AC";
+  if (betrag < 250000) return "< 250.000 €";
+  if (betrag < 750000) return "250.000–750.000 €";
+  if (betrag < 2500000) return "750.000–2.500.000 €";
+  return "> 2.500.000 €";
 };
 
 /**

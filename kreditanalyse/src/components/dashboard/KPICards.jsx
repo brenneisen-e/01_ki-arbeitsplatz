@@ -40,7 +40,7 @@ export default function KPICards() {
 
   const kpis = [
     {
-      label: 'Offene Antr\u00E4ge',
+      label: 'Offene Anträge',
       value: openCount,
       icon: TrendingUp,
       color: 'border-primary',
@@ -49,7 +49,7 @@ export default function KPICards() {
       sparkline: null,
     },
     {
-      label: '\u00D8 Bearbeitungszeit',
+      label: 'Ø Bearbeitungszeit',
       value: '12',
       icon: Clock,
       color: 'border-accent-warm',

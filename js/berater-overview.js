@@ -9,48 +9,48 @@ var currentBeraterTab = 'uebersicht';
 
 // ── MOCK BERATER ──
 var beraterData = {
-    name: 'Thomas Berger',
+    name: 'Maria Musterfrau',
     id: 'VB-40210',
-    photo: 'assets/images/berater-thomas.jpg',
+    photo: 'assets/images/maria-musterfrau.png',
     institut: 'Volksbank Mittelhessen eG',
-    center: 'Beratungscenter Giessen-Sued',
+    center: 'Beratungscenter Gießen-Süd',
     status: 'Aktiv'
 };
 
 // ── MOCK KUNDEN (Retail) ──
 var bankKundenRetail = [
-    { name:'Klaus Fischer',    id:'KDB001', geb:'12.05.1978', beruf:'Maschinenbau-Ingenieur', ort:'Giessen',    segment:'Premium',  produkte:6, ertrag:4850,  finanzplan:true,  letztKontakt:'28.02.2026', avatarBg:'#2563eb', nps:9,  kinder:[{name:'Lukas',alter:12},{name:'Emma',alter:9}], email:'k.fischer@email.de', telefon:'+49 641 98765', adresse:'Hauptstrasse 45, 35390 Giessen', arbeitgeber:'Continental AG', familienstand:'Verheiratet', risikoscore:28, bonitaet:82 },
-    { name:'Sandra Mueller',   id:'KDB002', geb:'23.11.1985', beruf:'Aerztin',               ort:'Wetzlar',    segment:'Premium',  produkte:4, ertrag:3200,  finanzplan:false, letztKontakt:'25.02.2026', avatarBg:'#9333ea', nps:7,  kinder:[{name:'Mia',alter:4}], email:'s.mueller@email.de', telefon:'+49 6441 55432', adresse:'Bahnhofstr. 12, 35578 Wetzlar', arbeitgeber:'Uniklinik Giessen', familienstand:'Ledig', risikoscore:15, bonitaet:91 },
+    { name:'Klaus Fischer',    id:'KDB001', geb:'12.05.1978', beruf:'Maschinenbau-Ingenieur', ort:'Gießen',     segment:'Premium',  produkte:6, ertrag:4850,  finanzplan:true,  letztKontakt:'28.02.2026', avatarBg:'#2563eb', nps:9,  kinder:[{name:'Lukas',alter:12},{name:'Emma',alter:9}], email:'k.fischer@email.de', telefon:'+49 641 98765', adresse:'Hauptstraße 45, 35390 Gießen', arbeitgeber:'Continental AG', familienstand:'Verheiratet', risikoscore:28, bonitaet:82 },
+    { name:'Sandra Müller',    id:'KDB002', geb:'23.11.1985', beruf:'Ärztin',                ort:'Wetzlar',    segment:'Premium',  produkte:4, ertrag:3200,  finanzplan:false, letztKontakt:'25.02.2026', avatarBg:'#9333ea', nps:7,  kinder:[{name:'Mia',alter:4}], email:'s.mueller@email.de', telefon:'+49 6441 55432', adresse:'Bahnhofstr. 12, 35578 Wetzlar', arbeitgeber:'Uniklinik Gießen', familienstand:'Ledig', risikoscore:15, bonitaet:91 },
     { name:'Markus Wagner',    id:'KDB003', geb:'08.03.1972', beruf:'Lehrer',                 ort:'Marburg',    segment:'Standard', produkte:3, ertrag:1800,  finanzplan:true,  letztKontakt:'20.02.2026', avatarBg:'#16a34a', nps:8,  kinder:[{name:'Tim',alter:14},{name:'Jana',alter:11}], email:'m.wagner@email.de', telefon:'+49 6421 77890', adresse:'Schulstr. 8, 35037 Marburg', arbeitgeber:'Land Hessen', familienstand:'Verheiratet', risikoscore:22, bonitaet:75 },
-    { name:'Julia Becker',     id:'KDB004', geb:'15.07.1990', beruf:'Marketing-Managerin',    ort:'Giessen',    segment:'Potenzial',produkte:2, ertrag:980,   finanzplan:false, letztKontakt:'18.02.2026', avatarBg:'#f59e0b', nps:6,  kinder:[], email:'j.becker@email.de', telefon:'+49 641 33210', adresse:'Ludwigstr. 22, 35390 Giessen', arbeitgeber:'Amazon DE', familienstand:'Ledig', risikoscore:18, bonitaet:88 },
-    { name:'Peter Hoffmann',   id:'KDB005', geb:'30.01.1970', beruf:'Steuerberater',          ort:'Wetzlar',    segment:'Premium',  produkte:8, ertrag:6200,  finanzplan:true,  letztKontakt:'15.02.2026', avatarBg:'#dc2626', nps:9,  kinder:[{name:'Fabian',alter:22},{name:'Laura',alter:19}], email:'p.hoffmann@email.de', telefon:'+49 6441 88456', adresse:'Friedrichstr. 5, 35578 Wetzlar', arbeitgeber:'Selbstaendig', familienstand:'Verheiratet', risikoscore:35, bonitaet:79 },
+    { name:'Julia Becker',     id:'KDB004', geb:'15.07.1990', beruf:'Marketing-Managerin',    ort:'Gießen',     segment:'Potenzial',produkte:2, ertrag:980,   finanzplan:false, letztKontakt:'18.02.2026', avatarBg:'#f59e0b', nps:6,  kinder:[], email:'j.becker@email.de', telefon:'+49 641 33210', adresse:'Ludwigstr. 22, 35390 Gießen', arbeitgeber:'Amazon DE', familienstand:'Ledig', risikoscore:18, bonitaet:88 },
+    { name:'Peter Hoffmann',   id:'KDB005', geb:'30.01.1970', beruf:'Steuerberater',          ort:'Wetzlar',    segment:'Premium',  produkte:8, ertrag:6200,  finanzplan:true,  letztKontakt:'15.02.2026', avatarBg:'#dc2626', nps:9,  kinder:[{name:'Fabian',alter:22},{name:'Laura',alter:19}], email:'p.hoffmann@email.de', telefon:'+49 6441 88456', adresse:'Friedrichstr. 5, 35578 Wetzlar', arbeitgeber:'Selbständig', familienstand:'Verheiratet', risikoscore:35, bonitaet:79 },
     { name:'Andrea Lang',      id:'KDB006', geb:'05.09.1982', beruf:'Steuerberaterin',        ort:'Lich',       segment:'Standard', produkte:5, ertrag:2400,  finanzplan:true,  letztKontakt:'12.02.2026', avatarBg:'#6366f1', nps:8,  kinder:[{name:'Sophie',alter:7}], email:'a.lang@email.de', telefon:'+49 6404 12345', adresse:'Marktplatz 3, 35423 Lich', arbeitgeber:'Kanzlei Lang & Partner', familienstand:'Geschieden', risikoscore:20, bonitaet:85 },
-    { name:'Thomas Klein',     id:'KDB007', geb:'18.12.1968', beruf:'Handwerksmeister',       ort:'Buseck',     segment:'Standard', produkte:4, ertrag:1650,  finanzplan:false, letztKontakt:'10.02.2026', avatarBg:'#0891b2', nps:7,  kinder:[{name:'Max',alter:16}], email:'t.klein@email.de', telefon:'+49 6408 99123', adresse:'Am Anger 7, 35418 Buseck', arbeitgeber:'Klein Sanitaer GmbH', familienstand:'Verheiratet', risikoscore:42, bonitaet:68 },
-    { name:'Monika Richter',   id:'KDB008', geb:'22.04.1975', beruf:'Lehrerin',               ort:'Giessen',    segment:'Standard', produkte:3, ertrag:1200,  finanzplan:true,  letztKontakt:'08.02.2026', avatarBg:'#d946ef', nps:8,  kinder:[{name:'Anna',alter:10},{name:'Felix',alter:7}], email:'m.richter@email.de', telefon:'+49 641 44567', adresse:'Goethering 15, 35390 Giessen', arbeitgeber:'Land Hessen', familienstand:'Verheiratet', risikoscore:12, bonitaet:80 },
+    { name:'Thomas Klein',     id:'KDB007', geb:'18.12.1968', beruf:'Handwerksmeister',       ort:'Buseck',     segment:'Standard', produkte:4, ertrag:1650,  finanzplan:false, letztKontakt:'10.02.2026', avatarBg:'#0891b2', nps:7,  kinder:[{name:'Max',alter:16}], email:'t.klein@email.de', telefon:'+49 6408 99123', adresse:'Am Anger 7, 35418 Buseck', arbeitgeber:'Klein Sanitär GmbH', familienstand:'Verheiratet', risikoscore:42, bonitaet:68 },
+    { name:'Monika Richter',   id:'KDB008', geb:'22.04.1975', beruf:'Lehrerin',               ort:'Gießen',     segment:'Standard', produkte:3, ertrag:1200,  finanzplan:true,  letztKontakt:'08.02.2026', avatarBg:'#d946ef', nps:8,  kinder:[{name:'Anna',alter:10},{name:'Felix',alter:7}], email:'m.richter@email.de', telefon:'+49 641 44567', adresse:'Goethering 15, 35390 Gießen', arbeitgeber:'Land Hessen', familienstand:'Verheiratet', risikoscore:12, bonitaet:80 },
     { name:'Stefan Braun',     id:'KDB009', geb:'11.06.1988', beruf:'IT-Consultant',          ort:'Marburg',    segment:'Potenzial',produkte:2, ertrag:750,   finanzplan:false, letztKontakt:'05.02.2026', avatarBg:'#ea580c', nps:5,  kinder:[], email:'s.braun@email.de', telefon:'+49 6421 55678', adresse:'Technikstr. 20, 35037 Marburg', arbeitgeber:'SAP SE', familienstand:'Ledig', risikoscore:10, bonitaet:92 },
-    { name:'Katharina Wolf',   id:'KDB010', geb:'03.03.1988', beruf:'Architektin',            ort:'Giessen',    segment:'Standard', produkte:5, ertrag:2100,  finanzplan:true,  letztKontakt:'01.02.2026', avatarBg:'#059669', nps:9,  kinder:[{name:'Lara',alter:3}], email:'k.wolf@email.de', telefon:'+49 641 77890', adresse:'Schillerstr. 9, 35390 Giessen', arbeitgeber:'Wolf Architekten', familienstand:'Verheiratet', risikoscore:25, bonitaet:84 },
-    { name:'Juergen Peters',   id:'KDB011', geb:'14.10.1965', beruf:'Geschaeftsfuehrer',      ort:'Wetzlar',    segment:'Premium',  produkte:7, ertrag:5100,  finanzplan:true,  letztKontakt:'28.01.2026', avatarBg:'#7c3aed', nps:8,  kinder:[{name:'Stefan',alter:28},{name:'Maria',alter:25}], email:'j.peters@email.de', telefon:'+49 6441 33789', adresse:'Industriestr. 18, 35578 Wetzlar', arbeitgeber:'Peters Metallbau GmbH', familienstand:'Verheiratet', risikoscore:30, bonitaet:76 },
-    { name:'Sabine Kraus',     id:'KDB012', geb:'27.08.1979', beruf:'Apothekerin',            ort:'Lich',       segment:'Standard', produkte:4, ertrag:1900,  finanzplan:false, letztKontakt:'25.01.2026', avatarBg:'#be185d', nps:7,  kinder:[{name:'Paul',alter:8},{name:'Clara',alter:5}], email:'s.kraus@email.de', telefon:'+49 6404 66789', adresse:'Apothekenstr. 2, 35423 Lich', arbeitgeber:'Loewen-Apotheke', familienstand:'Verheiratet', risikoscore:18, bonitaet:87 }
+    { name:'Katharina Wolf',   id:'KDB010', geb:'03.03.1988', beruf:'Architektin',            ort:'Gießen',     segment:'Standard', produkte:5, ertrag:2100,  finanzplan:true,  letztKontakt:'01.02.2026', avatarBg:'#059669', nps:9,  kinder:[{name:'Lara',alter:3}], email:'k.wolf@email.de', telefon:'+49 641 77890', adresse:'Schillerstr. 9, 35390 Gießen', arbeitgeber:'Wolf Architekten', familienstand:'Verheiratet', risikoscore:25, bonitaet:84 },
+    { name:'Jürgen Peters',    id:'KDB011', geb:'14.10.1965', beruf:'Geschäftsführer',        ort:'Wetzlar',    segment:'Premium',  produkte:7, ertrag:5100,  finanzplan:true,  letztKontakt:'28.01.2026', avatarBg:'#7c3aed', nps:8,  kinder:[{name:'Stefan',alter:28},{name:'Maria',alter:25}], email:'j.peters@email.de', telefon:'+49 6441 33789', adresse:'Industriestr. 18, 35578 Wetzlar', arbeitgeber:'Peters Metallbau GmbH', familienstand:'Verheiratet', risikoscore:30, bonitaet:76 },
+    { name:'Sabine Kraus',     id:'KDB012', geb:'27.08.1979', beruf:'Apothekerin',            ort:'Lich',       segment:'Standard', produkte:4, ertrag:1900,  finanzplan:false, letztKontakt:'25.01.2026', avatarBg:'#be185d', nps:7,  kinder:[{name:'Paul',alter:8},{name:'Clara',alter:5}], email:'s.kraus@email.de', telefon:'+49 6404 66789', adresse:'Apothekenstr. 2, 35423 Lich', arbeitgeber:'Löwen-Apotheke', familienstand:'Verheiratet', risikoscore:18, bonitaet:87 }
 ];
 
 // ── MOCK KUNDEN (Firmenkunde) ──
 var bankKundenFK = [
-    { name:'Mueller GmbH',          id:'FKB001', branche:'Maschinenbau',    ort:'Giessen',  kreditvol:8500000,  rating:'A+',  mitarbeiter:85,  ertrag:42000 },
+    { name:'Müller GmbH',           id:'FKB001', branche:'Maschinenbau',    ort:'Gießen',   kreditvol:8500000,  rating:'A+',  mitarbeiter:85,  ertrag:42000 },
     { name:'Schmidt & Partner',     id:'FKB002', branche:'Steuerberatung',  ort:'Wetzlar',  kreditvol:2200000,  rating:'A',   mitarbeiter:32,  ertrag:18500 },
     { name:'Weber Maschinenbau',    id:'FKB003', branche:'Anlagenbau',      ort:'Marburg',  kreditvol:12800000, rating:'A-',  mitarbeiter:145, ertrag:68000 },
-    { name:'Hessische Baeckerei',   id:'FKB004', branche:'Lebensmittel',    ort:'Lich',     kreditvol:3100000,  rating:'BBB+',mitarbeiter:48,  ertrag:15200 },
-    { name:'TechVision GmbH',       id:'FKB005', branche:'IT-Dienstleistung',ort:'Giessen', kreditvol:1800000,  rating:'A',   mitarbeiter:22,  ertrag:12800 },
+    { name:'Hessische Bäckerei',    id:'FKB004', branche:'Lebensmittel',    ort:'Lich',     kreditvol:3100000,  rating:'BBB+',mitarbeiter:48,  ertrag:15200 },
+    { name:'TechVision GmbH',       id:'FKB005', branche:'IT-Dienstleistung',ort:'Gießen', kreditvol:1800000,  rating:'A',   mitarbeiter:22,  ertrag:12800 },
     { name:'Lahn-Logistik AG',      id:'FKB006', branche:'Transport',       ort:'Wetzlar',  kreditvol:6200000,  rating:'BBB', mitarbeiter:120, ertrag:34500 },
     { name:'Biotech Mittelhessen',  id:'FKB007', branche:'Pharma',          ort:'Marburg',  kreditvol:4500000,  rating:'A+',  mitarbeiter:65,  ertrag:28000 },
-    { name:'Metallwerk Giessen',    id:'FKB008', branche:'Metallverarbeitung',ort:'Giessen',kreditvol:9200000,  rating:'A-',  mitarbeiter:180, ertrag:52000 }
+    { name:'Metallwerk Gießen',     id:'FKB008', branche:'Metallverarbeitung',ort:'Gießen', kreditvol:9200000,  rating:'A-',  mitarbeiter:180, ertrag:52000 }
 ];
 
 // ── MOCK KUNDEN (Vermoegen) ──
 var bankKundenVW = [
-    { name:'Dr. Friedrich von Hagen', id:'PBB001', ort:'Giessen',  aum:12500000, depot:8200000,  nachfolge:true,  stiftung:true,  ertrag:85000 },
-    { name:'Elisabeth Koenig',        id:'PBB002', ort:'Wetzlar',  aum:8800000,  depot:5600000,  nachfolge:true,  stiftung:false, ertrag:62000 },
+    { name:'Dr. Friedrich von Hagen', id:'PBB001', ort:'Gießen',   aum:12500000, depot:8200000,  nachfolge:true,  stiftung:true,  ertrag:85000 },
+    { name:'Elisabeth König',         id:'PBB002', ort:'Wetzlar',  aum:8800000,  depot:5600000,  nachfolge:true,  stiftung:false, ertrag:62000 },
     { name:'Prof. Hans-Peter Roth',   id:'PBB003', ort:'Marburg',  aum:15200000, depot:11400000, nachfolge:true,  stiftung:true,  ertrag:108000 },
-    { name:'Charlotte Steinberg',     id:'PBB004', ort:'Giessen',  aum:6400000,  depot:4100000,  nachfolge:false, stiftung:false, ertrag:42000 },
+    { name:'Charlotte Steinberg',     id:'PBB004', ort:'Gießen',   aum:6400000,  depot:4100000,  nachfolge:false, stiftung:false, ertrag:42000 },
     { name:'Familie Weidmann',        id:'PBB005', ort:'Lich',     aum:22800000, depot:15200000, nachfolge:true,  stiftung:true,  ertrag:165000 },
     { name:'Industriefamilie Bauer',  id:'PBB006', ort:'Wetzlar',  aum:18500000, depot:12800000, nachfolge:true,  stiftung:true,  ertrag:135000 }
 ];
@@ -58,16 +58,16 @@ var bankKundenVW = [
 // ── MOCK NEUGESCHAEFT ──
 var bankNeugeschaeft = [
     { nr:'NG-2026-001', produkt:'Baufinanzierung',         kunde:'Klaus Fischer',   vol:185000,  status:'Policiert', datum:'28.02.2026', sparte:'kredit' },
-    { nr:'NG-2026-002', produkt:'VR-MeinDepot Sparplan',   kunde:'Sandra Mueller',  vol:500,     status:'Aktiv',     datum:'25.02.2026', sparte:'wertpapier' },
+    { nr:'NG-2026-002', produkt:'VR-MeinDepot Sparplan',   kunde:'Sandra Müller',   vol:500,     status:'Aktiv',     datum:'25.02.2026', sparte:'wertpapier' },
     { nr:'NG-2026-003', produkt:'Riester-Rente VR',        kunde:'Markus Wagner',   vol:2100,    status:'Policiert', datum:'20.02.2026', sparte:'vorsorge' },
     { nr:'NG-2026-004', produkt:'Privatkredit',             kunde:'Julia Becker',    vol:15000,   status:'Antrag',    datum:'18.02.2026', sparte:'kredit' },
     { nr:'NG-2026-005', produkt:'VR-FinanzPlan',            kunde:'Peter Hoffmann',  vol:0,       status:'Abgeschlossen', datum:'15.02.2026', sparte:'beratung' },
     { nr:'NG-2026-006', produkt:'Tagesgeldkonto Plus',      kunde:'Andrea Lang',     vol:50000,   status:'Aktiv',     datum:'12.02.2026', sparte:'einlage' },
-    { nr:'NG-2026-007', produkt:'KfW-Foerderkredit',        kunde:'Thomas Klein',    vol:75000,   status:'Policiert', datum:'10.02.2026', sparte:'kredit' },
+    { nr:'NG-2026-007', produkt:'KfW-Förderkredit',         kunde:'Thomas Klein',    vol:75000,   status:'Policiert', datum:'10.02.2026', sparte:'kredit' },
     { nr:'NG-2026-008', produkt:'Unfallversicherung VR',    kunde:'Monika Richter',  vol:360,     status:'Policiert', datum:'08.02.2026', sparte:'versicherung' },
     { nr:'NG-2026-009', produkt:'ETF-Depot',                kunde:'Stefan Braun',    vol:25000,   status:'Aktiv',     datum:'05.02.2026', sparte:'wertpapier' },
     { nr:'NG-2026-010', produkt:'Bausparvertrag',           kunde:'Katharina Wolf',  vol:40000,   status:'Policiert', datum:'01.02.2026', sparte:'bausparen' },
-    { nr:'NG-2026-011', produkt:'Gewerbekredit',            kunde:'Juergen Peters',  vol:250000,  status:'Antrag',    datum:'28.01.2026', sparte:'kredit' },
+    { nr:'NG-2026-011', produkt:'Gewerbekredit',            kunde:'Jürgen Peters',   vol:250000,  status:'Antrag',    datum:'28.01.2026', sparte:'kredit' },
     { nr:'NG-2026-012', produkt:'Krankenversicherung ZV',   kunde:'Sabine Kraus',    vol:480,     status:'Policiert', datum:'25.01.2026', sparte:'versicherung' }
 ];
 
@@ -124,9 +124,11 @@ function showBeraterOverview() {
     // Fill further potentials
     fillBeraterWeiterePotentiale();
     
-    // Show chat toggle
+    // Show chat toggle and auto-open chat widget
     var chatToggle = document.getElementById('beraterChatToggle');
     if (chatToggle) chatToggle.style.display = 'flex';
+    var chatWidget = document.getElementById('beraterChatWidget');
+    if (chatWidget) chatWidget.style.display = 'flex';
     
     // Update URL route based on current view mode
     if (window.AppRouter) {
@@ -140,7 +142,7 @@ function showBeraterOverview() {
 
 function fillBeraterHeader() {
     var titleEl = document.getElementById('beraterPageTitle');
-    if (titleEl) titleEl.textContent = 'Berater: ' + beraterData.name;
+    if (titleEl) titleEl.textContent = 'Beraterin: ' + beraterData.name;
     
     var idEl = document.getElementById('beraterIdHeader');
     if (idEl) idEl.textContent = beraterData.id;
@@ -214,7 +216,7 @@ function setBankViewMode(mode) {
     var activeKpi = document.getElementById(kpiMap[mode]);
     if (activeKpi) activeKpi.style.display = '';
     
-    // Show Uebersicht tab
+    // Show Übersicht tab
     showBeraterTab('uebersicht');
     
     // Update customer list
@@ -277,16 +279,16 @@ function showBeraterTab(tabName) {
 function fillBeraterStammdaten() {
     var el = document.getElementById('berater-tab-stammdaten');
     if (!el || el.innerHTML.trim() !== '') return;
-    el.innerHTML = '<div class="uebersicht-card"><div class="uebersicht-card-header"><h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg> Beraterstammdaten</h3></div>' +
+    el.innerHTML = '<div class="uebersicht-card"><div class="uebersicht-card-header"><h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg> Beraterin-Stammdaten</h3></div>' +
         '<div class="kunden-info-grid" style="padding:16px;">' +
         '<div class="info-item"><span class="info-label">Berater-Nr.</span><span class="info-value">' + beraterData.id + '</span></div>' +
         '<div class="info-item"><span class="info-label">Name</span><span class="info-value">' + beraterData.name + '</span></div>' +
         '<div class="info-item"><span class="info-label">Institut</span><span class="info-value">' + beraterData.institut + '</span></div>' +
         '<div class="info-item"><span class="info-label">Beratungscenter</span><span class="info-value">' + beraterData.center + '</span></div>' +
-        '<div class="info-item"><span class="info-label">Hierarchie</span><span class="info-value">RD Mittelhessen &rarr; VD Giessen &rarr; BC Giessen-Sued</span></div>' +
+        '<div class="info-item"><span class="info-label">Hierarchie</span><span class="info-value">RD Mittelhessen &rarr; VD Gießen &rarr; BC Gießen-Süd</span></div>' +
         '<div class="info-item"><span class="info-label">Vorgesetzter</span><span class="info-value">Markus Schneider (Filialleiter)</span></div>' +
         '<div class="info-item"><span class="info-label">Telefon</span><span class="info-value">+49 641 7006-240</span></div>' +
-        '<div class="info-item"><span class="info-label">E-Mail</span><span class="info-value">thomas.berger@vb-mittelhessen.de</span></div>' +
+        '<div class="info-item"><span class="info-label">E-Mail</span><span class="info-value">maria.musterfrau@vb-mittelhessen.de</span></div>' +
         '<div class="info-item"><span class="info-label">IHK-Registrierung</span><span class="info-value">D-F-156-PQ89-12</span></div>' +
         '<div class="info-item"><span class="info-label">Zulassungen</span><span class="info-value">WpHG &sect;34d, KWG &sect;25a, Immobiliar &sect;34i</span></div>' +
         '<div class="info-item"><span class="info-label">Weiterbildung</span><span class="info-value">42/40 Std. (105%)</span></div>' +
@@ -302,7 +304,7 @@ function fillBeraterNeugeschaeft() {
         var totalVol = 0, count = bankNeugeschaeft.length;
         bankNeugeschaeft.forEach(function(n) { totalVol += n.vol; });
         kpiEl.innerHTML =
-            '<div class="kennzahl-item"><div class="kennzahl-value">' + count + '</div><div class="kennzahl-label">Abschluesse</div><div class="kennzahl-trend positive">+4 gg. Vormonat</div></div>' +
+            '<div class="kennzahl-item"><div class="kennzahl-value">' + count + '</div><div class="kennzahl-label">Abschlüsse</div><div class="kennzahl-trend positive">+4 gg. Vormonat</div></div>' +
             '<div class="kennzahl-item"><div class="kennzahl-value">' + fmtEuroBerater(totalVol) + '</div><div class="kennzahl-label">Gesamtvolumen</div><div class="kennzahl-trend positive">+18%</div></div>' +
             '<div class="kennzahl-item"><div class="kennzahl-value">' + fmtEuroBerater(Math.round(totalVol/count)) + '</div><div class="kennzahl-label">&Oslash; Volumen</div><div class="kennzahl-trend neutral">&plusmn;0</div></div>' +
             '<div class="kennzahl-item"><div class="kennzahl-value">72%</div><div class="kennzahl-label">Abschlussquote</div><div class="kennzahl-trend positive">+8%</div></div>';
@@ -335,7 +337,7 @@ function fillBeraterNeugeschaeft() {
         });
         donutEl.innerHTML = '<svg width="' + size + '" height="' + size + '" viewBox="0 0 ' + size + ' ' + size + '">' + circles +
             '<text x="' + cx + '" y="' + (cy+5) + '" text-anchor="middle" font-size="15" font-weight="700" fill="#1e293b">' + total + '</text>' +
-            '<text x="' + cx + '" y="' + (cy+19) + '" text-anchor="middle" font-size="10" fill="#94a3b8">Abschluesse</text></svg>' +
+            '<text x="' + cx + '" y="' + (cy+19) + '" text-anchor="middle" font-size="10" fill="#94a3b8">Abschlüsse</text></svg>' +
             '<div class="sparten-legend">' + legend + '</div>';
     }
     
@@ -365,7 +367,7 @@ function fillBeraterErtraege() {
     var el = document.getElementById('berater-tab-ertraege');
     if (!el || el.innerHTML.trim() !== '') return;
     
-    var months = ['Jan','Feb','Marz','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'];
+    var months = ['Jan','Feb','März','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'];
     var monthData = [18200,21400,19800,22600,24100,20500,23800,25200,21900,26400,24800,0];
     var maxVal = Math.max.apply(null, monthData);
     var bars = '';
@@ -404,7 +406,7 @@ function fillBeraterQualitaet() {
     if (!el || el.innerHTML.trim() !== '') return;
     
     // Complaint trend
-    var trendMonths = ['Okt','Nov','Dez','Jan','Feb','Marz'];
+    var trendMonths = ['Okt','Nov','Dez','Jan','Feb','März'];
     var trendVals = [1.2, 0.8, 1.5, 0.6, 0.9, 0.4];
     var maxTrend = 2.0;
     var trendBars = '';
@@ -418,7 +420,7 @@ function fillBeraterQualitaet() {
     var trainings = [
         { name:'WpHG Pflichtschulung', done:12, max:12, color:'#16a34a' },
         { name:'MiFID II Update', done:8, max:8, color:'#16a34a' },
-        { name:'Geldwaesche-Praevention', done:4, max:6, color:'#d97706' },
+        { name:'Geldwäsche-Prävention', done:4, max:6, color:'#d97706' },
         { name:'Open Finance / FIDA', done:6, max:8, color:'#2563eb' },
         { name:'ESG-Beratung', done:3, max:6, color:'#9333ea' }
     ];
@@ -431,7 +433,7 @@ function fillBeraterQualitaet() {
     // Compliance checklist
     var checks = [
         { name:'WpHG-Compliance', status:'ok' },
-        { name:'MaRisk-Konformitaet', status:'ok' },
+        { name:'MaRisk-Konformität', status:'ok' },
         { name:'Geldwaesche (GwG)', status:'ok' },
         { name:'Datenschutz (DSGVO)', status:'ok' },
         { name:'BaFin-Meldepflichten', status:'ok' },
@@ -441,10 +443,10 @@ function fillBeraterQualitaet() {
     var checkHtml = '';
     checks.forEach(function(c) {
         var icon = c.status === 'ok' ? '<svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" width="16" height="16"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>' : '<svg viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="2" width="16" height="16"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>';
-        checkHtml += '<div class="qual-check-item"><span>' + icon + '</span><span style="flex:1;">' + c.name + '</span><span class="qual-check-status ' + c.status + '">' + (c.status==='ok'?'Erfuellt':'Teilweise') + '</span></div>';
+        checkHtml += '<div class="qual-check-item"><span>' + icon + '</span><span style="flex:1;">' + c.name + '</span><span class="qual-check-status ' + c.status + '">' + (c.status==='ok'?'Erfüllt':'Teilweise') + '</span></div>';
     });
     
-    el.innerHTML = '<div class="uebersicht-card"><div class="uebersicht-card-header"><h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Qualitaetskennzahlen</h3></div>' +
+    el.innerHTML = '<div class="uebersicht-card"><div class="uebersicht-card-header"><h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Qualitätskennzahlen</h3></div>' +
         '<div class="kennzahlen-grid">' +
         '<div class="kennzahl-item"><div class="kennzahl-value">8,4</div><div class="kennzahl-label">NPS (Durchschnitt)</div><div class="kennzahl-trend positive">+0,3</div></div>' +
         '<div class="kennzahl-item"><div class="kennzahl-value">2</div><div class="kennzahl-label">Beschwerden</div><div class="kennzahl-trend positive">-3 gg. Vorjahr</div></div>' +
@@ -462,17 +464,17 @@ function fillBeraterPotentiale() {
     if (!el || el.innerHTML.trim() !== '') return;
     
     var potentiale = [
-        { kunde:'Klaus Fischer', id:'KDB001', prio:'high', produkt:'Baufinanzierung Anschluss', beschr:'Zinsbindung laeuft 09/2026 aus. Restschuld 185k. Guenstigere Konditionen moeglich.', vol:'185.000', ertrag:'2.775' },
-        { kunde:'Sandra Mueller', id:'KDB002', prio:'high', produkt:'VR-FinanzPlan + Altersvorsorge', beschr:'Sparquote 1.800/Mon. ohne AV. Open Finance zeigt nur Tagesgeld.', vol:'500/Mon.', ertrag:'1.800' },
-        { kunde:'Markus Wagner', id:'KDB003', prio:'medium', produkt:'Depot-Eroeffnung + ETF-Sparplan', beschr:'Depot bei Neobroker entdeckt (FIDA). Cross-Selling VR-Depot.', vol:'45.000', ertrag:'675' },
-        { kunde:'Julia Becker', id:'KDB004', prio:'high', produkt:'FIDA-Consent + Gesamtberatung', beschr:'Nur 2 Produkte. Open Finance koennte weitere Potentiale aufdecken.', vol:'n/a', ertrag:'500' },
-        { kunde:'Peter Hoffmann', id:'KDB005', prio:'medium', produkt:'Vermoegensverwaltung', beschr:'Hohe Liquiditaet auf Girokonto. Umschichtung in VV empfohlen.', vol:'120.000', ertrag:'1.800' },
-        { kunde:'Andrea Lang', id:'KDB006', prio:'medium', produkt:'Gewerbekredit + Firmenkonto', beschr:'Selbstaendige Steuerberaterin. Kanzlei wachsend, Finanzierungsbedarf.', vol:'80.000', ertrag:'1.200' },
-        { kunde:'Thomas Klein', id:'KDB007', prio:'low', produkt:'KfW-Foerderung Sanierung', beschr:'Immobilie Bj. 1975. Energetische Sanierung foerderfaehig.', vol:'75.000', ertrag:'1.125' },
+        { kunde:'Klaus Fischer', id:'KDB001', prio:'high', produkt:'Baufinanzierung Anschluss', beschr:'Zinsbindung läuft 09/2026 aus. Restschuld 185k. Günstigere Konditionen möglich.', vol:'185.000', ertrag:'2.775' },
+        { kunde:'Sandra Müller', id:'KDB002', prio:'high', produkt:'VR-FinanzPlan + Altersvorsorge', beschr:'Sparquote 1.800/Mon. ohne AV. Open Finance zeigt nur Tagesgeld.', vol:'500/Mon.', ertrag:'1.800' },
+        { kunde:'Markus Wagner', id:'KDB003', prio:'medium', produkt:'Depoteröffnung + ETF-Sparplan', beschr:'Depot bei Neobroker entdeckt (FIDA). Cross-Selling VR-Depot.', vol:'45.000', ertrag:'675' },
+        { kunde:'Julia Becker', id:'KDB004', prio:'high', produkt:'FIDA-Consent + Gesamtberatung', beschr:'Nur 2 Produkte. Open Finance könnte weitere Potentiale aufdecken.', vol:'n/a', ertrag:'500' },
+        { kunde:'Peter Hoffmann', id:'KDB005', prio:'medium', produkt:'Vermögensverwaltung', beschr:'Hohe Liquidität auf Girokonto. Umschichtung in VV empfohlen.', vol:'120.000', ertrag:'1.800' },
+        { kunde:'Andrea Lang', id:'KDB006', prio:'medium', produkt:'Gewerbekredit + Firmenkonto', beschr:'Selbständige Steuerberaterin. Kanzlei wachsend, Finanzierungsbedarf.', vol:'80.000', ertrag:'1.200' },
+        { kunde:'Thomas Klein', id:'KDB007', prio:'low', produkt:'KfW-Förderung Sanierung', beschr:'Immobilie Bj. 1975. Energetische Sanierung förderfähig.', vol:'75.000', ertrag:'1.125' },
         { kunde:'Stefan Braun', id:'KDB009', prio:'high', produkt:'VR-FinanzPlan', beschr:'Jung, hohes Einkommen, kaum Bankprodukte. Erstberatung dringend.', vol:'n/a', ertrag:'400' },
         { kunde:'Katharina Wolf', id:'KDB010', prio:'medium', produkt:'Risikolebensversicherung', beschr:'Junge Familie, Immobilienfinanzierung ohne Absicherung.', vol:'480/J.', ertrag:'360' },
-        { kunde:'Juergen Peters', id:'KDB011', prio:'high', produkt:'Nachfolgeplanung + Stiftung', beschr:'Geschaeftsfuehrer, 60 Jahre. Unternehmensnachfolge ungeklaert.', vol:'n/a', ertrag:'5.000' },
-        { kunde:'Sabine Kraus', id:'KDB012', prio:'low', produkt:'Depot-Eroeffnung', beschr:'Apothekerin mit hohem Einkommen. Depot bei Direktbank.', vol:'30.000', ertrag:'450' }
+        { kunde:'Jürgen Peters', id:'KDB011', prio:'high', produkt:'Nachfolgeplanung + Stiftung', beschr:'Geschäftsführer, 60 Jahre. Unternehmensnachfolge ungeklärt.', vol:'n/a', ertrag:'5.000' },
+        { kunde:'Sabine Kraus', id:'KDB012', prio:'low', produkt:'Depoteröffnung', beschr:'Apothekerin mit hohem Einkommen. Depot bei Direktbank.', vol:'30.000', ertrag:'450' }
     ];
     
     var html = '<div class="uebersicht-card potentiale-impuls-card"><div class="uebersicht-card-header"><h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg> Alle Vertriebspotentiale (' + potentiale.length + ')</h3></div><div class="potentiale-liste-neu">';
@@ -488,14 +490,14 @@ function fillBeraterWeiterePotentiale() {
     var el = document.getElementById('beraterWeiterePotentialeContent');
     if (!el) return;
     var more = [
-        { kunde:'Julia Becker', id:'KDB004', prio:'high', produkt:'FIDA-Consent einholen', beschr:'Nur 2 Produkte. Open Finance Analyse koennte Potentiale aufdecken.', vol:'n/a', ertrag:'500' },
-        { kunde:'Peter Hoffmann', id:'KDB005', prio:'medium', produkt:'Vermoegensverwaltung', beschr:'Hohe Liquiditaet ohne Anlage. Beratung zur Vermoegenstrukturierung.', vol:'120.000', ertrag:'1.800' },
-        { kunde:'Andrea Lang', id:'KDB006', prio:'medium', produkt:'Praxisfinanzierung', beschr:'Kanzleierweiterung geplant. Foerderfaehig ueber KfW.', vol:'80.000', ertrag:'1.200' },
-        { kunde:'Thomas Klein', id:'KDB007', prio:'low', produkt:'KfW-Foerderung', beschr:'Immobilie sanierungsbedurftig. Energieberatung empfohlen.', vol:'75.000', ertrag:'1.125' },
+        { kunde:'Julia Becker', id:'KDB004', prio:'high', produkt:'FIDA-Consent einholen', beschr:'Nur 2 Produkte. Open Finance Analyse könnte Potentiale aufdecken.', vol:'n/a', ertrag:'500' },
+        { kunde:'Peter Hoffmann', id:'KDB005', prio:'medium', produkt:'Vermögensverwaltung', beschr:'Hohe Liquidität ohne Anlage. Beratung zur Vermögensstrukturierung.', vol:'120.000', ertrag:'1.800' },
+        { kunde:'Andrea Lang', id:'KDB006', prio:'medium', produkt:'Praxisfinanzierung', beschr:'Kanzleierweiterung geplant. Förderfähig über KfW.', vol:'80.000', ertrag:'1.200' },
+        { kunde:'Thomas Klein', id:'KDB007', prio:'low', produkt:'KfW-Förderung', beschr:'Immobilie sanierungsbedürftig. Energieberatung empfohlen.', vol:'75.000', ertrag:'1.125' },
         { kunde:'Stefan Braun', id:'KDB009', prio:'high', produkt:'VR-FinanzPlan', beschr:'IT-Consultant, hohes Einkommen, kein FinanzPlan.', vol:'n/a', ertrag:'400' },
         { kunde:'Katharina Wolf', id:'KDB010', prio:'medium', produkt:'Risikolebensversicherung', beschr:'Immobilie + Kind, keine Absicherung der Restschuld.', vol:'480/J.', ertrag:'360' },
-        { kunde:'Juergen Peters', id:'KDB011', prio:'high', produkt:'Nachfolgeplanung', beschr:'Unternehmer 60J. Nachfolge + Stiftungsberatung.', vol:'n/a', ertrag:'5.000' },
-        { kunde:'Sabine Kraus', id:'KDB012', prio:'low', produkt:'Depot-Wechsel', beschr:'Depot bei Direktbank. Uebernahme ins VR-NetWorld.', vol:'30.000', ertrag:'450' }
+        { kunde:'Jürgen Peters', id:'KDB011', prio:'high', produkt:'Nachfolgeplanung', beschr:'Unternehmer 60J. Nachfolge + Stiftungsberatung.', vol:'n/a', ertrag:'5.000' },
+        { kunde:'Sabine Kraus', id:'KDB012', prio:'low', produkt:'Depot-Wechsel', beschr:'Depot bei Direktbank. Übernahme ins VR-NetWorld.', vol:'30.000', ertrag:'450' }
     ];
     var html = '';
     more.forEach(function(p) {
@@ -572,7 +574,7 @@ function fillBeraterPortfolio() {
         { name:'Anleihen', vol:22800000, color:'#16a34a' },
         { name:'Immobilien', vol:12400000, color:'#9333ea' },
         { name:'Alternative', vol:8200000, color:'#f59e0b' },
-        { name:'Liquiditaet', vol:13300000, color:'#64748b' }
+        { name:'Liquidität', vol:13300000, color:'#64748b' }
     ];
     var total = 85200000;
     var barsHtml = '';
@@ -585,7 +587,7 @@ function fillBeraterPortfolio() {
 function fillBeraterPerformance() {
     var el = document.getElementById('berater-tab-performance');
     if (!el || el.innerHTML.trim() !== '') return;
-    el.innerHTML = '<div class="uebersicht-card"><div class="uebersicht-card-header"><h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg> Performance-Uebersicht</h3></div>' +
+    el.innerHTML = '<div class="uebersicht-card"><div class="uebersicht-card-header"><h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg> Performance-Übersicht</h3></div>' +
         '<div class="kennzahlen-grid">' +
         '<div class="kennzahl-item"><div class="kennzahl-value">+12,4%</div><div class="kennzahl-label">Portfolio YTD</div><div class="kennzahl-trend positive">vs. Benchmark +8,1%</div></div>' +
         '<div class="kennzahl-item"><div class="kennzahl-value">0,72</div><div class="kennzahl-label">Sharpe Ratio</div><div class="kennzahl-trend positive">Gut</div></div>' +
@@ -655,14 +657,14 @@ function toggleBeraterPeriod(period) {
     if (!grid) return;
     if (period === 'month') {
         grid.innerHTML =
-            '<div class="kennzahl-item clickable" onclick="showBeraterTab(\'neugeschaeft\')"><div class="kennzahl-value">68</div><div class="kennzahl-label">Abschluesse</div><div class="kennzahl-trend positive">+12 vs. Vormonat</div></div>' +
-            '<div class="kennzahl-item clickable" onclick="showBeraterTab(\'neugeschaeft\')"><div class="kennzahl-value">\u20AC98.400</div><div class="kennzahl-label">Neugeschaeft</div><div class="kennzahl-trend positive">+22%</div></div>' +
+            '<div class="kennzahl-item clickable" onclick="showBeraterTab(\'neugeschaeft\')"><div class="kennzahl-value">68</div><div class="kennzahl-label">Abschlüsse</div><div class="kennzahl-trend positive">+12 vs. Vormonat</div></div>' +
+            '<div class="kennzahl-item clickable" onclick="showBeraterTab(\'neugeschaeft\')"><div class="kennzahl-value">\u20AC98.400</div><div class="kennzahl-label">Neugeschäft</div><div class="kennzahl-trend positive">+22%</div></div>' +
             '<div class="kennzahl-item clickable" onclick="showBeraterTab(\'kundenliste\')"><div class="kennzahl-value">128</div><div class="kennzahl-label">Beratungen</div><div class="kennzahl-trend positive">+18</div></div>' +
             '<div class="kennzahl-item clickable" onclick="showBeraterTab(\'qualitaet\')"><div class="kennzahl-value">72%</div><div class="kennzahl-label">Abschlussquote</div><div class="kennzahl-trend positive">+5%</div></div>';
     } else {
         grid.innerHTML =
-            '<div class="kennzahl-item clickable" onclick="showBeraterTab(\'neugeschaeft\')"><div class="kennzahl-value">18</div><div class="kennzahl-label">Abschluesse</div><div class="kennzahl-trend positive">+4 vs. Vorwoche</div></div>' +
-            '<div class="kennzahl-item clickable" onclick="showBeraterTab(\'neugeschaeft\')"><div class="kennzahl-value">\u20AC24.800</div><div class="kennzahl-label">Neugeschaeft</div><div class="kennzahl-trend positive">+15%</div></div>' +
+            '<div class="kennzahl-item clickable" onclick="showBeraterTab(\'neugeschaeft\')"><div class="kennzahl-value">18</div><div class="kennzahl-label">Abschlüsse</div><div class="kennzahl-trend positive">+4 vs. Vorwoche</div></div>' +
+            '<div class="kennzahl-item clickable" onclick="showBeraterTab(\'neugeschaeft\')"><div class="kennzahl-value">\u20AC24.800</div><div class="kennzahl-label">Neugeschäft</div><div class="kennzahl-trend positive">+15%</div></div>' +
             '<div class="kennzahl-item clickable" onclick="showBeraterTab(\'kundenliste\')"><div class="kennzahl-value">32</div><div class="kennzahl-label">Beratungen</div><div class="kennzahl-trend positive">+5</div></div>' +
             '<div class="kennzahl-item clickable" onclick="showBeraterTab(\'qualitaet\')"><div class="kennzahl-value">72%</div><div class="kennzahl-label">Abschlussquote</div><div class="kennzahl-trend positive">+8%</div></div>';
     }
@@ -679,7 +681,7 @@ function openBankKundenDetail(kundenName, kundenId) {
     
     // Copy berater info to shared header
     var headerTitle = document.getElementById('bankKundenHeaderTitle');
-    if (headerTitle) headerTitle.textContent = 'Berater: ' + beraterData.name;
+    if (headerTitle) headerTitle.textContent = 'Beraterin: ' + beraterData.name;
     var headerId = document.getElementById('bankKundenHeaderId');
     if (headerId) headerId.textContent = beraterData.id;
     
@@ -787,9 +789,9 @@ function getBeraterChatResponse(question) {
     if (q.indexOf('top 5') > -1 || q.indexOf('ertragspotenzial') > -1) {
         return '<strong>Top 5 Kunden nach Ertragspotenzial:</strong><br><br>' +
             '<div class="chat-customer-item"><button class="chat-customer-btn" onclick="openBankKundenDetail(\'Klaus Fischer\',\'KDB001\')">Klaus Fischer</button> Baufinanzierung Anschluss &euro;185k<br><span class="chat-recommendation">Ertragspotenzial: &euro;2.775</span></div>' +
-            '<div class="chat-customer-item"><button class="chat-customer-btn" onclick="openBankKundenDetail(\'Juergen Peters\',\'KDB011\')">Juergen Peters</button> Nachfolgeplanung<br><span class="chat-recommendation">Ertragspotenzial: &euro;5.000</span></div>' +
-            '<div class="chat-customer-item"><button class="chat-customer-btn" onclick="openBankKundenDetail(\'Sandra Mueller\',\'KDB002\')">Sandra Mueller</button> VR-FinanzPlan + AV<br><span class="chat-recommendation">Ertragspotenzial: &euro;1.800</span></div>' +
-            '<div class="chat-customer-item"><button class="chat-customer-btn" onclick="openBankKundenDetail(\'Peter Hoffmann\',\'KDB005\')">Peter Hoffmann</button> Vermoegensverwaltung<br><span class="chat-recommendation">Ertragspotenzial: &euro;1.800</span></div>' +
+            '<div class="chat-customer-item"><button class="chat-customer-btn" onclick="openBankKundenDetail(\'Jürgen Peters\',\'KDB011\')">Jürgen Peters</button> Nachfolgeplanung<br><span class="chat-recommendation">Ertragspotenzial: &euro;5.000</span></div>' +
+            '<div class="chat-customer-item"><button class="chat-customer-btn" onclick="openBankKundenDetail(\'Sandra Müller\',\'KDB002\')">Sandra Müller</button> VR-FinanzPlan + AV<br><span class="chat-recommendation">Ertragspotenzial: &euro;1.800</span></div>' +
+            '<div class="chat-customer-item"><button class="chat-customer-btn" onclick="openBankKundenDetail(\'Peter Hoffmann\',\'KDB005\')">Peter Hoffmann</button> Vermögensverwaltung<br><span class="chat-recommendation">Ertragspotenzial: &euro;1.800</span></div>' +
             '<div class="chat-customer-item"><button class="chat-customer-btn" onclick="openBankKundenDetail(\'Andrea Lang\',\'KDB006\')">Andrea Lang</button> Praxisfinanzierung<br><span class="chat-recommendation">Ertragspotenzial: &euro;1.200</span></div>' +
             '<div class="chat-followup-suggestions"><button onclick="askBeraterQuestion(\'Detailanalyse Klaus Fischer\')">Details Fischer</button><button onclick="askBeraterQuestion(\'Alle Potentiale anzeigen\')">Alle Potentiale</button></div>';
     }
@@ -798,7 +800,7 @@ function getBeraterChatResponse(question) {
         var ohneFinanzplan = bankKundenRetail.filter(function(k) { return !k.finanzplan; });
         var html = '<strong>Kunden ohne VR-FinanzPlan (' + ohneFinanzplan.length + '):</strong><br><br>';
         ohneFinanzplan.forEach(function(k) {
-            html += '<div class="chat-customer-item"><button class="chat-customer-btn" onclick="openBankKundenDetail(\'' + k.name + '\',\'' + k.id + '\')">' + k.name + '</button> ' + k.beruf + ', Ertrag: ' + fmtEuroBerater(k.ertrag) + '<br><span class="chat-recommendation">Potenzial: FinanzPlan-Gespraech einladen</span></div>';
+            html += '<div class="chat-customer-item"><button class="chat-customer-btn" onclick="openBankKundenDetail(\'' + k.name + '\',\'' + k.id + '\')">' + k.name + '</button> ' + k.beruf + ', Ertrag: ' + fmtEuroBerater(k.ertrag) + '<br><span class="chat-recommendation">Potenzial: FinanzPlan-Gespräch einladen</span></div>';
         });
         html += '<div class="chat-followup-suggestions"><button onclick="askBeraterQuestion(\'Top 5 Kunden nach Ertragspotenzial\')">Top 5 Ertrag</button></div>';
         return html;
@@ -807,7 +809,7 @@ function getBeraterChatResponse(question) {
     if (q.indexOf('open finance') > -1 || q.indexOf('fida') > -1 || q.indexOf('cross-selling') > -1) {
         return '<strong>Open Finance / FIDA Analyse:</strong><br><br>' +
             '<div class="chat-customer-item"><button class="chat-customer-btn" onclick="openBankKundenDetail(\'Markus Wagner\',\'KDB003\')">Markus Wagner</button> Depot bei Neobroker entdeckt (&euro;45k)<br><span class="chat-recommendation">&rarr; Cross-Selling: VR-MeinDepot mit Beratung</span></div>' +
-            '<div class="chat-customer-item"><button class="chat-customer-btn" onclick="openBankKundenDetail(\'Sandra Mueller\',\'KDB002\')">Sandra Mueller</button> Hohe Sparquote nur Tagesgeld<br><span class="chat-recommendation">&rarr; Altersvorsorge + Fondssparplan</span></div>' +
+            '<div class="chat-customer-item"><button class="chat-customer-btn" onclick="openBankKundenDetail(\'Sandra Müller\',\'KDB002\')">Sandra Müller</button> Hohe Sparquote nur Tagesgeld<br><span class="chat-recommendation">&rarr; Altersvorsorge + Fondssparplan</span></div>' +
             '<div class="chat-customer-item"><button class="chat-customer-btn" onclick="openBankKundenDetail(\'Stefan Braun\',\'KDB009\')">Stefan Braun</button> 2 Bankverbindungen, kaum VR-Produkte<br><span class="chat-recommendation">&rarr; VR-FinanzPlan als Erstberatung</span></div>' +
             '<div class="chat-followup-suggestions"><button onclick="askBeraterQuestion(\'Welche Kunden brauchen FIDA-Consent?\')">FIDA-Consent</button><button onclick="askBeraterQuestion(\'Detailanalyse Markus Wagner\')">Details Wagner</button></div>';
     }

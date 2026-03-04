@@ -975,7 +975,8 @@
     border-bottom-right-radius: 4px;
 }
 
-.chat-message.ai-message {
+.chat-message.ai-message,
+.chat-message.bot-message {
     background: #f1f5f9;
     color: #1e293b;
     margin-right: 40px;
@@ -1279,7 +1280,7 @@
     flex: 1;
     padding: 16px;
     overflow-y: auto;
-    max-height: 350px;
+    max-height: none;
 }
 
 .agentur-chat-widget .agentur-chat-welcome {

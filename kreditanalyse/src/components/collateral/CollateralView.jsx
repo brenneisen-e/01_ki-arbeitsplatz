@@ -21,6 +21,7 @@ import {
   CheckCircle,
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
+import StepCompleteBar from '../shared/StepCompleteBar';
 import { formatCurrency, formatPercent, formatDate } from '../../utils/formatters';
 import { haircutRates, sicherheitenArten } from '../../data/haircutRates';
 import {
@@ -1022,6 +1023,8 @@ export default function CollateralView() {
           />
         )}
       </div>
+
+      <StepCompleteBar currentStep="collateral" />
     </div>
   );
 }

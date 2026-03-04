@@ -76,6 +76,27 @@ function reducer(state, action) {
           [action.companyId]: { ...(state.votingState[action.companyId] || {}), ...action.data }
         }
       };
+    case 'ADVANCE_STATUS': {
+      const statusFlow = ['eingegangen', 'kyc', 'analysis', 'rating', 'collateral', 'decision', 'voting'];
+      const comp = state.companies.find(c => c.id === action.companyId);
+      if (!comp) return state;
+      const currentIdx = statusFlow.indexOf(comp.status);
+      if (currentIdx < 0 || currentIdx >= statusFlow.length - 1) return state;
+      const nextStatus = statusFlow[currentIdx + 1];
+      return {
+        ...state,
+        companies: state.companies.map(c =>
+          c.id === action.companyId ? { ...c, status: nextStatus } : c
+        ),
+      };
+    }
+    case 'SET_COMPANY_STATUS':
+      return {
+        ...state,
+        companies: state.companies.map(c =>
+          c.id === action.companyId ? { ...c, status: action.status } : c
+        ),
+      };
     case 'ADD_NOTIFICATION':
       return { ...state, notifications: [...state.notifications, { id: Date.now(), ...action.notification }] };
     case 'DISMISS_NOTIFICATION':

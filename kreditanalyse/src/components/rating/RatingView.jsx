@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react';
 import { useApp } from '../../context/AppContext';
+import StepCompleteBar from '../shared/StepCompleteBar';
 import {
   ArrowLeft,
   BarChart3,
@@ -381,6 +382,8 @@ export default function RatingView() {
           )}
         </div>
       </div>
+
+      <StepCompleteBar currentStep="rating" />
     </div>
   );
 }

@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useApp } from '../../context/AppContext';
 import { useAI } from '../../hooks/useAI';
-import { X, Send, Bot, User, Loader2 } from 'lucide-react';
+import { X, Send, Bot, User, Loader2, Download } from 'lucide-react';
 
 const viewContextPrompts = {
   dashboard: 'Du hilfst bei der Übersicht über das Kreditportfolio und offene Anträge.',
@@ -32,6 +32,37 @@ export default function AIChatPanel() {
   }, [state.aiPanelOpen]);
 
   if (!state.aiPanelOpen) return null;
+
+  const handleExportPdf = (content) => {
+    const companyName = company?.firma || 'Kreditanalyse';
+    const date = new Date().toLocaleDateString('de-DE');
+    const html = `<!DOCTYPE html>
+<html lang="de"><head><meta charset="UTF-8"/>
+<title>KI-Analyse – ${companyName}</title>
+<style>
+  body { font-family: 'Segoe UI', Arial, sans-serif; max-width: 700px; margin: 40px auto; padding: 20px; color: #1a1a2e; line-height: 1.6; }
+  h1 { font-size: 18px; color: #1B2B4B; border-bottom: 2px solid #00875A; padding-bottom: 8px; }
+  .meta { font-size: 12px; color: #64748B; margin-bottom: 24px; }
+  .content { font-size: 14px; white-space: pre-wrap; }
+  .footer { margin-top: 40px; padding-top: 16px; border-top: 1px solid #e2e8f0; font-size: 11px; color: #94A3B8; }
+  @media print { body { margin: 20px; } }
+</style></head><body>
+<h1>KI-Kreditanalyse – Zusammenfassung</h1>
+<div class="meta">${companyName} · Erstellt am ${date}</div>
+<div class="content">${content.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</div>
+<div class="footer">Generiert durch KI-Kreditanalyse-Modul · Vertraulich</div>
+</body></html>`;
+
+    const blob = new Blob([html], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const win = window.open(url, '_blank');
+    if (win) {
+      win.addEventListener('load', () => {
+        win.print();
+      });
+    }
+    setTimeout(() => URL.revokeObjectURL(url), 60000);
+  };
 
   const handleSend = async () => {
     if (!input.trim() || loading) return;
@@ -102,6 +133,16 @@ export default function AIChatPanel() {
                 : 'bg-surface text-text-primary'
             }`}>
               <div className="whitespace-pre-wrap">{msg.content}</div>
+              {msg.role === 'assistant' && (
+                <button
+                  onClick={() => handleExportPdf(msg.content)}
+                  className="mt-2 inline-flex items-center gap-1 text-[11px] text-text-muted hover:text-primary transition-colors"
+                  title="Als PDF exportieren"
+                >
+                  <Download size={12} />
+                  PDF Export
+                </button>
+              )}
             </div>
             {msg.role === 'user' && (
               <div className="w-6 h-6 rounded-full bg-text-secondary flex items-center justify-center shrink-0 mt-1">

@@ -45,6 +45,7 @@ import {
   Line,
 } from 'recharts';
 import { useApp } from '../../context/AppContext';
+import StepCompleteBar from '../shared/StepCompleteBar';
 import { formatCurrency, formatPercent, formatNumber } from '../../utils/formatters';
 import {
   competencyMatrix,
@@ -335,6 +336,8 @@ Empfehlung: Genehmigung unter den nachfolgend genannten Auflagen und Bedingungen
       {activeTab === 'konditionen' && renderKonditionen()}
       {activeTab === 'votierung' && renderVotierung()}
       {activeTab === 'workflow' && renderWorkflow()}
+
+      <StepCompleteBar currentStep="decision" />
     </div>
   );
 

@@ -40,6 +40,7 @@ import {
   CartesianGrid,
 } from 'recharts';
 import { useApp } from '../../context/AppContext';
+import StepCompleteBar from '../shared/StepCompleteBar';
 import {
   calculateAllRatios,
   changePercent,
@@ -338,6 +339,8 @@ export default function AnalysisView() {
           setStressZins={setStressZins}
         />
       )}
+
+      <StepCompleteBar currentStep="analysis" />
     </div>
   );
 }

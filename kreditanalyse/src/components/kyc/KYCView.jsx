@@ -1,5 +1,6 @@
 import { useState, useMemo, useCallback } from 'react';
 import { useApp } from '../../context/AppContext';
+import StepCompleteBar from '../shared/StepCompleteBar';
 import {
   ArrowLeft,
   FileCheck,
@@ -44,13 +45,13 @@ const DOCUMENT_STATUS_OPTIONS = [
 ];
 
 const INITIAL_CHECKLIST = [
-  { id: 'hrAuszug', name: 'Handelsregisterauszug (max. 3 Monate alt)', status: 'geprueft', checked: true, pruefDatum: '2025-12-10', pruefer: 'KM', comment: 'Aktuell, keine Beanstandung' },
-  { id: 'gesellschaftsvertrag', name: 'Gesellschaftsvertrag / Satzung (aktuell)', status: 'geprueft', checked: true, pruefDatum: '2025-12-10', pruefer: 'KM', comment: '' },
-  { id: 'gesellschafterliste', name: 'Gesellschafterliste (aktuell)', status: 'eingereicht', checked: false, pruefDatum: '', pruefer: '', comment: '' },
-  { id: 'transparenzregister', name: 'Transparenzregisterauszug', status: 'geprueft', checked: true, pruefDatum: '2025-12-12', pruefer: 'KM', comment: 'Abgleich erfolgt' },
-  { id: 'legGF1', name: 'Legitimation GF 1 (Ausweiskopie)', status: 'geprueft', checked: true, pruefDatum: '2025-12-08', pruefer: 'SB', comment: '' },
-  { id: 'legGF2', name: 'Legitimation GF 2 (falls vorhanden)', status: 'offen', checked: false, pruefDatum: '', pruefer: '', comment: '' },
-  { id: 'gewerbe', name: 'Gewerbeanmeldung/-ummeldung', status: 'eingereicht', checked: false, pruefDatum: '', pruefer: '', comment: '' },
+  { id: 'hrAuszug', name: 'Handelsregisterauszug (max. 3 Monate alt)', status: 'geprueft', checked: true, pruefDatum: '2025-12-10', pruefer: 'KM', comment: 'Aktuell, keine Beanstandung', kiGeprueft: true },
+  { id: 'gesellschaftsvertrag', name: 'Gesellschaftsvertrag / Satzung (aktuell)', status: 'geprueft', checked: true, pruefDatum: '2025-12-10', pruefer: 'KM', comment: '', kiGeprueft: false },
+  { id: 'gesellschafterliste', name: 'Gesellschafterliste (aktuell)', status: 'eingereicht', checked: false, pruefDatum: '', pruefer: '', comment: '', kiGeprueft: false },
+  { id: 'transparenzregister', name: 'Transparenzregisterauszug', status: 'geprueft', checked: true, pruefDatum: '2025-12-12', pruefer: 'KM', comment: 'Abgleich erfolgt', kiGeprueft: true },
+  { id: 'legGF1', name: 'Legitimation GF 1 (Ausweiskopie)', status: 'geprueft', checked: true, pruefDatum: '2025-12-08', pruefer: 'SB', comment: '', kiGeprueft: true },
+  { id: 'legGF2', name: 'Legitimation GF 2 (falls vorhanden)', status: 'offen', checked: false, pruefDatum: '', pruefer: '', comment: '', kiGeprueft: false },
+  { id: 'gewerbe', name: 'Gewerbeanmeldung/-ummeldung', status: 'eingereicht', checked: false, pruefDatum: '', pruefer: '', comment: '', kiGeprueft: false },
 ];
 
 const PEP_CATEGORIES = [
@@ -246,6 +247,8 @@ export default function KYCView() {
       {/* Compliance-Gesamtampel                                              */}
       {/* ================================================================== */}
       <ComplianceTrafficLight status={complianceStatus} label={complianceLabels[complianceStatus]} />
+
+      <StepCompleteBar currentStep="kyc" />
     </div>
   );
 }
@@ -345,6 +348,14 @@ function IdentifizierungTab({ checklist, setChecklist, expandedItem, setExpanded
                 <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium font-body ${statusOption?.color || 'bg-gray-100 text-gray-700'}`}>
                   {statusOption?.label || item.status}
                 </span>
+
+                {/* KI geprüft badge */}
+                {item.kiGeprueft && (
+                  <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold bg-violet-100 text-violet-700 border border-violet-200">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                    KI geprüft
+                  </span>
+                )}
 
                 {/* Date indicator if checked */}
                 {item.pruefDatum && (
@@ -477,13 +488,19 @@ function UBOTab({ company, uboDetails, setUboDetails }) {
   return (
     <div className="space-y-6">
       {/* Section header */}
-      <div>
-        <h2 className="text-lg font-semibold font-headline text-text-primary">
-          UBO-Ermittlung
-        </h2>
-        <p className="text-sm font-body text-text-muted mt-0.5">
-          Wirtschaftlich Berechtigte gemäß §3 GwG ermitteln und dokumentieren
-        </p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-lg font-semibold font-headline text-text-primary">
+            UBO-Ermittlung
+          </h2>
+          <p className="text-sm font-body text-text-muted mt-0.5">
+            Wirtschaftlich Berechtigte gemäß §3 GwG ermitteln und dokumentieren
+          </p>
+        </div>
+        <span className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold bg-violet-100 text-violet-700 border border-violet-200">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+          Durch KI geprüft
+        </span>
       </div>
 
       {/* ------------------------------------------------------------------ */}
@@ -1022,13 +1039,19 @@ function SanktionTab({
     <div className="space-y-6">
       {/* Section header */}
       <div className="flex items-center justify-between flex-wrap gap-3">
-        <div>
-          <h2 className="text-lg font-semibold font-headline text-text-primary">
-            Sanktionslistenprüfung
-          </h2>
-          <p className="text-sm font-body text-text-muted mt-0.5">
-            Abgleich gegen internationale Sanktions- und Embargolisten
-          </p>
+        <div className="flex items-center gap-3">
+          <div>
+            <h2 className="text-lg font-semibold font-headline text-text-primary">
+              Sanktionslistenprüfung
+            </h2>
+            <p className="text-sm font-body text-text-muted mt-0.5">
+              Abgleich gegen internationale Sanktions- und Embargolisten
+            </p>
+          </div>
+          <span className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold bg-violet-100 text-violet-700 border border-violet-200">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+            Durch KI geprüft
+          </span>
         </div>
         <button
           type="button"

@@ -1,5 +1,5 @@
 import { useApp } from '../../context/AppContext';
-import { MessageSquare, Bell, User, ChevronRight } from 'lucide-react';
+import { MessageSquare, Bell, User, ChevronRight, Home } from 'lucide-react';
 
 const viewTitles = {
   dashboard: 'Dashboard',
@@ -12,13 +12,37 @@ const viewTitles = {
   monitoring: 'Monitoring & Frühwarnung',
 };
 
+function goToLanding() {
+  try {
+    if (window.parent && window.parent !== window && typeof window.parent.closeKreditanalyse === 'function') {
+      window.parent.closeKreditanalyse();
+    }
+  } catch {
+    // Cross-origin restriction – ignore
+  }
+}
+
 export default function Header() {
   const { state, dispatch, getSelectedCompany } = useApp();
   const company = getSelectedCompany();
 
+  const isInIframe = (() => {
+    try { return window.parent !== window; } catch { return false; }
+  })();
+
   return (
     <header className="h-14 bg-white border-b border-border flex items-center justify-between px-6 shrink-0">
       <div className="flex items-center gap-2 text-sm">
+        {isInIframe && (
+          <button
+            onClick={goToLanding}
+            className="flex items-center gap-1.5 px-2.5 py-1.5 -ml-2 mr-1 rounded-lg text-text-secondary hover:bg-surface hover:text-primary transition-colors"
+            title="Zurück zur Startseite"
+          >
+            <Home size={16} strokeWidth={1.5} />
+            <span className="text-xs font-medium hidden sm:inline">Startseite</span>
+          </button>
+        )}
         <span className="font-semibold font-headline text-text-primary">
           {viewTitles[state.currentView] || state.currentView}
         </span>

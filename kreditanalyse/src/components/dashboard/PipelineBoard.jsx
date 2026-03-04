@@ -37,7 +37,7 @@ const COLUMNS = [
   },
   {
     key: 'analysis',
-    label: '\u00A718 Pr\u00FCfung',
+    label: '§18 Prüfung',
     statuses: ['analysis'],
     icon: FileSearch,
     headerColor: 'bg-indigo-50 text-indigo-700 border-indigo-200',
@@ -133,7 +133,7 @@ function PipelineCard({ company, onSelect }) {
       ) : (
         days != null && (
           <div className="mt-2 pt-2 border-t border-border flex items-center justify-between">
-            <span className="text-[11px] text-text-muted">F\u00E4llig</span>
+            <span className="text-[11px] text-text-muted">Fällig</span>
             <span
               className={`text-[11px] font-semibold font-mono ${slaColorClass}`}
             >
@@ -141,7 +141,7 @@ function PipelineCard({ company, onSelect }) {
                 ? `${days} Tage`
                 : days === 0
                 ? 'Heute'
-                : `${Math.abs(days)}T \u00FCberf.`}
+                : `${Math.abs(days)}T überf.`}
             </span>
           </div>
         )
@@ -202,7 +202,7 @@ export default function PipelineBoard() {
                 {col.companies.length === 0 ? (
                   <div className="flex items-center justify-center py-8">
                     <span className="text-xs text-text-muted italic">
-                      Keine Antr\u00E4ge
+                      Keine Anträge
                     </span>
                   </div>
                 ) : (

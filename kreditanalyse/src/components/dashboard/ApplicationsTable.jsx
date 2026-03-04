@@ -107,7 +107,7 @@ export default function ApplicationsTable() {
       },
       {
         key: 'faellig',
-        label: 'F\u00E4llig bis',
+        label: 'Fällig bis',
         sortable: true,
         render: (value) => {
           const days = daysRemaining(value);
@@ -123,7 +123,7 @@ export default function ApplicationsTable() {
                     ? `${days} Tage`
                     : days === 0
                     ? 'Heute'
-                    : `${Math.abs(days)}T \u00FCberf\u00E4llig`}
+                    : `${Math.abs(days)}T überfällig`}
                 </span>
               )}
             </div>
@@ -154,7 +154,7 @@ export default function ApplicationsTable() {
       columns={columns}
       data={tableData}
       onRowClick={handleRowClick}
-      emptyMessage="Keine Kreditantr\u00E4ge vorhanden"
+      emptyMessage="Keine Kreditanträge vorhanden"
     />
   );
 }

@@ -2387,6 +2387,8 @@ window.toggleSettings = toggleSettings;
 window.openAgenturView = openAgenturView;
 window.openRisikoscoring = openRisikoscoring;
 window.closeRisikoscoring = closeRisikoscoring;
+window.openKreditanalyse = openKreditanalyse;
+window.closeKreditanalyse = closeKreditanalyse;
 window.openBestandsuebertragung = openBestandsuebertragung;
 window.closeBestandsuebertragung = closeBestandsuebertragung;
 window.saveUserName = saveUserName;
@@ -2575,6 +2577,72 @@ function closeRisikoscoring() {
     }
 
     // Update URL route
+    if (window.AppRouter) AppRouter.navigate('/landing');
+}
+
+// ========================================
+// KI-KREDITANALYSE MODULE
+// ========================================
+
+let kreditanalyseLoaded = false;
+
+async function openKreditanalyse() {
+    console.log('KI-Kreditanalyse öffnen...');
+
+    // Hide landing page
+    const landingPage = document.getElementById('landingPage');
+    if (landingPage) {
+        landingPage.style.display = 'none';
+    }
+
+    // Hide main app if visible
+    const mainApp = document.getElementById('mainApp');
+    if (mainApp) {
+        mainApp.style.display = 'none';
+    }
+
+    // Hide other modules
+    ['bankenModule', 'assetModule', 'risikoscoringModule', 'bestandsuebertragungModule',
+     'pmoToolboxModule', 'hrPipelineModule', 'versicherungs1x1Module',
+     'beraterOverviewPage', 'kundenDetailBankPage'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) el.style.display = 'none';
+    });
+
+    // Show kreditanalyse module
+    const kaModule = document.getElementById('kreditanalyseModule');
+    if (kaModule) {
+        kaModule.style.display = 'block';
+
+        // Load iframe if not already loaded
+        if (!kreditanalyseLoaded) {
+            const iframe = document.getElementById('kreditanalyseIframe');
+            if (iframe) {
+                iframe.src = 'kreditanalyse/dist/index.html';
+                kreditanalyseLoaded = true;
+                console.log('KI-Kreditanalyse Modul geladen');
+            }
+        }
+    }
+
+    // Update URL route
+    if (window.AppRouter) AppRouter.navigate('/kreditanalyse');
+}
+
+function closeKreditanalyse() {
+    console.log('KI-Kreditanalyse schließen...');
+
+    const kaModule = document.getElementById('kreditanalyseModule');
+    if (kaModule) {
+        kaModule.style.display = 'none';
+    }
+
+    // Show landing page
+    const landingPage = document.getElementById('landingPage');
+    if (landingPage) {
+        landingPage.style.display = 'flex';
+    }
+
     if (window.AppRouter) AppRouter.navigate('/landing');
 }
 

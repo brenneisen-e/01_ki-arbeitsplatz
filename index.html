@@ -316,6 +316,14 @@
                             </svg>
                             <span>Versicherungs-1×1</span>
                         </button>
+                        <button class="nav-box nav-box-small" onclick="openKreditanalyse()">
+                            <svg class="nav-box-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"></path>
+                                <rect x="9" y="3" width="6" height="4" rx="1"></rect>
+                                <path d="M9 14l2 2 4-4"></path>
+                            </svg>
+                            <span>KI-Kreditanalyse</span>
+                        </button>
                     </div>
                 </div>
 
@@ -6833,6 +6841,13 @@
       <div class="loading-spinner"></div>
       <p>Versicherungs-1×1 wird geladen...</p>
     </div>
+  </div>
+
+  <!-- ========================================
+     K-01 KI-KREDITANALYSE MODULE
+     ======================================== -->
+  <div id="kreditanalyseModule" class="module-content" style="display: none;">
+    <iframe id="kreditanalyseIframe" src="about:blank" style="width: 100%; height: 100vh; border: none; display: block;" title="KI-Kreditanalyse"></iframe>
   </div>
 
   <!-- ========================================

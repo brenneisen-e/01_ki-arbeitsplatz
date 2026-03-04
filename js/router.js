@@ -35,6 +35,7 @@
             '/kundendetail-bank':   { view: 'kundendetail-bank',    pageId: 'B-10', title: 'Kunden-Detail Bank' },
             '/kundendetail-bank-fk':{ view: 'kundendetail-bank-fk', pageId: 'B-10b', title: 'Kunden-Detail FK' },
             '/kundendetail-bank-pb':{ view: 'kundendetail-bank-pb', pageId: 'B-10c', title: 'Kunden-Detail PB' },
+            '/kreditanalyse':       { view: 'kreditanalyse',        pageId: 'K-01', title: 'KI-Kreditanalyse' },
         },
 
         // Reverse map: view name → hash route
@@ -191,7 +192,8 @@
                 'berater-vermoegen':    function() { return typeof showBeraterOverview === 'function' && typeof setBankViewMode === 'function' ? (setBankViewMode('vermoegen'), showBeraterOverview(), true) : false; },
                 'kundendetail-bank':    function() { return typeof showBeraterOverview === 'function' ? (showBeraterOverview(), true) : false; },
                 'kundendetail-bank-fk': function() { return typeof showBeraterOverview === 'function' && typeof setBankViewMode === 'function' ? (setBankViewMode('firmenkunde'), showBeraterOverview(), true) : false; },
-                'kundendetail-bank-pb': function() { return typeof showBeraterOverview === 'function' && typeof setBankViewMode === 'function' ? (setBankViewMode('vermoegen'), showBeraterOverview(), true) : false; }
+                'kundendetail-bank-pb': function() { return typeof showBeraterOverview === 'function' && typeof setBankViewMode === 'function' ? (setBankViewMode('vermoegen'), showBeraterOverview(), true) : false; },
+                'kreditanalyse':        function() { return typeof openKreditanalyse === 'function' ? (openKreditanalyse(), true) : false; }
             };
 
             var handler = fnMap[viewName];

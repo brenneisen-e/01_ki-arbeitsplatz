@@ -6,11 +6,11 @@
 // ── MOCK KUNDEN DETAIL DATA ──
 var bankMockKunden = {
     'Klaus Fischer': {
-        geburtsdatum:'12.05.1978', adresse:'Hauptstrasse 45, 35390 Giessen', telefon:'+49 641 98765', email:'k.fischer@email.de',
+        geburtsdatum:'12.05.1978', adresse:'Hauptstraße 45, 35390 Gießen', telefon:'+49 641 98765', email:'k.fischer@email.de',
         beruf:'Maschinenbau-Ingenieur', familienstand:'Verheiratet', arbeitgeber:'Continental AG', beschaeftigtSeit:'01.04.2008',
         nettoeinkommen:4850, kinder:[{name:'Lukas',alter:12},{name:'Emma',alter:9}],
         risikoscore:28, bonitaet:82,
-        nps: { score:9, kategorie:'promoter', datum:'15.01.2026', kampagne:'Jahresumfrage 2026', details:[{name:'Beratungsqualitaet',wert:9},{name:'Zufriedenheit',wert:9},{name:'Weiterempfehlung',wert:10},{name:'Preis-Leistung',wert:8},{name:'Erreichbarkeit',wert:9}] },
+        nps: { score:9, kategorie:'promoter', datum:'15.01.2026', kampagne:'Jahresumfrage 2026', details:[{name:'Beratungsqualität',wert:9},{name:'Zufriedenheit',wert:9},{name:'Weiterempfehlung',wert:10},{name:'Preis-Leistung',wert:8},{name:'Erreichbarkeit',wert:9}] },
         konten: [
             { produkt:'VR-Girokonto Plus', details:'IBAN DE89 5066 1639 0012 3456 78', saldo:8450, eroeffnung:'15.03.2010', status:'Aktiv' },
             { produkt:'VR-Tagesgeld Extra', details:'Zinssatz 2,8% p.a.', saldo:42000, eroeffnung:'01.06.2020', status:'Aktiv' },
@@ -20,37 +20,41 @@ var bankMockKunden = {
             { produkt:'Unfallversicherung', details:'Grundsumme 80.000', saldo:0, eroeffnung:'01.01.2020', status:'Aktiv' }
         ],
         fidaVertraege: [
-            { institut:'Sparkasse Giessen', typ:'Girokonto', info:'Zweitkonto, Gehalt', consent:'12.01.2026', gueltig:'12.01.2027' },
-            { institut:'ING', typ:'Extra-Konto', info:'Tagesgeld 18.500', consent:'12.01.2026', gueltig:'12.01.2027' },
+            { institut:'Sparkasse Gießen', typ:'Girokonto', info:'Zweitkonto, Gehalt', consent:'12.01.2026', gueltig:'12.01.2027' },
+            { institut:'ING', typ:'Extra-Konto', info:'Tagesgeld €18.500', consent:'12.01.2026', gueltig:'12.01.2027' },
             { institut:'Trade Republic', typ:'Depot', info:'ETF-Sparplan 200/Mon.', consent:'12.01.2026', gueltig:'12.01.2027' }
         ],
         kommunikation: [
-            { typ:'email', datum:'28.02.2026', betreff:'Anschlussfinanzierung Angebot', inhalt:'Angebot fuer Baufi-Anschluss gesendet', status:'Geoeffnet' },
-            { typ:'call', datum:'20.02.2026', betreff:'Telefonat Baufinanzierung', inhalt:'Beratungsgespraech zu Anschlussoptionen', status:'Erledigt' },
-            { typ:'termin', datum:'15.02.2026', betreff:'Jahresgespraech', inhalt:'VR-FinanzPlan Review durchgefuehrt', status:'Erledigt' },
+            { typ:'email', datum:'28.02.2026', betreff:'Anschlussfinanzierung Angebot', inhalt:'Angebot für Baufi-Anschluss gesendet', status:'Geöffnet' },
+            { typ:'call', datum:'20.02.2026', betreff:'Telefonat Baufinanzierung', inhalt:'Beratungsgespräch zu Anschlussoptionen', status:'Erledigt' },
+            { typ:'termin', datum:'15.02.2026', betreff:'Jahresgespräch', inhalt:'VR-FinanzPlan Review durchgeführt', status:'Erledigt' },
             { typ:'brief', datum:'10.01.2026', betreff:'Kontoauszug Q4 2025', inhalt:'Quartalsauszug Depot + Konten', status:'Versendet' }
         ],
         avatarBg:'#2563eb', foto:'assets/images/AdobeStock_624564221.jpeg'
     },
-    'Sandra Mueller': {
+    'Sandra Müller': {
         geburtsdatum:'23.11.1985', adresse:'Bahnhofstr. 12, 35578 Wetzlar', telefon:'+49 6441 55432', email:'s.mueller@email.de',
-        beruf:'Aerztin', familienstand:'Ledig', arbeitgeber:'Uniklinik Giessen', beschaeftigtSeit:'01.08.2015',
+        beruf:'Ärztin', familienstand:'Ledig', arbeitgeber:'Uniklinik Gießen', beschaeftigtSeit:'01.08.2015',
         nettoeinkommen:5200, kinder:[{name:'Mia',alter:4}],
         risikoscore:15, bonitaet:91,
-        nps: { score:7, kategorie:'passive', datum:'15.01.2026', kampagne:'Jahresumfrage 2026', details:[{name:'Beratungsqualitaet',wert:7},{name:'Zufriedenheit',wert:7},{name:'Weiterempfehlung',wert:6},{name:'Preis-Leistung',wert:8},{name:'Erreichbarkeit',wert:7}] },
+        nps: { score:7, kategorie:'passive', datum:'15.01.2026', kampagne:'Jahresumfrage 2026', details:[{name:'Beratungsqualität',wert:7},{name:'Zufriedenheit',wert:7},{name:'Weiterempfehlung',wert:6},{name:'Preis-Leistung',wert:8},{name:'Erreichbarkeit',wert:7}] },
         konten: [
             { produkt:'VR-Girokonto Komfort', details:'IBAN DE89 5066 1639 0098 7654 32', saldo:12800, eroeffnung:'01.09.2015', status:'Aktiv' },
             { produkt:'VR-Tagesgeld Extra', details:'Zinssatz 2,8% p.a.', saldo:85000, eroeffnung:'15.03.2020', status:'Aktiv' },
-            { produkt:'VR-Festgeld 12M', details:'3,2% p.a., Faelligkeit 06/2026', saldo:50000, eroeffnung:'01.06.2025', status:'Aktiv' },
-            { produkt:'Kreditkarte Gold', details:'Limit 5.000', saldo:-1200, eroeffnung:'01.01.2018', status:'Aktiv' }
+            { produkt:'VR-Festgeld 12M', details:'3,2% p.a., Fälligkeit 06/2026', saldo:50000, eroeffnung:'01.06.2025', status:'Aktiv' },
+            { produkt:'Kreditkarte Gold', details:'Limit 5.000', saldo:-1200, eroeffnung:'01.01.2018', status:'Aktiv' },
+            { produkt:'Berufsunfähigkeitsvers.', details:'BU-Rente €2.500/Mon., Endalter 67', saldo:0, eroeffnung:'01.01.2020', status:'Aktiv' }
         ],
         fidaVertraege: [
-            { institut:'Commerzbank', typ:'Girokonto', info:'Gehaltskonto', consent:'20.01.2026', gueltig:'20.01.2027' },
-            { institut:'N26', typ:'Girokonto', info:'Zweitkonto', consent:'20.01.2026', gueltig:'20.01.2027' }
+            { institut:'Commerzbank', typ:'Girokonto', info:'Gehaltskonto €5.200/Mon.', consent:'20.01.2026', gueltig:'20.01.2027' },
+            { institut:'N26', typ:'Girokonto', info:'Zweitkonto, Reisen', consent:'20.01.2026', gueltig:'20.01.2027' },
+            { institut:'Scalable Capital', typ:'Depot', info:'ETF-Portfolio €32.000', consent:'20.01.2026', gueltig:'20.01.2027' }
         ],
         kommunikation: [
-            { typ:'email', datum:'25.02.2026', betreff:'Festgeld Verlaengerung', inhalt:'Info zu Festgeld-Konditionen', status:'Geoeffnet' },
-            { typ:'call', datum:'18.02.2026', betreff:'Altersvorsorge-Beratung', inhalt:'Erstgespraech Altersvorsorge', status:'Erledigt' }
+            { typ:'email', datum:'25.02.2026', betreff:'Festgeld Verlängerung', inhalt:'Info zu Festgeld-Konditionen bei Fälligkeit', status:'Geöffnet' },
+            { typ:'call', datum:'18.02.2026', betreff:'Altersvorsorge-Beratung', inhalt:'Erstgespräch Altersvorsorge-Konzept', status:'Erledigt' },
+            { typ:'termin', datum:'05.02.2026', betreff:'VR-FinanzPlan Erstberatung', inhalt:'Ganzheitliche Finanzplanung besprochen', status:'Erledigt' },
+            { typ:'email', datum:'15.01.2026', betreff:'Depotvergleich', inhalt:'Vergleich VR-MeinDepot vs. Scalable Capital', status:'Versendet' }
         ],
         avatarBg:'#9333ea', foto:'assets/images/AdobeStock_252262042.jpeg'
     },
@@ -59,37 +63,254 @@ var bankMockKunden = {
         beruf:'Lehrer', familienstand:'Verheiratet', arbeitgeber:'Land Hessen', beschaeftigtSeit:'01.02.2000',
         nettoeinkommen:3800, kinder:[{name:'Tim',alter:14},{name:'Jana',alter:11}],
         risikoscore:22, bonitaet:75,
-        nps: { score:8, kategorie:'promoter', datum:'15.01.2026', kampagne:'Jahresumfrage 2026', details:[{name:'Beratungsqualitaet',wert:8},{name:'Zufriedenheit',wert:8},{name:'Weiterempfehlung',wert:9},{name:'Preis-Leistung',wert:7},{name:'Erreichbarkeit',wert:8}] },
+        nps: { score:8, kategorie:'promoter', datum:'15.01.2026', kampagne:'Jahresumfrage 2026', details:[{name:'Beratungsqualität',wert:8},{name:'Zufriedenheit',wert:8},{name:'Weiterempfehlung',wert:9},{name:'Preis-Leistung',wert:7},{name:'Erreichbarkeit',wert:8}] },
         konten: [
             { produkt:'VR-Girokonto', details:'IBAN DE89 5066 1639 0045 6789 01', saldo:4200, eroeffnung:'01.03.2005', status:'Aktiv' },
-            { produkt:'Bausparvertrag', details:'Wuestenrot, Bausparsumme 60.000', saldo:35000, eroeffnung:'01.01.2012', status:'Aktiv' },
-            { produkt:'Riester-Rente VR', details:'Beitrag 162,17/Mon.', saldo:22400, eroeffnung:'01.01.2010', status:'Aktiv' }
+            { produkt:'Bausparvertrag', details:'Wüstenrot, Bausparsumme 60.000', saldo:35000, eroeffnung:'01.01.2012', status:'Aktiv' },
+            { produkt:'Riester-Rente VR', details:'Beitrag 162,17/Mon.', saldo:22400, eroeffnung:'01.01.2010', status:'Aktiv' },
+            { produkt:'Risikolebensversicherung', details:'Vers.-Summe €200.000, Laufzeit bis 2035', saldo:0, eroeffnung:'01.06.2015', status:'Aktiv' }
+        ],
+        fidaVertraege: [
+            { institut:'Sparkasse Marburg', typ:'Girokonto', info:'Gehaltskonto Ehefrau', consent:'10.02.2026', gueltig:'10.02.2027' }
+        ],
+        kommunikation: [
+            { typ:'termin', datum:'20.02.2026', betreff:'VR-FinanzPlan Review', inhalt:'Jährliches Review der Finanzplanung', status:'Erledigt' },
+            { typ:'email', datum:'10.02.2026', betreff:'ETF-Sparplan Info', inhalt:'Informationen zu VR-MeinDepot Sparplan', status:'Geöffnet' },
+            { typ:'call', datum:'28.01.2026', betreff:'Depoteröffnung Interesse', inhalt:'Telefonat zu ETF-Sparplänen für Kinder', status:'Erledigt' }
+        ],
+        avatarBg:'#16a34a', foto:'assets/images/AdobeStock_361342769.jpeg'
+    },
+    'Julia Becker': {
+        geburtsdatum:'15.07.1990', adresse:'Ludwigstr. 22, 35390 Gießen', telefon:'+49 641 33210', email:'j.becker@email.de',
+        beruf:'Marketing-Managerin', familienstand:'Ledig', arbeitgeber:'Amazon DE', beschaeftigtSeit:'01.03.2019',
+        nettoeinkommen:3600, kinder:[],
+        risikoscore:18, bonitaet:88,
+        nps: { score:6, kategorie:'passive', datum:'15.01.2026', kampagne:'Jahresumfrage 2026', details:[{name:'Beratungsqualität',wert:6},{name:'Zufriedenheit',wert:5},{name:'Weiterempfehlung',wert:6},{name:'Preis-Leistung',wert:7},{name:'Erreichbarkeit',wert:6}] },
+        konten: [
+            { produkt:'VR-Girokonto', details:'IBAN DE89 5066 1639 0023 4567 89', saldo:5800, eroeffnung:'01.05.2019', status:'Aktiv' },
+            { produkt:'Kreditkarte Classic', details:'Limit 3.000', saldo:-450, eroeffnung:'01.06.2019', status:'Aktiv' }
         ],
         fidaVertraege: [],
         kommunikation: [
-            { typ:'termin', datum:'20.02.2026', betreff:'VR-FinanzPlan Review', inhalt:'Jaehrliches Review der Finanzplanung', status:'Erledigt' }
+            { typ:'email', datum:'18.02.2026', betreff:'FIDA-Consent Einladung', inhalt:'Open Finance Datenfreigabe angefragt', status:'Geöffnet' },
+            { typ:'call', datum:'05.02.2026', betreff:'Erstberatung', inhalt:'Telefonat zur ganzheitlichen Beratung', status:'Erledigt' }
         ],
-        avatarBg:'#16a34a', foto:'assets/images/AdobeStock_361342769.jpeg'
+        avatarBg:'#f59e0b', foto:null
+    },
+    'Peter Hoffmann': {
+        geburtsdatum:'30.01.1970', adresse:'Friedrichstr. 5, 35578 Wetzlar', telefon:'+49 6441 88456', email:'p.hoffmann@email.de',
+        beruf:'Steuerberater', familienstand:'Verheiratet', arbeitgeber:'Selbständig', beschaeftigtSeit:'01.01.1998',
+        nettoeinkommen:7500, kinder:[{name:'Fabian',alter:22},{name:'Laura',alter:19}],
+        risikoscore:35, bonitaet:79,
+        nps: { score:9, kategorie:'promoter', datum:'15.01.2026', kampagne:'Jahresumfrage 2026', details:[{name:'Beratungsqualität',wert:9},{name:'Zufriedenheit',wert:9},{name:'Weiterempfehlung',wert:10},{name:'Preis-Leistung',wert:8},{name:'Erreichbarkeit',wert:9}] },
+        konten: [
+            { produkt:'VR-Girokonto Premium', details:'IBAN DE89 5066 1639 0034 5678 90', saldo:18200, eroeffnung:'01.01.2005', status:'Aktiv' },
+            { produkt:'VR-Geschäftskonto', details:'Kanzlei Hoffmann & Partner', saldo:42500, eroeffnung:'01.01.2005', status:'Aktiv' },
+            { produkt:'VR-Tagesgeld Extra', details:'Zinssatz 2,8% p.a.', saldo:120000, eroeffnung:'01.03.2018', status:'Aktiv' },
+            { produkt:'VR-MeinDepot', details:'Aktien + ETF, Volumen €85.000', saldo:85000, eroeffnung:'15.06.2015', status:'Aktiv' },
+            { produkt:'Baufinanzierung', details:'Tilgung 2,5%, Restschuld', saldo:-220000, eroeffnung:'01.04.2012', status:'Aktiv' },
+            { produkt:'Risikolebensversicherung', details:'Vers.-Summe €500.000', saldo:0, eroeffnung:'01.04.2012', status:'Aktiv' },
+            { produkt:'Berufsunfähigkeitsvers.', details:'BU-Rente €3.000/Mon.', saldo:0, eroeffnung:'01.01.2005', status:'Aktiv' },
+            { produkt:'Rechtsschutzversicherung', details:'Premium inkl. Beruf + Privat', saldo:0, eroeffnung:'01.01.2010', status:'Aktiv' }
+        ],
+        fidaVertraege: [
+            { institut:'Deutsche Bank', typ:'Girokonto', info:'Kanzleikonto €42.000', consent:'05.01.2026', gueltig:'05.01.2027' },
+            { institut:'Deka', typ:'Depot', info:'Fondsanlage €65.000', consent:'05.01.2026', gueltig:'05.01.2027' },
+            { institut:'Allianz', typ:'Lebensversicherung', info:'Kapital-LV, Ablauf 2030', consent:'05.01.2026', gueltig:'05.01.2027' }
+        ],
+        kommunikation: [
+            { typ:'termin', datum:'15.02.2026', betreff:'VR-FinanzPlan Review', inhalt:'Jährliche Vermögensübersicht besprochen', status:'Erledigt' },
+            { typ:'email', datum:'10.02.2026', betreff:'Vermögensverwaltung Angebot', inhalt:'VR-Vermögensverwaltung Konzept zugesandt', status:'Geöffnet' },
+            { typ:'call', datum:'28.01.2026', betreff:'Nachfolgeplanung Kanzlei', inhalt:'Erstgespräch Unternehmensnachfolge', status:'Erledigt' },
+            { typ:'brief', datum:'15.01.2026', betreff:'Kontoauszug Q4 2025', inhalt:'Quartalsauszug alle Konten + Depot', status:'Versendet' }
+        ],
+        avatarBg:'#dc2626', foto:'assets/images/AdobeStock_612932760.jpeg'
+    },
+    'Andrea Lang': {
+        geburtsdatum:'05.09.1982', adresse:'Marktplatz 3, 35423 Lich', telefon:'+49 6404 12345', email:'a.lang@email.de',
+        beruf:'Steuerberaterin', familienstand:'Geschieden', arbeitgeber:'Kanzlei Lang & Partner', beschaeftigtSeit:'01.06.2012',
+        nettoeinkommen:5800, kinder:[{name:'Sophie',alter:7}],
+        risikoscore:20, bonitaet:85,
+        nps: { score:8, kategorie:'promoter', datum:'15.01.2026', kampagne:'Jahresumfrage 2026', details:[{name:'Beratungsqualität',wert:8},{name:'Zufriedenheit',wert:8},{name:'Weiterempfehlung',wert:8},{name:'Preis-Leistung',wert:7},{name:'Erreichbarkeit',wert:9}] },
+        konten: [
+            { produkt:'VR-Girokonto Komfort', details:'IBAN DE89 5066 1639 0056 7890 12', saldo:9800, eroeffnung:'01.01.2013', status:'Aktiv' },
+            { produkt:'VR-Geschäftskonto', details:'Kanzlei Lang & Partner', saldo:28000, eroeffnung:'01.06.2012', status:'Aktiv' },
+            { produkt:'VR-Tagesgeld Extra', details:'Zinssatz 2,8% p.a.', saldo:50000, eroeffnung:'01.09.2019', status:'Aktiv' },
+            { produkt:'Unfallversicherung', details:'Grundsumme €100.000, Progression 350%', saldo:0, eroeffnung:'01.01.2015', status:'Aktiv' },
+            { produkt:'Risikolebensversicherung', details:'Vers.-Summe €250.000', saldo:0, eroeffnung:'01.01.2016', status:'Aktiv' }
+        ],
+        fidaVertraege: [
+            { institut:'Sparkasse Lich', typ:'Girokonto', info:'Zweitkonto, Kindergeld', consent:'15.01.2026', gueltig:'15.01.2027' },
+            { institut:'Union Investment', typ:'Depot', info:'Fondssparen €280/Mon.', consent:'15.01.2026', gueltig:'15.01.2027' }
+        ],
+        kommunikation: [
+            { typ:'termin', datum:'12.02.2026', betreff:'Gewerbekredit Beratung', inhalt:'Kanzleierweiterung – Finanzierungskonzept', status:'Erledigt' },
+            { typ:'email', datum:'05.02.2026', betreff:'KfW-Förderung Info', inhalt:'Informationen zu KfW-Förderkrediten', status:'Geöffnet' },
+            { typ:'call', datum:'20.01.2026', betreff:'Jahresplanung', inhalt:'Telefonat zur Kanzlei-Finanzplanung 2026', status:'Erledigt' }
+        ],
+        avatarBg:'#6366f1', foto:null
+    },
+    'Thomas Klein': {
+        geburtsdatum:'18.12.1968', adresse:'Am Anger 7, 35418 Buseck', telefon:'+49 6408 99123', email:'t.klein@email.de',
+        beruf:'Handwerksmeister', familienstand:'Verheiratet', arbeitgeber:'Klein Sanitär GmbH', beschaeftigtSeit:'01.01.1995',
+        nettoeinkommen:4200, kinder:[{name:'Max',alter:16}],
+        risikoscore:42, bonitaet:68,
+        nps: { score:7, kategorie:'passive', datum:'15.01.2026', kampagne:'Jahresumfrage 2026', details:[{name:'Beratungsqualität',wert:7},{name:'Zufriedenheit',wert:7},{name:'Weiterempfehlung',wert:7},{name:'Preis-Leistung',wert:6},{name:'Erreichbarkeit',wert:8}] },
+        konten: [
+            { produkt:'VR-Girokonto', details:'IBAN DE89 5066 1639 0067 8901 23', saldo:3200, eroeffnung:'01.01.2000', status:'Aktiv' },
+            { produkt:'VR-Geschäftskonto', details:'Klein Sanitär GmbH', saldo:15800, eroeffnung:'01.01.1995', status:'Aktiv' },
+            { produkt:'KfW-Förderkredit', details:'Energetische Sanierung, Tilgung 1,5%', saldo:-75000, eroeffnung:'01.10.2025', status:'Aktiv' },
+            { produkt:'Wohngebäudeversicherung', details:'Vers.-Summe €380.000, inkl. Elementar', saldo:0, eroeffnung:'01.01.2000', status:'Aktiv' }
+        ],
+        fidaVertraege: [
+            { institut:'Sparkasse Gießen', typ:'Girokonto', info:'Geschäftszweitkonto', consent:'08.02.2026', gueltig:'08.02.2027' }
+        ],
+        kommunikation: [
+            { typ:'termin', datum:'10.02.2026', betreff:'KfW-Förderung Beratung', inhalt:'Energetische Sanierung – Fördermöglichkeiten', status:'Erledigt' },
+            { typ:'email', datum:'25.01.2026', betreff:'Sanierungsfahrplan', inhalt:'Unterlagen Energieberatung zugesandt', status:'Geöffnet' },
+            { typ:'brief', datum:'10.01.2026', betreff:'Kontoauszug Q4 2025', inhalt:'Quartalsauszug Geschäfts- + Privatkonto', status:'Versendet' }
+        ],
+        avatarBg:'#0891b2', foto:null
+    },
+    'Monika Richter': {
+        geburtsdatum:'22.04.1975', adresse:'Goethering 15, 35390 Gießen', telefon:'+49 641 44567', email:'m.richter@email.de',
+        beruf:'Lehrerin', familienstand:'Verheiratet', arbeitgeber:'Land Hessen', beschaeftigtSeit:'01.08.2002',
+        nettoeinkommen:3400, kinder:[{name:'Anna',alter:10},{name:'Felix',alter:7}],
+        risikoscore:12, bonitaet:80,
+        nps: { score:8, kategorie:'promoter', datum:'15.01.2026', kampagne:'Jahresumfrage 2026', details:[{name:'Beratungsqualität',wert:8},{name:'Zufriedenheit',wert:9},{name:'Weiterempfehlung',wert:8},{name:'Preis-Leistung',wert:7},{name:'Erreichbarkeit',wert:8}] },
+        konten: [
+            { produkt:'VR-Girokonto', details:'IBAN DE89 5066 1639 0078 9012 34', saldo:5600, eroeffnung:'01.09.2002', status:'Aktiv' },
+            { produkt:'VR-Tagesgeld Extra', details:'Zinssatz 2,8% p.a.', saldo:22000, eroeffnung:'01.01.2018', status:'Aktiv' },
+            { produkt:'Unfallversicherung VR', details:'Familie, Grundsumme €120.000', saldo:0, eroeffnung:'01.08.2020', status:'Aktiv' }
+        ],
+        fidaVertraege: [
+            { institut:'Sparkasse Gießen', typ:'Girokonto', info:'Gehaltskonto Ehemann €3.800', consent:'12.02.2026', gueltig:'12.02.2027' },
+            { institut:'DWS', typ:'Depot', info:'Kindersparen 2x €50/Mon.', consent:'12.02.2026', gueltig:'12.02.2027' }
+        ],
+        kommunikation: [
+            { typ:'termin', datum:'08.02.2026', betreff:'Beratung Unfallversicherung', inhalt:'Absicherung Familie erweitert', status:'Erledigt' },
+            { typ:'email', datum:'01.02.2026', betreff:'Kindersparen Info', inhalt:'Informationen zu VR-MeinDepot Junior', status:'Geöffnet' }
+        ],
+        avatarBg:'#d946ef', foto:null
+    },
+    'Stefan Braun': {
+        geburtsdatum:'11.06.1988', adresse:'Technikstr. 20, 35037 Marburg', telefon:'+49 6421 55678', email:'s.braun@email.de',
+        beruf:'IT-Consultant', familienstand:'Ledig', arbeitgeber:'SAP SE', beschaeftigtSeit:'01.09.2018',
+        nettoeinkommen:5500, kinder:[],
+        risikoscore:10, bonitaet:92,
+        nps: { score:5, kategorie:'detractor', datum:'15.01.2026', kampagne:'Jahresumfrage 2026', details:[{name:'Beratungsqualität',wert:5},{name:'Zufriedenheit',wert:4},{name:'Weiterempfehlung',wert:5},{name:'Preis-Leistung',wert:6},{name:'Erreichbarkeit',wert:5}] },
+        konten: [
+            { produkt:'VR-Girokonto', details:'IBAN DE89 5066 1639 0089 0123 45', saldo:8200, eroeffnung:'01.10.2018', status:'Aktiv' },
+            { produkt:'ETF-Depot VR', details:'MSCI World + EM, Sparplan €500/Mon.', saldo:25000, eroeffnung:'01.03.2023', status:'Aktiv' }
+        ],
+        fidaVertraege: [
+            { institut:'N26', typ:'Girokonto', info:'Hauptkonto, Gehalt €5.500', consent:'25.01.2026', gueltig:'25.01.2027' },
+            { institut:'Trade Republic', typ:'Depot', info:'Aktien + Krypto, €45.000', consent:'25.01.2026', gueltig:'25.01.2027' },
+            { institut:'Scalable Capital', typ:'Depot', info:'ETF-Portfolio €18.000', consent:'25.01.2026', gueltig:'25.01.2027' }
+        ],
+        kommunikation: [
+            { typ:'email', datum:'05.02.2026', betreff:'VR-FinanzPlan Einladung', inhalt:'Einladung zur ganzheitlichen Finanzberatung', status:'Geöffnet' },
+            { typ:'call', datum:'20.01.2026', betreff:'Kundenbindungsgespräch', inhalt:'NPS-Rückmeldung besprochen, Verbesserungen zugesagt', status:'Erledigt' }
+        ],
+        avatarBg:'#ea580c', foto:null
+    },
+    'Katharina Wolf': {
+        geburtsdatum:'03.03.1988', adresse:'Schillerstr. 9, 35390 Gießen', telefon:'+49 641 77890', email:'k.wolf@email.de',
+        beruf:'Architektin', familienstand:'Verheiratet', arbeitgeber:'Wolf Architekten', beschaeftigtSeit:'01.01.2016',
+        nettoeinkommen:4600, kinder:[{name:'Lara',alter:3}],
+        risikoscore:25, bonitaet:84,
+        nps: { score:9, kategorie:'promoter', datum:'15.01.2026', kampagne:'Jahresumfrage 2026', details:[{name:'Beratungsqualität',wert:9},{name:'Zufriedenheit',wert:9},{name:'Weiterempfehlung',wert:10},{name:'Preis-Leistung',wert:8},{name:'Erreichbarkeit',wert:9}] },
+        konten: [
+            { produkt:'VR-Girokonto Komfort', details:'IBAN DE89 5066 1639 0090 1234 56', saldo:7400, eroeffnung:'01.01.2016', status:'Aktiv' },
+            { produkt:'VR-Geschäftskonto', details:'Wolf Architekten', saldo:22000, eroeffnung:'01.01.2016', status:'Aktiv' },
+            { produkt:'Bausparvertrag', details:'Schwäbisch Hall, Bausparsumme 80.000', saldo:40000, eroeffnung:'01.06.2020', status:'Aktiv' },
+            { produkt:'VR-MeinDepot', details:'ETF-Sparplan €200/Mon.', saldo:15600, eroeffnung:'01.01.2023', status:'Aktiv' },
+            { produkt:'Baufinanzierung', details:'Tilgung 3%, Restschuld €180.000', saldo:-180000, eroeffnung:'01.03.2022', status:'Aktiv' }
+        ],
+        fidaVertraege: [
+            { institut:'Commerzbank', typ:'Girokonto', info:'Gehaltskonto Ehemann €4.200', consent:'18.01.2026', gueltig:'18.01.2027' },
+            { institut:'Bausparkasse Schwäbisch Hall', typ:'Bausparvertrag', info:'Zuteilungsreif 2026', consent:'18.01.2026', gueltig:'18.01.2027' }
+        ],
+        kommunikation: [
+            { typ:'termin', datum:'01.02.2026', betreff:'VR-FinanzPlan Review', inhalt:'Finanzplanung mit Immobilie + Kind aktualisiert', status:'Erledigt' },
+            { typ:'email', datum:'25.01.2026', betreff:'Risikolebensversicherung', inhalt:'Angebot Absicherung Baufinanzierung', status:'Geöffnet' },
+            { typ:'call', datum:'15.01.2026', betreff:'Bausparvertrag Zuteilung', inhalt:'Info zu Zuteilungsoptionen', status:'Erledigt' },
+            { typ:'brief', datum:'10.01.2026', betreff:'Kontoauszug Q4 2025', inhalt:'Quartalsauszug alle Konten', status:'Versendet' }
+        ],
+        avatarBg:'#059669', foto:null
+    },
+    'Jürgen Peters': {
+        geburtsdatum:'14.10.1965', adresse:'Industriestr. 18, 35578 Wetzlar', telefon:'+49 6441 33789', email:'j.peters@email.de',
+        beruf:'Geschäftsführer', familienstand:'Verheiratet', arbeitgeber:'Peters Metallbau GmbH', beschaeftigtSeit:'01.01.1992',
+        nettoeinkommen:9500, kinder:[{name:'Stefan',alter:28},{name:'Maria',alter:25}],
+        risikoscore:30, bonitaet:76,
+        nps: { score:8, kategorie:'promoter', datum:'15.01.2026', kampagne:'Jahresumfrage 2026', details:[{name:'Beratungsqualität',wert:8},{name:'Zufriedenheit',wert:8},{name:'Weiterempfehlung',wert:9},{name:'Preis-Leistung',wert:7},{name:'Erreichbarkeit',wert:8}] },
+        konten: [
+            { produkt:'VR-Girokonto Premium', details:'IBAN DE89 5066 1639 0011 2233 44', saldo:25000, eroeffnung:'01.01.1992', status:'Aktiv' },
+            { produkt:'VR-Geschäftskonto', details:'Peters Metallbau GmbH', saldo:185000, eroeffnung:'01.01.1992', status:'Aktiv' },
+            { produkt:'Gewerbekredit', details:'Investitionskredit, Tilgung 3%', saldo:-250000, eroeffnung:'01.06.2024', status:'Aktiv' },
+            { produkt:'VR-MeinDepot', details:'Aktien + Fonds, Volumen €120.000', saldo:120000, eroeffnung:'01.01.2008', status:'Aktiv' },
+            { produkt:'Risikolebensversicherung', details:'Vers.-Summe €750.000 (Kreuzversicherung)', saldo:0, eroeffnung:'01.01.2000', status:'Aktiv' },
+            { produkt:'Berufsunfähigkeitsvers.', details:'BU-Rente €4.000/Mon., Endalter 67', saldo:0, eroeffnung:'01.01.1995', status:'Aktiv' },
+            { produkt:'Betriebliche Altersvorsorge', details:'Direktversicherung, Beitrag €535/Mon.', saldo:0, eroeffnung:'01.01.2005', status:'Aktiv' }
+        ],
+        fidaVertraege: [
+            { institut:'Deutsche Bank', typ:'Geschäftskonto', info:'Zweitkonto Firma €95.000', consent:'02.01.2026', gueltig:'02.01.2027' },
+            { institut:'Deka', typ:'Depot', info:'Vermögensverwaltung €280.000', consent:'02.01.2026', gueltig:'02.01.2027' },
+            { institut:'Swiss Life', typ:'Lebensversicherung', info:'Kapital-LV, Ablauf 2028, €180.000', consent:'02.01.2026', gueltig:'02.01.2027' },
+            { institut:'Allianz', typ:'Sachversicherung', info:'Betriebshaftpflicht + Inhaltsvers.', consent:'02.01.2026', gueltig:'02.01.2027' }
+        ],
+        kommunikation: [
+            { typ:'termin', datum:'28.01.2026', betreff:'Nachfolgeplanung', inhalt:'Unternehmensnachfolge – Sohn Stefan als Nachfolger', status:'Erledigt' },
+            { typ:'email', datum:'22.01.2026', betreff:'Stiftungsmodell', inhalt:'Informationen zur Familienstiftung', status:'Geöffnet' },
+            { typ:'call', datum:'15.01.2026', betreff:'Gewerbekredit Prolongation', inhalt:'Konditionen für Kreditverlängerung besprochen', status:'Erledigt' },
+            { typ:'termin', datum:'08.01.2026', betreff:'Jahresgespräch Firma', inhalt:'Geschäftsentwicklung und Finanzierungsbedarf 2026', status:'Erledigt' },
+            { typ:'brief', datum:'02.01.2026', betreff:'Kontoauszug Q4 2025', inhalt:'Quartalsauszug Geschäfts- + Privatkonten', status:'Versendet' }
+        ],
+        avatarBg:'#7c3aed', foto:null
+    },
+    'Sabine Kraus': {
+        geburtsdatum:'27.08.1979', adresse:'Apothekenstr. 2, 35423 Lich', telefon:'+49 6404 66789', email:'s.kraus@email.de',
+        beruf:'Apothekerin', familienstand:'Verheiratet', arbeitgeber:'Löwen-Apotheke', beschaeftigtSeit:'01.01.2008',
+        nettoeinkommen:5000, kinder:[{name:'Paul',alter:8},{name:'Clara',alter:5}],
+        risikoscore:18, bonitaet:87,
+        nps: { score:7, kategorie:'passive', datum:'15.01.2026', kampagne:'Jahresumfrage 2026', details:[{name:'Beratungsqualität',wert:7},{name:'Zufriedenheit',wert:7},{name:'Weiterempfehlung',wert:7},{name:'Preis-Leistung',wert:7},{name:'Erreichbarkeit',wert:7}] },
+        konten: [
+            { produkt:'VR-Girokonto Komfort', details:'IBAN DE89 5066 1639 0022 3344 55', saldo:8900, eroeffnung:'01.01.2008', status:'Aktiv' },
+            { produkt:'VR-Geschäftskonto', details:'Löwen-Apotheke', saldo:35000, eroeffnung:'01.01.2008', status:'Aktiv' },
+            { produkt:'VR-Tagesgeld Extra', details:'Zinssatz 2,8% p.a.', saldo:45000, eroeffnung:'01.06.2018', status:'Aktiv' },
+            { produkt:'Krankenversicherung ZV', details:'Privat-Zusatzvers., Familie', saldo:0, eroeffnung:'01.01.2020', status:'Aktiv' }
+        ],
+        fidaVertraege: [
+            { institut:'Apobank', typ:'Girokonto', info:'Berufskonto Apotheker', consent:'10.01.2026', gueltig:'10.01.2027' },
+            { institut:'Comdirect', typ:'Depot', info:'ETF + Einzelaktien €52.000', consent:'10.01.2026', gueltig:'10.01.2027' }
+        ],
+        kommunikation: [
+            { typ:'email', datum:'25.01.2026', betreff:'Depot-Wechsel Angebot', inhalt:'VR-MeinDepot Vergleich zu Comdirect', status:'Geöffnet' },
+            { typ:'call', datum:'18.01.2026', betreff:'Krankenversicherung Erweiterung', inhalt:'Zusatzversicherung für Kinder besprochen', status:'Erledigt' },
+            { typ:'termin', datum:'10.01.2026', betreff:'Jahresgespräch', inhalt:'Finanzplanung Familie + Apotheke', status:'Erledigt' }
+        ],
+        avatarBg:'#be185d', foto:null
     }
 };
 
 // Default for any customer not explicitly defined
 var bankDefaultKunde = {
-    geburtsdatum:'01.01.1980', adresse:'Musterstr. 1, 35390 Giessen', telefon:'+49 641 00000', email:'kunde@email.de',
+    geburtsdatum:'01.01.1980', adresse:'Musterstr. 1, 35390 Gießen', telefon:'+49 641 00000', email:'kunde@email.de',
     beruf:'Angestellt', familienstand:'Ledig', arbeitgeber:'Firma GmbH', beschaeftigtSeit:'01.01.2010',
     nettoeinkommen:3500, kinder:[],
     risikoscore:25, bonitaet:75,
-    nps: { score:7, kategorie:'passive', datum:'01.01.2026', kampagne:'Standard', details:[{name:'Beratungsqualitaet',wert:7},{name:'Zufriedenheit',wert:7},{name:'Weiterempfehlung',wert:7},{name:'Preis-Leistung',wert:7},{name:'Erreichbarkeit',wert:7}] },
+    nps: { score:7, kategorie:'passive', datum:'01.01.2026', kampagne:'Standard', details:[{name:'Beratungsqualität',wert:7},{name:'Zufriedenheit',wert:7},{name:'Weiterempfehlung',wert:7},{name:'Preis-Leistung',wert:7},{name:'Erreichbarkeit',wert:7}] },
     konten: [{ produkt:'VR-Girokonto', details:'Standardkonto', saldo:2500, eroeffnung:'01.01.2015', status:'Aktiv' }],
     fidaVertraege: [],
-    kommunikation: [{ typ:'email', datum:'01.01.2026', betreff:'Willkommen', inhalt:'Begruessung', status:'Versendet' }],
+    kommunikation: [{ typ:'email', datum:'01.01.2026', betreff:'Willkommen', inhalt:'Begrüßung', status:'Versendet' }],
     avatarBg:'#64748b', foto:null
 };
 
 // ── CUSTOMER PHOTOS MAP ──
 var bankKundenFotos = {
     'Klaus Fischer': 'assets/images/AdobeStock_624564221.jpeg',
-    'Sandra Mueller': 'assets/images/AdobeStock_252262042.jpeg',
+    'Sandra Müller': 'assets/images/AdobeStock_252262042.jpeg',
     'Markus Wagner': 'assets/images/AdobeStock_361342769.jpeg',
     'Peter Hoffmann': 'assets/images/AdobeStock_612932760.jpeg'
 };
@@ -320,7 +541,7 @@ function fillBankFida(kd) {
         statusEl.innerHTML = '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;padding:16px;">' +
             '<div style="text-align:center;padding:12px;background:#f8fafc;border-radius:8px;"><div style="font-size:11px;color:#64748b;">Consent-Status</div><div style="font-size:14px;font-weight:700;"><span class="status-badge ' + (hasConsent?'aktiv':'storniert') + '">' + (hasConsent?'Aktiv':'Nicht erteilt') + '</span></div></div>' +
             '<div style="text-align:center;padding:12px;background:#f8fafc;border-radius:8px;"><div style="font-size:11px;color:#64748b;">Erteilt am</div><div style="font-size:14px;font-weight:700;">' + (hasConsent ? kd.fidaVertraege[0].consent : '&mdash;') + '</div></div>' +
-            '<div style="text-align:center;padding:12px;background:#f8fafc;border-radius:8px;"><div style="font-size:11px;color:#64748b;">Gueltig bis</div><div style="font-size:14px;font-weight:700;">' + (hasConsent ? kd.fidaVertraege[0].gueltig : '&mdash;') + '</div></div>' +
+            '<div style="text-align:center;padding:12px;background:#f8fafc;border-radius:8px;"><div style="font-size:11px;color:#64748b;">Gültig bis</div><div style="font-size:14px;font-weight:700;">' + (hasConsent ? kd.fidaVertraege[0].gueltig : '&mdash;') + '</div></div>' +
             '<div style="text-align:center;padding:12px;background:#f8fafc;border-radius:8px;"><div style="font-size:11px;color:#64748b;">Datenquellen</div><div style="font-size:14px;font-weight:700;">' + kd.fidaVertraege.length + '</div></div>' +
             '</div>';
     }
@@ -363,15 +584,15 @@ function fillBankImpulse(kundenName, kd, retailData) {
     if (kd.fidaVertraege.length > 0) {
         impulse.push({ icon:'fida', title:'Cross-Selling aus Open Finance', beschr:'Drittbank-Daten zeigen Optimierungspotential. Konsolidierung empfohlen.', prio:'high', quelle:'FIDA' });
     } else {
-        impulse.push({ icon:'fida', title:'FIDA-Consent einholen', beschr:'Open Finance Daten fehlen. Consent anfordern fuer vollstaendige Analyse.', prio:'medium', quelle:'System' });
+        impulse.push({ icon:'fida', title:'FIDA-Consent einholen', beschr:'Open Finance Daten fehlen. Consent anfordern für vollständige Analyse.', prio:'medium', quelle:'System' });
     }
     if (kd.konten.length < 4) {
-        impulse.push({ icon:'cross', title:'Produktbreite erhoehen', beschr:'Nur ' + kd.konten.length + ' Produkte. Cross-Selling-Potential identifiziert.', prio:'medium', quelle:'KI' });
+        impulse.push({ icon:'cross', title:'Produktbreite erhöhen', beschr:'Nur ' + kd.konten.length + ' Produkte. Cross-Selling-Potential identifiziert.', prio:'medium', quelle:'KI' });
     }
     if (kd.nps.score <= 6) {
-        impulse.push({ icon:'nps', title:'Kundenzufriedenheit verbessern', beschr:'NPS Score ' + kd.nps.score + '/10. Persoenliches Gespraech empfohlen.', prio:'high', quelle:'NPS' });
+        impulse.push({ icon:'nps', title:'Kundenzufriedenheit verbessern', beschr:'NPS Score ' + kd.nps.score + '/10. Persönliches Gespräch empfohlen.', prio:'high', quelle:'NPS' });
     }
-    impulse.push({ icon:'vorsorge', title:'Altersvorsorge pruefen', beschr:'Versorgungsluecke im Alter identifiziert. Beratung empfohlen.', prio:'medium', quelle:'KI' });
+    impulse.push({ icon:'vorsorge', title:'Altersvorsorge prüfen', beschr:'Versorgungslücke im Alter identifiziert. Beratung empfohlen.', prio:'medium', quelle:'KI' });
     
     var iconSvgs = {
         plan: '<svg viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2" width="20" height="20"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>',
@@ -409,7 +630,7 @@ function fillBankFinanzplanung(kd) {
             '<div class="liquiditaet-row" style="display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid #f1f5f9;"><span style="flex:1;font-size:13px;">Fixe Ausgaben</span><div style="width:200px;height:8px;background:#e2e8f0;border-radius:4px;overflow:hidden;"><div style="height:100%;width:45%;background:#dc2626;border-radius:4px;"></div></div><span style="width:100px;text-align:right;font-weight:600;color:#dc2626;">-\u20AC' + fixeAusgaben.toLocaleString('de-DE') + '</span></div>' +
             '<div class="liquiditaet-row" style="display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid #f1f5f9;"><span style="flex:1;font-size:13px;">Variable Ausgaben</span><div style="width:200px;height:8px;background:#e2e8f0;border-radius:4px;overflow:hidden;"><div style="height:100%;width:20%;background:#f59e0b;border-radius:4px;"></div></div><span style="width:100px;text-align:right;font-weight:600;color:#f59e0b;">-\u20AC' + variableAusgaben.toLocaleString('de-DE') + '</span></div>' +
             '<div class="liquiditaet-row" style="display:flex;align-items:center;gap:12px;padding:12px 0;border-top:2px solid #1e293b;margin-top:8px;"><span style="flex:1;font-size:14px;font-weight:700;">Freies Einkommen</span><div style="width:200px;height:8px;background:#e2e8f0;border-radius:4px;overflow:hidden;"><div style="height:100%;width:' + (frei/einkommen*100) + '%;background:#2563eb;border-radius:4px;"></div></div><span style="width:100px;text-align:right;font-weight:700;color:#2563eb;">\u20AC' + frei.toLocaleString('de-DE') + '</span></div>' +
-            '<div style="margin-top:16px;padding:12px;background:#eff6ff;border-radius:8px;border-left:3px solid #2563eb;"><strong>Sparquote: ' + sparquote + '%</strong> &mdash; ' + (sparquote >= 20 ? 'Gute Sparquote. Potential fuer Anlage-Beratung.' : 'Unter Durchschnitt. Budgetberatung empfohlen.') + '</div>' +
+            '<div style="margin-top:16px;padding:12px;background:#eff6ff;border-radius:8px;border-left:3px solid #2563eb;"><strong>Sparquote: ' + sparquote + '%</strong> &mdash; ' + (sparquote >= 20 ? 'Gute Sparquote. Potential für Anlage-Beratung.' : 'Unter Durchschnitt. Budgetberatung empfohlen.') + '</div>' +
             '</div>';
     }
     
@@ -440,7 +661,7 @@ function fillBankKommunikation(kd) {
         brief: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>'
     };
     
-    var statusColors = { 'Geoeffnet':'#16a34a', 'Erledigt':'#2563eb', 'Versendet':'#64748b', 'Geplant':'#f59e0b' };
+    var statusColors = { 'Geöffnet':'#16a34a', 'Erledigt':'#2563eb', 'Versendet':'#64748b', 'Geplant':'#f59e0b' };
     
     var html = '';
     kd.kommunikation.forEach(function(k) {

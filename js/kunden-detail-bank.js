@@ -24,6 +24,30 @@ var bankMockKunden = {
             { institut:'ING', typ:'Extra-Konto', info:'Tagesgeld €18.500', consent:'12.01.2026', gueltig:'12.01.2027' },
             { institut:'Trade Republic', typ:'Depot', info:'ETF-Sparplan 200/Mon.', consent:'12.01.2026', gueltig:'12.01.2027' }
         ],
+        // ── BEDARFSFELD: SPAREN & VORSORGEN ──
+        sparenGeldmarkt: [
+            { produkt:'VR-Tagesgeld Extra', anbieter:'Volksbank Mittelhessen', volumen:42000, zinssatz:'2,80% p.a.', laufzeit:'Flexibel' },
+            { produkt:'Tagesgeldkonto', anbieter:'ING', volumen:18500, zinssatz:'2,75% p.a.', laufzeit:'Flexibel', quelle:'FIDA' }
+        ],
+        sparenKapitalmarkt: [
+            { produkt:'VR-MeinDepot ETF-Sparplan', anbieter:'Union Investment', volumen:28500, sparrate:'€300/Mon.', performance:'+9,4%' },
+            { produkt:'Riester-Rente VR', anbieter:'Union Investment', volumen:18200, sparrate:'€175/Mon.', performance:'+4,2%' },
+            { produkt:'ETF-Portfolio', anbieter:'Trade Republic', volumen:12800, sparrate:'€200/Mon.', performance:'+11,7%', quelle:'FIDA' }
+        ],
+        // ── BEDARFSFELD: ABSICHERN ──
+        versicherungenEigen: [
+            { versicherung:'Unfallversicherung', anbieter:'R+V Versicherung', deckung:'Grundsumme €80.000', tarifart:'Komfort', leistungen:['Invalidität','Bergungskosten','Krankenhaustagegeld'], praemie:'€180/Jahr', vertrag:'UV-2020-11234' },
+            { versicherung:'Risikolebensversicherung', anbieter:'R+V Versicherung', deckung:'€200.000', tarifart:'Premium', leistungen:['Todesfallschutz','Nachversicherung','Vorgezogene Leistung'], praemie:'€240/Jahr', vertrag:'RL-2016-44821' }
+        ],
+        versicherungenFremd: [
+            { versicherung:'Kfz-Versicherung', anbieter:'HUK-Coburg', deckung:'VK €45.000 / TK €20.000', tarifart:'Standard', leistungen:['Marderschäden','Auslandsschutz'], selbstbehalt:'€300 VK', praemie:'€680/Jahr', kuendigung:'30.11.2026' },
+            { versicherung:'Hausratversicherung', anbieter:'Allianz', deckung:'€75.000', tarifart:'Komfort', leistungen:['Fahrraddiebstahl','Überspannung','Elementar'], selbstbehalt:'€150', praemie:'€165/Jahr', kuendigung:'01.03.2027' },
+            { versicherung:'Privathaftpflicht', anbieter:'HUK24', deckung:'€50 Mio. pauschal', tarifart:'Premium', leistungen:['Schlüsselverlust','Ehrenamt','Deliktunfähige Kinder'], selbstbehalt:'€0', praemie:'€68/Jahr', kuendigung:'01.01.2027' }
+        ],
+        // ── BEDARFSFELD: FINANZIEREN ──
+        finanzierungen: [
+            { kredit:'Baufinanzierung', kreditgeber:'Volksbank Mittelhessen', ursprung:280000, restschuld:185000, zinssatz:'1,85% p.a.', rate:'€1.180/Mon.', laufzeit:'09/2026', absicherung:'Grundschuld', hinweis:'Zinsbindung endet 09/2026 – Anschlussfinanzierung erforderlich' }
+        ],
         kommunikation: [
             { typ:'email', datum:'28.02.2026', betreff:'Anschlussfinanzierung Angebot', inhalt:'Angebot für Baufi-Anschluss gesendet', status:'Geöffnet' },
             { typ:'call', datum:'20.02.2026', betreff:'Telefonat Baufinanzierung', inhalt:'Beratungsgespräch zu Anschlussoptionen', status:'Erledigt' },
@@ -50,6 +74,20 @@ var bankMockKunden = {
             { institut:'N26', typ:'Girokonto', info:'Zweitkonto, Reisen', consent:'20.01.2026', gueltig:'20.01.2027' },
             { institut:'Scalable Capital', typ:'Depot', info:'ETF-Portfolio €32.000', consent:'20.01.2026', gueltig:'20.01.2027' }
         ],
+        sparenGeldmarkt: [
+            { produkt:'VR-Tagesgeld Extra', anbieter:'Volksbank Mittelhessen', volumen:85000, zinssatz:'2,80% p.a.', laufzeit:'Flexibel' },
+            { produkt:'VR-Festgeld 12M', anbieter:'Volksbank Mittelhessen', volumen:50000, zinssatz:'3,20% p.a.', laufzeit:'bis 06/2026' }
+        ],
+        sparenKapitalmarkt: [
+            { produkt:'ETF-Portfolio', anbieter:'Scalable Capital', volumen:32000, sparrate:'€500/Mon.', performance:'+10,8%', quelle:'FIDA' }
+        ],
+        versicherungenEigen: [
+            { versicherung:'Berufsunfähigkeitsversicherung', anbieter:'R+V Versicherung', deckung:'BU-Rente €2.500/Mon.', tarifart:'Premium', leistungen:['Endalter 67','Nachversicherung','Weltweiter Schutz'], praemie:'€125/Monat', vertrag:'BU-2020-55891' }
+        ],
+        versicherungenFremd: [
+            { versicherung:'Privathaftpflicht', anbieter:'Allianz', deckung:'€50 Mio.', tarifart:'Komfort', leistungen:['Schlüsselverlust','Mietsachschäden'], selbstbehalt:'€150', praemie:'€58/Jahr', kuendigung:'01.04.2027' }
+        ],
+        finanzierungen: [],
         kommunikation: [
             { typ:'email', datum:'25.02.2026', betreff:'Festgeld Verlängerung', inhalt:'Info zu Festgeld-Konditionen bei Fälligkeit', status:'Geöffnet' },
             { typ:'call', datum:'18.02.2026', betreff:'Altersvorsorge-Beratung', inhalt:'Erstgespräch Altersvorsorge-Konzept', status:'Erledigt' },
@@ -73,6 +111,16 @@ var bankMockKunden = {
         fidaVertraege: [
             { institut:'Sparkasse Marburg', typ:'Girokonto', info:'Gehaltskonto Ehefrau', consent:'10.02.2026', gueltig:'10.02.2027' }
         ],
+        sparenGeldmarkt: [],
+        sparenKapitalmarkt: [
+            { produkt:'Bausparvertrag', anbieter:'Wüstenrot', volumen:35000, sparrate:'€250/Mon.', performance:'1,0%' },
+            { produkt:'Riester-Rente VR', anbieter:'Union Investment', volumen:22400, sparrate:'€162/Mon.', performance:'+3,8%' }
+        ],
+        versicherungenEigen: [
+            { versicherung:'Risikolebensversicherung', anbieter:'R+V Versicherung', deckung:'€200.000', tarifart:'Standard', leistungen:['Todesfallschutz','Laufzeit bis 2035'], praemie:'€180/Jahr', vertrag:'RL-2015-22450' }
+        ],
+        versicherungenFremd: [],
+        finanzierungen: [],
         kommunikation: [
             { typ:'termin', datum:'20.02.2026', betreff:'VR-FinanzPlan Review', inhalt:'Jährliches Review der Finanzplanung', status:'Erledigt' },
             { typ:'email', datum:'10.02.2026', betreff:'ETF-Sparplan Info', inhalt:'Informationen zu VR-MeinDepot Sparplan', status:'Geöffnet' },
@@ -91,6 +139,11 @@ var bankMockKunden = {
             { produkt:'Kreditkarte Classic', details:'Limit 3.000', saldo:-450, eroeffnung:'01.06.2019', status:'Aktiv' }
         ],
         fidaVertraege: [],
+        sparenGeldmarkt: [],
+        sparenKapitalmarkt: [],
+        versicherungenEigen: [],
+        versicherungenFremd: [],
+        finanzierungen: [],
         kommunikation: [
             { typ:'email', datum:'18.02.2026', betreff:'FIDA-Consent Einladung', inhalt:'Open Finance Datenfreigabe angefragt', status:'Geöffnet' },
             { typ:'call', datum:'05.02.2026', betreff:'Erstberatung', inhalt:'Telefonat zur ganzheitlichen Beratung', status:'Erledigt' }
@@ -118,6 +171,25 @@ var bankMockKunden = {
             { institut:'Deka', typ:'Depot', info:'Fondsanlage €65.000', consent:'05.01.2026', gueltig:'05.01.2027' },
             { institut:'Allianz', typ:'Lebensversicherung', info:'Kapital-LV, Ablauf 2030', consent:'05.01.2026', gueltig:'05.01.2027' }
         ],
+        sparenGeldmarkt: [
+            { produkt:'VR-Tagesgeld Extra', anbieter:'Volksbank Mittelhessen', volumen:120000, zinssatz:'2,80% p.a.', laufzeit:'Flexibel' }
+        ],
+        sparenKapitalmarkt: [
+            { produkt:'VR-MeinDepot', anbieter:'Union Investment', volumen:85000, sparrate:'€500/Mon.', performance:'+8,1%' },
+            { produkt:'Fondsanlage', anbieter:'Deka', volumen:65000, sparrate:'€300/Mon.', performance:'+6,5%', quelle:'FIDA' },
+            { produkt:'Kapital-Lebensversicherung', anbieter:'Allianz', volumen:48000, sparrate:'€200/Mon.', performance:'+2,8%', quelle:'FIDA' }
+        ],
+        versicherungenEigen: [
+            { versicherung:'Risikolebensversicherung', anbieter:'R+V Versicherung', deckung:'€500.000', tarifart:'Premium', leistungen:['Todesfallschutz','Nachversicherung'], praemie:'€420/Jahr', vertrag:'RL-2012-33567' },
+            { versicherung:'Berufsunfähigkeitsversicherung', anbieter:'R+V Versicherung', deckung:'BU-Rente €3.000/Mon.', tarifart:'Premium', leistungen:['Endalter 67','Weltweiter Schutz','Selbständige'], praemie:'€185/Monat', vertrag:'BU-2005-11234' },
+            { versicherung:'Rechtsschutzversicherung', anbieter:'R+V Versicherung', deckung:'€500.000 Privat+Beruf', tarifart:'Premium', leistungen:['Arbeitsrecht','Verkehr','Vertragsrecht'], praemie:'€295/Jahr', vertrag:'RS-2010-88912' }
+        ],
+        versicherungenFremd: [
+            { versicherung:'Wohngebäudeversicherung', anbieter:'Allianz', deckung:'€520.000', tarifart:'Komfort', leistungen:['Elementarschäden','Glasbruch'], selbstbehalt:'€500', praemie:'€480/Jahr', kuendigung:'01.07.2026' }
+        ],
+        finanzierungen: [
+            { kredit:'Baufinanzierung', kreditgeber:'Volksbank Mittelhessen', ursprung:350000, restschuld:220000, zinssatz:'2,10% p.a.', rate:'€1.450/Mon.', laufzeit:'04/2032', absicherung:'Grundschuld + RLV' }
+        ],
         kommunikation: [
             { typ:'termin', datum:'15.02.2026', betreff:'VR-FinanzPlan Review', inhalt:'Jährliche Vermögensübersicht besprochen', status:'Erledigt' },
             { typ:'email', datum:'10.02.2026', betreff:'Vermögensverwaltung Angebot', inhalt:'VR-Vermögensverwaltung Konzept zugesandt', status:'Geöffnet' },
@@ -143,6 +215,18 @@ var bankMockKunden = {
             { institut:'Sparkasse Lich', typ:'Girokonto', info:'Zweitkonto, Kindergeld', consent:'15.01.2026', gueltig:'15.01.2027' },
             { institut:'Union Investment', typ:'Depot', info:'Fondssparen €280/Mon.', consent:'15.01.2026', gueltig:'15.01.2027' }
         ],
+        sparenGeldmarkt: [
+            { produkt:'VR-Tagesgeld Extra', anbieter:'Volksbank Mittelhessen', volumen:50000, zinssatz:'2,80% p.a.', laufzeit:'Flexibel' }
+        ],
+        sparenKapitalmarkt: [
+            { produkt:'Fondssparen', anbieter:'Union Investment', volumen:18500, sparrate:'€280/Mon.', performance:'+7,2%', quelle:'FIDA' }
+        ],
+        versicherungenEigen: [
+            { versicherung:'Unfallversicherung', anbieter:'R+V Versicherung', deckung:'€100.000, Progression 350%', tarifart:'Premium', leistungen:['Invalidität','Bergungskosten','Kosmetische OPs'], praemie:'€245/Jahr', vertrag:'UV-2015-33789' },
+            { versicherung:'Risikolebensversicherung', anbieter:'R+V Versicherung', deckung:'€250.000', tarifart:'Komfort', leistungen:['Todesfallschutz','Nachversicherung'], praemie:'€195/Jahr', vertrag:'RL-2016-44125' }
+        ],
+        versicherungenFremd: [],
+        finanzierungen: [],
         kommunikation: [
             { typ:'termin', datum:'12.02.2026', betreff:'Gewerbekredit Beratung', inhalt:'Kanzleierweiterung – Finanzierungskonzept', status:'Erledigt' },
             { typ:'email', datum:'05.02.2026', betreff:'KfW-Förderung Info', inhalt:'Informationen zu KfW-Förderkrediten', status:'Geöffnet' },
@@ -230,6 +314,16 @@ var bankMockKunden = {
         fidaVertraege: [
             { institut:'Commerzbank', typ:'Girokonto', info:'Gehaltskonto Ehemann €4.200', consent:'18.01.2026', gueltig:'18.01.2027' },
             { institut:'Bausparkasse Schwäbisch Hall', typ:'Bausparvertrag', info:'Zuteilungsreif 2026', consent:'18.01.2026', gueltig:'18.01.2027' }
+        ],
+        sparenGeldmarkt: [],
+        sparenKapitalmarkt: [
+            { produkt:'VR-MeinDepot ETF-Sparplan', anbieter:'Union Investment', volumen:15600, sparrate:'€200/Mon.', performance:'+10,1%' },
+            { produkt:'Bausparvertrag', anbieter:'Schwäbisch Hall', volumen:40000, sparrate:'€250/Mon.', performance:'1,0%' }
+        ],
+        versicherungenEigen: [],
+        versicherungenFremd: [],
+        finanzierungen: [
+            { kredit:'Baufinanzierung', kreditgeber:'Volksbank Mittelhessen', ursprung:260000, restschuld:180000, zinssatz:'2,45% p.a.', rate:'€1.250/Mon.', laufzeit:'03/2037', absicherung:'Grundschuld' }
         ],
         kommunikation: [
             { typ:'termin', datum:'01.02.2026', betreff:'VR-FinanzPlan Review', inhalt:'Finanzplanung mit Immobilie + Kind aktualisiert', status:'Erledigt' },
@@ -568,6 +662,109 @@ function fillBankFida(kd) {
             '<div style="padding:12px;background:#fef2f2;border-radius:8px;text-align:center;"><div style="font-size:11px;color:#64748b;">Ausgaben (Schnitt)</div><div style="font-size:18px;font-weight:700;color:#dc2626;">\u20AC' + Math.round(kd.nettoeinkommen * 0.65).toLocaleString('de-DE') + '</div></div>' +
             '<div style="padding:12px;background:#eff6ff;border-radius:8px;text-align:center;"><div style="font-size:11px;color:#64748b;">Freies Einkommen</div><div style="font-size:18px;font-weight:700;color:#2563eb;">\u20AC' + Math.round(kd.nettoeinkommen * 0.35).toLocaleString('de-DE') + '</div></div>' +
             '</div></div>';
+    }
+
+    // ── BEDARFSFELD: SPAREN & VORSORGEN ──
+    var sparenEl = document.getElementById('bankFidaSparenContent');
+    if (sparenEl) {
+        var sparenHtml = '';
+        // Geldmarkt
+        var geldmarkt = kd.sparenGeldmarkt || [];
+        if (geldmarkt.length > 0) {
+            var totalGeld = 0;
+            sparenHtml += '<div class="bedarfsfeld-section" style="padding:0 16px 16px;"><h4 class="section-subtitle" style="font-size:13px;font-weight:600;color:#475569;margin:16px 0 8px;">Geldmarkt</h4>' +
+                '<table class="kunden-table fida-table"><thead><tr><th>Produkt</th><th>Anbieter</th><th>Volumen</th><th>Zinssatz</th><th>Laufzeit</th></tr></thead><tbody>';
+            geldmarkt.forEach(function(g) {
+                totalGeld += g.volumen;
+                sparenHtml += '<tr><td><strong>' + g.produkt + '</strong>' + (g.quelle === 'FIDA' ? ' <span style="font-size:10px;background:#dbeafe;color:#1e40af;padding:1px 6px;border-radius:10px;">FIDA</span>' : '') + '</td>' +
+                    '<td>' + g.anbieter + '</td><td>\u20AC' + g.volumen.toLocaleString('de-DE') + '</td><td>' + g.zinssatz + '</td><td>' + g.laufzeit + '</td></tr>';
+            });
+            sparenHtml += '<tr style="background:#f8fafc;font-weight:600;"><td>Gesamt Geldmarkt</td><td></td><td>\u20AC' + totalGeld.toLocaleString('de-DE') + '</td><td></td><td></td></tr>';
+            sparenHtml += '</tbody></table></div>';
+        }
+        // Kapitalmarkt
+        var kapital = kd.sparenKapitalmarkt || [];
+        if (kapital.length > 0) {
+            var totalKap = 0;
+            sparenHtml += '<div class="bedarfsfeld-section" style="padding:0 16px 16px;"><h4 class="section-subtitle" style="font-size:13px;font-weight:600;color:#475569;margin:16px 0 8px;">Kapitalmarkt</h4>' +
+                '<table class="kunden-table fida-table"><thead><tr><th>Produkt</th><th>Anbieter</th><th>Volumen</th><th>Sparrate</th><th>Performance YTD</th></tr></thead><tbody>';
+            kapital.forEach(function(k) {
+                totalKap += k.volumen;
+                sparenHtml += '<tr><td><strong>' + k.produkt + '</strong>' + (k.quelle === 'FIDA' ? ' <span style="font-size:10px;background:#dbeafe;color:#1e40af;padding:1px 6px;border-radius:10px;">FIDA</span>' : '') + '</td>' +
+                    '<td>' + k.anbieter + '</td><td>\u20AC' + k.volumen.toLocaleString('de-DE') + '</td><td>' + k.sparrate + '</td><td style="color:#16a34a;">' + k.performance + '</td></tr>';
+            });
+            sparenHtml += '<tr style="background:#f8fafc;font-weight:600;"><td>Gesamt Depot</td><td></td><td>\u20AC' + totalKap.toLocaleString('de-DE') + '</td><td></td><td></td></tr>';
+            sparenHtml += '</tbody></table></div>';
+        }
+        if (sparenHtml === '') {
+            sparenHtml = '<div style="padding:24px;text-align:center;color:#94a3b8;">Keine Spar- oder Vorsorgeprodukte vorhanden.</div>';
+        }
+        sparenEl.innerHTML = sparenHtml;
+    }
+
+    // ── BEDARFSFELD: ABSICHERN ──
+    var absichernEl = document.getElementById('bankFidaAbsichernContent');
+    if (absichernEl) {
+        var absHtml = '';
+        // Eigene Versicherungen (Genossenschaftliche Partner)
+        var eigen = kd.versicherungenEigen || [];
+        if (eigen.length > 0) {
+            absHtml += '<div class="bedarfsfeld-section" style="padding:0 16px 16px;"><h4 class="section-subtitle" style="font-size:13px;font-weight:600;color:#475569;margin:16px 0 8px;">Eigene Versicherungen (R+V / VR)</h4>' +
+                '<table class="kunden-table fida-table"><thead><tr><th>Versicherung</th><th>Anbieter</th><th>Deckungssumme</th><th>Tarifart</th><th>Leistungsumfang</th><th>Prämie</th><th>Vertragsnr.</th></tr></thead><tbody>';
+            eigen.forEach(function(v) {
+                var tags = v.leistungen.map(function(l) { return '<span class="leistung-tag" style="display:inline-block;font-size:10px;background:#f1f5f9;color:#475569;padding:2px 6px;border-radius:4px;margin:1px;">' + l + '</span>'; }).join(' ');
+                absHtml += '<tr><td><strong>' + v.versicherung + '</strong></td><td>' + v.anbieter + '</td><td>' + v.deckung + '</td>' +
+                    '<td><span class="tarif-badge" style="font-size:10px;padding:2px 8px;border-radius:10px;background:#dbeafe;color:#1e40af;">' + v.tarifart + '</span></td>' +
+                    '<td>' + tags + '</td><td>' + v.praemie + '</td><td>' + v.vertrag + '</td></tr>';
+            });
+            absHtml += '</tbody></table></div>';
+        }
+        // Fremd-Versicherungen (Wettbewerber)
+        var fremd = kd.versicherungenFremd || [];
+        if (fremd.length > 0) {
+            absHtml += '<div class="bedarfsfeld-section" style="padding:0 16px 16px;"><h4 class="section-subtitle" style="font-size:13px;font-weight:600;color:#475569;margin:16px 0 8px;">Wettbewerber-Versicherungen</h4>' +
+                '<table class="kunden-table fida-table"><thead><tr><th>Versicherung</th><th>Anbieter</th><th>Deckungssumme</th><th>Tarifart</th><th>Leistungsumfang</th><th>Selbstbehalt</th><th>Prämie</th><th>Kündigungsfrist</th></tr></thead><tbody>';
+            fremd.forEach(function(v) {
+                var tags = v.leistungen.map(function(l) { return '<span class="leistung-tag" style="display:inline-block;font-size:10px;background:#f1f5f9;color:#475569;padding:2px 6px;border-radius:4px;margin:1px;">' + l + '</span>'; }).join(' ');
+                absHtml += '<tr><td><strong>' + v.versicherung + '</strong></td><td>' + v.anbieter + '</td><td>' + v.deckung + '</td>' +
+                    '<td><span class="tarif-badge" style="font-size:10px;padding:2px 8px;border-radius:10px;background:#fef3c7;color:#92400e;">' + v.tarifart + '</span></td>' +
+                    '<td>' + tags + '</td><td>' + v.selbstbehalt + '</td><td>' + v.praemie + '</td><td>' + v.kuendigung + '</td></tr>';
+            });
+            absHtml += '</tbody></table></div>';
+        }
+        if (absHtml === '') {
+            absHtml = '<div style="padding:24px;text-align:center;color:#94a3b8;">Keine Versicherungsdaten vorhanden.</div>';
+        }
+        absichernEl.innerHTML = absHtml;
+    }
+
+    // ── BEDARFSFELD: FINANZIEREN ──
+    var finanzEl = document.getElementById('bankFidaFinanzierenContent');
+    if (finanzEl) {
+        var finHtml = '';
+        var finanz = kd.finanzierungen || [];
+        if (finanz.length > 0) {
+            var totalRest = 0;
+            finHtml += '<div style="padding:0 16px 16px;"><table class="kunden-table fida-table"><thead><tr><th>Kredit</th><th>Kreditgeber</th><th>Ursprungsbetrag</th><th>Restschuld</th><th>Zinssatz</th><th>Rate</th><th>Laufzeit bis</th><th>Absicherung</th></tr></thead><tbody>';
+            finanz.forEach(function(f) {
+                totalRest += f.restschuld;
+                finHtml += '<tr><td><strong>' + f.kredit + '</strong></td><td>' + f.kreditgeber + '</td>' +
+                    '<td>\u20AC' + f.ursprung.toLocaleString('de-DE') + '</td><td>\u20AC' + f.restschuld.toLocaleString('de-DE') + '</td>' +
+                    '<td>' + f.zinssatz + '</td><td>' + f.rate + '</td><td>' + f.laufzeit + '</td><td>' + f.absicherung + '</td></tr>';
+            });
+            finHtml += '<tr style="background:#f8fafc;font-weight:600;"><td>Gesamt Verbindlichkeiten</td><td></td><td></td><td>\u20AC' + totalRest.toLocaleString('de-DE') + '</td><td></td><td></td><td></td><td></td></tr>';
+            finHtml += '</tbody></table></div>';
+            // Hinweise
+            finanz.forEach(function(f) {
+                if (f.hinweis) {
+                    finHtml += '<div style="margin:0 16px 16px;padding:12px 16px;background:#fef3c7;border-left:4px solid #f59e0b;border-radius:4px;font-size:13px;color:#92400e;">' +
+                        '<strong>Hinweis:</strong> ' + f.hinweis + '</div>';
+                }
+            });
+        } else {
+            finHtml = '<div style="padding:24px;text-align:center;color:#94a3b8;">Keine Finanzierungen vorhanden.</div>';
+        }
+        finanzEl.innerHTML = finHtml;
     }
 }
 

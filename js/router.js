@@ -7,6 +7,24 @@
 (function() {
     'use strict';
 
+    // Views that live INSIDE versicherungModule and need it to be active/visible
+    var VERSICHERUNG_VIEWS = [
+        'landing', 'dashboard', 'agentursicht', 'agentursicht-b2b', 'agentursicht-mrh',
+        'potentialanalyse', 'kundendetail', 'kundendetail-b2b', 'kundendetail-mrh',
+        'bgav-uebersicht', 'bgav-umstellung'
+    ];
+
+    // Views that are context-dependent (need selected customer etc.)
+    // On deep-link refresh these fall back to a parent view
+    var DEEP_LINK_FALLBACKS = {
+        'kundendetail':         'agentursicht',
+        'kundendetail-b2b':     'agentursicht-b2b',
+        'kundendetail-mrh':     'agentursicht-mrh',
+        'kundendetail-bank':    'berater-retail',
+        'kundendetail-bank-fk': 'berater-firmenkunde',
+        'kundendetail-bank-pb': 'berater-vermoegen'
+    };
+
     const Router = {
         // Route definitions: hash → { open function, pageId, title }
         routes: {
@@ -72,8 +90,15 @@
             if (initialHash !== '/' && initialHash !== '/landing') {
                 const route = this.routes[initialHash];
                 if (route) {
-                    this.deepLinkTarget = { hash: initialHash, view: route.view };
-                    console.log('Router: Deep-link detected →', initialHash);
+                    // For context-dependent views, use the fallback view instead
+                    var targetView = route.view;
+                    if (DEEP_LINK_FALLBACKS[targetView]) {
+                        targetView = DEEP_LINK_FALLBACKS[targetView];
+                        console.log('Router: Deep-link fallback →', route.view, '→', targetView);
+                    }
+
+                    this.deepLinkTarget = { hash: initialHash, view: targetView };
+                    console.log('Router: Deep-link detected →', initialHash, '(view:', targetView + ')');
 
                     // IMMEDIATELY hide landing page (before any async code runs)
                     var lp = document.getElementById('landingPage');
@@ -82,29 +107,34 @@
                     }
 
                     // Attempt navigation at multiple intervals for robustness.
-                    // navigateToView returns true only when the view function
-                    // actually existed and was called.
                     var self = this;
                     var navigated = false;
                     function attemptDeepLink() {
                         if (navigated) return;
-                        var ok = self.navigateToView(route.view, false);
+                        var ok = self.navigateToView(targetView, false);
                         if (ok) {
                             navigated = true;
                             self.currentRoute = initialHash;
-                            console.log('Router: Deep-link navigation OK →', initialHash);
+                            console.log('Router: Deep-link navigation OK →', targetView);
                         } else {
-                            console.log('Router: Deep-link view not ready, will retry →', route.view);
+                            console.log('Router: Deep-link view not ready, will retry →', targetView);
                         }
-                        // Always keep landing hidden
-                        var lp2 = document.getElementById('landingPage');
-                        if (lp2) lp2.style.display = 'none';
                     }
                     setTimeout(attemptDeepLink, 100);
                     setTimeout(attemptDeepLink, 500);
                     setTimeout(attemptDeepLink, 1500);
                     setTimeout(attemptDeepLink, 3000);
-                    setTimeout(attemptDeepLink, 5000);
+
+                    // Final safety net: if after 6s nothing is visible, show landing
+                    setTimeout(function() {
+                        if (!navigated) {
+                            console.warn('Router: Deep-link failed after all retries, falling back to landing');
+                            self.showLandingFallback();
+                        } else {
+                            // Verify something is actually visible
+                            self.ensureVisibleContent(targetView);
+                        }
+                    }, 6000);
                 }
             }
 
@@ -114,6 +144,38 @@
         // Check if we're in a deep-link page load (used by landing.js to skip setup)
         isDeepLink() {
             return this.deepLinkTarget !== null;
+        },
+
+        // Safety fallback: ensure the user sees something
+        showLandingFallback() {
+            var lp = document.getElementById('landingPage');
+            var vm = document.getElementById('versicherungModule');
+            if (lp) lp.style.display = 'flex';
+            if (vm) vm.classList.add('active');
+            if (window.AppRouter) AppRouter.navigate('/landing');
+        },
+
+        // After navigation, verify the target is actually visible
+        ensureVisibleContent(viewName) {
+            // Check if at least one major container is visible
+            var containers = [
+                'landingPage', 'mainApp', 'agenturOverview', 'beraterOverviewPage',
+                'kundenDetailBankPage', 'bgavUmstellungPage', 'bankenModule',
+                'assetModule', 'risikoscoringModule', 'bestandsuebertragungModule',
+                'pmoToolboxModule', 'hrPipelineModule', 'versicherungs1x1Module'
+            ];
+
+            var anyVisible = containers.some(function(id) {
+                var el = document.getElementById(id);
+                if (!el) return false;
+                var style = window.getComputedStyle(el);
+                return style.display !== 'none' && style.visibility !== 'hidden' && el.offsetHeight > 0;
+            });
+
+            if (!anyVisible) {
+                console.warn('Router: No visible content after navigation to', viewName, '- falling back to landing');
+                this.showLandingFallback();
+            }
         },
 
         // Navigate to a route (called from code)
@@ -161,13 +223,36 @@
 
             if (!route) return;
 
+            // Apply deep-link fallbacks for context-dependent views
+            var viewName = route.view;
+            if (this.deepLinkTarget && DEEP_LINK_FALLBACKS[viewName]) {
+                viewName = DEEP_LINK_FALLBACKS[viewName];
+            }
+
             this.currentRoute = hash;
-            this.navigateToView(route.view, false);
+            this.navigateToView(viewName, false);
+        },
+
+        // Ensure versicherungModule is active for views that live inside it
+        ensureVersicherungModule(viewName) {
+            if (VERSICHERUNG_VIEWS.indexOf(viewName) >= 0) {
+                var vm = document.getElementById('versicherungModule');
+                if (vm && !vm.classList.contains('active')) {
+                    // Activate versicherung module
+                    document.querySelectorAll('.module-content').forEach(function(el) {
+                        el.classList.remove('active');
+                    });
+                    vm.classList.add('active');
+                }
+            }
         },
 
         // Navigate to a named view by calling its open function.
         // Returns true if the view function existed and was called.
         navigateToView(viewName, updateHash) {
+            // Ensure correct module container is active
+            this.ensureVersicherungModule(viewName);
+
             var fnMap = {
                 'landing':              function() { return typeof backToLanding === 'function' ? (backToLanding(), true) : false; },
                 'dashboard':            function() { return typeof openDashboard === 'function' ? (openDashboard(), true) : false; },
@@ -175,7 +260,7 @@
                 'agentursicht-b2b':     function() { return typeof openAgenturView === 'function' && typeof setViewMode === 'function' ? (setViewMode('ecclesia'), openAgenturView(), true) : false; },
                 'agentursicht-mrh':     function() { return typeof openAgenturView === 'function' && typeof setViewMode === 'function' ? (setViewMode('mrh'), openAgenturView(), true) : false; },
                 'potentialanalyse':     function() { return typeof openPotentialAnalyse === 'function' ? (openPotentialAnalyse(), true) : false; },
-                'kundendetail':         function() { return typeof backToLanding === 'function' ? (backToLanding(), true) : false; },
+                'kundendetail':         function() { return typeof openAgenturView === 'function' ? (openAgenturView(), true) : false; },
                 'kundendetail-b2b':     function() { return typeof openAgenturView === 'function' && typeof setViewMode === 'function' ? (setViewMode('ecclesia'), openAgenturView(), true) : false; },
                 'kundendetail-mrh':     function() { return typeof openAgenturView === 'function' && typeof setViewMode === 'function' ? (setViewMode('mrh'), openAgenturView(), true) : false; },
                 'bgav-uebersicht':      function() { return typeof openBgavUebersicht === 'function' ? (openBgavUebersicht(), true) : false; },

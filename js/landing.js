@@ -2434,9 +2434,7 @@ window.addEventListener('DOMContentLoaded', function() {
         // Deep-link: navigate to target route, skip landing setup
         if (_isDeepLink || (window.AppRouter && window.AppRouter.isDeepLink && window.AppRouter.isDeepLink())) {
             console.log('Deep-link: CSV loaded, triggering navigation');
-            // Re-hide landing page and let router handle the rest
-            var lp = document.getElementById('landingPage');
-            if (lp) lp.style.display = 'none';
+            // Let the router re-navigate now that CSV data is available
             if (window.AppRouter) window.AppRouter.handleHashChange();
             return;
         }

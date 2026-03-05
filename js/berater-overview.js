@@ -173,15 +173,23 @@ function handleBeraterPhotoUpload(event) {
 }
 
 function backFromBeraterOverview() {
-    document.getElementById('beraterOverviewPage').style.display = 'none';
+    // Hide B-02 specific elements (chat toggle + widget)
     var chatToggle = document.getElementById('beraterChatToggle');
     if (chatToggle) chatToggle.style.display = 'none';
     var chatWidget = document.getElementById('beraterChatWidget');
     if (chatWidget) chatWidget.style.display = 'none';
-    var landing = document.getElementById('landingPage');
-    if (landing) landing.style.display = 'flex';
-    if (window.AppRouter) AppRouter.navigate('/landing');
-    document.dispatchEvent(new CustomEvent('viewChanged', { detail: { view: 'landing' } }));
+
+    // Delegate to backToLanding() which properly resets all page states,
+    // module tabs, and dispatches the correct events for M-01
+    if (typeof backToLanding === 'function') {
+        backToLanding();
+    } else {
+        // Fallback if backToLanding not available
+        document.getElementById('beraterOverviewPage').style.display = 'none';
+        var landing = document.getElementById('landingPage');
+        if (landing) landing.style.display = 'flex';
+        if (window.AppRouter) AppRouter.navigate('/landing');
+    }
 }
 
 // ── VIEW MODE SWITCHING ──

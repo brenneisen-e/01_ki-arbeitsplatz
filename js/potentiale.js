@@ -224,7 +224,7 @@ function renderImpulseKanban() {
                 '<span class="impulse-kanban-card-expand" id="kanban-arrow-' + i.id + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="6 9 12 15 18 9"/></svg></span></div>' +
                 '<div class="impulse-kanban-card-desc">' + i.desc + '</div>' +
                 '<div class="impulse-kanban-card-badges">' +
-                (i.abschlussvolumen ? '<span class="impuls-volumen-badge small"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg> ' + Number(i.abschlussvolumen).toLocaleString('de-DE') + ' \u20AC</span>' : '') +
+                (i.abschlussvolumen ? '<span class="impuls-volumen-badge small"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> ' + Number(i.abschlussvolumen).toLocaleString('de-DE') + ' \u20AC</span>' : '') +
                 (i.provision ? '<span class="impuls-provision-badge small"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg> ' + Number(i.provision).toLocaleString('de-DE') + ' \u20AC</span>' : '') +
                 '</div>' +
                 '<div class="impulse-kanban-card-footer"><span class="impulse-kanban-card-badge ' + i.kategorie + '">' + (i.kategorie === 'whitespots' ? 'Neugesch\u00E4ft' : 'Anpassung') + '</span>' +

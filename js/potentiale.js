@@ -7,7 +7,7 @@ var currentImpulseOption = 0;
 var impulseOptions = ['Option 1: Kartenansicht', 'Option 2: Kanban-Board', 'Option 3: Kompakte Tabelle'];
 
 var impulseData = [
-    { id: 'kb-risiko', title: 'Risikolebensversicherung anbieten', desc: 'Hypothek \u20AC285.000 bei Sparkasse ohne Restschuldversicherung', kategorie: 'whitespots', prioritaet: 'high', source: 'Open Finance',
+    { id: 'kb-risiko', title: 'Risikolebensversicherung anbieten', desc: 'Hypothek \u20AC285.000 bei Sparkasse ohne Restschuldversicherung', kategorie: 'whitespots', prioritaet: 'high', source: 'Open Finance', abschlussvolumen: 6000, provision: 540,
       icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="20" height="20"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>',
       herleitung: [
         { label: 'Datenquelle', value: 'Open Finance - Kreditdaten (Sparkasse)' },
@@ -16,7 +16,7 @@ var impulseData = [
         { label: 'Empfehlung', value: 'Risikoleben \u20AC300.000, Laufzeit 20 Jahre, ca. \u20AC25/Monat' }
       ]
     },
-    { id: 'kb-fonds', title: 'Fondspolice anbieten', desc: 'Depot \u20AC85.000 bei DWS, Sparrate \u20AC800/Mon. ohne Steueroptimierung', kategorie: 'whitespots', prioritaet: 'high', source: 'Open Finance',
+    { id: 'kb-fonds', title: 'Fondspolice anbieten', desc: 'Depot \u20AC85.000 bei DWS, Sparrate \u20AC800/Mon. ohne Steueroptimierung', kategorie: 'whitespots', prioritaet: 'high', source: 'Open Finance', abschlussvolumen: 85000, provision: 3400,
       icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="20" height="20"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>',
       herleitung: [
         { label: 'Datenquelle', value: 'Open Finance - Investmentdaten (DWS)' },
@@ -24,7 +24,7 @@ var impulseData = [
         { label: 'Empfehlung', value: 'Fondsgebundene Rentenversicherung mit Steuervorteil + Todesfallschutz' }
       ]
     },
-    { id: 'kb-kfz', title: 'Kfz-Wechsel anbieten', desc: 'Kfz bei Allianz l\u00E4uft aus, Ersparnis ca. \u20AC180/Jahr m\u00F6glich', kategorie: 'anpassung', prioritaet: 'high', source: 'Open Finance',
+    { id: 'kb-kfz', title: 'Kfz-Wechsel anbieten', desc: 'Kfz bei Allianz l\u00E4uft aus, Ersparnis ca. \u20AC180/Jahr m\u00F6glich', kategorie: 'anpassung', prioritaet: 'high', source: 'Open Finance', abschlussvolumen: 540, provision: 95,
       icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="20" height="20"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9L18 10l-3-5H7L4 10l-2.5 1.1C.7 11.3 0 12.1 0 13v3c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/></svg>',
       herleitung: [
         { label: 'Datenquelle', value: 'Open Finance - Versicherungsdaten (Allianz)' },
@@ -44,7 +44,7 @@ var impulseData = [
         ]
       }
     },
-    { id: 'kb-bu', title: 'BU-Absicherung pr\u00FCfen', desc: 'Einkommensst\u00E4rke vs. BU-Rente pr\u00FCfen, ggf. erh\u00F6hen', kategorie: 'anpassung', prioritaet: 'medium', source: 'Bestandsdaten',
+    { id: 'kb-bu', title: 'BU-Absicherung pr\u00FCfen', desc: 'Einkommensst\u00E4rke vs. BU-Rente pr\u00FCfen, ggf. erh\u00F6hen', kategorie: 'anpassung', prioritaet: 'medium', source: 'Bestandsdaten', abschlussvolumen: 1800, provision: 2160,
       icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="20" height="20"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>',
       herleitung: [
         { label: 'Datenquelle', value: 'PSD2 (Gehaltsdaten) + Eigener Vertrag (BU)' },
@@ -55,7 +55,7 @@ var impulseData = [
       deckungslueckeBar: { pct: 41, label: '41% abgesichert' },
       empfehlung: 'Empfohlene Aufstockung: \u20AC2.200/Monat zus\u00E4tzlich. Gesch\u00E4tzte Mehrpr\u00E4mie: ca. \u20AC120\u2013150/Monat.'
     },
-    { id: 'kb-rs', title: 'Rechtsschutz Cross-Sell', desc: 'Kein Rechtsschutz vorhanden, Familie mit Immobilienbesitz', kategorie: 'whitespots', prioritaet: 'medium', source: 'Bestandsdaten',
+    { id: 'kb-rs', title: 'Rechtsschutz Cross-Sell', desc: 'Kein Rechtsschutz vorhanden, Familie mit Immobilienbesitz', kategorie: 'whitespots', prioritaet: 'medium', source: 'Bestandsdaten', abschlussvolumen: 300, provision: 45,
       icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="20" height="20"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>',
       herleitung: [
         { label: 'Datenquelle', value: 'Bestandsdaten' },
@@ -63,7 +63,7 @@ var impulseData = [
         { label: 'Empfehlung', value: 'Privat- und Immobilienrechtsschutz, ca. \u20AC25/Monat' }
       ]
     },
-    { id: 'kb-tier', title: 'Tierhalter-Haftpflicht pr\u00FCfen', desc: 'Hinweise auf Tierhaltung aus Kontoumsätzen (Fressnapf, Tierarzt)', kategorie: 'whitespots', prioritaet: 'low', source: 'Open Finance',
+    { id: 'kb-tier', title: 'Tierhalter-Haftpflicht pr\u00FCfen', desc: 'Hinweise auf Tierhaltung aus Kontoumsätzen (Fressnapf, Tierarzt)', kategorie: 'whitespots', prioritaet: 'low', source: 'Open Finance', abschlussvolumen: 60, provision: 9,
       icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="20" height="20"><path d="M10 5.172C10 3.782 8.884 2.5 7.5 2.5S5 3.782 5 5.172c0 1.39 2.5 4.328 2.5 4.328S10 6.562 10 5.172z"/><path d="M19 5.172C19 3.782 17.884 2.5 16.5 2.5S14 3.782 14 5.172c0 1.39 2.5 4.328 2.5 4.328S19 6.562 19 5.172z"/><path d="M12 22c-4-3-8-6.58-8-10.5a4 4 0 018 0 4 4 0 018 0c0 3.92-4 7.5-8 10.5z"/></svg>',
       herleitung: [
         { label: 'Datenquelle', value: 'Open Finance - Kontoumsätze (Sparkasse)' },
@@ -72,7 +72,7 @@ var impulseData = [
         { label: 'Empfehlung', value: 'Tierhalterhaftpflicht (Hund) ab ca. \u20AC5/Monat' }
       ]
     },
-    { id: 'kb-hausrat', title: 'Hausratversicherung pr\u00FCfen', desc: 'Wohnfl\u00E4che und Wertgegenst\u00E4nde ggf. unterversichert', kategorie: 'anpassung', prioritaet: 'low', source: 'Bestandsdaten',
+    { id: 'kb-hausrat', title: 'Hausratversicherung pr\u00FCfen', desc: 'Wohnfl\u00E4che und Wertgegenst\u00E4nde ggf. unterversichert', kategorie: 'anpassung', prioritaet: 'low', source: 'Bestandsdaten', abschlussvolumen: 120, provision: 18,
       icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="20" height="20"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>',
       herleitung: [
         { label: 'Datenquelle', value: 'Bestandsdaten' },
@@ -80,7 +80,7 @@ var impulseData = [
         { label: 'Empfehlung', value: 'Deckungssumme pr\u00FCfen, ggf. Fahrraddiebstahl erg\u00E4nzen' }
       ]
     },
-    { id: 'kb-umschuldung', title: 'Umschuldung Konsumentenkredit', desc: 'Targobank Kredit 9,0% p.a. \u2013 Umschuldung zu 4,9% m\u00F6glich', kategorie: 'anpassung', prioritaet: 'low', source: 'Open Finance',
+    { id: 'kb-umschuldung', title: 'Umschuldung Konsumentenkredit', desc: 'Targobank Kredit 9,0% p.a. \u2013 Umschuldung zu 4,9% m\u00F6glich', kategorie: 'anpassung', prioritaet: 'low', source: 'Open Finance', abschlussvolumen: 12500, provision: 375,
       icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="20" height="20"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>',
       herleitung: [
         { label: 'Datenquelle', value: 'Open Finance - Kreditdaten (Targobank)' },
@@ -223,6 +223,10 @@ function renderImpulseKanban() {
                 '<div class="impulse-kanban-card-title">' + i.title + '</div>' +
                 '<span class="impulse-kanban-card-expand" id="kanban-arrow-' + i.id + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="6 9 12 15 18 9"/></svg></span></div>' +
                 '<div class="impulse-kanban-card-desc">' + i.desc + '</div>' +
+                '<div class="impulse-kanban-card-badges">' +
+                (i.abschlussvolumen ? '<span class="impuls-volumen-badge small"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg> ' + Number(i.abschlussvolumen).toLocaleString('de-DE') + ' \u20AC</span>' : '') +
+                (i.provision ? '<span class="impuls-provision-badge small"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg> ' + Number(i.provision).toLocaleString('de-DE') + ' \u20AC</span>' : '') +
+                '</div>' +
                 '<div class="impulse-kanban-card-footer"><span class="impulse-kanban-card-badge ' + i.kategorie + '">' + (i.kategorie === 'whitespots' ? 'Neugesch\u00E4ft' : 'Anpassung') + '</span>' +
                 '<span class="impulse-kanban-card-source">' + i.source + '</span></div>' +
                 herleitungHtml + '</div>';
@@ -299,7 +303,7 @@ function renderImpulseTable() {
             }
 
             detailHtml = '<tr class="impulse-table-detail" id="table-detail-' + i.id + '">' +
-                '<td colspan="6"><div class="impulse-table-detail-inner">' +
+                '<td colspan="7"><div class="impulse-table-detail-inner">' +
                 herleitungHtml + barHtml + vergleichHtml + empfehlungHtml +
                 '<div class="impulse-table-actions">' +
                 '<button class="action-btn primary small" onclick="event.stopPropagation()">' + actionIcons.angebot + ' Angebot erstellen</button>' +
@@ -313,11 +317,15 @@ function renderImpulseTable() {
             '<td><span class="impulse-kat-badge ' + i.kategorie + '">' + katLabel + '</span></td>' +
             '<td><span class="impulse-prio-badge ' + i.prioritaet + '">' + prioLabel + '</span></td>' +
             '<td>' + i.source + '</td>' +
+            '<td class="impulse-table-badges">' +
+            (i.abschlussvolumen ? '<span class="impuls-volumen-badge small">' + Number(i.abschlussvolumen).toLocaleString('de-DE') + ' \u20AC</span>' : '') +
+            (i.provision ? '<span class="impuls-provision-badge small">' + Number(i.provision).toLocaleString('de-DE') + ' \u20AC</span>' : '') +
+            '</td>' +
             '<td class="impulse-table-expand-cell"><span class="impulse-table-expand" id="table-arrow-' + i.id + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="6 9 12 15 18 9"/></svg></span></td>' +
             '</tr>' + detailHtml;
     }).join('');
 
-    return '<table class="impulse-table"><thead><tr><th style="width:36px"></th><th>Impuls</th><th>Kategorie</th><th>Priorit\u00E4t</th><th>Quelle</th><th style="width:30px"></th></tr></thead><tbody>' + rows + '</tbody></table>';
+    return '<table class="impulse-table"><thead><tr><th style="width:36px"></th><th>Impuls</th><th>Kategorie</th><th>Priorit\u00E4t</th><th>Quelle</th><th>Volumen / Provision</th><th style="width:30px"></th></tr></thead><tbody>' + rows + '</tbody></table>';
 }
 
 function toggleTableDetail(id) {

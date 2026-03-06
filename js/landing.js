@@ -645,8 +645,8 @@ function saveSpeechApiKey() {
 // ========================================
 let isRecording = false;
 
-const FAKE_INTERIM_TEXT = 'hey, zeig meine';
-const FAKE_FULL_TEXT = 'Hey, zeig meine Vertriebspotentiale in meiner Agentur';
+const FAKE_INTERIM_TEXT = 'hey chatbot, zeig meine';
+const FAKE_FULL_TEXT = 'Hey Chatbot, zeig meine Vertriebspotentiale in meiner Agentur';
 
 function stopRecordingUI() {
     const micBtn = document.getElementById('landingChatMic');

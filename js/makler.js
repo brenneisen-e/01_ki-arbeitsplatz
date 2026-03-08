@@ -23,8 +23,12 @@ function toggleMaklerModus() {
 window.toggleMaklerModus = toggleMaklerModus;
 
 function applyMaklerModus() {
+    // Hide banking elements
+    if (typeof hideBankingElements === 'function') hideBankingElements();
+    if (typeof showInsuranceTabContents === 'function') showInsuranceTabContents();
+
     // KPIs: hide private + MRH, show Makler (and vice versa)
-    var privatKpis = document.querySelector('.cockpit-kpis:not(#maklerKpis):not(#mrhKpis)');
+    var privatKpis = document.querySelector('.agentur-page-new > .cockpit-kpis:not(#maklerKpis):not(#mrhKpis):not([id^="bank"])');
     var maklerKpis = document.getElementById('maklerKpis');
     var mrhKpis = document.getElementById('mrhKpis');
     var mrhBadges = document.getElementById('mrhSaeulenBadges');

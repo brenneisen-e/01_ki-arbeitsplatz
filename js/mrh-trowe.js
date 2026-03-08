@@ -4,15 +4,54 @@
 // ========================================
 // GLOBAL VIEW MODE STATE
 // ========================================
-var viewMode = 'ao'; // 'ao' | 'ecclesia' | 'mrh'
+var viewMode = 'ao'; // 'ao' | 'ecclesia' | 'mrh' | 'bank-retail' | 'bank-fk' | 'bank-vw'
+
+// Dropdown label map
+var viewModeLabels = {
+    'ao': 'Privatkunde (AO)',
+    'ecclesia': 'Makler B2B',
+    'mrh': 'Gewerbemakler 360\u00B0',
+    'bank-retail': 'VR Retail',
+    'bank-fk': 'VR Firmenkunde',
+    'bank-vw': 'VR Verm\u00F6gen'
+};
+
+function toggleViewModeDropdown() {
+    var menu = document.getElementById('viewModeMenu');
+    var toggle = document.getElementById('viewModeToggle');
+    if (!menu) return;
+    var isOpen = menu.style.display !== 'none';
+    menu.style.display = isOpen ? 'none' : 'block';
+    if (toggle) toggle.classList.toggle('open', !isOpen);
+}
+window.toggleViewModeDropdown = toggleViewModeDropdown;
+
+// Close dropdown when clicking outside
+document.addEventListener('click', function(e) {
+    var dropdown = document.getElementById('viewModeDropdown');
+    if (dropdown && !dropdown.contains(e.target)) {
+        var menu = document.getElementById('viewModeMenu');
+        var toggle = document.getElementById('viewModeToggle');
+        if (menu) menu.style.display = 'none';
+        if (toggle) toggle.classList.remove('open');
+    }
+});
 
 function setViewMode(mode) {
     viewMode = mode;
 
-    // Update selector buttons
-    document.querySelectorAll('.view-mode-btn').forEach(function(btn) {
-        btn.classList.toggle('active', btn.dataset.mode === mode);
+    // Update dropdown label and active item
+    var label = document.getElementById('viewModeLabel');
+    if (label) label.textContent = viewModeLabels[mode] || mode;
+    document.querySelectorAll('.view-mode-dropdown-item').forEach(function(item) {
+        item.classList.toggle('active', item.dataset.mode === mode);
     });
+
+    // Close dropdown
+    var menu = document.getElementById('viewModeMenu');
+    var toggle = document.getElementById('viewModeToggle');
+    if (menu) menu.style.display = 'none';
+    if (toggle) toggle.classList.remove('open');
 
     // Backward compat: keep maklerModus in sync
     if (typeof maklerModus !== 'undefined') {
@@ -30,13 +69,11 @@ function setViewMode(mode) {
     // Update URL to reflect the active view mode on A-02
     var agenturPage = document.getElementById('agenturOverview');
     if (agenturPage && agenturPage.style.display !== 'none' && window.AppRouter) {
-        if (mode === 'ecclesia') {
-            AppRouter.navigate('/agentur-b2b');
-        } else if (mode === 'mrh') {
-            AppRouter.navigate('/agentur-gewerbe');
-        } else {
-            AppRouter.navigate('/agentur');
-        }
+        var routeMap = {
+            'ao': '/agentur', 'ecclesia': '/agentur-b2b', 'mrh': '/agentur-gewerbe',
+            'bank-retail': '/berater', 'bank-fk': '/berater-firmenkunde', 'bank-vw': '/berater-vermoegen'
+        };
+        AppRouter.navigate(routeMap[mode] || '/agentur');
     }
 
     localStorage.setItem('viewMode', mode);
@@ -47,20 +84,85 @@ function applyViewMode() {
     if (viewMode === 'ao') {
         applyAOModus();
     } else if (viewMode === 'ecclesia') {
-        // Reuse existing Makler logic
         if (typeof maklerModus !== 'undefined') maklerModus = true;
         if (typeof applyMaklerModus === 'function') applyMaklerModus();
     } else if (viewMode === 'mrh') {
         applyMRHModus();
+    } else if (viewMode.indexOf('bank-') === 0) {
+        applyBankModus(viewMode);
     }
 }
 window.applyViewMode = applyViewMode;
 
+// Helper: hide all banking KPIs and tab content
+function hideBankingElements() {
+    ['bankRetailKpis','bankFkKpis','bankVwKpis'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) el.style.display = 'none';
+    });
+    // Hide banking tab contents
+    document.querySelectorAll('[id^="berater-tab-"]').forEach(function(el) {
+        el.classList.remove('active');
+    });
+    // Hide banking tabs in header
+    var headerTabs = document.querySelector('.agentur-page-new .agentur-header-tabs');
+    if (headerTabs) {
+        headerTabs.querySelectorAll('.agentur-tab-bank-retail, .agentur-tab-bank-fk, .agentur-tab-bank-vw').forEach(function(el) { el.style.display = 'none'; });
+        headerTabs.querySelectorAll('.agentur-tab-divider.agentur-tab-bank-retail, .agentur-tab-divider.agentur-tab-bank-fk, .agentur-tab-divider.agentur-tab-bank-vw').forEach(function(el) { el.style.display = 'none'; });
+    }
+}
+
+// Helper: hide all insurance KPIs and tab content
+function hideInsuranceElements() {
+    var privatKpis = document.querySelector('.agentur-page-new > .cockpit-kpis:not(#maklerKpis):not(#mrhKpis):not([id^="bank"])');
+    if (privatKpis) privatKpis.style.display = 'none';
+    var maklerKpis = document.getElementById('maklerKpis');
+    if (maklerKpis) maklerKpis.style.display = 'none';
+    var mrhKpis = document.getElementById('mrhKpis');
+    if (mrhKpis) mrhKpis.style.display = 'none';
+    var mrhBadges = document.getElementById('mrhSaeulenBadges');
+    if (mrhBadges) mrhBadges.style.display = 'none';
+    // Hide insurance tabs
+    var headerTabs = document.querySelector('.agentur-page-new .agentur-header-tabs');
+    if (headerTabs) {
+        headerTabs.querySelectorAll('.agentur-tab:not(.agentur-tab-makler):not(.agentur-tab-mrh):not([class*="bank-"])').forEach(function(el) {
+            el.style.display = 'none';
+        });
+        headerTabs.querySelectorAll('.agentur-tab-divider:not(.agentur-tab-makler):not(.agentur-tab-mrh):not([class*="bank-"])').forEach(function(el) {
+            el.style.display = 'none';
+        });
+        headerTabs.querySelectorAll('.agentur-tab-makler').forEach(function(el) { el.style.display = 'none'; });
+        headerTabs.querySelectorAll('.agentur-tab-mrh').forEach(function(el) { el.style.display = 'none'; });
+    }
+    // Hide insurance tab contents
+    document.querySelectorAll('.makler-tab-content').forEach(function(el) { el.classList.remove('active'); });
+    document.querySelectorAll('.mrh-tab-content').forEach(function(el) { el.classList.remove('active'); });
+    // Hide insurance tab-* contents
+    ['tab-uebersicht','tab-stammdaten','tab-neugeschaeft','tab-bestand','tab-storno','tab-provision','tab-qualitaet','tab-kundenliste','tab-potential','tab-kundenliste-makler','tab-kundenliste-mrh'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) { el.classList.remove('active'); el.style.display = 'none'; }
+    });
+}
+
+// Helper: show insurance tab content elements
+function showInsuranceTabContents() {
+    ['tab-uebersicht','tab-stammdaten','tab-neugeschaeft','tab-bestand','tab-storno','tab-provision','tab-qualitaet','tab-kundenliste','tab-potential'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) el.style.display = '';
+    });
+}
+
 function applyAOModus() {
     if (typeof maklerModus !== 'undefined') maklerModus = false;
 
+    // Hide banking elements
+    hideBankingElements();
+
+    // Show insurance tab content elements
+    showInsuranceTabContents();
+
     // KPIs
-    var privatKpis = document.querySelector('.cockpit-kpis:not(#maklerKpis):not(#mrhKpis)');
+    var privatKpis = document.querySelector('.agentur-page-new > .cockpit-kpis:not(#maklerKpis):not(#mrhKpis):not([id^="bank"])');
     var maklerKpis = document.getElementById('maklerKpis');
     var mrhKpis = document.getElementById('mrhKpis');
     var mrhBadges = document.getElementById('mrhSaeulenBadges');
@@ -69,13 +171,13 @@ function applyAOModus() {
     if (mrhKpis) mrhKpis.style.display = 'none';
     if (mrhBadges) mrhBadges.style.display = 'none';
 
-    // Tabs: show AO, hide Makler + MRH
+    // Tabs: show AO, hide Makler + MRH + Banking
     var headerTabs = document.querySelector('.agentur-page-new .agentur-header-tabs');
     if (headerTabs) {
-        headerTabs.querySelectorAll('.agentur-tab:not(.agentur-tab-makler):not(.agentur-tab-mrh)').forEach(function(el) {
+        headerTabs.querySelectorAll('.agentur-tab:not(.agentur-tab-makler):not(.agentur-tab-mrh):not([class*="bank-"])').forEach(function(el) {
             el.style.display = '';
         });
-        headerTabs.querySelectorAll('.agentur-tab-divider:not(.agentur-tab-makler):not(.agentur-tab-mrh)').forEach(function(el) {
+        headerTabs.querySelectorAll('.agentur-tab-divider:not(.agentur-tab-makler):not(.agentur-tab-mrh):not([class*="bank-"])').forEach(function(el) {
             el.style.display = '';
         });
         headerTabs.querySelectorAll('.agentur-tab-makler').forEach(function(el) { el.style.display = 'none'; });
@@ -121,6 +223,70 @@ function applyAOModus() {
     if (typeof showAgenturTab === 'function') showAgenturTab('uebersicht');
 }
 window.applyAOModus = applyAOModus;
+
+// ========================================
+// BANKING MODUS (merged from B-02)
+// ========================================
+function applyBankModus(mode) {
+    if (typeof maklerModus !== 'undefined') maklerModus = false;
+
+    // Hide all insurance elements
+    hideInsuranceElements();
+
+    // Hide all banking KPIs first
+    ['bankRetailKpis','bankFkKpis','bankVwKpis'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) el.style.display = 'none';
+    });
+
+    // Show the correct banking KPIs
+    var kpiMap = { 'bank-retail': 'bankRetailKpis', 'bank-fk': 'bankFkKpis', 'bank-vw': 'bankVwKpis' };
+    var activeKpi = document.getElementById(kpiMap[mode]);
+    if (activeKpi) activeKpi.style.display = '';
+
+    // Tab class mapping
+    var tabClassMap = { 'bank-retail': 'agentur-tab-bank-retail', 'bank-fk': 'agentur-tab-bank-fk', 'bank-vw': 'agentur-tab-bank-vw' };
+    var headerTabs = document.querySelector('.agentur-page-new .agentur-header-tabs');
+    if (headerTabs) {
+        // Hide all banking tab sets
+        Object.values(tabClassMap).forEach(function(cls) {
+            headerTabs.querySelectorAll('.' + cls).forEach(function(el) { el.style.display = 'none'; });
+        });
+        // Show active banking tab set
+        var activeCls = tabClassMap[mode];
+        if (activeCls) {
+            headerTabs.querySelectorAll('.' + activeCls).forEach(function(el) { el.style.display = ''; });
+        }
+    }
+
+    // Update header
+    var titleEl = document.getElementById('agenturPageTitle');
+    if (titleEl) titleEl.textContent = 'Beraterin: Maria Musterfrau';
+    var subtitleId = document.getElementById('agenturIdHeader');
+    if (subtitleId) {
+        var subtitleDiv = subtitleId.parentElement;
+        subtitleDiv.innerHTML = '<span id="agenturIdHeader">VB-40210</span> | <span id="agenturStatusHeader">Aktiv</span>';
+    }
+    var subheadline = document.getElementById('mrhSubheadline');
+    if (subheadline) subheadline.style.display = 'none';
+
+    // Map internal mode to bankViewMode for B-02 JS functions
+    var bankModeMap = { 'bank-retail': 'retail', 'bank-fk': 'firmenkunde', 'bank-vw': 'vermoegen' };
+    if (typeof bankViewMode !== 'undefined') {
+        bankViewMode = bankModeMap[mode] || 'retail';
+    } else {
+        window.bankViewMode = bankModeMap[mode] || 'retail';
+    }
+
+    // Fill banking data
+    if (typeof fillBeraterKundenTable === 'function') fillBeraterKundenTable();
+    if (typeof fillBeraterNeugeschaeft === 'function') fillBeraterNeugeschaeft();
+    if (typeof fillBeraterWeiterePotentiale === 'function') fillBeraterWeiterePotentiale();
+
+    // Show banking Übersicht tab
+    if (typeof showBeraterTab === 'function') showBeraterTab('uebersicht');
+}
+window.applyBankModus = applyBankModus;
 
 
 // ========================================
@@ -316,8 +482,12 @@ var mrhKunden = [
 // APPLY MRH MODUS
 // ========================================
 function applyMRHModus() {
+    // Hide banking elements
+    hideBankingElements();
+    showInsuranceTabContents();
+
     // KPIs
-    var privatKpis = document.querySelector('.cockpit-kpis:not(#maklerKpis):not(#mrhKpis)');
+    var privatKpis = document.querySelector('.agentur-page-new > .cockpit-kpis:not(#maklerKpis):not(#mrhKpis):not([id^="bank"])');
     var maklerKpis = document.getElementById('maklerKpis');
     var mrhKpis = document.getElementById('mrhKpis');
     var mrhBadges = document.getElementById('mrhSaeulenBadges');

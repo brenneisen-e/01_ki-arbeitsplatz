@@ -1,18 +1,136 @@
 /* css/mrh-trowe.css - MRH Trowe 360° Modus Styles */
 
 /* ========================================
-   3-WEGE MODUS SELECTOR (ersetzt Toggle)
+   MODUS-SELECTOR DROPDOWN (modern)
    ======================================== */
-.view-mode-selector {
-    display: flex;
-    align-items: center;
-    gap: 2px;
+.view-mode-dropdown {
     position: absolute;
     right: 80px;
-    z-index: 2;
+    z-index: 10;
+}
+
+.view-mode-dropdown-toggle {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
     background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.25);
     border-radius: 8px;
-    padding: 2px;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.view-mode-dropdown-toggle:hover {
+    background: rgba(255,255,255,0.25);
+}
+
+.view-mode-dropdown-toggle.open {
+    background: rgba(255,255,255,0.25);
+    border-color: rgba(255,255,255,0.4);
+}
+
+.view-mode-dropdown-chevron {
+    transition: transform 0.2s;
+}
+
+.view-mode-dropdown-toggle.open .view-mode-dropdown-chevron {
+    transform: rotate(180deg);
+}
+
+.view-mode-dropdown-menu {
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    min-width: 220px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.18), 0 2px 8px rgba(0,0,0,0.08);
+    padding: 6px 0;
+    animation: dropdownFadeIn 0.15s ease-out;
+}
+
+@keyframes dropdownFadeIn {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.view-mode-dropdown-group {
+    padding: 4px 0;
+}
+
+.view-mode-dropdown-group-label {
+    padding: 6px 14px 4px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #94a3b8;
+}
+
+.view-mode-dropdown-divider {
+    height: 1px;
+    background: #e2e8f0;
+    margin: 4px 10px;
+}
+
+.view-mode-dropdown-item {
+    display: block;
+    width: 100%;
+    padding: 8px 14px;
+    border: none;
+    background: none;
+    text-align: left;
+    font-size: 13px;
+    font-weight: 500;
+    color: #334155;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.view-mode-dropdown-item:hover {
+    background: #f1f5f9;
+    color: #0f172a;
+}
+
+.view-mode-dropdown-item.active {
+    background: #f0fdf4;
+    color: #166534;
+    font-weight: 600;
+}
+
+.view-mode-dropdown-item.active::before {
+    content: '\2713  ';
+    font-weight: 700;
+}
+
+/* Legacy button styles kept for B-02 compatibility */
+.view-mode-btn {
+    padding: 5px 12px;
+    border: none;
+    background: transparent;
+    color: rgba(255,255,255,0.7);
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.view-mode-btn:hover {
+    background: rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.9);
+}
+
+.view-mode-btn.active {
+    background: #86BC25;
+    color: #fff;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
 }
 
 .demo-reset-btn {
@@ -36,30 +154,6 @@
 .demo-reset-btn:hover {
     background: rgba(255,255,255,0.25);
     color: #fff;
-}
-
-.view-mode-btn {
-    padding: 5px 12px;
-    border: none;
-    background: transparent;
-    color: rgba(255,255,255,0.7);
-    font-size: 12px;
-    font-weight: 600;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.2s;
-    white-space: nowrap;
-}
-
-.view-mode-btn:hover {
-    background: rgba(255,255,255,0.1);
-    color: rgba(255,255,255,0.9);
-}
-
-.view-mode-btn.active {
-    background: #86BC25;
-    color: #fff;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
 }
 
 /* ========================================
@@ -603,7 +697,7 @@
 }
 
 @media (max-width: 1200px) {
-    .view-mode-selector {
+    .view-mode-dropdown {
         position: relative;
         right: auto;
         margin-left: auto;

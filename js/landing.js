@@ -561,6 +561,10 @@ function backToLanding() {
     if (landingPage) {
         landingPage.style.display = 'flex';
 
+        // Welcome Chat wieder anzeigen (wird beim Init auf display:none gesetzt)
+        var welcomeChat = document.getElementById('welcomeChat');
+        if (welcomeChat) welcomeChat.style.display = 'block';
+
         // Dispatch event for Page ID Tracker (M-01)
         document.dispatchEvent(new CustomEvent('moduleChanged', {
             detail: { module: 'main', view: 'landing' }

@@ -88,6 +88,17 @@ function getInitialsBerater(name) {
 
 // ── INIT & SHOW OVERVIEW ──
 function showBeraterOverview() {
+    // Redirect to A-02 with banking mode
+    var bankMode = 'bank-' + (bankViewMode === 'firmenkunde' ? 'fk' : (bankViewMode === 'vermoegen' ? 'vw' : 'retail'));
+    if (typeof showAgenturOverview === 'function') {
+        showAgenturOverview('VM00001');
+        if (typeof setViewMode === 'function') {
+            setViewMode(bankMode);
+        }
+        return;
+    }
+
+    // Fallback: standalone B-02
     // Hide landing page and welcome chat
     var landingPage = document.getElementById('landingPage');
     if (landingPage) landingPage.style.display = 'none';
@@ -234,30 +245,33 @@ function setBankViewMode(mode) {
 // ── TAB SWITCHING ──
 function showBeraterTab(tabName) {
     currentBeraterTab = tabName;
-    
-    // Deactivate all tab contents
-    var contents = document.querySelectorAll('.berater-page-new .agentur-tab-content');
-    contents.forEach(function(c) { c.classList.remove('active'); });
-    
+
+    // Deactivate all berater tab contents (both in A-02 merged and standalone B-02)
+    document.querySelectorAll('[id^="berater-tab-"]').forEach(function(c) { c.classList.remove('active'); });
+    // Also deactivate insurance tabs so they don't overlap
+    document.querySelectorAll('.agentur-tab-content[id^="tab-"]').forEach(function(c) { c.classList.remove('active'); });
+
     // Activate target
     var target = document.getElementById('berater-tab-' + tabName);
     if (target) target.classList.add('active');
-    
-    // Update tab button active states
-    var tabClass = { retail:'berater-tab-retail', firmenkunde:'berater-tab-fk', vermoegen:'berater-tab-vw' }[bankViewMode];
-    var allBtns = document.querySelectorAll('.agentur-tab.' + tabClass);
-    allBtns.forEach(function(b) { b.classList.remove('active'); });
-    
-    // Find matching button
-    allBtns.forEach(function(b) {
-        var onclick = b.getAttribute('onclick') || '';
-        if (onclick.indexOf("'" + tabName + "'") > -1) {
-            b.classList.add('active');
-        }
-    });
-    
+
+    // Determine which tab button class to use based on viewMode or bankViewMode
+    var modeForTabs = (typeof viewMode !== 'undefined' && viewMode.indexOf('bank-') === 0) ? viewMode : ('bank-' + (bankViewMode || 'retail'));
+    var tabClassMap = { 'bank-retail':'agentur-tab-bank-retail', 'bank-fk':'agentur-tab-bank-fk', 'bank-vw':'agentur-tab-bank-vw' };
+    var tabClass = tabClassMap[modeForTabs];
+    if (tabClass) {
+        var allBtns = document.querySelectorAll('.agentur-tab.' + tabClass);
+        allBtns.forEach(function(b) { b.classList.remove('active'); });
+        allBtns.forEach(function(b) {
+            var onclick = b.getAttribute('onclick') || '';
+            if (onclick.indexOf("'" + tabName + "'") > -1) {
+                b.classList.add('active');
+            }
+        });
+    }
+
     // Show/hide KPIs (only on uebersicht)
-    var kpiIds = ['beraterRetailKpis','beraterFirmenKpis','beraterVermoegenKpis'];
+    var kpiIds = ['bankRetailKpis','bankFkKpis','bankVwKpis'];
     kpiIds.forEach(function(id) {
         var el = document.getElementById(id);
         if (el && el.style.display !== 'none') {
@@ -266,11 +280,11 @@ function showBeraterTab(tabName) {
     });
     // Re-show active KPI on uebersicht
     if (tabName === 'uebersicht') {
-        var kpiMap = { retail:'beraterRetailKpis', firmenkunde:'beraterFirmenKpis', vermoegen:'beraterVermoegenKpis' };
+        var kpiMap = { retail:'bankRetailKpis', firmenkunde:'bankFkKpis', vermoegen:'bankVwKpis' };
         var activeKpi = document.getElementById(kpiMap[bankViewMode]);
         if (activeKpi) activeKpi.style.display = '';
     }
-    
+
     // Fill tab content dynamically
     if (tabName === 'stammdaten') fillBeraterStammdaten();
     if (tabName === 'ertraege') fillBeraterErtraege();
@@ -680,13 +694,20 @@ function toggleBeraterPeriod(period) {
 
 // ── NAVIGATE TO KUNDEN DETAIL ──
 function openBankKundenDetail(kundenName, kundenId) {
-    // Hide overview
-    document.getElementById('beraterOverviewPage').style.display = 'none';
-    
+    // Hide A-02 overview (merged container) or standalone B-02
+    var agenturOverview = document.getElementById('agenturOverview');
+    if (agenturOverview && agenturOverview.style.display !== 'none') {
+        agenturOverview.style.display = 'none';
+    }
+    var beraterPage = document.getElementById('beraterOverviewPage');
+    if (beraterPage && beraterPage.style.display !== 'none') {
+        beraterPage.style.display = 'none';
+    }
+
     // Show detail page
     var detailPage = document.getElementById('kundenDetailBankPage');
     if (detailPage) detailPage.style.display = 'block';
-    
+
     // Copy berater info to shared header
     var headerTitle = document.getElementById('bankKundenHeaderTitle');
     if (headerTitle) headerTitle.textContent = 'Beraterin: ' + beraterData.name;
@@ -715,7 +736,14 @@ function openBankKundenDetail(kundenName, kundenId) {
 
 function closeBankKundenDetail() {
     document.getElementById('kundenDetailBankPage').style.display = 'none';
-    document.getElementById('beraterOverviewPage').style.display = 'block';
+    // Return to A-02 (merged) if available, otherwise standalone B-02
+    var agenturOverview = document.getElementById('agenturOverview');
+    if (agenturOverview) {
+        agenturOverview.style.display = 'block';
+    } else {
+        var beraterPage = document.getElementById('beraterOverviewPage');
+        if (beraterPage) beraterPage.style.display = 'block';
+    }
     showBeraterTab('kundenliste');
     document.dispatchEvent(new CustomEvent('viewChanged', { detail: { view: 'beraterOverview' } }));
 }

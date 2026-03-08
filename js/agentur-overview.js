@@ -237,7 +237,7 @@ function showAgenturTab(tabName) {
     if (tabContent) tabContent.classList.add('active');
 
     // Cockpit-KPIs (Gesamtbestand etc.) nur in Übersicht anzeigen
-    var cockpitKpis = document.querySelector('.cockpit-kpis:not(#maklerKpis)');
+    var cockpitKpis = document.querySelector('.cockpit-kpis:not(#maklerKpis):not(#mrhKpis):not([id^="bank"])');
     if (cockpitKpis) {
         cockpitKpis.style.display = (tabName === 'uebersicht') ? '' : 'none';
     }

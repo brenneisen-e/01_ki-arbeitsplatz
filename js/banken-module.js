@@ -549,7 +549,7 @@ function switchModule(moduleName) {
     }
 
     // Store current module
-    localStorage.setItem('currentModule', moduleName);
+    safeLocalSet('currentModule', moduleName);
 
     // Load Banken module dynamically when first accessed
     if (moduleName === 'banken') {
@@ -582,10 +582,11 @@ function switchModule(moduleName) {
 
 // Initialize module on page load
 function initModuleSelector() {
-    const savedModule = localStorage.getItem('currentModule') || 'versicherung';
+    const savedModule = safeLocalGet('currentModule', 'versicherung');
     switchModule(savedModule);
 }
 
 // Exports
 window.switchModule = switchModule;
 window.initModuleSelector = initModuleSelector;
+window.__registerModule('banken-module.js');

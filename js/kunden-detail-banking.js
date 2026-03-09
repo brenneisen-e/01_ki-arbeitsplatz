@@ -442,6 +442,40 @@ function fillBankKundenDetail(kundenName) {
     setTextById('bankKundenBeschaeftigt', kd.beschaeftigtSeit);
     setTextById('bankKundenEinkommen', '\u20AC' + kd.nettoeinkommen.toLocaleString('de-DE') + '/Mon.');
     
+    // Cross-Referenz (institutsübergreifend)
+    var bankLinkedContainer = document.getElementById('bankLinkedCustomerCard');
+    if (!bankLinkedContainer) {
+        // Container dynamisch erstellen (Banking-Stammdaten werden dynamisch gerendert)
+        var stammdatenTab = document.getElementById('berater-tab-stammdaten');
+        if (stammdatenTab) {
+            var existingLinked = stammdatenTab.querySelector('.linked-customer-card');
+            if (!existingLinked) {
+                bankLinkedContainer = document.createElement('div');
+                bankLinkedContainer.id = 'bankLinkedCustomerCard';
+                bankLinkedContainer.className = 'linked-customer-card';
+                // Am Anfang des Stammdaten-Tabs einfügen
+                var firstChild = stammdatenTab.firstChild;
+                if (firstChild) stammdatenTab.insertBefore(bankLinkedContainer, firstChild);
+                else stammdatenTab.appendChild(bankLinkedContainer);
+            }
+        }
+    }
+    if (bankLinkedContainer && typeof getLinkedCustomer === 'function') {
+        var bankLinked = getLinkedCustomer(kundenName);
+        if (bankLinked && bankLinked.linkedSystem === 'versicherung') {
+            bankLinkedContainer.style.display = 'block';
+            bankLinkedContainer.innerHTML = '<div class="linked-customer-inner">' +
+                '<div class="linked-customer-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg></div>' +
+                '<div class="linked-customer-text">' +
+                '<strong>Institutsubergreifend erkannt:</strong> ' + kundenName + ' ist auch Versicherungskunde (' + bankLinked.linkedId + ') als ' + bankLinked.linkedName +
+                '</div>' +
+                '<button class="linked-customer-btn" onclick="openKundenDetail(\'' + bankLinked.linkedName.replace(/'/g, "\\'") + '\')">Zur Versicherungs-Ansicht</button>' +
+                '</div>';
+        } else {
+            bankLinkedContainer.style.display = 'none';
+        }
+    }
+
     // Kinder
     var kinderEl = document.getElementById('bankKundenKinder');
     if (kinderEl) {
@@ -532,7 +566,7 @@ function fillBankKundenDetail(kundenName) {
     switchBankKundenTab('stammdaten');
 
     // Re-apply finance mode to newly created elements
-    var currentMode = (typeof financeMode !== 'undefined') ? financeMode : (localStorage.getItem('financeMode') || 'closed');
+    var currentMode = (typeof financeMode !== 'undefined') ? financeMode : (safeLocalGet('financeMode', 'closed'));
     if (typeof setFinanceMode === 'function') {
         setFinanceMode(currentMode);
     }
@@ -1019,3 +1053,4 @@ function fillBankKommunikation(kd) {
 window.fillBankKundenDetail = fillBankKundenDetail;
 window.switchBankKundenTab = switchBankKundenTab;
 window.bankMockKunden = bankMockKunden;
+window.__registerModule('kunden-detail-banking.js');

@@ -1856,3 +1856,4 @@
     }
 
 })();
+window.__registerModule('am-prod-mode.js');

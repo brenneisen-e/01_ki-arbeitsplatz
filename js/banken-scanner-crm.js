@@ -874,3 +874,4 @@ window.crmSchedule = crmSchedule;
 window.crmNote = crmNote;
 window.editStammdaten = editStammdaten;
 
+window.__registerModule('banken-scanner-crm.js');

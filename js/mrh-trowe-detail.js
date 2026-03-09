@@ -376,11 +376,11 @@ window.switchMRHKundeDropdown = switchMRHKundeDropdown;
 // INIT: Restore viewMode from localStorage
 // ========================================
 (function() {
-    var saved = localStorage.getItem('viewMode');
+    var saved = safeLocalGet('viewMode', null);
     if (saved && (saved === 'ao' || saved === 'ecclesia' || saved === 'mrh')) {
         viewMode = saved;
     }
-    var savedFinance = localStorage.getItem('financeMode');
+    var savedFinance = safeLocalGet('financeMode', null);
     if (savedFinance && (savedFinance === 'open' || savedFinance === 'closed')) {
         financeMode = savedFinance;
     }
@@ -397,3 +397,4 @@ window.switchMRHKundeDropdown = switchMRHKundeDropdown;
     }, 100);
 })();
 
+window.__registerModule('mrh-trowe-detail.js');

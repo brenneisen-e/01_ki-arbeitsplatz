@@ -469,3 +469,4 @@ function resetHPDetailActions() {
 }
 
 // ========================================
+window.__registerModule('hr-pipeline-arbeitgeber.js');

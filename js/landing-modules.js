@@ -1,3 +1,4 @@
+(function(){var r=['safeLocalSet'];var m=r.filter(function(f){return typeof window[f]==='undefined'});if(m.length)console.error('[landing-modules.js] Fehlende Deps:',m.join(', '),'← Lade utils.js zuerst!');})();
 // Toggle Modules
 function toggleModules() {
     const container = document.getElementById('modulesContainer');
@@ -44,7 +45,7 @@ function saveUserName() {
         const newName = input.value.trim();
 
         // Im localStorage speichern
-        localStorage.setItem('userName', newName);
+        safeLocalSet('userName', newName);
 
         // Willkommensnachricht aktualisieren
         if (welcomeSpan) {
@@ -67,7 +68,7 @@ function saveUserName() {
 
 // Benutzername beim Laden wiederherstellen
 function loadUserName() {
-    const savedName = localStorage.getItem('userName');
+    const savedName = safeLocalGet('userName', null);
     if (savedName) {
         const input = document.getElementById('userNameInput');
         const welcomeSpan = document.getElementById('welcomeUserName');
@@ -881,3 +882,4 @@ function closePMOToolbox() {
     }, 50);
 }
 
+window.__registerModule('landing-modules.js');

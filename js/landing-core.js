@@ -77,13 +77,13 @@ window.CLAUDE_MODEL = window.CLAUDE_MODEL || 'claude-haiku-4-5-20251001';
 
 // Fallback: API-Key aus localStorage
 function getApiToken() {
-    return localStorage.getItem('claude_api_token') || '';
+    return safeLocalGet('claude_api_token', '');
 }
 
 // Save API token to localStorage
 function saveApiToken(token) {
     if (token && token.trim()) {
-        localStorage.setItem('claude_api_token', token.trim());
+        safeLocalSet('claude_api_token', token.trim());
         return true;
     }
     return false;
@@ -327,6 +327,9 @@ function openDashboard() {
         }));
     }
 
+    // Globale Suche einblenden
+    if (typeof showGlobalSearch === 'function') showGlobalSearch();
+
     // Update URL route
     if (window.AppRouter) AppRouter.navigate('/dashboard');
 
@@ -516,6 +519,9 @@ function backToLanding() {
     if (kundenDetailPage) kundenDetailPage.style.display = 'none';
     if (billingCheckPage) billingCheckPage.style.display = 'none';
 
+    // Globale Suche ausblenden
+    if (typeof hideGlobalSearch === 'function') hideGlobalSearch();
+
     // B-02/B-10 Banking Berater verstecken
     var beraterOverviewPage = document.getElementById('beraterOverviewPage');
     if (beraterOverviewPage) beraterOverviewPage.style.display = 'none';
@@ -543,7 +549,7 @@ function backToLanding() {
     });
 
     // localStorage zurücksetzen damit beim Reload nicht Asset Management öffnet
-    localStorage.setItem('currentModule', 'versicherung');
+    safeLocalSet('currentModule', 'versicherung');
 
     // BGAV page verstecken
     const bgavPage = document.getElementById('bgavUmstellungPage');
@@ -619,3 +625,4 @@ function initLandingChat() {
     
     console.log('Landing Chat initialisiert');
 }
+window.__registerModule('landing-core.js');

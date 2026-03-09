@@ -58,7 +58,7 @@ function handleLogoUpload(event) {
         placeholder.style.display = 'none';
 
         // Speichern im localStorage
-        localStorage.setItem('customLogo', e.target.result);
+        safeLocalSet('customLogo', e.target.result);
         console.log('Logo hochgeladen und gespeichert');
     };
     reader.readAsDataURL(file);
@@ -83,7 +83,7 @@ function handleProfileUpload(event, vermittlerId) {
     const reader = new FileReader();
     reader.onload = function(e) {
         // Speichern im localStorage
-        localStorage.setItem('profileImage_' + vermittlerId, e.target.result);
+        safeLocalSet('profileImage_' + vermittlerId, e.target.result);
 
         // Je nach Kontext das richtige Element aktualisieren
         if (vermittlerId === 'kunde') {
@@ -130,7 +130,7 @@ function handleAgenturPhotoUpload(event) {
         }
 
         // Speichern im localStorage
-        localStorage.setItem('agenturPhoto', e.target.result);
+        safeLocalSet('agenturPhoto', e.target.result);
         console.log('Agentur-Foto hochgeladen und gespeichert');
     };
     reader.readAsDataURL(file);
@@ -150,7 +150,7 @@ async function loadSavedImages() {
     }
 
     // Logo laden: localStorage > config > default SVG
-    const savedLogo = localStorage.getItem('customLogo');
+    const savedLogo = safeLocalGet('customLogo', null);
     const logoImg = document.getElementById('uploadedLogo');
     const logoPlaceholder = document.getElementById('logoPlaceholder');
 
@@ -172,7 +172,7 @@ async function loadSavedImages() {
     }
 
     // Agentur Photo laden: localStorage > config > default SVG
-    const savedAgenturPhoto = localStorage.getItem('agenturPhoto');
+    const savedAgenturPhoto = safeLocalGet('agenturPhoto', null);
     const photoImg = document.getElementById('agenturPhotoImg');
     const photoPlaceholder = document.querySelector('.agentur-photo-placeholder');
 
@@ -219,10 +219,10 @@ async function loadSavedImages() {
 function exportImagesForGitHub() {
     const images = {};
 
-    const logo = localStorage.getItem('customLogo');
+    const logo = safeLocalGet('customLogo', null);
     if (logo) images.logo = logo;
 
-    const photo = localStorage.getItem('agenturPhoto');
+    const photo = safeLocalGet('agenturPhoto', null);
     if (photo) images.photo = photo;
 
     if (Object.keys(images).length === 0) {
@@ -670,3 +670,4 @@ function closeVersicherungs1x1() {
 }
 
 // ========================================
+window.__registerModule('landing-upload.js');

@@ -44,7 +44,7 @@ function toggleFeedbackPanel() {
         panel.classList.toggle('open');
         if (panel.classList.contains('open')) {
             // Autor aus LocalStorage laden
-            const savedAuthor = localStorage.getItem('feedbackAuthor');
+            const savedAuthor = safeLocalGet('feedbackAuthor', null);
             if (savedAuthor) {
                 document.getElementById('feedbackAuthor').value = savedAuthor;
             }
@@ -82,7 +82,7 @@ function handleAuthorSelect() {
 
 // Autor-Auswahl initialisieren (bei Laden)
 function initAuthorSelect() {
-    const savedAuthor = localStorage.getItem('feedbackAuthor');
+    const savedAuthor = safeLocalGet('feedbackAuthor', null);
     const select = document.getElementById('feedbackAuthorSelect');
     const input = document.getElementById('feedbackAuthor');
 
@@ -128,7 +128,7 @@ async function submitFeedback() {
     }
 
     // Autor für nächstes Mal speichern
-    localStorage.setItem('feedbackAuthor', author);
+    safeLocalSet('feedbackAuthor', author);
 
     const feedback = {
         author: author,
@@ -149,9 +149,9 @@ async function submitFeedback() {
                 console.log('Altes Feedback löschen fehlgeschlagen:', e);
             }
         } else {
-            const feedbacks = JSON.parse(localStorage.getItem('bankenFeedback') || '[]');
+            const feedbacks = safeJsonParse(safeLocalGet('bankenFeedback', null), []);
             const filtered = feedbacks.filter(f => f.id !== editingFeedbackId && f.id !== parseInt(editingFeedbackId));
-            localStorage.setItem('bankenFeedback', JSON.stringify(filtered));
+            safeLocalSet('bankenFeedback', JSON.stringify(filtered));
         }
         editingFeedbackId = null;
     }
@@ -237,9 +237,9 @@ async function loadFeedbackFromCloudflare() {
 
 // LocalStorage Fallback
 function saveFeedbackToLocalStorage(feedback) {
-    const feedbacks = JSON.parse(localStorage.getItem('bankenFeedback') || '[]');
+    const feedbacks = safeJsonParse(safeLocalGet('bankenFeedback', null), []);
     feedbacks.unshift(feedback);
-    localStorage.setItem('bankenFeedback', JSON.stringify(feedbacks));
+    safeLocalSet('bankenFeedback', JSON.stringify(feedbacks));
     loadFeedbackFromLocalStorage();
     document.getElementById('feedbackText').value = '';
     showFeedbackNotification('Feedback lokal gespeichert (nur in diesem Browser)');
@@ -247,7 +247,7 @@ function saveFeedbackToLocalStorage(feedback) {
 
 // Feedback aus LocalStorage laden
 function loadFeedbackFromLocalStorage() {
-    const feedbacks = JSON.parse(localStorage.getItem('bankenFeedback') || '[]');
+    const feedbacks = safeJsonParse(safeLocalGet('bankenFeedback', null), []);
     renderFeedbackList(feedbacks);
     updateFeedbackBadge(feedbacks.length);
 }
@@ -405,7 +405,7 @@ function openFeedbackDetail(index) {
     }
 
     // Gespeicherten Autor laden
-    const savedAuthor = localStorage.getItem('feedbackAuthor') || '';
+    const savedAuthor = safeLocalGet('feedbackAuthor', '');
 
     modal.innerHTML = `
         <div class="feedback-detail-content">
@@ -498,7 +498,7 @@ async function submitReply(feedbackId) {
     }
 
     // Autor speichern
-    localStorage.setItem('feedbackAuthor', author);
+    safeLocalSet('feedbackAuthor', author);
 
     const reply = {
         id: Date.now(),
@@ -538,13 +538,13 @@ async function submitReply(feedbackId) {
 
 // Antwort lokal speichern (Fallback)
 function addReplyToLocalStorage(feedbackId, reply) {
-    const feedbacks = JSON.parse(localStorage.getItem('bankenFeedback') || '[]');
+    const feedbacks = safeJsonParse(safeLocalGet('bankenFeedback', null), []);
     const feedback = feedbacks.find(f => f.id === feedbackId || f.id === parseInt(feedbackId));
 
     if (feedback) {
         if (!feedback.replies) feedback.replies = [];
         feedback.replies.push(reply);
-        localStorage.setItem('bankenFeedback', JSON.stringify(feedbacks));
+        safeLocalSet('bankenFeedback', JSON.stringify(feedbacks));
         showFeedbackNotification('Antwort lokal gespeichert');
         closeFeedbackDetail();
         loadFeedbackFromLocalStorage();
@@ -569,7 +569,7 @@ function editFeedbackByIndex(index) {
 function editFeedback(fb) {
     // Falls String übergeben wurde (alte Aufrufe), parsen
     if (typeof fb === 'string') {
-        fb = JSON.parse(decodeURIComponent(fb));
+        fb = safeJsonParse(decodeURIComponent(fb), null);
     }
     editingFeedbackId = fb.id;
 
@@ -639,9 +639,9 @@ async function deleteFeedback(id) {
         }
     } else {
         // LocalStorage Fallback
-        const feedbacks = JSON.parse(localStorage.getItem('bankenFeedback') || '[]');
+        const feedbacks = safeJsonParse(safeLocalGet('bankenFeedback', null), []);
         const filtered = feedbacks.filter(f => f.id !== id && f.id !== parseInt(id));
-        localStorage.setItem('bankenFeedback', JSON.stringify(filtered));
+        safeLocalSet('bankenFeedback', JSON.stringify(filtered));
         loadFeedbackFromLocalStorage();
         showFeedbackNotification('Kommentar gelöscht!');
     }
@@ -740,11 +740,11 @@ async function exportFeedback() {
         } catch (error) {
             console.error('Export Fehler:', error);
             // Fallback zu LocalStorage
-            const feedbacks = JSON.parse(localStorage.getItem('bankenFeedback') || '[]');
+            const feedbacks = safeJsonParse(safeLocalGet('bankenFeedback', null), []);
             downloadFeedbackJson(feedbacks);
         }
     } else {
-        const feedbacks = JSON.parse(localStorage.getItem('bankenFeedback') || '[]');
+        const feedbacks = safeJsonParse(safeLocalGet('bankenFeedback', null), []);
         downloadFeedbackJson(feedbacks);
     }
 }
@@ -759,3 +759,4 @@ function downloadFeedbackJson(data) {
     URL.revokeObjectURL(url);
 }
 
+window.__registerModule('banken-feedback.js');

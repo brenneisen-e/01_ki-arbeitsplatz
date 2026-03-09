@@ -801,3 +801,4 @@
                 tbody.appendChild(totalRow);
             }
         }
+window.__registerModule('risikoscoring-data.js');

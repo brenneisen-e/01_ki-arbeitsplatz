@@ -313,3 +313,4 @@ function resetHPBewerber() {
     initHPChat();
 }
 
+window.__registerModule('hr-pipeline-bewerber.js');

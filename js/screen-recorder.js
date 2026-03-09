@@ -176,7 +176,7 @@ function toggleScreenRecordVisibility() {
     if (!btn) return;
     var visible = cb && cb.checked;
     btn.style.display = visible ? '' : 'none';
-    localStorage.setItem('screenRecordEnabled', visible ? '1' : '0');
+    safeLocalSet('screenRecordEnabled', visible ? '1' : '0');
     // Falls ausgeblendet und gerade Aufnahme läuft → stoppen
     if (!visible && screenRecorder.isRecording) {
         screenRecorder.stop();
@@ -186,9 +186,10 @@ window.toggleScreenRecordVisibility = toggleScreenRecordVisibility;
 
 // Beim Laden: gespeicherten Zustand wiederherstellen
 document.addEventListener('DOMContentLoaded', function() {
-    var enabled = localStorage.getItem('screenRecordEnabled') === '1';
+    var enabled = safeLocalGet('screenRecordEnabled', '0') === '1';
     var cb = document.getElementById('screenRecordToggle');
     var btn = document.getElementById('screenRecordBtn');
     if (cb) cb.checked = enabled;
     if (btn) btn.style.display = enabled ? '' : 'none';
 });
+window.__registerModule('screen-recorder.js');

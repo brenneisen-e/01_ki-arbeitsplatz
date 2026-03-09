@@ -313,7 +313,7 @@ function setBank(bankKey) {
     var bankLabel = document.getElementById('selectedBankLabel');
     if (bankLabel) bankLabel.textContent = cfg.name;
 
-    localStorage.setItem('selectedBank', bankKey);
+    safeLocalSet('selectedBank', bankKey);
     console.log('Bank gewechselt: ' + cfg.name);
 }
 window.setBank = setBank;
@@ -409,8 +409,13 @@ function setInsurer(insurerKey) {
         updateContractsForInsurer(insurerKey);
     }
 
-    localStorage.setItem('selectedInsurer', insurerKey);
+    safeLocalSet('selectedInsurer', insurerKey);
     console.log('Versicherer gewechselt: ' + cfg.name);
+
+    // A-10 Kunden-Detail aktualisieren falls sichtbar
+    if (typeof updateKundenDetailInsurer === 'function') {
+        updateKundenDetailInsurer();
+    }
 }
 window.setInsurer = setInsurer;
 
@@ -442,11 +447,11 @@ function loadInsurerGridLogos() {
 
 // Restore saved insurer + bank on page load
 function restoreInsurer() {
-    var saved = localStorage.getItem('selectedInsurer');
+    var saved = safeLocalGet('selectedInsurer', null);
     if (saved && insurerConfig[saved]) {
         setInsurer(saved);
     }
-    var savedBank = localStorage.getItem('selectedBank');
+    var savedBank = safeLocalGet('selectedBank', null);
     if (savedBank && bankConfig[savedBank]) {
         setBank(savedBank);
     }
@@ -551,7 +556,7 @@ function setViewMode(mode) {
         AppRouter.navigate(routeMap[mode] || '/agentur');
     }
 
-    localStorage.setItem('viewMode', mode);
+    safeLocalSet('viewMode', mode);
 }
 window.setViewMode = setViewMode;
 
@@ -593,7 +598,7 @@ function setFinanceMode(mode) {
         if (badge) badge.remove();
     }
 
-    localStorage.setItem('financeMode', mode);
+    safeLocalSet('financeMode', mode);
 }
 window.setFinanceMode = setFinanceMode;
 
@@ -1078,3 +1083,4 @@ function applyMRHModus() {
     showMRHTab('uebersicht');
 }
 window.applyMRHModus = applyMRHModus;
+window.__registerModule('mrh-trowe-modes.js');

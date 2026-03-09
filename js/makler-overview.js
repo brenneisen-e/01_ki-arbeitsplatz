@@ -1,3 +1,4 @@
+(function(){var r=['getFilteredData','kpiDefinitions'];var m=r.filter(function(f){return typeof window[f]==='undefined'});if(m.length)console.error('[makler-overview.js] Fehlende Deps:',m.join(', '),'← Lade config.js, data.js zuerst!');})();
 
 // ========================================
 // MAKLER RENEWAL OVERVIEW (A-02)
@@ -401,7 +402,7 @@ function renderMaklerBestand() {
 // ========================================
 document.addEventListener('DOMContentLoaded', function() {
     // Restore Makler mode
-    if (localStorage.getItem('maklerModus') === '1') {
+    if (safeLocalGet('maklerModus', '0') === '1') {
         maklerModus = true;
         var toggle = document.getElementById('maklerToggle');
         var label = document.getElementById('maklerToggleLabel');
@@ -410,3 +411,5 @@ document.addEventListener('DOMContentLoaded', function() {
         setTimeout(applyMaklerModus, 200);
     }
 });
+
+window.__registerModule('makler-overview.js');

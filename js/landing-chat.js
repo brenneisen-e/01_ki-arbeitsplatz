@@ -1,8 +1,9 @@
+(function(){var r=['state','getFilteredData'];var m=r.filter(function(f){return typeof window[f]==='undefined'});if(m.length)console.error('[landing-chat.js] Fehlende Deps:',m.join(', '),'← Lade data.js zuerst!');})();
 // ========================================
 // GOOGLE CLOUD SPEECH-TO-TEXT (kept for settings compatibility)
 // ========================================
 function getSpeechApiKey() {
-    return localStorage.getItem('google_speech_api_key') || '';
+    return safeLocalGet('google_speech_api_key', '');
 }
 
 function saveSpeechApiKey() {
@@ -11,7 +12,7 @@ function saveSpeechApiKey() {
     if (!input) return;
     const key = input.value.trim();
     if (key && key.startsWith('AIza')) {
-        localStorage.setItem('google_speech_api_key', key);
+        safeLocalSet('google_speech_api_key', key);
         if (status) { status.className = 'api-token-status success'; status.textContent = '✅ Google Cloud Key gespeichert – Speech-to-Text aktiv'; }
     } else if (!key) {
         localStorage.removeItem('google_speech_api_key');
@@ -391,7 +392,7 @@ function generateLandingMockResponse(message) {
         (lowerMessage.includes('potentiale') && !lowerMessage.includes('option')) ||
         (lowerMessage.includes('potenziale') && !lowerMessage.includes('option'))) {
 
-        const userName = localStorage.getItem('userName') || 'Maria';
+        const userName = safeLocalGet('userName', 'Maria');
         return `Hallo ${userName}, sehr gerne. Ich habe folgende Vertriebspotentiale identifiziert:
 <div class="chat-potentiale-list"><div class="chat-potentiale-item"><div class="kunde-info"><div class="kunde-avatar">PS</div><div class="kunde-details"><span class="kunde-name">Peter Schmidt</span><span class="kunde-potential multiple">Mehrere Potentiale erkannt</span><span class="kunde-desc">KFZ, BU & Hausrat – Vertragslücken identifiziert</span></div></div><button class="kunde-btn" onclick="openKundenDetailDualView('Peter Schmidt', 'KD00001')">Zum Kunden</button></div><div class="chat-potentiale-item"><div class="kunde-info"><div class="kunde-avatar">AM</div><div class="kunde-details"><span class="kunde-name">Anna Müller</span><span class="kunde-potential">Kfz-Versicherung – Wechselpotential</span><span class="kunde-desc">Vertrag läuft 12/2026 aus, Angebot erstellen</span></div></div><button class="kunde-btn" onclick="openKundenDetailDualView('Anna Müller', 'KD00042')">Zum Kunden</button></div><div class="chat-potentiale-item"><div class="kunde-info"><div class="kunde-avatar">TW</div><div class="kunde-details"><span class="kunde-name">Thomas Weber</span><span class="kunde-potential">BU-Versicherung – Deckungslücke</span><span class="kunde-desc">Aktuelle Absicherung deckt nur 60% des Nettoeinkommens</span></div></div><button class="kunde-btn" onclick="openKundenDetailDualView('Thomas Weber', 'KD00087')">Zum Kunden</button></div><div class="chat-potentiale-item"><div class="kunde-info"><div class="kunde-avatar">SK</div><div class="kunde-details"><span class="kunde-name">Sandra Koch</span><span class="kunde-potential">Hausratversicherung – Cross-Selling</span><span class="kunde-desc">Bestandskundin Leben, kein Sachvertrag vorhanden</span></div></div><button class="kunde-btn" onclick="openKundenDetailDualView('Sandra Koch', 'KD00023')">Zum Kunden</button></div><div class="chat-potentiale-item"><div class="kunde-info"><div class="kunde-avatar">MF</div><div class="kunde-details"><span class="kunde-name">Michael Fischer</span><span class="kunde-potential">Altersvorsorge – Nachholbedarf</span><span class="kunde-desc">38 Jahre, keine private Altersvorsorge, hohe Sparquote</span></div></div><button class="kunde-btn" onclick="openKundenDetailDualView('Michael Fischer', 'KD00056')">Zum Kunden</button></div></div>
 Klicke auf **"Zum Kunden"** um die Details und Potentiale einzusehen.`;
@@ -724,3 +725,4 @@ function hideLandingChatTyping() {
     }
 }
 
+window.__registerModule('landing-chat.js');

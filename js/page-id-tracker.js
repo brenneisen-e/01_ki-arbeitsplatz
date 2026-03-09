@@ -379,7 +379,7 @@ const PageIDTracker = {
             return 'kundendetail-bank';
         }
         // B-02 Berater Overview
-        const bankMode = localStorage.getItem('bankViewMode') || 'retail';
+        const bankMode = safeLocalGet('bankViewMode', 'retail');
         if (bankMode === 'firmenkunde') return 'berater-firmenkunde';
         if (bankMode === 'vermoegen') return 'berater-vermoegen';
         return 'berater-retail';
@@ -481,3 +481,4 @@ if (document.readyState === 'loading') {
 
 // Make globally accessible
 window.PageIDTracker = PageIDTracker;
+window.__registerModule('page-id-tracker.js');

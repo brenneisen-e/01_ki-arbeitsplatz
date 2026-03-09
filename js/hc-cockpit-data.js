@@ -785,3 +785,4 @@ function renderHCAlerts() {
         </div>
     `).join('');
 }
+window.__registerModule('hc-cockpit-data.js');

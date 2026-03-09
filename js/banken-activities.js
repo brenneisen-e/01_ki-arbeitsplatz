@@ -6,52 +6,52 @@
 
 // Get customer activities from localStorage
 function getCustomerActivities(customerId) {
-    const activities = JSON.parse(localStorage.getItem('customerActivities') || '{}');
+    const activities = safeJsonParse(safeLocalGet('customerActivities', null), {});
     return activities[customerId] || [];
 }
 
 // Save customer activity to localStorage
 function saveCustomerActivity(customerId, activity) {
-    const activities = JSON.parse(localStorage.getItem('customerActivities') || '{}');
+    const activities = safeJsonParse(safeLocalGet('customerActivities', null), {});
     if (!activities[customerId]) {
         activities[customerId] = [];
     }
     activities[customerId].unshift(activity);
-    localStorage.setItem('customerActivities', JSON.stringify(activities));
+    safeLocalSet('customerActivities', JSON.stringify(activities));
     return activity;
 }
 
 // Get customer notes from localStorage
 function getCustomerNotes(customerId) {
-    const notes = JSON.parse(localStorage.getItem('customerNotes') || '{}');
+    const notes = safeJsonParse(safeLocalGet('customerNotes', null), {});
     return notes[customerId] || [];
 }
 
 // Save customer note to localStorage
 function saveCustomerNote(customerId, note) {
-    const notes = JSON.parse(localStorage.getItem('customerNotes') || '{}');
+    const notes = safeJsonParse(safeLocalGet('customerNotes', null), {});
     if (!notes[customerId]) {
         notes[customerId] = [];
     }
     notes[customerId].unshift(note);
-    localStorage.setItem('customerNotes', JSON.stringify(notes));
+    safeLocalSet('customerNotes', JSON.stringify(notes));
     return note;
 }
 
 // Get customer Stammdaten modifications from localStorage
 function getCustomerStammdaten(customerId) {
-    const stammdaten = JSON.parse(localStorage.getItem('customerStammdaten') || '{}');
+    const stammdaten = safeJsonParse(safeLocalGet('customerStammdaten', null), {});
     return stammdaten[customerId] || {};
 }
 
 // Save customer Stammdaten to localStorage
 function saveCustomerStammdaten(customerId, field, value) {
-    const stammdaten = JSON.parse(localStorage.getItem('customerStammdaten') || '{}');
+    const stammdaten = safeJsonParse(safeLocalGet('customerStammdaten', null), {});
     if (!stammdaten[customerId]) {
         stammdaten[customerId] = {};
     }
     stammdaten[customerId][field] = value;
-    localStorage.setItem('customerStammdaten', JSON.stringify(stammdaten));
+    safeLocalSet('customerStammdaten', JSON.stringify(stammdaten));
 }
 
 // ========================================
@@ -273,7 +273,7 @@ function submitActivity() {
         type: type,
         typeLabel: typeLabels[type] || type,
         text: text,
-        author: localStorage.getItem('feedbackAuthor') || 'Eike',
+        author: safeLocalGet('feedbackAuthor', 'Eike'),
         timestamp: new Date().toISOString()
     };
 
@@ -359,10 +359,10 @@ function createActivityElement(activity) {
 function deleteActivity(activityId) {
     if (!confirm('Aktivität wirklich löschen?')) return;
 
-    const activities = JSON.parse(localStorage.getItem('customerActivities') || '{}');
+    const activities = safeJsonParse(safeLocalGet('customerActivities', null), {});
     if (activities[currentCustomerId]) {
         activities[currentCustomerId] = activities[currentCustomerId].filter(a => a.id !== activityId);
-        localStorage.setItem('customerActivities', JSON.stringify(activities));
+        safeLocalSet('customerActivities', JSON.stringify(activities));
         renderCustomerActivities(currentCustomerId);
         showNotification('Aktivität gelöscht', 'success');
     }
@@ -480,3 +480,4 @@ window.showNotification = showNotification;
 window.showNewCases = showNewCases;
 window.showPayments = showPayments;
 window.showPromises = showPromises;
+window.__registerModule('banken-activities.js');

@@ -93,15 +93,16 @@ function toggleScreenshotVisibility() {
     if (!btn) return;
     var visible = cb && cb.checked;
     btn.style.display = visible ? '' : 'none';
-    localStorage.setItem('screenshotEnabled', visible ? '1' : '0');
+    safeLocalSet('screenshotEnabled', visible ? '1' : '0');
 }
 window.toggleScreenshotVisibility = toggleScreenshotVisibility;
 
 // Beim Laden: gespeicherten Zustand wiederherstellen
 document.addEventListener('DOMContentLoaded', function() {
-    var enabled = localStorage.getItem('screenshotEnabled') === '1';
+    var enabled = safeLocalGet('screenshotEnabled', '0') === '1';
     var cb = document.getElementById('screenshotToggle');
     var btn = document.getElementById('screenshotBtn');
     if (cb) cb.checked = enabled;
     if (btn) btn.style.display = enabled ? '' : 'none';
 });
+window.__registerModule('screenshot.js');

@@ -436,3 +436,4 @@ Haben Sie dazu Fragen? Oder soll ich nochmal auf einen bestimmten Bereich tiefer
 
 // Make globally accessible
 window.SpeakerNotes = SpeakerNotes;
+window.__registerModule('speaker-notes.js');

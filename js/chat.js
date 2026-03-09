@@ -1,3 +1,4 @@
+(function(){var r=['safeLocalGet','state'];var m=r.filter(function(f){return typeof window[f]==='undefined'});if(m.length)console.error('[chat.js] Fehlende Deps:',m.join(', '),'← Lade utils.js, data.js zuerst!');})();
 // js/chat.js - Chat Logic (mit automatischer Datenanalyse nach Filtern)
 
 let chatHistory = [];
@@ -10,7 +11,7 @@ window.CLAUDE_MODEL = 'claude-haiku-4-5-20251001';
 
 // Fallback: API-Key aus localStorage (falls kein Worker)
 function getClaudeApiKey() {
-    return localStorage.getItem('claude_api_token') || '';
+    return safeLocalGet('claude_api_token', '');
 }
 
 // Prüfe ob Worker oder direkter Zugriff verwendet wird
@@ -1447,3 +1448,4 @@ window.showAnomalyAgenturen = showAnomalyAgenturen;
 window.removeAnomalyColumn = removeAnomalyColumn;
 
 console.log('chat.js geladen - initChat() ist verfuegbar');
+window.__registerModule('chat.js');

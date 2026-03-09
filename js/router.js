@@ -314,3 +314,4 @@
     }
 
 })();
+window.__registerModule('router.js');

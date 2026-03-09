@@ -613,3 +613,4 @@ function clearAllStates() {
 
 window.removeCounty = removeCounty;
 window.clearAllStates = clearAllStates;
+window.__registerModule('map-counties.js');

@@ -90,6 +90,7 @@ var kundenBestandVertraege = [
     { kunde: 'Norbert Keller', kundenId: 'KD00034', typ: 'Unfallversicherung', versicherer: 'ERGO', details: 'Invalidität €120.000, Progression 300%', praemie: '€210/Jahr', beginn: '01.04.2018', status: 'Aktiv' },
     { kunde: 'Ulrike Maier', kundenId: 'KD00035', typ: 'Berufsunfähigkeitsversicherung', versicherer: 'Zurich', details: 'BU-Rente: €1.600/Mon., Endalter 67', praemie: '€88/Mon.', beginn: '01.10.2021', status: 'Aktiv' }
 ];
+window.kundenBestandVertraege = kundenBestandVertraege;
 
 function generateMockVertraege() {
     var now = new Date();
@@ -606,3 +607,4 @@ window.updateContractsForInsurer = updateContractsForInsurer;
  * Navigation Functions
  */
 
+window.__registerModule('agentur-overview-tables.js');

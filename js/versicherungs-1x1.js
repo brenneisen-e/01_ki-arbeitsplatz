@@ -2559,3 +2559,4 @@
   };
 
 })();
+window.__registerModule('versicherungs-1x1.js');

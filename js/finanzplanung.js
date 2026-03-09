@@ -246,3 +246,4 @@ window.switchKundenTab = function(tabName) {
 };
 
 console.log('finanzplanung.js geladen');
+window.__registerModule('finanzplanung.js');

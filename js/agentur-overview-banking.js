@@ -1,3 +1,4 @@
+(function(){var r=['safeLocalGet'];var m=r.filter(function(f){return typeof window[f]==='undefined'});if(m.length)console.error('[agentur-overview-banking.js] Fehlende Deps:',m.join(', '),'← Lade utils.js zuerst!');})();
 // ── BERATER / BANKING MODULE (merged from berater-overview.js) ──
 
 /* ============================================================
@@ -6,7 +7,7 @@
    ============================================================ */
 
 // ── STATE ──
-var bankViewMode = localStorage.getItem('bankViewMode') || 'retail';
+var bankViewMode = safeLocalGet('bankViewMode', 'retail');
 var currentBeraterTab = 'uebersicht';
 
 // ── MOCK BERATER (Atruvia agree21/OKP BankingWorkspace) ──
@@ -187,7 +188,7 @@ function fillBeraterHeader() {
     var photoSmall = document.getElementById('beraterPhotoSmall');
     var photoImg = document.getElementById('beraterPhotoImgSmall');
     if (photoSmall && photoImg) {
-        var savedPhoto = localStorage.getItem('beraterPhoto');
+        var savedPhoto = safeLocalGet('beraterPhoto', null);
         var photoToUse = savedPhoto || beraterData.photo;
         if (photoToUse) {
             photoImg.src = photoToUse;
@@ -202,7 +203,7 @@ function handleBeraterPhotoUpload(event) {
     if (!file) return;
     var reader = new FileReader();
     reader.onload = function(e) {
-        localStorage.setItem('beraterPhoto', e.target.result);
+        safeLocalSet('beraterPhoto', e.target.result);
         fillBeraterHeader();
     };
     reader.readAsDataURL(file);
@@ -231,7 +232,7 @@ function backFromBeraterOverview() {
 // ── VIEW MODE SWITCHING ──
 function setBankViewMode(mode) {
     bankViewMode = mode;
-    localStorage.setItem('bankViewMode', mode);
+    safeLocalSet('bankViewMode', mode);
     
     // Update mode selector buttons
     var selector = document.getElementById('beraterViewModeSelector');
@@ -1172,3 +1173,4 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+window.__registerModule('agentur-overview-banking.js');

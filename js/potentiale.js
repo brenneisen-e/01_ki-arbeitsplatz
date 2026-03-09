@@ -366,3 +366,4 @@ function toggleTableDetail(id) {
 window.toggleTableDetail = toggleTableDetail;
 
 // ========================================
+window.__registerModule('potentiale.js');

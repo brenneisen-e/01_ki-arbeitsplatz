@@ -41,6 +41,7 @@
     <link rel="stylesheet" href="css/banking-berater.css?v=20260309">
     <!-- Modularisierte CSS-Module -->
     <link rel="stylesheet" href="css/kunden-detail.css?v=20260209">
+    <link rel="stylesheet" href="css/global-search.css?v=20260309">
     <link rel="stylesheet" href="css/clv.css?v=20260209">
     <link rel="stylesheet" href="css/agentur-fachkonzept.css?v=20260309b">
     <link rel="stylesheet" href="css/user-profile.css?v=20260209">
@@ -67,6 +68,15 @@
           <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"></path>
           <circle cx="12" cy="13" r="4"></circle>
       </svg>
+  </div>
+
+  <!-- Globale Suche -->
+  <div id="globalSearchContainer" class="global-search-container" style="display:none;">
+      <div class="global-search-input-wrap">
+          <svg class="global-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input id="globalSearchInput" class="global-search-input" type="text" placeholder="Kunden, Verträge suchen... (Ctrl+K)" autocomplete="off" />
+      </div>
+      <div id="globalSearchResults" class="global-search-results" style="display:none;"></div>
   </div>
 
   <!-- ========================================
@@ -4433,6 +4443,8 @@
                                     </div>
                                 </div>
                             </div>
+                            <!-- Cross-Referenz Card (institutsübergreifend) -->
+                            <div id="linkedCustomerCard" class="linked-customer-card" style="display:none;"></div>
                             <!-- Makler B2B Stammdaten (hidden by default) -->
                             <div class="kunden-info-grid" id="maklerStammdaten" style="display:none;">
                                 <div class="info-item">
@@ -4987,7 +4999,7 @@
                                 </svg>
                                 Absichern
                             </h2>
-                            <span class="bedarfsfeld-source ergo-badge">Eigene Versicherungen (ERGO)</span>
+                            <span class="bedarfsfeld-source ergo-badge" id="eigeneVersicherungenLabel">Eigene Versicherungen (ERGO)</span>
                         </div>
                         <table class="kunden-table fida-table">
                             <thead>
@@ -6255,15 +6267,7 @@
                                 </svg>
                                 Kommunikationshistorie
                             </h2>
-                            <div class="komm-switcher" id="kommSwitcher">
-                                <button class="option-switcher-arrow" onclick="switchKommOption(-1)">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14"><polyline points="15 18 9 12 15 6"></polyline></svg>
-                                </button>
-                                <span class="option-switcher-label" id="kommOptionLabel">Option 1: Timeline</span>
-                                <button class="option-switcher-arrow" onclick="switchKommOption(1)">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                                </button>
-                            </div>
+                            <!-- Kommunikation: Option 1 (Timeline) fest -->
                         </div>
                         <div id="kommContent">
                         <div class="kommunikation-timeline" id="kundenKommunikation">
@@ -7455,6 +7459,37 @@
   <!-- Page ID Display - Always visible on all pages and modules -->
   <div class="page-id-display" id="pageIdDisplay">M-01</div>
 
+    <!-- ============================================================
+         SCRIPT-LADEREIHENFOLGE – NICHT VERÄNDERN!
+
+         Abhängigkeitskette:
+         load-order (Manifest) → parent-relays (standalone)
+         → config → utils → data → charts/tables/map → main
+         → chat
+         → agentur-overview: core → tables → features → banking
+         → router
+         → landing: core → chat → regions → modules → data → upload
+         → nps-display
+         → kunden-detail: core → data → features → banking
+         → clv, bezahlen, potentiale, kommunikation-display, autocomplete
+         → user-mode → makler: modus → kunden → b2b → overview
+         → mrh-trowe: modes → render → detail
+         → screen-recorder, screenshot, sales-report, finanzplanung
+         → banken: feedback → module → dashboard → customer-detail(2)
+           → actions → charts → activities → scanner-crm → export → config-pdf → chat
+         → asset-management → am-prod-mode
+         → risikoscoring: data → ui
+         → provisionssimulation, bgav-umstellung
+         → hr-pipeline: core → bewerber → arbeitgeber → overlays
+         → hc-cockpit: data → ui
+         → versicherungs-1x1
+         → page-id-tracker, speaker-notes
+         → guided-tour (IMMER zuletzt)
+
+         Neue Dateien IMMER am Ende einfügen oder Abhängigkeit prüfen!
+         ============================================================ -->
+    <script src="js/load-order.js"></script>
+
     <!-- Parent Mouse Relay (für EikeCase Speaker Notes Mouse-Follow im Iframe) -->
     <script src="js/parent-mouse-relay.js"></script>
     <!-- Parent Wheel Relay (für EikeCase Speaker Notes Scroll im Iframe) -->
@@ -7537,10 +7572,27 @@
     <script src="js/hc-cockpit-ui.js?v=20260309"></script>
     <!-- Versicherungs-1×1 Knowledge Module -->
     <script src="js/versicherungs-1x1.js?v=20260303i"></script>
+    <!-- Globale Suche -->
+    <script src="js/global-search.js?v=20260309"></script>
     <!-- Page ID Tracker -->
     <script src="js/page-id-tracker.js?v=20260126"></script>
     <!-- Speaker Notes Teleprompter -->
     <script src="js/speaker-notes.js"></script>
+    <!-- Formular Modal -->
+    <div id="formularModal" class="formular-modal-overlay" style="display:none" onclick="if(event.target===this)closeFormularModal()">
+        <div class="formular-modal-card">
+            <div class="formular-modal-header">
+                <h3 class="formular-modal-title">Formular</h3>
+                <button class="formular-modal-close" onclick="closeFormularModal()">&times;</button>
+            </div>
+            <div class="formular-modal-body"></div>
+            <div class="formular-modal-footer">
+                <button class="formular-modal-cancel" onclick="closeFormularModal()">Abbrechen</button>
+                <button class="formular-modal-submit" onclick="submitFormularModal()">Absenden</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Bestandsuebertragung Module (ESM) -->
     <script type="module" src="js/bestandsuebertragung/index.js?v=20260126"></script>
     <!-- Guided Tour / Demo Mode -->

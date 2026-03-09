@@ -280,3 +280,4 @@ function toggleHPSideBySide() {
     }
 }
 
+window.__registerModule('hr-pipeline-overlays.js');

@@ -693,49 +693,257 @@ function toggleBeraterPeriod(period) {
 }
 
 // ── NAVIGATE TO KUNDEN DETAIL ──
+// Redirects to unified A-10 page instead of separate B-10
 function openBankKundenDetail(kundenName, kundenId) {
-    // Hide A-02 overview (merged container) or standalone B-02
-    var agenturOverview = document.getElementById('agenturOverview');
-    if (agenturOverview && agenturOverview.style.display !== 'none') {
-        agenturOverview.style.display = 'none';
-    }
-    var beraterPage = document.getElementById('beraterOverviewPage');
-    if (beraterPage && beraterPage.style.display !== 'none') {
-        beraterPage.style.display = 'none';
+    // Track that we came from berater overview (B-02)
+    if (typeof previousViewBeforeKundenDetail !== 'undefined') {
+        previousViewBeforeKundenDetail = 'beraterOverview';
     }
 
-    // Show detail page
-    var detailPage = document.getElementById('kundenDetailBankPage');
-    if (detailPage) detailPage.style.display = 'block';
+    // Update A-02 header to show berater info (so updateKundenSharedHeader copies it to A-10)
+    var titleEl = document.getElementById('agenturPageTitle');
+    var subtitleId = document.getElementById('agenturIdHeader');
+    if (titleEl) titleEl.textContent = 'Beraterin: ' + beraterData.name;
+    if (subtitleId) {
+        var subtitleDiv = subtitleId.parentElement;
+        if (subtitleDiv) {
+            subtitleDiv.innerHTML = '<span id="agenturIdHeader">' + beraterData.id + '</span> | <span id="agenturStatusHeader">Aktiv</span>';
+        }
+    }
 
-    // Copy berater info to shared header
-    var headerTitle = document.getElementById('bankKundenHeaderTitle');
-    if (headerTitle) headerTitle.textContent = 'Beraterin: ' + beraterData.name;
-    var headerId = document.getElementById('bankKundenHeaderId');
-    if (headerId) headerId.textContent = beraterData.id;
-    
-    // Copy berater photo
+    // Copy berater photo to agentur photo (so A-10 shared header picks it up)
     var srcImg = document.getElementById('beraterPhotoImgSmall');
-    var destImg = document.getElementById('bankKundenHeaderPhotoImg');
+    var destImg = document.getElementById('agenturPhotoImgSmall');
     if (srcImg && destImg && srcImg.style.display !== 'none') {
         destImg.src = srcImg.src;
         destImg.style.display = 'block';
     }
-    
-    // Set customer dropdown
-    var select = document.getElementById('bankKundenSwitchSelect');
-    if (select) select.value = kundenName;
-    
-    // Fill customer detail
-    if (typeof fillBankKundenDetail === 'function') {
-        fillBankKundenDetail(kundenName);
+
+    // Populate A-10 dropdown with bank customers
+    populateA10BankDropdown();
+
+    // Open unified A-10 customer detail page
+    openKundenDetail(kundenName, kundenId || 'KDB000');
+
+    // After A-10 loads, fill bank-specific data
+    setTimeout(function() {
+        if (typeof fillBankKundenDetail === 'function') {
+            fillBankKundenDetail(kundenName);
+        }
+        // Adapt A-10 tabs for bank mode
+        adaptA10ForBankMode(kundenName);
+    }, 100);
+}
+
+// Populate A-10 customer dropdown with bank customers
+function populateA10BankDropdown() {
+    var select = document.getElementById('kundenSwitchSelect');
+    if (!select) return;
+
+    // Get list of bank customers based on viewMode
+    var customers = [];
+    if (typeof viewMode !== 'undefined') {
+        if (viewMode === 'bank-retail' && typeof bankKundenRetail !== 'undefined') {
+            customers = bankKundenRetail;
+        } else if (viewMode === 'bank-fk' && typeof bankKundenFK !== 'undefined') {
+            customers = bankKundenFK;
+        } else if (viewMode === 'bank-vw' && typeof bankKundenVW !== 'undefined') {
+            customers = bankKundenVW;
+        }
     }
-    
-    document.dispatchEvent(new CustomEvent('viewChanged', { detail: { view: 'kundenDetailBank' } }));
+
+    if (customers.length > 0) {
+        select.innerHTML = '';
+        customers.forEach(function(k) {
+            var opt = document.createElement('option');
+            opt.value = k.name;
+            opt.textContent = k.name;
+            select.appendChild(opt);
+        });
+    }
+}
+
+// Adapt A-10 page tabs and content for bank mode
+function adaptA10ForBankMode(kundenName) {
+    var kundenPage = document.getElementById('kundenDetailPage');
+    if (!kundenPage) return;
+
+    kundenPage.classList.add('bank-mode');
+
+    // Rename "Betreute Verträge" tab to "Konten & Produkte"
+    var vertraegeTab = kundenPage.querySelector('.kunden-tab[data-tab="vertraege"]');
+    if (vertraegeTab) {
+        vertraegeTab.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg> Konten & Produkte';
+    }
+
+    // Fill bank stammdaten into A-10 elements
+    var kd = null;
+    if (typeof bankMockKunden !== 'undefined') {
+        kd = bankMockKunden[kundenName];
+    }
+    if (!kd) return;
+
+    // Override A-10 stammdaten with bank data
+    var nameEl = document.getElementById('kundenName');
+    if (nameEl) nameEl.textContent = kundenName;
+
+    var fields = {
+        'kundenGeburtsdatum': kd.geburtsdatum,
+        'kundenAdresse': kd.adresse,
+        'kundenTelefon': kd.telefon,
+        'kundenEmail': kd.email,
+        'kundenBeruf': kd.beruf,
+        'kundenFamilienstand': kd.familienstand,
+        'kundenArbeitgeber': kd.arbeitgeber,
+        'kundenBeschaeftigt': kd.beschaeftigtSeit,
+        'kundenEinkommen': '\u20AC' + kd.nettoeinkommen.toLocaleString('de-DE') + '/Mon.'
+    };
+    for (var id in fields) {
+        var el = document.getElementById(id);
+        if (el) el.textContent = fields[id];
+    }
+
+    // Fill Konten & Produkte (reuse vertraege tab content)
+    var kontenBody = document.getElementById('kundenVertraege');
+    if (kontenBody && kd.konten) {
+        kontenBody.innerHTML = '';
+        kd.konten.forEach(function(k) {
+            var saldo = typeof k.saldo === 'number' ? (k.saldo < 0 ? '-' : '') + '\u20AC' + Math.abs(k.saldo).toLocaleString('de-DE') : k.saldo;
+            var statusClass = k.status === 'Aktiv' ? 'aktiv' : 'storniert';
+            kontenBody.innerHTML += '<tr><td>' + k.produkt + '</td><td>' + k.details + '</td><td class="text-right">' + saldo + '</td><td>' + k.eroeffnung + '</td><td><span class="status-badge ' + statusClass + '">' + k.status + '</span></td></tr>';
+        });
+    }
+
+    // Adapt shared header tabs for bank module
+    adaptA10HeaderTabsForBank();
+}
+
+// Adapt A-10 shared header tabs for bank navigation
+function adaptA10HeaderTabsForBank() {
+    var headerTabs = document.querySelector('#kundenDetailPage .agentur-header-tabs');
+    if (!headerTabs) return;
+
+    headerTabs.innerHTML = '' +
+        '<button class="agentur-tab" onclick="navigateToBeraterTabFromA10(\'uebersicht\')">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg> Übersicht' +
+        '</button>' +
+        '<button class="agentur-tab" onclick="navigateToBeraterTabFromA10(\'stammdaten\')">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg> Stammdaten' +
+        '</button>' +
+        '<button class="agentur-tab" onclick="navigateToBeraterTabFromA10(\'neugeschaeft\')">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><line x1="12" y1="20" x2="12" y2="10"></line><line x1="18" y1="20" x2="18" y2="4"></line><line x1="6" y1="20" x2="6" y2="16"></line></svg> Neugeschäft' +
+        '</button>' +
+        '<button class="agentur-tab" onclick="navigateToBeraterTabFromA10(\'ertraege\')">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><circle cx="12" cy="12" r="10"></circle><text x="12" y="16" text-anchor="middle" fill="currentColor" stroke="none" font-size="12" font-weight="bold">\u20AC</text></svg> Erträge' +
+        '</button>' +
+        '<button class="agentur-tab" onclick="navigateToBeraterTabFromA10(\'qualitaet\')">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg> Qualität' +
+        '</button>' +
+        '<div class="agentur-tab-divider"></div>' +
+        '<button class="agentur-tab active" onclick="navigateToBeraterTabFromA10(\'kundenliste\')">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 00-3-3.87"></path><path d="M16 3.13a4 4 0 010 7.75"></path></svg> Kunden' +
+        '</button>' +
+        '<button class="agentur-tab" onclick="navigateToBeraterTabFromA10(\'potentiale\')">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg> Potentiale' +
+        '</button>';
+}
+
+// Navigate from A-10 back to B-02 berater tab
+function navigateToBeraterTabFromA10(tabName) {
+    document.getElementById('kundenDetailPage').style.display = 'none';
+    restoreA10InsuranceMode();
+
+    var beraterPage = document.getElementById('beraterOverviewPage');
+    var agenturOverview = document.getElementById('agenturOverview');
+
+    if (agenturOverview && agenturOverview.querySelector('#beraterOverviewPage')) {
+        agenturOverview.style.display = 'block';
+    } else if (beraterPage) {
+        beraterPage.style.display = 'block';
+    } else if (agenturOverview) {
+        agenturOverview.style.display = 'block';
+    }
+
+    if (typeof showBeraterTab === 'function') {
+        showBeraterTab(tabName);
+    }
+
+    document.dispatchEvent(new CustomEvent('viewChanged', { detail: { view: 'beraterOverview' } }));
+}
+
+// Restore A-10 to insurance mode when leaving bank context
+function restoreA10InsuranceMode() {
+    var kundenPage = document.getElementById('kundenDetailPage');
+    if (!kundenPage || !kundenPage.classList.contains('bank-mode')) return;
+
+    kundenPage.classList.remove('bank-mode');
+
+    // Restore "Betreute Verträge" tab label
+    var vertraegeTab = kundenPage.querySelector('.kunden-tab[data-tab="vertraege"]');
+    if (vertraegeTab) {
+        vertraegeTab.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg> Betreute Verträge';
+    }
+
+    // Restore A-10 dropdown with insurance customers
+    restoreA10InsuranceDropdown();
+
+    // Restore A-02 header tabs
+    restoreA10InsuranceHeaderTabs();
+}
+
+function restoreA10InsuranceDropdown() {
+    var select = document.getElementById('kundenSwitchSelect');
+    if (!select) return;
+    var insuranceCustomers = ['Peter Schmidt','Amira König','Thomas Weber','Anna Hoffmann','Michael Braun','Lisa Müller','Klaus Meier','Matthias Engel','Christian Bauer','Martin Wolf','Eva Hartmann'];
+    select.innerHTML = '';
+    insuranceCustomers.forEach(function(name) {
+        var opt = document.createElement('option');
+        opt.value = name;
+        opt.textContent = name;
+        select.appendChild(opt);
+    });
+}
+
+function restoreA10InsuranceHeaderTabs() {
+    var headerTabs = document.querySelector('#kundenDetailPage .agentur-header-tabs');
+    if (!headerTabs) return;
+
+    headerTabs.innerHTML = '' +
+        '<button class="agentur-tab" onclick="navigateToAgenturTab(\'uebersicht\')">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg> Übersicht' +
+        '</button>' +
+        '<button class="agentur-tab" onclick="navigateToAgenturTab(\'stammdaten\')">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg> Stammdaten' +
+        '</button>' +
+        '<button class="agentur-tab" onclick="navigateToAgenturTab(\'neugeschaeft\')">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><line x1="12" y1="20" x2="12" y2="10"></line><line x1="18" y1="20" x2="18" y2="4"></line><line x1="6" y1="20" x2="6" y2="16"></line></svg> Neugeschäft' +
+        '</button>' +
+        '<button class="agentur-tab" onclick="navigateToAgenturTab(\'bestand\')">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"></path></svg> Bestand' +
+        '</button>' +
+        '<button class="agentur-tab" onclick="navigateToAgenturTab(\'storno\')">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg> Storno' +
+        '</button>' +
+        '<button class="agentur-tab" onclick="navigateToAgenturTab(\'provision\')">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><circle cx="12" cy="12" r="10"></circle><text x="12" y="16" text-anchor="middle" fill="currentColor" stroke="none" font-size="12" font-weight="bold">\u20AC</text></svg> Vergütung' +
+        '</button>' +
+        '<button class="agentur-tab" onclick="navigateToAgenturTab(\'qualitaet\')">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg> Qualität' +
+        '</button>' +
+        '<div class="agentur-tab-divider"></div>' +
+        '<button class="agentur-tab active" onclick="navigateToAgenturTab(\'kundenliste\')">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 00-3-3.87"></path><path d="M16 3.13a4 4 0 010 7.75"></path></svg> Kunden' +
+        '</button>' +
+        '<button class="agentur-tab" onclick="navigateToAgenturTab(\'potential\')">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg> Potentiale' +
+        '</button>';
 }
 
 function closeBankKundenDetail() {
-    document.getElementById('kundenDetailBankPage').style.display = 'none';
+    // Now A-10 is used for bank customers too, so close it and restore insurance mode
+    document.getElementById('kundenDetailPage').style.display = 'none';
+    restoreA10InsuranceMode();
+
     // Return to A-02 (merged) if available, otherwise standalone B-02
     var agenturOverview = document.getElementById('agenturOverview');
     if (agenturOverview) {

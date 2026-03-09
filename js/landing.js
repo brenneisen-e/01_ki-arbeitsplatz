@@ -711,20 +711,22 @@ function toggleVoiceInput() {
 // DUAL VIEW: Stammdaten + Potentiale nebeneinander
 // ========================================
 function openKundenDetailDualView(kundenName, vermittlerId) {
-    // Track that we came from landing (M-01 chat)
-    if (typeof previousViewBeforeKundenDetail !== 'undefined') {
-        previousViewBeforeKundenDetail = 'landing';
-    }
-
-    // Sicherstellen, dass der A-02 Header "Maria Musterfrau" zeigt (nicht Makler-Header),
-    // da updateKundenSharedHeader() diese Werte auf A-10 kopiert.
-    var titleEl = document.getElementById('agenturPageTitle');
-    var subtitleId = document.getElementById('agenturIdHeader');
-    if (titleEl) titleEl.textContent = 'Agentur: Maria Musterfrau';
-    if (subtitleId) {
-        var subtitleDiv = subtitleId.parentElement;
-        if (subtitleDiv) {
-            subtitleDiv.innerHTML = '<span id="agenturIdHeader">VM00001</span> | <span id="agenturStatusHeader">Aktiv</span>';
+    // If called from landing page (M-01), override the source tracking
+    var landingPage = document.getElementById('landingPage');
+    if (landingPage && landingPage.style.display !== 'none') {
+        if (typeof previousViewBeforeKundenDetail !== 'undefined') {
+            previousViewBeforeKundenDetail = 'landing';
+        }
+        // Sicherstellen, dass der A-02 Header "Maria Musterfrau" zeigt (nicht Makler-Header),
+        // da updateKundenSharedHeader() diese Werte auf A-10 kopiert.
+        var titleEl = document.getElementById('agenturPageTitle');
+        var subtitleId = document.getElementById('agenturIdHeader');
+        if (titleEl) titleEl.textContent = 'Agentur: Maria Musterfrau';
+        if (subtitleId) {
+            var subtitleDiv = subtitleId.parentElement;
+            if (subtitleDiv) {
+                subtitleDiv.innerHTML = '<span id="agenturIdHeader">VM00001</span> | <span id="agenturStatusHeader">Aktiv</span>';
+            }
         }
     }
 

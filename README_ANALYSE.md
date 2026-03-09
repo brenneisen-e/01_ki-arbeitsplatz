@@ -66,32 +66,64 @@ kiarbeitsplatz/
 ├── js/                                 # JavaScript
 │   ├── main.js                         # Haupt-Initialisierung
 │   ├── router.js                       # Hash-basierte URL-Navigation
-│   ├── landing.js                      # Landing Page & Modul-Wechsel
+│   ├── landing-core.js                 # Landing Page: Auto-Zoom, API-Config, CSV-Upload
+│   ├── landing-chat.js                 # Landing Page: Chat, Voice, Dual-View
+│   ├── landing-regions.js              # Landing Page: Regionen-Abfragen
+│   ├── landing-modules.js              # Landing Page: Modul-Management, Settings
+│   ├── landing-data.js                 # Landing Page: CSV-Laden, Filter, Beispielfragen
+│   ├── landing-upload.js               # Landing Page: Upload-Modus, Potentialanalyse
 │   ├── config.js                       # API-Konfiguration (Anthropic)
 │   ├── data.js                         # Stammdaten & Mock-Daten
 │   ├── charts.js                       # Chart-Rendering
 │   ├── tables.js                       # Tabellen-Rendering
 │   ├── utils.js                        # Hilfsfunktionen
 │   ├── chat.js                         # KI-Chat (Versicherung)
-│   ├── agentur-overview.js             # A-02 Vermittler-Overview + B-02 Berater
-│   ├── kunden-detail.js                # A-10 Kunden-Detail + B-10 Banking-Detail
-│   ├── makler.js                       # Makler B2B (A-02b)
-│   ├── mrh-trowe.js                    # Gewerbe 360 (A-02c)
+│   ├── agentur-overview-core.js        # A-02 Core: Overview, Tabs, KPIs
+│   ├── agentur-overview-tables.js      # A-02 Tabellen: Mock-Daten, Vertraege
+│   ├── agentur-overview-features.js    # A-02 Features: FIDA, Chat, Potentiale
+│   ├── agentur-overview-banking.js     # A-02/B-02: Banking-Berater-Modus
+│   ├── kunden-detail-core.js           # A-10 Core: Navigation, Sticky-Bar
+│   ├── kunden-detail-data.js           # A-10 Daten: Mock-Kunden, fillKundenDetail
+│   ├── kunden-detail-features.js       # A-10 Features: Tier-Formular, Angebote, Tabs
+│   ├── kunden-detail-banking.js        # A-10/B-10: Bank-Kundendaten, fillBankKundenDetail
+│   ├── makler-modus.js                 # A-02b Modus-Toggle & Apply
+│   ├── makler-kunden.js                # A-02b Kundenliste & Detail
+│   ├── makler-b2b.js                   # A-02b B2B-Rendering
+│   ├── makler-overview.js              # A-02b Uebersicht, Renewals, Potentiale
+│   ├── mrh-trowe-modes.js              # A-02c View-Mode, Finance-Mode, Modus-Anwendung
+│   ├── mrh-trowe-render.js             # A-02c MRH-Rendering, Dashboards
+│   ├── mrh-trowe-detail.js             # A-02c Kunden-Detail, Navigation
 │   ├── potentiale.js                   # Potentialanalyse (A-05)
 │   ├── finanzplanung.js                # Finanzplanung (A-09)
-│   ├── banken.js                       # Banken-Modul (B-01)
+│   ├── banken-feedback.js              # B-01: Modul-State, Feedback-System
+│   ├── banken-module.js                # B-01: Screenshot, Modul-Loader/Switcher
+│   ├── banken-dashboard.js             # B-01: Dashboard-Tabs, Filter, Navigation
+│   ├── banken-customer-detail.js       # B-01: Kunden-Detail Modal (Teil 1)
+│   ├── banken-customer-detail2.js      # B-01: Kunden-Detail Modal (Teil 2)
+│   ├── banken-actions.js               # B-01: Kunden-Aktionen, Aufgaben
+│   ├── banken-charts.js                # B-01: Dashboard-Charts, NPL
+│   ├── banken-activities.js            # B-01: Aktivitaeten, Benachrichtigungen
+│   ├── banken-scanner-crm.js           # B-01: Dokumenten-Scanner, CRM-Profil
+│   ├── banken-export.js                # B-01: Dashboard-Export
+│   ├── banken-config-pdf.js            # B-01: Kunden-Config, PDF-Agent
 │   ├── banken-chat.js                  # Banken KI-Chat
 │   ├── bgav-umstellung.js              # BGAV Umstellung (A-12)
-│   ├── am-prod-mode.js                 # Asset Management
-│   ├── asset-management.js             # Asset Management Modul
-│   ├── risikoscoring.js                # Risikoscoring (R-01)
+│   ├── am-prod-mode.js                 # Asset Management Prod-Modus (IIFE, 1858 Zeilen)
+│   ├── asset-management.js             # Asset Management Modul (IIFE, 2474 Zeilen)
+│   ├── risikoscoring-data.js           # R-01 Daten: Verteilungen, Berechnungen
+│   ├── risikoscoring-ui.js             # R-01 UI: Rendering, Events, Exports
 │   ├── provisionssimulation.js         # Provisionssimulation
-│   ├── clv.js                          # Customer Lifetime Value
+│   ├── clv.js                          # Customer Lifetime Value (unifiziert)
 │   ├── nps-display.js                  # NPS Display
 │   ├── sales-report.js                 # Sales Report
 │   ├── cv-scanner.js                   # CV Scanner
-│   ├── hr-pipeline.js                  # HR Pipeline (H-01)
-│   ├── versicherungs-1x1.js            # Versicherungs-1x1 (V-01)
+│   ├── hr-pipeline-core.js             # H-01 Core: State, Demo-Daten, Utilities
+│   ├── hr-pipeline-bewerber.js         # H-01 Bewerber: Profil-Upload, Job-Matching
+│   ├── hr-pipeline-arbeitgeber.js      # H-01 Arbeitgeber: Dashboard, Screening
+│   ├── hr-pipeline-overlays.js         # H-01 Overlays: Interviews, Chat
+│   ├── hc-cockpit-data.js              # HR-Cockpit: Datenstrukturen, Metriken
+│   ├── hc-cockpit-ui.js                # HR-Cockpit: UI-Rendering, KI-Empfehlungen
+│   ├── versicherungs-1x1.js            # Versicherungs-1x1 (V-01, IIFE, 2561 Zeilen)
 │   ├── bezahlen.js                     # Bezahlen-Modul
 │   ├── kommunikation-display.js        # Kommunikations-Display
 │   ├── guided-tour.js                  # Guided Tour
@@ -244,9 +276,17 @@ kiarbeitsplatz/
 #### A-02 (Vermittler-Overview)
 | Datei | Beschreibung |
 |---|---|
-| `js/agentur-overview.js` | Hauptlogik A-02 (inkl. B-02 Banking-Modus) |
-| `js/makler.js` | A-02b Makler B2B Erweiterung |
-| `js/mrh-trowe.js` | A-02c Gewerbe 360 Erweiterung |
+| `js/agentur-overview-core.js` | A-02 Core: showAgenturOverview, Tabs, KPIs (643 Zeilen) |
+| `js/agentur-overview-tables.js` | A-02 Tabellen: Mock-Daten, Vertraege, Filter (557 Zeilen) |
+| `js/agentur-overview-features.js` | A-02 Features: Billing, FIDA, Chat, Potentiale (1076 Zeilen) |
+| `js/agentur-overview-banking.js` | A-02/B-02 Banking-Berater-Modus (1174 Zeilen) |
+| `js/makler-modus.js` | A-02b Makler Modus-Toggle (781 Zeilen) |
+| `js/makler-kunden.js` | A-02b Kundenliste & Detail (510 Zeilen) |
+| `js/makler-b2b.js` | A-02b B2B-Rendering (594 Zeilen) |
+| `js/makler-overview.js` | A-02b Uebersicht & Potentiale (412 Zeilen) |
+| `js/mrh-trowe-modes.js` | A-02c View-Modes (614 Zeilen) |
+| `js/mrh-trowe-render.js` | A-02c Rendering & Dashboards (621 Zeilen) |
+| `js/mrh-trowe-detail.js` | A-02c Kunden-Detail (399 Zeilen) |
 | `css/agentur-fachkonzept.css` | A-02 Styling |
 | `css/makler.css` | A-02b Styling |
 | `css/mrh-trowe.css` | A-02c Styling |
@@ -255,9 +295,12 @@ kiarbeitsplatz/
 #### A-10 (Kunden-Detailansicht)
 | Datei | Beschreibung |
 |---|---|
-| `js/kunden-detail.js` | Hauptlogik A-10 (inkl. B-10 Banking-Detail) |
+| `js/kunden-detail-core.js` | A-10 Core: Navigation, Sticky-Bar (524 Zeilen) |
+| `js/kunden-detail-data.js` | A-10 Daten: Mock-Kunden, fillKundenDetail (558 Zeilen) |
+| `js/kunden-detail-features.js` | A-10 Features: Tier-Form, Angebote, Tabs (485 Zeilen) |
+| `js/kunden-detail-banking.js` | A-10/B-10 Bank-Kundendaten (1021 Zeilen) |
 | `js/finanzplanung.js` | A-09/A-10 Finanzplanung |
-| `js/clv.js` | Customer Lifetime Value |
+| `js/clv.js` | Customer Lifetime Value (unifiziert: Versicherung + Banking) |
 | `css/kunden-detail.css` | A-10 Styling |
 | `css/finanzplanung.css` | Finanzplanung Styling |
 | `css/kunde-sticky-bar.css` | Sticky Bar Styling |
@@ -266,7 +309,7 @@ kiarbeitsplatz/
 #### B-02 (Berater-Uebersicht Banking) – Restant
 | Datei | Beschreibung |
 |---|---|
-| `js/agentur-overview.js` (ab Zeile ~2280) | B-02 Logik (integriert in agentur-overview.js) |
+| `js/agentur-overview-banking.js` | B-02 Logik (ehemals agentur-overview.js ab Zeile ~2280) |
 | `css/banking-berater.css` | B-02/B-10 eigene Styles |
 | `index.html` (Zeilen ~7374-7700) | B-02 HTML-Struktur |
 | `docs/FACHKONZEPT_B02_B10.md` | Fachkonzept-Dokumentation |
@@ -274,7 +317,7 @@ kiarbeitsplatz/
 #### B-10 (Kunden-Detail Bank) – Restant
 | Datei | Beschreibung |
 |---|---|
-| `js/kunden-detail.js` (ab Zeile ~1512) | B-10 Logik (integriert in kunden-detail.js) |
+| `js/kunden-detail-banking.js` | B-10 Logik (ehemals kunden-detail.js ab Zeile ~1568, jetzt eigene Datei) |
 | `css/banking-berater.css` | B-02/B-10 eigene Styles |
 | `index.html` (Zeilen ~7415-7655) | B-10 HTML (teilweise auskommentiert) |
 | `js/page-id-tracker.js` | Page ID Mapping fuer B-10 |
@@ -1550,18 +1593,37 @@ Die Reihenfolge ist kritisch (keine Module, alles globaler Scope):
 
 ### 7.1 Architektur-Beobachtungen
 
-1. **Monolithische index.html:** Die gesamte SPA lebt in einer einzigen HTML-Datei (~7.700+ Zeilen). Alle Module sind als `<div>`-Container integriert, die per `display: none/block` ein- und ausgeblendet werden.
+1. **Monolithische index.html:** Die gesamte SPA lebt in einer einzigen HTML-Datei (~7.500 Zeilen). Alle Module sind als `<div>`-Container integriert, die per `display: none/block` ein- und ausgeblendet werden.
 
-2. **Globaler Scope:** Alle JavaScript-Dateien nutzen den globalen Scope (IIFE nur bei router.js). Funktionen werden auf `window` exportiert. Es gibt kein Modul-System (ausser ES6 Module fuer Bestandsuebertragung und PMO Toolbox).
+2. **Globaler Scope:** Alle JavaScript-Dateien nutzen den globalen Scope (IIFE bei versicherungs-1x1.js, asset-management.js, am-prod-mode.js). Funktionen werden auf `window` exportiert. Es gibt kein Modul-System (ausser ES6 Module fuer Bestandsuebertragung und PMO Toolbox).
 
-3. **Merge-Strategie B-02/B-10:** Die Entscheidung, B-02 in `agentur-overview.js` und B-10 in `kunden-detail.js` zu integrieren statt separater Dateien, reduziert die Dateianzahl, fuehrt aber zu sehr grossen Dateien (3.400+ und 2.500+ Zeilen).
+3. **Refactoring Phase 1 (2026-03-09):**
+   - Dead Code entfernt: `#kundenDetailBankPage` (238 Zeilen HTML) eliminiert
+   - `viewKommunikation` alert() durch Inline-Modal ersetzt
+   - `previousViewBeforeKundenDetail` Default auf `null` gesetzt (mit Safe-Fallback)
+   - `bankKundenRetail` wird nun zur Laufzeit aus `bankMockKunden` abgeleitet (Single Source of Truth)
+   - FIDA-Datenmodell vereinheitlicht: `{ institut, typ, info, consent, gueltig }` fuer alle Kunden
+   - CLV-Berechnung konsolidiert in `clv.js` (Versicherung + Banking)
 
-4. **Dead Code (B-10 HTML):** Der `#kundenDetailBankPage` Container (238 Zeilen HTML) ist permanent ausgeblendet (`display: none !important`). Er wird nie angezeigt, da B-10 ueber den A-10-Adapter-Mechanismus laeuft.
+4. **Refactoring Phase 2 – Datei-Splitting (2026-03-09):**
+   Alle grossen JS-Dateien wurden in Teildateien aufgeteilt (Ziel: max ~800-1200 Zeilen pro Datei):
+   | Original-Datei | Zeilen | Aufgeteilt in | Dateien |
+   |---|---|---|---|
+   | `banken.js` | 8303 | 11 Dateien | banken-feedback, -module, -dashboard, -customer-detail, -customer-detail2, -actions, -charts, -activities, -scanner-crm, -export, -config-pdf |
+   | `landing.js` | 4342 | 6 Dateien | landing-core, -chat, -regions, -modules, -data, -upload |
+   | `hr-pipeline.js` | 3858 | 6 Dateien | hr-pipeline-core, -bewerber, -arbeitgeber, -overlays, hc-cockpit-data, hc-cockpit-ui |
+   | `agentur-overview.js` | 3450 | 4 Dateien | agentur-overview-core, -tables, -features, -banking |
+   | `kunden-detail.js` | 2588 | 4 Dateien | kunden-detail-core, -data, -features, -banking |
+   | `makler.js` | 2297 | 4 Dateien | makler-modus, -kunden, -b2b, -overview |
+   | `mrh-trowe.js` | 1634 | 3 Dateien | mrh-trowe-modes, -render, -detail |
+   | `risikoscoring.js` | 1569 | 2 Dateien | risikoscoring-data, -ui |
 
-5. **Doppelte Kundendaten:** Banking-Kunden existieren in zwei Varianten:
-   - `bankKundenRetail` in `agentur-overview.js` (12 Eintraege, Kurzform mit Segment, Ertrag, etc.)
-   - `bankMockKunden` in `kunden-detail.js` (12 Eintraege, Langform mit Konten, FIDA, Versicherungen)
-   - Keine automatische Synchronisation zwischen beiden
+   **Nicht aufgeteilt (IIFE-Module):**
+   - `versicherungs-1x1.js` (2561 Zeilen) – IIFE mit ~110 internen Cross-Referenzen
+   - `asset-management.js` (2474 Zeilen) – IIFE mit geschlossenem Scope
+   - `am-prod-mode.js` (1858 Zeilen) – IIFE, unter 25k Token-Grenze
+
+5. **Daten-Synchronisation (geloest):** `bankMockKunden` in `kunden-detail-banking.js` ist Single Source of Truth. `bankKundenRetail` wird per `DOMContentLoaded` in `agentur-overview-core.js` automatisch daraus abgeleitet.
 
 ### 7.2 Code-Qualitaet
 

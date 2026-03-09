@@ -5,6 +5,7 @@
 // GLOBAL VIEW MODE STATE
 // ========================================
 var viewMode = 'ao'; // 'ao' | 'ecclesia' | 'mrh' | 'bank-retail' | 'bank-fk' | 'bank-vw'
+var financeMode = 'closed'; // 'closed' | 'open' — Open Finance = alle Institute sichtbar
 
 // Dropdown label map
 var viewModeLabels = {
@@ -87,6 +88,48 @@ function setViewMode(mode) {
     localStorage.setItem('viewMode', mode);
 }
 window.setViewMode = setViewMode;
+
+// ========================================
+// OPEN / CLOSED FINANCE MODE
+// ========================================
+function setFinanceMode(mode) {
+    financeMode = mode;
+
+    // Update toggle buttons
+    document.querySelectorAll('.finance-mode-btn').forEach(function(btn) {
+        btn.classList.toggle('active', btn.dataset.fmode === mode);
+    });
+
+    // Toggle Open Finance badge on page
+    var badge = document.getElementById('openFinanceBadge');
+    if (mode === 'open') {
+        // Show Open Finance elements
+        document.querySelectorAll('.open-finance-only').forEach(function(el) { el.style.display = ''; });
+        document.querySelectorAll('.closed-finance-only').forEach(function(el) { el.style.display = 'none'; });
+        if (!badge) {
+            badge = document.createElement('div');
+            badge.id = 'openFinanceBadge';
+            badge.className = 'open-finance-badge';
+            var mainContent = document.querySelector('.agentur-main-content');
+            if (mainContent) mainContent.insertBefore(badge, mainContent.firstChild);
+        }
+        // Context-aware badge text
+        var isBank = viewMode.indexOf('bank-') === 0;
+        if (isBank) {
+            badge.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 019.9-1"></path></svg> Open Finance aktiv \u2014 Alle Institute sichtbar inkl. R+V Versicherung \u00fc. Genossenschaftsgruppe';
+        } else {
+            badge.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 019.9-1"></path></svg> Open Finance aktiv \u2014 Daten aller Institute sichtbar (FIDA)';
+        }
+    } else {
+        // Show Closed Finance elements
+        document.querySelectorAll('.open-finance-only').forEach(function(el) { el.style.display = 'none'; });
+        document.querySelectorAll('.closed-finance-only').forEach(function(el) { el.style.display = ''; });
+        if (badge) badge.remove();
+    }
+
+    localStorage.setItem('financeMode', mode);
+}
+window.setFinanceMode = setFinanceMode;
 
 function applyViewMode() {
     if (viewMode === 'ao') {
@@ -1572,12 +1615,20 @@ window.switchMRHKundeDropdown = switchMRHKundeDropdown;
     if (saved && (saved === 'ao' || saved === 'ecclesia' || saved === 'mrh')) {
         viewMode = saved;
     }
+    var savedFinance = localStorage.getItem('financeMode');
+    if (savedFinance && (savedFinance === 'open' || savedFinance === 'closed')) {
+        financeMode = savedFinance;
+    }
     // Apply on next tick (after DOM ready)
     setTimeout(function() {
         document.querySelectorAll('.view-mode-btn').forEach(function(btn) {
             btn.classList.toggle('active', btn.dataset.mode === viewMode);
         });
         applyViewMode();
+        // Restore finance mode toggle state
+        if (financeMode === 'open') {
+            setFinanceMode('open');
+        }
     }, 100);
 })();
 

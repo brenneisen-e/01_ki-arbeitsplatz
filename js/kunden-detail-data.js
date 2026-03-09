@@ -449,24 +449,6 @@ function fillKundenDetail(kundenName, vermittlerId) {
     const beschaeftigtEl = document.getElementById('kundenBeschaeftigtSeit');
     if (beschaeftigtEl) beschaeftigtEl.textContent = kunde.beschaeftigtSeit || '—';
 
-    // Cross-Referenz (institutsübergreifend)
-    var linkedCard = document.getElementById('linkedCustomerCard');
-    if (linkedCard && typeof getLinkedCustomer === 'function') {
-        var linked = getLinkedCustomer(kundenName);
-        if (linked && linked.linkedSystem === 'banking') {
-            linkedCard.style.display = 'block';
-            linkedCard.innerHTML = '<div class="linked-customer-inner">' +
-                '<div class="linked-customer-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg></div>' +
-                '<div class="linked-customer-text">' +
-                '<strong>Institutsubergreifend erkannt:</strong> ' + kundenName + ' ist auch Banking-Kunde (' + linked.linkedId + ') als ' + linked.linkedName +
-                '</div>' +
-                '<button class="linked-customer-btn" onclick="openBankKundenDetail(\'' + linked.linkedName.replace(/'/g, "\\'") + '\', \'' + linked.linkedId + '\')">Zur Banking-Ansicht</button>' +
-                '</div>';
-        } else {
-            linkedCard.style.display = 'none';
-        }
-    }
-
     // Tiere - Badge + Bestätigungs-Button
     const tierHintRow = document.getElementById('tierHintRow');
     const tiereEl = document.getElementById('kundenTiere');

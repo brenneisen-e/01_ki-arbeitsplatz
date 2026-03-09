@@ -881,3 +881,4 @@ Entscheidungshilfe und ersetzen nicht die fachliche Einzelfallprüfung.
 
 // Export download function
 window.downloadDashboardSummary = downloadDashboardSummary;
+window.__registerModule('banken-export.js');

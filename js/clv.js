@@ -305,3 +305,4 @@ function calculateBankCLV(kd, retailData) {
 
 // ========================================
 // END CLV MODULE
+window.__registerModule('clv.js');

@@ -873,3 +873,4 @@ window.navigateToSalesReport = navigateToSalesReport;
 window.demoAbschluesse = demoAbschluesse;
 
 console.log('sales-report.js geladen');
+window.__registerModule('sales-report.js');

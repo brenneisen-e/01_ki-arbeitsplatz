@@ -449,3 +449,4 @@ function startDemoTour() {
 window.startDemoTour = startDemoTour;
 
 console.log('guided-tour.js geladen');
+window.__registerModule('guided-tour.js');

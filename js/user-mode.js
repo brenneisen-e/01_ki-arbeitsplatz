@@ -1,3 +1,4 @@
+(function(){var r=['safeLocalGet'];var m=r.filter(function(f){return typeof window[f]==='undefined'});if(m.length)console.error('[user-mode.js] Fehlende Deps:',m.join(', '),'← Lade utils.js zuerst!');})();
 // js/user-mode.js - User Mode Switching (Vertrieb / PVA) + Profile
 // Extracted from landing.js for modularity
 
@@ -138,7 +139,7 @@ function updateWelcomeMessage(mode) {
     const chatBubble = document.querySelector('.welcome-message .chat-bubble p strong');
     if (chatBubble) {
         if (mode === 'vertrieb') {
-            const userName = localStorage.getItem('userName') || 'Max';
+            const userName = safeLocalGet('userName', 'Max');
             chatBubble.textContent = 'Willkommen zurück ' + userName + ', was kann ich für dich tun?';
         } else if (mode === 'pva') {
             chatBubble.textContent = 'Willkommen zurück Anja, was kann ich für dich tun?';
@@ -155,7 +156,7 @@ function updateProfileAvatar(mode) {
         return;
     }
 
-    const savedImage = localStorage.getItem(`userProfileImage_${mode}`);
+    const savedImage = safeLocalGet('userProfileImage_' + mode, null);
     console.log('Gespeichertes Bild vorhanden:', savedImage ? 'JA (' + savedImage.substring(0, 50) + '...)' : 'NEIN');
 
     if (savedImage) {
@@ -237,7 +238,7 @@ function processUserProfileImage(file, mode) {
         compressImage(e.target.result, 150, 0.8, function(compressedData) {
             try {
                 // Save to localStorage
-                localStorage.setItem(`userProfileImage_${mode}`, compressedData);
+                safeLocalSet('userProfileImage_' + mode, compressedData);
 
                 // Update all relevant images
                 updateAllUserProfileImages(mode, compressedData);
@@ -319,7 +320,7 @@ function loadUserProfileImages() {
     console.log('loadUserProfileImages aufgerufen');
 
     // Load Vertrieb profile
-    const vertriebImage = localStorage.getItem('userProfileImage_vertrieb');
+    const vertriebImage = safeLocalGet('userProfileImage_vertrieb', null);
     console.log('Vertrieb Bild in localStorage:', vertriebImage ? 'JA' : 'NEIN');
     if (vertriebImage) {
         const optionVertrieb = document.getElementById('optionAvatarVertrieb');
@@ -330,7 +331,7 @@ function loadUserProfileImages() {
     }
 
     // Load PVA profile
-    const pvaImage = localStorage.getItem('userProfileImage_pva');
+    const pvaImage = safeLocalGet('userProfileImage_pva', null);
     console.log('PVA (Anja) Bild in localStorage:', pvaImage ? 'JA' : 'NEIN');
     if (pvaImage) {
         const optionPva = document.getElementById('optionAvatarPva');
@@ -418,3 +419,4 @@ window.loadUserProfileImages = loadUserProfileImages;
 
 
 // ========================================
+window.__registerModule('user-mode.js');

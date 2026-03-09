@@ -39,3 +39,4 @@ function renderNpsStyleAll() {
     });
 }
 window.renderNpsStyleAll = renderNpsStyleAll;
+window.__registerModule('nps-display.js');

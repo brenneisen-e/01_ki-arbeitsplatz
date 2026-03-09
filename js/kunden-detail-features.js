@@ -15,7 +15,7 @@ var tierSvgIcons = {
 };
 
 function initTierForm() {
-    var saved = localStorage.getItem(getTierStorageKey());
+    var saved = safeLocalGet(getTierStorageKey(), null);
     if (saved) {
         try {
             var data = JSON.parse(saved);
@@ -44,7 +44,7 @@ function saveTierInfo() {
         alter: alter ? alter.value : ''
     };
 
-    localStorage.setItem(getTierStorageKey(), JSON.stringify(data));
+    safeLocalSet(getTierStorageKey(), JSON.stringify(data));
     showSavedTierDisplay(data);
 }
 window.saveTierInfo = saveTierInfo;
@@ -81,7 +81,7 @@ function openTierPopup(isEdit) {
 
     // Felder vorbelegen wenn edit
     if (isEdit) {
-        var saved = localStorage.getItem(getTierStorageKey());
+        var saved = safeLocalGet(getTierStorageKey(), null);
         if (saved) {
             try {
                 var data = JSON.parse(saved);
@@ -482,4 +482,61 @@ window.toggleImpulsDetail = toggleImpulsDetail;
    B-10 KUNDEN-DETAIL BANK  –  Banking Customer Detail
    Mirrors kunden-detail.js (A-10) structure exactly
    ============================================================ */
+
+// ============================================================
+// Versicherer-Auswahl in A-10 übertragen
+// ============================================================
+function updateKundenDetailInsurer() {
+    // Aktuell gewählten Versicherer ermitteln
+    var key = window.selectedInsurer || 'ergo';
+    var config = window.insurerConfig ? window.insurerConfig[key] : null;
+    if (!config) return;
+    var name = config.name || 'ERGO';
+    var domain = config.domain || 'ergo.de';
+
+    // 1. "Eigene Versicherungen (X)" Label aktualisieren
+    var label = document.getElementById('eigeneVersicherungenLabel');
+    if (label) {
+        label.textContent = 'Eigene Versicherungen (' + name + ')';
+    }
+
+    // 2. Eigene-Verträge-Zeilen im Absichern-Tab: Logo + Badge aktualisieren
+    var rows = document.querySelectorAll('.ergo-contract-row');
+    rows.forEach(function(row) {
+        var anbieterTd = row.querySelectorAll('td')[1]; // Zweite Spalte = Anbieter
+        if (anbieterTd) {
+            var logoUrl = 'https://img.logo.dev/' + domain + '?token=pk_H7vb5Y2lTsW47U4Xq-w3HA&size=40&format=png';
+            anbieterTd.innerHTML = '<img src="' + logoUrl + '" alt="' + name + '" class="versicherer-logo" width="18" height="18" style="vertical-align:middle;border-radius:4px;object-fit:contain;" onerror="this.style.display=\'none\'"> <span class="ergo-badge">' + name + '</span>';
+        }
+    });
+
+    // 3. Betreute Verträge Tab: Eigene Verträge mit ausgewähltem Versicherer anzeigen
+    var vertraegeBody = document.getElementById('kundenVertraege');
+    if (vertraegeBody) {
+        var trs = vertraegeBody.querySelectorAll('tr');
+        // Produkte des Versicherers ermitteln
+        var products = (window.insurerProducts && window.insurerProducts[key]) || [name];
+        trs.forEach(function(tr) {
+            var tds = tr.querySelectorAll('td');
+            if (tds.length >= 2) {
+                var anbieterTd = tds[1]; // Anbieter-Spalte (makler-only-col)
+                var currentText = anbieterTd.textContent.trim();
+                // Prüfe ob es ein "eigener" Vertrag ist (ERGO, DKV, etc. - Standard-Eigene)
+                var defaultEigene = ['ERGO', 'ERGO Direkt', 'DKV'];
+                var isEigen = defaultEigene.some(function(e) { return currentText.indexOf(e) !== -1; });
+                if (isEigen) {
+                    var newName = products[0] || name;
+                    if (typeof versichererLogoImg === 'function') {
+                        anbieterTd.innerHTML = versichererLogoImg(newName, 18) + ' ' + newName;
+                    } else {
+                        anbieterTd.textContent = newName;
+                    }
+                }
+            }
+        });
+    }
+}
+window.updateKundenDetailInsurer = updateKundenDetailInsurer;
+
+window.__registerModule('kunden-detail-features.js');
 

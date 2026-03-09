@@ -311,3 +311,4 @@ window.printLetter = printLetter;
 window.openCrmFromModal = openCrmFromModal;
 window.filterAufgaben = filterAufgaben;
 window.rescheduleTask = rescheduleTask;
+window.__registerModule('banken-actions.js');

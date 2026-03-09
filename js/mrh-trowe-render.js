@@ -619,3 +619,4 @@ function renderMRHPotentiale() {
 
 
 // ========================================
+window.__registerModule('mrh-trowe-render.js');

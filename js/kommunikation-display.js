@@ -123,3 +123,4 @@ function toggleKommCompactDetail(idx) {
 window.toggleKommCompactDetail = toggleKommCompactDetail;
 
 console.log('landing.js geladen');
+window.__registerModule('kommunikation-display.js');

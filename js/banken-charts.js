@@ -535,3 +535,4 @@ window.searchCustomers = searchCustomers;
 window.sortCustomerTable = sortCustomerTable;
 window.sortByPriority = sortByPriority;
 window.initCustomerTableSort = initCustomerTableSort;
+window.__registerModule('banken-charts.js');

@@ -204,12 +204,53 @@ function toggleVertriebsPeriod(period) {
 }
 
 /**
- * Öffnet ein Formular (Placeholder)
+ * Öffnet ein Mock-Formular im Modal
  * @param {string} formularId - Die ID des Formulars
  */
 function openFormular(formularId) {
-    console.log('Öffne Formular:', formularId);
-    alert('Formular "' + formularId + '" wird geladen...\n\n(Demo-Funktion)');
+    var formulare = {
+        'antrag-leben': { titel: 'Neuantrag Lebensversicherung', felder: ['Kunde', 'Produkt', 'Versicherungssumme', 'Laufzeit', 'Beginn'] },
+        'antrag-kfz': { titel: 'KFZ-Versicherung Antrag', felder: ['Kunde', 'Fahrzeug (HSN/TSN)', 'Kennzeichen', 'Schadenfreiheitsklasse', 'Beginn'] },
+        'antrag-sach': { titel: 'Sachversicherung Antrag', felder: ['Kunde', 'Objektart', 'Versicherungssumme', 'Selbstbeteiligung', 'Beginn'] },
+        'schadenmeldung': { titel: 'Schadensmeldung', felder: ['Vertragsnr.', 'Schadendatum', 'Schadenort', 'Beschreibung', 'Geschätzte Höhe'] },
+        'vr-finanzplan': { titel: 'VR-Finanzplan erstellen', felder: ['Kunde', 'Anlageziel', 'Anlagehorizont', 'Risikobereitschaft'] },
+        'baufinanzierung': { titel: 'Baufinanzierung Antrag', felder: ['Kunde', 'Objektwert', 'Darlehenssumme', 'Zinsbindung', 'Tilgung'] },
+        'depot-eroeffnung': { titel: 'Depot-Eröffnung', felder: ['Kunde', 'Depotmodell', 'Erfahrungsklasse', 'Referenzkonto'] },
+        'ratenkredit': { titel: 'Ratenkredit Antrag', felder: ['Kunde', 'Kreditsumme', 'Laufzeit', 'Verwendungszweck', 'Nettoeinkommen'] }
+    };
+
+    var formular = formulare[formularId] || { titel: 'Formular: ' + formularId, felder: ['Feld 1', 'Feld 2', 'Feld 3'] };
+    var modal = document.getElementById('formularModal');
+    if (!modal) return;
+
+    modal.querySelector('.formular-modal-title').textContent = formular.titel;
+    modal.querySelector('.formular-modal-body').innerHTML = formular.felder
+        .map(function(f) {
+            return '<div class="formular-modal-group"><label class="formular-modal-label">' + f + '</label><input type="text" class="formular-modal-input" placeholder="' + f + ' eingeben..." /></div>';
+        }).join('');
+    modal.style.display = 'flex';
+}
+
+function closeFormularModal() {
+    var modal = document.getElementById('formularModal');
+    if (modal) modal.style.display = 'none';
+}
+
+function submitFormularModal() {
+    closeFormularModal();
+    showToast('Formular erfolgreich übermittelt');
+}
+
+function showToast(message) {
+    var existing = document.getElementById('formularToast');
+    if (existing) existing.remove();
+    var toast = document.createElement('div');
+    toast.id = 'formularToast';
+    toast.className = 'formular-toast';
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    setTimeout(function() { toast.classList.add('show'); }, 10);
+    setTimeout(function() { toast.classList.remove('show'); setTimeout(function() { toast.remove(); }, 300); }, 3000);
 }
 
 /**
@@ -1074,3 +1115,4 @@ document.addEventListener('DOMContentLoaded', function() {
     setTimeout(updateDynamicDates, 200);
 });
 
+window.__registerModule('agentur-overview-features.js');

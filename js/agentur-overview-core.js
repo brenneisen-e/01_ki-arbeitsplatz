@@ -1,3 +1,4 @@
+(function(){var r=['getAgenturData','kpiDefinitions'];var m=r.filter(function(f){return typeof window[f]==='undefined'});if(m.length)console.error('[agentur-overview-core.js] Fehlende Deps:',m.join(', '),'← Lade config.js, data.js zuerst!');})();
 // js/agentur-overview.js - Agentur-Übersicht Funktionalität (Fachkonzept-konform)
 
 // ========================================
@@ -290,7 +291,7 @@ function fillHeader(agentur, agenturData) {
     }
 
     // Lade Profilbild (gespeichert oder Standard)
-    const savedPhoto = localStorage.getItem('agenturPhoto');
+    const savedPhoto = safeLocalGet('agenturPhoto', null);
     const photoImgSmall = document.getElementById('agenturPhotoImgSmall');
     const placeholderSmall = document.querySelector('.agentur-photo-placeholder-small');
 
@@ -641,3 +642,4 @@ function fillQualitaetTab(agenturData) {
     }
 }
 
+window.__registerModule('agentur-overview-core.js');

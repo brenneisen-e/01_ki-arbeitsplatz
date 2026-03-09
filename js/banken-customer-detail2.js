@@ -980,3 +980,4 @@ function toggleCreditView(button, viewType) {
 // Exports
 window.closeCustomerDetail = closeCustomerDetail;
 window.showCustomerTab = showCustomerTab;
+window.__registerModule('banken-customer-detail2.js');

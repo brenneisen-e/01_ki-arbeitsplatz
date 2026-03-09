@@ -2472,3 +2472,4 @@ var assetModuleLoaded = false;
     });
 
 })();
+window.__registerModule('asset-management.js');

@@ -843,3 +843,4 @@ function initHRPipeline() {
     }, 300);
 }
 
+window.__registerModule('hr-pipeline-core.js');

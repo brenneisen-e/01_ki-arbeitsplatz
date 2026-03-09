@@ -1,3 +1,4 @@
+(function(){var r=['dailyRawData'];var m=r.filter(function(f){return typeof window[f]==='undefined'});if(m.length)console.error('[landing-regions.js] Fehlende Deps:',m.join(', '),'← Lade data.js zuerst!');})();
 // ========================================
 // SPECIAL QUERY HANDLER: Top Sales Regions
 // ========================================
@@ -938,3 +939,4 @@ function backToRegionsView() {
     }
 }
 
+window.__registerModule('landing-regions.js');

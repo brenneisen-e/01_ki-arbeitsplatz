@@ -321,3 +321,4 @@ function toggleBezahlenKat(katName) {
 window.toggleBezahlenKat = toggleBezahlenKat;
 
 // ========================================
+window.__registerModule('bezahlen.js');

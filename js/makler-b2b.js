@@ -592,3 +592,4 @@ function toggleUebersichtPotDetail(id) {
     }
 }
 window.toggleUebersichtPotDetail = toggleUebersichtPotDetail;
+window.__registerModule('makler-b2b.js');

@@ -146,3 +146,32 @@ const agentDistributions = {
         { range: '> 1M', count: 15 }
     ]
 };
+// === Kunden Cross-Referenz (institutsübergreifend) ===
+var kundenCrossRef = {
+    'Peter Schmidt':   { bankName: 'Klaus Fischer',  bankId: 'KDB001', versId: 'KD00001' },
+    'Lisa Müller':     { bankName: 'Sandra Müller',   bankId: 'KDB002', versId: 'KD00006' },
+    'Matthias Engel':  { bankName: 'Stefan Braun',    bankId: 'KDB009', versId: 'KD00007' },
+    'Michael Braun':   { bankName: 'Jürgen Peters',   bankId: 'KDB011', versId: 'KD00005' }
+};
+
+function getLinkedCustomer(kundenName) {
+    // Direkter Lookup (Versicherung → Banking)
+    var direct = kundenCrossRef[kundenName];
+    if (direct) {
+        return { linkedName: direct.bankName, linkedId: direct.bankId, linkedSystem: 'banking', versName: kundenName, versId: direct.versId };
+    }
+    // Reverse-Lookup (Banking → Versicherung)
+    for (var key in kundenCrossRef) {
+        if (kundenCrossRef.hasOwnProperty(key)) {
+            var entry = kundenCrossRef[key];
+            if (entry.bankName === kundenName) {
+                return { linkedName: key, linkedId: entry.versId, linkedSystem: 'versicherung', bankName: kundenName, bankId: entry.bankId };
+            }
+        }
+    }
+    return null;
+}
+window.kundenCrossRef = kundenCrossRef;
+window.getLinkedCustomer = getLinkedCustomer;
+
+window.__registerModule('config.js');

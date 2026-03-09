@@ -804,3 +804,4 @@ function delay(ms) {
 window.printToolOverview = printToolOverview;
 
 console.log('banken modules geladen');
+window.__registerModule('banken-config-pdf.js');

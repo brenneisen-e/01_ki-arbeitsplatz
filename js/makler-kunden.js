@@ -508,3 +508,4 @@ function renderVersichererMix() {
     container.innerHTML = '<div class="bezahlen-donut-container"><div class="bezahlen-donut-chart">'+donut+'</div><div class="bezahlen-donut-legend">'+legend+'</div></div>';
 }
 window.renderVersichererMix = renderVersichererMix;
+window.__registerModule('makler-kunden.js');

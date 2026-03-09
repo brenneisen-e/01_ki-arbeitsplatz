@@ -470,3 +470,4 @@ function executeZusammenfassung(action, label) {
 }
 
 // ========================================
+window.__registerModule('autocomplete.js');

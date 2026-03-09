@@ -1488,3 +1488,4 @@ Die Stufe basiert auf dem Gesamtproduktionsvolumen (Neugeschäft + Bestand) übe
     window.switchBgavTab = switchBgavTab;
 
 })();
+window.__registerModule('bgav-umstellung.js');

@@ -18,7 +18,7 @@ function toggleMaklerModus() {
     if (a10 && a10.style.display !== 'none') {
         if (typeof closeKundenDetail === 'function') closeKundenDetail();
     }
-    localStorage.setItem('maklerModus', maklerModus ? '1' : '0');
+    safeLocalSet('maklerModus', maklerModus ? '1' : '0');
 }
 window.toggleMaklerModus = toggleMaklerModus;
 
@@ -778,4 +778,6 @@ var maklerKunden = [
         ]
     }
 ];
+
+window.__registerModule('makler-modus.js');
 

@@ -782,3 +782,4 @@ window.exportChatToPdf = exportChatToPdf;
 window.lastChatQueryResult = null;
 
 console.log('banken-chat.js geladen');
+window.__registerModule('banken-chat.js');

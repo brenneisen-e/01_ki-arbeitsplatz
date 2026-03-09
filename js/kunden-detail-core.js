@@ -213,7 +213,7 @@ function initKundenFidaState() {
 
 // Sync finance toggle on A-10 with current global financeMode
 function syncA10FinanceToggle() {
-    var mode = (typeof financeMode !== 'undefined') ? financeMode : (localStorage.getItem('financeMode') || 'closed');
+    var mode = (typeof financeMode !== 'undefined') ? financeMode : (safeLocalGet('financeMode', 'closed'));
     var toggleBtns = document.querySelectorAll('#a10FinanceModeToggle .finance-mode-btn');
     toggleBtns.forEach(function(btn) {
         btn.classList.toggle('active', btn.dataset.fmode === mode);
@@ -415,7 +415,7 @@ function updateKundenSharedHeader(kundenName, vermittlerId) {
     if (sourceImg && sourceImg.src && sourceImg.style.display !== 'none') {
         photoSrc = sourceImg.src;
     } else {
-        photoSrc = localStorage.getItem('agenturPhoto') || 'assets/images/maria-musterfrau.png';
+        photoSrc = safeLocalGet('agenturPhoto', 'assets/images/maria-musterfrau.png');
     }
 
     if (targetImg && photoSrc) {
@@ -522,3 +522,4 @@ function filterKundenliste(searchText) {
     });
 }
 window.filterKundenliste = filterKundenliste;
+window.__registerModule('kunden-detail-core.js');

@@ -131,15 +131,15 @@ function toggleSection(sectionId) {
         section.classList.toggle('collapsed');
 
         // Save state to localStorage
-        const collapsedSections = JSON.parse(localStorage.getItem('collapsedSections') || '{}');
+        const collapsedSections = safeJsonParse(safeLocalGet('collapsedSections', '{}'), {});
         collapsedSections[sectionId] = section.classList.contains('collapsed');
-        localStorage.setItem('collapsedSections', JSON.stringify(collapsedSections));
+        safeLocalSet('collapsedSections', JSON.stringify(collapsedSections));
     }
 }
 
 // Restore collapsed sections state on page load
 function restoreCollapsedSections() {
-    const collapsedSections = JSON.parse(localStorage.getItem('collapsedSections') || '{}');
+    const collapsedSections = safeJsonParse(safeLocalGet('collapsedSections', '{}'), {});
     Object.keys(collapsedSections).forEach(sectionId => {
         if (collapsedSections[sectionId]) {
             const section = document.getElementById(sectionId);
@@ -803,7 +803,7 @@ function submitTaskCompletion() {
             type: 'aufgabe',
             typeLabel: 'Aufgabe erledigt',
             text: `**${taskTitle}**\n\n**Problem:** ${problem}\n\n**Lösung:** ${solution}\n\nStatus: Erledigt`,
-            author: localStorage.getItem('feedbackAuthor') || 'Eike',
+            author: safeLocalGet('feedbackAuthor', 'Eike'),
             timestamp: new Date().toISOString(),
             isCompleted: true
         };
@@ -1102,3 +1102,4 @@ document.addEventListener("DOMContentLoaded", function() {
     initModuleSelector();
     restoreCollapsedSections();
 });
+window.__registerModule('banken-dashboard.js');

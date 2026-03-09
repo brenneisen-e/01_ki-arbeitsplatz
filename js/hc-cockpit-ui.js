@@ -1,3 +1,4 @@
+(function(){var r=['hcCockpitData'];var m=r.filter(function(f){return typeof window[f]==='undefined'});if(m.length)console.error('[hc-cockpit-ui.js] Fehlende Deps:',m.join(', '),'← Lade hc-cockpit-data.js zuerst!');})();
 
 function renderHCRiskMovers() {
     const tbody = document.getElementById('hcRiskMoversBody');
@@ -1156,3 +1157,4 @@ window.selectHCRegion = selectHCRegion;
 window.showHCShapForAgent = showHCShapForAgent;
 window.showHCUnitShapForAgent = showHCUnitShapForAgent;
 window.renderHCKIRecommendation = renderHCKIRecommendation;
+window.__registerModule('hc-cockpit-ui.js');

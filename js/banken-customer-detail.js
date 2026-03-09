@@ -967,3 +967,4 @@ function generateProductTransactions(product, customer) {
 
 // Exports
 window.openCustomerDetail = openCustomerDetail;
+window.__registerModule('banken-customer-detail.js');

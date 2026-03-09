@@ -1,5 +1,72 @@
 // js/utils.js - Utility Functions
 
+// === Global Error Handlers ===
+window.onerror = function(msg, source, lineno, colno, error) {
+    console.error('[Global Error]', msg, 'in', source, 'Zeile', lineno);
+    return true;
+};
+window.onunhandledrejection = function(event) {
+    console.error('[Unhandled Promise]', event.reason);
+    event.preventDefault();
+};
+
+// === Safe Wrapper Functions ===
+function safeLocalGet(key, fallback) {
+    try {
+        var val = localStorage.getItem(key);
+        return val !== null ? val : fallback;
+    } catch (e) {
+        console.warn('[localStorage] Lesen fehlgeschlagen für', key, e.message);
+        return fallback;
+    }
+}
+window.safeLocalGet = safeLocalGet;
+
+function safeLocalSet(key, value) {
+    try {
+        localStorage.setItem(key, value);
+        return true;
+    } catch (e) {
+        console.warn('[localStorage] Schreiben fehlgeschlagen für', key, e.message);
+        return false;
+    }
+}
+window.safeLocalSet = safeLocalSet;
+
+function safeJsonParse(str, fallback) {
+    try {
+        return JSON.parse(str);
+    } catch (e) {
+        console.warn('[JSON.parse] Fehlgeschlagen:', e.message);
+        return fallback;
+    }
+}
+window.safeJsonParse = safeJsonParse;
+
+async function safeFetch(url, options, timeoutMs) {
+    if (typeof timeoutMs === 'undefined') timeoutMs = 5000;
+    var controller = new AbortController();
+    var timeout = setTimeout(function() { controller.abort(); }, timeoutMs);
+    try {
+        var response = await fetch(url, Object.assign({}, options, { signal: controller.signal }));
+        clearTimeout(timeout);
+        if (!response.ok) {
+            console.warn('[Fetch] HTTP', response.status, 'für', url);
+            return null;
+        }
+        return response;
+    } catch (e) {
+        clearTimeout(timeout);
+        if (e.name === 'AbortError') {
+            console.warn('[Fetch] Timeout nach', timeoutMs, 'ms für', url);
+        } else {
+            console.warn('[Fetch] Fehler für', url, e.message);
+        }
+        return null;
+    }
+}
+window.safeFetch = safeFetch;
+
 // Format value based on unit type
 function formatValue(value, unit) {
     if (value === null || typeof value === 'undefined' || isNaN(value)) return '--';
@@ -146,3 +213,4 @@ function generateAgentDistribution(kpiId, currentValue) {
     
     return baseDistribution;
 }
+window.__registerModule('utils.js');

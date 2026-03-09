@@ -708,3 +708,4 @@ window.showAgenturTab = function(tabName) {
 };
 
 console.log('Provisionssimulation.js geladen');
+window.__registerModule('provisionssimulation.js');

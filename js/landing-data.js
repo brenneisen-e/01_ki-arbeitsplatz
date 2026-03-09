@@ -363,7 +363,7 @@ function setAgenturFilter(vermittlerId) {
         localStorage.removeItem('pendingSiloFilter');
         localStorage.removeItem('pendingSegmentFilter');
         localStorage.removeItem('pendingBundeslandFilter');
-        localStorage.setItem('pendingAgenturFilter', vermittlerId);
+        safeLocalSet('pendingAgenturFilter', vermittlerId);
         console.log('Filter im localStorage gespeichert');
     }
 }
@@ -374,7 +374,7 @@ function setSiloFilter(silo) {
     if (typeof state !== 'undefined') {
         state.filters.silo = silo;
     } else {
-        localStorage.setItem('pendingSiloFilter', silo);
+        safeLocalSet('pendingSiloFilter', silo);
     }
 }
 
@@ -384,7 +384,7 @@ function setSegmentFilter(segments) {
     if (typeof state !== 'undefined') {
         state.filters.segments = segments;
     } else {
-        localStorage.setItem('pendingSegmentFilter', JSON.stringify(segments));
+        safeLocalSet('pendingSegmentFilter', JSON.stringify(segments));
     }
 }
 
@@ -394,7 +394,7 @@ function setBundeslandFilter(laender) {
     if (typeof state !== 'undefined') {
         state.filters.bundeslaender = laender;
     } else {
-        localStorage.setItem('pendingBundeslandFilter', JSON.stringify(laender));
+        safeLocalSet('pendingBundeslandFilter', JSON.stringify(laender));
     }
 }
 
@@ -497,3 +497,4 @@ function askLandingSampleQuestion(question) {
 // Make function globally available
 window.askLandingSampleQuestion = askLandingSampleQuestion;
 
+window.__registerModule('landing-data.js');

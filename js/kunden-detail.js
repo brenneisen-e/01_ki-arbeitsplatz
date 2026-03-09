@@ -36,12 +36,41 @@ var versichererLogoDomains = {
     'ARAG': 'arag.de',
     'Fressnapf': 'fressnapf.de',
     'Bausparkasse Schw\u00E4bisch Hall': 'schwaebisch-hall.de',
-    'Bausparkasse LBS': 'lbs.de'
+    'Bausparkasse LBS': 'lbs.de',
+    'Targobank': 'targobank.de',
+    'N26': 'n26.com',
+    'Trade Republic': 'traderepublic.com',
+    'Scalable Capital': 'scalable.capital',
+    'Commerzbank': 'commerzbank.de',
+    'Consorsbank': 'consorsbank.de',
+    'Deutsche Bank': 'db.com',
+    'Deka': 'deka.de',
+    'Comdirect': 'comdirect.de',
+    'KfW': 'kfw.de',
+    'Union Investment': 'union-investment.de',
+    'Santander': 'santander.de',
+    'Swiss Life': 'swisslife.de',
+    'Apobank': 'apobank.de',
+    'Sparkasse Gießen': 'sparkasse.de',
+    'Sparkasse Marburg': 'sparkasse.de',
+    'Sparkasse Lich': 'sparkasse.de',
+    'Sparkasse Essen': 'sparkasse.de',
+    'Sparkasse Braunschweig': 'sparkasse.de',
+    'Volksbank Dortmund': 'volksbank.de'
 };
 
 function getVersichererLogoUrl(name, size) {
     size = size || 32;
     var domain = versichererLogoDomains[name];
+    // Fallback: try matching start of name (e.g. "Sparkasse Gießen" -> "Sparkasse")
+    if (!domain) {
+        for (var key in versichererLogoDomains) {
+            if (name.indexOf(key) === 0 || key.indexOf(name) === 0) {
+                domain = versichererLogoDomains[key];
+                break;
+            }
+        }
+    }
     if (!domain) return '';
     return 'https://img.logo.dev/' + domain + '?token=pk_H7vb5Y2lTsW47U4Xq-w3HA&size=' + size + '&format=png';
 }

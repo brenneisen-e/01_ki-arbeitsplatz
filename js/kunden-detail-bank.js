@@ -648,7 +648,8 @@ function fillBankFida(kd) {
         } else {
             var rows = '';
             kd.fidaVertraege.forEach(function(f) {
-                rows += '<tr><td><strong>' + f.institut + '</strong></td><td>' + f.typ + '</td><td>' + f.info + '</td><td>' + f.consent + '</td><td>' + f.gueltig + '</td></tr>';
+                var logo = (typeof versichererLogoImg === 'function') ? versichererLogoImg(f.institut, 18) : '';
+                rows += '<tr><td>' + logo + ' <strong>' + f.institut + '</strong></td><td>' + f.typ + '</td><td>' + f.info + '</td><td>' + f.consent + '</td><td>' + f.gueltig + '</td></tr>';
             });
             tableEl.innerHTML = rows;
         }
@@ -676,8 +677,9 @@ function fillBankFida(kd) {
                 '<table class="kunden-table fida-table"><thead><tr><th>Produkt</th><th>Anbieter</th><th>Volumen</th><th>Zinssatz</th><th>Laufzeit</th></tr></thead><tbody>';
             geldmarkt.forEach(function(g) {
                 totalGeld += g.volumen;
+                var gLogo = (typeof versichererLogoImg === 'function') ? versichererLogoImg(g.anbieter, 16) : '';
                 sparenHtml += '<tr><td><strong>' + g.produkt + '</strong>' + (g.quelle === 'FIDA' ? ' <span style="font-size:10px;background:#dbeafe;color:#1e40af;padding:1px 6px;border-radius:10px;">FIDA</span>' : '') + '</td>' +
-                    '<td>' + g.anbieter + '</td><td>\u20AC' + g.volumen.toLocaleString('de-DE') + '</td><td>' + g.zinssatz + '</td><td>' + g.laufzeit + '</td></tr>';
+                    '<td>' + gLogo + ' ' + g.anbieter + '</td><td>\u20AC' + g.volumen.toLocaleString('de-DE') + '</td><td>' + g.zinssatz + '</td><td>' + g.laufzeit + '</td></tr>';
             });
             sparenHtml += '<tr style="background:#f8fafc;font-weight:600;"><td>Gesamt Geldmarkt</td><td></td><td>\u20AC' + totalGeld.toLocaleString('de-DE') + '</td><td></td><td></td></tr>';
             sparenHtml += '</tbody></table></div>';
@@ -690,8 +692,9 @@ function fillBankFida(kd) {
                 '<table class="kunden-table fida-table"><thead><tr><th>Produkt</th><th>Anbieter</th><th>Volumen</th><th>Sparrate</th><th>Performance YTD</th></tr></thead><tbody>';
             kapital.forEach(function(k) {
                 totalKap += k.volumen;
+                var kLogo = (typeof versichererLogoImg === 'function') ? versichererLogoImg(k.anbieter, 16) : '';
                 sparenHtml += '<tr><td><strong>' + k.produkt + '</strong>' + (k.quelle === 'FIDA' ? ' <span style="font-size:10px;background:#dbeafe;color:#1e40af;padding:1px 6px;border-radius:10px;">FIDA</span>' : '') + '</td>' +
-                    '<td>' + k.anbieter + '</td><td>\u20AC' + k.volumen.toLocaleString('de-DE') + '</td><td>' + k.sparrate + '</td><td style="color:#16a34a;">' + k.performance + '</td></tr>';
+                    '<td>' + kLogo + ' ' + k.anbieter + '</td><td>\u20AC' + k.volumen.toLocaleString('de-DE') + '</td><td>' + k.sparrate + '</td><td style="color:#16a34a;">' + k.performance + '</td></tr>';
             });
             sparenHtml += '<tr style="background:#f8fafc;font-weight:600;"><td>Gesamt Depot</td><td></td><td>\u20AC' + totalKap.toLocaleString('de-DE') + '</td><td></td><td></td></tr>';
             sparenHtml += '</tbody></table></div>';
@@ -713,7 +716,8 @@ function fillBankFida(kd) {
                 '<table class="kunden-table fida-table"><thead><tr><th>Versicherung</th><th>Anbieter</th><th>Deckungssumme</th><th>Tarifart</th><th>Leistungsumfang</th><th>Prämie</th><th>Vertragsnr.</th></tr></thead><tbody>';
             eigen.forEach(function(v) {
                 var tags = v.leistungen.map(function(l) { return '<span class="leistung-tag" style="display:inline-block;font-size:10px;background:#f1f5f9;color:#475569;padding:2px 6px;border-radius:4px;margin:1px;">' + l + '</span>'; }).join(' ');
-                absHtml += '<tr><td><strong>' + v.versicherung + '</strong></td><td>' + v.anbieter + '</td><td>' + v.deckung + '</td>' +
+                var eLogo = (typeof versichererLogoImg === 'function') ? versichererLogoImg(v.anbieter, 16) : '';
+                absHtml += '<tr><td><strong>' + v.versicherung + '</strong></td><td>' + eLogo + ' ' + v.anbieter + '</td><td>' + v.deckung + '</td>' +
                     '<td><span class="tarif-badge" style="font-size:10px;padding:2px 8px;border-radius:10px;background:#dbeafe;color:#1e40af;">' + v.tarifart + '</span></td>' +
                     '<td>' + tags + '</td><td>' + v.praemie + '</td><td>' + v.vertrag + '</td></tr>';
             });
@@ -726,7 +730,8 @@ function fillBankFida(kd) {
                 '<table class="kunden-table fida-table"><thead><tr><th>Versicherung</th><th>Anbieter</th><th>Deckungssumme</th><th>Tarifart</th><th>Leistungsumfang</th><th>Selbstbehalt</th><th>Prämie</th><th>Kündigungsfrist</th></tr></thead><tbody>';
             fremd.forEach(function(v) {
                 var tags = v.leistungen.map(function(l) { return '<span class="leistung-tag" style="display:inline-block;font-size:10px;background:#f1f5f9;color:#475569;padding:2px 6px;border-radius:4px;margin:1px;">' + l + '</span>'; }).join(' ');
-                absHtml += '<tr><td><strong>' + v.versicherung + '</strong></td><td>' + v.anbieter + '</td><td>' + v.deckung + '</td>' +
+                var fLogo = (typeof versichererLogoImg === 'function') ? versichererLogoImg(v.anbieter, 16) : '';
+                absHtml += '<tr><td><strong>' + v.versicherung + '</strong></td><td>' + fLogo + ' ' + v.anbieter + '</td><td>' + v.deckung + '</td>' +
                     '<td><span class="tarif-badge" style="font-size:10px;padding:2px 8px;border-radius:10px;background:#fef3c7;color:#92400e;">' + v.tarifart + '</span></td>' +
                     '<td>' + tags + '</td><td>' + v.selbstbehalt + '</td><td>' + v.praemie + '</td><td>' + v.kuendigung + '</td></tr>';
             });
@@ -748,7 +753,8 @@ function fillBankFida(kd) {
             finHtml += '<div style="padding:0 16px 16px;"><table class="kunden-table fida-table"><thead><tr><th>Kredit</th><th>Kreditgeber</th><th>Ursprungsbetrag</th><th>Restschuld</th><th>Zinssatz</th><th>Rate</th><th>Laufzeit bis</th><th>Absicherung</th></tr></thead><tbody>';
             finanz.forEach(function(f) {
                 totalRest += f.restschuld;
-                finHtml += '<tr><td><strong>' + f.kredit + '</strong></td><td>' + f.kreditgeber + '</td>' +
+                var fkLogo = (typeof versichererLogoImg === 'function') ? versichererLogoImg(f.kreditgeber, 16) : '';
+                finHtml += '<tr><td><strong>' + f.kredit + '</strong></td><td>' + fkLogo + ' ' + f.kreditgeber + '</td>' +
                     '<td>\u20AC' + f.ursprung.toLocaleString('de-DE') + '</td><td>\u20AC' + f.restschuld.toLocaleString('de-DE') + '</td>' +
                     '<td>' + f.zinssatz + '</td><td>' + f.rate + '</td><td>' + f.laufzeit + '</td><td>' + f.absicherung + '</td></tr>';
             });

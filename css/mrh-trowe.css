@@ -136,6 +136,98 @@
 }
 
 /* ========================================
+   INSURER SELECTOR (inside dropdown)
+   ======================================== */
+.insurer-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 4px;
+    padding: 4px 10px 6px;
+}
+
+.insurer-dropdown-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    background: #fff;
+    cursor: pointer;
+    transition: all 0.15s;
+    padding: 4px;
+    overflow: hidden;
+}
+
+.insurer-dropdown-item img {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+    border-radius: 4px;
+}
+
+.insurer-dropdown-item:hover {
+    border-color: #94a3b8;
+    background: #f8fafc;
+    transform: scale(1.08);
+}
+
+.insurer-dropdown-item.active {
+    border-color: #166534;
+    background: #f0fdf4;
+    box-shadow: 0 0 0 1px #166534;
+}
+
+.insurer-icon-fallback {
+    width: 28px;
+    height: 28px;
+    border-radius: 4px;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    letter-spacing: -0.5px;
+}
+
+/* ========================================
+   INSURER LOGO IN HEADER (large, next to photo)
+   ======================================== */
+.insurer-logo-container {
+    width: 52px;
+    height: 52px;
+    border-radius: 10px;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    flex-shrink: 0;
+}
+
+.insurer-logo-img {
+    width: 44px;
+    height: 44px;
+    object-fit: contain;
+}
+
+.insurer-logo-fallback {
+    width: 52px;
+    height: 52px;
+    border-radius: 10px;
+    color: #fff;
+    font-size: 18px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    letter-spacing: -0.5px;
+}
+
+/* ========================================
    OPEN/CLOSED FINANCE TOGGLE
    ======================================== */
 .finance-mode-toggle {

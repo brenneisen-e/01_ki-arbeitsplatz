@@ -6,6 +6,233 @@
 // ========================================
 var viewMode = 'ao'; // 'ao' | 'ecclesia' | 'mrh' | 'bank-retail' | 'bank-fk' | 'bank-vw'
 var financeMode = 'closed'; // 'closed' | 'open' — Open Finance = alle Institute sichtbar
+var selectedInsurer = 'ergo'; // Currently selected insurance company
+
+// ========================================
+// INSURER CONFIGURATION
+// ========================================
+var insurerConfig = {
+    'ergo': {
+        name: 'ERGO',
+        domain: 'ergo.com',
+        primary: '#C8102E',
+        primaryDark: '#9A0C23',
+        primaryLight: '#DC3545',
+        headerBg: '#2d5016',
+        headerAccent: '#86BC25',
+        activeTabBg: '#86BC25',
+        dropdownActive: '#f0fdf4',
+        dropdownActiveText: '#166534'
+    },
+    'allianz': {
+        name: 'Allianz',
+        domain: 'allianz.com',
+        primary: '#003781',
+        primaryDark: '#002D6B',
+        primaryLight: '#1F78D1',
+        headerBg: '#003781',
+        headerAccent: '#1F78D1',
+        activeTabBg: '#1F78D1',
+        dropdownActive: '#eff6ff',
+        dropdownActiveText: '#1e40af'
+    },
+    'axa': {
+        name: 'AXA',
+        domain: 'axa.com',
+        primary: '#00008F',
+        primaryDark: '#000066',
+        primaryLight: '#3032C1',
+        headerBg: '#00008F',
+        headerAccent: '#FF1721',
+        activeTabBg: '#3032C1',
+        dropdownActive: '#eef2ff',
+        dropdownActiveText: '#3730a3'
+    },
+    'zurich': {
+        name: 'Zurich',
+        domain: 'zurich.com',
+        primary: '#003399',
+        primaryDark: '#002266',
+        primaryLight: '#4A90D9',
+        headerBg: '#003399',
+        headerAccent: '#4A90D9',
+        activeTabBg: '#4A90D9',
+        dropdownActive: '#eff6ff',
+        dropdownActiveText: '#1e3a8a'
+    },
+    'generali': {
+        name: 'Generali',
+        domain: 'generali.com',
+        primary: '#C8102E',
+        primaryDark: '#A00E24',
+        primaryLight: '#E04050',
+        headerBg: '#B8001C',
+        headerAccent: '#E04050',
+        activeTabBg: '#E04050',
+        dropdownActive: '#fef2f2',
+        dropdownActiveText: '#991b1b'
+    },
+    'hdi': {
+        name: 'HDI',
+        domain: 'hdi.global',
+        primary: '#007E3A',
+        primaryDark: '#005E2A',
+        primaryLight: '#2ECC71',
+        headerBg: '#007E3A',
+        headerAccent: '#2ECC71',
+        activeTabBg: '#2ECC71',
+        dropdownActive: '#f0fdf4',
+        dropdownActiveText: '#166534'
+    },
+    'rv': {
+        name: 'R+V',
+        domain: 'ruv.de',
+        primary: '#004899',
+        primaryDark: '#003466',
+        primaryLight: '#FFC72C',
+        headerBg: '#004899',
+        headerAccent: '#FFC72C',
+        activeTabBg: '#FFC72C',
+        dropdownActive: '#eff6ff',
+        dropdownActiveText: '#1e40af'
+    },
+    'signal-iduna': {
+        name: 'Signal Iduna',
+        domain: 'signal-iduna.de',
+        primary: '#0033A0',
+        primaryDark: '#002680',
+        primaryLight: '#FFD100',
+        headerBg: '#0033A0',
+        headerAccent: '#FFD100',
+        activeTabBg: '#FFD100',
+        dropdownActive: '#eff6ff',
+        dropdownActiveText: '#1e3a8a'
+    },
+    'gothaer': {
+        name: 'Gothaer',
+        domain: 'gothaer.de',
+        primary: '#009640',
+        primaryDark: '#007830',
+        primaryLight: '#00B84D',
+        headerBg: '#009640',
+        headerAccent: '#00B84D',
+        activeTabBg: '#00B84D',
+        dropdownActive: '#f0fdf4',
+        dropdownActiveText: '#166534'
+    },
+    'debeka': {
+        name: 'Debeka',
+        domain: 'debeka.de',
+        primary: '#003D7C',
+        primaryDark: '#002D5C',
+        primaryLight: '#4A8BC2',
+        headerBg: '#003D7C',
+        headerAccent: '#4A8BC2',
+        activeTabBg: '#4A8BC2',
+        dropdownActive: '#eff6ff',
+        dropdownActiveText: '#1e3a8a'
+    }
+};
+
+// Contract product sets per insurer (typical products each insurer offers)
+var insurerProducts = {
+    'ergo': ['ERGO', 'ERGO Direkt', 'DKV'],
+    'allianz': ['Allianz', 'Allianz Direct'],
+    'axa': ['AXA', 'AXA Easy'],
+    'zurich': ['Zurich', 'Zurich Connect'],
+    'generali': ['Generali', 'CosmosDirekt'],
+    'hdi': ['HDI', 'Hannoversche'],
+    'rv': ['R+V', 'KRAVAG', 'Condor'],
+    'signal-iduna': ['Signal Iduna', 'ADAC Versicherung'],
+    'gothaer': ['Gothaer', 'Janitos'],
+    'debeka': ['Debeka']
+};
+
+// ========================================
+// INSURER SELECTION
+// ========================================
+function setInsurer(insurerKey) {
+    if (!insurerConfig[insurerKey]) return;
+    selectedInsurer = insurerKey;
+
+    var cfg = insurerConfig[insurerKey];
+
+    // Update CSS custom properties for theming
+    var root = document.documentElement;
+    root.style.setProperty('--primary', cfg.primary);
+    root.style.setProperty('--primary-dark', cfg.primaryDark);
+    root.style.setProperty('--primary-light', cfg.primaryLight);
+
+    // Update header background color
+    var header = document.querySelector('.agentur-header-new');
+    if (header) header.style.background = cfg.headerBg;
+
+    // Update active tab color
+    var style = document.getElementById('insurerDynamicStyle');
+    if (!style) {
+        style = document.createElement('style');
+        style.id = 'insurerDynamicStyle';
+        document.head.appendChild(style);
+    }
+    style.textContent =
+        '.agentur-header-new .agentur-tab.active { background: ' + cfg.activeTabBg + ' !important; }' +
+        '.agentur-photo-small { background: linear-gradient(135deg, ' + cfg.headerAccent + ' 0%, ' + cfg.primary + ' 100%) !important; }' +
+        '.view-mode-dropdown-item.active { background: ' + cfg.dropdownActive + ' !important; color: ' + cfg.dropdownActiveText + ' !important; }' +
+        '.view-mode-dropdown-item.active svg { stroke: ' + cfg.dropdownActiveText + ' !important; }' +
+        '.insurer-dropdown-item.active { background: ' + cfg.dropdownActive + ' !important; color: ' + cfg.dropdownActiveText + ' !important; }';
+
+    // Update insurer logo in header
+    var logoImg = document.getElementById('insurerLogoImg');
+    var logoFallback = document.getElementById('insurerLogoFallback');
+    if (logoImg) {
+        var token = localStorage.getItem('logodev_token') || 'pk_a8V0rGbSQxSGipHMcGnScA';
+        logoImg.src = 'https://img.logo.dev/' + cfg.domain + '?token=' + token + '&size=120&format=png';
+        logoImg.alt = cfg.name;
+        logoImg.style.display = '';
+        logoImg.onerror = function() {
+            logoImg.style.display = 'none';
+            if (logoFallback) {
+                logoFallback.style.display = 'flex';
+                logoFallback.textContent = cfg.name.substring(0, 2).toUpperCase();
+                logoFallback.style.background = cfg.primary;
+            }
+        };
+        if (logoFallback) logoFallback.style.display = 'none';
+    }
+
+    // Update active state in insurer dropdown
+    document.querySelectorAll('.insurer-dropdown-item').forEach(function(item) {
+        item.classList.toggle('active', item.dataset.insurer === insurerKey);
+    });
+
+    // Update dropdown toggle to show insurer name
+    var insurerLabel = document.getElementById('selectedInsurerLabel');
+    if (insurerLabel) insurerLabel.textContent = cfg.name;
+
+    // Re-generate contract data with new insurer
+    if (typeof updateContractsForInsurer === 'function') {
+        updateContractsForInsurer(insurerKey);
+    }
+
+    localStorage.setItem('selectedInsurer', insurerKey);
+    console.log('Versicherer gewechselt: ' + cfg.name);
+}
+window.setInsurer = setInsurer;
+
+// Restore saved insurer on page load
+function restoreInsurer() {
+    var saved = localStorage.getItem('selectedInsurer');
+    if (saved && insurerConfig[saved]) {
+        setInsurer(saved);
+    }
+}
+
+// Call restore after DOM ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', restoreInsurer);
+} else {
+    setTimeout(restoreInsurer, 100);
+}
 
 // Dropdown label map
 var viewModeLabels = {

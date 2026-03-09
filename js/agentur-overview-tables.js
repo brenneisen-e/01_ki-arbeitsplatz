@@ -551,6 +551,57 @@ function generateEintrittsdatum() {
     return date.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
 }
 
+// ========================================
+// INSURER-BASED CONTRACT DATA UPDATE
+// ========================================
+// When user selects a different insurer, replace the main insurer in contracts
+// and re-render the tables. ~60% of contracts go to the selected insurer,
+// ~20% stay as cross-sales from partner companies, ~20% random competitors.
+
+function updateContractsForInsurer(insurerKey) {
+    if (typeof insurerConfig === 'undefined' || !insurerConfig[insurerKey]) return;
+    var cfg = insurerConfig[insurerKey];
+    var brands = (typeof insurerProducts !== 'undefined' && insurerProducts[insurerKey])
+        ? insurerProducts[insurerKey] : [cfg.name];
+    var mainBrand = brands[0]; // Primary brand name
+
+    // Competitor names that stay as-is for cross-selling realism
+    var allInsurers = Object.keys(insurerConfig || {}).filter(function(k) { return k !== insurerKey; });
+    var competitorNames = allInsurers.map(function(k) { return insurerConfig[k].name; });
+
+    // Update Bestandsverträge: majority → selected insurer
+    kundenBestandVertraege.forEach(function(v, i) {
+        if (i % 5 < 3) {
+            // 60%: primary brand
+            v.versicherer = mainBrand;
+        } else if (i % 5 === 3 && brands.length > 1) {
+            // 20%: sub-brand (e.g. DKV for ERGO, CosmosDirekt for Generali)
+            v.versicherer = brands[1];
+        }
+        // remaining 20% keep their original versicherer (cross-sell)
+    });
+
+    // Re-generate all mock data with updated insurer
+    if (typeof generateMockVertraege === 'function') {
+        generateMockVertraege();
+    }
+
+    // Re-render tables if currently visible
+    if (typeof renderVertragsTabelle === 'function') {
+        var activeTab = document.querySelector('.agentur-tab.active');
+        if (activeTab) {
+            var tabText = activeTab.textContent.trim().toLowerCase();
+            if (tabText.indexOf('bestand') >= 0 || tabText.indexOf('bersicht') >= 0) {
+                // Trigger a re-render
+                try { renderVertragsTabelle('bestand'); } catch(e) {}
+            }
+        }
+    }
+
+    console.log('Verträge aktualisiert für ' + cfg.name + ' — Hauptmarke: ' + mainBrand);
+}
+window.updateContractsForInsurer = updateContractsForInsurer;
+
 /**
  * Navigation Functions
  */

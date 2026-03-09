@@ -160,7 +160,8 @@
     overflow: hidden;
 }
 
-.insurer-dropdown-item img {
+.insurer-dropdown-item img,
+.insurer-dropdown-item .insurer-grid-logo {
     width: 28px;
     height: 28px;
     object-fit: contain;

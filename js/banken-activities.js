@@ -2,8 +2,7 @@
 // CUSTOMER ACTIVITIES & NOTES SYSTEM
 // ========================================
 
-// Get current customer ID from modal
-let currentCustomerId = null;
+// currentCustomerId declared in banken-feedback.js (shared var)
 
 // Get customer activities from localStorage
 function getCustomerActivities(customerId) {

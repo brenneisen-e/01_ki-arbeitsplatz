@@ -1,7 +1,3 @@
-                tbody.appendChild(totalRow);
-            }
-        }
-        
         // Load vermittler profile
         function loadVermittlerProfile() {
             const selectedProfile = document.getElementById('vermittlerSelect').value;

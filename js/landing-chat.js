@@ -1,5 +1,3 @@
-}
-
 // ========================================
 // GOOGLE CLOUD SPEECH-TO-TEXT (kept for settings compatibility)
 // ========================================

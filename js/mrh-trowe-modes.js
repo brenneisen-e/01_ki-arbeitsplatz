@@ -15,14 +15,14 @@ var insurerConfig = {
     'ergo': {
         name: 'ERGO',
         domain: 'ergo.de',
-        primary: '#C8102E',
-        primaryDark: '#9A0C23',
-        primaryLight: '#DC3545',
-        headerBg: '#C8102E',
-        headerAccent: '#FF4D6A',
-        activeTabBg: '#FF4D6A',
-        dropdownActive: '#fef2f2',
-        dropdownActiveText: '#991b1b'
+        primary: '#6B1C2A',
+        primaryDark: '#4A1320',
+        primaryLight: '#8B2A3A',
+        headerBg: '#6B1C2A',
+        headerAccent: '#D4A574',
+        activeTabBg: '#D4A574',
+        dropdownActive: '#fdf2f2',
+        dropdownActiveText: '#6B1C2A'
     },
     'allianz': {
         name: 'Allianz',

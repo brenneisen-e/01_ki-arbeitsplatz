@@ -1,4 +1,4 @@
-(function(){var r=['safeLocalGet'];var m=r.filter(function(f){return typeof window[f]==='undefined'});if(m.length)console.error('[agentur-overview-banking.js] Fehlende Deps:',m.join(', '),'← Lade utils.js zuerst!');})();
+(function(){var r=['safeLocalGet'];var m=r.filter(function(f){return typeof window[f]==='undefined'});if(m.length)console.debug('[agentur-overview-banking.js] Fehlende Deps:',m.join(', '),'← Lade utils.js zuerst!');})();
 // ── BERATER / BANKING MODULE (merged from berater-overview.js) ──
 
 /* ============================================================

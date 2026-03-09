@@ -1,4 +1,4 @@
-(function(){var r=['safeLocalGet','state'];var m=r.filter(function(f){return typeof window[f]==='undefined'});if(m.length)console.error('[chat.js] Fehlende Deps:',m.join(', '),'← Lade utils.js, data.js zuerst!');})();
+(function(){var r=['safeLocalGet','state'];var m=r.filter(function(f){return typeof window[f]==='undefined'});if(m.length)console.debug('[chat.js] Fehlende Deps:',m.join(', '),'← Lade utils.js, data.js zuerst!');})();
 // js/chat.js - Chat Logic (mit automatischer Datenanalyse nach Filtern)
 
 let chatHistory = [];

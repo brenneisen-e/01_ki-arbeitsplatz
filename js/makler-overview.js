@@ -1,4 +1,4 @@
-(function(){var r=['getFilteredData','kpiDefinitions'];var m=r.filter(function(f){return typeof window[f]==='undefined'});if(m.length)console.error('[makler-overview.js] Fehlende Deps:',m.join(', '),'← Lade config.js, data.js zuerst!');})();
+(function(){var r=['getFilteredData','kpiDefinitions'];var m=r.filter(function(f){return typeof window[f]==='undefined'});if(m.length)console.debug('[makler-overview.js] Fehlende Deps:',m.join(', '),'← Lade config.js, data.js zuerst!');})();
 
 // ========================================
 // MAKLER RENEWAL OVERVIEW (A-02)

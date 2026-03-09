@@ -1,4 +1,4 @@
-(function(){var r=['state','getMonthName'];var m=r.filter(function(f){return typeof window[f]==='undefined'&&typeof window[f]!=='function'});if(m.length)console.error('[charts.js] Fehlende Deps:',m.join(', '),'← Lade data.js und utils.js zuerst!');})();
+(function(){var r=['state','getMonthName'];var m=r.filter(function(f){return typeof window[f]==='undefined'&&typeof window[f]!=='function'});if(m.length)console.debug('[charts.js] Fehlende Deps:',m.join(', '),'← Lade data.js und utils.js zuerst!');})();
 // js/charts.js - Chart Functions
 
 // =====================================================

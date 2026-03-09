@@ -1,4 +1,4 @@
-(function(){var r=['state','kpiDefinitions','formatValue','getFilteredData'];var m=r.filter(function(f){return typeof window[f]==='undefined'});if(m.length)console.error('[main.js] Fehlende Deps:',m.join(', '),'← Lade config.js, utils.js, data.js zuerst!');})();
+(function(){var r=['state','kpiDefinitions','formatValue','getFilteredData'];var m=r.filter(function(f){return typeof window[f]==='undefined'});if(m.length)console.debug('[main.js] Fehlende Deps:',m.join(', '),'← Lade config.js, utils.js, data.js zuerst!');})();
 // js/main.js - Main Application Logic
 // Note: productsBySegment ist in config.js definiert
 

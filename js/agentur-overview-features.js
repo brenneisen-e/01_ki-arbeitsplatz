@@ -34,6 +34,12 @@ function openBillingCheck() {
     if (agenturOverview) agenturOverview.style.display = 'none';
     if (billingCheckPage) billingCheckPage.style.display = 'block';
 
+    // Lazy-load iframe src beim ersten Öffnen
+    var iframe = document.getElementById('billingCheckIframe');
+    if (iframe && !iframe.src && iframe.dataset.src) {
+        iframe.src = iframe.dataset.src;
+    }
+
     // Verstecke den Agentur-Chat-Toggle
     hideAgenturChat();
 }

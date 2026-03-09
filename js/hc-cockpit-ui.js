@@ -1,4 +1,4 @@
-(function(){var r=['hcCockpitData'];var m=r.filter(function(f){return typeof window[f]==='undefined'});if(m.length)console.error('[hc-cockpit-ui.js] Fehlende Deps:',m.join(', '),'← Lade hc-cockpit-data.js zuerst!');})();
+(function(){var r=['hcCockpitData'];var m=r.filter(function(f){return typeof window[f]==='undefined'});if(m.length)console.debug('[hc-cockpit-ui.js] Fehlende Deps:',m.join(', '),'← Lade hc-cockpit-data.js zuerst!');})();
 
 function renderHCRiskMovers() {
     const tbody = document.getElementById('hcRiskMoversBody');

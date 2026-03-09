@@ -140,7 +140,7 @@
    ======================================== */
 .finance-mode-toggle {
     position: absolute;
-    right: 240px;
+    right: 340px;
     top: 50%;
     transform: translateY(-50%);
     z-index: 10;

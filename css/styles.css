@@ -7811,6 +7811,14 @@ button svg,
     padding-top: 0;
 }
 
+.kunden-shared-header .finance-mode-toggle {
+    position: absolute;
+    right: 340px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+}
+
 .kunden-shared-header .kunden-switch-dropdown {
     position: absolute;
     right: 32px;

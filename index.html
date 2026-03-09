@@ -42,7 +42,7 @@
     <!-- Modularisierte CSS-Module -->
     <link rel="stylesheet" href="css/kunden-detail.css?v=20260209">
     <link rel="stylesheet" href="css/clv.css?v=20260209">
-    <link rel="stylesheet" href="css/agentur-fachkonzept.css?v=20260209">
+    <link rel="stylesheet" href="css/agentur-fachkonzept.css?v=20260309">
     <link rel="stylesheet" href="css/user-profile.css?v=20260209">
     <link rel="stylesheet" href="css/kunde-sticky-bar.css?v=20260209">
     <link rel="stylesheet" href="css/nps.css?v=20260209">
@@ -775,22 +775,23 @@
                 <!-- Modus-Selector Dropdown (rechts im Header) -->
                 <div class="view-mode-dropdown" id="viewModeDropdown">
                     <button class="view-mode-dropdown-toggle" id="viewModeToggle" onclick="toggleViewModeDropdown()">
+                        <svg class="view-mode-dropdown-icon" id="viewModeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
                         <span class="view-mode-dropdown-label" id="viewModeLabel">Privatkunde (AO)</span>
                         <svg class="view-mode-dropdown-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="6 9 12 15 18 9"></polyline></svg>
                     </button>
                     <div class="view-mode-dropdown-menu" id="viewModeMenu" style="display:none;">
                         <div class="view-mode-dropdown-group">
-                            <div class="view-mode-dropdown-group-label">Versicherung</div>
-                            <button class="view-mode-dropdown-item active" data-mode="ao" onclick="setViewMode('ao')">Privatkunde (AO)</button>
-                            <button class="view-mode-dropdown-item" data-mode="ecclesia" onclick="setViewMode('ecclesia')">Makler B2B</button>
-                            <button class="view-mode-dropdown-item" data-mode="mrh" onclick="setViewMode('mrh')">Gewerbemakler 360&deg;</button>
+                            <div class="view-mode-dropdown-group-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg> Versicherung</div>
+                            <button class="view-mode-dropdown-item active" data-mode="ao" onclick="setViewMode('ao')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg> Privatkunde (AO)</button>
+                            <button class="view-mode-dropdown-item" data-mode="ecclesia" onclick="setViewMode('ecclesia')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 00-3-3.87"></path><path d="M16 3.13a4 4 0 010 7.75"></path></svg> Makler B2B</button>
+                            <button class="view-mode-dropdown-item" data-mode="mrh" onclick="setViewMode('mrh')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"></path></svg> Gewerbemakler 360&deg;</button>
                         </div>
                         <div class="view-mode-dropdown-divider"></div>
                         <div class="view-mode-dropdown-group">
-                            <div class="view-mode-dropdown-group-label">Banken</div>
-                            <button class="view-mode-dropdown-item" data-mode="bank-retail" onclick="setViewMode('bank-retail')">VR Retail</button>
-                            <button class="view-mode-dropdown-item" data-mode="bank-fk" onclick="setViewMode('bank-fk')">VR Firmenkunde</button>
-                            <button class="view-mode-dropdown-item" data-mode="bank-vw" onclick="setViewMode('bank-vw')">VR Verm&ouml;gen</button>
+                            <div class="view-mode-dropdown-group-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><rect x="3" y="10" width="18" height="11" rx="2"></rect><path d="M12 2L2 10h20L12 2z"></path></svg> Banken</div>
+                            <button class="view-mode-dropdown-item" data-mode="bank-retail" onclick="setViewMode('bank-retail')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg> VR Retail</button>
+                            <button class="view-mode-dropdown-item" data-mode="bank-fk" onclick="setViewMode('bank-fk')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"></path></svg> VR Firmenkunde</button>
+                            <button class="view-mode-dropdown-item" data-mode="bank-vw" onclick="setViewMode('bank-vw')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg> VR Verm&ouml;gen</button>
                         </div>
                     </div>
                 </div>
@@ -982,7 +983,7 @@
                     </div>
                 </div>
                 <div class="cockpit-kpi-card">
-                    <div class="cockpit-kpi-icon neugeschaeft"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
+                    <div class="cockpit-kpi-icon neugeschaeft"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><text x="12" y="16" text-anchor="middle" fill="currentColor" stroke="none" font-size="12" font-weight="bold">&euro;</text></svg></div>
                     <div class="cockpit-kpi-content">
                         <div class="cockpit-kpi-value" id="bankKpiErtrag">&euro;248.500</div>
                         <div class="cockpit-kpi-label">Ertrag YTD</div>
@@ -1026,7 +1027,7 @@
                     </div>
                 </div>
                 <div class="cockpit-kpi-card">
-                    <div class="cockpit-kpi-icon ziel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
+                    <div class="cockpit-kpi-icon ziel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><text x="12" y="16" text-anchor="middle" fill="currentColor" stroke="none" font-size="12" font-weight="bold">&euro;</text></svg></div>
                     <div class="cockpit-kpi-content">
                         <div class="cockpit-kpi-value">&euro;385 Tsd.</div>
                         <div class="cockpit-kpi-label">Provisionsertrag</div>
@@ -1078,7 +1079,7 @@
                     </div>
                 </div>
                 <div class="cockpit-kpi-card">
-                    <div class="cockpit-kpi-icon neugeschaeft"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
+                    <div class="cockpit-kpi-icon neugeschaeft"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><text x="12" y="16" text-anchor="middle" fill="currentColor" stroke="none" font-size="12" font-weight="bold">&euro;</text></svg></div>
                     <div class="cockpit-kpi-content">
                         <div class="cockpit-kpi-value">&euro;680 Tsd.</div>
                         <div class="cockpit-kpi-label">Gesamt-Ertrag PB</div>
@@ -3545,7 +3546,7 @@
                                     <div class="abrechnung-item">
                                         <div class="abrechnung-info">
                                             <div class="abrechnung-icon">
-                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"></path></svg>
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><circle cx="12" cy="12" r="10"></circle><text x="12" y="16" text-anchor="middle" fill="currentColor" stroke="none" font-size="12" font-weight="bold">&euro;</text></svg>
                                             </div>
                                             <div>
                                                 <div class="abrechnung-monat">Februar 2026</div>
@@ -3557,7 +3558,7 @@
                                     <div class="abrechnung-item">
                                         <div class="abrechnung-info">
                                             <div class="abrechnung-icon">
-                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"></path></svg>
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><circle cx="12" cy="12" r="10"></circle><text x="12" y="16" text-anchor="middle" fill="currentColor" stroke="none" font-size="12" font-weight="bold">&euro;</text></svg>
                                             </div>
                                             <div>
                                                 <div class="abrechnung-monat">Januar 2026</div>
@@ -3569,7 +3570,7 @@
                                     <div class="abrechnung-item">
                                         <div class="abrechnung-info">
                                             <div class="abrechnung-icon">
-                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"></path></svg>
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><circle cx="12" cy="12" r="10"></circle><text x="12" y="16" text-anchor="middle" fill="currentColor" stroke="none" font-size="12" font-weight="bold">&euro;</text></svg>
                                             </div>
                                             <div>
                                                 <div class="abrechnung-monat">Dezember 2025</div>

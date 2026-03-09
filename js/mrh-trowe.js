@@ -40,9 +40,17 @@ document.addEventListener('click', function(e) {
 function setViewMode(mode) {
     viewMode = mode;
 
-    // Update dropdown label and active item
+    // Update dropdown label, icon, and active item
     var label = document.getElementById('viewModeLabel');
     if (label) label.textContent = viewModeLabels[mode] || mode;
+    var icon = document.getElementById('viewModeIcon');
+    if (icon) {
+        if (mode.indexOf('bank-') === 0) {
+            icon.innerHTML = '<rect x="3" y="10" width="18" height="11" rx="2"></rect><path d="M12 2L2 10h20L12 2z"></path>';
+        } else {
+            icon.innerHTML = '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>';
+        }
+    }
     document.querySelectorAll('.view-mode-dropdown-item').forEach(function(item) {
         item.classList.toggle('active', item.dataset.mode === mode);
     });

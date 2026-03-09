@@ -18,11 +18,11 @@ var insurerConfig = {
         primary: '#C8102E',
         primaryDark: '#9A0C23',
         primaryLight: '#DC3545',
-        headerBg: '#2d5016',
-        headerAccent: '#86BC25',
-        activeTabBg: '#86BC25',
-        dropdownActive: '#f0fdf4',
-        dropdownActiveText: '#166534'
+        headerBg: '#C8102E',
+        headerAccent: '#FF4D6A',
+        activeTabBg: '#FF4D6A',
+        dropdownActive: '#fef2f2',
+        dropdownActiveText: '#991b1b'
     },
     'allianz': {
         name: 'Allianz',
@@ -149,6 +149,199 @@ var insurerProducts = {
 };
 
 // ========================================
+// BANK CONFIGURATION
+// ========================================
+var selectedBank = 'vr'; // Currently selected bank group
+var bankConfig = {
+    'vr': {
+        name: 'VR / Volksbank',
+        domain: 'volksbank.de',
+        primary: '#003399',
+        primaryDark: '#002266',
+        headerBg: '#003399',
+        headerAccent: '#FF6600',
+        activeTabBg: '#FF6600',
+        labels: { retail: 'VR Retail', fk: 'VR Firmenkunde', vw: 'VR Verm\u00F6gen' }
+    },
+    'sparkasse': {
+        name: 'Sparkasse',
+        domain: 'sparkasse.de',
+        primary: '#FF0000',
+        primaryDark: '#CC0000',
+        headerBg: '#CC0000',
+        headerAccent: '#FF4444',
+        activeTabBg: '#FF4444',
+        labels: { retail: 'Sparkasse Retail', fk: 'Sparkasse Firmenkunde', vw: 'Sparkasse Verm\u00F6gen' }
+    },
+    'commerzbank': {
+        name: 'Commerzbank',
+        domain: 'commerzbank.de',
+        primary: '#FFD700',
+        primaryDark: '#D4B400',
+        headerBg: '#003D2E',
+        headerAccent: '#FFD700',
+        activeTabBg: '#FFD700',
+        labels: { retail: 'CBK Retail', fk: 'CBK Firmenkunde', vw: 'CBK Wealth Management' }
+    },
+    'deutsche-bank': {
+        name: 'Deutsche Bank',
+        domain: 'db.com',
+        primary: '#0018A8',
+        primaryDark: '#001280',
+        headerBg: '#0018A8',
+        headerAccent: '#4A72D9',
+        activeTabBg: '#4A72D9',
+        labels: { retail: 'DB Retail', fk: 'DB Firmenkunde', vw: 'DB Wealth Management' }
+    },
+    'dkb': {
+        name: 'DKB',
+        domain: 'dkb.de',
+        primary: '#004F9F',
+        primaryDark: '#003D7C',
+        headerBg: '#004F9F',
+        headerAccent: '#00B2A9',
+        activeTabBg: '#00B2A9',
+        labels: { retail: 'DKB Retail', fk: 'DKB Firmenkunde', vw: 'DKB Verm\u00F6gen' }
+    },
+    'ing': {
+        name: 'ING',
+        domain: 'ing.de',
+        primary: '#FF6200',
+        primaryDark: '#CC4E00',
+        headerBg: '#FF6200',
+        headerAccent: '#FFB380',
+        activeTabBg: '#FFB380',
+        labels: { retail: 'ING Retail', fk: 'ING Firmenkunde', vw: 'ING Verm\u00F6gen' }
+    },
+    'targobank': {
+        name: 'Targobank',
+        domain: 'targobank.de',
+        primary: '#003B7E',
+        primaryDark: '#002D60',
+        headerBg: '#003B7E',
+        headerAccent: '#00A3E0',
+        activeTabBg: '#00A3E0',
+        labels: { retail: 'Targo Retail', fk: 'Targo Firmenkunde', vw: 'Targo Verm\u00F6gen' }
+    },
+    'apobank': {
+        name: 'apoBank',
+        domain: 'apobank.de',
+        primary: '#003D7C',
+        primaryDark: '#002D5C',
+        headerBg: '#003D7C',
+        headerAccent: '#7DB928',
+        activeTabBg: '#7DB928',
+        labels: { retail: 'apoBank Retail', fk: 'apoBank Firmenkunde', vw: 'apoBank Verm\u00F6gen' }
+    }
+};
+
+// ========================================
+// BANK SELECTION
+// ========================================
+function setBank(bankKey) {
+    if (!bankConfig[bankKey]) return;
+    selectedBank = bankKey;
+    var cfg = bankConfig[bankKey];
+
+    // Update banking mode labels in dropdown
+    var bankModes = { 'bank-retail': 'retail', 'bank-fk': 'fk', 'bank-vw': 'vw' };
+    for (var mode in bankModes) {
+        viewModeLabels[mode] = cfg.labels[bankModes[mode]];
+        var btn = document.querySelector('.view-mode-dropdown-item[data-mode="' + mode + '"]');
+        if (btn) {
+            // Update text content but keep the SVG
+            var svg = btn.querySelector('svg');
+            btn.textContent = ' ' + cfg.labels[bankModes[mode]];
+            if (svg) btn.insertBefore(svg, btn.firstChild);
+        }
+    }
+
+    // Update current label if in bank mode
+    if (viewMode.indexOf('bank-') === 0) {
+        var label = document.getElementById('viewModeLabel');
+        if (label) label.textContent = viewModeLabels[viewMode];
+
+        // Apply bank theming to header
+        var header = document.querySelector('.agentur-header-new');
+        if (header) header.style.background = cfg.headerBg;
+
+        var style = document.getElementById('insurerDynamicStyle');
+        if (!style) {
+            style = document.createElement('style');
+            style.id = 'insurerDynamicStyle';
+            document.head.appendChild(style);
+        }
+        style.textContent =
+            '.agentur-header-new .agentur-tab.active { background: ' + cfg.activeTabBg + ' !important; }' +
+            '.agentur-photo-small { background: linear-gradient(135deg, ' + cfg.headerAccent + ' 0%, ' + cfg.primary + ' 100%) !important; }' +
+            '.bank-dropdown-item.active { background: #eff6ff !important; color: #1e40af !important; }';
+    }
+
+    // Update header logo for bank
+    var logoImg = document.getElementById('insurerLogoImg');
+    var logoFallback = document.getElementById('insurerLogoFallback');
+    if (logoImg) {
+        var logoUrl = (typeof getVersichererLogoUrl === 'function')
+            ? getVersichererLogoUrl(cfg.name, 120)
+            : '';
+        if (logoUrl) {
+            logoImg.src = logoUrl;
+            logoImg.alt = cfg.name;
+            logoImg.style.display = '';
+            logoImg.onerror = function() {
+                logoImg.style.display = 'none';
+                if (logoFallback) {
+                    logoFallback.style.display = 'flex';
+                    logoFallback.textContent = cfg.name.substring(0, 2).toUpperCase();
+                    logoFallback.style.background = cfg.primary;
+                }
+            };
+            if (logoFallback) logoFallback.style.display = 'none';
+        } else if (logoFallback) {
+            logoImg.style.display = 'none';
+            logoFallback.style.display = 'flex';
+            logoFallback.textContent = cfg.name.substring(0, 2).toUpperCase();
+            logoFallback.style.background = cfg.primary;
+        }
+    }
+
+    // Update active state in bank dropdown
+    document.querySelectorAll('.bank-dropdown-item').forEach(function(item) {
+        item.classList.toggle('active', item.dataset.bank === bankKey);
+    });
+
+    var bankLabel = document.getElementById('selectedBankLabel');
+    if (bankLabel) bankLabel.textContent = cfg.name;
+
+    localStorage.setItem('selectedBank', bankKey);
+    console.log('Bank gewechselt: ' + cfg.name);
+}
+window.setBank = setBank;
+
+// Load bank grid logos dynamically
+function loadBankGridLogos() {
+    if (typeof getVersichererLogoUrl !== 'function') return;
+    document.querySelectorAll('.bank-dropdown-item[data-bank]').forEach(function(btn) {
+        var key = btn.dataset.bank;
+        var cfg = bankConfig[key];
+        if (!cfg) return;
+        var url = getVersichererLogoUrl(cfg.name, 80);
+        if (!url) return;
+        if (btn.querySelector('img')) return;
+        var img = document.createElement('img');
+        img.src = url;
+        img.alt = cfg.name;
+        img.className = 'insurer-grid-logo';
+        img.onerror = function() { img.remove(); };
+        img.onload = function() {
+            var fallback = btn.querySelector('.insurer-icon-fallback');
+            if (fallback) fallback.style.display = 'none';
+        };
+        btn.insertBefore(img, btn.firstChild);
+    });
+}
+
+// ========================================
 // INSURER SELECTION
 // ========================================
 function setInsurer(insurerKey) {
@@ -247,14 +440,21 @@ function loadInsurerGridLogos() {
     });
 }
 
-// Restore saved insurer on page load
+// Restore saved insurer + bank on page load
 function restoreInsurer() {
     var saved = localStorage.getItem('selectedInsurer');
     if (saved && insurerConfig[saved]) {
         setInsurer(saved);
     }
+    var savedBank = localStorage.getItem('selectedBank');
+    if (savedBank && bankConfig[savedBank]) {
+        setBank(savedBank);
+    }
     // Load grid logos after a short delay to ensure getVersichererLogoUrl is available
-    setTimeout(loadInsurerGridLogos, 500);
+    setTimeout(function() {
+        loadInsurerGridLogos();
+        loadBankGridLogos();
+    }, 500);
 }
 
 // Call restore after DOM ready
@@ -269,9 +469,9 @@ var viewModeLabels = {
     'ao': 'Privatkunde (AO)',
     'ecclesia': 'Makler B2B',
     'mrh': 'Gewerbemakler 360\u00B0',
-    'bank-retail': 'VR Retail',
-    'bank-fk': 'VR Firmenkunde',
-    'bank-vw': 'VR Verm\u00F6gen'
+    'bank-retail': 'Banking Retail',
+    'bank-fk': 'Banking Firmenkunde',
+    'bank-vw': 'Banking Verm\u00F6gen'
 };
 
 function toggleViewModeDropdown() {
@@ -322,6 +522,15 @@ function setViewMode(mode) {
     // Backward compat: keep maklerModus in sync
     if (typeof maklerModus !== 'undefined') {
         maklerModus = (mode === 'ecclesia');
+    }
+
+    // Apply correct theming for the mode
+    if (mode.indexOf('bank-') === 0) {
+        // Bank mode: apply selected bank theming
+        setBank(selectedBank);
+    } else {
+        // Insurance mode: apply selected insurer theming
+        setInsurer(selectedInsurer);
     }
 
     applyViewMode();

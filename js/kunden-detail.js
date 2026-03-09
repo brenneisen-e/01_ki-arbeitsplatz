@@ -56,7 +56,19 @@ var versichererLogoDomains = {
     'Sparkasse Lich': 'sparkasse.de',
     'Sparkasse Essen': 'sparkasse.de',
     'Sparkasse Braunschweig': 'sparkasse.de',
-    'Volksbank Dortmund': 'volksbank.de'
+    'Volksbank Dortmund': 'volksbank.de',
+    'Volksbank Mittelhessen': 'volksbank.de',
+    'R+V Versicherung': 'ruv.de',
+    'Schwäbisch Hall': 'schwaebisch-hall.de',
+    'DZ HYP': 'dzhyp.de',
+    'TeamBank': 'teambank.de',
+    'easyCredit': 'easycredit.de',
+    'VR Smart Finanz': 'vr-smart-finanz.de',
+    'GENO Broker': 'genobroker.de',
+    'ReiseBank': 'reisebank.de',
+    'DZ BANK': 'dzbank.de',
+    'DZ PRIVATBANK': 'dz-privatbank.de',
+    'Münchener Hyp': 'muenchenerhyp.de'
 };
 
 function getVersichererLogoUrl(name, size) {
@@ -1904,7 +1916,8 @@ var bankKundenFotos = {
     'Klaus Fischer': 'assets/images/AdobeStock_624564221.jpeg',
     'Sandra Müller': 'assets/images/AdobeStock_252262042.jpeg',
     'Markus Wagner': 'assets/images/AdobeStock_361342769.jpeg',
-    'Peter Hoffmann': 'assets/images/AdobeStock_612932760.jpeg'
+    'Julia Becker': 'assets/images/AdobeStock_612932760.jpeg',
+    'Peter Hoffmann': 'assets/images/AdobeStock_1091012713.jpeg'
 };
 
 // ── FILL KUNDEN DETAIL (main entry) ──
@@ -2020,6 +2033,12 @@ function fillBankKundenDetail(kundenName) {
     
     // Switch to Stammdaten tab
     switchBankKundenTab('stammdaten');
+
+    // Re-apply finance mode to newly created elements
+    var currentMode = (typeof financeMode !== 'undefined') ? financeMode : (localStorage.getItem('financeMode') || 'closed');
+    if (typeof setFinanceMode === 'function') {
+        setFinanceMode(currentMode);
+    }
 }
 
 function setTextById(id, text) {
@@ -2147,7 +2166,7 @@ function fillBankFida(kd) {
             var rows = '';
             kd.fidaVertraege.forEach(function(f) {
                 var logo = (typeof versichererLogoImg === 'function') ? versichererLogoImg(f.institut, 18) : '';
-                rows += '<tr><td>' + logo + ' <strong>' + f.institut + '</strong></td><td>' + f.typ + '</td><td>' + f.info + '</td><td>' + f.consent + '</td><td>' + f.gueltig + '</td></tr>';
+                rows += '<tr class="open-finance-only"><td>' + logo + ' <strong>' + f.institut + '</strong></td><td>' + f.typ + '</td><td>' + f.info + '</td><td>' + f.consent + '</td><td>' + f.gueltig + '</td></tr>';
             });
             tableEl.innerHTML = rows;
         }
@@ -2176,7 +2195,8 @@ function fillBankFida(kd) {
             geldmarkt.forEach(function(g) {
                 totalGeld += g.volumen;
                 var gLogo = (typeof versichererLogoImg === 'function') ? versichererLogoImg(g.anbieter, 16) : '';
-                sparenHtml += '<tr><td><strong>' + g.produkt + '</strong>' + (g.quelle === 'FIDA' ? ' <span style="font-size:10px;background:#dbeafe;color:#1e40af;padding:1px 6px;border-radius:10px;">FIDA</span>' : '') + '</td>' +
+                var fidaClass = g.quelle === 'FIDA' ? ' class="open-finance-only"' : '';
+                sparenHtml += '<tr' + fidaClass + '><td><strong>' + g.produkt + '</strong>' + (g.quelle === 'FIDA' ? ' <span style="font-size:10px;background:#dbeafe;color:#1e40af;padding:1px 6px;border-radius:10px;">FIDA</span>' : '') + '</td>' +
                     '<td>' + gLogo + ' ' + g.anbieter + '</td><td>\u20AC' + g.volumen.toLocaleString('de-DE') + '</td><td>' + g.zinssatz + '</td><td>' + g.laufzeit + '</td></tr>';
             });
             sparenHtml += '<tr style="background:#f8fafc;font-weight:600;"><td>Gesamt Geldmarkt</td><td></td><td>\u20AC' + totalGeld.toLocaleString('de-DE') + '</td><td></td><td></td></tr>';
@@ -2191,7 +2211,8 @@ function fillBankFida(kd) {
             kapital.forEach(function(k) {
                 totalKap += k.volumen;
                 var kLogo = (typeof versichererLogoImg === 'function') ? versichererLogoImg(k.anbieter, 16) : '';
-                sparenHtml += '<tr><td><strong>' + k.produkt + '</strong>' + (k.quelle === 'FIDA' ? ' <span style="font-size:10px;background:#dbeafe;color:#1e40af;padding:1px 6px;border-radius:10px;">FIDA</span>' : '') + '</td>' +
+                var fidaClass = k.quelle === 'FIDA' ? ' class="open-finance-only"' : '';
+                sparenHtml += '<tr' + fidaClass + '><td><strong>' + k.produkt + '</strong>' + (k.quelle === 'FIDA' ? ' <span style="font-size:10px;background:#dbeafe;color:#1e40af;padding:1px 6px;border-radius:10px;">FIDA</span>' : '') + '</td>' +
                     '<td>' + kLogo + ' ' + k.anbieter + '</td><td>\u20AC' + k.volumen.toLocaleString('de-DE') + '</td><td>' + k.sparrate + '</td><td style="color:#16a34a;">' + k.performance + '</td></tr>';
             });
             sparenHtml += '<tr style="background:#f8fafc;font-weight:600;"><td>Gesamt Depot</td><td></td><td>\u20AC' + totalKap.toLocaleString('de-DE') + '</td><td></td><td></td></tr>';
@@ -2224,7 +2245,7 @@ function fillBankFida(kd) {
         // Fremd-Versicherungen (Wettbewerber)
         var fremd = kd.versicherungenFremd || [];
         if (fremd.length > 0) {
-            absHtml += '<div class="bedarfsfeld-section" style="padding:0 16px 16px;"><h4 class="section-subtitle" style="font-size:13px;font-weight:600;color:#475569;margin:16px 0 8px;">Wettbewerber-Versicherungen</h4>' +
+            absHtml += '<div class="bedarfsfeld-section open-finance-only" style="padding:0 16px 16px;"><h4 class="section-subtitle" style="font-size:13px;font-weight:600;color:#475569;margin:16px 0 8px;">Wettbewerber-Versicherungen</h4>' +
                 '<table class="kunden-table fida-table"><thead><tr><th>Versicherung</th><th>Anbieter</th><th>Deckungssumme</th><th>Tarifart</th><th>Leistungsumfang</th><th>Selbstbehalt</th><th>Prämie</th><th>Kündigungsfrist</th></tr></thead><tbody>';
             fremd.forEach(function(v) {
                 var tags = v.leistungen.map(function(l) { return '<span class="leistung-tag" style="display:inline-block;font-size:10px;background:#f1f5f9;color:#475569;padding:2px 6px;border-radius:4px;margin:1px;">' + l + '</span>'; }).join(' ');
@@ -2399,7 +2420,8 @@ function fillBankImpulse(kundenName, kd, retailData) {
     var html = '';
     impulse.forEach(function(imp) {
         // Clickable header
-        html += '<div class="impuls-item highlight clickable" onclick="toggleImpulsDetail(\'' + imp.id + '\')">' +
+        var impFidaClass = imp.quelle === 'FIDA' ? ' open-finance-only' : '';
+        html += '<div class="impuls-item highlight clickable' + impFidaClass + '" onclick="toggleImpulsDetail(\'' + imp.id + '\')">' +
             '<div class="impuls-icon">' + (iconSvgs[imp.icon] || '') + '</div>' +
             '<div class="impuls-text">' +
                 '<strong>' + imp.title + '</strong>' +
@@ -2410,7 +2432,7 @@ function fillBankImpulse(kundenName, kd, retailData) {
         '</div>';
 
         // Expandable detail panel
-        html += '<div class="impuls-detail" id="' + imp.id + '" style="display:none;">' +
+        html += '<div class="impuls-detail' + impFidaClass + '" id="' + imp.id + '" style="display:none;">' +
             '<div class="impuls-detail-section">' +
                 '<h4>Herleitung des Impulses</h4>' +
                 '<div class="herleitung-grid">';

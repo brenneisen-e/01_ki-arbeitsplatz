@@ -286,3 +286,22 @@ function renderCLV(clv) {
 }
 
 // ========================================
+// BANKING CLV CALCULATION
+// Unified variant for banking customer context
+// Uses revenue-based model instead of insurance premium-based model
+// ========================================
+
+function calculateBankCLV(kd, retailData) {
+    var ertrag = retailData ? retailData.ertrag : 2000;
+    var npsScore = kd.nps ? kd.nps.score : 7;
+    var years = 15;
+    if (npsScore >= 8) years = 20;
+    if (npsScore <= 5) years = 8;
+    var value = Math.round(ertrag * years * 0.85);
+    var segment = value >= 50000 ? 'Platinum' : (value >= 25000 ? 'Gold' : (value >= 10000 ? 'Silber' : 'Standard'));
+    var churnRisk = npsScore >= 8 ? 5 : (npsScore >= 6 ? 12 : 25);
+    return { value: value, segment: segment, haltedauer: years, churnRisk: churnRisk };
+}
+
+// ========================================
+// END CLV MODULE

@@ -3425,6 +3425,163 @@
                                 </div>
                             </div>
                         </div>
+                        <!-- Rechte Spalte: Banking Sidebar -->
+                        <div class="agentur-uebersicht-sidebar">
+                            <!-- Anstehende Termine -->
+                            <div class="uebersicht-card">
+                                <div class="uebersicht-card-header">
+                                    <h3>
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                            <line x1="16" y1="2" x2="16" y2="6"></line>
+                                            <line x1="8" y1="2" x2="8" y2="6"></line>
+                                            <line x1="3" y1="10" x2="21" y2="10"></line>
+                                        </svg>
+                                        Anstehende Termine
+                                    </h3>
+                                </div>
+                                <div class="termine-liste" id="beraterTermineListe">
+                                    <div class="termin-item heute" onclick="openBankKundenDetail('Klaus Fischer', 'KDB001')" style="cursor:pointer;">
+                                        <div class="termin-zeit">
+                                            <span class="termin-tag">Heute</span>
+                                            <span class="termin-uhrzeit">14:00</span>
+                                        </div>
+                                        <div class="termin-avatar" style="background: linear-gradient(135deg, #2563eb, #1d4ed8);">KF</div>
+                                        <div class="termin-details">
+                                            <strong>Klaus Fischer</strong>
+                                            <span>Baufinanzierung Anschluss</span>
+                                        </div>
+                                    </div>
+                                    <div class="termin-item" onclick="openBankKundenDetail('Sandra M&uuml;ller', 'KDB002')" style="cursor:pointer;">
+                                        <div class="termin-zeit">
+                                            <span class="termin-tag">Morgen</span>
+                                            <span class="termin-uhrzeit">10:00</span>
+                                        </div>
+                                        <div class="termin-avatar" style="background: linear-gradient(135deg, #f59e0b, #d97706);">SM</div>
+                                        <div class="termin-details">
+                                            <strong>Sandra M&uuml;ller</strong>
+                                            <span>VR-FinanzPlan Beratung</span>
+                                        </div>
+                                    </div>
+                                    <div class="termin-item" onclick="openBankKundenDetail('Markus Wagner', 'KDB003')" style="cursor:pointer;">
+                                        <div class="termin-zeit">
+                                            <span class="termin-tag" id="beraterTerminTag1"></span>
+                                            <span class="termin-uhrzeit">11:30</span>
+                                        </div>
+                                        <div class="termin-avatar" style="background: linear-gradient(135deg, #9333ea, #7c3aed);">MW</div>
+                                        <div class="termin-details">
+                                            <strong>Markus Wagner</strong>
+                                            <span>Depot-Er&ouml;ffnung</span>
+                                        </div>
+                                    </div>
+                                    <div class="termin-item" onclick="openBankKundenDetail('Julia Becker', 'KDB004')" style="cursor:pointer;">
+                                        <div class="termin-zeit">
+                                            <span class="termin-tag" id="beraterTerminTag2"></span>
+                                            <span class="termin-uhrzeit">09:00</span>
+                                        </div>
+                                        <div class="termin-avatar" style="background: linear-gradient(135deg, #dc2626, #b91c1c);">JB</div>
+                                        <div class="termin-details">
+                                            <strong>Julia Becker</strong>
+                                            <span>FIDA-Consent &amp; Konto&uuml;bersicht</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Schnellzugriff Banking Tools -->
+                            <div class="uebersicht-card">
+                                <div class="uebersicht-card-header">
+                                    <h3>
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                                            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path>
+                                            <polyline points="14 2 14 8 20 8"></polyline>
+                                        </svg>
+                                        Schnellzugriff
+                                    </h3>
+                                </div>
+                                <div class="formulare-grid">
+                                    <button class="formular-btn leben" onclick="openFormular('vr-finanzplan')">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                                            <path d="M22 11.08V12a10 10 0 11-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                        </svg>
+                                        VR-FinanzPlan
+                                    </button>
+                                    <button class="formular-btn kfz" onclick="openFormular('baufinanzierung')">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                                            <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"></path>
+                                            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                                        </svg>
+                                        Baufinanzierung
+                                    </button>
+                                    <button class="formular-btn sach" onclick="openFormular('depot-eroeffnung')">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                                            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+                                            <polyline points="17 6 23 6 23 12"></polyline>
+                                        </svg>
+                                        Depot-Er&ouml;ffnung
+                                    </button>
+                                    <button class="formular-btn schaden" onclick="openFormular('ratenkredit')">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                                            <line x1="12" y1="1" x2="12" y2="23"></line>
+                                            <path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"></path>
+                                        </svg>
+                                        Ratenkredit
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Ertrags&uuml;bersicht -->
+                            <div class="uebersicht-card">
+                                <div class="uebersicht-card-header">
+                                    <h3>
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                                            <circle cx="12" cy="12" r="10"></circle>
+                                            <text x="12" y="16" text-anchor="middle" fill="currentColor" stroke="none" font-size="12" font-weight="bold">&euro;</text>
+                                        </svg>
+                                        Ertrags&uuml;bersicht
+                                    </h3>
+                                </div>
+                                <div class="abrechnungen-liste">
+                                    <div class="abrechnung-item">
+                                        <div class="abrechnung-info">
+                                            <div class="abrechnung-icon">
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"></path></svg>
+                                            </div>
+                                            <div>
+                                                <div class="abrechnung-monat">Februar 2026</div>
+                                                <div class="abrechnung-datum">Erstellt: 02.03.2026</div>
+                                            </div>
+                                        </div>
+                                        <div class="abrechnung-betrag">&euro;22.400</div>
+                                    </div>
+                                    <div class="abrechnung-item">
+                                        <div class="abrechnung-info">
+                                            <div class="abrechnung-icon">
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"></path></svg>
+                                            </div>
+                                            <div>
+                                                <div class="abrechnung-monat">Januar 2026</div>
+                                                <div class="abrechnung-datum">Erstellt: 03.02.2026</div>
+                                            </div>
+                                        </div>
+                                        <div class="abrechnung-betrag">&euro;19.850</div>
+                                    </div>
+                                    <div class="abrechnung-item">
+                                        <div class="abrechnung-info">
+                                            <div class="abrechnung-icon">
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"></path></svg>
+                                            </div>
+                                            <div>
+                                                <div class="abrechnung-monat">Dezember 2025</div>
+                                                <div class="abrechnung-datum">Erstellt: 02.01.2026</div>
+                                            </div>
+                                        </div>
+                                        <div class="abrechnung-betrag">&euro;21.200</div>
+                                    </div>
+                                </div>
+                                <a href="#" class="link-alle-anzeigen" onclick="showBeraterTab('ertraege'); return false;">Alle Ertr&auml;ge anzeigen &rarr;</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <!-- Banking: Stammdaten -->

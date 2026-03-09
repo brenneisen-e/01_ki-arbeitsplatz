@@ -14,7 +14,7 @@ var selectedInsurer = 'ergo'; // Currently selected insurance company
 var insurerConfig = {
     'ergo': {
         name: 'ERGO',
-        domain: 'ergo.com',
+        domain: 'ergo.de',
         primary: '#C8102E',
         primaryDark: '#9A0C23',
         primaryLight: '#DC3545',
@@ -26,7 +26,7 @@ var insurerConfig = {
     },
     'allianz': {
         name: 'Allianz',
-        domain: 'allianz.com',
+        domain: 'allianz.de',
         primary: '#003781',
         primaryDark: '#002D6B',
         primaryLight: '#1F78D1',
@@ -38,7 +38,7 @@ var insurerConfig = {
     },
     'axa': {
         name: 'AXA',
-        domain: 'axa.com',
+        domain: 'axa.de',
         primary: '#00008F',
         primaryDark: '#000066',
         primaryLight: '#3032C1',
@@ -50,7 +50,7 @@ var insurerConfig = {
     },
     'zurich': {
         name: 'Zurich',
-        domain: 'zurich.com',
+        domain: 'zurich.de',
         primary: '#003399',
         primaryDark: '#002266',
         primaryLight: '#4A90D9',
@@ -62,7 +62,7 @@ var insurerConfig = {
     },
     'generali': {
         name: 'Generali',
-        domain: 'generali.com',
+        domain: 'generali.de',
         primary: '#C8102E',
         primaryDark: '#A00E24',
         primaryLight: '#E04050',
@@ -74,7 +74,7 @@ var insurerConfig = {
     },
     'hdi': {
         name: 'HDI',
-        domain: 'hdi.global',
+        domain: 'hdi.de',
         primary: '#007E3A',
         primaryDark: '#005E2A',
         primaryLight: '#2ECC71',
@@ -185,7 +185,7 @@ function setInsurer(insurerKey) {
     var logoImg = document.getElementById('insurerLogoImg');
     var logoFallback = document.getElementById('insurerLogoFallback');
     if (logoImg) {
-        var token = localStorage.getItem('logodev_token') || 'pk_a8V0rGbSQxSGipHMcGnScA';
+        var token = localStorage.getItem('logodev_token') || 'pk_H7vb5Y2lTsW47U4Xq-w3HA';
         logoImg.src = 'https://img.logo.dev/' + cfg.domain + '?token=' + token + '&size=120&format=png';
         logoImg.alt = cfg.name;
         logoImg.style.display = '';

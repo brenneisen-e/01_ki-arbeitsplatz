@@ -2051,6 +2051,29 @@ function showNeuePotentialeContent() {
                     desc: '680.000 € Prämienvolumen – Verhandlungen vorbereiten'
                 }
             ];
+        } else if (typeof viewMode !== 'undefined' && (viewMode === 'bank-retail' || viewMode === 'bank-fk' || viewMode === 'bank-vw')) {
+            potentiale = [
+                {
+                    name: 'Klaus Fischer',
+                    title: 'Anschlussfinanzierung DZ HYP',
+                    desc: 'Zinsbindung läuft 09/2026 aus. Restschuld €185.000 – Forward-Darlehen anbieten'
+                },
+                {
+                    name: 'Sandra Müller',
+                    title: 'VR-FinanzPlan fehlt',
+                    desc: 'Premium-Kundin ohne ganzheitliche Beratung – Cross-Selling-Potential €1.800'
+                },
+                {
+                    name: 'Stefan Braun',
+                    title: 'Kontokonsolidierung (FIDA)',
+                    desc: 'Hauptkonto bei N26 + Depots extern – VR-MeinDepot + Wero als Einstieg'
+                },
+                {
+                    name: 'Julia Becker',
+                    title: 'Altersvorsorge fehlt',
+                    desc: 'NPS 6, kein FinanzPlan – UniProfiRente + R+V BU empfehlen'
+                }
+            ];
         } else {
             potentiale = [
                 {
@@ -2128,6 +2151,8 @@ function showNeuePotentialeContent() {
                                 if (typeof showMRHTab === 'function') showMRHTab('potentiale');
                             } else if (typeof maklerModus !== 'undefined' && maklerModus) {
                                 if (typeof showMaklerTab === 'function') showMaklerTab('potentiale');
+                            } else if (typeof viewMode !== 'undefined' && (viewMode === 'bank-retail' || viewMode === 'bank-fk' || viewMode === 'bank-vw')) {
+                                if (typeof showBeraterTab === 'function') showBeraterTab('potentiale');
                             } else {
                                 showAgenturTab('potential');
                             }
@@ -2904,9 +2929,14 @@ function fillBeraterKundenTable() {
         var tbody = document.getElementById('beraterKundenBody');
         if (!tbody) return;
         var rows = '';
+        var kundenFotos = (typeof bankKundenFotos !== 'undefined') ? bankKundenFotos : {};
         bankKundenRetail.forEach(function(k) {
+            var foto = kundenFotos[k.name] || '';
+            var avatarHtml = foto
+                ? '<div style="width:28px;height:28px;border-radius:50%;overflow:hidden;display:inline-block;vertical-align:middle;margin-right:8px;flex-shrink:0;background:' + k.avatarBg + ';"><img src="' + foto + '" alt="' + k.name + '" style="width:100%;height:100%;object-fit:cover;" onerror="this.parentElement.innerHTML=\'' + k.name.split(' ').map(function(n){return n[0];}).join('') + '\'"></div>'
+                : '<div style="width:28px;height:28px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:white;background:' + k.avatarBg + ';vertical-align:middle;margin-right:8px;flex-shrink:0;">' + k.name.split(' ').map(function(n){return n[0];}).join('') + '</div>';
             rows += '<tr class="clickable-row" onclick="openBankKundenDetail(\'' + k.name + '\', \'' + k.id + '\')">' +
-                '<td><strong>' + k.name + '</strong></td>' +
+                '<td><div style="display:flex;align-items:center;">' + avatarHtml + '<strong>' + k.name + '</strong></div></td>' +
                 '<td>' + k.id + '</td>' +
                 '<td>' + k.geb + '</td>' +
                 '<td>' + k.beruf + '</td>' +

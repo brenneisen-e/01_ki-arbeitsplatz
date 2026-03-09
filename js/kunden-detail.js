@@ -128,6 +128,9 @@ function openKundenDetail(kundenName, vermittlerId) {
     document.getElementById('mainApp').style.display = 'none';
     document.getElementById('potentialAnalysePage').style.display = 'none';
     if (agenturOverview) agenturOverview.style.display = 'none';
+    // Also hide berater overview (B-02) if visible
+    var beraterPage = document.getElementById('beraterOverviewPage');
+    if (beraterPage) beraterPage.style.display = 'none';
 
     // Restore AO tabs if Makler/MRH was active
     if (typeof restoreAOKundenDetail === 'function') restoreAOKundenDetail();
@@ -159,6 +162,9 @@ function openKundenDetail(kundenName, vermittlerId) {
 
         // Aktiviere FIDA in Kundendetail wenn es in Potentialanalyse aktiv war
         initKundenFidaState();
+
+        // Sync A-10 finance toggle with current financeMode
+        syncA10FinanceToggle();
 
         // Dispatch event for Page ID Tracker
         document.dispatchEvent(new CustomEvent('viewChanged', {
@@ -192,6 +198,16 @@ function initKundenFidaState() {
         }
     }
 }
+
+// Sync finance toggle on A-10 with current global financeMode
+function syncA10FinanceToggle() {
+    var mode = (typeof financeMode !== 'undefined') ? financeMode : (localStorage.getItem('financeMode') || 'closed');
+    var toggleBtns = document.querySelectorAll('#a10FinanceModeToggle .finance-mode-btn');
+    toggleBtns.forEach(function(btn) {
+        btn.classList.toggle('active', btn.dataset.fmode === mode);
+    });
+}
+window.syncA10FinanceToggle = syncA10FinanceToggle;
 
 // Speichert den aktuellen Vermittlermodus (makler/ao)
 let currentVermittlerMode = 'ao'; // Default: AO ERGO Makler
@@ -291,6 +307,25 @@ function closeKundenDetail() {
 
         // Update URL route
         if (window.AppRouter) AppRouter.navigate('/landing');
+    } else if (previousViewBeforeKundenDetail === 'beraterOverview') {
+        // Restore A-10 to insurance mode and go back to B-02
+        if (typeof restoreA10InsuranceMode === 'function') restoreA10InsuranceMode();
+
+        var agenturOverview = document.getElementById('agenturOverview');
+        var beraterPage = document.getElementById('beraterOverviewPage');
+        if (agenturOverview) {
+            agenturOverview.style.display = 'block';
+        } else if (beraterPage) {
+            beraterPage.style.display = 'block';
+        }
+        if (typeof showBeraterTab === 'function') showBeraterTab('kundenliste');
+        console.log('Zurück zur Beraterübersicht (B-02)');
+
+        document.dispatchEvent(new CustomEvent('viewChanged', {
+            detail: { module: 'banking', view: 'beraterOverview' }
+        }));
+
+        if (window.AppRouter) AppRouter.navigate('/berater');
     } else if (previousViewBeforeKundenDetail === 'agentursicht') {
         const agenturOverview = document.getElementById('agenturOverview');
         if (agenturOverview) {
@@ -392,8 +427,16 @@ window.navigateToAgenturTab = navigateToAgenturTab;
  */
 function switchKundeDropdown(kundenName) {
     if (!kundenName) return;
-    const vermittlerId = currentKundenVermittlerId || 'VM00001';
-    openKundenDetail(kundenName, vermittlerId);
+    var kundenPage = document.getElementById('kundenDetailPage');
+    var isBankMode = kundenPage && kundenPage.classList.contains('bank-mode');
+
+    if (isBankMode && typeof openBankKundenDetail === 'function') {
+        // In bank mode, use bank customer detail flow
+        openBankKundenDetail(kundenName);
+    } else {
+        const vermittlerId = currentKundenVermittlerId || 'VM00001';
+        openKundenDetail(kundenName, vermittlerId);
+    }
 }
 window.switchKundeDropdown = switchKundeDropdown;
 

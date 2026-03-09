@@ -1158,7 +1158,7 @@
 
                                 <div class="potentiale-liste-neu">
                                     <!-- 1. Peter Schmidt - BU -->
-                                    <div class="potential-card" onclick="event.stopPropagation(); openKundenDetail('Peter Schmidt', 'KD00001')">
+                                    <div class="potential-card" onclick="event.stopPropagation(); openKundenDetailDualView('Peter Schmidt', 'KD00001')">
                                         <div class="potential-card-left">
                                             <div class="potential-kunde">
                                                 <strong>Peter Schmidt</strong>
@@ -1181,7 +1181,7 @@
                                     </div>
 
                                     <!-- 2. Amira König - Kfz (Open Finance) -->
-                                    <div class="potential-card open-finance-only" onclick="event.stopPropagation(); openKundenDetail('Amira König', 'KD00002')">
+                                    <div class="potential-card open-finance-only" onclick="event.stopPropagation(); openKundenDetailDualView('Amira König', 'KD00002')">
                                         <div class="potential-card-left">
                                             <div class="potential-kunde">
                                                 <strong>Amira König</strong>
@@ -1204,7 +1204,7 @@
                                     </div>
 
                                     <!-- 3. Thomas Weber - Risiko (Open Finance) -->
-                                    <div class="potential-card open-finance-only" onclick="event.stopPropagation(); openKundenDetail('Thomas Weber', 'KD00003')">
+                                    <div class="potential-card open-finance-only" onclick="event.stopPropagation(); openKundenDetailDualView('Thomas Weber', 'KD00003')">
                                         <div class="potential-card-left">
                                             <div class="potential-kunde">
                                                 <strong>Thomas Weber</strong>
@@ -1261,7 +1261,7 @@
                                         </div>
 
                                         <!-- 5. Peter Schmidt - Risiko (Open Finance) -->
-                                        <div class="potential-card open-finance-only" onclick="event.stopPropagation(); openKundenDetail('Peter Schmidt', 'KD00001')">
+                                        <div class="potential-card open-finance-only" onclick="event.stopPropagation(); openKundenDetailDualView('Peter Schmidt', 'KD00001')">
                                             <div class="potential-card-left">
                                                 <div class="potential-kunde">
                                                     <strong>Peter Schmidt</strong>
@@ -1284,7 +1284,7 @@
                                         </div>
 
                                         <!-- 6. Anna Hoffmann (Open Finance) -->
-                                        <div class="potential-card open-finance-only" onclick="event.stopPropagation(); openKundenDetail('Anna Hoffmann', 'KD00004')">
+                                        <div class="potential-card open-finance-only" onclick="event.stopPropagation(); openKundenDetailDualView('Anna Hoffmann', 'KD00004')">
                                             <div class="potential-card-left">
                                                 <div class="potential-kunde">
                                                     <strong>Anna Hoffmann</strong>
@@ -1307,7 +1307,7 @@
                                         </div>
 
                                         <!-- 7. Michael Braun -->
-                                        <div class="potential-card" onclick="event.stopPropagation(); openKundenDetail('Michael Braun', 'KD00005')">
+                                        <div class="potential-card" onclick="event.stopPropagation(); openKundenDetailDualView('Michael Braun', 'KD00005')">
                                             <div class="potential-card-left">
                                                 <div class="potential-kunde">
                                                     <strong>Michael Braun</strong>
@@ -1330,7 +1330,7 @@
                                         </div>
 
                                         <!-- 8. Lisa Müller -->
-                                        <div class="potential-card" onclick="event.stopPropagation(); openKundenDetail('Lisa Müller', 'KD00006')">
+                                        <div class="potential-card" onclick="event.stopPropagation(); openKundenDetailDualView('Lisa Müller', 'KD00006')">
                                             <div class="potential-card-left">
                                                 <div class="potential-kunde">
                                                     <strong>Lisa Müller</strong>
@@ -1353,7 +1353,7 @@
                                         </div>
 
                                         <!-- 9. Matthias Engel (PSD2 + Eigene Daten) -->
-                                        <div class="potential-card" onclick="event.stopPropagation(); openKundenDetail('Matthias Engel', 'KD00007')">
+                                        <div class="potential-card" onclick="event.stopPropagation(); openKundenDetailDualView('Matthias Engel', 'KD00007')">
                                             <div class="potential-card-left">
                                                 <div class="potential-kunde">
                                                     <strong>Matthias Engel</strong>
@@ -1376,7 +1376,7 @@
                                         </div>
 
                                         <!-- 10. Christian Bauer -->
-                                        <div class="potential-card" onclick="event.stopPropagation(); openKundenDetail('Christian Bauer', 'KD00008')">
+                                        <div class="potential-card" onclick="event.stopPropagation(); openKundenDetailDualView('Christian Bauer', 'KD00008')">
                                             <div class="potential-card-left">
                                                 <div class="potential-kunde">
                                                     <strong>Christian Bauer</strong>
@@ -1399,7 +1399,7 @@
                                         </div>
 
                                         <!-- 11. Martin Wolf -->
-                                        <div class="potential-card" onclick="event.stopPropagation(); openKundenDetail('Martin Wolf', 'KD00009')">
+                                        <div class="potential-card" onclick="event.stopPropagation(); openKundenDetailDualView('Martin Wolf', 'KD00009')">
                                             <div class="potential-card-left">
                                                 <div class="potential-kunde">
                                                     <strong>Martin Wolf</strong>
@@ -1422,7 +1422,7 @@
                                         </div>
 
                                         <!-- 12. Eva Hartmann (Open Finance) -->
-                                        <div class="potential-card open-finance-only" onclick="event.stopPropagation(); openKundenDetail('Eva Hartmann', 'KD00010')">
+                                        <div class="potential-card open-finance-only" onclick="event.stopPropagation(); openKundenDetailDualView('Eva Hartmann', 'KD00010')">
                                             <div class="potential-card-left">
                                                 <div class="potential-kunde">
                                                     <strong>Eva Hartmann</strong>
@@ -4059,6 +4059,16 @@
                             <span id="kundenHeaderId">-</span> | <span>Aktiv</span>
                         </div>
                     </div>
+                </div>
+                <div class="finance-mode-toggle" id="a10FinanceModeToggle">
+                    <button class="finance-mode-btn" data-fmode="closed" onclick="setFinanceMode('closed')" title="Nur eigene Daten">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0110 0v4"></path></svg>
+                        Closed
+                    </button>
+                    <button class="finance-mode-btn" data-fmode="open" onclick="setFinanceMode('open')" title="Alle Institute inkl. Genossenschaftsgruppe">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 019.9-1"></path></svg>
+                        Open
+                    </button>
                 </div>
             </div>
             <div class="kunden-switch-dropdown">
@@ -7399,11 +7409,9 @@
     </div>
   </div>
 
-  <!-- ========================================
-  <!-- ========================================
-     B-10 KUNDEN-DETAIL BANK
-     ======================================== -->
-  <div id="kundenDetailBankPage" style="display: none;">
+  <!-- B-10 removed: Bank customer detail now uses unified A-10 page.
+       Keeping empty stub for JS compatibility. -->
+  <div id="kundenDetailBankPage" style="display: none !important;" aria-hidden="true">
     <!-- Shared B-02 Header Tabs (Kunden active) -->
     <div class="kunden-shared-header berater-shared-header">
         <div class="kunden-shared-header-top">

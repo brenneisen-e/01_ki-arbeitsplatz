@@ -2298,20 +2298,41 @@ var beraterData = {
 };
 
 // ── MOCK KUNDEN (Retail) ──
-var bankKundenRetail = [
-    { name:'Klaus Fischer',    id:'KDB001', geb:'12.05.1978', beruf:'Maschinenbau-Ingenieur', ort:'Gießen',     segment:'Premium',  produkte:6, ertrag:4850,  finanzplan:true,  letztKontakt:'28.02.2026', avatarBg:'#2563eb', nps:9,  kinder:[{name:'Lukas',alter:12},{name:'Emma',alter:9}], email:'k.fischer@email.de', telefon:'+49 641 98765', adresse:'Hauptstraße 45, 35390 Gießen', arbeitgeber:'Continental AG', familienstand:'Verheiratet', risikoscore:28, bonitaet:82 },
-    { name:'Sandra Müller',    id:'KDB002', geb:'23.11.1985', beruf:'Ärztin',                ort:'Wetzlar',    segment:'Premium',  produkte:4, ertrag:3200,  finanzplan:false, letztKontakt:'25.02.2026', avatarBg:'#9333ea', nps:7,  kinder:[{name:'Mia',alter:4}], email:'s.mueller@email.de', telefon:'+49 6441 55432', adresse:'Bahnhofstr. 12, 35578 Wetzlar', arbeitgeber:'Uniklinik Gießen', familienstand:'Ledig', risikoscore:15, bonitaet:91 },
-    { name:'Markus Wagner',    id:'KDB003', geb:'08.03.1972', beruf:'Lehrer',                 ort:'Marburg',    segment:'Standard', produkte:3, ertrag:1800,  finanzplan:true,  letztKontakt:'20.02.2026', avatarBg:'#16a34a', nps:8,  kinder:[{name:'Tim',alter:14},{name:'Jana',alter:11}], email:'m.wagner@email.de', telefon:'+49 6421 77890', adresse:'Schulstr. 8, 35037 Marburg', arbeitgeber:'Land Hessen', familienstand:'Verheiratet', risikoscore:22, bonitaet:75 },
-    { name:'Julia Becker',     id:'KDB004', geb:'15.07.1990', beruf:'Marketing-Managerin',    ort:'Gießen',     segment:'Potenzial',produkte:2, ertrag:980,   finanzplan:false, letztKontakt:'18.02.2026', avatarBg:'#f59e0b', nps:6,  kinder:[], email:'j.becker@email.de', telefon:'+49 641 33210', adresse:'Ludwigstr. 22, 35390 Gießen', arbeitgeber:'Amazon DE', familienstand:'Ledig', risikoscore:18, bonitaet:88 },
-    { name:'Peter Hoffmann',   id:'KDB005', geb:'30.01.1970', beruf:'Steuerberater',          ort:'Wetzlar',    segment:'Premium',  produkte:8, ertrag:6200,  finanzplan:true,  letztKontakt:'15.02.2026', avatarBg:'#dc2626', nps:9,  kinder:[{name:'Fabian',alter:22},{name:'Laura',alter:19}], email:'p.hoffmann@email.de', telefon:'+49 6441 88456', adresse:'Friedrichstr. 5, 35578 Wetzlar', arbeitgeber:'Selbständig', familienstand:'Verheiratet', risikoscore:35, bonitaet:79 },
-    { name:'Andrea Lang',      id:'KDB006', geb:'05.09.1982', beruf:'Steuerberaterin',        ort:'Lich',       segment:'Standard', produkte:5, ertrag:2400,  finanzplan:true,  letztKontakt:'12.02.2026', avatarBg:'#6366f1', nps:8,  kinder:[{name:'Sophie',alter:7}], email:'a.lang@email.de', telefon:'+49 6404 12345', adresse:'Marktplatz 3, 35423 Lich', arbeitgeber:'Kanzlei Lang & Partner', familienstand:'Geschieden', risikoscore:20, bonitaet:85 },
-    { name:'Thomas Klein',     id:'KDB007', geb:'18.12.1968', beruf:'Handwerksmeister',       ort:'Buseck',     segment:'Standard', produkte:4, ertrag:1650,  finanzplan:false, letztKontakt:'10.02.2026', avatarBg:'#0891b2', nps:7,  kinder:[{name:'Max',alter:16}], email:'t.klein@email.de', telefon:'+49 6408 99123', adresse:'Am Anger 7, 35418 Buseck', arbeitgeber:'Klein Sanitär GmbH', familienstand:'Verheiratet', risikoscore:42, bonitaet:68 },
-    { name:'Monika Richter',   id:'KDB008', geb:'22.04.1975', beruf:'Lehrerin',               ort:'Gießen',     segment:'Standard', produkte:3, ertrag:1200,  finanzplan:true,  letztKontakt:'08.02.2026', avatarBg:'#d946ef', nps:8,  kinder:[{name:'Anna',alter:10},{name:'Felix',alter:7}], email:'m.richter@email.de', telefon:'+49 641 44567', adresse:'Goethering 15, 35390 Gießen', arbeitgeber:'Land Hessen', familienstand:'Verheiratet', risikoscore:12, bonitaet:80 },
-    { name:'Stefan Braun',     id:'KDB009', geb:'11.06.1988', beruf:'IT-Consultant',          ort:'Marburg',    segment:'Potenzial',produkte:2, ertrag:750,   finanzplan:false, letztKontakt:'05.02.2026', avatarBg:'#ea580c', nps:5,  kinder:[], email:'s.braun@email.de', telefon:'+49 6421 55678', adresse:'Technikstr. 20, 35037 Marburg', arbeitgeber:'SAP SE', familienstand:'Ledig', risikoscore:10, bonitaet:92 },
-    { name:'Katharina Wolf',   id:'KDB010', geb:'03.03.1988', beruf:'Architektin',            ort:'Gießen',     segment:'Standard', produkte:5, ertrag:2100,  finanzplan:true,  letztKontakt:'01.02.2026', avatarBg:'#059669', nps:9,  kinder:[{name:'Lara',alter:3}], email:'k.wolf@email.de', telefon:'+49 641 77890', adresse:'Schillerstr. 9, 35390 Gießen', arbeitgeber:'Wolf Architekten', familienstand:'Verheiratet', risikoscore:25, bonitaet:84 },
-    { name:'Jürgen Peters',    id:'KDB011', geb:'14.10.1965', beruf:'Geschäftsführer',        ort:'Wetzlar',    segment:'Premium',  produkte:7, ertrag:5100,  finanzplan:true,  letztKontakt:'28.01.2026', avatarBg:'#7c3aed', nps:8,  kinder:[{name:'Stefan',alter:28},{name:'Maria',alter:25}], email:'j.peters@email.de', telefon:'+49 6441 33789', adresse:'Industriestr. 18, 35578 Wetzlar', arbeitgeber:'Peters Metallbau GmbH', familienstand:'Verheiratet', risikoscore:30, bonitaet:76 },
-    { name:'Sabine Kraus',     id:'KDB012', geb:'27.08.1979', beruf:'Apothekerin',            ort:'Lich',       segment:'Standard', produkte:4, ertrag:1900,  finanzplan:false, letztKontakt:'25.01.2026', avatarBg:'#be185d', nps:7,  kinder:[{name:'Paul',alter:8},{name:'Clara',alter:5}], email:'s.kraus@email.de', telefon:'+49 6404 66789', adresse:'Apothekenstr. 2, 35423 Lich', arbeitgeber:'Löwen-Apotheke', familienstand:'Verheiratet', risikoscore:18, bonitaet:87 }
-];
+// Derived from bankMockKunden (single source of truth, defined in kunden-detail.js)
+// Populated on DOMContentLoaded after all scripts have loaded
+var bankKundenRetail = [];
+
+function _deriveBankKundenRetailFromMockKunden() {
+    if (typeof bankMockKunden === 'undefined') return;
+    bankKundenRetail.length = 0;
+    Object.keys(bankMockKunden).forEach(function(name) {
+        var kd = bankMockKunden[name];
+        bankKundenRetail.push({
+            name: name,
+            id: kd.id || 'KDB000',
+            geb: kd.geburtsdatum,
+            beruf: kd.beruf,
+            ort: kd.ort || '',
+            segment: kd.segment || 'Standard',
+            produkte: kd.konten ? kd.konten.length : 0,
+            ertrag: kd.ertrag || 0,
+            finanzplan: kd.finanzplan || false,
+            letztKontakt: kd.letztKontakt || '',
+            avatarBg: kd.avatarBg,
+            nps: kd.nps ? kd.nps.score : 7,
+            kinder: kd.kinder || [],
+            email: kd.email,
+            telefon: kd.telefon,
+            adresse: kd.adresse,
+            arbeitgeber: kd.arbeitgeber,
+            familienstand: kd.familienstand,
+            risikoscore: kd.risikoscore,
+            bonitaet: kd.bonitaet
+        });
+    });
+    window.bankKundenRetail = bankKundenRetail;
+}
+document.addEventListener('DOMContentLoaded', _deriveBankKundenRetailFromMockKunden);
 
 // ── MOCK KUNDEN (Firmenkunde) ──
 var bankKundenFK = [

@@ -103,7 +103,7 @@ window.getVersichererLogoUrl = getVersichererLogoUrl;
 let fidaActiveInPotentialAnalyse = false;
 
 // Speichert von welcher View der Nutzer zur Kundendetail-Seite gekommen ist
-let previousViewBeforeKundenDetail = 'potentialanalyse';
+let previousViewBeforeKundenDetail = null;
 
 // Speichert die aktuelle Vermittler-ID in der Kundendetail-Seite
 let currentKundenVermittlerId = null;
@@ -353,17 +353,33 @@ function closeKundenDetail() {
             if (window.AppRouter) AppRouter.navigate('/agentur');
         }
     } else {
-        // Default: Potentialanalyse
-        document.getElementById('potentialAnalysePage').style.display = 'block';
-        console.log('Zurück zur Potentialanalyse');
-
-        // Dispatch event for Page ID Tracker
-        document.dispatchEvent(new CustomEvent('viewChanged', {
-            detail: { module: 'versicherung', view: 'potentialanalyse' }
-        }));
-
-        // Update URL route
-        if (window.AppRouter) AppRouter.navigate('/potentialanalyse');
+        // Fallback: Zur zuletzt sichtbaren Seite navigieren, oder Landing als sicherer Default
+        var potentialPage = document.getElementById('potentialAnalysePage');
+        var landingPage = document.getElementById('landingPage');
+        if (potentialPage && potentialPage.dataset.lastVisited) {
+            potentialPage.style.display = 'block';
+            console.log('Zurück zur Potentialanalyse (Fallback)');
+            document.dispatchEvent(new CustomEvent('viewChanged', {
+                detail: { module: 'versicherung', view: 'potentialanalyse' }
+            }));
+            if (window.AppRouter) AppRouter.navigate('/potentialanalyse');
+        } else if (landingPage) {
+            landingPage.style.display = 'flex';
+            window.scrollTo(0, 0);
+            console.log('Zurück zur Landing Page (Fallback, kein previousView gesetzt)');
+            document.dispatchEvent(new CustomEvent('viewChanged', {
+                detail: { module: 'main', view: 'landing' }
+            }));
+            if (window.AppRouter) AppRouter.navigate('/landing');
+        } else {
+            // Absoluter Fallback: Potentialanalyse
+            if (potentialPage) potentialPage.style.display = 'block';
+            console.log('Zurück zur Potentialanalyse (absoluter Fallback)');
+            document.dispatchEvent(new CustomEvent('viewChanged', {
+                detail: { module: 'versicherung', view: 'potentialanalyse' }
+            }));
+            if (window.AppRouter) AppRouter.navigate('/potentialanalyse');
+        }
     }
 }
 
@@ -576,9 +592,9 @@ function fillKundenDetail(kundenName, vermittlerId) {
                 { typ: 'Wohngebäudeversicherung', versicherer: 'VHV', details: 'Vers.-Summe: €450.000, inkl. Elementar, gleitender Neuwert', praemie: '€450/Jahr', beginn: '15.06.2019', status: 'Aktiv' }
             ],
             fidaVertraege: [
-                { anbieter: 'Sparkasse', typ: 'Girokonto', info: 'Hauptkonto' },
-                { anbieter: 'ING DiBa', typ: 'Tagesgeld', info: 'Sparkonto' },
-                { anbieter: 'DWS', typ: 'Depot', info: 'Fondssparen' }
+                { institut: 'Sparkasse', typ: 'Girokonto', info: 'Hauptkonto', consent: '15.03.2024', gueltig: '15.03.2026' },
+                { institut: 'ING DiBa', typ: 'Tagesgeld', info: 'Sparkonto', consent: '15.03.2024', gueltig: '15.03.2026' },
+                { institut: 'DWS', typ: 'Depot', info: 'Fondssparen', consent: '15.03.2024', gueltig: '15.03.2026' }
             ]
         },
         'Amira König': {
@@ -607,8 +623,8 @@ function fillKundenDetail(kundenName, vermittlerId) {
                 { typ: 'Unfallversicherung', versicherer: 'Helvetia', details: 'Invalidität €100.000, Progression 350%', praemie: '€180/Jahr', beginn: '01.01.2020', status: 'Aktiv' }
             ],
             fidaVertraege: [
-                { anbieter: 'Volksbank', typ: 'Girokonto', info: 'Gehaltskonto' },
-                { anbieter: 'DKB', typ: 'Tagesgeld', info: 'Notgroschen' }
+                { institut: 'Volksbank', typ: 'Girokonto', info: 'Gehaltskonto', consent: '10.04.2024', gueltig: '10.04.2026' },
+                { institut: 'DKB', typ: 'Tagesgeld', info: 'Notgroschen', consent: '10.04.2024', gueltig: '10.04.2026' }
             ]
         },
         'Thomas Weber': {
@@ -635,9 +651,9 @@ function fillKundenDetail(kundenName, vermittlerId) {
                 { typ: 'Privathaftpflichtversicherung', versicherer: 'ERGO', details: 'Single, €50 Mio. Deckung', praemie: '€65/Jahr', beginn: '01.03.2021', status: 'Aktiv' }
             ],
             fidaVertraege: [
-                { anbieter: 'N26', typ: 'Girokonto', info: 'Hauptkonto' },
-                { anbieter: 'Trade Republic', typ: 'Depot', info: 'ETF-Sparplan €500/Mon.' },
-                { anbieter: 'Scalable Capital', typ: 'Depot', info: 'Einzelaktien' }
+                { institut: 'N26', typ: 'Girokonto', info: 'Hauptkonto', consent: '20.06.2024', gueltig: '20.06.2026' },
+                { institut: 'Trade Republic', typ: 'Depot', info: 'ETF-Sparplan €500/Mon.', consent: '20.06.2024', gueltig: '20.06.2026' },
+                { institut: 'Scalable Capital', typ: 'Depot', info: 'Einzelaktien', consent: '20.06.2024', gueltig: '20.06.2026' }
             ]
         },
         'Anna Hoffmann': {
@@ -665,8 +681,8 @@ function fillKundenDetail(kundenName, vermittlerId) {
                 { typ: 'Berufsunfähigkeitsversicherung', versicherer: 'Alte Leipziger', details: 'BU-Rente: €2.000/Mon., Endalter 67', praemie: '€110/Mon.', beginn: '01.01.2019', status: 'Aktiv' }
             ],
             fidaVertraege: [
-                { anbieter: 'Commerzbank', typ: 'Girokonto', info: 'Familienkonto' },
-                { anbieter: 'Consorsbank', typ: 'Depot', info: 'Kindersparen' }
+                { institut: 'Commerzbank', typ: 'Girokonto', info: 'Familienkonto', consent: '01.07.2024', gueltig: '01.07.2026' },
+                { institut: 'Consorsbank', typ: 'Depot', info: 'Kindersparen', consent: '01.07.2024', gueltig: '01.07.2026' }
             ]
         },
         'Michael Braun': {
@@ -695,9 +711,9 @@ function fillKundenDetail(kundenName, vermittlerId) {
                 { typ: 'Rechtsschutzversicherung', versicherer: 'ERGO', details: 'Premium inkl. Beruf, Verkehr, Privat', praemie: '€380/Jahr', beginn: '01.04.2018', status: 'Aktiv' }
             ],
             fidaVertraege: [
-                { anbieter: 'Deutsche Bank', typ: 'Girokonto', info: 'Geschäftskonto' },
-                { anbieter: 'Deka', typ: 'Depot', info: 'Vermögensaufbau €180.000' },
-                { anbieter: 'Bausparkasse Schwäbisch Hall', typ: 'Bausparvertrag', info: 'Zuteilungsreif' }
+                { institut: 'Deutsche Bank', typ: 'Girokonto', info: 'Geschäftskonto', consent: '15.05.2024', gueltig: '15.05.2026' },
+                { institut: 'Deka', typ: 'Depot', info: 'Vermögensaufbau €180.000', consent: '15.05.2024', gueltig: '15.05.2026' },
+                { institut: 'Bausparkasse Schwäbisch Hall', typ: 'Bausparvertrag', info: 'Zuteilungsreif', consent: '15.05.2024', gueltig: '15.05.2026' }
             ]
         },
         'Lisa Müller': {
@@ -724,9 +740,9 @@ function fillKundenDetail(kundenName, vermittlerId) {
                 { typ: 'Berufsunfähigkeitsversicherung', versicherer: 'ERGO', details: 'BU-Rente: €2.500/Mon., Dienstunfähigkeitsklausel', praemie: '€145/Mon.', beginn: '01.08.2022', status: 'Aktiv' }
             ],
             fidaVertraege: [
-                { anbieter: 'Comdirect', typ: 'Girokonto', info: 'Gehaltskonto' },
-                { anbieter: 'ING', typ: 'Extra-Konto', info: 'Tagesgeld €15.000' },
-                { anbieter: 'KfW', typ: 'Studienkredit', info: 'Restschuld €18.000' }
+                { institut: 'Comdirect', typ: 'Girokonto', info: 'Gehaltskonto', consent: '12.08.2024', gueltig: '12.08.2026' },
+                { institut: 'ING', typ: 'Extra-Konto', info: 'Tagesgeld €15.000', consent: '12.08.2024', gueltig: '12.08.2026' },
+                { institut: 'KfW', typ: 'Studienkredit', info: 'Restschuld €18.000', consent: '12.08.2024', gueltig: '12.08.2026' }
             ]
         },
         'Klaus Meier': {
@@ -754,8 +770,8 @@ function fillKundenDetail(kundenName, vermittlerId) {
                 { typ: 'Berufsunfähigkeitsversicherung', versicherer: 'Nürnberger', details: 'BU-Rente: €2.000/Mon., Handwerker-Tarif', praemie: '€135/Mon.', beginn: '01.03.2016', status: 'Aktiv' }
             ],
             fidaVertraege: [
-                { anbieter: 'Commerzbank', typ: 'Geschäftskonto', info: 'Betriebskonto' },
-                { anbieter: 'Union Investment', typ: 'Riester', info: 'Altersvorsorge €45.000' }
+                { institut: 'Commerzbank', typ: 'Geschäftskonto', info: 'Betriebskonto', consent: '01.09.2024', gueltig: '01.09.2026' },
+                { institut: 'Union Investment', typ: 'Riester', info: 'Altersvorsorge €45.000', consent: '01.09.2024', gueltig: '01.09.2026' }
             ]
         },
         'Matthias Engel': {
@@ -783,9 +799,9 @@ function fillKundenDetail(kundenName, vermittlerId) {
                 { typ: 'Privathaftpflichtversicherung', versicherer: 'ERGO', details: 'Familie, €50 Mio. Deckung', praemie: '€85/Jahr', beginn: '01.01.2018', status: 'Aktiv' }
             ],
             fidaVertraege: [
-                { anbieter: 'Sparkasse Essen', typ: 'Girokonto', info: 'Gehalt €4.200 netto/Mon.' },
-                { anbieter: 'ING', typ: 'Depot', info: 'ETF-Sparplan €400/Mon.' },
-                { anbieter: 'Allianz', typ: 'BU-Versicherung', info: 'Nur €1.200/Mon. - Deckungslücke!' }
+                { institut: 'Sparkasse Essen', typ: 'Girokonto', info: 'Gehalt €4.200 netto/Mon.', consent: '05.10.2024', gueltig: '05.10.2026' },
+                { institut: 'ING', typ: 'Depot', info: 'ETF-Sparplan €400/Mon.', consent: '05.10.2024', gueltig: '05.10.2026' },
+                { institut: 'Allianz', typ: 'BU-Versicherung', info: 'Nur €1.200/Mon. - Deckungslücke!', consent: '05.10.2024', gueltig: '05.10.2026' }
             ]
         },
         'Christian Bauer': {
@@ -812,9 +828,9 @@ function fillKundenDetail(kundenName, vermittlerId) {
                 { typ: 'Rechtsschutzversicherung', versicherer: 'ERGO', details: 'Beruf & Privat, €300 SB', praemie: '€280/Jahr', beginn: '01.06.2021', status: 'Aktiv' }
             ],
             fidaVertraege: [
-                { anbieter: 'Commerzbank', typ: 'Girokonto', info: 'Gehalt €3.800 netto/Mon.' },
-                { anbieter: 'Trade Republic', typ: 'Depot', info: 'Aktien €45.000' },
-                { anbieter: 'keine', typ: 'BU-Versicherung', info: 'NICHT VORHANDEN!' }
+                { institut: 'Commerzbank', typ: 'Girokonto', info: 'Gehalt €3.800 netto/Mon.', consent: '15.11.2024', gueltig: '15.11.2026' },
+                { institut: 'Trade Republic', typ: 'Depot', info: 'Aktien €45.000', consent: '15.11.2024', gueltig: '15.11.2026' },
+                { institut: 'keine', typ: 'BU-Versicherung', info: 'NICHT VORHANDEN!', consent: '15.11.2024', gueltig: '15.11.2026' }
             ]
         },
         'Martin Wolf': {
@@ -842,9 +858,9 @@ function fillKundenDetail(kundenName, vermittlerId) {
                 { typ: 'Wohngebäudeversicherung', versicherer: 'VHV', details: 'Vers.-Summe: €380.000, inkl. Elementar', praemie: '€520/Jahr', beginn: '01.07.2016', status: 'Aktiv' }
             ],
             fidaVertraege: [
-                { anbieter: 'Volksbank Dortmund', typ: 'Girokonto', info: 'Gehalt €3.200 netto/Mon.' },
-                { anbieter: 'Bausparkasse LBS', typ: 'Bausparvertrag', info: 'Ansparphase €28.000' },
-                { anbieter: 'keine', typ: 'BU-Versicherung', info: 'NICHT VORHANDEN - Hochrisiko-Beruf!' }
+                { institut: 'Volksbank Dortmund', typ: 'Girokonto', info: 'Gehalt €3.200 netto/Mon.', consent: '22.09.2024', gueltig: '22.09.2026' },
+                { institut: 'Bausparkasse LBS', typ: 'Bausparvertrag', info: 'Ansparphase €28.000', consent: '22.09.2024', gueltig: '22.09.2026' },
+                { institut: 'keine', typ: 'BU-Versicherung', info: 'NICHT VORHANDEN - Hochrisiko-Beruf!', consent: '22.09.2024', gueltig: '22.09.2026' }
             ]
         },
         'Eva Hartmann': {
@@ -872,9 +888,9 @@ function fillKundenDetail(kundenName, vermittlerId) {
                 { typ: 'Betriebshaftpflicht', versicherer: 'Hiscox', details: '€2 Mio. Deckung, Freelancer-Tarif', praemie: '€290/Jahr', beginn: '01.01.2020', status: 'Aktiv' }
             ],
             fidaVertraege: [
-                { anbieter: 'N26', typ: 'Geschäftskonto', info: 'Selbstständigen-Einkommen variabel' },
-                { anbieter: 'ING', typ: 'Tagesgeld', info: 'Rücklage €12.000' },
-                { anbieter: 'KfW', typ: 'Gründerkredit', info: 'Restschuld €15.000' }
+                { institut: 'N26', typ: 'Geschäftskonto', info: 'Selbstständigen-Einkommen variabel', consent: '01.12.2024', gueltig: '01.12.2026' },
+                { institut: 'ING', typ: 'Tagesgeld', info: 'Rücklage €12.000', consent: '01.12.2024', gueltig: '01.12.2026' },
+                { institut: 'KfW', typ: 'Gründerkredit', info: 'Restschuld €15.000', consent: '01.12.2024', gueltig: '01.12.2026' }
             ]
         }
     };
@@ -1016,16 +1032,19 @@ function fillKundenDetail(kundenName, vermittlerId) {
         `).join('');
     }
 
-    // FIDA Verträge
+    // FIDA Verträge (vereinheitlichtes Datenmodell: institut/typ/info/consent/gueltig)
     const fidaBody = document.getElementById('kundenFidaVertraege');
     if (fidaBody) {
-        fidaBody.innerHTML = kunde.fidaVertraege.map(v => `
-            <tr>
-                <td>${versichererLogoImg(v.anbieter, 18)} ${v.anbieter}</td>
+        fidaBody.innerHTML = kunde.fidaVertraege.map(v => {
+            var institutName = v.institut || v.anbieter || '';
+            return `<tr>
+                <td>${versichererLogoImg(institutName, 18)} ${institutName}</td>
                 <td>${v.typ}</td>
                 <td>${v.info}</td>
-            </tr>
-        `).join('');
+                <td>${v.consent || '&mdash;'}</td>
+                <td>${v.gueltig || '&mdash;'}</td>
+            </tr>`;
+        }).join('');
     }
 
     // Schadenhistorie / Leistungen
@@ -1492,7 +1511,40 @@ Ihre Versicherungsagentur`,
 
     const komm = kommunikationen[kommId];
     if (komm) {
-        alert(`${komm.typ} vom ${komm.datum}\n\nBetreff: ${komm.betreff}\n\n${komm.inhalt}\n\nStatus: ${komm.status}`);
+        // Inline-Modal statt alert() – konsistent mit B-10 Kommunikations-Timeline
+        var existing = document.getElementById('kommDetailOverlay');
+        if (existing) existing.remove();
+
+        var overlay = document.createElement('div');
+        overlay.id = 'kommDetailOverlay';
+        overlay.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:10000;display:flex;align-items:center;justify-content:center;';
+        overlay.onclick = function(e) { if (e.target === overlay) overlay.remove(); };
+
+        var typIcon = komm.typ === 'E-Mail' ? '✉' : (komm.typ === 'Brief' ? '📄' : '📞');
+        var statusColor = komm.status.includes('Geöffnet') ? '#16a34a' : (komm.status.includes('Termin') ? '#2563eb' : '#64748b');
+
+        var modal = document.createElement('div');
+        modal.style.cssText = 'background:white;border-radius:12px;max-width:560px;width:90%;max-height:80vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.3);';
+        modal.innerHTML =
+            '<div style="padding:20px 24px;border-bottom:1px solid #e2e8f0;display:flex;justify-content:space-between;align-items:center;">' +
+                '<div style="display:flex;align-items:center;gap:10px;">' +
+                    '<span style="font-size:20px;">' + typIcon + '</span>' +
+                    '<div><div style="font-weight:700;font-size:15px;color:#1e293b;">' + komm.typ + '</div>' +
+                    '<div style="font-size:12px;color:#64748b;">' + komm.datum + '</div></div>' +
+                '</div>' +
+                '<button onclick="document.getElementById(\'kommDetailOverlay\').remove()" style="background:none;border:none;cursor:pointer;font-size:20px;color:#94a3b8;padding:4px;">&times;</button>' +
+            '</div>' +
+            '<div style="padding:24px;">' +
+                '<div style="font-weight:600;font-size:14px;color:#1e293b;margin-bottom:16px;">' + komm.betreff + '</div>' +
+                '<div style="font-size:13px;color:#475569;line-height:1.7;white-space:pre-wrap;background:#f8fafc;padding:16px;border-radius:8px;border:1px solid #e2e8f0;">' + komm.inhalt + '</div>' +
+                '<div style="margin-top:16px;display:flex;align-items:center;gap:8px;">' +
+                    '<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:' + statusColor + ';"></span>' +
+                    '<span style="font-size:12px;color:' + statusColor + ';font-weight:500;">' + komm.status + '</span>' +
+                '</div>' +
+            '</div>';
+
+        overlay.appendChild(modal);
+        document.body.appendChild(overlay);
     }
 }
 
@@ -1516,6 +1568,7 @@ window.toggleImpulsDetail = toggleImpulsDetail;
 // ── MOCK KUNDEN DETAIL DATA ──
 var bankMockKunden = {
     'Klaus Fischer': {
+        id:'KDB001', ort:'Gießen', segment:'Premium', ertrag:4850, finanzplan:true, letztKontakt:'28.02.2026',
         geburtsdatum:'12.05.1978', adresse:'Hauptstraße 45, 35390 Gießen', telefon:'+49 641 98765', email:'k.fischer@email.de',
         beruf:'Maschinenbau-Ingenieur', familienstand:'Verheiratet', arbeitgeber:'Continental AG', beschaeftigtSeit:'01.04.2008',
         nettoeinkommen:4850, kinder:[{name:'Lukas',alter:12},{name:'Emma',alter:9}],
@@ -1567,6 +1620,7 @@ var bankMockKunden = {
         avatarBg:'#2563eb', foto:'assets/images/AdobeStock_624564221.jpeg'
     },
     'Sandra Müller': {
+        id:'KDB002', ort:'Wetzlar', segment:'Premium', ertrag:3200, finanzplan:false, letztKontakt:'25.02.2026',
         geburtsdatum:'23.11.1985', adresse:'Bahnhofstr. 12, 35578 Wetzlar', telefon:'+49 6441 55432', email:'s.mueller@email.de',
         beruf:'Ärztin', familienstand:'Ledig', arbeitgeber:'Uniklinik Gießen', beschaeftigtSeit:'01.08.2015',
         nettoeinkommen:5200, kinder:[{name:'Mia',alter:4}],
@@ -1607,6 +1661,7 @@ var bankMockKunden = {
         avatarBg:'#9333ea', foto:'assets/images/AdobeStock_252262042.jpeg'
     },
     'Markus Wagner': {
+        id:'KDB003', ort:'Marburg', segment:'Standard', ertrag:1800, finanzplan:true, letztKontakt:'20.02.2026',
         geburtsdatum:'08.03.1972', adresse:'Schulstr. 8, 35037 Marburg', telefon:'+49 6421 77890', email:'m.wagner@email.de',
         beruf:'Lehrer', familienstand:'Verheiratet', arbeitgeber:'Land Hessen', beschaeftigtSeit:'01.02.2000',
         nettoeinkommen:3800, kinder:[{name:'Tim',alter:14},{name:'Jana',alter:11}],
@@ -1639,6 +1694,7 @@ var bankMockKunden = {
         avatarBg:'#16a34a', foto:'assets/images/AdobeStock_361342769.jpeg'
     },
     'Julia Becker': {
+        id:'KDB004', ort:'Gießen', segment:'Potenzial', ertrag:980, finanzplan:false, letztKontakt:'18.02.2026',
         geburtsdatum:'15.07.1990', adresse:'Ludwigstr. 22, 35390 Gießen', telefon:'+49 641 33210', email:'j.becker@email.de',
         beruf:'Marketing-Managerin', familienstand:'Ledig', arbeitgeber:'Amazon DE', beschaeftigtSeit:'01.03.2019',
         nettoeinkommen:3600, kinder:[],
@@ -1661,6 +1717,7 @@ var bankMockKunden = {
         avatarBg:'#f59e0b', foto:null
     },
     'Peter Hoffmann': {
+        id:'KDB005', ort:'Wetzlar', segment:'Premium', ertrag:6200, finanzplan:true, letztKontakt:'15.02.2026',
         geburtsdatum:'30.01.1970', adresse:'Friedrichstr. 5, 35578 Wetzlar', telefon:'+49 6441 88456', email:'p.hoffmann@email.de',
         beruf:'Steuerberater', familienstand:'Verheiratet', arbeitgeber:'Selbständig', beschaeftigtSeit:'01.01.1998',
         nettoeinkommen:7500, kinder:[{name:'Fabian',alter:22},{name:'Laura',alter:19}],
@@ -1709,6 +1766,7 @@ var bankMockKunden = {
         avatarBg:'#dc2626', foto:'assets/images/AdobeStock_612932760.jpeg'
     },
     'Andrea Lang': {
+        id:'KDB006', ort:'Lich', segment:'Standard', ertrag:2400, finanzplan:true, letztKontakt:'12.02.2026',
         geburtsdatum:'05.09.1982', adresse:'Marktplatz 3, 35423 Lich', telefon:'+49 6404 12345', email:'a.lang@email.de',
         beruf:'Steuerberaterin', familienstand:'Geschieden', arbeitgeber:'Kanzlei Lang & Partner', beschaeftigtSeit:'01.06.2012',
         nettoeinkommen:5800, kinder:[{name:'Sophie',alter:7}],
@@ -1745,6 +1803,7 @@ var bankMockKunden = {
         avatarBg:'#6366f1', foto:null
     },
     'Thomas Klein': {
+        id:'KDB007', ort:'Buseck', segment:'Standard', ertrag:1650, finanzplan:false, letztKontakt:'10.02.2026',
         geburtsdatum:'18.12.1968', adresse:'Am Anger 7, 35418 Buseck', telefon:'+49 6408 99123', email:'t.klein@email.de',
         beruf:'Handwerksmeister', familienstand:'Verheiratet', arbeitgeber:'Klein Sanitär GmbH', beschaeftigtSeit:'01.01.1995',
         nettoeinkommen:4200, kinder:[{name:'Max',alter:16}],
@@ -1767,6 +1826,7 @@ var bankMockKunden = {
         avatarBg:'#0891b2', foto:null
     },
     'Monika Richter': {
+        id:'KDB008', ort:'Gießen', segment:'Standard', ertrag:1200, finanzplan:true, letztKontakt:'08.02.2026',
         geburtsdatum:'22.04.1975', adresse:'Goethering 15, 35390 Gießen', telefon:'+49 641 44567', email:'m.richter@email.de',
         beruf:'Lehrerin', familienstand:'Verheiratet', arbeitgeber:'Land Hessen', beschaeftigtSeit:'01.08.2002',
         nettoeinkommen:3400, kinder:[{name:'Anna',alter:10},{name:'Felix',alter:7}],
@@ -1788,6 +1848,7 @@ var bankMockKunden = {
         avatarBg:'#d946ef', foto:null
     },
     'Stefan Braun': {
+        id:'KDB009', ort:'Marburg', segment:'Potenzial', ertrag:750, finanzplan:false, letztKontakt:'05.02.2026',
         geburtsdatum:'11.06.1988', adresse:'Technikstr. 20, 35037 Marburg', telefon:'+49 6421 55678', email:'s.braun@email.de',
         beruf:'IT-Consultant', familienstand:'Ledig', arbeitgeber:'SAP SE', beschaeftigtSeit:'01.09.2018',
         nettoeinkommen:5500, kinder:[],
@@ -1809,6 +1870,7 @@ var bankMockKunden = {
         avatarBg:'#ea580c', foto:null
     },
     'Katharina Wolf': {
+        id:'KDB010', ort:'Gießen', segment:'Standard', ertrag:2100, finanzplan:true, letztKontakt:'01.02.2026',
         geburtsdatum:'03.03.1988', adresse:'Schillerstr. 9, 35390 Gießen', telefon:'+49 641 77890', email:'k.wolf@email.de',
         beruf:'Architektin', familienstand:'Verheiratet', arbeitgeber:'Wolf Architekten', beschaeftigtSeit:'01.01.2016',
         nettoeinkommen:4600, kinder:[{name:'Lara',alter:3}],
@@ -1844,6 +1906,7 @@ var bankMockKunden = {
         avatarBg:'#059669', foto:null
     },
     'Jürgen Peters': {
+        id:'KDB011', ort:'Wetzlar', segment:'Premium', ertrag:5100, finanzplan:true, letztKontakt:'28.01.2026',
         geburtsdatum:'14.10.1965', adresse:'Industriestr. 18, 35578 Wetzlar', telefon:'+49 6441 33789', email:'j.peters@email.de',
         beruf:'Geschäftsführer', familienstand:'Verheiratet', arbeitgeber:'Peters Metallbau GmbH', beschaeftigtSeit:'01.01.1992',
         nettoeinkommen:9500, kinder:[{name:'Stefan',alter:28},{name:'Maria',alter:25}],
@@ -1874,6 +1937,7 @@ var bankMockKunden = {
         avatarBg:'#7c3aed', foto:null
     },
     'Sabine Kraus': {
+        id:'KDB012', ort:'Lich', segment:'Standard', ertrag:1900, finanzplan:false, letztKontakt:'25.01.2026',
         geburtsdatum:'27.08.1979', adresse:'Apothekenstr. 2, 35423 Lich', telefon:'+49 6404 66789', email:'s.kraus@email.de',
         beruf:'Apothekerin', familienstand:'Verheiratet', arbeitgeber:'Löwen-Apotheke', beschaeftigtSeit:'01.01.2008',
         nettoeinkommen:5000, kinder:[{name:'Paul',alter:8},{name:'Clara',alter:5}],
@@ -2054,16 +2118,7 @@ function adjustColor(hex, amount) {
     return '#' + r.toString(16).padStart(2,'0') + g.toString(16).padStart(2,'0') + b.toString(16).padStart(2,'0');
 }
 
-function calculateBankCLV(kd, retailData) {
-    var ertrag = retailData ? retailData.ertrag : 2000;
-    var years = 15;
-    if (kd.nps.score >= 8) years = 20;
-    if (kd.nps.score <= 5) years = 8;
-    var value = Math.round(ertrag * years * 0.85);
-    var segment = value >= 50000 ? 'Platinum' : (value >= 25000 ? 'Gold' : (value >= 10000 ? 'Silber' : 'Standard'));
-    var churnRisk = kd.nps.score >= 8 ? 5 : (kd.nps.score >= 6 ? 12 : 25);
-    return { value:value, segment:segment, haltedauer:years, churnRisk:churnRisk };
-}
+// calculateBankCLV() moved to clv.js for unified CLV module
 
 // ── STICKY BAR ──
 function fillBankStickyBar(kundenName, retailData, kd, clv) {

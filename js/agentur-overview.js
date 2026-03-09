@@ -224,6 +224,20 @@ function updateDynamicDates() {
         var datumEl = document.getElementById('abrechnungDatum' + m);
         if (datumEl) datumEl.textContent = 'Erstellt: ' + String(erstelltDatum.getDate()).padStart(2,'0') + '.' + String(erstelltDatum.getMonth()+1).padStart(2,'0') + '.' + erstelltDatum.getFullYear();
     }
+
+    // FIDA Consent-Daten dynamisch berechnen
+    // Consent erteilt: 10 Monate vor heute, Gültig bis: +24 Monate ab Erteilung (FIDA max. Laufzeit)
+    var consentErteilt = new Date(now.getFullYear(), now.getMonth() - 10, now.getDate());
+    var consentGueltig = new Date(consentErteilt.getFullYear(), consentErteilt.getMonth() + 24, consentErteilt.getDate());
+    function fmtDatum(d) {
+        return String(d.getDate()).padStart(2, '0') + '.' + String(d.getMonth() + 1).padStart(2, '0') + '.' + d.getFullYear();
+    }
+    document.querySelectorAll('[data-dynamic-date="fida-consent-erteilt"]').forEach(function(el) {
+        el.textContent = fmtDatum(consentErteilt);
+    });
+    document.querySelectorAll('[data-dynamic-date="fida-consent-gueltig"]').forEach(function(el) {
+        el.textContent = fmtDatum(consentGueltig);
+    });
 }
 
 /**

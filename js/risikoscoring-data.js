@@ -797,4 +797,7 @@
                     <td class="stat-value">${totalStats.avgStorno.toFixed(1)}%</td>
                     <td class="stat-value">${totalStats.avgCrossSelling.toFixed(1)}</td>
                 `;
-                
+
+                tbody.appendChild(totalRow);
+            }
+        }

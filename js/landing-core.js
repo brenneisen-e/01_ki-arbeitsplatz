@@ -618,3 +618,4 @@ function initLandingChat() {
     });
     
     console.log('Landing Chat initialisiert');
+}

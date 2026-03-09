@@ -2,6 +2,59 @@
 // Mock-Daten, fillKundenDetail, Sticky Bar, Tab Navigation
 // Extracted from landing.js for modularity
 
+// ========================================
+// VERSICHERER LOGO HELPER (logo.dev)
+// ========================================
+var versichererLogoDomains = {
+    'Allianz': 'allianz.de',
+    'ERGO': 'ergo.de',
+    'VHV': 'vhv.de',
+    'Helvetia': 'helvetia.com',
+    'Alte Leipziger': 'alte-leipziger.de',
+    'Axa': 'axa.de',
+    'AXA': 'axa.de',
+    'N\u00FCrnberger': 'nuernberger.de',
+    'Hiscox': 'hiscox.de',
+    'Hannoversche': 'hannoversche.de',
+    'CosmosDirekt': 'cosmosdirekt.de',
+    'HUK-Coburg': 'huk.de',
+    'HUK24': 'huk24.de',
+    'Condor': 'condor-versicherungen.de',
+    'Zurich': 'zurich.de',
+    'HDI': 'hdi.de',
+    'R+V': 'ruv.de',
+    'Generali': 'generali.de',
+    'Gothaer': 'gothaer.de',
+    'Debeka': 'debeka.de',
+    'Sparkasse': 'sparkasse.de',
+    'Volksbank': 'volksbank.de',
+    'ING DiBa': 'ing.de',
+    'ING': 'ing.de',
+    'DKB': 'dkb.de',
+    'DWS': 'dws.de',
+    'Kravag': 'kravag.de',
+    'ARAG': 'arag.de',
+    'Fressnapf': 'fressnapf.de',
+    'Bausparkasse Schw\u00E4bisch Hall': 'schwaebisch-hall.de',
+    'Bausparkasse LBS': 'lbs.de'
+};
+
+function getVersichererLogoUrl(name, size) {
+    size = size || 32;
+    var domain = versichererLogoDomains[name];
+    if (!domain) return '';
+    return 'https://img.logo.dev/' + domain + '?token=pk_H7vb5Y2lTsW47U4Xq-w3HA&size=' + size + '&format=png';
+}
+
+function versichererLogoImg(name, size) {
+    size = size || 20;
+    var url = getVersichererLogoUrl(name, size * 2);
+    if (!url) return '';
+    return '<img src="' + url + '" alt="' + name + '" class="versicherer-logo" width="' + size + '" height="' + size + '" style="vertical-align:middle;border-radius:4px;object-fit:contain;" onerror="this.style.display=\'none\'">';
+}
+window.versichererLogoImg = versichererLogoImg;
+window.getVersichererLogoUrl = getVersichererLogoUrl;
+
 // KUNDENDETAIL SEITE
 // ========================================
 
@@ -870,7 +923,7 @@ function fillKundenDetail(kundenName, vermittlerId) {
         vertraegeBody.innerHTML = kunde.vertraege.map(v => `
             <tr>
                 <td><strong>${v.typ}</strong></td>
-                <td class="makler-only-col">${v.versicherer || ''}</td>
+                <td class="makler-only-col">${versichererLogoImg(v.versicherer, 18)} ${v.versicherer || ''}</td>
                 <td>${v.details || ''}</td>
                 <td>${v.praemie}</td>
                 <td>${v.beginn || ''}</td>
@@ -884,7 +937,7 @@ function fillKundenDetail(kundenName, vermittlerId) {
     if (fidaBody) {
         fidaBody.innerHTML = kunde.fidaVertraege.map(v => `
             <tr>
-                <td>${v.anbieter}</td>
+                <td>${versichererLogoImg(v.anbieter, 18)} ${v.anbieter}</td>
                 <td>${v.typ}</td>
                 <td>${v.info}</td>
             </tr>
@@ -902,7 +955,7 @@ function fillKundenDetail(kundenName, vermittlerId) {
                 '<td>' + s.beschreibung + '</td>' +
                 '<td><span class="schaden-status-badge ' + statusClass + '">' + s.status + '</span></td>' +
                 '<td class="text-right">' + s.betrag + '</td>' +
-                '<td>' + s.versicherer + '</td>' +
+                '<td>' + versichererLogoImg(s.versicherer, 16) + ' ' + s.versicherer + '</td>' +
                 '</tr>';
         }).join('');
         var schadenCard = document.getElementById('schadenhistorieCard');
@@ -1146,7 +1199,7 @@ function openTarifvergleich(produkt, empfehlung) {
         var stars = '';
         for (var s = 0; s < 5; s++) { stars += s < t.rating ? '<span class="tv-star filled">★</span>' : '<span class="tv-star">☆</span>'; }
         html += '<tr' + (t.empfohlen ? ' class="tv-empfohlen"' : '') + '>' +
-            '<td><strong>' + t.versicherer + '</strong></td>' +
+            '<td>' + versichererLogoImg(t.versicherer, 18) + ' <strong>' + t.versicherer + '</strong></td>' +
             '<td>' + t.tarif + '</td>' +
             '<td><strong>' + t.beitrag + '</strong></td>' +
             '<td>' + t.leistung + '</td>' +

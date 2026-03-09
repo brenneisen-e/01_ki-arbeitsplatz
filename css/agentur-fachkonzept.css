@@ -1,6 +1,16 @@
 /* css/agentur-fachkonzept.css - Agentur Overview Fachkonzept Design */
 /* Extracted from styles.css for modularity */
 
+/* Versicherer Logos (logo.dev) */
+.versicherer-logo {
+    display: inline-block;
+    vertical-align: middle;
+    border-radius: 4px;
+    object-fit: contain;
+    margin-right: 4px;
+    background: #fff;
+}
+
 /* ========================================
    AGENTUR OVERVIEW - FACHKONZEPT DESIGN
    ======================================== */

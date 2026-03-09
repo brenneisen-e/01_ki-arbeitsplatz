@@ -206,8 +206,15 @@ function buildTxItems(cat) {
             }
         }
 
+        // Extract versicherer from parentheses for logo
+        var txLogo = '';
+        var nameMatch = tx.name.match(/\(([^)]+)\)/);
+        if (nameMatch && typeof versichererLogoImg === 'function') {
+            txLogo = versichererLogoImg(nameMatch[1], 16);
+        }
+
         return '<div class="bezahlen-tx-item' + (tx.recurring ? ' has-recurring' : '') + '">' +
-            '<span class="bezahlen-tx-name">' + tx.name + datum + recurringBadge + '</span>' +
+            '<span class="bezahlen-tx-name">' + txLogo + tx.name + datum + recurringBadge + '</span>' +
             '<span class="bezahlen-tx-amount">\u20AC' + tx.amount + badge + '</span>' +
             '</div>' + recurringDetail;
     }).join('');

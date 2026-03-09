@@ -181,12 +181,14 @@ function setInsurer(insurerKey) {
         '.view-mode-dropdown-item.active svg { stroke: ' + cfg.dropdownActiveText + ' !important; }' +
         '.insurer-dropdown-item.active { background: ' + cfg.dropdownActive + ' !important; color: ' + cfg.dropdownActiveText + ' !important; }';
 
-    // Update insurer logo in header
+    // Update insurer logo in header (use getVersichererLogoUrl if available)
     var logoImg = document.getElementById('insurerLogoImg');
     var logoFallback = document.getElementById('insurerLogoFallback');
     if (logoImg) {
-        var token = localStorage.getItem('logodev_token') || 'pk_H7vb5Y2lTsW47U4Xq-w3HA';
-        logoImg.src = 'https://img.logo.dev/' + cfg.domain + '?token=' + token + '&size=120&format=png';
+        var logoUrl = (typeof getVersichererLogoUrl === 'function')
+            ? getVersichererLogoUrl(cfg.name, 120)
+            : 'https://img.logo.dev/' + cfg.domain + '?token=pk_H7vb5Y2lTsW47U4Xq-w3HA&size=120&format=png';
+        logoImg.src = logoUrl;
         logoImg.alt = cfg.name;
         logoImg.style.display = '';
         logoImg.onerror = function() {
@@ -219,19 +221,47 @@ function setInsurer(insurerKey) {
 }
 window.setInsurer = setInsurer;
 
+// Load logos into the insurer grid dynamically (same approach as kunden-detail)
+function loadInsurerGridLogos() {
+    if (typeof getVersichererLogoUrl !== 'function') return;
+    var buttons = document.querySelectorAll('.insurer-dropdown-item[data-insurer]');
+    buttons.forEach(function(btn) {
+        var key = btn.dataset.insurer;
+        var cfg = insurerConfig[key];
+        if (!cfg) return;
+        var url = getVersichererLogoUrl(cfg.name, 80);
+        if (!url) return;
+        // Only add img if not already present
+        if (btn.querySelector('img')) return;
+        var img = document.createElement('img');
+        img.src = url;
+        img.alt = cfg.name;
+        img.className = 'insurer-grid-logo';
+        img.onerror = function() { img.remove(); };
+        img.onload = function() {
+            // Hide fallback text, show logo
+            var fallback = btn.querySelector('.insurer-icon-fallback');
+            if (fallback) fallback.style.display = 'none';
+        };
+        btn.insertBefore(img, btn.firstChild);
+    });
+}
+
 // Restore saved insurer on page load
 function restoreInsurer() {
     var saved = localStorage.getItem('selectedInsurer');
     if (saved && insurerConfig[saved]) {
         setInsurer(saved);
     }
+    // Load grid logos after a short delay to ensure getVersichererLogoUrl is available
+    setTimeout(loadInsurerGridLogos, 500);
 }
 
 // Call restore after DOM ready
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', restoreInsurer);
 } else {
-    setTimeout(restoreInsurer, 100);
+    setTimeout(restoreInsurer, 300);
 }
 
 // Dropdown label map

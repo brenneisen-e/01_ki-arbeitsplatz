@@ -1,4 +1,4 @@
-(function(){var r=['kpiDefinitions'];var m=r.filter(function(f){return typeof window[f]==='undefined'});if(m.length)console.error('[data.js] Fehlende Deps:',m.join(', '),'← Lade config.js zuerst!');})();
+(function(){var r=['kpiDefinitions'];var m=r.filter(function(f){return typeof window[f]==='undefined'});if(m.length)console.debug('[data.js] Fehlende Deps:',m.join(', '),'← Lade config.js zuerst!');})();
 // js/data.js - Data Management
 
 // Global state

@@ -1,4 +1,4 @@
-(function(){var r=['safeLocalGet'];var m=r.filter(function(f){return typeof window[f]==='undefined'});if(m.length)console.error('[user-mode.js] Fehlende Deps:',m.join(', '),'← Lade utils.js zuerst!');})();
+(function(){var r=['safeLocalGet'];var m=r.filter(function(f){return typeof window[f]==='undefined'});if(m.length)console.debug('[user-mode.js] Fehlende Deps:',m.join(', '),'← Lade utils.js zuerst!');})();
 // js/user-mode.js - User Mode Switching (Vertrieb / PVA) + Profile
 // Extracted from landing.js for modularity
 
@@ -152,7 +152,6 @@ function updateProfileAvatar(mode) {
     console.log('updateProfileAvatar aufgerufen für Modus:', mode);
     const profileAvatarImg = document.getElementById('profileAvatarImg');
     if (!profileAvatarImg) {
-        console.error('profileAvatarImg Element nicht gefunden!');
         return;
     }
 

@@ -1,4 +1,4 @@
-(function(){var r=['safeLocalSet'];var m=r.filter(function(f){return typeof window[f]==='undefined'});if(m.length)console.error('[landing-modules.js] Fehlende Deps:',m.join(', '),'← Lade utils.js zuerst!');})();
+(function(){var r=['safeLocalSet'];var m=r.filter(function(f){return typeof window[f]==='undefined'});if(m.length)console.debug('[landing-modules.js] Fehlende Deps:',m.join(', '),'← Lade utils.js zuerst!');})();
 // Toggle Modules
 function toggleModules() {
     const container = document.getElementById('modulesContainer');

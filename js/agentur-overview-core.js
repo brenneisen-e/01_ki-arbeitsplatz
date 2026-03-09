@@ -1,4 +1,4 @@
-(function(){var r=['getAgenturData','kpiDefinitions'];var m=r.filter(function(f){return typeof window[f]==='undefined'});if(m.length)console.error('[agentur-overview-core.js] Fehlende Deps:',m.join(', '),'← Lade config.js, data.js zuerst!');})();
+(function(){var r=['getAgenturData','kpiDefinitions'];var m=r.filter(function(f){return typeof window[f]==='undefined'});if(m.length)console.debug('[agentur-overview-core.js] Fehlende Deps:',m.join(', '),'← Lade config.js, data.js zuerst!');})();
 // js/agentur-overview.js - Agentur-Übersicht Funktionalität (Fachkonzept-konform)
 
 // ========================================

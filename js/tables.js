@@ -1,4 +1,4 @@
-(function(){var r=['state','kpiDefinitions','formatValue'];var m=r.filter(function(f){return typeof window[f]==='undefined'});if(m.length)console.error('[tables.js] Fehlende Deps:',m.join(', '),'← Lade config.js, utils.js, data.js zuerst!');})();
+(function(){var r=['state','kpiDefinitions','formatValue'];var m=r.filter(function(f){return typeof window[f]==='undefined'});if(m.length)console.debug('[tables.js] Fehlende Deps:',m.join(', '),'← Lade config.js, utils.js, data.js zuerst!');})();
 // js/tables.js - Table Functions
 
 // Render table

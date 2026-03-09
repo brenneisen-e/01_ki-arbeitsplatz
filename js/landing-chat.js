@@ -1,4 +1,4 @@
-(function(){var r=['state','getFilteredData'];var m=r.filter(function(f){return typeof window[f]==='undefined'});if(m.length)console.error('[landing-chat.js] Fehlende Deps:',m.join(', '),'← Lade data.js zuerst!');})();
+(function(){var r=['state','getFilteredData'];var m=r.filter(function(f){return typeof window[f]==='undefined'});if(m.length)console.debug('[landing-chat.js] Fehlende Deps:',m.join(', '),'← Lade data.js zuerst!');})();
 // ========================================
 // GOOGLE CLOUD SPEECH-TO-TEXT (kept for settings compatibility)
 // ========================================

@@ -1,4 +1,4 @@
-(function(){var r=['risikoScoringData'];var m=r.filter(function(f){return typeof window[f]==='undefined'});if(m.length)console.error('[risikoscoring-ui.js] Fehlende Deps:',m.join(', '),'← Lade risikoscoring-data.js zuerst!');})();
+(function(){var r=['risikoScoringData'];var m=r.filter(function(f){return typeof window[f]==='undefined'});if(m.length)console.debug('[risikoscoring-ui.js] Fehlende Deps:',m.join(', '),'← Lade risikoscoring-data.js zuerst!');})();
         // Load vermittler profile
         function loadVermittlerProfile() {
             const selectedProfile = document.getElementById('vermittlerSelect').value;

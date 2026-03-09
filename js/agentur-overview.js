@@ -1187,22 +1187,20 @@ function generateEintrittsdatum() {
 function backFromAgentur() {
     console.log('Zurück vom Agentur-Overview');
 
-    const landingPage = document.getElementById('landingPage');
+    // Hide agentur-specific elements
     const agenturOverview = document.getElementById('agenturOverview');
-
-    if (landingPage) landingPage.style.display = 'flex';
     if (agenturOverview) agenturOverview.style.display = 'none';
-
-    // Verstecke den Agentur-Chat
     hideAgenturChat();
 
-    // Dispatch event for Page ID Tracker
-    document.dispatchEvent(new CustomEvent('viewChanged', {
-        detail: { module: 'versicherung', view: 'landing' }
-    }));
-
-    // Update URL route
-    if (window.AppRouter) AppRouter.navigate('/landing');
+    // Use the comprehensive landing reset (handles module tabs, welcome chat, zoom, etc.)
+    if (typeof backToLanding === 'function') {
+        backToLanding();
+    } else {
+        // Fallback if backToLanding not yet loaded
+        const landingPage = document.getElementById('landingPage');
+        if (landingPage) landingPage.style.display = 'flex';
+        if (window.AppRouter) AppRouter.navigate('/landing');
+    }
 }
 
 // ========================================

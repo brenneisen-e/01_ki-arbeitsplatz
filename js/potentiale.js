@@ -63,7 +63,7 @@ var impulseData = [
         { label: 'Empfehlung', value: 'Privat- und Immobilienrechtsschutz, ca. \u20AC25/Monat' }
       ]
     },
-    { id: 'kb-tier', title: 'Tierhalter-Haftpflicht pr\u00FCfen', desc: 'Hinweise auf Tierhaltung aus Kontoumsätzen (Fressnapf, Tierarzt)', kategorie: 'whitespots', prioritaet: 'low', source: 'Open Finance', abschlussvolumen: 60, provision: 9,
+    { id: 'kb-tier', title: 'Tierhalter-Haftpflicht pr\u00FCfen', desc: 'Hinweise auf Tierhaltung aus Kontoumsätzen (Fressnapf, Tierarzt)', kategorie: 'whitespots', prioritaet: 'low', source: 'PSD2', abschlussvolumen: 60, provision: 9,
       icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="20" height="20"><path d="M10 5.172C10 3.782 8.884 2.5 7.5 2.5S5 3.782 5 5.172c0 1.39 2.5 4.328 2.5 4.328S10 6.562 10 5.172z"/><path d="M19 5.172C19 3.782 17.884 2.5 16.5 2.5S14 3.782 14 5.172c0 1.39 2.5 4.328 2.5 4.328S19 6.562 19 5.172z"/><path d="M12 22c-4-3-8-6.58-8-10.5a4 4 0 018 0 4 4 0 018 0c0 3.92-4 7.5-8 10.5z"/></svg>',
       herleitung: [
         { label: 'Datenquelle', value: 'Open Finance - Kontoumsätze (Sparkasse)' },
@@ -177,7 +177,22 @@ function renderImpulseKanban() {
                 // Herleitung rows
                 var hRows = i.herleitung.map(function(h) {
                     var valStyle = h.warn ? ' style="color:#dc2626;"' : '';
-                    return '<div class="kanban-detail-row"><span class="kanban-detail-label">' + h.label + '</span><span class="kanban-detail-value"' + valStyle + '>' + h.value + '</span></div>';
+                    var val = h.value;
+                    // Inject logos for company names in parentheses e.g. "(Allianz)"
+                    if (typeof versichererLogoImg === 'function') {
+                        val = val.replace(/\(([^)]+)\)/g, function(m, name) {
+                            var logo = versichererLogoImg(name, 14);
+                            return logo ? '(' + logo + ' ' + name + ')' : m;
+                        });
+                        // Also inject logo at start for lines like "Allianz Premium, ..."
+                        for (var key in versichererLogoDomains) {
+                            if (val.indexOf(key) === 0) {
+                                val = versichererLogoImg(key, 14) + ' ' + val;
+                                break;
+                            }
+                        }
+                    }
+                    return '<div class="kanban-detail-row"><span class="kanban-detail-label">' + h.label + '</span><span class="kanban-detail-value"' + valStyle + '>' + val + '</span></div>';
                 }).join('');
 
                 // Deckungslücke-Bar
@@ -200,7 +215,18 @@ function renderImpulseKanban() {
                     }).join('');
                     vergleichHtml = '<div style="margin-top:10px;"><div class="kanban-detail-title">' + i.vergleich.title + '</div>' +
                         '<table class="comparison-table" style="margin-top:6px;font-size:12px;"><thead><tr>' +
-                        i.vergleich.cols.map(function(c) { return '<th>' + c + '</th>'; }).join('') +
+                        i.vergleich.cols.map(function(c) {
+                            var col = c;
+                            if (typeof versichererLogoImg === 'function') {
+                                for (var key in versichererLogoDomains) {
+                                    if (c.indexOf(key) !== -1) {
+                                        col = versichererLogoImg(key, 14) + ' ' + c;
+                                        break;
+                                    }
+                                }
+                            }
+                            return '<th>' + col + '</th>';
+                        }).join('') +
                         '</tr></thead><tbody>' + vRows + '</tbody></table></div>';
                 }
 
@@ -217,7 +243,8 @@ function renderImpulseKanban() {
                     '<button class="action-btn primary small icon-only" onclick="event.stopPropagation()" title="Angebot erstellen">' + actionIcons.angebot + '</button>' +
                     '<button class="action-btn secondary small icon-only" onclick="event.stopPropagation()" title="Termin vereinbaren">' + actionIcons.termin + '</button></div></div>';
             }
-            return '<div class="impulse-kanban-card" onclick="toggleKanbanDetail(\'' + i.id + '\')">' +
+            var ofClass = (i.source === 'Open Finance') ? ' open-finance-only' : '';
+            return '<div class="impulse-kanban-card' + ofClass + '" onclick="toggleKanbanDetail(\'' + i.id + '\')">' +
                 '<div class="impulse-kanban-card-header">' +
                 '<span class="impulse-kanban-card-icon">' + i.icon + '</span>' +
                 '<div class="impulse-kanban-card-title">' + i.title + '</div>' +
@@ -311,7 +338,8 @@ function renderImpulseTable() {
                 '</div></div></td></tr>';
         }
 
-        return '<tr class="impulse-table-row" onclick="toggleTableDetail(\'' + i.id + '\')">' +
+        var ofClass = (i.source === 'Open Finance') ? ' open-finance-only' : '';
+        return '<tr class="impulse-table-row' + ofClass + '" onclick="toggleTableDetail(\'' + i.id + '\')">' +
             '<td><span class="impulse-table-icon">' + i.icon + '</span></td>' +
             '<td><strong>' + i.title + '</strong><div class="impulse-table-desc">' + i.desc + '</div></td>' +
             '<td><span class="impulse-kat-badge ' + i.kategorie + '">' + katLabel + '</span></td>' +

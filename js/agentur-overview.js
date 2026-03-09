@@ -152,6 +152,16 @@ function updateDynamicDates() {
         }
     }
 
+    // Banking Termine Tag 1-2: übermorgen, +3 Tage
+    for (var bi = 1; bi <= 2; bi++) {
+        var bEl = document.getElementById('beraterTerminTag' + bi);
+        if (bEl) {
+            var bd = new Date(now);
+            bd.setDate(bd.getDate() + bi + 1);
+            bEl.textContent = fmtTag(bd);
+        }
+    }
+
     // Abschlüsse: Heute, Gestern, vor 3 Tagen, vor 4 Tagen
     var abschlussOffsets = [0, -1, -3, -4];
     var abschlussLabels = ['Heute', 'Gestern', null, null];

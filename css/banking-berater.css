@@ -339,14 +339,14 @@
 .berater-chat-send:hover { background: #cc5200; }
 
 /* Chat messages */
-.chat-message { margin-bottom: 12px; animation: beraterMsgFade 0.3s ease; }
+.berater-chat-widget .chat-message { margin-bottom: 12px; animation: beraterMsgFade 0.3s ease; }
 @keyframes beraterMsgFade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-.chat-message .message-content { padding: 10px 14px; border-radius: 12px; font-size: 13px; line-height: 1.5; }
-.user-message { text-align: right; }
-.user-message .message-content { background: var(--bank-vr-blue); color: white; display: inline-block; border-bottom-right-radius: 4px; }
-.ai-message .message-content { background: #f1f5f9; color: #1e293b; border-bottom-left-radius: 4px; }
-.chat-customer-item { padding: 8px 0; border-bottom: 1px solid #e2e8f0; }
-.chat-customer-btn {
+.berater-chat-widget .chat-message .message-content { padding: 10px 14px; border-radius: 12px; font-size: 13px; line-height: 1.5; }
+.berater-chat-widget .user-message { text-align: right; }
+.berater-chat-widget .user-message .message-content { background: var(--bank-vr-blue); color: white; display: inline-block; border-bottom-right-radius: 4px; }
+.berater-chat-widget .ai-message .message-content { background: #f1f5f9; color: #1e293b; border-bottom-left-radius: 4px; }
+.berater-chat-widget .chat-customer-item { padding: 8px 0; border-bottom: 1px solid #e2e8f0; }
+.berater-chat-widget .chat-customer-btn {
     background: white;
     border: 1px solid #e2e8f0;
     padding: 4px 10px;
@@ -356,10 +356,10 @@
     font-size: 12px;
     color: var(--bank-vr-blue);
 }
-.chat-customer-btn:hover { background: #f1f5f9; }
-.chat-recommendation { font-size: 11px; color: #16a34a; display: block; margin-top: 2px; }
-.chat-followup-suggestions { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
-.chat-followup-suggestions button {
+.berater-chat-widget .chat-customer-btn:hover { background: #f1f5f9; }
+.berater-chat-widget .chat-recommendation { font-size: 11px; color: #16a34a; display: block; margin-top: 2px; }
+.berater-chat-widget .chat-followup-suggestions { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+.berater-chat-widget .chat-followup-suggestions button {
     background: #eff6ff;
     border: 1px solid #bfdbfe;
     color: var(--bank-vr-blue);
@@ -368,7 +368,7 @@
     cursor: pointer;
     font-size: 11px;
 }
-.chat-followup-suggestions button:hover { background: #dbeafe; }
+.berater-chat-widget .chat-followup-suggestions button:hover { background: #dbeafe; }
 .typing-dots { display: flex; gap: 4px; padding: 4px 0; }
 .typing-dots span {
     width: 8px; height: 8px; border-radius: 50%; background: #94a3b8;

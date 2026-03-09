@@ -72,6 +72,14 @@
     text-transform: uppercase;
     letter-spacing: 0.05em;
     color: #94a3b8;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.view-mode-dropdown-group-label svg {
+    flex-shrink: 0;
+    opacity: 0.7;
 }
 
 .view-mode-dropdown-divider {
@@ -81,7 +89,9 @@
 }
 
 .view-mode-dropdown-item {
-    display: block;
+    display: flex;
+    align-items: center;
+    gap: 8px;
     width: 100%;
     padding: 8px 14px;
     border: none;
@@ -92,6 +102,20 @@
     color: #334155;
     cursor: pointer;
     transition: all 0.15s;
+}
+
+.view-mode-dropdown-item svg {
+    flex-shrink: 0;
+    opacity: 0.6;
+}
+
+.view-mode-dropdown-item:hover svg {
+    opacity: 0.85;
+}
+
+.view-mode-dropdown-item.active svg {
+    opacity: 1;
+    stroke: #166534;
 }
 
 .view-mode-dropdown-item:hover {
@@ -105,9 +129,83 @@
     font-weight: 600;
 }
 
-.view-mode-dropdown-item.active::before {
-    content: '\2713  ';
-    font-weight: 700;
+/* Icon in toggle button */
+.view-mode-dropdown-icon {
+    flex-shrink: 0;
+    opacity: 0.9;
+}
+
+/* ========================================
+   OPEN/CLOSED FINANCE TOGGLE
+   ======================================== */
+.finance-mode-toggle {
+    position: absolute;
+    right: 240px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    display: flex;
+    gap: 2px;
+    background: rgba(255,255,255,0.12);
+    border-radius: 8px;
+    padding: 2px;
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+.finance-mode-btn {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 5px 10px;
+    border: none;
+    background: transparent;
+    color: rgba(255,255,255,0.6);
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.finance-mode-btn:hover {
+    color: rgba(255,255,255,0.85);
+    background: rgba(255,255,255,0.1);
+}
+
+.finance-mode-btn.active {
+    background: rgba(255,255,255,0.2);
+    color: #fff;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+}
+
+.finance-mode-btn svg {
+    flex-shrink: 0;
+}
+
+/* Open Finance active indicator */
+.finance-mode-btn.active[data-fmode="open"] {
+    background: rgba(37, 99, 235, 0.35);
+    color: #fff;
+}
+
+/* Open Finance info badge */
+.open-finance-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, #eff6ff, #dbeafe);
+    border: 1px solid #93c5fd;
+    border-radius: 8px;
+    padding: 8px 16px;
+    margin-bottom: 16px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #1d4ed8;
+}
+
+.open-finance-badge svg {
+    flex-shrink: 0;
 }
 
 /* Legacy button styles kept for B-02 compatibility */
@@ -703,6 +801,12 @@
         position: relative;
         right: auto;
         margin-left: auto;
+    }
+    .finance-mode-toggle {
+        position: relative;
+        right: auto;
+        top: auto;
+        transform: none;
     }
     .mrh-treemap-container {
         grid-template-columns: repeat(2, 1fr);

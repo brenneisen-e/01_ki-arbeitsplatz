@@ -822,6 +822,17 @@ function adaptA10ForBankMode(kundenName) {
 
     kundenPage.classList.add('bank-mode');
 
+    // Update institution logo, name, standort for banking mode
+    if (typeof updateA10InstitutInfo === 'function') {
+        updateA10InstitutInfo();
+    }
+
+    // Update shared header title/photo for banking berater
+    var headerTitle = document.getElementById('kundenHeaderTitle');
+    if (headerTitle) headerTitle.textContent = 'Beraterin: ' + beraterData.name;
+    var headerId = document.getElementById('kundenHeaderId');
+    if (headerId) headerId.textContent = beraterData.id;
+
     // Rename "Betreute Verträge" tab to "Konten & Produkte"
     var vertraegeTab = kundenPage.querySelector('.kunden-tab[data-tab="vertraege"]');
     if (vertraegeTab) {
@@ -1122,6 +1133,19 @@ function restoreA10InsuranceMode() {
     if (!kundenPage || !kundenPage.classList.contains('bank-mode')) return;
 
     kundenPage.classList.remove('bank-mode');
+
+    // Restore institution logo, name, standort for insurance mode
+    if (typeof updateA10InstitutInfo === 'function') {
+        updateA10InstitutInfo();
+    }
+
+    // Restore shared header title/photo for insurance vermittler
+    var headerTitle = document.getElementById('kundenHeaderTitle');
+    var agenturTitle = document.getElementById('agenturPageTitle');
+    if (headerTitle) headerTitle.textContent = agenturTitle ? agenturTitle.textContent : 'Agentur: Maria Musterfrau';
+    var headerId = document.getElementById('kundenHeaderId');
+    var agenturId = document.getElementById('agenturIdHeader');
+    if (headerId) headerId.textContent = agenturId ? agenturId.textContent : 'VM00001';
 
     // Restore "Betreute Verträge" tab label
     var vertraegeTab = kundenPage.querySelector('.kunden-tab[data-tab="vertraege"]');

@@ -234,6 +234,33 @@
         }
     ];
 
+    // ========================================
+    // CUSTOMER PHOTOS MAP
+    // ========================================
+    var kundenFotos = {
+        // Versicherung
+        'Peter Schmidt': 'assets/images/AdobeStock_624564221.jpeg',
+        'Amira König': 'assets/images/AdobeStock_252262042.jpeg',
+        'Thomas Weber': 'assets/images/AdobeStock_361342769.jpeg',
+        'Sabine Danzig': 'assets/images/AdobeStock_612932760.jpeg',
+        // Banking
+        'Klaus Fischer': 'assets/images/AdobeStock_624564221.jpeg',
+        'Sandra Müller': 'assets/images/AdobeStock_252262042.jpeg',
+        'Markus Wagner': 'assets/images/AdobeStock_361342769.jpeg',
+        'Julia Becker': 'assets/images/AdobeStock_612932760.jpeg',
+        'Peter Hoffmann': 'assets/images/AdobeStock_1091012713.jpeg'
+    };
+
+    function getKundenAvatar(name) {
+        var foto = kundenFotos[name];
+        if (foto) {
+            return '<div class="unified-pot-avatar"><img src="' + foto + '" alt="' + name + '"></div>';
+        }
+        // Fallback: initials
+        var parts = name.split(' ');
+        var initials = (parts[0] ? parts[0][0] : '') + (parts[1] ? parts[1][0] : '');
+        return '<div class="unified-pot-avatar unified-pot-avatar-initials">' + initials + '</div>';
+    }
 
     // ========================================
     // HELPER FUNCTIONS
@@ -406,6 +433,8 @@
 
             html += '<div class="unified-pot-card" data-status="' + p.status + '" data-index="' + i + '">' +
                 '<div class="unified-pot-card-main" onclick="window._unifiedPotToggleDetail(\'' + detailId + '\', this)">' +
+                    // Avatar
+                    getKundenAvatar(p.kundenName) +
                     // Left section
                     '<div class="unified-pot-card-left">' +
                         '<div class="unified-pot-card-header-row">' +
@@ -444,8 +473,8 @@
 
             // Action buttons (icon-only with tooltips)
             html += '<div class="unified-pot-detail-actions">' +
-                '<button class="action-btn primary" title="Kunde \u00f6ffnen" onclick="event.stopPropagation(); window._unifiedPotOpenKunde(\'' + p.kundenName.replace(/'/g, "\\'") + '\', \'' + p.kundenId + '\')">' +
-                    getIcon('user') + '</button>' +
+                '<button class="action-btn primary kunde-oeffnen-btn" title="Kunde \u00f6ffnen" onclick="event.stopPropagation(); window._unifiedPotOpenKunde(\'' + p.kundenName.replace(/'/g, "\\'") + '\', \'' + p.kundenId + '\')">' +
+                    getIcon('user') + ' <span class="btn-label">Kunde \u00f6ffnen</span></button>' +
                 '<button class="action-btn secondary" title="Angebot erstellen" onclick="event.stopPropagation(); window._unifiedPotCreateAngebot(\'' + p.produkt.replace(/'/g, "\\'") + '\')">' +
                     getIcon('fileText') + '</button>' +
                 '<button class="action-btn secondary" title="Status \u00e4ndern" onclick="event.stopPropagation(); window._unifiedPotChangeStatus(' + i + ', \'' + containerId + '\')">' +
@@ -481,11 +510,7 @@
         var brandingColor = config.branding.color || '#2563eb';
         var html = '<div class="unified-pot-wrapper" id="' + containerId + '" style="--pot-brand-color:' + brandingColor + '">';
 
-        // Header with branding
-        html += '<div class="unified-pot-header">' +
-            '<h3>' + getIcon('zap') + ' ' + config.potentiale.branding + ' \u2013 Vertriebspotentiale (' + potentiale.length + ')</h3>' +
-            '<span class="unified-pot-branding-badge">' + config.potentiale.brandingBadge + '</span>' +
-            '</div>';
+        // Header (branding removed per OPT-19)
 
         // KPI Boxes
         html += renderKPIBoxes(kpiValues, config);

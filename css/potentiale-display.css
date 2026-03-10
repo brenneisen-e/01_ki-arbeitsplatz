@@ -869,3 +869,888 @@
     }
 }
 
+/* ========================================
+   OPT-07: KI-GESTÜTZTE IMPULSGENERIERUNG
+   ======================================== */
+
+.ki-impuls-card {
+    background: linear-gradient(135deg, #f8fafc 0%, #eef2ff 100%);
+    border: 1px solid #c7d2fe;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 16px;
+}
+
+.ki-impuls-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+}
+
+.ki-impuls-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    color: #6366f1;
+}
+
+.ki-impuls-title {
+    font-weight: 700;
+    font-size: 15px;
+    color: #1e293b;
+}
+
+.ki-impuls-badge {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin-left: auto;
+}
+
+.ki-badge-ai {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+.ki-badge-fallback {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.ki-impuls-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.ki-impuls-item {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 14px 16px;
+    transition: box-shadow 0.2s;
+}
+
+.ki-impuls-item:hover {
+    box-shadow: 0 2px 8px rgba(99,102,241,0.12);
+}
+
+.ki-impuls-item-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 6px;
+}
+
+.ki-impuls-item-title {
+    font-weight: 600;
+    font-size: 14px;
+    color: #1e293b;
+}
+
+.ki-impuls-item-desc {
+    font-size: 13px;
+    color: #475569;
+    line-height: 1.5;
+}
+
+.ki-impuls-item-volumen {
+    margin-top: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #166534;
+    background: #dcfce7;
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 6px;
+}
+
+/* Skeleton loader */
+.ki-impuls-loading .ki-impuls-skeleton {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.ki-skeleton-line {
+    height: 14px;
+    border-radius: 6px;
+    background: linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 50%, #e2e8f0 75%);
+    background-size: 200% 100%;
+    animation: kiSkeletonPulse 1.5s ease-in-out infinite;
+}
+
+.ki-skeleton-line.long { width: 90%; }
+.ki-skeleton-line.medium { width: 65%; }
+.ki-skeleton-line.short { width: 40%; }
+
+@keyframes kiSkeletonPulse {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+/* Bank-mode variant */
+.bank-mode .ki-impuls-card {
+    background: linear-gradient(135deg, #f8fafc 0%, #eff6ff 100%);
+    border-color: #93c5fd;
+}
+
+.bank-mode .ki-impuls-icon {
+    color: #003399;
+}
+
+/* ========================================
+   OPT-06: SANKEY-FLOW
+   ======================================== */
+
+.sankey-flow-card {
+    overflow: hidden;
+}
+
+.sankey-flow-card svg {
+    display: block;
+    margin: 0 auto;
+}
+
+/* ========================================
+   OPT-01: INTELLIGENTER TAGESSTART
+   ======================================== */
+
+.tagesstart-card {
+    background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 50%, #f0f9ff 100%);
+    border: 1px solid #bbf7d0;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 16px;
+}
+
+.tagesstart-header {
+    margin-bottom: 16px;
+}
+
+.tagesstart-greeting {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #f59e0b;
+}
+
+.tagesstart-gruss {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.tagesstart-datum {
+    font-size: 13px;
+    color: #64748b;
+}
+
+.tagesstart-items {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 10px;
+}
+
+.tagesstart-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 12px;
+    border-left: 3px solid #94a3b8;
+}
+
+.tagesstart-type-termin { border-left-color: #3b82f6; }
+.tagesstart-type-impuls { border-left-color: #f59e0b; }
+.tagesstart-type-aufgabe { border-left-color: #ef4444; }
+.tagesstart-type-target { border-left-color: #16a34a; }
+
+.tagesstart-item-icon {
+    flex-shrink: 0;
+    color: #64748b;
+    margin-top: 1px;
+}
+
+.tagesstart-type-termin .tagesstart-item-icon { color: #3b82f6; }
+.tagesstart-type-impuls .tagesstart-item-icon { color: #f59e0b; }
+.tagesstart-type-aufgabe .tagesstart-item-icon { color: #ef4444; }
+.tagesstart-type-target .tagesstart-item-icon { color: #16a34a; }
+
+.tagesstart-item-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.tagesstart-item-detail {
+    font-size: 12px;
+    color: #64748b;
+    line-height: 1.4;
+    margin-top: 2px;
+}
+
+/* ========================================
+   OPT-03: TAB-BADGES
+   ======================================== */
+
+.tab-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+    height: 18px;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 0 5px;
+    border-radius: 9px;
+    background: #e2e8f0;
+    color: #475569;
+    margin-left: 6px;
+    line-height: 1;
+}
+
+.tab-badge-alert {
+    background: #fef2f2;
+    color: #dc2626;
+    border: 1px solid #fecaca;
+}
+
+.kunden-tab.active .tab-badge {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+.kunden-tab.active .tab-badge-alert {
+    background: #dc2626;
+    color: white;
+    border-color: #dc2626;
+}
+
+/* ========================================
+   OPT-09: OPEN FINANCE STUFE 2
+   ======================================== */
+
+.fida-s2-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 0 16px 16px;
+}
+
+.fida-s2-item {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 14px 16px;
+}
+
+.fida-s2-item-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.fida-s2-quelle {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.fida-s2-erkenntnis {
+    font-size: 12px;
+    color: #64748b;
+    margin-bottom: 6px;
+    line-height: 1.4;
+}
+
+.fida-s2-empfehlung {
+    font-size: 13px;
+    color: #1e40af;
+    font-weight: 500;
+    margin-bottom: 6px;
+}
+
+.fida-s2-potential {
+    font-size: 13px;
+    font-weight: 600;
+    color: #166534;
+    background: #dcfce7;
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 6px;
+}
+
+/* ========================================
+   OPT-04: AKTIONS-BUTTONS
+   ======================================== */
+
+.fida-action-buttons {
+    display: flex;
+    gap: 6px;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #e2e8f0;
+}
+
+/* ========================================
+   OPT-08: CLV-SZENARIEN
+   ======================================== */
+
+.clv-szenarien-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 0 16px 16px;
+}
+
+.clv-szenario-item {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 14px 16px;
+}
+
+.clv-szenario-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+.clv-szenario-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.clv-szenario-value {
+    font-size: 16px;
+    font-weight: 700;
+    margin-left: auto;
+}
+
+.clv-szenario-delta {
+    font-size: 12px;
+    font-weight: 600;
+    color: #16a34a;
+    background: #dcfce7;
+    padding: 2px 8px;
+    border-radius: 6px;
+}
+
+.clv-szenario-bar-bg {
+    height: 8px;
+    background: #e2e8f0;
+    border-radius: 4px;
+    margin-bottom: 6px;
+}
+
+.clv-szenario-bar {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.6s ease;
+}
+
+.clv-szenario-aktionen {
+    font-size: 12px;
+    color: #64748b;
+}
+
+/* ========================================
+   OPT-02: LIFE EVENT TIMELINE
+   ======================================== */
+
+.life-timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding: 16px 16px 16px 40px;
+    position: relative;
+}
+
+.life-timeline::before {
+    content: '';
+    position: absolute;
+    left: 46px;
+    top: 20px;
+    bottom: 20px;
+    width: 2px;
+    background: #e2e8f0;
+}
+
+.life-timeline-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 8px 0;
+    position: relative;
+}
+
+.life-timeline-dot {
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    z-index: 1;
+}
+
+.life-timeline-datum {
+    font-size: 11px;
+    font-weight: 700;
+    color: #94a3b8;
+    text-transform: uppercase;
+}
+
+.life-timeline-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.life-timeline-detail {
+    font-size: 12px;
+    color: #64748b;
+}
+
+/* ========================================
+   OPT-12: RISIKOSCORING
+   ======================================== */
+
+.risiko-score-overview {
+    display: flex;
+    gap: 24px;
+    padding: 16px;
+    align-items: flex-start;
+}
+
+.risiko-score-circle {
+    flex-shrink: 0;
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    border: 4px solid;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.risiko-score-value {
+    font-size: 28px;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.risiko-score-label {
+    font-size: 10px;
+    color: #64748b;
+    text-align: center;
+}
+
+.risiko-score-details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.risiko-detail-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.risiko-detail-label {
+    font-size: 12px;
+    color: #475569;
+    min-width: 130px;
+}
+
+.risiko-detail-bar-bg {
+    flex: 1;
+    height: 8px;
+    background: #e2e8f0;
+    border-radius: 4px;
+}
+
+.risiko-detail-bar {
+    height: 100%;
+    border-radius: 4px;
+}
+
+.risiko-detail-wert {
+    font-size: 12px;
+    font-weight: 600;
+    color: #1e293b;
+    min-width: 28px;
+    text-align: right;
+}
+
+.risiko-empfehlungen {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 0 16px 16px;
+}
+
+.risiko-empfehlung {
+    font-size: 13px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border-left: 3px solid;
+}
+
+.risiko-emp-warn { background: #fef2f2; border-color: #ef4444; color: #991b1b; }
+.risiko-emp-action { background: #eff6ff; border-color: #3b82f6; color: #1e40af; }
+.risiko-emp-positive { background: #f0fdf4; border-color: #16a34a; color: #166534; }
+.risiko-emp-neutral { background: #f8fafc; border-color: #94a3b8; color: #475569; }
+
+/* ========================================
+   OPT-11: PROVISIONSPLANUNG
+   ======================================== */
+
+.provisions-summary {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    padding: 16px;
+}
+
+.provisions-kpi {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 12px;
+    text-align: center;
+}
+
+.provisions-kpi-label {
+    font-size: 12px;
+    color: #64748b;
+    display: block;
+}
+
+.provisions-kpi-value {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1e293b;
+    display: block;
+}
+
+.provisions-kpi-value.positive { color: #16a34a; }
+.provisions-kpi-value.negative { color: #ef4444; }
+
+.provisions-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin: 0 0 16px;
+}
+
+.provisions-table th {
+    background: #f8fafc;
+    padding: 8px 12px;
+    text-align: left;
+    font-weight: 600;
+    color: #64748b;
+    font-size: 11px;
+    text-transform: uppercase;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.provisions-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #f1f5f9;
+    color: #1e293b;
+}
+
+.storno-badge {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 6px;
+}
+
+.storno-low { background: #dcfce7; color: #166534; }
+.storno-medium { background: #fef3c7; color: #92400e; }
+.storno-high { background: #fef2f2; color: #dc2626; }
+
+/* ========================================
+   OPT-13: TARIFVERGLEICH KI-BEGRÜNDUNG
+   ======================================== */
+
+.tv-ki-reasoning {
+    margin-top: 16px;
+    background: linear-gradient(135deg, #f8fafc 0%, #eef2ff 100%);
+    border: 1px solid #c7d2fe;
+    border-radius: 10px;
+    padding: 14px 16px;
+}
+
+.tv-ki-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #4f46e5;
+    margin-bottom: 8px;
+}
+
+.tv-ki-text {
+    font-size: 13px;
+    color: #475569;
+    line-height: 1.6;
+}
+
+/* ========================================
+   OPT-05: TABLET / BERATUNGSMODUS
+   ======================================== */
+
+.beratungsmodus-active .kunden-tabs {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.beratungsmodus-active .kunden-card {
+    font-size: 15px;
+}
+
+.beratungsmodus-active .action-btn {
+    min-height: 44px;
+    min-width: 44px;
+    font-size: 14px;
+}
+
+.beratungsmodus-toggle {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 999;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: none;
+    background: #6366f1;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 16px rgba(99,102,241,0.4);
+    transition: transform 0.2s;
+}
+
+.beratungsmodus-toggle:hover {
+    transform: scale(1.1);
+}
+
+.beratungsmodus-toggle.active {
+    background: #16a34a;
+}
+
+@media (max-width: 1024px) {
+    .tagesstart-items {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .risiko-score-overview {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .provisions-summary {
+        grid-template-columns: 1fr;
+    }
+
+    .clv-szenario-header {
+        flex-wrap: wrap;
+    }
+}
+
+@media (max-width: 768px) {
+    .tagesstart-items {
+        grid-template-columns: 1fr;
+    }
+
+    .ki-impuls-item-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+    }
+
+    .fida-s2-item-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .fida-action-buttons {
+        flex-wrap: wrap;
+    }
+
+    .life-timeline {
+        padding-left: 24px;
+    }
+
+    .life-timeline::before {
+        left: 30px;
+    }
+}
+
+/* ========================================
+   OPT-10: BERATUNGSMODUS MIT GESPRÄCHSFÜHRUNG
+   ======================================== */
+
+.beratung-overlay {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 380px;
+    background: white;
+    box-shadow: -4px 0 20px rgba(0,0,0,0.15);
+    z-index: 10001;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease;
+}
+
+.beratung-overlay.hidden {
+    transform: translateX(100%);
+}
+
+.beratung-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(135deg, #6366f1, #4f46e5);
+    color: white;
+}
+
+.beratung-header h3 {
+    margin: 0;
+    font-size: 16px;
+}
+
+.beratung-close {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 20px;
+    padding: 4px;
+}
+
+.beratung-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px 20px;
+}
+
+.beratung-schritt {
+    padding: 12px;
+    margin-bottom: 10px;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.beratung-schritt:hover {
+    background: #f8fafc;
+}
+
+.beratung-schritt.active {
+    background: #eef2ff;
+    border-color: #6366f1;
+}
+
+.beratung-schritt.done {
+    background: #f0fdf4;
+    border-color: #16a34a;
+    opacity: 0.8;
+}
+
+.beratung-schritt-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1e293b;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.beratung-schritt-detail {
+    font-size: 12px;
+    color: #64748b;
+    margin-top: 4px;
+    line-height: 1.4;
+}
+
+.beratung-schritt-nummer {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #e2e8f0;
+    color: #475569;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.beratung-schritt.active .beratung-schritt-nummer {
+    background: #6366f1;
+    color: white;
+}
+
+.beratung-schritt.done .beratung-schritt-nummer {
+    background: #16a34a;
+    color: white;
+}
+
+.beratung-protokoll {
+    padding: 16px 20px;
+    border-top: 1px solid #e2e8f0;
+    background: #f8fafc;
+}
+
+.beratung-protokoll-btn {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    background: #6366f1;
+    color: white;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.beratung-protokoll-btn:hover {
+    background: #4f46e5;
+}
+

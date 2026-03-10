@@ -321,4 +321,213 @@ function toggleBezahlenKat(katName) {
 window.toggleBezahlenKat = toggleBezahlenKat;
 
 // ========================================
+// OPT-04: AKTIONS-BUTTONS AN DATENPUNKTEN
+// ========================================
+
+function addFidaActionButtons() {
+    // Add action buttons to FIDA Stufe 2 recommendations
+    var s2Items = document.querySelectorAll('.fida-s2-item');
+    s2Items.forEach(function(item) {
+        if (item.querySelector('.fida-action-buttons')) return;
+        var btnRow = document.createElement('div');
+        btnRow.className = 'fida-action-buttons';
+        btnRow.innerHTML =
+            '<button class="action-btn primary small" onclick="event.stopPropagation(); showAngebotToast(\'success\', \'Angebot wird erstellt...\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> Angebot</button>' +
+            '<button class="action-btn secondary small" onclick="event.stopPropagation(); showAngebotToast(\'success\', \'Termin wird angelegt...\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> Termin</button>' +
+            '<button class="action-btn secondary small" onclick="event.stopPropagation(); showAngebotToast(\'success\', \'E-Mail wird vorbereitet...\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg> E-Mail</button>';
+        item.appendChild(btnRow);
+    });
+}
+window.addFidaActionButtons = addFidaActionButtons;
+
+// ========================================
+// OPT-09: OPEN FINANCE STUFE 2
+// ========================================
+
+function renderFidaStufe2() {
+    var container = document.getElementById('fidaStufe2Container');
+    if (!container) return;
+    if (container.querySelector('.fida-s2-card')) return;
+
+    var isBanking = typeof isBankMode === 'function' && isBankMode();
+
+    var empfehlungen;
+    if (isBanking) {
+        empfehlungen = [
+            { quelle: 'Sparkasse Gießen – Girokonto', erkenntnis: 'Gehaltseingang €4.850/Mon., hohe freie Liquidität €695/Mon.', empfehlung: 'VR-FinanzPlan erstellen, Sparrate auf VR-MeinDepot erhöhen', potential: '€500/Mon. Sparrate', prio: 'hoch' },
+            { quelle: 'ING – Tagesgeld', erkenntnis: 'Hohe Einlage €18.500 bei nur 2,75% Zinsen', empfehlung: 'Union Investment VermögenPlus als Alternative vorschlagen', potential: '€3.700 Umschichtung', prio: 'mittel' },
+            { quelle: 'Trade Republic – Depot', erkenntnis: 'ETF-Sparplan €200/Mon. bei Neobroker, keine Beratung', empfehlung: 'VR-MeinDepot mit persönlicher Beratung und Union Fonds', potential: '€200/Mon. + €12.800 Transfer', prio: 'hoch' },
+            { quelle: 'DZ HYP – Baufinanzierung', erkenntnis: 'Zinsbindung endet 09/2026, Restschuld €185.000', empfehlung: 'Anschlussfinanzierung jetzt sichern, Forward-Darlehen anbieten', potential: '€185.000 Prolongation', prio: 'hoch' }
+        ];
+    } else {
+        empfehlungen = [
+            { quelle: 'Sparkasse – Girokonto (PSD2)', erkenntnis: 'Hypothekenzahlung €1.200/Mon. an Sparkasse erkannt, keine Restschuldversicherung', empfehlung: 'Risikolebensversicherung €300.000, Laufzeit 20 Jahre anbieten', potential: '€25/Mon. Prämie (€6.000 AV)', prio: 'hoch' },
+            { quelle: 'DWS – Depot', erkenntnis: 'Fondssparplan €400/Mon., konservative Allokation', empfehlung: 'Fondsgebundene Rentenversicherung als steueroptimierte Alternative', potential: '€250/Mon. Prämie (€3.000 AV)', prio: 'hoch' },
+            { quelle: 'Allianz – Kfz-Versicherung', erkenntnis: 'Kfz-Vollkasko SF8, Vertrag läuft seit 2019, aktuell €680/Jahr', empfehlung: 'Kfz-Wechsel zum Stichtag – Einsparung ca. €160/Jahr möglich', potential: '€520/Jahr Prämie', prio: 'mittel' },
+            { quelle: 'HUK24 – Hausrat', erkenntnis: 'Hausrat ohne Elementarschutz, Familie mit Kindern', empfehlung: 'Upgrade Hausrat + Elementar, ggf. Glasversicherung ergänzen', potential: '€180/Jahr Prämie', prio: 'mittel' },
+            { quelle: 'Targobank – Konsumentenkredit', erkenntnis: 'Konsumentenkredit €8.500 Rest, 6,9% Zinsen', empfehlung: 'Umschuldung prüfen, ggf. Restschuldversicherung anbieten', potential: '€15/Mon. Prämie', prio: 'niedrig' }
+        ];
+    }
+
+    var html = '<div class="kunden-card fida-s2-card">' +
+        '<div class="kunden-card-header fida">' +
+            '<h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Quantifizierte FIDA-Empfehlungen</h2>' +
+            '<span class="bedarfsfeld-source">Stufe 2 – Automatische Analyse</span>' +
+        '</div>' +
+        '<div class="fida-s2-list">';
+
+    for (var i = 0; i < empfehlungen.length; i++) {
+        var e = empfehlungen[i];
+        var prioClass = e.prio === 'hoch' ? 'high' : (e.prio === 'mittel' ? 'medium' : 'low');
+        html += '<div class="fida-s2-item">' +
+            '<div class="fida-s2-item-header">' +
+                '<span class="fida-s2-quelle">' + e.quelle + '</span>' +
+                '<span class="impuls-priority ' + prioClass + '">' + e.prio.charAt(0).toUpperCase() + e.prio.slice(1) + '</span>' +
+            '</div>' +
+            '<div class="fida-s2-erkenntnis">' + e.erkenntnis + '</div>' +
+            '<div class="fida-s2-empfehlung">' + e.empfehlung + '</div>' +
+            '<div class="fida-s2-potential">' + e.potential + '</div>' +
+        '</div>';
+    }
+
+    html += '</div></div>';
+    container.innerHTML = html;
+}
+window.renderFidaStufe2 = renderFidaStufe2;
+
+// ========================================
+// OPT-06: SANKEY-FLOW FÜR OPEN FINANCE
+// ========================================
+
+function renderSankeyFlow() {
+    var container = document.getElementById('sankeyFlowContainer');
+    if (!container) return;
+    if (container.querySelector('svg')) return; // Already rendered
+
+    // Check D3 and d3-sankey availability
+    if (typeof d3 === 'undefined' || typeof d3.sankey === 'undefined') {
+        container.innerHTML = '<div style="padding:20px;color:#94a3b8;text-align:center;">Sankey-Visualisierung nicht verfügbar (D3 fehlt)</div>';
+        return;
+    }
+
+    var isBanking = typeof isBankMode === 'function' && isBankMode();
+
+    // Build sankey data based on mode
+    var nodes, links;
+    if (isBanking) {
+        nodes = [
+            { name: 'Gehalt' },           // 0
+            { name: 'Mieteinnahmen' },     // 1
+            { name: 'Einkommen' },         // 2
+            { name: 'Wohnen' },            // 3
+            { name: 'Sparen & Anlage' },   // 4
+            { name: 'Versicherungen' },    // 5
+            { name: 'Lebenshaltung' },     // 6
+            { name: 'Kredit-Tilgung' },    // 7
+            { name: 'Frei verfügbar' }     // 8
+        ];
+        links = [
+            { source: 0, target: 2, value: 4850 },
+            { source: 1, target: 2, value: 650 },
+            { source: 2, target: 3, value: 1200 },
+            { source: 2, target: 4, value: 1275 },
+            { source: 2, target: 5, value: 380 },
+            { source: 2, target: 6, value: 1100 },
+            { source: 2, target: 7, value: 850 },
+            { source: 2, target: 8, value: 695 }
+        ];
+    } else {
+        nodes = [
+            { name: 'Gehalt (netto)' },     // 0
+            { name: 'Kindergeld' },          // 1
+            { name: 'Einkommen' },           // 2
+            { name: 'Wohnen & Kredit' },     // 3
+            { name: 'Versicherungen' },      // 4
+            { name: 'Sparen & Vorsorge' },   // 5
+            { name: 'Lebenshaltung' },       // 6
+            { name: 'Mobilität' },           // 7
+            { name: 'Frei verfügbar' }       // 8
+        ];
+        links = [
+            { source: 0, target: 2, value: 3834 },
+            { source: 1, target: 2, value: 500 },
+            { source: 2, target: 3, value: 1450 },
+            { source: 2, target: 4, value: 540 },
+            { source: 2, target: 5, value: 800 },
+            { source: 2, target: 6, value: 650 },
+            { source: 2, target: 7, value: 250 },
+            { source: 2, target: 8, value: 644 }
+        ];
+    }
+
+    var width = container.clientWidth || 600;
+    var height = 320;
+    var margin = { top: 10, right: 10, bottom: 10, left: 10 };
+
+    var svg = d3.select(container).append('svg')
+        .attr('width', width)
+        .attr('height', height)
+        .attr('viewBox', '0 0 ' + width + ' ' + height);
+
+    var sankeyGen = d3.sankey()
+        .nodeId(function(d) { return d.index; })
+        .nodeWidth(18)
+        .nodePadding(16)
+        .nodeAlign(d3.sankeyJustify)
+        .extent([[margin.left, margin.top], [width - margin.right, height - margin.bottom]]);
+
+    var graph = sankeyGen({
+        nodes: nodes.map(function(d, i) { return Object.assign({}, d, { index: i }); }),
+        links: links.map(function(d) { return Object.assign({}, d); })
+    });
+
+    var colorScale = [
+        '#16a34a', '#059669', '#6366f1',
+        '#f59e0b', '#3b82f6', '#8b5cf6',
+        '#ec4899', '#ef4444', '#10b981'
+    ];
+
+    // Draw links
+    svg.append('g')
+        .selectAll('path')
+        .data(graph.links)
+        .join('path')
+        .attr('d', d3.sankeyLinkHorizontal())
+        .attr('fill', 'none')
+        .attr('stroke', function(d) { return colorScale[d.target.index % colorScale.length]; })
+        .attr('stroke-opacity', 0.3)
+        .attr('stroke-width', function(d) { return Math.max(1, d.width); })
+        .on('mouseover', function() { d3.select(this).attr('stroke-opacity', 0.6); })
+        .on('mouseout', function() { d3.select(this).attr('stroke-opacity', 0.3); })
+        .append('title')
+        .text(function(d) { return d.source.name + ' → ' + d.target.name + ': €' + d.value.toLocaleString('de-DE'); });
+
+    // Draw nodes
+    var node = svg.append('g')
+        .selectAll('g')
+        .data(graph.nodes)
+        .join('g');
+
+    node.append('rect')
+        .attr('x', function(d) { return d.x0; })
+        .attr('y', function(d) { return d.y0; })
+        .attr('height', function(d) { return Math.max(1, d.y1 - d.y0); })
+        .attr('width', function(d) { return d.x1 - d.x0; })
+        .attr('fill', function(d) { return colorScale[d.index % colorScale.length]; })
+        .attr('rx', 3)
+        .append('title')
+        .text(function(d) { return d.name + ': €' + d.value.toLocaleString('de-DE'); });
+
+    node.append('text')
+        .attr('x', function(d) { return d.x0 < width / 2 ? d.x1 + 6 : d.x0 - 6; })
+        .attr('y', function(d) { return (d.y1 + d.y0) / 2; })
+        .attr('dy', '0.35em')
+        .attr('text-anchor', function(d) { return d.x0 < width / 2 ? 'start' : 'end'; })
+        .attr('font-size', '12px')
+        .attr('font-family', 'inherit')
+        .attr('fill', '#334155')
+        .text(function(d) { return d.name + ' €' + d.value.toLocaleString('de-DE'); });
+}
+window.renderSankeyFlow = renderSankeyFlow;
+
 window.__registerModule('bezahlen.js');

@@ -311,6 +311,15 @@ function showBeraterTab(tabName) {
         if (activeKpi) activeKpi.style.display = '';
     }
 
+    // OPT-01: Tagesstart rendering
+    if (tabName === 'uebersicht' && typeof renderTagesstart === 'function') {
+        renderTagesstart('tagesstartCardB02', 'banking');
+    }
+    // OPT-14: Refresh Widget Dashboard (Banking)
+    if (tabName === 'uebersicht' && typeof renderDashboardWidgets === 'function') {
+        renderDashboardWidgets('widgetGridB02');
+    }
+
     // Fill tab content dynamically
     if (tabName === 'stammdaten') fillBeraterStammdaten();
     if (tabName === 'ertraege') fillBeraterErtraege();

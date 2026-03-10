@@ -3181,11 +3181,26 @@ select:focus, .dropdown-button:focus {
     border: 1px solid #e2e8f0;
 }
 
+/* Seitentitel über dem Chat */
+.welcome-page-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 20px 24px 16px;
+    font-size: 20px;
+    font-weight: 700;
+    color: #1a1a2e;
+}
+
+.welcome-title-icon {
+    flex-shrink: 0;
+}
+
 /* Header mit Deloitte-Grün */
 .welcome-chat-header {
     background: white;
     color: #000000;
-    padding: 20px 24px;
+    padding: 0;
     border-bottom: 3px solid #86BC25;
 }
 

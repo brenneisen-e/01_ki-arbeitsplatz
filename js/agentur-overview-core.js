@@ -273,6 +273,11 @@ function showAgenturTab(tabName) {
     if (cockpitKpis) {
         cockpitKpis.style.display = (tabName === 'uebersicht') ? '' : 'none';
     }
+
+    // OPT-01: Tagesstart rendering
+    if (tabName === 'uebersicht' && typeof renderTagesstart === 'function') {
+        renderTagesstart('tagesstartCardA02', 'versicherung');
+    }
 }
 
 /**
@@ -648,5 +653,70 @@ function fillQualitaetTab(agenturData) {
         }).join('');
     }
 }
+
+// ========================================
+// OPT-01: INTELLIGENTER TAGESSTART
+// ========================================
+
+function renderTagesstart(targetId, mode) {
+    var container = document.getElementById(targetId);
+    if (!container) return;
+    if (container.querySelector('.tagesstart-card')) return; // Already rendered
+
+    var isBanking = mode === 'banking';
+    var now = new Date();
+    var tage = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'];
+    var monate = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'];
+    var datumStr = tage[now.getDay()] + ', ' + now.getDate() + '. ' + monate[now.getMonth()] + ' ' + now.getFullYear();
+
+    var gruss = 'Guten Morgen';
+    var h = now.getHours();
+    if (h >= 12 && h < 17) gruss = 'Guten Tag';
+    if (h >= 17) gruss = 'Guten Abend';
+
+    var items;
+    if (isBanking) {
+        items = [
+            { icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>', label: '3 Termine heute', detail: 'Klaus Fischer 10:00, Sandra Müller 14:00, Markus Wagner 16:30', type: 'termin' },
+            { icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>', label: '5 neue Impulse', detail: 'Anschlussfinanzierung Fischer, VR-FinanzPlan Müller, Depot-Eröffnung Wagner', type: 'impuls' },
+            { icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>', label: '2 Aufgaben offen', detail: 'FIDA-Consent erneuern (Fischer), R+V Rückruf (Lehmann)', type: 'aufgabe' },
+            { icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>', label: 'Ertrag MTD: €8.450', detail: 'Zielerreichung 78% — noch €2.350 bis Monatsziel', type: 'target' }
+        ];
+    } else {
+        items = [
+            { icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>', label: '4 Termine heute', detail: 'Schmidt 09:30, König 11:00, Braun 14:00, Lehmann 16:00', type: 'termin' },
+            { icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>', label: '8 offene Potentiale', detail: '3 hohe Priorität: Risikoleben Schmidt, BU König, Kfz-Wechsel Braun', type: 'impuls' },
+            { icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>', label: '3 Follow-ups fällig', detail: 'Angebot nachfassen Schmidt, Termin bestätigen König, Vertragssendung Braun', type: 'aufgabe' },
+            { icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>', label: 'Neugeschäft MTD: €12.450', detail: 'Zielerreichung 62% — 14 Arbeitstage verbleibend', type: 'target' }
+        ];
+    }
+
+    var html = '<div class="tagesstart-card">' +
+        '<div class="tagesstart-header">' +
+            '<div class="tagesstart-greeting">' +
+                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>' +
+                '<div>' +
+                    '<div class="tagesstart-gruss">' + gruss + '</div>' +
+                    '<div class="tagesstart-datum">' + datumStr + '</div>' +
+                '</div>' +
+            '</div>' +
+        '</div>' +
+        '<div class="tagesstart-items">';
+
+    for (var i = 0; i < items.length; i++) {
+        var it = items[i];
+        html += '<div class="tagesstart-item tagesstart-type-' + it.type + '">' +
+            '<div class="tagesstart-item-icon">' + it.icon + '</div>' +
+            '<div class="tagesstart-item-content">' +
+                '<div class="tagesstart-item-label">' + it.label + '</div>' +
+                '<div class="tagesstart-item-detail">' + it.detail + '</div>' +
+            '</div>' +
+        '</div>';
+    }
+
+    html += '</div></div>';
+    container.innerHTML = html;
+}
+window.renderTagesstart = renderTagesstart;
 
 window.__registerModule('agentur-overview-core.js');

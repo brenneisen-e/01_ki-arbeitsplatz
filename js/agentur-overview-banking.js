@@ -311,6 +311,11 @@ function showBeraterTab(tabName) {
         if (activeKpi) activeKpi.style.display = '';
     }
 
+    // OPT-01: Tagesstart rendering
+    if (tabName === 'uebersicht' && typeof renderTagesstart === 'function') {
+        renderTagesstart('tagesstartCardB02', 'banking');
+    }
+
     // Fill tab content dynamically
     if (tabName === 'stammdaten') fillBeraterStammdaten();
     if (tabName === 'ertraege') fillBeraterErtraege();

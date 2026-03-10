@@ -1150,6 +1150,8 @@
             <div class="agentur-main-content">
                 <!-- Tab Content: Übersicht (neu) -->
                 <div class="agentur-tab-content active" id="tab-uebersicht">
+                    <!-- OPT-01: Intelligenter Tagesstart -->
+                    <div id="tagesstartCardA02"></div>
                     <div class="agentur-uebersicht-grid">
                         <!-- Linke Spalte: Hauptinhalte -->
                         <div class="agentur-uebersicht-main">
@@ -3617,6 +3619,8 @@
                      ======================================== -->
                 <!-- Banking: Übersicht -->
                 <div class="agentur-tab-content" id="berater-tab-uebersicht">
+                    <!-- OPT-01: Intelligenter Tagesstart (Banking) -->
+                    <div id="tagesstartCardB02"></div>
                     <div class="agentur-uebersicht-grid">
                         <div class="agentur-uebersicht-main">
                             <!-- Vertriebskennzahlen -->
@@ -4771,6 +4775,10 @@
                             </div>
                         </div>
                     </div>
+                    <!-- OPT-02: Life Event Timeline -->
+                    <div id="lifeEventTimelineContainer"></div>
+                    <!-- OPT-12: Risikoscoring -->
+                    <div id="risikoscoringContainer"></div>
                 </div>
 
                 <!-- TAB: Betreute Verträge -->
@@ -4961,6 +4969,21 @@
                                 </tr>
                             </tbody>
                         </table>
+                    </div>
+
+                    <!-- OPT-09: Open Finance Stufe 2 - Quantifizierte Empfehlungen -->
+                    <div id="fidaStufe2Container"></div>
+
+                    <!-- OPT-06: Sankey-Flow Open Finance -->
+                    <div class="kunden-card sankey-flow-card">
+                        <div class="kunden-card-header fida">
+                            <h2>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                                Finanzfluss-Analyse
+                            </h2>
+                            <span class="bedarfsfeld-source">Open Finance Daten</span>
+                        </div>
+                        <div id="sankeyFlowContainer" style="width:100%;min-height:320px;"></div>
                     </div>
 
                     <!-- ===================== BEDARFSFELD: BEZAHLEN ===================== -->
@@ -5293,6 +5316,8 @@
 
                 <!-- TAB: Impulse -->
                 <div id="tabImpulse" class="kunden-tab-content">
+                    <!-- OPT-07: KI-generierte Impulse -->
+                    <div id="kiImpulsCard"></div>
                     <!-- Übersicht der Potentiale -->
                     <div class="kunden-card impulse-overview-card">
                         <div class="kunden-card-header vertriebsimpuls">
@@ -5954,6 +5979,10 @@
 
                 <!-- TAB: Finanzplanung -->
                 <div id="tabFinanzplanung" class="kunden-tab-content">
+                    <!-- OPT-08: CLV-Szenarien -->
+                    <div id="clvSzenarienContainer"></div>
+                    <!-- OPT-11: Provisionsplanung -->
+                    <div id="provisionsplanungContainer"></div>
                     <!-- Liquiditäts-Dashboard -->
                     <div class="kunden-card finanzplanung-card">
                         <div class="kunden-card-header">

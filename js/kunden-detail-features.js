@@ -1701,7 +1701,7 @@ function renderProvisionsplanung() {
     var nettoErtrag = totalErtrag - totalStorno;
 
     var html = '<div class="kunden-card provisions-card">' +
-        '<div class="kunden-card-header"><h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg> Provisionsplanung</h2></div>' +
+        '<div class="kunden-card-header"><h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><circle cx="12" cy="12" r="10"/><text x="12" y="16" text-anchor="middle" fill="currentColor" stroke="none" font-size="12" font-weight="bold">\u20AC</text></svg> Provisionsplanung</h2></div>' +
         '<div class="provisions-summary">' +
             '<div class="provisions-kpi"><span class="provisions-kpi-label">Brutto-Ertrag</span><span class="provisions-kpi-value">€' + totalErtrag.toLocaleString('de-DE') + '</span></div>' +
             '<div class="provisions-kpi"><span class="provisions-kpi-label">Stornoreserve</span><span class="provisions-kpi-value negative">-€' + Math.round(totalStorno).toLocaleString('de-DE') + '</span></div>' +

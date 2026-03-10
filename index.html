@@ -3762,8 +3762,8 @@
                                     </button>
                                     <button class="formular-btn schaden" onclick="openFormular('ratenkredit')">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
-                                            <line x1="12" y1="1" x2="12" y2="23"></line>
-                                            <path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"></path>
+                                            <circle cx="12" cy="12" r="10"></circle>
+                                            <text x="12" y="16" text-anchor="middle" fill="currentColor" stroke="none" font-size="12" font-weight="bold">&#8364;</text>
                                         </svg>
                                         Ratenkredit
                                     </button>
@@ -4297,10 +4297,8 @@
                     <div class="agentur-header-text">
                         <h1 class="agentur-page-title" id="kundenHeaderTitle">Agentur: Maria Musterfrau</h1>
                         <div class="agentur-subtitle">
-                            <span id="kundenHeaderId">-</span> | <span>Aktiv</span>
+                            <span id="kundenHeaderId">-</span> | <span>Aktiv</span><span id="a10InstitutName" class="institut-name-inline"></span>
                         </div>
-                        <div id="a10InstitutName" class="institut-name"></div>
-                        <div id="a10InstitutStandort" class="institut-standort"></div>
                     </div>
                 </div>
             </div>
@@ -4317,7 +4315,7 @@
                 </div>
                 <span id="a10ModusIndikator" class="modus-badge">AO</span>
             </div>
-            <div class="kunden-switch-dropdown">
+            <div class="kunden-switch-dropdown" style="display:none;">
                 <label>Kunde:</label>
                 <select id="kundenSwitchSelect" onchange="switchKundeDropdown(this.value)">
                     <option value="Peter Schmidt">Peter Schmidt</option>

@@ -7921,6 +7921,17 @@ button svg,
     font-weight: 500;
 }
 
+.institut-name-inline {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.55);
+    font-weight: 400;
+}
+
+.institut-name-inline:not(:empty)::before {
+    content: ' \2022 ';
+    color: rgba(255, 255, 255, 0.35);
+}
+
 .institut-standort {
     font-size: 12px;
     color: rgba(255, 255, 255, 0.55);

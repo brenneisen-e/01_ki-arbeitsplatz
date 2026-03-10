@@ -492,51 +492,47 @@
 }
 
 .unified-pot-pipeline-label {
-    font-size: 14px;
     font-weight: 700;
     color: #475569;
-    margin-bottom: 12px;
+    margin-bottom: 16px;
     text-transform: uppercase;
     letter-spacing: 0.03em;
     font-size: 12px;
 }
 
-.unified-pot-pipeline-steps {
+.unified-pot-pipeline-funnel {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 0;
 }
 
-.unified-pot-pipeline-step {
+.unified-pot-pipeline-stage {
     flex: 1;
     text-align: center;
+    min-width: 0;
 }
 
-.unified-pot-pipeline-bar {
-    background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
-    border-radius: 8px;
-    padding: 14px 8px;
-    margin-bottom: 6px;
-    transition: background 0.2s;
-    min-width: 60px;
+.unified-pot-pipeline-stage-bar {
+    border-radius: 10px;
+    padding: 16px 8px;
+    margin: 0 2px 8px 2px;
+    transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.unified-pot-pipeline-step:first-child .unified-pot-pipeline-bar {
-    background: linear-gradient(135deg, #eff6ff, #dbeafe);
+.unified-pot-pipeline-stage-bar:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
 
-.unified-pot-pipeline-step:last-child .unified-pot-pipeline-bar {
-    background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+.unified-pot-pipeline-stage.stage-final .unified-pot-pipeline-stage-bar {
+    background: linear-gradient(135deg, #ecfdf5, #d1fae5) !important;
+    border-bottom-color: #059669 !important;
 }
 
 .unified-pot-pipeline-count {
-    font-size: 22px;
-    font-weight: 700;
-    color: #1e293b;
-}
-
-.unified-pot-pipeline-step:last-child .unified-pot-pipeline-count {
-    color: #059669;
+    font-size: 26px;
+    font-weight: 800;
+    line-height: 1;
 }
 
 .unified-pot-pipeline-step-label {
@@ -545,6 +541,16 @@
     font-weight: 500;
 }
 
+.unified-pot-pipeline-connector {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 12px;
+    flex-shrink: 0;
+    opacity: 0.5;
+}
+
+/* Legacy arrow class kept for compat */
 .unified-pot-pipeline-arrow {
     display: flex;
     align-items: center;
@@ -553,6 +559,11 @@
     color: #94a3b8;
     flex-shrink: 0;
 }
+
+/* Legacy bar class kept for compat */
+.unified-pot-pipeline-steps { display: flex; align-items: center; gap: 0; }
+.unified-pot-pipeline-step { flex: 1; text-align: center; }
+.unified-pot-pipeline-bar { background: #f1f5f9; border-radius: 8px; padding: 14px 8px; margin-bottom: 6px; min-width: 60px; }
 
 /* Filter Tabs – A-02 style */
 .unified-pot-filters {
@@ -814,14 +825,33 @@
 .unified-pot-detail-actions .action-btn {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    padding: 8px 14px;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    padding: 0;
     border-radius: 8px;
-    font-size: 13px;
-    font-weight: 600;
+    font-size: 0;
     cursor: pointer;
     border: none;
     transition: background 0.15s, color 0.15s;
+    position: relative;
+}
+
+.unified-pot-detail-actions .action-btn[title]:hover::after {
+    content: attr(title);
+    position: absolute;
+    bottom: calc(100% + 6px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1e293b;
+    color: white;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: 10;
 }
 
 .unified-pot-detail-actions .action-btn.primary {
@@ -1034,6 +1064,27 @@
 
 .tagesstart-header {
     margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.tagesstart-toggle-icon {
+    color: #64748b;
+    transition: transform 0.25s ease;
+    flex-shrink: 0;
+}
+
+.tagesstart-collapsed .tagesstart-toggle-icon {
+    transform: rotate(-90deg);
+}
+
+.tagesstart-collapsed .tagesstart-header {
+    margin-bottom: 0;
+}
+
+.tagesstart-collapsed .tagesstart-items {
+    display: none;
 }
 
 .tagesstart-greeting {

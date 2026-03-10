@@ -1152,6 +1152,8 @@
                 <div class="agentur-tab-content active" id="tab-uebersicht">
                     <!-- OPT-01: Intelligenter Tagesstart -->
                     <div id="tagesstartCardA02"></div>
+                    <!-- OPT-14: Modulbaukasten Widget Dashboard -->
+                    <div id="widgetGrid"></div>
                     <div class="agentur-uebersicht-grid">
                         <!-- Linke Spalte: Hauptinhalte -->
                         <div class="agentur-uebersicht-main">
@@ -3621,6 +3623,8 @@
                 <div class="agentur-tab-content" id="berater-tab-uebersicht">
                     <!-- OPT-01: Intelligenter Tagesstart (Banking) -->
                     <div id="tagesstartCardB02"></div>
+                    <!-- OPT-14: Modulbaukasten Widget Dashboard (Banking) -->
+                    <div id="widgetGridB02"></div>
                     <div class="agentur-uebersicht-grid">
                         <div class="agentur-uebersicht-main">
                             <!-- Vertriebskennzahlen -->
@@ -4126,6 +4130,9 @@
         </div>
 
     </div>
+
+    <!-- OPT-14: Widget Configurator Modal -->
+    <div id="widgetConfigModal" style="display:none;"></div>
 
     <!-- Vertragsdetail Modal (auf body-Ebene für korrektes z-index) -->
     <div class="vertrag-detail-modal" id="vertragDetailModal" style="display:none;">
@@ -7715,6 +7722,7 @@
     <script src="js/chat.js"></script>
     <script src="js/agentur-overview-core.js?v=20260309"></script>
     <script src="js/agentur-overview-tables.js?v=20260309"></script>
+    <script src="js/widget-baukasten.js?v=20260310"></script>
     <script src="js/agentur-overview-features.js?v=20260309"></script>
     <script src="js/agentur-overview-banking.js?v=20260309"></script>
     <script src="js/router.js?v=20260309"></script>

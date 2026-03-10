@@ -99,6 +99,11 @@ function loadAgenturData(vermittlerId) {
         fillStornoTab(agenturData);
         fillProvisionTab(agenturData);
         fillQualitaetTab(agenturData);
+
+        // OPT-14: Render Widget Dashboard
+        if (typeof renderDashboardWidgets === 'function') {
+            renderDashboardWidgets('widgetGrid');
+        }
     }
 
     // Zeige Übersicht-Tab als ersten Tab und wende View-Mode an
@@ -277,6 +282,10 @@ function showAgenturTab(tabName) {
     // OPT-01: Tagesstart rendering
     if (tabName === 'uebersicht' && typeof renderTagesstart === 'function') {
         renderTagesstart('tagesstartCardA02', 'versicherung');
+    }
+    // OPT-14: Refresh Widget Dashboard on tab switch
+    if (tabName === 'uebersicht' && typeof renderDashboardWidgets === 'function') {
+        renderDashboardWidgets('widgetGrid');
     }
 }
 

@@ -405,6 +405,208 @@
     };
 
 
+        // ─── VERMOEGENSVERWALTUNG (VV-02 / VV-10) ─────────────────
+        vermoegensverwaltung: {
+            id: 'vermoegensverwaltung',
+            label: 'Vermögensverwalter',
+
+            branding: {
+                name: 'HRK LUNIS',
+                color: '#1a365d',
+                accent: '#c4a35a',
+                gradient: 'linear-gradient(135deg, #1a365d, #2d4a7a)',
+                headerBg: '#1a365d'
+            },
+
+            // VV-02 Overview
+            overview: {
+                kpis: ['aum_gesamt', 'net_new_money', 'ertrag_ytd', 'mandatsanzahl', 'avg_marge', 'at_risk'],
+                tabs: ['uebersicht', 'mandatsliste', 'pipeline', 'portfolio', 'compliance', 'reporting'],
+                tabLabels: {
+                    uebersicht: 'Übersicht',
+                    mandatsliste: 'Mandate',
+                    pipeline: 'Pipeline',
+                    portfolio: 'Portfolio-Übersicht',
+                    compliance: 'Compliance',
+                    reporting: 'Reporting'
+                },
+                headerFields: ['name', 'beraterId', 'standort', 'teamAuM'],
+                getKunden: function() { return window.vvMockMandanten || {}; }
+            },
+
+            // VV-10 Mandanten-Detail
+            detail: {
+                tabs: ['stammdaten', 'portfolio', 'finanzplanung', 'compliance', 'impulse', 'kommunikation'],
+                tabLabels: {
+                    stammdaten: 'Client 360°',
+                    portfolio: 'Portfolio',
+                    finanzplanung: 'Vermögensbilanz',
+                    compliance: 'Compliance',
+                    impulse: 'Potentiale',
+                    kommunikation: 'Kommunikation'
+                },
+                getKunde: function(name) {
+                    var mk = window.vvMockMandanten;
+                    return mk ? mk[name] : null;
+                },
+                produkttypen: ['SmartValue ETF', 'FairValue Individual', 'Institutionell', 'Stiftung', 'PE', 'Family Office'],
+                fidaMode: 'nicht_relevant',
+                clvBerechnung: 'vermoegensverwaltung'
+            },
+
+            // Chat
+            chat: {
+                botName: 'KI-Vertriebsassistent',
+                apiUrl: window.CLAUDE_WORKER_URL || 'https://vst-claude-api.eike-3e2.workers.dev',
+                keywords: {
+                    portfolio: 'Portfolio-Analyse',
+                    rebalancing: 'Rebalancing-Prüfung',
+                    compliance: 'Compliance-Status',
+                    mandant: 'Mandanteninfo',
+                    potentiale: 'Vertriebspotentiale'
+                },
+                quickActions: [
+                    'Portfolio-Performance analysieren',
+                    'Rebalancing-Bedarf prüfen',
+                    'Compliance-Status Mandant',
+                    'Geeignetheitsprüfung vorbereiten',
+                    'Marktumfeld Zusammenfassung'
+                ]
+            },
+
+            // Impulse
+            impulse: {
+                herkunftLabel: 'KI-Vertriebsassistent',
+                regeln: [
+                    {
+                        id: 'rebalancing',
+                        impuls: 'Rebalancing erforderlich',
+                        prioritaet: 'hoch',
+                        produkt: null,
+                        bedingung: function(k) {
+                            if (!k || !k.assetAllocation || !k.sollAllocation) return false;
+                            var keys = Object.keys(k.sollAllocation);
+                            for (var i = 0; i < keys.length; i++) {
+                                var diff = Math.abs((k.assetAllocation[keys[i]] || 0) - (k.sollAllocation[keys[i]] || 0));
+                                if (diff >= 2) return true;
+                            }
+                            return false;
+                        }
+                    },
+                    {
+                        id: 'wphg-bogen-faellig',
+                        impuls: 'WpHG-Bogen Aktualisierung fällig',
+                        prioritaet: 'hoch',
+                        produkt: null,
+                        bedingung: function(k) {
+                            if (!k || !k.wphgBogen) return false;
+                            var letzte = k.wphgBogen.letzteAktualisierung;
+                            if (!letzte) return false;
+                            var parts = letzte.split('-');
+                            var d = new Date(parts[0], parts[1] - 1, parts[2]);
+                            var diffMonths = (new Date().getFullYear() - d.getFullYear()) * 12 + (new Date().getMonth() - d.getMonth());
+                            return diffMonths >= 10;
+                        }
+                    },
+                    {
+                        id: 'geeignetheitsbericht-faellig',
+                        impuls: 'Geeignetheitsbericht fällig',
+                        prioritaet: 'hoch',
+                        produkt: null,
+                        bedingung: function(k) {
+                            if (!k || !k.geeignetheitsbericht) return false;
+                            return k.geeignetheitsbericht.status === 'offen';
+                        }
+                    },
+                    {
+                        id: 'verlustschwelle-naehert',
+                        impuls: 'Verlustschwelle nähert sich',
+                        prioritaet: 'hoch',
+                        produkt: null,
+                        bedingung: function(k) {
+                            if (!k || !k.verlustschwelle || !k.aum) return false;
+                            var trigger = k.verlustschwelle.hoechststand * (1 - k.verlustschwelle.schwelle);
+                            var puffer = k.aum - trigger;
+                            return puffer > 0 && puffer < k.aum * 0.08;
+                        }
+                    },
+                    {
+                        id: 'fremdbank-konsolidierung',
+                        impuls: 'Fremdbank-Vermögen konsolidieren',
+                        prioritaet: 'mittel',
+                        produkt: 'Konsolidierung',
+                        bedingung: function(k) {
+                            return k && k.fremdVermoegen && k.fremdVermoegen.length > 0;
+                        }
+                    },
+                    {
+                        id: 'nextgen-mandat',
+                        impuls: 'NextGen-Mandat erschließen',
+                        prioritaet: 'mittel',
+                        produkt: 'SmartValue',
+                        bedingung: function(k) {
+                            if (!k || !k.kinder) return false;
+                            for (var i = 0; i < k.kinder.length; i++) {
+                                if (k.kinder[i].alter >= 25 && !k.kinder[i].eigenesMandat) return true;
+                            }
+                            return false;
+                        }
+                    },
+                    {
+                        id: 'nachfolgeplanung',
+                        impuls: 'Nachfolgeplanung anstoßen',
+                        prioritaet: 'mittel',
+                        produkt: 'Stiftung / Nachfolge',
+                        bedingung: function(k) {
+                            if (!k || !k.geburtsdatum) return false;
+                            var parts = k.geburtsdatum.split('-');
+                            var alter = new Date().getFullYear() - parseInt(parts[0]);
+                            return alter >= 60 && k.unternehmen && k.unternehmen.length > 0;
+                        }
+                    },
+                    {
+                        id: 'mandatstyp-upgrade',
+                        impuls: 'Mandatstyp-Upgrade anbieten',
+                        prioritaet: 'niedrig',
+                        produkt: 'FairValue Individual',
+                        bedingung: function(k) {
+                            return k && k.segment === 'SmartValue' && k.aum >= 3000000;
+                        }
+                    }
+                ]
+            },
+
+            // Potentiale (UNIFY-01)
+            potentiale: {
+                kpiBoxes: [
+                    { key: 'mandate', label: 'Aktive Mandate', icon: 'briefcase', format: 'number' },
+                    { key: 'pipeline', label: 'Pipeline-Volumen', icon: 'trending-up', format: 'currency' },
+                    { key: 'crosssell', label: 'Cross-Selling-Potenzial', icon: 'layers', format: 'currency' },
+                    { key: 'atrisk', label: 'At-Risk Mandate', icon: 'alert-triangle', format: 'number' }
+                ],
+                pipelineSteps: ['lead', 'kennenlerngespraech', 'beratungsgespraech', 'analyse_vorschlag', 'onboarding', 'aktiv'],
+                statusLabels: {
+                    lead: 'Lead',
+                    kennenlerngespraech: 'Kennenlernen',
+                    beratungsgespraech: 'Beratung',
+                    analyse_vorschlag: 'Analyse/Vorschlag',
+                    onboarding: 'Onboarding',
+                    aktiv: 'Aktiv'
+                },
+                branding: 'KI-Vertriebsassistent',
+                brandingBadge: 'Wealth Management KI-Analyse',
+                produktTypen: ['SmartValue ETF', 'FairValue Individual', 'Institutionell', 'Stiftung', 'PE', 'Family Office'],
+                quellenLabels: ['Bestandsdaten', 'Marktdaten', 'Depotbank'],
+                quellenKategorien: ['bestand', 'lebensereignis', 'wettbewerb', 'markt', 'finanztransaktion'],
+                getPotentiale: function() { return window.vvPotentiale || []; },
+                openKundenDetail: function(name, id) {
+                    if (typeof openVVMandantDetail === 'function') openVVMandantDetail(name);
+                }
+            }
+        }
+    };
+
+
     // ========================================
     // MODE STATE & DETECTION
     // ========================================
@@ -439,6 +641,16 @@
             return 'banking';
         }
 
+        // 1b. Check if VV mode page is visible
+        var vvPage = document.getElementById('vvOverviewPage');
+        if (vvPage && vvPage.style.display !== 'none') {
+            return 'vermoegensverwaltung';
+        }
+        var vvDetailPage = document.getElementById('vvDetailPage');
+        if (vvDetailPage && vvDetailPage.style.display !== 'none') {
+            return 'vermoegensverwaltung';
+        }
+
         // 2. Check viewMode global
         if (typeof viewMode !== 'undefined') {
             if (viewMode === 'bank-retail' || viewMode === 'bank-fk' || viewMode === 'bank-vw') {
@@ -446,6 +658,9 @@
             }
             if (viewMode === 'ao' || viewMode === 'ecclesia' || viewMode === 'mrh') {
                 return 'versicherung';
+            }
+            if (viewMode === 'vv') {
+                return 'vermoegensverwaltung';
             }
         }
 
@@ -551,12 +766,21 @@
     // WINDOW EXPORTS
     // ========================================
 
+    /**
+     * Returns true if the current mode is vermoegensverwaltung.
+     */
+    function isVVMode() {
+        syncMode();
+        return currentMode === 'vermoegensverwaltung';
+    }
+
     window.MODE_CONFIGS = MODE_CONFIGS;
     window.getModeConfig = getModeConfig;
     window.setMode = setMode;
     window.getModeForCurrentView = getModeForCurrentView;
     window.syncMode = syncMode;
     window.isBankMode = isBankMode;
+    window.isVVMode = isVVMode;
     window.evaluateImpulse = evaluateImpulse;
     window.getBankingSubMode = getBankingSubMode;
     window.currentMode = currentMode;

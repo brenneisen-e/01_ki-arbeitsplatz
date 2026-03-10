@@ -528,6 +528,12 @@ function backToLanding() {
     var kundenDetailBankPage = document.getElementById('kundenDetailBankPage');
     if (kundenDetailBankPage) kundenDetailBankPage.style.display = 'none';
 
+    // VV-02/VV-10 Vermögensverwaltung verstecken
+    var vvOverviewPage = document.getElementById('vvOverviewPage');
+    if (vvOverviewPage) vvOverviewPage.style.display = 'none';
+    var vvDetailPage = document.getElementById('vvDetailPage');
+    if (vvDetailPage) vvDetailPage.style.display = 'none';
+
     // Asset Management Module verstecken
     const assetModule = document.getElementById('assetModule');
     if (assetModule) {

@@ -39,6 +39,11 @@ function showAgenturOverview(vermittlerId) {
     if (beraterPageAO) beraterPageAO.style.display = 'none';
     var kdBankPageAO = document.getElementById('kundenDetailBankPage');
     if (kdBankPageAO) kdBankPageAO.style.display = 'none';
+    // Hide VV-02/VV-10 Vermögensverwaltung
+    var vvOverviewAO = document.getElementById('vvOverviewPage');
+    if (vvOverviewAO) vvOverviewAO.style.display = 'none';
+    var vvDetailAO = document.getElementById('vvDetailPage');
+    if (vvDetailAO) vvDetailAO.style.display = 'none';
     if (agenturOverview) agenturOverview.style.display = 'block';
 
     // Öffne den Agentur-Chat automatisch (Vertriebs-Assistent)

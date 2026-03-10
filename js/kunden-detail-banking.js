@@ -885,7 +885,7 @@ function fillBankImpulse(kundenName, kd, retailData) {
     if (!el) return;
 
     var impulse = [];
-    // Impulse generiert durch Truuco Impulsmanager (Data Intelligence Platform / genoGPT)
+    // Impulse generiert durch KI-Vertriebsassistent
     if (!retailData || !retailData.finanzplan) {
         impulse.push({
             id: 'bank-impuls-finanzplan', icon:'plan',
@@ -915,20 +915,8 @@ function fillBankImpulse(kundenName, kd, retailData) {
             ],
             produkt: 'Kontokonsolidierung', empfehlung: 'Drittbank-Produkte in VR-Angebote \u00fcberf\u00fchren'
         });
-    } else {
-        impulse.push({
-            id: 'bank-impuls-fida', icon:'fida',
-            title:'FIDA-Consent einholen',
-            beschr:'Open Finance Daten fehlen. Consent anfordern f\u00fcr vollst\u00e4ndige Analyse.',
-            prio:'medium', quelle:'System',
-            herleitung: [
-                { label:'Datenquelle', value:'System - Keine Open Finance Daten vorhanden' },
-                { label:'Erkannte Situation', value:'Kundeneinwilligung f\u00fcr FIDA fehlt' },
-                { label:'Empfehlung', value:'FIDA-Consent im n\u00e4chsten Beratungsgespr\u00e4ch einholen' }
-            ],
-            produkt: 'FIDA-Consent', empfehlung: 'Open Finance Einwilligung f\u00fcr ganzheitliche Analyse'
-        });
     }
+    // Note: FIDA-Consent einholen is NOT an impulse - it belongs in the FIDA/Open Finance tab
     if (kd.konten.length < 4) {
         impulse.push({
             id: 'bank-impuls-cross', icon:'cross',
@@ -981,10 +969,10 @@ function fillBankImpulse(kundenName, kd, retailData) {
     impulse.push({
         id: 'bank-impuls-vorsorge', icon:'vorsorge',
         title:'Altersvorsorge pr\u00fcfen (Union Investment / R+V)',
-        beschr:'Versorgungsl\u00fccke im Alter durch Truuco Impulsmanager identifiziert. Verbundpartner-Beratung empfohlen.',
-        prio:'medium', quelle:'Truuco',
+        beschr:'Versorgungsl\u00fccke im Alter durch KI-Vertriebsassistent identifiziert. Verbundpartner-Beratung empfohlen.',
+        prio:'medium', quelle:'KI-Vertriebsassistent',
         herleitung: [
-            { label:'Datenquelle', value:'Truuco Impulsmanager \u2013 genoGPT Einkommens- und Vorsorgeanalyse' },
+            { label:'Datenquelle', value:'KI-Vertriebsassistent \u2013 Einkommens- und Vorsorgeanalyse' },
             { label:'Erkannte Situation', value:'Nettoeinkommen \u20AC' + (kd.nettoeinkommen || 0).toLocaleString('de-DE') + ' \u2013 Versorgungsl\u00fccke wahrscheinlich' },
             { label:'Verbundpartner', value:'Union Investment (UniProfiRente, VermögenPlus), R+V (BU-Versicherung), Schwäbisch Hall (Wohn-Riester)' },
             { label:'Empfehlung', value:'Rentenl\u00fccken-Analyse via VR-FinanzPlan (OKP), Zusatzvorsorge \u00fcber Verbundpartner empfehlen' }

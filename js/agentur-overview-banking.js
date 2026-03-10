@@ -964,115 +964,309 @@ function adaptA10ForBankMode(kundenName) {
             tabImpulse._originalInnerHTML = tabImpulse.innerHTML;
         }
 
-        var bankPot = (window.bankPotentiale || []).filter(function(p) { return p.kundenName === kundenName; });
-
-        // Separate into Whitespots (new business) and \u00c4nderungsgesch\u00e4ft (optimization)
-        var whitespots = [];
-        var aenderung = [];
-        bankPot.forEach(function(p) {
-            if (p.status === 'identifiziert' || p.status === 'angeschrieben') {
-                whitespots.push(p);
-            } else {
-                aenderung.push(p);
-            }
-        });
-
-        // Also build cross-selling insurance potentials as Whitespots
-        if (!kd.versicherungenEigen || !kd.versicherungenEigen.some(function(v){ return v.versicherung.indexOf('BU') >= 0 || v.versicherung.indexOf('Berufsunf') >= 0; })) {
-            whitespots.push({
-                produkt: 'BU-Versicherung (R+V Verbundpartner)',
-                beschreibung: 'Keine Berufsunf\u00e4higkeitsversicherung vorhanden. Absicherungsl\u00fccke bei Nettoeinkommen \u20AC' + (kd.nettoeinkommen || 0).toLocaleString('de-DE') + '/Mon.',
-                prioritaet: 'hoch', quelle: 'Verbundpartner R+V', volumen: 1800, ertrag: 360,
-                herleitung: [{ datenquelle: 'Bestandsanalyse', erkenntnis: 'Keine BU-Versicherung trotz hohem Einkommen' }, { datenquelle: 'R+V Verbundpartner', erkenntnis: 'R+V BU Premium mit Nachversicherungsgarantie empfohlen' }]
-            });
-        }
-        // Cross-sell external insurance to R+V
-        if (kd.versicherungenFremd) {
-            kd.versicherungenFremd.forEach(function(v) {
-                aenderung.push({
-                    produkt: v.versicherung + ' \u2013 Wechsel zu R+V',
-                    beschreibung: 'Aktuell bei ' + v.anbieter + ' (' + v.praemie + '). Pr\u00fcfung R+V Verbundpartner-Tarif.',
-                    prioritaet: 'mittel', quelle: 'Verbundpartner', volumen: 0, ertrag: 0,
-                    herleitung: [{ datenquelle: 'Open Finance', erkenntnis: v.versicherung + ' bei ' + v.anbieter + ', ' + v.praemie }]
-                });
-            });
-        }
-        // FIDA-based opportunities as \u00c4nderungsgesch\u00e4ft
-        if (kd.fidaVertraege && kd.fidaVertraege.length > 0) {
-            kd.fidaVertraege.forEach(function(f) {
-                aenderung.push({
-                    produkt: f.institut + ' \u2013 ' + f.typ + ' konsolidieren',
-                    beschreibung: f.info + '. Konsolidierung in VR-Produkte pr\u00fcfen.',
-                    prioritaet: 'mittel', quelle: 'Open Finance', volumen: 0, ertrag: 0,
-                    herleitung: [{ datenquelle: 'Open Finance (FIDA)', erkenntnis: f.institut + ': ' + f.info }]
-                });
-            });
-        }
-
-        var potHtml = '<div class="kunden-card impulse-overview-card">' +
-            '<div class="kunden-card-header vertriebsimpuls"><h2>' +
-                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>' +
-                ' Potentiale</h2></div>' +
-            '<div class="impuls-legende">' +
-                '<span class="impuls-legende-item"><span class="impuls-volumen-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> Abschlussvolumen</span> Gesch. Volumen bei Abschluss</span>' +
-                '<span class="impuls-legende-item"><span class="impuls-provision-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg> Provision</span> Erwartete Abschlussprovision</span>' +
-            '</div>';
-
-        function renderBankPotCard(p, idx, prefix) {
-            var pc = p.prioritaet === 'hoch' ? 'high' : (p.prioritaet === 'mittel' ? 'medium' : 'low');
-            var pl = p.prioritaet === 'hoch' ? 'Hohe Priorit\u00e4t' : (p.prioritaet === 'mittel' ? 'Mittlere Priorit\u00e4t' : 'Niedrige Priorit\u00e4t');
-            var vol = p.volumen ? '\u20AC' + p.volumen.toLocaleString('de-DE') : '';
-            var ert = p.ertrag ? '\u20AC' + p.ertrag.toLocaleString('de-DE') : '';
-            var detailId = prefix + '-' + idx;
-            var h = '<div class="impuls-item highlight clickable" onclick="toggleImpulsDetail(\'' + detailId + '\')">' +
-                '<div class="impuls-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></div>' +
-                '<div class="impuls-text"><strong>' + p.produkt + '</strong>' +
-                    '<p>' + (p.quelle ? '<span class="fida-source-badge small">' + p.quelle + '</span> ' : '') + p.beschreibung + '</p></div>' +
-                '<div style="text-align:right;flex-shrink:0;">' +
-                    (vol ? '<div class="impuls-volumen-badge">' + vol + '</div>' : '') +
-                    (ert ? '<div class="impuls-provision-badge">' + ert + '</div>' : '') +
-                '</div>' +
-                '<span class="impuls-priority ' + pc + '">' + pl + '</span>' +
-                '<span class="impuls-expand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="6 9 12 15 18 9"></polyline></svg></span>' +
-            '</div>';
-            h += '<div class="impuls-detail" id="' + detailId + '" style="display:none;"><div class="impuls-detail-section"><h4>Herleitung</h4><div class="herleitung-grid">';
-            if (p.herleitung) {
-                p.herleitung.forEach(function(hl) {
-                    h += '<div class="herleitung-item"><span class="herleitung-label">' + hl.datenquelle + '</span><span class="herleitung-value">' + hl.erkenntnis + '</span></div>';
-                });
-            }
-            h += '</div></div></div>';
-            return h;
-        }
-
-        // Whitespots (Neugeschäft) - always render category (KI impulses may add items)
-        potHtml += '<div class="impuls-kategorie" id="bankWhitespotsKategorie"><h3 class="impuls-kategorie-title whitespots">' +
-            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>' +
-            ' Whitespots (Neugeschäft) <span class="kategorie-badge">Produkt fehlt</span></h3>';
-        whitespots.forEach(function(p, i) { potHtml += renderBankPotCard(p, i, 'bank-ws'); });
-        potHtml += '<div id="kiImpulseInlineWS"></div>';
-        potHtml += '</div>';
-
-        // Änderungsgeschäft (Optimierung bestehend) - always render category
-        potHtml += '<div class="impuls-kategorie" id="bankAenderungKategorie"><h3 class="impuls-kategorie-title">' +
-            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>' +
-            ' Anpassungsbedarfe (Änderungsgeschäft) <span class="kategorie-badge">Bestehend optimieren</span></h3>';
-        aenderung.forEach(function(p, i) { potHtml += renderBankPotCard(p, i, 'bank-ae'); });
-        potHtml += '<div id="kiImpulseInlineAE"></div>';
-        potHtml += '</div>';
-
-        potHtml += '</div>';
-        tabImpulse.innerHTML = potHtml;
-
-        // Trigger KI impulse generation into inline containers
-        setTimeout(function() {
-            if (typeof generateKIImpuls === 'function') generateKIImpuls();
-        }, 100);
+        renderBankingPotentiale(kundenName);
     }
 
     // Adapt shared header tabs for bank module
     adaptA10HeaderTabsForBank();
 }
+
+// ========================================
+// OPT-17: Modusspezifische Banking-Potentiale (Whitespots + Anpassungsbedarfe)
+// Renders banking impulses into tabImpulse with same structure as insurance mode
+// Branding: always "KI-Vertriebsassistent" (not Truuco/genoGPT)
+// ========================================
+function renderBankingPotentiale(kundenName) {
+    var tabImpulse = document.getElementById('tabImpulse');
+    if (!tabImpulse) return;
+
+    // Save original content for restore (if not already saved)
+    if (!tabImpulse.dataset.originalHtml) {
+        tabImpulse.dataset.originalHtml = 'saved';
+        tabImpulse._originalInnerHTML = tabImpulse.innerHTML;
+    }
+
+    var kd = null;
+    if (typeof bankMockKunden !== 'undefined') {
+        kd = bankMockKunden[kundenName];
+    }
+    if (!kd) return;
+
+    var retailData = null;
+    if (typeof bankKundenRetail !== 'undefined') {
+        for (var ri = 0; ri < bankKundenRetail.length; ri++) {
+            if (bankKundenRetail[ri].name === kundenName) { retailData = bankKundenRetail[ri]; break; }
+        }
+    }
+
+    // Build Whitespots (Neugeschaeft) from rules
+    var whitespots = [];
+
+    // Rule: Kein VR-FinanzPlan
+    if (!retailData || !retailData.finanzplan) {
+        whitespots.push({
+            produkt: 'VR-FinanzPlan + Union Investment Sparplan',
+            beschreibung: 'Kein VR-FinanzPlan vorhanden. Ganzheitliche Beratung mit Sparplan-Empfehlung.',
+            prioritaet: 'hoch', quelle: 'Bestandsanalyse', volumen: 1800, ertrag: 0,
+            verbundpartner: 'Union Investment',
+            herleitung: [
+                { datenquelle: 'Interne Kundendaten', erkenntnis: 'Kein VR-FinanzPlan hinterlegt' },
+                { datenquelle: 'KI-Vertriebsassistent', erkenntnis: 'Ganzheitliche Finanzplanung erstellen, Union Investment Sparplan als Einstieg' }
+            ]
+        });
+    }
+
+    // Rule: Kein Depot/Fondssparen
+    var hasDepot = kd.konten && kd.konten.some(function(k) { return k.produkt.indexOf('Depot') >= 0 || k.produkt.indexOf('Fonds') >= 0 || k.produkt.indexOf('Union') >= 0; });
+    if (!hasDepot) {
+        whitespots.push({
+            produkt: 'VermögenPlus / Union Investment Fondsanlage',
+            beschreibung: 'Kein Depot oder Fondssparen vorhanden. Vermögensaufbau-Potential identifiziert.',
+            prioritaet: 'mittel', quelle: 'Bestandsanalyse', volumen: 675, ertrag: 0,
+            verbundpartner: 'Union Investment',
+            herleitung: [
+                { datenquelle: 'Interne Produktanalyse', erkenntnis: 'Kein Wertpapierdepot oder Fondsanlage vorhanden' },
+                { datenquelle: 'KI-Vertriebsassistent', erkenntnis: 'VermögenPlus oder Union Investment Fondsanlage für langfristigen Vermögensaufbau empfohlen' }
+            ]
+        });
+    }
+
+    // Rule: Keine Risikolebensversicherung bei Familie
+    var hasRLV = kd.versicherungenEigen && kd.versicherungenEigen.some(function(v) { return v.versicherung.indexOf('Risikoleben') >= 0 || v.versicherung.indexOf('RLV') >= 0; });
+    var hasFamily = kd.kinder && kd.kinder.length > 0;
+    if (!hasRLV && hasFamily) {
+        whitespots.push({
+            produkt: 'R+V Risikolebensversicherung',
+            beschreibung: 'Familie vorhanden, aber keine Risikolebensversicherung. Absicherungsbedarf erkannt.',
+            prioritaet: 'hoch', quelle: 'Bestandsanalyse + Open Finance', volumen: 1200, ertrag: 240,
+            verbundpartner: 'R+V',
+            herleitung: [
+                { datenquelle: 'Interne Kundendaten', erkenntnis: 'Familienstand: ' + (kd.familienstand || 'k.A.') + ', ' + kd.kinder.length + ' Kind(er)' },
+                { datenquelle: 'KI-Vertriebsassistent', erkenntnis: 'R+V Risikoleben zur Familienabsicherung empfohlen' }
+            ]
+        });
+    }
+
+    // Rule: Kein Bausparvertrag
+    var hasBauspar = kd.konten && kd.konten.some(function(k) { return k.produkt.indexOf('Bauspar') >= 0 || k.produkt.indexOf('Schwäbisch Hall') >= 0; });
+    if (!hasBauspar) {
+        whitespots.push({
+            produkt: 'Schwäbisch Hall Bausparvertrag',
+            beschreibung: 'Kein Bausparvertrag vorhanden. Staatliche Förderung und Zinssicherung möglich.',
+            prioritaet: 'mittel', quelle: 'Bestandsanalyse', volumen: 500, ertrag: 0,
+            verbundpartner: 'Schwäbisch Hall',
+            herleitung: [
+                { datenquelle: 'Interne Produktanalyse', erkenntnis: 'Kein Bausparvertrag im Bestand' },
+                { datenquelle: 'KI-Vertriebsassistent', erkenntnis: 'Schwäbisch Hall Bausparvertrag mit Wohnungsbauprämie und Arbeitnehmersparzulage empfohlen' }
+            ]
+        });
+    }
+
+    // Rule: Konsumentenkredit-Potential (easyCredit)
+    var hasKredit = kd.konten && kd.konten.some(function(k) { return k.produkt.indexOf('Kredit') >= 0 || k.produkt.indexOf('easyCredit') >= 0 || k.produkt.indexOf('Rahmen') >= 0; });
+    if (!hasKredit && kd.nettoeinkommen && kd.nettoeinkommen >= 2500) {
+        whitespots.push({
+            produkt: 'easyCredit Rahmenkredit',
+            beschreibung: 'Kein Konsumentenkredit vorhanden. Liquiditätsreserve über easyCredit möglich.',
+            prioritaet: 'niedrig', quelle: 'Bestandsanalyse', volumen: 0, ertrag: 0,
+            verbundpartner: 'easyCredit',
+            herleitung: [
+                { datenquelle: 'Interne Kundendaten', erkenntnis: 'Nettoeinkommen \u20AC' + kd.nettoeinkommen.toLocaleString('de-DE') + '/Mon., kein Rahmenkredit vorhanden' },
+                { datenquelle: 'KI-Vertriebsassistent', erkenntnis: 'easyCredit Rahmenkredit als flexible Liquiditätsreserve empfohlen' }
+            ]
+        });
+    }
+
+    // Also include bankPotentiale entries marked as new business
+    var bankPot = (window.bankPotentiale || []).filter(function(p) { return p.kundenName === kundenName; });
+    bankPot.forEach(function(p) {
+        if (p.status === 'identifiziert' || p.status === 'angeschrieben') {
+            whitespots.push(p);
+        }
+    });
+
+    // Build Anpassungsbedarfe (Aenderungsgeschaeft) from rules
+    var aenderung = [];
+
+    // Rule: Baufinanzierung mit Zinsbindung -> Anschlussfinanzierung
+    var hasBaufi = kd.konten && kd.konten.some(function(k) { return k.produkt.indexOf('Baufinanzierung') >= 0; });
+    if (hasBaufi) {
+        var baufi = kd.konten.find(function(k) { return k.produkt.indexOf('Baufinanzierung') >= 0; });
+        aenderung.push({
+            produkt: 'Anschlussfinanzierung DZ HYP',
+            beschreibung: 'Baufinanzierung vorhanden. Forward-Darlehen mit günstigeren Konditionen über DZ HYP prüfen.',
+            prioritaet: 'hoch', quelle: 'Interne Kreditdaten', volumen: 0, ertrag: 0,
+            verbundpartner: 'DZ HYP',
+            herleitung: [
+                { datenquelle: 'Interne Kreditdaten', erkenntnis: baufi.produkt + ' \u2013 ' + baufi.details },
+                { datenquelle: 'KI-Vertriebsassistent', erkenntnis: 'Frühzeitig Anschlusskonditionen über DZ HYP anbieten, Zinsvorteil sichern' }
+            ]
+        });
+    }
+
+    // Rule: Depot-Performance unter Benchmark
+    if (hasDepot) {
+        aenderung.push({
+            produkt: 'Depot-Umschichtung Union Investment',
+            beschreibung: 'Depot-Performance unter Benchmark. Umschichtung in optimierte Union Investment Fonds prüfen.',
+            prioritaet: 'mittel', quelle: 'Bestandsanalyse', volumen: 0, ertrag: 0,
+            verbundpartner: 'Union Investment',
+            herleitung: [
+                { datenquelle: 'Interne Depotanalyse', erkenntnis: 'Depot-Performance unter Vergleichsindex' },
+                { datenquelle: 'KI-Vertriebsassistent', erkenntnis: 'Umschichtung in Union Investment Fonds mit besserer Performance empfohlen' }
+            ]
+        });
+    }
+
+    // Rule: Kontomodell passt nicht zum Nutzungsverhalten
+    var hasGiro = kd.konten && kd.konten.some(function(k) { return k.produkt.indexOf('Girokonto') >= 0; });
+    if (hasGiro) {
+        aenderung.push({
+            produkt: 'Kontomodell-Wechsel',
+            beschreibung: 'Nutzungsverhalten prüfen. Passendes Kontomodell kann Kosten senken oder Zusatzleistungen bieten.',
+            prioritaet: 'niedrig', quelle: 'Bestandsanalyse', volumen: 0, ertrag: 0,
+            verbundpartner: '',
+            herleitung: [
+                { datenquelle: 'Kontobewegungen', erkenntnis: 'Nutzungsmuster analysiert, Kontomodell-Optimierung möglich' },
+                { datenquelle: 'KI-Vertriebsassistent', erkenntnis: 'Kontomodell an tatsächliches Nutzungsverhalten anpassen' }
+            ]
+        });
+    }
+
+    // Rule: R+V Risikoleben-Deckung zu niedrig für aktuelle Baufi
+    if (hasRLV && hasBaufi) {
+        aenderung.push({
+            produkt: 'R+V Deckungsanpassung Risikoleben',
+            beschreibung: 'R+V Risikoleben-Deckung prüfen: Passt die Versicherungssumme noch zur aktuellen Baufinanzierung?',
+            prioritaet: 'hoch', quelle: 'Bestandsanalyse + Open Finance', volumen: 0, ertrag: 0,
+            verbundpartner: 'R+V',
+            herleitung: [
+                { datenquelle: 'Bestandsanalyse', erkenntnis: 'Risikolebensversicherung vorhanden, Baufinanzierung aktiv' },
+                { datenquelle: 'KI-Vertriebsassistent', erkenntnis: 'Deckungssumme an aktuelle Restschuld der Baufinanzierung anpassen' }
+            ]
+        });
+    }
+
+    // Rule: NPS <= 6 -> Kundenzufriedenheit verbessern
+    if (kd.nps && kd.nps.score <= 6) {
+        aenderung.push({
+            produkt: 'Kundenzufriedenheit verbessern (Beratungsgespräch)',
+            beschreibung: 'NPS Score ' + kd.nps.score + '/10. Persönliches Gespräch zur Zufriedenheitsverbesserung empfohlen.',
+            prioritaet: 'hoch', quelle: 'NPS-Umfrage', volumen: 0, ertrag: 0,
+            verbundpartner: '',
+            herleitung: [
+                { datenquelle: 'NPS-Umfrage ' + (kd.nps.kampagne || ''), erkenntnis: 'NPS Score ' + kd.nps.score + '/10 \u2013 Detractor/Passive' },
+                { datenquelle: 'KI-Vertriebsassistent', erkenntnis: 'Persönliches Gespräch und Service-Upgrade empfohlen' }
+            ]
+        });
+    }
+
+    // Cross-sell external insurance to R+V as Anpassungsbedarfe
+    if (kd.versicherungenFremd) {
+        kd.versicherungenFremd.forEach(function(v) {
+            aenderung.push({
+                produkt: v.versicherung + ' \u2013 Wechsel zu R+V',
+                beschreibung: 'Aktuell bei ' + v.anbieter + ' (' + v.praemie + '). Prüfung R+V Verbundpartner-Tarif.',
+                prioritaet: 'mittel', quelle: 'Open Finance', volumen: 0, ertrag: 0,
+                verbundpartner: 'R+V',
+                herleitung: [{ datenquelle: 'Open Finance', erkenntnis: v.versicherung + ' bei ' + v.anbieter + ', ' + v.praemie }]
+            });
+        });
+    }
+
+    // Also include bankPotentiale entries marked as optimization/existing
+    bankPot.forEach(function(p) {
+        if (p.status !== 'identifiziert' && p.status !== 'angeschrieben') {
+            aenderung.push(p);
+        }
+    });
+
+    // --- Render HTML ---
+    var potHtml = '<div class="kunden-card impulse-overview-card">' +
+        '<div class="kunden-card-header vertriebsimpuls"><h2>' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>' +
+            ' Potentiale</h2></div>' +
+        '<div class="impuls-legende">' +
+            '<span class="impuls-legende-item"><span class="impuls-volumen-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> Ertrag/Volumen</span> Gesch. Ertrag/Jahr bei Abschluss</span>' +
+            '<span class="impuls-legende-item"><span class="impuls-provision-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg> Provision</span> Erwartete Abschlussprovision</span>' +
+        '</div>';
+
+    function renderBankPotCard(p, idx, prefix) {
+        var pc = p.prioritaet === 'hoch' ? 'high' : (p.prioritaet === 'mittel' ? 'medium' : 'low');
+        var pl = p.prioritaet === 'hoch' ? 'Hohe Priorität' : (p.prioritaet === 'mittel' ? 'Mittlere Priorität' : 'Niedrige Priorität');
+        var vol = p.volumen ? '\u20AC' + p.volumen.toLocaleString('de-DE') : '';
+        var ert = p.ertrag ? '\u20AC' + p.ertrag.toLocaleString('de-DE') : '';
+        var detailId = prefix + '-' + idx;
+
+        // Choose icon based on verbundpartner
+        var iconSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>';
+
+        var h = '<div class="impuls-item highlight clickable" onclick="toggleImpulsDetail(\'' + detailId + '\')">' +
+            '<div class="impuls-icon">' + iconSvg + '</div>' +
+            '<div class="impuls-text"><strong>' + p.produkt + '</strong>' +
+                '<p>' + (p.verbundpartner ? '<span class="fida-source-badge small">' + p.verbundpartner + '</span> ' : (p.quelle ? '<span class="fida-source-badge small">' + p.quelle + '</span> ' : '')) + p.beschreibung + '</p></div>' +
+            '<div style="text-align:right;flex-shrink:0;">' +
+                (vol ? '<div class="impuls-volumen-badge">\u20AC' + p.volumen.toLocaleString('de-DE') + '/J.</div>' : '') +
+                (ert ? '<div class="impuls-provision-badge">\u20AC' + p.ertrag.toLocaleString('de-DE') + '</div>' : '') +
+            '</div>' +
+            '<span class="impuls-priority ' + pc + '">' + pl + '</span>' +
+            '<span class="impuls-expand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="6 9 12 15 18 9"></polyline></svg></span>' +
+        '</div>';
+
+        // Expandable detail panel with herleitung + banking actions
+        h += '<div class="impuls-detail" id="' + detailId + '" style="display:none;">' +
+            '<div class="impuls-detail-section"><h4>Herleitung des Impulses</h4><div class="herleitung-grid">';
+        if (p.herleitung) {
+            p.herleitung.forEach(function(hl) {
+                h += '<div class="herleitung-item"><span class="herleitung-label">' + hl.datenquelle + '</span><span class="herleitung-value">' + hl.erkenntnis + '</span></div>';
+            });
+        }
+        h += '</div></div>' +
+            '<div class="impuls-detail-section"><h4>Aktionen</h4><div class="impuls-actions">' +
+                '<button class="action-btn primary" onclick="event.stopPropagation();">' +
+                    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>' +
+                    ' Angebot erstellen</button>' +
+                '<button class="action-btn secondary" onclick="event.stopPropagation();">' +
+                    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>' +
+                    ' Termin vereinbaren</button>' +
+                '<button class="action-btn secondary" onclick="event.stopPropagation();">' +
+                    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>' +
+                    ' Berechnung</button>' +
+            '</div></div></div>';
+        return h;
+    }
+
+    // Whitespots (Neugeschaeft)
+    potHtml += '<div class="impuls-kategorie" id="bankWhitespotsKategorie"><h3 class="impuls-kategorie-title whitespots">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>' +
+        ' Whitespots (Neugeschäft) <span class="kategorie-badge">Produkt fehlt</span></h3>';
+    whitespots.forEach(function(p, i) { potHtml += renderBankPotCard(p, i, 'bank-ws'); });
+    potHtml += '<div id="kiImpulseInlineWS"></div>';
+    potHtml += '</div>';
+
+    // Anpassungsbedarfe (Aenderungsgeschaeft)
+    potHtml += '<div class="impuls-kategorie" id="bankAenderungKategorie"><h3 class="impuls-kategorie-title">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>' +
+        ' Anpassungsbedarfe (Änderungsgeschäft) <span class="kategorie-badge">Bestehend optimieren</span></h3>';
+    aenderung.forEach(function(p, i) { potHtml += renderBankPotCard(p, i, 'bank-ae'); });
+    potHtml += '<div id="kiImpulseInlineAE"></div>';
+    potHtml += '</div>';
+
+    // Source footer: KI-Vertriebsassistent (same branding as insurance mode)
+    potHtml += '<div class="impulse-source-footer">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M12 2a10 10 0 0110 10c0 5.52-4.48 10-10 10S2 17.52 2 12 6.48 2 12 2z"/><path d="M12 6v6l4 2"/></svg>' +
+        ' Quelle: KI-Vertriebsassistent' +
+    '</div>';
+
+    potHtml += '</div>';
+    tabImpulse.innerHTML = potHtml;
+
+    // Trigger KI impulse generation into inline containers
+    setTimeout(function() {
+        if (typeof generateKIImpuls === 'function') generateKIImpuls();
+    }, 100);
+}
+window.renderBankingPotentiale = renderBankingPotentiale;
 
 // Adapt A-10 shared header tabs for bank navigation
 function adaptA10HeaderTabsForBank() {
@@ -1159,6 +1353,14 @@ function restoreA10InsuranceMode() {
         tabImpulse.innerHTML = tabImpulse._originalInnerHTML;
         delete tabImpulse._originalInnerHTML;
         delete tabImpulse.dataset.originalHtml;
+
+        // If impulse tab is currently active, re-render insurance content
+        if (tabImpulse.classList.contains('active')) {
+            setTimeout(function() {
+                if (typeof renderImpulseContent === 'function') renderImpulseContent();
+                if (typeof generateKIImpuls === 'function') generateKIImpuls();
+            }, 50);
+        }
     }
 
     // Restore A-10 dropdown with insurance customers

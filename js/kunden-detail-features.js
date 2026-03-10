@@ -330,7 +330,16 @@ function switchKundenTab(tabName) {
         setTimeout(function() { if (typeof addFidaActionButtons === 'function') addFidaActionButtons(); }, 100);
     }, 50);
     if (tabName === 'impulse') setTimeout(function() {
-        if (typeof renderImpulseContent === 'function') renderImpulseContent();
+        var isBankMode = document.querySelector('#kundenDetailPage.bank-mode');
+        if (isBankMode) {
+            // In bank mode, re-render banking potentials into tabImpulse
+            if (typeof renderBankingPotentiale === 'function') {
+                var kName = getCurrentKundenName();
+                renderBankingPotentiale(kName);
+            }
+        } else {
+            if (typeof renderImpulseContent === 'function') renderImpulseContent();
+        }
         if (typeof generateKIImpuls === 'function') generateKIImpuls();
     }, 50);
     if (tabName === 'kommunikation') setTimeout(function() {

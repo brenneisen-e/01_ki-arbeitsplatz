@@ -154,3 +154,20 @@
     background: #2563eb;
 }
 
+/* === OPT-17: Impulse/Potentiale Source Footer === */
+.impulse-source-footer {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 12px 24px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #64748b;
+    border-top: 1px solid #e2e8f0;
+    margin-top: 8px;
+}
+.impulse-source-footer svg {
+    flex-shrink: 0;
+    color: #94a3b8;
+}
+

@@ -197,6 +197,7 @@
                 brandingBadge: 'Open Finance KI-Analyse',
                 produktTypen: ['Risikolebensversicherung', 'Fondspolice', 'Kfz-Wechsel', 'BU-Nachversicherung', 'Rechtsschutz', 'Hausrat', 'Umschuldung'],
                 quellenLabels: ['Open Finance', 'Bestandsdaten', 'PSD2'],
+                quellenKategorien: ['finanztransaktion', 'bestand', 'kommunikation', 'wettbewerb', 'lebensereignis', 'markt'],
                 getPotentiale: function() { return window.vertriebsPotentiale || []; },
                 openKundenDetail: function(name, id) {
                     if (typeof openKundenDetail === 'function') openKundenDetail(name);
@@ -394,6 +395,7 @@
                 brandingBadge: 'KI-generiert via Data Intelligence Platform',
                 produktTypen: ['Anschlussfinanzierung', 'VR-FinanzPlan', 'VermögenPlus', 'FIDA-Consent + Wero', 'R+V Risikolebensversicherung', 'VR-KlimaKredit', 'DZ PRIVATBANK Nachfolge'],
                 quellenLabels: ['Truuco', 'FIDA', 'Impulsmanager', 'Truuco/FIDA'],
+                quellenKategorien: ['finanztransaktion', 'bestand', 'kommunikation', 'wettbewerb', 'lebensereignis', 'markt'],
                 getPotentiale: function() { return window.bankPotentiale || []; },
                 openKundenDetail: function(name, id) {
                     if (typeof openBankKundenDetail === 'function') openBankKundenDetail(name, id);

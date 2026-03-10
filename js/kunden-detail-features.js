@@ -364,6 +364,14 @@ function switchKundenTab(tabName) {
         if (typeof renderLifeEventTimeline === 'function') renderLifeEventTimeline();
         if (typeof renderRisikoscoring === 'function') renderRisikoscoring();
     }, 50);
+    if (tabName === 'vertraege') setTimeout(function() {
+        var kName = getCurrentKundenName();
+        if (typeof renderLueckenLeiste === 'function') renderLueckenLeiste(kName);
+    }, 50);
+    if (tabName === 'finanzprofil') setTimeout(function() {
+        var kName = getCurrentKundenName();
+        if (typeof renderFinanzprofil === 'function') renderFinanzprofil(kName);
+    }, 50);
 }
 
 // Toggle Impuls Detail
@@ -624,5 +632,288 @@ window.updateTabBadges = updateTabBadges;
 
 // Fallback export for viewKommunikation (loaded from kunden-detail-komm.js)
 window.viewKommunikation = typeof viewKommunikation === 'function' ? viewKommunikation : function() {};
+
+// ========================================
+// 20-D: LÜCKEN-LEISTE (ABSICHERUNGSSTATUS)
+// ========================================
+
+var absicherungsBereiche = [
+    { key: 'kfz', label: 'KFZ', keywords: ['kfz', 'kasko'] },
+    { key: 'haftpflicht', label: 'Haftpfl.', keywords: ['haftpflicht'] },
+    { key: 'hausrat', label: 'Hausrat', keywords: ['hausrat'] },
+    { key: 'bu', label: 'BU', keywords: ['bu', 'berufsunfähigkeit', 'berufsunf'] },
+    { key: 'rlv', label: 'RLV', keywords: ['risiko', 'rlv', 'risikoleben'] },
+    { key: 'pflege', label: 'Pflege', keywords: ['pflege'] },
+    { key: 'unfall', label: 'Unfall', keywords: ['unfall'] },
+    { key: 'rechtsschutz', label: 'Rechtssch.', keywords: ['rechtsschutz'] },
+    { key: 'wohngebaeude', label: 'Wohngeb.', keywords: ['wohngebäude', 'wohngebaeude', 'wohngeb'] }
+];
+
+function renderLueckenLeiste(kundenName) {
+    var container = document.getElementById('lueckenLeiste');
+    if (!container) return;
+
+    var kundenPage = document.getElementById('kundenDetailPage');
+    var isBankMode = kundenPage && kundenPage.classList.contains('bank-mode');
+
+    var vertraege = [];
+    if (isBankMode && typeof bankMockKunden !== 'undefined') {
+        var bk = bankMockKunden[kundenName];
+        if (bk) {
+            (bk.versicherungenEigen || []).forEach(function(v) { vertraege.push(v.versicherung || ''); });
+            (bk.versicherungenFremd || []).forEach(function(v) { vertraege.push(v.versicherung || ''); });
+        }
+    } else if (typeof window.mockKunden !== 'undefined') {
+        var mk = window.mockKunden[kundenName];
+        if (mk && mk.vertraege) {
+            mk.vertraege.forEach(function(v) { vertraege.push(v.typ || ''); });
+        }
+    }
+
+    var vertraegeStr = vertraege.join('|').toLowerCase();
+    var vorhanden = [];
+    var luecken = [];
+
+    absicherungsBereiche.forEach(function(bereich) {
+        var found = bereich.keywords.some(function(kw) { return vertraegeStr.indexOf(kw) >= 0; });
+        if (found) vorhanden.push(bereich);
+        else luecken.push(bereich);
+    });
+
+    var html = '<div class="kunden-card luecken-card"><div class="kunden-card-header"><h2>' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>' +
+        ' Absicherungsstatus</h2></div><div class="luecken-badges">';
+
+    absicherungsBereiche.forEach(function(bereich) {
+        var found = bereich.keywords.some(function(kw) { return vertraegeStr.indexOf(kw) >= 0; });
+        if (found) {
+            html += '<span class="luecke-badge luecke-ok" title="' + bereich.label + ' vorhanden"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="20 6 9 17 4 12"></polyline></svg> ' + bereich.label + '</span>';
+        } else {
+            html += '<span class="luecke-badge luecke-fehlt" title="' + bereich.label + ' fehlt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg> ' + bereich.label + '</span>';
+        }
+    });
+
+    html += '</div>';
+
+    if (luecken.length > 0) {
+        html += '<div class="luecken-detail"><strong>' + luecken.length + ' Lücke' + (luecken.length > 1 ? 'n' : '') + ' erkannt:</strong><ul>';
+        luecken.forEach(function(l, i) {
+            html += '<li>' + (i + 1) + '. ' + l.label + ' <a href="javascript:void(0)" onclick="switchKundenTab(\'impulse\')" class="luecke-link">Impuls öffnen</a></li>';
+        });
+        html += '</ul></div>';
+    } else {
+        html += '<div class="luecken-detail luecken-ok-msg"><strong>Alle Kernbereiche abgesichert</strong></div>';
+    }
+
+    html += '</div>';
+    container.innerHTML = html;
+}
+window.renderLueckenLeiste = renderLueckenLeiste;
+
+// ========================================
+// 20-B: LEBENSSITUATIONS-BADGE IM HEADER
+// ========================================
+
+function detectLebenssituation(kunde) {
+    var tags = [];
+    if (kunde.kinder && kunde.kinder.length > 0) tags.push(kunde.kinder.length + ' Kinder');
+    var fs = (kunde.familienstand || '').toLowerCase();
+    if (fs.indexOf('verheiratet') >= 0) tags.push('verheiratet');
+    else if (fs.indexOf('geschieden') >= 0) tags.push('geschieden');
+    else if (fs.indexOf('ledig') >= 0) tags.push('Single');
+    else tags.push(kunde.familienstand || 'k.A.');
+
+    // Eigenheim check
+    var vertraege = kunde.vertraege || [];
+    var hatEigenheim = vertraege.some(function(v) {
+        var t = (v.typ || '').toLowerCase();
+        return t.indexOf('wohngebäude') >= 0 || t.indexOf('wohngeb') >= 0 || t.indexOf('baufi') >= 0;
+    });
+    // Banking check
+    if (!hatEigenheim && kunde.finanzierungen) {
+        hatEigenheim = kunde.finanzierungen.some(function(f) {
+            return (f.kredit || '').toLowerCase().indexOf('baufi') >= 0;
+        });
+    }
+    if (!hatEigenheim && kunde.konten) {
+        hatEigenheim = kunde.konten.some(function(k) {
+            return (k.produkt || '').toLowerCase().indexOf('baufi') >= 0;
+        });
+    }
+    if (hatEigenheim) tags.push('Eigenheim');
+    else tags.push('Miete');
+
+    // Lebensphase
+    var alter = 40;
+    var geb = kunde.geburtsdatum;
+    if (geb) {
+        var parts = geb.split('.');
+        if (parts.length === 3) {
+            var birthYear = parseInt(parts[2]);
+            alter = new Date().getFullYear() - birthYear;
+        }
+    }
+
+    var phase, icon;
+    if (alter < 30) { phase = 'Berufseinsteiger'; icon = '\u{1F4BC}'; }
+    else if (alter < 45 && kunde.kinder && kunde.kinder.length > 0) { phase = 'Familie'; icon = '\u{1F468}\u200D\u{1F469}\u200D\u{1F467}\u200D\u{1F466}'; }
+    else if (alter < 45) { phase = 'Aufbauphase'; icon = '\u{1F4C8}'; }
+    else if (alter < 60) { phase = 'Konsolidierung'; icon = '\u{1F6E1}\uFE0F'; }
+    else { phase = 'Best Ager'; icon = '\u2600\uFE0F'; }
+
+    return { phase: phase, tags: tags, icon: icon, alter: alter };
+}
+
+function renderLebenssituationBadge(kundenName) {
+    var badge = document.getElementById('lebenssituationBadge');
+    if (!badge) return;
+
+    var kundenPage = document.getElementById('kundenDetailPage');
+    var isBankMode = kundenPage && kundenPage.classList.contains('bank-mode');
+
+    var kunde = null;
+    if (isBankMode && typeof bankMockKunden !== 'undefined') {
+        kunde = bankMockKunden[kundenName];
+    }
+    if (!kunde && typeof window.mockKunden !== 'undefined') {
+        kunde = window.mockKunden[kundenName];
+    }
+    if (!kunde) { badge.innerHTML = ''; return; }
+
+    var ls = detectLebenssituation(kunde);
+    badge.innerHTML = '<span class="ls-icon">' + ls.icon + '</span> ' +
+        '<span class="ls-phase">' + ls.phase + '</span>' +
+        (ls.tags.length > 0 ? '<span class="ls-tags">' + ls.alter + ' J. · ' + ls.tags.join(' · ') + '</span>' : '');
+    badge.style.display = '';
+}
+window.renderLebenssituationBadge = renderLebenssituationBadge;
+
+// ========================================
+// 20-C: FINANZPROFIL-TAB
+// ========================================
+
+function renderFinanzprofil(kundenName) {
+    var container = document.getElementById('finanzprofilContent');
+    if (!container) return;
+
+    var kundenPage = document.getElementById('kundenDetailPage');
+    var isBankMode = kundenPage && kundenPage.classList.contains('bank-mode');
+
+    var nettoeinkommen = 3800;
+    var praemienListe = [];
+    var verpflichtungen = [];
+    var sparenPosten = [];
+
+    if (isBankMode && typeof bankMockKunden !== 'undefined') {
+        var bk = bankMockKunden[kundenName];
+        if (bk) {
+            nettoeinkommen = bk.nettoeinkommen || 3800;
+            (bk.versicherungenEigen || []).forEach(function(v) {
+                var p = parsePraemieMonatlich(v.praemie);
+                praemienListe.push({ label: v.versicherung, anbieter: v.anbieter, betrag: p });
+            });
+            (bk.versicherungenFremd || []).forEach(function(v) {
+                var p = parsePraemieMonatlich(v.praemie);
+                praemienListe.push({ label: v.versicherung, anbieter: v.anbieter, betrag: p });
+            });
+            (bk.finanzierungen || []).forEach(function(f) {
+                var rate = 0;
+                var m = (f.rate || '').match(/[\d.,]+/);
+                if (m) rate = parseFloat(m[0].replace('.', '').replace(',', '.'));
+                verpflichtungen.push({ label: f.kredit + ' ' + f.kreditgeber, betrag: rate, quelle: '' });
+            });
+            (bk.sparenKapitalmarkt || []).forEach(function(s) {
+                var sr = 0;
+                var m = (s.sparrate || '').match(/[\d.,]+/);
+                if (m) sr = parseFloat(m[0].replace('.', '').replace(',', '.'));
+                if (sr > 0) sparenPosten.push({ label: s.produkt + ' ' + s.anbieter, betrag: sr, quelle: s.quelle || '' });
+            });
+        }
+    } else if (typeof window.mockKunden !== 'undefined') {
+        var mk = window.mockKunden[kundenName];
+        if (mk) {
+            // Use nettoeinkommen from mockKunden data or estimate
+            nettoeinkommen = mk.nettoeinkommen || 3800;
+            (mk.vertraege || []).forEach(function(v) {
+                var p = parsePraemieMonatlich(v.praemie);
+                praemienListe.push({ label: v.typ, anbieter: v.versicherer, betrag: p });
+            });
+            // FIDA-based obligations
+            (mk.fidaVertraege || []).forEach(function(f) {
+                if (f.typ && (f.typ.toLowerCase().indexOf('kredit') >= 0 || f.typ.toLowerCase().indexOf('baufi') >= 0)) {
+                    verpflichtungen.push({ label: f.typ + ' ' + f.institut, betrag: 0, quelle: 'FIDA' });
+                }
+            });
+        }
+    }
+
+    var gesamtPraemien = praemienListe.reduce(function(s, p) { return s + p.betrag; }, 0);
+    var gesamtVerpflichtungen = verpflichtungen.reduce(function(s, v) { return s + v.betrag; }, 0);
+    var gesamtSparen = sparenPosten.reduce(function(s, sp) { return s + sp.betrag; }, 0);
+    var absicherungsquote = nettoeinkommen > 0 ? (gesamtPraemien / nettoeinkommen * 100) : 0;
+    var freiVerfuegbar = nettoeinkommen - gesamtPraemien - gesamtVerpflichtungen;
+
+    var quoteColor = absicherungsquote >= 20 ? '#28a745' : (absicherungsquote >= 10 ? '#ffc107' : '#dc3545');
+    var quoteWidth = Math.min(absicherungsquote / 25 * 100, 100);
+
+    var html = '<div class="kunden-card"><div class="kunden-card-header"><h2>' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><rect x="2" y="3" width="20" height="18" rx="2"></rect><line x1="2" y1="9" x2="22" y2="9"></line><line x1="12" y1="9" x2="12" y2="21"></line></svg>' +
+        ' Finanzprofil</h2></div>';
+
+    // Absicherungsquote
+    html += '<div class="fp-quote-bar"><span>Absicherungsquote: <strong>' + absicherungsquote.toFixed(1) + '%</strong> vom Nettoeinkommen</span>' +
+        '<div class="fp-progress"><div class="fp-progress-fill" style="width:' + quoteWidth + '%;background:' + quoteColor + '"></div></div>' +
+        '<span class="fp-quote-hint">(empfohlen: 20\u201325%)</span></div>';
+
+    // Two-column layout
+    html += '<div class="fp-columns"><div class="fp-col"><h3>Einnahmen</h3><table class="fp-table"><tbody>' +
+        '<tr><td>Nettoeinkommen</td><td class="fp-amount">\u20AC' + nettoeinkommen.toLocaleString('de-DE') + '</td></tr>' +
+        '</tbody></table></div>';
+
+    html += '<div class="fp-col"><h3>Ausgaben (Versicherungen)</h3><table class="fp-table"><tbody>';
+    praemienListe.forEach(function(p) {
+        html += '<tr><td>' + p.label + ' <span class="fp-anbieter">' + p.anbieter + '</span></td><td class="fp-amount">\u20AC' + Math.round(p.betrag).toLocaleString('de-DE') + '</td></tr>';
+    });
+    html += '<tr class="fp-total"><td>Gesamt</td><td class="fp-amount">\u20AC' + Math.round(gesamtPraemien).toLocaleString('de-DE') + '</td></tr>';
+    html += '</tbody></table></div></div>';
+
+    // Verpflichtungen
+    if (verpflichtungen.length > 0 || sparenPosten.length > 0) {
+        html += '<div class="fp-section"><h3>Weitere Verpflichtungen</h3><table class="fp-table"><tbody>';
+        verpflichtungen.forEach(function(v) {
+            html += '<tr><td>' + v.label + (v.quelle ? ' <span class="fp-fida">' + v.quelle + '</span>' : '') + '</td><td class="fp-amount">\u20AC' + Math.round(v.betrag).toLocaleString('de-DE') + '/mtl.</td></tr>';
+        });
+        sparenPosten.forEach(function(s) {
+            html += '<tr><td>' + s.label + (s.quelle ? ' <span class="fp-fida">' + s.quelle + '</span>' : '') + '</td><td class="fp-amount">\u20AC' + Math.round(s.betrag).toLocaleString('de-DE') + '/mtl.</td></tr>';
+        });
+        html += '</tbody></table></div>';
+    }
+
+    // Summary
+    html += '<div class="fp-summary">' +
+        '<div class="fp-summary-item"><span>Frei verfügbar:</span> <strong>\u20AC' + Math.round(freiVerfuegbar).toLocaleString('de-DE') + '/mtl.</strong></div>';
+    if (gesamtSparen > 0) {
+        html += '<div class="fp-summary-item"><span>Davon Sparen:</span> \u20AC' + Math.round(gesamtSparen).toLocaleString('de-DE') + '/mtl.</div>';
+    }
+    html += '</div>';
+
+    // Action buttons
+    html += '<div class="fp-actions">' +
+        '<button class="btn-primary" onclick="if(typeof showToast===\'function\')showToast(\'Finanzplan wird erstellt...\',\'info\')">Finanzplan erstellen</button>' +
+        '<button class="btn-secondary" onclick="switchKundenTab(\'impulse\')">Absicherungslücke schließen</button></div>';
+
+    html += '</div>';
+    container.innerHTML = html;
+}
+window.renderFinanzprofil = renderFinanzprofil;
+
+function parsePraemieMonatlich(praemieStr) {
+    if (!praemieStr) return 0;
+    var match = praemieStr.match(/[\d.,]+/);
+    if (!match) return 0;
+    var val = parseFloat(match[0].replace('.', '').replace(',', '.'));
+    if (praemieStr.indexOf('/Jahr') >= 0) return val / 12;
+    return val; // Assume monthly
+}
 
 window.__registerModule('kunden-detail-features.js');

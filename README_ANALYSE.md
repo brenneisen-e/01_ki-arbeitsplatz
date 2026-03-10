@@ -1,7 +1,7 @@
 # README_ANALYSE.md – Vollstaendige Projektanalyse KI-Arbeitsplatz
 
 > **Stand:** 2026-03-10
-> **Fokus:** Module A-02 (Vermittler-Overview) und A-10 (Kunden-Detailansicht)
+> **Fokus:** Module A-02 (Vermittler-Overview), A-10 (Kunden-Detailansicht), VV-02 (Berater-Overview), VV-10 (Mandanten-Detail)
 > **Sprache:** Deutsch
 
 ---
@@ -55,6 +55,7 @@ kiarbeitsplatz/
 │   ├── screen-recorder.css             # Screen Recorder
 │   ├── stammdaten-extras.css           # Stammdaten Extras
 │   ├── user-profile.css                # User Profile
+│   ├── vermoegensverwaltung.css         # Vermoegensverwaltung VV-02/VV-10 (OPT-21)
 │   ├── versicherungs-1x1.css           # Versicherungs-1x1
 │   └── pmo-modules/                    # PMO Untermodule
 │       ├── _index.css
@@ -93,6 +94,8 @@ kiarbeitsplatz/
 │   ├── mrh-trowe-modes.js              # A-02c View-Mode, Finance-Mode, Modus-Anwendung
 │   ├── mrh-trowe-render.js             # A-02c MRH-Rendering, Dashboards
 │   ├── mrh-trowe-detail.js             # A-02c Kunden-Detail, Navigation
+│   ├── vv-mock-data.js                 # VV-02/VV-10: Mock-Mandanten, Pipeline, Potentiale (OPT-21)
+│   ├── vv-overview.js                  # VV-02/VV-10: Overview + Detail Rendering (OPT-21)
 │   ├── potentiale.js                   # Potentialanalyse (A-05)
 │   ├── finanzplanung.js                # Finanzplanung (A-09)
 │   ├── banken-feedback.js              # B-01: Modul-State, Feedback-System
@@ -269,6 +272,8 @@ kiarbeitsplatz/
 | P-01 | PMO Toolbox | Projekt-Management Office |
 | H-01 | HR Pipeline | Recruiting & Bewerbermanagement |
 | V-01 | Versicherungs-1x1 | Versicherungs-Grundlagen |
+| **VV-02** | **Berater-Overview (HRK LUNIS)** | **Vermoegensverwaltung Berater-Cockpit** |
+| **VV-10** | **Mandanten-Detail (Client 360°)** | **Vermoegensverwaltung Mandanten-Detailansicht** |
 | K-01 | KI-Kreditanalyse | React-basierte Kreditanalyse |
 
 ### 1.4 Dateizuordnung zu A-02, A-10, B-02, B-10
@@ -322,6 +327,22 @@ kiarbeitsplatz/
 | `index.html` (Zeilen ~7415-7655) | B-10 HTML (teilweise auskommentiert) |
 | `js/page-id-tracker.js` | Page ID Mapping fuer B-10 |
 | `js/router.js` | Routing fuer B-10 |
+
+#### VV-02 (Berater-Overview Vermoegensverwaltung) – OPT-21
+| Datei | Beschreibung |
+|---|---|
+| `js/vv-overview.js` | VV-02 + VV-10 Logik: showVVOverview, Tabs, KPIs, Detail-Rendering |
+| `js/vv-mock-data.js` | VV Mock-Daten: 8 Mandanten, Pipeline (12 Prospects), Potentiale (8) |
+| `js/mode-config.js` | MODE_CONFIGS.vermoegensverwaltung (Impulse-Regeln, Potentiale-Config) |
+| `css/vermoegensverwaltung.css` | VV-02/VV-10 vollstaendiges Stylesheet (HRK LUNIS Branding) |
+| `index.html` | `#vermoegensverwaltungModule` Container mit VV-02 und VV-10 Pages |
+
+#### VV-10 (Mandanten-Detail Vermoegensverwaltung – Client 360°) – OPT-21
+| Datei | Beschreibung |
+|---|---|
+| `js/vv-overview.js` | VV-10 Logik: openVVMandantDetail, Client 360°, Portfolio, Compliance |
+| `js/vv-mock-data.js` | Mandanten-Daten: Vermoegensbilanz, Asset Allocation, WpHG, Compliance |
+| `css/vermoegensverwaltung.css` | Detail-Styles: Wealth Tables, Family Tree, Performance Grid |
 
 ---
 
@@ -1421,6 +1442,116 @@ Statt den separaten B-10 Container zu nutzen, wird die **A-10 Seite fuer Banking
 - B-10 JS-Funktionen wie `fillBankKundenDetail()` existieren und sind funktional, werden aber nur indirekt ueber den A-10 Adapter genutzt
 - Doppelte Kundendaten: B-02 hat `bankKundenRetail` (Kurzform) UND B-10 hat `bankMockKunden` (Langform) fuer teils dieselben Kunden
 
+### 4.5 VV-02 / VV-10 – Vermoegensverwaltung (OPT-21)
+
+#### 4.5.1 Architektonische Entscheidung
+
+VV-02/VV-10 sind als **eigenstaendiges Modul** implementiert (nicht als View-Mode von A-02/A-10). Gruende:
+- **Voellig anderes Geschaeftsmodell:** HNWI-Beratung (~30-50 Mandanten) statt Massengeschaeft (200-400 Kunden)
+- **Andere KPIs:** AuM, Net New Money, Marge, At-Risk statt Neugeschaeft, Storno, NPS
+- **Andere Datenstruktur:** Portfolio mit Asset Allocation, Compliance (WpHG, Verlustschwelle), Vermoegensbilanz
+- **Andere Regulatorik:** MiFID II (voll), WpHG statt IDD
+
+#### 4.5.2 Vergleich mit A-02/B-02
+
+| Aspekt | A-02 (Versicherung) | B-02 (Banking) | VV-02 (Vermoegensverwaltung) |
+|---|---|---|---|
+| Eigener Container | `#agenturOverview` | In A-02 integriert | `#vvOverviewPage` (eigenstaendig) |
+| Eigenes JS | `agentur-overview-*.js` | In A-02 integriert | `vv-overview.js` (eigenstaendig) |
+| Mock-Kunden | 35 Vertraege | 12+8+6 = 26 | 8 Mandanten |
+| KPI-Boxen | 9 KPIs | 4 KPIs | 6 KPIs |
+| Tab-Anzahl | 9 Tabs | 7 Tabs | 6 Tabs (Overview) + 6 Tabs (Detail) |
+| Kunden-ID Format | `KD00001` | `KDB001` | `VV001` |
+| Chat | Mock (Keyword) | Mock (Keyword) | Config definiert, nicht implementiert |
+| CSS | `agentur-fachkonzept.css` | `banking-berater.css` | `vermoegensverwaltung.css` |
+| Branding | ERGO (rot #C8102E) | Volksbank (blau #003399) | HRK LUNIS (dunkelblau #1a365d, gold #c4a35a) |
+
+#### 4.5.3 VV-02 Berater-Overview
+
+**Container:** `#vvOverviewPage` innerhalb `#vermoegensverwaltungModule`
+**Einstieg:** `switchModule('vermoegensverwaltung')` → `showVVOverview()`
+**Route:** `/vv-overview`
+
+**Header:** HRK LUNIS Branding, Berater-Name, Titel, Standort
+**KPIs (6):** AuM Gesamt, Net New Money, Ertrag YTD, Mandate, Ø Marge, At-Risk
+
+**Tabs:**
+| Tab | Funktion | Inhalt |
+|---|---|---|
+| `uebersicht` | `fillVVUebersicht()` | Tagesstart (priorisierte Items), Portfolio-Einzeiler |
+| `mandatsliste` | `fillVVMandatsliste()` | Sortierte Mandantentabelle (AuM, Segment, Marge, Perf, Status) |
+| `pipeline` | `fillVVPipeline()` | Funnel-Visualisierung, Prospect-Tabelle mit Stadien |
+| `portfolio` | `fillVVPortfolioOverview()` | Aggregierte Asset Allocation, Drift-Monitoring |
+| `compliance` | `fillVVComplianceOverview()` | WpHG-Status, Geeignetheit, Verlustschwelle aller Mandanten |
+| `reporting` | `fillVVReporting()` | Performance vs. Benchmark, Ex-Ante/Ex-Post Kosten |
+
+#### 4.5.4 VV-10 Mandanten-Detail (Client 360°)
+
+**Container:** `#vvDetailPage` innerhalb `#vermoegensverwaltungModule`
+**Einstieg:** `openVVMandantDetail(name)` (Klick auf Mandant in VV-02)
+**Zurueck:** `backFromVVDetail()` → zurueck zu VV-02
+
+**Tabs:**
+| Tab | Funktion | Inhalt |
+|---|---|---|
+| `stammdaten` | `fillVVDetailStammdaten()` | Client 360°: Persoenliche Daten, Mandatsuebersicht, Familienbaum, Vermoegensstruktur |
+| `portfolio` | `fillVVDetailPortfolio()` | Asset Allocation (Ist vs. Soll), Performance-Metriken, Rebalancing-Empfehlung |
+| `finanzplanung` | `fillVVDetailVermoegensbilanz()` | Liquides/illiquides Vermoegen, Gesamtbilanz, Cross-Selling-Potenzial |
+| `compliance` | `fillVVDetailCompliance()` | WpHG-Bogen, Geeignetheitspruefung, Verlustschwelle (Art. 62 DelVO), Kosteninformation |
+| `impulse` | `fillVVDetailPotentiale()` | KI-Vertriebsassistent Impulse + Whitespots (aus evaluateImpulse + vvPotentiale) |
+| `kommunikation` | `fillVVDetailKommunikation()` | Kommunikationshistorie (Meetings, E-Mails, Anrufe) |
+
+#### 4.5.5 VV Datenmodell
+
+**vvMockMandanten** (8 Mandanten):
+
+| Mandant | Segment | AuM | Mandatstyp | Status |
+|---|---|---|---|---|
+| Dr. Heinrich von Trott | FairValue | 12,5M € | Individuelle VV | ok (Drift bei Aktien) |
+| Familie Lindenberg | SmartValue | 2,1M € | VV + PE | ok |
+| Stiftung Weber | Stiftung | 8,3M € | Spezialmandat | drift |
+| Winterberg GmbH | Institutionell | 25M € | Spezialmandat | ok |
+| Keller NextGen | SmartValue | 450k € | VV | wphg |
+| Prof. Dr. Hartmann | FairValue | 6,8M € | Individuelle VV | ok |
+| Dr. Marcus Schreiber | FairValue | 4,2M € | Individuelle VV | ok |
+| Familie Bergmann-Roth | FairValue | 18,5M € | VV + Family Office | ok |
+
+**Mandanten-Datenstruktur (Beispiel):**
+```javascript
+{
+    // Persoenliche Daten
+    geburtsdatum, adresse, beruf, familienstand, kinder[], lebensphase,
+    // Mandatsdetails
+    segment, mandatstyp, mandatSeit, aum, aumHistory[], netNewMoney,
+    // Portfolio
+    risikoprofil, anlagerichtlinie{}, esgPraeferenz{}, benchmark,
+    assetAllocation{}, sollAllocation{}, performance{},
+    // Vermoegensbilanz
+    fremdVermoegen[], immobilien[], unternehmen[], peBeteiligungen[],
+    // Compliance
+    wphgBogen{}, geeignetheitsbericht{}, verlustschwelle{},
+    exAnteKosten{}, exPostKosten{},
+    // Ertrag & Kommunikation
+    managementFee, ertragProJahr, kommunikation[], nps{}
+}
+```
+
+**vvPipeline** (12 Prospects): Lead → Kennenlernen → Beratung → Analyse → Onboarding
+**vvPotentiale** (8 Eintraege): Fremdbank-Konsolidierung, NextGen-Mandate, Stiftungsgruendung
+
+#### 4.5.6 VV Impulse-Regeln (mode-config.js)
+
+| Regel-ID | Impuls | Prioritaet | Bedingung |
+|---|---|---|---|
+| `rebalancing` | Rebalancing erforderlich | hoch | Drift ≥ 2pp in irgendeiner Assetklasse |
+| `wphg-bogen-faellig` | WpHG-Bogen Aktualisierung | hoch | Letzte Aktualisierung ≥ 10 Monate |
+| `geeignetheitsbericht-faellig` | Geeignetheitsbericht fällig | hoch | Status = 'offen' |
+| `verlustschwelle-naehert` | Verlustschwelle naehert sich | hoch | Puffer < 8% vom AuM |
+| `fremdbank-konsolidierung` | Fremdbank-Vermoegen konsolidieren | mittel | fremdVermoegen vorhanden |
+| `nextgen-mandat` | NextGen-Mandat erschliessen | mittel | Kind ≥ 25 ohne eigenes Mandat |
+| `nachfolgeplanung` | Nachfolgeplanung anstossen | mittel | Alter ≥ 60 + Unternehmen vorhanden |
+| `mandatstyp-upgrade` | Mandatstyp-Upgrade anbieten | niedrig | SmartValue + AuM ≥ 3M € |
+
 ---
 
 ## 5. Moduluebergreifende Abhaengigkeiten
@@ -1443,20 +1574,26 @@ Statt den separaten B-10 Container zu nutzen, wird die **A-10 Seite fuer Banking
           │                 │                │
           ▼                 ▼                ▼
      ┌──────────────────────────────────────────────┐
-     │          agentur-overview.js                  │
-     │  A-02: showAgenturOverview, fillHeader, etc. │
-     │  B-02: showBeraterOverview, fillBerater*, etc.│
-     └──────┬─────────────────────┬────────────────┘
-            │                     │
-            │ openKundenDetail()  │ openBankKundenDetail()
-            ▼                     ▼
-     ┌──────────────────────────────────────────────┐
-     │          kunden-detail.js                     │
-     │  A-10: fillKundenDetail, switchKundenTab      │
-     │  B-10: fillBankKundenDetail, switchBankTab    │
-     └──┬──────┬──────┬──────┬──────┬──────────────┘
-        │      │      │      │      │
-        ▼      ▼      ▼      ▼      ▼
+     │          mode-config.js                       │
+     │  MODE_CONFIGS: versicherung, banking,         │
+     │                vermoegensverwaltung           │
+     │  evaluateImpulse(), isVVMode(), isBankMode()  │
+     └──┬──────────────────────┬────────────────────┘
+        │                      │
+        ▼                      ▼
+     ┌──────────────────────┐  ┌──────────────────────────┐
+     │ agentur-overview.js  │  │  vv-overview.js (OPT-21) │
+     │ A-02 + B-02          │  │  VV-02 + VV-10           │
+     └──────┬───────────────┘  └──────┬───────────────────┘
+            │                         │
+            │ openKundenDetail()      │ openVVMandantDetail()
+            ▼                         ▼
+     ┌──────────────────────┐  ┌──────────────────────────┐
+     │  kunden-detail.js    │  │  vv-mock-data.js         │
+     │  A-10 + B-10         │  │  vvMockMandanten,        │
+     └──┬──────┬──────┬─────┘  │  vvPipeline, vvPotentiale│
+        │      │      │        └──────────────────────────┘
+        ▼      ▼      ▼
     clv.js  bezahlen  komm.  nps    finanzplanung.js
             .js       display display
                       .js    .js
@@ -1485,12 +1622,17 @@ Statt den separaten B-10 Container zu nutzen, wird die **A-10 Seite fuer Banking
 | `router.js` | `setViewMode()` | `agentur-overview.js` | View-Mode setzen |
 | `makler.js` | `restoreAOKundenDetail()` | `agentur-overview.js` | Makler → A-10 Restore |
 | `mrh-trowe.js` | `restoreMRHKundenDetail()` | `agentur-overview.js` | MRH → A-10 Restore |
+| `banken-module.js` | `showVVOverview()` | `vv-overview.js` | switchModule('vermoegensverwaltung') |
+| `vv-overview.js` | `evaluateImpulse()` | `mode-config.js` | VV-10 Impulse-Evaluierung |
+| `vv-overview.js` | `setMode()` | `mode-config.js` | Modus auf 'vermoegensverwaltung' setzen |
+| `vv-overview.js` | `backToLanding()` | `landing-core.js` | VV-02 → Landing zurueck |
 
 ### 5.3 Event-basierte Kommunikation
 
 | Event | Dispatcher | Listener | Beschreibung |
 |---|---|---|---|
-| `viewChanged` | `kunden-detail.js`, `agentur-overview.js` | `page-id-tracker.js` | View-Wechsel fuer Page-ID Tracking |
+| `viewChanged` | `kunden-detail.js`, `agentur-overview.js`, `vv-overview.js` | `page-id-tracker.js` | View-Wechsel fuer Page-ID Tracking |
+| `moduleChanged` | `banken-module.js` | `page-id-tracker.js` | Modul-Wechsel (inkl. vermoegensverwaltung) |
 | `hashchange` | Browser | `router.js` | URL-Aenderung |
 | `popstate` | Browser | `router.js` | History-Navigation |
 
@@ -1512,6 +1654,18 @@ A-02/A-10/B-02/B-10 exportieren zahlreiche Funktionen auf `window`:
 **Aus agentur-overview.js (B-02):**
 - `window.showBeraterOverview`, `window.openBankKundenDetail`
 - Alle B-02 Funktionen (implizit ueber globalen Scope)
+
+**Aus vv-overview.js (VV-02/VV-10):**
+- `window.showVVOverview`, `window.showVVTab`
+- `window.openVVMandantDetail`, `window.showVVDetailTab`
+- `window.backFromVVDetail`, `window.backFromVVOverview`
+
+**Aus vv-mock-data.js:**
+- `window.vvBeraterData`, `window.vvMockMandanten`
+- `window.vvPipeline`, `window.vvPotentiale`
+
+**Aus mode-config.js (erweitert):**
+- `window.isVVMode` (neu), `window.MODE_CONFIGS.vermoegensverwaltung` (neu)
 
 ---
 
@@ -1543,8 +1697,9 @@ A-02/A-10/B-02/B-10 exportieren zahlreiche Funktionen auf `window`:
 3. `styles.css` – Haupt-Stylesheet
 4. Modul-spezifische CSS (finanzplanung, banken, etc.)
 5. `banking-berater.css` – B-02/B-10 Color-Overrides
-6. `kunden-detail.css`, `clv.css`, `agentur-fachkonzept.css` – Modularisierte Styles
-7. Weitere Feature-CSS (nps, bezahlen-tx, potentiale-display, etc.)
+6. `vermoegensverwaltung.css` – VV-02/VV-10 HRK LUNIS Branding (OPT-21)
+7. `kunden-detail.css`, `clv.css`, `agentur-fachkonzept.css` – Modularisierte Styles
+8. Weitere Feature-CSS (nps, bezahlen-tx, potentiale-display, etc.)
 
 ### 6.4 JavaScript-Ladereihenfolge
 
@@ -1567,8 +1722,9 @@ Die Reihenfolge ist kritisch (keine Module, alles globaler Scope):
 14. kunden-detail.js (A-10 + B-10) ← Muss NACH agentur-overview.js!
 15. clv.js, bezahlen.js, potentiale.js, kommunikation-display.js, etc.
 16. makler.js, mrh-trowe.js (A-02 Varianten)
-17. Weitere Module (sales-report, finanzplanung, banken, etc.)
-18. page-id-tracker.js (Page ID System)
+17. vv-mock-data.js, vv-overview.js (VV-02/VV-10 Vermoegensverwaltung, OPT-21)
+18. Weitere Module (sales-report, finanzplanung, banken, etc.)
+19. page-id-tracker.js (Page ID System)
 19. bestandsuebertragung/index.js (als ES6 Module)
 20. guided-tour.js
 ```
@@ -1584,6 +1740,7 @@ Die Reihenfolge ist kritisch (keine Module, alles globaler Scope):
 | `financeMode` | Global | String | Open/Closed Finance Modus |
 | `agenturPhoto` | A-02 | String (URL) | Vermittler-Foto |
 | `tierInfo_<name>` | A-10 | JSON | Haustier-Info pro Kunde |
+| `currentModule` | M-01 | String | Aktives Modul (versicherung/banken/asset/vermoegensverwaltung) |
 
 ### 6.6 Deployment
 
@@ -1633,6 +1790,17 @@ Die Reihenfolge ist kritisch (keine Module, alles globaler Scope):
 
 5. **Daten-Synchronisation (geloest):** `bankMockKunden` in `kunden-detail-banking.js` ist Single Source of Truth. `bankKundenRetail` wird per `DOMContentLoaded` in `agentur-overview-core.js` automatisch daraus abgeleitet.
 
+6. **OPT-21: Dritter Modus Vermoegensverwaltung (2026-03-10):**
+   Neuer eigenstaendiger Modus `vermoegensverwaltung` in MODE_CONFIGS fuer HRK LUNIS Wealth Management:
+   - **Eigenstaendiges Modul-Paar:** `vv-overview.js` + `vv-mock-data.js` (nicht in A-02/A-10 integriert)
+   - **Eigener HTML-Container:** `#vermoegensverwaltungModule` mit `#vvOverviewPage` (VV-02) und `#vvDetailPage` (VV-10)
+   - **Eigene CSS-Datei:** `vermoegensverwaltung.css` mit HRK LUNIS Branding
+   - **mode-config.js erweitert:** `MODE_CONFIGS.vermoegensverwaltung` mit 8 Impulse-Regeln, Potentiale-Config, Chat-Config
+   - **Mode-Detection erweitert:** `isVVMode()` Helper, VV-Seiten in getModeForCurrentView()
+   - **switchModule erweitert:** `banken-module.js` unterstuetzt `vermoegensverwaltung`
+   - **Router erweitert:** `/vv-overview` Route
+   - **Page-Hiding erweitert:** `landing-core.js` + `agentur-overview-core.js` verstecken VV-Seiten
+
 ### 7.2 Code-Qualitaet
 
 1. **Konsistente Muster:** Alle fill-Funktionen folgen dem gleichen Muster: DOM-Element per ID holen, Daten aus Mock-Objekt lesen, innerHTML setzen.
@@ -1665,4 +1833,4 @@ Die Reihenfolge ist kritisch (keine Module, alles globaler Scope):
 
 ---
 
-> **Ende der Analyse** | Stand: 2026-03-09 | Erstellt mit Claude Code
+> **Ende der Analyse** | Stand: 2026-03-10 | Erstellt & aktualisiert mit Claude Code

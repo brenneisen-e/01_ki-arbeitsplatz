@@ -261,6 +261,13 @@ function showAgenturTab(tabName) {
     if (tabButton) tabButton.classList.add('active');
     if (tabContent) tabContent.classList.add('active');
 
+    // Unified Potentiale rendering (UNIFY-01)
+    if (tabName === 'potential' && typeof renderUnifiedPotentiale === 'function') {
+        // Ensure Versicherung mode is active for A-02
+        if (typeof setMode === 'function') setMode('versicherung');
+        renderUnifiedPotentiale('unifiedPotentialeA02');
+    }
+
     // Cockpit-KPIs (Gesamtbestand etc.) nur in Übersicht anzeigen
     var cockpitKpis = document.querySelector('.cockpit-kpis:not(#maklerKpis):not(#mrhKpis):not([id^="bank"])');
     if (cockpitKpis) {

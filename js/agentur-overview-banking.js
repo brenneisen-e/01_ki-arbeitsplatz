@@ -511,52 +511,27 @@ function fillBeraterQualitaet() {
         '<div class="uebersicht-card"><div class="uebersicht-card-header"><h3>Compliance-Checkliste</h3></div><div style="padding:16px;display:flex;flex-direction:column;gap:8px;">' + checkHtml + '</div></div>';
 }
 
-// ── FILL POTENTIALE TAB ──
+// ── FILL POTENTIALE TAB (Unified – UNIFY-01) ──
 function fillBeraterPotentiale() {
-    var el = document.getElementById('berater-tab-potentiale');
-    if (!el || el.innerHTML.trim() !== '') return;
-    
-    // Potentiale generiert durch Truuco Impulsmanager (Data Intelligence Platform)
-    var potentiale = [
-        { kunde:'Klaus Fischer', id:'KDB001', prio:'high', produkt:'Anschlussfinanzierung (DZ HYP / Münchener Hyp)', beschr:'Zinsbindung läuft 09/2026 aus. Restschuld 185k. Forward-Darlehen mit günstigeren Konditionen über DZ HYP oder Münchener Hypothekenbank möglich.', vol:'185.000', ertrag:'2.775', quelle:'Truuco' },
-        { kunde:'Sandra Müller', id:'KDB002', prio:'high', produkt:'VR-FinanzPlan + Union Investment Sparplan', beschr:'Sparquote 1.800/Mon. ohne Altersvorsorge. Open Finance zeigt nur Tagesgeld bei ING. UnionDepot mit VermögenPlus-Beratung empfohlen.', vol:'500/Mon.', ertrag:'1.800', quelle:'Truuco/FIDA' },
-        { kunde:'Markus Wagner', id:'KDB003', prio:'medium', produkt:'VR-MeinDepot + ETF-Sparplan', beschr:'Depot bei Trade Republic (FIDA). Umzug in VR-MeinDepot mit persönlicher Beratung und niedrigeren Kosten ab 4,95\u20AC/Trade.', vol:'45.000', ertrag:'675', quelle:'FIDA' },
-        { kunde:'Julia Becker', id:'KDB004', prio:'high', produkt:'FIDA-Consent + Wero-Aktivierung', beschr:'Nur 2 Produkte. Open Finance Consent einholen. Wero als Einstieg in digitale VR-Welt, dann VR-FinanzPlan.', vol:'n/a', ertrag:'500', quelle:'Impulsmanager' },
-        { kunde:'Peter Hoffmann', id:'KDB005', prio:'medium', produkt:'VermögenPlus (Union Investment)', beschr:'120k auf Tagesgeld. Digitale Fondsvermögensverwaltung VermögenPlus empfohlen (0,80-1,25% Gebühren je Volumen).', vol:'120.000', ertrag:'1.800', quelle:'Truuco' },
-        { kunde:'Andrea Lang', id:'KDB006', prio:'medium', produkt:'VR Smart Finanz Praxiskredit', beschr:'Kanzleierweiterung geplant. KMU-Kredit über VR Smart Finanz inkl. KfW-Förderung.', vol:'80.000', ertrag:'1.200', quelle:'Impulsmanager' },
-        { kunde:'Thomas Klein', id:'KDB007', prio:'low', produkt:'VR-KlimaKredit + KfW-Förderung', beschr:'Immobilie Bj. 1975. VR-KlimaKredit bis 75.000\u20AC für energieeffiziente Sanierung. KfW-Fördermittel beantragen.', vol:'75.000', ertrag:'1.125', quelle:'Truuco' },
-        { kunde:'Stefan Braun', id:'KDB009', prio:'high', produkt:'VR-FinanzPlan + Digitale girocard', beschr:'IT-affin, hohes Einkommen, kaum VR-Produkte. VR Banking App + digitale girocard als Einstieg, dann FinanzPlan.', vol:'n/a', ertrag:'400', quelle:'Impulsmanager' },
-        { kunde:'Katharina Wolf', id:'KDB010', prio:'medium', produkt:'R+V Risikolebensversicherung', beschr:'Junge Familie, Baufinanzierung 180k ohne Todesfallabsicherung. R+V Premium mit Nachversicherungsgarantie.', vol:'480/J.', ertrag:'360', quelle:'Truuco' },
-        { kunde:'Jürgen Peters', id:'KDB011', prio:'high', produkt:'DZ PRIVATBANK Nachfolgeplanung', beschr:'Geschäftsführer, 60 Jahre. DZ PRIVATBANK für Nachfolge + Stiftungsberatung. Kapital-LV bei Swiss Life läuft 2028 ab (FIDA).', vol:'n/a', ertrag:'5.000', quelle:'Truuco/FIDA' },
-        { kunde:'Sabine Kraus', id:'KDB012', prio:'low', produkt:'UnionDepot + GENO Broker Depot-Wechsel', beschr:'52k Depot bei Comdirect (FIDA). Wechsel zu UnionDepot oder GENO Broker mit persönlicher Beratung.', vol:'30.000', ertrag:'450', quelle:'FIDA' }
-    ];
-    
-    var expandSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="6 9 12 15 18 9"></polyline></svg>';
-    var html = '<div class="uebersicht-card potentiale-impuls-card"><div class="uebersicht-card-header"><h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg> Truuco Impulsmanager \u2013 Vertriebspotentiale (' + potentiale.length + ')</h3><span style="font-size:11px;background:rgba(37,99,235,0.1);color:#2563eb;padding:3px 10px;border-radius:12px;font-weight:600;">KI-generiert via Data Intelligence Platform</span></div><div class="potentiale-liste-neu">';
-    potentiale.forEach(function(p, idx) {
-        var detailId = 'berater-pot-detail-' + idx;
-        html += '<div class="potential-card clickable" style="cursor:pointer;" onclick="toggleBeraterPotentialDetail(\'' + detailId + '\', this)">' +
-            '<div class="potential-card-left"><div class="potential-kunde"><strong>' + p.kunde + '</strong><span class="potential-kunden-id">' + p.id + '</span><span class="impuls-priority ' + p.prio + '">' + (p.prio==='high'?'Hoch':(p.prio==='medium'?'Mittel':'Niedrig')) + '</span></div><div class="potential-produkt">' + p.produkt + '</div><div class="potential-beschreibung">' + p.beschr + '</div></div>' +
-            '<div class="potential-card-right"><div class="potential-kennzahl"><span class="potential-kennzahl-label">Volumen</span><span class="potential-kennzahl-value">\u20AC' + p.vol + '</span></div><div class="potential-kennzahl"><span class="potential-kennzahl-label">Ertrag</span><span class="potential-kennzahl-value prov">\u20AC' + p.ertrag + '</span></div></div>' +
-            '<span class="impuls-expand" style="display:flex;align-items:center;margin-left:8px;transition:transform 0.2s;">' + expandSvg + '</span>' +
-        '</div>';
-        // Expandable detail panel
-        html += '<div class="impuls-detail" id="' + detailId + '" style="display:none;">' +
-            '<div class="impuls-detail-section"><h4>Herleitung des Impulses</h4><div class="herleitung-grid">' +
-                '<div class="herleitung-item"><span class="herleitung-label">Datenquelle</span><span class="herleitung-value">' + (p.quelle || 'Truuco Impulsmanager') + '</span></div>' +
-                '<div class="herleitung-item"><span class="herleitung-label">Kunde</span><span class="herleitung-value">' + p.kunde + ' (' + p.id + ')</span></div>' +
-                '<div class="herleitung-item"><span class="herleitung-label">Erkannte Situation</span><span class="herleitung-value">' + p.beschr + '</span></div>' +
-                '<div class="herleitung-item"><span class="herleitung-label">Empfohlenes Produkt</span><span class="herleitung-value">' + p.produkt + '</span></div>' +
-                '<div class="herleitung-item"><span class="herleitung-label">Erwarteter Ertrag</span><span class="herleitung-value">\u20AC' + p.ertrag + '</span></div>' +
-            '</div></div>' +
-            '<div class="impuls-detail-section"><h4>Aktionen</h4><div class="impuls-actions">' +
-                '<button class="action-btn primary" onclick="event.stopPropagation(); openBankKundenDetail(\'' + p.kunde + '\', \'' + p.id + '\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg> Kunde \u00f6ffnen</button>' +
-                '<button class="action-btn secondary" onclick="event.stopPropagation();"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> Termin vereinbaren</button>' +
-            '</div></div>' +
-        '</div>';
-    });
-    html += '</div></div>';
-    el.innerHTML = html;
+    var parent = document.getElementById('berater-tab-potentiale');
+    if (!parent) return;
+
+    // Ensure the unified container exists (may have been cleared by resetBankMode)
+    var el = document.getElementById('unifiedPotentialeB02');
+    if (!el) {
+        el = document.createElement('div');
+        el.id = 'unifiedPotentialeB02';
+        parent.appendChild(el);
+    }
+
+    // Only render once per fill cycle
+    if (el.querySelector('.unified-pot-wrapper')) return;
+
+    // Ensure Banking mode is active
+    if (typeof setMode === 'function') setMode('banking');
+    if (typeof renderUnifiedPotentiale === 'function') {
+        renderUnifiedPotentiale('unifiedPotentialeB02');
+    }
 }
 
 // ── FILL WEITERE POTENTIALE (Uebersicht expandable) ──

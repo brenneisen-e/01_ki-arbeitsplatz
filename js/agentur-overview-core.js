@@ -104,6 +104,21 @@ function loadAgenturData(vermittlerId) {
         if (typeof renderDashboardWidgets === 'function') {
             renderDashboardWidgets('widgetGrid');
         }
+
+        // 20-A: Potenzial-Scoring in Kundenliste
+        setTimeout(function() {
+            if (typeof enhanceKundenlisteWithPotenzial === 'function') enhanceKundenlisteWithPotenzial();
+        }, 200);
+
+        // 20-E: Notification Bell
+        setTimeout(function() {
+            if (typeof initNotifications === 'function') initNotifications();
+        }, 300);
+
+        // 20-F: KI-Portfolio-Einzeiler
+        setTimeout(function() {
+            if (typeof renderKIPortfolioEinzeiler === 'function') renderKIPortfolioEinzeiler();
+        }, 400);
     }
 
     // Zeige Übersicht-Tab als ersten Tab und wende View-Mode an
@@ -277,6 +292,11 @@ function showAgenturTab(tabName) {
     var cockpitKpis = document.querySelector('.cockpit-kpis:not(#maklerKpis):not(#mrhKpis):not([id^="bank"])');
     if (cockpitKpis) {
         cockpitKpis.style.display = (tabName === 'uebersicht') ? '' : 'none';
+    }
+    // 20-F: KI-Einzeiler nur in Übersicht
+    var kiEinzeiler = document.getElementById('kiPortfolioEinzeiler');
+    if (kiEinzeiler) {
+        kiEinzeiler.style.display = (tabName === 'uebersicht') ? '' : 'none';
     }
 
     // OPT-01: Tagesstart rendering
@@ -733,5 +753,191 @@ window._toggleTagesstart = function(headerEl) {
     var card = headerEl.closest('.tagesstart-card');
     if (card) card.classList.toggle('tagesstart-collapsed');
 };
+
+// ========================================
+// 20-E: NOTIFICATION-BELL MIT EVENT-DROPDOWN
+// ========================================
+
+function generateNotifications() {
+    var notifications = [];
+    var now = new Date();
+    var kunden = (typeof window.mockKunden !== 'undefined') ? window.mockKunden : {};
+
+    Object.keys(kunden).forEach(function(name) {
+        var k = kunden[name];
+
+        // Vertrag läuft aus (check vertraege for contracts expiring soon)
+        (k.vertraege || []).forEach(function(v) {
+            if (v.details && v.details.indexOf('2026') >= 0 && v.details.toLowerCase().indexOf('laufzeit') >= 0) {
+                notifications.push({ prio: 'hoch', icon: '\u26A0\uFE0F', text: name + ': ' + v.typ + ' läuft bald aus', action: 'kunde', kunde: name });
+            }
+        });
+
+        // Alters-Meilenstein (runde Geburtstage)
+        if (k.geburtsdatum) {
+            var parts = k.geburtsdatum.split('.');
+            if (parts.length === 3) {
+                var birthYear = parseInt(parts[2]);
+                var alter = now.getFullYear() - birthYear;
+                var naechsterRunder = [30, 40, 50, 55, 60, 65].find(function(a) { return a === alter || a === alter + 1; });
+                if (naechsterRunder) {
+                    notifications.push({ prio: 'mittel', icon: '\u{1F382}', text: name + ': wird ' + naechsterRunder + ' \u2192 Nachversicherung prüfen', action: 'kunde', kunde: name });
+                }
+            }
+        }
+
+        // Kein Kontakt seit > 6 Monaten
+        if (k.kommunikation && k.kommunikation.length > 0) {
+            var lastKontakt = new Date(k.kommunikation[0].datum);
+            var monthsDiff = (now - lastKontakt) / (1000 * 60 * 60 * 24 * 30);
+            if (monthsDiff > 6) {
+                notifications.push({ prio: 'mittel', icon: '\u{1F4DE}', text: name + ': Kein Kontakt seit ' + Math.round(monthsDiff) + ' Monaten', action: 'kunde', kunde: name });
+            }
+        }
+    });
+
+    // Static mock notifications for demo
+    if (notifications.length < 2) {
+        notifications.push({ prio: 'niedrig', icon: '\u{1F4CB}', text: '3 Kunden: Neue BU-Tarife verfügbar \u2192 Optimierung', action: 'list' });
+        notifications.push({ prio: 'hoch', icon: '\u{1F4C9}', text: 'Stornoquote über Benchmark \u2192 2 Verträge prüfen', action: 'detail' });
+    }
+
+    return notifications;
+}
+
+function renderNotificationDropdown(notifications) {
+    var dropdown = document.getElementById('notificationDropdown');
+    var badge = document.getElementById('notificationBadge');
+    if (!dropdown) return;
+
+    if (badge) {
+        badge.textContent = notifications.length;
+        badge.style.display = notifications.length > 0 ? '' : 'none';
+    }
+
+    var html = '<div class="notif-header"><strong>Benachrichtigungen (' + notifications.length + ')</strong></div>';
+    notifications.forEach(function(n) {
+        html += '<div class="notif-item notif-' + n.prio + '">' +
+            '<span class="notif-icon">' + n.icon + '</span>' +
+            '<span class="notif-text">' + n.text + '</span>';
+        if (n.action === 'kunde' && n.kunde) {
+            html += '<button class="notif-action" onclick="toggleNotificationDropdown();openKundenDetail(\'' + n.kunde.replace(/'/g, "\\'") + '\')">Zum Kunden</button>';
+        } else if (n.action === 'list') {
+            html += '<button class="notif-action" onclick="toggleNotificationDropdown();showAgenturTab(\'kundenliste\')">Liste anzeigen</button>';
+        } else {
+            html += '<button class="notif-action" onclick="toggleNotificationDropdown();if(typeof showToast===\'function\')showToast(\'Details werden geladen...\',\'info\')">Details</button>';
+        }
+        html += '</div>';
+    });
+
+    dropdown.innerHTML = html;
+}
+
+function toggleNotificationDropdown() {
+    var dropdown = document.getElementById('notificationDropdown');
+    if (!dropdown) return;
+    if (dropdown.style.display === 'none' || !dropdown.style.display) {
+        dropdown.style.display = 'block';
+        // Close on outside click
+        setTimeout(function() {
+            document.addEventListener('click', closeNotifOnOutside, { once: true });
+        }, 10);
+    } else {
+        dropdown.style.display = 'none';
+    }
+}
+
+function closeNotifOnOutside(e) {
+    var container = document.getElementById('notificationBellContainer');
+    if (container && !container.contains(e.target)) {
+        var dropdown = document.getElementById('notificationDropdown');
+        if (dropdown) dropdown.style.display = 'none';
+    } else {
+        // Re-attach if click was inside
+        setTimeout(function() {
+            document.addEventListener('click', closeNotifOnOutside, { once: true });
+        }, 10);
+    }
+}
+
+function initNotifications() {
+    var notifications = generateNotifications();
+    renderNotificationDropdown(notifications);
+}
+window.toggleNotificationDropdown = toggleNotificationDropdown;
+window.initNotifications = initNotifications;
+
+// ========================================
+// 20-F: KI-PORTFOLIO-EINZEILER
+// ========================================
+
+function renderKIPortfolioEinzeiler() {
+    var container = document.getElementById('kiPortfolioEinzeiler');
+    if (!container) return;
+
+    var kunden = (typeof window.mockKunden !== 'undefined') ? window.mockKunden : {};
+    var kundenNames = Object.keys(kunden);
+
+    // Count auslaufende Verträge
+    var auslaufend = 0;
+    var offenePotenziale = 0;
+    var produktVolumen = {};
+
+    kundenNames.forEach(function(name) {
+        var k = kunden[name];
+        // Count gaps (potential)
+        var vertraegeStr = (k.vertraege || []).map(function(v) { return (v.typ || '').toLowerCase(); }).join('|');
+        ['bu', 'berufsunfähigkeit', 'haftpflicht', 'hausrat', 'risiko', 'rechtsschutz', 'unfall', 'pflege', 'wohngebäude'].forEach(function(kw) {
+            if (vertraegeStr.indexOf(kw) < 0) offenePotenziale++;
+        });
+
+        (k.vertraege || []).forEach(function(v) {
+            if (v.details && v.details.indexOf('2026') >= 0) auslaufend++;
+            var sparte = (v.typ || '').split('versicherung')[0].trim();
+            if (!produktVolumen[sparte]) produktVolumen[sparte] = 0;
+            produktVolumen[sparte]++;
+        });
+    });
+
+    // Top product by volume
+    var topProdukt = 'BU-Beratung';
+    var topCount = 0;
+    Object.keys(produktVolumen).forEach(function(key) {
+        if (produktVolumen[key] > topCount) { topCount = produktVolumen[key]; topProdukt = key; }
+    });
+
+    // Top 3 recommendations
+    var empfehlungen = [
+        { name: 'Weber, T.', action: 'BU-Nachversicherung', ap: '2.100' },
+        { name: 'Schmidt, P.', action: 'Fondspolice', ap: '890' },
+        { name: 'Hoffmann, A.', action: 'RLV-Abschluss', ap: '1.250' }
+    ];
+
+    var html = '<div class="ki-einzeiler-card">' +
+        '<div class="ki-einzeiler-main" onclick="toggleKIEinzeilerDetails()">' +
+        '<span class="ki-einzeiler-icon">\u{1F4A1}</span>' +
+        '<span class="ki-einzeiler-text">' + auslaufend + ' Kunden mit auslaufenden Verträgen \u00B7 ' + offenePotenziale + ' offene Potenziale \u00B7 Fokusthema: ' + topProdukt + ' (höchstes Vol.)</span>' +
+        '<button class="ki-einzeiler-toggle" id="kiEinzeilerToggle">\u25BC Details</button></div>' +
+        '<div class="ki-einzeiler-details" id="kiEinzeilerDetails" style="display:none;">' +
+        '<strong>Top-3 Handlungsempfehlungen:</strong><ol>';
+    empfehlungen.forEach(function(e) {
+        html += '<li>' + e.name + ': ' + e.action + ' (' + e.ap + '\u20AC AP) <a href="javascript:void(0)" onclick="if(typeof showToast===\'function\')showToast(\'Kunde wird geöffnet...\',\'info\')">\u2192</a></li>';
+    });
+    html += '</ol></div></div>';
+
+    container.innerHTML = html;
+    container.style.display = '';
+}
+
+function toggleKIEinzeilerDetails() {
+    var details = document.getElementById('kiEinzeilerDetails');
+    var toggle = document.getElementById('kiEinzeilerToggle');
+    if (!details) return;
+    var visible = details.style.display !== 'none';
+    details.style.display = visible ? 'none' : 'block';
+    if (toggle) toggle.innerHTML = visible ? '\u25BC Details' : '\u25B2 Schließen';
+}
+window.renderKIPortfolioEinzeiler = renderKIPortfolioEinzeiler;
+window.toggleKIEinzeilerDetails = toggleKIEinzeilerDetails;
 
 window.__registerModule('agentur-overview-core.js');

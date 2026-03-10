@@ -607,4 +607,132 @@ window.updateContractsForInsurer = updateContractsForInsurer;
  * Navigation Functions
  */
 
+// ========================================
+// 20-A: POTENZIAL-SCORING IN KUNDENLISTE
+// ========================================
+
+function calculatePotenzialScore(kundenName) {
+    var score = 0;
+    var mk = (typeof window.mockKunden !== 'undefined') ? window.mockKunden[kundenName] : null;
+    if (!mk) return 3; // Default mid-score
+
+    // Offene Whitespots: check missing insurance types, +1 per gap, max 2
+    var vertraegeStr = (mk.vertraege || []).map(function(v) { return (v.typ || '').toLowerCase(); }).join('|');
+    var gaps = 0;
+    ['bu', 'berufsunfähigkeit', 'haftpflicht', 'hausrat', 'risiko', 'rlv', 'rechtsschutz', 'unfall', 'pflege', 'wohngebäude'].forEach(function(kw) {
+        if (vertraegeStr.indexOf(kw) < 0) gaps++;
+    });
+    score += Math.min(gaps * 0.3, 2);
+
+    // FIDA data available but not fully leveraged -> +1
+    if (mk.fidaVertraege && mk.fidaVertraege.length > 0) score += 1;
+
+    // Letzter Kontakt > 90 Tage → +0.5 (we estimate from kommunikation)
+    if (mk.kommunikation && mk.kommunikation.length > 0) {
+        var lastDate = new Date(mk.kommunikation[0].datum);
+        var daysDiff = (new Date() - lastDate) / (1000 * 60 * 60 * 24);
+        if (daysDiff > 90) score += 0.5;
+    } else {
+        score += 0.5;
+    }
+
+    // NPS Promoter (8+) → +0.5
+    if (mk.nps && mk.nps.score >= 8) score += 0.5;
+
+    return Math.max(1, Math.min(5, Math.round(score)));
+}
+
+function renderPotenzialSterne(score) {
+    var html = '<span class="potenzial-sterne potenzial-' + (score >= 4 ? 'hoch' : (score >= 2 ? 'mittel' : 'niedrig')) + '">';
+    for (var i = 1; i <= 5; i++) {
+        html += i <= score ? '\u2605' : '\u2606';
+    }
+    html += '</span>';
+    return html;
+}
+
+var potenzialFilterActive = false;
+
+function enhanceKundenlisteWithPotenzial() {
+    var table = document.querySelector('.kundenliste-table');
+    if (!table) return;
+    var thead = table.querySelector('thead tr');
+    var tbody = document.getElementById('kundenlisteTableBody');
+    if (!thead || !tbody) return;
+
+    // Add Potenzial column header if not already present
+    if (thead.querySelector('.potenzial-header')) return;
+
+    var th = document.createElement('th');
+    th.className = 'potenzial-header';
+    th.innerHTML = 'Potenzial';
+    th.style.cursor = 'pointer';
+    th.title = 'Nach Potenzial sortieren';
+    th.onclick = function() { sortKundenlisteByPotenzial(); };
+    // Insert after Name (index 0) -> position 1
+    var nameHeader = thead.children[0];
+    nameHeader.parentNode.insertBefore(th, nameHeader.nextSibling);
+
+    // Add scores to each row
+    var rows = tbody.querySelectorAll('tr');
+    rows.forEach(function(row) {
+        var nameCell = row.querySelector('td:first-child');
+        if (!nameCell) return;
+        var kundenName = nameCell.textContent.trim();
+        var score = calculatePotenzialScore(kundenName);
+        var td = document.createElement('td');
+        td.className = 'potenzial-cell';
+        td.setAttribute('data-score', score);
+        td.innerHTML = renderPotenzialSterne(score);
+        nameCell.parentNode.insertBefore(td, nameCell.nextSibling);
+    });
+
+    // Add filter button above table
+    var header = document.querySelector('.kundenliste-header');
+    if (header && !document.getElementById('potenzialFilterBtn')) {
+        var btn = document.createElement('button');
+        btn.id = 'potenzialFilterBtn';
+        btn.className = 'potenzial-filter-btn';
+        btn.innerHTML = '\u2605 Nur Top-Potenziale (\u2605\u2605\u2605\u2605+)';
+        btn.onclick = function() {
+            potenzialFilterActive = !potenzialFilterActive;
+            btn.classList.toggle('active', potenzialFilterActive);
+            filterKundenlistePotenzial();
+        };
+        header.appendChild(btn);
+    }
+}
+
+function filterKundenlistePotenzial() {
+    var tbody = document.getElementById('kundenlisteTableBody');
+    if (!tbody) return;
+    var rows = tbody.querySelectorAll('tr');
+    rows.forEach(function(row) {
+        var cell = row.querySelector('.potenzial-cell');
+        if (!cell) return;
+        var score = parseInt(cell.getAttribute('data-score') || '0');
+        if (potenzialFilterActive && score < 4) {
+            row.style.display = 'none';
+        } else {
+            row.style.display = '';
+        }
+    });
+}
+
+function sortKundenlisteByPotenzial() {
+    var tbody = document.getElementById('kundenlisteTableBody');
+    if (!tbody) return;
+    var rows = Array.from(tbody.querySelectorAll('tr'));
+    rows.sort(function(a, b) {
+        var sa = parseInt((a.querySelector('.potenzial-cell') || {}).getAttribute && a.querySelector('.potenzial-cell').getAttribute('data-score') || '0');
+        var sb = parseInt((b.querySelector('.potenzial-cell') || {}).getAttribute && b.querySelector('.potenzial-cell').getAttribute('data-score') || '0');
+        return sb - sa;
+    });
+    rows.forEach(function(row) { tbody.appendChild(row); });
+}
+
+window.calculatePotenzialScore = calculatePotenzialScore;
+window.enhanceKundenlisteWithPotenzial = enhanceKundenlisteWithPotenzial;
+window.sortKundenlisteByPotenzial = sortKundenlisteByPotenzial;
+
 window.__registerModule('agentur-overview-tables.js');

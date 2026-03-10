@@ -8018,3 +8018,52 @@ button svg,
     margin: 0;
 }
 
+/* ========================================
+   20-A: POTENZIAL-SCORING IN KUNDENLISTE
+   ======================================== */
+.potenzial-sterne { font-size: 16px; letter-spacing: 1px; white-space: nowrap; }
+.potenzial-hoch { color: #16a34a; }
+.potenzial-mittel { color: #ca8a04; }
+.potenzial-niedrig { color: #94a3b8; }
+.potenzial-cell { min-width: 90px; }
+.potenzial-header { cursor: pointer; }
+.potenzial-header:hover { color: #3b82f6; }
+.potenzial-filter-btn { background: #fff; color: #64748b; border: 1px solid #e2e8f0; padding: 6px 14px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; margin-left: 12px; transition: all .15s; }
+.potenzial-filter-btn:hover { border-color: #3b82f6; color: #3b82f6; }
+.potenzial-filter-btn.active { background: #3b82f6; color: #fff; border-color: #3b82f6; }
+
+/* ========================================
+   20-E: NOTIFICATION BELL
+   ======================================== */
+.notification-bell-container { position: relative; display: inline-block; margin-left: 8px; }
+.notification-bell-btn { background: none; border: 1px solid #e2e8f0; border-radius: 8px; padding: 6px 8px; cursor: pointer; position: relative; color: #475569; transition: all .15s; }
+.notification-bell-btn:hover { background: #f1f5f9; border-color: #cbd5e1; }
+.notification-badge { position: absolute; top: -4px; right: -4px; background: #ef4444; color: #fff; font-size: 10px; font-weight: 700; min-width: 16px; height: 16px; line-height: 16px; text-align: center; border-radius: 8px; padding: 0 4px; }
+.notification-dropdown { position: absolute; top: calc(100% + 8px); right: 0; width: 340px; background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,.12); z-index: 1000; max-height: 400px; overflow-y: auto; }
+.notif-header { padding: 12px 16px; border-bottom: 1px solid #f1f5f9; font-size: 14px; }
+.notif-item { padding: 10px 16px; border-bottom: 1px solid #f8fafc; display: flex; align-items: flex-start; gap: 8px; font-size: 13px; }
+.notif-item:last-child { border-bottom: none; }
+.notif-item:hover { background: #f8fafc; }
+.notif-icon { flex-shrink: 0; font-size: 16px; }
+.notif-text { flex: 1; color: #334155; line-height: 1.4; }
+.notif-action { background: none; border: none; color: #3b82f6; cursor: pointer; font-size: 12px; font-weight: 600; white-space: nowrap; padding: 2px 0; }
+.notif-action:hover { text-decoration: underline; }
+.notif-hoch { border-left: 3px solid #ef4444; }
+.notif-mittel { border-left: 3px solid #f59e0b; }
+.notif-niedrig { border-left: 3px solid #94a3b8; }
+
+/* ========================================
+   20-F: KI-PORTFOLIO-EINZEILER
+   ======================================== */
+.ki-portfolio-einzeiler { margin: 0 0 16px; }
+.ki-einzeiler-card { background: linear-gradient(135deg, #eff6ff, #f0f9ff); border: 1px solid #bfdbfe; border-radius: 12px; overflow: hidden; }
+.ki-einzeiler-main { display: flex; align-items: center; gap: 10px; padding: 12px 16px; cursor: pointer; transition: background .15s; }
+.ki-einzeiler-main:hover { background: rgba(59,130,246,.06); }
+.ki-einzeiler-icon { font-size: 18px; flex-shrink: 0; }
+.ki-einzeiler-text { flex: 1; font-size: 13px; color: #334155; line-height: 1.5; }
+.ki-einzeiler-toggle { background: none; border: none; color: #3b82f6; cursor: pointer; font-size: 12px; font-weight: 600; white-space: nowrap; }
+.ki-einzeiler-details { padding: 0 16px 16px; border-top: 1px solid #dbeafe; }
+.ki-einzeiler-details strong { font-size: 13px; display: block; margin-bottom: 8px; color: #1e40af; }
+.ki-einzeiler-details ol { margin: 0; padding-left: 20px; font-size: 13px; line-height: 1.8; }
+.ki-einzeiler-details a { color: #3b82f6; text-decoration: none; font-weight: 600; margin-left: 4px; }
+

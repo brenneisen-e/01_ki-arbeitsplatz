@@ -861,7 +861,7 @@ function adaptA10ForBankMode(kundenName) {
         idEl.textContent = retailData ? retailData.id : (kd.id || 'KDB000');
     }
 
-    // Fill CLV data
+    // Fill CLV data (header + detail card)
     if (typeof calculateBankCLV === 'function') {
         var retailForClv = null;
         if (typeof bankKundenRetail !== 'undefined') {
@@ -870,10 +870,41 @@ function adaptA10ForBankMode(kundenName) {
             }
         }
         var clv = calculateBankCLV(kd, retailForClv);
+        // Header badge
         var clvValEl = document.getElementById('clvHeaderValue');
         if (clvValEl) clvValEl.textContent = '\u20AC' + clv.value.toLocaleString('de-DE');
         var clvSegEl = document.getElementById('clvHeaderSegment');
         if (clvSegEl) clvSegEl.textContent = clv.segment;
+        // CLV detail card elements
+        var clvTotalEl = document.getElementById('clvTotalValue');
+        if (clvTotalEl) clvTotalEl.textContent = '\u20AC' + clv.value.toLocaleString('de-DE');
+        var clvSegmentEl = document.getElementById('clvSegmentValue');
+        if (clvSegmentEl) {
+            clvSegmentEl.textContent = clv.segment;
+            clvSegmentEl.className = 'clv-segment-value ' + clv.segment.toLowerCase();
+        }
+        var clvHaltedauerEl = document.getElementById('clvHaltedauerValue');
+        if (clvHaltedauerEl) clvHaltedauerEl.textContent = clv.haltedauer + ' Jahre';
+        var clvStornoEl = document.getElementById('clvStornoValue');
+        if (clvStornoEl) {
+            clvStornoEl.textContent = clv.churnRisk + '%';
+            var stornoLevel = clv.churnRisk <= 8 ? 'low' : (clv.churnRisk <= 15 ? 'medium' : 'high');
+            clvStornoEl.className = 'clv-storno-value ' + stornoLevel;
+        }
+        // CLV trend
+        var clvTrendEl = document.getElementById('clvTotalTrend');
+        if (clvTrendEl) clvTrendEl.textContent = '';
+        // CLV breakdown for banking
+        var breakdownEl = document.getElementById('clvBreakdownRows');
+        if (breakdownEl) {
+            var ertrag = retailForClv ? retailForClv.ertrag : 2000;
+            breakdownEl.innerHTML =
+                '<div class="clv-row"><span class="clv-row-label">Jahresertrag</span><span class="clv-row-calc">\u20AC' + ertrag.toLocaleString('de-DE') + '/Jahr</span><span class="clv-row-value">\u20AC' + ertrag.toLocaleString('de-DE') + '</span></div>' +
+                '<div class="clv-row"><span class="clv-row-label">\u00d7 Progn. Haltedauer</span><span class="clv-row-calc">' + clv.haltedauer + ' Jahre</span><span class="clv-row-value">\u20AC' + (ertrag * clv.haltedauer).toLocaleString('de-DE') + '</span></div>' +
+                '<div class="clv-row"><span class="clv-row-label">\u00d7 Margen-Faktor</span><span class="clv-row-calc">85%</span><span class="clv-row-value"></span></div>' +
+                '<div class="clv-row negative"><span class="clv-row-label">\u2212 Abwanderungsrisiko</span><span class="clv-row-calc">' + clv.churnRisk + '%</span><span class="clv-row-value"></span></div>' +
+                '<div class="clv-row total"><span class="clv-row-label">= Customer Lifetime Value</span><span class="clv-row-calc"></span><span class="clv-row-value">\u20AC' + clv.value.toLocaleString('de-DE') + '</span></div>';
+        }
     }
 
     // Fill Kinder

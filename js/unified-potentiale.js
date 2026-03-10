@@ -339,25 +339,33 @@
     function renderPipeline(pipelineCounts, config) {
         var steps = config.potentiale.pipelineSteps;
         var labels = config.potentiale.statusLabels;
-        var maxCount = 1;
-        for (var i = 0; i < steps.length; i++) {
-            if (pipelineCounts[steps[i]] > maxCount) maxCount = pipelineCounts[steps[i]];
-        }
+        var total = 0;
+        for (var i = 0; i < steps.length; i++) total += pipelineCounts[steps[i]];
+
+        // Color stops for the funnel gradient (blue to green)
+        var colors = ['#3b82f6', '#6366f1', '#8b5cf6', '#059669'];
+        var bgColors = ['#eff6ff', '#eef2ff', '#f5f3ff', '#ecfdf5'];
 
         var html = '<div class="unified-pot-pipeline">' +
             '<div class="unified-pot-pipeline-label">Pipeline</div>' +
-            '<div class="unified-pot-pipeline-steps">';
+            '<div class="unified-pot-pipeline-funnel">';
         for (var j = 0; j < steps.length; j++) {
             var count = pipelineCounts[steps[j]];
-            var widthPct = Math.max(20, (count / maxCount) * 100);
-            html += '<div class="unified-pot-pipeline-step">' +
-                '<div class="unified-pot-pipeline-bar" style="width:' + widthPct + '%">' +
-                '<span class="unified-pot-pipeline-count">' + count + '</span>' +
+            var colorIdx = Math.min(j, colors.length - 1);
+            var accentColor = colors[colorIdx];
+            var bgColor = bgColors[colorIdx];
+            var isLast = j === steps.length - 1;
+
+            html += '<div class="unified-pot-pipeline-stage' + (isLast ? ' stage-final' : '') + '">' +
+                '<div class="unified-pot-pipeline-stage-bar" style="background:' + bgColor + ';border-bottom:3px solid ' + accentColor + ';">' +
+                    '<span class="unified-pot-pipeline-count" style="color:' + accentColor + ';">' + count + '</span>' +
                 '</div>' +
                 '<div class="unified-pot-pipeline-step-label">' + (labels[steps[j]] || steps[j]) + '</div>' +
                 '</div>';
             if (j < steps.length - 1) {
-                html += '<div class="unified-pot-pipeline-arrow">' + getIcon('arrowRight') + '</div>';
+                html += '<div class="unified-pot-pipeline-connector">' +
+                    '<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M8 12h8m0 0l-3-3m3 3l-3 3" stroke="' + accentColor + '" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>' +
+                    '</div>';
             }
         }
         html += '</div></div>';
@@ -434,14 +442,14 @@
             }
             html += '</div></div>';
 
-            // Action buttons
+            // Action buttons (icon-only with tooltips)
             html += '<div class="unified-pot-detail-actions">' +
-                '<button class="action-btn primary" onclick="event.stopPropagation(); window._unifiedPotOpenKunde(\'' + p.kundenName.replace(/'/g, "\\'") + '\', \'' + p.kundenId + '\')">' +
-                    getIcon('user') + ' Kunde \u00f6ffnen</button>' +
-                '<button class="action-btn secondary" onclick="event.stopPropagation(); window._unifiedPotCreateAngebot(\'' + p.produkt.replace(/'/g, "\\'") + '\')">' +
-                    getIcon('fileText') + ' Angebot erstellen</button>' +
-                '<button class="action-btn secondary" onclick="event.stopPropagation(); window._unifiedPotChangeStatus(' + i + ', \'' + containerId + '\')">' +
-                    getIcon('edit') + ' Status \u00e4ndern</button>' +
+                '<button class="action-btn primary" title="Kunde \u00f6ffnen" onclick="event.stopPropagation(); window._unifiedPotOpenKunde(\'' + p.kundenName.replace(/'/g, "\\'") + '\', \'' + p.kundenId + '\')">' +
+                    getIcon('user') + '</button>' +
+                '<button class="action-btn secondary" title="Angebot erstellen" onclick="event.stopPropagation(); window._unifiedPotCreateAngebot(\'' + p.produkt.replace(/'/g, "\\'") + '\')">' +
+                    getIcon('fileText') + '</button>' +
+                '<button class="action-btn secondary" title="Status \u00e4ndern" onclick="event.stopPropagation(); window._unifiedPotChangeStatus(' + i + ', \'' + containerId + '\')">' +
+                    getIcon('edit') + '</button>' +
                 '</div>';
 
             html += '</div></div>';

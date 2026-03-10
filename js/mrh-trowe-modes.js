@@ -577,20 +577,8 @@ function setFinanceMode(mode) {
         // Show Open Finance elements
         document.querySelectorAll('.open-finance-only').forEach(function(el) { el.style.display = ''; });
         document.querySelectorAll('.closed-finance-only').forEach(function(el) { el.style.display = 'none'; });
-        if (!badge) {
-            badge = document.createElement('div');
-            badge.id = 'openFinanceBadge';
-            badge.className = 'open-finance-badge';
-            var mainContent = document.querySelector('.agentur-main-content');
-            if (mainContent) mainContent.insertBefore(badge, mainContent.firstChild);
-        }
-        // Context-aware badge text
-        var isBank = viewMode.indexOf('bank-') === 0;
-        if (isBank) {
-            badge.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 019.9-1"></path></svg> Open Finance aktiv \u2014 Alle Institute sichtbar inkl. R+V Versicherung \u00fc. Genossenschaftsgruppe';
-        } else {
-            badge.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 019.9-1"></path></svg> Open Finance aktiv \u2014 Daten aller Institute sichtbar (FIDA)';
-        }
+        // Badge removed – the Open/Closed Finance toggle in the header is sufficient
+        if (badge) badge.remove();
     } else {
         // Show Closed Finance elements
         document.querySelectorAll('.open-finance-only').forEach(function(el) { el.style.display = 'none'; });

@@ -944,6 +944,121 @@ function adaptA10ForBankMode(kundenName) {
         });
     }
 
+    // Replace Potentiale tab (tabImpulse) content with banking potentials
+    var tabImpulse = document.getElementById('tabImpulse');
+    if (tabImpulse) {
+        // Save original content for restore
+        if (!tabImpulse.dataset.originalHtml) {
+            tabImpulse.dataset.originalHtml = 'saved';
+            tabImpulse._originalInnerHTML = tabImpulse.innerHTML;
+        }
+
+        var bankPot = (window.bankPotentiale || []).filter(function(p) { return p.kundenName === kundenName; });
+
+        // Separate into Whitespots (new business) and \u00c4nderungsgesch\u00e4ft (optimization)
+        var whitespots = [];
+        var aenderung = [];
+        bankPot.forEach(function(p) {
+            if (p.status === 'identifiziert' || p.status === 'angeschrieben') {
+                whitespots.push(p);
+            } else {
+                aenderung.push(p);
+            }
+        });
+
+        // Also build cross-selling insurance potentials as Whitespots
+        if (!kd.versicherungenEigen || !kd.versicherungenEigen.some(function(v){ return v.versicherung.indexOf('BU') >= 0 || v.versicherung.indexOf('Berufsunf') >= 0; })) {
+            whitespots.push({
+                produkt: 'BU-Versicherung (R+V Verbundpartner)',
+                beschreibung: 'Keine Berufsunf\u00e4higkeitsversicherung vorhanden. Absicherungsl\u00fccke bei Nettoeinkommen \u20AC' + (kd.nettoeinkommen || 0).toLocaleString('de-DE') + '/Mon.',
+                prioritaet: 'hoch', quelle: 'Verbundpartner R+V', volumen: 1800, ertrag: 360,
+                herleitung: [{ datenquelle: 'Bestandsanalyse', erkenntnis: 'Keine BU-Versicherung trotz hohem Einkommen' }, { datenquelle: 'R+V Verbundpartner', erkenntnis: 'R+V BU Premium mit Nachversicherungsgarantie empfohlen' }]
+            });
+        }
+        // Cross-sell external insurance to R+V
+        if (kd.versicherungenFremd) {
+            kd.versicherungenFremd.forEach(function(v) {
+                aenderung.push({
+                    produkt: v.versicherung + ' \u2013 Wechsel zu R+V',
+                    beschreibung: 'Aktuell bei ' + v.anbieter + ' (' + v.praemie + '). Pr\u00fcfung R+V Verbundpartner-Tarif.',
+                    prioritaet: 'mittel', quelle: 'Verbundpartner', volumen: 0, ertrag: 0,
+                    herleitung: [{ datenquelle: 'Open Finance', erkenntnis: v.versicherung + ' bei ' + v.anbieter + ', ' + v.praemie }]
+                });
+            });
+        }
+        // FIDA-based opportunities as \u00c4nderungsgesch\u00e4ft
+        if (kd.fidaVertraege && kd.fidaVertraege.length > 0) {
+            kd.fidaVertraege.forEach(function(f) {
+                aenderung.push({
+                    produkt: f.institut + ' \u2013 ' + f.typ + ' konsolidieren',
+                    beschreibung: f.info + '. Konsolidierung in VR-Produkte pr\u00fcfen.',
+                    prioritaet: 'mittel', quelle: 'Open Finance', volumen: 0, ertrag: 0,
+                    herleitung: [{ datenquelle: 'Open Finance (FIDA)', erkenntnis: f.institut + ': ' + f.info }]
+                });
+            });
+        }
+
+        var potHtml = '<div class="kunden-card impulse-overview-card">' +
+            '<div class="kunden-card-header vertriebsimpuls"><h2>' +
+                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>' +
+                ' Potentiale</h2></div>' +
+            '<div class="impuls-legende">' +
+                '<span class="impuls-legende-item"><span class="impuls-volumen-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> Abschlussvolumen</span> Gesch. Volumen bei Abschluss</span>' +
+                '<span class="impuls-legende-item"><span class="impuls-provision-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg> Provision</span> Erwartete Abschlussprovision</span>' +
+            '</div>';
+
+        function renderBankPotCard(p, idx, prefix) {
+            var pc = p.prioritaet === 'hoch' ? 'high' : (p.prioritaet === 'mittel' ? 'medium' : 'low');
+            var pl = p.prioritaet === 'hoch' ? 'Hohe Priorit\u00e4t' : (p.prioritaet === 'mittel' ? 'Mittlere Priorit\u00e4t' : 'Niedrige Priorit\u00e4t');
+            var vol = p.volumen ? '\u20AC' + p.volumen.toLocaleString('de-DE') : '';
+            var ert = p.ertrag ? '\u20AC' + p.ertrag.toLocaleString('de-DE') : '';
+            var detailId = prefix + '-' + idx;
+            var h = '<div class="impuls-item highlight clickable" onclick="toggleImpulsDetail(\'' + detailId + '\')">' +
+                '<div class="impuls-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></div>' +
+                '<div class="impuls-text"><strong>' + p.produkt + '</strong>' +
+                    '<p>' + (p.quelle ? '<span class="fida-source-badge small">' + p.quelle + '</span> ' : '') + p.beschreibung + '</p></div>' +
+                '<div style="text-align:right;flex-shrink:0;">' +
+                    (vol ? '<div class="impuls-volumen-badge">' + vol + '</div>' : '') +
+                    (ert ? '<div class="impuls-provision-badge">' + ert + '</div>' : '') +
+                '</div>' +
+                '<span class="impuls-priority ' + pc + '">' + pl + '</span>' +
+                '<span class="impuls-expand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="6 9 12 15 18 9"></polyline></svg></span>' +
+            '</div>';
+            h += '<div class="impuls-detail" id="' + detailId + '" style="display:none;"><div class="impuls-detail-section"><h4>Herleitung</h4><div class="herleitung-grid">';
+            if (p.herleitung) {
+                p.herleitung.forEach(function(hl) {
+                    h += '<div class="herleitung-item"><span class="herleitung-label">' + hl.datenquelle + '</span><span class="herleitung-value">' + hl.erkenntnis + '</span></div>';
+                });
+            }
+            h += '</div></div></div>';
+            return h;
+        }
+
+        // Whitespots (Neugeschäft) - always render category (KI impulses may add items)
+        potHtml += '<div class="impuls-kategorie" id="bankWhitespotsKategorie"><h3 class="impuls-kategorie-title whitespots">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>' +
+            ' Whitespots (Neugeschäft) <span class="kategorie-badge">Produkt fehlt</span></h3>';
+        whitespots.forEach(function(p, i) { potHtml += renderBankPotCard(p, i, 'bank-ws'); });
+        potHtml += '<div id="kiImpulseInlineWS"></div>';
+        potHtml += '</div>';
+
+        // Änderungsgeschäft (Optimierung bestehend) - always render category
+        potHtml += '<div class="impuls-kategorie" id="bankAenderungKategorie"><h3 class="impuls-kategorie-title">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>' +
+            ' Anpassungsbedarfe (Änderungsgeschäft) <span class="kategorie-badge">Bestehend optimieren</span></h3>';
+        aenderung.forEach(function(p, i) { potHtml += renderBankPotCard(p, i, 'bank-ae'); });
+        potHtml += '<div id="kiImpulseInlineAE"></div>';
+        potHtml += '</div>';
+
+        potHtml += '</div>';
+        tabImpulse.innerHTML = potHtml;
+
+        // Trigger KI impulse generation into inline containers
+        setTimeout(function() {
+            if (typeof generateKIImpuls === 'function') generateKIImpuls();
+        }, 100);
+    }
+
     // Adapt shared header tabs for bank module
     adaptA10HeaderTabsForBank();
 }
@@ -1012,6 +1127,14 @@ function restoreA10InsuranceMode() {
     var vertraegeTab = kundenPage.querySelector('.kunden-tab[data-tab="vertraege"]');
     if (vertraegeTab) {
         vertraegeTab.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg> Betreute Verträge';
+    }
+
+    // Restore Potentiale tab (tabImpulse) original content
+    var tabImpulse = document.getElementById('tabImpulse');
+    if (tabImpulse && tabImpulse._originalInnerHTML) {
+        tabImpulse.innerHTML = tabImpulse._originalInnerHTML;
+        delete tabImpulse._originalInnerHTML;
+        delete tabImpulse.dataset.originalHtml;
     }
 
     // Restore A-10 dropdown with insurance customers

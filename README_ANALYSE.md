@@ -1,6 +1,6 @@
 # README_ANALYSE.md – Vollstaendige Projektanalyse KI-Arbeitsplatz
 
-> **Stand:** 2026-03-09
+> **Stand:** 2026-03-10
 > **Fokus:** Module A-02 (Vermittler-Overview) und A-10 (Kunden-Detailansicht)
 > **Sprache:** Deutsch
 
@@ -241,7 +241,7 @@ kiarbeitsplatz/
 
 | Modul-Praefix | Modul | Beschreibung |
 |---|---|---|
-| M-01 | Landing Page | Hauptstartseite / Modulauswahl |
+| M-01 | Landing Page | Hauptstartseite / Modulauswahl. **NEU (v19):** Seitentitel "KI-Vertriebsarbeitsplatz" mit SVG-Icon (gruener Checkmark-Kreis) oberhalb der Modul-Tabs (`welcome-page-title`) |
 | A-01 | Agentur-Auswahl | Vermittler-Auswahl (Landing im Versicherungsmodul) |
 | **A-02** | **Vermittler-Overview (AO)** | **Agentursicht mit KPI, Kundenliste, Tabs** |
 | A-02b | Vermittler B2B | Makler B2B Ansicht (Ecclesia) |
@@ -483,6 +483,7 @@ A-02 Tab "Potentiale" → Dropdown "FIDA Case" → filterFidaCases(caseType)
 |---|---|---|
 | `filterFidaCases(caseType)` | ~1600 | Filtert FIDA/Open Finance Cases nach Typ |
 | `togglePotentialDetails(element)` | ~1650 | Klappt Potential-Details auf/zu (Accordion) |
+| `toggleBeraterPotentialDetail(detailId, cardEl)` | ~575 (banking) | Klappt Potentiale-Detail-Panel auf/zu auf B-02 Potentiale-Tab (inkl. Herleitung + Aktionen) |
 | `toggleVertriebsPeriod(period)` | ~1700 | Wechselt Zeitraum fuer Vertriebspotentiale |
 
 #### 2.4.6 Navigation & Sonstiges
@@ -531,7 +532,7 @@ A-02 Tab "Potentiale" → Dropdown "FIDA Case" → filterFidaCases(caseType)
 |---|---|---|
 | `openBankKundenDetail(kundenId)` | ~3260 | Oeffnet A-10 im Banking-Modus (KEINE eigene B-10 Seite) |
 | `populateA10BankDropdown(kunden)` | ~3290 | Befuellt A-10 Dropdown mit Banking-Kunden |
-| `adaptA10ForBankMode(kundenId)` | ~3310 | Passt A-10 Header/Tabs fuer Banking an |
+| `adaptA10ForBankMode(kundenId)` | ~3310 | Passt A-10 fuer Banking an: Header/Tabs, **Kundenfoto** (aus `bankKundenFotos`), **CLV** (via `calculateBankCLV()`), **Kinder-Badges**, **Kunden-ID** |
 | `adaptA10HeaderTabsForBank()` | ~3340 | Aendert Tab-Beschriftungen (Vertraege→Produkte, etc.) |
 | `navigateToBeraterTabFromA10()` | ~3370 | Zurueck von A-10 zu B-02 |
 | `restoreA10InsuranceMode()` | ~3390 | Stellt A-10 Versicherungs-Modus wieder her |
@@ -785,6 +786,11 @@ A-02 macht **keine** direkten API-Calls an den Cloudflare Worker (`vst-claude-ap
 - FIDA Cases Dropdown-Filter
 - Accordion-Elemente fuer einzelne Potentiale
 - Vertriebsperioden-Toggle (Monat/Quartal/Jahr)
+- **NEU (v19):** Aufklappbare Detail-Panels pro Potential-Item (wie A-10 Impulse):
+  - Klick auf Potential-Card oeffnet/schliesst Detail-Panel (`toggleBeraterPotentialDetail()`)
+  - Detail-Panel zeigt: Herleitung (Datenquelle, Kunde, erkannte Situation, empfohlenes Produkt, erwarteter Ertrag)
+  - Aktions-Buttons: "Kunde oeffnen" (→ A-10) und "Termin vereinbaren"
+  - Expand-Pfeil rotiert 180° bei Auf-/Zuklappen
 
 ---
 
@@ -1356,9 +1362,11 @@ B-10 hat einen **eigenen, vollstaendigen HTML-Container** `#kundenDetailBankPage
 
 Statt den separaten B-10 Container zu nutzen, wird die **A-10 Seite fuer Banking adaptiert**:
 1. `openBankKundenDetail()` → oeffnet A-10 Seite
-2. `adaptA10ForBankMode()` → CSS-Klasse `bank-mode` setzen, Header/Tabs aendern
+2. `adaptA10ForBankMode()` → CSS-Klasse `bank-mode` setzen, Header/Tabs aendern, **Kundenfoto setzen** (aus `bankKundenFotos`), **CLV berechnen/befuellen** (via `calculateBankCLV()`), **Kinder-Badges** anzeigen, **Kunden-ID** aus `bankKundenRetail` uebernehmen
 3. `adaptA10HeaderTabsForBank()` → Tab-Labels umschreiben (Vertraege→Produkte, etc.)
 4. `restoreA10InsuranceMode()` → Aenderungen rueckgaengig machen bei Ruecknavigation
+
+**Wichtig (v19):** `adaptA10ForBankMode()` schreibt direkt in die generischen A-10 Element-IDs (`kundenName`, `clvHeaderValue`, `.kunden-foto`, etc.), da die `bank`-prefixed IDs (`bankKundenFoto`, `bankClvHeaderValue`) im HTML nicht existieren.
 
 ### 4.4 Vergleich B-02/B-10 mit A-02/A-10
 

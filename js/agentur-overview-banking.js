@@ -531,9 +531,29 @@ function fillBeraterPotentiale() {
         { kunde:'Sabine Kraus', id:'KDB012', prio:'low', produkt:'UnionDepot + GENO Broker Depot-Wechsel', beschr:'52k Depot bei Comdirect (FIDA). Wechsel zu UnionDepot oder GENO Broker mit persönlicher Beratung.', vol:'30.000', ertrag:'450', quelle:'FIDA' }
     ];
     
+    var expandSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="6 9 12 15 18 9"></polyline></svg>';
     var html = '<div class="uebersicht-card potentiale-impuls-card"><div class="uebersicht-card-header"><h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg> Truuco Impulsmanager \u2013 Vertriebspotentiale (' + potentiale.length + ')</h3><span style="font-size:11px;background:rgba(37,99,235,0.1);color:#2563eb;padding:3px 10px;border-radius:12px;font-weight:600;">KI-generiert via Data Intelligence Platform</span></div><div class="potentiale-liste-neu">';
-    potentiale.forEach(function(p) {
-        html += '<div class="potential-card" onclick="event.stopPropagation(); openBankKundenDetail(\'' + p.kunde + '\', \'' + p.id + '\')"><div class="potential-card-left"><div class="potential-kunde"><strong>' + p.kunde + '</strong><span class="potential-kunden-id">' + p.id + '</span><span class="impuls-priority ' + p.prio + '">' + (p.prio==='high'?'Hoch':(p.prio==='medium'?'Mittel':'Niedrig')) + '</span></div><div class="potential-produkt">' + p.produkt + '</div><div class="potential-beschreibung">' + p.beschr + '</div></div><div class="potential-card-right"><div class="potential-kennzahl"><span class="potential-kennzahl-label">Volumen</span><span class="potential-kennzahl-value">\u20AC' + p.vol + '</span></div><div class="potential-kennzahl"><span class="potential-kennzahl-label">Ertrag</span><span class="potential-kennzahl-value prov">\u20AC' + p.ertrag + '</span></div></div></div>';
+    potentiale.forEach(function(p, idx) {
+        var detailId = 'berater-pot-detail-' + idx;
+        html += '<div class="potential-card clickable" style="cursor:pointer;" onclick="toggleBeraterPotentialDetail(\'' + detailId + '\', this)">' +
+            '<div class="potential-card-left"><div class="potential-kunde"><strong>' + p.kunde + '</strong><span class="potential-kunden-id">' + p.id + '</span><span class="impuls-priority ' + p.prio + '">' + (p.prio==='high'?'Hoch':(p.prio==='medium'?'Mittel':'Niedrig')) + '</span></div><div class="potential-produkt">' + p.produkt + '</div><div class="potential-beschreibung">' + p.beschr + '</div></div>' +
+            '<div class="potential-card-right"><div class="potential-kennzahl"><span class="potential-kennzahl-label">Volumen</span><span class="potential-kennzahl-value">\u20AC' + p.vol + '</span></div><div class="potential-kennzahl"><span class="potential-kennzahl-label">Ertrag</span><span class="potential-kennzahl-value prov">\u20AC' + p.ertrag + '</span></div></div>' +
+            '<span class="impuls-expand" style="display:flex;align-items:center;margin-left:8px;transition:transform 0.2s;">' + expandSvg + '</span>' +
+        '</div>';
+        // Expandable detail panel
+        html += '<div class="impuls-detail" id="' + detailId + '" style="display:none;">' +
+            '<div class="impuls-detail-section"><h4>Herleitung des Impulses</h4><div class="herleitung-grid">' +
+                '<div class="herleitung-item"><span class="herleitung-label">Datenquelle</span><span class="herleitung-value">' + (p.quelle || 'Truuco Impulsmanager') + '</span></div>' +
+                '<div class="herleitung-item"><span class="herleitung-label">Kunde</span><span class="herleitung-value">' + p.kunde + ' (' + p.id + ')</span></div>' +
+                '<div class="herleitung-item"><span class="herleitung-label">Erkannte Situation</span><span class="herleitung-value">' + p.beschr + '</span></div>' +
+                '<div class="herleitung-item"><span class="herleitung-label">Empfohlenes Produkt</span><span class="herleitung-value">' + p.produkt + '</span></div>' +
+                '<div class="herleitung-item"><span class="herleitung-label">Erwarteter Ertrag</span><span class="herleitung-value">\u20AC' + p.ertrag + '</span></div>' +
+            '</div></div>' +
+            '<div class="impuls-detail-section"><h4>Aktionen</h4><div class="impuls-actions">' +
+                '<button class="action-btn primary" onclick="event.stopPropagation(); openBankKundenDetail(\'' + p.kunde + '\', \'' + p.id + '\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg> Kunde \u00f6ffnen</button>' +
+                '<button class="action-btn secondary" onclick="event.stopPropagation();"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> Termin vereinbaren</button>' +
+            '</div></div>' +
+        '</div>';
     });
     html += '</div></div>';
     el.innerHTML = html;
@@ -558,6 +578,17 @@ function fillBeraterWeiterePotentiale() {
         html += '<div class="potential-card" onclick="event.stopPropagation(); openBankKundenDetail(\'' + p.kunde + '\', \'' + p.id + '\')"><div class="potential-card-left"><div class="potential-kunde"><strong>' + p.kunde + '</strong><span class="potential-kunden-id">' + p.id + '</span><span class="impuls-priority ' + p.prio + '">' + (p.prio==='high'?'Hoch':(p.prio==='medium'?'Mittel':'Niedrig')) + '</span></div><div class="potential-produkt">' + p.produkt + '</div><div class="potential-beschreibung">' + p.beschr + '</div></div><div class="potential-card-right"><div class="potential-kennzahl"><span class="potential-kennzahl-label">Volumen</span><span class="potential-kennzahl-value">\u20AC' + p.vol + '</span></div><div class="potential-kennzahl"><span class="potential-kennzahl-label">Ertrag</span><span class="potential-kennzahl-value prov">\u20AC' + p.ertrag + '</span></div></div></div>';
     });
     el.innerHTML = html;
+}
+
+function toggleBeraterPotentialDetail(detailId, cardEl) {
+    var detail = document.getElementById(detailId);
+    if (!detail) return;
+    var isVisible = detail.style.display !== 'none';
+    detail.style.display = isVisible ? 'none' : 'block';
+    var expandIcon = cardEl.querySelector('.impuls-expand');
+    if (expandIcon) {
+        expandIcon.style.transform = isVisible ? 'rotate(0deg)' : 'rotate(180deg)';
+    }
 }
 
 function toggleBeraterWeiterePotentiale() {
@@ -823,6 +854,53 @@ function adaptA10ForBankMode(kundenName) {
     // Override A-10 stammdaten with bank data
     var nameEl = document.getElementById('kundenName');
     if (nameEl) nameEl.textContent = kundenName;
+
+    // Set customer photo
+    var fotoEl = document.querySelector('#kundenDetailPage .kunden-foto');
+    if (fotoEl) {
+        var fotoPath = (typeof bankKundenFotos !== 'undefined') ? bankKundenFotos[kundenName] : null;
+        if (!fotoPath && kd.foto) fotoPath = kd.foto;
+        if (fotoPath) {
+            fotoEl.innerHTML = '<img src="' + fotoPath + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" onerror="this.parentNode.innerHTML=\'<svg viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot;><path d=&quot;M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2&quot;></path><circle cx=&quot;12&quot; cy=&quot;7&quot; r=&quot;4&quot;></circle></svg>\'">';
+        }
+    }
+
+    // Set customer ID
+    var idEl = document.getElementById('kundenVermittlerId');
+    if (idEl) {
+        var retailData = null;
+        if (typeof bankKundenRetail !== 'undefined') {
+            for (var ri = 0; ri < bankKundenRetail.length; ri++) {
+                if (bankKundenRetail[ri].name === kundenName) { retailData = bankKundenRetail[ri]; break; }
+            }
+        }
+        idEl.textContent = retailData ? retailData.id : (kd.id || 'KDB000');
+    }
+
+    // Fill CLV data
+    if (typeof calculateBankCLV === 'function') {
+        var retailForClv = null;
+        if (typeof bankKundenRetail !== 'undefined') {
+            for (var ci = 0; ci < bankKundenRetail.length; ci++) {
+                if (bankKundenRetail[ci].name === kundenName) { retailForClv = bankKundenRetail[ci]; break; }
+            }
+        }
+        var clv = calculateBankCLV(kd, retailForClv);
+        var clvValEl = document.getElementById('clvHeaderValue');
+        if (clvValEl) clvValEl.textContent = '\u20AC' + clv.value.toLocaleString('de-DE');
+        var clvSegEl = document.getElementById('clvHeaderSegment');
+        if (clvSegEl) clvSegEl.textContent = clv.segment;
+    }
+
+    // Fill Kinder
+    var kinderEl = document.getElementById('kundenKinder');
+    if (kinderEl && kd.kinder) {
+        if (kd.kinder.length === 0) {
+            kinderEl.innerHTML = '<span style="color:#94a3b8;">Keine</span>';
+        } else {
+            kinderEl.innerHTML = kd.kinder.map(function(k) { return '<span class="kinder-badge">' + k.name + ' (' + k.alter + ' Jahre)</span>'; }).join('');
+        }
+    }
 
     var fields = {
         'kundenGeburtsdatum': kd.geburtsdatum,

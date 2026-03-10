@@ -24,7 +24,7 @@
 }
 
 .clv-badge-label {
-    font-size: 11px;
+    font-size: 13px;
     font-weight: 600;
     color: #64748b;
     text-transform: uppercase;
@@ -38,7 +38,7 @@
 }
 
 .clv-badge-segment {
-    font-size: 11px;
+    font-size: 13px;
     font-weight: 600;
     padding: 2px 8px;
     border-radius: 4px;
@@ -62,7 +62,7 @@
 }
 
 .clv-badge-trend {
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 600;
 }
 
@@ -111,7 +111,7 @@
 .clv-haltedauer-label,
 .clv-storno-label {
     display: block;
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 600;
     color: #64748b;
     text-transform: uppercase;
@@ -129,7 +129,7 @@
 
 .clv-total-trend {
     display: block;
-    font-size: 13px;
+    font-size: 15px;
     font-weight: 600;
 }
 
@@ -194,7 +194,7 @@
 }
 
 .clv-breakdown-title {
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 600;
     color: #475569;
     margin-bottom: 12px;
@@ -216,18 +216,18 @@
 }
 
 .clv-row-label {
-    font-size: 13px;
+    font-size: 15px;
     font-weight: 500;
     color: #334155;
 }
 
 .clv-row-calc {
-    font-size: 12px;
+    font-size: 14px;
     color: #64748b;
 }
 
 .clv-row-value {
-    font-size: 13px;
+    font-size: 15px;
     font-weight: 600;
     color: #1e293b;
     text-align: right;
@@ -258,7 +258,7 @@
 }
 
 .clv-row.total .clv-row-label {
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 700;
     color: #1e293b;
 }
@@ -304,7 +304,7 @@
 }
 
 .info-label {
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 600;
     color: #64748b;
     text-transform: uppercase;
@@ -322,7 +322,7 @@
     background: #dbeafe;
     color: #1e40af;
     border-radius: 12px;
-    font-size: 13px;
+    font-size: 15px;
     font-weight: 500;
     margin-right: 8px;
     margin-bottom: 4px;
@@ -345,7 +345,7 @@
 .kunden-table th {
     padding: 14px 20px;
     text-align: left;
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 600;
     color: #64748b;
     text-transform: uppercase;
@@ -356,7 +356,7 @@
 .kunden-table td {
     padding: 14px 20px;
     border-bottom: 1px solid #e2e8f0;
-    font-size: 14px;
+    font-size: 15px;
     color: #1e293b;
 }
 
@@ -368,7 +368,7 @@
     display: inline-block;
     padding: 4px 10px;
     border-radius: 12px;
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 600;
 }
 
@@ -392,7 +392,7 @@
 }
 
 .fida-notice p {
-    font-size: 13px;
+    font-size: 15px;
     color: #92400e;
     margin: 0;
 }

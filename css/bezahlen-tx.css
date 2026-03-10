@@ -31,7 +31,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    font-size: 13px;
+    font-size: 15px;
     color: #334155;
     cursor: pointer;
     padding: 4px 8px;
@@ -128,7 +128,7 @@
     margin: 3px 0;
     border-radius: 8px;
     border-bottom: none;
-    font-size: 14px;
+    font-size: 15px;
     color: #475569;
     background: #ffffff;
     transition: background 0.15s, box-shadow 0.15s;
@@ -140,12 +140,12 @@
 
 .bezahlen-tx-name {
     flex: 1;
-    font-size: 14px;
+    font-size: 15px;
 }
 
 .bezahlen-tx-amount {
     font-weight: 600;
-    font-size: 14px;
+    font-size: 15px;
     color: #1e293b;
     display: flex;
     align-items: center;
@@ -154,7 +154,7 @@
 }
 
 .bezahlen-tx-badge {
-    font-size: 11px;
+    font-size: 13px;
     padding: 3px 8px;
     border-radius: 6px;
     font-weight: 600;
@@ -175,7 +175,7 @@
     background: #fef2f2;
     color: #dc2626;
     font-weight: 700;
-    font-size: 11px;
+    font-size: 13px;
     padding: 3px 10px;
     border-radius: 6px;
 }
@@ -184,7 +184,7 @@
     background: #fef9e7;
     color: #92400e;
     font-weight: 600;
-    font-size: 11px;
+    font-size: 13px;
     padding: 3px 10px;
     border-radius: 6px;
     border: 1px solid #fcd34d;
@@ -254,7 +254,7 @@
 }
 
 .bezahlen-tx-datum {
-    font-size: 12px;
+    font-size: 14px;
     color: #94a3b8;
     margin-left: 10px;
 }
@@ -308,7 +308,7 @@
     background: #f8faff;
     border: 1px solid #e0e7ff;
     border-radius: 8px;
-    font-size: 13px;
+    font-size: 15px;
 }
 
 .bezahlen-recurring-detail.open {
@@ -319,7 +319,7 @@
     display: flex;
     align-items: center;
     gap: 6px;
-    font-size: 12px;
+    font-size: 14px;
     color: #6366f1;
     margin-bottom: 8px;
     padding-bottom: 6px;
@@ -336,7 +336,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 4px 0;
-    font-size: 12px;
+    font-size: 14px;
     color: #475569;
 }
 
@@ -363,7 +363,7 @@
     margin-bottom: 16px;
     background: #f1f5f9;
     border-radius: 8px;
-    font-size: 13px;
+    font-size: 15px;
 }
 
 .donut-variant-switcher .option-switcher-arrow {
@@ -410,7 +410,7 @@
     padding: 5px 12px;
     border: 2px solid;
     border-radius: 20px;
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 500;
     cursor: pointer;
     transition: background 0.2s, transform 0.15s;
@@ -474,7 +474,7 @@
     gap: 8px;
     padding: 8px 14px;
     background: #f8fafc;
-    font-size: 13px;
+    font-size: 15px;
     color: #334155;
 }
 
@@ -492,7 +492,7 @@
     align-items: center;
     padding: 5px 14px 5px 34px;
     border-top: 1px solid #f1f5f9;
-    font-size: 12px;
+    font-size: 14px;
     color: #475569;
 }
 
@@ -536,13 +536,13 @@
 }
 
 .bezahlen-mini-name {
-    font-size: 13px;
+    font-size: 15px;
     font-weight: 600;
     color: #1e293b;
 }
 
 .bezahlen-mini-amount {
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 700;
     color: #334155;
     margin-top: 2px;
@@ -562,7 +562,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 11px;
+    font-size: 13px;
     font-weight: 600;
     color: white;
     transition: opacity 0.2s;
@@ -594,18 +594,18 @@
 .bezahlen-flat-card-name {
     flex: 1;
     font-weight: 600;
-    font-size: 14px;
+    font-size: 15px;
     color: #1e293b;
 }
 
 .bezahlen-flat-card-amount {
     font-weight: 700;
-    font-size: 14px;
+    font-size: 15px;
     color: #334155;
 }
 
 .bezahlen-flat-card-pct {
-    font-size: 12px;
+    font-size: 14px;
     color: #94a3b8;
     min-width: 40px;
     text-align: right;
@@ -633,7 +633,7 @@
 
 .bezahlen-grid-card-name {
     font-weight: 600;
-    font-size: 13px;
+    font-size: 15px;
     color: #475569;
     margin-bottom: 4px;
 }
@@ -645,7 +645,7 @@
 }
 
 .bezahlen-grid-card-pct {
-    font-size: 12px;
+    font-size: 14px;
     color: #94a3b8;
     margin-top: 2px;
 }

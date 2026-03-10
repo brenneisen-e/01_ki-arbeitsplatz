@@ -819,6 +819,849 @@
         }
     }
 
+    // ══════════════════════════════════════════════════
+    // 22-A: VV KI-CHAT (Mock, Keyword-basiert)
+    // ══════════════════════════════════════════════════
+
+    function toggleVVChat() {
+        var widget = document.getElementById('vvChatWidget');
+        var toggle = document.getElementById('vvChatToggle');
+        if (!widget || !toggle) return;
+
+        if (widget.style.display === 'none' || widget.style.display === '') {
+            widget.style.display = 'flex';
+            toggle.style.display = 'none';
+        } else {
+            widget.style.display = 'none';
+            toggle.style.display = 'flex';
+        }
+    }
+
+    function sendVVChat() {
+        var input = document.getElementById('vvChatInput');
+        var chatBody = document.getElementById('vvChatBody');
+        if (!input || !chatBody) return;
+        var question = input.value.trim();
+        if (!question) return;
+
+        // Hide welcome
+        var welcome = chatBody.querySelector('.vv-chat-welcome');
+        if (welcome) welcome.style.display = 'none';
+
+        // Add user message
+        chatBody.innerHTML += '<div class="vv-chat-msg vv-chat-user"><div class="vv-chat-msg-content">' + question + '</div></div>';
+        input.value = '';
+
+        // Simulate typing delay
+        setTimeout(function() {
+            var response = getVVChatResponse(question);
+            chatBody.innerHTML += '<div class="vv-chat-msg vv-chat-ai"><div class="vv-chat-msg-content">' + response + '</div></div>';
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }, 600);
+    }
+
+    function askVVQuestion(question) {
+        var input = document.getElementById('vvChatInput');
+        if (input) input.value = question;
+        sendVVChat();
+    }
+
+    function getVVChatResponse(question) {
+        var q = question.toLowerCase();
+        var mandant = currentVVMandant ? (window.vvMockMandanten || {})[currentVVMandant] : null;
+        var mandanten = window.vvMockMandanten || {};
+
+        // Quick-action follow-ups
+        var followUp = '<div class="vv-chat-followups">' +
+            '<button class="vv-chat-quick-btn" onclick="askVVQuestion(\'Rebalancing-Bedarf pruefen\')">Rebalancing?</button>' +
+            '<button class="vv-chat-quick-btn" onclick="askVVQuestion(\'Compliance-Status Mandant\')">Compliance?</button>' +
+            '<button class="vv-chat-quick-btn" onclick="askVVQuestion(\'Pipeline-Status\')">Pipeline?</button>' +
+            '</div>';
+
+        // Portfolio / Performance / Rendite
+        if (q.match(/portfolio|performance|rendite/)) {
+            if (mandant) {
+                var perf = mandant.performance || {};
+                var outperf = (perf.ytd || 0) - (perf.benchmark_ytd || 0);
+                return '<strong>Portfolio-Analyse: ' + currentVVMandant + '</strong><br><br>' +
+                    'AuM: <strong>' + fmtEuroFull(mandant.aum || 0) + '</strong><br>' +
+                    'Performance YTD: <strong>' + fmtPercent(perf.ytd || 0) + '</strong><br>' +
+                    'Benchmark: ' + fmtPercent(perf.benchmark_ytd || 0) + '<br>' +
+                    'Outperformance: <strong>' + fmtPercent(outperf) + '</strong><br>' +
+                    'Sharpe Ratio: ' + (perf.sharpe || 0).toFixed(2) + '<br>' +
+                    'Volatilitaet: ' + (perf.volatilitaet || 0).toFixed(1) + '%<br><br>' +
+                    'Benchmark: ' + (mandant.benchmark || '-') + followUp;
+            }
+            // Aggregate
+            var names = Object.keys(mandanten);
+            var totalAuM = 0, avgPerf = 0;
+            names.forEach(function(n) { totalAuM += mandanten[n].aum || 0; avgPerf += (mandanten[n].performance ? mandanten[n].performance.ytd : 0); });
+            avgPerf = names.length > 0 ? avgPerf / names.length : 0;
+            return '<strong>Portfolio-Uebersicht (alle Mandate):</strong><br><br>' +
+                'Gesamtes AuM: <strong>' + fmtEuroVV(totalAuM) + '</strong><br>' +
+                'Mandate: ' + names.length + '<br>' +
+                'Durchschnittl. Performance YTD: <strong>' + fmtPercent(avgPerf) + '</strong><br><br>' +
+                'Top-Performer: Winterberg GmbH (+6,7%), Dr. von Trott (+8,2%)<br>' +
+                'Underperformer: Prof. Hartmann (+2,8%), Keller NextGen (+4,2%)' + followUp;
+        }
+
+        // Rebalancing / Drift / Umschichten
+        if (q.match(/rebalancing|drift|umschicht/)) {
+            var drifts = [];
+            Object.keys(mandanten).forEach(function(n) {
+                var m = mandanten[n];
+                if (m.assetAllocation && m.sollAllocation) {
+                    Object.keys(m.sollAllocation).forEach(function(k) {
+                        var diff = (m.assetAllocation[k] || 0) - (m.sollAllocation[k] || 0);
+                        if (Math.abs(diff) >= 2) {
+                            drifts.push({ name: n, klasse: k, diff: diff, vol: Math.abs(diff) / 100 * (m.aum || 0) });
+                        }
+                    });
+                }
+            });
+            if (drifts.length === 0) {
+                return '<strong>Rebalancing-Analyse:</strong><br><br>Alle Mandate innerhalb der Toleranz. Kein Rebalancing-Bedarf erkannt.' + followUp;
+            }
+            var html = '<strong>Rebalancing-Bedarf erkannt (' + drifts.length + ' Abweichungen):</strong><br><br>';
+            drifts.forEach(function(d) {
+                html += '<strong>' + d.name + '</strong>: ' + d.klasse + ' ' + (d.diff > 0 ? '+' : '') + d.diff + 'pp → ' + fmtEuroVV(d.vol) + ' umschichten<br>';
+            });
+            html += '<br>Empfehlung: Aktien-Quote bei Ueberschreitung reduzieren, Renten aufstocken.' + followUp;
+            return html;
+        }
+
+        // Compliance / WpHG / Geeignetheit
+        if (q.match(/compliance|wphg|geeignet/)) {
+            var issues = [];
+            Object.keys(mandanten).forEach(function(n) {
+                var m = mandanten[n];
+                if (m.wphgBogen && m.wphgBogen.status !== 'vollstaendig') {
+                    issues.push(n + ': WpHG-Bogen aktualisierungsbeduerftig');
+                }
+                if (m.geeignetheitsbericht && m.geeignetheitsbericht.status === 'offen') {
+                    issues.push(n + ': Geeignetheitsbericht offen (faellig ' + m.geeignetheitsbericht.naechsterFaellig + ')');
+                }
+            });
+            if (mandant) {
+                var wphg = mandant.wphgBogen || {};
+                var gb = mandant.geeignetheitsbericht || {};
+                return '<strong>Compliance-Status: ' + currentVVMandant + '</strong><br><br>' +
+                    'WpHG-Bogen: ' + (wphg.status === 'vollstaendig' ? 'Vollstaendig' : 'Aktualisierung noetig') + '<br>' +
+                    'Letzte Aktualisierung: ' + (wphg.letzteAktualisierung || '-') + '<br>' +
+                    'Geeignetheitsbericht: ' + (gb.status === 'erstellt' ? 'Erstellt' : 'Offen') + '<br>' +
+                    'Naechster faellig: ' + (gb.naechsterFaellig || '-') + '<br>' +
+                    'ESG: ' + (mandant.esgPraeferenz ? mandant.esgPraeferenz.sfdr : '-') + followUp;
+            }
+            return '<strong>Compliance-Uebersicht:</strong><br><br>' +
+                (issues.length > 0 ? issues.join('<br>') : 'Alle Compliance-Items aktuell.') +
+                '<br><br>Offene Items: <strong>' + issues.length + '</strong>' + followUp;
+        }
+
+        // Markt / Zinsen / Konjunktur
+        if (q.match(/markt|zinsen|konjunktur|umfeld/)) {
+            return '<strong>Marktumfeld-Zusammenfassung (Q1 2026):</strong><br><br>' +
+                '<strong>Aktien:</strong> MSCI World +5,2% YTD. US-Markt fuehrend, Europa holt auf.<br>' +
+                '<strong>Renten:</strong> Euro-Staatsanleihen 10J bei 2,8%. EZB-Leitzins 3,25%.<br>' +
+                '<strong>Alternatives:</strong> PE-Markt stabil, Infra-Fonds nachgefragt.<br>' +
+                '<strong>ESG:</strong> Art. 8/9 Fonds mit Zuflüssen, Taxonomie-Reporting verschaerft.<br><br>' +
+                'Empfehlung: Leichte Uebergewichtung Euro-Renten, Aktien-Engagement beibehalten.' + followUp;
+        }
+
+        // Mandant / Client / Kunde
+        if (q.match(/mandant|client|kunde/) && mandant) {
+            return '<strong>Mandanten-Schnelluebersicht: ' + currentVVMandant + '</strong><br><br>' +
+                'Segment: ' + (mandant.segment || '-') + '<br>' +
+                'Mandatstyp: ' + (mandant.mandatstyp || '-') + '<br>' +
+                'AuM: <strong>' + fmtEuroFull(mandant.aum || 0) + '</strong><br>' +
+                'Mandat seit: ' + (mandant.mandatSeit || '-') + '<br>' +
+                'Risikoprofil: ' + (mandant.risikoprofil || '-') + '<br>' +
+                'NPS: ' + (mandant.nps ? mandant.nps.score : '-') + '/10<br>' +
+                'Status: ' + (mandant.statusIcon || 'ok') + followUp;
+        }
+
+        // Pipeline / Prospect / Akquise
+        if (q.match(/pipeline|prospect|akquise/)) {
+            var pipeline = window.vvPipeline || [];
+            var totalVol = 0;
+            pipeline.forEach(function(p) { totalVol += p.volEst || 0; });
+            var html = '<strong>Pipeline-Status (Q1 2026):</strong><br><br>' +
+                'Gesamt: <strong>' + pipeline.length + ' Prospects</strong><br>' +
+                'Erwartetes Volumen: <strong>' + fmtEuroVV(totalVol) + '</strong><br><br>';
+            html += '<strong>Naechste Schritte:</strong><br>';
+            pipeline.slice(0, 5).forEach(function(p) {
+                html += '- ' + p.name + ': ' + p.naechsterSchritt + ' (' + p.datum + ')<br>';
+            });
+            return html + followUp;
+        }
+
+        // Fallback
+        return '<strong>KI-Vertriebsassistent</strong><br><br>' +
+            'Ich kann Ihnen bei folgenden Themen helfen:<br><br>' +
+            '- <strong>Portfolio-Performance</strong> analysieren<br>' +
+            '- <strong>Rebalancing-Bedarf</strong> pruefen<br>' +
+            '- <strong>Compliance-Status</strong> abfragen<br>' +
+            '- <strong>Marktumfeld</strong> zusammenfassen<br>' +
+            '- <strong>Pipeline</strong> und Prospects anzeigen<br>' +
+            '- <strong>Mandanten</strong>-Details abrufen<br><br>' +
+            'Bitte formulieren Sie Ihre Frage mit einem der genannten Stichworte.' + followUp;
+    }
+
+    function showVVChatToggle() {
+        var toggle = document.getElementById('vvChatToggle');
+        if (toggle) toggle.style.display = 'flex';
+    }
+
+    function hideVVChat() {
+        var widget = document.getElementById('vvChatWidget');
+        var toggle = document.getElementById('vvChatToggle');
+        if (widget) widget.style.display = 'none';
+        if (toggle) toggle.style.display = 'none';
+    }
+
+    // ══════════════════════════════════════════════════
+    // 22-C: VV PDF-EXPORT MANDANTENANALYSE
+    // ══════════════════════════════════════════════════
+
+    function exportVVMandantenPDF() {
+        var name = currentVVMandant;
+        var mandant = name ? (window.vvMockMandanten || {})[name] : null;
+        if (!mandant) { alert('Bitte zuerst einen Mandanten auswaehlen.'); return; }
+
+        try {
+            /* jshint newcap: false */
+            var doc = new window.jspdf.jsPDF('p', 'mm', 'a4');
+            var y = 15;
+            var lm = 15; // left margin
+            var pw = 180; // page width usable
+            var berater = window.vvBeraterData || {};
+            var today = new Date().toLocaleDateString('de-DE');
+
+            // Header
+            doc.setFillColor(26, 54, 93); // vv-primary
+            doc.rect(0, 0, 210, 28, 'F');
+            doc.setFillColor(196, 163, 90); // vv-accent
+            doc.rect(lm, 7, 40, 14, 'F');
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(11);
+            doc.setTextColor(26, 54, 93);
+            doc.text('HRK LUNIS', lm + 4, 16);
+            doc.setTextColor(255, 255, 255);
+            doc.setFontSize(14);
+            doc.text('Mandantenanalyse', 65, 13);
+            doc.setFontSize(10);
+            doc.setFont('helvetica', 'normal');
+            doc.text('Berater: ' + berater.name + ' | ' + today, 65, 21);
+            y = 36;
+
+            // Section 1: Mandant
+            doc.setTextColor(26, 54, 93);
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(12);
+            doc.text('1. Mandant', lm, y); y += 7;
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(10);
+            doc.setTextColor(30, 41, 59);
+
+            var info = [
+                ['Name', name],
+                ['Segment', mandant.segment || '-'],
+                ['Mandatstyp', mandant.mandatstyp || '-'],
+                ['Mandat seit', mandant.mandatSeit || '-'],
+                ['AuM', fmtEuroFull(mandant.aum || 0)],
+                ['Risikoprofil', mandant.risikoprofil || '-'],
+                ['ESG', mandant.esgPraeferenz ? mandant.esgPraeferenz.sfdr : '-']
+            ];
+            info.forEach(function(row) {
+                doc.setFont('helvetica', 'bold');
+                doc.text(row[0] + ':', lm, y);
+                doc.setFont('helvetica', 'normal');
+                doc.text(row[1], lm + 40, y);
+                y += 5;
+            });
+            y += 5;
+
+            // Section 2: Portfolio
+            doc.setTextColor(26, 54, 93);
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(12);
+            doc.text('2. Portfolio', lm, y); y += 7;
+            doc.setFontSize(10);
+            doc.setTextColor(30, 41, 59);
+
+            // Asset Allocation table
+            var allocLabels = { aktien: 'Aktien', renten: 'Renten', alternatives: 'Alternatives', cash: 'Cash', pe: 'PE' };
+            doc.setFont('helvetica', 'bold');
+            doc.text('Assetklasse', lm, y);
+            doc.text('Ist', lm + 50, y);
+            doc.text('Soll', lm + 70, y);
+            doc.text('Drift', lm + 90, y);
+            y += 5;
+            doc.setFont('helvetica', 'normal');
+            if (mandant.sollAllocation) {
+                Object.keys(mandant.sollAllocation).forEach(function(k) {
+                    var ist = mandant.assetAllocation ? (mandant.assetAllocation[k] || 0) : 0;
+                    var soll = mandant.sollAllocation[k] || 0;
+                    var diff = ist - soll;
+                    doc.text(allocLabels[k] || k, lm, y);
+                    doc.text(ist + '%', lm + 50, y);
+                    doc.text(soll + '%', lm + 70, y);
+                    doc.text((diff > 0 ? '+' : '') + diff + 'pp', lm + 90, y);
+                    y += 5;
+                });
+            }
+            y += 3;
+            var perf = mandant.performance || {};
+            doc.setFont('helvetica', 'bold');
+            doc.text('Performance YTD: ' + fmtPercent(perf.ytd || 0), lm, y);
+            doc.setFont('helvetica', 'normal');
+            doc.text('Benchmark: ' + fmtPercent(perf.benchmark_ytd || 0), lm + 60, y);
+            y += 8;
+
+            // Section 3: Vermoegensbilanz
+            doc.setTextColor(26, 54, 93);
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(12);
+            doc.text('3. Vermoegensbilanz', lm, y); y += 7;
+            doc.setFontSize(10);
+            doc.setTextColor(30, 41, 59);
+
+            var fremdTotal = (mandant.fremdVermoegen || []).reduce(function(s, f) { return s + (f.volumen || 0); }, 0);
+            var gesamtLiquid = (mandant.aum || 0) + fremdTotal;
+            var gesamtImmo = (mandant.immobilien || []).reduce(function(s, i) { return s + (i.wert || 0); }, 0);
+            var gesamtUntern = (mandant.unternehmen || []).reduce(function(s, u) { return s + (u.schaetzwert || 0); }, 0);
+            var gesamtPE = (mandant.peBeteiligungen || []).reduce(function(s, p) { return s + (p.investiert || 0); }, 0);
+            var gesamt = gesamtLiquid + gesamtImmo + gesamtUntern + gesamtPE;
+
+            doc.setFont('helvetica', 'normal');
+            doc.text('Liquid (bei uns): ' + fmtEuroFull(mandant.aum || 0), lm, y); y += 5;
+            if (fremdTotal > 0) { doc.text('Liquid (Fremd): ' + fmtEuroFull(fremdTotal), lm, y); y += 5; }
+            if (gesamtImmo > 0) { doc.text('Immobilien: ' + fmtEuroFull(gesamtImmo), lm, y); y += 5; }
+            if (gesamtUntern > 0) { doc.text('Unternehmen: ~' + fmtEuroFull(gesamtUntern), lm, y); y += 5; }
+            if (gesamtPE > 0) { doc.text('PE-Beteiligungen: ' + fmtEuroFull(gesamtPE), lm, y); y += 5; }
+            doc.setFont('helvetica', 'bold');
+            doc.text('Gesamtvermoegen: ~' + fmtEuroFull(gesamt), lm, y); y += 8;
+
+            // Section 4: Compliance
+            doc.setTextColor(26, 54, 93);
+            doc.setFontSize(12);
+            doc.text('4. Compliance-Status', lm, y); y += 7;
+            doc.setFontSize(10);
+            doc.setTextColor(30, 41, 59);
+            doc.setFont('helvetica', 'normal');
+
+            var wphg = mandant.wphgBogen || {};
+            var gb = mandant.geeignetheitsbericht || {};
+            doc.text('WpHG-Bogen: ' + (wphg.status === 'vollstaendig' ? 'Vollstaendig' : 'Aktualisierung noetig') + ' (Stand: ' + (wphg.letzteAktualisierung || '-') + ')', lm, y); y += 5;
+            doc.text('Geeignetheitsbericht: ' + (gb.status === 'erstellt' ? 'Erstellt' : 'Offen') + ' (naechster: ' + (gb.naechsterFaellig || '-') + ')', lm, y); y += 5;
+            var vs = mandant.verlustschwelle || {};
+            doc.text('Verlustschwelle: -' + ((vs.schwelle || 0.1) * 100) + '% vom Hoechststand ' + fmtEuroFull(vs.hoechststand || 0), lm, y); y += 8;
+
+            // Section 5: Top-3 Potentiale
+            doc.setTextColor(26, 54, 93);
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(12);
+            doc.text('5. Top-Potentiale', lm, y); y += 7;
+            doc.setFontSize(10);
+            doc.setTextColor(30, 41, 59);
+            doc.setFont('helvetica', 'normal');
+
+            var potentiale = (window.vvPotentiale || []).filter(function(p) { return p.kundenName === name; });
+            if (potentiale.length > 0) {
+                potentiale.slice(0, 3).forEach(function(p, i) {
+                    doc.text((i + 1) + '. ' + p.produkt + ' (' + fmtEuroVV(p.volumen) + ')', lm, y); y += 5;
+                    var desc = p.beschreibung.length > 80 ? p.beschreibung.substring(0, 80) + '...' : p.beschreibung;
+                    doc.setTextColor(100, 116, 139);
+                    doc.text('   ' + desc, lm, y); y += 6;
+                    doc.setTextColor(30, 41, 59);
+                });
+            } else {
+                doc.text('Keine Potentiale identifiziert.', lm, y); y += 6;
+            }
+
+            // Footer / Disclaimer
+            doc.setDrawColor(226, 232, 240);
+            doc.line(lm, 275, lm + pw, 275);
+            doc.setFontSize(8);
+            doc.setTextColor(100, 116, 139);
+            doc.text('Erstellt mit KI-Vertriebsarbeitsplatz | ' + today + ' | Nicht zur Weitergabe an Dritte bestimmt', lm, 280);
+
+            // Save
+            var filename = 'Mandantenanalyse_' + name.replace(/[^a-zA-Z0-9]/g, '_') + '_' + today.replace(/\./g, '') + '.pdf';
+            doc.save(filename);
+        } catch (e) {
+            console.error('PDF-Export Fehler:', e);
+            alert('PDF-Export fehlgeschlagen. Bitte pruefen Sie die Konsole.');
+        }
+    }
+
+    // ══════════════════════════════════════════════════
+    // 22-E: VV NOTIFICATION BELL
+    // ══════════════════════════════════════════════════
+
+    function generateVVNotifications() {
+        var notifications = [];
+        var mandanten = window.vvMockMandanten || {};
+
+        Object.keys(mandanten).forEach(function(name) {
+            var m = mandanten[name];
+
+            // WpHG-Bogen faellig
+            if (m.wphgBogen && m.wphgBogen.status !== 'vollstaendig') {
+                notifications.push({ prio: 'hoch', text: 'WpHG-Bogen ' + name + ': Aktualisierung erforderlich', mandant: name, icon: 'shield' });
+            }
+
+            // Geeignetheitsbericht ueberfaellig
+            if (m.geeignetheitsbericht && m.geeignetheitsbericht.status === 'offen') {
+                notifications.push({ prio: 'hoch', text: 'Geeignetheitsbericht ' + name + ': Status offen (faellig ' + m.geeignetheitsbericht.naechsterFaellig + ')', mandant: name, icon: 'file' });
+            }
+
+            // Verlustschwelle <5% Puffer
+            if (m.verlustschwelle && m.aum) {
+                var trigger = m.verlustschwelle.hoechststand * (1 - (m.verlustschwelle.schwelle || 0.1));
+                var puffer = m.aum - trigger;
+                if (puffer < m.aum * 0.05 && puffer > 0) {
+                    notifications.push({ prio: 'hoch', text: 'Verlustschwelle ' + name + ': Nur noch ' + fmtEuroVV(puffer) + ' Puffer', mandant: name, icon: 'alert' });
+                }
+            }
+
+            // Rebalancing-Alert (Drift >= 3pp)
+            if (m.assetAllocation && m.sollAllocation) {
+                Object.keys(m.sollAllocation).forEach(function(k) {
+                    var diff = Math.abs((m.assetAllocation[k] || 0) - (m.sollAllocation[k] || 0));
+                    if (diff >= 3) {
+                        notifications.push({ prio: 'mittel', text: 'Rebalancing ' + name + ': ' + k + ' Drift ' + diff + 'pp', mandant: name, icon: 'trending' });
+                    }
+                });
+            }
+        });
+
+        // Pipeline-Prospect Termine
+        var pipeline = window.vvPipeline || [];
+        pipeline.forEach(function(p) {
+            if (p.stadium === 'onboarding' || p.stadium === 'analyse_vorschlag') {
+                notifications.push({ prio: 'mittel', text: 'Pipeline ' + p.name + ': ' + p.naechsterSchritt, mandant: null, icon: 'users' });
+            }
+        });
+
+        return notifications;
+    }
+
+    function toggleVVNotifications() {
+        var dropdown = document.getElementById('vvNotificationDropdown');
+        if (!dropdown) return;
+
+        if (dropdown.style.display === 'none' || dropdown.style.display === '') {
+            var notifications = generateVVNotifications();
+            renderVVNotificationDropdown(notifications);
+            dropdown.style.display = 'block';
+            // Close on outside click
+            setTimeout(function() {
+                document.addEventListener('click', closeVVNotificationsOnOutsideClick);
+            }, 10);
+        } else {
+            dropdown.style.display = 'none';
+            document.removeEventListener('click', closeVVNotificationsOnOutsideClick);
+        }
+    }
+
+    function closeVVNotificationsOnOutsideClick(e) {
+        var dropdown = document.getElementById('vvNotificationDropdown');
+        var btn = document.getElementById('vvNotificationBtn');
+        if (dropdown && btn && !dropdown.contains(e.target) && !btn.contains(e.target)) {
+            dropdown.style.display = 'none';
+            document.removeEventListener('click', closeVVNotificationsOnOutsideClick);
+        }
+    }
+
+    function renderVVNotificationDropdown(notifications) {
+        var dropdown = document.getElementById('vvNotificationDropdown');
+        if (!dropdown) return;
+
+        var svgIcons = {
+            shield: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>',
+            file: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>',
+            alert: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
+            trending: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg>',
+            users: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>'
+        };
+
+        if (notifications.length === 0) {
+            dropdown.innerHTML = '<div class="vv-notif-empty">Keine Benachrichtigungen</div>';
+            return;
+        }
+
+        var html = '<div class="vv-notif-header">Benachrichtigungen (' + notifications.length + ')</div>';
+        notifications.forEach(function(n) {
+            var prioClass = n.prio === 'hoch' ? 'vv-notif-hoch' : 'vv-notif-mittel';
+            var onclick = n.mandant ? ' onclick="openVVMandantDetail(\'' + n.mandant.replace(/'/g, "\\'") + '\')"' : '';
+            html += '<div class="vv-notif-item ' + prioClass + '"' + onclick + '>';
+            html += '<span class="vv-notif-icon">' + (svgIcons[n.icon] || svgIcons.alert) + '</span>';
+            html += '<span class="vv-notif-text">' + n.text + '</span>';
+            html += '</div>';
+        });
+        dropdown.innerHTML = html;
+    }
+
+    function updateVVNotificationBadge() {
+        var badge = document.getElementById('vvNotificationBadge');
+        if (!badge) return;
+        var notifications = generateVVNotifications();
+        var count = notifications.filter(function(n) { return n.prio === 'hoch'; }).length;
+        badge.textContent = count.toString();
+        badge.style.display = count > 0 ? 'flex' : 'none';
+    }
+
+    // ══════════════════════════════════════════════════
+    // 22-E: LUECKEN-LEISTE / ABDECKUNGSSTATUS
+    // ══════════════════════════════════════════════════
+
+    function renderVVAbdeckungsLeiste(m) {
+        var kategorien = [
+            { key: 'aktien', label: 'Aktien' },
+            { key: 'renten', label: 'Renten' },
+            { key: 'alternatives', label: 'Alternatives' },
+            { key: 'pe', label: 'PE' },
+            { key: 'cash', label: 'Cash' },
+            { key: 'immobilienfonds', label: 'Immobilienfonds' },
+            { key: 'esg', label: 'ESG' },
+            { key: 'rohstoffe', label: 'Rohstoffe' }
+        ];
+
+        var luecken = [];
+        var html = '<div class="vv-abdeckung-leiste">';
+
+        kategorien.forEach(function(kat) {
+            var vorhanden = false;
+
+            if (kat.key === 'esg') {
+                vorhanden = m.esgPraeferenz && m.esgPraeferenz.sfdr && m.esgPraeferenz.sfdr !== 'keine';
+                if (!vorhanden && m.esgPraeferenz && m.esgPraeferenz.sfdr && m.esgPraeferenz.sfdr !== 'keine') {
+                    luecken.push({ label: 'ESG', text: 'Portfolio nicht ESG-konform (Mandant wuenscht ' + m.esgPraeferenz.sfdr + ')' });
+                }
+            } else if (kat.key === 'immobilienfonds') {
+                vorhanden = false; // No real estate funds in asset allocation model
+                if (m.aum > 3000000) {
+                    luecken.push({ label: 'Immobilienfonds', text: 'Keine Immobilienfonds-Allokation (Empfehlung bei >3M AuM)' });
+                }
+            } else if (kat.key === 'rohstoffe') {
+                vorhanden = false; // No commodities in asset allocation model
+            } else {
+                vorhanden = m.assetAllocation && (m.assetAllocation[kat.key] || 0) > 0;
+                if (!vorhanden && kat.key === 'pe' && (m.aum || 0) > 5000000) {
+                    luecken.push({ label: 'PE', text: 'Keine PE-Allokation (Empfehlung bei >5M AuM)' });
+                }
+            }
+
+            var statusClass = vorhanden ? 'vv-abdeckung-ok' : 'vv-abdeckung-luecke';
+            var statusIcon = vorhanden ?
+                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="20 6 9 17 4 12"/></svg>' :
+                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
+            html += '<span class="vv-abdeckung-badge ' + statusClass + '" title="' + kat.label + '">' + statusIcon + ' ' + kat.label + '</span>';
+        });
+
+        html += '</div>';
+
+        if (luecken.length > 0) {
+            html += '<div class="vv-luecken-info"><strong>' + luecken.length + ' Luecken erkannt:</strong><br>';
+            luecken.forEach(function(l, i) {
+                html += '<div class="vv-luecke-item">' + (i + 1) + '. ' + l.text +
+                    ' <button class="vv-btn vv-btn-secondary" style="font-size:11px;padding:2px 8px;" onclick="showVVDetailTab(\'impulse\')">Impuls oeffnen</button></div>';
+            });
+            html += '</div>';
+        }
+
+        return html;
+    }
+
+    // ══════════════════════════════════════════════════
+    // 22-E: POTENZIAL-STERNE IN MANDATSLISTE
+    // ══════════════════════════════════════════════════
+
+    function calculateVVPotenzialScore(mandant) {
+        var score = 0;
+
+        // Cross-Selling: +1 pro Fremdbank
+        if (mandant.fremdVermoegen) {
+            score += mandant.fremdVermoegen.length;
+        }
+
+        // NextGen: +1 pro Kind >25 ohne Mandat
+        if (mandant.kinder) {
+            mandant.kinder.forEach(function(k) {
+                if (k.alter >= 25 && !k.eigenesMandat) score += 1;
+            });
+        }
+
+        // Compliance-Items: +1 pro offener
+        if (mandant.wphgBogen && mandant.wphgBogen.status !== 'vollstaendig') score += 1;
+        if (mandant.geeignetheitsbericht && mandant.geeignetheitsbericht.status === 'offen') score += 1;
+
+        // Mandatstyp-Upgrade: +1 wenn SmartValue und >3M AuM
+        if (mandant.segment === 'SmartValue' && (mandant.aum || 0) > 3000000) score += 1;
+
+        return Math.min(score, 5); // Cap at 5 stars
+    }
+
+    function renderVVSterne(score) {
+        var html = '';
+        for (var i = 0; i < 5; i++) {
+            if (i < score) {
+                html += '<svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1" width="14" height="14" class="vv-star-filled"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>';
+            } else {
+                html += '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" width="14" height="14" class="vv-star-empty"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>';
+            }
+        }
+        return '<span class="vv-sterne" title="Potenzial-Score: ' + score + '/5">' + html + '</span>';
+    }
+
+    // ══════════════════════════════════════════════════
+    // 22-E: DYNAMIC PORTFOLIO-EINZEILER
+    // ══════════════════════════════════════════════════
+
+    function generateVVEinzeiler() {
+        var mandanten = window.vvMockMandanten || {};
+        var names = Object.keys(mandanten);
+
+        var totalAuM = 0, complianceItems = 0;
+        names.forEach(function(n) {
+            var m = mandanten[n];
+            totalAuM += m.aum || 0;
+            if (m.wphgBogen && m.wphgBogen.status !== 'vollstaendig') complianceItems++;
+            if (m.geeignetheitsbericht && m.geeignetheitsbericht.status === 'offen') complianceItems++;
+        });
+
+        // Find top impulse (largest drift)
+        var topImpuls = 'Keine aktuellen Impulse';
+        var maxDrift = 0;
+        names.forEach(function(n) {
+            var m = mandanten[n];
+            if (m.assetAllocation && m.sollAllocation) {
+                Object.keys(m.sollAllocation).forEach(function(k) {
+                    var diff = Math.abs((m.assetAllocation[k] || 0) - (m.sollAllocation[k] || 0));
+                    if (diff > maxDrift) {
+                        maxDrift = diff;
+                        topImpuls = 'Rebalancing ' + n + ' (' + fmtEuroVV(m.aum || 0) + ')';
+                    }
+                });
+            }
+        });
+
+        return names.length + ' Mandate · ' + fmtEuroVV(totalAuM) + ' AuM · ' +
+            complianceItems + ' Compliance-Items offen · Fokus: ' + topImpuls;
+    }
+
+    // ══════════════════════════════════════════════════
+    // OVERRIDE: Enhanced fillVVUebersicht with dynamic Einzeiler
+    // ══════════════════════════════════════════════════
+
+    // Store original and replace with enhanced version
+    var _origFillVVUebersicht = fillVVUebersicht;
+    fillVVUebersicht = function() {
+        _origFillVVUebersicht();
+
+        // Replace static Einzeiler with dynamic one
+        var el = document.getElementById('vv-tab-uebersicht');
+        if (!el) return;
+
+        var einzeilerDiv = el.querySelector('.vv-einzeiler');
+        if (einzeilerDiv) {
+            einzeilerDiv.innerHTML = '<span class="vv-einzeiler-item">' + generateVVEinzeiler() + '</span>';
+        }
+    };
+
+    // ══════════════════════════════════════════════════
+    // OVERRIDE: Enhanced fillVVMandatsliste with Sterne
+    // ══════════════════════════════════════════════════
+
+    var _origFillVVMandatsliste = fillVVMandatsliste;
+    fillVVMandatsliste = function() {
+        var el = document.getElementById('vv-tab-mandatsliste');
+        if (!el) return;
+        var mandanten = window.vvMockMandanten || {};
+        var names = Object.keys(mandanten);
+
+        var html = '<div class="uebersicht-card vv-card"><div class="uebersicht-card-header"><h3>';
+        html += '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>';
+        html += ' Mandantenliste (' + names.length + ' Mandate)</h3></div>';
+        html += '<div class="vv-table-wrap"><table class="vv-table"><thead><tr>';
+        html += '<th>Mandant</th><th>Segment</th><th>AuM</th><th>Mandat</th><th>Marge</th><th>Perf YTD</th><th>Potenzial</th><th>Status</th>';
+        html += '</tr></thead><tbody>';
+
+        names.sort(function(a, b) { return (mandanten[b].aum || 0) - (mandanten[a].aum || 0); });
+
+        names.forEach(function(name) {
+            var m = mandanten[name];
+            var score = calculateVVPotenzialScore(m);
+            html += '<tr class="vv-table-row" onclick="openVVMandantDetail(\'' + name.replace(/'/g, "\\'") + '\')">';
+            html += '<td><div class="vv-mandant-cell"><span class="vv-avatar" style="background:' + (m.avatarBg || '#1a365d') + '">' + getInitialsVV(name) + '</span> ' + name + '</div></td>';
+            html += '<td>' + (m.segment || '-') + '</td>';
+            html += '<td class="vv-num">' + fmtEuroVV(m.aum || 0) + '</td>';
+            html += '<td>' + (m.mandatstyp || '-') + '</td>';
+            html += '<td class="vv-num">' + ((m.managementFee || 0) * 100).toFixed(2).replace('.', ',') + '%</td>';
+            html += '<td class="vv-num ' + (m.performance && m.performance.ytd >= 0 ? 'vv-positive' : 'vv-negative') + '">' + fmtPercent(m.performance ? m.performance.ytd : 0) + '</td>';
+            html += '<td>' + renderVVSterne(score) + '</td>';
+            html += '<td>' + getStatusBadge(m.statusIcon) + '</td>';
+            html += '</tr>';
+        });
+
+        html += '</tbody></table></div></div>';
+        el.innerHTML = html;
+    };
+
+    // ══════════════════════════════════════════════════
+    // OVERRIDE: Enhanced fillVVDetailPortfolio with Abdeckungsleiste
+    // ══════════════════════════════════════════════════
+
+    var _origFillVVDetailPortfolio = fillVVDetailPortfolio;
+    fillVVDetailPortfolio = function(m) {
+        _origFillVVDetailPortfolio(m);
+
+        // Prepend Abdeckungsleiste above the Asset Allocation
+        var el = document.getElementById('vvd-tab-portfolio');
+        if (!el) return;
+
+        var abdeckung = '<div class="uebersicht-card vv-card" style="grid-column:1/-1;"><div class="uebersicht-card-header"><h3>';
+        abdeckung += '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>';
+        abdeckung += ' Anlage-Abdeckung</h3></div><div style="padding:16px;">';
+        abdeckung += renderVVAbdeckungsLeiste(m);
+        abdeckung += '</div></div>';
+
+        // Insert at top of grid
+        var grid = el.querySelector('.vv-detail-grid');
+        if (grid) {
+            grid.insertAdjacentHTML('afterbegin', abdeckung);
+        } else {
+            el.insertAdjacentHTML('afterbegin', abdeckung);
+        }
+    };
+
+    // ══════════════════════════════════════════════════
+    // SHOW/HIDE CHAT ON PAGE NAVIGATION
+    // ══════════════════════════════════════════════════
+
+    var _origShowVVOverview = showVVOverview;
+    showVVOverview = function() {
+        _origShowVVOverview();
+        showVVChatToggle();
+        updateVVNotificationBadge();
+    };
+
+    var _origOpenVVMandantDetail = openVVMandantDetail;
+    openVVMandantDetail = function(name) {
+        _origOpenVVMandantDetail(name);
+        showVVChatToggle();
+    };
+
+    // ══════════════════════════════════════════════════
+    // 22-D: VV GUIDED TOUR (via event, steps defined below)
+    // ══════════════════════════════════════════════════
+
+    function startVVTour() {
+        if (!window.guidedTour) { console.warn('Guided Tour nicht geladen.'); return; }
+
+        // Save original steps and replace with VV steps
+        var tour = window.guidedTour;
+        var originalSteps = tour.steps;
+
+        var icons = {
+            chart: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>',
+            users: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>',
+            trending: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>',
+            shield: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>',
+            welcome: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>',
+            pie: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0110 10"/><line x1="12" y1="12" x2="12" y2="2"/><line x1="12" y1="12" x2="22" y2="12"/></svg>',
+            briefcase: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>',
+            bolt: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>',
+            user: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
+            check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>'
+        };
+
+        // VV-02 tour steps
+        tour.steps = [
+            {
+                title: 'Willkommen bei HRK LUNIS',
+                description: 'Diese Tour zeigt Ihnen die wichtigsten Funktionen des Vermoegensverwaltungs-Cockpits.',
+                icon: icons.welcome,
+                element: null,
+                position: 'center'
+            },
+            {
+                title: 'KPI-Cockpit',
+                description: 'Ihre wichtigsten Kennzahlen auf einen Blick: AuM, Net New Money, Ertrag, Mandate, Marge und At-Risk-Mandate.',
+                icon: icons.chart,
+                element: '.vv-kpi-row',
+                position: 'bottom'
+            },
+            {
+                title: 'Mandatsliste',
+                description: 'Alle Mandate sortiert nach AuM. Potenzial-Sterne zeigen Cross-Selling-Chancen. Klicken Sie auf einen Mandanten fuer die 360-Grad-Ansicht.',
+                icon: icons.users,
+                element: '.vv-tab-btn[data-tab="mandatsliste"]',
+                position: 'bottom',
+                beforeShow: function() { showVVTab('mandatsliste'); return new Promise(function(r) { setTimeout(r, 200); }); }
+            },
+            {
+                title: 'Sales Pipeline',
+                description: 'Ihr Sales-Funnel von Lead bis Onboarding. Sehen Sie erwartete Volumina und naechste Schritte.',
+                icon: icons.trending,
+                element: '.vv-tab-btn[data-tab="pipeline"]',
+                position: 'bottom',
+                beforeShow: function() { showVVTab('pipeline'); return new Promise(function(r) { setTimeout(r, 200); }); }
+            },
+            {
+                title: 'Compliance-Uebersicht',
+                description: 'Ueberfaellige WpHG-Boegen und Geeignetheitsberichte sofort erkennen. Verlustschwellen-Monitoring fuer alle Mandate.',
+                icon: icons.shield,
+                element: '.vv-tab-btn[data-tab="compliance"]',
+                position: 'bottom',
+                beforeShow: function() { showVVTab('compliance'); return new Promise(function(r) { setTimeout(r, 200); }); }
+            },
+            {
+                title: 'Tour abgeschlossen!',
+                description: 'Sie kennen jetzt das Berater-Cockpit. Klicken Sie auf einen Mandanten, um die Client-360-Grad-Ansicht zu erkunden.',
+                icon: icons.check,
+                element: null,
+                position: 'center',
+                isLast: true,
+                beforeShow: function() { showVVTab('uebersicht'); return new Promise(function(r) { setTimeout(r, 200); }); }
+            }
+        ];
+
+        tour.onComplete = function() {
+            tour.steps = originalSteps;
+            tour.onComplete = null;
+        };
+
+        tour.start();
+    }
+
+    // ══════════════════════════════════════════════════
+    // 23-E: VV KUNDEN-ID CROSS-REFERENZ
+    // ══════════════════════════════════════════════════
+
+    function initVVCrossRef() {
+        if (!window.kundenCrossRef) return;
+        // Add VV mandants to cross-reference
+        // Dr. von Trott could be a banking customer too
+        window.kundenCrossRef['Dr. Heinrich von Trott'] = {
+            bankName: 'Dr. Heinrich von Trott',
+            bankId: 'PBB001',
+            versId: null,
+            vvId: 'VV001',
+            vvName: 'Dr. Heinrich von Trott'
+        };
+        window.kundenCrossRef['Familie Bergmann-Roth'] = {
+            bankName: null,
+            bankId: null,
+            versId: null,
+            vvId: 'VV008',
+            vvName: 'Familie Bergmann-Roth'
+        };
+    }
+
+    // Initialize on load
+    try { initVVCrossRef(); } catch(e) { /* silently fail if config not loaded yet */ }
+
     // ── WINDOW EXPORTS ──
     window.showVVOverview = showVVOverview;
     window.showVVTab = showVVTab;
@@ -826,5 +1669,16 @@
     window.showVVDetailTab = showVVDetailTab;
     window.backFromVVDetail = backFromVVDetail;
     window.backFromVVOverview = backFromVVOverview;
+    window.toggleVVChat = toggleVVChat;
+    window.sendVVChat = sendVVChat;
+    window.askVVQuestion = askVVQuestion;
+    window.hideVVChat = hideVVChat;
+    window.exportVVMandantenPDF = exportVVMandantenPDF;
+    window.toggleVVNotifications = toggleVVNotifications;
+    window.startVVTour = startVVTour;
+    window.calculateVVPotenzialScore = calculateVVPotenzialScore;
+    window.generateVVNotifications = generateVVNotifications;
+    window.generateVVEinzeiler = generateVVEinzeiler;
+    window.renderVVAbdeckungsLeiste = renderVVAbdeckungsLeiste;
 
 })();

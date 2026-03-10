@@ -45,10 +45,19 @@ var bankMockKunden = {
             { kredit:'Baufinanzierung', kreditgeber:'Volksbank Mittelhessen', ursprung:280000, restschuld:185000, zinssatz:'1,85% p.a.', rate:'€1.180/Mon.', laufzeit:'09/2026', absicherung:'Grundschuld', hinweis:'Zinsbindung endet 09/2026 – Anschlussfinanzierung erforderlich' }
         ],
         kommunikation: [
-            { typ:'email', datum:'28.02.2026', betreff:'Anschlussfinanzierung Angebot', inhalt:'Angebot für Baufi-Anschluss gesendet', status:'Geöffnet' },
-            { typ:'call', datum:'20.02.2026', betreff:'Telefonat Baufinanzierung', inhalt:'Beratungsgespräch zu Anschlussoptionen', status:'Erledigt' },
-            { typ:'termin', datum:'15.02.2026', betreff:'Jahresgespräch', inhalt:'VR-FinanzPlan Review durchgeführt', status:'Erledigt' },
-            { typ:'brief', datum:'10.01.2026', betreff:'Kontoauszug Q4 2025', inhalt:'Quartalsauszug Depot + Konten', status:'Versendet' }
+            { typ:'chatbot', datum:'2026-03-05T20:30:00', betreff:'genoGPT: Anschlussfinanzierung', verlauf:[
+                {rolle:'kunde',text:'Meine Zinsbindung l\u00e4uft bald aus. Was kann ich tun?'},
+                {rolle:'bot',text:'Ihre Baufinanzierung bei der Volksbank Mittelhessen hat eine Zinsbindung bis 09/2026. F\u00fcr die Anschlussfinanzierung bieten wir aktuell attraktive Konditionen.'},
+                {rolle:'kunde',text:'Was sind die aktuellen Konditionen?'},
+                {rolle:'bot',text:'Aktuell ab 3,2% p.a. f\u00fcr 10 Jahre Zinsbindung. Soll ich einen Beratungstermin mit Ihrem Berater vereinbaren?'},
+                {rolle:'kunde',text:'Ja bitte'}
+            ], ergebnis:'Terminwunsch Anschlussfinanzierung', themen:['baufinanzierung','anschluss','termin'], status:'termin_geplant' },
+            { typ:'email', datum:'2026-02-28T09:00:00', betreff:'Anschlussfinanzierung Angebot', inhalt:'Angebot f\u00fcr Baufi-Anschluss gesendet', status:'geoeffnet', geoeffnetAm:'2026-02-28T14:00:00', followUp:false, automatisch:true },
+            { typ:'ki_kontakt', datum:'2026-02-22T10:00:00', betreff:'Zinsbindungsablauf-Warnung', inhalt:'System hat erkannt: Baufinanzierung Zinsbindung endet 09/2026. Anschlussfinanzierung dringend empfohlen.', status:'geoeffnet', followUp:false, automatisch:true, ausloeser:'regelbasiert' },
+            { typ:'call', datum:'2026-02-20T10:00:00', betreff:'Telefonat Baufinanzierung', inhalt:'Beratungsgespr\u00e4ch zu Anschlussoptionen', status:'erledigt' },
+            { typ:'termin', datum:'2026-02-15T10:00:00', betreff:'Jahresgespr\u00e4ch', inhalt:'VR-FinanzPlan Review durchgef\u00fchrt', status:'erledigt' },
+            { typ:'portal', datum:'2026-02-10T16:00:00', betreff:'Depot\u00fcbersicht angesehen', inhalt:'Kunde hat seine Depot\u00fcbersicht im Online-Banking aufgerufen und Union Investment Kontoauszug heruntergeladen.', status:'erledigt', dokument:'UnionDepot-Auszug-Q4-2025.pdf' },
+            { typ:'brief', datum:'2026-01-10T08:00:00', betreff:'Kontoauszug Q4 2025', inhalt:'Quartalsauszug Depot + Konten', status:'versendet', followUp:false, automatisch:true }
         ],
         avatarBg:'#2563eb', foto:'assets/images/AdobeStock_624564221.jpeg'
     },
@@ -86,10 +95,19 @@ var bankMockKunden = {
         ],
         finanzierungen: [],
         kommunikation: [
-            { typ:'email', datum:'25.02.2026', betreff:'Festgeld Verlängerung', inhalt:'Info zu Festgeld-Konditionen bei Fälligkeit', status:'Geöffnet' },
-            { typ:'call', datum:'18.02.2026', betreff:'Altersvorsorge-Beratung', inhalt:'Erstgespräch Altersvorsorge-Konzept', status:'Erledigt' },
-            { typ:'termin', datum:'05.02.2026', betreff:'VR-FinanzPlan Erstberatung', inhalt:'Ganzheitliche Finanzplanung besprochen', status:'Erledigt' },
-            { typ:'email', datum:'15.01.2026', betreff:'Depotvergleich', inhalt:'Vergleich VR-MeinDepot vs. Scalable Capital', status:'Versendet' }
+            { typ:'chatbot', datum:'2026-03-02T21:00:00', betreff:'genoGPT: Festgeld-Verl\u00e4ngerung', verlauf:[
+                {rolle:'kunde',text:'Mein Festgeld l\u00e4uft bald aus. Welche Optionen habe ich?'},
+                {rolle:'bot',text:'Ihr VR-Festgeld 12M (50.000\u20ac, 3,2% p.a.) wird im Juni 2026 f\u00e4llig. Sie k\u00f6nnen verl\u00e4ngern, umschichten oder auszahlen lassen.'},
+                {rolle:'kunde',text:'Was bekomme ich bei Verl\u00e4ngerung?'},
+                {rolle:'bot',text:'Aktuell bieten wir 2,9% f\u00fcr 12 Monate oder 3,0% f\u00fcr 24 Monate. Alternativ k\u00f6nnten Sie in den VR-MeinDepot ETF-Sparplan investieren. Soll ich einen Termin vereinbaren?'},
+                {rolle:'kunde',text:'Ja, ich m\u00f6chte alle Optionen besprechen'}
+            ], ergebnis:'Terminwunsch Festgeld-Anlage', themen:['festgeld','anlage','termin'], status:'termin_geplant' },
+            { typ:'email', datum:'2026-02-25T09:00:00', betreff:'Festgeld Verl\u00e4ngerung', inhalt:'Info zu Festgeld-Konditionen bei F\u00e4lligkeit', status:'geoeffnet', geoeffnetAm:'2026-02-25T18:00:00', followUp:false, automatisch:true },
+            { typ:'ki_kontakt', datum:'2026-02-18T10:00:00', betreff:'Altersvorsorge-L\u00fccke erkannt', inhalt:'System hat erkannt: Kundin (40 J.) hat keine private Altersvorsorge \u00fcber Verbundpartner. Empfehlung: R+V Riester oder Union Investment UniProfiRente.', status:'geoeffnet', followUp:false, automatisch:true, ausloeser:'regelbasiert' },
+            { typ:'call', datum:'2026-02-18T14:00:00', betreff:'Altersvorsorge-Beratung', inhalt:'Erstgespr\u00e4ch Altersvorsorge-Konzept', status:'erledigt' },
+            { typ:'termin', datum:'2026-02-05T10:00:00', betreff:'VR-FinanzPlan Erstberatung', inhalt:'Ganzheitliche Finanzplanung besprochen', status:'erledigt' },
+            { typ:'portal', datum:'2026-01-20T09:00:00', betreff:'Kontoumsaetze exportiert', inhalt:'Kundin hat Kontoumsaetze der letzten 6 Monate im Online-Banking exportiert.', status:'erledigt', dokument:'Umsaetze-Export-H2-2025.csv' },
+            { typ:'email', datum:'2026-01-15T09:00:00', betreff:'Depotvergleich', inhalt:'Vergleich VR-MeinDepot vs. Scalable Capital', status:'versendet', followUp:false, automatisch:true }
         ],
         avatarBg:'#9333ea', foto:'assets/images/AdobeStock_252262042.jpeg'
     },
@@ -120,9 +138,17 @@ var bankMockKunden = {
         versicherungenFremd: [],
         finanzierungen: [],
         kommunikation: [
-            { typ:'termin', datum:'20.02.2026', betreff:'VR-FinanzPlan Review', inhalt:'Jährliches Review der Finanzplanung', status:'Erledigt' },
-            { typ:'email', datum:'10.02.2026', betreff:'ETF-Sparplan Info', inhalt:'Informationen zu VR-MeinDepot Sparplan', status:'Geöffnet' },
-            { typ:'call', datum:'28.01.2026', betreff:'Depoteröffnung Interesse', inhalt:'Telefonat zu ETF-Sparplänen für Kinder', status:'Erledigt' }
+            { typ:'chatbot', datum:'2026-03-01T19:00:00', betreff:'genoGPT: Kindersparen', verlauf:[
+                {rolle:'kunde',text:'Ich m\u00f6chte f\u00fcr meine Kinder Geld anlegen. Was empfehlen Sie?'},
+                {rolle:'bot',text:'F\u00fcr Tim (14) und Jana (11) empfehle ich den VR-MeinDepot Junior mit ETF-Sparplan. Schon ab 25\u20ac/Mon. pro Kind m\u00f6glich.'},
+                {rolle:'kunde',text:'Welche ETFs gibt es da?'},
+                {rolle:'bot',text:'Union Investment bietet den UniGlobal Vorsorge und den UniNachhaltig Aktien Global an. Soll ich einen Beratungstermin vereinbaren?'},
+                {rolle:'kunde',text:'Ja gerne'}
+            ], ergebnis:'Terminwunsch Kindersparen', themen:['kindersparen','etf','termin'], status:'termin_geplant' },
+            { typ:'termin', datum:'2026-02-20T10:00:00', betreff:'VR-FinanzPlan Review', inhalt:'J\u00e4hrliches Review der Finanzplanung', status:'erledigt' },
+            { typ:'ki_kontakt', datum:'2026-02-12T10:00:00', betreff:'Riester-Zulage pr\u00fcfen', inhalt:'System hat erkannt: Riester-Beitrag m\u00f6glicherweise nicht optimal f\u00fcr maximale Zulage. Empfehlung: Beitrag anpassen.', status:'geoeffnet', followUp:false, automatisch:true, ausloeser:'regelbasiert' },
+            { typ:'email', datum:'2026-02-10T09:00:00', betreff:'ETF-Sparplan Info', inhalt:'Informationen zu VR-MeinDepot Sparplan', status:'geoeffnet', geoeffnetAm:'2026-02-10T20:00:00', followUp:false, automatisch:true },
+            { typ:'call', datum:'2026-01-28T14:00:00', betreff:'Depoteröffnung Interesse', inhalt:'Telefonat zu ETF-Sparpl\u00e4nen f\u00fcr Kinder', status:'erledigt' }
         ],
         avatarBg:'#16a34a', foto:'assets/images/AdobeStock_361342769.jpeg'
     },
@@ -144,8 +170,16 @@ var bankMockKunden = {
         versicherungenFremd: [],
         finanzierungen: [],
         kommunikation: [
-            { typ:'email', datum:'18.02.2026', betreff:'FIDA-Consent Einladung', inhalt:'Open Finance Datenfreigabe angefragt', status:'Geöffnet' },
-            { typ:'call', datum:'05.02.2026', betreff:'Erstberatung', inhalt:'Telefonat zur ganzheitlichen Beratung', status:'Erledigt' }
+            { typ:'chatbot', datum:'2026-03-04T22:00:00', betreff:'genoGPT: Kontomodelle', verlauf:[
+                {rolle:'kunde',text:'Welche Kontomodelle gibt es bei Ihnen?'},
+                {rolle:'bot',text:'Wir bieten VR-Girokonto (0\u20ac/Mon.), VR-Girokonto Komfort (4,90\u20ac/Mon.) und VR-Girokonto Premium (9,90\u20ac/Mon.) an. Mit Ihrem Gehaltseingang ab 2.500\u20ac ist Komfort kostenlos.'},
+                {rolle:'kunde',text:'Was bringt mir Komfort?'},
+                {rolle:'bot',text:'Kostenlose girocard, Kreditkarte Classic, Echtzeitüberweisungen und Kontoausz\u00fcge. Soll ich Sie zu einem Upgrade beraten lassen?'},
+                {rolle:'kunde',text:'Vielleicht sp\u00e4ter'}
+            ], ergebnis:'Information Kontomodelle', themen:['konto','upgrade'], status:'erledigt' },
+            { typ:'email', datum:'2026-02-18T09:00:00', betreff:'FIDA-Consent Einladung', inhalt:'Open Finance Datenfreigabe angefragt', status:'geoeffnet', geoeffnetAm:'2026-02-18T20:00:00', followUp:false, automatisch:true },
+            { typ:'ki_kontakt', datum:'2026-02-10T10:00:00', betreff:'Produktportfolio-L\u00fccke', inhalt:'System hat erkannt: Kundin hat keine Altersvorsorge und keine Absicherung. Verbundpartner R+V BU-Versicherung empfohlen.', status:'geoeffnet', followUp:false, automatisch:true, ausloeser:'regelbasiert' },
+            { typ:'call', datum:'2026-02-05T14:00:00', betreff:'Erstberatung', inhalt:'Telefonat zur ganzheitlichen Beratung', status:'erledigt' }
         ],
         avatarBg:'#f59e0b', foto:null
     },
@@ -191,10 +225,19 @@ var bankMockKunden = {
             { kredit:'Baufinanzierung', kreditgeber:'Volksbank Mittelhessen', ursprung:350000, restschuld:220000, zinssatz:'2,10% p.a.', rate:'€1.450/Mon.', laufzeit:'04/2032', absicherung:'Grundschuld + RLV' }
         ],
         kommunikation: [
-            { typ:'termin', datum:'15.02.2026', betreff:'VR-FinanzPlan Review', inhalt:'Jährliche Vermögensübersicht besprochen', status:'Erledigt' },
-            { typ:'email', datum:'10.02.2026', betreff:'Vermögensverwaltung Angebot', inhalt:'VR-Vermögensverwaltung Konzept zugesandt', status:'Geöffnet' },
-            { typ:'call', datum:'28.01.2026', betreff:'Nachfolgeplanung Kanzlei', inhalt:'Erstgespräch Unternehmensnachfolge', status:'Erledigt' },
-            { typ:'brief', datum:'15.01.2026', betreff:'Kontoauszug Q4 2025', inhalt:'Quartalsauszug alle Konten + Depot', status:'Versendet' }
+            { typ:'chatbot', datum:'2026-03-06T18:30:00', betreff:'genoGPT: Unternehmensnachfolge', verlauf:[
+                {rolle:'kunde',text:'Welche Modelle gibt es f\u00fcr die Unternehmensnachfolge?'},
+                {rolle:'bot',text:'F\u00fcr Ihre Kanzlei gibt es verschiedene Modelle: Verkauf, schrittweise \u00dcbergabe an Sohn Fabian oder Familiengesellschaft. Steuerlich ist eine fr\u00fchzeitige Planung wichtig.'},
+                {rolle:'kunde',text:'Mein Sohn Fabian soll \u00fcbernehmen. Was muss ich beachten?'},
+                {rolle:'bot',text:'Bei einer Nachfolge innerhalb der Familie empfehle ich: 1) Steuergutachten, 2) Bewertung der Kanzlei, 3) Finanzierungskonzept f\u00fcr Fabian. Soll ich einen Termin mit unserem Nachfolge-Spezialisten vereinbaren?'},
+                {rolle:'kunde',text:'Ja, unbedingt'}
+            ], ergebnis:'Terminwunsch Nachfolgeberatung', themen:['nachfolge','kanzlei','termin'], status:'termin_geplant' },
+            { typ:'termin', datum:'2026-02-15T10:00:00', betreff:'VR-FinanzPlan Review', inhalt:'J\u00e4hrliche Verm\u00f6gens\u00fcbersicht besprochen', status:'erledigt' },
+            { typ:'ki_kontakt', datum:'2026-02-08T10:00:00', betreff:'Kapital-LV Ablauf 2030', inhalt:'System hat erkannt: Allianz Kapital-LV l\u00e4uft 2030 ab. Wiederanlage-Konzept \u00fcber Union Investment empfohlen.', status:'geoeffnet', followUp:false, automatisch:true, ausloeser:'regelbasiert' },
+            { typ:'email', datum:'2026-02-10T09:00:00', betreff:'Verm\u00f6gensverwaltung Angebot', inhalt:'VR-Verm\u00f6gensverwaltung Konzept zugesandt', status:'geoeffnet', geoeffnetAm:'2026-02-10T20:00:00', followUp:false, automatisch:true },
+            { typ:'call', datum:'2026-01-28T14:00:00', betreff:'Nachfolgeplanung Kanzlei', inhalt:'Erstgespr\u00e4ch Unternehmensnachfolge', status:'erledigt' },
+            { typ:'portal', datum:'2026-01-20T10:00:00', betreff:'Online-Banking Login + Depot\u00fcbersicht', inhalt:'Kunde hat Depot\u00fcbersicht und Kontoausz\u00fcge im Online-Banking aufgerufen.', status:'erledigt', dokument:'Depot-Uebersicht-2025.pdf' },
+            { typ:'brief', datum:'2026-01-15T08:00:00', betreff:'Kontoauszug Q4 2025', inhalt:'Quartalsauszug alle Konten + Depot', status:'versendet', followUp:false, automatisch:true }
         ],
         avatarBg:'#dc2626', foto:'assets/images/AdobeStock_612932760.jpeg'
     },
@@ -229,9 +272,17 @@ var bankMockKunden = {
         versicherungenFremd: [],
         finanzierungen: [],
         kommunikation: [
-            { typ:'termin', datum:'12.02.2026', betreff:'Gewerbekredit Beratung', inhalt:'Kanzleierweiterung – Finanzierungskonzept', status:'Erledigt' },
-            { typ:'email', datum:'05.02.2026', betreff:'KfW-Förderung Info', inhalt:'Informationen zu KfW-Förderkrediten', status:'Geöffnet' },
-            { typ:'call', datum:'20.01.2026', betreff:'Jahresplanung', inhalt:'Telefonat zur Kanzlei-Finanzplanung 2026', status:'Erledigt' }
+            { typ:'chatbot', datum:'2026-03-03T20:00:00', betreff:'genoGPT: KfW-F\u00f6rderung', verlauf:[
+                {rolle:'kunde',text:'Welche KfW-F\u00f6rderkredite gibt es f\u00fcr Kanzleierweiterung?'},
+                {rolle:'bot',text:'F\u00fcr Ihre Kanzleierweiterung kommen der KfW-Unternehmerkredit (bis 25 Mio.\u20ac) und der ERP-Gr\u00fcnderkredit (bis 125.000\u20ac) in Frage. Die Volksbank Mittelhessen leitet die Antr\u00e4ge weiter.'},
+                {rolle:'kunde',text:'Welche Konditionen hat der Unternehmerkredit?'},
+                {rolle:'bot',text:'Ab 4,1% p.a., tilgungsfrei bis 2 Jahre, Laufzeit bis 20 Jahre. Soll ich einen Beratungstermin vereinbaren?'},
+                {rolle:'kunde',text:'Ja bitte'}
+            ], ergebnis:'Terminwunsch KfW-F\u00f6rderung', themen:['kfw','foerderung','kanzlei','termin'], status:'termin_geplant' },
+            { typ:'termin', datum:'2026-02-12T10:00:00', betreff:'Gewerbekredit Beratung', inhalt:'Kanzleierweiterung \u2013 Finanzierungskonzept', status:'erledigt' },
+            { typ:'ki_kontakt', datum:'2026-02-08T10:00:00', betreff:'Absicherung Kind empfohlen', inhalt:'System hat erkannt: Kind Sophie (7) ohne Unfallversicherung. R+V Kinder-Unfallversicherung empfohlen.', status:'geoeffnet', followUp:false, automatisch:true, ausloeser:'regelbasiert' },
+            { typ:'email', datum:'2026-02-05T09:00:00', betreff:'KfW-F\u00f6rderung Info', inhalt:'Informationen zu KfW-F\u00f6rderkrediten', status:'geoeffnet', geoeffnetAm:'2026-02-05T18:00:00', followUp:false, automatisch:true },
+            { typ:'call', datum:'2026-01-20T14:00:00', betreff:'Jahresplanung', inhalt:'Telefonat zur Kanzlei-Finanzplanung 2026', status:'erledigt' }
         ],
         avatarBg:'#6366f1', foto:null
     },
@@ -252,9 +303,17 @@ var bankMockKunden = {
             { institut:'Sparkasse Gießen', typ:'Girokonto', info:'Geschäftszweitkonto', consent:'08.02.2026', gueltig:'08.02.2027' }
         ],
         kommunikation: [
-            { typ:'termin', datum:'10.02.2026', betreff:'KfW-Förderung Beratung', inhalt:'Energetische Sanierung – Fördermöglichkeiten', status:'Erledigt' },
-            { typ:'email', datum:'25.01.2026', betreff:'Sanierungsfahrplan', inhalt:'Unterlagen Energieberatung zugesandt', status:'Geöffnet' },
-            { typ:'brief', datum:'10.01.2026', betreff:'Kontoauszug Q4 2025', inhalt:'Quartalsauszug Geschäfts- + Privatkonto', status:'Versendet' }
+            { typ:'chatbot', datum:'2026-03-07T19:00:00', betreff:'genoGPT: Energetische Sanierung', verlauf:[
+                {rolle:'kunde',text:'Welche F\u00f6rderungen gibt es f\u00fcr eine neue Heizung?'},
+                {rolle:'bot',text:'F\u00fcr Ihren KfW-F\u00f6rderkredit f\u00fcr energetische Sanierung gibt es zus\u00e4tzlich BAFA-Zusch\u00fcsse f\u00fcr W\u00e4rmepumpen (bis 40% F\u00f6rderung).'},
+                {rolle:'kunde',text:'Kann ich beides kombinieren?'},
+                {rolle:'bot',text:'Ja, KfW-Kredit und BAFA-Zuschuss sind kombinierbar. Soll ich einen Beratungstermin mit unserem Energie-Spezialisten vereinbaren?'},
+                {rolle:'kunde',text:'Ja, das w\u00e4re gut'}
+            ], ergebnis:'Terminwunsch Energieberatung', themen:['energie','sanierung','foerderung','termin'], status:'termin_geplant' },
+            { typ:'termin', datum:'2026-02-10T10:00:00', betreff:'KfW-F\u00f6rderung Beratung', inhalt:'Energetische Sanierung \u2013 F\u00f6rderm\u00f6glichkeiten', status:'erledigt' },
+            { typ:'ki_kontakt', datum:'2026-02-01T10:00:00', betreff:'Wohngeb\u00e4udeversicherung pr\u00fcfen', inhalt:'System hat erkannt: Energetische Sanierung erh\u00f6ht Geb\u00e4udewert. R+V Wohngeb\u00e4udeversicherung Anpassung empfohlen.', status:'geoeffnet', followUp:false, automatisch:true, ausloeser:'regelbasiert' },
+            { typ:'email', datum:'2026-01-25T09:00:00', betreff:'Sanierungsfahrplan', inhalt:'Unterlagen Energieberatung zugesandt', status:'geoeffnet', geoeffnetAm:'2026-01-25T20:00:00', followUp:false, automatisch:true },
+            { typ:'brief', datum:'2026-01-10T08:00:00', betreff:'Kontoauszug Q4 2025', inhalt:'Quartalsauszug Gesch\u00e4fts- + Privatkonto', status:'versendet', followUp:false, automatisch:true }
         ],
         avatarBg:'#0891b2', foto:null
     },
@@ -275,8 +334,14 @@ var bankMockKunden = {
             { institut:'DWS', typ:'Depot', info:'Kindersparen 2x €50/Mon.', consent:'12.02.2026', gueltig:'12.02.2027' }
         ],
         kommunikation: [
-            { typ:'termin', datum:'08.02.2026', betreff:'Beratung Unfallversicherung', inhalt:'Absicherung Familie erweitert', status:'Erledigt' },
-            { typ:'email', datum:'01.02.2026', betreff:'Kindersparen Info', inhalt:'Informationen zu VR-MeinDepot Junior', status:'Geöffnet' }
+            { typ:'chatbot', datum:'2026-03-02T20:30:00', betreff:'genoGPT: Kindersparen', verlauf:[
+                {rolle:'kunde',text:'Wie kann ich f\u00fcr meine Kinder sparen?'},
+                {rolle:'bot',text:'F\u00fcr Anna (10) und Felix (7) empfehle ich den VR-MeinDepot Junior. Bereits ab 25\u20ac/Mon. pro Kind k\u00f6nnen Sie in Union Investment ETFs investieren.'},
+                {rolle:'kunde',text:'Danke, ich schaue mir das an'}
+            ], ergebnis:'Information Kindersparen', themen:['kindersparen','depot'], status:'erledigt' },
+            { typ:'termin', datum:'2026-02-08T10:00:00', betreff:'Beratung Unfallversicherung', inhalt:'Absicherung Familie erweitert', status:'erledigt' },
+            { typ:'ki_kontakt', datum:'2026-02-01T10:00:00', betreff:'Altersvorsorge-Optimierung', inhalt:'System hat erkannt: Ehemann hat kein DWS Kindersparen optimiert. Empfehlung: Beitrag erh\u00f6hen f\u00fcr Zulage.', status:'geoeffnet', followUp:false, automatisch:true, ausloeser:'regelbasiert' },
+            { typ:'email', datum:'2026-02-01T09:00:00', betreff:'Kindersparen Info', inhalt:'Informationen zu VR-MeinDepot Junior', status:'geoeffnet', geoeffnetAm:'2026-02-01T18:00:00', followUp:false, automatisch:true }
         ],
         avatarBg:'#d946ef', foto:null
     },
@@ -297,8 +362,16 @@ var bankMockKunden = {
             { institut:'Scalable Capital', typ:'Depot', info:'ETF-Portfolio €18.000', consent:'25.01.2026', gueltig:'25.01.2027' }
         ],
         kommunikation: [
-            { typ:'email', datum:'05.02.2026', betreff:'VR-FinanzPlan Einladung', inhalt:'Einladung zur ganzheitlichen Finanzberatung', status:'Geöffnet' },
-            { typ:'call', datum:'20.01.2026', betreff:'Kundenbindungsgespräch', inhalt:'NPS-Rückmeldung besprochen, Verbesserungen zugesagt', status:'Erledigt' }
+            { typ:'chatbot', datum:'2026-03-08T23:00:00', betreff:'genoGPT: Depot-Wechsel', verlauf:[
+                {rolle:'kunde',text:'Warum sollte ich mein Depot von Trade Republic zu euch wechseln?'},
+                {rolle:'bot',text:'Der VR-MeinDepot bietet: pers\u00f6nliche Beratung, Union Investment Fonds und Integration in Ihre VR-FinanzPlan Gesamtplanung. Die TER der UniGlobal ETFs liegt bei 0,4% p.a.'},
+                {rolle:'kunde',text:'Das ist teurer als mein Trade Republic ETF'},
+                {rolle:'bot',text:'Stimmt, aber Sie erhalten daf\u00fcr pers\u00f6nliche Beratung und eine ganzheitliche Finanzplanung. Soll ich einen unverbindlichen Vergleichstermin vereinbaren?'},
+                {rolle:'kunde',text:'Nein danke, ich bleibe bei Trade Republic'}
+            ], ergebnis:'Kein Wechselinteresse', themen:['depot','wechsel'], status:'erledigt' },
+            { typ:'ki_kontakt', datum:'2026-02-10T10:00:00', betreff:'Absicherungs-L\u00fccken erkannt', inhalt:'System hat erkannt: Keine BU-Versicherung, keine Altersvorsorge, keine Haftpflicht \u00fcber Verbundpartner. R+V Absicherungspaket empfohlen.', status:'geoeffnet', followUp:false, automatisch:true, ausloeser:'regelbasiert' },
+            { typ:'email', datum:'2026-02-05T09:00:00', betreff:'VR-FinanzPlan Einladung', inhalt:'Einladung zur ganzheitlichen Finanzberatung', status:'geoeffnet', geoeffnetAm:'2026-02-05T22:00:00', followUp:false, automatisch:true },
+            { typ:'call', datum:'2026-01-20T14:00:00', betreff:'Kundenbindungsgespr\u00e4ch', inhalt:'NPS-R\u00fcckmeldung besprochen, Verbesserungen zugesagt', status:'erledigt' }
         ],
         avatarBg:'#ea580c', foto:null
     },
@@ -331,10 +404,18 @@ var bankMockKunden = {
             { kredit:'Baufinanzierung', kreditgeber:'Volksbank Mittelhessen', ursprung:260000, restschuld:180000, zinssatz:'2,45% p.a.', rate:'€1.250/Mon.', laufzeit:'03/2037', absicherung:'Grundschuld' }
         ],
         kommunikation: [
-            { typ:'termin', datum:'01.02.2026', betreff:'VR-FinanzPlan Review', inhalt:'Finanzplanung mit Immobilie + Kind aktualisiert', status:'Erledigt' },
-            { typ:'email', datum:'25.01.2026', betreff:'Risikolebensversicherung', inhalt:'Angebot Absicherung Baufinanzierung', status:'Geöffnet' },
-            { typ:'call', datum:'15.01.2026', betreff:'Bausparvertrag Zuteilung', inhalt:'Info zu Zuteilungsoptionen', status:'Erledigt' },
-            { typ:'brief', datum:'10.01.2026', betreff:'Kontoauszug Q4 2025', inhalt:'Quartalsauszug alle Konten', status:'Versendet' }
+            { typ:'chatbot', datum:'2026-03-04T19:30:00', betreff:'genoGPT: Bausparvertrag Zuteilung', verlauf:[
+                {rolle:'kunde',text:'Mein Bausparvertrag bei Schw\u00e4bisch Hall ist bald zuteilungsreif. Was bedeutet das?'},
+                {rolle:'bot',text:'Ihr FuchsImmo XS (Bausparsumme 80.000\u20ac) ist 2026 zuteilungsreif. Sie k\u00f6nnen das Bauspardarlehen (bis 40.000\u20ac) abrufen oder die Sparsumme auszahlen lassen.'},
+                {rolle:'kunde',text:'Kann ich das Darlehen f\u00fcr eine Renovierung nutzen?'},
+                {rolle:'bot',text:'Ja, Bauspardarlehen sind wohnwirtschaftlich gebunden. Renovierung, Modernisierung oder Umbau sind m\u00f6glich. Soll ich einen Beratungstermin vereinbaren?'},
+                {rolle:'kunde',text:'Ja bitte, wir planen eine K\u00fcchenrenovierung'}
+            ], ergebnis:'Terminwunsch Bauspardarlehen Renovierung', themen:['bauspar','zuteilung','renovierung','termin'], status:'termin_geplant' },
+            { typ:'termin', datum:'2026-02-01T10:00:00', betreff:'VR-FinanzPlan Review', inhalt:'Finanzplanung mit Immobilie + Kind aktualisiert', status:'erledigt' },
+            { typ:'ki_kontakt', datum:'2026-01-28T10:00:00', betreff:'RLV f\u00fcr Baufinanzierung empfohlen', inhalt:'System hat erkannt: Baufinanzierung 180.000\u20ac ohne Risikolebensversicherung. R+V RLV dringend empfohlen.', status:'geoeffnet', followUp:false, automatisch:true, ausloeser:'regelbasiert' },
+            { typ:'email', datum:'2026-01-25T09:00:00', betreff:'Risikolebensversicherung', inhalt:'Angebot Absicherung Baufinanzierung', status:'geoeffnet', geoeffnetAm:'2026-01-25T20:00:00', followUp:false, automatisch:true },
+            { typ:'call', datum:'2026-01-15T14:00:00', betreff:'Bausparvertrag Zuteilung', inhalt:'Info zu Zuteilungsoptionen', status:'erledigt' },
+            { typ:'brief', datum:'2026-01-10T08:00:00', betreff:'Kontoauszug Q4 2025', inhalt:'Quartalsauszug alle Konten', status:'versendet', followUp:false, automatisch:true }
         ],
         avatarBg:'#059669', foto:null
     },
@@ -361,11 +442,20 @@ var bankMockKunden = {
             { institut:'Allianz', typ:'Sachversicherung', info:'Betriebshaftpflicht + Inhaltsvers.', consent:'02.01.2026', gueltig:'02.01.2027' }
         ],
         kommunikation: [
-            { typ:'termin', datum:'28.01.2026', betreff:'Nachfolgeplanung', inhalt:'Unternehmensnachfolge – Sohn Stefan als Nachfolger', status:'Erledigt' },
-            { typ:'email', datum:'22.01.2026', betreff:'Stiftungsmodell', inhalt:'Informationen zur Familienstiftung', status:'Geöffnet' },
-            { typ:'call', datum:'15.01.2026', betreff:'Gewerbekredit Prolongation', inhalt:'Konditionen für Kreditverlängerung besprochen', status:'Erledigt' },
-            { typ:'termin', datum:'08.01.2026', betreff:'Jahresgespräch Firma', inhalt:'Geschäftsentwicklung und Finanzierungsbedarf 2026', status:'Erledigt' },
-            { typ:'brief', datum:'02.01.2026', betreff:'Kontoauszug Q4 2025', inhalt:'Quartalsauszug Geschäfts- + Privatkonten', status:'Versendet' }
+            { typ:'chatbot', datum:'2026-03-09T17:00:00', betreff:'genoGPT: Verm\u00f6gensverwaltung', verlauf:[
+                {rolle:'kunde',text:'Ich m\u00f6chte mein Depot professionell verwalten lassen. Was bieten Sie an?'},
+                {rolle:'bot',text:'Die VR-Verm\u00f6gensverwaltung startet ab 100.000\u20ac Anlagesumme. Mit Ihrem Depotvolumen von 120.000\u20ac sind Sie im Premium-Segment. Verwaltungsgeb\u00fchr ab 0,8% p.a.'},
+                {rolle:'kunde',text:'Wie sieht die Performance aus?'},
+                {rolle:'bot',text:'Die VR-Verm\u00f6gensverwaltung Balanced hat in den letzten 5 Jahren durchschnittlich 6,2% p.a. erzielt. Soll ich einen Beratungstermin vereinbaren?'},
+                {rolle:'kunde',text:'Ja, machen Sie einen Termin'}
+            ], ergebnis:'Terminwunsch Verm\u00f6gensverwaltung', themen:['vermoegen','verwaltung','termin'], status:'termin_geplant' },
+            { typ:'termin', datum:'2026-01-28T10:00:00', betreff:'Nachfolgeplanung', inhalt:'Unternehmensnachfolge \u2013 Sohn Stefan als Nachfolger', status:'erledigt' },
+            { typ:'ki_kontakt', datum:'2026-01-22T10:00:00', betreff:'Swiss Life LV Ablauf 2028', inhalt:'System hat erkannt: Swiss Life Kapital-LV (180.000\u20ac) l\u00e4uft 2028 ab. Wiederanlage \u00fcber Union Investment VR-Verm\u00f6gensverwaltung empfohlen.', status:'geoeffnet', followUp:false, automatisch:true, ausloeser:'regelbasiert' },
+            { typ:'email', datum:'2026-01-22T09:00:00', betreff:'Stiftungsmodell', inhalt:'Informationen zur Familienstiftung', status:'geoeffnet', geoeffnetAm:'2026-01-22T20:00:00', followUp:false, automatisch:true },
+            { typ:'call', datum:'2026-01-15T14:00:00', betreff:'Gewerbekredit Prolongation', inhalt:'Konditionen f\u00fcr Kreditverl\u00e4ngerung besprochen', status:'erledigt' },
+            { typ:'portal', datum:'2026-01-10T09:00:00', betreff:'Online-Banking: Gesch\u00e4ftskonto-\u00dcbersicht', inhalt:'Kunde hat Gesch\u00e4ftskonto-Ums\u00e4tze und Kreditvertrag im Online-Banking eingesehen.', status:'erledigt', dokument:'Gewerbekredit-Vertrag-2024.pdf' },
+            { typ:'termin', datum:'2026-01-08T10:00:00', betreff:'Jahresgespr\u00e4ch Firma', inhalt:'Gesch\u00e4ftsentwicklung und Finanzierungsbedarf 2026', status:'erledigt' },
+            { typ:'brief', datum:'2026-01-02T08:00:00', betreff:'Kontoauszug Q4 2025', inhalt:'Quartalsauszug Gesch\u00e4fts- + Privatkonten', status:'versendet', followUp:false, automatisch:true }
         ],
         avatarBg:'#7c3aed', foto:null
     },
@@ -387,9 +477,17 @@ var bankMockKunden = {
             { institut:'Comdirect', typ:'Depot', info:'ETF + Einzelaktien €52.000', consent:'10.01.2026', gueltig:'10.01.2027' }
         ],
         kommunikation: [
-            { typ:'email', datum:'25.01.2026', betreff:'Depot-Wechsel Angebot', inhalt:'VR-MeinDepot Vergleich zu Comdirect', status:'Geöffnet' },
-            { typ:'call', datum:'18.01.2026', betreff:'Krankenversicherung Erweiterung', inhalt:'Zusatzversicherung für Kinder besprochen', status:'Erledigt' },
-            { typ:'termin', datum:'10.01.2026', betreff:'Jahresgespräch', inhalt:'Finanzplanung Familie + Apotheke', status:'Erledigt' }
+            { typ:'chatbot', datum:'2026-03-06T21:00:00', betreff:'genoGPT: Krankenversicherung', verlauf:[
+                {rolle:'kunde',text:'Gibt es eine Zahnzusatzversicherung f\u00fcr meine Kinder?'},
+                {rolle:'bot',text:'Die R+V Zahnzusatz Z1U sch\u00fctzt Kinder ab Geburt. F\u00fcr Paul (8) und Clara (5) empfehle ich den Tarif mit Kieferorthop\u00e4die-Leistung. Ab 8\u20ac/Mon. pro Kind.'},
+                {rolle:'kunde',text:'Paul braucht bald eine Zahnspange. Ist das mitversichert?'},
+                {rolle:'bot',text:'Ja, die R+V Z1U \u00fcbernimmt bis zu 90% der Kosten f\u00fcr Kieferorthop\u00e4die. Achtung: 8 Monate Wartezeit. Soll ich einen Beratungstermin vereinbaren?'},
+                {rolle:'kunde',text:'Ja, m\u00f6glichst schnell!'}
+            ], ergebnis:'Terminwunsch Zahnzusatz Kinder dringend', themen:['zahnzusatz','kinder','termin'], status:'termin_geplant' },
+            { typ:'ki_kontakt', datum:'2026-01-28T10:00:00', betreff:'Depot-Konsolidierung empfohlen', inhalt:'System hat erkannt: Kundin hat Comdirect-Depot (52.000\u20ac) extern. VR-MeinDepot Wechsel mit Pr\u00e4mie empfohlen.', status:'geoeffnet', followUp:false, automatisch:true, ausloeser:'regelbasiert' },
+            { typ:'email', datum:'2026-01-25T09:00:00', betreff:'Depot-Wechsel Angebot', inhalt:'VR-MeinDepot Vergleich zu Comdirect', status:'geoeffnet', geoeffnetAm:'2026-01-25T20:00:00', followUp:false, automatisch:true },
+            { typ:'call', datum:'2026-01-18T14:00:00', betreff:'Krankenversicherung Erweiterung', inhalt:'Zusatzversicherung f\u00fcr Kinder besprochen', status:'erledigt' },
+            { typ:'termin', datum:'2026-01-10T10:00:00', betreff:'Jahresgespr\u00e4ch', inhalt:'Finanzplanung Familie + Apotheke', status:'erledigt' }
         ],
         avatarBg:'#be185d', foto:null
     }
@@ -404,7 +502,7 @@ var bankDefaultKunde = {
     nps: { score:7, kategorie:'passive', datum:'01.01.2026', kampagne:'Standard', details:[{name:'Beratungsqualität',wert:7},{name:'Zufriedenheit',wert:7},{name:'Weiterempfehlung',wert:7},{name:'Preis-Leistung',wert:7},{name:'Erreichbarkeit',wert:7}] },
     konten: [{ produkt:'VR-Girokonto', details:'Standardkonto', saldo:2500, eroeffnung:'01.01.2015', status:'Aktiv' }],
     fidaVertraege: [],
-    kommunikation: [{ typ:'email', datum:'01.01.2026', betreff:'Willkommen', inhalt:'Begrüßung', status:'Versendet' }],
+    kommunikation: [{ typ:'email', datum:'2026-01-01T09:00:00', betreff:'Willkommen', inhalt:'Begr\u00fc\u00dfung', status:'versendet', followUp:false, automatisch:true }],
     avatarBg:'#64748b', foto:null
 };
 
@@ -991,25 +1089,64 @@ function fillBankFinanzplanung(kd) {
 function fillBankKommunikation(kd) {
     var el = document.getElementById('bankKundenKommunikation');
     if (!el) return;
-    
-    var iconMap = {
-        email: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>',
-        call: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>',
-        termin: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>',
-        brief: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>'
+
+    // Use kommTypConfig if available, else fallback
+    var iconMap = {};
+    if (typeof kommTypConfig !== 'undefined') {
+        for (var key in kommTypConfig) {
+            iconMap[key] = kommTypConfig[key].icon;
+        }
+    }
+    // Alias call -> telefon for icon lookup
+    iconMap.call = iconMap.telefon || iconMap.call || '';
+
+    var statusColors = {
+        'geoeffnet':'#16a34a', 'erledigt':'#2563eb', 'versendet':'#64748b',
+        'termin_geplant':'#f59e0b', 'beantwortet':'#2563eb',
+        'Ge\u00f6ffnet':'#16a34a', 'Erledigt':'#2563eb', 'Versendet':'#64748b', 'Geplant':'#f59e0b'
     };
-    
-    var statusColors = { 'Geöffnet':'#16a34a', 'Erledigt':'#2563eb', 'Versendet':'#64748b', 'Geplant':'#f59e0b' };
-    
+
+    // Sort by date descending
+    var sorted = kd.kommunikation.slice().sort(function(a, b) {
+        return new Date(b.datum) - new Date(a.datum);
+    });
+
     var html = '';
-    kd.kommunikation.forEach(function(k) {
+    sorted.forEach(function(k) {
+        var typKey = k.typ === 'call' ? 'telefon' : k.typ;
+        var config = (typeof kommTypConfig !== 'undefined' && kommTypConfig[typKey]) ? kommTypConfig[typKey] : { farbe: '#64748b', icon: '', label: typKey };
         var color = statusColors[k.status] || '#64748b';
-        html += '<div class="komm-item" style="display:flex;gap:16px;padding:16px 0;border-bottom:1px solid #f1f5f9;">' +
-            '<div class="komm-icon" style="width:36px;height:36px;border-radius:50%;background:#f1f5f9;display:flex;align-items:center;justify-content:center;flex-shrink:0;">' + (iconMap[k.typ] || '') + '</div>' +
+        var statusLabel = k.status;
+        if (typeof getKommStatusLabel === 'function') statusLabel = getKommStatusLabel(k.status);
+        var datum = (typeof formatKommDatum === 'function' && k.datum.includes('T')) ? formatKommDatum(k.datum) : k.datum;
+
+        // Chatbot entry with verlauf
+        if (k.typ === 'chatbot' && k.verlauf) {
+            html += '<div class="komm-item chatbot" data-typ="chatbot" style="display:flex;gap:16px;padding:16px 0;border-bottom:1px solid #f1f5f9;border-left:3px solid ' + config.farbe + ';padding-left:12px;">' +
+                '<div class="komm-icon" style="width:36px;height:36px;border-radius:50%;background:' + config.farbe + '15;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:' + config.farbe + ';">' + config.icon + '</div>' +
+                '<div class="komm-content" style="flex:1;">' +
+                '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;"><span style="font-size:12px;color:' + config.farbe + ';font-weight:600;">' + config.label + ' &middot; ' + datum + '</span></div>' +
+                '<div style="font-weight:600;margin-bottom:8px;">' + k.betreff + '</div>' +
+                '<div class="chatbot-verlauf" style="display:flex;flex-direction:column;gap:6px;margin-bottom:8px;">';
+            k.verlauf.forEach(function(msg) {
+                var isKunde = msg.rolle === 'kunde';
+                html += '<div style="display:flex;flex-direction:column;align-items:' + (isKunde ? 'flex-start' : 'flex-end') + ';">' +
+                    '<span style="font-size:10px;color:#94a3b8;margin-bottom:2px;">' + (isKunde ? 'Kunde' : 'Bot') + '</span>' +
+                    '<span style="display:inline-block;padding:8px 12px;border-radius:' + (isKunde ? '12px 12px 12px 0' : '12px 12px 0 12px') + ';background:' + (isKunde ? '#f3f4f6' : config.farbe + '15') + ';font-size:12px;max-width:80%;color:#1e293b;">' + msg.text + '</span></div>';
+            });
+            html += '</div>';
+            if (k.ergebnis) html += '<div style="display:inline-block;padding:4px 10px;border-radius:12px;background:#fef3c7;color:#92400e;font-size:11px;font-weight:600;margin-bottom:6px;">' + k.ergebnis + '</div>';
+            html += '</div></div>';
+            return;
+        }
+
+        // Standard entry
+        html += '<div class="komm-item" data-typ="' + typKey + '" style="display:flex;gap:16px;padding:16px 0;border-bottom:1px solid #f1f5f9;border-left:3px solid ' + config.farbe + ';padding-left:12px;">' +
+            '<div class="komm-icon" style="width:36px;height:36px;border-radius:50%;background:' + config.farbe + '15;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:' + config.farbe + ';">' + config.icon + '</div>' +
             '<div class="komm-content" style="flex:1;">' +
-            '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;"><span style="font-size:12px;color:#64748b;">' + k.typ.charAt(0).toUpperCase() + k.typ.slice(1) + ' &middot; ' + k.datum + '</span><span class="status-badge" style="background:' + color + '20;color:' + color + ';padding:2px 8px;border-radius:4px;font-size:11px;">' + k.status + '</span></div>' +
+            '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;"><span style="font-size:12px;color:' + config.farbe + ';">' + config.label + ' &middot; ' + datum + '</span><span class="status-badge" style="background:' + color + '20;color:' + color + ';padding:2px 8px;border-radius:4px;font-size:11px;">' + statusLabel + '</span></div>' +
             '<div style="font-weight:600;margin-bottom:2px;">' + k.betreff + '</div>' +
-            '<div style="font-size:12px;color:#64748b;">' + k.inhalt + '</div>' +
+            '<div style="font-size:12px;color:#64748b;">' + (k.inhalt || '') + '</div>' +
             '</div></div>';
     });
     el.innerHTML = html;

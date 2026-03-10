@@ -442,7 +442,6 @@ function updateA10InstitutInfo() {
     var logoImg = document.getElementById('a10InstitutLogoImg');
     var logoFallback = document.getElementById('a10InstitutLogoFallback');
     var institutNameEl = document.getElementById('a10InstitutName');
-    var institutStandortEl = document.getElementById('a10InstitutStandort');
     var modusBadge = document.getElementById('a10ModusIndikator');
 
     if (isBankMode) {
@@ -455,7 +454,6 @@ function updateA10InstitutInfo() {
         _setA10Logo(logoImg, logoFallback, cfgName, cfgPrimary);
 
         if (institutNameEl) institutNameEl.textContent = (typeof beraterData !== 'undefined' && beraterData.institut) ? beraterData.institut : 'Volksbank Mittelhessen eG';
-        if (institutStandortEl) institutStandortEl.textContent = (typeof beraterData !== 'undefined' && beraterData.center) ? beraterData.center : '';
 
         // Modus badge: segment label
         var bvm = (typeof bankViewMode !== 'undefined') ? bankViewMode : 'retail';
@@ -484,7 +482,6 @@ function updateA10InstitutInfo() {
             'debeka': 'Debeka Versicherungsgruppe'
         };
         if (institutNameEl) institutNameEl.textContent = institutFullNames[insKey] || insName + ' Versicherung AG';
-        if (institutStandortEl) institutStandortEl.textContent = 'Standort: Köln';
 
         // Modus badge: AO or Makler
         var mode = (typeof currentVermittlerMode !== 'undefined') ? currentVermittlerMode : 'ao';

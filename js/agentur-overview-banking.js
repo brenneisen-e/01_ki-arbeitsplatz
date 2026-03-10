@@ -437,7 +437,7 @@ function fillBeraterErtraege() {
         bars += '<div style="display:flex;flex-direction:column;align-items:center;gap:4px;"><div style="height:' + h + 'px;width:28px;background:' + color + ';border-radius:4px 4px 0 0;"></div><span style="font-size:10px;color:#64748b;">' + months[i] + '</span><span style="font-size:10px;font-weight:600;">' + fmtEuroBerater(monthData[i]) + '</span></div>';
     }
     
-    el.innerHTML = '<div class="uebersicht-card"><div class="uebersicht-card-header"><h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"></path></svg> Ertragsentwicklung 2025</h3></div>' +
+    el.innerHTML = '<div class="uebersicht-card"><div class="uebersicht-card-header"><h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><circle cx="12" cy="12" r="10"></circle><text x="12" y="16" text-anchor="middle" fill="currentColor" stroke="none" font-size="12" font-weight="bold">\u20AC</text></svg> Ertragsentwicklung 2025</h3></div>' +
         '<div class="kennzahlen-grid" style="margin-bottom:24px;">' +
         '<div class="kennzahl-item"><div class="kennzahl-value">' + fmtEuroBerater(248500) + '</div><div class="kennzahl-label">Gesamt YTD</div><div class="kennzahl-trend positive">+8,2%</div></div>' +
         '<div class="kennzahl-item"><div class="kennzahl-value">' + fmtEuroBerater(24800) + '</div><div class="kennzahl-label">Letzter Monat</div><div class="kennzahl-trend positive">+12%</div></div>' +

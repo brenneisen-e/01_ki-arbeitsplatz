@@ -502,16 +502,16 @@ Ihre Versicherungsagentur`,
                 '<div style="display:flex;align-items:center;gap:10px;">' +
                     '<span style="font-size:20px;">' + typIcon + '</span>' +
                     '<div><div style="font-weight:700;font-size:15px;color:#1e293b;">' + komm.typ + '</div>' +
-                    '<div style="font-size:12px;color:#64748b;">' + komm.datum + '</div></div>' +
+                    '<div style="font-size:14px;color:#64748b;">' + komm.datum + '</div></div>' +
                 '</div>' +
                 '<button onclick="document.getElementById(\'kommDetailOverlay\').remove()" style="background:none;border:none;cursor:pointer;font-size:20px;color:#94a3b8;padding:4px;">&times;</button>' +
             '</div>' +
             '<div style="padding:24px;">' +
                 '<div style="font-weight:600;font-size:14px;color:#1e293b;margin-bottom:16px;">' + komm.betreff + '</div>' +
-                '<div style="font-size:13px;color:#475569;line-height:1.7;white-space:pre-wrap;background:#f8fafc;padding:16px;border-radius:8px;border:1px solid #e2e8f0;">' + komm.inhalt + '</div>' +
+                '<div style="font-size:15px;color:#475569;line-height:1.7;white-space:pre-wrap;background:#f8fafc;padding:16px;border-radius:8px;border:1px solid #e2e8f0;">' + komm.inhalt + '</div>' +
                 '<div style="margin-top:16px;display:flex;align-items:center;gap:8px;">' +
                     '<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:' + statusColor + ';"></span>' +
-                    '<span style="font-size:12px;color:' + statusColor + ';font-weight:500;">' + komm.status + '</span>' +
+                    '<span style="font-size:14px;color:' + statusColor + ';font-weight:500;">' + komm.status + '</span>' +
                 '</div>' +
             '</div>';
 
@@ -777,7 +777,7 @@ function showKommToast(msg) {
     if (existing) existing.remove();
     var toast = document.createElement('div');
     toast.id = 'kommToast';
-    toast.style.cssText = 'position:fixed;bottom:24px;right:24px;background:#1e293b;color:white;padding:12px 20px;border-radius:8px;font-size:13px;z-index:10000;box-shadow:0 4px 12px rgba(0,0,0,0.15);transition:opacity 0.3s;';
+    toast.style.cssText = 'position:fixed;bottom:24px;right:24px;background:#1e293b;color:white;padding:12px 20px;border-radius:8px;font-size:15px;z-index:10000;box-shadow:0 4px 12px rgba(0,0,0,0.15);transition:opacity 0.3s;';
     toast.textContent = msg;
     document.body.appendChild(toast);
     setTimeout(function() {

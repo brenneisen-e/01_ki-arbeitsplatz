@@ -214,7 +214,7 @@ function renderImpulseKanban() {
                         }).join('') + '</tr>';
                     }).join('');
                     vergleichHtml = '<div style="margin-top:10px;"><div class="kanban-detail-title">' + i.vergleich.title + '</div>' +
-                        '<table class="comparison-table" style="margin-top:6px;font-size:12px;"><thead><tr>' +
+                        '<table class="comparison-table" style="margin-top:6px;font-size:14px;"><thead><tr>' +
                         i.vergleich.cols.map(function(c) {
                             var col = c;
                             if (typeof versichererLogoImg === 'function') {
@@ -233,7 +233,7 @@ function renderImpulseKanban() {
                 // Empfehlung
                 var empfHtml = '';
                 if (i.empfehlung) {
-                    empfHtml = '<div style="margin-top:8px;"><div class="kanban-detail-title">Empfehlung</div><p style="margin:4px 0 0;font-size:12px;color:#334155;">' + i.empfehlung + '</p></div>';
+                    empfHtml = '<div style="margin-top:8px;"><div class="kanban-detail-title">Empfehlung</div><p style="margin:4px 0 0;font-size:14px;color:#334155;">' + i.empfehlung + '</p></div>';
                 }
 
                 herleitungHtml = '<div class="kanban-detail" id="kanban-detail-' + i.id + '" style="display:none;">' +

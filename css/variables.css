@@ -109,15 +109,15 @@
     --radius-full: 9999px;
 
     /* Typography Scale */
-    --font-xs: 11px;
-    --font-sm: 12px;
-    --font-base: 14px;
-    --font-md: 15px;
-    --font-lg: 16px;
-    --font-xl: 18px;
-    --font-2xl: 20px;
-    --font-3xl: 24px;
-    --font-4xl: 28px;
+    --font-xs: 13px;
+    --font-sm: 14px;
+    --font-base: 15px;
+    --font-md: 16px;
+    --font-lg: 18px;
+    --font-xl: 20px;
+    --font-2xl: 22px;
+    --font-3xl: 26px;
+    --font-4xl: 30px;
 
     /* Line Heights */
     --leading-tight: 1.25;

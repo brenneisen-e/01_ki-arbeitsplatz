@@ -1,11 +1,16 @@
-// Split aus kunden-detail-features.js – KI-Impulse, CLV-Szenarien, Timeline, Risikoscoring, Provisionsplanung, Beratungsmodus
-// Abhaengigkeiten: kunden-detail-features.js (switchKundenTab, toggleImpulsDetail, showAngebotToast), kunden-detail-banking.js (bankMockKunden)
+// ============================================================
+// kunden-detail-impulse.js – KI-Impulse, Feature-Tabs, Beratungsmodus
+// Split aus kunden-detail-features.js (OPT-18)
+// Abhängigkeiten: kunden-detail-features.js (switchKundenTab, toggleImpulsDetail, showAngebotToast),
+//                 kunden-detail-banking.js (bankMockKunden)
+// ============================================================
+
 
 // ============================================================
-// Versicherer-Auswahl in A-10 uebertragen
+// Versicherer-Auswahl in A-10 übertragen
 // ============================================================
 function updateKundenDetailInsurer() {
-    // Aktuell gewaehlten Versicherer ermitteln
+    // Aktuell gewählten Versicherer ermitteln
     var key = window.selectedInsurer || 'ergo';
     var config = window.insurerConfig ? window.insurerConfig[key] : null;
     if (!config) return;
@@ -18,7 +23,7 @@ function updateKundenDetailInsurer() {
         label.textContent = 'Eigene Versicherungen (' + name + ')';
     }
 
-    // 2. Eigene-Vertraege-Zeilen im Absichern-Tab: Logo + Badge aktualisieren
+    // 2. Eigene-Verträge-Zeilen im Absichern-Tab: Logo + Badge aktualisieren
     var rows = document.querySelectorAll('.ergo-contract-row');
     rows.forEach(function(row) {
         var anbieterTd = row.querySelectorAll('td')[1]; // Zweite Spalte = Anbieter
@@ -28,7 +33,7 @@ function updateKundenDetailInsurer() {
         }
     });
 
-    // 3. Betreute Vertraege Tab: Eigene Vertraege mit ausgewaehltem Versicherer anzeigen
+    // 3. Betreute Verträge Tab: Eigene Verträge mit ausgewähltem Versicherer anzeigen
     var vertraegeBody = document.getElementById('kundenVertraege');
     if (vertraegeBody) {
         var trs = vertraegeBody.querySelectorAll('tr');
@@ -39,7 +44,7 @@ function updateKundenDetailInsurer() {
             if (tds.length >= 2) {
                 var anbieterTd = tds[1]; // Anbieter-Spalte (makler-only-col)
                 var currentText = anbieterTd.textContent.trim();
-                // Pruefe ob es ein "eigener" Vertrag ist (ERGO, DKV, etc. - Standard-Eigene)
+                // Prüfe ob es ein "eigener" Vertrag ist (ERGO, DKV, etc. - Standard-Eigene)
                 var defaultEigene = ['ERGO', 'ERGO Direkt', 'DKV'];
                 var isEigen = defaultEigene.some(function(e) { return currentText.indexOf(e) !== -1; });
                 if (isEigen) {
@@ -57,7 +62,7 @@ function updateKundenDetailInsurer() {
 window.updateKundenDetailInsurer = updateKundenDetailInsurer;
 
 // ========================================
-// OPT-07: KI-GESTUETZTE IMPULSGENERIERUNG
+// OPT-07: KI-GESTÜTZTE IMPULSGENERIERUNG
 // ========================================
 
 window._kiImpulsCache = {};
@@ -75,6 +80,8 @@ function getKundenContext() {
     if (isBanking && typeof bankMockKunden !== 'undefined') {
         kunde = bankMockKunden[kundenName];
     } else if (!isBanking) {
+        // Insurance mode – mockKunden is local to fillKundenDetail, but we can read from DOM
+        // Try to get from the fillKundenDetail scope or the global
         if (typeof window.mockKunden !== 'undefined') {
             kunde = window.mockKunden[kundenName];
         }
@@ -85,18 +92,18 @@ function getKundenContext() {
 
 function buildKISystemPrompt(ctx) {
     if (ctx.isBanking) {
-        return 'Du bist ein KI-Vertriebsassistent f\u00fcr Bankberater (Volksbank/genoGPT). ' +
+        return 'Du bist ein KI-Vertriebsassistent für Bankberater (Volksbank/genoGPT). ' +
             'Analysiere die Kundendaten und generiere 2-3 konkrete, priorisierte Vertriebsimpulse. ' +
-            'Fokus auf: Cross-Selling (Verbundpartner R+V, Union Investment, Schw\u00e4bisch Hall, DZ PRIVATBANK), ' +
-            'Anschlussfinanzierung, VR-FinanzPlan, Verm\u00f6gensverwaltung, Open Finance/FIDA-Potentiale. ' +
-            'Format: F\u00fcr jeden Impuls: Titel, Priorit\u00e4t (Hoch/Mittel), Kurzbeschreibung (1-2 S\u00e4tze), gesch\u00e4tztes Ertragspotential. ' +
+            'Fokus auf: Cross-Selling (Verbundpartner R+V, Union Investment, Schwäbisch Hall, DZ PRIVATBANK), ' +
+            'Anschlussfinanzierung, VR-FinanzPlan, Vermögensverwaltung, Open Finance/FIDA-Potentiale. ' +
+            'Format: Für jeden Impuls: Titel, Priorität (Hoch/Mittel), Kurzbeschreibung (1-2 Sätze), geschätztes Ertragspotential. ' +
             'Antworte auf Deutsch. Sei konkret und beziehe dich auf die Kundendaten. Keine Markdown-Formatierung.';
     }
-    return 'Du bist ein KI-Vertriebsassistent f\u00fcr Versicherungsvermittler. ' +
+    return 'Du bist ein KI-Vertriebsassistent für Versicherungsvermittler. ' +
         'Analysiere die Kundendaten und generiere 2-3 konkrete, priorisierte Vertriebsimpulse. ' +
-        'Fokus auf: Deckungsl\u00fccken, Cross-Selling, Nachversicherung, Kfz-Wechsel, BU-Optimierung, ' +
+        'Fokus auf: Deckungslücken, Cross-Selling, Nachversicherung, Kfz-Wechsel, BU-Optimierung, ' +
         'Open Finance/FIDA-basierte Erkenntnisse, Lebenslagenwechsel. ' +
-        'Format: F\u00fcr jeden Impuls: Titel, Priorit\u00e4t (Hoch/Mittel), Kurzbeschreibung (1-2 S\u00e4tze), gesch\u00e4tztes Pr\u00e4mienvolumen. ' +
+        'Format: Für jeden Impuls: Titel, Priorität (Hoch/Mittel), Kurzbeschreibung (1-2 Sätze), geschätztes Prämienvolumen. ' +
         'Antworte auf Deutsch. Sei konkret und beziehe dich auf die Kundendaten. Keine Markdown-Formatierung.';
 }
 
@@ -111,14 +118,14 @@ function buildKIUserPrompt(ctx) {
         if (d.kinder && d.kinder.length > 0) {
             parts.push('Kinder: ' + d.kinder.map(function(k) { return k.name + ' (' + k.alter + ' J.)'; }).join(', '));
         }
-        if (d.nettoeinkommen) parts.push('Nettoeinkommen: \u20ac' + d.nettoeinkommen.toLocaleString('de-DE') + '/Mon.');
+        if (d.nettoeinkommen) parts.push('Nettoeinkommen: €' + d.nettoeinkommen.toLocaleString('de-DE') + '/Mon.');
 
         if (ctx.isBanking) {
             if (d.konten) {
                 parts.push('Produkte: ' + d.konten.map(function(k) { return k.produkt; }).join(', '));
             }
             if (d.finanzierungen) {
-                parts.push('Finanzierungen: ' + d.finanzierungen.map(function(f) { return f.produkt + ' (Restschuld: \u20ac' + Math.abs(f.restschuld || 0).toLocaleString('de-DE') + ')'; }).join(', '));
+                parts.push('Finanzierungen: ' + d.finanzierungen.map(function(f) { return f.produkt + ' (Restschuld: €' + Math.abs(f.restschuld || 0).toLocaleString('de-DE') + ')'; }).join(', '));
             }
             if (d.fidaVertraege && d.fidaVertraege.length > 0) {
                 parts.push('FIDA-Daten: ' + d.fidaVertraege.map(function(f) { return f.institut + ' ' + f.typ; }).join(', '));
@@ -128,7 +135,7 @@ function buildKIUserPrompt(ctx) {
             }
         } else {
             if (d.vertraege) {
-                parts.push('Vertr\u00e4ge: ' + d.vertraege.map(function(v) { return v.typ + ' (' + v.versicherer + ', ' + v.praemie + ')'; }).join(', '));
+                parts.push('Verträge: ' + d.vertraege.map(function(v) { return v.typ + ' (' + v.versicherer + ', ' + v.praemie + ')'; }).join(', '));
             }
             if (d.fidaVertraege && d.fidaVertraege.length > 0) {
                 parts.push('FIDA-Daten: ' + d.fidaVertraege.map(function(f) { return f.institut + ' ' + f.typ + ' (' + f.info + ')'; }).join(', '));
@@ -139,7 +146,7 @@ function buildKIUserPrompt(ctx) {
         if (d.nps) parts.push('NPS: ' + d.nps.score + ' (' + d.nps.kategorie + ')');
     }
 
-    return 'Generiere personalisierte Vertriebsimpulse f\u00fcr diesen Kunden:\n\n' + parts.join('\n');
+    return 'Generiere personalisierte Vertriebsimpulse für diesen Kunden:\n\n' + parts.join('\n');
 }
 
 function renderKIImpulsSkeleton() {
@@ -168,24 +175,24 @@ function parseKIResponse(text) {
         var line = lines[i].trim();
 
         // Detect impuls title patterns: "1.", "Impuls 1:", "**Title**", "- Title"
-        var titleMatch = line.match(/^(?:\d+[\.\)]\s*|Impuls\s*\d+[:\s]*|[-\u2022]\s*)(.+)/);
-        if (titleMatch && !line.match(/^(?:Priorit|Beschreib|Ertrag|Pr\u00e4mie|Potent)/i)) {
+        var titleMatch = line.match(/^(?:\d+[\.\)]\s*|Impuls\s*\d+[:\s]*|[-•]\s*)(.+)/);
+        if (titleMatch && !line.match(/^(?:Priorit|Beschreib|Ertrag|Prämie|Potent)/i)) {
             if (current) impulse.push(current);
             current = { titel: titleMatch[1].replace(/\*\*/g, '').replace(/:\s*$/, ''), prioritaet: 'Mittel', beschreibung: '', volumen: '' };
             continue;
         }
 
         if (current) {
-            var prioMatch = line.match(/Priorit[\u00e4a]t[:\s]*(Hoch|Mittel|Niedrig)/i);
+            var prioMatch = line.match(/Priorit[äa]t[:\s]*(Hoch|Mittel|Niedrig)/i);
             if (prioMatch) {
                 current.prioritaet = prioMatch[1].charAt(0).toUpperCase() + prioMatch[1].slice(1).toLowerCase();
                 continue;
             }
 
-            var volMatch = line.match(/(?:Ertrag|Pr\u00e4mie|Volumen|Potential)[:\s]*[\u20ac]?\s*([\d.,]+(?:\s*(?:\u20ac|EUR))?(?:\s*(?:\/|p\.?\s*a\.?|pro\s*Jahr|\/Jahr))?)/i);
+            var volMatch = line.match(/(?:Ertrag|Prämie|Volumen|Potential)[:\s]*[€]?\s*([\d.,]+(?:\s*(?:€|EUR))?(?:\s*(?:\/|p\.?\s*a\.?|pro\s*Jahr|\/Jahr))?)/i);
             if (volMatch) {
                 current.volumen = volMatch[1].replace(/\s+/g, ' ').trim();
-                if (current.volumen.indexOf('\u20ac') === -1) current.volumen = '\u20ac' + current.volumen;
+                if (current.volumen.indexOf('€') === -1) current.volumen = '€' + current.volumen;
                 continue;
             }
 
@@ -225,11 +232,11 @@ function getFallbackImpulse(ctx) {
     }
     if (impulse.length === 0) {
         impulse.push({
-            titel: ctx.isBanking ? 'VR-FinanzPlan Beratung' : 'Bestands\u00fcberpr\u00fcfung empfohlen',
+            titel: ctx.isBanking ? 'VR-FinanzPlan Beratung' : 'Bestandsüberprüfung empfohlen',
             prioritaet: 'Mittel',
             beschreibung: ctx.isBanking
-                ? 'Umfassende Finanzplanung durchf\u00fchren, um Cross-Selling-Potentiale zu identifizieren.'
-                : 'J\u00e4hrliche Bestandspr\u00fcfung durchf\u00fchren, um Deckungsl\u00fccken und Anpassungsbedarf zu erkennen.',
+                ? 'Umfassende Finanzplanung durchführen, um Cross-Selling-Potentiale zu identifizieren.'
+                : 'Jährliche Bestandsprüfung durchführen, um Deckungslücken und Anpassungsbedarf zu erkennen.',
             volumen: '',
             fallback: true
         });
@@ -272,7 +279,7 @@ function renderKIImpulseResult(impulse, isFallback) {
     return html;
 }
 
-// Render KI impulses as inline impuls-items within Whitespots/Aenderungsgeschaeft categories
+// Render KI impulses as inline impuls-items within Whitespots/Änderungsgeschäft categories
 function renderKIImpulseInline(impulse, isFallback) {
     var badgeText = isFallback ? 'Regelbasiert' : 'KI-generiert';
     var wsHtml = '';
@@ -281,7 +288,7 @@ function renderKIImpulseInline(impulse, isFallback) {
     for (var i = 0; i < impulse.length; i++) {
         var imp = impulse[i];
         var prioClass = imp.prioritaet === 'Hoch' ? 'high' : 'medium';
-        var prioLabel = imp.prioritaet === 'Hoch' ? 'Hohe Priorit\u00e4t' : 'Mittlere Priorit\u00e4t';
+        var prioLabel = imp.prioritaet === 'Hoch' ? 'Hohe Priorität' : 'Mittlere Priorität';
         var detailId = 'ki-inline-' + i;
 
         var itemHtml = '<div class="impuls-item highlight clickable" onclick="toggleImpulsDetail(\'' + detailId + '\')">' +
@@ -301,15 +308,15 @@ function renderKIImpulseInline(impulse, isFallback) {
         '<div class="impuls-detail" id="' + detailId + '" style="display:none;">' +
             '<div class="impuls-detail-section"><h4>Herleitung</h4>' +
             '<div class="herleitung-grid">' +
-                '<div class="herleitung-item"><span class="herleitung-label">Quelle</span><span class="herleitung-value">' + badgeText + ' \u2013 Data Intelligence Platform</span></div>' +
+                '<div class="herleitung-item"><span class="herleitung-label">Quelle</span><span class="herleitung-value">' + badgeText + ' – Data Intelligence Platform</span></div>' +
                 '<div class="herleitung-item"><span class="herleitung-label">Erkenntnis</span><span class="herleitung-value">' + imp.beschreibung + '</span></div>' +
             '</div></div>' +
         '</div>';
 
-        // Classify: items with "Wechsel", "Anpass", "Optimier", "Erhoeh", "Nachver" -> Aenderungsgeschaeft, rest -> Whitespots
+        // Classify: items with "Wechsel", "Anpass", "Optimier", "Erhöh", "Nachver" → Änderungsgeschäft, rest → Whitespots
         var titel = imp.titel.toLowerCase();
         if (titel.indexOf('wechsel') >= 0 || titel.indexOf('anpass') >= 0 || titel.indexOf('optimier') >= 0 ||
-            titel.indexOf('erh\u00f6h') >= 0 || titel.indexOf('nachver') >= 0 || titel.indexOf('aufstock') >= 0 ||
+            titel.indexOf('erhöh') >= 0 || titel.indexOf('nachver') >= 0 || titel.indexOf('aufstock') >= 0 ||
             titel.indexOf('umschuld') >= 0 || titel.indexOf('konsoli') >= 0) {
             aeHtml += itemHtml;
         } else {
@@ -412,16 +419,16 @@ function renderCLVSzenarien() {
     var szenarien;
     if (isBanking) {
         szenarien = [
-            { name: 'Basis (Status Quo)', clv: 18500, delta: 0, aktionen: 'Bestehende Produkte weiterf\u00fchren', color: '#94a3b8' },
-            { name: 'Anschlussfinanzierung', clv: 24200, delta: 5700, aktionen: 'Forward-Darlehen \u20ac185.000 + Zinsoptimierung', color: '#3b82f6' },
-            { name: 'Cross-Selling Verbund', clv: 31800, delta: 13300, aktionen: '+ R+V Risikoleben + Union Depot-Erh\u00f6hung + VR-FinanzPlan', color: '#16a34a' },
-            { name: 'Full Potential', clv: 38500, delta: 20000, aktionen: '+ DZ PRIVATBANK Verm\u00f6gensverwaltung + Schw\u00e4bisch Hall BSV', color: '#6366f1' }
+            { name: 'Basis (Status Quo)', clv: 18500, delta: 0, aktionen: 'Bestehende Produkte weiterführen', color: '#94a3b8' },
+            { name: 'Anschlussfinanzierung', clv: 24200, delta: 5700, aktionen: 'Forward-Darlehen €185.000 + Zinsoptimierung', color: '#3b82f6' },
+            { name: 'Cross-Selling Verbund', clv: 31800, delta: 13300, aktionen: '+ R+V Risikoleben + Union Depot-Erhöhung + VR-FinanzPlan', color: '#16a34a' },
+            { name: 'Full Potential', clv: 38500, delta: 20000, aktionen: '+ DZ PRIVATBANK Vermögensverwaltung + Schwäbisch Hall BSV', color: '#6366f1' }
         ];
     } else {
         szenarien = [
-            { name: 'Basis (Status Quo)', clv: 12800, delta: 0, aktionen: 'BU + Wohngeb\u00e4ude weiterf\u00fchren', color: '#94a3b8' },
-            { name: 'Deckungsl\u00fccken schlie\u00dfen', clv: 19200, delta: 6400, aktionen: '+ Risikoleben \u20ac300.000 + BU-Erh\u00f6hung auf \u20ac2.500', color: '#3b82f6' },
-            { name: 'Cross-Selling', clv: 24600, delta: 11800, aktionen: '+ Fondspolice \u20ac250/Mon. + Kfz-Wechsel + Rechtsschutz', color: '#16a34a' },
+            { name: 'Basis (Status Quo)', clv: 12800, delta: 0, aktionen: 'BU + Wohngebäude weiterführen', color: '#94a3b8' },
+            { name: 'Deckungslücken schließen', clv: 19200, delta: 6400, aktionen: '+ Risikoleben €300.000 + BU-Erhöhung auf €2.500', color: '#3b82f6' },
+            { name: 'Cross-Selling', clv: 24600, delta: 11800, aktionen: '+ Fondspolice €250/Mon. + Kfz-Wechsel + Rechtsschutz', color: '#16a34a' },
             { name: 'Full Potential', clv: 29400, delta: 16600, aktionen: '+ Unfallversicherung + Hausrat-Upgrade + PKV-Zusatz', color: '#6366f1' }
         ];
     }
@@ -438,8 +445,8 @@ function renderCLVSzenarien() {
         html += '<div class="clv-szenario-item">' +
             '<div class="clv-szenario-header">' +
                 '<span class="clv-szenario-name">' + s.name + '</span>' +
-                '<span class="clv-szenario-value" style="color:' + s.color + '">\u20ac' + s.clv.toLocaleString('de-DE') + '</span>' +
-                (s.delta > 0 ? '<span class="clv-szenario-delta">+\u20ac' + s.delta.toLocaleString('de-DE') + '</span>' : '') +
+                '<span class="clv-szenario-value" style="color:' + s.color + '">€' + s.clv.toLocaleString('de-DE') + '</span>' +
+                (s.delta > 0 ? '<span class="clv-szenario-delta">+€' + s.delta.toLocaleString('de-DE') + '</span>' : '') +
             '</div>' +
             '<div class="clv-szenario-bar-bg"><div class="clv-szenario-bar" style="width:' + pct + '%;background:' + s.color + '"></div></div>' +
             '<div class="clv-szenario-aktionen">' + s.aktionen + '</div>' +
@@ -466,25 +473,25 @@ function renderLifeEventTimeline() {
     if (isBanking) {
         events = [
             { datum: '2008', label: 'Berufseinstieg Continental AG', typ: 'beruf', detail: 'Maschinenbau-Ingenieur' },
-            { datum: '2010', label: 'Kontoer\u00f6ffnung Volksbank', typ: 'produkt', detail: 'VR-Girokonto Plus' },
+            { datum: '2010', label: 'Kontoeröffnung Volksbank', typ: 'produkt', detail: 'VR-Girokonto Plus' },
             { datum: '2012', label: 'Heirat', typ: 'leben', detail: 'Familienstand: Verheiratet' },
             { datum: '2014', label: 'Kind geboren: Lukas', typ: 'leben', detail: '1. Kind' },
-            { datum: '2016', label: 'Baufinanzierung DZ HYP', typ: 'produkt', detail: '\u20ac240.000, Zinsbindung 10 J.' },
+            { datum: '2016', label: 'Baufinanzierung DZ HYP', typ: 'produkt', detail: '€240.000, Zinsbindung 10 J.' },
             { datum: '2017', label: 'Kind geboren: Emma', typ: 'leben', detail: '2. Kind' },
-            { datum: '2018', label: 'Riester-Rente gestartet', typ: 'produkt', detail: 'Union Investment \u20ac175/Mon.' },
-            { datum: '2022', label: 'ETF-Sparplan gestartet', typ: 'produkt', detail: 'VR-MeinDepot \u20ac300/Mon.' },
-            { datum: '2026', label: 'Zinsbindung endet', typ: 'aktion', detail: 'Anschlussfinanzierung \u20ac185.000 erforderlich' }
+            { datum: '2018', label: 'Riester-Rente gestartet', typ: 'produkt', detail: 'Union Investment €175/Mon.' },
+            { datum: '2022', label: 'ETF-Sparplan gestartet', typ: 'produkt', detail: 'VR-MeinDepot €300/Mon.' },
+            { datum: '2026', label: 'Zinsbindung endet', typ: 'aktion', detail: 'Anschlussfinanzierung €185.000 erforderlich' }
         ];
     } else {
         events = [
             { datum: '2016', label: 'Berufseinstieg TechCorp GmbH', typ: 'beruf', detail: 'Angestellter' },
             { datum: '2017', label: 'Kind geboren: Lena', typ: 'leben', detail: '1. Kind' },
-            { datum: '2018', label: 'BU-Versicherung abgeschlossen', typ: 'produkt', detail: 'ERGO BU-Rente \u20ac1.500/Mon.' },
-            { datum: '2019', label: 'Wohngeb\u00e4udeversicherung', typ: 'produkt', detail: 'VHV \u20ac450.000 Vers.-Summe' },
-            { datum: '2020', label: 'Hauskauf + Hypothek', typ: 'leben', detail: 'Sparkasse \u20ac285.000' },
+            { datum: '2018', label: 'BU-Versicherung abgeschlossen', typ: 'produkt', detail: 'ERGO BU-Rente €1.500/Mon.' },
+            { datum: '2019', label: 'Wohngebäudeversicherung', typ: 'produkt', detail: 'VHV €450.000 Vers.-Summe' },
+            { datum: '2020', label: 'Hauskauf + Hypothek', typ: 'leben', detail: 'Sparkasse €285.000' },
             { datum: '2021', label: 'Kind geboren: Paul', typ: 'leben', detail: '2. Kind' },
-            { datum: '2024', label: 'Open Finance Consent', typ: 'aktion', detail: '6 Datenquellen verkn\u00fcpft' },
-            { datum: '2025', label: 'Kfz-Vertrag l\u00e4uft aus', typ: 'aktion', detail: 'Allianz Kfz, Wechsel-Potential' }
+            { datum: '2024', label: 'Open Finance Consent', typ: 'aktion', detail: '6 Datenquellen verknüpft' },
+            { datum: '2025', label: 'Kfz-Vertrag läuft aus', typ: 'aktion', detail: 'Allianz Kfz, Wechsel-Potential' }
         ];
     }
 
@@ -520,7 +527,7 @@ function renderLifeEventTimeline() {
 window.renderLifeEventTimeline = renderLifeEventTimeline;
 
 // ========================================
-// OPT-12: RISIKOSCORING -> PRODUKTSTEUERUNG
+// OPT-12: RISIKOSCORING → PRODUKTSTEUERUNG
 // ========================================
 
 function renderRisikoscoring() {
@@ -534,13 +541,13 @@ function renderRisikoscoring() {
     if (isBanking) {
         score = 28;
         details = [
-            { label: 'Bonit\u00e4t', wert: 82, max: 100, farbe: '#16a34a' },
+            { label: 'Bonität', wert: 82, max: 100, farbe: '#16a34a' },
             { label: 'Zahlungsverhalten', wert: 95, max: 100, farbe: '#16a34a' },
             { label: 'Verschuldungsgrad', wert: 45, max: 100, farbe: '#f59e0b' },
-            { label: 'Einkommensstabilit\u00e4t', wert: 90, max: 100, farbe: '#16a34a' }
+            { label: 'Einkommensstabilität', wert: 90, max: 100, farbe: '#16a34a' }
         ];
         empfehlungen = [
-            { text: 'Kreditlimit erh\u00f6hbar auf \u20ac15.000 (aktuell \u20ac10.000)', typ: 'positiv' },
+            { text: 'Kreditlimit erhöhbar auf €15.000 (aktuell €10.000)', typ: 'positiv' },
             { text: 'Baufinanzierung: Sondertilgung empfohlen zur Risikoreduktion', typ: 'neutral' },
             { text: 'R+V Risikoleben zur Restschuldabsicherung empfohlen', typ: 'aktion' }
         ];
@@ -553,9 +560,9 @@ function renderRisikoscoring() {
             { label: 'NPS / Bindung', wert: 90, max: 100, farbe: '#16a34a' }
         ];
         empfehlungen = [
-            { text: 'Risikosport-Zuschlag BU pr\u00fcfen (Skydiving, Bungee erkannt)', typ: 'warnung' },
-            { text: 'Risikoleben OHNE Extremsport-Ausschluss w\u00e4hlen', typ: 'aktion' },
-            { text: 'Deckungsl\u00fccke: Hypothek \u20ac285.000 ungesichert', typ: 'warnung' }
+            { text: 'Risikosport-Zuschlag BU prüfen (Skydiving, Bungee erkannt)', typ: 'warnung' },
+            { text: 'Risikoleben OHNE Extremsport-Ausschluss wählen', typ: 'aktion' },
+            { text: 'Deckungslücke: Hypothek €285.000 ungesichert', typ: 'warnung' }
         ];
     }
 
@@ -609,16 +616,16 @@ function renderProvisionsplanung() {
     if (isBanking) {
         positionen = [
             { produkt: 'Baufinanzierung Prolongation', volumen: 185000, ertrag: 2775, typ: 'Provision', haftung: '5 Jahre', storno: 0.02 },
-            { produkt: 'VR-MeinDepot Erh\u00f6hung', volumen: 12800, ertrag: 192, typ: 'Bestandsprovision', haftung: '-', storno: 0.05 },
+            { produkt: 'VR-MeinDepot Erhöhung', volumen: 12800, ertrag: 192, typ: 'Bestandsprovision', haftung: '-', storno: 0.05 },
             { produkt: 'R+V Risikoleben', volumen: 6000, ertrag: 540, typ: 'Abschluss', haftung: '5 Jahre', storno: 0.08 },
-            { produkt: 'Union Verm\u00f6genPlus', volumen: 3700, ertrag: 185, typ: 'Bestandsprovision', haftung: '-', storno: 0.03 }
+            { produkt: 'Union VermögenPlus', volumen: 3700, ertrag: 185, typ: 'Bestandsprovision', haftung: '-', storno: 0.03 }
         ];
     } else {
         positionen = [
             { produkt: 'Risikolebensversicherung', volumen: 6000, ertrag: 540, typ: 'Abschluss', haftung: '5 Jahre', storno: 0.08 },
             { produkt: 'Fondspolice', volumen: 3000, ertrag: 1200, typ: 'Abschluss', haftung: '5 Jahre', storno: 0.12 },
             { produkt: 'Kfz-Wechsel', volumen: 520, ertrag: 78, typ: 'Abschluss', haftung: '1 Jahr', storno: 0.15 },
-            { produkt: 'BU-Erh\u00f6hung', volumen: 1800, ertrag: 450, typ: 'Dynamik', haftung: '5 Jahre', storno: 0.06 }
+            { produkt: 'BU-Erhöhung', volumen: 1800, ertrag: 450, typ: 'Dynamik', haftung: '5 Jahre', storno: 0.06 }
         ];
     }
 
@@ -627,11 +634,11 @@ function renderProvisionsplanung() {
     var nettoErtrag = totalErtrag - totalStorno;
 
     var html = '<div class="kunden-card provisions-card">' +
-        '<div class="kunden-card-header"><h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><circle cx="12" cy="12" r="10"/><text x="12" y="16" text-anchor="middle" fill="currentColor" stroke="none" font-size="12" font-weight="bold">\u20ac</text></svg> Provisionsplanung</h2></div>' +
+        '<div class="kunden-card-header"><h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><circle cx="12" cy="12" r="10"/><text x="12" y="16" text-anchor="middle" fill="currentColor" stroke="none" font-size="12" font-weight="bold">\u20AC</text></svg> Provisionsplanung</h2></div>' +
         '<div class="provisions-summary">' +
-            '<div class="provisions-kpi"><span class="provisions-kpi-label">Brutto-Ertrag</span><span class="provisions-kpi-value">\u20ac' + totalErtrag.toLocaleString('de-DE') + '</span></div>' +
-            '<div class="provisions-kpi"><span class="provisions-kpi-label">Stornoreserve</span><span class="provisions-kpi-value negative">-\u20ac' + Math.round(totalStorno).toLocaleString('de-DE') + '</span></div>' +
-            '<div class="provisions-kpi"><span class="provisions-kpi-label">Netto-Ertrag</span><span class="provisions-kpi-value positive">\u20ac' + Math.round(nettoErtrag).toLocaleString('de-DE') + '</span></div>' +
+            '<div class="provisions-kpi"><span class="provisions-kpi-label">Brutto-Ertrag</span><span class="provisions-kpi-value">€' + totalErtrag.toLocaleString('de-DE') + '</span></div>' +
+            '<div class="provisions-kpi"><span class="provisions-kpi-label">Stornoreserve</span><span class="provisions-kpi-value negative">-€' + Math.round(totalStorno).toLocaleString('de-DE') + '</span></div>' +
+            '<div class="provisions-kpi"><span class="provisions-kpi-label">Netto-Ertrag</span><span class="provisions-kpi-value positive">€' + Math.round(nettoErtrag).toLocaleString('de-DE') + '</span></div>' +
         '</div>' +
         '<table class="provisions-table"><thead><tr><th>Produkt</th><th>Volumen</th><th>Ertrag</th><th>Typ</th><th>Haftung</th><th>Stornorisiko</th></tr></thead><tbody>';
 
@@ -640,8 +647,8 @@ function renderProvisionsplanung() {
         var stornoClass = p.storno >= 0.1 ? 'storno-high' : (p.storno >= 0.06 ? 'storno-medium' : 'storno-low');
         html += '<tr>' +
             '<td><strong>' + p.produkt + '</strong></td>' +
-            '<td>\u20ac' + p.volumen.toLocaleString('de-DE') + '</td>' +
-            '<td class="text-right"><strong>\u20ac' + p.ertrag.toLocaleString('de-DE') + '</strong></td>' +
+            '<td>€' + p.volumen.toLocaleString('de-DE') + '</td>' +
+            '<td class="text-right"><strong>€' + p.ertrag.toLocaleString('de-DE') + '</strong></td>' +
             '<td>' + p.typ + '</td>' +
             '<td>' + p.haftung + '</td>' +
             '<td><span class="storno-badge ' + stornoClass + '">' + (p.storno * 100).toFixed(0) + '%</span></td>' +
@@ -698,16 +705,16 @@ function initBeratungsmodusToggle() {
 })();
 
 // ========================================
-// OPT-10: BERATUNGSMODUS MIT GESPRAECHSFUEHRUNG
+// OPT-10: BERATUNGSMODUS MIT GESPRÄCHSFÜHRUNG
 // ========================================
 
 var beratungsSchritte = [
-    { nr: 1, titel: 'Begr\u00fcssung & Rapport', detail: 'Kunde namentlich begr\u00fcssen, aktuellen Anlass ansprechen, Gespr\u00e4chsziel kl\u00e4ren.' },
-    { nr: 2, titel: 'Bedarfsanalyse', detail: 'Aktuelle Lebenssituation erfragen, Ver\u00e4nderungen seit letztem Kontakt, W\u00fcnsche und Ziele.' },
-    { nr: 3, titel: 'Ist-Analyse vorstellen', detail: 'Bestehende Vertr\u00e4ge/Produkte zeigen, Open Finance Daten besprechen, Deckungsl\u00fccken aufzeigen.' },
-    { nr: 4, titel: 'Empfehlung pr\u00e4sentieren', detail: 'Konkrete Vorschl\u00e4ge mit KI-Begr\u00fcndung vorstellen, Tarifvergleich zeigen, CLV-Szenarien erl\u00e4utern.' },
-    { nr: 5, titel: 'Einwandbehandlung', detail: 'R\u00fcckfragen kl\u00e4ren, Alternativen anbieten, Preis-Leistung verdeutlichen.' },
-    { nr: 6, titel: 'Abschluss', detail: 'Zusammenfassung, n\u00e4chste Schritte vereinbaren, Angebot erstellen oder Termin f\u00fcr Nachgespr\u00e4ch.' },
+    { nr: 1, titel: 'Begrüssung & Rapport', detail: 'Kunde namentlich begrüssen, aktuellen Anlass ansprechen, Gesprächsziel klären.' },
+    { nr: 2, titel: 'Bedarfsanalyse', detail: 'Aktuelle Lebenssituation erfragen, Veränderungen seit letztem Kontakt, Wünsche und Ziele.' },
+    { nr: 3, titel: 'Ist-Analyse vorstellen', detail: 'Bestehende Verträge/Produkte zeigen, Open Finance Daten besprechen, Deckungslücken aufzeigen.' },
+    { nr: 4, titel: 'Empfehlung präsentieren', detail: 'Konkrete Vorschläge mit KI-Begründung vorstellen, Tarifvergleich zeigen, CLV-Szenarien erläutern.' },
+    { nr: 5, titel: 'Einwandbehandlung', detail: 'Rückfragen klären, Alternativen anbieten, Preis-Leistung verdeutlichen.' },
+    { nr: 6, titel: 'Abschluss', detail: 'Zusammenfassung, nächste Schritte vereinbaren, Angebot erstellen oder Termin für Nachgespräch.' },
     { nr: 7, titel: 'Dokumentation', detail: 'Beratungsprotokoll erstellen, Kundenakte aktualisieren, Follow-up planen.' }
 ];
 
@@ -719,7 +726,7 @@ function openBeratungsOverlay() {
     overlay.className = 'beratung-overlay';
 
     var html = '<div class="beratung-header">' +
-        '<h3>Gespr\u00e4chsleitfaden</h3>' +
+        '<h3>Gesprächsleitfaden</h3>' +
         '<button class="beratung-close" onclick="closeBeratungsOverlay()">&times;</button>' +
     '</div>' +
     '<div class="beratung-body">';

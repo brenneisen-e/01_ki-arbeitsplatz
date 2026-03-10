@@ -34,7 +34,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 14px;
+    font-size: 15px;
     flex-shrink: 0;
 }
 
@@ -51,7 +51,7 @@
 .komm-chat-bubble {
     padding: 10px 14px;
     border-radius: 12px;
-    font-size: 13px;
+    font-size: 15px;
     line-height: 1.5;
 }
 
@@ -73,7 +73,7 @@
 }
 
 .komm-chat-bubble-date {
-    font-size: 11px;
+    font-size: 13px;
     color: #94a3b8;
     margin-top: 4px;
 }
@@ -96,7 +96,7 @@
     align-items: center;
     padding: 8px 12px;
     border-radius: 6px;
-    font-size: 13px;
+    font-size: 15px;
     transition: background 0.15s;
 }
 
@@ -105,7 +105,7 @@
 }
 
 .komm-compact-date {
-    font-size: 12px;
+    font-size: 14px;
     color: #94a3b8;
     white-space: nowrap;
 }
@@ -126,7 +126,7 @@
 }
 
 .komm-compact-type {
-    font-size: 11px;
+    font-size: 13px;
     padding: 2px 8px;
     border-radius: 4px;
     background: #f1f5f9;
@@ -136,7 +136,7 @@
 }
 
 .komm-compact-status {
-    font-size: 11px;
+    font-size: 13px;
     padding: 2px 8px;
     border-radius: 4px;
     font-weight: 600;
@@ -189,7 +189,7 @@
 }
 
 .komm-compact-detail-text {
-    font-size: 13px;
+    font-size: 15px;
     color: #475569;
     line-height: 1.5;
     margin-bottom: 6px;
@@ -202,12 +202,12 @@
 }
 
 .komm-compact-detail-type {
-    font-size: 11px;
+    font-size: 13px;
     color: #94a3b8;
 }
 
 .komm-compact-detail-status {
-    font-size: 11px;
+    font-size: 13px;
     padding: 2px 8px;
     border-radius: 4px;
     font-weight: 600;
@@ -247,13 +247,13 @@
     align-items: center;
     gap: 8px;
     font-weight: 600;
-    font-size: 13px;
+    font-size: 15px;
     color: var(--primary-color, #2563eb);
     margin-bottom: 10px;
 }
 
 .komm-summary-text {
-    font-size: 13px;
+    font-size: 15px;
     line-height: 1.6;
     color: #475569;
 }
@@ -268,7 +268,7 @@
     align-items: center;
     gap: 6px;
     font-weight: 600;
-    font-size: 13px;
+    font-size: 15px;
     color: #1e293b;
     margin-bottom: 10px;
 }
@@ -318,7 +318,7 @@
 }
 
 .komm-impulse-quelle {
-    font-size: 11px;
+    font-size: 13px;
     color: #94a3b8;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -326,7 +326,7 @@
 }
 
 .komm-impulse-text {
-    font-size: 12px;
+    font-size: 14px;
     color: #475569;
     line-height: 1.5;
     margin-bottom: 8px;
@@ -341,7 +341,7 @@
 .komm-impulse-btn {
     padding: 5px 12px;
     border-radius: 6px;
-    font-size: 11px;
+    font-size: 13px;
     font-weight: 600;
     border: none;
     cursor: pointer;
@@ -413,7 +413,7 @@
 .chat-text {
     display: inline-block;
     padding: 8px 12px;
-    font-size: 12px;
+    font-size: 14px;
     line-height: 1.5;
     color: #1e293b;
 }
@@ -435,7 +435,7 @@
     border-radius: 12px;
     background: #fef3c7;
     color: #92400e;
-    font-size: 11px;
+    font-size: 13px;
     font-weight: 600;
     margin-top: 4px;
 }
@@ -458,7 +458,7 @@
 .komm-filter-btn {
     padding: 6px 16px;
     border-radius: 20px;
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.15s;

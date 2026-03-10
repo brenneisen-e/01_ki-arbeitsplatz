@@ -457,7 +457,7 @@ function fillBeraterErtraege() {
 
 function buildErtragsBar(label, val, total, color) {
     var pct = Math.round(val/total*100);
-    return '<div><div style="display:flex;justify-content:space-between;margin-bottom:4px;"><span style="font-size:13px;font-weight:600;">' + label + '</span><span style="font-size:13px;"><strong>' + fmtEuroBerater(val) + '</strong> (' + pct + '%)</span></div><div style="height:8px;background:#e2e8f0;border-radius:4px;overflow:hidden;"><div style="height:100%;width:' + pct + '%;background:' + color + ';border-radius:4px;"></div></div></div>';
+    return '<div><div style="display:flex;justify-content:space-between;margin-bottom:4px;"><span style="font-size:15px;font-weight:600;">' + label + '</span><span style="font-size:15px;"><strong>' + fmtEuroBerater(val) + '</strong> (' + pct + '%)</span></div><div style="height:8px;background:#e2e8f0;border-radius:4px;overflow:hidden;"><div style="height:100%;width:' + pct + '%;background:' + color + ';border-radius:4px;"></div></div></div>';
 }
 
 // ── FILL QUALITAET TAB ──
@@ -489,7 +489,7 @@ function fillBeraterQualitaet() {
     var trainHtml = '';
     trainings.forEach(function(t) {
         var pct = Math.round(t.done/t.max*100);
-        trainHtml += '<div style="margin-bottom:12px;"><div style="display:flex;justify-content:space-between;margin-bottom:4px;"><span style="font-size:13px;">' + t.name + '</span><span style="font-size:12px;color:#64748b;">' + t.done + '/' + t.max + ' Std. (' + pct + '%)</span></div><div class="qual-schulung-bar"><div class="qual-schulung-bar-fill" style="width:' + pct + '%;background:' + t.color + ';"></div></div></div>';
+        trainHtml += '<div style="margin-bottom:12px;"><div style="display:flex;justify-content:space-between;margin-bottom:4px;"><span style="font-size:15px;">' + t.name + '</span><span style="font-size:14px;color:#64748b;">' + t.done + '/' + t.max + ' Std. (' + pct + '%)</span></div><div class="qual-schulung-bar"><div class="qual-schulung-bar-fill" style="width:' + pct + '%;background:' + t.color + ';"></div></div></div>';
     });
     
     // Compliance checklist
@@ -629,7 +629,7 @@ function fillBeraterBranchenmix() {
     Object.keys(branchen).forEach(function(b) {
         var pct = Math.round(branchen[b].vol/totalVol*100);
         var color = colors[i % colors.length]; i++;
-        barsHtml += '<div><div style="display:flex;justify-content:space-between;margin-bottom:4px;"><span style="font-size:13px;font-weight:600;">' + b + ' (' + branchen[b].count + ')</span><span style="font-size:13px;">' + fmtEuroBerater(branchen[b].vol) + ' (' + pct + '%)</span></div><div style="height:8px;background:#e2e8f0;border-radius:4px;overflow:hidden;"><div style="height:100%;width:' + pct + '%;background:' + color + ';border-radius:4px;"></div></div></div>';
+        barsHtml += '<div><div style="display:flex;justify-content:space-between;margin-bottom:4px;"><span style="font-size:15px;font-weight:600;">' + b + ' (' + branchen[b].count + ')</span><span style="font-size:15px;">' + fmtEuroBerater(branchen[b].vol) + ' (' + pct + '%)</span></div><div style="height:8px;background:#e2e8f0;border-radius:4px;overflow:hidden;"><div style="height:100%;width:' + pct + '%;background:' + color + ';border-radius:4px;"></div></div></div>';
     });
     el.innerHTML = '<div class="uebersicht-card"><div class="uebersicht-card-header"><h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"></path></svg> Branchenmix</h3></div><div style="padding:16px;display:flex;flex-direction:column;gap:16px;">' + barsHtml + '</div></div>';
 }
@@ -695,7 +695,7 @@ function fillBeraterKundenTable() {
             var foto = kundenFotos[k.name] || '';
             var avatarHtml = foto
                 ? '<div style="width:28px;height:28px;border-radius:50%;overflow:hidden;display:inline-block;vertical-align:middle;margin-right:8px;flex-shrink:0;background:' + k.avatarBg + ';"><img src="' + foto + '" alt="' + k.name + '" style="width:100%;height:100%;object-fit:cover;" onerror="this.parentElement.innerHTML=\'' + k.name.split(' ').map(function(n){return n[0];}).join('') + '\'"></div>'
-                : '<div style="width:28px;height:28px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:white;background:' + k.avatarBg + ';vertical-align:middle;margin-right:8px;flex-shrink:0;">' + k.name.split(' ').map(function(n){return n[0];}).join('') + '</div>';
+                : '<div style="width:28px;height:28px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:white;background:' + k.avatarBg + ';vertical-align:middle;margin-right:8px;flex-shrink:0;">' + k.name.split(' ').map(function(n){return n[0];}).join('') + '</div>';
             rows += '<tr class="clickable-row" onclick="openBankKundenDetail(\'' + k.name + '\', \'' + k.id + '\')">' +
                 '<td><div style="display:flex;align-items:center;">' + avatarHtml + '<strong>' + k.name + '</strong></div></td>' +
                 '<td>' + k.id + '</td>' +
@@ -744,7 +744,6 @@ function toggleBeraterPeriod(period) {
     }
 }
 
-
 // ── WINDOW EXPORTS ──
 window.showBeraterOverview = showBeraterOverview;
 window.backFromBeraterOverview = backFromBeraterOverview;
@@ -759,4 +758,5 @@ window.bankKundenRetail = bankKundenRetail;
 window.bankKundenFK = bankKundenFK;
 window.bankKundenVW = bankKundenVW;
 window.beraterData = beraterData;
+
 window.__registerModule('agentur-overview-banking.js');

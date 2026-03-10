@@ -1,144 +1,9 @@
-// Split aus kunden-detail-features.js – OPT-15 Kommunikationshistorie
-// Abhaengigkeiten: kunden-detail-features.js (switchKundenTab), kunden-detail-data.js (mockKunden), kunden-detail-banking.js (bankMockKunden)
+// ============================================================
+// kunden-detail-komm.js – OPT-15 Kommunikationshistorie
+// Split aus kunden-detail-features.js (OPT-18)
+// Abhängigkeiten: kunden-detail-features.js, kunden-detail-data.js, kunden-detail-banking.js
+// ============================================================
 
-// ========================================
-// KOMMUNIKATION ANSEHEN (Legacy-Modal)
-// ========================================
-
-function viewKommunikation(kommId) {
-    console.log('Kommunikation ansehen:', kommId);
-
-    // Mock-Daten fuer Kommunikation
-    const kommunikationen = {
-        'email-1': {
-            typ: 'E-Mail',
-            datum: '28.11.2025, 09:15',
-            betreff: 'Kfz-Versicherung: Ihr Vertrag l\u00e4uft aus',
-            inhalt: `Sehr geehrter Herr Mustermann,
-
-Ihr Kfz-Vertrag bei der Allianz (Kennzeichen: M-AB 1234) l\u00e4uft am 31.12.2025 aus.
-
-Basierend auf Ihrer Schadenfreiheitsklasse SF12 und Ihren Fahrzeugdaten haben wir ein attraktives Angebot f\u00fcr Sie:
-
-- Haftpflicht + Vollkasko: \u20ac520/Jahr (statt \u20ac680 aktuell)
-- Ersparnis: \u20ac160/Jahr
-
-Interesse? Antworten Sie einfach auf diese E-Mail oder rufen Sie uns an.
-
-Mit freundlichen Gr\u00fc\u00dfen
-Ihre Versicherungsagentur`,
-            status: 'Ge\u00f6ffnet am 28.11.2025, 14:32'
-        },
-        'brief-1': {
-            typ: 'Brief',
-            datum: '15.11.2025',
-            betreff: 'Open Finance Datenfreigabe: Neue Potentiale erkannt',
-            inhalt: `Sehr geehrter Herr Mustermann,
-
-vielen Dank f\u00fcr Ihre Open Finance Datenfreigabe vom 15.03.2024.
-
-Basierend auf der Analyse Ihrer Finanzdaten haben wir folgende Optimierungsm\u00f6glichkeiten identifiziert:
-
-1. Risikolebensversicherung
-   Ihre Hypothek (\u20ac320.000) ist derzeit nicht abgesichert.
-
-2. Private Altersvorsorge
-   Bei Ihrer Sparrate von \u20ac800/Monat k\u00f6nnen wir Ihre Rentenl\u00fccke schlie\u00dfen.
-
-Wir w\u00fcrden uns freuen, diese M\u00f6glichkeiten in einem pers\u00f6nlichen Gespr\u00e4ch mit Ihnen zu besprechen.
-
-Mit freundlichen Gr\u00fc\u00dfen
-Ihre Versicherungsagentur`,
-            status: 'Versendet'
-        },
-        'call-1': {
-            typ: 'Telefonat',
-            datum: '10.11.2025, 11:20',
-            betreff: 'R\u00fcckruf wegen Altersvorsorge-Angebot',
-            inhalt: `Gespr\u00e4chsnotiz:
-
-Kunde rief zur\u00fcck wegen Brief vom 15.11.
-
-- Interesse an fondsgebundener Rentenversicherung
-- M\u00f6chte Angebot mit verschiedenen Fonds-Optionen
-- Bevorzugt nachhaltige ETFs
-- Budget: ca. \u20ac400/Monat zus\u00e4tzlich zur bestehenden Sparrate
-
-Termin vereinbart: 12.12.2025, 14:00 Uhr
-Ort: Agentur
-
-Vorbereitung:
-- 3 Angebote mit unterschiedlichen Risikoprofilen
-- ESG-Fonds-Optionen`,
-            status: 'Termin: 12.12.2025'
-        },
-        'email-2': {
-            typ: 'E-Mail',
-            datum: '01.10.2025, 08:00',
-            betreff: 'Willkommen bei Open Finance - Ihre Daten sind jetzt verkn\u00fcpft',
-            inhalt: `Sehr geehrter Herr Mustermann,
-
-vielen Dank f\u00fcr Ihre Open Finance Datenfreigabe!
-
-Ab sofort k\u00f6nnen wir Ihnen personalisierte Versicherungsempfehlungen basierend auf Ihrer Finanzsituation anbieten.
-
-Was bedeutet das f\u00fcr Sie?
-- Wir erkennen automatisch, wenn sich Ihre Lebensumst\u00e4nde \u00e4ndern
-- Sie erhalten nur relevante Angebote
-- Ihre Daten sind sicher und DSGVO-konform gesch\u00fctzt
-
-Ihre freigegebenen Datenquellen:
-- Sparkasse (Girokonto)
-- DWS (Depot)
-- Sparkasse (Hypothekendarlehen)
-- Allianz (Kfz-Versicherung)
-
-Sie k\u00f6nnen Ihre Einwilligung jederzeit \u00fcber das Open Finance Dashboard widerrufen.
-
-Mit freundlichen Gr\u00fc\u00dfen
-Ihre Versicherungsagentur`,
-            status: 'Ge\u00f6ffnet am 01.10.2025, 19:45'
-        }
-    };
-
-    const komm = kommunikationen[kommId];
-    if (komm) {
-        // Inline-Modal statt alert() – konsistent mit B-10 Kommunikations-Timeline
-        var existing = document.getElementById('kommDetailOverlay');
-        if (existing) existing.remove();
-
-        var overlay = document.createElement('div');
-        overlay.id = 'kommDetailOverlay';
-        overlay.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:10000;display:flex;align-items:center;justify-content:center;';
-        overlay.onclick = function(e) { if (e.target === overlay) overlay.remove(); };
-
-        var typIcon = komm.typ === 'E-Mail' ? '\u2709' : (komm.typ === 'Brief' ? '\ud83d\udcc4' : '\ud83d\udcde');
-        var statusColor = komm.status.includes('Ge\u00f6ffnet') ? '#16a34a' : (komm.status.includes('Termin') ? '#2563eb' : '#64748b');
-
-        var modal = document.createElement('div');
-        modal.style.cssText = 'background:white;border-radius:12px;max-width:560px;width:90%;max-height:80vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.3);';
-        modal.innerHTML =
-            '<div style="padding:20px 24px;border-bottom:1px solid #e2e8f0;display:flex;justify-content:space-between;align-items:center;">' +
-                '<div style="display:flex;align-items:center;gap:10px;">' +
-                    '<span style="font-size:20px;">' + typIcon + '</span>' +
-                    '<div><div style="font-weight:700;font-size:15px;color:#1e293b;">' + komm.typ + '</div>' +
-                    '<div style="font-size:12px;color:#64748b;">' + komm.datum + '</div></div>' +
-                '</div>' +
-                '<button onclick="document.getElementById(\'kommDetailOverlay\').remove()" style="background:none;border:none;cursor:pointer;font-size:20px;color:#94a3b8;padding:4px;">&times;</button>' +
-            '</div>' +
-            '<div style="padding:24px;">' +
-                '<div style="font-weight:600;font-size:14px;color:#1e293b;margin-bottom:16px;">' + komm.betreff + '</div>' +
-                '<div style="font-size:13px;color:#475569;line-height:1.7;white-space:pre-wrap;background:#f8fafc;padding:16px;border-radius:8px;border:1px solid #e2e8f0;">' + komm.inhalt + '</div>' +
-                '<div style="margin-top:16px;display:flex;align-items:center;gap:8px;">' +
-                    '<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:' + statusColor + ';"></span>' +
-                    '<span style="font-size:12px;color:' + statusColor + ';font-weight:500;">' + komm.status + '</span>' +
-                '</div>' +
-            '</div>';
-
-        overlay.appendChild(modal);
-        document.body.appendChild(overlay);
-    }
-}
 
 // ========================================
 // OPT-15: KOMMUNIKATIONSHISTORIE-UPGRADE
@@ -397,7 +262,7 @@ function showKommToast(msg) {
     if (existing) existing.remove();
     var toast = document.createElement('div');
     toast.id = 'kommToast';
-    toast.style.cssText = 'position:fixed;bottom:24px;right:24px;background:#1e293b;color:white;padding:12px 20px;border-radius:8px;font-size:13px;z-index:10000;box-shadow:0 4px 12px rgba(0,0,0,0.15);transition:opacity 0.3s;';
+    toast.style.cssText = 'position:fixed;bottom:24px;right:24px;background:#1e293b;color:white;padding:12px 20px;border-radius:8px;font-size:15px;z-index:10000;box-shadow:0 4px 12px rgba(0,0,0,0.15);transition:opacity 0.3s;';
     toast.textContent = msg;
     document.body.appendChild(toast);
     setTimeout(function() {
@@ -596,23 +461,18 @@ function renderDynamicKommTimeline(kundenName) {
 }
 window.renderDynamicKommTimeline = renderDynamicKommTimeline;
 
-// Legacy-Funktion fuer Kompatibilitaet
+// Legacy-Funktion für Kompatibilität
 function toggleKundenFida() {
     switchKundenTab('fida');
 }
 
-// Window-Exports
-window.viewKommunikation = viewKommunikation;
-window.getKommunikationForKunde = getKommunikationForKunde;
-window.getCurrentKundenName = getCurrentKundenName;
-window.formatKommDatum = formatKommDatum;
-window.daysAgo = daysAgo;
-window.getKommTypLabel = getKommTypLabel;
-window.getKommStatusLabel = getKommStatusLabel;
-window.showKommToast = showKommToast;
-window.renderChatbotEntry = renderChatbotEntry;
-window.renderKiKontaktEntry = renderKiKontaktEntry;
-window.renderPortalEntry = renderPortalEntry;
-window.renderStandardKommEntry = renderStandardKommEntry;
+// ── WINDOW EXPORTS ──
+window.renderKommSummary = renderKommSummary;
+window.renderKommSalesImpulse = renderKommSalesImpulse;
+window.kommImpulsAktion = kommImpulsAktion;
+window.renderKommFilter = renderKommFilter;
+window.filterKomm = filterKomm;
+window.renderDynamicKommTimeline = renderDynamicKommTimeline;
+window.toggleKundenFida = toggleKundenFida;
 
 window.__registerModule('kunden-detail-komm.js');

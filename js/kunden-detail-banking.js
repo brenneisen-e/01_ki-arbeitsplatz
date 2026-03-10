@@ -601,10 +601,10 @@ function fillBankKundenDetail(kundenName) {
     var clvDetailEl = document.getElementById('bankClvDetailContent');
     if (clvDetailEl) {
         clvDetailEl.innerHTML = '<div class="clv-summary" style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;padding:16px;">' +
-            '<div style="text-align:center;padding:12px;background:#f8fafc;border-radius:8px;"><div style="font-size:11px;color:#64748b;text-transform:uppercase;">Gesamt CLV</div><div style="font-size:20px;font-weight:700;color:#1e293b;">\u20AC' + clv.value.toLocaleString('de-DE') + '</div></div>' +
-            '<div style="text-align:center;padding:12px;background:#f8fafc;border-radius:8px;"><div style="font-size:11px;color:#64748b;text-transform:uppercase;">Segment</div><div style="font-size:20px;font-weight:700;color:#1e293b;">' + clv.segment + '</div></div>' +
-            '<div style="text-align:center;padding:12px;background:#f8fafc;border-radius:8px;"><div style="font-size:11px;color:#64748b;text-transform:uppercase;">Haltedauer (Prognose)</div><div style="font-size:20px;font-weight:700;color:#1e293b;">' + clv.haltedauer + ' J.</div></div>' +
-            '<div style="text-align:center;padding:12px;background:#f8fafc;border-radius:8px;"><div style="font-size:11px;color:#64748b;text-transform:uppercase;">Abwanderungsrisiko</div><div style="font-size:20px;font-weight:700;color:' + (clv.churnRisk < 10 ? '#16a34a' : '#dc2626') + ';">' + clv.churnRisk + '%</div></div>' +
+            '<div style="text-align:center;padding:12px;background:#f8fafc;border-radius:8px;"><div style="font-size:13px;color:#64748b;text-transform:uppercase;">Gesamt CLV</div><div style="font-size:20px;font-weight:700;color:#1e293b;">\u20AC' + clv.value.toLocaleString('de-DE') + '</div></div>' +
+            '<div style="text-align:center;padding:12px;background:#f8fafc;border-radius:8px;"><div style="font-size:13px;color:#64748b;text-transform:uppercase;">Segment</div><div style="font-size:20px;font-weight:700;color:#1e293b;">' + clv.segment + '</div></div>' +
+            '<div style="text-align:center;padding:12px;background:#f8fafc;border-radius:8px;"><div style="font-size:13px;color:#64748b;text-transform:uppercase;">Haltedauer (Prognose)</div><div style="font-size:20px;font-weight:700;color:#1e293b;">' + clv.haltedauer + ' J.</div></div>' +
+            '<div style="text-align:center;padding:12px;background:#f8fafc;border-radius:8px;"><div style="font-size:13px;color:#64748b;text-transform:uppercase;">Abwanderungsrisiko</div><div style="font-size:20px;font-weight:700;color:' + (clv.churnRisk < 10 ? '#16a34a' : '#dc2626') + ';">' + clv.churnRisk + '%</div></div>' +
             '</div>';
     }
     
@@ -666,7 +666,7 @@ function fillBankStickyBar(kundenName, retailData, kd, clv) {
             avatarEl.innerHTML = '<img src="' + fotoPath + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">';
         } else {
             var bg = kd.avatarBg || '#64748b';
-            avatarEl.innerHTML = '<div style="width:100%;height:100%;border-radius:50%;background:' + bg + ';display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:white;">' + getInitialsBerater(kundenName) + '</div>';
+            avatarEl.innerHTML = '<div style="width:100%;height:100%;border-radius:50%;background:' + bg + ';display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:white;">' + getInitialsBerater(kundenName) + '</div>';
         }
     }
     
@@ -676,7 +676,7 @@ function fillBankStickyBar(kundenName, retailData, kd, clv) {
         var stars = '';
         for (var i = 1; i <= 5; i++) {
             var filled = (kd.nps.score / 2) >= i;
-            stars += '<span style="color:' + (filled ? '#f59e0b' : '#e2e8f0') + ';font-size:12px;">\u2605</span>';
+            stars += '<span style="color:' + (filled ? '#f59e0b' : '#e2e8f0') + ';font-size:14px;">\u2605</span>';
         }
         npsEl.innerHTML = stars;
     }
@@ -736,10 +736,10 @@ function fillBankFida(kd) {
     if (statusEl) {
         var hasConsent = kd.fidaVertraege.length > 0;
         statusEl.innerHTML = '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;padding:16px;">' +
-            '<div style="text-align:center;padding:12px;background:#f8fafc;border-radius:8px;"><div style="font-size:11px;color:#64748b;">Consent-Status</div><div style="font-size:14px;font-weight:700;"><span class="status-badge ' + (hasConsent?'aktiv':'storniert') + '">' + (hasConsent?'Aktiv':'Nicht erteilt') + '</span></div></div>' +
-            '<div style="text-align:center;padding:12px;background:#f8fafc;border-radius:8px;"><div style="font-size:11px;color:#64748b;">Erteilt am</div><div style="font-size:14px;font-weight:700;">' + (hasConsent ? kd.fidaVertraege[0].consent : '&mdash;') + '</div></div>' +
-            '<div style="text-align:center;padding:12px;background:#f8fafc;border-radius:8px;"><div style="font-size:11px;color:#64748b;">Gültig bis</div><div style="font-size:14px;font-weight:700;">' + (hasConsent ? kd.fidaVertraege[0].gueltig : '&mdash;') + '</div></div>' +
-            '<div style="text-align:center;padding:12px;background:#f8fafc;border-radius:8px;"><div style="font-size:11px;color:#64748b;">Datenquellen</div><div style="font-size:14px;font-weight:700;">' + kd.fidaVertraege.length + '</div></div>' +
+            '<div style="text-align:center;padding:12px;background:#f8fafc;border-radius:8px;"><div style="font-size:13px;color:#64748b;">Consent-Status</div><div style="font-size:14px;font-weight:700;"><span class="status-badge ' + (hasConsent?'aktiv':'storniert') + '">' + (hasConsent?'Aktiv':'Nicht erteilt') + '</span></div></div>' +
+            '<div style="text-align:center;padding:12px;background:#f8fafc;border-radius:8px;"><div style="font-size:13px;color:#64748b;">Erteilt am</div><div style="font-size:14px;font-weight:700;">' + (hasConsent ? kd.fidaVertraege[0].consent : '&mdash;') + '</div></div>' +
+            '<div style="text-align:center;padding:12px;background:#f8fafc;border-radius:8px;"><div style="font-size:13px;color:#64748b;">Gültig bis</div><div style="font-size:14px;font-weight:700;">' + (hasConsent ? kd.fidaVertraege[0].gueltig : '&mdash;') + '</div></div>' +
+            '<div style="text-align:center;padding:12px;background:#f8fafc;border-radius:8px;"><div style="font-size:13px;color:#64748b;">Datenquellen</div><div style="font-size:14px;font-weight:700;">' + kd.fidaVertraege.length + '</div></div>' +
             '</div>';
     }
     
@@ -762,9 +762,9 @@ function fillBankFida(kd) {
     var bezahlenEl = document.getElementById('bankFidaBezahlenContent');
     if (bezahlenEl && kd.fidaVertraege.length > 0) {
         bezahlenEl.innerHTML = '<div style="padding:16px;"><div class="fida-finance-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">' +
-            '<div style="padding:12px;background:#f0fdf4;border-radius:8px;text-align:center;"><div style="font-size:11px;color:#64748b;">Nettoeinkommen</div><div style="font-size:18px;font-weight:700;color:#16a34a;">\u20AC' + kd.nettoeinkommen.toLocaleString('de-DE') + '</div></div>' +
-            '<div style="padding:12px;background:#fef2f2;border-radius:8px;text-align:center;"><div style="font-size:11px;color:#64748b;">Ausgaben (Schnitt)</div><div style="font-size:18px;font-weight:700;color:#dc2626;">\u20AC' + Math.round(kd.nettoeinkommen * 0.65).toLocaleString('de-DE') + '</div></div>' +
-            '<div style="padding:12px;background:#eff6ff;border-radius:8px;text-align:center;"><div style="font-size:11px;color:#64748b;">Freies Einkommen</div><div style="font-size:18px;font-weight:700;color:#2563eb;">\u20AC' + Math.round(kd.nettoeinkommen * 0.35).toLocaleString('de-DE') + '</div></div>' +
+            '<div style="padding:12px;background:#f0fdf4;border-radius:8px;text-align:center;"><div style="font-size:13px;color:#64748b;">Nettoeinkommen</div><div style="font-size:18px;font-weight:700;color:#16a34a;">\u20AC' + kd.nettoeinkommen.toLocaleString('de-DE') + '</div></div>' +
+            '<div style="padding:12px;background:#fef2f2;border-radius:8px;text-align:center;"><div style="font-size:13px;color:#64748b;">Ausgaben (Schnitt)</div><div style="font-size:18px;font-weight:700;color:#dc2626;">\u20AC' + Math.round(kd.nettoeinkommen * 0.65).toLocaleString('de-DE') + '</div></div>' +
+            '<div style="padding:12px;background:#eff6ff;border-radius:8px;text-align:center;"><div style="font-size:13px;color:#64748b;">Freies Einkommen</div><div style="font-size:18px;font-weight:700;color:#2563eb;">\u20AC' + Math.round(kd.nettoeinkommen * 0.35).toLocaleString('de-DE') + '</div></div>' +
             '</div></div>';
     }
 
@@ -776,7 +776,7 @@ function fillBankFida(kd) {
         var geldmarkt = kd.sparenGeldmarkt || [];
         if (geldmarkt.length > 0) {
             var totalGeld = 0;
-            sparenHtml += '<div class="bedarfsfeld-section" style="padding:0 16px 16px;"><h4 class="section-subtitle" style="font-size:13px;font-weight:600;color:#475569;margin:16px 0 8px;">Geldmarkt</h4>' +
+            sparenHtml += '<div class="bedarfsfeld-section" style="padding:0 16px 16px;"><h4 class="section-subtitle" style="font-size:15px;font-weight:600;color:#475569;margin:16px 0 8px;">Geldmarkt</h4>' +
                 '<table class="kunden-table fida-table"><thead><tr><th>Produkt</th><th>Anbieter</th><th>Volumen</th><th>Zinssatz</th><th>Laufzeit</th></tr></thead><tbody>';
             geldmarkt.forEach(function(g) {
                 totalGeld += g.volumen;
@@ -792,7 +792,7 @@ function fillBankFida(kd) {
         var kapital = kd.sparenKapitalmarkt || [];
         if (kapital.length > 0) {
             var totalKap = 0;
-            sparenHtml += '<div class="bedarfsfeld-section" style="padding:0 16px 16px;"><h4 class="section-subtitle" style="font-size:13px;font-weight:600;color:#475569;margin:16px 0 8px;">Kapitalmarkt</h4>' +
+            sparenHtml += '<div class="bedarfsfeld-section" style="padding:0 16px 16px;"><h4 class="section-subtitle" style="font-size:15px;font-weight:600;color:#475569;margin:16px 0 8px;">Kapitalmarkt</h4>' +
                 '<table class="kunden-table fida-table"><thead><tr><th>Produkt</th><th>Anbieter</th><th>Volumen</th><th>Sparrate</th><th>Performance YTD</th></tr></thead><tbody>';
             kapital.forEach(function(k) {
                 totalKap += k.volumen;
@@ -817,7 +817,7 @@ function fillBankFida(kd) {
         // Eigene Versicherungen (Genossenschaftliche Partner)
         var eigen = kd.versicherungenEigen || [];
         if (eigen.length > 0) {
-            absHtml += '<div class="bedarfsfeld-section" style="padding:0 16px 16px;"><h4 class="section-subtitle" style="font-size:13px;font-weight:600;color:#475569;margin:16px 0 8px;">Eigene Versicherungen (R+V / VR)</h4>' +
+            absHtml += '<div class="bedarfsfeld-section" style="padding:0 16px 16px;"><h4 class="section-subtitle" style="font-size:15px;font-weight:600;color:#475569;margin:16px 0 8px;">Eigene Versicherungen (R+V / VR)</h4>' +
                 '<table class="kunden-table fida-table"><thead><tr><th>Versicherung</th><th>Anbieter</th><th>Deckungssumme</th><th>Tarifart</th><th>Leistungsumfang</th><th>Prämie</th><th>Vertragsnr.</th></tr></thead><tbody>';
             eigen.forEach(function(v) {
                 var tags = v.leistungen.map(function(l) { return '<span class="leistung-tag" style="display:inline-block;font-size:10px;background:#f1f5f9;color:#475569;padding:2px 6px;border-radius:4px;margin:1px;">' + l + '</span>'; }).join(' ');
@@ -831,7 +831,7 @@ function fillBankFida(kd) {
         // Fremd-Versicherungen (Wettbewerber)
         var fremd = kd.versicherungenFremd || [];
         if (fremd.length > 0) {
-            absHtml += '<div class="bedarfsfeld-section open-finance-only" style="padding:0 16px 16px;"><h4 class="section-subtitle" style="font-size:13px;font-weight:600;color:#475569;margin:16px 0 8px;">Wettbewerber-Versicherungen</h4>' +
+            absHtml += '<div class="bedarfsfeld-section open-finance-only" style="padding:0 16px 16px;"><h4 class="section-subtitle" style="font-size:15px;font-weight:600;color:#475569;margin:16px 0 8px;">Wettbewerber-Versicherungen</h4>' +
                 '<table class="kunden-table fida-table"><thead><tr><th>Versicherung</th><th>Anbieter</th><th>Deckungssumme</th><th>Tarifart</th><th>Leistungsumfang</th><th>Selbstbehalt</th><th>Prämie</th><th>Kündigungsfrist</th></tr></thead><tbody>';
             fremd.forEach(function(v) {
                 var tags = v.leistungen.map(function(l) { return '<span class="leistung-tag" style="display:inline-block;font-size:10px;background:#f1f5f9;color:#475569;padding:2px 6px;border-radius:4px;margin:1px;">' + l + '</span>'; }).join(' ');
@@ -868,7 +868,7 @@ function fillBankFida(kd) {
             // Hinweise
             finanz.forEach(function(f) {
                 if (f.hinweis) {
-                    finHtml += '<div style="margin:0 16px 16px;padding:12px 16px;background:#fef3c7;border-left:4px solid #f59e0b;border-radius:4px;font-size:13px;color:#92400e;">' +
+                    finHtml += '<div style="margin:0 16px 16px;padding:12px 16px;background:#fef3c7;border-left:4px solid #f59e0b;border-radius:4px;font-size:15px;color:#92400e;">' +
                         '<strong>Hinweis:</strong> ' + f.hinweis + '</div>';
                 }
             });
@@ -883,4 +883,5 @@ function fillBankFida(kd) {
 window.fillBankKundenDetail = fillBankKundenDetail;
 window.switchBankKundenTab = switchBankKundenTab;
 window.bankMockKunden = bankMockKunden;
+
 window.__registerModule('kunden-detail-banking.js');

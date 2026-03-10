@@ -1,5 +1,10 @@
-// Split aus kunden-detail-banking.js – Banking Feature-Tabs: Impulse, Finanzplanung, Kommunikation
-// Abhaengigkeiten: kunden-detail-banking.js (bankMockKunden), kunden-detail-komm.js (formatKommDatum, getKommStatusLabel, kommTypConfig)
+// ============================================================
+// kunden-detail-banking-features.js – Banking Feature-Tabs (Impulse, Finanzplanung, Kommunikation)
+// Split aus kunden-detail-banking.js (OPT-18)
+// Abhängigkeiten: kunden-detail-banking.js (bankMockKunden),
+//                 kunden-detail-komm.js (formatKommDatum, getKommStatusLabel)
+// ============================================================
+
 
 // ── FILL IMPULSE TAB ──
 function fillBankImpulse(kundenName, kd, retailData) {
@@ -7,7 +12,7 @@ function fillBankImpulse(kundenName, kd, retailData) {
     if (!el) return;
 
     var impulse = [];
-    // Impulse generiert durch Truuco Impulsmanager (Data Intelligence Platform / genoGPT)
+    // Impulse generiert durch KI-Vertriebsassistent
     if (!retailData || !retailData.finanzplan) {
         impulse.push({
             id: 'bank-impuls-finanzplan', icon:'plan',
@@ -19,7 +24,7 @@ function fillBankImpulse(kundenName, kd, retailData) {
                 { label:'Erkannte Situation', value:'Kein VR-FinanzPlan hinterlegt' },
                 { label:'Empfehlung', value:'Ganzheitliche Finanzplanung erstellen, alle Lebensbereiche abdecken' }
             ],
-            produkt: 'VR-FinanzPlan', empfehlung: 'Ganzheitliche Beratung inkl. Vorsorge, Absicherung, Verm\u00f6gen'
+            produkt: 'VR-FinanzPlan', empfehlung: 'Ganzheitliche Beratung inkl. Vorsorge, Absicherung, Vermögen'
         });
     }
     if (kd.fidaVertraege.length > 0) {
@@ -37,20 +42,8 @@ function fillBankImpulse(kundenName, kd, retailData) {
             ],
             produkt: 'Kontokonsolidierung', empfehlung: 'Drittbank-Produkte in VR-Angebote \u00fcberf\u00fchren'
         });
-    } else {
-        impulse.push({
-            id: 'bank-impuls-fida', icon:'fida',
-            title:'FIDA-Consent einholen',
-            beschr:'Open Finance Daten fehlen. Consent anfordern f\u00fcr vollst\u00e4ndige Analyse.',
-            prio:'medium', quelle:'System',
-            herleitung: [
-                { label:'Datenquelle', value:'System - Keine Open Finance Daten vorhanden' },
-                { label:'Erkannte Situation', value:'Kundeneinwilligung f\u00fcr FIDA fehlt' },
-                { label:'Empfehlung', value:'FIDA-Consent im n\u00e4chsten Beratungsgespr\u00e4ch einholen' }
-            ],
-            produkt: 'FIDA-Consent', empfehlung: 'Open Finance Einwilligung f\u00fcr ganzheitliche Analyse'
-        });
     }
+    // Note: FIDA-Consent einholen is NOT an impulse - it belongs in the FIDA/Open Finance tab
     if (kd.konten.length < 4) {
         impulse.push({
             id: 'bank-impuls-cross', icon:'cross',
@@ -81,7 +74,7 @@ function fillBankImpulse(kundenName, kd, retailData) {
         });
     }
 
-    // Baufinanzierung Anschluss pruefen
+    // Baufinanzierung Anschluss prüfen
     var hasBaufi = kd.konten.some(function(k) { return k.produkt.indexOf('Baufinanzierung') >= 0; });
     if (hasBaufi) {
         var baufi = kd.konten.find(function(k) { return k.produkt.indexOf('Baufinanzierung') >= 0; });
@@ -93,7 +86,7 @@ function fillBankImpulse(kundenName, kd, retailData) {
             herleitung: [
                 { label:'Datenquelle', value:'Interne Kreditdaten' },
                 { label:'Erkannte Situation', value: baufi.produkt + ' \u2013 ' + baufi.details },
-                { label:'Restschuld', value: baufi.saldo ? '\u20ac' + Math.abs(baufi.saldo).toLocaleString('de-DE') : 'k.A.' },
+                { label:'Restschuld', value: baufi.saldo ? '\u20AC' + Math.abs(baufi.saldo).toLocaleString('de-DE') : 'k.A.' },
                 { label:'Empfehlung', value:'Fr\u00fchzeitig Anschlusskonditionen anbieten, Prolongation sichern' }
             ],
             produkt: 'Anschlussfinanzierung', empfehlung: 'G\u00fcnstigere Konditionen f\u00fcr Restschuld'
@@ -103,12 +96,12 @@ function fillBankImpulse(kundenName, kd, retailData) {
     impulse.push({
         id: 'bank-impuls-vorsorge', icon:'vorsorge',
         title:'Altersvorsorge pr\u00fcfen (Union Investment / R+V)',
-        beschr:'Versorgungsl\u00fccke im Alter durch Truuco Impulsmanager identifiziert. Verbundpartner-Beratung empfohlen.',
-        prio:'medium', quelle:'Truuco',
+        beschr:'Versorgungsl\u00fccke im Alter durch KI-Vertriebsassistent identifiziert. Verbundpartner-Beratung empfohlen.',
+        prio:'medium', quelle:'KI-Vertriebsassistent',
         herleitung: [
-            { label:'Datenquelle', value:'Truuco Impulsmanager \u2013 genoGPT Einkommens- und Vorsorgeanalyse' },
-            { label:'Erkannte Situation', value:'Nettoeinkommen \u20ac' + (kd.nettoeinkommen || 0).toLocaleString('de-DE') + ' \u2013 Versorgungsl\u00fccke wahrscheinlich' },
-            { label:'Verbundpartner', value:'Union Investment (UniProfiRente, Verm\u00f6genPlus), R+V (BU-Versicherung), Schw\u00e4bisch Hall (Wohn-Riester)' },
+            { label:'Datenquelle', value:'KI-Vertriebsassistent \u2013 Einkommens- und Vorsorgeanalyse' },
+            { label:'Erkannte Situation', value:'Nettoeinkommen \u20AC' + (kd.nettoeinkommen || 0).toLocaleString('de-DE') + ' \u2013 Versorgungsl\u00fccke wahrscheinlich' },
+            { label:'Verbundpartner', value:'Union Investment (UniProfiRente, VermögenPlus), R+V (BU-Versicherung), Schwäbisch Hall (Wohn-Riester)' },
             { label:'Empfehlung', value:'Rentenl\u00fccken-Analyse via VR-FinanzPlan (OKP), Zusatzvorsorge \u00fcber Verbundpartner empfehlen' }
         ],
         produkt: 'Altersvorsorge', empfehlung: 'Rentenl\u00fccke schlie\u00dfen mit VR-Vorsorgekonzept'
@@ -182,27 +175,27 @@ function fillBankFinanzplanung(kd) {
         var variableAusgaben = Math.round(einkommen * 0.20);
         var frei = einkommen - fixeAusgaben - variableAusgaben;
         var sparquote = Math.round(frei / einkommen * 100);
-
+        
         liqEl.innerHTML = '<div style="padding:16px;">' +
-            '<div class="liquiditaet-row" style="display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid #f1f5f9;"><span style="flex:1;font-size:13px;">Nettoeinkommen (fix)</span><div style="width:200px;height:8px;background:#e2e8f0;border-radius:4px;overflow:hidden;"><div style="height:100%;width:100%;background:#16a34a;border-radius:4px;"></div></div><span style="width:100px;text-align:right;font-weight:600;">\u20ac' + einkommen.toLocaleString('de-DE') + '</span></div>' +
-            '<div class="liquiditaet-row" style="display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid #f1f5f9;"><span style="flex:1;font-size:13px;">Fixe Ausgaben</span><div style="width:200px;height:8px;background:#e2e8f0;border-radius:4px;overflow:hidden;"><div style="height:100%;width:45%;background:#dc2626;border-radius:4px;"></div></div><span style="width:100px;text-align:right;font-weight:600;color:#dc2626;">-\u20ac' + fixeAusgaben.toLocaleString('de-DE') + '</span></div>' +
-            '<div class="liquiditaet-row" style="display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid #f1f5f9;"><span style="flex:1;font-size:13px;">Variable Ausgaben</span><div style="width:200px;height:8px;background:#e2e8f0;border-radius:4px;overflow:hidden;"><div style="height:100%;width:20%;background:#f59e0b;border-radius:4px;"></div></div><span style="width:100px;text-align:right;font-weight:600;color:#f59e0b;">-\u20ac' + variableAusgaben.toLocaleString('de-DE') + '</span></div>' +
-            '<div class="liquiditaet-row" style="display:flex;align-items:center;gap:12px;padding:12px 0;border-top:2px solid #1e293b;margin-top:8px;"><span style="flex:1;font-size:14px;font-weight:700;">Freies Einkommen</span><div style="width:200px;height:8px;background:#e2e8f0;border-radius:4px;overflow:hidden;"><div style="height:100%;width:' + (frei/einkommen*100) + '%;background:#2563eb;border-radius:4px;"></div></div><span style="width:100px;text-align:right;font-weight:700;color:#2563eb;">\u20ac' + frei.toLocaleString('de-DE') + '</span></div>' +
-            '<div style="margin-top:16px;padding:12px;background:#eff6ff;border-radius:8px;border-left:3px solid #2563eb;"><strong>Sparquote: ' + sparquote + '%</strong> &mdash; ' + (sparquote >= 20 ? 'Gute Sparquote. Potential f\u00fcr Anlage-Beratung.' : 'Unter Durchschnitt. Budgetberatung empfohlen.') + '</div>' +
+            '<div class="liquiditaet-row" style="display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid #f1f5f9;"><span style="flex:1;font-size:15px;">Nettoeinkommen (fix)</span><div style="width:200px;height:8px;background:#e2e8f0;border-radius:4px;overflow:hidden;"><div style="height:100%;width:100%;background:#16a34a;border-radius:4px;"></div></div><span style="width:100px;text-align:right;font-weight:600;">\u20AC' + einkommen.toLocaleString('de-DE') + '</span></div>' +
+            '<div class="liquiditaet-row" style="display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid #f1f5f9;"><span style="flex:1;font-size:15px;">Fixe Ausgaben</span><div style="width:200px;height:8px;background:#e2e8f0;border-radius:4px;overflow:hidden;"><div style="height:100%;width:45%;background:#dc2626;border-radius:4px;"></div></div><span style="width:100px;text-align:right;font-weight:600;color:#dc2626;">-\u20AC' + fixeAusgaben.toLocaleString('de-DE') + '</span></div>' +
+            '<div class="liquiditaet-row" style="display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid #f1f5f9;"><span style="flex:1;font-size:15px;">Variable Ausgaben</span><div style="width:200px;height:8px;background:#e2e8f0;border-radius:4px;overflow:hidden;"><div style="height:100%;width:20%;background:#f59e0b;border-radius:4px;"></div></div><span style="width:100px;text-align:right;font-weight:600;color:#f59e0b;">-\u20AC' + variableAusgaben.toLocaleString('de-DE') + '</span></div>' +
+            '<div class="liquiditaet-row" style="display:flex;align-items:center;gap:12px;padding:12px 0;border-top:2px solid #1e293b;margin-top:8px;"><span style="flex:1;font-size:14px;font-weight:700;">Freies Einkommen</span><div style="width:200px;height:8px;background:#e2e8f0;border-radius:4px;overflow:hidden;"><div style="height:100%;width:' + (frei/einkommen*100) + '%;background:#2563eb;border-radius:4px;"></div></div><span style="width:100px;text-align:right;font-weight:700;color:#2563eb;">\u20AC' + frei.toLocaleString('de-DE') + '</span></div>' +
+            '<div style="margin-top:16px;padding:12px;background:#eff6ff;border-radius:8px;border-left:3px solid #2563eb;"><strong>Sparquote: ' + sparquote + '%</strong> &mdash; ' + (sparquote >= 20 ? 'Gute Sparquote. Potential für Anlage-Beratung.' : 'Unter Durchschnitt. Budgetberatung empfohlen.') + '</div>' +
             '</div>';
     }
-
+    
     var sparEl = document.getElementById('bankSparzieleContent');
     if (sparEl) {
         sparEl.innerHTML = '<div style="padding:16px;">' +
             '<div style="padding:16px;border:1px solid #e2e8f0;border-radius:8px;margin-bottom:12px;">' +
             '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;"><strong>Eigenheim-Renovierung</strong><span class="status-badge aktiv">Aktiv</span></div>' +
             '<div style="height:8px;background:#e2e8f0;border-radius:4px;overflow:hidden;margin-bottom:4px;"><div style="height:100%;width:65%;background:#16a34a;border-radius:4px;"></div></div>' +
-            '<div style="display:flex;justify-content:space-between;font-size:12px;color:#64748b;"><span>\u20ac32.500 von \u20ac50.000</span><span>65%</span></div></div>' +
+            '<div style="display:flex;justify-content:space-between;font-size:14px;color:#64748b;"><span>\u20AC32.500 von \u20AC50.000</span><span>65%</span></div></div>' +
             '<div style="padding:16px;border:1px solid #e2e8f0;border-radius:8px;">' +
             '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;"><strong>Ausbildung Kinder</strong><span class="status-badge antrag">Geplant</span></div>' +
             '<div style="height:8px;background:#e2e8f0;border-radius:4px;overflow:hidden;margin-bottom:4px;"><div style="height:100%;width:28%;background:#2563eb;border-radius:4px;"></div></div>' +
-            '<div style="display:flex;justify-content:space-between;font-size:12px;color:#64748b;"><span>\u20ac14.000 von \u20ac50.000</span><span>28%</span></div></div>' +
+            '<div style="display:flex;justify-content:space-between;font-size:14px;color:#64748b;"><span>\u20AC14.000 von \u20AC50.000</span><span>28%</span></div></div>' +
             '</div>';
     }
 }
@@ -247,17 +240,17 @@ function fillBankKommunikation(kd) {
             html += '<div class="komm-item chatbot" data-typ="chatbot" style="display:flex;gap:16px;padding:16px 0;border-bottom:1px solid #f1f5f9;border-left:3px solid ' + config.farbe + ';padding-left:12px;">' +
                 '<div class="komm-icon" style="width:36px;height:36px;border-radius:50%;background:' + config.farbe + '15;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:' + config.farbe + ';">' + config.icon + '</div>' +
                 '<div class="komm-content" style="flex:1;">' +
-                '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;"><span style="font-size:12px;color:' + config.farbe + ';font-weight:600;">' + config.label + ' &middot; ' + datum + '</span></div>' +
+                '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;"><span style="font-size:14px;color:' + config.farbe + ';font-weight:600;">' + config.label + ' &middot; ' + datum + '</span></div>' +
                 '<div style="font-weight:600;margin-bottom:8px;">' + k.betreff + '</div>' +
                 '<div class="chatbot-verlauf" style="display:flex;flex-direction:column;gap:6px;margin-bottom:8px;">';
             k.verlauf.forEach(function(msg) {
                 var isKunde = msg.rolle === 'kunde';
                 html += '<div style="display:flex;flex-direction:column;align-items:' + (isKunde ? 'flex-start' : 'flex-end') + ';">' +
                     '<span style="font-size:10px;color:#94a3b8;margin-bottom:2px;">' + (isKunde ? 'Kunde' : 'Bot') + '</span>' +
-                    '<span style="display:inline-block;padding:8px 12px;border-radius:' + (isKunde ? '12px 12px 12px 0' : '12px 12px 0 12px') + ';background:' + (isKunde ? '#f3f4f6' : config.farbe + '15') + ';font-size:12px;max-width:80%;color:#1e293b;">' + msg.text + '</span></div>';
+                    '<span style="display:inline-block;padding:8px 12px;border-radius:' + (isKunde ? '12px 12px 12px 0' : '12px 12px 0 12px') + ';background:' + (isKunde ? '#f3f4f6' : config.farbe + '15') + ';font-size:14px;max-width:80%;color:#1e293b;">' + msg.text + '</span></div>';
             });
             html += '</div>';
-            if (k.ergebnis) html += '<div style="display:inline-block;padding:4px 10px;border-radius:12px;background:#fef3c7;color:#92400e;font-size:11px;font-weight:600;margin-bottom:6px;">' + k.ergebnis + '</div>';
+            if (k.ergebnis) html += '<div style="display:inline-block;padding:4px 10px;border-radius:12px;background:#fef3c7;color:#92400e;font-size:13px;font-weight:600;margin-bottom:6px;">' + k.ergebnis + '</div>';
             html += '</div></div>';
             return;
         }
@@ -266,9 +259,9 @@ function fillBankKommunikation(kd) {
         html += '<div class="komm-item" data-typ="' + typKey + '" style="display:flex;gap:16px;padding:16px 0;border-bottom:1px solid #f1f5f9;border-left:3px solid ' + config.farbe + ';padding-left:12px;">' +
             '<div class="komm-icon" style="width:36px;height:36px;border-radius:50%;background:' + config.farbe + '15;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:' + config.farbe + ';">' + config.icon + '</div>' +
             '<div class="komm-content" style="flex:1;">' +
-            '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;"><span style="font-size:12px;color:' + config.farbe + ';">' + config.label + ' &middot; ' + datum + '</span><span class="status-badge" style="background:' + color + '20;color:' + color + ';padding:2px 8px;border-radius:4px;font-size:11px;">' + statusLabel + '</span></div>' +
+            '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;"><span style="font-size:14px;color:' + config.farbe + ';">' + config.label + ' &middot; ' + datum + '</span><span class="status-badge" style="background:' + color + '20;color:' + color + ';padding:2px 8px;border-radius:4px;font-size:13px;">' + statusLabel + '</span></div>' +
             '<div style="font-weight:600;margin-bottom:2px;">' + k.betreff + '</div>' +
-            '<div style="font-size:12px;color:#64748b;">' + (k.inhalt || '') + '</div>' +
+            '<div style="font-size:14px;color:#64748b;">' + (k.inhalt || '') + '</div>' +
             '</div></div>';
     });
     el.innerHTML = html;

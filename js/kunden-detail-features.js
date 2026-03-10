@@ -8,7 +8,7 @@ function getTierStorageKey() {
     return 'tierInfo_' + name;
 }
 
-// SVG-Icons fuer Hund und Katze (einfarbig, modern)
+// SVG-Icons für Hund und Katze (einfarbig, modern)
 var tierSvgIcons = {
     Hund: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><ellipse cx="7" cy="4" rx="2" ry="2.5"/><ellipse cx="17" cy="4" rx="2" ry="2.5"/><ellipse cx="4" cy="10" rx="2" ry="2.5"/><ellipse cx="20" cy="10" rx="2" ry="2.5"/><path d="M12 22c-3 0-7-3-7-7a7 7 0 0114 0c0 4-4 7-7 7z"/></svg>',
     Katze: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><path d="M4 7V2l4 4"/><path d="M20 7V2l-4 4"/><circle cx="12" cy="14" r="7"/><circle cx="10" cy="12.5" r="1" fill="currentColor"/><circle cx="14" cy="12.5" r="1" fill="currentColor"/><path d="M10 15.5s1 1 2 1 2-1 2-1"/></svg>'
@@ -67,7 +67,7 @@ function showSavedTierDisplay(data) {
     // Hinweis-Zeile verstecken
     if (tierHintRow) tierHintRow.style.display = 'none';
 
-    // Popup schliessen
+    // Popup schließen
     closeTierPopup();
 }
 
@@ -124,9 +124,9 @@ function removeTierInfo() {
     // Hint-Zeile wieder anzeigen
     var tierHintRow = document.getElementById('tierHintRow');
     if (tierHintRow) tierHintRow.style.display = 'flex';
-    // Popup schliessen
+    // Popup schließen
     closeTierPopup();
-    // Formular zuruecksetzen
+    // Formular zurücksetzen
     var artSelect = document.getElementById('tierArtSelect');
     var detailsRow = document.getElementById('tierDetailsRow');
     var nameInput = document.getElementById('tierNameInput');
@@ -139,7 +139,7 @@ function removeTierInfo() {
 window.removeTierInfo = removeTierInfo;
 
 // ========================================
-// ANGEBOT ERSTELLEN - KONTEXTMENUE
+// ANGEBOT ERSTELLEN - KONTEXTMENÜ
 // ========================================
 
 function toggleAngebotMenu(event, btn) {
@@ -149,7 +149,7 @@ function toggleAngebotMenu(event, btn) {
     var menu = wrapper.querySelector('.angebot-context-menu');
     if (!menu) return;
 
-    // Alle anderen offenen Menues schliessen
+    // Alle anderen offenen Menüs schließen
     document.querySelectorAll('.angebot-context-menu').forEach(function(m) {
         if (m !== menu) m.style.display = 'none';
     });
@@ -157,7 +157,7 @@ function toggleAngebotMenu(event, btn) {
     // Toggle
     if (menu.style.display === 'none' || !menu.style.display) {
         menu.style.display = 'block';
-        // Klick ausserhalb schliesst das Menue
+        // Klick außerhalb schließt das Menü
         setTimeout(function() {
             document.addEventListener('click', closeAllAngebotMenus);
         }, 0);
@@ -183,7 +183,7 @@ function angebotAction(typ, el) {
     if (typ === 'pdf') {
         showAngebotToast('loading', 'PDF wird generiert: ' + produkt + '...');
         setTimeout(function() {
-            showAngebotToast('success', 'PDF erstellt: Angebot ' + produkt + ' f\u00fcr Peter Schmidt');
+            showAngebotToast('success', 'PDF erstellt: Angebot ' + produkt + ' für Peter Schmidt');
         }, 1800);
     } else if (typ === 'entwurf') {
         showAngebotToast('success', 'Entwurf gespeichert: ' + produkt);
@@ -218,7 +218,7 @@ function openTarifvergleich(produkt, empfehlung) {
     html += '<table class="tv-table"><thead><tr><th>Versicherer</th><th>Tarif</th><th>Beitrag</th><th>Leistung</th><th>Bewertung</th><th></th></tr></thead><tbody>';
     tarife.forEach(function(t) {
         var stars = '';
-        for (var s = 0; s < 5; s++) { stars += s < t.rating ? '<span class="tv-star filled">\u2605</span>' : '<span class="tv-star">\u2606</span>'; }
+        for (var s = 0; s < 5; s++) { stars += s < t.rating ? '<span class="tv-star filled">★</span>' : '<span class="tv-star">☆</span>'; }
         html += '<tr' + (t.empfohlen ? ' class="tv-empfohlen"' : '') + '>' +
             '<td>' + versichererLogoImg(t.versicherer, 18) + ' <strong>' + t.versicherer + '</strong></td>' +
             '<td>' + t.tarif + '</td>' +
@@ -230,17 +230,17 @@ function openTarifvergleich(produkt, empfehlung) {
     });
     html += '</tbody></table>';
 
-    // OPT-13: KI-Begruendung fuer Empfehlung
+    // OPT-13: KI-Begründung für Empfehlung
     var kiReasons = {
-        'Risikolebensversicherung': 'Basierend auf der Hypothekenh\u00f6he (\u20ac285.000) und Familiensituation (2 Kinder) empfehlen wir die Hannoversche T1 Plus: Bestes Preis-Leistungs-Verh\u00e4ltnis bei \u20ac300.000 Versicherungssumme. Die 20-Jahres-Laufzeit deckt die Restlaufzeit der Baufinanzierung ab. Risikosport-Zuschlag wurde ber\u00fccksichtigt.',
-        'Fondsgebundene Rentenversicherung': 'Bei einer Sparrate von \u20ac250/Mon. bietet die Alte Leipziger FR10 den g\u00fcnstigsten Kostenfaktor (Effektivkosten 0,8% p.a.) mit voller ETF-Flexibilit\u00e4t. Steuerliche Vorteile der Versicherungsl\u00f6sung (Halbeink\u00fcnfteverfahren nach 12 Jahren) gegen\u00fcber reinem Depot relevant ab ca. \u20ac50.000 Guthaben.',
-        'Kfz-Versicherung': 'SF8-Analyse zeigt: HDI Kfz-Vollkasko Comfort bietet \u20ac160/Jahr Ersparnis gegen\u00fcber aktuellem Allianz-Vertrag bei gleichwertigem Leistungsumfang. Weltweiter Schutz und Neupreis-Entsch\u00e4digung 24 Monate inklusive. Wechsel zum 01.01. empfohlen.',
-        'BU-Nachversicherung': 'Aktuelle BU-Rente \u20ac1.500/Mon. deckt nur 39% des Nettoeinkommens (empfohlen: 60-80%). ERGO BU Premium Protect bietet Nachversicherungsgarantie ohne erneute Gesundheitspr\u00fcfung bei Gehaltserh\u00f6hung. Infektionsklausel des HDI-Tarifs w\u00e4re bei B\u00fcrot\u00e4tigkeit weniger relevant.'
+        'Risikolebensversicherung': 'Basierend auf der Hypothekenhöhe (€285.000) und Familiensituation (2 Kinder) empfehlen wir die Hannoversche T1 Plus: Bestes Preis-Leistungs-Verhältnis bei €300.000 Versicherungssumme. Die 20-Jahres-Laufzeit deckt die Restlaufzeit der Baufinanzierung ab. Risikosport-Zuschlag wurde berücksichtigt.',
+        'Fondsgebundene Rentenversicherung': 'Bei einer Sparrate von €250/Mon. bietet die Alte Leipziger FR10 den günstigsten Kostenfaktor (Effektivkosten 0,8% p.a.) mit voller ETF-Flexibilität. Steuerliche Vorteile der Versicherungslösung (Halbeinkünfteverfahren nach 12 Jahren) gegenüber reinem Depot relevant ab ca. €50.000 Guthaben.',
+        'Kfz-Versicherung': 'SF8-Analyse zeigt: HDI Kfz-Vollkasko Comfort bietet €160/Jahr Ersparnis gegenüber aktuellem Allianz-Vertrag bei gleichwertigem Leistungsumfang. Weltweiter Schutz und Neupreis-Entschädigung 24 Monate inklusive. Wechsel zum 01.01. empfohlen.',
+        'BU-Nachversicherung': 'Aktuelle BU-Rente €1.500/Mon. deckt nur 39% des Nettoeinkommens (empfohlen: 60-80%). ERGO BU Premium Protect bietet Nachversicherungsgarantie ohne erneute Gesundheitsprüfung bei Gehaltserhöhung. Infektionsklausel des HDI-Tarifs wäre bei Bürotätigkeit weniger relevant.'
     };
     var reason = kiReasons[produkt];
     if (reason) {
         html += '<div class="tv-ki-reasoning">' +
-            '<div class="tv-ki-header"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> KI-Begr\u00fcndung</div>' +
+            '<div class="tv-ki-header"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> KI-Begründung</div>' +
             '<div class="tv-ki-text">' + reason + '</div>' +
         '</div>';
     }
@@ -260,28 +260,28 @@ window.closeTarifvergleich = closeTarifvergleich;
 function getTarifData(produkt) {
     var tarifSets = {
         'Risikolebensversicherung': [
-            { versicherer: 'Hannoversche', tarif: 'T1 Plus', beitrag: '\u20ac18/Mon.', leistung: '\u20ac300.000, 20 J.', rating: 5, empfohlen: true },
-            { versicherer: 'CosmosDirekt', tarif: 'Risiko Comfort', beitrag: '\u20ac21/Mon.', leistung: '\u20ac300.000, 20 J.', rating: 4, empfohlen: false },
-            { versicherer: 'HUK-Coburg', tarif: 'Risiko PLUS', beitrag: '\u20ac24/Mon.', leistung: '\u20ac300.000, 20 J.', rating: 4, empfohlen: false },
-            { versicherer: 'ERGO', tarif: 'RisikoLeben Premium', beitrag: '\u20ac28/Mon.', leistung: '\u20ac300.000, 20 J., Unfall +', rating: 3, empfohlen: false }
+            { versicherer: 'Hannoversche', tarif: 'T1 Plus', beitrag: '€18/Mon.', leistung: '€300.000, 20 J.', rating: 5, empfohlen: true },
+            { versicherer: 'CosmosDirekt', tarif: 'Risiko Comfort', beitrag: '€21/Mon.', leistung: '€300.000, 20 J.', rating: 4, empfohlen: false },
+            { versicherer: 'HUK-Coburg', tarif: 'Risiko PLUS', beitrag: '€24/Mon.', leistung: '€300.000, 20 J.', rating: 4, empfohlen: false },
+            { versicherer: 'ERGO', tarif: 'RisikoLeben Premium', beitrag: '€28/Mon.', leistung: '€300.000, 20 J., Unfall +', rating: 3, empfohlen: false }
         ],
         'Fondsgebundene Rentenversicherung': [
-            { versicherer: 'Alte Leipziger', tarif: 'FR10 Fonds', beitrag: '\u20ac250/Mon.', leistung: 'ETF-basiert, Steuervorteil', rating: 5, empfohlen: true },
-            { versicherer: 'Condor', tarif: 'C78 Comfort', beitrag: '\u20ac250/Mon.', leistung: 'Fondsgeb., flex. Entnahme', rating: 4, empfohlen: false },
-            { versicherer: 'Allianz', tarif: 'InvestFlex', beitrag: '\u20ac260/Mon.', leistung: 'Garantie + Fondsanlage', rating: 4, empfohlen: false },
-            { versicherer: 'Zurich', tarif: 'VorsorgePlus', beitrag: '\u20ac245/Mon.', leistung: 'Fondsgeb., Todesfallschutz', rating: 3, empfohlen: false }
+            { versicherer: 'Alte Leipziger', tarif: 'FR10 Fonds', beitrag: '€250/Mon.', leistung: 'ETF-basiert, Steuervorteil', rating: 5, empfohlen: true },
+            { versicherer: 'Condor', tarif: 'C78 Comfort', beitrag: '€250/Mon.', leistung: 'Fondsgeb., flex. Entnahme', rating: 4, empfohlen: false },
+            { versicherer: 'Allianz', tarif: 'InvestFlex', beitrag: '€260/Mon.', leistung: 'Garantie + Fondsanlage', rating: 4, empfohlen: false },
+            { versicherer: 'Zurich', tarif: 'VorsorgePlus', beitrag: '€245/Mon.', leistung: 'Fondsgeb., Todesfallschutz', rating: 3, empfohlen: false }
         ],
         'Kfz-Versicherung': [
-            { versicherer: 'HDI', tarif: 'Kfz-Vollkasko Comfort', beitrag: '\u20ac52/Mon.', leistung: 'VK, SF8, Weltweit', rating: 5, empfohlen: true },
-            { versicherer: 'HUK-Coburg', tarif: 'VK Plus', beitrag: '\u20ac48/Mon.', leistung: 'VK, SF8, EU-Schutz', rating: 4, empfohlen: false },
-            { versicherer: 'Allianz', tarif: 'AutoBest', beitrag: '\u20ac58/Mon.', leistung: 'VK, Neupreis 24 Mon.', rating: 4, empfohlen: false },
-            { versicherer: 'VHV', tarif: 'Klassik-Garant', beitrag: '\u20ac45/Mon.', leistung: 'VK, SF8, Basis', rating: 3, empfohlen: false }
+            { versicherer: 'HDI', tarif: 'Kfz-Vollkasko Comfort', beitrag: '€52/Mon.', leistung: 'VK, SF8, Weltweit', rating: 5, empfohlen: true },
+            { versicherer: 'HUK-Coburg', tarif: 'VK Plus', beitrag: '€48/Mon.', leistung: 'VK, SF8, EU-Schutz', rating: 4, empfohlen: false },
+            { versicherer: 'Allianz', tarif: 'AutoBest', beitrag: '€58/Mon.', leistung: 'VK, Neupreis 24 Mon.', rating: 4, empfohlen: false },
+            { versicherer: 'VHV', tarif: 'Klassik-Garant', beitrag: '€45/Mon.', leistung: 'VK, SF8, Basis', rating: 3, empfohlen: false }
         ],
         'BU-Nachversicherung': [
-            { versicherer: 'ERGO', tarif: 'BU Premium Protect', beitrag: '\u20ac145/Mon.', leistung: '\u20ac3.700/Mon., NVG', rating: 5, empfohlen: true },
-            { versicherer: 'Alte Leipziger', tarif: 'BU10 Plus', beitrag: '\u20ac138/Mon.', leistung: '\u20ac3.700/Mon., AU-Klausel', rating: 5, empfohlen: false },
-            { versicherer: 'HDI', tarif: 'EGO Top', beitrag: '\u20ac155/Mon.', leistung: '\u20ac3.700/Mon., Infektionsklausel', rating: 4, empfohlen: false },
-            { versicherer: 'N\u00fcrnberger', tarif: 'BU Premium', beitrag: '\u20ac142/Mon.', leistung: '\u20ac3.700/Mon., Dienstunf\u00e4higkeit', rating: 4, empfohlen: false }
+            { versicherer: 'ERGO', tarif: 'BU Premium Protect', beitrag: '€145/Mon.', leistung: '€3.700/Mon., NVG', rating: 5, empfohlen: true },
+            { versicherer: 'Alte Leipziger', tarif: 'BU10 Plus', beitrag: '€138/Mon.', leistung: '€3.700/Mon., AU-Klausel', rating: 5, empfohlen: false },
+            { versicherer: 'HDI', tarif: 'EGO Top', beitrag: '€155/Mon.', leistung: '€3.700/Mon., Infektionsklausel', rating: 4, empfohlen: false },
+            { versicherer: 'Nürnberger', tarif: 'BU Premium', beitrag: '€142/Mon.', leistung: '€3.700/Mon., Dienstunfähigkeit', rating: 4, empfohlen: false }
         ]
     };
     return tarifSets[produkt] || tarifSets['Risikolebensversicherung'];
@@ -325,12 +325,22 @@ function switchKundenTab(tabName) {
     // Render dynamic content for tabs
     if (tabName === 'fida') setTimeout(function() {
         if (typeof renderBezahlenContent === 'function') renderBezahlenContent();
-        if (typeof renderFidaStufe2 === 'function') renderFidaStufe2();
+        // FIDA-Empfehlungen gehoeren in den Potentiale-Tab, nicht in Open Finance
+        // if (typeof renderFidaStufe2 === 'function') renderFidaStufe2();
         if (typeof renderSankeyFlow === 'function') renderSankeyFlow();
         setTimeout(function() { if (typeof addFidaActionButtons === 'function') addFidaActionButtons(); }, 100);
     }, 50);
     if (tabName === 'impulse') setTimeout(function() {
-        if (typeof renderImpulseContent === 'function') renderImpulseContent();
+        var isBankMode = document.querySelector('#kundenDetailPage.bank-mode');
+        if (isBankMode) {
+            // In bank mode, re-render banking potentials into tabImpulse
+            if (typeof renderBankingPotentiale === 'function') {
+                var kName = getCurrentKundenName();
+                renderBankingPotentiale(kName);
+            }
+        } else {
+            if (typeof renderImpulseContent === 'function') renderImpulseContent();
+        }
         if (typeof generateKIImpuls === 'function') generateKIImpuls();
     }, 50);
     if (tabName === 'kommunikation') setTimeout(function() {
@@ -374,11 +384,144 @@ function toggleImpulsDetail(impulsId) {
     }
 }
 
-// Window-Exports fuer globale Verfuegbarkeit
-window.switchKundenTab = switchKundenTab;
+// Kommunikation ansehen
+function viewKommunikation(kommId) {
+    console.log('Kommunikation ansehen:', kommId);
+
+    // Mock-Daten für Kommunikation
+    const kommunikationen = {
+        'email-1': {
+            typ: 'E-Mail',
+            datum: '28.11.2025, 09:15',
+            betreff: 'Kfz-Versicherung: Ihr Vertrag läuft aus',
+            inhalt: `Sehr geehrter Herr Mustermann,
+
+Ihr Kfz-Vertrag bei der Allianz (Kennzeichen: M-AB 1234) läuft am 31.12.2025 aus.
+
+Basierend auf Ihrer Schadenfreiheitsklasse SF12 und Ihren Fahrzeugdaten haben wir ein attraktives Angebot für Sie:
+
+- Haftpflicht + Vollkasko: €520/Jahr (statt €680 aktuell)
+- Ersparnis: €160/Jahr
+
+Interesse? Antworten Sie einfach auf diese E-Mail oder rufen Sie uns an.
+
+Mit freundlichen Grüßen
+Ihre Versicherungsagentur`,
+            status: 'Geöffnet am 28.11.2025, 14:32'
+        },
+        'brief-1': {
+            typ: 'Brief',
+            datum: '15.11.2025',
+            betreff: 'Open Finance Datenfreigabe: Neue Potentiale erkannt',
+            inhalt: `Sehr geehrter Herr Mustermann,
+
+vielen Dank für Ihre Open Finance Datenfreigabe vom 15.03.2024.
+
+Basierend auf der Analyse Ihrer Finanzdaten haben wir folgende Optimierungsmöglichkeiten identifiziert:
+
+1. Risikolebensversicherung
+   Ihre Hypothek (€320.000) ist derzeit nicht abgesichert.
+
+2. Private Altersvorsorge
+   Bei Ihrer Sparrate von €800/Monat können wir Ihre Rentenlücke schließen.
+
+Wir würden uns freuen, diese Möglichkeiten in einem persönlichen Gespräch mit Ihnen zu besprechen.
+
+Mit freundlichen Grüßen
+Ihre Versicherungsagentur`,
+            status: 'Versendet'
+        },
+        'call-1': {
+            typ: 'Telefonat',
+            datum: '10.11.2025, 11:20',
+            betreff: 'Rückruf wegen Altersvorsorge-Angebot',
+            inhalt: `Gesprächsnotiz:
+
+Kunde rief zurück wegen Brief vom 15.11.
+
+- Interesse an fondsgebundener Rentenversicherung
+- Möchte Angebot mit verschiedenen Fonds-Optionen
+- Bevorzugt nachhaltige ETFs
+- Budget: ca. €400/Monat zusätzlich zur bestehenden Sparrate
+
+Termin vereinbart: 12.12.2025, 14:00 Uhr
+Ort: Agentur
+
+Vorbereitung:
+- 3 Angebote mit unterschiedlichen Risikoprofilen
+- ESG-Fonds-Optionen`,
+            status: 'Termin: 12.12.2025'
+        },
+        'email-2': {
+            typ: 'E-Mail',
+            datum: '01.10.2025, 08:00',
+            betreff: 'Willkommen bei Open Finance - Ihre Daten sind jetzt verknüpft',
+            inhalt: `Sehr geehrter Herr Mustermann,
+
+vielen Dank für Ihre Open Finance Datenfreigabe!
+
+Ab sofort können wir Ihnen personalisierte Versicherungsempfehlungen basierend auf Ihrer Finanzsituation anbieten.
+
+Was bedeutet das für Sie?
+- Wir erkennen automatisch, wenn sich Ihre Lebensumstände ändern
+- Sie erhalten nur relevante Angebote
+- Ihre Daten sind sicher und DSGVO-konform geschützt
+
+Ihre freigegebenen Datenquellen:
+- Sparkasse (Girokonto)
+- DWS (Depot)
+- Sparkasse (Hypothekendarlehen)
+- Allianz (Kfz-Versicherung)
+
+Sie können Ihre Einwilligung jederzeit über das Open Finance Dashboard widerrufen.
+
+Mit freundlichen Grüßen
+Ihre Versicherungsagentur`,
+            status: 'Geöffnet am 01.10.2025, 19:45'
+        }
+    };
+
+    const komm = kommunikationen[kommId];
+    if (komm) {
+        // Inline-Modal statt alert() – konsistent mit B-10 Kommunikations-Timeline
+        var existing = document.getElementById('kommDetailOverlay');
+        if (existing) existing.remove();
+
+        var overlay = document.createElement('div');
+        overlay.id = 'kommDetailOverlay';
+        overlay.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:10000;display:flex;align-items:center;justify-content:center;';
+        overlay.onclick = function(e) { if (e.target === overlay) overlay.remove(); };
+
+        var typIcon = komm.typ === 'E-Mail' ? '✉' : (komm.typ === 'Brief' ? '📄' : '📞');
+        var statusColor = komm.status.includes('Geöffnet') ? '#16a34a' : (komm.status.includes('Termin') ? '#2563eb' : '#64748b');
+
+        var modal = document.createElement('div');
+        modal.style.cssText = 'background:white;border-radius:12px;max-width:560px;width:90%;max-height:80vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.3);';
+        modal.innerHTML =
+            '<div style="padding:20px 24px;border-bottom:1px solid #e2e8f0;display:flex;justify-content:space-between;align-items:center;">' +
+                '<div style="display:flex;align-items:center;gap:10px;">' +
+                    '<span style="font-size:20px;">' + typIcon + '</span>' +
+                    '<div><div style="font-weight:700;font-size:15px;color:#1e293b;">' + komm.typ + '</div>' +
+                    '<div style="font-size:14px;color:#64748b;">' + komm.datum + '</div></div>' +
+                '</div>' +
+                '<button onclick="document.getElementById(\'kommDetailOverlay\').remove()" style="background:none;border:none;cursor:pointer;font-size:20px;color:#94a3b8;padding:4px;">&times;</button>' +
+            '</div>' +
+            '<div style="padding:24px;">' +
+                '<div style="font-weight:600;font-size:14px;color:#1e293b;margin-bottom:16px;">' + komm.betreff + '</div>' +
+                '<div style="font-size:15px;color:#475569;line-height:1.7;white-space:pre-wrap;background:#f8fafc;padding:16px;border-radius:8px;border:1px solid #e2e8f0;">' + komm.inhalt + '</div>' +
+                '<div style="margin-top:16px;display:flex;align-items:center;gap:8px;">' +
+                    '<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:' + statusColor + ';"></span>' +
+                    '<span style="font-size:14px;color:' + statusColor + ';font-weight:500;">' + komm.status + '</span>' +
+                '</div>' +
+            '</div>';
+
+        overlay.appendChild(modal);
+        document.body.appendChild(overlay);
+    }
+}
+
+// Window-Exports für globale Verfügbarkeit
 window.toggleImpulsDetail = toggleImpulsDetail;
-window.showAngebotToast = showAngebotToast;
-window.viewKommunikation = typeof viewKommunikation === 'function' ? viewKommunikation : function() {};
 
 // ========================================
 // OPT-03: TAB-BADGES & PRIORISIERUNG
@@ -472,11 +615,14 @@ window.updateTabBadges = updateTabBadges;
 
 // ========================================
 
-// -- BANKING KUNDEN-DETAIL (merged from kunden-detail-bank.js) --
+// ── BANKING KUNDEN-DETAIL (merged from kunden-detail-bank.js) ──
 
 /* ============================================================
    B-10 KUNDEN-DETAIL BANK  –  Banking Customer Detail
    Mirrors kunden-detail.js (A-10) structure exactly
    ============================================================ */
+
+// Fallback export for viewKommunikation (loaded from kunden-detail-komm.js)
+window.viewKommunikation = typeof viewKommunikation === 'function' ? viewKommunikation : function() {};
 
 window.__registerModule('kunden-detail-features.js');

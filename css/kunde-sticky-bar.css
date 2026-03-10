@@ -40,7 +40,7 @@
 }
 
 .kunde-sticky-kid {
-    font-size: 12px;
+    font-size: 14px;
     color: #64748b;
     background: #e2e8f0;
     padding: 2px 8px;
@@ -60,7 +60,7 @@
 }
 
 .kunde-sticky-kpi-label {
-    font-size: 11px;
+    font-size: 13px;
     font-weight: 600;
     color: #64748b;
     text-transform: uppercase;
@@ -68,7 +68,7 @@
 }
 
 .kunde-sticky-kpi-value {
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 700;
     color: #1e293b;
 }
@@ -105,7 +105,7 @@
 }
 
 .nps-style-label {
-    font-size: 13px;
+    font-size: 15px;
     font-weight: 600;
     color: white;
     min-width: 220px;
@@ -139,7 +139,7 @@
 .nps-bar-fill.detractor { background: #ef4444; }
 
 .nps-bar-value {
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 700;
     min-width: 16px;
     color: #334155;
@@ -152,7 +152,7 @@
     gap: 6px;
     padding: 4px 12px;
     border-radius: 20px;
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 600;
     color: white;
 }
@@ -173,7 +173,7 @@
 }
 
 .nps-star {
-    font-size: 14px;
+    font-size: 15px;
     line-height: 1;
 }
 
@@ -189,7 +189,7 @@
 }
 
 .nps-gauge-value {
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 700;
     color: #334155;
 }
@@ -199,7 +199,7 @@
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    font-size: 13px;
+    font-size: 15px;
     font-weight: 600;
     color: #334155;
 }
@@ -221,7 +221,7 @@
     padding: 8px 16px;
     border: 2px solid #e2e8f0;
     border-radius: 8px;
-    font-size: 14px;
+    font-size: 15px;
     width: 280px;
     transition: border-color 0.2s;
 }
@@ -245,7 +245,7 @@
     background: #f8fafc;
     padding: 12px 16px;
     text-align: left;
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 600;
     color: #64748b;
     text-transform: uppercase;
@@ -256,7 +256,7 @@
 .kundenliste-table tbody td {
     padding: 12px 16px;
     border-bottom: 1px solid #f1f5f9;
-    font-size: 14px;
+    font-size: 15px;
     color: #334155;
 }
 
@@ -272,7 +272,7 @@
     width: 28px;
     height: 28px;
     border-radius: 50%;
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 700;
     color: white;
 }
@@ -325,7 +325,7 @@
     display: inline-flex;
     align-items: center;
     gap: 4px;
-    font-size: 12px;
+    font-size: 14px;
     color: #94a3b8;
     margin-left: 12px;
 }
@@ -342,7 +342,7 @@
 }
 
 .nps-detail-title {
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 700;
     color: #1e293b;
     margin-bottom: 4px;
@@ -356,7 +356,7 @@
 }
 
 .nps-survey-date {
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 600;
     color: #475569;
     background: #f1f5f9;
@@ -365,7 +365,7 @@
 }
 
 .nps-survey-kampagne {
-    font-size: 12px;
+    font-size: 14px;
     color: #64748b;
 }
 
@@ -383,7 +383,7 @@
 }
 
 .nps-detail-label {
-    font-size: 13px;
+    font-size: 15px;
     color: #475569;
 }
 

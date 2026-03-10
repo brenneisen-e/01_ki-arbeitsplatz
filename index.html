@@ -4986,8 +4986,8 @@
                         </table>
                     </div>
 
-                    <!-- OPT-09: Open Finance Stufe 2 - Quantifizierte Empfehlungen -->
-                    <div id="fidaStufe2Container"></div>
+                    <!-- OPT-09: FIDA-Empfehlungen nur im Potentiale-Tab, nicht hier im Open Finance Tab -->
+                    <div id="fidaStufe2Container" style="display:none;"></div>
 
                     <!-- OPT-06: Sankey-Flow Open Finance -->
                     <div class="kunden-card sankey-flow-card">
@@ -5989,6 +5989,11 @@
                                 </div>
                             </div>
                             <div id="kiImpulseInlineAE"></div>
+                        </div>
+                        <!-- Source footer: same in both modes -->
+                        <div class="impulse-source-footer">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M12 2a10 10 0 0110 10c0 5.52-4.48 10-10 10S2 17.52 2 12 6.48 2 12 2z"/><path d="M12 6v6l4 2"/></svg>
+                            Quelle: KI-Vertriebsassistent
                         </div>
                     </div>
                     </div><!-- /impulseContent -->
@@ -7066,7 +7071,7 @@
         box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         pointer-events: none;
         z-index: 1000;
-        font-size: 13px;
+        font-size: 15px;
         border: 1px solid #e2e8f0;
     "></div>
     </div>
@@ -7324,7 +7329,7 @@
                 <div class="bgav-sim-stamm-divider"></div>
 
                 <div class="bgav-sim-stamm-section-title">
-                    Veränderung Vergütung ggü.<br>Durchschnitt WJ 23/24 und 24/25<br><span style="font-size:11px; opacity:0.7;">(simuliert)</span>
+                    Veränderung Vergütung ggü.<br>Durchschnitt WJ 23/24 und 24/25<br><span style="font-size:13px; opacity:0.7;">(simuliert)</span>
                 </div>
 
                 <!-- Comparison chart (Canvas) -->
@@ -7650,7 +7655,7 @@
         </div>
         <div>
           <div style="font-size:14px;font-weight:700;color:white;">genoGPT Vertriebs-Assistent</div>
-          <div style="font-size:11px;color:rgba(255,255,255,0.6);">Truuco Impulsmanager | Open Finance | DZ BANK Gruppe</div>
+          <div style="font-size:13px;color:rgba(255,255,255,0.6);">Truuco Impulsmanager | Open Finance | DZ BANK Gruppe</div>
         </div>
       </div>
       <button class="berater-chat-close" onclick="toggleBeraterChat()">
@@ -7660,7 +7665,7 @@
     <div class="berater-chat-body" id="beraterChatBody">
       <div class="berater-chat-welcome">
         <div style="font-size:14px;font-weight:700;color:#1e293b;margin-bottom:8px;">genoGPT Vertriebs-Assistent</div>
-        <div style="font-size:12px;color:#64748b;margin-bottom:16px;">Ich analysiere Ihr Kundenportfolio mit der Truuco Data Intelligence Platform, identifiziere Cross-Selling-Potentiale und nutze FIDA-Daten f&uuml;r gezielte Verbundpartner-Empfehlungen.</div>
+        <div style="font-size:14px;color:#64748b;margin-bottom:16px;">Ich analysiere Ihr Kundenportfolio mit der Truuco Data Intelligence Platform, identifiziere Cross-Selling-Potentiale und nutze FIDA-Daten f&uuml;r gezielte Verbundpartner-Empfehlungen.</div>
         <div class="berater-chat-examples">
           <button class="berater-example-btn" data-question="Top 5 Kunden nach Ertragspotenzial">Top 5 Ertragspotenzial</button>
           <button class="berater-example-btn" data-question="Welche Kunden brauchen einen VR-FinanzPlan?">FinanzPlan-Potenziale</button>

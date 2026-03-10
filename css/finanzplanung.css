@@ -12,7 +12,7 @@
     color: #047857;
     padding: 4px 10px;
     border-radius: 12px;
-    font-size: 11px;
+    font-size: 13px;
     font-weight: 500;
 }
 
@@ -38,7 +38,7 @@
     align-items: center;
     gap: 8px;
     min-width: 280px;
-    font-size: 14px;
+    font-size: 15px;
     color: #475569;
 }
 
@@ -117,7 +117,7 @@
     background: #f0fdf4;
     border-radius: 10px;
     border-left: 4px solid #10b981;
-    font-size: 13px;
+    font-size: 15px;
     color: #166534;
 }
 
@@ -196,7 +196,7 @@
 }
 
 .sparziel-date {
-    font-size: 13px;
+    font-size: 15px;
     color: #64748b;
 }
 
@@ -206,7 +206,7 @@
     gap: 6px;
     padding: 6px 12px;
     border-radius: 20px;
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 600;
 }
 
@@ -263,7 +263,7 @@
 .progress-labels {
     display: flex;
     justify-content: space-between;
-    font-size: 12px;
+    font-size: 14px;
     color: #64748b;
 }
 
@@ -283,7 +283,7 @@
 }
 
 .detail-label {
-    font-size: 11px;
+    font-size: 13px;
     color: #64748b;
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -311,7 +311,7 @@
     padding: 10px 14px;
     background: #fef9c3;
     border-radius: 8px;
-    font-size: 13px;
+    font-size: 15px;
     color: #92400e;
 }
 
@@ -325,7 +325,7 @@
     color: white;
     border: none;
     border-radius: 8px;
-    font-size: 13px;
+    font-size: 15px;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -344,7 +344,7 @@
     background: #f8fafc;
     border: 1px solid #e2e8f0;
     border-radius: 8px;
-    font-size: 13px;
+    font-size: 15px;
     font-weight: 500;
     color: #475569;
     cursor: pointer;
@@ -375,7 +375,7 @@
 }
 
 .simulator-input-group label {
-    font-size: 13px;
+    font-size: 15px;
     font-weight: 500;
     color: #475569;
 }
@@ -411,7 +411,7 @@
     min-width: 100px;
     text-align: right;
     font-weight: 600;
-    font-size: 14px;
+    font-size: 15px;
     color: #1e293b;
 }
 
@@ -461,7 +461,7 @@
 
 .renten-bar .bar-label {
     margin-top: 10px;
-    font-size: 11px;
+    font-size: 13px;
     color: #64748b;
     text-align: center;
 }
@@ -485,7 +485,7 @@
 }
 
 .luecke-label {
-    font-size: 11px;
+    font-size: 13px;
     color: #92400e;
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -522,7 +522,7 @@
 }
 
 .ergebnis-label {
-    font-size: 13px;
+    font-size: 15px;
     color: #64748b;
 }
 
@@ -580,7 +580,7 @@
 }
 
 .produkt-vorteile {
-    font-size: 13px;
+    font-size: 15px;
     color: #15803d;
 }
 
@@ -633,12 +633,12 @@
 }
 
 .legende-label {
-    font-size: 13px;
+    font-size: 15px;
     color: #64748b;
 }
 
 .legende-value {
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 600;
     color: #1e293b;
 }
@@ -662,7 +662,7 @@
 .impuls-situation h4,
 .impuls-empfehlungen h4 {
     margin: 0 0 12px 0;
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 600;
     color: #475569;
 }
@@ -676,7 +676,7 @@
 .impuls-situation li {
     padding: 8px 0;
     border-bottom: 1px solid #f1f5f9;
-    font-size: 14px;
+    font-size: 15px;
     color: #64748b;
 }
 
@@ -722,7 +722,7 @@
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    font-size: 13px;
+    font-size: 15px;
     font-weight: 700;
     color: white;
     flex-shrink: 0;
@@ -747,12 +747,12 @@
 }
 
 .empfehlung-text strong {
-    font-size: 14px;
+    font-size: 15px;
     color: #1e293b;
 }
 
 .empfehlung-text span {
-    font-size: 12px;
+    font-size: 14px;
     color: #64748b;
 }
 
@@ -789,7 +789,7 @@
     .liquiditaet-value {
         min-width: unset;
         text-align: left;
-        font-size: 14px;
+        font-size: 15px;
     }
 
     .liquiditaet-bar-container {
@@ -854,7 +854,7 @@
 
     .slider-value {
         min-width: 80px;
-        font-size: 13px;
+        font-size: 15px;
     }
 }
 
@@ -869,12 +869,12 @@
     }
 
     .liquiditaet-label {
-        font-size: 13px;
+        font-size: 15px;
         gap: 6px;
     }
 
     .liquiditaet-value {
-        font-size: 13px;
+        font-size: 15px;
     }
 
     .liquiditaet-value.result {
@@ -883,7 +883,7 @@
 
     .liquiditaet-insight {
         padding: 12px;
-        font-size: 12px;
+        font-size: 14px;
     }
 
     .sparziele-container {
@@ -906,12 +906,12 @@
     }
 
     .sparziel-title h4 {
-        font-size: 14px;
+        font-size: 15px;
     }
 
     .sparziel-status {
         padding: 4px 10px;
-        font-size: 11px;
+        font-size: 13px;
     }
 
     .sparziel-details {
@@ -946,7 +946,7 @@
     }
 
     .renten-bar .bar-value {
-        font-size: 14px;
+        font-size: 15px;
     }
 
     .renten-bar .bar-label {
@@ -962,7 +962,7 @@
     }
 
     .ergebnis-label {
-        font-size: 12px;
+        font-size: 14px;
     }
 
     .ergebnis-value {
@@ -974,15 +974,15 @@
     }
 
     .empfehlung-header h4 {
-        font-size: 14px;
+        font-size: 15px;
     }
 
     .produkt-name {
-        font-size: 14px;
+        font-size: 15px;
     }
 
     .produkt-vorteile {
-        font-size: 12px;
+        font-size: 14px;
     }
 
     .szenario-vergleich {
@@ -1009,15 +1009,15 @@
     }
 
     .legende-label {
-        font-size: 11px;
+        font-size: 13px;
     }
 
     .legende-value {
-        font-size: 12px;
+        font-size: 14px;
     }
 
     .impuls-situation li {
-        font-size: 13px;
+        font-size: 15px;
         padding: 6px 0;
     }
 
@@ -1029,15 +1029,15 @@
     .prio-badge {
         width: 24px;
         height: 24px;
-        font-size: 11px;
-    }
-
-    .empfehlung-text strong {
         font-size: 13px;
     }
 
+    .empfehlung-text strong {
+        font-size: 15px;
+    }
+
     .empfehlung-text span {
-        font-size: 11px;
+        font-size: 13px;
     }
 
     .impuls-actions {

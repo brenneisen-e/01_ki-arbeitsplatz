@@ -82,6 +82,10 @@ function loadUserName() {
 function openAgenturView() {
     console.log('Agenturansicht öffnen...');
 
+    // Erstaufruf: immer mit ERGO Logo und Farben starten
+    if (typeof setViewMode === 'function') setViewMode('ao');
+    if (typeof setInsurer === 'function') setInsurer('ergo');
+
     // Prüfe ob Daten vorhanden sind
     const rawData = window.dailyRawData || (typeof dailyRawData !== 'undefined' ? dailyRawData : null);
     const agenturen = (rawData && rawData.length > 0 && typeof getAgenturen === 'function') ? getAgenturen() : [];

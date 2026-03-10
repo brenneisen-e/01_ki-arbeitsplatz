@@ -241,6 +241,13 @@ var bankConfig = {
 function setBank(bankKey) {
     if (!bankConfig[bankKey]) return;
     selectedBank = bankKey;
+
+    // Auto-switch to bank mode if currently in insurance mode
+    if (viewMode.indexOf('bank-') !== 0) {
+        setViewMode('bank-retail');
+        return; // setViewMode calls setBank again via applyViewMode
+    }
+
     var cfg = bankConfig[bankKey];
 
     // Update banking mode labels in dropdown
@@ -347,6 +354,12 @@ function loadBankGridLogos() {
 function setInsurer(insurerKey) {
     if (!insurerConfig[insurerKey]) return;
     selectedInsurer = insurerKey;
+
+    // Auto-switch to insurance mode if currently in bank mode
+    if (viewMode.indexOf('bank-') === 0) {
+        setViewMode('ao');
+        return; // setViewMode calls setInsurer again via applyViewMode
+    }
 
     var cfg = insurerConfig[insurerKey];
 

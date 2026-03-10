@@ -176,6 +176,31 @@
                         }
                     }
                 ]
+            },
+
+            // Potentiale (UNIFY-01)
+            potentiale: {
+                kpiBoxes: [
+                    { key: 'consent', label: 'Consent-Kunden', icon: 'users', format: 'number' },
+                    { key: 'identified', label: 'Identifizierte Potentiale', icon: 'star', format: 'number' },
+                    { key: 'volume', label: 'Geschätztes Prämienvolumen', icon: 'euro', format: 'currency' },
+                    { key: 'conversion', label: 'Conversion-Rate', icon: 'trending-up', format: 'percent' }
+                ],
+                pipelineSteps: ['identifiziert', 'angeschrieben', 'termin', 'abgeschlossen'],
+                statusLabels: {
+                    identifiziert: 'Identifiziert',
+                    angeschrieben: 'Angeschrieben',
+                    termin: 'Termin vereinbart',
+                    abgeschlossen: 'Abgeschlossen'
+                },
+                branding: 'KI-Vertriebsassistent',
+                brandingBadge: 'Open Finance KI-Analyse',
+                produktTypen: ['Risikolebensversicherung', 'Fondspolice', 'Kfz-Wechsel', 'BU-Nachversicherung', 'Rechtsschutz', 'Hausrat', 'Umschuldung'],
+                quellenLabels: ['Open Finance', 'Bestandsdaten', 'PSD2'],
+                getPotentiale: function() { return window.vertriebsPotentiale || []; },
+                openKundenDetail: function(name, id) {
+                    if (typeof openKundenDetail === 'function') openKundenDetail(name);
+                }
             }
         },
 
@@ -348,6 +373,31 @@
                         }
                     }
                 ]
+            },
+
+            // Potentiale (UNIFY-01)
+            potentiale: {
+                kpiBoxes: [
+                    { key: 'total', label: 'Potentiale gesamt', icon: 'zap', format: 'number' },
+                    { key: 'prioritized', label: 'Davon priorisiert', icon: 'star', format: 'number' },
+                    { key: 'volume', label: 'Ertragspotential', icon: 'euro', format: 'currency' },
+                    { key: 'conversion', label: 'Conversion-Rate', icon: 'trending-up', format: 'percent' }
+                ],
+                pipelineSteps: ['identifiziert', 'angeschrieben', 'termin', 'abgeschlossen'],
+                statusLabels: {
+                    identifiziert: 'Identifiziert',
+                    angeschrieben: 'Angeschrieben',
+                    termin: 'Termin vereinbart',
+                    abgeschlossen: 'Abgeschlossen'
+                },
+                branding: 'Truuco Impulsmanager',
+                brandingBadge: 'KI-generiert via Data Intelligence Platform',
+                produktTypen: ['Anschlussfinanzierung', 'VR-FinanzPlan', 'VermögenPlus', 'FIDA-Consent + Wero', 'R+V Risikolebensversicherung', 'VR-KlimaKredit', 'DZ PRIVATBANK Nachfolge'],
+                quellenLabels: ['Truuco', 'FIDA', 'Impulsmanager', 'Truuco/FIDA'],
+                getPotentiale: function() { return window.bankPotentiale || []; },
+                openKundenDetail: function(name, id) {
+                    if (typeof openBankKundenDetail === 'function') openBankKundenDetail(name, id);
+                }
             }
         }
     };

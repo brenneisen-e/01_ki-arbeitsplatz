@@ -873,21 +873,80 @@ function renderKIImpulseResult(impulse, isFallback) {
     return html;
 }
 
+// Render KI impulses as inline impuls-items within Whitespots/Änderungsgeschäft categories
+function renderKIImpulseInline(impulse, isFallback) {
+    var badgeText = isFallback ? 'Regelbasiert' : 'KI-generiert';
+    var wsHtml = '';
+    var aeHtml = '';
+
+    for (var i = 0; i < impulse.length; i++) {
+        var imp = impulse[i];
+        var prioClass = imp.prioritaet === 'Hoch' ? 'high' : 'medium';
+        var prioLabel = imp.prioritaet === 'Hoch' ? 'Hohe Priorität' : 'Mittlere Priorität';
+        var detailId = 'ki-inline-' + i;
+
+        var itemHtml = '<div class="impuls-item highlight clickable" onclick="toggleImpulsDetail(\'' + detailId + '\')">' +
+            '<div class="impuls-icon">' +
+                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>' +
+            '</div>' +
+            '<div class="impuls-text">' +
+                '<strong>' + imp.titel + '</strong>' +
+                '<p><span class="fida-source-badge small">' + badgeText + '</span> ' + imp.beschreibung + '</p>' +
+            '</div>' +
+            '<div style="text-align:right;flex-shrink:0;">' +
+                (imp.volumen ? '<div class="impuls-volumen-badge">' + imp.volumen + '</div>' : '') +
+            '</div>' +
+            '<span class="impuls-priority ' + prioClass + '">' + prioLabel + '</span>' +
+            '<span class="impuls-expand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="6 9 12 15 18 9"></polyline></svg></span>' +
+        '</div>' +
+        '<div class="impuls-detail" id="' + detailId + '" style="display:none;">' +
+            '<div class="impuls-detail-section"><h4>Herleitung</h4>' +
+            '<div class="herleitung-grid">' +
+                '<div class="herleitung-item"><span class="herleitung-label">Quelle</span><span class="herleitung-value">' + badgeText + ' – Data Intelligence Platform</span></div>' +
+                '<div class="herleitung-item"><span class="herleitung-label">Erkenntnis</span><span class="herleitung-value">' + imp.beschreibung + '</span></div>' +
+            '</div></div>' +
+        '</div>';
+
+        // Classify: items with "Wechsel", "Anpass", "Optimier", "Erhöh", "Nachver" → Änderungsgeschäft, rest → Whitespots
+        var titel = imp.titel.toLowerCase();
+        if (titel.indexOf('wechsel') >= 0 || titel.indexOf('anpass') >= 0 || titel.indexOf('optimier') >= 0 ||
+            titel.indexOf('erhöh') >= 0 || titel.indexOf('nachver') >= 0 || titel.indexOf('aufstock') >= 0 ||
+            titel.indexOf('umschuld') >= 0 || titel.indexOf('konsoli') >= 0) {
+            aeHtml += itemHtml;
+        } else {
+            wsHtml += itemHtml;
+        }
+    }
+
+    return { whitespots: wsHtml, aenderung: aeHtml };
+}
+
 function generateKIImpuls() {
+    var wsContainer = document.getElementById('kiImpulseInlineWS');
+    var aeContainer = document.getElementById('kiImpulseInlineAE');
+    var hasInline = wsContainer || aeContainer;
+
+    // Fallback: render into kiImpulsCard if inline containers not available
     var container = document.getElementById('kiImpulsCard');
-    if (!container) return;
+    if (!hasInline && !container) return;
 
     var ctx = getKundenContext();
-    var cacheKey = ctx.name + '_' + (ctx.isBanking ? 'bank' : 'vers');
+    var cacheKey = ctx.name + '_' + (ctx.isBanking ? 'bank' : 'vers') + '_inline';
 
-    // Check cache
-    if (window._kiImpulsCache[cacheKey]) {
-        container.innerHTML = window._kiImpulsCache[cacheKey];
+    // Check cache for inline
+    if (hasInline && window._kiImpulsCache[cacheKey]) {
+        if (wsContainer) wsContainer.innerHTML = window._kiImpulsCache[cacheKey].whitespots || '';
+        if (aeContainer) aeContainer.innerHTML = window._kiImpulsCache[cacheKey].aenderung || '';
         return;
     }
 
-    // Show skeleton
-    container.innerHTML = renderKIImpulsSkeleton();
+    // Show inline skeleton
+    if (hasInline) {
+        var skelItem = '<div class="impuls-item" style="opacity:0.5;"><div class="impuls-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg></div><div class="impuls-text"><strong>KI-Impulse werden generiert...</strong><p style="background:#e5e7eb;height:12px;border-radius:4px;width:70%;margin:6px 0;"></p></div></div>';
+        if (wsContainer) wsContainer.innerHTML = skelItem;
+    } else if (container) {
+        container.innerHTML = renderKIImpulsSkeleton();
+    }
 
     var apiUrl = window.CLAUDE_WORKER_URL || 'https://vst-claude-api.eike-3e2.workers.dev';
     var systemPrompt = buildKISystemPrompt(ctx);
@@ -917,17 +976,26 @@ function generateKIImpuls() {
         var impulse = parseKIResponse(text);
         if (impulse.length === 0) throw new Error('No impulses parsed');
 
-        var html = renderKIImpulseResult(impulse, false);
-        container.innerHTML = html;
-        window._kiImpulsCache[cacheKey] = html;
+        renderKIImpulseToContainers(impulse, false, hasInline, wsContainer, aeContainer, container, cacheKey);
     })
     .catch(function(err) {
         console.warn('KI-Impuls API Fehler, nutze Fallback:', err.message);
         var fallback = getFallbackImpulse(ctx);
-        var html = renderKIImpulseResult(fallback, true);
+        renderKIImpulseToContainers(fallback, true, hasInline, wsContainer, aeContainer, container, cacheKey);
+    });
+}
+
+function renderKIImpulseToContainers(impulse, isFallback, hasInline, wsContainer, aeContainer, container, cacheKey) {
+    if (hasInline) {
+        var inline = renderKIImpulseInline(impulse, isFallback);
+        if (wsContainer) wsContainer.innerHTML = inline.whitespots;
+        if (aeContainer) aeContainer.innerHTML = inline.aenderung;
+        window._kiImpulsCache[cacheKey] = inline;
+    } else if (container) {
+        var html = renderKIImpulseResult(impulse, isFallback);
         container.innerHTML = html;
         window._kiImpulsCache[cacheKey] = html;
-    });
+    }
 }
 window.generateKIImpuls = generateKIImpuls;
 

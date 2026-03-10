@@ -14,7 +14,7 @@ window.__LOAD_ORDER = [
     'kunden-detail-core.js', 'kunden-detail-data.js',
     'kunden-detail-features.js', 'kunden-detail-komm.js', 'kunden-detail-impulse.js',
     'kunden-detail-banking.js', 'kunden-detail-banking-features.js',
-    'clv.js', 'bezahlen.js', 'potentiale.js', 'kommunikation-display.js', 'autocomplete.js',
+    'clv.js', 'bezahlen.js', 'potentiale.js', 'quellen-clustering.js', 'kommunikation-display.js', 'autocomplete.js',
     'user-mode.js', 'makler-modus.js', 'makler-kunden.js', 'makler-b2b.js', 'makler-overview.js',
     'mrh-trowe-modes.js', 'mrh-trowe-render.js', 'mrh-trowe-detail.js',
     'screen-recorder.js', 'screenshot.js',

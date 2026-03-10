@@ -1038,6 +1038,249 @@
 }
 
 /* ========================================
+   OPT-19: QUELLEN-CLUSTERING
+   ======================================== */
+
+/* Quellen-Badges (inline pills above impuls title) */
+.quellen-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-bottom: 6px;
+    width: 100%;
+}
+
+.quellen-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1.4;
+    background: color-mix(in srgb, var(--q-color) 12%, transparent);
+    color: var(--q-color);
+    border: 1px solid color-mix(in srgb, var(--q-color) 25%, transparent);
+    white-space: nowrap;
+}
+
+.quellen-badge-icon {
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.quellen-badge-icon svg {
+    width: 11px;
+    height: 11px;
+    stroke: var(--q-color);
+}
+
+.quellen-badge-label {
+    font-size: 11px;
+}
+
+/* Quellen-Herleitung (inside detail panel) */
+.quellen-herleitung {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 12px;
+    padding: 10px 12px;
+    background: #f8fafc;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+}
+
+.quellen-herleitung-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    font-size: 13px;
+    line-height: 1.5;
+    padding: 3px 0;
+    border-left: 3px solid var(--q-color);
+    padding-left: 8px;
+}
+
+.quellen-herleitung-icon {
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.quellen-herleitung-icon svg {
+    width: 12px;
+    height: 12px;
+    stroke: var(--q-color);
+}
+
+.quellen-herleitung-label {
+    font-weight: 600;
+    color: var(--q-color);
+    white-space: nowrap;
+}
+
+.quellen-herleitung-detail {
+    color: #475569;
+}
+
+/* Quellen-Filter Bar */
+.quellen-filter-bar {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    padding: 8px 16px 12px;
+}
+
+.quellen-filter-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 12px;
+    border: 1px solid color-mix(in srgb, var(--q-color) 40%, transparent);
+    background: transparent;
+    border-radius: 16px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--q-color);
+    transition: all 0.15s;
+    white-space: nowrap;
+}
+
+.quellen-filter-btn:hover {
+    background: color-mix(in srgb, var(--q-color) 8%, transparent);
+}
+
+.quellen-filter-btn.active {
+    background: var(--q-color);
+    color: white;
+    border-color: var(--q-color);
+}
+
+.quellen-filter-btn.active svg {
+    stroke: white;
+}
+
+.quellen-filter-icon {
+    display: inline-flex;
+    align-items: center;
+}
+
+.quellen-filter-icon svg {
+    width: 12px;
+    height: 12px;
+    stroke: currentColor;
+}
+
+/* Ansicht-Toggle (Radio-Button-Gruppe) */
+.ansicht-toggle {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 16px 4px;
+}
+
+.ansicht-toggle-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #64748b;
+    margin-right: 4px;
+}
+
+.ansicht-toggle-btn {
+    padding: 5px 14px;
+    border: 1px solid #e2e8f0;
+    background: white;
+    border-radius: 16px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    color: #64748b;
+    transition: all 0.15s;
+}
+
+.ansicht-toggle-btn:hover {
+    background: #f1f5f9;
+    color: #1e293b;
+}
+
+.ansicht-toggle-btn.active {
+    background: #1e293b;
+    color: white;
+    border-color: #1e293b;
+}
+
+/* Quellen-Gruppe (Datenquellen-Ansicht) */
+.quellen-gruppe {
+    margin-bottom: 16px;
+}
+
+.quellen-gruppe-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--q-color);
+    padding: 10px 16px 6px;
+    border-bottom: 2px solid color-mix(in srgb, var(--q-color) 30%, transparent);
+    margin-bottom: 8px;
+}
+
+.quellen-gruppe-icon {
+    display: inline-flex;
+    align-items: center;
+}
+
+.quellen-gruppe-icon svg {
+    width: 16px;
+    height: 16px;
+    stroke: var(--q-color);
+}
+
+.quellen-gruppe-items {
+    padding: 0 8px;
+}
+
+/* Category badge in datenquelle view */
+.quellen-kat-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-right: 4px;
+}
+
+.quellen-kat-badge.whitespot {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.quellen-kat-badge.anpassung {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .quellen-filter-bar {
+        padding: 6px 12px 8px;
+    }
+    .quellen-filter-btn {
+        font-size: 11px;
+        padding: 4px 8px;
+    }
+    .ansicht-toggle {
+        flex-wrap: wrap;
+    }
+}
+
+/* ========================================
    OPT-06: SANKEY-FLOW
    ======================================== */
 

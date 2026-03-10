@@ -244,7 +244,9 @@ function renderImpulseKanban() {
                     '<button class="action-btn secondary small icon-only" onclick="event.stopPropagation()" title="Termin vereinbaren">' + actionIcons.termin + '</button></div></div>';
             }
             var ofClass = (i.source === 'Open Finance') ? ' open-finance-only' : '';
+            var quellenBadgesHtml = (typeof renderQuellenBadges === 'function' && i.quellen) ? renderQuellenBadges(i.quellen) : '';
             return '<div class="impulse-kanban-card' + ofClass + '" onclick="toggleKanbanDetail(\'' + i.id + '\')">' +
+                quellenBadgesHtml +
                 '<div class="impulse-kanban-card-header">' +
                 '<span class="impulse-kanban-card-icon">' + i.icon + '</span>' +
                 '<div class="impulse-kanban-card-title">' + i.title + '</div>' +
@@ -339,9 +341,10 @@ function renderImpulseTable() {
         }
 
         var ofClass = (i.source === 'Open Finance') ? ' open-finance-only' : '';
+        var tblQuellenHtml = (typeof renderQuellenBadges === 'function' && i.quellen) ? renderQuellenBadges(i.quellen) : '';
         return '<tr class="impulse-table-row' + ofClass + '" onclick="toggleTableDetail(\'' + i.id + '\')">' +
             '<td><span class="impulse-table-icon">' + i.icon + '</span></td>' +
-            '<td><strong>' + i.title + '</strong><div class="impulse-table-desc">' + i.desc + '</div></td>' +
+            '<td>' + tblQuellenHtml + '<strong>' + i.title + '</strong><div class="impulse-table-desc">' + i.desc + '</div></td>' +
             '<td><span class="impulse-kat-badge ' + i.kategorie + '">' + katLabel + '</span></td>' +
             '<td><span class="impulse-prio-badge ' + i.prioritaet + '">' + prioLabel + '</span></td>' +
             '<td>' + i.source + '</td>' +

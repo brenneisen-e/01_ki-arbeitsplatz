@@ -228,3 +228,306 @@
     color: #92400e;
 }
 
+/* ========================================
+   OPT-15: KOMMUNIKATIONSHISTORIE-UPGRADE
+   ======================================== */
+
+/* KI-Zusammenfassung Card */
+.komm-summary-card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-left: 3px solid var(--primary-color, #2563eb);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 16px;
+}
+
+.komm-summary-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--primary-color, #2563eb);
+    margin-bottom: 10px;
+}
+
+.komm-summary-text {
+    font-size: 13px;
+    line-height: 1.6;
+    color: #475569;
+}
+
+/* Sales-Impulse aus Kommunikation */
+.komm-sales-impulse {
+    margin-bottom: 16px;
+}
+
+.komm-impulse-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 600;
+    font-size: 13px;
+    color: #1e293b;
+    margin-bottom: 10px;
+}
+
+.komm-impulse-card {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 8px;
+}
+
+.komm-impulse-card-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+}
+
+.komm-impulse-prio {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+
+.komm-impulse-prio.prioritaet-kritisch {
+    background: #fef2f2;
+    color: #dc2626;
+}
+
+.komm-impulse-prio.prioritaet-hoch {
+    background: #fff7ed;
+    color: #ea580c;
+}
+
+.komm-impulse-prio.prioritaet-mittel {
+    background: #eff6ff;
+    color: #2563eb;
+}
+
+.komm-impulse-prio.prioritaet-niedrig {
+    background: #f1f5f9;
+    color: #64748b;
+}
+
+.komm-impulse-quelle {
+    font-size: 11px;
+    color: #94a3b8;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.komm-impulse-text {
+    font-size: 12px;
+    color: #475569;
+    line-height: 1.5;
+    margin-bottom: 8px;
+}
+
+.komm-impulse-actions {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.komm-impulse-btn {
+    padding: 5px 12px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: all 0.15s;
+    background: var(--primary-color, #2563eb);
+    color: white;
+}
+
+.komm-impulse-btn:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+.komm-impulse-btn.secondary {
+    background: #f1f5f9;
+    color: #475569;
+    border: 1px solid #e2e8f0;
+}
+
+.komm-impulse-btn.secondary:hover {
+    background: #e2e8f0;
+}
+
+.komm-impulse-btn.kritisch {
+    background: #dc2626;
+    color: white;
+}
+
+/* Chatbot-Verlauf Blasen */
+.chatbot-verlauf {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 12px;
+    background: #f8fafc;
+    border-radius: 8px;
+    margin: 8px 0;
+}
+
+.chat-blase {
+    display: flex;
+    flex-direction: column;
+    max-width: 80%;
+}
+
+.chat-blase-kunde {
+    align-self: flex-start;
+}
+
+.chat-blase-bot {
+    align-self: flex-end;
+}
+
+.chat-rolle {
+    font-size: 10px;
+    color: #94a3b8;
+    margin-bottom: 2px;
+    font-weight: 500;
+}
+
+.chat-blase-kunde .chat-rolle {
+    text-align: left;
+}
+
+.chat-blase-bot .chat-rolle {
+    text-align: right;
+}
+
+.chat-text {
+    display: inline-block;
+    padding: 8px 12px;
+    font-size: 12px;
+    line-height: 1.5;
+    color: #1e293b;
+}
+
+.chat-blase-kunde .chat-text {
+    background: #f3f4f6;
+    border-radius: 12px 12px 12px 0;
+}
+
+.chat-blase-bot .chat-text {
+    background: #ede9fe;
+    border-radius: 12px 12px 0 12px;
+    color: #5b21b6;
+}
+
+.chat-ergebnis-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 12px;
+    background: #fef3c7;
+    color: #92400e;
+    font-size: 11px;
+    font-weight: 600;
+    margin-top: 4px;
+}
+
+/* Kommunikation-Eintrag Aktions-Buttons */
+.komm-entry-actions {
+    display: flex;
+    gap: 6px;
+    margin-top: 8px;
+}
+
+/* Filter-Leiste */
+.komm-filter-bar {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+}
+
+.komm-filter-btn {
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+    border: 1px solid var(--primary-color, #2563eb);
+    background: white;
+    color: var(--primary-color, #2563eb);
+}
+
+.komm-filter-btn.active {
+    background: var(--primary-color, #2563eb);
+    color: white;
+}
+
+.komm-filter-btn:not(.active):hover {
+    background: #eff6ff;
+}
+
+/* Dynamic timeline entry styling */
+#kundenKommunikation .komm-item[data-typ] {
+    border-left: 3px solid #e2e8f0;
+    padding-left: 12px;
+    transition: border-color 0.2s;
+}
+
+#kundenKommunikation .komm-item[data-typ="chatbot"] {
+    border-left-color: #8b5cf6;
+}
+
+#kundenKommunikation .komm-item[data-typ="ki_kontakt"] {
+    border-left-color: #06b6d4;
+}
+
+#kundenKommunikation .komm-item[data-typ="termin"] {
+    border-left-color: #f59e0b;
+}
+
+#kundenKommunikation .komm-item[data-typ="video"] {
+    border-left-color: #10b981;
+}
+
+#kundenKommunikation .komm-item[data-typ="portal"] {
+    border-left-color: #6b7280;
+}
+
+#kundenKommunikation .komm-item[data-typ="email"] {
+    border-left-color: #2563eb;
+}
+
+#kundenKommunikation .komm-item[data-typ="brief"] {
+    border-left-color: #64748b;
+}
+
+#kundenKommunikation .komm-item[data-typ="telefon"] {
+    border-left-color: #16a34a;
+}
+
+/* Status badge colors for new statuses */
+.komm-status-badge.erledigt {
+    background: #dbeafe;
+    color: #2563eb;
+}
+
+.komm-status-badge.beantwortet {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.komm-status-badge.termin_geplant {
+    background: #fef3c7;
+    color: #92400e;
+}
+

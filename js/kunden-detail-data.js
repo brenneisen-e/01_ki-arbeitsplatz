@@ -71,6 +71,21 @@ function fillKundenDetail(kundenName, vermittlerId) {
                 { institut: 'Sparkasse', typ: 'Girokonto', info: 'Hauptkonto', consent: '15.03.2024', gueltig: '15.03.2026' },
                 { institut: 'ING DiBa', typ: 'Tagesgeld', info: 'Sparkonto', consent: '15.03.2024', gueltig: '15.03.2026' },
                 { institut: 'DWS', typ: 'Depot', info: 'Fondssparen', consent: '15.03.2024', gueltig: '15.03.2026' }
+            ],
+            kommunikation: [
+                { typ: 'chatbot', datum: '2026-03-03T22:15:00', betreff: 'Self-Service Anfrage: Hausratversicherung', verlauf: [
+                    { rolle: 'kunde', text: 'Was deckt meine Hausratversicherung ab?' },
+                    { rolle: 'bot', text: 'Ihre Hausratversicherung bei ERGO deckt Sch\u00e4den durch Feuer, Einbruch, Leitungswasser und Sturm ab. Eine Elementarschadendeckung ist aktuell nicht enthalten.' },
+                    { rolle: 'kunde', text: 'Was kostet Elementarschadendeckung?' },
+                    { rolle: 'bot', text: 'F\u00fcr Ihren Tarif ca. 45\u20ac/Jahr Aufpreis. Soll ich einen Termin mit Ihrem Berater vereinbaren?' },
+                    { rolle: 'kunde', text: 'Ja bitte' }
+                ], ergebnis: 'Terminwunsch Elementarschadendeckung', themen: ['hausrat', 'elementarschaden', 'termin'], status: 'termin_geplant' },
+                { typ: 'email', datum: '2026-02-28T09:15:00', betreff: 'Kfz-Versicherung: Ihr Vertrag l\u00e4uft aus', inhalt: 'Sehr geehrter Herr Schmidt, Ihr Kfz-Vertrag bei der Allianz l\u00e4uft am 24.04.2026 aus. Wir haben ein attraktives Angebot f\u00fcr Sie vorbereitet.', status: 'geoeffnet', geoeffnetAm: '2026-02-28T14:32:00', followUp: false, automatisch: true },
+                { typ: 'ki_kontakt', datum: '2026-02-25T10:00:00', betreff: 'BU-Unterdeckungs-Warnung', inhalt: 'System hat erkannt: BU-Absicherung 1.500\u20ac/mtl. liegt unter empfohlenem Wert (2.400\u20ac). Personalisierte Info-Mail an Kunden gesendet.', status: 'geoeffnet', followUp: false, automatisch: true, ausloeser: 'regelbasiert' },
+                { typ: 'portal', datum: '2026-02-20T16:45:00', betreff: 'Vertragsdokument heruntergeladen', inhalt: 'Kunde hat BU-Vertragsbedingungen im Self-Service-Portal heruntergeladen.', status: 'erledigt', dokument: 'BU-Vertrag V-2024-001 Bedingungen.pdf' },
+                { typ: 'brief', datum: '2026-02-15T08:00:00', betreff: 'Open Finance Datenfreigabe: Neue Potentiale erkannt', inhalt: 'Basierend auf Ihren freigegebenen Finanzdaten haben wir Optimierungsm\u00f6glichkeiten f\u00fcr Ihre Versicherungssituation identifiziert.', status: 'versendet', followUp: false, automatisch: true },
+                { typ: 'telefon', datum: '2026-02-08T11:20:00', betreff: 'R\u00fcckruf wegen Altersvorsorge-Angebot', inhalt: 'Kunde interessiert an fondsgebundener Rentenversicherung. Termin f\u00fcr 14.04. vereinbart.', status: 'termin_geplant' },
+                { typ: 'email', datum: '2026-01-15T08:00:00', betreff: 'Willkommen bei Open Finance', inhalt: 'Vielen Dank f\u00fcr Ihre Open Finance Datenfreigabe. Personalisierte Empfehlungen verf\u00fcgbar.', status: 'geoeffnet', geoeffnetAm: '2026-01-15T19:45:00', followUp: true, automatisch: true }
             ]
         },
         'Amira König': {
@@ -101,6 +116,19 @@ function fillKundenDetail(kundenName, vermittlerId) {
             fidaVertraege: [
                 { institut: 'Volksbank', typ: 'Girokonto', info: 'Gehaltskonto', consent: '10.04.2024', gueltig: '10.04.2026' },
                 { institut: 'DKB', typ: 'Tagesgeld', info: 'Notgroschen', consent: '10.04.2024', gueltig: '10.04.2026' }
+            ],
+            kommunikation: [
+                { typ: 'chatbot', datum: '2026-03-05T19:30:00', betreff: 'Self-Service Anfrage: Risikolebensversicherung', verlauf: [
+                    { rolle: 'kunde', text: 'Meine Risikolebensversicherung l\u00e4uft bald aus. Was kann ich tun?' },
+                    { rolle: 'bot', text: 'Ihre Risikolebensversicherung bei ERGO (Vers.-Summe 150.000\u20ac) l\u00e4uft im Februar 2026 aus. Ich empfehle eine Verl\u00e4ngerung oder Neuabschluss.' },
+                    { rolle: 'kunde', text: 'Was kostet eine Verl\u00e4ngerung?' },
+                    { rolle: 'bot', text: 'Die Pr\u00e4mie h\u00e4ngt von Ihrem aktuellen Alter und Gesundheitszustand ab. Soll ich einen Beratungstermin f\u00fcr Sie vereinbaren?' },
+                    { rolle: 'kunde', text: 'Ja, gerne' }
+                ], ergebnis: 'Terminwunsch RLV-Verl\u00e4ngerung', themen: ['risikoleben', 'verlaengerung', 'termin'], status: 'termin_geplant' },
+                { typ: 'email', datum: '2026-02-20T09:00:00', betreff: 'Risikolebensversicherung: Vertrag l\u00e4uft aus', inhalt: 'Sehr geehrte Frau K\u00f6nig, Ihre Risikolebensversicherung bei ERGO l\u00e4uft im Februar 2026 aus.', status: 'geoeffnet', geoeffnetAm: '2026-02-20T12:15:00', followUp: false, automatisch: true },
+                { typ: 'ki_kontakt', datum: '2026-02-10T10:00:00', betreff: 'BU-Optimierungsvorschlag', inhalt: 'System hat erkannt: BU-Rente 1.800\u20ac/Mon. k\u00f6nnte angesichts des Einkommens auf 2.200\u20ac erh\u00f6ht werden. Info-Mail gesendet.', status: 'geoeffnet', followUp: false, automatisch: true, ausloeser: 'regelbasiert' },
+                { typ: 'telefon', datum: '2026-01-28T14:00:00', betreff: 'Beratungsgespr\u00e4ch Unfallversicherung', inhalt: 'Kundin hat Fragen zur Unfallversicherung Progression. Zufrieden mit aktuellem Schutz.', status: 'erledigt' },
+                { typ: 'email', datum: '2026-01-10T08:00:00', betreff: 'Jahres\u00fcbersicht Ihrer Vertr\u00e4ge', inhalt: 'Anbei Ihre Jahres\u00fcbersicht aller bestehenden Versicherungsvertr\u00e4ge.', status: 'geoeffnet', geoeffnetAm: '2026-01-10T20:30:00', followUp: true, automatisch: true }
             ]
         },
         'Thomas Weber': {
@@ -130,6 +158,19 @@ function fillKundenDetail(kundenName, vermittlerId) {
                 { institut: 'N26', typ: 'Girokonto', info: 'Hauptkonto', consent: '20.06.2024', gueltig: '20.06.2026' },
                 { institut: 'Trade Republic', typ: 'Depot', info: 'ETF-Sparplan €500/Mon.', consent: '20.06.2024', gueltig: '20.06.2026' },
                 { institut: 'Scalable Capital', typ: 'Depot', info: 'Einzelaktien', consent: '20.06.2024', gueltig: '20.06.2026' }
+            ],
+            kommunikation: [
+                { typ: 'chatbot', datum: '2026-03-01T21:00:00', betreff: 'Self-Service Anfrage: Haftpflichtversicherung', verlauf: [
+                    { rolle: 'kunde', text: 'Ich ziehe bald mit meiner Freundin zusammen. Muss ich meine Haftpflicht \u00e4ndern?' },
+                    { rolle: 'bot', text: 'Wenn Sie zusammenziehen, k\u00f6nnen Sie Ihre Partnerin in Ihre Privathaftpflicht aufnehmen. Das spart eine separate Police.' },
+                    { rolle: 'kunde', text: 'Was kostet das?' },
+                    { rolle: 'bot', text: 'Der Aufpreis f\u00fcr einen Partnertarif betr\u00e4gt ca. 15\u20ac/Jahr. Soll ich Ihren Berater informieren?' },
+                    { rolle: 'kunde', text: 'Nein danke, ich melde mich selbst' }
+                ], ergebnis: 'Information Partnertarif erteilt', themen: ['haftpflicht', 'partnertarif'], status: 'erledigt' },
+                { typ: 'ki_kontakt', datum: '2026-02-18T10:00:00', betreff: 'Tierhalterhaftpflicht empfohlen', inhalt: 'System hat erkannt: Kunde hat Katze, aber keine Tierhalterhaftpflicht. Empfehlung gesendet.', status: 'geoeffnet', followUp: false, automatisch: true, ausloeser: 'regelbasiert' },
+                { typ: 'email', datum: '2026-02-05T09:00:00', betreff: 'Berufsunf\u00e4higkeitsversicherung: Wichtiger Schutz', inhalt: 'Als Software-Entwickler sollten Sie \u00fcber eine BU-Absicherung nachdenken.', status: 'geoeffnet', geoeffnetAm: '2026-02-05T18:20:00', followUp: false, automatisch: true },
+                { typ: 'portal', datum: '2026-01-22T14:30:00', betreff: 'Haftpflicht-Vertragsdokument angesehen', inhalt: 'Kunde hat Vertragsbedingungen der Privathaftpflichtversicherung im Portal eingesehen.', status: 'erledigt', dokument: 'PHV-Vertrag V-2021-003.pdf' },
+                { typ: 'email', datum: '2026-01-05T08:00:00', betreff: 'Willkommen bei Open Finance', inhalt: 'Vielen Dank f\u00fcr Ihre Open Finance Datenfreigabe.', status: 'geoeffnet', geoeffnetAm: '2026-01-05T12:00:00', followUp: true, automatisch: true }
             ]
         },
         'Anna Hoffmann': {
@@ -159,6 +200,19 @@ function fillKundenDetail(kundenName, vermittlerId) {
             fidaVertraege: [
                 { institut: 'Commerzbank', typ: 'Girokonto', info: 'Familienkonto', consent: '01.07.2024', gueltig: '01.07.2026' },
                 { institut: 'Consorsbank', typ: 'Depot', info: 'Kindersparen', consent: '01.07.2024', gueltig: '01.07.2026' }
+            ],
+            kommunikation: [
+                { typ: 'chatbot', datum: '2026-03-07T20:45:00', betreff: 'Self-Service Anfrage: Kinderabsicherung', verlauf: [
+                    { rolle: 'kunde', text: 'Welche Versicherungen brauche ich f\u00fcr meine Kinder?' },
+                    { rolle: 'bot', text: 'F\u00fcr Ihre Kinder Sophie (3) und Emma (1) empfehle ich: Unfallversicherung, ggf. Invalidit\u00e4tsversicherung und eine Ausbildungsversicherung.' },
+                    { rolle: 'kunde', text: 'Was kostet eine Kinderunfallversicherung?' },
+                    { rolle: 'bot', text: 'Ab ca. 60\u20ac/Jahr pro Kind. M\u00f6chten Sie einen Beratungstermin?' },
+                    { rolle: 'kunde', text: 'Ja, bitte einen Termin' }
+                ], ergebnis: 'Terminwunsch Kinderabsicherung', themen: ['kinderunfall', 'absicherung', 'termin'], status: 'termin_geplant' },
+                { typ: 'email', datum: '2026-02-22T09:00:00', betreff: 'Familienschutz: Ihre Risikolebensversicherung', inhalt: 'Ihre RLV bei ERGO mit 300.000\u20ac Vers.-Summe l\u00e4uft planm\u00e4\u00dfig bis 2045.', status: 'geoeffnet', geoeffnetAm: '2026-02-22T13:10:00', followUp: true, automatisch: true },
+                { typ: 'ki_kontakt', datum: '2026-02-12T10:00:00', betreff: 'Elternzeit-Absicherungscheck', inhalt: 'System hat erkannt: Kundin ist in Elternzeit. Empfehlung f\u00fcr Einkommensabsicherung und Familienschutz gesendet.', status: 'geoeffnet', followUp: false, automatisch: true, ausloeser: 'regelbasiert' },
+                { typ: 'telefon', datum: '2026-01-30T10:30:00', betreff: 'Beratung BU-Erh\u00f6hung', inhalt: 'Kundin m\u00f6chte BU-Rente von 2.000\u20ac auf 2.500\u20ac erh\u00f6hen. Nachversicherung gepr\u00fcft.', status: 'erledigt' },
+                { typ: 'portal', datum: '2026-01-18T09:15:00', betreff: 'RLV-Vertragsdokument heruntergeladen', inhalt: 'Kundin hat Risikolebensversicherungs-Bedingungen im Portal heruntergeladen.', status: 'erledigt', dokument: 'RLV-Vertrag V-2020-007.pdf' }
             ]
         },
         'Michael Braun': {
@@ -190,6 +244,19 @@ function fillKundenDetail(kundenName, vermittlerId) {
                 { institut: 'Deutsche Bank', typ: 'Girokonto', info: 'Geschäftskonto', consent: '15.05.2024', gueltig: '15.05.2026' },
                 { institut: 'Deka', typ: 'Depot', info: 'Vermögensaufbau €180.000', consent: '15.05.2024', gueltig: '15.05.2026' },
                 { institut: 'Bausparkasse Schwäbisch Hall', typ: 'Bausparvertrag', info: 'Zuteilungsreif', consent: '15.05.2024', gueltig: '15.05.2026' }
+            ],
+            kommunikation: [
+                { typ: 'chatbot', datum: '2026-03-02T18:00:00', betreff: 'Self-Service Anfrage: Rechtsschutzversicherung', verlauf: [
+                    { rolle: 'kunde', text: 'Deckt mein Rechtsschutz auch Streitigkeiten mit meinen Mitarbeitern ab?' },
+                    { rolle: 'bot', text: 'Ihre Rechtsschutzversicherung bei ERGO (Premium) deckt Beruf, Verkehr und Privat ab. Arbeitsrechtliche Streitigkeiten als Arbeitgeber sind im Firmenrechtsschutz enthalten.' },
+                    { rolle: 'kunde', text: 'Habe ich Firmenrechtsschutz?' },
+                    { rolle: 'bot', text: 'Aktuell haben Sie nur Privatrechtsschutz. F\u00fcr Ihren Meisterbetrieb empfehle ich einen Firmenrechtsschutz. Soll ich einen Beratungstermin vereinbaren?' },
+                    { rolle: 'kunde', text: 'Ja bitte' }
+                ], ergebnis: 'Terminwunsch Firmenrechtsschutz', themen: ['rechtsschutz', 'firma', 'termin'], status: 'termin_geplant' },
+                { typ: 'ki_kontakt', datum: '2026-02-22T10:00:00', betreff: 'Wohngeb\u00e4ude-Pr\u00e4mienvergleich', inhalt: 'System hat g\u00fcnstigere Wohngeb\u00e4udeversicherung gefunden. Einsparungspotenzial 120\u20ac/Jahr. Info an Kunden gesendet.', status: 'geoeffnet', followUp: false, automatisch: true, ausloeser: 'regelbasiert' },
+                { typ: 'email', datum: '2026-02-10T09:00:00', betreff: 'Bausparvertrag: Zuteilung steht bevor', inhalt: 'Ihr Bausparvertrag bei Schw\u00e4bisch Hall ist bald zuteilungsreif.', status: 'geoeffnet', geoeffnetAm: '2026-02-10T14:00:00', followUp: false, automatisch: true },
+                { typ: 'telefon', datum: '2026-01-25T15:00:00', betreff: 'NPS-Nachgespr\u00e4ch', inhalt: 'Kunde unzufrieden mit Schadensregulierung. Erkl\u00e4rung und Verbesserungsvorschl\u00e4ge besprochen.', status: 'erledigt' },
+                { typ: 'brief', datum: '2026-01-08T08:00:00', betreff: 'Jahres\u00fcbersicht 2025', inhalt: 'Zusammenfassung aller Vertr\u00e4ge und Leistungen im Jahr 2025.', status: 'versendet', followUp: false, automatisch: true }
             ]
         },
         'Lisa Müller': {
@@ -219,6 +286,18 @@ function fillKundenDetail(kundenName, vermittlerId) {
                 { institut: 'Comdirect', typ: 'Girokonto', info: 'Gehaltskonto', consent: '12.08.2024', gueltig: '12.08.2026' },
                 { institut: 'ING', typ: 'Extra-Konto', info: 'Tagesgeld €15.000', consent: '12.08.2024', gueltig: '12.08.2026' },
                 { institut: 'KfW', typ: 'Studienkredit', info: 'Restschuld €18.000', consent: '12.08.2024', gueltig: '12.08.2026' }
+            ],
+            kommunikation: [
+                { typ: 'chatbot', datum: '2026-02-28T22:30:00', betreff: 'Self-Service Anfrage: Dienstunf\u00e4higkeit', verlauf: [
+                    { rolle: 'kunde', text: 'Was ist der Unterschied zwischen Berufsunf\u00e4higkeit und Dienstunf\u00e4higkeit?' },
+                    { rolle: 'bot', text: 'Als \u00c4rztin haben Sie eine BU mit Dienstunf\u00e4higkeitsklausel bei ERGO. Die DU-Klausel greift, wenn Sie als Beamtin/\u00c4rztin dienstunf\u00e4hig werden.' },
+                    { rolle: 'kunde', text: 'Reicht mein Schutz von 2.500\u20ac aus?' },
+                    { rolle: 'bot', text: 'Bei Ihrem Nettoeinkommen w\u00e4re eine Absicherung von 3.000-3.500\u20ac empfehlenswert. Soll ich einen Beratungstermin vereinbaren?' },
+                    { rolle: 'kunde', text: 'Nein, ich \u00fcberlege erst mal' }
+                ], ergebnis: 'Information BU-Erh\u00f6hung', themen: ['bu', 'dienstunfaehigkeit', 'erhoehung'], status: 'erledigt' },
+                { typ: 'ki_kontakt', datum: '2026-02-15T10:00:00', betreff: 'Studienkredit-Absicherung', inhalt: 'System hat erkannt: KfW-Studienkredit 18.000\u20ac ohne Absicherung. Risikolebensversicherung empfohlen.', status: 'geoeffnet', followUp: false, automatisch: true, ausloeser: 'regelbasiert' },
+                { typ: 'email', datum: '2026-02-01T09:00:00', betreff: 'BU-Versicherung: Ihr Schutz im \u00dcberblick', inhalt: 'Ihre BU bei ERGO mit 2.500\u20ac BU-Rente und DU-Klausel ist aktiv.', status: 'geoeffnet', geoeffnetAm: '2026-02-01T20:15:00', followUp: false, automatisch: true },
+                { typ: 'telefon', datum: '2026-01-20T16:00:00', betreff: 'Beratungsgespr\u00e4ch Altersvorsorge', inhalt: 'Kundin interessiert an zus\u00e4tzlicher Altersvorsorge. ETF-Police besprochen.', status: 'erledigt' }
             ]
         },
         'Klaus Meier': {
@@ -248,6 +327,19 @@ function fillKundenDetail(kundenName, vermittlerId) {
             fidaVertraege: [
                 { institut: 'Commerzbank', typ: 'Geschäftskonto', info: 'Betriebskonto', consent: '01.09.2024', gueltig: '01.09.2026' },
                 { institut: 'Union Investment', typ: 'Riester', info: 'Altersvorsorge €45.000', consent: '01.09.2024', gueltig: '01.09.2026' }
+            ],
+            kommunikation: [
+                { typ: 'chatbot', datum: '2026-03-04T12:30:00', betreff: 'Self-Service Anfrage: Betriebshaftpflicht', verlauf: [
+                    { rolle: 'kunde', text: 'Deckt meine Betriebshaftpflicht auch Subunternehmer ab?' },
+                    { rolle: 'bot', text: 'Ihre Betriebshaftpflicht bei ERGO (5 Mio.\u20ac Deckung) deckt Subunternehmer ab, sofern diese im Vertrag mitversichert sind.' },
+                    { rolle: 'kunde', text: 'Wie kann ich das pr\u00fcfen?' },
+                    { rolle: 'bot', text: 'Das steht in Ihren Vertragsunterlagen unter \u00a7 3 Mitversicherte Personen. Soll ich einen Beratungstermin vereinbaren?' },
+                    { rolle: 'kunde', text: 'Ja, das w\u00e4re gut' }
+                ], ergebnis: 'Terminwunsch Betriebshaftpflicht-Check', themen: ['betriebshaftpflicht', 'subunternehmer', 'termin'], status: 'termin_geplant' },
+                { typ: 'ki_kontakt', datum: '2026-02-20T10:00:00', betreff: 'BU-Nachversicherung empfohlen', inhalt: 'System hat erkannt: Einkommen gestiegen, BU-Rente 2.000\u20ac k\u00f6nnte auf 2.800\u20ac erh\u00f6ht werden.', status: 'geoeffnet', followUp: false, automatisch: true, ausloeser: 'regelbasiert' },
+                { typ: 'portal', datum: '2026-02-08T11:00:00', betreff: 'Betriebshaftpflicht-Dokument heruntergeladen', inhalt: 'Kunde hat Betriebshaftpflicht-Vertragsbedingungen im Portal heruntergeladen.', status: 'erledigt', dokument: 'BHV-Vertrag V-2015-012.pdf' },
+                { typ: 'email', datum: '2026-01-28T09:00:00', betreff: 'Riester-Rente: Jahresbescheinigung', inhalt: 'Ihre Riester-Jahresbescheinigung 2025 steht zum Download bereit.', status: 'geoeffnet', geoeffnetAm: '2026-01-28T19:00:00', followUp: true, automatisch: true },
+                { typ: 'brief', datum: '2026-01-10T08:00:00', betreff: 'Jahresrechnung Betriebshaftpflicht', inhalt: 'Jahresrechnung f\u00fcr Ihre Betriebshaftpflichtversicherung 2026.', status: 'versendet', followUp: false, automatisch: true }
             ]
         },
         'Matthias Engel': {
@@ -278,6 +370,18 @@ function fillKundenDetail(kundenName, vermittlerId) {
                 { institut: 'Sparkasse Essen', typ: 'Girokonto', info: 'Gehalt €4.200 netto/Mon.', consent: '05.10.2024', gueltig: '05.10.2026' },
                 { institut: 'ING', typ: 'Depot', info: 'ETF-Sparplan €400/Mon.', consent: '05.10.2024', gueltig: '05.10.2026' },
                 { institut: 'Allianz', typ: 'BU-Versicherung', info: 'Nur €1.200/Mon. - Deckungslücke!', consent: '05.10.2024', gueltig: '05.10.2026' }
+            ],
+            kommunikation: [
+                { typ: 'chatbot', datum: '2026-03-06T20:00:00', betreff: 'Self-Service Anfrage: BU-Deckungsl\u00fccke', verlauf: [
+                    { rolle: 'kunde', text: 'Ich habe geh\u00f6rt, meine BU-Absicherung k\u00f6nnte zu niedrig sein. Stimmt das?' },
+                    { rolle: 'bot', text: 'Ihre BU bei Allianz sichert 1.200\u20ac/Mon. ab. Bei Ihrem Nettoeinkommen von 4.200\u20ac empfehlen wir mindestens 2.500\u20ac/Mon.' },
+                    { rolle: 'kunde', text: 'Kann ich die bestehende erh\u00f6hen?' },
+                    { rolle: 'bot', text: 'Eine Erh\u00f6hung bei der Allianz ist m\u00f6glich, alternativ eine Zusatz-BU bei einem anderen Anbieter. Soll ich einen Beratungstermin vereinbaren?' },
+                    { rolle: 'kunde', text: 'Ja, bitte dringend' }
+                ], ergebnis: 'Terminwunsch BU-Erh\u00f6hung dringend', themen: ['bu', 'deckungsluecke', 'erhoehung', 'termin'], status: 'termin_geplant' },
+                { typ: 'ki_kontakt', datum: '2026-02-28T10:00:00', betreff: 'BU-Unterdeckungs-Warnung', inhalt: 'System hat erkannt: BU-Absicherung 1.200\u20ac/mtl. liegt deutlich unter empfohlenem Wert (2.500\u20ac). Dringende Handlungsempfehlung gesendet.', status: 'geoeffnet', followUp: false, automatisch: true, ausloeser: 'regelbasiert' },
+                { typ: 'email', datum: '2026-02-12T09:00:00', betreff: 'ETF-Sparplan: Performance-Update', inhalt: 'Ihr ETF-Sparplan bei ING hat eine Performance von +11,2% erzielt.', status: 'geoeffnet', geoeffnetAm: '2026-02-12T18:30:00', followUp: true, automatisch: true },
+                { typ: 'telefon', datum: '2026-01-22T11:00:00', betreff: 'Beratung Familienschutz', inhalt: 'Kunde hat zwei kleine Kinder. Risikolebensversicherung und Unfallversicherung besprochen.', status: 'erledigt' }
             ]
         },
         'Christian Bauer': {
@@ -307,6 +411,18 @@ function fillKundenDetail(kundenName, vermittlerId) {
                 { institut: 'Commerzbank', typ: 'Girokonto', info: 'Gehalt €3.800 netto/Mon.', consent: '15.11.2024', gueltig: '15.11.2026' },
                 { institut: 'Trade Republic', typ: 'Depot', info: 'Aktien €45.000', consent: '15.11.2024', gueltig: '15.11.2026' },
                 { institut: 'keine', typ: 'BU-Versicherung', info: 'NICHT VORHANDEN!', consent: '15.11.2024', gueltig: '15.11.2026' }
+            ],
+            kommunikation: [
+                { typ: 'chatbot', datum: '2026-03-08T15:00:00', betreff: 'Self-Service Anfrage: Rechtsschutz', verlauf: [
+                    { rolle: 'kunde', text: 'Mein Vermieter k\u00fcrzt meine Kaution. Was tun?' },
+                    { rolle: 'bot', text: 'Ihre Rechtsschutzversicherung bei ERGO deckt Mietrecht ab. Sie k\u00f6nnen direkt eine Schadenmeldung \u00fcber uns einreichen.' },
+                    { rolle: 'kunde', text: 'Wie melde ich den Schaden?' },
+                    { rolle: 'bot', text: 'Ich kann das f\u00fcr Sie an Ihren Berater weiterleiten. M\u00f6chten Sie das?' },
+                    { rolle: 'kunde', text: 'Ja bitte' }
+                ], ergebnis: 'Weiterleitung Rechtsschutz-Schadenfall', themen: ['rechtsschutz', 'mietrecht', 'schadenfall'], status: 'termin_geplant' },
+                { typ: 'ki_kontakt', datum: '2026-02-25T10:00:00', betreff: 'BU-Versicherung dringend empfohlen', inhalt: 'System hat erkannt: Keine BU-Versicherung vorhanden. Einkommen 3.800\u20ac/Mon. nicht abgesichert. Dringende Empfehlung gesendet.', status: 'geoeffnet', followUp: false, automatisch: true, ausloeser: 'regelbasiert' },
+                { typ: 'email', datum: '2026-02-05T09:00:00', betreff: 'Berufsunf\u00e4higkeitsversicherung: Jetzt absichern', inhalt: 'Als Projektmanager sollten Sie Ihr Einkommen absichern. Wir haben passende Angebote.', status: 'geoeffnet', geoeffnetAm: '2026-02-05T21:00:00', followUp: false, automatisch: true },
+                { typ: 'portal', datum: '2026-01-15T10:30:00', betreff: 'Rechtsschutz-Police angesehen', inhalt: 'Kunde hat Rechtsschutz-Vertragsbedingungen im Portal eingesehen.', status: 'erledigt', dokument: 'RS-Vertrag V-2021-005.pdf' }
             ]
         },
         'Martin Wolf': {
@@ -337,6 +453,19 @@ function fillKundenDetail(kundenName, vermittlerId) {
                 { institut: 'Volksbank Dortmund', typ: 'Girokonto', info: 'Gehalt €3.200 netto/Mon.', consent: '22.09.2024', gueltig: '22.09.2026' },
                 { institut: 'Bausparkasse LBS', typ: 'Bausparvertrag', info: 'Ansparphase €28.000', consent: '22.09.2024', gueltig: '22.09.2026' },
                 { institut: 'keine', typ: 'BU-Versicherung', info: 'NICHT VORHANDEN - Hochrisiko-Beruf!', consent: '22.09.2024', gueltig: '22.09.2026' }
+            ],
+            kommunikation: [
+                { typ: 'chatbot', datum: '2026-03-05T07:30:00', betreff: 'Self-Service Anfrage: Unfallversicherung', verlauf: [
+                    { rolle: 'kunde', text: 'Zahlt meine Unfallversicherung auch bei Arbeitsunf\u00e4llen auf dem Dach?' },
+                    { rolle: 'bot', text: 'Ihre Unfallversicherung bei ERGO mit Progression 500% leistet bei allen Unf\u00e4llen, auch Arbeitsunf\u00e4lle. F\u00fcr Arbeitsunf\u00e4lle greift zus\u00e4tzlich die BG BAU.' },
+                    { rolle: 'kunde', text: 'Ich habe geh\u00f6rt, ich brauche eine BU-Versicherung?' },
+                    { rolle: 'bot', text: 'Das stimmt! Als Dachdecker-Meister ist eine BU besonders wichtig. Aktuell haben Sie keine. Soll ich einen Beratungstermin vereinbaren?' },
+                    { rolle: 'kunde', text: 'Was kostet das denn ungef\u00e4hr?' }
+                ], ergebnis: 'Interesse an BU-Versicherung', themen: ['unfall', 'bu', 'handwerk'], status: 'erledigt' },
+                { typ: 'ki_kontakt', datum: '2026-02-20T10:00:00', betreff: 'Dringende BU-Empfehlung: Hochrisiko-Beruf', inhalt: 'System hat erkannt: Keine BU-Versicherung vorhanden. Beruf Dachdecker = Hochrisiko. Dringende Kontaktempfehlung an Berater.', status: 'geoeffnet', followUp: false, automatisch: true, ausloeser: 'regelbasiert' },
+                { typ: 'email', datum: '2026-02-08T09:00:00', betreff: 'Unfallversicherung: Ihr Schutz im \u00dcberblick', inhalt: 'Ihre Unfallversicherung bei ERGO mit 150.000\u20ac Invalidit\u00e4t und 500% Progression.', status: 'geoeffnet', geoeffnetAm: '2026-02-08T06:30:00', followUp: false, automatisch: true },
+                { typ: 'telefon', datum: '2026-01-18T09:00:00', betreff: 'NPS-Nachgespr\u00e4ch', inhalt: 'Kunde sehr unzufrieden (NPS 3). Hauptgrund: F\u00fchlt sich nicht proaktiv beraten. Ma\u00dfnahmenplan vereinbart.', status: 'erledigt' },
+                { typ: 'brief', datum: '2026-01-05T08:00:00', betreff: 'Wohngeb\u00e4udeversicherung: Jahresrechnung', inhalt: 'Jahresrechnung f\u00fcr Ihre Wohngeb\u00e4udeversicherung 2026.', status: 'versendet', followUp: false, automatisch: true }
             ]
         },
         'Eva Hartmann': {
@@ -367,6 +496,19 @@ function fillKundenDetail(kundenName, vermittlerId) {
                 { institut: 'N26', typ: 'Geschäftskonto', info: 'Selbstständigen-Einkommen variabel', consent: '01.12.2024', gueltig: '01.12.2026' },
                 { institut: 'ING', typ: 'Tagesgeld', info: 'Rücklage €12.000', consent: '01.12.2024', gueltig: '01.12.2026' },
                 { institut: 'KfW', typ: 'Gründerkredit', info: 'Restschuld €15.000', consent: '01.12.2024', gueltig: '01.12.2026' }
+            ],
+            kommunikation: [
+                { typ: 'chatbot', datum: '2026-03-09T14:00:00', betreff: 'Self-Service Anfrage: Betriebshaftpflicht', verlauf: [
+                    { rolle: 'kunde', text: 'Deckt meine Betriebshaftpflicht auch Urheberrechtsverletzungen ab?' },
+                    { rolle: 'bot', text: 'Ihre Betriebshaftpflicht bei Hiscox (2 Mio.\u20ac Deckung, Freelancer-Tarif) deckt Verm\u00f6genssch\u00e4den durch Urheberrechtsverletzungen ab.' },
+                    { rolle: 'kunde', text: 'Gut zu wissen. Und wie sieht es mit Cyber-Risiken aus?' },
+                    { rolle: 'bot', text: 'Cyber-Risiken sind nur teilweise gedeckt. F\u00fcr umfassenden Schutz empfehle ich eine separate Cyber-Versicherung. Soll ich einen Beratungstermin vereinbaren?' },
+                    { rolle: 'kunde', text: 'Ja bitte' }
+                ], ergebnis: 'Terminwunsch Cyber-Versicherung', themen: ['betriebshaftpflicht', 'cyber', 'termin'], status: 'termin_geplant' },
+                { typ: 'ki_kontakt', datum: '2026-02-26T10:00:00', betreff: 'BU-Aufstockung empfohlen', inhalt: 'System hat erkannt: BU-Rente 1.000\u20ac/Mon. ist zu niedrig f\u00fcr Selbstst\u00e4ndige. Aufstockung auf mindestens 2.000\u20ac empfohlen.', status: 'geoeffnet', followUp: false, automatisch: true, ausloeser: 'regelbasiert' },
+                { typ: 'email', datum: '2026-02-10T09:00:00', betreff: 'Gr\u00fcnderkredit: Tilgungsplan', inhalt: 'Ihr KfW-Gr\u00fcnderkredit hat noch 15.000\u20ac Restschuld. Tilgungsplan anbei.', status: 'geoeffnet', geoeffnetAm: '2026-02-10T11:00:00', followUp: true, automatisch: true },
+                { typ: 'portal', datum: '2026-01-28T16:00:00', betreff: 'Betriebshaftpflicht-Police angesehen', inhalt: 'Kundin hat Hiscox-Vertragsbedingungen im Portal eingesehen.', status: 'erledigt', dokument: 'BHV-Hiscox-V-2020-009.pdf' },
+                { typ: 'telefon', datum: '2026-01-12T14:30:00', betreff: 'Beratung Altersvorsorge Selbstst\u00e4ndige', inhalt: 'Kundin braucht Altersvorsorge-Konzept als Selbstst\u00e4ndige. R\u00fcrup + ETF besprochen.', status: 'erledigt' }
             ]
         }
     };

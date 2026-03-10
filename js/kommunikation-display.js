@@ -13,6 +13,51 @@ var kommData = [
     { type: 'email', typLabel: 'Automatische E-Mail', date: '01.10.2025', subject: 'Willkommen bei Open Finance', preview: 'Vielen Dank f\u00FCr Ihre Open Finance Datenfreigabe. Personalisierte Empfehlungen verf\u00FCgbar.', status: 'geoeffnet', statusText: 'Ge\u00F6ffnet', direction: 'outgoing' }
 ];
 
+// Extended type mapping for all communication types
+var kommTypConfig = {
+    email: {
+        label: 'E-Mail',
+        farbe: '#2563eb',
+        icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>'
+    },
+    brief: {
+        label: 'Brief',
+        farbe: '#64748b',
+        icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>'
+    },
+    telefon: {
+        label: 'Telefonat',
+        farbe: '#16a34a',
+        icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>'
+    },
+    chatbot: {
+        label: 'Chatbot-Gespr\u00e4ch',
+        farbe: '#8b5cf6',
+        icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>'
+    },
+    ki_kontakt: {
+        label: 'KI-generierter Kontakt',
+        farbe: '#06b6d4',
+        icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"/><path d="M9 9h6v6H9z"/><path d="M9 1v3"/><path d="M15 1v3"/><path d="M9 20v3"/><path d="M15 20v3"/><path d="M20 9h3"/><path d="M20 14h3"/><path d="M1 9h3"/><path d="M1 14h3"/></svg>'
+    },
+    termin: {
+        label: 'Termin',
+        farbe: '#f59e0b',
+        icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>'
+    },
+    video: {
+        label: 'Videocall',
+        farbe: '#10b981',
+        icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>'
+    },
+    portal: {
+        label: 'Portal-Aktivit\u00e4t',
+        farbe: '#6b7280',
+        icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>'
+    }
+};
+window.kommTypConfig = kommTypConfig;
+
 function switchKommOption(direction) {
     currentKommOption = (currentKommOption + direction + kommOptions.length) % kommOptions.length;
     var label = document.getElementById('kommOptionLabel');

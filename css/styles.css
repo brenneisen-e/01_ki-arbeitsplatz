@@ -7827,11 +7827,7 @@ button svg,
 }
 
 .kunden-shared-header .finance-mode-toggle {
-    position: absolute;
-    right: 340px;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 10;
+    /* Now positioned inside .header-controls-a10 via flexbox */
 }
 
 .kunden-shared-header .kunden-switch-dropdown {
@@ -7884,6 +7880,83 @@ button svg,
 
 .kunden-shared-header .kunden-switch-dropdown select:focus {
     border-color: #86BC25;
+}
+
+/* A-10 Institution Info (Logo, Name, Standort, Modus-Badge) */
+.kunden-shared-header .insurer-logo-container {
+    width: 52px;
+    height: 52px;
+    border-radius: 10px;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    flex-shrink: 0;
+}
+
+.kunden-shared-header .insurer-logo-img {
+    width: 44px;
+    height: 44px;
+    object-fit: contain;
+}
+
+.kunden-shared-header .insurer-logo-fallback {
+    width: 52px;
+    height: 52px;
+    border-radius: 10px;
+    color: #fff;
+    font-size: 18px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    letter-spacing: -0.5px;
+}
+
+.institut-name {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 500;
+}
+
+.institut-standort {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.55);
+}
+
+.header-controls-a10 {
+    position: absolute;
+    right: 230px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    z-index: 10;
+}
+
+.header-controls-a10 .finance-mode-toggle {
+    position: static;
+    transform: none;
+}
+
+.modus-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    background: rgba(255, 255, 255, 0.15);
+    color: rgba(255, 255, 255, 0.9);
+    white-space: nowrap;
+}
+
+.bank-mode .modus-badge {
+    background: rgba(255, 102, 0, 0.3);
+    color: #fff;
 }
 
 /* ========================================

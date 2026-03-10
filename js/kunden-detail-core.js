@@ -425,8 +425,102 @@ function updateKundenSharedHeader(kundenName, vermittlerId) {
         targetImg.style.display = 'block';
         if (targetPlaceholder) targetPlaceholder.style.display = 'none';
     }
+
+    // Institution logo, name, standort, modus badge (analog zu A-02 setInsurer/setBank)
+    updateA10InstitutInfo();
 }
 window.updateKundenSharedHeader = updateKundenSharedHeader;
+
+/**
+ * Update institution logo, name, location, and mode badge in A-10 header.
+ * Mirrors the logo logic from setInsurer()/setBank() in mrh-trowe-modes.js.
+ */
+function updateA10InstitutInfo() {
+    var kundenPage = document.getElementById('kundenDetailPage');
+    var isBankMode = kundenPage && kundenPage.classList.contains('bank-mode');
+
+    var logoImg = document.getElementById('a10InstitutLogoImg');
+    var logoFallback = document.getElementById('a10InstitutLogoFallback');
+    var institutNameEl = document.getElementById('a10InstitutName');
+    var institutStandortEl = document.getElementById('a10InstitutStandort');
+    var modusBadge = document.getElementById('a10ModusIndikator');
+
+    if (isBankMode) {
+        // Banking mode: use bank config
+        var bankKey = (typeof selectedBank !== 'undefined') ? selectedBank : 'vr';
+        var bankCfg = (typeof bankConfig !== 'undefined' && bankConfig[bankKey]) ? bankConfig[bankKey] : null;
+        var cfgName = bankCfg ? bankCfg.name : 'VR / Volksbank';
+        var cfgPrimary = bankCfg ? bankCfg.primary : '#003399';
+
+        _setA10Logo(logoImg, logoFallback, cfgName, cfgPrimary);
+
+        if (institutNameEl) institutNameEl.textContent = (typeof beraterData !== 'undefined' && beraterData.institut) ? beraterData.institut : 'Volksbank Mittelhessen eG';
+        if (institutStandortEl) institutStandortEl.textContent = (typeof beraterData !== 'undefined' && beraterData.center) ? beraterData.center : '';
+
+        // Modus badge: segment label
+        var bvm = (typeof bankViewMode !== 'undefined') ? bankViewMode : 'retail';
+        var segmentLabels = { 'retail': 'Privatkunden', 'firmenkunde': 'Firmenkunden', 'vermoegen': 'Vermögenskunden' };
+        if (modusBadge) modusBadge.textContent = segmentLabels[bvm] || 'Privatkunden';
+    } else {
+        // Insurance mode: use insurer config
+        var insKey = (typeof selectedInsurer !== 'undefined') ? selectedInsurer : 'ergo';
+        var insCfg = (typeof insurerConfig !== 'undefined' && insurerConfig[insKey]) ? insurerConfig[insKey] : null;
+        var insName = insCfg ? insCfg.name : 'ERGO';
+        var insPrimary = insCfg ? insCfg.primary : '#6B1C2A';
+
+        _setA10Logo(logoImg, logoFallback, insName, insPrimary);
+
+        // Institut full name mapping
+        var institutFullNames = {
+            'ergo': 'ERGO Versicherung AG',
+            'allianz': 'Allianz Versicherungs-AG',
+            'axa': 'AXA Versicherung AG',
+            'zurich': 'Zurich Versicherung AG',
+            'generali': 'Generali Deutschland AG',
+            'hdi': 'HDI Versicherung AG',
+            'ruv': 'R+V Versicherung AG',
+            'signal-iduna': 'Signal Iduna Gruppe',
+            'gothaer': 'Gothaer Versicherung AG',
+            'debeka': 'Debeka Versicherungsgruppe'
+        };
+        if (institutNameEl) institutNameEl.textContent = institutFullNames[insKey] || insName + ' Versicherung AG';
+        if (institutStandortEl) institutStandortEl.textContent = 'Standort: Köln';
+
+        // Modus badge: AO or Makler
+        var mode = (typeof currentVermittlerMode !== 'undefined') ? currentVermittlerMode : 'ao';
+        if (modusBadge) modusBadge.textContent = (mode === 'makler') ? 'Makler' : 'AO';
+    }
+}
+window.updateA10InstitutInfo = updateA10InstitutInfo;
+
+/**
+ * Set logo image or fallback in A-10 header (mirrors setInsurer/setBank logo logic).
+ */
+function _setA10Logo(logoImg, logoFallback, name, primaryColor) {
+    if (!logoImg) return;
+    var logoUrl = (typeof getVersichererLogoUrl === 'function')
+        ? getVersichererLogoUrl(name, 120)
+        : '';
+    if (logoUrl) {
+        logoImg.src = logoUrl;
+        logoImg.alt = name;
+        logoImg.style.display = '';
+        logoImg.onerror = function() {
+            logoImg.style.display = 'none';
+            if (logoFallback) {
+                logoFallback.style.display = 'flex';
+                logoFallback.textContent = name.substring(0, 2).toUpperCase();
+                logoFallback.style.background = primaryColor;
+            }
+        };
+        if (logoFallback) logoFallback.style.display = 'none';
+    } else if (logoFallback) {
+        logoImg.style.display = 'none';
+        logoFallback.style.display = 'flex';
+        logoFallback.textContent = name.substring(0, 2).toUpperCase();
+        logoFallback.style.background = primaryColor;
+    }
+}
 
 /**
  * Navigate from A-10 back to A-02 and show a specific tab

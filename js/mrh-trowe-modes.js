@@ -161,7 +161,7 @@ var bankConfig = {
         headerBg: '#003399',
         headerAccent: '#FF6600',
         activeTabBg: '#FF6600',
-        labels: { retail: 'VR Retail', fk: 'VR Firmenkunde', vw: 'VR Verm\u00F6gen' }
+        labels: { retail: 'Banking-Retail', fk: 'Banking-Firmenkunde', vw: 'Banking-Vermögen' }
     },
     'sparkasse': {
         name: 'Sparkasse',

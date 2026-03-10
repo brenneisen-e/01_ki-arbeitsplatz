@@ -56,6 +56,8 @@ var versichererLogoDomains = {
     'Sparkasse Lich': 'sparkasse.de',
     'Sparkasse Essen': 'sparkasse.de',
     'Sparkasse Braunschweig': 'sparkasse.de',
+    'VR / Volksbank': 'vr.de',
+    'Volksbank': 'vr.de',
     'Volksbank Dortmund': 'volksbank.de',
     'Volksbank Mittelhessen': 'volksbank.de',
     'R+V Versicherung': 'ruv.de',

@@ -563,6 +563,13 @@ function switchModule(moduleName) {
         }
     }
 
+    // Load Vermögensverwaltung module when first accessed
+    if (moduleName === 'vermoegensverwaltung') {
+        if (typeof showVVOverview === 'function') {
+            showVVOverview();
+        }
+    }
+
     // Dispatch event for Page ID Tracker
     document.dispatchEvent(new CustomEvent('moduleChanged', {
         detail: { module: moduleName }
@@ -573,6 +580,8 @@ function switchModule(moduleName) {
         AppRouter.navigate('/banken');
     } else if (window.AppRouter && moduleName === 'asset') {
         AppRouter.navigate('/asset-management');
+    } else if (window.AppRouter && moduleName === 'vermoegensverwaltung') {
+        AppRouter.navigate('/vv-overview');
     } else if (window.AppRouter && moduleName === 'versicherung') {
         AppRouter.navigate('/landing');
     }

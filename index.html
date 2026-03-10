@@ -53,6 +53,7 @@
     <link rel="stylesheet" href="css/stammdaten-extras.css?v=20260209">
     <link rel="stylesheet" href="css/screen-recorder.css?v=20260210">
     <link rel="stylesheet" href="css/bgav-umstellung.css?v=20260219">
+    <link rel="stylesheet" href="css/vermoegensverwaltung.css?v=20260310">
     <link rel="stylesheet" href="css/versicherungs-1x1.css?v=20260303i">
 </head>
 <body>
@@ -145,6 +146,14 @@
                         <line x1="6" y1="20" x2="6" y2="16"></line>
                     </svg>
                     Asset Manager
+                </button>
+                <button class="module-tab" data-module="vermoegensverwaltung" onclick="switchModule('vermoegensverwaltung')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                        <path d="M2 17l10 5 10-5"></path>
+                        <path d="M2 12l10 5 10-5"></path>
+                    </svg>
+                    Vermögensverwaltung
                 </button>
             </div>
             <span class="brand-label">Open Finance Suite</span>
@@ -7617,6 +7626,157 @@
   </div>
 
   <!-- ========================================
+     VERMOEGENSVERWALTUNG MODULE - HRK LUNIS Wealth Management
+     ======================================== -->
+  <div id="vermoegensverwaltungModule" class="module-content" style="display: none;">
+
+    <!-- VV-02: Berater Overview Page -->
+    <div id="vvOverviewPage" class="vv-page" style="display: block;">
+      <div class="vv-page-inner">
+        <!-- Header -->
+        <div class="vv-header">
+          <div class="vv-header-left">
+            <button class="back-button" onclick="backFromVVOverview()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg> Zurück
+            </button>
+            <div class="vv-header-info">
+              <div class="vv-brand-logo">
+                <span class="vv-brand-text">HRK LUNIS</span>
+              </div>
+              <div class="vv-header-text">
+                <h1 class="vv-page-title" id="vvPageTitle">Berater: Dr. Thomas Richter</h1>
+                <div class="vv-subtitle" id="vvSubtitle">Senior Advisor · Frankfurt · seit 2019</div>
+              </div>
+            </div>
+          </div>
+          <!-- Tab Navigation -->
+          <div class="vv-header-tabs">
+            <button class="vv-tab-btn active" data-tab="uebersicht" onclick="showVVTab('uebersicht')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+              Übersicht
+            </button>
+            <button class="vv-tab-btn" data-tab="mandatsliste" onclick="showVVTab('mandatsliste')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+              Mandate
+            </button>
+            <button class="vv-tab-btn" data-tab="pipeline" onclick="showVVTab('pipeline')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+              Pipeline
+            </button>
+            <button class="vv-tab-btn" data-tab="portfolio" onclick="showVVTab('portfolio')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0110 10"/><line x1="12" y1="12" x2="12" y2="2"/><line x1="12" y1="12" x2="22" y2="12"/></svg>
+              Portfolio-Übersicht
+            </button>
+            <button class="vv-tab-btn" data-tab="compliance" onclick="showVVTab('compliance')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              Compliance
+            </button>
+            <button class="vv-tab-btn" data-tab="reporting" onclick="showVVTab('reporting')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              Reporting
+            </button>
+          </div>
+        </div>
+
+        <!-- KPI Cockpit -->
+        <div class="vv-kpi-row">
+          <div class="vv-kpi-card" id="vvKpiAuM">
+            <div class="vv-kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
+            <div class="vv-kpi-content"><div class="vv-kpi-value">0</div><div class="vv-kpi-label">AuM Gesamt</div><div class="vv-kpi-trend">-</div></div>
+          </div>
+          <div class="vv-kpi-card" id="vvKpiNNM">
+            <div class="vv-kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></div>
+            <div class="vv-kpi-content"><div class="vv-kpi-value">0</div><div class="vv-kpi-label">Net New Money</div><div class="vv-kpi-trend">-</div></div>
+          </div>
+          <div class="vv-kpi-card" id="vvKpiErtrag">
+            <div class="vv-kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><circle cx="12" cy="12" r="10"/><text x="12" y="16" text-anchor="middle" fill="currentColor" stroke="none" font-size="12" font-weight="bold">€</text></svg></div>
+            <div class="vv-kpi-content"><div class="vv-kpi-value">0</div><div class="vv-kpi-label">Ertrag YTD</div><div class="vv-kpi-trend">-</div></div>
+          </div>
+          <div class="vv-kpi-card" id="vvKpiMandate">
+            <div class="vv-kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg></div>
+            <div class="vv-kpi-content"><div class="vv-kpi-value">0</div><div class="vv-kpi-label">Mandate</div><div class="vv-kpi-trend">-</div></div>
+          </div>
+          <div class="vv-kpi-card" id="vvKpiMarge">
+            <div class="vv-kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg></div>
+            <div class="vv-kpi-content"><div class="vv-kpi-value">0</div><div class="vv-kpi-label">Ø Marge</div><div class="vv-kpi-trend">-</div></div>
+          </div>
+          <div class="vv-kpi-card" id="vvKpiAtRisk">
+            <div class="vv-kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+            <div class="vv-kpi-content"><div class="vv-kpi-value">0</div><div class="vv-kpi-label">At-Risk</div><div class="vv-kpi-trend">-</div></div>
+          </div>
+        </div>
+
+        <!-- Tab Content Areas -->
+        <div class="vv-tab-content active" id="vv-tab-uebersicht"></div>
+        <div class="vv-tab-content" id="vv-tab-mandatsliste"></div>
+        <div class="vv-tab-content" id="vv-tab-pipeline"></div>
+        <div class="vv-tab-content" id="vv-tab-portfolio"></div>
+        <div class="vv-tab-content" id="vv-tab-compliance"></div>
+        <div class="vv-tab-content" id="vv-tab-reporting"></div>
+      </div>
+    </div>
+
+    <!-- VV-10: Mandanten Detail Page -->
+    <div id="vvDetailPage" class="vv-page" style="display: none;">
+      <div class="vv-page-inner">
+        <!-- Header -->
+        <div class="vv-header">
+          <div class="vv-header-left">
+            <button class="back-button" onclick="backFromVVDetail()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg> Zurück
+            </button>
+            <div class="vv-header-info">
+              <div class="vv-brand-logo">
+                <span class="vv-brand-text">HRK LUNIS</span>
+              </div>
+              <div class="vv-header-text">
+                <h1 class="vv-page-title" id="vvDetailTitle">Mandant</h1>
+                <div class="vv-subtitle" id="vvDetailSubtitle">-</div>
+              </div>
+            </div>
+          </div>
+          <!-- Detail Tab Navigation -->
+          <div class="vv-header-tabs">
+            <button class="vv-detail-tab-btn active" data-tab="stammdaten" onclick="showVVDetailTab('stammdaten')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              Client 360°
+            </button>
+            <button class="vv-detail-tab-btn" data-tab="portfolio" onclick="showVVDetailTab('portfolio')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0110 10"/><line x1="12" y1="12" x2="12" y2="2"/><line x1="12" y1="12" x2="22" y2="12"/></svg>
+              Portfolio
+            </button>
+            <button class="vv-detail-tab-btn" data-tab="finanzplanung" onclick="showVVDetailTab('finanzplanung')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
+              Vermögensbilanz
+            </button>
+            <button class="vv-detail-tab-btn" data-tab="compliance" onclick="showVVDetailTab('compliance')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              Compliance
+            </button>
+            <button class="vv-detail-tab-btn" data-tab="impulse" onclick="showVVDetailTab('impulse')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+              Potentiale
+            </button>
+            <button class="vv-detail-tab-btn" data-tab="kommunikation" onclick="showVVDetailTab('kommunikation')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+              Kommunikation
+            </button>
+          </div>
+        </div>
+
+        <!-- Detail Tab Content Areas -->
+        <div class="vv-detail-tab-content active" id="vvd-tab-stammdaten"></div>
+        <div class="vv-detail-tab-content" id="vvd-tab-portfolio"></div>
+        <div class="vv-detail-tab-content" id="vvd-tab-finanzplanung"></div>
+        <div class="vv-detail-tab-content" id="vvd-tab-compliance"></div>
+        <div class="vv-detail-tab-content" id="vvd-tab-impulse"></div>
+        <div class="vv-detail-tab-content" id="vvd-tab-kommunikation"></div>
+      </div>
+    </div>
+
+  </div><!-- Ende VERMOEGENSVERWALTUNG MODULE -->
+
+  <!-- ========================================
      RISIKOSCORING MODULE - Vermittler-Scoring Dashboard
      ======================================== -->
   <div id="risikoscoringModule" class="module-content" style="display: none;">
@@ -7825,6 +7985,9 @@
     <script src="js/banken-export.js?v=20260309"></script>
     <script src="js/banken-config-pdf.js?v=20260309"></script>
     <script src="js/banken-chat.js?v=20251217"></script>
+    <!-- Vermögensverwaltung (OPT-21) -->
+    <script src="js/vv-mock-data.js?v=20260310"></script>
+    <script src="js/vv-overview.js?v=20260310"></script>
     <script src="js/asset-management.js?v=20260220"></script>
     <script src="js/am-prod-mode.js?v=20260223"></script>
     <script src="js/risikoscoring-data.js?v=20260309"></script>

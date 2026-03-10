@@ -1,0 +1,775 @@
+/* css/vermoegensverwaltung.css – OPT-21: Vermögensverwaltung (HRK LUNIS) Styles */
+
+/* ── VV BRANDING COLORS ── */
+:root {
+    --vv-primary: #1a365d;
+    --vv-primary-light: #2d4a7a;
+    --vv-accent: #c4a35a;
+    --vv-accent-light: #d4b76e;
+    --vv-bg: #f8fafc;
+    --vv-card-bg: #ffffff;
+    --vv-text: #1e293b;
+    --vv-text-muted: #64748b;
+    --vv-border: #e2e8f0;
+    --vv-positive: #16a34a;
+    --vv-negative: #dc2626;
+    --vv-warning: #ea580c;
+}
+
+/* ── VV PAGE ── */
+.vv-page {
+    background: var(--vv-bg);
+    min-height: 100vh;
+}
+
+.vv-page-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 24px 32px;
+}
+
+/* ── VV HEADER ── */
+.vv-header {
+    background: linear-gradient(135deg, var(--vv-primary), var(--vv-primary-light));
+    color: white;
+    padding: 16px 24px;
+    border-radius: 0 0 12px 12px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px;
+}
+
+.vv-header-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.vv-header .back-button {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: white;
+    padding: 6px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: background 0.15s;
+}
+
+.vv-header .back-button:hover {
+    background: rgba(255,255,255,0.25);
+}
+
+.vv-header-info {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.vv-brand-logo {
+    background: var(--vv-accent);
+    padding: 6px 14px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+}
+
+.vv-brand-text {
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    color: var(--vv-primary);
+}
+
+.vv-page-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0;
+    line-height: 1.3;
+}
+
+.vv-subtitle {
+    font-size: 13px;
+    opacity: 0.85;
+}
+
+.vv-header-tabs {
+    display: flex;
+    gap: 4px;
+    margin-left: auto;
+    flex-wrap: wrap;
+}
+
+/* ── VV TAB BUTTONS ── */
+.vv-tab-btn,
+.vv-detail-tab-btn {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: rgba(255,255,255,0.8);
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: all 0.15s;
+    white-space: nowrap;
+}
+
+.vv-tab-btn:hover,
+.vv-detail-tab-btn:hover {
+    background: rgba(255,255,255,0.2);
+    color: white;
+}
+
+.vv-tab-btn.active,
+.vv-detail-tab-btn.active {
+    background: rgba(255,255,255,0.25);
+    color: white;
+    border-color: rgba(255,255,255,0.4);
+    font-weight: 600;
+}
+
+/* ── VV TAB CONTENT ── */
+.vv-tab-content,
+.vv-detail-tab-content {
+    display: none;
+}
+
+.vv-tab-content.active,
+.vv-detail-tab-content.active {
+    display: block;
+}
+
+/* ── VV KPI ROW ── */
+.vv-kpi-row {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.vv-kpi-card {
+    background: var(--vv-card-bg);
+    border: 1px solid var(--vv-border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 1px 3px rgba(15,23,42,0.06);
+}
+
+.vv-kpi-icon {
+    color: var(--vv-primary);
+    opacity: 0.7;
+    flex-shrink: 0;
+}
+
+.vv-kpi-content {
+    min-width: 0;
+}
+
+.vv-kpi-value {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--vv-text);
+    line-height: 1.2;
+}
+
+.vv-kpi-label {
+    font-size: 11px;
+    color: var(--vv-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    margin-top: 2px;
+}
+
+.vv-kpi-trend {
+    font-size: 12px;
+    color: var(--vv-text-muted);
+    margin-top: 2px;
+}
+
+/* ── VV CARD ── */
+.vv-card {
+    background: var(--vv-card-bg);
+    border: 1px solid var(--vv-border);
+    border-radius: 10px;
+    box-shadow: 0 1px 3px rgba(15,23,42,0.06);
+    margin-bottom: 16px;
+}
+
+.vv-card .uebersicht-card-header {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--vv-border);
+}
+
+.vv-card .uebersicht-card-header h3 {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--vv-text);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+}
+
+/* ── VV TABLE ── */
+.vv-table-wrap {
+    overflow-x: auto;
+}
+
+.vv-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.vv-table th {
+    text-align: left;
+    padding: 10px 12px;
+    font-weight: 600;
+    color: var(--vv-text-muted);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    border-bottom: 2px solid var(--vv-border);
+    white-space: nowrap;
+}
+
+.vv-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #f1f5f9;
+    color: var(--vv-text);
+}
+
+.vv-table-row {
+    cursor: pointer;
+    transition: background 0.1s;
+}
+
+.vv-table-row:hover {
+    background: #f8fafc;
+}
+
+.vv-num {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+.vv-positive { color: var(--vv-positive); }
+.vv-negative { color: var(--vv-negative); }
+.vv-warning { color: var(--vv-warning); }
+
+/* ── VV AVATAR ── */
+.vv-avatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    color: white;
+    font-size: 12px;
+    font-weight: 600;
+    flex-shrink: 0;
+}
+
+.vv-avatar-lg {
+    width: 56px;
+    height: 56px;
+    font-size: 18px;
+}
+
+.vv-mandant-cell {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    white-space: nowrap;
+}
+
+/* ── VV STATUS BADGES ── */
+.vv-status-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.vv-status-ok {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.vv-status-warning {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.vv-status-danger {
+    background: #fef2f2;
+    color: #991b1b;
+}
+
+.vv-status-info {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+/* ── VV PIPELINE ── */
+.vv-funnel {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+}
+
+.vv-funnel-stage {
+    text-align: center;
+    background: #f1f5f9;
+    border-radius: 8px;
+    padding: 12px 20px;
+    min-width: 80px;
+}
+
+.vv-funnel-count {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--vv-primary);
+}
+
+.vv-funnel-label {
+    font-size: 11px;
+    color: var(--vv-text-muted);
+    margin-top: 2px;
+}
+
+.vv-funnel-arrow {
+    font-size: 20px;
+    color: var(--vv-text-muted);
+}
+
+.vv-pipeline-summary {
+    text-align: center;
+    font-size: 14px;
+    color: var(--vv-text-muted);
+    margin-bottom: 8px;
+}
+
+.vv-stage-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    background: #e2e8f0;
+    color: #334155;
+}
+
+.vv-stage-onboarding { background: #dcfce7; color: #166534; }
+.vv-stage-analyse_vorschlag { background: #dbeafe; color: #1e40af; }
+.vv-stage-beratungsgespraech { background: #fef3c7; color: #92400e; }
+.vv-stage-kennenlerngespraech { background: #f3e8ff; color: #6b21a8; }
+.vv-stage-lead { background: #f1f5f9; color: #475569; }
+
+/* ── VV BAR CHART ── */
+.vv-bar-bg {
+    background: #f1f5f9;
+    border-radius: 4px;
+    height: 20px;
+    width: 100%;
+    min-width: 120px;
+}
+
+.vv-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.3s;
+}
+
+/* ── VV DETAIL GRID ── */
+.vv-detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+@media (max-width: 1024px) {
+    .vv-detail-grid {
+        grid-template-columns: 1fr;
+    }
+    .vv-kpi-row {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .vv-kpi-row {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* ── VV CLIENT 360° ── */
+.vv-client-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.vv-client-info {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--vv-text);
+}
+
+.vv-info-section {
+    margin-top: 16px;
+}
+
+.vv-info-section h4 {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--vv-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    margin: 0 0 8px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--vv-border);
+}
+
+/* ── VV FAMILY TREE ── */
+.vv-family-tree {
+    font-size: 13px;
+    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
+    line-height: 1.8;
+    padding: 12px;
+    background: #f8fafc;
+    border-radius: 8px;
+    border: 1px solid var(--vv-border);
+}
+
+.vv-family-root {
+    font-weight: 600;
+    color: var(--vv-primary);
+}
+
+.vv-family-child {
+    margin-left: 16px;
+    color: var(--vv-text);
+}
+
+/* ── VV WEALTH TABLE ── */
+.vv-wealth-table {
+    font-size: 14px;
+}
+
+.vv-wealth-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.vv-wealth-row:last-child {
+    border-bottom: none;
+}
+
+.vv-wealth-sub {
+    padding-left: 20px;
+    font-size: 13px;
+    color: var(--vv-text-muted);
+}
+
+.vv-wealth-divider {
+    border-top: 2px solid var(--vv-border);
+    margin: 8px 0;
+}
+
+.vv-wealth-total {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--vv-primary);
+}
+
+.vv-wealth-highlight {
+    color: var(--vv-primary);
+    font-weight: 500;
+}
+
+.vv-wealth-potential {
+    color: var(--vv-accent);
+}
+
+/* ── VV BILANZ ── */
+.vv-bilanz-section {
+    margin-bottom: 20px;
+}
+
+.vv-bilanz-section h4 {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--vv-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    margin: 0 0 8px;
+}
+
+.vv-bilanz-total {
+    background: #f8fafc;
+    padding: 12px 16px;
+    border-radius: 8px;
+    border: 1px solid var(--vv-border);
+    margin-top: 16px;
+}
+
+/* ── VV PERFORMANCE ── */
+.vv-perf-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+.vv-perf-item {
+    background: #f8fafc;
+    border-radius: 8px;
+    padding: 12px 14px;
+    border: 1px solid var(--vv-border);
+}
+
+.vv-perf-label {
+    font-size: 11px;
+    color: var(--vv-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    display: block;
+}
+
+.vv-perf-value {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--vv-text);
+    display: block;
+    margin-top: 4px;
+}
+
+/* ── VV REBALANCING ── */
+.vv-rebalancing-hint {
+    margin-top: 16px;
+    padding: 12px 16px;
+    background: #fffbeb;
+    border: 1px solid #fbbf24;
+    border-radius: 8px;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+/* ── VV BUTTONS ── */
+.vv-btn {
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all 0.15s;
+}
+
+.vv-btn-primary {
+    background: var(--vv-primary);
+    color: white;
+    border-color: var(--vv-primary);
+}
+
+.vv-btn-primary:hover {
+    background: var(--vv-primary-light);
+}
+
+.vv-btn-secondary {
+    background: white;
+    color: var(--vv-primary);
+    border-color: var(--vv-border);
+}
+
+.vv-btn-secondary:hover {
+    background: #f8fafc;
+    border-color: var(--vv-primary);
+}
+
+/* ── VV TAGESSTART ── */
+.vv-tagesstart-items {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.vv-tagesstart-item {
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border: 1px solid var(--vv-border);
+}
+
+.vv-tagesstart-item.vv-prio-hoch {
+    background: #fef2f2;
+    border-color: #fecaca;
+}
+
+.vv-tagesstart-item.vv-prio-mittel {
+    background: #fffbeb;
+    border-color: #fed7aa;
+}
+
+.vv-tagesstart-item.vv-prio-niedrig {
+    background: #f0fdf4;
+    border-color: #bbf7d0;
+}
+
+.vv-ts-icon {
+    flex-shrink: 0;
+}
+
+/* ── VV EINZEILER ── */
+.vv-einzeiler {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    flex-wrap: wrap;
+}
+
+.vv-einzeiler-sep {
+    color: var(--vv-text-muted);
+    opacity: 0.5;
+}
+
+/* ── VV IMPULSE/POTENTIAL CARDS ── */
+.vv-impulse-card {
+    padding: 12px 16px;
+    border-radius: 8px;
+    border: 1px solid var(--vv-border);
+    margin-bottom: 8px;
+}
+
+.vv-impulse-card.vv-prio-hoch {
+    border-left: 4px solid var(--vv-negative);
+    background: #fef2f2;
+}
+
+.vv-impulse-card.vv-prio-mittel {
+    border-left: 4px solid var(--vv-warning);
+    background: #fffbeb;
+}
+
+.vv-impulse-card.vv-prio-niedrig {
+    border-left: 4px solid var(--vv-positive);
+    background: #f0fdf4;
+}
+
+.vv-impulse-header {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--vv-text);
+}
+
+.vv-impulse-prio {
+    display: inline-block;
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    background: #e2e8f0;
+    color: #475569;
+    margin-right: 4px;
+}
+
+.vv-impulse-produkt {
+    font-size: 12px;
+    color: var(--vv-text-muted);
+    margin-top: 4px;
+}
+
+.vv-potential-card {
+    padding: 14px 16px;
+    border-radius: 8px;
+    border: 1px solid var(--vv-border);
+    margin-bottom: 10px;
+    background: #f8fafc;
+}
+
+.vv-potential-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+}
+
+.vv-potential-vol {
+    margin-left: auto;
+    font-weight: 700;
+    color: var(--vv-primary);
+}
+
+.vv-potential-desc {
+    font-size: 13px;
+    color: var(--vv-text);
+    line-height: 1.5;
+}
+
+.vv-potential-status {
+    font-size: 12px;
+    color: var(--vv-text-muted);
+    margin-top: 6px;
+}
+
+/* ── VV KOMMUNIKATION ── */
+.vv-komm-item {
+    display: flex;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.vv-komm-item:last-child {
+    border-bottom: none;
+}
+
+.vv-komm-icon {
+    font-size: 18px;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.vv-komm-content {
+    font-size: 14px;
+    color: var(--vv-text);
+    line-height: 1.5;
+}
+
+.vv-komm-meta {
+    font-size: 12px;
+    color: var(--vv-text-muted);
+    margin-top: 2px;
+}
+
+.vv-komm-notiz {
+    font-size: 13px;
+    color: var(--vv-text-muted);
+    margin-top: 4px;
+    font-style: italic;
+}

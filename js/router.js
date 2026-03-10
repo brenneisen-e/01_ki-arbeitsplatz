@@ -162,7 +162,8 @@
                 'landingPage', 'mainApp', 'agenturOverview', 'beraterOverviewPage',
                 'kundenDetailBankPage', 'bgavUmstellungPage', 'bankenModule',
                 'assetModule', 'risikoscoringModule', 'bestandsuebertragungModule',
-                'pmoToolboxModule', 'hrPipelineModule', 'versicherungs1x1Module'
+                'pmoToolboxModule', 'hrPipelineModule', 'versicherungs1x1Module',
+                'vermoegensverwaltungModule', 'vvOverviewPage', 'vvDetailPage'
             ];
 
             var anyVisible = containers.some(function(id) {
@@ -267,6 +268,7 @@
                 'bgav-umstellung':      function() { return typeof openBgavTool === 'function' ? (openBgavTool(), true) : false; },
                 'banken':               function() { return typeof switchModule === 'function' ? (switchModule('banken'), true) : false; },
                 'asset-management':     function() { return typeof switchModule === 'function' ? (switchModule('asset'), true) : false; },
+                'vv-overview':          function() { return typeof switchModule === 'function' ? (switchModule('vermoegensverwaltung'), true) : false; },
                 'risikoscoring':        function() { return typeof openRisikoscoring === 'function' ? (openRisikoscoring(), true) : false; },
                 'bestandsuebertragung': function() { return typeof openBestandsuebertragung === 'function' ? (openBestandsuebertragung(), true) : false; },
                 'pmo-toolbox':          function() { return typeof openPMOToolbox === 'function' ? (openPMOToolbox(), true) : false; },

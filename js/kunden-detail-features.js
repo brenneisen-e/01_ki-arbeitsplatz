@@ -325,7 +325,8 @@ function switchKundenTab(tabName) {
     // Render dynamic content for tabs
     if (tabName === 'fida') setTimeout(function() {
         if (typeof renderBezahlenContent === 'function') renderBezahlenContent();
-        if (typeof renderFidaStufe2 === 'function') renderFidaStufe2();
+        // FIDA-Empfehlungen gehoeren in den Potentiale-Tab, nicht in Open Finance
+        // if (typeof renderFidaStufe2 === 'function') renderFidaStufe2();
         if (typeof renderSankeyFlow === 'function') renderSankeyFlow();
         setTimeout(function() { if (typeof addFidaActionButtons === 'function') addFidaActionButtons(); }, 100);
     }, 50);

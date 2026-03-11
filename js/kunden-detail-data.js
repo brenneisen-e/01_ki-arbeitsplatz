@@ -37,10 +37,11 @@ function fillKundenDetail(kundenName, vermittlerId) {
             adresse: 'Musterstra\u00DFe 123, 12345 Musterstadt',
             telefon: '+49 123 456789',
             email: 'peter.schmidt@email.de',
-            beruf: 'Angestellter',
+            beruf: 'Senior IT-Projektmanager',
             familienstand: 'Verheiratet',
             nettoeinkommen: 3800,
             arbeitgeber: 'TechCorp GmbH',
+            linkedinHint: true,
             beschaeftigtSeit: '01.03.2016',
             tiere: 'unbekannt',
             risikoscore: 35,
@@ -551,7 +552,14 @@ function fillKundenDetail(kundenName, vermittlerId) {
     document.getElementById('kundenAdresse').textContent = kunde.adresse;
     document.getElementById('kundenTelefon').textContent = kunde.telefon;
     document.getElementById('kundenEmail').textContent = kunde.email;
-    document.getElementById('kundenBeruf').textContent = kunde.beruf;
+    var berufEl = document.getElementById('kundenBeruf');
+    if (berufEl) {
+        if (kunde.linkedinHint) {
+            berufEl.innerHTML = kunde.beruf + ' <img src="https://img.logo.dev/linkedin.com?token=pk_H7vb5Y2lTsW47U4Xq-w3HA&size=40&format=png" alt="LinkedIn" style="width:16px;height:16px;vertical-align:middle;margin-left:4px;border-radius:3px;opacity:0.8;" title="Quelle: LinkedIn-Profil">';
+        } else {
+            berufEl.textContent = kunde.beruf;
+        }
+    }
     document.getElementById('kundenFamilienstand').textContent = kunde.familienstand;
 
     // Kinder

@@ -625,7 +625,6 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
-    max-width: 900px;
 }
 
 /* Individual Card – combines A-02 table layout with B-02 expandable detail */

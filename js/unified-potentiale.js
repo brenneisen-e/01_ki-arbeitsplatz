@@ -502,7 +502,7 @@
                 '</div>' +
                 '<div class="unified-pot-card-right">' +
                     '<div class="unified-pot-card-kennzahl"><svg class="kz-icon" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a4 4 0 00-8 0v2"/></svg><span class="unified-pot-card-kz-label">Volumen</span><span class="unified-pot-card-kz-value">' + formatCurrency(totalVolumen) + '</span></div>' +
-                    '<div class="unified-pot-card-kennzahl"><svg class="kz-icon" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg><span class="unified-pot-card-kz-label">Ertrag</span><span class="unified-pot-card-kz-value prov">' + formatCurrency(totalErtrag) + '</span></div>' +
+                    '<div class="unified-pot-card-kennzahl"><svg class="kz-icon" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><path d="M17 9a5 5 0 00-4.5-3H11a4 4 0 000 8h2a4 4 0 010 8h-1.5A5 5 0 017 19"/><line x1="5" y1="12" x2="19" y2="12"/><line x1="5" y1="15" x2="16" y2="15"/></svg><span class="unified-pot-card-kz-label">Ertrag</span><span class="unified-pot-card-kz-value prov">' + formatCurrency(totalErtrag) + '</span></div>' +
                 '</div>' +
                 '<span class="unified-pot-expand">' + getIcon('chevronDown') + '</span>' +
             '</div>';

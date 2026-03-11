@@ -30,9 +30,9 @@ function fillKundenDetail(kundenName, vermittlerId) {
     const idEl = document.getElementById('kundenVermittlerId');
     if (idEl) idEl.textContent = vermittlerId;
 
-    // Mock-Daten für Demo
-    const mockKunden = {
-        'Peter Schmidt': {
+    // Mock-Daten: Inline-Legacy + OPT-26 Personas aus externen Dateien (ueberschreiben Legacy)
+    var _legacyKunden = {
+        'Peter Schmidt__LEGACY': {
             geburtsdatum: '15.03.1985',
             adresse: 'Musterstra\u00DFe 123, 12345 Musterstadt',
             telefon: '+49 123 456789',
@@ -524,6 +524,8 @@ function fillKundenDetail(kundenName, vermittlerId) {
             ]
         }
     };
+    // OPT-26 Personas ueberschreiben Legacy-Daten (gleiche Namen haben Vorrang)
+    var mockKunden = Object.assign({}, _legacyKunden, window._versicherungsPersonas || {});
 
     window.mockKunden = mockKunden;
     const kunde = mockKunden[kundenName] || mockKunden['Peter Schmidt'];

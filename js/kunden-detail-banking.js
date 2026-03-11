@@ -1,5 +1,6 @@
 // ── MOCK KUNDEN DETAIL DATA ──
-var bankMockKunden = {
+// Legacy-Daten – werden von OPT-26 Personas ueberschrieben (Object.assign)
+var _legacyBankKunden = {
     'Klaus Fischer': {
         id:'KDB001', ort:'Gießen', segment:'Premium', ertrag:4850, finanzplan:true, letztKontakt:'28.02.2026',
         geburtsdatum:'12.05.1978', adresse:'Hauptstraße 45, 35390 Gießen', telefon:'+49 641 98765', email:'k.fischer@email.de',
@@ -492,6 +493,9 @@ var bankMockKunden = {
         avatarBg:'#be185d', foto:null
     }
 };
+
+// OPT-26 Personas ueberschreiben Legacy-Daten
+var bankMockKunden = Object.assign({}, _legacyBankKunden, window._bankingPersonas || {});
 
 // Default for any customer not explicitly defined
 var bankDefaultKunde = {

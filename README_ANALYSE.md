@@ -1,7 +1,7 @@
 # README_ANALYSE.md – Vollstaendige Projektanalyse KI-Arbeitsplatz
 
-> **Stand:** 2026-03-10
-> **Fokus:** Module A-02 (Vermittler-Overview), A-10 (Kunden-Detailansicht), VV-02 (Berater-Overview), VV-10 (Mandanten-Detail)
+> **Stand:** 2026-03-11
+> **Fokus:** Alle Module: A-02, A-10, B-02, B-10, VV-02, VV-10, Landing Page, Widget-Baukasten
 > **Sprache:** Deutsch
 
 ---
@@ -346,60 +346,254 @@ kiarbeitsplatz/
 
 ---
 
-## 2. Modul A-02 – Vermittler-Overview (Detailanalyse)
+## 2. Globaler Header (OPT-24)
 
-### 2.1 Zweck, Zielgruppe & Kontext
+### 2.1 Prinzip: EIN Header fuer alle Screens
 
-**Zweck:** Zentrale Uebersichtsseite fuer einen einzelnen Versicherungsvermittler (Agenturbetrieb). Zeigt alle relevanten KPIs, Kundenlisten, Vertragsdaten und Qualitaetskennzahlen.
+Seit OPT-24 gibt es **einen einzigen globalen Header**, der auf allen Screens (A-02, A-10, B-02, B-10, VV-02, VV-10) **identisch** aussieht. Die rechten Controls (Modus-Dropdown + Closed/Open Toggle) werden per **DOM-Portal** zwischen den Seiten verschoben.
+
+### 2.2 Header-Struktur (ueberall identisch)
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│ [← Zurueck]  [Logo] [Foto] Titel / Subtitle   [Closed·Open] [▼ Privatkunde (AO)] │
+├─────────────────────────────────────────────────────────────────────┤
+│  Uebersicht │ Stammdaten │ Neugeschaeft │ Bestand │ ... │ Kunden │ Potentiale  │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+**Linke Seite (pro Seite spezifisch):**
+- Zurueck-Button (unterschiedliche onclick-Handler je Seite)
+- Instituts-/Versicherer-Logo (`insurer-logo-container`)
+- Berater/Vermittler-Foto (`agentur-photo-small`)
+- Titel + Untertitel (`agentur-page-title` + `agentur-subtitle`)
+
+**Rechte Seite (GLOBAL, wird per JS verschoben):**
+- `#financeModeToggle` – Closed/Open Finance Toggle
+- `#viewModeDropdown` – Modus-Dropdown mit vollstaendigem Menue
+- Demo-Reset-Button
+- Notification-Bell
+
+**Tab-Zeile (pro Seite spezifisch):**
+- Jede Seite hat ihre eigenen Tabs im Header
+
+### 2.3 Modus-Dropdown (`#viewModeMenu`)
+
+Das Dropdown enthaelt ALLE verfuegbaren Modi in einem einzigen Menue:
+
+| Gruppe | Eintraege | Funktion |
+|---|---|---|
+| **Versicherer-Auswahl** | ERGO, Allianz, AXA, Zurich, Generali, HDI, R+V, Signal Iduna, Gothaer, Debeka | `setInsurer(key)` |
+| **Versicherungs-Modus** | Privatkunde (AO), Makler B2B, Gewerbemakler 360° | `setViewMode(mode)` |
+| **Bank-Auswahl** | VR, Sparkasse, Commerzbank, Deutsche Bank, DKB, ING, Targobank, apoBank | `setBank(key)` |
+| **Banking-Modus** | Banking Retail, Banking Firmenkunde, Banking Vermoegen | `setViewMode(mode)` |
+| **VV-Auswahl** | HRK LUNIS | `setVV(key)` |
+| **VV-Modus** | FairValue, SmartValue, Institutional | `setViewMode(mode)` |
+
+### 2.4 Controls-Portal Mechanismus
+
+Die globalen Controls werden per `moveGlobalControls(slotId)` zwischen Slots verschoben:
+
+| Seite | Slot-ID | Wann verschoben |
+|---|---|---|
+| A-02 (Home) | `a02ControlsSlot` | Default-Position, bei `closeKundenDetail()`, `backFromVVOverview()`, `backToLanding()` |
+| A-10 | `a10ControlsSlot` | Bei `openKundenDetail()` |
+| VV-02 | `vv02ControlsSlot` | Bei `showVVOverview()` |
+| VV-10 | `vv10ControlsSlot` | Bei `openVVMandantDetail()` |
+
+### 2.5 Closed/Open Finance Toggle
+
+- **Closed:** Nur eigene Daten des Versicherers/der Bank
+- **Open:** Alle Institute inkl. Genossenschaftsgruppe (Open Finance / FIDA)
+- Gesteuert durch `setFinanceMode('closed'|'open')`
+- Aktualisiert alle `.finance-mode-btn` Elemente via `querySelectorAll`
+
+---
+
+## 3. Modul A-02 – Vermittler-Overview (Detailanalyse)
+
+### 3.1 Zweck, Zielgruppe & Kontext
+
+**Zweck:** Zentrale Uebersichtsseite fuer einen einzelnen Versicherungsvermittler. Zeigt KPIs, Kundenlisten, Vertragsdaten, Potentiale und Qualitaetskennzahlen.
 
 **Zielgruppe:** Vertriebsleiter, Agenturinhaber, Aussendienst-Fuehrungskraefte
 
-**Kontext im Gesamtsystem:**
-- Erreichbar ueber Route `/agentur` (Hash `#/agentur`)
+**Kontext:**
+- Container: `#agenturOverview` (display:none wenn nicht aktiv)
+- Route: `/agentur`
 - Page-ID: `A-02`
-- Lebt innerhalb des `versicherungModule`-Containers
-- Einstieg erfolgt typischerweise ueber Landing Page (M-01) → Versicherungsmodul → Agentur-Auswahl (A-01) → A-02
-- Varianten: A-02b (Makler B2B / Ecclesia), A-02c (Gewerbe 360 / MRH Trowe)
-- B-02 (Banking Berater) ist KEIN separates Modul, sondern als View-Mode in agentur-overview.js integriert
+- Varianten durch View-Mode: A-02 (AO), A-02b (Makler B2B), A-02c (Gewerbe 360°)
+- B-02 (Banking) teilt denselben Container mit anderen Tab-Sets
 
-**Hauptdatei:** `js/agentur-overview.js` (ca. 3.400+ Zeilen)
-**HTML-Bereich:** `index.html` Zeilen ~1900-4200 (Container `#agenturOverview`)
-**CSS:** `css/agentur-fachkonzept.css`
+**JS-Dateien:** `agentur-overview-core.js`, `agentur-overview-features.js`, `agentur-overview-tables.js`, `agentur-overview-banking.js`
+**CSS:** `css/agentur-fachkonzept.css`, `css/styles.css`
 
-### 2.2 Screens, Views & Tabs
+### 3.2 Cockpit-KPIs (Ebene 1)
 
-#### 2.2.1 Haupt-Container
-- `#agenturOverview` – Gesamter A-02 Bereich, wird via `style.display` ein-/ausgeblendet
+Die KPIs aendern sich je nach aktivem Modus:
 
-#### 2.2.2 Header-Bereich
-- Vermittler-Profilbild (Avatar mit Initialen)
-- Name, Vermittler-ID, Standort
-- Stammdaten-Button (oeffnet Stammdaten-Overlay)
-- Dropdown zur Vermittler-Auswahl (`#agenturDropdown`)
-- KPI-Cockpit mit 9 Boxen (siehe 2.6.1)
-
-#### 2.2.3 Tab-System (Hauptnavigation)
-Das Tab-System wird ueber `showAgenturTab(tabName)` gesteuert. Verfuegbare Tabs:
-
-| Tab-Name | DOM-ID | Beschreibung |
+**Versicherungs-KPIs (AO-Modus):**
+| KPI | ID | Beschreibung |
 |---|---|---|
-| `uebersicht` | `#agenturTabUebersicht` | Standard-Tab: Cockpit-KPIs, Aktivitaeten |
-| `neugeschaeft` | `#agenturTabNeugeschaeft` | Neugeschaeft-Vertragstabelle mit Filtern |
-| `bestand` | `#agenturTabBestand` | Bestandsvertraege mit Zeitraum-Filter |
-| `storno` | `#agenturTabStorno` | Storno-Vertraege mit Typ-Filter |
-| `provision` | `#agenturTabProvision` | Provisionsabrechnung & Diagramme |
-| `qualitaet` | `#agenturTabQualitaet` | Qualitaetskennzahlen & Bewertungen |
-| `kunden` | `#agenturTabKunden` | Kundenliste mit Suchfunktion |
-| `potentiale` | `#agenturTabPotentiale` | Vertriebspotentiale & FIDA Cases |
-| `kommunikation` | `#agenturTabKommunikation` | Kommunikationshistorie |
+| Gesamtbestand | `cockpitBestand` | GWP in Euro |
+| Neugeschaeft YTD | `cockpitNeugeschaeft` | Neugeschaeft Year-to-Date |
+| Storno-Quote | `cockpitStorno` | Frueh- und Spaetstorno |
+| Zielerfullung | `cockpitZiel` | Prozentualer Fortschritt |
 
-#### 2.2.4 Overlays & Modals
-- **Stammdaten-Overlay** (`#stammdatenOverlay`): Detaillierte Vermittler-Stammdaten
-- **Vertrags-Detail-Modal** (`#vertragDetailModal`): Einzelvertrags-Ansicht bei Klick auf Tabellenzeile
-- **Billing-Check Modal** (`#billingCheckModal`): Abrechnungspruefung
-- **KI-Chat Panel** (`#agenturChatPanel`): Chat-Bereich fuer Vermittler-spezifische Fragen
+**Makler B2B KPIs (5 Stueck):** Bestandspraemie, Neugeschaeft YTD, Courtage YTD, Retention Rate, Ø Schadenquote
 
-### 2.3 Klickstrecken & User Flows
+**MRH/Gewerbe 360° KPIs (5 Stueck):** Bestandspraemie, Neugeschaeft YTD, Courtage YTD, Retention Rate, Ø Schadenquote
+
+**Banking Retail KPIs (4 Stueck):** Kundenstamm, Ertrag YTD, Cross-Selling-Quote, VR-FinanzPlan-Quote
+
+**Banking Firmenkunde KPIs (5 Stueck):** Kreditvolumen, Neugeschaeft YTD, Provisionsertrag, Ausfallrisiko, Kundenbindung
+
+**Banking Vermoegen KPIs (4 Stueck):** AuM Gesamt, Provisions-Ertrag WP, Vorsorge-Ertrag, Gesamt-Ertrag PB
+
+### 3.3 Tab-System (Hauptnavigation A-02)
+
+Gesteuert durch `showAgenturTab(tabName)`. Content-Divs: `#tab-{tabName}`.
+
+#### Tab 1: Uebersicht (`#tab-uebersicht`) – DEFAULT
+
+| Kachel/Section | Beschreibung |
+|---|---|
+| **Intelligenter Tagesstart** (`#tagesstartCardA02`) | KI-generierte Tagesempfehlungen (OPT-01), dynamisch gerendert |
+| **Widget Dashboard** (`#widgetGrid`) | Konfigurierbares Widget-Grid (OPT-14, siehe Abschnitt Widget-Baukasten) |
+| **Vertriebskennzahlen** | 4 KPI-Kacheln: Abschluesse, Neugeschaeft, Termine, Abschlussquote. Umschaltbar Woche/Monat |
+| **Vertriebspotentiale** | Top-5 Potentiale als Karten: Kundenname, Produkt, Praemie, Provision, Prioritaet (Hoch/Mittel/Niedrig) |
+| **Letzte Abschluesse** | Tabelle der letzten Vertragsabschluesse mit Datum, Kunde, Sparte, Praemie |
+| **Letzte Abrechnungen** | Tabelle der letzten Provisionsabrechnungen |
+| **Kundenstruktur** | Balkendiagramm: Kundenverteilung nach Segment (Privat, Gewerbe, etc.) |
+| **Spartenverteilung** | Balkendiagramm: Bestandsverteilung nach Versicherungssparten |
+
+#### Tab 2: Stammdaten (`#tab-stammdaten`)
+
+| Kachel/Section | Beschreibung |
+|---|---|
+| **Basis-Stammdaten** | Grid mit: Agenturnummer, Name/Firma, Adresse, Telefon, E-Mail, Agenturtyp, Status (Badge), Vertragsbeginn |
+| **Qualifikation** | Grid mit: IHK-Registrierung, §34d Status, Weiterbildungsstunden, Letzte Pruefung |
+| **Vertriebsstruktur** | Grid mit: Vertriebsleiter, Region, Segment, Verbund-Partner |
+| **CV Scanner** | Upload-Bereich fuer Lebenslauf-Analyse (KI-gestuetzt) |
+
+#### Tab 3: Neugeschaeft (`#tab-neugeschaeft`)
+
+| Kachel/Section | Beschreibung |
+|---|---|
+| **6 KPI-Karten** | Antraege, Policiertes NG, Jahresbeitrag (APE), Abschlussquote, Ø Beitrag, Cross-Selling-Quote |
+| **Spartenverteilung NG** | Balkendiagramm der Neugeschaeft-Verteilung nach Sparten (`#spartenNeugeschaeft`) |
+| **Vertragstabelle Neugeschaeft** | Sortierbare Tabelle mit Spalten: Datum, Kunde, Sparte, Produkt, Praemie, Status, AP. Filter nach Sparte und Zeitraum |
+
+#### Tab 4: Bestand (`#tab-bestand`)
+
+| Kachel/Section | Beschreibung |
+|---|---|
+| **5 KPI-Karten** | Bestandsbeitrag (GWP), Vertragsanzahl, Bestandswachstum, Kundenzahl, Vertraege pro Kunde |
+| **Zeitraum-Filter** | Auswahl des Betrachtungszeitraums |
+| **Spartenverteilung Bestand** | Balkendiagramm (`#spartenBestand`) |
+| **Vertragstabelle Bestand** | Sortierbare Tabelle: Vertragsnr, Kunde, Sparte, Produkt, Praemie, Status. Filter nach Sparte |
+
+#### Tab 5: Storno (`#tab-storno`)
+
+| Kachel/Section | Beschreibung |
+|---|---|
+| **3 KPI-Karten** | Fruehstorno-Quote (<12 Mon., Warning), Spaetstorno-Quote (>12 Mon.), Netto-Bestandsentwicklung |
+| **Storno-Gruende** | Liste der Storno-Gruende mit Balken-Visualisierung (`#stornoGruende`) |
+| **Vertragstabelle Storno** | Tabelle stornierter Vertraege mit Storno-Grund, -Datum, -Typ |
+
+#### Tab 6: Verguetung/Provision (`#tab-provision`)
+
+| Kachel/Section | Beschreibung |
+|---|---|
+| **4 KPI-Karten** | Provisionsanspruch (Highlight), Stornohaftung (Warning), Bonus-Erreichung, Deckungsbeitrag |
+| **Provisionssimulation** | Interaktives Simulations-Tool: Schieberegler fuer Praemienvolumen, Provisionsberechnung (OPT-09) |
+| **Provisions-Staffeln** | Tabelle der aktiven Staffeln und Bonusregelungen |
+| **Abrechnungshistorie** | Tabelle vergangener Abrechnungen mit Zeitraum-Filter |
+
+#### Tab 7: Qualitaet (`#tab-qualitaet`)
+
+| Kachel/Section | Beschreibung |
+|---|---|
+| **6 KPI-Karten** | NPS Score, Beschwerdequote, IDD-Compliance (Badge), Schulungsstatus (§34d GewO), Dokumentationsquote, Underwriting-Quote |
+| **NPS Detail** | Detailansicht Net Promoter Score mit Trend-Chart |
+| **Beschwerden** | Auflistung offener/geschlossener Beschwerden |
+| **Schulungsuebersicht** | Auflistung absolvierter Schulungen und offener Pflichtschulungen |
+
+#### Tab 8: Kunden (`#tab-kundenliste`)
+
+| Kachel/Section | Beschreibung |
+|---|---|
+| **Suchleiste** | Freitext-Suche ueber Kundennamen |
+| **Kundenliste** | Klickbare Kundenkarten mit: Foto, Name, Kunden-ID, Vertragsanzahl, Bestandspraemie. Klick oeffnet A-10 |
+
+#### Tab 9: Potentiale (`#tab-potential`)
+
+| Kachel/Section | Beschreibung |
+|---|---|
+| **Unified Potentiale** (`#unifiedPotentialeA02`) | Dynamisch gerendert durch `renderUnifiedPotentiale()`. Gruppiert nach Kunde mit aufklappbaren Gruppen. Filter nach Status (Offen/In Bearbeitung/Abgeschlossen). Hover-Effekte auf Zeilen |
+| **FIDA-Potentiale** | Zusaetzliche Potentiale aus Open Finance Daten (wenn FIDA aktiv) |
+
+### 3.4 Makler B2B Tabs (A-02b, Modus `ecclesia`)
+
+Aktiviert durch `setViewMode('ecclesia')`. Eigene Tab-Leiste mit `agentur-tab-makler` Klasse.
+
+| Tab | DOM-ID | Beschreibung |
+|---|---|---|
+| Uebersicht | `#tab-makler-uebersicht` | Makler-spezifische KPIs und Uebersicht |
+| Stammdaten | `#tab-makler-stammdaten` | Maklerstammdaten |
+| Neugeschaeft | `#tab-makler-neugeschaeft` | Neugeschaeft-Tabelle Makler |
+| Bestand | `#tab-makler-bestand` | Bestandsvertraege Makler |
+| Versicherer-Mix | `#tab-makler-versicherermix` | Verteilung nach Versicherern |
+| Renewals | `#tab-makler-renewal` | Renewal-Kalender und -Ampel |
+| Schaeden | `#tab-makler-schaden` | Schadenhistorie |
+| Deckungsluecken | `#tab-makler-deckungsluecken` | Deckungsluecken-Analyse |
+| Kunden | `#tab-kundenliste-makler` | Kundenliste (Makler-Ansicht) |
+| Potentiale | `#tab-makler-potentiale` | Potentiale (Makler-spezifisch) |
+
+### 3.5 Gewerbemakler 360° Tabs (A-02c, Modus `mrh`)
+
+Aktiviert durch `setViewMode('mrh')`. Eigene Tab-Leiste mit `agentur-tab-mrh` Klasse.
+
+| Tab | DOM-ID | Beschreibung |
+|---|---|---|
+| Uebersicht | `#tab-mrh-uebersicht` | MRH-spezifische KPIs, Treemap-Visualisierung |
+| Stammdaten | `#tab-mrh-stammdaten` | Gewerbemakler-Stammdaten |
+| Neugeschaeft | `#tab-mrh-neugeschaeft` | Neugeschaeft Gewerbe |
+| Bestand | `#tab-mrh-bestand` | Bestandsvertraege Gewerbe |
+| Versicherer-Mix | `#tab-mrh-versicherermix` | Versicherer-Verteilung |
+| Renewals | `#tab-mrh-renewal` | Renewal-Kalender |
+| Schaeden | `#tab-mrh-schaden` | Schadenverlauf |
+| Deckungsluecken | `#tab-mrh-deckungsluecken` | Gewerbliche Deckungsluecken |
+| Potentiale | `#tab-mrh-potentiale` | Gewerbe-Potentiale |
+
+### 3.6 Banking Tabs (B-02, Modi `bank-retail`/`bank-fk`/`bank-vw`)
+
+Aktiviert durch `setViewMode('bank-retail')` etc. Eigene Tab-Leiste mit `agentur-tab-bank-*` Klassen. B-02 nutzt denselben `#agenturOverview` Container wie A-02.
+
+**Retail-Tabs (`agentur-tab-bank-retail`):**
+
+| Tab | Beschreibung |
+|---|---|
+| Uebersicht | Banking-KPIs (Kundenstamm, Ertrag, Cross-Selling, FinanzPlan-Quote) |
+| Stammdaten | Berater-Stammdaten |
+| Neugeschaeft | Banking-Neugeschaeft |
+| Bestand | Kontenbestand |
+| Qualitaet | Qualitaetskennzahlen Banking |
+| Kunden | Kundenliste (Banking-Ansicht) |
+| Potentiale | Banking-Potentiale |
+
+**Firmenkunde-Tabs (`agentur-tab-bank-fk`):** Zusaetzlich: Kreditportfolio, Risikoanalyse
+
+**Vermoegen-Tabs (`agentur-tab-bank-vw`):** Zusaetzlich: Performance, Nachfolge
+
+### 3.7 KI-Chat (A-02)
+
+- Toggle-Button: `#agenturChatToggle`
+- Chat-Widget: `#agenturChatWidget`
+- Vermittler-spezifische Fragen via Anthropic Claude API
+- Kontext: Aktuelle Vermittler-Daten werden an den Chat uebergeben
+
+### 3.8 Klickstrecken & User Flows
 
 #### Flow 1: Grundnavigation
 ```
@@ -453,7 +647,7 @@ A-02 Tab "Potentiale" → Dropdown "FIDA Case" → filterFidaCases(caseType)
   → Tabelle gefiltert anzeigen
 ```
 
-### 2.4 Funktionen & Handler (vollstaendig)
+### 3.9 Funktionen & Handler (vollstaendig)
 
 #### 2.4.1 Haupt-Einstiegsfunktionen
 
@@ -567,7 +761,7 @@ A-02 Tab "Potentiale" → Dropdown "FIDA Case" → filterFidaCases(caseType)
 | `sendBeraterChatMessage()` | ~3450 | Chat im Banking-Kontext |
 | `getBeraterChatResponse(msg)` | ~3480 | Mock-Responses: Top-5-Kunden, Finanzplan, FIDA, Verbundpartner, Abwanderungsrisiko |
 
-### 2.5 State Management
+### 3.10 State Management
 
 #### 2.5.1 Globale State-Variablen (agentur-overview.js)
 
@@ -593,7 +787,7 @@ A-02 Tab "Potentiale" → Dropdown "FIDA Case" → filterFidaCases(caseType)
 - Alle anderen State-Variablen sind rein In-Memory (gehen bei Reload verloren)
 - Deep-Link-Unterstuetzung ueber Router: URL-Hash speichert aktuelle Route
 
-### 2.6 Datenstrukturen & Mock-Daten
+### 3.11 Datenstrukturen & Mock-Daten
 
 #### 2.6.1 KPI-Definitionen (aus config.js)
 
@@ -731,7 +925,7 @@ Sparten: Leben, Kranken, Schaden/Unfall, Kfz, Haftpflicht, Hausrat, Wohngebaeude
 }
 ```
 
-### 2.7 API-Calls & KI-Integration
+### 3.12 API-Calls & KI-Integration
 
 #### 2.7.1 Chat-System (Mock-Modus)
 
@@ -755,7 +949,7 @@ A-02 nutzt **ausschliesslich Mock-Responses** (kein echter API-Call):
 
 A-02 macht **keine** direkten API-Calls an den Cloudflare Worker (`vst-claude-api.eike-3e2.workers.dev`). Der echte API-Call ist nur im allgemeinen Chat (chat.js, Modul T-05) aktiv.
 
-### 2.8 UI/Layout pro Screen
+### 3.13 UI/Layout pro Screen
 
 #### 2.8.1 Gesamtlayout A-02
 ```
@@ -815,9 +1009,9 @@ A-02 macht **keine** direkten API-Calls an den Cloudflare Worker (`vst-claude-ap
 
 ---
 
-## 3. Modul A-10 – Kunden-Detailansicht (Detailanalyse)
+## 4. Modul A-10 – Kunden-Detailansicht (Detailanalyse)
 
-### 3.1 Zweck, Zielgruppe & Kontext
+### 4.1 Zweck, Zielgruppe & Kontext
 
 **Zweck:** Detailansicht fuer einen einzelnen Versicherungskunden. Zeigt Stammdaten, Vertraege, Open Finance (FIDA) Daten, Beratungsimpulse, CLV-Analyse, Kommunikationshistorie und KI-gestuetzte Produktempfehlungen.
 
@@ -835,61 +1029,136 @@ A-02 macht **keine** direkten API-Calls an den Cloudflare Worker (`vst-claude-ap
 **HTML-Bereich:** `index.html` Zeilen ~4200-7400 (Container `#kundenDetailPage`)
 **CSS:** `css/kunden-detail.css`, `css/kunde-sticky-bar.css`
 
-### 3.2 Screens, Views & Tabs
+### 4.2 Screens, Views & Tabs
 
-#### 3.2.1 Haupt-Container
+#### 4.2.1 Haupt-Container
 - `#kundenDetailPage` – Gesamter A-10 Bereich, per `style.display` gesteuert
 - CSS-Klassen: `makler-view` oder `ao-view` (je nach Vermittlermodus)
 - Kann auch `bank-mode` Klasse tragen (wenn von B-02 aufgerufen)
 
-#### 3.2.2 Shared Header
-- Vermittler-Foto + Name (vom A-02 uebernommen)
-- Vermittler-ID
-- Kunden-Dropdown (`#kundenSwitchSelect`) zum Kundenwechsel ohne Zuruecknavigation
-- Finance-Mode-Toggle (`#a10FinanceModeToggle`): `closed` / `open` (Open Finance)
+#### 4.2.2 Header (OPT-24: identisch mit A-02)
+- Zurueck-Button → `closeKundenDetail()`
+- Instituts-Logo (`#a10InstitutLogo`), Berater-Foto, Titel, Untertitel
+- Globale Controls werden per Portal in `#a10ControlsSlot` verschoben
+- **KEIN** Kunden-Dropdown mehr (OPT-24 entfernt)
 
-#### 3.2.3 Kunden-Profil-Bereich
-- Kundenfoto (aus Adobe Stock oder SVG-Fallback)
-- Name, Geburtsdatum, Adresse, Telefon, E-Mail
-- Beruf, Familienstand, Arbeitgeber, Beschaeftigt seit
-- Kinder-Badges
-- Haustier-Info (mit Popup-Formular, localStorage-Persistierung)
-- NPS-Score (1-10 Sterne, Popup mit Detailkategorien)
-- Risikoscore (0-100, Farbbalken + Tooltip mit Risikofaktoren)
-- Bonitaetsscore (0-100, Farbbalken)
+#### 4.2.3 Tab-System (Navigation auf A-10)
 
-#### 3.2.4 Tab-System (Hauptnavigation)
-Gesteuert ueber `switchKundenTab(tabName)`:
+Die Tabs auf A-10 sind identisch mit A-02 Tabs, aber klicken zurueck auf A-02:
+- `navigateToAgenturTab('tabName')` schliesst A-10 und oeffnet A-02 auf dem gewaehlten Tab
+- Ausnahme: Tab "Kunden" ist auf A-10 aktiv (Standard)
 
-| Tab-Name | DOM-ID | Beschreibung |
-|---|---|---|
-| `stammdaten` | `#tabStammdaten` | Standard-Tab: Stammdaten + CLV + Scores + Haustier |
-| `vertraege` | `#tabVertraege` | Betreute Vertraege + Schadenhistorie |
-| `fida` | `#tabFida` | Open Finance / FIDA mit 4 Bedarfsfeldern (Bezahlen, Sparen, Absichern, Finanzieren) |
-| `impulse` | `#tabImpulse` | Vertriebspotentiale: Whitespots + Anpassungsbedarfe mit Angebots-Dropdown |
-| `finanzplanung` | `#tabFinanzplanung` | Liquiditaets-Dashboard, Sparziele, Rentensimulator mit Szenario-Vergleich |
-| `kommunikation` | `#tabKommunikation` | Kommunikationshistorie-Timeline (E-Mail, Brief, Telefon) |
+#### 4.2.4 Kunden-Profil & Stammdaten (`#tabStammdaten`) – DEFAULT TAB
 
-**Hinweis:** Der FIDA-Tab hat die CSS-Klasse `open-finance-only` und wird nur im Open-Finance-Modus angezeigt.
+| Kachel/Section | Beschreibung |
+|---|---|
+| **Stammdaten-Karte** | Kundenfoto, Name, Kunden-ID, CLV-Badge (Customer Lifetime Value) |
+| **Kontaktdaten** | Adresse, Telefon, E-Mail, Geburtsdatum |
+| **Berufliche Daten** | Beruf, Arbeitgeber, Familienstand, Beschaeftigt seit |
+| **Kinder-Badges** | Anzahl und Alter der Kinder |
+| **Haustier-Info** | Haustier-Typ/Name (mit Popup-Formular, localStorage) |
+| **NPS-Score** | 1-10 Sterne, Popup mit 5 Detailkategorien |
+| **Risikoscore** | 0-100, Farbbalken mit Tooltip (Risikofaktoren) |
+| **Bonitaetsscore** | 0-100, Farbbalken |
+| **Makler-Stammdaten** (`#maklerStammdaten`) | B2B-Daten, nur bei Makler-Modus sichtbar: Branche, Segment, Mitarbeitende, Jahresumsatz |
+| **MRH-Stammdaten** (`#mrhStammdatenA10`) | Gewerbe-Daten, nur bei MRH-Modus: Branche, Specialty, Gesellschaftsform |
 
-#### 3.2.5 Stammdaten-Varianten (kontextabhaengig)
-- `#privatStammdaten` – Standard Privatkunden-Stammdaten (immer sichtbar)
-- `#maklerStammdaten` – B2B Makler-Stammdaten (Branche, Segment, Mitarbeitende, Jahresumsatz, etc.) – hidden
-- `#mrhStammdatenA10` – Gewerbemakler 360° Stammdaten (Branche, Specialty, Gesellschaftsform, etc.) – hidden
+#### 4.2.5 Vertraege (`#tabVertraege`)
 
-#### 3.2.6 Overlays & Modals
+| Kachel/Section | Beschreibung |
+|---|---|
+| **Luecken-Leiste** (`#lueckenLeiste`) | Absicherungsstatus-Visualisierung: Farbige Balken pro Sparte |
+| **Vertragstabelle** | Alle aktiven Vertraege des Kunden: Vertragsnr, Sparte, Produkt, Praemie, Status |
+| **Schadenhistorie** (`#schadenhistorieCard`) | Schadenmeldungen mit Datum, Status, Betrag (nur bei Makler/MRH sichtbar) |
+| **Deckungsluecken** (`#maklerDeckungslueckenCard`) | Deckungsluecken-Analyse (nur Makler-Modus) |
+| **Renewal-Ampel** (`#maklerRenewalCard`) | Ablaufende Vertraege mit Ampel-Status (nur Makler-Modus) |
+
+#### 4.2.6 Finanzprofil (`#tabFinanzprofil`)
+
+| Kachel/Section | Beschreibung |
+|---|---|
+| **Finanzprofil-Content** (`#finanzprofilContent`) | Dynamisch gerendert: Einkommens-/Ausgabenanalyse, Vermoegensstruktur |
+
+#### 4.2.7 Open Finance / FIDA (`#tabFida`) – Nur bei Finance-Mode "Open"
+
+| Kachel/Section | Beschreibung |
+|---|---|
+| **Consent-Status** | Open Finance Zustimmungsstatus mit Datum |
+| **4 Bedarfsfelder** | Bezahlen (Konten, Karten), Sparen (Tagesgeld, Depot), Absichern (Versicherungen), Finanzieren (Kredite) |
+| **Daten-Aggregation** | Konten und Vertraege aller Institute des Kunden |
+| **FIDA-Potentiale** | Cross-Selling-Moeglichkeiten basierend auf Open-Finance-Daten |
+
+#### 4.2.8 Impulse/Potentiale (`#tabImpulse`)
+
+| Kachel/Section | Beschreibung |
+|---|---|
+| **Uebersicht der Potentiale** | KI-generierte Vertriebsimpulse mit Prioritaet (Hoch/Mittel/Niedrig) |
+| **Impuls: Risikoleben** (`#impuls-risikoleben`) | Detail: Absicherungsluecke, Praemienvorschlag, Angebot-Button |
+| **Impuls: Fondspolice** (`#impuls-fondspolice`) | Detail: Altersvorsorge-Optimierung |
+| **Impuls: KFZ** (`#impuls-kfz`) | Detail: KFZ-Versicherungswechsel |
+| **Impuls: BU** (`#impuls-bu`) | Detail: Berufsunfaehigkeit, AO/Makler-Ansicht (`#buAoAnsicht`) |
+| **Impuls: Hausrat** (`#impuls-hausrat`) | Detail: Hausratversicherung |
+| **Impuls: Konsumentenkredit** (`#impuls-konsumentenkredit`) | Detail: Kreditpotential |
+| **Angebots-Funktionen** | Dropdown-Menue mit: PDF erstellen, Entwurf speichern, Tarifvergleich |
+
+#### 4.2.9 Finanzplanung (`#tabFinanzplanung`)
+
+| Kachel/Section | Beschreibung |
+|---|---|
+| **Liquiditaets-Dashboard** | Monatliche Ein-/Ausgaben-Uebersicht |
+| **Sparziele** | Definierte Sparziele mit Fortschrittsbalken |
+| **Rentensimulator** | Interaktiver Rechner mit Szenario-Vergleich (Basis, Optimiert, Premium) |
+| **Vermoegensverteilung** | Tortendiagramm der Vermoegensklassen |
+
+#### 4.2.10 Kommunikation (`#tabKommunikation`)
+
+| Kachel/Section | Beschreibung |
+|---|---|
+| **Kommunikations-Timeline** | Chronologische Darstellung aller Kontakte: E-Mail, Brief, Telefon, Termin |
+| **Filter** | Filterbar nach Kanal (E-Mail, Brief, Telefon) und Zeitraum |
+| **Erstellen-Button** | Neue Kommunikation anlegen |
+
+#### 4.2.11 Schadenhistorie (`#tabSchadenhistorie`) – Makler-Modus
+
+| Kachel/Section | Beschreibung |
+|---|---|
+| **Schadenliste** | Alle Schaeden mit Datum, Sparte, Status, Betrag |
+
+#### 4.2.12 Deckungsluecken (`#tabDeckungsluecken`) – Makler-Modus
+
+| Kachel/Section | Beschreibung |
+|---|---|
+| **Deckungsluecken-Analyse** | Identifizierte Luecken mit Handlungsempfehlung |
+
+#### 4.2.13 Renewals (`#tabRenewal`) – Makler-Modus
+
+| Kachel/Section | Beschreibung |
+|---|---|
+| **Renewal-Ampel** | Ablaufende Vertraege: Rot/Gelb/Gruen Status |
+
+#### 4.2.14 Ansprechpartner (`#tabAnsprechpartner`) – Makler-Modus
+
+| Kachel/Section | Beschreibung |
+|---|---|
+| **Ansprechpartner-Liste** | B2B-Ansprechpartner beim Makler |
+
+#### 4.2.15 B2B-Potentiale (`#tabB2bpotentiale`) – Makler-Modus
+
+| Kachel/Section | Beschreibung |
+|---|---|
+| **B2B-Potentiale** | Spezifische Makler-Potentiale |
+
+#### 4.2.16 Overlays & Modals
 - **NPS-Detail-Popup** (`#npsDetailPopup`): Aufschluesselung nach 5 Kategorien
-- **Tier-Popup** (`#tierPopup` + `#tierPopupOverlay`): Haustier-Eingabeformular
+- **Tier-Popup** (`#tierPopup`): Haustier-Eingabeformular mit localStorage-Persistierung
 - **Tarifvergleich-Modal** (`#tarifvergleichModal`): Vergleichstabelle verschiedener Versicherer
-- **Angebot-Context-Menu**: Dropdown mit "PDF erstellen", "Entwurf speichern", "Tarifvergleich"
 - **Angebot-Toast** (`#angebotToast`): Feedback-Toast fuer Angebotsaktionen
 
-#### 3.2.7 Sticky Bar
-- Fixierte Leiste am unteren Bildschirmrand
-- Zeigt: Kundenname, Kunden-ID, NPS-Sterne, CLV-Wert, Segment
-- Wird via `updateKundeStickyBar()` aktualisiert
+#### 4.2.17 Sticky Bar (unterer Bildschirmrand)
+- Fixierte Leiste: Kundenname, Kunden-ID, NPS-Sterne, CLV-Wert, Segment
+- Aktualisiert via `updateKundeStickyBar()`
 
-### 3.3 Klickstrecken & User Flows
+### 4.3 Klickstrecken & User Flows
 
 #### Flow 1: Kunde oeffnen (aus A-02)
 ```
@@ -975,7 +1244,7 @@ A-10 → Button "Vertriebsbericht"
   → A-10 ausblenden → navigateToSalesReport(agenturId)
 ```
 
-### 3.4 Funktionen & Handler (vollstaendig)
+### 4.4 Funktionen & Handler (vollstaendig)
 
 #### 3.4.1 Haupt-Einstiegsfunktionen
 
@@ -1084,7 +1353,7 @@ A-10 → Button "Vertriebsbericht"
 | `fillBankFinanzplanung(kd)` | ~2469 | Finanzplanung: Liquiditaet, Sparziele |
 | `fillBankKommunikation(kd)` | ~2503 | Kommunikationshistorie befuellen |
 
-### 3.5 State Management
+### 4.5 State Management
 
 #### 3.5.1 Globale State-Variablen (kunden-detail.js)
 
@@ -1108,7 +1377,7 @@ A-10 → Button "Vertriebsbericht"
 - **Agentur-Foto**: `localStorage` (Key: `agenturPhoto`)
 - Alle anderen State-Variablen sind rein In-Memory
 
-### 3.6 Datenstrukturen & Mock-Daten
+### 4.6 Datenstrukturen & Mock-Daten
 
 #### 3.6.1 Versicherer-Logo-Mapping
 
@@ -1208,7 +1477,7 @@ Bankkundenstruktur (erweitert gegenueber Versicherung):
 }
 ```
 
-### 3.7 API-Calls & KI-Integration
+### 4.7 API-Calls & KI-Integration
 
 #### 3.7.1 Kein direkter API-Call
 
@@ -1234,7 +1503,7 @@ Die B-10 Impulse werden **regelbasiert** generiert (nicht KI-basiert):
 Impulse enthalten `herleitung[]` mit Datenquelle, erkannter Situation und Empfehlung.
 Quelle wird als "Truuco Impulsmanager / genoGPT" dargestellt.
 
-### 3.8 UI/Layout pro Screen
+### 4.8 UI/Layout pro Screen
 
 #### 3.8.1 Gesamtlayout A-10
 ```
@@ -1311,9 +1580,204 @@ Quelle wird als "Truuco Impulsmanager / genoGPT" dargestellt.
 
 ---
 
-## 4. Restanten-Check: B-02 und B-10
+## 5. Modul VV-02 – Berater-Uebersicht Vermoegensverwaltung
 
-### 4.1 Architektonische Entscheidung
+### 5.1 Zweck & Kontext
+
+**Zweck:** Uebersichtsseite fuer einen Vermoegensverwaltungs-Berater (HRK LUNIS). Zeigt Mandanten, Pipeline, Portfolio und Compliance.
+
+**Container:** `#vvOverviewPage` (innerhalb `#vermoegensverwaltungModule`)
+**Route:** `/vv-overview`
+**Page-ID:** `VV-02`
+**JS:** `js/vv-overview.js`, `js/vv-mock-data.js`
+**CSS:** `css/vermoegensverwaltung.css`
+
+### 5.2 Header (OPT-24: identisch mit A-02)
+
+- Zurueck-Button → `backFromVVOverview()`
+- VV Logo-Container (`#vvLogoContainer`): HRK Gradient-Fallback
+- Berater-Foto (`#vvPhotoSmall`)
+- Titel (`#vvPageTitle`): "Berater: Dr. Thomas Richter"
+- Untertitel (`#vvSubtitle`): "Senior Advisor · Frankfurt · seit 2019"
+- Globale Controls in `#vv02ControlsSlot`
+
+### 5.3 VV-02 KPIs
+
+Rendern per `fillVVKPIs()` basierend auf `window.vvBeraterData`:
+- AuM Gesamt (Assets under Management)
+- Mandanten-Anzahl
+- Performance YTD
+- Compliance-Score
+
+### 5.4 Tab-System VV-02
+
+Gesteuert durch `showVVTab(tabName)`. Content-Divs: `#vv-tab-{tabName}` (dynamisch befuellt).
+
+| Tab | ID | Beschreibung |
+|---|---|---|
+| **Uebersicht** | `#vv-tab-uebersicht` | Dashboard mit KPIs, Tagesstart, Aktivitaeten |
+| **Mandate** | `#vv-tab-mandatsliste` | Mandantenliste: Name, Mandatstyp, AuM, Performance. Klick oeffnet VV-10 |
+| **Pipeline** | `#vv-tab-pipeline` | Sales Pipeline: Interessenten, Angebotsphase, Abschluss |
+| **Portfolio-Uebersicht** | `#vv-tab-portfolio` | Aggregiertes Portfolio aller Mandate: Asset-Allokation, Risiko |
+| **Compliance** | `#vv-tab-compliance` | Regulatorische Anforderungen, MiFID II, KYC-Status |
+| **Reporting** | `#vv-tab-reporting` | Berater-Performance-Reports |
+
+### 5.5 Mandantenliste (Detail)
+
+Jeder Mandant zeigt:
+- Name, Mandatstyp (FairValue/SmartValue/Institutional)
+- AuM (Assets under Management)
+- Performance (%, mit Trend)
+- Risikoprofil
+- Klick → `openVVMandantDetail(name)` → VV-10
+
+### 5.6 KI-Chat (VV-02)
+
+- Toggle: `#vvChatToggle`
+- Widget: `#vvChatWidget`
+- VV-spezifische Fragen via Claude API
+
+---
+
+## 6. Modul VV-10 – Mandanten-Detailansicht
+
+### 6.1 Zweck & Kontext
+
+**Zweck:** Detailansicht eines einzelnen VV-Mandanten mit Portfolio, Compliance und Kommunikation.
+
+**Container:** `#vvDetailPage` (innerhalb `#vermoegensverwaltungModule`)
+**Page-ID:** `VV-10`
+
+### 6.2 Header (OPT-24: identisch mit A-02)
+
+- Zurueck-Button → `backFromVVDetail()` (zurueck zu VV-02)
+- VV Logo: HRK Gradient-Fallback
+- Berater-Foto
+- Titel (`#vvDetailBeraterTitle`): "Berater: Dr. Thomas Richter"
+- Untertitel: "Senior Advisor · Frankfurt · seit 2019"
+- Globale Controls in `#vv10ControlsSlot`
+- **Mandant-Zeile entfernt** (OPT-24) – Mandantenname wird im Content angezeigt
+
+### 6.3 Tab-System VV-10
+
+Gesteuert durch `showVVDetailTab(tabName)`. Content-Divs: `#vvd-tab-{tabName}` (dynamisch befuellt).
+
+| Tab | ID | Beschreibung |
+|---|---|---|
+| **Client 360°** | `#vvd-tab-stammdaten` | Mandanten-Stammdaten: Kontaktdaten, Risikoprofil, Anlageziele, KYC-Status |
+| **Portfolio** | `#vvd-tab-portfolio` | Einzelportfolio: Asset-Allokation, Positionen, Performance-Chart, Benchmark-Vergleich |
+| **Vermoegensbilanz** | `#vvd-tab-finanzplanung` | Gesamtvermoegen: Immobilien, Liquiditaet, Wertpapiere, Verbindlichkeiten |
+| **Compliance** | `#vvd-tab-compliance` | MiFID II Eignung, Geeignetheitspruefung, Risikoaufklaerung, Dokumentation |
+| **Potentiale** | `#vvd-tab-impulse` | VV-spezifische Potentiale: Mandatstyp-Upgrade, NextGen, Nachfolgeplanung |
+| **Kommunikation** | `#vvd-tab-kommunikation` | Kontakthistorie mit dem Mandanten |
+
+### 6.4 VV Mock-Mandanten (Beispieldaten)
+
+Definiert in `js/vv-mock-data.js` mit Mandanten wie:
+- Dr. Heinrich Weber (FairValue, AuM €4.2M)
+- Familie Goldstein (SmartValue, AuM €8.7M)
+- Stiftung Rhein-Main (Institutional, AuM €45M)
+- u.v.m.
+
+Jeder Mandant hat: `segment`, `mandatstyp`, `aum`, `performance`, `risikoprofil`, `anlageziel`
+
+### 6.5 VV-Potentiale (Mock)
+
+| Key | Beschreibung | Prioritaet | Bedingung |
+|---|---|---|---|
+| `rebalancing` | Portfolio-Rebalancing faellig | hoch | Abweichung > Toleranz |
+| `nextgen-mandat` | NextGen-Mandat erschliessen | mittel | Kind ≥ 25 ohne Mandat |
+| `nachfolgeplanung` | Nachfolgeplanung anstossen | mittel | Alter ≥ 60 + Unternehmen |
+| `mandatstyp-upgrade` | Mandatstyp-Upgrade anbieten | niedrig | SmartValue + AuM ≥ 3M |
+
+---
+
+## 7. Widget-Baukasten (OPT-14)
+
+### 7.1 Zweck
+
+Konfigurierbares Widget-Dashboard auf der A-02/B-02 Uebersichtsseite. Nutzer koennen Widgets per Zahnrad-Button aktivieren/deaktivieren. Zustand wird in `localStorage` persistiert.
+
+### 7.2 Widget-Registry
+
+| Widget-Key | Label | Beschreibung | Modi | Groesse |
+|---|---|---|---|---|
+| `aufgaben` | Offene Aufgaben | Follow-ups, Wiedervorlagen, Fristen | Versicherung, Banking | normal |
+| `stornoRadar` | Storno-Radar | Gefaehrdete Vertraege mit Fruehwarnung | Versicherung | normal |
+| `ngTrend` | Neugeschaeft-Trend | Sparkline der letzten 6 Monate | Versicherung, Banking | normal |
+| `topPotentiale` | Top-Potentiale | Die 5 besten Vertriebschancen | Versicherung, Banking | wide |
+| `provisionProgress` | Provisions-Fortschritt | Zielerreichung Provision/Ertrag YTD | Versicherung, Banking | normal |
+| `fidaStatus` | FIDA/Open Finance | Consent-Status und Datenqualitaet | Versicherung, Banking | normal |
+| `kommFeed` | Kommunikations-Feed | Letzte Kontakte & Nachrichten | Versicherung, Banking | normal |
+| `kalender` | Kalender-Widget | Heutige & morgige Termine | Versicherung, Banking | normal |
+| `abwanderung` | Abwanderungsrisiko | Kunden mit erhoehtem Risiko | Banking | normal |
+| `crossSelling` | Cross-Selling | Verbundpartner-Potentiale (R+V, Union) | Banking | normal |
+| `spartenMix` | Sparten-Mix | Verteilung nach Versicherungssparten | Versicherung | normal |
+| `benchmark` | Benchmark | Vergleich mit Durchschnitt der Region | Versicherung, Banking | wide |
+
+**Default:** Alle Widgets sind standardmaessig **deaktiviert** (`defaultActive: false`).
+
+### 7.3 Konfiguration
+
+- Zahnrad-Button oeffnet Config-Panel mit Checkboxen pro Widget
+- Zustand wird in `localStorage` unter Key `widgetConfig` gespeichert
+- `renderDashboardWidgets('widgetGrid')` rendert aktive Widgets ins Grid
+
+---
+
+## 8. Landing Page (M-01)
+
+### 8.1 Zweck
+
+Einstiegsseite der Anwendung. Bietet Suche, KI-Chat, Modul-Auswahl und konfigurierbares Dashboard.
+
+**Container:** `#landingPage`
+**JS:** `landing-core.js`, `landing-chat.js`, `landing-data.js`, `landing-modules.js`, `landing-upload.js`, `landing-regions.js`
+
+### 8.2 Bereiche & Inhalte
+
+| Bereich | Beschreibung |
+|---|---|
+| **Suchleiste** | Freitext-Suche ueber Vermittler/Kunden mit Autocomplete (`#autocompleteSuggestions`) |
+| **KI-Chat** | Chat-Eingabe mit Voice-Support, Anthropic Claude API Integration |
+| **Module-Container** (`#modulesContainer`) | Tab-Leiste: Versicherung, Banken, Vermoegensverwaltung, Asset Management, etc. |
+| **Sales Report** (`#salesReportContainer`) | Vertriebsbericht mit Filter nach Zeitraum, Region, Produkt |
+| **Upload-Modus** (`#uploadModeHint`) | CSV-Upload fuer Bestandsdaten |
+
+### 8.3 Modul-Tabs (Landing Page)
+
+| Modul-Tab | Container-ID | Beschreibung |
+|---|---|---|
+| Versicherung | `#versicherungModule` | Enthalt A-01 (Agentur-Auswahl) → A-02 |
+| Banken | `#bankenModule` | Banken-spezifisches Dashboard |
+| Vermoegensverwaltung | `#vermoegensverwaltungModule` | VV-02 und VV-10 |
+| Asset Management | `#assetModule` | Asset Management Modul |
+| Risikoscoring | `#risikoscoringModule` | Risikoscoring-Tool |
+| Bestandsuebertragung | `#bestandsuebertragungModule` | Bestandsuebertragung VST |
+| PMO Toolbox | `#pmoToolboxModule` | PMO/Projektmanagement-Tools |
+| HR Pipeline | `#hrPipelineModule` | HR-Recruiting-Pipeline |
+| Versicherungs 1x1 | `#versicherungs1x1Module` | Wissensdatenbank Versicherung |
+| Kreditanalyse | `#kreditanalyseModule` | Kreditanalyse-Tool |
+
+---
+
+## 9. Weitere Seiten
+
+### 9.1 Potentialanalyse (`#potentialAnalysePage`)
+
+Eigenstaendige Seite fuer die uebergreifende Potentialanalyse mit FIDA-Integration. Container fuer aggregierte Potentiale aller Kunden eines Vermittlers.
+
+### 9.2 Billing Check (`#billingCheckPage`)
+
+Abrechnungspruefungs-Tool fuer Provisionsabrechnungen.
+
+### 9.3 BGAV Umstellung (`#bgavUmstellungPage`)
+
+Tool fuer die Umstellung von BGAV-Vertraegen (Betriebliche Gruppenaltersversorgung).
+
+### 9.4 Restanten-Check B-02 und B-10
+
+#### 9.4.1 Architektonische Entscheidung
 
 B-02 und B-10 sind **keine eigenstaendigen Module**, sondern in A-02 bzw. A-10 integrierte View-Modi. Die Architekturentscheidung war bewusst: Statt separater Dateien werden die Banking-Funktionen als Erweiterungen der Versicherungsmodule implementiert.
 
@@ -1325,9 +1789,9 @@ B-02 und B-10 sind **keine eigenstaendigen Module**, sondern in A-02 bzw. A-10 i
 | Routing | `/agentur` / `/kundendetail` | `/berater` / `/kundendetail-bank` |
 | Page-IDs | A-02 / A-10 | B-02 / B-10 |
 
-### 4.2 B-02 Berater-Uebersicht – Status
+#### 9.4.2 B-02 Berater-Uebersicht – Status
 
-#### 4.2.1 JavaScript (in agentur-overview.js, ab Zeile ~2277)
+##### JavaScript (in agentur-overview.js, ab Zeile ~2277)
 
 B-02 hat einen **vollstaendigen Funktionssatz** im JavaScript:
 - `showBeraterOverview()` – Eigenstaendiger Einstiegspunkt
@@ -1339,7 +1803,7 @@ B-02 hat einen **vollstaendigen Funktionssatz** im JavaScript:
 - `sendBeraterChatMessage()` / `getBeraterChatResponse()` – Eigener Mock-Chat
 - Eigene Mock-Daten: `beraterData`, `bankKundenRetail` (12), `bankKundenFK` (8), `bankKundenVW` (6), `bankNeugeschaeft` (12)
 
-#### 4.2.2 HTML
+##### HTML
 
 **Kein eigener Container** `#beraterOverviewPage` in index.html gefunden. B-02 rendert seinen Content dynamisch in den bestehenden `#agenturOverview`-Container oder nutzt die A-02 DOM-Struktur mit Banking-Overrides.
 
@@ -1348,7 +1812,7 @@ Der Chat-Widget fuer B-02 hat eigenes HTML (Zeilen ~7374-7413):
 - `#beraterChatWidget` – Chat-Panel mit "genoGPT Vertriebs-Assistent" Branding
 - Quick-Action Buttons: Top 5 Ertragspotenzial, FinanzPlan-Potenziale, Open Finance Analyse, Verbundpartner, Abwanderungsrisiko
 
-#### 4.2.3 CSS (banking-berater.css)
+##### CSS (banking-berater.css)
 
 Eigenes Stylesheet mit Banking-spezifischen Overrides:
 - **Farbvariablen:** `--bank-vr-blue: #003399`, `--bank-vr-orange: #FF6600`
@@ -1357,9 +1821,9 @@ Eigenes Stylesheet mit Banking-spezifischen Overrides:
 - **Tab-Override:** Orangener Active-State statt Standard
 - **Eigene Chat-Widget-Styles:** Banking-spezifisches Chat-Design
 
-### 4.3 B-10 Kunden-Detail Bank – Status
+#### 9.4.3 B-10 Kunden-Detail Bank – Status
 
-#### 4.3.1 JavaScript (in kunden-detail.js, ab Zeile ~1512)
+##### JavaScript (in kunden-detail.js, ab Zeile ~1512)
 
 B-10 hat einen **vollstaendigen, eigenstaendigen Funktionssatz**:
 - `fillBankKundenDetail(kundenName)` – Eigenstaendiger Einstiegspunkt
@@ -1371,7 +1835,7 @@ B-10 hat einen **vollstaendigen, eigenstaendigen Funktionssatz**:
 - `fillBankKommunikation()` – Kommunikationshistorie
 - Eigene Mock-Daten: `bankMockKunden` (12 vollstaendige Kundenprofile)
 
-#### 4.3.2 HTML (index.html Zeilen ~7417-7655)
+##### HTML (index.html Zeilen ~7417-7655)
 
 B-10 hat einen **eigenen, vollstaendigen HTML-Container** `#kundenDetailBankPage`:
 - **Aber:** `style="display: none !important;" aria-hidden="true"` – permanent ausgeblendet!
@@ -1379,7 +1843,7 @@ B-10 hat einen **eigenen, vollstaendigen HTML-Container** `#kundenDetailBankPage
 - Der Container dient als "empty stub for JS compatibility"
 - Trotzdem enthaelt er vollstaendiges HTML: Header, Sticky Bar, 6 Tabs (Stammdaten, Konten, FIDA, Impulse, Finanzplanung, Kommunikation)
 
-#### 4.3.3 Bruecken-Mechanismus A-10 ↔ B-10
+##### Bruecken-Mechanismus A-10 ↔ B-10
 
 Statt den separaten B-10 Container zu nutzen, wird die **A-10 Seite fuer Banking adaptiert**:
 1. `openBankKundenDetail()` → oeffnet A-10 Seite
@@ -1389,9 +1853,9 @@ Statt den separaten B-10 Container zu nutzen, wird die **A-10 Seite fuer Banking
 
 **Wichtig (v19):** `adaptA10ForBankMode()` schreibt direkt in die generischen A-10 Element-IDs (`kundenName`, `clvHeaderValue`, `.kunden-foto`, etc.), da die `bank`-prefixed IDs (`bankKundenFoto`, `bankClvHeaderValue`) im HTML nicht existieren.
 
-### 4.4 Vergleich B-02/B-10 mit A-02/A-10
+#### 9.4.4 Vergleich B-02/B-10 mit A-02/A-10
 
-#### 4.4.1 Struktureller Vergleich
+##### Struktureller Vergleich
 
 | Merkmal | A-02 | B-02 | A-10 | B-10 |
 |---|---|---|---|---|
@@ -1404,7 +1868,7 @@ Statt den separaten B-10 Container zu nutzen, wird die **A-10 Seite fuer Banking
 | CLV-Berechnung | - | - | Via `clv.js` | Eigene `calculateBankCLV()` |
 | Impulse | - | - | Via `renderImpulseContent()` | Eigene `fillBankImpulse()` (regelbasiert) |
 
-#### 4.4.2 Datenstruktur-Vergleich
+##### Datenstruktur-Vergleich
 
 | Feld | A-10 mockKunden | B-10 bankMockKunden |
 |---|---|---|
@@ -1418,7 +1882,7 @@ Statt den separaten B-10 Container zu nutzen, wird die **A-10 Seite fuer Banking
 | Kommunikation | `kommunikationen{}` (4 Eintraege, alert-basiert) | `kommunikation[]` (pro Kunde, Timeline-Darstellung) |
 | Foto | `kundenFotos{}` (4 Eintraege) | `bankKundenFotos{}` (5 Eintraege) + avatarBg-Fallback |
 
-#### 4.4.3 Funktionale Unterschiede
+##### Funktionale Unterschiede
 
 1. **FIDA als Kernfeature:** In B-10 ist Open Finance das zentrale Feature mit 4 Bedarfsfeldern (Bezahlen, Sparen, Absichern, Finanzieren). In A-10 ist FIDA ein optionaler Tab.
 
@@ -1430,7 +1894,7 @@ Statt den separaten B-10 Container zu nutzen, wird die **A-10 Seite fuer Banking
 
 5. **Branding:** B-10 nutzt "genoGPT Vertriebs-Assistent" und "Truuco Impulsmanager". A-10 hat keinen spezifischen KI-Branding.
 
-### 4.5 Fazit Restanten-Check
+#### 9.4.5 Fazit Restanten-Check
 
 | Modul | Status | Bewertung |
 |---|---|---|
@@ -1442,9 +1906,9 @@ Statt den separaten B-10 Container zu nutzen, wird die **A-10 Seite fuer Banking
 - B-10 JS-Funktionen wie `fillBankKundenDetail()` existieren und sind funktional, werden aber nur indirekt ueber den A-10 Adapter genutzt
 - Doppelte Kundendaten: B-02 hat `bankKundenRetail` (Kurzform) UND B-10 hat `bankMockKunden` (Langform) fuer teils dieselben Kunden
 
-### 4.5 VV-02 / VV-10 – Vermoegensverwaltung (OPT-21)
+### 9.5 VV-02 / VV-10 – Vermoegensverwaltung (Restanten-Check)
 
-#### 4.5.1 Architektonische Entscheidung
+#### 9.5.1 Architektonische Entscheidung
 
 VV-02/VV-10 sind als **eigenstaendiges Modul** implementiert (nicht als View-Mode von A-02/A-10). Gruende:
 - **Voellig anderes Geschaeftsmodell:** HNWI-Beratung (~30-50 Mandanten) statt Massengeschaeft (200-400 Kunden)
@@ -1452,7 +1916,7 @@ VV-02/VV-10 sind als **eigenstaendiges Modul** implementiert (nicht als View-Mod
 - **Andere Datenstruktur:** Portfolio mit Asset Allocation, Compliance (WpHG, Verlustschwelle), Vermoegensbilanz
 - **Andere Regulatorik:** MiFID II (voll), WpHG statt IDD
 
-#### 4.5.2 Vergleich mit A-02/B-02
+#### 9.5.2 Vergleich mit A-02/B-02
 
 | Aspekt | A-02 (Versicherung) | B-02 (Banking) | VV-02 (Vermoegensverwaltung) |
 |---|---|---|---|
@@ -1466,7 +1930,7 @@ VV-02/VV-10 sind als **eigenstaendiges Modul** implementiert (nicht als View-Mod
 | CSS | `agentur-fachkonzept.css` | `banking-berater.css` | `vermoegensverwaltung.css` |
 | Branding | ERGO (rot #C8102E) | Volksbank (blau #003399) | HRK LUNIS (dunkelblau #1a365d, gold #c4a35a) |
 
-#### 4.5.3 VV-02 Berater-Overview
+#### 9.5.3 VV-02 Berater-Overview
 
 **Container:** `#vvOverviewPage` innerhalb `#vermoegensverwaltungModule`
 **Einstieg:** `switchModule('vermoegensverwaltung')` → `showVVOverview()`
@@ -1485,7 +1949,7 @@ VV-02/VV-10 sind als **eigenstaendiges Modul** implementiert (nicht als View-Mod
 | `compliance` | `fillVVComplianceOverview()` | WpHG-Status, Geeignetheit, Verlustschwelle aller Mandanten |
 | `reporting` | `fillVVReporting()` | Performance vs. Benchmark, Ex-Ante/Ex-Post Kosten |
 
-#### 4.5.4 VV-10 Mandanten-Detail (Client 360°)
+#### 9.5.4 VV-10 Mandanten-Detail (Client 360°)
 
 **Container:** `#vvDetailPage` innerhalb `#vermoegensverwaltungModule`
 **Einstieg:** `openVVMandantDetail(name)` (Klick auf Mandant in VV-02)
@@ -1501,7 +1965,7 @@ VV-02/VV-10 sind als **eigenstaendiges Modul** implementiert (nicht als View-Mod
 | `impulse` | `fillVVDetailPotentiale()` | KI-Vertriebsassistent Impulse + Whitespots (aus evaluateImpulse + vvPotentiale) |
 | `kommunikation` | `fillVVDetailKommunikation()` | Kommunikationshistorie (Meetings, E-Mails, Anrufe) |
 
-#### 4.5.5 VV Datenmodell
+#### 9.5.5 VV Datenmodell
 
 **vvMockMandanten** (8 Mandanten):
 
@@ -1539,7 +2003,7 @@ VV-02/VV-10 sind als **eigenstaendiges Modul** implementiert (nicht als View-Mod
 **vvPipeline** (12 Prospects): Lead → Kennenlernen → Beratung → Analyse → Onboarding
 **vvPotentiale** (8 Eintraege): Fremdbank-Konsolidierung, NextGen-Mandate, Stiftungsgruendung
 
-#### 4.5.6 VV Impulse-Regeln (mode-config.js)
+#### 9.5.6 VV Impulse-Regeln (mode-config.js)
 
 | Regel-ID | Impuls | Prioritaet | Bedingung |
 |---|---|---|---|
@@ -1554,9 +2018,9 @@ VV-02/VV-10 sind als **eigenstaendiges Modul** implementiert (nicht als View-Mod
 
 ---
 
-## 5. Moduluebergreifende Abhaengigkeiten
+## 10. Moduluebergreifende Abhaengigkeiten
 
-### 5.1 Abhaengigkeitsgraph (A-02, A-10, B-02, B-10)
+### 10.1 Abhaengigkeitsgraph (A-02, A-10, B-02, B-10)
 
 ```
                    ┌─────────────────────────────────────┐
@@ -1599,7 +2063,7 @@ VV-02/VV-10 sind als **eigenstaendiges Modul** implementiert (nicht als View-Mod
                       .js    .js
 ```
 
-### 5.2 Funktionsuebergreifende Aufrufe
+### 10.2 Funktionsuebergreifende Aufrufe
 
 | Aufrufende Datei | Aufgerufene Funktion | Zieldatei | Beschreibung |
 |---|---|---|---|
@@ -1627,7 +2091,7 @@ VV-02/VV-10 sind als **eigenstaendiges Modul** implementiert (nicht als View-Mod
 | `vv-overview.js` | `setMode()` | `mode-config.js` | Modus auf 'vermoegensverwaltung' setzen |
 | `vv-overview.js` | `backToLanding()` | `landing-core.js` | VV-02 → Landing zurueck |
 
-### 5.3 Event-basierte Kommunikation
+### 10.3 Event-basierte Kommunikation
 
 | Event | Dispatcher | Listener | Beschreibung |
 |---|---|---|---|
@@ -1636,7 +2100,7 @@ VV-02/VV-10 sind als **eigenstaendiges Modul** implementiert (nicht als View-Mod
 | `hashchange` | Browser | `router.js` | URL-Aenderung |
 | `popstate` | Browser | `router.js` | History-Navigation |
 
-### 5.4 Globale Window-Exports
+### 10.4 Globale Window-Exports
 
 A-02/A-10/B-02/B-10 exportieren zahlreiche Funktionen auf `window`:
 
@@ -1669,9 +2133,9 @@ A-02/A-10/B-02/B-10 exportieren zahlreiche Funktionen auf `window`:
 
 ---
 
-## 6. Konfiguration & Dependencies
+## 11. Konfiguration & Dependencies
 
-### 6.1 CDN-Bibliotheken (geladen via index.html HEAD)
+### 11.1 CDN-Bibliotheken (geladen via index.html HEAD)
 
 | Bibliothek | Version | CDN | Verwendung |
 |---|---|---|---|
@@ -1683,14 +2147,14 @@ A-02/A-10/B-02/B-10 exportieren zahlreiche Funktionen auf `window`:
 | jsPDF | 2.5.1 | cdnjs | PDF-Generierung |
 | JSZip | 3.10.1 | cdnjs | PPTX-Export (ZIP-basiert) |
 
-### 6.2 Externe APIs
+### 11.2 Externe APIs
 
 | API | URL | Verwendung | Authentifizierung |
 |---|---|---|---|
 | Anthropic Claude (via Worker) | `https://vst-claude-api.eike-3e2.workers.dev` | KI-Chat (nur T-05 aktiv) | API-Key im Worker |
 | logo.dev | `https://img.logo.dev/<domain>?token=pk_H7vb5Y2lTsW47U4Xq-w3HA` | Versicherer/Banken-Logos | Public Token |
 
-### 6.3 CSS-Dateien Ladereihenfolge
+### 11.3 CSS-Dateien Ladereihenfolge
 
 1. `variables.css` – CSS-Custom-Properties (Farben, Spacing, etc.)
 2. `shared.css` – Gemeinsame Basis-Styles
@@ -1701,7 +2165,7 @@ A-02/A-10/B-02/B-10 exportieren zahlreiche Funktionen auf `window`:
 7. `kunden-detail.css`, `clv.css`, `agentur-fachkonzept.css` – Modularisierte Styles
 8. Weitere Feature-CSS (nps, bezahlen-tx, potentiale-display, etc.)
 
-### 6.4 JavaScript-Ladereihenfolge
+### 11.4 JavaScript-Ladereihenfolge
 
 Die Reihenfolge ist kritisch (keine Module, alles globaler Scope):
 
@@ -1732,7 +2196,7 @@ Die Reihenfolge ist kritisch (keine Module, alles globaler Scope):
 **Hinweis:** Zeile 7693 bestaetigt die Merge-Entscheidung:
 `"berater-overview.js and kunden-detail-bank.js merged into agentur-overview.js and kunden-detail.js"`
 
-### 6.5 localStorage Keys
+### 11.5 localStorage Keys
 
 | Key | Modul | Typ | Beschreibung |
 |---|---|---|---|
@@ -1742,7 +2206,7 @@ Die Reihenfolge ist kritisch (keine Module, alles globaler Scope):
 | `tierInfo_<name>` | A-10 | JSON | Haustier-Info pro Kunde |
 | `currentModule` | M-01 | String | Aktives Modul (versicherung/banken/asset/vermoegensverwaltung) |
 
-### 6.6 Deployment
+### 11.6 Deployment
 
 | Aspekt | Detail |
 |---|---|
@@ -1754,9 +2218,9 @@ Die Reihenfolge ist kritisch (keine Module, alles globaler Scope):
 
 ---
 
-## 7. Beobachtungen & Empfehlungen
+## 12. Beobachtungen & Empfehlungen
 
-### 7.1 Architektur-Beobachtungen
+### 12.1 Architektur-Beobachtungen
 
 1. **Monolithische index.html:** Die gesamte SPA lebt in einer einzigen HTML-Datei (~7.500 Zeilen). Alle Module sind als `<div>`-Container integriert, die per `display: none/block` ein- und ausgeblendet werden.
 
@@ -1801,7 +2265,7 @@ Die Reihenfolge ist kritisch (keine Module, alles globaler Scope):
    - **Router erweitert:** `/vv-overview` Route
    - **Page-Hiding erweitert:** `landing-core.js` + `agentur-overview-core.js` verstecken VV-Seiten
 
-### 7.2 Code-Qualitaet
+### 12.2 Code-Qualitaet
 
 1. **Konsistente Muster:** Alle fill-Funktionen folgen dem gleichen Muster: DOM-Element per ID holen, Daten aus Mock-Objekt lesen, innerHTML setzen.
 
@@ -1811,7 +2275,7 @@ Die Reihenfolge ist kritisch (keine Module, alles globaler Scope):
 
 4. **Kein Error-Handling:** Keine try/catch Bloecke, keine Fehlerbehandlung bei API-Calls oder localStorage-Operationen (ausser vereinzeltes `try { JSON.parse } catch`).
 
-### 7.3 Datenmodell-Beobachtungen
+### 12.3 Datenmodell-Beobachtungen
 
 1. **Unterschiedliche Kunden-IDs:** Versicherungs-Kunden nutzen `KD00001`-Format, Banking-Kunden `KDB001`-Format, Firmenkunden `FKB001`, Vermoegenskunden `PBB001`. Keine uebergreifende Zuordnung.
 
@@ -1826,7 +2290,7 @@ Die Reihenfolge ist kritisch (keine Module, alles globaler Scope):
    - Versicherung: `KD00001`, Banking: `KDB001`, Firmenkunden: `FKB001`, Vermoegenskunden: `PBB001`, VV-Mandate: `VV001`
    - Cross-Referenz via `kundenCrossRef` in config.js (Versicherung <-> Banking <-> VV)
 
-### 7.4 Potentielle Verbesserungsbereiche
+### 12.4 Potentielle Verbesserungsbereiche
 
 1. ~~**B-10 HTML aufraemen:**~~ GELOEST – Refactoring Phase 1 (7.1.3): `#kundenDetailBankPage` entfernt, B-10 laeuft ueber A-10-Adapter.
 

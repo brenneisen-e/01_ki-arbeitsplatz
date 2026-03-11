@@ -424,67 +424,119 @@
 
 
     // ========================================
-    // POTENTIALE CARDS
+    // POTENTIALE CARDS (grouped by customer)
     // ========================================
 
-    function renderPotentialeCards(potentiale, config, containerId) {
-        var html = '<div class="unified-pot-cards" id="' + containerId + '-cards">';
+    function groupByKunde(potentiale) {
+        var groups = [];
+        var map = {};
         for (var i = 0; i < potentiale.length; i++) {
             var p = potentiale[i];
-            var detailId = containerId + '-detail-' + i;
-            var pc = prioClass(p.prioritaet);
-
-            html += '<div class="unified-pot-card" data-status="' + p.status + '" data-index="' + i + '">' +
-                '<div class="unified-pot-card-main" onclick="window._unifiedPotToggleDetail(\'' + detailId + '\', this)">' +
-                    // Avatar
-                    getKundenAvatar(p.kundenName) +
-                    // Left section
-                    '<div class="unified-pot-card-left">' +
-                        '<div class="unified-pot-card-header-row">' +
-                            '<strong class="unified-pot-card-name">' + p.kundenName + '</strong>' +
-                            '<span class="unified-pot-card-id">' + p.kundenId + '</span>' +
-                            '<span class="impuls-priority ' + pc + '">' + prioLabel(p.prioritaet) + '</span>' +
-                            '<span class="unified-pot-status-badge status-' + p.status + '">' + statusLabel(p.status, config) + '</span>' +
-                        '</div>' +
-                        '<div class="unified-pot-card-produkt">' + p.produkt + '</div>' +
-                        '<div class="unified-pot-card-beschreibung">' + p.beschreibung + '</div>' +
-                        (p.letzteAktion ? '<div class="unified-pot-card-aktion">Letzte Aktion: ' + p.letzteAktion + '</div>' : '') +
-                    '</div>' +
-                    // Right section
-                    '<div class="unified-pot-card-right">' +
-                        '<div class="unified-pot-card-kennzahl"><span class="unified-pot-card-kz-label">Volumen</span><span class="unified-pot-card-kz-value">' + formatCurrency(p.volumen) + '</span></div>' +
-                        '<div class="unified-pot-card-kennzahl"><span class="unified-pot-card-kz-label">Ertrag</span><span class="unified-pot-card-kz-value prov">' + formatCurrency(p.ertrag) + '</span></div>' +
-                    '</div>' +
-                    // Expand icon
-                    '<span class="unified-pot-expand">' + getIcon('chevronDown') + '</span>' +
-                '</div>';
-
-            // Expandable detail panel
-            html += '<div class="unified-pot-detail" id="' + detailId + '">' +
-                '<div class="unified-pot-detail-section">' +
-                    '<h4>Herleitung</h4>' +
-                    '<div class="unified-pot-herleitung">';
-            if (p.herleitung) {
-                for (var h = 0; h < p.herleitung.length; h++) {
-                    html += '<div class="unified-pot-herleitung-row">' +
-                        '<span class="unified-pot-herleitung-label">' + p.herleitung[h].datenquelle + '</span>' +
-                        '<span class="unified-pot-herleitung-value">' + p.herleitung[h].erkenntnis + '</span>' +
-                        '</div>';
-                }
+            var key = p.kundenId;
+            if (!map[key]) {
+                map[key] = { kundenName: p.kundenName, kundenId: p.kundenId, items: [] };
+                groups.push(map[key]);
             }
-            html += '</div></div>';
+            map[key].items.push({ pot: p, originalIndex: i });
+        }
+        return groups;
+    }
 
-            // Action buttons
-            html += '<div class="unified-pot-detail-actions">' +
-                '<button class="action-btn primary kunde-oeffnen-btn" title="Kunde \u00f6ffnen" onclick="event.stopPropagation(); window._unifiedPotOpenKunde(\'' + p.kundenName.replace(/'/g, "\\'") + '\', \'' + p.kundenId + '\')">' +
-                    getIcon('user') + ' <span class="btn-label">Kunde \u00f6ffnen</span></button>' +
-                '<button class="action-btn secondary" title="Angebot erstellen" onclick="event.stopPropagation(); window._unifiedPotCreateAngebot(\'' + p.produkt.replace(/'/g, "\\'") + '\')">' +
-                    getIcon('fileText') + ' <span class="btn-label">Angebot erstellen</span></button>' +
-                '<button class="action-btn secondary" title="Status \u00e4ndern" onclick="event.stopPropagation(); window._unifiedPotChangeStatus(' + i + ', \'' + containerId + '\')">' +
-                    getIcon('edit') + ' <span class="btn-label">Status \u00e4ndern</span></button>' +
-                '</div>';
+    function renderPotentialeCards(potentiale, config, containerId) {
+        var groups = groupByKunde(potentiale);
+        var html = '<div class="unified-pot-cards" id="' + containerId + '-cards">';
 
-            html += '</div></div>';
+        for (var g = 0; g < groups.length; g++) {
+            var group = groups[g];
+            var groupId = containerId + '-group-' + g;
+            var totalVolumen = 0;
+            var totalErtrag = 0;
+            var statuses = [];
+            for (var s = 0; s < group.items.length; s++) {
+                totalVolumen += (group.items[s].pot.volumen || 0);
+                totalErtrag += (group.items[s].pot.ertrag || 0);
+                statuses.push(group.items[s].pot.status);
+            }
+
+            // Collect unique statuses as data attribute for filtering
+            var uniqueStatuses = [];
+            for (var us = 0; us < statuses.length; us++) {
+                if (uniqueStatuses.indexOf(statuses[us]) === -1) uniqueStatuses.push(statuses[us]);
+            }
+
+            html += '<div class="unified-pot-group" data-statuses="' + uniqueStatuses.join(',') + '">';
+
+            // Customer header row (with photo)
+            html += '<div class="unified-pot-group-header" onclick="window._unifiedPotToggleGroup(\'' + groupId + '\', this)">' +
+                getKundenAvatar(group.kundenName) +
+                '<div class="unified-pot-group-info">' +
+                    '<strong class="unified-pot-card-name">' + group.kundenName + '</strong>' +
+                    '<span class="unified-pot-card-id">' + group.kundenId + '</span>' +
+                    '<span class="unified-pot-group-count">' + group.items.length + ' Potentiale</span>' +
+                '</div>' +
+                '<div class="unified-pot-card-right">' +
+                    '<div class="unified-pot-card-kennzahl"><span class="unified-pot-card-kz-label">Volumen</span><span class="unified-pot-card-kz-value">' + formatCurrency(totalVolumen) + '</span></div>' +
+                    '<div class="unified-pot-card-kennzahl"><span class="unified-pot-card-kz-label">Ertrag</span><span class="unified-pot-card-kz-value prov">' + formatCurrency(totalErtrag) + '</span></div>' +
+                '</div>' +
+                '<span class="unified-pot-expand">' + getIcon('chevronDown') + '</span>' +
+            '</div>';
+
+            // Expandable child rows (no photo)
+            html += '<div class="unified-pot-group-body" id="' + groupId + '">';
+            for (var i = 0; i < group.items.length; i++) {
+                var p = group.items[i].pot;
+                var idx = group.items[i].originalIndex;
+                var detailId = containerId + '-detail-' + idx;
+                var pc = prioClass(p.prioritaet);
+
+                html += '<div class="unified-pot-card unified-pot-child-card" data-status="' + p.status + '" data-index="' + idx + '">' +
+                    '<div class="unified-pot-card-main" onclick="window._unifiedPotToggleDetail(\'' + detailId + '\', this)">' +
+                        // No avatar for child rows
+                        '<div class="unified-pot-card-left">' +
+                            '<div class="unified-pot-card-header-row">' +
+                                '<span class="impuls-priority ' + pc + '">' + prioLabel(p.prioritaet) + '</span>' +
+                                '<span class="unified-pot-status-badge status-' + p.status + '">' + statusLabel(p.status, config) + '</span>' +
+                            '</div>' +
+                            '<div class="unified-pot-card-produkt">' + p.produkt + '</div>' +
+                            '<div class="unified-pot-card-beschreibung">' + p.beschreibung + '</div>' +
+                            (p.letzteAktion ? '<div class="unified-pot-card-aktion">Letzte Aktion: ' + p.letzteAktion + '</div>' : '') +
+                        '</div>' +
+                        '<div class="unified-pot-card-right">' +
+                            '<div class="unified-pot-card-kennzahl"><span class="unified-pot-card-kz-label">Volumen</span><span class="unified-pot-card-kz-value">' + formatCurrency(p.volumen) + '</span></div>' +
+                            '<div class="unified-pot-card-kennzahl"><span class="unified-pot-card-kz-label">Ertrag</span><span class="unified-pot-card-kz-value prov">' + formatCurrency(p.ertrag) + '</span></div>' +
+                        '</div>' +
+                        '<span class="unified-pot-expand">' + getIcon('chevronDown') + '</span>' +
+                    '</div>';
+
+                // Expandable detail panel
+                html += '<div class="unified-pot-detail" id="' + detailId + '">' +
+                    '<div class="unified-pot-detail-section">' +
+                        '<h4>Herleitung</h4>' +
+                        '<div class="unified-pot-herleitung">';
+                if (p.herleitung) {
+                    for (var h = 0; h < p.herleitung.length; h++) {
+                        html += '<div class="unified-pot-herleitung-row">' +
+                            '<span class="unified-pot-herleitung-label">' + p.herleitung[h].datenquelle + '</span>' +
+                            '<span class="unified-pot-herleitung-value">' + p.herleitung[h].erkenntnis + '</span>' +
+                            '</div>';
+                    }
+                }
+                html += '</div></div>';
+
+                // Action buttons
+                html += '<div class="unified-pot-detail-actions">' +
+                    '<button class="action-btn primary kunde-oeffnen-btn" title="Kunde \u00f6ffnen" onclick="event.stopPropagation(); window._unifiedPotOpenKunde(\'' + p.kundenName.replace(/'/g, "\\'") + '\', \'' + p.kundenId + '\')">' +
+                        getIcon('user') + ' <span class="btn-label">Kunde \u00f6ffnen</span></button>' +
+                    '<button class="action-btn secondary" title="Angebot erstellen" onclick="event.stopPropagation(); window._unifiedPotCreateAngebot(\'' + p.produkt.replace(/'/g, "\\'") + '\')">' +
+                        getIcon('fileText') + ' <span class="btn-label">Angebot erstellen</span></button>' +
+                    '<button class="action-btn secondary" title="Status \u00e4ndern" onclick="event.stopPropagation(); window._unifiedPotChangeStatus(' + idx + ', \'' + containerId + '\')">' +
+                        getIcon('edit') + ' <span class="btn-label">Status \u00e4ndern</span></button>' +
+                    '</div>';
+
+                html += '</div></div>';
+            }
+            html += '</div>'; // group-body
+            html += '</div>'; // group
         }
         html += '</div>';
         return html;
@@ -537,6 +589,17 @@
     // INTERACTION HANDLERS
     // ========================================
 
+    window._unifiedPotToggleGroup = function(groupId, headerEl) {
+        var body = document.getElementById(groupId);
+        if (!body) return;
+        var isOpen = body.classList.contains('open');
+        body.classList.toggle('open');
+        var expand = headerEl.querySelector('.unified-pot-expand');
+        if (expand) {
+            expand.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
+        }
+    };
+
     window._unifiedPotToggleDetail = function(detailId, mainEl) {
         var detail = document.getElementById(detailId);
         if (!detail) return;
@@ -557,15 +620,27 @@
         }
         btn.classList.add('active');
 
-        // Filter cards
+        // Filter groups and child cards
         var cardsContainer = document.getElementById(containerId + '-cards');
         if (!cardsContainer) return;
-        var cards = cardsContainer.querySelectorAll('.unified-pot-card');
-        for (var j = 0; j < cards.length; j++) {
+
+        // Filter customer groups
+        var groups = cardsContainer.querySelectorAll('.unified-pot-group');
+        for (var g = 0; g < groups.length; g++) {
+            var groupStatuses = groups[g].getAttribute('data-statuses') || '';
             if (filter === 'alle') {
-                cards[j].style.display = '';
+                groups[g].style.display = '';
             } else {
-                cards[j].style.display = (cards[j].getAttribute('data-status') === filter) ? '' : 'none';
+                groups[g].style.display = (groupStatuses.indexOf(filter) !== -1) ? '' : 'none';
+            }
+            // Filter child cards within group
+            var childCards = groups[g].querySelectorAll('.unified-pot-child-card');
+            for (var c = 0; c < childCards.length; c++) {
+                if (filter === 'alle') {
+                    childCards[c].style.display = '';
+                } else {
+                    childCards[c].style.display = (childCards[c].getAttribute('data-status') === filter) ? '' : 'none';
+                }
             }
         }
     };

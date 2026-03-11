@@ -401,8 +401,7 @@
                     if (typeof openBankKundenDetail === 'function') openBankKundenDetail(name, id);
                 }
             }
-        }
-    };
+        },
 
 
         // ─── VERMOEGENSVERWALTUNG (VV-02 / VV-10) ─────────────────

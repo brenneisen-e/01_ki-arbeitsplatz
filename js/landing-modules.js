@@ -378,6 +378,11 @@ let vertriebsarbeitsplatzLoaded = false;
 async function openVertriebsarbeitsplatz() {
     console.log('Vertriebsarbeitsplatz V02 öffnen...');
 
+    // TEMPORAER: Isoliert in neuem Tab oeffnen (zum Testen ohne Iframe)
+    window.open('vertriebsarbeitsplatz/dist/index.html', '_blank');
+    return;
+
+    /* --- IFRAME-VERSION (vorerst deaktiviert) ---
     // Hide landing page
     const landingPage = document.getElementById('landingPage');
     if (landingPage) {
@@ -429,6 +434,7 @@ async function openVertriebsarbeitsplatz() {
 
     // Update URL route
     if (window.AppRouter) AppRouter.navigate('/vertriebsarbeitsplatz');
+    --- ENDE IFRAME-VERSION --- */
 }
 
 function closeVertriebsarbeitsplatz() {

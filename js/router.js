@@ -55,6 +55,7 @@
             '/kundendetail-bank-pb':{ view: 'kundendetail-bank-pb', pageId: 'B-10c', title: 'Kunden-Detail PB' },
             '/kreditanalyse':       { view: 'kreditanalyse',        pageId: 'K-01', title: 'KI-Kreditanalyse' },
             '/vv-overview':         { view: 'vv-overview',          pageId: 'VV-01', title: 'Vermögensverwaltung' },
+            '/vertriebsarbeitsplatz': { view: 'vertriebsarbeitsplatz', pageId: 'VA-01', title: 'Vertriebsarbeitsplatz V02' },
         },
 
         // Reverse map: view name → hash route

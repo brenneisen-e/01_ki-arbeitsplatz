@@ -7792,31 +7792,34 @@
     <!-- VV-10: Mandanten Detail Page -->
     <div id="vvDetailPage" class="vv-page" style="display: none;">
       <div class="vv-page-inner">
-        <!-- Header -->
-        <div class="vv-header">
-          <div class="vv-header-left">
+        <!-- Header (OPT-24: A-02 Struktur + Mandant-Zeile) -->
+        <div class="vv-header agentur-header-new">
+          <div class="agentur-header-left">
             <button class="back-button" onclick="backFromVVDetail()">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg> Zurück
             </button>
-            <div class="vv-header-info">
-              <div class="vv-brand-logo">
-                <span class="vv-brand-text">HRK LUNIS</span>
+            <div class="agentur-header-info">
+              <!-- VV Logo (analog A-02) -->
+              <div class="insurer-logo-container">
+                <div class="insurer-logo-fallback" style="display:flex;background:linear-gradient(135deg,#1a1a2e,#16213e);color:#c9a84c;font-size:9px;font-weight:700;">HRK</div>
               </div>
-              <div class="vv-header-text">
-                <h1 class="vv-page-title" id="vvDetailTitle">Mandant</h1>
-                <div class="vv-subtitle" id="vvDetailSubtitle">-</div>
+              <div class="agentur-photo-small">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="agentur-photo-placeholder-small">
+                  <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+              </div>
+              <div class="agentur-header-text">
+                <h1 class="agentur-page-title" id="vvDetailBeraterTitle">Berater: Dr. Thomas Richter</h1>
+                <div class="agentur-subtitle">Senior Advisor · Frankfurt · seit 2019</div>
               </div>
             </div>
           </div>
-          <!-- VV Detail Actions -->
-          <div class="vv-header-actions">
-            <button class="vv-header-action-btn" id="vvDetailTourBtn" onclick="startVVDetailTour()" title="Tour starten">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
-            </button>
-            <button class="vv-header-action-btn vv-pdf-btn" id="vvPdfBtn" onclick="exportVVMandantenPDF()" title="PDF exportieren">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
-              PDF
-            </button>
+          <!-- Mandant-Zeile (NEU: nur auf VV-10 Detail) -->
+          <div class="kunden-switch-dropdown" style="display:flex;align-items:center;gap:8px;padding:0 20px;">
+            <label style="font-weight:600;color:#64748b;font-size:14px;">Mandant:</label>
+            <span id="vvDetailTitle" style="font-weight:700;font-size:15px;color:#1e293b;">-</span>
+            <span id="vvDetailSubtitle" style="font-size:13px;color:#64748b;">-</span>
           </div>
           <!-- Detail Tab Navigation -->
           <div class="vv-header-tabs">

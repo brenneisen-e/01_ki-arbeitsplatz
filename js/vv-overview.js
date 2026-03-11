@@ -416,9 +416,13 @@
             var detail = document.getElementById('vvDetailPage');
             if (detail) detail.style.display = 'block';
 
-            // Fill header
+            // Fill header (OPT-24: Berater info + Mandant line)
+            var beraterTitle = document.getElementById('vvDetailBeraterTitle');
+            var vvData = window.vvBeraterData;
+            if (beraterTitle && vvData) beraterTitle.textContent = 'Berater: ' + vvData.name;
+
             var titleEl = document.getElementById('vvDetailTitle');
-            if (titleEl) titleEl.textContent = 'Mandant: ' + name;
+            if (titleEl) titleEl.textContent = name;
             var subtitleEl = document.getElementById('vvDetailSubtitle');
             if (subtitleEl) subtitleEl.textContent = (mandant.segment || '') + ' · ' + (mandant.mandatstyp || '');
 

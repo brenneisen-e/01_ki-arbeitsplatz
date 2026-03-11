@@ -51,7 +51,9 @@
                 if (el) el.style.display = 'none';
             });
 
-            // Show VV overview
+            // Show VV module container + overview page
+            var vvModule = document.getElementById('vermoegensverwaltungModule');
+            if (vvModule) { vvModule.style.display = 'block'; vvModule.classList.add('active'); }
             var vvPage = document.getElementById('vvOverviewPage');
             if (vvPage) vvPage.style.display = 'block';
 

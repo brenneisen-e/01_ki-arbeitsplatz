@@ -384,16 +384,29 @@ async function openVertriebsarbeitsplatz() {
         landingPage.style.display = 'none';
     }
 
+    // Hide welcome chat
+    const welcomeChat = document.getElementById('welcomeChat');
+    if (welcomeChat) {
+        welcomeChat.style.display = 'none';
+    }
+
     // Hide main app if visible
     const mainApp = document.getElementById('mainApp');
     if (mainApp) {
         mainApp.style.display = 'none';
     }
 
+    // Hide versicherungModule (contains landing page!)
+    const versicherungModule = document.getElementById('versicherungModule');
+    if (versicherungModule) {
+        versicherungModule.style.display = 'none';
+    }
+
     // Hide other modules
     ['bankenModule', 'assetModule', 'risikoscoringModule', 'bestandsuebertragungModule',
      'pmoToolboxModule', 'hrPipelineModule', 'versicherungs1x1Module',
-     'beraterOverviewPage', 'kundenDetailBankPage', 'kreditanalyseModule'].forEach(function(id) {
+     'beraterOverviewPage', 'kundenDetailBankPage', 'kreditanalyseModule',
+     'vermoegensverwaltungModule'].forEach(function(id) {
         var el = document.getElementById(id);
         if (el) el.style.display = 'none';
     });
@@ -426,13 +439,42 @@ function closeVertriebsarbeitsplatz() {
         vaModule.style.display = 'none';
     }
 
-    // Show landing page
+    // Show versicherungModule (contains the landing page!)
+    const versicherungModule = document.getElementById('versicherungModule');
+    if (versicherungModule) {
+        versicherungModule.style.display = 'block';
+    }
+
+    // Hide all versicherung sub-views
+    ['mainApp', 'agenturOverview', 'kundenDetailPage', 'potentialAnalysePage',
+     'finanzplanung', 'agenturGrid'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) el.style.display = 'none';
+    });
+
+    // Show landing page (use flex for proper centering)
     const landingPage = document.getElementById('landingPage');
     if (landingPage) {
         landingPage.style.display = 'flex';
     }
 
+    // Show welcome chat again
+    const welcomeChat = document.getElementById('welcomeChat');
+    if (welcomeChat) {
+        welcomeChat.style.display = 'block';
+    }
+
     if (window.AppRouter) AppRouter.navigate('/landing');
+
+    // Dispatch event to update Page ID back to M-01
+    setTimeout(() => {
+        document.dispatchEvent(new CustomEvent('moduleChanged', {
+            detail: { module: 'main', view: 'landing' }
+        }));
+        if (window.PageIDTracker) {
+            window.PageIDTracker.updatePageId('main', 'landing');
+        }
+    }, 50);
 }
 
 // ========================================

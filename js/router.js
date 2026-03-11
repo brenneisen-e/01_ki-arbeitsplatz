@@ -55,6 +55,7 @@
             '/kundendetail-bank-pb':{ view: 'kundendetail-bank-pb', pageId: 'B-10c', title: 'Kunden-Detail PB' },
             '/kreditanalyse':       { view: 'kreditanalyse',        pageId: 'K-01', title: 'KI-Kreditanalyse' },
             '/vv-overview':         { view: 'vv-overview',          pageId: 'VV-01', title: 'Vermögensverwaltung' },
+            '/vertriebsarbeitsplatz': { view: 'vertriebsarbeitsplatz', pageId: 'VA-01', title: 'Vertriebsarbeitsplatz V02' },
         },
 
         // Reverse map: view name → hash route
@@ -281,7 +282,8 @@
                 'kundendetail-bank':    function() { return typeof showAgenturOverview === 'function' && typeof setViewMode === 'function' ? (showAgenturOverview('VM00001'), setViewMode('bank-retail'), true) : false; },
                 'kundendetail-bank-fk': function() { return typeof showAgenturOverview === 'function' && typeof setViewMode === 'function' ? (showAgenturOverview('VM00001'), setViewMode('bank-fk'), true) : false; },
                 'kundendetail-bank-pb': function() { return typeof showAgenturOverview === 'function' && typeof setViewMode === 'function' ? (showAgenturOverview('VM00001'), setViewMode('bank-vw'), true) : false; },
-                'kreditanalyse':        function() { return typeof openKreditanalyse === 'function' ? (openKreditanalyse(), true) : false; }
+                'kreditanalyse':        function() { return typeof openKreditanalyse === 'function' ? (openKreditanalyse(), true) : false; },
+                'vertriebsarbeitsplatz': function() { return typeof openVertriebsarbeitsplatz === 'function' ? (openVertriebsarbeitsplatz(), true) : false; }
             };
 
             var handler = fnMap[viewName];

@@ -2,61 +2,45 @@ import KPIGrid from '../../../components/ui/KPIGrid';
 import Card from '../../../components/ui/Card';
 import LineChartComponent from '../../../components/charts/LineChartComponent';
 import { CheckCircle, XCircle, Clock } from 'lucide-react';
+import { useMode } from '../../../hooks/useMode';
+import { QUALITAET_DATA } from '../../../data';
 
-const Q_KPI_CONFIG = [
+const DEFAULT_KPI_CONFIG = [
   { id: 'gesamtNote', label: 'Gesamtnote', format: 'num', icon: 'Award' },
   { id: 'complianceQuote', label: 'Compliance-Quote', format: 'pct', icon: 'Shield' },
   { id: 'schulungStunden', label: 'Schulungsstd. YTD', format: 'num', icon: 'BookOpen' },
   { id: 'beschwerdeQuote', label: 'Beschwerde-Quote', format: 'pct', icon: 'MessageCircle' },
 ];
 
-const Q_KPI_VALUES = {
-  gesamtNote: { wert: 1.8, trend: -5.3 },
-  complianceQuote: { wert: 98.5, trend: 0.5 },
-  schulungStunden: { wert: 24, trend: 20.0 },
-  beschwerdeQuote: { wert: 2.1, trend: -15.0 },
-};
-
-const TREND_DATA = [
-  { name: 'Q1/25', value: 2.1 },
-  { name: 'Q2/25', value: 2.0 },
-  { name: 'Q3/25', value: 1.9 },
-  { name: 'Q4/25', value: 1.9 },
-  { name: 'Q1/26', value: 1.8 },
-];
-
-const COMPLIANCE_ITEMS = [
-  { label: 'IDD-Dokumentation', status: 'ok' },
-  { label: 'Beratungsprotokolle', status: 'ok' },
-  { label: 'Datenschutz-Schulung', status: 'ok' },
-  { label: 'Geldwaesche-Pruefung', status: 'ok' },
-  { label: 'Interessenkonflikte', status: 'pending' },
-];
-
-const SCHULUNGEN = [
-  { name: 'IDD Weiterbildung 2026', stunden: 12, status: 'ok' },
-  { name: 'Datenschutz Update', stunden: 4, status: 'ok' },
-  { name: 'Produktschulung BU Neu', stunden: 4, status: 'ok' },
-  { name: 'ESG-Beratung', stunden: 4, status: 'ok' },
-  { name: 'Cyber-Sicherheit', stunden: 2, status: 'pending' },
-];
-
 export default function QualitaetTab() {
+  const { modeId } = useMode();
+  const data = QUALITAET_DATA[modeId] || QUALITAET_DATA.versicherung;
+  const kpiConfig = data.kpiConfig || DEFAULT_KPI_CONFIG;
+
+  const trendLabel = data.trendLabel || 'Qualitaetstrend (Gesamtnote)';
+  const trendHint = modeId === 'versicherung'
+    ? 'Niedrigere Note = besser (Schulnoten-System)'
+    : modeId === 'vermoegensverwaltung'
+    ? 'Hoeher = besser'
+    : null;
+
   return (
     <div className="space-y-6">
-      <KPIGrid kpiConfig={Q_KPI_CONFIG} kpiValues={Q_KPI_VALUES} />
+      <KPIGrid kpiConfig={kpiConfig} kpiValues={data.kpiValues} />
 
       <div className="grid grid-cols-2 gap-4">
         <Card>
-          <h3 className="font-semibold text-slate-800 mb-4">Qualitaetstrend (Gesamtnote)</h3>
-          <LineChartComponent data={TREND_DATA} height={220} color="#10b981" />
-          <div className="mt-2 text-xs text-slate-400 text-center">Niedrigere Note = besser (Schulnoten-System)</div>
+          <h3 className="font-semibold text-slate-800 mb-4">{trendLabel}</h3>
+          <LineChartComponent data={data.trendData} height={220} color="#10b981" />
+          {trendHint && (
+            <div className="mt-2 text-xs text-slate-400 text-center">{trendHint}</div>
+          )}
         </Card>
 
         <Card>
           <h3 className="font-semibold text-slate-800 mb-4">Compliance-Status</h3>
           <div className="space-y-3">
-            {COMPLIANCE_ITEMS.map((item, i) => (
+            {data.compliance.map((item, i) => (
               <div key={i} className="flex items-center justify-between py-1">
                 <span className="text-sm text-slate-700">{item.label}</span>
                 {item.status === 'ok' ? (
@@ -75,7 +59,7 @@ export default function QualitaetTab() {
       <Card>
         <h3 className="font-semibold text-slate-800 mb-4">Schulungen & Weiterbildung</h3>
         <div className="space-y-3">
-          {SCHULUNGEN.map((s, i) => (
+          {data.schulungen.map((s, i) => (
             <div key={i} className="flex items-center justify-between py-2 border-b border-slate-100 last:border-0">
               <div className="flex items-center gap-3">
                 {s.status === 'ok' ? (

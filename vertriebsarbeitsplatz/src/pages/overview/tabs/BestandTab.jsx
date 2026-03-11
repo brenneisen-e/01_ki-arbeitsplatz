@@ -5,12 +5,26 @@ import { useMode } from '../../../hooks/useMode';
 import { KUNDEN_BY_MODE, BESTAND_DATA } from '../../../data';
 import { formatEur } from '../../../utils/formatters';
 
-const BESTAND_KPI_CONFIG = [
-  { id: 'vertraege', label: 'Vertraege', format: 'num', icon: 'FileText' },
-  { id: 'praemienvolumen', label: 'Praemienvolumen', format: 'eur', icon: 'Briefcase' },
-  { id: 'durchschnittspraemie', label: '\u00d8 Praemie/Kunde', format: 'eur', icon: 'BarChart3' },
-  { id: 'vertragsdichte', label: '\u00d8 Vertraege/Kunde', format: 'num', icon: 'Layers' },
-];
+const BESTAND_KPI_CONFIG = {
+  versicherung: [
+    { id: 'vertraege', label: 'Vertraege', format: 'num', icon: 'FileText' },
+    { id: 'praemienvolumen', label: 'Praemienvolumen', format: 'eur', icon: 'Briefcase' },
+    { id: 'durchschnittspraemie', label: '\u00d8 Praemie/Kunde', format: 'eur', icon: 'BarChart3' },
+    { id: 'vertragsdichte', label: '\u00d8 Vertraege/Kunde', format: 'num', icon: 'Layers' },
+  ],
+  banking: [
+    { id: 'vertraege', label: 'Produkte', format: 'num', icon: 'FileText' },
+    { id: 'praemienvolumen', label: 'Gesamtvolumen', format: 'eur', icon: 'Briefcase' },
+    { id: 'durchschnittspraemie', label: '\u00d8 Volumen/Kunde', format: 'eur', icon: 'BarChart3' },
+    { id: 'vertragsdichte', label: '\u00d8 Produkte/Kunde', format: 'num', icon: 'Layers' },
+  ],
+  vermoegensverwaltung: [
+    { id: 'vertraege', label: 'Mandate', format: 'num', icon: 'FileText' },
+    { id: 'praemienvolumen', label: 'AuM Gesamt', format: 'eur', icon: 'Briefcase' },
+    { id: 'durchschnittspraemie', label: '\u00d8 AuM/Mandat', format: 'eur', icon: 'BarChart3' },
+    { id: 'vertragsdichte', label: '\u00d8 Mandate/Berater', format: 'num', icon: 'Layers' },
+  ],
+};
 
 const COLUMNS = [
   { id: 'typ', label: 'Typ' },
@@ -26,6 +40,7 @@ export default function BestandTab() {
   const { modeId, navigateTo } = useMode();
   const kunden = KUNDEN_BY_MODE[modeId] || [];
   const data = BESTAND_DATA[modeId] || BESTAND_DATA.versicherung;
+  const kpiConfig = BESTAND_KPI_CONFIG[modeId] || BESTAND_KPI_CONFIG.versicherung;
 
   // Flatten all products
   const allProdukte = kunden.flatMap(k =>
@@ -39,7 +54,7 @@ export default function BestandTab() {
 
   return (
     <div className="space-y-6">
-      <KPIGrid kpiConfig={BESTAND_KPI_CONFIG} kpiValues={data.kpiValues} />
+      <KPIGrid kpiConfig={kpiConfig} kpiValues={data.kpiValues} />
 
       <DataTable
         columns={COLUMNS}
@@ -54,7 +69,7 @@ export default function BestandTab() {
               </div>
               <span>{name}</span>
               <span className="text-slate-400">{rows[0]?.kundeId}</span>
-              <span className="text-slate-400">&middot; {rows.length} Vertraege &middot; {formatEur(total)}</span>
+              <span className="text-slate-400">&middot; {rows.length} {modeId === 'vermoegensverwaltung' ? 'Positionen' : 'Vertraege'} &middot; {formatEur(total)}</span>
             </div>
           );
         }}

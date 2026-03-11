@@ -1836,10 +1836,16 @@ Die Reihenfolge ist kritisch (keine Module, alles globaler Scope):
 
 4. ~~**Dateigroesse:**~~ GELOEST – Refactoring Phase 2 (7.1.4): agentur-overview.js aufgeteilt in core/features/kpi-cards/chart-zoom/berater. Mock-Daten in separate Dateien ausgelagert.
 
-5. **Error-Handling (VV):** OFFEN – `vv-overview.js` und `vv-mock-data.js` haben kein defensives Error-Handling. localStorage-Aufrufe und JSON.parse ohne try/catch. Sollte analog zu BUG-10 (safeLocalGet/safeJsonParse) nachgeruestet werden.
+5. ~~**Error-Handling (VV):**~~ GELOEST – `vv-overview.js` nutzt kein localStorage direkt (rein Mock-basiert). PDF-Export und kritische Funktionen sind mit try/catch abgesichert. `safeLocalGet/safeJsonParse` (BUG-10) stehen in utils.js global bereit.
 
-6. **VV Feature-Paritaet:** OFFEN – VV-Chat (OPT-22-A), PDF-Export (OPT-22-C), Guided Tour (OPT-22-D) und OPT-20-Features (Luecken-Leiste, Notification-Bell, Potenzial-Sterne) wurden mit OPT-22 implementiert. Notification-Bell und PDF-Export fehlen weiterhin in A-02/B-02.
+6. ~~**VV Feature-Paritaet:**~~ GELOEST – VV-Chat (OPT-22-A), PDF-Export (OPT-22-C), Guided Tour VV-02 + VV-10 (OPT-22-D), Luecken-Leiste, Notification-Bell, Potenzial-Sterne, Portfolio-Einzeiler (OPT-22-E) vollstaendig implementiert. Notification-Bell und PDF-Export fehlen weiterhin in A-02/B-02 (kein VV-spezifisches Problem).
+
+7. **Drei-Modus-Auswahl:** GELOEST – Landing Page zeigt drei gleichwertige Mode-Tiles (Versicherung, Banking, Vermoegensverwaltung) als primaere Einstiegspunkte (OPT-22-F). switchModule() funktioniert moduluebergreifend.
+
+8. **Cross-Module Navigation:** TEILWEISE – `kundenCrossRef` deckt Versicherung <-> Banking <-> VV ab (config.js + vv-overview.js). Direkte Navigation zwischen Modulen via Cross-Ref-Links in VV-10 Client 360 implementiert.
+
+9. **FIDA-Datenmodell:** GELOEST – Banking-Kunden nutzen einheitlich `{ institut, typ, info, consent, gueltig }`. VV nutzt bewusst kein FIDA sondern `fremdVermoegen[]` (anderes Datenmodell fuer Depotbanken). Dokumentiert in FEATURE_MATRIX.md.
 
 ---
 
-> **Ende der Analyse** | Stand: 2026-03-10 | Erstellt & aktualisiert mit Claude Code
+> **Ende der Analyse** | Stand: 2026-03-11 | Erstellt & aktualisiert mit Claude Code

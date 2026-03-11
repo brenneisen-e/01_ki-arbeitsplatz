@@ -1,6 +1,6 @@
 # Feature-Matrix: KI-Vertriebsarbeitsplatz
 
-> **Stand:** 2026-03-10 | **Bezug:** OPT-23-D
+> **Stand:** 2026-03-11 | **Bezug:** OPT-22/OPT-23
 
 ## Legende
 
@@ -49,17 +49,20 @@
 | Vermoegensstruktur          | -    | -    | +     |
 | PDF-Export                   | -    | -    | +     |
 | Luecken-Leiste              | -    | -    | +     |
+| Guided Tour (Detail)         | -    | -    | +     |
+| Cross-Modul-Links            | -    | -    | +     |
 
 ## Moduluebergreifende Features
 
 | Feature                     | Status     | Implementiert in        |
 |-----------------------------|------------|-------------------------|
-| Kunden-ID Cross-Referenz    | Teilweise  | config.js (Vers<->Bank<->VV) |
+| Kunden-ID Cross-Referenz    | Erweitert  | config.js + vv-overview.js (4 VV-Mandanten) |
 | Mode-Config System          | Vollst.    | mode-config.js          |
 | Guided Tour Engine          | Vollst.    | guided-tour.js          |
 | FIDA-Datenmodell (einheitl.)| Vollst.    | { institut, typ, info, consent, gueltig } |
-| Error-Handling (BUG-10)     | Offen      | Noch nicht implementiert |
+| Error-Handling (BUG-10)     | Verfuegbar | safeLocalGet/Set/JsonParse in utils.js |
 | Load-Order (BUG-03)         | Offen      | load-order.js geplant   |
+| Drei-Modus Landing Tiles    | Vollst.    | index.html + styles.css (OPT-22-F) |
 
 ## Hinweise
 
@@ -69,3 +72,6 @@
 4. FIDA ist fuer VV nicht relevant (`fidaMode: 'nicht_relevant'`), VV nutzt `fremdVermoegen[]`
 5. Kommunikation in A-10 hat individuelle Eintraege pro Kunde (OPT-15 Zustand pruefen)
 6. VV hat exklusive Features: Familien-Stammbaum, Vermoegensstruktur, Compliance-Tab, Pipeline
+7. VV-10 hat eigene Guided Tour (OPT-22-D) mit 7 Steps (Client 360, Portfolio, Bilanz, Compliance, Potentiale)
+8. Cross-Modul-Links in VV-10 Client 360 zeigen Banking/Versicherungs-Referenzen (OPT-23-E)
+9. Landing Page hat drei gleichwertige Mode-Tiles: Versicherung, Banking, Vermoegensverwaltung (OPT-22-F)

@@ -3208,6 +3208,138 @@ select:focus, .dropdown-button:focus {
    NAVIGATION BOXEN
    ======================================== */
 
+/* ── OPT-22-F: Three-Mode Tiles ── */
+.mode-tiles-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin: 16px 0 8px 0;
+}
+
+.mode-tile {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 20px 18px;
+    background: #fff;
+    border: 2px solid #e2e8f0;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    text-align: left;
+}
+
+.mode-tile:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+}
+
+.mode-tile-icon {
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+}
+
+.mode-tile-content {
+    min-width: 0;
+}
+
+.mode-tile-title {
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.mode-tile-brand {
+    font-size: 12px;
+    font-weight: 600;
+    margin-top: 2px;
+    opacity: 0.75;
+}
+
+.mode-tile-desc {
+    font-size: 11px;
+    color: #64748b;
+    margin-top: 2px;
+}
+
+/* Versicherung Tile */
+.mode-tile-versicherung {
+    border-color: #C8102E;
+}
+.mode-tile-versicherung:hover {
+    background: #fef2f2;
+    border-color: #C8102E;
+}
+.mode-tile-versicherung .mode-tile-icon {
+    background: #fef2f2;
+    color: #C8102E;
+}
+.mode-tile-versicherung .mode-tile-title {
+    color: #C8102E;
+}
+.mode-tile-versicherung .mode-tile-brand {
+    color: #991b1b;
+}
+
+/* Banking Tile */
+.mode-tile-banking {
+    border-color: #003399;
+}
+.mode-tile-banking:hover {
+    background: #eff6ff;
+    border-color: #003399;
+}
+.mode-tile-banking .mode-tile-icon {
+    background: #eff6ff;
+    color: #003399;
+}
+.mode-tile-banking .mode-tile-title {
+    color: #003399;
+}
+.mode-tile-banking .mode-tile-brand {
+    color: #1e3a5f;
+}
+
+/* VV Tile */
+.mode-tile-vv {
+    border-color: #1a365d;
+}
+.mode-tile-vv:hover {
+    background: #f8f6f0;
+    border-color: #c4a35a;
+}
+.mode-tile-vv .mode-tile-icon {
+    background: linear-gradient(135deg, #1a365d, #2d4a7a);
+    color: #c4a35a;
+    border-radius: 12px;
+}
+.mode-tile-vv .mode-tile-title {
+    color: #1a365d;
+}
+.mode-tile-vv .mode-tile-brand {
+    color: #92722e;
+}
+
+@media (max-width: 768px) {
+    .mode-tiles-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 1024px) and (min-width: 769px) {
+    .mode-tiles-row {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    .mode-tile {
+        padding: 16px 12px;
+    }
+}
+
 .navigation-boxes {
     display: flex;
     flex-wrap: wrap;

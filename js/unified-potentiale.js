@@ -31,6 +31,18 @@
     }
 
     // ========================================
+    // DYNAMIC DATE HELPERS
+    // ========================================
+    // All dates are relative to today so the showcase always looks fresh.
+    function relDate(daysOffset) {
+        var d = new Date();
+        d.setDate(d.getDate() + daysOffset);
+        var dd = String(d.getDate()).padStart(2, '0');
+        var mm = String(d.getMonth() + 1).padStart(2, '0');
+        return dd + '.' + mm + '.';
+    }
+
+    // ========================================
     // UNIFIED POTENTIALE DATA
     // ========================================
 
@@ -40,7 +52,7 @@
             kundenName: 'Peter Schmidt', kundenId: 'KD00001', prioritaet: 'hoch',
             produkt: 'Risikolebensversicherung', beschreibung: 'Hypothek \u20AC285.000 bei Sparkasse ohne Restschuldversicherung. Risikoleben \u20AC300.000, Laufzeit 20 Jahre empfohlen.',
             quelle: 'Open Finance', volumen: 6000, ertrag: 540, status: 'angeschrieben',
-            letzteAktion: 'Angebot per E-Mail versendet (08.03.)',
+            letzteAktion: 'Angebot per E-Mail versendet (' + relDate(-3) + ')',
             herleitung: [
                 { datenquelle: 'Open Finance - Kreditdaten (Sparkasse)', erkenntnis: 'Baufinanzierung \u20AC285.000 ohne Absicherung' },
                 { datenquelle: 'Bestandsdaten', erkenntnis: 'Verheiratet, 2 Kinder (8 + 5 Jahre) \u2013 hoher Absicherungsbedarf' },
@@ -61,7 +73,7 @@
             kundenName: 'Peter Schmidt', kundenId: 'KD00001', prioritaet: 'hoch',
             produkt: 'Kfz-Wechsel', beschreibung: 'Kfz bei Allianz l\u00E4uft aus, Ersparnis ca. \u20AC180/Jahr m\u00F6glich. Vergleichsangebot erstellen.',
             quelle: 'Open Finance', volumen: 540, ertrag: 95, status: 'termin',
-            letzteAktion: 'Termin vereinbart f\u00FCr 14.03.',
+            letzteAktion: 'Termin vereinbart f\u00FCr ' + relDate(+3) + '',
             herleitung: [
                 { datenquelle: 'Open Finance - Versicherungsdaten', erkenntnis: 'Kfz-Vertrag bei Allianz endet 30.11.2025' },
                 { datenquelle: 'Tarifvergleich', erkenntnis: 'Ersparnis ca. \u20AC180/Jahr bei vergleichbarem Schutz' }
@@ -71,7 +83,7 @@
             kundenName: 'Amira K\u00F6nig', kundenId: 'KD00002', prioritaet: 'hoch',
             produkt: 'BU-Nachversicherung', beschreibung: 'BU-Absicherung 1.500\u20AC/Mon. bei Netto 3.680\u20AC \u2013 nur 41% abgesichert. Aufstockung um 1.100\u20AC empfohlen.',
             quelle: 'PSD2', volumen: 1800, ertrag: 2160, status: 'identifiziert',
-            letzteAktion: 'Deckungsl\u00FCcke erkannt (07.03.)',
+            letzteAktion: 'Deckungsl\u00FCcke erkannt (' + relDate(-4) + ')',
             herleitung: [
                 { datenquelle: 'PSD2 - Gehaltsdaten', erkenntnis: 'Netto-Gehalt \u20AC3.680/Monat' },
                 { datenquelle: 'Eigener Vertrag (BU)', erkenntnis: 'Aktuelle BU: \u20AC1.500/Mon. \u2013 Deckungsl\u00FCcke \u20AC2.180/Mon.' },
@@ -82,7 +94,7 @@
             kundenName: 'Amira K\u00F6nig', kundenId: 'KD00002', prioritaet: 'mittel',
             produkt: 'Rechtsschutz Cross-Sell', beschreibung: 'Kein Rechtsschutz vorhanden, Familie mit Immobilienbesitz. Privat- und Immobilienrechtsschutz empfohlen.',
             quelle: 'Bestandsdaten', volumen: 300, ertrag: 45, status: 'identifiziert',
-            letzteAktion: 'Bestandsanalyse (05.03.)',
+            letzteAktion: 'Bestandsanalyse (' + relDate(-6) + ')',
             herleitung: [
                 { datenquelle: 'Bestandsdaten', erkenntnis: 'Kein Rechtsschutzvertrag, aber Immobilie + Familie' },
                 { datenquelle: 'Kalkulation', erkenntnis: 'Privat- und Immobilienrechtsschutz ca. \u20AC25/Monat' }
@@ -92,7 +104,7 @@
             kundenName: 'Amira K\u00F6nig', kundenId: 'KD00002', prioritaet: 'niedrig',
             produkt: 'Tierhalter-Haftpflicht', beschreibung: 'Hinweise auf Tierhaltung aus Kontoumsätzen (Fressnapf, Tierarzt). Tierhalterhaftpflicht ab ca. \u20AC5/Monat.',
             quelle: 'PSD2', volumen: 60, ertrag: 9, status: 'identifiziert',
-            letzteAktion: 'Transaktionsanalyse (05.03.)',
+            letzteAktion: 'Transaktionsanalyse (' + relDate(-6) + ')',
             herleitung: [
                 { datenquelle: 'Open Finance - Kontoumsätze', erkenntnis: 'Fressnapf \u20AC45/Mon., Tierarztpraxis \u20AC120 (Sep. 2025)' },
                 { datenquelle: 'Bestandspr\u00FCfung', erkenntnis: 'Kein Tierhalterhaftpflicht-Vertrag vorhanden' }
@@ -102,7 +114,7 @@
             kundenName: 'Thomas Weber', kundenId: 'KD00003', prioritaet: 'mittel',
             produkt: 'Hausratversicherung pr\u00FCfen', beschreibung: 'Letzte Anpassung vor 5 Jahren, Wohnfl\u00E4che 120m\u00B2. Deckungssumme und Fahrraddiebstahl pr\u00FCfen.',
             quelle: 'Bestandsdaten', volumen: 120, ertrag: 18, status: 'angeschrieben',
-            letzteAktion: 'Erinnerung per Brief (03.03.)',
+            letzteAktion: 'Erinnerung per Brief (' + relDate(-8) + ')',
             herleitung: [
                 { datenquelle: 'Bestandsdaten', erkenntnis: 'Letzte Anpassung vor 5 Jahren, 120m\u00B2 Wohnfl\u00E4che' },
                 { datenquelle: 'Empfehlung', erkenntnis: 'Deckungssumme pr\u00FCfen, ggf. Fahrraddiebstahl erg\u00E4nzen' }
@@ -112,27 +124,27 @@
             kundenName: 'Thomas Weber', kundenId: 'KD00003', prioritaet: 'niedrig',
             produkt: 'Umschuldung Konsumentenkredit', beschreibung: 'Targobank Kredit 9,0% p.a. \u2013 Umschuldung zu 4,9% m\u00F6glich. Ersparnis \u20AC756.',
             quelle: 'Open Finance', volumen: 12500, ertrag: 375, status: 'abgeschlossen',
-            letzteAktion: 'Umschuldung abgeschlossen (01.03.)',
+            letzteAktion: 'Umschuldung abgeschlossen (' + relDate(-10) + ')',
             herleitung: [
                 { datenquelle: 'Open Finance - Kreditdaten (Targobank)', erkenntnis: 'Konsumentenkredit \u20AC12.500, Zinssatz 9,0% p.a.' },
                 { datenquelle: 'Vergleichsangebot', erkenntnis: 'Santander BestCredit 4,9% p.a., Ersparnis \u20AC756' }
             ]
         },
         // Füllerkunden (nicht klickbar)
-        { kundenName: 'Anna Hoffmann', kundenId: 'KD00004', prioritaet: 'mittel', produkt: 'Unfallversicherung', beschreibung: 'Kein Unfallschutz vorhanden.', quelle: 'Bestandsdaten', volumen: 480, ertrag: 72, status: 'identifiziert', letzteAktion: 'Analyse erstellt (05.03.)', herleitung: [], filler: true },
-        { kundenName: 'Anna Hoffmann', kundenId: 'KD00004', prioritaet: 'niedrig', produkt: 'Zahnzusatzversicherung', beschreibung: 'Keine Zahnzusatzversicherung.', quelle: 'Bestandsdaten', volumen: 360, ertrag: 54, status: 'identifiziert', letzteAktion: 'Analyse erstellt (05.03.)', herleitung: [], filler: true },
-        { kundenName: 'Michael Braun', kundenId: 'KD00005', prioritaet: 'hoch', produkt: 'Berufsunf\u00e4higkeitsversicherung', beschreibung: 'Selbstst\u00e4ndiger Handwerker ohne BU-Schutz.', quelle: 'Bestandsdaten', volumen: 2400, ertrag: 1920, status: 'angeschrieben', letzteAktion: 'Angebot versendet (07.03.)', herleitung: [], filler: true },
-        { kundenName: 'Michael Braun', kundenId: 'KD00005', prioritaet: 'mittel', produkt: 'Betriebshaftpflicht', beschreibung: 'Pr\u00e4mie seit 3 Jahren nicht angepasst.', quelle: 'Bestandsdaten', volumen: 1800, ertrag: 270, status: 'termin', letzteAktion: 'Termin am 15.03.', herleitung: [], filler: true },
-        { kundenName: 'Lisa M\u00fcller', kundenId: 'KD00006', prioritaet: 'hoch', produkt: 'Wohngeb\u00e4udeversicherung', beschreibung: 'Immobilienkauf 2024, noch keine Geb\u00e4udeversicherung.', quelle: 'Open Finance', volumen: 1200, ertrag: 180, status: 'termin', letzteAktion: 'Termin am 12.03.', herleitung: [], filler: true },
-        { kundenName: 'Lisa M\u00fcller', kundenId: 'KD00006', prioritaet: 'niedrig', produkt: 'Glasversicherung', beschreibung: 'Wintergarten ohne Glasschutz.', quelle: 'Bestandsdaten', volumen: 180, ertrag: 27, status: 'identifiziert', letzteAktion: 'Analyse erstellt (04.03.)', herleitung: [], filler: true },
-        { kundenName: 'Matthias Engel', kundenId: 'KD00007', prioritaet: 'mittel', produkt: 'Altersvorsorge-Check', beschreibung: 'Versorgungsl\u00fccke ca. \u20AC800/Monat.', quelle: 'Bestandsdaten', volumen: 3600, ertrag: 2880, status: 'angeschrieben', letzteAktion: 'Info-Paket versendet (06.03.)', herleitung: [], filler: true },
-        { kundenName: 'Christian Bauer', kundenId: 'KD00008', prioritaet: 'hoch', produkt: 'Firmenrechtsschutz', beschreibung: 'GmbH ohne Rechtsschutz.', quelle: 'Bestandsdaten', volumen: 960, ertrag: 144, status: 'identifiziert', letzteAktion: 'Analyse erstellt (03.03.)', herleitung: [], filler: true },
-        { kundenName: 'Martin Wolf', kundenId: 'KD00009', prioritaet: 'niedrig', produkt: 'Reiseversicherung', beschreibung: 'H\u00e4ufige Gesch\u00e4ftsreisen ohne Absicherung.', quelle: 'PSD2', volumen: 240, ertrag: 36, status: 'abgeschlossen', letzteAktion: 'Police erstellt (28.02.)', herleitung: [], filler: true },
-        { kundenName: 'Eva Hartmann', kundenId: 'KD00010', prioritaet: 'mittel', produkt: 'Pflegezusatzversicherung', beschreibung: 'Keine private Pflegeabsicherung.', quelle: 'Bestandsdaten', volumen: 720, ertrag: 108, status: 'angeschrieben', letzteAktion: 'Beratungstermin angefragt (09.03.)', herleitung: [], filler: true },
-        { kundenName: 'Eva Hartmann', kundenId: 'KD00010', prioritaet: 'hoch', produkt: 'Risikolebensversicherung', beschreibung: 'Alleinverdienerin, 2 Kinder.', quelle: 'Bestandsdaten', volumen: 1800, ertrag: 270, status: 'termin', letzteAktion: 'Termin am 14.03.', herleitung: [], filler: true },
-        { kundenName: 'Stefan Richter', kundenId: 'KD00012', prioritaet: 'hoch', produkt: 'Cyber-Versicherung', beschreibung: 'IT-Freelancer ohne Cyber-Schutz.', quelle: 'Bestandsdaten', volumen: 1500, ertrag: 225, status: 'identifiziert', letzteAktion: 'Analyse erstellt (10.03.)', herleitung: [], filler: true },
-        { kundenName: 'Claudia Neumann', kundenId: 'KD00013', prioritaet: 'mittel', produkt: 'Hausratversicherung', beschreibung: 'Umzug in gr\u00f6\u00dfere Wohnung, Deckung anpassen.', quelle: 'Bestandsdaten', volumen: 320, ertrag: 48, status: 'abgeschlossen', letzteAktion: 'Police angepasst (02.03.)', herleitung: [], filler: true },
-        { kundenName: 'Jens Krause', kundenId: 'KD00014', prioritaet: 'niedrig', produkt: 'Tierhalterhaftpflicht', beschreibung: 'Hundebesitzer ohne Absicherung.', quelle: 'PSD2', volumen: 80, ertrag: 12, status: 'identifiziert', letzteAktion: 'Kontoumsatz-Analyse (08.03.)', herleitung: [], filler: true }
+        { kundenName: 'Anna Hoffmann', kundenId: 'KD00004', prioritaet: 'mittel', produkt: 'Unfallversicherung', beschreibung: 'Kein Unfallschutz vorhanden.', quelle: 'Bestandsdaten', volumen: 480, ertrag: 72, status: 'identifiziert', letzteAktion: 'Analyse erstellt (' + relDate(-6) + ')', herleitung: [], filler: true },
+        { kundenName: 'Anna Hoffmann', kundenId: 'KD00004', prioritaet: 'niedrig', produkt: 'Zahnzusatzversicherung', beschreibung: 'Keine Zahnzusatzversicherung.', quelle: 'Bestandsdaten', volumen: 360, ertrag: 54, status: 'identifiziert', letzteAktion: 'Analyse erstellt (' + relDate(-6) + ')', herleitung: [], filler: true },
+        { kundenName: 'Michael Braun', kundenId: 'KD00005', prioritaet: 'hoch', produkt: 'Berufsunf\u00e4higkeitsversicherung', beschreibung: 'Selbstst\u00e4ndiger Handwerker ohne BU-Schutz.', quelle: 'Bestandsdaten', volumen: 2400, ertrag: 1920, status: 'angeschrieben', letzteAktion: 'Angebot versendet (' + relDate(-4) + ')', herleitung: [], filler: true },
+        { kundenName: 'Michael Braun', kundenId: 'KD00005', prioritaet: 'mittel', produkt: 'Betriebshaftpflicht', beschreibung: 'Pr\u00e4mie seit 3 Jahren nicht angepasst.', quelle: 'Bestandsdaten', volumen: 1800, ertrag: 270, status: 'termin', letzteAktion: 'Termin am ' + relDate(+4), herleitung: [], filler: true },
+        { kundenName: 'Lisa M\u00fcller', kundenId: 'KD00006', prioritaet: 'hoch', produkt: 'Wohngeb\u00e4udeversicherung', beschreibung: 'Immobilienkauf 2024, noch keine Geb\u00e4udeversicherung.', quelle: 'Open Finance', volumen: 1200, ertrag: 180, status: 'termin', letzteAktion: 'Termin am ' + relDate(+1), herleitung: [], filler: true },
+        { kundenName: 'Lisa M\u00fcller', kundenId: 'KD00006', prioritaet: 'niedrig', produkt: 'Glasversicherung', beschreibung: 'Wintergarten ohne Glasschutz.', quelle: 'Bestandsdaten', volumen: 180, ertrag: 27, status: 'identifiziert', letzteAktion: 'Analyse erstellt (' + relDate(-7) + ')', herleitung: [], filler: true },
+        { kundenName: 'Matthias Engel', kundenId: 'KD00007', prioritaet: 'mittel', produkt: 'Altersvorsorge-Check', beschreibung: 'Versorgungsl\u00fccke ca. \u20AC800/Monat.', quelle: 'Bestandsdaten', volumen: 3600, ertrag: 2880, status: 'angeschrieben', letzteAktion: 'Info-Paket versendet (' + relDate(-5) + ')', herleitung: [], filler: true },
+        { kundenName: 'Christian Bauer', kundenId: 'KD00008', prioritaet: 'hoch', produkt: 'Firmenrechtsschutz', beschreibung: 'GmbH ohne Rechtsschutz.', quelle: 'Bestandsdaten', volumen: 960, ertrag: 144, status: 'identifiziert', letzteAktion: 'Analyse erstellt (' + relDate(-8) + ')', herleitung: [], filler: true },
+        { kundenName: 'Martin Wolf', kundenId: 'KD00009', prioritaet: 'niedrig', produkt: 'Reiseversicherung', beschreibung: 'H\u00e4ufige Gesch\u00e4ftsreisen ohne Absicherung.', quelle: 'PSD2', volumen: 240, ertrag: 36, status: 'abgeschlossen', letzteAktion: 'Police erstellt (' + relDate(-11) + ')', herleitung: [], filler: true },
+        { kundenName: 'Eva Hartmann', kundenId: 'KD00010', prioritaet: 'mittel', produkt: 'Pflegezusatzversicherung', beschreibung: 'Keine private Pflegeabsicherung.', quelle: 'Bestandsdaten', volumen: 720, ertrag: 108, status: 'angeschrieben', letzteAktion: 'Beratungstermin angefragt (' + relDate(-2) + ')', herleitung: [], filler: true },
+        { kundenName: 'Eva Hartmann', kundenId: 'KD00010', prioritaet: 'hoch', produkt: 'Risikolebensversicherung', beschreibung: 'Alleinverdienerin, 2 Kinder.', quelle: 'Bestandsdaten', volumen: 1800, ertrag: 270, status: 'termin', letzteAktion: 'Termin am ' + relDate(+3), herleitung: [], filler: true },
+        { kundenName: 'Stefan Richter', kundenId: 'KD00012', prioritaet: 'hoch', produkt: 'Cyber-Versicherung', beschreibung: 'IT-Freelancer ohne Cyber-Schutz.', quelle: 'Bestandsdaten', volumen: 1500, ertrag: 225, status: 'identifiziert', letzteAktion: 'Analyse erstellt (' + relDate(-1) + ')', herleitung: [], filler: true },
+        { kundenName: 'Claudia Neumann', kundenId: 'KD00013', prioritaet: 'mittel', produkt: 'Hausratversicherung', beschreibung: 'Umzug in gr\u00f6\u00dfere Wohnung, Deckung anpassen.', quelle: 'Bestandsdaten', volumen: 320, ertrag: 48, status: 'abgeschlossen', letzteAktion: 'Police angepasst (' + relDate(-9) + ')', herleitung: [], filler: true },
+        { kundenName: 'Jens Krause', kundenId: 'KD00014', prioritaet: 'niedrig', produkt: 'Tierhalterhaftpflicht', beschreibung: 'Hundebesitzer ohne Absicherung.', quelle: 'PSD2', volumen: 80, ertrag: 12, status: 'identifiziert', letzteAktion: 'Kontoumsatz-Analyse (' + relDate(-3) + ')', herleitung: [], filler: true }
     ];
 
     // Banking potentiale (derived from fillBeraterPotentiale in agentur-overview-banking.js)
@@ -141,7 +153,7 @@
             kundenName: 'Klaus Fischer', kundenId: 'KDB001', prioritaet: 'hoch',
             produkt: 'Anschlussfinanzierung (DZ HYP / M\u00FCnchener Hyp)', beschreibung: 'Zinsbindung l\u00E4uft 09/2026 aus. Restschuld 185k. Forward-Darlehen mit g\u00FCnstigeren Konditionen \u00FCber DZ HYP oder M\u00FCnchener Hypothekenbank m\u00F6glich.',
             quelle: 'Truuco', volumen: 185000, ertrag: 2775, status: 'angeschrieben',
-            letzteAktion: 'Konditionen-Vergleich zugesandt (09.03.)',
+            letzteAktion: 'Konditionen-Vergleich zugesandt (' + relDate(-2) + ')',
             herleitung: [
                 { datenquelle: 'Bestandsanalyse', erkenntnis: 'Baufinanzierung Restschuld \u20AC185.000, Zinssatz 3,2%' },
                 { datenquelle: 'Marktdaten', erkenntnis: 'Aktuelle Forward-Konditionen ab 2,4% \u2013 Ersparnis ca. 0,8% p.a.' },
@@ -152,7 +164,7 @@
             kundenName: 'Sandra M\u00FCller', kundenId: 'KDB002', prioritaet: 'hoch',
             produkt: 'VR-FinanzPlan + Union Investment Sparplan', beschreibung: 'Sparquote 1.800/Mon. ohne Altersvorsorge. Open Finance zeigt nur Tagesgeld bei ING. UnionDepot mit Verm\u00F6genPlus-Beratung empfohlen.',
             quelle: 'Truuco/FIDA', volumen: 6000, ertrag: 1800, status: 'termin',
-            letzteAktion: 'Beratungstermin am 15.03.',
+            letzteAktion: 'Beratungstermin am ' + relDate(+4) + '',
             herleitung: [
                 { datenquelle: 'FIDA - ING Kontodaten', erkenntnis: 'Sparquote \u20AC1.800/Mon., nur Tagesgeld, keine Altersvorsorge' },
                 { datenquelle: 'Bedarfsanalyse', erkenntnis: 'VR-FinanzPlan zeigt Vorsorge-L\u00FCcke von ca. \u20AC800/Mon.' },
@@ -173,7 +185,7 @@
             kundenName: 'Julia Becker', kundenId: 'KDB004', prioritaet: 'hoch',
             produkt: 'FIDA-Consent + Wero-Aktivierung', beschreibung: 'Nur 2 Produkte. Open Finance Consent einholen. Wero als Einstieg in digitale VR-Welt, dann VR-FinanzPlan.',
             quelle: 'Impulsmanager', volumen: 0, ertrag: 500, status: 'identifiziert',
-            letzteAktion: 'Potential erkannt (08.03.)',
+            letzteAktion: 'Potential erkannt (' + relDate(-3) + ')',
             herleitung: [
                 { datenquelle: 'Bestandsanalyse', erkenntnis: 'Nur 2 Produkte (Girokonto + Sparkonto), niedrige Produktbreite' },
                 { datenquelle: 'Impulsmanager', erkenntnis: 'FIDA-Consent + Wero-Onboarding als Einstieg in digitales \u00D6kosystem' }
@@ -183,7 +195,7 @@
             kundenName: 'Peter Hoffmann', kundenId: 'KDB005', prioritaet: 'mittel',
             produkt: 'Verm\u00F6genPlus (Union Investment)', beschreibung: '120k auf Tagesgeld. Digitale Fondsverm\u00F6gensverwaltung Verm\u00F6genPlus empfohlen (0,80-1,25% Geb\u00FChren je Volumen).',
             quelle: 'Truuco', volumen: 120000, ertrag: 1800, status: 'angeschrieben',
-            letzteAktion: 'Infomaterial zugesandt (07.03.)',
+            letzteAktion: 'Infomaterial zugesandt (' + relDate(-4) + ')',
             herleitung: [
                 { datenquelle: 'Bestandsanalyse', erkenntnis: '\u20AC120.000 auf Tagesgeld bei nur 1,2% Verzinsung' },
                 { datenquelle: 'Verbundpartner', erkenntnis: 'Verm\u00F6genPlus (Union Investment): erwartete Rendite 4-6% p.a.' }
@@ -193,7 +205,7 @@
             kundenName: 'Andrea Lang', kundenId: 'KDB006', prioritaet: 'mittel',
             produkt: 'VR Smart Finanz Praxiskredit', beschreibung: 'Kanzleierweiterung geplant. KMU-Kredit \u00FCber VR Smart Finanz inkl. KfW-F\u00F6rderung.',
             quelle: 'Impulsmanager', volumen: 80000, ertrag: 1200, status: 'identifiziert',
-            letzteAktion: 'Im Gespr\u00E4ch beim letzten Beratungstermin (04.03.)',
+            letzteAktion: 'Im Gespr\u00E4ch beim letzten Beratungstermin (' + relDate(-7) + ')',
             herleitung: [
                 { datenquelle: 'Beratungshistorie', erkenntnis: 'Kanzleierweiterung erw\u00E4hnt beim letzten Termin' },
                 { datenquelle: 'Impulsmanager', erkenntnis: 'VR Smart Finanz Praxiskredit + KfW-F\u00F6rderung m\u00F6glich' }
@@ -203,7 +215,7 @@
             kundenName: 'Thomas Klein', kundenId: 'KDB007', prioritaet: 'niedrig',
             produkt: 'VR-KlimaKredit + KfW-F\u00F6rderung', beschreibung: 'Immobilie Bj. 1975. VR-KlimaKredit bis 75.000\u20AC f\u00FCr energieeffiziente Sanierung. KfW-F\u00F6rdermittel beantragen.',
             quelle: 'Truuco', volumen: 75000, ertrag: 1125, status: 'identifiziert',
-            letzteAktion: 'Potential erkannt (06.03.)',
+            letzteAktion: 'Potential erkannt (' + relDate(-5) + ')',
             herleitung: [
                 { datenquelle: 'Bestandsdaten', erkenntnis: 'Immobilie Baujahr 1975, energetische Sanierung sinnvoll' },
                 { datenquelle: 'Verbundpartner', erkenntnis: 'VR-KlimaKredit bis \u20AC75.000 + KfW-F\u00F6rdermittel' }
@@ -213,7 +225,7 @@
             kundenName: 'Stefan Braun', kundenId: 'KDB009', prioritaet: 'hoch',
             produkt: 'VR-FinanzPlan + Digitale girocard', beschreibung: 'IT-affin, hohes Einkommen, kaum VR-Produkte. VR Banking App + digitale girocard als Einstieg, dann FinanzPlan.',
             quelle: 'Impulsmanager', volumen: 0, ertrag: 400, status: 'angeschrieben',
-            letzteAktion: 'VR Banking App Demo-Link gesendet (08.03.)',
+            letzteAktion: 'VR Banking App Demo-Link gesendet (' + relDate(-3) + ')',
             herleitung: [
                 { datenquelle: 'Bestandsanalyse', erkenntnis: 'Hohes Einkommen, kaum VR-Produkte, IT-affin' },
                 { datenquelle: 'Impulsmanager', erkenntnis: 'Digitale Produkte als Einstieg, dann VR-FinanzPlan' }
@@ -223,7 +235,7 @@
             kundenName: 'Katharina Wolf', kundenId: 'KDB010', prioritaet: 'mittel',
             produkt: 'R+V Risikolebensversicherung', beschreibung: 'Junge Familie, Baufinanzierung 180k ohne Todesfallabsicherung. R+V Premium mit Nachversicherungsgarantie.',
             quelle: 'Truuco', volumen: 480, ertrag: 360, status: 'termin',
-            letzteAktion: 'Beratungstermin am 12.03.',
+            letzteAktion: 'Beratungstermin am ' + relDate(+1) + '',
             herleitung: [
                 { datenquelle: 'Bestandsanalyse', erkenntnis: 'Baufinanzierung \u20AC180.000 ohne Todesfallabsicherung' },
                 { datenquelle: 'Verbundpartner R+V', erkenntnis: 'R+V Premium RLV mit Nachversicherungsgarantie empfohlen' }
@@ -233,7 +245,7 @@
             kundenName: 'J\u00FCrgen Peters', kundenId: 'KDB011', prioritaet: 'hoch',
             produkt: 'DZ PRIVATBANK Nachfolgeplanung', beschreibung: 'Gesch\u00E4ftsf\u00FChrer, 60 Jahre. DZ PRIVATBANK f\u00FCr Nachfolge + Stiftungsberatung. Kapital-LV bei Swiss Life l\u00E4uft 2028 ab (FIDA).',
             quelle: 'Truuco/FIDA', volumen: 0, ertrag: 5000, status: 'termin',
-            letzteAktion: 'Termin mit DZ PRIVATBANK am 18.03.',
+            letzteAktion: 'Termin mit DZ PRIVATBANK am ' + relDate(+7) + '',
             herleitung: [
                 { datenquelle: 'Bestandsanalyse', erkenntnis: 'Gesch\u00E4ftsf\u00FChrer, 60 Jahre \u2013 Nachfolgeplanung relevant' },
                 { datenquelle: 'FIDA', erkenntnis: 'Kapital-LV bei Swiss Life l\u00E4uft 2028 ab \u2013 Wiederanlage' },
@@ -244,22 +256,22 @@
             kundenName: 'Sabine Kraus', kundenId: 'KDB012', prioritaet: 'niedrig',
             produkt: 'UnionDepot + GENO Broker Depot-Wechsel', beschreibung: '52k Depot bei Comdirect (FIDA). Wechsel zu UnionDepot oder GENO Broker mit pers\u00F6nlicher Beratung.',
             quelle: 'FIDA', volumen: 30000, ertrag: 450, status: 'identifiziert',
-            letzteAktion: 'FIDA-Daten abgeglichen (06.03.)',
+            letzteAktion: 'FIDA-Daten abgeglichen (' + relDate(-5) + ')',
             herleitung: [
                 { datenquelle: 'FIDA - Comdirect', erkenntnis: 'Depotvolumen \u20AC52.000, \u00FCberwiegend Einzelaktien' },
                 { datenquelle: 'Konditionsvergleich', erkenntnis: 'UnionDepot / GENO Broker mit pers\u00F6nlicher Beratung' }
             ]
         },
         // Füllerkunden Banking (nicht klickbar)
-        { kundenName: 'Monika Schuster', kundenId: 'KDB013', prioritaet: 'hoch', produkt: 'VR-MeinZuhause Baufinanzierung', beschreibung: 'Neubau geplant, Finanzierungsbedarf \u20AC320.000.', quelle: 'Impulsmanager', volumen: 320000, ertrag: 4800, status: 'termin', letzteAktion: 'Beratungstermin am 13.03.', herleitung: [], filler: true },
-        { kundenName: 'Ralf Zimmermann', kundenId: 'KDB014', prioritaet: 'mittel', produkt: 'Union Investment Riester', beschreibung: 'Riester-Zulagen nicht ausgesch\u00f6pft.', quelle: 'Truuco', volumen: 2100, ertrag: 630, status: 'angeschrieben', letzteAktion: 'Info-Material versendet (07.03.)', herleitung: [], filler: true },
-        { kundenName: 'Ralf Zimmermann', kundenId: 'KDB014', prioritaet: 'niedrig', produkt: 'VR-Vorteilswelt Aktivierung', beschreibung: 'Cashback-Programm noch nicht aktiviert.', quelle: 'Impulsmanager', volumen: 0, ertrag: 50, status: 'identifiziert', letzteAktion: 'System-Impuls (10.03.)', herleitung: [], filler: true },
-        { kundenName: 'Heike Lorenz', kundenId: 'KDB015', prioritaet: 'hoch', produkt: 'R+V Berufsunf\u00e4higkeitsversicherung', beschreibung: 'Akademikerin, 32J., ohne BU-Schutz.', quelle: 'Truuco', volumen: 1800, ertrag: 1350, status: 'angeschrieben', letzteAktion: 'Angebot versendet (08.03.)', herleitung: [], filler: true },
+        { kundenName: 'Monika Schuster', kundenId: 'KDB013', prioritaet: 'hoch', produkt: 'VR-MeinZuhause Baufinanzierung', beschreibung: 'Neubau geplant, Finanzierungsbedarf \u20AC320.000.', quelle: 'Impulsmanager', volumen: 320000, ertrag: 4800, status: 'termin', letzteAktion: 'Beratungstermin am ' + relDate(+2), herleitung: [], filler: true },
+        { kundenName: 'Ralf Zimmermann', kundenId: 'KDB014', prioritaet: 'mittel', produkt: 'Union Investment Riester', beschreibung: 'Riester-Zulagen nicht ausgesch\u00f6pft.', quelle: 'Truuco', volumen: 2100, ertrag: 630, status: 'angeschrieben', letzteAktion: 'Info-Material versendet (' + relDate(-4) + ')', herleitung: [], filler: true },
+        { kundenName: 'Ralf Zimmermann', kundenId: 'KDB014', prioritaet: 'niedrig', produkt: 'VR-Vorteilswelt Aktivierung', beschreibung: 'Cashback-Programm noch nicht aktiviert.', quelle: 'Impulsmanager', volumen: 0, ertrag: 50, status: 'identifiziert', letzteAktion: 'System-Impuls (' + relDate(-1) + ')', herleitung: [], filler: true },
+        { kundenName: 'Heike Lorenz', kundenId: 'KDB015', prioritaet: 'hoch', produkt: 'R+V Berufsunf\u00e4higkeitsversicherung', beschreibung: 'Akademikerin, 32J., ohne BU-Schutz.', quelle: 'Truuco', volumen: 1800, ertrag: 1350, status: 'angeschrieben', letzteAktion: 'Angebot versendet (' + relDate(-3) + ')', herleitung: [], filler: true },
         { kundenName: 'Dirk Seidel', kundenId: 'KDB016', prioritaet: 'mittel', produkt: 'VR Smart Finanz Gewerbekredit', beschreibung: 'Erweiterung Gastst\u00e4tte, Kreditbedarf \u20AC45.000.', quelle: 'Impulsmanager', volumen: 45000, ertrag: 675, status: 'identifiziert', letzteAktion: 'Erstgespr\u00e4ch ausstehend', herleitung: [], filler: true },
-        { kundenName: 'Anja Bergmann', kundenId: 'KDB017', prioritaet: 'hoch', produkt: 'Verm\u00f6genPlus Portfolioumschichtung', beschreibung: 'Depot \u20AC95.000 mit hohem Aktienanteil, Umschichtung empfohlen.', quelle: 'FIDA', volumen: 95000, ertrag: 1425, status: 'termin', letzteAktion: 'Termin am 16.03.', herleitung: [], filler: true },
-        { kundenName: 'Anja Bergmann', kundenId: 'KDB017', prioritaet: 'niedrig', produkt: 'Wero-Aktivierung', beschreibung: 'Noch keine Wero-Registrierung.', quelle: 'Impulsmanager', volumen: 0, ertrag: 30, status: 'identifiziert', letzteAktion: 'System-Impuls (09.03.)', herleitung: [], filler: true },
-        { kundenName: 'Frank Mayer', kundenId: 'KDB018', prioritaet: 'mittel', produkt: 'KfW-Studienkredit Ablösung', beschreibung: 'Studienkredit \u20AC18.000 bei KfW, g\u00fcnstigere Konditionen m\u00f6glich.', quelle: 'FIDA', volumen: 18000, ertrag: 270, status: 'abgeschlossen', letzteAktion: 'Umschuldung abgeschlossen (01.03.)', herleitung: [], filler: true },
-        { kundenName: 'Petra Wendt', kundenId: 'KDB019', prioritaet: 'hoch', produkt: 'R+V Wohngeb\u00e4udeversicherung', beschreibung: 'Altbau Bj. 1968, Unterversicherung wahrscheinlich.', quelle: 'Truuco', volumen: 1500, ertrag: 225, status: 'angeschrieben', letzteAktion: 'Pr\u00fcfung angeboten (06.03.)', herleitung: [], filler: true }
+        { kundenName: 'Anja Bergmann', kundenId: 'KDB017', prioritaet: 'hoch', produkt: 'Verm\u00f6genPlus Portfolioumschichtung', beschreibung: 'Depot \u20AC95.000 mit hohem Aktienanteil, Umschichtung empfohlen.', quelle: 'FIDA', volumen: 95000, ertrag: 1425, status: 'termin', letzteAktion: 'Termin am ' + relDate(+5), herleitung: [], filler: true },
+        { kundenName: 'Anja Bergmann', kundenId: 'KDB017', prioritaet: 'niedrig', produkt: 'Wero-Aktivierung', beschreibung: 'Noch keine Wero-Registrierung.', quelle: 'Impulsmanager', volumen: 0, ertrag: 30, status: 'identifiziert', letzteAktion: 'System-Impuls (' + relDate(-2) + ')', herleitung: [], filler: true },
+        { kundenName: 'Frank Mayer', kundenId: 'KDB018', prioritaet: 'mittel', produkt: 'KfW-Studienkredit Ablösung', beschreibung: 'Studienkredit \u20AC18.000 bei KfW, g\u00fcnstigere Konditionen m\u00f6glich.', quelle: 'FIDA', volumen: 18000, ertrag: 270, status: 'abgeschlossen', letzteAktion: 'Umschuldung abgeschlossen (' + relDate(-10) + ')', herleitung: [], filler: true },
+        { kundenName: 'Petra Wendt', kundenId: 'KDB019', prioritaet: 'hoch', produkt: 'R+V Wohngeb\u00e4udeversicherung', beschreibung: 'Altbau Bj. 1968, Unterversicherung wahrscheinlich.', quelle: 'Truuco', volumen: 1500, ertrag: 225, status: 'angeschrieben', letzteAktion: 'Pr\u00fcfung angeboten (' + relDate(-5) + ')', herleitung: [], filler: true }
     ];
 
     // ========================================

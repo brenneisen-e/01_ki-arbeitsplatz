@@ -1,0 +1,200 @@
+// V1: Peter Schmidt (vollstaendig)
+export const V1 = {
+  name: 'Peter Schmidt', id: 'KD00001', alter: 42,
+  beruf: 'IT-Projektleiter', nettoeinkommen: 4200,
+  familienstand: 'verheiratet',
+  partner: { name: 'Sarah', beruf: 'Lehrerin Teilzeit', einkommen: 1800 },
+  kinder: [{ name: 'Lina', alter: 7 }, { name: 'Max', alter: 1 }],
+  wohnsituation: 'eigentum', wohnflaeche: 145,
+  linkedin: { kontakte: 500, aktivitaet: 'mittel', branchen: ['IT', 'Digitalisierung'] },
+  lebenssituation: 'konsolidierung',
+  nps: 8, risikoscore: 28, potentialScore: 4.5, abwanderungsrisiko: 'niedrig',
+  eigeneProdukte: [
+    { typ: 'bu', sparte: 'leben', produkt: 'ERGO BU Comfort', details: '1.800\u20ac/mtl. Rente', praemie: 2160, seit: '2018-03', status: 'optimierbar' },
+    { typ: 'kfz', sparte: 'kfz', produkt: 'VW Tiguan VK', details: '500\u20ac SB, SF-12', praemie: 680, seit: '2021-06', status: 'aktiv' },
+    { typ: 'hausrat', sparte: 'schaden', produkt: 'ERGO Hausrat Basis', details: '65qm FALSCH! Lebt in 145qm EFH', praemie: 180, seit: '2016-01', status: 'optimierbar' },
+    { typ: 'haftpflicht', sparte: 'schaden', produkt: 'ERGO Privat Premium', details: 'Familie 10M\u20ac', praemie: 95, seit: '2017-05', status: 'aktiv' },
+  ],
+  fremdProdukte: [
+    { typ: 'girokonto', institut: 'Sparkasse Koeln', details: 'Gehaltseingang 4.200\u20ac', volumen: 3500, consent: true },
+    { typ: 'baufinanzierung', institut: 'Sparkasse Koeln', details: '285k Rest, 1,8%, Zinsbindung bis 09/2027', volumen: 285000, consent: true },
+    { typ: 'kredit', institut: 'KfW', details: 'Studienkredit Rest 12k', volumen: 12000, consent: true },
+    { typ: 'depot', institut: 'ING DiBa', details: 'MSCI World+EM, Sparplan 300/mtl', volumen: 42000, consent: true },
+    { typ: 'tagesgeld', institut: 'DKB', details: '1,5% Zins', volumen: 8500, consent: false },
+    { typ: 'rlv', institut: 'Allianz', details: '150k Deckung, bis 2035', volumen: 540, consent: true },
+  ],
+  transaktionen: [
+    { kategorie: 'gehalt', betrag: 4200, empfaenger: 'Arbeitgeber' },
+    { kategorie: 'gehalt_partner', betrag: 1800, empfaenger: 'Land NRW' },
+    { kategorie: 'kindergeld', betrag: 500, empfaenger: 'Familienkasse' },
+    { kategorie: 'baufi', betrag: -1050, empfaenger: 'Sparkasse' },
+    { kategorie: 'kredit', betrag: -120, empfaenger: 'KfW' },
+    { kategorie: 'versicherung_eigen', betrag: -260, empfaenger: 'ERGO' },
+    { kategorie: 'versicherung_fremd', betrag: -45, empfaenger: 'Allianz' },
+    { kategorie: 'sparplan', betrag: -300, empfaenger: 'ING DiBa' },
+    { kategorie: 'kinder', betrag: -380, empfaenger: 'Kita Koeln' },
+    { kategorie: 'konsum', betrag: -1200, empfaenger: 'Diverse' },
+    { kategorie: 'mobilitaet', betrag: -180, empfaenger: 'Shell, ADAC' },
+    { kategorie: 'abos', betrag: -65, empfaenger: 'Netflix, Spotify, DAZN' },
+    { kategorie: 'sparen', betrag: -200, empfaenger: 'Sparkonto Urlaub' },
+  ],
+  potentiale: [
+    { titel: 'BU-Nachversicherung 1.800\u21922.600\u20ac/mtl.', typ: 'anpassung', quellen: ['bestand', 'lebensereignis'], prioritaet: 'hoch', volumen: 960, volumenTyp: 'jaehrlich', beschreibung: 'Zweites Kind, Einkommen gestiegen. BU deckt nur 69% statt 80%.', empfohleneAktion: 'termin_vereinbaren', produktEmpfehlung: 'ERGO BU Comfort Plus', status: 'termin' },
+    { titel: 'Hausrat-Upgrade 65\u2192145qm + Elementar', typ: 'anpassung', quellen: ['bestand'], prioritaet: 'hoch', volumen: 120, volumenTyp: 'jaehrlich', beschreibung: 'Falsche Wohnflaeche seit Umzug 2021. Keine Elementar trotz EFH.', empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'ERGO Hausrat Premium + Elementar', status: 'identifiziert' },
+    { titel: 'Fondspolice statt ING-ETF-Depot', typ: 'whitespot', quellen: ['finanztransaktion', 'bestand'], prioritaet: 'mittel', volumen: 42000, volumenTyp: 'einmalig', beschreibung: '42k bei ING ohne Steuervorteil. ERGO-Fondspolice mit Halbeinkuenfte.', empfohleneAktion: 'termin_vereinbaren', produktEmpfehlung: 'ERGO Rente Balance', status: 'identifiziert' },
+    { titel: 'RLV-Erhoehung 150k\u2192300k', typ: 'anpassung', quellen: ['wettbewerb', 'lebensereignis'], prioritaet: 'hoch', volumen: 240, volumenTyp: 'jaehrlich', beschreibung: 'Allianz-RLV deckt nicht mal Baufi-Restschuld.', empfohleneAktion: 'tarifvergleich', produktEmpfehlung: 'ERGO Risikoleben', status: 'angeschrieben' },
+    { titel: 'Unfallversicherung Familie', typ: 'whitespot', quellen: ['bestand'], prioritaet: 'mittel', volumen: 250, volumenTyp: 'jaehrlich', beschreibung: '2 Kinder, kein Unfallschutz. ERGO Unfall Smart.', empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'ERGO Unfall Smart Familie', status: 'identifiziert' },
+    { titel: 'Baufi-Anschlussfinanzierung 2027', typ: 'cross_sell', quellen: ['finanztransaktion'], prioritaet: 'hoch', volumen: 0, volumenTyp: 'vermittlung', beschreibung: 'Zinsbindung Sparkasse endet 09/2027. Forward-Darlehen jetzt pruefen.', empfohleneAktion: 'termin_vereinbaren', produktEmpfehlung: 'Kooperationspartner', status: 'identifiziert' },
+  ],
+  kommunikation: [
+    { datum: '2026-02-15', typ: 'termin', richtung: 'ausgehend', betreff: 'Jahresgespraech', zusammenfassung: 'BU-Luecke angesprochen, Kunde offen. Termin fuer Nachversicherung vereinbart.' },
+    { datum: '2026-01-20', typ: 'chatbot', richtung: 'eingehend', betreff: 'Pflege Eltern', zusammenfassung: 'Kunde fragte nach Pflegezusatz fuer Eltern (68+71 Jahre).' },
+    { datum: '2025-11-05', typ: 'email', richtung: 'ausgehend', betreff: 'Weihnachtsaktion', zusammenfassung: 'Saisonale Kampagne verschickt, keine Reaktion.' },
+  ],
+  absicherung: {
+    vorhanden: ['bu', 'kfz', 'haftpflicht'],
+    fehlend: ['hausrat_korrekt', 'rlv_ausreichend', 'pflege', 'unfall', 'rechtsschutz', 'wohngebaeude'],
+  },
+};
+
+// V2: Amira Koenig
+export const V2 = {
+  name: 'Amira Koenig', id: 'KD00002', alter: 28,
+  beruf: 'Designerin', nettoeinkommen: 2800,
+  familienstand: 'ledig', partner: null,
+  kinder: [],
+  wohnsituation: 'miete', wohnflaeche: 55,
+  linkedin: { kontakte: 800, aktivitaet: 'hoch', branchen: ['Design', 'Marketing'] },
+  lebenssituation: 'aufbau',
+  nps: 7, risikoscore: 35, potentialScore: 3.8, abwanderungsrisiko: 'mittel',
+  eigeneProdukte: [
+    { typ: 'kfz', sparte: 'kfz', produkt: 'ERGO KFZ Comfort', details: 'VW Polo, VK 300\u20ac SB', praemie: 420, seit: '2024-01', status: 'aktiv' },
+  ],
+  fremdProdukte: [
+    { typ: 'girokonto', institut: 'N26', details: 'Gehaltseingang 2.800\u20ac', volumen: 2100, consent: true },
+    { typ: 'depot', institut: 'Trade Republic', details: 'ETF Sparplan 150/mtl', volumen: 8500, consent: true },
+    { typ: 'tagesgeld', institut: 'Commerzbank', details: '2,0% Zins', volumen: 3200, consent: true },
+  ],
+  transaktionen: [
+    { kategorie: 'gehalt', betrag: 2800, empfaenger: 'Agentur XY' },
+    { kategorie: 'miete', betrag: -750, empfaenger: 'Vermieter' },
+    { kategorie: 'versicherung_eigen', betrag: -35, empfaenger: 'ERGO' },
+    { kategorie: 'sparplan', betrag: -150, empfaenger: 'Trade Republic' },
+    { kategorie: 'konsum', betrag: -900, empfaenger: 'Diverse' },
+    { kategorie: 'mobilitaet', betrag: -120, empfaenger: 'Tanken' },
+    { kategorie: 'abos', betrag: -45, empfaenger: 'Spotify, Adobe CC' },
+  ],
+  potentiale: [
+    { titel: 'BU-Versicherung', typ: 'whitespot', quellen: ['bestand'], prioritaet: 'kritisch', volumen: 1440, volumenTyp: 'jaehrlich', beschreibung: 'Keine BU trotz Alleinverdienerin. ERGO BU Smart.', empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'ERGO BU Smart', status: 'identifiziert' },
+    { titel: 'Haftpflichtversicherung', typ: 'whitespot', quellen: ['bestand'], prioritaet: 'hoch', volumen: 65, volumenTyp: 'jaehrlich', beschreibung: 'Keine Privathaftpflicht. Grundabsicherung fehlt.', empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'ERGO Haftpflicht Single', status: 'identifiziert' },
+    { titel: 'Kfz-Wechsel Allianz\u2192ERGO', typ: 'anpassung', quellen: ['wettbewerb'], prioritaet: 'mittel', volumen: 540, volumenTyp: 'jaehrlich', beschreibung: 'Guenstigerer Tarif moeglich bei ERGO.', empfohleneAktion: 'tarifvergleich', produktEmpfehlung: 'ERGO KFZ Premium', status: 'angeschrieben' },
+    { titel: 'Hausratversicherung', typ: 'whitespot', quellen: ['bestand'], prioritaet: 'mittel', volumen: 85, volumenTyp: 'jaehrlich', beschreibung: 'Kein Hausrat. 55qm Mietwohnung.', empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'ERGO Hausrat Basis', status: 'identifiziert' },
+  ],
+  kommunikation: [
+    { datum: '2026-03-01', typ: 'email', richtung: 'ausgehend', betreff: 'KFZ-Verlaengerung', zusammenfassung: 'Angebot fuer KFZ-Verlaengerung mit Upgrade gesendet.' },
+  ],
+  absicherung: {
+    vorhanden: ['kfz'],
+    fehlend: ['bu', 'haftpflicht', 'hausrat', 'rechtsschutz'],
+  },
+};
+
+// V3: Thomas Weber
+export const V3 = {
+  name: 'Thomas Weber', id: 'KD00003', alter: 55,
+  beruf: 'Handwerksmeister', nettoeinkommen: 4800,
+  familienstand: 'verheiratet',
+  partner: { name: 'Monika', beruf: 'Buchhalterin', einkommen: 1500 },
+  kinder: [{ name: 'Jan', alter: 25 }, { name: 'Lisa', alter: 22 }],
+  wohnsituation: 'eigentum', wohnflaeche: 180,
+  linkedin: { kontakte: 120, aktivitaet: 'niedrig', branchen: ['Handwerk'] },
+  lebenssituation: 'vorruhestand',
+  nps: 5, risikoscore: 42, potentialScore: 3.2, abwanderungsrisiko: 'hoch',
+  eigeneProdukte: [
+    { typ: 'wohngebaeude', sparte: 'schaden', produkt: 'ERGO Wohngebaeude Komfort', details: '180qm EFH, Baujahr 1995', praemie: 1200, seit: '2010-04', status: 'aktiv' },
+    { typ: 'hausrat', sparte: 'schaden', produkt: 'ERGO Hausrat Premium', details: '180qm', praemie: 320, seit: '2010-04', status: 'aktiv' },
+    { typ: 'haftpflicht', sparte: 'schaden', produkt: 'ERGO Privat Familie', details: '10M\u20ac Deckung', praemie: 110, seit: '2010-04', status: 'aktiv' },
+    { typ: 'kfz', sparte: 'kfz', produkt: 'BMW X3 VK', details: '500\u20ac SB, SF-25', praemie: 890, seit: '2020-01', status: 'aktiv' },
+    { typ: 'kfz2', sparte: 'kfz', produkt: 'VW Golf Zweitwagen', details: 'TK nur', praemie: 280, seit: '2022-06', status: 'aktiv' },
+    { typ: 'bu', sparte: 'leben', produkt: 'ERGO BU Classic', details: '2.500\u20ac/mtl.', praemie: 1800, seit: '2005-01', status: 'aktiv' },
+    { typ: 'unfall', sparte: 'schaden', produkt: 'ERGO Unfall Kombi', details: 'Ehepaar', praemie: 540, seit: '2008-03', status: 'aktiv' },
+  ],
+  fremdProdukte: [
+    { typ: 'girokonto', institut: 'Volksbank', details: 'Privat + Firma', volumen: 12000, consent: true },
+    { typ: 'bausparvertrag', institut: 'Schwaebisch Hall', details: 'Zuteilungsreif 2027', volumen: 18000, consent: true },
+    { typ: 'lebensversicherung', institut: 'R+V', details: 'Ablauf 2028, Rueckkaufswert 95k', volumen: 95000, consent: true },
+    { typ: 'depot', institut: 'DKB', details: 'Gemischtes Depot', volumen: 120000, consent: true },
+    { typ: 'kfz_fremd', institut: 'HUK24', details: 'Zweitwagen Frau', volumen: 350, consent: false },
+  ],
+  transaktionen: [
+    { kategorie: 'gehalt', betrag: 4800, empfaenger: 'Eigener Betrieb' },
+    { kategorie: 'gehalt_partner', betrag: 1500, empfaenger: 'Steuerkanzlei' },
+    { kategorie: 'versicherung_eigen', betrag: -430, empfaenger: 'ERGO' },
+    { kategorie: 'versicherung_fremd', betrag: -29, empfaenger: 'HUK24' },
+    { kategorie: 'konsum', betrag: -1500, empfaenger: 'Diverse' },
+    { kategorie: 'mobilitaet', betrag: -350, empfaenger: 'Tanken, Werkstatt' },
+    { kategorie: 'haus', betrag: -400, empfaenger: 'Nebenkosten, Instandhaltung' },
+  ],
+  potentiale: [
+    { titel: 'Bindungsgespraech NPS-Detractor', typ: 'anpassung', quellen: ['kommunikation'], prioritaet: 'kritisch', volumen: 5140, volumenTyp: 'jaehrlich', beschreibung: 'NPS 5 = Detractor. Bestandsverlust-Risiko 5.140\u20ac/J.', empfohleneAktion: 'termin_vereinbaren', produktEmpfehlung: 'Kundenbindung', status: 'identifiziert' },
+    { titel: 'LV-Ablauf 2028 Wiederanlage', typ: 'cross_sell', quellen: ['bestand', 'finanztransaktion'], prioritaet: 'hoch', volumen: 95000, volumenTyp: 'einmalig', beschreibung: 'R+V LV laeuft 2028 ab. 95k Wiederanlage in ERGO-Produkt.', empfohleneAktion: 'termin_vereinbaren', produktEmpfehlung: 'ERGO Rente Balance', status: 'identifiziert' },
+    { titel: 'Nachfolgeplanung Betrieb', typ: 'cross_sell', quellen: ['lebensereignis'], prioritaet: 'hoch', volumen: 0, volumenTyp: 'vermittlung', beschreibung: 'Handwerksbetrieb, 55 Jahre. Nachfolge planen.', empfohleneAktion: 'termin_vereinbaren', produktEmpfehlung: 'Kooperationspartner', status: 'identifiziert' },
+    { titel: 'Ruerup-Rente Steueroptimierung', typ: 'whitespot', quellen: ['finanztransaktion'], prioritaet: 'mittel', volumen: 6000, volumenTyp: 'jaehrlich', beschreibung: 'Hohe Steuerlast als Selbstaendiger. Ruerup-Potential.', empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'ERGO Ruerup Rente', status: 'identifiziert' },
+    { titel: 'KFZ-Optimierung Frau', typ: 'anpassung', quellen: ['wettbewerb'], prioritaet: 'niedrig', volumen: 350, volumenTyp: 'jaehrlich', beschreibung: 'HUK24 Zweitwagen. ERGO Buendelrabatt moeglich.', empfohleneAktion: 'tarifvergleich', produktEmpfehlung: 'ERGO KFZ', status: 'identifiziert' },
+  ],
+  kommunikation: [
+    { datum: '2026-02-28', typ: 'telefon', richtung: 'eingehend', betreff: 'Beschwerde Schadensregulierung', zusammenfassung: 'Unzufrieden mit Dauer der KFZ-Schadensregulierung. 3 Wochen wartet er.' },
+    { datum: '2025-12-10', typ: 'termin', richtung: 'ausgehend', betreff: 'Jahresgespraech', zusammenfassung: 'Gespraech verlief distanziert. Kunde erwaehnte Angebot von HUK.' },
+  ],
+  absicherung: {
+    vorhanden: ['bu', 'kfz', 'haftpflicht', 'hausrat', 'wohngebaeude', 'unfall'],
+    fehlend: ['pflege', 'rechtsschutz', 'sterbegeld'],
+  },
+};
+
+// V4: Anna Hoffmann
+export const V4 = {
+  name: 'Anna Hoffmann', id: 'KD00004', alter: 35,
+  beruf: 'Aerztin (Internistin)', nettoeinkommen: 5500,
+  familienstand: 'verheiratet',
+  partner: { name: 'Markus', beruf: 'Architekt', einkommen: 3200 },
+  kinder: [{ name: 'Emma', alter: 3 }],
+  wohnsituation: 'miete', wohnflaeche: 95,
+  linkedin: { kontakte: 350, aktivitaet: 'mittel', branchen: ['Medizin', 'Gesundheit'] },
+  lebenssituation: 'aufbau',
+  nps: 9, risikoscore: 18, potentialScore: 4.8, abwanderungsrisiko: 'niedrig',
+  eigeneProdukte: [
+    { typ: 'haftpflicht', sparte: 'schaden', produkt: 'ERGO Privat Premium', details: 'Familie 10M\u20ac', praemie: 105, seit: '2022-01', status: 'aktiv' },
+    { typ: 'hausrat', sparte: 'schaden', produkt: 'ERGO Hausrat Komfort', details: '95qm', praemie: 200, seit: '2022-01', status: 'aktiv' },
+  ],
+  fremdProdukte: [
+    { typ: 'girokonto', institut: 'Commerzbank', details: 'Gehaltseingang 5.500\u20ac', volumen: 8000, consent: true },
+    { typ: 'tagesgeld', institut: 'ING', details: '2,0% Zins', volumen: 65000, consent: true },
+    { typ: 'depot', institut: 'Scalable Capital', details: 'ETF Portfolio', volumen: 38000, consent: true },
+    { typ: 'kfz', institut: 'Allianz', details: 'Audi A3, VK', volumen: 720, consent: true },
+  ],
+  transaktionen: [
+    { kategorie: 'gehalt', betrag: 5500, empfaenger: 'Klinikum' },
+    { kategorie: 'gehalt_partner', betrag: 3200, empfaenger: 'Architekturbuero' },
+    { kategorie: 'kindergeld', betrag: 250, empfaenger: 'Familienkasse' },
+    { kategorie: 'miete', betrag: -1350, empfaenger: 'Vermieter' },
+    { kategorie: 'versicherung_eigen', betrag: -25, empfaenger: 'ERGO' },
+    { kategorie: 'versicherung_fremd', betrag: -60, empfaenger: 'Allianz' },
+    { kategorie: 'sparplan', betrag: -500, empfaenger: 'Scalable Capital' },
+    { kategorie: 'konsum', betrag: -1800, empfaenger: 'Diverse' },
+    { kategorie: 'kinder', betrag: -450, empfaenger: 'Kita' },
+  ],
+  potentiale: [
+    { titel: 'BU-Versicherung Aerzte-Tarif', typ: 'whitespot', quellen: ['bestand'], prioritaet: 'kritisch', volumen: 3600, volumenTyp: 'jaehrlich', beschreibung: 'Aerztin ohne BU! Aerzte-Spezialtarif mit besseren Konditionen.', empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'ERGO BU Aerzte Comfort Plus', status: 'termin' },
+    { titel: 'Risikoleben-Versicherung', typ: 'whitespot', quellen: ['lebensereignis'], prioritaet: 'hoch', volumen: 480, volumenTyp: 'jaehrlich', beschreibung: 'Familie mit Kind, keine RLV. 500k Deckung empfohlen.', empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'ERGO Risikoleben', status: 'identifiziert' },
+    { titel: 'Fondspolice statt Scalable-Depot', typ: 'whitespot', quellen: ['finanztransaktion'], prioritaet: 'mittel', volumen: 38000, volumenTyp: 'einmalig', beschreibung: '38k bei Scalable. Fondspolice mit Steuervorteil.', empfohleneAktion: 'termin_vereinbaren', produktEmpfehlung: 'ERGO Rente Balance', status: 'identifiziert' },
+    { titel: 'KFZ-Wechsel Allianz\u2192ERGO', typ: 'anpassung', quellen: ['wettbewerb'], prioritaet: 'niedrig', volumen: 720, volumenTyp: 'jaehrlich', beschreibung: 'Allianz KFZ. ERGO Buendel-Rabatt moeglich.', empfohleneAktion: 'tarifvergleich', produktEmpfehlung: 'ERGO KFZ Premium', status: 'identifiziert' },
+  ],
+  kommunikation: [
+    { datum: '2026-03-05', typ: 'termin', richtung: 'ausgehend', betreff: 'BU-Beratung', zusammenfassung: 'Ausfuehrliche BU-Beratung. Aerztin sehr interessiert an Spezialtarif. Angebot folgt.' },
+  ],
+  absicherung: {
+    vorhanden: ['haftpflicht', 'hausrat'],
+    fehlend: ['bu', 'rlv', 'rechtsschutz', 'unfall', 'wohngebaeude_vormerken'],
+  },
+};

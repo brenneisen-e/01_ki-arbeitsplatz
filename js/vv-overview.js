@@ -72,7 +72,7 @@
         }
     }
 
-    // ── FILL HEADER ──
+    // ── FILL HEADER (OPT-24: same structure as A-02) ──
     function fillVVHeader() {
         var data = window.vvBeraterData;
         if (!data) return;
@@ -80,6 +80,15 @@
         if (title) title.textContent = 'Berater: ' + data.name;
         var sub = document.getElementById('vvSubtitle');
         if (sub) sub.textContent = data.titel + ' · ' + data.standort + ' · seit ' + data.seit;
+
+        // Photo (re-use A-02 pattern)
+        var photoImg = document.getElementById('vvPhotoImgSmall');
+        if (photoImg && data.photo) {
+            photoImg.src = data.photo;
+            photoImg.style.display = 'block';
+            var placeholder = document.querySelector('#vvPhotoSmall .agentur-photo-placeholder-small');
+            if (placeholder) placeholder.style.display = 'none';
+        }
     }
 
     // ── FILL KPIs ──

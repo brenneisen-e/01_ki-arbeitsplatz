@@ -178,23 +178,21 @@ function showBeraterOverview() {
 }
 
 function fillBeraterHeader() {
-    var titleEl = document.getElementById('beraterPageTitle');
-    if (titleEl) titleEl.textContent = 'Beraterin: ' + beraterData.name;
-    
-    var idEl = document.getElementById('beraterIdHeader');
-    if (idEl) idEl.textContent = beraterData.id;
-    
-    // Photo
-    var photoSmall = document.getElementById('beraterPhotoSmall');
-    var photoImg = document.getElementById('beraterPhotoImgSmall');
-    if (photoSmall && photoImg) {
-        var savedPhoto = safeLocalGet('beraterPhoto', null);
-        var photoToUse = savedPhoto || beraterData.photo;
-        if (photoToUse) {
-            photoImg.src = photoToUse;
-            photoImg.style.display = 'block';
-            photoImg.onerror = function() { this.style.display = 'none'; };
-        }
+    // OPT-24: Delegate to fillHeader() – ONE header function for all screens
+    if (typeof fillHeader === 'function') {
+        var agentur = { name: beraterData.name, id: beraterData.id };
+        fillHeader(agentur, {});
+        // Override title prefix for Banking
+        var titleEl = document.getElementById('agenturPageTitle');
+        if (titleEl) titleEl.textContent = 'Beraterin: ' + beraterData.name;
+        var idEl = document.getElementById('agenturIdHeader');
+        if (idEl) idEl.textContent = beraterData.id;
+    } else {
+        // Fallback if fillHeader not loaded yet
+        var titleEl = document.getElementById('beraterPageTitle') || document.getElementById('agenturPageTitle');
+        if (titleEl) titleEl.textContent = 'Beraterin: ' + beraterData.name;
+        var idEl = document.getElementById('beraterIdHeader') || document.getElementById('agenturIdHeader');
+        if (idEl) idEl.textContent = beraterData.id;
     }
 }
 

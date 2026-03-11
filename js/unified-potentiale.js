@@ -408,32 +408,25 @@
         var labels = config.potentiale.statusLabels;
         var total = 0;
         for (var i = 0; i < steps.length; i++) total += pipelineCounts[steps[i]];
+        if (total === 0) total = 1; // prevent division by zero
 
         // Color stops for the funnel gradient (blue to green)
         var colors = ['#3b82f6', '#6366f1', '#8b5cf6', '#059669'];
-        var bgColors = ['#eff6ff', '#eef2ff', '#f5f3ff', '#ecfdf5'];
 
-        var html = '<div class="unified-pot-pipeline">' +
+        // OPT-27: Horizontal bar pipeline (saves 60% height)
+        var html = '<div class="unified-pot-pipeline unified-pot-pipeline-horizontal">' +
             '<div class="unified-pot-pipeline-label">Pipeline</div>' +
-            '<div class="unified-pot-pipeline-funnel">';
+            '<div class="unified-pot-pipeline-bar-row">';
         for (var j = 0; j < steps.length; j++) {
             var count = pipelineCounts[steps[j]];
             var colorIdx = Math.min(j, colors.length - 1);
             var accentColor = colors[colorIdx];
-            var bgColor = bgColors[colorIdx];
-            var isLast = j === steps.length - 1;
+            var pct = Math.max((count / total) * 100, 8); // min 8% width for readability
 
-            html += '<div class="unified-pot-pipeline-stage' + (isLast ? ' stage-final' : '') + '">' +
-                '<div class="unified-pot-pipeline-stage-bar" style="background:' + bgColor + ';border-bottom:3px solid ' + accentColor + ';">' +
-                    '<span class="unified-pot-pipeline-count" style="color:' + accentColor + ';">' + count + '</span>' +
-                '</div>' +
-                '<div class="unified-pot-pipeline-step-label">' + (labels[steps[j]] || steps[j]) + '</div>' +
+            html += '<div class="unified-pot-pipeline-bar-segment" style="flex:' + pct + ';background:' + accentColor + ';">' +
+                '<span class="unified-pot-pipeline-bar-count">' + count + '</span>' +
+                '<span class="unified-pot-pipeline-bar-label">' + (labels[steps[j]] || steps[j]) + '</span>' +
                 '</div>';
-            if (j < steps.length - 1) {
-                html += '<div class="unified-pot-pipeline-connector">' +
-                    '<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M8 12h8m0 0l-3-3m3 3l-3 3" stroke="' + accentColor + '" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>' +
-                    '</div>';
-            }
         }
         html += '</div></div>';
         return html;
@@ -527,6 +520,27 @@
                 var detailId = containerId + '-detail-' + idx;
                 var pc = prioClass(p.prioritaet);
 
+                // OPT-27: Build source/quellen tags
+                var quellenHtml = '';
+                if (p.quelle) {
+                    var quellenArr = p.quelle.split(/[,+\/]/);
+                    var quellenColors = {
+                        'bestand': '#2563eb', 'bestandsdaten': '#2563eb',
+                        'finanztransaktion': '#7c3aed', 'psd2': '#7c3aed',
+                        'lebensereignis': '#059669',
+                        'wettbewerb': '#dc2626', 'open finance': '#dc2626',
+                        'kommunikation': '#d97706',
+                        'markt': '#0891b2'
+                    };
+                    for (var qi = 0; qi < quellenArr.length; qi++) {
+                        var qName = quellenArr[qi].trim();
+                        if (!qName) continue;
+                        var qLower = qName.toLowerCase();
+                        var qColor = quellenColors[qLower] || '#64748b';
+                        quellenHtml += '<span class="unified-pot-quelle-tag" style="border-color:' + qColor + ';color:' + qColor + ';">' + qName + '</span>';
+                    }
+                }
+
                 html += '<div class="unified-pot-card unified-pot-child-card" data-status="' + p.status + '" data-index="' + idx + '">' +
                     '<div class="unified-pot-card-main" onclick="window._unifiedPotToggleDetail(\'' + detailId + '\', this)">' +
                         // No avatar for child rows
@@ -534,6 +548,7 @@
                             '<div class="unified-pot-card-header-row">' +
                                 '<span class="impuls-priority ' + pc + '">' + prioLabel(p.prioritaet) + '</span>' +
                                 '<span class="unified-pot-status-badge status-' + p.status + '">' + statusLabel(p.status, config) + '</span>' +
+                                quellenHtml +
                             '</div>' +
                             '<div class="unified-pot-card-produkt">' + p.produkt + '</div>' +
                             '<div class="unified-pot-card-beschreibung">' + p.beschreibung + '</div>' +
@@ -620,6 +635,18 @@
         html += '</div>';
 
         container.innerHTML = html;
+
+        // OPT-27: Auto-expand top 3 groups (highest volume)
+        var groupBodies = container.querySelectorAll('.unified-pot-group-body');
+        var openCount = Math.min(3, groupBodies.length);
+        for (var oi = 0; oi < openCount; oi++) {
+            groupBodies[oi].classList.add('open');
+            var headerExpand = groupBodies[oi].previousElementSibling;
+            if (headerExpand) {
+                var expandIcon = headerExpand.querySelector('.unified-pot-expand');
+                if (expandIcon) expandIcon.style.transform = 'rotate(180deg)';
+            }
+        }
     }
 
 

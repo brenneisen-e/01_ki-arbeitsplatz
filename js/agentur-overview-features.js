@@ -734,13 +734,16 @@ function highlightContractRow(contractType) {
 function toggleAgenturChat() {
     const widget = document.getElementById('agenturChatWidget');
     const toggle = document.getElementById('agenturChatToggle');
+    const backdrop = document.getElementById('agenturChatBackdrop');
 
-    if (widget.style.display === 'none' || widget.style.display === '') {
-        widget.style.display = 'flex';
-        toggle.style.display = 'none';
+    if (!widget.classList.contains('chat-open')) {
+        widget.classList.add('chat-open');
+        if (backdrop) backdrop.classList.add('chat-backdrop-visible');
+        if (toggle) toggle.style.display = 'none';
     } else {
-        widget.style.display = 'none';
-        toggle.style.display = 'flex';
+        widget.classList.remove('chat-open');
+        if (backdrop) backdrop.classList.remove('chat-backdrop-visible');
+        if (toggle) toggle.style.display = 'flex';
     }
 }
 
@@ -750,7 +753,9 @@ function toggleAgenturChat() {
 function hideAgenturChat() {
     const widget = document.getElementById('agenturChatWidget');
     const toggle = document.getElementById('agenturChatToggle');
-    if (widget) widget.style.display = 'none';
+    const backdrop = document.getElementById('agenturChatBackdrop');
+    if (widget) widget.classList.remove('chat-open');
+    if (backdrop) backdrop.classList.remove('chat-backdrop-visible');
     if (toggle) toggle.style.display = 'none';
 }
 
@@ -776,9 +781,9 @@ function toggleWeiterePotentiale() {
  * Zeigt neue Potentiale mit Ladeanimation und wechselt dann zum Potentiale-Tab
  */
 function showNeuePotentiale() {
-    // Prüfen ob Chat geschlossen ist (display = 'none' oder '')
+    // Prüfen ob Chat geschlossen ist
     const chatWidget = document.getElementById('agenturChatWidget');
-    if (chatWidget && (chatWidget.style.display === 'none' || chatWidget.style.display === '')) {
+    if (chatWidget && !chatWidget.classList.contains('chat-open')) {
         // Chat ist geschlossen - öffnen
         toggleAgenturChat();
         // Kurz warten bis Chat geöffnet ist

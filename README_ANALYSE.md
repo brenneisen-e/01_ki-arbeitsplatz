@@ -1820,16 +1820,25 @@ Die Reihenfolge ist kritisch (keine Module, alles globaler Scope):
 3. **FIDA-Daten unterschiedlich modelliert:**
    - Versicherung: `fidaVertraege: [{ anbieter, typ, info }]` (einfach)
    - Banking: `fidaVertraege: [{ institut, typ, info, consent, gueltig }]` (mit Consent-Management)
+   - Vermoegensverwaltung: Kein FIDA – nutzt stattdessen `fremdVermoegen: [{ institut, typ, volumen }]` (Depotbank-Daten)
+
+4. **Kunden-ID-Formate je Modul:**
+   - Versicherung: `KD00001`, Banking: `KDB001`, Firmenkunden: `FKB001`, Vermoegenskunden: `PBB001`, VV-Mandate: `VV001`
+   - Cross-Referenz via `kundenCrossRef` in config.js (Versicherung <-> Banking <-> VV)
 
 ### 7.4 Potentielle Verbesserungsbereiche
 
-1. **B-10 HTML aufraemen:** Der tote `#kundenDetailBankPage` Container koennte entfernt werden, da B-10 ueber A-10-Adapter laeuft.
+1. ~~**B-10 HTML aufraemen:**~~ GELOEST – Refactoring Phase 1 (7.1.3): `#kundenDetailBankPage` entfernt, B-10 laeuft ueber A-10-Adapter.
 
-2. **Kundendaten-Konsolidierung:** `bankKundenRetail` und `bankMockKunden` koennten zusammengefuehrt werden, um Datenredundanz zu vermeiden.
+2. ~~**Kundendaten-Konsolidierung:**~~ GELOEST – Refactoring Phase 1 (7.1.5): `bankKundenRetail` und `bankMockKunden` zusammengefuehrt.
 
-3. **Ladereihenfolge:** Die Abhaengigkeit von `agentur-overview.js` vor `kunden-detail.js` ist fragil und nur durch die Scriptreihenfolge in index.html gesichert.
+3. **Ladereihenfolge:** OFFEN – Die Abhaengigkeit von `agentur-overview.js` vor `kunden-detail.js` ist fragil und nur durch die Scriptreihenfolge in index.html gesichert. Siehe BUG-03 in BUGFIX_SPEC.md (`load-order.js`).
 
-4. **Dateigroesse:** `agentur-overview.js` (3.400+ Zeilen) und `kunden-detail.js` (2.534 Zeilen) koennten durch Auslagerung der Mock-Daten in separate JSON-Dateien schlanker werden.
+4. ~~**Dateigroesse:**~~ GELOEST – Refactoring Phase 2 (7.1.4): agentur-overview.js aufgeteilt in core/features/kpi-cards/chart-zoom/berater. Mock-Daten in separate Dateien ausgelagert.
+
+5. **Error-Handling (VV):** OFFEN – `vv-overview.js` und `vv-mock-data.js` haben kein defensives Error-Handling. localStorage-Aufrufe und JSON.parse ohne try/catch. Sollte analog zu BUG-10 (safeLocalGet/safeJsonParse) nachgeruestet werden.
+
+6. **VV Feature-Paritaet:** OFFEN – VV-Chat (OPT-22-A), PDF-Export (OPT-22-C), Guided Tour (OPT-22-D) und OPT-20-Features (Luecken-Leiste, Notification-Bell, Potenzial-Sterne) wurden mit OPT-22 implementiert. Notification-Bell und PDF-Export fehlen weiterhin in A-02/B-02.
 
 ---
 

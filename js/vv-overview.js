@@ -42,30 +42,34 @@
 
     // ── SHOW VV OVERVIEW ──
     function showVVOverview() {
-        // Hide all other pages
-        ['landingPage', 'mainApp', 'agenturOverview', 'beraterOverviewPage',
-         'kundenDetailPage', 'kundenDetailBankPage', 'billingCheckPage',
-         'potentialAnalysePage', 'bgavUmstellungPage', 'vvDetailPage'].forEach(function(id) {
-            var el = document.getElementById(id);
-            if (el) el.style.display = 'none';
-        });
+        try {
+            // Hide all other pages
+            ['landingPage', 'mainApp', 'agenturOverview', 'beraterOverviewPage',
+             'kundenDetailPage', 'kundenDetailBankPage', 'billingCheckPage',
+             'potentialAnalysePage', 'bgavUmstellungPage', 'vvDetailPage'].forEach(function(id) {
+                var el = document.getElementById(id);
+                if (el) el.style.display = 'none';
+            });
 
-        // Show VV overview
-        var vvPage = document.getElementById('vvOverviewPage');
-        if (vvPage) vvPage.style.display = 'block';
+            // Show VV overview
+            var vvPage = document.getElementById('vvOverviewPage');
+            if (vvPage) vvPage.style.display = 'block';
 
-        // Set mode
-        if (typeof setMode === 'function') setMode('vermoegensverwaltung');
+            // Set mode
+            if (typeof setMode === 'function') setMode('vermoegensverwaltung');
 
-        // Fill data
-        fillVVHeader();
-        fillVVKPIs();
-        showVVTab('uebersicht');
+            // Fill data
+            fillVVHeader();
+            fillVVKPIs();
+            showVVTab('uebersicht');
 
-        // Dispatch event
-        document.dispatchEvent(new CustomEvent('viewChanged', { detail: { module: 'vermoegensverwaltung', view: 'vvOverview' } }));
+            // Dispatch event
+            document.dispatchEvent(new CustomEvent('viewChanged', { detail: { module: 'vermoegensverwaltung', view: 'vvOverview' } }));
 
-        if (window.AppRouter) AppRouter.navigate('/vv-overview');
+            if (window.AppRouter) AppRouter.navigate('/vv-overview');
+        } catch (e) {
+            console.error('VV Overview Fehler:', e);
+        }
     }
 
     // ── FILL HEADER ──
@@ -389,30 +393,34 @@
     // ======================================
 
     function openVVMandantDetail(name) {
-        var mandanten = window.vvMockMandanten || {};
-        var mandant = mandanten[name];
-        if (!mandant) { console.warn('VV Mandant nicht gefunden:', name); return; }
+        try {
+            var mandanten = window.vvMockMandanten || {};
+            var mandant = mandanten[name];
+            if (!mandant) { console.warn('VV Mandant nicht gefunden:', name); return; }
 
-        currentVVMandant = name;
+            currentVVMandant = name;
 
-        // Hide overview, show detail
-        var overview = document.getElementById('vvOverviewPage');
-        if (overview) overview.style.display = 'none';
+            // Hide overview, show detail
+            var overview = document.getElementById('vvOverviewPage');
+            if (overview) overview.style.display = 'none';
 
-        var detail = document.getElementById('vvDetailPage');
-        if (detail) detail.style.display = 'block';
+            var detail = document.getElementById('vvDetailPage');
+            if (detail) detail.style.display = 'block';
 
-        // Fill header
-        var titleEl = document.getElementById('vvDetailTitle');
-        if (titleEl) titleEl.textContent = 'Mandant: ' + name;
-        var subtitleEl = document.getElementById('vvDetailSubtitle');
-        if (subtitleEl) subtitleEl.textContent = mandant.segment + ' · ' + mandant.mandatstyp;
+            // Fill header
+            var titleEl = document.getElementById('vvDetailTitle');
+            if (titleEl) titleEl.textContent = 'Mandant: ' + name;
+            var subtitleEl = document.getElementById('vvDetailSubtitle');
+            if (subtitleEl) subtitleEl.textContent = (mandant.segment || '') + ' · ' + (mandant.mandatstyp || '');
 
-        // Show first tab
-        showVVDetailTab('stammdaten');
+            // Show first tab
+            showVVDetailTab('stammdaten');
 
-        // Dispatch event
-        document.dispatchEvent(new CustomEvent('viewChanged', { detail: { module: 'vermoegensverwaltung', view: 'vvDetail', mandant: name } }));
+            // Dispatch event
+            document.dispatchEvent(new CustomEvent('viewChanged', { detail: { module: 'vermoegensverwaltung', view: 'vvDetail', mandant: name } }));
+        } catch (e) {
+            console.error('VV Detail Fehler:', e);
+        }
     }
 
     // ── DETAIL TAB SWITCHING ──
@@ -480,6 +488,25 @@
         html += '<div class="info-item"><span class="info-label">ESG-Präferenz</span><span class="info-value">' + (m.esgPraeferenz ? m.esgPraeferenz.sfdr : '-') + (m.esgPraeferenz && m.esgPraeferenz.pai ? ', PAI' : '') + '</span></div>';
         html += '<div class="info-item"><span class="info-label">Benchmark</span><span class="info-value">' + (m.benchmark || '-') + '</span></div>';
         html += '</div></div>';
+
+        // Cross-module links (23-E)
+        var crossRef = window.kundenCrossRef ? window.kundenCrossRef[name] : null;
+        if (crossRef) {
+            html += '<div class="vv-info-section"><h4>Cross-Modul-Referenzen</h4>';
+            html += '<div class="kunden-info-grid">';
+            if (crossRef.bankId) {
+                html += '<div class="info-item"><span class="info-label">Banking</span><span class="info-value">' + (crossRef.bankName || name) + ' (' + crossRef.bankId + ')';
+                html += ' <button class="vv-btn vv-btn-secondary" style="font-size:11px;padding:2px 8px;margin-left:8px;" onclick="if(typeof switchModule===\'function\'){switchModule(\'banken\');}">Banking oeffnen</button>';
+                html += '</span></div>';
+            }
+            if (crossRef.versId) {
+                html += '<div class="info-item"><span class="info-label">Versicherung</span><span class="info-value">' + crossRef.versId;
+                html += ' <button class="vv-btn vv-btn-secondary" style="font-size:11px;padding:2px 8px;margin-left:8px;" onclick="if(typeof openAgenturView===\'function\'){openAgenturView();}">Versicherung oeffnen</button>';
+                html += '</span></div>';
+            }
+            html += '</div></div>';
+        }
+
         html += '</div></div>';
 
         // Family & Wealth structure
@@ -1636,13 +1663,101 @@
     }
 
     // ══════════════════════════════════════════════════
+    // 22-D: VV-10 DETAIL GUIDED TOUR
+    // ══════════════════════════════════════════════════
+
+    function startVVDetailTour() {
+        if (!window.guidedTour) { console.warn('Guided Tour nicht geladen.'); return; }
+        if (!currentVVMandant) { console.warn('Kein Mandant ausgewaehlt.'); return; }
+
+        var tour = window.guidedTour;
+        var originalSteps = tour.steps;
+
+        var icons = {
+            user: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
+            pie: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0110 10"/><line x1="12" y1="12" x2="12" y2="2"/><line x1="12" y1="12" x2="22" y2="12"/></svg>',
+            briefcase: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>',
+            shield: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>',
+            bolt: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>',
+            welcome: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>',
+            check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>'
+        };
+
+        tour.steps = [
+            {
+                title: 'Mandant: ' + currentVVMandant,
+                description: 'Diese Tour fuehrt Sie durch die 360-Grad-Ansicht des Mandanten.',
+                icon: icons.welcome,
+                element: null,
+                position: 'center'
+            },
+            {
+                title: 'Client 360°',
+                description: 'Alle Informationen zum Mandanten: Stammdaten, Familie, Beruf, Vermoegensueberblick und Kommunikationshistorie.',
+                icon: icons.user,
+                element: '.vv-detail-tab-btn[data-tab="stammdaten"]',
+                position: 'bottom',
+                beforeShow: function() { showVVDetailTab('stammdaten'); return new Promise(function(r) { setTimeout(r, 200); }); }
+            },
+            {
+                title: 'Portfolio',
+                description: 'Ist- vs. Soll-Allokation, Drift erkennen, Performance-Kennzahlen und die Anlage-Abdeckungsleiste.',
+                icon: icons.pie,
+                element: '.vv-detail-tab-btn[data-tab="portfolio"]',
+                position: 'bottom',
+                beforeShow: function() { showVVDetailTab('portfolio'); return new Promise(function(r) { setTimeout(r, 200); }); }
+            },
+            {
+                title: 'Vermoegensbilanz',
+                description: 'Liquides Vermoegen bei uns und fremd, Immobilien, Unternehmensbeteiligungen und PE-Stakes auf einen Blick.',
+                icon: icons.briefcase,
+                element: '.vv-detail-tab-btn[data-tab="finanzplanung"]',
+                position: 'bottom',
+                beforeShow: function() { showVVDetailTab('finanzplanung'); return new Promise(function(r) { setTimeout(r, 200); }); }
+            },
+            {
+                title: 'Compliance',
+                description: 'WpHG-Bogen-Status, Geeignetheitsberichte, Verlustschwellen-Monitoring und Kostenreporting.',
+                icon: icons.shield,
+                element: '.vv-detail-tab-btn[data-tab="compliance"]',
+                position: 'bottom',
+                beforeShow: function() { showVVDetailTab('compliance'); return new Promise(function(r) { setTimeout(r, 200); }); }
+            },
+            {
+                title: 'Potentiale',
+                description: 'KI-gestuetzte Empfehlungen: Konsolidierung, NextGen-Mandate, Cross-Selling und Nachfolgeplanung.',
+                icon: icons.bolt,
+                element: '.vv-detail-tab-btn[data-tab="impulse"]',
+                position: 'bottom',
+                beforeShow: function() { showVVDetailTab('impulse'); return new Promise(function(r) { setTimeout(r, 200); }); }
+            },
+            {
+                title: 'Tour abgeschlossen!',
+                description: 'Sie kennen jetzt alle Bereiche der Mandantenansicht. Nutzen Sie den PDF-Export oben rechts fuer Berichte.',
+                icon: icons.check,
+                element: null,
+                position: 'center',
+                isLast: true,
+                beforeShow: function() { showVVDetailTab('stammdaten'); return new Promise(function(r) { setTimeout(r, 200); }); }
+            }
+        ];
+
+        tour.onComplete = function() {
+            tour.steps = originalSteps;
+            tour.onComplete = null;
+        };
+
+        tour.start();
+    }
+
+    // ══════════════════════════════════════════════════
     // 23-E: VV KUNDEN-ID CROSS-REFERENZ
     // ══════════════════════════════════════════════════
 
     function initVVCrossRef() {
         if (!window.kundenCrossRef) return;
         // Add VV mandants to cross-reference
-        // Dr. von Trott could be a banking customer too
+        // Dr. von Trott could be a banking customer too (Private Banking)
         window.kundenCrossRef['Dr. Heinrich von Trott'] = {
             bankName: 'Dr. Heinrich von Trott',
             bankId: 'PBB001',
@@ -1650,12 +1765,29 @@
             vvId: 'VV001',
             vvName: 'Dr. Heinrich von Trott'
         };
+        // Familie Bergmann-Roth - VV only, no banking/insurance yet
         window.kundenCrossRef['Familie Bergmann-Roth'] = {
             bankName: null,
             bankId: null,
             versId: null,
             vvId: 'VV008',
             vvName: 'Familie Bergmann-Roth'
+        };
+        // Dr. Schreiber - has insurance contracts at ERGO
+        window.kundenCrossRef['Dr. Marcus Schreiber'] = {
+            bankName: null,
+            bankId: null,
+            versId: 'KD00005',
+            vvId: 'VV007',
+            vvName: 'Dr. Marcus Schreiber'
+        };
+        // Prof. Hartmann - has banking relationship with VR
+        window.kundenCrossRef['Prof. Dr. Elisabeth Hartmann'] = {
+            bankName: 'Prof. Dr. Hartmann',
+            bankId: 'PBB003',
+            versId: null,
+            vvId: 'VV006',
+            vvName: 'Prof. Dr. Elisabeth Hartmann'
         };
     }
 
@@ -1676,6 +1808,7 @@
     window.exportVVMandantenPDF = exportVVMandantenPDF;
     window.toggleVVNotifications = toggleVVNotifications;
     window.startVVTour = startVVTour;
+    window.startVVDetailTour = startVVDetailTour;
     window.calculateVVPotenzialScore = calculateVVPotenzialScore;
     window.generateVVNotifications = generateVVNotifications;
     window.generateVVEinzeiler = generateVVEinzeiler;

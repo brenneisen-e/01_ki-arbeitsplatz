@@ -826,32 +826,22 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 34px;
+    gap: 6px;
+    width: auto;
     height: 34px;
-    padding: 0;
+    padding: 0 14px;
     border-radius: 8px;
-    font-size: 0;
+    font-size: 13px;
+    font-weight: 500;
     cursor: pointer;
     border: none;
     transition: background 0.15s, color 0.15s;
     position: relative;
 }
 
-.unified-pot-detail-actions .action-btn[title]:hover::after {
-    content: attr(title);
-    position: absolute;
-    bottom: calc(100% + 6px);
-    left: 50%;
-    transform: translateX(-50%);
-    background: #1e293b;
-    color: white;
-    padding: 4px 10px;
-    border-radius: 6px;
-    font-size: 14px;
-    font-weight: 500;
+.unified-pot-detail-actions .action-btn .btn-label {
+    font-size: 13px;
     white-space: nowrap;
-    pointer-events: none;
-    z-index: 10;
 }
 
 .unified-pot-detail-actions .action-btn.primary {
@@ -878,21 +868,13 @@
     height: 16px;
 }
 
-/* "Kunde öffnen" button – wider, brand-colored */
+/* "Kunde öffnen" button – brand-colored */
 .unified-pot-detail-actions .action-btn.kunde-oeffnen-btn {
-    width: auto;
-    padding: 0 14px;
-    gap: 6px;
-    font-size: 13px;
-    font-weight: 500;
     background: var(--pot-brand-color, #2563eb);
     color: white;
 }
 .unified-pot-detail-actions .action-btn.kunde-oeffnen-btn:hover {
     filter: brightness(1.1);
-}
-.unified-pot-detail-actions .action-btn.kunde-oeffnen-btn .btn-label {
-    font-size: 13px;
 }
 
 /* Customer avatar in card header */

@@ -474,14 +474,14 @@
             }
             html += '</div></div>';
 
-            // Action buttons (icon-only with tooltips)
+            // Action buttons
             html += '<div class="unified-pot-detail-actions">' +
                 '<button class="action-btn primary kunde-oeffnen-btn" title="Kunde \u00f6ffnen" onclick="event.stopPropagation(); window._unifiedPotOpenKunde(\'' + p.kundenName.replace(/'/g, "\\'") + '\', \'' + p.kundenId + '\')">' +
                     getIcon('user') + ' <span class="btn-label">Kunde \u00f6ffnen</span></button>' +
                 '<button class="action-btn secondary" title="Angebot erstellen" onclick="event.stopPropagation(); window._unifiedPotCreateAngebot(\'' + p.produkt.replace(/'/g, "\\'") + '\')">' +
-                    getIcon('fileText') + '</button>' +
+                    getIcon('fileText') + ' <span class="btn-label">Angebot erstellen</span></button>' +
                 '<button class="action-btn secondary" title="Status \u00e4ndern" onclick="event.stopPropagation(); window._unifiedPotChangeStatus(' + i + ', \'' + containerId + '\')">' +
-                    getIcon('edit') + '</button>' +
+                    getIcon('edit') + ' <span class="btn-label">Status \u00e4ndern</span></button>' +
                 '</div>';
 
             html += '</div></div>';

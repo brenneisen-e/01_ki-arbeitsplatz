@@ -202,7 +202,13 @@ function adaptA10ForBankMode(kundenName) {
     };
     for (var id in fields) {
         var el = document.getElementById(id);
-        if (el) el.textContent = fields[id];
+        if (el) {
+            if (id === 'kundenBeruf' && kd.linkedinHint) {
+                el.innerHTML = fields[id] + ' <img src="https://img.logo.dev/linkedin.com?token=pk_H7vb5Y2lTsW47U4Xq-w3HA&size=40&format=png" alt="LinkedIn" style="width:16px;height:16px;vertical-align:middle;margin-left:4px;border-radius:3px;opacity:0.8;" title="Quelle: LinkedIn-Profil">';
+            } else {
+                el.textContent = fields[id];
+            }
+        }
     }
 
     // Fill Konten & Produkte (reuse vertraege tab content)

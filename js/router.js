@@ -54,6 +54,7 @@
             '/kundendetail-bank-fk':{ view: 'kundendetail-bank-fk', pageId: 'B-10b', title: 'Kunden-Detail FK' },
             '/kundendetail-bank-pb':{ view: 'kundendetail-bank-pb', pageId: 'B-10c', title: 'Kunden-Detail PB' },
             '/kreditanalyse':       { view: 'kreditanalyse',        pageId: 'K-01', title: 'KI-Kreditanalyse' },
+            '/vv-overview':         { view: 'vv-overview',          pageId: 'VV-01', title: 'Vermögensverwaltung' },
         },
 
         // Reverse map: view name → hash route

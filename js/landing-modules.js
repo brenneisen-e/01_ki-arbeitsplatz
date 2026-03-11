@@ -112,6 +112,8 @@ window.openRisikoscoring = openRisikoscoring;
 window.closeRisikoscoring = closeRisikoscoring;
 window.openKreditanalyse = openKreditanalyse;
 window.closeKreditanalyse = closeKreditanalyse;
+window.openVertriebsarbeitsplatz = openVertriebsarbeitsplatz;
+window.closeVertriebsarbeitsplatz = closeVertriebsarbeitsplatz;
 window.openBestandsuebertragung = openBestandsuebertragung;
 window.closeBestandsuebertragung = closeBestandsuebertragung;
 window.saveUserName = saveUserName;
@@ -356,6 +358,72 @@ function closeKreditanalyse() {
     const kaModule = document.getElementById('kreditanalyseModule');
     if (kaModule) {
         kaModule.style.display = 'none';
+    }
+
+    // Show landing page
+    const landingPage = document.getElementById('landingPage');
+    if (landingPage) {
+        landingPage.style.display = 'flex';
+    }
+
+    if (window.AppRouter) AppRouter.navigate('/landing');
+}
+
+// ========================================
+// VERTRIEBSARBEITSPLATZ V02 MODULE
+// ========================================
+
+let vertriebsarbeitsplatzLoaded = false;
+
+async function openVertriebsarbeitsplatz() {
+    console.log('Vertriebsarbeitsplatz V02 öffnen...');
+
+    // Hide landing page
+    const landingPage = document.getElementById('landingPage');
+    if (landingPage) {
+        landingPage.style.display = 'none';
+    }
+
+    // Hide main app if visible
+    const mainApp = document.getElementById('mainApp');
+    if (mainApp) {
+        mainApp.style.display = 'none';
+    }
+
+    // Hide other modules
+    ['bankenModule', 'assetModule', 'risikoscoringModule', 'bestandsuebertragungModule',
+     'pmoToolboxModule', 'hrPipelineModule', 'versicherungs1x1Module',
+     'beraterOverviewPage', 'kundenDetailBankPage', 'kreditanalyseModule'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) el.style.display = 'none';
+    });
+
+    // Show vertriebsarbeitsplatz module
+    const vaModule = document.getElementById('vertriebsarbeitsplatzModule');
+    if (vaModule) {
+        vaModule.style.display = 'block';
+
+        // Load iframe if not already loaded
+        if (!vertriebsarbeitsplatzLoaded) {
+            const iframe = document.getElementById('vertriebsarbeitsplatzIframe');
+            if (iframe) {
+                iframe.src = 'vertriebsarbeitsplatz/dist/index.html';
+                vertriebsarbeitsplatzLoaded = true;
+                console.log('Vertriebsarbeitsplatz V02 Modul geladen');
+            }
+        }
+    }
+
+    // Update URL route
+    if (window.AppRouter) AppRouter.navigate('/vertriebsarbeitsplatz');
+}
+
+function closeVertriebsarbeitsplatz() {
+    console.log('Vertriebsarbeitsplatz V02 schließen...');
+
+    const vaModule = document.getElementById('vertriebsarbeitsplatzModule');
+    if (vaModule) {
+        vaModule.style.display = 'none';
     }
 
     // Show landing page

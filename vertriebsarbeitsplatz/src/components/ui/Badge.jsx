@@ -1,0 +1,72 @@
+import { clsx } from 'clsx';
+
+const PRIO_STYLES = {
+  kritisch: 'bg-red-50 text-red-700 border-red-200',
+  hoch: 'bg-amber-50 text-amber-700 border-amber-200',
+  mittel: 'bg-blue-50 text-blue-700 border-blue-200',
+  niedrig: 'bg-gray-50 text-gray-600 border-gray-200',
+};
+
+const QUELLEN_STYLES = {
+  finanztransaktion: 'bg-emerald-50 text-emerald-700',
+  bestand: 'bg-blue-50 text-blue-700',
+  kommunikation: 'bg-violet-50 text-violet-700',
+  wettbewerb: 'bg-amber-50 text-amber-700',
+  lebensereignis: 'bg-pink-50 text-pink-700',
+  markt: 'bg-gray-50 text-gray-600',
+};
+
+const SPARTEN_STYLES = {
+  leben: 'bg-blue-100 text-blue-700',
+  kranken: 'bg-emerald-100 text-emerald-700',
+  schaden: 'bg-violet-100 text-violet-700',
+  kfz: 'bg-amber-100 text-amber-700',
+};
+
+const STATUS_STYLES = {
+  aktiv: 'bg-emerald-50 text-emerald-700',
+  optimierbar: 'bg-amber-50 text-amber-700',
+  policiert: 'bg-emerald-50 text-emerald-700',
+  beantragt: 'bg-blue-50 text-blue-700',
+  storniert: 'bg-red-50 text-red-600',
+};
+
+export function PrioBadge({ prioritaet }) {
+  return (
+    <span className={clsx('inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium border', PRIO_STYLES[prioritaet] || PRIO_STYLES.niedrig)}>
+      {prioritaet.charAt(0).toUpperCase() + prioritaet.slice(1)}
+    </span>
+  );
+}
+
+export function QuellenBadge({ quelle }) {
+  const label = {
+    finanztransaktion: 'FinTx',
+    bestand: 'Best.',
+    kommunikation: 'Komm.',
+    wettbewerb: 'Wettb.',
+    lebensereignis: 'Leben.',
+    markt: 'Markt',
+  };
+  return (
+    <span className={clsx('inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium', QUELLEN_STYLES[quelle] || QUELLEN_STYLES.markt)}>
+      {label[quelle] || quelle}
+    </span>
+  );
+}
+
+export function SparteBadge({ sparte }) {
+  return (
+    <span className={clsx('inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium', SPARTEN_STYLES[sparte] || 'bg-gray-100 text-gray-600')}>
+      {sparte.charAt(0).toUpperCase() + sparte.slice(1)}
+    </span>
+  );
+}
+
+export function StatusBadge({ status }) {
+  return (
+    <span className={clsx('inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium', STATUS_STYLES[status] || 'bg-gray-100 text-gray-600')}>
+      {status === 'optimierbar' ? '\u26a0 Optim.' : status.charAt(0).toUpperCase() + status.slice(1)}
+    </span>
+  );
+}

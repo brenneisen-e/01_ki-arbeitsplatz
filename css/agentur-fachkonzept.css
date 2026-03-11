@@ -284,6 +284,7 @@
 
 .agentur-tab-content.active {
     display: block;
+    padding-top: var(--header-content-gap, 24px);
 }
 
 /* Agentur Übersicht Tab Styles */
@@ -1911,10 +1912,7 @@
     font-weight: 600;
 }
 
-/* Potentiale-Tab: gleicher Abstand wie cockpit-kpis zum Header */
-.agentur-tab-content > .kpi-detail-grid {
-    margin-top: var(--header-content-gap, 24px);
-}
+/* padding-top auf .agentur-tab-content.active reicht jetzt */
 
 /* Storno Reasons */
 .storno-reasons {

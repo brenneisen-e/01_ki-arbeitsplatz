@@ -625,6 +625,7 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
+    max-width: 900px;
 }
 
 /* Individual Card – combines A-02 table layout with B-02 expandable detail */
@@ -664,7 +665,7 @@
 }
 
 .unified-pot-card-name {
-    font-size: 15px;
+    font-size: 16px;
     color: #1e293b;
 }
 
@@ -727,28 +728,36 @@
 
 .unified-pot-card-right {
     display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 6px;
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
     flex-shrink: 0;
-    min-width: 100px;
 }
 
 .unified-pot-card-kennzahl {
-    text-align: right;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.unified-pot-card-kennzahl .kz-icon {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    opacity: 0.5;
 }
 
 .unified-pot-card-kz-label {
-    display: block;
-    font-size: 10px;
+    font-size: 11px;
     color: #94a3b8;
     text-transform: uppercase;
     letter-spacing: 0.03em;
     font-weight: 600;
+    margin-right: 4px;
 }
 
 .unified-pot-card-kz-value {
-    font-size: 15px;
+    font-size: 17px;
     font-weight: 700;
     color: #1e293b;
 }

@@ -117,7 +117,22 @@
                 { datenquelle: 'Open Finance - Kreditdaten (Targobank)', erkenntnis: 'Konsumentenkredit \u20AC12.500, Zinssatz 9,0% p.a.' },
                 { datenquelle: 'Vergleichsangebot', erkenntnis: 'Santander BestCredit 4,9% p.a., Ersparnis \u20AC756' }
             ]
-        }
+        },
+        // Füllerkunden (nicht klickbar)
+        { kundenName: 'Anna Hoffmann', kundenId: 'KD00004', prioritaet: 'mittel', produkt: 'Unfallversicherung', beschreibung: 'Kein Unfallschutz vorhanden.', quelle: 'Bestandsdaten', volumen: 480, ertrag: 72, status: 'identifiziert', letzteAktion: 'Analyse erstellt (05.03.)', herleitung: [], filler: true },
+        { kundenName: 'Anna Hoffmann', kundenId: 'KD00004', prioritaet: 'niedrig', produkt: 'Zahnzusatzversicherung', beschreibung: 'Keine Zahnzusatzversicherung.', quelle: 'Bestandsdaten', volumen: 360, ertrag: 54, status: 'identifiziert', letzteAktion: 'Analyse erstellt (05.03.)', herleitung: [], filler: true },
+        { kundenName: 'Michael Braun', kundenId: 'KD00005', prioritaet: 'hoch', produkt: 'Berufsunf\u00e4higkeitsversicherung', beschreibung: 'Selbstst\u00e4ndiger Handwerker ohne BU-Schutz.', quelle: 'Bestandsdaten', volumen: 2400, ertrag: 1920, status: 'angeschrieben', letzteAktion: 'Angebot versendet (07.03.)', herleitung: [], filler: true },
+        { kundenName: 'Michael Braun', kundenId: 'KD00005', prioritaet: 'mittel', produkt: 'Betriebshaftpflicht', beschreibung: 'Pr\u00e4mie seit 3 Jahren nicht angepasst.', quelle: 'Bestandsdaten', volumen: 1800, ertrag: 270, status: 'termin', letzteAktion: 'Termin am 15.03.', herleitung: [], filler: true },
+        { kundenName: 'Lisa M\u00fcller', kundenId: 'KD00006', prioritaet: 'hoch', produkt: 'Wohngeb\u00e4udeversicherung', beschreibung: 'Immobilienkauf 2024, noch keine Geb\u00e4udeversicherung.', quelle: 'Open Finance', volumen: 1200, ertrag: 180, status: 'termin', letzteAktion: 'Termin am 12.03.', herleitung: [], filler: true },
+        { kundenName: 'Lisa M\u00fcller', kundenId: 'KD00006', prioritaet: 'niedrig', produkt: 'Glasversicherung', beschreibung: 'Wintergarten ohne Glasschutz.', quelle: 'Bestandsdaten', volumen: 180, ertrag: 27, status: 'identifiziert', letzteAktion: 'Analyse erstellt (04.03.)', herleitung: [], filler: true },
+        { kundenName: 'Matthias Engel', kundenId: 'KD00007', prioritaet: 'mittel', produkt: 'Altersvorsorge-Check', beschreibung: 'Versorgungsl\u00fccke ca. \u20AC800/Monat.', quelle: 'Bestandsdaten', volumen: 3600, ertrag: 2880, status: 'angeschrieben', letzteAktion: 'Info-Paket versendet (06.03.)', herleitung: [], filler: true },
+        { kundenName: 'Christian Bauer', kundenId: 'KD00008', prioritaet: 'hoch', produkt: 'Firmenrechtsschutz', beschreibung: 'GmbH ohne Rechtsschutz.', quelle: 'Bestandsdaten', volumen: 960, ertrag: 144, status: 'identifiziert', letzteAktion: 'Analyse erstellt (03.03.)', herleitung: [], filler: true },
+        { kundenName: 'Martin Wolf', kundenId: 'KD00009', prioritaet: 'niedrig', produkt: 'Reiseversicherung', beschreibung: 'H\u00e4ufige Gesch\u00e4ftsreisen ohne Absicherung.', quelle: 'PSD2', volumen: 240, ertrag: 36, status: 'abgeschlossen', letzteAktion: 'Police erstellt (28.02.)', herleitung: [], filler: true },
+        { kundenName: 'Eva Hartmann', kundenId: 'KD00010', prioritaet: 'mittel', produkt: 'Pflegezusatzversicherung', beschreibung: 'Keine private Pflegeabsicherung.', quelle: 'Bestandsdaten', volumen: 720, ertrag: 108, status: 'angeschrieben', letzteAktion: 'Beratungstermin angefragt (09.03.)', herleitung: [], filler: true },
+        { kundenName: 'Eva Hartmann', kundenId: 'KD00010', prioritaet: 'hoch', produkt: 'Risikolebensversicherung', beschreibung: 'Alleinverdienerin, 2 Kinder.', quelle: 'Bestandsdaten', volumen: 1800, ertrag: 270, status: 'termin', letzteAktion: 'Termin am 14.03.', herleitung: [], filler: true },
+        { kundenName: 'Stefan Richter', kundenId: 'KD00012', prioritaet: 'hoch', produkt: 'Cyber-Versicherung', beschreibung: 'IT-Freelancer ohne Cyber-Schutz.', quelle: 'Bestandsdaten', volumen: 1500, ertrag: 225, status: 'identifiziert', letzteAktion: 'Analyse erstellt (10.03.)', herleitung: [], filler: true },
+        { kundenName: 'Claudia Neumann', kundenId: 'KD00013', prioritaet: 'mittel', produkt: 'Hausratversicherung', beschreibung: 'Umzug in gr\u00f6\u00dfere Wohnung, Deckung anpassen.', quelle: 'Bestandsdaten', volumen: 320, ertrag: 48, status: 'abgeschlossen', letzteAktion: 'Police angepasst (02.03.)', herleitung: [], filler: true },
+        { kundenName: 'Jens Krause', kundenId: 'KD00014', prioritaet: 'niedrig', produkt: 'Tierhalterhaftpflicht', beschreibung: 'Hundebesitzer ohne Absicherung.', quelle: 'PSD2', volumen: 80, ertrag: 12, status: 'identifiziert', letzteAktion: 'Kontoumsatz-Analyse (08.03.)', herleitung: [], filler: true }
     ];
 
     // Banking potentiale (derived from fillBeraterPotentiale in agentur-overview-banking.js)
@@ -234,7 +249,17 @@
                 { datenquelle: 'FIDA - Comdirect', erkenntnis: 'Depotvolumen \u20AC52.000, \u00FCberwiegend Einzelaktien' },
                 { datenquelle: 'Konditionsvergleich', erkenntnis: 'UnionDepot / GENO Broker mit pers\u00F6nlicher Beratung' }
             ]
-        }
+        },
+        // Füllerkunden Banking (nicht klickbar)
+        { kundenName: 'Monika Schuster', kundenId: 'KDB013', prioritaet: 'hoch', produkt: 'VR-MeinZuhause Baufinanzierung', beschreibung: 'Neubau geplant, Finanzierungsbedarf \u20AC320.000.', quelle: 'Impulsmanager', volumen: 320000, ertrag: 4800, status: 'termin', letzteAktion: 'Beratungstermin am 13.03.', herleitung: [], filler: true },
+        { kundenName: 'Ralf Zimmermann', kundenId: 'KDB014', prioritaet: 'mittel', produkt: 'Union Investment Riester', beschreibung: 'Riester-Zulagen nicht ausgesch\u00f6pft.', quelle: 'Truuco', volumen: 2100, ertrag: 630, status: 'angeschrieben', letzteAktion: 'Info-Material versendet (07.03.)', herleitung: [], filler: true },
+        { kundenName: 'Ralf Zimmermann', kundenId: 'KDB014', prioritaet: 'niedrig', produkt: 'VR-Vorteilswelt Aktivierung', beschreibung: 'Cashback-Programm noch nicht aktiviert.', quelle: 'Impulsmanager', volumen: 0, ertrag: 50, status: 'identifiziert', letzteAktion: 'System-Impuls (10.03.)', herleitung: [], filler: true },
+        { kundenName: 'Heike Lorenz', kundenId: 'KDB015', prioritaet: 'hoch', produkt: 'R+V Berufsunf\u00e4higkeitsversicherung', beschreibung: 'Akademikerin, 32J., ohne BU-Schutz.', quelle: 'Truuco', volumen: 1800, ertrag: 1350, status: 'angeschrieben', letzteAktion: 'Angebot versendet (08.03.)', herleitung: [], filler: true },
+        { kundenName: 'Dirk Seidel', kundenId: 'KDB016', prioritaet: 'mittel', produkt: 'VR Smart Finanz Gewerbekredit', beschreibung: 'Erweiterung Gastst\u00e4tte, Kreditbedarf \u20AC45.000.', quelle: 'Impulsmanager', volumen: 45000, ertrag: 675, status: 'identifiziert', letzteAktion: 'Erstgespr\u00e4ch ausstehend', herleitung: [], filler: true },
+        { kundenName: 'Anja Bergmann', kundenId: 'KDB017', prioritaet: 'hoch', produkt: 'Verm\u00f6genPlus Portfolioumschichtung', beschreibung: 'Depot \u20AC95.000 mit hohem Aktienanteil, Umschichtung empfohlen.', quelle: 'FIDA', volumen: 95000, ertrag: 1425, status: 'termin', letzteAktion: 'Termin am 16.03.', herleitung: [], filler: true },
+        { kundenName: 'Anja Bergmann', kundenId: 'KDB017', prioritaet: 'niedrig', produkt: 'Wero-Aktivierung', beschreibung: 'Noch keine Wero-Registrierung.', quelle: 'Impulsmanager', volumen: 0, ertrag: 30, status: 'identifiziert', letzteAktion: 'System-Impuls (09.03.)', herleitung: [], filler: true },
+        { kundenName: 'Frank Mayer', kundenId: 'KDB018', prioritaet: 'mittel', produkt: 'KfW-Studienkredit Ablösung', beschreibung: 'Studienkredit \u20AC18.000 bei KfW, g\u00fcnstigere Konditionen m\u00f6glich.', quelle: 'FIDA', volumen: 18000, ertrag: 270, status: 'abgeschlossen', letzteAktion: 'Umschuldung abgeschlossen (01.03.)', herleitung: [], filler: true },
+        { kundenName: 'Petra Wendt', kundenId: 'KDB019', prioritaet: 'hoch', produkt: 'R+V Wohngeb\u00e4udeversicherung', beschreibung: 'Altbau Bj. 1968, Unterversicherung wahrscheinlich.', quelle: 'Truuco', volumen: 1500, ertrag: 225, status: 'angeschrieben', letzteAktion: 'Pr\u00fcfung angeboten (06.03.)', herleitung: [], filler: true }
     ];
 
     // ========================================
@@ -434,7 +459,7 @@
             var p = potentiale[i];
             var key = p.kundenId;
             if (!map[key]) {
-                map[key] = { kundenName: p.kundenName, kundenId: p.kundenId, items: [] };
+                map[key] = { kundenName: p.kundenName, kundenId: p.kundenId, items: [], filler: !!p.filler };
                 groups.push(map[key]);
             }
             map[key].items.push({ pot: p, originalIndex: i });
@@ -464,10 +489,11 @@
                 if (uniqueStatuses.indexOf(statuses[us]) === -1) uniqueStatuses.push(statuses[us]);
             }
 
-            html += '<div class="unified-pot-group" data-statuses="' + uniqueStatuses.join(',') + '">';
+            var isFiller = !!group.filler;
+            html += '<div class="unified-pot-group' + (isFiller ? ' filler-group' : '') + '" data-statuses="' + uniqueStatuses.join(',') + '">';
 
             // Customer header row (with photo)
-            html += '<div class="unified-pot-group-header" onclick="window._unifiedPotToggleGroup(\'' + groupId + '\', this)">' +
+            html += '<div class="unified-pot-group-header"' + (isFiller ? '' : ' onclick="window._unifiedPotToggleGroup(\'' + groupId + '\', this)"') + (isFiller ? ' style="cursor:default;opacity:0.7;"' : '') + '>' +
                 getKundenAvatar(group.kundenName) +
                 '<div class="unified-pot-group-info">' +
                     '<strong class="unified-pot-card-name">' + group.kundenName + '</strong>' +
@@ -475,8 +501,8 @@
                     '<span class="unified-pot-group-count">' + group.items.length + ' Potentiale</span>' +
                 '</div>' +
                 '<div class="unified-pot-card-right">' +
-                    '<div class="unified-pot-card-kennzahl"><span class="unified-pot-card-kz-label">Volumen</span><span class="unified-pot-card-kz-value">' + formatCurrency(totalVolumen) + '</span></div>' +
-                    '<div class="unified-pot-card-kennzahl"><span class="unified-pot-card-kz-label">Ertrag</span><span class="unified-pot-card-kz-value prov">' + formatCurrency(totalErtrag) + '</span></div>' +
+                    '<div class="unified-pot-card-kennzahl"><svg class="kz-icon" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a4 4 0 00-8 0v2"/></svg><span class="unified-pot-card-kz-label">Volumen</span><span class="unified-pot-card-kz-value">' + formatCurrency(totalVolumen) + '</span></div>' +
+                    '<div class="unified-pot-card-kennzahl"><svg class="kz-icon" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg><span class="unified-pot-card-kz-label">Ertrag</span><span class="unified-pot-card-kz-value prov">' + formatCurrency(totalErtrag) + '</span></div>' +
                 '</div>' +
                 '<span class="unified-pot-expand">' + getIcon('chevronDown') + '</span>' +
             '</div>';
@@ -526,7 +552,7 @@
                 // Action buttons
                 html += '<div class="unified-pot-detail-actions">' +
                     '<button class="action-btn primary kunde-oeffnen-btn" title="Kunde \u00f6ffnen" onclick="event.stopPropagation(); window._unifiedPotOpenKunde(\'' + p.kundenName.replace(/'/g, "\\'") + '\', \'' + p.kundenId + '\')">' +
-                        getIcon('user') + ' <span class="btn-label">Kunde \u00f6ffnen</span></button>' +
+                        '<span class="btn-label">Kunde \u00f6ffnen</span></button>' +
                     '<button class="action-btn secondary" title="Angebot erstellen" onclick="event.stopPropagation(); window._unifiedPotCreateAngebot(\'' + p.produkt.replace(/'/g, "\\'") + '\')">' +
                         getIcon('fileText') + ' <span class="btn-label">Angebot erstellen</span></button>' +
                     '<button class="action-btn secondary" title="Status \u00e4ndern" onclick="event.stopPropagation(); window._unifiedPotChangeStatus(' + idx + ', \'' + containerId + '\')">' +

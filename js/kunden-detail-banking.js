@@ -653,39 +653,11 @@ function adjustColor(hex, amount) {
 
 // ── STICKY BAR ──
 function fillBankStickyBar(kundenName, retailData, kd, clv) {
-    var nameEl = document.getElementById('bankKundeBarName');
-    if (nameEl) nameEl.textContent = kundenName;
-    var idEl = document.getElementById('bankKundeBarId');
-    if (idEl) idEl.textContent = retailData ? retailData.id : 'KDB000';
-    
-    // Avatar in sticky bar
-    var avatarEl = document.getElementById('bankKundeStickyAvatar');
-    if (avatarEl) {
-        var fotoPath = bankKundenFotos[kundenName] || (kd.foto);
-        if (fotoPath) {
-            avatarEl.innerHTML = '<img src="' + fotoPath + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">';
-        } else {
-            var bg = kd.avatarBg || '#64748b';
-            avatarEl.innerHTML = '<div style="width:100%;height:100%;border-radius:50%;background:' + bg + ';display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:white;">' + getInitialsBerater(kundenName) + '</div>';
-        }
+    // Use shared sticky bar elements (kundeBarXxxB)
+    if (typeof updateKundeStickyBar === 'function') {
+        var clvStr = '\u20AC' + clv.value.toLocaleString('de-DE');
+        updateKundeStickyBar(kundenName, retailData ? retailData.id : (kd.id || 'KDB000'), kd.nps, clvStr, clv.segment);
     }
-    
-    // NPS stars
-    var npsEl = document.getElementById('bankKundeBarNps');
-    if (npsEl) {
-        var stars = '';
-        for (var i = 1; i <= 5; i++) {
-            var filled = (kd.nps.score / 2) >= i;
-            stars += '<span style="color:' + (filled ? '#f59e0b' : '#e2e8f0') + ';font-size:14px;">\u2605</span>';
-        }
-        npsEl.innerHTML = stars;
-    }
-    
-    var clvEl = document.getElementById('bankKundeBarClv');
-    if (clvEl) clvEl.textContent = '\u20AC' + clv.value.toLocaleString('de-DE');
-    
-    var segEl = document.getElementById('bankKundeBarSegment');
-    if (segEl) segEl.textContent = clv.segment;
 }
 
 // ── TAB SWITCHING ──

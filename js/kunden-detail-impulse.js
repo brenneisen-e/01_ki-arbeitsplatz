@@ -287,6 +287,8 @@ function renderKIImpulseInline(impulse, isFallback) {
 
     for (var i = 0; i < impulse.length; i++) {
         var imp = impulse[i];
+        // Skip items without concrete product/volumen data (generic KI placeholders)
+        if (!imp.volumen && !imp.ertrag) continue;
         var prioClass = imp.prioritaet === 'Hoch' ? 'high' : 'medium';
         var prioLabel = imp.prioritaet === 'Hoch' ? 'Hohe Priorität' : 'Mittlere Priorität';
         var detailId = 'ki-inline-' + i;

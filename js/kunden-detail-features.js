@@ -362,7 +362,6 @@ function switchKundenTab(tabName) {
     }, 50);
     if (tabName === 'stammdaten') setTimeout(function() {
         if (typeof renderLifeEventTimeline === 'function') renderLifeEventTimeline();
-        if (typeof renderRisikoscoring === 'function') renderRisikoscoring();
     }, 50);
     // OPT-25-B: Absicherungsstatus moved to Potentiale tab
     if (tabName === 'vertraege') setTimeout(function() {}, 50);
@@ -693,19 +692,7 @@ function renderLueckenLeiste(kundenName) {
         }
     });
 
-    html += '</div>';
-
-    if (luecken.length > 0) {
-        html += '<div class="luecken-detail"><strong>' + luecken.length + ' Lücke' + (luecken.length > 1 ? 'n' : '') + ' erkannt:</strong><ul>';
-        luecken.forEach(function(l, i) {
-            html += '<li>' + (i + 1) + '. ' + l.label + ' <a href="javascript:void(0)" onclick="switchKundenTab(\'impulse\')" class="luecke-link">Impuls öffnen</a></li>';
-        });
-        html += '</ul></div>';
-    } else {
-        html += '<div class="luecken-detail luecken-ok-msg"><strong>Alle Kernbereiche abgesichert</strong></div>';
-    }
-
-    html += '</div>';
+    html += '</div></div>';
     container.innerHTML = html;
 }
 window.renderLueckenLeiste = renderLueckenLeiste;

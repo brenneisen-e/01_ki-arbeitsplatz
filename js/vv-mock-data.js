@@ -494,6 +494,15 @@
         { name: 'Dr. Peter Stein', stadium: 'lead', volEst: 1200000, naechsterSchritt: 'Kontakt via LinkedIn', datum: '2026-03-28' }
     ];
 
+    // ── OPT-26: Persona-Erweiterungen mergen (transaktionen, potentiale, linkedin) ──
+    if (window._vvPersonaExtensions) {
+        Object.keys(window._vvPersonaExtensions).forEach(function(name) {
+            if (window.vvMockMandanten[name]) {
+                Object.assign(window.vvMockMandanten[name], window._vvPersonaExtensions[name]);
+            }
+        });
+    }
+
     // ── VV POTENTIALE ──
     window.vvPotentiale = [
         {

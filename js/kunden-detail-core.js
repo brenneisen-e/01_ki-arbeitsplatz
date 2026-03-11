@@ -429,10 +429,7 @@ function updateKundenSharedHeader(kundenName, vermittlerId) {
     // Institution logo, name, standort, modus badge (analog zu A-02 setInsurer/setBank)
     updateA10InstitutInfo();
 
-    // 20-B: Lebenssituations-Badge
-    if (typeof renderLebenssituationBadge === 'function') {
-        renderLebenssituationBadge(kundenName);
-    }
+    // 20-B: Lebenssituations-Badge GELÖSCHT (OPT-24)
 }
 window.updateKundenSharedHeader = updateKundenSharedHeader;
 

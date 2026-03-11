@@ -1,5 +1,6 @@
 import { Sun, Clock, Zap, CheckSquare, Calendar, Phone, AlertTriangle } from 'lucide-react';
 import Card from '../../../components/ui/Card';
+import Avatar from '../../../components/ui/Avatar';
 import { PrioBadge } from '../../../components/ui/Badge';
 import { useMode } from '../../../hooks/useMode';
 import { KUNDEN_BY_MODE, TERMINE_BY_MODE, AUFGABEN_BY_MODE, getAllPotentiale } from '../../../data';
@@ -175,11 +176,17 @@ export default function UebersichtTab() {
                 className="py-3 border-b border-slate-100 last:border-0 cursor-pointer hover:bg-slate-50 -mx-2 px-2 rounded-lg transition-colors"
                 onClick={() => navigateTo('detail', { kundeId: t.kundeId })}
               >
-                <div className="flex items-center justify-between mb-1">
-                  <span className="text-xs text-slate-400">{t.datum} {t.zeit}</span>
+                <div className="flex items-center gap-3">
+                  <Avatar name={t.kunde} foto={t.foto} size={36} />
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between mb-0.5">
+                      <span className="text-sm font-medium text-slate-700">{t.kunde}</span>
+                      <span className="text-xs text-slate-400">{t.zeit}</span>
+                    </div>
+                    <div className="text-xs text-slate-500">{t.betreff}</div>
+                    <div className="text-xs text-slate-400">{t.datum}</div>
+                  </div>
                 </div>
-                <div className="text-sm font-medium text-slate-700">{t.kunde}</div>
-                <div className="text-xs text-slate-500">{t.betreff}</div>
               </div>
             ))}
           </div>

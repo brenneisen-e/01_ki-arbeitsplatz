@@ -1,5 +1,6 @@
 import Card from '../../../components/ui/Card';
 import DataTable from '../../../components/ui/DataTable';
+import LogoImg from '../../../components/ui/LogoImg';
 import { formatEur } from '../../../utils/formatters';
 import { CheckCircle, XCircle, Link2 } from 'lucide-react';
 
@@ -38,7 +39,12 @@ export default function OpenFinanceTab({ kunde }) {
         <DataTable
           columns={[
             { id: 'typ', label: 'Produkt', render: v => <span className="font-medium capitalize">{v.replace(/_/g, ' ')}</span> },
-            { id: 'institut', label: 'Institut' },
+            { id: 'institut', label: 'Institut', render: (v) => (
+              <div className="flex items-center gap-2">
+                <LogoImg name={v} size={18} />
+                <span>{v}</span>
+              </div>
+            )},
             { id: 'details', label: 'Details' },
             { id: 'volumen', label: 'Volumen', render: v => <span className="font-mono">{formatEur(v)}</span> },
             { id: 'consent', label: 'Consent', render: v => (

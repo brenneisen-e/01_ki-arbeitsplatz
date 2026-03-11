@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import KPIGrid from '../../../components/ui/KPIGrid';
 import DataTable from '../../../components/ui/DataTable';
+import Avatar from '../../../components/ui/Avatar';
 import { useMode } from '../../../hooks/useMode';
 import { KUNDEN_BY_MODE } from '../../../data';
 import { formatEur, potentialSterne } from '../../../utils/formatters';
@@ -45,7 +46,12 @@ export default function KundenTab() {
   );
 
   const columns = [
-    { id: 'name', label: 'Name', render: (v) => <span className="font-medium">{v}</span> },
+    { id: 'name', label: 'Name', render: (v, row) => (
+      <div className="flex items-center gap-2">
+        <Avatar name={v} foto={row.foto} size={28} />
+        <span className="font-medium">{v}</span>
+      </div>
+    )},
     { id: 'potentialScore', label: 'Potenzial', render: (v) => <StarRating score={v || 0} /> },
     { id: 'id', label: 'ID' },
     { id: 'beruf', label: 'Beruf' },

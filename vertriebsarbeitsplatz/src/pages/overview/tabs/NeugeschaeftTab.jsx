@@ -2,6 +2,7 @@ import KPIGrid from '../../../components/ui/KPIGrid';
 import Card from '../../../components/ui/Card';
 import DonutChart from '../../../components/charts/DonutChart';
 import DataTable from '../../../components/ui/DataTable';
+import LogoImg from '../../../components/ui/LogoImg';
 import { SparteBadge, StatusBadge } from '../../../components/ui/Badge';
 import { useMode } from '../../../hooks/useMode';
 import { NEUGESCHAEFT_DATA } from '../../../data';
@@ -18,8 +19,13 @@ const COLUMNS = [
   { id: 'id', label: 'Vertragsnr.', width: '120px' },
   { id: 'sparte', label: 'Sparte', render: (v) => <SparteBadge sparte={v} /> },
   { id: 'produkt', label: 'Produkt' },
-  { id: 'versicherer', label: 'Anbieter' },
-  { id: 'beitrag', label: 'Betrag', render: (v, row) => `${formatEur(v)}/${row.beitragsart}` },
+  { id: 'versicherer', label: 'Versicherer', render: (v) => (
+    <div className="flex items-center gap-2">
+      <LogoImg name={v} size={18} />
+      <span>{v}</span>
+    </div>
+  )},
+  { id: 'beitrag', label: 'Beitrag', render: (v, row) => `${formatEur(v)}/${row.beitragsart}` },
   { id: 'status', label: 'Status', render: (v) => <StatusBadge status={v} /> },
   { id: 'datum', label: 'Datum' },
 ];

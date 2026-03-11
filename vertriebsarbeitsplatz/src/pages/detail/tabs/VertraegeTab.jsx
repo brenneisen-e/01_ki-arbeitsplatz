@@ -1,5 +1,6 @@
 import Card from '../../../components/ui/Card';
 import DataTable from '../../../components/ui/DataTable';
+import LogoImg from '../../../components/ui/LogoImg';
 import { StatusBadge, SparteBadge } from '../../../components/ui/Badge';
 import { formatEur } from '../../../utils/formatters';
 
@@ -14,7 +15,12 @@ export default function VertraegeTab({ kunde }) {
         </h3>
         <DataTable
           columns={[
-            { id: 'produkt', label: 'Produkt', render: v => <span className="font-medium">{v}</span> },
+            { id: 'produkt', label: 'Produkt', render: (v, row) => (
+              <div className="flex items-center gap-2">
+                {row.versicherer && <LogoImg name={row.versicherer} size={18} />}
+                <span className="font-medium">{v}</span>
+              </div>
+            )},
             { id: 'sparte', label: 'Sparte', render: v => v ? <SparteBadge sparte={v} /> : '-' },
             { id: 'details', label: 'Tarif / Details' },
             { id: 'praemie', label: 'Praemie/J.', render: v => <span className="font-mono font-medium">{formatEur(v)}</span> },

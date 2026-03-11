@@ -3,6 +3,7 @@ import { clsx } from 'clsx';
 import { ArrowLeft, ChevronDown, Settings, User } from 'lucide-react';
 import { useMode } from '../../hooks/useMode';
 import { MODE_CONFIGS } from '../../data/modeConfig';
+import LogoImg from '../ui/LogoImg';
 
 export default function GlobalHeader({ kundeInfo }) {
   const { config, modeId, switchMode, activeTab, setActiveTab, currentView, goBack } = useMode();
@@ -19,13 +20,19 @@ export default function GlobalHeader({ kundeInfo }) {
               <ArrowLeft size={20} strokeWidth={1.75} />
             </button>
           )}
-          <div className="w-10 h-10 rounded-lg bg-white/20 border border-white/30 flex items-center justify-center text-white font-bold text-sm">
-            {config.institut.charAt(0)}
+          <div className="w-10 h-10 rounded-lg bg-white/20 border border-white/30 flex items-center justify-center overflow-hidden">
+            <LogoImg name={config.institut} size={32} />
           </div>
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-white/20 border-2 border-white/50 flex items-center justify-center">
-              <User size={20} className="text-white" strokeWidth={1.75} />
-            </div>
+            {config.beraterFoto ? (
+              <div className="w-10 h-10 rounded-full border-2 border-white/50 overflow-hidden">
+                <img src={config.beraterFoto} alt={config.beraterName} className="w-full h-full object-cover" />
+              </div>
+            ) : (
+              <div className="w-10 h-10 rounded-full bg-white/20 border-2 border-white/50 flex items-center justify-center">
+                <User size={20} className="text-white" strokeWidth={1.75} />
+              </div>
+            )}
             <div>
               <div className="text-white text-sm font-medium">
                 {config.beraterTitel}: {config.beraterName}

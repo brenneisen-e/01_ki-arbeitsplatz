@@ -585,10 +585,10 @@ export const STAMMDATEN_DATA = {
 // =============================================
 export const TERMINE_BY_MODE = {
   versicherung: [
-    { datum: '2026-03-11', zeit: '17:30', kunde: 'Amira Koenig', betreff: 'Kfz-Angebot besprechen', kundeId: 'KD00002' },
+    { datum: '2026-03-11', zeit: '17:30', kunde: 'Amira Koenig', betreff: 'Kfz-Angebot besprechen', kundeId: 'KD00002', foto: '/images/AdobeStock_252262042.jpeg' },
     { datum: '2026-03-12', zeit: '10:30', kunde: 'Anna Hoffmann', betreff: 'Altersvorsorge-Beratung', kundeId: 'KD00004' },
-    { datum: '2026-03-13', zeit: '14:00', kunde: 'Thomas Weber', betreff: 'Hausbesuch Bindungsgespraech', kundeId: 'KD00003' },
-    { datum: '2026-03-14', zeit: '09:00', kunde: 'Sandra Yilmaz', betreff: 'Jahresgespraech', kundeId: 'KD00008' },
+    { datum: '2026-03-13', zeit: '14:00', kunde: 'Thomas Weber', betreff: 'Hausbesuch Bindungsgespraech', kundeId: 'KD00003', foto: '/images/AdobeStock_361342769.jpeg' },
+    { datum: '2026-03-14', zeit: '09:00', kunde: 'Sandra Yilmaz', betreff: 'Jahresgespraech', kundeId: 'KD00008', foto: '/images/AdobeStock_612932760.jpeg' },
   ],
   banking: [
     { datum: '2026-03-11', zeit: '14:00', kunde: 'Klaus Fischer', betreff: 'Anschlussfinanzierung Beratung', kundeId: 'KDB001' },

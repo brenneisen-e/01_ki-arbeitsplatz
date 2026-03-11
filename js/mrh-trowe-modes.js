@@ -508,6 +508,61 @@ function setVV(vvKey) {
 }
 window.setVV = setVV;
 
+/* ========================================
+   OPT-24: GLOBAL HEADER CONTROLS PORTAL
+   Verschiebt viewModeDropdown + financeModeToggle
+   zwischen den verschiedenen Seiten-Headers
+   ======================================== */
+function moveGlobalControls(targetSlotId) {
+    var targetSlot = document.getElementById(targetSlotId);
+    if (!targetSlot) return;
+
+    var controlIds = ['viewModeDropdown', 'financeModeToggle', 'demoResetBtn', 'notificationBellContainer'];
+    // Also include the demo-reset-btn which has no id, find it by class
+    var dropdown = document.getElementById('viewModeDropdown');
+    var finance = document.getElementById('financeModeToggle');
+
+    if (dropdown) targetSlot.appendChild(dropdown);
+    if (finance) targetSlot.appendChild(finance);
+
+    // Move demo reset button (find it wherever it currently is)
+    var currentSlot = dropdown ? dropdown.previousElementSibling : null;
+    var demoBtn = document.querySelector('.demo-reset-btn');
+    if (demoBtn) targetSlot.appendChild(demoBtn);
+
+    var notifBell = document.getElementById('notificationBellContainer');
+    if (notifBell) targetSlot.appendChild(notifBell);
+
+    // Close any open dropdown menu
+    var menu = document.getElementById('viewModeMenu');
+    var toggle = document.getElementById('viewModeToggle');
+    if (menu) menu.style.display = 'none';
+    if (toggle) toggle.classList.remove('open');
+}
+window.moveGlobalControls = moveGlobalControls;
+
+// OPT-24: Hilfsfunktion – VV-Seiten ausblenden und A-02 anzeigen
+function _exitVVIfActive() {
+    var vvOverview = document.getElementById('vvOverviewPage');
+    var vvDetail = document.getElementById('vvDetailPage');
+    var isVVVisible = (vvOverview && vvOverview.style.display !== 'none') ||
+                      (vvDetail && vvDetail.style.display !== 'none');
+    if (!isVVVisible) return;
+
+    if (vvOverview) vvOverview.style.display = 'none';
+    if (vvDetail) vvDetail.style.display = 'none';
+
+    // Controls zurück nach A-02
+    moveGlobalControls('a02ControlsSlot');
+
+    // VV-Modul deaktivieren, Versicherungs-Modul aktivieren
+    if (typeof switchModule === 'function') switchModule('versicherung');
+
+    // A-02 Seite anzeigen
+    var agenturOverview = document.getElementById('agenturOverview');
+    if (agenturOverview) agenturOverview.style.display = 'block';
+}
+
 function toggleViewModeDropdown() {
     var menu = document.getElementById('viewModeMenu');
     var toggle = document.getElementById('viewModeToggle');
@@ -565,9 +620,13 @@ function setViewMode(mode) {
         if (icon) icon.innerHTML = '<path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>';
     } else if (mode.indexOf('bank-') === 0) {
         // Bank mode: apply selected bank theming
+        // OPT-24: Falls VV aktiv war, zurück zur Agentur-Seite navigieren
+        _exitVVIfActive();
         setBank(selectedBank);
     } else {
         // Insurance mode: apply selected insurer theming
+        // OPT-24: Falls VV aktiv war, zurück zur Agentur-Seite navigieren
+        _exitVVIfActive();
         setInsurer(selectedInsurer);
     }
 

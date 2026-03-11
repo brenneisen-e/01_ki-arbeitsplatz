@@ -8069,21 +8069,7 @@ button svg,
     color: rgba(255, 255, 255, 0.55);
 }
 
-.header-controls-a10 {
-    position: absolute;
-    right: 230px;
-    top: 50%;
-    transform: translateY(-50%);
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    z-index: 10;
-}
-
-.header-controls-a10 .finance-mode-toggle {
-    position: static;
-    transform: none;
-}
+/* header-controls-a10: ENTFERNT (OPT-24), ersetzt durch .global-controls-slot */
 
 .modus-badge {
     display: inline-flex;
@@ -8100,6 +8086,79 @@ button svg,
 .bank-mode .modus-badge {
     background: rgba(255, 102, 0, 0.3);
     color: #fff;
+}
+
+/* ========================================
+   OPT-24: GLOBAL HEADER CONTROLS SLOT
+   Portal-Slot für die globalen Controls
+   (viewModeDropdown + financeModeToggle werden per JS verschoben)
+   ======================================== */
+.global-controls-slot {
+    display: contents; /* Kinder positionieren sich relativ zum Header-Parent */
+}
+
+/* Innerhalb kunden-shared-header (A-10): Controls als Flex-Row */
+.kunden-shared-header > .global-controls-slot {
+    display: flex;
+    position: absolute;
+    right: 230px;
+    top: 50%;
+    transform: translateY(-50%);
+    align-items: center;
+    gap: 12px;
+    z-index: 10;
+}
+
+.kunden-shared-header > .global-controls-slot .view-mode-dropdown {
+    position: static;
+    transform: none;
+}
+
+.kunden-shared-header > .global-controls-slot .finance-mode-toggle {
+    position: static;
+    transform: none;
+}
+
+.kunden-shared-header > .global-controls-slot .demo-reset-btn {
+    display: none;
+}
+
+.kunden-shared-header > .global-controls-slot .notification-bell-container {
+    display: none;
+}
+
+/* Innerhalb vv-header (VV-02, VV-10): Controls positioniert */
+.vv-header > .global-controls-slot {
+    display: flex;
+    position: absolute;
+    right: 24px;
+    top: 16px;
+    align-items: center;
+    gap: 12px;
+    z-index: 10;
+}
+
+.vv-header > .global-controls-slot .view-mode-dropdown {
+    position: static;
+    transform: none;
+}
+
+.vv-header > .global-controls-slot .finance-mode-toggle {
+    position: static;
+    transform: none;
+}
+
+.vv-header > .global-controls-slot .demo-reset-btn {
+    display: none;
+}
+
+.vv-header > .global-controls-slot .notification-bell-container {
+    display: none;
+}
+
+/* VV-header braucht position:relative für absolute Kinder */
+.vv-header {
+    position: relative;
 }
 
 /* ========================================

@@ -15,7 +15,7 @@
             label: 'Offene Aufgaben',
             description: 'Follow-ups, Wiedervorlagen, Fristen',
             icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>',
-            defaultActive: true,
+            defaultActive: false,
             size: 'normal',
             modes: ['versicherung', 'banking'],
             render: renderAufgabenWidget
@@ -25,7 +25,7 @@
             label: 'Storno-Radar',
             description: 'Gefährdete Verträge mit Frühwarnung',
             icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
-            defaultActive: true,
+            defaultActive: false,
             size: 'normal',
             modes: ['versicherung'],
             render: renderStornoRadar
@@ -35,7 +35,7 @@
             label: 'Neugeschäft-Trend',
             description: 'Sparkline der letzten 6 Monate',
             icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>',
-            defaultActive: true,
+            defaultActive: false,
             size: 'normal',
             modes: ['versicherung', 'banking'],
             render: renderNGTrend
@@ -45,7 +45,7 @@
             label: 'Top-Potentiale',
             description: 'Die 5 besten Vertriebschancen',
             icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>',
-            defaultActive: true,
+            defaultActive: false,
             size: 'wide',
             modes: ['versicherung', 'banking'],
             render: renderTopPotentiale
@@ -55,7 +55,7 @@
             label: 'Provisions-Fortschritt',
             description: 'Zielerreichung Provision/Ertrag YTD',
             icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',
-            defaultActive: true,
+            defaultActive: false,
             size: 'normal',
             modes: ['versicherung', 'banking'],
             render: renderProvisionProgress
@@ -65,7 +65,7 @@
             label: 'FIDA/Open Finance',
             description: 'Consent-Status und Datenqualität',
             icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>',
-            defaultActive: true,
+            defaultActive: false,
             size: 'normal',
             modes: ['versicherung', 'banking'],
             render: renderFidaStatusWidget
@@ -95,7 +95,7 @@
             label: 'Abwanderungsrisiko',
             description: 'Kunden mit erhöhtem Abwanderungsrisiko',
             icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="18" y1="8" x2="23" y2="13"/><line x1="23" y1="8" x2="18" y2="13"/></svg>',
-            defaultActive: true,
+            defaultActive: false,
             size: 'normal',
             modes: ['banking'],
             render: renderAbwanderungWidget

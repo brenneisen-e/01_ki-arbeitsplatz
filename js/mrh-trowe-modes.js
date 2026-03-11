@@ -268,9 +268,11 @@ function setBank(bankKey) {
         var label = document.getElementById('viewModeLabel');
         if (label) label.textContent = viewModeLabels[viewMode];
 
-        // Apply bank theming to header
+        // Apply bank theming to header (A-02 + A-10)
         var header = document.querySelector('.agentur-header-new');
         if (header) header.style.background = cfg.headerBg;
+        var kundenHeader = document.querySelector('.kunden-shared-header');
+        if (kundenHeader) kundenHeader.style.background = cfg.headerBg;
 
         var style = document.getElementById('insurerDynamicStyle');
         if (!style) {
@@ -280,6 +282,7 @@ function setBank(bankKey) {
         }
         style.textContent =
             '.agentur-header-new .agentur-tab.active { background: ' + cfg.activeTabBg + ' !important; }' +
+            '.kunden-shared-header .agentur-tab.active { background: ' + cfg.activeTabBg + ' !important; }' +
             '.agentur-photo-small { background: linear-gradient(135deg, ' + cfg.headerAccent + ' 0%, ' + cfg.primary + ' 100%) !important; }' +
             '.bank-dropdown-item.active { background: #eff6ff !important; color: #1e40af !important; }';
     }
@@ -369,9 +372,11 @@ function setInsurer(insurerKey) {
     root.style.setProperty('--primary-dark', cfg.primaryDark);
     root.style.setProperty('--primary-light', cfg.primaryLight);
 
-    // Update header background color
+    // Update header background color (A-02 + A-10)
     var header = document.querySelector('.agentur-header-new');
     if (header) header.style.background = cfg.headerBg;
+    var kundenHeader = document.querySelector('.kunden-shared-header');
+    if (kundenHeader) kundenHeader.style.background = cfg.headerBg;
 
     // Update active tab color
     var style = document.getElementById('insurerDynamicStyle');
@@ -382,6 +387,7 @@ function setInsurer(insurerKey) {
     }
     style.textContent =
         '.agentur-header-new .agentur-tab.active { background: ' + cfg.activeTabBg + ' !important; }' +
+        '.kunden-shared-header .agentur-tab.active { background: ' + cfg.activeTabBg + ' !important; }' +
         '.agentur-photo-small { background: linear-gradient(135deg, ' + cfg.headerAccent + ' 0%, ' + cfg.primary + ' 100%) !important; }' +
         '.view-mode-dropdown-item.active { background: ' + cfg.dropdownActive + ' !important; color: ' + cfg.dropdownActiveText + ' !important; }' +
         '.view-mode-dropdown-item.active svg { stroke: ' + cfg.dropdownActiveText + ' !important; }' +
@@ -538,6 +544,21 @@ function moveGlobalControls(targetSlotId) {
     var toggle = document.getElementById('viewModeToggle');
     if (menu) menu.style.display = 'none';
     if (toggle) toggle.classList.remove('open');
+
+    // Sync header background color to target header (OPT-24: identical theming)
+    var targetHeader = targetSlot.closest('.kunden-shared-header') || targetSlot.closest('.agentur-header-new');
+    if (targetHeader) {
+        var cfg = null;
+        if (viewMode && viewMode.indexOf('bank-') === 0 && typeof bankConfig !== 'undefined') {
+            var bankKey = typeof selectedBank !== 'undefined' ? selectedBank : 'vr';
+            cfg = bankConfig[bankKey];
+        } else if (typeof insurerConfig !== 'undefined') {
+            cfg = insurerConfig[selectedInsurer || 'ergo'];
+        }
+        if (cfg && cfg.headerBg) {
+            targetHeader.style.background = cfg.headerBg;
+        }
+    }
 }
 window.moveGlobalControls = moveGlobalControls;
 

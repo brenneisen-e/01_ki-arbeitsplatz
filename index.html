@@ -852,6 +852,21 @@
                             <button class="view-mode-dropdown-item" data-mode="bank-fk" onclick="setViewMode('bank-fk')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"></path></svg> Banking Firmenkunde</button>
                             <button class="view-mode-dropdown-item" data-mode="bank-vw" onclick="setViewMode('bank-vw')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg> Banking Verm&ouml;gen</button>
                         </div>
+                        <div class="view-mode-dropdown-divider"></div>
+                        <!-- Vermögensverwaltung-Auswahl (OPT-24) -->
+                        <div class="view-mode-dropdown-group insurer-selector-group">
+                            <div class="view-mode-dropdown-group-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg> Verm&ouml;gensverwaltung</div>
+                            <div class="insurer-grid" id="vvGrid">
+                                <button class="vv-dropdown-item active" data-vv="hrk-lunis" onclick="setVV('hrk-lunis')" title="HRK LUNIS"><span class="insurer-icon-fallback" style="background:linear-gradient(135deg,#1a1a2e,#16213e);color:#c9a84c;font-size:9px;">HRK</span></button>
+                            </div>
+                        </div>
+                        <div class="view-mode-dropdown-divider"></div>
+                        <div class="view-mode-dropdown-group">
+                            <div class="view-mode-dropdown-group-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg> VV Modus</div>
+                            <button class="view-mode-dropdown-item" data-mode="vv-fairvalue" onclick="setViewMode('vv-fairvalue')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg> FairValue</button>
+                            <button class="view-mode-dropdown-item" data-mode="vv-smartvalue" onclick="setViewMode('vv-smartvalue')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> SmartValue</button>
+                            <button class="view-mode-dropdown-item" data-mode="vv-institutional" onclick="setViewMode('vv-institutional')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg> Institutional</button>
+                        </div>
                     </div>
                 </div>
                 <div class="finance-mode-toggle" id="financeModeToggle">

@@ -489,8 +489,24 @@ var viewModeLabels = {
     'mrh': 'Gewerbemakler 360\u00B0',
     'bank-retail': 'Banking Retail',
     'bank-fk': 'Banking Firmenkunde',
-    'bank-vw': 'Banking Verm\u00F6gen'
+    'bank-vw': 'Banking Verm\u00F6gen',
+    'vv-fairvalue': 'VV FairValue',
+    'vv-smartvalue': 'VV SmartValue',
+    'vv-institutional': 'VV Institutional'
 };
+
+// OPT-24: VV selector
+var selectedVV = 'hrk-lunis';
+function setVV(vvKey) {
+    selectedVV = vvKey;
+    // Update active state
+    document.querySelectorAll('.vv-dropdown-item').forEach(function(item) {
+        item.classList.toggle('active', item.dataset.vv === vvKey);
+    });
+    // Switch to VV module
+    if (typeof switchModule === 'function') switchModule('vermoegensverwaltung');
+}
+window.setVV = setVV;
 
 function toggleViewModeDropdown() {
     var menu = document.getElementById('viewModeMenu');
@@ -543,7 +559,11 @@ function setViewMode(mode) {
     }
 
     // Apply correct theming for the mode
-    if (mode.indexOf('bank-') === 0) {
+    if (mode.indexOf('vv-') === 0) {
+        // VV mode: switch to VV module
+        if (typeof showVVOverview === 'function') showVVOverview();
+        if (icon) icon.innerHTML = '<path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>';
+    } else if (mode.indexOf('bank-') === 0) {
         // Bank mode: apply selected bank theming
         setBank(selectedBank);
     } else {
@@ -551,7 +571,9 @@ function setViewMode(mode) {
         setInsurer(selectedInsurer);
     }
 
-    applyViewMode();
+    if (mode.indexOf('vv-') !== 0) {
+        applyViewMode();
+    }
 
     // Close A-10 if open and update URL based on which page is visible
     var a10 = document.getElementById('kundenDetailPage');
@@ -564,7 +586,8 @@ function setViewMode(mode) {
     if (agenturPage && agenturPage.style.display !== 'none' && window.AppRouter) {
         var routeMap = {
             'ao': '/agentur', 'ecclesia': '/agentur-b2b', 'mrh': '/agentur-gewerbe',
-            'bank-retail': '/berater', 'bank-fk': '/berater-firmenkunde', 'bank-vw': '/berater-vermoegen'
+            'bank-retail': '/berater', 'bank-fk': '/berater-firmenkunde', 'bank-vw': '/berater-vermoegen',
+            'vv-fairvalue': '/vv-overview', 'vv-smartvalue': '/vv-overview', 'vv-institutional': '/vv-overview'
         };
         AppRouter.navigate(routeMap[mode] || '/agentur');
     }

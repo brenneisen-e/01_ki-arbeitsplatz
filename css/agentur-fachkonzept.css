@@ -2671,7 +2671,7 @@
 }
 .formular-modal-close:hover { color: #334155; }
 .formular-modal-body { padding: var(--header-content-gap, 24px); }
-.formular-modal-group { margin-bottom: 16px; }
+.formular-modal-group { margin-bottom: var(--card-gap, 16px); }
 .formular-modal-label {
     display: block; font-size: 15px; font-weight: 600; color: #475569;
     margin-bottom: 6px;
@@ -2686,7 +2686,7 @@
 }
 .formular-modal-footer {
     display: flex; justify-content: flex-end; gap: 12px;
-    padding: 16px 24px; border-top: 1px solid #e2e8f0; background: #f8fafc;
+    padding: var(--spacing-md, 16px) var(--header-content-gap, 24px); border-top: 1px solid #e2e8f0; background: #f8fafc;
 }
 .formular-modal-cancel {
     padding: 10px 20px; border: 1px solid #cbd5e1; background: #fff;

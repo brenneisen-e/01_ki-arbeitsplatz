@@ -764,28 +764,9 @@ function detectLebenssituation(kunde) {
     return { phase: phase, tags: tags, icon: icon, alter: alter };
 }
 
-function renderLebenssituationBadge(kundenName) {
-    var badge = document.getElementById('lebenssituationBadge');
-    if (!badge) return;
-
-    var kundenPage = document.getElementById('kundenDetailPage');
-    var isBankMode = kundenPage && kundenPage.classList.contains('bank-mode');
-
-    var kunde = null;
-    if (isBankMode && typeof bankMockKunden !== 'undefined') {
-        kunde = bankMockKunden[kundenName];
-    }
-    if (!kunde && typeof window.mockKunden !== 'undefined') {
-        kunde = window.mockKunden[kundenName];
-    }
-    if (!kunde) { badge.innerHTML = ''; return; }
-
-    var ls = detectLebenssituation(kunde);
-    badge.innerHTML = '<span class="ls-icon">' + ls.icon + '</span> ' +
-        '<span class="ls-phase">' + ls.phase + '</span>' +
-        (ls.tags.length > 0 ? '<span class="ls-tags">' + ls.alter + ' J. · ' + ls.tags.join(' · ') + '</span>' : '');
-    badge.style.display = '';
-}
+// renderLebenssituationBadge GELÖSCHT (OPT-24)
+// Stub kept for backwards compat
+function renderLebenssituationBadge() {}
 window.renderLebenssituationBadge = renderLebenssituationBadge;
 
 // ========================================

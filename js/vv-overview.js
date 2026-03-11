@@ -72,7 +72,7 @@
         }
     }
 
-    // ── FILL HEADER ──
+    // ── FILL HEADER (OPT-24: same structure as A-02) ──
     function fillVVHeader() {
         var data = window.vvBeraterData;
         if (!data) return;
@@ -80,6 +80,15 @@
         if (title) title.textContent = 'Berater: ' + data.name;
         var sub = document.getElementById('vvSubtitle');
         if (sub) sub.textContent = data.titel + ' · ' + data.standort + ' · seit ' + data.seit;
+
+        // Photo (re-use A-02 pattern)
+        var photoImg = document.getElementById('vvPhotoImgSmall');
+        if (photoImg && data.photo) {
+            photoImg.src = data.photo;
+            photoImg.style.display = 'block';
+            var placeholder = document.querySelector('#vvPhotoSmall .agentur-photo-placeholder-small');
+            if (placeholder) placeholder.style.display = 'none';
+        }
     }
 
     // ── FILL KPIs ──
@@ -407,9 +416,13 @@
             var detail = document.getElementById('vvDetailPage');
             if (detail) detail.style.display = 'block';
 
-            // Fill header
+            // Fill header (OPT-24: Berater info + Mandant line)
+            var beraterTitle = document.getElementById('vvDetailBeraterTitle');
+            var vvData = window.vvBeraterData;
+            if (beraterTitle && vvData) beraterTitle.textContent = 'Berater: ' + vvData.name;
+
             var titleEl = document.getElementById('vvDetailTitle');
-            if (titleEl) titleEl.textContent = 'Mandant: ' + name;
+            if (titleEl) titleEl.textContent = name;
             var subtitleEl = document.getElementById('vvDetailSubtitle');
             if (subtitleEl) subtitleEl.textContent = (mandant.segment || '') + ' · ' + (mandant.mandatstyp || '');
 

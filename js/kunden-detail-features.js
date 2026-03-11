@@ -324,18 +324,18 @@ function switchKundenTab(tabName) {
 
     // Render dynamic content for tabs
     if (tabName === 'fida') setTimeout(function() {
-        if (typeof renderBezahlenContent === 'function') renderBezahlenContent();
-        // FIDA-Empfehlungen gehoeren in den Potentiale-Tab, nicht in Open Finance
-        // if (typeof renderFidaStufe2 === 'function') renderFidaStufe2();
+        // OPT-25-C: Bezahlen moved to Finanzprofil tab
         if (typeof renderSankeyFlow === 'function') renderSankeyFlow();
         setTimeout(function() { if (typeof addFidaActionButtons === 'function') addFidaActionButtons(); }, 100);
     }, 50);
     if (tabName === 'impulse') setTimeout(function() {
+        // OPT-25-B: Render Absicherungsstatus as first element in Potentiale tab
+        var kName = getCurrentKundenName();
+        if (typeof renderLueckenLeiste === 'function') renderLueckenLeiste(kName);
         var isBankMode = document.querySelector('#kundenDetailPage.bank-mode');
         if (isBankMode) {
             // In bank mode, re-render banking potentials into tabImpulse
             if (typeof renderBankingPotentiale === 'function') {
-                var kName = getCurrentKundenName();
                 renderBankingPotentiale(kName);
             }
         } else {
@@ -364,13 +364,13 @@ function switchKundenTab(tabName) {
         if (typeof renderLifeEventTimeline === 'function') renderLifeEventTimeline();
         if (typeof renderRisikoscoring === 'function') renderRisikoscoring();
     }, 50);
-    if (tabName === 'vertraege') setTimeout(function() {
-        var kName = getCurrentKundenName();
-        if (typeof renderLueckenLeiste === 'function') renderLueckenLeiste(kName);
-    }, 50);
+    // OPT-25-B: Absicherungsstatus moved to Potentiale tab
+    if (tabName === 'vertraege') setTimeout(function() {}, 50);
     if (tabName === 'finanzprofil') setTimeout(function() {
         var kName = getCurrentKundenName();
         if (typeof renderFinanzprofil === 'function') renderFinanzprofil(kName);
+        // OPT-25-C: Bezahlen-Daten im Finanzprofil rendern
+        if (typeof renderBezahlenContent === 'function') renderBezahlenContent();
     }, 50);
 }
 

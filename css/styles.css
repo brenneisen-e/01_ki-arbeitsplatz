@@ -4530,8 +4530,10 @@ button svg,
     color: #2563eb;
 }
 
+/* OPT-25-E: Consistent tab content spacing */
 .kunden-tab-content {
     display: none;
+    padding-top: var(--header-content-gap, 24px);
 }
 
 .kunden-tab-content.active {
@@ -5629,14 +5631,17 @@ button svg,
     padding: 20px;
 }
 
+/* OPT-25-D: Compact Potentiale card layout */
 .impuls-item {
     display: flex;
-    align-items: flex-start;
-    gap: 16px;
-    padding: 16px;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    padding: var(--card-padding, 20px);
     background: white;
-    border-radius: 10px;
+    border-radius: var(--card-radius, 12px);
     border: 1px solid #e2e8f0;
+    min-height: auto;
 }
 
 .impuls-item.highlight {
@@ -5645,10 +5650,10 @@ button svg,
 
 .impuls-icon {
     flex-shrink: 0;
-    width: 48px;
-    height: 48px;
+    width: 32px;
+    height: 32px;
     background: linear-gradient(135deg, rgba(134, 188, 37, 0.15) 0%, rgba(134, 188, 37, 0.05) 100%);
-    border-radius: 12px;
+    border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -5656,23 +5661,24 @@ button svg,
 }
 
 .impuls-icon svg {
-    width: 24px;
-    height: 24px;
+    width: 18px;
+    height: 18px;
 }
 
 .impuls-text {
     flex: 1;
+    min-width: 0;
 }
 
 .impuls-text strong {
     display: block;
     font-size: 15px;
     color: #1e293b;
-    margin-bottom: 6px;
+    margin-bottom: 4px;
 }
 
 .impuls-text p {
-    font-size: 15px;
+    font-size: 14px;
     color: #64748b;
     line-height: 1.5;
     margin: 0;
@@ -5680,9 +5686,9 @@ button svg,
 
 .impuls-priority {
     flex-shrink: 0;
-    padding: 6px 12px;
+    padding: 4px 10px;
     border-radius: 20px;
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 600;
 }
 
@@ -5701,11 +5707,11 @@ button svg,
     color: #64748b;
 }
 
-/* Potentiale Legende */
+/* Potentiale Legende – OPT-25-E */
 .impuls-legende {
     display: flex;
-    gap: 32px;
-    padding: 14px 20px;
+    gap: var(--spacing-xl, 32px);
+    padding: 14px var(--card-padding, 20px);
     margin: 0 0 4px 0;
     background: #f8fafc;
     border-bottom: 1px solid #e2e8f0;
@@ -5720,13 +5726,13 @@ button svg,
     font-size: 15px;
 }
 
-/* Volumen & Provision Badges */
+/* Volumen & Provision Badges – OPT-25-D compact */
 .impuls-volumen-badges {
     display: flex;
-    flex-direction: column;
-    gap: 4px;
+    flex-direction: row;
+    gap: 6px;
     flex-shrink: 0;
-    margin-right: 8px;
+    margin-right: 4px;
 }
 
 .impuls-volumen-badge,
@@ -6219,9 +6225,10 @@ button svg,
 }
 
 /* Impuls Kategorien */
+/* OPT-25-E: Consistent spacing for impuls categories */
 .impuls-kategorie {
-    margin-bottom: 32px;
-    padding-top: 8px;
+    margin-bottom: var(--spacing-xl, 32px);
+    padding-top: var(--spacing-sm, 8px);
 }
 
 .impuls-kategorie:last-child {
@@ -6235,16 +6242,16 @@ button svg,
     font-size: 15px;
     font-weight: 600;
     color: #1e293b;
-    margin-bottom: 20px;
-    padding-bottom: 12px;
+    margin-bottom: var(--card-padding, 20px);
+    padding-bottom: var(--spacing-md, 16px);
     border-bottom: 2px solid #e2e8f0;
 }
 
-/* Impuls Items Spacing */
+/* Impuls Items Spacing – OPT-25-E */
 .impuls-kategorie .impuls-item {
-    margin-bottom: 12px;
-    margin-left: 20px;
-    margin-right: 20px;
+    margin-bottom: var(--card-gap, 16px);
+    margin-left: 0;
+    margin-right: 0;
 }
 
 .impuls-kategorie .impuls-item:last-of-type {
@@ -6252,13 +6259,13 @@ button svg,
 }
 
 .impuls-kategorie .impuls-detail {
-    margin-bottom: 16px;
-    margin-left: 20px;
-    margin-right: 20px;
+    margin-bottom: var(--card-gap, 16px);
+    margin-left: 0;
+    margin-right: 0;
 }
 
 .impuls-kategorie-title {
-    margin-left: 8px;
+    margin-left: 0;
 }
 
 .impuls-kategorie-title.whitespots {

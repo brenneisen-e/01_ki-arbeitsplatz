@@ -92,12 +92,20 @@
     --space-12: 48px;
     --space-16: 64px;
 
-    /* Legacy spacing (keep for compatibility) */
-    --spacing-xs: 4px;
-    --spacing-sm: 8px;
-    --spacing-md: 16px;
-    --spacing-lg: 24px;
-    --spacing-xl: 32px;
+    /* Layout Spacing – OPT-25: EINE Design-Sprache */
+    --spacing-xs: 4px;     /* Inline-Abstände, Badge-Padding */
+    --spacing-sm: 8px;     /* Button-Gruppen, Tag-Abstände */
+    --spacing-md: 16px;    /* Karten-Innenabstand, Element-Abstände */
+    --spacing-lg: 24px;    /* Abstand Header → Content (IMMER GLEICH) */
+    --spacing-xl: 32px;    /* Abstand zwischen Sektionen */
+
+    /* Card System – OPT-25 */
+    --card-padding: 20px;
+    --card-gap: 16px;      /* Abstand zwischen Karten */
+    --card-radius: 12px;
+
+    /* Header → Content Abstand – OPT-25: FIXIERT in ALLEN Tabs */
+    --header-content-gap: 24px;
 
     /* Border Radius - Consistent system */
     --radius-xs: 4px;

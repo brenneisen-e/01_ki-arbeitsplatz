@@ -5,16 +5,17 @@
    IMPULSE DISPLAY OPTIONS
    ======================================== */
 /* Option 2: Kanban Board */
+/* OPT-25-D/E: Kanban with spacing variables */
 .impulse-kanban {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
+    gap: var(--card-gap, 16px);
 }
 
 .impulse-kanban-col {
     background: #f8fafc;
-    border-radius: 10px;
-    padding: 12px;
+    border-radius: var(--card-radius, 12px);
+    padding: var(--spacing-md, 16px);
 }
 
 .impulse-kanban-col-title {
@@ -45,12 +46,13 @@
 .impulse-kanban-card {
     background: white;
     border-radius: 8px;
-    padding: 12px;
-    margin-bottom: 8px;
+    padding: var(--spacing-md, 16px);
+    margin-bottom: var(--spacing-sm, 8px);
     border: 1px solid #e2e8f0;
     box-shadow: 0 1px 2px rgba(0,0,0,0.05);
     cursor: pointer;
     transition: border-color 0.2s, box-shadow 0.2s;
+    min-height: auto;
 }
 
 .impulse-kanban-card:hover {
@@ -1726,6 +1728,80 @@
    OPT-12: RISIKOSCORING
    ======================================== */
 
+/* OPT-25-A: Compact Risikoscoring with click-to-expand */
+.risikoscoring-compact {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: var(--card-radius, 12px);
+    margin-bottom: var(--card-gap, 16px);
+    overflow: hidden;
+}
+
+.risiko-compact-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 20px;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.risiko-compact-header:hover {
+    background: #f8fafc;
+}
+
+.risiko-compact-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: #334155;
+}
+
+.risiko-compact-score {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 3px solid;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
+}
+
+.risiko-compact-label {
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.risiko-expand-arrow {
+    color: #94a3b8;
+    transition: transform 0.3s ease;
+    flex-shrink: 0;
+}
+
+.risiko-compact-header.open .risiko-expand-arrow {
+    transform: rotate(180deg);
+}
+
+.risiko-expand-panel {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease;
+}
+
+.risiko-expand-panel.open {
+    max-height: 600px;
+}
+
+.risiko-expand-panel .risiko-score-details {
+    padding: 12px 20px 8px;
+    border-top: 1px solid #e2e8f0;
+}
+
+.risiko-expand-panel .risiko-empfehlungen {
+    padding: 0 20px 16px;
+}
+
+/* Legacy full-card styles (kept for compatibility) */
 .risiko-score-overview {
     display: flex;
     gap: 24px;

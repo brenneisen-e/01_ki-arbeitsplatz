@@ -17,9 +17,9 @@ export default function UebersichtTab() {
   const aufgaben = AUFGABEN;
 
   return (
-    <div className="grid grid-cols-10 gap-4">
-      {/* Linke Spalte 70% */}
-      <div className="col-span-7 space-y-4">
+    <div className="grid grid-cols-3 gap-4">
+      {/* Linke Spalte 2/3 */}
+      <div className="col-span-2 space-y-4 min-w-0">
         {/* Tagesstart */}
         <Card>
           <div className="flex items-center justify-between mb-4">
@@ -107,8 +107,8 @@ export default function UebersichtTab() {
         </Card>
       </div>
 
-      {/* Rechte Spalte 30% - Termine */}
-      <div className="col-span-3">
+      {/* Rechte Spalte 1/3 - Termine */}
+      <div className="col-span-1 min-w-0">
         <Card>
           <div className="flex items-center gap-2 mb-4">
             <Clock size={20} className="text-slate-500" strokeWidth={1.75} />

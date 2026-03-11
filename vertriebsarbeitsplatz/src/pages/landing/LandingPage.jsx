@@ -71,7 +71,7 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen bg-slate-50">
       {/* Top Bar */}
-      <div className="bg-white border-b border-slate-200 px-10 py-4">
+      <div className="bg-white border-b border-slate-200 px-6 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center">
@@ -83,7 +83,7 @@ export default function LandingPage() {
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto px-10 py-8">
+      <div className="max-w-6xl mx-auto px-6 py-8">
         {/* Modul-Tabs */}
         <div className="flex gap-2 mb-8">
           {MODULE_TABS.map(tab => (

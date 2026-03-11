@@ -12,7 +12,7 @@ export default function GlobalHeader({ kundeInfo }) {
   return (
     <header className="transition-all duration-500" style={{ background: config.colors.gradient }}>
       {/* Top Row */}
-      <div className="px-10 pt-5 pb-3 flex items-center justify-between">
+      <div className="px-6 pt-5 pb-3 flex items-center justify-between">
         <div className="flex items-center gap-4">
           {currentView !== 'landing' && (
             <button onClick={goBack} className="text-white/70 hover:text-white transition-colors p-1">
@@ -61,7 +61,7 @@ export default function GlobalHeader({ kundeInfo }) {
 
       {/* Kunden-Zeile (Detail-Ansicht) */}
       {kundeInfo && (
-        <div className="px-10 pb-2">
+        <div className="px-6 pb-2">
           <div className="flex items-center gap-3 text-white/80 text-sm">
             <div className="w-7 h-7 rounded-full bg-white/20 flex items-center justify-center text-xs font-bold text-white">
               {kundeInfo.name.split(' ').map(n => n[0]).join('')}
@@ -75,7 +75,7 @@ export default function GlobalHeader({ kundeInfo }) {
       )}
 
       {/* Tab-Leiste */}
-      <div className="px-10 flex gap-1 overflow-x-auto pb-0">
+      <div className="px-6 flex gap-1 overflow-x-auto pb-0">
         {tabs.map(tab => (
           <button
             key={tab.id}

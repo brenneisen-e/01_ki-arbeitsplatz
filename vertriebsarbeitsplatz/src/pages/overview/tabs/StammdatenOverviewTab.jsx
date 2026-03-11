@@ -1,9 +1,11 @@
 import Card from '../../../components/ui/Card';
 import { useMode } from '../../../hooks/useMode';
+import { STAMMDATEN_DATA } from '../../../data';
 import { Building2, GraduationCap, FileText, User } from 'lucide-react';
 
 export default function StammdatenOverviewTab() {
-  const { config } = useMode();
+  const { modeId } = useMode();
+  const data = STAMMDATEN_DATA[modeId] || STAMMDATEN_DATA.versicherung;
 
   return (
     <div className="grid grid-cols-2 gap-4">
@@ -13,11 +15,9 @@ export default function StammdatenOverviewTab() {
           <h3 className="font-semibold text-slate-800">Basis-Informationen</h3>
         </div>
         <div className="space-y-3 text-sm">
-          <InfoRow label="Name" value={config.beraterName} />
-          <InfoRow label="Titel" value={config.beraterTitel} />
-          <InfoRow label="ID" value={config.beraterId} />
-          <InfoRow label="Institut" value={config.institut} />
-          <InfoRow label="Status" value="Aktiv" />
+          {data.basis.map((row, i) => (
+            <InfoRow key={i} label={row.label} value={row.value} />
+          ))}
         </div>
       </Card>
 
@@ -27,10 +27,9 @@ export default function StammdatenOverviewTab() {
           <h3 className="font-semibold text-slate-800">Organisation</h3>
         </div>
         <div className="space-y-3 text-sm">
-          <InfoRow label="Region" value="Koeln-Bonn" />
-          <InfoRow label="Bezirk" value="Koeln Sued" />
-          <InfoRow label="Team" value="Team Alpha" />
-          <InfoRow label="Leitung" value="Frank Mueller" />
+          {data.organisation.map((row, i) => (
+            <InfoRow key={i} label={row.label} value={row.value} />
+          ))}
         </div>
       </Card>
 
@@ -40,21 +39,23 @@ export default function StammdatenOverviewTab() {
           <h3 className="font-semibold text-slate-800">Qualifikation</h3>
         </div>
         <div className="space-y-3 text-sm">
-          <InfoRow label="IHK" value="Versicherungsfachmann/-frau" />
-          <InfoRow label="IDD" value="15h / 15h (100%)" />
-          <InfoRow label="Letzte Pruefung" value="12/2025" />
+          {data.qualifikation.map((row, i) => (
+            <InfoRow key={i} label={row.label} value={row.value} />
+          ))}
         </div>
       </Card>
 
       <Card>
         <div className="flex items-center gap-2 mb-4">
           <FileText size={20} className="text-slate-500" strokeWidth={1.75} />
-          <h3 className="font-semibold text-slate-800">Vertragsinformationen</h3>
+          <h3 className="font-semibold text-slate-800">
+            {modeId === 'vermoegensverwaltung' ? 'Anstellung & Ziele' : 'Vertragsinformationen'}
+          </h3>
         </div>
         <div className="space-y-3 text-sm">
-          <InfoRow label="Vertrag seit" value="01.01.2015" />
-          <InfoRow label="Provisionsmodell" value="Kombination (AP + BP)" />
-          <InfoRow label="Kuendigungsfrist" value="6 Monate" />
+          {data.vertrag.map((row, i) => (
+            <InfoRow key={i} label={row.label} value={row.value} />
+          ))}
         </div>
       </Card>
     </div>
@@ -65,7 +66,7 @@ function InfoRow({ label, value }) {
   return (
     <div className="flex justify-between">
       <span className="text-slate-400">{label}</span>
-      <span className="text-slate-700 font-medium">{value}</span>
+      <span className="text-slate-700 font-medium text-right">{value}</span>
     </div>
   );
 }

@@ -122,7 +122,7 @@ function loadAgenturData(vermittlerId) {
 
         // 20-F: KI-Portfolio-Einzeiler
         setTimeout(function() {
-            if (typeof renderKIPortfolioEinzeiler === 'function') renderKIPortfolioEinzeiler();
+            // 20-F KI-Einzeiler entfernt
         }, 400);
     }
 
@@ -298,12 +298,6 @@ function showAgenturTab(tabName) {
     if (cockpitKpis) {
         cockpitKpis.style.display = (tabName === 'uebersicht') ? '' : 'none';
     }
-    // 20-F: KI-Einzeiler nur in Übersicht
-    var kiEinzeiler = document.getElementById('kiPortfolioEinzeiler');
-    if (kiEinzeiler) {
-        kiEinzeiler.style.display = (tabName === 'uebersicht') ? '' : 'none';
-    }
-
     // OPT-01: Tagesstart rendering
     if (tabName === 'uebersicht' && typeof renderTagesstart === 'function') {
         renderTagesstart('tagesstartCardA02', 'versicherung');
@@ -873,76 +867,4 @@ window.toggleNotificationDropdown = toggleNotificationDropdown;
 window.initNotifications = initNotifications;
 
 // ========================================
-// 20-F: KI-PORTFOLIO-EINZEILER
-// ========================================
-
-function renderKIPortfolioEinzeiler() {
-    var container = document.getElementById('kiPortfolioEinzeiler');
-    if (!container) return;
-
-    var kunden = (typeof window.mockKunden !== 'undefined') ? window.mockKunden : {};
-    var kundenNames = Object.keys(kunden);
-
-    // Count auslaufende Verträge
-    var auslaufend = 0;
-    var offenePotenziale = 0;
-    var produktVolumen = {};
-
-    kundenNames.forEach(function(name) {
-        var k = kunden[name];
-        // Count gaps (potential)
-        var vertraegeStr = (k.vertraege || []).map(function(v) { return (v.typ || '').toLowerCase(); }).join('|');
-        ['bu', 'berufsunfähigkeit', 'haftpflicht', 'hausrat', 'risiko', 'rechtsschutz', 'unfall', 'pflege', 'wohngebäude'].forEach(function(kw) {
-            if (vertraegeStr.indexOf(kw) < 0) offenePotenziale++;
-        });
-
-        (k.vertraege || []).forEach(function(v) {
-            if (v.details && v.details.indexOf('2026') >= 0) auslaufend++;
-            var sparte = (v.typ || '').split('versicherung')[0].trim();
-            if (!produktVolumen[sparte]) produktVolumen[sparte] = 0;
-            produktVolumen[sparte]++;
-        });
-    });
-
-    // Top product by volume
-    var topProdukt = 'BU-Beratung';
-    var topCount = 0;
-    Object.keys(produktVolumen).forEach(function(key) {
-        if (produktVolumen[key] > topCount) { topCount = produktVolumen[key]; topProdukt = key; }
-    });
-
-    // Top 3 recommendations
-    var empfehlungen = [
-        { name: 'Weber, T.', action: 'BU-Nachversicherung', ap: '2.100' },
-        { name: 'Schmidt, P.', action: 'Fondspolice', ap: '890' },
-        { name: 'Hoffmann, A.', action: 'RLV-Abschluss', ap: '1.250' }
-    ];
-
-    var html = '<div class="ki-einzeiler-card">' +
-        '<div class="ki-einzeiler-main" onclick="toggleKIEinzeilerDetails()">' +
-        '<span class="ki-einzeiler-icon">\u{1F4A1}</span>' +
-        '<span class="ki-einzeiler-text">' + auslaufend + ' Kunden mit auslaufenden Verträgen \u00B7 ' + offenePotenziale + ' offene Potenziale \u00B7 Fokusthema: ' + topProdukt + ' (höchstes Vol.)</span>' +
-        '<button class="ki-einzeiler-toggle" id="kiEinzeilerToggle">\u25BC Details</button></div>' +
-        '<div class="ki-einzeiler-details" id="kiEinzeilerDetails" style="display:none;">' +
-        '<strong>Top-3 Handlungsempfehlungen:</strong><ol>';
-    empfehlungen.forEach(function(e) {
-        html += '<li>' + e.name + ': ' + e.action + ' (' + e.ap + '\u20AC AP) <a href="javascript:void(0)" onclick="if(typeof showToast===\'function\')showToast(\'Kunde wird geöffnet...\',\'info\')">\u2192</a></li>';
-    });
-    html += '</ol></div></div>';
-
-    container.innerHTML = html;
-    container.style.display = '';
-}
-
-function toggleKIEinzeilerDetails() {
-    var details = document.getElementById('kiEinzeilerDetails');
-    var toggle = document.getElementById('kiEinzeilerToggle');
-    if (!details) return;
-    var visible = details.style.display !== 'none';
-    details.style.display = visible ? 'none' : 'block';
-    if (toggle) toggle.innerHTML = visible ? '\u25BC Details' : '\u25B2 Schließen';
-}
-window.renderKIPortfolioEinzeiler = renderKIPortfolioEinzeiler;
-window.toggleKIEinzeilerDetails = toggleKIEinzeilerDetails;
-
 window.__registerModule('agentur-overview-core.js');

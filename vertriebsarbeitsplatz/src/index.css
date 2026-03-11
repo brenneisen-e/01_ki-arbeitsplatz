@@ -1,0 +1,163 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import "tailwindcss";
+
+:root {
+  /* === MODUS-FARBEN (Default: Versicherung) === */
+  --mode-primary: #86181d;
+  --mode-primary-light: #C8102E;
+  --mode-gradient: linear-gradient(135deg, #5a1018 0%, #86181d 40%, #a02028 100%);
+  --mode-accent: #e8c547;
+
+  /* === NEUTRALE FARBEN === */
+  --bg-primary: #f8fafc;
+  --bg-card: #ffffff;
+  --bg-card-hover: #f1f5f9;
+  --bg-table-stripe: #f8fafc;
+  --bg-table-hover: #e2e8f0;
+
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-tertiary: #94a3b8;
+  --text-on-dark: #f8fafc;
+
+  --border-light: #e2e8f0;
+  --border-medium: #cbd5e1;
+  --border-focus: var(--mode-primary-light);
+
+  /* === SEMANTISCHE FARBEN === */
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-danger: #ef4444;
+  --color-info: #3b82f6;
+
+  --badge-kritisch: #ef4444;
+  --badge-kritisch-bg: #fef2f2;
+  --badge-hoch: #f59e0b;
+  --badge-hoch-bg: #fffbeb;
+  --badge-mittel: #3b82f6;
+  --badge-mittel-bg: #eff6ff;
+  --badge-niedrig: #6b7280;
+  --badge-niedrig-bg: #f3f4f6;
+
+  /* === QUELLEN-FARBEN (OPT-19) === */
+  --quelle-finanztransaktion: #10b981;
+  --quelle-bestand: #3b82f6;
+  --quelle-kommunikation: #8b5cf6;
+  --quelle-wettbewerb: #f59e0b;
+  --quelle-lebensereignis: #ec4899;
+  --quelle-markt: #6b7280;
+
+  /* === KARTEN === */
+  --card-radius: 12px;
+  --card-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.06);
+  --card-shadow-hover: 0 4px 6px rgba(0,0,0,0.04), 0 2px 4px rgba(0,0,0,0.06);
+  --card-border: 1px solid var(--border-light);
+
+  /* === SPARTEN-FARBEN === */
+  --sparte-leben: #3b82f6;
+  --sparte-kranken: #10b981;
+  --sparte-schaden: #8b5cf6;
+  --sparte-kfz: #f59e0b;
+}
+
+/* === MODUS-KLASSEN === */
+[data-mode="versicherung"] {
+  --mode-primary: #86181d;
+  --mode-primary-light: #C8102E;
+  --mode-gradient: linear-gradient(135deg, #5a1018 0%, #86181d 40%, #a02028 100%);
+  --mode-accent: #e8c547;
+}
+
+[data-mode="banking"] {
+  --mode-primary: #004d26;
+  --mode-primary-light: #00843d;
+  --mode-gradient: linear-gradient(135deg, #003318 0%, #004d26 40%, #006633 100%);
+  --mode-accent: #7ab648;
+}
+
+[data-mode="vermoegensverwaltung"] {
+  --mode-primary: #1a365d;
+  --mode-primary-light: #2b4c7e;
+  --mode-gradient: linear-gradient(135deg, #0f2340 0%, #1a365d 40%, #2b4c7e 100%);
+  --mode-accent: #c4a35a;
+}
+
+/* === GLOBALE STILE === */
+/* WICHTIG: Kein * { margin/padding: 0 } hier!
+   Tailwind v4 hat seinen eigenen Reset in @layer base.
+   Un-layered CSS wuerde alle Tailwind-Utilities ueberschreiben. */
+
+@layer base {
+  html {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    color: var(--text-primary);
+    background-color: var(--bg-primary);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    min-width: 1024px;
+    min-height: 100vh;
+  }
+
+  #root {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+/* === SCROLLBAR === */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-medium);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-tertiary);
+}
+
+/* === ANIMATIONEN === */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@layer utilities {
+  /* Font Mono mit JetBrains Mono */
+  .font-mono {
+    font-family: 'JetBrains Mono', monospace !important;
+    font-feature-settings: 'tnum';
+  }
+
+  .animate-fade-in-up {
+    animation: fadeInUp 300ms ease-out forwards;
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 200ms ease-out forwards;
+  }
+
+  .animate-scale-in {
+    animation: scaleIn 200ms ease-out forwards;
+  }
+}

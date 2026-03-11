@@ -46,12 +46,16 @@ function showAgenturOverview(vermittlerId) {
     if (vvDetailAO) vvDetailAO.style.display = 'none';
     if (agenturOverview) agenturOverview.style.display = 'block';
 
-    // Öffne den Agentur-Chat automatisch (Vertriebs-Assistent)
+    // Öffne den Agentur-Chat automatisch als Slide-In (Vertriebs-Assistent)
     const agenturChatWidget = document.getElementById('agenturChatWidget');
     const agenturChatToggle = document.getElementById('agenturChatToggle');
+    const agenturChatBackdrop = document.getElementById('agenturChatBackdrop');
 
     if (agenturChatWidget) {
-        agenturChatWidget.style.display = 'flex';
+        agenturChatWidget.classList.add('chat-open');
+    }
+    if (agenturChatBackdrop) {
+        agenturChatBackdrop.classList.add('chat-backdrop-visible');
     }
 
     // Toggle Button ausblenden, da Chat bereits geöffnet ist
@@ -306,6 +310,17 @@ function showAgenturTab(tabName) {
     if (tabName === 'uebersicht' && typeof renderDashboardWidgets === 'function') {
         renderDashboardWidgets('widgetGrid');
     }
+
+    // OPT-27: Chat-Widget — close slide-in on tab switch, show toggle icon on non-overview tabs
+    var chatWidget = document.getElementById('agenturChatWidget');
+    var chatToggle = document.getElementById('agenturChatToggle');
+    var chatBackdrop = document.getElementById('agenturChatBackdrop');
+    if (chatWidget) chatWidget.classList.remove('chat-open');
+    if (chatBackdrop) chatBackdrop.classList.remove('chat-backdrop-visible');
+    if (chatToggle) {
+        // Show toggle icon on all tabs so user can open chat anytime
+        chatToggle.style.display = 'flex';
+    }
 }
 
 /**
@@ -482,6 +497,25 @@ function fillNeugeschaeftTab(agenturData) {
         spartenContainer.innerHTML = `<div class="sparten-donut-layout"><div class="sparten-donut-svg">${donutSvg}</div><div class="sparten-legend">${legend}</div></div>`;
     }
 
+    // Top 5 Kunden Neugeschäft
+    const topKundenEl = document.getElementById('ngTopKunden');
+    if (topKundenEl) {
+        const topKunden = [
+            { name: 'Schmidt, Thomas', val: 4280 },
+            { name: 'Weber, Sabine', val: 3150 },
+            { name: 'Hoffmann, Anna', val: 2890 },
+            { name: 'Braun, Michael', val: 2640 },
+            { name: 'Fischer, Julia', val: 2180 }
+        ];
+        topKundenEl.innerHTML = topKunden.map((k, i) =>
+            '<div class="ng-top-kunden-item">' +
+            '<span class="ng-top-kunden-rank">' + (i + 1) + '</span>' +
+            '<span class="ng-top-kunden-name">' + k.name + '</span>' +
+            '<span class="ng-top-kunden-val">€' + k.val.toLocaleString('de-DE') + '</span>' +
+            '</div>'
+        ).join('');
+    }
+
     // Vertragstabelle befüllen
     if (mockNeugeschaeft.length === 0) generateMockVertraege();
     fillNeugeschaeftTable();
@@ -517,18 +551,20 @@ function fillStornoTab(agenturData) {
     const stornoSpaet = (stornoGesamt * 0.6).toFixed(1);
     const nettoEntwicklung = (agenturData?.neugeschaeft || 0) - ((agenturData?.bestand || 0) * stornoGesamt / 100);
 
+    var stornoAnzahl = Math.floor(Math.random() * 40) + 15;
     setElementText('stornoFrueh', `${stornoFrueh}%`);
     setElementText('stornoSpaet', `${stornoSpaet}%`);
     setElementText('stornoNetto', formatCurrency(nettoEntwicklung));
+    setElementText('stornoAnzahl', stornoAnzahl.toLocaleString('de-DE'));
 
     // Storno-Gründe
     const gruendeContainer = document.getElementById('stornoGruende');
     if (gruendeContainer) {
         const gruende = [
             { name: 'Preis / zu teuer', count: Math.floor(Math.random() * 30) + 20, color: '#ef4444' },
-            { name: 'Wettbewerber', count: Math.floor(Math.random() * 20) + 15, color: '#f97316' },
-            { name: 'Leistung nicht zufrieden', count: Math.floor(Math.random() * 15) + 10, color: '#eab308' },
-            { name: 'Finanzielle Gründe', count: Math.floor(Math.random() * 15) + 8, color: '#8b5cf6' },
+            { name: 'Finanzielle Gründe', count: Math.floor(Math.random() * 15) + 8, color: '#f87171' },
+            { name: 'Wettbewerber', count: Math.floor(Math.random() * 20) + 15, color: '#f59e0b' },
+            { name: 'Leistung nicht zufrieden', count: Math.floor(Math.random() * 15) + 10, color: '#fb923c' },
             { name: 'Kein Bedarf mehr', count: Math.floor(Math.random() * 10) + 5, color: '#94a3b8' }
         ];
         const maxCount = Math.max(...gruende.map(g => g.count));
@@ -669,7 +705,7 @@ function fillQualitaetTab(agenturData) {
             { datum: new Date(now.getFullYear(), now.getMonth(), now.getDate() - 5), text: 'IDD-Jahresaudit Beratungsdoku', ergebnis: 'bestanden', label: 'Bestanden' },
             { datum: new Date(now.getFullYear(), now.getMonth(), now.getDate() - 18), text: 'Stichprobe Risikoanalysen Q1', ergebnis: 'bestanden', label: 'Bestanden' },
             { datum: new Date(now.getFullYear(), now.getMonth() - 1, 12), text: 'DSGVO-Konformitätsprüfung', ergebnis: 'teilweise', label: 'Teilweise' },
-            { datum: new Date(now.getFullYear(), now.getMonth() - 1, 3), text: 'ESG-Beratungspflicht Audit', ergebnis: 'teilweise', label: 'Nacharbeit' },
+            { datum: new Date(now.getFullYear(), now.getMonth() - 1, 3), text: 'ESG-Beratungspflicht Audit', ergebnis: 'nacharbeit', label: 'Nacharbeit' },
             { datum: new Date(now.getFullYear(), now.getMonth() - 2, 20), text: 'GwG-Prüfung Identifikation', ergebnis: 'bestanden', label: 'Bestanden' },
             { datum: new Date(now.getFullYear(), now.getMonth() - 2, 8), text: 'Beschwerdemanagement Review', ergebnis: 'bestanden', label: 'Bestanden' }
         ];
@@ -719,13 +755,32 @@ function renderTagesstart(targetId, mode) {
         ];
     }
 
+    // OPT-27: Kompakte Tagesstart-Summary (immer sichtbar)
+    var summaryParts = [];
+    for (var si = 0; si < items.length; si++) {
+        var sLabel = items[si].label;
+        summaryParts.push(sLabel);
+    }
+    var summaryLine = summaryParts.join(' · ');
+
+    // Fokus-Info: Top-Potential aus OPT-26
+    var fokusLine = '';
+    if (!isBanking && typeof window.versicherungPotentiale !== 'undefined' && window.versicherungPotentiale.length > 0) {
+        var topPot = window.versicherungPotentiale.find(function(p) { return p.prioritaet === 'hoch'; }) || window.versicherungPotentiale[0];
+        fokusLine = 'Fokus: ' + topPot.kundenName + ' – ' + topPot.produkt;
+    } else if (isBanking && typeof window.bankPotentiale !== 'undefined' && window.bankPotentiale.length > 0) {
+        var topBPot = window.bankPotentiale.find(function(p) { return p.prioritaet === 'hoch'; }) || window.bankPotentiale[0];
+        fokusLine = 'Fokus: ' + topBPot.kundenName + ' – ' + topBPot.produkt;
+    }
+
     var html = '<div class="tagesstart-card tagesstart-collapsed">' +
         '<div class="tagesstart-header" onclick="window._toggleTagesstart(this)" style="cursor:pointer;">' +
             '<div class="tagesstart-greeting">' +
-                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>' +
+                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>' +
                 '<div>' +
-                    '<div class="tagesstart-gruss">' + gruss + '</div>' +
-                    '<div class="tagesstart-datum">' + datumStr + '</div>' +
+                    '<div class="tagesstart-gruss">' + gruss + ', Maria <span class="tagesstart-datum-inline">' + datumStr + '</span></div>' +
+                    '<div class="tagesstart-summary">' + summaryLine + '</div>' +
+                    (fokusLine ? '<div class="tagesstart-fokus">' + fokusLine + '</div>' : '') +
                 '</div>' +
             '</div>' +
             '<svg class="tagesstart-toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><polyline points="6 9 12 15 18 9"/></svg>' +

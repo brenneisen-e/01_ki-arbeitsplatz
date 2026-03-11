@@ -1251,17 +1251,41 @@
 
 .agentur-chat-widget {
     position: fixed;
-    bottom: 24px;
-    right: 24px;
+    top: 0;
+    right: 0;
     width: 420px;
-    height: 560px;
+    height: 100vh;
     background: white;
-    border-radius: 16px;
-    box-shadow: 0 10px 50px rgba(0, 0, 0, 0.2);
+    border-radius: 0;
+    box-shadow: -4px 0 24px rgba(0, 0, 0, 0.15);
     display: flex;
     flex-direction: column;
-    z-index: 999;
+    z-index: 1001;
     overflow: hidden;
+    transform: translateX(100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.agentur-chat-widget.chat-open {
+    transform: translateX(0);
+}
+
+.agentur-chat-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.25);
+    z-index: 1000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.agentur-chat-backdrop.chat-backdrop-visible {
+    opacity: 1;
+    pointer-events: auto;
 }
 
 .agentur-chat-header {
@@ -1610,6 +1634,53 @@
     border-bottom: 2px solid #86BC25;
 }
 
+.stammdaten-aktivitaeten {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.stamm-aktivitaet {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid #f1f5f9;
+    font-size: 14px;
+}
+
+.stamm-aktivitaet:last-child {
+    border-bottom: none;
+}
+
+.stamm-akt-datum {
+    color: #94a3b8;
+    font-size: 13px;
+    font-weight: 500;
+    white-space: nowrap;
+    min-width: 80px;
+}
+
+.stamm-akt-text {
+    color: #334155;
+}
+
+.stammdaten-notizen {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.stamm-notiz {
+    font-size: 14px;
+    color: #475569;
+    line-height: 1.5;
+    padding: 12px;
+    background: #f8fafc;
+    border-radius: 8px;
+    border-left: 3px solid #86BC25;
+}
+
 .stammdaten-grid-new {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -1745,6 +1816,60 @@
     font-size: 14px;
     color: #94a3b8;
     margin-top: 4px;
+}
+
+.kpi-detail-sub-extra {
+    font-size: 13px;
+    color: #64748b;
+    margin-top: 6px;
+    padding-top: 6px;
+    border-top: 1px solid #f1f5f9;
+}
+
+/* Neugeschäft Two-Column Layout */
+.ng-two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--header-content-gap, 24px);
+}
+
+.ng-top-kunden-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.ng-top-kunden-item:last-child {
+    border-bottom: none;
+}
+
+.ng-top-kunden-rank {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: #f1f5f9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+    color: #475569;
+    flex-shrink: 0;
+}
+
+.ng-top-kunden-name {
+    flex: 1;
+    font-size: 14px;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.ng-top-kunden-val {
+    font-size: 14px;
+    font-weight: 700;
+    color: #059669;
 }
 
 /* Sparten Chart */
@@ -2586,6 +2711,7 @@
 .qual-check-status.warn {
     background: #fef3c7;
     color: #92400e;
+    font-weight: 700;
 }
 
 .qual-check-status.fail {
@@ -2641,6 +2767,13 @@
 .qual-pruefung-ergebnis.teilweise {
     background: #fef3c7;
     color: #92400e;
+    font-weight: 700;
+}
+
+.qual-pruefung-ergebnis.nacharbeit {
+    background: #fee2e2;
+    color: #dc2626;
+    font-weight: 700;
 }
 
 .qual-pruefung-ergebnis.offen {

@@ -431,9 +431,6 @@
     grid-template-columns: repeat(4, 1fr);
     gap: 16px;
     margin-bottom: 20px;
-    max-width: 900px;
-    margin-left: auto;
-    margin-right: auto;
 }
 
 .unified-pot-kpi-box {
@@ -494,9 +491,6 @@
     margin-bottom: 16px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.06);
     border: 1px solid #e2e8f0;
-    max-width: 900px;
-    margin-left: auto;
-    margin-right: auto;
 }
 
 .unified-pot-pipeline-label {
@@ -558,6 +552,50 @@
     opacity: 0.5;
 }
 
+/* OPT-27: Horizontal pipeline bar */
+.unified-pot-pipeline-horizontal .unified-pot-pipeline-funnel { display: none; }
+
+.unified-pot-pipeline-bar-row {
+    display: flex;
+    border-radius: 10px;
+    overflow: hidden;
+    min-height: 48px;
+}
+
+.unified-pot-pipeline-bar-segment {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 12px;
+    color: white;
+    min-width: 0;
+    transition: flex 0.3s ease;
+}
+
+.unified-pot-pipeline-bar-segment:first-child {
+    border-radius: 10px 0 0 10px;
+}
+
+.unified-pot-pipeline-bar-segment:last-child {
+    border-radius: 0 10px 10px 0;
+}
+
+.unified-pot-pipeline-bar-count {
+    font-size: 20px;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.unified-pot-pipeline-bar-label {
+    font-size: 13px;
+    font-weight: 500;
+    opacity: 0.9;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 /* Legacy arrow class kept for compat */
 .unified-pot-pipeline-arrow {
     display: flex;
@@ -579,13 +617,10 @@
     gap: 6px;
     margin-bottom: 16px;
     flex-wrap: wrap;
-    max-width: 900px;
     background: #f1f5f9;
     border-radius: 10px;
     padding: 4px;
     width: fit-content;
-    margin-left: auto;
-    margin-right: auto;
 }
 
 .unified-pot-filter-btn {
@@ -634,9 +669,6 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
-    max-width: 900px;
-    margin-left: auto;
-    margin-right: auto;
 }
 
 /* Individual Card – combines A-02 table layout with B-02 expandable detail */
@@ -842,6 +874,17 @@
 
 .unified-pot-group-body.open {
     display: block;
+}
+
+/* OPT-27: Quellen/Source Tags */
+.unified-pot-quelle-tag {
+    font-size: 11px;
+    padding: 1px 7px;
+    border-radius: 10px;
+    border: 1px solid currentColor;
+    font-weight: 600;
+    background: white;
+    white-space: nowrap;
 }
 
 /* Child cards within a group – no outer border/shadow, indented */
@@ -1471,6 +1514,26 @@
 .tagesstart-datum {
     font-size: 15px;
     color: #64748b;
+}
+
+.tagesstart-datum-inline {
+    font-size: 14px;
+    color: #94a3b8;
+    font-weight: 400;
+    margin-left: 8px;
+}
+
+.tagesstart-summary {
+    font-size: 14px;
+    color: #475569;
+    margin-top: 2px;
+}
+
+.tagesstart-fokus {
+    font-size: 13px;
+    color: #059669;
+    font-weight: 600;
+    margin-top: 2px;
 }
 
 .tagesstart-items {

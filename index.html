@@ -1359,11 +1359,79 @@
                                             <button class="action-btn secondary" onclick="event.stopPropagation();"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> Termin vereinbaren</button>
                                         </div></div>
                                     </div>
+
+                                    <!-- 4. Anna Hoffmann - BU Ärzte-Tarif (Hoch) -->
+                                    <div class="potential-card clickable" style="cursor:pointer;" onclick="toggleBeraterPotentialDetail('ins-pot-top4', this)">
+                                        <div class="potential-card-left">
+                                            <div class="potential-kunde">
+                                                <strong>Anna Hoffmann</strong>
+                                                <span class="potential-kunden-id">KD00004</span>
+                                                <span class="impuls-priority high">Hoch</span>
+                                            </div>
+                                            <div class="potential-produkt">BU Ärzte-Tarif</div>
+                                            <div class="potential-beschreibung">Ärztin 105k, nur Haftpflicht+Hausrat. BU fehlt komplett – kritisch.</div>
+                                        </div>
+                                        <div class="potential-card-right">
+                                            <div class="potential-kennzahl">
+                                                <span class="potential-kennzahl-label">Prämie</span>
+                                                <span class="potential-kennzahl-value">€3.600/J.</span>
+                                            </div>
+                                            <div class="potential-kennzahl">
+                                                <span class="potential-kennzahl-label">Provision</span>
+                                                <span class="potential-kennzahl-value prov">€1.800</span>
+                                            </div>
+                                        </div>
+                                        <span class="impuls-expand" style="display:flex;align-items:center;margin-left:8px;transition:transform 0.2s;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="6 9 12 15 18 9"></polyline></svg></span>
+                                    </div>
+                                    <div class="impuls-detail" id="ins-pot-top4" style="display:none;">
+                                        <div class="impuls-detail-section"><h4>Herleitung</h4><div class="herleitung-grid">
+                                            <div class="herleitung-item"><span class="herleitung-label">Datenquelle</span><span class="herleitung-value">Bestandsanalyse</span></div>
+                                            <div class="herleitung-item"><span class="herleitung-label">Erkannte Situation</span><span class="herleitung-value">Ärztin, 105k Netto, keine BU – Absicherungsquote 0.2%</span></div>
+                                        </div></div>
+                                        <div class="impuls-detail-section"><h4>Aktionen</h4><div class="impuls-actions">
+                                            <button class="action-btn primary" onclick="event.stopPropagation(); openKundenDetailDualView('Anna Hoffmann', 'KD00004')">Kunde öffnen</button>
+                                            <button class="action-btn secondary" onclick="event.stopPropagation();">Termin vereinbaren</button>
+                                        </div></div>
+                                    </div>
+
+                                    <!-- 5. Michael Braun - Pflegezusatz -->
+                                    <div class="potential-card clickable" style="cursor:pointer;" onclick="toggleBeraterPotentialDetail('ins-pot-top5', this)">
+                                        <div class="potential-card-left">
+                                            <div class="potential-kunde">
+                                                <strong>Michael Braun</strong>
+                                                <span class="potential-kunden-id">KD00005</span>
+                                                <span class="impuls-priority medium">Mittel</span>
+                                            </div>
+                                            <div class="potential-produkt">Pflege-Zusatzversicherung</div>
+                                            <div class="potential-beschreibung">62 Jahre, Ruhestand. Pflegelücke ca. €2.100/Mon. absichern.</div>
+                                        </div>
+                                        <div class="potential-card-right">
+                                            <div class="potential-kennzahl">
+                                                <span class="potential-kennzahl-label">Prämie</span>
+                                                <span class="potential-kennzahl-value">€1.440/J.</span>
+                                            </div>
+                                            <div class="potential-kennzahl">
+                                                <span class="potential-kennzahl-label">Provision</span>
+                                                <span class="potential-kennzahl-value prov">€720</span>
+                                            </div>
+                                        </div>
+                                        <span class="impuls-expand" style="display:flex;align-items:center;margin-left:8px;transition:transform 0.2s;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="6 9 12 15 18 9"></polyline></svg></span>
+                                    </div>
+                                    <div class="impuls-detail" id="ins-pot-top5" style="display:none;">
+                                        <div class="impuls-detail-section"><h4>Herleitung</h4><div class="herleitung-grid">
+                                            <div class="herleitung-item"><span class="herleitung-label">Datenquelle</span><span class="herleitung-value">Bestandsanalyse + Lebensereignis</span></div>
+                                            <div class="herleitung-item"><span class="herleitung-label">Erkannte Situation</span><span class="herleitung-value">62 Jahre, 25 Jahre Bestandskunde, keine Pflegeabsicherung</span></div>
+                                        </div></div>
+                                        <div class="impuls-detail-section"><h4>Aktionen</h4><div class="impuls-actions">
+                                            <button class="action-btn primary" onclick="event.stopPropagation(); openKundenDetailDualView('Michael Braun', 'KD00005')">Kunde öffnen</button>
+                                            <button class="action-btn secondary" onclick="event.stopPropagation();">Termin vereinbaren</button>
+                                        </div></div>
+                                    </div>
                                 </div>
 
                                 <!-- Weitere Potentiale (ausklappbar) -->
                                 <div class="weitere-potentiale-toggle" onclick="toggleWeiterePotentiale()">
-                                    <span class="weitere-badge">+8</span>
+                                    <span class="weitere-badge">+6</span>
                                     <span>Weitere Potentiale anzeigen</span>
                                     <svg class="toggle-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
                                         <polyline points="6 9 12 15 18 9"></polyline>
@@ -2043,6 +2111,29 @@
 
                 <!-- Tab Content: Kundenliste -->
                 <div class="agentur-tab-content" id="tab-kundenliste">
+                    <!-- OPT-27: KPI-Header fuer Konsistenz mit allen anderen Tabs -->
+                    <div class="kpi-detail-grid" id="kundenKpiGrid">
+                        <div class="kpi-detail-card">
+                            <div class="kpi-detail-header">Kunden</div>
+                            <div class="kpi-detail-value" id="kundenAnzahl">11</div>
+                            <div class="kpi-detail-sub">Aktive Kunden</div>
+                        </div>
+                        <div class="kpi-detail-card">
+                            <div class="kpi-detail-header">Ø Verträge</div>
+                            <div class="kpi-detail-value" id="kundenAvgVertraege">3,8</div>
+                            <div class="kpi-detail-sub">Pro Kunde</div>
+                        </div>
+                        <div class="kpi-detail-card">
+                            <div class="kpi-detail-header">Ø Bestandsvolumen</div>
+                            <div class="kpi-detail-value" id="kundenAvgBestand">€4.636/J.</div>
+                            <div class="kpi-detail-sub">Pro Kunde</div>
+                        </div>
+                        <div class="kpi-detail-card">
+                            <div class="kpi-detail-header">Ø NPS</div>
+                            <div class="kpi-detail-value" id="kundenAvgNps">7,2</div>
+                            <div class="kpi-detail-sub">Net Promoter Score</div>
+                        </div>
+                    </div>
                     <div class="kundenliste-header">
                         <h3 class="section-title">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
@@ -2457,6 +2548,27 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Letzte Aktivitäten -->
+                        <div class="stammdaten-section">
+                            <h3>Letzte Aktivitäten</h3>
+                            <div class="stammdaten-aktivitaeten">
+                                <div class="stamm-aktivitaet"><span class="stamm-akt-datum">08.03.2026</span><span class="stamm-akt-text">Quartalsmeeting mit Vertriebsleitung</span></div>
+                                <div class="stamm-aktivitaet"><span class="stamm-akt-datum">03.03.2026</span><span class="stamm-akt-text">Produktfreigabe KV-Tarif XL erneuert</span></div>
+                                <div class="stamm-aktivitaet"><span class="stamm-akt-datum">25.02.2026</span><span class="stamm-akt-text">IDD-Weiterbildung „Nachhaltigkeit" absolviert</span></div>
+                                <div class="stamm-aktivitaet"><span class="stamm-akt-datum">18.02.2026</span><span class="stamm-akt-text">Bonusvereinbarung 2026 unterzeichnet</span></div>
+                                <div class="stamm-aktivitaet"><span class="stamm-akt-datum">10.02.2026</span><span class="stamm-akt-text">Stornohaftung-Review abgeschlossen</span></div>
+                            </div>
+                        </div>
+
+                        <!-- Notizen -->
+                        <div class="stammdaten-section">
+                            <h3>Notizen</h3>
+                            <div class="stammdaten-notizen">
+                                <div class="stamm-notiz">Agentur plant Expansion in den Bereich bAV ab Q3/2026. Schulungsbedarf für betriebliche Altersvorsorge vormerken.</div>
+                                <div class="stamm-notiz">Besondere Stärke im Segment Ärzte/Heilberufe — Cross-Selling-Potentiale mit BU-Spezialtarifen nutzen.</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -2481,22 +2593,19 @@
                         <div class="kpi-detail-card">
                             <div class="kpi-detail-header">Abschlussquote</div>
                             <div class="kpi-detail-value" id="ngAbschlussquote">0%</div>
-                            <div class="kpi-detail-sub">Policiert / Eingereicht</div>
-                        </div>
-                        <div class="kpi-detail-card">
-                            <div class="kpi-detail-header">Ø Beitrag</div>
-                            <div class="kpi-detail-value" id="ngDurchschnitt">€0</div>
-                            <div class="kpi-detail-sub">Pro Vertrag</div>
-                        </div>
-                        <div class="kpi-detail-card">
-                            <div class="kpi-detail-header">Cross-Selling-Quote</div>
-                            <div class="kpi-detail-value" id="ngCrossSelling">0%</div>
-                            <div class="kpi-detail-sub">Kunden mit >1 Vertrag</div>
+                            <div class="kpi-detail-sub">Policiert / Eingereicht · Ø <span id="ngDurchschnitt">€0</span> pro Vertrag</div>
+                            <div class="kpi-detail-sub-extra">Cross-Selling: <strong id="ngCrossSelling">0%</strong></div>
                         </div>
                     </div>
-                    <div class="sparten-chart">
-                        <h3>Spartenverteilung Neugeschäft</h3>
-                        <div class="sparten-bars" id="spartenNeugeschaeft"></div>
+                    <div class="ng-two-col">
+                        <div class="sparten-chart">
+                            <h3>Spartenverteilung Neugeschäft</h3>
+                            <div class="sparten-bars" id="spartenNeugeschaeft"></div>
+                        </div>
+                        <div class="sparten-chart">
+                            <h3>Top 5 Kunden (Neugeschäft)</h3>
+                            <div id="ngTopKunden" class="ng-top-kunden"></div>
+                        </div>
                     </div>
 
                     <!-- Vertragstabelle Neugeschäft -->
@@ -2550,7 +2659,7 @@
                         <div class="kpi-detail-card">
                             <div class="kpi-detail-header">Vertragsanzahl</div>
                             <div class="kpi-detail-value" id="bestandVertraege">0</div>
-                            <div class="kpi-detail-sub">Aktive Verträge</div>
+                            <div class="kpi-detail-sub">Aktive Verträge · Ø <span id="bestandDichte">0</span> pro Kunde</div>
                         </div>
                         <div class="kpi-detail-card">
                             <div class="kpi-detail-header">Bestandswachstum</div>
@@ -2561,11 +2670,6 @@
                             <div class="kpi-detail-header">Kundenzahl</div>
                             <div class="kpi-detail-value" id="bestandKunden">0</div>
                             <div class="kpi-detail-sub">Aktive Kunden</div>
-                        </div>
-                        <div class="kpi-detail-card">
-                            <div class="kpi-detail-header">Verträge pro Kunde</div>
-                            <div class="kpi-detail-value" id="bestandDichte">0</div>
-                            <div class="kpi-detail-sub">Vertragsdichte</div>
                         </div>
                     </div>
 
@@ -2639,6 +2743,11 @@
                             <div class="kpi-detail-header">Netto-Bestandsentwicklung</div>
                             <div class="kpi-detail-value" id="stornoNetto">€0</div>
                             <div class="kpi-detail-sub">Neugeschäft - Storno</div>
+                        </div>
+                        <div class="kpi-detail-card">
+                            <div class="kpi-detail-header">Stornierte Verträge</div>
+                            <div class="kpi-detail-value" id="stornoAnzahl">0</div>
+                            <div class="kpi-detail-sub">Anzahl YTD</div>
                         </div>
                     </div>
                     <div class="storno-reasons">
@@ -2723,7 +2832,7 @@
                                 <line x1="4" y1="14" x2="16" y2="14"></line>
                             </svg>
                             <h3>Provisionsmodell-Simulation</h3>
-                            <span class="header-badge">AlphaProtect vs BetaCare</span>
+                            <span class="model-compare-label">AlphaProtect vs BetaCare</span>
                             <div class="header-spacer"></div>
                             <div class="perspective-toggle">
                                 <button class="perspective-btn active" onclick="switchPerspective('vermittler')">
@@ -3228,16 +3337,7 @@
                             <div class="kpi-detail-header">Schulungsstatus</div>
                             <div class="kpi-detail-value" id="qualSchulung">0/15h</div>
                             <div class="kpi-detail-sub">Weiterbildung (&sect;34d GewO)</div>
-                        </div>
-                        <div class="kpi-detail-card">
-                            <div class="kpi-detail-header">Dokumentationsquote</div>
-                            <div class="kpi-detail-value" id="qualDoku">0%</div>
-                            <div class="kpi-detail-sub">Vollst&auml;ndige Protokolle</div>
-                        </div>
-                        <div class="kpi-detail-card">
-                            <div class="kpi-detail-header">Underwriting-Quote</div>
-                            <div class="kpi-detail-value" id="qualUnderwriting">0%</div>
-                            <div class="kpi-detail-sub">Annahme-Quote</div>
+                            <div class="kpi-detail-sub-extra">Doku: <strong id="qualDoku">0%</strong> · UW: <strong id="qualUnderwriting">0%</strong></div>
                         </div>
                     </div>
 
@@ -4270,7 +4370,8 @@
         <span class="chat-badge">KI</span>
     </button>
 
-    <div class="agentur-chat-widget" id="agenturChatWidget" style="display: none;">
+    <div class="agentur-chat-backdrop" id="agenturChatBackdrop" onclick="toggleAgenturChat()"></div>
+    <div class="agentur-chat-widget" id="agenturChatWidget">
         <div class="agentur-chat-header">
             <div class="agentur-chat-title">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">

@@ -4345,23 +4345,7 @@
             </div>
             <!-- OPT-24: Portal-Slot für globale Header-Controls (werden per JS hierher verschoben) -->
             <div id="a10ControlsSlot" class="global-controls-slot"></div>
-            <!-- Kunden-Zeile (sichtbar auf A-10) -->
-            <div class="kunden-switch-dropdown" id="a10KundenZeile">
-                <label>Kunde:</label>
-                <select id="kundenSwitchSelect" onchange="switchKundeDropdown(this.value)">
-                    <option value="Peter Schmidt">Peter Schmidt</option>
-                    <option value="Amira König">Amira König</option>
-                    <option value="Thomas Weber">Thomas Weber</option>
-                    <option value="Anna Hoffmann">Anna Hoffmann</option>
-                    <option value="Michael Braun">Michael Braun</option>
-                    <option value="Lisa Müller">Lisa Müller</option>
-                    <option value="Klaus Meier">Klaus Meier</option>
-                    <option value="Matthias Engel">Matthias Engel</option>
-                    <option value="Christian Bauer">Christian Bauer</option>
-                    <option value="Martin Wolf">Martin Wolf</option>
-                    <option value="Eva Hartmann">Eva Hartmann</option>
-                </select>
-            </div>
+            <!-- OPT-24: Kunden-Dropdown ENTFERNT – Header ist überall identisch -->
             <div class="agentur-header-tabs">
                 <button class="agentur-tab" onclick="navigateToAgenturTab('uebersicht')">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
@@ -7812,12 +7796,8 @@
           </div>
           <!-- OPT-24: Portal-Slot für globale Header-Controls -->
           <div id="vv10ControlsSlot" class="global-controls-slot"></div>
-          <!-- Mandant-Zeile (NEU: nur auf VV-10 Detail) -->
-          <div class="kunden-switch-dropdown" style="display:flex;align-items:center;gap:8px;padding:0 20px;">
-            <label style="font-weight:600;color:#64748b;font-size:14px;">Mandant:</label>
-            <span id="vvDetailTitle" style="font-weight:700;font-size:15px;color:#1e293b;">-</span>
-            <span id="vvDetailSubtitle" style="font-size:13px;color:#64748b;">-</span>
-          </div>
+          <!-- OPT-24: Mandant-Zeile ENTFERNT – Header ist überall identisch -->
+          <!-- vvDetailTitle/vvDetailSubtitle jetzt unsichtbar (JS-Referenzen bleiben harmlos) -->
           <!-- Detail Tab Navigation -->
           <div class="vv-header-tabs">
             <button class="vv-detail-tab-btn active" data-tab="stammdaten" onclick="showVVDetailTab('stammdaten')">

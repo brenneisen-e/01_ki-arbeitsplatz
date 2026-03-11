@@ -7962,11 +7962,7 @@ button svg,
     /* Now positioned inside .header-controls-a10 via flexbox */
 }
 
-.kunden-shared-header .kunden-switch-dropdown {
-    position: absolute;
-    right: 32px;
-    z-index: 2;
-}
+/* kunden-switch-dropdown: ENTFERNT aus A-10 Header (OPT-24) */
 
 .kunden-shared-header .agentur-header-text h1 {
     color: white;

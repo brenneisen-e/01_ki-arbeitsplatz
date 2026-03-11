@@ -174,11 +174,11 @@ function openKundenDetail(kundenName, vermittlerId) {
         // Update shared header on A-10
         updateKundenSharedHeader(kundenName, vermittlerId);
 
+        // OPT-24: Globale Header-Controls nach A-10 verschieben
+        if (typeof moveGlobalControls === 'function') moveGlobalControls('a10ControlsSlot');
+
         // Aktiviere FIDA in Kundendetail wenn es in Potentialanalyse aktiv war
         initKundenFidaState();
-
-        // Sync A-10 finance toggle with current financeMode
-        syncA10FinanceToggle();
 
         // Dispatch event for Page ID Tracker
         document.dispatchEvent(new CustomEvent('viewChanged', {
@@ -304,6 +304,9 @@ function updateOpenFinanceTable(mode) {
 
 function closeKundenDetail() {
     document.getElementById('kundenDetailPage').style.display = 'none';
+
+    // OPT-24: Globale Header-Controls zurück nach A-02 verschieben
+    if (typeof moveGlobalControls === 'function') moveGlobalControls('a02ControlsSlot');
 
     // Remove dual view if active
     if (typeof closeDualView === 'function') closeDualView();

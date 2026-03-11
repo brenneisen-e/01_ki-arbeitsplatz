@@ -58,6 +58,9 @@
             // Set mode
             if (typeof setMode === 'function') setMode('vermoegensverwaltung');
 
+            // OPT-24: Globale Header-Controls nach VV-02 verschieben
+            if (typeof moveGlobalControls === 'function') moveGlobalControls('vv02ControlsSlot');
+
             // Fill data
             fillVVHeader();
             fillVVKPIs();
@@ -415,6 +418,9 @@
 
             var detail = document.getElementById('vvDetailPage');
             if (detail) detail.style.display = 'block';
+
+            // OPT-24: Globale Header-Controls nach VV-10 verschieben
+            if (typeof moveGlobalControls === 'function') moveGlobalControls('vv10ControlsSlot');
 
             // Fill header (OPT-24: Berater info + Mandant line)
             var beraterTitle = document.getElementById('vvDetailBeraterTitle');
@@ -845,12 +851,16 @@
     function backFromVVDetail() {
         var detail = document.getElementById('vvDetailPage');
         if (detail) detail.style.display = 'none';
-        showVVOverview();
+        showVVOverview(); // showVVOverview already moves controls to vv02ControlsSlot
     }
 
     function backFromVVOverview() {
         var vvPage = document.getElementById('vvOverviewPage');
         if (vvPage) vvPage.style.display = 'none';
+
+        // OPT-24: Controls zurück nach A-02
+        if (typeof moveGlobalControls === 'function') moveGlobalControls('a02ControlsSlot');
+
         if (typeof backToLanding === 'function') {
             backToLanding();
         } else {

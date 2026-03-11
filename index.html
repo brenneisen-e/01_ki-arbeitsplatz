@@ -798,6 +798,8 @@
                         Potentiale
                     </button>
                 </div>
+                <!-- OPT-24: Global Header Controls Container (wird per JS zwischen Pages verschoben) -->
+                <div id="a02ControlsSlot" class="global-controls-slot">
                 <!-- Modus-Selector Dropdown (rechts im Header) -->
                 <div class="view-mode-dropdown" id="viewModeDropdown">
                     <button class="view-mode-dropdown-toggle" id="viewModeToggle" onclick="toggleViewModeDropdown()">
@@ -896,6 +898,7 @@
                     </button>
                     <div class="notification-dropdown" id="notificationDropdown" style="display:none;"></div>
                 </div>
+                </div><!-- /a02ControlsSlot -->
             </div>
 
             <!-- Ebene 1: Cockpit-Übersicht (Big Numbers) -->
@@ -4340,20 +4343,10 @@
                     <!-- 20-B: Lebenssituations-Badge GELÖSCHT (OPT-24) -->
                 </div>
             </div>
-            <div class="header-controls-a10">
-                <div class="finance-mode-toggle" id="a10FinanceModeToggle">
-                    <button class="finance-mode-btn" data-fmode="closed" onclick="setFinanceMode('closed')" title="Nur eigene Daten">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0110 0v4"></path></svg>
-                        Closed
-                    </button>
-                    <button class="finance-mode-btn" data-fmode="open" onclick="setFinanceMode('open')" title="Alle Institute inkl. Genossenschaftsgruppe">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 019.9-1"></path></svg>
-                        Open
-                    </button>
-                </div>
-                <span id="a10ModusIndikator" class="modus-badge">AO</span>
-            </div>
-            <div class="kunden-switch-dropdown" style="display:none;">
+            <!-- OPT-24: Portal-Slot für globale Header-Controls (werden per JS hierher verschoben) -->
+            <div id="a10ControlsSlot" class="global-controls-slot"></div>
+            <!-- Kunden-Zeile (sichtbar auf A-10) -->
+            <div class="kunden-switch-dropdown" id="a10KundenZeile">
                 <label>Kunde:</label>
                 <select id="kundenSwitchSelect" onchange="switchKundeDropdown(this.value)">
                     <option value="Peter Schmidt">Peter Schmidt</option>
@@ -7670,6 +7663,8 @@
               </div>
             </div>
           </div>
+          <!-- OPT-24: Portal-Slot für globale Header-Controls -->
+          <div id="vv02ControlsSlot" class="global-controls-slot"></div>
           <!-- Tab Navigation (VV Tabs, gleiche Klassen wie A-02) -->
           <div class="vv-header-tabs">
             <button class="vv-tab-btn active" data-tab="uebersicht" onclick="showVVTab('uebersicht')">
@@ -7815,6 +7810,8 @@
               </div>
             </div>
           </div>
+          <!-- OPT-24: Portal-Slot für globale Header-Controls -->
+          <div id="vv10ControlsSlot" class="global-controls-slot"></div>
           <!-- Mandant-Zeile (NEU: nur auf VV-10 Detail) -->
           <div class="kunden-switch-dropdown" style="display:flex;align-items:center;gap:8px;padding:0 20px;">
             <label style="font-weight:600;color:#64748b;font-size:14px;">Mandant:</label>

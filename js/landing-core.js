@@ -528,6 +528,9 @@ function backToLanding() {
     var kundenDetailBankPage = document.getElementById('kundenDetailBankPage');
     if (kundenDetailBankPage) kundenDetailBankPage.style.display = 'none';
 
+    // OPT-24: Globale Header-Controls zurück nach A-02 (Home-Slot)
+    if (typeof moveGlobalControls === 'function') moveGlobalControls('a02ControlsSlot');
+
     // VV-02/VV-10 Vermögensverwaltung verstecken
     var vvOverviewPage = document.getElementById('vvOverviewPage');
     if (vvOverviewPage) vvOverviewPage.style.display = 'none';

@@ -1,6 +1,18 @@
 /* css/agentur-fachkonzept.css - Agentur Overview Fachkonzept Design */
 /* Extracted from styles.css for modularity */
 
+/* Layout Spacing Variables */
+:root {
+    --spacing-sm: 8px;
+    --spacing-md: 16px;
+    --spacing-lg: 24px;
+    --spacing-xl: 32px;
+    --card-padding: 20px;
+    --card-gap: 16px;
+    --card-radius: 12px;
+    --header-content-gap: 24px;
+}
+
 /* Versicherer Logos (logo.dev) */
 .versicherer-logo {
     display: inline-block;
@@ -18,13 +30,13 @@
 .agentur-page-new {
     min-height: 100vh;
     background: #f8fafc;
-    padding-bottom: 40px;
+    padding-bottom: var(--spacing-xl, 32px);
 }
 
 /* Header mit Agentur-Info */
 .agentur-header-new {
     background: #2d5016;
-    padding: 16px 32px;
+    padding: var(--spacing-md, 16px) var(--spacing-xl, 32px);
     border-bottom: none;
     display: flex;
     justify-content: space-between;
@@ -37,13 +49,13 @@
 .agentur-header-left {
     display: flex;
     align-items: center;
-    gap: 24px;
+    gap: var(--header-content-gap, 24px);
 }
 
 .agentur-header-info {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: var(--card-gap, 16px);
 }
 
 .agentur-photo-small {
@@ -87,19 +99,19 @@
 .cockpit-kpis {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
+    gap: var(--card-padding, 20px);
     max-width: 1400px;
-    margin: 40px auto 24px;
-    padding: 0 32px;
+    margin: var(--spacing-xl, 32px) auto var(--header-content-gap, 24px);
+    padding: 0 var(--spacing-xl, 32px);
 }
 
 .cockpit-kpi-card {
     background: white;
-    border-radius: 12px;
-    padding: 20px 24px;
+    border-radius: var(--card-radius, 12px);
+    padding: var(--card-padding, 20px) var(--header-content-gap, 24px);
     display: flex;
     align-items: flex-start;
-    gap: 16px;
+    gap: var(--card-gap, 16px);
     box-shadow: 0 1px 3px rgba(0,0,0,0.08);
     border: 1px solid #e2e8f0;
     border-top: 3px solid #e2e8f0;
@@ -221,16 +233,16 @@
 .agentur-main-content {
     max-width: 1800px;
     margin: 0 auto;
-    padding: 0 32px;
+    padding: 0 var(--spacing-xl, 32px);
 }
 
 .agentur-tabs {
     display: flex;
-    gap: 8px;
+    gap: var(--spacing-sm, 8px);
     background: white;
-    padding: 8px;
-    border-radius: 12px;
-    margin-bottom: 24px;
+    padding: var(--spacing-sm, 8px);
+    border-radius: var(--card-radius, 12px);
+    margin-bottom: var(--header-content-gap, 24px);
     box-shadow: 0 1px 3px rgba(0,0,0,0.08);
     overflow-x: auto;
 }
@@ -238,8 +250,8 @@
 .agentur-tab {
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 12px 20px;
+    gap: var(--spacing-sm, 8px);
+    padding: 12px var(--card-padding, 20px);
     border: none;
     background: transparent;
     border-radius: 8px;
@@ -278,25 +290,25 @@
 .agentur-uebersicht-grid {
     display: grid;
     grid-template-columns: 1fr 380px;
-    gap: 24px;
+    gap: var(--header-content-gap, 24px);
 }
 
 .agentur-uebersicht-main {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: var(--card-padding, 20px);
 }
 
 .agentur-uebersicht-sidebar {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: var(--card-padding, 20px);
 }
 
 .uebersicht-card {
     background: white;
-    border-radius: 12px;
-    padding: 20px;
+    border-radius: var(--card-radius, 12px);
+    padding: var(--card-padding, 20px);
     box-shadow: 0 1px 3px rgba(0,0,0,0.08);
     border: 1px solid #e2e8f0;
 }
@@ -305,7 +317,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 16px;
+    margin-bottom: var(--card-gap, 16px);
     padding-bottom: 12px;
     border-bottom: 1px solid #e2e8f0;
 }
@@ -368,7 +380,7 @@
 .kennzahlen-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 16px;
+    gap: var(--card-gap, 16px);
 }
 
 .kennzahl-item {
@@ -440,7 +452,7 @@
 .potentiale-liste {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: var(--card-gap, 16px);
 }
 
 .potential-item {
@@ -467,7 +479,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 14px 16px;
+    padding: 14px var(--spacing-md, 16px);
     background: #f8fafc;
 }
 
@@ -517,7 +529,7 @@
 }
 
 .potential-details {
-    padding: 16px;
+    padding: var(--spacing-md, 16px);
     background: white;
     border-top: 1px solid #e2e8f0;
 }
@@ -590,7 +602,7 @@
 .aufgaben-liste {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: var(--spacing-sm, 8px);
 }
 
 .aufgabe-item {
@@ -729,7 +741,7 @@
 .termine-liste {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: var(--card-gap, 16px);
 }
 
 .termin-item {
@@ -809,15 +821,15 @@
 .formulare-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
+    gap: var(--spacing-sm, 8px);
 }
 
 .formular-btn {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 8px;
-    padding: 16px 12px;
+    gap: var(--spacing-sm, 8px);
+    padding: var(--spacing-md, 16px) 12px;
     background: #f8fafc;
     border: 1px solid #e2e8f0;
     border-radius: 10px;
@@ -1001,7 +1013,7 @@
 .abschluesse-liste {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: var(--spacing-sm, 8px);
 }
 
 .abschluss-item {
@@ -1079,7 +1091,7 @@
 .abrechnungen-liste {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: var(--spacing-sm, 8px);
 }
 
 .abrechnung-item {
@@ -1144,7 +1156,7 @@
 .geburtstage-liste {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: var(--spacing-sm, 8px);
 }
 
 .geburtstag-item {
@@ -1577,13 +1589,13 @@
 .stammdaten-sections {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 24px;
+    gap: var(--header-content-gap, 24px);
 }
 
 .stammdaten-section {
     background: white;
-    border-radius: 12px;
-    padding: 24px;
+    border-radius: var(--card-radius, 12px);
+    padding: var(--header-content-gap, 24px);
     box-shadow: 0 1px 3px rgba(0,0,0,0.08);
     border: 1px solid #e2e8f0;
 }
@@ -1592,7 +1604,7 @@
     font-size: 16px;
     font-weight: 700;
     color: #1e293b;
-    margin: 0 0 20px 0;
+    margin: 0 0 var(--card-padding, 20px) 0;
     padding-bottom: 12px;
     border-bottom: 2px solid #86BC25;
 }
@@ -1600,7 +1612,7 @@
 .stammdaten-grid-new {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
+    gap: var(--card-gap, 16px);
 }
 
 .stammdaten-item-new {
@@ -1649,14 +1661,14 @@
 .kpi-detail-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 16px;
-    margin-bottom: 20px;
+    gap: var(--card-gap, 16px);
+    margin-bottom: var(--card-padding, 20px);
 }
 
 .kpi-detail-card {
     background: white;
-    border-radius: 12px;
-    padding: 20px;
+    border-radius: var(--card-radius, 12px);
+    padding: var(--card-padding, 20px);
     box-shadow: 0 1px 3px rgba(0,0,0,0.06);
     border: 1px solid #e2e8f0;
     border-top: 3px solid #86BC25;
@@ -1737,8 +1749,8 @@
 /* Sparten Chart */
 .sparten-chart {
     background: white;
-    border-radius: 12px;
-    padding: 24px;
+    border-radius: var(--card-radius, 12px);
+    padding: var(--header-content-gap, 24px);
     box-shadow: 0 1px 3px rgba(0,0,0,0.08);
     border: 1px solid #e2e8f0;
 }
@@ -1747,7 +1759,7 @@
     font-size: 16px;
     font-weight: 700;
     color: #1e293b;
-    margin: 0 0 20px 0;
+    margin: 0 0 var(--card-padding, 20px) 0;
 }
 
 .sparten-bars {
@@ -1799,7 +1811,7 @@
 .sparten-donut-layout {
     display: flex;
     align-items: center;
-    gap: 32px;
+    gap: var(--spacing-xl, 32px);
 }
 
 .sparten-donut-svg {
@@ -1847,9 +1859,9 @@
 .zeitraum-filter-bar {
     display: flex;
     align-items: center;
-    gap: 16px;
-    margin-top: 16px;
-    padding: 12px 20px;
+    gap: var(--card-gap, 16px);
+    margin-top: var(--spacing-md, 16px);
+    padding: 12px var(--card-padding, 20px);
     background: white;
     border-radius: 10px;
     border: 1px solid #e2e8f0;
@@ -1901,14 +1913,14 @@
 
 /* Potentiale-Tab: gleicher Abstand wie cockpit-kpis zum Header */
 .agentur-tab-content > .kpi-detail-grid {
-    margin-top: 24px;
+    margin-top: var(--header-content-gap, 24px);
 }
 
 /* Storno Reasons */
 .storno-reasons {
     background: white;
-    border-radius: 12px;
-    padding: 24px;
+    border-radius: var(--card-radius, 12px);
+    padding: var(--header-content-gap, 24px);
     box-shadow: 0 1px 3px rgba(0,0,0,0.08);
     border: 1px solid #e2e8f0;
 }
@@ -1917,13 +1929,13 @@
     font-size: 16px;
     font-weight: 700;
     color: #1e293b;
-    margin: 0 0 16px 0;
+    margin: 0 0 var(--card-gap, 16px) 0;
 }
 
 .storno-reason-list {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: var(--spacing-sm, 8px);
 }
 
 .storno-reason-item {
@@ -2032,9 +2044,9 @@
 
 .vertrags-tabelle-section {
     background: white;
-    border-radius: 12px;
-    padding: 20px 24px;
-    margin-top: 20px;
+    border-radius: var(--card-radius, 12px);
+    padding: var(--card-padding, 20px) var(--header-content-gap, 24px);
+    margin-top: var(--card-padding, 20px);
     box-shadow: 0 1px 3px rgba(0,0,0,0.06);
     border: 1px solid #e2e8f0;
 }
@@ -2042,11 +2054,11 @@
 .vertrags-tabelle-section .section-title {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--spacing-sm, 8px);
     font-size: 16px;
     font-weight: 600;
     color: #1e293b;
-    margin: 0 0 16px 0;
+    margin: 0 0 var(--card-gap, 16px) 0;
 }
 
 .vertrags-tabelle-section .section-title svg {
@@ -2058,8 +2070,8 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 16px;
-    gap: 16px;
+    margin-bottom: var(--card-gap, 16px);
+    gap: var(--card-gap, 16px);
     flex-wrap: wrap;
 }
 
@@ -2252,7 +2264,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 20px 24px;
+    padding: var(--card-padding, 20px) var(--header-content-gap, 24px);
     border-bottom: 1px solid #e2e8f0;
     background: #f8fafc;
     border-radius: 16px 16px 0 0;
@@ -2296,7 +2308,7 @@
 }
 
 .vertrag-detail-body {
-    padding: 24px;
+    padding: var(--header-content-gap, 24px);
 }
 
 .vertrag-detail-grid {

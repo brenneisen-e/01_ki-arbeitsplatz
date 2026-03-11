@@ -25,26 +25,26 @@
 .vv-page-inner {
     max-width: 1400px;
     margin: 0 auto;
-    padding: 0 24px 32px;
+    padding: 0 var(--spacing-lg, 24px) var(--spacing-xl, 32px);
 }
 
 /* ── VV HEADER ── */
 .vv-header {
     background: linear-gradient(135deg, var(--vv-primary), var(--vv-primary-light));
     color: white;
-    padding: 16px 24px;
-    border-radius: 0 0 12px 12px;
-    margin-bottom: 20px;
+    padding: var(--spacing-md, 16px) var(--spacing-lg, 24px);
+    border-radius: 0 0 var(--card-radius, 12px) var(--card-radius, 12px);
+    margin-bottom: var(--card-padding, 20px);
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 16px;
+    gap: var(--card-gap, 16px);
 }
 
 .vv-header-left {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: var(--card-gap, 16px);
 }
 
 .vv-header .back-button {
@@ -151,18 +151,18 @@
 .vv-kpi-row {
     display: grid;
     grid-template-columns: repeat(6, 1fr);
-    gap: 12px;
-    margin-bottom: 20px;
+    gap: var(--card-gap, 16px);
+    margin-bottom: var(--card-padding, 20px);
 }
 
 .vv-kpi-card {
     background: var(--vv-card-bg);
     border: 1px solid var(--vv-border);
     border-radius: 10px;
-    padding: 14px 16px;
+    padding: 14px var(--spacing-md, 16px);
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: var(--card-gap, 16px);
     box-shadow: 0 1px 3px rgba(15,23,42,0.06);
 }
 
@@ -201,13 +201,13 @@
 .vv-card {
     background: var(--vv-card-bg);
     border: 1px solid var(--vv-border);
-    border-radius: 10px;
+    border-radius: var(--card-radius, 12px);
     box-shadow: 0 1px 3px rgba(15,23,42,0.06);
-    margin-bottom: 16px;
+    margin-bottom: var(--card-gap, 16px);
 }
 
 .vv-card .uebersicht-card-header {
-    padding: 12px 16px;
+    padding: 12px var(--card-gap, 16px);
     border-bottom: 1px solid var(--vv-border);
 }
 
@@ -330,16 +330,16 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    margin-bottom: 16px;
+    gap: var(--spacing-sm, 8px);
+    margin-bottom: var(--card-gap, 16px);
     flex-wrap: wrap;
 }
 
 .vv-funnel-stage {
     text-align: center;
     background: #f1f5f9;
-    border-radius: 8px;
-    padding: 12px 20px;
+    border-radius: var(--spacing-sm, 8px);
+    padding: 12px var(--card-padding, 20px);
     min-width: 80px;
 }
 
@@ -402,7 +402,7 @@
 .vv-detail-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 16px;
+    gap: var(--card-gap, 16px);
 }
 
 @media (max-width: 1024px) {
@@ -424,8 +424,8 @@
 .vv-client-header {
     display: flex;
     align-items: flex-start;
-    gap: 16px;
-    margin-bottom: 16px;
+    gap: var(--card-gap, 16px);
+    margin-bottom: var(--card-gap, 16px);
 }
 
 .vv-client-info {
@@ -435,7 +435,7 @@
 }
 
 .vv-info-section {
-    margin-top: 16px;
+    margin-top: var(--card-gap, 16px);
 }
 
 .vv-info-section h4 {
@@ -514,7 +514,7 @@
 
 /* ── VV BILANZ ── */
 .vv-bilanz-section {
-    margin-bottom: 20px;
+    margin-bottom: var(--card-padding, 20px);
 }
 
 .vv-bilanz-section h4 {
@@ -528,10 +528,10 @@
 
 .vv-bilanz-total {
     background: #f8fafc;
-    padding: 12px 16px;
-    border-radius: 8px;
+    padding: 12px var(--card-gap, 16px);
+    border-radius: var(--spacing-sm, 8px);
     border: 1px solid var(--vv-border);
-    margin-top: 16px;
+    margin-top: var(--card-gap, 16px);
 }
 
 /* ── VV PERFORMANCE ── */
@@ -566,8 +566,8 @@
 
 /* ── VV REBALANCING ── */
 .vv-rebalancing-hint {
-    margin-top: 16px;
-    padding: 12px 16px;
+    margin-top: var(--card-gap, 16px);
+    padding: 12px var(--card-gap, 16px);
     background: #fffbeb;
     border: 1px solid #fbbf24;
     border-radius: 8px;
@@ -611,7 +611,7 @@
 .vv-tagesstart-items {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: var(--spacing-sm, 8px);
 }
 
 .vv-tagesstart-item {
@@ -647,7 +647,7 @@
 .vv-einzeiler {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--spacing-sm, 8px);
     font-size: 14px;
     flex-wrap: wrap;
 }
@@ -659,7 +659,7 @@
 
 /* ── VV IMPULSE/POTENTIAL CARDS ── */
 .vv-impulse-card {
-    padding: 12px 16px;
+    padding: 12px var(--card-gap, 16px);
     border-radius: 8px;
     border: 1px solid var(--vv-border);
     margin-bottom: 8px;
@@ -705,7 +705,7 @@
 }
 
 .vv-potential-card {
-    padding: 14px 16px;
+    padding: 14px var(--card-gap, 16px);
     border-radius: 8px;
     border: 1px solid var(--vv-border);
     margin-bottom: 10px;
@@ -780,8 +780,8 @@
 
 .vv-chat-toggle {
     position: fixed;
-    bottom: 24px;
-    right: 24px;
+    bottom: var(--spacing-lg, 24px);
+    right: var(--spacing-lg, 24px);
     width: 56px;
     height: 56px;
     border-radius: 50%;
@@ -816,12 +816,12 @@
 
 .vv-chat-widget {
     position: fixed;
-    bottom: 24px;
-    right: 24px;
+    bottom: var(--spacing-lg, 24px);
+    right: var(--spacing-lg, 24px);
     width: 380px;
     max-height: 520px;
     background: white;
-    border-radius: 12px;
+    border-radius: var(--card-radius, 12px);
     box-shadow: 0 8px 32px rgba(15,23,42,0.18);
     border: 1px solid var(--vv-border);
     z-index: 1001;
@@ -833,7 +833,7 @@
 .vv-chat-header {
     background: linear-gradient(135deg, var(--vv-primary), var(--vv-primary-light));
     color: white;
-    padding: 12px 16px;
+    padding: 12px var(--card-gap, 16px);
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -862,13 +862,13 @@
 .vv-chat-body {
     flex: 1;
     overflow-y: auto;
-    padding: 16px;
+    padding: var(--card-gap, 16px);
     max-height: 360px;
 }
 
 .vv-chat-welcome {
     text-align: center;
-    padding: 16px 0;
+    padding: var(--card-gap, 16px) 0;
 }
 
 .vv-chat-welcome h4 {
@@ -880,7 +880,7 @@
 .vv-chat-welcome p {
     font-size: 13px;
     color: var(--vv-text-muted);
-    margin: 0 0 16px;
+    margin: 0 0 var(--card-gap, 16px);
 }
 
 .vv-chat-quick-actions {
@@ -940,8 +940,8 @@
 
 .vv-chat-input-area {
     display: flex;
-    gap: 8px;
-    padding: 12px 16px;
+    gap: var(--spacing-sm, 8px);
+    padding: 12px var(--card-gap, 16px);
     border-top: 1px solid var(--vv-border);
     background: #fafbfc;
 }
@@ -949,8 +949,8 @@
 .vv-chat-input-area textarea {
     flex: 1;
     border: 1px solid var(--vv-border);
-    border-radius: 8px;
-    padding: 8px 12px;
+    border-radius: var(--spacing-sm, 8px);
+    padding: var(--spacing-sm, 8px) 12px;
     font-size: 13px;
     font-family: inherit;
     resize: none;
@@ -987,8 +987,8 @@
 .vv-header-actions {
     display: flex;
     align-items: center;
-    gap: 8px;
-    margin-left: 16px;
+    gap: var(--spacing-sm, 8px);
+    margin-left: var(--card-gap, 16px);
     position: relative;
 }
 
@@ -1054,7 +1054,7 @@
 }
 
 .vv-notif-header {
-    padding: 12px 16px;
+    padding: 12px var(--card-gap, 16px);
     font-size: 13px;
     font-weight: 600;
     color: var(--vv-text);
@@ -1062,14 +1062,14 @@
 }
 
 .vv-notif-empty {
-    padding: 24px 16px;
+    padding: var(--spacing-lg, 24px) var(--card-gap, 16px);
     text-align: center;
     color: var(--vv-text-muted);
     font-size: 13px;
 }
 
 .vv-notif-item {
-    padding: 10px 16px;
+    padding: 10px var(--card-gap, 16px);
     display: flex;
     align-items: flex-start;
     gap: 10px;

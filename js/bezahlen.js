@@ -252,8 +252,8 @@ window.navigateToVertrag = navigateToVertrag;
 
 // Navigation von "Hinweise aus Kontoumsätzen" zu allen Fressnapf-Umsätzen
 function navigateToTierUmsaetze() {
-    // 1. Zum Open Finance Tab wechseln
-    switchKundenTab('fida');
+    // 1. Zum Finanzprofil Tab wechseln (OPT-25-C: Bezahlen moved here)
+    switchKundenTab('finanzprofil');
 
     // 2. Warten bis Content gerendert, dann Bezahlen rendern + Akkordeon öffnen + scrollen
     setTimeout(function() {

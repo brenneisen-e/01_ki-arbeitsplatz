@@ -4821,9 +4821,6 @@
 
                 <!-- TAB: Betreute Verträge -->
                 <div id="tabVertraege" class="kunden-tab-content">
-                    <!-- 20-D: Lücken-Leiste (Absicherungsstatus) -->
-                    <div id="lueckenLeiste" class="luecken-leiste-container"></div>
-
                     <div class="kunden-card">
                         <div class="kunden-card-header">
                             <h2>
@@ -4907,6 +4904,8 @@
                 <!-- TAB: Finanzprofil (20-C) -->
                 <div id="tabFinanzprofil" class="kunden-tab-content">
                     <div id="finanzprofilContent" class="finanzprofil-container"></div>
+                    <!-- OPT-25-C: Bezahlen-Daten ins Finanzprofil integriert -->
+                    <div id="bezahlenContent"></div>
                 </div>
 
                 <!-- TAB: Open Finance -->
@@ -5032,42 +5031,7 @@
                         <div id="sankeyFlowContainer" style="width:100%;min-height:320px;"></div>
                     </div>
 
-                    <!-- ===================== BEDARFSFELD: BEZAHLEN ===================== -->
-                    <div class="kunden-card bedarfsfeld-card">
-                        <div class="kunden-card-header bedarfsfeld bezahlen">
-                            <h2>
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
-                                    <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
-                                    <line x1="1" y1="10" x2="23" y2="10"></line>
-                                </svg>
-                                Bezahlen
-                            </h2>
-                            <span class="bedarfsfeld-source">Sparkasse Hauptkonto</span>
-                        </div>
-                        <div class="fida-finance-grid">
-                            <div class="fida-finance-card">
-                                <span class="fida-finance-label">Gesamtgehalt (netto)</span>
-                                <span class="fida-finance-value">€3.834/Monat</span>
-                                <span class="fida-finance-detail">Fixgehalt: €3.680 + Variables Gehalt: Ø €154/Mon.</span>
-                                <span class="fida-finance-detail">Arbeitgeber: TechCorp GmbH</span>
-                            </div>
-                            <div class="fida-finance-card">
-                                <span class="fida-finance-label">Monatliche Ausgaben (Ø)</span>
-                                <span class="fida-finance-value">€2.890/Monat</span>
-                                <span class="fida-finance-detail">Fixkosten: €2.240 (Miete, Kredit, Versicherungen)</span>
-                                <span class="fida-finance-detail">Variable Kosten: €650 (Lebensmittel, Freizeit, etc.)</span>
-                            </div>
-                            <div class="fida-finance-card frei-verfuegbar">
-                                <span class="fida-finance-label">Frei verfügbares Einkommen</span>
-                                <span class="fida-finance-value highlight-positive">€944/Monat</span>
-                                <span class="fida-finance-detail">Nach allen laufenden Ausgaben</span>
-                                <span class="fida-finance-detail">Sparquote: ~25% des Nettoeinkommens</span>
-                            </div>
-                        </div>
-
-                        <!-- Banktransaktionen Content -->
-                        <div id="bezahlenContent"></div>
-                    </div>
+                    <!-- OPT-25-C: Bezahlen moved to Finanzprofil tab -->
 
                     <!-- ===================== BEDARFSFELD: SPAREN & VORSORGEN ===================== -->
                     <div class="kunden-card bedarfsfeld-card">
@@ -5362,6 +5326,8 @@
 
                 <!-- TAB: Impulse -->
                 <div id="tabImpulse" class="kunden-tab-content">
+                    <!-- OPT-25-B: Absicherungsstatus (moved from Vertraege tab) -->
+                    <div id="lueckenLeiste" class="luecken-leiste-container"></div>
                     <!-- OPT-07: KI-generierte Impulse (hidden, rendered inline into categories below) -->
                     <div id="kiImpulsCard" style="display:none;"></div>
                     <!-- Übersicht der Potentiale -->

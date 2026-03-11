@@ -533,7 +533,7 @@ window.renderLifeEventTimeline = renderLifeEventTimeline;
 function renderRisikoscoring() {
     var container = document.getElementById('risikoscoringContainer');
     if (!container) return;
-    if (container.querySelector('.risikoscoring-card')) return;
+    if (container.querySelector('.risikoscoring-compact')) return;
 
     var isBanking = typeof isBankMode === 'function' && isBankMode();
 
@@ -569,13 +569,18 @@ function renderRisikoscoring() {
     var scoreColor = score <= 30 ? '#16a34a' : (score <= 60 ? '#f59e0b' : '#ef4444');
     var scoreLabel = score <= 30 ? 'Niedriges Risiko' : (score <= 60 ? 'Mittleres Risiko' : 'Hohes Risiko');
 
-    var html = '<div class="kunden-card risikoscoring-card">' +
-        '<div class="kunden-card-header"><h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Risikoscoring</h2></div>' +
-        '<div class="risiko-score-overview">' +
-            '<div class="risiko-score-circle" style="border-color:' + scoreColor + '">' +
-                '<span class="risiko-score-value" style="color:' + scoreColor + '">' + score + '</span>' +
-                '<span class="risiko-score-label">' + scoreLabel + '</span>' +
+    // OPT-25-A: Compact score with click-to-expand (no duplicate card)
+    var html = '<div class="risikoscoring-compact">' +
+        '<div class="risiko-compact-header" onclick="toggleRisikoDetail()" title="Klicken für Details">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>' +
+            '<span class="risiko-compact-title">Risikoscoring</span>' +
+            '<div class="risiko-compact-score" style="border-color:' + scoreColor + '">' +
+                '<span style="color:' + scoreColor + ';font-weight:800;font-size:18px;">' + score + '</span>' +
             '</div>' +
+            '<span class="risiko-compact-label" style="color:' + scoreColor + '">' + scoreLabel + '</span>' +
+            '<svg class="risiko-expand-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="6 9 12 15 18 9"/></svg>' +
+        '</div>' +
+        '<div class="risiko-expand-panel" id="risikoExpandPanel">' +
             '<div class="risiko-score-details">';
 
     for (var i = 0; i < details.length; i++) {
@@ -587,8 +592,7 @@ function renderRisikoscoring() {
         '</div>';
     }
 
-    html += '</div></div>' +
-        '<div class="risiko-empfehlungen">';
+    html += '</div><div class="risiko-empfehlungen">';
 
     for (var j = 0; j < empfehlungen.length; j++) {
         var e = empfehlungen[j];
@@ -596,9 +600,24 @@ function renderRisikoscoring() {
         html += '<div class="risiko-empfehlung ' + eClass + '">' + e.text + '</div>';
     }
 
-    html += '</div></div>';
+    html += '</div></div></div>';
     container.innerHTML = html;
 }
+
+function toggleRisikoDetail() {
+    var panel = document.getElementById('risikoExpandPanel');
+    var header = panel ? panel.previousElementSibling : null;
+    if (!panel) return;
+    var isOpen = panel.classList.contains('open');
+    if (isOpen) {
+        panel.classList.remove('open');
+        if (header) header.classList.remove('open');
+    } else {
+        panel.classList.add('open');
+        if (header) header.classList.add('open');
+    }
+}
+window.toggleRisikoDetail = toggleRisikoDetail;
 window.renderRisikoscoring = renderRisikoscoring;
 
 // ========================================

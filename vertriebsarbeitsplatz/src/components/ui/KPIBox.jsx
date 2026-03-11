@@ -43,8 +43,7 @@ export default function KPIBox({ icon, label, wert, format = 'num', trend, delay
     >
       <div className="flex items-center justify-between mb-3">
         <div
-          className="w-8 h-8 rounded-lg flex items-center justify-center"
-          style={{ backgroundColor: 'color-mix(in srgb, var(--mode-primary-light) 10%, transparent)' }}
+          className="w-8 h-8 rounded-lg flex items-center justify-center bg-slate-100"
         >
           <Icon size={18} style={{ color: 'var(--mode-primary-light)' }} strokeWidth={1.75} />
         </div>
@@ -54,7 +53,7 @@ export default function KPIBox({ icon, label, wert, format = 'num', trend, delay
           </span>
         )}
       </div>
-      <div className="font-mono text-3xl font-bold text-slate-900 mb-1" style={{ fontFeatureSettings: "'tnum'" }}>
+      <div className="font-mono text-2xl font-bold text-slate-900 mb-1 truncate" style={{ fontFeatureSettings: "'tnum'" }}>
         {formatValue(format === 'pct' ? displayed : Math.round(displayed), format)}
       </div>
       <div className="text-sm text-slate-500">{label}</div>

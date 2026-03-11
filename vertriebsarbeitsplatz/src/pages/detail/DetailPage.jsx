@@ -34,7 +34,7 @@ export default function DetailPage() {
   return (
     <div className="min-h-screen bg-slate-50">
       <GlobalHeader kundeInfo={{ name: kunde.name, id: kunde.id, beruf: kunde.beruf }} />
-      <div className="px-10 py-6 animate-fade-in-up">
+      <div className="px-6 py-6 animate-fade-in-up">
         <TabComponent kunde={kunde} />
       </div>
     </div>

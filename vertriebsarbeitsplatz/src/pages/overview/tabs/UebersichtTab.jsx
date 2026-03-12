@@ -205,7 +205,7 @@ export default function UebersichtTab() {
               <div
                 key={i}
                 className="grid py-2.5 px-3 rounded-lg hover:bg-slate-50 transition-colors cursor-pointer items-center"
-                style={{ gridTemplateColumns: '220px auto 140px' }}
+                style={{ gridTemplateColumns: 'minmax(200px, auto) 1fr 140px' }}
                 onClick={() => navigateTo('detail', { kundeId: p.kundeId })}
               >
                 <div className="flex items-center gap-2 min-w-0">

@@ -141,7 +141,7 @@ function getDemoResponse(message, { currentView }) {
 
 export default function VertriebsAssistent() {
   const { modeId, config, currentView, setActiveTab } = useMode();
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);

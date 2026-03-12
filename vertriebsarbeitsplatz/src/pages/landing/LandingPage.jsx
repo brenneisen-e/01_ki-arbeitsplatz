@@ -57,8 +57,8 @@ const TILES = {
 };
 
 export default function LandingPage() {
-  const { switchMode, config } = useMode();
-  const [activeModule, setActiveModule] = useState('versicherung');
+  const { switchMode, config, modeId } = useMode();
+  const [activeModule, setActiveModule] = useState(modeId || 'versicherung');
   const [chatInput, setChatInput] = useState('');
 
   const tiles = TILES[activeModule] || TILES.versicherung;

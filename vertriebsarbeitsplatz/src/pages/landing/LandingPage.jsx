@@ -1,14 +1,14 @@
 import { useState } from 'react';
 import { clsx } from 'clsx';
-import { Mic, Send, LayoutDashboard, Users, Zap, BarChart3, FileCheck, ArrowLeftRight, Calculator, Shield, Briefcase, BookOpen } from 'lucide-react';
+import { Mic, Send, LayoutDashboard, Users, Zap, BarChart3, FileCheck, ArrowLeftRight, Calculator, Shield, Briefcase, BookOpen, Landmark, Wallet, PieChart } from 'lucide-react';
 import { useMode } from '../../hooks/useMode';
 import { MODE_CONFIGS } from '../../data/modeConfig';
 
 const MODULE_TABS = [
-  { id: 'versicherung', label: 'Versicherung' },
-  { id: 'banking', label: 'Banken' },
-  { id: 'asset', label: 'Asset Manager' },
-  { id: 'vermoegensverwaltung', label: 'Vermögensverwaltung' },
+  { id: 'versicherung', label: 'Versicherung', icon: Shield, desc: 'Bestand, Neugeschäft, Storno', color: MODE_CONFIGS.versicherung.colors.primary },
+  { id: 'banking', label: 'Banken', icon: Landmark, desc: 'Kredit, Einlagen, Erträge', color: MODE_CONFIGS.banking.colors.primary },
+  { id: 'asset', label: 'Asset Manager', icon: PieChart, desc: 'Fonds & Anlageprodukte', color: '#4a5568' },
+  { id: 'vermoegensverwaltung', label: 'Vermögensverwaltung', icon: Wallet, desc: 'AuM, Mandate, Pipeline', color: MODE_CONFIGS.vermoegensverwaltung.colors.primary },
 ];
 
 const TILES = {
@@ -85,21 +85,39 @@ export default function LandingPage() {
 
       <div className="max-w-6xl mx-auto px-6 py-8">
         {/* Modul-Tabs */}
-        <div className="flex gap-2 mb-8">
-          {MODULE_TABS.map(tab => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveModule(tab.id)}
-              className={clsx(
-                'px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200',
-                activeModule === tab.id
-                  ? 'bg-slate-800 text-white'
-                  : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
-              )}
-            >
-              {tab.label}
-            </button>
-          ))}
+        <div className="grid grid-cols-4 gap-3 mb-8">
+          {MODULE_TABS.map(tab => {
+            const Icon = tab.icon;
+            const isActive = activeModule === tab.id;
+            return (
+              <button
+                key={tab.id}
+                onClick={() => setActiveModule(tab.id)}
+                className={clsx(
+                  'flex items-center gap-3 px-4 py-3 rounded-xl text-left transition-all duration-200',
+                  isActive
+                    ? 'text-white shadow-md'
+                    : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 hover:-translate-y-px hover:shadow-sm'
+                )}
+                style={isActive ? { background: tab.color } : undefined}
+              >
+                <div className={clsx(
+                  'w-9 h-9 rounded-lg flex items-center justify-center shrink-0',
+                  isActive ? 'bg-white/20' : 'bg-slate-100'
+                )}>
+                  <Icon size={18} className={isActive ? 'text-white' : 'text-slate-500'} strokeWidth={1.75} />
+                </div>
+                <div className="min-w-0">
+                  <div className={clsx('text-sm font-semibold truncate', isActive ? 'text-white' : 'text-slate-800')}>
+                    {tab.label}
+                  </div>
+                  <div className={clsx('text-[11px] truncate', isActive ? 'text-white/70' : 'text-slate-400')}>
+                    {tab.desc}
+                  </div>
+                </div>
+              </button>
+            );
+          })}
         </div>
 
         {/* Welcome + Chat */}

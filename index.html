@@ -119,12 +119,14 @@
     const h = React.createElement;
     const { useState, useEffect, useRef, useCallback } = React;
 
+    const VAP_BASE = 'vertriebsarbeitsplatz/dist/index.html';
+
     const MODULES = [
-        { id: 'dashboard',   label: 'Gesamtübersicht',       icon: LayoutDashboard, desc: 'KPIs, Bestand, Neugeschäft',           href: 'app.html#/dashboard' },
+        { id: 'dashboard',   label: 'VST-Cockpit',            icon: LayoutDashboard, desc: 'KPIs, Bestand, Neugeschäft',           href: 'app.html#/dashboard' },
         { id: 'vap',         label: 'Vertriebsarbeitsplatz',  icon: Users,           desc: 'Agenturansicht, Kunden, Verträge',
           versions: [
               { label: 'v01', href: 'app.html#/agentur' },
-              { label: 'v02 (React)', href: 'vertriebsarbeitsplatz/dist/index.html' },
+              { label: 'v02 (React)', href: VAP_BASE + '#/versicherung/overview/uebersicht' },
           ]
         },
         { id: 'potential',   label: 'Potentialanalyse',       icon: Box,             desc: 'Cross-Sell, Up-Sell, Whitespots',     href: 'app.html#/potentialanalyse' },
@@ -140,11 +142,11 @@
     ];
 
     const DEMO_SUGGESTIONS = [
-        { text: 'Zusammenfassung heutiger Tag',        href: 'vertriebsarbeitsplatz/dist/index.html' },
-        { text: 'Zeige meine Vertriebspotentiale',     href: 'app.html#/agentur' },
+        { text: 'Zusammenfassung heutiger Tag',        href: VAP_BASE + '#/versicherung/overview/uebersicht' },
+        { text: 'Zeige meine Vertriebspotentiale',     href: VAP_BASE + '#/versicherung/overview/potentiale' },
         { text: 'Top 5 Vertriebsregionen',             href: 'app.html#/dashboard' },
         { text: 'Kundenpotenzial analysieren',          href: 'app.html#/potentialanalyse' },
-        { text: 'Cross-Selling Chancen anzeigen',       href: 'vertriebsarbeitsplatz/dist/index.html' },
+        { text: 'Cross-Selling Chancen anzeigen',       href: VAP_BASE + '#/versicherung/overview/potentiale' },
         { text: 'Was kann ich hier machen?',            href: 'app.html#/dashboard' },
     ];
 
@@ -326,7 +328,7 @@
 
                 // Demo Tour
                 h('button', {
-                    onClick: () => { window.location.href = 'app.html#/agentur'; },
+                    onClick: () => { window.location.href = VAP_BASE + '#/versicherung/overview/uebersicht'; },
                     className: 'w-full flex items-center gap-2 px-3 py-2.5 text-sm text-slate-600 rounded-lg hover:bg-slate-50 border border-slate-200 transition-colors'
                 },
                     h(Play, { size: 14, className: 'text-slate-400' }),
@@ -397,7 +399,7 @@
             if (!chatInput.trim()) return;
             const match = DEMO_SUGGESTIONS.find(s => s.text.toLowerCase() === chatInput.toLowerCase());
             if (match) { window.location.href = match.href; }
-            else { window.location.href = 'vertriebsarbeitsplatz/dist/index.html'; }
+            else { window.location.href = VAP_BASE + '#/versicherung/overview/uebersicht'; }
         }
 
         function handleKeyDown(e) {

@@ -1,6 +1,5 @@
 # Cloudflare Pages Redirects
-# Note: Cloudflare Pages automatically serves index.html for /
-# Only add specific redirects here if needed
 
-# Example: Redirect old paths to new ones
-# /old-path  /new-path  301
+# Root redirects to React app (M-01 Landing Page)
+/  /vertriebsarbeitsplatz/  302
+/landing  /vertriebsarbeitsplatz/  302

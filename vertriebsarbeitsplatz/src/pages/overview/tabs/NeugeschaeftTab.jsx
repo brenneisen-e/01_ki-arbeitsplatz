@@ -1,8 +1,10 @@
+import { useState } from 'react';
 import KPIGrid from '../../../components/ui/KPIGrid';
 import Card from '../../../components/ui/Card';
 import DonutChart from '../../../components/charts/DonutChart';
 import DataTable from '../../../components/ui/DataTable';
 import LogoImg from '../../../components/ui/LogoImg';
+import VertragDetailModal from '../../../components/ui/VertragDetailModal';
 import { SparteBadge, StatusBadge } from '../../../components/ui/Badge';
 import { useMode } from '../../../hooks/useMode';
 import { NEUGESCHAEFT_DATA } from '../../../data';
@@ -31,11 +33,15 @@ const COLUMNS = [
 ];
 
 export default function NeugeschaeftTab() {
-  const { modeId, navigateTo } = useMode();
+  const { modeId } = useMode();
+  const [selectedVertrag, setSelectedVertrag] = useState(null);
   const data = NEUGESCHAEFT_DATA[modeId] || NEUGESCHAEFT_DATA.versicherung;
 
   return (
     <div className="space-y-6">
+      {selectedVertrag && (
+        <VertragDetailModal vertrag={selectedVertrag} onClose={() => setSelectedVertrag(null)} />
+      )}
       <KPIGrid kpiConfig={NG_KPI_CONFIG} kpiValues={data.kpiValues} />
 
       <div className="grid grid-cols-2 gap-4">
@@ -84,7 +90,7 @@ export default function NeugeschaeftTab() {
         columns={COLUMNS}
         data={data.vertraege}
         groupBy="kunde"
-        onRowClick={(row) => navigateTo('detail', { kundeId: row.kundeId, tab: 'vertraege' })}
+        onRowClick={(row) => setSelectedVertrag(row)}
         renderGroupHeader={(kunde, rows) => (
           <div className="flex items-center gap-2">
             <div className="w-6 h-6 rounded-full bg-slate-200 flex items-center justify-center text-xs font-bold text-slate-600">

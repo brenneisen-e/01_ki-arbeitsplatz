@@ -60,7 +60,7 @@ const LETZTE_ABSCHLUESSE = {
   ],
   banking: [
     { kunde: 'Klaus Fischer', kundeId: 'KDB001', produkt: 'Anschlussfinanzierung', sparte: 'kredit', betrag: 185000, datum: '10.03.2026' },
-    { kunde: 'Sandra Mueller', kundeId: 'KDB002', produkt: 'VR-FinanzPlan', sparte: 'wertpapier', betrag: 25000, datum: '09.03.2026' },
+    { kunde: 'Sandra Müller', kundeId: 'KDB002', produkt: 'VR-FinanzPlan', sparte: 'wertpapier', betrag: 25000, datum: '09.03.2026' },
     { kunde: 'Peter Hoffmann', kundeId: 'KDB005', produkt: 'VermögenPlus Depot', sparte: 'wertpapier', betrag: 50000, datum: '08.03.2026' },
   ],
   vermoegensverwaltung: [

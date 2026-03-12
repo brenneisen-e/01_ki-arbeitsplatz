@@ -7,7 +7,7 @@ import LogoImg from '../ui/LogoImg';
 import { downloadDemoData } from '../../utils/downloadDemoData';
 
 export default function GlobalHeader({ kundeInfo }) {
-  const { config, modeId, switchMode, activeTab, setActiveTab, currentView, goBack } = useMode();
+  const { config, modeId, switchMode, switchInstitut, activeTab, setActiveTab, currentView, goBack } = useMode();
   const [showModeDropdown, setShowModeDropdown] = useState(false);
   const tabs = currentView === 'detail' ? config.detailTabs : config.tabs;
 
@@ -51,12 +51,13 @@ export default function GlobalHeader({ kundeInfo }) {
               onClick={() => setShowModeDropdown(!showModeDropdown)}
               className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-sm transition-colors"
             >
-              {config.label} <ChevronDown size={16} />
+              {config.institut} <ChevronDown size={16} />
             </button>
             {showModeDropdown && (
               <ModeDropdown
                 currentMode={modeId}
-                onSelect={(id) => { switchMode(id); setShowModeDropdown(false); }}
+                currentInstitut={config.institut}
+                onSelect={(mId, variant) => { switchInstitut(variant, mId); setShowModeDropdown(false); }}
                 onClose={() => setShowModeDropdown(false)}
               />
             )}
@@ -110,36 +111,54 @@ export default function GlobalHeader({ kundeInfo }) {
   );
 }
 
-function ModeDropdown({ currentMode, onSelect, onClose }) {
+function ModeDropdown({ currentMode, currentInstitut, onSelect, onClose }) {
   const modes = Object.values(MODE_CONFIGS);
 
   return (
     <>
       <div className="fixed inset-0 z-40" onClick={onClose} />
-      <div className="absolute right-0 top-full mt-2 w-64 bg-white rounded-xl shadow-xl border border-slate-200 z-50 animate-scale-in overflow-hidden">
-        <div className="p-2">
-          {modes.map(m => (
-            <button
-              key={m.id}
-              onClick={() => onSelect(m.id)}
+      <div className="absolute right-0 top-full mt-2 w-72 bg-white rounded-xl shadow-xl border border-slate-200 z-50 animate-scale-in overflow-hidden max-h-[70vh] overflow-y-auto">
+        {modes.map((m, mi) => (
+          <div key={m.id}>
+            {/* Mode category header */}
+            <div
               className={clsx(
-                'w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors text-left',
-                currentMode === m.id ? 'bg-slate-100 font-medium' : 'hover:bg-slate-50'
+                'px-4 py-2 text-xs font-semibold text-white uppercase tracking-wider',
+                mi > 0 && 'border-t border-slate-200'
               )}
+              style={{ background: m.colors.gradient }}
             >
-              <div
-                className="w-8 h-8 rounded-lg flex items-center justify-center text-white text-xs font-bold"
-                style={{ background: m.colors.gradient }}
-              >
-                {m.institut.charAt(0)}
-              </div>
-              <div>
-                <div className="text-slate-800">{m.label}</div>
-                <div className="text-xs text-slate-400">{m.institut}</div>
-              </div>
-            </button>
-          ))}
-        </div>
+              {m.label}
+            </div>
+            {/* Institute variants */}
+            <div className="p-1.5">
+              {(m.institutVarianten || []).map(variant => {
+                const isActive = currentMode === m.id && currentInstitut === variant.institut;
+                return (
+                  <button
+                    key={variant.institut}
+                    onClick={() => onSelect(m.id, variant)}
+                    className={clsx(
+                      'w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors text-left',
+                      isActive ? 'bg-slate-100 font-medium ring-1 ring-slate-300' : 'hover:bg-slate-50'
+                    )}
+                  >
+                    <div className="w-7 h-7 rounded-md border border-slate-200 bg-white flex items-center justify-center overflow-hidden shrink-0">
+                      <LogoImg name={variant.institut} size={22} />
+                    </div>
+                    <div className="min-w-0">
+                      <div className="text-slate-800 truncate">{variant.institut}</div>
+                      <div className="text-xs text-slate-400">{variant.beraterTitel}</div>
+                    </div>
+                    {isActive && (
+                      <div className="ml-auto w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: variant.colors.primary }} />
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        ))}
       </div>
     </>
   );

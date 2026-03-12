@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useCallback } from 'react';
+import { createContext, useContext, useState, useCallback, useMemo } from 'react';
 import { MODE_CONFIGS } from '../data/modeConfig';
 
 const ModeContext = createContext(null);
@@ -8,15 +8,38 @@ export function ModeProvider({ children }) {
   const [currentView, setCurrentView] = useState('landing'); // landing | overview | detail
   const [activeTab, setActiveTab] = useState('uebersicht');
   const [selectedKundeId, setSelectedKundeId] = useState(null);
+  const [institutOverride, setInstitutOverride] = useState(null);
 
-  const config = MODE_CONFIGS[modeId];
+  const baseConfig = MODE_CONFIGS[modeId];
+
+  // Merge institut override into config
+  const config = useMemo(() => {
+    if (!institutOverride) return baseConfig;
+    return {
+      ...baseConfig,
+      institut: institutOverride.institut,
+      beraterTitel: institutOverride.beraterTitel || baseConfig.beraterTitel,
+      colors: institutOverride.colors || baseConfig.colors,
+    };
+  }, [baseConfig, institutOverride]);
 
   const switchMode = useCallback((newModeId) => {
     setModeId(newModeId);
+    setInstitutOverride(null);
     setCurrentView('overview');
     setActiveTab('uebersicht');
     setSelectedKundeId(null);
   }, []);
+
+  const switchInstitut = useCallback((variant, newModeId) => {
+    if (newModeId && newModeId !== modeId) {
+      setModeId(newModeId);
+      setCurrentView('overview');
+      setActiveTab('uebersicht');
+      setSelectedKundeId(null);
+    }
+    setInstitutOverride(variant);
+  }, [modeId]);
 
   const navigateTo = useCallback((view, opts = {}) => {
     setCurrentView(view);
@@ -45,7 +68,7 @@ export function ModeProvider({ children }) {
   return (
     <ModeContext.Provider value={{
       modeId, config, currentView, activeTab, selectedKundeId,
-      switchMode, navigateTo, setActiveTab, setSelectedKundeId, goBack,
+      switchMode, switchInstitut, navigateTo, setActiveTab, setSelectedKundeId, goBack,
     }}>
       <div data-mode={modeId}>
         {children}

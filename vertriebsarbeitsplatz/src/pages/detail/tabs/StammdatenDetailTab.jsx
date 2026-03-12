@@ -2,18 +2,77 @@ import Card from '../../../components/ui/Card';
 import DataTable from '../../../components/ui/DataTable';
 import { StatusBadge, SparteBadge } from '../../../components/ui/Badge';
 import { formatEur, formatPct, berechneHaushaltsnetto, berechneAbsicherungsquote, berechneSparquote, berechneFrei, potentialSterne } from '../../../utils/formatters';
-import { User, Wallet, Linkedin, Star, ChevronDown } from 'lucide-react';
+import { User, Wallet, Linkedin, Star, ChevronDown, MapPin, Briefcase, Heart, Users } from 'lucide-react';
 import { useState } from 'react';
+import { useMode } from '../../../hooks/useMode';
+
+const KUNDEN_FOTOS = {
+  'KD00001': './images/AdobeStock_624564221.jpeg',
+  'KD00002': './images/AdobeStock_252262042.jpeg',
+  'KD00003': './images/AdobeStock_361342769.jpeg',
+  'KD00005': './images/AdobeStock_612932760.jpeg',
+  'KD00008': './images/AdobeStock_1091012713.jpeg',
+  'BK00001': './images/AdobeStock_624564221.jpeg',
+  'BK00003': './images/AdobeStock_361342769.jpeg',
+  'BK00005': './images/AdobeStock_252262042.jpeg',
+  'WM00001': './images/AdobeStock_612932760.jpeg',
+  'WM00003': './images/AdobeStock_1091012713.jpeg',
+};
 
 export default function StammdatenDetailTab({ kunde }) {
   const [risikoExpanded, setRisikoExpanded] = useState(false);
+  const { config } = useMode();
   const haushalt = berechneHaushaltsnetto(kunde);
   const absQuote = berechneAbsicherungsquote(kunde);
   const sparQuote = berechneSparquote(kunde);
   const frei = berechneFrei(kunde);
+  const foto = KUNDEN_FOTOS[kunde.id];
+  const initialen = kunde.name.split(' ').map(n => n[0]).join('');
 
   return (
     <div className="space-y-4">
+      {/* Kunden-Profil Header */}
+      <Card>
+        <div className="flex items-center gap-5">
+          {foto ? (
+            <img
+              src={foto}
+              alt={kunde.name}
+              className="w-24 h-24 rounded-xl object-cover border-2 shadow-sm"
+              style={{ borderColor: config.colors.primaryLight + '40' }}
+            />
+          ) : (
+            <div
+              className="w-24 h-24 rounded-xl flex items-center justify-center text-white text-2xl font-bold shadow-sm"
+              style={{ background: config.colors.gradient }}
+            >
+              {initialen}
+            </div>
+          )}
+          <div className="flex-1">
+            <h2 className="text-xl font-bold text-slate-800">{kunde.name}</h2>
+            <div className="flex items-center gap-4 mt-1.5 text-sm text-slate-500">
+              <span className="flex items-center gap-1"><Briefcase size={14} /> {kunde.beruf}</span>
+              <span className="flex items-center gap-1"><Users size={14} /> {kunde.alter} Jahre</span>
+              {kunde.familienstand && (
+                <span className="flex items-center gap-1"><Heart size={14} /> {kunde.familienstand}</span>
+              )}
+            </div>
+            <div className="flex items-center gap-3 mt-2 text-xs text-slate-400">
+              <span>{kunde.id}</span>
+              <span>·</span>
+              <span>{config.kundenLabel || 'Kunde'} seit {kunde.eigeneProdukte?.[0]?.seit || '–'}</span>
+              {kunde.linkedin && (
+                <>
+                  <span>·</span>
+                  <span className="flex items-center gap-1"><Linkedin size={12} className="text-blue-500" /> {kunde.linkedin.kontakte}+ Kontakte</span>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      </Card>
+
       <div className="grid grid-cols-2 gap-4">
         {/* Persoenliche Daten */}
         <Card>

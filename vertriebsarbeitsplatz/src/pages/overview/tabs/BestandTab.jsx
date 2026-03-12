@@ -1,5 +1,7 @@
+import { useState } from 'react';
 import KPIGrid from '../../../components/ui/KPIGrid';
 import DataTable from '../../../components/ui/DataTable';
+import VertragDetailModal from '../../../components/ui/VertragDetailModal';
 import { SparteBadge, StatusBadge } from '../../../components/ui/Badge';
 import { useMode } from '../../../hooks/useMode';
 import { KUNDEN_BY_MODE, BESTAND_DATA } from '../../../data';
@@ -37,7 +39,8 @@ const COLUMNS = [
 ];
 
 export default function BestandTab() {
-  const { modeId, navigateTo } = useMode();
+  const { modeId } = useMode();
+  const [selectedVertrag, setSelectedVertrag] = useState(null);
   const kunden = KUNDEN_BY_MODE[modeId] || [];
   const data = BESTAND_DATA[modeId] || BESTAND_DATA.versicherung;
   const kpiConfig = BESTAND_KPI_CONFIG[modeId] || BESTAND_KPI_CONFIG.versicherung;
@@ -48,12 +51,20 @@ export default function BestandTab() {
       ...p,
       id: `${k.id}-${p.typ}`,
       kundeId: k.id,
+      kunde: k.name,
       kundeName: k.name,
+      beitrag: p.praemie,
+      beitragsart: 'J',
+      versicherer: p.produkt?.split(' ')[0],
+      datum: p.seit,
     }))
   );
 
   return (
     <div className="space-y-6">
+      {selectedVertrag && (
+        <VertragDetailModal vertrag={selectedVertrag} onClose={() => setSelectedVertrag(null)} />
+      )}
       <KPIGrid kpiConfig={kpiConfig} kpiValues={data.kpiValues} />
 
       <DataTable
@@ -73,7 +84,7 @@ export default function BestandTab() {
             </div>
           );
         }}
-        onRowClick={(row) => navigateTo('detail', { kundeId: row.kundeId })}
+        onRowClick={(row) => setSelectedVertrag(row)}
       />
     </div>
   );

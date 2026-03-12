@@ -1,17 +1,17 @@
-import { V1, V2, V3, V4 } from './versicherung-v1-v4';
-import { V5, V6, V7, V8 } from './versicherung-v5-v8';
-import { B1, B2, B3, B4, B5, B6 } from './banking';
-import { W1, W2, W3, W4, W5 } from './vv';
+import { getKunden } from './generator';
 
-export const VERSICHERUNG_KUNDEN = [V1, V2, V3, V4, V5, V6, V7, V8];
-export const BANKING_KUNDEN = [B1, B2, B3, B4, B5, B6];
-export const VV_MANDANTEN = [W1, W2, W3, W4, W5];
-
+// Dynamisch generierte Kunden (Showcase + generierte)
+// Lazy: Werden beim ersten Zugriff generiert und gecacht
 export const KUNDEN_BY_MODE = {
-  versicherung: VERSICHERUNG_KUNDEN,
-  banking: BANKING_KUNDEN,
-  vermoegensverwaltung: VV_MANDANTEN,
+  get versicherung() { return getKunden('versicherung'); },
+  get banking() { return getKunden('banking'); },
+  get vermoegensverwaltung() { return getKunden('vermoegensverwaltung'); },
 };
+
+// Legacy exports
+export const VERSICHERUNG_KUNDEN = KUNDEN_BY_MODE.versicherung;
+export const BANKING_KUNDEN = KUNDEN_BY_MODE.banking;
+export const VV_MANDANTEN = KUNDEN_BY_MODE.vermoegensverwaltung;
 
 export function getKundeById(modeId, kundeId) {
   const list = KUNDEN_BY_MODE[modeId] || [];

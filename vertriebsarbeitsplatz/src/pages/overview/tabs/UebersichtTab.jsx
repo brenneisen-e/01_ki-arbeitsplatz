@@ -14,13 +14,13 @@ const MINI_KPIS = {
     { label: 'Abschlussquote', value: '68%', subtext: '+5%' },
   ],
   banking: [
-    { label: 'Abschlüsse', value: '8', subtext: 'diese Woche' },
-    { label: 'Ertrag', value: '24,8k', subtext: 'dieser Monat' },
-    { label: 'Termine', value: '18', subtext: 'diesen Monat' },
+    { label: 'Abschlüsse', value: '8', subtext: 'Diese Woche' },
+    { label: 'Ertrag', value: '24,8k', subtext: 'Dieser Monat' },
+    { label: 'Termine', value: '18', subtext: 'Diesen Monat' },
     { label: 'NPS', value: '8,4', subtext: 'Durchschnitt' },
   ],
   vermoegensverwaltung: [
-    { label: 'AuM', value: '78M', subtext: 'gesamt' },
+    { label: 'AuM', value: '78M', subtext: 'Gesamt' },
     { label: 'NNM', value: '+5,8M', subtext: 'YTD' },
     { label: 'Performance', value: '+5,6%', subtext: 'YTD \u00d8' },
     { label: 'Pipeline', value: '45M', subtext: '12 Leads' },

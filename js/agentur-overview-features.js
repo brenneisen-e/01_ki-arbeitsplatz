@@ -6,15 +6,9 @@ function backFromAgentur() {
     if (agenturOverview) agenturOverview.style.display = 'none';
     hideAgenturChat();
 
-    // Use the comprehensive landing reset (handles module tabs, welcome chat, zoom, etc.)
-    if (typeof backToLanding === 'function') {
-        backToLanding();
-    } else {
-        // Fallback if backToLanding not yet loaded
-        const landingPage = document.getElementById('landingPage');
-        if (landingPage) landingPage.style.display = 'flex';
-        if (window.AppRouter) AppRouter.navigate('/landing');
-    }
+    // Redirect to React M-01
+    window.location.href = '/';
+    return;
 }
 
 // ========================================

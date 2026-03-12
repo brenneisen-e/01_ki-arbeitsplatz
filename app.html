@@ -11,7 +11,7 @@
         var hash = window.location.hash.replace('#', '') || '/';
         if (hash === '/' || hash === '/landing') {
             // Redirect to React M-01 landing page
-            window.location.replace('./index.html');
+            window.location.replace('/');
             return;
         }
         // Deep-link: hide loading animation immediately via CSS

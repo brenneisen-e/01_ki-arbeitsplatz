@@ -214,17 +214,9 @@ function backFromBeraterOverview() {
     var chatWidget = document.getElementById('beraterChatWidget');
     if (chatWidget) chatWidget.style.display = 'none';
 
-    // Delegate to backToLanding() which properly resets all page states,
-    // module tabs, and dispatches the correct events for M-01
-    if (typeof backToLanding === 'function') {
-        backToLanding();
-    } else {
-        // Fallback if backToLanding not available
-        document.getElementById('beraterOverviewPage').style.display = 'none';
-        var landing = document.getElementById('landingPage');
-        if (landing) landing.style.display = 'flex';
-        if (window.AppRouter) AppRouter.navigate('/landing');
-    }
+    // Redirect to React M-01
+    window.location.href = '/';
+    return;
 }
 
 // ── VIEW MODE SWITCHING ──

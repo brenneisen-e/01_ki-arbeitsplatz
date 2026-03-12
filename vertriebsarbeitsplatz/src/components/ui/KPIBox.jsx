@@ -4,9 +4,7 @@ import { useEffect, useState } from 'react';
 
 function formatValue(wert, format) {
   if (format === 'eur') {
-    if (wert >= 1000000) return `${(wert / 1000000).toLocaleString('de-DE', { maximumFractionDigits: 1 })} M\u20ac`;
-    if (wert >= 1000) return `${(wert / 1000).toLocaleString('de-DE', { maximumFractionDigits: 0 })} k\u20ac`;
-    return `${wert.toLocaleString('de-DE')} \u20ac`;
+    return `${Math.round(wert).toLocaleString('de-DE')}\u20ac`;
   }
   if (format === 'pct') return `${wert.toLocaleString('de-DE', { maximumFractionDigits: 1 })}%`;
   if (format === 'num') return wert.toLocaleString('de-DE');

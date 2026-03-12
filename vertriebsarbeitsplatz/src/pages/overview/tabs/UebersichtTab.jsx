@@ -200,33 +200,34 @@ export default function UebersichtTab() {
             </div>
             <span className="text-sm text-slate-400">Top-5 von {getAllPotentiale(modeId).length}</span>
           </div>
-          <div className="space-y-1">
+          <div className="space-y-0">
             {potentiale.map((p, i) => (
               <div
                 key={i}
-                className="flex items-center justify-between py-2.5 px-3 rounded-lg hover:bg-slate-50 transition-colors cursor-pointer"
+                className="grid py-2.5 px-3 rounded-lg hover:bg-slate-50 transition-colors cursor-pointer items-center"
+                style={{ gridTemplateColumns: '160px auto 140px' }}
                 onClick={() => navigateTo('detail', { kundeId: p.kundeId })}
               >
-                <div className="flex items-center gap-3 flex-1 min-w-0">
-                  <span className="text-sm font-semibold text-slate-800 w-36 truncate">{p.kundeName}</span>
-                  <span className="text-xs text-slate-400">{p.kundeId}</span>
+                <div className="flex items-center gap-2 min-w-0">
+                  <span className="text-sm font-semibold text-slate-800 truncate">{p.kundeName}</span>
+                  <span className="text-xs text-slate-400 shrink-0">{p.kundeId}</span>
                   <PrioBadge prioritaet={p.prioritaet} />
                 </div>
-                <div className="flex-1 min-w-0 mx-3">
+                <div className="min-w-0 px-3">
                   <div className="text-sm font-medium" style={{ color: 'var(--mode-primary-light)' }}>{p.titel}</div>
                   <div className="text-xs text-slate-500 truncate">{p.beschreibung}</div>
                 </div>
-                <div className="flex items-center gap-4 shrink-0 text-right">
-                  <div>
+                <div className="flex items-center gap-4 shrink-0 justify-end">
+                  <div className="text-right">
                     <div className="text-[10px] uppercase text-slate-400">Prämie</div>
                     <div className="text-sm font-mono font-medium text-slate-700">
-                      {p.volumen > 0 ? `€${p.volumen.toLocaleString('de-DE')}/J.` : '-'}
+                      {p.volumen > 0 ? `${p.volumen.toLocaleString('de-DE')}€/J.` : '-'}
                     </div>
                   </div>
-                  <div>
+                  <div className="text-right">
                     <div className="text-[10px] uppercase text-slate-400">Provision</div>
                     <div className="text-sm font-mono font-medium" style={{ color: 'var(--mode-primary-light)' }}>
-                      {p.volumen > 0 ? `€${Math.round(p.volumen * 0.75).toLocaleString('de-DE')}` : '-'}
+                      {p.volumen > 0 ? `${Math.round(p.volumen * 0.75).toLocaleString('de-DE')}€` : '-'}
                     </div>
                   </div>
                 </div>

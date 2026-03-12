@@ -2,7 +2,7 @@ import Card from '../../../components/ui/Card';
 import DataTable from '../../../components/ui/DataTable';
 import { StatusBadge, SparteBadge } from '../../../components/ui/Badge';
 import { formatEur, formatPct, berechneHaushaltsnetto, berechneAbsicherungsquote, berechneSparquote, berechneFrei, potentialSterne } from '../../../utils/formatters';
-import { User, Wallet, Linkedin, Star, ChevronDown, MapPin, Briefcase, Heart, Users, CheckCircle, Building2 } from 'lucide-react';
+import { User, Wallet, Linkedin, Star, ChevronDown, MapPin, Briefcase, Heart, Users, CheckCircle, Building2, PawPrint, Info } from 'lucide-react';
 import { useState } from 'react';
 import { useMode } from '../../../hooks/useMode';
 
@@ -122,6 +122,9 @@ export default function StammdatenDetailTab({ kunde }) {
               <InfoRow label="Kinder" value={kunde.kinder.map(k => `${k.name} (${k.alter})`).join(', ')} />
             )}
             <InfoRow label="Wohnsituation" value={`${kunde.wohnsituation}, ${kunde.wohnflaeche}qm`} />
+            {kunde.haustiere && (
+              <HaustiereRow haustiere={kunde.haustiere} />
+            )}
             {kunde.linkedin && (
               <div className="flex items-center gap-2 pt-2 border-t border-slate-100 mt-2">
                 <Linkedin size={14} className="text-blue-600" />
@@ -258,6 +261,51 @@ function ArbeitgeberRow({ arbeitgeber }) {
           </button>
         )}
       </span>
+    </div>
+  );
+}
+
+function HaustiereRow({ haustiere }) {
+  const [showDetail, setShowDetail] = useState(false);
+  const tierLabel = haustiere.name
+    ? `${haustiere.art} (${haustiere.name}, ${haustiere.alter} J.)`
+    : `${haustiere.art} (${haustiere.alter} J.)`;
+
+  return (
+    <div className="pt-2 border-t border-slate-100 mt-2">
+      <div className="flex justify-between items-center">
+        <span className="flex items-center gap-1.5 text-slate-400">
+          <PawPrint size={14} className="text-amber-500" />
+          Haustier
+        </span>
+        <span className="flex items-center gap-2 text-slate-700 font-medium">
+          {tierLabel}
+          <button
+            onClick={() => setShowDetail(!showDetail)}
+            className="flex items-center gap-1 text-[10px] text-blue-500 bg-blue-50 px-1.5 py-0.5 rounded-full border border-blue-100 hover:bg-blue-100 transition-colors"
+          >
+            <Info size={10} />
+            Kontoumsätze
+          </button>
+        </span>
+      </div>
+      {showDetail && haustiere.erkannteTransaktionen && (
+        <div className="mt-2 bg-amber-50 border border-amber-200 rounded-lg p-3 space-y-2 animate-fade-in">
+          <div className="text-xs font-semibold text-amber-700 flex items-center gap-1.5">
+            <PawPrint size={12} />
+            Hinweise aus Kontoumsätzen erkannt
+          </div>
+          {haustiere.erkannteTransaktionen.map((t, i) => (
+            <div key={i} className="flex justify-between text-xs text-amber-800">
+              <span>{t.haendler}</span>
+              <span className="font-mono">{t.betrag}€ ({t.haeufigkeit})</span>
+            </div>
+          ))}
+          <div className="text-[10px] text-amber-600 pt-1 border-t border-amber-200">
+            Quelle: PSD2/Open Finance Transaktionsanalyse
+          </div>
+        </div>
+      )}
     </div>
   );
 }

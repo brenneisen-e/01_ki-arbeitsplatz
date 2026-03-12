@@ -14,17 +14,36 @@ function hatFremd(p, typ) {
   return p.fremdProdukte.some(fp => fp.typ === typ);
 }
 
+function fmtEur(v) {
+  return v.toLocaleString('de-DE') + '€';
+}
+
 // ═══ Versicherung ═══
 const VERSICHERUNG_REGELN = [
   {
     id: 'bu_fehlt',
     check: (p) => !hatProdukt(p, 'bu') && p.alter < 60 && p._berufObj.buRisiko !== 'keine',
-    titel: 'BU-Versicherung fehlt',
+    titel: (p) => `Erhöhung Abdeckung BU`,
     typ: 'whitespot', quellen: ['bestand'], prioritaet: 'kritisch',
     volumen: (p) => Math.round(p.nettoeinkommen * 0.8 * 12 * 0.04),
     beschreibung: (p) => `Keine BU vorhanden. ${p.beruf} (${p._berufObj.buRisiko}). Empfehlung: ${Math.round(p.nettoeinkommen * 0.8)}€/mtl. Rente.`,
     produktEmpfehlung: (p) => p._berufObj.buRisiko === 'arzt' ? 'ERGO BU Ärzte-Tarif' : 'ERGO BU Comfort',
     empfohleneAktion: 'angebot_erstellen',
+    herleitung: (p) => [
+      { label: 'Datenquelle', value: 'PSD2-Gehaltsanalyse + Bestandsdaten' },
+      { label: 'Beruf / Risikoklasse', value: `${p.beruf} (${p._berufObj.buRisiko})` },
+      { label: 'Aktuelles Nettoeinkommen', value: `${fmtEur(p.nettoeinkommen)}/mtl.` },
+      { label: 'Aktuelle BU-Absicherung', value: '0€/mtl. (keine BU vorhanden)' },
+      { label: 'Empfohlene Absicherung', value: `${fmtEur(Math.round(p.nettoeinkommen * 0.8))}/mtl. (80% d. Nettoeinkommens)` },
+      { label: 'Deckungslücke', value: `${fmtEur(Math.round(p.nettoeinkommen * 0.8))}/mtl.` },
+    ],
+    deckungsluecke: (p) => ({
+      label: 'BU-Absicherung vs. Nettoeinkommen',
+      gehalt: p.nettoeinkommen,
+      aktuelleAbsicherung: 0,
+      empfohleneAbsicherung: Math.round(p.nettoeinkommen * 0.8),
+      einheit: '€/mtl.',
+    }),
   },
   {
     id: 'haftpflicht_fehlt',
@@ -35,6 +54,12 @@ const VERSICHERUNG_REGELN = [
     beschreibung: () => 'Existenzbedrohende Lücke. Pflichtversicherung für jeden Haushalt.',
     produktEmpfehlung: 'ERGO Haftpflicht',
     empfohleneAktion: 'angebot_erstellen',
+    herleitung: (p) => [
+      { label: 'Datenquelle', value: 'Bestandsanalyse' },
+      { label: 'Erkannte Situation', value: 'Keine Privathaftpflicht im Bestand' },
+      { label: 'Haushaltsgröße', value: p.partner ? `2 Erwachsene${p.kinder?.length ? `, ${p.kinder.length} Kind${p.kinder.length > 1 ? 'er' : ''}` : ''}` : `Single${p.kinder?.length ? ` mit ${p.kinder.length} Kind${p.kinder.length > 1 ? 'er' : ''}` : ''}` },
+      { label: 'Empfehlung', value: p.partner ? 'ERGO Haftpflicht Familie, ab 65€/J.' : 'ERGO Haftpflicht Single, ab 45€/J.' },
+    ],
   },
   {
     id: 'rlv_bei_baufi',
@@ -48,6 +73,16 @@ const VERSICHERUNG_REGELN = [
     },
     produktEmpfehlung: 'ERGO Risikoleben',
     empfohleneAktion: 'termin_vereinbaren',
+    herleitung: (p) => {
+      const baufi = p.fremdProdukte.find(f => f.typ === 'baufinanzierung');
+      return [
+        { label: 'Datenquelle', value: `Open Finance – Kreditdaten (${baufi?.institut || 'Bank'})` },
+        { label: 'Baufinanzierung', value: `${fmtEur(baufi?.volumen || 0)} bei ${baufi?.institut || 'Fremdbank'}` },
+        { label: 'Familiensituation', value: p.partner ? `Verheiratet${p.kinder?.length ? `, ${p.kinder.length} Kind${p.kinder.length > 1 ? 'er' : ''}` : ''}` : 'Alleinlebend' },
+        { label: 'Absicherung vorhanden', value: 'Keine RLV im Bestand' },
+        { label: 'Empfehlung', value: `RLV ${fmtEur(baufi?.volumen || 300000)} Versicherungssumme, 20 Jahre Laufzeit, ca. 25€/Monat` },
+      ];
+    },
   },
   {
     id: 'baufi_zinsbindung',
@@ -60,6 +95,38 @@ const VERSICHERUNG_REGELN = [
       return `Zinsbindung endet ${baufi?._zinsbindungEnde}. Jetzt Forward-Darlehen prüfen.`;
     },
     empfohleneAktion: 'termin_vereinbaren',
+    herleitung: (p) => {
+      const baufi = p.fremdProdukte.find(f => f._zinsbindungEnde);
+      const aktZins = randomBetween(12, 22) / 10;
+      const neuZins = randomBetween(28, 38) / 10;
+      return [
+        { label: 'Datenquelle', value: `Open Finance – Kreditdaten (${baufi?.institut || 'Bank'})` },
+        { label: 'Restschuld (geschätzt)', value: fmtEur(baufi?.volumen || 200000) },
+        { label: 'Zinsbindung endet', value: `${baufi?._zinsbindungEnde || '2027'}` },
+        { label: 'Aktueller Zinssatz', value: `${aktZins.toFixed(2)}% (Abschluss ${(baufi?._zinsbindungEnde || 2027) - 10})` },
+        { label: 'Markt-Zinsniveau aktuell', value: `${neuZins.toFixed(2)}% (Forward ab ${(neuZins - 0.3).toFixed(2)}%)` },
+        { label: 'Empfehlung', value: 'Forward-Darlehen jetzt sichern, bevor Zinsbindung ausläuft' },
+      ];
+    },
+    vergleich: (p) => {
+      const baufi = p.fremdProdukte.find(f => f._zinsbindungEnde);
+      const restschuld = baufi?.volumen || 200000;
+      const aktZins = randomBetween(12, 22) / 10;
+      const forwardZins = randomBetween(30, 36) / 10;
+      const monatsrateAlt = Math.round(restschuld * (aktZins / 100) / 12);
+      const monatsrateNeu = Math.round(restschuld * (forwardZins / 100) / 12);
+      return {
+        titel: `Vergleich: Aktuelle Konditionen vs. Forward-Darlehen`,
+        spalten: ['Merkmal', `${baufi?.institut || 'Bank'} (aktuell)`, 'Forward-Darlehen'],
+        zeilen: [
+          { merkmal: 'Zinssatz', aktuell: `${aktZins.toFixed(2)}%`, angebot: `${forwardZins.toFixed(2)}%`, highlight: false },
+          { merkmal: 'Restschuld', aktuell: fmtEur(restschuld), angebot: fmtEur(restschuld) },
+          { merkmal: 'Zinskosten/Monat', aktuell: fmtEur(monatsrateAlt), angebot: fmtEur(monatsrateNeu) },
+          { merkmal: 'Zinsbindung', aktuell: `bis ${baufi?._zinsbindungEnde || 2027}`, angebot: '10 Jahre', highlight: true },
+          { merkmal: 'Planungssicherheit', aktuell: 'Nur bis Ablauf', angebot: 'Jetzt sichern', highlight: true },
+        ],
+      };
+    },
   },
   {
     id: 'fondspolice_statt_depot',
@@ -73,6 +140,38 @@ const VERSICHERUNG_REGELN = [
     },
     produktEmpfehlung: 'ERGO Rente Balance',
     empfohleneAktion: 'termin_vereinbaren',
+    herleitung: (p) => {
+      const depot = p.fremdProdukte.find(f => f.typ === 'depot');
+      const vol = depot?.volumen || 30000;
+      const rendite = Math.round(vol * 0.07);
+      const steuerDepot = Math.round(rendite * 0.26375);
+      const steuerPolice = Math.round(rendite * 0.5 * 0.26375);
+      return [
+        { label: 'Datenquelle', value: `Open Finance – Depotwerte (${depot?.institut || 'Fremdbank'})` },
+        { label: 'Depot-Volumen', value: `${fmtEur(vol)} bei ${depot?.institut || 'Fremdbank'}` },
+        { label: 'Angenommene Rendite', value: `7% p.a. = ${fmtEur(rendite)}/J.` },
+        { label: 'Steuer Depot (AbgSt.)', value: `${fmtEur(steuerDepot)}/J. (26,375% auf Gewinne)` },
+        { label: 'Steuer Fondspolice', value: `${fmtEur(steuerPolice)}/J. (Halbeinkünfte nach 12J.)` },
+        { label: 'Jährliche Ersparnis', value: `${fmtEur(steuerDepot - steuerPolice)}/J. durch Halbeinkünfteverfahren` },
+      ];
+    },
+    vergleich: (p) => {
+      const depot = p.fremdProdukte.find(f => f.typ === 'depot');
+      const vol = depot?.volumen || 30000;
+      const rendite = Math.round(vol * 0.07);
+      return {
+        titel: `Vergleich: Depot (${depot?.institut || 'Fremdbank'}) vs. ERGO Fondspolice`,
+        spalten: ['Merkmal', `Depot (${depot?.institut || 'aktuell'})`, 'ERGO Rente Balance'],
+        zeilen: [
+          { merkmal: 'Depotvolumen', aktuell: fmtEur(vol), angebot: fmtEur(vol) },
+          { merkmal: 'Besteuerung Gewinne', aktuell: '26,375% AbgSt.', angebot: 'Halbeinkünfte (12J.)', highlight: true },
+          { merkmal: 'Steuer bei 7% Rendite', aktuell: fmtEur(Math.round(rendite * 0.26375)), angebot: fmtEur(Math.round(rendite * 0.5 * 0.26375)), highlight: true },
+          { merkmal: 'Fondsauswahl', aktuell: 'Unbeschränkt', angebot: '100+ ETFs & Fonds' },
+          { merkmal: 'Garantie', aktuell: 'Keine', angebot: 'Optional 60-90%', highlight: true },
+          { merkmal: 'Flexibilität', aktuell: 'Jederzeit verfügbar', angebot: 'Ab 62 J. oder Kündigung' },
+        ],
+      };
+    },
   },
   {
     id: 'pflege_ab_45',
@@ -84,6 +183,28 @@ const VERSICHERUNG_REGELN = [
     beschreibung: () => 'Keine Pflegezusatzversicherung. Versorgungslücke bei Pflegefall.',
     produktEmpfehlung: 'ERGO Pflege Comfort',
     empfohleneAktion: 'angebot_erstellen',
+    herleitung: (p) => {
+      const kostenHeim = 4500;
+      const gkvLeistung = 2005;
+      const luecke = kostenHeim - gkvLeistung;
+      return [
+        { label: 'Datenquelle', value: 'Bestandsanalyse + demografische Daten' },
+        { label: 'Alter', value: `${p.alter} Jahre` },
+        { label: 'Pflegeheim-Kosten (Durchschnitt)', value: `${fmtEur(kostenHeim)}/mtl.` },
+        { label: 'GKV-Leistung (Pflegegrad 3)', value: `${fmtEur(gkvLeistung)}/mtl.` },
+        { label: 'Versorgungslücke', value: `${fmtEur(luecke)}/mtl. Eigenanteil` },
+        { label: 'Empfehlung', value: `ERGO Pflege Comfort, ${fmtEur(luecke)} Pflegerente, ab ${p.alter < 50 ? '35' : p.alter < 55 ? '55' : '85'}€/mtl.` },
+      ];
+    },
+    deckungsluecke: (p) => ({
+      label: 'Pflegekosten-Absicherung',
+      gehalt: 4500,
+      gehaltLabel: 'Heim-Kosten',
+      aktuelleAbsicherung: 2005,
+      absicherungLabel: 'GKV-Leistung',
+      empfohleneAbsicherung: 4500,
+      einheit: '€/mtl.',
+    }),
   },
   {
     id: 'wohngebaeude_fehlt',
@@ -94,6 +215,13 @@ const VERSICHERUNG_REGELN = [
     beschreibung: () => 'Eigenheim ohne Wohngebäudeversicherung. Existenzrisiko bei Brand/Sturm.',
     produktEmpfehlung: 'ERGO Wohngebäude Premium',
     empfohleneAktion: 'angebot_erstellen',
+    herleitung: (p) => [
+      { label: 'Datenquelle', value: 'Bestandsanalyse + Immobiliendaten' },
+      { label: 'Wohnsituation', value: `Eigentum, ${p.wohnflaeche || 120}qm` },
+      { label: 'Gebäudeversicherung', value: 'Nicht vorhanden' },
+      { label: 'Risiko', value: 'Existenzbedrohend bei Brand, Sturm, Leitungswasser' },
+      { label: 'Empfehlung', value: `ERGO Wohngebäude Premium, ca. ${randomBetween(25, 50)}€/mtl.` },
+    ],
   },
   {
     id: 'ruerup_selbstaendig',
@@ -104,6 +232,19 @@ const VERSICHERUNG_REGELN = [
     beschreibung: () => 'Selbständig ohne Altersvorsorge. Rürup steuerlich absetzbar bis 27.566€/J.',
     produktEmpfehlung: 'ERGO Rente Garantie Rürup',
     empfohleneAktion: 'termin_vereinbaren',
+    herleitung: (p) => {
+      const maxAbsetzbar = 27566;
+      const empfBeitrag = Math.min(maxAbsetzbar, Math.round(p.bruttoeinkommen * 0.1));
+      const steuerErsparnis = Math.round(empfBeitrag * 0.42);
+      return [
+        { label: 'Datenquelle', value: 'Bestandsdaten + Steueranalyse' },
+        { label: 'Berufsstatus', value: `Selbständig (${p.beruf})` },
+        { label: 'Keine gesetzl. Rentenversicherung', value: 'Keine Pflichtbeiträge → hohe Versorgungslücke' },
+        { label: 'Max. steuerlich absetzbar', value: `${fmtEur(maxAbsetzbar)}/J. (2026)` },
+        { label: 'Empfohlener Beitrag', value: `${fmtEur(empfBeitrag)}/J.` },
+        { label: 'Steuerersparnis (geschätzt)', value: `${fmtEur(steuerErsparnis)}/J. bei 42% Grenzsteuersatz` },
+      ];
+    },
   },
   {
     id: 'kfz_fremd',
@@ -117,6 +258,37 @@ const VERSICHERUNG_REGELN = [
     },
     produktEmpfehlung: 'ERGO Kfz Comfort',
     empfohleneAktion: 'tarifvergleich',
+    herleitung: (p) => {
+      const kfz = p.fremdProdukte.find(f => f.typ === 'kfz');
+      const fremdPraemie = kfz?.volumen || randomBetween(500, 900);
+      const ergoPraemie = Math.round(fremdPraemie * 0.82);
+      return [
+        { label: 'Datenquelle', value: 'Wettbewerbsanalyse (Fremdvertrag erkannt)' },
+        { label: 'Aktueller Versicherer', value: kfz?.institut || 'Fremdversicherer' },
+        { label: 'Fahrzeug', value: kfz?.details || pickKfzModell(p) || 'Pkw' },
+        { label: 'Aktuelle Jahresprämie', value: `${fmtEur(fremdPraemie)}/J.` },
+        { label: 'ERGO-Angebot (geschätzt)', value: `${fmtEur(ergoPraemie)}/J. inkl. Bündelrabatt` },
+        { label: 'Ersparnis', value: `${fmtEur(fremdPraemie - ergoPraemie)}/J. (${Math.round((1 - ergoPraemie / fremdPraemie) * 100)}%)` },
+      ];
+    },
+    vergleich: (p) => {
+      const kfz = p.fremdProdukte.find(f => f.typ === 'kfz');
+      const fremdPraemie = kfz?.volumen || randomBetween(500, 900);
+      const ergoPraemie = Math.round(fremdPraemie * 0.82);
+      return {
+        titel: `Vergleich: ${kfz?.institut || 'Fremdversicherer'} (aktuell) vs. ERGO Kfz`,
+        spalten: ['Merkmal', `${kfz?.institut || 'Aktuell'}`, 'ERGO Kfz Comfort'],
+        zeilen: [
+          { merkmal: 'Jahresprämie', aktuell: fmtEur(fremdPraemie), angebot: fmtEur(ergoPraemie), highlight: true },
+          { merkmal: 'Vollkasko SB', aktuell: '300€', angebot: '300€' },
+          { merkmal: 'Teilkasko SB', aktuell: '150€', angebot: '150€' },
+          { merkmal: 'GAP-Deckung', aktuell: 'Nein', angebot: 'Ja', highlight: true },
+          { merkmal: 'Marderschäden', aktuell: 'Ja', angebot: 'Ja (inkl. Folgeschäden)', highlight: true },
+          { merkmal: 'Auslandsschutz', aktuell: 'EU', angebot: 'Weltweit', highlight: true },
+          { merkmal: 'Bündelrabatt', aktuell: '–', angebot: '15% bei 3+ Verträgen', highlight: true },
+        ],
+      };
+    },
   },
   {
     id: 'hausrat_fehlt',
@@ -127,6 +299,16 @@ const VERSICHERUNG_REGELN = [
     beschreibung: (p) => `Kein Hausrat. ${p.wohnflaeche}qm ${p.wohnsituation}.`,
     produktEmpfehlung: 'ERGO Hausrat Basis',
     empfohleneAktion: 'angebot_erstellen',
+    herleitung: (p) => {
+      const vsQm = 650;
+      const vsSumme = (p.wohnflaeche || 80) * vsQm;
+      return [
+        { label: 'Datenquelle', value: 'Bestandsanalyse' },
+        { label: 'Wohnfläche', value: `${p.wohnflaeche || 80}qm (${p.wohnsituation})` },
+        { label: 'Empfohlene VS (650€/qm)', value: fmtEur(vsSumme) },
+        { label: 'Empfehlung', value: `ERGO Hausrat Basis, ca. ${randomBetween(6, 15)}€/mtl.` },
+      ];
+    },
   },
   {
     id: 'rechtsschutz_fehlt',
@@ -137,6 +319,11 @@ const VERSICHERUNG_REGELN = [
     beschreibung: () => 'Kein Rechtsschutz vorhanden.',
     produktEmpfehlung: 'ERGO Rechtsschutz',
     empfohleneAktion: 'angebot_erstellen',
+    herleitung: (p) => [
+      { label: 'Datenquelle', value: 'Bestandsanalyse' },
+      { label: 'Erkannte Situation', value: 'Keine Rechtsschutzversicherung im Bestand' },
+      { label: 'Empfehlung', value: p.wohnsituation === 'Eigentum' ? 'ERGO Rechtsschutz Premium (Privat + Verkehr + Wohnen)' : 'ERGO Rechtsschutz Privat + Verkehr' },
+    ],
   },
   {
     id: 'bindungsgespraech',
@@ -146,6 +333,17 @@ const VERSICHERUNG_REGELN = [
     volumen: () => 0,
     beschreibung: (p) => `NPS ${p.nps}/10 = Detractor. Abwanderungsrisiko hoch. Proaktiv Termin vereinbaren.`,
     empfohleneAktion: 'termin_vereinbaren',
+    herleitung: (p) => {
+      const vertraege = p.eigeneProdukte?.length || 0;
+      const bestandswert = p.eigeneProdukte?.reduce((s, ep) => s + (ep.volumen || 0), 0) || 0;
+      return [
+        { label: 'Datenquelle', value: 'Kundenzufriedenheits-Analyse (NPS)' },
+        { label: 'NPS-Score', value: `${p.nps}/10 (Detractor ≤ 6)` },
+        { label: 'Abwanderungsrisiko', value: 'HOCH – Kunde ist unzufrieden' },
+        { label: 'Bestandswert gefährdet', value: `${vertraege} Verträge, ${fmtEur(bestandswert)}/J.` },
+        { label: 'Empfehlung', value: 'Sofort proaktives Bindungsgespräch führen' },
+      ];
+    },
   },
 ];
 
@@ -160,6 +358,20 @@ const BANKING_REGELN = [
     beschreibung: () => 'Keine BU erkennbar. R+V BU über VR-Verbund anbieten.',
     produktEmpfehlung: 'R+V BU',
     empfohleneAktion: 'termin_vereinbaren',
+    herleitung: (p) => [
+      { label: 'Datenquelle', value: 'Kontoanalyse + VR-Verbund Bestand' },
+      { label: 'Beruf', value: p.beruf || 'Angestellt' },
+      { label: 'Aktuelles Nettoeinkommen', value: `${fmtEur(p.nettoeinkommen)}/mtl.` },
+      { label: 'Erkannte Situation', value: 'Keine BU-Versicherung im Bestand oder Fremdbestand erkennbar' },
+      { label: 'Empfohlene BU-Rente', value: `${fmtEur(Math.round(p.nettoeinkommen * 0.75))}/mtl. (75% d. Nettoeinkommens)` },
+    ],
+    deckungsluecke: (p) => ({
+      label: 'BU-Absicherung vs. Nettoeinkommen',
+      gehalt: p.nettoeinkommen,
+      aktuelleAbsicherung: 0,
+      empfohleneAbsicherung: Math.round(p.nettoeinkommen * 0.75),
+      einheit: '€/mtl.',
+    }),
   },
   {
     id: 'rv_kfz_statt_fremd',
@@ -173,6 +385,35 @@ const BANKING_REGELN = [
     },
     produktEmpfehlung: 'R+V Kfz-Versicherung',
     empfohleneAktion: 'tarifvergleich',
+    herleitung: (p) => {
+      const kfz = p.fremdProdukte.find(f => f.typ === 'kfz');
+      const fremdPraemie = kfz?.volumen || randomBetween(500, 900);
+      const rvPraemie = Math.round(fremdPraemie * 0.85);
+      return [
+        { label: 'Datenquelle', value: 'Wettbewerbsanalyse (Fremdvertrag erkannt)' },
+        { label: 'Aktueller Versicherer', value: kfz?.institut || 'Fremdversicherer' },
+        { label: 'Fahrzeug', value: kfz?.details || 'Pkw' },
+        { label: 'Aktuelle Jahresprämie', value: `${fmtEur(fremdPraemie)}/J.` },
+        { label: 'R+V-Angebot', value: `${fmtEur(rvPraemie)}/J. über VR-Verbund` },
+        { label: 'Ersparnis', value: `${fmtEur(fremdPraemie - rvPraemie)}/J. (${Math.round((1 - rvPraemie / fremdPraemie) * 100)}%)` },
+      ];
+    },
+    vergleich: (p) => {
+      const kfz = p.fremdProdukte.find(f => f.typ === 'kfz');
+      const fremdPraemie = kfz?.volumen || randomBetween(500, 900);
+      const rvPraemie = Math.round(fremdPraemie * 0.85);
+      return {
+        titel: `Vergleich: ${kfz?.institut || 'Fremdversicherer'} vs. R+V Kfz`,
+        spalten: ['Merkmal', `${kfz?.institut || 'Aktuell'}`, 'R+V Kfz'],
+        zeilen: [
+          { merkmal: 'Jahresprämie', aktuell: fmtEur(fremdPraemie), angebot: fmtEur(rvPraemie), highlight: true },
+          { merkmal: 'Vollkasko SB', aktuell: '300€', angebot: '300€' },
+          { merkmal: 'SF-Rabatt Übernahme', aktuell: 'Standard', angebot: 'Ja (1:1)', highlight: true },
+          { merkmal: 'VR-Bündelrabatt', aktuell: '–', angebot: '10% auf alle R+V-Verträge', highlight: true },
+          { merkmal: 'Werkstattbindung', aktuell: 'Nein', angebot: 'Optional (20% Rabatt)' },
+        ],
+      };
+    },
   },
   {
     id: 'depot_umschichtung',
@@ -186,6 +427,31 @@ const BANKING_REGELN = [
     },
     produktEmpfehlung: 'Union Investment UniGlobal Vorsorge',
     empfohleneAktion: 'termin_vereinbaren',
+    herleitung: (p) => {
+      const depot = p.fremdProdukte.find(f => f.typ === 'depot');
+      const vol = depot?.volumen || 30000;
+      return [
+        { label: 'Datenquelle', value: `Open Finance – Depotdaten (${depot?.institut || 'Fremdbank'})` },
+        { label: 'Depot-Volumen', value: fmtEur(vol) },
+        { label: 'Aktueller Anbieter', value: depot?.institut || 'Fremdbank' },
+        { label: 'Empfehlung', value: `Union Investment UniGlobal Vorsorge (TER 0,98%)` },
+      ];
+    },
+    vergleich: (p) => {
+      const depot = p.fremdProdukte.find(f => f.typ === 'depot');
+      const vol = depot?.volumen || 30000;
+      return {
+        titel: `Vergleich: ${depot?.institut || 'Fremdbank'} Depot vs. Union Investment`,
+        spalten: ['Merkmal', `${depot?.institut || 'aktuell'}`, 'Union Investment'],
+        zeilen: [
+          { merkmal: 'Depotvolumen', aktuell: fmtEur(vol), angebot: fmtEur(vol) },
+          { merkmal: 'Depotgebühr', aktuell: `${randomBetween(20, 40)}€/J.`, angebot: '0€ bei VR-Konto', highlight: true },
+          { merkmal: 'Sparplan ab', aktuell: '50€/mtl.', angebot: '25€/mtl.', highlight: true },
+          { merkmal: 'Beratung', aktuell: 'Online-only', angebot: 'Persönlich in Filiale', highlight: true },
+          { merkmal: 'VL-fähig', aktuell: 'Teilweise', angebot: 'Ja', highlight: true },
+        ],
+      };
+    },
   },
   {
     id: 'tagesgeld_konsolidierung',
@@ -198,6 +464,19 @@ const BANKING_REGELN = [
       return `${tg?.volumen?.toLocaleString('de') || ''}€ bei ${tg?.institut || ''}. VR-Tagesgeld oder VR-FinanzPlan.`;
     },
     empfohleneAktion: 'termin_vereinbaren',
+    herleitung: (p) => {
+      const tg = p.fremdProdukte.find(f => f.typ === 'tagesgeld');
+      const vol = tg?.volumen || 20000;
+      const fremdZins = randomBetween(15, 25) / 10;
+      const vrZins = randomBetween(20, 30) / 10;
+      return [
+        { label: 'Datenquelle', value: `Open Finance – Kontodaten (${tg?.institut || 'Fremdbank'})` },
+        { label: 'Fremd-Tagesgeld', value: `${fmtEur(vol)} bei ${tg?.institut || 'Fremdbank'}` },
+        { label: 'Geschätzter Zinssatz', value: `${fremdZins.toFixed(2)}% p.a.` },
+        { label: 'VR-Tagesgeld aktuell', value: `${vrZins.toFixed(2)}% p.a.` },
+        { label: 'Empfehlung', value: 'Konsolidierung in VR-Tagesgeld oder VR-FinanzPlan' },
+      ];
+    },
   },
   {
     id: 'bauspar_eigentum',
@@ -208,6 +487,13 @@ const BANKING_REGELN = [
     beschreibung: () => 'Zur Miete, unter 40: Bauspar für Eigentumsplanung.',
     produktEmpfehlung: 'Schwäbisch Hall Fuchs Bauspar',
     empfohleneAktion: 'termin_vereinbaren',
+    herleitung: (p) => [
+      { label: 'Datenquelle', value: 'Kundendaten + Lebenssituation' },
+      { label: 'Wohnsituation', value: `Miete (${p.alter} Jahre, unter 40)` },
+      { label: 'Eigentumsquote Region', value: `${randomBetween(35, 55)}% → gute Kaufchancen` },
+      { label: 'Empfehlung', value: `Schwäbisch Hall Fuchs, Bausparsumme ${fmtEur(randomBetween(30, 80) * 1000)}` },
+      { label: 'Staatliche Förderung', value: 'Wohnungsbauprämie + Arbeitnehmersparzulage möglich' },
+    ],
   },
   {
     id: 'vr_finanzplan',
@@ -218,6 +504,12 @@ const BANKING_REGELN = [
     beschreibung: () => 'Kein ganzheitlicher Finanzplan vorhanden. VR-FinanzPlan als Gesamtkonzept.',
     produktEmpfehlung: 'VR-FinanzPlan',
     empfohleneAktion: 'termin_vereinbaren',
+    herleitung: (p) => [
+      { label: 'Datenquelle', value: 'Bestandsanalyse (eigene Produkte)' },
+      { label: 'Aktuelle Produkte', value: `${p.eigeneProdukte.length} Verträge im Bestand` },
+      { label: 'Erkannte Situation', value: 'Kein ganzheitlicher Finanzplan vorhanden' },
+      { label: 'Empfehlung', value: 'VR-FinanzPlan als übergreifendes Gesamtkonzept erstellen' },
+    ],
   },
   {
     id: 'rv_haftpflicht',
@@ -228,6 +520,12 @@ const BANKING_REGELN = [
     beschreibung: () => 'Keine Haftpflicht erkennbar. R+V Haftpflicht über VR-Verbund.',
     produktEmpfehlung: 'R+V Haftpflicht',
     empfohleneAktion: 'angebot_erstellen',
+    herleitung: (p) => [
+      { label: 'Datenquelle', value: 'Bestandsanalyse + VR-Verbund Prüfung' },
+      { label: 'Erkannte Situation', value: 'Keine Privathaftpflicht im Bestand erkennbar' },
+      { label: 'Haushaltsgröße', value: p.partner ? 'Familie' : 'Single' },
+      { label: 'Empfehlung', value: `R+V Haftpflicht ${p.partner ? 'Familie' : 'Single'}, ab ${p.partner ? '65' : '45'}€/J.` },
+    ],
   },
   {
     id: 'bindungsgespraech',
@@ -237,6 +535,12 @@ const BANKING_REGELN = [
     volumen: () => 0,
     beschreibung: (p) => `NPS ${p.nps}/10. Proaktiv Termin vereinbaren.`,
     empfohleneAktion: 'termin_vereinbaren',
+    herleitung: (p) => [
+      { label: 'Datenquelle', value: 'NPS-Befragung / Kundenzufriedenheit' },
+      { label: 'NPS-Score', value: `${p.nps}/10 (Detractor)` },
+      { label: 'Abwanderungsrisiko', value: 'HOCH' },
+      { label: 'Empfehlung', value: 'Sofort proaktives Bindungsgespräch führen' },
+    ],
   },
 ];
 
@@ -256,6 +560,32 @@ const VV_REGELN = [
       return `${((depot?.volumen || 0) / 1000000).toFixed(1)}M€ bei ${depot?.institut || ''}. In HRK LUNIS Mandat konsolidieren.`;
     },
     empfohleneAktion: 'termin_vereinbaren',
+    herleitung: (p) => {
+      const depot = p.fremdProdukte.find(f => f.typ === 'depot_privat');
+      const vol = depot?.volumen || 500000;
+      return [
+        { label: 'Datenquelle', value: `Wettbewerbsanalyse (${depot?.institut || 'Fremdbank'})` },
+        { label: 'Fremdbank-Depot', value: `${(vol / 1000000).toFixed(2)}M€ bei ${depot?.institut || 'Fremdbank'}` },
+        { label: 'Geschätzte Fremd-Gebühr', value: `${(vol * 0.015 / 1000).toFixed(0)}k€/J. (1,5% All-in-Fee)` },
+        { label: 'HRK LUNIS Fee', value: `${(vol * 0.009 / 1000).toFixed(0)}k€/J. (0,9% ab 1M€)` },
+        { label: 'Konsolidierungsvorteil', value: `Bessere Konditionen ab Gesamtvolumen, Reporting aus einer Hand` },
+      ];
+    },
+    vergleich: (p) => {
+      const depot = p.fremdProdukte.find(f => f.typ === 'depot_privat');
+      const vol = depot?.volumen || 500000;
+      return {
+        titel: `Vergleich: ${depot?.institut || 'Fremdbank'} vs. HRK LUNIS Mandat`,
+        spalten: ['Merkmal', `${depot?.institut || 'Fremdbank'}`, 'HRK LUNIS'],
+        zeilen: [
+          { merkmal: 'All-in-Fee', aktuell: '1,5%', angebot: '0,9%', highlight: true },
+          { merkmal: 'Kosten/Jahr', aktuell: fmtEur(Math.round(vol * 0.015)), angebot: fmtEur(Math.round(vol * 0.009)), highlight: true },
+          { merkmal: 'Reporting', aktuell: 'Separat', angebot: 'Konsolidiert', highlight: true },
+          { merkmal: 'Anlageausschuss', aktuell: 'Standard', angebot: 'Individuell' },
+          { merkmal: 'ESG-Integration', aktuell: 'Teilweise', angebot: 'Vollständig', highlight: true },
+        ],
+      };
+    },
   },
   {
     id: 'cash_konsolidierung',
@@ -268,6 +598,19 @@ const VV_REGELN = [
       return `${((cash?.volumen || 0) / 1000).toFixed(0)}k€ Cash bei ${cash?.institut || ''}. Opportunitätskosten ~${Math.round((cash?.volumen || 0) * 0.04 / 1000)}k€/J.`;
     },
     empfohleneAktion: 'termin_vereinbaren',
+    herleitung: (p) => {
+      const cash = p.fremdProdukte.find(f => f.typ === 'tagesgeld');
+      const vol = cash?.volumen || 500000;
+      const oppKosten = Math.round(vol * 0.04);
+      return [
+        { label: 'Datenquelle', value: `Open Finance – Kontodaten (${cash?.institut || 'Bank'})` },
+        { label: 'Cash-Position', value: `${fmtEur(vol)} auf Tagesgeld (${cash?.institut || 'Bank'})` },
+        { label: 'Tagesgeld-Zinssatz', value: '~2,0% p.a. (geschätzt)' },
+        { label: 'Erwartete VV-Rendite', value: '~6,0% p.a. (konservativ)' },
+        { label: 'Opportunitätskosten', value: `${fmtEur(oppKosten)}/J. entgangene Rendite` },
+        { label: 'Empfehlung', value: 'Schrittweise Anlage in diversifiziertes VV-Mandat' },
+      ];
+    },
   },
   {
     id: 'nextgen_mandat',
@@ -284,6 +627,16 @@ const VV_REGELN = [
     },
     produktEmpfehlung: 'SmartValue Mandat',
     empfohleneAktion: 'termin_vereinbaren',
+    herleitung: (p) => {
+      const kind = p.kinder.find(k => k.alter >= 25 && !k.eigeneProdukte);
+      return [
+        { label: 'Datenquelle', value: 'Familiendaten + Bestandsanalyse' },
+        { label: 'Kind', value: `${kind?.name || 'N.N.'}, ${kind?.alter || ''} Jahre` },
+        { label: 'Eigenes Mandat', value: 'Keines vorhanden' },
+        { label: 'Eltern-Mandat', value: `Bestehendes Mandat bei HRK LUNIS` },
+        { label: 'Empfehlung', value: 'SmartValue als Einstiegsmandat (ab 250k€)' },
+      ];
+    },
   },
   {
     id: 'mandatstyp_upgrade',
@@ -293,6 +646,25 @@ const VV_REGELN = [
     volumen: () => 0,
     beschreibung: (p) => `Gesamtvermögen ${(p._gesamtvermoegen / 1000000).toFixed(1)}M€ rechtfertigt FairValue Individual.`,
     empfohleneAktion: 'termin_vereinbaren',
+    herleitung: (p) => [
+      { label: 'Datenquelle', value: 'Bestandsanalyse (AuM)' },
+      { label: 'Aktuelles Mandat', value: 'SmartValue (standardisiert)' },
+      { label: 'Gesamtvermögen', value: `${(p._gesamtvermoegen / 1000000).toFixed(1)}M€` },
+      { label: 'FairValue ab', value: '3M€ (individuelles Mandat)' },
+      { label: 'Vorteile FairValue', value: 'Individueller Anlageausschuss, direkter Portfoliomanager, ESG-Customizing' },
+    ],
+    vergleich: () => ({
+      titel: 'Vergleich: SmartValue vs. FairValue Individual',
+      spalten: ['Merkmal', 'SmartValue', 'FairValue Individual'],
+      zeilen: [
+        { merkmal: 'Mindestanlage', aktuell: '250k€', angebot: '3M€' },
+        { merkmal: 'All-in-Fee', aktuell: '1,2%', angebot: '0,85%', highlight: true },
+        { merkmal: 'Portfolio', aktuell: 'Standardisiert', angebot: 'Individuell', highlight: true },
+        { merkmal: 'Anlageausschuss', aktuell: 'Quartalsreport', angebot: 'Persönlicher Zugang', highlight: true },
+        { merkmal: 'ESG-Customizing', aktuell: 'Standard', angebot: 'Individuell', highlight: true },
+        { merkmal: 'Reporting', aktuell: 'Standard', angebot: 'Individuell + Performance-Attribution' },
+      ],
+    }),
   },
   {
     id: 'nachfolgeplanung',
@@ -305,6 +677,16 @@ const VV_REGELN = [
       return `${p.alter} Jahre, ${bet?.details || ''}. Verkauf in 3-5 Jahren? Erlös in VV-Mandat.`;
     },
     empfohleneAktion: 'termin_vereinbaren',
+    herleitung: (p) => {
+      const bet = p.fremdProdukte.find(f => f.typ === 'unternehmensbeteiligung');
+      return [
+        { label: 'Datenquelle', value: 'Lebenssituation + Bestandsdaten' },
+        { label: 'Alter', value: `${p.alter} Jahre` },
+        { label: 'Unternehmensbeteiligung', value: bet?.details || 'Vorhanden' },
+        { label: 'Geschätzter Wert', value: fmtEur(bet?.volumen || 0) },
+        { label: 'Empfehlung', value: 'Nachfolgeplanung + Erlös-Wiederanlage in VV-Mandat strukturieren' },
+      ];
+    },
   },
   {
     id: 'stiftungsgruendung',
@@ -315,6 +697,13 @@ const VV_REGELN = [
     beschreibung: () => 'Vermögens- und Alterssituation qualifiziert für Stiftungsgründung.',
     produktEmpfehlung: 'HRK LUNIS Stiftungsmanagement',
     empfohleneAktion: 'termin_vereinbaren',
+    herleitung: (p) => [
+      { label: 'Datenquelle', value: 'Bestandsdaten + Vermögensanalyse' },
+      { label: 'Gesamtvermögen', value: `${(p._gesamtvermoegen / 1000000).toFixed(0)}M€` },
+      { label: 'Alter', value: `${p.alter} Jahre` },
+      { label: 'Steuerliche Vorteile', value: 'Zuwendungen bis 1M€ absetzbar (über 10 Jahre verteilbar)' },
+      { label: 'Empfehlung', value: 'HRK LUNIS Stiftungsmanagement mit individuellem Stiftungszweck' },
+    ],
   },
   {
     id: 'pe_allokation',
@@ -325,6 +714,17 @@ const VV_REGELN = [
     beschreibung: () => 'Keine PE-Allokation im Portfolio. Diversifikation + Rendite-Uplift.',
     produktEmpfehlung: 'HRK LUNIS PE Fund V',
     empfohleneAktion: 'termin_vereinbaren',
+    herleitung: (p) => {
+      const peAllokation = Math.round(p._gesamtvermoegen * 0.05);
+      return [
+        { label: 'Datenquelle', value: 'Portfolio-Analyse' },
+        { label: 'Gesamtvermögen', value: `${(p._gesamtvermoegen / 1000000).toFixed(1)}M€` },
+        { label: 'Aktuelle PE-Allokation', value: '0% (keine PE im Portfolio)' },
+        { label: 'Empfohlene PE-Allokation', value: `5% = ${fmtEur(peAllokation)}` },
+        { label: 'Erwartete IRR', value: '12-15% p.a. (historisch)' },
+        { label: 'Empfehlung', value: 'HRK LUNIS PE Fund V, Mindestzeichnung 200k€' },
+      ];
+    },
   },
   {
     id: 'lv_ablauf',
@@ -340,6 +740,16 @@ const VV_REGELN = [
       return `${lv?.institut || ''} LV ${lv?.details || ''}. Auszahlung in VV-Mandat integrieren.`;
     },
     empfohleneAktion: 'termin_vereinbaren',
+    herleitung: (p) => {
+      const lv = p.fremdProdukte.find(f => f.typ === 'rlv' && f.details?.includes('Ablauf'));
+      return [
+        { label: 'Datenquelle', value: `Open Finance – Versicherungsdaten (${lv?.institut || ''})` },
+        { label: 'Versicherer', value: lv?.institut || 'Fremdversicherer' },
+        { label: 'Details', value: lv?.details || 'Ablauf demnächst' },
+        { label: 'Ablaufsumme', value: fmtEur(lv?.volumen || 0) },
+        { label: 'Empfehlung', value: 'Auszahlung in bestehendes VV-Mandat integrieren (Aufstockung)' },
+      ];
+    },
   },
   {
     id: 'family_office',
@@ -350,6 +760,13 @@ const VV_REGELN = [
     beschreibung: (p) => `Gesamtvermögen ${(p._gesamtvermoegen / 1000000).toFixed(0)}M€ qualifiziert für Family Office Service.`,
     produktEmpfehlung: 'WERTIQ Family Office',
     empfohleneAktion: 'termin_vereinbaren',
+    herleitung: (p) => [
+      { label: 'Datenquelle', value: 'Bestandsdaten + Vermögensanalyse' },
+      { label: 'Gesamtvermögen', value: `${(p._gesamtvermoegen / 1000000).toFixed(0)}M€` },
+      { label: 'Qualifikation', value: 'Family Office ab 15M€ Gesamtvermögen' },
+      { label: 'Leistungen', value: 'Ganzheitliche Vermögenssteuerung, Steueroptimierung, Generationenplanung' },
+      { label: 'Empfehlung', value: 'WERTIQ Family Office Anbindung prüfen' },
+    ],
   },
 ];
 
@@ -376,6 +793,9 @@ export function evaluatePotentiale(person) {
       empfohleneAktion: r.empfohleneAktion || 'termin_vereinbaren',
       produktEmpfehlung: typeof r.produktEmpfehlung === 'function' ? r.produktEmpfehlung(person) : (r.produktEmpfehlung || ''),
       status: random(statusOptions),
+      herleitung: r.herleitung ? (typeof r.herleitung === 'function' ? r.herleitung(person) : r.herleitung) : null,
+      vergleich: r.vergleich ? (typeof r.vergleich === 'function' ? r.vergleich(person) : r.vergleich) : null,
+      deckungsluecke: r.deckungsluecke ? (typeof r.deckungsluecke === 'function' ? r.deckungsluecke(person) : r.deckungsluecke) : null,
     }))
     .sort((a, b) => (PRIO_ORDER[a.prioritaet] || 3) - (PRIO_ORDER[b.prioritaet] || 3));
 }

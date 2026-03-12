@@ -1,13 +1,11 @@
 export function formatEur(val) {
   if (val == null) return '-';
-  if (Math.abs(val) >= 1000000) return `${(val / 1000000).toLocaleString('de-DE', { maximumFractionDigits: 1 })} M\u20ac`;
-  if (Math.abs(val) >= 1000) return `${(val / 1000).toLocaleString('de-DE', { maximumFractionDigits: 0 })} k\u20ac`;
-  return `${val.toLocaleString('de-DE')} \u20ac`;
+  return Math.round(val).toLocaleString('de-DE') + '\u20ac';
 }
 
 export function formatEurExact(val) {
   if (val == null) return '-';
-  return `${val.toLocaleString('de-DE', { minimumFractionDigits: 0, maximumFractionDigits: 0 })} \u20ac`;
+  return val.toLocaleString('de-DE', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + '\u20ac';
 }
 
 export function formatPct(val) {

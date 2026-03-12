@@ -134,6 +134,30 @@ function generateKinder(alter, anzahl) {
   return kinder.sort((a, b) => b.alter - a.alter);
 }
 
+const HUNDE_NAMEN = ['Bella','Max','Luna','Buddy','Charlie','Rocky','Mila','Sam','Bruno','Rex','Lola','Balu','Nala','Cooper','Lucky'];
+const KATZEN_NAMEN = ['Mietze','Felix','Luna','Simba','Mimi','Lilly','Leo','Nala','Mia','Tiger','Muffin','Cleo','Moritz','Kitty'];
+
+function generateHaustiere(wohnsituation, kinder) {
+  // ~30% Wahrscheinlichkeit ein Haustier zu haben, höher bei Eigentum/Kindern
+  const chance = wohnsituation === 'Eigentum' ? 45 : kinder?.length > 0 ? 35 : 20;
+  if (randomBetween(1, 100) > chance) return null;
+
+  const art = weightedRandom({ Hund: 45, Katze: 40, Hamster: 5, Kaninchen: 5, Fische: 3, Vogel: 2 });
+  const name = art === 'Hund' ? random(HUNDE_NAMEN) : art === 'Katze' ? random(KATZEN_NAMEN) : null;
+  const alter = randomBetween(1, 12);
+
+  return {
+    art,
+    name,
+    alter,
+    quelle: 'kontoumsaetze',
+    erkannteTransaktionen: [
+      { haendler: art === 'Fische' ? 'Zoo & Co' : 'Fressnapf', betrag: randomBetween(25, 65), haeufigkeit: 'monatlich' },
+      ...(randomBetween(1, 100) > 50 ? [{ haendler: 'Tierarztpraxis', betrag: randomBetween(45, 180), haeufigkeit: 'quartal' }] : []),
+    ],
+  };
+}
+
 export function generatePerson(modus) {
   const geschlecht = random(['m', 'w']);
   const vorname = random(geschlecht === 'm' ? VORNAMEN_M : VORNAMEN_W);
@@ -224,6 +248,7 @@ export function generatePerson(modus) {
     wohnflaeche,
     linkedin,
     lebenssituation,
+    haustiere: generateHaustiere(wohnsituation, kinder),
     _berufObj: berufObj,
     _modus: modus,
   };
@@ -298,6 +323,7 @@ export function generateVVPerson() {
     wohnflaeche,
     linkedin,
     lebenssituation: alter >= 62 ? 'ruhestand' : alter >= 50 ? 'pre-retirement' : 'konsolidierung',
+    haustiere: generateHaustiere(wohnsituation, kinder),
     _berufObj: { ...berufObj, segment: 'selbstaendig', buRisiko: 'buero' },
     _modus: 'vermoegensverwaltung',
     _gesamtvermoegen: gesamtvermoegen,

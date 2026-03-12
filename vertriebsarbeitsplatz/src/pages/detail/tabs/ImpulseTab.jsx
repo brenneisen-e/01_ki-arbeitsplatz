@@ -3,7 +3,7 @@ import Card from '../../../components/ui/Card';
 import { PrioBadge, QuellenBadge } from '../../../components/ui/Badge';
 import { formatEur } from '../../../utils/formatters';
 import { useMode } from '../../../hooks/useMode';
-import { Shield, Zap, RefreshCw, CheckCircle, XCircle, ChevronDown, Calendar, User, ExternalLink } from 'lucide-react';
+import { Shield, Zap, RefreshCw, CheckCircle, XCircle, ChevronDown, Calendar, User, ExternalLink, TrendingUp, ArrowRight } from 'lucide-react';
 
 const ABSICHERUNGS_TYPEN = [
   { key: 'bu', label: 'BU' },
@@ -186,33 +186,45 @@ function PotentialCard({ potential: p, kunde, expanded, onToggle }) {
 
       {/* Expandable detail section */}
       {expanded && (
-        <div className="border-t border-slate-100 bg-slate-50/50 p-4 space-y-4 animate-fade-in">
+        <div className="border-t border-slate-100 bg-slate-50/50 p-4 space-y-5 animate-fade-in">
           {/* Herleitung */}
-          <div>
-            <h5 className="text-xs font-semibold text-slate-600 uppercase tracking-wider mb-3">
-              Herleitung des Impulses
-            </h5>
-            <div className="grid grid-cols-2 gap-2 text-sm">
-              <HerleitungRow label="Datenquelle" value={quellenLabel(p.quellen)} />
-              <HerleitungRow label="Kunde" value={`${kunde.name} (${kunde.id})`} />
-              <HerleitungRow label="Erkannte Situation" value={p.beschreibung} />
-              <HerleitungRow label="Empfohlenes Produkt" value={p.produktEmpfehlung || '–'} />
-              <HerleitungRow
-                label="Erwartete Prämie"
-                value={p.volumen > 0
-                  ? `${formatEur(p.volumen)}${p.volumenTyp === 'jaehrlich' ? '/J.' : p.volumenTyp === 'einmalig' ? ' (einmalig)' : ''}`
-                  : 'Vermittlung'}
-              />
-              {p.status && (
-                <HerleitungRow
-                  label="Status"
-                  value={p.status === 'termin' ? 'Termin vereinbart' :
-                         p.status === 'angeschrieben' ? 'Kunde angeschrieben' :
-                         p.status === 'identifiziert' ? 'Identifiziert' : p.status}
-                />
-              )}
+          {p.herleitung && p.herleitung.length > 0 && (
+            <div>
+              <h5 className="text-xs font-semibold text-slate-600 uppercase tracking-wider mb-3">
+                Herleitung des Impulses
+              </h5>
+              <div className="grid grid-cols-2 gap-2 text-sm">
+                {p.herleitung.map((h, i) => (
+                  <HerleitungRow key={i} label={h.label} value={h.value} />
+                ))}
+              </div>
             </div>
-          </div>
+          )}
+
+          {/* Fallback herleitung if no structured data */}
+          {(!p.herleitung || p.herleitung.length === 0) && (
+            <div>
+              <h5 className="text-xs font-semibold text-slate-600 uppercase tracking-wider mb-3">
+                Herleitung des Impulses
+              </h5>
+              <div className="grid grid-cols-2 gap-2 text-sm">
+                <HerleitungRow label="Datenquelle" value={quellenLabel(p.quellen)} />
+                <HerleitungRow label="Kunde" value={`${kunde.name} (${kunde.id})`} />
+                <HerleitungRow label="Erkannte Situation" value={p.beschreibung} />
+                <HerleitungRow label="Empfohlenes Produkt" value={p.produktEmpfehlung || '–'} />
+              </div>
+            </div>
+          )}
+
+          {/* Deckungslücke Visualization */}
+          {p.deckungsluecke && (
+            <DeckungslueckeBar data={p.deckungsluecke} />
+          )}
+
+          {/* Vergleichstabelle */}
+          {p.vergleich && (
+            <VergleichsTabelle data={p.vergleich} />
+          )}
 
           {/* Aktionen */}
           <div>
@@ -257,6 +269,132 @@ function HerleitungRow({ label, value }) {
     <div className="bg-white rounded-lg px-3 py-2 border border-slate-100">
       <span className="text-xs text-slate-400 block">{label}</span>
       <span className="text-slate-700 font-medium">{value}</span>
+    </div>
+  );
+}
+
+function DeckungslueckeBar({ data }) {
+  const { gehalt, aktuelleAbsicherung, empfohleneAbsicherung, einheit, label } = data;
+  const gehaltLabel = data.gehaltLabel || 'Nettoeinkommen';
+  const absicherungLabel = data.absicherungLabel || 'Aktuelle Absicherung';
+  const pctAbgesichert = gehalt > 0 ? Math.round((aktuelleAbsicherung / gehalt) * 100) : 0;
+  const pctEmpfohlen = gehalt > 0 ? Math.round((empfohleneAbsicherung / gehalt) * 100) : 0;
+  const luecke = empfohleneAbsicherung - aktuelleAbsicherung;
+
+  return (
+    <div>
+      <h5 className="text-xs font-semibold text-slate-600 uppercase tracking-wider mb-3">
+        {label || 'Deckungslücken-Analyse'}
+      </h5>
+      <div className="bg-white rounded-xl border border-slate-200 p-4 space-y-4">
+        {/* Key numbers */}
+        <div className="grid grid-cols-3 gap-3 text-center">
+          <div className="bg-slate-50 rounded-lg p-3">
+            <div className="text-xs text-slate-400 mb-1">{gehaltLabel}</div>
+            <div className="text-lg font-bold text-slate-800">{gehalt.toLocaleString('de-DE')}{einheit?.replace('€/mtl.', '€')}</div>
+            <div className="text-xs text-slate-400">/mtl.</div>
+          </div>
+          <div className="bg-red-50 rounded-lg p-3">
+            <div className="text-xs text-red-400 mb-1">{absicherungLabel}</div>
+            <div className="text-lg font-bold text-red-600">{aktuelleAbsicherung.toLocaleString('de-DE')}€</div>
+            <div className="text-xs text-red-400">/mtl. ({pctAbgesichert}%)</div>
+          </div>
+          <div className="bg-emerald-50 rounded-lg p-3">
+            <div className="text-xs text-emerald-500 mb-1">Empfehlung</div>
+            <div className="text-lg font-bold text-emerald-700">{empfohleneAbsicherung.toLocaleString('de-DE')}€</div>
+            <div className="text-xs text-emerald-500">/mtl. ({pctEmpfohlen}%)</div>
+          </div>
+        </div>
+
+        {/* Visual bar */}
+        <div>
+          <div className="flex justify-between text-xs text-slate-400 mb-1">
+            <span>{pctAbgesichert}% abgesichert</span>
+            <span>Ziel: {pctEmpfohlen}%</span>
+          </div>
+          <div className="w-full h-6 bg-slate-100 rounded-full relative overflow-hidden">
+            {/* Empfohlen (target) */}
+            <div
+              className="absolute inset-y-0 left-0 bg-emerald-100 rounded-full border-r-2 border-dashed border-emerald-400"
+              style={{ width: `${Math.min(pctEmpfohlen, 100)}%` }}
+            />
+            {/* Aktuell */}
+            <div
+              className="absolute inset-y-0 left-0 rounded-full transition-all duration-500"
+              style={{
+                width: `${Math.min(pctAbgesichert, 100)}%`,
+                background: pctAbgesichert >= pctEmpfohlen
+                  ? 'linear-gradient(90deg, #10b981, #34d399)'
+                  : pctAbgesichert > 0
+                    ? 'linear-gradient(90deg, #f59e0b, #fbbf24)'
+                    : 'linear-gradient(90deg, #ef4444, #f87171)',
+              }}
+            />
+            {/* Label on bar */}
+            <div className="absolute inset-0 flex items-center justify-center text-xs font-semibold text-slate-700">
+              {pctAbgesichert > 0 ? `${pctAbgesichert}% abgesichert` : 'Keine Absicherung'}
+            </div>
+          </div>
+        </div>
+
+        {/* Gap callout */}
+        {luecke > 0 && (
+          <div className="flex items-center gap-2 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
+            <TrendingUp size={16} className="text-amber-500 shrink-0" />
+            <span className="text-sm text-amber-800">
+              <strong>Deckungslücke: {luecke.toLocaleString('de-DE')}€/mtl.</strong>
+              {' '}— {aktuelleAbsicherung === 0 ? 'Vollständig ungeschützt' : `Nur ${pctAbgesichert}% des Einkommens abgesichert`}
+            </span>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function VergleichsTabelle({ data }) {
+  const { titel, spalten, zeilen } = data;
+
+  return (
+    <div>
+      <h5 className="text-xs font-semibold text-slate-600 uppercase tracking-wider mb-3">
+        {titel}
+      </h5>
+      <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="bg-slate-50">
+              {spalten.map((s, i) => (
+                <th
+                  key={i}
+                  className={`px-4 py-2.5 text-left font-semibold text-slate-600 ${
+                    i === 0 ? 'text-slate-500' : ''
+                  } ${i === spalten.length - 1 ? 'text-right' : ''}`}
+                >
+                  {s}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {zeilen.map((z, i) => (
+              <tr
+                key={i}
+                className={`border-t border-slate-100 ${i % 2 === 1 ? 'bg-slate-50/50' : ''}`}
+              >
+                <td className="px-4 py-2.5 text-slate-600 font-medium">{z.merkmal}</td>
+                <td className="px-4 py-2.5 text-slate-500">{z.aktuell}</td>
+                <td className={`px-4 py-2.5 text-right font-medium ${
+                  z.highlight ? 'text-emerald-600' : 'text-slate-700'
+                }`}>
+                  {z.highlight && <span className="font-semibold">{z.angebot}</span>}
+                  {!z.highlight && z.angebot}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

@@ -59,7 +59,7 @@ export default function FinanzprofilTab({ kunde }) {
 
         <div className="border-t-2 border-slate-300 pt-3">
           <div className="flex justify-between text-sm font-bold">
-            <span className="text-slate-800">FREI VERFUEGBAR</span>
+            <span className="text-slate-800">FREI VERFÜGBAR</span>
             <span className={`font-mono ${frei >= 0 ? 'text-emerald-600' : 'text-red-500'}`}>{formatEur(frei)}</span>
           </div>
         </div>
@@ -114,11 +114,11 @@ function kategorieLabel(kat) {
     sparen: 'Sparen',
     kinder: 'Kinder',
     konsum: 'Konsum',
-    mobilitaet: 'Mobilitaet',
+    mobilitaet: 'Mobilität',
     abos: 'Abos/Freizeit',
     haus: 'Haus/Nebenkosten',
     software: 'Software',
-    geschaeft: 'Geschaeft',
+    geschaeft: 'Geschäft',
   };
   return labels[kat] || kat;
 }

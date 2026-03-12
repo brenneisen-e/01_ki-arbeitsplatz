@@ -32,7 +32,7 @@ export default function ImpulseTab({ kunde }) {
             <Shield size={20} className="text-slate-500" strokeWidth={1.75} />
             <h3 className="font-semibold text-slate-800">Absicherungsstatus</h3>
           </div>
-          <span className="text-sm text-slate-400">{luecken} Luecken erkannt</span>
+          <span className="text-sm text-slate-400">{luecken} Lücken erkannt</span>
         </div>
         <div className="flex flex-wrap gap-2">
           {ABSICHERUNGS_TYPEN.map(typ => {
@@ -60,7 +60,7 @@ export default function ImpulseTab({ kunde }) {
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
               <Zap size={20} style={{ color: 'var(--mode-primary-light)' }} strokeWidth={1.75} />
-              <h3 className="font-semibold text-slate-800">Whitespots (Neugeschaeft)</h3>
+              <h3 className="font-semibold text-slate-800">Whitespots (Neugeschäft)</h3>
             </div>
             <span className="text-sm text-slate-400">{whitespots.length} Potentiale</span>
           </div>

@@ -8,28 +8,28 @@ const MODULE_TABS = [
   { id: 'versicherung', label: 'Versicherung' },
   { id: 'banking', label: 'Banken' },
   { id: 'asset', label: 'Asset Manager' },
-  { id: 'vermoegensverwaltung', label: 'Vermoegensverwaltung' },
+  { id: 'vermoegensverwaltung', label: 'Vermögensverwaltung' },
 ];
 
 const TILES = {
   versicherung: {
     main: [
-      { id: 'gesamt', label: 'Gesamtuebersicht', icon: LayoutDashboard, desc: 'KPIs, Bestand, Neugeschaeft' },
-      { id: 'agentur', label: 'Agenturansicht', icon: Users, desc: 'Kunden, Vertraege, Details' },
+      { id: 'gesamt', label: 'Gesamtübersicht', icon: LayoutDashboard, desc: 'KPIs, Bestand, Neugeschäft' },
+      { id: 'agentur', label: 'Agenturansicht', icon: Users, desc: 'Kunden, Verträge, Details' },
       { id: 'potential', label: 'Potentialanalyse', icon: Zap, desc: 'Cross-Sell, Up-Sell, Whitespots' },
     ],
     ops: [
       { id: 'scoring', label: 'Vermittler-Scoring', icon: BarChart3 },
       { id: 'umstellung', label: 'Vertragsumstellung', icon: ArrowLeftRight },
-      { id: 'bestand', label: 'Bestandsuebertragung', icon: FileCheck },
-      { id: 'abrechnung', label: 'Abrechnungspruefung', icon: Calculator },
+      { id: 'bestand', label: 'Bestandsübertragung', icon: FileCheck },
+      { id: 'abrechnung', label: 'Abrechnungsprüfung', icon: Calculator },
       { id: 'provision', label: 'Provisionsvalidierung', icon: Shield },
     ],
   },
   banking: {
     main: [
-      { id: 'gesamt', label: 'Gesamtuebersicht', icon: LayoutDashboard, desc: 'Kunden, Kredit, Einlagen' },
-      { id: 'berater', label: 'Berateransicht', icon: Users, desc: 'Firmenkunden, Retail, Vermoegen' },
+      { id: 'gesamt', label: 'Gesamtübersicht', icon: LayoutDashboard, desc: 'Kunden, Kredit, Einlagen' },
+      { id: 'berater', label: 'Berateransicht', icon: Users, desc: 'Firmenkunden, Retail, Vermögen' },
       { id: 'potential', label: 'Potentialanalyse', icon: Zap, desc: 'R+V, Union Inv., Schw.Hall' },
     ],
     ops: [
@@ -39,8 +39,8 @@ const TILES = {
   },
   vermoegensverwaltung: {
     main: [
-      { id: 'gesamt', label: 'Gesamtuebersicht', icon: LayoutDashboard, desc: 'AuM, NNM, Performance' },
-      { id: 'mandanten', label: 'Mandantenuebersicht', icon: Users, desc: 'Mandate, Portfolios' },
+      { id: 'gesamt', label: 'Gesamtübersicht', icon: LayoutDashboard, desc: 'AuM, NNM, Performance' },
+      { id: 'mandanten', label: 'Mandantenübersicht', icon: Users, desc: 'Mandate, Portfolios' },
       { id: 'pipeline', label: 'Pipeline', icon: Zap, desc: 'Akquise, Konsolidierung' },
     ],
     ops: [
@@ -50,7 +50,7 @@ const TILES = {
   },
   asset: {
     main: [
-      { id: 'gesamt', label: 'Gesamtuebersicht', icon: LayoutDashboard, desc: 'Fondsuebersicht' },
+      { id: 'gesamt', label: 'Gesamtübersicht', icon: LayoutDashboard, desc: 'Fondsübersicht' },
     ],
     ops: [],
   },
@@ -110,7 +110,7 @@ export default function LandingPage() {
                 <BookOpen size={20} className="text-slate-600" strokeWidth={1.75} />
               </div>
               <p className="text-slate-700">
-                Willkommen zurueck <span className="font-semibold">{config.beraterName}</span>, was kann ich fuer dich tun?
+                Willkommen zurück <span className="font-semibold">{config.beraterName}</span>, was kann ich für dich tun?
               </p>
             </div>
           </div>

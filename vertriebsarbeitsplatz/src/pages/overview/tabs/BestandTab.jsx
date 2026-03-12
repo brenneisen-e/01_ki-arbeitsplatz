@@ -7,10 +7,10 @@ import { formatEur } from '../../../utils/formatters';
 
 const BESTAND_KPI_CONFIG = {
   versicherung: [
-    { id: 'vertraege', label: 'Vertraege', format: 'num', icon: 'FileText' },
-    { id: 'praemienvolumen', label: 'Praemienvolumen', format: 'eur', icon: 'Briefcase' },
-    { id: 'durchschnittspraemie', label: '\u00d8 Praemie/Kunde', format: 'eur', icon: 'BarChart3' },
-    { id: 'vertragsdichte', label: '\u00d8 Vertraege/Kunde', format: 'num', icon: 'Layers' },
+    { id: 'vertraege', label: 'Verträge', format: 'num', icon: 'FileText' },
+    { id: 'praemienvolumen', label: 'Prämienvolumen', format: 'eur', icon: 'Briefcase' },
+    { id: 'durchschnittspraemie', label: '\u00d8 Prämie/Kunde', format: 'eur', icon: 'BarChart3' },
+    { id: 'vertragsdichte', label: '\u00d8 Verträge/Kunde', format: 'num', icon: 'Layers' },
   ],
   banking: [
     { id: 'vertraege', label: 'Produkte', format: 'num', icon: 'FileText' },
@@ -31,7 +31,7 @@ const COLUMNS = [
   { id: 'sparte', label: 'Sparte', render: (v) => v ? <SparteBadge sparte={v} /> : '-' },
   { id: 'produkt', label: 'Produkt' },
   { id: 'details', label: 'Details' },
-  { id: 'praemie', label: 'Praemie/J.', render: (v) => <span className="font-mono">{formatEur(v)}</span> },
+  { id: 'praemie', label: 'Prämie/J.', render: (v) => <span className="font-mono">{formatEur(v)}</span> },
   { id: 'seit', label: 'Seit' },
   { id: 'status', label: 'Status', render: (v) => <StatusBadge status={v} /> },
 ];
@@ -69,7 +69,7 @@ export default function BestandTab() {
               </div>
               <span>{name}</span>
               <span className="text-slate-400">{rows[0]?.kundeId}</span>
-              <span className="text-slate-400">&middot; {rows.length} {modeId === 'vermoegensverwaltung' ? 'Positionen' : 'Vertraege'} &middot; {formatEur(total)}</span>
+              <span className="text-slate-400">&middot; {rows.length} {modeId === 'vermoegensverwaltung' ? 'Positionen' : 'Verträge'} &middot; {formatEur(total)}</span>
             </div>
           );
         }}

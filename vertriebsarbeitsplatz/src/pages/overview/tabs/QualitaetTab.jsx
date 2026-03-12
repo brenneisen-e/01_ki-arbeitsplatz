@@ -17,11 +17,11 @@ export default function QualitaetTab() {
   const data = QUALITAET_DATA[modeId] || QUALITAET_DATA.versicherung;
   const kpiConfig = data.kpiConfig || DEFAULT_KPI_CONFIG;
 
-  const trendLabel = data.trendLabel || 'Qualitaetstrend (Gesamtnote)';
+  const trendLabel = data.trendLabel || 'Qualitätstrend (Gesamtnote)';
   const trendHint = modeId === 'versicherung'
     ? 'Niedrigere Note = besser (Schulnoten-System)'
     : modeId === 'vermoegensverwaltung'
-    ? 'Hoeher = besser'
+    ? 'Höher = besser'
     : null;
 
   return (

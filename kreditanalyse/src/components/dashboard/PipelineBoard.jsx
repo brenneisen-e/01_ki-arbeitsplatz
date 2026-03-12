@@ -69,7 +69,7 @@ const COLUMNS = [
     icon: Vote,
     headerColor: 'bg-orange-50 text-orange-700 border-orange-200',
     badgeColor: 'bg-orange-100 text-orange-700',
-    targetView: 'voting',
+    targetView: 'decision',
   },
   {
     key: 'decided',
@@ -78,7 +78,7 @@ const COLUMNS = [
     icon: CheckCircle2,
     headerColor: 'bg-green-50 text-green-700 border-green-200',
     badgeColor: 'bg-green-100 text-green-700',
-    targetView: 'overview',
+    targetView: 'decision',
   },
 ];
 

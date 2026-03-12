@@ -3,11 +3,30 @@ import { MODE_CONFIGS } from '../data/modeConfig';
 
 const ModeContext = createContext(null);
 
+/* ── Legacy module definitions ─────────────────────────────── */
+
+const LEGACY_MODULES = {
+  'dashboard':           { title: 'VST-Cockpit',             route: 'dashboard' },
+  'agentur':             { title: 'Vermittler-Ansicht (v01)', route: 'agentur' },
+  'potentialanalyse':    { title: 'Potentialanalyse',         route: 'potentialanalyse' },
+  'risikoscoring':       { title: 'Vermittler-Scoring',       route: 'risikoscoring' },
+  'bgav-umstellung':     { title: 'Vertragsumstellung',       route: 'bgav-umstellung' },
+  'bestandsuebertragung':{ title: 'Bestandsübertragung',      route: 'bestandsuebertragung' },
+  'pmo-toolbox':         { title: 'PMO Toolbox',              route: 'pmo-toolbox' },
+  'hr-pipeline':         { title: 'HR Pipeline',              route: 'hr-pipeline' },
+  'versicherungs-1x1':   { title: 'Versicherungs-1×1',        route: 'versicherungs-1x1' },
+  'kreditanalyse':       { title: 'KI-Kreditanalyse',         route: 'kreditanalyse' },
+};
+
 /* ── Hash-URL helpers ──────────────────────────────────────── */
 
-function buildHash(modeId, view, tab, kundeId) {
-  // #/versicherung/overview/uebersicht
-  // #/versicherung/detail/KD00001/stammdaten
+function buildHash(modeId, view, tab, kundeId, legacyModuleId) {
+  // Legacy: #/module/dashboard
+  if (view === 'legacy' && legacyModuleId) {
+    return `#/module/${legacyModuleId}`;
+  }
+  // React: #/versicherung/overview/uebersicht
+  //        #/versicherung/detail/KD00001/stammdaten
   let hash = `#/${modeId}/${view}`;
   if (view === 'detail' && kundeId) hash += `/${kundeId}`;
   if (tab) hash += `/${tab}`;
@@ -15,9 +34,19 @@ function buildHash(modeId, view, tab, kundeId) {
 }
 
 function parseHash(hash) {
-  // Remove leading #/ or #
   const raw = hash.replace(/^#\/?/, '');
   const parts = raw.split('/').filter(Boolean);
+
+  // Check for legacy module route: #/module/dashboard
+  if (parts[0] === 'module' && parts.length >= 2 && LEGACY_MODULES[parts[1]]) {
+    return {
+      modeId: 'versicherung',
+      view: 'legacy',
+      tab: null,
+      kundeId: null,
+      legacyModuleId: parts[1],
+    };
+  }
 
   // Default: versicherung / overview / uebersicht
   let modeId = 'versicherung';
@@ -36,15 +65,13 @@ function parseHash(hash) {
   }
 
   if (view === 'detail') {
-    // #/mode/detail/KD00001/tab
     if (parts.length >= 3) kundeId = parts[2];
     if (parts.length >= 4) tab = parts[3];
   } else {
-    // #/mode/overview/tab
     if (parts.length >= 3) tab = parts[2];
   }
 
-  return { modeId, view, tab, kundeId };
+  return { modeId, view, tab, kundeId, legacyModuleId: null };
 }
 
 /* ── Provider ──────────────────────────────────────────────── */
@@ -53,12 +80,12 @@ export function ModeProvider({ children }) {
   const initial = parseHash(window.location.hash);
 
   const [modeId, setModeId] = useState(initial.modeId);
-  const [currentView, setCurrentView] = useState(initial.view);
+  const [currentView, setCurrentView] = useState(initial.view);  // 'overview' | 'detail' | 'legacy'
   const [activeTab, setActiveTab] = useState(initial.tab || 'uebersicht');
   const [selectedKundeId, setSelectedKundeId] = useState(initial.kundeId);
   const [institutOverride, setInstitutOverride] = useState(null);
+  const [legacyModuleId, setLegacyModuleId] = useState(initial.legacyModuleId);
 
-  // Prevent double-push when handling popstate
   const skipNextPush = useRef(false);
 
   const baseConfig = MODE_CONFIGS[modeId];
@@ -72,19 +99,24 @@ export function ModeProvider({ children }) {
     };
   }, [baseConfig, institutOverride]);
 
-  /* ── Sync state → URL (push to history) ──────────────────── */
+  // Legacy module info (for LegacyModule component)
+  const legacyInfo = legacyModuleId ? LEGACY_MODULES[legacyModuleId] : null;
+  const legacyRoute = legacyInfo?.route || '';
+  const legacyTitle = legacyInfo?.title || '';
+
+  /* ── Sync state → URL ────────────────────────────────────── */
   useEffect(() => {
     if (skipNextPush.current) {
       skipNextPush.current = false;
       return;
     }
-    const newHash = buildHash(modeId, currentView, activeTab, selectedKundeId);
+    const newHash = buildHash(modeId, currentView, activeTab, selectedKundeId, legacyModuleId);
     if (window.location.hash !== newHash) {
       window.history.pushState(null, '', newHash);
     }
-  }, [modeId, currentView, activeTab, selectedKundeId]);
+  }, [modeId, currentView, activeTab, selectedKundeId, legacyModuleId]);
 
-  /* ── Listen for browser back/forward ─────────────────────── */
+  /* ── Browser back/forward ────────────────────────────────── */
   useEffect(() => {
     function onPopState() {
       const parsed = parseHash(window.location.hash);
@@ -93,6 +125,7 @@ export function ModeProvider({ children }) {
       setCurrentView(parsed.view);
       setActiveTab(parsed.tab || getDefaultTab(parsed.modeId, parsed.view));
       setSelectedKundeId(parsed.kundeId);
+      setLegacyModuleId(parsed.legacyModuleId);
       setInstitutOverride(null);
     }
     window.addEventListener('popstate', onPopState);
@@ -102,7 +135,7 @@ export function ModeProvider({ children }) {
   /* ── Set initial hash if empty ───────────────────────────── */
   useEffect(() => {
     if (!window.location.hash || window.location.hash === '#' || window.location.hash === '#/') {
-      const newHash = buildHash(modeId, currentView, activeTab, selectedKundeId);
+      const newHash = buildHash(modeId, currentView, activeTab, selectedKundeId, legacyModuleId);
       window.history.replaceState(null, '', newHash);
     }
   }, []);
@@ -115,6 +148,7 @@ export function ModeProvider({ children }) {
     setCurrentView('overview');
     setActiveTab('uebersicht');
     setSelectedKundeId(null);
+    setLegacyModuleId(null);
   }, []);
 
   const switchInstitut = useCallback((variant, newModeId) => {
@@ -123,12 +157,14 @@ export function ModeProvider({ children }) {
       setCurrentView('overview');
       setActiveTab('uebersicht');
       setSelectedKundeId(null);
+      setLegacyModuleId(null);
     }
     setInstitutOverride(variant);
   }, [modeId]);
 
   const navigateTo = useCallback((view, opts = {}) => {
     setCurrentView(view);
+    setLegacyModuleId(null);
     if (view === 'overview') {
       setActiveTab(opts.tab || 'uebersicht');
       setSelectedKundeId(null);
@@ -138,17 +174,27 @@ export function ModeProvider({ children }) {
     }
   }, [config]);
 
+  const openLegacyModule = useCallback((moduleId) => {
+    if (!LEGACY_MODULES[moduleId]) {
+      console.warn('Unknown legacy module:', moduleId);
+      return;
+    }
+    setCurrentView('legacy');
+    setLegacyModuleId(moduleId);
+    setSelectedKundeId(null);
+  }, []);
+
   const goBack = useCallback(() => {
     if (currentView === 'detail') {
-      // Detail → Overview (find the correct "customers" tab for the current mode)
       const kundenTab = baseConfig.tabs.find(t =>
         t.id === 'kunden' || t.id === 'mandatsliste'
       );
       setCurrentView('overview');
       setActiveTab(kundenTab?.id || 'kunden');
       setSelectedKundeId(null);
-    } else if (currentView === 'overview') {
-      // Overview → Landing page (root index.html)
+      setLegacyModuleId(null);
+    } else if (currentView === 'legacy' || currentView === 'overview') {
+      // Back to landing page
       window.location.href = getBasePath();
     }
   }, [currentView, baseConfig]);
@@ -156,7 +202,9 @@ export function ModeProvider({ children }) {
   return (
     <ModeContext.Provider value={{
       modeId, config, currentView, activeTab, selectedKundeId,
-      switchMode, switchInstitut, navigateTo, setActiveTab, setSelectedKundeId, goBack,
+      legacyRoute, legacyTitle, legacyModuleId,
+      switchMode, switchInstitut, navigateTo, openLegacyModule,
+      setActiveTab, setSelectedKundeId, goBack,
     }}>
       <div data-mode={modeId}>
         {children}
@@ -181,11 +229,8 @@ function getDefaultTab(modeId, view) {
 }
 
 function getBasePath() {
-  // Navigate to root landing page
-  // Works for both local dev and production: go up from /vertriebsarbeitsplatz/dist/
   const path = window.location.pathname;
   if (path.includes('/vertriebsarbeitsplatz/')) {
-    // Go up to the repo root
     return path.substring(0, path.indexOf('/vertriebsarbeitsplatz/')) + '/';
   }
   return '/';

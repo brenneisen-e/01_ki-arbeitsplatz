@@ -148,13 +148,9 @@
             return this.deepLinkTarget !== null;
         },
 
-        // Safety fallback: ensure the user sees something
+        // Safety fallback: redirect to React M-01
         showLandingFallback() {
-            var lp = document.getElementById('landingPage');
-            var vm = document.getElementById('versicherungModule');
-            if (lp) lp.style.display = 'flex';
-            if (vm) vm.classList.add('active');
-            if (window.AppRouter) AppRouter.navigate('/landing');
+            window.location.href = './index.html';
         },
 
         // After navigation, verify the target is actually visible
@@ -257,7 +253,7 @@
             this.ensureVersicherungModule(viewName);
 
             var fnMap = {
-                'landing':              function() { return typeof backToLanding === 'function' ? (backToLanding(), true) : false; },
+                'landing':              function() { window.location.href = './index.html'; return true; },
                 'dashboard':            function() { return typeof openDashboard === 'function' ? (openDashboard(), true) : false; },
                 'agentursicht':         function() { return typeof openAgenturView === 'function' ? (openAgenturView(), true) : false; },
                 'agentursicht-b2b':     function() { return typeof openAgenturView === 'function' && typeof setViewMode === 'function' ? (setViewMode('ecclesia'), openAgenturView(), true) : false; },

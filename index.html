@@ -112,11 +112,12 @@
     import {
         LayoutDashboard, Users, Home, Box, Zap, Clock, ShieldCheck, FileText,
         CreditCard, CheckCircle, LayoutGrid, UserPlus, BookOpen, ClipboardCheck,
-        Briefcase, ExternalLink, Mic, Send, MessageCircle, Search
+        Briefcase, ExternalLink, Mic, Send, MessageCircle, Search,
+        Settings, User, Key, Upload, Play, FileUp, Lock, Camera, Video, Eye, EyeOff, ChevronDown
     } from 'lucide-react';
 
     const h = React.createElement;
-    const { useState, useEffect, useRef } = React;
+    const { useState, useEffect, useRef, useCallback } = React;
 
     const MODULES = [
         { id: 'dashboard',   label: 'Gesamtübersicht',       icon: LayoutDashboard, desc: 'KPIs, Bestand, Neugeschäft',           href: 'app.html#/dashboard' },
@@ -189,13 +190,184 @@
         );
     }
 
+    function ToggleSwitch({ id, checked, onChange }) {
+        return h('label', { className: 'relative inline-flex items-center cursor-pointer' },
+            h('input', { type: 'checkbox', className: 'sr-only peer', checked, onChange: (e) => onChange(e.target.checked) }),
+            h('div', { className: 'w-9 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:bg-green-600 transition-colors' }),
+            h('div', { className: 'absolute left-0.5 top-0.5 w-4 h-4 bg-white rounded-full transition-transform peer-checked:translate-x-4 shadow-sm', style: { transform: checked ? 'translateX(16px)' : 'translateX(0)' } })
+        );
+    }
+
+    function SettingsPanel() {
+        const [open, setOpen] = useState(false);
+        const [userName, setUserName] = useState(() => localStorage.getItem('kiUserName') || 'Maria');
+        const [apiToken, setApiToken] = useState(() => localStorage.getItem('openai_api_token') || '');
+        const [showApiToken, setShowApiToken] = useState(false);
+        const [speechKey, setSpeechKey] = useState(() => localStorage.getItem('google_speech_api_key') || '');
+        const [showSpeechKey, setShowSpeechKey] = useState(false);
+        const [mockMode, setMockMode] = useState(() => localStorage.getItem('mockMode') !== 'false');
+        const [uploadMode, setUploadMode] = useState(() => localStorage.getItem('uploadMode') === 'true');
+        const [saveStatus, setSaveStatus] = useState('');
+
+        function showStatus(msg) { setSaveStatus(msg); setTimeout(() => setSaveStatus(''), 2000); }
+
+        function saveUserNameFn() {
+            localStorage.setItem('kiUserName', userName);
+            showStatus('Name gespeichert');
+            window.dispatchEvent(new CustomEvent('userNameChanged', { detail: userName }));
+        }
+
+        function saveApiTokenFn() {
+            localStorage.setItem('openai_api_token', apiToken);
+            showStatus('API Key gespeichert');
+        }
+
+        function saveSpeechKeyFn() {
+            localStorage.setItem('google_speech_api_key', speechKey);
+            showStatus('Speech Key gespeichert');
+        }
+
+        function handleMockMode(val) { setMockMode(val); localStorage.setItem('mockMode', val); }
+        function handleUploadMode(val) { setUploadMode(val); localStorage.setItem('uploadMode', val); }
+
+        function openGenerator() { window.location.href = 'csv-generator.html'; }
+
+        return h('div', { className: 'mt-6 bg-white rounded-xl border border-slate-200 overflow-hidden' },
+            h('button', {
+                onClick: () => setOpen(!open),
+                className: 'w-full flex items-center gap-2 px-5 py-3 text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors'
+            },
+                h(Settings, { size: 16, className: 'text-slate-400', strokeWidth: 1.75 }),
+                h('span', null, 'Settings'),
+                h(ChevronDown, { size: 14, className: 'ml-auto text-slate-400 transition-transform ' + (open ? 'rotate-180' : ''), strokeWidth: 2 })
+            ),
+
+            open && h('div', { className: 'border-t border-slate-100 px-5 py-4 space-y-4' },
+                // Save status
+                saveStatus && h('div', { className: 'text-xs text-green-600 font-medium' }, saveStatus),
+
+                // Username
+                h('div', null,
+                    h('div', { className: 'flex items-center gap-2 mb-2' },
+                        h(User, { size: 14, className: 'text-slate-400' }),
+                        h('span', { className: 'text-xs font-medium text-slate-500' }, 'Benutzername')
+                    ),
+                    h('div', { className: 'flex gap-2' },
+                        h('input', {
+                            type: 'text', value: userName,
+                            onChange: (e) => setUserName(e.target.value),
+                            onKeyDown: (e) => { if (e.key === 'Enter') saveUserNameFn(); },
+                            className: 'flex-1 px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-200'
+                        }),
+                        h('button', { onClick: saveUserNameFn, className: 'px-3 py-2 text-xs font-medium bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors' }, 'Speichern')
+                    )
+                ),
+
+                // Test-Daten generieren
+                h('button', {
+                    onClick: openGenerator,
+                    className: 'w-full flex items-center gap-2 px-3 py-2.5 text-sm text-slate-600 rounded-lg hover:bg-slate-50 border border-slate-200 transition-colors'
+                },
+                    h(FileUp, { size: 14, className: 'text-slate-400' }),
+                    h('span', null, 'Test-Daten generieren')
+                ),
+
+                // CSV Upload
+                h('label', {
+                    className: 'w-full flex items-center gap-2 px-3 py-2.5 text-sm text-slate-600 rounded-lg hover:bg-slate-50 border border-slate-200 cursor-pointer transition-colors'
+                },
+                    h(Upload, { size: 14, className: 'text-slate-400' }),
+                    h('span', null, 'CSV Upload'),
+                    h('input', { type: 'file', accept: '.csv', className: 'hidden', onChange: (e) => {
+                        if (e.target.files[0]) showStatus('CSV geladen: ' + e.target.files[0].name);
+                    }})
+                ),
+
+                // API Key
+                h('div', null,
+                    h('div', { className: 'flex items-center gap-2 mb-2' },
+                        h(Key, { size: 14, className: 'text-slate-400' }),
+                        h('span', { className: 'text-xs font-medium text-slate-500' }, 'KI-API (via Worker aktiv)')
+                    ),
+                    h('div', { className: 'flex gap-2' },
+                        h('input', {
+                            type: showApiToken ? 'text' : 'password', value: apiToken,
+                            onChange: (e) => setApiToken(e.target.value),
+                            placeholder: 'Nicht nötig - Worker konfiguriert',
+                            disabled: true,
+                            className: 'flex-1 px-3 py-2 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-400'
+                        }),
+                        h('button', { onClick: () => setShowApiToken(!showApiToken), className: 'p-2 border border-slate-200 rounded-lg hover:bg-slate-50' },
+                            h(showApiToken ? EyeOff : Eye, { size: 14, className: 'text-slate-400' })
+                        ),
+                        h('button', { onClick: saveApiTokenFn, className: 'px-3 py-2 text-xs font-medium bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors' }, 'Speichern')
+                    )
+                ),
+
+                // Speech-to-Text Key
+                h('div', null,
+                    h('div', { className: 'flex items-center gap-2 mb-2' },
+                        h(Mic, { size: 14, className: 'text-slate-400' }),
+                        h('span', { className: 'text-xs font-medium text-slate-500' }, 'Google Cloud Speech-to-Text')
+                    ),
+                    h('div', { className: 'flex gap-2' },
+                        h('input', {
+                            type: showSpeechKey ? 'text' : 'password', value: speechKey,
+                            onChange: (e) => setSpeechKey(e.target.value),
+                            placeholder: 'AIza... (Google Cloud API Key)',
+                            className: 'flex-1 px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-200'
+                        }),
+                        h('button', { onClick: () => setShowSpeechKey(!showSpeechKey), className: 'p-2 border border-slate-200 rounded-lg hover:bg-slate-50' },
+                            h(showSpeechKey ? EyeOff : Eye, { size: 14, className: 'text-slate-400' })
+                        ),
+                        h('button', { onClick: saveSpeechKeyFn, className: 'px-3 py-2 text-xs font-medium bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors' }, 'Speichern')
+                    )
+                ),
+
+                // Demo Tour
+                h('button', {
+                    onClick: () => { window.location.href = 'app.html#/agentur'; },
+                    className: 'w-full flex items-center gap-2 px-3 py-2.5 text-sm text-slate-600 rounded-lg hover:bg-slate-50 border border-slate-200 transition-colors'
+                },
+                    h(Play, { size: 14, className: 'text-slate-400' }),
+                    h('span', null, 'Interaktive Demo starten')
+                ),
+
+                // Toggles
+                h('div', { className: 'space-y-3 pt-2 border-t border-slate-100' },
+                    h('div', { className: 'flex items-center justify-between' },
+                        h('div', { className: 'flex items-center gap-2' },
+                            h(Lock, { size: 14, className: 'text-slate-400' }),
+                            h('span', { className: 'text-sm text-slate-600' }, 'Mock-Modus')
+                        ),
+                        h(ToggleSwitch, { checked: mockMode, onChange: handleMockMode })
+                    ),
+                    h('div', { className: 'flex items-center justify-between' },
+                        h('div', { className: 'flex items-center gap-2' },
+                            h(Upload, { size: 14, className: 'text-slate-400' }),
+                            h('span', { className: 'text-sm text-slate-600' }, 'Upload-Modus')
+                        ),
+                        h(ToggleSwitch, { checked: uploadMode, onChange: handleUploadMode })
+                    ),
+                    uploadMode && h('p', { className: 'text-xs text-slate-400 ml-6' }, 'Klicke auf das Logo oder Profilbild um eigene Bilder hochzuladen.')
+                )
+            )
+        );
+    }
+
     function App() {
         const [chatInput, setChatInput] = useState('');
         const [suggestions, setSuggestions] = useState([]);
         const [showSuggestions, setShowSuggestions] = useState(false);
+        const [userName, setUserName] = useState(() => localStorage.getItem('kiUserName') || 'Maria');
         const inputRef = useRef(null);
 
-        useEffect(() => { if (window.__finishLoading) window.__finishLoading(); }, []);
+        useEffect(() => {
+            if (window.__finishLoading) window.__finishLoading();
+            const handler = (e) => setUserName(e.detail);
+            window.addEventListener('userNameChanged', handler);
+            return () => window.removeEventListener('userNameChanged', handler);
+        }, []);
 
         function handleInput(val) {
             setChatInput(val);
@@ -258,7 +430,7 @@
                             ),
                             h('p', { className: 'text-slate-700' },
                                 'Willkommen zurück ',
-                                h('span', { className: 'font-semibold' }, 'Maria'),
+                                h('span', { className: 'font-semibold' }, userName),
                                 ', was kann ich für dich tun?'
                             )
                         )
@@ -309,7 +481,10 @@
                     MODULES.map((mod, i) =>
                         h(ModuleTile, { key: mod.id, mod, delay: i * 40 })
                     )
-                )
+                ),
+
+                // Settings Panel
+                h(SettingsPanel)
             )
         );
     }

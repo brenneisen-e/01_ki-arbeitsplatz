@@ -501,10 +501,13 @@ function openGenerator() {
     window.location.href = 'csv-generator.html';
 }
 
-// Back to landing page (ohne Reload)
+// Back to landing page → redirect to React M-01
 function backToLanding() {
-    console.log('Zurück zur Landing Page...');
+    console.log('Zurück zur React M-01 Landing Page...');
+    window.location.href = './index.html';
+    return;
 
+    // Legacy code below (no longer reached)
     const landingPage = document.getElementById('landingPage');
     const mainApp = document.getElementById('mainApp');
     const agenturOverview = document.getElementById('agenturOverview');

@@ -65,7 +65,8 @@ export function ModeProvider({ children }) {
       setCurrentView('overview');
       setActiveTab('kunden');
     } else if (currentView === 'overview') {
-      setCurrentView('landing');
+      // Navigate back to root landing page
+      window.location.href = '../';
     }
   }, [currentView]);
 

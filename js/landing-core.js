@@ -504,7 +504,7 @@ function openGenerator() {
 // Back to landing page → redirect to React M-01
 function backToLanding() {
     console.log('Zurück zur React M-01 Landing Page...');
-    window.location.href = './index.html';
+    window.location.href = '/';
     return;
 
     // Legacy code below (no longer reached)

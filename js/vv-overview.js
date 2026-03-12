@@ -857,18 +857,9 @@
     }
 
     function backFromVVOverview() {
-        var vvPage = document.getElementById('vvOverviewPage');
-        if (vvPage) vvPage.style.display = 'none';
-
-        // OPT-24: Controls zurück nach A-02
-        if (typeof moveGlobalControls === 'function') moveGlobalControls('a02ControlsSlot');
-
-        if (typeof backToLanding === 'function') {
-            backToLanding();
-        } else {
-            var landing = document.getElementById('landingPage');
-            if (landing) landing.style.display = 'flex';
-        }
+        // Redirect to React M-01
+        window.location.href = '/';
+        return;
     }
 
     // ══════════════════════════════════════════════════

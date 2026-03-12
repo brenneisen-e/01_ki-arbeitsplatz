@@ -2,7 +2,7 @@ import { createContext, useContext, useState, useCallback, useMemo } from 'react
 import { MODE_CONFIGS } from '../data/modeConfig';
 
 function getInitialView() {
-  return 'landing';
+  return 'overview';
 }
 
 const ModeContext = createContext(null);
@@ -55,9 +55,6 @@ export function ModeProvider({ children }) {
     }
     if (view === 'detail' && opts.tab) setActiveTab(opts.tab);
     if (view === 'detail' && !opts.tab) setActiveTab(config.detailTabs[0]?.id || 'stammdaten');
-    if (view === 'landing') {
-      setSelectedKundeId(null);
-    }
   }, [config]);
 
   const goBack = useCallback(() => {

@@ -17,9 +17,9 @@ export default function VerguetungTab() {
   const data = VERGUETUNG_DATA[modeId] || VERGUETUNG_DATA.versicherung;
   const kpiConfig = data.kpiConfig || DEFAULT_KPI_CONFIG;
 
-  const tabTitle = modeId === 'banking' ? 'Erträge' : modeId === 'vermoegensverwaltung' ? 'Erträge' : 'Vergütung';
-  const chartTitle = modeId === 'vermoegensverwaltung' ? 'Ertragsentwicklung (12 Monate)' : modeId === 'banking' ? 'Ertragsentwicklung (12 Monate)' : 'Provisionsentwicklung (12 Monate)';
-  const spartenTitle = modeId === 'vermoegensverwaltung' ? 'Erträge nach Quelle' : modeId === 'banking' ? 'Ertragsquellen' : 'Provision nach Sparte';
+  const tabTitle = modeId === 'banking' ? 'Erträge & Vergütung' : modeId === 'vermoegensverwaltung' ? 'Erträge' : 'Vergütung';
+  const chartTitle = modeId === 'vermoegensverwaltung' ? 'Ertragsentwicklung (12 Monate)' : modeId === 'banking' ? 'Deckungsbeitrag (12 Monate)' : 'Provisionsentwicklung (12 Monate)';
+  const spartenTitle = modeId === 'vermoegensverwaltung' ? 'Erträge nach Quelle' : modeId === 'banking' ? 'Deckungsbeitrag nach Quelle' : 'Provision nach Sparte';
 
   return (
     <div className="space-y-6">
@@ -38,12 +38,12 @@ export default function VerguetungTab() {
 
       <Card>
         <h3 className="font-semibold text-slate-800 mb-4">
-          {modeId === 'vermoegensverwaltung' ? 'Gebührenmodell' : modeId === 'banking' ? 'Vergütungsmodell' : 'Provisionsmodell'}
+          {modeId === 'vermoegensverwaltung' ? 'Gebührenmodell' : modeId === 'banking' ? 'Vergütung Berater' : 'Provisionsmodell'}
         </h3>
         <div className="grid grid-cols-3 gap-6 text-sm">
           <div>
             <div className="text-slate-400 text-xs uppercase tracking-wider mb-2">
-              {modeId === 'vermoegensverwaltung' ? 'Management Fee' : modeId === 'banking' ? 'Neugeschäft' : 'Abschlussprovision'}
+              {modeId === 'vermoegensverwaltung' ? 'Management Fee' : modeId === 'banking' ? 'Verbund-Provisionen' : 'Abschlussprovision'}
             </div>
             <div className="space-y-1 text-slate-600">
               {data.modell.abschluss.map((line, i) => <div key={i}>{line}</div>)}
@@ -51,7 +51,7 @@ export default function VerguetungTab() {
           </div>
           <div>
             <div className="text-slate-400 text-xs uppercase tracking-wider mb-2">
-              {modeId === 'vermoegensverwaltung' ? 'Laufende Erträge' : modeId === 'banking' ? 'Bestand' : 'Bestandsprovision'}
+              {modeId === 'vermoegensverwaltung' ? 'Laufende Erträge' : modeId === 'banking' ? 'Festgehalt & Bankertrag' : 'Bestandsprovision'}
             </div>
             <div className="space-y-1 text-slate-600">
               {data.modell.bestand.map((line, i) => <div key={i}>{line}</div>)}

@@ -46,8 +46,25 @@ function calculatePraemie(prod, person) {
   if (prod.praemieRange) return randomBetween(prod.praemieRange[0], prod.praemieRange[1]);
   if (prod.saldoRange) return randomBetween(prod.saldoRange[0], prod.saldoRange[1]);
   if (prod.rateRange) return randomBetween(prod.rateRange[0], prod.rateRange[1]) * 12;
-  if (prod.volumenRange) return randomBetween(prod.volumenRange[0], prod.volumenRange[1]);
+  if (prod.volumenRange) {
+    // For credit products: return annual payment (Annuität), not the full loan volume
+    // Store volume separately via calculateVolumen()
+    if (prod.kategorie === 'kredit') {
+      const volumen = randomBetween(prod.volumenRange[0], prod.volumenRange[1]);
+      // Annuität = Zins (~2-4%) + Tilgung (~2-3%) ≈ 4-7% of volume per year
+      const annuitaetRate = randomBetween(4, 7) / 100;
+      return Math.round(volumen * annuitaetRate);
+    }
+    return randomBetween(prod.volumenRange[0], prod.volumenRange[1]);
+  }
   return randomBetween(100, 2000);
+}
+
+function calculateVolumen(prod) {
+  if (prod.volumenRange && prod.kategorie === 'kredit') {
+    return randomBetween(prod.volumenRange[0], prod.volumenRange[1]);
+  }
+  return null;
 }
 
 function generateVertragsdatum(alter) {
@@ -94,14 +111,17 @@ export function assignEigeneProdukte(person, modus) {
     for (let i = 0; i < Math.min(dichte, extras.length); i++) {
       const p = extras[i];
       const praemie = calculatePraemie(p, person);
-      produkte.push({
+      const volumen = calculateVolumen(p);
+      const entry = {
         typ: p.id, sparte: p.kategorie,
         produkt: p.name,
         details: generateProduktDetails(p, person),
         praemie,
         seit: generateVertragsdatum(person.alter),
         status: weightedRandom({ aktiv: 80, optimierbar: 15, auslaufend: 5 }),
-      });
+      };
+      if (volumen) entry.volumen = volumen;
+      produkte.push(entry);
     }
   }
 

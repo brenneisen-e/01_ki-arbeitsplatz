@@ -2,9 +2,37 @@ import Card from '../../../components/ui/Card';
 import DataTable from '../../../components/ui/DataTable';
 import { StatusBadge, SparteBadge } from '../../../components/ui/Badge';
 import { formatEur, formatPct, berechneHaushaltsnetto, berechneAbsicherungsquote, berechneSparquote, berechneFrei, potentialSterne } from '../../../utils/formatters';
-import { User, Wallet, Linkedin, Star, ChevronDown, MapPin, Briefcase, Heart, Users } from 'lucide-react';
+import { User, Wallet, Linkedin, Star, ChevronDown, MapPin, Briefcase, Heart, Users, CheckCircle, Building2 } from 'lucide-react';
 import { useState } from 'react';
 import { useMode } from '../../../hooks/useMode';
+
+const FREMD_TYP_LABELS = {
+  girokonto: 'Girokonto',
+  baufinanzierung: 'Baufinanzierung',
+  kredit: 'Kredit',
+  depot: 'Depot',
+  depot_privat: 'Depot (Privat)',
+  depot_firma: 'Depot (Firma)',
+  depot2: 'Depot 2',
+  tagesgeld: 'Tagesgeld',
+  festgeld: 'Festgeld',
+  sparkonto: 'Sparkonto',
+  rlv: 'Risikoleben',
+  bav: 'bAV',
+  bausparer: 'Bausparer',
+  riester: 'Riester-Rente',
+  ruerup: 'Rürup-Rente',
+  anleihe: 'Anleihe',
+  fonds: 'Fonds',
+  kfz: 'Kfz-Versicherung',
+  haftpflicht: 'Haftpflicht',
+  hausrat: 'Hausrat',
+  bu: 'BU-Versicherung',
+  unfall: 'Unfallversicherung',
+  rechtsschutz: 'Rechtsschutz',
+  wohngebaeude: 'Wohngebäude',
+  pflege: 'Pflege',
+};
 
 const KUNDEN_FOTOS = {
   'KD00001': './images/AdobeStock_624564221.jpeg',
@@ -83,6 +111,9 @@ export default function StammdatenDetailTab({ kunde }) {
           <div className="space-y-2 text-sm">
             <InfoRow label="Name" value={`${kunde.name}, ${kunde.alter}`} />
             <InfoRow label="Beruf" value={kunde.beruf} />
+            {kunde.arbeitgeber && (
+              <ArbeitgeberRow arbeitgeber={kunde.arbeitgeber} />
+            )}
             <InfoRow label="Familienstand" value={kunde.familienstand} />
             {kunde.partner && (
               <InfoRow label="Partner" value={`${kunde.partner.name} (${kunde.partner.beruf})`} />
@@ -173,7 +204,7 @@ export default function StammdatenDetailTab({ kunde }) {
         {kunde.fremdProdukte?.length > 0 ? (
           <DataTable
             columns={[
-              { id: 'typ', label: 'Produkt' },
+              { id: 'typ', label: 'Produkt', render: v => FREMD_TYP_LABELS[v] || v },
               { id: 'institut', label: 'Institut' },
               { id: 'details', label: 'Details' },
               { id: 'volumen', label: 'Volumen', render: v => <span className="font-mono">{formatEur(v)}</span> },
@@ -187,6 +218,46 @@ export default function StammdatenDetailTab({ kunde }) {
           <div className="text-sm text-slate-400 py-4 text-center">Keine Fremdprodukte bekannt</div>
         )}
       </Card>
+    </div>
+  );
+}
+
+function ArbeitgeberRow({ arbeitgeber }) {
+  const [bestaetigt, setBestaetigt] = useState(arbeitgeber.bestaetigt);
+  const [showTooltip, setShowTooltip] = useState(false);
+
+  return (
+    <div className="flex justify-between items-center">
+      <span className="text-slate-400">Arbeitgeber</span>
+      <span className="flex items-center gap-2 text-slate-700 font-medium">
+        <Building2 size={14} className="text-slate-400" />
+        {arbeitgeber.name}
+        <span
+          className="relative"
+          onMouseEnter={() => setShowTooltip(true)}
+          onMouseLeave={() => setShowTooltip(false)}
+        >
+          <Linkedin size={14} className="text-blue-600 cursor-help" />
+          {showTooltip && (
+            <span className="absolute bottom-6 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs rounded-lg px-3 py-2 whitespace-nowrap z-50 shadow-lg">
+              Daten aus LinkedIn-Abzug hinzugefügt
+              <span className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-800" />
+            </span>
+          )}
+        </span>
+        {bestaetigt ? (
+          <span className="flex items-center gap-1 text-emerald-600 text-xs bg-emerald-50 px-2 py-0.5 rounded-full">
+            <CheckCircle size={12} /> Bestätigt
+          </span>
+        ) : (
+          <button
+            onClick={() => setBestaetigt(true)}
+            className="flex items-center gap-1 text-xs text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 px-2 py-0.5 rounded-full border border-slate-200 hover:border-emerald-200 transition-colors cursor-pointer"
+          >
+            <CheckCircle size={12} /> Bestätigen
+          </button>
+        )}
+      </span>
     </div>
   );
 }

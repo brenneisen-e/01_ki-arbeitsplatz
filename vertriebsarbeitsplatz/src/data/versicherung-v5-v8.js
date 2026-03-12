@@ -1,7 +1,7 @@
 // V5: Klaus Meier
 export const V5 = {
   name: 'Klaus Meier', id: 'KD00005', alter: 48,
-  beruf: 'Beamter A14 PKV', nettoeinkommen: 4600,
+  beruf: 'Beamter A14 PKV', arbeitgeber: { name: 'Bezirksregierung Gießen', quelle: 'linkedin', bestaetigt: true }, nettoeinkommen: 4600,
   familienstand: 'verheiratet',
   partner: { name: 'Petra', beruf: 'Grundschullehrerin', einkommen: 2200 },
   kinder: [{ name: 'Sophie', alter: 16 }, { name: 'Felix', alter: 13 }, { name: 'Tim', alter: 9 }],
@@ -51,7 +51,7 @@ export const V5 = {
 // V6: Lisa Bauer
 export const V6 = {
   name: 'Lisa Bauer', id: 'KD00006', alter: 31,
-  beruf: 'Freelancerin (Grafikdesign)', nettoeinkommen: 2800,
+  beruf: 'Marketing-Managerin', arbeitgeber: { name: 'SAP SE', quelle: 'linkedin', bestaetigt: false }, nettoeinkommen: 2800,
   familienstand: 'ledig', partner: null, kinder: [],
   wohnsituation: 'miete', wohnflaeche: 45,
   linkedin: { kontakte: 1200, aktivitaet: 'hoch', branchen: ['Design', 'Kreativwirtschaft'] },
@@ -90,7 +90,7 @@ export const V6 = {
 // V7: Michael Braun
 export const V7 = {
   name: 'Michael Braun', id: 'KD00007', alter: 62,
-  beruf: 'Ruhestand (ex-Ingenieur)', nettoeinkommen: 3200,
+  beruf: 'Lehrer Gymnasium', arbeitgeber: { name: 'Friedrich-Schiller-Gymnasium', quelle: 'linkedin', bestaetigt: true }, nettoeinkommen: 3200,
   familienstand: 'verheiratet',
   partner: { name: 'Renate', beruf: 'Ruhestand', einkommen: 1800 },
   kinder: [{ name: 'Stefan', alter: 35 }, { name: 'Katrin', alter: 32 }],
@@ -139,7 +139,7 @@ export const V7 = {
 // V8: Sandra Yilmaz
 export const V8 = {
   name: 'Sandra Yilmaz', id: 'KD00008', alter: 38,
-  beruf: 'Pharma-Referentin', nettoeinkommen: 5200,
+  beruf: 'Pharma-Referentin', arbeitgeber: { name: 'Boehringer Ingelheim', quelle: 'linkedin', bestaetigt: false }, nettoeinkommen: 5200,
   familienstand: 'verheiratet',
   partner: { name: 'Mehmet', beruf: 'Zahnarzt (selbständig)', einkommen: 6500 },
   kinder: [{ name: 'Leyla', alter: 5 }],

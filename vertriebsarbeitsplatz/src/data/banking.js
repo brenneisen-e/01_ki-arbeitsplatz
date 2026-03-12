@@ -1,7 +1,7 @@
 // B1: Klaus Fischer
 export const B1 = {
   name: 'Klaus Fischer', id: 'BK00001', alter: 45,
-  beruf: 'Vertriebsleiter', nettoeinkommen: 4500,
+  beruf: 'Vertriebsleiter', arbeitgeber: { name: 'Continental AG', quelle: 'linkedin', bestaetigt: false }, nettoeinkommen: 4500,
   familienstand: 'verheiratet',
   partner: { name: 'Sabine', beruf: 'Teilzeit Verwaltung', einkommen: 1200 },
   kinder: [{ name: 'Lukas', alter: 12 }, { name: 'Marie', alter: 9 }],
@@ -50,7 +50,7 @@ export const B1 = {
 // B2: Sandra Müller
 export const B2 = {
   name: 'Sandra Müller', id: 'BK00002', alter: 33,
-  beruf: 'Lehrerin (verbeamtet)', nettoeinkommen: 3200,
+  beruf: 'Lehrerin (verbeamtet)', arbeitgeber: { name: 'Café Müller (Inhaberin)', quelle: 'linkedin', bestaetigt: true }, nettoeinkommen: 3200,
   familienstand: 'verheiratet',
   partner: { name: 'Tobias', beruf: 'Ingenieur (Commerzbank-Kunde)', einkommen: 4200 },
   kinder: [],
@@ -82,7 +82,7 @@ export const B2 = {
 // B3: Peter Hoffmann
 export const B3 = {
   name: 'Peter Hoffmann', id: 'BK00003', alter: 58,
-  beruf: 'GmbH-Geschäftsführer', nettoeinkommen: 8500,
+  beruf: 'GmbH-Geschäftsführer', arbeitgeber: { name: 'Siemens Healthineers', quelle: 'linkedin', bestaetigt: false }, nettoeinkommen: 8500,
   familienstand: 'verheiratet',
   partner: { name: 'Claudia', beruf: 'Buchhalterin (im Betrieb)', einkommen: 2500 },
   kinder: [{ name: 'Jan', alter: 28 }, { name: 'Lea', alter: 25 }],
@@ -122,7 +122,7 @@ export const B3 = {
 // B4: Markus Wagner
 export const B4 = {
   name: 'Markus Wagner', id: 'BK00004', alter: 29,
-  beruf: 'Junior Controller', nettoeinkommen: 2600,
+  beruf: 'Junior Controller', arbeitgeber: { name: 'Volksbank Mittelhessen', quelle: 'linkedin', bestaetigt: true }, nettoeinkommen: 2600,
   familienstand: 'ledig', partner: null, kinder: [],
   wohnsituation: 'miete', wohnflaeche: 50,
   nps: 6, risikoscore: 40, potentialScore: 3.5, abwanderungsrisiko: 'hoch',
@@ -153,7 +153,7 @@ export const B4 = {
 // B5: Andrea Lang
 export const B5 = {
   name: 'Andrea Lang', id: 'BK00005', alter: 41,
-  beruf: 'Inhaberin 3 Cafés (18 MA)', nettoeinkommen: 5500,
+  beruf: 'Inhaberin 3 Cafés (18 MA)', arbeitgeber: { name: 'BASF SE', quelle: 'linkedin', bestaetigt: false }, nettoeinkommen: 5500,
   familienstand: 'geschieden', partner: null,
   kinder: [{ name: 'Mia', alter: 10 }],
   wohnsituation: 'miete', wohnflaeche: 85,
@@ -192,7 +192,7 @@ export const B5 = {
 // B6: Stefan Braun
 export const B6 = {
   name: 'Stefan Braun', id: 'BK00006', alter: 36,
-  beruf: 'IT-Freelancer', nettoeinkommen: 6800,
+  beruf: 'IT-Freelancer', arbeitgeber: { name: 'Universitätsklinikum Gießen', quelle: 'linkedin', bestaetigt: false }, nettoeinkommen: 6800,
   familienstand: 'ledig', partner: null, kinder: [],
   wohnsituation: 'miete', wohnflaeche: 65,
   nps: 4, risikoscore: 55, potentialScore: 3.8, abwanderungsrisiko: 'hoch',

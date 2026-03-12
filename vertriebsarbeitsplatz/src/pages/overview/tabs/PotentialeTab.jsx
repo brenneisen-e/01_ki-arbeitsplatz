@@ -8,6 +8,19 @@ import { KUNDEN_BY_MODE, getAllPotentiale } from '../../../data';
 import { formatEur } from '../../../utils/formatters';
 import { clsx } from 'clsx';
 
+const KUNDEN_FOTOS = {
+  'KD00001': './images/AdobeStock_624564221.jpeg',
+  'KD00002': './images/AdobeStock_252262042.jpeg',
+  'KD00003': './images/AdobeStock_361342769.jpeg',
+  'KD00005': './images/AdobeStock_612932760.jpeg',
+  'KD00008': './images/AdobeStock_1091012713.jpeg',
+  'BK00001': './images/AdobeStock_624564221.jpeg',
+  'BK00003': './images/AdobeStock_361342769.jpeg',
+  'BK00005': './images/AdobeStock_252262042.jpeg',
+  'WM00001': './images/AdobeStock_612932760.jpeg',
+  'WM00003': './images/AdobeStock_1091012713.jpeg',
+};
+
 const P_KPI_CONFIG = [
   { id: 'consentKunden', label: 'Consent-Kunden', format: 'num', icon: 'Users' },
   { id: 'potentiale', label: 'Potentiale', format: 'num', icon: 'Zap' },
@@ -104,9 +117,17 @@ export default function PotentialeTab() {
                 onClick={() => navigateTo('detail', { kundeId, tab: 'impulse' })}
               >
                 <div className="flex items-center gap-3">
-                  <div className="w-7 h-7 rounded-full bg-slate-200 flex items-center justify-center text-xs font-bold text-slate-600">
-                    {kunde?.name?.split(' ').map(n => n[0]).join('') || '?'}
-                  </div>
+                  {KUNDEN_FOTOS[kundeId] ? (
+                    <img
+                      src={KUNDEN_FOTOS[kundeId]}
+                      alt={kunde?.name || kundeId}
+                      className="w-8 h-8 rounded-full object-cover border border-slate-200"
+                    />
+                  ) : (
+                    <div className="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-xs font-bold text-slate-600">
+                      {kunde?.name?.split(' ').map(n => n[0]).join('') || '?'}
+                    </div>
+                  )}
                   <span className="font-semibold text-sm text-slate-800">{kunde?.name || kundeId}</span>
                   <span className="text-xs text-slate-400">{kundeId} &middot; {potentiale.length} Potentiale</span>
                 </div>

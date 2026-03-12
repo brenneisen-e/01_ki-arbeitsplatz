@@ -1,7 +1,7 @@
 // V1: Peter Schmidt (vollständig)
 export const V1 = {
   name: 'Peter Schmidt', id: 'KD00001', alter: 42,
-  beruf: 'IT-Projektleiter', nettoeinkommen: 4200,
+  beruf: 'IT-Projektleiter', arbeitgeber: { name: 'Deutsche Telekom AG', quelle: 'linkedin', bestaetigt: false }, nettoeinkommen: 4200,
   familienstand: 'verheiratet',
   partner: { name: 'Sarah', beruf: 'Lehrerin Teilzeit', einkommen: 1800 },
   kinder: [{ name: 'Lina', alter: 7 }, { name: 'Max', alter: 1 }],
@@ -60,7 +60,7 @@ export const V1 = {
 // V2: Amira König
 export const V2 = {
   name: 'Amira König', id: 'KD00002', alter: 28,
-  beruf: 'Designerin', nettoeinkommen: 2800,
+  beruf: 'Designerin', arbeitgeber: { name: 'Publicis Sapient', quelle: 'linkedin', bestaetigt: false }, nettoeinkommen: 2800,
   familienstand: 'ledig', partner: null,
   kinder: [],
   wohnsituation: 'miete', wohnflaeche: 55,
@@ -102,7 +102,7 @@ export const V2 = {
 // V3: Thomas Weber
 export const V3 = {
   name: 'Thomas Weber', id: 'KD00003', alter: 55,
-  beruf: 'Handwerksmeister', nettoeinkommen: 4800,
+  beruf: 'Handwerksmeister Sanitär', arbeitgeber: { name: 'Weber Sanitär & Heizung GmbH', quelle: 'linkedin', bestaetigt: false }, nettoeinkommen: 4800,
   familienstand: 'verheiratet',
   partner: { name: 'Monika', beruf: 'Buchhalterin', einkommen: 1500 },
   kinder: [{ name: 'Jan', alter: 25 }, { name: 'Lisa', alter: 22 }],
@@ -155,7 +155,7 @@ export const V3 = {
 // V4: Anna Hoffmann
 export const V4 = {
   name: 'Anna Hoffmann', id: 'KD00004', alter: 35,
-  beruf: 'Ärztin (Internistin)', nettoeinkommen: 5500,
+  beruf: 'Ärztin Allgemeinmedizin', arbeitgeber: { name: 'Uniklinik Köln', quelle: 'linkedin', bestaetigt: false }, nettoeinkommen: 5500,
   familienstand: 'verheiratet',
   partner: { name: 'Markus', beruf: 'Architekt', einkommen: 3200 },
   kinder: [{ name: 'Emma', alter: 3 }],

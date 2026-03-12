@@ -26,7 +26,7 @@ function parseHash(hash) {
   }
 
   if (parts.length >= 2) {
-    if (parts[1] === 'detail' || parts[1] === 'overview') {
+    if (parts[1] === 'detail' || parts[1] === 'overview' || parts[1] === 'cockpit') {
       view = parts[1];
     }
   }
@@ -132,6 +132,9 @@ export function ModeProvider({ children }) {
     } else if (view === 'detail') {
       if (opts.kundeId !== undefined) setSelectedKundeId(opts.kundeId);
       setActiveTab(opts.tab || config.detailTabs[0]?.id || 'stammdaten');
+    } else if (view === 'cockpit') {
+      setActiveTab('cockpit');
+      setSelectedKundeId(null);
     }
   }, [config]);
 
@@ -143,7 +146,7 @@ export function ModeProvider({ children }) {
       setCurrentView('overview');
       setActiveTab(kundenTab?.id || 'kunden');
       setSelectedKundeId(null);
-    } else if (currentView === 'overview') {
+    } else if (currentView === 'overview' || currentView === 'cockpit') {
       window.location.href = getBasePath();
     }
   }, [currentView, baseConfig]);

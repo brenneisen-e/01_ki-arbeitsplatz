@@ -2,8 +2,7 @@ import { createContext, useContext, useState, useCallback, useMemo } from 'react
 import { MODE_CONFIGS } from '../data/modeConfig';
 
 function getInitialView() {
-  // Always start directly in overview (Agenturansicht)
-  return 'overview';
+  return 'landing';
 }
 
 const ModeContext = createContext(null);
@@ -65,8 +64,9 @@ export function ModeProvider({ children }) {
     if (currentView === 'detail') {
       setCurrentView('overview');
       setActiveTab('kunden');
+    } else if (currentView === 'overview') {
+      setCurrentView('landing');
     }
-    // No navigation back from overview — landing page removed
   }, [currentView]);
 
   return (

@@ -122,8 +122,8 @@ export default function StammdatenDetailTab({ kunde }) {
               <InfoRow label="Kinder" value={kunde.kinder.map(k => `${k.name} (${k.alter})`).join(', ')} />
             )}
             <InfoRow label="Wohnsituation" value={`${kunde.wohnsituation}, ${kunde.wohnflaeche}qm`} />
-            {kunde.haustiere && (
-              <HaustiereRow haustiere={kunde.haustiere} />
+            {(kunde.haustiere || kunde.tiere) && (
+              <HaustiereRow haustiere={normalizeHaustiere(kunde.haustiere || kunde.tiere)} />
             )}
             {kunde.linkedin && (
               <div className="flex items-center gap-2 pt-2 border-t border-slate-100 mt-2">
@@ -265,11 +265,26 @@ function ArbeitgeberRow({ arbeitgeber }) {
   );
 }
 
+function normalizeHaustiere(raw) {
+  if (!raw) return null;
+  return {
+    art: raw.art || raw.typ || 'Haustier',
+    name: raw.name || null,
+    rasse: raw.rasse || null,
+    alter: raw.alter || null,
+    quelle: raw.quelle || 'kontoumsaetze',
+    erkannteTransaktionen: raw.erkannteTransaktionen || (raw.umsaetze || []).map(u => ({
+      haendler: u.empfaenger || u.haendler || 'Unbekannt',
+      betrag: Math.abs(u.betrag),
+      haeufigkeit: u.haeufigkeit || 'monatlich',
+    })),
+  };
+}
+
 function HaustiereRow({ haustiere }) {
   const [showDetail, setShowDetail] = useState(false);
-  const tierLabel = haustiere.name
-    ? `${haustiere.art} (${haustiere.name}, ${haustiere.alter} J.)`
-    : `${haustiere.art} (${haustiere.alter} J.)`;
+  const details = [haustiere.name, haustiere.rasse, haustiere.alter ? `${haustiere.alter} J.` : null].filter(Boolean).join(', ');
+  const tierLabel = details ? `${haustiere.art} (${details})` : haustiere.art;
 
   return (
     <div className="pt-2 border-t border-slate-100 mt-2">

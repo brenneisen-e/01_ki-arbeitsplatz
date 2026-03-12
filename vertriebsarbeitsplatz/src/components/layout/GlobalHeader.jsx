@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { clsx } from 'clsx';
-import { ArrowLeft, ChevronDown, Settings, User } from 'lucide-react';
+import { ArrowLeft, ChevronDown, Download, Settings, User } from 'lucide-react';
 import { useMode } from '../../hooks/useMode';
 import { MODE_CONFIGS } from '../../data/modeConfig';
 import LogoImg from '../ui/LogoImg';
+import { downloadDemoData } from '../../utils/downloadDemoData';
 
 export default function GlobalHeader({ kundeInfo }) {
   const { config, modeId, switchMode, activeTab, setActiveTab, currentView, goBack } = useMode();
@@ -25,12 +26,12 @@ export default function GlobalHeader({ kundeInfo }) {
           </div>
           <div className="flex items-center gap-3">
             {config.beraterFoto ? (
-              <div className="w-10 h-10 rounded-full border-2 border-white/50 overflow-hidden">
+              <div className="w-12 h-12 rounded-full border-2 border-white/50 overflow-hidden">
                 <img src={config.beraterFoto} alt={config.beraterName} className="w-full h-full object-cover" />
               </div>
             ) : (
-              <div className="w-10 h-10 rounded-full bg-white/20 border-2 border-white/50 flex items-center justify-center">
-                <User size={20} className="text-white" strokeWidth={1.75} />
+              <div className="w-12 h-12 rounded-full bg-white/20 border-2 border-white/50 flex items-center justify-center">
+                <User size={24} className="text-white" strokeWidth={1.75} />
               </div>
             )}
             <div>
@@ -60,6 +61,13 @@ export default function GlobalHeader({ kundeInfo }) {
               />
             )}
           </div>
+          <button
+            onClick={downloadDemoData}
+            title="Demodaten als JSON exportieren"
+            className="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors"
+          >
+            <Download size={18} strokeWidth={1.75} />
+          </button>
           <button className="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors">
             <Settings size={18} strokeWidth={1.75} />
           </button>
@@ -70,7 +78,7 @@ export default function GlobalHeader({ kundeInfo }) {
       {kundeInfo && (
         <div className="px-6 pb-2">
           <div className="flex items-center gap-3 text-white/80 text-sm">
-            <div className="w-7 h-7 rounded-full bg-white/20 flex items-center justify-center text-xs font-bold text-white">
+            <div className="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center text-sm font-bold text-white">
               {kundeInfo.name.split(' ').map(n => n[0]).join('')}
             </div>
             <span className="font-medium text-white">{kundeInfo.name}</span>

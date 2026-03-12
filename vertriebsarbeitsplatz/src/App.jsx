@@ -2,6 +2,7 @@ import { ModeProvider, useMode } from './hooks/useMode';
 import LandingPage from './pages/landing/LandingPage';
 import OverviewPage from './pages/overview/OverviewPage';
 import DetailPage from './pages/detail/DetailPage';
+import VertriebsAssistent from './components/layout/VertriebsAssistent';
 
 function AppRouter() {
   const { currentView } = useMode();
@@ -22,6 +23,7 @@ export default function App() {
   return (
     <ModeProvider>
       <AppRouter />
+      <VertriebsAssistent />
     </ModeProvider>
   );
 }

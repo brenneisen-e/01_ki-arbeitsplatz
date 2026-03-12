@@ -11,7 +11,7 @@ import { clsx } from 'clsx';
 const P_KPI_CONFIG = [
   { id: 'consentKunden', label: 'Consent-Kunden', format: 'num', icon: 'Users' },
   { id: 'potentiale', label: 'Potentiale', format: 'num', icon: 'Zap' },
-  { id: 'praemienvolumen', label: 'Praemienvolumen', format: 'eur', icon: 'Briefcase' },
+  { id: 'praemienvolumen', label: 'Prämienvolumen', format: 'eur', icon: 'Briefcase' },
   { id: 'convRate', label: 'Conv.-Rate', format: 'pct', icon: 'Target' },
 ];
 

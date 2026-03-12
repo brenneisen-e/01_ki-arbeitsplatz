@@ -19,7 +19,7 @@ export default function StammdatenDetailTab({ kunde }) {
         <Card>
           <div className="flex items-center gap-2 mb-4">
             <User size={20} className="text-slate-500" strokeWidth={1.75} />
-            <h3 className="font-semibold text-slate-800">Persoenliche Daten</h3>
+            <h3 className="font-semibold text-slate-800">Persönliche Daten</h3>
           </div>
           <div className="space-y-2 text-sm">
             <InfoRow label="Name" value={`${kunde.name}, ${kunde.alter}`} />
@@ -46,13 +46,13 @@ export default function StammdatenDetailTab({ kunde }) {
         <Card>
           <div className="flex items-center gap-2 mb-4">
             <Wallet size={20} className="text-slate-500" strokeWidth={1.75} />
-            <h3 className="font-semibold text-slate-800">Finanzuebersicht</h3>
+            <h3 className="font-semibold text-slate-800">Finanzübersicht</h3>
           </div>
           <div className="space-y-2 text-sm">
             <InfoRow label="Haushaltsnetto" value={`${formatEur(haushalt)}/mtl.`} />
             <InfoRow label="Absicherungsquote" value={formatPct(absQuote)} />
             <InfoRow label="Sparquote" value={formatPct(sparQuote)} />
-            <InfoRow label="Frei verfuegbar" value={`${formatEur(frei)}/mtl.`} />
+            <InfoRow label="Frei verfügbar" value={`${formatEur(frei)}/mtl.`} />
             <div className="pt-2 border-t border-slate-100 mt-2">
               <div className="flex justify-between items-center cursor-pointer" onClick={() => setRisikoExpanded(!risikoExpanded)}>
                 <span className="text-slate-400">Risikoscore</span>
@@ -63,8 +63,8 @@ export default function StammdatenDetailTab({ kunde }) {
               </div>
               {risikoExpanded && (
                 <div className="mt-2 pl-4 space-y-1 text-xs text-slate-500 animate-fade-in">
-                  <div>Bonitaet: {kunde.risikoscore < 30 ? 'Gut' : 'Mittel'}</div>
-                  <div>Zahlungsverhalten: Regelmaessig</div>
+                  <div>Bonität: {kunde.risikoscore < 30 ? 'Gut' : 'Mittel'}</div>
+                  <div>Zahlungsverhalten: Regelmäßig</div>
                   <div>Abwanderungsrisiko: {kunde.abwanderungsrisiko}</div>
                 </div>
               )}
@@ -87,7 +87,7 @@ export default function StammdatenDetailTab({ kunde }) {
       {/* Eigene Produkte */}
       <Card>
         <h3 className="font-semibold text-slate-800 mb-4">
-          Eigene Produkte ({kunde.eigeneProdukte?.length || 0} Vertraege)
+          Eigene Produkte ({kunde.eigeneProdukte?.length || 0} Verträge)
         </h3>
         {kunde.eigeneProdukte?.length > 0 ? (
           <DataTable
@@ -95,7 +95,7 @@ export default function StammdatenDetailTab({ kunde }) {
               { id: 'produkt', label: 'Produkt' },
               { id: 'sparte', label: 'Sparte', render: v => v ? <SparteBadge sparte={v} /> : '-' },
               { id: 'details', label: 'Details' },
-              { id: 'praemie', label: 'Praemie/J.', render: v => <span className="font-mono">{formatEur(v)}</span> },
+              { id: 'praemie', label: 'Prämie/J.', render: v => <span className="font-mono">{formatEur(v)}</span> },
               { id: 'seit', label: 'Seit' },
               { id: 'status', label: 'Status', render: v => <StatusBadge status={v} /> },
             ]}

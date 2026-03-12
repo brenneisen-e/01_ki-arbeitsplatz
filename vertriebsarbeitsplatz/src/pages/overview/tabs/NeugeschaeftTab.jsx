@@ -9,7 +9,7 @@ import { NEUGESCHAEFT_DATA } from '../../../data';
 import { formatEur } from '../../../utils/formatters';
 
 const NG_KPI_CONFIG = [
-  { id: 'antraege', label: 'Antraege', format: 'num', icon: 'FileText' },
+  { id: 'antraege', label: 'Anträge', format: 'num', icon: 'FileText' },
   { id: 'policiert', label: 'Policiertes NG', format: 'eur', icon: 'TrendingUp' },
   { id: 'ape', label: 'APE', format: 'eur', icon: 'BarChart3' },
   { id: 'abschlussquote', label: 'Abschlussquote', format: 'pct', icon: 'Target' },
@@ -31,7 +31,7 @@ const COLUMNS = [
 ];
 
 export default function NeugeschaeftTab() {
-  const { modeId } = useMode();
+  const { modeId, navigateTo } = useMode();
   const data = NEUGESCHAEFT_DATA[modeId] || NEUGESCHAEFT_DATA.versicherung;
 
   return (
@@ -41,7 +41,7 @@ export default function NeugeschaeftTab() {
       <div className="grid grid-cols-2 gap-4">
         {/* Donut */}
         <Card>
-          <h3 className="font-semibold text-slate-800 mb-4">Spartenverteilung Neugeschaeft</h3>
+          <h3 className="font-semibold text-slate-800 mb-4">Spartenverteilung Neugeschäft</h3>
           <DonutChart
             data={data.spartenVerteilung}
             height={220}
@@ -64,7 +64,7 @@ export default function NeugeschaeftTab() {
 
         {/* Top 5 */}
         <Card>
-          <h3 className="font-semibold text-slate-800 mb-4">Top-5 Kunden Neugeschaeft</h3>
+          <h3 className="font-semibold text-slate-800 mb-4">Top-5 Kunden Neugeschäft</h3>
           <div className="space-y-3">
             {data.top5.map((k, i) => (
               <div key={i} className="flex items-center justify-between py-2 border-b border-slate-100 last:border-0">
@@ -84,6 +84,7 @@ export default function NeugeschaeftTab() {
         columns={COLUMNS}
         data={data.vertraege}
         groupBy="kunde"
+        onRowClick={(row) => navigateTo('detail', { kundeId: row.kundeId, tab: 'vertraege' })}
         renderGroupHeader={(kunde, rows) => (
           <div className="flex items-center gap-2">
             <div className="w-6 h-6 rounded-full bg-slate-200 flex items-center justify-center text-xs font-bold text-slate-600">
@@ -91,7 +92,7 @@ export default function NeugeschaeftTab() {
             </div>
             <span>{kunde}</span>
             <span className="text-slate-400">{rows[0]?.kundeId}</span>
-            <span className="text-slate-400">&middot; {rows.length} Vertraege</span>
+            <span className="text-slate-400">&middot; {rows.length} Verträge</span>
           </div>
         )}
       />

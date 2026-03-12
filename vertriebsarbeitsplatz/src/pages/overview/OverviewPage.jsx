@@ -37,7 +37,9 @@ export default function OverviewPage() {
     <div className="min-h-screen bg-slate-50 overflow-hidden">
       <GlobalHeader />
       <div className="px-6 py-6 animate-fade-in-up">
-        <KPIGrid kpiConfig={config.kpiConfig} kpiValues={config.kpiValues} />
+        {activeTab === 'uebersicht' && (
+          <KPIGrid kpiConfig={config.kpiConfig} kpiValues={config.kpiValues} />
+        )}
         <TabComponent />
       </div>
     </div>

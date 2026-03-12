@@ -10,7 +10,7 @@ export const V5 = {
   lebenssituation: 'konsolidierung',
   nps: 7, risikoscore: 22, potentialScore: 3.5, abwanderungsrisiko: 'niedrig',
   eigeneProdukte: [
-    { typ: 'wohngebaeude', sparte: 'schaden', produkt: 'ERGO Wohngebaeude Premium', details: '160qm, Baujahr 2005', praemie: 980, seit: '2005-08', status: 'aktiv' },
+    { typ: 'wohngebaeude', sparte: 'schaden', produkt: 'ERGO Wohngebäude Premium', details: '160qm, Baujahr 2005', praemie: 980, seit: '2005-08', status: 'aktiv' },
     { typ: 'hausrat', sparte: 'schaden', produkt: 'ERGO Hausrat Komfort', details: '160qm + Elementar', praemie: 280, seit: '2005-08', status: 'aktiv' },
     { typ: 'haftpflicht', sparte: 'schaden', produkt: 'ERGO Privat Premium', details: 'Familie 10M\u20ac', praemie: 110, seit: '2005-08', status: 'aktiv' },
     { typ: 'kfz', sparte: 'kfz', produkt: 'VW Passat VK', details: '500\u20ac SB, SF-18', praemie: 720, seit: '2019-01', status: 'aktiv' },
@@ -21,7 +21,7 @@ export const V5 = {
     { typ: 'girokonto', institut: 'Sparkasse', details: 'Gehaltseingang', volumen: 42000, consent: true },
     { typ: 'bausparvertrag', institut: 'LBS', details: 'Ansparphase', volumen: 25000, consent: true },
     { typ: 'depot', institut: 'DWS', details: 'Gemischte Fonds', volumen: 35000, consent: true },
-    { typ: 'du', institut: 'DBV', details: 'Dienstunfaehigkeit', volumen: 1200, consent: true },
+    { typ: 'du', institut: 'DBV', details: 'Dienstunfähigkeit', volumen: 1200, consent: true },
   ],
   transaktionen: [
     { kategorie: 'gehalt', betrag: 4600, empfaenger: 'Land Hessen' },
@@ -33,14 +33,14 @@ export const V5 = {
     { kategorie: 'kinder', betrag: -600, empfaenger: 'Vereine, Nachhilfe' },
   ],
   potentiale: [
-    { titel: 'PKV-Optimierung Selbstbehalt', typ: 'anpassung', quellen: ['bestand'], prioritaet: 'mittel', volumen: -400, volumenTyp: 'jaehrlich', beschreibung: 'Erhoehung SB auf 600\u20ac spart ca. 400\u20ac/J.', empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'ERGO PKV Beamte Optimal', status: 'identifiziert' },
+    { titel: 'PKV-Optimierung Selbstbehalt', typ: 'anpassung', quellen: ['bestand'], prioritaet: 'mittel', volumen: -400, volumenTyp: 'jaehrlich', beschreibung: 'Erhöhung SB auf 600\u20ac spart ca. 400\u20ac/J.', empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'ERGO PKV Beamte Optimal', status: 'identifiziert' },
     { titel: 'DU-Wechsel DBV\u2192ERGO', typ: 'anpassung', quellen: ['wettbewerb'], prioritaet: 'hoch', volumen: 1200, volumenTyp: 'jaehrlich', beschreibung: 'DBV DU-Tarif veraltet. ERGO DU mit besserem Leistungskatalog.', empfohleneAktion: 'tarifvergleich', produktEmpfehlung: 'ERGO DU Beamte Plus', status: 'angeschrieben' },
-    { titel: 'Pflegezusatz Ehepaar', typ: 'whitespot', quellen: ['bestand', 'lebensereignis'], prioritaet: 'mittel', volumen: 960, volumenTyp: 'jaehrlich', beschreibung: 'Beide 48, Pflege-Vorsorge noch guenstig.', empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'ERGO Pflege-Schutz', status: 'identifiziert' },
+    { titel: 'Pflegezusatz Ehepaar', typ: 'whitespot', quellen: ['bestand', 'lebensereignis'], prioritaet: 'mittel', volumen: 960, volumenTyp: 'jaehrlich', beschreibung: 'Beide 48, Pflege-Vorsorge noch günstig.', empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'ERGO Pflege-Schutz', status: 'identifiziert' },
     { titel: 'Fondspolice statt DWS-Depot', typ: 'whitespot', quellen: ['finanztransaktion'], prioritaet: 'mittel', volumen: 35000, volumenTyp: 'einmalig', beschreibung: '35k bei DWS. Fondspolice mit Steuervorteilen.', empfohleneAktion: 'termin_vereinbaren', produktEmpfehlung: 'ERGO Rente Balance', status: 'identifiziert' },
     { titel: 'Kinderunfall-Versicherung', typ: 'whitespot', quellen: ['bestand'], prioritaet: 'niedrig', volumen: 180, volumenTyp: 'jaehrlich', beschreibung: '3 Kinder, aktiv im Sportverein.', empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'ERGO Kinderunfall', status: 'identifiziert' },
   ],
   kommunikation: [
-    { datum: '2026-01-15', typ: 'termin', richtung: 'ausgehend', betreff: 'PKV-Check', zusammenfassung: 'Tarif-Check durchgefuehrt. Kunde zufrieden, aber offen fuer DU-Wechsel.' },
+    { datum: '2026-01-15', typ: 'termin', richtung: 'ausgehend', betreff: 'PKV-Check', zusammenfassung: 'Tarif-Check durchgeführt. Kunde zufrieden, aber offen für DU-Wechsel.' },
   ],
   absicherung: {
     vorhanden: ['wohngebaeude', 'hausrat', 'haftpflicht', 'kfz', 'pkv'],
@@ -74,12 +74,12 @@ export const V6 = {
   ],
   potentiale: [
     { titel: 'BU-Versicherung Kreativberuf', typ: 'whitespot', quellen: ['bestand'], prioritaet: 'kritisch', volumen: 1080, volumenTyp: 'jaehrlich', beschreibung: 'Freelancerin ohne BU! Existenzbedrohend bei Ausfall.', empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'ERGO BU Comfort', status: 'identifiziert' },
-    { titel: 'Berufshaftpflicht Freelancer', typ: 'whitespot', quellen: ['bestand'], prioritaet: 'hoch', volumen: 350, volumenTyp: 'jaehrlich', beschreibung: 'Kein beruflicher Haftpflichtschutz. Wichtig fuer Auftraggeber.', empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'ERGO Berufshaftpflicht', status: 'identifiziert' },
-    { titel: 'Hausratversicherung', typ: 'whitespot', quellen: ['bestand'], prioritaet: 'mittel', volumen: 65, volumenTyp: 'jaehrlich', beschreibung: 'Teure Arbeitsgeraete (iMac, iPad Pro) nicht versichert.', empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'ERGO Hausrat Basis + Elektronik', status: 'identifiziert' },
-    { titel: 'Ruerup-Rente Selbstaendige', typ: 'whitespot', quellen: ['finanztransaktion'], prioritaet: 'mittel', volumen: 2400, volumenTyp: 'jaehrlich', beschreibung: 'Keine Altersvorsorge ausser KSK. Steuerlich absetzbar.', empfohleneAktion: 'termin_vereinbaren', produktEmpfehlung: 'ERGO Ruerup Rente', status: 'identifiziert' },
+    { titel: 'Berufshaftpflicht Freelancer', typ: 'whitespot', quellen: ['bestand'], prioritaet: 'hoch', volumen: 350, volumenTyp: 'jaehrlich', beschreibung: 'Kein beruflicher Haftpflichtschutz. Wichtig für Auftraggeber.', empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'ERGO Berufshaftpflicht', status: 'identifiziert' },
+    { titel: 'Hausratversicherung', typ: 'whitespot', quellen: ['bestand'], prioritaet: 'mittel', volumen: 65, volumenTyp: 'jaehrlich', beschreibung: 'Teure Arbeitsgeräte (iMac, iPad Pro) nicht versichert.', empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'ERGO Hausrat Basis + Elektronik', status: 'identifiziert' },
+    { titel: 'Rürup-Rente Selbständige', typ: 'whitespot', quellen: ['finanztransaktion'], prioritaet: 'mittel', volumen: 2400, volumenTyp: 'jaehrlich', beschreibung: 'Keine Altersvorsorge ausser KSK. Steuerlich absetzbar.', empfohleneAktion: 'termin_vereinbaren', produktEmpfehlung: 'ERGO Rürup Rente', status: 'identifiziert' },
   ],
   kommunikation: [
-    { datum: '2026-03-08', typ: 'chatbot', richtung: 'eingehend', betreff: 'BU-Anfrage', zusammenfassung: 'Kundin hat im Chatbot nach BU-Versicherung fuer Freelancer gefragt.' },
+    { datum: '2026-03-08', typ: 'chatbot', richtung: 'eingehend', betreff: 'BU-Anfrage', zusammenfassung: 'Kundin hat im Chatbot nach BU-Versicherung für Freelancer gefragt.' },
   ],
   absicherung: {
     vorhanden: ['haftpflicht'],
@@ -99,7 +99,7 @@ export const V7 = {
   lebenssituation: 'ruhestand',
   nps: 8, risikoscore: 15, potentialScore: 3.0, abwanderungsrisiko: 'niedrig',
   eigeneProdukte: [
-    { typ: 'wohngebaeude', sparte: 'schaden', produkt: 'ERGO Wohngebaeude Basis', details: '200qm, Baujahr 1985', praemie: 850, seit: '2000-01', status: 'optimierbar' },
+    { typ: 'wohngebaeude', sparte: 'schaden', produkt: 'ERGO Wohngebäude Basis', details: '200qm, Baujahr 1985', praemie: 850, seit: '2000-01', status: 'optimierbar' },
     { typ: 'hausrat', sparte: 'schaden', produkt: 'ERGO Hausrat Komfort', details: '200qm', praemie: 350, seit: '2000-01', status: 'aktiv' },
     { typ: 'haftpflicht', sparte: 'schaden', produkt: 'ERGO Privat Familie', details: '10M\u20ac', praemie: 95, seit: '2000-01', status: 'aktiv' },
     { typ: 'kfz', sparte: 'kfz', produkt: 'Mercedes E-Klasse VK', details: '500\u20ac SB, SF-30', praemie: 680, seit: '2021-01', status: 'aktiv' },
@@ -121,14 +121,14 @@ export const V7 = {
     { kategorie: 'konsum', betrag: -1200, empfaenger: 'Diverse' },
   ],
   potentiale: [
-    { titel: 'Pflegezusatz Ehepaar', typ: 'whitespot', quellen: ['bestand', 'lebensereignis'], prioritaet: 'hoch', volumen: 1440, volumenTyp: 'jaehrlich', beschreibung: 'Beide ueber 60, kein Pflegeschutz. Noch versicherbar.', empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'ERGO Pflege-Schutz Premium', status: 'angeschrieben' },
-    { titel: 'Sterbegeld-Versicherung', typ: 'whitespot', quellen: ['lebensereignis'], prioritaet: 'mittel', volumen: 600, volumenTyp: 'jaehrlich', beschreibung: 'Bestattungsvorsorge fuer Ehepaar.', empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'ERGO Sterbegeld', status: 'identifiziert' },
+    { titel: 'Pflegezusatz Ehepaar', typ: 'whitespot', quellen: ['bestand', 'lebensereignis'], prioritaet: 'hoch', volumen: 1440, volumenTyp: 'jaehrlich', beschreibung: 'Beide über 60, kein Pflegeschutz. Noch versicherbar.', empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'ERGO Pflege-Schutz Premium', status: 'angeschrieben' },
+    { titel: 'Sterbegeld-Versicherung', typ: 'whitespot', quellen: ['lebensereignis'], prioritaet: 'mittel', volumen: 600, volumenTyp: 'jaehrlich', beschreibung: 'Bestattungsvorsorge für Ehepaar.', empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'ERGO Sterbegeld', status: 'identifiziert' },
     { titel: 'Fondspolice statt Deka-Depot', typ: 'whitespot', quellen: ['finanztransaktion'], prioritaet: 'mittel', volumen: 145000, volumenTyp: 'einmalig', beschreibung: '145k bei Deka. Umschichtung in steueroptimierte Fondspolice.', empfohleneAktion: 'termin_vereinbaren', produktEmpfehlung: 'ERGO Rente Balance', status: 'identifiziert' },
-    { titel: 'Wohngebaeude-Update', typ: 'anpassung', quellen: ['bestand'], prioritaet: 'mittel', volumen: 200, volumenTyp: 'jaehrlich', beschreibung: 'Basis-Tarif von 2000. Elementar fehlt, Unterversicherung moeglich.', empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'ERGO Wohngebaeude Premium + Elementar', status: 'identifiziert' },
+    { titel: 'Wohngebäude-Update', typ: 'anpassung', quellen: ['bestand'], prioritaet: 'mittel', volumen: 200, volumenTyp: 'jaehrlich', beschreibung: 'Basis-Tarif von 2000. Elementar fehlt, Unterversicherung möglich.', empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'ERGO Wohngebäude Premium + Elementar', status: 'identifiziert' },
     { titel: 'Enkelkind-Vorsorge', typ: 'cross_sell', quellen: ['lebensereignis'], prioritaet: 'niedrig', volumen: 1200, volumenTyp: 'jaehrlich', beschreibung: 'Enkel (2 Jahre). Ausbildungsversicherung/Fondssparplan.', empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'ERGO Junior Vorsorge', status: 'identifiziert' },
   ],
   kommunikation: [
-    { datum: '2026-02-20', typ: 'termin', richtung: 'ausgehend', betreff: 'Pflege-Beratung', zusammenfassung: 'Ehepaar informiert ueber Pflege-Zuschuss. Interesse, aber erst Bedenken abwaegen.' },
+    { datum: '2026-02-20', typ: 'termin', richtung: 'ausgehend', betreff: 'Pflege-Beratung', zusammenfassung: 'Ehepaar informiert über Pflege-Zuschuss. Interesse, aber erst Bedenken abwägen.' },
   ],
   absicherung: {
     vorhanden: ['wohngebaeude', 'hausrat', 'haftpflicht', 'kfz', 'rechtsschutz', 'unfall'],
@@ -141,7 +141,7 @@ export const V8 = {
   name: 'Sandra Yilmaz', id: 'KD00008', alter: 38,
   beruf: 'Pharma-Referentin', nettoeinkommen: 5200,
   familienstand: 'verheiratet',
-  partner: { name: 'Mehmet', beruf: 'Zahnarzt (selbstaendig)', einkommen: 6500 },
+  partner: { name: 'Mehmet', beruf: 'Zahnarzt (selbständig)', einkommen: 6500 },
   kinder: [{ name: 'Leyla', alter: 5 }],
   wohnsituation: 'miete', wohnflaeche: 110,
   linkedin: { kontakte: 600, aktivitaet: 'hoch', branchen: ['Pharma', 'Medizin'] },
@@ -173,11 +173,11 @@ export const V8 = {
   potentiale: [
     { titel: 'BU-Nachversicherung 2.200\u21923.200\u20ac', typ: 'anpassung', quellen: ['bestand', 'lebensereignis'], prioritaet: 'hoch', volumen: 1200, volumenTyp: 'jaehrlich', beschreibung: 'Einkommen deutlich gestiegen. BU deckt nur 42%.', empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'ERGO BU Comfort Plus', status: 'termin' },
     { titel: 'RLV Baufi-Vorbereitung', typ: 'whitespot', quellen: ['lebensereignis'], prioritaet: 'hoch', volumen: 480, volumenTyp: 'jaehrlich', beschreibung: 'Immobilienkauf geplant 2027. RLV jetzt abschliessen.', empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'ERGO Risikoleben', status: 'identifiziert' },
-    { titel: 'Wohngebaeude vormerken', typ: 'cross_sell', quellen: ['lebensereignis'], prioritaet: 'mittel', volumen: 1200, volumenTyp: 'jaehrlich', beschreibung: 'Hauskauf geplant. Wohngebaeude-Police vorbereiten.', empfohleneAktion: 'termin_vereinbaren', produktEmpfehlung: 'ERGO Wohngebaeude Premium', status: 'identifiziert' },
+    { titel: 'Wohngebäude vormerken', typ: 'cross_sell', quellen: ['lebensereignis'], prioritaet: 'mittel', volumen: 1200, volumenTyp: 'jaehrlich', beschreibung: 'Hauskauf geplant. Wohngebäude-Police vorbereiten.', empfohleneAktion: 'termin_vereinbaren', produktEmpfehlung: 'ERGO Wohngebäude Premium', status: 'identifiziert' },
     { titel: 'Fondspolice statt ING-Depot', typ: 'whitespot', quellen: ['finanztransaktion'], prioritaet: 'mittel', volumen: 85000, volumenTyp: 'einmalig', beschreibung: '85k bei ING. Teilumschichtung in Fondspolice.', empfohleneAktion: 'termin_vereinbaren', produktEmpfehlung: 'ERGO Rente Balance', status: 'identifiziert' },
   ],
   kommunikation: [
-    { datum: '2026-03-10', typ: 'termin', richtung: 'ausgehend', betreff: 'BU-Upgrade Beratung', zusammenfassung: 'Termin fuer BU-Nachversicherung steht. Kundin moechte auch RLV besprechen.' },
+    { datum: '2026-03-10', typ: 'termin', richtung: 'ausgehend', betreff: 'BU-Upgrade Beratung', zusammenfassung: 'Termin für BU-Nachversicherung steht. Kundin möchte auch RLV besprechen.' },
   ],
   absicherung: {
     vorhanden: ['bu', 'haftpflicht', 'kfz'],

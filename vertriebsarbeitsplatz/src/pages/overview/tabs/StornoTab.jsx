@@ -8,7 +8,7 @@ const STORNO_KPI_CONFIG = [
   { id: 'stornoAnzahl', label: 'Stornierungen', format: 'num', icon: 'AlertTriangle' },
   { id: 'stornoQuote', label: 'Storno-Quote', format: 'pct', icon: 'TrendingDown' },
   { id: 'stornoVolumen', label: 'Storno-Volumen', format: 'eur', icon: 'Briefcase' },
-  { id: 'fruehstorno', label: 'Fruehstorno (<12M)', format: 'num', icon: 'Clock' },
+  { id: 'fruehstorno', label: 'Frühstorno (<12M)', format: 'num', icon: 'Clock' },
 ];
 
 export default function StornoTab() {
@@ -21,7 +21,7 @@ export default function StornoTab() {
 
       <Card>
         <h3 className="font-semibold text-slate-800 mb-4">
-          {modeId === 'banking' ? 'Kuendigungsgruende' : 'Storno-Gruende'}
+          {modeId === 'banking' ? 'Kündigungsgründe' : 'Storno-Gründe'}
         </h3>
         <BarChartComponent
           data={data.gruende}
@@ -32,10 +32,10 @@ export default function StornoTab() {
 
       <Card>
         <h3 className="font-semibold text-slate-800 mb-4">
-          {modeId === 'banking' ? 'Gekuendigte Konten/Produkte' : 'Stornierte Vertraege'}
+          {modeId === 'banking' ? 'Gekündigte Konten/Produkte' : 'Stornierte Verträge'}
         </h3>
         <div className="text-sm text-slate-500 py-8 text-center">
-          {data.kpiValues.stornoAnzahl.wert} {modeId === 'banking' ? 'Kuendigungen' : 'Stornierungen'} in den letzten 12 Monaten. Details in der Detailansicht verfuegbar.
+          {data.kpiValues.stornoAnzahl.wert} {modeId === 'banking' ? 'Kündigungen' : 'Stornierungen'} in den letzten 12 Monaten. Details in der Detailansicht verfügbar.
         </div>
       </Card>
     </div>

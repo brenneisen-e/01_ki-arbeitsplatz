@@ -11,7 +11,7 @@ export default function VertraegeTab({ kunde }) {
     <div className="space-y-4">
       <Card>
         <h3 className="font-semibold text-slate-800 mb-4">
-          Eigene Produkte ({produkte.length} Vertraege)
+          Eigene Produkte ({produkte.length} Verträge)
         </h3>
         <DataTable
           columns={[
@@ -23,7 +23,7 @@ export default function VertraegeTab({ kunde }) {
             )},
             { id: 'sparte', label: 'Sparte', render: v => v ? <SparteBadge sparte={v} /> : '-' },
             { id: 'details', label: 'Tarif / Details' },
-            { id: 'praemie', label: 'Praemie/J.', render: v => <span className="font-mono font-medium">{formatEur(v)}</span> },
+            { id: 'praemie', label: 'Prämie/J.', render: v => <span className="font-mono font-medium">{formatEur(v)}</span> },
             { id: 'seit', label: 'Seit' },
             { id: 'status', label: 'Status', render: v => <StatusBadge status={v} /> },
           ]}
@@ -34,8 +34,8 @@ export default function VertraegeTab({ kunde }) {
       <Card>
         <h3 className="font-semibold text-slate-800 mb-4">Vertragszusammenfassung</h3>
         <div className="grid grid-cols-3 gap-6">
-          <SummaryItem label="Gesamtpraemie/J." value={formatEur(produkte.reduce((s, p) => s + (p.praemie || 0), 0))} />
-          <SummaryItem label="Anzahl Vertraege" value={produkte.length} />
+          <SummaryItem label="Gesamtprämie/J." value={formatEur(produkte.reduce((s, p) => s + (p.praemie || 0), 0))} />
+          <SummaryItem label="Anzahl Verträge" value={produkte.length} />
           <SummaryItem label="Optimierbar" value={produkte.filter(p => p.status === 'optimierbar').length} highlight />
         </div>
       </Card>

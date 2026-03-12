@@ -9,7 +9,7 @@ import { Star } from 'lucide-react';
 
 const K_KPI_CONFIG = [
   { id: 'kundenAnzahl', label: 'Kunden', format: 'num', icon: 'Users' },
-  { id: 'avgVertraege', label: '\u00d8 Vertraege/Kunde', format: 'num', icon: 'FileText' },
+  { id: 'avgVertraege', label: '\u00d8 Verträge/Kunde', format: 'num', icon: 'FileText' },
   { id: 'avgVolumen', label: '\u00d8 Bestandsvolumen', format: 'eur', icon: 'Briefcase' },
   { id: 'avgNps', label: '\u00d8 NPS', format: 'num', icon: 'ThumbsUp' },
 ];
@@ -48,7 +48,7 @@ export default function KundenTab() {
   const columns = [
     { id: 'name', label: 'Name', render: (v, row) => (
       <div className="flex items-center gap-2">
-        <Avatar name={v} foto={row.foto} size={28} />
+        <Avatar name={v} foto={row.foto} size={36} />
         <span className="font-medium">{v}</span>
       </div>
     )},

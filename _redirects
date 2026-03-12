@@ -1,5 +1,2 @@
 # Cloudflare Pages Redirects
-
-# Root redirects to React app (M-01 Landing Page)
-/  /vertriebsarbeitsplatz/  302
-/landing  /vertriebsarbeitsplatz/  302
+# Root serves index.html (React M-01 Landing Page)

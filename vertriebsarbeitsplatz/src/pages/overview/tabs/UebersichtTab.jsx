@@ -151,7 +151,7 @@ export default function UebersichtTab() {
           <div className="flex items-center justify-between mb-1">
             <div className="flex items-center gap-2">
               <Sun size={20} className="text-amber-500" strokeWidth={1.75} />
-              <span className="text-lg font-semibold text-slate-800">Guten Morgen, {config.beraterName.split(' ')[0]}</span>
+              <span className="text-lg font-semibold text-slate-800">Guten Morgen, {(() => { const parts = config.beraterName.split(' '); return parts[0].endsWith('.') && parts.length > 1 ? parts[0] + ' ' + parts[1] : parts[0]; })()}</span>
             </div>
             <span className="text-sm text-slate-400">{datumStr}</span>
           </div>

@@ -6,6 +6,15 @@
     <title>KI-Vertriebsarbeitsplatz</title>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%2386BC25'/%3E%3Cstop offset='100%25' stop-color='%2300AA4F'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='6' fill='url(%23g)'/%3E%3Ctext x='16' y='22' text-anchor='middle' font-family='system-ui' font-size='14' font-weight='bold' fill='white'%3EKI%3C/text%3E%3C/svg%3E">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                colors: { brand: { DEFAULT: '#004d26', light: '#00843d', dark: '#003318' } }
+            }
+        }
+    };
+    </script>
     <script type="importmap">
     {
       "imports": {
@@ -18,94 +27,39 @@
     <style>
         @keyframes fade-in-up { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
         .animate-fade-in-up { animation: fade-in-up 0.4s ease-out both; }
+        .module-tile { transition: all 0.25s ease; }
+        .module-tile:hover { background: #004d26 !important; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,77,38,0.2); }
+        .module-tile:hover .tile-icon-wrap { background: rgba(255,255,255,0.2) !important; }
+        .module-tile:hover .tile-icon { color: white !important; }
+        .module-tile:hover .tile-label { color: white !important; }
+        .module-tile:hover .tile-desc { color: rgba(255,255,255,0.7) !important; }
+        .module-tile:hover .tile-external { color: rgba(255,255,255,0.5) !important; }
+        .module-tile:hover .tile-versions a { background: rgba(255,255,255,0.15) !important; color: white !important; border-color: rgba(255,255,255,0.3) !important; }
+        .module-tile:hover .tile-versions a:hover { background: rgba(255,255,255,0.3) !important; }
 
         /* Loading Screen */
         #loading-screen {
-            position: fixed;
-            inset: 0;
-            z-index: 9999;
+            position: fixed; inset: 0; z-index: 9999;
             background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
             transition: opacity 0.5s ease-out;
         }
-        #loading-screen.fade-out {
-            opacity: 0;
-            pointer-events: none;
-        }
-        @keyframes logo-pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
+        #loading-screen.fade-out { opacity: 0; pointer-events: none; }
+        @keyframes logo-pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
         .loading-logo {
-            width: 100px;
-            height: 100px;
-            background: white;
-            border-radius: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 24px;
-            animation: logo-pulse 2s ease-in-out infinite;
+            width: 100px; height: 100px; background: white; border-radius: 24px;
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 24px; animation: logo-pulse 2s ease-in-out infinite;
         }
         .loading-logo svg { color: #86BC25; }
-        .loading-brand {
-            color: #94a3b8;
-            font-size: 28px;
-            font-weight: 700;
-            margin: 0 0 32px 0;
-            letter-spacing: -0.5px;
-            font-family: system-ui, -apple-system, sans-serif;
-        }
-        .progress-track {
-            width: 320px;
-            height: 8px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 4px;
-            overflow: hidden;
-        }
-        .progress-bar {
-            height: 100%;
-            width: 0%;
-            background: linear-gradient(90deg, #86BC25, #00AA4F);
-            border-radius: 4px;
-            transition: width 0.3s ease;
-            position: relative;
-        }
-        @keyframes shimmer {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
-        }
-        .progress-bar::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-            animation: shimmer 1.5s infinite;
-        }
-        .progress-details {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 12px;
-            width: 320px;
-            font-family: system-ui, -apple-system, sans-serif;
-        }
-        .progress-status {
-            color: rgba(255,255,255,0.7);
-            font-size: 14px;
-            font-weight: 500;
-        }
-        .progress-percent {
-            color: white;
-            font-size: 14px;
-            font-weight: 700;
-            background: rgba(255,255,255,0.1);
-            padding: 4px 12px;
-            border-radius: 12px;
-        }
+        .loading-brand { color: #94a3b8; font-size: 28px; font-weight: 700; margin: 0 0 32px 0; letter-spacing: -0.5px; font-family: system-ui, sans-serif; }
+        .progress-track { width: 320px; height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden; }
+        .progress-bar { height: 100%; width: 0%; background: linear-gradient(90deg, #86BC25, #00AA4F); border-radius: 4px; transition: width 0.3s ease; position: relative; }
+        @keyframes shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+        .progress-bar::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent); animation: shimmer 1.5s infinite; }
+        .progress-details { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; width: 320px; font-family: system-ui, sans-serif; }
+        .progress-status { color: rgba(255,255,255,0.7); font-size: 14px; font-weight: 500; }
+        .progress-percent { color: white; font-size: 14px; font-weight: 700; background: rgba(255,255,255,0.1); padding: 4px 12px; border-radius: 12px; }
     </style>
 </head>
 <body class="bg-slate-50 min-h-screen">
@@ -119,9 +73,7 @@
             </svg>
         </div>
         <h1 class="loading-brand">Financial Service Sales Excellence Platform</h1>
-        <div class="progress-track">
-            <div class="progress-bar" id="progressBar"></div>
-        </div>
+        <div class="progress-track"><div class="progress-bar" id="progressBar"></div></div>
         <div class="progress-details">
             <span class="progress-status" id="progressStatus">Initialisiere...</span>
             <span class="progress-percent" id="progressPercent">0%</span>
@@ -130,14 +82,11 @@
 
     <div id="root"></div>
 
-    <!-- Loading animation script (runs immediately, no module dependency) -->
     <script>
     (function() {
         var bar = document.getElementById('progressBar');
         var status = document.getElementById('progressStatus');
         var percent = document.getElementById('progressPercent');
-        var screen = document.getElementById('loading-screen');
-
         var steps = [
             { pct: 15, text: 'Module laden...' },
             { pct: 35, text: 'React initialisieren...' },
@@ -145,29 +94,14 @@
             { pct: 75, text: 'Daten vorbereiten...' },
             { pct: 90, text: 'Fast fertig...' },
         ];
-
         var i = 0;
         var interval = setInterval(function() {
-            if (i < steps.length) {
-                bar.style.width = steps[i].pct + '%';
-                status.textContent = steps[i].text;
-                percent.textContent = steps[i].pct + '%';
-                i++;
-            }
+            if (i < steps.length) { bar.style.width = steps[i].pct + '%'; status.textContent = steps[i].text; percent.textContent = steps[i].pct + '%'; i++; }
         }, 300);
-
-        // When React app signals ready, finish loading
         window.__finishLoading = function() {
             clearInterval(interval);
-            bar.style.width = '100%';
-            status.textContent = 'Bereit!';
-            percent.textContent = '100%';
-            setTimeout(function() {
-                screen.classList.add('fade-out');
-                setTimeout(function() {
-                    screen.remove();
-                }, 500);
-            }, 300);
+            bar.style.width = '100%'; status.textContent = 'Bereit!'; percent.textContent = '100%';
+            setTimeout(function() { document.getElementById('loading-screen').classList.add('fade-out'); setTimeout(function() { document.getElementById('loading-screen').remove(); }, 500); }, 300);
         };
     })();
     </script>
@@ -178,45 +112,133 @@
     import {
         LayoutDashboard, Users, Home, Box, Zap, Clock, ShieldCheck, FileText,
         CreditCard, CheckCircle, LayoutGrid, UserPlus, BookOpen, ClipboardCheck,
-        Briefcase, ExternalLink, Mic, Send, MessageCircle
+        Briefcase, ExternalLink, Mic, Send, MessageCircle, Search
     } from 'lucide-react';
 
     const h = React.createElement;
+    const { useState, useEffect, useRef } = React;
 
     const MODULES = [
-        { id: 'dashboard',   label: 'Gesamtübersicht',            icon: LayoutDashboard, desc: 'KPIs, Bestand, Neugeschäft',             href: 'app.html#/dashboard' },
-        { id: 'agentur',     label: 'Vertriebsarbeitsplatz v01',  icon: Users,           desc: 'Agenturansicht, Kunden, Verträge',       href: 'app.html#/agentur' },
-        { id: 'v02',         label: 'Vertriebsarbeitsplatz v02',  icon: Home,            desc: 'React App — Banking, Versicherung, VV',  href: 'vertriebsarbeitsplatz/dist/index.html' },
-        { id: 'potential',   label: 'Potentialanalyse',           icon: Box,             desc: 'Cross-Sell, Up-Sell, Whitespots',        href: 'app.html#/potentialanalyse' },
+        { id: 'dashboard',   label: 'Gesamtübersicht',       icon: LayoutDashboard, desc: 'KPIs, Bestand, Neugeschäft',           href: 'app.html#/dashboard' },
+        { id: 'vap',         label: 'Vertriebsarbeitsplatz',  icon: Users,           desc: 'Agenturansicht, Kunden, Verträge',
+          versions: [
+              { label: 'v01', href: 'app.html#/agentur' },
+              { label: 'v02 (React)', href: 'vertriebsarbeitsplatz/dist/index.html' },
+          ]
+        },
+        { id: 'potential',   label: 'Potentialanalyse',       icon: Box,             desc: 'Cross-Sell, Up-Sell, Whitespots',     href: 'app.html#/potentialanalyse' },
+        { id: 'scoring',     label: 'Vermittler-Scoring',     icon: Clock,           desc: 'Risikobewertung & Analyse',           href: 'app.html#/risikoscoring' },
+        { id: 'bgav',        label: 'Vertragsumstellung',     icon: ShieldCheck,     desc: 'BGAV Simulation & Übersicht',         href: 'app.html#/bgav-umstellung' },
+        { id: 'bestand',     label: 'Bestandsübertragung',    icon: FileText,        desc: 'Vertragsübertragungen verwalten',     href: 'app.html#/bestandsuebertragung' },
+        { id: 'abrechnung',  label: 'Abrechnungsprüfung',     icon: CreditCard,      desc: 'Abrechnungen prüfen & validieren',    href: 'https://billingcheck.pages.dev/app', external: true },
+        { id: 'provision',   label: 'Provisionsvalidierung',  icon: CheckCircle,     desc: 'Provisionen analysieren',             href: 'https://provisions-analyzer.pages.dev/', external: true },
+        { id: 'pmo',         label: 'PMO Toolbox',            icon: LayoutGrid,      desc: 'Transformationsprogramm',             href: 'app.html#/pmo-toolbox' },
+        { id: 'hr',          label: 'HR Pipeline',            icon: UserPlus,        desc: 'Recruiting & Bewerbermanagement',     href: 'app.html#/hr-pipeline' },
+        { id: 'v1x1',        label: 'Versicherungs-1×1',      icon: BookOpen,        desc: 'Wissen & Nachschlagewerk',            href: 'app.html#/versicherungs-1x1' },
+        { id: 'kredit',      label: 'KI-Kreditanalyse',       icon: ClipboardCheck,  desc: 'KI-gestützte Kreditbewertung',        href: 'app.html#/kreditanalyse' },
     ];
 
-    const SALES_OPS = [
-        { id: 'scoring',       label: 'Vermittler-Scoring',     icon: Clock,          href: 'app.html#/risikoscoring' },
-        { id: 'bgav',          label: 'Vertragsumstellung',     icon: ShieldCheck,    href: 'app.html#/bgav-umstellung' },
-        { id: 'bestand',       label: 'Bestandsübertragung',    icon: FileText,       href: 'app.html#/bestandsuebertragung' },
-        { id: 'abrechnung',    label: 'Abrechnungsprüfung',     icon: CreditCard,     href: 'https://billingcheck.pages.dev/app', external: true },
-        { id: 'provision',     label: 'Provisionsvalidierung',  icon: CheckCircle,    href: 'https://provisions-analyzer.pages.dev/', external: true },
-        { id: 'pmo',           label: 'PMO Toolbox',            icon: LayoutGrid,     href: 'app.html#/pmo-toolbox' },
-        { id: 'hr',            label: 'HR Pipeline',            icon: UserPlus,       href: 'app.html#/hr-pipeline' },
-        { id: 'v1x1',          label: 'Versicherungs-1×1',      icon: BookOpen,       href: 'app.html#/versicherungs-1x1' },
-        { id: 'kredit',        label: 'KI-Kreditanalyse',       icon: ClipboardCheck, href: 'app.html#/kreditanalyse' },
+    const DEMO_SUGGESTIONS = [
+        { text: 'Zusammenfassung heutiger Tag',        href: 'vertriebsarbeitsplatz/dist/index.html' },
+        { text: 'Zeige meine Vertriebspotentiale',     href: 'app.html#/agentur' },
+        { text: 'Top 5 Vertriebsregionen',             href: 'app.html#/dashboard' },
+        { text: 'Kundenpotenzial analysieren',          href: 'app.html#/potentialanalyse' },
+        { text: 'Cross-Selling Chancen anzeigen',       href: 'vertriebsarbeitsplatz/dist/index.html' },
+        { text: 'Was kann ich hier machen?',            href: 'app.html#/dashboard' },
     ];
+
+    function ModuleTile({ mod, delay }) {
+        if (mod.versions) {
+            return h('div', {
+                className: 'module-tile bg-white rounded-xl border border-slate-200 p-5 animate-fade-in-up cursor-default',
+                style: { animationDelay: delay + 'ms' }
+            },
+                h('div', { className: 'tile-icon-wrap w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center mb-3' },
+                    h(mod.icon, { size: 20, className: 'tile-icon text-slate-600', strokeWidth: 1.75 })
+                ),
+                h('div', { className: 'tile-label font-semibold text-slate-800 mb-1 text-sm' }, mod.label),
+                h('div', { className: 'tile-desc text-xs text-slate-400 mb-3' }, mod.desc),
+                h('div', { className: 'tile-versions flex gap-2' },
+                    mod.versions.map(v =>
+                        h('a', {
+                            key: v.label,
+                            href: v.href,
+                            className: 'px-3 py-1.5 text-xs font-medium rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 transition-colors no-underline',
+                            onClick: (e) => e.stopPropagation()
+                        }, v.label)
+                    )
+                )
+            );
+        }
+
+        return h('a', {
+            href: mod.href,
+            target: mod.external ? '_blank' : undefined,
+            rel: mod.external ? 'noopener noreferrer' : undefined,
+            className: 'module-tile bg-white rounded-xl border border-slate-200 p-5 block no-underline animate-fade-in-up relative',
+            style: { animationDelay: delay + 'ms' }
+        },
+            mod.external && h('div', { className: 'absolute top-3 right-3' },
+                h(ExternalLink, { size: 12, className: 'tile-external text-slate-300' })
+            ),
+            h('div', { className: 'tile-icon-wrap w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center mb-3' },
+                h(mod.icon, { size: 20, className: 'tile-icon text-slate-600', strokeWidth: 1.75 })
+            ),
+            h('div', { className: 'tile-label font-semibold text-slate-800 mb-1 text-sm' }, mod.label),
+            h('div', { className: 'tile-desc text-xs text-slate-400' }, mod.desc)
+        );
+    }
 
     function App() {
-        const [chatInput, setChatInput] = React.useState('');
+        const [chatInput, setChatInput] = useState('');
+        const [suggestions, setSuggestions] = useState([]);
+        const [showSuggestions, setShowSuggestions] = useState(false);
+        const inputRef = useRef(null);
 
-        React.useEffect(() => {
-            // Signal loading screen that React app is ready
-            if (window.__finishLoading) window.__finishLoading();
-        }, []);
+        useEffect(() => { if (window.__finishLoading) window.__finishLoading(); }, []);
 
-        return h('div', { className: 'min-h-screen bg-slate-50' },
+        function handleInput(val) {
+            setChatInput(val);
+            if (val.trim().length > 0) {
+                const filtered = DEMO_SUGGESTIONS.filter(s => s.text.toLowerCase().includes(val.toLowerCase()));
+                setSuggestions(filtered.length > 0 ? filtered : DEMO_SUGGESTIONS);
+                setShowSuggestions(true);
+            } else {
+                setShowSuggestions(false);
+            }
+        }
+
+        function handleFocus() {
+            if (chatInput.trim().length === 0) {
+                setSuggestions(DEMO_SUGGESTIONS);
+                setShowSuggestions(true);
+            }
+        }
+
+        function handleSuggestionClick(s) {
+            setChatInput(s.text);
+            setShowSuggestions(false);
+            setTimeout(() => { window.location.href = s.href; }, 300);
+        }
+
+        function handleSubmit() {
+            if (!chatInput.trim()) return;
+            const match = DEMO_SUGGESTIONS.find(s => s.text.toLowerCase() === chatInput.toLowerCase());
+            if (match) { window.location.href = match.href; }
+            else { window.location.href = 'vertriebsarbeitsplatz/dist/index.html'; }
+        }
+
+        function handleKeyDown(e) {
+            if (e.key === 'Enter') { e.preventDefault(); handleSubmit(); }
+        }
+
+        return h('div', { className: 'min-h-screen bg-slate-50', onClick: () => setShowSuggestions(false) },
 
             // Header
             h('div', { className: 'bg-white border-b border-slate-200 px-6 py-4' },
                 h('div', { className: 'max-w-5xl mx-auto flex items-center justify-between' },
                     h('div', { className: 'flex items-center gap-3' },
-                        h('div', { className: 'w-9 h-9 rounded-lg bg-gradient-to-br from-green-600 to-green-500 flex items-center justify-center' },
+                        h('div', { className: 'w-9 h-9 rounded-lg bg-gradient-to-br from-green-700 to-green-500 flex items-center justify-center' },
                             h(Briefcase, { size: 18, className: 'text-white', strokeWidth: 1.75 })
                         ),
                         h('span', { className: 'text-lg font-semibold text-slate-800' }, 'KI-Vertriebsarbeitsplatz')
@@ -241,63 +263,51 @@
                             )
                         )
                     ),
-                    h('div', { className: 'flex gap-2' },
-                        h('input', {
-                            type: 'text',
-                            value: chatInput,
-                            onChange: (e) => setChatInput(e.target.value),
-                            placeholder: 'Frag mich etwas...',
-                            className: 'flex-1 px-4 py-3 rounded-xl border border-slate-200 bg-white text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-green-200 transition-shadow'
-                        }),
-                        h('button', { className: 'p-3 rounded-xl bg-white border border-slate-200 hover:bg-slate-50 transition-colors' },
-                            h(Mic, { size: 18, className: 'text-slate-500', strokeWidth: 1.75 })
+                    h('div', { className: 'relative', onClick: (e) => e.stopPropagation() },
+                        h('div', { className: 'flex gap-2' },
+                            h('input', {
+                                ref: inputRef,
+                                type: 'text',
+                                value: chatInput,
+                                onChange: (e) => handleInput(e.target.value),
+                                onFocus: handleFocus,
+                                onKeyDown: handleKeyDown,
+                                placeholder: 'Frag mich etwas...',
+                                className: 'flex-1 px-4 py-3 rounded-xl border border-slate-200 bg-white text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-green-200 transition-shadow'
+                            }),
+                            h('button', { className: 'p-3 rounded-xl bg-white border border-slate-200 hover:bg-slate-50 transition-colors' },
+                                h(Mic, { size: 18, className: 'text-slate-500', strokeWidth: 1.75 })
+                            ),
+                            h('button', {
+                                onClick: handleSubmit,
+                                className: 'p-3 rounded-xl bg-green-700 hover:bg-green-800 transition-colors'
+                            },
+                                h(Send, { size: 18, className: 'text-white', strokeWidth: 1.75 })
+                            )
                         ),
-                        h('button', { className: 'p-3 rounded-xl bg-green-600 hover:bg-green-700 transition-colors' },
-                            h(Send, { size: 18, className: 'text-white', strokeWidth: 1.75 })
+                        // Autocomplete suggestions
+                        showSuggestions && suggestions.length > 0 && h('div', {
+                            className: 'absolute left-0 right-16 top-full mt-1 bg-white rounded-xl border border-slate-200 shadow-lg z-50 overflow-hidden'
+                        },
+                            suggestions.map((s, i) =>
+                                h('button', {
+                                    key: i,
+                                    onClick: () => handleSuggestionClick(s),
+                                    className: 'w-full flex items-center gap-3 px-4 py-3 text-sm text-slate-700 hover:bg-green-50 transition-colors text-left border-b border-slate-100 last:border-b-0'
+                                },
+                                    h(Search, { size: 14, className: 'text-slate-400 shrink-0' }),
+                                    s.text
+                                )
+                            )
                         )
                     )
                 ),
 
-                // Module Section
-                h('h3', { className: 'text-xs font-semibold uppercase tracking-wider text-slate-400 mb-3' }, 'Module'),
-                h('div', { className: 'grid grid-cols-4 gap-4 mb-8' },
+                // Module Grid
+                h('h3', { className: 'text-xs font-semibold uppercase tracking-wider text-slate-400 mb-4' }, 'Module'),
+                h('div', { className: 'grid grid-cols-4 gap-4' },
                     MODULES.map((mod, i) =>
-                        h('a', {
-                            key: mod.id,
-                            href: mod.href,
-                            className: 'bg-white rounded-xl border border-slate-200 p-5 text-left hover:-translate-y-0.5 hover:shadow-md transition-all duration-200 animate-fade-in-up block no-underline',
-                            style: { animationDelay: i * 50 + 'ms' }
-                        },
-                            h('div', { className: 'w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center mb-3' },
-                                h(mod.icon, { size: 20, className: 'text-slate-600', strokeWidth: 1.75 })
-                            ),
-                            h('div', { className: 'font-semibold text-slate-800 mb-1 text-sm' }, mod.label),
-                            h('div', { className: 'text-xs text-slate-400' }, mod.desc)
-                        )
-                    )
-                ),
-
-                // Sales Operations
-                h('h3', { className: 'text-xs font-semibold uppercase tracking-wider text-slate-400 mb-3 flex items-center gap-2' },
-                    h(Zap, { size: 14, className: 'text-slate-400' }),
-                    'Sales Operations'
-                ),
-                h('div', { className: 'grid grid-cols-5 gap-3' },
-                    SALES_OPS.map((op, i) =>
-                        h('a', {
-                            key: op.id,
-                            href: op.href,
-                            target: op.external ? '_blank' : undefined,
-                            rel: op.external ? 'noopener noreferrer' : undefined,
-                            className: 'bg-white rounded-xl border border-slate-200 p-4 text-left hover:-translate-y-0.5 hover:shadow-md transition-all duration-200 animate-fade-in-up block no-underline relative',
-                            style: { animationDelay: (MODULES.length + i) * 50 + 'ms' }
-                        },
-                            op.external && h('div', { className: 'absolute top-2 right-2' },
-                                h(ExternalLink, { size: 10, className: 'text-slate-300' })
-                            ),
-                            h(op.icon, { size: 18, className: 'text-slate-500 mb-2', strokeWidth: 1.75 }),
-                            h('div', { className: 'text-sm font-medium text-slate-700' }, op.label)
-                        )
+                        h(ModuleTile, { key: mod.id, mod, delay: i * 40 })
                     )
                 )
             )

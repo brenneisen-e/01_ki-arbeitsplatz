@@ -1,11 +1,16 @@
 import { createContext, useContext, useState, useCallback, useMemo } from 'react';
 import { MODE_CONFIGS } from '../data/modeConfig';
 
+function getInitialView() {
+  const params = new URLSearchParams(window.location.search);
+  return params.get('view') === 'overview' ? 'overview' : 'landing';
+}
+
 const ModeContext = createContext(null);
 
 export function ModeProvider({ children }) {
   const [modeId, setModeId] = useState('versicherung');
-  const [currentView, setCurrentView] = useState('landing'); // landing | overview | detail
+  const [currentView, setCurrentView] = useState(getInitialView); // landing | overview | detail
   const [activeTab, setActiveTab] = useState('uebersicht');
   const [selectedKundeId, setSelectedKundeId] = useState(null);
   const [institutOverride, setInstitutOverride] = useState(null);

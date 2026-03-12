@@ -122,7 +122,7 @@
     const VAP_BASE = 'vertriebsarbeitsplatz/dist/index.html';
 
     const MODULES = [
-        { id: 'dashboard',   label: 'VST-Cockpit',            icon: LayoutDashboard, desc: 'KPIs, Bestand, Neugeschäft',           href: 'app.html#/dashboard' },
+        { id: 'dashboard',   label: 'VST-Cockpit',            icon: LayoutDashboard, desc: 'KPIs, Bestand, Neugeschäft',           href: VAP_BASE + '#/versicherung/overview/uebersicht' },
         { id: 'vap',         label: 'Vertriebsarbeitsplatz',  icon: Users,           desc: 'Agenturansicht, Kunden, Verträge',
           versions: [
               { label: 'v01', href: 'app.html#/agentur' },
@@ -144,10 +144,10 @@
     const DEMO_SUGGESTIONS = [
         { text: 'Zusammenfassung heutiger Tag',        href: VAP_BASE + '#/versicherung/overview/uebersicht' },
         { text: 'Zeige meine Vertriebspotentiale',     href: VAP_BASE + '#/versicherung/overview/potentiale' },
-        { text: 'Top 5 Vertriebsregionen',             href: 'app.html#/dashboard' },
+        { text: 'Top 5 Vertriebsregionen',             href: VAP_BASE + '#/versicherung/overview/uebersicht' },
         { text: 'Kundenpotenzial analysieren',          href: 'app.html#/potentialanalyse' },
         { text: 'Cross-Selling Chancen anzeigen',       href: VAP_BASE + '#/versicherung/overview/potentiale' },
-        { text: 'Was kann ich hier machen?',            href: 'app.html#/dashboard' },
+        { text: 'Was kann ich hier machen?',            href: VAP_BASE + '#/versicherung/overview/uebersicht' },
     ];
 
     function ModuleTile({ mod, delay }) {

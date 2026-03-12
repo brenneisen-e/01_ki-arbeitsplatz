@@ -46,6 +46,13 @@ export const MODE_CONFIGS = {
       { id: 'finanzprofil', label: 'Finanzprofil' },
       { id: 'kommunikation', label: 'Kommunikation' },
     ],
+    institutVarianten: [
+      { institut: 'ERGO', beraterTitel: 'Agentur', colors: { primary: '#86181d', primaryLight: '#C8102E', gradient: 'linear-gradient(135deg, #5a1018 0%, #86181d 40%, #a02028 100%)', accent: '#e8c547' } },
+      { institut: 'Allianz', beraterTitel: 'Vertreter', colors: { primary: '#003781', primaryLight: '#0056b3', gradient: 'linear-gradient(135deg, #002255 0%, #003781 40%, #0056b3 100%)', accent: '#009ee0' } },
+      { institut: 'AXA', beraterTitel: 'Generalvertreter', colors: { primary: '#00008f', primaryLight: '#0033cc', gradient: 'linear-gradient(135deg, #000066 0%, #00008f 40%, #0033cc 100%)', accent: '#ff1721' } },
+      { institut: 'Generali', beraterTitel: 'Geschäftsstelle', colors: { primary: '#c8102e', primaryLight: '#e01e3c', gradient: 'linear-gradient(135deg, #8c0b20 0%, #c8102e 40%, #e01e3c 100%)', accent: '#ffd700' } },
+      { institut: 'Zurich', beraterTitel: 'Direktion', colors: { primary: '#003399', primaryLight: '#0050b3', gradient: 'linear-gradient(135deg, #002266 0%, #003399 40%, #0050b3 100%)', accent: '#009fe3' } },
+    ],
   },
   banking: {
     id: 'banking',
@@ -93,6 +100,13 @@ export const MODE_CONFIGS = {
       { id: 'finanzprofil', label: 'Finanzprofil' },
       { id: 'kommunikation', label: 'Kommunikation' },
     ],
+    institutVarianten: [
+      { institut: 'Volksbank Mittelhessen', beraterTitel: 'Beraterin', colors: { primary: '#004d26', primaryLight: '#00843d', gradient: 'linear-gradient(135deg, #003318 0%, #004d26 40%, #006633 100%)', accent: '#7ab648' } },
+      { institut: 'Sparkasse', beraterTitel: 'Berater', colors: { primary: '#cc0000', primaryLight: '#ff0000', gradient: 'linear-gradient(135deg, #990000 0%, #cc0000 40%, #ff0000 100%)', accent: '#ffffff' } },
+      { institut: 'Commerzbank', beraterTitel: 'Berater', colors: { primary: '#ffcc00', primaryLight: '#ffd633', gradient: 'linear-gradient(135deg, #1a1a1a 0%, #333333 40%, #4d4d4d 100%)', accent: '#ffcc00' } },
+      { institut: 'Deutsche Bank', beraterTitel: 'Berater', colors: { primary: '#0018a8', primaryLight: '#0033cc', gradient: 'linear-gradient(135deg, #000d66 0%, #0018a8 40%, #0033cc 100%)', accent: '#ffffff' } },
+      { institut: 'ING', beraterTitel: 'Berater', colors: { primary: '#ff6200', primaryLight: '#ff8533', gradient: 'linear-gradient(135deg, #cc4e00 0%, #ff6200 40%, #ff8533 100%)', accent: '#ffffff' } },
+    ],
   },
   vermoegensverwaltung: {
     id: 'vermoegensverwaltung',
@@ -137,6 +151,12 @@ export const MODE_CONFIGS = {
       { id: 'compliance', label: 'Compliance' },
       { id: 'impulse', label: 'Impulse' },
       { id: 'kommunikation', label: 'Kommunikation' },
+    ],
+    institutVarianten: [
+      { institut: 'HRK LUNIS AG', beraterTitel: 'Senior Advisor', colors: { primary: '#1a365d', primaryLight: '#2b4c7e', gradient: 'linear-gradient(135deg, #0f2340 0%, #1a365d 40%, #2b4c7e 100%)', accent: '#c4a35a' } },
+      { institut: 'Berenberg', beraterTitel: 'Relationship Manager', colors: { primary: '#1a3a5c', primaryLight: '#2a5a8c', gradient: 'linear-gradient(135deg, #0f2640 0%, #1a3a5c 40%, #2a5a8c 100%)', accent: '#b89d5a' } },
+      { institut: 'Flossbach von Storch', beraterTitel: 'Portfolio Manager', colors: { primary: '#2c3e50', primaryLight: '#3d5a80', gradient: 'linear-gradient(135deg, #1a252f 0%, #2c3e50 40%, #3d5a80 100%)', accent: '#c9a85c' } },
+      { institut: 'DJE Kapital', beraterTitel: 'Vermögensberater', colors: { primary: '#003366', primaryLight: '#005599', gradient: 'linear-gradient(135deg, #002244 0%, #003366 40%, #005599 100%)', accent: '#e6c347' } },
     ],
   },
 };

@@ -14,13 +14,13 @@ const MINI_KPIS = {
     { label: 'Abschlussquote', value: '68%', subtext: '+5%' },
   ],
   banking: [
-    { label: 'Abschlüsse', value: '8', subtext: 'diese Woche' },
-    { label: 'Ertrag', value: '24,8k', subtext: 'dieser Monat' },
-    { label: 'Termine', value: '18', subtext: 'diesen Monat' },
+    { label: 'Abschlüsse', value: '8', subtext: 'Diese Woche' },
+    { label: 'Ertrag', value: '24,8k', subtext: 'Dieser Monat' },
+    { label: 'Termine', value: '18', subtext: 'Diesen Monat' },
     { label: 'NPS', value: '8,4', subtext: 'Durchschnitt' },
   ],
   vermoegensverwaltung: [
-    { label: 'AuM', value: '78M', subtext: 'gesamt' },
+    { label: 'AuM', value: '78M', subtext: 'Gesamt' },
     { label: 'NNM', value: '+5,8M', subtext: 'YTD' },
     { label: 'Performance', value: '+5,6%', subtext: 'YTD \u00d8' },
     { label: 'Pipeline', value: '45M', subtext: '12 Leads' },
@@ -60,7 +60,7 @@ const LETZTE_ABSCHLUESSE = {
   ],
   banking: [
     { kunde: 'Klaus Fischer', kundeId: 'KDB001', produkt: 'Anschlussfinanzierung', sparte: 'kredit', betrag: 185000, datum: '10.03.2026' },
-    { kunde: 'Sandra Mueller', kundeId: 'KDB002', produkt: 'VR-FinanzPlan', sparte: 'wertpapier', betrag: 25000, datum: '09.03.2026' },
+    { kunde: 'Sandra Müller', kundeId: 'KDB002', produkt: 'VR-FinanzPlan', sparte: 'wertpapier', betrag: 25000, datum: '09.03.2026' },
     { kunde: 'Peter Hoffmann', kundeId: 'KDB005', produkt: 'VermögenPlus Depot', sparte: 'wertpapier', betrag: 50000, datum: '08.03.2026' },
   ],
   vermoegensverwaltung: [

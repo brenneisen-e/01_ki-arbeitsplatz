@@ -57,7 +57,7 @@ const TILES = {
 };
 
 export default function LandingPage() {
-  const { switchMode, config, modeId } = useMode();
+  const { switchMode, navigateTo, config, modeId } = useMode();
   const [activeModule, setActiveModule] = useState(modeId || 'versicherung');
   const [chatInput, setChatInput] = useState('');
 
@@ -66,6 +66,10 @@ export default function LandingPage() {
   function handleTileClick(tileId) {
     const targetMode = activeModule === 'asset' ? 'vermoegensverwaltung' : activeModule;
     switchMode(targetMode);
+    if (tileId === 'gesamt') {
+      // Navigate to VST-Cockpit (Gesamtübersicht)
+      navigateTo('cockpit');
+    }
   }
 
   return (

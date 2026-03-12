@@ -12,46 +12,155 @@ const WELCOME_MESSAGES = {
 };
 
 const QUICK_ACTIONS = [
+  'Neue Vertriebspotentiale',
   'Kundenpotenzial analysieren',
   'Gesprächsleitfaden erstellen',
   'Cross-Selling Chancen',
 ];
 
-function getDemoResponse(message) {
+function getDemoResponse(message, { currentView }) {
   const lower = message.toLowerCase();
 
-  if (lower.includes('bu') || lower.includes('berufsunfähigkeit')) {
-    return 'Die BU-Analyse zeigt, dass der Kunde aufgrund seines Berufsbilds (kaufmännischer Angestellter, 38 Jahre) ein moderates Risikoprofil aufweist. Empfehlung: BU-Rente von mindestens 1.800 € monatlich mit Nachversicherungsgarantie. Die aktuelle Absicherungslücke beträgt ca. 1.200 €/Monat.';
-  }
-  if (lower.includes('cross-selling') || lower.includes('cross selling')) {
-    return 'Basierend auf dem aktuellen Vertragsbestand sehe ich folgende Cross-Selling-Chancen:\n\n1. **Betriebliche Altersvorsorge** – Arbeitgeberzuschuss noch nicht ausgeschöpft\n2. **Rechtsschutzversicherung** – Kein bestehender Vertrag\n3. **Unfallversicherung** – Nur Grundschutz vorhanden\n\nPriorisierung: bAV hat das höchste Abschlusspotenzial (geschätzt 85%).';
-  }
-  if (lower.includes('kundenpotenzial') || lower.includes('potenzial') || lower.includes('analysieren')) {
-    return 'Kundenpotenzial-Analyse:\n\n• **Absicherungsgrad:** 62% – es bestehen Lücken in der Arbeitskraftabsicherung und Altersvorsorge\n• **Lebenssituation:** Familiengründung vor 2 Jahren → erhöhter Bedarf an Risikolebens- und Kinderabsicherung\n• **Einkommen:** Überdurchschnittlich für Altersgruppe → Potenzial für Kapitalanlageprodukte\n• **Nächster Impuls:** Jahresgespräch in 3 Wochen terminieren';
-  }
-  if (lower.includes('gesprächsleitfaden') || lower.includes('gespräch') || lower.includes('leitfaden')) {
-    return 'Gesprächsleitfaden für das nächste Kundengespräch:\n\n1. **Einstieg** – Bezug auf letztes Gespräch, aktuelle Lebenssituation erfragen\n2. **Bedarfsanalyse** – Veränderungen seit letztem Kontakt? Neue Wünsche/Sorgen?\n3. **Absicherungscheck** – Bestehende Verträge gemeinsam durchgehen, Lücken aufzeigen\n4. **Empfehlung** – Maximal 2 konkrete Produktvorschläge unterbreiten\n5. **Abschluss** – Nächste Schritte vereinbaren, Folgetermin festlegen\n\n💡 Tipp: Den Kunden zuerst erzählen lassen – offene Fragen stellen!';
-  }
-  if (lower.includes('kredit') || lower.includes('finanzierung')) {
-    return 'Für die Kreditanalyse empfehle ich folgende Schritte:\n\n1. **Bonitätsprüfung** – Schufa-Score und Einkommensnachweise prüfen\n2. **Kapitaldienstfähigkeit** – Monatliche Belastungsquote berechnen (max. 35-40%)\n3. **Sicherheiten** – Vorhandene Sicherheiten bewerten\n4. **Konditionsvergleich** – Passende Kreditprodukte gegenüberstellen\n\nSoll ich eine detaillierte Berechnung für einen bestimmten Kunden erstellen?';
-  }
-  if (lower.includes('portfolio') || lower.includes('anlage') || lower.includes('depot')) {
-    return 'Portfolio-Analyse:\n\n• **Aktuelle Allokation:** 45% Aktien, 30% Anleihen, 15% Immobilien, 10% Liquidität\n• **Risikoprofil:** Ausgewogen (Stufe 3/5)\n• **Performance YTD:** +4,2% (Benchmark: +3,8%)\n• **Empfehlung:** Leichte Übergewichtung europäischer Dividendenwerte, Reduktion der Liquiditätsquote auf 5%';
+  if (lower.includes('vertriebspotentiale') || lower.includes('vertriebspotenziale')) {
+    return {
+      content: `<div class="space-y-3">
+        <p class="font-semibold">Analyse der Vertriebspotentiale</p>
+        <p>Ich habe <strong>3 neue Potentiale</strong> für den aktuellen Kunden identifiziert:</p>
+        <ol class="list-decimal pl-4 space-y-1">
+          <li><strong>Berufsunfähigkeitsversicherung</strong> — Absicherungslücke erkannt, kein bestehender BU-Schutz</li>
+          <li><strong>Betriebliche Altersvorsorge</strong> — AG-Zuschuss nicht ausgeschöpft, Steuerersparnis möglich</li>
+          <li><strong>Rechtsschutzversicherung</strong> — Kein Vertrag vorhanden, Lebenssituation empfiehlt Absicherung</li>
+        </ol>
+        <p class="text-xs text-slate-500 mt-2">→ Wechsel zum Tab <em>Vertriebspotenziale</em> für Details...</p>
+      </div>`,
+      navigateTo: currentView === 'detail' ? 'impulse' : 'potentiale',
+    };
   }
 
-  return 'Vielen Dank für deine Frage! Ich habe die relevanten Kundendaten und Vertriebsinformationen analysiert. Basierend auf dem aktuellen Bestand und den Marktbedingungen empfehle ich, zunächst die bestehenden Vertragsbeziehungen zu prüfen und dann gezielt auf die identifizierten Bedarfslücken einzugehen. Soll ich einen konkreten Bereich genauer analysieren?';
+  if (lower.includes('bu') || lower.includes('berufsunfähigkeit')) {
+    return {
+      content: `<div class="space-y-2">
+        <p class="font-semibold">BU-Analyse</p>
+        <p>Der Kunde weist aufgrund seines Berufsbilds <strong>(kaufm. Angestellter, 38 J.)</strong> ein moderates Risikoprofil auf.</p>
+        <table class="w-full text-xs mt-2 border-collapse">
+          <tr class="border-b border-slate-200"><td class="py-1 text-slate-500">Empfehlung</td><td class="py-1 font-medium">BU-Rente min. 1.800 €/mtl.</td></tr>
+          <tr class="border-b border-slate-200"><td class="py-1 text-slate-500">Absicherungslücke</td><td class="py-1 font-medium text-red-600">ca. 1.200 €/Monat</td></tr>
+          <tr><td class="py-1 text-slate-500">Extras</td><td class="py-1 font-medium">Nachversicherungsgarantie empfohlen</td></tr>
+        </table>
+      </div>`,
+    };
+  }
+
+  if (lower.includes('cross-selling') || lower.includes('cross selling')) {
+    return {
+      content: `<div class="space-y-2">
+        <p class="font-semibold">Cross-Selling Chancen</p>
+        <p>Basierend auf dem aktuellen Vertragsbestand:</p>
+        <div class="space-y-2 mt-2">
+          <div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-emerald-500"></span><strong>bAV</strong> — AG-Zuschuss nicht ausgeschöpft <span class="ml-auto text-xs bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full">85% Potenzial</span></div>
+          <div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-amber-500"></span><strong>Rechtsschutz</strong> — Kein bestehender Vertrag <span class="ml-auto text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full">70% Potenzial</span></div>
+          <div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-blue-500"></span><strong>Unfallversicherung</strong> — Nur Grundschutz <span class="ml-auto text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">55% Potenzial</span></div>
+        </div>
+      </div>`,
+    };
+  }
+
+  if (lower.includes('kundenpotenzial') || lower.includes('potenzial') || lower.includes('analysieren')) {
+    return {
+      content: `<div class="space-y-2">
+        <p class="font-semibold">Kundenpotenzial-Analyse</p>
+        <table class="w-full text-xs mt-1 border-collapse">
+          <tr class="border-b border-slate-200"><td class="py-1.5 text-slate-500">Absicherungsgrad</td><td class="py-1.5 font-medium">62% <span class="text-amber-600">— Lücken bei AK & AV</span></td></tr>
+          <tr class="border-b border-slate-200"><td class="py-1.5 text-slate-500">Lebenssituation</td><td class="py-1.5 font-medium">Familiengründung vor 2 J. → RL + Kinderabsicherung</td></tr>
+          <tr class="border-b border-slate-200"><td class="py-1.5 text-slate-500">Einkommen</td><td class="py-1.5 font-medium text-emerald-600">Überdurchschnittlich → Kapitalanlage-Potenzial</td></tr>
+          <tr><td class="py-1.5 text-slate-500">Nächster Impuls</td><td class="py-1.5 font-medium">Jahresgespräch in 3 Wochen terminieren</td></tr>
+        </table>
+      </div>`,
+    };
+  }
+
+  if (lower.includes('gesprächsleitfaden') || lower.includes('gespräch') || lower.includes('leitfaden')) {
+    return {
+      content: `<div class="space-y-2">
+        <p class="font-semibold">Gesprächsleitfaden</p>
+        <ol class="list-decimal pl-4 space-y-1.5 text-[13px]">
+          <li><strong>Einstieg</strong> — Bezug auf letztes Gespräch, aktuelle Lebenssituation erfragen</li>
+          <li><strong>Bedarfsanalyse</strong> — Veränderungen seit letztem Kontakt? Neue Wünsche/Sorgen?</li>
+          <li><strong>Absicherungscheck</strong> — Bestehende Verträge gemeinsam durchgehen, Lücken aufzeigen</li>
+          <li><strong>Empfehlung</strong> — Max. 2 konkrete Produktvorschläge unterbreiten</li>
+          <li><strong>Abschluss</strong> — Nächste Schritte vereinbaren, Folgetermin festlegen</li>
+        </ol>
+        <div class="mt-2 p-2 bg-amber-50 border border-amber-200 rounded text-xs text-amber-800">
+          💡 <strong>Tipp:</strong> Den Kunden zuerst erzählen lassen — offene Fragen stellen!
+        </div>
+      </div>`,
+    };
+  }
+
+  if (lower.includes('kredit') || lower.includes('finanzierung')) {
+    return {
+      content: `<div class="space-y-2">
+        <p class="font-semibold">Kreditanalyse — Empfohlene Schritte</p>
+        <ol class="list-decimal pl-4 space-y-1">
+          <li><strong>Bonitätsprüfung</strong> — Schufa-Score und Einkommensnachweise prüfen</li>
+          <li><strong>Kapitaldienstfähigkeit</strong> — Monatl. Belastungsquote (max. 35–40%)</li>
+          <li><strong>Sicherheiten</strong> — Vorhandene Sicherheiten bewerten</li>
+          <li><strong>Konditionsvergleich</strong> — Passende Kreditprodukte gegenüberstellen</li>
+        </ol>
+      </div>`,
+    };
+  }
+
+  if (lower.includes('portfolio') || lower.includes('anlage') || lower.includes('depot')) {
+    return {
+      content: `<div class="space-y-2">
+        <p class="font-semibold">Portfolio-Analyse</p>
+        <table class="w-full text-xs mt-1 border-collapse">
+          <tr class="border-b border-slate-200"><td class="py-1.5 text-slate-500">Allokation</td><td class="py-1.5 font-medium">45% Aktien · 30% Anleihen · 15% Immo · 10% Cash</td></tr>
+          <tr class="border-b border-slate-200"><td class="py-1.5 text-slate-500">Risikoprofil</td><td class="py-1.5 font-medium">Ausgewogen (Stufe 3/5)</td></tr>
+          <tr class="border-b border-slate-200"><td class="py-1.5 text-slate-500">Performance YTD</td><td class="py-1.5 font-medium text-emerald-600">+4,2% (Benchmark: +3,8%)</td></tr>
+          <tr><td class="py-1.5 text-slate-500">Empfehlung</td><td class="py-1.5 font-medium">EU-Dividendenwerte ↑ · Liquidität auf 5% ↓</td></tr>
+        </table>
+      </div>`,
+    };
+  }
+
+  return {
+    content: `<div class="space-y-2">
+      <p>Ich habe die relevanten Kundendaten und Vertriebsinformationen analysiert.</p>
+      <p>Basierend auf dem aktuellen Bestand empfehle ich:</p>
+      <ul class="list-disc pl-4 space-y-1">
+        <li>Bestehende Vertragsbeziehungen prüfen</li>
+        <li>Identifizierte Bedarfslücken gezielt ansprechen</li>
+        <li>Nächsten Kundenkontakt terminieren</li>
+      </ul>
+      <p class="text-slate-500">Soll ich einen konkreten Bereich genauer analysieren?</p>
+    </div>`,
+  };
 }
 
 export default function VertriebsAssistent() {
-  const { modeId, config } = useMode();
+  const { modeId, config, currentView, setActiveTab } = useMode();
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
+  const hasAutoOpened = useRef(false);
 
   const { primary, primaryLight, gradient } = config.colors;
+
+  // Auto-open on detail page
+  useEffect(() => {
+    if (currentView === 'detail' && !hasAutoOpened.current) {
+      setIsOpen(true);
+      hasAutoOpened.current = true;
+    }
+    if (currentView !== 'detail') {
+      hasAutoOpened.current = false;
+    }
+  }, [currentView]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -75,12 +184,19 @@ export default function VertriebsAssistent() {
       setIsTyping(true);
 
       setTimeout(() => {
-        const response = getDemoResponse(text);
-        setMessages((prev) => [...prev, { role: 'assistant', content: response }]);
+        const result = getDemoResponse(text, { currentView });
+        setMessages((prev) => [...prev, { role: 'assistant', content: result.content, isHtml: true }]);
         setIsTyping(false);
-      }, 1000);
+
+        // Navigate to tab if response requests it
+        if (result.navigateTo) {
+          setTimeout(() => {
+            setActiveTab(result.navigateTo);
+          }, 800);
+        }
+      }, 1200);
     },
-    [isTyping],
+    [isTyping, currentView, setActiveTab],
   );
 
   const handleSend = () => sendMessage(input);
@@ -190,16 +306,28 @@ export default function VertriebsAssistent() {
                     <Bot size={14} className="text-white" />
                   </div>
                 )}
-                <div
-                  className={`max-w-[85%] rounded-lg px-3 py-2 text-sm whitespace-pre-wrap ${
-                    msg.role === 'user'
-                      ? 'rounded-tr-none text-white'
-                      : 'rounded-tl-none bg-gray-100 text-gray-800'
-                  }`}
-                  style={msg.role === 'user' ? { backgroundColor: primary } : undefined}
-                >
-                  {msg.content}
-                </div>
+                {msg.isHtml ? (
+                  <div
+                    className={`max-w-[85%] rounded-lg px-3 py-2 text-sm ${
+                      msg.role === 'user'
+                        ? 'rounded-tr-none text-white'
+                        : 'rounded-tl-none bg-gray-100 text-gray-800'
+                    }`}
+                    style={msg.role === 'user' ? { backgroundColor: primary } : undefined}
+                    dangerouslySetInnerHTML={{ __html: msg.content }}
+                  />
+                ) : (
+                  <div
+                    className={`max-w-[85%] rounded-lg px-3 py-2 text-sm whitespace-pre-wrap ${
+                      msg.role === 'user'
+                        ? 'rounded-tr-none text-white'
+                        : 'rounded-tl-none bg-gray-100 text-gray-800'
+                    }`}
+                    style={msg.role === 'user' ? { backgroundColor: primary } : undefined}
+                  >
+                    {msg.content}
+                  </div>
+                )}
                 {msg.role === 'user' && (
                   <div className="w-7 h-7 rounded-full bg-gray-400 flex items-center justify-center shrink-0 mt-0.5">
                     <User size={14} className="text-white" />
@@ -223,7 +351,7 @@ export default function VertriebsAssistent() {
                     <span className="animate-bounce" style={{ animationDelay: '150ms' }}>.</span>
                     <span className="animate-bounce" style={{ animationDelay: '300ms' }}>.</span>
                   </span>
-                  {' '}Schreibt...
+                  {' '}Analysiere...
                 </div>
               </div>
             )}

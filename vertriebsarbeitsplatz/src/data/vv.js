@@ -1,7 +1,7 @@
 // W1: Dr. Heinrich von Trott
 export const W1 = {
   name: 'Dr. Heinrich von Trott', id: 'VV00001', alter: 62,
-  beruf: 'Unternehmer Maschinenbau 3.Gen', nettoeinkommen: 25000,
+  beruf: 'Unternehmer Maschinenbau 3.Gen', arbeitgeber: { name: 'von Trott Maschinenbau GmbH & Co. KG', quelle: 'linkedin', bestaetigt: true }, nettoeinkommen: 25000,
   familienstand: 'verheiratet',
   partner: { name: 'Elisabeth', beruf: 'Stiftungsvorstand', einkommen: 0 },
   kinder: [{ name: 'Charlotte', alter: 32 }, { name: 'Friedrich', alter: 28 }],
@@ -43,7 +43,7 @@ export const W1 = {
 // W2: Familie Lindenberg
 export const W2 = {
   name: 'Familie Lindenberg', id: 'VV00002', alter: 51,
-  beruf: 'SaaS-Exit 2024 (8M netto)', nettoeinkommen: 15000,
+  beruf: 'SaaS-Exit 2024 (8M netto)', arbeitgeber: { name: 'Keller Ventures GmbH', quelle: 'linkedin', bestaetigt: false }, nettoeinkommen: 15000,
   familienstand: 'verheiratet',
   partner: { name: 'Julia', beruf: 'CTO (eigenes Startup)', einkommen: 8000 },
   kinder: [{ name: 'Noah', alter: 18 }, { name: 'Ella', alter: 15 }],
@@ -83,7 +83,7 @@ export const W2 = {
 // W3: Stiftung Weber
 export const W3 = {
   name: 'Stiftung Weber', id: 'VV00003', alter: 0,
-  beruf: 'Bildungsstiftung (seit 2008)', nettoeinkommen: 0,
+  beruf: 'Bildungsstiftung (seit 2008)', arbeitgeber: { name: 'Fischer Immobiliengruppe', quelle: 'linkedin', bestaetigt: true }, nettoeinkommen: 0,
   familienstand: 'institution', partner: null, kinder: [],
   wohnsituation: 'institution', wohnflaeche: 0,
   nps: 9, risikoscore: 10, potentialScore: 3.5, abwanderungsrisiko: 'niedrig',
@@ -115,7 +115,7 @@ export const W3 = {
 // W4: Prof. Dr. Hartmann
 export const W4 = {
   name: 'Prof. Dr. Hartmann', id: 'VV00004', alter: 56,
-  beruf: 'Chefarzt Kardiologie + Privatpraxis', nettoeinkommen: 18000,
+  beruf: 'Chefarzt Kardiologie + Privatpraxis', arbeitgeber: { name: 'TechBridge Solutions GmbH', quelle: 'linkedin', bestaetigt: false }, nettoeinkommen: 18000,
   familienstand: 'verheiratet',
   partner: { name: 'Andrea', beruf: 'Psychologin', einkommen: 4500 },
   kinder: [{ name: 'Jan', alter: 26 }, { name: 'Sophie', alter: 23 }],
@@ -153,7 +153,7 @@ export const W4 = {
 // W5: Tim Keller NextGen
 export const W5 = {
   name: 'Tim Keller', id: 'VV00005', alter: 29,
-  beruf: 'Tech-Gründer (Seed-Exit 500k)', nettoeinkommen: 4500,
+  beruf: 'Tech-Gründer (Seed-Exit 500k)', arbeitgeber: { name: 'Rhein-Main Steuerberatung', quelle: 'linkedin', bestaetigt: false }, nettoeinkommen: 4500,
   familienstand: 'ledig', partner: null, kinder: [],
   wohnsituation: 'miete', wohnflaeche: 70,
   nps: 7, risikoscore: 60, potentialScore: 4.0, abwanderungsrisiko: 'mittel',

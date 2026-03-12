@@ -115,7 +115,7 @@ export const MODE_CONFIGS = {
     institutDomain: 'hrklunis.com',
     beraterTitel: 'Senior Advisor',
     beraterName: 'Dr. Thomas Richter',
-    beraterFoto: null,
+    beraterFoto: './images/AdobeStock_361342769.jpeg',
     beraterId: 'HRK-TR-001',
     kundenLabel: 'Mandant',
     colors: {

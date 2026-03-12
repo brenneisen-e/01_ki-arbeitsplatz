@@ -113,6 +113,7 @@ window.closeRisikoscoring = closeRisikoscoring;
 window.openKreditanalyse = openKreditanalyse;
 window.closeKreditanalyse = closeKreditanalyse;
 window.openVertriebsarbeitsplatz = openVertriebsarbeitsplatz;
+window.openVertriebsarbeitsplatzOverview = openVertriebsarbeitsplatzOverview;
 window.closeVertriebsarbeitsplatz = closeVertriebsarbeitsplatz;
 window.openBestandsuebertragung = openBestandsuebertragung;
 window.closeBestandsuebertragung = closeBestandsuebertragung;
@@ -374,6 +375,11 @@ function closeKreditanalyse() {
 // ========================================
 
 let vertriebsarbeitsplatzLoaded = false;
+
+function openVertriebsarbeitsplatzOverview() {
+    console.log('Vertriebsarbeitsplatz V02 direkt zur Übersicht...');
+    window.open('vertriebsarbeitsplatz/dist/index.html?view=overview', '_blank');
+}
 
 async function openVertriebsarbeitsplatz() {
     console.log('Vertriebsarbeitsplatz V02 öffnen...');

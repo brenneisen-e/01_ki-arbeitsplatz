@@ -378,7 +378,7 @@ let vertriebsarbeitsplatzLoaded = false;
 
 function openVertriebsarbeitsplatzOverview() {
     console.log('Vertriebsarbeitsplatz V02 direkt zur Übersicht...');
-    window.open('vertriebsarbeitsplatz/dist/index.html?view=overview', '_blank');
+    window.open('vertriebsarbeitsplatz/dist/index.html', '_blank');
 }
 
 async function openVertriebsarbeitsplatz() {

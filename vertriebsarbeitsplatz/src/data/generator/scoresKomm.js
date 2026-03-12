@@ -73,6 +73,14 @@ export function generateTransaktionen(person) {
     txns.push({ kategorie: 'mobilitaet', betrag: -randomBetween(100, 300), empfaenger: 'Tanken, ADAC' });
   }
 
+  // Haustiere (aus Kontoumsätzen erkannt)
+  if (person.haustiere) {
+    const tierTxn = person.haustiere.erkannteTransaktionen?.[0];
+    if (tierTxn) {
+      txns.push({ kategorie: 'haustier', betrag: -tierTxn.betrag, empfaenger: tierTxn.haendler, tierRelevant: true });
+    }
+  }
+
   // Abos
   txns.push({ kategorie: 'abos', betrag: -randomBetween(20, 80), empfaenger: random(['Netflix, Spotify', 'Spotify, DAZN', 'Netflix, Disney+', 'Amazon Prime, Spotify']) });
 

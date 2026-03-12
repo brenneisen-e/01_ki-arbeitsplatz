@@ -74,8 +74,10 @@ export function generateTransaktionen(person) {
   }
 
   // Haustiere (aus Kontoumsätzen erkannt)
-  if (person.haustiere) {
-    const tierTxn = person.haustiere.erkannteTransaktionen?.[0];
+  const tier = person.haustiere || person.tiere;
+  if (tier) {
+    const txnList = tier.erkannteTransaktionen || (tier.umsaetze || []).map(u => ({ haendler: u.empfaenger, betrag: Math.abs(u.betrag) }));
+    const tierTxn = txnList[0];
     if (tierTxn) {
       txns.push({ kategorie: 'haustier', betrag: -tierTxn.betrag, empfaenger: tierTxn.haendler, tierRelevant: true });
     }

@@ -205,11 +205,11 @@ export default function UebersichtTab() {
               <div
                 key={i}
                 className="grid py-2.5 px-3 rounded-lg hover:bg-slate-50 transition-colors cursor-pointer items-center"
-                style={{ gridTemplateColumns: '160px auto 140px' }}
+                style={{ gridTemplateColumns: '220px auto 140px' }}
                 onClick={() => navigateTo('detail', { kundeId: p.kundeId })}
               >
                 <div className="flex items-center gap-2 min-w-0">
-                  <span className="text-sm font-semibold text-slate-800 truncate">{p.kundeName}</span>
+                  <span className="text-sm font-semibold text-slate-800 whitespace-nowrap">{p.kundeName}</span>
                   <span className="text-xs text-slate-400 shrink-0">{p.kundeId}</span>
                   <PrioBadge prioritaet={p.prioritaet} />
                 </div>

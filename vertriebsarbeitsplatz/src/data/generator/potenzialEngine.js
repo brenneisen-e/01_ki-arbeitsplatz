@@ -345,6 +345,42 @@ const VERSICHERUNG_REGELN = [
       ];
     },
   },
+  {
+    id: 'tierkranken',
+    check: (p) => (p.haustiere || p.tiere) && ['Hund', 'Katze'].includes((p.haustiere || p.tiere)?.art || (p.haustiere || p.tiere)?.typ),
+    titel: (p) => {
+      const tier = p.haustiere || p.tiere;
+      const art = tier?.art || tier?.typ || 'Haustier';
+      return `Tierkrankenversicherung ${art}`;
+    },
+    typ: 'cross_sell', quellen: ['finanztransaktion'], prioritaet: 'niedrig',
+    volumen: () => randomBetween(200, 480),
+    beschreibung: (p) => {
+      const tier = p.haustiere || p.tiere;
+      const art = tier?.art || tier?.typ || 'Haustier';
+      const name = tier?.name;
+      return `${art}${name ? ` "${name}"` : ''} aus Kontoumsätzen erkannt. Tierkrankenversicherung anbieten.`;
+    },
+    produktEmpfehlung: 'ERGO Tierkrankenversicherung',
+    empfohleneAktion: 'angebot_erstellen',
+    herleitung: (p) => {
+      const tier = p.haustiere || p.tiere;
+      const art = tier?.art || tier?.typ || 'Haustier';
+      const name = tier?.name;
+      const txns = tier?.erkannteTransaktionen || (tier?.umsaetze || []).map(u => ({ haendler: u.empfaenger, betrag: Math.abs(u.betrag) }));
+      const rows = [
+        { label: 'Datenquelle', value: 'PSD2/Open Finance Transaktionsanalyse' },
+        { label: 'Erkanntes Haustier', value: `${art}${name ? ` "${name}"` : ''}${tier?.rasse ? ` (${tier.rasse})` : ''}` },
+      ];
+      txns.forEach(t => {
+        rows.push({ label: `Erkannter Umsatz`, value: `${t.haendler}: ${fmtEur(t.betrag)}/mtl.` });
+      });
+      const avgTierarzt = art === 'Hund' ? 1200 : 800;
+      rows.push({ label: 'Durchschn. Tierarztkosten', value: `${fmtEur(avgTierarzt)}/J. (${art})` });
+      rows.push({ label: 'Empfehlung', value: `ERGO Tierkrankenversicherung ${art}, ab ${art === 'Hund' ? '25' : '18'}€/mtl.` });
+      return rows;
+    },
+  },
 ];
 
 // ═══ Banking ═══
@@ -541,6 +577,42 @@ const BANKING_REGELN = [
       { label: 'Abwanderungsrisiko', value: 'HOCH' },
       { label: 'Empfehlung', value: 'Sofort proaktives Bindungsgespräch führen' },
     ],
+  },
+  {
+    id: 'tierkranken_rv',
+    check: (p) => (p.haustiere || p.tiere) && ['Hund', 'Katze'].includes((p.haustiere || p.tiere)?.art || (p.haustiere || p.tiere)?.typ),
+    titel: (p) => {
+      const tier = p.haustiere || p.tiere;
+      const art = tier?.art || tier?.typ || 'Haustier';
+      return `R+V Tierkrankenversicherung ${art}`;
+    },
+    typ: 'cross_sell', quellen: ['finanztransaktion'], prioritaet: 'niedrig',
+    volumen: () => randomBetween(200, 480),
+    beschreibung: (p) => {
+      const tier = p.haustiere || p.tiere;
+      const art = tier?.art || tier?.typ || 'Haustier';
+      const name = tier?.name;
+      return `${art}${name ? ` "${name}"` : ''} aus Kontoumsätzen erkannt. R+V Tierkrankenversicherung über VR-Verbund.`;
+    },
+    produktEmpfehlung: 'R+V Tierkrankenversicherung',
+    empfohleneAktion: 'angebot_erstellen',
+    herleitung: (p) => {
+      const tier = p.haustiere || p.tiere;
+      const art = tier?.art || tier?.typ || 'Haustier';
+      const name = tier?.name;
+      const txns = tier?.erkannteTransaktionen || (tier?.umsaetze || []).map(u => ({ haendler: u.empfaenger, betrag: Math.abs(u.betrag) }));
+      const rows = [
+        { label: 'Datenquelle', value: 'PSD2/Open Finance Transaktionsanalyse' },
+        { label: 'Erkanntes Haustier', value: `${art}${name ? ` "${name}"` : ''}${tier?.rasse ? ` (${tier.rasse})` : ''}` },
+      ];
+      txns.forEach(t => {
+        rows.push({ label: 'Erkannter Umsatz', value: `${t.haendler}: ${fmtEur(t.betrag)}/mtl.` });
+      });
+      const avgTierarzt = art === 'Hund' ? 1200 : 800;
+      rows.push({ label: 'Durchschn. Tierarztkosten', value: `${fmtEur(avgTierarzt)}/J. (${art})` });
+      rows.push({ label: 'Empfehlung', value: `R+V Tierkrankenversicherung ${art}, ab ${art === 'Hund' ? '25' : '18'}€/mtl.` });
+      return rows;
+    },
   },
 ];
 

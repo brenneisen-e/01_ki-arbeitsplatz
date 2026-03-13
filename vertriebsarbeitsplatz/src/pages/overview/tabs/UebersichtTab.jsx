@@ -146,8 +146,8 @@ export default function UebersichtTab() {
     <div className="grid grid-cols-3 gap-4">
       {/* Linke Spalte 2/3 */}
       <div className="col-span-2 space-y-4 min-w-0">
-        {/* Tagesstart / Begrüßung */}
-        <Card>
+        {/* Tagesstart / Begruessung */}
+        <Card hoverColor="#f0fdf4">
           <div className="flex items-center justify-between mb-1">
             <div className="flex items-center gap-2">
               <Sun size={20} className="text-amber-500" strokeWidth={1.75} />
@@ -190,7 +190,7 @@ export default function UebersichtTab() {
         </Card>
 
         {/* Vertriebspotenziale */}
-        <Card>
+        <Card hoverColor="#fef9c3">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
               <Zap size={20} style={{ color: 'var(--mode-primary-light)' }} strokeWidth={1.75} />
@@ -244,7 +244,7 @@ export default function UebersichtTab() {
         </Card>
 
         {/* Aufgaben */}
-        <Card>
+        <Card hoverColor="#eff6ff">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
               <CheckSquare size={20} className="text-slate-500" strokeWidth={1.75} />
@@ -266,8 +266,8 @@ export default function UebersichtTab() {
           </div>
         </Card>
 
-        {/* Letzte Abschlüsse */}
-        <Card>
+        {/* Letzte Abschluesse */}
+        <Card hoverColor="#ecfdf5">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
               <CheckCircle size={20} className="text-emerald-500" strokeWidth={1.75} />
@@ -309,7 +309,7 @@ export default function UebersichtTab() {
       {/* Rechte Spalte 1/3 */}
       <div className="col-span-1 space-y-4 min-w-0">
         {/* Anstehende Termine */}
-        <Card>
+        <Card hoverColor="#fdf4ff">
           <div className="flex items-center gap-2 mb-4">
             <Clock size={20} className="text-slate-500" strokeWidth={1.75} />
             <h3 className="font-semibold text-slate-800">Anstehende Termine</h3>
@@ -342,7 +342,7 @@ export default function UebersichtTab() {
         </Card>
 
         {/* Schnellzugriff Formulare */}
-        <Card>
+        <Card hoverColor="#f0f9ff">
           <div className="flex items-center gap-2 mb-4">
             <FileText size={20} className="text-slate-500" strokeWidth={1.75} />
             <h3 className="font-semibold text-slate-800">Schnellzugriff Formulare</h3>
@@ -364,7 +364,7 @@ export default function UebersichtTab() {
         </Card>
 
         {/* Provisionsabrechnungen */}
-        <Card>
+        <Card hoverColor="#fefce8">
           <div className="flex items-center gap-2 mb-4">
             <Euro size={20} className="text-slate-500" strokeWidth={1.75} />
             <h3 className="font-semibold text-slate-800">
@@ -395,7 +395,7 @@ export default function UebersichtTab() {
         </Card>
 
         {/* Geburtstage diese Woche */}
-        <Card>
+        <Card hoverColor="#fff1f2">
           <div className="flex items-center gap-2 mb-4">
             <Cake size={20} className="text-pink-400" strokeWidth={1.75} />
             <h3 className="font-semibold text-slate-800">Geburtstage diese Woche</h3>

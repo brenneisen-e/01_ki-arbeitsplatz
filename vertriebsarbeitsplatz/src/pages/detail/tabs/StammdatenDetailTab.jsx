@@ -49,6 +49,11 @@ const KUNDEN_FOTOS = {
   'WM00003': './images/AdobeStock_1091012713.jpeg',
   // Stiftungen: Logo statt Foto
   'VV00003': './images/stiftung-weber-logo.svg',
+  // VV Mandanten
+  'VV00001': './images/AdobeStock_1367815601.jpeg',
+  'VV00002': './images/AdobeStock_910604663.jpeg',
+  'VV00004': './images/AdobeStock_329502726.jpeg',
+  'VV00005': './images/AdobeStock_1387839378.jpeg',
 };
 
 // Dynamischer Lookup: prüft auch mandanten/-Ordner

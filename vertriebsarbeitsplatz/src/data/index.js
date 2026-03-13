@@ -583,30 +583,54 @@ export const STAMMDATEN_DATA = {
 };
 
 // =============================================
-// TERMINE (mode-aware)
+// TERMINE (mode-aware, dynamisch basierend auf aktuellem Datum)
 // =============================================
-export const TERMINE_BY_MODE = {
+function fmtDate(d) {
+  return d.toISOString().split('T')[0];
+}
+
+function relDate(offsetDays) {
+  const d = new Date();
+  d.setDate(d.getDate() + offsetDays);
+  return fmtDate(d);
+}
+
+const TERMINE_TEMPLATES = {
   versicherung: [
-    { datum: '2026-03-11', zeit: '17:30', kunde: 'Amira König', betreff: 'Kfz-Angebot besprechen', kundeId: 'KD00002', foto: './images/AdobeStock_252262042.jpeg' },
-    { datum: '2026-03-12', zeit: '10:30', kunde: 'Anna Hoffmann', betreff: 'Altersvorsorge-Beratung', kundeId: 'KD00004' },
-    { datum: '2026-03-13', zeit: '14:00', kunde: 'Thomas Weber', betreff: 'Hausbesuch Bindungsgespräch', kundeId: 'KD00003', foto: './images/AdobeStock_361342769.jpeg' },
-    { datum: '2026-03-14', zeit: '09:00', kunde: 'Sandra Yilmaz', betreff: 'Jahresgespräch', kundeId: 'KD00008', foto: './images/AdobeStock_612932760.jpeg' },
+    { offset: 0, zeit: '14:00', kunde: 'Thomas Weber', betreff: 'Hausbesuch Bindungsgespräch', kundeId: 'KD00003', foto: './images/AdobeStock_361342769.jpeg' },
+    { offset: 1, zeit: '09:00', kunde: 'Sandra Yilmaz', betreff: 'Jahresgespräch', kundeId: 'KD00008', foto: './images/AdobeStock_612932760.jpeg' },
+    { offset: 2, zeit: '17:30', kunde: 'Amira König', betreff: 'Kfz-Angebot besprechen', kundeId: 'KD00002', foto: './images/AdobeStock_252262042.jpeg' },
+    { offset: 4, zeit: '10:30', kunde: 'Anna Hoffmann', betreff: 'Altersvorsorge-Beratung', kundeId: 'KD00004' },
   ],
   banking: [
-    { datum: '2026-03-11', zeit: '14:00', kunde: 'Klaus Fischer', betreff: 'Anschlussfinanzierung Beratung', kundeId: 'KDB001' },
-    { datum: '2026-03-12', zeit: '09:30', kunde: 'Peter Hoffmann', betreff: 'VermögenPlus Depot Review', kundeId: 'KDB005' },
-    { datum: '2026-03-13', zeit: '11:00', kunde: 'Sandra Müller', betreff: 'VR-FinanzPlan Erstgespräch', kundeId: 'KDB002' },
-    { datum: '2026-03-14', zeit: '15:30', kunde: 'Andrea Lang', betreff: 'Praxiskredit Auszahlung', kundeId: 'KDB006' },
+    { offset: 0, zeit: '11:00', kunde: 'Sandra Müller', betreff: 'VR-FinanzPlan Erstgespräch', kundeId: 'KDB002' },
+    { offset: 1, zeit: '15:30', kunde: 'Andrea Lang', betreff: 'Praxiskredit Auszahlung', kundeId: 'KDB006' },
+    { offset: 3, zeit: '14:00', kunde: 'Klaus Fischer', betreff: 'Anschlussfinanzierung Beratung', kundeId: 'KDB001' },
+    { offset: 5, zeit: '09:30', kunde: 'Peter Hoffmann', betreff: 'VermögenPlus Depot Review', kundeId: 'KDB005' },
   ],
   vermoegensverwaltung: [
-    { datum: '2026-03-11', zeit: '10:00', kunde: 'Dr. Anna Fischer', betreff: 'Onboarding-Gespräch (3,5M\u20ac)', kundeId: 'VV-NEW' },
-    { datum: '2026-03-12', zeit: '14:00', kunde: 'Familie Schneider', betreff: 'WpHG-Fragebogen', kundeId: 'VV-PIPE' },
-    { datum: '2026-03-15', zeit: '10:00', kunde: 'Dr. Stefan Meier', betreff: 'Investmentvorschlag (5M\u20ac)', kundeId: 'VV-PIPE2' },
-    { datum: '2026-03-17', zeit: '11:00', kunde: 'Fam. Hohenlohe', betreff: 'Family Office Pitch (15M\u20ac)', kundeId: 'VV-PIPE3' },
+    { offset: 0, zeit: '10:00', kunde: 'Dr. Anna Fischer', betreff: 'Onboarding-Gespräch (3,5M\u20ac)', kundeId: 'VV-NEW' },
+    { offset: 1, zeit: '14:00', kunde: 'Familie Schneider', betreff: 'WpHG-Fragebogen', kundeId: 'VV-PIPE' },
+    { offset: 4, zeit: '10:00', kunde: 'Dr. Stefan Meier', betreff: 'Investmentvorschlag (5M\u20ac)', kundeId: 'VV-PIPE2' },
+    { offset: 6, zeit: '11:00', kunde: 'Fam. Hohenlohe', betreff: 'Family Office Pitch (15M\u20ac)', kundeId: 'VV-PIPE3' },
   ],
 };
 
-// Keep legacy export for backward compatibility
+function buildTermine(templates) {
+  return templates.map(({ offset, ...rest }) => ({ datum: relDate(offset), ...rest }));
+}
+
+export function getTermineByMode(modeId) {
+  const templates = TERMINE_TEMPLATES[modeId] || TERMINE_TEMPLATES.versicherung;
+  return buildTermine(templates);
+}
+
+// Legacy static exports (built once on module load)
+export const TERMINE_BY_MODE = {
+  versicherung: buildTermine(TERMINE_TEMPLATES.versicherung),
+  banking: buildTermine(TERMINE_TEMPLATES.banking),
+  vermoegensverwaltung: buildTermine(TERMINE_TEMPLATES.vermoegensverwaltung),
+};
 export const TERMINE = TERMINE_BY_MODE.versicherung;
 
 // =============================================

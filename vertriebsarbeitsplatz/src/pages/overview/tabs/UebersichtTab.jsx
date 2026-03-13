@@ -3,7 +3,7 @@ import Card from '../../../components/ui/Card';
 import Avatar from '../../../components/ui/Avatar';
 import { PrioBadge, SparteBadge } from '../../../components/ui/Badge';
 import { useMode } from '../../../hooks/useMode';
-import { KUNDEN_BY_MODE, TERMINE_BY_MODE, AUFGABEN_BY_MODE, getAllPotentiale } from '../../../data';
+import { KUNDEN_BY_MODE, getTermineByMode, AUFGABEN_BY_MODE, getAllPotentiale } from '../../../data';
 import { formatEur } from '../../../utils/formatters';
 
 const MINI_KPIS = {
@@ -130,7 +130,7 @@ export default function UebersichtTab() {
     return (prio[a.prioritaet] || 3) - (prio[b.prioritaet] || 3);
   }).slice(0, 5);
 
-  const termine = (TERMINE_BY_MODE[modeId] || TERMINE_BY_MODE.versicherung).slice(0, 4);
+  const termine = getTermineByMode(modeId).slice(0, 4);
   const aufgaben = AUFGABEN_BY_MODE[modeId] || AUFGABEN_BY_MODE.versicherung;
   const miniKpis = MINI_KPIS[modeId] || MINI_KPIS.versicherung;
   const tagesItems = TAGESSTART_ITEMS[modeId] || TAGESSTART_ITEMS.versicherung;

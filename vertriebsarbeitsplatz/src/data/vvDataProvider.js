@@ -59,15 +59,19 @@ function generateMonthly(prng, years = 3) {
   const startYear = 2026 - years;
   for (let y = startYear; y <= 2025; y++) {
     for (let m = 0; m < 12; m++) {
-      const pf = round1(rng(prng, -2.0, 3.0));
-      const bm = round1(pf + rng(prng, -1.5, 0.5));
+      // Upward bias: mostly positive returns with occasional small dips
+      const trend = 0.5; // positive drift
+      const noise = rng(prng, -1.8, 2.2);
+      const pf = round1(trend + noise);
+      // Benchmark slightly underperforms portfolio on average
+      const bm = round1(pf + rng(prng, -0.8, 0.2));
       result.push({ monat: `${MONTH_NAMES[m]} ${y}`, portfolio: pf, benchmark: bm });
     }
   }
   // 2026: Jan-Mar
   for (let m = 0; m < 3; m++) {
-    const pf = round1(rng(prng, -1.5, 2.5));
-    const bm = round1(pf + rng(prng, -1.0, 0.3));
+    const pf = round1(0.4 + rng(prng, -1.2, 2.0));
+    const bm = round1(pf + rng(prng, -0.6, 0.1));
     result.push({ monat: `${MONTH_NAMES[m]} 2026`, portfolio: pf, benchmark: bm });
   }
   return result;

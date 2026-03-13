@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Versicherungs-1×1 – Wissen & Nachschlagewerk</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%2386BC25'/%3E%3Cstop offset='100%25' stop-color='%2300AA4F'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='6' fill='url(%23g)'/%3E%3Ctext x='16' y='22' text-anchor='middle' font-family='system-ui' font-size='14' font-weight='bold' fill='white'%3EKI%3C/text%3E%3C/svg%3E">
+    <link rel="stylesheet" href="../css/variables.css">
+    <link rel="stylesheet" href="../css/shared.css">
+    <link rel="stylesheet" href="../css/versicherungs-1x1.css">
+</head>
+<body>
+    <div id="versicherungs1x1Module" class="module-content" style="display:block">
+        <!-- Content loaded from partial -->
+    </div>
+
+    <script>
+    function closeVersicherungs1x1() { window.location.href = getBasePath(); }
+    function getBasePath() {
+        var p = window.location.pathname;
+        var i = p.indexOf('/Versicherungs1x1/');
+        return i !== -1 ? p.substring(0, i) + '/' : '/';
+    }
+    window.safeLocalGet = function(k, f) { try { var v = localStorage.getItem(k); return v !== null ? v : f; } catch(e) { return f; } };
+    window.safeLocalSet = function(k, v) { try { localStorage.setItem(k, v); } catch(e) {} };
+    </script>
+
+    <script>
+    fetch('../partials/versicherungs-1x1-module.html')
+        .then(r => r.text())
+        .then(html => {
+            document.getElementById('versicherungs1x1Module').innerHTML = html;
+            var s = document.createElement('script');
+            s.src = '../js/versicherungs-1x1.js';
+            document.body.appendChild(s);
+        });
+    </script>
+</body>
+</html>

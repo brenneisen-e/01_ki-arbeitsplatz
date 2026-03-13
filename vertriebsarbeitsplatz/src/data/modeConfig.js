@@ -126,8 +126,8 @@ export const MODE_CONFIGS = {
     },
     kpiConfig: [
       { id: 'aum', label: 'AuM Gesamt', format: 'eur', icon: 'Wallet' },
-      { id: 'nnm', label: 'Net New Money', format: 'eur', icon: 'TrendingUp' },
-      { id: 'ertrag', label: 'Ertrag YTD', format: 'eur', icon: 'BarChart3' },
+      { id: 'nnm', label: 'Net New Money YTD', format: 'eur', icon: 'TrendingUp' },
+      { id: 'ertrag', label: 'Management Fee YTD', format: 'eur', icon: 'BarChart3' },
       { id: 'mandate', label: 'Mandate', format: 'num', icon: 'Users' },
     ],
     kpiValues: {

@@ -1691,11 +1691,10 @@ export const VV_REVENUE = {
   ],
 
   feeStruktur: [
-    { typ: 'Management Fee', volumen: 232100, anteil: 79.5 },
-    { typ: 'Performance Fee', volumen: 21000, anteil: 7.2 },
-    { typ: 'Custody Fee', volumen: 15075, anteil: 5.2 },
-    { typ: 'Transaktionskosten', volumen: 12350, anteil: 4.2 },
-    { typ: 'Sonstiges', volumen: 11400, anteil: 3.9 },
+    { typ: 'Management Fee', volumen: 232100, anteil: 83.8 },
+    { typ: 'Performance Fee', volumen: 21000, anteil: 7.6 },
+    { typ: 'Transaktionskosten', volumen: 12350, anteil: 4.5 },
+    { typ: 'Sonstiges', volumen: 11400, anteil: 4.1 },
   ],
 
   forecast: {

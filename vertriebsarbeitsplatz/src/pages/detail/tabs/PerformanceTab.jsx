@@ -293,11 +293,7 @@ export default function PerformanceTab({ kunde }) {
   const vsGrenze = verlustschwelle?.schwelle ?? -10;
   // Derive hoechststand and aktuell from AuM if not absolute values
   const currentAuM = kunde?.aum || 0;
-  const vsAktPct = verlustschwelle?._pctFromHigh ?? (
-    verlustschwelle?.hoechststand > 0
-      ? +((verlustschwelle.aktuell - verlustschwelle.hoechststand) / verlustschwelle.hoechststand * 100).toFixed(1)
-      : 0
-  );
+  const vsAktPct = verlustschwelle?.aktuell ?? 0;
   const vsHoechst = verlustschwelle?.hoechststand || (currentAuM > 0 ? Math.round(currentAuM / (1 + vsAktPct / 100)) : 0);
   const vsAktuell = verlustschwelle?.aktuell || currentAuM;
   const vsRatio = vsGrenze !== 0 ? Math.abs(vsAktPct) / Math.abs(vsGrenze) : 0;

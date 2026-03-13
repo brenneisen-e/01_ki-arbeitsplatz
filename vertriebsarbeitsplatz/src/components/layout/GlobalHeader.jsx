@@ -27,7 +27,7 @@ const TAGESSTART_ITEMS = {
   ],
   vermoegensverwaltung: [
     { icon: Calendar, text: '2 Mandate-Meetings' },
-    { icon: AlertTriangle, text: '1 Rebalancing fällig', className: 'text-amber-300' },
+    { icon: Calendar, text: '3 Follow-ups fällig' },
     { icon: AlertTriangle, text: '1 WpHG abgelaufen', className: 'text-red-300' },
   ],
 };

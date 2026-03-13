@@ -40,6 +40,7 @@ function formatAuM(val) {
 
 function SegmentBadge({ typ }) {
   if (!typ) return null;
+  const labels = { Spezialmandat: 'Individuell' };
   const styles = {
     FairValue: 'bg-blue-50 text-blue-700 border-blue-200',
     SmartValue: 'bg-emerald-50 text-emerald-700 border-emerald-200',
@@ -47,7 +48,7 @@ function SegmentBadge({ typ }) {
   };
   return (
     <span className={`inline-flex items-center text-[10px] font-semibold px-1.5 py-0.5 rounded-full border ${styles[typ] || 'bg-slate-50 text-slate-500 border-slate-200'}`}>
-      {typ}
+      {labels[typ] || typ}
     </span>
   );
 }
@@ -81,17 +82,20 @@ function getColumns(modeId) {
   ];
 
   if (isVV) {
-    cols.push({ id: 'mandatsTyp', label: 'Segment', flex: 1, align: 'center' });
+    cols.push({ id: 'mandatsTyp', label: 'Anlagestrategie', flex: 1, align: 'center' });
   }
 
   cols.push({ id: 'volumen', label: isVV ? 'AuM' : isBanking ? 'Volumen' : 'Praemie', flex: 1, align: 'right' });
 
   if (isVV) {
-    cols.push({ id: 'ytd', label: 'Perf. YTD', flex: 1, align: 'right' });
+    cols.push(
+      { id: 'ytd', label: 'Perf. YTD', flex: 1, align: 'right' },
+      { id: 'perfVsBm', label: 'ggü. BM', flex: 0.8, align: 'right' },
+    );
   }
 
   cols.push(
-    { id: 'potentialScore', label: 'Potenzial', flex: 1, align: 'center' },
+    { id: 'potentialScore', label: isVV ? 'Cross-Sell' : 'Potenzial', flex: 1, align: 'center' },
     { id: 'nps', label: 'NPS', flex: 0.5, align: 'center' },
     { id: 'status', label: 'Status', flex: 1, align: 'center' },
     { id: 'letzterKontakt', label: 'Kontakt', flex: 0.7, align: 'right' },
@@ -130,6 +134,8 @@ export default function KundenTab() {
         ...k,
         volumen,
         ytd: k.portfolio?.performance?.ytd ?? null,
+        perfVsBm: k.portfolio?.performance?.ytd != null && k.portfolio?.benchmark?.ytd != null
+          ? +(k.portfolio.performance.ytd - k.portfolio.benchmark.ytd).toFixed(1) : null,
         letzterKontakt: k.kommunikation?.[0]?.datum
           ? (() => {
               const [y, m, d] = k.kommunikation[0].datum.split('-');
@@ -192,6 +198,12 @@ export default function KundenTab() {
         return row.ytd != null ? (
           <span className={`font-mono font-medium ${row.ytd >= 0 ? 'text-emerald-600' : 'text-red-600'}`}>
             {row.ytd >= 0 ? '+' : ''}{row.ytd.toFixed(1)}%
+          </span>
+        ) : <span className="text-slate-300">-</span>;
+      case 'perfVsBm':
+        return row.perfVsBm != null ? (
+          <span className={`font-mono font-medium ${row.perfVsBm >= 0 ? 'text-emerald-600' : 'text-red-600'}`}>
+            {row.perfVsBm >= 0 ? '+' : ''}{row.perfVsBm.toFixed(1)}%
           </span>
         ) : <span className="text-slate-300">-</span>;
       case 'potentialScore':

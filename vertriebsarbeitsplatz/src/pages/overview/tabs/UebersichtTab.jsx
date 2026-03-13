@@ -48,7 +48,7 @@ const TAGESSTART_ITEMS = {
   ],
   vermoegensverwaltung: [
     { icon: Calendar, text: '2 Mandate-Meetings', size: 14 },
-    { icon: AlertTriangle, text: '1 Rebalancing fällig', size: 14, className: 'text-amber-500' },
+    { icon: AlertTriangle, text: '2 Follow-ups fällig', size: 14, className: 'text-amber-500' },
     { icon: AlertTriangle, text: '1 WpHG abgelaufen', size: 14, className: 'text-red-500' },
   ],
 };
@@ -214,17 +214,16 @@ export default function UebersichtTab() {
               </div>
             </div>
             <div className="space-y-0">
-              <div className="grid py-1.5 px-3 items-center text-[10px] uppercase text-slate-400 font-semibold" style={{ gridTemplateColumns: '1fr 100px 120px 60px' }}>
+              <div className="grid py-1.5 px-3 items-center text-[10px] uppercase text-slate-400 font-semibold" style={{ gridTemplateColumns: '1fr 100px 120px' }}>
                 <span>Mandant</span>
                 <span className="text-right">AuM</span>
                 <span className="text-right">Letztes Gespräch</span>
-                <span className="text-right">Leads</span>
               </div>
               {filteredVVKunden.slice(0, 8).map((k, i) => (
                 <div
                   key={k.id || i}
                   className="grid py-2.5 px-3 rounded-lg row-hover transition-colors cursor-pointer items-center"
-                  style={{ gridTemplateColumns: '1fr 100px 120px 60px' }}
+                  style={{ gridTemplateColumns: '1fr 100px 120px' }}
                   onClick={() => navigateTo('detail', { kundeId: k.id })}
                 >
                   <div className="flex items-center gap-2.5 min-w-0">
@@ -242,16 +241,6 @@ export default function UebersichtTab() {
                   </div>
                   <div className="text-right text-xs text-slate-500">
                     {k.letzteKomm ? new Date(k.letzteKomm.datum).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: '2-digit' }) : '–'}
-                  </div>
-                  <div className="text-right">
-                    {k.leadsCount > 0 ? (
-                      <span className="inline-flex items-center gap-0.5 text-xs font-semibold" style={{ color: 'var(--mode-primary-light)' }}>
-                        <Sparkles size={12} />
-                        {k.leadsCount}
-                      </span>
-                    ) : (
-                      <span className="text-xs text-slate-300">–</span>
-                    )}
                   </div>
                 </div>
               ))}

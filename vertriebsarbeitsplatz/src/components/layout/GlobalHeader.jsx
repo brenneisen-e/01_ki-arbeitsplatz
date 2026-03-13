@@ -1,10 +1,18 @@
 import { useState } from 'react';
 import { clsx } from 'clsx';
-import { ArrowLeft, ChevronDown, Download, Settings, User } from 'lucide-react';
+import { ArrowLeft, Home, ChevronDown, Download, Settings, User } from 'lucide-react';
 import { useMode } from '../../hooks/useMode';
 import { MODE_CONFIGS } from '../../data/modeConfig';
 import LogoImg from '../ui/LogoImg';
 import { downloadDemoData } from '../../utils/downloadDemoData';
+
+function getBasePath() {
+  const path = window.location.pathname;
+  if (path.includes('/vertriebsarbeitsplatz/')) {
+    return path.substring(0, path.indexOf('/vertriebsarbeitsplatz/')) + '/';
+  }
+  return '/';
+}
 
 export default function GlobalHeader({ kundeInfo }) {
   const { config, modeId, switchMode, switchInstitut, activeTab, setActiveTab, currentView, goBack } = useMode();
@@ -16,8 +24,16 @@ export default function GlobalHeader({ kundeInfo }) {
       {/* Top Row */}
       <div className="px-6 pt-5 pb-3 flex items-center justify-between">
         <div className="flex items-center gap-4">
-          {currentView !== 'landing' && (
-            <button onClick={goBack} className="text-white/70 hover:text-white transition-colors p-1">
+          <button
+            onClick={() => { window.location.href = getBasePath(); }}
+            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-white/70 hover:text-white hover:bg-white/10 transition-colors"
+            title="Zurück zur Startseite"
+          >
+            <Home size={16} strokeWidth={1.75} />
+            <span className="text-xs font-medium hidden sm:inline">Startseite</span>
+          </button>
+          {currentView === 'detail' && (
+            <button onClick={goBack} className="text-white/70 hover:text-white transition-colors p-1" title="Zurück zur Übersicht">
               <ArrowLeft size={20} strokeWidth={1.75} />
             </button>
           )}

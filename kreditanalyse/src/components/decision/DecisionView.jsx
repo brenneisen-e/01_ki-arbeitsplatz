@@ -31,6 +31,8 @@ import {
   TrendingDown,
   AlertTriangle,
   BadgeCheck,
+  FileSignature,
+  Download,
 } from 'lucide-react';
 import {
   BarChart,
@@ -52,6 +54,8 @@ import {
   approvalHierarchy,
   getRequiredApprover,
 } from '../../data/competencyMatrix';
+import { fillContractTemplate } from '../../utils/contractTemplate';
+import { exportContractAsDocx } from '../../utils/contractExport';
 
 // =============================================================================
 // Constants
@@ -685,42 +689,67 @@ Empfehlung: Genehmigung unter den nachfolgend genannten Auflagen und Bedingungen
           )}
         </div>
 
-        {/* KI Kreditvorlage */}
-        <div className="bg-surface-card border border-border rounded-xl p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-base font-semibold font-headline text-text-primary">
-              KI-Kreditvorlage
-            </h2>
+        {/* KI Kreditvorlage / Kreditvertrag generieren */}
+        {company.status === 'approved' ? (
+          <div className="bg-surface-card border border-border rounded-xl p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-base font-semibold font-headline text-text-primary">
+                Kreditvertrag
+              </h2>
+            </div>
+            <p className="text-sm text-text-secondary mb-4">
+              Der Kredit wurde genehmigt. Generieren Sie den Kreditvertrag als Word-Dokument basierend auf der STANDARD LOAN AGREEMENT Vorlage.
+            </p>
             <button
               type="button"
-              onClick={handleKiVorlage}
-              disabled={kiLoading}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg text-sm font-body hover:bg-primary-light transition-colors disabled:opacity-60"
+              onClick={async () => {
+                const contractText = fillContractTemplate(company);
+                const contractNr = `${company.id} / ${new Date().getFullYear()}`;
+                await exportContractAsDocx(contractText, company, contractNr);
+              }}
+              className="inline-flex items-center gap-2 px-5 py-3 bg-emerald-600 text-white rounded-lg text-sm font-semibold font-body hover:bg-emerald-700 transition-colors"
             >
-              {kiLoading ? (
-                <Loader2 size={16} strokeWidth={1.5} className="animate-spin" />
-              ) : (
-                <Sparkles size={16} strokeWidth={1.5} />
-              )}
-              {kiLoading ? 'Generiere Vorlage...' : 'KI-Kreditvorlage generieren'}
+              <FileSignature size={18} />
+              Kreditvertrag generieren
             </button>
           </div>
-
-          {kiLoading && (
-            <div className="flex items-center gap-3 p-6 text-text-secondary text-sm">
-              <Loader2 size={20} strokeWidth={1.5} className="animate-spin text-primary" />
-              KI analysiert Kreditantrag und erstellt Vorlage...
+        ) : (
+          <div className="bg-surface-card border border-border rounded-xl p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-base font-semibold font-headline text-text-primary">
+                KI-Kreditvorlage
+              </h2>
+              <button
+                type="button"
+                onClick={handleKiVorlage}
+                disabled={kiLoading}
+                className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg text-sm font-body hover:bg-primary-light transition-colors disabled:opacity-60"
+              >
+                {kiLoading ? (
+                  <Loader2 size={16} strokeWidth={1.5} className="animate-spin" />
+                ) : (
+                  <Sparkles size={16} strokeWidth={1.5} />
+                )}
+                {kiLoading ? 'Generiere Vorlage...' : 'KI-Kreditvorlage generieren'}
+              </button>
             </div>
-          )}
 
-          {kiResult && (
-            <div className="bg-surface border border-border rounded-lg p-6 prose prose-sm max-w-none">
-              <div className="whitespace-pre-wrap text-sm text-text-primary font-body leading-relaxed">
-                {kiResult}
+            {kiLoading && (
+              <div className="flex items-center gap-3 p-6 text-text-secondary text-sm">
+                <Loader2 size={20} strokeWidth={1.5} className="animate-spin text-primary" />
+                KI analysiert Kreditantrag und erstellt Vorlage...
               </div>
-            </div>
-          )}
-        </div>
+            )}
+
+            {kiResult && (
+              <div className="bg-surface border border-border rounded-lg p-6 prose prose-sm max-w-none">
+                <div className="whitespace-pre-wrap text-sm text-text-primary font-body leading-relaxed">
+                  {kiResult}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
       </div>
     );
   }

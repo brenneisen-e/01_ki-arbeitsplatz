@@ -9,47 +9,30 @@ const viewTitles = {
   rating: 'Rating',
   collateral: 'Sicherheitenbewertung',
   decision: 'Kreditentscheidung',
+  contract: 'Kreditvertrag',
   monitoring: 'Monitoring & Frühwarnung',
 };
 
 function goToLanding() {
-  try {
-    if (window.parent && window.parent !== window && typeof window.parent.closeKreditanalyse === 'function') {
-      window.parent.closeKreditanalyse();
-      return;
-    }
-  } catch {
-    // Cross-origin restriction – fall through to fallback
-  }
-  // Fallback: navigate top frame directly to React landing page
-  try {
-    window.top.location.href = '/index.html';
-  } catch {
-    window.location.href = '/index.html';
-  }
+  // Navigate directly to the landing page
+  window.location.href = '/index.html';
 }
 
 export default function Header() {
   const { state, dispatch, getSelectedCompany } = useApp();
   const company = getSelectedCompany();
 
-  const isInIframe = (() => {
-    try { return window.parent !== window; } catch { return false; }
-  })();
-
   return (
     <header className="h-14 bg-white border-b border-border flex items-center justify-between px-6 shrink-0">
       <div className="flex items-center gap-2 text-sm">
-        {isInIframe && (
-          <button
-            onClick={goToLanding}
-            className="flex items-center gap-1.5 px-2.5 py-1.5 -ml-2 mr-1 rounded-lg text-text-secondary hover:bg-surface hover:text-primary transition-colors"
-            title="Zurück zur Startseite"
-          >
-            <Home size={16} strokeWidth={1.5} />
-            <span className="text-xs font-medium hidden sm:inline">Startseite</span>
-          </button>
-        )}
+        <button
+          onClick={goToLanding}
+          className="flex items-center gap-1.5 px-2.5 py-1.5 -ml-2 mr-1 rounded-lg text-text-secondary hover:bg-surface hover:text-primary transition-colors"
+          title="Zurück zur Startseite"
+        >
+          <Home size={16} strokeWidth={1.5} />
+          <span className="text-xs font-medium hidden sm:inline">Startseite</span>
+        </button>
         <span className="font-semibold font-headline text-text-primary">
           {viewTitles[state.currentView] || state.currentView}
         </span>

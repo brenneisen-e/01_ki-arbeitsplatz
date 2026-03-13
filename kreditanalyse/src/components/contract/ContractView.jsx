@@ -118,14 +118,39 @@ export default function ContractView() {
     const dataJson = JSON.stringify({
       kreditgeber: { name: 'Musterbank AG', adresse: 'Musterstraße 1, 50667 Köln', vorstand: 'Dr. Maria Schmidt, Thomas Berger' },
       kreditnehmer: { firma: company.firma, rechtsform: company.rechtsform, hrb: company.hrb, adresse: `${company.adresse?.strasse}, ${company.adresse?.plz} ${company.adresse?.ort}`, gf: company.gf?.map(g => g.name) },
-      kredit: { art: kredit.art, betrag, betragWort: numberToWords(betrag), laufzeit, tilgungsfrei: kredit.tilgungsfrei || 0, verwendung: kredit.verwendung },
-      zinsen: { sollzins: kundenZins, effektivzins: effektivZins, monatlicheRate: Math.round(monatlicheRate) },
-      sicherheiten: sichBewertung.map(s => ({ art: s.art, bezeichnung: s.bezeichnung, beleihungswert: s.beleihungswert, rang: s.rang })),
+      kredit: { art: kredit.art, betrag, betragWort: numberToWords(betrag), laufzeit, tilgungsfrei: kredit.tilgungsfrei || 0, verwendung: kredit.verwendung, auszahlung: kredit.auszahlung },
+      zinsen: { sollzins: kundenZins, effektivzins: effektivZins, monatlicheRate: Math.round(monatlicheRate), bereitstellungsprovision: 0.25 },
+      sicherheiten: sichBewertung.map(s => ({ art: s.art, bezeichnung: s.bezeichnung, wert: s.wert, beleihungswert: s.beleihungswert, rang: s.rang })),
       rating: { klasse: ratingClass.klasse, pd: ratingClass.pd },
       covenants: { ekQuote: Math.max(20, Math.round((ratios.eigenkapitalquote || 25) - 5)), dynVerschuldung: Math.min(6, Math.round((ratios.dynamischer_verschuldungsgrad || 4) + 1)) },
+      bestehende_verbindlichkeiten: company.bestehende_verbindlichkeiten || [],
     }, null, 2);
 
-    const systemPrompt = `Du bist Jurist in der Kreditabteilung einer deutschen Bank. Erstelle einen standardisierten Kreditvertrag auf Basis der folgenden Daten. Verwende juristisch korrekte, aber verständliche Sprache. Alle konkreten Werte (Beträge, Zinssätze, Sicherheiten, Auflagen) exakt aus den Daten übernehmen. Format: Nummerierte Abschnitte (1-12) gemäß Bankstandard: 1. Vertragsparteien, 2. Kreditsumme, 3. Zweckbindung, 4. Zinsregelung, 5. Tilgung & Rückzahlung, 6. Sicherheiten, 7. Rating, 8. Covenants/Auflagen, 9. Auszahlungsvoraussetzungen, 10. Kündigungsrechte, 11. Schlussbestimmungen, 12. Unterschriften.`;
+    const systemPrompt = `Du bist Jurist in der Kreditabteilung einer deutschen Bank. Erstelle einen standardisierten Kreditvertrag im LMA-Format (Loan Market Association) auf Basis der folgenden Daten. Verwende juristisch korrekte, aber verständliche deutsche Sprache. Alle konkreten Werte (Beträge, Zinssätze, Sicherheiten, Auflagen) exakt aus den Daten übernehmen.
+
+Format: Nummerierte Abschnitte gemäß vdp-Bankstandard für gewerbliche Kreditverträge:
+1. PRÄAMBEL (Kreditnehmer, Sicherungsgut, Finanzierungsstruktur, Finanzdokumente)
+2. DEFINITIONEN (Wesentliche Vertragsbegriffe)
+3. DARLEHENSNENNBETRAG (Betrag in Ziffern und Worten)
+4. ZWECKBINDUNG (Verwendungszweck des Kredits)
+5. LAUFZEIT (Beginn, Ende, tilgungsfreie Zeit)
+6. AUSZAHLUNG (Auszahlungsvoraussetzungen, Bereitstellungszeitraum)
+7. ZINSEN (Sollzinssatz, Effektivzins, Zinsperioden, Zinszahlungstermine, Zinsberechnung)
+8. ZAHLUNG / VERZUG (Zahlungspünktlichkeit, Verzugsbeginn, Verzugszinsen)
+9. ORDENTLICHE TILGUNG & SONDERTILGUNG (Tilgungsplan, Ratenstruktur Annuität, freiwillige Sondertilgung)
+10. GEBÜHREN & KOSTEN (Bereitstellungsprovision, sonstige Kosten)
+11. SICHERHEITEN (Alle vereinbarten Sicherheiten mit Beleihungswert und Rang)
+12. AUSZAHLUNGSVORAUSSETZUNGEN (Conditions Precedent: Dokumente, Nachweise)
+13. ZUSICHERUNGEN & GEWÄHRLEISTUNGEN (Status, Gültigkeit, Keine Pflichtverletzung, Keine Kündigungsgründe, Insolvenz, Steuern, Versicherung)
+14. COVENANTS / AUFLAGEN (Financial Covenants: EK-Quote, Verschuldungsgrad; Informationspflichten; Allgemeine Auflagen)
+15. RATING (Ratingklasse, Ausfallwahrscheinlichkeit)
+16. KÜNDIGUNGSRECHTE (Ordentliche und außerordentliche Kündigung, Kündigungsgründe)
+17. ABTRETUNG & BANKGEHEIMNIS (Risikotransfer, Syndizierung, Refinanzierung)
+18. GERICHTSSTAND & ANWENDBARES RECHT
+19. SCHRIFTFORM & SALVATORISCHE KLAUSEL
+20. UNTERSCHRIFTEN (Kreditgeber und Kreditnehmer mit Ort und Datum)
+
+Erstelle einen vollständigen, professionellen Vertrag mit allen 20 Abschnitten. Jeder Abschnitt soll substanzielle juristische Formulierungen enthalten.`;
 
     const result = await callAI(systemPrompt, dataJson);
     setContractText(result);

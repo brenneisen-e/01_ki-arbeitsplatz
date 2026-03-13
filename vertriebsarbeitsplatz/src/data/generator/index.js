@@ -85,6 +85,8 @@ export function generateAllKunden(modus, anzahl = 45, seed = 42) {
     // Ensure required fields exist for generator functions
     if (!enriched._modus) enriched._modus = modus;
     if (!enriched.kinder) enriched.kinder = [];
+    if (!enriched.fremdProdukte) enriched.fremdProdukte = [];
+    if (!enriched.eigeneProdukte) enriched.eigeneProdukte = [];
     if (!enriched.transaktionen) {
       enriched.transaktionen = generateTransaktionen(enriched);
       // VV mandants: add management fee + income from portfolio as transactions
@@ -106,7 +108,13 @@ export function generateAllKunden(modus, anzahl = 45, seed = 42) {
     if (!enriched.potentiale) {
       enriched.potentiale = evaluatePotentiale(enriched);
     }
-    calculateScores(enriched);
+    // Only calculate scores if not already present (needs _berufObj)
+    if (!enriched._berufObj) {
+      enriched._berufObj = { segment: 'selbstaendig', buRisiko: 'buero' };
+    }
+    if (!enriched.risikoscore) {
+      calculateScores(enriched);
+    }
     if (!enriched.absicherung) {
       enriched.absicherung = berechneAbsicherung(enriched);
     }

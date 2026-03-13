@@ -2,11 +2,11 @@ import { CheckCircle2, ArrowRight } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 
 const STEP_CONFIG = {
-  kyc: { label: 'KYC abschließen', next: 'analysis', nextLabel: '§18 KWG Prüfung' },
-  analysis: { label: '§18 Prüfung abschließen', next: 'rating', nextLabel: 'Rating' },
-  rating: { label: 'Rating abschließen', next: 'collateral', nextLabel: 'Sicherheiten' },
-  collateral: { label: 'Sicherheiten abschließen', next: 'decision', nextLabel: 'Kreditentscheidung' },
-  decision: { label: 'Votierung abschließen', next: 'voting', nextLabel: 'Genehmigung' },
+  kyc: { label: 'KYC abschließen → §18 Prüfung', next: 'analysis', nextLabel: '§18 KWG Prüfung' },
+  analysis: { label: '§18 Prüfung abschließen → Rating', next: 'rating', nextLabel: 'Rating' },
+  rating: { label: 'Rating abschließen → Sicherheiten', next: 'collateral', nextLabel: 'Sicherheiten' },
+  collateral: { label: 'Sicherheiten abschließen → Kreditvorlage', next: 'credit-proposal', nextLabel: 'Kreditvorlage' },
+  'credit-proposal': { label: 'Kreditvorlage abschließen → Votierung', next: 'decision', nextLabel: 'Votierung' },
 };
 
 export default function StepCompleteBar({ currentStep }) {

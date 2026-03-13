@@ -58,8 +58,6 @@ import {
 // =============================================================================
 
 const TABS = [
-  { key: 'finanzierung', label: 'Finanzierungsstruktur', icon: Landmark },
-  { key: 'konditionen', label: 'Konditionenberechnung', icon: Calculator },
   { key: 'votierung', label: 'Votierung', icon: Vote },
   { key: 'workflow', label: 'Genehmigungsworkflow', icon: GitBranch },
 ];
@@ -143,10 +141,10 @@ function SectionHeading({ children }) {
 // =============================================================================
 
 export default function DecisionView() {
-  const { getSelectedCompany, navigate } = useApp();
+  const { getSelectedCompany, navigate, dispatch } = useApp();
   const company = getSelectedCompany();
 
-  const [activeTab, setActiveTab] = useState('finanzierung');
+  const [activeTab, setActiveTab] = useState('votierung');
 
   // --- Tab 1: Finanzierungsstruktur state ---
   const [zinsSatz, setZinsSatz] = useState(5.2);
@@ -332,12 +330,8 @@ Empfehlung: Genehmigung unter den nachfolgend genannten Auflagen und Bedingungen
       </div>
 
       {/* Tab content */}
-      {activeTab === 'finanzierung' && renderFinanzierung()}
-      {activeTab === 'konditionen' && renderKonditionen()}
       {activeTab === 'votierung' && renderVotierung()}
       {activeTab === 'workflow' && renderWorkflow()}
-
-      <StepCompleteBar currentStep="decision" />
     </div>
   );
 
@@ -900,6 +894,44 @@ Empfehlung: Genehmigung unter den nachfolgend genannten Auflagen und Bedingungen
             <StatusItem label="Kreditbetrag" value={formatCurrency(betrag)} />
           </div>
         </div>
+
+        {/* Approval banner & Contract button */}
+        {company.status === 'approved' && (
+          <div className="space-y-4">
+            <div className="bg-green-50 border border-green-200 rounded-xl p-5 flex items-center gap-4">
+              <div className="w-10 h-10 rounded-full bg-accent flex items-center justify-center">
+                <CheckCircle size={20} className="text-white" />
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-accent">Kredit genehmigt</p>
+                <p className="text-xs text-text-secondary">am {new Date().toLocaleDateString('de-DE')} durch {requiredApprover.approver}</p>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                dispatch({ type: 'ADVANCE_TO_CONTRACT', companyId: company.id });
+                navigate('contract');
+              }}
+              className="w-full inline-flex items-center justify-center gap-2 px-6 py-4 rounded-xl text-base font-semibold font-body bg-accent text-white shadow-sm hover:bg-accent/90 transition-colors"
+            >
+              Kreditvertrag erstellen
+              <ChevronRight size={20} />
+            </button>
+          </div>
+        )}
+
+        {company.status === 'rejected' && (
+          <div className="bg-red-50 border border-red-200 rounded-xl p-5 flex items-center gap-4">
+            <div className="w-10 h-10 rounded-full bg-danger flex items-center justify-center">
+              <AlertTriangle size={20} className="text-white" />
+            </div>
+            <div>
+              <p className="text-sm font-semibold text-danger">Kredit abgelehnt</p>
+              <p className="text-xs text-text-secondary">am {new Date().toLocaleDateString('de-DE')}</p>
+            </div>
+          </div>
+        )}
       </div>
     );
   }

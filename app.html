@@ -14,9 +14,19 @@
             window.location.replace('/');
             return;
         }
-        // Deep-link: hide loading animation immediately via CSS
+        // Deep-link: hide loading animation and default containers immediately via CSS
+        // The .module-content.active rule needs !important override
+        var versicherungViews = ['/dashboard', '/agentur', '/agentur-b2b', '/agentur-gewerbe',
+            '/potentialanalyse', '/kundendetail', '/bgav-uebersicht', '/bgav-umstellung',
+            '/banken', '/asset-management', '/vv-overview', '/berater', '/berater-firmenkunde', '/berater-vermoegen'];
+        var isNonVersicherungDeepLink = versicherungViews.indexOf(hash) === -1;
+        var css = '#loadingAnimation { display: none !important; } #landingPage { display: none !important; }';
+        if (isNonVersicherungDeepLink) {
+            // For standalone modules (kreditanalyse, pmo, hr, etc.), hide the versicherung container
+            css += ' #versicherungModule { display: none !important; } #mainApp { display: none !important; }';
+        }
         var style = document.createElement('style');
-        style.textContent = '#loadingAnimation { display: none !important; } #landingPage { display: none !important; }';
+        style.textContent = css;
         document.documentElement.appendChild(style);
     })();
     </script>

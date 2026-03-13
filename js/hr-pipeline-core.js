@@ -775,15 +775,21 @@ const HP_CHAT_RESPONSES = {
 // ========================================
 
 async function openHRPipeline() {
-    const landingPage = document.getElementById('landingPage');
-    if (landingPage) landingPage.style.display = 'none';
-    const mainApp = document.getElementById('mainApp');
-    if (mainApp) mainApp.style.display = 'none';
-    ['bankenModule', 'assetModule', 'risikoscoringModule', 'bestandsuebertragungModule', 'pmoToolboxModule',
-     'beraterOverviewPage', 'kundenDetailBankPage'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.style.display = 'none';
-    });
+    if (typeof deactivateAllModules === 'function') {
+        deactivateAllModules('hrPipelineModule');
+    } else {
+        // Fallback: hide key containers
+        ['landingPage', 'mainApp', 'bankenModule', 'assetModule', 'risikoscoringModule',
+         'bestandsuebertragungModule', 'pmoToolboxModule', 'beraterOverviewPage',
+         'kundenDetailBankPage'].forEach(id => {
+            var el = document.getElementById(id);
+            if (el) el.style.display = 'none';
+        });
+        document.querySelectorAll('.module-content').forEach(function(el) {
+            el.classList.remove('active');
+            if (el.id !== 'hrPipelineModule') el.style.display = 'none';
+        });
+    }
 
     const cvModule = document.getElementById('hrPipelineModule');
     if (cvModule) {

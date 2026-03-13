@@ -1,4 +1,4 @@
-import { VV_WPHG, VV_PERFORMANCE } from '../../../data/vvExtended';
+import { VV_WPHG, VV_PERFORMANCE } from '../../../data/vvDataProvider';
 import { formatEur } from '../../../utils/formatters';
 import { CheckCircle, AlertTriangle, Shield, FileText, TrendingDown, Receipt, Target, Leaf, Clock } from 'lucide-react';
 import { clsx } from 'clsx';

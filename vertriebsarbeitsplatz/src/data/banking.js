@@ -182,7 +182,7 @@ export const B1 = {
 // B2: Sandra Müller
 export const B2 = {
   name: 'Sandra Müller', id: 'BK00002', alter: 33,
-  beruf: 'Lehrerin (verbeamtet)', arbeitgeber: { name: 'Café Müller (Inhaberin)', quelle: 'linkedin', bestaetigt: true }, nettoeinkommen: 3200,
+  beruf: 'Café-Inhaberin (selbständig)', arbeitgeber: { name: 'Café Müller (3 Standorte)', quelle: 'linkedin', bestaetigt: true }, nettoeinkommen: 3200,
   familienstand: 'verheiratet',
   partner: { name: 'Tobias', beruf: 'Ingenieur (Commerzbank-Kunde)', einkommen: 4200 },
   kinder: [],
@@ -203,7 +203,7 @@ export const B2 = {
     { titel: 'Baufinanzierung vorbereiten', typ: 'cross_sell', quellen: ['lebensereignis'], prioritaet: 'hoch', volumen: 350000, volumenTyp: 'einmalig', beschreibung: 'Hausbau geplant 2027. Vorab-Beratung und Finanzierungsrahmen.', empfohleneAktion: 'termin_vereinbaren', produktEmpfehlung: 'VR-Baufinanzierung', status: 'termin',
       herleitung: [
         { label: 'Datenquelle', value: 'PSD2-Gehaltsanalyse + Kundengespr\u00e4ch' },
-        { label: 'Nettoeinkommen Kundin', value: '3.200 \u20ac/mtl. (verbeamtet)' },
+        { label: 'Nettoeinkommen Kundin', value: '3.200 \u20ac/mtl. (selbständig)' },
         { label: 'Nettoeinkommen Ehemann', value: '4.200 \u20ac/mtl. (Ingenieur)' },
         { label: 'Haushaltseinkommen', value: '7.400 \u20ac netto \u2013 sehr gute Bonit\u00e4t' },
         { label: 'Eigenkapital', value: '35.000 \u20ac Sparkonto + ggf. Mittel von Tobias' },

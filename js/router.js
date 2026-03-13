@@ -150,7 +150,7 @@
 
         // Safety fallback: redirect to React M-01
         showLandingFallback() {
-            window.location.href = '/';
+            window.location.href = '/index.html';
         },
 
         // After navigation, verify the target is actually visible
@@ -161,7 +161,8 @@
                 'kundenDetailBankPage', 'bgavUmstellungPage', 'bankenModule',
                 'assetModule', 'risikoscoringModule', 'bestandsuebertragungModule',
                 'pmoToolboxModule', 'hrPipelineModule', 'versicherungs1x1Module',
-                'vermoegensverwaltungModule', 'vvOverviewPage', 'vvDetailPage'
+                'vermoegensverwaltungModule', 'vvOverviewPage', 'vvDetailPage',
+                'kreditanalyseModule', 'vertriebsarbeitsplatzModule'
             ];
 
             var anyVisible = containers.some(function(id) {
@@ -253,7 +254,7 @@
             this.ensureVersicherungModule(viewName);
 
             var fnMap = {
-                'landing':              function() { window.location.href = '/'; return true; },
+                'landing':              function() { window.location.href = '/index.html'; return true; },
                 'dashboard':            function() { return typeof openDashboard === 'function' ? (openDashboard(), true) : false; },
                 'agentursicht':         function() { return typeof openAgenturView === 'function' ? (openAgenturView(), true) : false; },
                 'agentursicht-b2b':     function() { return typeof openAgenturView === 'function' && typeof setViewMode === 'function' ? (setViewMode('ecclesia'), openAgenturView(), true) : false; },

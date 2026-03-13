@@ -504,7 +504,7 @@ function openGenerator() {
 // Back to landing page → redirect to React M-01
 function backToLanding() {
     console.log('Zurück zur React M-01 Landing Page...');
-    window.location.href = '/';
+    window.location.href = '/index.html';
     return;
 
     // Legacy code below (no longer reached)
@@ -589,8 +589,8 @@ function backToLanding() {
         }));
     }
 
-    // Update URL route
-    if (window.AppRouter) AppRouter.navigate('/landing');
+    // Navigate to React landing page
+    window.location.href = '/';
 
     // Reset the landing chat response container (clear loading indicator)
     const responseContainer = document.getElementById('landingChatResponse');

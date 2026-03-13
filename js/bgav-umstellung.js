@@ -1465,12 +1465,8 @@ Die Stufe basiert auf dem Gesamtproduktionsvolumen (Neugeschäft + Bestand) übe
             setTimeout(applyAutoZoom, 50);
         }
 
-        // Reset URL hash
-        if (window.AppRouter) {
-            AppRouter.navigate('/landing');
-        } else if (window.history && window.history.pushState) {
-            window.history.pushState({ view: 'landing' }, '', '#/');
-        }
+        // Navigate to React landing page
+        window.location.href = '/';
 
         if (typeof PageIDTracker !== 'undefined') {
             PageIDTracker.setPageId('M-01');

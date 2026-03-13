@@ -582,8 +582,9 @@ function switchModule(moduleName) {
         AppRouter.navigate('/asset-management');
     } else if (window.AppRouter && moduleName === 'vermoegensverwaltung') {
         AppRouter.navigate('/vv-overview');
-    } else if (window.AppRouter && moduleName === 'versicherung') {
-        AppRouter.navigate('/landing');
+    } else if (moduleName === 'versicherung') {
+        window.location.href = '/';
+        return;
     }
 
     console.log('Switched to module:', moduleName);
@@ -591,6 +592,12 @@ function switchModule(moduleName) {
 
 // Initialize module on page load
 function initModuleSelector() {
+    // Skip module initialization when a deep-link is active (e.g. #/kreditanalyse)
+    // The router will handle navigation to the correct view
+    if (window.AppRouter && window.AppRouter.isDeepLink && window.AppRouter.isDeepLink()) {
+        console.log('initModuleSelector: Skipping – deep-link active');
+        return;
+    }
     const savedModule = safeLocalGet('currentModule', 'versicherung');
     switchModule(savedModule);
 }

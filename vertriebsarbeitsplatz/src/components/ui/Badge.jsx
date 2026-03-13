@@ -27,6 +27,11 @@ const STATUS_STYLES = {
   aktiv: 'bg-emerald-50 text-emerald-700',
   optimierbar: 'bg-amber-50 text-amber-700',
   policiert: 'bg-emerald-50 text-emerald-700',
+  ausgezahlt: 'bg-emerald-50 text-emerald-700',
+  vermittelt: 'bg-blue-50 text-blue-700',
+  eroeffnet: 'bg-emerald-50 text-emerald-700',
+  genehmigt: 'bg-teal-50 text-teal-700',
+  onboarding: 'bg-blue-50 text-blue-700',
   beantragt: 'bg-blue-50 text-blue-700',
   storniert: 'bg-red-50 text-red-600',
 };

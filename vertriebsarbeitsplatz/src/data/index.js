@@ -583,29 +583,34 @@ export const STAMMDATEN_DATA = {
 };
 
 // =============================================
-// TERMINE (mode-aware)
+// TERMINE (mode-aware, dynamisch relativ zu heute)
 // =============================================
-export const TERMINE_BY_MODE = {
-  versicherung: [
-    { datum: '2026-03-11', zeit: '17:30', kunde: 'Amira König', betreff: 'Kfz-Angebot besprechen', kundeId: 'KD00002', foto: './images/AdobeStock_252262042.jpeg' },
-    { datum: '2026-03-12', zeit: '10:30', kunde: 'Anna Hoffmann', betreff: 'Altersvorsorge-Beratung', kundeId: 'KD00004' },
-    { datum: '2026-03-13', zeit: '14:00', kunde: 'Thomas Weber', betreff: 'Hausbesuch Bindungsgespräch', kundeId: 'KD00003', foto: './images/AdobeStock_361342769.jpeg' },
-    { datum: '2026-03-14', zeit: '09:00', kunde: 'Sandra Yilmaz', betreff: 'Jahresgespräch', kundeId: 'KD00008', foto: './images/AdobeStock_612932760.jpeg' },
-  ],
-  banking: [
-    { datum: '2026-03-11', zeit: '14:00', kunde: 'Klaus Fischer', betreff: 'Anschlussfinanzierung Beratung', kundeId: 'KDB001' },
-    { datum: '2026-03-12', zeit: '09:30', kunde: 'Peter Hoffmann', betreff: 'VermögenPlus Depot Review', kundeId: 'KDB005' },
-    { datum: '2026-03-13', zeit: '11:00', kunde: 'Sandra Müller', betreff: 'VR-FinanzPlan Erstgespräch', kundeId: 'KDB002' },
-    { datum: '2026-03-14', zeit: '15:30', kunde: 'Andrea Lang', betreff: 'Praxiskredit Auszahlung', kundeId: 'KDB006' },
-  ],
-  vermoegensverwaltung: [
-    { datum: '2026-03-11', zeit: '10:00', kunde: 'Dr. Anna Fischer', betreff: 'Onboarding-Gespräch (3,5M\u20ac)', kundeId: 'VV-NEW' },
-    { datum: '2026-03-12', zeit: '14:00', kunde: 'Familie Schneider', betreff: 'WpHG-Fragebogen', kundeId: 'VV-PIPE' },
-    { datum: '2026-03-15', zeit: '10:00', kunde: 'Dr. Stefan Meier', betreff: 'Investmentvorschlag (5M\u20ac)', kundeId: 'VV-PIPE2' },
-    { datum: '2026-03-17', zeit: '11:00', kunde: 'Fam. Hohenlohe', betreff: 'Family Office Pitch (15M\u20ac)', kundeId: 'VV-PIPE3' },
-  ],
-};
+function futureDateISO(daysFromToday) {
+  const d = new Date();
+  d.setDate(d.getDate() + daysFromToday);
+  return d.toISOString().split('T')[0];
+}
 
+export const TERMINE_BY_MODE = {
+  get versicherung() { return [
+    { datum: futureDateISO(0), zeit: '17:30', kunde: 'Amira König', betreff: 'Kfz-Angebot besprechen', kundeId: 'KD00002', foto: './images/AdobeStock_252262042.jpeg' },
+    { datum: futureDateISO(1), zeit: '10:30', kunde: 'Anna Hoffmann', betreff: 'Altersvorsorge-Beratung', kundeId: 'KD00004' },
+    { datum: futureDateISO(2), zeit: '14:00', kunde: 'Thomas Weber', betreff: 'Hausbesuch Bindungsgespräch', kundeId: 'KD00003', foto: './images/AdobeStock_361342769.jpeg' },
+    { datum: futureDateISO(3), zeit: '09:00', kunde: 'Sandra Yilmaz', betreff: 'Jahresgespräch', kundeId: 'KD00008', foto: './images/AdobeStock_612932760.jpeg' },
+  ]; },
+  get banking() { return [
+    { datum: futureDateISO(0), zeit: '14:00', kunde: 'Klaus Fischer', betreff: 'Anschlussfinanzierung Beratung', kundeId: 'KDB001' },
+    { datum: futureDateISO(1), zeit: '09:30', kunde: 'Peter Hoffmann', betreff: 'VermögenPlus Depot Review', kundeId: 'KDB005' },
+    { datum: futureDateISO(2), zeit: '11:00', kunde: 'Sandra Müller', betreff: 'VR-FinanzPlan Erstgespräch', kundeId: 'KDB002' },
+    { datum: futureDateISO(3), zeit: '15:30', kunde: 'Andrea Lang', betreff: 'Praxiskredit Auszahlung', kundeId: 'KDB006' },
+  ]; },
+  get vermoegensverwaltung() { return [
+    { datum: futureDateISO(0), zeit: '10:00', kunde: 'Dr. Anna Fischer', betreff: 'Onboarding-Gespräch (3,5M€)', kundeId: 'VV-NEW' },
+    { datum: futureDateISO(1), zeit: '14:00', kunde: 'Familie Schneider', betreff: 'WpHG-Fragebogen', kundeId: 'VV-PIPE' },
+    { datum: futureDateISO(3), zeit: '10:00', kunde: 'Dr. Stefan Meier', betreff: 'Investmentvorschlag (5M€)', kundeId: 'VV-PIPE2' },
+    { datum: futureDateISO(5), zeit: '11:00', kunde: 'Fam. Hohenlohe', betreff: 'Family Office Pitch (15M€)', kundeId: 'VV-PIPE3' },
+  ]; },
+};
 // Keep legacy export for backward compatibility
 export const TERMINE = TERMINE_BY_MODE.versicherung;
 

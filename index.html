@@ -123,21 +123,16 @@
 
     const MODULES = [
         { id: 'dashboard',   label: 'VST-Cockpit',            icon: LayoutDashboard, desc: 'KPIs, Bestand, Neugeschäft',           href: 'VSTCockpit/dist/index.html' },
-        { id: 'vap',         label: 'Vertriebsarbeitsplatz',  icon: Users,           desc: 'Agenturansicht, Kunden, Verträge',
-          versions: [
-              { label: 'v01', href: 'app.html#/agentur' },
-              { label: 'v02 (React)', href: VAP_BASE + '#/versicherung/overview/uebersicht' },
-          ]
-        },
+        { id: 'vap',         label: 'Vertriebsarbeitsplatz',  icon: Users,           desc: 'Agenturansicht, Kunden, Verträge',     href: 'vertriebsarbeitsplatz/dist/index.html#/versicherung/overview/uebersicht' },
         { id: 'potential',   label: 'Potentialanalyse',       icon: Box,             desc: 'Cross-Sell, Up-Sell, Whitespots',     href: 'app.html#/potentialanalyse' },
-        { id: 'scoring',     label: 'Vermittler-Scoring',     icon: Clock,           desc: 'Risikobewertung & Analyse',           href: 'app.html#/risikoscoring' },
-        { id: 'bgav',        label: 'Vertragsumstellung',     icon: ShieldCheck,     desc: 'BGAV Simulation & Übersicht',         href: 'app.html#/bgav-umstellung' },
-        { id: 'bestand',     label: 'Bestandsübertragung',    icon: FileText,        desc: 'Vertragsübertragungen verwalten',     href: 'app.html#/bestandsuebertragung' },
+        { id: 'scoring',     label: 'Vermittler-Scoring',     icon: Clock,           desc: 'Risikobewertung & Analyse',           href: 'Risikoscoring/index.html' },
+        { id: 'bgav',        label: 'Vertragsumstellung',     icon: ShieldCheck,     desc: 'BGAV Simulation & Übersicht',         href: 'BGAVUmstellung/index.html' },
+        { id: 'bestand',     label: 'Bestandsübertragung',    icon: FileText,        desc: 'Vertragsübertragungen verwalten',     href: 'Bestandsuebertragung/index.html' },
         { id: 'abrechnung',  label: 'Abrechnungsprüfung',     icon: CreditCard,      desc: 'Abrechnungen prüfen & validieren',    href: 'https://billingcheck.pages.dev/app', external: true },
         { id: 'provision',   label: 'Provisionsvalidierung',  icon: CheckCircle,     desc: 'Provisionen analysieren',             href: 'https://provisions-analyzer.pages.dev/', external: true },
-        { id: 'pmo',         label: 'PMO Toolbox',            icon: LayoutGrid,      desc: 'Transformationsprogramm',             href: 'app.html#/pmo-toolbox' },
-        { id: 'hr',          label: 'HR Pipeline',            icon: UserPlus,        desc: 'Recruiting & Bewerbermanagement',     href: 'app.html#/hr-pipeline' },
-        { id: 'v1x1',        label: 'Versicherungs-1×1',      icon: BookOpen,        desc: 'Wissen & Nachschlagewerk',            href: 'app.html#/versicherungs-1x1' },
+        { id: 'pmo',         label: 'PMO Toolbox',            icon: LayoutGrid,      desc: 'Transformationsprogramm',             href: 'PMOToolbox/index.html' },
+        { id: 'hr',          label: 'HR Pipeline',            icon: UserPlus,        desc: 'Recruiting & Bewerbermanagement',     href: 'HRPipeline/index.html' },
+        { id: 'v1x1',        label: 'Versicherungs-1×1',      icon: BookOpen,        desc: 'Wissen & Nachschlagewerk',            href: 'Versicherungs1x1/index.html' },
         { id: 'kredit',      label: 'KI-Kreditanalyse',       icon: ClipboardCheck,  desc: 'KI-gestützte Kreditbewertung',        href: 'kreditanalyse/dist/index.html' },
     ];
 

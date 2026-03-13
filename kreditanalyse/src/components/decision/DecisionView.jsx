@@ -1,11 +1,11 @@
 /**
  * DecisionView -- Kreditentscheidung (Credit Decision) view.
  *
- * Four tabs:
- *   1. Finanzierungsstruktur  -- Investment structure, annuity repayment plan, chart
- *   2. Konditionenberechnung  -- Interest rate breakdown with sliders, market comparison
- *   3. Votierung              -- Dual vote (Markt / Marktfolge), KI credit memo
- *   4. Genehmigungsworkflow   -- Competency matrix, approval workflow stepper
+ * Two tabs:
+ *   1. Votierung              -- Dual vote (Markt / Marktfolge), KI credit memo
+ *   2. Genehmigungsworkflow   -- Competency matrix, approval workflow stepper
+ *
+ * Finanzierungsstruktur & Konditionenberechnung moved to CreditProposalView.
  */
 
 import { useState, useMemo } from 'react';

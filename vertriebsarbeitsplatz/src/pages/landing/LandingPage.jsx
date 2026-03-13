@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { clsx } from 'clsx';
 import { Mic, Send, LayoutDashboard, Users, Zap, BarChart3, FileCheck, ArrowLeftRight, Calculator, Shield, Briefcase, BookOpen, Landmark, Wallet, PieChart } from 'lucide-react';
 import { useMode } from '../../hooks/useMode';
@@ -61,6 +61,25 @@ export default function LandingPage() {
   const [activeModule, setActiveModule] = useState(modeId || 'versicherung');
   const [chatInput, setChatInput] = useState('');
 
+  // Name prompt on first visit
+  const [userName, setUserName] = useState(() => localStorage.getItem('kia_user_name') || '');
+  const [showNamePrompt, setShowNamePrompt] = useState(!userName);
+  const [nameInput, setNameInput] = useState('');
+  const nameInputRef = useRef(null);
+
+  useEffect(() => {
+    if (showNamePrompt && nameInputRef.current) nameInputRef.current.focus();
+  }, [showNamePrompt]);
+
+  function handleNameSubmit(e) {
+    e.preventDefault();
+    const trimmed = nameInput.trim();
+    if (!trimmed) return;
+    localStorage.setItem('kia_user_name', trimmed);
+    setUserName(trimmed);
+    setShowNamePrompt(false);
+  }
+
   const tiles = TILES[activeModule] || TILES.versicherung;
 
   function handleTileClick(tileId) {
@@ -74,6 +93,39 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen bg-slate-50">
+      {/* Name Prompt Overlay */}
+      {showNamePrompt && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm animate-fade-in">
+          <form onSubmit={handleNameSubmit} className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md mx-4 animate-fade-in-up">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-12 h-12 rounded-xl bg-slate-800 flex items-center justify-center">
+                <Briefcase size={22} className="text-white" strokeWidth={1.75} />
+              </div>
+              <div>
+                <h2 className="text-lg font-semibold text-slate-800">Willkommen!</h2>
+                <p className="text-sm text-slate-500">KI-Vertriebsarbeitsplatz</p>
+              </div>
+            </div>
+            <label className="block text-sm font-medium text-slate-700 mb-2">Wie darf ich dich nennen?</label>
+            <input
+              ref={nameInputRef}
+              type="text"
+              value={nameInput}
+              onChange={e => setNameInput(e.target.value)}
+              placeholder="Dein Vorname..."
+              className="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-400 transition-shadow mb-4"
+            />
+            <button
+              type="submit"
+              disabled={!nameInput.trim()}
+              className="w-full py-3 rounded-xl bg-slate-800 text-white text-sm font-semibold hover:bg-slate-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              Los geht's
+            </button>
+          </form>
+        </div>
+      )}
+
       {/* Top Bar */}
       <div className="bg-white border-b border-slate-200 px-6 py-4">
         <div className="flex items-center justify-between">
@@ -132,7 +184,7 @@ export default function LandingPage() {
                 <BookOpen size={20} className="text-slate-600" strokeWidth={1.75} />
               </div>
               <p className="text-slate-700">
-                Willkommen zurück <span className="font-semibold">{config.beraterName}</span>, was kann ich für dich tun?
+                Willkommen zurück <span className="font-semibold">{userName || config.beraterName}</span>, was kann ich für dich tun?
               </p>
             </div>
           </div>

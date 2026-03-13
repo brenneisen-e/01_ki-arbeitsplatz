@@ -4,6 +4,7 @@ import { StatusBadge, SparteBadge } from '../../../components/ui/Badge';
 import { formatEur, formatPct, berechneHaushaltsnetto, berechneAbsicherungsquote, berechneSparquote, berechneFrei, potentialSterne } from '../../../utils/formatters';
 import { User, Wallet, Linkedin, Star, ChevronDown, MapPin, Briefcase, Heart, Users, CheckCircle, Building2, PawPrint, Info } from 'lucide-react';
 import { getLogoUrl } from '../../../utils/logos';
+import { getKundeFoto } from '../../../utils/kundenFotos';
 import { useState } from 'react';
 import { useMode } from '../../../hooks/useMode';
 
@@ -34,35 +35,6 @@ const FREMD_TYP_LABELS = {
   wohngebaeude: 'Wohngebäude',
   pflege: 'Pflege',
 };
-
-// Fotos für Mandanten: Stockfotos in ./images/mandanten/ ablegen
-// Dateiname-Konvention: {ID}.jpg (z.B. VV00001.jpg, KD00001.jpg)
-const KUNDEN_FOTOS = {
-  'KD00001': './images/AdobeStock_624564221.jpeg',
-  'KD00002': './images/AdobeStock_252262042.jpeg',
-  'KD00003': './images/AdobeStock_361342769.jpeg',
-  'KD00005': './images/AdobeStock_612932760.jpeg',
-  'KD00008': './images/AdobeStock_1091012713.jpeg',
-  'BK00001': './images/AdobeStock_624564221.jpeg',
-  'BK00003': './images/AdobeStock_361342769.jpeg',
-  'BK00005': './images/AdobeStock_252262042.jpeg',
-  'WM00001': './images/AdobeStock_612932760.jpeg',
-  'WM00003': './images/AdobeStock_1091012713.jpeg',
-  // Stiftungen: Logo statt Foto
-  'VV00003': './images/stiftung-weber-logo.svg',
-  // VV Mandanten
-  'VV00001': './images/AdobeStock_1367815601.jpeg',
-  'VV00002': './images/AdobeStock_910604663.jpeg',
-  'VV00004': './images/AdobeStock_329502726.jpeg',
-  'VV00005': './images/AdobeStock_1387839378.jpeg',
-};
-
-// Dynamischer Lookup: prüft auch mandanten/-Ordner
-function getKundeFoto(id) {
-  if (KUNDEN_FOTOS[id]) return KUNDEN_FOTOS[id];
-  // Fallback: Stockfoto aus mandanten/-Ordner (Konvention: {ID}.jpg)
-  return `./images/mandanten/${id}.jpg`;
-}
 
 export default function StammdatenDetailTab({ kunde }) {
   const [risikoExpanded, setRisikoExpanded] = useState(false);

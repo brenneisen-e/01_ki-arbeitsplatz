@@ -6,6 +6,7 @@ import { PrioBadge, SparteBadge } from '../../../components/ui/Badge';
 import { useMode } from '../../../hooks/useMode';
 import { KUNDEN_BY_MODE, TERMINE_BY_MODE, AUFGABEN_BY_MODE, getAllPotentiale } from '../../../data';
 import { formatEur } from '../../../utils/formatters';
+import { getKundeFoto } from '../../../utils/kundenFotos';
 
 const MINI_KPIS = {
   versicherung: [
@@ -208,7 +209,7 @@ export default function UebersichtTab() {
                   onClick={() => navigateTo('detail', { kundeId: k.id })}
                 >
                   <div className="flex items-center gap-2.5 min-w-0">
-                    <Avatar name={k.name} size={34} />
+                    <Avatar name={k.name} foto={getKundeFoto(k.id)} size={34} />
                     <div className="min-w-0">
                       <div className="text-sm font-semibold text-slate-700 truncate flex items-center gap-1.5">
                         {k.name}

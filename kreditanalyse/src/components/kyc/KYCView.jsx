@@ -125,7 +125,7 @@ export default function KYCView() {
             Kein Kreditantrag ausgewählt
           </h2>
           <p className="text-sm font-body text-text-secondary max-w-md">
-            Bitte wählen Sie einen Kreditantrag im Dashboard aus, um die KYC &amp; Compliance-Prüfung durchzuführen.
+            Bitte wähle einen Kreditantrag im Dashboard aus, um die KYC &amp; Compliance-Prüfung durchzuführen.
           </p>
         </div>
         <button
@@ -1172,7 +1172,7 @@ function SanktionTab({
               <div className="text-sm font-body text-amber-800">
                 <strong>Fuzzy Match erkannt:</strong> Bei mindestens einer Entität wurde eine
                 partielle Namensübereinstimmung mit einem Listeneintrag festgestellt.
-                Bitte prüfen Sie den Treffer manuell und dokumentieren Sie das Ergebnis.
+                Bitte prüfe den Treffer manuell und dokumentiere das Ergebnis.
               </div>
             </div>
           )}
@@ -1201,7 +1201,7 @@ function SanktionTab({
             <SearchCheck size={24} strokeWidth={1.5} className="text-text-muted" />
           </div>
           <p className="text-sm font-body text-text-secondary max-w-sm">
-            Klicken Sie auf &quot;Prüfung durchführen&quot;, um den Abgleich aller Personen und
+            Klicke auf &quot;Prüfung durchführen&quot;, um den Abgleich aller Personen und
             des Unternehmens gegen internationale Sanktionslisten zu starten.
           </p>
         </div>

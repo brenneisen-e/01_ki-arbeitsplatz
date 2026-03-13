@@ -234,7 +234,7 @@ export default function RatingView() {
             Kein Unternehmen ausgewählt
           </h2>
           <p className="text-text-secondary text-sm mb-6">
-            Bitte wählen Sie zuerst ein Unternehmen aus dem Dashboard aus, um das Rating durchzuführen.
+            Bitte wähle zuerst ein Unternehmen aus dem Dashboard aus, um das Rating durchzuführen.
           </p>
           <button
             onClick={() => navigate('dashboard')}

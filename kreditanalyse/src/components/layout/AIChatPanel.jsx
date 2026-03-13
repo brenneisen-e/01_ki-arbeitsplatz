@@ -106,7 +106,7 @@ export default function AIChatPanel() {
         {state.aiMessages.length === 0 && (
           <div className="text-center text-text-muted text-sm py-8">
             <Bot size={32} className="mx-auto mb-3 opacity-30" />
-            <p>Stellen Sie eine Frage zum aktuellen Bereich.</p>
+            <p>Stelle eine Frage zum aktuellen Bereich.</p>
             <div className="mt-4 space-y-2">
               {['Wie bewertest du die Eigenkapitalquote?', 'Welche Risiken siehst du?', 'Erstelle eine Zusammenfassung.'].map((q) => (
                 <button

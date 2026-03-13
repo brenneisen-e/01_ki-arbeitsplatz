@@ -26,7 +26,7 @@ export default function ContractView() {
     return (
       <div className="flex flex-col items-center justify-center h-96 gap-4">
         <AlertCircle size={48} strokeWidth={1.5} className="text-text-muted" />
-        <p className="text-text-secondary font-body text-lg">Bitte wählen Sie einen Kreditantrag aus.</p>
+        <p className="text-text-secondary font-body text-lg">Bitte wähle einen Kreditantrag aus.</p>
         <button type="button" onClick={() => navigate('dashboard')}
           className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg font-body text-sm hover:bg-primary-light transition-colors">
           <ArrowLeft size={16} /> Zum Dashboard
@@ -95,7 +95,7 @@ export default function ContractView() {
         <div className="bg-surface-card border border-border rounded-lg p-8 flex flex-col items-center gap-4">
           <FileSignature size={48} strokeWidth={1} className="text-text-muted" />
           <p className="text-sm text-text-secondary text-center max-w-md">
-            Klicken Sie auf den Button, um einen standardisierten Kreditvertrag nach LMA/vdp-Vorlage aus allen Antragsdaten zu generieren.
+            Klicke auf den Button, um einen standardisierten Kreditvertrag nach LMA/vdp-Vorlage aus allen Antragsdaten zu generieren.
           </p>
           <button
             type="button"

@@ -97,7 +97,7 @@ export default function CreditProposalView() {
     return (
       <div className="flex flex-col items-center justify-center h-96 gap-4">
         <AlertCircle size={48} strokeWidth={1.5} className="text-text-muted" />
-        <p className="text-text-secondary font-body text-lg">Bitte wählen Sie einen Kreditantrag aus.</p>
+        <p className="text-text-secondary font-body text-lg">Bitte wähle einen Kreditantrag aus.</p>
         <button type="button" onClick={() => navigate('dashboard')}
           className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg font-body text-sm hover:bg-primary-light transition-colors">
           <ArrowLeft size={16} /> Zum Dashboard

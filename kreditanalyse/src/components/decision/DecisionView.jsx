@@ -189,7 +189,7 @@ export default function DecisionView() {
       <div className="flex flex-col items-center justify-center h-96 gap-4">
         <AlertCircle size={48} strokeWidth={1.5} className="text-text-muted" />
         <p className="text-text-secondary font-body text-lg">
-          Bitte wählen Sie einen Kreditantrag aus.
+          Bitte wähle einen Kreditantrag aus.
         </p>
         <button
           type="button"
@@ -698,7 +698,7 @@ Empfehlung: Genehmigung unter den nachfolgend genannten Auflagen und Bedingungen
               </h2>
             </div>
             <p className="text-sm text-text-secondary mb-4">
-              Der Kredit wurde genehmigt. Generieren Sie den Kreditvertrag als Word-Dokument basierend auf der STANDARD LOAN AGREEMENT Vorlage.
+              Der Kredit wurde genehmigt. Generiere den Kreditvertrag als Word-Dokument basierend auf der STANDARD LOAN AGREEMENT Vorlage.
             </p>
             <button
               type="button"

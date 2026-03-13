@@ -7,7 +7,7 @@ import { TrendingUp, TrendingDown, AlertTriangle, CheckCircle, MessageSquare, Le
 import { clsx } from 'clsx';
 import Card from '../../../components/ui/Card';
 import { useMode } from '../../../hooks/useMode';
-import { VV_PERFORMANCE } from '../../../data/vvExtended';
+import { VV_PERFORMANCE } from '../../../data/vvDataProvider';
 import { KUNDEN_BY_MODE } from '../../../data/index';
 import { formatEur } from '../../../utils/formatters';
 

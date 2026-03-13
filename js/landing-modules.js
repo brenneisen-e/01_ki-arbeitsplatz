@@ -301,7 +301,7 @@ function closeRisikoscoring() {
     }
 
     // Update URL route
-    if (window.AppRouter) AppRouter.navigate('/landing');
+    window.location.href = '/';
 }
 
 // ========================================
@@ -325,10 +325,17 @@ async function openKreditanalyse() {
         mainApp.style.display = 'none';
     }
 
+    // Hide versicherungModule (contains landing page)
+    const versicherungModule = document.getElementById('versicherungModule');
+    if (versicherungModule) {
+        versicherungModule.style.display = 'none';
+    }
+
     // Hide other modules
     ['bankenModule', 'assetModule', 'risikoscoringModule', 'bestandsuebertragungModule',
      'pmoToolboxModule', 'hrPipelineModule', 'versicherungs1x1Module',
-     'beraterOverviewPage', 'kundenDetailBankPage'].forEach(function(id) {
+     'beraterOverviewPage', 'kundenDetailBankPage', 'vertriebsarbeitsplatzModule',
+     'vermoegensverwaltungModule'].forEach(function(id) {
         var el = document.getElementById(id);
         if (el) el.style.display = 'none';
     });
@@ -367,7 +374,7 @@ function closeKreditanalyse() {
         landingPage.style.display = 'flex';
     }
 
-    if (window.AppRouter) AppRouter.navigate('/landing');
+    window.location.href = '/';
 }
 
 // ========================================
@@ -476,7 +483,7 @@ function closeVertriebsarbeitsplatz() {
         welcomeChat.style.display = 'block';
     }
 
-    if (window.AppRouter) AppRouter.navigate('/landing');
+    window.location.href = '/';
 
     // Dispatch event to update Page ID back to M-01
     setTimeout(() => {
@@ -769,7 +776,7 @@ function closeBestandsuebertragung() {
     }
 
     // Update URL route
-    if (window.AppRouter) AppRouter.navigate('/landing');
+    window.location.href = '/';
 
     // Dispatch event to update Page ID back to M-01
     setTimeout(() => {
@@ -992,7 +999,7 @@ function closePMOToolbox() {
     }
 
     // Update URL route
-    if (window.AppRouter) AppRouter.navigate('/landing');
+    window.location.href = '/';
 
     // Dispatch event to update Page ID back to M-01
     // Use setTimeout to ensure DOM is updated first

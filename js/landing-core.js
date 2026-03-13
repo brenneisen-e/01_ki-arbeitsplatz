@@ -589,8 +589,8 @@ function backToLanding() {
         }));
     }
 
-    // Update URL route
-    if (window.AppRouter) AppRouter.navigate('/landing');
+    // Navigate to React landing page
+    window.location.href = '/';
 
     // Reset the landing chat response container (clear loading indicator)
     const responseContainer = document.getElementById('landingChatResponse');

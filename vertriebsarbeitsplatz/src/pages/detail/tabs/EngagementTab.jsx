@@ -1,4 +1,6 @@
 import { VV_ENGAGEMENT } from '../../../data/vvExtended';
+import { useMode } from '../../../hooks/useMode';
+import { KUNDEN_BY_MODE } from '../../../data';
 import {
   ExternalLink, Globe, Mail, Calendar, Newspaper, Users,
   ThumbsUp, Share2, PenLine, Eye, Clock, MousePointerClick,

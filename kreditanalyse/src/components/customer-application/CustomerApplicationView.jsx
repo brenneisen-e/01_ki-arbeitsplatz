@@ -2,12 +2,13 @@
  * CustomerApplicationView -- Customer-facing credit application form.
  * This is the "Kundenperspektive" pre-stage where customers submit their
  * own credit applications before they appear on the internal dashboard.
+ *
+ * Includes demo document upload with simulated AI extraction.
  */
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import {
   Building2,
-  Users,
   Banknote,
   Send,
   ChevronDown,
@@ -16,8 +17,21 @@ import {
   UserCircle,
   Phone,
   Mail,
+  Upload,
+  FileText,
+  Sparkles,
+  Loader2,
+  Download,
+  X,
+  Eye,
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
+import {
+  generateBilanzPdf,
+  generateGuvPdf,
+  generateBwaPdf,
+  DEMO_EXTRACTION_RESULT,
+} from '../../utils/demoPdfGenerator';
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -43,6 +57,7 @@ const VERWENDUNG_KATEGORIEN = [
 // ---------------------------------------------------------------------------
 
 const fmt = new Intl.NumberFormat('de-DE');
+const fmtCurrency = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR', minimumFractionDigits: 0 });
 
 function formatDE(v) {
   if (v === '' || v === null || v === undefined) return '';
@@ -75,7 +90,7 @@ function Label({ children, htmlFor }) {
   return <label className={labelCls} htmlFor={htmlFor}>{children}</label>;
 }
 
-function SectionCard({ icon: Icon, title, children }) {
+function SectionCard({ icon: Icon, title, badge, children }) {
   return (
     <div className="bg-surface-card border border-border rounded-lg">
       <div className="flex items-center gap-3 px-5 py-3.5 border-b border-border">
@@ -85,6 +100,11 @@ function SectionCard({ icon: Icon, title, children }) {
         <h3 className="text-sm font-headline font-semibold text-text-primary tracking-wide">
           {title}
         </h3>
+        {badge && (
+          <span className="ml-auto text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700">
+            {badge}
+          </span>
+        )}
       </div>
       <div className="p-5">{children}</div>
     </div>
@@ -111,6 +131,20 @@ function EuroInput({ value, onChange, placeholder = '0', id }) {
     </div>
   );
 }
+
+// ---------------------------------------------------------------------------
+// AI Extraction Steps (simulated)
+// ---------------------------------------------------------------------------
+
+const EXTRACTION_STEPS = [
+  'Dokumente werden gelesen...',
+  'Bilanzpositionen werden extrahiert...',
+  'GuV-Daten werden analysiert...',
+  'Kennzahlen werden berechnet...',
+  'Unternehmensdaten werden zugeordnet...',
+  'Kreditbedarf wird ermittelt...',
+  'Antrag wird vorbefüllt...',
+];
 
 // ---------------------------------------------------------------------------
 // Main Component
@@ -143,12 +177,79 @@ export default function CustomerApplicationView() {
   const [verwendung, setVerwendung] = useState('');
   const [sicherheiten, setSicherheiten] = useState('');
 
+  // Document upload state
+  const [uploadedFiles, setUploadedFiles] = useState([]);
+  const [extracting, setExtracting] = useState(false);
+  const [extractionStep, setExtractionStep] = useState(0);
+  const [extractionDone, setExtractionDone] = useState(false);
+  const [extractedSummary, setExtractedSummary] = useState(null);
+  const fileInputRef = useRef(null);
+
   // UI state
   const [validationErrors, setValidationErrors] = useState([]);
   const [showErrors, setShowErrors] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
   const isFieldError = (fieldName) => showErrors && validationErrors.some(e => e.field === fieldName);
+
+  // Handle file upload (demo: accepts any file, simulates AI extraction)
+  const handleFileUpload = useCallback((e) => {
+    const files = Array.from(e.target.files);
+    if (files.length === 0) return;
+    const newFiles = files.map(f => ({
+      name: f.name,
+      size: f.size,
+      type: f.type,
+      uploadedAt: new Date(),
+    }));
+    setUploadedFiles(prev => [...prev, ...newFiles]);
+    // Reset the input so the same file can be re-uploaded
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  }, []);
+
+  const removeFile = useCallback((idx) => {
+    setUploadedFiles(prev => prev.filter((_, i) => i !== idx));
+  }, []);
+
+  // Simulated AI extraction
+  const runExtraction = useCallback(() => {
+    setExtracting(true);
+    setExtractionStep(0);
+    setExtractionDone(false);
+
+    // Simulate step-by-step extraction with delays
+    let step = 0;
+    const interval = setInterval(() => {
+      step++;
+      setExtractionStep(step);
+      if (step >= EXTRACTION_STEPS.length) {
+        clearInterval(interval);
+        // Apply demo extraction result
+        const d = DEMO_EXTRACTION_RESULT;
+        setFirma(d.firma);
+        setRechtsform(d.rechtsform);
+        setBranche(d.branche);
+        setGruendung(d.gruendung);
+        setStrasse(d.strasse);
+        setPlz(d.plz);
+        setOrt(d.ort);
+        setMitarbeiter(d.mitarbeiter);
+        setAnsprechpartner(d.ansprechpartner);
+        setPosition(d.position);
+        setEmail(d.email);
+        setTelefon(d.telefon);
+        setKreditArt(d.kreditArt);
+        setBetrag(d.betrag);
+        setLaufzeit(d.laufzeit);
+        setVerwendungKategorie(d.verwendungKategorie);
+        setVerwendung(d.verwendung);
+        setSicherheiten(d.sicherheiten);
+        setExtractedSummary(d.financialSummary);
+        setExtracting(false);
+        setExtractionDone(true);
+      }
+    }, 600);
+  }, []);
 
   const validateForm = useCallback(() => {
     const errors = [];
@@ -181,7 +282,6 @@ export default function CustomerApplicationView() {
     setShowErrors(false);
     setValidationErrors([]);
 
-    // Create a new company entry with status "eingegangen"
     const newId = `CRED-${new Date().getFullYear()}-${String(Date.now()).slice(-3)}`;
     dispatch({
       type: 'ADD_CUSTOMER_APPLICATION',
@@ -231,7 +331,16 @@ export default function CustomerApplicationView() {
           <div className="flex items-center justify-center gap-3 pt-4">
             <button
               type="button"
-              onClick={() => setSubmitted(false)}
+              onClick={() => {
+                setSubmitted(false);
+                setExtractionDone(false);
+                setExtractedSummary(null);
+                setUploadedFiles([]);
+                setFirma(''); setBranche(''); setGruendung(''); setStrasse(''); setPlz('');
+                setOrt(''); setMitarbeiter(''); setAnsprechpartner(''); setTelefon('');
+                setEmail(''); setPosition(''); setBetrag(''); setLaufzeit('');
+                setVerwendung(''); setSicherheiten('');
+              }}
               className="inline-flex items-center gap-2 px-5 py-2.5 border border-border text-text-primary rounded-lg text-sm font-semibold hover:bg-surface transition-colors"
             >
               Neuen Antrag stellen
@@ -272,7 +381,8 @@ export default function CustomerApplicationView() {
         <div>
           <p className="text-sm font-semibold text-amber-800">Hinweis</p>
           <p className="text-xs text-amber-700 mt-0.5">
-            Nach Einreichung wird Ihr Antrag von unserem Kreditteam geprueft. Sie erhalten zeitnah eine Rueckmeldung.
+            Laden Sie Ihre Jahresabschlüsse (Bilanz, GuV, BWA) hoch – unsere KI füllt den Antrag automatisch für Sie aus.
+            Nach Einreichung wird Ihr Antrag von unserem Kreditteam geprüft.
           </p>
         </div>
       </div>
@@ -288,8 +398,160 @@ export default function CustomerApplicationView() {
         </div>
       )}
 
-      {/* SECTION: Unternehmensdaten */}
-      <SectionCard icon={Building2} title="Unternehmensdaten">
+      {/* ================================================================== */}
+      {/* DOCUMENT UPLOAD SECTION                                            */}
+      {/* ================================================================== */}
+      <SectionCard icon={Upload} title="Dokumente hochladen" badge={extractionDone ? 'KI-Analyse abgeschlossen' : null}>
+        {/* Demo documents download */}
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-5">
+          <div className="flex items-start gap-3">
+            <Eye size={16} className="text-blue-600 mt-0.5 shrink-0" />
+            <div>
+              <p className="text-xs font-semibold text-blue-800">Demo-Dokumente herunterladen</p>
+              <p className="text-xs text-blue-700 mt-0.5 mb-3">
+                Laden Sie die Beispieldokumente der Müller Maschinenbau GmbH herunter, um die KI-Analyse zu testen.
+              </p>
+              <div className="flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  onClick={generateBilanzPdf}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-blue-300 text-blue-700 rounded text-xs font-semibold hover:bg-blue-50 transition-colors"
+                >
+                  <Download size={12} /> Bilanz 2021–2023
+                </button>
+                <button
+                  type="button"
+                  onClick={generateGuvPdf}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-blue-300 text-blue-700 rounded text-xs font-semibold hover:bg-blue-50 transition-colors"
+                >
+                  <Download size={12} /> GuV 2021–2023
+                </button>
+                <button
+                  type="button"
+                  onClick={generateBwaPdf}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-blue-300 text-blue-700 rounded text-xs font-semibold hover:bg-blue-50 transition-colors"
+                >
+                  <Download size={12} /> BWA 12/2023
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Upload area */}
+        <div
+          className="border-2 border-dashed border-border rounded-lg p-6 text-center cursor-pointer hover:border-amber-400 hover:bg-amber-50/30 transition-colors"
+          onClick={() => fileInputRef.current?.click()}
+        >
+          <input
+            ref={fileInputRef}
+            type="file"
+            multiple
+            accept=".pdf,.xlsx,.xls,.csv,.doc,.docx"
+            onChange={handleFileUpload}
+            className="hidden"
+          />
+          <Upload size={28} strokeWidth={1.5} className="text-text-muted mx-auto mb-2" />
+          <p className="text-sm text-text-secondary font-body">
+            Dokumente hierhin ziehen oder <span className="text-amber-600 font-semibold">durchsuchen</span>
+          </p>
+          <p className="text-xs text-text-muted mt-1">
+            PDF, Excel, Word – Bilanz, GuV, BWA, Jahresabschluss
+          </p>
+        </div>
+
+        {/* Uploaded files list */}
+        {uploadedFiles.length > 0 && (
+          <div className="mt-4 space-y-2">
+            {uploadedFiles.map((file, idx) => (
+              <div key={idx} className="flex items-center gap-3 bg-surface rounded-lg px-4 py-2.5 border border-border">
+                <FileText size={16} className="text-amber-600 shrink-0" />
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-body text-text-primary truncate">{file.name}</p>
+                  <p className="text-xs text-text-muted">{(file.size / 1024).toFixed(0)} KB</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => removeFile(idx)}
+                  className="p-1 text-text-muted hover:text-danger transition-colors"
+                >
+                  <X size={14} />
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* AI extraction button + progress */}
+        {uploadedFiles.length > 0 && !extractionDone && (
+          <div className="mt-4">
+            {extracting ? (
+              <div className="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-lg p-5">
+                <div className="flex items-center gap-3 mb-4">
+                  <Loader2 size={20} className="text-amber-600 animate-spin" />
+                  <p className="text-sm font-semibold text-amber-800">KI analysiert Ihre Dokumente...</p>
+                </div>
+                <div className="space-y-2">
+                  {EXTRACTION_STEPS.map((step, idx) => (
+                    <div key={idx} className="flex items-center gap-2">
+                      {idx < extractionStep ? (
+                        <CheckCircle2 size={14} className="text-emerald-500 shrink-0" />
+                      ) : idx === extractionStep ? (
+                        <Loader2 size={14} className="text-amber-600 animate-spin shrink-0" />
+                      ) : (
+                        <div className="w-3.5 h-3.5 rounded-full border border-gray-300 shrink-0" />
+                      )}
+                      <span className={`text-xs font-body ${idx < extractionStep ? 'text-emerald-700' : idx === extractionStep ? 'text-amber-800 font-semibold' : 'text-text-muted'}`}>
+                        {step}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={runExtraction}
+                className="w-full inline-flex items-center justify-center gap-2 px-5 py-3 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-lg text-sm font-semibold hover:from-amber-600 hover:to-orange-600 transition-all shadow-sm"
+              >
+                <Sparkles size={18} />
+                KI-Analyse starten – Antrag automatisch ausfüllen
+              </button>
+            )}
+          </div>
+        )}
+
+        {/* Extraction result summary */}
+        {extractionDone && extractedSummary && (
+          <div className="mt-4 bg-emerald-50 border border-emerald-200 rounded-lg p-4">
+            <div className="flex items-center gap-2 mb-3">
+              <CheckCircle2 size={16} className="text-emerald-600" />
+              <p className="text-sm font-semibold text-emerald-800">Daten erfolgreich extrahiert</p>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              {[
+                { label: 'Umsatz 2023', value: fmtCurrency.format(extractedSummary.umsatz2023) },
+                { label: 'Jahresüberschuss', value: fmtCurrency.format(extractedSummary.jahresueberschuss2023) },
+                { label: 'EK-Quote', value: extractedSummary.eigenkapitalquote },
+                { label: 'Umsatzrendite', value: extractedSummary.umsatzrendite },
+              ].map((item) => (
+                <div key={item.label} className="bg-white rounded-md p-2.5 border border-emerald-100">
+                  <p className="text-[10px] text-text-muted uppercase tracking-wider">{item.label}</p>
+                  <p className="text-sm font-mono font-semibold text-text-primary mt-0.5">{item.value}</p>
+                </div>
+              ))}
+            </div>
+            <p className="text-xs text-emerald-700 mt-3">
+              Alle Felder wurden vorbefüllt. Bitte prüfen Sie die Daten und passen Sie bei Bedarf an.
+            </p>
+          </div>
+        )}
+      </SectionCard>
+
+      {/* ================================================================== */}
+      {/* SECTION: Unternehmensdaten                                         */}
+      {/* ================================================================== */}
+      <SectionCard icon={Building2} title="Unternehmensdaten" badge={extractionDone ? 'Vorbefüllt' : null}>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="md:col-span-1">
             <Label htmlFor="firma">Firmenname *</Label>
@@ -391,7 +653,7 @@ export default function CustomerApplicationView() {
       </SectionCard>
 
       {/* SECTION: Ansprechpartner */}
-      <SectionCard icon={UserCircle} title="Ansprechpartner">
+      <SectionCard icon={UserCircle} title="Ansprechpartner" badge={extractionDone ? 'Vorbefüllt' : null}>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <Label htmlFor="ansprechpartner">Name *</Label>
@@ -449,7 +711,7 @@ export default function CustomerApplicationView() {
       </SectionCard>
 
       {/* SECTION: Kreditwunsch */}
-      <SectionCard icon={Banknote} title="Kreditwunsch">
+      <SectionCard icon={Banknote} title="Kreditwunsch" badge={extractionDone ? 'Vorbefüllt' : null}>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
             <Label htmlFor="kreditArt">Kreditart *</Label>

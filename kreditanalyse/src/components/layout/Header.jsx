@@ -16,9 +16,16 @@ function goToLanding() {
   try {
     if (window.parent && window.parent !== window && typeof window.parent.closeKreditanalyse === 'function') {
       window.parent.closeKreditanalyse();
+      return;
     }
   } catch {
-    // Cross-origin restriction – ignore
+    // Cross-origin restriction – fall through to fallback
+  }
+  // Fallback: navigate top frame directly to React landing page
+  try {
+    window.top.location.href = '/';
+  } catch {
+    window.location.href = '/';
   }
 }
 

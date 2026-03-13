@@ -23,9 +23,9 @@ function goToLanding() {
   }
   // Fallback: navigate top frame directly to React landing page
   try {
-    window.top.location.href = '/';
+    window.top.location.href = '/index.html';
   } catch {
-    window.location.href = '/';
+    window.location.href = '/index.html';
   }
 }
 

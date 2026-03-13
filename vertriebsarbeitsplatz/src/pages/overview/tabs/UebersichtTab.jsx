@@ -1,4 +1,5 @@
-import { Sun, Clock, Zap, CheckSquare, Calendar, Phone, AlertTriangle, CheckCircle, FileText, Heart, Car, Home, ShieldAlert, Cake, Euro, Download, Landmark, BarChart3, PiggyBank, Wallet } from 'lucide-react';
+import { useState } from 'react';
+import { Sun, Clock, Zap, CheckSquare, Calendar, Phone, AlertTriangle, CheckCircle, FileText, Heart, Car, Home, ShieldAlert, Cake, Euro, Download, Landmark, BarChart3, PiggyBank, Wallet, Sparkles } from 'lucide-react';
 import Card from '../../../components/ui/Card';
 import Avatar from '../../../components/ui/Avatar';
 import { PrioBadge, SparteBadge } from '../../../components/ui/Badge';
@@ -125,10 +126,25 @@ const PROVISIONSABRECHNUNGEN = {
 
 export default function UebersichtTab() {
   const { modeId, config, navigateTo, setActiveTab } = useMode();
+  const [mandatFilter, setMandatFilter] = useState('alle');
   const potentiale = getAllPotentiale(modeId).sort((a, b) => {
     const prio = { kritisch: 0, hoch: 1, mittel: 2, niedrig: 3 };
     return (prio[a.prioritaet] || 3) - (prio[b.prioritaet] || 3);
   }).slice(0, 5);
+
+  // VV: Kunden mit Mandatsinformationen
+  const vvKunden = modeId === 'vermoegensverwaltung' ? (KUNDEN_BY_MODE.vermoegensverwaltung || []).map(k => {
+    const mandat = (k.eigeneProdukte || []).find(p => p.typ === 'mandat');
+    const letzteKomm = (k.kommunikation || []).sort((a, b) => b.datum.localeCompare(a.datum))[0];
+    const leadsCount = (k.potentiale || []).length;
+    const istNeu = mandat && (mandat.status === 'onboarding' || (mandat.seit && mandat.seit >= '2025-06'));
+    return { ...k, mandat, letzteKomm, leadsCount, istNeu };
+  }) : [];
+  const filteredVVKunden = vvKunden.filter(k => {
+    if (mandatFilter === 'neu') return k.istNeu;
+    if (mandatFilter === 'bestand') return !k.istNeu;
+    return true;
+  });
 
   const termine = (TERMINE_BY_MODE[modeId] || TERMINE_BY_MODE.versicherung).slice(0, 4);
   const aufgaben = AUFGABEN_BY_MODE[modeId] || AUFGABEN_BY_MODE.versicherung;
@@ -189,59 +205,138 @@ export default function UebersichtTab() {
           </div>
         </Card>
 
-        {/* Vertriebspotenziale */}
-        <Card >
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-2">
-              <Zap size={20} style={{ color: 'var(--mode-primary-light)' }} strokeWidth={1.75} />
-              <h3 className="font-semibold text-slate-800">
-                {modeId === 'vermoegensverwaltung' ? 'Mandate & Potenziale' : 'Vertriebspotenziale'}
-              </h3>
-            </div>
-            <span className="text-sm text-slate-400">Top-5 von {getAllPotentiale(modeId).length}</span>
-          </div>
-          <div className="space-y-0">
-            {potentiale.map((p, i) => (
-              <div
-                key={i}
-                className="grid py-2.5 px-3 rounded-lg row-hover transition-colors cursor-pointer items-center"
-                style={{ gridTemplateColumns: 'max-content 1fr 140px' }}
-                onClick={() => navigateTo('detail', { kundeId: p.kundeId })}
-              >
-                <div className="flex items-center gap-2 min-w-0">
-                  <span className="text-sm font-semibold text-slate-800 whitespace-nowrap">{p.kundeName}</span>
-                  <span className="text-xs text-slate-400 shrink-0">{p.kundeId}</span>
-                  <PrioBadge prioritaet={p.prioritaet} />
-                </div>
-                <div className="min-w-0 px-3">
-                  <div className="text-sm font-medium" style={{ color: 'var(--mode-primary-light)' }}>{p.titel}</div>
-                  <div className="text-xs text-slate-500 truncate">{p.beschreibung}</div>
-                </div>
-                <div className="flex items-center gap-4 shrink-0 justify-end">
-                  <div className="text-right">
-                    <div className="text-[10px] uppercase text-slate-400">Prämie</div>
-                    <div className="text-sm font-mono font-medium text-slate-700">
-                      {p.volumen > 0 ? `${p.volumen.toLocaleString('de-DE')}€/J.` : '-'}
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-[10px] uppercase text-slate-400">Provision</div>
-                    <div className="text-sm font-mono font-medium" style={{ color: 'var(--mode-primary-light)' }}>
-                      {p.volumen > 0 ? `${Math.round(p.volumen * 0.75).toLocaleString('de-DE')}€` : '-'}
-                    </div>
-                  </div>
-                </div>
+        {/* Vertriebspotenziale / Mandate & Potenziale */}
+        {modeId === 'vermoegensverwaltung' ? (
+          <Card>
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <Zap size={20} style={{ color: 'var(--mode-primary-light)' }} strokeWidth={1.75} />
+                <h3 className="font-semibold text-slate-800">Mandate & Potenziale</h3>
               </div>
-            ))}
-          </div>
-          <button
-            className="mt-3 text-sm font-medium hover:underline"
-            style={{ color: 'var(--mode-primary-light)' }}
-            onClick={() => setActiveTab('potentiale')}
-          >
-            +{Math.max(0, getAllPotentiale(modeId).length - 5)} weitere anzeigen →
-          </button>
-        </Card>
+              <div className="flex gap-1.5">
+                {[
+                  { key: 'alle', label: 'Alle' },
+                  { key: 'bestand', label: 'Bestandsmandate' },
+                  { key: 'neu', label: 'Neue Mandate' },
+                ].map(f => (
+                  <button
+                    key={f.key}
+                    onClick={() => setMandatFilter(f.key)}
+                    className={`px-2.5 py-1 rounded-full text-xs font-medium transition-colors ${
+                      mandatFilter === f.key
+                        ? 'text-white'
+                        : 'bg-slate-100 text-slate-500 hover:bg-slate-200'
+                    }`}
+                    style={mandatFilter === f.key ? { backgroundColor: 'var(--mode-primary-light)' } : undefined}
+                  >
+                    {f.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="space-y-0">
+              <div className="grid py-1.5 px-3 items-center text-[10px] uppercase text-slate-400 font-semibold" style={{ gridTemplateColumns: '1fr 100px 120px 60px' }}>
+                <span>Mandant</span>
+                <span className="text-right">AuM</span>
+                <span className="text-right">Letztes Gespräch</span>
+                <span className="text-right">Leads</span>
+              </div>
+              {filteredVVKunden.slice(0, 8).map((k, i) => (
+                <div
+                  key={k.id || i}
+                  className="grid py-2.5 px-3 rounded-lg row-hover transition-colors cursor-pointer items-center"
+                  style={{ gridTemplateColumns: '1fr 100px 120px 60px' }}
+                  onClick={() => navigateTo('detail', { kundeId: k.id })}
+                >
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <Avatar name={k.name} size={34} />
+                    <div className="min-w-0">
+                      <div className="text-sm font-semibold text-slate-700 truncate flex items-center gap-1.5">
+                        {k.name}
+                        {k.istNeu && <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-emerald-100 text-emerald-700 font-medium">Neu</span>}
+                      </div>
+                      <div className="text-xs text-slate-400 truncate">{k.mandat ? k.mandat.produkt : k.mandatsTyp || '–'}</div>
+                    </div>
+                  </div>
+                  <div className="text-right text-sm font-mono font-medium text-slate-700">
+                    {k.aum ? `${(k.aum / 1000000).toFixed(1)}M` : '–'}
+                  </div>
+                  <div className="text-right text-xs text-slate-500">
+                    {k.letzteKomm ? new Date(k.letzteKomm.datum).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: '2-digit' }) : '–'}
+                  </div>
+                  <div className="text-right">
+                    {k.leadsCount > 0 ? (
+                      <span className="inline-flex items-center gap-0.5 text-xs font-semibold" style={{ color: 'var(--mode-primary-light)' }}>
+                        <Sparkles size={12} />
+                        {k.leadsCount}
+                      </span>
+                    ) : (
+                      <span className="text-xs text-slate-300">–</span>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+            <button
+              className="mt-3 text-sm font-medium hover:underline"
+              style={{ color: 'var(--mode-primary-light)' }}
+              onClick={() => setActiveTab('mandatsliste')}
+            >
+              Alle {vvKunden.length} Mandanten anzeigen →
+            </button>
+          </Card>
+        ) : (
+          <Card>
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <Zap size={20} style={{ color: 'var(--mode-primary-light)' }} strokeWidth={1.75} />
+                <h3 className="font-semibold text-slate-800">Vertriebspotenziale</h3>
+              </div>
+              <span className="text-sm text-slate-400">Top-5 von {getAllPotentiale(modeId).length}</span>
+            </div>
+            <div className="space-y-0">
+              {potentiale.map((p, i) => (
+                <div
+                  key={i}
+                  className="grid py-2.5 px-3 rounded-lg row-hover transition-colors cursor-pointer items-center"
+                  style={{ gridTemplateColumns: 'max-content 1fr 140px' }}
+                  onClick={() => navigateTo('detail', { kundeId: p.kundeId })}
+                >
+                  <div className="flex items-center gap-2 min-w-0">
+                    <span className="text-sm font-semibold text-slate-800 whitespace-nowrap">{p.kundeName}</span>
+                    <span className="text-xs text-slate-400 shrink-0">{p.kundeId}</span>
+                    <PrioBadge prioritaet={p.prioritaet} />
+                  </div>
+                  <div className="min-w-0 px-3">
+                    <div className="text-sm font-medium" style={{ color: 'var(--mode-primary-light)' }}>{p.titel}</div>
+                    <div className="text-xs text-slate-500 truncate">{p.beschreibung}</div>
+                  </div>
+                  <div className="flex items-center gap-4 shrink-0 justify-end">
+                    <div className="text-right">
+                      <div className="text-[10px] uppercase text-slate-400">Prämie</div>
+                      <div className="text-sm font-mono font-medium text-slate-700">
+                        {p.volumen > 0 ? `${p.volumen.toLocaleString('de-DE')}€/J.` : '-'}
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-[10px] uppercase text-slate-400">Provision</div>
+                      <div className="text-sm font-mono font-medium" style={{ color: 'var(--mode-primary-light)' }}>
+                        {p.volumen > 0 ? `${Math.round(p.volumen * 0.75).toLocaleString('de-DE')}€` : '-'}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <button
+              className="mt-3 text-sm font-medium hover:underline"
+              style={{ color: 'var(--mode-primary-light)' }}
+              onClick={() => setActiveTab('potentiale')}
+            >
+              +{Math.max(0, getAllPotentiale(modeId).length - 5)} weitere anzeigen →
+            </button>
+          </Card>
+        )}
 
         {/* Aufgaben */}
         <Card >

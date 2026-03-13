@@ -124,7 +124,7 @@
     import React from 'react';
     import { createRoot } from 'react-dom/client';
     import {
-        LayoutDashboard, Users, Home, Box, Zap, Clock, ShieldCheck, FileText,
+        LayoutDashboard, Users, Home, Zap, Clock, ShieldCheck, FileText,
         CreditCard, CheckCircle, LayoutGrid, UserPlus, BookOpen, ClipboardCheck,
         Briefcase, ExternalLink, Mic, Send, MessageCircle, Search,
         Settings, User, Key, Upload, Play, FileUp, Lock, Camera, Video, Eye, EyeOff, ChevronDown
@@ -146,7 +146,7 @@
             modules: [
                 { id: 'dashboard',  label: 'VST-Cockpit',           icon: LayoutDashboard, desc: 'KPIs, Bestand, Neugeschäft',       href: 'VSTCockpit/dist/index.html' },
                 { id: 'vap',        label: 'Vertriebsarbeitsplatz', icon: Users,           desc: 'Agenturansicht, Kunden, Verträge', href: 'vertriebsarbeitsplatz/dist/index.html#/versicherung/overview/uebersicht' },
-                { id: 'potential',  label: 'Potentialanalyse',      icon: Box,             desc: 'Cross-Sell, Up-Sell, Whitespots',  href: 'app.html#/potentialanalyse' },
+                { id: 'kredit',     label: 'KI-Kreditanalyse',      icon: ClipboardCheck,  desc: 'KI-gestützte Kreditbewertung',     href: 'kreditanalyse/dist/index.html' },
                 { id: 'scoring',    label: 'Vermittler-Scoring',    icon: Clock,           desc: 'Risikobewertung & Analyse',        href: 'Risikoscoring/index.html' },
             ]
         },
@@ -172,10 +172,9 @@
             iconBg: 'bg-violet-50',
             iconColor: 'text-violet-600',
             modules: [
-                { id: 'pmo',    label: 'PMO Toolbox',          icon: LayoutGrid,     desc: 'Transformationsprogramm',          href: 'PMOToolbox/index.html' },
-                { id: 'hr',     label: 'HR Pipeline',          icon: UserPlus,       desc: 'Recruiting & Bewerbermanagement',  href: 'HRPipeline/index.html' },
-                { id: 'v1x1',   label: 'Versicherungs-1×1',    icon: BookOpen,       desc: 'Wissen & Nachschlagewerk',         href: 'Versicherungs1x1/index.html' },
-                { id: 'kredit', label: 'KI-Kreditanalyse',     icon: ClipboardCheck, desc: 'KI-gestützte Kreditbewertung',     href: 'kreditanalyse/dist/index.html' },
+                { id: 'pmo',    label: 'PMO Toolbox',          icon: LayoutGrid, desc: 'Transformationsprogramm',          href: 'PMOToolbox/index.html' },
+                { id: 'hr',     label: 'HR Pipeline',          icon: UserPlus,   desc: 'Recruiting & Bewerbermanagement',  href: 'HRPipeline/index.html' },
+                { id: 'v1x1',   label: 'Versicherungs-1×1',    icon: BookOpen,   desc: 'Wissen & Nachschlagewerk',         href: 'Versicherungs1x1/index.html' },
             ]
         }
     ];
@@ -184,7 +183,7 @@
         { text: 'Zusammenfassung heutiger Tag',        href: VAP_BASE + '#/versicherung/overview/uebersicht' },
         { text: 'Zeige meine Vertriebspotentiale',     href: VAP_BASE + '#/versicherung/overview/potentiale' },
         { text: 'Top 5 Vertriebsregionen',             href: VAP_BASE + '#/versicherung/cockpit' },
-        { text: 'Kundenpotenzial analysieren',          href: 'app.html#/potentialanalyse' },
+        { text: 'Kreditantrag analysieren',              href: 'kreditanalyse/dist/index.html' },
         { text: 'Cross-Selling Chancen anzeigen',       href: VAP_BASE + '#/versicherung/overview/potentiale' },
         { text: 'Was kann ich hier machen?',            href: VAP_BASE + '#/versicherung/cockpit' },
     ];

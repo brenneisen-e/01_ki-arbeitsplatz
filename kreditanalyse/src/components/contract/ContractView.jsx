@@ -22,6 +22,7 @@ import {
   scoreToRatingClass,
 } from '../../utils/ratingEngine';
 import { haircutRates } from '../../data/haircutRates';
+import { LMA_TEMPLATE_STRUCTURE } from '../../data/lmaTemplate';
 import { useAI } from '../../hooks/useAI';
 
 function numberToWords(n) {
@@ -114,46 +115,101 @@ export default function ContractView() {
     return { ...s, haircut, beleihungswert };
   });
 
+  // Build contract from LMA template with data substitution
+  const fillTemplate = () => {
+    const kreditgeber = { name: 'Musterbank AG', adresse: 'Musterstraße 1, 50667 Köln', vorstand: 'Dr. Maria Schmidt, Thomas Berger' };
+    const adresse = company.adresse || {};
+    const gfNames = (company.gf || []).map(g => `${g.name} (${g.funktion}, ${g.anteil}%)`).join('\n');
+    const gfNamenKurz = (company.gf || []).map(g => g.name).join(', ');
+    const tilgungsfreiMonate = kredit.tilgungsfrei || 0;
+    const tilgungsfreiText = tilgungsfreiMonate > 0
+      ? `Die ersten ${tilgungsfreiMonate} Monate sind tilgungsfrei. Während der tilgungsfreien Zeit sind lediglich die anfallenden Zinsen zu entrichten.`
+      : 'Es wurde keine tilgungsfreie Anlaufzeit vereinbart.';
+    const auszahlungsDatum = kredit.auszahlung || new Date().toISOString().slice(0, 10);
+    const endDatum = new Date(auszahlungsDatum);
+    endDatum.setMonth(endDatum.getMonth() + laufzeit);
+    const endDatumStr = endDatum.toLocaleDateString('de-DE');
+    const bereitstellungAb = new Date(auszahlungsDatum);
+    bereitstellungAb.setMonth(bereitstellungAb.getMonth() - 1);
+    const ersteRate = new Date(auszahlungsDatum);
+    ersteRate.setMonth(ersteRate.getMonth() + 1 + tilgungsfreiMonate);
+
+    const covenantEkQuote = Math.max(20, Math.round((ratios.eigenkapitalquote || 25) - 5));
+    const covenantVerschuldung = Math.min(6, Math.round((ratios.dynamischer_verschuldungsgrad || 4) + 1));
+
+    // Build Sicherheiten table and Anlage
+    const sichTabelle = sichBewertung.map((s, i) =>
+      `${i + 1}. ${s.art}\n   Bezeichnung: ${s.bezeichnung}\n   Marktwert: ${formatCurrency(s.wert)}\n   Beleihungswert: ${formatCurrency(s.beleihungswert)}\n   Rang: ${s.rang}. Rang`
+    ).join('\n\n');
+
+    const sichAnlage = sichBewertung.map((s, i) =>
+      `Sicherheit ${i + 1}:\nArt: ${s.art}\nBezeichnung: ${s.bezeichnung}\nMarktwert: ${formatCurrency(s.wert)}\nHaircut: ${s.haircut}%\nBeleihungswert: ${formatCurrency(s.beleihungswert)}\nRang: ${s.rang}. Rang\nBewertung: ${s.bewertung || '–'}\nDatum: ${s.datum ? new Date(s.datum).toLocaleDateString('de-DE') : '–'}`
+    ).join('\n\n');
+
+    const sicherheitenBeschreibung = sichBewertung.map(s => `${s.art} (${s.bezeichnung})`).join(', ');
+    const eigenanteil = formatCurrency(Math.round(betrag * 0.2));
+    const investitionssumme = formatCurrency(Math.round(betrag * 1.2));
+
+    // Perform placeholder substitution
+    let text = LMA_TEMPLATE_STRUCTURE;
+    const replacements = {
+      '{{KREDITNEHMER_FIRMA}}': company.firma,
+      '{{KREDITNEHMER_RECHTSFORM}}': company.rechtsform || '–',
+      '{{KREDITNEHMER_AMTSGERICHT}}': company.amtsgericht || 'Amtsgericht',
+      '{{KREDITNEHMER_HRB}}': company.hrb || '–',
+      '{{KREDITNEHMER_ADRESSE}}': `${adresse.strasse || ''}, ${adresse.plz || ''} ${adresse.ort || ''}`,
+      '{{KREDITNEHMER_ORT}}': adresse.ort || '–',
+      '{{KREDITNEHMER_GRUENDUNG}}': String(company.gruendung || '–'),
+      '{{KREDITNEHMER_GF}}': gfNames,
+      '{{KREDITNEHMER_GF_NAMEN}}': gfNamenKurz,
+      '{{KREDITGEBER_NAME}}': kreditgeber.name,
+      '{{KREDITGEBER_ADRESSE}}': kreditgeber.adresse,
+      '{{KREDITGEBER_VORSTAND}}': kreditgeber.vorstand,
+      '{{KREDITBETRAG}}': formatCurrency(betrag),
+      '{{KREDITBETRAG_WORT}}': numberToWords(betrag),
+      '{{VERWENDUNGSZWECK}}': kredit.verwendung || kredit.art || '–',
+      '{{LAUFZEIT}}': String(laufzeit),
+      '{{ENDDATUM}}': endDatumStr,
+      '{{SOLLZINS}}': kundenZins.toFixed(2),
+      '{{EFFEKTIVZINS}}': effektivZins.toFixed(2),
+      '{{MONATLICHE_RATE}}': formatCurrency(Math.round(monatlicheRate)),
+      '{{AUSZAHLUNGSDATUM}}': new Date(auszahlungsDatum).toLocaleDateString('de-DE'),
+      '{{ERSTE_RATE}}': ersteRate.toLocaleDateString('de-DE'),
+      '{{TILGUNGSFREI_TEXT}}': tilgungsfreiText,
+      '{{BEREITSTELLUNG_AB}}': bereitstellungAb.toLocaleDateString('de-DE'),
+      '{{BEREITSTELLUNGSPROVISION}}': '0,25',
+      '{{EIGENANTEIL}}': eigenanteil,
+      '{{INVESTITIONSSUMME}}': investitionssumme,
+      '{{SICHERHEITEN_BESCHREIBUNG}}': sicherheitenBeschreibung,
+      '{{SICHERHEITEN_TABELLE}}': sichTabelle,
+      '{{SICHERHEITEN_ANLAGE}}': sichAnlage,
+      '{{COVENANT_EK_QUOTE}}': String(covenantEkQuote),
+      '{{COVENANT_VERSCHULDUNG}}': String(covenantVerschuldung),
+      '{{GERICHTSSTAND}}': adresse.ort || 'Köln',
+      '{{ORT}}': adresse.ort || 'Köln',
+      '{{DATUM}}': new Date().toLocaleDateString('de-DE'),
+    };
+
+    for (const [placeholder, value] of Object.entries(replacements)) {
+      text = text.replaceAll(placeholder, value);
+    }
+
+    return text.trim();
+  };
+
   const generateContract = async () => {
-    const dataJson = JSON.stringify({
-      kreditgeber: { name: 'Musterbank AG', adresse: 'Musterstraße 1, 50667 Köln', vorstand: 'Dr. Maria Schmidt, Thomas Berger' },
-      kreditnehmer: { firma: company.firma, rechtsform: company.rechtsform, hrb: company.hrb, adresse: `${company.adresse?.strasse}, ${company.adresse?.plz} ${company.adresse?.ort}`, gf: company.gf?.map(g => g.name) },
-      kredit: { art: kredit.art, betrag, betragWort: numberToWords(betrag), laufzeit, tilgungsfrei: kredit.tilgungsfrei || 0, verwendung: kredit.verwendung, auszahlung: kredit.auszahlung },
-      zinsen: { sollzins: kundenZins, effektivzins: effektivZins, monatlicheRate: Math.round(monatlicheRate), bereitstellungsprovision: 0.25 },
-      sicherheiten: sichBewertung.map(s => ({ art: s.art, bezeichnung: s.bezeichnung, wert: s.wert, beleihungswert: s.beleihungswert, rang: s.rang })),
-      rating: { klasse: ratingClass.klasse, pd: ratingClass.pd },
-      covenants: { ekQuote: Math.max(20, Math.round((ratios.eigenkapitalquote || 25) - 5)), dynVerschuldung: Math.min(6, Math.round((ratios.dynamischer_verschuldungsgrad || 4) + 1)) },
-      bestehende_verbindlichkeiten: company.bestehende_verbindlichkeiten || [],
-    }, null, 2);
+    // Primary: Fill the LMA template with actual data
+    const filledContract = fillTemplate();
 
-    const systemPrompt = `Du bist Jurist in der Kreditabteilung einer deutschen Bank. Erstelle einen standardisierten Kreditvertrag im LMA-Format (Loan Market Association) auf Basis der folgenden Daten. Verwende juristisch korrekte, aber verständliche deutsche Sprache. Alle konkreten Werte (Beträge, Zinssätze, Sicherheiten, Auflagen) exakt aus den Daten übernehmen.
-
-Format: Nummerierte Abschnitte gemäß vdp-Bankstandard für gewerbliche Kreditverträge:
-1. PRÄAMBEL (Kreditnehmer, Sicherungsgut, Finanzierungsstruktur, Finanzdokumente)
-2. DEFINITIONEN (Wesentliche Vertragsbegriffe)
-3. DARLEHENSNENNBETRAG (Betrag in Ziffern und Worten)
-4. ZWECKBINDUNG (Verwendungszweck des Kredits)
-5. LAUFZEIT (Beginn, Ende, tilgungsfreie Zeit)
-6. AUSZAHLUNG (Auszahlungsvoraussetzungen, Bereitstellungszeitraum)
-7. ZINSEN (Sollzinssatz, Effektivzins, Zinsperioden, Zinszahlungstermine, Zinsberechnung)
-8. ZAHLUNG / VERZUG (Zahlungspünktlichkeit, Verzugsbeginn, Verzugszinsen)
-9. ORDENTLICHE TILGUNG & SONDERTILGUNG (Tilgungsplan, Ratenstruktur Annuität, freiwillige Sondertilgung)
-10. GEBÜHREN & KOSTEN (Bereitstellungsprovision, sonstige Kosten)
-11. SICHERHEITEN (Alle vereinbarten Sicherheiten mit Beleihungswert und Rang)
-12. AUSZAHLUNGSVORAUSSETZUNGEN (Conditions Precedent: Dokumente, Nachweise)
-13. ZUSICHERUNGEN & GEWÄHRLEISTUNGEN (Status, Gültigkeit, Keine Pflichtverletzung, Keine Kündigungsgründe, Insolvenz, Steuern, Versicherung)
-14. COVENANTS / AUFLAGEN (Financial Covenants: EK-Quote, Verschuldungsgrad; Informationspflichten; Allgemeine Auflagen)
-15. RATING (Ratingklasse, Ausfallwahrscheinlichkeit)
-16. KÜNDIGUNGSRECHTE (Ordentliche und außerordentliche Kündigung, Kündigungsgründe)
-17. ABTRETUNG & BANKGEHEIMNIS (Risikotransfer, Syndizierung, Refinanzierung)
-18. GERICHTSSTAND & ANWENDBARES RECHT
-19. SCHRIFTFORM & SALVATORISCHE KLAUSEL
-20. UNTERSCHRIFTEN (Kreditgeber und Kreditnehmer mit Ort und Datum)
-
-Erstelle einen vollständigen, professionellen Vertrag mit allen 20 Abschnitten. Jeder Abschnitt soll substanzielle juristische Formulierungen enthalten.`;
-
-    const result = await callAI(systemPrompt, dataJson);
-    setContractText(result);
+    // If AI is available, let AI polish/enhance the filled template
+    try {
+      const systemPrompt = `Du bist Jurist in der Kreditabteilung einer deutschen Bank. Der folgende Kreditvertrag wurde automatisch aus einer LMA/vdp-Vorlage generiert und mit den tatsächlichen Kreditdaten befüllt. Prüfe den Vertrag auf Vollständigkeit und Konsistenz. Gib den finalen Vertrag zurück – behalte die komplette Struktur bei, korrigiere nur offensichtliche Fehler und ergänze fehlende Formulierungen wo nötig. Ändere KEINE konkreten Werte (Beträge, Zinssätze, Daten). Antworte NUR mit dem fertigen Vertragstext, ohne Kommentare.`;
+      const result = await callAI(systemPrompt, filledContract);
+      setContractText(result || filledContract);
+    } catch {
+      // Fallback: use the template-filled contract directly
+      setContractText(filledContract);
+    }
   };
 
   const handlePrint = () => window.print();
@@ -180,7 +236,7 @@ Erstelle einen vollständigen, professionellen Vertrag mit allen 20 Abschnitten.
             Kreditvertrag – {company.firma}
           </h2>
           <p className="text-xs text-text-muted font-body">
-            Generierung und Bearbeitung des standardisierten Kreditvertrags
+            Automatische LMA-Vertragserstellung auf Basis der vdp-Vorlage
           </p>
         </div>
       </div>
@@ -190,7 +246,7 @@ Erstelle einen vollständigen, professionellen Vertrag mit allen 20 Abschnitten.
         <div className="bg-surface-card border border-border rounded-lg p-8 flex flex-col items-center gap-4">
           <FileSignature size={48} strokeWidth={1} className="text-text-muted" />
           <p className="text-sm text-text-secondary text-center max-w-md">
-            Klicken Sie auf den Button, um einen vollständigen Kreditvertrag aus allen Antragsdaten zu generieren.
+            Klicken Sie auf den Button, um einen standardisierten Kreditvertrag nach LMA/vdp-Vorlage aus allen Antragsdaten zu generieren.
           </p>
           <button
             type="button"
@@ -213,6 +269,9 @@ Erstelle einen vollständigen, professionellen Vertrag mit allen 20 Abschnitten.
               <h1 className="text-2xl font-headline font-bold text-text-primary tracking-wide uppercase">
                 Kreditvertrag
               </h1>
+              <p className="text-xs text-text-muted mt-1 font-body tracking-wider">
+                (Standardisierter Kreditvertrag nach vdp/LMA-Standard)
+              </p>
               <p className="text-sm text-text-secondary mt-2 font-body">
                 Nr. {company.id} / {new Date().getFullYear()}
               </p>

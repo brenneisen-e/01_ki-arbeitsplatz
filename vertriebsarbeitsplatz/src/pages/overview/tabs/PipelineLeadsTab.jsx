@@ -86,9 +86,9 @@ export default function PipelineLeadsTab() {
   const bestandsAuM = bestandsmandate.reduce((s, l) => s + (l.potentialAuM || 0), 0);
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       {/* KPIs */}
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-4 gap-3">
         <KPI icon={Users} label="Pipeline Leads" value={leads.length} sub={`${neumandate.length} Neue, ${bestandsmandate.length} Bestand`} />
         <KPI icon={UserPlus} label="Neue Mandate" value={neumandate.length} sub={formatEur(neumandatAuM) + ' pot. AuM'} />
         <KPI icon={Briefcase} label="Bestandsmandate" value={bestandsmandate.length} sub={formatEur(bestandsAuM) + ' pot. AuM'} color="text-emerald-600" />
@@ -97,7 +97,7 @@ export default function PipelineLeadsTab() {
 
       {/* Pipeline Bar */}
       <Card>
-        <h3 className="font-semibold text-slate-800 mb-4">Pipeline</h3>
+        <h3 className="font-semibold text-slate-800 mb-2">Pipeline</h3>
         <PipelineBar segments={pipelineSegments} />
       </Card>
 
@@ -161,12 +161,12 @@ export default function PipelineLeadsTab() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-slate-200 text-left text-xs text-slate-400 uppercase">
-                <th className="py-2 pr-3 w-6"></th>
-                <th className="py-2 pr-3">Lead</th>
-                <th className="py-2 pr-3">Kategorie</th>
-                <th className="py-2 pr-3">Quelle</th>
-                <th className="py-2 pr-3">Stadium</th>
-                <th className="py-2 pr-3">Pot. Volumen</th>
+                <th className="py-2 pr-2 w-5"></th>
+                <th className="py-2 pr-2 w-[18%]">Lead</th>
+                <th className="py-2 pr-2 w-[10%]">Kategorie</th>
+                <th className="py-2 pr-2 w-[10%]">Quelle</th>
+                <th className="py-2 pr-2 w-[10%]">Stadium</th>
+                <th className="py-2 pr-2 w-[12%]">Pot. Volumen</th>
                 <th className="py-2">Herkunft</th>
               </tr>
             </thead>
@@ -240,14 +240,14 @@ function LeadRow({ lead, isExpanded, onToggle }) {
         className="border-b border-slate-100 hover:bg-slate-50 transition-colors cursor-pointer"
         onClick={onToggle}
       >
-        <td className="py-2.5 pr-1 text-slate-400">
+        <td className="py-2.5 pr-1 text-slate-400 w-5">
           {isExpanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
         </td>
-        <td className="py-2.5 pr-3">
+        <td className="py-2.5 pr-2">
           <div className="font-medium text-slate-800">{lead.name}</div>
           {lead.beruf && <div className="text-[10px] text-slate-400">{lead.beruf}</div>}
         </td>
-        <td className="py-2.5 pr-3">
+        <td className="py-2.5 pr-2">
           <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${
             lead.kategorie === 'neumandat'
               ? 'bg-blue-50 text-blue-700'
@@ -256,7 +256,7 @@ function LeadRow({ lead, isExpanded, onToggle }) {
             {lead.kategorie === 'neumandat' ? 'Neues Mandat' : 'Bestand'}
           </span>
         </td>
-        <td className="py-2.5 pr-3">
+        <td className="py-2.5 pr-2">
           <span
             className="text-[10px] font-medium px-2 py-0.5 rounded-full text-white"
             style={{ backgroundColor: QUELLEN_COLORS[lead.quelle] || '#94a3b8' }}
@@ -264,13 +264,13 @@ function LeadRow({ lead, isExpanded, onToggle }) {
             {QUELLEN_LABELS[lead.quelle] || lead.quelleLabel || lead.quelle}
           </span>
         </td>
-        <td className="py-2.5 pr-3">
+        <td className="py-2.5 pr-2">
           <StadiumBadge stadium={lead.stadium} />
         </td>
-        <td className="py-2.5 pr-3 font-mono text-slate-700 text-sm">
+        <td className="py-2.5 pr-2 font-mono text-slate-700 text-sm">
           {lead.geschaetztesVolumen || '—'}
         </td>
-        <td className="py-2.5 text-xs text-slate-500 max-w-[280px] truncate">
+        <td className="py-2.5 text-xs text-slate-500 truncate">
           {lead.herkunft}
         </td>
       </tr>

@@ -76,6 +76,25 @@ export function generateAllKunden(modus, anzahl = 45, seed = 42) {
       : generatePerson(modus);
 
     buildKunde(person, modus);
+
+    // VV: derive mandatsTyp, aum, and portfolio from eigeneProdukte
+    if (modus === 'vermoegensverwaltung') {
+      const mandat = person.eigeneProdukte.find(p => p.sparte === 'vv' || p.sparte === 'FairValue' || p.sparte === 'SmartValue');
+      if (mandat) {
+        person.mandatsTyp = person._vvSegment || (mandat.praemie > 5000000 ? 'FairValue' : 'SmartValue');
+        person.aum = mandat.praemie || 0;
+      }
+      // Generate portfolio performance data
+      const ytd = +(2 + Math.random() * 8).toFixed(1);
+      const bmYtd = +(ytd - 0.5 - Math.random() * 2).toFixed(1);
+      person.portfolio = {
+        allocation: { aktien: 45 + Math.floor(Math.random() * 20), anleihen: 20 + Math.floor(Math.random() * 15), alternative: 10 + Math.floor(Math.random() * 10), cash: 5 + Math.floor(Math.random() * 5) },
+        performance: { ytd, '1j': +(ytd * 1.8 + Math.random() * 3).toFixed(1), '3j': +(4 + Math.random() * 5).toFixed(1) },
+        benchmark: { ytd: bmYtd, '1j': +(bmYtd * 1.6 + Math.random() * 2).toFixed(1), '3j': +(3.5 + Math.random() * 3).toFixed(1) },
+        esgScore: 55 + Math.floor(Math.random() * 35),
+      };
+    }
+
     generated.push(person);
   }
 

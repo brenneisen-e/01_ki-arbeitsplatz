@@ -130,7 +130,12 @@ export default function KundenTab() {
         ...k,
         volumen,
         ytd: k.portfolio?.performance?.ytd ?? null,
-        letzterKontakt: k.kommunikation?.[0]?.datum?.slice(5) || '-',
+        letzterKontakt: k.kommunikation?.[0]?.datum
+          ? (() => {
+              const [y, m, d] = k.kommunikation[0].datum.split('-');
+              return `${d}.${m}.${y}`;
+            })()
+          : '-',
         potCount: k.potentiale?.filter(p => p.status !== 'abgeschlossen')?.length || 0,
       };
     });

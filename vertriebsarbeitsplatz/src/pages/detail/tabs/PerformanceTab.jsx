@@ -217,21 +217,28 @@ export default function PerformanceTab({ kunde }) {
   const kpis = deriveKpis(monthly, kunde?.portfolio);
 
   // Convert monthly percentage returns to absolute EUR values
+  // Both portfolio and benchmark START at the same base value, then grow by their respective returns
+  // This ensures a fair comparison; the portfolio should outperform the benchmark
   const absoluteMonthly = useMemo(() => {
     if (!monthly || !kunde?.aum) return monthly || [];
     const baseAum = kunde.aum;
-    // Walk backwards from current AuM to reconstruct absolute values
     const len = monthly.length;
+    if (len === 0) return [];
+
+    // Walk backwards from current AuM to find the starting portfolio value
+    let startVal = baseAum;
+    for (let i = len - 1; i >= 1; i--) {
+      startVal = startVal / (1 + monthly[i].portfolio / 100);
+    }
+
+    // Now walk forward: both start at the same value
     const pfValues = new Array(len);
     const bmValues = new Array(len);
-    // Start from baseAum at end, walk backward
-    pfValues[len - 1] = baseAum;
-    bmValues[len - 1] = baseAum; // benchmark starts at same value
-    for (let i = len - 2; i >= 0; i--) {
-      const pfRet = monthly[i + 1].portfolio / 100;
-      const bmRet = monthly[i + 1].benchmark / 100;
-      pfValues[i] = pfValues[i + 1] / (1 + pfRet);
-      bmValues[i] = bmValues[i + 1] / (1 + bmRet);
+    pfValues[0] = startVal;
+    bmValues[0] = startVal; // benchmark starts at same point as portfolio
+    for (let i = 1; i < len; i++) {
+      pfValues[i] = pfValues[i - 1] * (1 + monthly[i].portfolio / 100);
+      bmValues[i] = bmValues[i - 1] * (1 + monthly[i].benchmark / 100);
     }
     return monthly.map((m, i) => ({
       monat: m.monat,
@@ -284,9 +291,15 @@ export default function PerformanceTab({ kunde }) {
 
   // Verlustschwelle calculation (percentage from high)
   const vsGrenze = verlustschwelle?.schwelle ?? -10;
-  const vsHoechst = verlustschwelle?.hoechststand ?? 0;
-  const vsAktuell = verlustschwelle?.aktuell ?? 0;
-  const vsAktPct = vsHoechst > 0 ? +((vsAktuell - vsHoechst) / vsHoechst * 100).toFixed(1) : 0;
+  // Derive hoechststand and aktuell from AuM if not absolute values
+  const currentAuM = kunde?.aum || 0;
+  const vsAktPct = verlustschwelle?._pctFromHigh ?? (
+    verlustschwelle?.hoechststand > 0
+      ? +((verlustschwelle.aktuell - verlustschwelle.hoechststand) / verlustschwelle.hoechststand * 100).toFixed(1)
+      : 0
+  );
+  const vsHoechst = verlustschwelle?.hoechststand || (currentAuM > 0 ? Math.round(currentAuM / (1 + vsAktPct / 100)) : 0);
+  const vsAktuell = verlustschwelle?.aktuell || currentAuM;
   const vsRatio = vsGrenze !== 0 ? Math.abs(vsAktPct) / Math.abs(vsGrenze) : 0;
 
   // Rating display
@@ -640,11 +653,18 @@ export default function PerformanceTab({ kunde }) {
               <span className="text-xs text-slate-400 ml-1.5">/ {vsGrenze}%</span>
             </div>
           </div>
-          {verlustschwelle?.hoechststandDatum && (
-            <p className="text-[10px] text-slate-400 mt-1">
-              Höchststand: {formatEur(vsHoechst)} ({verlustschwelle.hoechststandDatum})
-            </p>
-          )}
+          <div className="flex items-center justify-between mt-1">
+            {verlustschwelle?.hoechststandDatum && (
+              <p className="text-[10px] text-slate-400">
+                Höchststand: {formatEur(vsHoechst)} ({verlustschwelle.hoechststandDatum})
+              </p>
+            )}
+            {vsAktuell > 0 && (
+              <p className="text-[10px] text-slate-400">
+                Aktuell: {formatEur(vsAktuell)}
+              </p>
+            )}
+          </div>
           <div className="w-full bg-slate-100 rounded-full h-2 mt-2 relative">
             <div
               className="h-2 rounded-full absolute left-0 top-0"

@@ -4,7 +4,7 @@ export default function PipelineBar({ segments }) {
 
   return (
     <div className="w-full">
-      <div className="flex h-10 rounded-lg overflow-hidden">
+      <div className="flex h-8 rounded-lg overflow-hidden">
         {segments.map((seg, i) => {
           const pct = (seg.count / total) * 100;
           if (pct === 0) return null;

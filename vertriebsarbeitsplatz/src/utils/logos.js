@@ -73,6 +73,12 @@ const DOMAIN_MAP = {
   'Flossbach von Storch': 'flossbachvonstorch.de',
   'DJE Kapital': 'dje.de',
   'Pictet': 'pictet.com',
+  'UBS': 'ubs.com',
+  'N26': 'n26.com',
+  'Coinbase': 'coinbase.com',
+  'Coinbase/Ledger': 'coinbase.com',
+  'Privat': null,
+  'Eigene': null,
 };
 
 export function getLogoUrl(name, size = 32) {

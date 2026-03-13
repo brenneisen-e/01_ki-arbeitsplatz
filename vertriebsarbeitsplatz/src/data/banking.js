@@ -5,7 +5,7 @@ export const B1 = {
   familienstand: 'verheiratet',
   partner: { name: 'Sabine', beruf: 'Teilzeit Verwaltung', einkommen: 1200 },
   kinder: [{ name: 'Lukas', alter: 12 }, { name: 'Marie', alter: 9 }],
-  wohnsituation: 'eigentum', wohnflaeche: 150,
+  wohnsituation: 'Eigentum', wohnflaeche: 150,
   nps: 7, risikoscore: 30, potentialScore: 4.2, abwanderungsrisiko: 'mittel',
   eigeneProdukte: [
     { typ: 'girokonto', sparte: 'konto', produkt: 'VR-MeinKonto Plus', details: 'Gehaltseingang 4.500\u20ac netto', praemie: 0, seit: '2015-01', status: 'aktiv' },
@@ -186,7 +186,7 @@ export const B2 = {
   familienstand: 'verheiratet',
   partner: { name: 'Tobias', beruf: 'Ingenieur (Commerzbank-Kunde)', einkommen: 4200 },
   kinder: [],
-  wohnsituation: 'miete', wohnflaeche: 80,
+  wohnsituation: 'Miete', wohnflaeche: 80,
   nps: 8, risikoscore: 15, potentialScore: 4.0, abwanderungsrisiko: 'niedrig',
   eigeneProdukte: [
     { typ: 'girokonto', sparte: 'konto', produkt: 'VR-MeinKonto', details: 'Gehaltseingang 3.200\u20ac', praemie: 0, seit: '2020-01', status: 'aktiv' },
@@ -255,7 +255,7 @@ export const B3 = {
   familienstand: 'verheiratet',
   partner: { name: 'Claudia', beruf: 'Buchhalterin (im Betrieb)', einkommen: 2500 },
   kinder: [{ name: 'Jan', alter: 28 }, { name: 'Lea', alter: 25 }],
-  wohnsituation: 'eigentum', wohnflaeche: 220,
+  wohnsituation: 'Eigentum', wohnflaeche: 220,
   nps: 6, risikoscore: 35, potentialScore: 4.5, abwanderungsrisiko: 'mittel',
   eigeneProdukte: [
     { typ: 'firmenkonto1', sparte: 'konto', produkt: 'VR-BusinessKonto', details: 'Hauptkonto GmbH', praemie: 25, seit: '2008-01', status: 'aktiv', volumen: 45000 },
@@ -362,7 +362,7 @@ export const B4 = {
   name: 'Markus Wagner', id: 'BK00004', alter: 29,
   beruf: 'Junior Controller', arbeitgeber: { name: 'Volksbank Mittelhessen', quelle: 'linkedin', bestaetigt: true }, nettoeinkommen: 2600,
   familienstand: 'ledig', partner: null, kinder: [],
-  wohnsituation: 'miete', wohnflaeche: 50,
+  wohnsituation: 'Miete', wohnflaeche: 50,
   nps: 6, risikoscore: 40, potentialScore: 3.5, abwanderungsrisiko: 'hoch',
   eigeneProdukte: [
     { typ: 'girokonto', sparte: 'konto', produkt: 'VR-MeinKonto', details: 'Gehaltseingang 2.600\u20ac', praemie: 0, seit: '2018-01', status: 'aktiv' },
@@ -450,7 +450,7 @@ export const B5 = {
   beruf: 'Inhaberin 3 Cafés (18 MA)', arbeitgeber: { name: 'BASF SE', quelle: 'linkedin', bestaetigt: false }, nettoeinkommen: 5500,
   familienstand: 'geschieden', partner: null,
   kinder: [{ name: 'Mia', alter: 10 }],
-  wohnsituation: 'miete', wohnflaeche: 85,
+  wohnsituation: 'Miete', wohnflaeche: 85,
   nps: 8, risikoscore: 38, potentialScore: 4.3, abwanderungsrisiko: 'niedrig',
   eigeneProdukte: [
     { typ: 'geschaeftskonto1', sparte: 'konto', produkt: 'VR-BusinessKonto', details: 'Café 1 Innenstadt', praemie: 25, seit: '2016-01', status: 'aktiv', volumen: 18000 },
@@ -548,7 +548,7 @@ export const B6 = {
   name: 'Stefan Braun', id: 'BK00006', alter: 36,
   beruf: 'IT-Freelancer', arbeitgeber: { name: 'Universitätsklinikum Gießen', quelle: 'linkedin', bestaetigt: false }, nettoeinkommen: 6800,
   familienstand: 'ledig', partner: null, kinder: [],
-  wohnsituation: 'miete', wohnflaeche: 65,
+  wohnsituation: 'Miete', wohnflaeche: 65,
   nps: 4, risikoscore: 55, potentialScore: 3.8, abwanderungsrisiko: 'hoch',
   eigeneProdukte: [
     { typ: 'girokonto', sparte: 'konto', produkt: 'VR-MeinKonto', details: 'Kindheitskonto, kaum genutzt', praemie: 0, seit: '2000-01', status: 'aktiv', volumen: 800 },

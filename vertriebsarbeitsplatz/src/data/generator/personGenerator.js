@@ -138,21 +138,17 @@ const HUNDE_NAMEN = ['Bella','Max','Luna','Buddy','Charlie','Rocky','Mila','Sam'
 const KATZEN_NAMEN = ['Mietze','Felix','Luna','Simba','Mimi','Lilly','Leo','Nala','Mia','Tiger','Muffin','Cleo','Moritz','Kitty'];
 
 function generateHaustiere(wohnsituation, kinder) {
-  // ~30% Wahrscheinlichkeit ein Haustier zu haben, höher bei Eigentum/Kindern
+  // ~30% Wahrscheinlichkeit Haustier-Hinweis aus Kontoumsätzen
   const chance = wohnsituation === 'Eigentum' ? 45 : kinder?.length > 0 ? 35 : 20;
   if (randomBetween(1, 100) > chance) return null;
 
-  const art = weightedRandom({ Hund: 45, Katze: 40, Hamster: 5, Kaninchen: 5, Fische: 3, Vogel: 2 });
-  const name = art === 'Hund' ? random(HUNDE_NAMEN) : art === 'Katze' ? random(KATZEN_NAMEN) : null;
-  const alter = randomBetween(1, 12);
+  const tierhandlung = random(['Fressnapf', 'Das Futterhaus', 'Zooplus.de', 'Zoo & Co', 'Kölle Zoo']);
 
   return {
-    art,
-    name,
-    alter,
+    art: 'Vermutung: Haustier',
     quelle: 'kontoumsaetze',
     erkannteTransaktionen: [
-      { haendler: art === 'Fische' ? 'Zoo & Co' : 'Fressnapf', betrag: randomBetween(25, 65), haeufigkeit: 'monatlich' },
+      { haendler: tierhandlung, betrag: randomBetween(25, 95), haeufigkeit: 'monatlich' },
       ...(randomBetween(1, 100) > 50 ? [{ haendler: 'Tierarztpraxis', betrag: randomBetween(45, 180), haeufigkeit: 'quartal' }] : []),
     ],
   };

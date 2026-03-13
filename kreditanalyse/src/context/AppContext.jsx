@@ -77,7 +77,7 @@ function reducer(state, action) {
         }
       };
     case 'ADVANCE_STATUS': {
-      const statusFlow = ['eingegangen', 'kyc', 'analysis', 'rating', 'collateral', 'decision', 'voting'];
+      const statusFlow = ['eingegangen', 'kyc', 'analysis', 'rating', 'collateral', 'credit-proposal', 'voting'];
       const comp = state.companies.find(c => c.id === action.companyId);
       if (!comp) return state;
       const currentIdx = statusFlow.indexOf(comp.status);
@@ -87,6 +87,16 @@ function reducer(state, action) {
         ...state,
         companies: state.companies.map(c =>
           c.id === action.companyId ? { ...c, status: nextStatus } : c
+        ),
+      };
+    }
+    case 'ADVANCE_TO_CONTRACT': {
+      const comp = state.companies.find(c => c.id === action.companyId);
+      if (!comp || comp.status !== 'approved') return state;
+      return {
+        ...state,
+        companies: state.companies.map(c =>
+          c.id === action.companyId ? { ...c, status: 'contract' } : c
         ),
       };
     }

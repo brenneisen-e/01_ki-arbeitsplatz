@@ -18,14 +18,12 @@ import {
   Users,
   Banknote,
   FileText,
-  Sparkles,
   Plus,
   Trash2,
-  Loader2,
-  CheckCircle2,
-  AlertTriangle,
-  XCircle,
   ChevronDown,
+  Search,
+  ArrowRight,
+  AlertCircle,
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 
@@ -214,8 +212,16 @@ function SmallEuroInput({ value, onChange, placeholder = '0' }) {
 // ---------------------------------------------------------------------------
 
 export default function NewApplicationView() {
-  const { state, dispatch } = useApp();
+  const { state, dispatch, navigate, getSelectedCompany } = useApp();
+  const company = getSelectedCompany();
   const draft = state.applicationDraft;
+
+  // Customer search
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [validationErrors, setValidationErrors] = useState([]);
+  const [showErrors, setShowErrors] = useState(false);
+  const errorRefs = useRef({});
 
   // ---- Section A: Antragsteller ----
   const [firma, setFirma] = useState(draft.firma || '');
@@ -258,10 +264,39 @@ export default function NewApplicationView() {
       : []
   );
 
-  // ---- KI-Voranalyse ----
-  const [analysisLoading, setAnalysisLoading] = useState(false);
-  const [analysisResult, setAnalysisResult] = useState(null);
-  const analysisRef = useRef(null);
+  // Pre-fill from selected company (Bestandskunde)
+  const didPrefill = useRef(false);
+  useEffect(() => {
+    if (company && !didPrefill.current) {
+      didPrefill.current = true;
+      setFirma(company.firma || '');
+      setRechtsform(company.rechtsform || 'GmbH');
+      setHrb(company.hrb || '');
+      setAmtsgericht(company.amtsgericht || '');
+      setGruendung(company.gruendung || '');
+      setBranche(company.branche || '');
+      setWzCode(company.wz_code || '');
+      setStrasse(company.adresse?.strasse || '');
+      setPlz(company.adresse?.plz || '');
+      setOrt(company.adresse?.ort || '');
+      setUmsatz(company.bilanz?.[2023]?.umsatz || '');
+      setMitarbeiter(company.mitarbeiter || '');
+      setSteuerId(company.steuer_id || '');
+      setUstId(company.ust_id || '');
+      setHauptbank(company.hauptbank ?? true);
+      if (company.gf?.length) setGfRows(company.gf);
+      setKreditArt(company.kredit?.art || 'Investitionskredit');
+      setBetrag(company.kredit?.betrag || '');
+      setLaufzeit(company.kredit?.laufzeit || '');
+      setTilgungsfrei(company.kredit?.tilgungsfrei || '');
+      setVerwendung(company.kredit?.verwendung || '');
+      setVerwendungKategorie(company.kredit?.verwendungKategorie || 'Maschine/Anlage');
+      setAuszahlung(company.kredit?.auszahlung || '');
+      if (company.bestehende_verbindlichkeiten?.length) {
+        setVerbindlichkeiten(company.bestehende_verbindlichkeiten);
+      }
+    }
+  }, [company]);
 
   // Sync local state to global draft on every change (debounced would be
   // better in production, but for the demo this keeps things simple).
@@ -332,84 +367,62 @@ export default function NewApplicationView() {
     setVerbindlichkeiten((prev) => prev.filter((_, i) => i !== idx));
   }, []);
 
-  // ---- KI-Voranalyse simulation ----
-  const runAnalysis = useCallback(() => {
-    setAnalysisLoading(true);
-    setAnalysisResult(null);
+  // Customer search suggestions
+  const searchResults = searchQuery.length >= 2
+    ? state.companies.filter(c =>
+        c.firma.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        c.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (c.hrb && c.hrb.toLowerCase().includes(searchQuery.toLowerCase()))
+      )
+    : [];
 
-    setTimeout(() => {
-      const b = typeof betrag === 'number' ? betrag : parseInt(betrag, 10) || 0;
+  const selectCustomer = useCallback((c) => {
+    dispatch({ type: 'SELECT_COMPANY', id: c.id });
+    setSearchQuery('');
+    setShowSuggestions(false);
+    // Pre-fill is handled by the useEffect above
+    didPrefill.current = false; // Reset so it re-fills
+  }, [dispatch]);
 
-      let color = 'green';
-      let plausibilitaet = [];
-      let fehlend = [];
-      let risiko = [];
+  // Validation
+  const validateForm = useCallback(() => {
+    const errors = [];
+    if (!firma.trim()) errors.push({ field: 'firma', label: 'Firmenname' });
+    if (!rechtsform) errors.push({ field: 'rechtsform', label: 'Rechtsform' });
+    if (!branche.trim()) errors.push({ field: 'branche', label: 'Branche' });
+    if (!gfRows[0]?.name?.trim()) errors.push({ field: 'gf', label: 'Mind. 1 Geschäftsführer' });
+    if (!kreditArt) errors.push({ field: 'kreditArt', label: 'Kreditart' });
+    const b = typeof betrag === 'number' ? betrag : parseInt(betrag, 10) || 0;
+    if (!b) errors.push({ field: 'betrag', label: 'Kreditbetrag' });
+    if (!laufzeit) errors.push({ field: 'laufzeit', label: 'Laufzeit' });
+    if (!verwendung.trim()) errors.push({ field: 'verwendung', label: 'Verwendungszweck' });
+    if (!auszahlung) errors.push({ field: 'auszahlung', label: 'Gewünschter Auszahlungstermin' });
+    return errors;
+  }, [firma, rechtsform, branche, gfRows, kreditArt, betrag, laufzeit, verwendung, auszahlung]);
 
-      if (b > 5000000) {
-        color = 'red';
-        plausibilitaet = [
-          'Kreditbetrag liegt deutlich ueber dem branchenueblichen Durchschnitt.',
-          'Verhaeltnis Kreditbetrag zu Umsatz erscheint auffaellig (> 50 %).',
-          'Laufzeitlaenge in Relation zur Investitionsart pruefungsbeduertig.',
-        ];
-        fehlend = [
-          'Jahresabschluesse der letzten 3 Jahre (testiert)',
-          'Aktuelle BWA mit Summen- und Saldenliste',
-          'Investitionsplan / Kostenvoranschlaege',
-          'Gesellschaftsvertrag in aktueller Fassung',
-          'Grundbuchauszug (bei Immobiliensicherheit)',
-        ];
-        risiko = [
-          'Hohe Verschuldungsquote erwartet -- detaillierte Kapitaldienstfaehigkeitspruefung erforderlich.',
-          'Branchenrisiko: konjunktursensitiver Sektor, Stresstest empfohlen.',
-          'Sicherheitendeckung voraussichtlich unter 80 % -- Nachbesicherung pruefen.',
-        ];
-      } else if (b > 1000000) {
-        color = 'yellow';
-        plausibilitaet = [
-          'Kreditbetrag im mittleren Segment -- plausibel fuer die angegebene Unternehmensgroesse.',
-          'Verwendungszweck und Kategorie sind konsistent.',
-          'Gruendungsjahr und Branchenerfahrung der GF passen zusammen.',
-        ];
-        fehlend = [
-          'Jahresabschluesse der letzten 2 Jahre',
-          'Aktuelle BWA (nicht aelter als 3 Monate)',
-          'Liquiditaetsplanung fuer die Kreditlaufzeit',
-          'Sicherheitennachweise (Grundbuch, Zessionsunterlagen)',
-        ];
-        risiko = [
-          'Mittleres Risikoprofil -- Standardpruefung ausreichend.',
-          'Tilgungsfreie Anlaufzeit beachten -- Kapitaldienstfaehigkeit ab Tilgungsbeginn pruefen.',
-          'Bestehende Verbindlichkeiten in Gesamtobligo einbeziehen.',
-        ];
-      } else {
-        color = 'green';
-        plausibilitaet = [
-          'Kreditbetrag im unteren Segment -- passt zur Unternehmensgroesse.',
-          'Angaben sind in sich konsistent und vollstaendig.',
-          'Keine offensichtlichen Auffaelligkeiten erkannt.',
-        ];
-        fehlend = [
-          'Letzter Jahresabschluss (Bilanz / GuV)',
-          'Aktuelle BWA',
-          'Personalausweis-Kopien der Geschaeftsfuehrung',
-        ];
-        risiko = [
-          'Geringes Risikoprofil bei vorlaeufiger Einschaetzung.',
-          'Standardmaessige Bonitaetspruefung empfohlen.',
-          'Sicherheitenstellung erscheint angemessen.',
-        ];
+  const handleComplete = useCallback(() => {
+    const errors = validateForm();
+    if (errors.length > 0) {
+      setValidationErrors(errors);
+      setShowErrors(true);
+      // Scroll to first error
+      const firstField = errors[0].field;
+      const el = document.getElementById(firstField);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        el.focus();
       }
+      return;
+    }
+    setShowErrors(false);
+    setValidationErrors([]);
+    if (company) {
+      dispatch({ type: 'ADVANCE_STATUS', companyId: company.id });
+    }
+    navigate('kyc');
+  }, [validateForm, company, dispatch, navigate]);
 
-      setAnalysisResult({ color, plausibilitaet, fehlend, risiko });
-      setAnalysisLoading(false);
-
-      // Scroll to result
-      setTimeout(() => {
-        analysisRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 100);
-    }, 1500);
-  }, [betrag]);
+  const isFieldError = (fieldName) => showErrors && validationErrors.some(e => e.field === fieldName);
 
   // ---- Render ----
   return (
@@ -421,13 +434,55 @@ export default function NewApplicationView() {
         </div>
         <div>
           <h2 className="text-lg font-headline font-semibold text-text-primary">
-            Neuer Kreditantrag
+            {company ? `Kreditantrag – ${company.firma}` : 'Neuer Kreditantrag'}
           </h2>
           <p className="text-xs text-text-muted font-body">
-            Erfassen Sie alle relevanten Antragsdaten. Pflichtfelder sind markiert.
+            Erfassen Sie alle relevanten Antragsdaten. Pflichtfelder sind mit * markiert.
           </p>
         </div>
       </div>
+
+      {/* Customer search */}
+      <div className="relative">
+        <div className="relative">
+          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => { setSearchQuery(e.target.value); setShowSuggestions(true); }}
+            onFocus={() => setShowSuggestions(true)}
+            onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
+            placeholder="Kunde suchen (Name, Kundennr., HRB)..."
+            className={inputCls + ' pl-10'}
+          />
+        </div>
+        {showSuggestions && searchResults.length > 0 && (
+          <div className="absolute z-20 w-full mt-1 bg-surface-card border border-border rounded-lg shadow-lg max-h-48 overflow-y-auto">
+            {searchResults.map(c => (
+              <button
+                key={c.id}
+                type="button"
+                onMouseDown={() => selectCustomer(c)}
+                className="w-full text-left px-4 py-2.5 hover:bg-primary/5 text-sm font-body border-b border-border/50 last:border-0"
+              >
+                <span className="font-semibold text-text-primary">{c.firma}</span>
+                <span className="text-text-muted ml-2 text-xs">{c.id} · {c.hrb}</span>
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Validation errors banner */}
+      {showErrors && validationErrors.length > 0 && (
+        <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3">
+          <AlertCircle size={18} className="text-danger mt-0.5 shrink-0" />
+          <div>
+            <p className="text-sm font-semibold text-danger">Bitte füllen Sie alle Pflichtfelder aus:</p>
+            <p className="text-xs text-red-600 mt-1">{validationErrors.map(e => e.label).join(', ')}</p>
+          </div>
+        </div>
+      )}
 
       {/* ================================================================== */}
       {/* SECTION A -- Antragsteller                                         */}
@@ -443,7 +498,7 @@ export default function NewApplicationView() {
               value={firma}
               onChange={(e) => setFirma(e.target.value)}
               placeholder="Mustermann GmbH"
-              className={inputCls}
+              className={inputCls + (isFieldError('firma') ? ' border-danger ring-2 ring-danger/20 animate-shake' : '')}
             />
           </div>
           <div>
@@ -842,10 +897,10 @@ export default function NewApplicationView() {
           <textarea
             id="verwendung"
             value={verwendung}
-            onChange={(e) => setVerwendung(e.target.value)}
+            onChange={(e) => { setVerwendung(e.target.value); if (showErrors) setShowErrors(false); }}
             placeholder="Beschreiben Sie den Verwendungszweck des Kredits..."
             rows={3}
-            className={inputCls + ' resize-y'}
+            className={inputCls + ' resize-y' + (isFieldError('verwendung') ? ' border-danger ring-2 ring-danger/20 animate-shake' : '')}
           />
         </div>
 
@@ -988,156 +1043,16 @@ export default function NewApplicationView() {
       </SectionCard>
 
       {/* ================================================================== */}
-      {/* KI-Voranalyse                                                      */}
+      {/* Kreditantrag abschließen                                           */}
       {/* ================================================================== */}
-      <div className="flex justify-center">
-        <button
-          type="button"
-          onClick={runAnalysis}
-          disabled={analysisLoading}
-          className={
-            'inline-flex items-center gap-2 px-6 py-3 rounded-lg text-sm font-semibold font-body ' +
-            'bg-accent text-white shadow-sm ' +
-            'hover:bg-accent/90 active:bg-accent/80 ' +
-            'disabled:opacity-60 disabled:cursor-not-allowed ' +
-            'transition-all duration-150'
-          }
-        >
-          {analysisLoading ? (
-            <Loader2 size={18} className="animate-spin" />
-          ) : (
-            <Sparkles size={18} />
-          )}
-          {analysisLoading ? 'Analyse laeuft...' : 'KI-Voranalyse starten'}
-        </button>
-      </div>
-
-      {/* Analysis result panel */}
-      {analysisResult && (
-        <div
-          ref={analysisRef}
-          className="bg-surface-card border border-border rounded-lg overflow-hidden"
-        >
-          {/* Header with traffic light */}
-          <div className="flex items-center justify-between px-5 py-3.5 border-b border-border bg-gray-50/50">
-            <div className="flex items-center gap-3">
-              <Sparkles size={16} className="text-accent" />
-              <h3 className="text-sm font-headline font-semibold text-text-primary">
-                KI-Voranalyse Ergebnis
-              </h3>
-            </div>
-            {/* Traffic light */}
-            <div className="flex items-center gap-2">
-              <div className="flex items-center gap-1.5 bg-white border border-border rounded-full px-3 py-1.5">
-                <span
-                  className={`w-3 h-3 rounded-full ${
-                    analysisResult.color === 'green'
-                      ? 'bg-green-500 shadow-[0_0_6px_rgba(34,197,94,0.5)]'
-                      : 'bg-gray-200'
-                  }`}
-                />
-                <span
-                  className={`w-3 h-3 rounded-full ${
-                    analysisResult.color === 'yellow'
-                      ? 'bg-amber-400 shadow-[0_0_6px_rgba(251,191,36,0.5)]'
-                      : 'bg-gray-200'
-                  }`}
-                />
-                <span
-                  className={`w-3 h-3 rounded-full ${
-                    analysisResult.color === 'red'
-                      ? 'bg-red-500 shadow-[0_0_6px_rgba(239,68,68,0.5)]'
-                      : 'bg-gray-200'
-                  }`}
-                />
-              </div>
-              <span
-                className={`text-xs font-semibold font-body uppercase tracking-wider ${
-                  analysisResult.color === 'green'
-                    ? 'text-green-600'
-                    : analysisResult.color === 'yellow'
-                    ? 'text-amber-600'
-                    : 'text-red-600'
-                }`}
-              >
-                {analysisResult.color === 'green'
-                  ? 'Positiv'
-                  : analysisResult.color === 'yellow'
-                  ? 'Pruefungsbedarf'
-                  : 'Kritisch'}
-              </span>
-            </div>
-          </div>
-
-          <div className="p-5 space-y-5">
-            {/* Plausibilitaet */}
-            <div>
-              <div className="flex items-center gap-2 mb-2">
-                <CheckCircle2 size={15} className="text-accent" />
-                <h4 className="text-xs font-semibold text-text-primary uppercase tracking-wider font-body">
-                  Plausibilitaet
-                </h4>
-              </div>
-              <ul className="space-y-1 ml-6">
-                {analysisResult.plausibilitaet.map((item, i) => (
-                  <li
-                    key={i}
-                    className="text-xs text-text-secondary font-body list-disc leading-relaxed"
-                  >
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Fehlende Unterlagen */}
-            <div>
-              <div className="flex items-center gap-2 mb-2">
-                <AlertTriangle size={15} className="text-accent-warm" />
-                <h4 className="text-xs font-semibold text-text-primary uppercase tracking-wider font-body">
-                  Fehlende Unterlagen
-                </h4>
-              </div>
-              <ul className="space-y-1 ml-6">
-                {analysisResult.fehlend.map((item, i) => (
-                  <li
-                    key={i}
-                    className="text-xs text-text-secondary font-body list-disc leading-relaxed"
-                  >
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Erste Risikoeinschaetzung */}
-            <div>
-              <div className="flex items-center gap-2 mb-2">
-                {analysisResult.color === 'red' ? (
-                  <XCircle size={15} className="text-danger" />
-                ) : analysisResult.color === 'yellow' ? (
-                  <AlertTriangle size={15} className="text-accent-warm" />
-                ) : (
-                  <CheckCircle2 size={15} className="text-accent" />
-                )}
-                <h4 className="text-xs font-semibold text-text-primary uppercase tracking-wider font-body">
-                  Erste Risikoeinschaetzung
-                </h4>
-              </div>
-              <ul className="space-y-1 ml-6">
-                {analysisResult.risiko.map((item, i) => (
-                  <li
-                    key={i}
-                    className="text-xs text-text-secondary font-body list-disc leading-relaxed"
-                  >
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </div>
-      )}
+      <button
+        type="button"
+        onClick={handleComplete}
+        className="w-full inline-flex items-center justify-center gap-2 px-6 py-4 rounded-xl text-base font-semibold font-body bg-accent text-white shadow-sm hover:bg-accent/90 active:bg-accent/80 transition-all duration-150"
+      >
+        Kreditantrag abschließen
+        <ArrowRight size={20} />
+      </button>
     </div>
   );
 }

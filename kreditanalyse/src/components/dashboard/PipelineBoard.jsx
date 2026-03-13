@@ -5,8 +5,10 @@ import {
   FileSearch,
   BarChart3,
   Lock,
+  ClipboardList,
   Vote,
   CheckCircle2,
+  FileSignature,
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { formatCurrency, daysRemaining, slaColor } from '../../utils/formatters';
@@ -24,7 +26,7 @@ const COLUMNS = [
     icon: Inbox,
     headerColor: 'bg-blue-50 text-blue-700 border-blue-200',
     badgeColor: 'bg-blue-100 text-blue-700',
-    targetView: 'kyc',
+    targetView: 'application',
   },
   {
     key: 'kyc',
@@ -63,6 +65,15 @@ const COLUMNS = [
     targetView: 'collateral',
   },
   {
+    key: 'credit-proposal',
+    label: 'Kreditvorlage',
+    statuses: ['credit-proposal'],
+    icon: ClipboardList,
+    headerColor: 'bg-teal-50 text-teal-700 border-teal-200',
+    badgeColor: 'bg-teal-100 text-teal-700',
+    targetView: 'credit-proposal',
+  },
+  {
     key: 'voting',
     label: 'Votierung',
     statuses: ['voting', 'decision'],
@@ -79,6 +90,15 @@ const COLUMNS = [
     headerColor: 'bg-green-50 text-green-700 border-green-200',
     badgeColor: 'bg-green-100 text-green-700',
     targetView: 'decision',
+  },
+  {
+    key: 'contract',
+    label: 'Kreditvertrag',
+    statuses: ['contract'],
+    icon: FileSignature,
+    headerColor: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+    badgeColor: 'bg-emerald-100 text-emerald-700',
+    targetView: 'contract',
   },
 ];
 
@@ -178,7 +198,7 @@ export default function PipelineBoard() {
           return (
             <div
               key={col.key}
-              className="flex flex-col w-56 flex-shrink-0"
+              className="flex flex-col w-48 flex-shrink-0"
             >
               {/* Column header */}
               <div

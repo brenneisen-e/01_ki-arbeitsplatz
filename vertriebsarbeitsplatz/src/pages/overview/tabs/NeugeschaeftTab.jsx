@@ -10,12 +10,26 @@ import { useMode } from '../../../hooks/useMode';
 import { NEUGESCHAEFT_DATA } from '../../../data';
 import { formatEur } from '../../../utils/formatters';
 
-const NG_KPI_CONFIG = [
-  { id: 'antraege', label: 'Anträge', format: 'num', icon: 'FileText' },
-  { id: 'policiert', label: 'Policiertes NG', format: 'eur', icon: 'TrendingUp' },
-  { id: 'ape', label: 'APE', format: 'eur', icon: 'BarChart3' },
-  { id: 'abschlussquote', label: 'Abschlussquote', format: 'pct', icon: 'Target' },
-];
+const NG_KPI_CONFIG = {
+  versicherung: [
+    { id: 'antraege', label: 'Anträge', format: 'num', icon: 'FileText' },
+    { id: 'policiert', label: 'Policiertes NG', format: 'eur', icon: 'TrendingUp' },
+    { id: 'ape', label: 'APE', format: 'eur', icon: 'BarChart3' },
+    { id: 'abschlussquote', label: 'Abschlussquote', format: 'pct', icon: 'Target' },
+  ],
+  banking: [
+    { id: 'antraege', label: 'Abschlüsse YTD', format: 'num', icon: 'FileText' },
+    { id: 'policiert', label: 'Volumen Neugeschäft', format: 'eur', icon: 'TrendingUp' },
+    { id: 'ape', label: 'DB-Beitrag NG', format: 'eur', icon: 'BarChart3' },
+    { id: 'abschlussquote', label: 'Abschlussquote', format: 'pct', icon: 'Target' },
+  ],
+  vermoegensverwaltung: [
+    { id: 'antraege', label: 'Neue Mandate', format: 'num', icon: 'FileText' },
+    { id: 'policiert', label: 'NNM Volumen', format: 'eur', icon: 'TrendingUp' },
+    { id: 'ape', label: 'AuM Zufluss', format: 'eur', icon: 'BarChart3' },
+    { id: 'abschlussquote', label: 'Abschlussquote', format: 'pct', icon: 'Target' },
+  ],
+};
 
 const COLUMNS = [
   { id: 'id', label: 'Vertragsnr.', width: '120px' },
@@ -42,7 +56,7 @@ export default function NeugeschaeftTab() {
       {selectedVertrag && (
         <VertragDetailModal vertrag={selectedVertrag} onClose={() => setSelectedVertrag(null)} />
       )}
-      <KPIGrid kpiConfig={NG_KPI_CONFIG} kpiValues={data.kpiValues} />
+      <KPIGrid kpiConfig={NG_KPI_CONFIG[modeId] || NG_KPI_CONFIG.versicherung} kpiValues={data.kpiValues} />
 
       <div className="grid grid-cols-2 gap-4">
         {/* Donut */}

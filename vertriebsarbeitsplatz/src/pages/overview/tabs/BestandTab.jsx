@@ -15,10 +15,10 @@ const BESTAND_KPI_CONFIG = {
     { id: 'vertragsdichte', label: '\u00d8 Verträge/Kunde', format: 'num', icon: 'Layers' },
   ],
   banking: [
-    { id: 'vertraege', label: 'Produkte', format: 'num', icon: 'FileText' },
-    { id: 'praemienvolumen', label: 'Gesamtvolumen', format: 'eur', icon: 'Briefcase' },
-    { id: 'durchschnittspraemie', label: '\u00d8 Volumen/Kunde', format: 'eur', icon: 'BarChart3' },
-    { id: 'vertragsdichte', label: '\u00d8 Produkte/Kunde', format: 'num', icon: 'Layers' },
+    { id: 'vertraege', label: 'Produktanzahl', format: 'num', icon: 'FileText' },
+    { id: 'praemienvolumen', label: 'Kreditvolumen', format: 'eur', icon: 'Landmark' },
+    { id: 'durchschnittspraemie', label: 'Einlagenvolumen', format: 'eur', icon: 'PiggyBank' },
+    { id: 'vertragsdichte', label: 'Produkte/Kunde (PPK)', format: 'num', icon: 'Layers' },
   ],
   vermoegensverwaltung: [
     { id: 'vertraege', label: 'Mandate', format: 'num', icon: 'FileText' },

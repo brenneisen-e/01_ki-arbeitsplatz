@@ -277,7 +277,7 @@ function closeRisikoscoring() {
     }
 
     // Navigate to React landing page (index.html at root)
-    window.location.replace(window.location.origin + '/');
+    window.location.href = '/index.html';
 }
 
 // ========================================
@@ -319,7 +319,7 @@ function closeKreditanalyse() {
     }
 
     // Navigate to React landing page (index.html at root)
-    window.location.replace(window.location.origin + '/');
+    window.location.href = '/index.html';
 }
 
 // ========================================
@@ -404,7 +404,7 @@ function closeVertriebsarbeitsplatz() {
     }
 
     // Navigate to React landing page (index.html at root)
-    window.location.replace(window.location.origin + '/');
+    window.location.href = '/index.html';
 }
 
 // ========================================
@@ -558,7 +558,7 @@ function closeBestandsuebertragung() {
     }
 
     // Navigate to React landing page (index.html at root)
-    window.location.replace(window.location.origin + '/');
+    window.location.href = '/index.html';
 }
 
 // ========================================
@@ -641,7 +641,7 @@ function closePMOToolbox() {
     }
 
     // Navigate to React landing page (index.html at root)
-    window.location.replace(window.location.origin + '/');
+    window.location.href = '/index.html';
 }
 
 window.__registerModule('landing-modules.js');

@@ -34,6 +34,8 @@ const FREMD_TYP_LABELS = {
   pflege: 'Pflege',
 };
 
+// Fotos für Mandanten: Stockfotos in ./images/mandanten/ ablegen
+// Dateiname-Konvention: {ID}.jpg (z.B. VV00001.jpg, KD00001.jpg)
 const KUNDEN_FOTOS = {
   'KD00001': './images/AdobeStock_624564221.jpeg',
   'KD00002': './images/AdobeStock_252262042.jpeg',
@@ -45,16 +47,26 @@ const KUNDEN_FOTOS = {
   'BK00005': './images/AdobeStock_252262042.jpeg',
   'WM00001': './images/AdobeStock_612932760.jpeg',
   'WM00003': './images/AdobeStock_1091012713.jpeg',
+  // Stiftungen: Logo statt Foto
+  'VV00003': './images/stiftung-weber-logo.svg',
 };
+
+// Dynamischer Lookup: prüft auch mandanten/-Ordner
+function getKundeFoto(id) {
+  if (KUNDEN_FOTOS[id]) return KUNDEN_FOTOS[id];
+  // Fallback: Stockfoto aus mandanten/-Ordner (Konvention: {ID}.jpg)
+  return `./images/mandanten/${id}.jpg`;
+}
 
 export default function StammdatenDetailTab({ kunde }) {
   const [risikoExpanded, setRisikoExpanded] = useState(false);
+  const [fotoFailed, setFotoFailed] = useState(false);
   const { config } = useMode();
   const haushalt = berechneHaushaltsnetto(kunde);
   const absQuote = berechneAbsicherungsquote(kunde);
   const sparQuote = berechneSparquote(kunde);
   const frei = berechneFrei(kunde);
-  const foto = KUNDEN_FOTOS[kunde.id];
+  const foto = getKundeFoto(kunde.id);
   const initialen = kunde.name.split(' ').map(n => n[0]).join('');
 
   return (
@@ -62,12 +74,13 @@ export default function StammdatenDetailTab({ kunde }) {
       {/* Kunden-Profil Header */}
       <Card>
         <div className="flex items-center gap-5">
-          {foto ? (
+          {foto && !fotoFailed ? (
             <img
               src={foto}
               alt={kunde.name}
               className="w-24 h-24 rounded-xl object-cover border-2 shadow-sm"
               style={{ borderColor: config.colors.primaryLight + '40' }}
+              onError={() => setFotoFailed(true)}
             />
           ) : (
             <div

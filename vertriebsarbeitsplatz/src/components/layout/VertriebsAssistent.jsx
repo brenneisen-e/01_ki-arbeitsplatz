@@ -40,6 +40,7 @@ function getCockpitDemoResponse(message) {
         </ol>
         <p class="text-xs text-slate-500 mt-2">→ <em>Die Tabelle zeigt jetzt die Top 5 Vermittler.</em></p>
       </div>`,
+      cockpitAction: { view: 'table', tableView: 'agenturen' },
     };
   }
 
@@ -56,6 +57,7 @@ function getCockpitDemoResponse(message) {
         </ol>
         <p class="text-xs text-slate-500 mt-2">→ <em>Die Tabelle zeigt jetzt die Top 5 Vermittler.</em></p>
       </div>`,
+      cockpitAction: { view: 'table', tableView: 'agenturen' },
     };
   }
 
@@ -88,6 +90,7 @@ function getCockpitDemoResponse(message) {
         </div>
         <p class="text-xs text-slate-500 mt-2">→ <em>Die KI-Analyse-Spalte zeigt Ursachen und Handlungsempfehlungen.</em></p>
       </div>`,
+      cockpitAction: { view: 'table', tableView: 'agenturen' },
     };
   }
 
@@ -104,6 +107,7 @@ function getCockpitDemoResponse(message) {
         </ol>
         <p class="text-xs text-slate-500 mt-2">→ <em>Performance-Score = gewichteter Mix aus NG, Storno, NPS</em></p>
       </div>`,
+      cockpitAction: { view: 'table', tableView: 'bundeslaender' },
     };
   }
 
@@ -331,6 +335,13 @@ export default function VertriebsAssistent() {
           setTimeout(() => {
             setActiveTab(result.navigateTo);
           }, 800);
+        }
+
+        // Cockpit-specific navigation via custom event
+        if (result.cockpitAction) {
+          setTimeout(() => {
+            window.dispatchEvent(new CustomEvent('cockpit-navigate', { detail: result.cockpitAction }));
+          }, 600);
         }
       }, 1200);
     },

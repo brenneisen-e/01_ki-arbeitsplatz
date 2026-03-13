@@ -13,6 +13,7 @@ import CreditProposalView from '../credit-proposal/CreditProposalView';
 import DecisionView from '../decision/DecisionView';
 import ContractView from '../contract/ContractView';
 import MonitoringView from '../monitoring/MonitoringView';
+import CustomerApplicationView from '../customer-application/CustomerApplicationView';
 
 const views = {
   dashboard: DashboardView,
@@ -25,6 +26,7 @@ const views = {
   decision: DecisionView,
   contract: ContractView,
   monitoring: MonitoringView,
+  'customer-application': CustomerApplicationView,
 };
 
 export default function MainLayout() {

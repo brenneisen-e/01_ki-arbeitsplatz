@@ -2,7 +2,7 @@ import { useApp } from '../../context/AppContext';
 import {
   LayoutDashboard, FileText, Shield, FileSearch, BarChart3,
   Lock, Gavel, Activity, ChevronLeft, ChevronRight, Building2,
-  FileSignature, ClipboardList,
+  FileSignature, ClipboardList, Send,
 } from 'lucide-react';
 
 const navItems = [
@@ -34,6 +34,28 @@ export default function Sidebar() {
           </div>
         )}
       </div>
+
+      {/* Customer application button */}
+      <div className="px-2 pt-4 pb-2">
+        <button
+          onClick={() => navigate('customer-application')}
+          className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold transition-colors ${
+            currentView === 'customer-application'
+              ? 'bg-amber-500 text-white'
+              : 'bg-amber-500/90 text-white hover:bg-amber-500'
+          }`}
+          title={sidebarCollapsed ? 'Kreditantrag stellen (Kundenperspektive)' : undefined}
+        >
+          <Send size={18} strokeWidth={1.5} className="shrink-0" />
+          {!sidebarCollapsed && <span className="truncate">Kreditantrag stellen</span>}
+        </button>
+        {!sidebarCollapsed && (
+          <p className="text-[10px] text-text-muted mt-1 px-3">Kundenperspektive</p>
+        )}
+      </div>
+
+      {/* Divider */}
+      <div className="mx-4 border-t border-white/10" />
 
       {/* Nav */}
       <nav className="flex-1 py-4 overflow-y-auto scrollbar-thin">

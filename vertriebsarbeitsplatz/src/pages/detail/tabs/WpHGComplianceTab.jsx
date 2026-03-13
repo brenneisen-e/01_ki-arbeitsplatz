@@ -1,9 +1,7 @@
-import { useMode } from '../../../hooks/useMode';
 import { VV_WPHG, VV_PERFORMANCE } from '../../../data/vvExtended';
-import { KUNDEN_BY_MODE } from '../../../data/index';
 import { formatEur } from '../../../utils/formatters';
 import { CheckCircle, AlertTriangle, Shield, FileText, TrendingDown, Receipt, Target, Leaf, Clock } from 'lucide-react';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 
 // ─── Helper: format date DE ───
 function fmtDate(d) {
@@ -31,7 +29,7 @@ function StatusBadge({ status }) {
     )}>
       {isOk && <CheckCircle size={12} />}
       {isWarn && <AlertTriangle size={12} />}
-      {status === 'vollstaendig' ? 'Vollstaendig' : status === 'aktualisierung_noetig' ? 'Aktualisierung noetig' : status}
+      {status === 'vollstaendig' ? 'Vollständig' : status === 'aktualisierung_noetig' ? 'Aktualisierung nötig' : status}
     </span>
   );
 }
@@ -99,7 +97,7 @@ function VerlustschwelleBar({ trigger, drawdown }) {
 // ─── Section card wrapper ───
 function Section({ title, icon: Icon, children }) {
   return (
-    <div className="bg-white rounded-2xl border border-slate-200 p-5" style={{ boxShadow: 'var(--card-shadow)' }}>
+    <div className="bg-white rounded-xl border border-slate-200 p-5" style={{ boxShadow: 'var(--card-shadow)' }}>
       <div className="flex items-center gap-2 mb-4">
         {Icon && <Icon size={18} className="text-slate-500" strokeWidth={1.75} />}
         <h3 className="font-semibold text-slate-800">{title}</h3>
@@ -110,17 +108,24 @@ function Section({ title, icon: Icon, children }) {
 }
 
 // ─── Main component ───
-export default function WpHGComplianceTab() {
-  const { selectedKundeId, modeId } = useMode();
-  const kunden = KUNDEN_BY_MODE[modeId] || [];
-  const kunde = kunden.find(k => k.id === selectedKundeId);
-  const wphg = VV_WPHG[selectedKundeId];
-  const perf = VV_PERFORMANCE[selectedKundeId];
+export default function WpHGComplianceTab({ kunde }) {
+  const wphg = VV_WPHG[kunde?.id];
+  const perf = VV_PERFORMANCE[kunde?.id];
 
-  if (!wphg || !kunde) {
+  if (!wphg) {
     return (
-      <div className="bg-white rounded-2xl border border-slate-200 p-8 text-center text-slate-400">
-        Keine WpHG-Daten fuer diesen Mandanten vorhanden.
+      <div className="space-y-4">
+        <div className="bg-white rounded-xl border border-slate-200 p-5" style={{ boxShadow: 'var(--card-shadow)' }}>
+          <div className="flex flex-col items-center justify-center py-16 text-center">
+            <div className="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center mb-4">
+              <Shield className="w-8 h-8 text-slate-400" />
+            </div>
+            <h3 className="font-semibold text-slate-700 mb-1">WpHG-Daten nicht verfügbar</h3>
+            <p className="text-sm text-slate-400 max-w-md">
+              Für {kunde?.name || 'diesen Mandanten'} liegen keine WpHG-Compliance-Daten vor.
+            </p>
+          </div>
+        </div>
       </div>
     );
   }
@@ -141,7 +146,57 @@ export default function WpHGComplianceTab() {
 
   return (
     <div className="space-y-4">
-      {/* 1. WpHG-Bogen (Anlegerprofil) */}
+      {/* 1. Status-Übersicht (4 Karten) */}
+      <div className="grid grid-cols-4 gap-4">
+        {[
+          {
+            label: 'Fragebogen',
+            status: wphg.status,
+            detail: wphg.status === 'aktualisierung_noetig'
+              ? `Fällig seit ${fmtDate(wphg.naechsteFaelligkeit)}`
+              : `Aktuell (${fmtDate(wphg.letzteAktualisierung)})`,
+            icon: FileText,
+          },
+          {
+            label: 'Geeignetheit',
+            status: gp.ergebnis === 'Geeignet' ? 'vollstaendig' : 'aktualisierung_noetig',
+            detail: `${gp.ergebnis || '–'} (${gp.letzterBericht || '–'})`,
+            icon: Shield,
+          },
+          {
+            label: 'Verlustschwelle',
+            status: vs && Math.abs(vs.aktuell) / Math.abs(vs.grenze) > 0.8 ? 'aktualisierung_noetig' : 'vollstaendig',
+            detail: vs ? `${vs.aktuell.toFixed(1)}% / ${vs.grenze}%` : '–',
+            icon: TrendingDown,
+          },
+          {
+            label: 'Kosteninformation',
+            status: ki.exAnte?.status === 'bereitgestellt' && ki.exPost?.status === 'bereitgestellt' ? 'vollstaendig' : 'aktualisierung_noetig',
+            detail: ki.exAnte?.status === 'bereitgestellt' && ki.exPost?.status === 'bereitgestellt' ? 'Vollständig' : 'Ausstehend',
+            icon: Receipt,
+          },
+        ].map((item) => {
+          const isOk = item.status === 'vollstaendig';
+          const borderColor = isOk ? 'border-l-emerald-500' : 'border-l-amber-400';
+          const Icon = item.icon;
+          return (
+            <div
+              key={item.label}
+              className={`bg-white border border-slate-200 border-l-4 ${borderColor} rounded-xl p-4`}
+              style={{ boxShadow: 'var(--card-shadow)' }}
+            >
+              <div className="flex items-center gap-2 mb-2">
+                <Icon size={16} className="text-slate-400" />
+                <span className="text-xs font-medium text-slate-500">{item.label}</span>
+              </div>
+              <StatusBadge status={item.status} />
+              <p className="text-xs text-slate-500 mt-2">{item.detail}</p>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* 2. WpHG-Bogen (Anlegerprofil) */}
       <Section title="WpHG-Bogen (Anlegerprofil)" icon={FileText}>
         <div className="space-y-3">
           <div className="flex items-center justify-between">
@@ -150,7 +205,7 @@ export default function WpHGComplianceTab() {
           </div>
           <InfoRow label="Letzte Aktualisierung" value={fmtDate(wphg.letzteAktualisierung)} icon={Clock} />
           <InfoRow
-            label="Naechste Faelligkeit"
+            label="Nächste Fälligkeit"
             value={
               <span className="flex items-center gap-1.5">
                 {fmtDate(wphg.naechsteFaelligkeit)}
@@ -178,16 +233,16 @@ export default function WpHGComplianceTab() {
           <InfoRow label="Anlagehorizont" value={wphg.anlagehorizont} />
           <InfoRow label="Verlusttoleranz" value={wphg.verlusttoleranz} />
 
-          {/* ESG-Praeferenzen */}
+          {/* ESG-Präferenzen */}
           <div className="pt-2 border-t border-slate-100">
             <div className="flex items-center gap-1.5 mb-2">
               <Leaf size={13} className="text-emerald-500" />
-              <span className="text-xs text-slate-400">ESG-Praeferenzen</span>
+              <span className="text-xs text-slate-400">ESG-Präferenzen</span>
             </div>
             <div className="space-y-1.5 pl-5">
               <InfoRow label="SFDR" value={wphg.esgPraeferenzen?.sfdr || '-'} />
               <InfoRow label="Taxonomie" value={wphg.esgPraeferenzen?.taxonomie || '-'} />
-              <InfoRow label="PAI" value={wphg.esgPraeferenzen?.pai ? 'Beruecksichtigt' : 'Nicht beruecksichtigt'} />
+              <InfoRow label="PAI" value={wphg.esgPraeferenzen?.pai ? 'Berücksichtigt' : 'Nicht berücksichtigt'} />
             </div>
           </div>
 
@@ -222,13 +277,13 @@ export default function WpHGComplianceTab() {
       </Section>
 
       <div className="grid grid-cols-2 gap-4">
-        {/* 2. Geeignetheitspruefung */}
-        <Section title="Geeignetheitspruefung" icon={Shield}>
+        {/* 3. Geeignetheitsprüfung */}
+        <Section title="Geeignetheitsprüfung" icon={Shield}>
           <div className="space-y-2">
             <InfoRow label="Letzter Bericht" value={gp.letzterBericht || '-'} />
             <InfoRow label="Erstellt" value={fmtDate(gp.erstellt)} />
             <div className="flex justify-between items-center py-1.5">
-              <span className="text-slate-400 text-sm">Naechste Faelligkeit</span>
+              <span className="text-slate-400 text-sm">Nächste Fälligkeit</span>
               <span className="flex items-center gap-1.5 text-sm font-medium">
                 {fmtDate(gp.naechsterFaellig)}
                 {gpDaysLeft < 60 && (
@@ -245,14 +300,14 @@ export default function WpHGComplianceTab() {
           </div>
         </Section>
 
-        {/* 3. Verlustschwelle */}
+        {/* 4. Verlustschwelle */}
         <Section title="Verlustschwelle" icon={TrendingDown}>
           {vs ? (
             <div className="space-y-3">
               <VerlustschwelleBar trigger={vs.grenze} drawdown={vs.aktuell} />
               <div className="grid grid-cols-3 gap-2 pt-2 border-t border-slate-100">
                 <div className="text-center">
-                  <div className="text-[10px] text-slate-400">Hoechststand</div>
+                  <div className="text-[10px] text-slate-400">Höchststand</div>
                   <div className="text-sm font-mono font-semibold text-slate-700">
                     {kunde.aum ? formatEur(Math.round(kunde.aum / (1 + vs.aktuell / 100))) : '-'}
                   </div>
@@ -276,7 +331,7 @@ export default function WpHGComplianceTab() {
       </div>
 
       <div className="grid grid-cols-2 gap-4">
-        {/* 4. Kosteninformation */}
+        {/* 5. Kosteninformation */}
         <Section title="Kosteninformation" icon={Receipt}>
           <div className="space-y-2">
             <div className="flex justify-between items-center py-1.5">
@@ -300,10 +355,10 @@ export default function WpHGComplianceTab() {
           </div>
         </Section>
 
-        {/* 5. Zielmarktabgleich */}
+        {/* 6. Zielmarktabgleich */}
         <Section title="Zielmarktabgleich" icon={Target}>
           <div className="space-y-2">
-            <InfoRow label="Positionen geprueft" value={zm.positionen || '-'} />
+            <InfoRow label="Positionen geprüft" value={zm.positionen || '-'} />
             <InfoRow label="Konform" value={zm.konform || '-'} />
             {zm.letzterCheck && (
               <InfoRow label="Letzter Check" value={fmtDate(zm.letzterCheck)} />

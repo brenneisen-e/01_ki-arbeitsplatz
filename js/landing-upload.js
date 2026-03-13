@@ -666,7 +666,7 @@ function closeVersicherungs1x1() {
     if (landingPage) landingPage.style.display = 'flex';
 
     // Update URL route
-    if (window.AppRouter) AppRouter.navigate('/landing');
+    if (window.AppRouter) window.location.href = '/';
 }
 
 // ========================================

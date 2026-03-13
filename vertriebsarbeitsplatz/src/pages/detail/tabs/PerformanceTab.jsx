@@ -7,7 +7,7 @@ import { TrendingUp, TrendingDown, AlertTriangle, CheckCircle, MessageSquare, Le
 import { clsx } from 'clsx';
 import Card from '../../../components/ui/Card';
 import { useMode } from '../../../hooks/useMode';
-import { VV_PERFORMANCE } from '../../../data/vvExtended';
+import { getVVPerformance } from '../../../data/vvDataAdapter';
 import { KUNDEN_BY_MODE } from '../../../data/index';
 import { formatEur } from '../../../utils/formatters';
 
@@ -182,7 +182,7 @@ export default function PerformanceTab({ kunde }) {
   const { config } = useMode();
   const [timeRange, setTimeRange] = useState('ytd');
 
-  const perfData = VV_PERFORMANCE[kunde?.id];
+  const perfData = getVVPerformance(kunde?.id, kunde);
 
   // ── No data placeholder ──
   if (!perfData) {

@@ -822,7 +822,7 @@ function closeHRPipeline() {
     document.dispatchEvent(new CustomEvent('moduleChanged', { detail: { module: 'main', view: 'landing' } }));
 
     // Update URL route
-    if (window.AppRouter) AppRouter.navigate('/landing');
+    if (window.AppRouter) window.location.href = '/';
 }
 
 function initHRPipeline() {

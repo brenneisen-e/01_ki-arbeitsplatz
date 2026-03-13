@@ -1,4 +1,4 @@
-import { VV_FAMILIE } from '../../../data/vvExtended';
+import { getVVFamilie } from '../../../data/vvDataAdapter';
 import { formatEur } from '../../../utils/formatters';
 import { Users, Building2, AlertTriangle, CheckCircle, Briefcase, Award, TrendingUp, Crown, UserPlus } from 'lucide-react';
 import { clsx } from 'clsx';
@@ -80,7 +80,7 @@ function Section({ title, icon: Icon, children }) {
 
 // ─── Main component ───
 export default function FamilieNetzwerkTab({ kunde }) {
-  const data = VV_FAMILIE[kunde?.id];
+  const data = getVVFamilie(kunde?.id, kunde);
 
   if (!data) {
     return (

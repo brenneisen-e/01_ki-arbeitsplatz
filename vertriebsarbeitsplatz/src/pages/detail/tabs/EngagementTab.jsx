@@ -1,4 +1,4 @@
-import { VV_ENGAGEMENT } from '../../../data/vvExtended';
+import { getVVEngagement } from '../../../data/vvDataAdapter';
 import { useMode } from '../../../hooks/useMode';
 import { KUNDEN_BY_MODE } from '../../../data';
 import {
@@ -83,7 +83,7 @@ export default function EngagementTab() {
   const { selectedKundeId, modeId } = useMode();
   const kunden = KUNDEN_BY_MODE[modeId] || [];
   const kunde = kunden.find(k => k.id === selectedKundeId);
-  const data = VV_ENGAGEMENT[selectedKundeId];
+  const data = getVVEngagement(selectedKundeId, kunde);
 
   if (!data || !kunde) {
     return (

@@ -1,4 +1,4 @@
-import { VV_WPHG, VV_PERFORMANCE } from '../../../data/vvExtended';
+import { getVVWpHG, getVVPerformance } from '../../../data/vvDataAdapter';
 import { formatEur } from '../../../utils/formatters';
 import { CheckCircle, AlertTriangle, Shield, FileText, TrendingDown, Receipt, Target, Leaf, Clock } from 'lucide-react';
 import { clsx } from 'clsx';
@@ -109,8 +109,8 @@ function Section({ title, icon: Icon, children }) {
 
 // ─── Main component ───
 export default function WpHGComplianceTab({ kunde }) {
-  const wphg = VV_WPHG[kunde?.id];
-  const perf = VV_PERFORMANCE[kunde?.id];
+  const wphg = getVVWpHG(kunde?.id, kunde);
+  const perf = getVVPerformance(kunde?.id, kunde);
 
   if (!wphg) {
     return (

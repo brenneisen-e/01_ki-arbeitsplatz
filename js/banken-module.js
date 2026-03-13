@@ -583,7 +583,7 @@ function switchModule(moduleName) {
     } else if (window.AppRouter && moduleName === 'vermoegensverwaltung') {
         AppRouter.navigate('/vv-overview');
     } else if (window.AppRouter && moduleName === 'versicherung') {
-        AppRouter.navigate('/landing');
+        window.location.href = '/';
     }
 
     console.log('Switched to module:', moduleName);

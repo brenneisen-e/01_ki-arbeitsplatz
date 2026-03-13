@@ -1467,7 +1467,7 @@ Die Stufe basiert auf dem Gesamtproduktionsvolumen (Neugeschäft + Bestand) übe
 
         // Reset URL hash
         if (window.AppRouter) {
-            AppRouter.navigate('/landing');
+            window.location.href = '/';
         } else if (window.history && window.history.pushState) {
             window.history.pushState({ view: 'landing' }, '', '#/');
         }

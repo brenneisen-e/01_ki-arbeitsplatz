@@ -301,7 +301,7 @@ function closeRisikoscoring() {
     }
 
     // Update URL route
-    if (window.AppRouter) AppRouter.navigate('/landing');
+    window.location.href = '/';
 }
 
 // ========================================
@@ -367,7 +367,7 @@ function closeKreditanalyse() {
         landingPage.style.display = 'flex';
     }
 
-    if (window.AppRouter) AppRouter.navigate('/landing');
+    window.location.href = '/';
 }
 
 // ========================================
@@ -476,7 +476,7 @@ function closeVertriebsarbeitsplatz() {
         welcomeChat.style.display = 'block';
     }
 
-    if (window.AppRouter) AppRouter.navigate('/landing');
+    window.location.href = '/';
 
     // Dispatch event to update Page ID back to M-01
     setTimeout(() => {
@@ -769,7 +769,7 @@ function closeBestandsuebertragung() {
     }
 
     // Update URL route
-    if (window.AppRouter) AppRouter.navigate('/landing');
+    window.location.href = '/';
 
     // Dispatch event to update Page ID back to M-01
     setTimeout(() => {
@@ -992,7 +992,7 @@ function closePMOToolbox() {
     }
 
     // Update URL route
-    if (window.AppRouter) AppRouter.navigate('/landing');
+    window.location.href = '/';
 
     // Dispatch event to update Page ID back to M-01
     // Use setTimeout to ensure DOM is updated first

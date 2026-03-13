@@ -8,9 +8,11 @@ import {
   Printer,
   Download,
   Edit3,
+  FileText,
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { formatCurrency } from '../../utils/formatters';
+import { exportContractAsDocx, exportContractAsPdf } from '../../utils/contractExport';
 import {
   calculateAllRatios,
 } from '../../utils/financialCalculations';
@@ -212,16 +214,14 @@ export default function ContractView() {
     }
   };
 
+  const contractNr = `${company.id} / ${new Date().getFullYear()}`;
+
   const handlePrint = () => window.print();
-  const handleDownload = () => {
-    // Simple text download
-    const blob = new Blob([contractText || ''], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `Kreditvertrag_${company.firma.replace(/\s+/g, '_')}.txt`;
-    a.click();
-    URL.revokeObjectURL(url);
+  const handleDownloadPdf = () => {
+    exportContractAsPdf(contractText, company, contractNr);
+  };
+  const handleDownloadDocx = async () => {
+    await exportContractAsDocx(contractText, company, contractNr);
   };
 
   return (
@@ -313,9 +313,13 @@ export default function ContractView() {
 
           {/* Action buttons */}
           <div className="flex items-center gap-3 no-print sticky bottom-4 bg-surface/95 backdrop-blur-sm border border-border rounded-xl p-4 shadow-lg">
-            <button type="button" onClick={handleDownload}
+            <button type="button" onClick={handleDownloadDocx}
               className="inline-flex items-center gap-2 px-4 py-2.5 bg-primary text-white rounded-lg text-sm font-semibold hover:bg-primary-light transition-colors">
-              <Download size={16} /> PDF herunterladen
+              <FileText size={16} /> Word (.docx)
+            </button>
+            <button type="button" onClick={handleDownloadPdf}
+              className="inline-flex items-center gap-2 px-4 py-2.5 bg-emerald-600 text-white rounded-lg text-sm font-semibold hover:bg-emerald-700 transition-colors">
+              <Download size={16} /> PDF
             </button>
             <button type="button" onClick={handlePrint}
               className="inline-flex items-center gap-2 px-4 py-2.5 border border-border text-text-primary rounded-lg text-sm font-semibold hover:bg-surface transition-colors">

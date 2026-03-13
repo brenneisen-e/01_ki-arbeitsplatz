@@ -107,6 +107,23 @@ function reducer(state, action) {
           c.id === action.companyId ? { ...c, status: action.status } : c
         ),
       };
+    case 'ADD_CUSTOMER_APPLICATION': {
+      const newCompany = {
+        ...action.company,
+        bilanz: {},
+        gf: action.company.ansprechpartner
+          ? [{ name: action.company.ansprechpartner.name, funktion: action.company.ansprechpartner.position || 'GF', anteil: '', seit: '', erfahrung: '' }]
+          : [],
+        sicherheiten: [],
+        konto: null,
+        schufa: null,
+        creditreform_index: null,
+      };
+      return {
+        ...state,
+        companies: [...state.companies, newCompany],
+      };
+    }
     case 'ADD_NOTIFICATION':
       return { ...state, notifications: [...state.notifications, { id: Date.now(), ...action.notification }] };
     case 'DISMISS_NOTIFICATION':

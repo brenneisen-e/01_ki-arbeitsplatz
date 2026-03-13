@@ -56,23 +56,21 @@ const MONTH_NAMES = ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'S
 
 function generateMonthly(prng, years = 3) {
   const result = [];
-  const startYear = 2026 - years;
-  for (let y = startYear; y <= 2025; y++) {
-    for (let m = 0; m < 12; m++) {
+  const now = new Date();
+  const currentYear = now.getFullYear();
+  const currentMonth = now.getMonth(); // 0-based
+  const startYear = currentYear - years;
+  for (let y = startYear; y <= currentYear; y++) {
+    const maxMonth = y === currentYear ? currentMonth : 11;
+    for (let m = 0; m <= maxMonth; m++) {
       // Upward bias: mostly positive returns with occasional small dips
       const trend = 0.5; // positive drift
       const noise = rng(prng, -1.8, 2.2);
       const pf = round1(trend + noise);
       // Benchmark slightly underperforms portfolio on average
-      const bm = round1(pf + rng(prng, -0.8, 0.2));
+      const bm = round1(pf - rng(prng, 0.0, 0.6));
       result.push({ monat: `${MONTH_NAMES[m]} ${y}`, portfolio: pf, benchmark: bm });
     }
-  }
-  // 2026: Jan-Mar
-  for (let m = 0; m < 3; m++) {
-    const pf = round1(0.4 + rng(prng, -1.2, 2.0));
-    const bm = round1(pf + rng(prng, -0.6, 0.1));
-    result.push({ monat: `${MONTH_NAMES[m]} 2026`, portfolio: pf, benchmark: bm });
   }
   return result;
 }
@@ -81,12 +79,28 @@ function generateMonthly(prng, years = 3) {
 
 function transformPerformance(raw) {
   if (!raw) return null;
-  // Map monthlyReturns → monthly (add year, rename 'name' to 'monat')
-  const monthly = (raw.monthlyReturns || []).map((m, i) => ({
+  // Map monthlyReturns → monthly, then extend dynamically to current month
+  // Base data is for 2025; extend into 2026 up to current month
+  const baseMonthly = (raw.monthlyReturns || []).map((m, i) => ({
     monat: `${m.name} 2025`,
     portfolio: m.portfolio,
     benchmark: m.benchmark,
   }));
+
+  // Extend with months from Jan 2026 to current month
+  const now = new Date();
+  const currentYear = now.getFullYear();
+  const currentMonth = now.getMonth(); // 0-based
+  const prng = makePrng((raw.ioComment || 'default') + '_extend');
+  for (let y = 2026; y <= currentYear; y++) {
+    const maxMonth = y === currentYear ? currentMonth : 11;
+    for (let m = 0; m <= maxMonth; m++) {
+      const pf = round1(0.4 + rng(prng, -1.0, 2.0));
+      const bm = round1(pf - rng(prng, 0.1, 0.6));
+      baseMonthly.push({ monat: `${MONTH_NAMES[m]} ${y}`, portfolio: pf, benchmark: bm });
+    }
+  }
+  const monthly = baseMonthly;
 
   // Map sectors → sektoren (value → anteil)
   const sektoren = (raw.sectors || []).map(s => ({ name: s.name, anteil: s.value }));
@@ -137,7 +151,7 @@ function transformPerformance(raw) {
     ioKommentar,
     esg: { score: 72, sfdr: 'Art. 8', co2: 42 },
     kosten: { quote: 1.15, betrag: 28500, jahr: 2024 },
-    verlustschwelle: { schwelle: -10, hoechststand: 2800000, aktuell: 2650000, hoechststandDatum: '15.01.2025', grenze: -10 },
+    verlustschwelle: { schwelle: -10, _pctFromHigh: -5.4, hoechststandDatum: '15.01.2026', grenze: -10 },
   };
 }
 
@@ -220,10 +234,8 @@ function generatePerformance(id) {
     },
     verlustschwelle: {
       schwelle: pick(prng, [-8, -10, -12, -15]),
-      hoechststand: rngInt(prng, 500000, 15000000),
-      aktuell: rngInt(prng, 450000, 14000000),
+      _pctFromHigh: round1(rng(prng, -7, -1)),
       hoechststandDatum: pick(prng, ['15.01.2026', '28.02.2026', '10.12.2025']),
-      grenze: pick(prng, [-8, -10, -12, -15]),
     },
   };
 }

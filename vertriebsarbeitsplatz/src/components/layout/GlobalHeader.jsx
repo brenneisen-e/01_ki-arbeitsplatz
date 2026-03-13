@@ -154,8 +154,8 @@ export default function GlobalHeader({ kundeInfo }) {
         </div>
       </div>
 
-      {/* Bloomberg Market Ticker - only on overview */}
-      {isOverview && (
+      {/* Bloomberg Market Ticker - only on overview in VV mode */}
+      {isOverview && modeId === 'vermoegensverwaltung' && (
         <div className="px-6 pb-2">
           <div className="flex items-center gap-4 text-xs overflow-x-auto">
             <span className="text-white/40 font-medium shrink-0">Märkte</span>

@@ -3,6 +3,8 @@ import DataTable from '../../../components/ui/DataTable';
 import { StatusBadge, SparteBadge } from '../../../components/ui/Badge';
 import { formatEur, formatPct, berechneHaushaltsnetto, berechneAbsicherungsquote, berechneSparquote, berechneFrei, potentialSterne } from '../../../utils/formatters';
 import { User, Wallet, Linkedin, Star, ChevronDown, MapPin, Briefcase, Heart, Users, CheckCircle, Building2, PawPrint, Info } from 'lucide-react';
+import { getLogoUrl } from '../../../utils/logos';
+import { getKundeFoto } from '../../../utils/kundenFotos';
 import { useState } from 'react';
 import { useMode } from '../../../hooks/useMode';
 
@@ -34,39 +36,11 @@ const FREMD_TYP_LABELS = {
   pflege: 'Pflege',
 };
 
-// Fotos für Mandanten: Stockfotos in ./images/mandanten/ ablegen
-// Dateiname-Konvention: {ID}.jpg (z.B. VV00001.jpg, KD00001.jpg)
-const KUNDEN_FOTOS = {
-  'KD00001': './images/AdobeStock_624564221.jpeg',
-  'KD00002': './images/AdobeStock_252262042.jpeg',
-  'KD00003': './images/AdobeStock_361342769.jpeg',
-  'KD00005': './images/AdobeStock_612932760.jpeg',
-  'KD00008': './images/AdobeStock_1091012713.jpeg',
-  'BK00001': './images/AdobeStock_624564221.jpeg',
-  'BK00003': './images/AdobeStock_361342769.jpeg',
-  'BK00005': './images/AdobeStock_252262042.jpeg',
-  'WM00001': './images/AdobeStock_612932760.jpeg',
-  'WM00003': './images/AdobeStock_1091012713.jpeg',
-  // Stiftungen: Logo statt Foto
-  'VV00003': './images/stiftung-weber-logo.svg',
-  // VV Mandanten
-  'VV00001': './images/AdobeStock_1367815601.jpeg',
-  'VV00002': './images/AdobeStock_910604663.jpeg',
-  'VV00004': './images/AdobeStock_329502726.jpeg',
-  'VV00005': './images/AdobeStock_1387839378.jpeg',
-};
-
-// Dynamischer Lookup: prüft auch mandanten/-Ordner
-function getKundeFoto(id) {
-  if (KUNDEN_FOTOS[id]) return KUNDEN_FOTOS[id];
-  // Fallback: Stockfoto aus mandanten/-Ordner (Konvention: {ID}.jpg)
-  return `./images/mandanten/${id}.jpg`;
-}
-
 export default function StammdatenDetailTab({ kunde }) {
   const [risikoExpanded, setRisikoExpanded] = useState(false);
   const [fotoFailed, setFotoFailed] = useState(false);
-  const { config } = useMode();
+  const { config, modeId } = useMode();
+  const isVV = modeId === 'vermoegensverwaltung';
   const haushalt = berechneHaushaltsnetto(kunde);
   const absQuote = berechneAbsicherungsquote(kunde);
   const sparQuote = berechneSparquote(kunde);
@@ -219,7 +193,7 @@ export default function StammdatenDetailTab({ kunde }) {
               { id: 'produkt', label: 'Produkt' },
               { id: 'sparte', label: 'Sparte', render: v => v ? <SparteBadge sparte={v} /> : '-' },
               { id: 'details', label: 'Details' },
-              { id: 'praemie', label: 'Prämie/J.', render: v => <span className="font-mono">{formatEur(v)}</span> },
+              { id: isVV ? 'volumen' : 'praemie', label: isVV ? 'Volumen' : 'Prämie/J.', render: v => <span className="font-mono">{formatEur(v)}</span> },
               { id: 'seit', label: 'Seit' },
               { id: 'status', label: 'Status', render: v => <StatusBadge status={v} /> },
             ]}
@@ -242,12 +216,15 @@ export default function StammdatenDetailTab({ kunde }) {
                 const label = FREMD_TYP_LABELS[v] || v || '';
                 return label.charAt(0).toUpperCase() + label.slice(1);
               }},
-              { id: 'institut', label: 'Institut', render: (v, row) => (
-                <span className="flex items-center gap-2">
-                  {v && <img src={`https://img.logo.dev/${encodeURIComponent((v || '').toLowerCase().replace(/\s+/g, '') + '.de')}?token=pk_a0zcHMnGQDSbGSQCBcK1qA&size=24`} alt="" className="w-5 h-5 rounded object-contain" onError={e => { e.target.style.display = 'none'; }} />}
-                  <span>{v}</span>
-                </span>
-              )},
+              { id: 'institut', label: 'Institut', render: (v, row) => {
+                const logoUrl = v ? getLogoUrl(v, 24) : null;
+                return (
+                  <span className="flex items-center gap-2">
+                    {logoUrl && <img src={logoUrl} alt="" className="w-5 h-5 rounded object-contain" onError={e => { e.target.style.display = 'none'; }} />}
+                    <span>{v}</span>
+                  </span>
+                );
+              }},
               { id: 'details', label: 'Details' },
               { id: 'volumen', label: 'Volumen', render: v => <span className="font-mono">{formatEur(v)}</span> },
               { id: 'consent', label: 'Consent', render: (v, row) => {

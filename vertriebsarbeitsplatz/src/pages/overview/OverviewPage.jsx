@@ -10,6 +10,8 @@ import QualitaetTab from './tabs/QualitaetTab';
 import KundenTab from './tabs/KundenTab';
 import PotentialeTab from './tabs/PotentialeTab';
 import StammdatenOverviewTab from './tabs/StammdatenOverviewTab';
+import PipelineLeadsTab from './tabs/PipelineLeadsTab';
+import RevenueTab from './tabs/RevenueTab';
 
 const TAB_COMPONENTS = {
   uebersicht: UebersichtTab,
@@ -23,7 +25,8 @@ const TAB_COMPONENTS = {
   kunden: KundenTab,
   potentiale: PotentialeTab,
   mandatsliste: KundenTab,
-  pipeline: PotentialeTab,
+  pipeline: PipelineLeadsTab,
+  revenue: RevenueTab,
   portfolio: BestandTab,
   compliance: QualitaetTab,
   reporting: VerguetungTab,

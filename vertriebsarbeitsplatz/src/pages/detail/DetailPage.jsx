@@ -7,6 +7,10 @@ import OpenFinanceTab from './tabs/OpenFinanceTab';
 import ImpulseTab from './tabs/ImpulseTab';
 import FinanzprofilTab from './tabs/FinanzprofilTab';
 import KommunikationTab from './tabs/KommunikationTab';
+import PerformanceTab from './tabs/PerformanceTab';
+import WpHGComplianceTab from './tabs/WpHGComplianceTab';
+import FamilieNetzwerkTab from './tabs/FamilieNetzwerkTab';
+import EngagementTab from './tabs/EngagementTab';
 
 const TAB_COMPONENTS = {
   stammdaten: StammdatenDetailTab,
@@ -16,6 +20,10 @@ const TAB_COMPONENTS = {
   impulse: ImpulseTab,
   finanzprofil: FinanzprofilTab,
   kommunikation: KommunikationTab,
+  performance: PerformanceTab,
+  wphg: WpHGComplianceTab,
+  familie: FamilieNetzwerkTab,
+  engagement: EngagementTab,
   portfolio: VertraegeTab,
   vermoegensbilanz: FinanzprofilTab,
   compliance: OpenFinanceTab,

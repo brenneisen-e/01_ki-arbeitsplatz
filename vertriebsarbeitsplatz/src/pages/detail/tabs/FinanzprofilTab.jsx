@@ -278,6 +278,8 @@ function InsightCard({ insight }) {
 
 // ─── Main Component ───
 export default function FinanzprofilTab({ kunde }) {
+  const { modeId } = useMode();
+  const isVV = modeId === 'vermoegensverwaltung';
   const { config } = useMode();
   const transaktionen = kunde.transaktionen || [];
   const einnahmen = transaktionen.filter(t => t.betrag > 0);
@@ -368,46 +370,48 @@ export default function FinanzprofilTab({ kunde }) {
         </Card>
       </div>
 
-      {/* Row 2: Kontotransaktionen (Open Banking / Tink) */}
-      <Card>
-        <div className="flex items-center justify-between mb-4">
-          <div>
-            <h3 className="font-semibold text-slate-800">Kontotransaktionen</h3>
-            <p className="text-xs text-slate-400 mt-0.5">Open Banking (PSD2/FIDA) · {kontoumsaetze.reduce((s, c) => s + c.items.length, 0)} Transaktionen erkannt</p>
+      {/* Row 2: Kontotransaktionen (Open Banking / Tink) - hidden for VV */}
+      {!isVV && (
+        <Card>
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h3 className="font-semibold text-slate-800">Kontotransaktionen</h3>
+              <p className="text-xs text-slate-400 mt-0.5">Open Banking (PSD2/FIDA) · {kontoumsaetze.reduce((s, c) => s + c.items.length, 0)} Transaktionen erkannt</p>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <span className="text-xs text-slate-400">Gesamt:</span>
+              <span className="text-sm font-mono font-semibold text-slate-700">{formatEur(totalKontoumsaetze)}</span>
+            </div>
           </div>
-          <div className="flex items-center gap-1.5">
-            <span className="text-xs text-slate-400">Gesamt:</span>
-            <span className="text-sm font-mono font-semibold text-slate-700">{formatEur(totalKontoumsaetze)}</span>
+
+          {/* Filter Chips */}
+          <div className="flex flex-wrap gap-1.5 mb-4">
+            {['alle', ...kontoumsaetze.map(c => c.name.toLowerCase())].map(f => (
+              <button
+                key={f}
+                onClick={() => setActiveFilter(f)}
+                className={`text-xs px-2.5 py-1 rounded-full border transition-colors ${
+                  activeFilter === f
+                    ? 'bg-slate-800 text-white border-slate-800'
+                    : 'bg-white text-slate-500 border-slate-200 hover:border-slate-400'
+                }`}
+              >
+                {f === 'alle' ? 'Alle' : f.charAt(0).toUpperCase() + f.slice(1)}
+              </button>
+            ))}
           </div>
-        </div>
 
-        {/* Filter Chips */}
-        <div className="flex flex-wrap gap-1.5 mb-4">
-          {['alle', ...kontoumsaetze.map(c => c.name.toLowerCase())].map(f => (
-            <button
-              key={f}
-              onClick={() => setActiveFilter(f)}
-              className={`text-xs px-2.5 py-1 rounded-full border transition-colors ${
-                activeFilter === f
-                  ? 'bg-slate-800 text-white border-slate-800'
-                  : 'bg-white text-slate-500 border-slate-200 hover:border-slate-400'
-              }`}
-            >
-              {f === 'alle' ? 'Alle' : f.charAt(0).toUpperCase() + f.slice(1)}
-            </button>
-          ))}
-        </div>
+          {/* Category Rows */}
+          <div className="space-y-2">
+            {filteredCategories.map((cat, i) => (
+              <CategoryRow key={cat.name} category={cat} defaultOpen={i === 0} />
+            ))}
+          </div>
+        </Card>
+      )}
 
-        {/* Category Rows */}
-        <div className="space-y-2">
-          {filteredCategories.map((cat, i) => (
-            <CategoryRow key={cat.name} category={cat} defaultOpen={i === 0} />
-          ))}
-        </div>
-      </Card>
-
-      {/* Row 3: KI-Erkenntnisse aus Kontoumsätzen */}
-      {insights.length > 0 && (
+      {/* Row 3: KI-Erkenntnisse aus Kontoumsätzen - hidden for VV */}
+      {!isVV && insights.length > 0 && (
         <Card>
           <div className="flex items-center gap-2 mb-4">
             <span className="text-base">🤖</span>

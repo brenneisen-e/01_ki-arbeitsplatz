@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { clsx } from 'clsx';
 
-export default function Card({ children, className, hover = false, hoverColor, onClick, padding = true }) {
+export default function Card({ children, className, hover = true, onClick, padding = true }) {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
@@ -11,16 +11,16 @@ export default function Card({ children, className, hover = false, hoverColor, o
         padding && 'p-5',
         hover && 'hover:-translate-y-px hover:shadow-md cursor-pointer',
         onClick && 'cursor-pointer',
-        isHovered && hoverColor ? 'border-transparent shadow-md' : 'border-slate-200',
+        isHovered ? 'border-transparent shadow-md' : 'border-slate-200',
         className
       )}
       style={{
-        boxShadow: isHovered && hoverColor ? undefined : 'var(--card-shadow)',
-        backgroundColor: isHovered && hoverColor ? hoverColor : '#ffffff',
+        boxShadow: isHovered ? undefined : 'var(--card-shadow)',
+        backgroundColor: isHovered ? 'var(--mode-pastel)' : '#ffffff',
       }}
       onClick={onClick}
-      onMouseEnter={() => hoverColor && setIsHovered(true)}
-      onMouseLeave={() => hoverColor && setIsHovered(false)}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
       {children}
     </div>

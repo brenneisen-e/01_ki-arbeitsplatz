@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { clsx } from 'clsx';
 import {
   ArrowLeft, ChevronDown, LayoutDashboard, List,
@@ -224,6 +224,17 @@ export default function CockpitPage() {
   const [tableView, setTableView] = useState('bundeslaender');
   const [showReport, setShowReport] = useState(false);
   const [selectedStates, setSelectedStates] = useState(new Set());
+
+  // Listen for cockpit-navigate events from VertriebsAssistent
+  useEffect(() => {
+    function onCockpitNavigate(e) {
+      const { view: targetView, tableView: targetTableView } = e.detail;
+      if (targetView) setView(targetView);
+      if (targetTableView) setTableView(targetTableView);
+    }
+    window.addEventListener('cockpit-navigate', onCockpitNavigate);
+    return () => window.removeEventListener('cockpit-navigate', onCockpitNavigate);
+  }, []);
 
   function toggleState(name) {
     setSelectedStates(prev => {

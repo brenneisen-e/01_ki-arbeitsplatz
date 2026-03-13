@@ -599,22 +599,20 @@ let versicherungs1x1Loaded = false;
 
 async function openVersicherungs1x1() {
     console.log('Versicherungs-1×1 öffnen...');
-
-    // Hide landing page
-    const landingPage = document.getElementById('landingPage');
-    if (landingPage) landingPage.style.display = 'none';
-
-    // Hide main app if visible
-    const mainApp = document.getElementById('mainApp');
-    if (mainApp) mainApp.style.display = 'none';
-
-    // Hide other modules
-    ['bankenModule', 'assetModule', 'cvScannerModule', 'risikoscoringModule',
-     'bestandsuebertragungModule', 'pmoToolboxModule', 'hrPipelineModule',
-     'beraterOverviewPage', 'kundenDetailBankPage'].forEach(function(id) {
-        const el = document.getElementById(id);
-        if (el) el.style.display = 'none';
-    });
+    if (typeof deactivateAllModules === 'function') {
+        deactivateAllModules('versicherungs1x1Module');
+    } else {
+        ['landingPage', 'mainApp', 'bankenModule', 'assetModule', 'cvScannerModule',
+         'risikoscoringModule', 'bestandsuebertragungModule', 'pmoToolboxModule',
+         'hrPipelineModule', 'beraterOverviewPage', 'kundenDetailBankPage'].forEach(function(id) {
+            var el = document.getElementById(id);
+            if (el) el.style.display = 'none';
+        });
+        document.querySelectorAll('.module-content').forEach(function(el) {
+            el.classList.remove('active');
+            if (el.id !== 'versicherungs1x1Module') el.style.display = 'none';
+        });
+    }
 
     // Show versicherungs-1x1 module
     const v1x1Module = document.getElementById('versicherungs1x1Module');

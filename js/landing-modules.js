@@ -1,4 +1,21 @@
 (function(){var r=['safeLocalSet'];var m=r.filter(function(f){return typeof window[f]==='undefined'});if(m.length)console.debug('[landing-modules.js] Fehlende Deps:',m.join(', '),'← Lade utils.js zuerst!');})();
+
+// Helper: Deactivate all module-content containers except the given one
+function deactivateAllModules(exceptId) {
+    document.querySelectorAll('.module-content').forEach(function(el) {
+        el.classList.remove('active');
+        if (el.id !== exceptId) {
+            el.style.display = 'none';
+        }
+    });
+    // Also hide standalone containers inside versicherungModule
+    ['landingPage', 'mainApp', 'agenturOverview', 'beraterOverviewPage',
+     'kundenDetailBankPage', 'bgavUmstellungPage'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) el.style.display = 'none';
+    });
+}
+
 // Toggle Modules
 function toggleModules() {
     const container = document.getElementById('modulesContainer');
@@ -215,42 +232,7 @@ let risikoscoringLoaded = false;
 
 async function openRisikoscoring() {
     console.log('Risikoscoring öffnen...');
-
-    // Hide landing page
-    const landingPage = document.getElementById('landingPage');
-    if (landingPage) {
-        landingPage.style.display = 'none';
-    }
-
-    // Hide main app if visible
-    const mainApp = document.getElementById('mainApp');
-    if (mainApp) {
-        mainApp.style.display = 'none';
-    }
-
-    // Hide banken module if visible
-    const bankenModule = document.getElementById('bankenModule');
-    if (bankenModule) {
-        bankenModule.style.display = 'none';
-    }
-
-    // Hide asset module if visible
-    const assetModuleRS = document.getElementById('assetModule');
-    if (assetModuleRS) {
-        assetModuleRS.style.display = 'none';
-    }
-
-    // Hide CV Scanner if visible
-    const cvModule = document.getElementById('cvScannerModule');
-    if (cvModule) {
-        cvModule.style.display = 'none';
-    }
-
-    // Hide B-02/B-10 Banking Berater if visible
-    var beraterPageRS = document.getElementById('beraterOverviewPage');
-    if (beraterPageRS) beraterPageRS.style.display = 'none';
-    var kdBankPageRS = document.getElementById('kundenDetailBankPage');
-    if (kdBankPageRS) kdBankPageRS.style.display = 'none';
+    deactivateAllModules('risikoscoringModule');
 
     // Show risikoscoring module
     const rsModule = document.getElementById('risikoscoringModule');
@@ -312,33 +294,7 @@ let kreditanalyseLoaded = false;
 
 async function openKreditanalyse() {
     console.log('KI-Kreditanalyse öffnen...');
-
-    // Hide landing page
-    const landingPage = document.getElementById('landingPage');
-    if (landingPage) {
-        landingPage.style.display = 'none';
-    }
-
-    // Hide main app if visible
-    const mainApp = document.getElementById('mainApp');
-    if (mainApp) {
-        mainApp.style.display = 'none';
-    }
-
-    // Hide versicherungModule (contains landing page)
-    const versicherungModule = document.getElementById('versicherungModule');
-    if (versicherungModule) {
-        versicherungModule.style.display = 'none';
-    }
-
-    // Hide other modules
-    ['bankenModule', 'assetModule', 'risikoscoringModule', 'bestandsuebertragungModule',
-     'pmoToolboxModule', 'hrPipelineModule', 'versicherungs1x1Module',
-     'beraterOverviewPage', 'kundenDetailBankPage', 'vertriebsarbeitsplatzModule',
-     'vermoegensverwaltungModule'].forEach(function(id) {
-        var el = document.getElementById(id);
-        if (el) el.style.display = 'none';
-    });
+    deactivateAllModules('kreditanalyseModule');
 
     // Show kreditanalyse module
     const kaModule = document.getElementById('kreditanalyseModule');
@@ -566,61 +522,7 @@ function setupBestandNavFallback(moduleEl) {
 
 async function openBestandsuebertragung() {
     console.log('Bestandsübertragung öffnen...');
-
-    // Hide landing page
-    const landingPage = document.getElementById('landingPage');
-    if (landingPage) {
-        landingPage.style.display = 'none';
-    }
-
-    // Hide main app if visible
-    const mainApp = document.getElementById('mainApp');
-    if (mainApp) {
-        mainApp.style.display = 'none';
-    }
-
-    // Hide welcome chat (sibling of landing page)
-    const welcomeChat = document.getElementById('welcomeChat');
-    if (welcomeChat) {
-        welcomeChat.style.display = 'none';
-    }
-
-    // Hide all other modules
-    const versicherungModule = document.getElementById('versicherungModule');
-    if (versicherungModule) {
-        versicherungModule.style.display = 'none';
-    }
-
-    const bankenModule = document.getElementById('bankenModule');
-    if (bankenModule) {
-        bankenModule.style.display = 'none';
-    }
-
-    const assetModuleBU = document.getElementById('assetModule');
-    if (assetModuleBU) {
-        assetModuleBU.style.display = 'none';
-    }
-
-    const rsModule = document.getElementById('risikoscoringModule');
-    if (rsModule) {
-        rsModule.style.display = 'none';
-    }
-
-    const pmoModule = document.getElementById('pmoToolboxModule');
-    if (pmoModule) {
-        pmoModule.style.display = 'none';
-    }
-
-    const cvModule = document.getElementById('cvScannerModule');
-    if (cvModule) {
-        cvModule.style.display = 'none';
-    }
-
-    // Hide B-02/B-10 Banking Berater
-    var beraterPageBU = document.getElementById('beraterOverviewPage');
-    if (beraterPageBU) beraterPageBU.style.display = 'none';
-    var kdBankPageBU = document.getElementById('kundenDetailBankPage');
-    if (kdBankPageBU) kdBankPageBU.style.display = 'none';
+    deactivateAllModules('bestandsuebertragungModule');
 
     // Show bestandsuebertragung module
     const bestandModule = document.getElementById('bestandsuebertragungModule');
@@ -798,61 +700,7 @@ let pmoToolboxLoaded = false;
 
 async function openPMOToolbox() {
     console.log('PMO Toolbox öffnen...');
-
-    // Hide landing page
-    const landingPage = document.getElementById('landingPage');
-    if (landingPage) {
-        landingPage.style.display = 'none';
-    }
-
-    // Hide welcome chat (sibling of landing page)
-    const welcomeChat = document.getElementById('welcomeChat');
-    if (welcomeChat) {
-        welcomeChat.style.display = 'none';
-    }
-
-    // Hide main app if visible
-    const mainApp = document.getElementById('mainApp');
-    if (mainApp) {
-        mainApp.style.display = 'none';
-    }
-
-    // Hide other modules
-    const versicherungModule = document.getElementById('versicherungModule');
-    if (versicherungModule) {
-        versicherungModule.style.display = 'none';
-    }
-
-    const bankenModule = document.getElementById('bankenModule');
-    if (bankenModule) {
-        bankenModule.style.display = 'none';
-    }
-
-    const assetModulePMO = document.getElementById('assetModule');
-    if (assetModulePMO) {
-        assetModulePMO.style.display = 'none';
-    }
-
-    const rsModule = document.getElementById('risikoscoringModule');
-    if (rsModule) {
-        rsModule.style.display = 'none';
-    }
-
-    const bestandModule = document.getElementById('bestandsuebertragungModule');
-    if (bestandModule) {
-        bestandModule.style.display = 'none';
-    }
-
-    const cvModule = document.getElementById('cvScannerModule');
-    if (cvModule) {
-        cvModule.style.display = 'none';
-    }
-
-    // Hide B-02/B-10 Banking Berater
-    var beraterPagePMO = document.getElementById('beraterOverviewPage');
-    if (beraterPagePMO) beraterPagePMO.style.display = 'none';
-    var kdBankPagePMO = document.getElementById('kundenDetailBankPage');
-    if (kdBankPagePMO) kdBankPagePMO.style.display = 'none';
+    deactivateAllModules('pmoToolboxModule');
 
     // Hide main chat widget and toggle (they should not appear in PMO Toolbox)
     const chatWidget = document.getElementById('chatWidget');

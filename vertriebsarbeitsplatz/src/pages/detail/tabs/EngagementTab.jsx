@@ -1,12 +1,10 @@
-import { useMode } from '../../../hooks/useMode';
 import { VV_ENGAGEMENT } from '../../../data/vvExtended';
-import { KUNDEN_BY_MODE } from '../../../data/index';
 import {
   ExternalLink, Globe, Mail, Calendar, Newspaper, Users,
   ThumbsUp, Share2, PenLine, Eye, Clock, MousePointerClick,
-  CheckCircle, Star, Sparkles,
+  CheckCircle, Star, Sparkles, Activity,
 } from 'lucide-react';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 
 // ─── Date formatter ───
 function fmtDate(d) {

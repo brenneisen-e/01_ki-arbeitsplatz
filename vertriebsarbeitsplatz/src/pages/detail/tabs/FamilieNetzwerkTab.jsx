@@ -1,9 +1,7 @@
-import { useMode } from '../../../hooks/useMode';
 import { VV_FAMILIE } from '../../../data/vvExtended';
-import { KUNDEN_BY_MODE } from '../../../data/index';
 import { formatEur } from '../../../utils/formatters';
-import { Users, Building2, AlertTriangle, CheckCircle, Briefcase, Award, TrendingUp, Crown } from 'lucide-react';
-import clsx from 'clsx';
+import { Users, Building2, AlertTriangle, CheckCircle, Briefcase, Award, TrendingUp, Crown, UserPlus } from 'lucide-react';
+import { clsx } from 'clsx';
 
 // ─── Person card in orgchart ───
 function PersonCard({ person, isCenter = false }) {
@@ -70,7 +68,7 @@ function HorizontalConnector({ count }) {
 // ─── Section wrapper ───
 function Section({ title, icon: Icon, children }) {
   return (
-    <div className="bg-white rounded-2xl border border-slate-200 p-5" style={{ boxShadow: 'var(--card-shadow)' }}>
+    <div className="bg-white rounded-xl border border-slate-200 p-5" style={{ boxShadow: 'var(--card-shadow)' }}>
       <div className="flex items-center gap-2 mb-4">
         {Icon && <Icon size={18} className="text-slate-500" strokeWidth={1.75} />}
         <h3 className="font-semibold text-slate-800">{title}</h3>
@@ -81,16 +79,23 @@ function Section({ title, icon: Icon, children }) {
 }
 
 // ─── Main component ───
-export default function FamilieNetzwerkTab() {
-  const { selectedKundeId, modeId } = useMode();
-  const kunden = KUNDEN_BY_MODE[modeId] || [];
-  const kunde = kunden.find(k => k.id === selectedKundeId);
-  const data = VV_FAMILIE[selectedKundeId];
+export default function FamilieNetzwerkTab({ kunde }) {
+  const data = VV_FAMILIE[kunde?.id];
 
-  if (!data || !kunde) {
+  if (!data) {
     return (
-      <div className="bg-white rounded-2xl border border-slate-200 p-8 text-center text-slate-400">
-        Keine Familien- und Netzwerkdaten fuer diesen Mandanten vorhanden.
+      <div className="space-y-4">
+        <div className="bg-white rounded-xl border border-slate-200 p-5" style={{ boxShadow: 'var(--card-shadow)' }}>
+          <div className="flex flex-col items-center justify-center py-16 text-center">
+            <div className="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center mb-4">
+              <Users className="w-8 h-8 text-slate-400" />
+            </div>
+            <h3 className="font-semibold text-slate-700 mb-1">Familiendaten nicht verfügbar</h3>
+            <p className="text-sm text-slate-400 max-w-md">
+              Für {kunde?.name || 'diesen Mandanten'} liegen keine Familien- und Netzwerkdaten vor.
+            </p>
+          </div>
+        </div>
       </div>
     );
   }

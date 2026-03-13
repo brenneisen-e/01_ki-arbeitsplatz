@@ -11,6 +11,7 @@ import PerformanceTab from './tabs/PerformanceTab';
 import WpHGComplianceTab from './tabs/WpHGComplianceTab';
 import FamilieNetzwerkTab from './tabs/FamilieNetzwerkTab';
 import EngagementTab from './tabs/EngagementTab';
+import LeadsTab from './tabs/LeadsTab';
 
 const TAB_COMPONENTS = {
   stammdaten: StammdatenDetailTab,
@@ -24,6 +25,7 @@ const TAB_COMPONENTS = {
   wphg: WpHGComplianceTab,
   familie: FamilieNetzwerkTab,
   engagement: EngagementTab,
+  leads: LeadsTab,
   portfolio: VertraegeTab,
   vermoegensbilanz: FinanzprofilTab,
   compliance: OpenFinanceTab,

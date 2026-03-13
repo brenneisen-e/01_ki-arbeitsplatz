@@ -139,16 +139,16 @@ export const MODE_CONFIGS = {
     tabs: [
       { id: 'uebersicht', label: 'Mein Tag' },
       { id: 'mandatsliste', label: 'Mandanten' },
-      { id: 'pipeline', label: 'Pipeline & Leads' },
+      { id: 'pipeline', label: 'Leads' },
       { id: 'revenue', label: 'Revenue' },
       { id: 'compliance', label: 'Compliance' },
-      { id: 'potentiale', label: 'Potentiale' },
     ],
     detailTabs: [
       { id: 'stammdaten', label: 'Überblick' },
       { id: 'performance', label: 'Performance' },
       { id: 'vermoegensbilanz', label: 'Vermögen' },
       { id: 'wphg', label: 'WpHG & Compliance' },
+      { id: 'leads', label: 'Leads' },
       { id: 'familie', label: 'Familie & Netzwerk' },
       { id: 'engagement', label: 'Engagement' },
       { id: 'kommunikation', label: 'Kontakte' },

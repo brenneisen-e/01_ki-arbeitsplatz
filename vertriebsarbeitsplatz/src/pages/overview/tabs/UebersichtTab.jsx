@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Sun, Clock, Zap, CheckSquare, Calendar, Phone, AlertTriangle, CheckCircle, FileText, Heart, Car, Home, ShieldAlert, Cake, Euro, Download, Landmark, BarChart3, PiggyBank, Wallet, Sparkles } from 'lucide-react';
 import Card from '../../../components/ui/Card';
 import Avatar from '../../../components/ui/Avatar';
@@ -133,6 +133,25 @@ export default function UebersichtTab() {
     return (prio[a.prioritaet] || 3) - (prio[b.prioritaet] || 3);
   }).slice(0, 5);
 
+  // Group potentials by customer for Versicherung/Banking
+  const kundenPotentiale = useMemo(() => {
+    if (modeId === 'vermoegensverwaltung') return [];
+    const allPots = getAllPotentiale(modeId);
+    const grouped = {};
+    allPots.forEach(p => {
+      if (!grouped[p.kundeId]) {
+        grouped[p.kundeId] = { kundeId: p.kundeId, kundeName: p.kundeName, potentiale: [], gesamtPraemie: 0, gesamtProvision: 0 };
+      }
+      grouped[p.kundeId].potentiale.push(p);
+      if (p.volumen > 0) {
+        grouped[p.kundeId].gesamtPraemie += p.volumen;
+        grouped[p.kundeId].gesamtProvision += Math.round(p.volumen * 0.75);
+      }
+    });
+    // Sort by total premium descending, then by number of potentials
+    return Object.values(grouped).sort((a, b) => b.gesamtPraemie - a.gesamtPraemie || b.potentiale.length - a.potentiale.length);
+  }, [modeId]);
+
   // VV: Kunden mit Mandatsinformationen
   const vvKunden = modeId === 'vermoegensverwaltung' ? (KUNDEN_BY_MODE.vermoegensverwaltung || []).map(k => {
     const mandat = (k.eigeneProdukte || []).find(p => p.typ === 'mandat');
@@ -252,49 +271,64 @@ export default function UebersichtTab() {
                 <Zap size={20} style={{ color: 'var(--mode-primary-light)' }} strokeWidth={1.75} />
                 <h3 className="font-semibold text-slate-800">Vertriebspotenziale</h3>
               </div>
-              <span className="text-sm text-slate-400">Top-5 von {getAllPotentiale(modeId).length}</span>
+              <span className="text-sm text-slate-400">{kundenPotentiale.length} Kunden · {getAllPotentiale(modeId).length} Potenziale</span>
             </div>
             <div className="space-y-0">
-              {potentiale.map((p, i) => (
-                <div
-                  key={i}
-                  className="grid py-2.5 px-3 rounded-lg row-hover transition-colors cursor-pointer items-center"
-                  style={{ gridTemplateColumns: 'max-content 1fr 140px' }}
-                  onClick={() => navigateTo('detail', { kundeId: p.kundeId })}
-                >
-                  <div className="flex items-center gap-2 min-w-0">
-                    <span className="text-sm font-semibold text-slate-800 whitespace-nowrap">{p.kundeName}</span>
-                    <span className="text-xs text-slate-400 shrink-0">{p.kundeId}</span>
-                    <PrioBadge prioritaet={p.prioritaet} />
-                  </div>
-                  <div className="min-w-0 px-3">
-                    <div className="text-sm font-medium" style={{ color: 'var(--mode-primary-light)' }}>{p.titel}</div>
-                    <div className="text-xs text-slate-500 truncate">{p.beschreibung}</div>
-                  </div>
-                  <div className="flex items-center gap-4 shrink-0 justify-end">
-                    <div className="text-right">
-                      <div className="text-[10px] uppercase text-slate-400">Prämie</div>
-                      <div className="text-sm font-mono font-medium text-slate-700">
-                        {p.volumen > 0 ? `${p.volumen.toLocaleString('de-DE')}€/J.` : '-'}
+              <div className="grid py-1.5 px-3 items-center text-[10px] uppercase text-slate-400 font-semibold" style={{ gridTemplateColumns: '1fr 80px 100px 100px' }}>
+                <span>Kunde</span>
+                <span className="text-right">Potenziale</span>
+                <span className="text-right">{modeId === 'banking' ? 'Volumen' : 'Prämie'}</span>
+                <span className="text-right">Provision</span>
+              </div>
+              {kundenPotentiale.slice(0, 8).map((kp, i) => {
+                const topPrio = kp.potentiale.reduce((best, p) => {
+                  const prio = { kritisch: 0, hoch: 1, mittel: 2, niedrig: 3 };
+                  return (prio[p.prioritaet] ?? 3) < (prio[best] ?? 3) ? p.prioritaet : best;
+                }, 'niedrig');
+                return (
+                  <div
+                    key={kp.kundeId}
+                    className="grid py-2.5 px-3 rounded-lg row-hover transition-colors cursor-pointer items-center"
+                    style={{ gridTemplateColumns: '1fr 80px 100px 100px' }}
+                    onClick={() => navigateTo('detail', { kundeId: kp.kundeId, tab: 'potentiale' })}
+                  >
+                    <div className="flex items-center gap-2 min-w-0">
+                      <Avatar name={kp.kundeName} foto={getKundeFoto(kp.kundeId)} size={30} />
+                      <div className="min-w-0">
+                        <div className="text-sm font-semibold text-slate-700 truncate flex items-center gap-1.5">
+                          {kp.kundeName}
+                          <PrioBadge prioritaet={topPrio} />
+                        </div>
+                        <div className="text-[10px] text-slate-400 truncate">
+                          {kp.potentiale.slice(0, 2).map(p => p.titel).join(', ')}
+                          {kp.potentiale.length > 2 && ` +${kp.potentiale.length - 2}`}
+                        </div>
                       </div>
                     </div>
                     <div className="text-right">
-                      <div className="text-[10px] uppercase text-slate-400">Provision</div>
-                      <div className="text-sm font-mono font-medium" style={{ color: 'var(--mode-primary-light)' }}>
-                        {p.volumen > 0 ? `${Math.round(p.volumen * 0.75).toLocaleString('de-DE')}€` : '-'}
-                      </div>
+                      <span className="inline-flex items-center gap-0.5 text-sm font-semibold" style={{ color: 'var(--mode-primary-light)' }}>
+                        {kp.potentiale.length}
+                      </span>
+                    </div>
+                    <div className="text-right text-sm font-mono font-medium text-slate-700">
+                      {kp.gesamtPraemie > 0 ? `${kp.gesamtPraemie.toLocaleString('de-DE')}€` : '-'}
+                    </div>
+                    <div className="text-right text-sm font-mono font-medium" style={{ color: 'var(--mode-primary-light)' }}>
+                      {kp.gesamtProvision > 0 ? `${kp.gesamtProvision.toLocaleString('de-DE')}€` : '-'}
                     </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
-            <button
-              className="mt-3 text-sm font-medium hover:underline"
-              style={{ color: 'var(--mode-primary-light)' }}
-              onClick={() => setActiveTab('potentiale')}
-            >
-              +{Math.max(0, getAllPotentiale(modeId).length - 5)} weitere anzeigen →
-            </button>
+            {kundenPotentiale.length > 8 && (
+              <button
+                className="mt-3 text-sm font-medium hover:underline"
+                style={{ color: 'var(--mode-primary-light)' }}
+                onClick={() => setActiveTab('potentiale')}
+              >
+                +{kundenPotentiale.length - 8} weitere Kunden anzeigen →
+              </button>
+            )}
           </Card>
         )}
 

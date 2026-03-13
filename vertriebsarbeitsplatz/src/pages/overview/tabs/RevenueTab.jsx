@@ -13,10 +13,12 @@ export default function RevenueTab() {
   const { config } = useMode();
   const data = VV_REVENUE;
 
-  const monthlyTotal = data.monthlyRevenue.map(m => ({
-    name: m.name,
-    value: m.managementFee + m.performanceFee + m.sonstiges,
-  }));
+  // Cumulative revenue YTD (running total) - more meaningful than monthly billing amounts
+  let cumulative = 0;
+  const monthlyTotal = data.monthlyRevenue.map(m => {
+    cumulative += m.managementFee + m.performanceFee + m.sonstiges;
+    return { name: m.name, value: cumulative };
+  });
   const ytdTotal = data.monthlyRevenue.reduce((s, m) => s + m.managementFee + m.performanceFee + m.sonstiges, 0);
   const ytdMgmt = data.monthlyRevenue.reduce((s, m) => s + m.managementFee, 0);
   const ytdPerf = data.monthlyRevenue.reduce((s, m) => s + m.performanceFee, 0);
@@ -38,7 +40,7 @@ export default function RevenueTab() {
       <div className="grid grid-cols-3 gap-4">
         <div className="col-span-2">
           <Card>
-            <h3 className="font-semibold text-slate-800 mb-4">Ertragsentwicklung</h3>
+            <h3 className="font-semibold text-slate-800 mb-4">Kumulierter Ertrag YTD</h3>
             <LineChartComponent data={monthlyTotal} height={280} color={config.colors.primaryLight} />
           </Card>
         </div>

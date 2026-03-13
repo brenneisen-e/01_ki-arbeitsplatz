@@ -151,7 +151,7 @@ function transformPerformance(raw) {
     ioKommentar,
     esg: { score: 72, sfdr: 'Art. 8', co2: 42 },
     kosten: { quote: 1.15, betrag: 28500, jahr: 2024 },
-    verlustschwelle: { schwelle: -10, _pctFromHigh: -5.4, hoechststandDatum: '15.01.2026', grenze: -10 },
+    verlustschwelle: { schwelle: -10, aktuell: -5.4, hoechststandDatum: '15.01.2026', grenze: -10 },
   };
 }
 
@@ -232,11 +232,10 @@ function generatePerformance(id) {
       betrag: rngInt(prng, 5000, 120000),
       jahr: 2025,
     },
-    verlustschwelle: {
-      schwelle: pick(prng, [-8, -10, -12, -15]),
-      _pctFromHigh: round1(rng(prng, -7, -1)),
-      hoechststandDatum: pick(prng, ['15.01.2026', '28.02.2026', '10.12.2025']),
-    },
+    verlustschwelle: (() => {
+      const grenze = pick(prng, [-8, -10, -12, -15]);
+      return { schwelle: grenze, grenze, aktuell: round1(rng(prng, -7, -1)), hoechststandDatum: pick(prng, ['15.01.2026', '28.02.2026', '10.12.2025']) };
+    })(),
   };
 }
 

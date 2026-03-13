@@ -8,6 +8,11 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
     tailwind.config = {
+        safelist: [
+            'bg-green-50', 'text-green-600',
+            'bg-blue-50', 'text-blue-600',
+            'bg-violet-50', 'text-violet-600',
+        ],
         theme: {
             extend: {
                 colors: { brand: { DEFAULT: '#004d26', light: '#00843d', dark: '#003318' } }
@@ -36,6 +41,15 @@
         .module-tile:hover .tile-external { color: rgba(255,255,255,0.5) !important; }
         .module-tile:hover .tile-versions a { background: rgba(255,255,255,0.15) !important; color: white !important; border-color: rgba(255,255,255,0.3) !important; }
         .module-tile:hover .tile-versions a:hover { background: rgba(255,255,255,0.3) !important; }
+
+        /* Hero dot-pattern background */
+        .hero-pattern {
+            background-image: radial-gradient(circle at 1px 1px, rgba(0,77,38,0.04) 1px, transparent 0);
+            background-size: 24px 24px;
+        }
+        /* Cluster card hover */
+        .cluster-section { transition: box-shadow 0.3s ease; }
+        .cluster-section:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.04); }
 
         /* Loading Screen */
         #loading-screen {
@@ -121,19 +135,49 @@
 
     const VAP_BASE = 'vertriebsarbeitsplatz/dist/index.html';
 
-    const MODULES = [
-        { id: 'dashboard',   label: 'VST-Cockpit',            icon: LayoutDashboard, desc: 'KPIs, Bestand, Neugeschäft',           href: 'VSTCockpit/dist/index.html' },
-        { id: 'vap',         label: 'Vertriebsarbeitsplatz',  icon: Users,           desc: 'Agenturansicht, Kunden, Verträge',     href: 'vertriebsarbeitsplatz/dist/index.html#/versicherung/overview/uebersicht' },
-        { id: 'potential',   label: 'Potentialanalyse',       icon: Box,             desc: 'Cross-Sell, Up-Sell, Whitespots',     href: 'app.html#/potentialanalyse' },
-        { id: 'scoring',     label: 'Vermittler-Scoring',     icon: Clock,           desc: 'Risikobewertung & Analyse',           href: 'Risikoscoring/index.html' },
-        { id: 'bgav',        label: 'Vertragsumstellung',     icon: ShieldCheck,     desc: 'BGAV Simulation & Übersicht',         href: 'BGAVUmstellung/index.html' },
-        { id: 'bestand',     label: 'Bestandsübertragung',    icon: FileText,        desc: 'Vertragsübertragungen verwalten',     href: 'Bestandsuebertragung/index.html' },
-        { id: 'abrechnung',  label: 'Abrechnungsprüfung',     icon: CreditCard,      desc: 'Abrechnungen prüfen & validieren',    href: 'https://billingcheck.pages.dev/app', external: true },
-        { id: 'provision',   label: 'Provisionsvalidierung',  icon: CheckCircle,     desc: 'Provisionen analysieren',             href: 'https://provisions-analyzer.pages.dev/', external: true },
-        { id: 'pmo',         label: 'PMO Toolbox',            icon: LayoutGrid,      desc: 'Transformationsprogramm',             href: 'PMOToolbox/index.html' },
-        { id: 'hr',          label: 'HR Pipeline',            icon: UserPlus,        desc: 'Recruiting & Bewerbermanagement',     href: 'HRPipeline/index.html' },
-        { id: 'v1x1',        label: 'Versicherungs-1×1',      icon: BookOpen,        desc: 'Wissen & Nachschlagewerk',            href: 'Versicherungs1x1/index.html' },
-        { id: 'kredit',      label: 'KI-Kreditanalyse',       icon: ClipboardCheck,  desc: 'KI-gestützte Kreditbewertung',        href: 'kreditanalyse/dist/index.html' },
+    const MODULE_CLUSTERS = [
+        {
+            id: 'sales',
+            title: 'Vertrieb & Analyse',
+            icon: Zap,
+            accentColor: '#00843d',
+            iconBg: 'bg-green-50',
+            iconColor: 'text-green-600',
+            modules: [
+                { id: 'dashboard',  label: 'VST-Cockpit',           icon: LayoutDashboard, desc: 'KPIs, Bestand, Neugeschäft',       href: 'VSTCockpit/dist/index.html' },
+                { id: 'vap',        label: 'Vertriebsarbeitsplatz', icon: Users,           desc: 'Agenturansicht, Kunden, Verträge', href: 'vertriebsarbeitsplatz/dist/index.html#/versicherung/overview/uebersicht' },
+                { id: 'potential',  label: 'Potentialanalyse',      icon: Box,             desc: 'Cross-Sell, Up-Sell, Whitespots',  href: 'app.html#/potentialanalyse' },
+                { id: 'scoring',    label: 'Vermittler-Scoring',    icon: Clock,           desc: 'Risikobewertung & Analyse',        href: 'Risikoscoring/index.html' },
+            ]
+        },
+        {
+            id: 'contracts',
+            title: 'Vertragsmanagement',
+            icon: FileText,
+            accentColor: '#2563eb',
+            iconBg: 'bg-blue-50',
+            iconColor: 'text-blue-600',
+            modules: [
+                { id: 'bgav',       label: 'Vertragsumstellung',     icon: ShieldCheck, desc: 'BGAV Simulation & Übersicht',      href: 'BGAVUmstellung/index.html' },
+                { id: 'bestand',    label: 'Bestandsübertragung',    icon: FileText,    desc: 'Vertragsübertragungen verwalten',  href: 'Bestandsuebertragung/index.html' },
+                { id: 'abrechnung', label: 'Abrechnungsprüfung',     icon: CreditCard,  desc: 'Abrechnungen prüfen & validieren', href: 'https://billingcheck.pages.dev/app', external: true },
+                { id: 'provision',  label: 'Provisionsvalidierung',  icon: CheckCircle, desc: 'Provisionen analysieren',           href: 'https://provisions-analyzer.pages.dev/', external: true },
+            ]
+        },
+        {
+            id: 'tools',
+            title: 'Tools & Wissen',
+            icon: BookOpen,
+            accentColor: '#7c3aed',
+            iconBg: 'bg-violet-50',
+            iconColor: 'text-violet-600',
+            modules: [
+                { id: 'pmo',    label: 'PMO Toolbox',          icon: LayoutGrid,     desc: 'Transformationsprogramm',          href: 'PMOToolbox/index.html' },
+                { id: 'hr',     label: 'HR Pipeline',          icon: UserPlus,       desc: 'Recruiting & Bewerbermanagement',  href: 'HRPipeline/index.html' },
+                { id: 'v1x1',   label: 'Versicherungs-1×1',    icon: BookOpen,       desc: 'Wissen & Nachschlagewerk',         href: 'Versicherungs1x1/index.html' },
+                { id: 'kredit', label: 'KI-Kreditanalyse',     icon: ClipboardCheck, desc: 'KI-gestützte Kreditbewertung',     href: 'kreditanalyse/dist/index.html' },
+            ]
+        }
     ];
 
     const DEMO_SUGGESTIONS = [
@@ -145,14 +189,17 @@
         { text: 'Was kann ich hier machen?',            href: VAP_BASE + '#/versicherung/cockpit' },
     ];
 
-    function ModuleTile({ mod, delay }) {
+    function ModuleTile({ mod, delay, cluster }) {
+        const iconBg = cluster ? cluster.iconBg : 'bg-slate-100';
+        const iconColor = cluster ? cluster.iconColor : 'text-slate-600';
+
         if (mod.versions) {
             return h('div', {
                 className: 'module-tile bg-white rounded-xl border border-slate-200 p-5 animate-fade-in-up cursor-default',
                 style: { animationDelay: delay + 'ms' }
             },
-                h('div', { className: 'tile-icon-wrap w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center mb-3' },
-                    h(mod.icon, { size: 20, className: 'tile-icon text-slate-600', strokeWidth: 1.75 })
+                h('div', { className: 'tile-icon-wrap w-10 h-10 rounded-lg ' + iconBg + ' flex items-center justify-center mb-3' },
+                    h(mod.icon, { size: 20, className: 'tile-icon ' + iconColor, strokeWidth: 1.75 })
                 ),
                 h('div', { className: 'tile-label font-semibold text-slate-800 mb-1 text-sm' }, mod.label),
                 h('div', { className: 'tile-desc text-xs text-slate-400 mb-3' }, mod.desc),
@@ -179,11 +226,37 @@
             mod.external && h('div', { className: 'absolute top-3 right-3' },
                 h(ExternalLink, { size: 12, className: 'tile-external text-slate-300' })
             ),
-            h('div', { className: 'tile-icon-wrap w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center mb-3' },
-                h(mod.icon, { size: 20, className: 'tile-icon text-slate-600', strokeWidth: 1.75 })
+            h('div', { className: 'tile-icon-wrap w-10 h-10 rounded-lg ' + iconBg + ' flex items-center justify-center mb-3' },
+                h(mod.icon, { size: 20, className: 'tile-icon ' + iconColor, strokeWidth: 1.75 })
             ),
             h('div', { className: 'tile-label font-semibold text-slate-800 mb-1 text-sm' }, mod.label),
             h('div', { className: 'tile-desc text-xs text-slate-400' }, mod.desc)
+        );
+    }
+
+    function ClusterSection({ cluster, startDelay }) {
+        return h('div', {
+            className: 'cluster-section mb-6 rounded-xl border border-slate-200 bg-white/70 backdrop-blur-sm overflow-hidden'
+        },
+            // Cluster header
+            h('div', {
+                className: 'flex items-center gap-3 px-5 py-3 border-b border-slate-100',
+                style: { borderLeft: '4px solid ' + cluster.accentColor }
+            },
+                h('div', {
+                    className: 'w-7 h-7 rounded-md ' + cluster.iconBg + ' flex items-center justify-center'
+                },
+                    h(cluster.icon, { size: 15, className: cluster.iconColor, strokeWidth: 2 })
+                ),
+                h('h3', { className: 'text-sm font-semibold text-slate-700 tracking-wide' }, cluster.title),
+                h('span', { className: 'ml-auto text-xs text-slate-400 font-medium' }, cluster.modules.length + ' Module')
+            ),
+            // Module grid inside cluster
+            h('div', { className: 'p-4 grid grid-cols-4 gap-3' },
+                cluster.modules.map((mod, i) =>
+                    h(ModuleTile, { key: mod.id, mod, delay: startDelay + i * 50, cluster })
+                )
+            )
         );
     }
 
@@ -404,7 +477,7 @@
         return h('div', { className: 'min-h-screen', onClick: () => setShowSuggestions(false) },
 
             // Header
-            h('div', { className: 'bg-white border-b border-slate-200 px-6 py-4' },
+            h('div', { className: 'bg-white border-b border-slate-200 px-6 py-4 relative' },
                 h('div', { className: 'max-w-5xl mx-auto flex items-center justify-between' },
                     h('div', { className: 'flex items-center gap-3' },
                         h('div', { className: 'w-9 h-9 rounded-lg bg-gradient-to-br from-green-700 to-green-500 flex items-center justify-center' },
@@ -416,10 +489,16 @@
                 )
             ),
 
+            // Gradient accent bar
+            h('div', {
+                className: 'h-1',
+                style: { background: 'linear-gradient(90deg, #004d26, #00843d, #2563eb, #7c3aed)' }
+            }),
+
             h('div', { className: 'max-w-5xl mx-auto px-6 py-8' },
 
                 // Welcome + Chat
-                h('div', { className: 'mb-8' },
+                h('div', { className: 'mb-8 hero-pattern rounded-2xl p-6 -mx-2' },
                     h('div', { className: 'bg-white rounded-xl border border-slate-200 p-6 mb-4 shadow-sm' },
                         h('div', { className: 'flex items-center gap-3' },
                             h('div', { className: 'w-10 h-10 rounded-full bg-green-50 flex items-center justify-center' },
@@ -472,12 +551,10 @@
                     )
                 ),
 
-                // Module Grid
+                // Module Clusters
                 h('h3', { className: 'text-xs font-semibold uppercase tracking-wider text-slate-400 mb-4' }, 'Module'),
-                h('div', { className: 'grid grid-cols-4 gap-4' },
-                    MODULES.map((mod, i) =>
-                        h(ModuleTile, { key: mod.id, mod, delay: i * 40 })
-                    )
+                MODULE_CLUSTERS.map((cluster, ci) =>
+                    h(ClusterSection, { key: cluster.id, cluster, startDelay: ci * 200 })
                 ),
 
                 // Settings Panel

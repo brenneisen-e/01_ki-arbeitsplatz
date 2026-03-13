@@ -585,31 +585,95 @@ export const STAMMDATEN_DATA = {
 // =============================================
 // TERMINE (mode-aware, dynamisch relativ zu heute)
 // =============================================
-function futureDateISO(daysFromToday) {
-  const d = new Date();
-  d.setDate(d.getDate() + daysFromToday);
-  return d.toISOString().split('T')[0];
+// Deutsche Feiertage für ein gegebenes Jahr
+function getFeiertage(year) {
+  const a = year % 19, b = Math.floor(year / 100), c = year % 100;
+  const d = Math.floor(b / 4), e = b % 4, f = Math.floor((b + 8) / 25);
+  const g = Math.floor((b - f + 1) / 3), h = (19 * a + b - d - g + 15) % 30;
+  const i = Math.floor(c / 4), k = c % 4;
+  const l = (32 + 2 * e + 2 * i - h - k) % 7;
+  const m = Math.floor((a + 11 * h + 22 * l) / 451);
+  const month = Math.floor((h + l - 7 * m + 114) / 31) - 1;
+  const day = ((h + l - 7 * m + 114) % 31) + 1;
+  const easter = new Date(year, month, day);
+  const easterOff = (days) => { const dd = new Date(easter); dd.setDate(dd.getDate() + days); return dd; };
+  const toKey = (dd) => dd.toISOString().split('T')[0];
+  return new Set([
+    toKey(new Date(year, 0, 1)), toKey(easterOff(-2)), toKey(easterOff(1)),
+    toKey(new Date(year, 4, 1)), toKey(easterOff(39)), toKey(easterOff(50)),
+    toKey(new Date(year, 9, 3)), toKey(new Date(year, 11, 25)), toKey(new Date(year, 11, 26)),
+  ]);
+}
+
+function isBusinessDay(date, feiertage) {
+  const dow = date.getDay();
+  return dow !== 0 && dow !== 6 && !feiertage.has(date.toISOString().split('T')[0]);
+}
+
+// Generate next appointment slot: 2h from now, skip weekends/holidays, 10:00-18:00 window
+function nextTerminSlot(offsetIndex) {
+  const now = new Date();
+  const allFeiertage = new Set([...getFeiertage(now.getFullYear()), ...getFeiertage(now.getFullYear() + 1)]);
+
+  let slot = new Date(now.getTime() + 2 * 60 * 60 * 1000);
+  // Round to next half hour
+  const mins = slot.getMinutes();
+  slot.setMinutes(mins < 30 ? 30 : 0, 0, 0);
+  if (mins >= 30) slot.setHours(slot.getHours() + 1);
+
+  // Clamp to business hours
+  function clamp(d) {
+    let r = new Date(d);
+    for (let x = 0; x < 30; x++) {
+      if (!isBusinessDay(r, allFeiertage) || r.getHours() >= 18) {
+        r.setDate(r.getDate() + 1); r.setHours(10, 0, 0, 0); continue;
+      }
+      if (r.getHours() < 10) { r.setHours(10, 0, 0, 0); }
+      break;
+    }
+    return r;
+  }
+  slot = clamp(slot);
+
+  // Advance by offsetIndex * ~2.5h for spread
+  const offsets = [0, 2.5, 5, 8];
+  slot = new Date(slot.getTime() + (offsets[offsetIndex] || offsetIndex * 2.5) * 60 * 60 * 1000);
+  slot = clamp(slot);
+
+  return {
+    datum: slot.toISOString().split('T')[0],
+    zeit: `${String(slot.getHours()).padStart(2, '0')}:${String(slot.getMinutes()).padStart(2, '0')}`,
+  };
 }
 
 export const TERMINE_BY_MODE = {
-  get versicherung() { return [
-    { datum: futureDateISO(0), zeit: '17:30', kunde: 'Amira König', betreff: 'Kfz-Angebot besprechen', kundeId: 'KD00002', foto: './images/AdobeStock_252262042.jpeg' },
-    { datum: futureDateISO(1), zeit: '10:30', kunde: 'Anna Hoffmann', betreff: 'Altersvorsorge-Beratung', kundeId: 'KD00004' },
-    { datum: futureDateISO(2), zeit: '14:00', kunde: 'Thomas Weber', betreff: 'Hausbesuch Bindungsgespräch', kundeId: 'KD00003', foto: './images/AdobeStock_361342769.jpeg' },
-    { datum: futureDateISO(3), zeit: '09:00', kunde: 'Sandra Yilmaz', betreff: 'Jahresgespräch', kundeId: 'KD00008', foto: './images/AdobeStock_612932760.jpeg' },
-  ]; },
-  get banking() { return [
-    { datum: futureDateISO(0), zeit: '14:00', kunde: 'Klaus Fischer', betreff: 'Anschlussfinanzierung Beratung', kundeId: 'KDB001' },
-    { datum: futureDateISO(1), zeit: '09:30', kunde: 'Peter Hoffmann', betreff: 'VermögenPlus Depot Review', kundeId: 'KDB005' },
-    { datum: futureDateISO(2), zeit: '11:00', kunde: 'Sandra Müller', betreff: 'VR-FinanzPlan Erstgespräch', kundeId: 'KDB002' },
-    { datum: futureDateISO(3), zeit: '15:30', kunde: 'Andrea Lang', betreff: 'Praxiskredit Auszahlung', kundeId: 'KDB006' },
-  ]; },
-  get vermoegensverwaltung() { return [
-    { datum: futureDateISO(0), zeit: '10:00', kunde: 'Dr. Anna Fischer', betreff: 'Onboarding-Gespräch (3,5M€)', kundeId: 'VV-NEW' },
-    { datum: futureDateISO(1), zeit: '14:00', kunde: 'Familie Schneider', betreff: 'WpHG-Fragebogen', kundeId: 'VV-PIPE' },
-    { datum: futureDateISO(3), zeit: '10:00', kunde: 'Dr. Stefan Meier', betreff: 'Investmentvorschlag (5M€)', kundeId: 'VV-PIPE2' },
-    { datum: futureDateISO(5), zeit: '11:00', kunde: 'Fam. Hohenlohe', betreff: 'Family Office Pitch (15M€)', kundeId: 'VV-PIPE3' },
-  ]; },
+  get versicherung() {
+    const s = [0,1,2,3].map(i => nextTerminSlot(i));
+    return [
+      { datum: s[0].datum, zeit: s[0].zeit, kunde: 'Amira König', betreff: 'Kfz-Angebot besprechen', kundeId: 'KD00002', foto: './images/AdobeStock_252262042.jpeg' },
+      { datum: s[1].datum, zeit: s[1].zeit, kunde: 'Anna Hoffmann', betreff: 'Altersvorsorge-Beratung', kundeId: 'KD00004' },
+      { datum: s[2].datum, zeit: s[2].zeit, kunde: 'Thomas Weber', betreff: 'Hausbesuch Bindungsgespräch', kundeId: 'KD00003', foto: './images/AdobeStock_361342769.jpeg' },
+      { datum: s[3].datum, zeit: s[3].zeit, kunde: 'Sandra Yilmaz', betreff: 'Jahresgespräch', kundeId: 'KD00008', foto: './images/AdobeStock_612932760.jpeg' },
+    ];
+  },
+  get banking() {
+    const s = [0,1,2,3].map(i => nextTerminSlot(i));
+    return [
+      { datum: s[0].datum, zeit: s[0].zeit, kunde: 'Klaus Fischer', betreff: 'Anschlussfinanzierung Beratung', kundeId: 'KDB001' },
+      { datum: s[1].datum, zeit: s[1].zeit, kunde: 'Peter Hoffmann', betreff: 'VermögenPlus Depot Review', kundeId: 'KDB005' },
+      { datum: s[2].datum, zeit: s[2].zeit, kunde: 'Sandra Müller', betreff: 'VR-FinanzPlan Erstgespräch', kundeId: 'KDB002' },
+      { datum: s[3].datum, zeit: s[3].zeit, kunde: 'Andrea Lang', betreff: 'Praxiskredit Auszahlung', kundeId: 'KDB006' },
+    ];
+  },
+  get vermoegensverwaltung() {
+    const s = [0,1,2,3].map(i => nextTerminSlot(i));
+    return [
+      { datum: s[0].datum, zeit: s[0].zeit, kunde: 'Dr. Anna Fischer', betreff: 'Onboarding-Gespräch (3,5M€)', kundeId: 'VV-NEW' },
+      { datum: s[1].datum, zeit: s[1].zeit, kunde: 'Familie Schneider', betreff: 'WpHG-Fragebogen', kundeId: 'VV-PIPE' },
+      { datum: s[2].datum, zeit: s[2].zeit, kunde: 'Dr. Stefan Meier', betreff: 'Investmentvorschlag (5M€)', kundeId: 'VV-PIPE2' },
+      { datum: s[3].datum, zeit: s[3].zeit, kunde: 'Fam. Hohenlohe', betreff: 'Family Office Pitch (15M€)', kundeId: 'VV-PIPE3' },
+    ];
+  },
 };
 // Keep legacy export for backward compatibility
 export const TERMINE = TERMINE_BY_MODE.versicherung;

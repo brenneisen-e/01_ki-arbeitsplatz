@@ -162,48 +162,7 @@ export default function UebersichtTab() {
     <div className="grid grid-cols-3 gap-4">
       {/* Linke Spalte 2/3 */}
       <div className="col-span-2 space-y-4 min-w-0">
-        {/* Tagesstart / Begruessung */}
-        <Card>
-          <div className="flex items-center justify-between mb-1">
-            <div className="flex items-center gap-2">
-              <Sun size={20} className="text-amber-500" strokeWidth={1.75} />
-              <span className="text-lg font-semibold text-slate-800">Guten Morgen, {(() => { const parts = config.beraterName.split(' '); return parts[0].endsWith('.') && parts.length > 1 ? parts[0] + ' ' + parts[1] : parts[0]; })()}</span>
-            </div>
-            <span className="text-sm text-slate-400">{datumStr}</span>
-          </div>
-          <div className="flex gap-3 text-sm text-slate-600 mb-3 flex-wrap">
-            {tagesItems.map((item, i) => {
-              const Icon = item.icon;
-              return (
-                <span key={i} className="flex items-center gap-1">
-                  <Icon size={item.size} className={item.className} />
-                  {item.text}
-                </span>
-              );
-            })}
-            <span className="text-slate-400">·</span>
-            <span>Neugeschäft MTD: {modeId === 'versicherung' ? '€12.450' : modeId === 'banking' ? '€248k' : '€5,8M'}</span>
-          </div>
-
-          {/* Vertriebskennzahlen */}
-          <div className="mt-3 pt-3 border-t border-slate-100">
-            <div className="flex items-center justify-between mb-3">
-              <h4 className="text-sm font-semibold text-slate-700 flex items-center gap-1.5">
-                <BarChart3 size={16} className="text-slate-400" />
-                Vertriebskennzahlen
-              </h4>
-              <div className="flex gap-1 text-xs">
-                <span className="px-2 py-1 rounded bg-slate-800 text-white">Woche</span>
-                <span className="px-2 py-1 rounded bg-slate-100 text-slate-500 cursor-pointer hover:bg-slate-200">Monat</span>
-              </div>
-            </div>
-            <div className="grid grid-cols-4 gap-3">
-              {miniKpis.map((kpi, i) => (
-                <MiniKPI key={i} label={kpi.label} value={kpi.value} subtext={kpi.subtext} />
-              ))}
-            </div>
-          </div>
-        </Card>
+        {/* Vertriebspotenziale / Mandate & Potenziale - moved up, greeting removed */}
 
         {/* Vertriebspotenziale / Mandate & Potenziale */}
         {modeId === 'vermoegensverwaltung' ? (

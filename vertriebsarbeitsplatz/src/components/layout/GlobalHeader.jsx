@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { clsx } from 'clsx';
-import { ArrowLeft, Home, ChevronDown, Download, Settings, User } from 'lucide-react';
+import { ArrowLeft, Home, ChevronDown, Download, Settings, User, Calendar, AlertTriangle, Cloud, Sun, CloudRain, TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import { useMode } from '../../hooks/useMode';
 import { MODE_CONFIGS } from '../../data/modeConfig';
 import LogoImg from '../ui/LogoImg';
@@ -14,10 +14,49 @@ function getBasePath() {
   return '/';
 }
 
+const TAGESSTART_ITEMS = {
+  versicherung: [
+    { icon: Calendar, text: '4 Termine heute' },
+    { icon: AlertTriangle, text: '8 offene Potenziale', className: 'text-amber-300' },
+    { icon: Calendar, text: '3 Follow-ups fällig' },
+  ],
+  banking: [
+    { icon: Calendar, text: '4 Termine' },
+    { icon: Calendar, text: '1 Rückruf' },
+    { icon: AlertTriangle, text: '2 FIDA-Consents offen', className: 'text-amber-300' },
+  ],
+  vermoegensverwaltung: [
+    { icon: Calendar, text: '2 Mandate-Meetings' },
+    { icon: AlertTriangle, text: '1 Rebalancing fällig', className: 'text-amber-300' },
+    { icon: AlertTriangle, text: '1 WpHG abgelaufen', className: 'text-red-300' },
+  ],
+};
+
+// Mock weather data
+function getWeatherData() {
+  const h = new Date().getHours();
+  if (h < 12) return { temp: 8, condition: 'Bewölkt', icon: Cloud, high: 14, low: 4 };
+  if (h < 17) return { temp: 13, condition: 'Teilw. sonnig', icon: Sun, high: 14, low: 4 };
+  return { temp: 9, condition: 'Bewölkt', icon: Cloud, high: 14, low: 4 };
+}
+
+// Mock Bloomberg market data
+const MARKET_DATA = [
+  { symbol: 'DAX', value: '18.245', change: '+0,42%', positive: true },
+  { symbol: 'S&P 500', value: '5.892', change: '+0,18%', positive: true },
+  { symbol: 'EUR/USD', value: '1,0847', change: '-0,12%', positive: false },
+  { symbol: 'Bund 10Y', value: '2,31%', change: '+2bp', positive: null },
+  { symbol: 'Gold', value: '2.185', change: '+0,65%', positive: true },
+];
+
 export default function GlobalHeader({ kundeInfo }) {
   const { config, modeId, switchMode, switchInstitut, activeTab, setActiveTab, currentView, goBack } = useMode();
   const [showModeDropdown, setShowModeDropdown] = useState(false);
   const tabs = currentView === 'detail' ? config.detailTabs : config.tabs;
+  const tagesItems = TAGESSTART_ITEMS[modeId] || TAGESSTART_ITEMS.versicherung;
+  const weather = getWeatherData();
+  const WeatherIcon = weather.icon;
+  const isOverview = currentView !== 'detail';
 
   return (
     <header className="transition-all duration-500" style={{ background: config.colors.gradient }}>
@@ -59,9 +98,33 @@ export default function GlobalHeader({ kundeInfo }) {
               </div>
             </div>
           </div>
+
+          {/* To-Dos inline next to advisor name */}
+          {isOverview && (
+            <div className="flex items-center gap-3 ml-4 pl-4 border-l border-white/20">
+              {tagesItems.map((item, i) => {
+                const Icon = item.icon;
+                return (
+                  <span key={i} className="flex items-center gap-1 text-white/80 text-xs">
+                    <Icon size={13} className={item.className || 'text-white/60'} />
+                    {item.text}
+                  </span>
+                );
+              })}
+            </div>
+          )}
         </div>
 
         <div className="flex items-center gap-3">
+          {/* Weather Widget */}
+          {isOverview && (
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/10 text-white text-xs">
+              <WeatherIcon size={16} className="text-white/80" />
+              <span className="font-medium">{weather.temp}°C</span>
+              <span className="text-white/50">{weather.condition}</span>
+            </div>
+          )}
+
           <div className="relative">
             <button
               onClick={() => setShowModeDropdown(!showModeDropdown)}
@@ -90,6 +153,30 @@ export default function GlobalHeader({ kundeInfo }) {
           </button>
         </div>
       </div>
+
+      {/* Bloomberg Market Ticker - only on overview */}
+      {isOverview && (
+        <div className="px-6 pb-2">
+          <div className="flex items-center gap-4 text-xs overflow-x-auto">
+            <span className="text-white/40 font-medium shrink-0">Märkte</span>
+            {MARKET_DATA.map((m, i) => (
+              <div key={i} className="flex items-center gap-1.5 shrink-0">
+                <span className="text-white/60">{m.symbol}</span>
+                <span className="text-white font-mono font-medium">{m.value}</span>
+                <span className={clsx(
+                  'font-mono font-medium flex items-center gap-0.5',
+                  m.positive === true ? 'text-emerald-300' : m.positive === false ? 'text-red-300' : 'text-white/50'
+                )}>
+                  {m.positive === true && <TrendingUp size={10} />}
+                  {m.positive === false && <TrendingDown size={10} />}
+                  {m.positive === null && <Minus size={10} />}
+                  {m.change}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Kunden-Zeile (Detail-Ansicht) */}
       {kundeInfo && (

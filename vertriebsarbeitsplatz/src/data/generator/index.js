@@ -79,7 +79,44 @@ export function generateAllKunden(modus, anzahl = 45, seed = 42) {
     generated.push(person);
   }
 
-  return [...showcase.map(k => ({ ...k, _isShowcase: true })), ...generated];
+  // Enrich showcase data: ensure they have transaktionen, scores, etc.
+  const enrichedShowcase = showcase.map(k => {
+    const enriched = { ...k, _isShowcase: true };
+    // Ensure required fields exist for generator functions
+    if (!enriched._modus) enriched._modus = modus;
+    if (!enriched.kinder) enriched.kinder = [];
+    if (!enriched.transaktionen) {
+      enriched.transaktionen = generateTransaktionen(enriched);
+      // VV mandants: add management fee + income from portfolio as transactions
+      if (modus === 'vermoegensverwaltung' && enriched.aum) {
+        const mgmtFee = Math.round(enriched.aum * 0.01 / 12);
+        enriched.transaktionen.push({ kategorie: 'versicherung_firma', betrag: -mgmtFee, empfaenger: 'VV Management Fee' });
+        const dividenden = Math.round(enriched.aum * 0.02 / 12);
+        enriched.transaktionen.push({ kategorie: 'einkommen', betrag: dividenden, empfaenger: 'Dividenden & Zinserträge' });
+        // Add a savings/investment transaction
+        const sparRate = Math.round((enriched.nettoeinkommen || 10000) * 0.2);
+        enriched.transaktionen.push({ kategorie: 'sparen', betrag: -sparRate, empfaenger: 'Sparplan / Wiederanlage' });
+      }
+    }
+    if (!enriched.nps) {
+      const produktAnzahl = (enriched.eigeneProdukte || []).length;
+      const npsBase = produktAnzahl >= 5 ? 8 : produktAnzahl >= 3 ? 7 : produktAnzahl >= 2 ? 6 : 5;
+      enriched.nps = Math.max(1, Math.min(10, npsBase + (Math.floor(Math.random() * 5) - 2)));
+    }
+    if (!enriched.potentiale) {
+      enriched.potentiale = evaluatePotentiale(enriched);
+    }
+    calculateScores(enriched);
+    if (!enriched.absicherung) {
+      enriched.absicherung = berechneAbsicherung(enriched);
+    }
+    if (!enriched.kommunikation) {
+      enriched.kommunikation = generateKommunikation(enriched);
+    }
+    return enriched;
+  });
+
+  return [...enrichedShowcase, ...generated];
 }
 
 // ═══ Cache: Nur einmal pro Session generieren ═══

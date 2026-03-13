@@ -63,7 +63,7 @@ function ChartTooltip({ active, payload, label }) {
         <p key={i} className="flex items-center gap-1.5">
           <span className="w-2 h-2 rounded-full" style={{ backgroundColor: p.color }} />
           <span className="text-slate-500">{p.name}:</span>
-          <span className="font-mono font-medium text-slate-800">{fmtNum(p.value)}</span>
+          <span className="font-mono font-medium text-slate-800">{fmtNum(p.value, 0)} EUR</span>
         </p>
       ))}
     </div>
@@ -72,12 +72,11 @@ function ChartTooltip({ active, payload, label }) {
 
 // ─── KPI Box ──────────────────────────────────────────────────────────────────
 function KpiBox({ label, value, suffix = '%' }) {
-  const isPositive = typeof value === 'number' && value >= 0;
   return (
     <div className="bg-white border border-slate-200 rounded-xl p-4" style={{ boxShadow: 'var(--card-shadow)' }}>
       <p className="text-xs text-slate-500 mb-1">{label}</p>
-      <p className={clsx('font-mono font-semibold text-2xl', isPositive ? 'text-slate-800' : 'text-red-600')}>
-        {value == null ? '–' : `${value > 0 && suffix === '%' ? '+' : ''}${fmtNum(value)}${suffix}`}
+      <p className="font-mono font-semibold text-2xl text-[#1a365d]">
+        {value == null ? '–' : `${typeof value === 'number' && value > 0 && suffix === '%' ? '+' : ''}${typeof value === 'string' ? value : fmtNum(value)}${suffix}`}
       </p>
     </div>
   );
@@ -185,6 +184,9 @@ export default function PerformanceTab({ kunde }) {
 
   const perfData = VV_PERFORMANCE[kunde?.id];
 
+  // Benchmark name from WPHG data or default
+  const benchmarkName = '60% MSCI World / 40% Bloomberg Agg';
+
   // ── No data placeholder ──
   if (!perfData) {
     return (
@@ -214,11 +216,36 @@ export default function PerformanceTab({ kunde }) {
   // Derive KPIs from kunde portfolio data
   const kpis = deriveKpis(monthly, kunde?.portfolio);
 
-  // Build time ranges from monthly series
-  const timeRanges = useMemo(() => buildTimeRanges(monthly), [monthly]);
+  // Convert monthly percentage returns to absolute EUR values
+  const absoluteMonthly = useMemo(() => {
+    if (!monthly || !kunde?.aum) return monthly || [];
+    const baseAum = kunde.aum;
+    // Walk backwards from current AuM to reconstruct absolute values
+    const len = monthly.length;
+    const pfValues = new Array(len);
+    const bmValues = new Array(len);
+    // Start from baseAum at end, walk backward
+    pfValues[len - 1] = baseAum;
+    bmValues[len - 1] = baseAum; // benchmark starts at same value
+    for (let i = len - 2; i >= 0; i--) {
+      const pfRet = monthly[i + 1].portfolio / 100;
+      const bmRet = monthly[i + 1].benchmark / 100;
+      pfValues[i] = pfValues[i + 1] / (1 + pfRet);
+      bmValues[i] = bmValues[i + 1] / (1 + bmRet);
+    }
+    return monthly.map((m, i) => ({
+      monat: m.monat,
+      portfolio: Math.round(pfValues[i]),
+      benchmark: Math.round(bmValues[i]),
+    }));
+  }, [monthly, kunde?.aum]);
+
+  // Build time ranges from monthly series (using absolute values)
+  const timeRanges = useMemo(() => buildTimeRanges(absoluteMonthly), [absoluteMonthly]);
   const rangeKeys = ['ytd', '1j', '3j', '5j'];
   const rangeLabels = { ytd: 'YTD', '1j': '1J', '3j': '3J', '5j': '5J' };
   const currentSeries = timeRanges[timeRange] || [];
+  const lastPortfolioValue = currentSeries.length > 0 ? currentSeries[currentSeries.length - 1].portfolio : null;
 
   // Convert allocation objects to chart-ready arrays
   const allocData = useMemo(() => {
@@ -298,10 +325,10 @@ export default function PerformanceTab({ kunde }) {
       </div>
       {showAbsolute ? (
         <div className="grid grid-cols-4 gap-4">
-          <KpiBox label="Portfolio-Wert" value={kunde?.aum ? fmtNum(kunde.aum / 1000, 0) : '–'} suffix="k €" />
-          <KpiBox label="Performance YTD" value={kunde?.aum && kpis.perfYtd != null ? fmtNum(Math.round(kunde.aum * kpis.perfYtd / 100 / 1000), 0) : '–'} suffix="k €" />
-          <KpiBox label="vs. Benchmark" value={kunde?.aum && kpis.vsBenchmark != null ? fmtNum(Math.round(kunde.aum * kpis.vsBenchmark / 100 / 1000), 0) : '–'} suffix="k €" />
-          <KpiBox label="Volatilität (abs.)" value={kunde?.aum && risiko?.volatilitaet != null ? fmtNum(Math.round(kunde.aum * risiko.volatilitaet / 100 / 1000), 0) : '–'} suffix="k €" />
+          <KpiBox label="Portfolio-Wert" value={kunde?.aum ? fmtNum(Math.round(kunde.aum), 0) : '–'} suffix=" EUR" />
+          <KpiBox label="Performance YTD" value={kunde?.aum && kpis.perfYtd != null ? fmtNum(Math.round(kunde.aum * kpis.perfYtd / 100), 0) : '–'} suffix=" EUR" />
+          <KpiBox label="vs. Benchmark" value={kunde?.aum && kpis.vsBenchmark != null ? fmtNum(Math.round(kunde.aum * kpis.vsBenchmark / 100), 0) : '–'} suffix=" EUR" />
+          <KpiBox label="Volatilität (abs.)" value={kunde?.aum && risiko?.volatilitaet != null ? fmtNum(Math.round(kunde.aum * risiko.volatilitaet / 100), 0) : '–'} suffix=" EUR" />
         </div>
       ) : (
         <div className="grid grid-cols-4 gap-4">
@@ -315,7 +342,7 @@ export default function PerformanceTab({ kunde }) {
       {/* ── 2. Performance vs. Benchmark (Line Chart) ── */}
       <Card>
         <div className="flex items-center justify-between mb-4">
-          <SectionTitle sub="Portfolio vs. Benchmark (indexiert, Basis 100)">Performance-Verlauf</SectionTitle>
+          <SectionTitle sub={`Portfolio vs. Benchmark (${benchmarkName})`}>Performance-Verlauf</SectionTitle>
           <div className="flex gap-1">
             {rangeKeys.map(rk => {
               const hasSeries = (timeRanges[rk] || []).length > 0;
@@ -340,16 +367,32 @@ export default function PerformanceTab({ kunde }) {
           </div>
         </div>
         {currentSeries.length > 0 ? (
-          <ResponsiveContainer width="100%" height={280}>
-            <LineChart data={currentSeries} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
-              <XAxis dataKey="monat" tick={{ fontSize: 11, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fontSize: 11, fill: '#94a3b8' }} axisLine={false} tickLine={false} domain={['dataMin - 1', 'dataMax + 1']} />
-              <Tooltip content={<ChartTooltip />} />
-              <Legend iconType="line" wrapperStyle={{ fontSize: 11, paddingTop: 8 }} />
-              <Line type="monotone" dataKey="portfolio" name="Portfolio" stroke={C.primary} strokeWidth={2.5} dot={false} activeDot={{ r: 4, strokeWidth: 0, fill: C.primary }} />
-              <Line type="monotone" dataKey="benchmark" name="Benchmark" stroke={C.slateLight} strokeWidth={1.5} strokeDasharray="6 3" dot={false} activeDot={{ r: 3, strokeWidth: 0, fill: C.slateLight }} />
-            </LineChart>
-          </ResponsiveContainer>
+          <>
+            <ResponsiveContainer width="100%" height={280}>
+              <LineChart data={currentSeries} margin={{ top: 5, right: 20, bottom: 5, left: 20 }}>
+                <XAxis dataKey="monat" tick={{ fontSize: 11, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
+                <YAxis
+                  tick={{ fontSize: 11, fill: '#94a3b8' }}
+                  axisLine={false}
+                  tickLine={false}
+                  domain={['dataMin * 0.95', 'dataMax * 1.02']}
+                  tickFormatter={v => `${fmtNum(Math.round(v / 1000), 0)}k`}
+                />
+                <Tooltip content={<ChartTooltip />} />
+                <Legend iconType="line" wrapperStyle={{ fontSize: 11, paddingTop: 8 }} />
+                <Line type="monotone" dataKey="portfolio" name="Portfolio" stroke={C.primary} strokeWidth={2.5} dot={false} activeDot={{ r: 4, strokeWidth: 0, fill: C.primary }} />
+                <Line type="monotone" dataKey="benchmark" name={`Benchmark (${benchmarkName})`} stroke={C.slateLight} strokeWidth={1.5} strokeDasharray="6 3" dot={false} activeDot={{ r: 3, strokeWidth: 0, fill: C.slateLight }} />
+              </LineChart>
+            </ResponsiveContainer>
+            {lastPortfolioValue && (
+              <div className="flex justify-end mt-2">
+                <div className="bg-[#1a365d] text-white rounded-lg px-4 py-2">
+                  <span className="text-xs text-slate-300">Aktueller Portfolio-Wert</span>
+                  <p className="font-mono font-bold text-lg">{fmtNum(lastPortfolioValue, 0)} EUR</p>
+                </div>
+              </div>
+            )}
+          </>
         ) : (
           <div className="flex items-center justify-center h-48 text-sm text-slate-400">
             Keine Daten für diesen Zeitraum verfügbar

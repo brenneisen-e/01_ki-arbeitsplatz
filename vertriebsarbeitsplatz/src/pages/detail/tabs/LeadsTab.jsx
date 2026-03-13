@@ -4,19 +4,19 @@ import { VV_LEADS } from '../../../data/vvExtended';
 import { ChevronDown, ChevronUp, UserPlus, Briefcase } from 'lucide-react';
 
 const QUELLEN_COLORS = {
-  empfehlung: '#10b981',
-  nextgen: '#8b5cf6',
-  presse: '#f59e0b',
-  event: '#ec4899',
-  multiplikator: '#06b6d4',
-  digital: '#3b82f6',
-  liquiditaet: '#ef4444',
+  empfehlung: '#4a8c6f',
+  nextgen: '#7c6b9e',
+  presse: '#b08d3e',
+  event: '#a65f7d',
+  multiplikator: '#4a8fa0',
+  digital: '#5a7fb8',
+  liquiditaet: '#a05a5a',
   fremdbank: '#6b7280',
-  upgrade: '#06b6d4',
-  lifeevent: '#f97316',
-  stiftung: '#7c3aed',
-  event_einladung: '#ec4899',
-  performance: '#ef4444',
+  upgrade: '#4a8fa0',
+  lifeevent: '#b07040',
+  stiftung: '#6a5a8e',
+  event_einladung: '#a65f7d',
+  performance: '#a05a5a',
   compliance: '#64748b',
 };
 
@@ -195,7 +195,7 @@ function LeadCard({ lead, isExpanded, onToggle }) {
           </span>
           <span className="font-medium text-sm text-slate-800 truncate">{lead.name}</span>
           <span
-            className="text-[10px] font-medium px-2 py-0.5 rounded-full text-white shrink-0"
+            className="text-xs font-medium px-2.5 py-0.5 rounded-full text-white shrink-0"
             style={{ backgroundColor: QUELLEN_COLORS[lead.quelle] || '#94a3b8' }}
           >
             {QUELLEN_LABELS[lead.quelle] || lead.quelleLabel || lead.quelle}
@@ -245,7 +245,7 @@ function StadiumBadge({ stadium }) {
     gewonnen: 'bg-emerald-50 text-emerald-600',
   };
   return (
-    <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${styles[stadium] || styles.lead}`}>
+    <span className={`text-xs font-medium px-2.5 py-0.5 rounded-full ${styles[stadium] || styles.lead}`}>
       {STADIUM_LABELS[stadium] || stadium}
     </span>
   );

@@ -384,6 +384,33 @@ export default function NewApplicationView() {
     didPrefill.current = false; // Reset so it re-fills
   }, [dispatch]);
 
+  // Auto-validate when opening an existing company (show errors immediately)
+  const didAutoValidate = useRef(false);
+  useEffect(() => {
+    if (company && didPrefill.current && !didAutoValidate.current) {
+      didAutoValidate.current = true;
+      // Run validation after prefill state has settled
+      const timer = setTimeout(() => {
+        const errors = [];
+        if (!(company.firma || '').trim()) errors.push({ field: 'firma', label: 'Firmenname' });
+        if (!(company.rechtsform)) errors.push({ field: 'rechtsform', label: 'Rechtsform' });
+        if (!(company.branche || '').trim()) errors.push({ field: 'branche', label: 'Branche' });
+        if (!company.gf?.[0]?.name?.trim()) errors.push({ field: 'gf', label: 'Mind. 1 Geschäftsführer' });
+        if (!company.kredit?.art) errors.push({ field: 'kreditArt', label: 'Kreditart' });
+        const b = company.kredit?.betrag || 0;
+        if (!b) errors.push({ field: 'betrag', label: 'Kreditbetrag' });
+        if (!company.kredit?.laufzeit) errors.push({ field: 'laufzeit', label: 'Laufzeit' });
+        if (!(company.kredit?.verwendung || '').trim()) errors.push({ field: 'verwendung', label: 'Verwendungszweck' });
+        if (!company.kredit?.auszahlung) errors.push({ field: 'auszahlung', label: 'Gewünschter Auszahlungstermin' });
+        if (errors.length > 0) {
+          setValidationErrors(errors);
+          setShowErrors(true);
+        }
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [company]);
+
   // Validation
   const validateForm = useCallback(() => {
     const errors = [];
@@ -437,7 +464,7 @@ export default function NewApplicationView() {
             {company ? `Kreditantrag – ${company.firma}` : 'Neuer Kreditantrag'}
           </h2>
           <p className="text-xs text-text-muted font-body">
-            Erfassen Sie alle relevanten Antragsdaten. Pflichtfelder sind mit * markiert.
+            Erfasse alle relevanten Antragsdaten. Pflichtfelder sind mit * markiert.
           </p>
         </div>
       </div>
@@ -478,7 +505,7 @@ export default function NewApplicationView() {
         <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3">
           <AlertCircle size={18} className="text-danger mt-0.5 shrink-0" />
           <div>
-            <p className="text-sm font-semibold text-danger">Bitte füllen Sie alle Pflichtfelder aus:</p>
+            <p className="text-sm font-semibold text-danger">Bitte fülle alle Pflichtfelder aus:</p>
             <p className="text-xs text-red-600 mt-1">{validationErrors.map(e => e.label).join(', ')}</p>
           </div>
         </div>
@@ -898,7 +925,7 @@ export default function NewApplicationView() {
             id="verwendung"
             value={verwendung}
             onChange={(e) => { setVerwendung(e.target.value); if (showErrors) setShowErrors(false); }}
-            placeholder="Beschreiben Sie den Verwendungszweck des Kredits..."
+            placeholder="Beschreibe den Verwendungszweck des Kredits..."
             rows={3}
             className={inputCls + ' resize-y' + (isFieldError('verwendung') ? ' border-danger ring-2 ring-danger/20 animate-shake' : '')}
           />

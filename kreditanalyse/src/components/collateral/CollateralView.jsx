@@ -227,7 +227,7 @@ function ErfassenTab({ items, setItems }) {
     <div className="space-y-4">
       <SectionHeading>Sicherheiten erfassen</SectionHeading>
       <p className="text-sm text-text-secondary font-body -mt-1 mb-4">
-        Erfassen Sie alle relevanten Sicherheiten fuer den Kreditantrag. Die Bewertung erfolgt
+        Erfasse alle relevanten Sicherheiten fuer den Kreditantrag. Die Bewertung erfolgt
         automatisch im naechsten Tab.
       </p>
 
@@ -448,7 +448,7 @@ function BewertungTab({ items, haircuts, setHaircuts }) {
         <div className="flex flex-col items-center justify-center py-12 text-text-muted">
           <Calculator size={40} strokeWidth={1.5} className="mb-3 opacity-50" />
           <p className="text-sm font-body">
-            Keine Sicherheiten vorhanden. Bitte erfassen Sie Sicherheiten im ersten Tab.
+            Keine Sicherheiten vorhanden. Bitte erfasse Sicherheiten im ersten Tab.
           </p>
         </div>
       ) : (
@@ -943,7 +943,7 @@ export default function CollateralView() {
             Kein Kreditantrag ausgewaehlt
           </h2>
           <p className="text-sm font-body text-text-secondary max-w-md">
-            Bitte waehlen Sie einen Kreditantrag im Dashboard aus, um die Sicherheitenbewertung
+            Bitte waehle einen Kreditantrag im Dashboard aus, um die Sicherheitenbewertung
             durchzufuehren.
           </p>
         </div>

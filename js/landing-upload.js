@@ -665,8 +665,8 @@ function closeVersicherungs1x1() {
     const landingPage = document.getElementById('landingPage');
     if (landingPage) landingPage.style.display = 'flex';
 
-    // Update URL route
-    if (window.AppRouter) AppRouter.navigate('/landing');
+    // Navigate to React landing page
+    window.location.href = '/';
 }
 
 // ========================================

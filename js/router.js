@@ -161,7 +161,8 @@
                 'kundenDetailBankPage', 'bgavUmstellungPage', 'bankenModule',
                 'assetModule', 'risikoscoringModule', 'bestandsuebertragungModule',
                 'pmoToolboxModule', 'hrPipelineModule', 'versicherungs1x1Module',
-                'vermoegensverwaltungModule', 'vvOverviewPage', 'vvDetailPage'
+                'vermoegensverwaltungModule', 'vvOverviewPage', 'vvDetailPage',
+                'kreditanalyseModule', 'vertriebsarbeitsplatzModule'
             ];
 
             var anyVisible = containers.some(function(id) {

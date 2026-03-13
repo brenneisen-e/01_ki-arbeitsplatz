@@ -322,8 +322,9 @@ function closeKundenDetail() {
             detail: { module: 'main', view: 'landing' }
         }));
 
-        // Update URL route
-        if (window.AppRouter) AppRouter.navigate('/landing');
+        // Navigate to React landing page
+        window.location.href = '/';
+        return;
     } else if (previousViewBeforeKundenDetail === 'beraterOverview') {
         // Restore A-10 to insurance mode and go back to B-02
         if (typeof restoreA10InsuranceMode === 'function') restoreA10InsuranceMode();
@@ -375,7 +376,8 @@ function closeKundenDetail() {
             document.dispatchEvent(new CustomEvent('viewChanged', {
                 detail: { module: 'main', view: 'landing' }
             }));
-            if (window.AppRouter) AppRouter.navigate('/landing');
+            window.location.href = '/';
+            return;
         } else {
             // Absoluter Fallback: Potentialanalyse
             if (potentialPage) potentialPage.style.display = 'block';

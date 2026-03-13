@@ -1,4 +1,4 @@
-import { VV_ENGAGEMENT } from '../../../data/vvExtended';
+import { VV_ENGAGEMENT } from '../../../data/vvDataProvider';
 import { useMode } from '../../../hooks/useMode';
 import { KUNDEN_BY_MODE } from '../../../data';
 import {

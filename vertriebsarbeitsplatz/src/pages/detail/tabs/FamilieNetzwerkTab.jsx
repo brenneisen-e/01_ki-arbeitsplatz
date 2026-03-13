@@ -1,4 +1,4 @@
-import { VV_FAMILIE } from '../../../data/vvExtended';
+import { VV_FAMILIE } from '../../../data/vvDataProvider';
 import { formatEur } from '../../../utils/formatters';
 import { Users, Building2, AlertTriangle, CheckCircle, Briefcase, Award, TrendingUp, Crown, UserPlus } from 'lucide-react';
 import { clsx } from 'clsx';

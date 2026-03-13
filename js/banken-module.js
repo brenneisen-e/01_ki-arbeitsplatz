@@ -582,8 +582,9 @@ function switchModule(moduleName) {
         AppRouter.navigate('/asset-management');
     } else if (window.AppRouter && moduleName === 'vermoegensverwaltung') {
         AppRouter.navigate('/vv-overview');
-    } else if (window.AppRouter && moduleName === 'versicherung') {
-        AppRouter.navigate('/landing');
+    } else if (moduleName === 'versicherung') {
+        window.location.href = '/';
+        return;
     }
 
     console.log('Switched to module:', moduleName);

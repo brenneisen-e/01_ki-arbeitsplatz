@@ -821,8 +821,8 @@ function closeHRPipeline() {
     if (landingPage) landingPage.style.display = 'flex';
     document.dispatchEvent(new CustomEvent('moduleChanged', { detail: { module: 'main', view: 'landing' } }));
 
-    // Update URL route
-    if (window.AppRouter) AppRouter.navigate('/landing');
+    // Navigate to React landing page
+    window.location.href = '/';
 }
 
 function initHRPipeline() {

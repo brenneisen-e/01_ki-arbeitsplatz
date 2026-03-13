@@ -7,6 +7,8 @@
   --mode-primary-light: #C8102E;
   --mode-gradient: linear-gradient(135deg, #5a1018 0%, #86181d 40%, #a02028 100%);
   --mode-accent: #e8c547;
+  --mode-pastel: #fef2f2;
+  --mode-row-hover: #fde8e8;
 
   /* === NEUTRALE FARBEN === */
   --bg-primary: #f8fafc;
@@ -66,6 +68,8 @@
   --mode-primary-light: #C8102E;
   --mode-gradient: linear-gradient(135deg, #5a1018 0%, #86181d 40%, #a02028 100%);
   --mode-accent: #e8c547;
+  --mode-pastel: #fef2f2;
+  --mode-row-hover: #fde8e8;
 }
 
 [data-mode="banking"] {
@@ -73,6 +77,8 @@
   --mode-primary-light: #00843d;
   --mode-gradient: linear-gradient(135deg, #003318 0%, #004d26 40%, #006633 100%);
   --mode-accent: #7ab648;
+  --mode-pastel: #f0fdf4;
+  --mode-row-hover: #dcfce7;
 }
 
 [data-mode="vermoegensverwaltung"] {
@@ -80,6 +86,8 @@
   --mode-primary-light: #2b4c7e;
   --mode-gradient: linear-gradient(135deg, #0f2340 0%, #1a365d 40%, #2b4c7e 100%);
   --mode-accent: #c4a35a;
+  --mode-pastel: #eff6ff;
+  --mode-row-hover: #dbeafe;
 }
 
 /* === GLOBALE STILE === */
@@ -159,5 +167,9 @@
 
   .animate-scale-in {
     animation: scaleIn 200ms ease-out forwards;
+  }
+
+  .row-hover:hover {
+    background-color: var(--mode-row-hover);
   }
 }

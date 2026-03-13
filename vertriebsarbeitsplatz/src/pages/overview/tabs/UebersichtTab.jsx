@@ -147,7 +147,7 @@ export default function UebersichtTab() {
       {/* Linke Spalte 2/3 */}
       <div className="col-span-2 space-y-4 min-w-0">
         {/* Tagesstart / Begruessung */}
-        <Card hoverColor="#f0fdf4">
+        <Card>
           <div className="flex items-center justify-between mb-1">
             <div className="flex items-center gap-2">
               <Sun size={20} className="text-amber-500" strokeWidth={1.75} />
@@ -190,7 +190,7 @@ export default function UebersichtTab() {
         </Card>
 
         {/* Vertriebspotenziale */}
-        <Card hoverColor="#fef9c3">
+        <Card >
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
               <Zap size={20} style={{ color: 'var(--mode-primary-light)' }} strokeWidth={1.75} />
@@ -204,7 +204,7 @@ export default function UebersichtTab() {
             {potentiale.map((p, i) => (
               <div
                 key={i}
-                className="grid py-2.5 px-3 rounded-lg hover:bg-slate-50 transition-colors cursor-pointer items-center"
+                className="grid py-2.5 px-3 rounded-lg row-hover transition-colors cursor-pointer items-center"
                 style={{ gridTemplateColumns: 'max-content 1fr 140px' }}
                 onClick={() => navigateTo('detail', { kundeId: p.kundeId })}
               >
@@ -244,7 +244,7 @@ export default function UebersichtTab() {
         </Card>
 
         {/* Aufgaben */}
-        <Card hoverColor="#eff6ff">
+        <Card >
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
               <CheckSquare size={20} className="text-slate-500" strokeWidth={1.75} />
@@ -254,7 +254,7 @@ export default function UebersichtTab() {
           </div>
           <div className="space-y-2">
             {aufgaben.map((a, i) => (
-              <div key={i} className="flex items-center justify-between py-2 cursor-pointer hover:bg-slate-50 -mx-2 px-2 rounded-lg transition-colors"
+              <div key={i} className="flex items-center justify-between py-2 cursor-pointer row-hover -mx-2 px-2 rounded-lg transition-colors"
                 onClick={() => a.kundeId && navigateTo('detail', { kundeId: a.kundeId })}>
                 <div className="flex items-center gap-3">
                   <input type="checkbox" className="w-4 h-4 rounded border-slate-300" readOnly />
@@ -267,7 +267,7 @@ export default function UebersichtTab() {
         </Card>
 
         {/* Letzte Abschluesse */}
-        <Card hoverColor="#ecfdf5">
+        <Card >
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
               <CheckCircle size={20} className="text-emerald-500" strokeWidth={1.75} />
@@ -279,7 +279,7 @@ export default function UebersichtTab() {
             {abschluesse.map((a, i) => (
               <div
                 key={i}
-                className="flex items-center justify-between py-2.5 px-3 rounded-lg hover:bg-slate-50 transition-colors cursor-pointer"
+                className="flex items-center justify-between py-2.5 px-3 rounded-lg row-hover transition-colors cursor-pointer"
                 onClick={() => navigateTo('detail', { kundeId: a.kundeId, tab: 'vertraege' })}
               >
                 <div className="flex items-center gap-3">
@@ -309,7 +309,7 @@ export default function UebersichtTab() {
       {/* Rechte Spalte 1/3 */}
       <div className="col-span-1 space-y-4 min-w-0">
         {/* Anstehende Termine */}
-        <Card hoverColor="#fdf4ff">
+        <Card >
           <div className="flex items-center gap-2 mb-4">
             <Clock size={20} className="text-slate-500" strokeWidth={1.75} />
             <h3 className="font-semibold text-slate-800">Anstehende Termine</h3>
@@ -323,7 +323,7 @@ export default function UebersichtTab() {
               return (
                 <div
                   key={i}
-                  className="flex items-center gap-3 py-2.5 border-b border-slate-100 last:border-0 cursor-pointer hover:bg-slate-50 -mx-2 px-2 rounded-lg transition-colors"
+                  className="flex items-center gap-3 py-2.5 border-b border-slate-100 last:border-0 cursor-pointer row-hover -mx-2 px-2 rounded-lg transition-colors"
                   onClick={() => navigateTo('detail', { kundeId: t.kundeId })}
                 >
                   <div className="text-center shrink-0 w-14">
@@ -342,7 +342,7 @@ export default function UebersichtTab() {
         </Card>
 
         {/* Schnellzugriff Formulare */}
-        <Card hoverColor="#f0f9ff">
+        <Card >
           <div className="flex items-center gap-2 mb-4">
             <FileText size={20} className="text-slate-500" strokeWidth={1.75} />
             <h3 className="font-semibold text-slate-800">Schnellzugriff Formulare</h3>
@@ -353,7 +353,7 @@ export default function UebersichtTab() {
               return (
                 <button
                   key={i}
-                  className="flex flex-col items-center gap-2 p-4 rounded-xl border border-slate-200 hover:border-slate-300 hover:bg-slate-50 transition-all text-center"
+                  className="flex flex-col items-center gap-2 p-4 rounded-xl border border-slate-200 hover:border-slate-300 row-hover transition-all text-center"
                 >
                   <Icon size={24} style={{ color: item.color }} strokeWidth={1.5} />
                   <span className="text-xs font-medium text-slate-600">{item.label}</span>
@@ -364,7 +364,7 @@ export default function UebersichtTab() {
         </Card>
 
         {/* Provisionsabrechnungen */}
-        <Card hoverColor="#fefce8">
+        <Card >
           <div className="flex items-center gap-2 mb-4">
             <Euro size={20} className="text-slate-500" strokeWidth={1.75} />
             <h3 className="font-semibold text-slate-800">
@@ -373,7 +373,7 @@ export default function UebersichtTab() {
           </div>
           <div className="space-y-2">
             {abrechnungen.map((a, i) => (
-              <div key={i} className="flex items-center justify-between py-2 px-2 rounded-lg hover:bg-slate-50 transition-colors cursor-pointer">
+              <div key={i} className="flex items-center justify-between py-2 px-2 rounded-lg row-hover transition-colors cursor-pointer">
                 <div className="flex items-center gap-3">
                   <Download size={16} className="text-slate-400" />
                   <div>
@@ -395,7 +395,7 @@ export default function UebersichtTab() {
         </Card>
 
         {/* Geburtstage diese Woche */}
-        <Card hoverColor="#fff1f2">
+        <Card >
           <div className="flex items-center gap-2 mb-4">
             <Cake size={20} className="text-pink-400" strokeWidth={1.75} />
             <h3 className="font-semibold text-slate-800">Geburtstage diese Woche</h3>
@@ -404,7 +404,7 @@ export default function UebersichtTab() {
             {geburtstage.map((g, i) => (
               <div
                 key={i}
-                className="flex items-center gap-3 py-2 cursor-pointer hover:bg-slate-50 -mx-2 px-2 rounded-lg transition-colors"
+                className="flex items-center gap-3 py-2 cursor-pointer row-hover -mx-2 px-2 rounded-lg transition-colors"
                 onClick={() => navigateTo('detail', { kundeId: g.kundeId })}
               >
                 <Avatar name={g.name} foto={g.foto} size={40} />

@@ -262,7 +262,7 @@ export default function KundenTab() {
             className={clsx(
               'flex items-center border-b border-slate-100 last:border-0 cursor-pointer transition-colors duration-100',
               i % 2 === 0 ? 'bg-white' : 'bg-slate-50/40',
-              'hover:bg-slate-100',
+              'row-hover',
             )}
             onClick={() => navigateTo('detail', { kundeId: row.id })}
           >

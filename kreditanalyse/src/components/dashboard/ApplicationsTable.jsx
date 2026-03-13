@@ -26,9 +26,9 @@ function targetViewForStatus(status) {
       return 'collateral';
     case 'voting':
     case 'decision':
-      return 'voting';
+      return 'decision';
     default:
-      return 'overview';
+      return 'dashboard';
   }
 }
 

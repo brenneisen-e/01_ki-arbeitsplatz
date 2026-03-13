@@ -18,6 +18,142 @@ const QUICK_ACTIONS = [
   'Cross-Selling Chancen',
 ];
 
+const COCKPIT_QUICK_ACTIONS = [
+  'Top 5 nach Ergebnis',
+  'Performance Überblick',
+  'Auffällige Vermittler',
+];
+
+function getCockpitDemoResponse(message) {
+  const lower = message.toLowerCase();
+
+  if (lower.includes('top') && lower.includes('ergebnis')) {
+    return {
+      content: `<div class="space-y-2">
+        <p class="font-semibold">Top 5 Vermittler nach Ergebnis:</p>
+        <ol class="list-decimal pl-4 space-y-1 text-[13px]">
+          <li><strong>Maria Musterfrau</strong> — €890k</li>
+          <li><strong>Thomas Weber</strong> — €820k</li>
+          <li><strong>Sabine Danzig</strong> — €780k</li>
+          <li><strong>Klaus Richter</strong> — €750k</li>
+          <li><strong>Petra Hoffmann</strong> — €720k</li>
+        </ol>
+        <p class="text-xs text-slate-500 mt-2">→ <em>Die Tabelle zeigt jetzt die Top 5 Vermittler.</em></p>
+      </div>`,
+    };
+  }
+
+  if (lower.includes('top') && lower.includes('neugeschäft')) {
+    return {
+      content: `<div class="space-y-2">
+        <p class="font-semibold">Top 5 Vermittler nach Neugeschäft:</p>
+        <ol class="list-decimal pl-4 space-y-1 text-[13px]">
+          <li><strong>Maria Musterfrau</strong> — €890k</li>
+          <li><strong>Thomas Weber</strong> — €820k</li>
+          <li><strong>Sabine Danzig</strong> — €780k</li>
+          <li><strong>Klaus Richter</strong> — €750k</li>
+          <li><strong>Petra Hoffmann</strong> — €720k</li>
+        </ol>
+        <p class="text-xs text-slate-500 mt-2">→ <em>Die Tabelle zeigt jetzt die Top 5 Vermittler.</em></p>
+      </div>`,
+    };
+  }
+
+  if (lower.includes('performance') || lower.includes('gesamt')) {
+    return {
+      content: `<div class="space-y-2">
+        <p class="font-semibold">Gesamt-Performance Überblick:</p>
+        <table class="w-full text-xs mt-1 border-collapse">
+          <tr class="border-b border-slate-200"><td class="py-1.5 text-slate-500">Neugeschäft YTD</td><td class="py-1.5 font-medium font-mono">€38,1 Mio</td></tr>
+          <tr class="border-b border-slate-200"><td class="py-1.5 text-slate-500">Bestand</td><td class="py-1.5 font-medium font-mono">€141,9 Mrd</td></tr>
+          <tr class="border-b border-slate-200"><td class="py-1.5 text-slate-500">Stornoquote</td><td class="py-1.5 font-medium"><span class="text-emerald-600">4,9%</span> (Ziel: &lt;5,0%)</td></tr>
+          <tr class="border-b border-slate-200"><td class="py-1.5 text-slate-500">NPS Score</td><td class="py-1.5 font-medium">48 <span class="text-emerald-600">(+6 YoY)</span></td></tr>
+          <tr class="border-b border-slate-200"><td class="py-1.5 text-slate-500">Combined Ratio</td><td class="py-1.5 font-medium">91,0%</td></tr>
+          <tr><td class="py-1.5 text-slate-500">Gesamtergebnis</td><td class="py-1.5 font-medium font-mono text-emerald-600">€1,9 Mio</td></tr>
+        </table>
+        <p class="text-xs text-slate-500 mt-2">→ <em>Positive Entwicklung über alle KPIs.</em></p>
+      </div>`,
+    };
+  }
+
+  if (lower.includes('auffällig') || lower.includes('auffallig') || lower.includes('ungewöhnlich') || lower.includes('anomalie')) {
+    return {
+      content: `<div class="space-y-2">
+        <p class="font-semibold">Auffällige Vermittler (Anomalie-Erkennung):</p>
+        <p class="text-[13px]">4 Vermittler mit auffälligen Werten identifiziert:</p>
+        <div class="space-y-1.5 mt-2">
+          <div class="flex items-center gap-2 text-[13px]"><span class="w-2 h-2 rounded-full bg-red-500"></span><strong>2×</strong> Hohe Stornoquote (&gt;15%)</div>
+          <div class="flex items-center gap-2 text-[13px]"><span class="w-2 h-2 rounded-full bg-amber-500"></span><strong>1×</strong> Niedriger NPS Score (&lt;30)</div>
+          <div class="flex items-center gap-2 text-[13px]"><span class="w-2 h-2 rounded-full bg-orange-500"></span><strong>1×</strong> Bestandsrückgang (&gt;10% YoY)</div>
+        </div>
+        <p class="text-xs text-slate-500 mt-2">→ <em>Die KI-Analyse-Spalte zeigt Ursachen und Handlungsempfehlungen.</em></p>
+      </div>`,
+    };
+  }
+
+  if (lower.includes('bundesland') || lower.includes('bundesländ')) {
+    return {
+      content: `<div class="space-y-2">
+        <p class="font-semibold">Bundesland-Ranking nach Performance:</p>
+        <ol class="list-decimal pl-4 space-y-1 text-[13px]">
+          <li><strong>Bayern</strong> — Score: 87 · NG: €5,8 Mio · Storno: 4,8%</li>
+          <li><strong>Baden-Württemberg</strong> — Score: 84 · NG: €5,2 Mio · Storno: 4,9%</li>
+          <li><strong>NRW</strong> — Score: 81 · NG: €6,1 Mio · Storno: 5,2%</li>
+          <li><strong>Hessen</strong> — Score: 78 · NG: €4,2 Mio · Storno: 5,0%</li>
+          <li><strong>Hamburg</strong> — Score: 75 · NG: €3,8 Mio · Storno: 4,5%</li>
+        </ol>
+        <p class="text-xs text-slate-500 mt-2">→ <em>Performance-Score = gewichteter Mix aus NG, Storno, NPS</em></p>
+      </div>`,
+    };
+  }
+
+  if (lower.includes('storno') && lower.includes('segment')) {
+    return {
+      content: `<div class="space-y-2">
+        <p class="font-semibold">Stornoquoten nach Segment:</p>
+        <table class="w-full text-xs mt-1 border-collapse">
+          <tr class="border-b border-slate-200"><td class="py-1 font-medium">Leben</td><td class="py-1 font-mono">5,8%</td><td class="py-1 text-emerald-600">-0,3%</td></tr>
+          <tr class="border-b border-slate-200"><td class="py-1 font-medium">Kranken</td><td class="py-1 font-mono">4,2%</td><td class="py-1 text-emerald-600">-0,5%</td></tr>
+          <tr class="border-b border-slate-200"><td class="py-1 font-medium">Schaden</td><td class="py-1 font-mono">8,5%</td><td class="py-1 text-red-500">+0,2%</td></tr>
+          <tr><td class="py-1 font-medium">Kfz</td><td class="py-1 font-mono">12,1%</td><td class="py-1 text-emerald-600">-0,8%</td></tr>
+        </table>
+        <p class="text-xs text-slate-500 mt-2">→ <em>Gesamt: 8,2% (Ziel: &lt;8,0%)</em></p>
+      </div>`,
+    };
+  }
+
+  if (lower.includes('nps')) {
+    return {
+      content: `<div class="space-y-2">
+        <p class="font-semibold">NPS Score Entwicklung:</p>
+        <table class="w-full text-xs mt-1 border-collapse">
+          <tr class="border-b border-slate-200"><td class="py-1 text-slate-500">Jan 2024</td><td class="py-1 font-mono">38</td></tr>
+          <tr class="border-b border-slate-200"><td class="py-1 text-slate-500">Apr 2024</td><td class="py-1 font-mono">40</td></tr>
+          <tr class="border-b border-slate-200"><td class="py-1 text-slate-500">Jul 2024</td><td class="py-1 font-mono">41</td></tr>
+          <tr class="border-b border-slate-200"><td class="py-1 text-slate-500">Okt 2024</td><td class="py-1 font-mono">42</td></tr>
+          <tr><td class="py-1 text-slate-500">Jan 2025</td><td class="py-1 font-mono font-semibold text-emerald-600">48</td></tr>
+        </table>
+        <p class="text-xs text-slate-500 mt-2">→ <em>Trend: +10 Punkte YoY (+26%). Kranken zeigt stärkste Verbesserung.</em></p>
+      </div>`,
+    };
+  }
+
+  // Cockpit fallback
+  return {
+    content: `<div class="space-y-2">
+      <p>Ich habe die Dashboard-Daten analysiert.</p>
+      <p><strong>Verfügbare Abfragen:</strong></p>
+      <ul class="list-disc pl-4 space-y-1 text-[13px]">
+        <li>Top 5 Vermittler nach Neugeschäft</li>
+        <li>Bundesland Performance Ranking</li>
+        <li>NPS Score Entwicklung</li>
+        <li>Stornoquoten nach Segment</li>
+        <li>Auffällige Vermittler</li>
+      </ul>
+    </div>`,
+  };
+}
+
 function getDemoResponse(message, { currentView }) {
   const lower = message.toLowerCase();
 
@@ -184,7 +320,9 @@ export default function VertriebsAssistent() {
       setIsTyping(true);
 
       setTimeout(() => {
-        const result = getDemoResponse(text, { currentView });
+        const result = currentView === 'cockpit'
+          ? getCockpitDemoResponse(text)
+          : getDemoResponse(text, { currentView });
         setMessages((prev) => [...prev, { role: 'assistant', content: result.content, isHtml: true }]);
         setIsTyping(false);
 
@@ -208,7 +346,10 @@ export default function VertriebsAssistent() {
     }
   };
 
-  const welcomeMessage = WELCOME_MESSAGES[modeId] || WELCOME_MESSAGES.versicherung;
+  const welcomeMessage = currentView === 'cockpit'
+    ? 'Hallo! Ich kann dir bei der Analyse deiner Dashboard-Daten helfen. Hier sind einige Vorschläge:'
+    : (WELCOME_MESSAGES[modeId] || WELCOME_MESSAGES.versicherung);
+  const quickActions = currentView === 'cockpit' ? COCKPIT_QUICK_ACTIONS : QUICK_ACTIONS;
 
   return (
     <>
@@ -267,7 +408,7 @@ export default function VertriebsAssistent() {
 
                 {/* Quick action chips */}
                 <div className="pl-9 flex flex-wrap gap-2">
-                  {QUICK_ACTIONS.map((action) => (
+                  {quickActions.map((action) => (
                     <button
                       key={action}
                       onClick={() => sendMessage(action)}

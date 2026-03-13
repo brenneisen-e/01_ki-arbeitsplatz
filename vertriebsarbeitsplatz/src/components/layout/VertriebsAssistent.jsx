@@ -12,8 +12,8 @@ const WELCOME_MESSAGES = {
 };
 
 const QUICK_ACTIONS = [
-  'Neue Vertriebspotentiale',
-  'Kundenpotenzial analysieren',
+  'Neue Leads anzeigen',
+  'Mandantenpotenzial analysieren',
   'Gesprächsleitfaden erstellen',
   'Cross-Selling Chancen',
 ];
@@ -161,19 +161,26 @@ function getCockpitDemoResponse(message) {
 function getDemoResponse(message, { currentView }) {
   const lower = message.toLowerCase();
 
-  if (lower.includes('vertriebspotentiale') || lower.includes('vertriebspotenziale')) {
+  if (lower.includes('vertriebspotentiale') || lower.includes('vertriebspotenziale') || lower.includes('neue leads') || lower.includes('leads anzeigen')) {
     return {
       content: `<div class="space-y-3">
-        <p class="font-semibold">Analyse der Vertriebspotentiale</p>
-        <p>Ich habe <strong>3 neue Potentiale</strong> für den aktuellen Kunden identifiziert:</p>
+        <p class="font-semibold">Aktuelle Leads</p>
+        <p>Ich habe <strong>12 aktive Leads</strong> in deiner Pipeline identifiziert:</p>
+        <p class="text-xs font-semibold text-slate-600 mt-1">Neue Mandate (6):</p>
         <ol class="list-decimal pl-4 space-y-1">
-          <li><strong>Berufsunfähigkeitsversicherung</strong> — Absicherungslücke erkannt, kein bestehender BU-Schutz</li>
-          <li><strong>Betriebliche Altersvorsorge</strong> — AG-Zuschuss nicht ausgeschöpft, Steuerersparnis möglich</li>
-          <li><strong>Rechtsschutzversicherung</strong> — Kein Vertrag vorhanden, Lebenssituation empfiehlt Absicherung</li>
+          <li><strong>Dr. Katharina Bauer</strong> — Empfehlung Prof. Hartmann, 3,5M, Termin steht</li>
+          <li><strong>Charlotte von Trott</strong> — NextGen, Anwältin, 800k Eigenvermögen</li>
+          <li><strong>Dipl.-Ing. Stefan Müller</strong> — Presse/Firmenverkauf, 6M Erlös</li>
         </ol>
-        <p class="text-xs text-slate-500 mt-2">→ Wechsel zum Tab <em>Vertriebspotenziale</em> für Details...</p>
+        <p class="text-xs font-semibold text-slate-600 mt-1">Bestandsmandate (6):</p>
+        <ol class="list-decimal pl-4 space-y-1">
+          <li><strong>Lindenberg Cash 5,5M</strong> — Fremdbank-Konsolidierung, kritisch</li>
+          <li><strong>Hartmann PE +300k</strong> — Mandats-Erweiterung, Angebot läuft</li>
+          <li><strong>Weber Sparkasse 500k</strong> — Festgeld-Fälligkeit 2027</li>
+        </ol>
+        <p class="text-xs text-slate-500 mt-2">→ Wechsel zum Tab <em>Leads</em> für Details...</p>
       </div>`,
-      navigateTo: currentView === 'detail' ? 'impulse' : 'potentiale',
+      navigateTo: currentView === 'detail' ? 'impulse' : 'pipeline',
     };
   }
 

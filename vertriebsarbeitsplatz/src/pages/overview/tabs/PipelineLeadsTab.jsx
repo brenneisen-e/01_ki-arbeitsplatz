@@ -2,30 +2,43 @@ import { useState } from 'react';
 import Card from '../../../components/ui/Card';
 import PipelineBar from '../../../components/ui/PipelineBar';
 import { useMode } from '../../../hooks/useMode';
-import { Users, UserPlus, TrendingUp, Target, Filter } from 'lucide-react';
+import { Users, UserPlus, TrendingUp, Target, Filter, ChevronDown, ChevronUp, Briefcase } from 'lucide-react';
 
 import { VV_LEADS } from '../../../data/vvExtended';
+import { formatEur } from '../../../utils/formatters';
 
 const QUELLEN_COLORS = {
+  empfehlung: '#10b981',
   nextgen: '#8b5cf6',
   presse: '#f59e0b',
-  empfehlung: '#10b981',
+  event: '#ec4899',
+  multiplikator: '#06b6d4',
   digital: '#3b82f6',
   liquiditaet: '#ef4444',
-  event: '#ec4899',
-  upgrade: '#06b6d4',
   fremdbank: '#6b7280',
+  upgrade: '#06b6d4',
+  lifeevent: '#f97316',
+  stiftung: '#7c3aed',
+  event_einladung: '#ec4899',
+  performance: '#ef4444',
+  compliance: '#64748b',
 };
 
 const QUELLEN_LABELS = {
-  nextgen: 'NextGen',
-  presse: 'Presse',
   empfehlung: 'Empfehlung',
+  nextgen: 'NextGen',
+  presse: 'Presse/Exit',
+  event: 'Event',
+  multiplikator: 'Multiplikator',
   digital: 'Digital',
   liquiditaet: 'Liquidität',
-  event: 'Event',
-  upgrade: 'Upgrade',
   fremdbank: 'Fremdbank',
+  upgrade: 'Upgrade',
+  lifeevent: 'Life Event',
+  stiftung: 'Stiftung',
+  event_einladung: 'Event-Einladung',
+  performance: 'Performance',
+  compliance: 'Compliance',
 };
 
 const STADIUM_ORDER = ['lead', 'kennenlernen', 'identifiziert', 'termin', 'angebot', 'gewonnen'];
@@ -38,25 +51,26 @@ const STADIUM_LABELS = {
   gewonnen: 'Gewonnen',
 };
 
-const TYP_TABS = [
-  { id: 'alle', label: 'Alle' },
-  { id: 'neukunde', label: 'Neukunden' },
-  { id: 'bestandskunde', label: 'Bestandskunden' },
+const KATEGORIE_TABS = [
+  { id: 'alle', label: 'Alle Leads' },
+  { id: 'neumandat', label: 'Neue Mandate' },
+  { id: 'bestandsmandat', label: 'Bestandsmandate' },
 ];
 
 export default function PipelineLeadsTab() {
-  const [typFilter, setTypFilter] = useState('alle');
+  const [kategorieFilter, setKategorieFilter] = useState('alle');
   const [statusFilter, setStatusFilter] = useState('alle');
+  const [expandedLead, setExpandedLead] = useState(null);
 
   const leads = VV_LEADS || [];
   const filtered = leads.filter(l => {
-    if (typFilter !== 'alle' && l.typ !== typFilter) return false;
+    if (kategorieFilter !== 'alle' && l.kategorie !== kategorieFilter) return false;
     if (statusFilter !== 'alle' && l.stadium !== statusFilter) return false;
     return true;
   });
 
-  const neukunden = leads.filter(l => l.typ === 'neukunde');
-  const bestandskunden = leads.filter(l => l.typ === 'bestandskunde');
+  const neumandate = leads.filter(l => l.kategorie === 'neumandat');
+  const bestandsmandate = leads.filter(l => l.kategorie === 'bestandsmandat');
 
   const stadiumCounts = {};
   STADIUM_ORDER.forEach(s => { stadiumCounts[s] = leads.filter(l => l.stadium === s).length; });
@@ -67,13 +81,17 @@ export default function PipelineLeadsTab() {
     color: s === 'gewonnen' ? '#10b981' : s === 'angebot' ? '#f59e0b' : s === 'termin' ? '#3b82f6' : s === 'kennenlernen' ? '#8b5cf6' : s === 'identifiziert' ? '#06b6d4' : '#94a3b8',
   }));
 
+  // Calculate potential AuM by category
+  const neumandatAuM = neumandate.reduce((s, l) => s + (l.potentialAuM || 0), 0);
+  const bestandsAuM = bestandsmandate.reduce((s, l) => s + (l.potentialAuM || 0), 0);
+
   return (
     <div className="space-y-4">
       {/* KPIs */}
       <div className="grid grid-cols-4 gap-4">
-        <KPI icon={Users} label="Pipeline Leads" value={leads.length} sub={`${neukunden.length} Neukunden, ${bestandskunden.length} Bestand`} />
-        <KPI icon={UserPlus} label="Neukunden" value={neukunden.length} sub="in Pipeline" />
-        <KPI icon={TrendingUp} label="Bestandskunden" value={bestandskunden.length} sub="Cross-/Upsell" color="text-emerald-600" />
+        <KPI icon={Users} label="Pipeline Leads" value={leads.length} sub={`${neumandate.length} Neue, ${bestandsmandate.length} Bestand`} />
+        <KPI icon={UserPlus} label="Neue Mandate" value={neumandate.length} sub={formatEur(neumandatAuM) + ' pot. AuM'} />
+        <KPI icon={Briefcase} label="Bestandsmandate" value={bestandsmandate.length} sub={formatEur(bestandsAuM) + ' pot. AuM'} color="text-emerald-600" />
         <KPI icon={Target} label="Stadien" value={Object.keys(stadiumCounts).filter(s => stadiumCounts[s] > 0).length} sub="aktive Phasen" />
       </div>
 
@@ -85,24 +103,31 @@ export default function PipelineLeadsTab() {
 
       {/* Filters */}
       <div className="flex items-center gap-4 flex-wrap">
-        <div className="flex items-center gap-1.5">
-          <Filter size={14} className="text-slate-400" />
-          <span className="text-xs text-slate-400">Typ:</span>
-          {TYP_TABS.map(t => (
+        {/* Kategorie Tabs (prominent) */}
+        <div className="flex gap-1">
+          {KATEGORIE_TABS.map(t => (
             <button
               key={t.id}
-              onClick={() => setTypFilter(t.id)}
-              className={`text-xs px-2.5 py-1 rounded-full border transition-colors ${
-                typFilter === t.id
+              onClick={() => setKategorieFilter(t.id)}
+              className={`text-sm px-4 py-2 rounded-lg font-medium border transition-colors ${
+                kategorieFilter === t.id
                   ? 'bg-slate-800 text-white border-slate-800'
-                  : 'bg-white text-slate-500 border-slate-200 hover:border-slate-400'
+                  : 'bg-white text-slate-600 border-slate-200 hover:border-slate-400'
               }`}
             >
               {t.label}
+              <span className="ml-1.5 text-xs opacity-70">
+                {t.id === 'alle' ? leads.length : t.id === 'neumandat' ? neumandate.length : bestandsmandate.length}
+              </span>
             </button>
           ))}
         </div>
+
+        <div className="h-6 w-px bg-slate-200" />
+
+        {/* Stadium filter */}
         <div className="flex items-center gap-1.5 flex-wrap">
+          <Filter size={14} className="text-slate-400" />
           <span className="text-xs text-slate-400">Stadium:</span>
           <button
             onClick={() => setStatusFilter('alle')}
@@ -136,45 +161,27 @@ export default function PipelineLeadsTab() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-slate-200 text-left text-xs text-slate-400 uppercase">
+                <th className="py-2 pr-3 w-6"></th>
                 <th className="py-2 pr-3">Lead</th>
+                <th className="py-2 pr-3">Kategorie</th>
                 <th className="py-2 pr-3">Quelle</th>
-                <th className="py-2 pr-3">Typ</th>
                 <th className="py-2 pr-3">Stadium</th>
                 <th className="py-2 pr-3">Pot. Volumen</th>
                 <th className="py-2">Herkunft</th>
               </tr>
             </thead>
             <tbody>
-              {filtered.map(lead => (
-                <tr key={lead.id} className="border-b border-slate-100 hover:bg-slate-50 transition-colors cursor-pointer">
-                  <td className="py-2.5 pr-3">
-                    <div className="font-medium text-slate-800">{lead.name}</div>
-                    {lead.beruf && <div className="text-[10px] text-slate-400">{lead.beruf}</div>}
-                  </td>
-                  <td className="py-2.5 pr-3">
-                    <span
-                      className="text-[10px] font-medium px-2 py-0.5 rounded-full text-white"
-                      style={{ backgroundColor: QUELLEN_COLORS[lead.quelle] || '#94a3b8' }}
-                    >
-                      {QUELLEN_LABELS[lead.quelle] || lead.quelle}
-                    </span>
-                  </td>
-                  <td className="py-2.5 pr-3">
-                    <span className={`text-xs ${lead.typ === 'neukunde' ? 'text-blue-600' : 'text-emerald-600'}`}>
-                      {lead.typ === 'neukunde' ? 'Neukunde' : 'Bestand'}
-                    </span>
-                  </td>
-                  <td className="py-2.5 pr-3">
-                    <StadiumBadge stadium={lead.stadium} />
-                  </td>
-                  <td className="py-2.5 pr-3 font-mono text-slate-700 text-sm">
-                    {lead.geschaetztesVolumen || '—'}
-                  </td>
-                  <td className="py-2.5 text-xs text-slate-500 max-w-[280px] truncate">
-                    {lead.herkunft}
-                  </td>
-                </tr>
-              ))}
+              {filtered.map(lead => {
+                const isExpanded = expandedLead === lead.id;
+                return (
+                  <LeadRow
+                    key={lead.id}
+                    lead={lead}
+                    isExpanded={isExpanded}
+                    onToggle={() => setExpandedLead(isExpanded ? null : lead.id)}
+                  />
+                );
+              })}
             </tbody>
           </table>
           {filtered.length === 0 && (
@@ -186,34 +193,36 @@ export default function PipelineLeadsTab() {
       {/* Quellen-Aufschlüsselung */}
       <div className="grid grid-cols-2 gap-4">
         <Card>
-          <h4 className="font-semibold text-slate-800 mb-3">Neukunden-Quellen</h4>
+          <h4 className="font-semibold text-slate-800 mb-3">Neue Mandate — Quellen</h4>
           <div className="space-y-2">
-            {['nextgen', 'presse', 'empfehlung', 'digital'].map(q => {
-              const count = leads.filter(l => l.quelle === q && l.typ === 'neukunde').length;
+            {['empfehlung', 'nextgen', 'presse', 'event', 'multiplikator', 'digital'].map(q => {
+              const count = leads.filter(l => l.quelle === q && l.kategorie === 'neumandat').length;
+              if (count === 0) return null;
               return (
                 <div key={q} className="flex items-center justify-between text-sm">
                   <div className="flex items-center gap-2">
                     <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: QUELLEN_COLORS[q] }} />
                     <span className="text-slate-600">{QUELLEN_LABELS[q]}</span>
                   </div>
-                  <span className="text-xs text-slate-500">{count} Leads</span>
+                  <span className="text-xs text-slate-500">{count} Lead{count !== 1 ? 's' : ''}</span>
                 </div>
               );
             })}
           </div>
         </Card>
         <Card>
-          <h4 className="font-semibold text-slate-800 mb-3">Bestandskunden-Quellen</h4>
+          <h4 className="font-semibold text-slate-800 mb-3">Bestandsmandate — Quellen</h4>
           <div className="space-y-2">
-            {['liquiditaet', 'event', 'upgrade', 'fremdbank'].map(q => {
-              const count = leads.filter(l => l.quelle === q && l.typ === 'bestandskunde').length;
+            {['liquiditaet', 'fremdbank', 'upgrade', 'lifeevent', 'stiftung', 'event_einladung', 'performance', 'compliance'].map(q => {
+              const count = leads.filter(l => l.quelle === q && l.kategorie === 'bestandsmandat').length;
+              if (count === 0) return null;
               return (
                 <div key={q} className="flex items-center justify-between text-sm">
                   <div className="flex items-center gap-2">
                     <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: QUELLEN_COLORS[q] }} />
                     <span className="text-slate-600">{QUELLEN_LABELS[q]}</span>
                   </div>
-                  <span className="text-xs text-slate-500">{count} Leads</span>
+                  <span className="text-xs text-slate-500">{count} Lead{count !== 1 ? 's' : ''}</span>
                 </div>
               );
             })}
@@ -221,6 +230,96 @@ export default function PipelineLeadsTab() {
         </Card>
       </div>
     </div>
+  );
+}
+
+function LeadRow({ lead, isExpanded, onToggle }) {
+  return (
+    <>
+      <tr
+        className="border-b border-slate-100 hover:bg-slate-50 transition-colors cursor-pointer"
+        onClick={onToggle}
+      >
+        <td className="py-2.5 pr-1 text-slate-400">
+          {isExpanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+        </td>
+        <td className="py-2.5 pr-3">
+          <div className="font-medium text-slate-800">{lead.name}</div>
+          {lead.beruf && <div className="text-[10px] text-slate-400">{lead.beruf}</div>}
+        </td>
+        <td className="py-2.5 pr-3">
+          <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${
+            lead.kategorie === 'neumandat'
+              ? 'bg-blue-50 text-blue-700'
+              : 'bg-emerald-50 text-emerald-700'
+          }`}>
+            {lead.kategorie === 'neumandat' ? 'Neues Mandat' : 'Bestand'}
+          </span>
+        </td>
+        <td className="py-2.5 pr-3">
+          <span
+            className="text-[10px] font-medium px-2 py-0.5 rounded-full text-white"
+            style={{ backgroundColor: QUELLEN_COLORS[lead.quelle] || '#94a3b8' }}
+          >
+            {QUELLEN_LABELS[lead.quelle] || lead.quelleLabel || lead.quelle}
+          </span>
+        </td>
+        <td className="py-2.5 pr-3">
+          <StadiumBadge stadium={lead.stadium} />
+        </td>
+        <td className="py-2.5 pr-3 font-mono text-slate-700 text-sm">
+          {lead.geschaetztesVolumen || '—'}
+        </td>
+        <td className="py-2.5 text-xs text-slate-500 max-w-[280px] truncate">
+          {lead.herkunft}
+        </td>
+      </tr>
+      {isExpanded && lead.herleitung && (
+        <tr className="bg-slate-50/80">
+          <td colSpan={7} className="px-6 py-4">
+            <div className="max-w-3xl">
+              <div className="flex items-center gap-2 mb-3">
+                <h4 className="text-sm font-semibold text-slate-700">Herleitung</h4>
+                {lead.quelleLabel && (
+                  <span className="text-[10px] text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full">
+                    {lead.quelleLabel}
+                  </span>
+                )}
+              </div>
+              <div className="grid grid-cols-[auto_1fr] gap-x-6 gap-y-1.5">
+                {lead.herleitung.map((h, i) => (
+                  <div key={i} className="contents">
+                    <span className="text-xs text-slate-400 font-medium whitespace-nowrap">{h.label}</span>
+                    <span className="text-xs text-slate-700">{h.value}</span>
+                  </div>
+                ))}
+              </div>
+              {lead.naechsterSchritt && (
+                <div className="mt-3 pt-2 border-t border-slate-200">
+                  <span className="text-xs text-slate-400 font-medium">Nächster Schritt: </span>
+                  <span className="text-xs text-slate-700 font-medium">{lead.naechsterSchritt}</span>
+                </div>
+              )}
+              {lead.wahrscheinlichkeit > 0 && (
+                <div className="mt-2 flex items-center gap-2">
+                  <span className="text-[10px] text-slate-400">Wahrscheinlichkeit:</span>
+                  <div className="w-24 h-1.5 bg-slate-200 rounded-full">
+                    <div
+                      className="h-1.5 rounded-full transition-all"
+                      style={{
+                        width: `${lead.wahrscheinlichkeit}%`,
+                        backgroundColor: lead.wahrscheinlichkeit >= 70 ? '#10b981' : lead.wahrscheinlichkeit >= 40 ? '#f59e0b' : '#94a3b8',
+                      }}
+                    />
+                  </div>
+                  <span className="text-[10px] font-mono text-slate-600">{lead.wahrscheinlichkeit}%</span>
+                </div>
+              )}
+            </div>
+          </td>
+        </tr>
+      )}
+    </>
   );
 }
 

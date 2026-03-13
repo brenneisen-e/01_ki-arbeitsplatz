@@ -50,12 +50,12 @@ function ErfahrungCheck({ label, value }) {
 // ─── Info row ───
 function InfoRow({ label, value, icon: Icon }) {
   return (
-    <div className="flex justify-between items-start py-1.5">
-      <span className="text-slate-400 text-sm flex items-center gap-1.5">
-        {Icon && <Icon size={13} className="text-slate-400" />}
+    <div className="grid grid-cols-[200px_1fr] gap-4 items-start py-2">
+      <span className="text-slate-500 text-[15px] flex items-center gap-1.5">
+        {Icon && <Icon size={14} className="text-slate-400" />}
         {label}
       </span>
-      <span className="text-slate-700 text-sm font-medium text-right max-w-[60%]">{value}</span>
+      <span className="text-slate-800 text-[15px] font-medium">{value}</span>
     </div>
   );
 }
@@ -198,9 +198,9 @@ export default function WpHGComplianceTab({ kunde }) {
 
       {/* 2. WpHG-Bogen (Anlegerprofil) */}
       <Section title="WpHG-Bogen (Anlegerprofil)" icon={FileText}>
-        <div className="space-y-3">
-          <div className="flex items-center justify-between">
-            <span className="text-sm text-slate-500">Status</span>
+        <div className="space-y-1">
+          <div className="grid grid-cols-[200px_1fr] gap-4 items-center py-2">
+            <span className="text-slate-500 text-[15px]">Status</span>
             <StatusBadge status={wphg.status} />
           </div>
           <InfoRow label="Letzte Aktualisierung" value={fmtDate(wphg.letzteAktualisierung)} icon={Clock} />
@@ -220,8 +220,8 @@ export default function WpHGComplianceTab({ kunde }) {
           <InfoRow label="Risikoprofil" value={wphg.risikoprofil} />
 
           {/* Anlageerfahrung */}
-          <div className="pt-2 border-t border-slate-100">
-            <span className="text-xs text-slate-400 mb-2 block">Anlageerfahrung</span>
+          <div className="pt-3 border-t border-slate-100">
+            <span className="text-sm text-slate-500 mb-3 block font-medium">Anlageerfahrung</span>
             <div className="flex flex-wrap gap-1.5">
               {Object.entries(wphg.anlageerfahrung || {}).map(([key, val]) => (
                 <ErfahrungCheck key={key} label={erfahrungLabels[key] || key} value={val} />
@@ -234,12 +234,12 @@ export default function WpHGComplianceTab({ kunde }) {
           <InfoRow label="Verlusttoleranz" value={wphg.verlusttoleranz} />
 
           {/* ESG-Präferenzen */}
-          <div className="pt-2 border-t border-slate-100">
-            <div className="flex items-center gap-1.5 mb-2">
-              <Leaf size={13} className="text-emerald-500" />
-              <span className="text-xs text-slate-400">ESG-Präferenzen</span>
+          <div className="pt-3 border-t border-slate-100">
+            <div className="flex items-center gap-1.5 mb-3">
+              <Leaf size={14} className="text-emerald-500" />
+              <span className="text-sm text-slate-500 font-medium">ESG-Präferenzen</span>
             </div>
-            <div className="space-y-1.5 pl-5">
+            <div className="pl-5 space-y-0">
               <InfoRow label="SFDR" value={wphg.esgPraeferenzen?.sfdr || '-'} />
               <InfoRow label="Taxonomie" value={wphg.esgPraeferenzen?.taxonomie || '-'} />
               <InfoRow label="PAI" value={wphg.esgPraeferenzen?.pai ? 'Berücksichtigt' : 'Nicht berücksichtigt'} />
@@ -247,29 +247,30 @@ export default function WpHGComplianceTab({ kunde }) {
           </div>
 
           {/* Anlagerichtlinie */}
-          <div className="pt-2 border-t border-slate-100">
-            <span className="text-xs text-slate-400 mb-2 block">Anlagerichtlinie</span>
-            <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-sm">
-              <div className="flex justify-between">
-                <span className="text-slate-400">Max. Aktien</span>
-                <span className="text-slate-700 font-medium">{rl.maxAktien}%</span>
+          <div className="pt-3 border-t border-slate-100">
+            <span className="text-sm text-slate-500 mb-3 block font-medium">Anlagerichtlinie</span>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-[120px_1fr] gap-2 items-center">
+                <span className="text-[15px] text-slate-500">Max. Aktien</span>
+                <span className="text-[15px] text-slate-800 font-medium">{rl.maxAktien}%</span>
               </div>
-              <div className="flex justify-between">
-                <span className="text-slate-400">Min. Renten</span>
-                <span className="text-slate-700 font-medium">{rl.minRenten}%</span>
+              <div className="grid grid-cols-[120px_1fr] gap-2 items-center">
+                <span className="text-[15px] text-slate-500">Min. Renten</span>
+                <span className="text-[15px] text-slate-800 font-medium">{rl.minRenten}%</span>
               </div>
-              <div className="flex justify-between">
-                <span className="text-slate-400">Krypto</span>
-                <span className="text-slate-700 font-medium">{rl.krypto}</span>
+              <div className="grid grid-cols-[120px_1fr] gap-2 items-center">
+                <span className="text-[15px] text-slate-500">Krypto</span>
+                <span className="text-[15px] text-slate-800 font-medium">{rl.krypto}</span>
               </div>
-              <div className="flex justify-between">
-                <span className="text-slate-400">Alternatives</span>
-                <span className="text-slate-700 font-medium">{rl.alternatives}</span>
+              <div className="grid grid-cols-[120px_1fr] gap-2 items-center">
+                <span className="text-[15px] text-slate-500">Alternatives</span>
+                <span className="text-[15px] text-slate-800 font-medium">{rl.alternatives}</span>
               </div>
             </div>
             {rl.benchmark && (
-              <div className="mt-2 text-xs text-slate-400">
-                Benchmark: <span className="text-slate-600">{rl.benchmark}</span>
+              <div className="mt-3 grid grid-cols-[120px_1fr] gap-2 items-center">
+                <span className="text-[15px] text-slate-500">Benchmark</span>
+                <span className="text-[15px] text-slate-800 font-medium">{rl.benchmark}</span>
               </div>
             )}
           </div>
@@ -279,22 +280,24 @@ export default function WpHGComplianceTab({ kunde }) {
       <div className="grid grid-cols-2 gap-4">
         {/* 3. Geeignetheitsprüfung */}
         <Section title="Geeignetheitsprüfung" icon={Shield}>
-          <div className="space-y-2">
+          <div className="space-y-0">
             <InfoRow label="Letzter Bericht" value={gp.letzterBericht || '-'} />
             <InfoRow label="Erstellt" value={fmtDate(gp.erstellt)} />
-            <div className="flex justify-between items-center py-1.5">
-              <span className="text-slate-400 text-sm">Nächste Fälligkeit</span>
-              <span className="flex items-center gap-1.5 text-sm font-medium">
-                {fmtDate(gp.naechsterFaellig)}
-                {gpDaysLeft < 60 && (
-                  <span className="inline-flex items-center gap-0.5 text-[10px] text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded-full">
-                    <AlertTriangle size={10} /> {gpDaysLeft}d
-                  </span>
-                )}
-              </span>
-            </div>
-            <div className="flex justify-between items-center py-1.5">
-              <span className="text-slate-400 text-sm">Ergebnis</span>
+            <InfoRow
+              label="Nächste Fälligkeit"
+              value={
+                <span className="flex items-center gap-1.5">
+                  {fmtDate(gp.naechsterFaellig)}
+                  {gpDaysLeft < 60 && (
+                    <span className="inline-flex items-center gap-0.5 text-[10px] text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded-full">
+                      <AlertTriangle size={10} /> {gpDaysLeft}d
+                    </span>
+                  )}
+                </span>
+              }
+            />
+            <div className="grid grid-cols-[200px_1fr] gap-4 items-center py-2">
+              <span className="text-slate-500 text-[15px]">Ergebnis</span>
               <StatusBadge status={gp.ergebnis} />
             </div>
           </div>
@@ -333,17 +336,17 @@ export default function WpHGComplianceTab({ kunde }) {
       <div className="grid grid-cols-2 gap-4">
         {/* 5. Kosteninformation */}
         <Section title="Kosteninformation" icon={Receipt}>
-          <div className="space-y-2">
-            <div className="flex justify-between items-center py-1.5">
-              <span className="text-slate-400 text-sm">Ex-Ante</span>
-              <span className="flex items-center gap-2 text-sm">
+          <div className="space-y-0">
+            <div className="grid grid-cols-[200px_1fr] gap-4 items-center py-2">
+              <span className="text-slate-500 text-[15px]">Ex-Ante</span>
+              <span className="flex items-center gap-2">
                 <StatusBadge status={ki.exAnte?.status || '-'} />
                 <span className="text-xs text-slate-400">{fmtDate(ki.exAnte?.datum)}</span>
               </span>
             </div>
-            <div className="flex justify-between items-center py-1.5">
-              <span className="text-slate-400 text-sm">Ex-Post</span>
-              <span className="flex items-center gap-2 text-sm">
+            <div className="grid grid-cols-[200px_1fr] gap-4 items-center py-2">
+              <span className="text-slate-500 text-[15px]">Ex-Post</span>
+              <span className="flex items-center gap-2">
                 <StatusBadge status={ki.exPost?.status || '-'} />
                 <span className="text-xs text-slate-400">{fmtDate(ki.exPost?.datum)}</span>
               </span>

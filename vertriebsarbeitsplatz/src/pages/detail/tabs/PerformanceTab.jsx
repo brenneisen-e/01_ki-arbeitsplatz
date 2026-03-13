@@ -181,6 +181,7 @@ function deriveKpis(monthly, kundePortfolio) {
 export default function PerformanceTab({ kunde }) {
   const { config } = useMode();
   const [timeRange, setTimeRange] = useState('ytd');
+  const [showAbsolute, setShowAbsolute] = useState(true);
 
   const perfData = VV_PERFORMANCE[kunde?.id];
 
@@ -271,13 +272,45 @@ export default function PerformanceTab({ kunde }) {
   return (
     <div className="space-y-4">
 
-      {/* ── 1. KPI Boxes ── */}
-      <div className="grid grid-cols-4 gap-4">
-        <KpiBox label="Performance YTD" value={kpis.perfYtd} suffix="%" />
-        <KpiBox label="vs. Benchmark" value={kpis.vsBenchmark} suffix=" pp" />
-        <KpiBox label="Performance 3J (p.a.)" value={kpis.perf3j} suffix="%" />
-        <KpiBox label="Volatilität" value={risiko?.volatilitaet} suffix="%" />
+      {/* ── 1. KPI Boxes with Absolute/Percentage Toggle ── */}
+      <div className="flex items-center justify-between mb-2">
+        <div />
+        <div className="flex items-center gap-1 bg-slate-100 rounded-lg p-0.5">
+          <button
+            onClick={() => setShowAbsolute(true)}
+            className={clsx(
+              'px-3 py-1 text-xs rounded-md font-medium transition-colors',
+              showAbsolute ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-700',
+            )}
+          >
+            Absolut (€)
+          </button>
+          <button
+            onClick={() => setShowAbsolute(false)}
+            className={clsx(
+              'px-3 py-1 text-xs rounded-md font-medium transition-colors',
+              !showAbsolute ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-700',
+            )}
+          >
+            Prozentual (%)
+          </button>
+        </div>
       </div>
+      {showAbsolute ? (
+        <div className="grid grid-cols-4 gap-4">
+          <KpiBox label="Portfolio-Wert" value={kunde?.aum ? fmtNum(kunde.aum / 1000, 0) : '–'} suffix="k €" />
+          <KpiBox label="Performance YTD" value={kunde?.aum && kpis.perfYtd != null ? fmtNum(Math.round(kunde.aum * kpis.perfYtd / 100 / 1000), 0) : '–'} suffix="k €" />
+          <KpiBox label="vs. Benchmark" value={kunde?.aum && kpis.vsBenchmark != null ? fmtNum(Math.round(kunde.aum * kpis.vsBenchmark / 100 / 1000), 0) : '–'} suffix="k €" />
+          <KpiBox label="Volatilität (abs.)" value={kunde?.aum && risiko?.volatilitaet != null ? fmtNum(Math.round(kunde.aum * risiko.volatilitaet / 100 / 1000), 0) : '–'} suffix="k €" />
+        </div>
+      ) : (
+        <div className="grid grid-cols-4 gap-4">
+          <KpiBox label="Performance YTD" value={kpis.perfYtd} suffix="%" />
+          <KpiBox label="vs. Benchmark" value={kpis.vsBenchmark} suffix=" pp" />
+          <KpiBox label="Performance 3J (p.a.)" value={kpis.perf3j} suffix="%" />
+          <KpiBox label="Volatilität" value={risiko?.volatilitaet} suffix="%" />
+        </div>
+      )}
 
       {/* ── 2. Performance vs. Benchmark (Line Chart) ── */}
       <Card>

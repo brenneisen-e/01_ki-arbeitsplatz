@@ -6,7 +6,7 @@ import { VV_LEADS } from '../../../data/vvExtended';
 import { useMode } from '../../../hooks/useMode';
 import {
   ChevronDown, ChevronUp, UserPlus, Briefcase, Calendar, User,
-  ExternalLink, TrendingUp, Filter,
+  ExternalLink, TrendingUp, Filter, Sparkles,
 } from 'lucide-react';
 import { clsx } from 'clsx';
 
@@ -313,6 +313,17 @@ function LeadRow({ lead, kunde, isExpanded, onToggle }) {
         <tr className="bg-slate-50/80">
           <td colSpan={7} className="px-6 py-4">
             <div className="max-w-4xl space-y-4">
+              {/* KI-Beschreibung */}
+              {lead.kiDescription && (
+                <div className="bg-gradient-to-r from-indigo-50 to-purple-50 border border-indigo-100 rounded-xl px-4 py-3">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Sparkles size={14} className="text-indigo-500" />
+                    <span className="text-xs font-semibold text-indigo-600">KI-Vertriebsassistent</span>
+                  </div>
+                  <p className="text-xs text-slate-700 leading-relaxed">{lead.kiDescription}</p>
+                </div>
+              )}
+
               {/* Herleitung */}
               {lead.herleitung && lead.herleitung.length > 0 && (
                 <div>

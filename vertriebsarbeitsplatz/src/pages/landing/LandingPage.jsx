@@ -56,6 +56,8 @@ export default function LandingPage() {
 
   // Settings
   const [showSettings, setShowSettings] = useState(false);
+  const [showVariants, setShowVariants] = useState(false);
+  const [language, setLanguage] = useState(() => localStorage.getItem('kia_language') || 'de');
   const [settingsName, setSettingsName] = useState(() => localStorage.getItem('kia_user_fullname') || '');
   const [settingsPhoto, setSettingsPhoto] = useState(() => localStorage.getItem('kia_user_photo') || '');
   const photoInputRef = useRef(null);
@@ -246,7 +248,31 @@ export default function LandingPage() {
           </div>
           <span className="text-white/80 text-sm font-medium">KI-Vertriebsarbeitsplatz</span>
         </div>
-        <span className="text-xs text-white/40 font-medium tracking-wider uppercase">Open Finance Suite</span>
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-1 bg-white/10 rounded-lg p-0.5">
+            <button
+              onClick={() => { setLanguage('de'); localStorage.setItem('kia_language', 'de'); }}
+              className={clsx(
+                'flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium transition-all',
+                language === 'de' ? 'bg-white text-slate-800 shadow-sm' : 'text-white/60 hover:text-white/90'
+              )}
+            >
+              <img src="https://img.logo.dev/de?token=pk_H7vb5Y2lTsW47U4Xq-w3HA&format=png&size=32" alt="DE" className="w-4 h-3 rounded-sm object-cover" />
+              DE
+            </button>
+            <button
+              onClick={() => { setLanguage('en'); localStorage.setItem('kia_language', 'en'); }}
+              className={clsx(
+                'flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium transition-all',
+                language === 'en' ? 'bg-white text-slate-800 shadow-sm' : 'text-white/60 hover:text-white/90'
+              )}
+            >
+              <img src="https://img.logo.dev/gb?token=pk_H7vb5Y2lTsW47U4Xq-w3HA&format=png&size=32" alt="EN" className="w-4 h-3 rounded-sm object-cover" />
+              EN
+            </button>
+          </div>
+          <span className="text-xs text-white/40 font-medium tracking-wider uppercase">Open Finance Suite</span>
+        </div>
       </div>
 
       {/* Main content */}
@@ -331,35 +357,44 @@ export default function LandingPage() {
           })}
         </div>
 
-        {/* Institute variants */}
-        <div className="flex flex-wrap gap-2 justify-center max-w-3xl">
-          {activeConfig.institutVarianten.map((variant) => {
-            const isSelected = selectedVariant?.institut === variant.institut ||
-              (!selectedVariant && variant.institut === activeConfig.institut);
-            const vLogoUrl = getLogoUrl(variant.institut, 32);
-            return (
-              <button
-                key={variant.institut}
-                onClick={() => { setSelectedVariant(variant); try { localStorage.setItem('kia_last_mode', JSON.stringify({ modeId: activeModule, variant })); } catch {} }}
-                className={clsx(
-                  'flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-medium transition-all duration-300',
-                  isSelected
-                    ? 'bg-white text-slate-800 shadow-md'
-                    : 'bg-white/10 text-white/70 hover:bg-white/15 border border-white/10'
-                )}
-              >
-                {vLogoUrl ? (
-                  <img src={vLogoUrl} alt={variant.institut} className="w-5 h-5 rounded object-contain" />
-                ) : (
-                  <span className="w-5 h-5 rounded bg-slate-200 flex items-center justify-center text-[9px] font-bold text-slate-600">
-                    {variant.institut.charAt(0)}
-                  </span>
-                )}
-                {variant.institut}
-              </button>
-            );
-          })}
-        </div>
+        {/* Institute variants (collapsible) */}
+        <button
+          onClick={() => setShowVariants(v => !v)}
+          className="flex items-center gap-2 text-white/50 hover:text-white/80 text-xs font-medium transition-colors mb-3"
+        >
+          {showVariants ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+          {showVariants ? 'Unternehmen ausblenden' : 'Unternehmen auswählen'}
+        </button>
+        {showVariants && (
+          <div className="flex flex-wrap gap-2 justify-center max-w-3xl animate-fade-in">
+            {activeConfig.institutVarianten.map((variant) => {
+              const isSelected = selectedVariant?.institut === variant.institut ||
+                (!selectedVariant && variant.institut === activeConfig.institut);
+              const vLogoUrl = getLogoUrl(variant.institut, 32);
+              return (
+                <button
+                  key={variant.institut}
+                  onClick={() => { setSelectedVariant(variant); try { localStorage.setItem('kia_last_mode', JSON.stringify({ modeId: activeModule, variant })); } catch {} }}
+                  className={clsx(
+                    'flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-medium transition-all duration-300',
+                    isSelected
+                      ? 'bg-white text-slate-800 shadow-md'
+                      : 'bg-white/10 text-white/70 hover:bg-white/15 border border-white/10'
+                  )}
+                >
+                  {vLogoUrl ? (
+                    <img src={vLogoUrl} alt={variant.institut} className="w-5 h-5 rounded object-contain" />
+                  ) : (
+                    <span className="w-5 h-5 rounded bg-slate-200 flex items-center justify-center text-[9px] font-bold text-slate-600">
+                      {variant.institut.charAt(0)}
+                    </span>
+                  )}
+                  {variant.institut}
+                </button>
+              );
+            })}
+          </div>
+        )}
       </div>
 
       {/* Settings Section */}

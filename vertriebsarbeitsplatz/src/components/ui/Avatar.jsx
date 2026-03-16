@@ -16,7 +16,8 @@ function getGradient(name) {
 }
 
 function getInitials(name) {
-  return name.split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase();
+  const words = name.split(/\s+/).filter(w => !/^(Dr\.|Prof\.|Fam\.|Dipl\.-Ing\.)$/i.test(w));
+  return words.map(w => w[0]).join('').slice(0, 2).toUpperCase();
 }
 
 export default function Avatar({ name, foto, size = 32, className = '' }) {

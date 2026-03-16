@@ -193,7 +193,7 @@ export default function GlobalHeader({ kundeInfo }) {
         <div className="px-6 pb-2">
           <div className="flex items-center gap-3 text-white/80 text-sm">
             <div className="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center text-sm font-bold text-white">
-              {kundeInfo.name.split(' ').map(n => n[0]).join('')}
+              {kundeInfo.name.split(/\s+/).filter(w => !/^(Dr\.|Prof\.|Fam\.|Dipl\.-Ing\.)$/i.test(w)).map(n => n[0]).join('')}
             </div>
             <span className="font-medium text-white">{kundeInfo.name}</span>
             <span className="text-white/50">|</span>

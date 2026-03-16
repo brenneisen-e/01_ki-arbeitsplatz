@@ -1,28 +1,29 @@
 import { useState } from 'react';
 import Card from '../../../components/ui/Card';
+import PipelineBar from '../../../components/ui/PipelineBar';
 import LogoImg from '../../../components/ui/LogoImg';
 import { VV_LEADS } from '../../../data/vvExtended';
 import { useMode } from '../../../hooks/useMode';
 import {
-  ChevronDown, UserPlus, Briefcase, Calendar, User,
-  ExternalLink, TrendingUp, ArrowRight,
+  ChevronDown, ChevronUp, UserPlus, Briefcase, Calendar, User,
+  ExternalLink, TrendingUp, Filter,
 } from 'lucide-react';
 import { clsx } from 'clsx';
 
 const QUELLEN_COLORS = {
-  empfehlung: '#4a8c6f',
-  nextgen: '#7c6b9e',
-  presse: '#b08d3e',
-  event: '#a65f7d',
-  multiplikator: '#4a8fa0',
-  digital: '#5a7fb8',
-  liquiditaet: '#a05a5a',
+  empfehlung: '#10b981',
+  nextgen: '#8b5cf6',
+  presse: '#f59e0b',
+  event: '#ec4899',
+  multiplikator: '#06b6d4',
+  digital: '#3b82f6',
+  liquiditaet: '#ef4444',
   fremdbank: '#6b7280',
-  upgrade: '#4a8fa0',
-  lifeevent: '#b07040',
-  stiftung: '#6a5a8e',
-  event_einladung: '#a65f7d',
-  performance: '#a05a5a',
+  upgrade: '#06b6d4',
+  lifeevent: '#f97316',
+  stiftung: '#7c3aed',
+  event_einladung: '#ec4899',
+  performance: '#ef4444',
   compliance: '#64748b',
 };
 
@@ -43,6 +44,7 @@ const QUELLEN_LABELS = {
   compliance: 'Compliance',
 };
 
+const STADIUM_ORDER = ['lead', 'kennenlernen', 'identifiziert', 'termin', 'angebot', 'gewonnen'];
 const STADIUM_LABELS = {
   lead: 'Lead',
   kennenlernen: 'Kennenlernen',
@@ -51,6 +53,12 @@ const STADIUM_LABELS = {
   angebot: 'Angebot',
   gewonnen: 'Gewonnen',
 };
+
+const KATEGORIE_TABS = [
+  { id: 'alle', label: 'Alle Leads' },
+  { id: 'neumandat', label: 'Neue Mandate' },
+  { id: 'bestandsmandat', label: 'Bestandsmandate' },
+];
 
 // ─── Detect institution names in herleitung values for logo display ───
 const KNOWN_INSTITUTES = [
@@ -69,6 +77,8 @@ function detectInstitut(text) {
 }
 
 export default function LeadsTab({ kunde }) {
+  const [kategorieFilter, setKategorieFilter] = useState('alle');
+  const [statusFilter, setStatusFilter] = useState('alle');
   const [expandedLead, setExpandedLead] = useState(null);
 
   // Filter leads related to this mandant
@@ -105,13 +115,28 @@ export default function LeadsTab({ kunde }) {
     if (!exists) mergedLeads.push(pl);
   });
 
-  const neumandatLeads = mergedLeads.filter(l => l.kategorie === 'neumandat');
-  const bestandsLeads = mergedLeads.filter(l => l.kategorie === 'bestandsmandat');
+  const filtered = mergedLeads.filter(l => {
+    if (kategorieFilter !== 'alle' && l.kategorie !== kategorieFilter) return false;
+    if (statusFilter !== 'alle' && l.stadium !== statusFilter) return false;
+    return true;
+  });
+
+  const neumandate = mergedLeads.filter(l => l.kategorie === 'neumandat');
+  const bestandsmandate = mergedLeads.filter(l => l.kategorie === 'bestandsmandat');
+
+  const stadiumCounts = {};
+  STADIUM_ORDER.forEach(s => { stadiumCounts[s] = mergedLeads.filter(l => l.stadium === s).length; });
+
+  const pipelineSegments = STADIUM_ORDER.map(s => ({
+    label: STADIUM_LABELS[s],
+    count: stadiumCounts[s] || 0,
+    color: s === 'gewonnen' ? '#10b981' : s === 'angebot' ? '#f59e0b' : s === 'termin' ? '#3b82f6' : s === 'kennenlernen' ? '#8b5cf6' : s === 'identifiziert' ? '#06b6d4' : '#94a3b8',
+  }));
 
   if (mergedLeads.length === 0) {
     return (
       <div className="space-y-4">
-        <Card>
+        <Card hover={false}>
           <div className="flex flex-col items-center justify-center py-16 text-center">
             <div className="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center mb-4">
               <UserPlus className="w-8 h-8 text-slate-400" />
@@ -127,194 +152,257 @@ export default function LeadsTab({ kunde }) {
   }
 
   return (
-    <div className="space-y-6">
-      {/* Summary KPIs */}
-      <div className="grid grid-cols-3 gap-4">
-        <Card>
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-blue-50">
-              <UserPlus size={20} className="text-blue-500" />
-            </div>
-            <div>
-              <div className="text-2xl font-bold text-slate-800">{neumandatLeads.length}</div>
-              <div className="text-xs text-slate-500">Leads Neue Mandate</div>
-            </div>
-          </div>
-        </Card>
-        <Card>
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-emerald-50">
-              <Briefcase size={20} className="text-emerald-500" />
-            </div>
-            <div>
-              <div className="text-2xl font-bold text-slate-800">{bestandsLeads.length}</div>
-              <div className="text-xs text-slate-500">Leads Bestandsmandat</div>
-            </div>
-          </div>
-        </Card>
-        <Card>
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-slate-100">
-              <TrendingUp size={20} className="text-slate-500" />
-            </div>
-            <div>
-              <div className="text-2xl font-bold text-slate-800">{mergedLeads.length}</div>
-              <div className="text-xs text-slate-500">Leads Gesamt</div>
-            </div>
-          </div>
-        </Card>
+    <div className="space-y-3">
+      {/* KPIs */}
+      <div className="grid grid-cols-3 gap-3">
+        <KPI icon={UserPlus} label="Leads Neue Mandate" value={neumandate.length} />
+        <KPI icon={Briefcase} label="Leads Bestandsmandat" value={bestandsmandate.length} color="text-emerald-600" />
+        <KPI icon={TrendingUp} label="Leads Gesamt" value={mergedLeads.length} />
       </div>
 
-      {/* Neue Mandate Section */}
-      {neumandatLeads.length > 0 && (
-        <Card>
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-2">
-              <UserPlus size={20} className="text-blue-500" strokeWidth={1.75} />
-              <h3 className="font-semibold text-slate-800">Leads für neue Mandate</h3>
-            </div>
-            <span className="text-sm text-slate-400">{neumandatLeads.length} Leads</span>
-          </div>
-          <div className="space-y-3">
-            {neumandatLeads.map(lead => (
-              <LeadCard
-                key={lead.id}
-                lead={lead}
-                kunde={kunde}
-                isExpanded={expandedLead === lead.id}
-                onToggle={() => setExpandedLead(expandedLead === lead.id ? null : lead.id)}
-              />
-            ))}
-          </div>
-        </Card>
-      )}
+      {/* Pipeline Bar */}
+      <Card hover={false}>
+        <h3 className="font-semibold text-slate-800 mb-2">Pipeline</h3>
+        <PipelineBar segments={pipelineSegments} />
+      </Card>
 
-      {/* Bestandsmandate Section */}
-      {bestandsLeads.length > 0 && (
-        <Card>
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-2">
-              <Briefcase size={20} className="text-emerald-500" strokeWidth={1.75} />
-              <h3 className="font-semibold text-slate-800">Leads für Bestandsmandat</h3>
-            </div>
-            <span className="text-sm text-slate-400">{bestandsLeads.length} Leads</span>
-          </div>
-          <div className="space-y-3">
-            {bestandsLeads.map(lead => (
-              <LeadCard
-                key={lead.id}
-                lead={lead}
-                kunde={kunde}
-                isExpanded={expandedLead === lead.id}
-                onToggle={() => setExpandedLead(expandedLead === lead.id ? null : lead.id)}
-              />
-            ))}
-          </div>
-        </Card>
-      )}
+      {/* Filters */}
+      <div className="flex items-center gap-4 flex-wrap">
+        <div className="flex gap-1">
+          {KATEGORIE_TABS.map(t => (
+            <button
+              key={t.id}
+              onClick={() => setKategorieFilter(t.id)}
+              className={`text-sm px-4 py-2 rounded-lg font-medium border transition-colors ${
+                kategorieFilter === t.id
+                  ? 'bg-slate-800 text-white border-slate-800'
+                  : 'bg-white text-slate-600 border-slate-200 hover:border-slate-400'
+              }`}
+            >
+              {t.label}
+              <span className="ml-1.5 text-xs opacity-70">
+                {t.id === 'alle' ? mergedLeads.length : t.id === 'neumandat' ? neumandate.length : bestandsmandate.length}
+              </span>
+            </button>
+          ))}
+        </div>
+
+        <div className="h-6 w-px bg-slate-200" />
+
+        <div className="flex items-center gap-1.5 flex-wrap">
+          <Filter size={14} className="text-slate-400" />
+          <span className="text-xs text-slate-400">Stadium:</span>
+          <button
+            onClick={() => setStatusFilter('alle')}
+            className={`text-xs px-2.5 py-1 rounded-full border transition-colors ${
+              statusFilter === 'alle'
+                ? 'bg-slate-800 text-white border-slate-800'
+                : 'bg-white text-slate-500 border-slate-200 hover:border-slate-400'
+            }`}
+          >
+            Alle
+          </button>
+          {STADIUM_ORDER.map(s => (
+            <button
+              key={s}
+              onClick={() => setStatusFilter(s)}
+              className={`text-xs px-2.5 py-1 rounded-full border transition-colors ${
+                statusFilter === s
+                  ? 'bg-slate-800 text-white border-slate-800'
+                  : 'bg-white text-slate-500 border-slate-200 hover:border-slate-400'
+              }`}
+            >
+              {STADIUM_LABELS[s]}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Leads Table */}
+      <Card hover={false}>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-slate-200 text-left text-xs text-slate-400 uppercase">
+                <th className="py-2 pr-2 w-5"></th>
+                <th className="py-2 pr-2 w-[18%]">Lead</th>
+                <th className="py-2 pr-2 w-[10%]">Kategorie</th>
+                <th className="py-2 pr-2 w-[10%]">Quelle</th>
+                <th className="py-2 pr-2 w-[10%]">Stadium</th>
+                <th className="py-2 pr-2 w-[12%]">Pot. Volumen</th>
+                <th className="py-2">Herkunft</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filtered.map(lead => {
+                const isExpanded = expandedLead === lead.id;
+                return (
+                  <LeadRow
+                    key={lead.id}
+                    lead={lead}
+                    kunde={kunde}
+                    isExpanded={isExpanded}
+                    onToggle={() => setExpandedLead(isExpanded ? null : lead.id)}
+                  />
+                );
+              })}
+            </tbody>
+          </table>
+          {filtered.length === 0 && (
+            <div className="text-center py-8 text-sm text-slate-400">Keine Leads gefunden</div>
+          )}
+        </div>
+      </Card>
     </div>
   );
 }
 
-function LeadCard({ lead, kunde, isExpanded, onToggle }) {
+function LeadRow({ lead, kunde, isExpanded, onToggle }) {
+  const [hovered, setHovered] = useState(false);
   const { config, navigateTo } = useMode();
 
   return (
-    <div className={clsx(
-      'border rounded-lg transition-all',
-      isExpanded ? 'border-slate-300 shadow-sm' : 'border-slate-100 hover:border-slate-200',
-    )}>
-      {/* Clickable header */}
-      <div
-        className="p-4 cursor-pointer hover:bg-slate-50 transition-colors"
+    <>
+      <tr
+        className="border-b border-slate-100 transition-colors cursor-pointer"
+        style={hovered ? { backgroundColor: 'var(--mode-primary-light)', color: '#ffffff' } : undefined}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
         onClick={onToggle}
       >
-        <div className="flex items-start justify-between mb-1">
-          <div className="flex-1">
-            <h4 className="text-sm font-semibold text-slate-800">{lead.name}</h4>
-            {lead.beruf && (
-              <p className="text-xs text-slate-400 mt-0.5">{lead.beruf}</p>
-            )}
-            <div className="flex gap-1.5 mt-1.5">
-              <span
-                className="text-xs font-medium px-2.5 py-0.5 rounded-full text-white"
-                style={{ backgroundColor: QUELLEN_COLORS[lead.quelle] || '#94a3b8' }}
-              >
-                {QUELLEN_LABELS[lead.quelle] || lead.quelleLabel || lead.quelle}
-              </span>
-              <StadiumBadge stadium={lead.stadium} />
-            </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <span className="font-mono text-sm font-medium text-slate-700">{lead.geschaetztesVolumen || '—'}</span>
-            <ChevronDown
-              size={16}
-              className={clsx('text-slate-400 transition-transform duration-200', isExpanded && 'rotate-180')}
-            />
-          </div>
-        </div>
-        {lead.herkunft && (
-          <p className="text-sm text-slate-500 mt-1">{lead.herkunft}</p>
-        )}
-      </div>
-
-      {/* Expandable detail section */}
+        <td className={`py-2.5 pr-1 w-5 ${hovered ? 'text-white' : 'text-slate-400'}`}>
+          {isExpanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+        </td>
+        <td className="py-2.5 pr-2">
+          <div className={`font-medium ${hovered ? 'text-white' : 'text-slate-800'}`}>{lead.name}</div>
+          {lead.beruf && <div className={`text-[10px] ${hovered ? 'text-white/70' : 'text-slate-400'}`}>{lead.beruf}</div>}
+        </td>
+        <td className="py-2.5 pr-2">
+          <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${
+            hovered
+              ? 'bg-white/20 text-white'
+              : lead.kategorie === 'neumandat'
+                ? 'bg-blue-50 text-blue-700'
+                : 'bg-emerald-50 text-emerald-700'
+          }`}>
+            {lead.kategorie === 'neumandat' ? 'Neues Mandat' : 'Bestand'}
+          </span>
+        </td>
+        <td className="py-2.5 pr-2">
+          <span
+            className="text-[10px] font-medium px-2 py-0.5 rounded-full text-white"
+            style={{ backgroundColor: hovered ? 'rgba(255,255,255,0.25)' : (QUELLEN_COLORS[lead.quelle] || '#94a3b8') }}
+          >
+            {QUELLEN_LABELS[lead.quelle] || lead.quelleLabel || lead.quelle}
+          </span>
+        </td>
+        <td className="py-2.5 pr-2">
+          {hovered
+            ? <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-white/20 text-white">{STADIUM_LABELS[lead.stadium] || lead.stadium}</span>
+            : <StadiumBadge stadium={lead.stadium} />
+          }
+        </td>
+        <td className={`py-2.5 pr-2 font-mono text-sm ${hovered ? 'text-white' : 'text-slate-700'}`}>
+          {lead.geschaetztesVolumen || '—'}
+        </td>
+        <td className={`py-2.5 text-xs truncate ${hovered ? 'text-white/80' : 'text-slate-500'}`}>
+          {lead.herkunft}
+        </td>
+      </tr>
       {isExpanded && (
-        <div className="border-t border-slate-100 bg-slate-50/50 p-4 space-y-5 animate-fade-in">
-          {/* Herleitung */}
-          {lead.herleitung && lead.herleitung.length > 0 && (
-            <div>
-              <h5 className="text-xs font-semibold text-slate-600 uppercase tracking-wider mb-3">
-                Herleitung
-              </h5>
-              <div className="grid grid-cols-2 gap-2 text-sm">
-                {lead.herleitung.map((h, i) => (
-                  <HerleitungRow key={i} label={h.label} value={h.value} />
-                ))}
+        <tr className="bg-slate-50/80">
+          <td colSpan={7} className="px-6 py-4">
+            <div className="max-w-4xl space-y-4">
+              {/* Herleitung */}
+              {lead.herleitung && lead.herleitung.length > 0 && (
+                <div>
+                  <div className="flex items-center gap-2 mb-3">
+                    <h4 className="text-sm font-semibold text-slate-700">Herleitung</h4>
+                    {lead.quelleLabel && (
+                      <span className="text-[10px] text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full">
+                        {lead.quelleLabel}
+                      </span>
+                    )}
+                  </div>
+                  <div className="grid grid-cols-2 gap-2 text-sm">
+                    {lead.herleitung.map((h, i) => (
+                      <HerleitungRow key={i} label={h.label} value={h.value} />
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Vergleichstabelle */}
+              {lead.vergleich && (
+                <VergleichsTabelle data={lead.vergleich} />
+              )}
+
+              {/* Nächster Schritt */}
+              {lead.naechsterSchritt && (
+                <div className="pt-2 border-t border-slate-200">
+                  <span className="text-xs text-slate-400 font-medium">Nächster Schritt: </span>
+                  <span className="text-xs text-slate-700 font-medium">{lead.naechsterSchritt}</span>
+                </div>
+              )}
+
+              {/* Wahrscheinlichkeit */}
+              {lead.wahrscheinlichkeit > 0 && (
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] text-slate-400">Wahrscheinlichkeit:</span>
+                  <div className="w-24 h-1.5 bg-slate-200 rounded-full">
+                    <div
+                      className="h-1.5 rounded-full transition-all"
+                      style={{
+                        width: `${lead.wahrscheinlichkeit}%`,
+                        backgroundColor: lead.wahrscheinlichkeit >= 70 ? '#10b981' : lead.wahrscheinlichkeit >= 40 ? '#f59e0b' : '#94a3b8',
+                      }}
+                    />
+                  </div>
+                  <span className="text-[10px] font-mono text-slate-600">{lead.wahrscheinlichkeit}%</span>
+                </div>
+              )}
+
+              {/* Aktionen */}
+              <div className="flex flex-wrap gap-2 pt-2">
+                {lead.naechsterSchritt && (
+                  <button
+                    className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium text-white transition-colors"
+                    style={{ backgroundColor: config.colors.primary }}
+                    onMouseEnter={(e) => e.currentTarget.style.opacity = '0.85'}
+                    onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
+                  >
+                    <Calendar size={14} />
+                    {lead.naechsterSchritt}
+                  </button>
+                )}
+                {lead.produktEmpfehlung && (
+                  <span className="flex items-center gap-1 text-xs text-slate-400 self-center ml-2">
+                    <ExternalLink size={12} />
+                    {lead.produktEmpfehlung}
+                  </span>
+                )}
               </div>
             </div>
-          )}
-
-          {/* Vergleichstabelle (from potentiale data) */}
-          {lead.vergleich && (
-            <VergleichsTabelle data={lead.vergleich} />
-          )}
-
-          {/* Aktionen */}
-          <div>
-            <h5 className="text-xs font-semibold text-slate-600 uppercase tracking-wider mb-3">
-              Aktionen
-            </h5>
-            <div className="flex flex-wrap gap-2">
-              {lead.naechsterSchritt && (
-                <button
-                  className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium text-white transition-colors"
-                  style={{ backgroundColor: config.colors.primary }}
-                  onMouseEnter={(e) => e.currentTarget.style.opacity = '0.85'}
-                  onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
-                >
-                  <Calendar size={14} />
-                  {lead.naechsterSchritt}
-                </button>
-              )}
-              <button
-                onClick={(e) => { e.stopPropagation(); navigateTo('detail', { kundeId: kunde.id, tab: 'stammdaten' }); }}
-                className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium border border-slate-300 text-slate-700 hover:bg-slate-100 transition-colors"
-              >
-                <User size={14} />
-                Mandant öffnen
-              </button>
-              {lead.produktEmpfehlung && (
-                <span className="flex items-center gap-1 text-xs text-slate-400 self-center ml-2">
-                  <ExternalLink size={12} />
-                  {lead.produktEmpfehlung}
-                </span>
-              )}
-            </div>
-          </div>
-        </div>
+          </td>
+        </tr>
       )}
-    </div>
+    </>
+  );
+}
+
+function KPI({ icon: Icon, label, value, color }) {
+  return (
+    <Card hover={false}>
+      <div className="flex items-center gap-3">
+        <div className="p-2 rounded-lg bg-slate-100">
+          <Icon size={20} className="text-slate-500" />
+        </div>
+        <div>
+          <div className={`text-2xl font-bold ${color || 'text-slate-800'}`}>{value}</div>
+          <div className="text-xs text-slate-500">{label}</div>
+        </div>
+      </div>
+    </Card>
   );
 }
 
@@ -335,7 +423,6 @@ function HerleitungRow({ label, value }) {
 // ─── Comparison table ───
 function VergleichsTabelle({ data }) {
   const { titel, spalten, zeilen } = data;
-  // Try to detect institution logos in column headers
   const colLogos = spalten.map(s => detectInstitut(s));
 
   return (
@@ -397,7 +484,7 @@ function StadiumBadge({ stadium }) {
     gewonnen: 'bg-emerald-50 text-emerald-600',
   };
   return (
-    <span className={`text-xs font-medium px-2.5 py-0.5 rounded-full ${styles[stadium] || styles.lead}`}>
+    <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${styles[stadium] || styles.lead}`}>
       {STADIUM_LABELS[stadium] || stadium}
     </span>
   );

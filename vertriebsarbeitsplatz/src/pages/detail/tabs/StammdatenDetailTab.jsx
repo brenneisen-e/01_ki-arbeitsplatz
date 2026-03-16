@@ -108,7 +108,12 @@ export default function StammdatenDetailTab({ kunde }) {
               const birthDate = new Date(birthYear, today.getMonth() - 3, 15);
               return birthDate.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
             })()} />
-            <InfoRow label="Alter" value={`${kunde.alter} Jahre`} />
+            <InfoRow label="Alter" value={`${kunde.alter} Jahre (${(() => {
+              const today = new Date();
+              const birthYear = today.getFullYear() - kunde.alter;
+              const birthDate = new Date(birthYear, today.getMonth() - 3, 15);
+              return birthDate.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+            })()})`} />
             <InfoRow label="Beruf" value={kunde.beruf} />
             {kunde.arbeitgeber && (
               <ArbeitgeberRow arbeitgeber={kunde.arbeitgeber} />
@@ -120,7 +125,7 @@ export default function StammdatenDetailTab({ kunde }) {
             {kunde.kinder?.length > 0 && (
               <InfoRow label="Kinder" value={kunde.kinder.map(k => `${k.name} (${k.alter})`).join(', ')} />
             )}
-            <InfoRow label="Wohnsituation" value={`${kunde.wohnsituation}, ${kunde.wohnflaeche}qm${kunde.adresse ? ` · ${kunde.adresse}` : ''}`} />
+            <InfoRow label="Wohnsituation" value={kunde.adresse ? `Adresse: ${kunde.adresse} (${kunde.wohnsituation}, ${kunde.wohnflaeche}qm)` : `${kunde.wohnsituation}, ${kunde.wohnflaeche}qm`} />
             {(kunde.haustiere || kunde.tiere) && (
               <HaustiereRow haustiere={normalizeHaustiere(kunde.haustiere || kunde.tiere)} />
             )}

@@ -75,7 +75,7 @@ export default function StammdatenDetailTab({ kunde }) {
               <span className="flex items-center gap-1"><Briefcase size={14} /> {kunde.beruf}</span>
               <span className="flex items-center gap-1"><Users size={14} /> {kunde.alter} Jahre</span>
               {kunde.familienstand && (
-                <span className="flex items-center gap-1"><Heart size={14} /> {kunde.familienstand}</span>
+                <span className="flex items-center gap-1"><Heart size={14} /> {kunde.familienstand?.charAt(0).toUpperCase() + kunde.familienstand?.slice(1)}</span>
               )}
             </div>
             <div className="flex items-center gap-3 mt-2 text-xs text-slate-400">
@@ -113,7 +113,7 @@ export default function StammdatenDetailTab({ kunde }) {
             {kunde.arbeitgeber && (
               <ArbeitgeberRow arbeitgeber={kunde.arbeitgeber} />
             )}
-            <InfoRow label="Familienstand" value={kunde.familienstand} />
+            <InfoRow label="Familienstand" value={kunde.familienstand ? kunde.familienstand.charAt(0).toUpperCase() + kunde.familienstand.slice(1) : ''} />
             {kunde.partner && (
               <InfoRow label="Partner" value={`${kunde.partner.name} (${kunde.partner.beruf})`} />
             )}

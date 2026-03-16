@@ -25,7 +25,7 @@ export const MODE_CONFIGS = {
       gesamtbestand: { wert: 141863691, trend: 0.9 },
       neugeschaeft: { wert: 392209, trend: 12.3 },
       stornoquote: { wert: 5.0, trend: -0.3 },
-      zielerreichung: { wert: 100, trend: 5.2 },
+      zielerreichung: { wert: 94.7, trend: 5.2 },
     },
     tabs: [
       { id: 'uebersicht', label: 'Übersicht' },

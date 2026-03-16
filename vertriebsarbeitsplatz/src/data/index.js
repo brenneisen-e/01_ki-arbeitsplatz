@@ -161,6 +161,12 @@ export const STORNO_DATA = {
       { name: 'Unzufriedenheit', value: 15 },
       { name: 'Sonstiges', value: 10 },
     ],
+    vertraege: [
+      { kunde: 'Herbert Lange', kundeId: 'KD00012', produkt: 'ERGO Hausrat Komfort', sparte: 'Schaden', praemie: 280, stornoDatum: '2025-11-15', grund: 'Preis', typ: 'Spätstorno' },
+      { kunde: 'Sandra Richter', kundeId: 'KD00018', produkt: 'ERGO BU Comfort', sparte: 'Leben', praemie: 1920, stornoDatum: '2025-09-22', grund: 'Wettbewerb', typ: 'Spätstorno' },
+      { kunde: 'Frank Zimmermann', kundeId: 'KD00025', produkt: 'ERGO Kfz-Vollkasko', sparte: 'Kfz', praemie: 780, stornoDatum: '2026-01-08', grund: 'Umzug', typ: 'Frühstorno' },
+      { kunde: 'Monika Becker', kundeId: 'KD00031', produkt: 'ERGO Privat Familie', sparte: 'Schaden', praemie: 95, stornoDatum: '2025-12-03', grund: 'Unzufriedenheit', typ: 'Spätstorno' },
+    ],
   },
   banking: {
     kpiValues: {
@@ -482,13 +488,13 @@ export const QUALITAET_DATA = {
 export const STAMMDATEN_DATA = {
   versicherung: {
     basis: [
-      { label: 'Name', value: 'Maria Musterfrau' },
+      { label: 'Name', value: 'Nadine Müller' },
       { label: 'Titel', value: 'Agentur' },
       { label: 'ID', value: 'VM00001' },
       { label: 'Institut', value: 'ERGO' },
       { label: 'Status', value: 'Aktiv' },
       { label: 'Telefon', value: '+49 221 4200-100' },
-      { label: 'E-Mail', value: 'maria.musterfrau@ergo.de' },
+      { label: 'E-Mail', value: 'nadine.mueller@ergo.de' },
     ],
     organisation: [
       { label: 'Hierarchie', value: 'OD Süd \u2192 RD Bayern \u2192 VD München' },
@@ -516,14 +522,14 @@ export const STAMMDATEN_DATA = {
   },
   banking: {
     basis: [
-      { label: 'Name', value: 'Maria Musterfrau' },
+      { label: 'Name', value: 'Nadine Müller' },
       { label: 'Titel', value: 'Beraterin' },
       { label: 'ID', value: 'VB-40210' },
       { label: 'Institut', value: 'Volksbank Mittelhessen eG' },
       { label: 'Beratungscenter', value: 'BC Gießen-Süd' },
       { label: 'Status', value: 'Aktiv' },
       { label: 'Telefon', value: '+49 641 7006-240' },
-      { label: 'E-Mail', value: 'maria.musterfrau@vb-mittelhessen.de' },
+      { label: 'E-Mail', value: 'nadine.mueller@vb-mittelhessen.de' },
     ],
     organisation: [
       { label: 'Hierarchie', value: 'RD Mittelhessen \u2192 VD Gießen \u2192 BC Gießen-Süd' },

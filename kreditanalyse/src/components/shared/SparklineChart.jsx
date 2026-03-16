@@ -5,21 +5,49 @@
  * Props:
  *   data    Array<number>  – raw numeric data points
  *   color   string         – stroke color (default: primary #1B2B4B)
- *   width   number         – SVG width in px  (default 80)
+ *   width   number|string  – SVG width in px or "100%" (default 80)
  *   height  number         – SVG height in px (default 24)
+ *   filled  boolean        – show area fill under the line (default false)
  */
 
-import { LineChart, Line, ResponsiveContainer } from 'recharts';
+import { LineChart, Line, Area, AreaChart, ResponsiveContainer } from 'recharts';
 
 export default function SparklineChart({
   data = [],
   color = '#1B2B4B',
   width = 80,
   height = 24,
+  filled = false,
 }) {
   if (!data || data.length === 0) return null;
 
   const chartData = data.map((v, i) => ({ v, i }));
+
+  if (filled) {
+    return (
+      <div style={{ width: width === '100%' ? '100%' : width, height }} className="inline-block align-middle">
+        <ResponsiveContainer width="100%" height="100%">
+          <AreaChart data={chartData} margin={{ top: 2, right: 2, bottom: 0, left: 2 }}>
+            <defs>
+              <linearGradient id={`fill-${color.replace('#', '')}`} x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor={color} stopOpacity={0.2} />
+                <stop offset="100%" stopColor={color} stopOpacity={0.02} />
+              </linearGradient>
+            </defs>
+            <Area
+              type="monotone"
+              dataKey="v"
+              stroke={color}
+              strokeWidth={2}
+              fill={`url(#fill-${color.replace('#', '')})`}
+              dot={false}
+              isAnimationActive={false}
+            />
+          </AreaChart>
+        </ResponsiveContainer>
+      </div>
+    );
+  }
 
   return (
     <div style={{ width, height }} className="inline-block align-middle">

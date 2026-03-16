@@ -428,6 +428,9 @@ export default function VertriebsAssistent() {
     : (WELCOME_MESSAGES[modeId] || WELCOME_MESSAGES.versicherung);
   const quickActions = currentView === 'cockpit' ? COCKPIT_QUICK_ACTIONS : (QUICK_ACTIONS[modeId] || QUICK_ACTIONS.versicherung);
 
+  // Don't show on landing page
+  if (currentView === 'landing') return null;
+
   return (
     <>
       {/* Floating button */}

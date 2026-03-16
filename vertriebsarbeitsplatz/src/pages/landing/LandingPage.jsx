@@ -1,6 +1,6 @@
-import { useState, useEffect, useRef, useMemo } from 'react';
+import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { clsx } from 'clsx';
-import { Send, Briefcase, Shield, Landmark, Wallet, PieChart, Bot, Loader2 } from 'lucide-react';
+import { Send, Briefcase, Shield, Landmark, Wallet, PieChart, Bot, Loader2, Settings, Upload, RotateCcw, User, ChevronDown, ChevronUp } from 'lucide-react';
 import { useMode } from '../../hooks/useMode';
 import { MODE_CONFIGS, MODUS_LIST } from '../../data/modeConfig';
 import { getLogoUrl } from '../../utils/logos';
@@ -35,6 +35,12 @@ export default function LandingPage() {
   const [nameInput, setNameInput] = useState('');
   const nameInputRef = useRef(null);
 
+  // Settings
+  const [showSettings, setShowSettings] = useState(false);
+  const [settingsName, setSettingsName] = useState(() => localStorage.getItem('kia_user_fullname') || '');
+  const [settingsPhoto, setSettingsPhoto] = useState(() => localStorage.getItem('kia_user_photo') || '');
+  const photoInputRef = useRef(null);
+
   useEffect(() => {
     if (showNamePrompt && nameInputRef.current) nameInputRef.current.focus();
   }, [showNamePrompt]);
@@ -46,6 +52,40 @@ export default function LandingPage() {
     localStorage.setItem('kia_user_name', trimmed);
     setUserName(trimmed);
     setShowNamePrompt(false);
+  }
+
+  function handleSettingsSave() {
+    localStorage.setItem('kia_user_fullname', settingsName);
+    // Update display name (first name from full name)
+    const firstName = settingsName.trim().split(' ')[0];
+    if (firstName) {
+      localStorage.setItem('kia_user_name', firstName);
+      setUserName(firstName);
+    } else {
+      localStorage.removeItem('kia_user_name');
+      setUserName('');
+    }
+  }
+
+  function handlePhotoUpload(e) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const dataUrl = ev.target.result;
+      localStorage.setItem('kia_user_photo', dataUrl);
+      setSettingsPhoto(dataUrl);
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function handleSettingsReset() {
+    localStorage.removeItem('kia_user_fullname');
+    localStorage.removeItem('kia_user_photo');
+    localStorage.removeItem('kia_user_name');
+    setSettingsName('');
+    setSettingsPhoto('');
+    setUserName('');
   }
 
   const activeConfig = MODE_CONFIGS[activeModule];
@@ -300,6 +340,85 @@ export default function LandingPage() {
             );
           })}
         </div>
+      </div>
+
+      {/* Settings Section */}
+      <div className="px-6 pb-6">
+        <button
+          onClick={() => setShowSettings(v => !v)}
+          className="flex items-center gap-2 mx-auto text-white/40 hover:text-white/70 text-xs font-medium transition-colors"
+        >
+          <Settings size={14} />
+          Einstellungen
+          {showSettings ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+        </button>
+
+        {showSettings && (
+          <div className="mt-4 max-w-md mx-auto bg-white/10 backdrop-blur-sm border border-white/15 rounded-2xl p-5 animate-fade-in">
+            <h3 className="text-white text-sm font-semibold mb-4 flex items-center gap-2">
+              <User size={16} />
+              Berater-Profil
+            </h3>
+
+            {/* Photo */}
+            <div className="flex items-center gap-4 mb-4">
+              <div className="relative">
+                {settingsPhoto ? (
+                  <img src={settingsPhoto} alt="Profil" className="w-16 h-16 rounded-full object-cover border-2 border-white/20" />
+                ) : (
+                  <div className="w-16 h-16 rounded-full bg-white/15 border-2 border-white/20 flex items-center justify-center">
+                    <User size={24} className="text-white/40" />
+                  </div>
+                )}
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <button
+                  onClick={() => photoInputRef.current?.click()}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/15 hover:bg-white/25 text-white/80 text-xs font-medium transition-colors"
+                >
+                  <Upload size={12} />
+                  Bild hochladen
+                </button>
+                <input
+                  ref={photoInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={handlePhotoUpload}
+                  className="hidden"
+                />
+                {settingsPhoto && (
+                  <button
+                    onClick={() => { setSettingsPhoto(''); localStorage.removeItem('kia_user_photo'); }}
+                    className="text-[10px] text-white/40 hover:text-white/60 transition-colors text-left"
+                  >
+                    Bild entfernen
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* Name input */}
+            <label className="block text-xs text-white/60 font-medium mb-1.5">Vor- und Nachname</label>
+            <input
+              type="text"
+              value={settingsName}
+              onChange={e => setSettingsName(e.target.value)}
+              onBlur={handleSettingsSave}
+              onKeyDown={e => { if (e.key === 'Enter') handleSettingsSave(); }}
+              placeholder="z.B. Eike Brenneisen"
+              className="w-full px-4 py-2.5 rounded-xl bg-white/10 border border-white/15 text-white text-sm placeholder-white/30 focus:outline-none focus:bg-white/15 focus:border-white/30 transition-all mb-4"
+            />
+
+            {/* Reset */}
+            <button
+              onClick={handleSettingsReset}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white/50 hover:text-white/70 text-xs font-medium transition-colors"
+            >
+              <RotateCcw size={12} />
+              Auf Standard zurücksetzen
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

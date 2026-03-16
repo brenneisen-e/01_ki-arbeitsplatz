@@ -5,6 +5,7 @@ import { useMode } from '../../hooks/useMode';
 import { MODE_CONFIGS } from '../../data/modeConfig';
 import LogoImg from '../ui/LogoImg';
 import { downloadDemoData } from '../../utils/downloadDemoData';
+import useTranslation from '../../i18n/useTranslation';
 
 function getBasePath() {
   const path = window.location.pathname;
@@ -51,6 +52,7 @@ const MARKET_DATA = [
 
 export default function GlobalHeader({ kundeInfo }) {
   const { config, modeId, switchMode, switchInstitut, activeTab, setActiveTab, currentView, goBack } = useMode();
+  const { t, lang } = useTranslation();
   const [showModeDropdown, setShowModeDropdown] = useState(false);
   const tabs = currentView === 'detail' ? config.detailTabs : config.tabs;
   const tagesItems = TAGESSTART_ITEMS[modeId] || TAGESSTART_ITEMS.versicherung;
@@ -66,13 +68,13 @@ export default function GlobalHeader({ kundeInfo }) {
           <button
             onClick={() => { window.location.href = getBasePath(); }}
             className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-white/70 hover:text-white hover:bg-white/10 transition-colors"
-            title="Zurück zur Startseite"
+            title={t('zurueckStartseite')}
           >
             <Home size={16} strokeWidth={1.75} />
-            <span className="text-xs font-medium hidden sm:inline">Startseite</span>
+            <span className="text-xs font-medium hidden sm:inline">{t('startseite')}</span>
           </button>
           {currentView === 'detail' && (
-            <button onClick={goBack} className="text-white/70 hover:text-white transition-colors p-1" title="Zurück zur Übersicht">
+            <button onClick={goBack} className="text-white/70 hover:text-white transition-colors p-1" title={t('zurueckUebersicht')}>
               <ArrowLeft size={20} strokeWidth={1.75} />
             </button>
           )}
@@ -101,7 +103,7 @@ export default function GlobalHeader({ kundeInfo }) {
                       {config.beraterTitel}: {displayName}
                     </div>
                     <div className="text-white/60 text-xs">
-                      {config.beraterId} | Aktiv
+                      {config.beraterId} | {t('aktiv')}
                     </div>
                   </div>
                 </>
@@ -153,7 +155,7 @@ export default function GlobalHeader({ kundeInfo }) {
           </div>
           <button
             onClick={downloadDemoData}
-            title="Demodaten als JSON exportieren"
+            title={t('demodatenExportieren')}
             className="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors"
           >
             <Download size={18} strokeWidth={1.75} />
@@ -168,7 +170,7 @@ export default function GlobalHeader({ kundeInfo }) {
       {isOverview && modeId === 'vermoegensverwaltung' && (
         <div className="px-6 pb-2">
           <div className="flex items-center gap-4 text-xs overflow-x-auto">
-            <span className="text-white/40 font-medium shrink-0">Märkte</span>
+            <span className="text-white/40 font-medium shrink-0">{t('maerkte')}</span>
             {MARKET_DATA.map((m, i) => (
               <div key={i} className="flex items-center gap-1.5 shrink-0">
                 <span className="text-white/60">{m.symbol}</span>
@@ -216,7 +218,7 @@ export default function GlobalHeader({ kundeInfo }) {
                 : 'text-white/70 hover:text-white hover:bg-white/10'
             )}
           >
-            {tab.label}
+            {tab.labelKey ? t(tab.labelKey) : tab.label}
           </button>
         ))}
       </div>

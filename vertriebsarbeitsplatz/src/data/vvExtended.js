@@ -1842,6 +1842,34 @@ export const VV_LEADS = [
       { label: 'Regulatorischer Vorteil', value: 'Art.9 erleichtert Fördermittel-Akquise + Spenderansprache' },
     ],
   },
+
+  // 11. Digitale Signale — Defense/Rüstungs-Investment-Interesse
+  {
+    id: 'BM016',
+    name: 'Dr. von Trott Defense-Investment',
+    kategorie: 'bestandsmandat',
+    quelle: 'digital',
+    quelleLabel: 'Digitales Signal / Interne Analyse',
+    stadium: 'lead',
+    geschaetztesVolumen: '500.000–1.500.000 €',
+    potentialAuM: 1000000,
+    wahrscheinlichkeit: 55,
+    naechsterSchritt: 'Termin vereinbaren — Defense-Investmentthese und Whitepaper besprechen',
+    datum: '2026-03-14',
+    referenzMandant: 'VV00001',
+    beruf: 'Bestandsmandant',
+    isNeuerLead: true,
+    herkunft: 'Dr. von Trott: Interne Analyse zeigt starkes Interesse an Defense-Anlagen — Whitepaper gelesen, LinkedIn-Diskussionen, Newsletter geöffnet, Event besucht.',
+    kiDescription: 'KI-Analyse: Unsere interne Signalanalyse hat ein starkes Interessencluster bei Dr. von Trott zum Thema Defense-/Rüstungsinvestments identifiziert. Vier unabhängige Datenpunkte bestätigen das Muster: (1) Unser Whitepaper „Defense & Aerospace — Investmentchancen im neuen geopolitischen Umfeld" wurde vollständig gelesen (Verweildauer 14 Min.). (2) Auf LinkedIn hat sich Dr. von Trott aktiv an Diskussionen zu europäischer Verteidigungspolitik und Defense-ETFs beteiligt — mit mehreren Kommentaren und Shares. (3) Unser thematischer Newsletter „Defense-Sektor: Portfolioallokation 2026" wurde geöffnet und alle Links angeklickt. (4) Vor ca. 2 Monaten hat er an unserem Event „Geopolitik & Portfoliostrategie" teilgenommen. Empfehlung: Proaktiv Termin vereinbaren und Defense-Investmentthese vorstellen. Anknüpfungspunkt: Unser neues Whitepaper „European Defense Stocks — Due Diligence Report 2026" (vor 2 Tagen veröffentlicht). Potenzielle Allokation: 500k–1,5M € aus dem bestehenden FairValue-Mandat (12,5M AuM) — das entspricht 4–12% des Portfolios, im Einklang mit seiner Risikoneigung.',
+    herleitung: [
+      { label: 'Whitepaper', value: 'Defense & Aerospace Whitepaper vollständig gelesen (14 Min. Verweildauer)' },
+      { label: 'LinkedIn-Aktivität', value: 'Aktive Diskussionsbeiträge zu europäischer Verteidigungspolitik und Defense-ETFs' },
+      { label: 'Newsletter', value: 'Defense-Sektor Newsletter geöffnet — alle Links angeklickt (Klickrate 100%)' },
+      { label: 'Event-Teilnahme', value: 'Event „Geopolitik & Portfoliostrategie" besucht (Januar 2026)' },
+      { label: 'Neues Whitepaper', value: '„European Defense Stocks — Due Diligence Report 2026" (veröffentlicht vor 2 Tagen)' },
+      { label: 'Potenzielle Allokation', value: '500k–1,5M € (4–12% des 12,5M FairValue-Mandats)' },
+    ],
+  },
 ];
 
 

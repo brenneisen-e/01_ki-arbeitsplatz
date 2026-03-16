@@ -120,7 +120,7 @@ export default function StammdatenDetailTab({ kunde }) {
             {kunde.kinder?.length > 0 && (
               <InfoRow label="Kinder" value={kunde.kinder.map(k => `${k.name} (${k.alter})`).join(', ')} />
             )}
-            <InfoRow label="Wohnsituation" value={`${kunde.wohnsituation}, ${kunde.wohnflaeche}qm`} />
+            <InfoRow label="Wohnsituation" value={`${kunde.wohnsituation}, ${kunde.wohnflaeche}qm${kunde.adresse ? ` · ${kunde.adresse}` : ''}`} />
             {(kunde.haustiere || kunde.tiere) && (
               <HaustiereRow haustiere={normalizeHaustiere(kunde.haustiere || kunde.tiere)} />
             )}

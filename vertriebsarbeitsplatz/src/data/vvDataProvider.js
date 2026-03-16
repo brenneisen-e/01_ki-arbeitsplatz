@@ -79,20 +79,24 @@ function generateMonthly(prng, years = 3) {
 
 function transformPerformance(raw) {
   if (!raw) return null;
-  // Map monthlyReturns → monthly, then extend dynamically to current month
-  // Base data is for 2025; extend into 2026 up to current month
-  const baseMonthly = (raw.monthlyReturns || []).map((m, i) => ({
-    monat: `${m.name} 2025`,
+  // Map monthlyReturns → monthly
+  // Names already include year (e.g. 'Jan 2023'), so use directly
+  const baseMonthly = (raw.monthlyReturns || []).map((m) => ({
+    monat: m.name,
     portfolio: m.portfolio,
     benchmark: m.benchmark,
   }));
 
-  // Extend with months from Jan 2026 to current month
+  // Find last year in data to extend from there
+  const lastEntry = baseMonthly[baseMonthly.length - 1];
+  const lastYearInData = lastEntry ? parseInt(lastEntry.monat.split(' ')[1]) : 2025;
+
+  // Extend with months after the last data entry up to current month
   const now = new Date();
   const currentYear = now.getFullYear();
   const currentMonth = now.getMonth(); // 0-based
   const prng = makePrng((raw.ioComment || 'default') + '_extend');
-  for (let y = 2026; y <= currentYear; y++) {
+  for (let y = lastYearInData + 1; y <= currentYear; y++) {
     const maxMonth = y === currentYear ? currentMonth : 11;
     for (let m = 0; m <= maxMonth; m++) {
       const pf = round1(0.4 + rng(prng, -1.0, 2.0));
@@ -101,6 +105,9 @@ function transformPerformance(raw) {
     }
   }
   const monthly = baseMonthly;
+
+  // Pass through deposit events
+  const einzahlungen = raw.einzahlungen || [];
 
   // Map sectors → sektoren (value → anteil)
   const sektoren = (raw.sectors || []).map(s => ({ name: s.name, anteil: s.value }));
@@ -140,6 +147,7 @@ function transformPerformance(raw) {
 
   return {
     monthly,
+    einzahlungen,
     allocation: raw.allocation,
     sollAllocation: raw.targetAllocation || raw.sollAllocation,
     sektoren,
@@ -206,8 +214,21 @@ function generatePerformance(id) {
     'Stabiler Portfolioverlauf trotz erhöhter Marktvolatilität. Die Anleihenquote bietet ausreichend Puffer.',
   ];
 
+  // Generate 1-2 deposit events for generated mandants
+  const generatedMonthly = generateMonthly(prng);
+  const depositCount = rngInt(prng, 1, 2);
+  const einzahlungen = [];
+  for (let d = 0; d < depositCount; d++) {
+    const idx = rngInt(prng, 6, generatedMonthly.length - 3);
+    const betrag = rngInt(prng, 3, 15) * 100000;
+    const monat = generatedMonthly[idx].monat;
+    const mio = (betrag / 1000000).toFixed(1).replace('.', ',');
+    einzahlungen.push({ monat, betrag, label: `Einzahlung ${mio} Mio EUR` });
+  }
+
   return {
-    monthly: generateMonthly(prng),
+    monthly: generatedMonthly,
+    einzahlungen,
     allocation,
     sollAllocation,
     sektoren,
@@ -513,8 +534,8 @@ function generateEngagement(id) {
     newsletter: {
       oeffnungsrate: rngInt(prng, 20, 95),
       klicks: [
-        { datum: '2026-03-05', betreff: pick(prng, ['Marktausblick Q1 2026', 'Portfolio-Update März', 'ESG-Spezial']), aktion: pick(prng, ['geoeffnet', 'geklickt']) },
-        { datum: '2026-02-10', betreff: pick(prng, ['Anlagetrends 2026', 'Nachfolge-Spezial', 'Quartalsbericht Q4']), aktion: pick(prng, ['geoeffnet', 'geklickt']) },
+        { datum: '2026-03-05', betreff: pick(prng, ['Marktausblick Q1 2026', 'Portfolio-Update März', 'ESG-Spezial']), aktion: pick(prng, ['geöffnet', 'geklickt']) },
+        { datum: '2026-02-10', betreff: pick(prng, ['Anlagetrends 2026', 'Nachfolge-Spezial', 'Quartalsbericht Q4']), aktion: pick(prng, ['geöffnet', 'geklickt']) },
       ],
       signale: [pick(prng, ['Aktiver Leser', 'Nachfolge-Themen geklickt', 'ESG-Interesse', 'Geringe Öffnungsrate'])],
     },

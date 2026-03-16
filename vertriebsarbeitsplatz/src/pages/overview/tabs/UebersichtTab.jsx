@@ -214,25 +214,31 @@ export default function UebersichtTab() {
               </div>
             </div>
             <div className="space-y-0">
-              <div className="grid py-1.5 px-3 items-center text-[10px] uppercase text-slate-400 font-semibold" style={{ gridTemplateColumns: '1fr 100px 120px' }}>
+              <div className="grid py-1.5 px-3 items-center text-[10px] uppercase text-slate-400 font-semibold" style={{ gridTemplateColumns: '2fr 90px 100px 70px 60px 90px' }}>
                 <span>Mandant</span>
                 <span className="text-right">AuM</span>
                 <span className="text-right">Letztes Gespräch</span>
+                <span className="text-center">Leads</span>
+                <span className="text-center">Typ</span>
+                <span className="text-center">Strategie</span>
               </div>
               {filteredVVKunden.slice(0, 8).map((k, i) => (
                 <div
                   key={k.id || i}
                   className="grid py-2.5 px-3 rounded-lg row-hover transition-colors cursor-pointer items-center"
-                  style={{ gridTemplateColumns: '1fr 100px 120px' }}
+                  style={{ gridTemplateColumns: '2fr 90px 100px 70px 60px 90px' }}
                   onClick={() => navigateTo('detail', { kundeId: k.id })}
                 >
                   <div className="flex items-center gap-2.5 min-w-0">
-                    <Avatar name={k.name} foto={getKundeFoto(k.id)} size={34} />
-                    <div className="min-w-0">
-                      <div className="text-sm font-semibold text-slate-700 truncate flex items-center gap-1.5">
-                        {k.name}
-                        {k.istNeu && <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-emerald-100 text-emerald-700 font-medium">Neu</span>}
+                    {k.istNeu ? (
+                      <div className="w-[34px] h-[34px] rounded-full bg-slate-100 flex items-center justify-center shrink-0">
+                        <Sparkles size={16} className="text-slate-400" />
                       </div>
+                    ) : (
+                      <Avatar name={k.name} foto={getKundeFoto(k.id)} size={34} />
+                    )}
+                    <div className="min-w-0">
+                      <div className="text-sm font-semibold text-slate-700 truncate">{k.name}</div>
                       <div className="text-xs text-slate-400 truncate">{k.mandat ? k.mandat.produkt : k.mandatsTyp || '–'}</div>
                     </div>
                   </div>
@@ -241,6 +247,33 @@ export default function UebersichtTab() {
                   </div>
                   <div className="text-right text-xs text-slate-500">
                     {k.letzteKomm ? new Date(k.letzteKomm.datum).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: '2-digit' }) : '–'}
+                  </div>
+                  <div className="text-center">
+                    {k.leadsCount > 0 ? (
+                      <span className="inline-flex items-center justify-center w-6 h-6 rounded-full text-xs font-bold text-white" style={{ backgroundColor: 'var(--mode-primary-light)' }}>
+                        {k.leadsCount}
+                      </span>
+                    ) : (
+                      <span className="text-slate-300 text-xs">–</span>
+                    )}
+                  </div>
+                  <div className="text-center">
+                    <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium ${
+                      k.istNeu
+                        ? 'bg-blue-50 text-blue-700 border border-blue-200'
+                        : 'bg-slate-100 text-slate-600'
+                    }`}>
+                      {k.istNeu ? 'Neu' : 'Bestand'}
+                    </span>
+                  </div>
+                  <div className="text-center">
+                    <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-semibold border ${
+                      k.mandatsTyp === 'FairValue' ? 'bg-blue-50 text-blue-700 border-blue-200' :
+                      k.mandatsTyp === 'SmartValue' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' :
+                      'bg-purple-50 text-purple-700 border-purple-200'
+                    }`}>
+                      {k.mandatsTyp === 'Spezialmandat' ? 'Spezial' : k.mandatsTyp || '–'}
+                    </span>
                   </div>
                 </div>
               ))}

@@ -63,9 +63,9 @@ function ExpandedChart({ data, format, label, onClose }) {
   const values = data.map(d => d.value);
   const max = Math.max(...values);
   const min = Math.min(...values);
-  // Use a baseline so bars show relative differences clearly
   const baseline = min > 0 ? min * 0.9 : 0;
   const range = (max - baseline) * 1.1 || 1;
+  const BAR_AREA_H = 180; // fixed pixel height for bars
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm animate-fade-in" onClick={onClose}>
@@ -76,15 +76,16 @@ function ExpandedChart({ data, format, label, onClose }) {
             <LucideIcons.X size={18} />
           </button>
         </div>
-        <div className="flex items-end gap-1.5 h-56">
+        <div className="flex items-end gap-1.5">
           {data.map((d, i) => {
-            const height = range > 0 ? ((d.value - baseline) / range) * 100 : 0;
+            const ratio = (d.value - baseline) / range;
+            const barH = Math.max(Math.round(ratio * BAR_AREA_H), 4);
             return (
               <div key={i} className="flex-1 flex flex-col items-center gap-1">
                 <span className="text-[8px] text-slate-500 font-mono whitespace-nowrap">{formatCompact(d.value, format)}</span>
                 <div
                   className="w-full rounded-t transition-all duration-300"
-                  style={{ height: `${Math.max(height, 3)}%`, backgroundColor: 'var(--mode-primary-light)', minHeight: 4 }}
+                  style={{ height: barH, backgroundColor: 'var(--mode-primary-light)' }}
                 />
                 <span className="text-[8px] text-slate-400 -rotate-45 origin-top-left whitespace-nowrap mt-1">{d.month}</span>
               </div>

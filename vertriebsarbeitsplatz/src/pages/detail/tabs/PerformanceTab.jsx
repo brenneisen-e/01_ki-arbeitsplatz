@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import {
   BarChart, Bar, PieChart, Pie, Cell,
   XAxis, YAxis, Tooltip, ResponsiveContainer, LineChart, Line, Legend,
+  ReferenceLine,
 } from 'recharts';
 import { TrendingUp, TrendingDown, AlertTriangle, CheckCircle, MessageSquare, Leaf } from 'lucide-react';
 import { clsx } from 'clsx';
@@ -208,7 +209,7 @@ export default function PerformanceTab({ kunde }) {
   }
 
   const {
-    monthly, allocation, sollAllocation, sektoren, regionen,
+    monthly, einzahlungen, allocation, sollAllocation, sektoren, regionen,
     risiko, anleihen, waehrungen, hedgingQuote,
     ioKommentar, esg, kosten, verlustschwelle,
   } = perfData;
@@ -216,9 +217,15 @@ export default function PerformanceTab({ kunde }) {
   // Derive KPIs from kunde portfolio data
   const kpis = deriveKpis(monthly, kunde?.portfolio);
 
+  // Build deposit lookup: monat → betrag
+  const depositMap = useMemo(() => {
+    const map = {};
+    (einzahlungen || []).forEach(e => { map[e.monat] = e; });
+    return map;
+  }, [einzahlungen]);
+
   // Convert monthly percentage returns to absolute EUR values
-  // Both portfolio and benchmark START at the same base value, then grow by their respective returns
-  // This ensures a fair comparison; the portfolio should outperform the benchmark
+  // Incorporates deposits: at deposit months, add the deposit amount to portfolio value
   const absoluteMonthly = useMemo(() => {
     if (!monthly || !kunde?.aum) return monthly || [];
     const baseAum = kunde.aum;
@@ -226,8 +233,11 @@ export default function PerformanceTab({ kunde }) {
     if (len === 0) return [];
 
     // Walk backwards from current AuM to find the starting portfolio value
+    // Subtract deposits when walking backwards
     let startVal = baseAum;
     for (let i = len - 1; i >= 1; i--) {
+      const dep = depositMap[monthly[i].monat];
+      if (dep) startVal -= dep.betrag;
       startVal = startVal / (1 + monthly[i].portfolio / 100);
     }
 
@@ -235,17 +245,23 @@ export default function PerformanceTab({ kunde }) {
     const pfValues = new Array(len);
     const bmValues = new Array(len);
     pfValues[0] = startVal;
-    bmValues[0] = startVal; // benchmark starts at same point as portfolio
+    bmValues[0] = startVal;
     for (let i = 1; i < len; i++) {
       pfValues[i] = pfValues[i - 1] * (1 + monthly[i].portfolio / 100);
       bmValues[i] = bmValues[i - 1] * (1 + monthly[i].benchmark / 100);
+      // Add deposits to portfolio value (not benchmark)
+      const dep = depositMap[monthly[i].monat];
+      if (dep) {
+        pfValues[i] += dep.betrag;
+        bmValues[i] += dep.betrag; // benchmark also gets deposit to keep comparison fair
+      }
     }
     return monthly.map((m, i) => ({
       monat: m.monat,
       portfolio: Math.round(pfValues[i]),
       benchmark: Math.round(bmValues[i]),
     }));
-  }, [monthly, kunde?.aum]);
+  }, [monthly, kunde?.aum, depositMap]);
 
   // Build time ranges from monthly series (using absolute values)
   const timeRanges = useMemo(() => buildTimeRanges(absoluteMonthly), [absoluteMonthly]);
@@ -253,6 +269,13 @@ export default function PerformanceTab({ kunde }) {
   const rangeLabels = { ytd: 'YTD', '1j': '1J', '3j': '3J', '5j': '5J' };
   const currentSeries = timeRanges[timeRange] || [];
   const lastPortfolioValue = currentSeries.length > 0 ? currentSeries[currentSeries.length - 1].portfolio : null;
+
+  // Filter deposits to those visible in the current time range
+  const visibleDeposits = useMemo(() => {
+    if (!einzahlungen?.length || !currentSeries.length) return [];
+    const visibleMonths = new Set(currentSeries.map(s => s.monat));
+    return einzahlungen.filter(e => visibleMonths.has(e.monat));
+  }, [einzahlungen, currentSeries]);
 
   // Convert allocation objects to chart-ready arrays
   const allocData = useMemo(() => {
@@ -377,8 +400,8 @@ export default function PerformanceTab({ kunde }) {
         </div>
         {currentSeries.length > 0 ? (
           <>
-            <ResponsiveContainer width="100%" height={280}>
-              <LineChart data={currentSeries} margin={{ top: 5, right: 20, bottom: 5, left: 20 }}>
+            <ResponsiveContainer width="100%" height={300}>
+              <LineChart data={currentSeries} margin={{ top: 25, right: 20, bottom: 5, left: 20 }}>
                 <XAxis dataKey="monat" tick={{ fontSize: 11, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
                 <YAxis
                   tick={{ fontSize: 11, fill: '#94a3b8' }}
@@ -391,6 +414,23 @@ export default function PerformanceTab({ kunde }) {
                 <Legend iconType="line" wrapperStyle={{ fontSize: 11, paddingTop: 8 }} />
                 <Line type="monotone" dataKey="portfolio" name="Portfolio" stroke={C.primary} strokeWidth={2.5} dot={false} activeDot={{ r: 4, strokeWidth: 0, fill: C.primary }} />
                 <Line type="monotone" dataKey="benchmark" name={`Benchmark (${benchmarkName})`} stroke={C.slateLight} strokeWidth={1.5} strokeDasharray="6 3" dot={false} activeDot={{ r: 3, strokeWidth: 0, fill: C.slateLight }} />
+                {visibleDeposits.map((dep, i) => (
+                  <ReferenceLine
+                    key={`dep-${i}`}
+                    x={dep.monat}
+                    stroke={C.green}
+                    strokeWidth={2}
+                    strokeDasharray="4 2"
+                    label={{
+                      value: dep.label,
+                      position: 'top',
+                      fill: C.green,
+                      fontSize: 10,
+                      fontWeight: 600,
+                      offset: 8,
+                    }}
+                  />
+                ))}
               </LineChart>
             </ResponsiveContainer>
             {lastPortfolioValue && (

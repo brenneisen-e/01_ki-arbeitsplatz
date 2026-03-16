@@ -207,6 +207,10 @@ export function generatePerson(modus) {
     : weightedRandom({ Miete: 30, Eigentum: 70 });
   const wohnflaeche = wohnsituation === 'Eigentum'
     ? randomBetween(100, 180) : randomBetween(45, 110);
+  const STRASSEN = ['Hauptstr.','Gartenstr.','Bahnhofstr.','Lindenallee','Bergstr.','Waldweg','Ringstr.','Schillerstr.','Goethestr.','Mozartstr.','Kirchstr.','Friedhofstr.','Schulstr.','Industriestr.','Am Markt','Wiesenstr.','Feldstr.','Rosenweg','Birkenweg','Eichenstr.'];
+  const STAEDTE_MAP = { versicherung: ['Köln','Bonn','Leverkusen','Bergisch Gladbach','Troisdorf'], banking: ['Gießen','Wetzlar','Marburg','Friedberg','Bad Nauheim'], vermoegensverwaltung: ['Frankfurt am Main','Wiesbaden','Bad Homburg','Kronberg','Königstein'] };
+  const staedte = STAEDTE_MAP[modus] || STAEDTE_MAP.versicherung;
+  const adresse = `${random(STRASSEN)} ${randomBetween(1, 120)}, ${randomBetween(10000, 99999)} ${random(staedte)}`;
 
   // Lebenssituation
   const lebenssituation =
@@ -246,6 +250,7 @@ export function generatePerson(modus) {
     kinder,
     wohnsituation,
     wohnflaeche,
+    adresse,
     linkedin,
     lebenssituation,
     haustiere: generateHaustiere(wohnsituation, kinder),
@@ -293,6 +298,9 @@ export function generateVVPerson() {
 
   const wohnsituation = 'Eigentum';
   const wohnflaeche = randomBetween(150, 350);
+  const VV_STRASSEN = ['Taunusanlage','Villenweg','Am Kirchberg','Bockenheimer Landstr.','Palmengarten-Str.','Grüneburgweg','Kennedyallee','Marbachweg','Forsthausstr.','Kronberger Str.'];
+  const VV_STAEDTE = ['Frankfurt am Main','Wiesbaden','Bad Homburg','Kronberg im Taunus','Königstein im Taunus','Oberursel'];
+  const adresse = `${random(VV_STRASSEN)} ${randomBetween(1, 60)}, ${randomBetween(60000, 65999)} ${random(VV_STAEDTE)}`;
 
   // Arbeitgeber
   let arbeitgeber = null;
@@ -321,6 +329,7 @@ export function generateVVPerson() {
     kinder,
     wohnsituation,
     wohnflaeche,
+    adresse,
     linkedin,
     lebenssituation: alter >= 62 ? 'ruhestand' : alter >= 50 ? 'pre-retirement' : 'konsolidierung',
     haustiere: generateHaustiere(wohnsituation, kinder),

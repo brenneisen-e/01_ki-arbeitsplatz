@@ -301,7 +301,8 @@ function ArbeitgeberRow({ arbeitgeber }) {
 function normalizeHaustiere(raw) {
   if (!raw) return null;
   return {
-    art: raw.art || raw.typ || 'Haustier',
+    art: raw.art || raw.typ || (raw.vermutet ? null : 'Haustier'),
+    vermutet: raw.vermutet || false,
     name: raw.name || null,
     rasse: raw.rasse || null,
     alter: raw.alter || null,
@@ -327,9 +328,13 @@ function HaustiereRow({ haustiere }) {
           <div className="flex items-center gap-2">
             <span className="flex items-center gap-1.5 text-amber-500 shrink-0">
               <PawPrint size={14} />
-              Haustier-Hinweis:
+              {haustiere.vermutet ? 'Vermutlich Haustier:' : 'Haustier-Hinweis:'}
             </span>
-            <span className="text-sm text-slate-500 italic">Hinweise aus Kontoumsätzen erkannt</span>
+            <span className="text-sm text-slate-500 italic">
+              {haustiere.vermutet
+                ? 'Haustier vermutet (aus Kontoumsätzen)'
+                : `${haustiere.art}${haustiere.name ? ` "${haustiere.name}"` : ''} — aus Kontoumsätzen erkannt`}
+            </span>
             <button
               onClick={() => setShowDetail(!showDetail)}
               className="flex items-center gap-1 text-[10px] text-blue-500 bg-blue-50 px-1.5 py-0.5 rounded-full border border-blue-100 hover:bg-blue-100 transition-colors"

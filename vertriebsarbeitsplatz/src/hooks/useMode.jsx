@@ -26,7 +26,7 @@ function parseHash(hash) {
   }
 
   if (parts.length >= 2) {
-    if (parts[1] === 'detail' || parts[1] === 'overview' || parts[1] === 'cockpit') {
+    if (parts[1] === 'detail' || parts[1] === 'overview' || parts[1] === 'cockpit' || parts[1] === 'landing') {
       view = parts[1];
     }
   }
@@ -96,11 +96,11 @@ export function ModeProvider({ children }) {
     };
   }, []);
 
-  /* ── Set initial hash if empty ───────────────────────────── */
+  /* ── Set initial hash if empty → go to landing ──────────── */
   useEffect(() => {
     if (!window.location.hash || window.location.hash === '#' || window.location.hash === '#/') {
-      const newHash = buildHash(modeId, currentView, activeTab, selectedKundeId);
-      window.history.replaceState(null, '', newHash);
+      setCurrentView('landing');
+      window.history.replaceState(null, '', '#/versicherung/landing');
     }
   }, []);
 
@@ -147,7 +147,7 @@ export function ModeProvider({ children }) {
       setActiveTab(kundenTab?.id || 'kunden');
       setSelectedKundeId(null);
     } else if (currentView === 'overview' || currentView === 'cockpit') {
-      window.location.href = getBasePath();
+      setCurrentView('landing');
     }
   }, [currentView, baseConfig]);
 

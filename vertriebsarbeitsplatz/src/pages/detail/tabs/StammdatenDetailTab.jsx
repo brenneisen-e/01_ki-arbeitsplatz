@@ -311,42 +311,84 @@ function normalizeHaustiere(raw) {
 
 function HaustiereRow({ haustiere }) {
   const [showDetail, setShowDetail] = useState(false);
-  const details = [haustiere.name, haustiere.rasse, haustiere.alter ? `${haustiere.alter} J.` : null].filter(Boolean).join(', ');
-  const tierLabel = details ? `${haustiere.art} (${details})` : haustiere.art;
+  const [confirmed, setConfirmed] = useState(false);
+  const [tierArt, setTierArt] = useState('');
+  const [tierName, setTierName] = useState('');
 
   return (
     <div className="pt-2 border-t border-slate-100 mt-2">
-      <div className="flex items-center gap-2">
-        <span className="flex items-center gap-1.5 text-slate-400 shrink-0">
-          <PawPrint size={14} className="text-amber-500" />
-          Haustier:
-        </span>
-        <span className="flex items-center gap-2 text-slate-700 font-medium">
-          {tierLabel}
-          <button
-            onClick={() => setShowDetail(!showDetail)}
-            className="flex items-center gap-1 text-[10px] text-blue-500 bg-blue-50 px-1.5 py-0.5 rounded-full border border-blue-100 hover:bg-blue-100 transition-colors"
-          >
-            <Info size={10} />
-            Kontoumsätze
-          </button>
-        </span>
-      </div>
-      {showDetail && haustiere.erkannteTransaktionen && (
-        <div className="mt-2 bg-amber-50 border border-amber-200 rounded-lg p-3 space-y-2 animate-fade-in">
-          <div className="text-xs font-semibold text-amber-700 flex items-center gap-1.5">
-            <PawPrint size={12} />
-            Hinweise aus Kontoumsätzen erkannt
+      {!confirmed ? (
+        <>
+          <div className="flex items-center gap-2">
+            <span className="flex items-center gap-1.5 text-amber-500 shrink-0">
+              <PawPrint size={14} />
+              Haustier-Hinweis:
+            </span>
+            <span className="text-sm text-slate-500 italic">Hinweise aus Kontoumsätzen erkannt</span>
+            <button
+              onClick={() => setShowDetail(!showDetail)}
+              className="flex items-center gap-1 text-[10px] text-blue-500 bg-blue-50 px-1.5 py-0.5 rounded-full border border-blue-100 hover:bg-blue-100 transition-colors"
+            >
+              <Info size={10} />
+              Details
+            </button>
           </div>
-          {haustiere.erkannteTransaktionen.map((t, i) => (
-            <div key={i} className="flex justify-between text-xs text-amber-800">
-              <span>{t.haendler}</span>
-              <span className="font-mono">{t.betrag}€ ({t.haeufigkeit})</span>
+          {showDetail && (
+            <div className="mt-2 bg-amber-50 border border-amber-200 rounded-lg p-3 space-y-2 animate-fade-in">
+              <div className="text-xs font-semibold text-amber-700 flex items-center gap-1.5">
+                <PawPrint size={12} />
+                Erkannte Transaktionen
+              </div>
+              {haustiere.erkannteTransaktionen?.map((t, i) => (
+                <div key={i} className="flex justify-between text-xs text-amber-800">
+                  <span>{t.haendler}</span>
+                  <span className="font-mono">{t.betrag}€ ({t.haeufigkeit})</span>
+                </div>
+              ))}
+              <div className="text-[10px] text-amber-600 pt-1 border-t border-amber-200">
+                Quelle: PSD2/Open Finance Transaktionsanalyse
+              </div>
+              <div className="pt-2 border-t border-amber-200 space-y-2">
+                <div className="text-xs font-semibold text-amber-700">Haustier bestätigen:</div>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    placeholder="Art (z.B. Katze, Hund)"
+                    value={tierArt}
+                    onChange={e => setTierArt(e.target.value)}
+                    className="text-xs border border-amber-300 rounded px-2 py-1 flex-1 bg-white focus:outline-none focus:ring-1 focus:ring-amber-400"
+                  />
+                  <input
+                    type="text"
+                    placeholder="Name"
+                    value={tierName}
+                    onChange={e => setTierName(e.target.value)}
+                    className="text-xs border border-amber-300 rounded px-2 py-1 flex-1 bg-white focus:outline-none focus:ring-1 focus:ring-amber-400"
+                  />
+                  <button
+                    onClick={() => { if (tierArt.trim()) setConfirmed(true); }}
+                    className="text-xs px-3 py-1 rounded bg-emerald-500 text-white hover:bg-emerald-600 transition-colors font-medium"
+                  >
+                    Bestätigen
+                  </button>
+                </div>
+              </div>
             </div>
-          ))}
-          <div className="text-[10px] text-amber-600 pt-1 border-t border-amber-200">
-            Quelle: PSD2/Open Finance Transaktionsanalyse
-          </div>
+          )}
+        </>
+      ) : (
+        <div className="flex items-center gap-2">
+          <span className="flex items-center gap-1.5 text-slate-400 shrink-0">
+            <PawPrint size={14} className="text-amber-500" />
+            Haustier:
+          </span>
+          <span className="text-slate-700 font-medium">
+            {tierArt}{tierName ? ` (${tierName})` : ''}
+          </span>
+          <span className="flex items-center gap-1 text-[10px] text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded-full border border-emerald-200">
+            <CheckCircle size={10} />
+            Bestätigt
+          </span>
         </div>
       )}
     </div>

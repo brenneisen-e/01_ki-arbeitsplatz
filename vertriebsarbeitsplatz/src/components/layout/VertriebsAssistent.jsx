@@ -11,12 +11,26 @@ const WELCOME_MESSAGES = {
     'Hallo! Ich helfe dir bei Portfolioanalysen, Mandatsbetreuung und Compliance-Fragen.',
 };
 
-const QUICK_ACTIONS = [
-  'Neue Leads anzeigen',
-  'Mandantenpotenzial analysieren',
-  'Gesprächsleitfaden erstellen',
-  'Cross-Selling Chancen',
-];
+const QUICK_ACTIONS = {
+  versicherung: [
+    'Neue Leads anzeigen',
+    'Kundenpotenzial analysieren',
+    'Gesprächsleitfaden erstellen',
+    'Cross-Selling Chancen',
+  ],
+  banking: [
+    'Neue Leads anzeigen',
+    'Kundenpotenzial analysieren',
+    'Gesprächsleitfaden erstellen',
+    'Kreditanalyse starten',
+  ],
+  vermoegensverwaltung: [
+    'Neue Leads anzeigen',
+    'Mandantenpotenzial analysieren',
+    'Gesprächsleitfaden erstellen',
+    'Portfolio-Analyse',
+  ],
+};
 
 const COCKPIT_QUICK_ACTIONS = [
   'Top 5 nach Ergebnis',
@@ -158,29 +172,74 @@ function getCockpitDemoResponse(message) {
   };
 }
 
-function getDemoResponse(message, { currentView }) {
+function getDemoResponse(message, { currentView, modeId }) {
   const lower = message.toLowerCase();
 
   if (lower.includes('vertriebspotentiale') || lower.includes('vertriebspotenziale') || lower.includes('neue leads') || lower.includes('leads anzeigen')) {
+    if (modeId === 'vermoegensverwaltung') {
+      return {
+        content: `<div class="space-y-3">
+          <p class="font-semibold">Aktuelle Leads</p>
+          <p>Ich habe <strong>12 aktive Leads</strong> in deiner Pipeline identifiziert:</p>
+          <p class="text-xs font-semibold text-slate-600 mt-1">Neue Mandate (6):</p>
+          <ol class="list-decimal pl-4 space-y-1">
+            <li><strong>Dr. Katharina Bauer</strong> — Empfehlung Prof. Hartmann, 3,5M, Termin steht</li>
+            <li><strong>Charlotte von Trott</strong> — NextGen, Anwältin, 800k Eigenvermögen</li>
+            <li><strong>Dipl.-Ing. Stefan Müller</strong> — Presse/Firmenverkauf, 6M Erlös</li>
+          </ol>
+          <p class="text-xs font-semibold text-slate-600 mt-1">Bestandsmandate (6):</p>
+          <ol class="list-decimal pl-4 space-y-1">
+            <li><strong>Lindenberg Cash 5,5M</strong> — Fremdbank-Konsolidierung, kritisch</li>
+            <li><strong>Hartmann PE +300k</strong> — Mandats-Erweiterung, Angebot läuft</li>
+            <li><strong>Weber Sparkasse 500k</strong> — Festgeld-Fälligkeit 2027</li>
+          </ol>
+          <p class="text-xs text-slate-500 mt-2">→ Wechsel zum Tab <em>Leads</em> für Details...</p>
+        </div>`,
+        navigateTo: currentView === 'detail' ? 'impulse' : 'pipeline',
+      };
+    }
+    if (modeId === 'banking') {
+      return {
+        content: `<div class="space-y-3">
+          <p class="font-semibold">Aktuelle Leads</p>
+          <p>Ich habe <strong>8 aktive Vertriebschancen</strong> identifiziert:</p>
+          <p class="text-xs font-semibold text-slate-600 mt-1">Neukunden (4):</p>
+          <ol class="list-decimal pl-4 space-y-1">
+            <li><strong>Dr. Martin Schäfer</strong> — Baufinanzierung 380k, Termin vereinbart</li>
+            <li><strong>Lisa & Tom Bergmann</strong> — Hauskauf geplant, Kreditbedarf 420k</li>
+            <li><strong>Firma Elektro Wenzel</strong> — Betriebsmittelkredit, 150k</li>
+          </ol>
+          <p class="text-xs font-semibold text-slate-600 mt-1">Bestandskunden (4):</p>
+          <ol class="list-decimal pl-4 space-y-1">
+            <li><strong>Schmidt Anschlussfinanzierung</strong> — Zinsbindung läuft 09/2027, 285k</li>
+            <li><strong>Meier Sparplan-Erhöhung</strong> — Gehaltsanpassung, +200€/mtl.</li>
+            <li><strong>Weber Festgeld-Fälligkeit</strong> — 50k, Wiederanlage beraten</li>
+          </ol>
+          <p class="text-xs text-slate-500 mt-2">→ Wechsel zum Tab <em>Potenziale</em> für Details...</p>
+        </div>`,
+        navigateTo: currentView === 'detail' ? 'impulse' : 'potentiale',
+      };
+    }
+    // versicherung
     return {
       content: `<div class="space-y-3">
         <p class="font-semibold">Aktuelle Leads</p>
-        <p>Ich habe <strong>12 aktive Leads</strong> in deiner Pipeline identifiziert:</p>
-        <p class="text-xs font-semibold text-slate-600 mt-1">Neue Mandate (6):</p>
+        <p>Ich habe <strong>10 aktive Vertriebschancen</strong> identifiziert:</p>
+        <p class="text-xs font-semibold text-slate-600 mt-1">Neukunden (4):</p>
         <ol class="list-decimal pl-4 space-y-1">
-          <li><strong>Dr. Katharina Bauer</strong> — Empfehlung Prof. Hartmann, 3,5M, Termin steht</li>
-          <li><strong>Charlotte von Trott</strong> — NextGen, Anwältin, 800k Eigenvermögen</li>
-          <li><strong>Dipl.-Ing. Stefan Müller</strong> — Presse/Firmenverkauf, 6M Erlös</li>
+          <li><strong>Familie Richter</strong> — Empfehlung Bestandskunde, Komplettabsicherung</li>
+          <li><strong>Jan Krüger</strong> — Berufsstart, BU + Haftpflicht</li>
+          <li><strong>Dr. Eva Lorenz</strong> — PKV-Wechsel, Ärztetarif</li>
         </ol>
-        <p class="text-xs font-semibold text-slate-600 mt-1">Bestandsmandate (6):</p>
+        <p class="text-xs font-semibold text-slate-600 mt-1">Bestandskunden (6):</p>
         <ol class="list-decimal pl-4 space-y-1">
-          <li><strong>Lindenberg Cash 5,5M</strong> — Fremdbank-Konsolidierung, kritisch</li>
-          <li><strong>Hartmann PE +300k</strong> — Mandats-Erweiterung, Angebot läuft</li>
-          <li><strong>Weber Sparkasse 500k</strong> — Festgeld-Fälligkeit 2027</li>
+          <li><strong>Braun Pflegezusatz</strong> — Ehepaar, Cross-Sell Potenzial</li>
+          <li><strong>Schmidt BU-Erhöhung</strong> — Gehaltsanpassung, Nachversicherung</li>
+          <li><strong>Weber LV-Ablauf 2028</strong> — Wiederanlage + Rentenvorsorge</li>
         </ol>
-        <p class="text-xs text-slate-500 mt-2">→ Wechsel zum Tab <em>Leads</em> für Details...</p>
+        <p class="text-xs text-slate-500 mt-2">→ Wechsel zum Tab <em>Potenziale</em> für Details...</p>
       </div>`,
-      navigateTo: currentView === 'detail' ? 'impulse' : 'pipeline',
+      navigateTo: currentView === 'detail' ? 'impulse' : 'potentiale',
     };
   }
 
@@ -333,7 +392,7 @@ export default function VertriebsAssistent() {
       setTimeout(() => {
         const result = currentView === 'cockpit'
           ? getCockpitDemoResponse(text)
-          : getDemoResponse(text, { currentView });
+          : getDemoResponse(text, { currentView, modeId });
         setMessages((prev) => [...prev, { role: 'assistant', content: result.content, isHtml: true }]);
         setIsTyping(false);
 
@@ -367,7 +426,10 @@ export default function VertriebsAssistent() {
   const welcomeMessage = currentView === 'cockpit'
     ? 'Hallo! Ich kann dir bei der Analyse deiner Dashboard-Daten helfen. Hier sind einige Vorschläge:'
     : (WELCOME_MESSAGES[modeId] || WELCOME_MESSAGES.versicherung);
-  const quickActions = currentView === 'cockpit' ? COCKPIT_QUICK_ACTIONS : QUICK_ACTIONS;
+  const quickActions = currentView === 'cockpit' ? COCKPIT_QUICK_ACTIONS : (QUICK_ACTIONS[modeId] || QUICK_ACTIONS.versicherung);
+
+  // Don't show on landing page
+  if (currentView === 'landing') return null;
 
   return (
     <>

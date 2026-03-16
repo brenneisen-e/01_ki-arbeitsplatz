@@ -14,8 +14,8 @@ export const V5 = {
     { typ: 'wohngebaeude', sparte: 'schaden', produkt: 'ERGO Wohngeb\u00e4ude Premium', details: '160qm, Baujahr 2005', praemie: 980, seit: '2005-08', status: 'aktiv' },
     { typ: 'hausrat', sparte: 'schaden', produkt: 'ERGO Hausrat Komfort', details: '160qm + Elementar', praemie: 280, seit: '2005-08', status: 'aktiv' },
     { typ: 'haftpflicht', sparte: 'schaden', produkt: 'ERGO Privat Premium', details: 'Familie 10M\u20ac', praemie: 110, seit: '2005-08', status: 'aktiv' },
-    { typ: 'kfz', sparte: 'kfz', produkt: 'VW Passat VK', details: '500\u20ac SB, SF-18', praemie: 720, seit: '2019-01', status: 'aktiv' },
-    { typ: 'kfz2', sparte: 'kfz', produkt: 'Opel Corsa Zweitwagen', details: 'TK', praemie: 260, seit: '2023-01', status: 'aktiv' },
+    { typ: 'kfz', sparte: 'kfz', produkt: 'ERGO Kfz-Vollkasko', details: 'VW Passat, 500\u20ac SB, SF-18', praemie: 720, seit: '2019-01', status: 'aktiv' },
+    { typ: 'kfz2', sparte: 'kfz', produkt: 'ERGO Kfz-Teilkasko', details: 'Opel Corsa (Zweitwagen), TK', praemie: 260, seit: '2023-01', status: 'aktiv' },
     { typ: 'pkv', sparte: 'kranken', produkt: 'ERGO PKV Beamte Komfort', details: 'Familie, Beihilfe 50%', praemie: 4300, seit: '2008-01', status: 'aktiv' },
   ],
   fremdProdukte: [
@@ -221,7 +221,7 @@ export const V7 = {
     { typ: 'wohngebaeude', sparte: 'schaden', produkt: 'ERGO Wohngeb\u00e4ude Basis', details: '200qm, Baujahr 1985', praemie: 850, seit: '2000-01', status: 'optimierbar' },
     { typ: 'hausrat', sparte: 'schaden', produkt: 'ERGO Hausrat Komfort', details: '200qm', praemie: 350, seit: '2000-01', status: 'aktiv' },
     { typ: 'haftpflicht', sparte: 'schaden', produkt: 'ERGO Privat Familie', details: '10M\u20ac', praemie: 95, seit: '2000-01', status: 'aktiv' },
-    { typ: 'kfz', sparte: 'kfz', produkt: 'Mercedes E-Klasse VK', details: '500\u20ac SB, SF-30', praemie: 680, seit: '2021-01', status: 'aktiv' },
+    { typ: 'kfz', sparte: 'kfz', produkt: 'ERGO Kfz-Vollkasko', details: 'Mercedes E-Klasse, 500\u20ac SB, SF-30', praemie: 680, seit: '2021-01', status: 'aktiv' },
     { typ: 'rechtsschutz', sparte: 'schaden', produkt: 'ERGO Rechtsschutz Familie', details: 'Privat + Verkehr', praemie: 320, seit: '2010-01', status: 'aktiv' },
     { typ: 'unfall', sparte: 'schaden', produkt: 'ERGO Unfall Senior', details: 'Ehepaar', praemie: 480, seit: '2015-01', status: 'aktiv' },
   ],
@@ -334,7 +334,7 @@ export const V8 = {
   eigeneProdukte: [
     { typ: 'bu', sparte: 'leben', produkt: 'ERGO BU Comfort', details: '2.200\u20ac/mtl.', praemie: 1680, seit: '2019-01', status: 'optimierbar' },
     { typ: 'haftpflicht', sparte: 'schaden', produkt: 'ERGO Privat Premium', details: 'Familie', praemie: 105, seit: '2019-01', status: 'aktiv' },
-    { typ: 'kfz', sparte: 'kfz', produkt: 'BMW X1 VK', details: '500\u20ac SB', praemie: 850, seit: '2022-01', status: 'aktiv' },
+    { typ: 'kfz', sparte: 'kfz', produkt: 'ERGO Kfz-Vollkasko', details: 'BMW X1, 500\u20ac SB', praemie: 850, seit: '2022-01', status: 'aktiv' },
   ],
   fremdProdukte: [
     { typ: 'girokonto', institut: 'ING', details: 'Gehaltseingang', volumen: 12000, consent: true },

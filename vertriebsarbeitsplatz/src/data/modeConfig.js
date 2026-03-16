@@ -5,7 +5,7 @@ export const MODE_CONFIGS = {
     institut: 'ERGO',
     institutDomain: 'ergo.de',
     beraterTitel: 'Agentur',
-    beraterName: 'Maria Musterfrau',
+    beraterName: 'Nadine Müller',
     beraterFoto: './images/maria-musterfrau.png',
     beraterId: 'VM00001',
     kundenLabel: 'Kunde',
@@ -52,6 +52,7 @@ export const MODE_CONFIGS = {
       { institut: 'AXA', beraterTitel: 'Generalvertreter', colors: { primary: '#00008f', primaryLight: '#0033cc', gradient: 'linear-gradient(135deg, #000066 0%, #00008f 40%, #0033cc 100%)', accent: '#ff1721' } },
       { institut: 'Generali', beraterTitel: 'Geschäftsstelle', colors: { primary: '#c8102e', primaryLight: '#e01e3c', gradient: 'linear-gradient(135deg, #8c0b20 0%, #c8102e 40%, #e01e3c 100%)', accent: '#ffd700' } },
       { institut: 'Zurich', beraterTitel: 'Direktion', colors: { primary: '#003399', primaryLight: '#0050b3', gradient: 'linear-gradient(135deg, #002266 0%, #003399 40%, #0050b3 100%)', accent: '#009fe3' } },
+      { institut: 'Zukunftsversicherung', beraterTitel: 'Beraterin', colors: { primary: '#1e2a4a', primaryLight: '#2d3f6e', gradient: 'linear-gradient(135deg, #121a30 0%, #1e2a4a 40%, #2d3f6e 100%)', accent: '#5b8def' } },
     ],
   },
   banking: {
@@ -60,7 +61,7 @@ export const MODE_CONFIGS = {
     institut: 'Volksbank Mittelhessen',
     institutDomain: 'volksbank.de',
     beraterTitel: 'Beraterin',
-    beraterName: 'Maria Musterfrau',
+    beraterName: 'Nadine Müller',
     beraterFoto: './images/maria-musterfrau.png',
     beraterId: 'VB-40210',
     kundenLabel: 'Kunde',
@@ -106,6 +107,7 @@ export const MODE_CONFIGS = {
       { institut: 'Commerzbank', beraterTitel: 'Berater', colors: { primary: '#ffcc00', primaryLight: '#ffd633', gradient: 'linear-gradient(135deg, #1a1a1a 0%, #333333 40%, #4d4d4d 100%)', accent: '#ffcc00' } },
       { institut: 'Deutsche Bank', beraterTitel: 'Berater', colors: { primary: '#0018a8', primaryLight: '#0033cc', gradient: 'linear-gradient(135deg, #000d66 0%, #0018a8 40%, #0033cc 100%)', accent: '#ffffff' } },
       { institut: 'ING', beraterTitel: 'Berater', colors: { primary: '#ff6200', primaryLight: '#ff8533', gradient: 'linear-gradient(135deg, #cc4e00 0%, #ff6200 40%, #ff8533 100%)', accent: '#ffffff' } },
+      { institut: 'Zukunftsbank', beraterTitel: 'Beraterin', colors: { primary: '#1e2a4a', primaryLight: '#2d3f6e', gradient: 'linear-gradient(135deg, #121a30 0%, #1e2a4a 40%, #2d3f6e 100%)', accent: '#5b8def' } },
     ],
   },
   vermoegensverwaltung: {

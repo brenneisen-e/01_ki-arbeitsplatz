@@ -77,6 +77,8 @@ const DOMAIN_MAP = {
   'N26': 'n26.com',
   'Coinbase': 'coinbase.com',
   'Coinbase/Ledger': 'coinbase.com',
+  'Zukunftsversicherung': null,
+  'Zukunftsbank': null,
   'Privat': null,
   'Eigene': null,
 };

@@ -9,7 +9,7 @@ export const V5 = {
   linkedin: { kontakte: 80, aktivitaet: 'niedrig', branchen: ['Verwaltung'] },
   lebenssituation: 'konsolidierung',
   nps: 7, risikoscore: 22, potentialScore: 3.5, abwanderungsrisiko: 'niedrig',
-  tiere: { typ: 'Hund', rasse: 'Dackel', name: 'Fritz', quelle: 'kontoumsaetze', umsaetze: [{ empfaenger: 'Fressnapf Gie\u00dfen', betrag: -65, haeufigkeit: 'monatlich' }, { empfaenger: 'Tierarzt Dr. Stein', betrag: -90, haeufigkeit: 'quartalsweise' }] },
+  tiere: { typ: null, rasse: null, name: null, vermutet: true, quelle: 'kontoumsaetze', umsaetze: [{ empfaenger: 'Fressnapf Gie\u00dfen', betrag: -65, haeufigkeit: 'monatlich' }, { empfaenger: 'Tierarzt Dr. Stein', betrag: -90, haeufigkeit: 'quartalsweise' }] },
   eigeneProdukte: [
     { typ: 'wohngebaeude', sparte: 'schaden', produkt: 'ERGO Wohngeb\u00e4ude Premium', details: '160qm, Baujahr 2005', praemie: 980, seit: '2005-08', status: 'aktiv' },
     { typ: 'hausrat', sparte: 'schaden', produkt: 'ERGO Hausrat Komfort', details: '160qm + Elementar', praemie: 280, seit: '2005-08', status: 'aktiv' },
@@ -216,7 +216,7 @@ export const V7 = {
   linkedin: { kontakte: 200, aktivitaet: 'niedrig', branchen: ['Maschinenbau'] },
   lebenssituation: 'ruhestand',
   nps: 8, risikoscore: 15, potentialScore: 3.0, abwanderungsrisiko: 'niedrig',
-  tiere: { typ: 'Katze', rasse: 'Maine Coon', name: 'Moritz', quelle: 'kontoumsaetze', umsaetze: [{ empfaenger: 'Fressnapf', betrag: -55, haeufigkeit: 'monatlich' }, { empfaenger: 'Tierklinik Gie\u00dfen', betrag: -180, haeufigkeit: 'halbj\u00e4hrlich' }] },
+  tiere: { typ: null, rasse: null, name: null, vermutet: true, quelle: 'kontoumsaetze', umsaetze: [{ empfaenger: 'Fressnapf', betrag: -55, haeufigkeit: 'monatlich' }, { empfaenger: 'Tierklinik Gie\u00dfen', betrag: -180, haeufigkeit: 'halbj\u00e4hrlich' }] },
   eigeneProdukte: [
     { typ: 'wohngebaeude', sparte: 'schaden', produkt: 'ERGO Wohngeb\u00e4ude Basis', details: '200qm, Baujahr 1985', praemie: 850, seit: '2000-01', status: 'optimierbar' },
     { typ: 'hausrat', sparte: 'schaden', produkt: 'ERGO Hausrat Komfort', details: '200qm', praemie: 350, seit: '2000-01', status: 'aktiv' },
@@ -330,7 +330,7 @@ export const V8 = {
   linkedin: { kontakte: 600, aktivitaet: 'hoch', branchen: ['Pharma', 'Medizin'] },
   lebenssituation: 'aufbau',
   nps: 7, risikoscore: 20, potentialScore: 4.5, abwanderungsrisiko: 'niedrig',
-  tiere: { typ: 'Kaninchen', rasse: 'Zwergkaninchen', name: 'Flecki & Schnuffel', quelle: 'kontoumsaetze', umsaetze: [{ empfaenger: 'K\u00f6lle Zoo', betrag: -35, haeufigkeit: 'monatlich' }] },
+  tiere: { typ: null, rasse: null, name: null, vermutet: true, quelle: 'kontoumsaetze', umsaetze: [{ empfaenger: 'K\u00f6lle Zoo', betrag: -35, haeufigkeit: 'monatlich' }] },
   eigeneProdukte: [
     { typ: 'bu', sparte: 'leben', produkt: 'ERGO BU Comfort', details: '2.200\u20ac/mtl.', praemie: 1680, seit: '2019-01', status: 'optimierbar' },
     { typ: 'haftpflicht', sparte: 'schaden', produkt: 'ERGO Privat Premium', details: 'Familie', praemie: 105, seit: '2019-01', status: 'aktiv' },

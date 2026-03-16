@@ -43,9 +43,14 @@ export default function LandingPage() {
   const [thinkingText, setThinkingText] = useState('');
   const inputRef = useRef(null);
 
-  // Name prompt on first visit
+  // Name prompt on first visit only (check localStorage)
   const [userName, setUserName] = useState(() => localStorage.getItem('kia_user_name') || '');
-  const [showNamePrompt, setShowNamePrompt] = useState(!userName);
+  const [showNamePrompt, setShowNamePrompt] = useState(() => {
+    // Only show on very first visit (no name saved AND no "kia_name_prompted" flag)
+    const hasName = !!localStorage.getItem('kia_user_name');
+    const wasPrompted = !!localStorage.getItem('kia_name_prompted');
+    return !hasName && !wasPrompted;
+  });
   const [nameInput, setNameInput] = useState('');
   const nameInputRef = useRef(null);
 
@@ -64,6 +69,7 @@ export default function LandingPage() {
     const trimmed = nameInput.trim();
     if (!trimmed) return;
     localStorage.setItem('kia_user_name', trimmed);
+    localStorage.setItem('kia_name_prompted', 'true');
     setUserName(trimmed);
     setShowNamePrompt(false);
   }
@@ -260,9 +266,9 @@ export default function LandingPage() {
 
         {/* Welcome text */}
         <h1 className="text-white text-2xl md:text-3xl font-light text-center mb-2">
-          Willkommen zurück{userName ? `, ${userName}` : ''}
+          {userName ? `Willkommen zur\u00fcck, ${userName}` : 'Willkommen'}
         </h1>
-        <p className="text-white/60 text-base mb-8">Was kann ich heute für dich tun?</p>
+        <p className="text-white/60 text-base mb-8">{userName ? 'Was kann ich heute f\u00fcr dich tun?' : 'Was kann ich f\u00fcr dich tun?'}</p>
 
         {/* Chat input */}
         <div className="w-full max-w-xl relative mb-10">

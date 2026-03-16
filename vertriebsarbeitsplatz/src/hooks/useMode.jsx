@@ -17,7 +17,7 @@ function parseHash(hash) {
   const parts = raw.split('/').filter(Boolean);
 
   let modeId = 'versicherung';
-  let view = 'overview';
+  let view = 'landing';
   let tab = null;
   let kundeId = null;
 

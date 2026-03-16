@@ -86,7 +86,7 @@ function generateKontoumsaetze(kunde) {
   if (haustier) {
     konsumItems.push({
       name: `Fressnapf Tiernahrung`, amount: Math.abs(haustier.betrag), datum: fmtDate(vm, 12),
-      badge: 'tier-hint', badgeLabel: '🐾 Haustier erkannt', recurring: true,
+      badge: 'tier-hint', badgeLabel: 'Haustier erkannt', recurring: true,
       insight: 'Regelmäßige Tierfutter-Käufe erkannt — Tierhalterhaftpflicht & OP-Versicherung prüfen'
     });
   } else {
@@ -95,7 +95,7 @@ function generateKontoumsaetze(kunde) {
     if (seed % 3 === 0) {
       konsumItems.push({
         name: 'Fressnapf Tiernahrung', amount: 42, datum: fmtDate(vm, 12),
-        badge: 'tier-hint', badgeLabel: '🐾 Haustier erkannt', recurring: true,
+        badge: 'tier-hint', badgeLabel: 'Haustier erkannt', recurring: true,
         insight: 'Regelmäßige Tierfutter-Käufe erkannt — Tierhalterhaftpflicht & OP-Versicherung prüfen'
       });
     }
@@ -154,7 +154,7 @@ function generateInsights(kontoumsaetze, kunde) {
   if (tierItems.length > 0) {
     insights.push({
       type: 'tier',
-      icon: '🐾',
+      icon: null,
       title: 'Haustier erkannt',
       text: 'Regelmäßige Käufe bei Fressnapf deuten auf Tierhaltung hin. Tierhalterhaftpflicht und Tier-OP-Versicherung als Cross-Sell prüfen.',
       prio: 'hoch',
@@ -167,7 +167,7 @@ function generateInsights(kontoumsaetze, kunde) {
   if (riskItems.length > 0) {
     insights.push({
       type: 'risiko',
-      icon: '⚠️',
+      icon: null,
       title: 'Risikosport erkannt',
       text: 'Ausgaben für Fallschirmspringen / Extremsport. Unfallversicherung mit Risikosport-Klausel und BU-Risikoprüfung empfohlen.',
       prio: 'mittel',
@@ -180,7 +180,7 @@ function generateInsights(kontoumsaetze, kunde) {
   if (unknownIns.length > 0) {
     insights.push({
       type: 'luecke',
-      icon: '🔍',
+      icon: null,
       title: `${unknownIns.length} Fremdversicherung${unknownIns.length > 1 ? 'en' : ''} erkannt`,
       text: `Aus Kontoumsätzen ${unknownIns.length > 1 ? 'wurden' : 'wurde'} ${unknownIns.length} nicht betreute Versicherung${unknownIns.length > 1 ? 'en' : ''} identifiziert. Konsolidierungspotential prüfen.`,
       prio: 'hoch',
@@ -195,7 +195,7 @@ function generateInsights(kontoumsaetze, kunde) {
   if (frei > 300) {
     insights.push({
       type: 'sparen',
-      icon: '💰',
+      icon: null,
       title: 'Freie Liquidität erkannt',
       text: `${formatEur(frei)} monatlich frei verfügbar. Sparrate erhöhen oder Altersvorsorge-Produkt empfehlen.`,
       prio: 'mittel',
@@ -255,13 +255,45 @@ function CategoryRow({ category, defaultOpen = false }) {
   );
 }
 
+// ─── SVG Icons for AI Insights ───
+const InsightIcons = {
+  tier: (
+    <svg className="w-5 h-5 text-slate-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <ellipse cx="8" cy="6" rx="2" ry="2.5"/><ellipse cx="16" cy="6" rx="2" ry="2.5"/>
+      <ellipse cx="5" cy="11" rx="1.5" ry="2"/><ellipse cx="19" cy="11" rx="1.5" ry="2"/>
+      <path d="M8 17c0-2.2 1.8-4 4-4s4 1.8 4 4v1a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-1z"/>
+    </svg>
+  ),
+  risiko: (
+    <svg className="w-5 h-5 text-slate-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+      <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+    </svg>
+  ),
+  luecke: (
+    <svg className="w-5 h-5 text-slate-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+    </svg>
+  ),
+  sparen: (
+    <svg className="w-5 h-5 text-slate-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+    </svg>
+  ),
+  header: (
+    <svg className="w-4 h-4 text-slate-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 9h6v6H9z"/><path d="M9 1v3M15 1v3M9 20v3M15 20v3M1 9h3M1 15h3M20 9h3M20 15h3"/>
+    </svg>
+  ),
+};
+
 // ─── AI Insight Card ───
 function InsightCard({ insight }) {
   const prioBg = insight.prio === 'hoch' ? 'border-l-red-400' : insight.prio === 'mittel' ? 'border-l-amber-400' : 'border-l-slate-300';
   return (
     <div className={`border border-slate-200 rounded-lg p-3 border-l-4 ${prioBg}`}>
       <div className="flex items-start gap-2.5">
-        <span className="text-lg">{insight.icon}</span>
+        <span className="mt-0.5 shrink-0">{InsightIcons[insight.type] || insight.icon}</span>
         <div className="flex-1">
           <div className="flex items-center justify-between mb-1">
             <span className="text-sm font-semibold text-slate-800">{insight.title}</span>
@@ -414,7 +446,7 @@ export default function FinanzprofilTab({ kunde }) {
       {!isVV && insights.length > 0 && (
         <Card>
           <div className="flex items-center gap-2 mb-4">
-            <span className="text-base">🤖</span>
+            <span className="shrink-0">{InsightIcons.header}</span>
             <h3 className="font-semibold text-slate-800">KI-Erkenntnisse aus Kontoumsätzen</h3>
             <span className="text-xs text-slate-400 ml-auto">{insights.length} Erkenntnisse</span>
           </div>

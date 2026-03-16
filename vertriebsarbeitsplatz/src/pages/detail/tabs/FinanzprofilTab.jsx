@@ -51,14 +51,17 @@ function generateKontoumsaetze(kunde) {
   const versEigen = kunde.transaktionen?.find(t => t.kategorie === 'versicherung_eigen');
   const versFremd = kunde.transaktionen?.find(t => t.kategorie === 'versicherung_fremd' || t.kategorie === 'versicherung');
   const versItems = [];
+  const PRODUKT_LABELS = { wohngebaeude: 'Wohngebäude', hausrat: 'Hausrat', haftpflicht: 'Haftpflicht', kfz: 'Kfz', kfz2: 'Kfz (Zweitwagen)', bu: 'BU', unfall: 'Unfall', rechtsschutz: 'Rechtsschutz', pkv: 'PKV', girokonto: 'Girokonto', festgeld: 'Festgeld', tagesgeld: 'Tagesgeld', depot: 'Depot', kredit: 'Kredit', bausparvertrag: 'Bausparvertrag', lebensversicherung: 'Lebensversicherung', rlv: 'Risikoleben', du: 'Dienstunfähigkeit' };
   if (versEigen) {
     (kunde.eigeneProdukte || []).slice(0, 3).forEach(p => {
-      versItems.push({ name: `${p.typ} (${p.gesellschaft || 'Eigener Bestand'})`, amount: Math.round((p.praemie || 50) / 12), datum: fmtDate(vm, 1), badge: 'bekannt', badgeLabel: 'Betreut' });
+      const label = PRODUKT_LABELS[p.typ] || p.typ;
+      versItems.push({ name: `${label} (Eigener Bestand)`, amount: Math.round((p.praemie || 50) / 12), datum: fmtDate(vm, 1), badge: 'bekannt', badgeLabel: 'Betreut' });
     });
   }
   if (versFremd || (kunde.fremdProdukte || []).some(p => p.typ?.includes('versicherung') || p.typ === 'kfz' || p.typ === 'haftpflicht')) {
     (kunde.fremdProdukte || []).filter(p => p.typ !== 'baufinanzierung' && p.typ !== 'depot').slice(0, 2).forEach(p => {
-      versItems.push({ name: `${p.typ} (${p.institut || 'Fremd'})`, amount: Math.round((p.praemie || 40) / 12), datum: fmtDate(vm, 1), badge: 'unbekannt', badgeLabel: 'Fremd' });
+      const label = PRODUKT_LABELS[p.typ] || p.typ;
+      versItems.push({ name: `${label} (${p.institut || 'Fremd'})`, amount: Math.round((p.praemie || 40) / 12), datum: fmtDate(vm, 1), badge: 'unbekannt', badgeLabel: 'Fremd' });
     });
   }
   if (versItems.length > 0) {
@@ -488,6 +491,8 @@ function kategorieLabel(kat) {
     software: 'Software',
     geschaeft: 'Geschäft',
     haustier: 'Haustier',
+    tierbedarf: 'Tierbedarf',
+    tierarzt: 'Tierarzt',
   };
-  return labels[kat] || kat;
+  return labels[kat] || (kat ? kat.charAt(0).toUpperCase() + kat.slice(1) : kat);
 }

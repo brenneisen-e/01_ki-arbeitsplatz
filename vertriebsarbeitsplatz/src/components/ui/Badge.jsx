@@ -1,10 +1,17 @@
 import { clsx } from 'clsx';
 
 const PRIO_STYLES = {
-  kritisch: 'bg-red-50 text-red-700 border-red-200',
-  hoch: 'bg-amber-50 text-amber-700 border-amber-200',
-  mittel: 'bg-blue-50 text-blue-700 border-blue-200',
+  kritisch: 'bg-emerald-100 text-emerald-800 border-emerald-300',
+  hoch: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+  mittel: 'bg-teal-50 text-teal-700 border-teal-200',
   niedrig: 'bg-gray-50 text-gray-600 border-gray-200',
+};
+
+const PRIO_LABELS = {
+  kritisch: 'Sehr hoch',
+  hoch: 'Hoch',
+  mittel: 'Mittel',
+  niedrig: 'Niedrig',
 };
 
 const QUELLEN_STYLES = {
@@ -39,7 +46,7 @@ const STATUS_STYLES = {
 export function PrioBadge({ prioritaet }) {
   return (
     <span className={clsx('inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium border', PRIO_STYLES[prioritaet] || PRIO_STYLES.niedrig)}>
-      {prioritaet.charAt(0).toUpperCase() + prioritaet.slice(1)}
+      {PRIO_LABELS[prioritaet] || prioritaet.charAt(0).toUpperCase() + prioritaet.slice(1)}
     </span>
   );
 }

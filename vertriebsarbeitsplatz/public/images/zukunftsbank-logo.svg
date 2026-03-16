@@ -6,22 +6,15 @@
     </linearGradient>
   </defs>
   <rect width="128" height="128" rx="24" fill="url(#zb-grad)"/>
-  <!-- Rising sun / horizon = Zukunft -->
-  <circle cx="64" cy="72" r="22" fill="white" opacity="0.9"/>
-  <rect x="20" y="72" width="88" height="36" rx="2" fill="url(#zb-grad)"/>
+  <!-- Rising sun -->
+  <circle cx="64" cy="72" r="24" fill="white" opacity="0.9"/>
+  <rect x="16" y="72" width="96" height="40" fill="url(#zb-grad)"/>
   <!-- Horizon line -->
-  <line x1="20" y1="72" x2="108" y2="72" stroke="white" stroke-width="2.5" opacity="0.8"/>
+  <line x1="20" y1="72" x2="108" y2="72" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity="0.8"/>
   <!-- Light rays -->
-  <line x1="64" y1="30" x2="64" y2="44" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity="0.6"/>
-  <line x1="40" y1="38" x2="46" y2="50" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity="0.5"/>
-  <line x1="88" y1="38" x2="82" y2="50" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity="0.5"/>
-  <line x1="28" y1="54" x2="36" y2="60" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity="0.4"/>
-  <line x1="100" y1="54" x2="92" y2="60" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity="0.4"/>
-  <!-- Bank columns below horizon -->
-  <rect x="38" y="78" width="6" height="20" rx="1" fill="white" opacity="0.5"/>
-  <rect x="52" y="78" width="6" height="20" rx="1" fill="white" opacity="0.5"/>
-  <rect x="70" y="78" width="6" height="20" rx="1" fill="white" opacity="0.5"/>
-  <rect x="84" y="78" width="6" height="20" rx="1" fill="white" opacity="0.5"/>
-  <!-- Base line -->
-  <line x1="32" y1="100" x2="96" y2="100" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.4"/>
+  <line x1="64" y1="26" x2="64" y2="42" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity="0.7"/>
+  <line x1="38" y1="34" x2="44" y2="48" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity="0.55"/>
+  <line x1="90" y1="34" x2="84" y2="48" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity="0.55"/>
+  <line x1="22" y1="52" x2="32" y2="58" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity="0.4"/>
+  <line x1="106" y1="52" x2="96" y2="58" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity="0.4"/>
 </svg>

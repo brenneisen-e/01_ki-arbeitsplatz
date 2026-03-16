@@ -50,30 +50,43 @@ function Sparkline({ data, color = 'var(--mode-primary-light)' }) {
   );
 }
 
+function formatCompact(wert, format) {
+  if (format === 'eur') {
+    if (wert >= 1000000) return `${(wert / 1000000).toLocaleString('de-DE', { maximumFractionDigits: 1 })}M\u20ac`;
+    if (wert >= 1000) return `${Math.round(wert / 1000).toLocaleString('de-DE')}k\u20ac`;
+    return `${Math.round(wert).toLocaleString('de-DE')}\u20ac`;
+  }
+  return formatValue(wert, format);
+}
+
 function ExpandedChart({ data, format, label, onClose }) {
   const values = data.map(d => d.value);
-  const max = Math.max(...values) * 1.1;
+  const max = Math.max(...values);
+  const min = Math.min(...values);
+  // Use a baseline so bars show relative differences clearly
+  const baseline = min > 0 ? min * 0.9 : 0;
+  const range = (max - baseline) * 1.1 || 1;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm animate-fade-in" onClick={onClose}>
-      <div className="bg-white rounded-2xl shadow-xl p-6 w-full max-w-lg mx-4 animate-fade-in-up" onClick={e => e.stopPropagation()}>
+      <div className="bg-white rounded-2xl shadow-xl p-6 w-full max-w-2xl mx-4 animate-fade-in-up" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between mb-4">
           <h3 className="font-semibold text-slate-800">{label} — Letzte 12 Monate</h3>
           <button onClick={onClose} className="text-slate-400 hover:text-slate-600">
             <LucideIcons.X size={18} />
           </button>
         </div>
-        <div className="flex items-end gap-1 h-48">
+        <div className="flex items-end gap-1.5 h-56">
           {data.map((d, i) => {
-            const height = max > 0 ? (d.value / max) * 100 : 0;
+            const height = range > 0 ? ((d.value - baseline) / range) * 100 : 0;
             return (
               <div key={i} className="flex-1 flex flex-col items-center gap-1">
-                <span className="text-[9px] text-slate-500 font-mono">{formatValue(d.value, format)}</span>
+                <span className="text-[8px] text-slate-500 font-mono whitespace-nowrap">{formatCompact(d.value, format)}</span>
                 <div
                   className="w-full rounded-t transition-all duration-300"
-                  style={{ height: `${height}%`, backgroundColor: 'var(--mode-primary-light)', minHeight: 2 }}
+                  style={{ height: `${Math.max(height, 3)}%`, backgroundColor: 'var(--mode-primary-light)', minHeight: 4 }}
                 />
-                <span className="text-[9px] text-slate-400 -rotate-45 origin-top-left whitespace-nowrap mt-1">{d.month}</span>
+                <span className="text-[8px] text-slate-400 -rotate-45 origin-top-left whitespace-nowrap mt-1">{d.month}</span>
               </div>
             );
           })}

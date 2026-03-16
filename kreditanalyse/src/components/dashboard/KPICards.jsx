@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { TrendingUp, Clock, CheckCircle, Euro } from 'lucide-react';
+import { TrendingUp, TrendingDown, Clock, CheckCircle, Euro, FileText } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { formatCurrencyCompact } from '../../utils/formatters';
 import SparklineChart from '../shared/SparklineChart';
@@ -7,12 +7,6 @@ import SparklineChart from '../shared/SparklineChart';
 /**
  * KPICards -- Four key-performance-indicator cards displayed in a horizontal
  * row at the top of the credit-analysis dashboard.
- *
- * Metrics:
- *   1. Offene Antraege   -- count of companies not yet approved or rejected
- *   2. Bearbeitungszeit  -- average processing time (hardcoded demo value)
- *   3. Genehmigungsquote -- approved / (approved + rejected) * 100
- *   4. Volumen           -- sum of kredit.betrag for all open applications
  */
 export default function KPICards() {
   const { state } = useApp();
@@ -35,45 +29,50 @@ export default function KPICards() {
     };
   }, [companies]);
 
-  // Synthetic sparkline data points to visualise a positive approval-rate trend
-  const approvalSparkline = [62, 68, 65, 71, 74, 70, 78, approvalRate];
-
   const kpis = [
     {
       label: 'Offene Anträge',
       value: openCount,
-      icon: TrendingUp,
-      color: 'border-primary',
-      iconColor: 'text-primary',
+      icon: FileText,
       suffix: null,
-      sparkline: null,
+      trend: { value: 12, positive: true },
+      sparkline: [5, 7, 6, 8, 7, 9, 8, openCount],
+      bgColor: '#EEF2FF',
+      iconColor: '#4F46E5',
+      sparkColor: '#4F46E5',
     },
     {
       label: 'Ø Bearbeitungszeit',
       value: '12',
       icon: Clock,
-      color: 'border-accent-warm',
-      iconColor: 'text-accent-warm',
       suffix: 'Tage',
-      sparkline: null,
+      trend: { value: 8, positive: false },
+      sparkline: [18, 16, 15, 14, 13, 14, 13, 12],
+      bgColor: '#FFF7ED',
+      iconColor: '#D97706',
+      sparkColor: '#D97706',
     },
     {
       label: 'Genehmigungsquote',
       value: `${approvalRate}`,
       icon: CheckCircle,
-      color: 'border-accent',
-      iconColor: 'text-accent',
       suffix: '%',
-      sparkline: approvalSparkline,
+      trend: { value: 5, positive: true },
+      sparkline: [62, 68, 65, 71, 74, 70, 78, approvalRate],
+      bgColor: '#ECFDF5',
+      iconColor: '#059669',
+      sparkColor: '#059669',
     },
     {
       label: 'Volumen in Bearbeitung',
       value: formatCurrencyCompact(totalVolume),
       icon: Euro,
-      color: 'border-primary-light',
-      iconColor: 'text-primary-light',
       suffix: null,
-      sparkline: null,
+      trend: { value: 3.2, positive: true },
+      sparkline: [2.1, 2.4, 2.2, 2.8, 3.1, 2.9, 3.3, 3.5],
+      bgColor: '#EFF6FF',
+      iconColor: '#2563EB',
+      sparkColor: '#2563EB',
     },
   ];
 
@@ -81,46 +80,63 @@ export default function KPICards() {
     <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
       {kpis.map((kpi) => {
         const Icon = kpi.icon;
+        const TrendIcon = kpi.trend.positive ? TrendingUp : TrendingDown;
         return (
           <div
             key={kpi.label}
-            className={`bg-surface-card border border-border ${kpi.color} border-l-4 rounded-lg p-5 shadow-sm hover:shadow-md transition-shadow`}
+            className="bg-surface-card border border-border rounded-xl p-5 shadow-sm hover:shadow-lg transition-all duration-200 hover:-translate-y-0.5"
           >
-            <div className="flex items-start justify-between">
-              {/* Metric content */}
-              <div className="flex-1 min-w-0">
-                <p className="text-xs font-medium text-text-secondary uppercase tracking-wide font-body mb-2">
-                  {kpi.label}
-                </p>
-                <div className="flex items-baseline gap-1.5">
-                  <span className="text-2xl font-bold font-mono text-text-primary leading-none">
-                    {kpi.value}
-                  </span>
-                  {kpi.suffix && (
-                    <span className="text-sm font-medium text-text-secondary font-body">
-                      {kpi.suffix}
-                    </span>
-                  )}
-                </div>
-                {kpi.sparkline && (
-                  <div className="mt-2">
-                    <SparklineChart
-                      data={kpi.sparkline}
-                      color="#00875A"
-                      width={96}
-                      height={24}
-                    />
-                  </div>
-                )}
-              </div>
-
-              {/* Icon badge */}
+            {/* Top row: icon badge + trend */}
+            <div className="flex items-center justify-between mb-3">
               <div
-                className={`flex-shrink-0 p-2 rounded-lg bg-surface ${kpi.iconColor}`}
+                className="w-10 h-10 rounded-xl flex items-center justify-center"
+                style={{ backgroundColor: kpi.bgColor }}
               >
-                <Icon size={20} strokeWidth={1.5} />
+                <Icon size={20} strokeWidth={1.75} style={{ color: kpi.iconColor }} />
               </div>
+              {kpi.trend && (
+                <span
+                  className={`flex items-center gap-1 text-xs font-semibold px-2 py-1 rounded-full ${
+                    kpi.trend.positive
+                      ? 'bg-emerald-50 text-emerald-600'
+                      : 'bg-red-50 text-red-500'
+                  }`}
+                >
+                  <TrendIcon size={12} />
+                  {kpi.trend.value}%
+                </span>
+              )}
             </div>
+
+            {/* Value */}
+            <div className="flex items-baseline gap-1.5 mb-1">
+              <span className="text-2xl font-bold font-mono text-text-primary leading-none">
+                {kpi.value}
+              </span>
+              {kpi.suffix && (
+                <span className="text-sm font-medium text-text-secondary font-body">
+                  {kpi.suffix}
+                </span>
+              )}
+            </div>
+
+            {/* Label */}
+            <p className="text-xs font-medium text-text-secondary font-body mb-3">
+              {kpi.label}
+            </p>
+
+            {/* Sparkline */}
+            {kpi.sparkline && (
+              <div className="pt-2 border-t border-border/50">
+                <SparklineChart
+                  data={kpi.sparkline}
+                  color={kpi.sparkColor}
+                  width="100%"
+                  height={32}
+                  filled
+                />
+              </div>
+            )}
           </div>
         );
       })}

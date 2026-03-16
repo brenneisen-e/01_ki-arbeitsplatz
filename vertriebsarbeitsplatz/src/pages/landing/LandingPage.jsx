@@ -252,11 +252,8 @@ export default function LandingPage() {
               <img src={logoUrl} alt={currentInstitut} className="max-w-full max-h-full object-contain" />
             </div>
           ) : (
-            <div className="w-32 h-32 rounded-3xl bg-white/15 backdrop-blur-sm border border-white/20 shadow-xl flex items-center justify-center p-3">
-              <span className={clsx(
-                'text-white font-bold tracking-tight text-center leading-tight break-words',
-                currentInstitut.length > 12 ? 'text-base' : currentInstitut.length > 8 ? 'text-xl' : 'text-2xl'
-              )}>{currentInstitut}</span>
+            <div className="w-32 h-32 rounded-3xl bg-white shadow-xl flex items-center justify-center">
+              <span className="text-slate-700 text-6xl font-bold">{currentInstitut.charAt(0)}</span>
             </div>
           )}
         </div>

@@ -9,7 +9,7 @@ export const V1 = {
   linkedin: { kontakte: 500, aktivitaet: 'mittel', branchen: ['IT', 'Digitalisierung'] },
   lebenssituation: 'konsolidierung',
   nps: 8, risikoscore: 28, potentialScore: 4.5, abwanderungsrisiko: 'niedrig',
-  tiere: { typ: 'Hund', rasse: 'Labrador', name: 'Buddy', quelle: 'kontoumsaetze', umsaetze: [{ empfaenger: 'Fressnapf K\u00f6ln', betrag: -85, haeufigkeit: 'monatlich' }, { empfaenger: 'Tierarztpraxis Dr. M\u00fcller', betrag: -120, haeufigkeit: 'quartalsweise' }, { empfaenger: 'Hundeschule Rhein', betrag: -45, haeufigkeit: 'monatlich' }] },
+  tiere: { typ: null, rasse: null, name: null, vermutet: true, quelle: 'kontoumsaetze', umsaetze: [{ empfaenger: 'Fressnapf K\u00f6ln', betrag: -85, haeufigkeit: 'monatlich' }, { empfaenger: 'Tierarztpraxis Dr. M\u00fcller', betrag: -120, haeufigkeit: 'quartalsweise' }, { empfaenger: 'Hundeschule Rhein', betrag: -45, haeufigkeit: 'monatlich' }] },
   eigeneProdukte: [
     { typ: 'bu', sparte: 'leben', produkt: 'ERGO BU Comfort', details: '1.800\u20ac/mtl. Rente', praemie: 2160, seit: '2018-03', status: 'optimierbar' },
     { typ: 'kfz', sparte: 'kfz', produkt: 'ERGO Kfz-Vollkasko', details: 'VW Tiguan, 500\u20ac SB, SF-12', praemie: 680, seit: '2021-06', status: 'aktiv' },
@@ -213,7 +213,7 @@ export const V2 = {
   linkedin: { kontakte: 800, aktivitaet: 'hoch', branchen: ['Design', 'Marketing'] },
   lebenssituation: 'aufbau',
   nps: 7, risikoscore: 35, potentialScore: 3.8, abwanderungsrisiko: 'mittel',
-  tiere: { typ: 'Katze', rasse: 'Britisch Kurzhaar', name: 'Milo', quelle: 'kontoumsaetze', umsaetze: [{ empfaenger: 'Zooplus.de', betrag: -45, haeufigkeit: 'monatlich' }, { empfaenger: 'Tierklinik K\u00f6ln-S\u00fcd', betrag: -85, haeufigkeit: 'halbj\u00e4hrlich' }] },
+  tiere: { typ: null, rasse: null, name: null, vermutet: true, quelle: 'kontoumsaetze', umsaetze: [{ empfaenger: 'Zooplus.de', betrag: -45, haeufigkeit: 'monatlich' }, { empfaenger: 'Tierklinik K\u00f6ln-S\u00fcd', betrag: -85, haeufigkeit: 'halbj\u00e4hrlich' }] },
   eigeneProdukte: [
     { typ: 'kfz', sparte: 'kfz', produkt: 'ERGO KFZ Comfort', details: 'VW Polo, VK 300\u20ac SB', praemie: 420, seit: '2024-01', status: 'aktiv' },
   ],
@@ -468,7 +468,7 @@ export const V4 = {
   linkedin: { kontakte: 350, aktivitaet: 'mittel', branchen: ['Medizin', 'Gesundheit'] },
   lebenssituation: 'aufbau',
   nps: 9, risikoscore: 18, potentialScore: 4.8, abwanderungsrisiko: 'niedrig',
-  tiere: { typ: 'Hund', rasse: 'Golden Retriever', name: 'Luna', quelle: 'kontoumsaetze', umsaetze: [{ empfaenger: 'Das Futterhaus K\u00f6ln', betrag: -95, haeufigkeit: 'monatlich' }, { empfaenger: 'Tierarzt Dr. Weber', betrag: -150, haeufigkeit: 'quartalsweise' }] },
+  tiere: { typ: null, rasse: null, name: null, vermutet: true, quelle: 'kontoumsaetze', umsaetze: [{ empfaenger: 'Das Futterhaus K\u00f6ln', betrag: -95, haeufigkeit: 'monatlich' }, { empfaenger: 'Tierarzt Dr. Weber', betrag: -150, haeufigkeit: 'quartalsweise' }] },
   eigeneProdukte: [
     { typ: 'haftpflicht', sparte: 'schaden', produkt: 'ERGO Privat Premium', details: 'Familie 10M\u20ac', praemie: 105, seit: '2022-01', status: 'aktiv' },
     { typ: 'hausrat', sparte: 'schaden', produkt: 'ERGO Hausrat Komfort', details: '95qm', praemie: 200, seit: '2022-01', status: 'aktiv' },

@@ -147,9 +147,11 @@ function generateHaustiere(wohnsituation, kinder) {
   const alter = randomBetween(1, 12);
 
   return {
-    art,
-    name,
-    alter,
+    art: null,
+    typ: null,
+    name: null,
+    rasse: null,
+    vermutet: true,
     quelle: 'kontoumsaetze',
     erkannteTransaktionen: [
       { haendler: art === 'Fische' ? 'Zoo & Co' : 'Fressnapf', betrag: randomBetween(25, 65), haeufigkeit: 'monatlich' },

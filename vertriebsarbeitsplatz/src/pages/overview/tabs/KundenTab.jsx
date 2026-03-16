@@ -72,30 +72,57 @@ function RiskBadge({ risk }) {
   );
 }
 
+function AllocationBar({ allocation }) {
+  if (!allocation) return <span className="text-slate-300">-</span>;
+  const segments = [
+    { key: 'aktien', color: '#3b82f6', label: 'Aktien' },
+    { key: 'anleihen', color: '#10b981', label: 'Anleihen' },
+    { key: 'alternative', color: '#8b5cf6', label: 'Alternative' },
+    { key: 'cash', color: '#94a3b8', label: 'Cash' },
+  ];
+  return (
+    <div className="flex items-center gap-1.5">
+      <div className="flex w-16 h-2 rounded-full overflow-hidden bg-slate-100">
+        {segments.map(s => {
+          const val = allocation[s.key] || 0;
+          return val > 0 ? <div key={s.key} style={{ width: `${val}%`, backgroundColor: s.color }} title={`${s.label}: ${val}%`} /> : null;
+        })}
+      </div>
+      <span className="text-[10px] text-slate-400">{allocation.aktien || 0}%</span>
+    </div>
+  );
+}
+
 function getColumns(modeId) {
   const isVV = modeId === 'vermoegensverwaltung';
   const isBanking = modeId === 'banking';
+
+  if (isVV) {
+    return [
+      { id: 'name', label: 'Mandant', flex: 1.8 },
+      { id: 'volumen', label: 'AuM', flex: 0.9, align: 'right' },
+      { id: 'letzterKontakt', label: 'Letztes Gespräch', flex: 0.9, align: 'right' },
+      { id: 'mandatsTyp', label: 'Strategie', flex: 0.8, align: 'center' },
+      { id: 'mandatSeit', label: 'Mandant seit', flex: 0.7, align: 'right' },
+      { id: 'ytd', label: 'Perf. YTD', flex: 0.7, align: 'right' },
+      { id: 'perfVsBm', label: 'ggü. BM', flex: 0.6, align: 'right' },
+      { id: 'allocation', label: 'Allokation', flex: 1, align: 'center' },
+      { id: 'esgScore', label: 'ESG', flex: 0.5, align: 'center' },
+      { id: 'gesamtVermoegen', label: 'Gesamtverm.', flex: 0.9, align: 'right' },
+      { id: 'potentialCount', label: 'Potenziale', flex: 0.6, align: 'center' },
+      { id: 'status', label: 'Status', flex: 0.7, align: 'center' },
+    ];
+  }
 
   const cols = [
     { id: 'name', label: 'Name', flex: 2 },
     { id: 'beruf', label: 'Beruf', flex: 2 },
   ];
 
-  if (isVV) {
-    cols.push({ id: 'mandatsTyp', label: 'Anlagestrategie', flex: 1, align: 'center' });
-  }
-
-  cols.push({ id: 'volumen', label: isVV ? 'AuM' : isBanking ? 'Volumen' : 'Praemie', flex: 1, align: 'right' });
-
-  if (isVV) {
-    cols.push(
-      { id: 'ytd', label: 'Perf. YTD', flex: 1, align: 'right' },
-      { id: 'perfVsBm', label: 'ggü. BM', flex: 0.8, align: 'right' },
-    );
-  }
+  cols.push({ id: 'volumen', label: isBanking ? 'Volumen' : 'Praemie', flex: 1, align: 'right' });
 
   cols.push(
-    { id: 'potentialScore', label: isVV ? 'Cross-Sell' : 'Potenzial', flex: 1, align: 'center' },
+    { id: 'potentialScore', label: 'Potenzial', flex: 1, align: 'center' },
     { id: 'nps', label: 'NPS', flex: 0.5, align: 'center' },
     { id: 'status', label: 'Status', flex: 1, align: 'center' },
     { id: 'letzterKontakt', label: 'Kontakt', flex: 0.7, align: 'right' },
@@ -130,9 +157,15 @@ export default function KundenTab() {
       const volumen = isVV
         ? (k.aum || k.eigeneProdukte?.reduce((s, p) => s + (p.volumen || 0), 0) || 0)
         : (k.eigeneProdukte?.reduce((s, p) => s + (p.praemie || p.volumen || 0), 0) || 0);
+      const fremdTotal = k.fremdProdukte?.reduce((s, p) => s + (p.volumen || 0), 0) || 0;
+      const mandatStart = k.eigeneProdukte?.[0]?.seit || null;
       return {
         ...k,
         volumen,
+        gesamtVermoegen: volumen + fremdTotal,
+        mandatSeit: mandatStart,
+        allocation: k.portfolio?.allocation ?? null,
+        esgScore: k.portfolio?.esgScore ?? null,
         ytd: k.portfolio?.performance?.ytd ?? null,
         perfVsBm: k.portfolio?.performance?.ytd != null && k.portfolio?.benchmark?.ytd != null
           ? +(k.portfolio.performance.ytd - k.portfolio.benchmark.ytd).toFixed(1) : null,
@@ -143,6 +176,7 @@ export default function KundenTab() {
             })()
           : '-',
         potCount: k.potentiale?.filter(p => p.status !== 'abgeschlossen')?.length || 0,
+        potValue: k.potentiale?.filter(p => p.status !== 'abgeschlossen')?.reduce((s, p) => s + (p.volumen || 0), 0) || 0,
       };
     });
 
@@ -194,6 +228,28 @@ export default function KundenTab() {
         return <SegmentBadge typ={row.mandatsTyp} />;
       case 'volumen':
         return <span className="font-mono font-medium text-slate-800">{isVV ? formatAuM(row.volumen) : formatEur(row.volumen)}</span>;
+      case 'gesamtVermoegen':
+        return <span className="font-mono text-slate-600">{formatAuM(row.gesamtVermoegen)}</span>;
+      case 'mandatSeit':
+        if (!row.mandatSeit) return <span className="text-slate-300">-</span>;
+        { const [y, m] = row.mandatSeit.split('-');
+          return <span className="text-slate-500">{m}/{y}</span>; }
+      case 'allocation':
+        return <AllocationBar allocation={row.allocation} />;
+      case 'esgScore':
+        if (row.esgScore == null) return <span className="text-slate-300">-</span>;
+        return (
+          <span className={clsx('font-mono font-medium text-[12px]',
+            row.esgScore >= 75 ? 'text-emerald-600' : row.esgScore >= 60 ? 'text-amber-600' : 'text-red-500'
+          )}>{row.esgScore}</span>
+        );
+      case 'potentialCount':
+        return row.potCount > 0 ? (
+          <div className="flex flex-col items-center">
+            <span className="font-semibold text-slate-700">{row.potCount}</span>
+            {row.potValue > 0 && <span className="text-[9px] text-slate-400">{formatAuM(row.potValue)}</span>}
+          </div>
+        ) : <span className="text-slate-300">-</span>;
       case 'ytd':
         return row.ytd != null ? (
           <span className={`font-mono font-medium ${row.ytd >= 0 ? 'text-emerald-600' : 'text-red-600'}`}>

@@ -34,8 +34,8 @@ function SignalTag({ label, type = 'neutral' }) {
 function resolveSignalType(signal) {
   if (!signal) return 'neutral';
   const s = signal.toLowerCase();
-  if (s.includes('positiv') || s.includes('engagement') || s.includes('sichtbarkeit') || s.includes('top') || s.includes('super') || s.includes('regelmaessig')) return 'positive';
-  if (s.includes('nachfolge') || s.includes('liquiditaet') || s.includes('action') || s.includes('noetig') || s.includes('offen') || s.includes('aktualisierung')) return 'action';
+  if (s.includes('positiv') || s.includes('engagement') || s.includes('sichtbarkeit') || s.includes('top') || s.includes('super') || s.includes('regelmäßig')) return 'positive';
+  if (s.includes('nachfolge') || s.includes('liquidität') || s.includes('action') || s.includes('nötig') || s.includes('offen') || s.includes('aktualisierung')) return 'action';
   return 'neutral';
 }
 
@@ -101,8 +101,8 @@ export default function EngagementTab() {
 
   return (
     <div className="space-y-4">
-      {/* 1. LinkedIn-Aktivitaet */}
-      <Section title="LinkedIn-Aktivitaet" icon={Users}>
+      {/* 1. LinkedIn-Aktivität */}
+      <Section title="LinkedIn-Aktivität" icon={Users}>
         {li.url || li.profilUrl ? (
           <div className="space-y-3">
             <div className="flex items-center justify-between">
@@ -125,7 +125,7 @@ export default function EngagementTab() {
                 li.aktivitaet === 'mittel' ? 'bg-amber-50 text-amber-700' :
                 'bg-slate-100 text-slate-500',
               )}>
-                Aktivitaet: {li.aktivitaet || 'Keine'}
+                Aktivität: {li.aktivitaet || 'Keine'}
               </span>
             </div>
 
@@ -210,7 +210,7 @@ export default function EngagementTab() {
                     : '-'
                   }
                 </div>
-                <div className="text-[10px] text-slate-400">Oeffnungsrate</div>
+                <div className="text-[10px] text-slate-400">Öffnungsrate</div>
               </div>
             </div>
             {nl.klicks && nl.klicks.length > 0 && (

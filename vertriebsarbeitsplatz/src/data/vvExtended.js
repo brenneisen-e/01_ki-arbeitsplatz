@@ -55,7 +55,7 @@ export const VV_PERFORMANCE = {
       { name: 'GBP', value: 5 },
       { name: 'Sonstige', value: 3 },
     ],
-    ioComment: 'Das Portfolio entwickelt sich im Rahmen der Erwartungen. Die konservative Ausrichtung mit Schwerpunkt europaeische Qualitaetsaktien und Investment-Grade-Anleihen hat sich in der aktuellen Marktphase bewaehrt. Die Duration im Anleihensegment wurde taktisch auf 4,8 Jahre reduziert. Wir empfehlen eine moderate Erhoehung der Aktienquote bei Ruecksetzern. Der ESG-Filter ist aktiv, ein Upgrade auf Art.9 wird geprueft.',
+    ioComment: 'Das Portfolio entwickelt sich im Rahmen der Erwartungen. Die konservative Ausrichtung mit Schwerpunkt europäische Qualitätsaktien und Investment-Grade-Anleihen hat sich in der aktuellen Marktphase bewährt. Die Duration im Anleihensegment wurde taktisch auf 4,8 Jahre reduziert. Wir empfehlen eine moderate Erhöhung der Aktienquote bei Rücksetzern. Der ESG-Filter ist aktiv, ein Upgrade auf Art.9 wird geprüft.',
   },
 
   // ── W2: Familie Lindenberg – Wachstum ──
@@ -107,7 +107,7 @@ export const VV_PERFORMANCE = {
       { name: 'CHF', value: 5 },
       { name: 'Sonstige', value: 5 },
     ],
-    ioComment: 'Starke YTD-Performance dank Tech-Uebergewichtung. Die Aktienquote liegt leicht ueber Soll (+2pp), was bei der aktuellen Marktdynamik bewusst beibehalten wird. Bei der geplanten Cash-Konsolidierung (5,5M bei Commerzbank) empfehlen wir ein Upgrade auf FairValue mit breiterer Diversifikation. PE-Allokation sollte im Zuge der Konsolidierung auf 10-15% erhoeht werden.',
+    ioComment: 'Starke YTD-Performance dank Tech-Übergewichtung. Die Aktienquote liegt leicht über Soll (+2pp), was bei der aktuellen Marktdynamik bewusst beibehalten wird. Bei der geplanten Cash-Konsolidierung (5,5M bei Commerzbank) empfehlen wir ein Upgrade auf FairValue mit breiterer Diversifikation. PE-Allokation sollte im Zuge der Konsolidierung auf 10-15% erhöht werden.',
   },
 
   // ── W3: Stiftung Weber – Defensiv ──
@@ -160,7 +160,7 @@ export const VV_PERFORMANCE = {
       { name: 'GBP', value: 3 },
       { name: 'Sonstige', value: 2 },
     ],
-    ioComment: 'Das Stiftungsmandat zeigt stabile Entwicklung mit Fokus auf Kapitalerhalt und regelmaessige Ausschuettung. Die Anleihenquote wurde bei 50% gehalten, mit Schwerpunkt auf Staats- und Pfandbriefen. ESG-Upgrade auf Art.9 wird vom Stiftungsrat geprueft. Die Ausschuettungsrendite liegt bei plan-konformen 3,0% p.a. Eine Optimierung im Anleihensegment koennte die Ausschuettung um ca. 30.000 EUR p.a. steigern.',
+    ioComment: 'Das Stiftungsmandat zeigt stabile Entwicklung mit Fokus auf Kapitalerhalt und regelmäßige Ausschüttung. Die Anleihenquote wurde bei 50% gehalten, mit Schwerpunkt auf Staats- und Pfandbriefen. ESG-Upgrade auf Art.9 wird vom Stiftungsrat geprüft. Die Ausschüttungsrendite liegt bei plan-konformen 3,0% p.a. Eine Optimierung im Anleihensegment könnte die Ausschüttung um ca. 30.000 EUR p.a. steigern.',
   },
 
   // ── W4: Prof. Dr. Hartmann – Ausgewogen ──
@@ -212,7 +212,7 @@ export const VV_PERFORMANCE = {
       { name: 'GBP', value: 4 },
       { name: 'Sonstige', value: 3 },
     ],
-    ioComment: 'Portfolio leicht ueber Benchmark dank Healthcare-Uebergewichtung, die die Fachexpertise des Mandanten reflektiert. Aktienquote +2pp ueber Soll – Rebalancing bei naechster Gelegenheit empfohlen. Die Immofonds-Allokation (8%) liefert stabile Ertraege. PE Healthcare Fund II (Co-Investment) wird aktuell geprueft. ING-Tagesgeld (250k) sollte konsolidiert werden.',
+    ioComment: 'Portfolio leicht über Benchmark dank Healthcare-Übergewichtung, die die Fachexpertise des Mandanten reflektiert. Aktienquote +2pp über Soll – Rebalancing bei nächster Gelegenheit empfohlen. Die Immofonds-Allokation (8%) liefert stabile Erträge. PE Healthcare Fund II (Co-Investment) wird aktuell geprüft. ING-Tagesgeld (250k) sollte konsolidiert werden.',
   },
 
   // ── W5: Tim Keller – Aggressiv / Tech ──
@@ -262,7 +262,7 @@ export const VV_PERFORMANCE = {
       { name: 'GBP', value: 5 },
       { name: 'Sonstige', value: 10 },
     ],
-    ioComment: 'Aggressives Wachstumsprofil mit starker Tech-Uebergewichtung. Die YTD-Outperformance gegenueber Benchmark ist beeindruckend (+3,4pp), geht aber mit erhoehter Volatilitaet einher. Krypto-Exposure (120k extern) sollte im Gesamtkontext beruecksichtigt werden. Bei erfolgreichem naechsten Exit empfehlen wir Upgrade auf FairValue mit breiterer Diversifikation.',
+    ioComment: 'Aggressives Wachstumsprofil mit starker Tech-Übergewichtung. Die YTD-Outperformance gegenüber Benchmark ist beeindruckend (+3,4pp), geht aber mit erhöhter Volatilität einher. Krypto-Exposure (120k extern) sollte im Gesamtkontext berücksichtigt werden. Bei erfolgreichem nächsten Exit empfehlen wir Upgrade auf FairValue mit breiterer Diversifikation.',
   },
 };
 
@@ -284,9 +284,9 @@ export const VV_WPHG = {
     geeignetheit: {
       status: 'konform',
       pruefungen: [
-        { datum: '2026-03-01', typ: 'Quartalspruefung', ergebnis: 'bestanden', details: 'Alle Positionen innerhalb der Risikoklasse. Aktienquote konform.' },
-        { datum: '2025-12-15', typ: 'Jahrespruefung', ergebnis: 'bestanden', details: 'Gesamtportfolio entspricht Risikoprofil und Anlagezielen.' },
-        { datum: '2025-09-20', typ: 'Ad-hoc Pruefung', ergebnis: 'bestanden', details: 'ESG-Filter-Anpassung geprueft und konform.' },
+        { datum: '2026-03-01', typ: 'Quartalsprüfung', ergebnis: 'bestanden', details: 'Alle Positionen innerhalb der Risikoklasse. Aktienquote konform.' },
+        { datum: '2025-12-15', typ: 'Jahresprüfung', ergebnis: 'bestanden', details: 'Gesamtportfolio entspricht Risikoprofil und Anlagezielen.' },
+        { datum: '2025-09-20', typ: 'Ad-hoc Prüfung', ergebnis: 'bestanden', details: 'ESG-Filter-Anpassung geprüft und konform.' },
       ],
     },
     verlustschwelle: {
@@ -310,10 +310,10 @@ export const VV_WPHG = {
     },
     dokumente: [
       { typ: 'WpHG-Fragebogen', datum: '2025-11-15', status: 'aktuell' },
-      { typ: 'Geeignetheitspruefung', datum: '2026-03-01', status: 'aktuell' },
+      { typ: 'Geeignetheitsprüfung', datum: '2026-03-01', status: 'aktuell' },
       { typ: 'Ex-Ante Kosteninformation', datum: '2026-01-10', status: 'aktuell' },
       { typ: 'Ex-Post Kostenausweis', datum: '2026-02-28', status: 'aktuell' },
-      { typ: 'Vermoegensverwaltungsvertrag', datum: '2018-01-15', status: 'aktuell' },
+      { typ: 'Vermögensverwaltungsvertrag', datum: '2018-01-15', status: 'aktuell' },
     ],
   },
 
@@ -324,16 +324,16 @@ export const VV_WPHG = {
       naechstesPruefung: '2026-08-20',
       status: 'aktuell',
       risikoklasse: 4,
-      anlageziel: 'Langfristiges Vermoegenswachstum',
+      anlageziel: 'Langfristiges Vermögenswachstum',
       anlagehorizont: '10+ Jahre',
       erfahrung: { aktien: 'hoch', anleihen: 'mittel', alternative: 'hoch', derivate: 'mittel' },
     },
     geeignetheit: {
       status: 'konform',
       pruefungen: [
-        { datum: '2026-02-15', typ: 'Quartalspruefung', ergebnis: 'bestanden', details: 'Tech-Uebergewichtung innerhalb der Risikoklasse 4 toleriert.' },
-        { datum: '2025-11-10', typ: 'Quartalspruefung', ergebnis: 'bestanden', details: 'PE-Allokation geprueft und konform.' },
-        { datum: '2025-08-20', typ: 'Jahrespruefung', ergebnis: 'bestanden', details: 'Neuer Fragebogen nach SaaS-Exit, Risikoklasse 4 bestaetigt.' },
+        { datum: '2026-02-15', typ: 'Quartalsprüfung', ergebnis: 'bestanden', details: 'Tech-Übergewichtung innerhalb der Risikoklasse 4 toleriert.' },
+        { datum: '2025-11-10', typ: 'Quartalsprüfung', ergebnis: 'bestanden', details: 'PE-Allokation geprüft und konform.' },
+        { datum: '2025-08-20', typ: 'Jahresprüfung', ergebnis: 'bestanden', details: 'Neuer Fragebogen nach SaaS-Exit, Risikoklasse 4 bestätigt.' },
       ],
     },
     verlustschwelle: {
@@ -354,10 +354,10 @@ export const VV_WPHG = {
     },
     dokumente: [
       { typ: 'WpHG-Fragebogen', datum: '2025-08-20', status: 'aktuell' },
-      { typ: 'Geeignetheitspruefung', datum: '2026-02-15', status: 'aktuell' },
+      { typ: 'Geeignetheitsprüfung', datum: '2026-02-15', status: 'aktuell' },
       { typ: 'Ex-Ante Kosteninformation', datum: '2026-01-10', status: 'aktuell' },
       { typ: 'Ex-Post Kostenausweis', datum: '2026-02-28', status: 'aktuell' },
-      { typ: 'Vermoegensverwaltungsvertrag', datum: '2024-06-01', status: 'aktuell' },
+      { typ: 'Vermögensverwaltungsvertrag', datum: '2024-06-01', status: 'aktuell' },
     ],
   },
 
@@ -368,16 +368,16 @@ export const VV_WPHG = {
       naechstesPruefung: '2026-04-01',
       status: 'aktuell',
       risikoklasse: 2,
-      anlageziel: 'Realer Kapitalerhalt mit laufender Ausschuettung',
+      anlageziel: 'Realer Kapitalerhalt mit laufender Ausschüttung',
       anlagehorizont: 'unbefristet',
       erfahrung: { aktien: 'mittel', anleihen: 'hoch', alternative: 'gering', derivate: 'gering' },
     },
     geeignetheit: {
       status: 'konform',
       pruefungen: [
-        { datum: '2026-02-28', typ: 'Quartalspruefung', ergebnis: 'bestanden', details: 'Kapitalerhalt und Ausschuettungsziel (3%) erfuellt.' },
-        { datum: '2025-12-01', typ: 'Stiftungsrechtliche Pruefung', ergebnis: 'bestanden', details: 'Anlage konform mit Stiftungssatzung und Anlagerichtlinien.' },
-        { datum: '2025-10-01', typ: 'Jahrespruefung', ergebnis: 'bestanden', details: 'Stiftungsrat hat Anlagerichtlinien bestaetigt.' },
+        { datum: '2026-02-28', typ: 'Quartalsprüfung', ergebnis: 'bestanden', details: 'Kapitalerhalt und Ausschüttungsziel (3%) erfüllt.' },
+        { datum: '2025-12-01', typ: 'Stiftungsrechtliche Prüfung', ergebnis: 'bestanden', details: 'Anlage konform mit Stiftungssatzung und Anlagerichtlinien.' },
+        { datum: '2025-10-01', typ: 'Jahresprüfung', ergebnis: 'bestanden', details: 'Stiftungsrat hat Anlagerichtlinien bestätigt.' },
       ],
     },
     verlustschwelle: {
@@ -400,11 +400,11 @@ export const VV_WPHG = {
     },
     dokumente: [
       { typ: 'WpHG-Fragebogen', datum: '2025-10-01', status: 'aktuell' },
-      { typ: 'Geeignetheitspruefung', datum: '2026-02-28', status: 'aktuell' },
+      { typ: 'Geeignetheitsprüfung', datum: '2026-02-28', status: 'aktuell' },
       { typ: 'Stiftungsanlagerichtlinien', datum: '2025-10-01', status: 'aktuell' },
       { typ: 'Ex-Ante Kosteninformation', datum: '2026-01-10', status: 'aktuell' },
       { typ: 'Ex-Post Kostenausweis', datum: '2026-02-28', status: 'aktuell' },
-      { typ: 'Vermoegensverwaltungsvertrag', datum: '2008-01-15', status: 'aktuell' },
+      { typ: 'Vermögensverwaltungsvertrag', datum: '2008-01-15', status: 'aktuell' },
     ],
   },
 
@@ -422,9 +422,9 @@ export const VV_WPHG = {
     geeignetheit: {
       status: 'konform',
       pruefungen: [
-        { datum: '2026-03-01', typ: 'Quartalspruefung', ergebnis: 'bestanden', details: 'Healthcare-Schwerpunkt (22%) konform mit Anlageziel.' },
-        { datum: '2025-12-10', typ: 'Quartalspruefung', ergebnis: 'bestanden', details: 'PE Healthcare Allokation geprueft und konform.' },
-        { datum: '2025-09-10', typ: 'Jahrespruefung', ergebnis: 'bestanden', details: 'Anlageziel und Risikoklasse bestaetigt.' },
+        { datum: '2026-03-01', typ: 'Quartalsprüfung', ergebnis: 'bestanden', details: 'Healthcare-Schwerpunkt (22%) konform mit Anlageziel.' },
+        { datum: '2025-12-10', typ: 'Quartalsprüfung', ergebnis: 'bestanden', details: 'PE Healthcare Allokation geprüft und konform.' },
+        { datum: '2025-09-10', typ: 'Jahresprüfung', ergebnis: 'bestanden', details: 'Anlageziel und Risikoklasse bestätigt.' },
       ],
     },
     verlustschwelle: {
@@ -447,10 +447,10 @@ export const VV_WPHG = {
     },
     dokumente: [
       { typ: 'WpHG-Fragebogen', datum: '2025-09-10', status: 'aktuell' },
-      { typ: 'Geeignetheitspruefung', datum: '2026-03-01', status: 'aktuell' },
+      { typ: 'Geeignetheitsprüfung', datum: '2026-03-01', status: 'aktuell' },
       { typ: 'Ex-Ante Kosteninformation', datum: '2026-01-10', status: 'aktuell' },
       { typ: 'Ex-Post Kostenausweis', datum: '2026-02-28', status: 'aktuell' },
-      { typ: 'Vermoegensverwaltungsvertrag', datum: '2019-01-10', status: 'aktuell' },
+      { typ: 'Vermögensverwaltungsvertrag', datum: '2019-01-10', status: 'aktuell' },
     ],
   },
 
@@ -468,9 +468,9 @@ export const VV_WPHG = {
     geeignetheit: {
       status: 'warnung',
       pruefungen: [
-        { datum: '2026-03-10', typ: 'Quartalspruefung', ergebnis: 'warnung', details: 'WpHG-Fragebogen abgelaufen seit 15.06.2025. Erneuerung dringend erforderlich.' },
-        { datum: '2025-12-01', typ: 'Quartalspruefung', ergebnis: 'warnung', details: 'Fragebogen abgelaufen. Mandant wurde per E-Mail kontaktiert.' },
-        { datum: '2025-06-15', typ: 'Jahrespruefung', ergebnis: 'faellig', details: 'Pruefung faellig, Mandant hat Termin nicht wahrgenommen.' },
+        { datum: '2026-03-10', typ: 'Quartalsprüfung', ergebnis: 'warnung', details: 'WpHG-Fragebogen abgelaufen seit 15.06.2025. Erneuerung dringend erforderlich.' },
+        { datum: '2025-12-01', typ: 'Quartalsprüfung', ergebnis: 'warnung', details: 'Fragebogen abgelaufen. Mandant wurde per E-Mail kontaktiert.' },
+        { datum: '2025-06-15', typ: 'Jahresprüfung', ergebnis: 'fällig', details: 'Prüfung fällig, Mandant hat Termin nicht wahrgenommen.' },
       ],
     },
     verlustschwelle: {
@@ -491,10 +491,10 @@ export const VV_WPHG = {
     },
     dokumente: [
       { typ: 'WpHG-Fragebogen', datum: '2024-12-15', status: 'abgelaufen', faellig: '2025-06-15' },
-      { typ: 'Geeignetheitspruefung', datum: '2026-03-10', status: 'aktuell' },
+      { typ: 'Geeignetheitsprüfung', datum: '2026-03-10', status: 'aktuell' },
       { typ: 'Ex-Ante Kosteninformation', datum: '2026-01-10', status: 'aktuell' },
       { typ: 'Ex-Post Kostenausweis', datum: '2026-02-28', status: 'aktuell' },
-      { typ: 'Vermoegensverwaltungsvertrag', datum: '2025-01-05', status: 'aktuell' },
+      { typ: 'Vermögensverwaltungsvertrag', datum: '2025-01-05', status: 'aktuell' },
     ],
   },
 };
@@ -524,13 +524,13 @@ export const VV_FAMILIE = {
     generationenPlanung: {
       themen: [
         'Unternehmensnachfolge Maschinenbau GmbH – Friedrich als Nachfolger',
-        'NextGen Charlotte – eigene Vermoegensverwaltung aufbauen',
+        'NextGen Charlotte – eigene Vermögensverwaltung aufbauen',
         'Familienstiftung Gruendung – Elisabeth als Initiatorin',
-        'Steueroptimierte Vermoegensuebertragung an Kinder',
+        'Steueroptimierte Vermögensübertragung an Kinder',
         'LV-Ablauf 2026 – Wiederanlage planen',
       ],
-      zeitrahmen: '3-5 Jahre (Uebergabe Unternehmen)',
-      notizen: 'Heinrich plant Rueckzug aus dem operativen Geschaeft mit 65-67. Friedrich wird eingearbeitet, Charlotte hat kein Interesse am Unternehmen. Elisabeth moechte Familienstiftung fuer Bildungszwecke gruenden (2M Stiftungskapital). Erbschaftssteuerliche Optimierung sollte fruehzeitig geplant werden.',
+      zeitrahmen: '3-5 Jahre (Übergabe Unternehmen)',
+      notizen: 'Heinrich plant Rückzug aus dem operativen Geschäft mit 65-67. Friedrich wird eingearbeitet, Charlotte hat kein Interesse am Unternehmen. Elisabeth möchte Familienstiftung für Bildungszwecke gründen (2M Stiftungskapital). Erbschaftssteuerliche Optimierung sollte frühzeitig geplant werden.',
     },
   },
 
@@ -540,7 +540,7 @@ export const VV_FAMILIE = {
       { name: 'Markus Lindenberg', rolle: 'mandant', alter: 51, beruf: 'SaaS-Unternehmer (Exit 2024, 8M netto)', mandant: true, aum: 2100000 },
       { name: 'Julia Lindenberg', rolle: 'ehepartner', alter: 48, beruf: 'CTO (eigenes Startup)', vermoegen: 450000 },
       { name: 'Noah Lindenberg', rolle: 'kind', alter: 18, beruf: 'Abiturient, Studienbeginn 2026' },
-      { name: 'Ella Lindenberg', rolle: 'kind', alter: 15, beruf: 'Schuelerin (Gymnasium)' },
+      { name: 'Ella Lindenberg', rolle: 'kind', alter: 15, beruf: 'Schülerin (Gymnasium)' },
     ],
     vermoegensUebersicht: {
       gesamt: 10430000,
@@ -554,24 +554,24 @@ export const VV_FAMILIE = {
     },
     generationenPlanung: {
       themen: [
-        'Cash-Konsolidierung 5,5M (hoechste Prioritaet)',
+        'Cash-Konsolidierung 5,5M (höchste Priorität)',
         'NextGen Noah – Studiendepot 100k',
-        'Julias Startup – Liquiditaetsbedarf beobachten',
+        'Julias Startup – Liquiditätsbedarf beobachten',
         'Angel-Portfolio professionalisieren',
         'Langfristige Familienstruktur planen',
       ],
       zeitrahmen: '1-2 Jahre (Cash-Konsolidierung kurzfristig)',
-      notizen: 'Markus hat durch den SaaS-Exit 2024 erhebliche liquide Mittel erhalten, die noch groesstenteils unstrukturiert bei der Commerzbank liegen. Julia arbeitet an einem eigenen Startup (Seed-Phase). Noah beginnt 2026 mit dem Studium. Ella hat noch 3 Jahre Schule. Prioritaet: Cash strukturiert investieren, bevor Inflation den Wert auffrisst.',
+      notizen: 'Markus hat durch den SaaS-Exit 2024 erhebliche liquide Mittel erhalten, die noch größtenteils unstrukturiert bei der Commerzbank liegen. Julia arbeitet an einem eigenen Startup (Seed-Phase). Noah beginnt 2026 mit dem Studium. Ella hat noch 3 Jahre Schule. Priorität: Cash strukturiert investieren, bevor Inflation den Wert auffrisst.',
     },
   },
 
   // ── W3: Stiftung Weber ──
   VV00003: {
     mitglieder: [
-      { name: 'Stiftung Weber', rolle: 'stiftung', alter: 0, beruf: 'Bildungsstiftung (gegruendet 2008)', mandant: true, aum: 8300000 },
+      { name: 'Stiftung Weber', rolle: 'stiftung', alter: 0, beruf: 'Bildungsstiftung (gegründet 2008)', mandant: true, aum: 8300000 },
       { name: 'Dr. Martin Weber', rolle: 'mandant', alter: 74, beruf: 'Stifter, ehem. Unternehmer' },
       { name: 'Claudia Weber', rolle: 'ehepartner', alter: 71, beruf: 'Stiftungsvorstand' },
-      { name: 'Dr. Thomas Fischer', rolle: 'kind', alter: 0, beruf: 'Geschaeftsfuehrer Stiftung, Vorstandsmitglied' },
+      { name: 'Dr. Thomas Fischer', rolle: 'kind', alter: 0, beruf: 'Geschäftsfuehrer Stiftung, Vorstandsmitglied' },
     ],
     vermoegensUebersicht: {
       gesamt: 8800000,
@@ -586,12 +586,12 @@ export const VV_FAMILIE = {
     generationenPlanung: {
       themen: [
         'ESG Art.9 Upgrade des Stiftungsmandats',
-        'Ausschuettungsoptimierung fuer Foerderzwecke',
-        'Sparkasse-Festgeld bei Faelligkeit konsolidieren',
+        'Ausschüttungsoptimierung für Förderzwecke',
+        'Sparkasse-Festgeld bei Fälligkeit konsolidieren',
         'Stiftungskapital langfristig erhalten (realer Kapitalerhalt)',
       ],
       zeitrahmen: 'Unbefristet (Stiftung auf Dauer angelegt)',
-      notizen: 'Die Stiftung Weber foerdert seit 2008 Bildungsprojekte in der Region. Jaehrliche Ausschuettung ca. 250.000 EUR fuer Foerderzwecke. Der Stiftungsrat tagt halbjaehrlich. Dr. Weber (Stifter) zieht sich zunehmend zurueck, Dr. Fischer uebernimmt operativ. Ziel: realer Kapitalerhalt bei zuverlaessiger Ausschuettung.',
+      notizen: 'Die Stiftung Weber fördert seit 2008 Bildungsprojekte in der Region. Jährliche Ausschüttung ca. 250.000 EUR für Förderzwecke. Der Stiftungsrat tagt halbjährlich. Dr. Weber (Stifter) zieht sich zunehmend zurück, Dr. Fischer übernimmt operativ. Ziel: realer Kapitalerhalt bei zuverlässiger Ausschüttung.',
     },
   },
 
@@ -616,20 +616,20 @@ export const VV_FAMILIE = {
     generationenPlanung: {
       themen: [
         'Praxisnachfolge planen (Verkauf in 5-8 Jahren)',
-        'NextGen Jan – eigene Vermoegensverwaltung aufbauen',
-        'Sophie – Studienfinanzierung und spaetere Niederlassung',
+        'NextGen Jan – eigene Vermögensverwaltung aufbauen',
+        'Sophie – Studienfinanzierung und spätere Niederlassung',
         'PE Healthcare Fund II – Fachexpertise nutzen',
         'ING-Tagesgeld konsolidieren',
       ],
       zeitrahmen: '5-8 Jahre (Praxisverkauf)',
-      notizen: 'Prof. Hartmann plant den Verkauf seiner Privatpraxis in 5-8 Jahren (dann 61-64). Sohn Jan (Assistenzarzt) koennte eventuell uebernehmen, was aber noch offen ist. Sophie studiert Medizin und plant eigene kardiologische Praxis. Andrea fuehrt eine eigene psychologische Praxis. Praxisverkauferloese (ca. 800k) sollen ins FairValue Mandat fliessen.',
+      notizen: 'Prof. Hartmann plant den Verkauf seiner Privatpraxis in 5-8 Jahren (dann 61-64). Sohn Jan (Assistenzarzt) könnte eventuell übernehmen, was aber noch offen ist. Sophie studiert Medizin und plant eigene kardiologische Praxis. Andrea führt eine eigene psychologische Praxis. Praxisverkaufserlöse (ca. 800k) sollen ins FairValue Mandat fließen.',
     },
   },
 
   // ── W5: Tim Keller ──
   VV00005: {
     mitglieder: [
-      { name: 'Tim Keller', rolle: 'mandant', alter: 29, beruf: 'Tech-Gruender (Seed-Exit 500k)', mandant: true, aum: 450000 },
+      { name: 'Tim Keller', rolle: 'mandant', alter: 29, beruf: 'Tech-Gründer (Seed-Exit 500k)', mandant: true, aum: 450000 },
     ],
     vermoegensUebersicht: {
       gesamt: 658000,
@@ -643,13 +643,13 @@ export const VV_FAMILIE = {
     },
     generationenPlanung: {
       themen: [
-        'Naechster Exit vorbereiten – Upgrade auf FairValue',
+        'Nächster Exit vorbereiten – Upgrade auf FairValue',
         'Krypto-Bestand strukturieren und integrieren',
         'Angel-Portfolio professionell tracken',
         'Langfristigen Vermoegensaufbau starten',
       ],
       zeitrahmen: '2-3 Jahre (naechster Startup-Exit)',
-      notizen: 'Tim ist als Tech-Gruender ein typischer NextGen-Mandant mit hohem Wachstumspotenzial. Aktuell kleines AuM (450k), aber bei erfolgreichem naechsten Exit (Series A Investment) koennte das Volumen auf 1,5-2M steigen. Krypto-Bestand (120k) und Angel-Investments (80k) sollten im Gesamtreporting integriert werden. WpHG-Fragebogen ist abgelaufen – Erneuerung dringend.',
+      notizen: 'Tim ist als Tech-Gründer ein typischer NextGen-Mandant mit hohem Wachstumspotenzial. Aktuell kleines AuM (450k), aber bei erfolgreichem naechsten Exit (Series A Investment) könnte das Volumen auf 1,5-2M steigen. Krypto-Bestand (120k) und Angel-Investments (80k) sollten im Gesamtreporting integriert werden. WpHG-Fragebogen ist abgelaufen – Erneuerung dringend.',
     },
   },
 };
@@ -669,10 +669,10 @@ export const VV_ENGAGEMENT = {
       kontakte: 480,
       letzteAktivitaeten: [
         { typ: 'share', datum: '2025-06-10', inhalt: 'Artikel geteilt: "Nachfolge im Mittelstand – Herausforderungen 2025"' },
-        { typ: 'like', datum: '2025-05-22', inhalt: 'IHK-Beitrag zu Industrie 4.0 Foerderung geliked' },
+        { typ: 'like', datum: '2025-05-22', inhalt: 'IHK-Beitrag zu Industrie 4.0 Förderung geliked' },
         { typ: 'profil_update', datum: '2025-04-15', inhalt: 'Profilbild aktualisiert' },
       ],
-      signale: ['Nachfolge-Thema aktiv', 'ESG-Roadmap 2030 erwaehnt', 'Sohn Friedrich als neuer COO'],
+      signale: ['Nachfolge-Thema aktiv', 'ESG-Roadmap 2030 erwähnt', 'Sohn Friedrich als neuer COO'],
     },
     website: {
       besuche: [
@@ -688,15 +688,15 @@ export const VV_ENGAGEMENT = {
         { seite: '/marktbericht', besuche: 2 },
         { seite: '/esg-report', besuche: 1 },
       ],
-      signale: ['Regelmaessig Quartalsbericht gelesen', 'ESG-Report Interesse'],
+      signale: ['Regelmäßig Quartalsbericht gelesen', 'ESG-Report Interesse'],
     },
     newsletter: {
       abonniert: true,
       oeffnungsrate: 65,
       letzteOeffnung: '2026-03-05',
       klicks: [
-        { datum: '2026-03-05', betreff: 'Marktausblick Q1 2026', aktion: 'geoeffnet' },
-        { datum: '2026-02-10', betreff: 'Nachfolge-Spezial: Steueroptimierte Uebergabe', aktion: 'geklickt' },
+        { datum: '2026-03-05', betreff: 'Marktausblick Q1 2026', aktion: 'geöffnet' },
+        { datum: '2026-02-10', betreff: 'Nachfolge-Spezial: Steueroptimierte Übergabe', aktion: 'geklickt' },
         { datum: '2026-01-08', betreff: 'ESG-Update: Art.9 Mandate im Vergleich', aktion: 'geklickt' },
       ],
       signale: ['Nachfolge-Themen geklickt', 'ESG-Interesse'],
@@ -730,7 +730,7 @@ export const VV_ENGAGEMENT = {
       themen: ['SaaS', 'Startup', 'Venture Capital', 'Tech-Exits', 'Entrepreneurship'],
       kontakte: 2850,
       letzteAktivitaeten: [
-        { typ: 'post', datum: '2026-03-08', inhalt: 'Beitrag: "Was ich nach meinem SaaS-Exit ueber Vermoegen gelernt habe"' },
+        { typ: 'post', datum: '2026-03-08', inhalt: 'Beitrag: "Was ich nach meinem SaaS-Exit über Vermögen gelernt habe"' },
         { typ: 'share', datum: '2026-02-28', inhalt: 'PE-Report 2026 geteilt mit Kommentar zu Healthcare-Investments' },
         { typ: 'like', datum: '2026-02-20', inhalt: 'Artikel "Angel Investing Lektionen" geliked' },
         { typ: 'post', datum: '2026-02-10', inhalt: 'Julia\'s Startup-Fortschritte: Series A Vorbereitung' },
@@ -762,7 +762,7 @@ export const VV_ENGAGEMENT = {
       klicks: [
         { datum: '2026-03-10', betreff: 'PE Healthcare Fund II – Jetzt zeichnen', aktion: 'geklickt' },
         { datum: '2026-02-25', betreff: 'FairValue vs. SmartValue: Ihr Upgrade-Pfad', aktion: 'geklickt' },
-        { datum: '2026-02-10', betreff: 'Marktausblick Q1 2026', aktion: 'geoeffnet' },
+        { datum: '2026-02-10', betreff: 'Marktausblick Q1 2026', aktion: 'geöffnet' },
         { datum: '2026-01-15', betreff: 'Cash-Allokation: Warum jeder Monat zaehlt', aktion: 'geklickt' },
       ],
       signale: ['PE-Zeichnung geklickt – Top-Signal', 'Cash-Thema resoniert'],
@@ -780,8 +780,8 @@ export const VV_ENGAGEMENT = {
       ],
     },
     presse: [
-      { datum: '2026-02-15', quelle: 'Gruenderszene', titel: 'Keller Ventures: Neuer SaaS-Fund aufgelegt', signal: 'Liquiditaet – weitere Exits moeglich' },
-      { datum: '2025-09-30', quelle: 'Finance Forward', titel: 'SaaS-Exit 2024: Wie Gruender ihr Vermoegen anlegen', signal: 'Positiv – Engagement Sichtbarkeit' },
+      { datum: '2026-02-15', quelle: 'Gründerszene', titel: 'Keller Ventures: Neuer SaaS-Fund aufgelegt', signal: 'Liquiditaet – weitere Exits moeglich' },
+      { datum: '2025-09-30', quelle: 'Finance Forward', titel: 'SaaS-Exit 2024: Wie Gründer ihr Vermoegen anlegen', signal: 'Positiv – Engagement Sichtbarkeit' },
     ],
     digitalScore: 78,
   },
@@ -819,8 +819,8 @@ export const VV_ENGAGEMENT = {
       oeffnungsrate: 45,
       letzteOeffnung: '2026-02-01',
       klicks: [
-        { datum: '2026-02-01', betreff: 'ESG-Spezial: Art.9 fuer Stiftungen', aktion: 'geklickt' },
-        { datum: '2025-12-15', betreff: 'Stiftungsmandat Jahresrueckblick', aktion: 'geoeffnet' },
+        { datum: '2026-02-01', betreff: 'ESG-Spezial: Art.9 für Stiftungen', aktion: 'geklickt' },
+        { datum: '2025-12-15', betreff: 'Stiftungsmandat Jahresrückblick', aktion: 'geöffnet' },
       ],
       signale: ['ESG Art.9 Klick – Upgrade-Signal'],
     },
@@ -851,7 +851,7 @@ export const VV_ENGAGEMENT = {
       kontakte: 950,
       letzteAktivitaeten: [
         { typ: 'post', datum: '2026-01-28', inhalt: 'Kommentar zur neuen Herzinsuffizienz-Leitlinie' },
-        { typ: 'share', datum: '2026-01-15', inhalt: 'Artikel geteilt: "PE in Healthcare – Chancen fuer Fachexperten"' },
+        { typ: 'share', datum: '2026-01-15', inhalt: 'Artikel geteilt: "PE in Healthcare – Chancen für Fachexperten"' },
         { typ: 'like', datum: '2025-12-20', inhalt: 'MedTech Innovation Report geliked' },
       ],
       signale: ['Healthcare PE Interesse – Engagement', 'Fachliche Sichtbarkeit hoch'],
@@ -878,8 +878,8 @@ export const VV_ENGAGEMENT = {
       letzteOeffnung: '2026-03-08',
       klicks: [
         { datum: '2026-03-08', betreff: 'PE Healthcare Fund II – Exklusive Zeichnung', aktion: 'geklickt' },
-        { datum: '2026-02-12', betreff: 'Marktausblick Q1 2026', aktion: 'geoeffnet' },
-        { datum: '2026-01-20', betreff: 'Nachfolgeplanung fuer Praxisinhaber', aktion: 'geklickt' },
+        { datum: '2026-02-12', betreff: 'Marktausblick Q1 2026', aktion: 'geöffnet' },
+        { datum: '2026-01-20', betreff: 'Nachfolgeplanung für Praxisinhaber', aktion: 'geklickt' },
       ],
       signale: ['PE-Zeichnung geklickt', 'Praxisnachfolge Interesse'],
     },
@@ -887,10 +887,10 @@ export const VV_ENGAGEMENT = {
       vergangene: [
         { name: 'PE Healthcare Investor Call', datum: '2026-02-25', typ: 'webinar', status: 'teilgenommen' },
         { name: 'Jahresempfang 2025', datum: '2025-12-10', typ: 'dinner', status: 'teilgenommen' },
-        { name: 'Medtech-Konferenz Muenchen', datum: '2025-10-08', typ: 'konferenz', status: 'teilgenommen' },
+        { name: 'Medtech-Konferenz München', datum: '2025-10-08', typ: 'konferenz', status: 'teilgenommen' },
       ],
       empfohlene: [
-        { name: 'PE Healthcare Fund II Zeichnung', datum: '2026-04-01', match: 'hoch', grund: 'Fachexpertise + Website-Aktivitaet', aktion: 'einladen' },
+        { name: 'PE Healthcare Fund II Zeichnung', datum: '2026-04-01', match: 'hoch', grund: 'Fachexpertise + Website-Aktivität', aktion: 'einladen' },
         { name: 'Praxisnachfolge Roundtable', datum: '2026-05-15', match: 'hoch', grund: 'Praxisverkauf in 5-8 Jahren', aktion: 'einladen' },
         { name: 'NextGen Mediziner Dinner', datum: '2026-06-10', match: 'mittel', grund: 'Jan (Assistenzarzt) als potenzieller Mandant', aktion: 'vorschlagen' },
       ],
@@ -951,7 +951,7 @@ export const VV_ENGAGEMENT = {
         { datum: '2026-02-08', betreff: 'PE Fund Basket – neue Opportunitaet', aktion: 'geklickt' },
         { datum: '2026-01-25', betreff: 'Marktausblick Q1 2026', aktion: 'geklickt' },
       ],
-      signale: ['Super-Engager – 95% Oeffnungsrate', 'Alle relevanten Links geklickt'],
+      signale: ['Super-Engager – 95% Öffnungsrate', 'Alle relevanten Links geklickt'],
     },
     events: {
       vergangene: [
@@ -964,13 +964,13 @@ export const VV_ENGAGEMENT = {
       empfohlene: [
         { name: 'Krypto-Strukturierung Workshop', datum: '2026-04-05', match: 'hoch', grund: 'WpHG-Erneuerung + Krypto-Integration', aktion: 'einladen' },
         { name: 'NextGen Impact Dinner', datum: '2026-04-22', match: 'hoch', grund: 'Thought Leader im Impact-Bereich', aktion: 'einladen' },
-        { name: 'Series A Exit-Planung', datum: '2026-05-10', match: 'hoch', grund: 'Naechster Exit erwartet – Mandatsupgrade', aktion: 'einladen' },
+        { name: 'Series A Exit-Planung', datum: '2026-05-10', match: 'hoch', grund: 'Nächster Exit erwartet – Mandatsupgrade', aktion: 'einladen' },
         { name: 'Climate Tech Investor Day', datum: '2026-06-15', match: 'mittel', grund: 'Climate Tech Award Gewinner', aktion: 'vorschlagen' },
       ],
     },
     presse: [
       { datum: '2026-03-01', quelle: 'TechCrunch (DE)', titel: 'Keller-Startup gewinnt Climate Tech Award', signal: 'Top-Sichtbarkeit – Engagement-Chance' },
-      { datum: '2026-01-15', quelle: 'Gruenderszene', titel: 'Gen-Z Gruender: Zwischen Exit-Millionen und Impact Investing', signal: 'Positiv – Sichtbarkeit' },
+      { datum: '2026-01-15', quelle: 'Gründerszene', titel: 'Gen-Z Gründer: Zwischen Exit-Millionen und Impact Investing', signal: 'Positiv – Sichtbarkeit' },
       { datum: '2025-09-20', quelle: 'Finance Forward', titel: 'Krypto und klassische Vermoegensverwaltung: Geht das zusammen?', signal: 'Krypto-Thema – Aktualisierung noetig' },
     ],
     digitalScore: 92,

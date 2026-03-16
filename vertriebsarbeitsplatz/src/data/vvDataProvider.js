@@ -513,8 +513,8 @@ function generateEngagement(id) {
     newsletter: {
       oeffnungsrate: rngInt(prng, 20, 95),
       klicks: [
-        { datum: '2026-03-05', betreff: pick(prng, ['Marktausblick Q1 2026', 'Portfolio-Update März', 'ESG-Spezial']), aktion: pick(prng, ['geoeffnet', 'geklickt']) },
-        { datum: '2026-02-10', betreff: pick(prng, ['Anlagetrends 2026', 'Nachfolge-Spezial', 'Quartalsbericht Q4']), aktion: pick(prng, ['geoeffnet', 'geklickt']) },
+        { datum: '2026-03-05', betreff: pick(prng, ['Marktausblick Q1 2026', 'Portfolio-Update März', 'ESG-Spezial']), aktion: pick(prng, ['geöffnet', 'geklickt']) },
+        { datum: '2026-02-10', betreff: pick(prng, ['Anlagetrends 2026', 'Nachfolge-Spezial', 'Quartalsbericht Q4']), aktion: pick(prng, ['geöffnet', 'geklickt']) },
       ],
       signale: [pick(prng, ['Aktiver Leser', 'Nachfolge-Themen geklickt', 'ESG-Interesse', 'Geringe Öffnungsrate'])],
     },

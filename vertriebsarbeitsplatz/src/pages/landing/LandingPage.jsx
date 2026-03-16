@@ -21,8 +21,22 @@ const SUGGESTIONS = [
 
 export default function LandingPage() {
   const { switchMode, switchInstitut, navigateTo, config, modeId } = useMode();
-  const [activeModule, setActiveModule] = useState(modeId || 'versicherung');
-  const [selectedVariant, setSelectedVariant] = useState(null);
+
+  // Restore last selected mode/institut from localStorage
+  const [activeModule, setActiveModule] = useState(() => {
+    try {
+      const saved = JSON.parse(localStorage.getItem('kia_last_mode'));
+      if (saved?.modeId && MODE_CONFIGS[saved.modeId]) return saved.modeId;
+    } catch {}
+    return modeId || 'versicherung';
+  });
+  const [selectedVariant, setSelectedVariant] = useState(() => {
+    try {
+      const saved = JSON.parse(localStorage.getItem('kia_last_mode'));
+      if (saved?.variant) return saved.variant;
+    } catch {}
+    return null;
+  });
   const [chatInput, setChatInput] = useState('');
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [isThinking, setIsThinking] = useState(false);
@@ -238,8 +252,11 @@ export default function LandingPage() {
               <img src={logoUrl} alt={currentInstitut} className="max-w-full max-h-full object-contain" />
             </div>
           ) : (
-            <div className="w-32 h-32 rounded-3xl bg-white/15 backdrop-blur-sm border border-white/20 shadow-xl flex items-center justify-center">
-              <span className="text-white text-2xl font-bold tracking-tight text-center px-2 leading-tight">{currentInstitut}</span>
+            <div className="w-32 h-32 rounded-3xl bg-white/15 backdrop-blur-sm border border-white/20 shadow-xl flex items-center justify-center p-3">
+              <span className={clsx(
+                'text-white font-bold tracking-tight text-center leading-tight break-words',
+                currentInstitut.length > 12 ? 'text-base' : currentInstitut.length > 8 ? 'text-xl' : 'text-2xl'
+              )}>{currentInstitut}</span>
             </div>
           )}
         </div>
@@ -296,7 +313,7 @@ export default function LandingPage() {
             return (
               <button
                 key={tab.id}
-                onClick={() => { setActiveModule(tab.id); setSelectedVariant(null); }}
+                onClick={() => { setActiveModule(tab.id); setSelectedVariant(null); try { localStorage.setItem('kia_last_mode', JSON.stringify({ modeId: tab.id })); } catch {} }}
                 className={clsx(
                   'flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200',
                   isActive
@@ -320,7 +337,7 @@ export default function LandingPage() {
             return (
               <button
                 key={variant.institut}
-                onClick={() => setSelectedVariant(variant)}
+                onClick={() => { setSelectedVariant(variant); try { localStorage.setItem('kia_last_mode', JSON.stringify({ modeId: activeModule, variant })); } catch {} }}
                 className={clsx(
                   'flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-medium transition-all duration-300',
                   isSelected

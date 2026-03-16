@@ -3,6 +3,12 @@
 
 const LOGO_TOKEN = 'pk_H7vb5Y2lTsW47U4Xq-w3HA';
 
+// Custom local logos for fictional institutes
+const CUSTOM_LOGOS = {
+  'Zukunftsbank': 'images/zukunftsbank-logo.svg',
+  'Zukunftsversicherung': 'images/zukunftsversicherung-logo.svg',
+};
+
 const DOMAIN_MAP = {
   'Allianz': 'allianz.de',
   'ERGO': 'ergo.de',
@@ -84,6 +90,12 @@ const DOMAIN_MAP = {
 };
 
 export function getLogoUrl(name, size = 32) {
+  // Check custom local logos first
+  if (CUSTOM_LOGOS[name]) {
+    const base = import.meta.env.BASE_URL || '/';
+    return `${base}${CUSTOM_LOGOS[name]}`;
+  }
+
   let domain = DOMAIN_MAP[name];
   // Fallback: try matching start of name
   if (!domain) {

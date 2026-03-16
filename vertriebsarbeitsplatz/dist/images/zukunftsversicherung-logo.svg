@@ -6,8 +6,19 @@
     </linearGradient>
   </defs>
   <rect width="128" height="128" rx="24" fill="url(#zv-grad)"/>
-  <!-- Z letter stylized -->
-  <path d="M30 34h68v13H50l48 34v13H30V81h48L30 47z" fill="white" opacity="0.95"/>
-  <!-- Shield accent for insurance -->
-  <path d="M96 20c0 0 6 2 12 2v14c0 10-5 18-12 22-7-4-12-12-12-22V22c6 0 12-2 12-2z" fill="white" opacity="0.35" stroke="white" stroke-width="1.5" stroke-opacity="0.5"/>
+  <!-- Rising sun / horizon = Zukunft -->
+  <circle cx="64" cy="58" r="18" fill="white" opacity="0.85"/>
+  <rect x="20" y="58" width="88" height="16" fill="url(#zv-grad)"/>
+  <!-- Horizon line -->
+  <line x1="24" y1="58" x2="104" y2="58" stroke="white" stroke-width="2" opacity="0.7"/>
+  <!-- Light rays -->
+  <line x1="64" y1="22" x2="64" y2="34" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity="0.6"/>
+  <line x1="42" y1="28" x2="47" y2="38" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.45"/>
+  <line x1="86" y1="28" x2="81" y2="38" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.45"/>
+  <line x1="30" y1="42" x2="37" y2="48" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.35"/>
+  <line x1="98" y1="42" x2="91" y2="48" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.35"/>
+  <!-- Shield below horizon = Versicherung/Schutz -->
+  <path d="M64 68c0 0 20 4 20 4v18c0 12-8 22-20 28-12-6-20-16-20-28V72s20-4 20-4z" fill="white" opacity="0.25" stroke="white" stroke-width="2" stroke-opacity="0.6" stroke-linejoin="round"/>
+  <!-- Checkmark inside shield -->
+  <path d="M54 88l7 7 13-14" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.7"/>
 </svg>

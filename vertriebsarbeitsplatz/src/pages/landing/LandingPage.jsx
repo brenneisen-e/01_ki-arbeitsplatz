@@ -230,7 +230,7 @@ export default function LandingPage() {
       </div>
 
       {/* Main content */}
-      <div className="flex-1 flex flex-col items-center justify-center px-6 -mt-16">
+      <div className="flex-1 flex flex-col items-center justify-center px-6 -mt-8">
         {/* Logo */}
         <div className="mb-8">
           {logoUrl ? (
@@ -343,10 +343,10 @@ export default function LandingPage() {
       </div>
 
       {/* Settings Section */}
-      <div className="px-6 pb-6">
+      <div className="px-6 py-4 shrink-0">
         <button
           onClick={() => setShowSettings(v => !v)}
-          className="flex items-center gap-2 mx-auto text-white/40 hover:text-white/70 text-xs font-medium transition-colors"
+          className="flex items-center gap-2 mx-auto text-white/50 hover:text-white/80 text-xs font-medium transition-colors py-2"
         >
           <Settings size={14} />
           Einstellungen

@@ -263,9 +263,10 @@ export default function UebersichtTab() {
               <span className="text-sm text-slate-400">{kundenPotentiale.length} Kunden · {getAllPotentiale(modeId).length} Potenziale</span>
             </div>
             <div className="space-y-0">
-              <div className="grid py-1.5 px-3 items-center text-[10px] uppercase text-slate-400 font-semibold" style={{ gridTemplateColumns: '1fr 80px 100px 100px' }}>
+              <div className="grid py-1.5 px-3 items-center text-[10px] uppercase text-slate-400 font-semibold" style={{ gridTemplateColumns: '1fr 1fr 80px 100px 100px' }}>
                 <span>Kunde</span>
-                <span className="text-right">Potenziale</span>
+                <span>Top-Potenziale</span>
+                <span className="text-right">Anzahl</span>
                 <span className="text-right">{modeId === 'banking' ? 'Volumen' : 'Prämie'}</span>
                 <span className="text-right">Provision</span>
               </div>
@@ -278,7 +279,7 @@ export default function UebersichtTab() {
                   <div
                     key={kp.kundeId}
                     className="grid py-2.5 px-3 rounded-lg row-hover transition-colors cursor-pointer items-center"
-                    style={{ gridTemplateColumns: '1fr 80px 100px 100px' }}
+                    style={{ gridTemplateColumns: '1fr 1fr 80px 100px 100px' }}
                     onClick={() => navigateTo('detail', { kundeId: kp.kundeId, tab: 'potentiale' })}
                   >
                     <div className="flex items-center gap-2 min-w-0">
@@ -288,11 +289,15 @@ export default function UebersichtTab() {
                           {kp.kundeName}
                           <PrioBadge prioritaet={topPrio} />
                         </div>
-                        <div className="text-[10px] text-slate-400 truncate">
-                          {kp.potentiale.slice(0, 2).map(p => p.titel).join(', ')}
-                          {kp.potentiale.length > 2 && ` +${kp.potentiale.length - 2}`}
-                        </div>
                       </div>
+                    </div>
+                    <div className="flex flex-wrap gap-1 min-w-0">
+                      {kp.potentiale.slice(0, 3).map((p, pi) => (
+                        <span key={pi} className="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-600 whitespace-nowrap">{p.titel}</span>
+                      ))}
+                      {kp.potentiale.length > 3 && (
+                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-slate-50 text-slate-400">+{kp.potentiale.length - 3}</span>
+                      )}
                     </div>
                     <div className="text-right">
                       <span className="inline-flex items-center gap-0.5 text-sm font-semibold" style={{ color: 'var(--mode-primary-light)' }}>

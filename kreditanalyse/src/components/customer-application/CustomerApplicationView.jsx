@@ -302,6 +302,7 @@ export default function CustomerApplicationView() {
           verwendungKategorie,
         },
         sicherheiten_vorerfassung: sicherheiten,
+        uploadedDocuments: uploadedFiles.map(f => ({ name: f.name, size: f.size, type: f.type, uploadedAt: f.uploadedAt?.toISOString?.() || new Date().toISOString() })),
         status: 'eingegangen',
       },
     });

@@ -907,13 +907,13 @@ export default function NewApplicationView() {
             </div>
           </div>
           <div>
-            <Label htmlFor="auszahlung">Gew. Auszahlungstermin</Label>
+            <Label htmlFor="auszahlung">Gew. Auszahlungstermin *</Label>
             <input
               id="auszahlung"
               type="date"
               value={auszahlung}
               onChange={(e) => setAuszahlung(e.target.value)}
-              className={inputCls + ' font-mono'}
+              className={inputCls + ' font-mono' + (isFieldError('auszahlung') ? ' border-danger ring-2 ring-danger/20 animate-shake' : '')}
             />
           </div>
         </div>
@@ -1068,6 +1068,39 @@ export default function NewApplicationView() {
           Zeile hinzufuegen
         </button>
       </SectionCard>
+
+      {/* ================================================================== */}
+      {/* SECTION E -- Eingereichte Dokumente (Document Viewer)              */}
+      {/* ================================================================== */}
+      {company?.uploadedDocuments?.length > 0 && (
+        <SectionCard icon={FileText} letter="E" title="Eingereichte Dokumente">
+          <p className="text-xs text-text-muted mb-4">
+            Vom Kunden hochgeladene Dokumente zum Kreditantrag.
+          </p>
+          <div className="space-y-2">
+            {company.uploadedDocuments.map((doc, idx) => (
+              <div
+                key={idx}
+                className="flex items-center gap-3 bg-surface rounded-lg px-4 py-3 border border-border hover:border-primary-light/40 transition-colors"
+              >
+                <div className="flex items-center justify-center w-9 h-9 rounded-md bg-primary/5 text-primary shrink-0">
+                  <FileText size={18} />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-body font-medium text-text-primary truncate">{doc.name}</p>
+                  <p className="text-xs text-text-muted">
+                    {doc.size ? `${(doc.size / 1024).toFixed(0)} KB` : '–'}
+                    {doc.uploadedAt && ` · Hochgeladen am ${new Date(doc.uploadedAt).toLocaleDateString('de-DE')}`}
+                  </p>
+                </div>
+                <span className="text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 shrink-0">
+                  Eingereicht
+                </span>
+              </div>
+            ))}
+          </div>
+        </SectionCard>
+      )}
 
       {/* ================================================================== */}
       {/* Kreditantrag abschließen                                           */}

@@ -118,6 +118,7 @@ function reducer(state, action) {
         konto: null,
         schufa: null,
         creditreform_index: null,
+        uploadedDocuments: action.company.uploadedDocuments || [],
       };
       return {
         ...state,

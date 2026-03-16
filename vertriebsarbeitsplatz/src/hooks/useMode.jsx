@@ -112,6 +112,7 @@ export function ModeProvider({ children }) {
     setCurrentView('overview');
     setActiveTab('uebersicht');
     setSelectedKundeId(null);
+    try { localStorage.setItem('kia_last_mode', JSON.stringify({ modeId: newModeId })); } catch {}
   }, []);
 
   const switchInstitut = useCallback((variant, newModeId) => {
@@ -122,6 +123,7 @@ export function ModeProvider({ children }) {
       setSelectedKundeId(null);
     }
     setInstitutOverride(variant);
+    try { localStorage.setItem('kia_last_mode', JSON.stringify({ modeId: newModeId || modeId, variant })); } catch {}
   }, [modeId]);
 
   const navigateTo = useCallback((view, opts = {}) => {

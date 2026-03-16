@@ -6,6 +6,7 @@ export const B1 = {
   partner: { name: 'Sabine', beruf: 'Teilzeit Verwaltung', einkommen: 1200 },
   kinder: [{ name: 'Lukas', alter: 12 }, { name: 'Marie', alter: 9 }],
   wohnsituation: 'Eigentum', wohnflaeche: 150, adresse: 'Gartenstr. 18, 35390 Gießen',
+  tiere: { typ: null, rasse: null, name: null, vermutet: true, quelle: 'kontoumsaetze', umsaetze: [{ empfaenger: 'Fressnapf Gießen', betrag: -75, haeufigkeit: 'monatlich' }, { empfaenger: 'Tierarztpraxis Dr. Schäfer', betrag: -110, haeufigkeit: 'quartalsweise' }] },
   nps: 7, risikoscore: 30, potentialScore: 4.2, abwanderungsrisiko: 'mittel',
   eigeneProdukte: [
     { typ: 'girokonto', sparte: 'konto', produkt: 'VR-MeinKonto Plus', details: 'Gehaltseingang 4.500\u20ac netto', praemie: 0, seit: '2015-01', status: 'aktiv' },

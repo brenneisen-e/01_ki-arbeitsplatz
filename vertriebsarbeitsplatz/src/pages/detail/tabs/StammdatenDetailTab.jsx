@@ -108,7 +108,12 @@ export default function StammdatenDetailTab({ kunde }) {
               const birthDate = new Date(birthYear, today.getMonth() - 3, 15);
               return birthDate.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
             })()} />
-            <InfoRow label="Alter" value={`${kunde.alter} Jahre`} />
+            <InfoRow label="Alter" value={`${kunde.alter} Jahre (${(() => {
+              const today = new Date();
+              const birthYear = today.getFullYear() - kunde.alter;
+              const birthDate = new Date(birthYear, today.getMonth() - 3, 15);
+              return birthDate.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+            })()})`} />
             <InfoRow label="Beruf" value={kunde.beruf} />
             {kunde.arbeitgeber && (
               <ArbeitgeberRow arbeitgeber={kunde.arbeitgeber} />
@@ -120,7 +125,7 @@ export default function StammdatenDetailTab({ kunde }) {
             {kunde.kinder?.length > 0 && (
               <InfoRow label="Kinder" value={kunde.kinder.map(k => `${k.name} (${k.alter})`).join(', ')} />
             )}
-            <InfoRow label="Wohnsituation" value={`${kunde.wohnsituation}, ${kunde.wohnflaeche}qm${kunde.adresse ? ` · ${kunde.adresse}` : ''}`} />
+            <InfoRow label="Wohnsituation" value={kunde.adresse ? `Adresse: ${kunde.adresse} (${kunde.wohnsituation}, ${kunde.wohnflaeche}qm)` : `${kunde.wohnsituation}, ${kunde.wohnflaeche}qm`} />
             {(kunde.haustiere || kunde.tiere) && (
               <HaustiereRow haustiere={normalizeHaustiere(kunde.haustiere || kunde.tiere)} />
             )}
@@ -296,7 +301,8 @@ function ArbeitgeberRow({ arbeitgeber }) {
 function normalizeHaustiere(raw) {
   if (!raw) return null;
   return {
-    art: raw.art || raw.typ || 'Haustier',
+    art: raw.art || raw.typ || (raw.vermutet ? null : 'Haustier'),
+    vermutet: raw.vermutet || false,
     name: raw.name || null,
     rasse: raw.rasse || null,
     alter: raw.alter || null,
@@ -322,9 +328,13 @@ function HaustiereRow({ haustiere }) {
           <div className="flex items-center gap-2">
             <span className="flex items-center gap-1.5 text-amber-500 shrink-0">
               <PawPrint size={14} />
-              Haustier-Hinweis:
+              {haustiere.vermutet ? 'Vermutlich Haustier:' : 'Haustier-Hinweis:'}
             </span>
-            <span className="text-sm text-slate-500 italic">Hinweise aus Kontoumsätzen erkannt</span>
+            <span className="text-sm text-slate-500 italic">
+              {haustiere.vermutet
+                ? 'Haustier vermutet (aus Kontoumsätzen)'
+                : `${haustiere.art}${haustiere.name ? ` "${haustiere.name}"` : ''} — aus Kontoumsätzen erkannt`}
+            </span>
             <button
               onClick={() => setShowDetail(!showDetail)}
               className="flex items-center gap-1 text-[10px] text-blue-500 bg-blue-50 px-1.5 py-0.5 rounded-full border border-blue-100 hover:bg-blue-100 transition-colors"

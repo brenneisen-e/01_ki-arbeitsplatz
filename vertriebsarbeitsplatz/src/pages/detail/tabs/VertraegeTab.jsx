@@ -8,33 +8,47 @@ import { ChevronDown, ChevronRight, ExternalLink } from 'lucide-react';
 
 function ProduktRow({ produkt, modeId, onNavigateKontoumsaetze }) {
   const [expanded, setExpanded] = useState(false);
+  const [hovered, setHovered] = useState(false);
   const isGiro = produkt.typ === 'girokonto';
 
   return (
     <>
       <tr
-        className="border-t border-slate-100 hover:bg-slate-50 cursor-pointer transition-colors"
+        className="border-t border-slate-100 cursor-pointer transition-colors"
+        style={hovered && !expanded ? { backgroundColor: 'var(--mode-primary-light)', color: '#ffffff' } : undefined}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
         onClick={() => setExpanded(!expanded)}
       >
         <td className="px-4 py-3 text-sm">
           <div className="flex items-center gap-2">
-            <span className="text-slate-400">
-              {expanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
+            <span className={hovered && !expanded ? 'text-white' : 'text-slate-400'}>
+              {expanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
             </span>
             {produkt.versicherer && <LogoImg name={produkt.versicherer} size={18} />}
-            <span className="font-medium text-slate-700">{produkt.produkt}</span>
+            <span className={`font-medium ${hovered && !expanded ? 'text-white' : 'text-slate-700'}`}>{produkt.produkt}</span>
           </div>
         </td>
-        <td className="px-4 py-3 text-sm">{produkt.sparte ? <SparteBadge sparte={produkt.sparte} /> : '-'}</td>
-        <td className="px-4 py-3 text-sm text-slate-700">{produkt.details}</td>
+        <td className="px-4 py-3 text-sm">
+          {hovered && !expanded
+            ? <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-white/20 text-white">{produkt.sparte || '-'}</span>
+            : (produkt.sparte ? <SparteBadge sparte={produkt.sparte} /> : '-')
+          }
+        </td>
+        <td className={`px-4 py-3 text-sm ${hovered && !expanded ? 'text-white/90' : 'text-slate-700'}`}>{produkt.details}</td>
         {modeId === 'banking' && (
-          <td className="px-4 py-3 text-sm">
-            {produkt.volumen ? <span className="font-mono text-slate-500">{formatEur(produkt.volumen)}</span> : '-'}
+          <td className={`px-4 py-3 text-sm ${hovered && !expanded ? 'text-white' : ''}`}>
+            {produkt.volumen ? <span className={`font-mono ${hovered && !expanded ? 'text-white' : 'text-slate-500'}`}>{formatEur(produkt.volumen)}</span> : '-'}
           </td>
         )}
-        <td className="px-4 py-3 text-sm"><span className="font-mono font-medium">{formatEur(produkt.praemie)}</span></td>
-        <td className="px-4 py-3 text-sm">{produkt.seit}</td>
-        <td className="px-4 py-3 text-sm"><StatusBadge status={produkt.status} /></td>
+        <td className={`px-4 py-3 text-sm ${hovered && !expanded ? 'text-white' : ''}`}><span className={`font-mono font-medium ${hovered && !expanded ? 'text-white' : ''}`}>{formatEur(produkt.praemie)}</span></td>
+        <td className={`px-4 py-3 text-sm ${hovered && !expanded ? 'text-white/80' : ''}`}>{produkt.seit}</td>
+        <td className="px-4 py-3 text-sm">
+          {hovered && !expanded
+            ? <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-white/20 text-white">{produkt.status}</span>
+            : <StatusBadge status={produkt.status} />
+          }
+        </td>
       </tr>
       {expanded && (
         <tr className="bg-slate-50/80">

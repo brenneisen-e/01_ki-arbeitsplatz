@@ -142,7 +142,6 @@ const EXTRACTION_STEPS = [
   'GuV-Daten werden analysiert...',
   'Kennzahlen werden berechnet...',
   'Unternehmensdaten werden zugeordnet...',
-  'Kreditbedarf wird ermittelt...',
   'Antrag wird vorbefüllt...',
 ];
 
@@ -239,8 +238,6 @@ export default function CustomerApplicationView() {
         setEmail(d.email);
         setTelefon(d.telefon);
         setKreditArt(d.kreditArt);
-        setBetrag(d.betrag);
-        setLaufzeit(d.laufzeit);
         setVerwendungKategorie(d.verwendungKategorie);
         setVerwendung(d.verwendung);
         setSicherheiten(d.sicherheiten);
@@ -260,7 +257,7 @@ export default function CustomerApplicationView() {
     if (!kreditArt) errors.push({ field: 'kreditArt', label: 'Kreditart' });
     const b = typeof betrag === 'number' ? betrag : parseInt(betrag, 10) || 0;
     if (!b) errors.push({ field: 'betrag', label: 'Kreditbetrag' });
-    if (!laufzeit) errors.push({ field: 'laufzeit', label: 'Gewuenschte Laufzeit' });
+    if (!laufzeit) errors.push({ field: 'laufzeit', label: 'Gewünschte Laufzeit' });
     if (!verwendung.trim()) errors.push({ field: 'verwendung', label: 'Verwendungszweck' });
     return errors;
   }, [firma, branche, ansprechpartner, email, kreditArt, betrag, laufzeit, verwendung]);
@@ -302,6 +299,7 @@ export default function CustomerApplicationView() {
           verwendungKategorie,
         },
         sicherheiten_vorerfassung: sicherheiten,
+        uploadedDocuments: uploadedFiles.map(f => ({ name: f.name, size: f.size, type: f.type, uploadedAt: f.uploadedAt?.toISOString?.() || new Date().toISOString() })),
         status: 'eingegangen',
       },
     });
@@ -325,8 +323,8 @@ export default function CustomerApplicationView() {
             Kreditantrag erfolgreich eingereicht!
           </h2>
           <p className="text-sm text-text-secondary font-body max-w-md mx-auto">
-            Vielen Dank fuer Ihren Kreditantrag. Unser Kreditteam wird Ihren Antrag
-            prufen und sich in Kuerze bei Ihnen melden.
+            Vielen Dank für Ihren Kreditantrag. Unser Kreditteam wird Ihren Antrag
+            prüfen und sich in Kürze bei Ihnen melden.
           </p>
           <div className="flex items-center justify-center gap-3 pt-4">
             <button
@@ -392,7 +390,7 @@ export default function CustomerApplicationView() {
         <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3">
           <AlertCircle size={18} className="text-danger mt-0.5 shrink-0" />
           <div>
-            <p className="text-sm font-semibold text-danger">Bitte fuellen Sie alle Pflichtfelder aus:</p>
+            <p className="text-sm font-semibold text-danger">Bitte füllen Sie alle Pflichtfelder aus:</p>
             <p className="text-xs text-red-600 mt-1">{validationErrors.map(e => e.label).join(', ')}</p>
           </div>
         </div>
@@ -588,7 +586,7 @@ export default function CustomerApplicationView() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
           <div>
-            <Label htmlFor="gruendung">Gruendungsjahr</Label>
+            <Label htmlFor="gruendung">Gründungsjahr</Label>
             <input
               id="gruendung"
               type="number"
@@ -619,7 +617,7 @@ export default function CustomerApplicationView() {
               type="text"
               value={ort}
               onChange={(e) => setOrt(e.target.value)}
-              placeholder="z.B. Koeln"
+              placeholder="z.B. Köln"
               className={inputCls}
             />
           </div>
@@ -627,7 +625,7 @@ export default function CustomerApplicationView() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
           <div>
-            <Label htmlFor="strasse">Strasse</Label>
+            <Label htmlFor="strasse">Straße</Label>
             <input
               id="strasse"
               type="text"
@@ -673,7 +671,7 @@ export default function CustomerApplicationView() {
               type="text"
               value={position}
               onChange={(e) => setPosition(e.target.value)}
-              placeholder="Geschaeftsfuehrer"
+              placeholder="Geschäftsführer"
               className={inputCls}
             />
           </div>
@@ -723,11 +721,11 @@ export default function CustomerApplicationView() {
             </div>
           </div>
           <div>
-            <Label htmlFor="betrag">Gewuenschter Kreditbetrag *</Label>
+            <Label htmlFor="betrag">Gewünschter Kreditbetrag *</Label>
             <EuroInput id="betrag" value={betrag} onChange={setBetrag} />
           </div>
           <div>
-            <Label htmlFor="laufzeit">Gewuenschte Laufzeit (Monate) *</Label>
+            <Label htmlFor="laufzeit">Gewünschte Laufzeit (Monate) *</Label>
             <input
               id="laufzeit"
               type="number"
@@ -758,7 +756,7 @@ export default function CustomerApplicationView() {
             id="verwendung"
             value={verwendung}
             onChange={(e) => setVerwendung(e.target.value)}
-            placeholder="Beschreiben Sie, wofuer der Kredit verwendet werden soll..."
+            placeholder="Beschreiben Sie, wofür der Kredit verwendet werden soll..."
             rows={3}
             className={inputCls + ' resize-y' + (isFieldError('verwendung') ? ' border-danger ring-2 ring-danger/20' : '')}
           />
@@ -770,7 +768,7 @@ export default function CustomerApplicationView() {
             id="sicherheiten"
             value={sicherheiten}
             onChange={(e) => setSicherheiten(e.target.value)}
-            placeholder="z.B. Grundschuld auf Betriebsgelaende, Maschinen, Buergschaften..."
+            placeholder="z.B. Grundschuld auf Betriebsgelände, Maschinen, Bürgschaften..."
             rows={2}
             className={inputCls + ' resize-y'}
           />

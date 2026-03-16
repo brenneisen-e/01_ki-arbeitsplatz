@@ -1,8 +1,9 @@
 import { useState, useCallback } from 'react';
 import Card from '../../../components/ui/Card';
 import PipelineBar from '../../../components/ui/PipelineBar';
+import LogoImg from '../../../components/ui/LogoImg';
 import { useMode } from '../../../hooks/useMode';
-import { Users, UserPlus, TrendingUp, Target, Filter, ChevronDown, ChevronUp, Briefcase } from 'lucide-react';
+import { Users, UserPlus, TrendingUp, Target, Filter, ChevronDown, ChevronUp, Briefcase, Sparkles, Calendar, ExternalLink } from 'lucide-react';
 
 import { VV_LEADS } from '../../../data/vvExtended';
 import { formatEur } from '../../../utils/formatters';
@@ -281,34 +282,51 @@ function LeadRow({ lead, isExpanded, onToggle }) {
           {lead.herkunft}
         </td>
       </tr>
-      {isExpanded && lead.herleitung && (
+      {isExpanded && (
         <tr className="bg-slate-50/80">
           <td colSpan={7} className="px-6 py-4">
-            <div className="max-w-3xl">
-              <div className="flex items-center gap-2 mb-3">
-                <h4 className="text-sm font-semibold text-slate-700">Herleitung</h4>
-                {lead.quelleLabel && (
-                  <span className="text-[10px] text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full">
-                    {lead.quelleLabel}
-                  </span>
-                )}
-              </div>
-              <div className="grid grid-cols-[auto_1fr] gap-x-6 gap-y-1.5">
-                {lead.herleitung.map((h, i) => (
-                  <div key={i} className="contents">
-                    <span className="text-xs text-slate-400 font-medium whitespace-nowrap">{h.label}</span>
-                    <span className="text-xs text-slate-700">{h.value}</span>
+            <div className="max-w-4xl space-y-4">
+              {/* KI-Beschreibung */}
+              {lead.kiDescription && (
+                <div className="bg-gradient-to-r from-indigo-50 to-purple-50 border border-indigo-100 rounded-xl px-4 py-3">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Sparkles size={14} className="text-indigo-500" />
+                    <span className="text-xs font-semibold text-indigo-600">KI-Vertriebsassistent</span>
                   </div>
-                ))}
-              </div>
+                  <p className="text-xs text-slate-700 leading-relaxed">{lead.kiDescription}</p>
+                </div>
+              )}
+
+              {/* Herleitung */}
+              {lead.herleitung && lead.herleitung.length > 0 && (
+                <div>
+                  <div className="flex items-center gap-2 mb-3">
+                    <h4 className="text-sm font-semibold text-slate-700">Herleitung</h4>
+                    {lead.quelleLabel && (
+                      <span className="text-[10px] text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full">
+                        {lead.quelleLabel}
+                      </span>
+                    )}
+                  </div>
+                  <div className="grid grid-cols-2 gap-2 text-sm">
+                    {lead.herleitung.map((h, i) => (
+                      <HerleitungRow key={i} label={h.label} value={h.value} />
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Nächster Schritt */}
               {lead.naechsterSchritt && (
-                <div className="mt-3 pt-2 border-t border-slate-200">
+                <div className="pt-2 border-t border-slate-200">
                   <span className="text-xs text-slate-400 font-medium">Nächster Schritt: </span>
                   <span className="text-xs text-slate-700 font-medium">{lead.naechsterSchritt}</span>
                 </div>
               )}
+
+              {/* Wahrscheinlichkeit */}
               {lead.wahrscheinlichkeit > 0 && (
-                <div className="mt-2 flex items-center gap-2">
+                <div className="flex items-center gap-2">
                   <span className="text-[10px] text-slate-400">Wahrscheinlichkeit:</span>
                   <div className="w-24 h-1.5 bg-slate-200 rounded-full">
                     <div
@@ -322,6 +340,16 @@ function LeadRow({ lead, isExpanded, onToggle }) {
                   <span className="text-[10px] font-mono text-slate-600">{lead.wahrscheinlichkeit}%</span>
                 </div>
               )}
+
+              {/* Aktionen */}
+              {lead.naechsterSchritt && (
+                <div className="flex flex-wrap gap-2 pt-2">
+                  <button className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium text-white bg-slate-700 hover:bg-slate-600 transition-colors">
+                    <Calendar size={14} />
+                    {lead.naechsterSchritt}
+                  </button>
+                </div>
+              )}
             </div>
           </td>
         </tr>
@@ -332,7 +360,7 @@ function LeadRow({ lead, isExpanded, onToggle }) {
 
 function KPI({ icon: Icon, label, value, sub, color }) {
   return (
-    <Card>
+    <Card hover={false}>
       <div className="flex items-center gap-3">
         <div className="p-2 rounded-lg bg-slate-100">
           <Icon size={20} className="text-slate-500" />
@@ -344,6 +372,34 @@ function KPI({ icon: Icon, label, value, sub, color }) {
         </div>
       </div>
     </Card>
+  );
+}
+
+const KNOWN_INSTITUTES = [
+  'UBS', 'Deutsche Bank', 'Commerzbank', 'ING', 'Sparkasse', 'DKB',
+  'Alte Leipziger', 'Zurich', 'Allianz', 'ERGO', 'Goldman Sachs',
+  'J.P. Morgan', 'Credit Suisse', 'HSBC', 'BNP Paribas', 'Berenberg',
+  'Metzler', 'Hauck & Aufhäuser', 'Bethmann Bank', 'Pictet', 'DWS',
+];
+
+function detectInstitut(text) {
+  if (!text) return null;
+  for (const inst of KNOWN_INSTITUTES) {
+    if (text.includes(inst)) return inst;
+  }
+  return null;
+}
+
+function HerleitungRow({ label, value }) {
+  const institut = detectInstitut(value);
+  return (
+    <div className="bg-white rounded-lg px-3 py-2 border border-slate-100">
+      <span className="text-xs text-slate-400 block">{label}</span>
+      <span className="text-slate-700 font-medium flex items-center gap-1.5 text-sm">
+        {institut && <LogoImg name={institut} size={16} />}
+        {value}
+      </span>
+    </div>
   );
 }
 

@@ -665,19 +665,19 @@ export const TERMINE_BY_MODE = {
   get banking() {
     const s = [0,1,2,3].map(i => nextTerminSlot(i));
     return [
-      { datum: s[0].datum, zeit: s[0].zeit, kunde: 'Klaus Fischer', betreff: 'Anschlussfinanzierung Beratung', kundeId: 'KDB001' },
-      { datum: s[1].datum, zeit: s[1].zeit, kunde: 'Peter Hoffmann', betreff: 'VermögenPlus Depot Review', kundeId: 'KDB005' },
-      { datum: s[2].datum, zeit: s[2].zeit, kunde: 'Sandra Müller', betreff: 'VR-FinanzPlan Erstgespräch', kundeId: 'KDB002' },
-      { datum: s[3].datum, zeit: s[3].zeit, kunde: 'Andrea Lang', betreff: 'Praxiskredit Auszahlung', kundeId: 'KDB006' },
+      { datum: s[0].datum, zeit: s[0].zeit, kunde: 'Klaus Fischer', betreff: 'Anschlussfinanzierung Beratung', kundeId: 'KDB001', foto: './images/AdobeStock_329502726.jpeg' },
+      { datum: s[1].datum, zeit: s[1].zeit, kunde: 'Peter Hoffmann', betreff: 'VermögenPlus Depot Review', kundeId: 'KDB005', foto: './images/AdobeStock_910604663.jpeg' },
+      { datum: s[2].datum, zeit: s[2].zeit, kunde: 'Sandra Müller', betreff: 'VR-FinanzPlan Erstgespräch', kundeId: 'KDB002', foto: './images/AdobeStock_477904088.jpeg' },
+      { datum: s[3].datum, zeit: s[3].zeit, kunde: 'Andrea Lang', betreff: 'Praxiskredit Auszahlung', kundeId: 'KDB006', foto: './images/AdobeStock_612940075.jpeg' },
     ];
   },
   get vermoegensverwaltung() {
     const s = [0,1,2,3].map(i => nextTerminSlot(i));
     return [
-      { datum: s[0].datum, zeit: s[0].zeit, kunde: 'Dr. Anna Fischer', betreff: 'Onboarding-Gespräch (3,5M€)', kundeId: 'VV-NEW' },
-      { datum: s[1].datum, zeit: s[1].zeit, kunde: 'Familie Schneider', betreff: 'WpHG-Fragebogen', kundeId: 'VV-PIPE' },
-      { datum: s[2].datum, zeit: s[2].zeit, kunde: 'Dr. Stefan Meier', betreff: 'Investmentvorschlag (5M€)', kundeId: 'VV-PIPE2' },
-      { datum: s[3].datum, zeit: s[3].zeit, kunde: 'Fam. Hohenlohe', betreff: 'Family Office Pitch (15M€)', kundeId: 'VV-PIPE3' },
+      { datum: s[0].datum, zeit: s[0].zeit, kunde: 'Dr. Anna Fischer', betreff: 'Onboarding-Gespräch (3,5M€)', kundeId: 'VV-NEW', foto: './images/AdobeStock_1210213822.jpeg' },
+      { datum: s[1].datum, zeit: s[1].zeit, kunde: 'Familie Schneider', betreff: 'WpHG-Fragebogen', kundeId: 'VV-PIPE', foto: './images/AdobeStock_965208311.jpeg' },
+      { datum: s[2].datum, zeit: s[2].zeit, kunde: 'Dr. Stefan Meier', betreff: 'Investmentvorschlag (5M€)', kundeId: 'VV-PIPE2', foto: './images/AdobeStock_1387839378.jpeg' },
+      { datum: s[3].datum, zeit: s[3].zeit, kunde: 'Fam. Hohenlohe', betreff: 'Family Office Pitch (15M€)', kundeId: 'VV-PIPE3', foto: './images/AdobeStock_1367815601.jpeg' },
     ];
   },
 };

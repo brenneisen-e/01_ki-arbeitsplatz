@@ -1155,6 +1155,7 @@ export const VV_LEADS = [
     referenzMandant: 'VV00004',
     beruf: 'Notarin, Immobilienverkäufe 2025',
     herkunft: 'Empfehlung Prof. Hartmann (VV00004) — Notarin mit 3,5M Nettoerlösen aus Immobilienverkäufen',
+    kiDescription: 'KI-Analyse: Dr. Katharina Bauer hat kürzlich mehrere Immobilien in Frankfurt veräußert (Nettoerlös ca. 3,5M €). Die Erlöse liegen derzeit unverzinst auf Tagesgeldkonten verteilt — ein klassisches Post-Liquiditätsevent-Muster. Prof. Hartmann (VV00004) hat sie als Notarin aus dem Ärzte-/Juristennetzwerk Frankfurt empfohlen. Da kein bestehendes VV-Mandat existiert und das Vermögen unstrukturiert angelegt ist, besteht hoher Handlungsbedarf. Empfehlung: FairValue Mandat mit individueller Asset Allocation, Fokus auf inflationsgeschützten Realwerten und Diversifikation. Wahrscheinlichkeit eines Mandatsabschlusses wird auf 70% geschätzt — der persönliche Bezug über Prof. Hartmann ist ein starker Türöffner.',
     herleitung: [
       { label: 'Empfehlungsgeber', value: 'Prof. Dr. Hartmann (VV00004), Mandant seit 2019' },
       { label: 'Kontext', value: 'Gemeinsames Netzwerk Ärzte/Juristen Frankfurt' },
@@ -1179,6 +1180,7 @@ export const VV_LEADS = [
     referenzMandant: 'VV00001',
     beruf: 'Logistik-Unternehmer',
     herkunft: 'Empfehlung Dr. von Trott (VV00001) — Logistik-Unternehmer, geschätzt 3M €',
+    kiDescription: 'KI-Analyse: Familie Schneider plant den Verkauf ihres Logistikunternehmens mit geschätztem Erlös von ca. 3M €. Die Empfehlung kam direkt von Dr. Heinrich von Trott (VV00001, Top-Mandant mit 12,5M AuM), der die Familie aus dem IHK-Präsidium Rhein-Main kennt. Aktuell liegt das Vermögen bei der Commerzbank Wealth Management — ein Wechsel ist realistisch, da der persönliche Bezug über Dr. von Trott Vertrauen schafft. Der WpHG-Fragebogen ist der nächste formale Schritt. Empfehlung: FairValue Mandat mit Fokus auf Kapitalerhalt und moderatem Wachstum nach Unternehmensverkauf. Cross-Selling-Potenzial: Nachfolgeberatung und Steuerstrategie.',
     herleitung: [
       { label: 'Empfehlungsgeber', value: 'Dr. Heinrich von Trott (VV00001), Top-Mandant 12,5M AuM' },
       { label: 'Kontext', value: 'Unternehmer-Netzwerk Rhein-Main, gemeinsam im IHK-Präsidium' },
@@ -1204,6 +1206,7 @@ export const VV_LEADS = [
     referenzMandant: 'VV00001',
     beruf: 'Anwältin, Partnerin Wirtschaftskanzlei',
     herkunft: 'Tochter von Dr. von Trott (VV00001) — Anwältin, 32 J., geschätztes Eigenvermögen 800k',
+    kiDescription: 'KI-Analyse: Charlotte von Trott (32) ist Tochter des Top-Mandanten Dr. Heinrich von Trott (VV00001) und Partnerin in einer Wirtschaftskanzlei in Frankfurt. Ihr geschätztes Eigenvermögen von ca. 800k € stammt aus Ersparnissen und Bonuszahlungen — typisches Profil einer jungen High Earner ohne strukturierte Vermögensverwaltung. Der Vater hat die Empfehlung aktiv ausgesprochen, was die Abschlusswahrscheinlichkeit auf 60% hebt. NextGen-Strategie: SmartValue Mandat als Einstieg mit Perspektive auf FairValue bei wachsendem Vermögen. Langfristwert: Bindung der 3. Generation an HRK LUNIS, potenzieller Erbschaftsfluss aus dem 12,5M-Mandat des Vaters.',
     herleitung: [
       { label: 'Verwandtschaft', value: 'Tochter von Dr. Heinrich von Trott (VV00001)' },
       { label: 'Alter / Beruf', value: '32 Jahre, Anwältin / Partnerin bei Wirtschaftskanzlei Frankfurt' },
@@ -1228,6 +1231,7 @@ export const VV_LEADS = [
     referenzMandant: 'VV00001',
     beruf: 'Ingenieur im Familienunternehmen',
     herkunft: 'Sohn von Dr. von Trott (VV00001) — Ingenieur, 28 J., potenzielle Firmennachfolge',
+    kiDescription: 'KI-Analyse: Friedrich von Trott (28) ist der Sohn von Dr. Heinrich von Trott und arbeitet als Ingenieur im Familienunternehmen (Maschinenbau). Sein aktuelles Eigenvermögen ist mit ca. 250k € noch überschaubar, aber der strategische Wert ist enorm: Er ist der wahrscheinliche Nachfolger der Von Trott Maschinenbau GmbH (Firmenwert geschätzt 4,5M €). Bei einer Übernahme in 3–5 Jahren fließen erhebliche Vermögenswerte. Empfehlung: Jetzt mit SmartValue Mandat binden, perspektivisch FairValue nach Unternehmensübernahme. Ansprache indirekt über den Vater beim nächsten Quartalstermin — niedrige Hürde durch familiäre Vertrauensbasis.',
     herleitung: [
       { label: 'Verwandtschaft', value: 'Sohn von Dr. Heinrich von Trott (VV00001)' },
       { label: 'Alter / Beruf', value: '28 Jahre, Ingenieur im Familienunternehmen Maschinenbau' },
@@ -1251,6 +1255,7 @@ export const VV_LEADS = [
     referenzMandant: 'VV00004',
     beruf: 'Assistenzarzt Kardiologie',
     herkunft: 'Sohn von Prof. Hartmann (VV00004) — Assistenzarzt, 26 J., hohes Einkommenspotenzial',
+    kiDescription: 'KI-Analyse: Jan Hartmann (26) ist Sohn von Prof. Dr. Hartmann (VV00004) und Assistenzarzt in der Kardiologie. Aktuell erst 50k € Vermögen, aber das Einkommenspotenzial ist außergewöhnlich hoch: Facharzttitel in 2–3 Jahren (dann 150k+ p.a.), danach absehbare Praxisgründung mit perspektivisch 1M+ AuM. Klassisches „Seed-Investment" in die NextGen-Strategie — frühzeitige Bindung eines zukünftigen UHNW-Mandanten. Empfehlung: SmartValue Junior als Einstieg, Ansparplan mit monatlicher Zuzahlung. Ansprache über den Vater bei dessen nächstem regulären Termin.',
     herleitung: [
       { label: 'Verwandtschaft', value: 'Sohn von Prof. Dr. Hartmann (VV00004)' },
       { label: 'Alter / Beruf', value: '26 Jahre, Assistenzarzt Kardiologie' },
@@ -1274,6 +1279,7 @@ export const VV_LEADS = [
     referenzMandant: 'VV00002',
     beruf: 'Studienanfänger (18 J.)',
     herkunft: 'Sohn von Fam. Lindenberg (VV00002) — Studienbeginn 2026, Eltern planen 100k Startkapital',
+    kiDescription: 'KI-Analyse: Noah Lindenberg (18) beginnt 2026 sein Studium. Die Eltern (Fam. Lindenberg, VV00002) planen 100k € Startkapital aus ihren SaaS-Exit-Erlösen für ihn bereitzustellen. Strategischer Wert: Frühzeitige Bindung der NextGen an HRK LUNIS noch vor dem ersten eigenen Vermögensaufbau. Bei der Cash-Konsolidierung der Eltern (5,5M €) kann das Studiendepot als natürlicher Gesprächsanlass dienen. Empfehlung: SmartValue Junior Mandat mit langfristigem Anlagehorizont (10+ Jahre). Das Depot wächst mit dem Mandanten — aus dem Studenten von heute wird der potenzielle UHNW-Mandant von morgen.',
     herleitung: [
       { label: 'Verwandtschaft', value: 'Sohn von Familie Lindenberg (VV00002)' },
       { label: 'Alter', value: '18 Jahre — Studienbeginn 2026' },
@@ -1297,6 +1303,7 @@ export const VV_LEADS = [
     datum: '2026-02-10',
     beruf: 'Ehem. GF Ingenieurbüro (verkauft)',
     herkunft: 'Handelsblatt: Verkauf Ingenieurbüro an schwedischen Konzern. Geschätzter Erlös 6M € netto.',
+    kiDescription: 'KI-Analyse: Das Handelsblatt berichtete am 05.02.2026 über den Verkauf von Müller Engineering an den schwedischen Sandvik-Konzern. Der geschätzte Nettoerlös nach Steuern beträgt ca. 6M €. Dipl.-Ing. Müller sitzt im Einzugsgebiet Rhein-Main (Darmstadt). Ein Erst-Telefonat am 10.02. zeigte grundsätzliches Interesse am FairValue-Mandat. Risiko: Post-Exit-Mandate sind stark umkämpft — alle großen VV-Häuser werden parallel Kontakt aufnehmen. Zeitvorteil nutzen: Schnelles persönliches Erstgespräch in Frankfurt vereinbaren. Differenzierung über inhabergeführte Struktur und persönliche Betreuung.',
     herleitung: [
       { label: 'Quelle', value: 'Handelsblatt, 05.02.2026 — "Müller Engineering an Sandvik verkauft"' },
       { label: 'Geschätzter Erlös', value: '6.000.000 € netto nach Steuern' },
@@ -1320,6 +1327,7 @@ export const VV_LEADS = [
     datum: '2026-03-08',
     beruf: 'Ehem. GF Fuchs Präzisionstechnik',
     herkunft: 'Handelsblatt: Dr. Martin Fuchs verkauft Fuchs Präzisionstechnik an schwedischen Konzern. Geschätzter Erlös 4–6M €.',
+    kiDescription: 'KI-Analyse: Frischer Presse-Lead aus dem Handelsblatt (06.03.2026): Dr. Martin Fuchs hat Fuchs Präzisionstechnik an einen schwedischen Konzern verkauft. Der geschätzte Erlös liegt bei 4–6M € basierend auf EBITDA-Multiples der Branche. Die Firma sitzt in Frankfurt-Süd — direkt im Einzugsgebiet. Noch besteht kein Kontakt, aber über das IHK-Netzwerk Frankfurt könnte Dr. von Trott (VV00001) als Türöffner fungieren. Lead-Qualität: mittel — ohne persönlichen Bezug ist die Wahrscheinlichkeit bei 15%. Empfehlung: Recherche vertiefen, dann warme Kontaktaufnahme über IHK-Netzwerk statt Kaltakquise.',
     herleitung: [
       { label: 'Quelle', value: 'Handelsblatt, 06.03.2026 — "Fuchs Präzisionstechnik geht an Sandvik"' },
       { label: 'Geschätzter Erlös', value: '4.000.000–6.000.000 € (EBITDA-Multiple geschätzt)' },
@@ -1344,6 +1352,7 @@ export const VV_LEADS = [
     datum: '2025-11-15',
     beruf: 'Kulturstiftung',
     herkunft: 'Kontakt beim Stiftungstag 2025 — Kulturstiftung, aktuell bei DWS, Interesse an ESG-Stiftungsmandat',
+    kiDescription: 'KI-Analyse: Die Stiftung Merian ist eine Kulturstiftung mit ca. 4,2M € AuM, aktuell bei DWS verwaltet. Kontakt entstand beim Stiftungstag 2025, wo HRK LUNIS als Sponsor auftrat. Die Stiftungsvorständin Dr. Elisabeth Merian äußerte Unzufriedenheit mit dem DWS-Reporting und Interesse an einem ESG-konformen Stiftungsmandat. Stiftungsmandate sind besonders wertvoll: lange Laufzeiten, regelmäßige Zuflüsse, und Multiplikatoreffekt im Stiftungsnetzwerk. Empfehlung: Spezialmandat Stiftung mit maßgeschneidertem ESG-Reporting und quartalsweiser Stiftungsrat-Präsentation. Differenzierung über persönliche Betreuung vs. DWS-Standardreporting.',
     herleitung: [
       { label: 'Event', value: 'Stiftungstag 2025, Frankfurt — HRK LUNIS als Sponsor' },
       { label: 'Kontaktperson', value: 'Dr. Elisabeth Merian, Stiftungsvorstand' },
@@ -1366,6 +1375,7 @@ export const VV_LEADS = [
     datum: '2026-03-02',
     beruf: 'Kardiologe, Praxiskette',
     herkunft: 'Unternehmer-Dinner 02.03. — Kardiologe mit Praxiskette, geschätzt 8M €, Termin 18.03.',
+    kiDescription: 'KI-Analyse: Prof. König ist Kardiologe und Betreiber einer Praxiskette mit geschätztem Gesamtvermögen von ca. 8M € (Praxis + Immobilien). Der Kontakt wurde beim HRK LUNIS Unternehmer-Dinner am 02.03.2026 über Prof. Hartmann (VV00004) hergestellt — starker persönlicher Bezug. Das Vermögen ist derzeit bei mehreren Banken verteilt ohne VV-Mandat — ein typisches Fragmentierungsmuster bei erfolgreichen Ärzten. Der Erstgesprächstermin am 18.03.2026 steht bereits. Hoher Lead-Wert: 8M € Potenzial bei 45% Wahrscheinlichkeit. Empfehlung: FairValue Mandat mit Konsolidierung aller Depots, ergänzt um PE Healthcare als fachspezifisches Investmentthema.',
     herleitung: [
       { label: 'Event', value: 'HRK LUNIS Unternehmer-Dinner, 02.03.2026' },
       { label: 'Kontakt', value: 'Über Prof. Hartmann (VV00004) vorgestellt' },
@@ -1390,6 +1400,7 @@ export const VV_LEADS = [
     datum: '2026-03-01',
     beruf: 'Unternehmer (Medizintechnik)',
     herkunft: 'Steuerberater Dr. Krause empfiehlt Mandant nach geplantem Firmenverkauf — geschätzt 5,5M €',
+    kiDescription: 'KI-Analyse: Steuerberater Dr. Krause (Netzwerkpartner seit 2020) hat diesen Lead proaktiv gemeldet: Dr. Klaus Berger bereitet den Verkauf seiner Medizintechnik GmbH vor. M&A-Berater schätzen den Erlös auf 5,5M €, Closing voraussichtlich Q3/2026. Multiplikator-Leads über Steuerberater haben eine überdurchschnittliche Conversion-Rate, da der Mandant bereits Vertrauen in die Empfehlung seines Steuerberaters hat. Empfehlung: Dreier-Gespräch (Berater + StB + Mandant) als vertrauensbildende Maßnahme. Timing beachten: Erst nach Closing operativ werden, aber Beziehungsaufbau jetzt starten.',
     herleitung: [
       { label: 'Multiplikator', value: 'Steuerberater Dr. Krause (Netzwerkpartner seit 2020)' },
       { label: 'Kontext', value: 'Firmenverkauf Medizintechnik GmbH in Vorbereitung' },
@@ -1414,6 +1425,7 @@ export const VV_LEADS = [
     datum: '2026-03-10',
     beruf: 'unbekannt',
     herkunft: 'Website: 3× /dienstleistungen/stiftungsmanagement besucht + Anmeldung Stiftungsforum — Name: Dr. Schulte',
+    kiDescription: 'KI-Analyse: Digitaler Lead mit schwachem Signal-Profil. Dr. Schulte hat die Stiftungsmanagement-Seite 3× besucht (Feb/März 2026), den Stiftungs-Newsletter mit überdurchschnittlicher Klickrate geöffnet und sich für das Stiftungsforum am 25.04. angemeldet. Das digitale Verhaltensmuster deutet auf aktive Informationssuche zum Thema Stiftungsverwaltung hin. Einschränkung: UHNW-Mandanten akquiriert man in der Regel nicht über die Website — die Wahrscheinlichkeit liegt bei nur 15%. Empfehlung: Beim Stiftungsforum persönlich ansprechen, Volumen und Hintergrund eruieren. Kein aktives Outbound vor dem Event.',
     herleitung: [
       { label: 'Digitale Signale', value: '3× Seitenbesuche /dienstleistungen/stiftungsmanagement (Feb/Mär 2026)' },
       { label: 'Newsletter', value: 'Geöffnet: Stiftungs-Spezial (Klickrate überdurchschnittlich)' },
@@ -1438,6 +1450,7 @@ export const VV_LEADS = [
     datum: '2026-03-10',
     beruf: 'Zahnärztin (Praxisverkauf)',
     herkunft: 'Jahresempfang 2025 — Zahnärztin mit Praxisverkauf. SmartValue Mandat (1,8M) unterschrieben.',
+    kiDescription: 'KI-Analyse: Erfolgreich gewonnenes Mandat! Dr. Lisa Schreiber (Zahnärztin) hat nach ihrem Praxisverkauf 2025 (Nettoerlös 1,8M €) das SmartValue Mandat am 10.03.2026 unterschrieben. Der Kontakt entstand beim Jahresempfang 2025. Onboarding läuft, Mandatsstart am 01.04.2026. Dieser abgeschlossene Lead zeigt: Event-basierte Akquise bei Ärzten nach Praxisverkauf funktioniert hervorragend. Nächste Schritte: Onboarding finalisieren, Erstinvestition strukturieren. Mittelfristig: Cross-Selling (Altersvorsorge, Immobilien). Langfristig: Multiplikator-Potenzial im Ärzte-Netzwerk Frankfurt.',
     herleitung: [
       { label: 'Event', value: 'Jahresempfang HRK LUNIS, Dezember 2025' },
       { label: 'Hintergrund', value: 'Praxisverkauf 2025, Nettoerlös 1.800.000 €' },
@@ -1466,6 +1479,7 @@ export const VV_LEADS = [
     referenzMandant: 'VV00002',
     beruf: 'Bestandsmandant',
     herkunft: 'Fam. Lindenberg: 5,5M € Cash seit 14 Monaten bei Commerzbank. Opportunitätskosten ca. 275k €/Jahr.',
+    kiDescription: 'KI-Analyse: Dringender Handlungsbedarf! Familie Lindenberg (VV00002) hat seit 14 Monaten 5,5M € Cash auf einem Commerzbank-Girokonto liegen — Exit-Erlöse aus dem SaaS-Verkauf 2024. Die Opportunitätskosten sind erheblich: ca. 275k €/Jahr entgangene Rendite bei 5% Zielrendite plus ca. 137k €/Jahr realer Kaufkraftverlust durch Inflation. Der Mandant ist grundsätzlich einverstanden, die Unterschrift steht noch aus. Empfohlene Strategie: 3-Phasen-Investition (2M sofort, 2M Q3, 1,5M Q4) zur Risikominimierung durch zeitliche Diversifikation. Lead-Qualität: Sehr hoch (80%) — der Mandant ist überzeugt, es fehlt nur noch der formale Abschluss.',
     herleitung: [
       { label: 'Datenquelle', value: 'Consent-Abfrage Commerzbank' },
       { label: 'Cash-Bestand', value: '5.500.000 € auf Girokonto (Exit-Erlöse 2024)' },
@@ -1490,6 +1504,7 @@ export const VV_LEADS = [
     referenzMandant: 'VV00001',
     beruf: 'Bestandsmandant',
     herkunft: 'Dr. von Trott: Alte Leipziger LV, Rückkaufswert 320k €, Ablauf Q3/2026. Wiederanlage ins Mandat.',
+    kiDescription: 'KI-Analyse: Proaktiver Lead aus der Consent-Datenabfrage bei der Alten Leipziger. Dr. von Trotts Lebensversicherung (Vertrag vor 2005) läuft Q3/Q4 2026 ab mit einem Rückkaufswert von 320k €. Steuerlich optimal: Auszahlung nach 12 Jahren steuerfrei. Das Geld würde ohne Beratung unverzinst auf dem Konto landen. Empfehlung: Proaktives Gespräch VOR dem Ablauftermin planen — Wiederanlage direkt ins bestehende FairValue Mandat. Renditeargument: 5–7% Zielrendite vs. 0% auf dem Girokonto. Die Wahrscheinlichkeit liegt bei 85% — der Mandant vertraut HRK LUNIS bereits vollständig.',
     herleitung: [
       { label: 'Datenquelle', value: 'Consent-Abfrage Alte Leipziger' },
       { label: 'Versicherer', value: 'Alte Leipziger Lebensversicherung' },
@@ -1516,6 +1531,7 @@ export const VV_LEADS = [
     referenzMandant: 'VV00001',
     beruf: 'Bestandsmandant',
     herkunft: 'Dr. von Trott: 2,8M UBS Depot + 400k DB Cash. Konsolidierung spart ca. 16.000 €/Jahr Kosten.',
+    kiDescription: 'KI-Analyse: Konsolidierungspotenzial bei Dr. von Trott! Die Consent-Abfragen bei UBS und Deutsche Bank zeigen: 2,8M € im UBS-Depot (Gemischtes Mandat, Kostenquote 1,35%) plus 400k € Cash bei der Deutschen Bank. Durch Konsolidierung ins FairValue Mandat (All-in-Fee 0,85%) spart der Mandant ca. 16.000 €/Jahr bei 3,2M Volumen. Zusätzlich profitiert er von einheitlichem Reporting und ganzheitlicher Betreuung statt fragmentierter Vermögensübersicht. Das Gesamtmandat würde auf ca. 15,7M € steigen — ein signifikanter Revenuegewinn für HRK LUNIS. Empfehlung: Konkretes Vergleichsangebot UBS vs. FairValue erstellen.',
     herleitung: [
       { label: 'Datenquelle', value: 'Consent-Abfrage UBS + Deutsche Bank' },
       { label: 'UBS Depotvolumen', value: '2.800.000 € (Gemischtes Mandat)' },
@@ -1540,6 +1556,7 @@ export const VV_LEADS = [
     referenzMandant: 'VV00003',
     beruf: 'Bestandsmandant',
     herkunft: 'Stiftung Weber: 500k Festgeld bei Sparkasse (2% bis 2027). Bei Fälligkeit ins Spezialmandat überführen.',
+    kiDescription: 'KI-Analyse: Die Stiftung Weber (VV00003) hat 500k € Festgeld bei der Sparkasse (2,0% bis 2027). Bei Fälligkeit besteht eine Konsolidierungschance ins Spezialmandat: Rendite 4–5% statt 2,0% = Mehrertrag von 10.000–15.000 €/Jahr. Für eine Bildungsstiftung sind diese zusätzlichen Erträge direkt förderungswirksam — ein starkes Argument. Der Zeitpunkt ist noch nicht akut (Fälligkeit 2027), aber die Vorbereitung sollte jetzt beginnen. Empfehlung: Fälligkeitstermin im Kalender markieren, ab Q4/2026 Konsolidierungsgespräch mit dem Stiftungsrat führen. Sicherheitsorientierung der Stiftung dabei berücksichtigen.',
     herleitung: [
       { label: 'Datenquelle', value: 'Consent-Abfrage Sparkasse' },
       { label: 'Festgeld-Volumen', value: '500.000 € (2,0% bis 2027)' },
@@ -1564,6 +1581,7 @@ export const VV_LEADS = [
     referenzMandant: 'VV00004',
     beruf: 'Bestandsmandant',
     herkunft: 'Prof. Hartmann: 250k bei ING (2,0% Tagesgeld). Im FairValue Mandat deutlich höherer Ertrag möglich.',
+    kiDescription: 'KI-Analyse: Prof. Hartmann (VV00004) hat 250k € bei ING auf Tagesgeld (2,0% variabel, tendenziell sinkend). Im FairValue Mandat wären 5–7% Zielrendite realistisch — ein Mehrertrag von 7.500–12.500 €/Jahr. Die ING-Zinsen werden bei den nächsten EZB-Senkungen weiter fallen, was das Umschichtungsargument verstärkt. Empfehlung: Beim nächsten regulären PE-Termin die Konsolidierung ansprechen — niedriger Aufwand, da Prof. Hartmann bereits Bestandsmandant ist. Kein separater Termin nötig, das Thema kann als Zusatzpunkt auf die Agenda.',
     herleitung: [
       { label: 'Datenquelle', value: 'Consent-Abfrage ING' },
       { label: 'Tagesgeld-Volumen', value: '250.000 € bei ING (2,0% p.a., variabel, sinkend)' },
@@ -1589,6 +1607,7 @@ export const VV_LEADS = [
     referenzMandant: 'VV00002',
     beruf: 'Bestandsmandant',
     herkunft: 'Fam. Lindenberg: Aktuell 2,1M SmartValue. Mit Cash (5,5M) wäre AuM 7,6M → FairValue-berechtigt. Kostenvorteil: 15.200 €/J.',
+    kiDescription: 'KI-Analyse: Doppelte Chance bei Familie Lindenberg! Aktuell im SmartValue Mandat (2,1M AuM). Wenn die 5,5M Cash-Konsolidierung (BM001) durchgeführt wird, steigt das AuM auf 7,6M € — weit über der FairValue-Schwelle von 3M €. Ein Mandats-Upgrade spart dem Kunden 15.200 €/Jahr (1,05% SmartValue → 0,85% FairValue). Win-Win: Der Mandant profitiert von niedrigeren Kosten und individuellerem Service, HRK LUNIS erhöht das verwaltete Volumen erheblich. Empfehlung: Cash-Konsolidierung und Mandats-Upgrade gleichzeitig vorschlagen — als Gesamtpaket wirkt das Angebot überzeugender.',
     herleitung: [
       { label: 'Aktuelles Mandat', value: 'SmartValue (AuM 2,1M, seit 06/2024)' },
       { label: 'Ziel-AuM nach Konsolidierung', value: '7.600.000 € (2,1M + 5,5M Cash)' },
@@ -1613,6 +1632,7 @@ export const VV_LEADS = [
     referenzMandant: 'VV00005',
     beruf: 'Bestandsmandant',
     herkunft: 'Tim Keller: 450k SmartValue. Series A Startup — bei Exit FairValue Upgrade möglich (ab 3M).',
+    kiDescription: 'KI-Analyse: Tim Keller (VV00005) ist aktuell im SmartValue Mandat mit 450k € AuM. Er hält ein Series-A-Startup-Investment mit erwartetem Exit in 2–3 Jahren. Bei erfolgreichem Exit könnten 500k–1,5M € hinzukommen — was das AuM potenziell über die 3M-FairValue-Schwelle hebt. Die Wahrscheinlichkeit ist moderat (40%), da Startup-Exits unsicher sind. Empfehlung: Kein aktives Drängen, aber im nächsten Gespräch den erwarteten Exit-Zeitrahmen klären. Bei positivem Verlauf kann das FairValue-Upgrade vorbereitet werden. Langfristig: Tim Keller ist 35 und hat ein wachsendes Techunternehmer-Profil — potenzieller UHNW-Mandant der Zukunft.',
     herleitung: [
       { label: 'Aktuelles Mandat', value: 'SmartValue (AuM 450.000 €, seit 01/2025)' },
       { label: 'Laufendes Startup', value: 'Series A Investment — erwarteter Exit in 2–3 Jahren' },
@@ -1637,6 +1657,7 @@ export const VV_LEADS = [
     referenzMandant: 'VV00001',
     beruf: 'Bestandsmandant',
     herkunft: 'Dr. von Trott (62 J.): Nachfolge Maschinenbau GmbH in 3–5 Jahren. Firmenwert geschätzt 4,5M €. Erlös-Anlage planen.',
+    kiDescription: 'KI-Analyse: Strategisch hochrelevanter Lead! Dr. von Trott (62 J.) plant die Nachfolge der Von Trott Maschinenbau GmbH & Co. KG (3. Generation) in den nächsten 3–5 Jahren. Der Firmenwert wird auf 4,5M € geschätzt (EBITDA-Multiple). Sohn Friedrich (28) arbeitet bereits im Unternehmen und ist voraussichtlicher Nachfolger. Bei einem Verkauf oder einer Übertragung fließen erhebliche Erlöse ins Privatvermögen. Steuerlich komplex: Betriebsvermögensfreibetrag und Verschonungsabschlag müssen geprüft werden. Empfehlung: Jetzt Nachfolgeberatung mit Steuer- und Rechtspartner koordinieren — HRK LUNIS als ganzheitlicher Berater positionieren. Cross-Selling: Auch Friedrich als eigenständigen Mandanten aufbauen (siehe NM004).',
     herleitung: [
       { label: 'Auslöser', value: 'Alter 62 + Sohn Friedrich (28) im Unternehmen — Nachfolge in 3–5 Jahren' },
       { label: 'Unternehmen', value: 'Von Trott Maschinenbau GmbH & Co. KG, 3. Generation' },
@@ -1660,6 +1681,7 @@ export const VV_LEADS = [
     referenzMandant: 'VV00004',
     beruf: 'Bestandsmandant',
     herkunft: 'Prof. Hartmann (56 J.): Praxisverkauf in 5–8 Jahren geplant. Geschätzte Bewertung 800k. Erlös ins FairValue.',
+    kiDescription: 'KI-Analyse: Prof. Hartmann (56 J.) plant den Ruhestand in 5–8 Jahren. Seine kardiologische Privatpraxis (etabliert seit 15+ Jahren) hat einen geschätzten Wert von 800k € (Substanz + Goodwill). Möglicher Nachfolger: Sohn Jan (Assistenzarzt, NM005) oder externer Käufer. Der Verkaufserlös würde das bestehende FairValue Mandat erhöhen. Langfristiger Beratungsansatz: Praxisbewertung, steueroptimierte Übergabe und Anlage des Erlöses planen. Verbindung zu NM005 (Jan Hartmann): Bei interner Nachfolge wird der Vermögenstransfer innerhalb der Familie relevant.',
     herleitung: [
       { label: 'Auslöser', value: 'Alter 56, Ruhestand in 5–8 Jahren geplant' },
       { label: 'Praxis', value: 'Kardiologische Privatpraxis, etabliert seit 15+ Jahren' },
@@ -1684,6 +1706,7 @@ export const VV_LEADS = [
     referenzMandant: 'VV00001',
     beruf: 'Bestandsmandant',
     herkunft: 'Elisabeth von Trott: Soziales Engagement seit 10+ Jahren. Familienstiftung als Nachfolgeinstrument prüfen, Kapital 2M €.',
+    kiDescription: 'KI-Analyse: Elisabeth von Trott (Ehefrau von Dr. Heinrich von Trott) engagiert sich seit über 10 Jahren sozial und plant eine Familienstiftung. Das geplante Stiftungskapital beträgt 2M € aus dem Privatvermögen. Strategischer Wert für HRK LUNIS: Stiftungen binden Mandanten und Vermögen langfristig — ein nahezu unkündbares Mandat. Steuerlicher Vorteil: Sonderausgabenabzug bis 1M € im Gründungsjahr. Die Stiftung dient gleichzeitig als Nachfolgeinstrument für die Familie (Gesamtvermögen >20M). Empfehlung: Stiftungskonzept mit Elisabeth besprechen und als umfassendes Family-Governance-Instrument positionieren.',
     herleitung: [
       { label: 'Auslöser', value: 'Gesamtvermögen >20M, Alter >60 — Stiftung als Nachfolgeinstrument' },
       { label: 'Initiatorin', value: 'Elisabeth von Trott, Stiftungsvorstand (ehrenamtlich)' },
@@ -1709,6 +1732,7 @@ export const VV_LEADS = [
     referenzMandant: 'VV00002',
     beruf: 'Bestandsmandant',
     herkunft: 'Fam. Lindenberg: Profil passt zum Unternehmer-Dinner am 25.03. Einladung als Anlass — 91 Tage kein Kontakt!',
+    kiDescription: 'KI-Analyse: Achtung — 91 Tage kein Kontakt zu Familie Lindenberg! Bei Top-Mandanten ist eine Kontaktpause von >90 Tagen ein Warnsignal für die Kundenbindung. Das Unternehmer-Dinner am 25.03.2026 bietet den perfekten Gesprächsanlass: Fam. Lindenberg (SaaS-Exit-Unternehmer) passt optimal zur Zielgruppe. Wichtig: Die Einladung als echten Mehrwert positionieren, nicht als Verkaufsgespräch. Strategie: Einladung persönlich versenden, im Gespräch dann natürlich auf die Cash-Konsolidierung (BM001) und das Mandats-Upgrade (BM006) überleiten. Aktivierung dringend empfohlen.',
     herleitung: [
       { label: 'Event', value: 'Unternehmer-Dinner am 25.03.2026' },
       { label: 'Mandantenprofil', value: 'SaaS-Exit-Unternehmer — passt perfekt zur Zielgruppe' },
@@ -1733,6 +1757,7 @@ export const VV_LEADS = [
     referenzMandant: 'VV00003',
     beruf: 'Bestandsmandant',
     herkunft: 'Stiftung Weber: -8,2% Performance, nahe 10%-Verlustschwelle. Proaktives Gespräch dringend empfohlen.',
+    kiDescription: 'KI-Analyse: DRINGEND — Performance-Warnung! Die Stiftung Weber hat -8,2% seit Höchststand verloren und nähert sich der 10%-Verlustschwelle. Bei Erreichen der -10%-Marke wird automatisch eine regulatorische Verlustschwellenmeldung ausgelöst — das sollte unbedingt proaktiv kommuniziert werden, BEVOR der Mandant es selbst bemerkt. Ursache: Anleihen-Segment unter Druck durch Zinsanstieg. Empfohlene Maßnahme: Sofort anrufen, Situation erklären, Rebalancing vorschlagen (Anleihen-Duration verkürzen). Proaktive Kommunikation stärkt das Vertrauen — reaktives Handeln nach einer Schwellenmeldung wirkt defensiv.',
     herleitung: [
       { label: 'Aktuelle Performance', value: '-8,2% seit Höchststand (Verlustschwelle: -10%)' },
       { label: 'Ursache', value: 'Anleihen-Segment unter Druck durch Zinsanstieg' },
@@ -1758,6 +1783,7 @@ export const VV_LEADS = [
     referenzMandant: 'VV00005',
     beruf: 'Bestandsmandant',
     herkunft: 'Tim Keller: WpHG-Bogen 14 Tage überfällig. Compliance-Termin als Anlass für Krypto-Reporting-Gespräch nutzen.',
+    kiDescription: 'KI-Analyse: Compliance-Pflicht als Vertriebschance nutzen! Tim Kellers WpHG-Fragebogen ist 14 Tage überfällig — regulatorisch zwingend erforderlich. Den Pflichttermin smart nutzen: Gleichzeitig Krypto-Reporting besprechen (Tim ist Techunternehmer mit Krypto-Affinität), Angel-Portfolio-Erweiterung und ESG-Impact-Investments thematisieren. Beim Ausfüllen des WpHG-Bogens Risikobereitschaft aktualisieren — ggf. neue Anlageklassen freigeben. Aus einer regulatorischen Pflicht wird so ein wertvolles Beratungsgespräch mit Cross-Selling-Potenzial.',
     herleitung: [
       { label: 'Compliance-Pflicht', value: 'WpHG-Fragebogen 14 Tage überfällig — regulatorisch notwendig' },
       { label: 'Cross-Selling', value: 'Termin nutzen für: Krypto-Reporting, Angel-Portfolio, ESG-Impact' },
@@ -1782,6 +1808,7 @@ export const VV_LEADS = [
     referenzMandant: 'VV00004',
     beruf: 'Bestandsmandant',
     herkunft: 'Prof. Hartmann: PE Healthcare Allokation von 200k auf 500k erhöhen. Fachkenntnis Kardiologie = Informationsvorteil.',
+    kiDescription: 'KI-Analyse: Prof. Hartmann (Chefarzt Kardiologie) hat aktuell nur 200k € in PE Healthcare — das sind 2,9% seines AuM, deutlich unter dem Zielkorridor von 7–10%. Als Kardiologe verfügt er über einzigartige Branchenkenntnis, die seine PE-Investments in Healthcare besonders informiert macht. Der PE Healthcare Fund II bietet eine ideale Gelegenheit, die Allokation auf 500k € (+300k) zu erhöhen. Erwartete IRR: 12–15% p.a. basierend auf historischen Healthcare-PE-Renditen. Empfehlung: Zeichnungsunterlagen vorbereiten und bei nächstem Termin die PE-Erweiterung vorschlagen. Die Wahrscheinlichkeit liegt bei 75% — der Mandant kennt und schätzt die Anlageklasse.',
     herleitung: [
       { label: 'Aktuelle PE-Allokation', value: '200.000 € (PE Healthcare Fund, seit 01/2022)' },
       { label: 'Anteil am AuM', value: '2,9% — deutlich unter Ziel 7–10%' },
@@ -1807,6 +1834,7 @@ export const VV_LEADS = [
     referenzMandant: 'VV00003',
     beruf: 'Bestandsmandant',
     herkunft: 'Stiftung Weber: ESG-Score 72, Ziel >80. Art.8 auf Art.9 upgraden — unterstreicht Bildungsmission der Stiftung.',
+    kiDescription: 'KI-Analyse: Die Stiftung Weber hat aktuell einen ESG-Score von 72 (Art.8 Spezialmandat), das Ziel liegt bei >80 (Art.9 Konformität). Ein Upgrade auf Art.9 würde die Bildungsmission der Stiftung unterstreichen und gleichzeitig regulatorische Vorteile bringen: erleichterte Fördermittel-Akquise und stärkere Positionierung bei der Spenderansprache. Kein direkter Revenue-Impact, aber hoher Bindungseffekt und Differenzierung gegenüber Wettbewerbern. Empfehlung: Art.9 Mandat-Proposal für die nächste Stiftungsrat-Sitzung vorbereiten — der Stiftungsrat entscheidet, nicht der einzelne Ansprechpartner.',
     herleitung: [
       { label: 'Aktueller ESG-Score', value: '72 von 100 (Art.8 Spezialmandat)' },
       { label: 'Ziel-ESG-Score', value: '>80 (Art.9 Konformität)' },

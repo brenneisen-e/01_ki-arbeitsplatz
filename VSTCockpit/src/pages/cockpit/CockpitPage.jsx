@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { clsx } from 'clsx';
 import {
   Home, ChevronDown, LayoutDashboard, List,
   TrendingUp, TrendingDown, Maximize2, X, Download, Calendar, BarChart3 as BarChartIcon, Activity,
+  MessageSquare, Send, Sparkles, ArrowRight,
 } from 'lucide-react';
 import * as LucideIcons from 'lucide-react';
 import { AreaChart, Area, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
@@ -209,6 +210,242 @@ function FullscreenModal({ kpi, data, onClose }) {
   );
 }
 
+/* ── Scale monthly data by selected states' share ─ */
+function scaleMonthlyData(data, selectedStates) {
+  if (selectedStates.size === 0) return data;
+  const totalBestand = BUNDESLAND_DATA.reduce((s, bl) => s + bl.bestand, 0);
+  const selectedBestand = BUNDESLAND_DATA
+    .filter(bl => selectedStates.has(bl.name))
+    .reduce((s, bl) => s + bl.bestand, 0);
+  const ratio = selectedBestand / totalBestand;
+  return data.map(m => {
+    const scaled = { month: m.month };
+    for (const k of Object.keys(m)) {
+      if (k === 'month') continue;
+      const def = KPI_DEFS.find(d => d.id === k);
+      if (def && (def.unit === 'percent' || def.unit === 'score')) {
+        // For rates/scores, add slight variation instead of scaling
+        scaled[k] = +(m[k] * (0.97 + ratio * 0.06)).toFixed(1);
+      } else {
+        scaled[k] = Math.round(m[k] * ratio);
+      }
+    }
+    return scaled;
+  });
+}
+
+/* ── Cockpit Chatbot ──────────────────────────────── */
+const QUICK_ACTIONS = [
+  { label: 'Top 5 Vermittler nach Ergebnis', icon: 'TrendingUp' },
+  { label: 'Auffällige Stornoquoten', icon: 'AlertTriangle' },
+  { label: 'Performance Überblick', icon: 'BarChart3' },
+  { label: 'Bundesland-Vergleich', icon: 'Map' },
+];
+
+const DEMO_RESPONSES = {
+  'Top 5 Vermittler nach Ergebnis': {
+    text: 'Hier sind die Top 5 Vermittler nach Neugeschäftsvolumen:',
+    table: TOP_VERMITTLER.slice(0, 5).map((v, i) => `${i + 1}. **${v.name}** (${v.region}) — ${fmtCur(v.neugeschaeft)} NG, ${v.abschluesse} Abschlüsse`),
+    action: { label: 'Agenturen-Tabelle öffnen', view: 'table', tableView: 'agenturen' },
+  },
+  'Auffällige Stornoquoten': {
+    text: 'Bundesländer mit überdurchschnittlicher Stornoquote (> 5,0%):',
+    table: BUNDESLAND_DATA.filter(bl => bl.storno > 5.0)
+      .sort((a, b) => b.storno - a.storno)
+      .map(bl => `• **${bl.name}**: ${bl.storno.toFixed(1)}% Stornoquote (${bl.vermittler} Vermittler)`),
+    action: { label: 'Bundesländer-Tabelle öffnen', view: 'table', tableView: 'bundeslaender' },
+  },
+  'Performance Überblick': {
+    text: 'Aktuelle Vertriebsperformance im Überblick:',
+    table: [
+      `• **Neugeschäft YTD**: ${fmtCur(MONTHLY_DATA.reduce((s, m) => s + m.neugeschaeft, 0))}`,
+      `• **Bestandsvolumen**: ${fmtCur(MONTHLY_DATA[MONTHLY_DATA.length - 1].bestand)}`,
+      `• **Stornoquote**: ${MONTHLY_DATA[MONTHLY_DATA.length - 1].storno.toFixed(1)}%`,
+      `• **NPS Score**: ${MONTHLY_DATA[MONTHLY_DATA.length - 1].nps}`,
+      `• **Combined Ratio**: ${MONTHLY_DATA[MONTHLY_DATA.length - 1].combined.toFixed(1)}%`,
+    ],
+    action: null,
+  },
+  'Bundesland-Vergleich': {
+    text: 'Top 5 Bundesländer nach Neugeschäft:',
+    table: [...BUNDESLAND_DATA].sort((a, b) => b.neugeschaeft - a.neugeschaeft).slice(0, 5)
+      .map((bl, i) => `${i + 1}. **${bl.name}** — ${fmtCur(bl.neugeschaeft)} NG, Faktor ${bl.factor.toFixed(2)}`),
+    action: { label: 'Bundesländer-Tabelle öffnen', view: 'table', tableView: 'bundeslaender' },
+  },
+};
+
+function CockpitChatbot({ onNavigate }) {
+  const [open, setOpen] = useState(false);
+  const [messages, setMessages] = useState([
+    { role: 'bot', text: 'Willkommen im KI-Vertriebsassistenten. Was möchten Sie analysieren?', actions: QUICK_ACTIONS },
+  ]);
+  const [input, setInput] = useState('');
+  const [typing, setTyping] = useState(false);
+  const bottomRef = useRef(null);
+
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages, typing]);
+
+  function handleQuickAction(label) {
+    setMessages(prev => [...prev, { role: 'user', text: label }]);
+    setTyping(true);
+    setTimeout(() => {
+      const resp = DEMO_RESPONSES[label];
+      if (resp) {
+        setMessages(prev => [...prev, {
+          role: 'bot',
+          text: resp.text,
+          list: resp.table,
+          action: resp.action,
+          actions: QUICK_ACTIONS,
+        }]);
+      } else {
+        setMessages(prev => [...prev, {
+          role: 'bot',
+          text: 'Diese Analyse wird gerade vorbereitet. Bitte versuchen Sie eine der vordefinierten Aktionen.',
+          actions: QUICK_ACTIONS,
+        }]);
+      }
+      setTyping(false);
+    }, 800 + Math.random() * 400);
+  }
+
+  function handleSend() {
+    if (!input.trim()) return;
+    const text = input.trim();
+    setInput('');
+    // Check if input matches a quick action
+    const match = Object.keys(DEMO_RESPONSES).find(k => text.toLowerCase().includes(k.toLowerCase().split(' ')[0]));
+    if (match) {
+      handleQuickAction(match);
+    } else {
+      setMessages(prev => [...prev, { role: 'user', text }]);
+      setTyping(true);
+      setTimeout(() => {
+        setMessages(prev => [...prev, {
+          role: 'bot',
+          text: `Ihre Anfrage "${text}" wird analysiert. In der Demo stehen folgende Auswertungen zur Verfügung:`,
+          actions: QUICK_ACTIONS,
+        }]);
+        setTyping(false);
+      }, 600);
+    }
+  }
+
+  function handleAction(action) {
+    if (action && onNavigate) {
+      onNavigate(action);
+      setOpen(false);
+    }
+  }
+
+  if (!open) {
+    return (
+      <button
+        onClick={() => setOpen(true)}
+        className="fixed bottom-6 right-6 z-40 w-14 h-14 rounded-full bg-slate-800 text-white shadow-xl hover:bg-slate-700 hover:scale-105 transition-all flex items-center justify-center"
+        title="KI-Assistent"
+      >
+        <Sparkles size={22} />
+      </button>
+    );
+  }
+
+  return (
+    <div className="fixed bottom-6 right-6 z-40 w-[400px] h-[520px] bg-white rounded-2xl shadow-2xl border border-slate-200 flex flex-col animate-fade-in-up overflow-hidden">
+      {/* Header */}
+      <div className="bg-slate-800 text-white px-4 py-3 flex items-center justify-between shrink-0">
+        <div className="flex items-center gap-2">
+          <Sparkles size={16} />
+          <span className="font-semibold text-sm">KI-Vertriebsassistent</span>
+        </div>
+        <button onClick={() => setOpen(false)} className="p-1 hover:bg-white/10 rounded transition-colors">
+          <X size={16} />
+        </button>
+      </div>
+
+      {/* Messages */}
+      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+        {messages.map((msg, i) => (
+          <div key={i} className={clsx('flex', msg.role === 'user' ? 'justify-end' : 'justify-start')}>
+            <div className={clsx(
+              'max-w-[85%] rounded-xl px-3 py-2 text-sm',
+              msg.role === 'user'
+                ? 'bg-slate-800 text-white rounded-br-sm'
+                : 'bg-slate-100 text-slate-700 rounded-bl-sm'
+            )}>
+              <p>{msg.text}</p>
+              {msg.list && (
+                <div className="mt-2 space-y-1 text-[13px]">
+                  {msg.list.map((item, j) => (
+                    <div key={j} className="text-slate-600" dangerouslySetInnerHTML={{
+                      __html: item.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                    }} />
+                  ))}
+                </div>
+              )}
+              {msg.action && (
+                <button
+                  onClick={() => handleAction(msg.action)}
+                  className="mt-2 flex items-center gap-1 text-xs text-blue-600 hover:text-blue-700 font-medium"
+                >
+                  {msg.action.label} <ArrowRight size={12} />
+                </button>
+              )}
+              {msg.actions && (
+                <div className="mt-3 flex flex-wrap gap-1.5">
+                  {msg.actions.map(a => {
+                    const AIcon = LucideIcons[a.icon] || MessageSquare;
+                    return (
+                      <button
+                        key={a.label}
+                        onClick={() => handleQuickAction(a.label)}
+                        className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-white border border-slate-200 text-xs text-slate-600 hover:bg-blue-50 hover:border-blue-200 hover:text-blue-700 transition-colors"
+                      >
+                        <AIcon size={12} />
+                        {a.label}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          </div>
+        ))}
+        {typing && (
+          <div className="flex justify-start">
+            <div className="bg-slate-100 rounded-xl px-4 py-2.5 rounded-bl-sm">
+              <div className="flex gap-1">
+                <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+              </div>
+            </div>
+          </div>
+        )}
+        <div ref={bottomRef} />
+      </div>
+
+      {/* Input */}
+      <div className="p-3 border-t border-slate-100 shrink-0">
+        <div className="flex gap-2">
+          <input
+            value={input}
+            onChange={e => setInput(e.target.value)}
+            onKeyDown={e => e.key === 'Enter' && handleSend()}
+            placeholder="Frag mich etwas..."
+            className="flex-1 px-3 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:border-blue-300 focus:ring-1 focus:ring-blue-100"
+          />
+          <button onClick={handleSend} className="p-2 rounded-lg bg-slate-800 text-white hover:bg-slate-700 transition-colors">
+            <Send size={16} />
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /* ══════════════════════════════════════════════════
    CockpitPage - mirrors legacy A-03 Gesamtübersicht
    Layout: flex with kpi-grid (flex:1) + map-sidebar (380px)
@@ -230,6 +467,27 @@ export default function CockpitPage() {
   const [tableView, setTableView] = useState('bundeslaender');
   const [showReport, setShowReport] = useState(false);
   const [selectedStates, setSelectedStates] = useState(new Set());
+
+  // Filtered data based on selected states
+  const filteredData = useMemo(() => scaleMonthlyData(MONTHLY_DATA, selectedStates), [selectedStates]);
+  const filteredBundesland = useMemo(() => {
+    if (selectedStates.size === 0) return BUNDESLAND_DATA;
+    return BUNDESLAND_DATA.filter(bl => selectedStates.has(bl.name));
+  }, [selectedStates]);
+  const filteredVermittler = useMemo(() => {
+    if (selectedStates.size === 0) return TOP_VERMITTLER;
+    // Map regions to Bundesland names
+    const regionMap = { 'NRW': 'Nordrhein-Westfalen' };
+    return TOP_VERMITTLER.filter(vm => {
+      const fullRegion = regionMap[vm.region] || vm.region;
+      return selectedStates.has(fullRegion) || selectedStates.has(vm.region);
+    });
+  }, [selectedStates]);
+
+  function handleChatNavigate(action) {
+    if (action.view) setView(action.view);
+    if (action.tableView) setTableView(action.tableView);
+  }
 
   // Listen for cockpit-navigate events from VertriebsAssistent
   useEffect(() => {
@@ -296,9 +554,16 @@ export default function CockpitPage() {
           {/* Main: KPI grid + Map sidebar */}
           <div className="flex gap-5 items-stretch">
             <div className="flex-1 min-w-0">
+              {selectedStates.size > 0 && (
+                <div className="mb-4 flex items-center gap-2 text-sm text-slate-500">
+                  <LucideIcons.Filter size={14} />
+                  <span>Gefiltert nach: <strong className="text-slate-700">{[...selectedStates].join(', ')}</strong></span>
+                  <button onClick={() => setSelectedStates(new Set())} className="text-xs text-blue-600 hover:text-blue-700 ml-1">(Filter zurücksetzen)</button>
+                </div>
+              )}
               <div className="grid gap-5" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(380px, 1fr))' }}>
                 {KPI_DEFS.map(kpi => (
-                  <KPICard key={kpi.id} kpi={kpi} data={MONTHLY_DATA} onExpand={setExpandedKpi} />
+                  <KPICard key={kpi.id} kpi={kpi} data={filteredData} onExpand={setExpandedKpi} />
                 ))}
               </div>
             </div>
@@ -370,6 +635,13 @@ export default function CockpitPage() {
       {/* Table View */}
       {view === 'table' && (
         <div className="max-w-[1920px] mx-auto p-5 animate-fade-in-up">
+          {selectedStates.size > 0 && (
+            <div className="mb-4 flex items-center gap-2 text-sm text-slate-500">
+              <LucideIcons.Filter size={14} />
+              <span>Gefiltert nach: <strong className="text-slate-700">{[...selectedStates].join(', ')}</strong></span>
+              <button onClick={() => setSelectedStates(new Set())} className="text-xs text-blue-600 hover:text-blue-700 ml-1">(Filter zurücksetzen)</button>
+            </div>
+          )}
           <div className="flex gap-2 mb-4">
             {[['bundeslaender', 'Bundesländer'], ['landkreise', 'Landkreise'], ['agenturen', 'Agenturen']].map(([id, label]) => (
               <button key={id} onClick={() => setTableView(id)}
@@ -390,8 +662,8 @@ export default function CockpitPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {BUNDESLAND_DATA.map((bl, i) => (
-                    <tr key={bl.name} className="border-b border-slate-50 hover:bg-blue-50/30 transition-colors">
+                  {filteredBundesland.map((bl, i) => (
+                    <tr key={bl.name} className={clsx('border-b border-slate-50 hover:bg-blue-50/30 transition-colors', selectedStates.has(bl.name) && 'bg-green-50/50')}>
                       <td className="px-5 py-2.5 text-slate-400 text-xs">{i + 1}</td>
                       <td className="px-5 py-2.5 font-medium text-slate-700">{bl.name}</td>
                       <td className="px-5 py-2.5 text-right font-mono text-slate-700">{fmtCur(bl.neugeschaeft)}</td>
@@ -422,7 +694,7 @@ export default function CockpitPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {TOP_VERMITTLER.map((vm, i) => (
+                  {filteredVermittler.map((vm, i) => (
                     <tr key={vm.id} className="border-b border-slate-50 hover:bg-blue-50/30 transition-colors">
                       <td className="px-5 py-2.5 text-slate-400 text-xs">{i + 1}</td>
                       <td className="px-5 py-2.5"><div className="font-medium text-slate-700">{vm.name}</div><div className="text-[11px] text-slate-400">{vm.id}</div></td>
@@ -441,7 +713,9 @@ export default function CockpitPage() {
         </div>
       )}
 
-      {expandedKpi && <FullscreenModal kpi={expandedKpi} data={MONTHLY_DATA} onClose={() => setExpandedKpi(null)} />}
+      {expandedKpi && <FullscreenModal kpi={expandedKpi} data={filteredData} onClose={() => setExpandedKpi(null)} />}
+
+      <CockpitChatbot onNavigate={handleChatNavigate} />
     </div>
   );
 }

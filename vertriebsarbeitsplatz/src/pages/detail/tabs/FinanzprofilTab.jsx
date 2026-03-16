@@ -22,6 +22,8 @@ function TxBadge({ type, label }) {
 }
 
 // ─── Generate detailed Kontotransaktionen from basic transaction data ───
+// IMPORTANT: Item amounts MUST sum up to the actual transaction amounts from
+// kunde.transaktionen so that this section matches "Einnahmen & Ausgaben" above.
 function generateKontoumsaetze(kunde) {
   const now = new Date();
   const vm = new Date(now.getFullYear(), now.getMonth() - 1, 1);
@@ -30,70 +32,105 @@ function generateKontoumsaetze(kunde) {
     return dt.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
   };
 
-  const categories = [];
+  const PRODUKT_LABELS = { wohngebaeude: 'Wohngebäude', hausrat: 'Hausrat', haftpflicht: 'Haftpflicht', kfz: 'Kfz', kfz2: 'Kfz (Zweitwagen)', bu: 'BU', unfall: 'Unfall', rechtsschutz: 'Rechtsschutz', pkv: 'PKV', girokonto: 'Girokonto', festgeld: 'Festgeld', tagesgeld: 'Tagesgeld', depot: 'Depot', kredit: 'Kredit', bausparvertrag: 'Bausparvertrag', lebensversicherung: 'Lebensversicherung', rlv: 'Risikoleben', du: 'Dienstunfähigkeit' };
 
-  // Wohnen
-  const baufi = kunde.transaktionen?.find(t => t.kategorie === 'baufi');
-  const miete = kunde.transaktionen?.find(t => t.kategorie === 'miete');
-  if (baufi || miete) {
+  // Helper: split a total into sub-items that sum exactly to total
+  function splitTotal(total, shares) {
+    let remaining = total;
+    return shares.map((s, i) => {
+      if (i === shares.length - 1) return remaining;
+      const val = Math.round(total * s);
+      remaining -= val;
+      return val;
+    });
+  }
+
+  const categories = [];
+  const txn = kunde.transaktionen || [];
+
+  // Wohnen (baufi or miete)
+  const baufi = txn.find(t => t.kategorie === 'baufi');
+  const miete = txn.find(t => t.kategorie === 'miete');
+  const haus = txn.find(t => t.kategorie === 'haus');
+  if (baufi || miete || haus) {
     const wohnenItems = [];
-    if (baufi) {
-      wohnenItems.push({ name: `Hypothek ${baufi.empfaenger}`, amount: Math.abs(baufi.betrag), datum: fmtDate(vm, 5), badge: 'bekannt', badgeLabel: 'Bekannt', recurring: true });
+    if (baufi) wohnenItems.push({ name: `Hypothek ${baufi.empfaenger}`, amount: Math.abs(baufi.betrag), datum: fmtDate(vm, 5), badge: 'bekannt', badgeLabel: 'Bekannt', recurring: true });
+    if (miete) wohnenItems.push({ name: `Miete ${miete.empfaenger}`, amount: Math.abs(miete.betrag), datum: fmtDate(vm, 1), recurring: true });
+    if (haus) {
+      const hausTotal = Math.abs(haus.betrag);
+      const [strom, nk] = splitTotal(hausTotal, [0.45, 0.55]);
+      wohnenItems.push({ name: 'Strom / Gas', amount: strom, datum: fmtDate(vm, 3), recurring: true });
+      wohnenItems.push({ name: 'Nebenkosten', amount: nk, datum: fmtDate(vm, 1), recurring: true });
     }
-    if (miete) {
-      wohnenItems.push({ name: `Miete ${miete.empfaenger}`, amount: Math.abs(miete.betrag), datum: fmtDate(vm, 1), recurring: true });
-    }
-    wohnenItems.push({ name: 'Nebenkosten / Strom', amount: 190, datum: fmtDate(vm, 3), recurring: true });
     categories.push({ name: 'Wohnen', color: '#93b8e8', total: wohnenItems.reduce((s, i) => s + i.amount, 0), items: wohnenItems });
   }
 
-  // Versicherungen
-  const versEigen = kunde.transaktionen?.find(t => t.kategorie === 'versicherung_eigen');
-  const versFremd = kunde.transaktionen?.find(t => t.kategorie === 'versicherung_fremd' || t.kategorie === 'versicherung');
+  // Versicherungen - use actual transaction amounts, distribute across products
+  const versEigen = txn.find(t => t.kategorie === 'versicherung_eigen');
+  const versFremd = txn.find(t => t.kategorie === 'versicherung_fremd' || t.kategorie === 'versicherung');
   const versItems = [];
-  const PRODUKT_LABELS = { wohngebaeude: 'Wohngebäude', hausrat: 'Hausrat', haftpflicht: 'Haftpflicht', kfz: 'Kfz', kfz2: 'Kfz (Zweitwagen)', bu: 'BU', unfall: 'Unfall', rechtsschutz: 'Rechtsschutz', pkv: 'PKV', girokonto: 'Girokonto', festgeld: 'Festgeld', tagesgeld: 'Tagesgeld', depot: 'Depot', kredit: 'Kredit', bausparvertrag: 'Bausparvertrag', lebensversicherung: 'Lebensversicherung', rlv: 'Risikoleben', du: 'Dienstunfähigkeit' };
   if (versEigen) {
-    (kunde.eigeneProdukte || []).slice(0, 3).forEach(p => {
-      const label = PRODUKT_LABELS[p.typ] || p.typ;
-      versItems.push({ name: `${label} (Eigener Bestand)`, amount: Math.round((p.praemie || 50) / 12), datum: fmtDate(vm, 1), badge: 'bekannt', badgeLabel: 'Betreut' });
-    });
+    const eigenTotal = Math.abs(versEigen.betrag);
+    const eigenProdukte = (kunde.eigeneProdukte || []).slice(0, 4);
+    if (eigenProdukte.length > 0) {
+      const praemienRaw = eigenProdukte.map(p => p.praemie || 50);
+      const praemienSum = praemienRaw.reduce((s, v) => s + v, 0);
+      let remaining = eigenTotal;
+      eigenProdukte.forEach((p, i) => {
+        const label = PRODUKT_LABELS[p.typ] || p.typ;
+        const amount = i === eigenProdukte.length - 1 ? remaining : Math.round(eigenTotal * praemienRaw[i] / praemienSum);
+        remaining -= amount;
+        versItems.push({ name: `${label} (Eigener Bestand)`, amount, datum: fmtDate(vm, 1), badge: 'bekannt', badgeLabel: 'Betreut' });
+      });
+    }
   }
-  if (versFremd || (kunde.fremdProdukte || []).some(p => p.typ?.includes('versicherung') || p.typ === 'kfz' || p.typ === 'haftpflicht')) {
-    (kunde.fremdProdukte || []).filter(p => p.typ !== 'baufinanzierung' && p.typ !== 'depot').slice(0, 2).forEach(p => {
-      const label = PRODUKT_LABELS[p.typ] || p.typ;
-      versItems.push({ name: `${label} (${p.institut || 'Fremd'})`, amount: Math.round((p.praemie || 40) / 12), datum: fmtDate(vm, 1), badge: 'unbekannt', badgeLabel: 'Fremd' });
-    });
+  if (versFremd) {
+    const fremdTotal = Math.abs(versFremd.betrag);
+    const fremdProdukte = (kunde.fremdProdukte || []).filter(p => p.typ !== 'baufinanzierung' && p.typ !== 'depot' && p.typ !== 'girokonto' && p.typ !== 'tagesgeld' && p.typ !== 'bausparvertrag').slice(0, 3);
+    if (fremdProdukte.length > 0) {
+      let remaining = fremdTotal;
+      fremdProdukte.forEach((p, i) => {
+        const label = PRODUKT_LABELS[p.typ] || p.typ;
+        const amount = i === fremdProdukte.length - 1 ? remaining : Math.round(fremdTotal / fremdProdukte.length);
+        remaining -= Math.round(fremdTotal / fremdProdukte.length);
+        versItems.push({ name: `${label} (${p.institut || 'Fremd'})`, amount, datum: fmtDate(vm, 1), badge: 'unbekannt', badgeLabel: 'Fremd' });
+      });
+    } else {
+      versItems.push({ name: 'Versicherung (Fremd)', amount: fremdTotal, datum: fmtDate(vm, 1), badge: 'unbekannt', badgeLabel: 'Fremd' });
+    }
   }
   if (versItems.length > 0) {
     categories.push({ name: 'Versicherungen', color: '#7ecba1', total: versItems.reduce((s, i) => s + i.amount, 0), items: versItems });
   }
 
   // Kredit & Finanzierung
-  const kredit = kunde.transaktionen?.find(t => t.kategorie === 'kredit');
+  const kredit = txn.find(t => t.kategorie === 'kredit');
   if (kredit) {
     categories.push({ name: 'Kredit & Finanzierung', color: '#b8a9e2', total: Math.abs(kredit.betrag), items: [
       { name: `Kredit ${kredit.empfaenger}`, amount: Math.abs(kredit.betrag), datum: fmtDate(vm, 5), badge: 'luecke', badgeLabel: 'Restschuld offen', recurring: true }
     ]});
   }
 
-  // Lebensmittel & Alltag — with pet detection
-  const konsum = kunde.transaktionen?.find(t => t.kategorie === 'konsum');
-  const haustier = kunde.transaktionen?.find(t => t.kategorie === 'haustier');
+  // Lebensmittel & Alltag — items sum to exact konsum amount
+  const konsum = txn.find(t => t.kategorie === 'konsum');
+  const haustier = txn.find(t => t.kategorie === 'haustier');
   const konsumItems = [];
   if (konsum) {
     const total = Math.abs(konsum.betrag);
-    konsumItems.push({ name: 'REWE Supermarkt', amount: Math.round(total * 0.4), datum: fmtDate(vm, 8) });
-    konsumItems.push({ name: 'EDEKA', amount: Math.round(total * 0.25), datum: fmtDate(vm, 15) });
-    konsumItems.push({ name: 'dm Drogerie', amount: Math.round(total * 0.1), datum: fmtDate(vm, 10) });
+    const haustierAmt = haustier ? Math.abs(haustier.betrag) : 0;
+    const konsumOnly = total;
+    const [rewe, edeka, dm] = splitTotal(konsumOnly, [0.45, 0.30, 0.25]);
+    konsumItems.push({ name: 'REWE Supermarkt', amount: rewe, datum: fmtDate(vm, 8) });
+    konsumItems.push({ name: 'EDEKA', amount: edeka, datum: fmtDate(vm, 15) });
+    konsumItems.push({ name: 'dm Drogerie', amount: dm, datum: fmtDate(vm, 10) });
   }
   if (haustier) {
     konsumItems.push({
-      name: `Fressnapf Tiernahrung`, amount: Math.abs(haustier.betrag), datum: fmtDate(vm, 12),
+      name: 'Fressnapf Tiernahrung', amount: Math.abs(haustier.betrag), datum: fmtDate(vm, 12),
       badge: 'tier-hint', badgeLabel: 'Haustier erkannt', recurring: true,
       insight: 'Regelmäßige Tierfutter-Käufe erkannt — Tierhalterhaftpflicht & OP-Versicherung prüfen'
     });
   } else {
-    // Random chance to detect pet from "Konsum" patterns
     const seed = (kunde.name || '').length + (kunde.vorname || '').length;
     if (seed % 3 === 0) {
       konsumItems.push({
@@ -107,41 +144,68 @@ function generateKontoumsaetze(kunde) {
     categories.push({ name: 'Lebensmittel & Alltag', color: '#f0c78a', total: konsumItems.reduce((s, i) => s + i.amount, 0), items: konsumItems });
   }
 
-  // Mobilität
-  const mob = kunde.transaktionen?.find(t => t.kategorie === 'mobilitaet');
+  // Mobilität - items sum to exact mobilitaet amount
+  const mob = txn.find(t => t.kategorie === 'mobilitaet');
   if (mob) {
-    categories.push({ name: 'Mobilität', color: '#f0a0a0', total: Math.abs(mob.betrag), items: [
-      { name: 'ARAL Tankstelle', amount: Math.round(Math.abs(mob.betrag) * 0.6), datum: fmtDate(vm, 6) },
-      { name: 'ADAC Mitgliedschaft', amount: 30, datum: fmtDate(vm, 1), recurring: true },
-      { name: 'Parkhaus', amount: Math.round(Math.abs(mob.betrag) * 0.1), datum: fmtDate(vm, 9) },
+    const mobTotal = Math.abs(mob.betrag);
+    const [tank, adac, park] = splitTotal(mobTotal, [0.6, 0.15, 0.25]);
+    categories.push({ name: 'Mobilität', color: '#f0a0a0', total: mobTotal, items: [
+      { name: 'ARAL Tankstelle', amount: tank, datum: fmtDate(vm, 6) },
+      { name: 'ADAC Mitgliedschaft', amount: adac, datum: fmtDate(vm, 1), recurring: true },
+      { name: 'Parkhaus / Parken', amount: park, datum: fmtDate(vm, 9) },
     ]});
   }
 
   // Sparen & Investment
-  const sparplan = kunde.transaktionen?.find(t => t.kategorie === 'sparplan' || t.kategorie === 'sparen');
+  const sparplan = txn.find(t => t.kategorie === 'sparplan' || t.kategorie === 'sparen');
   if (sparplan) {
     categories.push({ name: 'Sparen & Investment', color: '#10b981', total: Math.abs(sparplan.betrag), items: [
       { name: `Sparplan ${sparplan.empfaenger}`, amount: Math.abs(sparplan.betrag), datum: fmtDate(vm, 1), badge: 'bekannt', badgeLabel: 'Bekannt', recurring: true }
     ]});
   }
 
-  // Freizeit & Abos
-  const abos = kunde.transaktionen?.find(t => t.kategorie === 'abos');
+  // Freizeit & Abos - items sum to exact abos amount
+  const abos = txn.find(t => t.kategorie === 'abos');
   if (abos) {
-    const freizeitItems = [
-      { name: abos.empfaenger || 'Netflix, Spotify', amount: Math.round(Math.abs(abos.betrag) * 0.5), datum: fmtDate(vm, 1), recurring: true },
-      { name: 'Restaurant / Lieferdienst', amount: Math.round(Math.abs(abos.betrag) * 0.5), datum: fmtDate(vm, 11) },
-    ];
-    // Risikosport-Erkennung für manche Kunden
+    const abosTotal = Math.abs(abos.betrag);
     const seed2 = (kunde.name || '').charCodeAt(0) || 65;
-    if (seed2 % 5 === 0) {
+    const hasRisiko = seed2 % 5 === 0;
+    const freizeitItems = [];
+    if (hasRisiko) {
+      const [streaming, restaurant, skydive] = splitTotal(abosTotal, [0.4, 0.45, 0.15]);
+      freizeitItems.push({ name: abos.empfaenger || 'Netflix, Spotify', amount: streaming, datum: fmtDate(vm, 1), recurring: true });
+      freizeitItems.push({ name: 'Restaurant / Lieferdienst', amount: restaurant, datum: fmtDate(vm, 11) });
       freizeitItems.push({
-        name: 'Skydive Academy', amount: 25, datum: fmtDate(vm, 14),
+        name: 'Skydive Academy', amount: skydive, datum: fmtDate(vm, 14),
         badge: 'insight', badgeLabel: 'Risikosport',
         insight: 'Extremsport erkannt — Unfallversicherung & BU-Risikoprüfung empfohlen'
       });
+    } else {
+      const [streaming, restaurant] = splitTotal(abosTotal, [0.5, 0.5]);
+      freizeitItems.push({ name: abos.empfaenger || 'Netflix, Spotify', amount: streaming, datum: fmtDate(vm, 1), recurring: true });
+      freizeitItems.push({ name: 'Restaurant / Lieferdienst', amount: restaurant, datum: fmtDate(vm, 11) });
     }
-    categories.push({ name: 'Freizeit & Hobbies', color: '#8fd4e6', total: freizeitItems.reduce((s, i) => s + i.amount, 0), items: freizeitItems });
+    categories.push({ name: 'Freizeit & Hobbies', color: '#8fd4e6', total: abosTotal, items: freizeitItems });
+  }
+
+  // Kinder
+  const kinder = txn.find(t => t.kategorie === 'kinder');
+  if (kinder) {
+    const kinderTotal = Math.abs(kinder.betrag);
+    const [kita, kleidung] = splitTotal(kinderTotal, [0.6, 0.4]);
+    categories.push({ name: 'Kinder', color: '#d4a5e5', total: kinderTotal, items: [
+      { name: 'Kita / Betreuung', amount: kita, datum: fmtDate(vm, 1), recurring: true },
+      { name: 'Kinderkleidung / Bedarf', amount: kleidung, datum: fmtDate(vm, 12) },
+    ]});
+  }
+
+  // Tierbedarf (separate category if exists)
+  const tierbedarf = txn.find(t => t.kategorie === 'tierbedarf');
+  if (tierbedarf) {
+    categories.push({ name: 'Tierbedarf', color: '#e8a87c', total: Math.abs(tierbedarf.betrag), items: [
+      { name: `${tierbedarf.empfaenger || 'Fressnapf'}`, amount: Math.abs(tierbedarf.betrag), datum: fmtDate(vm, 12), badge: 'tier-hint', badgeLabel: 'Haustier erkannt', recurring: true,
+        insight: 'Regelmäßige Tierfutter-Käufe erkannt — Tierhalterhaftpflicht & OP-Versicherung prüfen' }
+    ]});
   }
 
   return categories;

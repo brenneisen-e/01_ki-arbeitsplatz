@@ -19,14 +19,14 @@
 
     // ── VV MOCK MANDANTEN ──
     window.vvMockMandanten = {
-        'Dr. Heinrich von Trott': {
+        'Tim Keller': {
             id: 'VV001',
             geburtsdatum: '1963-08-12',
             adresse: 'Parkstr. 15, 61231 Bad Nauheim',
             beruf: 'Unternehmer (Maschinenbau)',
             familienstand: 'verheiratet',
             telefon: '+49 6032 123456',
-            email: 'h.vontrott@vontrott-mb.de',
+            email: 't.keller@keller-mb.de',
             kinder: [
                 { name: 'Maximilian', alter: 34, eigenesMandat: true, mandatTyp: 'SmartValue', aum: 450000 },
                 { name: 'Charlotte', alter: 31, eigenesMandat: false }
@@ -64,7 +64,7 @@
                 { bezeichnung: 'ETW Frankfurt', wert: 850000, typ: 'vermietet' },
                 { bezeichnung: 'Gewerbeimmobilie', wert: 2750000, typ: 'betrieblich' }
             ],
-            unternehmen: [{ name: 'von Trott Maschinenbau GmbH', anteil: 100, schaetzwert: 15000000 }],
+            unternehmen: [{ name: 'Keller Maschinenbau GmbH', anteil: 100, schaetzwert: 15000000 }],
             peBeteiligungen: [
                 { fonds: 'PE Growth Fund A', jahrgang: 2021, investiert: 700000 },
                 { fonds: 'PE Buyout Fund B', jahrgang: 2023, investiert: 500000 }
@@ -484,7 +484,7 @@
         { name: 'Familie Schneider', stadium: 'beratungsgespraech', volEst: 3000000, naechsterSchritt: 'WpHG-Bogen einholen', datum: '2026-03-12' },
         { name: 'Prof. König', stadium: 'kennenlerngespraech', volEst: 8000000, naechsterSchritt: 'Termin 18.03.', datum: '2026-03-18' },
         { name: 'Dr. Julia Wagner', stadium: 'lead', volEst: 2000000, naechsterSchritt: 'Erstansprache via Event', datum: '2026-03-20' },
-        { name: 'Fam. Berger', stadium: 'lead', volEst: 4000000, naechsterSchritt: 'Empfehlung von Dr. von Trott', datum: '2026-03-22' },
+        { name: 'Fam. Berger', stadium: 'lead', volEst: 4000000, naechsterSchritt: 'Empfehlung von Tim Keller', datum: '2026-03-22' },
         { name: 'Ehepaar Kern', stadium: 'kennenlerngespraech', volEst: 1500000, naechsterSchritt: 'Zweittermin vereinbaren', datum: '2026-03-14' },
         { name: 'Industriestiftung Blum', stadium: 'beratungsgespraech', volEst: 12000000, naechsterSchritt: 'Stiftungskonzept vorstellen', datum: '2026-03-16' },
         { name: 'Thomas Engel', stadium: 'lead', volEst: 800000, naechsterSchritt: 'SmartValue-Info versenden', datum: '2026-03-25' },
@@ -506,7 +506,7 @@
     // ── VV POTENTIALE ──
     window.vvPotentiale = [
         {
-            kundenName: 'Dr. Heinrich von Trott', kundenId: 'VV001', prioritaet: 'hoch',
+            kundenName: 'Tim Keller', kundenId: 'VV001', prioritaet: 'hoch',
             produkt: 'Fremdbank-Konsolidierung', beschreibung: '3,2M € bei UBS Zürich → Konsolidierung vorschlagen, Gesamtbetreuung verbessern.',
             quelle: 'Bestandsdaten', volumen: 3200000, ertrag: 30400, status: 'identifiziert',
             letzteAktion: 'Thema im Quartals-Review angesprochen (20.02.)',
@@ -516,8 +516,8 @@
             ]
         },
         {
-            kundenName: 'Dr. Heinrich von Trott', kundenId: 'VV001', prioritaet: 'mittel',
-            produkt: 'NextGen-Mandat (Tochter)', beschreibung: 'Charlotte von Trott (31), kein eigenes Mandat. SmartValue-Einstieg über Familienbindung.',
+            kundenName: 'Tim Keller', kundenId: 'VV001', prioritaet: 'mittel',
+            produkt: 'NextGen-Mandat (Tochter)', beschreibung: 'Charlotte Keller (31), kein eigenes Mandat. SmartValue-Einstieg über Familienbindung.',
             quelle: 'Bestandsdaten', volumen: 500000, ertrag: 6000, status: 'identifiziert',
             letzteAktion: 'Gespräch mit Vater geplant (Q2)',
             herleitung: [
@@ -526,7 +526,7 @@
             ]
         },
         {
-            kundenName: 'Dr. Heinrich von Trott', kundenId: 'VV001', prioritaet: 'mittel',
+            kundenName: 'Tim Keller', kundenId: 'VV001', prioritaet: 'mittel',
             produkt: 'Stiftungsgründung', beschreibung: 'Alter 62, hoher Vermögensbestand → Stiftung als Nachfolgeinstrument prüfen.',
             quelle: 'Bestandsdaten', volumen: 5000000, ertrag: 31000, status: 'identifiziert',
             letzteAktion: 'Thema noch nicht adressiert',

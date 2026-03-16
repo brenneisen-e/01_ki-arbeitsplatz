@@ -162,7 +162,7 @@
         html += '<div class="vv-tagesstart-items">';
         html += '<div class="vv-tagesstart-item vv-prio-hoch"><span class="vv-ts-icon">⚠</span> Geeignetheitsbericht Q1 für <strong>Keller NextGen</strong> in 21 Tagen fällig</div>';
         html += '<div class="vv-tagesstart-item vv-prio-hoch"><span class="vv-ts-icon">⚠</span> WpHG-Bogen <strong>Keller NextGen</strong> abgelaufen – Aktualisierung erforderlich</div>';
-        html += '<div class="vv-tagesstart-item vv-prio-mittel"><span class="vv-ts-icon">📊</span> Rebalancing-Bedarf bei <strong>Dr. von Trott</strong>: Aktienquote +2pp über Soll</div>';
+        html += '<div class="vv-tagesstart-item vv-prio-mittel"><span class="vv-ts-icon">📊</span> Rebalancing-Bedarf bei <strong>Tim Keller</strong>: Aktienquote +2pp über Soll</div>';
         html += '<div class="vv-tagesstart-item vv-prio-mittel"><span class="vv-ts-icon">📧</span> Anlagevorschlag für <strong>Dr. Meier</strong> (Pipeline) bis 15.03. versenden</div>';
         html += '<div class="vv-tagesstart-item vv-prio-niedrig"><span class="vv-ts-icon">✅</span> Onboarding <strong>Dr. Anna Fischer</strong>: Depoteröffnung abschließen</div>';
         html += '</div></div></div>';
@@ -944,7 +944,7 @@
                 'Gesamtes AuM: <strong>' + fmtEuroVV(totalAuM) + '</strong><br>' +
                 'Mandate: ' + names.length + '<br>' +
                 'Durchschnittl. Performance YTD: <strong>' + fmtPercent(avgPerf) + '</strong><br><br>' +
-                'Top-Performer: Winterberg GmbH (+6,7%), Dr. von Trott (+8,2%)<br>' +
+                'Top-Performer: Winterberg GmbH (+6,7%), Tim Keller (+8,2%)<br>' +
                 'Underperformer: Prof. Hartmann (+2,8%), Keller NextGen (+4,2%)' + followUp;
         }
 
@@ -1773,13 +1773,13 @@
     function initVVCrossRef() {
         if (!window.kundenCrossRef) return;
         // Add VV mandants to cross-reference
-        // Dr. von Trott could be a banking customer too (Private Banking)
-        window.kundenCrossRef['Dr. Heinrich von Trott'] = {
-            bankName: 'Dr. Heinrich von Trott',
+        // Tim Keller could be a banking customer too (Private Banking)
+        window.kundenCrossRef['Tim Keller'] = {
+            bankName: 'Tim Keller',
             bankId: 'PBB001',
             versId: null,
             vvId: 'VV001',
-            vvName: 'Dr. Heinrich von Trott'
+            vvName: 'Tim Keller'
         };
         // Familie Bergmann-Roth - VV only, no banking/insurance yet
         window.kundenCrossRef['Familie Bergmann-Roth'] = {

@@ -2,6 +2,7 @@ import Card from '../../../components/ui/Card';
 import LineChartComponent from '../../../components/charts/LineChartComponent';
 import DonutChart from '../../../components/charts/DonutChart';
 import { useMode } from '../../../hooks/useMode';
+import useTranslation from '../../../i18n/useTranslation';
 import { formatEur } from '../../../utils/formatters';
 import { Wallet, TrendingUp, BarChart3, Target } from 'lucide-react';
 
@@ -11,6 +12,7 @@ const FEE_COLORS = ['#1a365d', '#2b4c7e', '#c4a35a', '#6b7280'];
 
 export default function RevenueTab() {
   const { config } = useMode();
+  const { t } = useTranslation();
   const data = VV_REVENUE;
 
   // Cumulative revenue YTD (running total) - more meaningful than monthly billing amounts
@@ -30,27 +32,27 @@ export default function RevenueTab() {
     <div className="space-y-4">
       {/* KPIs */}
       <div className="grid grid-cols-4 gap-4">
-        <KPI icon={Wallet} label="Ertrag YTD" value={formatEur(ytdTotal)} color="text-slate-800" />
-        <KPI icon={TrendingUp} label="Management Fee" value={formatEur(ytdMgmt)} color="text-blue-700" />
-        <KPI icon={BarChart3} label="Performance Fee" value={formatEur(ytdPerf)} color="text-emerald-700" />
-        <KPI icon={Target} label="Forecast 2026" value={formatEur(forecastTotal)} color="text-amber-700" />
+        <KPI icon={Wallet} label={t('ertragYtd')} value={formatEur(ytdTotal)} color="text-slate-800" />
+        <KPI icon={TrendingUp} label={t('managementFee')} value={formatEur(ytdMgmt)} color="text-blue-700" />
+        <KPI icon={BarChart3} label={t('performanceFee')} value={formatEur(ytdPerf)} color="text-emerald-700" />
+        <KPI icon={Target} label={t('forecast')} value={formatEur(forecastTotal)} color="text-amber-700" />
       </div>
 
       {/* Revenue Trend */}
       <div className="grid grid-cols-3 gap-4">
         <div className="col-span-2">
           <Card>
-            <h3 className="font-semibold text-slate-800 mb-4">Kumulierter Ertrag YTD</h3>
+            <h3 className="font-semibold text-slate-800 mb-4">{t('kumulierterErtragYtd')}</h3>
             <LineChartComponent data={monthlyTotal} height={280} color={config.colors.primaryLight} />
           </Card>
         </div>
         <Card>
-          <h3 className="font-semibold text-slate-800 mb-4">Fee-Struktur</h3>
+          <h3 className="font-semibold text-slate-800 mb-4">{t('feeStruktur')}</h3>
           <DonutChart
             data={feeDonut}
             height={200}
             centerValue={formatEur(ytdTotal)}
-            centerLabel="Gesamt"
+            centerLabel={t('gesamt')}
             colors={FEE_COLORS}
           />
           <div className="mt-3 space-y-1.5">
@@ -69,15 +71,15 @@ export default function RevenueTab() {
 
       {/* Mandanten Revenue */}
       <Card>
-        <h3 className="font-semibold text-slate-800 mb-4">Ertrag nach Mandant</h3>
+        <h3 className="font-semibold text-slate-800 mb-4">{t('ertragNachMandant')}</h3>
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-slate-200 text-left text-xs text-slate-400 uppercase">
-              <th className="py-2 pr-3">Mandant</th>
-              <th className="py-2 pr-3 text-right">AuM</th>
-              <th className="py-2 pr-3 text-right">Fee (% p.a.)</th>
-              <th className="py-2 pr-3 text-right">Ertrag YTD</th>
-              <th className="py-2">Anteil</th>
+              <th className="py-2 pr-3">{t('mandant')}</th>
+              <th className="py-2 pr-3 text-right">{t('aum')}</th>
+              <th className="py-2 pr-3 text-right">{t('feePA')}</th>
+              <th className="py-2 pr-3 text-right">{t('ertragYtd')}</th>
+              <th className="py-2">{t('anteil')}</th>
             </tr>
           </thead>
           <tbody>
@@ -103,7 +105,7 @@ export default function RevenueTab() {
           </tbody>
           <tfoot>
             <tr className="border-t-2 border-slate-300">
-              <td className="py-2.5 pr-3 font-bold text-slate-800">Gesamt</td>
+              <td className="py-2.5 pr-3 font-bold text-slate-800">{t('gesamt')}</td>
               <td className="py-2.5 pr-3 text-right font-mono font-bold text-slate-800">
                 {formatEur(data.mandantenRevenue.reduce((s, m) => s + m.aum, 0))}
               </td>
@@ -119,14 +121,14 @@ export default function RevenueTab() {
 
       {/* Forecast */}
       <Card>
-        <h3 className="font-semibold text-slate-800 mb-4">Forecast 2026</h3>
+        <h3 className="font-semibold text-slate-800 mb-4">{t('forecast')}</h3>
         <div className="grid grid-cols-4 gap-4">
           {['Q1', 'Q2', 'Q3', 'Q4'].map((q, i) => {
             const val = [data.forecast.q1, data.forecast.q2, data.forecast.q3, data.forecast.q4][i];
             const isActual = i === 0;
             return (
               <div key={q} className={`text-center py-3 rounded-lg border ${isActual ? 'border-emerald-200 bg-emerald-50' : 'border-slate-200 bg-slate-50'}`}>
-                <div className="text-xs text-slate-400 uppercase mb-1">{q} {isActual ? '(Ist)' : '(Plan)'}</div>
+                <div className="text-xs text-slate-400 uppercase mb-1">{q} {isActual ? t('ist') : t('plan')}</div>
                 <div className={`text-lg font-mono font-bold ${isActual ? 'text-emerald-700' : 'text-slate-700'}`}>{formatEur(val)}</div>
               </div>
             );

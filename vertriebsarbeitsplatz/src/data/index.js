@@ -702,7 +702,7 @@ export const AUFGABEN_BY_MODE = {
   vermoegensverwaltung: [
     { text: 'Geeignetheitsbericht Keller NextGen (fällig in 21 Tagen)', faellig: 'Heute', kundeId: 'VV005', erledigt: false },
     { text: 'WpHG-Fragebogen Keller NextGen aktualisieren', faellig: 'Heute', kundeId: 'VV005', erledigt: false },
-    { text: 'Rebalancing Dr. von Trott (Aktien +2pp über Ziel)', faellig: 'Morgen', kundeId: 'VV001', erledigt: false },
+    { text: 'Rebalancing Tim Keller (Aktien +2pp über Ziel)', faellig: 'Morgen', kundeId: 'VV001', erledigt: false },
     { text: 'Investmentvorschlag Dr. Meier senden (Pipeline)', faellig: '15.03.', kundeId: 'VV-PIPE2', erledigt: false },
   ],
 };

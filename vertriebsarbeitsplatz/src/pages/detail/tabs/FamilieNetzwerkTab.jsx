@@ -2,9 +2,10 @@ import { VV_FAMILIE } from '../../../data/vvDataProvider';
 import { formatEur } from '../../../utils/formatters';
 import { Users, Building2, AlertTriangle, CheckCircle, Briefcase, Award, TrendingUp, Crown, UserPlus } from 'lucide-react';
 import { clsx } from 'clsx';
+import useTranslation from '../../../i18n/useTranslation';
 
 // ─── Person card in orgchart ───
-function PersonCard({ person, isCenter = false }) {
+function PersonCard({ person, isCenter = false, t }) {
   const hasMandant = person.istMandant;
   const isLead = person.istLead;
 
@@ -23,7 +24,7 @@ function PersonCard({ person, isCenter = false }) {
       </div>
       <div className="text-sm font-semibold text-slate-800 leading-tight">{person.name}</div>
       {person.alter != null && person.alter > 0 && (
-        <div className="text-xs text-slate-400 mt-0.5">{person.alter} Jahre</div>
+        <div className="text-xs text-slate-400 mt-0.5">{person.alter} {t('jahre')}</div>
       )}
       <div className="text-xs text-slate-500 mt-0.5">{person.beruf}</div>
 
@@ -80,6 +81,7 @@ function Section({ title, icon: Icon, children }) {
 
 // ─── Main component ───
 export default function FamilieNetzwerkTab({ kunde }) {
+  const { t } = useTranslation();
   const data = VV_FAMILIE[kunde?.id];
 
   if (!data) {
@@ -90,9 +92,9 @@ export default function FamilieNetzwerkTab({ kunde }) {
             <div className="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center mb-4">
               <Users className="w-8 h-8 text-slate-400" />
             </div>
-            <h3 className="font-semibold text-slate-700 mb-1">Familiendaten nicht verfügbar</h3>
+            <h3 className="font-semibold text-slate-700 mb-1">{t('familiendatenNichtVerfuegbar')}</h3>
             <p className="text-sm text-slate-400 max-w-md">
-              Für {kunde?.name || 'diesen Mandanten'} liegen keine Familien- und Netzwerkdaten vor.
+              {t('familiendatenFehlen', { name: kunde?.name || 'diesen Mandanten' })}
             </p>
           </div>
         </div>
@@ -109,11 +111,11 @@ export default function FamilieNetzwerkTab({ kunde }) {
   return (
     <div className="space-y-4">
       {/* 1. Familien-Orgchart */}
-      <Section title="Familien-Orgchart" icon={Users}>
+      <Section title={t('familienOrgchart')} icon={Users}>
         <div className="flex flex-col items-center">
           {/* Top row: Mandant + Partner */}
           <div className="flex items-start justify-center gap-8">
-            {mandant && <PersonCard person={mandant} isCenter />}
+            {mandant && <PersonCard person={mandant} isCenter t={t} />}
             {partner && (
               <>
                 <div className="flex items-center self-center">
@@ -121,7 +123,7 @@ export default function FamilieNetzwerkTab({ kunde }) {
                   <span className="text-[10px] text-rose-400 px-1">Partner</span>
                   <div className="w-8 border-t-2 border-dashed border-rose-300" />
                 </div>
-                <PersonCard person={partner} />
+                <PersonCard person={partner} t={t} />
               </>
             )}
           </div>
@@ -139,7 +141,7 @@ export default function FamilieNetzwerkTab({ kunde }) {
                 {kinder.map((k, i) => (
                   <div key={i} className="flex flex-col items-center">
                     {kinder.length > 1 && <VerticalLine color="border-slate-300" />}
-                    <PersonCard person={k} />
+                    <PersonCard person={k} t={t} />
                   </div>
                 ))}
               </div>
@@ -150,12 +152,12 @@ export default function FamilieNetzwerkTab({ kunde }) {
         {/* Gesamt-AuM + Potenzial footer */}
         <div className="flex items-center justify-center gap-6 mt-6 pt-4 border-t border-slate-100">
           <div className="text-center">
-            <div className="text-[10px] text-slate-400 uppercase tracking-wider">Gesamt-AuM Familie</div>
+            <div className="text-[10px] text-slate-400 uppercase tracking-wider">{t('gesamtAumFamilie')}</div>
             <div className="text-lg font-bold font-mono text-slate-800">{formatEur(data.gesamtAuM)}</div>
           </div>
           {data.potenzial && (
             <div className="text-center">
-              <div className="text-[10px] text-slate-400 uppercase tracking-wider">Potenzial</div>
+              <div className="text-[10px] text-slate-400 uppercase tracking-wider">{t('potenzialLabel')}</div>
               <div className="text-lg font-bold font-mono text-emerald-600">{data.potenzial}</div>
             </div>
           )}
@@ -164,7 +166,7 @@ export default function FamilieNetzwerkTab({ kunde }) {
 
       {/* 2. Unternehmens-Orgchart */}
       {unt && (
-        <Section title="Unternehmens-Orgchart" icon={Building2}>
+        <Section title={t('unternehmensOrgchart')} icon={Building2}>
           {/* Company header */}
           <div className="bg-slate-50 rounded-xl p-4 mb-4">
             <div className="flex items-start justify-between">
@@ -174,30 +176,30 @@ export default function FamilieNetzwerkTab({ kunde }) {
               </div>
               {unt.nachfolge && unt.nachfolge.status === 'offen' && (
                 <span className="inline-flex items-center gap-1 text-xs font-medium text-amber-700 bg-amber-50 px-2 py-1 rounded-full border border-amber-200">
-                  <AlertTriangle size={12} /> Nachfolge offen
+                  <AlertTriangle size={12} /> {t('nachfolgeOffen')}
                 </span>
               )}
               {unt.nachfolge && unt.nachfolge.status === 'abgeschlossen' && (
                 <span className="inline-flex items-center gap-1 text-xs font-medium text-emerald-700 bg-emerald-50 px-2 py-1 rounded-full border border-emerald-200">
-                  <CheckCircle size={12} /> Abgeschlossen
+                  <CheckCircle size={12} /> {t('nachfolgeAbgeschlossen')}
                 </span>
               )}
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-3">
               <div>
-                <div className="text-[10px] text-slate-400">Umsatz</div>
+                <div className="text-[10px] text-slate-400">{t('umsatzLabel')}</div>
                 <div className="text-sm font-semibold text-slate-700">{unt.umsatz}</div>
               </div>
               <div>
-                <div className="text-[10px] text-slate-400">Mitarbeiter</div>
+                <div className="text-[10px] text-slate-400">{t('mitarbeiterLabel')}</div>
                 <div className="text-sm font-semibold text-slate-700">{unt.mitarbeiter}</div>
               </div>
               <div>
-                <div className="text-[10px] text-slate-400">Standort</div>
+                <div className="text-[10px] text-slate-400">{t('standortLabel')}</div>
                 <div className="text-sm font-semibold text-slate-700">{unt.standort}</div>
               </div>
               <div>
-                <div className="text-[10px] text-slate-400">Gesch. Wert</div>
+                <div className="text-[10px] text-slate-400">{t('geschWert')}</div>
                 <div className="text-sm font-semibold text-slate-700">{unt.geschaetzterWert}</div>
               </div>
             </div>
@@ -206,7 +208,7 @@ export default function FamilieNetzwerkTab({ kunde }) {
           {/* Positions tree */}
           {unt.positionen && unt.positionen.length > 0 && (
             <div className="space-y-2 mb-4">
-              <div className="text-xs text-slate-400 font-medium uppercase tracking-wider">Positionen</div>
+              <div className="text-xs text-slate-400 font-medium uppercase tracking-wider">{t('positionen')}</div>
               {unt.positionen.map((pos, i) => (
                 <div key={i} className="flex items-center gap-3 py-1.5 px-3 bg-slate-50 rounded-lg">
                   <div className="w-7 h-7 rounded-full bg-slate-300 flex items-center justify-center text-white text-[10px] font-bold">
@@ -242,7 +244,7 @@ export default function FamilieNetzwerkTab({ kunde }) {
                   'text-xs font-semibold',
                   unt.nachfolge.status === 'offen' ? 'text-amber-700' : 'text-emerald-700',
                 )}>
-                  Nachfolge-Status: {unt.nachfolge.status === 'offen' ? 'Offen' : 'Abgeschlossen'}
+                  {t('nachfolgeStatus')}: {unt.nachfolge.status === 'offen' ? 'Offen' : t('nachfolgeAbgeschlossen')}
                 </span>
               </div>
               <p className={clsx(
@@ -258,11 +260,11 @@ export default function FamilieNetzwerkTab({ kunde }) {
 
       {/* 3. Weitere Mandate / Beteiligungen */}
       {((data.weitereMandate && data.weitereMandate.length > 0) || (data.peBeteiligungen && data.peBeteiligungen.length > 0)) && (
-        <Section title="Weitere Mandate / Beteiligungen" icon={Award}>
+        <Section title={t('weitereMandateBeteiligungen')} icon={Award}>
           {/* Mandate list */}
           {data.weitereMandate && data.weitereMandate.length > 0 && (
             <div className="mb-4">
-              <div className="text-xs text-slate-400 font-medium uppercase tracking-wider mb-2">Mandate & Gremien</div>
+              <div className="text-xs text-slate-400 font-medium uppercase tracking-wider mb-2">{t('mandateGremien')}</div>
               <div className="space-y-1.5">
                 {data.weitereMandate.map((m, i) => (
                   <div key={i} className="flex items-center justify-between py-1.5 px-3 bg-slate-50 rounded-lg">
@@ -289,7 +291,7 @@ export default function FamilieNetzwerkTab({ kunde }) {
           {/* PE-Beteiligungen */}
           {data.peBeteiligungen && data.peBeteiligungen.length > 0 && (
             <div>
-              <div className="text-xs text-slate-400 font-medium uppercase tracking-wider mb-2">PE-Beteiligungen</div>
+              <div className="text-xs text-slate-400 font-medium uppercase tracking-wider mb-2">{t('peBeteiligungen')}</div>
               <div className="space-y-1.5">
                 {data.peBeteiligungen.map((pe, i) => (
                   <div key={i} className="flex items-center justify-between py-1.5 px-3 bg-slate-50 rounded-lg">

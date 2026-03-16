@@ -5,7 +5,7 @@
 // ─── 1. VV_PERFORMANCE ── Per-mandant performance data ──────────────────────
 
 export const VV_PERFORMANCE = {
-  // ── W1: Dr. Heinrich von Trott – Konservativ (Vorbild: Flossbach v. Storch Multiple Opps) ──
+  // ── W1: Tim Keller – Konservativ (Vorbild: Flossbach v. Storch Multiple Opps) ──
   VV00001: {
     monthlyReturns: [
       // 2023 – Erholung nach 2022, defensiv profitiert von Anleihen-Rally H2
@@ -423,7 +423,7 @@ export const VV_PERFORMANCE = {
 // ─── 2. VV_WPHG ── WpHG Compliance data per Mandant ────────────────────────
 
 export const VV_WPHG = {
-  // ── W1: Dr. Heinrich von Trott ──
+  // ── W1: Tim Keller ──
   VV00001: {
     fragebogen: {
       letztesUpdate: '2025-11-15',
@@ -656,13 +656,13 @@ export const VV_WPHG = {
 // ─── 3. VV_FAMILIE ── Family / Network data per Mandant ─────────────────────
 
 export const VV_FAMILIE = {
-  // ── W1: Dr. Heinrich von Trott ──
+  // ── W1: Tim Keller ──
   VV00001: {
     mitglieder: [
-      { name: 'Dr. Heinrich von Trott', rolle: 'mandant', alter: 62, beruf: 'Unternehmer Maschinenbau 3.Gen', mandant: true, aum: 12500000 },
-      { name: 'Elisabeth von Trott', rolle: 'ehepartner', alter: 59, beruf: 'Stiftungsvorstand (ehrenamtlich)', vermoegen: 850000 },
-      { name: 'Charlotte von Trott', rolle: 'kind', alter: 32, beruf: 'Anwaeltin, Partnerin Wirtschaftskanzlei (Frankfurt)', vermoegen: 800000 },
-      { name: 'Friedrich von Trott', rolle: 'kind', alter: 28, beruf: 'Ingenieur, im Familienunternehmen taetig', vermoegen: 250000 },
+      { name: 'Tim Keller', rolle: 'mandant', alter: 62, beruf: 'Unternehmer Maschinenbau 3.Gen', mandant: true, aum: 12500000 },
+      { name: 'Elisabeth Keller', rolle: 'ehepartner', alter: 59, beruf: 'Stiftungsvorstand (ehrenamtlich)', vermoegen: 850000 },
+      { name: 'Charlotte Keller', rolle: 'kind', alter: 32, beruf: 'Anwaeltin, Partnerin Wirtschaftskanzlei (Frankfurt)', vermoegen: 800000 },
+      { name: 'Friedrich Keller', rolle: 'kind', alter: 28, beruf: 'Ingenieur, im Familienunternehmen taetig', vermoegen: 250000 },
     ],
     vermoegensUebersicht: {
       gesamt: 24170000,
@@ -683,7 +683,7 @@ export const VV_FAMILIE = {
         'LV-Ablauf 2026 – Wiederanlage planen',
       ],
       zeitrahmen: '3-5 Jahre (Übergabe Unternehmen)',
-      notizen: 'Heinrich plant Rückzug aus dem operativen Geschäft mit 65-67. Friedrich wird eingearbeitet, Charlotte hat kein Interesse am Unternehmen. Elisabeth möchte Familienstiftung für Bildungszwecke gründen (2M Stiftungskapital). Erbschaftssteuerliche Optimierung sollte frühzeitig geplant werden.',
+      notizen: 'Tim plant Rückzug aus dem operativen Geschäft mit 65-67. Friedrich wird eingearbeitet, Charlotte hat kein Interesse am Unternehmen. Elisabeth möchte Familienstiftung für Bildungszwecke gründen (2M Stiftungskapital). Erbschaftssteuerliche Optimierung sollte frühzeitig geplant werden.',
     },
   },
 
@@ -811,11 +811,11 @@ export const VV_FAMILIE = {
 // ─── 4. VV_ENGAGEMENT ── Digital engagement signals per Mandant ──────────────
 
 export const VV_ENGAGEMENT = {
-  // ── W1: Dr. Heinrich von Trott ──
+  // ── W1: Tim Keller ──
   VV00001: {
     linkedin: {
-      url: 'linkedin.com/in/heinrich-von-trott',
-      profilUrl: 'linkedin.com/in/heinrich-von-trott',
+      url: 'linkedin.com/in/tim-keller',
+      profilUrl: 'linkedin.com/in/tim-keller',
       aktivitaet: 'niedrig',
       letzterPost: '2025-06-10',
       themen: ['Maschinenbau', 'Industrie 4.0', 'Familienunternehmen'],
@@ -868,7 +868,7 @@ export const VV_ENGAGEMENT = {
     },
     presse: [
       { datum: '2026-01-20', quelle: 'Handelsblatt', titel: 'Maschinenbau-Mittelstand: Nachfolgeproblematik verschaerft sich', signal: 'Nachfolge-Thema – Action noetig' },
-      { datum: '2025-11-05', quelle: 'FAZ', titel: 'Von Trott Maschinenbau gewinnt Innovationspreis', signal: 'Positiv – Sichtbarkeit' },
+      { datum: '2025-11-05', quelle: 'FAZ', titel: 'Keller Maschinenbau gewinnt Innovationspreis', signal: 'Positiv – Sichtbarkeit' },
     ],
     digitalScore: 42,
   },
@@ -1179,10 +1179,10 @@ export const VV_LEADS = [
     datum: '2026-02-20',
     referenzMandant: 'VV00001',
     beruf: 'Logistik-Unternehmer',
-    herkunft: 'Empfehlung Dr. von Trott (VV00001) — Logistik-Unternehmer, geschätzt 3M €',
-    kiDescription: 'KI-Analyse: Familie Schneider plant den Verkauf ihres Logistikunternehmens mit geschätztem Erlös von ca. 3M €. Die Empfehlung kam direkt von Dr. Heinrich von Trott (VV00001, Top-Mandant mit 12,5M AuM), der die Familie aus dem IHK-Präsidium Rhein-Main kennt. Aktuell liegt das Vermögen bei der Commerzbank Wealth Management — ein Wechsel ist realistisch, da der persönliche Bezug über Dr. von Trott Vertrauen schafft. Der WpHG-Fragebogen ist der nächste formale Schritt. Empfehlung: FairValue Mandat mit Fokus auf Kapitalerhalt und moderatem Wachstum nach Unternehmensverkauf. Cross-Selling-Potenzial: Nachfolgeberatung und Steuerstrategie.',
+    herkunft: 'Empfehlung Tim Keller (VV00001) — Logistik-Unternehmer, geschätzt 3M €',
+    kiDescription: 'KI-Analyse: Familie Schneider plant den Verkauf ihres Logistikunternehmens mit geschätztem Erlös von ca. 3M €. Die Empfehlung kam direkt von Tim Keller (VV00001, Top-Mandant mit 12,5M AuM), der die Familie aus dem IHK-Präsidium Rhein-Main kennt. Aktuell liegt das Vermögen bei der Commerzbank Wealth Management — ein Wechsel ist realistisch, da der persönliche Bezug über Tim Keller Vertrauen schafft. Der WpHG-Fragebogen ist der nächste formale Schritt. Empfehlung: FairValue Mandat mit Fokus auf Kapitalerhalt und moderatem Wachstum nach Unternehmensverkauf. Cross-Selling-Potenzial: Nachfolgeberatung und Steuerstrategie.',
     herleitung: [
-      { label: 'Empfehlungsgeber', value: 'Dr. Heinrich von Trott (VV00001), Top-Mandant 12,5M AuM' },
+      { label: 'Empfehlungsgeber', value: 'Tim Keller (VV00001), Top-Mandant 12,5M AuM' },
       { label: 'Kontext', value: 'Unternehmer-Netzwerk Rhein-Main, gemeinsam im IHK-Präsidium' },
       { label: 'Geschätztes Vermögen', value: 'ca. 3.000.000 € (Unternehmensverkauf geplant)' },
       { label: 'Aktueller Berater', value: 'Commerzbank Wealth Management' },
@@ -1193,7 +1193,7 @@ export const VV_LEADS = [
   // 2. NextGen – Kinder von Mandanten
   {
     id: 'NM003',
-    name: 'Charlotte von Trott',
+    name: 'Charlotte Keller',
     kategorie: 'neumandat',
     quelle: 'nextgen',
     quelleLabel: 'NextGen (Kind v. Mandant)',
@@ -1205,20 +1205,20 @@ export const VV_LEADS = [
     datum: '2026-02-15',
     referenzMandant: 'VV00001',
     beruf: 'Anwältin, Partnerin Wirtschaftskanzlei',
-    herkunft: 'Tochter von Dr. von Trott (VV00001) — Anwältin, 32 J., geschätztes Eigenvermögen 800k',
-    kiDescription: 'KI-Analyse: Charlotte von Trott (32) ist Tochter des Top-Mandanten Dr. Heinrich von Trott (VV00001) und Partnerin in einer Wirtschaftskanzlei in Frankfurt. Ihr geschätztes Eigenvermögen von ca. 800k € stammt aus Ersparnissen und Bonuszahlungen — typisches Profil einer jungen High Earner ohne strukturierte Vermögensverwaltung. Der Vater hat die Empfehlung aktiv ausgesprochen, was die Abschlusswahrscheinlichkeit auf 60% hebt. NextGen-Strategie: SmartValue Mandat als Einstieg mit Perspektive auf FairValue bei wachsendem Vermögen. Langfristwert: Bindung der 3. Generation an HRK LUNIS, potenzieller Erbschaftsfluss aus dem 12,5M-Mandat des Vaters.',
+    herkunft: 'Tochter von Tim Keller (VV00001) — Anwältin, 32 J., geschätztes Eigenvermögen 800k',
+    kiDescription: 'KI-Analyse: Charlotte Keller (32) ist Tochter des Top-Mandanten Tim Keller (VV00001) und Partnerin in einer Wirtschaftskanzlei in Frankfurt. Ihr geschätztes Eigenvermögen von ca. 800k € stammt aus Ersparnissen und Bonuszahlungen — typisches Profil einer jungen High Earner ohne strukturierte Vermögensverwaltung. Der Vater hat die Empfehlung aktiv ausgesprochen, was die Abschlusswahrscheinlichkeit auf 60% hebt. NextGen-Strategie: SmartValue Mandat als Einstieg mit Perspektive auf FairValue bei wachsendem Vermögen. Langfristwert: Bindung der 3. Generation an HRK LUNIS, potenzieller Erbschaftsfluss aus dem 12,5M-Mandat des Vaters.',
     herleitung: [
-      { label: 'Verwandtschaft', value: 'Tochter von Dr. Heinrich von Trott (VV00001)' },
+      { label: 'Verwandtschaft', value: 'Tochter von Tim Keller (VV00001)' },
       { label: 'Alter / Beruf', value: '32 Jahre, Anwältin / Partnerin bei Wirtschaftskanzlei Frankfurt' },
       { label: 'Geschätztes Eigenvermögen', value: 'ca. 800.000 € (Ersparnisse + Bonuszahlungen)' },
-      { label: 'Türöffner', value: 'Vater Dr. von Trott hat Empfehlung ausgesprochen' },
+      { label: 'Türöffner', value: 'Vater Tim Keller hat Empfehlung ausgesprochen' },
       { label: 'Eigenes Mandat?', value: 'Nein — kein eigenes VV-Mandat vorhanden' },
       { label: 'Empfohlenes Produkt', value: 'SmartValue Mandat (ab 250k)' },
     ],
   },
   {
     id: 'NM004',
-    name: 'Friedrich von Trott',
+    name: 'Friedrich Keller',
     kategorie: 'neumandat',
     quelle: 'nextgen',
     quelleLabel: 'NextGen (Kind v. Mandant)',
@@ -1230,10 +1230,10 @@ export const VV_LEADS = [
     datum: '2026-01-20',
     referenzMandant: 'VV00001',
     beruf: 'Ingenieur im Familienunternehmen',
-    herkunft: 'Sohn von Dr. von Trott (VV00001) — Ingenieur, 28 J., potenzielle Firmennachfolge',
-    kiDescription: 'KI-Analyse: Friedrich von Trott (28) ist der Sohn von Dr. Heinrich von Trott und arbeitet als Ingenieur im Familienunternehmen (Maschinenbau). Sein aktuelles Eigenvermögen ist mit ca. 250k € noch überschaubar, aber der strategische Wert ist enorm: Er ist der wahrscheinliche Nachfolger der Von Trott Maschinenbau GmbH (Firmenwert geschätzt 4,5M €). Bei einer Übernahme in 3–5 Jahren fließen erhebliche Vermögenswerte. Empfehlung: Jetzt mit SmartValue Mandat binden, perspektivisch FairValue nach Unternehmensübernahme. Ansprache indirekt über den Vater beim nächsten Quartalstermin — niedrige Hürde durch familiäre Vertrauensbasis.',
+    herkunft: 'Sohn von Tim Keller (VV00001) — Ingenieur, 28 J., potenzielle Firmennachfolge',
+    kiDescription: 'KI-Analyse: Friedrich Keller (28) ist der Sohn von Tim Keller und arbeitet als Ingenieur im Familienunternehmen (Maschinenbau). Sein aktuelles Eigenvermögen ist mit ca. 250k € noch überschaubar, aber der strategische Wert ist enorm: Er ist der wahrscheinliche Nachfolger der Keller Maschinenbau GmbH (Firmenwert geschätzt 4,5M €). Bei einer Übernahme in 3–5 Jahren fließen erhebliche Vermögenswerte. Empfehlung: Jetzt mit SmartValue Mandat binden, perspektivisch FairValue nach Unternehmensübernahme. Ansprache indirekt über den Vater beim nächsten Quartalstermin — niedrige Hürde durch familiäre Vertrauensbasis.',
     herleitung: [
-      { label: 'Verwandtschaft', value: 'Sohn von Dr. Heinrich von Trott (VV00001)' },
+      { label: 'Verwandtschaft', value: 'Sohn von Tim Keller (VV00001)' },
       { label: 'Alter / Beruf', value: '28 Jahre, Ingenieur im Familienunternehmen Maschinenbau' },
       { label: 'Geschätztes Eigenvermögen', value: 'ca. 250.000 € (Ersparnisse + Firmenanteile unklar)' },
       { label: 'Nachfolge-Kontext', value: 'Potenzielle Übernahme des Familienunternehmens in 3-5 Jahren' },
@@ -1327,12 +1327,12 @@ export const VV_LEADS = [
     datum: '2026-03-08',
     beruf: 'Ehem. GF Fuchs Präzisionstechnik',
     herkunft: 'Handelsblatt: Dr. Martin Fuchs verkauft Fuchs Präzisionstechnik an schwedischen Konzern. Geschätzter Erlös 4–6M €.',
-    kiDescription: 'KI-Analyse: Frischer Presse-Lead aus dem Handelsblatt (06.03.2026): Dr. Martin Fuchs hat Fuchs Präzisionstechnik an einen schwedischen Konzern verkauft. Der geschätzte Erlös liegt bei 4–6M € basierend auf EBITDA-Multiples der Branche. Die Firma sitzt in Frankfurt-Süd — direkt im Einzugsgebiet. Noch besteht kein Kontakt, aber über das IHK-Netzwerk Frankfurt könnte Dr. von Trott (VV00001) als Türöffner fungieren. Lead-Qualität: mittel — ohne persönlichen Bezug ist die Wahrscheinlichkeit bei 15%. Empfehlung: Recherche vertiefen, dann warme Kontaktaufnahme über IHK-Netzwerk statt Kaltakquise.',
+    kiDescription: 'KI-Analyse: Frischer Presse-Lead aus dem Handelsblatt (06.03.2026): Dr. Martin Fuchs hat Fuchs Präzisionstechnik an einen schwedischen Konzern verkauft. Der geschätzte Erlös liegt bei 4–6M € basierend auf EBITDA-Multiples der Branche. Die Firma sitzt in Frankfurt-Süd — direkt im Einzugsgebiet. Noch besteht kein Kontakt, aber über das IHK-Netzwerk Frankfurt könnte Tim Keller (VV00001) als Türöffner fungieren. Lead-Qualität: mittel — ohne persönlichen Bezug ist die Wahrscheinlichkeit bei 15%. Empfehlung: Recherche vertiefen, dann warme Kontaktaufnahme über IHK-Netzwerk statt Kaltakquise.',
     herleitung: [
       { label: 'Quelle', value: 'Handelsblatt, 06.03.2026 — "Fuchs Präzisionstechnik geht an Sandvik"' },
       { label: 'Geschätzter Erlös', value: '4.000.000–6.000.000 € (EBITDA-Multiple geschätzt)' },
       { label: 'Region', value: 'Frankfurt-Süd — im Einzugsgebiet' },
-      { label: 'Netzwerk', value: 'IHK Frankfurt — ggf. über Dr. von Trott ansprechbar' },
+      { label: 'Netzwerk', value: 'IHK Frankfurt — ggf. über Tim Keller ansprechbar' },
       { label: 'Status', value: 'Noch kein Kontakt — Ansprache über Netzwerk geplant' },
     ],
   },
@@ -1491,7 +1491,7 @@ export const VV_LEADS = [
   },
   {
     id: 'BM002',
-    name: 'Dr. von Trott LV-Ablauf 320k',
+    name: 'Tim Keller LV-Ablauf 320k',
     kategorie: 'bestandsmandat',
     quelle: 'liquiditaet',
     quelleLabel: 'Erhöhte Liquidität',
@@ -1503,8 +1503,8 @@ export const VV_LEADS = [
     datum: '2026-02-15',
     referenzMandant: 'VV00001',
     beruf: 'Bestandsmandant',
-    herkunft: 'Dr. von Trott: Alte Leipziger LV, Rückkaufswert 320k €, Ablauf Q3/2026. Wiederanlage ins Mandat.',
-    kiDescription: 'KI-Analyse: Proaktiver Lead aus der Consent-Datenabfrage bei der Alten Leipziger. Dr. von Trotts Lebensversicherung (Vertrag vor 2005) läuft Q3/Q4 2026 ab mit einem Rückkaufswert von 320k €. Steuerlich optimal: Auszahlung nach 12 Jahren steuerfrei. Das Geld würde ohne Beratung unverzinst auf dem Konto landen. Empfehlung: Proaktives Gespräch VOR dem Ablauftermin planen — Wiederanlage direkt ins bestehende FairValue Mandat. Renditeargument: 5–7% Zielrendite vs. 0% auf dem Girokonto. Die Wahrscheinlichkeit liegt bei 85% — der Mandant vertraut HRK LUNIS bereits vollständig.',
+    herkunft: 'Tim Keller: Alte Leipziger LV, Rückkaufswert 320k €, Ablauf Q3/2026. Wiederanlage ins Mandat.',
+    kiDescription: 'KI-Analyse: Proaktiver Lead aus der Consent-Datenabfrage bei der Alten Leipziger. Tim Kellers Lebensversicherung (Vertrag vor 2005) läuft Q3/Q4 2026 ab mit einem Rückkaufswert von 320k €. Steuerlich optimal: Auszahlung nach 12 Jahren steuerfrei. Das Geld würde ohne Beratung unverzinst auf dem Konto landen. Empfehlung: Proaktives Gespräch VOR dem Ablauftermin planen — Wiederanlage direkt ins bestehende FairValue Mandat. Renditeargument: 5–7% Zielrendite vs. 0% auf dem Girokonto. Die Wahrscheinlichkeit liegt bei 85% — der Mandant vertraut HRK LUNIS bereits vollständig.',
     herleitung: [
       { label: 'Datenquelle', value: 'Consent-Abfrage Alte Leipziger' },
       { label: 'Versicherer', value: 'Alte Leipziger Lebensversicherung' },
@@ -1518,7 +1518,7 @@ export const VV_LEADS = [
   // 2. Fremdbank-Konsolidierung
   {
     id: 'BM003',
-    name: 'Dr. von Trott UBS-Konsolidierung 3,2M',
+    name: 'Tim Keller UBS-Konsolidierung 3,2M',
     kategorie: 'bestandsmandat',
     quelle: 'fremdbank',
     quelleLabel: 'Fremdbank-Konsolidierung',
@@ -1530,8 +1530,8 @@ export const VV_LEADS = [
     datum: '2026-03-01',
     referenzMandant: 'VV00001',
     beruf: 'Bestandsmandant',
-    herkunft: 'Dr. von Trott: 2,8M UBS Depot + 400k DB Cash. Konsolidierung spart ca. 16.000 €/Jahr Kosten.',
-    kiDescription: 'KI-Analyse: Konsolidierungspotenzial bei Dr. von Trott! Die Consent-Abfragen bei UBS und Deutsche Bank zeigen: 2,8M € im UBS-Depot (Gemischtes Mandat, Kostenquote 1,35%) plus 400k € Cash bei der Deutschen Bank. Durch Konsolidierung ins FairValue Mandat (All-in-Fee 0,85%) spart der Mandant ca. 16.000 €/Jahr bei 3,2M Volumen. Zusätzlich profitiert er von einheitlichem Reporting und ganzheitlicher Betreuung statt fragmentierter Vermögensübersicht. Das Gesamtmandat würde auf ca. 15,7M € steigen — ein signifikanter Revenuegewinn für HRK LUNIS. Empfehlung: Konkretes Vergleichsangebot UBS vs. FairValue erstellen.',
+    herkunft: 'Tim Keller: 2,8M UBS Depot + 400k DB Cash. Konsolidierung spart ca. 16.000 €/Jahr Kosten.',
+    kiDescription: 'KI-Analyse: Konsolidierungspotenzial bei Tim Keller! Die Consent-Abfragen bei UBS und Deutsche Bank zeigen: 2,8M € im UBS-Depot (Gemischtes Mandat, Kostenquote 1,35%) plus 400k € Cash bei der Deutschen Bank. Durch Konsolidierung ins FairValue Mandat (All-in-Fee 0,85%) spart der Mandant ca. 16.000 €/Jahr bei 3,2M Volumen. Zusätzlich profitiert er von einheitlichem Reporting und ganzheitlicher Betreuung statt fragmentierter Vermögensübersicht. Das Gesamtmandat würde auf ca. 15,7M € steigen — ein signifikanter Revenuegewinn für HRK LUNIS. Empfehlung: Konkretes Vergleichsangebot UBS vs. FairValue erstellen.',
     herleitung: [
       { label: 'Datenquelle', value: 'Consent-Abfrage UBS + Deutsche Bank' },
       { label: 'UBS Depotvolumen', value: '2.800.000 € (Gemischtes Mandat)' },
@@ -1644,7 +1644,7 @@ export const VV_LEADS = [
   // 4. Life Events / Lebensveränderungen
   {
     id: 'BM008',
-    name: 'Dr. von Trott Nachfolgeplanung',
+    name: 'Tim Keller Nachfolgeplanung',
     kategorie: 'bestandsmandat',
     quelle: 'lifeevent',
     quelleLabel: 'Lebensveränderung',
@@ -1656,11 +1656,11 @@ export const VV_LEADS = [
     datum: '2026-02-15',
     referenzMandant: 'VV00001',
     beruf: 'Bestandsmandant',
-    herkunft: 'Dr. von Trott (62 J.): Nachfolge Maschinenbau GmbH in 3–5 Jahren. Firmenwert geschätzt 4,5M €. Erlös-Anlage planen.',
-    kiDescription: 'KI-Analyse: Strategisch hochrelevanter Lead! Dr. von Trott (62 J.) plant die Nachfolge der Von Trott Maschinenbau GmbH & Co. KG (3. Generation) in den nächsten 3–5 Jahren. Der Firmenwert wird auf 4,5M € geschätzt (EBITDA-Multiple). Sohn Friedrich (28) arbeitet bereits im Unternehmen und ist voraussichtlicher Nachfolger. Bei einem Verkauf oder einer Übertragung fließen erhebliche Erlöse ins Privatvermögen. Steuerlich komplex: Betriebsvermögensfreibetrag und Verschonungsabschlag müssen geprüft werden. Empfehlung: Jetzt Nachfolgeberatung mit Steuer- und Rechtspartner koordinieren — HRK LUNIS als ganzheitlicher Berater positionieren. Cross-Selling: Auch Friedrich als eigenständigen Mandanten aufbauen (siehe NM004).',
+    herkunft: 'Tim Keller (62 J.): Nachfolge Maschinenbau GmbH in 3–5 Jahren. Firmenwert geschätzt 4,5M €. Erlös-Anlage planen.',
+    kiDescription: 'KI-Analyse: Strategisch hochrelevanter Lead! Tim Keller (62 J.) plant die Nachfolge der Keller Maschinenbau GmbH & Co. KG (3. Generation) in den nächsten 3–5 Jahren. Der Firmenwert wird auf 4,5M € geschätzt (EBITDA-Multiple). Sohn Friedrich (28) arbeitet bereits im Unternehmen und ist voraussichtlicher Nachfolger. Bei einem Verkauf oder einer Übertragung fließen erhebliche Erlöse ins Privatvermögen. Steuerlich komplex: Betriebsvermögensfreibetrag und Verschonungsabschlag müssen geprüft werden. Empfehlung: Jetzt Nachfolgeberatung mit Steuer- und Rechtspartner koordinieren — HRK LUNIS als ganzheitlicher Berater positionieren. Cross-Selling: Auch Friedrich als eigenständigen Mandanten aufbauen (siehe NM004).',
     herleitung: [
       { label: 'Auslöser', value: 'Alter 62 + Sohn Friedrich (28) im Unternehmen — Nachfolge in 3–5 Jahren' },
-      { label: 'Unternehmen', value: 'Von Trott Maschinenbau GmbH & Co. KG, 3. Generation' },
+      { label: 'Unternehmen', value: 'Keller Maschinenbau GmbH & Co. KG, 3. Generation' },
       { label: 'Geschätzte Firmenbewertung', value: '4.500.000 € (EBITDA-Multiple)' },
       { label: 'Steuerliche Aspekte', value: 'Betriebsvermögensfreibetrag, Verschonungsabschlag prüfen' },
       { label: 'Nächster Schritt', value: 'Nachfolgeberatung mit Steuer- und Rechtspartner koordinieren' },
@@ -1693,7 +1693,7 @@ export const VV_LEADS = [
   // 5. Stiftungsgründung
   {
     id: 'BM010',
-    name: 'Dr. von Trott Familienstiftung',
+    name: 'Tim Keller Familienstiftung',
     kategorie: 'bestandsmandat',
     quelle: 'stiftung',
     quelleLabel: 'Stiftungsgründung',
@@ -1701,15 +1701,15 @@ export const VV_LEADS = [
     geschaetztesVolumen: '2.000.000 €',
     potentialAuM: 2000000,
     wahrscheinlichkeit: 45,
-    naechsterSchritt: 'Stiftungskonzept mit Elisabeth von Trott besprechen',
+    naechsterSchritt: 'Stiftungskonzept mit Elisabeth Keller besprechen',
     datum: '2026-01-20',
     referenzMandant: 'VV00001',
     beruf: 'Bestandsmandant',
-    herkunft: 'Elisabeth von Trott: Soziales Engagement seit 10+ Jahren. Familienstiftung als Nachfolgeinstrument prüfen, Kapital 2M €.',
-    kiDescription: 'KI-Analyse: Elisabeth von Trott (Ehefrau von Dr. Heinrich von Trott) engagiert sich seit über 10 Jahren sozial und plant eine Familienstiftung. Das geplante Stiftungskapital beträgt 2M € aus dem Privatvermögen. Strategischer Wert für HRK LUNIS: Stiftungen binden Mandanten und Vermögen langfristig — ein nahezu unkündbares Mandat. Steuerlicher Vorteil: Sonderausgabenabzug bis 1M € im Gründungsjahr. Die Stiftung dient gleichzeitig als Nachfolgeinstrument für die Familie (Gesamtvermögen >20M). Empfehlung: Stiftungskonzept mit Elisabeth besprechen und als umfassendes Family-Governance-Instrument positionieren.',
+    herkunft: 'Elisabeth Keller: Soziales Engagement seit 10+ Jahren. Familienstiftung als Nachfolgeinstrument prüfen, Kapital 2M €.',
+    kiDescription: 'KI-Analyse: Elisabeth Keller (Ehefrau von Tim Keller) engagiert sich seit über 10 Jahren sozial und plant eine Familienstiftung. Das geplante Stiftungskapital beträgt 2M € aus dem Privatvermögen. Strategischer Wert für HRK LUNIS: Stiftungen binden Mandanten und Vermögen langfristig — ein nahezu unkündbares Mandat. Steuerlicher Vorteil: Sonderausgabenabzug bis 1M € im Gründungsjahr. Die Stiftung dient gleichzeitig als Nachfolgeinstrument für die Familie (Gesamtvermögen >20M). Empfehlung: Stiftungskonzept mit Elisabeth besprechen und als umfassendes Family-Governance-Instrument positionieren.',
     herleitung: [
       { label: 'Auslöser', value: 'Gesamtvermögen >20M, Alter >60 — Stiftung als Nachfolgeinstrument' },
-      { label: 'Initiatorin', value: 'Elisabeth von Trott, Stiftungsvorstand (ehrenamtlich)' },
+      { label: 'Initiatorin', value: 'Elisabeth Keller, Stiftungsvorstand (ehrenamtlich)' },
       { label: 'Geplantes Stiftungskapital', value: '2.000.000 € aus Privatvermögen' },
       { label: 'Steuerliche Vorteile', value: 'Sonderausgabenabzug bis 1M im Gründungsjahr' },
       { label: 'Langfristwert', value: 'Stiftung bindet Mandanten + Vermögen langfristig an HRK LUNIS' },
@@ -1846,7 +1846,7 @@ export const VV_LEADS = [
   // 11. Digitale Signale — Defense/Rüstungs-Investment-Interesse
   {
     id: 'BM016',
-    name: 'Dr. von Trott Defense-Investment',
+    name: 'Tim Keller Defense-Investment',
     kategorie: 'bestandsmandat',
     quelle: 'digital',
     quelleLabel: 'Digitales Signal / Interne Analyse',
@@ -1859,8 +1859,8 @@ export const VV_LEADS = [
     referenzMandant: 'VV00001',
     beruf: 'Bestandsmandant',
     isNeuerLead: true,
-    herkunft: 'Dr. von Trott: Interne Analyse zeigt starkes Interesse an Defense-Anlagen — Whitepaper gelesen, LinkedIn-Diskussionen, Newsletter geöffnet, Event besucht.',
-    kiDescription: 'KI-Analyse: Unsere interne Signalanalyse hat ein starkes Interessencluster bei Dr. von Trott zum Thema Defense-/Rüstungsinvestments identifiziert. Vier unabhängige Datenpunkte bestätigen das Muster: (1) Unser Whitepaper „Defense & Aerospace — Investmentchancen im neuen geopolitischen Umfeld" wurde vollständig gelesen (Verweildauer 14 Min.). (2) Auf LinkedIn hat sich Dr. von Trott aktiv an Diskussionen zu europäischer Verteidigungspolitik und Defense-ETFs beteiligt — mit mehreren Kommentaren und Shares. (3) Unser thematischer Newsletter „Defense-Sektor: Portfolioallokation 2026" wurde geöffnet und alle Links angeklickt. (4) Vor ca. 2 Monaten hat er an unserem Event „Geopolitik & Portfoliostrategie" teilgenommen. Empfehlung: Proaktiv Termin vereinbaren und Defense-Investmentthese vorstellen. Anknüpfungspunkt: Unser neues Whitepaper „European Defense Stocks — Due Diligence Report 2026" (vor 2 Tagen veröffentlicht). Potenzielle Allokation: 500k–1,5M € aus dem bestehenden FairValue-Mandat (12,5M AuM) — das entspricht 4–12% des Portfolios, im Einklang mit seiner Risikoneigung.',
+    herkunft: 'Tim Keller: Interne Analyse zeigt starkes Interesse an Defense-Anlagen — Whitepaper gelesen, LinkedIn-Diskussionen, Newsletter geöffnet, Event besucht.',
+    kiDescription: 'KI-Analyse: Unsere interne Signalanalyse hat ein starkes Interessencluster bei Tim Keller zum Thema Defense-/Rüstungsinvestments identifiziert. Vier unabhängige Datenpunkte bestätigen das Muster: (1) Unser Whitepaper „Defense & Aerospace — Investmentchancen im neuen geopolitischen Umfeld" wurde vollständig gelesen (Verweildauer 14 Min.). (2) Auf LinkedIn hat sich Tim Keller aktiv an Diskussionen zu europäischer Verteidigungspolitik und Defense-ETFs beteiligt — mit mehreren Kommentaren und Shares. (3) Unser thematischer Newsletter „Defense-Sektor: Portfolioallokation 2026" wurde geöffnet und alle Links angeklickt. (4) Vor ca. 2 Monaten hat er an unserem Event „Geopolitik & Portfoliostrategie" teilgenommen. Empfehlung: Proaktiv Termin vereinbaren und Defense-Investmentthese vorstellen. Anknüpfungspunkt: Unser neues Whitepaper „European Defense Stocks — Due Diligence Report 2026" (vor 2 Tagen veröffentlicht). Potenzielle Allokation: 500k–1,5M € aus dem bestehenden FairValue-Mandat (12,5M AuM) — das entspricht 4–12% des Portfolios, im Einklang mit seiner Risikoneigung.',
     herleitung: [
       { label: 'Whitepaper', value: 'Defense & Aerospace Whitepaper vollständig gelesen (14 Min. Verweildauer)' },
       { label: 'LinkedIn-Aktivität', value: 'Aktive Diskussionsbeiträge zu europäischer Verteidigungspolitik und Defense-ETFs' },
@@ -1892,7 +1892,7 @@ export const VV_REVENUE = {
   ],
 
   mandantenRevenue: [
-    { name: 'Dr. von Trott', aum: 12500000, fee: 0.85, ertrag: 106250 },
+    { name: 'Tim Keller', aum: 12500000, fee: 0.85, ertrag: 106250 },
     { name: 'Fam. Lindenberg', aum: 2100000, fee: 1.05, ertrag: 22050 },
     { name: 'Stiftung Weber', aum: 8300000, fee: 0.75, ertrag: 62250 },
     { name: 'Prof. Hartmann', aum: 6800000, fee: 0.85, ertrag: 57800 },

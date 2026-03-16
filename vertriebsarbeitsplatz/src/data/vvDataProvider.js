@@ -399,7 +399,7 @@ function transformFamilie(raw) {
   const hasUnternehmen = beruf.toLowerCase().includes('unternehmer') || beruf.toLowerCase().includes('stifter');
 
   const unternehmen = hasUnternehmen ? {
-    name: beruf.includes('Maschinenbau') ? 'Von Trott Maschinenbau GmbH' :
+    name: beruf.includes('Maschinenbau') ? 'Keller Maschinenbau GmbH' :
           beruf.includes('SaaS') ? 'Lindenberg Digital GmbH (verkauft)' :
           `${mandant?.name?.split(' ').pop() || 'Familien'} Holding GmbH`,
     branche: beruf.includes('Maschinenbau') ? 'Maschinenbau' :

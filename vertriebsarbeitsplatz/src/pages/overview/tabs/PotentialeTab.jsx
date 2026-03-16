@@ -4,6 +4,7 @@ import Card from '../../../components/ui/Card';
 import PipelineBar from '../../../components/ui/PipelineBar';
 import { PrioBadge, QuellenBadge } from '../../../components/ui/Badge';
 import { useMode } from '../../../hooks/useMode';
+import useTranslation from '../../../i18n/useTranslation';
 import { KUNDEN_BY_MODE, getAllPotentiale } from '../../../data';
 import { formatEur } from '../../../utils/formatters';
 import { clsx } from 'clsx';
@@ -21,23 +22,24 @@ const KUNDEN_FOTOS = {
   'WM00003': './images/AdobeStock_1091012713.jpeg',
 };
 
-const P_KPI_CONFIG = [
-  { id: 'consentKunden', label: 'Consent-Kunden', format: 'num', icon: 'Users' },
-  { id: 'potentiale', label: 'Potentiale', format: 'num', icon: 'Zap' },
-  { id: 'praemienvolumen', label: 'Prämienvolumen', format: 'eur', icon: 'Briefcase' },
-  { id: 'convRate', label: 'Conv.-Rate', format: 'pct', icon: 'Target' },
-];
-
-const STATUS_TABS = [
-  { id: 'alle', label: 'Alle' },
-  { id: 'identifiziert', label: 'Identifiziert' },
-  { id: 'angeschrieben', label: 'Angeschrieben' },
-  { id: 'termin', label: 'Termin' },
-  { id: 'abgeschlossen', label: 'Abgeschlossen' },
-];
-
 export default function PotentialeTab() {
   const { modeId, navigateTo } = useMode();
+  const { t } = useTranslation();
+
+  const P_KPI_CONFIG = [
+    { id: 'consentKunden', label: t('consentKunden'), format: 'num', icon: 'Users' },
+    { id: 'potentiale', label: t('potenziale'), format: 'num', icon: 'Zap' },
+    { id: 'praemienvolumen', label: t('praemienvolumen'), format: 'eur', icon: 'Briefcase' },
+    { id: 'convRate', label: t('convRate'), format: 'pct', icon: 'Target' },
+  ];
+
+  const STATUS_TABS = [
+    { id: 'alle', label: t('alle') },
+    { id: 'identifiziert', label: t('identifiziert') },
+    { id: 'angeschrieben', label: t('angeschrieben') },
+    { id: 'termin', label: t('terminLabel') },
+    { id: 'abgeschlossen', label: t('abgeschlossen') },
+  ];
   const [statusFilter, setStatusFilter] = useState('alle');
   const allPotentiale = getAllPotentiale(modeId);
   const kunden = KUNDEN_BY_MODE[modeId] || [];
@@ -59,10 +61,10 @@ export default function PotentialeTab() {
   };
 
   const pipelineSegments = [
-    { label: 'Identifiziert', count: statusCounts.identifiziert, color: '#3b82f6' },
-    { label: 'Angeschrieben', count: statusCounts.angeschrieben, color: '#f59e0b' },
-    { label: 'Termin', count: statusCounts.termin, color: '#10b981' },
-    { label: 'Abgeschl.', count: statusCounts.abgeschlossen, color: 'var(--mode-primary)' },
+    { label: t('identifiziert'), count: statusCounts.identifiziert, color: '#3b82f6' },
+    { label: t('angeschrieben'), count: statusCounts.angeschrieben, color: '#f59e0b' },
+    { label: t('terminLabel'), count: statusCounts.termin, color: '#10b981' },
+    { label: t('abgeschl'), count: statusCounts.abgeschlossen, color: 'var(--mode-primary)' },
   ];
 
   const filtered = statusFilter === 'alle'
@@ -82,7 +84,7 @@ export default function PotentialeTab() {
 
       {/* Pipeline */}
       <Card>
-        <h3 className="font-semibold text-slate-800 mb-4">Pipeline</h3>
+        <h3 className="font-semibold text-slate-800 mb-4">{t('pipeline')}</h3>
         <PipelineBar segments={pipelineSegments} />
       </Card>
 
@@ -131,7 +133,7 @@ export default function PotentialeTab() {
                   <span className="font-semibold text-sm text-slate-800">{kunde?.name || kundeId}</span>
                   <span className="text-xs text-slate-400">{kundeId} &middot; {potentiale.length} Potentiale</span>
                 </div>
-                <span className="font-mono text-sm font-medium text-slate-700">Gesamt {formatEur(gesamt)}</span>
+                <span className="font-mono text-sm font-medium text-slate-700">{t('gesamt')} {formatEur(gesamt)}</span>
               </div>
 
               {/* Potentiale-Zeilen */}

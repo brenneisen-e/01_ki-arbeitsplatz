@@ -1,4 +1,5 @@
 import { useMode } from '../../hooks/useMode';
+import useTranslation from '../../i18n/useTranslation';
 import { KUNDEN_BY_MODE, getKundeById } from '../../data';
 import GlobalHeader from '../../components/layout/GlobalHeader';
 import StammdatenDetailTab from './tabs/StammdatenDetailTab';
@@ -34,12 +35,13 @@ const TAB_COMPONENTS = {
 };
 
 export default function DetailPage() {
+  const { t } = useTranslation();
   const { modeId, activeTab, selectedKundeId } = useMode();
   const kunden = KUNDEN_BY_MODE[modeId] || [];
 
   // Wenn kein Kunde gewaehlt, nimm den ersten
   const kunde = getKundeById(modeId, selectedKundeId) || kunden[0];
-  if (!kunde) return <div className="p-10">Kein Kunde gefunden.</div>;
+  if (!kunde) return <div className="p-10">{t('keinKundeGefunden')}</div>;
 
   const TabComponent = TAB_COMPONENTS[activeTab] || StammdatenDetailTab;
 

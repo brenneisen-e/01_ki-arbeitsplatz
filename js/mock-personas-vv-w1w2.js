@@ -4,19 +4,19 @@
 
 window._vvPersonaExtensions = window._vvPersonaExtensions || {};
 
-// ── W1: Dr. Heinrich von Trott – Unternehmer, 62, Konsolidierung/Nachfolge ──
-window._vvPersonaExtensions['Dr. Heinrich von Trott'] = {
+// ── W1: Tim Keller – Unternehmer, 62, Konsolidierung/Nachfolge ──
+window._vvPersonaExtensions['Tim Keller'] = {
 
     linkedin: {
-        profil: 'linkedin.com/in/heinrich-vontrott',
-        headline: 'Geschäftsführender Gesellschafter | von Trott Maschinenbau GmbH',
+        profil: 'linkedin.com/in/tim-keller',
+        headline: 'Geschäftsführender Gesellschafter | Keller Maschinenbau GmbH',
         connections: 1850,
         recentPosts: [
-            { datum: '2026-02-18', thema: 'Firmenjubiläum 75 Jahre von Trott Maschinenbau' },
+            { datum: '2026-02-18', thema: 'Firmenjubiläum 75 Jahre Keller Maschinenbau' },
             { datum: '2026-01-22', thema: 'Nachhaltige Produktion – unsere ESG-Roadmap 2030' }
         ],
         lebensereignisse: [
-            { typ: 'firmenjubilaeum', datum: '2026-02', details: '75 Jahre von Trott Maschinenbau' },
+            { typ: 'firmenjubilaeum', datum: '2026-02', details: '75 Jahre Keller Maschinenbau' },
             { typ: 'nachfolge_signal', datum: '2025-12', details: 'Sohn Maximilian als COO vorgestellt' }
         ]
     },

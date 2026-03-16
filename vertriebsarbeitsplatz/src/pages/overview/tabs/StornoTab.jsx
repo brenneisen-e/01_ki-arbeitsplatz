@@ -2,28 +2,8 @@ import KPIGrid from '../../../components/ui/KPIGrid';
 import Card from '../../../components/ui/Card';
 import BarChartComponent from '../../../components/charts/BarChartComponent';
 import { useMode } from '../../../hooks/useMode';
+import useTranslation from '../../../i18n/useTranslation';
 import { STORNO_DATA } from '../../../data';
-
-const STORNO_KPI_CONFIG = {
-  versicherung: [
-    { id: 'stornoAnzahl', label: 'Stornierungen', format: 'num', icon: 'AlertTriangle' },
-    { id: 'stornoQuote', label: 'Storno-Quote', format: 'pct', icon: 'TrendingDown' },
-    { id: 'stornoVolumen', label: 'Storno-Volumen', format: 'eur', icon: 'Briefcase' },
-    { id: 'fruehstorno', label: 'Frühstorno (<12M)', format: 'num', icon: 'Clock' },
-  ],
-  banking: [
-    { id: 'stornoAnzahl', label: 'Produktkündigungen', format: 'num', icon: 'AlertTriangle' },
-    { id: 'stornoQuote', label: 'Kündigungsquote', format: 'pct', icon: 'TrendingDown' },
-    { id: 'stornoVolumen', label: 'Abgefl. Volumen', format: 'eur', icon: 'Briefcase' },
-    { id: 'fruehstorno', label: 'Kundenabgänge', format: 'num', icon: 'Clock' },
-  ],
-  vermoegensverwaltung: [
-    { id: 'stornoAnzahl', label: 'Mandatskündigungen', format: 'num', icon: 'AlertTriangle' },
-    { id: 'stornoQuote', label: 'Kündigungsquote', format: 'pct', icon: 'TrendingDown' },
-    { id: 'stornoVolumen', label: 'AuM-Abfluss', format: 'eur', icon: 'Briefcase' },
-    { id: 'fruehstorno', label: 'Frühkündigungen', format: 'num', icon: 'Clock' },
-  ],
-};
 
 const GRUND_COLORS = {
   'Preis': 'bg-amber-100 text-amber-700',
@@ -35,6 +15,28 @@ const GRUND_COLORS = {
 
 export default function StornoTab() {
   const { modeId } = useMode();
+  const { t } = useTranslation();
+
+  const STORNO_KPI_CONFIG = {
+    versicherung: [
+      { id: 'stornoAnzahl', label: t('stornierungen'), format: 'num', icon: 'AlertTriangle' },
+      { id: 'stornoQuote', label: t('stornoQuote'), format: 'pct', icon: 'TrendingDown' },
+      { id: 'stornoVolumen', label: t('stornoVolumen'), format: 'eur', icon: 'Briefcase' },
+      { id: 'fruehstorno', label: t('fruehstornoKurz'), format: 'num', icon: 'Clock' },
+    ],
+    banking: [
+      { id: 'stornoAnzahl', label: t('produktkuendigungen'), format: 'num', icon: 'AlertTriangle' },
+      { id: 'stornoQuote', label: t('kuendigungsquote'), format: 'pct', icon: 'TrendingDown' },
+      { id: 'stornoVolumen', label: t('abgeflVolumen'), format: 'eur', icon: 'Briefcase' },
+      { id: 'fruehstorno', label: t('kundenabgaenge'), format: 'num', icon: 'Clock' },
+    ],
+    vermoegensverwaltung: [
+      { id: 'stornoAnzahl', label: t('mandatskuendigungen'), format: 'num', icon: 'AlertTriangle' },
+      { id: 'stornoQuote', label: t('kuendigungsquote'), format: 'pct', icon: 'TrendingDown' },
+      { id: 'stornoVolumen', label: t('aumAbfluss'), format: 'eur', icon: 'Briefcase' },
+      { id: 'fruehstorno', label: t('fruehkuendigungen'), format: 'num', icon: 'Clock' },
+    ],
+  };
   const data = STORNO_DATA[modeId] || STORNO_DATA.versicherung;
   const vertraege = data.vertraege || [];
 
@@ -44,7 +46,7 @@ export default function StornoTab() {
 
       <Card>
         <h3 className="font-semibold text-slate-800 mb-4">
-          {modeId === 'banking' ? 'Kündigungsgründe' : 'Storno-Gründe'}
+          {modeId === 'banking' ? t('kuendigungsgruende') : t('stornoGruende')}
         </h3>
         <BarChartComponent
           data={data.gruende}
@@ -55,20 +57,20 @@ export default function StornoTab() {
 
       <Card>
         <h3 className="font-semibold text-slate-800 mb-4">
-          {modeId === 'banking' ? 'Gekündigte Konten/Produkte' : 'Stornierte Verträge'}
+          {modeId === 'banking' ? t('gekuendigteKontenProdukte') : t('stornierteVertraege')}
         </h3>
         {vertraege.length > 0 ? (
           <div className="bg-white rounded-xl border border-slate-200 overflow-hidden" style={{ boxShadow: 'var(--card-shadow)' }}>
             <table className="w-full">
               <thead>
                 <tr className="bg-slate-50">
-                  <th className="px-4 py-3 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">Kunde</th>
-                  <th className="px-4 py-3 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">Produkt</th>
-                  <th className="px-4 py-3 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">Sparte</th>
-                  <th className="px-4 py-3 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">Prämie/J.</th>
-                  <th className="px-4 py-3 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">Storno-Datum</th>
-                  <th className="px-4 py-3 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">Grund</th>
-                  <th className="px-4 py-3 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">Typ</th>
+                  <th className="px-4 py-3 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">{t('kunde')}</th>
+                  <th className="px-4 py-3 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">{t('produkt')}</th>
+                  <th className="px-4 py-3 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">{t('sparte')}</th>
+                  <th className="px-4 py-3 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">{t('praemieJ')}</th>
+                  <th className="px-4 py-3 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">{t('stornoDatum')}</th>
+                  <th className="px-4 py-3 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">{t('grund')}</th>
+                  <th className="px-4 py-3 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">{t('typ')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -96,7 +98,7 @@ export default function StornoTab() {
           </div>
         ) : (
           <div className="text-sm text-slate-500 py-8 text-center">
-            Keine {modeId === 'banking' ? 'Kündigungen' : 'Stornierungen'} im aktuellen Zeitraum.
+            {modeId === 'banking' ? t('keineKuendigungen') : t('keineStornierungen')}
           </div>
         )}
       </Card>

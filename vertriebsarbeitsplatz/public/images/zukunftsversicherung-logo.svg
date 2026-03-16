@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" fill="none">
+  <defs>
+    <linearGradient id="zv-grad" x1="0" y1="0" x2="128" y2="128" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#1a365d"/>
+      <stop offset="100%" stop-color="#4a6fa5"/>
+    </linearGradient>
+  </defs>
+  <rect width="128" height="128" rx="24" fill="url(#zv-grad)"/>
+  <!-- Z letter stylized -->
+  <path d="M30 34h68v13H50l48 34v13H30V81h48L30 47z" fill="white" opacity="0.95"/>
+  <!-- Shield accent for insurance -->
+  <path d="M96 20c0 0 6 2 12 2v14c0 10-5 18-12 22-7-4-12-12-12-22V22c6 0 12-2 12-2z" fill="white" opacity="0.35" stroke="white" stroke-width="1.5" stroke-opacity="0.5"/>
+</svg>

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import Card from '../../../components/ui/Card';
 import PipelineBar from '../../../components/ui/PipelineBar';
 import { useMode } from '../../../hooks/useMode';
@@ -96,7 +96,7 @@ export default function PipelineLeadsTab() {
       </div>
 
       {/* Pipeline Bar */}
-      <Card>
+      <Card hover={false}>
         <h3 className="font-semibold text-slate-800 mb-2">Pipeline</h3>
         <PipelineBar segments={pipelineSegments} />
       </Card>
@@ -156,7 +156,7 @@ export default function PipelineLeadsTab() {
       </div>
 
       {/* Leads Table */}
-      <Card>
+      <Card hover={false}>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
@@ -192,7 +192,7 @@ export default function PipelineLeadsTab() {
 
       {/* Quellen-Aufschlüsselung */}
       <div className="grid grid-cols-2 gap-4">
-        <Card>
+        <Card hover={false}>
           <h4 className="font-semibold text-slate-800 mb-3">Neue Mandate — Quellen</h4>
           <div className="space-y-2">
             {['empfehlung', 'nextgen', 'presse', 'event', 'multiplikator', 'digital'].map(q => {
@@ -210,7 +210,7 @@ export default function PipelineLeadsTab() {
             })}
           </div>
         </Card>
-        <Card>
+        <Card hover={false}>
           <h4 className="font-semibold text-slate-800 mb-3">Bestandsmandate — Quellen</h4>
           <div className="space-y-2">
             {['liquiditaet', 'fremdbank', 'upgrade', 'lifeevent', 'stiftung', 'event_einladung', 'performance', 'compliance'].map(q => {
@@ -234,43 +234,50 @@ export default function PipelineLeadsTab() {
 }
 
 function LeadRow({ lead, isExpanded, onToggle }) {
+  const [hovered, setHovered] = useState(false);
+
   return (
     <>
       <tr
-        className="border-b border-slate-100 hover:bg-slate-50 transition-colors cursor-pointer"
+        className="border-b border-slate-100 transition-colors cursor-pointer"
+        style={hovered ? { backgroundColor: 'var(--mode-primary-light)', color: '#ffffff' } : undefined}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
         onClick={onToggle}
       >
-        <td className="py-2.5 pr-1 text-slate-400 w-5">
+        <td className={`py-2.5 pr-1 w-5 ${hovered ? 'text-white' : 'text-slate-400'}`}>
           {isExpanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
         </td>
         <td className="py-2.5 pr-2">
-          <div className="font-medium text-slate-800">{lead.name}</div>
-          {lead.beruf && <div className="text-[10px] text-slate-400">{lead.beruf}</div>}
+          <div className={`font-medium ${hovered ? 'text-white' : 'text-slate-800'}`}>{lead.name}</div>
+          {lead.beruf && <div className={`text-[10px] ${hovered ? 'text-white/70' : 'text-slate-400'}`}>{lead.beruf}</div>}
         </td>
         <td className="py-2.5 pr-2">
           <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${
-            lead.kategorie === 'neumandat'
-              ? 'bg-blue-50 text-blue-700'
-              : 'bg-emerald-50 text-emerald-700'
+            hovered
+              ? 'bg-white/20 text-white'
+              : lead.kategorie === 'neumandat'
+                ? 'bg-blue-50 text-blue-700'
+                : 'bg-emerald-50 text-emerald-700'
           }`}>
             {lead.kategorie === 'neumandat' ? 'Neues Mandat' : 'Bestand'}
           </span>
         </td>
         <td className="py-2.5 pr-2">
           <span
-            className="text-[10px] font-medium px-2 py-0.5 rounded-full text-white"
-            style={{ backgroundColor: QUELLEN_COLORS[lead.quelle] || '#94a3b8' }}
+            className={`text-[10px] font-medium px-2 py-0.5 rounded-full text-white`}
+            style={{ backgroundColor: hovered ? 'rgba(255,255,255,0.25)' : (QUELLEN_COLORS[lead.quelle] || '#94a3b8') }}
           >
             {QUELLEN_LABELS[lead.quelle] || lead.quelleLabel || lead.quelle}
           </span>
         </td>
         <td className="py-2.5 pr-2">
-          <StadiumBadge stadium={lead.stadium} />
+          {hovered ? <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-white/20 text-white">{STADIUM_LABELS[lead.stadium] || lead.stadium}</span> : <StadiumBadge stadium={lead.stadium} />}
         </td>
-        <td className="py-2.5 pr-2 font-mono text-slate-700 text-sm">
+        <td className={`py-2.5 pr-2 font-mono text-sm ${hovered ? 'text-white' : 'text-slate-700'}`}>
           {lead.geschaetztesVolumen || '—'}
         </td>
-        <td className="py-2.5 text-xs text-slate-500 truncate">
+        <td className={`py-2.5 text-xs truncate ${hovered ? 'text-white/80' : 'text-slate-500'}`}>
           {lead.herkunft}
         </td>
       </tr>

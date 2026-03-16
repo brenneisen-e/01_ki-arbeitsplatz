@@ -5,48 +5,48 @@
 // ─── 1. VV_PERFORMANCE ── Per-mandant performance data ──────────────────────
 
 export const VV_PERFORMANCE = {
-  // ── W1: Dr. Heinrich von Trott – Konservativ ──
+  // ── W1: Dr. Heinrich von Trott – Konservativ (Vorbild: Flossbach v. Storch Multiple Opps) ──
   VV00001: {
     monthlyReturns: [
-      // 2023
-      { name: 'Jan 2023', portfolio: 1.2, benchmark: 0.9 },
-      { name: 'Feb 2023', portfolio: -0.5, benchmark: -0.8 },
-      { name: 'Mär 2023', portfolio: 0.3, benchmark: 0.1 },
-      { name: 'Apr 2023', portfolio: 0.8, benchmark: 0.6 },
-      { name: 'Mai 2023', portfolio: -0.2, benchmark: -0.4 },
-      { name: 'Jun 2023', portfolio: 1.5, benchmark: 1.1 },
-      { name: 'Jul 2023', portfolio: 0.9, benchmark: 0.7 },
-      { name: 'Aug 2023', portfolio: -1.8, benchmark: -2.1 },
-      { name: 'Sep 2023', portfolio: -1.2, benchmark: -1.5 },
-      { name: 'Okt 2023', portfolio: -0.6, benchmark: -0.9 },
-      { name: 'Nov 2023', portfolio: 2.4, benchmark: 2.0 },
-      { name: 'Dez 2023', portfolio: 1.8, benchmark: 1.5 },
-      // 2024
-      { name: 'Jan 2024', portfolio: 0.4, benchmark: 0.2 },
-      { name: 'Feb 2024', portfolio: 1.6, benchmark: 1.2 },
-      { name: 'Mär 2024', portfolio: 1.1, benchmark: 0.8 },
-      { name: 'Apr 2024', portfolio: -2.3, benchmark: -2.8 },
-      { name: 'Mai 2024', portfolio: 0.7, benchmark: 0.4 },
-      { name: 'Jun 2024', portfolio: 1.3, benchmark: 1.0 },
-      { name: 'Jul 2024', portfolio: 0.5, benchmark: 0.3 },
-      { name: 'Aug 2024', portfolio: -0.9, benchmark: -1.2 },
-      { name: 'Sep 2024', portfolio: 1.8, benchmark: 1.4 },
-      { name: 'Okt 2024', portfolio: -0.4, benchmark: -0.7 },
-      { name: 'Nov 2024', portfolio: 1.9, benchmark: 1.5 },
-      { name: 'Dez 2024', portfolio: 0.8, benchmark: 0.5 },
-      // 2025
-      { name: 'Jan 2025', portfolio: 0.8, benchmark: 0.5 },
-      { name: 'Feb 2025', portfolio: 1.3, benchmark: 0.7 },
-      { name: 'Mär 2025', portfolio: 0.4, benchmark: 0.3 },
-      { name: 'Apr 2025', portfolio: 0.9, benchmark: 0.6 },
-      { name: 'Mai 2025', portfolio: -0.3, benchmark: -0.5 },
-      { name: 'Jun 2025', portfolio: 0.7, benchmark: 0.4 },
-      { name: 'Jul 2025', portfolio: 1.1, benchmark: 0.8 },
-      { name: 'Aug 2025', portfolio: -0.6, benchmark: -0.9 },
-      { name: 'Sep 2025', portfolio: 0.5, benchmark: 0.3 },
-      { name: 'Okt 2025', portfolio: 1.4, benchmark: 1.0 },
-      { name: 'Nov 2025', portfolio: 0.8, benchmark: 0.6 },
-      { name: 'Dez 2025', portfolio: 1.2, benchmark: 0.9 },
+      // 2023 – Erholung nach 2022, defensiv profitiert von Anleihen-Rally H2
+      { name: 'Jan 2023', portfolio: 2.1, benchmark: 1.8 },
+      { name: 'Feb 2023', portfolio: -0.8, benchmark: -1.2 },
+      { name: 'Mär 2023', portfolio: -1.4, benchmark: -1.9 },  // SVB-Krise
+      { name: 'Apr 2023', portfolio: 0.6, benchmark: 0.3 },
+      { name: 'Mai 2023', portfolio: 0.2, benchmark: -0.1 },
+      { name: 'Jun 2023', portfolio: 1.3, benchmark: 1.0 },
+      { name: 'Jul 2023', portfolio: 1.1, benchmark: 0.8 },
+      { name: 'Aug 2023', portfolio: -1.0, benchmark: -1.4 },
+      { name: 'Sep 2023', portfolio: -0.9, benchmark: -1.6 },   // Zins-Sorgen
+      { name: 'Okt 2023', portfolio: -0.3, benchmark: -0.8 },
+      { name: 'Nov 2023', portfolio: 2.8, benchmark: 2.3 },     // Jahresendrallye
+      { name: 'Dez 2023', portfolio: 1.9, benchmark: 1.6 },
+      // 2024 – Starkes Aktienjahr, AI-Rally, Konservativ partizipiert moderat
+      { name: 'Jan 2024', portfolio: 0.7, benchmark: 0.4 },
+      { name: 'Feb 2024', portfolio: 1.8, benchmark: 1.5 },
+      { name: 'Mär 2024', portfolio: 1.2, benchmark: 0.9 },
+      { name: 'Apr 2024', portfolio: -2.1, benchmark: -2.7 },   // Geopolitik-Korrektur
+      { name: 'Mai 2024', portfolio: 1.4, benchmark: 1.0 },
+      { name: 'Jun 2024', portfolio: 0.9, benchmark: 0.6 },
+      { name: 'Jul 2024', portfolio: 1.6, benchmark: 1.2 },
+      { name: 'Aug 2024', portfolio: -1.3, benchmark: -2.0 },   // Yen-Carry-Trade
+      { name: 'Sep 2024', portfolio: 0.8, benchmark: 0.5 },
+      { name: 'Okt 2024', portfolio: -0.5, benchmark: -0.9 },
+      { name: 'Nov 2024', portfolio: 2.4, benchmark: 1.9 },     // US-Wahl-Rally
+      { name: 'Dez 2024', portfolio: 0.6, benchmark: 0.3 },
+      // 2025 – Volatiler Start, dann Erholung
+      { name: 'Jan 2025', portfolio: 1.5, benchmark: 1.1 },
+      { name: 'Feb 2025', portfolio: 0.3, benchmark: -0.2 },
+      { name: 'Mär 2025', portfolio: -1.8, benchmark: -2.4 },   // Zoll-Ängste
+      { name: 'Apr 2025', portfolio: -0.7, benchmark: -1.3 },
+      { name: 'Mai 2025', portfolio: 1.9, benchmark: 1.4 },     // Erholung
+      { name: 'Jun 2025', portfolio: 1.1, benchmark: 0.7 },
+      { name: 'Jul 2025', portfolio: 0.8, benchmark: 0.5 },
+      { name: 'Aug 2025', portfolio: -0.4, benchmark: -0.8 },
+      { name: 'Sep 2025', portfolio: 0.6, benchmark: 0.2 },
+      { name: 'Okt 2025', portfolio: 1.7, benchmark: 1.3 },
+      { name: 'Nov 2025', portfolio: 1.2, benchmark: 0.8 },
+      { name: 'Dez 2025', portfolio: 0.9, benchmark: 0.5 },
     ],
     einzahlungen: [
       { monat: 'Mär 2024', betrag: 5000000, label: 'Einzahlung 5,0 Mio EUR' },
@@ -89,48 +89,48 @@ export const VV_PERFORMANCE = {
     ioComment: 'Das Portfolio entwickelt sich im Rahmen der Erwartungen. Die konservative Ausrichtung mit Schwerpunkt europäische Qualitätsaktien und Investment-Grade-Anleihen hat sich in der aktuellen Marktphase bewährt. Die Duration im Anleihensegment wurde taktisch auf 4,8 Jahre reduziert. Wir empfehlen eine moderate Erhöhung der Aktienquote bei Rücksetzern. Der ESG-Filter ist aktiv, ein Upgrade auf Art.9 wird geprüft.',
   },
 
-  // ── W2: Familie Lindenberg – Wachstum ──
+  // ── W2: Familie Lindenberg – Wachstum (Vorbild: DWS Top Dividende + Growth-Tilt) ──
   VV00002: {
     monthlyReturns: [
-      // 2023
-      { name: 'Jan 2023', portfolio: 2.1, benchmark: 0.9 },
-      { name: 'Feb 2023', portfolio: -1.3, benchmark: -0.8 },
-      { name: 'Mär 2023', portfolio: 0.8, benchmark: 0.1 },
-      { name: 'Apr 2023', portfolio: 1.9, benchmark: 0.6 },
-      { name: 'Mai 2023', portfolio: -0.6, benchmark: -0.4 },
-      { name: 'Jun 2023', portfolio: 3.2, benchmark: 1.1 },
-      { name: 'Jul 2023', portfolio: 1.4, benchmark: 0.7 },
-      { name: 'Aug 2023', portfolio: -3.5, benchmark: -2.1 },
-      { name: 'Sep 2023', portfolio: -1.8, benchmark: -1.5 },
-      { name: 'Okt 2023', portfolio: -0.9, benchmark: -0.9 },
-      { name: 'Nov 2023', portfolio: 3.8, benchmark: 2.0 },
-      { name: 'Dez 2023', portfolio: 2.5, benchmark: 1.5 },
-      // 2024
-      { name: 'Jan 2024', portfolio: 1.8, benchmark: 0.2 },
-      { name: 'Feb 2024', portfolio: 2.9, benchmark: 1.2 },
-      { name: 'Mär 2024', portfolio: 0.5, benchmark: 0.8 },
-      { name: 'Apr 2024', portfolio: -3.8, benchmark: -2.8 },
-      { name: 'Mai 2024', portfolio: 1.2, benchmark: 0.4 },
-      { name: 'Jun 2024', portfolio: 2.8, benchmark: 1.0 },
-      { name: 'Jul 2024', portfolio: 1.1, benchmark: 0.3 },
-      { name: 'Aug 2024', portfolio: -2.1, benchmark: -1.2 },
-      { name: 'Sep 2024', portfolio: 2.5, benchmark: 1.4 },
-      { name: 'Okt 2024', portfolio: -0.7, benchmark: -0.7 },
-      { name: 'Nov 2024', portfolio: 3.2, benchmark: 1.5 },
-      { name: 'Dez 2024', portfolio: 1.6, benchmark: 0.5 },
-      // 2025
-      { name: 'Jan 2025', portfolio: 1.5, benchmark: 0.5 },
-      { name: 'Feb 2025', portfolio: 2.3, benchmark: 1.0 },
-      { name: 'Mär 2025', portfolio: -0.8, benchmark: -0.3 },
-      { name: 'Apr 2025', portfolio: 1.8, benchmark: 0.9 },
-      { name: 'Mai 2025', portfolio: -1.2, benchmark: -0.7 },
-      { name: 'Jun 2025', portfolio: 2.1, benchmark: 1.1 },
-      { name: 'Jul 2025', portfolio: 1.6, benchmark: 0.8 },
-      { name: 'Aug 2025', portfolio: -1.5, benchmark: -1.0 },
-      { name: 'Sep 2025', portfolio: 0.9, benchmark: 0.4 },
-      { name: 'Okt 2025', portfolio: 2.8, benchmark: 1.5 },
-      { name: 'Nov 2025', portfolio: 1.4, benchmark: 0.7 },
-      { name: 'Dez 2025', portfolio: 2.2, benchmark: 1.2 },
+      // 2023 – Tech-Rebound, Wachstumsstrategie profitiert stark
+      { name: 'Jan 2023', portfolio: 3.4, benchmark: 1.8 },
+      { name: 'Feb 2023', portfolio: -1.7, benchmark: -1.2 },
+      { name: 'Mär 2023', portfolio: -2.8, benchmark: -1.9 },   // SVB → Tech-Dip
+      { name: 'Apr 2023', portfolio: 1.2, benchmark: 0.3 },
+      { name: 'Mai 2023', portfolio: 2.9, benchmark: -0.1 },    // AI-Hype Nvidia etc.
+      { name: 'Jun 2023', portfolio: 3.1, benchmark: 1.0 },
+      { name: 'Jul 2023', portfolio: 1.8, benchmark: 0.8 },
+      { name: 'Aug 2023', portfolio: -2.4, benchmark: -1.4 },
+      { name: 'Sep 2023', portfolio: -1.9, benchmark: -1.6 },
+      { name: 'Okt 2023', portfolio: -1.5, benchmark: -0.8 },
+      { name: 'Nov 2023', portfolio: 4.7, benchmark: 2.3 },     // Massive Jahresendrallye
+      { name: 'Dez 2023', portfolio: 2.8, benchmark: 1.6 },
+      // 2024 – AI-Superzyklus, Tech dominiert, Apr-Korrektur
+      { name: 'Jan 2024', portfolio: 1.9, benchmark: 0.4 },
+      { name: 'Feb 2024', portfolio: 3.5, benchmark: 1.5 },     // Nvidia Earnings
+      { name: 'Mär 2024', portfolio: 1.4, benchmark: 0.9 },
+      { name: 'Apr 2024', portfolio: -4.2, benchmark: -2.7 },   // Geopolitik-Schock
+      { name: 'Mai 2024', portfolio: 2.6, benchmark: 1.0 },
+      { name: 'Jun 2024', portfolio: 3.1, benchmark: 0.6 },
+      { name: 'Jul 2024', portfolio: -1.8, benchmark: 1.2 },    // Rotation aus Tech
+      { name: 'Aug 2024', portfolio: -3.6, benchmark: -2.0 },   // Yen-Carry-Trade Crash
+      { name: 'Sep 2024', portfolio: 2.1, benchmark: 0.5 },
+      { name: 'Okt 2024', portfolio: -0.4, benchmark: -0.7 },
+      { name: 'Nov 2024', portfolio: 4.8, benchmark: 1.9 },     // Trump-Rally, Tech springt
+      { name: 'Dez 2024', portfolio: 1.2, benchmark: 0.3 },
+      // 2025 – Volatile Seitwärtsbewegung, Tech-Bewertung hoch
+      { name: 'Jan 2025', portfolio: 2.1, benchmark: 1.1 },
+      { name: 'Feb 2025', portfolio: 0.8, benchmark: -0.2 },
+      { name: 'Mär 2025', portfolio: -3.4, benchmark: -2.4 },   // Zölle + Rezessionsangst
+      { name: 'Apr 2025', portfolio: -1.9, benchmark: -1.3 },
+      { name: 'Mai 2025', portfolio: 3.7, benchmark: 1.4 },     // V-Shape Recovery
+      { name: 'Jun 2025', portfolio: 2.3, benchmark: 0.7 },
+      { name: 'Jul 2025', portfolio: 1.5, benchmark: 0.5 },
+      { name: 'Aug 2025', portfolio: -1.1, benchmark: -0.8 },
+      { name: 'Sep 2025', portfolio: 0.4, benchmark: 0.2 },
+      { name: 'Okt 2025', portfolio: 3.2, benchmark: 1.3 },     // Q3 Earnings Beat
+      { name: 'Nov 2025', portfolio: 1.8, benchmark: 0.8 },
+      { name: 'Dez 2025', portfolio: 1.4, benchmark: 0.5 },
     ],
     einzahlungen: [
       { monat: 'Jun 2024', betrag: 8000000, label: 'Einzahlung 8,0 Mio EUR (SaaS-Exit)' },
@@ -171,48 +171,48 @@ export const VV_PERFORMANCE = {
     ioComment: 'Starke YTD-Performance dank Tech-Übergewichtung. Die Aktienquote liegt leicht über Soll (+2pp), was bei der aktuellen Marktdynamik bewusst beibehalten wird. Bei der geplanten Cash-Konsolidierung (5,5M bei Commerzbank) empfehlen wir ein Upgrade auf FairValue mit breiterer Diversifikation. PE-Allokation sollte im Zuge der Konsolidierung auf 10-15% erhöht werden.',
   },
 
-  // ── W3: Stiftung Weber – Defensiv ──
+  // ── W3: Stiftung Weber – Defensiv (Vorbild: Stiftungsfonds, 30% Aktien / 70% Anleihen) ──
   VV00003: {
     monthlyReturns: [
-      // 2023
-      { name: 'Jan 2023', portfolio: 0.8, benchmark: 0.6 },
-      { name: 'Feb 2023', portfolio: -0.3, benchmark: -0.5 },
-      { name: 'Mär 2023', portfolio: 0.1, benchmark: 0.0 },
-      { name: 'Apr 2023', portfolio: 0.5, benchmark: 0.4 },
-      { name: 'Mai 2023', portfolio: -0.1, benchmark: -0.2 },
-      { name: 'Jun 2023', portfolio: 0.9, benchmark: 0.7 },
-      { name: 'Jul 2023', portfolio: 0.4, benchmark: 0.3 },
-      { name: 'Aug 2023', portfolio: -1.1, benchmark: -1.4 },
-      { name: 'Sep 2023', portfolio: -0.7, benchmark: -0.9 },
-      { name: 'Okt 2023', portfolio: -0.3, benchmark: -0.5 },
-      { name: 'Nov 2023', portfolio: 1.5, benchmark: 1.3 },
-      { name: 'Dez 2023', portfolio: 1.0, benchmark: 0.9 },
-      // 2024
-      { name: 'Jan 2024', portfolio: 0.3, benchmark: 0.1 },
-      { name: 'Feb 2024', portfolio: 0.9, benchmark: 0.8 },
-      { name: 'Mär 2024', portfolio: 0.6, benchmark: 0.5 },
-      { name: 'Apr 2024', portfolio: -1.4, benchmark: -1.7 },
-      { name: 'Mai 2024', portfolio: 0.4, benchmark: 0.3 },
-      { name: 'Jun 2024', portfolio: 0.7, benchmark: 0.6 },
-      { name: 'Jul 2024', portfolio: 0.2, benchmark: 0.1 },
-      { name: 'Aug 2024', portfolio: -0.5, benchmark: -0.7 },
-      { name: 'Sep 2024', portfolio: 1.0, benchmark: 0.8 },
-      { name: 'Okt 2024', portfolio: -0.2, benchmark: -0.4 },
-      { name: 'Nov 2024', portfolio: 1.1, benchmark: 0.9 },
-      { name: 'Dez 2024', portfolio: 0.5, benchmark: 0.4 },
-      // 2025
-      { name: 'Jan 2025', portfolio: 0.6, benchmark: 0.4 },
-      { name: 'Feb 2025', portfolio: 0.9, benchmark: 0.8 },
-      { name: 'Mär 2025', portfolio: 0.2, benchmark: 0.1 },
-      { name: 'Apr 2025', portfolio: 0.5, benchmark: 0.4 },
-      { name: 'Mai 2025', portfolio: -0.1, benchmark: -0.3 },
-      { name: 'Jun 2025', portfolio: 0.4, benchmark: 0.3 },
-      { name: 'Jul 2025', portfolio: 0.6, benchmark: 0.5 },
-      { name: 'Aug 2025', portfolio: -0.2, benchmark: -0.4 },
+      // 2023 – Anleihen-Rally H2 hilft, geringe Aktienquote dämpft
+      { name: 'Jan 2023', portfolio: 1.4, benchmark: 1.8 },
+      { name: 'Feb 2023', portfolio: -0.6, benchmark: -1.2 },
+      { name: 'Mär 2023', portfolio: -0.4, benchmark: -1.9 },
+      { name: 'Apr 2023', portfolio: 0.5, benchmark: 0.3 },
+      { name: 'Mai 2023', portfolio: 0.1, benchmark: -0.1 },
+      { name: 'Jun 2023', portfolio: 0.7, benchmark: 1.0 },
+      { name: 'Jul 2023', portfolio: 0.5, benchmark: 0.8 },
+      { name: 'Aug 2023', portfolio: -0.3, benchmark: -1.4 },
+      { name: 'Sep 2023', portfolio: -0.6, benchmark: -1.6 },
+      { name: 'Okt 2023', portfolio: 0.2, benchmark: -0.8 },   // Anleihen halten
+      { name: 'Nov 2023', portfolio: 1.8, benchmark: 2.3 },
+      { name: 'Dez 2023', portfolio: 1.3, benchmark: 1.6 },
+      // 2024 – Stabil, Kupons stützen, Aktienrallye nur teilweise mitgenommen
+      { name: 'Jan 2024', portfolio: 0.4, benchmark: 0.4 },
+      { name: 'Feb 2024', portfolio: 0.6, benchmark: 1.5 },
+      { name: 'Mär 2024', portfolio: 0.5, benchmark: 0.9 },
+      { name: 'Apr 2024', portfolio: -0.8, benchmark: -2.7 },   // Abgepuffert
+      { name: 'Mai 2024', portfolio: 0.4, benchmark: 1.0 },
+      { name: 'Jun 2024', portfolio: 0.6, benchmark: 0.6 },
+      { name: 'Jul 2024', portfolio: 0.3, benchmark: 1.2 },
+      { name: 'Aug 2024', portfolio: -0.2, benchmark: -2.0 },   // Stabil in Krise
+      { name: 'Sep 2024', portfolio: 0.7, benchmark: 0.5 },
+      { name: 'Okt 2024', portfolio: 0.1, benchmark: -0.7 },
+      { name: 'Nov 2024', portfolio: 0.9, benchmark: 1.9 },
+      { name: 'Dez 2024', portfolio: 0.4, benchmark: 0.3 },
+      // 2025 – Stetiger Ertrag, kaum Drawdowns
+      { name: 'Jan 2025', portfolio: 0.5, benchmark: 1.1 },
+      { name: 'Feb 2025', portfolio: 0.4, benchmark: -0.2 },
+      { name: 'Mär 2025', portfolio: -0.3, benchmark: -2.4 },   // Defensiv hält
+      { name: 'Apr 2025', portfolio: 0.2, benchmark: -1.3 },
+      { name: 'Mai 2025', portfolio: 0.8, benchmark: 1.4 },
+      { name: 'Jun 2025', portfolio: 0.5, benchmark: 0.7 },
+      { name: 'Jul 2025', portfolio: 0.4, benchmark: 0.5 },
+      { name: 'Aug 2025', portfolio: 0.1, benchmark: -0.8 },
       { name: 'Sep 2025', portfolio: 0.3, benchmark: 0.2 },
-      { name: 'Okt 2025', portfolio: 0.7, benchmark: 0.6 },
-      { name: 'Nov 2025', portfolio: 0.5, benchmark: 0.4 },
-      { name: 'Dez 2025', portfolio: 0.8, benchmark: 0.7 },
+      { name: 'Okt 2025', portfolio: 0.6, benchmark: 1.3 },
+      { name: 'Nov 2025', portfolio: 0.5, benchmark: 0.8 },
+      { name: 'Dez 2025', portfolio: 0.4, benchmark: 0.5 },
     ],
     einzahlungen: [
       { monat: 'Jan 2024', betrag: 500000, label: 'Einzahlung 0,5 Mio EUR' },
@@ -255,48 +255,48 @@ export const VV_PERFORMANCE = {
     ioComment: 'Das Stiftungsmandat zeigt stabile Entwicklung mit Fokus auf Kapitalerhalt und regelmäßige Ausschüttung. Die Anleihenquote wurde bei 50% gehalten, mit Schwerpunkt auf Staats- und Pfandbriefen. ESG-Upgrade auf Art.9 wird vom Stiftungsrat geprüft. Die Ausschüttungsrendite liegt bei plan-konformen 3,0% p.a. Eine Optimierung im Anleihensegment könnte die Ausschüttung um ca. 30.000 EUR p.a. steigern.',
   },
 
-  // ── W4: Prof. Dr. Hartmann – Ausgewogen ──
+  // ── W4: Prof. Dr. Hartmann – Ausgewogen (Vorbild: Ethna-AKTIV / Carmignac Patrimoine) ──
   VV00004: {
     monthlyReturns: [
-      // 2023
-      { name: 'Jan 2023', portfolio: 1.4, benchmark: 1.0 },
-      { name: 'Feb 2023', portfolio: -0.8, benchmark: -1.0 },
-      { name: 'Mär 2023', portfolio: 0.5, benchmark: 0.2 },
-      { name: 'Apr 2023', portfolio: 1.0, benchmark: 0.7 },
-      { name: 'Mai 2023', portfolio: -0.4, benchmark: -0.5 },
-      { name: 'Jun 2023', portfolio: 2.0, benchmark: 1.4 },
-      { name: 'Jul 2023', portfolio: 1.1, benchmark: 0.8 },
-      { name: 'Aug 2023', portfolio: -2.3, benchmark: -2.6 },
-      { name: 'Sep 2023', portfolio: -1.5, benchmark: -1.8 },
-      { name: 'Okt 2023', portfolio: -0.5, benchmark: -0.8 },
-      { name: 'Nov 2023', portfolio: 2.8, benchmark: 2.4 },
-      { name: 'Dez 2023', portfolio: 2.0, benchmark: 1.7 },
-      // 2024
-      { name: 'Jan 2024', portfolio: 0.6, benchmark: 0.3 },
-      { name: 'Feb 2024', portfolio: 1.8, benchmark: 1.4 },
-      { name: 'Mär 2024', portfolio: 0.9, benchmark: 0.6 },
-      { name: 'Apr 2024', portfolio: -2.7, benchmark: -3.1 },
-      { name: 'Mai 2024', portfolio: 0.8, benchmark: 0.5 },
-      { name: 'Jun 2024', portfolio: 1.5, benchmark: 1.1 },
-      { name: 'Jul 2024', portfolio: 0.7, benchmark: 0.4 },
-      { name: 'Aug 2024', portfolio: -1.1, benchmark: -1.4 },
-      { name: 'Sep 2024', portfolio: 2.0, benchmark: 1.6 },
-      { name: 'Okt 2024', portfolio: -0.3, benchmark: -0.6 },
-      { name: 'Nov 2024', portfolio: 2.2, benchmark: 1.8 },
-      { name: 'Dez 2024', portfolio: 1.0, benchmark: 0.7 },
-      // 2025
-      { name: 'Jan 2025', portfolio: 0.9, benchmark: 0.7 },
-      { name: 'Feb 2025', portfolio: 1.5, benchmark: 1.1 },
-      { name: 'Mär 2025', portfolio: 0.1, benchmark: -0.1 },
-      { name: 'Apr 2025', portfolio: 1.1, benchmark: 0.8 },
-      { name: 'Mai 2025', portfolio: -0.7, benchmark: -0.6 },
-      { name: 'Jun 2025', portfolio: 0.8, benchmark: 0.5 },
-      { name: 'Jul 2025', portfolio: 1.3, benchmark: 1.0 },
-      { name: 'Aug 2025', portfolio: -0.9, benchmark: -1.1 },
-      { name: 'Sep 2025', portfolio: 0.6, benchmark: 0.4 },
-      { name: 'Okt 2025', portfolio: 1.6, benchmark: 1.2 },
-      { name: 'Nov 2025', portfolio: 1.0, benchmark: 0.8 },
-      { name: 'Dez 2025', portfolio: 1.5, benchmark: 1.1 },
+      // 2023 – Ausgewogene Strategie, Healthcare-Schwerpunkt hilft
+      { name: 'Jan 2023', portfolio: 1.8, benchmark: 1.8 },
+      { name: 'Feb 2023', portfolio: -0.5, benchmark: -1.2 },
+      { name: 'Mär 2023', portfolio: -0.9, benchmark: -1.9 },
+      { name: 'Apr 2023', portfolio: 0.7, benchmark: 0.3 },
+      { name: 'Mai 2023', portfolio: 0.4, benchmark: -0.1 },
+      { name: 'Jun 2023', portfolio: 1.6, benchmark: 1.0 },
+      { name: 'Jul 2023', portfolio: 1.3, benchmark: 0.8 },
+      { name: 'Aug 2023', portfolio: -1.4, benchmark: -1.4 },
+      { name: 'Sep 2023', portfolio: -1.1, benchmark: -1.6 },
+      { name: 'Okt 2023', portfolio: -0.2, benchmark: -0.8 },
+      { name: 'Nov 2023', portfolio: 3.1, benchmark: 2.3 },
+      { name: 'Dez 2023', portfolio: 2.1, benchmark: 1.6 },
+      // 2024 – Solides Jahr, Healthcare & PE liefern Mehrwert
+      { name: 'Jan 2024', portfolio: 0.9, benchmark: 0.4 },
+      { name: 'Feb 2024', portfolio: 2.1, benchmark: 1.5 },
+      { name: 'Mär 2024', portfolio: 1.0, benchmark: 0.9 },
+      { name: 'Apr 2024', portfolio: -2.4, benchmark: -2.7 },   // Abgefedert durch Anleihen
+      { name: 'Mai 2024', portfolio: 1.3, benchmark: 1.0 },
+      { name: 'Jun 2024', portfolio: 1.4, benchmark: 0.6 },
+      { name: 'Jul 2024', portfolio: 0.8, benchmark: 1.2 },
+      { name: 'Aug 2024', portfolio: -1.5, benchmark: -2.0 },
+      { name: 'Sep 2024', portfolio: 1.6, benchmark: 0.5 },     // Healthcare-Rally
+      { name: 'Okt 2024', portfolio: 0.3, benchmark: -0.7 },
+      { name: 'Nov 2024', portfolio: 2.5, benchmark: 1.9 },
+      { name: 'Dez 2024', portfolio: 0.8, benchmark: 0.3 },
+      // 2025 – Stabil mit Healthcare-Outperformance
+      { name: 'Jan 2025', portfolio: 1.2, benchmark: 1.1 },
+      { name: 'Feb 2025', portfolio: 0.7, benchmark: -0.2 },
+      { name: 'Mär 2025', portfolio: -1.6, benchmark: -2.4 },
+      { name: 'Apr 2025', portfolio: -0.3, benchmark: -1.3 },
+      { name: 'Mai 2025', portfolio: 2.4, benchmark: 1.4 },     // Healthcare-Earnings
+      { name: 'Jun 2025', portfolio: 1.3, benchmark: 0.7 },
+      { name: 'Jul 2025', portfolio: 0.9, benchmark: 0.5 },
+      { name: 'Aug 2025', portfolio: -0.6, benchmark: -0.8 },
+      { name: 'Sep 2025', portfolio: 0.8, benchmark: 0.2 },
+      { name: 'Okt 2025', portfolio: 1.9, benchmark: 1.3 },
+      { name: 'Nov 2025', portfolio: 1.1, benchmark: 0.8 },
+      { name: 'Dez 2025', portfolio: 0.7, benchmark: 0.5 },
     ],
     einzahlungen: [
       { monat: 'Feb 2024', betrag: 1500000, label: 'Einzahlung 1,5 Mio EUR' },
@@ -338,48 +338,48 @@ export const VV_PERFORMANCE = {
     ioComment: 'Portfolio leicht über Benchmark dank Healthcare-Übergewichtung, die die Fachexpertise des Mandanten reflektiert. Aktienquote +2pp über Soll – Rebalancing bei nächster Gelegenheit empfohlen. Die Immofonds-Allokation (8%) liefert stabile Erträge. PE Healthcare Fund II (Co-Investment) wird aktuell geprüft. ING-Tagesgeld (250k) sollte konsolidiert werden.',
   },
 
-  // ── W5: Tim Keller – Aggressiv / Tech ──
+  // ── W5: Tim Keller – Aggressiv / Tech (Vorbild: ARK Innovation + Nasdaq-100) ──
   VV00005: {
     monthlyReturns: [
-      // 2023
-      { name: 'Jan 2023', portfolio: 3.5, benchmark: 0.9 },
-      { name: 'Feb 2023', portfolio: -2.1, benchmark: -0.8 },
-      { name: 'Mär 2023', portfolio: 1.2, benchmark: 0.1 },
-      { name: 'Apr 2023', portfolio: 2.5, benchmark: 0.6 },
-      { name: 'Mai 2023', portfolio: -1.0, benchmark: -0.4 },
-      { name: 'Jun 2023', portfolio: 4.8, benchmark: 1.1 },
-      { name: 'Jul 2023', portfolio: 2.0, benchmark: 0.7 },
-      { name: 'Aug 2023', portfolio: -5.2, benchmark: -2.1 },
-      { name: 'Sep 2023', portfolio: -3.1, benchmark: -1.5 },
-      { name: 'Okt 2023', portfolio: -1.5, benchmark: -0.9 },
-      { name: 'Nov 2023', portfolio: 5.8, benchmark: 2.0 },
-      { name: 'Dez 2023', portfolio: 3.9, benchmark: 1.5 },
-      // 2024
-      { name: 'Jan 2024', portfolio: 2.8, benchmark: 0.2 },
-      { name: 'Feb 2024', portfolio: 4.2, benchmark: 1.2 },
-      { name: 'Mär 2024', portfolio: -1.5, benchmark: 0.8 },
-      { name: 'Apr 2024', portfolio: -5.5, benchmark: -2.8 },
-      { name: 'Mai 2024', portfolio: 1.9, benchmark: 0.4 },
-      { name: 'Jun 2024', portfolio: 3.4, benchmark: 1.0 },
-      { name: 'Jul 2024', portfolio: 1.8, benchmark: 0.3 },
-      { name: 'Aug 2024', portfolio: -3.2, benchmark: -1.2 },
-      { name: 'Sep 2024', portfolio: 3.8, benchmark: 1.4 },
-      { name: 'Okt 2024', portfolio: -1.2, benchmark: -0.7 },
-      { name: 'Nov 2024', portfolio: 4.5, benchmark: 1.5 },
-      { name: 'Dez 2024', portfolio: 2.4, benchmark: 0.5 },
-      // 2025
-      { name: 'Jan 2025', portfolio: 2.2, benchmark: 0.5 },
-      { name: 'Feb 2025', portfolio: 2.8, benchmark: 1.2 },
-      { name: 'Mär 2025', portfolio: -2.1, benchmark: -0.8 },
-      { name: 'Apr 2025', portfolio: 3.1, benchmark: 1.0 },
-      { name: 'Mai 2025', portfolio: -1.8, benchmark: -0.5 },
-      { name: 'Jun 2025', portfolio: 2.5, benchmark: 1.3 },
-      { name: 'Jul 2025', portfolio: 3.4, benchmark: 1.5 },
-      { name: 'Aug 2025', portfolio: -2.8, benchmark: -1.4 },
-      { name: 'Sep 2025', portfolio: 1.2, benchmark: 0.6 },
-      { name: 'Okt 2025', portfolio: 4.1, benchmark: 2.0 },
-      { name: 'Nov 2025', portfolio: 2.0, benchmark: 0.9 },
-      { name: 'Dez 2025', portfolio: 3.5, benchmark: 1.8 },
+      // 2023 – Mega-Cap Tech Rebound, aber volatile Zwischenphasen
+      { name: 'Jan 2023', portfolio: 5.2, benchmark: 1.8 },     // Tech-Rebound
+      { name: 'Feb 2023', portfolio: -2.8, benchmark: -1.2 },
+      { name: 'Mär 2023', portfolio: -4.1, benchmark: -1.9 },   // SVB = Tech-Panik
+      { name: 'Apr 2023', portfolio: 1.5, benchmark: 0.3 },
+      { name: 'Mai 2023', portfolio: 6.3, benchmark: -0.1 },    // Nvidia +25%, AI-Hype
+      { name: 'Jun 2023', portfolio: 4.2, benchmark: 1.0 },
+      { name: 'Jul 2023', portfolio: 2.4, benchmark: 0.8 },
+      { name: 'Aug 2023', portfolio: -3.1, benchmark: -1.4 },
+      { name: 'Sep 2023', portfolio: -2.6, benchmark: -1.6 },
+      { name: 'Okt 2023', portfolio: -1.8, benchmark: -0.8 },
+      { name: 'Nov 2023', portfolio: 7.4, benchmark: 2.3 },     // Jahresendrallye
+      { name: 'Dez 2023', portfolio: 4.1, benchmark: 1.6 },
+      // 2024 – AI-Superzyklus, extremer Apr-Aug Rücksetzer
+      { name: 'Jan 2024', portfolio: 3.1, benchmark: 0.4 },
+      { name: 'Feb 2024', portfolio: 5.8, benchmark: 1.5 },     // Nvidia-Mania
+      { name: 'Mär 2024', portfolio: -2.3, benchmark: 0.9 },
+      { name: 'Apr 2024', portfolio: -6.9, benchmark: -2.7 },   // Tech-Crash
+      { name: 'Mai 2024', portfolio: 3.5, benchmark: 1.0 },
+      { name: 'Jun 2024', portfolio: 4.8, benchmark: 0.6 },
+      { name: 'Jul 2024', portfolio: -4.2, benchmark: 1.2 },    // Rotation raus aus Tech
+      { name: 'Aug 2024', portfolio: -5.7, benchmark: -2.0 },   // Yen-Carry-Trade
+      { name: 'Sep 2024', portfolio: 3.9, benchmark: 0.5 },
+      { name: 'Okt 2024', portfolio: -0.8, benchmark: -0.7 },
+      { name: 'Nov 2024', portfolio: 6.9, benchmark: 1.9 },     // Trump + AI Push
+      { name: 'Dez 2024', portfolio: 1.7, benchmark: 0.3 },
+      // 2025 – Hochvolatil, Impact-Themen laufen
+      { name: 'Jan 2025', portfolio: 3.4, benchmark: 1.1 },
+      { name: 'Feb 2025', portfolio: 1.5, benchmark: -0.2 },
+      { name: 'Mär 2025', portfolio: -5.8, benchmark: -2.4 },   // Zölle treffen Tech
+      { name: 'Apr 2025', portfolio: -3.2, benchmark: -1.3 },
+      { name: 'Mai 2025', portfolio: 6.1, benchmark: 1.4 },     // V-Shape, AI-Earnings
+      { name: 'Jun 2025', portfolio: 3.5, benchmark: 0.7 },
+      { name: 'Jul 2025', portfolio: 2.1, benchmark: 0.5 },
+      { name: 'Aug 2025', portfolio: -1.6, benchmark: -0.8 },
+      { name: 'Sep 2025', portfolio: 0.9, benchmark: 0.2 },
+      { name: 'Okt 2025', portfolio: 4.8, benchmark: 1.3 },     // Q3 Mega-Earnings
+      { name: 'Nov 2025', portfolio: 2.7, benchmark: 0.8 },
+      { name: 'Dez 2025', portfolio: 2.3, benchmark: 0.5 },
     ],
     einzahlungen: [
       { monat: 'Jan 2025', betrag: 500000, label: 'Einzahlung 0,5 Mio EUR (Seed-Exit)' },

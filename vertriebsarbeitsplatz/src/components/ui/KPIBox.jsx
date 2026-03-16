@@ -18,7 +18,8 @@ function generateMonthlyData(currentValue, trend) {
     const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
     const monthLabel = d.toLocaleDateString('de-DE', { month: 'short', year: '2-digit' });
     const factor = 1 - ((trend / 100) * (i / 11));
-    const noise = 1 + (Math.sin(i * 2.7 + currentValue * 0.001) * 0.04);
+    // Very subtle noise (~0.5%) for realistic AuM progression
+    const noise = 1 + (Math.sin(i * 2.7 + currentValue * 0.001) * 0.005);
     data.push({ month: monthLabel, value: Math.round(currentValue * factor * noise) });
   }
   return data;
@@ -76,18 +77,18 @@ function ExpandedChart({ data, format, label, onClose }) {
             <LucideIcons.X size={18} />
           </button>
         </div>
-        <div className="flex items-end gap-1.5">
+        <div className="flex items-end gap-1.5 mb-6">
           {data.map((d, i) => {
             const ratio = (d.value - baseline) / range;
             const barH = Math.max(Math.round(ratio * BAR_AREA_H), 4);
             return (
-              <div key={i} className="flex-1 flex flex-col items-center gap-1">
+              <div key={i} className="flex-1 flex flex-col items-center gap-1 relative">
                 <span className="text-[8px] text-slate-500 font-mono whitespace-nowrap">{formatCompact(d.value, format)}</span>
                 <div
                   className="w-full rounded-t transition-all duration-300"
                   style={{ height: barH, backgroundColor: 'var(--mode-primary-light)' }}
                 />
-                <span className="text-[8px] text-slate-400 -rotate-45 origin-top-left whitespace-nowrap mt-1">{d.month}</span>
+                <span className="text-[8px] text-slate-400 absolute -bottom-5 -rotate-45 origin-top-left whitespace-nowrap">{d.month}</span>
               </div>
             );
           })}

@@ -4,7 +4,9 @@ import Card from '../../../components/ui/Card';
 import Avatar from '../../../components/ui/Avatar';
 import { PrioBadge, SparteBadge } from '../../../components/ui/Badge';
 import { useMode } from '../../../hooks/useMode';
+import useTranslation from '../../../i18n/useTranslation';
 import { KUNDEN_BY_MODE, TERMINE_BY_MODE, AUFGABEN_BY_MODE, getAllPotentiale } from '../../../data';
+import { VV_LEADS } from '../../../data/vvExtended';
 import { formatEur } from '../../../utils/formatters';
 import { getKundeFoto } from '../../../utils/kundenFotos';
 
@@ -88,22 +90,22 @@ const GEBURTSTAGE = {
 
 const SCHNELLZUGRIFF = {
   versicherung: [
-    { label: 'Lebensversicherung', icon: Heart, color: '#ef4444' },
-    { label: 'Kfz-Versicherung', icon: Car, color: '#3b82f6' },
-    { label: 'Sachversicherung', icon: Home, color: '#8b5cf6' },
-    { label: 'Schadenmeldung', icon: ShieldAlert, color: '#f59e0b' },
+    { labelKey: 'lebensversicherung', icon: Heart, color: '#ef4444' },
+    { labelKey: 'kfzVersicherung', icon: Car, color: '#3b82f6' },
+    { labelKey: 'sachversicherung', icon: Home, color: '#8b5cf6' },
+    { labelKey: 'schadenmeldung', icon: ShieldAlert, color: '#f59e0b' },
   ],
   banking: [
-    { label: 'VR-FinanzPlan', icon: BarChart3, color: '#10b981' },
-    { label: 'Kredit-Antrag', icon: Landmark, color: '#3b82f6' },
-    { label: 'Depot eröffnen', icon: PiggyBank, color: '#8b5cf6' },
-    { label: 'Wero aktivieren', icon: Wallet, color: '#f59e0b' },
+    { labelKey: 'vrFinanzPlan', icon: BarChart3, color: '#10b981' },
+    { labelKey: 'kreditAntrag', icon: Landmark, color: '#3b82f6' },
+    { labelKey: 'depotEroeffnen', icon: PiggyBank, color: '#8b5cf6' },
+    { labelKey: 'weroAktivieren', icon: Wallet, color: '#f59e0b' },
   ],
   vermoegensverwaltung: [
-    { label: 'Neues Mandat', icon: FileText, color: '#1a365d' },
-    { label: 'WpHG-Fragebogen', icon: FileText, color: '#3b82f6' },
-    { label: 'Investmentvorschlag', icon: BarChart3, color: '#10b981' },
-    { label: 'Compliance-Check', icon: ShieldAlert, color: '#f59e0b' },
+    { labelKey: 'neuesMandat', icon: FileText, color: '#1a365d' },
+    { labelKey: 'wphgFragebogen', icon: FileText, color: '#3b82f6' },
+    { labelKey: 'investmentvorschlag', icon: BarChart3, color: '#10b981' },
+    { labelKey: 'complianceCheck', icon: ShieldAlert, color: '#f59e0b' },
   ],
 };
 
@@ -127,6 +129,7 @@ const PROVISIONSABRECHNUNGEN = {
 
 export default function UebersichtTab() {
   const { modeId, config, navigateTo, setActiveTab } = useMode();
+  const { t, lang } = useTranslation();
   const [mandatFilter, setMandatFilter] = useState('alle');
   const potentiale = getAllPotentiale(modeId).sort((a, b) => {
     const prio = { kritisch: 0, hoch: 1, mittel: 2, niedrig: 3 };
@@ -176,7 +179,7 @@ export default function UebersichtTab() {
   const abrechnungen = PROVISIONSABRECHNUNGEN[modeId] || PROVISIONSABRECHNUNGEN.versicherung;
 
   const heute = new Date();
-  const datumStr = heute.toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+  const datumStr = heute.toLocaleDateString(lang === 'en' ? 'en-GB' : 'de-DE', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
 
   return (
     <div className="grid grid-cols-3 gap-4">
@@ -190,13 +193,13 @@ export default function UebersichtTab() {
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
                 <Zap size={20} style={{ color: 'var(--mode-primary-light)' }} strokeWidth={1.75} />
-                <h3 className="font-semibold text-slate-800">Mandate & Potenziale</h3>
+                <h3 className="font-semibold text-slate-800">{t('mandatePotenziale')}</h3>
               </div>
               <div className="flex gap-1.5">
                 {[
-                  { key: 'alle', label: 'Alle' },
-                  { key: 'bestand', label: 'Bestandsmandate' },
-                  { key: 'neu', label: 'Neue Mandate' },
+                  { key: 'alle', label: t('alle') },
+                  { key: 'bestand', label: t('bestandsmandate') },
+                  { key: 'neu', label: t('neueMandate') },
                 ].map(f => (
                   <button
                     key={f.key}
@@ -215,12 +218,12 @@ export default function UebersichtTab() {
             </div>
             <div className="space-y-0">
               <div className="grid py-1.5 px-3 items-center text-[10px] uppercase text-slate-400 font-semibold" style={{ gridTemplateColumns: '2fr 90px 100px 70px 60px 90px' }}>
-                <span>Mandant</span>
-                <span className="text-right">AuM</span>
-                <span className="text-right">Letztes Gespräch</span>
-                <span className="text-center">Leads</span>
-                <span className="text-center">Typ</span>
-                <span className="text-center">Strategie</span>
+                <span>{t('mandant')}</span>
+                <span className="text-right">{t('aum')}</span>
+                <span className="text-right">{t('letztesGespraech')}</span>
+                <span className="text-center">{t('tab.leads')}</span>
+                <span className="text-center">{t('typ')}</span>
+                <span className="text-center">{t('strategie')}</span>
               </div>
               {filteredVVKunden.slice(0, 8).map((k, i) => (
                 <div
@@ -242,7 +245,12 @@ export default function UebersichtTab() {
                       <div className="text-xs text-slate-400 truncate">{k.mandat ? k.mandat.produkt : k.mandatsTyp || '–'}</div>
                     </div>
                   </div>
-                  <div className="text-right text-sm font-mono font-medium text-slate-700">
+                  <div className="text-right text-sm font-mono font-medium text-slate-700 flex items-center justify-end gap-2">
+                    {k.id === 'VV00001' && VV_LEADS.some(l => l.isNeuerLead && l.referenzMandant === 'VV00001') && (
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500 text-white whitespace-nowrap animate-pulse">
+                        Neuer Lead
+                      </span>
+                    )}
                     {k.aum ? `${(k.aum / 1000000).toFixed(1)}M` : '–'}
                   </div>
                   <div className="text-right text-xs text-slate-500">
@@ -263,7 +271,7 @@ export default function UebersichtTab() {
                         ? 'bg-blue-50 text-blue-700 border border-blue-200'
                         : 'bg-slate-100 text-slate-600'
                     }`}>
-                      {k.istNeu ? 'Neu' : 'Bestand'}
+                      {k.istNeu ? t('neu') : t('bestand')}
                     </span>
                   </div>
                   <div className="text-center">
@@ -272,7 +280,7 @@ export default function UebersichtTab() {
                       k.mandatsTyp === 'SmartValue' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' :
                       'bg-purple-50 text-purple-700 border-purple-200'
                     }`}>
-                      {k.mandatsTyp === 'Spezialmandat' ? 'Spezial' : k.mandatsTyp || '–'}
+                      {k.mandatsTyp === 'Spezialmandat' ? t('spezial') : k.mandatsTyp || '–'}
                     </span>
                   </div>
                 </div>
@@ -283,7 +291,7 @@ export default function UebersichtTab() {
               style={{ color: 'var(--mode-primary-light)' }}
               onClick={() => setActiveTab('mandatsliste')}
             >
-              Alle {vvKunden.length} Mandanten anzeigen →
+              {t('alleMandantenAnzeigen', { count: vvKunden.length })}
             </button>
           </Card>
         ) : (
@@ -291,17 +299,17 @@ export default function UebersichtTab() {
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
                 <Zap size={20} style={{ color: 'var(--mode-primary-light)' }} strokeWidth={1.75} />
-                <h3 className="font-semibold text-slate-800">Vertriebspotenziale</h3>
+                <h3 className="font-semibold text-slate-800">{t('vertriebspotenziale')}</h3>
               </div>
-              <span className="text-sm text-slate-400">{kundenPotentiale.length} Kunden · {getAllPotentiale(modeId).length} Potenziale</span>
+              <span className="text-sm text-slate-400">{t('kundenPotenzialeSummary', { kunden: kundenPotentiale.length, potenziale: getAllPotentiale(modeId).length })}</span>
             </div>
             <div className="space-y-0">
               <div className="grid py-1.5 px-3 items-center text-[10px] uppercase text-slate-400 font-semibold" style={{ gridTemplateColumns: '1fr 1fr 80px 100px 100px' }}>
-                <span>Kunde</span>
-                <span>Top-Potenziale</span>
-                <span className="text-right">Anzahl</span>
-                <span className="text-right">{modeId === 'banking' ? 'Volumen' : 'Prämie'}</span>
-                <span className="text-right">Provision</span>
+                <span>{t('kunde')}</span>
+                <span>{t('topPotenziale')}</span>
+                <span className="text-right">{t('anzahl')}</span>
+                <span className="text-right">{modeId === 'banking' ? t('volumen') : t('praemie')}</span>
+                <span className="text-right">{t('provision')}</span>
               </div>
               {kundenPotentiale.slice(0, 8).map((kp, i) => {
                 const topPrio = kp.potentiale.reduce((best, p) => {
@@ -353,7 +361,7 @@ export default function UebersichtTab() {
                 style={{ color: 'var(--mode-primary-light)' }}
                 onClick={() => setActiveTab('potentiale')}
               >
-                +{kundenPotentiale.length - 8} weitere Kunden anzeigen →
+                {t('weitereKundenAnzeigen', { count: kundenPotentiale.length - 8 })}
               </button>
             )}
           </Card>
@@ -364,9 +372,9 @@ export default function UebersichtTab() {
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
               <CheckSquare size={20} className="text-slate-500" strokeWidth={1.75} />
-              <h3 className="font-semibold text-slate-800">Aktuelle Aufgaben</h3>
+              <h3 className="font-semibold text-slate-800">{t('aktuelleAufgaben')}</h3>
             </div>
-            <span className="text-sm text-slate-400">{aufgaben.length} offen</span>
+            <span className="text-sm text-slate-400">{t('offen', { count: aufgaben.length })}</span>
           </div>
           <div className="space-y-2">
             {aufgaben.map((a, i) => (
@@ -387,9 +395,9 @@ export default function UebersichtTab() {
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
               <CheckCircle size={20} className="text-emerald-500" strokeWidth={1.75} />
-              <h3 className="font-semibold text-slate-800">Letzte Abschlüsse</h3>
+              <h3 className="font-semibold text-slate-800">{t('letzteAbschluesse')}</h3>
             </div>
-            <span className="text-xs px-2 py-1 rounded-full bg-slate-100 text-slate-500">Diese Woche</span>
+            <span className="text-xs px-2 py-1 rounded-full bg-slate-100 text-slate-500">{t('dieseWoche')}</span>
           </div>
           <div className="space-y-2">
             {abschluesse.map((a, i) => (
@@ -417,7 +425,7 @@ export default function UebersichtTab() {
             style={{ color: 'var(--mode-primary-light)' }}
             onClick={() => setActiveTab('neugeschaeft')}
           >
-            Alle Abschlüsse anzeigen →
+            {t('alleAbschluesseAnzeigen')}
           </button>
         </Card>
       </div>
@@ -428,28 +436,28 @@ export default function UebersichtTab() {
         <Card >
           <div className="flex items-center gap-2 mb-4">
             <Clock size={20} className="text-slate-500" strokeWidth={1.75} />
-            <h3 className="font-semibold text-slate-800">Anstehende Termine</h3>
+            <h3 className="font-semibold text-slate-800">{t('anstehendeTermine')}</h3>
           </div>
           <div className="space-y-3">
-            {termine.map((t, i) => {
-              const tDate = new Date(t.datum);
+            {termine.map((termin, i) => {
+              const tDate = new Date(termin.datum);
               const todayStr = heute.toISOString().split('T')[0];
-              const isToday = t.datum === todayStr;
-              const dayLabel = isToday ? 'Heute' : tDate.toLocaleDateString('de-DE', { weekday: 'short', day: '2-digit', month: '2-digit' });
+              const isToday = termin.datum === todayStr;
+              const dayLabel = isToday ? t('heute') : tDate.toLocaleDateString(lang === 'en' ? 'en-GB' : 'de-DE', { weekday: 'short', day: '2-digit', month: '2-digit' });
               return (
                 <div
                   key={i}
                   className="flex items-center gap-3 py-2.5 border-b border-slate-100 last:border-0 cursor-pointer row-hover -mx-2 px-2 rounded-lg transition-colors"
-                  onClick={() => navigateTo('detail', { kundeId: t.kundeId })}
+                  onClick={() => navigateTo('detail', { kundeId: termin.kundeId })}
                 >
                   <div className="text-center shrink-0 w-14">
                     <div className={`text-[10px] font-semibold uppercase ${isToday ? 'text-red-500' : 'text-slate-400'}`}>{dayLabel}</div>
-                    <div className="text-sm font-bold text-slate-700">{t.zeit}</div>
+                    <div className="text-sm font-bold text-slate-700">{termin.zeit}</div>
                   </div>
-                  <Avatar name={t.kunde} foto={t.foto} size={44} />
+                  <Avatar name={termin.kunde} foto={termin.foto} size={44} />
                   <div className="flex-1 min-w-0">
-                    <div className="text-sm font-semibold text-slate-700 truncate">{t.kunde}</div>
-                    <div className="text-xs text-slate-500 truncate">{t.betreff}</div>
+                    <div className="text-sm font-semibold text-slate-700 truncate">{termin.kunde}</div>
+                    <div className="text-xs text-slate-500 truncate">{termin.betreff}</div>
                   </div>
                 </div>
               );
@@ -461,7 +469,7 @@ export default function UebersichtTab() {
         <Card >
           <div className="flex items-center gap-2 mb-4">
             <FileText size={20} className="text-slate-500" strokeWidth={1.75} />
-            <h3 className="font-semibold text-slate-800">Schnellzugriff Formulare</h3>
+            <h3 className="font-semibold text-slate-800">{t('schnellzugriffFormulare')}</h3>
           </div>
           <div className="grid grid-cols-2 gap-2">
             {schnellzugriff.map((item, i) => {
@@ -472,7 +480,7 @@ export default function UebersichtTab() {
                   className="flex flex-col items-center gap-2 p-4 rounded-xl border border-slate-200 hover:border-slate-300 row-hover transition-all text-center"
                 >
                   <Icon size={24} style={{ color: item.color }} strokeWidth={1.5} />
-                  <span className="text-xs font-medium text-slate-600">{item.label}</span>
+                  <span className="text-xs font-medium text-slate-600">{t(item.labelKey)}</span>
                 </button>
               );
             })}
@@ -484,7 +492,7 @@ export default function UebersichtTab() {
           <div className="flex items-center gap-2 mb-4">
             <Euro size={20} className="text-slate-500" strokeWidth={1.75} />
             <h3 className="font-semibold text-slate-800">
-              {modeId === 'vermoegensverwaltung' ? 'Ertragsabrechnungen' : 'Provisionsabrechnungen'}
+              {modeId === 'vermoegensverwaltung' ? t('ertragsabrechnungen') : t('provisionsabrechnungen')}
             </h3>
           </div>
           <div className="space-y-2">
@@ -506,7 +514,7 @@ export default function UebersichtTab() {
             style={{ color: 'var(--mode-primary-light)' }}
             onClick={() => setActiveTab('verguetung')}
           >
-            Alle Abrechnungen anzeigen →
+            {t('alleAbrechnungenAnzeigen')}
           </button>
         </Card>
 
@@ -514,7 +522,7 @@ export default function UebersichtTab() {
         <Card >
           <div className="flex items-center gap-2 mb-4">
             <Cake size={20} className="text-pink-400" strokeWidth={1.75} />
-            <h3 className="font-semibold text-slate-800">Geburtstage diese Woche</h3>
+            <h3 className="font-semibold text-slate-800">{t('geburtstagsWoche')}</h3>
           </div>
           <div className="space-y-3">
             {geburtstage.map((g, i) => (
@@ -526,7 +534,7 @@ export default function UebersichtTab() {
                 <Avatar name={g.name} foto={g.foto} size={40} />
                 <div className="flex-1 min-w-0">
                   <div className="text-sm font-medium text-slate-700">{g.name}</div>
-                  <div className="text-xs text-slate-400">{g.datum} · wird {g.alter}</div>
+                  <div className="text-xs text-slate-400">{g.datum} · {t('wird')} {g.alter}</div>
                 </div>
               </div>
             ))}

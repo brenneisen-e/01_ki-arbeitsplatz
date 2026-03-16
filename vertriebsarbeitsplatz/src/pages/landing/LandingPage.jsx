@@ -257,7 +257,7 @@ export default function LandingPage() {
                 language === 'de' ? 'bg-white text-slate-800 shadow-sm' : 'text-white/60 hover:text-white/90'
               )}
             >
-              <img src="https://img.logo.dev/de?token=pk_H7vb5Y2lTsW47U4Xq-w3HA&format=png&size=32" alt="DE" className="w-4 h-3 rounded-sm object-cover" />
+              <svg className="w-4 h-3 rounded-sm" viewBox="0 0 640 480"><rect width="640" height="160" fill="#000"/><rect y="160" width="640" height="160" fill="#D00"/><rect y="320" width="640" height="160" fill="#FFCE00"/></svg>
               DE
             </button>
             <button
@@ -267,7 +267,7 @@ export default function LandingPage() {
                 language === 'en' ? 'bg-white text-slate-800 shadow-sm' : 'text-white/60 hover:text-white/90'
               )}
             >
-              <img src="https://img.logo.dev/gb?token=pk_H7vb5Y2lTsW47U4Xq-w3HA&format=png&size=32" alt="EN" className="w-4 h-3 rounded-sm object-cover" />
+              <svg className="w-4 h-3 rounded-sm" viewBox="0 0 60 30"><clipPath id="s"><path d="M0,0 v30 h60 v-30 z"/></clipPath><clipPath id="t"><path d="M30,15 h30 v15 z v15 h-30 z h-30 v-15 z v-15 h30 z"/></clipPath><g clipPath="url(#s)"><path d="M0,0 v30 h60 v-30 z" fill="#012169"/><path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" strokeWidth="6"/><path d="M0,0 L60,30 M60,0 L0,30" clipPath="url(#t)" stroke="#C8102E" strokeWidth="4"/><path d="M30,0 v30 M0,15 h60" stroke="#fff" strokeWidth="10"/><path d="M30,0 v30 M0,15 h60" stroke="#C8102E" strokeWidth="6"/></g></svg>
               EN
             </button>
           </div>

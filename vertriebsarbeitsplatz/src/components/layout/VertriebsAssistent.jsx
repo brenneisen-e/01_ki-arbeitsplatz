@@ -1,6 +1,8 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { MessageCircle, X, Send, Bot, User } from 'lucide-react';
+import { MessageCircle, X, Send, Bot, User, FileText, Mail } from 'lucide-react';
 import { useMode } from '../../hooks/useMode';
+import { KUNDEN_BY_MODE } from '../../data';
+import { VV_LEADS } from '../../data/vvExtended';
 
 const WELCOME_MESSAGES = {
   versicherung:
@@ -31,6 +33,110 @@ const QUICK_ACTIONS = {
     'Portfolio-Analyse',
   ],
 };
+
+// Detail-view quick actions that change based on customer context
+function getDetailQuickActions(modeId, kunde) {
+  if (modeId === 'vermoegensverwaltung' && kunde) {
+    const leads = VV_LEADS.filter(l => l.referenzMandant === kunde.id);
+    const hasLeads = leads.length > 0;
+    const actions = [
+      'Anschreiben formulieren',
+      'Gesprächsleitfaden erstellen',
+    ];
+    if (hasLeads) actions.push('Leads analysieren');
+    actions.push('Portfolio-Analyse');
+    return actions;
+  }
+  if (modeId === 'banking') {
+    return [
+      'Anschreiben formulieren',
+      'Gesprächsleitfaden erstellen',
+      'Kreditanalyse starten',
+      'Cross-Selling Chancen',
+    ];
+  }
+  return [
+    'Anschreiben formulieren',
+    'Gesprächsleitfaden erstellen',
+    'Kundenpotenzial analysieren',
+    'Cross-Selling Chancen',
+  ];
+}
+
+function getAnschreibenLeadOptions(kundeId) {
+  return VV_LEADS.filter(l => l.referenzMandant === kundeId);
+}
+
+function generateAnschreibenResponse(lead, kunde) {
+  const name = kunde?.name || 'Mandant';
+  const firstName = name.split(/\s+/).filter(w => !/^(Dr\.|Prof\.|Fam\.)$/i.test(w))[0] || 'Herr/Frau';
+  const anrede = name.includes('Dr.') ? `Sehr geehrter Herr ${name.replace('Dr. ', '')}` : `Sehr geehrter ${name}`;
+  const today = new Date().toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+
+  let thema = lead.name;
+  let bezug = '';
+  let whitepaper = '';
+
+  if (lead.id === 'BM016') {
+    thema = 'Defense & Aerospace Investments';
+    bezug = 'Ihr Interesse am Thema Defense-Investments, das wir in mehreren Kontaktpunkten registriert haben';
+    whitepaper = 'European Defense Stocks — Due Diligence Report 2026';
+  } else if (lead.quelle === 'fremdbank') {
+    thema = 'Konsolidierung Ihrer Vermögenswerte';
+    bezug = `die Optimierungsmöglichkeiten bei Ihrem ${lead.name}`;
+  } else if (lead.quelle === 'liquiditaet') {
+    thema = 'Wiederanlage-Strategie';
+    bezug = `die bevorstehende Fälligkeit bzw. Liquidität im Rahmen von ${lead.name}`;
+  } else if (lead.quelle === 'lifeevent') {
+    thema = 'Nachfolgeplanung';
+    bezug = `Ihre strategische Planung im Bereich ${lead.name}`;
+  } else {
+    bezug = `das Thema ${lead.name}`;
+  }
+
+  const wpRef = whitepaper
+    ? `\n\nAls Gesprächsgrundlage möchte ich Ihnen gerne unser aktuelles Whitepaper „${whitepaper}" mitbringen, das wir vor zwei Tagen veröffentlicht haben. Es enthält eine fundierte Analyse der aktuellen Investmentchancen und regulatorischen Rahmenbedingungen.`
+    : '';
+
+  const brief = `${anrede},
+
+ich hoffe, es geht Ihnen gut. Ich schreibe Ihnen bezüglich ${bezug}.
+
+Gerne würde ich mit Ihnen in einem persönlichen Gespräch die Möglichkeiten und Potenziale besprechen, die sich für Ihr Portfolio ergeben.${wpRef}
+
+Darf ich Ihnen einen Termin in den kommenden zwei Wochen vorschlagen? Ich bin zeitlich flexibel und richte mich gerne nach Ihrem Kalender.
+
+Mit freundlichen Grüßen
+Dr. Thomas Richter
+Senior Advisor | HRK LUNIS AG`;
+
+  const emailSubject = `Einladung: Persönliches Gespräch — ${thema}`;
+
+  return `<div class="space-y-3">
+    <p class="font-semibold">Anschreiben generiert für: ${lead.name}</p>
+
+    <div class="bg-white border border-slate-200 rounded-lg p-3 text-xs space-y-1">
+      <div class="flex items-center gap-2 mb-2">
+        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-blue-50 text-blue-700 text-[10px] font-medium">
+          📄 DOCX Anschreiben
+        </span>
+        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-purple-50 text-purple-700 text-[10px] font-medium">
+          ✉️ EML E-Mail
+        </span>
+      </div>
+      <div class="bg-slate-50 rounded p-2.5 text-[11px] leading-relaxed whitespace-pre-line font-mono">${brief}</div>
+    </div>
+
+    <div class="bg-amber-50 border border-amber-200 rounded-lg p-2 text-xs text-amber-800">
+      <strong>Betreff (E-Mail):</strong> ${emailSubject}
+    </div>
+
+    <div class="flex gap-2 mt-2">
+      <button class="px-3 py-1.5 bg-blue-600 text-white rounded-lg text-xs font-medium hover:bg-blue-700">📄 Als DOCX herunterladen</button>
+      <button class="px-3 py-1.5 bg-purple-600 text-white rounded-lg text-xs font-medium hover:bg-purple-700">✉️ Als E-Mail öffnen</button>
+    </div>
+  </div>`;
+}
 
 const COCKPIT_QUICK_ACTIONS = [
   'Top 5 nach Ergebnis',
@@ -346,16 +452,25 @@ function getDemoResponse(message, { currentView, modeId }) {
 }
 
 export default function VertriebsAssistent() {
-  const { modeId, config, currentView, setActiveTab } = useMode();
+  const { modeId, config, currentView, setActiveTab, selectedKundeId } = useMode();
   const [isOpen, setIsOpen] = useState(true);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [anschreibenStep, setAnschreibenStep] = useState(null); // null | 'select_lead'
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
   const hasAutoOpened = useRef(false);
 
   const { primary, primaryLight, gradient } = config.colors;
+
+  // Get current customer data for detail view
+  const currentKunde = currentView === 'detail' && selectedKundeId
+    ? (KUNDEN_BY_MODE[modeId] || []).find(k => k.id === selectedKundeId)
+    : null;
+  const kundeLeads = currentKunde
+    ? getAnschreibenLeadOptions(currentKunde.id)
+    : [];
 
   // Auto-open on detail page
   useEffect(() => {
@@ -379,6 +494,7 @@ export default function VertriebsAssistent() {
   // Reset messages when mode changes
   useEffect(() => {
     setMessages([]);
+    setAnschreibenStep(null);
   }, [modeId]);
 
   const sendMessage = useCallback(
@@ -387,6 +503,44 @@ export default function VertriebsAssistent() {
       const userMsg = { role: 'user', content: text.trim() };
       setMessages((prev) => [...prev, userMsg]);
       setInput('');
+
+      // Handle "Anschreiben formulieren" flow
+      if (text.trim().toLowerCase().includes('anschreiben formulieren') && currentView === 'detail' && kundeLeads.length > 0) {
+        setIsTyping(true);
+        setTimeout(() => {
+          setMessages((prev) => [...prev, {
+            role: 'assistant',
+            content: `<div class="space-y-2">
+              <p class="font-semibold">Anschreiben formulieren</p>
+              <p>Zu welchem Thema soll ich ein Anschreiben für <strong>${currentKunde?.name || 'den Mandanten'}</strong> erstellen?</p>
+              <p class="text-xs text-slate-500">Bitte wähle einen Lead aus:</p>
+            </div>`,
+            isHtml: true,
+          }]);
+          setIsTyping(false);
+          setAnschreibenStep('select_lead');
+        }, 800);
+        return;
+      }
+
+      // Handle lead selection in Anschreiben flow
+      if (anschreibenStep === 'select_lead') {
+        const selectedLead = kundeLeads.find(l =>
+          text.toLowerCase().includes(l.name.toLowerCase()) ||
+          text.toLowerCase().includes(l.id.toLowerCase())
+        );
+        if (selectedLead) {
+          setAnschreibenStep(null);
+          setIsTyping(true);
+          setTimeout(() => {
+            const response = generateAnschreibenResponse(selectedLead, currentKunde);
+            setMessages((prev) => [...prev, { role: 'assistant', content: response, isHtml: true }]);
+            setIsTyping(false);
+          }, 1500);
+          return;
+        }
+      }
+
       setIsTyping(true);
 
       setTimeout(() => {
@@ -395,6 +549,7 @@ export default function VertriebsAssistent() {
           : getDemoResponse(text, { currentView, modeId });
         setMessages((prev) => [...prev, { role: 'assistant', content: result.content, isHtml: true }]);
         setIsTyping(false);
+        setAnschreibenStep(null);
 
         // Navigate to tab if response requests it
         if (result.navigateTo) {
@@ -411,7 +566,7 @@ export default function VertriebsAssistent() {
         }
       }, 1200);
     },
-    [isTyping, currentView, setActiveTab],
+    [isTyping, currentView, setActiveTab, anschreibenStep, kundeLeads, currentKunde, modeId],
   );
 
   const handleSend = () => sendMessage(input);
@@ -425,8 +580,14 @@ export default function VertriebsAssistent() {
 
   const welcomeMessage = currentView === 'cockpit'
     ? 'Hallo! Ich kann dir bei der Analyse deiner Dashboard-Daten helfen. Hier sind einige Vorschläge:'
-    : (WELCOME_MESSAGES[modeId] || WELCOME_MESSAGES.versicherung);
-  const quickActions = currentView === 'cockpit' ? COCKPIT_QUICK_ACTIONS : (QUICK_ACTIONS[modeId] || QUICK_ACTIONS.versicherung);
+    : currentView === 'detail' && currentKunde
+      ? `Hallo! Ich bin bereit für ${currentKunde.name}. Was kann ich für dich tun?`
+      : (WELCOME_MESSAGES[modeId] || WELCOME_MESSAGES.versicherung);
+  const quickActions = currentView === 'cockpit'
+    ? COCKPIT_QUICK_ACTIONS
+    : currentView === 'detail' && currentKunde
+      ? getDetailQuickActions(modeId, currentKunde)
+      : (QUICK_ACTIONS[modeId] || QUICK_ACTIONS.versicherung);
 
   // Don't show on landing page
   if (currentView === 'landing') return null;
@@ -510,6 +671,35 @@ export default function VertriebsAssistent() {
                     </button>
                   ))}
                 </div>
+              </div>
+            )}
+
+            {/* Lead selection chips for Anschreiben flow */}
+            {anschreibenStep === 'select_lead' && kundeLeads.length > 0 && (
+              <div className="pl-9 flex flex-wrap gap-1.5">
+                {kundeLeads.map((lead) => (
+                  <button
+                    key={lead.id}
+                    onClick={() => sendMessage(lead.name)}
+                    className="px-2.5 py-1.5 text-[11px] rounded-lg border transition-colors text-left leading-tight"
+                    style={{
+                      borderColor: lead.isNeuerLead ? '#10b981' : primaryLight,
+                      color: lead.isNeuerLead ? '#059669' : primary,
+                      backgroundColor: lead.isNeuerLead ? '#ecfdf5' : undefined,
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = lead.isNeuerLead ? '#059669' : primary;
+                      e.currentTarget.style.color = '#fff';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = lead.isNeuerLead ? '#ecfdf5' : 'transparent';
+                      e.currentTarget.style.color = lead.isNeuerLead ? '#059669' : primary;
+                    }}
+                  >
+                    {lead.isNeuerLead && <span className="text-[9px] font-bold block text-emerald-600">NEU</span>}
+                    {lead.name}
+                  </button>
+                ))}
               </div>
             )}
 

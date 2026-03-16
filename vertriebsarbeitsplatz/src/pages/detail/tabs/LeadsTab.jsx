@@ -4,6 +4,7 @@ import PipelineBar from '../../../components/ui/PipelineBar';
 import LogoImg from '../../../components/ui/LogoImg';
 import { VV_LEADS } from '../../../data/vvExtended';
 import { useMode } from '../../../hooks/useMode';
+import useTranslation from '../../../i18n/useTranslation';
 import {
   ChevronDown, ChevronUp, UserPlus, Briefcase, Calendar, User,
   ExternalLink, TrendingUp, Filter, Sparkles,
@@ -27,38 +28,7 @@ const QUELLEN_COLORS = {
   compliance: '#64748b',
 };
 
-const QUELLEN_LABELS = {
-  empfehlung: 'Empfehlung',
-  nextgen: 'NextGen',
-  presse: 'Presse/Exit',
-  event: 'Event',
-  multiplikator: 'Multiplikator',
-  digital: 'Digital',
-  liquiditaet: 'Liquidität',
-  fremdbank: 'Fremdbank',
-  upgrade: 'Upgrade',
-  lifeevent: 'Life Event',
-  stiftung: 'Stiftung',
-  event_einladung: 'Event-Einladung',
-  performance: 'Performance',
-  compliance: 'Compliance',
-};
-
 const STADIUM_ORDER = ['lead', 'kennenlernen', 'identifiziert', 'termin', 'angebot', 'gewonnen'];
-const STADIUM_LABELS = {
-  lead: 'Lead',
-  kennenlernen: 'Kennenlernen',
-  identifiziert: 'Identifiziert',
-  termin: 'Termin',
-  angebot: 'Angebot',
-  gewonnen: 'Gewonnen',
-};
-
-const KATEGORIE_TABS = [
-  { id: 'alle', label: 'Alle Leads' },
-  { id: 'neumandat', label: 'Neue Mandate' },
-  { id: 'bestandsmandat', label: 'Bestandsmandate' },
-];
 
 // ─── Detect institution names in herleitung values for logo display ───
 const KNOWN_INSTITUTES = [
@@ -80,6 +50,40 @@ export default function LeadsTab({ kunde }) {
   const [kategorieFilter, setKategorieFilter] = useState('alle');
   const [statusFilter, setStatusFilter] = useState('alle');
   const [expandedLead, setExpandedLead] = useState(null);
+  const { t, lang } = useTranslation();
+
+  // Translated labels computed inside the component
+  const kategorieTabLabels = [
+    { id: 'alle', label: t('alleLeads') },
+    { id: 'neumandat', label: t('neueMandate') },
+    { id: 'bestandsmandat', label: t('bestandsmandate') },
+  ];
+
+  const stadiumLabels = {
+    lead: t('stadium.lead'),
+    kennenlernen: t('stadium.kennenlernen'),
+    identifiziert: t('stadium.identifiziert'),
+    termin: t('stadium.termin'),
+    angebot: t('stadium.angebot'),
+    gewonnen: t('stadium.gewonnen'),
+  };
+
+  const quellenLabels = {
+    empfehlung: t('quelle.empfehlung'),
+    nextgen: t('quelle.nextgen'),
+    presse: t('quelle.presse'),
+    event: t('quelle.event'),
+    multiplikator: t('quelle.multiplikator'),
+    digital: t('quelle.digital'),
+    liquiditaet: t('quelle.liquiditaet'),
+    fremdbank: t('quelle.fremdbank'),
+    upgrade: t('quelle.upgrade'),
+    lifeevent: t('quelle.lifeevent'),
+    stiftung: t('quelle.stiftung'),
+    event_einladung: t('quelle.event_einladung'),
+    performance: t('quelle.performance'),
+    compliance: t('quelle.compliance'),
+  };
 
   // Filter leads related to this mandant
   const allLeads = VV_LEADS || [];
@@ -114,6 +118,12 @@ export default function LeadsTab({ kunde }) {
     );
     if (!exists) mergedLeads.push(pl);
   });
+  // Sort: new leads (isNeuerLead) first
+  mergedLeads.sort((a, b) => {
+    if (a.isNeuerLead && !b.isNeuerLead) return -1;
+    if (!a.isNeuerLead && b.isNeuerLead) return 1;
+    return 0;
+  });
 
   const filtered = mergedLeads.filter(l => {
     if (kategorieFilter !== 'alle' && l.kategorie !== kategorieFilter) return false;
@@ -128,7 +138,7 @@ export default function LeadsTab({ kunde }) {
   STADIUM_ORDER.forEach(s => { stadiumCounts[s] = mergedLeads.filter(l => l.stadium === s).length; });
 
   const pipelineSegments = STADIUM_ORDER.map(s => ({
-    label: STADIUM_LABELS[s],
+    label: stadiumLabels[s],
     count: stadiumCounts[s] || 0,
     color: s === 'gewonnen' ? '#10b981' : s === 'angebot' ? '#f59e0b' : s === 'termin' ? '#3b82f6' : s === 'kennenlernen' ? '#8b5cf6' : s === 'identifiziert' ? '#06b6d4' : '#94a3b8',
   }));
@@ -141,9 +151,9 @@ export default function LeadsTab({ kunde }) {
             <div className="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center mb-4">
               <UserPlus className="w-8 h-8 text-slate-400" />
             </div>
-            <h3 className="font-semibold text-slate-700 mb-1">Keine Leads vorhanden</h3>
+            <h3 className="font-semibold text-slate-700 mb-1">{t('keineLeadsVorhanden')}</h3>
             <p className="text-sm text-slate-400 max-w-md">
-              Für {kunde?.name || 'diesen Mandanten'} wurden noch keine Leads identifiziert.
+              {t('keineLeadsFuer', { name: kunde?.name || 'diesen Mandanten' })}
             </p>
           </div>
         </Card>
@@ -155,33 +165,33 @@ export default function LeadsTab({ kunde }) {
     <div className="space-y-3">
       {/* KPIs */}
       <div className="grid grid-cols-3 gap-3">
-        <KPI icon={UserPlus} label="Leads Neue Mandate" value={neumandate.length} />
-        <KPI icon={Briefcase} label="Leads Bestandsmandat" value={bestandsmandate.length} color="text-emerald-600" />
-        <KPI icon={TrendingUp} label="Leads Gesamt" value={mergedLeads.length} />
+        <KPI icon={UserPlus} label={t('leadsNeueMandate')} value={neumandate.length} />
+        <KPI icon={Briefcase} label={t('leadsBestandsmandat')} value={bestandsmandate.length} color="text-emerald-600" />
+        <KPI icon={TrendingUp} label={t('leadsGesamt')} value={mergedLeads.length} />
       </div>
 
       {/* Pipeline Bar */}
       <Card hover={false}>
-        <h3 className="font-semibold text-slate-800 mb-2">Pipeline</h3>
+        <h3 className="font-semibold text-slate-800 mb-2">{t('pipeline')}</h3>
         <PipelineBar segments={pipelineSegments} />
       </Card>
 
       {/* Filters */}
       <div className="flex items-center gap-4 flex-wrap">
         <div className="flex gap-1">
-          {KATEGORIE_TABS.map(t => (
+          {kategorieTabLabels.map(tab => (
             <button
-              key={t.id}
-              onClick={() => setKategorieFilter(t.id)}
+              key={tab.id}
+              onClick={() => setKategorieFilter(tab.id)}
               className={`text-sm px-4 py-2 rounded-lg font-medium border transition-colors ${
-                kategorieFilter === t.id
+                kategorieFilter === tab.id
                   ? 'bg-slate-800 text-white border-slate-800'
                   : 'bg-white text-slate-600 border-slate-200 hover:border-slate-400'
               }`}
             >
-              {t.label}
+              {tab.label}
               <span className="ml-1.5 text-xs opacity-70">
-                {t.id === 'alle' ? mergedLeads.length : t.id === 'neumandat' ? neumandate.length : bestandsmandate.length}
+                {tab.id === 'alle' ? mergedLeads.length : tab.id === 'neumandat' ? neumandate.length : bestandsmandate.length}
               </span>
             </button>
           ))}
@@ -191,7 +201,7 @@ export default function LeadsTab({ kunde }) {
 
         <div className="flex items-center gap-1.5 flex-wrap">
           <Filter size={14} className="text-slate-400" />
-          <span className="text-xs text-slate-400">Stadium:</span>
+          <span className="text-xs text-slate-400">{t('stadium')}:</span>
           <button
             onClick={() => setStatusFilter('alle')}
             className={`text-xs px-2.5 py-1 rounded-full border transition-colors ${
@@ -200,7 +210,7 @@ export default function LeadsTab({ kunde }) {
                 : 'bg-white text-slate-500 border-slate-200 hover:border-slate-400'
             }`}
           >
-            Alle
+            {t('alle')}
           </button>
           {STADIUM_ORDER.map(s => (
             <button
@@ -212,7 +222,7 @@ export default function LeadsTab({ kunde }) {
                   : 'bg-white text-slate-500 border-slate-200 hover:border-slate-400'
               }`}
             >
-              {STADIUM_LABELS[s]}
+              {stadiumLabels[s]}
             </button>
           ))}
         </div>
@@ -225,12 +235,12 @@ export default function LeadsTab({ kunde }) {
             <thead>
               <tr className="border-b border-slate-200 text-left text-xs text-slate-400 uppercase">
                 <th className="py-2 pr-2 w-5"></th>
-                <th className="py-2 pr-2 w-[18%]">Lead</th>
-                <th className="py-2 pr-2 w-[10%]">Kategorie</th>
-                <th className="py-2 pr-2 w-[10%]">Quelle</th>
-                <th className="py-2 pr-2 w-[10%]">Stadium</th>
-                <th className="py-2 pr-2 w-[12%]">Pot. Volumen</th>
-                <th className="py-2">Herkunft</th>
+                <th className="py-2 pr-2 w-[18%]">{t('lead')}</th>
+                <th className="py-2 pr-2 w-[10%]">{t('kategorie')}</th>
+                <th className="py-2 pr-2 w-[10%]">{t('quelle')}</th>
+                <th className="py-2 pr-2 w-[10%]">{t('stadium')}</th>
+                <th className="py-2 pr-2 w-[12%]">{t('potVolumen')}</th>
+                <th className="py-2">{t('herkunft')}</th>
               </tr>
             </thead>
             <tbody>
@@ -243,13 +253,16 @@ export default function LeadsTab({ kunde }) {
                     kunde={kunde}
                     isExpanded={isExpanded}
                     onToggle={() => setExpandedLead(isExpanded ? null : lead.id)}
+                    t={t}
+                    stadiumLabels={stadiumLabels}
+                    quellenLabels={quellenLabels}
                   />
                 );
               })}
             </tbody>
           </table>
           {filtered.length === 0 && (
-            <div className="text-center py-8 text-sm text-slate-400">Keine Leads gefunden</div>
+            <div className="text-center py-8 text-sm text-slate-400">{t('keineLeadsGefunden')}</div>
           )}
         </div>
       </Card>
@@ -257,7 +270,7 @@ export default function LeadsTab({ kunde }) {
   );
 }
 
-function LeadRow({ lead, kunde, isExpanded, onToggle }) {
+function LeadRow({ lead, kunde, isExpanded, onToggle, t, stadiumLabels, quellenLabels }) {
   const [hovered, setHovered] = useState(false);
   const { config, navigateTo } = useMode();
 
@@ -274,7 +287,14 @@ function LeadRow({ lead, kunde, isExpanded, onToggle }) {
           {isExpanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
         </td>
         <td className="py-2.5 pr-2">
-          <div className={`font-medium ${hovered ? 'text-white' : 'text-slate-800'}`}>{lead.name}</div>
+          <div className={`font-medium flex items-center gap-2 ${hovered ? 'text-white' : 'text-slate-800'}`}>
+            {lead.name}
+            {lead.isNeuerLead && (
+              <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold whitespace-nowrap ${hovered ? 'bg-white/30 text-white' : 'bg-emerald-500 text-white animate-pulse'}`}>
+                Neuer Lead
+              </span>
+            )}
+          </div>
           {lead.beruf && <div className={`text-[10px] ${hovered ? 'text-white/70' : 'text-slate-400'}`}>{lead.beruf}</div>}
         </td>
         <td className="py-2.5 pr-2">
@@ -285,7 +305,7 @@ function LeadRow({ lead, kunde, isExpanded, onToggle }) {
                 ? 'bg-blue-50 text-blue-700'
                 : 'bg-emerald-50 text-emerald-700'
           }`}>
-            {lead.kategorie === 'neumandat' ? 'Neues Mandat' : 'Bestand'}
+            {lead.kategorie === 'neumandat' ? t('neuesMandat.badge') : t('bestand')}
           </span>
         </td>
         <td className="py-2.5 pr-2">
@@ -293,13 +313,13 @@ function LeadRow({ lead, kunde, isExpanded, onToggle }) {
             className="text-[10px] font-medium px-2 py-0.5 rounded-full text-white"
             style={{ backgroundColor: hovered ? 'rgba(255,255,255,0.25)' : (QUELLEN_COLORS[lead.quelle] || '#94a3b8') }}
           >
-            {QUELLEN_LABELS[lead.quelle] || lead.quelleLabel || lead.quelle}
+            {quellenLabels[lead.quelle] || lead.quelleLabel || lead.quelle}
           </span>
         </td>
         <td className="py-2.5 pr-2">
           {hovered
-            ? <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-white/20 text-white">{STADIUM_LABELS[lead.stadium] || lead.stadium}</span>
-            : <StadiumBadge stadium={lead.stadium} />
+            ? <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-white/20 text-white">{stadiumLabels[lead.stadium] || lead.stadium}</span>
+            : <StadiumBadge stadium={lead.stadium} stadiumLabels={stadiumLabels} />
           }
         </td>
         <td className={`py-2.5 pr-2 font-mono text-sm ${hovered ? 'text-white' : 'text-slate-700'}`}>
@@ -318,7 +338,7 @@ function LeadRow({ lead, kunde, isExpanded, onToggle }) {
                 <div className="bg-gradient-to-r from-indigo-50 to-purple-50 border border-indigo-100 rounded-xl px-4 py-3">
                   <div className="flex items-center gap-2 mb-2">
                     <Sparkles size={14} className="text-indigo-500" />
-                    <span className="text-xs font-semibold text-indigo-600">KI-Vertriebsassistent</span>
+                    <span className="text-xs font-semibold text-indigo-600">{t('kiVertriebsassistent')}</span>
                   </div>
                   <p className="text-xs text-slate-700 leading-relaxed">{lead.kiDescription}</p>
                 </div>
@@ -328,7 +348,7 @@ function LeadRow({ lead, kunde, isExpanded, onToggle }) {
               {lead.herleitung && lead.herleitung.length > 0 && (
                 <div>
                   <div className="flex items-center gap-2 mb-3">
-                    <h4 className="text-sm font-semibold text-slate-700">Herleitung</h4>
+                    <h4 className="text-sm font-semibold text-slate-700">{t('herleitung')}</h4>
                     {lead.quelleLabel && (
                       <span className="text-[10px] text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full">
                         {lead.quelleLabel}
@@ -351,7 +371,7 @@ function LeadRow({ lead, kunde, isExpanded, onToggle }) {
               {/* Nächster Schritt */}
               {lead.naechsterSchritt && (
                 <div className="pt-2 border-t border-slate-200">
-                  <span className="text-xs text-slate-400 font-medium">Nächster Schritt: </span>
+                  <span className="text-xs text-slate-400 font-medium">{t('naechsterSchritt')}: </span>
                   <span className="text-xs text-slate-700 font-medium">{lead.naechsterSchritt}</span>
                 </div>
               )}
@@ -359,7 +379,7 @@ function LeadRow({ lead, kunde, isExpanded, onToggle }) {
               {/* Wahrscheinlichkeit */}
               {lead.wahrscheinlichkeit > 0 && (
                 <div className="flex items-center gap-2">
-                  <span className="text-[10px] text-slate-400">Wahrscheinlichkeit:</span>
+                  <span className="text-[10px] text-slate-400">{t('wahrscheinlichkeit')}:</span>
                   <div className="w-24 h-1.5 bg-slate-200 rounded-full">
                     <div
                       className="h-1.5 rounded-full transition-all"
@@ -485,7 +505,7 @@ function VergleichsTabelle({ data }) {
   );
 }
 
-function StadiumBadge({ stadium }) {
+function StadiumBadge({ stadium, stadiumLabels }) {
   const styles = {
     lead: 'bg-slate-100 text-slate-600',
     kennenlernen: 'bg-purple-50 text-purple-600',
@@ -496,7 +516,7 @@ function StadiumBadge({ stadium }) {
   };
   return (
     <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${styles[stadium] || styles.lead}`}>
-      {STADIUM_LABELS[stadium] || stadium}
+      {stadiumLabels[stadium] || stadium}
     </span>
   );
 }

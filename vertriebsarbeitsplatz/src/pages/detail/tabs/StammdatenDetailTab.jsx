@@ -2,7 +2,7 @@ import Card from '../../../components/ui/Card';
 import DataTable from '../../../components/ui/DataTable';
 import { StatusBadge, SparteBadge } from '../../../components/ui/Badge';
 import { formatEur, formatPct, berechneHaushaltsnetto, berechneAbsicherungsquote, berechneSparquote, berechneFrei, potentialSterne } from '../../../utils/formatters';
-import { User, Wallet, Linkedin, Star, ChevronDown, MapPin, Briefcase, Heart, Users, CheckCircle, Building2, PawPrint, Info } from 'lucide-react';
+import { User, Wallet, Linkedin, Star, ChevronDown, ChevronRight, MapPin, Briefcase, Heart, Users, CheckCircle, Building2, PawPrint, Info } from 'lucide-react';
 import { getLogoUrl } from '../../../utils/logos';
 import { getKundeFoto } from '../../../utils/kundenFotos';
 import { useState } from 'react';
@@ -40,8 +40,17 @@ export default function StammdatenDetailTab({ kunde }) {
   const [risikoExpanded, setRisikoExpanded] = useState(false);
   const [fotoFailed, setFotoFailed] = useState(false);
   const { config, modeId } = useMode();
+  const institut = config?.institut;
   const isVV = modeId === 'vermoegensverwaltung';
   const haushalt = berechneHaushaltsnetto(kunde);
+
+  // Adapt product names to selected institut
+  const baseInstitut = modeId === 'versicherung' ? 'ERGO' : modeId === 'banking' ? 'VR' : null;
+  const shortInstitut = institut ? institut.split(' ')[0] : null;
+  const adaptedProdukte = (kunde.eigeneProdukte || []).map(p => {
+    if (!baseInstitut || !shortInstitut || shortInstitut === baseInstitut) return p;
+    return { ...p, produkt: p.produkt?.replace(new RegExp(baseInstitut, 'g'), shortInstitut) };
+  });
   const absQuote = berechneAbsicherungsquote(kunde);
   const sparQuote = berechneSparquote(kunde);
   const frei = berechneFrei(kunde);
@@ -190,20 +199,30 @@ export default function StammdatenDetailTab({ kunde }) {
       {/* Eigene Produkte */}
       <Card>
         <h3 className="font-semibold text-slate-800 mb-4">
-          Eigene Produkte ({kunde.eigeneProdukte?.length || 0} Verträge)
+          Eigene Produkte ({adaptedProdukte.length} {modeId === 'banking' ? 'Produkte' : 'Vertr\u00e4ge'})
         </h3>
-        {kunde.eigeneProdukte?.length > 0 ? (
-          <DataTable
-            columns={[
-              { id: 'produkt', label: 'Produkt' },
-              { id: 'sparte', label: 'Sparte', render: v => v ? <SparteBadge sparte={v} /> : '-' },
-              { id: 'details', label: 'Details' },
-              { id: isVV ? 'volumen' : 'praemie', label: isVV ? 'Volumen' : 'Prämie/J.', render: v => <span className="font-mono">{formatEur(v)}</span> },
-              { id: 'seit', label: 'Seit' },
-              { id: 'status', label: 'Status', render: v => <StatusBadge status={v} /> },
-            ]}
-            data={kunde.eigeneProdukte}
-          />
+        {adaptedProdukte.length > 0 ? (
+          <div className="bg-white rounded-xl border border-slate-200 overflow-hidden" style={{ boxShadow: 'var(--card-shadow)' }}>
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="bg-slate-50">
+                    <th className="px-4 py-3 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">Produkt</th>
+                    <th className="px-4 py-3 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">Sparte</th>
+                    <th className="px-4 py-3 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">Details</th>
+                    <th className="px-4 py-3 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">{isVV ? 'Volumen' : 'Pr\u00e4mie/J.'}</th>
+                    <th className="px-4 py-3 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">Seit</th>
+                    <th className="px-4 py-3 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {adaptedProdukte.map((p, i) => (
+                    <ExpandableProduktRow key={p.id || i} produkt={p} isVV={isVV} />
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
         ) : (
           <div className="text-sm text-slate-400 py-4 text-center">Keine eigenen Produkte</div>
         )}
@@ -402,6 +421,82 @@ function HaustiereRow({ haustiere }) {
         </div>
       )}
     </div>
+  );
+}
+
+function ExpandableProduktRow({ produkt, isVV }) {
+  const [expanded, setExpanded] = useState(false);
+  const [hovered, setHovered] = useState(false);
+
+  return (
+    <>
+      <tr
+        className="border-t border-slate-100 cursor-pointer transition-colors"
+        style={hovered && !expanded ? { backgroundColor: 'var(--mode-primary-light)', color: '#ffffff' } : undefined}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+        onClick={() => setExpanded(!expanded)}
+      >
+        <td className="px-4 py-3 text-sm">
+          <div className="flex items-center gap-2">
+            <span className={hovered && !expanded ? 'text-white' : 'text-slate-400'}>
+              {expanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
+            </span>
+            <span className={`font-medium ${hovered && !expanded ? 'text-white' : 'text-slate-700'}`}>{produkt.produkt}</span>
+          </div>
+        </td>
+        <td className="px-4 py-3 text-sm">
+          {hovered && !expanded
+            ? <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-white/20 text-white">{produkt.sparte || '-'}</span>
+            : (produkt.sparte ? <SparteBadge sparte={produkt.sparte} /> : '-')
+          }
+        </td>
+        <td className={`px-4 py-3 text-sm ${hovered && !expanded ? 'text-white/90' : 'text-slate-700'}`}>{produkt.details}</td>
+        <td className={`px-4 py-3 text-sm ${hovered && !expanded ? 'text-white' : ''}`}>
+          <span className={`font-mono font-medium ${hovered && !expanded ? 'text-white' : ''}`}>
+            {formatEur(isVV ? produkt.volumen : produkt.praemie)}
+          </span>
+        </td>
+        <td className={`px-4 py-3 text-sm ${hovered && !expanded ? 'text-white/80' : ''}`}>{produkt.seit}</td>
+        <td className="px-4 py-3 text-sm">
+          {hovered && !expanded
+            ? <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-white/20 text-white">{produkt.status}</span>
+            : <StatusBadge status={produkt.status} />
+          }
+        </td>
+      </tr>
+      {expanded && (
+        <tr className="bg-slate-50/80">
+          <td colSpan={6} className="px-4 py-3">
+            <div className="pl-8 grid grid-cols-2 md:grid-cols-4 gap-4 text-xs">
+              <div>
+                <span className="text-slate-400 uppercase tracking-wider">Vertragsbeginn</span>
+                <div className="font-medium text-slate-700 mt-0.5">{produkt.seit}</div>
+              </div>
+              <div>
+                <span className="text-slate-400 uppercase tracking-wider">Status</span>
+                <div className="mt-0.5"><StatusBadge status={produkt.status} /></div>
+              </div>
+              <div>
+                <span className="text-slate-400 uppercase tracking-wider">Sparte</span>
+                <div className="font-medium text-slate-700 mt-0.5">{produkt.sparte || '-'}</div>
+              </div>
+              <div>
+                <span className="text-slate-400 uppercase tracking-wider">Details</span>
+                <div className="font-medium text-slate-700 mt-0.5">{produkt.details}</div>
+              </div>
+              {produkt.status === 'optimierbar' && (
+                <div className="col-span-2 md:col-span-4 mt-1">
+                  <div className="bg-amber-50 border border-amber-200 rounded px-3 py-2 text-amber-800 text-xs">
+                    Optimierungspotenzial erkannt \u2014 Tarifaktualisierung empfohlen
+                  </div>
+                </div>
+              )}
+            </div>
+          </td>
+        </tr>
+      )}
+    </>
   );
 }
 

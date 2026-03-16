@@ -99,6 +99,7 @@ export const MODE_CONFIGS = {
       { id: 'openfinance', label: 'Open Finance' },
       { id: 'impulse', label: 'Impulse' },
       { id: 'finanzprofil', label: 'Finanzprofil' },
+      { id: 'produktabschluss', label: 'Produktabschluss' },
       { id: 'kommunikation', label: 'Kommunikation' },
     ],
     institutVarianten: [

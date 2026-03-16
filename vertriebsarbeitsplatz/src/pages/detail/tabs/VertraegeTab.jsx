@@ -96,9 +96,29 @@ function ProduktRow({ produkt, modeId, onNavigateKontoumsaetze }) {
   );
 }
 
+// Replace the base institut name in product names with the currently selected institut
+const INSTITUT_REPLACEMENTS = {
+  versicherung: 'ERGO',
+  banking: 'VR',
+};
+
+function adaptProduktName(name, modeId, institut) {
+  if (!institut || !name) return name;
+  const baseInstitut = INSTITUT_REPLACEMENTS[modeId];
+  if (!baseInstitut) return name;
+  // Extract short name for replacement (e.g., "Allianz" from "Allianz", "Zukunftsversicherung" etc.)
+  const shortInstitut = institut.split(' ')[0];
+  if (shortInstitut === baseInstitut) return name;
+  return name.replace(new RegExp(baseInstitut, 'g'), shortInstitut);
+}
+
 export default function VertraegeTab({ kunde }) {
-  const { modeId, setActiveTab } = useMode();
-  const produkte = kunde.eigeneProdukte || [];
+  const { modeId, setActiveTab, config } = useMode();
+  const institut = config?.institut;
+  const produkte = (kunde.eigeneProdukte || []).map(p => ({
+    ...p,
+    produkt: adaptProduktName(p.produkt, modeId, institut),
+  }));
 
   const praemieLabel = modeId === 'banking' ? 'Jahreskosten' : modeId === 'vermoegensverwaltung' ? 'Volumen' : 'Prämie/J.';
   const sumLabel = modeId === 'banking' ? 'Gesamtkosten/J.' : modeId === 'vermoegensverwaltung' ? 'Gesamtvolumen' : 'Gesamtprämie/J.';

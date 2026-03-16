@@ -133,7 +133,12 @@ export function ModeProvider({ children }) {
       setSelectedKundeId(null);
     } else if (view === 'detail') {
       if (opts.kundeId !== undefined) setSelectedKundeId(opts.kundeId);
-      setActiveTab(opts.tab || config.detailTabs[0]?.id || 'stammdaten');
+      const requestedTab = opts.tab;
+      const validTabIds = config.detailTabs.map(t => t.id);
+      const resolvedTab = (requestedTab && validTabIds.includes(requestedTab))
+        ? requestedTab
+        : config.detailTabs[0]?.id || 'stammdaten';
+      setActiveTab(resolvedTab);
     } else if (view === 'cockpit') {
       setActiveTab('cockpit');
       setSelectedKundeId(null);

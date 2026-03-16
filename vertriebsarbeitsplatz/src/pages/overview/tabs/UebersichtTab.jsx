@@ -313,7 +313,7 @@ export default function UebersichtTab() {
                     key={kp.kundeId}
                     className="grid py-2.5 px-3 rounded-lg row-hover transition-colors cursor-pointer items-center"
                     style={{ gridTemplateColumns: '1fr 1fr 80px 100px 100px' }}
-                    onClick={() => navigateTo('detail', { kundeId: kp.kundeId, tab: 'potentiale' })}
+                    onClick={() => navigateTo('detail', { kundeId: kp.kundeId, tab: 'impulse' })}
                   >
                     <div className="flex items-center gap-2 min-w-0">
                       <Avatar name={kp.kundeName} foto={getKundeFoto(kp.kundeId)} size={30} />

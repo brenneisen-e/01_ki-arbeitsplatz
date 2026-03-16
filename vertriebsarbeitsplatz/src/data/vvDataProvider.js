@@ -99,8 +99,8 @@ function transformPerformance(raw) {
   for (let y = lastYearInData + 1; y <= currentYear; y++) {
     const maxMonth = y === currentYear ? currentMonth : 11;
     for (let m = 0; m <= maxMonth; m++) {
-      const pf = round1(0.4 + rng(prng, -1.0, 2.0));
-      const bm = round1(pf - rng(prng, 0.1, 0.6));
+      const pf = round1(0.3 + rng(prng, -2.5, 3.0));
+      const bm = round1(pf - rng(prng, 0.1, 0.8));
       baseMonthly.push({ monat: `${MONTH_NAMES[m]} ${y}`, portfolio: pf, benchmark: bm });
     }
   }

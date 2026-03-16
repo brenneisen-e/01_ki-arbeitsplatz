@@ -80,23 +80,33 @@ export default function GlobalHeader({ kundeInfo }) {
             <LogoImg name={config.institut} size={32} />
           </div>
           <div className="flex items-center gap-3">
-            {config.beraterFoto ? (
-              <div className="w-12 h-12 rounded-full border-2 border-white/50 overflow-hidden">
-                <img src={config.beraterFoto} alt={config.beraterName} className="w-full h-full object-cover" />
-              </div>
-            ) : (
-              <div className="w-12 h-12 rounded-full bg-white/20 border-2 border-white/50 flex items-center justify-center">
-                <User size={24} className="text-white" strokeWidth={1.75} />
-              </div>
-            )}
-            <div>
-              <div className="text-white text-sm font-medium">
-                {config.beraterTitel}: {config.beraterName}
-              </div>
-              <div className="text-white/60 text-xs">
-                {config.beraterId} | Aktiv
-              </div>
-            </div>
+            {(() => {
+              const customPhoto = typeof window !== 'undefined' ? localStorage.getItem('kia_user_photo') : null;
+              const customName = typeof window !== 'undefined' ? localStorage.getItem('kia_user_fullname') : null;
+              const displayName = customName || config.beraterName;
+              const displayPhoto = customPhoto || config.beraterFoto;
+              return (
+                <>
+                  {displayPhoto ? (
+                    <div className="w-12 h-12 rounded-full border-2 border-white/50 overflow-hidden">
+                      <img src={displayPhoto} alt={displayName} className="w-full h-full object-cover" />
+                    </div>
+                  ) : (
+                    <div className="w-12 h-12 rounded-full bg-white/20 border-2 border-white/50 flex items-center justify-center">
+                      <User size={24} className="text-white" strokeWidth={1.75} />
+                    </div>
+                  )}
+                  <div>
+                    <div className="text-white text-sm font-medium">
+                      {config.beraterTitel}: {displayName}
+                    </div>
+                    <div className="text-white/60 text-xs">
+                      {config.beraterId} | Aktiv
+                    </div>
+                  </div>
+                </>
+              );
+            })()}
           </div>
 
           {/* To-Dos inline next to advisor name */}

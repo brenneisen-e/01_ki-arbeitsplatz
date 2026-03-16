@@ -180,7 +180,7 @@ function deriveKpis(monthly, kundePortfolio) {
 // ═════════════════════════════════════════════════════════════════════════════
 export default function PerformanceTab({ kunde }) {
   const { config } = useMode();
-  const [timeRange, setTimeRange] = useState('ytd');
+  const [timeRange, setTimeRange] = useState('3j');
   const [showAbsolute, setShowAbsolute] = useState(true);
 
   const perfData = VV_PERFORMANCE[kunde?.id];

@@ -1,8 +1,15 @@
 // =============================================================================
-// Demo-Unternehmensdaten fuer Kreditanalyse-Modul
-// 8 deutsche Unternehmen mit vollstaendigen Bilanzdaten (2021-2023),
+// Demo-Unternehmensdaten für Kreditanalyse-Modul
+// 8 deutsche Unternehmen mit vollständigen Bilanzdaten (2021-2023),
 // Kreditdetails, Sicherheiten, Kontoinformationen und Ratings
 // =============================================================================
+
+// Helper: dynamische Datumsberechnung relativ zum heutigen Tag
+function daysFromNow(offset) {
+  const d = new Date();
+  d.setDate(d.getDate() + offset);
+  return d.toISOString().slice(0, 10);
+}
 
 export const demoCompanies = [
   // =========================================================================
@@ -183,8 +190,8 @@ export const demoCompanies = [
     },
     status: "eingegangen",
     bearbeiter: "M. Weber",
-    eingangsdatum: "2024-01-15",
-    faellig: "2024-03-15",
+    eingangsdatum: daysFromNow(-3),
+    faellig: daysFromNow(12),
   },
 
   // =========================================================================
@@ -343,8 +350,8 @@ export const demoCompanies = [
     },
     status: "kyc",
     bearbeiter: "S. Fischer",
-    eingangsdatum: "2024-02-01",
-    faellig: "2024-04-01",
+    eingangsdatum: daysFromNow(-7),
+    faellig: daysFromNow(8),
   },
 
   // =========================================================================
@@ -514,8 +521,8 @@ export const demoCompanies = [
     },
     status: "analysis",
     bearbeiter: "K. Gruber",
-    eingangsdatum: "2024-01-20",
-    faellig: "2024-03-20",
+    eingangsdatum: daysFromNow(-14),
+    faellig: daysFromNow(5),
   },
 
   // =========================================================================
@@ -721,8 +728,8 @@ export const demoCompanies = [
     },
     status: "credit-proposal",
     bearbeiter: "H. Petersen",
-    eingangsdatum: "2024-02-10",
-    faellig: "2024-04-10",
+    eingangsdatum: daysFromNow(-21),
+    faellig: daysFromNow(-2),
   },
 
   // =========================================================================
@@ -918,8 +925,8 @@ export const demoCompanies = [
     },
     status: "approved",
     bearbeiter: "Dr. R. Hartmann",
-    eingangsdatum: "2024-02-20",
-    faellig: "2024-04-20",
+    eingangsdatum: daysFromNow(-30),
+    faellig: daysFromNow(-5),
   },
 
   // =========================================================================
@@ -1098,8 +1105,8 @@ export const demoCompanies = [
     },
     status: "rating",
     bearbeiter: "A. Braun",
-    eingangsdatum: "2024-03-01",
-    faellig: "2024-05-01",
+    eingangsdatum: daysFromNow(-10),
+    faellig: daysFromNow(18),
   },
 
   // =========================================================================
@@ -1296,8 +1303,8 @@ export const demoCompanies = [
     },
     status: "voting",
     bearbeiter: "C. Vogel",
-    eingangsdatum: "2024-01-05",
-    faellig: "2024-03-05",
+    eingangsdatum: daysFromNow(-25),
+    faellig: daysFromNow(-1),
   },
 
   // =========================================================================
@@ -1468,8 +1475,8 @@ export const demoCompanies = [
     },
     status: "rejected",
     bearbeiter: "T. Klein",
-    eingangsdatum: "2024-02-28",
-    faellig: "2024-04-28",
+    eingangsdatum: daysFromNow(-35),
+    faellig: daysFromNow(-10),
   },
 ];
 

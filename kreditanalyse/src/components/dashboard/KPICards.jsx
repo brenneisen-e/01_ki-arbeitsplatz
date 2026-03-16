@@ -1,31 +1,37 @@
 import { useMemo } from 'react';
-import { TrendingUp, TrendingDown, Clock, CheckCircle, Euro, FileText } from 'lucide-react';
+import { TrendingUp, TrendingDown, Clock, CheckCircle, XCircle, Euro, FileText, Banknote, Timer } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { formatCurrencyCompact } from '../../utils/formatters';
 import SparklineChart from '../shared/SparklineChart';
 
 /**
- * KPICards -- Four key-performance-indicator cards displayed in a horizontal
- * row at the top of the credit-analysis dashboard.
+ * KPICards -- Key-performance-indicator cards displayed at the top of the
+ * credit-analysis dashboard.
  */
 export default function KPICards() {
   const { state } = useApp();
   const companies = state.companies;
 
-  const { openCount, approvalRate, totalVolume } = useMemo(() => {
+  const { openCount, approvalRate, totalVolume, approvedVolume, rejectedCount, avgBetrag } = useMemo(() => {
     const open = companies.filter(
       (c) => c.status !== 'approved' && c.status !== 'rejected'
     );
-    const approved = companies.filter((c) => c.status === 'approved').length;
-    const rejected = companies.filter((c) => c.status === 'rejected').length;
-    const decided = approved + rejected;
-    const rate = decided > 0 ? Math.round((approved / decided) * 100) : 0;
+    const approved = companies.filter((c) => c.status === 'approved');
+    const rejected = companies.filter((c) => c.status === 'rejected');
+    const decided = approved.length + rejected.length;
+    const rate = decided > 0 ? Math.round((approved.length / decided) * 100) : 0;
     const volume = open.reduce((sum, c) => sum + (c.kredit?.betrag || 0), 0);
+    const apprVol = approved.reduce((sum, c) => sum + (c.kredit?.betrag || 0), 0);
+    const allBetrag = companies.reduce((sum, c) => sum + (c.kredit?.betrag || 0), 0);
+    const avg = companies.length > 0 ? Math.round(allBetrag / companies.length) : 0;
 
     return {
       openCount: open.length,
       approvalRate: rate,
       totalVolume: volume,
+      approvedVolume: apprVol,
+      rejectedCount: rejected.length,
+      avgBetrag: avg,
     };
   }, [companies]);
 
@@ -74,10 +80,43 @@ export default function KPICards() {
       iconColor: '#2563EB',
       sparkColor: '#2563EB',
     },
+    {
+      label: 'Genehmigtes Volumen',
+      value: formatCurrencyCompact(approvedVolume),
+      icon: Banknote,
+      suffix: null,
+      trend: { value: 15, positive: true },
+      sparkline: [0.8, 1.2, 1.0, 1.5, 1.8, 2.0, 2.2, approvedVolume / 1000000 || 0.5],
+      bgColor: '#F0FDF4',
+      iconColor: '#16A34A',
+      sparkColor: '#16A34A',
+    },
+    {
+      label: 'Abgelehnte Anträge',
+      value: rejectedCount,
+      icon: XCircle,
+      suffix: null,
+      trend: { value: 3, positive: false },
+      sparkline: [2, 1, 3, 2, 1, 2, 1, rejectedCount],
+      bgColor: '#FEF2F2',
+      iconColor: '#DC2626',
+      sparkColor: '#DC2626',
+    },
+    {
+      label: 'Ø Kreditbetrag',
+      value: formatCurrencyCompact(avgBetrag),
+      icon: Timer,
+      suffix: null,
+      trend: { value: 4.5, positive: true },
+      sparkline: [1.2, 1.4, 1.3, 1.5, 1.6, 1.8, 1.7, avgBetrag / 1000000 || 1.5],
+      bgColor: '#FAF5FF',
+      iconColor: '#7C3AED',
+      sparkColor: '#7C3AED',
+    },
   ];
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
       {kpis.map((kpi) => {
         const Icon = kpi.icon;
         const TrendIcon = kpi.trend.positive ? TrendingUp : TrendingDown;

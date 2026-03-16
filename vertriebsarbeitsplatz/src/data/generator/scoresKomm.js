@@ -94,47 +94,48 @@ export function generateKommunikation(person) {
   const komm = [];
   const anzahl = randomBetween(2, 5);
 
-  const typen = ['termin', 'email', 'chatbot', 'telefon'];
+  const typen = ['termin', 'email', 'chatbot', 'telefon', 'kontaktformular'];
   const richtungen = ['eingehend', 'ausgehend'];
 
   const betreffPool = {
     versicherung: [
-      'Jahresgespräch',
-      'BU-Beratung',
-      'Kfz-Verlängerung',
-      'Schadensmeldung',
-      'Angebot nachfassen',
-      'Tarifwechsel besprechen',
-      'Altersvorsorge-Beratung',
-      'Hausrat-Upgrade',
-      'Frage zur Rechnung',
-      'Cross-Selling Kampagne',
+      'Jahresgespr\u00e4ch', 'BU-Beratung', 'Kfz-Verl\u00e4ngerung', 'Schadensmeldung',
+      'Angebot nachfassen', 'Tarifwechsel besprechen', 'Altersvorsorge-Beratung',
+      'Hausrat-Upgrade', 'Frage zur Rechnung', 'Cross-Selling Kampagne',
     ],
     banking: [
-      'Kontoeröffnung',
-      'Kreditberatung',
-      'Anlageberatung',
-      'VR-FinanzPlan',
-      'Baufinanzierung',
-      'Depot-Review',
-      'Kontogebühren',
-      'FIDA-Consent',
-      'Wero-Aktivierung',
-      'Union Investment Sparplan',
+      'Kontoer\u00f6ffnung', 'Kreditberatung', 'Anlageberatung', 'VR-FinanzPlan',
+      'Baufinanzierung', 'Depot-Review', 'Kontogeb\u00fchren', 'FIDA-Consent',
+      'Wero-Aktivierung', 'Union Investment Sparplan',
     ],
     vermoegensverwaltung: [
-      'Portfolio-Review',
-      'Onboarding-Gespräch',
-      'WpHG-Fragebogen',
-      'Performance-Report',
-      'Rebalancing besprechen',
-      'Nachfolgeplanung',
-      'NextGen-Beratung',
-      'ESG-Upgrade',
-      'Investmentvorschlag',
-      'Quartalsmeeting',
+      'Portfolio-Review', 'Onboarding-Gespr\u00e4ch', 'WpHG-Fragebogen', 'Performance-Report',
+      'Rebalancing besprechen', 'Nachfolgeplanung', 'NextGen-Beratung', 'ESG-Upgrade',
+      'Investmentvorschlag', 'Quartalsmeeting',
     ],
   };
+
+  const zusammenfassungPool = [
+    'Kunde hat Informationen angefragt. Wiedervorlage angelegt.',
+    'Angebot besprochen, Kunde zeigt Interesse. Termin vereinbart.',
+    'Kampagne verschickt, keine Reaktion.',
+    'R\u00fcckrufbitte erhalten, zeitnah zur\u00fcckrufen.',
+    'Beratungsgespr\u00e4ch gef\u00fchrt, Follow-up geplant.',
+    'Kunde fragte nach Details zum Produkt. Unterlagen gesendet.',
+    'Proaktive Ansprache, Kunde offen f\u00fcr Termin.',
+    'Kundenanliegen bearbeitet und abgeschlossen.',
+  ];
+
+  const emailBodyPool = [
+    (name, betreff) => `Sehr geehrte/r ${name},\n\nvielen Dank f\u00fcr Ihr Interesse an unserem Angebot zum Thema "${betreff}".\n\nGerne m\u00f6chte ich Ihnen in einem pers\u00f6nlichen Gespr\u00e4ch die Details erl\u00e4utern und ein individuelles Angebot erstellen.\n\nK\u00f6nnen wir einen Termin vereinbaren?\n\nMit freundlichen Gr\u00fc\u00dfen\nIhr Berater`,
+    (name, betreff) => `Hallo ${name},\n\nwie besprochen sende ich Ihnen die Informationen zum Thema "${betreff}".\n\nBitte schauen Sie sich die Unterlagen in Ruhe an. Bei Fragen stehe ich Ihnen jederzeit zur Verf\u00fcgung.\n\nViele Gr\u00fc\u00dfe\nIhr Berater`,
+  ];
+
+  const chatFragenPool = [
+    { frage: 'Wie kann ich meine Daten \u00e4ndern?', antwort: 'Sie k\u00f6nnen Ihre pers\u00f6nlichen Daten direkt im Online-Banking unter "Einstellungen" \u00e4ndern oder sich an Ihre Filiale wenden.' },
+    { frage: 'Wann ist mein Berater erreichbar?', antwort: 'Ihr pers\u00f6nlicher Berater ist Mo-Fr von 9-17 Uhr erreichbar. Soll ich einen R\u00fcckruf einrichten?' },
+    { frage: 'Wie kann ich eine Schadensmeldung machen?', antwort: 'Eine Schadensmeldung k\u00f6nnen Sie online, per App oder telefonisch (0800-Hotline) aufgeben. Halten Sie bitte Ihre Vertragsnummer bereit.' },
+  ];
 
   const pool = betreffPool[person._modus] || betreffPool.versicherung;
 
@@ -142,14 +143,39 @@ export function generateKommunikation(person) {
     const monat = String(randomBetween(1, 3)).padStart(2, '0');
     const tag = String(randomBetween(1, 28)).padStart(2, '0');
     const jahr = randomBetween(0, 100) > 30 ? '2026' : '2025';
+    const typ = random(typen);
+    const betreff = random(pool);
+    const richtung = typ === 'chatbot' || typ === 'kontaktformular' ? 'eingehend' : random(richtungen);
 
-    komm.push({
+    const entry = {
       datum: `${jahr}-${monat}-${tag}`,
-      typ: random(typen),
-      richtung: random(richtungen),
-      betreff: random(pool),
-      zusammenfassung: `${random(['Kunde', 'Mandant', 'Berater'])} ${random(['hat', 'wollte', 'fragte nach'])} ${random(['Information', 'Angebot', 'Termin', 'Rückruf', 'Beratung'])}. ${random(['Wiedervorlage angelegt.', 'Keine Reaktion.', 'Positiv, Follow-up geplant.', 'Erledigt.', 'Termin vereinbart.'])}`,
-    });
+      typ,
+      richtung,
+      betreff,
+      zusammenfassung: random(zusammenfassungPool),
+    };
+
+    // Add rich content for some entries
+    if (typ === 'email' && richtung === 'ausgehend' && randomBetween(0, 100) > 40) {
+      const nameTeile = person.name.split(' ');
+      const anrede = nameTeile.length > 1 ? `Herr/Frau ${nameTeile[nameTeile.length - 1]}` : person.name;
+      entry.emailBody = random(emailBodyPool)(anrede, betreff);
+    }
+
+    if (typ === 'chatbot' && randomBetween(0, 100) > 30) {
+      const chatQ = random(chatFragenPool);
+      entry.chatverlauf = [
+        { rolle: 'kunde', text: chatQ.frage, zeit: `${randomBetween(8, 22)}:${String(randomBetween(0, 59)).padStart(2, '0')}` },
+        { rolle: 'bot', text: chatQ.antwort, zeit: `${randomBetween(8, 22)}:${String(randomBetween(0, 59)).padStart(2, '0')}` },
+      ];
+      entry.kiZusammenfassung = `Kunde stellte Frage: "${chatQ.frage.substring(0, 40)}..." \u2013 Chatbot hat informiert und L\u00f6sung angeboten.`;
+    }
+
+    if (typ === 'kontaktformular') {
+      entry.inhalt = `Kontaktformular-Anfrage: "${person.name} bat um R\u00fcckruf zum Thema ${betreff}. Erreichbar werktags 9-17 Uhr."`;
+    }
+
+    komm.push(entry);
   }
 
   return komm.sort((a, b) => b.datum.localeCompare(a.datum));

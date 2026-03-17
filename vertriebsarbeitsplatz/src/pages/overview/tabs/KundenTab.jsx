@@ -1,24 +1,11 @@
 import { useState } from 'react';
 import KPIGrid from '../../../components/ui/KPIGrid';
 import { useMode } from '../../../hooks/useMode';
+import useTranslation from '../../../i18n/useTranslation';
 import { KUNDEN_BY_MODE } from '../../../data';
 import { formatEur, potentialSterne } from '../../../utils/formatters';
 import { Star, Search, TrendingDown, Minus, AlertTriangle, ChevronUp, ChevronDown } from 'lucide-react';
 import { clsx } from 'clsx';
-
-const K_KPI_CONFIG = [
-  { id: 'kundenAnzahl', label: 'Kunden', format: 'num', icon: 'Users' },
-  { id: 'avgVertraege', label: '\u00d8 Vertraege/Kunde', format: 'num', icon: 'FileText' },
-  { id: 'avgVolumen', label: '\u00d8 Bestandsvolumen', format: 'eur', icon: 'Briefcase' },
-  { id: 'avgNps', label: '\u00d8 NPS', format: 'num', icon: 'ThumbsUp' },
-];
-
-const VV_KPI_CONFIG = [
-  { id: 'mandatAnzahl', label: 'Mandate', format: 'num', icon: 'Users' },
-  { id: 'gesamtAuM', label: 'AuM Gesamt', format: 'eur', icon: 'Wallet' },
-  { id: 'avgAuM', label: '\u00d8 AuM/Mandant', format: 'eur', icon: 'Briefcase' },
-  { id: 'avgNps', label: '\u00d8 NPS', format: 'num', icon: 'ThumbsUp' },
-];
 
 function StarRating({ score }) {
   const { full, half, empty } = potentialSterne(score);
@@ -38,9 +25,9 @@ function formatAuM(val) {
   return formatEur(val);
 }
 
-function SegmentBadge({ typ }) {
+function SegmentBadge({ typ, t }) {
   if (!typ) return null;
-  const labels = { Spezialmandat: 'Individuell' };
+  const labels = { Spezialmandat: t ? t('individuell') : 'Individuell' };
   const styles = {
     FairValue: 'bg-blue-50 text-blue-700 border-blue-200',
     SmartValue: 'bg-emerald-50 text-emerald-700 border-emerald-200',
@@ -53,7 +40,7 @@ function SegmentBadge({ typ }) {
   );
 }
 
-function RiskBadge({ risk }) {
+function RiskBadge({ risk, t }) {
   if (!risk) return null;
   const styles = {
     niedrig: 'text-emerald-600',
@@ -67,7 +54,7 @@ function RiskBadge({ risk }) {
   };
   return (
     <span className={`inline-flex items-center gap-0.5 text-[10px] font-medium ${styles[risk] || 'text-slate-400'}`}>
-      {icons[risk]} {risk === 'niedrig' ? 'Stabil' : risk === 'mittel' ? 'Beobachten' : 'Risiko'}
+      {icons[risk]} {risk === 'niedrig' ? t('stabil') : risk === 'mittel' ? t('beobachten') : t('risiko')}
     </span>
   );
 }
@@ -93,39 +80,39 @@ function AllocationBar({ allocation }) {
   );
 }
 
-function getColumns(modeId) {
+function getColumns(modeId, t) {
   const isVV = modeId === 'vermoegensverwaltung';
   const isBanking = modeId === 'banking';
 
   if (isVV) {
     return [
-      { id: 'name', label: 'Mandant', flex: 1.8 },
-      { id: 'volumen', label: 'AuM', flex: 0.9, align: 'right' },
-      { id: 'letzterKontakt', label: 'Letztes Gespräch', flex: 0.9, align: 'right' },
-      { id: 'mandatsTyp', label: 'Strategie', flex: 0.8, align: 'center' },
-      { id: 'mandatSeit', label: 'Mandant seit', flex: 0.7, align: 'right' },
-      { id: 'ytd', label: 'Perf. YTD', flex: 0.7, align: 'right' },
-      { id: 'perfVsBm', label: 'ggü. BM', flex: 0.6, align: 'right' },
-      { id: 'allocation', label: 'Allokation', flex: 1, align: 'center' },
+      { id: 'name', label: t('mandant'), flex: 1.8 },
+      { id: 'volumen', label: t('aum'), flex: 0.9, align: 'right' },
+      { id: 'letzterKontakt', label: t('letztesGespraech'), flex: 0.9, align: 'right' },
+      { id: 'mandatsTyp', label: t('strategie'), flex: 0.8, align: 'center' },
+      { id: 'mandatSeit', label: t('mandantSeit'), flex: 0.7, align: 'right' },
+      { id: 'ytd', label: t('perfYtd'), flex: 0.7, align: 'right' },
+      { id: 'perfVsBm', label: t('gguBm'), flex: 0.6, align: 'right' },
+      { id: 'allocation', label: t('allokation'), flex: 1, align: 'center' },
       { id: 'esgScore', label: 'ESG', flex: 0.5, align: 'center' },
-      { id: 'gesamtVermoegen', label: 'Gesamtverm.', flex: 0.9, align: 'right' },
-      { id: 'potentialCount', label: 'Potenziale', flex: 0.6, align: 'center' },
-      { id: 'status', label: 'Status', flex: 0.7, align: 'center' },
+      { id: 'gesamtVermoegen', label: t('gesamtverm'), flex: 0.9, align: 'right' },
+      { id: 'potentialCount', label: t('potenziale'), flex: 0.6, align: 'center' },
+      { id: 'status', label: t('status'), flex: 0.7, align: 'center' },
     ];
   }
 
   const cols = [
-    { id: 'name', label: 'Name', flex: 2 },
-    { id: 'beruf', label: 'Beruf', flex: 2 },
+    { id: 'name', label: t('name'), flex: 2 },
+    { id: 'beruf', label: t('beruf'), flex: 2 },
   ];
 
-  cols.push({ id: 'volumen', label: isBanking ? 'Volumen' : 'Praemie', flex: 1, align: 'right' });
+  cols.push({ id: 'volumen', label: isBanking ? t('volumen') : t('praemie'), flex: 1, align: 'right' });
 
   cols.push(
-    { id: 'potentialScore', label: 'Potenzial', flex: 1, align: 'center' },
+    { id: 'potentialScore', label: t('potenzial'), flex: 1, align: 'center' },
     { id: 'nps', label: 'NPS', flex: 0.5, align: 'center' },
-    { id: 'status', label: 'Status', flex: 1, align: 'center' },
-    { id: 'letzterKontakt', label: 'Kontakt', flex: 0.7, align: 'right' },
+    { id: 'status', label: t('status'), flex: 1, align: 'center' },
+    { id: 'letzterKontakt', label: t('kontakt'), flex: 0.7, align: 'right' },
   );
 
   return cols;
@@ -133,13 +120,28 @@ function getColumns(modeId) {
 
 export default function KundenTab() {
   const { modeId, navigateTo } = useMode();
+  const { t } = useTranslation();
   const kunden = KUNDEN_BY_MODE[modeId] || [];
   const [filter, setFilter] = useState('');
   const [sortCol, setSortCol] = useState(null);
   const [sortDir, setSortDir] = useState('asc');
   const isVV = modeId === 'vermoegensverwaltung';
 
-  const columns = getColumns(modeId);
+  const K_KPI_CONFIG = [
+    { id: 'kundenAnzahl', label: t('kundenLabel'), format: 'num', icon: 'Users' },
+    { id: 'avgVertraege', label: t('avgVertraegeProKunde'), format: 'num', icon: 'FileText' },
+    { id: 'avgVolumen', label: t('avgBestandsvolumen'), format: 'eur', icon: 'Briefcase' },
+    { id: 'avgNps', label: t('avgNps'), format: 'num', icon: 'ThumbsUp' },
+  ];
+
+  const VV_KPI_CONFIG = [
+    { id: 'mandatAnzahl', label: t('mandate'), format: 'num', icon: 'Users' },
+    { id: 'gesamtAuM', label: t('aumGesamt'), format: 'eur', icon: 'Wallet' },
+    { id: 'avgAuM', label: t('avgAumMandat'), format: 'eur', icon: 'Briefcase' },
+    { id: 'avgNps', label: t('avgNps'), format: 'num', icon: 'ThumbsUp' },
+  ];
+
+  const columns = getColumns(modeId, t);
 
   function handleSort(colId) {
     if (sortCol === colId) {
@@ -215,7 +217,7 @@ export default function KundenTab() {
     };
   }
 
-  const kundenLabel = isVV ? 'Mandant' : 'Kunde';
+  const kundenLabel = isVV ? t('mandant') : t('kundeLabel');
 
   // Cell renderer
   function renderCell(col, row) {
@@ -225,7 +227,7 @@ export default function KundenTab() {
       case 'beruf':
         return <span className="text-slate-600 truncate">{row.beruf}</span>;
       case 'mandatsTyp':
-        return <SegmentBadge typ={row.mandatsTyp} />;
+        return <SegmentBadge typ={row.mandatsTyp} t={t} />;
       case 'volumen':
         return <span className="font-mono font-medium text-slate-800">{isVV ? formatAuM(row.volumen) : formatEur(row.volumen)}</span>;
       case 'gesamtVermoegen':
@@ -276,7 +278,7 @@ export default function KundenTab() {
           </span>
         );
       case 'status':
-        return <RiskBadge risk={row.abwanderungsrisiko} />;
+        return <RiskBadge risk={row.abwanderungsrisiko} t={t} />;
       case 'letzterKontakt':
         return <span className="text-slate-500">{row.letzterKontakt}</span>;
       default:
@@ -295,12 +297,12 @@ export default function KundenTab() {
             type="text"
             value={filter}
             onChange={e => setFilter(e.target.value)}
-            placeholder={`${kundenLabel} suchen...`}
+            placeholder={isVV ? t('mandantSuchen') : `${kundenLabel} suchen...`}
             className="pl-9 pr-4 py-2 rounded-lg border border-slate-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-slate-300 w-64"
           />
         </div>
         <div className="text-xs text-slate-400 ml-2">
-          {tableData.length} {tableData.length === 1 ? kundenLabel : isVV ? 'Mandanten' : 'Kunden'}
+          {tableData.length} {tableData.length === 1 ? kundenLabel : isVV ? t('mandantenPlural') : t('kundenPlural')}
         </div>
       </div>
 

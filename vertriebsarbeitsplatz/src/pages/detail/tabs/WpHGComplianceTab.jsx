@@ -2,6 +2,7 @@ import { VV_WPHG, VV_PERFORMANCE } from '../../../data/vvDataProvider';
 import { formatEur } from '../../../utils/formatters';
 import { CheckCircle, AlertTriangle, Shield, FileText, TrendingDown, Receipt, Target, Leaf, Clock } from 'lucide-react';
 import { clsx } from 'clsx';
+import useTranslation from '../../../i18n/useTranslation';
 
 // ─── Helper: format date DE ───
 function fmtDate(d) {
@@ -17,7 +18,7 @@ function daysUntil(dateStr) {
 }
 
 // ─── Status badge ───
-function StatusBadge({ status }) {
+function StatusBadge({ status, t }) {
   const isOk = status === 'vollstaendig' || status === 'aktuell' || status === 'bereitgestellt' || status === 'Geeignet' || status === 'geeignet';
   const isWarn = status === 'aktualisierung_noetig';
   return (
@@ -29,7 +30,7 @@ function StatusBadge({ status }) {
     )}>
       {isOk && <CheckCircle size={12} />}
       {isWarn && <AlertTriangle size={12} />}
-      {status === 'vollstaendig' ? 'Vollständig' : status === 'aktualisierung_noetig' ? 'Aktualisierung nötig' : status}
+      {status === 'vollstaendig' ? (t ? t('vollstaendig') : 'Vollständig') : status === 'aktualisierung_noetig' ? (t ? t('aktualisierungNoetig') : 'Aktualisierung nötig') : status}
     </span>
   );
 }
@@ -61,7 +62,7 @@ function InfoRow({ label, value, icon: Icon }) {
 }
 
 // ─── Verlustschwelle bar ───
-function VerlustschwelleBar({ trigger, drawdown }) {
+function VerlustschwelleBar({ trigger, drawdown, t }) {
   const absDrawdown = Math.abs(drawdown);
   const absTrigger = Math.abs(trigger);
   const pct = absTrigger > 0 ? (absDrawdown / absTrigger) * 100 : 0;
@@ -72,8 +73,8 @@ function VerlustschwelleBar({ trigger, drawdown }) {
     <div className="space-y-2">
       <div className="flex justify-between text-xs text-slate-500">
         <span>0%</span>
-        <span className={clsx('font-semibold', textColor)}>Aktuell: {drawdown.toFixed(1)}%</span>
-        <span className="font-medium text-red-600">Schwelle: {trigger}%</span>
+        <span className={clsx('font-semibold', textColor)}>{t('aktuellLabel')}: {drawdown.toFixed(1)}%</span>
+        <span className="font-medium text-red-600">{t('schwelleLabel')}: {trigger}%</span>
       </div>
       <div className="relative h-4 bg-slate-100 rounded-full overflow-hidden">
         {/* Trigger marker */}
@@ -85,10 +86,10 @@ function VerlustschwelleBar({ trigger, drawdown }) {
         />
       </div>
       <div className="flex justify-between text-[10px] text-slate-400">
-        <span>Sicher</span>
+        <span>{t('sicher')}</span>
         <span>50%</span>
         <span>75%</span>
-        <span>Schwelle</span>
+        <span>{t('schwelleLabel')}</span>
       </div>
     </div>
   );
@@ -109,6 +110,7 @@ function Section({ title, icon: Icon, children }) {
 
 // ─── Main component ───
 export default function WpHGComplianceTab({ kunde }) {
+  const { t } = useTranslation();
   const wphg = VV_WPHG[kunde?.id];
   const perf = VV_PERFORMANCE[kunde?.id];
 
@@ -120,9 +122,9 @@ export default function WpHGComplianceTab({ kunde }) {
             <div className="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center mb-4">
               <Shield className="w-8 h-8 text-slate-400" />
             </div>
-            <h3 className="font-semibold text-slate-700 mb-1">WpHG-Daten nicht verfügbar</h3>
+            <h3 className="font-semibold text-slate-700 mb-1">{t('wphgDatenNichtVerfuegbar')}</h3>
             <p className="text-sm text-slate-400 max-w-md">
-              Für {kunde?.name || 'diesen Mandanten'} liegen keine WpHG-Compliance-Daten vor.
+              {t('wphgDatenFehlen', { name: kunde?.name || 'diesen Mandanten' })}
             </p>
           </div>
         </div>
@@ -131,8 +133,8 @@ export default function WpHGComplianceTab({ kunde }) {
   }
 
   const erfahrungLabels = {
-    aktien: 'Aktien', anleihen: 'Anleihen', fonds: 'Fonds', pe: 'PE/Alternative',
-    derivate: 'Derivate', krypto: 'Krypto',
+    aktien: t('aktien'), anleihen: t('anleihen'), fonds: t('fonds'), pe: t('peAlternative'),
+    derivate: t('derivate'), krypto: t('krypto'),
   };
 
   const rl = wphg.anlagerichtlinie || {};
@@ -150,29 +152,29 @@ export default function WpHGComplianceTab({ kunde }) {
       <div className="grid grid-cols-4 gap-4">
         {[
           {
-            label: 'Fragebogen',
+            label: t('fragebogen'),
             status: wphg.status,
             detail: wphg.status === 'aktualisierung_noetig'
-              ? `Fällig seit ${fmtDate(wphg.naechsteFaelligkeit)}`
-              : `Aktuell (${fmtDate(wphg.letzteAktualisierung)})`,
+              ? `${t('faelligSeit')} ${fmtDate(wphg.naechsteFaelligkeit)}`
+              : `${t('aktuellLabel')} (${fmtDate(wphg.letzteAktualisierung)})`,
             icon: FileText,
           },
           {
-            label: 'Geeignetheit',
+            label: t('geeignetheit'),
             status: gp.ergebnis === 'Geeignet' ? 'vollstaendig' : 'aktualisierung_noetig',
             detail: `${gp.ergebnis || '–'} (${gp.letzterBericht || '–'})`,
             icon: Shield,
           },
           {
-            label: 'Verlustschwelle',
+            label: t('verlustschwelle'),
             status: vs && Math.abs(vs.aktuell) / Math.abs(vs.grenze) > 0.8 ? 'aktualisierung_noetig' : 'vollstaendig',
             detail: vs ? `${vs.aktuell.toFixed(1)}% / ${vs.grenze}%` : '–',
             icon: TrendingDown,
           },
           {
-            label: 'Kosteninformation',
+            label: t('kosteninformation'),
             status: ki.exAnte?.status === 'bereitgestellt' && ki.exPost?.status === 'bereitgestellt' ? 'vollstaendig' : 'aktualisierung_noetig',
-            detail: ki.exAnte?.status === 'bereitgestellt' && ki.exPost?.status === 'bereitgestellt' ? 'Vollständig' : 'Ausstehend',
+            detail: ki.exAnte?.status === 'bereitgestellt' && ki.exPost?.status === 'bereitgestellt' ? t('vollstaendig') : t('ausstehend'),
             icon: Receipt,
           },
         ].map((item) => {
@@ -189,7 +191,7 @@ export default function WpHGComplianceTab({ kunde }) {
                 <Icon size={16} className="text-slate-400" />
                 <span className="text-xs font-medium text-slate-500">{item.label}</span>
               </div>
-              <StatusBadge status={item.status} />
+              <StatusBadge status={item.status} t={t} />
               <p className="text-xs text-slate-500 mt-2">{item.detail}</p>
             </div>
           );
@@ -197,31 +199,31 @@ export default function WpHGComplianceTab({ kunde }) {
       </div>
 
       {/* 2. WpHG-Bogen (Anlegerprofil) */}
-      <Section title="WpHG-Bogen (Anlegerprofil)" icon={FileText}>
+      <Section title={t('wphgBogen')} icon={FileText}>
         <div className="space-y-1">
           <div className="grid grid-cols-[200px_1fr] gap-4 items-center py-2">
             <span className="text-slate-500 text-[15px]">Status</span>
-            <StatusBadge status={wphg.status} />
+            <StatusBadge status={wphg.status} t={t} />
           </div>
-          <InfoRow label="Letzte Aktualisierung" value={fmtDate(wphg.letzteAktualisierung)} icon={Clock} />
+          <InfoRow label={t('letzteAktualisierung')} value={fmtDate(wphg.letzteAktualisierung)} icon={Clock} />
           <InfoRow
-            label="Nächste Fälligkeit"
+            label={t('naechsteFaelligkeit')}
             value={
               <span className="flex items-center gap-1.5">
                 {fmtDate(wphg.naechsteFaelligkeit)}
                 {profilDaysLeft < 60 && (
                   <span className="inline-flex items-center gap-0.5 text-[10px] text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded-full">
-                    <AlertTriangle size={10} /> {profilDaysLeft} Tage
+                    <AlertTriangle size={10} /> {profilDaysLeft} {t('tage')}
                   </span>
                 )}
               </span>
             }
           />
-          <InfoRow label="Risikoprofil" value={wphg.risikoprofil} />
+          <InfoRow label={t('risikoprofilLabel')} value={wphg.risikoprofil} />
 
           {/* Anlageerfahrung */}
           <div className="pt-3 border-t border-slate-100">
-            <span className="text-sm text-slate-500 mb-3 block font-medium">Anlageerfahrung</span>
+            <span className="text-sm text-slate-500 mb-3 block font-medium">{t('anlageerfahrung')}</span>
             <div className="flex flex-wrap gap-1.5">
               {Object.entries(wphg.anlageerfahrung || {}).map(([key, val]) => (
                 <ErfahrungCheck key={key} label={erfahrungLabels[key] || key} value={val} />
@@ -229,47 +231,47 @@ export default function WpHGComplianceTab({ kunde }) {
             </div>
           </div>
 
-          <InfoRow label="Anlageziel" value={wphg.anlageziel} />
-          <InfoRow label="Anlagehorizont" value={wphg.anlagehorizont} />
-          <InfoRow label="Verlusttoleranz" value={wphg.verlusttoleranz} />
+          <InfoRow label={t('anlageziel')} value={wphg.anlageziel} />
+          <InfoRow label={t('anlagehorizont')} value={wphg.anlagehorizont} />
+          <InfoRow label={t('verlusttoleranz')} value={wphg.verlusttoleranz} />
 
           {/* ESG-Präferenzen */}
           <div className="pt-3 border-t border-slate-100">
             <div className="flex items-center gap-1.5 mb-3">
               <Leaf size={14} className="text-emerald-500" />
-              <span className="text-sm text-slate-500 font-medium">ESG-Präferenzen</span>
+              <span className="text-sm text-slate-500 font-medium">{t('esgPraeferenzen')}</span>
             </div>
             <div className="pl-5 space-y-0">
               <InfoRow label="SFDR" value={wphg.esgPraeferenzen?.sfdr || '-'} />
               <InfoRow label="Taxonomie" value={wphg.esgPraeferenzen?.taxonomie || '-'} />
-              <InfoRow label="PAI" value={wphg.esgPraeferenzen?.pai ? 'Berücksichtigt' : 'Nicht berücksichtigt'} />
+              <InfoRow label="PAI" value={wphg.esgPraeferenzen?.pai ? t('beruecksichtigt') : t('nichtBeruecksichtigt')} />
             </div>
           </div>
 
           {/* Anlagerichtlinie */}
           <div className="pt-3 border-t border-slate-100">
-            <span className="text-sm text-slate-500 mb-3 block font-medium">Anlagerichtlinie</span>
+            <span className="text-sm text-slate-500 mb-3 block font-medium">{t('anlagerichtlinie')}</span>
             <div className="grid grid-cols-2 gap-4">
               <div className="grid grid-cols-[120px_1fr] gap-2 items-center">
-                <span className="text-[15px] text-slate-500">Max. Aktien</span>
+                <span className="text-[15px] text-slate-500">{t('maxAktien')}</span>
                 <span className="text-[15px] text-slate-800 font-medium">{rl.maxAktien}%</span>
               </div>
               <div className="grid grid-cols-[120px_1fr] gap-2 items-center">
-                <span className="text-[15px] text-slate-500">Min. Renten</span>
+                <span className="text-[15px] text-slate-500">{t('minRenten')}</span>
                 <span className="text-[15px] text-slate-800 font-medium">{rl.minRenten}%</span>
               </div>
               <div className="grid grid-cols-[120px_1fr] gap-2 items-center">
-                <span className="text-[15px] text-slate-500">Krypto</span>
+                <span className="text-[15px] text-slate-500">{t('krypto')}</span>
                 <span className="text-[15px] text-slate-800 font-medium">{rl.krypto}</span>
               </div>
               <div className="grid grid-cols-[120px_1fr] gap-2 items-center">
-                <span className="text-[15px] text-slate-500">Alternatives</span>
+                <span className="text-[15px] text-slate-500">{t('alternatives')}</span>
                 <span className="text-[15px] text-slate-800 font-medium">{rl.alternatives}</span>
               </div>
             </div>
             {rl.benchmark && (
               <div className="mt-3 grid grid-cols-[120px_1fr] gap-2 items-center">
-                <span className="text-[15px] text-slate-500">Benchmark</span>
+                <span className="text-[15px] text-slate-500">{t('benchmark')}</span>
                 <span className="text-[15px] text-slate-800 font-medium">{rl.benchmark}</span>
               </div>
             )}
@@ -279,12 +281,12 @@ export default function WpHGComplianceTab({ kunde }) {
 
       <div className="grid grid-cols-2 gap-4">
         {/* 3. Geeignetheitsprüfung */}
-        <Section title="Geeignetheitsprüfung" icon={Shield}>
+        <Section title={t('geeignetheitspruefung')} icon={Shield}>
           <div className="space-y-0">
-            <InfoRow label="Letzter Bericht" value={gp.letzterBericht || '-'} />
-            <InfoRow label="Erstellt" value={fmtDate(gp.erstellt)} />
+            <InfoRow label={t('letzterBericht')} value={gp.letzterBericht || '-'} />
+            <InfoRow label={t('erstellt')} value={fmtDate(gp.erstellt)} />
             <InfoRow
-              label="Nächste Fälligkeit"
+              label={t('naechsteFaelligkeit')}
               value={
                 <span className="flex items-center gap-1.5">
                   {fmtDate(gp.naechsterFaellig)}
@@ -297,26 +299,26 @@ export default function WpHGComplianceTab({ kunde }) {
               }
             />
             <div className="grid grid-cols-[200px_1fr] gap-4 items-center py-2">
-              <span className="text-slate-500 text-[15px]">Ergebnis</span>
-              <StatusBadge status={gp.ergebnis} />
+              <span className="text-slate-500 text-[15px]">{t('ergebnis')}</span>
+              <StatusBadge status={gp.ergebnis} t={t} />
             </div>
           </div>
         </Section>
 
         {/* 4. Verlustschwelle */}
-        <Section title="Verlustschwelle" icon={TrendingDown}>
+        <Section title={t('verlustschwelle')} icon={TrendingDown}>
           {vs ? (
             <div className="space-y-3">
-              <VerlustschwelleBar trigger={vs.grenze} drawdown={vs.aktuell} />
+              <VerlustschwelleBar trigger={vs.grenze} drawdown={vs.aktuell} t={t} />
               <div className="grid grid-cols-3 gap-2 pt-2 border-t border-slate-100">
                 <div className="text-center">
-                  <div className="text-[10px] text-slate-400">Höchststand</div>
+                  <div className="text-[10px] text-slate-400">{t('hoechststandLabel')}</div>
                   <div className="text-sm font-mono font-semibold text-slate-700">
                     {kunde.aum ? formatEur(Math.round(kunde.aum / (1 + vs.aktuell / 100))) : '-'}
                   </div>
                 </div>
                 <div className="text-center">
-                  <div className="text-[10px] text-slate-400">Aktueller Stand</div>
+                  <div className="text-[10px] text-slate-400">{t('aktuellStand')}</div>
                   <div className="text-sm font-mono font-semibold text-slate-700">
                     {kunde.aum ? formatEur(kunde.aum) : '-'}
                   </div>
@@ -328,54 +330,54 @@ export default function WpHGComplianceTab({ kunde }) {
               </div>
             </div>
           ) : (
-            <div className="text-sm text-slate-400">Keine Verlustschwellendaten vorhanden.</div>
+            <div className="text-sm text-slate-400">{t('keineVerlustschwellendaten')}</div>
           )}
         </Section>
       </div>
 
       <div className="grid grid-cols-2 gap-4">
         {/* 5. Kosteninformation */}
-        <Section title="Kosteninformation" icon={Receipt}>
+        <Section title={t('kosteninformation')} icon={Receipt}>
           <div className="space-y-0">
             <div className="grid grid-cols-[200px_1fr] gap-4 items-center py-2">
               <span className="text-slate-500 text-[15px]">Ex-Ante</span>
               <span className="flex items-center gap-2">
-                <StatusBadge status={ki.exAnte?.status || '-'} />
+                <StatusBadge status={ki.exAnte?.status || '-'} t={t} />
                 <span className="text-xs text-slate-400">{fmtDate(ki.exAnte?.datum)}</span>
               </span>
             </div>
             <div className="grid grid-cols-[200px_1fr] gap-4 items-center py-2">
               <span className="text-slate-500 text-[15px]">Ex-Post</span>
               <span className="flex items-center gap-2">
-                <StatusBadge status={ki.exPost?.status || '-'} />
+                <StatusBadge status={ki.exPost?.status || '-'} t={t} />
                 <span className="text-xs text-slate-400">{fmtDate(ki.exPost?.datum)}</span>
               </span>
             </div>
             <div className="pt-2 border-t border-slate-100">
-              <InfoRow label="Gesamtkosten" value={formatEur(ki.gesamtkosten)} />
-              <InfoRow label="Kostenquote" value={ki.quote ? `${ki.quote.toFixed(2)}% p.a.` : '-'} />
+              <InfoRow label={t('gesamtkosten')} value={formatEur(ki.gesamtkosten)} />
+              <InfoRow label={t('kostenquote')} value={ki.quote ? `${ki.quote.toFixed(2)}% p.a.` : '-'} />
             </div>
           </div>
         </Section>
 
         {/* 6. Zielmarktabgleich */}
-        <Section title="Zielmarktabgleich" icon={Target}>
+        <Section title={t('zielmarktabgleich')} icon={Target}>
           <div className="space-y-2">
-            <InfoRow label="Positionen geprüft" value={zm.positionen || '-'} />
-            <InfoRow label="Konform" value={zm.konform || '-'} />
+            <InfoRow label={t('positionenGeprueft')} value={zm.positionen || '-'} />
+            <InfoRow label={t('konform')} value={zm.konform || '-'} />
             {zm.letzterCheck && (
-              <InfoRow label="Letzter Check" value={fmtDate(zm.letzterCheck)} />
+              <InfoRow label={t('letzterCheck')} value={fmtDate(zm.letzterCheck)} />
             )}
             {(zm.konform != null && zm.positionen != null) && (
               <div className="pt-2 border-t border-slate-100">
                 <div className="flex items-center gap-2">
                   {zm.konform === zm.positionen ? (
                     <span className="inline-flex items-center gap-1 text-xs font-medium text-emerald-700 bg-emerald-50 px-2 py-1 rounded-full">
-                      <CheckCircle size={12} /> Alle Positionen konform
+                      <CheckCircle size={12} /> {t('allePositionenKonform')}
                     </span>
                   ) : (
                     <span className="inline-flex items-center gap-1 text-xs font-medium text-amber-700 bg-amber-50 px-2 py-1 rounded-full">
-                      <AlertTriangle size={12} /> {zm.positionen - zm.konform} nicht konform
+                      <AlertTriangle size={12} /> {t('nichtKonform', { count: zm.positionen - zm.konform })}
                     </span>
                   )}
                 </div>

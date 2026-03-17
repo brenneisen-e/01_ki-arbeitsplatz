@@ -4,9 +4,10 @@ import LogoImg from '../../../components/ui/LogoImg';
 import { StatusBadge, SparteBadge } from '../../../components/ui/Badge';
 import { formatEur } from '../../../utils/formatters';
 import { useMode } from '../../../hooks/useMode';
+import useTranslation from '../../../i18n/useTranslation';
 import { ChevronDown, ChevronRight, ExternalLink } from 'lucide-react';
 
-function ProduktRow({ produkt, modeId, onNavigateKontoumsaetze }) {
+function ProduktRow({ produkt, modeId, onNavigateKontoumsaetze, t }) {
   const [expanded, setExpanded] = useState(false);
   const [hovered, setHovered] = useState(false);
   const isGiro = produkt.typ === 'girokonto';
@@ -55,25 +56,25 @@ function ProduktRow({ produkt, modeId, onNavigateKontoumsaetze }) {
           <td colSpan={modeId === 'banking' ? 7 : 6} className="px-4 py-3">
             <div className="pl-8 grid grid-cols-2 md:grid-cols-4 gap-4 text-xs">
               <div>
-                <span className="text-slate-400 uppercase tracking-wider">Vertragsbeginn</span>
+                <span className="text-slate-400 uppercase tracking-wider">{t('vertragsbeginn')}</span>
                 <div className="font-medium text-slate-700 mt-0.5">{produkt.seit}</div>
               </div>
               <div>
-                <span className="text-slate-400 uppercase tracking-wider">Status</span>
+                <span className="text-slate-400 uppercase tracking-wider">{t('status')}</span>
                 <div className="mt-0.5"><StatusBadge status={produkt.status} /></div>
               </div>
               <div>
-                <span className="text-slate-400 uppercase tracking-wider">Sparte</span>
+                <span className="text-slate-400 uppercase tracking-wider">{t('sparte')}</span>
                 <div className="font-medium text-slate-700 mt-0.5">{produkt.sparte || '-'}</div>
               </div>
               <div>
-                <span className="text-slate-400 uppercase tracking-wider">Details</span>
+                <span className="text-slate-400 uppercase tracking-wider">{t('details')}</span>
                 <div className="font-medium text-slate-700 mt-0.5">{produkt.details}</div>
               </div>
               {produkt.status === 'optimierbar' && (
                 <div className="col-span-2 md:col-span-4 mt-1">
                   <div className="bg-amber-50 border border-amber-200 rounded px-3 py-2 text-amber-800 text-xs">
-                    Optimierungspotenzial erkannt — Tarifaktualisierung empfohlen
+                    {t('optimierungspotenzial')}
                   </div>
                 </div>
               )}
@@ -84,7 +85,7 @@ function ProduktRow({ produkt, modeId, onNavigateKontoumsaetze }) {
                     className="flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded transition-colors hover:bg-blue-100 text-blue-600 bg-blue-50 border border-blue-200"
                   >
                     <ExternalLink size={12} />
-                    Kontoumsätze anzeigen
+                    {t('kontoumsaetzeAnzeigen')}
                   </button>
                 </div>
               )}
@@ -113,6 +114,7 @@ function adaptProduktName(name, modeId, institut) {
 }
 
 export default function VertraegeTab({ kunde }) {
+  const { t } = useTranslation();
   const { modeId, setActiveTab, config } = useMode();
   const institut = config?.institut;
   const produkte = (kunde.eigeneProdukte || []).map(p => ({
@@ -120,29 +122,29 @@ export default function VertraegeTab({ kunde }) {
     produkt: adaptProduktName(p.produkt, modeId, institut),
   }));
 
-  const praemieLabel = modeId === 'banking' ? 'Jahreskosten' : modeId === 'vermoegensverwaltung' ? 'Volumen' : 'Prämie/J.';
-  const sumLabel = modeId === 'banking' ? 'Gesamtkosten/J.' : modeId === 'vermoegensverwaltung' ? 'Gesamtvolumen' : 'Gesamtprämie/J.';
+  const praemieLabel = modeId === 'banking' ? t('jahreskosten') : modeId === 'vermoegensverwaltung' ? t('volumenLabel') : t('gesamtpraemie').replace('/J.', '') + '/J.';
+  const sumLabel = modeId === 'banking' ? t('gesamtkostenJ') : modeId === 'vermoegensverwaltung' ? t('gesamtvolumen') : t('gesamtpraemie');
 
   return (
     <div className="space-y-4">
       <Card>
         <h3 className="font-semibold text-slate-800 mb-4">
-          Eigene Produkte ({produkte.length} {modeId === 'banking' ? 'Produkte' : 'Verträge'})
+          {t('eigeneProdukte')} ({produkte.length} {modeId === 'banking' ? t('produkteLabel') : t('vertraege')})
         </h3>
         <div className="bg-white rounded-xl border border-slate-200 overflow-hidden" style={{ boxShadow: 'var(--card-shadow)' }}>
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
                 <tr className="bg-slate-50">
-                  <th className="px-4 py-3 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">Produkt</th>
-                  <th className="px-4 py-3 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">Sparte</th>
-                  <th className="px-4 py-3 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">Tarif / Details</th>
+                  <th className="px-4 py-3 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">{t('produkt')}</th>
+                  <th className="px-4 py-3 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">{t('sparte')}</th>
+                  <th className="px-4 py-3 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">{t('tarifDetails')}</th>
                   {modeId === 'banking' && (
-                    <th className="px-4 py-3 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">Volumen</th>
+                    <th className="px-4 py-3 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">{t('volumenLabel')}</th>
                   )}
                   <th className="px-4 py-3 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">{praemieLabel}</th>
                   <th className="px-4 py-3 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">Seit</th>
-                  <th className="px-4 py-3 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">Status</th>
+                  <th className="px-4 py-3 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">{t('status')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -152,6 +154,7 @@ export default function VertraegeTab({ kunde }) {
                     produkt={p}
                     modeId={modeId}
                     onNavigateKontoumsaetze={p.typ === 'girokonto' ? () => setActiveTab('finanzprofil') : null}
+                    t={t}
                   />
                 ))}
               </tbody>
@@ -161,11 +164,11 @@ export default function VertraegeTab({ kunde }) {
       </Card>
 
       <Card>
-        <h3 className="font-semibold text-slate-800 mb-4">Vertragszusammenfassung</h3>
+        <h3 className="font-semibold text-slate-800 mb-4">{t('vertragszusammenfassung')}</h3>
         <div className="grid grid-cols-3 gap-6">
           <SummaryItem label={sumLabel} value={formatEur(produkte.reduce((s, p) => s + (p.praemie || 0), 0))} />
-          <SummaryItem label={modeId === 'banking' ? 'Anzahl Produkte' : 'Anzahl Verträge'} value={produkte.length} />
-          <SummaryItem label="Optimierbar" value={produkte.filter(p => p.status === 'optimierbar').length} highlight />
+          <SummaryItem label={modeId === 'banking' ? t('anzahlProdukte') : t('anzahlVertraege')} value={produkte.length} />
+          <SummaryItem label={t('optimierbar')} value={produkte.filter(p => p.status === 'optimierbar').length} highlight />
         </div>
       </Card>
     </div>

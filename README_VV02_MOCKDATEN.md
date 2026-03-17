@@ -34,7 +34,7 @@ Jeder Mandant repraesentiert ein typisches Wealth-Management-Szenario:
 
 | ID | Name | Alter | Mandatstyp | AuM | Kernthema |
 |----|------|-------|------------|-----|-----------|
-| W1 | Dr. Heinrich von Trott | 62 | FairValue | 12,5M EUR | Unternehmensnachfolge, UBS-Konsolidierung |
+| W1 | Tim Keller | 62 | FairValue | 12,5M EUR | Unternehmensnachfolge, UBS-Konsolidierung |
 | W2 | Familie Lindenberg | 51 | SmartValue | 2,1M EUR | SaaS-Exit, 5,5M Cash bei Commerzbank |
 | W3 | Stiftung Weber | – | Spezialmandat | 8,3M EUR | Bildungsstiftung, ESG Art.9 Upgrade |
 | W4 | Prof. Dr. Hartmann | 56 | FairValue | 6,8M EUR | Chefarzt, PE Healthcare, Praxisnachfolge |
@@ -60,7 +60,7 @@ Die Familienstrukturen sind das Herzstuck des VV-Moduls. Sie ermoeglichen Cross-
 VV_FAMILIE[mandantId] = {
   mitglieder: [
     {
-      name: 'Dr. Heinrich von Trott',
+      name: 'Tim Keller',
       rolle: 'mandant' | 'ehepartner' | 'kind' | 'stiftung',
       alter: 62,
       beruf: 'Unternehmer Maschinenbau 3.Gen',
@@ -88,16 +88,16 @@ VV_FAMILIE[mandantId] = {
 }
 ```
 
-### 3.2 Stammbaum W1 – Familie von Trott (24,17M EUR Gesamtvermoegen)
+### 3.2 Stammbaum W1 – Familie Keller (24,17M EUR Gesamtvermoegen)
 
 ```
-                    Dr. Heinrich von Trott (62)
+                    Tim Keller (62)
                     Unternehmer Maschinenbau 3.Gen
                     AuM: 12.500.000 EUR (FairValue)
                               |
               ┌───────────────┴───────────────┐
               |                               |
-    Elisabeth von Trott (59)                  |
+    Elisabeth Keller (59)                  |
     Stiftungsvorstand (ehrenamtl.)            |
     Eigenvermoegen: 850.000 EUR               |
               |                               |
@@ -213,7 +213,7 @@ Kein Stammbaum – Einzelmandant. Typischer NextGen-Einstieg. Wachstum erwartet 
 
 ## 4. Unternehmens-/Organisations-Organigramme
 
-### 4.1 Von Trott Maschinenbau GmbH & Co. KG
+### 4.1 Keller Maschinenbau GmbH & Co. KG
 
 Das Unternehmen ist als **Fremdprodukt** (typ: 'gmbh') mit 4,5M EUR Bewertung hinterlegt:
 
@@ -224,19 +224,19 @@ Das Unternehmen ist als **Fremdprodukt** (typ: 'gmbh') mit 4,5M EUR Bewertung hi
 Die Unternehmensstruktur wird implizit ueber die Familiendaten modelliert:
 
 ```
-    von Trott Maschinenbau GmbH & Co. KG
+    Keller Maschinenbau GmbH & Co. KG
     3. Generation | Bewertung: ca. 4,5M EUR (EBITDA-Multiple)
     ┌────────────────────────────────────┐
     │ Gesellschafter / GF:               │
-    │   Dr. Heinrich von Trott (62)      │
+    │   Tim Keller (62)      │
     │   → plant Rueckzug mit 65–67       │
     ├────────────────────────────────────┤
     │ Nachfolger (geplant):              │
-    │   Friedrich von Trott (28)         │
+    │   Friedrich Keller (28)         │
     │   Ingenieur, aktuell im            │
     │   Unternehmen taetig               │
     ├────────────────────────────────────┤
-    │ Charlotte von Trott (32)           │
+    │ Charlotte Keller (32)           │
     │ → KEIN Interesse am Unternehmen    │
     │   (Karriere als Anwaeltin)         │
     └────────────────────────────────────┘
@@ -313,7 +313,7 @@ VV_PERFORMANCE[mandantId] = {
 
 | Mandant | YTD | 1 Jahr | Volatilitaet | Sharpe | Max DD | Stil |
 |---------|-----|--------|-------------|--------|--------|------|
-| W1 von Trott | +4,2% | +8,5% | 8,2% | 1,05 | -5,1% | Konservativ-Ausgewogen |
+| W1 Keller | +4,2% | +8,5% | 8,2% | 1,05 | -5,1% | Konservativ-Ausgewogen |
 | W2 Lindenberg | +5,8% | +12,1% | 12,5% | 1,35 | -8,7% | Wachstum/Tech-Fokus |
 | W3 Stiftung | +2,8% | +5,2% | 5,4% | 0,82 | -2,1% | Defensiv (Kapitalerhalt) |
 | W4 Hartmann | +4,8% | +9,1% | 9,8% | 1,18 | -6,3% | Ausgewogen + Healthcare |
@@ -376,7 +376,7 @@ VV_WPHG[mandantId] = {
 
 | Mandant | Risikoklasse | Status | Verlustschwelle | Aktuell | Naechste Pruefung |
 |---------|-------------|--------|-----------------|---------|-------------------|
-| W1 von Trott | 3 | aktuell | -10% | -3,2% | 2026-05-15 |
+| W1 Keller | 3 | aktuell | -10% | -3,2% | 2026-05-15 |
 | W2 Lindenberg | 4 | aktuell | -15% | -5,1% | 2026-08-20 |
 | W3 Stiftung | 2 | aktuell | -8% | -1,5% | 2026-04-01 |
 | W4 Hartmann | 4 | aktuell | -12% | -4,8% | 2026-06-10 |
@@ -418,7 +418,7 @@ VV_ENGAGEMENT[mandantId] = {
 
 | Mandant | Score | LinkedIn | Newsletter-Oeffnung | Events | Profil |
 |---------|-------|----------|---------------------|--------|--------|
-| W1 von Trott | 42 | niedrig (480 Kontakte) | 65% | 2/3 | Tradioneller Unternehmer |
+| W1 Keller | 42 | niedrig (480 Kontakte) | 65% | 2/3 | Tradioneller Unternehmer |
 | W2 Lindenberg | 78 | hoch (2.850 Kontakte) | 82% | 3/4 | Digital Native, SaaS |
 | W3 Stiftung | 22 | niedrig (120 Kontakte) | 45% | 2/2 | Institution, wenig digital |
 | W4 Hartmann | 58 | mittel (950 Kontakte) | 72% | 2/3 | Fachlich aktiv |
@@ -442,7 +442,7 @@ Die Engagement-Signale ermoeglichen dem Berater:
 VV_LEADS = [
   {
     id: 'L001',
-    name: 'Charlotte von Trott',
+    name: 'Charlotte Keller',
     quelle: 'NextGen' | 'Empfehlung' | 'Event' | 'Liquiditaet' | 'Bestandskunde',
     typ: 'neukunde' | 'bestandskunde',
     status: 'identifiziert' | 'kontaktiert' | 'termin' | 'angebot' | 'onboarding' | 'gewonnen',
@@ -460,8 +460,8 @@ VV_LEADS = [
 
 | Lead | Quelle | Status | Pot. AuM | Wahrsch. | Gewichtet |
 |------|--------|--------|----------|----------|-----------|
-| Charlotte von Trott | NextGen (W1) | kontaktiert | 800k | 60% | 480k |
-| Friedrich von Trott | NextGen (W1) | identifiziert | 250k | 40% | 100k |
+| Charlotte Keller | NextGen (W1) | kontaktiert | 800k | 60% | 480k |
+| Friedrich Keller | NextGen (W1) | identifiziert | 250k | 40% | 100k |
 | Dr. Katharina Bauer | Empfehlung (W4) | termin | 3,5M | 70% | 2,45M |
 | Lindenberg Cash | Bestandskunde (W2) | angebot | 5,5M | 80% | 4,4M |
 | Stiftung Merian | Event | kontaktiert | 4,2M | 35% | 1,47M |
@@ -493,7 +493,7 @@ VV_REVENUE = {
     // ... 12 Monate
   ],
   mandantenRevenue: [
-    { name: 'Dr. von Trott', aum: 12500000, fee: 0.85, ertrag: 106250 },
+    { name: 'Tim Keller', aum: 12500000, fee: 0.85, ertrag: 106250 },
     // ...
   ],
   feeStruktur: [
@@ -509,7 +509,7 @@ VV_REVENUE = {
 
 | Mandant | AuM | Fee-Satz | Jahresertrag |
 |---------|-----|----------|-------------|
-| Dr. von Trott | 12,5M | 0,85% | 106.250 EUR |
+| Tim Keller | 12,5M | 0,85% | 106.250 EUR |
 | Stiftung Weber | 8,3M | 0,75% | 62.250 EUR |
 | Prof. Hartmann | 6,8M | 0,85% | 57.800 EUR |
 | Fam. Lindenberg | 2,1M | 1,05% | 22.050 EUR |
@@ -524,7 +524,7 @@ Fee-Zusammensetzung: 79,5% Management Fees, 7,2% Performance Fees, 5,2% Custody,
 
 Die erweiterten Persona-Dateien (`mock-personas-vv-w1w2.js`, `mock-personas-vv-w3w5.js`) enthalten monatliche Transaktionsdaten:
 
-### 10.1 Beispiel W1 – Dr. von Trott (Februar 2026)
+### 10.1 Beispiel W1 – Tim Keller (Februar 2026)
 
 | Richtung | Kategorie | Betrag | Quelle/Empfaenger |
 |----------|-----------|--------|-------------------|
@@ -542,7 +542,7 @@ Die erweiterten Persona-Dateien (`mock-personas-vv-w1w2.js`, `mock-personas-vv-w
 
 | Mandant | Netto-Cashflow/Monat | Sparquote |
 |---------|---------------------|-----------|
-| W1 von Trott | +123.700 EUR | 42% |
+| W1 Keller | +123.700 EUR | 42% |
 | W2 Lindenberg | +5.600 EUR | 28% |
 | W3 Stiftung | +3.400 EUR | 11% (Ueberschuss) |
 | W4 Hartmann | -6.200 EUR | negativ (geplant, 200k/J. Entnahme) |

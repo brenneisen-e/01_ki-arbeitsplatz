@@ -3,6 +3,7 @@ import Card from '../../../components/ui/Card';
 import DonutChart from '../../../components/charts/DonutChart';
 import { formatEur } from '../../../utils/formatters';
 import { useMode } from '../../../hooks/useMode';
+import useTranslation from '../../../i18n/useTranslation';
 
 // ─── Badge component for transaction status ───
 function TxBadge({ type, label }) {
@@ -285,7 +286,7 @@ function CategoryRow({ category, defaultOpen = false }) {
         <div className="flex items-center gap-2.5">
           <div className="w-3 h-3 rounded-full" style={{ backgroundColor: category.color }} />
           <span className="text-sm font-medium text-slate-700">{category.name}</span>
-          <span className="text-xs text-slate-400">{category.items.length} Posten</span>
+          <span className="text-xs text-slate-400">{category.items.length} {t ? t('posten') : 'Posten'}</span>
         </div>
         <div className="flex items-center gap-3">
           <span className="text-sm font-mono font-semibold text-slate-700">{formatEur(category.total)}</span>
@@ -377,6 +378,7 @@ function InsightCard({ insight }) {
 
 // ─── Main Component ───
 export default function FinanzprofilTab({ kunde }) {
+  const { t } = useTranslation();
   const { modeId } = useMode();
   const isVV = modeId === 'vermoegensverwaltung';
   const { config } = useMode();
@@ -413,10 +415,10 @@ export default function FinanzprofilTab({ kunde }) {
       {/* Row 1: Einnahmen/Ausgaben + Donut */}
       <div className="grid grid-cols-2 gap-4">
         <Card>
-          <h3 className="font-semibold text-slate-800 mb-4">Einnahmen & Ausgaben</h3>
+          <h3 className="font-semibold text-slate-800 mb-4">{t('einnahmenAusgaben')}</h3>
           <div className="mb-4">
             <div className="flex justify-between text-sm font-semibold text-slate-700 mb-2">
-              <span>Einnahmen</span>
+              <span>{t('einnahmen')}</span>
               <span className="font-mono text-emerald-600">{formatEur(totalEin)}</span>
             </div>
             <div className="border-t border-slate-200 pt-2 space-y-1.5">
@@ -430,7 +432,7 @@ export default function FinanzprofilTab({ kunde }) {
           </div>
           <div className="mb-4">
             <div className="flex justify-between text-sm font-semibold text-slate-700 mb-2">
-              <span>Ausgaben</span>
+              <span>{t('ausgaben')}</span>
               <span className="font-mono text-red-500">{formatEur(totalAus)}</span>
             </div>
             <div className="border-t border-slate-200 pt-2 space-y-1.5">
@@ -444,15 +446,15 @@ export default function FinanzprofilTab({ kunde }) {
           </div>
           <div className="border-t-2 border-slate-300 pt-3">
             <div className="flex justify-between text-sm font-bold">
-              <span className="text-slate-800">FREI VERFÜGBAR</span>
+              <span className="text-slate-800">{t('freiVerfuegbarLabel')}</span>
               <span className={`font-mono ${frei >= 0 ? 'text-emerald-600' : 'text-red-500'}`}>{formatEur(frei)}</span>
             </div>
           </div>
         </Card>
 
         <Card>
-          <h3 className="font-semibold text-slate-800 mb-4">Ausgaben-Verteilung</h3>
-          <DonutChart data={donutData} height={260} centerValue={formatEur(totalAus)} centerLabel="Ausgaben" colors={COLORS} />
+          <h3 className="font-semibold text-slate-800 mb-4">{t('ausgabenVerteilung')}</h3>
+          <DonutChart data={donutData} height={260} centerValue={formatEur(totalAus)} centerLabel={t('ausgaben')} colors={COLORS} />
           <div className="mt-4 space-y-1.5">
             {donutData.map((d, i) => (
               <div key={d.name} className="flex items-center justify-between text-sm">
@@ -474,11 +476,11 @@ export default function FinanzprofilTab({ kunde }) {
         <Card>
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h3 className="font-semibold text-slate-800">Kontotransaktionen</h3>
-              <p className="text-xs text-slate-400 mt-0.5">Open Banking (PSD2/FIDA) · {kontoumsaetze.reduce((s, c) => s + c.items.length, 0)} Transaktionen erkannt</p>
+              <h3 className="font-semibold text-slate-800">{t('kontotransaktionen')}</h3>
+              <p className="text-xs text-slate-400 mt-0.5">{t('openBankingPsd2')} · {kontoumsaetze.reduce((s, c) => s + c.items.length, 0)} {t('transaktionenErkannt')}</p>
             </div>
             <div className="flex items-center gap-1.5">
-              <span className="text-xs text-slate-400">Gesamt:</span>
+              <span className="text-xs text-slate-400">{t('gesamt')}:</span>
               <span className="text-sm font-mono font-semibold text-slate-700">{formatEur(totalKontoumsaetze)}</span>
             </div>
           </div>
@@ -514,8 +516,8 @@ export default function FinanzprofilTab({ kunde }) {
         <Card>
           <div className="flex items-center gap-2 mb-4">
             <span className="shrink-0">{InsightIcons.header}</span>
-            <h3 className="font-semibold text-slate-800">KI-Erkenntnisse aus Kontoumsätzen</h3>
-            <span className="text-xs text-slate-400 ml-auto">{insights.length} Erkenntnisse</span>
+            <h3 className="font-semibold text-slate-800">{t('kiErkenntnisse')}</h3>
+            <span className="text-xs text-slate-400 ml-auto">{insights.length} {t('erkenntnisseLabel')}</span>
           </div>
           <div className="space-y-2.5">
             {insights.map((ins, i) => (

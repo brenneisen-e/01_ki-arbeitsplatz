@@ -4,6 +4,7 @@ import { clsx } from 'clsx';
 import { Mail, Phone, Calendar, MessageCircle, ArrowUpRight, ArrowDownLeft, ChevronDown, ChevronUp, Bot, User, Sparkles, ExternalLink, Globe } from 'lucide-react';
 import { formatDatum } from '../../../utils/formatters';
 import { useMode } from '../../../hooks/useMode';
+import useTranslation from '../../../i18n/useTranslation';
 
 const TYP_ICONS = {
   email: Mail,
@@ -13,13 +14,7 @@ const TYP_ICONS = {
   kontaktformular: Globe,
 };
 
-const TYP_LABELS = {
-  email: 'E-Mail',
-  telefon: 'Telefon',
-  termin: 'Termin',
-  chatbot: 'Chatbot',
-  kontaktformular: 'Kontaktanfrage',
-};
+// TYP_LABELS moved inside component for i18n
 
 const TYP_COLORS = {
   email: { bg: 'bg-blue-50', text: 'text-blue-600' },
@@ -30,6 +25,14 @@ const TYP_COLORS = {
 };
 
 export default function KommunikationTab({ kunde }) {
+  const { t } = useTranslation();
+  const TYP_LABELS = {
+    email: t('email'),
+    telefon: t('telefon'),
+    termin: t('terminTyp'),
+    chatbot: t('chatbot'),
+    kontaktformular: t('kontaktanfrage'),
+  };
   const kommunikation = kunde.kommunikation || [];
   const [filterTyp, setFilterTyp] = useState('alle');
   const [expandedItem, setExpandedItem] = useState(null);
@@ -84,9 +87,9 @@ export default function KommunikationTab({ kunde }) {
 
       {/* Timeline */}
       <Card hover={false}>
-        <h3 className="font-semibold text-slate-800 mb-4">Kommunikations-Timeline</h3>
+        <h3 className="font-semibold text-slate-800 mb-4">{t('kommunikationsTimeline')}</h3>
         {filtered.length === 0 ? (
-          <div className="text-sm text-slate-400 py-8 text-center">Keine Kommunikation vorhanden</div>
+          <div className="text-sm text-slate-400 py-8 text-center">{t('keineKommunikation')}</div>
         ) : (
           <div className="space-y-0">
             {filtered.map((k, i) => (
@@ -96,6 +99,8 @@ export default function KommunikationTab({ kunde }) {
                 isLast={i === filtered.length - 1}
                 isExpanded={expandedItem === i}
                 onToggle={() => setExpandedItem(expandedItem === i ? null : i)}
+                t={t}
+                typLabels={TYP_LABELS}
               />
             ))}
           </div>
@@ -105,7 +110,7 @@ export default function KommunikationTab({ kunde }) {
   );
 }
 
-function KommunikationEntry({ entry: k, isLast, isExpanded, onToggle }) {
+function KommunikationEntry({ entry: k, isLast, isExpanded, onToggle, t, typLabels: TYP_LABELS }) {
   const Icon = TYP_ICONS[k.typ] || Mail;
   const colors = TYP_COLORS[k.typ] || TYP_COLORS.email;
   const hasDetail = k.inhalt || k.chatverlauf || k.emailBody;
@@ -138,7 +143,7 @@ function KommunikationEntry({ entry: k, isLast, isExpanded, onToggle }) {
           </span>
         </div>
         <div className="text-xs text-slate-400 mb-2">
-          {formatDatum(k.datum)} &middot; {k.richtung === 'eingehend' ? 'Eingehend' : 'Ausgehend'}
+          {formatDatum(k.datum)} &middot; {k.richtung === 'eingehend' ? t('eingehend') : t('ausgehend')}
           {k.kanal && <> &middot; {k.kanal}</>}
         </div>
         <p className="text-sm text-slate-600">{k.zusammenfassung}</p>
@@ -150,7 +155,7 @@ function KommunikationEntry({ entry: k, isLast, isExpanded, onToggle }) {
             className="flex items-center gap-1 mt-2 text-xs font-medium text-blue-600 hover:text-blue-700 transition-colors"
           >
             {isExpanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
-            {k.chatverlauf ? 'Chatverlauf anzeigen' : k.emailBody ? 'E-Mail anzeigen' : 'Details anzeigen'}
+            {k.chatverlauf ? t('chatverlaufAnzeigen') : k.emailBody ? t('emailAnzeigen') : t('detailsAnzeigen')}
           </button>
         )}
 
@@ -159,7 +164,7 @@ function KommunikationEntry({ entry: k, isLast, isExpanded, onToggle }) {
           <div className="mt-3 animate-fade-in">
             {/* Chatbot conversation */}
             {k.chatverlauf && (
-              <ChatverlaufView verlauf={k.chatverlauf} kiZusammenfassung={k.kiZusammenfassung} config={config} />
+              <ChatverlaufView verlauf={k.chatverlauf} kiZusammenfassung={k.kiZusammenfassung} config={config} t={t} />
             )}
 
             {/* Email body */}
@@ -167,9 +172,9 @@ function KommunikationEntry({ entry: k, isLast, isExpanded, onToggle }) {
               <div className="bg-slate-50 border border-slate-200 rounded-xl p-4">
                 <div className="flex items-center gap-2 text-xs text-slate-400 mb-3 pb-2 border-b border-slate-200">
                   <Mail size={12} />
-                  <span>Von: {k.absender || 'Berater'}</span>
+                  <span>{t('von')} {k.absender || 'Berater'}</span>
                   <span>&middot;</span>
-                  <span>An: {k.empfaenger || 'Kunde'}</span>
+                  <span>{t('an')} {k.empfaenger || 'Kunde'}</span>
                 </div>
                 <div className="text-sm text-slate-700 whitespace-pre-line">{k.emailBody}</div>
               </div>
@@ -188,7 +193,7 @@ function KommunikationEntry({ entry: k, isLast, isExpanded, onToggle }) {
   );
 }
 
-function ChatverlaufView({ verlauf, kiZusammenfassung, config }) {
+function ChatverlaufView({ verlauf, kiZusammenfassung, config, t }) {
   return (
     <div className="space-y-3">
       {/* AI Summary */}
@@ -196,7 +201,7 @@ function ChatverlaufView({ verlauf, kiZusammenfassung, config }) {
         <div className="bg-indigo-50 border border-indigo-200 rounded-xl p-4">
           <div className="flex items-center gap-2 mb-2">
             <Sparkles size={14} className="text-indigo-600" />
-            <span className="text-xs font-semibold text-indigo-700 uppercase tracking-wider">KI-Zusammenfassung</span>
+            <span className="text-xs font-semibold text-indigo-700 uppercase tracking-wider">{t('kiZusammenfassung')}</span>
           </div>
           <p className="text-sm text-indigo-900">{kiZusammenfassung}</p>
         </div>
@@ -206,9 +211,9 @@ function ChatverlaufView({ verlauf, kiZusammenfassung, config }) {
       <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-3">
         <div className="flex items-center gap-2 text-xs text-slate-400 pb-2 border-b border-slate-200">
           <MessageCircle size={12} />
-          <span className="font-medium">Chatbot-Verlauf</span>
+          <span className="font-medium">{t('chatbotVerlauf')}</span>
           <span>&middot;</span>
-          <span>{verlauf.length} Nachrichten</span>
+          <span>{verlauf.length} {t('nachrichten')}</span>
         </div>
         {verlauf.map((msg, i) => (
           <div key={i} className={clsx('flex gap-2', msg.rolle === 'kunde' ? 'justify-end' : 'justify-start')}>

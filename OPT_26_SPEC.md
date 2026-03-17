@@ -875,7 +875,7 @@ Ein Girokonto. 800 EUR Saldo. Alles andere ist woanders.
 
 ---
 
-## W1: Dr. Heinrich von Trott – HNWI mit Nachfolgebedarf
+## W1: Tim Keller – HNWI mit Nachfolgebedarf
 
 ### Schicht 1: Stammdaten
 
@@ -1320,7 +1320,7 @@ Todos:
 
 === Phase 4: VV-Personas W1-W5 ===
 
-- [ ] W1 Dr. von Trott: Bestehenden Mandanten ergaenzen um LinkedIn, Transaktionen (Ausschuettung 125k/Q, UBS-Gebuehren sichtbar), erweiterte Fremdprodukte (UBS 2.8M, DB 400k, Immobilien 3.65M, GmbH 4-5M), 8 Potentiale
+- [ ] W1 Tim Keller: Bestehenden Mandanten ergaenzen um LinkedIn, Transaktionen (Ausschuettung 125k/Q, UBS-Gebuehren sichtbar), erweiterte Fremdprodukte (UBS 2.8M, DB 400k, Immobilien 3.65M, GmbH 4-5M), 8 Potentiale
 - [ ] W2 Lindenberg komplett: 51+49, SaaS-Exit 8M, AuM 2.1M, FREMD: 5.5M CASH Commerzbank!, Upgrade SmartValue->FairValue
 - [ ] W3 Stiftung Weber komplett: 8.3M Stiftung, ESG-Score 72 unter Ziel, Ausschuettungsoptimierung
 - [ ] W4 Prof. Dr. Hartmann komplett: 56, Chefarzt 350k, 6.8M FairValue, PE Healthcare, Sohn Assistenzarzt
@@ -1651,16 +1651,16 @@ Einfarbige SVG-Icons (stroke-only). Keine Emojis.
 # C. VERMOEGENSVERWALTUNGS-PERSONAS (VV-02/VV-10) – 5 Stueck
 # ═══════════════════════════════════════════════════════════
 
-## W1: Dr. Heinrich von Trott – HNWI mit Nachfolgebedarf
+## W1: Tim Keller – HNWI mit Nachfolgebedarf
 
 ### Stammdaten
 
 | Feld | Wert |
 |---|---|
-| Name | Dr. Heinrich von Trott |
+| Name | Tim Keller |
 | Alter | 62 |
 | Geburtsdatum | 08.04.1963 |
-| Beruf | Geschaeftsfuehrender Gesellschafter, von Trott Maschinenbau GmbH (3. Generation) |
+| Beruf | Geschaeftsfuehrender Gesellschafter, Keller Maschinenbau GmbH (3. Generation) |
 | Firmenumsatz | 45 Mio. EUR, 280 Mitarbeiter |
 | Persoenl. Gewinn | ~500.000 EUR/J. (Geschaeftsfuehrergehalt + Ausschuettung) |
 | Familienstand | Verheiratet mit Elisabeth (59), Stiftungsraetin |
@@ -1691,7 +1691,7 @@ Einfarbige SVG-Icons (stroke-only). Keine Emojis.
 | Depot | UBS Zuerich | 2.800.000 EUR | Konservative Renten-Strategie, historisch (Vater eroeffnet) |
 | Tagesgeld | Deutsche Bank | 400.000 EUR | Liquiditaetsreserve |
 | Immobilien | Privat | 3.200.000 EUR | 2 ETW Frankfurt, 1 Ferienhaus Toskana |
-| Unternehmensbeteiligung | von Trott GmbH | geschaetzt 15.000.000 EUR | 100% Gesellschafter |
+| Unternehmensbeteiligung | Keller GmbH | geschaetzt 15.000.000 EUR | 100% Gesellschafter |
 | PE-Beteiligung | Golding Capital | 500.000 EUR | European Buyout Fund XII, Vintage 2022 |
 
 **Gesamtvermoegen:** ~34.400.000 EUR (davon 12,5M bei uns = 36% betreut)
@@ -2012,7 +2012,7 @@ Einfarbige SVG-Icons (stroke-only). Keine Emojis.
 | Banking | B4 | Markus Wagner | 29 | Berufseinsteiger, nur Girokonto | 5 |
 | Banking | B5 | Andrea Lang | 41 | FK Cafe-Kette, Expansion | 5 |
 | Banking | B6 | Stefan Braun | 36 | Digital Native, VR = Karteileiche | 6 |
-| VV | W1 | Dr. von Trott | 62 | 12,5M, UBS 2,8M Fremd, Nachfolge | 8 |
+| VV | W1 | Tim Keller | 62 | 12,5M, UBS 2,8M Fremd, Nachfolge | 8 |
 | VV | W2 | Familie Lindenberg | 51/49 | SaaS-Exit, 5,5M Cash Fremdbank! | 6 |
 | VV | W3 | Stiftung Weber | - | 8,3M Stiftung, ESG-Pflicht | 4 |
 | VV | W4 | Prof. Hartmann | 57 | 6,8M Arzt, Praxis-Nachfolge | 5 |
@@ -2071,7 +2071,7 @@ Todos:
 === VV-Personas (W1-W5) ===
 
 - [ ] vv-mock-data.js lesen: vvMockMandanten-Format verstehen
-- [ ] W1 Dr. von Trott ergaenzen: LinkedIn, Transaktionen auf Referenzkonto, Fremdvermoegen (UBS 2,8M + DB 400k + Immobilien 3,2M + GmbH 15M + PE 500k), erweiterte Potentiale (8)
+- [ ] W1 Tim Keller ergaenzen: LinkedIn, Transaktionen auf Referenzkonto, Fremdvermoegen (UBS 2,8M + DB 400k + Immobilien 3,2M + GmbH 15M + PE 500k), erweiterte Potentiale (8)
 - [ ] W2 Lindenberg komplett: SmartValue 2,1M + PE 300k + Commerzbank 5,5M CASH + Immobilien 2,2M + 6 Potentiale
 - [ ] W3 Stiftung Weber: Spezialmandat 8,3M + Anlagerichtlinie + 4 Potentiale
 - [ ] W4 Prof. Hartmann: FairValue 6,8M + Immobilien 2M + 5 Potentiale

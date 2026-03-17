@@ -3,6 +3,7 @@ import Card from '../../../components/ui/Card';
 import { PrioBadge, QuellenBadge } from '../../../components/ui/Badge';
 import { formatEur } from '../../../utils/formatters';
 import { useMode } from '../../../hooks/useMode';
+import useTranslation from '../../../i18n/useTranslation';
 import { Shield, Zap, RefreshCw, CheckCircle, XCircle, ChevronDown, Calendar, User, ExternalLink, TrendingUp, ArrowRight } from 'lucide-react';
 
 const ABSICHERUNGS_TYPEN = [
@@ -18,6 +19,7 @@ const ABSICHERUNGS_TYPEN = [
 ];
 
 export default function ImpulseTab({ kunde }) {
+  const { t } = useTranslation();
   const absicherung = kunde.absicherung || { vorhanden: [], fehlend: [] };
   const potentiale = kunde.potentiale || [];
   const whitespots = potentiale.filter(p => p.typ === 'whitespot');
@@ -33,9 +35,9 @@ export default function ImpulseTab({ kunde }) {
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             <Shield size={20} className="text-slate-500" strokeWidth={1.75} />
-            <h3 className="font-semibold text-slate-800">Absicherungsstatus</h3>
+            <h3 className="font-semibold text-slate-800">{t('absicherungsstatus')}</h3>
           </div>
-          <span className="text-sm text-slate-400">{luecken} Lücken erkannt</span>
+          <span className="text-sm text-slate-400">{t('lueckenErkannt', { count: luecken })}</span>
         </div>
         <div className="flex flex-wrap gap-2">
           {ABSICHERUNGS_TYPEN.map(typ => {
@@ -63,7 +65,7 @@ export default function ImpulseTab({ kunde }) {
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
               <Zap size={20} style={{ color: 'var(--mode-primary-light)' }} strokeWidth={1.75} />
-              <h3 className="font-semibold text-slate-800">Whitespots (Neugeschäft)</h3>
+              <h3 className="font-semibold text-slate-800">{t('whitespotsNeugeschaeft')}</h3>
             </div>
             <span className="text-sm text-slate-400">{whitespots.length} Potentiale</span>
           </div>
@@ -77,6 +79,7 @@ export default function ImpulseTab({ kunde }) {
                   kunde={kunde}
                   expanded={expandedIndex === key}
                   onToggle={() => setExpandedIndex(expandedIndex === key ? null : key)}
+                  t={t}
                 />
               );
             })}
@@ -90,7 +93,7 @@ export default function ImpulseTab({ kunde }) {
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
               <RefreshCw size={20} className="text-amber-500" strokeWidth={1.75} />
-              <h3 className="font-semibold text-slate-800">Anpassungsbedarfe</h3>
+              <h3 className="font-semibold text-slate-800">{t('anpassungsbedarfe')}</h3>
             </div>
             <span className="text-sm text-slate-400">{anpassungen.length} Potentiale</span>
           </div>
@@ -104,6 +107,7 @@ export default function ImpulseTab({ kunde }) {
                   kunde={kunde}
                   expanded={expandedIndex === key}
                   onToggle={() => setExpandedIndex(expandedIndex === key ? null : key)}
+                  t={t}
                 />
               );
             })}
@@ -115,7 +119,7 @@ export default function ImpulseTab({ kunde }) {
       {crossSell.length > 0 && (
         <Card>
           <div className="flex items-center justify-between mb-4">
-            <h3 className="font-semibold text-slate-800">Weitere Potentiale</h3>
+            <h3 className="font-semibold text-slate-800">{t('weiterePotentiale')}</h3>
             <span className="text-sm text-slate-400">{crossSell.length} Potentiale</span>
           </div>
           <div className="space-y-3">
@@ -128,6 +132,7 @@ export default function ImpulseTab({ kunde }) {
                   kunde={kunde}
                   expanded={expandedIndex === key}
                   onToggle={() => setExpandedIndex(expandedIndex === key ? null : key)}
+                  t={t}
                 />
               );
             })}
@@ -138,18 +143,18 @@ export default function ImpulseTab({ kunde }) {
   );
 }
 
-function quellenLabel(quellen) {
+function quellenLabel(quellen, t) {
   const map = {
-    bestand: 'Bestandsanalyse',
-    lebensereignis: 'Lebensereignis',
-    finanztransaktion: 'Open Finance (FIDA)',
-    wettbewerb: 'Wettbewerbsanalyse',
-    kommunikation: 'Kommunikationsanalyse',
+    bestand: t('bestandsanalyse'),
+    lebensereignis: t('lebensereignis'),
+    finanztransaktion: t('openFinanceFida'),
+    wettbewerb: t('wettbewerbsanalyse'),
+    kommunikation: t('kommunikationsanalyse'),
   };
   return (quellen || []).map(q => map[q] || q).join(' + ');
 }
 
-function PotentialCard({ potential: p, kunde, expanded, onToggle }) {
+function PotentialCard({ potential: p, kunde, expanded, onToggle, t }) {
   const { config, navigateTo } = useMode();
 
   return (
@@ -173,7 +178,7 @@ function PotentialCard({ potential: p, kunde, expanded, onToggle }) {
             <span className="font-mono text-sm font-medium text-slate-700">
               {p.volumen > 0 ? formatEur(p.volumen) : '-'}
               {p.volumenTyp === 'jaehrlich' && '/J.'}
-              {p.volumenTyp === 'einmalig' && ' Einmal'}
+              {p.volumenTyp === 'einmalig' && ` ${t('einmalLabel')}`}
             </span>
             <ChevronDown
               size={16}
@@ -191,7 +196,7 @@ function PotentialCard({ potential: p, kunde, expanded, onToggle }) {
           {p.herleitung && p.herleitung.length > 0 && (
             <div>
               <h5 className="text-xs font-semibold text-slate-600 uppercase tracking-wider mb-3">
-                Herleitung des Impulses
+                {t('herleitungDesImpulses')}
               </h5>
               <div className="grid grid-cols-2 gap-2 text-sm">
                 {p.herleitung.map((h, i) => (
@@ -205,20 +210,20 @@ function PotentialCard({ potential: p, kunde, expanded, onToggle }) {
           {(!p.herleitung || p.herleitung.length === 0) && (
             <div>
               <h5 className="text-xs font-semibold text-slate-600 uppercase tracking-wider mb-3">
-                Herleitung des Impulses
+                {t('herleitungDesImpulses')}
               </h5>
               <div className="grid grid-cols-2 gap-2 text-sm">
-                <HerleitungRow label="Datenquelle" value={quellenLabel(p.quellen)} />
-                <HerleitungRow label="Kunde" value={`${kunde.name} (${kunde.id})`} />
-                <HerleitungRow label="Erkannte Situation" value={p.beschreibung} />
-                <HerleitungRow label="Empfohlenes Produkt" value={p.produktEmpfehlung || '–'} />
+                <HerleitungRow label={t('datenquelle')} value={quellenLabel(p.quellen, t)} />
+                <HerleitungRow label={t('kundeLabel')} value={`${kunde.name} (${kunde.id})`} />
+                <HerleitungRow label={t('erkannteSituation')} value={p.beschreibung} />
+                <HerleitungRow label={t('empfohlenesProdukt')} value={p.produktEmpfehlung || '–'} />
               </div>
             </div>
           )}
 
           {/* Deckungslücke Visualization */}
           {p.deckungsluecke && (
-            <DeckungslueckeBar data={p.deckungsluecke} />
+            <DeckungslueckeBar data={p.deckungsluecke} t={t} />
           )}
 
           {/* Vergleichstabelle */}
@@ -229,7 +234,7 @@ function PotentialCard({ potential: p, kunde, expanded, onToggle }) {
           {/* Aktionen */}
           <div>
             <h5 className="text-xs font-semibold text-slate-600 uppercase tracking-wider mb-3">
-              Aktionen
+              {t('aktionen')}
             </h5>
             <div className="flex flex-wrap gap-2">
               <button
@@ -240,15 +245,15 @@ function PotentialCard({ potential: p, kunde, expanded, onToggle }) {
                 onMouseLeave={(e) => e.currentTarget.style.backgroundColor = config.colors.primary}
               >
                 <User size={14} />
-                Kunde öffnen
+                {t('kundeOeffnen')}
               </button>
               <button
                 className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium border border-slate-300 text-slate-700 hover:bg-slate-100 transition-colors"
               >
                 <Calendar size={14} />
-                {p.empfohleneAktion === 'termin_vereinbaren' ? 'Termin vereinbaren' :
-                 p.empfohleneAktion === 'angebot_erstellen' ? 'Angebot erstellen' :
-                 p.empfohleneAktion === 'tarifvergleich' ? 'Tarifvergleich starten' : 'Aktion'}
+                {p.empfohleneAktion === 'termin_vereinbaren' ? t('terminVereinbaren') :
+                 p.empfohleneAktion === 'angebot_erstellen' ? t('angebotErstellen') :
+                 p.empfohleneAktion === 'tarifvergleich' ? t('tarifvergleichStarten') : t('aktion')}
               </button>
               {p.produktEmpfehlung && (
                 <span className="flex items-center gap-1 text-xs text-slate-400 self-center ml-2">
@@ -273,7 +278,7 @@ function HerleitungRow({ label, value }) {
   );
 }
 
-function DeckungslueckeBar({ data }) {
+function DeckungslueckeBar({ data, t }) {
   const { gehalt, aktuelleAbsicherung, empfohleneAbsicherung, einheit, label } = data;
   const gehaltLabel = data.gehaltLabel || 'Nettoeinkommen';
   const absicherungLabel = data.absicherungLabel || 'Aktuelle Absicherung';
@@ -284,7 +289,7 @@ function DeckungslueckeBar({ data }) {
   return (
     <div>
       <h5 className="text-xs font-semibold text-slate-600 uppercase tracking-wider mb-3">
-        {label || 'Deckungslücken-Analyse'}
+        {label || t('deckungslueckenAnalyse')}
       </h5>
       <div className="bg-white rounded-xl border border-slate-200 p-4 space-y-4">
         {/* Key numbers */}
@@ -300,7 +305,7 @@ function DeckungslueckeBar({ data }) {
             <div className="text-xs text-red-400">/mtl. ({pctAbgesichert}%)</div>
           </div>
           <div className="bg-emerald-50 rounded-lg p-3">
-            <div className="text-xs text-emerald-500 mb-1">Empfehlung</div>
+            <div className="text-xs text-emerald-500 mb-1">{t('empfehlungLabel')}</div>
             <div className="text-lg font-bold text-emerald-700">{empfohleneAbsicherung.toLocaleString('de-DE')}€</div>
             <div className="text-xs text-emerald-500">/mtl. ({pctEmpfohlen}%)</div>
           </div>
@@ -309,8 +314,8 @@ function DeckungslueckeBar({ data }) {
         {/* Visual bar */}
         <div>
           <div className="flex justify-between text-xs text-slate-400 mb-1">
-            <span>{pctAbgesichert}% abgesichert</span>
-            <span>Ziel: {pctEmpfohlen}%</span>
+            <span>{pctAbgesichert}% {t('abgesichert')}</span>
+            <span>{t('zielLabel')}: {pctEmpfohlen}%</span>
           </div>
           <div className="w-full h-6 bg-slate-100 rounded-full relative overflow-hidden">
             {/* Empfohlen (target) */}
@@ -332,7 +337,7 @@ function DeckungslueckeBar({ data }) {
             />
             {/* Label on bar */}
             <div className="absolute inset-0 flex items-center justify-center text-xs font-semibold text-slate-700">
-              {pctAbgesichert > 0 ? `${pctAbgesichert}% abgesichert` : 'Keine Absicherung'}
+              {pctAbgesichert > 0 ? `${pctAbgesichert}% ${t('abgesichert')}` : t('keineAbsicherung')}
             </div>
           </div>
         </div>
@@ -342,8 +347,8 @@ function DeckungslueckeBar({ data }) {
           <div className="flex items-center gap-2 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
             <TrendingUp size={16} className="text-amber-500 shrink-0" />
             <span className="text-sm text-amber-800">
-              <strong>Deckungslücke: {luecke.toLocaleString('de-DE')}€/mtl.</strong>
-              {' '}— {aktuelleAbsicherung === 0 ? 'Vollständig ungeschützt' : `Nur ${pctAbgesichert}% des Einkommens abgesichert`}
+              <strong>{t('deckungsluecke')}: {luecke.toLocaleString('de-DE')}€/mtl.</strong>
+              {' '}— {aktuelleAbsicherung === 0 ? t('vollstaendigUngeschuetzt') : t('nurAbgesichert', { pct: pctAbgesichert })}
             </span>
           </div>
         )}

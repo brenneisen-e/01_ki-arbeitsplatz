@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { MessageCircle, X, Send, Bot, User, FileText, Mail } from 'lucide-react';
 import { useMode } from '../../hooks/useMode';
+import useTranslation from '../../i18n/useTranslation';
 import { KUNDEN_BY_MODE } from '../../data';
 import { VV_LEADS } from '../../data/vvExtended';
 
@@ -112,16 +113,23 @@ Senior Advisor | HRK LUNIS AG`;
 
   const emailSubject = `Einladung: Persönliches Gespräch — ${thema}`;
 
+  const docxSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:4px"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>`;
+  const emailSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:4px"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>`;
+
+  // Encode the brief text and email subject as base64 to safely embed in data attributes
+  const briefBase64 = btoa(unescape(encodeURIComponent(brief)));
+  const subjectBase64 = btoa(unescape(encodeURIComponent(emailSubject)));
+
   return `<div class="space-y-3">
     <p class="font-semibold">Anschreiben generiert für: ${lead.name}</p>
 
     <div class="bg-white border border-slate-200 rounded-lg p-3 text-xs space-y-1">
       <div class="flex items-center gap-2 mb-2">
         <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-blue-50 text-blue-700 text-[10px] font-medium">
-          📄 DOCX Anschreiben
+          ${docxSvg} DOCX Anschreiben
         </span>
         <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-purple-50 text-purple-700 text-[10px] font-medium">
-          ✉️ EML E-Mail
+          ${emailSvg} EML E-Mail
         </span>
       </div>
       <div class="bg-slate-50 rounded p-2.5 text-[11px] leading-relaxed whitespace-pre-line font-mono">${brief}</div>
@@ -132,8 +140,8 @@ Senior Advisor | HRK LUNIS AG`;
     </div>
 
     <div class="flex gap-2 mt-2">
-      <button class="px-3 py-1.5 bg-blue-600 text-white rounded-lg text-xs font-medium hover:bg-blue-700">📄 Als DOCX herunterladen</button>
-      <button class="px-3 py-1.5 bg-purple-600 text-white rounded-lg text-xs font-medium hover:bg-purple-700">✉️ Als E-Mail öffnen</button>
+      <button data-action="download-docx" data-brief="${briefBase64}" class="inline-flex items-center px-3 py-1.5 bg-blue-600 text-white rounded-lg text-xs font-medium hover:bg-blue-700">${docxSvg} Als DOCX herunterladen</button>
+      <button data-action="open-email" data-brief="${briefBase64}" data-subject="${subjectBase64}" class="inline-flex items-center px-3 py-1.5 bg-purple-600 text-white rounded-lg text-xs font-medium hover:bg-purple-700">${emailSvg} Als E-Mail öffnen</button>
     </div>
   </div>`;
 }
@@ -290,7 +298,7 @@ function getDemoResponse(message, { currentView, modeId }) {
           <p class="text-xs font-semibold text-slate-600 mt-1">Neue Mandate (6):</p>
           <ol class="list-decimal pl-4 space-y-1">
             <li><strong>Dr. Katharina Bauer</strong> — Empfehlung Prof. Hartmann, 3,5M, Termin steht</li>
-            <li><strong>Charlotte von Trott</strong> — NextGen, Anwältin, 800k Eigenvermögen</li>
+            <li><strong>Charlotte Keller</strong> — NextGen, Anwältin, 800k Eigenvermögen</li>
             <li><strong>Dipl.-Ing. Stefan Müller</strong> — Presse/Firmenverkauf, 6M Erlös</li>
           </ol>
           <p class="text-xs font-semibold text-slate-600 mt-1">Bestandsmandate (6):</p>
@@ -452,6 +460,7 @@ function getDemoResponse(message, { currentView, modeId }) {
 }
 
 export default function VertriebsAssistent() {
+  const { t } = useTranslation();
   const { modeId, config, currentView, setActiveTab, selectedKundeId } = useMode();
   const [isOpen, setIsOpen] = useState(true);
   const [messages, setMessages] = useState([]);
@@ -571,6 +580,45 @@ export default function VertriebsAssistent() {
 
   const handleSend = () => sendMessage(input);
 
+  // Event delegation for Anschreiben action buttons (rendered via dangerouslySetInnerHTML)
+  const handleMessagesClick = useCallback((e) => {
+    const btn = e.target.closest('[data-action]');
+    if (!btn) return;
+
+    const action = btn.getAttribute('data-action');
+    const briefB64 = btn.getAttribute('data-brief');
+    const subjectB64 = btn.getAttribute('data-subject');
+
+    // Decode base64 → UTF-8
+    const decodeBrief = (b64) => {
+      try { return decodeURIComponent(escape(atob(b64))); } catch { return atob(b64); }
+    };
+
+    if (action === 'download-docx' && briefB64) {
+      const briefText = decodeBrief(briefB64);
+      const htmlContent = `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
+<head><meta charset="utf-8"><title>Anschreiben</title>
+<style>body { font-family: Calibri, Arial, sans-serif; font-size: 11pt; line-height: 1.6; white-space: pre-line; }</style>
+</head><body>${briefText.replace(/\n/g, '<br>')}</body></html>`;
+      const blob = new Blob(['\ufeff', htmlContent], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'Anschreiben.docx';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    if (action === 'open-email' && briefB64) {
+      const briefText = decodeBrief(briefB64);
+      const subject = subjectB64 ? decodeBrief(subjectB64) : 'Anschreiben';
+      const mailtoUrl = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(briefText)}`;
+      window.open(mailtoUrl, '_blank');
+    }
+  }, []);
+
   const handleKeyDown = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
@@ -600,7 +648,7 @@ export default function VertriebsAssistent() {
           onClick={() => setIsOpen(true)}
           style={{ background: gradient }}
           className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full shadow-lg flex items-center justify-center text-white hover:scale-105 transition-transform"
-          title="KI-Vertriebsassistent öffnen"
+          title={t('kiVertriebsassistent')}
         >
           <MessageCircle size={24} />
         </button>
@@ -619,7 +667,7 @@ export default function VertriebsAssistent() {
           >
             <div className="flex items-center gap-2 text-white">
               <Bot size={20} />
-              <span className="text-sm font-semibold">KI-Vertriebsassistent</span>
+              <span className="text-sm font-semibold">{t('kiVertriebsassistent')}</span>
             </div>
             <button
               onClick={() => setIsOpen(false)}
@@ -630,7 +678,7 @@ export default function VertriebsAssistent() {
           </div>
 
           {/* Messages area */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-3">
+          <div className="flex-1 overflow-y-auto p-4 space-y-3" onClick={handleMessagesClick}>
             {/* Welcome message */}
             {messages.length === 0 && (
               <div className="space-y-4">

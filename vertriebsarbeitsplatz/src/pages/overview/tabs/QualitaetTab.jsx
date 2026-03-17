@@ -3,25 +3,27 @@ import Card from '../../../components/ui/Card';
 import LineChartComponent from '../../../components/charts/LineChartComponent';
 import { CheckCircle, XCircle, Clock } from 'lucide-react';
 import { useMode } from '../../../hooks/useMode';
+import useTranslation from '../../../i18n/useTranslation';
 import { QUALITAET_DATA } from '../../../data';
-
-const DEFAULT_KPI_CONFIG = [
-  { id: 'gesamtNote', label: 'Gesamtnote', format: 'num', icon: 'Award' },
-  { id: 'complianceQuote', label: 'Compliance-Quote', format: 'pct', icon: 'Shield' },
-  { id: 'schulungStunden', label: 'Schulungsstd. YTD', format: 'num', icon: 'BookOpen' },
-  { id: 'beschwerdeQuote', label: 'Beschwerde-Quote', format: 'pct', icon: 'MessageCircle' },
-];
 
 export default function QualitaetTab() {
   const { modeId } = useMode();
+  const { t } = useTranslation();
+
+  const DEFAULT_KPI_CONFIG = [
+    { id: 'gesamtNote', label: t('gesamtnote'), format: 'num', icon: 'Award' },
+    { id: 'complianceQuote', label: t('complianceQuote'), format: 'pct', icon: 'Shield' },
+    { id: 'schulungStunden', label: t('schulungStunden'), format: 'num', icon: 'BookOpen' },
+    { id: 'beschwerdeQuote', label: t('beschwerdeQuote'), format: 'pct', icon: 'MessageCircle' },
+  ];
   const data = QUALITAET_DATA[modeId] || QUALITAET_DATA.versicherung;
   const kpiConfig = data.kpiConfig || DEFAULT_KPI_CONFIG;
 
-  const trendLabel = data.trendLabel || 'Qualitätstrend (Gesamtnote)';
+  const trendLabel = data.trendLabel || t('qualitaetstrend');
   const trendHint = modeId === 'versicherung'
-    ? 'Niedrigere Note = besser (Schulnoten-System)'
+    ? t('niedrigereNoteBesser')
     : modeId === 'vermoegensverwaltung'
-    ? 'Höher = besser'
+    ? t('hoeherBesser')
     : null;
 
   return (
@@ -38,7 +40,7 @@ export default function QualitaetTab() {
         </Card>
 
         <Card>
-          <h3 className="font-semibold text-slate-800 mb-4">Compliance-Status</h3>
+          <h3 className="font-semibold text-slate-800 mb-4">{t('complianceStatusLabel')}</h3>
           <div className="space-y-3">
             {data.compliance.map((item, i) => (
               <div key={i} className="flex items-center justify-between py-1">
@@ -57,7 +59,7 @@ export default function QualitaetTab() {
       </div>
 
       <Card>
-        <h3 className="font-semibold text-slate-800 mb-4">Schulungen & Weiterbildung</h3>
+        <h3 className="font-semibold text-slate-800 mb-4">{t('schulungenWeiterbildung')}</h3>
         <div className="space-y-3">
           {data.schulungen.map((s, i) => (
             <div key={i} className="flex items-center justify-between py-2 border-b border-slate-100 last:border-0">

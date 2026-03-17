@@ -7,6 +7,7 @@ import {
   CheckCircle, Star, Sparkles, Activity,
 } from 'lucide-react';
 import { clsx } from 'clsx';
+import useTranslation from '../../../i18n/useTranslation';
 
 // ─── Date formatter ───
 function fmtDate(d) {
@@ -51,7 +52,7 @@ function ActivityIcon({ typ }) {
 }
 
 // ─── Match level badge ───
-function MatchBadge({ level }) {
+function MatchBadge({ level, t }) {
   return (
     <span className={clsx(
       'inline-flex items-center gap-0.5 text-[10px] font-medium px-2 py-0.5 rounded-full border',
@@ -60,7 +61,7 @@ function MatchBadge({ level }) {
       level === 'niedrig' && 'bg-slate-50 text-slate-500 border-slate-200',
     )}>
       <Star size={10} />
-      {level === 'hoch' ? 'Hoch' : level === 'mittel' ? 'Mittel' : 'Niedrig'}
+      {level === 'hoch' ? (t ? t('hoch') : 'Hoch') : level === 'mittel' ? (t ? t('mittel') : 'Mittel') : (t ? t('niedrig') : 'Niedrig')}
     </span>
   );
 }
@@ -80,6 +81,7 @@ function Section({ title, icon: Icon, children }) {
 
 // ─── Main component ───
 export default function EngagementTab() {
+  const { t } = useTranslation();
   const { selectedKundeId, modeId } = useMode();
   const kunden = KUNDEN_BY_MODE[modeId] || [];
   const kunde = kunden.find(k => k.id === selectedKundeId);
@@ -88,7 +90,7 @@ export default function EngagementTab() {
   if (!data || !kunde) {
     return (
       <div className="bg-white rounded-2xl border border-slate-200 p-8 text-center text-slate-400">
-        Keine Engagement-Daten fuer diesen Mandanten vorhanden.
+        {t('keineEngagementDaten')}
       </div>
     );
   }
@@ -102,7 +104,7 @@ export default function EngagementTab() {
   return (
     <div className="space-y-4">
       {/* 1. LinkedIn-Aktivität */}
-      <Section title="LinkedIn-Aktivität" icon={Users}>
+      <Section title={t('linkedInAktivitaet')} icon={Users}>
         {li.url || li.profilUrl ? (
           <div className="space-y-3">
             <div className="flex items-center justify-between">
@@ -114,10 +116,10 @@ export default function EngagementTab() {
                     rel="noopener noreferrer"
                     className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-800"
                   >
-                    <ExternalLink size={13} /> Profil ansehen
+                    <ExternalLink size={13} /> {t('profilAnsehen')}
                   </a>
                 )}
-                <span className="text-sm text-slate-500">{li.kontakte} Kontakte</span>
+                <span className="text-sm text-slate-500">{li.kontakte} {t('kontakte')}</span>
               </div>
               <span className={clsx(
                 'text-xs font-medium px-2 py-0.5 rounded-full',
@@ -125,7 +127,7 @@ export default function EngagementTab() {
                 li.aktivitaet === 'mittel' ? 'bg-amber-50 text-amber-700' :
                 'bg-slate-100 text-slate-500',
               )}>
-                Aktivität: {li.aktivitaet || 'Keine'}
+                {t('aktivitaet')} {li.aktivitaet || 'Keine'}
               </span>
             </div>
 
@@ -154,7 +156,7 @@ export default function EngagementTab() {
             )}
           </div>
         ) : (
-          <div className="text-sm text-slate-400">Kein LinkedIn-Profil hinterlegt.</div>
+          <div className="text-sm text-slate-400">{t('keinLinkedin')}</div>
         )}
       </Section>
 
@@ -163,20 +165,20 @@ export default function EngagementTab() {
         <div className="grid grid-cols-2 gap-6">
           {/* Website */}
           <div>
-            <div className="text-xs text-slate-400 font-medium uppercase tracking-wider mb-2">Website-Besuche (90d)</div>
+            <div className="text-xs text-slate-400 font-medium uppercase tracking-wider mb-2">{t('websiteBesuche')}</div>
             <div className="flex items-center gap-4 mb-3">
               <div className="text-center">
                 <div className="text-2xl font-bold text-slate-800">{ws.besuche90Tage || 0}</div>
-                <div className="text-[10px] text-slate-400">Besuche</div>
+                <div className="text-[10px] text-slate-400">{t('besuche')}</div>
               </div>
               <div className="text-center">
                 <div className="text-lg font-semibold text-slate-700">{ws.avgVerweildauer || '-'}</div>
-                <div className="text-[10px] text-slate-400">Avg. Verweildauer</div>
+                <div className="text-[10px] text-slate-400">{t('avgVerweildauer')}</div>
               </div>
             </div>
             {ws.topSeiten && ws.topSeiten.length > 0 && (
               <div className="space-y-1">
-                <div className="text-xs text-slate-400 mb-1">Top-Seiten</div>
+                <div className="text-xs text-slate-400 mb-1">{t('topSeiten')}</div>
                 {ws.topSeiten.map((s, i) => (
                   <div key={i} className="flex items-center justify-between py-1 px-2 bg-slate-50 rounded text-xs">
                     <span className="text-slate-600 truncate flex-1 mr-2">
@@ -199,7 +201,7 @@ export default function EngagementTab() {
 
           {/* Newsletter */}
           <div>
-            <div className="text-xs text-slate-400 font-medium uppercase tracking-wider mb-2">Newsletter</div>
+            <div className="text-xs text-slate-400 font-medium uppercase tracking-wider mb-2">{t('newsletter')}</div>
             <div className="flex items-center gap-4 mb-3">
               <div className="text-center">
                 <div className="text-2xl font-bold text-slate-800">
@@ -210,12 +212,12 @@ export default function EngagementTab() {
                     : '-'
                   }
                 </div>
-                <div className="text-[10px] text-slate-400">Öffnungsrate</div>
+                <div className="text-[10px] text-slate-400">{t('oeffnungsrate')}</div>
               </div>
             </div>
             {nl.klicks && nl.klicks.length > 0 && (
               <div className="space-y-1">
-                <div className="text-xs text-slate-400 mb-1">Click-History</div>
+                <div className="text-xs text-slate-400 mb-1">{t('clickHistory')}</div>
                 {nl.klicks.map((k, i) => (
                   <div key={i} className="flex items-center justify-between py-1 px-2 bg-slate-50 rounded text-xs">
                     <div className="flex items-center gap-1.5 flex-1 min-w-0">
@@ -243,11 +245,11 @@ export default function EngagementTab() {
       </Section>
 
       {/* 3. Events & Veranstaltungen */}
-      <Section title="Events & Veranstaltungen" icon={Calendar}>
+      <Section title={t('eventsVorschlaege')} icon={Calendar}>
         <div className="grid grid-cols-2 gap-6">
           {/* Vergangene */}
           <div>
-            <div className="text-xs text-slate-400 font-medium uppercase tracking-wider mb-2">Vergangene Events</div>
+            <div className="text-xs text-slate-400 font-medium uppercase tracking-wider mb-2">{t('vergangeneEvents')}</div>
             {ev.vergangene && ev.vergangene.length > 0 ? (
               <div className="space-y-1.5">
                 {ev.vergangene.map((e, i) => (
@@ -260,7 +262,7 @@ export default function EngagementTab() {
                       <span className="text-xs text-slate-400">{fmtDate(e.datum)}</span>
                       {(e.status === 'teilgenommen' || e.teilgenommen) && (
                         <span className="inline-flex items-center gap-0.5 text-[10px] font-medium text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded-full border border-emerald-200">
-                          <CheckCircle size={10} /> Teilgenommen
+                          <CheckCircle size={10} /> {t('teilgenommen')}
                         </span>
                       )}
                     </div>
@@ -268,13 +270,13 @@ export default function EngagementTab() {
                 ))}
               </div>
             ) : (
-              <div className="text-sm text-slate-400">Keine vergangenen Events.</div>
+              <div className="text-sm text-slate-400">{t('keineVergangeneEvents')}</div>
             )}
           </div>
 
           {/* Empfohlene */}
           <div>
-            <div className="text-xs text-slate-400 font-medium uppercase tracking-wider mb-2">Empfohlene Events</div>
+            <div className="text-xs text-slate-400 font-medium uppercase tracking-wider mb-2">{t('empfohleneEvents')}</div>
             {ev.empfohlene && ev.empfohlene.length > 0 ? (
               <div className="space-y-1.5">
                 {ev.empfohlene.map((e, i) => (
@@ -290,10 +292,10 @@ export default function EngagementTab() {
                     </div>
                     <div className="flex items-center gap-2 ml-2 shrink-0">
                       <span className="text-xs text-slate-400">{fmtDate(e.datum)}</span>
-                      <MatchBadge level={e.match} />
+                      <MatchBadge level={e.match} t={t} />
                       {(e.match === 'hoch' && e.aktion === 'einladen') && (
                         <button className="text-[10px] font-medium text-white bg-emerald-500 hover:bg-emerald-600 px-2 py-0.5 rounded-full transition-colors">
-                          Einladen!
+                          {t('einladen')}
                         </button>
                       )}
                     </div>
@@ -301,14 +303,14 @@ export default function EngagementTab() {
                 ))}
               </div>
             ) : (
-              <div className="text-sm text-slate-400">Keine empfohlenen Events.</div>
+              <div className="text-sm text-slate-400">{t('keineEmpfohleneEvents')}</div>
             )}
           </div>
         </div>
       </Section>
 
       {/* 4. Presse & Oeffentliche Erwaehnungen */}
-      <Section title="Presse & Oeffentliche Erwaehnungen" icon={Newspaper}>
+      <Section title={t('presseErwaehnung')} icon={Newspaper}>
         {pr.length > 0 ? (
           <div className="space-y-2">
             {pr.map((p, i) => (
@@ -329,7 +331,7 @@ export default function EngagementTab() {
             ))}
           </div>
         ) : (
-          <div className="text-sm text-slate-400">Keine Presseerwahnungen vorhanden.</div>
+          <div className="text-sm text-slate-400">{t('keinePresse')}</div>
         )}
       </Section>
     </div>

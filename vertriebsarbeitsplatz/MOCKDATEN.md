@@ -95,7 +95,7 @@ Jeder Kunde durchläuft diese Schritte:
 
 | ID | Name | Alter | Beruf | Netto/mtl. | AuM-Segment |
 |---|---|---|---|---|---|
-| W1 | Dr. Heinrich von Trott | 62 | Unternehmer Maschinenbau (3. Gen.) | 25.000€ | FairValue (>5M) |
+| W1 | Tim Keller | 62 | Unternehmer Maschinenbau (3. Gen.) | 25.000€ | FairValue (>5M) |
 | W2 | Familie Lindenberg | 51 | SaaS-Exit 2024 (8M netto) | 15.000€ | FairValue |
 | W3 | Stiftung Weber | — | Bildungsstiftung (seit 2008) | 0€ | Stiftungs-Spezialmandat |
 | W4 | Prof. Dr. Hartmann | 56 | Chefarzt Kardiologie + Privatpraxis | 18.000€ | FairValue |

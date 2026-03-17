@@ -4,43 +4,45 @@ import DataTable from '../../../components/ui/DataTable';
 import VertragDetailModal from '../../../components/ui/VertragDetailModal';
 import { SparteBadge, StatusBadge } from '../../../components/ui/Badge';
 import { useMode } from '../../../hooks/useMode';
+import useTranslation from '../../../i18n/useTranslation';
 import { KUNDEN_BY_MODE, BESTAND_DATA } from '../../../data';
 import { formatEur } from '../../../utils/formatters';
 
-const BESTAND_KPI_CONFIG = {
-  versicherung: [
-    { id: 'vertraege', label: 'Verträge', format: 'num', icon: 'FileText' },
-    { id: 'praemienvolumen', label: 'Prämienvolumen', format: 'eur', icon: 'Briefcase' },
-    { id: 'durchschnittspraemie', label: '\u00d8 Prämie/Kunde', format: 'eur', icon: 'BarChart3' },
-    { id: 'vertragsdichte', label: '\u00d8 Verträge/Kunde', format: 'num', icon: 'Layers' },
-  ],
-  banking: [
-    { id: 'vertraege', label: 'Produktanzahl', format: 'num', icon: 'FileText' },
-    { id: 'praemienvolumen', label: 'Kreditvolumen', format: 'eur', icon: 'Landmark' },
-    { id: 'durchschnittspraemie', label: 'Einlagenvolumen', format: 'eur', icon: 'PiggyBank' },
-    { id: 'vertragsdichte', label: 'Produkte/Kunde (PPK)', format: 'num', icon: 'Layers' },
-  ],
-  vermoegensverwaltung: [
-    { id: 'vertraege', label: 'Mandate', format: 'num', icon: 'FileText' },
-    { id: 'praemienvolumen', label: 'AuM Gesamt', format: 'eur', icon: 'Briefcase' },
-    { id: 'durchschnittspraemie', label: '\u00d8 AuM/Mandat', format: 'eur', icon: 'BarChart3' },
-    { id: 'vertragsdichte', label: '\u00d8 Mandate/Berater', format: 'num', icon: 'Layers' },
-  ],
-};
-
-const COLUMNS = [
-  { id: 'typ', label: 'Typ' },
-  { id: 'sparte', label: 'Sparte', render: (v) => v ? <SparteBadge sparte={v} /> : '-' },
-  { id: 'produkt', label: 'Produkt' },
-  { id: 'details', label: 'Details' },
-  { id: 'praemie', label: 'Prämie/J.', render: (v) => <span className="font-mono">{formatEur(v)}</span> },
-  { id: 'seit', label: 'Seit' },
-  { id: 'status', label: 'Status', render: (v) => <StatusBadge status={v} /> },
-];
-
 export default function BestandTab() {
   const { modeId } = useMode();
+  const { t } = useTranslation();
   const [selectedVertrag, setSelectedVertrag] = useState(null);
+
+  const BESTAND_KPI_CONFIG = {
+    versicherung: [
+      { id: 'vertraege', label: t('vertraege'), format: 'num', icon: 'FileText' },
+      { id: 'praemienvolumen', label: t('praemienvolumen'), format: 'eur', icon: 'Briefcase' },
+      { id: 'durchschnittspraemie', label: t('durchschnittspraemie'), format: 'eur', icon: 'BarChart3' },
+      { id: 'vertragsdichte', label: t('vertragsdichte'), format: 'num', icon: 'Layers' },
+    ],
+    banking: [
+      { id: 'vertraege', label: t('produktanzahl'), format: 'num', icon: 'FileText' },
+      { id: 'praemienvolumen', label: t('kreditvolumen'), format: 'eur', icon: 'Landmark' },
+      { id: 'durchschnittspraemie', label: t('einlagenvolumen'), format: 'eur', icon: 'PiggyBank' },
+      { id: 'vertragsdichte', label: t('produkteProKunde'), format: 'num', icon: 'Layers' },
+    ],
+    vermoegensverwaltung: [
+      { id: 'vertraege', label: t('mandate'), format: 'num', icon: 'FileText' },
+      { id: 'praemienvolumen', label: t('aumGesamt'), format: 'eur', icon: 'Briefcase' },
+      { id: 'durchschnittspraemie', label: t('avgAumMandat2'), format: 'eur', icon: 'BarChart3' },
+      { id: 'vertragsdichte', label: t('mandateProBerater'), format: 'num', icon: 'Layers' },
+    ],
+  };
+
+  const COLUMNS = [
+    { id: 'typ', label: t('typ') },
+    { id: 'sparte', label: t('sparte'), render: (v) => v ? <SparteBadge sparte={v} /> : '-' },
+    { id: 'produkt', label: t('produkt') },
+    { id: 'details', label: t('details') },
+    { id: 'praemie', label: t('praemieJ'), render: (v) => <span className="font-mono">{formatEur(v)}</span> },
+    { id: 'seit', label: 'Seit' },
+    { id: 'status', label: t('status'), render: (v) => <StatusBadge status={v} /> },
+  ];
   const kunden = KUNDEN_BY_MODE[modeId] || [];
   const data = BESTAND_DATA[modeId] || BESTAND_DATA.versicherung;
   const kpiConfig = BESTAND_KPI_CONFIG[modeId] || BESTAND_KPI_CONFIG.versicherung;
@@ -80,7 +82,7 @@ export default function BestandTab() {
               </div>
               <span>{name}</span>
               <span className="text-slate-400">{rows[0]?.kundeId}</span>
-              <span className="text-slate-400">&middot; {rows.length} {modeId === 'vermoegensverwaltung' ? 'Positionen' : 'Verträge'} &middot; {formatEur(total)}</span>
+              <span className="text-slate-400">&middot; {rows.length} {modeId === 'vermoegensverwaltung' ? t('positionenLabel') : t('vertraege')} &middot; {formatEur(total)}</span>
             </div>
           );
         }}

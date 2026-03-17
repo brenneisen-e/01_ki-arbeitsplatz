@@ -885,7 +885,7 @@ Sparten: Leben, Kranken, Schaden/Unfall, Kfz, Haftpflicht, Hausrat, Wohngebaeude
 **Vermoegenskunden** (`bankKundenVW`, 6 Eintraege, PBB001-PBB006):
 ```
 {
-  name: "Dr. Heinrich von Trott",
+  name: "Tim Keller",
   id: "PBB001",
   ort: "Bad Nauheim",
   aum: 2800000,         // Assets under Management
@@ -1971,7 +1971,7 @@ VV-02/VV-10 sind als **eigenstaendiges Modul** implementiert (nicht als View-Mod
 
 | Mandant | Segment | AuM | Mandatstyp | Status |
 |---|---|---|---|---|
-| Dr. Heinrich von Trott | FairValue | 12,5M € | Individuelle VV | ok (Drift bei Aktien) |
+| Tim Keller | FairValue | 12,5M € | Individuelle VV | ok (Drift bei Aktien) |
 | Familie Lindenberg | SmartValue | 2,1M € | VV + PE | ok |
 | Stiftung Weber | Stiftung | 8,3M € | Spezialmandat | drift |
 | Winterberg GmbH | Institutionell | 25M € | Spezialmandat | ok |

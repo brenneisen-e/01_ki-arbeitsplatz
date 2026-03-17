@@ -332,7 +332,7 @@ function LeadRow({ lead, kunde, isExpanded, onToggle, t, stadiumLabels, quellenL
       {isExpanded && (
         <tr className="bg-slate-50/80">
           <td colSpan={7} className="px-6 py-4">
-            <div className="max-w-4xl space-y-4">
+            <div className="max-w-6xl space-y-4">
               {/* KI-Beschreibung */}
               {lead.kiDescription && (
                 <div className="bg-gradient-to-r from-indigo-50 to-purple-50 border border-indigo-100 rounded-xl px-4 py-3">
@@ -340,7 +340,7 @@ function LeadRow({ lead, kunde, isExpanded, onToggle, t, stadiumLabels, quellenL
                     <Sparkles size={14} className="text-indigo-500" />
                     <span className="text-xs font-semibold text-indigo-600">{t('kiVertriebsassistent')}</span>
                   </div>
-                  <p className="text-xs text-slate-700 leading-relaxed">{lead.kiDescription}</p>
+                  <p className="text-sm text-slate-700 leading-relaxed">{lead.kiDescription}</p>
                 </div>
               )}
 

@@ -7,48 +7,50 @@ import LogoImg from '../../../components/ui/LogoImg';
 import VertragDetailModal from '../../../components/ui/VertragDetailModal';
 import { SparteBadge, StatusBadge } from '../../../components/ui/Badge';
 import { useMode } from '../../../hooks/useMode';
+import useTranslation from '../../../i18n/useTranslation';
 import { NEUGESCHAEFT_DATA } from '../../../data';
 import { formatEur } from '../../../utils/formatters';
 
-const NG_KPI_CONFIG = {
-  versicherung: [
-    { id: 'antraege', label: 'Anträge', format: 'num', icon: 'FileText' },
-    { id: 'policiert', label: 'Policiertes NG', format: 'eur', icon: 'TrendingUp' },
-    { id: 'ape', label: 'APE', format: 'eur', icon: 'BarChart3' },
-    { id: 'abschlussquote', label: 'Abschlussquote', format: 'pct', icon: 'Target' },
-  ],
-  banking: [
-    { id: 'antraege', label: 'Abschlüsse YTD', format: 'num', icon: 'FileText' },
-    { id: 'policiert', label: 'Volumen Neugeschäft', format: 'eur', icon: 'TrendingUp' },
-    { id: 'ape', label: 'DB-Beitrag NG', format: 'eur', icon: 'BarChart3' },
-    { id: 'abschlussquote', label: 'Abschlussquote', format: 'pct', icon: 'Target' },
-  ],
-  vermoegensverwaltung: [
-    { id: 'antraege', label: 'Neue Mandate', format: 'num', icon: 'FileText' },
-    { id: 'policiert', label: 'NNM Volumen', format: 'eur', icon: 'TrendingUp' },
-    { id: 'ape', label: 'AuM Zufluss', format: 'eur', icon: 'BarChart3' },
-    { id: 'abschlussquote', label: 'Abschlussquote', format: 'pct', icon: 'Target' },
-  ],
-};
-
-const COLUMNS = [
-  { id: 'id', label: 'Vertragsnr.', width: '120px' },
-  { id: 'sparte', label: 'Sparte', render: (v) => <SparteBadge sparte={v} /> },
-  { id: 'produkt', label: 'Produkt' },
-  { id: 'versicherer', label: 'Versicherer', render: (v) => (
-    <div className="flex items-center gap-2">
-      <LogoImg name={v} size={18} />
-      <span>{v}</span>
-    </div>
-  )},
-  { id: 'beitrag', label: 'Beitrag', render: (v, row) => `${formatEur(v)}/${row.beitragsart}` },
-  { id: 'status', label: 'Status', render: (v) => <StatusBadge status={v} /> },
-  { id: 'datum', label: 'Datum' },
-];
-
 export default function NeugeschaeftTab() {
   const { modeId } = useMode();
+  const { t } = useTranslation();
   const [selectedVertrag, setSelectedVertrag] = useState(null);
+
+  const NG_KPI_CONFIG = {
+    versicherung: [
+      { id: 'antraege', label: t('antraege'), format: 'num', icon: 'FileText' },
+      { id: 'policiert', label: t('policiertesNg'), format: 'eur', icon: 'TrendingUp' },
+      { id: 'ape', label: t('apeLabel'), format: 'eur', icon: 'BarChart3' },
+      { id: 'abschlussquote', label: t('abschlussquote'), format: 'pct', icon: 'Target' },
+    ],
+    banking: [
+      { id: 'antraege', label: t('abschluesseYtd'), format: 'num', icon: 'FileText' },
+      { id: 'policiert', label: t('volumenNeugeschaeft'), format: 'eur', icon: 'TrendingUp' },
+      { id: 'ape', label: t('dbBeitragNg'), format: 'eur', icon: 'BarChart3' },
+      { id: 'abschlussquote', label: t('abschlussquote'), format: 'pct', icon: 'Target' },
+    ],
+    vermoegensverwaltung: [
+      { id: 'antraege', label: t('neueMandate'), format: 'num', icon: 'FileText' },
+      { id: 'policiert', label: t('nnmVolumen'), format: 'eur', icon: 'TrendingUp' },
+      { id: 'ape', label: t('aumZufluss'), format: 'eur', icon: 'BarChart3' },
+      { id: 'abschlussquote', label: t('abschlussquote'), format: 'pct', icon: 'Target' },
+    ],
+  };
+
+  const COLUMNS = [
+    { id: 'id', label: 'Vertragsnr.', width: '120px' },
+    { id: 'sparte', label: t('sparte'), render: (v) => <SparteBadge sparte={v} /> },
+    { id: 'produkt', label: t('produkt') },
+    { id: 'versicherer', label: 'Versicherer', render: (v) => (
+      <div className="flex items-center gap-2">
+        <LogoImg name={v} size={18} />
+        <span>{v}</span>
+      </div>
+    )},
+    { id: 'beitrag', label: 'Beitrag', render: (v, row) => `${formatEur(v)}/${row.beitragsart}` },
+    { id: 'status', label: t('status'), render: (v) => <StatusBadge status={v} /> },
+    { id: 'datum', label: 'Datum' },
+  ];
   const data = NEUGESCHAEFT_DATA[modeId] || NEUGESCHAEFT_DATA.versicherung;
 
   return (
@@ -61,12 +63,12 @@ export default function NeugeschaeftTab() {
       <div className="grid grid-cols-2 gap-4">
         {/* Donut */}
         <Card>
-          <h3 className="font-semibold text-slate-800 mb-4">Spartenverteilung Neugeschäft</h3>
+          <h3 className="font-semibold text-slate-800 mb-4">{t('spartenverteilungNeugeschaeft')}</h3>
           <DonutChart
             data={data.spartenVerteilung}
             height={220}
             centerValue={data.spartenVerteilung.reduce((s, d) => s + d.value, 0)}
-            centerLabel="Gesamt"
+            centerLabel={t('gesamt')}
             colors={data.spartenVerteilung.map(d => d.color)}
           />
           <div className="mt-4 space-y-2">
@@ -84,7 +86,7 @@ export default function NeugeschaeftTab() {
 
         {/* Top 5 */}
         <Card>
-          <h3 className="font-semibold text-slate-800 mb-4">Top-5 Kunden Neugeschäft</h3>
+          <h3 className="font-semibold text-slate-800 mb-4">{t('top5KundenNeugeschaeft')}</h3>
           <div className="space-y-3">
             {data.top5.map((k, i) => (
               <div key={i} className="flex items-center justify-between py-2 border-b border-slate-100 last:border-0">
@@ -112,7 +114,7 @@ export default function NeugeschaeftTab() {
             </div>
             <span>{kunde}</span>
             <span className="text-slate-400">{rows[0]?.kundeId}</span>
-            <span className="text-slate-400">&middot; {rows.length} Verträge</span>
+            <span className="text-slate-400">&middot; {rows.length} {t('vertraege')}</span>
           </div>
         )}
       />

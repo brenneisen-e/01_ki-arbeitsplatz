@@ -8,6 +8,7 @@ import { TrendingUp, TrendingDown, AlertTriangle, CheckCircle, MessageSquare, Le
 import { clsx } from 'clsx';
 import Card from '../../../components/ui/Card';
 import { useMode } from '../../../hooks/useMode';
+import useTranslation from '../../../i18n/useTranslation';
 import { VV_PERFORMANCE } from '../../../data/vvDataProvider';
 import { KUNDEN_BY_MODE } from '../../../data/index';
 import { formatEur } from '../../../utils/formatters';
@@ -30,14 +31,6 @@ const ALLOC_COLORS = {
   alternative: C.slate,
   immofonds: C.slateLight,
   cash: C.slateLighter,
-};
-
-const ALLOC_LABELS = {
-  aktien: 'Aktien',
-  anleihen: 'Anleihen',
-  alternative: 'Alternative',
-  immofonds: 'Immofonds',
-  cash: 'Cash',
 };
 
 const REGION_COLORS = [C.primary, C.gold, C.slate, C.slateLight, C.slateLighter];
@@ -180,8 +173,17 @@ function deriveKpis(monthly, kundePortfolio) {
 // ═════════════════════════════════════════════════════════════════════════════
 export default function PerformanceTab({ kunde }) {
   const { config } = useMode();
+  const { t } = useTranslation();
   const [timeRange, setTimeRange] = useState('1j');
   const [showAbsolute, setShowAbsolute] = useState(true);
+
+  const ALLOC_LABELS = {
+    aktien: t('aktien'),
+    anleihen: t('anleihen'),
+    alternative: t('alternative'),
+    immofonds: t('immofonds'),
+    cash: t('cash'),
+  };
 
   const perfData = VV_PERFORMANCE[kunde?.id];
 
@@ -197,10 +199,10 @@ export default function PerformanceTab({ kunde }) {
             <div className="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center mb-4">
               <TrendingUp className="w-8 h-8 text-slate-400" />
             </div>
-            <h3 className="font-semibold text-slate-700 mb-1">Performance-Daten nicht verfügbar</h3>
+            <h3 className="font-semibold text-slate-700 mb-1">{t('performanceDatenNichtVerfuegbar')}</h3>
             <p className="text-sm text-slate-400 max-w-md">
-              Für {kunde?.name || 'diesen Mandanten'} liegen noch keine Performance-Daten vor.
-              Die Daten werden nach dem ersten vollständigen Berichtsmonat angezeigt.
+              {t('performanceDatenFehlen', { name: kunde?.name || 'diesen Mandanten' })}
+              {' '}{t('performanceDatenHinweis')}
             </p>
           </div>
         </Card>
@@ -342,7 +344,7 @@ export default function PerformanceTab({ kunde }) {
               showAbsolute ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-700',
             )}
           >
-            Absolut (€)
+            {t('absolut')}
           </button>
           <button
             onClick={() => setShowAbsolute(false)}
@@ -351,30 +353,30 @@ export default function PerformanceTab({ kunde }) {
               !showAbsolute ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-700',
             )}
           >
-            Prozentual (%)
+            {t('prozentual')}
           </button>
         </div>
       </div>
       {showAbsolute ? (
         <div className="grid grid-cols-4 gap-4">
-          <KpiBox label="Portfolio-Wert" value={kunde?.aum ? fmtNum(Math.round(kunde.aum), 0) : '–'} suffix=" EUR" />
-          <KpiBox label="Performance YTD" value={kunde?.aum && kpis.perfYtd != null ? fmtNum(Math.round(kunde.aum * kpis.perfYtd / 100), 0) : '–'} suffix=" EUR" />
-          <KpiBox label="vs. Benchmark" value={kunde?.aum && kpis.vsBenchmark != null ? fmtNum(Math.round(kunde.aum * kpis.vsBenchmark / 100), 0) : '–'} suffix=" EUR" />
-          <KpiBox label="Volatilität (abs.)" value={kunde?.aum && risiko?.volatilitaet != null ? fmtNum(Math.round(kunde.aum * risiko.volatilitaet / 100), 0) : '–'} suffix=" EUR" />
+          <KpiBox label={t('portfolioWert')} value={kunde?.aum ? fmtNum(Math.round(kunde.aum), 0) : '–'} suffix=" EUR" />
+          <KpiBox label={t('performanceYtd')} value={kunde?.aum && kpis.perfYtd != null ? fmtNum(Math.round(kunde.aum * kpis.perfYtd / 100), 0) : '–'} suffix=" EUR" />
+          <KpiBox label={t('vsBenchmark')} value={kunde?.aum && kpis.vsBenchmark != null ? fmtNum(Math.round(kunde.aum * kpis.vsBenchmark / 100), 0) : '–'} suffix=" EUR" />
+          <KpiBox label={t('volatilitaetAbs')} value={kunde?.aum && risiko?.volatilitaet != null ? fmtNum(Math.round(kunde.aum * risiko.volatilitaet / 100), 0) : '–'} suffix=" EUR" />
         </div>
       ) : (
         <div className="grid grid-cols-4 gap-4">
-          <KpiBox label="Performance YTD" value={kpis.perfYtd} suffix="%" />
-          <KpiBox label="vs. Benchmark" value={kpis.vsBenchmark} suffix=" pp" />
-          <KpiBox label="Performance 3J (p.a.)" value={kpis.perf3j} suffix="%" />
-          <KpiBox label="Volatilität" value={risiko?.volatilitaet} suffix="%" />
+          <KpiBox label={t('performanceYtd')} value={kpis.perfYtd} suffix="%" />
+          <KpiBox label={t('vsBenchmark')} value={kpis.vsBenchmark} suffix=" pp" />
+          <KpiBox label={t('performance3jPa')} value={kpis.perf3j} suffix="%" />
+          <KpiBox label={t('volatilitaet')} value={risiko?.volatilitaet} suffix="%" />
         </div>
       )}
 
       {/* ── 2. Performance vs. Benchmark (Line Chart) ── */}
       <Card>
         <div className="flex items-center justify-between mb-4">
-          <SectionTitle sub={`Portfolio vs. Benchmark (${benchmarkName})`}>Performance-Verlauf</SectionTitle>
+          <SectionTitle sub={`${t('portfolioVsBenchmark')} (${benchmarkName})`}>{t('performanceVerlauf')}</SectionTitle>
           <div className="flex gap-1">
             {rangeKeys.map(rk => {
               const hasSeries = (timeRanges[rk] || []).length > 0;
@@ -436,7 +438,7 @@ export default function PerformanceTab({ kunde }) {
             {lastPortfolioValue && (
               <div className="flex justify-end mt-2">
                 <div className="bg-[#1a365d] text-white rounded-lg px-4 py-2">
-                  <span className="text-xs text-slate-300">Aktueller Portfolio-Wert</span>
+                  <span className="text-xs text-slate-300">{t('aktuellPortfolioWert')}</span>
                   <p className="font-mono font-bold text-lg">{fmtNum(lastPortfolioValue, 0)} EUR</p>
                 </div>
               </div>
@@ -444,7 +446,7 @@ export default function PerformanceTab({ kunde }) {
           </>
         ) : (
           <div className="flex items-center justify-center h-48 text-sm text-slate-400">
-            Keine Daten für diesen Zeitraum verfügbar
+            {t('keineDatenZeitraum')}
           </div>
         )}
       </Card>
@@ -454,7 +456,7 @@ export default function PerformanceTab({ kunde }) {
 
         {/* ── 3. Asset Allocation Donut ── */}
         <Card>
-          <SectionTitle sub="Ist- vs. Soll-Allokation">Asset Allocation</SectionTitle>
+          <SectionTitle sub={t('istVsSoll')}>{t('assetAllocation')}</SectionTitle>
           <div className="flex items-start gap-6">
             <div className="flex flex-col items-center gap-1">
               <MiniDonut data={allocData} size={160} centerLabel="Ist" />
@@ -493,7 +495,7 @@ export default function PerformanceTab({ kunde }) {
 
         {/* ── 4. Sektoren (Horizontal Bar) ── */}
         <Card>
-          <SectionTitle sub="Top-Sektoren nach Gewichtung">Sektoren</SectionTitle>
+          <SectionTitle sub={t('topSektoren')}>{t('sektoren')}</SectionTitle>
           <div className="space-y-2.5">
             {(sektoren || []).map((s) => (
               <div key={s.name}>
@@ -518,9 +520,9 @@ export default function PerformanceTab({ kunde }) {
 
         {/* ── 5. Regional Allocation ── */}
         <Card>
-          <SectionTitle sub="Geographische Verteilung">Regionen</SectionTitle>
+          <SectionTitle sub={t('geographischeVerteilung')}>{t('regionen')}</SectionTitle>
           <div className="flex items-start gap-6">
-            <MiniDonut data={regionData} size={160} centerLabel="Regionen" />
+            <MiniDonut data={regionData} size={160} centerLabel={t('regionen')} />
             <div className="flex-1 mt-2">
               <DonutLegend data={regionData} />
             </div>
@@ -529,25 +531,25 @@ export default function PerformanceTab({ kunde }) {
 
         {/* ── 6. Risk Profile ── */}
         <Card>
-          <SectionTitle sub="Risikokennzahlen des Portfolios">Risikoprofil</SectionTitle>
+          <SectionTitle sub={t('risikokennzahlen')}>{t('risikoprofil')}</SectionTitle>
           <div className="grid grid-cols-2 gap-3">
             <div className="bg-slate-50 rounded-lg p-3">
-              <p className="text-[10px] text-slate-400 uppercase tracking-wide">Volatilität</p>
+              <p className="text-[10px] text-slate-400 uppercase tracking-wide">{t('volatilitaet')}</p>
               <p className="font-mono font-semibold text-lg text-slate-800">{fmtNum(risiko?.volatilitaet)}%</p>
               {risiko?.benchmarkVola != null && (
                 <p className="text-[10px] text-slate-400 mt-0.5">BM: {fmtNum(risiko.benchmarkVola)}%</p>
               )}
             </div>
             <div className="bg-slate-50 rounded-lg p-3">
-              <p className="text-[10px] text-slate-400 uppercase tracking-wide">Max Drawdown</p>
+              <p className="text-[10px] text-slate-400 uppercase tracking-wide">{t('maxDrawdown')}</p>
               <p className="font-mono font-semibold text-lg text-red-600">{fmtNum(risiko?.maxDrawdown)}%</p>
             </div>
             <div className="bg-slate-50 rounded-lg p-3">
-              <p className="text-[10px] text-slate-400 uppercase tracking-wide">Sharpe Ratio</p>
+              <p className="text-[10px] text-slate-400 uppercase tracking-wide">{t('sharpeRatio')}</p>
               <p className="font-mono font-semibold text-lg text-slate-800">{fmtNum(risiko?.sharpeRatio, 2)}</p>
             </div>
             <div className="bg-slate-50 rounded-lg p-3">
-              <p className="text-[10px] text-slate-400 uppercase tracking-wide">Beta</p>
+              <p className="text-[10px] text-slate-400 uppercase tracking-wide">{t('beta')}</p>
               <p className="font-mono font-semibold text-lg text-slate-800">{fmtNum(risiko?.beta, 2)}</p>
             </div>
           </div>
@@ -559,7 +561,7 @@ export default function PerformanceTab({ kunde }) {
 
         {/* ── 7. Bond Maturity Structure ── */}
         <Card>
-          <SectionTitle sub="Laufzeitenstruktur & Kennzahlen">Anleihen</SectionTitle>
+          <SectionTitle sub={t('laufzeitenstruktur')}>{t('anleihenLabel')}</SectionTitle>
           {anleihen?.laufzeiten && (
             <div className="mb-4">
               <ResponsiveContainer width="100%" height={130}>
@@ -578,15 +580,15 @@ export default function PerformanceTab({ kunde }) {
           )}
           <div className="grid grid-cols-3 gap-3">
             <div className="text-center">
-              <p className="text-[10px] text-slate-400 uppercase tracking-wide">Duration</p>
+              <p className="text-[10px] text-slate-400 uppercase tracking-wide">{t('duration')}</p>
               <p className="font-mono font-semibold text-slate-800">{fmtNum(anleihen?.duration)} J</p>
             </div>
             <div className="text-center">
-              <p className="text-[10px] text-slate-400 uppercase tracking-wide">YTM</p>
+              <p className="text-[10px] text-slate-400 uppercase tracking-wide">{t('ytm')}</p>
               <p className="font-mono font-semibold text-slate-800">{fmtNum(anleihen?.ytm)}%</p>
             </div>
             <div className="text-center">
-              <p className="text-[10px] text-slate-400 uppercase tracking-wide">Rating</p>
+              <p className="text-[10px] text-slate-400 uppercase tracking-wide">{t('rating')}</p>
               <p className="font-mono font-semibold text-slate-800 text-xs">{ratingDisplay}</p>
             </div>
           </div>
@@ -594,14 +596,14 @@ export default function PerformanceTab({ kunde }) {
 
         {/* ── 8. Currency Allocation ── */}
         <Card>
-          <SectionTitle sub="Währungsverteilung & Absicherung">Währungen</SectionTitle>
+          <SectionTitle sub={t('waehrungsverteilung')}>{t('waehrungen')}</SectionTitle>
           <div className="flex items-start gap-6">
             <MiniDonut data={waehrungData} size={140} centerLabel="FX" />
             <div className="flex-1 mt-1">
               <DonutLegend data={waehrungData} />
               <div className="mt-4 pt-3 border-t border-slate-100">
                 <div className="flex items-center justify-between text-xs">
-                  <span className="text-slate-500">FX-Hedging-Quote</span>
+                  <span className="text-slate-500">{t('fxHedgingQuote')}</span>
                   <span className="font-mono font-semibold text-slate-800">{hedgingQuote ?? '–'}%</span>
                 </div>
                 <div className="w-full bg-slate-100 rounded-full h-1.5 mt-1.5">
@@ -625,12 +627,12 @@ export default function PerformanceTab({ kunde }) {
             </div>
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-1.5">
-                <h3 className="font-semibold text-slate-800 text-sm">Investment Office Kommentar</h3>
+                <h3 className="font-semibold text-slate-800 text-sm">{t('investmentOfficeKommentar')}</h3>
                 <span className="text-[10px] text-slate-400">{ioKommentar.datum} &middot; {ioKommentar.autor}</span>
               </div>
               <p className="text-sm text-slate-600 leading-relaxed">{ioKommentar.text}</p>
               {ioKommentar.naechsterReview && (
-                <p className="text-[10px] text-slate-400 mt-2">Nächster Review: {ioKommentar.naechsterReview}</p>
+                <p className="text-[10px] text-slate-400 mt-2">{t('naechsterReview')}{ioKommentar.naechsterReview}</p>
               )}
             </div>
           </div>
@@ -643,7 +645,7 @@ export default function PerformanceTab({ kunde }) {
         <div className="bg-white border border-slate-200 rounded-xl p-4" style={{ boxShadow: 'var(--card-shadow)' }}>
           <div className="flex items-center gap-1.5 mb-2">
             <Leaf className="w-3.5 h-3.5 text-emerald-500" />
-            <p className="text-[10px] text-slate-400 uppercase tracking-wide">ESG-Score</p>
+            <p className="text-[10px] text-slate-400 uppercase tracking-wide">{t('esgScore')}</p>
           </div>
           <div className="flex items-end gap-2">
             <span className="font-mono font-semibold text-2xl text-slate-800">{esg?.score ?? '–'}</span>
@@ -665,7 +667,7 @@ export default function PerformanceTab({ kunde }) {
 
         {/* Kosten */}
         <div className="bg-white border border-slate-200 rounded-xl p-4" style={{ boxShadow: 'var(--card-shadow)' }}>
-          <p className="text-[10px] text-slate-400 uppercase tracking-wide mb-2">Kostenquote (All-in)</p>
+          <p className="text-[10px] text-slate-400 uppercase tracking-wide mb-2">{t('kostenquoteAllIn')}</p>
           <div className="flex items-end gap-2">
             <span className="font-mono font-semibold text-2xl text-slate-800">{fmtNum(kosten?.quote, 2)}%</span>
             <span className="text-xs text-slate-400 mb-1">p.a.</span>
@@ -677,7 +679,7 @@ export default function PerformanceTab({ kunde }) {
 
         {/* Verlustschwelle */}
         <div className="bg-white border border-slate-200 rounded-xl p-4" style={{ boxShadow: 'var(--card-shadow)' }}>
-          <p className="text-[10px] text-slate-400 uppercase tracking-wide mb-2">Verlustschwelle</p>
+          <p className="text-[10px] text-slate-400 uppercase tracking-wide mb-2">{t('verlustschwelle')}</p>
           <div className="flex items-center gap-2">
             {vsRatio < 0.8 ? (
               <CheckCircle className="w-5 h-5 text-emerald-500" />
@@ -692,12 +694,12 @@ export default function PerformanceTab({ kunde }) {
           <div className="flex items-center justify-between mt-1">
             {verlustschwelle?.hoechststandDatum && (
               <p className="text-[10px] text-slate-400">
-                Höchststand: {formatEur(vsHoechst)} ({verlustschwelle.hoechststandDatum})
+                {t('hoechststand')} {formatEur(vsHoechst)} ({verlustschwelle.hoechststandDatum})
               </p>
             )}
             {vsAktuell > 0 && (
               <p className="text-[10px] text-slate-400">
-                Aktuell: {formatEur(vsAktuell)}
+                {t('aktuell')} {formatEur(vsAktuell)}
               </p>
             )}
           </div>

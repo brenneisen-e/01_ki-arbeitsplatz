@@ -4,22 +4,24 @@ import { Send, Briefcase, Shield, Landmark, Wallet, PieChart, Bot, Loader2, Sett
 import { useMode } from '../../hooks/useMode';
 import { MODE_CONFIGS, MODUS_LIST } from '../../data/modeConfig';
 import { getLogoUrl } from '../../utils/logos';
-
-const MODULE_TABS = [
-  { id: 'versicherung', label: 'Versicherung', icon: Shield },
-  { id: 'banking', label: 'Banken', icon: Landmark },
-  { id: 'vermoegensverwaltung', label: 'Vermögensverwaltung', icon: Wallet },
-];
-
-const SUGGESTIONS = [
-  { trigger: 'zu', label: 'Zusammenfassung heutiger Tag', action: 'overview' },
-  { trigger: 'üb', label: 'Übersicht anzeigen', action: 'overview' },
-  { trigger: 'co', label: 'Cockpit öffnen', action: 'cockpit' },
-  { trigger: 'ku', label: 'Kundenliste anzeigen', action: 'kunden' },
-  { trigger: 'po', label: 'Potenziale anzeigen', action: 'potentiale' },
-];
+import useTranslation from '../../i18n/useTranslation';
 
 export default function LandingPage() {
+  const { t } = useTranslation();
+
+  const MODULE_TABS = [
+    { id: 'versicherung', label: t('versicherung'), icon: Shield },
+    { id: 'banking', label: t('bankenLabel'), icon: Landmark },
+    { id: 'vermoegensverwaltung', label: t('vermoegensverwaltungLabel'), icon: Wallet },
+  ];
+
+  const SUGGESTIONS = [
+    { trigger: 'zu', label: t('zusammenfassungHeutigerTag'), action: 'overview' },
+    { trigger: 'üb', label: t('uebersichtAnzeigen'), action: 'overview' },
+    { trigger: 'co', label: t('cockpitOeffnen'), action: 'cockpit' },
+    { trigger: 'ku', label: t('kundenlisteAnzeigen'), action: 'kunden' },
+    { trigger: 'po', label: t('potenzialeAnzeigen'), action: 'potentiale' },
+  ];
   const { switchMode, switchInstitut, navigateTo, config, modeId } = useMode();
 
   // Restore last selected mode/institut from localStorage
@@ -136,10 +138,10 @@ export default function LandingPage() {
   function executeSuggestion(suggestion) {
     setIsThinking(true);
     const steps = [
-      'Daten werden geladen...',
-      'KPIs werden berechnet...',
-      'Vertriebspotenziale analysiert...',
-      'Übersicht wird vorbereitet...',
+      t('datenWerdenGeladen'),
+      t('kpisWerdenBerechnet'),
+      t('vertriebspotenzialeAnalysiert'),
+      t('uebersichtWirdVorbereitet'),
     ];
     let step = 0;
     setThinkingText(steps[0]);
@@ -203,17 +205,17 @@ export default function LandingPage() {
                 <Briefcase size={22} className="text-white" strokeWidth={1.75} />
               </div>
               <div>
-                <h2 className="text-lg font-semibold text-slate-800">Willkommen!</h2>
+                <h2 className="text-lg font-semibold text-slate-800">{t('willkommen')}!</h2>
                 <p className="text-sm text-slate-500">KI-Vertriebsarbeitsplatz</p>
               </div>
             </div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">Wie darf ich dich nennen?</label>
+            <label className="block text-sm font-medium text-slate-700 mb-2">{t('wieDarfIchDichNennen')}</label>
             <input
               ref={nameInputRef}
               type="text"
               value={nameInput}
               onChange={e => setNameInput(e.target.value)}
-              placeholder="Dein Vorname..."
+              placeholder={t('deinVorname')}
               className="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-400 transition-shadow mb-4"
             />
             <button
@@ -221,7 +223,7 @@ export default function LandingPage() {
               disabled={!nameInput.trim()}
               className="w-full py-3 rounded-xl bg-slate-800 text-white text-sm font-semibold hover:bg-slate-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
             >
-              Los geht's
+              {t('losGehts')}
             </button>
           </form>
         </div>
@@ -292,9 +294,9 @@ export default function LandingPage() {
 
         {/* Welcome text */}
         <h1 className="text-white text-2xl md:text-3xl font-light text-center mb-2">
-          {userName ? `Willkommen zur\u00fcck, ${userName}` : 'Willkommen'}
+          {userName ? t('willkommenZurueck', { name: userName }) : t('willkommen')}
         </h1>
-        <p className="text-white/60 text-base mb-8">{userName ? 'Was kann ich heute f\u00fcr dich tun?' : 'Was kann ich f\u00fcr dich tun?'}</p>
+        <p className="text-white/60 text-base mb-8">{userName ? t('wasKannIchHeuteTun') : t('wasKannIchTun')}</p>
 
         {/* Chat input */}
         <div className="w-full max-w-xl relative mb-10">
@@ -306,7 +308,7 @@ export default function LandingPage() {
                 value={chatInput}
                 onChange={e => setChatInput(e.target.value)}
                 onKeyDown={handleKeyDown}
-                placeholder="Frag mich etwas..."
+                placeholder={t('fragMichEtwas')}
                 className="w-full px-5 py-4 rounded-2xl bg-white/15 backdrop-blur-sm border border-white/20 text-white text-sm placeholder-white/40 focus:outline-none focus:bg-white/20 focus:border-white/40 transition-all"
               />
               {/* Autocomplete Suggestions */}
@@ -363,7 +365,7 @@ export default function LandingPage() {
           className="flex items-center gap-2 text-white/50 hover:text-white/80 text-xs font-medium transition-colors mb-3"
         >
           {showVariants ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
-          {showVariants ? 'Unternehmen ausblenden' : 'Unternehmen auswählen'}
+          {showVariants ? t('unternehmenAusblenden') : t('unternehmenAuswaehlen')}
         </button>
         {showVariants && (
           <div className="flex flex-wrap gap-2 justify-center max-w-3xl animate-fade-in">
@@ -404,7 +406,7 @@ export default function LandingPage() {
           className="flex items-center gap-2 mx-auto text-white/50 hover:text-white/80 text-xs font-medium transition-colors py-2"
         >
           <Settings size={14} />
-          Einstellungen
+          {t('einstellungen')}
           {showSettings ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
         </button>
 
@@ -412,7 +414,7 @@ export default function LandingPage() {
           <div className="mt-4 max-w-md mx-auto bg-white/10 backdrop-blur-sm border border-white/15 rounded-2xl p-5 animate-fade-in">
             <h3 className="text-white text-sm font-semibold mb-4 flex items-center gap-2">
               <User size={16} />
-              Berater-Profil
+              {t('beraterProfil')}
             </h3>
 
             {/* Photo */}
@@ -432,7 +434,7 @@ export default function LandingPage() {
                   className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/15 hover:bg-white/25 text-white/80 text-xs font-medium transition-colors"
                 >
                   <Upload size={12} />
-                  Bild hochladen
+                  {t('bildHochladen')}
                 </button>
                 <input
                   ref={photoInputRef}
@@ -446,21 +448,21 @@ export default function LandingPage() {
                     onClick={() => { setSettingsPhoto(''); localStorage.removeItem('kia_user_photo'); }}
                     className="text-[10px] text-white/40 hover:text-white/60 transition-colors text-left"
                   >
-                    Bild entfernen
+                    {t('bildEntfernen')}
                   </button>
                 )}
               </div>
             </div>
 
             {/* Name input */}
-            <label className="block text-xs text-white/60 font-medium mb-1.5">Vor- und Nachname</label>
+            <label className="block text-xs text-white/60 font-medium mb-1.5">{t('vorUndNachname')}</label>
             <input
               type="text"
               value={settingsName}
               onChange={e => setSettingsName(e.target.value)}
               onBlur={handleSettingsSave}
               onKeyDown={e => { if (e.key === 'Enter') handleSettingsSave(); }}
-              placeholder="z.B. Eike Brenneisen"
+              placeholder={t('namePlaceholder')}
               className="w-full px-4 py-2.5 rounded-xl bg-white/10 border border-white/15 text-white text-sm placeholder-white/30 focus:outline-none focus:bg-white/15 focus:border-white/30 transition-all mb-4"
             />
 
@@ -470,7 +472,7 @@ export default function LandingPage() {
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white/50 hover:text-white/70 text-xs font-medium transition-colors"
             >
               <RotateCcw size={12} />
-              Auf Standard zurücksetzen
+              {t('aufStandardZuruecksetzen')}
             </button>
           </div>
         )}

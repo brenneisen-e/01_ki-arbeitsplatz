@@ -7,6 +7,7 @@ import { getLogoUrl } from '../../../utils/logos';
 import { getKundeFoto } from '../../../utils/kundenFotos';
 import { useState } from 'react';
 import { useMode } from '../../../hooks/useMode';
+import useTranslation from '../../../i18n/useTranslation';
 
 const FREMD_TYP_LABELS = {
   girokonto: 'Girokonto',
@@ -37,6 +38,7 @@ const FREMD_TYP_LABELS = {
 };
 
 export default function StammdatenDetailTab({ kunde }) {
+  const { t } = useTranslation();
   const [risikoExpanded, setRisikoExpanded] = useState(false);
   const [fotoFailed, setFotoFailed] = useState(false);
   const { config, modeId } = useMode();
@@ -82,7 +84,7 @@ export default function StammdatenDetailTab({ kunde }) {
             <h2 className="text-xl font-bold text-slate-800">{kunde.name}</h2>
             <div className="flex items-center gap-4 mt-1.5 text-sm text-slate-500">
               <span className="flex items-center gap-1"><Briefcase size={14} /> {kunde.beruf}</span>
-              <span className="flex items-center gap-1"><Users size={14} /> {kunde.alter} Jahre</span>
+              <span className="flex items-center gap-1"><Users size={14} /> {kunde.alter} {t('jahre')}</span>
               {kunde.familienstand && (
                 <span className="flex items-center gap-1"><Heart size={14} /> {kunde.familienstand?.charAt(0).toUpperCase() + kunde.familienstand?.slice(1)}</span>
               )}
@@ -90,7 +92,7 @@ export default function StammdatenDetailTab({ kunde }) {
             <div className="flex items-center gap-3 mt-2 text-xs text-slate-400">
               <span>{kunde.id}</span>
               <span>·</span>
-              <span>{config.kundenLabel || 'Kunde'} seit {kunde.eigeneProdukte?.[0]?.seit || '–'}</span>
+              <span>{t('kundeSeit')} {kunde.eigeneProdukte?.[0]?.seit || '–'}</span>
               {kunde.linkedin && (
                 <>
                   <span>·</span>
@@ -107,36 +109,36 @@ export default function StammdatenDetailTab({ kunde }) {
         <Card>
           <div className="flex items-center gap-2 mb-4">
             <User size={20} className="text-slate-500" strokeWidth={1.75} />
-            <h3 className="font-semibold text-slate-800">Persönliche Daten</h3>
+            <h3 className="font-semibold text-slate-800">{t('persoenlicheDaten')}</h3>
           </div>
           <div className="space-y-2 text-sm">
-            <InfoRow label="Name" value={kunde.name} />
-            <InfoRow label="Geburtsdatum" value={(() => {
+            <InfoRow label={t('name')} value={kunde.name} />
+            <InfoRow label={t('geburtsdatum')} value={(() => {
               const today = new Date();
               const birthYear = today.getFullYear() - kunde.alter;
               const birthDate = new Date(birthYear, today.getMonth() - 3, 15);
               return birthDate.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
             })()} />
-            <InfoRow label="Alter" value={`${kunde.alter} Jahre (${(() => {
+            <InfoRow label={t('alter')} value={`${kunde.alter} ${t('jahre')} (${(() => {
               const today = new Date();
               const birthYear = today.getFullYear() - kunde.alter;
               const birthDate = new Date(birthYear, today.getMonth() - 3, 15);
               return birthDate.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
             })()})`} />
-            <InfoRow label="Beruf" value={kunde.beruf} />
+            <InfoRow label={t('beruf')} value={kunde.beruf} />
             {kunde.arbeitgeber && (
-              <ArbeitgeberRow arbeitgeber={kunde.arbeitgeber} />
+              <ArbeitgeberRow arbeitgeber={kunde.arbeitgeber} t={t} />
             )}
-            <InfoRow label="Familienstand" value={kunde.familienstand ? kunde.familienstand.charAt(0).toUpperCase() + kunde.familienstand.slice(1) : ''} />
+            <InfoRow label={t('familienstand')} value={kunde.familienstand ? kunde.familienstand.charAt(0).toUpperCase() + kunde.familienstand.slice(1) : ''} />
             {kunde.partner && (
-              <InfoRow label="Partner" value={`${kunde.partner.name} (${kunde.partner.beruf})`} />
+              <InfoRow label={t('partner')} value={`${kunde.partner.name} (${kunde.partner.beruf})`} />
             )}
             {kunde.kinder?.length > 0 && (
-              <InfoRow label="Kinder" value={kunde.kinder.map(k => `${k.name} (${k.alter})`).join(', ')} />
+              <InfoRow label={t('kinder')} value={kunde.kinder.map(k => `${k.name} (${k.alter})`).join(', ')} />
             )}
-            <InfoRow label="Wohnsituation" value={kunde.adresse ? `Adresse: ${kunde.adresse} (${kunde.wohnsituation}, ${kunde.wohnflaeche}qm)` : `${kunde.wohnsituation}, ${kunde.wohnflaeche}qm`} />
+            <InfoRow label={t('wohnsituation')} value={kunde.adresse ? `${kunde.adresse} (${kunde.wohnsituation}, ${kunde.wohnflaeche}qm)` : `${kunde.wohnsituation}, ${kunde.wohnflaeche}qm`} />
             {(kunde.haustiere || kunde.tiere) && (
-              <HaustiereRow haustiere={normalizeHaustiere(kunde.haustiere || kunde.tiere)} />
+              <HaustiereRow haustiere={normalizeHaustiere(kunde.haustiere || kunde.tiere)} t={t} />
             )}
             {kunde.linkedin && (
               <div className="flex items-center gap-2 pt-2 border-t border-slate-100 mt-2">
@@ -152,26 +154,26 @@ export default function StammdatenDetailTab({ kunde }) {
         <Card>
           <div className="flex items-center gap-2 mb-4">
             <Wallet size={20} className="text-slate-500" strokeWidth={1.75} />
-            <h3 className="font-semibold text-slate-800">Finanzübersicht</h3>
+            <h3 className="font-semibold text-slate-800">{t('finanzuebersicht')}</h3>
           </div>
           <div className="space-y-2 text-sm">
-            <InfoRow label="Haushaltsnetto" value={`${formatEur(haushalt)}/mtl.`} />
-            <InfoRow label="Absicherungsquote" value={formatPct(absQuote > 0 ? absQuote : (kunde.aum ? 72 + ((kunde.alter || 50) % 20) : 0))} />
-            <InfoRow label="Sparquote" value={formatPct(sparQuote > 0 ? sparQuote : (kunde.nettoeinkommen ? Math.min(45, Math.round(kunde.nettoeinkommen / 200)) : 18))} />
-            <InfoRow label="Frei verfügbar" value={`${formatEur(frei > 0 ? frei : (kunde.nettoeinkommen ? Math.round(kunde.nettoeinkommen * 0.3) : 2500))}/mtl.`} />
+            <InfoRow label={t('haushaltsnetto')} value={`${formatEur(haushalt)}/mtl.`} />
+            <InfoRow label={t('absicherungsquote')} value={formatPct(absQuote > 0 ? absQuote : (kunde.aum ? 72 + ((kunde.alter || 50) % 20) : 0))} />
+            <InfoRow label={t('sparquote')} value={formatPct(sparQuote > 0 ? sparQuote : (kunde.nettoeinkommen ? Math.min(45, Math.round(kunde.nettoeinkommen / 200)) : 18))} />
+            <InfoRow label={t('freiVerfuegbar')} value={`${formatEur(frei > 0 ? frei : (kunde.nettoeinkommen ? Math.round(kunde.nettoeinkommen * 0.3) : 2500))}/mtl.`} />
             <div className="pt-2 border-t border-slate-100 mt-2">
               <div className="flex items-center gap-2 cursor-pointer" onClick={() => setRisikoExpanded(!risikoExpanded)}>
-                <span className="text-slate-400 shrink-0">Risikoscore:</span>
+                <span className="text-slate-400 shrink-0">{t('risikoscore')}</span>
                 <span className="flex items-center gap-1">
-                  <span className="text-slate-700 font-medium">{kunde.risikoscore} ({kunde.risikoscore < 30 ? 'Niedrig' : kunde.risikoscore < 50 ? 'Mittel' : 'Hoch'})</span>
+                  <span className="text-slate-700 font-medium">{kunde.risikoscore} ({kunde.risikoscore < 30 ? t('niedrig') : kunde.risikoscore < 50 ? t('mittel') : t('hoch')})</span>
                   <ChevronDown size={14} className={`text-slate-400 transition-transform ${risikoExpanded ? 'rotate-180' : ''}`} />
                 </span>
               </div>
               {risikoExpanded && (
                 <div className="mt-2 pl-4 space-y-1 text-xs text-slate-500 animate-fade-in">
-                  <div>Bonität: {kunde.risikoscore < 30 ? 'Gut' : 'Mittel'}</div>
-                  <div>Zahlungsverhalten: Regelmäßig</div>
-                  <div>Abwanderungsrisiko: {kunde.abwanderungsrisiko}</div>
+                  <div>{t('bonitaet')} {kunde.risikoscore < 30 ? t('gut') : t('mittel')}</div>
+                  <div>{t('zahlungsverhalten')}</div>
+                  <div>{t('abwanderungsrisiko')} {kunde.abwanderungsrisiko}</div>
                 </div>
               )}
             </div>
@@ -184,7 +186,7 @@ export default function StammdatenDetailTab({ kunde }) {
               return Math.round((kunde.nettoeinkommen || 5000) * 12 * 0.03 * 10);
             })())} />
             <div className="flex items-center gap-2">
-              <span className="text-slate-400 shrink-0">Potenzial-Score:</span>
+              <span className="text-slate-400 shrink-0">{t('potenzialScore')}</span>
               <div className="flex items-center gap-1">
                 {Array(potentialSterne(kunde.potentialScore || 0).full).fill(0).map((_, i) => (
                   <Star key={i} size={14} className="text-amber-400 fill-amber-400" />
@@ -199,7 +201,7 @@ export default function StammdatenDetailTab({ kunde }) {
       {/* Eigene Produkte */}
       <Card>
         <h3 className="font-semibold text-slate-800 mb-4">
-          Eigene Produkte ({adaptedProdukte.length} {modeId === 'banking' ? 'Produkte' : 'Vertr\u00e4ge'})
+          {t('eigeneProdukte')} ({adaptedProdukte.length} {modeId === 'banking' ? t('produkteLabel') : t('vertraege')})
         </h3>
         {adaptedProdukte.length > 0 ? (
           <div className="bg-white rounded-xl border border-slate-200 overflow-hidden" style={{ boxShadow: 'var(--card-shadow)' }}>
@@ -207,31 +209,31 @@ export default function StammdatenDetailTab({ kunde }) {
               <table className="w-full">
                 <thead>
                   <tr className="bg-slate-50">
-                    <th className="px-4 py-3 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">Produkt</th>
-                    <th className="px-4 py-3 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">Sparte</th>
-                    <th className="px-4 py-3 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">Details</th>
-                    <th className="px-4 py-3 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">{isVV ? 'Volumen' : 'Pr\u00e4mie/J.'}</th>
+                    <th className="px-4 py-3 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">{t('produkt')}</th>
+                    <th className="px-4 py-3 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">{t('sparte')}</th>
+                    <th className="px-4 py-3 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">{t('details')}</th>
+                    <th className="px-4 py-3 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">{isVV ? t('volumenLabel') : t('praemieLabel') + '/J.'}</th>
                     <th className="px-4 py-3 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">Seit</th>
-                    <th className="px-4 py-3 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">Status</th>
+                    <th className="px-4 py-3 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">{t('status')}</th>
                   </tr>
                 </thead>
                 <tbody>
                   {adaptedProdukte.map((p, i) => (
-                    <ExpandableProduktRow key={p.id || i} produkt={p} isVV={isVV} />
+                    <ExpandableProduktRow key={p.id || i} produkt={p} isVV={isVV} t={t} />
                   ))}
                 </tbody>
               </table>
             </div>
           </div>
         ) : (
-          <div className="text-sm text-slate-400 py-4 text-center">Keine eigenen Produkte</div>
+          <div className="text-sm text-slate-400 py-4 text-center">{t('keineEigeneProdukte')}</div>
         )}
       </Card>
 
       {/* Fremdprodukte */}
       <Card>
         <h3 className="font-semibold text-slate-800 mb-4">
-          Fremdprodukte (Open Finance / FIDA) ({kunde.fremdProdukte?.length || 0} Produkte)
+          {t('fremdprodukte')} ({kunde.fremdProdukte?.length || 0} {t('produkteLabel')})
         </h3>
         {kunde.fremdProdukte?.length > 0 ? (
           <DataTable
@@ -270,20 +272,20 @@ export default function StammdatenDetailTab({ kunde }) {
             data={kunde.fremdProdukte}
           />
         ) : (
-          <div className="text-sm text-slate-400 py-4 text-center">Keine Fremdprodukte bekannt</div>
+          <div className="text-sm text-slate-400 py-4 text-center">{t('keineFremdprodukte')}</div>
         )}
       </Card>
     </div>
   );
 }
 
-function ArbeitgeberRow({ arbeitgeber }) {
+function ArbeitgeberRow({ arbeitgeber, t }) {
   const [bestaetigt, setBestaetigt] = useState(arbeitgeber.bestaetigt);
   const [showTooltip, setShowTooltip] = useState(false);
 
   return (
     <div className="flex items-center gap-2">
-      <span className="text-slate-400 shrink-0">Arbeitgeber:</span>
+      <span className="text-slate-400 shrink-0">{t('arbeitgeberLabel')}:</span>
       <span className="flex items-center gap-2 text-slate-700 font-medium">
         <Building2 size={14} className="text-slate-400" />
         {arbeitgeber.name}
@@ -295,21 +297,21 @@ function ArbeitgeberRow({ arbeitgeber }) {
           <Linkedin size={14} className="text-blue-600 cursor-help" />
           {showTooltip && (
             <span className="absolute bottom-6 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs rounded-lg px-3 py-2 whitespace-nowrap z-50 shadow-lg">
-              Daten aus LinkedIn-Abzug hinzugefügt
+              {t('datenAusLinkedin')}
               <span className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-800" />
             </span>
           )}
         </span>
         {bestaetigt ? (
           <span className="flex items-center gap-1 text-emerald-600 text-xs bg-emerald-50 px-2 py-0.5 rounded-full">
-            <CheckCircle size={12} /> Bestätigt
+            <CheckCircle size={12} /> {t('bestaetigt')}
           </span>
         ) : (
           <button
             onClick={() => setBestaetigt(true)}
             className="flex items-center gap-1 text-xs text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 px-2 py-0.5 rounded-full border border-slate-200 hover:border-emerald-200 transition-colors cursor-pointer"
           >
-            <CheckCircle size={12} /> Bestätigen
+            <CheckCircle size={12} /> {t('bestaetigen')}
           </button>
         )}
       </span>
@@ -334,7 +336,7 @@ function normalizeHaustiere(raw) {
   };
 }
 
-function HaustiereRow({ haustiere }) {
+function HaustiereRow({ haustiere, t }) {
   const [showDetail, setShowDetail] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
   const [tierArt, setTierArt] = useState('');
@@ -347,12 +349,12 @@ function HaustiereRow({ haustiere }) {
           <div className="flex items-center gap-2">
             <span className="flex items-center gap-1.5 text-amber-500 shrink-0">
               <PawPrint size={14} />
-              {haustiere.vermutet ? 'Vermutlich Haustier:' : 'Haustier-Hinweis:'}
+              {haustiere.vermutet ? t('haustierVermutet') : t('haustierHinweis')}
             </span>
             <span className="text-sm text-slate-500 italic">
               {haustiere.vermutet
-                ? 'Haustier vermutet (aus Kontoumsätzen)'
-                : `${haustiere.art}${haustiere.name ? ` "${haustiere.name}"` : ''} — aus Kontoumsätzen erkannt`}
+                ? t('haustierAusKonto')
+                : `${haustiere.art}${haustiere.name ? ` "${haustiere.name}"` : ''} — ${t('ausKontoumsaetzenErkannt')}`}
             </span>
             <button
               onClick={() => setShowDetail(!showDetail)}
@@ -366,7 +368,7 @@ function HaustiereRow({ haustiere }) {
             <div className="mt-2 bg-amber-50 border border-amber-200 rounded-lg p-3 space-y-2 animate-fade-in">
               <div className="text-xs font-semibold text-amber-700 flex items-center gap-1.5">
                 <PawPrint size={12} />
-                Erkannte Transaktionen
+                {t('erkannteTransaktionen')}
               </div>
               {haustiere.erkannteTransaktionen?.map((t, i) => (
                 <div key={i} className="flex justify-between text-xs text-amber-800">
@@ -375,14 +377,14 @@ function HaustiereRow({ haustiere }) {
                 </div>
               ))}
               <div className="text-[10px] text-amber-600 pt-1 border-t border-amber-200">
-                Quelle: PSD2/Open Finance Transaktionsanalyse
+                {t('quellePsd2')}
               </div>
               <div className="pt-2 border-t border-amber-200 space-y-2">
-                <div className="text-xs font-semibold text-amber-700">Haustier bestätigen:</div>
+                <div className="text-xs font-semibold text-amber-700">{t('haustierBestaetigen')}</div>
                 <div className="flex gap-2">
                   <input
                     type="text"
-                    placeholder="Art (z.B. Katze, Hund)"
+                    placeholder={t('artPlaceholder')}
                     value={tierArt}
                     onChange={e => setTierArt(e.target.value)}
                     className="text-xs border border-amber-300 rounded px-2 py-1 flex-1 bg-white focus:outline-none focus:ring-1 focus:ring-amber-400"
@@ -398,7 +400,7 @@ function HaustiereRow({ haustiere }) {
                     onClick={() => { if (tierArt.trim()) setConfirmed(true); }}
                     className="text-xs px-3 py-1 rounded bg-emerald-500 text-white hover:bg-emerald-600 transition-colors font-medium"
                   >
-                    Bestätigen
+                    {t('bestaetigen')}
                   </button>
                 </div>
               </div>
@@ -409,14 +411,14 @@ function HaustiereRow({ haustiere }) {
         <div className="flex items-center gap-2">
           <span className="flex items-center gap-1.5 text-slate-400 shrink-0">
             <PawPrint size={14} className="text-amber-500" />
-            Haustier:
+            {t('haustierLabel')}:
           </span>
           <span className="text-slate-700 font-medium">
             {tierArt}{tierName ? ` (${tierName})` : ''}
           </span>
           <span className="flex items-center gap-1 text-[10px] text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded-full border border-emerald-200">
             <CheckCircle size={10} />
-            Bestätigt
+            {t('bestaetigt')}
           </span>
         </div>
       )}
@@ -424,7 +426,7 @@ function HaustiereRow({ haustiere }) {
   );
 }
 
-function ExpandableProduktRow({ produkt, isVV }) {
+function ExpandableProduktRow({ produkt, isVV, t }) {
   const [expanded, setExpanded] = useState(false);
   const [hovered, setHovered] = useState(false);
 
@@ -470,7 +472,7 @@ function ExpandableProduktRow({ produkt, isVV }) {
           <td colSpan={6} className="px-4 py-3">
             <div className="pl-8 grid grid-cols-2 md:grid-cols-4 gap-4 text-xs">
               <div>
-                <span className="text-slate-400 uppercase tracking-wider">Vertragsbeginn</span>
+                <span className="text-slate-400 uppercase tracking-wider">{t('vertragsbeginn')}</span>
                 <div className="font-medium text-slate-700 mt-0.5">{produkt.seit}</div>
               </div>
               <div>
@@ -488,7 +490,7 @@ function ExpandableProduktRow({ produkt, isVV }) {
               {produkt.status === 'optimierbar' && (
                 <div className="col-span-2 md:col-span-4 mt-1">
                   <div className="bg-amber-50 border border-amber-200 rounded px-3 py-2 text-amber-800 text-xs">
-                    Optimierungspotenzial erkannt \u2014 Tarifaktualisierung empfohlen
+                    {t('optimierungspotenzial')}
                   </div>
                 </div>
               )}

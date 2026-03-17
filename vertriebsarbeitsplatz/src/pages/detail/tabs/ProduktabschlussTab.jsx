@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { getLang } from '../../../utils/langHelper';
 import Card from '../../../components/ui/Card';
 import { clsx } from 'clsx';
 import { ShoppingCart, AlertTriangle, CheckCircle, Clock, XCircle, ChevronDown, ChevronUp, ArrowRight, User, CreditCard, FileText, Fingerprint, PenTool } from 'lucide-react';
@@ -65,7 +66,7 @@ export default function ProduktabschlussTab({ kunde }) {
           </div>
           <div>
             <div className="text-2xl font-bold text-slate-800">
-              {abschluesse.reduce((sum, a) => sum + (a.details?.betrag || 0), 0).toLocaleString((localStorage.getItem('kia_language') || 'de') === 'en' ? 'en-US' : 'de-DE')}\u20ac
+              {abschluesse.reduce((sum, a) => sum + (a.details?.betrag || 0), 0).toLocaleString(getLang() === 'en' ? 'en-US' : 'de-DE')}\u20ac
             </div>
             <div className="text-xs text-slate-400">{t('kreditvolumenGesamt')}</div>
           </div>
@@ -129,7 +130,7 @@ function AntragCard({ antrag, t, statusConfig: STATUS_CONFIG }) {
           <>
             <div className="bg-slate-50 rounded-lg p-3">
               <div className="text-xs text-slate-400 mb-1">{t('kreditbetrag')}</div>
-              <div className="text-lg font-bold text-slate-800">{antrag.details.betrag?.toLocaleString((localStorage.getItem('kia_language') || 'de') === 'en' ? 'en-US' : 'de-DE')}\u20ac</div>
+              <div className="text-lg font-bold text-slate-800">{antrag.details.betrag?.toLocaleString(getLang() === 'en' ? 'en-US' : 'de-DE')}\u20ac</div>
             </div>
             <div className="bg-slate-50 rounded-lg p-3">
               <div className="text-xs text-slate-400 mb-1">{t('laufzeit')}</div>
@@ -209,7 +210,7 @@ function AntragCard({ antrag, t, statusConfig: STATUS_CONFIG }) {
                     </div>
                     {schritt.datum && (
                       <div className="text-[11px] text-slate-400 mt-0.5">
-                        {new Date(schritt.datum).toLocaleString((localStorage.getItem('kia_language') || 'de') === 'en' ? 'en-US' : 'de-DE', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                        {new Date(schritt.datum).toLocaleString(getLang() === 'en' ? 'en-US' : 'de-DE', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
                       </div>
                     )}
                   </div>

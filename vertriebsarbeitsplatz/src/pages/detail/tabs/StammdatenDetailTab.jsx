@@ -1,4 +1,5 @@
 import Card from '../../../components/ui/Card';
+import { getLang } from '../../../utils/langHelper';
 import DataTable from '../../../components/ui/DataTable';
 import { StatusBadge, SparteBadge } from '../../../components/ui/Badge';
 import { formatEur, formatPct, berechneHaushaltsnetto, berechneAbsicherungsquote, berechneSparquote, berechneFrei, potentialSterne } from '../../../utils/formatters';
@@ -40,7 +41,7 @@ function getFremdTypLabels(t) {
 }
 
 export default function StammdatenDetailTab({ kunde }) {
-  const { t } = useTranslation();
+  const { t, tn } = useTranslation();
   const [risikoExpanded, setRisikoExpanded] = useState(false);
   const [fotoFailed, setFotoFailed] = useState(false);
   const { config, modeId } = useMode();
@@ -83,7 +84,7 @@ export default function StammdatenDetailTab({ kunde }) {
             </div>
           )}
           <div className="flex-1">
-            <h2 className="text-xl font-bold text-slate-800">{kunde.name}</h2>
+            <h2 className="text-xl font-bold text-slate-800">{tn(kunde.name)}</h2>
             <div className="flex items-center gap-4 mt-1.5 text-sm text-slate-500">
               <span className="flex items-center gap-1"><Briefcase size={14} /> {kunde.beruf}</span>
               <span className="flex items-center gap-1"><Users size={14} /> {kunde.alter} {t('jahre')}</span>
@@ -114,18 +115,18 @@ export default function StammdatenDetailTab({ kunde }) {
             <h3 className="font-semibold text-slate-800">{t('persoenlicheDaten')}</h3>
           </div>
           <div className="space-y-2 text-sm">
-            <InfoRow label={t('name')} value={kunde.name} />
+            <InfoRow label={t('name')} value={tn(kunde.name)} />
             <InfoRow label={t('geburtsdatum')} value={(() => {
               const today = new Date();
               const birthYear = today.getFullYear() - kunde.alter;
               const birthDate = new Date(birthYear, today.getMonth() - 3, 15);
-              return birthDate.toLocaleDateString((localStorage.getItem('kia_language') || 'de') === 'en' ? 'en-GB' : 'de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+              return birthDate.toLocaleDateString(getLang() === 'en' ? 'en-GB' : 'de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
             })()} />
             <InfoRow label={t('alter')} value={`${kunde.alter} ${t('jahre')} (${(() => {
               const today = new Date();
               const birthYear = today.getFullYear() - kunde.alter;
               const birthDate = new Date(birthYear, today.getMonth() - 3, 15);
-              return birthDate.toLocaleDateString((localStorage.getItem('kia_language') || 'de') === 'en' ? 'en-GB' : 'de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+              return birthDate.toLocaleDateString(getLang() === 'en' ? 'en-GB' : 'de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
             })()})`} />
             <InfoRow label={t('beruf')} value={kunde.beruf} />
             {kunde.arbeitgeber && (

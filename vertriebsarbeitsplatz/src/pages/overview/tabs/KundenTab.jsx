@@ -120,7 +120,7 @@ function getColumns(modeId, t) {
 
 export default function KundenTab() {
   const { modeId, navigateTo } = useMode();
-  const { t } = useTranslation();
+  const { t, tn } = useTranslation();
   const kunden = KUNDEN_BY_MODE[modeId] || [];
   const [filter, setFilter] = useState('');
   const [sortCol, setSortCol] = useState(null);
@@ -223,7 +223,7 @@ export default function KundenTab() {
   function renderCell(col, row) {
     switch (col.id) {
       case 'name':
-        return <span className="font-medium text-slate-800">{row.name}</span>;
+        return <span className="font-medium text-slate-800">{tn(row.name)}</span>;
       case 'beruf':
         return <span className="text-slate-600 truncate">{row.beruf}</span>;
       case 'mandatsTyp':

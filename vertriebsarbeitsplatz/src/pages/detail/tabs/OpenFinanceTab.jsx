@@ -5,8 +5,68 @@ import { formatEur } from '../../../utils/formatters';
 import { CheckCircle, XCircle, Link2 } from 'lucide-react';
 import useTranslation from '../../../i18n/useTranslation';
 
+const TYP_EN = {
+  depot: 'Securities Account', depot2: 'Securities Account 2', depot_firma: 'Company Securities',
+  depot_privat: 'Private Securities', cash: 'Cash', festgeld: 'Fixed Deposit',
+  tagesgeld: 'Money Market', immobilien: 'Real Estate', immobilie: 'Real Estate',
+  gmbh: 'Company Ownership', lv: 'Life Insurance', bu: 'Disability Insurance',
+  du: 'Civil Service Disability', dno: 'D&O Insurance', haftpflicht: 'Liability Insurance',
+  hausrat: 'Household Insurance', kfz: 'Auto Insurance', kfz2: 'Auto Insurance 2',
+  kfz_fremd: 'Auto Insurance (External)', pkv: 'Private Health Insurance',
+  pkv_ehemann: 'Private Health (Spouse)', rlv: 'Term Life Insurance',
+  unfall: 'Accident Insurance', it_hp: 'IT Liability', praxis_hp: 'Practice Liability',
+  betriebshaftpflicht: 'Business Liability', kuenstlersozialkasse: 'Artist Social Fund',
+  rechtsschutz: 'Legal Protection', versicherung: 'Insurance',
+  wohngebaeude: 'Building Insurance', inhaltsversicherung: 'Contents Insurance',
+  baufinanzierung: 'Mortgage', bausparvertrag: 'Home Savings Plan',
+  business_konto: 'Business Account', geschaeftskonto: 'Business Account',
+  geschaeftskonto1: 'Business Account 1', geschaeftskonto2: 'Business Account 2',
+  geschaeftskonto3: 'Business Account 3', girokonto: 'Checking Account',
+  konsumkredit: 'Consumer Credit', konto: 'Account', kffw: 'KfW Loan',
+  privatkredit: 'Personal Loan', privat_konto: 'Private Account',
+  privatkonto: 'Private Account', praxiskonto: 'Practice Account',
+  smartfinanz: 'Smart Finance', sparkonto: 'Savings Account',
+  angel: 'Angel Investment', unternehmensbeteiligung: 'Business Participation',
+  telefon: 'Phone', visa: 'Visa', lebensversicherung: 'Life Insurance',
+};
+
+const INST_EN = { Eigene: 'Own', Privat: 'Private' };
+
+const DETAILS_EN = [
+  ['Gemischtes Mandat', 'Mixed Mandate'], ['Gemischte Fonds', 'Mixed Funds'],
+  ['Gemischtes Depot', 'Mixed Portfolio'], ['Festgeld/Tagesgeld', 'Fixed Deposit/Money Market'],
+  ['Gehaltseingang', 'Salary Deposit'], ['Ablauf', 'Maturity'],
+  ['Rückkaufswert', 'Surrender Value'], ['RKW', 'SV (Surrender Value)'],
+  ['Zuteilungsreif', 'Maturing'], ['ZINSBINDUNG', 'FIXED RATE PERIOD'],
+  ['Zinsbindung', 'Fixed Rate Period'], ['Privathaftpflicht', 'Personal Liability'],
+  ['Privatversicherung', 'Private Insurance'], ['Ehepaar', 'Couple'],
+  ['Familie', 'Family'], ['Notgroschen', 'Emergency Fund'],
+  ['Steuerrücklage', 'Tax Reserve'], ['Lohnkonto', 'Payroll Account'],
+  ['Renteneingang', 'Pension Deposit'], ['Hauptkonto', 'Main Account'],
+  ['Ansparphase', 'Savings Phase'], ['Firmenkonto', 'Company Account'],
+  ['Ausgewogen', 'Balanced'], ['Konservativ', 'Conservative'],
+  ['Defensiv', 'Defensive'], ['Wachstum', 'Growth'],
+  ['Zweitwagen Frau', 'Second Car (Spouse)'],
+  ['Dienstunfähigkeit', 'Civil Service Disability'],
+  ['Pflichtversichert', 'Statutory Insured'], ['Deckung', 'Coverage'],
+  ['Baujahr', 'Built'], ['Privat-Depot Aktien', 'Private Stock Portfolio'],
+  ['Privat-Girokonto', 'Private Checking Account'],
+  ['Betriebsmittel', 'Operating Funds'],
+  ['Studienkredit Rest', 'Student Loan Remaining'],
+  ['Inventar', 'Inventory'], ['Innenstadt', 'Downtown'],
+  ['Bahnhof', 'Station'], ['Rest', 'Remaining'],
+  ['bis', 'until'], ['mtl', '/mo'], ['Zins', 'Interest'], ['netto', 'net'],
+];
+
+function translateDetails(details, lang) {
+  if (lang !== 'en' || !details) return details;
+  let s = details;
+  for (const [de, en] of DETAILS_EN) s = s.replaceAll(de, en);
+  return s;
+}
+
 export default function OpenFinanceTab({ kunde }) {
-  const { t } = useTranslation();
+  const { t, lang } = useTranslation();
   const fremd = kunde.fremdProdukte || [];
   const consented = fremd.filter(f => f.consent).length;
   const total = fremd.length;
@@ -40,14 +100,14 @@ export default function OpenFinanceTab({ kunde }) {
         <h3 className="font-semibold text-slate-800 mb-4">{t('externeVerknuepfungen')}</h3>
         <DataTable
           columns={[
-            { id: 'typ', label: t('produkt'), render: v => <span className="font-medium capitalize">{v.replace(/_/g, ' ')}</span> },
+            { id: 'typ', label: t('produkt'), render: v => <span className="font-medium capitalize">{lang === 'en' ? (TYP_EN[v] || v.replace(/_/g, ' ')) : v.replace(/_/g, ' ')}</span> },
             { id: 'institut', label: t('institut'), render: (v) => (
               <div className="flex items-center gap-2">
                 <LogoImg name={v} size={18} />
-                <span>{v}</span>
+                <span>{lang === 'en' ? (INST_EN[v] || v) : v}</span>
               </div>
             )},
-            { id: 'details', label: t('details') },
+            { id: 'details', label: t('details'), render: v => translateDetails(v, lang) },
             { id: 'volumen', label: t('volumenLabel'), render: v => <span className="font-mono">{formatEur(v)}</span> },
             { id: 'consent', label: 'Consent', render: v => (
               v ? (

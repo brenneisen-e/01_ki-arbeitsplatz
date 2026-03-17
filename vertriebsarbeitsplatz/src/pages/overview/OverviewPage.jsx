@@ -1,19 +1,20 @@
-import { useMemo } from 'react';
+import { lazy, Suspense, useMemo } from 'react';
 import { useMode } from '../../hooks/useMode';
 import GlobalHeader from '../../components/layout/GlobalHeader';
 import KPIGrid from '../../components/ui/KPIGrid';
 import { KUNDEN_BY_MODE } from '../../data';
 import UebersichtTab from './tabs/UebersichtTab';
-import NeugeschaeftTab from './tabs/NeugeschaeftTab';
-import BestandTab from './tabs/BestandTab';
-import StornoTab from './tabs/StornoTab';
-import VerguetungTab from './tabs/VerguetungTab';
-import QualitaetTab from './tabs/QualitaetTab';
-import KundenTab from './tabs/KundenTab';
-import PotentialeTab from './tabs/PotentialeTab';
-import StammdatenOverviewTab from './tabs/StammdatenOverviewTab';
-import PipelineLeadsTab from './tabs/PipelineLeadsTab';
-import RevenueTab from './tabs/RevenueTab';
+
+const NeugeschaeftTab = lazy(() => import('./tabs/NeugeschaeftTab'));
+const BestandTab = lazy(() => import('./tabs/BestandTab'));
+const StornoTab = lazy(() => import('./tabs/StornoTab'));
+const VerguetungTab = lazy(() => import('./tabs/VerguetungTab'));
+const QualitaetTab = lazy(() => import('./tabs/QualitaetTab'));
+const KundenTab = lazy(() => import('./tabs/KundenTab'));
+const PotentialeTab = lazy(() => import('./tabs/PotentialeTab'));
+const StammdatenOverviewTab = lazy(() => import('./tabs/StammdatenOverviewTab'));
+const PipelineLeadsTab = lazy(() => import('./tabs/PipelineLeadsTab'));
+const RevenueTab = lazy(() => import('./tabs/RevenueTab'));
 
 const TAB_COMPONENTS = {
   uebersicht: UebersichtTab,
@@ -33,6 +34,12 @@ const TAB_COMPONENTS = {
   compliance: QualitaetTab,
   reporting: VerguetungTab,
 };
+
+const TabFallback = (
+  <div className="flex items-center justify-center py-20">
+    <div className="w-8 h-8 border-2 border-slate-300 border-t-slate-600 rounded-full animate-spin" />
+  </div>
+);
 
 export default function OverviewPage() {
   const { config, activeTab, modeId } = useMode();
@@ -58,7 +65,9 @@ export default function OverviewPage() {
         {activeTab === 'uebersicht' && (
           <KPIGrid kpiConfig={config.kpiConfig} kpiValues={kpiValues} />
         )}
-        <TabComponent />
+        <Suspense fallback={TabFallback}>
+          <TabComponent />
+        </Suspense>
       </div>
     </div>
   );

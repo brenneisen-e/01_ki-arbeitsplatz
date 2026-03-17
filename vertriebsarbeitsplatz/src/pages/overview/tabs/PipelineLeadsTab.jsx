@@ -32,7 +32,7 @@ export default function PipelineLeadsTab() {
   const [kategorieFilter, setKategorieFilter] = useState('alle');
   const [statusFilter, setStatusFilter] = useState('alle');
   const [expandedLead, setExpandedLead] = useState(null);
-  const { t, lang } = useTranslation();
+  const { t, tn, lang } = useTranslation();
 
   const kategorieTabs = [
     { id: 'alle', label: t('alleLeads') },
@@ -262,7 +262,7 @@ function LeadRow({ lead, isExpanded, onToggle, t, stadiumLabels, quellenLabels }
         </td>
         <td className="py-2.5 pr-2">
           <div className={`font-medium flex items-center gap-2 ${hovered ? 'text-white' : 'text-slate-800'}`}>
-            {lead.name}
+            {tn(lead.name)}
             {lead.isNeuerLead && (
               <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold whitespace-nowrap ${hovered ? 'bg-white/30 text-white' : 'bg-emerald-500 text-white animate-pulse'}`}>
                 {t('neuerLead')}

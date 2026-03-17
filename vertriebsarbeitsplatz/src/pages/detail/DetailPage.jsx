@@ -1,19 +1,21 @@
+import { lazy, Suspense } from 'react';
 import { useMode } from '../../hooks/useMode';
 import useTranslation from '../../i18n/useTranslation';
 import { KUNDEN_BY_MODE, getKundeById } from '../../data';
 import GlobalHeader from '../../components/layout/GlobalHeader';
 import StammdatenDetailTab from './tabs/StammdatenDetailTab';
-import VertraegeTab from './tabs/VertraegeTab';
-import OpenFinanceTab from './tabs/OpenFinanceTab';
-import ImpulseTab from './tabs/ImpulseTab';
-import FinanzprofilTab from './tabs/FinanzprofilTab';
-import KommunikationTab from './tabs/KommunikationTab';
-import PerformanceTab from './tabs/PerformanceTab';
-import WpHGComplianceTab from './tabs/WpHGComplianceTab';
-import FamilieNetzwerkTab from './tabs/FamilieNetzwerkTab';
-import EngagementTab from './tabs/EngagementTab';
-import LeadsTab from './tabs/LeadsTab';
-import ProduktabschlussTab from './tabs/ProduktabschlussTab';
+
+const VertraegeTab = lazy(() => import('./tabs/VertraegeTab'));
+const OpenFinanceTab = lazy(() => import('./tabs/OpenFinanceTab'));
+const ImpulseTab = lazy(() => import('./tabs/ImpulseTab'));
+const FinanzprofilTab = lazy(() => import('./tabs/FinanzprofilTab'));
+const KommunikationTab = lazy(() => import('./tabs/KommunikationTab'));
+const PerformanceTab = lazy(() => import('./tabs/PerformanceTab'));
+const WpHGComplianceTab = lazy(() => import('./tabs/WpHGComplianceTab'));
+const FamilieNetzwerkTab = lazy(() => import('./tabs/FamilieNetzwerkTab'));
+const EngagementTab = lazy(() => import('./tabs/EngagementTab'));
+const LeadsTab = lazy(() => import('./tabs/LeadsTab'));
+const ProduktabschlussTab = lazy(() => import('./tabs/ProduktabschlussTab'));
 
 const TAB_COMPONENTS = {
   stammdaten: StammdatenDetailTab,
@@ -34,8 +36,14 @@ const TAB_COMPONENTS = {
   compliance: OpenFinanceTab,
 };
 
+const TabFallback = (
+  <div className="flex items-center justify-center py-20">
+    <div className="w-8 h-8 border-2 border-slate-300 border-t-slate-600 rounded-full animate-spin" />
+  </div>
+);
+
 export default function DetailPage() {
-  const { t } = useTranslation();
+  const { t, tn } = useTranslation();
   const { modeId, activeTab, selectedKundeId } = useMode();
   const kunden = KUNDEN_BY_MODE[modeId] || [];
 
@@ -47,9 +55,11 @@ export default function DetailPage() {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      <GlobalHeader kundeInfo={{ name: kunde.name, id: kunde.id, beruf: kunde.beruf }} />
+      <GlobalHeader kundeInfo={{ name: tn(kunde.name), id: kunde.id, beruf: kunde.beruf }} />
       <div className="px-6 py-6 animate-fade-in-up">
-        <TabComponent kunde={kunde} />
+        <Suspense fallback={TabFallback}>
+          <TabComponent kunde={kunde} />
+        </Suspense>
       </div>
     </div>
   );

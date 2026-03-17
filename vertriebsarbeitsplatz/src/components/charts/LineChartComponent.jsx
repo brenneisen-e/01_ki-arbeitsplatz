@@ -1,11 +1,12 @@
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import { getLang } from '../../utils/langHelper';
 
 function CustomTooltip({ active, payload, label }) {
   if (!active || !payload?.[0]) return null;
   return (
     <div className="bg-white px-3 py-2 rounded-lg shadow-lg border border-slate-200 text-sm">
       <div className="font-medium text-slate-700">{label}</div>
-      <div className="text-slate-500">{payload[0].value.toLocaleString((localStorage.getItem('kia_language') || 'de') === 'en' ? 'en-US' : 'de-DE')}</div>
+      <div className="text-slate-500">{payload[0].value.toLocaleString(getLang() === 'en' ? 'en-US' : 'de-DE')}</div>
     </div>
   );
 }

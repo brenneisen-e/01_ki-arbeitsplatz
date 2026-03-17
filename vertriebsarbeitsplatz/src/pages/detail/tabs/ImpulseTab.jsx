@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { getLang } from '../../../utils/langHelper';
 import Card from '../../../components/ui/Card';
 import { PrioBadge, QuellenBadge } from '../../../components/ui/Badge';
@@ -23,9 +23,9 @@ export default function ImpulseTab({ kunde }) {
   const { t, tn } = useTranslation();
   const absicherung = kunde.absicherung || { vorhanden: [], fehlend: [] };
   const potentiale = kunde.potentiale || [];
-  const whitespots = potentiale.filter(p => p.typ === 'whitespot');
-  const anpassungen = potentiale.filter(p => p.typ === 'anpassung');
-  const crossSell = potentiale.filter(p => p.typ === 'cross_sell' || p.typ === 'konsolidierung' || p.typ === 'nextgen' || p.typ === 'beratung');
+  const whitespots = useMemo(() => potentiale.filter(p => p.typ === 'whitespot'), [potentiale]);
+  const anpassungen = useMemo(() => potentiale.filter(p => p.typ === 'anpassung'), [potentiale]);
+  const crossSell = useMemo(() => potentiale.filter(p => p.typ === 'cross_sell' || p.typ === 'konsolidierung' || p.typ === 'nextgen' || p.typ === 'beratung'), [potentiale]);
   const luecken = absicherung.fehlend?.length || 0;
   const [expandedIndex, setExpandedIndex] = useState(null);
 

@@ -143,7 +143,7 @@ export default function VertraegeTab({ kunde }) {
                     <th className="px-4 py-3 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">{t('volumenLabel')}</th>
                   )}
                   <th className="px-4 py-3 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">{praemieLabel}</th>
-                  <th className="px-4 py-3 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">Seit</th>
+                  <th className="px-4 py-3 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">{t('seit')}</th>
                   <th className="px-4 py-3 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">{t('status')}</th>
                 </tr>
               </thead>

@@ -69,18 +69,18 @@ export default function KommunikationTab({ kunde }) {
 
       {/* Filter */}
       <div className="flex gap-2">
-        {typen.map(t => (
+        {typen.map(typ => (
           <button
-            key={t}
-            onClick={() => setFilterTyp(t)}
+            key={typ}
+            onClick={() => setFilterTyp(typ)}
             className={clsx(
               'px-3 py-1.5 rounded-lg text-sm font-medium transition-colors',
-              filterTyp === t
+              filterTyp === typ
                 ? 'bg-slate-800 text-white'
                 : 'bg-white text-slate-500 border border-slate-200 hover:bg-slate-50'
             )}
           >
-            {t === 'alle' ? `Alle (${kommunikation.length})` : `${TYP_LABELS[t] || t} (${typCounts[t] || 0})`}
+            {typ === 'alle' ? `${t('alle')} (${kommunikation.length})` : `${TYP_LABELS[typ] || typ} (${typCounts[typ] || 0})`}
           </button>
         ))}
       </div>

@@ -21,7 +21,7 @@ export default function ProduktabschlussTab({ kunde }) {
   const STATUS_CONFIG = {
     abgeschlossen: { icon: CheckCircle, color: 'text-emerald-500', bg: 'bg-emerald-50', label: t('abgeschlossen') },
     abgebrochen: { icon: XCircle, color: 'text-red-500', bg: 'bg-red-50', label: t('abgebrochen') },
-    offen: { icon: Clock, color: 'text-slate-300', bg: 'bg-slate-50', label: 'Offen' },
+    offen: { icon: Clock, color: 'text-slate-300', bg: 'bg-slate-50', label: t('statusOffen') },
   };
   const abschluesse = kunde.produktabschluss || [];
 

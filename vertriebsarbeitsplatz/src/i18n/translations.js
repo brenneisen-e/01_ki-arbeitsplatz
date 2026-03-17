@@ -675,6 +675,41 @@ const translations = {
   'auffaelligeVermittler': { de: 'Auffällige Vermittler', en: 'Notable agents' },
   'termineHeute': { de: 'Termine heute', en: 'Appointments today' },
   'rueckrufLabel': { de: 'Rückruf', en: 'Callback' },
+
+  // ─── Seit / Since ───
+  'seit': { de: 'Seit', en: 'Since' },
+
+  // ─── Status labels ───
+  'statusOffen': { de: 'Offen', en: 'Open' },
+
+  // ─── Vertragsdetails / Contract Details ───
+  'vertragsdetails': { de: 'Vertragsdetails', en: 'Contract Details' },
+  'schliessen': { de: 'Schließen', en: 'Close' },
+  'kundenmaskeOeffnen': { de: 'Kundenmaske öffnen', en: 'Open customer view' },
+
+  // ─── Fremdprodukt-Typen ───
+  'typ.girokonto': { de: 'Girokonto', en: 'Current Account' },
+  'typ.baufinanzierung': { de: 'Baufinanzierung', en: 'Mortgage' },
+  'typ.kredit': { de: 'Kredit', en: 'Loan' },
+  'typ.depot': { de: 'Depot', en: 'Securities Account' },
+  'typ.tagesgeld': { de: 'Tagesgeld', en: 'Savings Account' },
+  'typ.festgeld': { de: 'Festgeld', en: 'Fixed Deposit' },
+  'typ.sparkonto': { de: 'Sparkonto', en: 'Savings Account' },
+  'typ.risikoleben': { de: 'Risikoleben', en: 'Term Life' },
+  'typ.bav': { de: 'bAV', en: 'Occ. Pension' },
+  'typ.bausparer': { de: 'Bausparer', en: 'Building Savings' },
+  'typ.riester': { de: 'Riester-Rente', en: 'Riester Pension' },
+  'typ.ruerup': { de: 'Rürup-Rente', en: 'Rürup Pension' },
+  'typ.anleihe': { de: 'Anleihe', en: 'Bond' },
+  'typ.fonds': { de: 'Fonds', en: 'Fund' },
+  'typ.kfzVers': { de: 'Kfz-Versicherung', en: 'Motor Insurance' },
+  'typ.haftpflicht': { de: 'Haftpflicht', en: 'Liability' },
+  'typ.hausrat': { de: 'Hausrat', en: 'Household' },
+  'typ.buVers': { de: 'BU-Versicherung', en: 'Disability Ins.' },
+  'typ.unfall': { de: 'Unfallversicherung', en: 'Accident Ins.' },
+  'typ.rechtsschutz': { de: 'Rechtsschutz', en: 'Legal Protection' },
+  'typ.wohngebaeude': { de: 'Wohngebäude', en: 'Building Ins.' },
+  'typ.pflege': { de: 'Pflege', en: 'Care Ins.' },
 };
 
 export default translations;

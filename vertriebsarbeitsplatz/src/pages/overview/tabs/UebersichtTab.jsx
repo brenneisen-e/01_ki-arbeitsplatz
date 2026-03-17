@@ -39,19 +39,19 @@ const FOKUS = {
 
 const TAGESSTART_ITEMS = {
   versicherung: [
-    { icon: Calendar, text: '4 Termine heute', size: 14 },
-    { icon: Zap, text: '8 offene Potenziale', size: 14 },
-    { icon: Phone, text: '3 Follow-ups fällig', size: 14 },
+    { icon: Calendar, textKey: 'termineHeute', textPrefix: '4 ', size: 14 },
+    { icon: Zap, textKey: 'offenePotenziale', textPrefix: '8 ', size: 14 },
+    { icon: Phone, textKey: 'followupsFaellig', textPrefix: '3 ', size: 14 },
   ],
   banking: [
-    { icon: Calendar, text: '4 Termine', size: 14 },
-    { icon: Phone, text: '1 Rückruf', size: 14 },
-    { icon: AlertTriangle, text: '2 FIDA-Consents offen', size: 14, className: 'text-amber-500' },
+    { icon: Calendar, textKey: 'termine', textPrefix: '4 ', size: 14 },
+    { icon: Phone, textKey: 'rueckruf', textPrefix: '1 ', size: 14 },
+    { icon: AlertTriangle, textKey: 'fidaConsentsOffen', textPrefix: '2 ', size: 14, className: 'text-amber-500' },
   ],
   vermoegensverwaltung: [
-    { icon: Calendar, text: '2 Mandate-Meetings', size: 14 },
-    { icon: AlertTriangle, text: '2 Follow-ups fällig', size: 14, className: 'text-amber-500' },
-    { icon: AlertTriangle, text: '1 WpHG abgelaufen', size: 14, className: 'text-red-500' },
+    { icon: Calendar, textKey: 'mandateMeetings', textPrefix: '2 ', size: 14 },
+    { icon: AlertTriangle, textKey: 'followupsFaellig', textPrefix: '2 ', size: 14, className: 'text-amber-500' },
+    { icon: AlertTriangle, textKey: 'wphgAbgelaufen', textPrefix: '1 ', size: 14, className: 'text-red-500' },
   ],
 };
 

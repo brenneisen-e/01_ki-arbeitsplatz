@@ -5,6 +5,21 @@ import useTranslation from '../../i18n/useTranslation';
 import { KUNDEN_BY_MODE } from '../../data';
 import { VV_LEADS } from '../../data/vvExtended';
 import { getLang, tx, invalidateLangCache } from '../../utils/langHelper';
+import { MODE_CONFIGS } from '../../data/modeConfig';
+
+function getAdvisorSignature() {
+  const customName = typeof window !== 'undefined' ? localStorage.getItem('kia_user_fullname') : null;
+  let modeId = 'vermoegensverwaltung';
+  try {
+    const stored = localStorage.getItem('kia_last_mode');
+    if (stored) modeId = JSON.parse(stored).modeId || modeId;
+  } catch {}
+  const cfg = MODE_CONFIGS[modeId] || MODE_CONFIGS.vermoegensverwaltung;
+  const name = customName || cfg.beraterName;
+  const title = cfg.beraterTitel;
+  const institut = cfg.institut;
+  return { name, title, institut };
+}
 
 function getWelcomeMessage(modeId, t) {
   const keys = {
@@ -51,6 +66,7 @@ function generateAnschreibenResponse(lead, kunde) {
   const anrede = isEn
     ? (name.includes('Dr.') ? `Dear Mr. ${name.replace('Dr. ', '')}` : `Dear ${name}`)
     : (name.includes('Dr.') ? `Sehr geehrter Herr ${name.replace('Dr. ', '')}` : `Sehr geehrter ${name}`);
+  const advisor = getAdvisorSignature();
   const dateLocale = isEn ? 'en-US' : 'de-DE';
   const today = new Date().toLocaleDateString(dateLocale, { day: '2-digit', month: '2-digit', year: 'numeric' });
 
@@ -99,8 +115,8 @@ I would be delighted to discuss the opportunities and potential that arise for y
 May I suggest an appointment within the next two weeks? I am flexible with timing and happy to accommodate your schedule.
 
 Kind regards,
-Dr. Thomas Richter
-Senior Advisor | HRK LUNIS AG`
+${advisor.name}
+${advisor.title} | ${advisor.institut}`
     : `${anrede},
 
 ich hoffe, es geht Ihnen gut. Ich schreibe Ihnen bezüglich ${bezug}.
@@ -110,8 +126,8 @@ Gerne würde ich mit Ihnen in einem persönlichen Gespräch die Möglichkeiten u
 Darf ich Ihnen einen Termin in den kommenden zwei Wochen vorschlagen? Ich bin zeitlich flexibel und richte mich gerne nach Ihrem Kalender.
 
 Mit freundlichen Grüßen
-Dr. Thomas Richter
-Senior Advisor | HRK LUNIS AG`;
+${advisor.name}
+${advisor.title} | ${advisor.institut}`;
 
   const emailSubject = isEn
     ? `Invitation: Personal Meeting — ${thema}`

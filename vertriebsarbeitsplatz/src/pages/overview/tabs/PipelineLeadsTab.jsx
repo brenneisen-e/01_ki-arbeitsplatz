@@ -192,6 +192,7 @@ export default function PipelineLeadsTab() {
                     isExpanded={isExpanded}
                     onToggle={() => setExpandedLead(isExpanded ? null : lead.id)}
                     t={t}
+                    tn={tn}
                     stadiumLabels={stadiumLabels}
                     quellenLabels={quellenLabels}
                   />
@@ -248,7 +249,7 @@ export default function PipelineLeadsTab() {
   );
 }
 
-function LeadRow({ lead, isExpanded, onToggle, t, stadiumLabels, quellenLabels }) {
+function LeadRow({ lead, isExpanded, onToggle, t, tn, stadiumLabels, quellenLabels }) {
   const [hovered, setHovered] = useState(false);
 
   return (

@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import Card from '../../../components/ui/Card';
 import PipelineBar from '../../../components/ui/PipelineBar';
 import LogoImg from '../../../components/ui/LogoImg';
@@ -67,32 +67,35 @@ export default function PipelineLeadsTab() {
   };
 
   // Sort leads: new leads (isNeuerLead) first, then by date
-  const leads = [...(VV_LEADS || [])].sort((a, b) => {
+  const leads = useMemo(() => [...(VV_LEADS || [])].sort((a, b) => {
     if (a.isNeuerLead && !b.isNeuerLead) return -1;
     if (!a.isNeuerLead && b.isNeuerLead) return 1;
     return 0;
-  });
-  const filtered = leads.filter(l => {
+  }), []);
+
+  const filtered = useMemo(() => leads.filter(l => {
     if (kategorieFilter !== 'alle' && l.kategorie !== kategorieFilter) return false;
     if (statusFilter !== 'alle' && l.stadium !== statusFilter) return false;
     return true;
-  });
+  }), [leads, kategorieFilter, statusFilter]);
 
-  const neumandate = leads.filter(l => l.kategorie === 'neumandat');
-  const bestandsmandate = leads.filter(l => l.kategorie === 'bestandsmandat');
+  const neumandate = useMemo(() => leads.filter(l => l.kategorie === 'neumandat'), [leads]);
+  const bestandsmandate = useMemo(() => leads.filter(l => l.kategorie === 'bestandsmandat'), [leads]);
 
-  const stadiumCounts = {};
-  STADIUM_ORDER.forEach(s => { stadiumCounts[s] = leads.filter(l => l.stadium === s).length; });
-
-  const pipelineSegments = STADIUM_ORDER.map(s => ({
-    label: stadiumLabels[s],
-    count: stadiumCounts[s] || 0,
-    color: s === 'gewonnen' ? '#10b981' : s === 'angebot' ? '#f59e0b' : s === 'termin' ? '#3b82f6' : s === 'kennenlernen' ? '#8b5cf6' : s === 'identifiziert' ? '#06b6d4' : '#94a3b8',
-  }));
+  const { stadiumCounts, pipelineSegments } = useMemo(() => {
+    const counts = {};
+    STADIUM_ORDER.forEach(s => { counts[s] = leads.filter(l => l.stadium === s).length; });
+    const segments = STADIUM_ORDER.map(s => ({
+      label: stadiumLabels[s],
+      count: counts[s] || 0,
+      color: s === 'gewonnen' ? '#10b981' : s === 'angebot' ? '#f59e0b' : s === 'termin' ? '#3b82f6' : s === 'kennenlernen' ? '#8b5cf6' : s === 'identifiziert' ? '#06b6d4' : '#94a3b8',
+    }));
+    return { stadiumCounts: counts, pipelineSegments: segments };
+  }, [leads, stadiumLabels]);
 
   // Calculate potential AuM by category
-  const neumandatAuM = neumandate.reduce((s, l) => s + (l.potentialAuM || 0), 0);
-  const bestandsAuM = bestandsmandate.reduce((s, l) => s + (l.potentialAuM || 0), 0);
+  const neumandatAuM = useMemo(() => neumandate.reduce((s, l) => s + (l.potentialAuM || 0), 0), [neumandate]);
+  const bestandsAuM = useMemo(() => bestandsmandate.reduce((s, l) => s + (l.potentialAuM || 0), 0), [bestandsmandate]);
 
   return (
     <div className="space-y-3">

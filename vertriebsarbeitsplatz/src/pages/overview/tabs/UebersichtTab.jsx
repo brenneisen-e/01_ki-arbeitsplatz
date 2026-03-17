@@ -133,10 +133,10 @@ export default function UebersichtTab() {
   const { modeId, config, navigateTo, setActiveTab } = useMode();
   const { t, tn, lang } = useTranslation();
   const [mandatFilter, setMandatFilter] = useState('alle');
-  const potentiale = getAllPotentiale(modeId).sort((a, b) => {
+  const potentiale = useMemo(() => getAllPotentiale(modeId).sort((a, b) => {
     const prio = { kritisch: 0, hoch: 1, mittel: 2, niedrig: 3 };
     return (prio[a.prioritaet] || 3) - (prio[b.prioritaet] || 3);
-  }).slice(0, 5);
+  }).slice(0, 5), [modeId]);
 
   // Group potentials by customer for Versicherung/Banking
   const kundenPotentiale = useMemo(() => {
@@ -158,18 +158,18 @@ export default function UebersichtTab() {
   }, [modeId]);
 
   // VV: Kunden mit Mandatsinformationen
-  const vvKunden = modeId === 'vermoegensverwaltung' ? (KUNDEN_BY_MODE.vermoegensverwaltung || []).map(k => {
+  const vvKunden = useMemo(() => modeId === 'vermoegensverwaltung' ? (KUNDEN_BY_MODE.vermoegensverwaltung || []).map(k => {
     const mandat = (k.eigeneProdukte || []).find(p => p.typ === 'mandat');
     const letzteKomm = (k.kommunikation || []).sort((a, b) => b.datum.localeCompare(a.datum))[0];
     const leadsCount = (k.potentiale || []).length;
     const istNeu = mandat && (mandat.status === 'onboarding' || (mandat.seit && mandat.seit >= '2025-06'));
     return { ...k, mandat, letzteKomm, leadsCount, istNeu };
-  }) : [];
-  const filteredVVKunden = vvKunden.filter(k => {
+  }) : [], [modeId]);
+  const filteredVVKunden = useMemo(() => vvKunden.filter(k => {
     if (mandatFilter === 'neu') return k.istNeu;
     if (mandatFilter === 'bestand') return !k.istNeu;
     return true;
-  });
+  }), [vvKunden, mandatFilter]);
 
   const termine = (TERMINE_BY_MODE[modeId] || TERMINE_BY_MODE.versicherung).slice(0, 4);
   const aufgaben = AUFGABEN_BY_MODE[modeId] || AUFGABEN_BY_MODE.versicherung;

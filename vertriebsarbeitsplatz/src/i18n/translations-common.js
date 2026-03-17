@@ -1,0 +1,156 @@
+/**
+ * Common translations: Global/Header, Tabs, Landing Page, Months, Weekdays, general labels.
+ */
+const translationsCommon = {
+  // ─── Global / Header ───
+  'startseite': { de: 'Startseite', en: 'Home' },
+  'zurueckStartseite': { de: 'Zurück zur Startseite', en: 'Back to Home' },
+  'zurueckUebersicht': { de: 'Zurück zur Übersicht', en: 'Back to Overview' },
+  'aktiv': { de: 'Aktiv', en: 'Active' },
+  'demodatenExportieren': { de: 'Demodaten als JSON exportieren', en: 'Export demo data as JSON' },
+  'maerkte': { de: 'Märkte', en: 'Markets' },
+  'mandateMeetings': { de: 'Mandate-Meetings', en: 'Mandate Meetings' },
+  'followupsFaellig': { de: 'Follow-ups fällig', en: 'Follow-ups due' },
+  'wphgAbgelaufen': { de: 'WpHG abgelaufen', en: 'MiFID expired' },
+  'termine': { de: 'Termine', en: 'Appointments' },
+  'rueckruf': { de: 'Rückruf', en: 'Callback' },
+  'fidaConsentsOffen': { de: 'FIDA-Consents offen', en: 'FIDA consents pending' },
+  'offenePotenziale': { de: 'offene Potenziale', en: 'open potentials' },
+  'bewoelkt': { de: 'Bewölkt', en: 'Cloudy' },
+  'teilwSonnig': { de: 'Teilw. sonnig', en: 'Partly sunny' },
+
+  // ─── Tabs (Overview) ───
+  'tab.meinTag': { de: 'Mein Tag', en: 'My Day' },
+  'tab.mandanten': { de: 'Mandanten', en: 'Clients' },
+  'tab.kunden': { de: 'Kunden', en: 'Customers' },
+  'tab.leads': { de: 'Leads', en: 'Leads' },
+  'tab.revenue': { de: 'Revenue', en: 'Revenue' },
+  'tab.compliance': { de: 'Compliance', en: 'Compliance' },
+  'tab.bestand': { de: 'Bestand', en: 'Portfolio' },
+  'tab.neugeschaeft': { de: 'Neugeschäft', en: 'New Business' },
+  'tab.potenziale': { de: 'Potenziale', en: 'Potentials' },
+  'tab.storno': { de: 'Storno', en: 'Cancellations' },
+  'tab.verguetung': { de: 'Vergütung', en: 'Compensation' },
+  'tab.qualitaet': { de: 'Qualität', en: 'Quality' },
+  'tab.stammdaten': { de: 'Stammdaten', en: 'Master Data' },
+
+  // ─── Tabs (Detail) ───
+  'tab.ueberblick': { de: 'Überblick', en: 'Overview' },
+  'tab.performance': { de: 'Performance', en: 'Performance' },
+  'tab.vermoegen': { de: 'Vermögen', en: 'Assets' },
+  'tab.wphgCompliance': { de: 'WpHG & Compliance', en: 'MiFID & Compliance' },
+  'tab.familieNetzwerk': { de: 'Familie & Netzwerk', en: 'Family & Network' },
+  'tab.engagement': { de: 'Engagement', en: 'Engagement' },
+  'tab.kontakte': { de: 'Kontakte', en: 'Contacts' },
+
+  // ─── Landing Page ───
+  'willkommen': { de: 'Willkommen', en: 'Welcome' },
+  'willkommenZurueck': { de: 'Willkommen zurück, {name}', en: 'Welcome back, {name}' },
+  'wasKannIchHeuteTun': { de: 'Was kann ich heute für dich tun?', en: 'What can I do for you today?' },
+  'wasKannIchTun': { de: 'Was kann ich für dich tun?', en: 'What can I do for you?' },
+  'fragMichEtwas': { de: 'Frag mich etwas...', en: 'Ask me something...' },
+  'zusammenfassungHeutigerTag': { de: 'Zusammenfassung heutiger Tag', en: 'Summary of today' },
+  'uebersichtAnzeigen': { de: 'Übersicht anzeigen', en: 'Show overview' },
+  'cockpitOeffnen': { de: 'Cockpit öffnen', en: 'Open cockpit' },
+  'kundenlisteAnzeigen': { de: 'Kundenliste anzeigen', en: 'Show customer list' },
+  'potenzialeAnzeigen': { de: 'Potenziale anzeigen', en: 'Show potentials' },
+  'versicherung': { de: 'Versicherung', en: 'Insurance' },
+  'bankenLabel': { de: 'Banken', en: 'Banking' },
+  'vermoegensverwaltungLabel': { de: 'Vermögensverwaltung', en: 'Wealth Management' },
+  'unternehmenAuswaehlen': { de: 'Unternehmen auswählen', en: 'Select company' },
+  'unternehmenAusblenden': { de: 'Unternehmen ausblenden', en: 'Hide companies' },
+  'einstellungen': { de: 'Einstellungen', en: 'Settings' },
+  'beraterProfil': { de: 'Berater-Profil', en: 'Advisor Profile' },
+  'bildHochladen': { de: 'Bild hochladen', en: 'Upload photo' },
+  'bildEntfernen': { de: 'Bild entfernen', en: 'Remove photo' },
+  'vorUndNachname': { de: 'Vor- und Nachname', en: 'First and last name' },
+  'aufStandardZuruecksetzen': { de: 'Auf Standard zurücksetzen', en: 'Reset to default' },
+  'losGehts': { de: "Los geht's", en: "Let's go" },
+  'wieDarfIchDichNennen': { de: 'Wie darf ich dich nennen?', en: 'What should I call you?' },
+  'deinVorname': { de: 'Dein Vorname...', en: 'Your first name...' },
+  'namePlaceholder': { de: 'z.B. Eike Brenneisen', en: 'e.g. John Smith' },
+  'datenWerdenGeladen': { de: 'Daten werden geladen...', en: 'Loading data...' },
+  'kpisWerdenBerechnet': { de: 'KPIs werden berechnet...', en: 'Calculating KPIs...' },
+  'vertriebspotenzialeAnalysiert': { de: 'Vertriebspotenziale analysiert...', en: 'Analyzing sales potentials...' },
+  'uebersichtWirdVorbereitet': { de: 'Übersicht wird vorbereitet...', en: 'Preparing overview...' },
+
+  // ─── Month Names ───
+  'monat.jan': { de: 'Jan', en: 'Jan' },
+  'monat.feb': { de: 'Feb', en: 'Feb' },
+  'monat.maer': { de: 'Mär', en: 'Mar' },
+  'monat.apr': { de: 'Apr', en: 'Apr' },
+  'monat.mai': { de: 'Mai', en: 'May' },
+  'monat.jun': { de: 'Jun', en: 'Jun' },
+  'monat.jul': { de: 'Jul', en: 'Jul' },
+  'monat.aug': { de: 'Aug', en: 'Aug' },
+  'monat.sep': { de: 'Sep', en: 'Sep' },
+  'monat.okt': { de: 'Okt', en: 'Oct' },
+  'monat.nov': { de: 'Nov', en: 'Nov' },
+  'monat.dez': { de: 'Dez', en: 'Dec' },
+  'monat.januar': { de: 'Januar', en: 'January' },
+  'monat.februar': { de: 'Februar', en: 'February' },
+  'monat.maerz': { de: 'März', en: 'March' },
+  'monat.april': { de: 'April', en: 'April' },
+  'monat.maiLang': { de: 'Mai', en: 'May' },
+  'monat.juni': { de: 'Juni', en: 'June' },
+  'monat.juli': { de: 'Juli', en: 'July' },
+  'monat.august': { de: 'August', en: 'August' },
+  'monat.september': { de: 'September', en: 'September' },
+  'monat.oktober': { de: 'Oktober', en: 'October' },
+  'monat.november': { de: 'November', en: 'November' },
+  'monat.dezember': { de: 'Dezember', en: 'December' },
+
+  // ─── Week Day Names ───
+  'wochentag.mo': { de: 'Mo', en: 'Mon' },
+  'wochentag.di': { de: 'Di', en: 'Tue' },
+  'wochentag.mi': { de: 'Mi', en: 'Wed' },
+  'wochentag.do': { de: 'Do', en: 'Thu' },
+  'wochentag.fr': { de: 'Fr', en: 'Fri' },
+  'wochentag.sa': { de: 'Sa', en: 'Sat' },
+  'wochentag.so': { de: 'So', en: 'Sun' },
+
+  // ─── Vertriebsassistent / Quick Actions ───
+  'neuerLead': { de: 'Neuer Lead', en: 'New Lead' },
+  'nachrichtEingeben': { de: 'Nachricht eingeben...', en: 'Type a message...' },
+  'analysiere': { de: 'Analysiere...', en: 'Analyzing...' },
+  'welcomeVersicherung': { de: 'Hallo! Ich bin dein KI-Vertriebsassistent. Ich kann dir bei Kundenanalysen, Produktempfehlungen und Vertriebsstrategien helfen.', en: 'Hello! I\'m your AI sales assistant. I can help you with customer analyses, product recommendations, and sales strategies.' },
+  'welcomeBanking': { de: 'Hallo! Ich unterstütze dich bei Kreditanalysen, Anlageberatung und Kundengesprächen.', en: 'Hello! I can help you with credit analyses, investment advice, and customer meetings.' },
+  'welcomeVermoegensverwaltung': { de: 'Hallo! Ich helfe dir bei Portfolioanalysen, Mandatsbetreuung und Compliance-Fragen.', en: 'Hello! I can help you with portfolio analyses, mandate management, and compliance questions.' },
+  'welcomeCockpit': { de: 'Hallo! Ich kann dir bei der Analyse deiner Dashboard-Daten helfen. Hier sind einige Vorschläge:', en: 'Hello! I can help you analyze your dashboard data. Here are some suggestions:' },
+  'welcomeDetail': { de: 'Hallo! Ich bin bereit für {name}. Was kann ich für dich tun?', en: 'Hello! I\'m ready for {name}. What can I do for you?' },
+  'neueLeadsAnzeigen': { de: 'Neue Leads anzeigen', en: 'Show new leads' },
+  'kundenpotenzialAnalysieren': { de: 'Kundenpotenzial analysieren', en: 'Analyze customer potential' },
+  'gespraechsleitfadenErstellen': { de: 'Gesprächsleitfaden erstellen', en: 'Create conversation guide' },
+  'crossSellingChancen': { de: 'Cross-Selling Chancen', en: 'Cross-selling opportunities' },
+  'kreditanalyseStarten': { de: 'Kreditanalyse starten', en: 'Start credit analysis' },
+  'mandantenpotenzialAnalysieren': { de: 'Mandantenpotenzial analysieren', en: 'Analyze client potential' },
+  'portfolioAnalyse': { de: 'Portfolio-Analyse', en: 'Portfolio Analysis' },
+  'anschreibenFormulieren': { de: 'Anschreiben formulieren', en: 'Draft letter' },
+  'leadsAnalysieren': { de: 'Leads analysieren', en: 'Analyze leads' },
+  'top5NachErgebnis': { de: 'Top 5 nach Ergebnis', en: 'Top 5 by result' },
+  'performanceUeberblick': { de: 'Performance Überblick', en: 'Performance overview' },
+  'auffaelligeVermittler': { de: 'Auffällige Vermittler', en: 'Notable agents' },
+  'termineHeute': { de: 'Termine heute', en: 'Appointments today' },
+  'rueckrufLabel': { de: 'Rückruf', en: 'Callback' },
+
+  // ─── Seit / Since ───
+  'seit': { de: 'Seit', en: 'Since' },
+
+  // ─── Status labels ───
+  'statusOffen': { de: 'Offen', en: 'Open' },
+
+  // ─── Mode labels ───
+  'modus.versicherung': { de: 'Versicherung', en: 'Insurance' },
+  'modus.banking': { de: 'Banking', en: 'Banking' },
+  'modus.vermoegensverwaltung': { de: 'Vermögensverwaltung', en: 'Wealth Management' },
+
+  // ─── Detail Page ───
+  'keinKundeGefunden': { de: 'Kein Kunde gefunden.', en: 'No customer found.' },
+
+  // ─── Vertragsdetails / Contract Details ───
+  'vertragsdetails': { de: 'Vertragsdetails', en: 'Contract Details' },
+  'schliessen': { de: 'Schließen', en: 'Close' },
+  'kundenmaskeOeffnen': { de: 'Kundenmaske öffnen', en: 'Open customer view' },
+};
+
+export default translationsCommon;

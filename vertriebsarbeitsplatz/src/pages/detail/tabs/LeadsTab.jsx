@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import Card from '../../../components/ui/Card';
 import PipelineBar from '../../../components/ui/PipelineBar';
 import LogoImg from '../../../components/ui/LogoImg';
@@ -85,63 +85,68 @@ export default function LeadsTab({ kunde }) {
     compliance: t('quelle.compliance'),
   };
 
-  // Filter leads related to this mandant
-  const allLeads = VV_LEADS || [];
-  const kundeLeads = allLeads.filter(l => l.referenzMandant === kunde?.id);
+  // Filter leads related to this mandant, merge with persona leads, and sort
+  const mergedLeads = useMemo(() => {
+    const allLeads = VV_LEADS || [];
+    const kundeLeads = allLeads.filter(l => l.referenzMandant === kunde?.id);
 
-  // Also include leads from the mandant's potentiale (persona data)
-  const personaLeads = (kunde?.potentiale || []).map((p, i) => ({
-    id: `persona-${i}`,
-    name: p.titel,
-    kategorie: p.typ === 'nextgen' || p.typ === 'beratung' ? 'neumandat' : 'bestandsmandat',
-    quelle: p.typ === 'nextgen' ? 'nextgen' : p.typ === 'konsolidierung' ? 'fremdbank' : p.typ === 'anpassung' ? 'upgrade' : p.typ === 'cross_sell' ? 'upgrade' : 'lifeevent',
-    quelleLabel: p.quellen?.join(', ') || p.typ,
-    stadium: p.status === 'abgeschlossen' ? 'gewonnen' : p.status === 'termin' ? 'termin' : p.status === 'angeschrieben' ? 'kennenlernen' : 'identifiziert',
-    geschaetztesVolumen: p.volumen > 0 ? `${(p.volumen / 1000000).toFixed(1)}M €` : '—',
-    potentialAuM: p.volumen || 0,
-    herkunft: p.beschreibung,
-    herleitung: p.herleitung || [],
-    vergleich: p.vergleich || null,
-    deckungsluecke: p.deckungsluecke || null,
-    naechsterSchritt: p.empfohleneAktion === 'termin_vereinbaren' ? 'Termin vereinbaren' : p.empfohleneAktion === 'angebot_erstellen' ? 'Angebot erstellen' : p.empfohleneAktion,
-    produktEmpfehlung: p.produktEmpfehlung,
-    beruf: '',
-    datum: '',
-  }));
+    // Also include leads from the mandant's potentiale (persona data)
+    const personaLeads = (kunde?.potentiale || []).map((p, i) => ({
+      id: `persona-${i}`,
+      name: p.titel,
+      kategorie: p.typ === 'nextgen' || p.typ === 'beratung' ? 'neumandat' : 'bestandsmandat',
+      quelle: p.typ === 'nextgen' ? 'nextgen' : p.typ === 'konsolidierung' ? 'fremdbank' : p.typ === 'anpassung' ? 'upgrade' : p.typ === 'cross_sell' ? 'upgrade' : 'lifeevent',
+      quelleLabel: p.quellen?.join(', ') || p.typ,
+      stadium: p.status === 'abgeschlossen' ? 'gewonnen' : p.status === 'termin' ? 'termin' : p.status === 'angeschrieben' ? 'kennenlernen' : 'identifiziert',
+      geschaetztesVolumen: p.volumen > 0 ? `${(p.volumen / 1000000).toFixed(1)}M €` : '—',
+      potentialAuM: p.volumen || 0,
+      herkunft: p.beschreibung,
+      herleitung: p.herleitung || [],
+      vergleich: p.vergleich || null,
+      deckungsluecke: p.deckungsluecke || null,
+      naechsterSchritt: p.empfohleneAktion === 'termin_vereinbaren' ? 'Termin vereinbaren' : p.empfohleneAktion === 'angebot_erstellen' ? 'Angebot erstellen' : p.empfohleneAktion,
+      produktEmpfehlung: p.produktEmpfehlung,
+      beruf: '',
+      datum: '',
+    }));
 
-  // Merge: use VV_LEADS for this mandant, plus persona leads if not duplicated
-  const mergedLeads = [...kundeLeads];
-  personaLeads.forEach(pl => {
-    const exists = kundeLeads.some(kl =>
-      kl.name.toLowerCase().includes(pl.name.split(' ')[0]?.toLowerCase()) ||
-      pl.name.toLowerCase().includes(kl.name.split(' ')[0]?.toLowerCase())
-    );
-    if (!exists) mergedLeads.push(pl);
-  });
-  // Sort: new leads (isNeuerLead) first
-  mergedLeads.sort((a, b) => {
-    if (a.isNeuerLead && !b.isNeuerLead) return -1;
-    if (!a.isNeuerLead && b.isNeuerLead) return 1;
-    return 0;
-  });
+    // Merge: use VV_LEADS for this mandant, plus persona leads if not duplicated
+    const merged = [...kundeLeads];
+    personaLeads.forEach(pl => {
+      const exists = kundeLeads.some(kl =>
+        kl.name.toLowerCase().includes(pl.name.split(' ')[0]?.toLowerCase()) ||
+        pl.name.toLowerCase().includes(kl.name.split(' ')[0]?.toLowerCase())
+      );
+      if (!exists) merged.push(pl);
+    });
+    // Sort: new leads (isNeuerLead) first
+    merged.sort((a, b) => {
+      if (a.isNeuerLead && !b.isNeuerLead) return -1;
+      if (!a.isNeuerLead && b.isNeuerLead) return 1;
+      return 0;
+    });
+    return merged;
+  }, [kunde]);
 
-  const filtered = mergedLeads.filter(l => {
+  const filtered = useMemo(() => mergedLeads.filter(l => {
     if (kategorieFilter !== 'alle' && l.kategorie !== kategorieFilter) return false;
     if (statusFilter !== 'alle' && l.stadium !== statusFilter) return false;
     return true;
-  });
+  }), [mergedLeads, kategorieFilter, statusFilter]);
 
-  const neumandate = mergedLeads.filter(l => l.kategorie === 'neumandat');
-  const bestandsmandate = mergedLeads.filter(l => l.kategorie === 'bestandsmandat');
+  const neumandate = useMemo(() => mergedLeads.filter(l => l.kategorie === 'neumandat'), [mergedLeads]);
+  const bestandsmandate = useMemo(() => mergedLeads.filter(l => l.kategorie === 'bestandsmandat'), [mergedLeads]);
 
-  const stadiumCounts = {};
-  STADIUM_ORDER.forEach(s => { stadiumCounts[s] = mergedLeads.filter(l => l.stadium === s).length; });
-
-  const pipelineSegments = STADIUM_ORDER.map(s => ({
-    label: stadiumLabels[s],
-    count: stadiumCounts[s] || 0,
-    color: s === 'gewonnen' ? '#10b981' : s === 'angebot' ? '#f59e0b' : s === 'termin' ? '#3b82f6' : s === 'kennenlernen' ? '#8b5cf6' : s === 'identifiziert' ? '#06b6d4' : '#94a3b8',
-  }));
+  const { stadiumCounts, pipelineSegments } = useMemo(() => {
+    const counts = {};
+    STADIUM_ORDER.forEach(s => { counts[s] = mergedLeads.filter(l => l.stadium === s).length; });
+    const segments = STADIUM_ORDER.map(s => ({
+      label: stadiumLabels[s],
+      count: counts[s] || 0,
+      color: s === 'gewonnen' ? '#10b981' : s === 'angebot' ? '#f59e0b' : s === 'termin' ? '#3b82f6' : s === 'kennenlernen' ? '#8b5cf6' : s === 'identifiziert' ? '#06b6d4' : '#94a3b8',
+    }));
+    return { stadiumCounts: counts, pipelineSegments: segments };
+  }, [mergedLeads, stadiumLabels]);
 
   if (mergedLeads.length === 0) {
     return (

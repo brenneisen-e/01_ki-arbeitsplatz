@@ -3,6 +3,7 @@ import Card from '../../../components/ui/Card';
 import PipelineBar from '../../../components/ui/PipelineBar';
 import LogoImg from '../../../components/ui/LogoImg';
 import { VV_LEADS } from '../../../data/vvExtended';
+import { LEADS_EN } from '../../../data/vvExtended-leads-en';
 import { useMode } from '../../../hooks/useMode';
 import useTranslation from '../../../i18n/useTranslation';
 import {
@@ -275,9 +276,22 @@ export default function LeadsTab({ kunde }) {
   );
 }
 
+function getLeadField(lead, field, lang) {
+  if (lang !== 'en' || !lead.id) return lead[field];
+  const en = LEADS_EN[lead.id];
+  return en?.[field] ?? lead[field];
+}
+
+function getHerleitungEn(lead, lang) {
+  if (lang !== 'en' || !lead.id) return lead.herleitung;
+  const en = LEADS_EN[lead.id];
+  return en?.herleitung ?? lead.herleitung;
+}
+
 function LeadRow({ lead, kunde, isExpanded, onToggle, t, stadiumLabels, quellenLabels }) {
   const [hovered, setHovered] = useState(false);
   const { config, navigateTo } = useMode();
+  const { lang } = useTranslation();
 
   return (
     <>
@@ -331,13 +345,13 @@ function LeadRow({ lead, kunde, isExpanded, onToggle, t, stadiumLabels, quellenL
           {lead.geschaetztesVolumen || '—'}
         </td>
         <td className={`py-2.5 text-xs truncate ${hovered ? 'text-white/80' : 'text-slate-500'}`}>
-          {lead.herkunft}
+          {getLeadField(lead, 'herkunft', lang)}
         </td>
       </tr>
       {isExpanded && (
         <tr className="bg-slate-50/80">
           <td colSpan={7} className="px-6 py-4">
-            <div className="max-w-6xl space-y-4">
+            <div className="space-y-4">
               {/* KI-Beschreibung */}
               {lead.kiDescription && (
                 <div className="bg-gradient-to-r from-indigo-50 to-purple-50 border border-indigo-100 rounded-xl px-4 py-3">
@@ -345,7 +359,7 @@ function LeadRow({ lead, kunde, isExpanded, onToggle, t, stadiumLabels, quellenL
                     <Sparkles size={14} className="text-indigo-500" />
                     <span className="text-xs font-semibold text-indigo-600">{t('kiVertriebsassistent')}</span>
                   </div>
-                  <p className="text-sm text-slate-700 leading-relaxed">{lead.kiDescription}</p>
+                  <p className="text-sm text-slate-700 leading-relaxed">{getLeadField(lead, 'kiDescription', lang)}</p>
                 </div>
               )}
 
@@ -356,12 +370,12 @@ function LeadRow({ lead, kunde, isExpanded, onToggle, t, stadiumLabels, quellenL
                     <h4 className="text-sm font-semibold text-slate-700">{t('herleitung')}</h4>
                     {lead.quelleLabel && (
                       <span className="text-[10px] text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full">
-                        {lead.quelleLabel}
+                        {getLeadField(lead, 'quelleLabel', lang) || lead.quelleLabel}
                       </span>
                     )}
                   </div>
                   <div className="grid grid-cols-2 gap-2 text-sm">
-                    {lead.herleitung.map((h, i) => (
+                    {getHerleitungEn(lead, lang).map((h, i) => (
                       <HerleitungRow key={i} label={h.label} value={h.value} />
                     ))}
                   </div>
@@ -377,7 +391,7 @@ function LeadRow({ lead, kunde, isExpanded, onToggle, t, stadiumLabels, quellenL
               {lead.naechsterSchritt && (
                 <div className="pt-2 border-t border-slate-200">
                   <span className="text-xs text-slate-400 font-medium">{t('naechsterSchritt')}: </span>
-                  <span className="text-xs text-slate-700 font-medium">{lead.naechsterSchritt}</span>
+                  <span className="text-xs text-slate-700 font-medium">{getLeadField(lead, 'naechsterSchritt', lang)}</span>
                 </div>
               )}
 
@@ -408,7 +422,7 @@ function LeadRow({ lead, kunde, isExpanded, onToggle, t, stadiumLabels, quellenL
                     onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
                   >
                     <Calendar size={14} />
-                    {lead.naechsterSchritt}
+                    {getLeadField(lead, 'naechsterSchritt', lang)}
                   </button>
                 )}
                 {lead.produktEmpfehlung && (

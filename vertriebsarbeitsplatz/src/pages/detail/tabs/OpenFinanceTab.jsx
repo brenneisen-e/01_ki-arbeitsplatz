@@ -36,7 +36,7 @@ const DETAILS_EN = [
   ['Gemischtes Mandat', 'Mixed Mandate'], ['Gemischte Fonds', 'Mixed Funds'],
   ['Gemischtes Depot', 'Mixed Portfolio'], ['Festgeld/Tagesgeld', 'Fixed Deposit/Money Market'],
   ['Gehaltseingang', 'Salary Deposit'], ['Ablauf', 'Maturity'],
-  ['Rückkaufswert', 'Surrender Value'], ['RKW', 'SV (Surrender Value)'],
+  ['Rückkaufswert', 'Surrender Value'], ['RKW', 'SV'],
   ['Zuteilungsreif', 'Maturing'], ['ZINSBINDUNG', 'FIXED RATE PERIOD'],
   ['Zinsbindung', 'Fixed Rate Period'], ['Privathaftpflicht', 'Personal Liability'],
   ['Privatversicherung', 'Private Insurance'], ['Ehepaar', 'Couple'],
@@ -45,6 +45,7 @@ const DETAILS_EN = [
   ['Renteneingang', 'Pension Deposit'], ['Hauptkonto', 'Main Account'],
   ['Ansparphase', 'Savings Phase'], ['Firmenkonto', 'Company Account'],
   ['Ausgewogen', 'Balanced'], ['Konservativ', 'Conservative'],
+  ['Konservativ-Ausgewogen', 'Conservative-Balanced'],
   ['Defensiv', 'Defensive'], ['Wachstum', 'Growth'],
   ['Zweitwagen Frau', 'Second Car (Spouse)'],
   ['Dienstunfähigkeit', 'Civil Service Disability'],
@@ -56,6 +57,14 @@ const DETAILS_EN = [
   ['Inventar', 'Inventory'], ['Innenstadt', 'Downtown'],
   ['Bahnhof', 'Station'], ['Rest', 'Remaining'],
   ['bis', 'until'], ['mtl', '/mo'], ['Zins', 'Interest'], ['netto', 'net'],
+  // VV-specific details
+  ['EFH', 'Detached House'], ['MFH', 'Multi-Family'], ['Gewerbe', 'Commercial'],
+  ['Maschinenbau GmbH', 'Engineering GmbH'], ['Ferienwohnung', 'Vacation Apartment'],
+  ['CASH GEPARKT! Exit-Erlöse', 'CASH PARKED! Exit proceeds'],
+  ['Praxis-Konto', 'Practice Account'], ['Praxis-Immobilie', 'Practice Property'],
+  ['Privatkonto', 'Private Account'], ['Schwerpunkt', 'Focus'],
+  ['Ausschüttung', 'Distribution'], ['Co-Investment', 'Co-Investment'],
+  ['ESG-Filter', 'ESG Filter'], ['Tech-Fokus', 'Tech Focus'],
 ];
 
 function translateDetails(details, lang) {

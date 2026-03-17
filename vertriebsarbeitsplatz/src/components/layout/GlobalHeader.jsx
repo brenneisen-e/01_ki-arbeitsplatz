@@ -17,28 +17,28 @@ function getBasePath() {
 
 const TAGESSTART_ITEMS = {
   versicherung: [
-    { icon: Calendar, text: '4 Termine heute' },
-    { icon: AlertTriangle, text: '8 offene Potenziale', className: 'text-amber-300' },
-    { icon: Calendar, text: '3 Follow-ups fällig' },
+    { icon: Calendar, textKey: 'termineHeute', textPrefix: '4 ' },
+    { icon: AlertTriangle, textKey: 'offenePotenziale', textPrefix: '8 ', className: 'text-amber-300' },
+    { icon: Calendar, textKey: 'followupsFaellig', textPrefix: '3 ' },
   ],
   banking: [
-    { icon: Calendar, text: '4 Termine' },
-    { icon: Calendar, text: '1 Rückruf' },
-    { icon: AlertTriangle, text: '2 FIDA-Consents offen', className: 'text-amber-300' },
+    { icon: Calendar, textKey: 'termine', textPrefix: '4 ' },
+    { icon: Calendar, textKey: 'rueckruf', textPrefix: '1 ' },
+    { icon: AlertTriangle, textKey: 'fidaConsentsOffen', textPrefix: '2 ', className: 'text-amber-300' },
   ],
   vermoegensverwaltung: [
-    { icon: Calendar, text: '2 Mandate-Meetings' },
-    { icon: Calendar, text: '3 Follow-ups fällig' },
-    { icon: AlertTriangle, text: '1 WpHG abgelaufen', className: 'text-red-300' },
+    { icon: Calendar, textKey: 'mandateMeetings', textPrefix: '2 ' },
+    { icon: Calendar, textKey: 'followupsFaellig', textPrefix: '3 ' },
+    { icon: AlertTriangle, textKey: 'wphgAbgelaufen', textPrefix: '1 ', className: 'text-red-300' },
   ],
 };
 
 // Mock weather data
 function getWeatherData() {
   const h = new Date().getHours();
-  if (h < 12) return { temp: 8, condition: 'Bewölkt', icon: Cloud, high: 14, low: 4 };
-  if (h < 17) return { temp: 13, condition: 'Teilw. sonnig', icon: Sun, high: 14, low: 4 };
-  return { temp: 9, condition: 'Bewölkt', icon: Cloud, high: 14, low: 4 };
+  if (h < 12) return { temp: 8, conditionKey: 'bewoelkt', icon: Cloud, high: 14, low: 4 };
+  if (h < 17) return { temp: 13, conditionKey: 'teilwSonnig', icon: Sun, high: 14, low: 4 };
+  return { temp: 9, conditionKey: 'bewoelkt', icon: Cloud, high: 14, low: 4 };
 }
 
 // Mock Bloomberg market data
@@ -119,7 +119,7 @@ export default function GlobalHeader({ kundeInfo }) {
                 return (
                   <span key={i} className="flex items-center gap-1 text-white/80 text-xs">
                     <Icon size={13} className={item.className || 'text-white/60'} />
-                    {item.text}
+                    {item.textPrefix}{t(item.textKey)}
                   </span>
                 );
               })}
@@ -133,7 +133,7 @@ export default function GlobalHeader({ kundeInfo }) {
             <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/10 text-white text-xs">
               <WeatherIcon size={16} className="text-white/80" />
               <span className="font-medium">{weather.temp}°C</span>
-              <span className="text-white/50">{weather.condition}</span>
+              <span className="text-white/50">{t(weather.conditionKey)}</span>
             </div>
           )}
 

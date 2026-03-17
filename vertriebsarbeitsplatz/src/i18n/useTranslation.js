@@ -16,18 +16,21 @@ export default function useTranslation() {
   });
 
   useEffect(() => {
-    // Listen for storage changes (e.g. language switched on landing page)
-    const handler = () => {
+    // Listen for storage changes (cross-tab)
+    const storageHandler = () => {
       const next = localStorage.getItem('kia_language') || 'de';
       setLang(next);
     };
-    window.addEventListener('storage', handler);
-    // Also poll briefly in case same-tab change
-    const interval = setInterval(() => {
-      const current = localStorage.getItem('kia_language') || 'de';
-      setLang(prev => prev !== current ? current : prev);
-    }, 500);
-    return () => { window.removeEventListener('storage', handler); clearInterval(interval); };
+    // Listen for same-tab language changes via custom event
+    const langHandler = (e) => {
+      setLang(e.detail || 'de');
+    };
+    window.addEventListener('storage', storageHandler);
+    window.addEventListener('kia-language-change', langHandler);
+    return () => {
+      window.removeEventListener('storage', storageHandler);
+      window.removeEventListener('kia-language-change', langHandler);
+    };
   }, []);
 
   const t = useCallback((key, params) => {

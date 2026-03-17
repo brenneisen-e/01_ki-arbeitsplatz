@@ -150,9 +150,9 @@ export const W4 = {
   },
 };
 
-// W5: Tim Keller NextGen
+// W5: Maxim Meydarn
 export const W5 = {
-  name: 'Tim Keller', id: 'VV00005', alter: 29,
+  name: 'Maxim Meydarn', id: 'VV00005', alter: 29,
   beruf: 'Tech-Gründer (Seed-Exit 500k)', arbeitgeber: { name: 'Rhein-Main Steuerberatung', quelle: 'linkedin', bestaetigt: false }, nettoeinkommen: 4500,
   familienstand: 'ledig', partner: null, kinder: [],
   wohnsituation: 'Miete', wohnflaeche: 70, adresse: 'Berger Str. 142, 60385 Frankfurt am Main',

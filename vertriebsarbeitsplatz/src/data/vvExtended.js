@@ -338,7 +338,7 @@ export const VV_PERFORMANCE = {
     ioComment: 'Portfolio leicht über Benchmark dank Healthcare-Übergewichtung, die die Fachexpertise des Mandanten reflektiert. Aktienquote +2pp über Soll – Rebalancing bei nächster Gelegenheit empfohlen. Die Immofonds-Allokation (8%) liefert stabile Erträge. PE Healthcare Fund II (Co-Investment) wird aktuell geprüft. ING-Tagesgeld (250k) sollte konsolidiert werden.',
   },
 
-  // ── W5: Tim Keller – Aggressiv / Tech (Vorbild: ARK Innovation + Nasdaq-100) ──
+  // ── W5: Maxim Meydarn – Aggressiv / Tech (Vorbild: ARK Innovation + Nasdaq-100) ──
   VV00005: {
     monthlyReturns: [
       // 2023 – Mega-Cap Tech Rebound, aber volatile Zwischenphasen
@@ -607,7 +607,7 @@ export const VV_WPHG = {
     ],
   },
 
-  // ── W5: Tim Keller – ABGELAUFEN (Demo) ──
+  // ── W5: Maxim Meydarn – ABGELAUFEN (Demo) ──
   VV00005: {
     fragebogen: {
       letztesUpdate: '2024-12-15',
@@ -779,10 +779,10 @@ export const VV_FAMILIE = {
     },
   },
 
-  // ── W5: Tim Keller ──
+  // ── W5: Maxim Meydarn ──
   VV00005: {
     mitglieder: [
-      { name: 'Tim Keller', rolle: 'mandant', alter: 29, beruf: 'Tech-Gründer (Seed-Exit 500k)', mandant: true, aum: 450000 },
+      { name: 'Maxim Meydarn', rolle: 'mandant', alter: 29, beruf: 'Tech-Gründer (Seed-Exit 500k)', mandant: true, aum: 450000 },
     ],
     vermoegensUebersicht: {
       gesamt: 658000,
@@ -1055,11 +1055,11 @@ export const VV_ENGAGEMENT = {
     digitalScore: 58,
   },
 
-  // ── W5: Tim Keller ──
+  // ── W5: Maxim Meydarn ──
   VV00005: {
     linkedin: {
-      url: 'linkedin.com/in/timkeller-tech',
-      profilUrl: 'linkedin.com/in/timkeller-tech',
+      url: 'linkedin.com/in/maxim-meydarn',
+      profilUrl: 'linkedin.com/in/maxim-meydarn',
       aktivitaet: 'sehr_hoch',
       letzterPost: '2026-03-12',
       themen: ['Deep Tech', 'AI/ML', 'Climate Tech', 'Web3', 'Impact Investing', 'Startup Ecosystem'],
@@ -1619,7 +1619,7 @@ export const VV_LEADS = [
   },
   {
     id: 'BM007',
-    name: 'Tim Keller Upgrade bei nächstem Exit',
+    name: 'Maxim Meydarn Upgrade bei nächstem Exit',
     kategorie: 'bestandsmandat',
     quelle: 'upgrade',
     quelleLabel: 'Mandats-Upgrade',
@@ -1631,8 +1631,8 @@ export const VV_LEADS = [
     datum: '2026-03-02',
     referenzMandant: 'VV00005',
     beruf: 'Bestandsmandant',
-    herkunft: 'Tim Keller: 450k SmartValue. Series A Startup — bei Exit FairValue Upgrade möglich (ab 3M).',
-    kiDescription: 'KI-Analyse: Tim Keller (VV00005) ist aktuell im SmartValue Mandat mit 450k € AuM. Er hält ein Series-A-Startup-Investment mit erwartetem Exit in 2–3 Jahren. Bei erfolgreichem Exit könnten 500k–1,5M € hinzukommen — was das AuM potenziell über die 3M-FairValue-Schwelle hebt. Die Wahrscheinlichkeit ist moderat (40%), da Startup-Exits unsicher sind. Empfehlung: Kein aktives Drängen, aber im nächsten Gespräch den erwarteten Exit-Zeitrahmen klären. Bei positivem Verlauf kann das FairValue-Upgrade vorbereitet werden. Langfristig: Tim Keller ist 35 und hat ein wachsendes Techunternehmer-Profil — potenzieller UHNW-Mandant der Zukunft.',
+    herkunft: 'Maxim Meydarn: 450k SmartValue. Series A Startup — bei Exit FairValue Upgrade möglich (ab 3M).',
+    kiDescription: 'KI-Analyse: Maxim Meydarn (VV00005) ist aktuell im SmartValue Mandat mit 450k € AuM. Er hält ein Series-A-Startup-Investment mit erwartetem Exit in 2–3 Jahren. Bei erfolgreichem Exit könnten 500k–1,5M € hinzukommen — was das AuM potenziell über die 3M-FairValue-Schwelle hebt. Die Wahrscheinlichkeit ist moderat (40%), da Startup-Exits unsicher sind. Empfehlung: Kein aktives Drängen, aber im nächsten Gespräch den erwarteten Exit-Zeitrahmen klären. Bei positivem Verlauf kann das FairValue-Upgrade vorbereitet werden. Langfristig: Maxim Meydarn ist 35 und hat ein wachsendes Techunternehmer-Profil — potenzieller UHNW-Mandant der Zukunft.',
     herleitung: [
       { label: 'Aktuelles Mandat', value: 'SmartValue (AuM 450.000 €, seit 01/2025)' },
       { label: 'Laufendes Startup', value: 'Series A Investment — erwarteter Exit in 2–3 Jahren' },
@@ -1770,7 +1770,7 @@ export const VV_LEADS = [
   // 8. Compliance-getriebene Kontaktanlässe
   {
     id: 'BM013',
-    name: 'Tim Keller WpHG-Bogen überfällig',
+    name: 'Maxim Meydarn WpHG-Bogen überfällig',
     kategorie: 'bestandsmandat',
     quelle: 'compliance',
     quelleLabel: 'Compliance-Kontaktanlass',
@@ -1782,8 +1782,8 @@ export const VV_LEADS = [
     datum: '2026-03-12',
     referenzMandant: 'VV00005',
     beruf: 'Bestandsmandant',
-    herkunft: 'Tim Keller: WpHG-Bogen 14 Tage überfällig. Compliance-Termin als Anlass für Krypto-Reporting-Gespräch nutzen.',
-    kiDescription: 'KI-Analyse: Compliance-Pflicht als Vertriebschance nutzen! Tim Kellers WpHG-Fragebogen ist 14 Tage überfällig — regulatorisch zwingend erforderlich. Den Pflichttermin smart nutzen: Gleichzeitig Krypto-Reporting besprechen (Tim ist Techunternehmer mit Krypto-Affinität), Angel-Portfolio-Erweiterung und ESG-Impact-Investments thematisieren. Beim Ausfüllen des WpHG-Bogens Risikobereitschaft aktualisieren — ggf. neue Anlageklassen freigeben. Aus einer regulatorischen Pflicht wird so ein wertvolles Beratungsgespräch mit Cross-Selling-Potenzial.',
+    herkunft: 'Maxim Meydarn: WpHG-Bogen 14 Tage überfällig. Compliance-Termin als Anlass für Krypto-Reporting-Gespräch nutzen.',
+    kiDescription: 'KI-Analyse: Compliance-Pflicht als Vertriebschance nutzen! Maxim Meydarns WpHG-Fragebogen ist 14 Tage überfällig — regulatorisch zwingend erforderlich. Den Pflichttermin smart nutzen: Gleichzeitig Krypto-Reporting besprechen (Maxim ist Techunternehmer mit Krypto-Affinität), Angel-Portfolio-Erweiterung und ESG-Impact-Investments thematisieren. Beim Ausfüllen des WpHG-Bogens Risikobereitschaft aktualisieren — ggf. neue Anlageklassen freigeben. Aus einer regulatorischen Pflicht wird so ein wertvolles Beratungsgespräch mit Cross-Selling-Potenzial.',
     herleitung: [
       { label: 'Compliance-Pflicht', value: 'WpHG-Fragebogen 14 Tage überfällig — regulatorisch notwendig' },
       { label: 'Cross-Selling', value: 'Termin nutzen für: Krypto-Reporting, Angel-Portfolio, ESG-Impact' },
@@ -1896,7 +1896,7 @@ export const VV_REVENUE = {
     { name: 'Fam. Lindenberg', aum: 2100000, fee: 1.05, ertrag: 22050 },
     { name: 'Stiftung Weber', aum: 8300000, fee: 0.75, ertrag: 62250 },
     { name: 'Prof. Hartmann', aum: 6800000, fee: 0.85, ertrag: 57800 },
-    { name: 'Tim Keller', aum: 450000, fee: 1.05, ertrag: 4725 },
+    { name: 'Maxim Meydarn', aum: 450000, fee: 1.05, ertrag: 4725 },
   ],
 
   feeStruktur: [

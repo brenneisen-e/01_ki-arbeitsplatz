@@ -651,6 +651,30 @@ const translations = {
   'erkenntnisseLabel': { de: 'Erkenntnisse', en: 'Insights' },
   'posten': { de: 'Posten', en: 'Items' },
   'transaktionenErkannt': { de: 'Transaktionen erkannt', en: 'transactions detected' },
+
+  // ─── Vertriebsassistent / Quick Actions ───
+  'neuerLead': { de: 'Neuer Lead', en: 'New Lead' },
+  'nachrichtEingeben': { de: 'Nachricht eingeben...', en: 'Type a message...' },
+  'analysiere': { de: 'Analysiere...', en: 'Analyzing...' },
+  'welcomeVersicherung': { de: 'Hallo! Ich bin dein KI-Vertriebsassistent. Ich kann dir bei Kundenanalysen, Produktempfehlungen und Vertriebsstrategien helfen.', en: 'Hello! I\'m your AI sales assistant. I can help you with customer analyses, product recommendations, and sales strategies.' },
+  'welcomeBanking': { de: 'Hallo! Ich unterstütze dich bei Kreditanalysen, Anlageberatung und Kundengesprächen.', en: 'Hello! I can help you with credit analyses, investment advice, and customer meetings.' },
+  'welcomeVermoegensverwaltung': { de: 'Hallo! Ich helfe dir bei Portfolioanalysen, Mandatsbetreuung und Compliance-Fragen.', en: 'Hello! I can help you with portfolio analyses, mandate management, and compliance questions.' },
+  'welcomeCockpit': { de: 'Hallo! Ich kann dir bei der Analyse deiner Dashboard-Daten helfen. Hier sind einige Vorschläge:', en: 'Hello! I can help you analyze your dashboard data. Here are some suggestions:' },
+  'welcomeDetail': { de: 'Hallo! Ich bin bereit für {name}. Was kann ich für dich tun?', en: 'Hello! I\'m ready for {name}. What can I do for you?' },
+  'neueLeadsAnzeigen': { de: 'Neue Leads anzeigen', en: 'Show new leads' },
+  'kundenpotenzialAnalysieren': { de: 'Kundenpotenzial analysieren', en: 'Analyze customer potential' },
+  'gespraechsleitfadenErstellen': { de: 'Gesprächsleitfaden erstellen', en: 'Create conversation guide' },
+  'crossSellingChancen': { de: 'Cross-Selling Chancen', en: 'Cross-selling opportunities' },
+  'kreditanalyseStarten': { de: 'Kreditanalyse starten', en: 'Start credit analysis' },
+  'mandantenpotenzialAnalysieren': { de: 'Mandantenpotenzial analysieren', en: 'Analyze client potential' },
+  'portfolioAnalyse': { de: 'Portfolio-Analyse', en: 'Portfolio Analysis' },
+  'anschreibenFormulieren': { de: 'Anschreiben formulieren', en: 'Draft letter' },
+  'leadsAnalysieren': { de: 'Leads analysieren', en: 'Analyze leads' },
+  'top5NachErgebnis': { de: 'Top 5 nach Ergebnis', en: 'Top 5 by result' },
+  'performanceUeberblick': { de: 'Performance Überblick', en: 'Performance overview' },
+  'auffaelligeVermittler': { de: 'Auffällige Vermittler', en: 'Notable agents' },
+  'termineHeute': { de: 'Termine heute', en: 'Appointments today' },
+  'rueckrufLabel': { de: 'Rückruf', en: 'Callback' },
 };
 
 export default translations;

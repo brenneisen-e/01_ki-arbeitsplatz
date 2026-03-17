@@ -1,4 +1,5 @@
 import KPIGrid from '../../../components/ui/KPIGrid';
+import { getLang } from '../../../utils/langHelper';
 import Card from '../../../components/ui/Card';
 import BarChartComponent from '../../../components/charts/BarChartComponent';
 import { useMode } from '../../../hooks/useMode';
@@ -79,8 +80,8 @@ export default function StornoTab() {
                     <td className="px-4 py-3 text-sm font-medium text-slate-700">{v.kunde}</td>
                     <td className="px-4 py-3 text-sm text-slate-700">{v.produkt}</td>
                     <td className="px-4 py-3 text-sm text-slate-500">{v.sparte}</td>
-                    <td className="px-4 py-3 text-sm font-mono text-slate-700">{v.praemie?.toLocaleString((localStorage.getItem('kia_language') || 'de') === 'en' ? 'en-US' : 'de-DE')}€</td>
-                    <td className="px-4 py-3 text-sm text-slate-500">{new Date(v.stornoDatum).toLocaleDateString((localStorage.getItem('kia_language') || 'de') === 'en' ? 'en-GB' : 'de-DE')}</td>
+                    <td className="px-4 py-3 text-sm font-mono text-slate-700">{v.praemie?.toLocaleString(getLang() === 'en' ? 'en-US' : 'de-DE')}€</td>
+                    <td className="px-4 py-3 text-sm text-slate-500">{new Date(v.stornoDatum).toLocaleDateString(getLang() === 'en' ? 'en-GB' : 'de-DE')}</td>
                     <td className="px-4 py-3 text-sm">
                       <span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${GRUND_COLORS[v.grund] || GRUND_COLORS['Sonstiges']}`}>
                         {t(`stornoGrund.${v.grund.toLowerCase()}`) || v.grund}

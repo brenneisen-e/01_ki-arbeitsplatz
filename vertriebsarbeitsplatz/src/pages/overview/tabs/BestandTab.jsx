@@ -10,7 +10,7 @@ import { formatEur } from '../../../utils/formatters';
 
 export default function BestandTab() {
   const { modeId } = useMode();
-  const { t } = useTranslation();
+  const { t, tn } = useTranslation();
   const [selectedVertrag, setSelectedVertrag] = useState(null);
 
   const BESTAND_KPI_CONFIG = {
@@ -80,7 +80,7 @@ export default function BestandTab() {
               <div className="w-6 h-6 rounded-full bg-slate-200 flex items-center justify-center text-xs font-bold text-slate-600">
                 {name.split(' ').map(n => n[0]).join('')}
               </div>
-              <span>{name}</span>
+              <span>{tn(name)}</span>
               <span className="text-slate-400">{rows[0]?.kundeId}</span>
               <span className="text-slate-400">&middot; {rows.length} {modeId === 'vermoegensverwaltung' ? t('positionenLabel') : t('vertraege')} &middot; {formatEur(total)}</span>
             </div>

@@ -10,10 +10,7 @@ import {
   VV_FAMILIE as RAW_FAMI,
   VV_ENGAGEMENT as RAW_ENG,
 } from './vvExtended';
-
-function getLang() {
-  try { return localStorage.getItem('kia_language') || 'de'; } catch { return 'de'; }
-}
+import { getLang } from '../utils/langHelper';
 
 // ─── Simple seeded PRNG (hash-based) ────────────────────────────────────────
 function hashSeed(str) {
@@ -59,7 +56,7 @@ function round2(v) {
 const MONTH_NAMES_DE = ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'];
 const MONTH_NAMES_EN = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 function getMonthNames() {
-  try { return (localStorage.getItem('kia_language') || 'de') === 'en' ? MONTH_NAMES_EN : MONTH_NAMES_DE; } catch { return MONTH_NAMES_DE; }
+  return getLang() === 'en' ? MONTH_NAMES_EN : MONTH_NAMES_DE;
 }
 
 function generateMonthly(prng, years = 3) {
@@ -399,7 +396,7 @@ const ROLLE_MAP = {
 
 function transformFamilie(raw) {
   if (!raw) return null;
-  const lang = (() => { try { return localStorage.getItem('kia_language') || 'de'; } catch { return 'de'; } })();
+  const lang = getLang();
   const mitglieder = (raw.mitglieder || []).map(m => ({
     ...m,
     rolle: (ROLLE_MAP[m.rolle] || { de: m.rolle, en: m.rolle })[lang],
@@ -592,8 +589,16 @@ function generateEngagement(id) {
 
 // ─── PROXY FACTORY ──────────────────────────────────────────────────────────
 
+const _proxyCaches = [];
+if (typeof window !== 'undefined') {
+  window.addEventListener('kia-language-change', () => {
+    _proxyCaches.forEach(c => { for (const k in c) delete c[k]; });
+  });
+}
+
 function createDataProxy(rawData, transformFn, generateFn) {
   const cache = {};
+  _proxyCaches.push(cache);
   return new Proxy(cache, {
     get(target, prop) {
       if (typeof prop !== 'string') return undefined;

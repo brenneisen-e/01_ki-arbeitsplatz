@@ -12,7 +12,7 @@ const FEE_COLORS = ['#1a365d', '#2b4c7e', '#c4a35a', '#6b7280'];
 
 export default function RevenueTab() {
   const { config } = useMode();
-  const { t } = useTranslation();
+  const { t, tn } = useTranslation();
   const data = VV_REVENUE;
 
   // Cumulative revenue YTD (running total) - more meaningful than monthly billing amounts
@@ -87,7 +87,7 @@ export default function RevenueTab() {
               const anteil = ytdTotal > 0 ? ((m.ertrag / ytdTotal) * 100).toFixed(1) : 0;
               return (
                 <tr key={i} className="border-b border-slate-100 hover:bg-slate-50 transition-colors">
-                  <td className="py-2.5 pr-3 font-medium text-slate-800">{m.name}</td>
+                  <td className="py-2.5 pr-3 font-medium text-slate-800">{tn(m.name)}</td>
                   <td className="py-2.5 pr-3 text-right font-mono text-slate-700">{formatEur(m.aum)}</td>
                   <td className="py-2.5 pr-3 text-right font-mono text-slate-600">{m.fee}%</td>
                   <td className="py-2.5 pr-3 text-right font-mono font-medium" style={{ color: config.colors.primaryLight }}>{formatEur(m.ertrag)}</td>

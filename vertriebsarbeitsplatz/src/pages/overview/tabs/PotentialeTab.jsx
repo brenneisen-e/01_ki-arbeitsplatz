@@ -24,7 +24,7 @@ const KUNDEN_FOTOS = {
 
 export default function PotentialeTab() {
   const { modeId, navigateTo } = useMode();
-  const { t } = useTranslation();
+  const { t, tn } = useTranslation();
 
   const P_KPI_CONFIG = [
     { id: 'consentKunden', label: t('consentKunden'), format: 'num', icon: 'Users' },
@@ -130,7 +130,7 @@ export default function PotentialeTab() {
                       {kunde?.name?.split(' ').map(n => n[0]).join('') || '?'}
                     </div>
                   )}
-                  <span className="font-semibold text-sm text-slate-800">{kunde?.name || kundeId}</span>
+                  <span className="font-semibold text-sm text-slate-800">{tn(kunde?.name) || kundeId}</span>
                   <span className="text-xs text-slate-400">{kundeId} &middot; {potentiale.length} Potentiale</span>
                 </div>
                 <span className="font-mono text-sm font-medium text-slate-700">{t('gesamt')} {formatEur(gesamt)}</span>

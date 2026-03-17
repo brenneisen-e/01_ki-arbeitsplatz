@@ -13,7 +13,7 @@ import { formatEur } from '../../../utils/formatters';
 
 export default function NeugeschaeftTab() {
   const { modeId } = useMode();
-  const { t } = useTranslation();
+  const { t, tn } = useTranslation();
   const [selectedVertrag, setSelectedVertrag] = useState(null);
 
   const NG_KPI_CONFIG = {
@@ -92,7 +92,7 @@ export default function NeugeschaeftTab() {
               <div key={i} className="flex items-center justify-between py-2 border-b border-slate-100 last:border-0">
                 <div className="flex items-center gap-3">
                   <span className="text-xs font-bold text-slate-400 w-5">{i + 1}.</span>
-                  <span className="text-sm font-medium text-slate-700">{k.name}</span>
+                  <span className="text-sm font-medium text-slate-700">{tn(k.name)}</span>
                 </div>
                 <span className="font-mono text-sm font-medium text-slate-800">{formatEur(k.betrag)}</span>
               </div>

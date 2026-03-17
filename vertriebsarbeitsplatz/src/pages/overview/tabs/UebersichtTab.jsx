@@ -131,7 +131,7 @@ const PROVISIONSABRECHNUNGEN = {
 
 export default function UebersichtTab() {
   const { modeId, config, navigateTo, setActiveTab } = useMode();
-  const { t, lang } = useTranslation();
+  const { t, tn, lang } = useTranslation();
   const [mandatFilter, setMandatFilter] = useState('alle');
   const potentiale = getAllPotentiale(modeId).sort((a, b) => {
     const prio = { kritisch: 0, hoch: 1, mittel: 2, niedrig: 3 };
@@ -240,10 +240,10 @@ export default function UebersichtTab() {
                         <Sparkles size={16} className="text-slate-400" />
                       </div>
                     ) : (
-                      <Avatar name={k.name} foto={getKundeFoto(k.id)} size={34} />
+                      <Avatar name={tn(k.name)} foto={getKundeFoto(k.id)} size={34} />
                     )}
                     <div className="min-w-0">
-                      <div className="text-sm font-semibold text-slate-700 truncate">{k.name}</div>
+                      <div className="text-sm font-semibold text-slate-700 truncate">{tn(k.name)}</div>
                       <div className="text-xs text-slate-400 truncate">{k.mandat ? k.mandat.produkt : k.mandatsTyp || '–'}</div>
                     </div>
                   </div>
@@ -329,7 +329,7 @@ export default function UebersichtTab() {
                       <Avatar name={kp.kundeName} foto={getKundeFoto(kp.kundeId)} size={30} />
                       <div className="min-w-0">
                         <div className="text-sm font-semibold text-slate-700 truncate flex items-center gap-1.5">
-                          {kp.kundeName}
+                          {tn(kp.kundeName)}
                           <PrioBadge prioritaet={topPrio} />
                         </div>
                       </div>
@@ -535,7 +535,7 @@ export default function UebersichtTab() {
               >
                 <Avatar name={g.name} foto={g.foto} size={40} />
                 <div className="flex-1 min-w-0">
-                  <div className="text-sm font-medium text-slate-700">{g.name}</div>
+                  <div className="text-sm font-medium text-slate-700">{tn(g.name)}</div>
                   <div className="text-xs text-slate-400">{g.datum} · {t('wird')} {g.alter}</div>
                 </div>
               </div>

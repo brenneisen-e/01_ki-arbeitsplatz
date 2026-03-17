@@ -1,9 +1,5 @@
 import { getKunden } from './generator';
-
-// ─── Language helper ───
-function getLang() {
-  try { return localStorage.getItem('kia_language') || 'de'; } catch { return 'de'; }
-}
+import { getLang } from '../utils/langHelper';
 function tx(de, en) { return getLang() === 'en' ? en : de; }
 
 // Translate name prefixes like "Familie" → "Family"

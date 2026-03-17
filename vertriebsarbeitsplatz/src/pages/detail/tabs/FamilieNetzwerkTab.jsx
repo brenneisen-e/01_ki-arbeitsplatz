@@ -244,7 +244,7 @@ export default function FamilieNetzwerkTab({ kunde }) {
                   'text-xs font-semibold',
                   unt.nachfolge.status === 'offen' ? 'text-amber-700' : 'text-emerald-700',
                 )}>
-                  {t('nachfolgeStatus')}: {unt.nachfolge.status === 'offen' ? 'Offen' : t('nachfolgeAbgeschlossen')}
+                  {t('nachfolgeStatus')}: {unt.nachfolge.status === 'offen' ? t('nachfolgeOffen') : t('nachfolgeAbgeschlossen')}
                 </span>
               </div>
               <p className={clsx(

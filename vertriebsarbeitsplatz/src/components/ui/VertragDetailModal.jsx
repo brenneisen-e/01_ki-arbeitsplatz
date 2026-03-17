@@ -3,10 +3,12 @@ import { SparteBadge, StatusBadge } from './Badge';
 import LogoImg from './LogoImg';
 import { formatEur } from '../../utils/formatters';
 import { useMode } from '../../hooks/useMode';
+import useTranslation from '../../i18n/useTranslation';
 import { getKundeById } from '../../data';
 
 export default function VertragDetailModal({ vertrag, onClose }) {
   const { modeId, config, navigateTo } = useMode();
+  const { t } = useTranslation();
 
   if (!vertrag) return null;
 
@@ -38,7 +40,7 @@ export default function VertragDetailModal({ vertrag, onClose }) {
             <div className="flex items-center gap-3 text-white">
               <FileText size={20} />
               <div>
-                <h3 className="font-semibold text-sm">Vertragsdetails</h3>
+                <h3 className="font-semibold text-sm">{t('vertragsdetails')}</h3>
                 <span className="text-white/70 text-xs">{vertrag.id}</span>
               </div>
             </div>
@@ -67,7 +69,7 @@ export default function VertragDetailModal({ vertrag, onClose }) {
                   onMouseLeave={(e) => e.currentTarget.style.backgroundColor = config.colors.primary}
                 >
                   <User size={14} />
-                  Kunde öffnen
+                  {t('kundeOeffnen')}
                 </button>
               )}
             </div>
@@ -118,7 +120,7 @@ export default function VertragDetailModal({ vertrag, onClose }) {
               onClick={onClose}
               className="px-4 py-2 text-sm text-slate-600 hover:text-slate-800 transition-colors"
             >
-              Schließen
+              {t('schliessen')}
             </button>
             {kundeExists && (
               <button
@@ -129,7 +131,7 @@ export default function VertragDetailModal({ vertrag, onClose }) {
                 onMouseLeave={(e) => e.currentTarget.style.backgroundColor = config.colors.primary}
               >
                 <ExternalLink size={14} />
-                Kundenmaske öffnen
+                {t('kundenmaskeOeffnen')}
               </button>
             )}
           </div>

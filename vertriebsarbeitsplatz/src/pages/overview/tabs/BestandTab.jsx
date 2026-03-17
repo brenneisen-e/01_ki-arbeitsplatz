@@ -40,7 +40,7 @@ export default function BestandTab() {
     { id: 'produkt', label: t('produkt') },
     { id: 'details', label: t('details') },
     { id: 'praemie', label: t('praemieJ'), render: (v) => <span className="font-mono">{formatEur(v)}</span> },
-    { id: 'seit', label: 'Seit' },
+    { id: 'seit', label: t('seit') },
     { id: 'status', label: t('status'), render: (v) => <StatusBadge status={v} /> },
   ];
   const kunden = KUNDEN_BY_MODE[modeId] || [];

@@ -9,33 +9,35 @@ import { useState } from 'react';
 import { useMode } from '../../../hooks/useMode';
 import useTranslation from '../../../i18n/useTranslation';
 
-const FREMD_TYP_LABELS = {
-  girokonto: 'Girokonto',
-  baufinanzierung: 'Baufinanzierung',
-  kredit: 'Kredit',
-  depot: 'Depot',
-  depot_privat: 'Depot (Privat)',
-  depot_firma: 'Depot (Firma)',
-  depot2: 'Depot 2',
-  tagesgeld: 'Tagesgeld',
-  festgeld: 'Festgeld',
-  sparkonto: 'Sparkonto',
-  rlv: 'Risikoleben',
-  bav: 'bAV',
-  bausparer: 'Bausparer',
-  riester: 'Riester-Rente',
-  ruerup: 'Rürup-Rente',
-  anleihe: 'Anleihe',
-  fonds: 'Fonds',
-  kfz: 'Kfz-Versicherung',
-  haftpflicht: 'Haftpflicht',
-  hausrat: 'Hausrat',
-  bu: 'BU-Versicherung',
-  unfall: 'Unfallversicherung',
-  rechtsschutz: 'Rechtsschutz',
-  wohngebaeude: 'Wohngebäude',
-  pflege: 'Pflege',
-};
+function getFremdTypLabels(t) {
+  return {
+    girokonto: t('typ.girokonto'),
+    baufinanzierung: t('typ.baufinanzierung'),
+    kredit: t('typ.kredit'),
+    depot: t('typ.depot'),
+    depot_privat: t('typ.depot') + ' (Privat)',
+    depot_firma: t('typ.depot') + ' (Firma)',
+    depot2: t('typ.depot') + ' 2',
+    tagesgeld: t('typ.tagesgeld'),
+    festgeld: t('typ.festgeld'),
+    sparkonto: t('typ.sparkonto'),
+    rlv: t('typ.risikoleben'),
+    bav: t('typ.bav'),
+    bausparer: t('typ.bausparer'),
+    riester: t('typ.riester'),
+    ruerup: t('typ.ruerup'),
+    anleihe: t('typ.anleihe'),
+    fonds: t('typ.fonds'),
+    kfz: t('typ.kfzVers'),
+    haftpflicht: t('typ.haftpflicht'),
+    hausrat: t('typ.hausrat'),
+    bu: t('typ.buVers'),
+    unfall: t('typ.unfall'),
+    rechtsschutz: t('typ.rechtsschutz'),
+    wohngebaeude: t('typ.wohngebaeude'),
+    pflege: t('typ.pflege'),
+  };
+}
 
 export default function StammdatenDetailTab({ kunde }) {
   const { t } = useTranslation();
@@ -213,7 +215,7 @@ export default function StammdatenDetailTab({ kunde }) {
                     <th className="px-4 py-3 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">{t('sparte')}</th>
                     <th className="px-4 py-3 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">{t('details')}</th>
                     <th className="px-4 py-3 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">{isVV ? t('volumenLabel') : t('praemieLabel') + '/J.'}</th>
-                    <th className="px-4 py-3 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">Seit</th>
+                    <th className="px-4 py-3 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">{t('seit')}</th>
                     <th className="px-4 py-3 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">{t('status')}</th>
                   </tr>
                 </thead>
@@ -238,8 +240,9 @@ export default function StammdatenDetailTab({ kunde }) {
         {kunde.fremdProdukte?.length > 0 ? (
           <DataTable
             columns={[
-              { id: 'typ', label: 'Produkt', render: v => {
-                const label = FREMD_TYP_LABELS[v] || v || '';
+              { id: 'typ', label: t('produkt'), render: v => {
+                const fremdLabels = getFremdTypLabels(t);
+                const label = fremdLabels[v] || v || '';
                 return label.charAt(0).toUpperCase() + label.slice(1);
               }},
               { id: 'institut', label: 'Institut', render: (v, row) => {

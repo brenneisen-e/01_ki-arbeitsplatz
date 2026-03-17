@@ -41,7 +41,7 @@ export default function OpenFinanceTab({ kunde }) {
         <DataTable
           columns={[
             { id: 'typ', label: t('produkt'), render: v => <span className="font-medium capitalize">{v.replace(/_/g, ' ')}</span> },
-            { id: 'institut', label: 'Institut', render: (v) => (
+            { id: 'institut', label: t('institut'), render: (v) => (
               <div className="flex items-center gap-2">
                 <LogoImg name={v} size={18} />
                 <span>{v}</span>

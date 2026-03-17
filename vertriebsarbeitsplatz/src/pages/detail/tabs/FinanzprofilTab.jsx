@@ -4,6 +4,11 @@ import DonutChart from '../../../components/charts/DonutChart';
 import { formatEur } from '../../../utils/formatters';
 import { useMode } from '../../../hooks/useMode';
 import useTranslation from '../../../i18n/useTranslation';
+import translations from '../../../i18n/translations';
+
+// ─── Module-level translation helpers (for code outside React components) ───
+function getLang() { try { return localStorage.getItem('kia_language') || 'de'; } catch { return 'de'; } }
+function tx(key) { const entry = translations[key]; if (!entry) return key; return getLang() === 'en' ? entry.en : entry.de; }
 
 // ─── Badge component for transaction status ───
 function TxBadge({ type, label }) {
@@ -33,7 +38,7 @@ function generateKontoumsaetze(kunde) {
     return dt.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
   };
 
-  const PRODUKT_LABELS = { wohngebaeude: 'Wohngebäude', hausrat: 'Hausrat', haftpflicht: 'Haftpflicht', kfz: 'Kfz', kfz2: 'Kfz (Zweitwagen)', bu: 'BU', unfall: 'Unfall', rechtsschutz: 'Rechtsschutz', pkv: 'PKV', girokonto: 'Girokonto', festgeld: 'Festgeld', tagesgeld: 'Tagesgeld', depot: 'Depot', kredit: 'Kredit', bausparvertrag: 'Bausparvertrag', lebensversicherung: 'Lebensversicherung', rlv: 'Risikoleben', du: 'Dienstunfähigkeit' };
+  const PRODUKT_LABELS = { wohngebaeude: tx('finanzprofil.produktLabel.wohngebaeude'), hausrat: tx('finanzprofil.produktLabel.hausrat'), haftpflicht: tx('finanzprofil.produktLabel.haftpflicht'), kfz: tx('finanzprofil.produktLabel.kfz'), kfz2: tx('finanzprofil.produktLabel.kfz2'), bu: tx('finanzprofil.produktLabel.bu'), unfall: tx('finanzprofil.produktLabel.unfall'), rechtsschutz: tx('finanzprofil.produktLabel.rechtsschutz'), pkv: tx('finanzprofil.produktLabel.pkv'), girokonto: tx('finanzprofil.produktLabel.girokonto'), festgeld: tx('finanzprofil.produktLabel.festgeld'), tagesgeld: tx('finanzprofil.produktLabel.tagesgeld'), depot: tx('finanzprofil.produktLabel.depot'), kredit: tx('finanzprofil.produktLabel.kredit'), bausparvertrag: tx('finanzprofil.produktLabel.bausparvertrag'), lebensversicherung: tx('finanzprofil.produktLabel.lebensversicherung'), rlv: tx('finanzprofil.produktLabel.rlv'), du: tx('finanzprofil.produktLabel.du') };
 
   // Helper: split a total into sub-items that sum exactly to total
   function splitTotal(total, shares) {
@@ -55,15 +60,15 @@ function generateKontoumsaetze(kunde) {
   const haus = txn.find(t => t.kategorie === 'haus');
   if (baufi || miete || haus) {
     const wohnenItems = [];
-    if (baufi) wohnenItems.push({ name: `Hypothek ${baufi.empfaenger}`, amount: Math.abs(baufi.betrag), datum: fmtDate(vm, 5), badge: 'bekannt', badgeLabel: 'Bekannt', recurring: true });
-    if (miete) wohnenItems.push({ name: `Miete ${miete.empfaenger}`, amount: Math.abs(miete.betrag), datum: fmtDate(vm, 1), recurring: true });
+    if (baufi) wohnenItems.push({ name: `${tx('finanzprofil.hypothek')} ${baufi.empfaenger}`, amount: Math.abs(baufi.betrag), datum: fmtDate(vm, 5), badge: 'bekannt', badgeLabel: tx('finanzprofil.bekannt'), recurring: true });
+    if (miete) wohnenItems.push({ name: `${tx('finanzprofil.miete')} ${miete.empfaenger}`, amount: Math.abs(miete.betrag), datum: fmtDate(vm, 1), recurring: true });
     if (haus) {
       const hausTotal = Math.abs(haus.betrag);
       const [strom, nk] = splitTotal(hausTotal, [0.45, 0.55]);
-      wohnenItems.push({ name: 'Strom / Gas', amount: strom, datum: fmtDate(vm, 3), recurring: true });
-      wohnenItems.push({ name: 'Nebenkosten', amount: nk, datum: fmtDate(vm, 1), recurring: true });
+      wohnenItems.push({ name: tx('finanzprofil.stromGas'), amount: strom, datum: fmtDate(vm, 3), recurring: true });
+      wohnenItems.push({ name: tx('finanzprofil.nebenkosten'), amount: nk, datum: fmtDate(vm, 1), recurring: true });
     }
-    categories.push({ name: 'Wohnen', color: '#93b8e8', total: wohnenItems.reduce((s, i) => s + i.amount, 0), items: wohnenItems });
+    categories.push({ name: tx('finanzprofil.wohnen'), color: '#93b8e8', total: wohnenItems.reduce((s, i) => s + i.amount, 0), items: wohnenItems });
   }
 
   // Versicherungen - use actual transaction amounts, distribute across products
@@ -81,7 +86,7 @@ function generateKontoumsaetze(kunde) {
         const label = PRODUKT_LABELS[p.typ] || p.typ;
         const amount = i === eigenProdukte.length - 1 ? remaining : Math.round(eigenTotal * praemienRaw[i] / praemienSum);
         remaining -= amount;
-        versItems.push({ name: `${label} (Eigener Bestand)`, amount, datum: fmtDate(vm, 1), badge: 'bekannt', badgeLabel: 'Betreut' });
+        versItems.push({ name: `${label} (${tx('finanzprofil.eigenerBestand')})`, amount, datum: fmtDate(vm, 1), badge: 'bekannt', badgeLabel: tx('finanzprofil.betreut') });
       });
     }
   }
@@ -94,21 +99,21 @@ function generateKontoumsaetze(kunde) {
         const label = PRODUKT_LABELS[p.typ] || p.typ;
         const amount = i === fremdProdukte.length - 1 ? remaining : Math.round(fremdTotal / fremdProdukte.length);
         remaining -= Math.round(fremdTotal / fremdProdukte.length);
-        versItems.push({ name: `${label} (${p.institut || 'Fremd'})`, amount, datum: fmtDate(vm, 1), badge: 'unbekannt', badgeLabel: 'Fremd' });
+        versItems.push({ name: `${label} (${p.institut || tx('finanzprofil.fremd')})`, amount, datum: fmtDate(vm, 1), badge: 'unbekannt', badgeLabel: tx('finanzprofil.fremd') });
       });
     } else {
-      versItems.push({ name: 'Versicherung (Fremd)', amount: fremdTotal, datum: fmtDate(vm, 1), badge: 'unbekannt', badgeLabel: 'Fremd' });
+      versItems.push({ name: tx('finanzprofil.versicherungFremd'), amount: fremdTotal, datum: fmtDate(vm, 1), badge: 'unbekannt', badgeLabel: tx('finanzprofil.fremd') });
     }
   }
   if (versItems.length > 0) {
-    categories.push({ name: 'Versicherungen', color: '#7ecba1', total: versItems.reduce((s, i) => s + i.amount, 0), items: versItems });
+    categories.push({ name: tx('finanzprofil.versicherungen'), color: '#7ecba1', total: versItems.reduce((s, i) => s + i.amount, 0), items: versItems });
   }
 
   // Kredit & Finanzierung
   const kredit = txn.find(t => t.kategorie === 'kredit');
   if (kredit) {
-    categories.push({ name: 'Kredit & Finanzierung', color: '#b8a9e2', total: Math.abs(kredit.betrag), items: [
-      { name: `Kredit ${kredit.empfaenger}`, amount: Math.abs(kredit.betrag), datum: fmtDate(vm, 5), badge: 'luecke', badgeLabel: 'Restschuld offen', recurring: true }
+    categories.push({ name: tx('finanzprofil.kreditFinanzierung'), color: '#b8a9e2', total: Math.abs(kredit.betrag), items: [
+      { name: `${tx('finanzprofil.kredit')} ${kredit.empfaenger}`, amount: Math.abs(kredit.betrag), datum: fmtDate(vm, 5), badge: 'luecke', badgeLabel: tx('finanzprofil.restschuldOffen'), recurring: true }
     ]});
   }
 
@@ -128,21 +133,21 @@ function generateKontoumsaetze(kunde) {
   if (haustier) {
     konsumItems.push({
       name: 'Fressnapf Tiernahrung', amount: Math.abs(haustier.betrag), datum: fmtDate(vm, 12),
-      badge: 'tier-hint', badgeLabel: 'Haustier erkannt', recurring: true,
-      insight: 'Regelmäßige Tierfutter-Käufe erkannt — Tierhalterhaftpflicht & OP-Versicherung prüfen'
+      badge: 'tier-hint', badgeLabel: tx('finanzprofil.haustierErkannt'), recurring: true,
+      insight: tx('finanzprofil.insightHaustierInline')
     });
   } else {
     const seed = (kunde.name || '').length + (kunde.vorname || '').length;
     if (seed % 3 === 0) {
       konsumItems.push({
         name: 'Fressnapf Tiernahrung', amount: 42, datum: fmtDate(vm, 12),
-        badge: 'tier-hint', badgeLabel: 'Haustier erkannt', recurring: true,
-        insight: 'Regelmäßige Tierfutter-Käufe erkannt — Tierhalterhaftpflicht & OP-Versicherung prüfen'
+        badge: 'tier-hint', badgeLabel: tx('finanzprofil.haustierErkannt'), recurring: true,
+        insight: tx('finanzprofil.insightHaustierInline')
       });
     }
   }
   if (konsumItems.length > 0) {
-    categories.push({ name: 'Lebensmittel & Alltag', color: '#f0c78a', total: konsumItems.reduce((s, i) => s + i.amount, 0), items: konsumItems });
+    categories.push({ name: tx('finanzprofil.lebensmittelAlltag'), color: '#f0c78a', total: konsumItems.reduce((s, i) => s + i.amount, 0), items: konsumItems });
   }
 
   // Mobilität - items sum to exact mobilitaet amount
@@ -150,18 +155,18 @@ function generateKontoumsaetze(kunde) {
   if (mob) {
     const mobTotal = Math.abs(mob.betrag);
     const [tank, adac, park] = splitTotal(mobTotal, [0.6, 0.15, 0.25]);
-    categories.push({ name: 'Mobilität', color: '#f0a0a0', total: mobTotal, items: [
+    categories.push({ name: tx('finanzprofil.mobilitaet'), color: '#f0a0a0', total: mobTotal, items: [
       { name: 'ARAL Tankstelle', amount: tank, datum: fmtDate(vm, 6) },
       { name: 'ADAC Mitgliedschaft', amount: adac, datum: fmtDate(vm, 1), recurring: true },
-      { name: 'Parkhaus / Parken', amount: park, datum: fmtDate(vm, 9) },
+      { name: tx('finanzprofil.parkhausParken'), amount: park, datum: fmtDate(vm, 9) },
     ]});
   }
 
   // Sparen & Investment
   const sparplan = txn.find(t => t.kategorie === 'sparplan' || t.kategorie === 'sparen');
   if (sparplan) {
-    categories.push({ name: 'Sparen & Investment', color: '#10b981', total: Math.abs(sparplan.betrag), items: [
-      { name: `Sparplan ${sparplan.empfaenger}`, amount: Math.abs(sparplan.betrag), datum: fmtDate(vm, 1), badge: 'bekannt', badgeLabel: 'Bekannt', recurring: true }
+    categories.push({ name: tx('finanzprofil.sparenInvestment'), color: '#10b981', total: Math.abs(sparplan.betrag), items: [
+      { name: `${tx('finanzprofil.sparplan')} ${sparplan.empfaenger}`, amount: Math.abs(sparplan.betrag), datum: fmtDate(vm, 1), badge: 'bekannt', badgeLabel: tx('finanzprofil.bekannt'), recurring: true }
     ]});
   }
 
@@ -175,18 +180,18 @@ function generateKontoumsaetze(kunde) {
     if (hasRisiko) {
       const [streaming, restaurant, skydive] = splitTotal(abosTotal, [0.4, 0.45, 0.15]);
       freizeitItems.push({ name: abos.empfaenger || 'Netflix, Spotify', amount: streaming, datum: fmtDate(vm, 1), recurring: true });
-      freizeitItems.push({ name: 'Restaurant / Lieferdienst', amount: restaurant, datum: fmtDate(vm, 11) });
+      freizeitItems.push({ name: tx('finanzprofil.restaurantLieferdienst'), amount: restaurant, datum: fmtDate(vm, 11) });
       freizeitItems.push({
         name: 'Skydive Academy', amount: skydive, datum: fmtDate(vm, 14),
-        badge: 'insight', badgeLabel: 'Risikosport',
-        insight: 'Extremsport erkannt — Unfallversicherung & BU-Risikoprüfung empfohlen'
+        badge: 'insight', badgeLabel: tx('finanzprofil.risikosport'),
+        insight: tx('finanzprofil.insightRisikoInline')
       });
     } else {
       const [streaming, restaurant] = splitTotal(abosTotal, [0.5, 0.5]);
       freizeitItems.push({ name: abos.empfaenger || 'Netflix, Spotify', amount: streaming, datum: fmtDate(vm, 1), recurring: true });
-      freizeitItems.push({ name: 'Restaurant / Lieferdienst', amount: restaurant, datum: fmtDate(vm, 11) });
+      freizeitItems.push({ name: tx('finanzprofil.restaurantLieferdienst'), amount: restaurant, datum: fmtDate(vm, 11) });
     }
-    categories.push({ name: 'Freizeit & Hobbies', color: '#8fd4e6', total: abosTotal, items: freizeitItems });
+    categories.push({ name: tx('finanzprofil.freizeitHobbies'), color: '#8fd4e6', total: abosTotal, items: freizeitItems });
   }
 
   // Kinder
@@ -194,18 +199,18 @@ function generateKontoumsaetze(kunde) {
   if (kinder) {
     const kinderTotal = Math.abs(kinder.betrag);
     const [kita, kleidung] = splitTotal(kinderTotal, [0.6, 0.4]);
-    categories.push({ name: 'Kinder', color: '#d4a5e5', total: kinderTotal, items: [
-      { name: 'Kita / Betreuung', amount: kita, datum: fmtDate(vm, 1), recurring: true },
-      { name: 'Kinderkleidung / Bedarf', amount: kleidung, datum: fmtDate(vm, 12) },
+    categories.push({ name: tx('finanzprofil.kinder'), color: '#d4a5e5', total: kinderTotal, items: [
+      { name: tx('finanzprofil.kitaBetreuung'), amount: kita, datum: fmtDate(vm, 1), recurring: true },
+      { name: tx('finanzprofil.kinderkleidungBedarf'), amount: kleidung, datum: fmtDate(vm, 12) },
     ]});
   }
 
   // Tierbedarf (separate category if exists)
   const tierbedarf = txn.find(t => t.kategorie === 'tierbedarf');
   if (tierbedarf) {
-    categories.push({ name: 'Tierbedarf', color: '#e8a87c', total: Math.abs(tierbedarf.betrag), items: [
-      { name: `${tierbedarf.empfaenger || 'Fressnapf'}`, amount: Math.abs(tierbedarf.betrag), datum: fmtDate(vm, 12), badge: 'tier-hint', badgeLabel: 'Haustier erkannt', recurring: true,
-        insight: 'Regelmäßige Tierfutter-Käufe erkannt — Tierhalterhaftpflicht & OP-Versicherung prüfen' }
+    categories.push({ name: tx('finanzprofil.tierbedarf'), color: '#e8a87c', total: Math.abs(tierbedarf.betrag), items: [
+      { name: `${tierbedarf.empfaenger || 'Fressnapf'}`, amount: Math.abs(tierbedarf.betrag), datum: fmtDate(vm, 12), badge: 'tier-hint', badgeLabel: tx('finanzprofil.haustierErkannt'), recurring: true,
+        insight: tx('finanzprofil.insightHaustierInline') }
     ]});
   }
 
@@ -223,36 +228,39 @@ function generateInsights(kontoumsaetze, kunde) {
     insights.push({
       type: 'tier',
       icon: null,
-      title: 'Haustier erkannt',
-      text: 'Regelmäßige Käufe bei Fressnapf deuten auf Tierhaltung hin. Tierhalterhaftpflicht und Tier-OP-Versicherung als Cross-Sell prüfen.',
+      title: tx('finanzprofil.insightHaustierTitle'),
+      text: tx('finanzprofil.insightHaustierText'),
       prio: 'hoch',
-      potential: '€ 120–250 / Jahr'
+      potential: tx('finanzprofil.potentialJahr')
     });
   }
 
   // Risk sport detection
-  const riskItems = allItems.filter(i => i.insight?.includes('Extremsport') || i.insight?.includes('Risikosport'));
+  const riskItems = allItems.filter(i => i.badge === 'insight' || i.insight?.includes('Extremsport') || i.insight?.includes('Extreme sport'));
   if (riskItems.length > 0) {
     insights.push({
       type: 'risiko',
       icon: null,
-      title: 'Risikosport erkannt',
-      text: 'Ausgaben für Fallschirmspringen / Extremsport. Unfallversicherung mit Risikosport-Klausel und BU-Risikoprüfung empfohlen.',
+      title: tx('finanzprofil.insightRisikoTitle'),
+      text: tx('finanzprofil.insightRisikoText'),
       prio: 'mittel',
-      potential: 'Risikominimierung'
+      potential: tx('finanzprofil.potentialRisikominimierung')
     });
   }
 
   // Insurance gap from unknown products
   const unknownIns = allItems.filter(i => i.badge === 'unbekannt');
   if (unknownIns.length > 0) {
+    const lang = getLang();
+    const suffix = unknownIns.length > 1 ? (lang === 'en' ? 'ies' : 'en') : (lang === 'en' ? 'y' : '');
+    const verb = unknownIns.length > 1 ? (lang === 'en' ? 'were' : 'wurden') : (lang === 'en' ? 'was' : 'wurde');
     insights.push({
       type: 'luecke',
       icon: null,
-      title: `${unknownIns.length} Fremdversicherung${unknownIns.length > 1 ? 'en' : ''} erkannt`,
-      text: `Aus Kontoumsätzen ${unknownIns.length > 1 ? 'wurden' : 'wurde'} ${unknownIns.length} nicht betreute Versicherung${unknownIns.length > 1 ? 'en' : ''} identifiziert. Konsolidierungspotential prüfen.`,
+      title: tx('finanzprofil.insightFremdversTitle').replace('{count}', unknownIns.length).replace('{suffix}', suffix),
+      text: tx('finanzprofil.insightFremdversText').replace('{verb}', verb).replace('{count}', unknownIns.length).replace('{suffix}', suffix),
       prio: 'hoch',
-      potential: 'Bestandskonsolidierung'
+      potential: tx('finanzprofil.potentialBestandskonsolidierung')
     });
   }
 
@@ -264,10 +272,10 @@ function generateInsights(kontoumsaetze, kunde) {
     insights.push({
       type: 'sparen',
       icon: null,
-      title: 'Freie Liquidität erkannt',
-      text: `${formatEur(frei)} monatlich frei verfügbar. Sparrate erhöhen oder Altersvorsorge-Produkt empfehlen.`,
+      title: tx('finanzprofil.insightFreiTitle'),
+      text: tx('finanzprofil.insightFreiText').replace('{amount}', formatEur(frei)),
       prio: 'mittel',
-      potential: `${formatEur(Math.round(frei * 0.5))} / Mon. Sparrate`
+      potential: tx('finanzprofil.insightFreiPotential').replace('{amount}', formatEur(Math.round(frei * 0.5)))
     });
   }
 
@@ -286,7 +294,7 @@ function CategoryRow({ category, defaultOpen = false }) {
         <div className="flex items-center gap-2.5">
           <div className="w-3 h-3 rounded-full" style={{ backgroundColor: category.color }} />
           <span className="text-sm font-medium text-slate-700">{category.name}</span>
-          <span className="text-xs text-slate-400">{category.items.length} {t ? t('posten') : 'Posten'}</span>
+          <span className="text-xs text-slate-400">{category.items.length} {tx('finanzprofil.posten')}</span>
         </div>
         <div className="flex items-center gap-3">
           <span className="text-sm font-mono font-semibold text-slate-700">{formatEur(category.total)}</span>
@@ -395,7 +403,7 @@ export default function FinanzprofilTab({ kunde }) {
     const kat = kategorieLabel(t.kategorie);
     kategorieMap[kat] = (kategorieMap[kat] || 0) + Math.abs(t.betrag);
   });
-  if (frei > 0) kategorieMap['Frei'] = frei;
+  if (frei > 0) kategorieMap[t('finanzprofil.frei')] = frei;
 
   const donutData = Object.entries(kategorieMap).map(([name, value]) => ({ name, value }));
   const COLORS = ['#3b82f6', '#10b981', '#8b5cf6', '#f59e0b', '#ec4899', '#6b7280', '#14b8a6', '#f97316', '#a855f7', '#ef4444', '#06b6d4'];
@@ -497,7 +505,7 @@ export default function FinanzprofilTab({ kunde }) {
                     : 'bg-white text-slate-500 border-slate-200 hover:border-slate-400'
                 }`}
               >
-                {f === 'alle' ? 'Alle' : f.charAt(0).toUpperCase() + f.slice(1)}
+                {f === 'alle' ? t('finanzprofil.alle') : f.charAt(0).toUpperCase() + f.slice(1)}
               </button>
             ))}
           </div>
@@ -532,33 +540,33 @@ export default function FinanzprofilTab({ kunde }) {
 
 function kategorieLabel(kat) {
   const labels = {
-    gehalt: 'Gehalt',
-    gehalt_partner: 'Gehalt Partner',
-    kindergeld: 'Kindergeld',
-    rente: 'Rente',
-    rente_partner: 'Rente Partner',
-    einkommen: 'Einkommen',
-    gf_gehalt: 'GF-Gehalt',
-    baufi: 'Baufinanzierung',
-    miete: 'Miete',
-    kredit: 'Kredit',
-    versicherung_eigen: 'Versicherung (eigen)',
-    versicherung_fremd: 'Versicherung (fremd)',
-    versicherung: 'Versicherung',
-    versicherung_firma: 'Versicherung Firma',
-    sparplan: 'Sparplan',
-    sparplan2: 'Sparplan 2',
-    sparen: 'Sparen',
-    kinder: 'Kinder',
-    konsum: 'Konsum',
-    mobilitaet: 'Mobilität',
-    abos: 'Abos/Freizeit',
-    haus: 'Haus/Nebenkosten',
-    software: 'Software',
-    geschaeft: 'Geschäft',
-    haustier: 'Haustier',
-    tierbedarf: 'Tierbedarf',
-    tierarzt: 'Tierarzt',
+    gehalt: tx('kategorie.gehalt'),
+    gehalt_partner: tx('kategorie.gehaltPartner'),
+    kindergeld: tx('kategorie.kindergeld'),
+    rente: tx('kategorie.rente'),
+    rente_partner: tx('kategorie.rentePartner'),
+    einkommen: tx('kategorie.einkommen'),
+    gf_gehalt: tx('kategorie.gfGehalt'),
+    baufi: tx('kategorie.baufinanzierung'),
+    miete: tx('kategorie.miete'),
+    kredit: tx('kategorie.kredit'),
+    versicherung_eigen: tx('kategorie.versicherungEigen'),
+    versicherung_fremd: tx('kategorie.versicherungFremd'),
+    versicherung: tx('kategorie.versicherung'),
+    versicherung_firma: tx('kategorie.versicherungFirma'),
+    sparplan: tx('kategorie.sparplan'),
+    sparplan2: tx('kategorie.sparplan2'),
+    sparen: tx('kategorie.sparen'),
+    kinder: tx('kategorie.kinder'),
+    konsum: tx('kategorie.konsum'),
+    mobilitaet: tx('kategorie.mobilitaet'),
+    abos: tx('kategorie.abosFreizeit'),
+    haus: tx('kategorie.hausNebenkosten'),
+    software: tx('kategorie.software'),
+    geschaeft: tx('kategorie.geschaeft'),
+    haustier: tx('kategorie.haustier'),
+    tierbedarf: tx('kategorie.tierbedarf'),
+    tierarzt: tx('kategorie.tierarzt'),
   };
   return labels[kat] || (kat ? kat.charAt(0).toUpperCase() + kat.slice(1) : kat);
 }

@@ -45,5 +45,14 @@ export default function useTranslation() {
     return text;
   }, [lang]);
 
-  return { t, lang };
+  // Translate display names (e.g. "Familie Lindenberg" → "Family Lindenberg")
+  const tn = useCallback((name) => {
+    if (!name || lang === 'de') return name;
+    return name
+      .replace(/^Familie /, 'Family ')
+      .replace(/^Fam\. /, 'Family ')
+      .replace(/^Stiftung /, 'Foundation ');
+  }, [lang]);
+
+  return { t, tn, lang };
 }

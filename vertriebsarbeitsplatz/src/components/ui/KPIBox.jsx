@@ -2,21 +2,26 @@ import { clsx } from 'clsx';
 import * as LucideIcons from 'lucide-react';
 import { useEffect, useState, useMemo } from 'react';
 
+function getLang() { try { return localStorage.getItem('kia_language') || 'de'; } catch { return 'de'; } }
+
 function formatValue(wert, format) {
+  const loc = getLang() === 'en' ? 'en-US' : 'de-DE';
+  const cur = getLang() === 'en' ? '$' : '\u20ac';
   if (format === 'eur') {
-    return `${Math.round(wert).toLocaleString('de-DE')}\u20ac`;
+    return `${Math.round(wert).toLocaleString(loc)}${cur}`;
   }
-  if (format === 'pct') return `${wert.toLocaleString('de-DE', { maximumFractionDigits: 1 })}%`;
-  if (format === 'num') return wert.toLocaleString('de-DE');
+  if (format === 'pct') return `${wert.toLocaleString(loc, { maximumFractionDigits: 1 })}%`;
+  if (format === 'num') return wert.toLocaleString(loc);
   return String(wert);
 }
 
 function generateMonthlyData(currentValue, trend) {
+  const loc = getLang() === 'en' ? 'en-US' : 'de-DE';
   const now = new Date();
   const data = [];
   for (let i = 11; i >= 0; i--) {
     const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
-    const monthLabel = d.toLocaleDateString('de-DE', { month: 'short', year: '2-digit' });
+    const monthLabel = d.toLocaleDateString(loc, { month: 'short', year: '2-digit' });
     const factor = 1 - ((trend / 100) * (i / 11));
     // Very subtle noise (~0.5%) for realistic AuM progression
     const noise = 1 + (Math.sin(i * 2.7 + currentValue * 0.001) * 0.005);
@@ -52,10 +57,12 @@ function Sparkline({ data, color = 'var(--mode-primary-light)' }) {
 }
 
 function formatCompact(wert, format) {
+  const loc = getLang() === 'en' ? 'en-US' : 'de-DE';
+  const cur = getLang() === 'en' ? '$' : '\u20ac';
   if (format === 'eur') {
-    if (wert >= 1000000) return `${(wert / 1000000).toLocaleString('de-DE', { maximumFractionDigits: 1 })}M\u20ac`;
-    if (wert >= 1000) return `${Math.round(wert / 1000).toLocaleString('de-DE')}k\u20ac`;
-    return `${Math.round(wert).toLocaleString('de-DE')}\u20ac`;
+    if (wert >= 1000000) return `${(wert / 1000000).toLocaleString(loc, { maximumFractionDigits: 1 })}M${cur}`;
+    if (wert >= 1000) return `${Math.round(wert / 1000).toLocaleString(loc)}k${cur}`;
+    return `${Math.round(wert).toLocaleString(loc)}${cur}`;
   }
   return formatValue(wert, format);
 }
@@ -72,7 +79,7 @@ function ExpandedChart({ data, format, label, onClose }) {
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm animate-fade-in" onClick={onClose}>
       <div className="bg-white rounded-2xl shadow-xl p-6 w-full max-w-2xl mx-4 animate-fade-in-up" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between mb-4">
-          <h3 className="font-semibold text-slate-800">{label} — Letzte 12 Monate</h3>
+          <h3 className="font-semibold text-slate-800">{label} — {getLang() === 'en' ? 'Last 12 Months' : 'Letzte 12 Monate'}</h3>
           <button onClick={onClose} className="text-slate-400 hover:text-slate-600">
             <LucideIcons.X size={18} />
           </button>

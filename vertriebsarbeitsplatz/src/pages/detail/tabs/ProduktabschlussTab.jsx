@@ -6,14 +6,24 @@ import { formatDatum } from '../../../utils/formatters';
 import { useMode } from '../../../hooks/useMode';
 import useTranslation from '../../../i18n/useTranslation';
 
-const SCHRITT_ICONS = {
-  'Kreditrechner': CreditCard,
-  'Pers\u00f6nliche Daten': User,
-  'Einkommensangaben': FileText,
-  'Kontoverbindung': CreditCard,
-  'Legitimation': Fingerprint,
-  'Legitimation (VideoIdent)': Fingerprint,
-  'Unterschrift': PenTool,
+const SCHRITT_ICONS_BY_KEY = {
+  'kreditrechner': CreditCard,
+  'persoenlicheDaten': User,
+  'einkommensangaben': FileText,
+  'kontoverbindung': CreditCard,
+  'legitimation': Fingerprint,
+  'legitimationVideoIdent': Fingerprint,
+  'unterschrift': PenTool,
+};
+
+const SCHRITT_NAME_TO_KEY = {
+  'Kreditrechner': 'kreditrechner',
+  'Pers\u00f6nliche Daten': 'persoenlicheDaten',
+  'Einkommensangaben': 'einkommensangaben',
+  'Kontoverbindung': 'kontoverbindung',
+  'Legitimation': 'legitimation',
+  'Legitimation (VideoIdent)': 'legitimationVideoIdent',
+  'Unterschrift': 'unterschrift',
 };
 
 export default function ProduktabschlussTab({ kunde }) {
@@ -55,7 +65,7 @@ export default function ProduktabschlussTab({ kunde }) {
           </div>
           <div>
             <div className="text-2xl font-bold text-slate-800">
-              {abschluesse.reduce((sum, a) => sum + (a.details?.betrag || 0), 0).toLocaleString('de-DE')}\u20ac
+              {abschluesse.reduce((sum, a) => sum + (a.details?.betrag || 0), 0).toLocaleString((localStorage.getItem('kia_language') || 'de') === 'en' ? 'en-US' : 'de-DE')}\u20ac
             </div>
             <div className="text-xs text-slate-400">{t('kreditvolumenGesamt')}</div>
           </div>
@@ -119,7 +129,7 @@ function AntragCard({ antrag, t, statusConfig: STATUS_CONFIG }) {
           <>
             <div className="bg-slate-50 rounded-lg p-3">
               <div className="text-xs text-slate-400 mb-1">{t('kreditbetrag')}</div>
-              <div className="text-lg font-bold text-slate-800">{antrag.details.betrag?.toLocaleString('de-DE')}\u20ac</div>
+              <div className="text-lg font-bold text-slate-800">{antrag.details.betrag?.toLocaleString((localStorage.getItem('kia_language') || 'de') === 'en' ? 'en-US' : 'de-DE')}\u20ac</div>
             </div>
             <div className="bg-slate-50 rounded-lg p-3">
               <div className="text-xs text-slate-400 mb-1">{t('laufzeit')}</div>
@@ -165,7 +175,8 @@ function AntragCard({ antrag, t, statusConfig: STATUS_CONFIG }) {
             {antrag.schritte?.map((schritt, i) => {
               const statusCfg = STATUS_CONFIG[schritt.status] || STATUS_CONFIG.offen;
               const StatusIcon = statusCfg.icon;
-              const StepIcon = SCHRITT_ICONS[schritt.name] || FileText;
+              const schrittKey = SCHRITT_NAME_TO_KEY[schritt.name];
+              const StepIcon = (schrittKey && SCHRITT_ICONS_BY_KEY[schrittKey]) || FileText;
               const isLast = i === antrag.schritte.length - 1;
 
               return (
@@ -187,7 +198,7 @@ function AntragCard({ antrag, t, statusConfig: STATUS_CONFIG }) {
                         schritt.status === 'abgebrochen' ? 'text-red-600' :
                         schritt.status === 'offen' ? 'text-slate-300' : 'text-slate-700'
                       )}>
-                        {schritt.name}
+                        {schrittKey ? t(`schritt.${schrittKey}`) : schritt.name}
                       </span>
                       <span className={clsx(
                         'text-[10px] font-medium px-2 py-0.5 rounded-full',
@@ -198,7 +209,7 @@ function AntragCard({ antrag, t, statusConfig: STATUS_CONFIG }) {
                     </div>
                     {schritt.datum && (
                       <div className="text-[11px] text-slate-400 mt-0.5">
-                        {new Date(schritt.datum).toLocaleString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })} Uhr
+                        {new Date(schritt.datum).toLocaleString((localStorage.getItem('kia_language') || 'de') === 'en' ? 'en-US' : 'de-DE', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
                       </div>
                     )}
                   </div>

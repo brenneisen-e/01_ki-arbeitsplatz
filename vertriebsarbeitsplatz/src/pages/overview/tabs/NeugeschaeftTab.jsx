@@ -38,18 +38,18 @@ export default function NeugeschaeftTab() {
   };
 
   const COLUMNS = [
-    { id: 'id', label: 'Vertragsnr.', width: '120px' },
+    { id: 'id', label: t('vertragsnr'), width: '120px' },
     { id: 'sparte', label: t('sparte'), render: (v) => <SparteBadge sparte={v} /> },
     { id: 'produkt', label: t('produkt') },
-    { id: 'versicherer', label: 'Versicherer', render: (v) => (
+    { id: 'versicherer', label: t('versicherer'), render: (v) => (
       <div className="flex items-center gap-2">
         <LogoImg name={v} size={18} />
         <span>{v}</span>
       </div>
     )},
-    { id: 'beitrag', label: 'Beitrag', render: (v, row) => `${formatEur(v)}/${row.beitragsart}` },
+    { id: 'beitrag', label: t('beitrag'), render: (v, row) => `${formatEur(v)}/${row.beitragsart}` },
     { id: 'status', label: t('status'), render: (v) => <StatusBadge status={v} /> },
-    { id: 'datum', label: 'Datum' },
+    { id: 'datum', label: t('datum') },
   ];
   const data = NEUGESCHAEFT_DATA[modeId] || NEUGESCHAEFT_DATA.versicherung;
 

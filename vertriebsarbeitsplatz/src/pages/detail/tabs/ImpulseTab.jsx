@@ -7,15 +7,15 @@ import useTranslation from '../../../i18n/useTranslation';
 import { Shield, Zap, RefreshCw, CheckCircle, XCircle, ChevronDown, Calendar, User, ExternalLink, TrendingUp, ArrowRight } from 'lucide-react';
 
 const ABSICHERUNGS_TYPEN = [
-  { key: 'bu', label: 'BU' },
-  { key: 'kfz', label: 'KFZ' },
-  { key: 'hausrat', label: 'Hausrat' },
-  { key: 'haftpflicht', label: 'Haftpfl.' },
-  { key: 'rlv', label: 'RLV' },
-  { key: 'pflege', label: 'Pflege' },
-  { key: 'unfall', label: 'Unfall' },
-  { key: 'rechtsschutz', label: 'Rechtsch.' },
-  { key: 'wohngebaeude', label: 'Wohngeb.' },
+  { key: 'bu' },
+  { key: 'kfz' },
+  { key: 'hausrat' },
+  { key: 'haftpflicht' },
+  { key: 'rlv' },
+  { key: 'pflege' },
+  { key: 'unfall' },
+  { key: 'rechtsschutz' },
+  { key: 'wohngebaeude' },
 ];
 
 export default function ImpulseTab({ kunde }) {
@@ -52,7 +52,7 @@ export default function ImpulseTab({ kunde }) {
                 }`}
               >
                 {vorhanden ? <CheckCircle size={14} /> : <XCircle size={14} />}
-                {typ.label}
+                {t(`absicherung.${typ.key}`)}
               </div>
             );
           })}
@@ -296,17 +296,17 @@ function DeckungslueckeBar({ data, t }) {
         <div className="grid grid-cols-3 gap-3 text-center">
           <div className="bg-slate-50 rounded-lg p-3">
             <div className="text-xs text-slate-400 mb-1">{gehaltLabel}</div>
-            <div className="text-lg font-bold text-slate-800">{gehalt.toLocaleString('de-DE')}{einheit?.replace('€/mtl.', '€')}</div>
+            <div className="text-lg font-bold text-slate-800">{gehalt.toLocaleString((localStorage.getItem('kia_language') || 'de') === 'en' ? 'en-US' : 'de-DE')}{einheit?.replace('€/mtl.', '€')}</div>
             <div className="text-xs text-slate-400">/mtl.</div>
           </div>
           <div className="bg-red-50 rounded-lg p-3">
             <div className="text-xs text-red-400 mb-1">{absicherungLabel}</div>
-            <div className="text-lg font-bold text-red-600">{aktuelleAbsicherung.toLocaleString('de-DE')}€</div>
+            <div className="text-lg font-bold text-red-600">{aktuelleAbsicherung.toLocaleString((localStorage.getItem('kia_language') || 'de') === 'en' ? 'en-US' : 'de-DE')}€</div>
             <div className="text-xs text-red-400">/mtl. ({pctAbgesichert}%)</div>
           </div>
           <div className="bg-emerald-50 rounded-lg p-3">
             <div className="text-xs text-emerald-500 mb-1">{t('empfehlungLabel')}</div>
-            <div className="text-lg font-bold text-emerald-700">{empfohleneAbsicherung.toLocaleString('de-DE')}€</div>
+            <div className="text-lg font-bold text-emerald-700">{empfohleneAbsicherung.toLocaleString((localStorage.getItem('kia_language') || 'de') === 'en' ? 'en-US' : 'de-DE')}€</div>
             <div className="text-xs text-emerald-500">/mtl. ({pctEmpfohlen}%)</div>
           </div>
         </div>
@@ -347,7 +347,7 @@ function DeckungslueckeBar({ data, t }) {
           <div className="flex items-center gap-2 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
             <TrendingUp size={16} className="text-amber-500 shrink-0" />
             <span className="text-sm text-amber-800">
-              <strong>{t('deckungsluecke')}: {luecke.toLocaleString('de-DE')}€/mtl.</strong>
+              <strong>{t('deckungsluecke')}: {luecke.toLocaleString((localStorage.getItem('kia_language') || 'de') === 'en' ? 'en-US' : 'de-DE')}€/mtl.</strong>
               {' '}— {aktuelleAbsicherung === 0 ? t('vollstaendigUngeschuetzt') : t('nurAbgesichert', { pct: pctAbgesichert })}
             </span>
           </div>

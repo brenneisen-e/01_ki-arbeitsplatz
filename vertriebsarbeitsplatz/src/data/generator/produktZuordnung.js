@@ -4,40 +4,44 @@
 import { random, randomBetween, weightedRandom, shuffle } from './utils';
 import { VERSICHERUNGS_PRODUKTE, BANKING_PRODUKTE, VV_PRODUKTE, FREMD_PROFILE, pickKfzModell } from './produktKatalog';
 
+// ═══ i18n helpers ═══
+function getLang() { try { return localStorage.getItem('kia_language') || 'de'; } catch { return 'de'; } }
+function tx(de, en) { return getLang() === 'en' ? en : de; }
+
 // ═══ Versicherer-Produkt-Name generieren ═══
 function generateProduktName(prod, modus) {
   const institut = modus === 'versicherung' ? 'ERGO'
     : modus === 'banking' ? 'VB Mittelhessen'
     : 'HRK LUNIS';
-  if (prod.name) return `${institut} ${prod.name.replace(/versicherung/i, '').trim()}`.trim();
+  if (prod.name) return `${institut} ${prod.name.replace(/versicherung/i, '').replace(/insurance/i, '').trim()}`.trim();
   return prod.name || prod.id;
 }
 
 function generateProduktDetails(prod, person) {
   switch (prod.id) {
-    case 'bu': return `${Math.round(person.nettoeinkommen * 0.8)}€/mtl. Rente`;
-    case 'rlv': return `${randomBetween(100, 400)}k Deckung, bis ${2030 + randomBetween(0, 15)}`;
+    case 'bu': return `${Math.round(person.nettoeinkommen * 0.8)}€/${tx('mtl.', 'mo.')} ${tx('Rente', 'pension')}`;
+    case 'rlv': return `${randomBetween(100, 400)}k ${tx('Deckung', 'coverage')}, ${tx('bis', 'until')} ${2030 + randomBetween(0, 15)}`;
     case 'kfz': {
       const modell = pickKfzModell(person);
-      const deckung = random(['Vollkasko', 'Teilkasko', 'Vollkasko 500€ SB']);
+      const deckung = random([tx('Vollkasko', 'Comprehensive'), tx('Teilkasko', 'Partial'), tx('Vollkasko 500€ SB', 'Comprehensive 500€ deductible')]);
       return `${modell}, ${deckung}, SF-${randomBetween(3, 25)}`;
     }
-    case 'haftpflicht': return `${person.kinder.length > 0 ? 'Familie' : 'Single'} ${randomBetween(5, 10)}M€`;
+    case 'haftpflicht': return `${person.kinder.length > 0 ? tx('Familie', 'Family') : 'Single'} ${randomBetween(5, 10)}M€`;
     case 'hausrat': return `${person.wohnflaeche}qm`;
-    case 'wohngebaeude': return `${person.wohnflaeche}qm, Baujahr ${randomBetween(1960, 2020)}`;
-    case 'pkv': return `${random(['Komfort','Premium','Basis'])}tarif`;
-    case 'zahnzusatz': return `${randomBetween(70, 100)}% Erstattung`;
-    case 'pflege': return `Pflegetagegeld ${randomBetween(30, 80)}€/Tag`;
-    case 'rechtsschutz': return `${random(['Privat','Privat+Beruf','Komplett'])}`;
-    case 'unfall': return person.kinder.length > 0 ? 'Familie' : 'Einzel';
-    case 'fondspolice': return `${random(['MSCI World','Multi Asset','Nachhaltig'])} Strategie`;
-    case 'ruerup': return `${randomBetween(200, 600)}€/mtl.`;
-    case 'riester': return `${randomBetween(5, 175)}€/mtl.`;
-    case 'kapital_lv': return `Ablauf ${randomBetween(2028, 2040)}`;
-    case 'gewerbe_hp': return `${random(['5M€','10M€'])} Deckung`;
-    case 'girokonto': return `Gehaltseingang ${person.nettoeinkommen.toLocaleString('de')}€`;
+    case 'wohngebaeude': return `${person.wohnflaeche}qm, ${tx('Baujahr', 'built')} ${randomBetween(1960, 2020)}`;
+    case 'pkv': return `${random([tx('Komfort', 'Comfort'), 'Premium', tx('Basis', 'Basic')])}${tx('tarif', ' plan')}`;
+    case 'zahnzusatz': return `${randomBetween(70, 100)}% ${tx('Erstattung', 'reimbursement')}`;
+    case 'pflege': return `${tx('Pflegetagegeld', 'Daily care allowance')} ${randomBetween(30, 80)}€/${tx('Tag', 'day')}`;
+    case 'rechtsschutz': return `${random([tx('Privat', 'Private'), tx('Privat+Beruf', 'Private+Professional'), tx('Komplett', 'Complete')])}`;
+    case 'unfall': return person.kinder.length > 0 ? tx('Familie', 'Family') : tx('Einzel', 'Individual');
+    case 'fondspolice': return `${random(['MSCI World', 'Multi Asset', tx('Nachhaltig', 'Sustainable')])} ${tx('Strategie', 'Strategy')}`;
+    case 'ruerup': return `${randomBetween(200, 600)}€/${tx('mtl.', 'mo.')}`;
+    case 'riester': return `${randomBetween(5, 175)}€/${tx('mtl.', 'mo.')}`;
+    case 'kapital_lv': return `${tx('Ablauf', 'Maturity')} ${randomBetween(2028, 2040)}`;
+    case 'gewerbe_hp': return `${random(['5M€', '10M€'])} ${tx('Deckung', 'coverage')}`;
+    case 'girokonto': return `${tx('Gehaltseingang', 'Salary deposit')} ${person.nettoeinkommen.toLocaleString('de')}€`;
     case 'baufinanzierung': return `${randomBetween(100, 450)}k€, ${randomBetween(1, 3)}.${randomBetween(0, 9)}%`;
-    case 'depot': return `${random(['ETF-Sparplan','Fondsdepot','Wertpapierdepot'])}`;
+    case 'depot': return `${random([tx('ETF-Sparplan', 'ETF Savings Plan'), tx('Fondsdepot', 'Fund Portfolio'), tx('Wertpapierdepot', 'Securities Portfolio')])}`;
     default: return prod.name || '';
   }
 }
@@ -88,7 +92,7 @@ export function assignEigeneProdukte(person, modus) {
       produkte.push({
         typ: p.id,
         sparte: p.sparte,
-        produkt: `ERGO ${p.name.replace('versicherung', '').replace('Versicherung', '').trim()}`,
+        produkt: `ERGO ${p.name.replace(/versicherung/i, '').replace(/insurance/i, '').trim()}`,
         details: generateProduktDetails(p, person),
         praemie: calculatePraemie(p, person),
         seit: generateVertragsdatum(person.alter),
@@ -101,7 +105,7 @@ export function assignEigeneProdukte(person, modus) {
     // Jeder Banking-Kunde hat ein Girokonto
     produkte.push({
       typ: 'girokonto', sparte: 'konto',
-      produkt: 'VR-Girokonto', details: `Gehaltseingang ${person.nettoeinkommen.toLocaleString('de')}€`,
+      produkt: tx('VR-Girokonto', 'VR Checking Account'), details: `${tx('Gehaltseingang', 'Salary deposit')} ${person.nettoeinkommen.toLocaleString('de')}€`,
       praemie: 0, seit: generateVertragsdatum(person.alter), status: 'aktiv',
     });
 
@@ -149,7 +153,7 @@ export function assignEigeneProdukte(person, modus) {
       produkte.push({
         typ: p.id, sparte: 'alternatives',
         produkt: p.name,
-        details: `${(vol / 1000000).toFixed(1)}M€ Beteiligung`,
+        details: `${(vol / 1000000).toFixed(1)}M€ ${tx('Beteiligung', 'participation')}`,
         praemie: vol,
         seit: generateVertragsdatum(Math.min(person.alter, 55)),
         status: 'aktiv',
@@ -177,7 +181,7 @@ function assignFremdVersicherung(person, eigeneProdukte) {
   // 1. Girokonto (immer)
   fremd.push({
     typ: 'girokonto', institut: profil.pickBank(person),
-    details: `Gehaltseingang ${person.nettoeinkommen.toLocaleString('de')}€`,
+    details: `${tx('Gehaltseingang', 'Salary deposit')} ${person.nettoeinkommen.toLocaleString('de')}€`,
     volumen: randomBetween(1500, 8000), consent: randomBetween(0, 100) > 30,
   });
 
@@ -187,7 +191,7 @@ function assignFremdVersicherung(person, eigeneProdukte) {
     const sparrate = randomBetween(100, Math.min(800, Math.round(person.nettoeinkommen * 0.15)));
     fremd.push({
       typ: 'depot', institut: profil.pickDepot(person),
-      details: `ETF-Sparplan ${sparrate}€/mtl.`,
+      details: `${tx('ETF-Sparplan', 'ETF Savings Plan')} ${sparrate}€/${tx('mtl.', 'mo.')}`,
       volumen: randomBetween(5000, Math.min(80000, person.nettoeinkommen * 8)),
       consent: randomBetween(0, 100) > 40,
     });
@@ -197,7 +201,7 @@ function assignFremdVersicherung(person, eigeneProdukte) {
   if (randomBetween(0, 100) > 50) {
     fremd.push({
       typ: 'tagesgeld', institut: random(['ING','DKB','Commerzbank','Deutsche Bank']),
-      details: `${randomBetween(1, 3)},${randomBetween(0, 9)}% Zins`,
+      details: `${randomBetween(1, 3)},${randomBetween(0, 9)}% ${tx('Zins', 'interest')}`,
       volumen: randomBetween(3000, Math.min(50000, person.nettoeinkommen * 5)),
       consent: randomBetween(0, 100) > 40,
     });
@@ -209,7 +213,7 @@ function assignFremdVersicherung(person, eigeneProdukte) {
     const zinsbindungJahr = randomBetween(2026, 2032);
     fremd.push({
       typ: 'baufinanzierung', institut: profil.pickBaufi(),
-      details: `${restschuld.toLocaleString('de')}€ Rest, ${randomBetween(1, 3)},${randomBetween(0, 9)}%, Zinsbindung bis ${zinsbindungJahr}`,
+      details: `${restschuld.toLocaleString('de')}€ ${tx('Rest', 'remaining')}, ${randomBetween(1, 3)},${randomBetween(0, 9)}%, ${tx('Zinsbindung bis', 'fixed rate until')} ${zinsbindungJahr}`,
       volumen: restschuld, consent: randomBetween(0, 100) > 30,
       _zinsbindungEnde: zinsbindungJahr,
     });
@@ -242,7 +246,7 @@ function assignFremdBanking(person, eigeneProdukte) {
     const sparrate = randomBetween(100, Math.min(1000, Math.round(person.nettoeinkommen * 0.15)));
     fremd.push({
       typ: 'depot', institut: profil.pickDepot(person),
-      details: `ETF-Sparplan ${sparrate}€/mtl.`,
+      details: `${tx('ETF-Sparplan', 'ETF Savings Plan')} ${sparrate}€/${tx('mtl.', 'mo.')}`,
       volumen: randomBetween(5000, Math.min(100000, person.nettoeinkommen * 10)),
       consent: randomBetween(0, 100) > 40,
     });
@@ -252,7 +256,7 @@ function assignFremdBanking(person, eigeneProdukte) {
   if (randomBetween(0, 100) > 40) {
     fremd.push({
       typ: 'tagesgeld', institut: random(profil.tagesgeld),
-      details: `${randomBetween(2, 3)},${randomBetween(0, 9)}% Zins`,
+      details: `${randomBetween(2, 3)},${randomBetween(0, 9)}% ${tx('Zins', 'interest')}`,
       volumen: randomBetween(5000, Math.min(60000, person.nettoeinkommen * 6)),
       consent: randomBetween(0, 100) > 30,
     });
@@ -290,7 +294,7 @@ function assignFremdVV(person) {
   if (randomBetween(0, 100) > 20) {
     fremd.push({
       typ: 'depot_privat', institut: random(profil.privateBanking),
-      details: 'Depot bei Fremdbank',
+      details: tx('Depot bei Fremdbank', 'Portfolio at external bank'),
       volumen: randomBetween(
         Math.round(person._gesamtvermoegen * 0.05),
         Math.round(person._gesamtvermoegen * 0.3)
@@ -303,7 +307,7 @@ function assignFremdVV(person) {
   if (randomBetween(0, 100) > 40) {
     fremd.push({
       typ: 'tagesgeld', institut: random(profil.geschaeftsbanken),
-      details: 'Tagesgeld/Cash bei Fremdbank',
+      details: tx('Tagesgeld/Cash bei Fremdbank', 'Money market/cash at external bank'),
       volumen: randomBetween(100000, Math.min(2000000, Math.round(person._gesamtvermoegen * 0.1))),
       consent: randomBetween(0, 100) > 30,
     });
@@ -313,9 +317,14 @@ function assignFremdVV(person) {
   if (person._gesamtvermoegen > 2000000 && randomBetween(0, 100) > 30) {
     fremd.push({
       typ: 'immobilien', institut: null,
-      details: random(['Villa + Ferienimmobilie', 'Mehrfamilienhaus (vermietet)',
-        'Eigentumswohnung + Gewerbeeinheit', 'Penthouse + Chalet Schweiz',
-        '3 Wohneinheiten (vermietet)', 'Stadthaus + Finca Mallorca']),
+      details: random([
+        tx('Villa + Ferienimmobilie', 'Villa + vacation property'),
+        tx('Mehrfamilienhaus (vermietet)', 'Multi-family house (rented)'),
+        tx('Eigentumswohnung + Gewerbeeinheit', 'Condominium + commercial unit'),
+        tx('Penthouse + Chalet Schweiz', 'Penthouse + Swiss chalet'),
+        tx('3 Wohneinheiten (vermietet)', '3 residential units (rented)'),
+        tx('Stadthaus + Finca Mallorca', 'Townhouse + Finca Mallorca'),
+      ]),
       volumen: randomBetween(500000, Math.min(5000000, Math.round(person._gesamtvermoegen * 0.3))),
       consent: false,
     });
@@ -326,10 +335,10 @@ function assignFremdVV(person) {
     fremd.push({
       typ: 'unternehmensbeteiligung', institut: null,
       details: random([
-        `GmbH Maschinenbau, ${randomBetween(15, 200)} MA`,
-        `GmbH IT-Dienstleistung, ${randomBetween(10, 80)} MA`,
-        `GmbH & Co. KG Handel, ${randomBetween(5, 50)} MA`,
-        'Familienholding (3. Generation)',
+        `${tx('GmbH Maschinenbau', 'GmbH Mechanical Engineering')}, ${randomBetween(15, 200)} ${tx('MA', 'employees')}`,
+        `${tx('GmbH IT-Dienstleistung', 'GmbH IT Services')}, ${randomBetween(10, 80)} ${tx('MA', 'employees')}`,
+        `${tx('GmbH & Co. KG Handel', 'GmbH & Co. KG Trade')}, ${randomBetween(5, 50)} ${tx('MA', 'employees')}`,
+        tx('Familienholding (3. Generation)', 'Family holding (3rd generation)'),
       ]),
       volumen: randomBetween(1000000, 15000000),
       consent: false,
@@ -340,7 +349,7 @@ function assignFremdVV(person) {
   if (person.alter > 50 && randomBetween(0, 100) > 50) {
     fremd.push({
       typ: 'rlv', institut: random(['Alte Leipziger','Allianz','Zurich','Generali']),
-      details: `Ablauf ${randomBetween(2026, 2030)}, Rückkaufswert ${randomBetween(150, 500)}k€`,
+      details: `${tx('Ablauf', 'Maturity')} ${randomBetween(2026, 2030)}, ${tx('Rückkaufswert', 'surrender value')} ${randomBetween(150, 500)}k€`,
       volumen: randomBetween(150000, 500000),
       consent: false,
     });
@@ -349,7 +358,7 @@ function assignFremdVV(person) {
   // 6. Referenzkonto bei Geschäftsbank
   fremd.push({
     typ: 'girokonto', institut: random(profil.geschaeftsbanken),
-    details: 'Referenzkonto für Mandat',
+    details: tx('Referenzkonto für Mandat', 'Reference account for mandate'),
     volumen: randomBetween(20000, 200000),
     consent: true,
   });
@@ -358,7 +367,7 @@ function assignFremdVV(person) {
   if (randomBetween(0, 100) > 30) {
     fremd.push({
       typ: 'kfz', institut: random(profil.versicherer),
-      details: `${pickKfzModell(person)}, Vollkasko`,
+      details: `${pickKfzModell(person)}, ${tx('Vollkasko', 'Comprehensive')}`,
       volumen: randomBetween(800, 3000),
       consent: false,
     });
@@ -383,6 +392,6 @@ export function validateFremdProdukte(person, modus) {
     .filter(p => p.typ === 'kfz' && p.details && !p.details.includes(','))
     .forEach(p => {
       const modell = pickKfzModell(person);
-      p.details = `${modell}, ${random(['Vollkasko', 'Teilkasko'])}`;
+      p.details = `${modell}, ${random([tx('Vollkasko', 'Comprehensive'), tx('Teilkasko', 'Partial')])}`;
     });
 }

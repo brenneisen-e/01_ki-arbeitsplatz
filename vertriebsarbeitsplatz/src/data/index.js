@@ -1,5 +1,20 @@
 import { getKunden } from './generator';
 
+// ─── Language helper ───
+function getLang() {
+  try { return localStorage.getItem('kia_language') || 'de'; } catch { return 'de'; }
+}
+function tx(de, en) { return getLang() === 'en' ? en : de; }
+
+// Translate name prefixes like "Familie" → "Family"
+export function translateName(name) {
+  if (getLang() !== 'en') return name;
+  return name
+    .replace(/^Familie /, 'Family ')
+    .replace(/^Fam\. /, 'Family ')
+    .replace(/^Stiftung /, 'Foundation ');
+}
+
 // Dynamisch generierte Kunden (Showcase + generierte)
 // Lazy: Werden beim ersten Zugriff generiert und gecacht
 export const KUNDEN_BY_MODE = {
@@ -37,10 +52,10 @@ export const NEUGESCHAEFT_DATA = {
       abschlussquote: { wert: 77.9, trend: 3.1 },
     },
     spartenVerteilung: [
-      { name: 'Leben', value: 32, color: '#3b82f6' },
-      { name: 'Kranken', value: 21, color: '#10b981' },
-      { name: 'Schaden', value: 21, color: '#8b5cf6' },
-      { name: 'Kfz', value: 12, color: '#f59e0b' },
+      { name: tx('Leben', 'Life'), value: 32, color: '#3b82f6' },
+      { name: tx('Kranken', 'Health'), value: 21, color: '#10b981' },
+      { name: tx('Schaden', 'Property'), value: 21, color: '#8b5cf6' },
+      { name: tx('Kfz', 'Motor'), value: 12, color: '#f59e0b' },
     ],
     top5: [
       { name: 'Ralf Dietrich', betrag: 1585 },
@@ -101,12 +116,12 @@ export const NEUGESCHAEFT_DATA = {
       { name: 'SmartValue', value: 1, color: '#10b981' },
     ],
     top5: [
-      { name: 'Familie Bergmann-Roth', betrag: 3500000 },
+      { name: translateName('Familie Bergmann-Roth'), betrag: 3500000 },
       { name: 'Dr. Anna Fischer', betrag: 1500000 },
       { name: 'Maxim Meydarn', betrag: 800000 },
     ],
     vertraege: [
-      { id: 'VV-2026-001', kundeId: 'VV008', kunde: 'Familie Bergmann-Roth', sparte: 'fairvalue', produkt: 'VV + Family Office', versicherer: 'HRK LUNIS', beitrag: 3500000, beitragsart: 'ges', status: 'aktiv', datum: '2026-01-15' },
+      { id: 'VV-2026-001', kundeId: 'VV008', kunde: translateName('Familie Bergmann-Roth'), sparte: 'fairvalue', produkt: 'VV + Family Office', versicherer: 'HRK LUNIS', beitrag: 3500000, beitragsart: 'ges', status: 'aktiv', datum: '2026-01-15' },
       { id: 'VV-2026-002', kundeId: 'VV-NEW', kunde: 'Dr. Anna Fischer', sparte: 'fairvalue', produkt: 'Individuelle VV', versicherer: 'HRK LUNIS', beitrag: 1500000, beitragsart: 'ges', status: 'onboarding', datum: '2026-03-11' },
       { id: 'VV-2026-003', kundeId: 'VV005', kunde: 'Maxim Meydarn', sparte: 'smartvalue', produkt: 'SmartValue VV', versicherer: 'HRK LUNIS', beitrag: 800000, beitragsart: 'ges', status: 'aktiv', datum: '2026-02-01' },
     ],
@@ -155,17 +170,17 @@ export const STORNO_DATA = {
       fruehstorno: { wert: 1, trend: -50.0 },
     },
     gruende: [
-      { name: 'Preis', value: 35 },
-      { name: 'Wettbewerb', value: 25 },
-      { name: 'Umzug', value: 15 },
-      { name: 'Unzufriedenheit', value: 15 },
-      { name: 'Sonstiges', value: 10 },
+      { name: tx('Preis', 'Price'), value: 35 },
+      { name: tx('Wettbewerb', 'Competition'), value: 25 },
+      { name: tx('Umzug', 'Relocation'), value: 15 },
+      { name: tx('Unzufriedenheit', 'Dissatisfaction'), value: 15 },
+      { name: tx('Sonstiges', 'Other'), value: 10 },
     ],
     vertraege: [
-      { kunde: 'Herbert Lange', kundeId: 'KD00012', produkt: 'ERGO Hausrat Komfort', sparte: 'Schaden', praemie: 280, stornoDatum: '2025-11-15', grund: 'Preis', typ: 'Spätstorno' },
-      { kunde: 'Sandra Richter', kundeId: 'KD00018', produkt: 'ERGO BU Comfort', sparte: 'Leben', praemie: 1920, stornoDatum: '2025-09-22', grund: 'Wettbewerb', typ: 'Spätstorno' },
-      { kunde: 'Frank Zimmermann', kundeId: 'KD00025', produkt: 'ERGO Kfz-Vollkasko', sparte: 'Kfz', praemie: 780, stornoDatum: '2026-01-08', grund: 'Umzug', typ: 'Frühstorno' },
-      { kunde: 'Monika Becker', kundeId: 'KD00031', produkt: 'ERGO Privat Familie', sparte: 'Schaden', praemie: 95, stornoDatum: '2025-12-03', grund: 'Unzufriedenheit', typ: 'Spätstorno' },
+      { kunde: 'Herbert Lange', kundeId: 'KD00012', produkt: 'ERGO Hausrat Komfort', sparte: tx('Schaden', 'Property'), praemie: 280, stornoDatum: '2025-11-15', grund: tx('Preis', 'Price'), typ: tx('Spätstorno', 'Late Cancel.') },
+      { kunde: 'Sandra Richter', kundeId: 'KD00018', produkt: 'ERGO BU Comfort', sparte: tx('Leben', 'Life'), praemie: 1920, stornoDatum: '2025-09-22', grund: tx('Wettbewerb', 'Competition'), typ: tx('Spätstorno', 'Late Cancel.') },
+      { kunde: 'Frank Zimmermann', kundeId: 'KD00025', produkt: 'ERGO Kfz-Vollkasko', sparte: tx('Kfz', 'Motor'), praemie: 780, stornoDatum: '2026-01-08', grund: tx('Umzug', 'Relocation'), typ: tx('Frühstorno', 'Early Cancel.') },
+      { kunde: 'Monika Becker', kundeId: 'KD00031', produkt: tx('ERGO Privat Familie', 'ERGO Private Family'), sparte: tx('Schaden', 'Property'), praemie: 95, stornoDatum: '2025-12-03', grund: tx('Unzufriedenheit', 'Dissatisfaction'), typ: tx('Spätstorno', 'Late Cancel.') },
     ],
   },
   banking: {
@@ -176,11 +191,11 @@ export const STORNO_DATA = {
       fruehstorno: { wert: 2, trend: 0.0 },
     },
     gruende: [
-      { name: 'Konditionen (bessere Zinsen)', value: 30 },
-      { name: 'Bankenwechsel (Umzug)', value: 25 },
-      { name: 'Wechsel zu Neobank', value: 20 },
-      { name: 'Unzufriedenheit (Service)', value: 15 },
-      { name: 'Sonstiges (Todesfall etc.)', value: 10 },
+      { name: tx('Konditionen (bessere Zinsen)', 'Terms (better rates)'), value: 30 },
+      { name: tx('Bankenwechsel (Umzug)', 'Bank switch (relocation)'), value: 25 },
+      { name: tx('Wechsel zu Neobank', 'Switch to neobank'), value: 20 },
+      { name: tx('Unzufriedenheit (Service)', 'Dissatisfaction (service)'), value: 15 },
+      { name: tx('Sonstiges (Todesfall etc.)', 'Other (death etc.)'), value: 10 },
     ],
   },
   vermoegensverwaltung: {
@@ -191,10 +206,10 @@ export const STORNO_DATA = {
       fruehstorno: { wert: 0, trend: 0.0 },
     },
     gruende: [
-      { name: 'Performance', value: 40 },
-      { name: 'Gebühren', value: 30 },
-      { name: 'Konsolidierung', value: 20 },
-      { name: 'Sonstiges', value: 10 },
+      { name: tx('Performance', 'Performance'), value: 40 },
+      { name: tx('Gebühren', 'Fees'), value: 30 },
+      { name: tx('Konsolidierung', 'Consolidation'), value: 20 },
+      { name: tx('Sonstiges', 'Other'), value: 10 },
     ],
   },
 };
@@ -211,30 +226,30 @@ export const VERGUETUNG_DATA = {
       dynprov: { wert: 2000, trend: 5.0 },
     },
     kpiConfig: [
-      { id: 'provision', label: 'Provision YTD', format: 'eur', icon: 'Wallet' },
-      { id: 'ap', label: 'Abschlussprovision', format: 'eur', icon: 'TrendingUp' },
-      { id: 'bp', label: 'Bestandsprovision', format: 'eur', icon: 'Briefcase' },
-      { id: 'dynprov', label: 'Dynamikprovision', format: 'eur', icon: 'Zap' },
+      { id: 'provision', label: tx('Provision YTD', 'Commission YTD'), format: 'eur', icon: 'Wallet' },
+      { id: 'ap', label: tx('Abschlussprovision', 'Closing Commission'), format: 'eur', icon: 'TrendingUp' },
+      { id: 'bp', label: tx('Bestandsprovision', 'Portfolio Commission'), format: 'eur', icon: 'Briefcase' },
+      { id: 'dynprov', label: tx('Dynamikprovision', 'Dynamic Commission'), format: 'eur', icon: 'Zap' },
     ],
     monthlyData: [
       { name: 'Jan', value: 4200 },
       { name: 'Feb', value: 5100 },
-      { name: 'Mär', value: 4800 },
-      { name: 'Apr', value: 6200 },
-      { name: 'Mai', value: 5500 },
+      { name: tx('Mär', 'Mar'), value: 4800 },
+      { name: tx('Apr', 'Apr'), value: 6200 },
+      { name: tx('Mai', 'May'), value: 5500 },
       { name: 'Jun', value: 7100 },
       { name: 'Jul', value: 4900 },
       { name: 'Aug', value: 3800 },
       { name: 'Sep', value: 5600 },
-      { name: 'Okt', value: 6800 },
+      { name: tx('Okt', 'Oct'), value: 6800 },
       { name: 'Nov', value: 5200 },
-      { name: 'Dez', value: 8300 },
+      { name: tx('Dez', 'Dec'), value: 8300 },
     ],
     spartenData: [
-      { name: 'Leben', value: 18500 },
-      { name: 'Kranken', value: 12000 },
-      { name: 'Schaden', value: 9500 },
-      { name: 'Kfz', value: 8500 },
+      { name: tx('Leben', 'Life'), value: 18500 },
+      { name: tx('Kranken', 'Health'), value: 12000 },
+      { name: tx('Schaden', 'Property'), value: 9500 },
+      { name: tx('Kfz', 'Motor'), value: 8500 },
     ],
     modell: {
       abschluss: [
@@ -266,31 +281,31 @@ export const VERGUETUNG_DATA = {
     },
     kpiConfig: [
       { id: 'provision', label: 'DB III YTD', format: 'eur', icon: 'Wallet' },
-      { id: 'ap', label: 'Konditionsbeitrag Kredite', format: 'eur', icon: 'TrendingUp' },
-      { id: 'bp', label: 'Konditionsbeitrag Einlagen', format: 'eur', icon: 'PiggyBank' },
-      { id: 'dynprov', label: 'Provisionsüberschuss WP', format: 'eur', icon: 'BarChart3' },
+      { id: 'ap', label: tx('Konditionsbeitrag Kredite', 'Margin Contribution Loans'), format: 'eur', icon: 'TrendingUp' },
+      { id: 'bp', label: tx('Konditionsbeitrag Einlagen', 'Margin Contribution Deposits'), format: 'eur', icon: 'PiggyBank' },
+      { id: 'dynprov', label: tx('Provisionsüberschuss WP', 'Securities Commission Surplus'), format: 'eur', icon: 'BarChart3' },
     ],
     monthlyData: [
       { name: 'Jan', value: 5800 },
       { name: 'Feb', value: 6200 },
-      { name: 'Mär', value: 6900 },
+      { name: tx('Mär', 'Mar'), value: 6900 },
       { name: 'Apr', value: 5400 },
-      { name: 'Mai', value: 6100 },
+      { name: tx('Mai', 'May'), value: 6100 },
       { name: 'Jun', value: 7200 },
       { name: 'Jul', value: 5900 },
       { name: 'Aug', value: 6400 },
       { name: 'Sep', value: 6800 },
-      { name: 'Okt', value: 7500 },
+      { name: tx('Okt', 'Oct'), value: 7500 },
       { name: 'Nov', value: 8200 },
-      { name: 'Dez', value: 0 },
+      { name: tx('Dez', 'Dec'), value: 0 },
     ],
     spartenData: [
-      { name: 'Konditionsbeitrag Kredite', value: 28500 },
-      { name: 'Konditionsbeitrag Einlagen', value: 16200 },
-      { name: 'Provisionsüberschuss WP (Union Inv.)', value: 12800 },
-      { name: 'Provisionsüberschuss Verbund (R+V)', value: 8400 },
-      { name: 'Gebührenertrag', value: 4200 },
-      { name: 'Sonstiges', value: 2300 },
+      { name: tx('Konditionsbeitrag Kredite', 'Margin Contribution Loans'), value: 28500 },
+      { name: tx('Konditionsbeitrag Einlagen', 'Margin Contribution Deposits'), value: 16200 },
+      { name: tx('Provisionsüberschuss WP (Union Inv.)', 'Securities Commission Surplus (Union Inv.)'), value: 12800 },
+      { name: tx('Provisionsüberschuss Verbund (R+V)', 'Group Commission Surplus (R+V)'), value: 8400 },
+      { name: tx('Gebührenertrag', 'Fee Revenue'), value: 4200 },
+      { name: tx('Sonstiges', 'Other'), value: 2300 },
     ],
     modell: {
       abschluss: [
@@ -321,24 +336,24 @@ export const VERGUETUNG_DATA = {
       dynprov: { wert: 155000, trend: 15.8 },
     },
     kpiConfig: [
-      { id: 'provision', label: 'Ertrag YTD', format: 'eur', icon: 'Wallet' },
+      { id: 'provision', label: tx('Ertrag YTD', 'Revenue YTD'), format: 'eur', icon: 'Wallet' },
       { id: 'ap', label: 'Management Fee', format: 'eur', icon: 'TrendingUp' },
       { id: 'bp', label: 'Performance Fee', format: 'eur', icon: 'BarChart3' },
-      { id: 'dynprov', label: 'NNM-Ertrag', format: 'eur', icon: 'Zap' },
+      { id: 'dynprov', label: tx('NNM-Ertrag', 'NNM Revenue'), format: 'eur', icon: 'Zap' },
     ],
     monthlyData: [
       { name: 'Jan', value: 72000 },
       { name: 'Feb', value: 78000 },
-      { name: 'Mär', value: 85000 },
+      { name: tx('Mär', 'Mar'), value: 85000 },
       { name: 'Apr', value: 69000 },
-      { name: 'Mai', value: 82000 },
+      { name: tx('Mai', 'May'), value: 82000 },
       { name: 'Jun', value: 91000 },
       { name: 'Jul', value: 76000 },
       { name: 'Aug', value: 68000 },
       { name: 'Sep', value: 88000 },
-      { name: 'Okt', value: 95000 },
+      { name: tx('Okt', 'Oct'), value: 95000 },
       { name: 'Nov', value: 92000 },
-      { name: 'Dez', value: 0 },
+      { name: tx('Dez', 'Dec'), value: 0 },
     ],
     spartenData: [
       { name: 'Management Fee', value: 425000 },
@@ -387,18 +402,18 @@ export const QUALITAET_DATA = {
       { name: 'Q1/26', value: 1.8 },
     ],
     compliance: [
-      { label: 'IDD-Dokumentation', status: 'ok' },
-      { label: 'Beratungsprotokolle', status: 'ok' },
-      { label: 'Datenschutz-Schulung', status: 'ok' },
-      { label: 'Geldwäsche-Prüfung', status: 'ok' },
-      { label: 'Interessenkonflikte', status: 'pending' },
+      { label: tx('IDD-Dokumentation', 'IDD Documentation'), status: 'ok' },
+      { label: tx('Beratungsprotokolle', 'Advisory Protocols'), status: 'ok' },
+      { label: tx('Datenschutz-Schulung', 'Data Privacy Training'), status: 'ok' },
+      { label: tx('Geldwäsche-Prüfung', 'Anti-Money Laundering Check'), status: 'ok' },
+      { label: tx('Interessenkonflikte', 'Conflicts of Interest'), status: 'pending' },
     ],
     schulungen: [
-      { name: 'IDD Weiterbildung 2026', stunden: 12, status: 'ok' },
-      { name: 'Datenschutz Update', stunden: 4, status: 'ok' },
-      { name: 'Produktschulung BU Neu', stunden: 4, status: 'ok' },
-      { name: 'ESG-Beratung', stunden: 4, status: 'ok' },
-      { name: 'Cyber-Sicherheit', stunden: 2, status: 'pending' },
+      { name: tx('IDD Weiterbildung 2026', 'IDD Training 2026'), stunden: 12, status: 'ok' },
+      { name: tx('Datenschutz Update', 'Data Privacy Update'), stunden: 4, status: 'ok' },
+      { name: tx('Produktschulung BU Neu', 'Product Training DI New'), stunden: 4, status: 'ok' },
+      { name: tx('ESG-Beratung', 'ESG Advisory'), stunden: 4, status: 'ok' },
+      { name: tx('Cyber-Sicherheit', 'Cyber Security'), stunden: 2, status: 'pending' },
     ],
   },
   banking: {
@@ -409,37 +424,37 @@ export const QUALITAET_DATA = {
       beschwerdeQuote: { wert: 0.8, trend: -27.3 },
     },
     kpiConfig: [
-      { id: 'gesamtNote', label: 'NPS Durchschnitt', format: 'num', icon: 'Award' },
-      { id: 'complianceQuote', label: 'Compliance-Quote', format: 'pct', icon: 'Shield' },
-      { id: 'schulungStunden', label: 'Schulungsstd. YTD', format: 'num', icon: 'BookOpen' },
-      { id: 'beschwerdeQuote', label: 'Beschwerde-Quote', format: 'pct', icon: 'MessageCircle' },
+      { id: 'gesamtNote', label: tx('NPS Durchschnitt', 'NPS Average'), format: 'num', icon: 'Award' },
+      { id: 'complianceQuote', label: tx('Compliance-Quote', 'Compliance Rate'), format: 'pct', icon: 'Shield' },
+      { id: 'schulungStunden', label: tx('Schulungsstd. YTD', 'Training Hrs YTD'), format: 'num', icon: 'BookOpen' },
+      { id: 'beschwerdeQuote', label: tx('Beschwerde-Quote', 'Complaint Rate'), format: 'pct', icon: 'MessageCircle' },
     ],
     trendData: [
-      { name: 'Okt', value: 1.2 },
+      { name: tx('Okt', 'Oct'), value: 1.2 },
       { name: 'Nov', value: 0.8 },
-      { name: 'Dez', value: 1.5 },
+      { name: tx('Dez', 'Dec'), value: 1.5 },
       { name: 'Jan', value: 0.6 },
       { name: 'Feb', value: 0.9 },
-      { name: 'Mär', value: 0.4 },
+      { name: tx('Mär', 'Mar'), value: 0.4 },
     ],
-    trendLabel: 'Beschwerden pro Monat',
+    trendLabel: tx('Beschwerden pro Monat', 'Complaints per month'),
     compliance: [
-      { label: 'WpHG-Compliance', status: 'ok' },
-      { label: 'MaRisk-Konformität', status: 'ok' },
-      { label: 'Geldwäsche (GwG)', status: 'ok' },
-      { label: 'Datenschutz (DSGVO)', status: 'ok' },
-      { label: 'BaFin-Meldepflichten', status: 'ok' },
+      { label: tx('WpHG-Compliance', 'MiFID Compliance'), status: 'ok' },
+      { label: tx('MaRisk-Konformität', 'MaRisk Conformity'), status: 'ok' },
+      { label: tx('Geldwäsche (GwG)', 'Anti-Money Laundering (AML)'), status: 'ok' },
+      { label: tx('Datenschutz (DSGVO)', 'Data Privacy (GDPR)'), status: 'ok' },
+      { label: tx('BaFin-Meldepflichten', 'BaFin Reporting'), status: 'ok' },
       { label: 'Open Finance (FIDA)', status: 'pending' },
-      { label: 'ESG-Transparenz', status: 'pending' },
+      { label: tx('ESG-Transparenz', 'ESG Transparency'), status: 'pending' },
     ],
     schulungen: [
-      { name: 'WpHG Pflichtschulung', stunden: 12, status: 'ok' },
+      { name: tx('WpHG Pflichtschulung', 'MiFID Mandatory Training'), stunden: 12, status: 'ok' },
       { name: 'MiFID II Update', stunden: 8, status: 'ok' },
-      { name: 'Geldwäsche-Prävention', stunden: 4, status: 'pending' },
+      { name: tx('Geldwäsche-Prävention', 'Anti-Money Laundering Prevention'), stunden: 4, status: 'pending' },
       { name: 'Open Finance / FIDA', stunden: 6, status: 'ok' },
-      { name: 'ESG-Beratung (Taxonomie)', stunden: 3, status: 'pending' },
+      { name: tx('ESG-Beratung (Taxonomie)', 'ESG Advisory (Taxonomy)'), stunden: 3, status: 'pending' },
       { name: 'genoGPT / Truuco Impulsmanager', stunden: 4, status: 'ok' },
-      { name: 'Wero / Digitale girocard', stunden: 2, status: 'ok' },
+      { name: tx('Wero / Digitale girocard', 'Wero / Digital girocard'), stunden: 2, status: 'ok' },
     ],
   },
   vermoegensverwaltung: {
@@ -450,10 +465,10 @@ export const QUALITAET_DATA = {
       beschwerdeQuote: { wert: 0.0, trend: 0.0 },
     },
     kpiConfig: [
-      { id: 'gesamtNote', label: 'Kundenzufriedenheit', format: 'pct', icon: 'Award' },
-      { id: 'complianceQuote', label: 'Compliance-Quote', format: 'pct', icon: 'Shield' },
-      { id: 'schulungStunden', label: 'Schulungsstd. YTD', format: 'num', icon: 'BookOpen' },
-      { id: 'beschwerdeQuote', label: 'Beschwerden', format: 'num', icon: 'MessageCircle' },
+      { id: 'gesamtNote', label: tx('Kundenzufriedenheit', 'Client Satisfaction'), format: 'pct', icon: 'Award' },
+      { id: 'complianceQuote', label: tx('Compliance-Quote', 'Compliance Rate'), format: 'pct', icon: 'Shield' },
+      { id: 'schulungStunden', label: tx('Schulungsstd. YTD', 'Training Hrs YTD'), format: 'num', icon: 'BookOpen' },
+      { id: 'beschwerdeQuote', label: tx('Beschwerden', 'Complaints'), format: 'num', icon: 'MessageCircle' },
     ],
     trendData: [
       { name: 'Q1/25', value: 91 },
@@ -462,22 +477,22 @@ export const QUALITAET_DATA = {
       { name: 'Q4/25', value: 93 },
       { name: 'Q1/26', value: 94 },
     ],
-    trendLabel: 'Kundenzufriedenheit (%)',
+    trendLabel: tx('Kundenzufriedenheit (%)', 'Client Satisfaction (%)'),
     compliance: [
-      { label: 'WpHG-Fragebogen aktuell', status: 'ok' },
-      { label: 'Geeignetheitserklärung', status: 'ok' },
-      { label: 'Verlustschwellenmeldung', status: 'ok' },
-      { label: 'Ex-Ante Kostenausweis', status: 'ok' },
-      { label: 'Ex-Post Kostenausweis', status: 'ok' },
-      { label: 'ESG-Präferenzen (SFDR)', status: 'ok' },
-      { label: 'Geldwäsche (GwG)', status: 'ok' },
+      { label: tx('WpHG-Fragebogen aktuell', 'MiFID Questionnaire current'), status: 'ok' },
+      { label: tx('Geeignetheitserklärung', 'Suitability Declaration'), status: 'ok' },
+      { label: tx('Verlustschwellenmeldung', 'Loss Threshold Notification'), status: 'ok' },
+      { label: tx('Ex-Ante Kostenausweis', 'Ex-Ante Cost Disclosure'), status: 'ok' },
+      { label: tx('Ex-Post Kostenausweis', 'Ex-Post Cost Disclosure'), status: 'ok' },
+      { label: tx('ESG-Präferenzen (SFDR)', 'ESG Preferences (SFDR)'), status: 'ok' },
+      { label: tx('Geldwäsche (GwG)', 'Anti-Money Laundering (AML)'), status: 'ok' },
     ],
     schulungen: [
-      { name: 'WpHG Pflichtschulung', stunden: 12, status: 'ok' },
+      { name: tx('WpHG Pflichtschulung', 'MiFID Mandatory Training'), stunden: 12, status: 'ok' },
       { name: 'MiFID II / DelVO Update', stunden: 8, status: 'ok' },
-      { name: 'ESG / Taxonomie', stunden: 6, status: 'ok' },
-      { name: 'Portfoliomanagement Zertifizierung', stunden: 8, status: 'ok' },
-      { name: 'Geldwäsche-Prävention', stunden: 2, status: 'ok' },
+      { name: 'ESG / Taxonomy', stunden: 6, status: 'ok' },
+      { name: tx('Portfoliomanagement Zertifizierung', 'Portfolio Management Certification'), stunden: 8, status: 'ok' },
+      { name: tx('Geldwäsche-Prävention', 'Anti-Money Laundering Prevention'), stunden: 2, status: 'ok' },
     ],
   },
 };
@@ -559,27 +574,27 @@ export const STAMMDATEN_DATA = {
       { label: 'Titel', value: 'Senior Advisor' },
       { label: 'ID', value: 'HRK-SR-042' },
       { label: 'Institut', value: 'HRK LUNIS AG' },
-      { label: 'Standort', value: 'Frankfurt am Main' },
-      { label: 'Status', value: 'Aktiv' },
-      { label: 'Telefon', value: '+49 69 7106-4200' },
-      { label: 'E-Mail', value: 'thomas.richter@hrk-lunis.de' },
+      { label: tx('Standort', 'Location'), value: 'Frankfurt am Main' },
+      { label: 'Status', value: tx('Aktiv', 'Active') },
+      { label: tx('Telefon', 'Phone'), value: '+49 69 7106-4200' },
+      { label: tx('E-Mail', 'Email'), value: 'thomas.richter@hrk-lunis.de' },
     ],
     organisation: [
       { label: 'Team', value: 'Wealth Management Frankfurt' },
       { label: 'Team AuM', value: '342M\u20ac' },
-      { label: 'Dabei seit', value: '2019' },
+      { label: tx('Dabei seit', 'Since'), value: '2019' },
       { label: 'Segment', value: 'UHNW / Family Office' },
-      { label: 'Mandate', value: '8 aktiv (+3 Pipeline)' },
+      { label: tx('Mandate', 'Mandates'), value: tx('8 aktiv (+3 Pipeline)', '8 active (+3 Pipeline)') },
     ],
     qualifikation: [
       { label: 'Qualifikation', value: 'CFA, CAIA, CFP\u00ae' },
-      { label: 'WpHG-Status', value: 'Konform' },
-      { label: 'MiFID II', value: 'Zertifiziert' },
-      { label: 'ESG-Beratung', value: 'SFDR Art. 8 + 9 zertifiziert' },
-      { label: 'Weiterbildung', value: '36/32 Std. (113%)' },
+      { label: tx('WpHG-Status', 'MiFID Status'), value: tx('Konform', 'Compliant') },
+      { label: 'MiFID II', value: tx('Zertifiziert', 'Certified') },
+      { label: tx('ESG-Beratung', 'ESG Advisory'), value: tx('SFDR Art. 8 + 9 zertifiziert', 'SFDR Art. 8 + 9 certified') },
+      { label: tx('Weiterbildung', 'Training'), value: tx('36/32 Std. (113%)', '36/32 hrs (113%)') },
     ],
     vertrag: [
-      { label: 'Anstellungsart', value: 'Festanstellung' },
+      { label: tx('Anstellungsart', 'Employment Type'), value: tx('Festanstellung', 'Permanent') },
       { label: 'Vergütung', value: 'Fixum + Tantieme (AuM + NNM)' },
       { label: 'Performance Fee', value: '10% > Benchmark' },
       { label: 'AuM-Ziel 2026', value: '85M\u20ac' },
@@ -656,28 +671,28 @@ export const TERMINE_BY_MODE = {
   get versicherung() {
     const s = [0,1,2,3].map(i => nextTerminSlot(i));
     return [
-      { datum: s[0].datum, zeit: s[0].zeit, kunde: 'Amira König', betreff: 'Kfz-Angebot besprechen', kundeId: 'KD00002', foto: './images/AdobeStock_252262042.jpeg' },
-      { datum: s[1].datum, zeit: s[1].zeit, kunde: 'Anna Hoffmann', betreff: 'Altersvorsorge-Beratung', kundeId: 'KD00004' },
-      { datum: s[2].datum, zeit: s[2].zeit, kunde: 'Thomas Weber', betreff: 'Hausbesuch Bindungsgespräch', kundeId: 'KD00003', foto: './images/AdobeStock_361342769.jpeg' },
-      { datum: s[3].datum, zeit: s[3].zeit, kunde: 'Sandra Yilmaz', betreff: 'Jahresgespräch', kundeId: 'KD00008', foto: './images/AdobeStock_612932760.jpeg' },
+      { datum: s[0].datum, zeit: s[0].zeit, kunde: 'Amira König', betreff: tx('Kfz-Angebot besprechen', 'Discuss motor insurance quote'), kundeId: 'KD00002', foto: './images/AdobeStock_252262042.jpeg' },
+      { datum: s[1].datum, zeit: s[1].zeit, kunde: 'Anna Hoffmann', betreff: tx('Altersvorsorge-Beratung', 'Retirement planning consultation'), kundeId: 'KD00004' },
+      { datum: s[2].datum, zeit: s[2].zeit, kunde: 'Thomas Weber', betreff: tx('Hausbesuch Bindungsgespräch', 'Home visit retention meeting'), kundeId: 'KD00003', foto: './images/AdobeStock_361342769.jpeg' },
+      { datum: s[3].datum, zeit: s[3].zeit, kunde: 'Sandra Yilmaz', betreff: tx('Jahresgespräch', 'Annual review'), kundeId: 'KD00008', foto: './images/AdobeStock_612932760.jpeg' },
     ];
   },
   get banking() {
     const s = [0,1,2,3].map(i => nextTerminSlot(i));
     return [
-      { datum: s[0].datum, zeit: s[0].zeit, kunde: 'Klaus Fischer', betreff: 'Anschlussfinanzierung Beratung', kundeId: 'KDB001', foto: './images/AdobeStock_329502726.jpeg' },
-      { datum: s[1].datum, zeit: s[1].zeit, kunde: 'Peter Hoffmann', betreff: 'VermögenPlus Depot Review', kundeId: 'KDB005', foto: './images/AdobeStock_1210213822.jpeg' },
-      { datum: s[2].datum, zeit: s[2].zeit, kunde: 'Sandra Müller', betreff: 'VR-FinanzPlan Erstgespräch', kundeId: 'KDB002', foto: './images/AdobeStock_477904088.jpeg' },
-      { datum: s[3].datum, zeit: s[3].zeit, kunde: 'Andrea Lang', betreff: 'Praxiskredit Auszahlung', kundeId: 'KDB006', foto: './images/AdobeStock_612940075.jpeg' },
+      { datum: s[0].datum, zeit: s[0].zeit, kunde: 'Klaus Fischer', betreff: tx('Anschlussfinanzierung Beratung', 'Refinancing consultation'), kundeId: 'KDB001', foto: './images/AdobeStock_329502726.jpeg' },
+      { datum: s[1].datum, zeit: s[1].zeit, kunde: 'Peter Hoffmann', betreff: tx('VermögenPlus Depot Review', 'VermögenPlus Depot Review'), kundeId: 'KDB005', foto: './images/AdobeStock_1210213822.jpeg' },
+      { datum: s[2].datum, zeit: s[2].zeit, kunde: 'Sandra Müller', betreff: tx('VR-FinanzPlan Erstgespräch', 'VR Financial Plan initial meeting'), kundeId: 'KDB002', foto: './images/AdobeStock_477904088.jpeg' },
+      { datum: s[3].datum, zeit: s[3].zeit, kunde: 'Andrea Lang', betreff: tx('Praxiskredit Auszahlung', 'Practice loan disbursement'), kundeId: 'KDB006', foto: './images/AdobeStock_612940075.jpeg' },
     ];
   },
   get vermoegensverwaltung() {
     const s = [0,1,2,3].map(i => nextTerminSlot(i));
     return [
-      { datum: s[0].datum, zeit: s[0].zeit, kunde: 'Dr. Anna Fischer', betreff: 'Onboarding-Gespräch (3,5M€)', kundeId: 'VV-NEW', foto: './images/AdobeStock_910604663.jpeg' },
-      { datum: s[1].datum, zeit: s[1].zeit, kunde: 'Familie Schneider', betreff: 'WpHG-Fragebogen', kundeId: 'VV-PIPE', foto: './images/AdobeStock_965208311.jpeg' },
-      { datum: s[2].datum, zeit: s[2].zeit, kunde: 'Dr. Stefan Meier', betreff: 'Investmentvorschlag (5M€)', kundeId: 'VV-PIPE2', foto: './images/AdobeStock_1387839378.jpeg' },
-      { datum: s[3].datum, zeit: s[3].zeit, kunde: 'Fam. Hohenlohe', betreff: 'Family Office Pitch (15M€)', kundeId: 'VV-PIPE3', foto: './images/AdobeStock_1367815601.jpeg' },
+      { datum: s[0].datum, zeit: s[0].zeit, kunde: 'Dr. Anna Fischer', betreff: tx('Onboarding-Gespräch (3,5M€)', 'Onboarding meeting (3.5M€)'), kundeId: 'VV-NEW', foto: './images/AdobeStock_910604663.jpeg' },
+      { datum: s[1].datum, zeit: s[1].zeit, kunde: translateName('Familie Schneider'), betreff: tx('WpHG-Fragebogen', 'MiFID Questionnaire'), kundeId: 'VV-PIPE', foto: './images/AdobeStock_965208311.jpeg' },
+      { datum: s[2].datum, zeit: s[2].zeit, kunde: 'Dr. Stefan Meier', betreff: tx('Investmentvorschlag (5M€)', 'Investment proposal (5M€)'), kundeId: 'VV-PIPE2', foto: './images/AdobeStock_1387839378.jpeg' },
+      { datum: s[3].datum, zeit: s[3].zeit, kunde: translateName('Fam. Hohenlohe'), betreff: 'Family Office Pitch (15M€)', kundeId: 'VV-PIPE3', foto: './images/AdobeStock_1367815601.jpeg' },
     ];
   },
 };
@@ -689,21 +704,21 @@ export const TERMINE = TERMINE_BY_MODE.versicherung;
 // =============================================
 export const AUFGABEN_BY_MODE = {
   versicherung: [
-    { text: 'Rückruf Peter Schmidt (BU-Nachversicherung)', faellig: 'Heute', kundeId: 'KD00001', erledigt: false },
-    { text: 'Angebot Amira König nachfassen', faellig: 'Morgen', kundeId: 'KD00002', erledigt: false },
-    { text: 'Storno-Warnung Klaus Wagner prüfen', faellig: 'Fr', kundeId: 'KD00003', erledigt: false },
+    { text: tx('Rückruf Peter Schmidt (BU-Nachversicherung)', 'Callback Peter Schmidt (DI reinsurance)'), faellig: tx('Heute', 'Today'), kundeId: 'KD00001', erledigt: false },
+    { text: tx('Angebot Amira König nachfassen', 'Follow up proposal Amira König'), faellig: tx('Morgen', 'Tomorrow'), kundeId: 'KD00002', erledigt: false },
+    { text: tx('Storno-Warnung Klaus Wagner prüfen', 'Check cancellation warning Klaus Wagner'), faellig: tx('Fr', 'Fri'), kundeId: 'KD00003', erledigt: false },
   ],
   banking: [
-    { text: 'Anschlussfinanzierung Fischer vorbereiten', faellig: 'Heute', kundeId: 'KDB001', erledigt: false },
-    { text: 'FIDA-Consent Julia Becker einholen', faellig: 'Morgen', kundeId: 'KDB004', erledigt: false },
-    { text: 'Wero-Aktivierung Stefan Braun nachfassen', faellig: 'Mi', kundeId: 'KDB009', erledigt: false },
-    { text: 'VR-FinanzPlan Sandra Müller erstellen', faellig: 'Fr', kundeId: 'KDB002', erledigt: false },
+    { text: tx('Anschlussfinanzierung Fischer vorbereiten', 'Prepare refinancing for Fischer'), faellig: tx('Heute', 'Today'), kundeId: 'KDB001', erledigt: false },
+    { text: tx('FIDA-Consent Julia Becker einholen', 'Obtain FIDA consent Julia Becker'), faellig: tx('Morgen', 'Tomorrow'), kundeId: 'KDB004', erledigt: false },
+    { text: tx('Wero-Aktivierung Stefan Braun nachfassen', 'Follow up Wero activation Stefan Braun'), faellig: tx('Mi', 'Wed'), kundeId: 'KDB009', erledigt: false },
+    { text: tx('VR-FinanzPlan Sandra Müller erstellen', 'Create VR Financial Plan for Sandra Müller'), faellig: tx('Fr', 'Fri'), kundeId: 'KDB002', erledigt: false },
   ],
   vermoegensverwaltung: [
-    { text: 'Geeignetheitsbericht Meydarn (fällig in 21 Tagen)', faellig: 'Heute', kundeId: 'VV005', erledigt: false },
-    { text: 'WpHG-Fragebogen Meydarn aktualisieren', faellig: 'Heute', kundeId: 'VV005', erledigt: false },
-    { text: 'Rebalancing Tim Keller (Aktien +2pp über Ziel)', faellig: 'Morgen', kundeId: 'VV001', erledigt: false },
-    { text: 'Investmentvorschlag Dr. Meier senden (Pipeline)', faellig: '15.03.', kundeId: 'VV-PIPE2', erledigt: false },
+    { text: tx('Geeignetheitsbericht Meydarn (fällig in 21 Tagen)', 'Suitability report Meydarn (due in 21 days)'), faellig: tx('Heute', 'Today'), kundeId: 'VV005', erledigt: false },
+    { text: tx('WpHG-Fragebogen Meydarn aktualisieren', 'Update MiFID questionnaire Meydarn'), faellig: tx('Heute', 'Today'), kundeId: 'VV005', erledigt: false },
+    { text: tx('Rebalancing Tim Keller (Aktien +2pp über Ziel)', 'Rebalancing Tim Keller (Equities +2pp above target)'), faellig: tx('Morgen', 'Tomorrow'), kundeId: 'VV001', erledigt: false },
+    { text: tx('Investmentvorschlag Dr. Meier senden (Pipeline)', 'Send investment proposal to Dr. Meier (Pipeline)'), faellig: '15.03.', kundeId: 'VV-PIPE2', erledigt: false },
   ],
 };
 

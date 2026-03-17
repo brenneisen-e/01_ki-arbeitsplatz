@@ -710,6 +710,496 @@ const translations = {
   'typ.rechtsschutz': { de: 'Rechtsschutz', en: 'Legal Protection' },
   'typ.wohngebaeude': { de: 'Wohngebäude', en: 'Building Ins.' },
   'typ.pflege': { de: 'Pflege', en: 'Care Ins.' },
+
+  // ─── Month Names ───
+  'monat.jan': { de: 'Jan', en: 'Jan' },
+  'monat.feb': { de: 'Feb', en: 'Feb' },
+  'monat.maer': { de: 'Mär', en: 'Mar' },
+  'monat.apr': { de: 'Apr', en: 'Apr' },
+  'monat.mai': { de: 'Mai', en: 'May' },
+  'monat.jun': { de: 'Jun', en: 'Jun' },
+  'monat.jul': { de: 'Jul', en: 'Jul' },
+  'monat.aug': { de: 'Aug', en: 'Aug' },
+  'monat.sep': { de: 'Sep', en: 'Sep' },
+  'monat.okt': { de: 'Okt', en: 'Oct' },
+  'monat.nov': { de: 'Nov', en: 'Nov' },
+  'monat.dez': { de: 'Dez', en: 'Dec' },
+  'monat.januar': { de: 'Januar', en: 'January' },
+  'monat.februar': { de: 'Februar', en: 'February' },
+  'monat.maerz': { de: 'März', en: 'March' },
+  'monat.april': { de: 'April', en: 'April' },
+  'monat.maiLang': { de: 'Mai', en: 'May' },
+  'monat.juni': { de: 'Juni', en: 'June' },
+  'monat.juli': { de: 'Juli', en: 'July' },
+  'monat.august': { de: 'August', en: 'August' },
+  'monat.september': { de: 'September', en: 'September' },
+  'monat.oktober': { de: 'Oktober', en: 'October' },
+  'monat.november': { de: 'November', en: 'November' },
+  'monat.dezember': { de: 'Dezember', en: 'December' },
+
+  // ─── Family Relationship Terms ───
+  'rolle.mandant': { de: 'Mandant', en: 'Client' },
+  'rolle.ehepartnerin': { de: 'Ehepartnerin', en: 'Spouse' },
+  'rolle.ehepartner': { de: 'Ehepartner', en: 'Spouse' },
+  'rolle.ehefrau': { de: 'Ehefrau', en: 'Wife' },
+  'rolle.sohn': { de: 'Sohn', en: 'Son' },
+  'rolle.tochter': { de: 'Tochter', en: 'Daughter' },
+  'rolle.kind': { de: 'Kind', en: 'Child' },
+  'rolle.institution': { de: 'Mandant (Institution)', en: 'Client (Institution)' },
+  'rolle.geschaeftsfuehrer': { de: 'Geschäftsführer', en: 'Managing Director' },
+  'rolle.prokuristin': { de: 'Prokuristin', en: 'Authorized Officer' },
+  'rolle.mitarbeiter': { de: 'Mitarbeiter', en: 'Employee' },
+
+  // ─── Customer Name Prefixes ───
+  'namePrefix.familie': { de: 'Familie', en: 'Family' },
+  'namePrefix.stiftung': { de: 'Stiftung', en: 'Foundation' },
+
+  // ─── Marital Status ───
+  'familienstand.verheiratet': { de: 'verheiratet', en: 'married' },
+  'familienstand.ledig': { de: 'ledig', en: 'single' },
+  'familienstand.geschieden': { de: 'geschieden', en: 'divorced' },
+  'familienstand.verwitwet': { de: 'verwitwet', en: 'widowed' },
+  'familienstand.institution': { de: 'Institution', en: 'Institution' },
+
+  // ─── Living Situation ───
+  'wohnsituation.eigentum': { de: 'Eigentum', en: 'Owned' },
+  'wohnsituation.miete': { de: 'Miete', en: 'Rented' },
+  'wohnsituation.institution': { de: 'Institution', en: 'Institution' },
+
+  // ─── Risk Labels ───
+  'risiko.niedrig': { de: 'niedrig', en: 'low' },
+  'risiko.mittel': { de: 'mittel', en: 'medium' },
+  'risiko.hoch': { de: 'hoch', en: 'high' },
+  'risiko.kritisch': { de: 'kritisch', en: 'critical' },
+
+  // ─── Sector Names ───
+  'sektor.technologie': { de: 'Technologie', en: 'Technology' },
+  'sektor.healthcare': { de: 'Healthcare', en: 'Healthcare' },
+  'sektor.finanzen': { de: 'Finanzen', en: 'Financials' },
+  'sektor.industrie': { de: 'Industrie', en: 'Industrials' },
+  'sektor.konsum': { de: 'Konsum', en: 'Consumer' },
+  'sektor.energie': { de: 'Energie', en: 'Energy' },
+  'sektor.versorger': { de: 'Versorger', en: 'Utilities' },
+  'sektor.grundstoffe': { de: 'Grundstoffe', en: 'Materials' },
+  'sektor.kommunikation': { de: 'Kommunikation', en: 'Communication' },
+  'sektor.sonstige': { de: 'Sonstige', en: 'Other' },
+
+  // ─── Region Names ───
+  'region.europa': { de: 'Europa', en: 'Europe' },
+  'region.nordamerika': { de: 'Nordamerika', en: 'North America' },
+  'region.asienPazifik': { de: 'Asien-Pazifik', en: 'Asia-Pacific' },
+  'region.schwellenlaender': { de: 'Schwellenländer', en: 'Emerging Markets' },
+  'region.sonstige': { de: 'Sonstige', en: 'Other' },
+
+  // ─── Bond Types ───
+  'anleihe.investmentGrade': { de: 'Investment Grade', en: 'Investment Grade' },
+  'anleihe.highYield': { de: 'High Yield', en: 'High Yield' },
+  'anleihe.staatsanleihen': { de: 'Staatsanleihen', en: 'Government Bonds' },
+  'anleihe.pfandbriefe': { de: 'Pfandbriefe', en: 'Covered Bonds' },
+  'anleihe.emergingMarkets': { de: 'Emerging Markets', en: 'Emerging Markets' },
+  'anleihe.wandelanleihen': { de: 'Wandelanleihen', en: 'Convertible Bonds' },
+
+  // ─── Portfolio Labels ───
+  'portfolio.immobilien': { de: 'Immobilien', en: 'Real Estate' },
+
+  // ─── Deposit / Transaction Labels ───
+  'einzahlung': { de: 'Einzahlung', en: 'Deposit' },
+  'einzahlungMioEur': { de: 'Einzahlung {amount} Mio EUR', en: 'Deposit {amount}M EUR' },
+
+  // ─── Storno / Cancellation Reasons ───
+  'stornoGrund.preis': { de: 'Preis', en: 'Price' },
+  'stornoGrund.wettbewerb': { de: 'Wettbewerb', en: 'Competition' },
+  'stornoGrund.umzug': { de: 'Umzug', en: 'Relocation' },
+  'stornoGrund.unzufriedenheit': { de: 'Unzufriedenheit', en: 'Dissatisfaction' },
+  'stornoGrund.sonstiges': { de: 'Sonstiges', en: 'Other' },
+  'stornoGrund.performance': { de: 'Performance', en: 'Performance' },
+  'stornoGrund.gebuehren': { de: 'Gebühren', en: 'Fees' },
+  'stornoGrund.konsolidierung': { de: 'Konsolidierung', en: 'Consolidation' },
+  'stornoGrund.konditionenBessereZinsen': { de: 'Konditionen (bessere Zinsen)', en: 'Terms (better rates)' },
+  'stornoGrund.bankenwechselUmzug': { de: 'Bankenwechsel (Umzug)', en: 'Bank switch (relocation)' },
+  'stornoGrund.wechselNeobank': { de: 'Wechsel zu Neobank', en: 'Switch to neobank' },
+  'stornoGrund.unzufriedenheitService': { de: 'Unzufriedenheit (Service)', en: 'Dissatisfaction (service)' },
+  'stornoGrund.sonstigesTodesfall': { de: 'Sonstiges (Todesfall etc.)', en: 'Other (death etc.)' },
+
+  // ─── Potenzial Types ───
+  'potenzialTyp.konsolidierung': { de: 'Konsolidierung', en: 'Consolidation' },
+  'potenzialTyp.nextgen': { de: 'NextGen', en: 'NextGen' },
+  'potenzialTyp.beratung': { de: 'Beratung', en: 'Advisory' },
+  'potenzialTyp.anpassung': { de: 'Anpassung', en: 'Adjustment' },
+  'potenzialTyp.crossSell': { de: 'Cross-Sell', en: 'Cross-Sell' },
+  'potenzialTyp.neugeschaeft': { de: 'Neugeschäft', en: 'New Business' },
+  'potenzialTyp.whitespace': { de: 'Whitespace', en: 'Whitespace' },
+
+  // ─── Potenzial Status ───
+  'potenzialStatus.identifiziert': { de: 'Identifiziert', en: 'Identified' },
+  'potenzialStatus.angeschrieben': { de: 'Angeschrieben', en: 'Contacted' },
+  'potenzialStatus.termin': { de: 'Termin', en: 'Meeting' },
+  'potenzialStatus.abgeschlossen': { de: 'Abgeschlossen', en: 'Completed' },
+
+  // ─── Empfohlene Aktion ───
+  'aktion.terminVereinbaren': { de: 'Termin vereinbaren', en: 'Schedule meeting' },
+  'aktion.angebotErstellen': { de: 'Angebot erstellen', en: 'Create proposal' },
+  'aktion.beratendesMeeting': { de: 'Beratendes Meeting', en: 'Advisory meeting' },
+
+  // ─── Engagement Activity Levels ───
+  'aktivitaet.niedrig': { de: 'niedrig', en: 'low' },
+  'aktivitaet.mittel': { de: 'mittel', en: 'moderate' },
+  'aktivitaet.hoch': { de: 'hoch', en: 'high' },
+  'aktivitaet.sehrHoch': { de: 'sehr hoch', en: 'very high' },
+
+  // ─── Communication Types ───
+  'kommTyp.termin': { de: 'Termin', en: 'Appointment' },
+  'kommTyp.email': { de: 'E-Mail', en: 'Email' },
+  'kommTyp.telefon': { de: 'Telefon', en: 'Phone' },
+  'kommTyp.chatbot': { de: 'Chatbot', en: 'Chatbot' },
+
+  // ─── NeugeschäftTab column headers ───
+  'vertragsnr': { de: 'Vertragsnr.', en: 'Contract No.' },
+  'versicherer': { de: 'Versicherer', en: 'Insurer' },
+  'beitrag': { de: 'Beitrag', en: 'Contribution' },
+  'datum': { de: 'Datum', en: 'Date' },
+
+  // ─── Additional insurance type labels ───
+  'absicherung.bu': { de: 'BU', en: 'DI' },
+  'absicherung.kfz': { de: 'KFZ', en: 'Motor' },
+  'absicherung.hausrat': { de: 'Hausrat', en: 'Household' },
+  'absicherung.haftpflicht': { de: 'Haftpfl.', en: 'Liability' },
+  'absicherung.rlv': { de: 'RLV', en: 'Term Life' },
+  'absicherung.pflege': { de: 'Pflege', en: 'Care' },
+  'absicherung.unfall': { de: 'Unfall', en: 'Accident' },
+  'absicherung.rechtsschutz': { de: 'Rechtsch.', en: 'Legal' },
+  'absicherung.wohngebaeude': { de: 'Wohngeb.', en: 'Building' },
+
+  // ─── ProduktabschlussTab step labels ───
+  'schritt.kreditrechner': { de: 'Kreditrechner', en: 'Loan Calculator' },
+  'schritt.persoenlicheDaten': { de: 'Persönliche Daten', en: 'Personal Data' },
+  'schritt.einkommensangaben': { de: 'Einkommensangaben', en: 'Income Details' },
+  'schritt.kontoverbindung': { de: 'Kontoverbindung', en: 'Bank Details' },
+  'schritt.legitimation': { de: 'Legitimation', en: 'Verification' },
+  'schritt.legitimationVideo': { de: 'Legitimation (VideoIdent)', en: 'Verification (VideoIdent)' },
+  'schritt.unterschrift': { de: 'Unterschrift', en: 'Signature' },
+
+  // ─── FinanzprofilTab labels ───
+  'finanzprofil.wohnen': { de: 'Wohnen', en: 'Housing' },
+  'finanzprofil.versicherungen': { de: 'Versicherungen', en: 'Insurance' },
+  'finanzprofil.kreditFinanzierung': { de: 'Kredit & Finanzierung', en: 'Credit & Financing' },
+  'finanzprofil.lebensmittelAlltag': { de: 'Lebensmittel & Alltag', en: 'Groceries & Daily' },
+  'finanzprofil.mobilitaet': { de: 'Mobilität', en: 'Mobility' },
+  'finanzprofil.sparenInvestment': { de: 'Sparen & Investment', en: 'Savings & Investment' },
+  'finanzprofil.freizeitHobbies': { de: 'Freizeit & Hobbies', en: 'Leisure & Hobbies' },
+  'finanzprofil.kinder': { de: 'Kinder', en: 'Children' },
+  'finanzprofil.tierbedarf': { de: 'Tierbedarf', en: 'Pet Supplies' },
+  'finanzprofil.haustierErkannt': { de: 'Haustier erkannt', en: 'Pet detected' },
+  'finanzprofil.risikosportErkannt': { de: 'Risikosport erkannt', en: 'Risk sport detected' },
+  'finanzprofil.fremdversicherungen': { de: 'Fremdversicherung(en)', en: 'External insurance(s)' },
+  'finanzprofil.freieLiquiditaet': { de: 'Freie Liquidität erkannt', en: 'Free liquidity detected' },
+  'finanzprofil.hypothek': { de: 'Hypothek', en: 'Mortgage' },
+  'finanzprofil.miete': { de: 'Miete', en: 'Rent' },
+  'finanzprofil.stromGas': { de: 'Strom / Gas', en: 'Electricity / Gas' },
+  'finanzprofil.nebenkosten': { de: 'Nebenkosten', en: 'Utilities' },
+  'finanzprofil.versicherungFremd': { de: 'Versicherung (Fremd)', en: 'Insurance (External)' },
+  'finanzprofil.restschuldOffen': { de: 'Restschuld offen', en: 'Outstanding debt' },
+  'finanzprofil.bekannt': { de: 'Bekannt', en: 'Known' },
+  'finanzprofil.betreut': { de: 'Betreut', en: 'Managed' },
+  'finanzprofil.fremd': { de: 'Fremd', en: 'External' },
+  'finanzprofil.eigenerBestand': { de: 'Eigener Bestand', en: 'Own Portfolio' },
+  'finanzprofil.risikosport': { de: 'Risikosport', en: 'Risk Sport' },
+  'finanzprofil.kredit': { de: 'Kredit', en: 'Loan' },
+  'finanzprofil.sparplan': { de: 'Sparplan', en: 'Savings Plan' },
+  'finanzprofil.kitaBetreuung': { de: 'Kita / Betreuung', en: 'Daycare' },
+  'finanzprofil.kinderkleidungBedarf': { de: 'Kinderkleidung / Bedarf', en: 'Children Clothing / Supplies' },
+  'finanzprofil.parkhausParken': { de: 'Parkhaus / Parken', en: 'Parking' },
+  'finanzprofil.restaurantLieferdienst': { de: 'Restaurant / Lieferdienst', en: 'Restaurant / Delivery' },
+  'finanzprofil.frei': { de: 'Frei', en: 'Free' },
+  'finanzprofil.alle': { de: 'Alle', en: 'All' },
+  'finanzprofil.produktLabel.wohngebaeude': { de: 'Wohngebäude', en: 'Building Insurance' },
+  'finanzprofil.produktLabel.hausrat': { de: 'Hausrat', en: 'Household Insurance' },
+  'finanzprofil.produktLabel.haftpflicht': { de: 'Haftpflicht', en: 'Liability Insurance' },
+  'finanzprofil.produktLabel.kfz': { de: 'Kfz', en: 'Motor Insurance' },
+  'finanzprofil.produktLabel.kfz2': { de: 'Kfz (Zweitwagen)', en: 'Motor (Second Car)' },
+  'finanzprofil.produktLabel.bu': { de: 'BU', en: 'Disability' },
+  'finanzprofil.produktLabel.unfall': { de: 'Unfall', en: 'Accident' },
+  'finanzprofil.produktLabel.rechtsschutz': { de: 'Rechtsschutz', en: 'Legal Protection' },
+  'finanzprofil.produktLabel.pkv': { de: 'PKV', en: 'Private Health Ins.' },
+  'finanzprofil.produktLabel.girokonto': { de: 'Girokonto', en: 'Current Account' },
+  'finanzprofil.produktLabel.festgeld': { de: 'Festgeld', en: 'Fixed Deposit' },
+  'finanzprofil.produktLabel.tagesgeld': { de: 'Tagesgeld', en: 'Savings Account' },
+  'finanzprofil.produktLabel.depot': { de: 'Depot', en: 'Securities Account' },
+  'finanzprofil.produktLabel.kredit': { de: 'Kredit', en: 'Loan' },
+  'finanzprofil.produktLabel.bausparvertrag': { de: 'Bausparvertrag', en: 'Building Savings' },
+  'finanzprofil.produktLabel.lebensversicherung': { de: 'Lebensversicherung', en: 'Life Insurance' },
+  'finanzprofil.produktLabel.rlv': { de: 'Risikoleben', en: 'Term Life' },
+  'finanzprofil.produktLabel.du': { de: 'Dienstunfähigkeit', en: 'Service Disability' },
+  'finanzprofil.insightHaustierTitle': { de: 'Haustier erkannt', en: 'Pet Detected' },
+  'finanzprofil.insightHaustierText': { de: 'Regelmäßige Käufe bei Fressnapf deuten auf Tierhaltung hin. Tierhalterhaftpflicht und Tier-OP-Versicherung als Cross-Sell prüfen.', en: 'Regular purchases at pet stores indicate pet ownership. Check pet liability and pet surgery insurance as cross-sell opportunities.' },
+  'finanzprofil.insightHaustierInline': { de: 'Regelmäßige Tierfutter-Käufe erkannt — Tierhalterhaftpflicht & OP-Versicherung prüfen', en: 'Regular pet food purchases detected — check pet liability & surgery insurance' },
+  'finanzprofil.insightRisikoTitle': { de: 'Risikosport erkannt', en: 'Risk Sport Detected' },
+  'finanzprofil.insightRisikoText': { de: 'Ausgaben für Fallschirmspringen / Extremsport. Unfallversicherung mit Risikosport-Klausel und BU-Risikoprüfung empfohlen.', en: 'Expenses for skydiving / extreme sports. Accident insurance with risk sport clause and disability risk assessment recommended.' },
+  'finanzprofil.insightRisikoInline': { de: 'Extremsport erkannt — Unfallversicherung & BU-Risikoprüfung empfohlen', en: 'Extreme sport detected — accident insurance & disability risk assessment recommended' },
+  'finanzprofil.insightFremdversTitle': { de: '{count} Fremdversicherung{suffix} erkannt', en: '{count} external insurance policy{suffix} detected' },
+  'finanzprofil.insightFremdversText': { de: 'Aus Kontoumsätzen {verb} {count} nicht betreute Versicherung{suffix} identifiziert. Konsolidierungspotential prüfen.', en: '{count} unmanaged insurance policy{suffix} identified from account transactions. Check consolidation potential.' },
+  'finanzprofil.insightFreiTitle': { de: 'Freie Liquidität erkannt', en: 'Free Liquidity Detected' },
+  'finanzprofil.insightFreiText': { de: '{amount} monatlich frei verfügbar. Sparrate erhöhen oder Altersvorsorge-Produkt empfehlen.', en: '{amount} available monthly. Increase savings rate or recommend retirement product.' },
+  'finanzprofil.insightFreiPotential': { de: '{amount} / Mon. Sparrate', en: '{amount} / mo. savings rate' },
+  'finanzprofil.potentialRisikominimierung': { de: 'Risikominimierung', en: 'Risk Minimization' },
+  'finanzprofil.potentialBestandskonsolidierung': { de: 'Bestandskonsolidierung', en: 'Portfolio Consolidation' },
+  'finanzprofil.potentialJahr': { de: '€ 120–250 / Jahr', en: '€ 120–250 / Year' },
+  'finanzprofil.prioHoch': { de: 'hoch', en: 'high' },
+  'finanzprofil.prioMittel': { de: 'mittel', en: 'medium' },
+  'finanzprofil.versicherungLabel': { de: 'Versicherung', en: 'Insurance' },
+  'finanzprofil.posten': { de: 'Posten', en: 'Items' },
+
+  // ─── Income/Expense Category Labels (FinanzprofilTab) ───
+  'kategorie.gehalt': { de: 'Gehalt', en: 'Salary' },
+  'kategorie.gehaltPartner': { de: 'Gehalt Partner', en: 'Partner Salary' },
+  'kategorie.kindergeld': { de: 'Kindergeld', en: 'Child Benefit' },
+  'kategorie.rente': { de: 'Rente', en: 'Pension' },
+  'kategorie.rentePartner': { de: 'Rente Partner', en: 'Partner Pension' },
+  'kategorie.einkommen': { de: 'Einkommen', en: 'Income' },
+  'kategorie.gfGehalt': { de: 'GF-Gehalt', en: 'MD Salary' },
+  'kategorie.baufinanzierung': { de: 'Baufinanzierung', en: 'Mortgage' },
+  'kategorie.miete': { de: 'Miete', en: 'Rent' },
+  'kategorie.kredit': { de: 'Kredit', en: 'Loan' },
+  'kategorie.versicherungEigen': { de: 'Versicherung (eigen)', en: 'Insurance (own)' },
+  'kategorie.versicherungFremd': { de: 'Versicherung (fremd)', en: 'Insurance (external)' },
+  'kategorie.versicherung': { de: 'Versicherung', en: 'Insurance' },
+  'kategorie.versicherungFirma': { de: 'Versicherung Firma', en: 'Company Insurance' },
+  'kategorie.sparplan': { de: 'Sparplan', en: 'Savings Plan' },
+  'kategorie.sparplan2': { de: 'Sparplan 2', en: 'Savings Plan 2' },
+  'kategorie.sparen': { de: 'Sparen', en: 'Savings' },
+  'kategorie.kinder': { de: 'Kinder', en: 'Children' },
+  'kategorie.konsum': { de: 'Konsum', en: 'Consumption' },
+  'kategorie.mobilitaet': { de: 'Mobilität', en: 'Mobility' },
+  'kategorie.abosFreizeit': { de: 'Abos/Freizeit', en: 'Subscriptions/Leisure' },
+  'kategorie.hausNebenkosten': { de: 'Haus/Nebenkosten', en: 'House/Utilities' },
+  'kategorie.software': { de: 'Software', en: 'Software' },
+  'kategorie.geschaeft': { de: 'Geschäft', en: 'Business' },
+  'kategorie.haustier': { de: 'Haustier', en: 'Pet' },
+  'kategorie.tierbedarf': { de: 'Tierbedarf', en: 'Pet Supplies' },
+  'kategorie.tierarzt': { de: 'Tierarzt', en: 'Veterinarian' },
+
+  // ─── Task/Appointment descriptions for VV mode ───
+  'aufgabe.geeignetheitsbericht': { de: 'Geeignetheitsbericht {name} (fällig in {days} Tagen)', en: 'Suitability report {name} (due in {days} days)' },
+  'aufgabe.wphgFragebogenAktualisieren': { de: 'WpHG-Fragebogen {name} aktualisieren', en: 'Update MiFID questionnaire for {name}' },
+  'aufgabe.rebalancing': { de: 'Rebalancing {name} (Aktien +2pp über Ziel)', en: 'Rebalancing {name} (Equities +2pp above target)' },
+  'aufgabe.investmentvorschlag': { de: 'Investmentvorschlag {name} senden (Pipeline)', en: 'Send investment proposal to {name} (Pipeline)' },
+
+  // ─── Appointment descriptions for VV mode ───
+  'termin.onboarding': { de: 'Onboarding-Gespräch', en: 'Onboarding meeting' },
+  'termin.wphgFragebogen': { de: 'WpHG-Fragebogen', en: 'MiFID Questionnaire' },
+  'termin.investmentvorschlag': { de: 'Investmentvorschlag', en: 'Investment proposal' },
+  'termin.familyOfficePitch': { de: 'Family Office Pitch', en: 'Family Office Pitch' },
+  'termin.portfolioReview': { de: 'Portfolio-Review', en: 'Portfolio Review' },
+  'termin.quartalsmeeting': { de: 'Quartalsmeeting', en: 'Quarterly meeting' },
+  'termin.nachfolgeplanung': { de: 'Nachfolgeplanung', en: 'Succession planning' },
+
+  // ─── OpenFinanceTab ───
+  'institut': { de: 'Institut', en: 'Institution' },
+
+  // ─── Engagement - HRK LUNIS Section ───
+  'websiteNewsletter': { de: 'HRK LUNIS Website & Newsletter', en: 'HRK LUNIS Website & Newsletter' },
+
+  // ─── StammdatenDetailTab - product type suffixes ───
+  'produktSuffix.privat': { de: '(Privat)', en: '(Private)' },
+  'produktSuffix.firma': { de: '(Firma)', en: '(Company)' },
+
+  // ─── Week Day Names ───
+  'wochentag.mo': { de: 'Mo', en: 'Mon' },
+  'wochentag.di': { de: 'Di', en: 'Tue' },
+  'wochentag.mi': { de: 'Mi', en: 'Wed' },
+  'wochentag.do': { de: 'Do', en: 'Thu' },
+  'wochentag.fr': { de: 'Fr', en: 'Fri' },
+  'wochentag.sa': { de: 'Sa', en: 'Sat' },
+  'wochentag.so': { de: 'So', en: 'Sun' },
+
+  // ─── Übersicht Tab - VV Quick Access Labels ───
+  'neuesMandat': { de: 'Neues Mandat', en: 'New Mandate' },
+  'wphgFragebogenLabel': { de: 'WpHG-Fragebogen', en: 'MiFID Questionnaire' },
+  'investmentvorschlagLabel': { de: 'Investmentvorschlag', en: 'Investment Proposal' },
+  'complianceCheckLabel': { de: 'Compliance-Check', en: 'Compliance Check' },
+
+  // ─── VV data / IO Kommentar ───
+  'naechsterReviewLabel': { de: 'Nächster Review', en: 'Next Review' },
+
+  // ─── Potenzial Volumen Types ───
+  'volumenTyp.einmalig': { de: 'Einmalig', en: 'One-time' },
+  'volumenTyp.jaehrlich': { de: 'Jährlich', en: 'Annual' },
+  'volumenTyp.vermittlung': { de: 'Vermittlung', en: 'Referral' },
+
+  // ─── Generated data labels ───
+  'generiert.nachfolgeregelung': { de: 'Nachfolgeregelung in Planung', en: 'Succession planning in progress' },
+  'generiert.nachfolgeregelungDetail': { de: 'Nachfolgeregelung in Planung für die nächsten 3-5 Jahre.', en: 'Succession planning in progress for the next 3-5 years.' },
+
+  // ─── Occupation labels (generated personas) ───
+  'beruf.unternehmer': { de: 'Unternehmer', en: 'Entrepreneur' },
+  'beruf.arzt': { de: 'Arzt', en: 'Physician' },
+  'beruf.rechtsanwalt': { de: 'Rechtsanwalt', en: 'Lawyer' },
+  'beruf.geschaeftsfuehrer': { de: 'Geschäftsführer', en: 'Managing Director' },
+  'beruf.investor': { de: 'Investor', en: 'Investor' },
+  'beruf.freiberufler': { de: 'Freiberufler', en: 'Freelancer' },
+  'beruf.aerztin': { de: 'Ärztin', en: 'Physician' },
+  'beruf.lehrerin': { de: 'Lehrerin', en: 'Teacher' },
+  'beruf.selbstaendig': { de: 'Selbständig', en: 'Self-employed' },
+  'beruf.architektin': { de: 'Architektin', en: 'Architect' },
+  'beruf.managerin': { de: 'Managerin', en: 'Manager' },
+  'beruf.schueler': { de: 'Schüler/in', en: 'Student (school)' },
+  'beruf.student': { de: 'Student/in', en: 'Student' },
+  'beruf.ingenieur': { de: 'Ingenieur/in', en: 'Engineer' },
+  'beruf.berater': { de: 'Berater/in', en: 'Consultant' },
+  'beruf.gruender': { de: 'Gründer/in', en: 'Founder' },
+  'beruf.rentner': { de: 'Rentner', en: 'Retiree' },
+  'beruf.rentnerin': { de: 'Rentnerin', en: 'Retiree' },
+  'beruf.pensionaer': { de: 'Pensionär', en: 'Pensioner' },
+  'beruf.privatier': { de: 'Privatier', en: 'Private Investor' },
+
+  // ─── Compliance/WpHG generated data ───
+  'wphg.kapitalerhalt': { de: 'Kapitalerhalt', en: 'Capital Preservation' },
+  'wphg.kapitalerhaltModerat': { de: 'Kapitalerhalt mit moderatem Wachstum', en: 'Capital preservation with moderate growth' },
+  'wphg.langfristigesWachstum': { de: 'Langfristiges Vermögenswachstum', en: 'Long-term wealth growth' },
+  'wphg.aggressivesWachstum': { de: 'Aggressive Wachstumsstrategie', en: 'Aggressive growth strategy' },
+  'wphg.nichtErlaubt': { de: 'Nicht erlaubt', en: 'Not permitted' },
+  'wphg.geeignet': { de: 'Geeignet', en: 'Suitable' },
+  'wphg.bedingtGeeignet': { de: 'Bedingt geeignet', en: 'Conditionally suitable' },
+  'wphg.bereitgestellt': { de: 'bereitgestellt', en: 'provided' },
+  'wphg.risikoklasse': { de: 'Risikoklasse', en: 'Risk Class' },
+  'wphg.ja': { de: 'Ja', en: 'Yes' },
+  'wphg.nein': { de: 'Nein', en: 'No' },
+  'wphg.teilweise': { de: 'Teilweise', en: 'Partially' },
+
+  // ─── Generated Engagement data ───
+  'engagement.artikelVV': { de: 'Artikel über Vermögensverwaltung geteilt', en: 'Shared article about wealth management' },
+  'engagement.ihkBeitrag': { de: 'IHK-Beitrag geliked', en: 'Liked CCI article' },
+  'engagement.esgReport': { de: 'ESG-Report kommentiert', en: 'Commented on ESG report' },
+  'engagement.branchennews': { de: 'Branchennews geteilt', en: 'Shared industry news' },
+  'engagement.profilAktualisiert': { de: 'Profil aktualisiert', en: 'Profile updated' },
+  'engagement.fachartikelGeliked': { de: 'Fachartikel geliked', en: 'Liked expert article' },
+  'engagement.nachfolgeThema': { de: 'Nachfolge-Thema aktiv', en: 'Succession topic active' },
+  'engagement.hoheSichtbarkeit': { de: 'Hohe Sichtbarkeit', en: 'High visibility' },
+  'engagement.esgInteresse': { de: 'ESG-Interesse', en: 'ESG interest' },
+  'engagement.peInteresse': { de: 'PE-Interesse', en: 'PE interest' },
+  'engagement.techAffinitaet': { de: 'Tech-Affinität', en: 'Tech affinity' },
+  'engagement.liquiditaetsbedarf': { de: 'Liquiditätsbedarf', en: 'Liquidity need' },
+  'engagement.wachstumsorientiert': { de: 'Wachstumsorientiert', en: 'Growth-oriented' },
+  'engagement.konservativ': { de: 'Konservativ', en: 'Conservative' },
+  'engagement.stiftungsinteresse': { de: 'Stiftungsinteresse', en: 'Foundation interest' },
+  'engagement.regelmaessigQuartalsbericht': { de: 'Regelmäßig Quartalsbericht gelesen', en: 'Regularly read quarterly report' },
+  'engagement.selteneBesuche': { de: 'Seltene Besuche', en: 'Rare visits' },
+  'engagement.esgReportInteresse': { de: 'ESG-Report Interesse', en: 'ESG report interest' },
+  'engagement.hoheVerweildauer': { de: 'Hohe Verweildauer', en: 'High dwell time' },
+  'engagement.aktiverLeser': { de: 'Aktiver Leser', en: 'Active reader' },
+  'engagement.nachfolgeGeklickt': { de: 'Nachfolge-Themen geklickt', en: 'Clicked succession topics' },
+  'engagement.geringeOeffnungsrate': { de: 'Geringe Öffnungsrate', en: 'Low open rate' },
+  'engagement.teilgenommen': { de: 'teilgenommen', en: 'attended' },
+  'engagement.nichtTeilgenommen': { de: 'nicht teilgenommen', en: 'did not attend' },
+  'engagement.passtZuAnlageziel': { de: 'Passt zu Anlageziel', en: 'Matches investment objective' },
+  'engagement.nachfolgeInteresse': { de: 'Nachfolge-Interesse', en: 'Succession interest' },
+  'engagement.esgUpgradGeplant': { de: 'ESG-Upgrade geplant', en: 'ESG upgrade planned' },
+  'engagement.positivSichtbarkeit': { de: 'Positiv – Sichtbarkeit', en: 'Positive – Visibility' },
+  'engagement.neutral': { de: 'Neutral', en: 'Neutral' },
+  'engagement.geoeffnet': { de: 'geöffnet', en: 'opened' },
+  'engagement.geklickt': { de: 'geklickt', en: 'clicked' },
+
+  // ─── Event names ───
+  'event.jahresempfang': { de: 'Jahresempfang 2025', en: 'Annual Reception 2025' },
+  'event.nachfolgeRoundtable': { de: 'Nachfolge-Roundtable', en: 'Succession Roundtable' },
+  'event.esgWebinar': { de: 'ESG-Webinar', en: 'ESG Webinar' },
+  'event.anlegerDinner': { de: 'Anleger-Dinner', en: 'Investor Dinner' },
+  'event.familienstiftung': { de: 'Familienstiftung Praxistag', en: 'Family Foundation Workshop' },
+  'event.nachfolgeKongress': { de: 'Nachfolge-Kongress', en: 'Succession Congress' },
+  'event.esgWorkshop': { de: 'ESG Art.9 Workshop', en: 'ESG Art.9 Workshop' },
+  'event.investmentForum': { de: 'Investment Forum', en: 'Investment Forum' },
+
+  // ─── IO Kommentar generated data ───
+  'ioKommentar.1': { de: 'Das Portfolio entwickelt sich im Rahmen der Erwartungen. Die Diversifikation über verschiedene Anlageklassen sorgt für Stabilität.', en: 'The portfolio is performing in line with expectations. Diversification across asset classes provides stability.' },
+  'ioKommentar.2': { de: 'Die aktuelle Marktlage erfordert eine defensive Positionierung. Wir empfehlen eine Reduktion der Aktienquote bei Erreichen neuer Höchststände.', en: 'The current market environment requires defensive positioning. We recommend reducing equity allocation upon reaching new highs.' },
+  'ioKommentar.3': { de: 'Performance liegt über der Benchmark. Die Übergewichtung in Technologie und Healthcare hat sich positiv ausgewirkt.', en: 'Performance exceeds the benchmark. The overweight in technology and healthcare has had a positive impact.' },
+  'ioKommentar.4': { de: 'Stabiler Portfolioverlauf trotz erhöhter Marktvolatilität. Die Anleihenquote bietet ausreichend Puffer.', en: 'Stable portfolio performance despite elevated market volatility. The bond allocation provides sufficient buffer.' },
+
+  // ─── KPI labels for modeConfig ───
+  'kpi.gesamtbestand': { de: 'Gesamtbestand', en: 'Total Portfolio' },
+  'kpi.neugeschaeftYtd': { de: 'Neugeschäft YTD', en: 'New Business YTD' },
+  'kpi.stornoQuote': { de: 'Storno-Quote', en: 'Cancellation Rate' },
+  'kpi.zielerreichung': { de: 'Zielerreichung', en: 'Goal Achievement' },
+  'kpi.kunden': { de: 'Kunden', en: 'Customers' },
+  'kpi.kreditvolumen': { de: 'Kreditvolumen', en: 'Credit Volume' },
+  'kpi.einlagen': { de: 'Einlagen', en: 'Deposits' },
+  'kpi.ertragYtd': { de: 'Ertrag YTD', en: 'Revenue YTD' },
+  'kpi.aumGesamt': { de: 'AuM Gesamt', en: 'Total AuM' },
+  'kpi.mandate': { de: 'Mandate', en: 'Mandates' },
+
+  // ─── Mode labels ───
+  'modus.versicherung': { de: 'Versicherung', en: 'Insurance' },
+  'modus.banking': { de: 'Banking', en: 'Banking' },
+  'modus.vermoegensverwaltung': { de: 'Vermögensverwaltung', en: 'Wealth Management' },
+
+  // ─── Potenzial priority ───
+  'prioritaet.kritisch': { de: 'Kritisch', en: 'Critical' },
+  'prioritaet.hoch': { de: 'Hoch', en: 'High' },
+  'prioritaet.mittel': { de: 'Mittel', en: 'Medium' },
+  'prioritaet.niedrig': { de: 'Niedrig', en: 'Low' },
+
+  // ─── Generated Familie potenzial labels ───
+  'potenzialBewertung.hoch': { de: 'Hoch', en: 'High' },
+  'potenzialBewertung.mittel': { de: 'Mittel', en: 'Medium' },
+  'potenzialBewertung.sehrHoch': { de: 'Sehr hoch', en: 'Very high' },
+
+  // ─── Additional Data/index.js labels ───
+  'sparte.leben': { de: 'Leben', en: 'Life' },
+  'sparte.kranken': { de: 'Kranken', en: 'Health' },
+  'sparte.schaden': { de: 'Schaden', en: 'Property' },
+  'sparte.kfz': { de: 'Kfz', en: 'Motor' },
+  'spartenVerteilung': { de: 'Spartenverteilung', en: 'Category Distribution' },
+
+  // ─── Vergütung/Revenue data labels ───
+  'vergModell.abschlussprovision': { de: 'Abschlussprovision', en: 'Closing Commission' },
+  'vergModell.bestandsprovision': { de: 'Bestandsprovision', en: 'Portfolio Commission' },
+  'vergModell.dynamikprovision': { de: 'Dynamikprovision', en: 'Dynamic Commission' },
+  'vergModell.bonifikation': { de: 'Bonifikation', en: 'Bonus' },
+
+  // ─── Qualität labels ───
+  'qual.beschwerdenProMonat': { de: 'Beschwerden pro Monat', en: 'Complaints per month' },
+  'qual.abgelaufeneZulassungen': { de: 'Abgelaufene Zulassungen', en: 'Expired certifications' },
+  'qual.offeneBeschwerden': { de: 'Offene Beschwerden', en: 'Open complaints' },
+  'qual.bafin': { de: 'BaFin-Auflagen', en: 'BaFin requirements' },
+
+  // ─── Stammdaten overview data labels ───
+  'stamm.gebundenerVermittler': { de: 'Gebundener Vermittler', en: 'Tied Agent' },
+  'stamm.spartenBereiche': { de: 'Leben, Kranken, Schaden, Kfz', en: 'Life, Health, Property, Motor' },
+  'stamm.iddWeiterbildung': { de: 'IDD Weiterbildung', en: 'IDD Training' },
+
+  // ─── Communication subject lines (VV) ───
+  'betreff.portfolioReview': { de: 'Portfolio-Review', en: 'Portfolio Review' },
+  'betreff.onboardingGespraech': { de: 'Onboarding-Gespräch', en: 'Onboarding Meeting' },
+  'betreff.wphgFragebogen': { de: 'WpHG-Fragebogen', en: 'MiFID Questionnaire' },
+  'betreff.performanceReport': { de: 'Performance-Report', en: 'Performance Report' },
+  'betreff.rebalancingBesprechen': { de: 'Rebalancing besprechen', en: 'Discuss Rebalancing' },
+  'betreff.nachfolgeplanung': { de: 'Nachfolgeplanung', en: 'Succession Planning' },
+  'betreff.nextgenBeratung': { de: 'NextGen-Beratung', en: 'NextGen Advisory' },
+  'betreff.esgUpgrade': { de: 'ESG-Upgrade', en: 'ESG Upgrade' },
+  'betreff.investmentvorschlag': { de: 'Investmentvorschlag', en: 'Investment Proposal' },
+  'betreff.quartalsmeeting': { de: 'Quartalsmeeting', en: 'Quarterly Meeting' },
+
+  // ─── Product type display labels ───
+  'typ.mandat': { de: 'Mandat', en: 'Mandate' },
+  'typ.pe': { de: 'PE-Beteiligung', en: 'PE Participation' },
+  'typ.cash': { de: 'Cash', en: 'Cash' },
+  'typ.konto': { de: 'Konto', en: 'Account' },
+  'typ.krypto': { de: 'Krypto', en: 'Crypto' },
+  'typ.angel': { de: 'Angel Investment', en: 'Angel Investment' },
+  'typ.immobilien': { de: 'Immobilien', en: 'Real Estate' },
+  'typ.immobilie': { de: 'Immobilie', en: 'Real Estate' },
+  'typ.gmbh': { de: 'GmbH-Beteiligung', en: 'Company Stake' },
+  'typ.lv': { de: 'Lebensversicherung', en: 'Life Insurance' },
+  'typ.praxiskonto': { de: 'Praxiskonto', en: 'Practice Account' },
+
+  // ─── UebersichtTab MiniKPI labels ───
+  'abschluesse': { de: 'Abschlüsse', en: 'Closings' },
+  'neugeschaeft': { de: 'Neugeschäft', en: 'New Business' },
+  'ertrag': { de: 'Ertrag', en: 'Revenue' },
+  'plusVsVorwoche': { de: '+3 vs. Vorwoche', en: '+3 vs. last week' },
+  'dieserMonat': { de: 'Dieser Monat', en: 'This Month' },
+  'diesenMonat': { de: 'Diesen Monat', en: 'This Month' },
+  'durchschnitt': { de: 'Durchschnitt', en: 'Average' },
 };
 
 export default translations;

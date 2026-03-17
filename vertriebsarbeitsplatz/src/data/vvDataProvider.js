@@ -11,6 +11,10 @@ import {
   VV_ENGAGEMENT as RAW_ENG,
 } from './vvExtended';
 
+function getLang() {
+  try { return localStorage.getItem('kia_language') || 'de'; } catch { return 'de'; }
+}
+
 // ─── Simple seeded PRNG (hash-based) ────────────────────────────────────────
 function hashSeed(str) {
   let h = 0;
@@ -52,7 +56,11 @@ function round2(v) {
 }
 
 // ─── MONTHS helper ──────────────────────────────────────────────────────────
-const MONTH_NAMES = ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'];
+const MONTH_NAMES_DE = ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'];
+const MONTH_NAMES_EN = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+function getMonthNames() {
+  try { return (localStorage.getItem('kia_language') || 'de') === 'en' ? MONTH_NAMES_EN : MONTH_NAMES_DE; } catch { return MONTH_NAMES_DE; }
+}
 
 function generateMonthly(prng, years = 3) {
   const result = [];
@@ -69,7 +77,7 @@ function generateMonthly(prng, years = 3) {
       const pf = round1(trend + noise);
       // Benchmark slightly underperforms portfolio on average
       const bm = round1(pf - rng(prng, 0.0, 0.6));
-      result.push({ monat: `${MONTH_NAMES[m]} ${y}`, portfolio: pf, benchmark: bm });
+      result.push({ monat: `${getMonthNames()[m]} ${y}`, portfolio: pf, benchmark: bm });
     }
   }
   return result;
@@ -101,7 +109,7 @@ function transformPerformance(raw) {
     for (let m = 0; m <= maxMonth; m++) {
       const pf = round1(0.3 + rng(prng, -2.5, 3.0));
       const bm = round1(pf - rng(prng, 0.1, 0.8));
-      baseMonthly.push({ monat: `${MONTH_NAMES[m]} ${y}`, portfolio: pf, benchmark: bm });
+      baseMonthly.push({ monat: `${getMonthNames()[m]} ${y}`, portfolio: pf, benchmark: bm });
     }
   }
   const monthly = baseMonthly;
@@ -181,10 +189,11 @@ function generatePerformance(id) {
     immofonds: immoPct,
   };
 
-  const sektorNames = ['Technologie', 'Healthcare', 'Finanzen', 'Industrie', 'Konsum', 'Energie', 'Versorger', 'Grundstoffe'];
+  const lang = getLang();
+  const sektorNames = lang === 'en' ? ['Technology', 'Healthcare', 'Financials', 'Industrials', 'Consumer', 'Energy', 'Utilities', 'Materials'] : ['Technologie', 'Healthcare', 'Finanzen', 'Industrie', 'Konsum', 'Energie', 'Versorger', 'Grundstoffe'];
   const sektoren = sektorNames.map(name => ({ name, anteil: rngInt(prng, 4, 22) }));
 
-  const regionNames = ['Europa', 'Nordamerika', 'Asien-Pazifik', 'Schwellenländer', 'Sonstige'];
+  const regionNames = lang === 'en' ? ['Europe', 'North America', 'Asia-Pacific', 'Emerging Markets', 'Other'] : ['Europa', 'Nordamerika', 'Asien-Pazifik', 'Schwellenländer', 'Sonstige'];
   const regionen = regionNames.map(name => ({ name, anteil: rngInt(prng, 5, 45) }));
 
   const volatilitaet = round1(rng(prng, 5, 15));
@@ -196,7 +205,7 @@ function generatePerformance(id) {
     benchmarkVola: round1(volatilitaet * rng(prng, 0.9, 1.2)),
   };
 
-  const bondNames = ['Investment Grade', 'High Yield', 'Staatsanleihen', 'Pfandbriefe', 'Emerging Markets'];
+  const bondNames = lang === 'en' ? ['Investment Grade', 'High Yield', 'Government Bonds', 'Covered Bonds', 'Emerging Markets'] : ['Investment Grade', 'High Yield', 'Staatsanleihen', 'Pfandbriefe', 'Emerging Markets'];
   const anleihen = {
     laufzeiten: bondNames.map(name => ({ name, anteil: rngInt(prng, 5, 35) })),
     duration: round1(rng(prng, 2.5, 7.5)),
@@ -204,15 +213,18 @@ function generatePerformance(id) {
     rating: { ig: rngInt(prng, 50, 80), bbb: rngInt(prng, 10, 30), subig: rngInt(prng, 5, 20) },
   };
 
-  const currNames = ['EUR', 'USD', 'CHF', 'GBP', 'Sonstige'];
+  const currNames = ['EUR', 'USD', 'CHF', 'GBP', lang === 'en' ? 'Other' : 'Sonstige'];
   const waehrungen = currNames.map(name => ({ name, anteil: rngInt(prng, 3, 60) }));
 
-  const kommentare = [
-    'Das Portfolio entwickelt sich im Rahmen der Erwartungen. Die Diversifikation über verschiedene Anlageklassen sorgt für Stabilität.',
-    'Die aktuelle Marktlage erfordert eine defensive Positionierung. Wir empfehlen eine Reduktion der Aktienquote bei Erreichen neuer Höchststände.',
-    'Performance liegt über der Benchmark. Die Übergewichtung in Technologie und Healthcare hat sich positiv ausgewirkt.',
-    'Stabiler Portfolioverlauf trotz erhöhter Marktvolatilität. Die Anleihenquote bietet ausreichend Puffer.',
-  ];
+  const kommentare = lang === 'en'
+    ? ['The portfolio is performing in line with expectations. Diversification across asset classes provides stability.',
+       'The current market environment requires defensive positioning. We recommend reducing equity allocation upon reaching new highs.',
+       'Performance exceeds the benchmark. The overweight in technology and healthcare has had a positive impact.',
+       'Stable portfolio performance despite elevated market volatility. The bond allocation provides sufficient buffer.']
+    : ['Das Portfolio entwickelt sich im Rahmen der Erwartungen. Die Diversifikation über verschiedene Anlageklassen sorgt für Stabilität.',
+       'Die aktuelle Marktlage erfordert eine defensive Positionierung. Wir empfehlen eine Reduktion der Aktienquote bei Erreichen neuer Höchststände.',
+       'Performance liegt über der Benchmark. Die Übergewichtung in Technologie und Healthcare hat sich positiv ausgewirkt.',
+       'Stabiler Portfolioverlauf trotz erhöhter Marktvolatilität. Die Anleihenquote bietet ausreichend Puffer.'];
 
   // Generate 1-2 deposit events for generated mandants
   const generatedMonthly = generateMonthly(prng);
@@ -223,7 +235,7 @@ function generatePerformance(id) {
     const betrag = rngInt(prng, 3, 15) * 100000;
     const monat = generatedMonthly[idx].monat;
     const mio = (betrag / 1000000).toFixed(1).replace('.', ',');
-    einzahlungen.push({ monat, betrag, label: `Einzahlung ${mio} Mio EUR` });
+    einzahlungen.push({ monat, betrag, label: lang === 'en' ? `Deposit ${mio}M EUR` : `Einzahlung ${mio} Mio EUR` });
   }
 
   return {
@@ -264,6 +276,7 @@ function generatePerformance(id) {
 
 function transformWphg(raw) {
   if (!raw) return null;
+  const _lang = getLang();
   const fb = raw.fragebogen || {};
   const gp = raw.geeignetheit || {};
   const vs = raw.verlustschwelle || {};
@@ -286,11 +299,11 @@ function transformWphg(raw) {
     anlageziel: fb.anlageziel || 'Vermögenswachstum',
     anlagehorizont: fb.anlagehorizont || '10+ Jahre',
     verlusttoleranz: vs.schwelle ? `Max. ${vs.schwelle}% p.a.` : 'Moderat',
-    esgPraeferenzen: { sfdr: 'Art. 8', taxonomie: 'Ja', pai: true },
+    esgPraeferenzen: { sfdr: 'Art. 8', taxonomie: _lang === 'en' ? 'Yes' : 'Ja', pai: true },
     anlagerichtlinie: {
       maxAktien: 60,
       minRenten: 20,
-      krypto: 'Nicht erlaubt',
+      krypto: _lang === 'en' ? 'Not permitted' : 'Nicht erlaubt',
       alternatives: 'Max. 20%',
       benchmark: '60% MSCI World / 40% Bloomberg Agg',
     },
@@ -298,11 +311,11 @@ function transformWphg(raw) {
       letzterBericht: latestPruefung ? `Q${Math.ceil((new Date(latestPruefung.datum).getMonth() + 1) / 3)} ${new Date(latestPruefung.datum).getFullYear()}` : 'Q1 2026',
       erstellt: latestPruefung?.datum,
       naechsterFaellig: fb.naechstesPruefung,
-      ergebnis: gp.status === 'konform' ? 'Geeignet' : (gp.status || 'Geeignet'),
+      ergebnis: gp.status === 'konform' ? (_lang === 'en' ? 'Suitable' : 'Geeignet') : (gp.status || (_lang === 'en' ? 'Suitable' : 'Geeignet')),
     },
     kosteninformation: {
-      exAnte: { status: 'bereitgestellt', datum: '2026-01-10' },
-      exPost: { status: 'bereitgestellt', datum: '2026-02-28' },
+      exAnte: { status: _lang === 'en' ? 'provided' : 'bereitgestellt', datum: '2026-01-10' },
+      exPost: { status: _lang === 'en' ? 'provided' : 'bereitgestellt', datum: '2026-02-28' },
       gesamtkosten: k.exPost?.gesamtkosten || 28500,
       quote: k.exAnte?.gesamtTER || 1.02,
     },
@@ -316,8 +329,9 @@ function transformWphg(raw) {
 
 function generateWphg(id) {
   const prng = makePrng(id + '_wphg');
+  const _lang = getLang();
   const risikoklasse = rngInt(prng, 2, 5);
-  const ziele = ['Kapitalerhalt', 'Kapitalerhalt mit moderatem Wachstum', 'Langfristiges Vermögenswachstum', 'Aggressive Wachstumsstrategie'];
+  const ziele = _lang === 'en' ? ['Capital Preservation', 'Capital Preservation with Moderate Growth', 'Long-term Wealth Growth', 'Aggressive Growth Strategy'] : ['Kapitalerhalt', 'Kapitalerhalt mit moderatem Wachstum', 'Langfristiges Vermögenswachstum', 'Aggressive Wachstumsstrategie'];
   const horizonte = ['3-5 Jahre', '5-10 Jahre', '10+ Jahre', '7-15 Jahre'];
   const statusOk = prng() > 0.2;
   const totalPos = rngInt(prng, 20, 50);
@@ -340,14 +354,14 @@ function generateWphg(id) {
     verlusttoleranz: pick(prng, ['Max. -8% p.a.', 'Max. -10% p.a.', 'Max. -15% p.a.', 'Moderat']),
     esgPraeferenzen: {
       sfdr: pick(prng, ['Art. 6', 'Art. 8', 'Art. 8+', 'Art. 9']),
-      taxonomie: pick(prng, ['Ja', 'Nein', 'Teilweise']),
+      taxonomie: pick(prng, _lang === 'en' ? ['Yes', 'No', 'Partially'] : ['Ja', 'Nein', 'Teilweise']),
       pai: prng() > 0.4,
     },
     anlagerichtlinie: {
       maxAktien: rngInt(prng, 40, 70),
       minRenten: rngInt(prng, 15, 35),
-      krypto: pick(prng, ['Nicht erlaubt', 'Max. 5%', 'Max. 2%']),
-      alternatives: pick(prng, ['Max. 15%', 'Max. 20%', 'Max. 25%', 'Nicht erlaubt']),
+      krypto: pick(prng, _lang === 'en' ? ['Not permitted', 'Max. 5%', 'Max. 2%'] : ['Nicht erlaubt', 'Max. 5%', 'Max. 2%']),
+      alternatives: pick(prng, _lang === 'en' ? ['Max. 15%', 'Max. 20%', 'Max. 25%', 'Not permitted'] : ['Max. 15%', 'Max. 20%', 'Max. 25%', 'Nicht erlaubt']),
       benchmark: pick(prng, [
         '60% MSCI World / 40% Bloomberg Agg',
         '70% MSCI ACWI / 30% Bloomberg Global',
@@ -358,11 +372,11 @@ function generateWphg(id) {
       letzterBericht: pick(prng, ['Q4 2025', 'Q1 2026', 'Q3 2025']),
       erstellt: pick(prng, ['2025-12-15', '2026-01-20', '2025-09-30']),
       naechsterFaellig: pick(prng, ['2026-06-15', '2026-09-20', '2026-03-30']),
-      ergebnis: prng() > 0.15 ? 'Geeignet' : 'Bedingt geeignet',
+      ergebnis: prng() > 0.15 ? (_lang === 'en' ? 'Suitable' : 'Geeignet') : (_lang === 'en' ? 'Conditionally suitable' : 'Bedingt geeignet'),
     },
     kosteninformation: {
-      exAnte: { status: 'bereitgestellt', datum: pick(prng, ['2026-01-10', '2025-12-15', '2026-02-05']) },
-      exPost: { status: prng() > 0.2 ? 'bereitgestellt' : 'ausstehend', datum: pick(prng, ['2026-02-28', '2026-01-31', '2025-12-31']) },
+      exAnte: { status: _lang === 'en' ? 'provided' : 'bereitgestellt', datum: pick(prng, ['2026-01-10', '2025-12-15', '2026-02-05']) },
+      exPost: { status: prng() > 0.2 ? (_lang === 'en' ? 'provided' : 'bereitgestellt') : (_lang === 'en' ? 'pending' : 'ausstehend'), datum: pick(prng, ['2026-02-28', '2026-01-31', '2025-12-31']) },
       gesamtkosten: rngInt(prng, 5000, 100000),
       quote: round2(rng(prng, 0.65, 1.85)),
     },
@@ -377,17 +391,18 @@ function generateWphg(id) {
 // ─── TRANSFORM: VV_FAMILIE ──────────────────────────────────────────────────
 
 const ROLLE_MAP = {
-  mandant: 'Mandant',
-  ehepartner: 'Ehepartnerin',
-  kind: 'Kind',
-  stiftung: 'Mandant (Institution)',
+  mandant: { de: 'Mandant', en: 'Client' },
+  ehepartner: { de: 'Ehepartnerin', en: 'Spouse' },
+  kind: { de: 'Kind', en: 'Child' },
+  stiftung: { de: 'Mandant (Institution)', en: 'Client (Institution)' },
 };
 
 function transformFamilie(raw) {
   if (!raw) return null;
+  const lang = (() => { try { return localStorage.getItem('kia_language') || 'de'; } catch { return 'de'; } })();
   const mitglieder = (raw.mitglieder || []).map(m => ({
     ...m,
-    rolle: ROLLE_MAP[m.rolle] || m.rolle,
+    rolle: (ROLLE_MAP[m.rolle] || { de: m.rolle, en: m.rolle })[lang],
     istMandant: m.mandant === true || m.rolle === 'mandant',
     istLead: m.istLead || false,
   }));
@@ -439,20 +454,21 @@ function generateFamilie(id) {
   const numKids = rngInt(prng, 0, 3);
   const aum = rngInt(prng, 500000, 12000000);
 
+  const _lang = getLang();
   const mitglieder = [
     {
       name: `${pick(prng, vornamenM)} ${nachname}`,
-      rolle: 'Mandant',
+      rolle: _lang === 'en' ? 'Client' : 'Mandant',
       alter: mAge,
-      beruf: pick(prng, ['Unternehmer', 'Arzt', 'Rechtsanwalt', 'Geschäftsführer', 'Investor', 'Freiberufler']),
+      beruf: pick(prng, _lang === 'en' ? ['Entrepreneur', 'Physician', 'Attorney', 'Managing Director', 'Investor', 'Freelancer'] : ['Unternehmer', 'Arzt', 'Rechtsanwalt', 'Geschäftsführer', 'Investor', 'Freiberufler']),
       istMandant: true,
       aum,
     },
     {
       name: `${pick(prng, vornamenW)} ${nachname}`,
-      rolle: 'Ehepartnerin',
+      rolle: _lang === 'en' ? 'Spouse' : 'Ehepartnerin',
       alter: pAge,
-      beruf: pick(prng, ['Ärztin', 'Lehrerin', 'Selbständig', 'Architektin', 'Managerin']),
+      beruf: pick(prng, _lang === 'en' ? ['Physician', 'Teacher', 'Self-employed', 'Architect', 'Manager'] : ['Ärztin', 'Lehrerin', 'Selbständig', 'Architektin', 'Managerin']),
       vermoegen: rngInt(prng, 100000, 2000000),
     },
   ];
@@ -462,9 +478,9 @@ function generateFamilie(id) {
     const age = rngInt(prng, 8, 32);
     mitglieder.push({
       name: `${pick(prng, isBoy ? vornamenM : vornamenW)} ${nachname}`,
-      rolle: isBoy ? 'Sohn' : 'Tochter',
+      rolle: _lang === 'en' ? (isBoy ? 'Son' : 'Daughter') : (isBoy ? 'Sohn' : 'Tochter'),
       alter: age,
-      beruf: age < 18 ? 'Schüler/in' : pick(prng, ['Student/in', 'Ingenieur/in', 'Berater/in', 'Gründer/in']),
+      beruf: age < 18 ? (_lang === 'en' ? 'Student' : 'Schüler/in') : pick(prng, _lang === 'en' ? ['Student', 'Engineer', 'Consultant', 'Founder'] : ['Student/in', 'Ingenieur/in', 'Berater/in', 'Gründer/in']),
       istLead: age >= 18 && age <= 30 && prng() > 0.5,
     });
   }
@@ -472,7 +488,7 @@ function generateFamilie(id) {
   return {
     mitglieder,
     gesamtAuM: aum + rngInt(prng, 200000, 5000000),
-    potenzial: pick(prng, ['Hoch', 'Mittel', 'Sehr hoch', '2-5M Potenzial']),
+    potenzial: pick(prng, _lang === 'en' ? ['High', 'Medium', 'Very high', '2-5M Potential'] : ['Hoch', 'Mittel', 'Sehr hoch', '2-5M Potenzial']),
     unternehmen: prng() > 0.5 ? {
       name: `${nachname} ${pick(prng, ['GmbH', 'Holding GmbH', 'AG', 'KG'])}`,
       branche: pick(prng, ['Maschinenbau', 'IT-Dienstleistungen', 'Immobilien', 'Medizintechnik', 'Beratung']),
@@ -480,10 +496,10 @@ function generateFamilie(id) {
       mitarbeiter: pick(prng, ['15-50', '50-150', '150-300']),
       standort: pick(prng, ['Frankfurt', 'München', 'Hamburg', 'Düsseldorf', 'Stuttgart']),
       geschaetzterWert: pick(prng, ['3-8M EUR', '8-15M EUR', '15-30M EUR']),
-      nachfolge: prng() > 0.5 ? { status: 'offen', details: 'Nachfolgeregelung in Planung für die nächsten 3-5 Jahre.' } : null,
+      nachfolge: prng() > 0.5 ? { status: 'offen', details: _lang === 'en' ? 'Succession planning in progress for the next 3-5 years.' : 'Nachfolgeregelung in Planung für die nächsten 3-5 Jahre.' } : null,
       positionen: [
-        { name: mitglieder[0].name, rolle: 'Geschäftsführer', anteil: '75%' },
-        { name: mitglieder[1].name, rolle: 'Prokuristin', anteil: '25%' },
+        { name: mitglieder[0].name, rolle: _lang === 'en' ? 'Managing Director' : 'Geschäftsführer', anteil: '75%' },
+        { name: mitglieder[1].name, rolle: _lang === 'en' ? 'Authorized Signatory' : 'Prokuristin', anteil: '25%' },
       ],
     } : null,
     weitereMandate: prng() > 0.5 ? [

@@ -120,7 +120,7 @@ export default function FamilieNetzwerkTab({ kunde }) {
               <>
                 <div className="flex items-center self-center">
                   <div className="w-8 border-t-2 border-dashed border-rose-300" />
-                  <span className="text-[10px] text-rose-400 px-1">Partner</span>
+                  <span className="text-[10px] text-rose-400 px-1">{t('partner')}</span>
                   <div className="w-8 border-t-2 border-dashed border-rose-300" />
                 </div>
                 <PersonCard person={partner} t={t} />

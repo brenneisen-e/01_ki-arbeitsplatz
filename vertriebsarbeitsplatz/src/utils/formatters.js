@@ -1,33 +1,38 @@
+function getLang() { try { return localStorage.getItem('kia_language') || 'de'; } catch { return 'de'; } }
+function numLoc() { return getLang() === 'en' ? 'en-US' : 'de-DE'; }
+function dateLoc() { return getLang() === 'en' ? 'en-GB' : 'de-DE'; }
+function cur() { return getLang() === 'en' ? '$' : '\u20ac'; }
+
 export function formatEur(val) {
   if (val == null) return '-';
-  return Math.round(val).toLocaleString('de-DE') + '\u20ac';
+  return Math.round(val).toLocaleString(numLoc()) + cur();
 }
 
 export function formatEurExact(val) {
   if (val == null) return '-';
-  return val.toLocaleString('de-DE', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + '\u20ac';
+  return val.toLocaleString(numLoc(), { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + cur();
 }
 
 export function formatPct(val) {
   if (val == null) return '-';
-  return `${val.toLocaleString('de-DE', { maximumFractionDigits: 1 })}%`;
+  return `${val.toLocaleString(numLoc(), { maximumFractionDigits: 1 })}%`;
 }
 
 export function formatNum(val) {
   if (val == null) return '-';
-  return val.toLocaleString('de-DE');
+  return val.toLocaleString(numLoc());
 }
 
 export function formatDatum(dateStr) {
   if (!dateStr) return '-';
   const d = new Date(dateStr);
-  return d.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+  return d.toLocaleDateString(dateLoc(), { day: '2-digit', month: '2-digit', year: 'numeric' });
 }
 
 export function formatDatumKurz(dateStr) {
   if (!dateStr) return '-';
   const d = new Date(dateStr);
-  return d.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit' });
+  return d.toLocaleDateString(dateLoc(), { day: '2-digit', month: '2-digit' });
 }
 
 export function berechneHaushaltsnetto(kunde) {

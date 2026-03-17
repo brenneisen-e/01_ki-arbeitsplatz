@@ -15,8 +15,8 @@ function getFremdTypLabels(t) {
     baufinanzierung: t('typ.baufinanzierung'),
     kredit: t('typ.kredit'),
     depot: t('typ.depot'),
-    depot_privat: t('typ.depot') + ' (Privat)',
-    depot_firma: t('typ.depot') + ' (Firma)',
+    depot_privat: t('typ.depot') + ' (' + t('privat') + ')',
+    depot_firma: t('typ.depot') + ' (' + t('firma') + ')',
     depot2: t('typ.depot') + ' 2',
     tagesgeld: t('typ.tagesgeld'),
     festgeld: t('typ.festgeld'),
@@ -119,13 +119,13 @@ export default function StammdatenDetailTab({ kunde }) {
               const today = new Date();
               const birthYear = today.getFullYear() - kunde.alter;
               const birthDate = new Date(birthYear, today.getMonth() - 3, 15);
-              return birthDate.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+              return birthDate.toLocaleDateString((localStorage.getItem('kia_language') || 'de') === 'en' ? 'en-GB' : 'de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
             })()} />
             <InfoRow label={t('alter')} value={`${kunde.alter} ${t('jahre')} (${(() => {
               const today = new Date();
               const birthYear = today.getFullYear() - kunde.alter;
               const birthDate = new Date(birthYear, today.getMonth() - 3, 15);
-              return birthDate.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+              return birthDate.toLocaleDateString((localStorage.getItem('kia_language') || 'de') === 'en' ? 'en-GB' : 'de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
             })()})`} />
             <InfoRow label={t('beruf')} value={kunde.beruf} />
             {kunde.arbeitgeber && (
@@ -245,7 +245,7 @@ export default function StammdatenDetailTab({ kunde }) {
                 const label = fremdLabels[v] || v || '';
                 return label.charAt(0).toUpperCase() + label.slice(1);
               }},
-              { id: 'institut', label: 'Institut', render: (v, row) => {
+              { id: 'institut', label: t('institut'), render: (v, row) => {
                 const logoUrl = v ? getLogoUrl(v, 24) : null;
                 return (
                   <span className="flex items-center gap-2">
@@ -254,8 +254,8 @@ export default function StammdatenDetailTab({ kunde }) {
                   </span>
                 );
               }},
-              { id: 'details', label: 'Details' },
-              { id: 'volumen', label: 'Volumen', render: v => <span className="font-mono">{formatEur(v)}</span> },
+              { id: 'details', label: t('details') },
+              { id: 'volumen', label: t('volumenLabel'), render: v => <span className="font-mono">{formatEur(v)}</span> },
               { id: 'consent', label: 'Consent', render: (v, row) => {
                 if (!v) return <span className="text-slate-400">{'\u2717'}</span>;
                 // Generate a plausible consent date based on the product
@@ -364,7 +364,7 @@ function HaustiereRow({ haustiere, t }) {
               className="flex items-center gap-1 text-[10px] text-blue-500 bg-blue-50 px-1.5 py-0.5 rounded-full border border-blue-100 hover:bg-blue-100 transition-colors"
             >
               <Info size={10} />
-              Details
+              {t('details')}
             </button>
           </div>
           {showDetail && (

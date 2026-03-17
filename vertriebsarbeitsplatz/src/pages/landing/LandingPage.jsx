@@ -255,7 +255,7 @@ export default function LandingPage() {
             <button
               onClick={() => { setLanguage('de'); localStorage.setItem('kia_language', 'de'); window.dispatchEvent(new CustomEvent('kia-language-change', { detail: 'de' })); }}
               className={clsx(
-                'flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium transition-all',
+                'flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium transition-all cursor-pointer',
                 language === 'de' ? 'bg-white text-slate-800 shadow-sm' : 'text-white/60 hover:text-white/90'
               )}
             >
@@ -265,7 +265,7 @@ export default function LandingPage() {
             <button
               onClick={() => { setLanguage('en'); localStorage.setItem('kia_language', 'en'); window.dispatchEvent(new CustomEvent('kia-language-change', { detail: 'en' })); }}
               className={clsx(
-                'flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium transition-all',
+                'flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium transition-all cursor-pointer',
                 language === 'en' ? 'bg-white text-slate-800 shadow-sm' : 'text-white/60 hover:text-white/90'
               )}
             >

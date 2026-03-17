@@ -298,21 +298,21 @@ function getDemoResponse(message, { currentView, modeId }) {
     if (modeId === 'vermoegensverwaltung') {
       return {
         content: `<div class="space-y-3">
-          <p class="font-semibold">Aktuelle Leads</p>
-          <p>Ich habe <strong>12 aktive Leads</strong> in deiner Pipeline identifiziert:</p>
-          <p class="text-xs font-semibold text-slate-600 mt-1">Neue Mandate (6):</p>
+          <p class="font-semibold">${tx('Aktuelle Leads', 'Current Leads')}</p>
+          <p>${tx('Ich habe <strong>12 aktive Leads</strong> in deiner Pipeline identifiziert:', 'I have identified <strong>12 active leads</strong> in your pipeline:')}</p>
+          <p class="text-xs font-semibold text-slate-600 mt-1">${tx('Neue Mandate (6):', 'New Mandates (6):')} </p>
           <ol class="list-decimal pl-4 space-y-1">
-            <li><strong>Dr. Katharina Bauer</strong> — Empfehlung Prof. Hartmann, 3,5M, Termin steht</li>
-            <li><strong>Charlotte Keller</strong> — NextGen, Anwältin, 800k Eigenvermögen</li>
-            <li><strong>Dipl.-Ing. Stefan Müller</strong> — Presse/Firmenverkauf, 6M Erlös</li>
+            <li><strong>Dr. Katharina Bauer</strong> — ${tx('Empfehlung Prof. Hartmann, 3,5M, Termin steht', 'Referral Prof. Hartmann, 3.5M, appointment scheduled')}</li>
+            <li><strong>Charlotte Keller</strong> — ${tx('NextGen, Anwältin, 800k Eigenvermögen', 'NextGen, lawyer, 800k own assets')}</li>
+            <li><strong>Dipl.-Ing. Stefan Müller</strong> — ${tx('Presse/Firmenverkauf, 6M Erlös', 'Press/company sale, 6M proceeds')}</li>
           </ol>
-          <p class="text-xs font-semibold text-slate-600 mt-1">Bestandsmandate (6):</p>
+          <p class="text-xs font-semibold text-slate-600 mt-1">${tx('Bestandsmandate (6):', 'Existing Mandates (6):')} </p>
           <ol class="list-decimal pl-4 space-y-1">
-            <li><strong>Lindenberg Cash 5,5M</strong> — Fremdbank-Konsolidierung, kritisch</li>
-            <li><strong>Hartmann PE +300k</strong> — Mandats-Erweiterung, Angebot läuft</li>
-            <li><strong>Weber Sparkasse 500k</strong> — Festgeld-Fälligkeit 2027</li>
+            <li><strong>Lindenberg Cash 5,5M</strong> — ${tx('Fremdbank-Konsolidierung, kritisch', 'Third-party bank consolidation, critical')}</li>
+            <li><strong>Hartmann PE +300k</strong> — ${tx('Mandats-Erweiterung, Angebot läuft', 'Mandate expansion, offer pending')}</li>
+            <li><strong>Weber Sparkasse 500k</strong> — ${tx('Festgeld-Fälligkeit 2027', 'Fixed deposit maturity 2027')}</li>
           </ol>
-          <p class="text-xs text-slate-500 mt-2">→ Wechsel zum Tab <em>Leads</em> für Details...</p>
+          <p class="text-xs text-slate-500 mt-2">${tx('→ Wechsel zum Tab <em>Leads</em> für Details...', '→ Switch to the <em>Leads</em> tab for details...')}</p>
         </div>`,
         navigateTo: currentView === 'detail' ? 'impulse' : 'pipeline',
       };
@@ -320,21 +320,21 @@ function getDemoResponse(message, { currentView, modeId }) {
     if (modeId === 'banking') {
       return {
         content: `<div class="space-y-3">
-          <p class="font-semibold">Aktuelle Leads</p>
-          <p>Ich habe <strong>8 aktive Vertriebschancen</strong> identifiziert:</p>
-          <p class="text-xs font-semibold text-slate-600 mt-1">Neukunden (4):</p>
+          <p class="font-semibold">${tx('Aktuelle Leads', 'Current Leads')}</p>
+          <p>${tx('Ich habe <strong>8 aktive Vertriebschancen</strong> identifiziert:', 'I have identified <strong>8 active sales opportunities</strong>:')}</p>
+          <p class="text-xs font-semibold text-slate-600 mt-1">${tx('Neukunden (4):', 'New Customers (4):')} </p>
           <ol class="list-decimal pl-4 space-y-1">
-            <li><strong>Dr. Martin Schäfer</strong> — Baufinanzierung 380k, Termin vereinbart</li>
-            <li><strong>Lisa & Tom Bergmann</strong> — Hauskauf geplant, Kreditbedarf 420k</li>
-            <li><strong>Firma Elektro Wenzel</strong> — Betriebsmittelkredit, 150k</li>
+            <li><strong>Dr. Martin Schäfer</strong> — ${tx('Baufinanzierung 380k, Termin vereinbart', 'Mortgage 380k, appointment arranged')}</li>
+            <li><strong>Lisa & Tom Bergmann</strong> — ${tx('Hauskauf geplant, Kreditbedarf 420k', 'House purchase planned, credit need 420k')}</li>
+            <li><strong>Firma Elektro Wenzel</strong> — ${tx('Betriebsmittelkredit, 150k', 'Working capital loan, 150k')}</li>
           </ol>
-          <p class="text-xs font-semibold text-slate-600 mt-1">Bestandskunden (4):</p>
+          <p class="text-xs font-semibold text-slate-600 mt-1">${tx('Bestandskunden (4):', 'Existing Customers (4):')} </p>
           <ol class="list-decimal pl-4 space-y-1">
-            <li><strong>Schmidt Anschlussfinanzierung</strong> — Zinsbindung läuft 09/2027, 285k</li>
-            <li><strong>Meier Sparplan-Erhöhung</strong> — Gehaltsanpassung, +200€/mtl.</li>
-            <li><strong>Weber Festgeld-Fälligkeit</strong> — 50k, Wiederanlage beraten</li>
+            <li><strong>Schmidt ${tx('Anschlussfinanzierung', 'Refinancing')}</strong> — ${tx('Zinsbindung läuft 09/2027, 285k', 'Fixed rate expires 09/2027, 285k')}</li>
+            <li><strong>Meier ${tx('Sparplan-Erhöhung', 'Savings Plan Increase')}</strong> — ${tx('Gehaltsanpassung, +200€/mtl.', 'Salary adjustment, +200€/mo.')}</li>
+            <li><strong>Weber ${tx('Festgeld-Fälligkeit', 'Fixed Deposit Maturity')}</strong> — ${tx('50k, Wiederanlage beraten', '50k, reinvestment advice')}</li>
           </ol>
-          <p class="text-xs text-slate-500 mt-2">→ Wechsel zum Tab <em>Potenziale</em> für Details...</p>
+          <p class="text-xs text-slate-500 mt-2">${tx('→ Wechsel zum Tab <em>Potenziale</em> für Details...', '→ Switch to the <em>Potentials</em> tab for details...')}</p>
         </div>`,
         navigateTo: currentView === 'detail' ? 'impulse' : 'potentiale',
       };
@@ -342,21 +342,21 @@ function getDemoResponse(message, { currentView, modeId }) {
     // versicherung
     return {
       content: `<div class="space-y-3">
-        <p class="font-semibold">Aktuelle Leads</p>
-        <p>Ich habe <strong>10 aktive Vertriebschancen</strong> identifiziert:</p>
-        <p class="text-xs font-semibold text-slate-600 mt-1">Neukunden (4):</p>
+        <p class="font-semibold">${tx('Aktuelle Leads', 'Current Leads')}</p>
+        <p>${tx('Ich habe <strong>10 aktive Vertriebschancen</strong> identifiziert:', 'I have identified <strong>10 active sales opportunities</strong>:')}</p>
+        <p class="text-xs font-semibold text-slate-600 mt-1">${tx('Neukunden (4):', 'New Customers (4):')} </p>
         <ol class="list-decimal pl-4 space-y-1">
-          <li><strong>Familie Richter</strong> — Empfehlung Bestandskunde, Komplettabsicherung</li>
-          <li><strong>Jan Krüger</strong> — Berufsstart, BU + Haftpflicht</li>
-          <li><strong>Dr. Eva Lorenz</strong> — PKV-Wechsel, Ärztetarif</li>
+          <li><strong>Familie Richter</strong> — ${tx('Empfehlung Bestandskunde, Komplettabsicherung', 'Referral from existing customer, full coverage')}</li>
+          <li><strong>Jan Krüger</strong> — ${tx('Berufsstart, BU + Haftpflicht', 'Career start, disability + liability insurance')}</li>
+          <li><strong>Dr. Eva Lorenz</strong> — ${tx('PKV-Wechsel, Ärztetarif', 'Private health insurance switch, physician rate')}</li>
         </ol>
-        <p class="text-xs font-semibold text-slate-600 mt-1">Bestandskunden (6):</p>
+        <p class="text-xs font-semibold text-slate-600 mt-1">${tx('Bestandskunden (6):', 'Existing Customers (6):')} </p>
         <ol class="list-decimal pl-4 space-y-1">
-          <li><strong>Braun Pflegezusatz</strong> — Ehepaar, Cross-Sell Potenzial</li>
-          <li><strong>Schmidt BU-Erhöhung</strong> — Gehaltsanpassung, Nachversicherung</li>
-          <li><strong>Weber LV-Ablauf 2028</strong> — Wiederanlage + Rentenvorsorge</li>
+          <li><strong>Braun ${tx('Pflegezusatz', 'Care Supplement')}</strong> — ${tx('Ehepaar, Cross-Sell Potenzial', 'Married couple, cross-sell potential')}</li>
+          <li><strong>Schmidt ${tx('BU-Erhöhung', 'DI Increase')}</strong> — ${tx('Gehaltsanpassung, Nachversicherung', 'Salary adjustment, subsequent insurance')}</li>
+          <li><strong>Weber ${tx('LV-Ablauf 2028', 'Life Insurance Expiry 2028')}</strong> — ${tx('Wiederanlage + Rentenvorsorge', 'Reinvestment + pension provision')}</li>
         </ol>
-        <p class="text-xs text-slate-500 mt-2">→ Wechsel zum Tab <em>Potenziale</em> für Details...</p>
+        <p class="text-xs text-slate-500 mt-2">${tx('→ Wechsel zum Tab <em>Potenziale</em> für Details...', '→ Switch to the <em>Potentials</em> tab for details...')}</p>
       </div>`,
       navigateTo: currentView === 'detail' ? 'impulse' : 'potentiale',
     };
@@ -365,12 +365,15 @@ function getDemoResponse(message, { currentView, modeId }) {
   if (lower.includes('bu') || lower.includes('berufsunfähigkeit')) {
     return {
       content: `<div class="space-y-2">
-        <p class="font-semibold">BU-Analyse</p>
-        <p>Der Kunde weist aufgrund seines Berufsbilds <strong>(kaufm. Angestellter, 38 J.)</strong> ein moderates Risikoprofil auf.</p>
+        <p class="font-semibold">${tx('BU-Analyse', 'Disability Insurance Analysis')}</p>
+        <p>${tx(
+          'Der Kunde weist aufgrund seines Berufsbilds <strong>(kaufm. Angestellter, 38 J.)</strong> ein moderates Risikoprofil auf.',
+          'Based on the occupational profile <strong>(commercial employee, age 38)</strong>, the customer has a moderate risk profile.'
+        )}</p>
         <table class="w-full text-xs mt-2 border-collapse">
-          <tr class="border-b border-slate-200"><td class="py-1 text-slate-500">Empfehlung</td><td class="py-1 font-medium">BU-Rente min. 1.800 €/mtl.</td></tr>
-          <tr class="border-b border-slate-200"><td class="py-1 text-slate-500">Absicherungslücke</td><td class="py-1 font-medium text-red-600">ca. 1.200 €/Monat</td></tr>
-          <tr><td class="py-1 text-slate-500">Extras</td><td class="py-1 font-medium">Nachversicherungsgarantie empfohlen</td></tr>
+          <tr class="border-b border-slate-200"><td class="py-1 text-slate-500">${tx('Empfehlung', 'Recommendation')}</td><td class="py-1 font-medium">${tx('BU-Rente min. 1.800 €/mtl.', 'DI pension min. €1,800/mo.')}</td></tr>
+          <tr class="border-b border-slate-200"><td class="py-1 text-slate-500">${tx('Absicherungslücke', 'Coverage Gap')}</td><td class="py-1 font-medium text-red-600">${tx('ca. 1.200 €/Monat', 'approx. €1,200/month')}</td></tr>
+          <tr><td class="py-1 text-slate-500">${tx('Extras', 'Extras')}</td><td class="py-1 font-medium">${tx('Nachversicherungsgarantie empfohlen', 'Subsequent insurance guarantee recommended')}</td></tr>
         </table>
       </div>`,
     };
@@ -379,12 +382,12 @@ function getDemoResponse(message, { currentView, modeId }) {
   if (lower.includes('cross-selling') || lower.includes('cross selling')) {
     return {
       content: `<div class="space-y-2">
-        <p class="font-semibold">Cross-Selling Chancen</p>
-        <p>Basierend auf dem aktuellen Vertragsbestand:</p>
+        <p class="font-semibold">${tx('Cross-Selling Chancen', 'Cross-Selling Opportunities')}</p>
+        <p>${tx('Basierend auf dem aktuellen Vertragsbestand:', 'Based on the current contract portfolio:')}</p>
         <div class="space-y-2 mt-2">
-          <div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-emerald-500"></span><strong>bAV</strong> — AG-Zuschuss nicht ausgeschöpft <span class="ml-auto text-xs bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full">85% Potenzial</span></div>
-          <div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-amber-500"></span><strong>Rechtsschutz</strong> — Kein bestehender Vertrag <span class="ml-auto text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full">70% Potenzial</span></div>
-          <div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-blue-500"></span><strong>Unfallversicherung</strong> — Nur Grundschutz <span class="ml-auto text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">55% Potenzial</span></div>
+          <div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-emerald-500"></span><strong>${tx('bAV', 'Company Pension')}</strong> — ${tx('AG-Zuschuss nicht ausgeschöpft', 'Employer subsidy not fully utilized')} <span class="ml-auto text-xs bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full">${tx('85% Potenzial', '85% Potential')}</span></div>
+          <div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-amber-500"></span><strong>${tx('Rechtsschutz', 'Legal Protection')}</strong> — ${tx('Kein bestehender Vertrag', 'No existing contract')} <span class="ml-auto text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full">${tx('70% Potenzial', '70% Potential')}</span></div>
+          <div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-blue-500"></span><strong>${tx('Unfallversicherung', 'Accident Insurance')}</strong> — ${tx('Nur Grundschutz', 'Basic coverage only')} <span class="ml-auto text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">${tx('55% Potenzial', '55% Potential')}</span></div>
         </div>
       </div>`,
     };
@@ -393,12 +396,12 @@ function getDemoResponse(message, { currentView, modeId }) {
   if (lower.includes('kundenpotenzial') || lower.includes('potenzial') || lower.includes('analysieren')) {
     return {
       content: `<div class="space-y-2">
-        <p class="font-semibold">Kundenpotenzial-Analyse</p>
+        <p class="font-semibold">${tx('Kundenpotenzial-Analyse', 'Customer Potential Analysis')}</p>
         <table class="w-full text-xs mt-1 border-collapse">
-          <tr class="border-b border-slate-200"><td class="py-1.5 text-slate-500">Absicherungsgrad</td><td class="py-1.5 font-medium">62% <span class="text-amber-600">— Lücken bei AK & AV</span></td></tr>
-          <tr class="border-b border-slate-200"><td class="py-1.5 text-slate-500">Lebenssituation</td><td class="py-1.5 font-medium">Familiengründung vor 2 J. → RL + Kinderabsicherung</td></tr>
-          <tr class="border-b border-slate-200"><td class="py-1.5 text-slate-500">Einkommen</td><td class="py-1.5 font-medium text-emerald-600">Überdurchschnittlich → Kapitalanlage-Potenzial</td></tr>
-          <tr><td class="py-1.5 text-slate-500">Nächster Impuls</td><td class="py-1.5 font-medium">Jahresgespräch in 3 Wochen terminieren</td></tr>
+          <tr class="border-b border-slate-200"><td class="py-1.5 text-slate-500">${tx('Absicherungsgrad', 'Coverage Level')}</td><td class="py-1.5 font-medium">62% <span class="text-amber-600">${tx('— Lücken bei AK & AV', '— Gaps in accident & pension insurance')}</span></td></tr>
+          <tr class="border-b border-slate-200"><td class="py-1.5 text-slate-500">${tx('Lebenssituation', 'Life Situation')}</td><td class="py-1.5 font-medium">${tx('Familiengründung vor 2 J. → RL + Kinderabsicherung', 'Family founded 2 yrs ago → term life + child coverage')}</td></tr>
+          <tr class="border-b border-slate-200"><td class="py-1.5 text-slate-500">${tx('Einkommen', 'Income')}</td><td class="py-1.5 font-medium text-emerald-600">${tx('Überdurchschnittlich → Kapitalanlage-Potenzial', 'Above average → investment potential')}</td></tr>
+          <tr><td class="py-1.5 text-slate-500">${tx('Nächster Impuls', 'Next Action')}</td><td class="py-1.5 font-medium">${tx('Jahresgespräch in 3 Wochen terminieren', 'Schedule annual review in 3 weeks')}</td></tr>
         </table>
       </div>`,
     };
@@ -407,16 +410,16 @@ function getDemoResponse(message, { currentView, modeId }) {
   if (lower.includes('gesprächsleitfaden') || lower.includes('gespräch') || lower.includes('leitfaden')) {
     return {
       content: `<div class="space-y-2">
-        <p class="font-semibold">Gesprächsleitfaden</p>
+        <p class="font-semibold">${tx('Gesprächsleitfaden', 'Conversation Guide')}</p>
         <ol class="list-decimal pl-4 space-y-1.5 text-[13px]">
-          <li><strong>Einstieg</strong> — Bezug auf letztes Gespräch, aktuelle Lebenssituation erfragen</li>
-          <li><strong>Bedarfsanalyse</strong> — Veränderungen seit letztem Kontakt? Neue Wünsche/Sorgen?</li>
-          <li><strong>Absicherungscheck</strong> — Bestehende Verträge gemeinsam durchgehen, Lücken aufzeigen</li>
-          <li><strong>Empfehlung</strong> — Max. 2 konkrete Produktvorschläge unterbreiten</li>
-          <li><strong>Abschluss</strong> — Nächste Schritte vereinbaren, Folgetermin festlegen</li>
+          <li><strong>${tx('Einstieg', 'Opening')}</strong> — ${tx('Bezug auf letztes Gespräch, aktuelle Lebenssituation erfragen', 'Reference last conversation, ask about current life situation')}</li>
+          <li><strong>${tx('Bedarfsanalyse', 'Needs Analysis')}</strong> — ${tx('Veränderungen seit letztem Kontakt? Neue Wünsche/Sorgen?', 'Changes since last contact? New wishes/concerns?')}</li>
+          <li><strong>${tx('Absicherungscheck', 'Coverage Check')}</strong> — ${tx('Bestehende Verträge gemeinsam durchgehen, Lücken aufzeigen', 'Review existing contracts together, identify gaps')}</li>
+          <li><strong>${tx('Empfehlung', 'Recommendation')}</strong> — ${tx('Max. 2 konkrete Produktvorschläge unterbreiten', 'Present max. 2 concrete product suggestions')}</li>
+          <li><strong>${tx('Abschluss', 'Closing')}</strong> — ${tx('Nächste Schritte vereinbaren, Folgetermin festlegen', 'Agree on next steps, schedule follow-up')}</li>
         </ol>
         <div class="mt-2 p-2 bg-amber-50 border border-amber-200 rounded text-xs text-amber-800">
-          💡 <strong>Tipp:</strong> Den Kunden zuerst erzählen lassen — offene Fragen stellen!
+          💡 <strong>${tx('Tipp:', 'Tip:')}</strong> ${tx('Den Kunden zuerst erzählen lassen — offene Fragen stellen!', 'Let the customer talk first — ask open-ended questions!')}
         </div>
       </div>`,
     };
@@ -425,12 +428,12 @@ function getDemoResponse(message, { currentView, modeId }) {
   if (lower.includes('kredit') || lower.includes('finanzierung')) {
     return {
       content: `<div class="space-y-2">
-        <p class="font-semibold">Kreditanalyse — Empfohlene Schritte</p>
+        <p class="font-semibold">${tx('Kreditanalyse — Empfohlene Schritte', 'Credit Analysis — Recommended Steps')}</p>
         <ol class="list-decimal pl-4 space-y-1">
-          <li><strong>Bonitätsprüfung</strong> — Schufa-Score und Einkommensnachweise prüfen</li>
-          <li><strong>Kapitaldienstfähigkeit</strong> — Monatl. Belastungsquote (max. 35–40%)</li>
-          <li><strong>Sicherheiten</strong> — Vorhandene Sicherheiten bewerten</li>
-          <li><strong>Konditionsvergleich</strong> — Passende Kreditprodukte gegenüberstellen</li>
+          <li><strong>${tx('Bonitätsprüfung', 'Credit Check')}</strong> — ${tx('Schufa-Score und Einkommensnachweise prüfen', 'Review credit score and income documentation')}</li>
+          <li><strong>${tx('Kapitaldienstfähigkeit', 'Debt Service Capacity')}</strong> — ${tx('Monatl. Belastungsquote (max. 35–40%)', 'Monthly debt-to-income ratio (max. 35–40%)')}</li>
+          <li><strong>${tx('Sicherheiten', 'Collateral')}</strong> — ${tx('Vorhandene Sicherheiten bewerten', 'Evaluate available collateral')}</li>
+          <li><strong>${tx('Konditionsvergleich', 'Rate Comparison')}</strong> — ${tx('Passende Kreditprodukte gegenüberstellen', 'Compare suitable credit products')}</li>
         </ol>
       </div>`,
     };
@@ -439,12 +442,12 @@ function getDemoResponse(message, { currentView, modeId }) {
   if (lower.includes('portfolio') || lower.includes('anlage') || lower.includes('depot')) {
     return {
       content: `<div class="space-y-2">
-        <p class="font-semibold">Portfolio-Analyse</p>
+        <p class="font-semibold">${tx('Portfolio-Analyse', 'Portfolio Analysis')}</p>
         <table class="w-full text-xs mt-1 border-collapse">
-          <tr class="border-b border-slate-200"><td class="py-1.5 text-slate-500">Allokation</td><td class="py-1.5 font-medium">45% Aktien · 30% Anleihen · 15% Immo · 10% Cash</td></tr>
-          <tr class="border-b border-slate-200"><td class="py-1.5 text-slate-500">Risikoprofil</td><td class="py-1.5 font-medium">Ausgewogen (Stufe 3/5)</td></tr>
+          <tr class="border-b border-slate-200"><td class="py-1.5 text-slate-500">${tx('Allokation', 'Allocation')}</td><td class="py-1.5 font-medium">${tx('45% Aktien · 30% Anleihen · 15% Immo · 10% Cash', '45% Equities · 30% Bonds · 15% Real Estate · 10% Cash')}</td></tr>
+          <tr class="border-b border-slate-200"><td class="py-1.5 text-slate-500">${tx('Risikoprofil', 'Risk Profile')}</td><td class="py-1.5 font-medium">${tx('Ausgewogen (Stufe 3/5)', 'Balanced (Level 3/5)')}</td></tr>
           <tr class="border-b border-slate-200"><td class="py-1.5 text-slate-500">Performance YTD</td><td class="py-1.5 font-medium text-emerald-600">+4,2% (Benchmark: +3,8%)</td></tr>
-          <tr><td class="py-1.5 text-slate-500">Empfehlung</td><td class="py-1.5 font-medium">EU-Dividendenwerte ↑ · Liquidität auf 5% ↓</td></tr>
+          <tr><td class="py-1.5 text-slate-500">${tx('Empfehlung', 'Recommendation')}</td><td class="py-1.5 font-medium">${tx('EU-Dividendenwerte ↑ · Liquidität auf 5% ↓', 'EU dividend stocks ↑ · Liquidity to 5% ↓')}</td></tr>
         </table>
       </div>`,
     };
@@ -452,20 +455,20 @@ function getDemoResponse(message, { currentView, modeId }) {
 
   return {
     content: `<div class="space-y-2">
-      <p>Ich habe die relevanten Kundendaten und Vertriebsinformationen analysiert.</p>
-      <p>Basierend auf dem aktuellen Bestand empfehle ich:</p>
+      <p>${tx('Ich habe die relevanten Kundendaten und Vertriebsinformationen analysiert.', 'I have analyzed the relevant customer data and sales information.')}</p>
+      <p>${tx('Basierend auf dem aktuellen Bestand empfehle ich:', 'Based on the current portfolio, I recommend:')}</p>
       <ul class="list-disc pl-4 space-y-1">
-        <li>Bestehende Vertragsbeziehungen prüfen</li>
-        <li>Identifizierte Bedarfslücken gezielt ansprechen</li>
-        <li>Nächsten Kundenkontakt terminieren</li>
+        <li>${tx('Bestehende Vertragsbeziehungen prüfen', 'Review existing contract relationships')}</li>
+        <li>${tx('Identifizierte Bedarfslücken gezielt ansprechen', 'Address identified coverage gaps')}</li>
+        <li>${tx('Nächsten Kundenkontakt terminieren', 'Schedule next customer contact')}</li>
       </ul>
-      <p class="text-slate-500">Soll ich einen konkreten Bereich genauer analysieren?</p>
+      <p class="text-slate-500">${tx('Soll ich einen konkreten Bereich genauer analysieren?', 'Would you like me to analyze a specific area in more detail?')}</p>
     </div>`,
   };
 }
 
 export default function VertriebsAssistent() {
-  const { t } = useTranslation();
+  const { t, lang } = useTranslation();
   const { modeId, config, currentView, setActiveTab, selectedKundeId } = useMode();
   const [isOpen, setIsOpen] = useState(true);
   const [messages, setMessages] = useState([]);
@@ -524,7 +527,13 @@ export default function VertriebsAssistent() {
         setTimeout(() => {
           setMessages((prev) => [...prev, {
             role: 'assistant',
-            content: `<div class="space-y-2">
+            content: lang === 'en'
+              ? `<div class="space-y-2">
+              <p class="font-semibold">Compose Letter</p>
+              <p>On which topic should I compose a letter for <strong>${currentKunde?.name || 'the client'}</strong>?</p>
+              <p class="text-xs text-slate-500">Please select a lead:</p>
+            </div>`
+              : `<div class="space-y-2">
               <p class="font-semibold">Anschreiben formulieren</p>
               <p>Zu welchem Thema soll ich ein Anschreiben für <strong>${currentKunde?.name || 'den Mandanten'}</strong> erstellen?</p>
               <p class="text-xs text-slate-500">Bitte wähle einen Lead aus:</p>
@@ -580,7 +589,7 @@ export default function VertriebsAssistent() {
         }
       }, 1200);
     },
-    [isTyping, currentView, setActiveTab, anschreibenStep, kundeLeads, currentKunde, modeId],
+    [isTyping, currentView, setActiveTab, anschreibenStep, kundeLeads, currentKunde, modeId, lang],
   );
 
   const handleSend = () => sendMessage(input);
@@ -602,14 +611,14 @@ export default function VertriebsAssistent() {
     if (action === 'download-docx' && briefB64) {
       const briefText = decodeBrief(briefB64);
       const htmlContent = `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
-<head><meta charset="utf-8"><title>Anschreiben</title>
+<head><meta charset="utf-8"><title>${getLang() === 'en' ? 'Letter' : 'Anschreiben'}</title>
 <style>body { font-family: Calibri, Arial, sans-serif; font-size: 11pt; line-height: 1.6; white-space: pre-line; }</style>
 </head><body>${briefText.replace(/\n/g, '<br>')}</body></html>`;
       const blob = new Blob(['\ufeff', htmlContent], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = 'Anschreiben.docx';
+      a.download = getLang() === 'en' ? 'Letter.docx' : 'Anschreiben.docx';
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -618,7 +627,7 @@ export default function VertriebsAssistent() {
 
     if (action === 'open-email' && briefB64) {
       const briefText = decodeBrief(briefB64);
-      const subject = subjectB64 ? decodeBrief(subjectB64) : 'Anschreiben';
+      const subject = subjectB64 ? decodeBrief(subjectB64) : (getLang() === 'en' ? 'Letter' : 'Anschreiben');
       const mailtoUrl = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(briefText)}`;
       window.open(mailtoUrl, '_blank');
     }

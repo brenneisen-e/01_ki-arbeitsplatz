@@ -103,9 +103,9 @@ export default function FamilieNetzwerkTab({ kunde }) {
   }
 
   const mitglieder = data.mitglieder || [];
-  const mandant = mitglieder.find(m => m.rolle === 'Mandant' || m.rolle === 'Mandant (Institution)');
-  const partner = mitglieder.find(m => m.rolle === 'Ehepartnerin' || m.rolle === 'Ehefrau' || m.rolle === 'Partner');
-  const kinder = mitglieder.filter(m => m.rolle === 'Sohn' || m.rolle === 'Tochter' || m.rolle === 'Kind');
+  const mandant = mitglieder.find(m => m.rolle === 'Mandant' || m.rolle === 'Mandant (Institution)' || m.rolle === 'Client' || m.rolle === 'Client (Institution)');
+  const partner = mitglieder.find(m => m.rolle === 'Ehepartnerin' || m.rolle === 'Ehefrau' || m.rolle === 'Partner' || m.rolle === 'Spouse');
+  const kinder = mitglieder.filter(m => m.rolle === 'Sohn' || m.rolle === 'Tochter' || m.rolle === 'Kind' || m.rolle === 'Son' || m.rolle === 'Daughter' || m.rolle === 'Child');
   const unt = data.unternehmen;
 
   return (
@@ -279,7 +279,7 @@ export default function FamilieNetzwerkTab({ kunde }) {
                         {m.typ || m.art}
                       </span>
                       {m.seit && (
-                        <span className="text-xs text-slate-400">seit {m.seit}</span>
+                        <span className="text-xs text-slate-400">{t('seitLabel')} {m.seit}</span>
                       )}
                     </div>
                   </div>

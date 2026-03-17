@@ -157,7 +157,7 @@ function getCockpitQuickActions(t) {
 function getCockpitDemoResponse(message) {
   const lower = message.toLowerCase();
 
-  if (lower.includes('top') && lower.includes('ergebnis')) {
+  if ((lower.includes('top') && lower.includes('ergebnis')) || (lower.includes('top') && lower.includes('result'))) {
     return {
       content: `<div class="space-y-2">
         <p class="font-semibold">${tx('Top 5 Vermittler nach Ergebnis:', 'Top 5 Agents by Result:')}</p>
@@ -191,7 +191,7 @@ function getCockpitDemoResponse(message) {
     };
   }
 
-  if (lower.includes('performance') || lower.includes('gesamt')) {
+  if (lower.includes('performance') || lower.includes('gesamt') || lower.includes('overview')) {
     return {
       content: `<div class="space-y-2">
         <p class="font-semibold">${tx('Gesamt-Performance Überblick:', 'Overall Performance Overview:')}</p>
@@ -208,7 +208,7 @@ function getCockpitDemoResponse(message) {
     };
   }
 
-  if (lower.includes('auffällig') || lower.includes('auffallig') || lower.includes('ungewöhnlich') || lower.includes('anomalie')) {
+  if (lower.includes('auffällig') || lower.includes('auffallig') || lower.includes('ungewöhnlich') || lower.includes('anomalie') || lower.includes('notable agents') || lower.includes('anomal')) {
     return {
       content: `<div class="space-y-2">
         <p class="font-semibold">${tx('Auffällige Vermittler (Anomalie-Erkennung):', 'Notable Agents (Anomaly Detection):')}</p>
@@ -291,7 +291,7 @@ function getCockpitDemoResponse(message) {
 function getDemoResponse(message, { currentView, modeId }) {
   const lower = message.toLowerCase();
 
-  if (lower.includes('vertriebspotentiale') || lower.includes('vertriebspotenziale') || lower.includes('neue leads') || lower.includes('leads anzeigen')) {
+  if (lower.includes('vertriebspotentiale') || lower.includes('vertriebspotenziale') || lower.includes('neue leads') || lower.includes('leads anzeigen') || lower.includes('show leads') || lower.includes('analyze leads') || lower.includes('new leads')) {
     if (modeId === 'vermoegensverwaltung') {
       return {
         content: `<div class="space-y-3">
@@ -359,7 +359,7 @@ function getDemoResponse(message, { currentView, modeId }) {
     };
   }
 
-  if (lower.includes('bu') || lower.includes('berufsunfähigkeit')) {
+  if (lower.includes('bu') || lower.includes('berufsunfähigkeit') || lower.includes('disability insurance')) {
     return {
       content: `<div class="space-y-2">
         <p class="font-semibold">${tx('BU-Analyse', 'Disability Insurance Analysis')}</p>
@@ -376,7 +376,7 @@ function getDemoResponse(message, { currentView, modeId }) {
     };
   }
 
-  if (lower.includes('cross-selling') || lower.includes('cross selling')) {
+  if (lower.includes('cross-selling') || lower.includes('cross selling') || lower.includes('cross-sell')) {
     return {
       content: `<div class="space-y-2">
         <p class="font-semibold">${tx('Cross-Selling Chancen', 'Cross-Selling Opportunities')}</p>
@@ -390,7 +390,7 @@ function getDemoResponse(message, { currentView, modeId }) {
     };
   }
 
-  if (lower.includes('kundenpotenzial') || lower.includes('potenzial') || lower.includes('analysieren')) {
+  if (lower.includes('kundenpotenzial') || lower.includes('potenzial') || lower.includes('analysieren') || lower.includes('customer potential') || lower.includes('client potential') || lower.includes('mandant potential')) {
     return {
       content: `<div class="space-y-2">
         <p class="font-semibold">${tx('Kundenpotenzial-Analyse', 'Customer Potential Analysis')}</p>
@@ -404,7 +404,7 @@ function getDemoResponse(message, { currentView, modeId }) {
     };
   }
 
-  if (lower.includes('gesprächsleitfaden') || lower.includes('gespräch') || lower.includes('leitfaden')) {
+  if (lower.includes('gesprächsleitfaden') || lower.includes('gespräch') || lower.includes('leitfaden') || lower.includes('conversation guide')) {
     return {
       content: `<div class="space-y-2">
         <p class="font-semibold">${tx('Gesprächsleitfaden', 'Conversation Guide')}</p>
@@ -422,7 +422,7 @@ function getDemoResponse(message, { currentView, modeId }) {
     };
   }
 
-  if (lower.includes('kredit') || lower.includes('finanzierung')) {
+  if (lower.includes('kredit') || lower.includes('finanzierung') || lower.includes('credit analysis') || lower.includes('loan')) {
     return {
       content: `<div class="space-y-2">
         <p class="font-semibold">${tx('Kreditanalyse — Empfohlene Schritte', 'Credit Analysis — Recommended Steps')}</p>
@@ -436,7 +436,7 @@ function getDemoResponse(message, { currentView, modeId }) {
     };
   }
 
-  if (lower.includes('portfolio') || lower.includes('anlage') || lower.includes('depot')) {
+  if (lower.includes('portfolio') || lower.includes('anlage') || lower.includes('depot') || lower.includes('portfolio analysis')) {
     return {
       content: `<div class="space-y-2">
         <p class="font-semibold">${tx('Portfolio-Analyse', 'Portfolio Analysis')}</p>
@@ -520,7 +520,8 @@ export default function VertriebsAssistent() {
       setInput('');
 
       // Handle "Anschreiben formulieren" flow
-      if (text.trim().toLowerCase().includes('anschreiben formulieren') && currentView === 'detail' && kundeLeads.length > 0) {
+      const lowerText = text.trim().toLowerCase();
+      if ((lowerText.includes('anschreiben formulieren') || lowerText.includes('draft letter')) && currentView === 'detail' && kundeLeads.length > 0) {
         setIsTyping(true);
         setTimeout(() => {
           setMessages((prev) => [...prev, {

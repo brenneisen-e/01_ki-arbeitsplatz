@@ -1,6 +1,8 @@
 import { clsx } from 'clsx';
+import useTranslation from '../../i18n/useTranslation';
 
 export default function TabBar({ tabs, activeTab, onTabChange }) {
+  const { t, lang } = useTranslation();
   return (
     <div className="flex gap-1 border-b border-slate-200 mb-6">
       {tabs.map(tab => (
@@ -15,7 +17,7 @@ export default function TabBar({ tabs, activeTab, onTabChange }) {
           )}
           style={activeTab === tab.id ? { borderColor: 'var(--mode-primary-light)' } : undefined}
         >
-          {tab.label}
+          {tab.labelKey ? t(tab.labelKey) : (lang === 'en' && tab.labelEn ? tab.labelEn : tab.label)}
         </button>
       ))}
     </div>

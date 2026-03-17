@@ -79,11 +79,11 @@ export default function StornoTab() {
                     <td className="px-4 py-3 text-sm font-medium text-slate-700">{v.kunde}</td>
                     <td className="px-4 py-3 text-sm text-slate-700">{v.produkt}</td>
                     <td className="px-4 py-3 text-sm text-slate-500">{v.sparte}</td>
-                    <td className="px-4 py-3 text-sm font-mono text-slate-700">{v.praemie?.toLocaleString('de-DE')}€</td>
-                    <td className="px-4 py-3 text-sm text-slate-500">{new Date(v.stornoDatum).toLocaleDateString('de-DE')}</td>
+                    <td className="px-4 py-3 text-sm font-mono text-slate-700">{v.praemie?.toLocaleString((localStorage.getItem('kia_language') || 'de') === 'en' ? 'en-US' : 'de-DE')}€</td>
+                    <td className="px-4 py-3 text-sm text-slate-500">{new Date(v.stornoDatum).toLocaleDateString((localStorage.getItem('kia_language') || 'de') === 'en' ? 'en-GB' : 'de-DE')}</td>
                     <td className="px-4 py-3 text-sm">
                       <span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${GRUND_COLORS[v.grund] || GRUND_COLORS['Sonstiges']}`}>
-                        {v.grund}
+                        {t(`stornoGrund.${v.grund.toLowerCase()}`) || v.grund}
                       </span>
                     </td>
                     <td className="px-4 py-3 text-sm">

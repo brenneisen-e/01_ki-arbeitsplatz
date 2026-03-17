@@ -5,6 +5,10 @@ import useTranslation from '../../i18n/useTranslation';
 import { KUNDEN_BY_MODE } from '../../data';
 import { VV_LEADS } from '../../data/vvExtended';
 
+// Module-level i18n helpers (for functions outside React component scope)
+function getLang() { try { return localStorage.getItem('kia_language') || 'de'; } catch { return 'de'; } }
+function tx(de, en) { return getLang() === 'en' ? en : de; }
+
 function getWelcomeMessage(modeId, t) {
   const keys = {
     versicherung: 'welcomeVersicherung',
@@ -44,10 +48,14 @@ function getAnschreibenLeadOptions(kundeId) {
 }
 
 function generateAnschreibenResponse(lead, kunde) {
-  const name = kunde?.name || 'Mandant';
-  const firstName = name.split(/\s+/).filter(w => !/^(Dr\.|Prof\.|Fam\.)$/i.test(w))[0] || 'Herr/Frau';
-  const anrede = name.includes('Dr.') ? `Sehr geehrter Herr ${name.replace('Dr. ', '')}` : `Sehr geehrter ${name}`;
-  const today = new Date().toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+  const isEn = getLang() === 'en';
+  const name = kunde?.name || tx('Mandant', 'Client');
+  const firstName = name.split(/\s+/).filter(w => !/^(Dr\.|Prof\.|Fam\.)$/i.test(w))[0] || tx('Herr/Frau', 'Mr./Ms.');
+  const anrede = isEn
+    ? (name.includes('Dr.') ? `Dear Mr. ${name.replace('Dr. ', '')}` : `Dear ${name}`)
+    : (name.includes('Dr.') ? `Sehr geehrter Herr ${name.replace('Dr. ', '')}` : `Sehr geehrter ${name}`);
+  const dateLocale = isEn ? 'en-US' : 'de-DE';
+  const today = new Date().toLocaleDateString(dateLocale, { day: '2-digit', month: '2-digit', year: 'numeric' });
 
   let thema = lead.name;
   let bezug = '';
@@ -55,26 +63,48 @@ function generateAnschreibenResponse(lead, kunde) {
 
   if (lead.id === 'BM016') {
     thema = 'Defense & Aerospace Investments';
-    bezug = 'Ihr Interesse am Thema Defense-Investments, das wir in mehreren Kontaktpunkten registriert haben';
+    bezug = isEn
+      ? 'your interest in the topic of defense investments, which we have noted across several touchpoints'
+      : 'Ihr Interesse am Thema Defense-Investments, das wir in mehreren Kontaktpunkten registriert haben';
     whitepaper = 'European Defense Stocks — Due Diligence Report 2026';
   } else if (lead.quelle === 'fremdbank') {
-    thema = 'Konsolidierung Ihrer Vermögenswerte';
-    bezug = `die Optimierungsmöglichkeiten bei Ihrem ${lead.name}`;
+    thema = isEn ? 'Consolidation of Your Assets' : 'Konsolidierung Ihrer Vermögenswerte';
+    bezug = isEn
+      ? `the optimization opportunities regarding your ${lead.name}`
+      : `die Optimierungsmöglichkeiten bei Ihrem ${lead.name}`;
   } else if (lead.quelle === 'liquiditaet') {
-    thema = 'Wiederanlage-Strategie';
-    bezug = `die bevorstehende Fälligkeit bzw. Liquidität im Rahmen von ${lead.name}`;
+    thema = isEn ? 'Reinvestment Strategy' : 'Wiederanlage-Strategie';
+    bezug = isEn
+      ? `the upcoming maturity and liquidity related to ${lead.name}`
+      : `die bevorstehende Fälligkeit bzw. Liquidität im Rahmen von ${lead.name}`;
   } else if (lead.quelle === 'lifeevent') {
-    thema = 'Nachfolgeplanung';
-    bezug = `Ihre strategische Planung im Bereich ${lead.name}`;
+    thema = isEn ? 'Succession Planning' : 'Nachfolgeplanung';
+    bezug = isEn
+      ? `your strategic planning in the area of ${lead.name}`
+      : `Ihre strategische Planung im Bereich ${lead.name}`;
   } else {
-    bezug = `das Thema ${lead.name}`;
+    bezug = isEn ? `the topic of ${lead.name}` : `das Thema ${lead.name}`;
   }
 
   const wpRef = whitepaper
-    ? `\n\nAls Gesprächsgrundlage möchte ich Ihnen gerne unser aktuelles Whitepaper „${whitepaper}" mitbringen, das wir vor zwei Tagen veröffentlicht haben. Es enthält eine fundierte Analyse der aktuellen Investmentchancen und regulatorischen Rahmenbedingungen.`
+    ? (isEn
+      ? `\n\nAs a basis for our discussion, I would like to bring you our latest whitepaper "${whitepaper}", which we published two days ago. It contains a thorough analysis of current investment opportunities and regulatory frameworks.`
+      : `\n\nAls Gesprächsgrundlage möchte ich Ihnen gerne unser aktuelles Whitepaper „${whitepaper}" mitbringen, das wir vor zwei Tagen veröffentlicht haben. Es enthält eine fundierte Analyse der aktuellen Investmentchancen und regulatorischen Rahmenbedingungen.`)
     : '';
 
-  const brief = `${anrede},
+  const brief = isEn
+    ? `${anrede},
+
+I hope this message finds you well. I am writing to you regarding ${bezug}.
+
+I would be delighted to discuss the opportunities and potential that arise for your portfolio in a personal meeting.${wpRef}
+
+May I suggest an appointment within the next two weeks? I am flexible with timing and happy to accommodate your schedule.
+
+Kind regards,
+Dr. Thomas Richter
+Senior Advisor | HRK LUNIS AG`
+    : `${anrede},
 
 ich hoffe, es geht Ihnen gut. Ich schreibe Ihnen bezüglich ${bezug}.
 
@@ -86,7 +116,9 @@ Mit freundlichen Grüßen
 Dr. Thomas Richter
 Senior Advisor | HRK LUNIS AG`;
 
-  const emailSubject = `Einladung: Persönliches Gespräch — ${thema}`;
+  const emailSubject = isEn
+    ? `Invitation: Personal Meeting — ${thema}`
+    : `Einladung: Persönliches Gespräch — ${thema}`;
 
   const docxSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:4px"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>`;
   const emailSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:4px"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>`;
@@ -96,27 +128,27 @@ Senior Advisor | HRK LUNIS AG`;
   const subjectBase64 = btoa(unescape(encodeURIComponent(emailSubject)));
 
   return `<div class="space-y-3">
-    <p class="font-semibold">Anschreiben generiert für: ${lead.name}</p>
+    <p class="font-semibold">${tx('Anschreiben generiert für:', 'Letter generated for:')} ${lead.name}</p>
 
     <div class="bg-white border border-slate-200 rounded-lg p-3 text-xs space-y-1">
       <div class="flex items-center gap-2 mb-2">
         <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-blue-50 text-blue-700 text-[10px] font-medium">
-          ${docxSvg} DOCX Anschreiben
+          ${docxSvg} ${tx('DOCX Anschreiben', 'DOCX Letter')}
         </span>
         <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-purple-50 text-purple-700 text-[10px] font-medium">
-          ${emailSvg} EML E-Mail
+          ${emailSvg} ${tx('EML E-Mail', 'EML Email')}
         </span>
       </div>
       <div class="bg-slate-50 rounded p-2.5 text-[11px] leading-relaxed whitespace-pre-line font-mono">${brief}</div>
     </div>
 
     <div class="bg-amber-50 border border-amber-200 rounded-lg p-2 text-xs text-amber-800">
-      <strong>Betreff (E-Mail):</strong> ${emailSubject}
+      <strong>${tx('Betreff (E-Mail):', 'Subject (Email):')} </strong> ${emailSubject}
     </div>
 
     <div class="flex gap-2 mt-2">
-      <button data-action="download-docx" data-brief="${briefBase64}" class="inline-flex items-center px-3 py-1.5 bg-blue-600 text-white rounded-lg text-xs font-medium hover:bg-blue-700">${docxSvg} Als DOCX herunterladen</button>
-      <button data-action="open-email" data-brief="${briefBase64}" data-subject="${subjectBase64}" class="inline-flex items-center px-3 py-1.5 bg-purple-600 text-white rounded-lg text-xs font-medium hover:bg-purple-700">${emailSvg} Als E-Mail öffnen</button>
+      <button data-action="download-docx" data-brief="${briefBase64}" class="inline-flex items-center px-3 py-1.5 bg-blue-600 text-white rounded-lg text-xs font-medium hover:bg-blue-700">${docxSvg} ${tx('Als DOCX herunterladen', 'Download as DOCX')}</button>
+      <button data-action="open-email" data-brief="${briefBase64}" data-subject="${subjectBase64}" class="inline-flex items-center px-3 py-1.5 bg-purple-600 text-white rounded-lg text-xs font-medium hover:bg-purple-700">${emailSvg} ${tx('Als E-Mail öffnen', 'Open as Email')}</button>
     </div>
   </div>`;
 }
@@ -131,7 +163,7 @@ function getCockpitDemoResponse(message) {
   if (lower.includes('top') && lower.includes('ergebnis')) {
     return {
       content: `<div class="space-y-2">
-        <p class="font-semibold">Top 5 Vermittler nach Ergebnis:</p>
+        <p class="font-semibold">${tx('Top 5 Vermittler nach Ergebnis:', 'Top 5 Agents by Result:')}</p>
         <ol class="list-decimal pl-4 space-y-1 text-[13px]">
           <li><strong>Maria Musterfrau</strong> — €890k</li>
           <li><strong>Thomas Weber</strong> — €820k</li>
@@ -139,7 +171,7 @@ function getCockpitDemoResponse(message) {
           <li><strong>Klaus Richter</strong> — €750k</li>
           <li><strong>Petra Hoffmann</strong> — €720k</li>
         </ol>
-        <p class="text-xs text-slate-500 mt-2">→ <em>Die Tabelle zeigt jetzt die Top 5 Vermittler.</em></p>
+        <p class="text-xs text-slate-500 mt-2">→ <em>${tx('Die Tabelle zeigt jetzt die Top 5 Vermittler.', 'The table now shows the top 5 agents.')}</em></p>
       </div>`,
       cockpitAction: { view: 'table', tableView: 'agenturen' },
     };
@@ -148,7 +180,7 @@ function getCockpitDemoResponse(message) {
   if (lower.includes('top') && lower.includes('neugeschäft')) {
     return {
       content: `<div class="space-y-2">
-        <p class="font-semibold">Top 5 Vermittler nach Neugeschäft:</p>
+        <p class="font-semibold">${tx('Top 5 Vermittler nach Neugeschäft:', 'Top 5 Agents by New Business:')}</p>
         <ol class="list-decimal pl-4 space-y-1 text-[13px]">
           <li><strong>Maria Musterfrau</strong> — €890k</li>
           <li><strong>Thomas Weber</strong> — €820k</li>
@@ -156,7 +188,7 @@ function getCockpitDemoResponse(message) {
           <li><strong>Klaus Richter</strong> — €750k</li>
           <li><strong>Petra Hoffmann</strong> — €720k</li>
         </ol>
-        <p class="text-xs text-slate-500 mt-2">→ <em>Die Tabelle zeigt jetzt die Top 5 Vermittler.</em></p>
+        <p class="text-xs text-slate-500 mt-2">→ <em>${tx('Die Tabelle zeigt jetzt die Top 5 Vermittler.', 'The table now shows the top 5 agents.')}</em></p>
       </div>`,
       cockpitAction: { view: 'table', tableView: 'agenturen' },
     };
@@ -165,16 +197,16 @@ function getCockpitDemoResponse(message) {
   if (lower.includes('performance') || lower.includes('gesamt')) {
     return {
       content: `<div class="space-y-2">
-        <p class="font-semibold">Gesamt-Performance Überblick:</p>
+        <p class="font-semibold">${tx('Gesamt-Performance Überblick:', 'Overall Performance Overview:')}</p>
         <table class="w-full text-xs mt-1 border-collapse">
-          <tr class="border-b border-slate-200"><td class="py-1.5 text-slate-500">Neugeschäft YTD</td><td class="py-1.5 font-medium font-mono">€38,1 Mio</td></tr>
-          <tr class="border-b border-slate-200"><td class="py-1.5 text-slate-500">Bestand</td><td class="py-1.5 font-medium font-mono">€141,9 Mrd</td></tr>
-          <tr class="border-b border-slate-200"><td class="py-1.5 text-slate-500">Stornoquote</td><td class="py-1.5 font-medium"><span class="text-emerald-600">4,9%</span> (Ziel: &lt;5,0%)</td></tr>
+          <tr class="border-b border-slate-200"><td class="py-1.5 text-slate-500">${tx('Neugeschäft YTD', 'New Business YTD')}</td><td class="py-1.5 font-medium font-mono">€38,1 ${tx('Mio', 'M')}</td></tr>
+          <tr class="border-b border-slate-200"><td class="py-1.5 text-slate-500">${tx('Bestand', 'Portfolio')}</td><td class="py-1.5 font-medium font-mono">€141,9 ${tx('Mrd', 'B')}</td></tr>
+          <tr class="border-b border-slate-200"><td class="py-1.5 text-slate-500">${tx('Stornoquote', 'Cancellation Rate')}</td><td class="py-1.5 font-medium"><span class="text-emerald-600">4,9%</span> (${tx('Ziel', 'Target')}: &lt;5,0%)</td></tr>
           <tr class="border-b border-slate-200"><td class="py-1.5 text-slate-500">NPS Score</td><td class="py-1.5 font-medium">48 <span class="text-emerald-600">(+6 YoY)</span></td></tr>
           <tr class="border-b border-slate-200"><td class="py-1.5 text-slate-500">Combined Ratio</td><td class="py-1.5 font-medium">91,0%</td></tr>
-          <tr><td class="py-1.5 text-slate-500">Gesamtergebnis</td><td class="py-1.5 font-medium font-mono text-emerald-600">€1,9 Mio</td></tr>
+          <tr><td class="py-1.5 text-slate-500">${tx('Gesamtergebnis', 'Total Result')}</td><td class="py-1.5 font-medium font-mono text-emerald-600">€1,9 ${tx('Mio', 'M')}</td></tr>
         </table>
-        <p class="text-xs text-slate-500 mt-2">→ <em>Positive Entwicklung über alle KPIs.</em></p>
+        <p class="text-xs text-slate-500 mt-2">→ <em>${tx('Positive Entwicklung über alle KPIs.', 'Positive trend across all KPIs.')}</em></p>
       </div>`,
     };
   }
@@ -182,14 +214,14 @@ function getCockpitDemoResponse(message) {
   if (lower.includes('auffällig') || lower.includes('auffallig') || lower.includes('ungewöhnlich') || lower.includes('anomalie')) {
     return {
       content: `<div class="space-y-2">
-        <p class="font-semibold">Auffällige Vermittler (Anomalie-Erkennung):</p>
-        <p class="text-[13px]">4 Vermittler mit auffälligen Werten identifiziert:</p>
+        <p class="font-semibold">${tx('Auffällige Vermittler (Anomalie-Erkennung):', 'Notable Agents (Anomaly Detection):')}</p>
+        <p class="text-[13px]">${tx('4 Vermittler mit auffälligen Werten identifiziert:', '4 agents with notable values identified:')}</p>
         <div class="space-y-1.5 mt-2">
-          <div class="flex items-center gap-2 text-[13px]"><span class="w-2 h-2 rounded-full bg-red-500"></span><strong>2×</strong> Hohe Stornoquote (&gt;15%)</div>
-          <div class="flex items-center gap-2 text-[13px]"><span class="w-2 h-2 rounded-full bg-amber-500"></span><strong>1×</strong> Niedriger NPS Score (&lt;30)</div>
-          <div class="flex items-center gap-2 text-[13px]"><span class="w-2 h-2 rounded-full bg-orange-500"></span><strong>1×</strong> Bestandsrückgang (&gt;10% YoY)</div>
+          <div class="flex items-center gap-2 text-[13px]"><span class="w-2 h-2 rounded-full bg-red-500"></span><strong>2×</strong> ${tx('Hohe Stornoquote', 'High Cancellation Rate')} (&gt;15%)</div>
+          <div class="flex items-center gap-2 text-[13px]"><span class="w-2 h-2 rounded-full bg-amber-500"></span><strong>1×</strong> ${tx('Niedriger NPS Score', 'Low NPS Score')} (&lt;30)</div>
+          <div class="flex items-center gap-2 text-[13px]"><span class="w-2 h-2 rounded-full bg-orange-500"></span><strong>1×</strong> ${tx('Bestandsrückgang', 'Portfolio Decline')} (&gt;10% YoY)</div>
         </div>
-        <p class="text-xs text-slate-500 mt-2">→ <em>Die KI-Analyse-Spalte zeigt Ursachen und Handlungsempfehlungen.</em></p>
+        <p class="text-xs text-slate-500 mt-2">→ <em>${tx('Die KI-Analyse-Spalte zeigt Ursachen und Handlungsempfehlungen.', 'The AI analysis column shows causes and recommended actions.')}</em></p>
       </div>`,
       cockpitAction: { view: 'table', tableView: 'agenturen' },
     };
@@ -198,15 +230,15 @@ function getCockpitDemoResponse(message) {
   if (lower.includes('bundesland') || lower.includes('bundesländ')) {
     return {
       content: `<div class="space-y-2">
-        <p class="font-semibold">Bundesland-Ranking nach Performance:</p>
+        <p class="font-semibold">${tx('Bundesland-Ranking nach Performance:', 'Federal State Ranking by Performance:')}</p>
         <ol class="list-decimal pl-4 space-y-1 text-[13px]">
-          <li><strong>Bayern</strong> — Score: 87 · NG: €5,8 Mio · Storno: 4,8%</li>
-          <li><strong>Baden-Württemberg</strong> — Score: 84 · NG: €5,2 Mio · Storno: 4,9%</li>
-          <li><strong>NRW</strong> — Score: 81 · NG: €6,1 Mio · Storno: 5,2%</li>
-          <li><strong>Hessen</strong> — Score: 78 · NG: €4,2 Mio · Storno: 5,0%</li>
-          <li><strong>Hamburg</strong> — Score: 75 · NG: €3,8 Mio · Storno: 4,5%</li>
+          <li><strong>Bayern</strong> — Score: 87 · ${tx('NG', 'NB')}: €5,8 ${tx('Mio', 'M')} · ${tx('Storno', 'Canc.')}: 4,8%</li>
+          <li><strong>Baden-Württemberg</strong> — Score: 84 · ${tx('NG', 'NB')}: €5,2 ${tx('Mio', 'M')} · ${tx('Storno', 'Canc.')}: 4,9%</li>
+          <li><strong>NRW</strong> — Score: 81 · ${tx('NG', 'NB')}: €6,1 ${tx('Mio', 'M')} · ${tx('Storno', 'Canc.')}: 5,2%</li>
+          <li><strong>Hessen</strong> — Score: 78 · ${tx('NG', 'NB')}: €4,2 ${tx('Mio', 'M')} · ${tx('Storno', 'Canc.')}: 5,0%</li>
+          <li><strong>Hamburg</strong> — Score: 75 · ${tx('NG', 'NB')}: €3,8 ${tx('Mio', 'M')} · ${tx('Storno', 'Canc.')}: 4,5%</li>
         </ol>
-        <p class="text-xs text-slate-500 mt-2">→ <em>Performance-Score = gewichteter Mix aus NG, Storno, NPS</em></p>
+        <p class="text-xs text-slate-500 mt-2">→ <em>${tx('Performance-Score = gewichteter Mix aus NG, Storno, NPS', 'Performance score = weighted mix of NB, cancellations, NPS')}</em></p>
       </div>`,
       cockpitAction: { view: 'table', tableView: 'bundeslaender' },
     };
@@ -215,14 +247,14 @@ function getCockpitDemoResponse(message) {
   if (lower.includes('storno') && lower.includes('segment')) {
     return {
       content: `<div class="space-y-2">
-        <p class="font-semibold">Stornoquoten nach Segment:</p>
+        <p class="font-semibold">${tx('Stornoquoten nach Segment:', 'Cancellation Rates by Segment:')}</p>
         <table class="w-full text-xs mt-1 border-collapse">
-          <tr class="border-b border-slate-200"><td class="py-1 font-medium">Leben</td><td class="py-1 font-mono">5,8%</td><td class="py-1 text-emerald-600">-0,3%</td></tr>
-          <tr class="border-b border-slate-200"><td class="py-1 font-medium">Kranken</td><td class="py-1 font-mono">4,2%</td><td class="py-1 text-emerald-600">-0,5%</td></tr>
-          <tr class="border-b border-slate-200"><td class="py-1 font-medium">Schaden</td><td class="py-1 font-mono">8,5%</td><td class="py-1 text-red-500">+0,2%</td></tr>
-          <tr><td class="py-1 font-medium">Kfz</td><td class="py-1 font-mono">12,1%</td><td class="py-1 text-emerald-600">-0,8%</td></tr>
+          <tr class="border-b border-slate-200"><td class="py-1 font-medium">${tx('Leben', 'Life')}</td><td class="py-1 font-mono">5,8%</td><td class="py-1 text-emerald-600">-0,3%</td></tr>
+          <tr class="border-b border-slate-200"><td class="py-1 font-medium">${tx('Kranken', 'Health')}</td><td class="py-1 font-mono">4,2%</td><td class="py-1 text-emerald-600">-0,5%</td></tr>
+          <tr class="border-b border-slate-200"><td class="py-1 font-medium">${tx('Schaden', 'Property & Casualty')}</td><td class="py-1 font-mono">8,5%</td><td class="py-1 text-red-500">+0,2%</td></tr>
+          <tr><td class="py-1 font-medium">${tx('Kfz', 'Auto')}</td><td class="py-1 font-mono">12,1%</td><td class="py-1 text-emerald-600">-0,8%</td></tr>
         </table>
-        <p class="text-xs text-slate-500 mt-2">→ <em>Gesamt: 8,2% (Ziel: &lt;8,0%)</em></p>
+        <p class="text-xs text-slate-500 mt-2">→ <em>${tx('Gesamt: 8,2% (Ziel: <8,0%)', 'Total: 8.2% (Target: <8.0%)')}</em></p>
       </div>`,
     };
   }
@@ -230,15 +262,15 @@ function getCockpitDemoResponse(message) {
   if (lower.includes('nps')) {
     return {
       content: `<div class="space-y-2">
-        <p class="font-semibold">NPS Score Entwicklung:</p>
+        <p class="font-semibold">${tx('NPS Score Entwicklung:', 'NPS Score Trend:')}</p>
         <table class="w-full text-xs mt-1 border-collapse">
-          <tr class="border-b border-slate-200"><td class="py-1 text-slate-500">Jan 2024</td><td class="py-1 font-mono">38</td></tr>
-          <tr class="border-b border-slate-200"><td class="py-1 text-slate-500">Apr 2024</td><td class="py-1 font-mono">40</td></tr>
-          <tr class="border-b border-slate-200"><td class="py-1 text-slate-500">Jul 2024</td><td class="py-1 font-mono">41</td></tr>
-          <tr class="border-b border-slate-200"><td class="py-1 text-slate-500">Okt 2024</td><td class="py-1 font-mono">42</td></tr>
-          <tr><td class="py-1 text-slate-500">Jan 2025</td><td class="py-1 font-mono font-semibold text-emerald-600">48</td></tr>
+          <tr class="border-b border-slate-200"><td class="py-1 text-slate-500">${tx('Jan', 'Jan')} 2024</td><td class="py-1 font-mono">38</td></tr>
+          <tr class="border-b border-slate-200"><td class="py-1 text-slate-500">${tx('Apr', 'Apr')} 2024</td><td class="py-1 font-mono">40</td></tr>
+          <tr class="border-b border-slate-200"><td class="py-1 text-slate-500">${tx('Jul', 'Jul')} 2024</td><td class="py-1 font-mono">41</td></tr>
+          <tr class="border-b border-slate-200"><td class="py-1 text-slate-500">${tx('Okt', 'Oct')} 2024</td><td class="py-1 font-mono">42</td></tr>
+          <tr><td class="py-1 text-slate-500">${tx('Jan', 'Jan')} 2025</td><td class="py-1 font-mono font-semibold text-emerald-600">48</td></tr>
         </table>
-        <p class="text-xs text-slate-500 mt-2">→ <em>Trend: +10 Punkte YoY (+26%). Kranken zeigt stärkste Verbesserung.</em></p>
+        <p class="text-xs text-slate-500 mt-2">→ <em>${tx('Trend: +10 Punkte YoY (+26%). Kranken zeigt stärkste Verbesserung.', 'Trend: +10 points YoY (+26%). Health shows strongest improvement.')}</em></p>
       </div>`,
     };
   }
@@ -246,14 +278,14 @@ function getCockpitDemoResponse(message) {
   // Cockpit fallback
   return {
     content: `<div class="space-y-2">
-      <p>Ich habe die Dashboard-Daten analysiert.</p>
-      <p><strong>Verfügbare Abfragen:</strong></p>
+      <p>${tx('Ich habe die Dashboard-Daten analysiert.', 'I have analyzed the dashboard data.')}</p>
+      <p><strong>${tx('Verfügbare Abfragen:', 'Available queries:')}</strong></p>
       <ul class="list-disc pl-4 space-y-1 text-[13px]">
-        <li>Top 5 Vermittler nach Neugeschäft</li>
-        <li>Bundesland Performance Ranking</li>
-        <li>NPS Score Entwicklung</li>
-        <li>Stornoquoten nach Segment</li>
-        <li>Auffällige Vermittler</li>
+        <li>${tx('Top 5 Vermittler nach Neugeschäft', 'Top 5 Agents by New Business')}</li>
+        <li>${tx('Bundesland Performance Ranking', 'Federal State Performance Ranking')}</li>
+        <li>${tx('NPS Score Entwicklung', 'NPS Score Trend')}</li>
+        <li>${tx('Stornoquoten nach Segment', 'Cancellation Rates by Segment')}</li>
+        <li>${tx('Auffällige Vermittler', 'Notable Agents')}</li>
       </ul>
     </div>`,
   };

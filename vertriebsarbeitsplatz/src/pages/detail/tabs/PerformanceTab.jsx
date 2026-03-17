@@ -36,15 +36,18 @@ const ALLOC_COLORS = {
 const REGION_COLORS = [C.primary, C.gold, C.slate, C.slateLight, C.slateLighter];
 
 // ─── Format helpers ───────────────────────────────────────────────────────────
+function getLang() { try { return localStorage.getItem('kia_language') || 'de'; } catch { return 'de'; } }
+function loc() { return getLang() === 'en' ? 'en-US' : 'de-DE'; }
+
 function fmtPct(v, decimals = 1) {
   if (v == null) return '–';
   const sign = v > 0 ? '+' : '';
-  return `${sign}${v.toLocaleString('de-DE', { minimumFractionDigits: decimals, maximumFractionDigits: decimals })}%`;
+  return `${sign}${v.toLocaleString(loc(), { minimumFractionDigits: decimals, maximumFractionDigits: decimals })}%`;
 }
 
 function fmtNum(v, decimals = 1) {
   if (v == null) return '–';
-  return v.toLocaleString('de-DE', { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+  return v.toLocaleString(loc(), { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
 }
 
 // ─── Custom tooltip ───────────────────────────────────────────────────────────
@@ -572,7 +575,7 @@ export default function PerformanceTab({ kunde }) {
                 >
                   <XAxis type="number" tick={{ fontSize: 10, fill: '#94a3b8' }} axisLine={false} tickLine={false} unit="%" />
                   <YAxis type="category" dataKey="name" tick={{ fontSize: 11, fill: '#64748b' }} axisLine={false} tickLine={false} width={48} />
-                  <Tooltip formatter={(v) => [`${v}%`, 'Anteil']} contentStyle={{ fontSize: 11, borderRadius: 8 }} />
+                  <Tooltip formatter={(v) => [`${v}%`, getLang() === 'en' ? 'Share' : 'Anteil']} contentStyle={{ fontSize: 11, borderRadius: 8 }} />
                   <Bar dataKey="value" fill={C.gold} radius={[0, 4, 4, 0]} barSize={14} />
                 </BarChart>
               </ResponsiveContainer>

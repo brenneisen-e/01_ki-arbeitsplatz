@@ -10,9 +10,10 @@ import { clsx } from 'clsx';
 import useTranslation from '../../../i18n/useTranslation';
 
 // ─── Date formatter ───
+function getLang() { try { return localStorage.getItem('kia_language') || 'de'; } catch { return 'de'; } }
 function fmtDate(d) {
   if (!d) return '-';
-  return new Date(d).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+  return new Date(d).toLocaleDateString(getLang() === 'en' ? 'en-GB' : 'de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
 }
 
 // ─── Signal tag pill ───
@@ -161,7 +162,7 @@ export default function EngagementTab() {
       </Section>
 
       {/* 2. Website & Newsletter */}
-      <Section title="HRK LUNIS Website & Newsletter" icon={Globe}>
+      <Section title={t('websiteNewsletter')} icon={Globe}>
         <div className="grid grid-cols-2 gap-6">
           {/* Website */}
           <div>

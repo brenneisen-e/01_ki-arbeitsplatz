@@ -10,21 +10,24 @@ import { VV_LEADS } from '../../../data/vvExtended';
 import { formatEur } from '../../../utils/formatters';
 import { getKundeFoto } from '../../../utils/kundenFotos';
 
+function getLang() { try { return localStorage.getItem('kia_language') || 'de'; } catch { return 'de'; } }
+function tx(de, en) { return getLang() === 'en' ? en : de; }
+
 const MINI_KPIS = {
   versicherung: [
-    { label: 'Abschlüsse', value: '12', subtext: '+3 vs. Vorwoche' },
-    { label: 'Neugeschäft', value: '€18.450', subtext: '+12%' },
-    { label: 'Termine', value: '28', subtext: '±0' },
-    { label: 'Abschlussquote', value: '68%', subtext: '+5%' },
+    { labelKey: 'abschluesse', value: '12', subtextKey: 'plusVsVorwoche' },
+    { labelKey: 'neugeschaeft', value: '€18.450', subtext: '+12%' },
+    { labelKey: 'termine', value: '28', subtext: '±0' },
+    { labelKey: 'abschlussquote', value: '68%', subtext: '+5%' },
   ],
   banking: [
-    { label: 'Abschlüsse', value: '8', subtext: 'Diese Woche' },
-    { label: 'Ertrag', value: '24,8k', subtext: 'Dieser Monat' },
-    { label: 'Termine', value: '18', subtext: 'Diesen Monat' },
-    { label: 'NPS', value: '8,4', subtext: 'Durchschnitt' },
+    { labelKey: 'abschluesse', value: '8', subtextKey: 'dieseWoche' },
+    { labelKey: 'ertrag', value: '24,8k', subtextKey: 'dieserMonat' },
+    { labelKey: 'termine', value: '18', subtextKey: 'diesenMonat' },
+    { label: 'NPS', value: '8,4', subtextKey: 'durchschnitt' },
   ],
   vermoegensverwaltung: [
-    { label: 'AuM', value: '78M', subtext: 'Gesamt' },
+    { label: 'AuM', value: '78M', subtextKey: 'gesamt' },
     { label: 'NNM', value: '+5,8M', subtext: 'YTD' },
     { label: 'Performance', value: '+5,6%', subtext: 'YTD \u00d8' },
     { label: 'Pipeline', value: '45M', subtext: '12 Leads' },
@@ -32,9 +35,9 @@ const MINI_KPIS = {
 };
 
 const FOKUS = {
-  versicherung: { text: 'Peter Schmidt - BU-Nachversicherung', next: '17:30 Amira König' },
-  banking: { text: 'Klaus Fischer - Anschlussfinanzierung 09/2026', next: '14:00 Klaus Fischer' },
-  vermoegensverwaltung: { text: 'Keller NextGen - WpHG-Fragebogen + Geeignetheitsbericht', next: '10:00 Dr. Anna Fischer (Onboarding)' },
+  versicherung: { text: tx('Peter Schmidt - BU-Nachversicherung', 'Peter Schmidt - Disability Re-Insurance'), next: '17:30 Amira König' },
+  banking: { text: tx('Klaus Fischer - Anschlussfinanzierung 09/2026', 'Klaus Fischer - Refinancing 09/2026'), next: '14:00 Klaus Fischer' },
+  vermoegensverwaltung: { text: tx('Keller NextGen - WpHG-Fragebogen + Geeignetheitsbericht', 'Keller NextGen - WpHG Questionnaire + Suitability Report'), next: tx('10:00 Dr. Anna Fischer (Onboarding)', '10:00 Dr. Anna Fischer (Onboarding)') },
 };
 
 const TAGESSTART_ITEMS = {
@@ -69,7 +72,7 @@ const LETZTE_ABSCHLUESSE = {
   ],
   vermoegensverwaltung: [
     { kunde: 'Dr. Stefan Meier', kundeId: 'VV001', produkt: 'Spezialmandat Dividende', sparte: 'mandat', betrag: 5000000, datum: '10.03.2026' },
-    { kunde: 'Familie Keller', kundeId: 'VV002', produkt: 'ESG Impact Fund', sparte: 'mandat', betrag: 2500000, datum: '08.03.2026' },
+    { kunde: tx('Familie Keller', 'Family Keller'), kundeId: 'VV002', produkt: 'ESG Impact Fund', sparte: 'mandat', betrag: 2500000, datum: '08.03.2026' },
   ],
 };
 
@@ -111,14 +114,14 @@ const SCHNELLZUGRIFF = {
 
 const PROVISIONSABRECHNUNGEN = {
   versicherung: [
-    { monat: 'Februar 2026', betrag: 8420, datum: '01.03.2026' },
-    { monat: 'Januar 2026', betrag: 7890, datum: '01.02.2026' },
-    { monat: 'Dezember 2025', betrag: 9150, datum: '02.01.2026' },
+    { monat: tx('Februar 2026', 'February 2026'), betrag: 8420, datum: '01.03.2026' },
+    { monat: tx('Januar 2026', 'January 2026'), betrag: 7890, datum: '01.02.2026' },
+    { monat: tx('Dezember 2025', 'December 2025'), betrag: 9150, datum: '02.01.2026' },
   ],
   banking: [
-    { monat: 'Februar 2026', betrag: 24800, datum: '01.03.2026' },
-    { monat: 'Januar 2026', betrag: 21400, datum: '01.02.2026' },
-    { monat: 'Dezember 2025', betrag: 26400, datum: '02.01.2026' },
+    { monat: tx('Februar 2026', 'February 2026'), betrag: 24800, datum: '01.03.2026' },
+    { monat: tx('Januar 2026', 'January 2026'), betrag: 21400, datum: '01.02.2026' },
+    { monat: tx('Dezember 2025', 'December 2025'), betrag: 26400, datum: '02.01.2026' },
   ],
   vermoegensverwaltung: [
     { monat: 'Q4/2025', betrag: 285000, datum: '15.01.2026' },
@@ -254,7 +257,7 @@ export default function UebersichtTab() {
                     {k.aum ? `${(k.aum / 1000000).toFixed(1)}M` : '–'}
                   </div>
                   <div className="text-right text-xs text-slate-500">
-                    {k.letzteKomm ? new Date(k.letzteKomm.datum).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: '2-digit' }) : '–'}
+                    {k.letzteKomm ? new Date(k.letzteKomm.datum).toLocaleDateString(lang === 'en' ? 'en-GB' : 'de-DE', { day: '2-digit', month: '2-digit', year: '2-digit' }) : '–'}
                   </div>
                   <div className="text-center">
                     {k.leadsCount > 0 ? (
@@ -346,10 +349,10 @@ export default function UebersichtTab() {
                       </span>
                     </div>
                     <div className="text-right text-sm font-mono font-medium text-slate-700">
-                      {kp.gesamtPraemie > 0 ? `${kp.gesamtPraemie.toLocaleString('de-DE')}€` : '-'}
+                      {kp.gesamtPraemie > 0 ? `${kp.gesamtPraemie.toLocaleString(lang === 'en' ? 'en-US' : 'de-DE')}€` : '-'}
                     </div>
                     <div className="text-right text-sm font-mono font-medium" style={{ color: 'var(--mode-primary-light)' }}>
-                      {kp.gesamtProvision > 0 ? `${kp.gesamtProvision.toLocaleString('de-DE')}€` : '-'}
+                      {kp.gesamtProvision > 0 ? `${kp.gesamtProvision.toLocaleString(lang === 'en' ? 'en-US' : 'de-DE')}€` : '-'}
                     </div>
                   </div>
                 );
@@ -545,15 +548,18 @@ export default function UebersichtTab() {
   );
 }
 
-function MiniKPI({ label, value, subtext }) {
-  const isPositive = subtext?.startsWith('+');
-  const isNegative = subtext?.startsWith('-');
+function MiniKPI({ label, labelKey, value, subtext, subtextKey }) {
+  const { t } = useTranslation();
+  const displayLabel = labelKey ? t(labelKey) : label;
+  const displaySubtext = subtextKey ? t(subtextKey) : subtext;
+  const isPositive = displaySubtext?.startsWith('+');
+  const isNegative = displaySubtext?.startsWith('-');
   return (
     <div className="text-center py-2">
       <div className="font-mono text-2xl font-bold text-slate-800">{value}</div>
-      <div className="text-xs text-slate-500 mt-0.5">{label}</div>
+      <div className="text-xs text-slate-500 mt-0.5">{displayLabel}</div>
       <div className={`text-xs mt-0.5 font-medium ${isPositive ? 'text-emerald-500' : isNegative ? 'text-red-500' : 'text-slate-400'}`}>
-        {subtext}
+        {displaySubtext}
       </div>
     </div>
   );

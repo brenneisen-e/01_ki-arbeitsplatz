@@ -4,10 +4,11 @@ import { CheckCircle, AlertTriangle, Shield, FileText, TrendingDown, Receipt, Ta
 import { clsx } from 'clsx';
 import useTranslation from '../../../i18n/useTranslation';
 
-// ─── Helper: format date DE ───
+// ─── Helper: format date ───
+function getLang() { try { return localStorage.getItem('kia_language') || 'de'; } catch { return 'de'; } }
 function fmtDate(d) {
   if (!d) return '-';
-  return new Date(d).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+  return new Date(d).toLocaleDateString(getLang() === 'en' ? 'en-GB' : 'de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
 }
 
 // ─── Helper: days until date ───

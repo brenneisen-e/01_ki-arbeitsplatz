@@ -4,6 +4,9 @@
 import { random, randomBetween } from './utils';
 import { pickKfzModell } from './produktKatalog';
 
+function getLang() { try { return localStorage.getItem('kia_language') || 'de'; } catch { return 'de'; } }
+function tx(de, en) { return getLang() === 'en' ? en : de; }
+
 const PRIO_ORDER = { kritisch: 0, hoch: 1, mittel: 2, niedrig: 3 };
 
 function hatProdukt(p, typ) {
@@ -15,7 +18,7 @@ function hatFremd(p, typ) {
 }
 
 function fmtEur(v) {
-  return v.toLocaleString('de-DE') + '€';
+  return v.toLocaleString(getLang() === 'en' ? 'en-US' : 'de-DE') + (getLang() === 'en' ? '$' : '€');
 }
 
 // ═══ Versicherung ═══
@@ -23,7 +26,7 @@ const VERSICHERUNG_REGELN = [
   {
     id: 'bu_fehlt',
     check: (p) => !hatProdukt(p, 'bu') && p.alter < 60 && p._berufObj.buRisiko !== 'keine',
-    titel: (p) => `Erhöhung Abdeckung BU`,
+    titel: (p) => tx('Erhöhung Abdeckung BU', 'Increase Disability Coverage'),
     typ: 'whitespot', quellen: ['bestand'], prioritaet: 'kritisch',
     volumen: (p) => Math.round(p.nettoeinkommen * 0.8 * 12 * 0.04),
     beschreibung: (p) => `Keine BU vorhanden. ${p.beruf} (${p._berufObj.buRisiko}). Empfehlung: ${Math.round(p.nettoeinkommen * 0.8)}€/mtl. Rente.`,
@@ -48,7 +51,7 @@ const VERSICHERUNG_REGELN = [
   {
     id: 'haftpflicht_fehlt',
     check: (p) => !hatProdukt(p, 'haftpflicht'),
-    titel: 'Haftpflichtversicherung fehlt',
+    titel: tx('Haftpflichtversicherung fehlt', 'Liability Insurance Missing'),
     typ: 'whitespot', quellen: ['bestand'], prioritaet: 'hoch',
     volumen: () => randomBetween(65, 95),
     beschreibung: () => 'Existenzbedrohende Lücke. Pflichtversicherung für jeden Haushalt.',
@@ -64,7 +67,7 @@ const VERSICHERUNG_REGELN = [
   {
     id: 'rlv_bei_baufi',
     check: (p) => !hatProdukt(p, 'rlv') && p.fremdProdukte.some(f => f.typ === 'baufinanzierung'),
-    titel: 'Risikolebensversicherung (Baufi-Absicherung)',
+    titel: tx('Risikolebensversicherung (Baufi-Absicherung)', 'Term Life Insurance (Mortgage Protection)'),
     typ: 'cross_sell', quellen: ['finanztransaktion', 'lebensereignis'], prioritaet: 'hoch',
     volumen: () => randomBetween(180, 540),
     beschreibung: (p) => {
@@ -87,7 +90,7 @@ const VERSICHERUNG_REGELN = [
   {
     id: 'baufi_zinsbindung',
     check: (p) => p.fremdProdukte.some(f => f._zinsbindungEnde && f._zinsbindungEnde <= 2027),
-    titel: 'Baufi-Anschlussfinanzierung vorbereiten',
+    titel: tx('Baufi-Anschlussfinanzierung vorbereiten', 'Prepare Mortgage Refinancing'),
     typ: 'cross_sell', quellen: ['finanztransaktion', 'markt'], prioritaet: 'kritisch',
     volumen: () => 0,
     beschreibung: (p) => {
@@ -131,7 +134,7 @@ const VERSICHERUNG_REGELN = [
   {
     id: 'fondspolice_statt_depot',
     check: (p) => !hatProdukt(p, 'fondspolice') && p.fremdProdukte.some(f => f.typ === 'depot' && f.volumen > 10000),
-    titel: 'Fondspolice statt Fremd-Depot',
+    titel: tx('Fondspolice statt Fremd-Depot', 'Fund Policy Instead of External Depot'),
     typ: 'cross_sell', quellen: ['finanztransaktion', 'bestand'], prioritaet: 'mittel',
     volumen: (p) => p.fremdProdukte.find(f => f.typ === 'depot')?.volumen || 0,
     beschreibung: (p) => {
@@ -176,7 +179,7 @@ const VERSICHERUNG_REGELN = [
   {
     id: 'pflege_ab_45',
     check: (p) => !hatProdukt(p, 'pflege') && p.alter >= 45,
-    titel: 'Pflegezusatzversicherung',
+    titel: tx('Pflegezusatzversicherung', 'Supplementary Care Insurance'),
     typ: 'whitespot', quellen: ['bestand', 'lebensereignis'],
     prioritaet: (p) => p.alter >= 55 ? 'hoch' : 'mittel',
     volumen: () => randomBetween(240, 720),
@@ -209,7 +212,7 @@ const VERSICHERUNG_REGELN = [
   {
     id: 'wohngebaeude_fehlt',
     check: (p) => !hatProdukt(p, 'wohngebaeude') && p.wohnsituation === 'Eigentum',
-    titel: 'Wohngebäudeversicherung fehlt',
+    titel: tx('Wohngebäudeversicherung fehlt', 'Building Insurance Missing'),
     typ: 'whitespot', quellen: ['bestand'], prioritaet: 'hoch',
     volumen: () => randomBetween(300, 600),
     beschreibung: () => 'Eigenheim ohne Wohngebäudeversicherung. Existenzrisiko bei Brand/Sturm.',
@@ -226,7 +229,7 @@ const VERSICHERUNG_REGELN = [
   {
     id: 'ruerup_selbstaendig',
     check: (p) => !hatProdukt(p, 'ruerup') && p._berufObj.segment === 'selbstaendig' && p.alter < 60,
-    titel: 'Rürup-Rente (steuerlich absetzbar)',
+    titel: tx('Rürup-Rente (steuerlich absetzbar)', 'Rürup Pension (Tax Deductible)'),
     typ: 'whitespot', quellen: ['bestand'], prioritaet: 'hoch',
     volumen: () => randomBetween(2400, 7200),
     beschreibung: () => 'Selbständig ohne Altersvorsorge. Rürup steuerlich absetzbar bis 27.566€/J.',
@@ -249,7 +252,7 @@ const VERSICHERUNG_REGELN = [
   {
     id: 'kfz_fremd',
     check: (p) => !hatProdukt(p, 'kfz') && hatFremd(p, 'kfz'),
-    titel: 'Kfz-Wechsel zu ERGO',
+    titel: tx('Kfz-Wechsel zu ERGO', 'Car Insurance Switch to ERGO'),
     typ: 'cross_sell', quellen: ['wettbewerb'], prioritaet: 'mittel',
     volumen: () => randomBetween(400, 900),
     beschreibung: (p) => {
@@ -293,7 +296,7 @@ const VERSICHERUNG_REGELN = [
   {
     id: 'hausrat_fehlt',
     check: (p) => !hatProdukt(p, 'hausrat'),
-    titel: 'Hausratversicherung fehlt',
+    titel: tx('Hausratversicherung fehlt', 'Household Insurance Missing'),
     typ: 'whitespot', quellen: ['bestand'], prioritaet: 'mittel',
     volumen: () => randomBetween(80, 200),
     beschreibung: (p) => `Kein Hausrat. ${p.wohnflaeche}qm ${p.wohnsituation}.`,
@@ -313,7 +316,7 @@ const VERSICHERUNG_REGELN = [
   {
     id: 'rechtsschutz_fehlt',
     check: (p) => !hatProdukt(p, 'rechtsschutz') && p.alter > 30,
-    titel: 'Rechtsschutzversicherung',
+    titel: tx('Rechtsschutzversicherung', 'Legal Protection Insurance'),
     typ: 'whitespot', quellen: ['bestand'], prioritaet: 'niedrig',
     volumen: () => randomBetween(200, 400),
     beschreibung: () => 'Kein Rechtsschutz vorhanden.',
@@ -328,7 +331,7 @@ const VERSICHERUNG_REGELN = [
   {
     id: 'bindungsgespraech',
     check: (p) => p.nps <= 5,
-    titel: 'Bindungsgespräch (NPS Detractor)',
+    titel: tx('Bindungsgespräch (NPS Detractor)', 'Retention Talk (NPS Detractor)'),
     typ: 'beratung', quellen: ['kommunikation'], prioritaet: 'kritisch',
     volumen: () => 0,
     beschreibung: (p) => `NPS ${p.nps}/10 = Detractor. Abwanderungsrisiko hoch. Proaktiv Termin vereinbaren.`,
@@ -388,7 +391,7 @@ const BANKING_REGELN = [
   {
     id: 'rv_bu_fehlt',
     check: (p) => !p.fremdProdukte.some(f => f.typ === 'bu') && !hatProdukt(p, 'rv_bu') && p.alter < 55,
-    titel: 'R+V Berufsunfähigkeit',
+    titel: tx('R+V Berufsunfähigkeit', 'R+V Disability Insurance'),
     typ: 'cross_sell', quellen: ['bestand', 'wettbewerb'], prioritaet: 'hoch',
     volumen: () => randomBetween(800, 2400),
     beschreibung: () => 'Keine BU erkennbar. R+V BU über VR-Verbund anbieten.',
@@ -492,7 +495,7 @@ const BANKING_REGELN = [
   {
     id: 'tagesgeld_konsolidierung',
     check: (p) => p.fremdProdukte.some(f => f.typ === 'tagesgeld' && f.volumen > 10000),
-    titel: 'Tagesgeld-Konsolidierung',
+    titel: tx('Tagesgeld-Konsolidierung', 'Savings Account Consolidation'),
     typ: 'anpassung', quellen: ['finanztransaktion'], prioritaet: 'mittel',
     volumen: (p) => p.fremdProdukte.find(f => f.typ === 'tagesgeld')?.volumen || 0,
     beschreibung: (p) => {
@@ -517,7 +520,7 @@ const BANKING_REGELN = [
   {
     id: 'bauspar_eigentum',
     check: (p) => p.wohnsituation === 'Miete' && p.alter < 40 && !hatProdukt(p, 'bauspar'),
-    titel: 'Schwäbisch Hall Bauspar (Eigentumsplanung)',
+    titel: tx('Schwäbisch Hall Bauspar (Eigentumsplanung)', 'Schwäbisch Hall Savings Plan (Property Planning)'),
     typ: 'whitespot', quellen: ['bestand', 'lebensereignis'], prioritaet: 'mittel',
     volumen: () => randomBetween(10000, 40000),
     beschreibung: () => 'Zur Miete, unter 40: Bauspar für Eigentumsplanung.',
@@ -534,7 +537,7 @@ const BANKING_REGELN = [
   {
     id: 'vr_finanzplan',
     check: (p) => !hatProdukt(p, 'vr_finanzplan') && p.eigeneProdukte.length >= 2,
-    titel: 'VR-FinanzPlan erstellen',
+    titel: tx('VR-FinanzPlan erstellen', 'Create VR Financial Plan'),
     typ: 'whitespot', quellen: ['bestand'], prioritaet: 'mittel',
     volumen: () => 0,
     beschreibung: () => 'Kein ganzheitlicher Finanzplan vorhanden. VR-FinanzPlan als Gesamtkonzept.',
@@ -550,7 +553,7 @@ const BANKING_REGELN = [
   {
     id: 'rv_haftpflicht',
     check: (p) => !p.fremdProdukte.some(f => f.typ === 'haftpflicht') && !hatProdukt(p, 'rv_haftpflicht'),
-    titel: 'R+V Haftpflicht',
+    titel: tx('R+V Haftpflicht', 'R+V Liability Insurance'),
     typ: 'cross_sell', quellen: ['bestand'], prioritaet: 'hoch',
     volumen: () => randomBetween(60, 110),
     beschreibung: () => 'Keine Haftpflicht erkennbar. R+V Haftpflicht über VR-Verbund.',
@@ -566,7 +569,7 @@ const BANKING_REGELN = [
   {
     id: 'bindungsgespraech',
     check: (p) => p.nps <= 5,
-    titel: 'Bindungsgespräch (NPS Detractor)',
+    titel: tx('Bindungsgespräch (NPS Detractor)', 'Retention Talk (NPS Detractor)'),
     typ: 'beratung', quellen: ['kommunikation'], prioritaet: 'kritisch',
     volumen: () => 0,
     beschreibung: (p) => `NPS ${p.nps}/10. Proaktiv Termin vereinbaren.`,
@@ -662,7 +665,7 @@ const VV_REGELN = [
   {
     id: 'cash_konsolidierung',
     check: (p) => p.fremdProdukte.some(f => f.typ === 'tagesgeld' && f.volumen > 200000),
-    titel: 'Cash-Konsolidierung (Opportunitätskosten!)',
+    titel: tx('Cash-Konsolidierung (Opportunitätskosten!)', 'Cash Consolidation (Opportunity Cost!)'),
     typ: 'whitespot', quellen: ['finanztransaktion'], prioritaet: 'kritisch',
     volumen: (p) => p.fremdProdukte.find(f => f.typ === 'tagesgeld')?.volumen || 0,
     beschreibung: (p) => {
@@ -713,7 +716,7 @@ const VV_REGELN = [
   {
     id: 'mandatstyp_upgrade',
     check: (p) => p._vvSegment === 'SmartValue' && p._gesamtvermoegen > 4000000,
-    titel: 'Mandats-Upgrade SmartValue auf FairValue',
+    titel: tx('Mandats-Upgrade SmartValue auf FairValue', 'Mandate Upgrade SmartValue to FairValue'),
     typ: 'anpassung', quellen: ['bestand'], prioritaet: 'mittel',
     volumen: () => 0,
     beschreibung: (p) => `Gesamtvermögen ${(p._gesamtvermoegen / 1000000).toFixed(1)}M€ rechtfertigt FairValue Individual.`,
@@ -726,7 +729,7 @@ const VV_REGELN = [
       { label: 'Vorteile FairValue', value: 'Individueller Anlageausschuss, direkter Portfoliomanager, ESG-Customizing' },
     ],
     vergleich: () => ({
-      titel: 'Vergleich: SmartValue vs. FairValue Individual',
+      titel: tx('Vergleich: SmartValue vs. FairValue Individual', 'Comparison: SmartValue vs. FairValue Individual'),
       spalten: ['Merkmal', 'SmartValue', 'FairValue Individual'],
       zeilen: [
         { merkmal: 'Mindestanlage', aktuell: '250k€', angebot: '3M€' },
@@ -741,7 +744,7 @@ const VV_REGELN = [
   {
     id: 'nachfolgeplanung',
     check: (p) => p.alter >= 58 && p.fremdProdukte.some(f => f.typ === 'unternehmensbeteiligung'),
-    titel: 'Nachfolgeplanung anstoßen',
+    titel: tx('Nachfolgeplanung anstoßen', 'Initiate Succession Planning'),
     typ: 'cross_sell', quellen: ['lebensereignis', 'bestand'], prioritaet: 'hoch',
     volumen: (p) => p.fremdProdukte.find(f => f.typ === 'unternehmensbeteiligung')?.volumen || 0,
     beschreibung: (p) => {
@@ -763,7 +766,7 @@ const VV_REGELN = [
   {
     id: 'stiftungsgruendung',
     check: (p) => p.alter >= 55 && p._gesamtvermoegen > 10000000,
-    titel: 'Stiftungsgründung empfehlen',
+    titel: tx('Stiftungsgründung empfehlen', 'Recommend Foundation Establishment'),
     typ: 'whitespot', quellen: ['lebensereignis', 'bestand'], prioritaet: 'mittel',
     volumen: () => randomBetween(500000, 2000000),
     beschreibung: () => 'Vermögens- und Alterssituation qualifiziert für Stiftungsgründung.',
@@ -780,7 +783,7 @@ const VV_REGELN = [
   {
     id: 'pe_allokation',
     check: (p) => p._gesamtvermoegen > 5000000 && !hatProdukt(p, 'vv_pe'),
-    titel: 'Private Equity Beteiligung anbieten',
+    titel: tx('Private Equity Beteiligung anbieten', 'Offer Private Equity Participation'),
     typ: 'whitespot', quellen: ['bestand'], prioritaet: 'mittel',
     volumen: (p) => Math.round(p._gesamtvermoegen * 0.05),
     beschreibung: () => 'Keine PE-Allokation im Portfolio. Diversifikation + Rendite-Uplift.',
@@ -826,7 +829,7 @@ const VV_REGELN = [
   {
     id: 'family_office',
     check: (p) => p._gesamtvermoegen > 15000000,
-    titel: 'WERTIQ Family Office Anbindung',
+    titel: tx('WERTIQ Family Office Anbindung', 'WERTIQ Family Office Integration'),
     typ: 'whitespot', quellen: ['bestand'], prioritaet: 'mittel',
     volumen: () => 0,
     beschreibung: (p) => `Gesamtvermögen ${(p._gesamtvermoegen / 1000000).toFixed(0)}M€ qualifiziert für Family Office Service.`,

@@ -3,6 +3,10 @@
 // ============================================
 import { random, randomBetween, clamp } from './utils';
 
+// ═══ i18n helpers ═══
+function getLang() { try { return localStorage.getItem('kia_language') || 'de'; } catch { return 'de'; } }
+function tx(de, en) { return getLang() === 'en' ? en : de; }
+
 // ═══ Scores berechnen ═══
 export function calculateScores(person) {
   const produktAnzahl = person.eigeneProdukte.length;
@@ -97,46 +101,87 @@ export function generateKommunikation(person) {
   const typen = ['termin', 'email', 'chatbot', 'telefon', 'kontaktformular'];
   const richtungen = ['eingehend', 'ausgehend'];
 
-  const betreffPool = {
+  const betreffPoolDE = {
     versicherung: [
-      'Jahresgespr\u00e4ch', 'BU-Beratung', 'Kfz-Verl\u00e4ngerung', 'Schadensmeldung',
+      'Jahresgespräch', 'BU-Beratung', 'Kfz-Verlängerung', 'Schadensmeldung',
       'Angebot nachfassen', 'Tarifwechsel besprechen', 'Altersvorsorge-Beratung',
       'Hausrat-Upgrade', 'Frage zur Rechnung', 'Cross-Selling Kampagne',
     ],
     banking: [
-      'Kontoer\u00f6ffnung', 'Kreditberatung', 'Anlageberatung', 'VR-FinanzPlan',
-      'Baufinanzierung', 'Depot-Review', 'Kontogeb\u00fchren', 'FIDA-Consent',
+      'Kontoeröffnung', 'Kreditberatung', 'Anlageberatung', 'VR-FinanzPlan',
+      'Baufinanzierung', 'Depot-Review', 'Kontogebühren', 'FIDA-Consent',
       'Wero-Aktivierung', 'Union Investment Sparplan',
     ],
     vermoegensverwaltung: [
-      'Portfolio-Review', 'Onboarding-Gespr\u00e4ch', 'WpHG-Fragebogen', 'Performance-Report',
+      'Portfolio-Review', 'Onboarding-Gespräch', 'WpHG-Fragebogen', 'Performance-Report',
       'Rebalancing besprechen', 'Nachfolgeplanung', 'NextGen-Beratung', 'ESG-Upgrade',
       'Investmentvorschlag', 'Quartalsmeeting',
     ],
   };
+  const betreffPoolEN = {
+    versicherung: [
+      'Annual Review', 'Disability Insurance Consultation', 'Car Insurance Renewal', 'Claim Report',
+      'Follow Up on Offer', 'Discuss Tariff Change', 'Retirement Planning Consultation',
+      'Household Insurance Upgrade', 'Billing Question', 'Cross-Selling Campaign',
+    ],
+    banking: [
+      'Account Opening', 'Loan Consultation', 'Investment Consultation', 'VR Financial Plan',
+      'Mortgage Financing', 'Portfolio Review', 'Account Fees', 'FIDA Consent',
+      'Wero Activation', 'Union Investment Savings Plan',
+    ],
+    vermoegensverwaltung: [
+      'Portfolio Review', 'Onboarding Meeting', 'WpHG Questionnaire', 'Performance Report',
+      'Discuss Rebalancing', 'Succession Planning', 'NextGen Consultation', 'ESG Upgrade',
+      'Investment Proposal', 'Quarterly Meeting',
+    ],
+  };
+  function getBetreffPool() { return getLang() === 'en' ? betreffPoolEN : betreffPoolDE; }
 
-  const zusammenfassungPool = [
+  const zusammenfassungPoolDE = [
     'Kunde hat Informationen angefragt. Wiedervorlage angelegt.',
     'Angebot besprochen, Kunde zeigt Interesse. Termin vereinbart.',
     'Kampagne verschickt, keine Reaktion.',
-    'R\u00fcckrufbitte erhalten, zeitnah zur\u00fcckrufen.',
-    'Beratungsgespr\u00e4ch gef\u00fchrt, Follow-up geplant.',
+    'Rückrufbitte erhalten, zeitnah zurückrufen.',
+    'Beratungsgespräch geführt, Follow-up geplant.',
     'Kunde fragte nach Details zum Produkt. Unterlagen gesendet.',
-    'Proaktive Ansprache, Kunde offen f\u00fcr Termin.',
+    'Proaktive Ansprache, Kunde offen für Termin.',
     'Kundenanliegen bearbeitet und abgeschlossen.',
   ];
-
-  const emailBodyPool = [
-    (name, betreff) => `Sehr geehrte/r ${name},\n\nvielen Dank f\u00fcr Ihr Interesse an unserem Angebot zum Thema "${betreff}".\n\nGerne m\u00f6chte ich Ihnen in einem pers\u00f6nlichen Gespr\u00e4ch die Details erl\u00e4utern und ein individuelles Angebot erstellen.\n\nK\u00f6nnen wir einen Termin vereinbaren?\n\nMit freundlichen Gr\u00fc\u00dfen\nIhr Berater`,
-    (name, betreff) => `Hallo ${name},\n\nwie besprochen sende ich Ihnen die Informationen zum Thema "${betreff}".\n\nBitte schauen Sie sich die Unterlagen in Ruhe an. Bei Fragen stehe ich Ihnen jederzeit zur Verf\u00fcgung.\n\nViele Gr\u00fc\u00dfe\nIhr Berater`,
+  const zusammenfassungPoolEN = [
+    'Customer requested information. Follow-up scheduled.',
+    'Offer discussed, customer shows interest. Appointment arranged.',
+    'Campaign sent, no response.',
+    'Callback request received, call back promptly.',
+    'Advisory meeting held, follow-up planned.',
+    'Customer asked for product details. Documents sent.',
+    'Proactive outreach, customer open to appointment.',
+    'Customer concern handled and resolved.',
   ];
+  function getZusammenfassungPool() { return getLang() === 'en' ? zusammenfassungPoolEN : zusammenfassungPoolDE; }
 
-  const chatFragenPool = [
-    { frage: 'Wie kann ich meine Daten \u00e4ndern?', antwort: 'Sie k\u00f6nnen Ihre pers\u00f6nlichen Daten direkt im Online-Banking unter "Einstellungen" \u00e4ndern oder sich an Ihre Filiale wenden.' },
-    { frage: 'Wann ist mein Berater erreichbar?', antwort: 'Ihr pers\u00f6nlicher Berater ist Mo-Fr von 9-17 Uhr erreichbar. Soll ich einen R\u00fcckruf einrichten?' },
-    { frage: 'Wie kann ich eine Schadensmeldung machen?', antwort: 'Eine Schadensmeldung k\u00f6nnen Sie online, per App oder telefonisch (0800-Hotline) aufgeben. Halten Sie bitte Ihre Vertragsnummer bereit.' },
+  const emailBodyPoolDE = [
+    (name, betreff) => `Sehr geehrte/r ${name},\n\nvielen Dank für Ihr Interesse an unserem Angebot zum Thema "${betreff}".\n\nGerne möchte ich Ihnen in einem persönlichen Gespräch die Details erläutern und ein individuelles Angebot erstellen.\n\nKönnen wir einen Termin vereinbaren?\n\nMit freundlichen Grüßen\nIhr Berater`,
+    (name, betreff) => `Hallo ${name},\n\nwie besprochen sende ich Ihnen die Informationen zum Thema "${betreff}".\n\nBitte schauen Sie sich die Unterlagen in Ruhe an. Bei Fragen stehe ich Ihnen jederzeit zur Verfügung.\n\nViele Grüße\nIhr Berater`,
   ];
+  const emailBodyPoolEN = [
+    (name, betreff) => `Dear ${name},\n\nthank you for your interest in our offer regarding "${betreff}".\n\nI would be happy to explain the details in a personal meeting and prepare a customized offer for you.\n\nCan we schedule an appointment?\n\nBest regards,\nYour Advisor`,
+    (name, betreff) => `Hello ${name},\n\nas discussed, I am sending you the information regarding "${betreff}".\n\nPlease review the documents at your convenience. If you have any questions, I am available at any time.\n\nKind regards,\nYour Advisor`,
+  ];
+  function getEmailBodyPool() { return getLang() === 'en' ? emailBodyPoolEN : emailBodyPoolDE; }
 
+  const chatFragenPoolDE = [
+    { frage: 'Wie kann ich meine Daten ändern?', antwort: 'Sie können Ihre persönlichen Daten direkt im Online-Banking unter "Einstellungen" ändern oder sich an Ihre Filiale wenden.' },
+    { frage: 'Wann ist mein Berater erreichbar?', antwort: 'Ihr persönlicher Berater ist Mo-Fr von 9-17 Uhr erreichbar. Soll ich einen Rückruf einrichten?' },
+    { frage: 'Wie kann ich eine Schadensmeldung machen?', antwort: 'Eine Schadensmeldung können Sie online, per App oder telefonisch (0800-Hotline) aufgeben. Halten Sie bitte Ihre Vertragsnummer bereit.' },
+  ];
+  const chatFragenPoolEN = [
+    { frage: 'How can I change my personal data?', antwort: 'You can change your personal data directly in online banking under "Settings" or contact your local branch.' },
+    { frage: 'When is my advisor available?', antwort: 'Your personal advisor is available Mon-Fri from 9am to 5pm. Would you like me to arrange a callback?' },
+    { frage: 'How can I file a claim?', antwort: 'You can file a claim online, via the app, or by phone (0800 hotline). Please have your policy number ready.' },
+  ];
+  function getChatFragenPool() { return getLang() === 'en' ? chatFragenPoolEN : chatFragenPoolDE; }
+
+  const betreffPool = getBetreffPool();
   const pool = betreffPool[person._modus] || betreffPool.versicherung;
 
   for (let i = 0; i < anzahl; i++) {
@@ -152,27 +197,33 @@ export function generateKommunikation(person) {
       typ,
       richtung,
       betreff,
-      zusammenfassung: random(zusammenfassungPool),
+      zusammenfassung: random(getZusammenfassungPool()),
     };
 
     // Add rich content for some entries
     if (typ === 'email' && richtung === 'ausgehend' && randomBetween(0, 100) > 40) {
       const nameTeile = person.name.split(' ');
-      const anrede = nameTeile.length > 1 ? `Herr/Frau ${nameTeile[nameTeile.length - 1]}` : person.name;
-      entry.emailBody = random(emailBodyPool)(anrede, betreff);
+      const anrede = nameTeile.length > 1
+        ? tx(`Herr/Frau ${nameTeile[nameTeile.length - 1]}`, `Mr./Ms. ${nameTeile[nameTeile.length - 1]}`)
+        : person.name;
+      entry.emailBody = random(getEmailBodyPool())(anrede, betreff);
     }
 
     if (typ === 'chatbot' && randomBetween(0, 100) > 30) {
-      const chatQ = random(chatFragenPool);
+      const chatQ = random(getChatFragenPool());
       entry.chatverlauf = [
         { rolle: 'kunde', text: chatQ.frage, zeit: `${randomBetween(8, 22)}:${String(randomBetween(0, 59)).padStart(2, '0')}` },
         { rolle: 'bot', text: chatQ.antwort, zeit: `${randomBetween(8, 22)}:${String(randomBetween(0, 59)).padStart(2, '0')}` },
       ];
-      entry.kiZusammenfassung = `Kunde stellte Frage: "${chatQ.frage.substring(0, 40)}..." \u2013 Chatbot hat informiert und L\u00f6sung angeboten.`;
+      entry.kiZusammenfassung = getLang() === 'en'
+        ? `Customer asked: "${chatQ.frage.substring(0, 40)}..." – Chatbot provided information and offered a solution.`
+        : `Kunde stellte Frage: "${chatQ.frage.substring(0, 40)}..." – Chatbot hat informiert und Lösung angeboten.`;
     }
 
     if (typ === 'kontaktformular') {
-      entry.inhalt = `Kontaktformular-Anfrage: "${person.name} bat um R\u00fcckruf zum Thema ${betreff}. Erreichbar werktags 9-17 Uhr."`;
+      entry.inhalt = getLang() === 'en'
+        ? `Contact form inquiry: "${person.name} requested a callback regarding ${betreff}. Available weekdays 9am-5pm."`
+        : `Kontaktformular-Anfrage: "${person.name} bat um Rückruf zum Thema ${betreff}. Erreichbar werktags 9-17 Uhr."`;
     }
 
     komm.push(entry);

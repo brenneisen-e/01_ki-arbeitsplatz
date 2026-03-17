@@ -59,13 +59,13 @@ function RiskBadge({ risk, t }) {
   );
 }
 
-function AllocationBar({ allocation }) {
+function AllocationBar({ allocation, t }) {
   if (!allocation) return <span className="text-slate-300">-</span>;
   const segments = [
-    { key: 'aktien', color: '#3b82f6', label: 'Aktien' },
-    { key: 'anleihen', color: '#10b981', label: 'Anleihen' },
-    { key: 'alternative', color: '#8b5cf6', label: 'Alternative' },
-    { key: 'cash', color: '#94a3b8', label: 'Cash' },
+    { key: 'aktien', color: '#3b82f6', label: t('aktien') },
+    { key: 'anleihen', color: '#10b981', label: t('anleihen') },
+    { key: 'alternative', color: '#8b5cf6', label: t('alternative') },
+    { key: 'cash', color: '#94a3b8', label: t('cash') },
   ];
   return (
     <div className="flex items-center gap-1.5">
@@ -237,7 +237,7 @@ export default function KundenTab() {
         { const [y, m] = row.mandatSeit.split('-');
           return <span className="text-slate-500">{m}/{y}</span>; }
       case 'allocation':
-        return <AllocationBar allocation={row.allocation} />;
+        return <AllocationBar allocation={row.allocation} t={t} />;
       case 'esgScore':
         if (row.esgScore == null) return <span className="text-slate-300">-</span>;
         return (

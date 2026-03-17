@@ -100,7 +100,7 @@ export default function GlobalHeader({ kundeInfo }) {
                   )}
                   <div>
                     <div className="text-white text-sm font-medium">
-                      {config.beraterTitel}: {displayName}
+                      {lang === 'en' && config.beraterTitelEn ? config.beraterTitelEn : config.beraterTitel}: {displayName}
                     </div>
                     <div className="text-white/60 text-xs">
                       {config.beraterId} | {t('aktiv')}
@@ -218,7 +218,7 @@ export default function GlobalHeader({ kundeInfo }) {
                 : 'text-white/70 hover:text-white hover:bg-white/10'
             )}
           >
-            {tab.labelKey ? t(tab.labelKey) : tab.label}
+            {tab.labelKey ? t(tab.labelKey) : (lang === 'en' && tab.labelEn ? tab.labelEn : tab.label)}
           </button>
         ))}
       </div>
@@ -243,7 +243,7 @@ function ModeDropdown({ currentMode, currentInstitut, onSelect, onClose }) {
               )}
               style={{ background: m.colors.gradient }}
             >
-              {m.label}
+              {lang === 'en' && m.labelEn ? m.labelEn : m.label}
             </div>
             {/* Institute variants */}
             <div className="p-1.5">

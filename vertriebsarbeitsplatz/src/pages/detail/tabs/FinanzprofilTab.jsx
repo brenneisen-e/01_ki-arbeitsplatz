@@ -7,7 +7,7 @@ import useTranslation from '../../../i18n/useTranslation';
 import translations from '../../../i18n/translations';
 
 // ─── Module-level translation helpers (for code outside React components) ───
-function getLang() { try { return localStorage.getItem('kia_language') || 'de'; } catch { return 'de'; } }
+import { getLang } from '../../../utils/langHelper';
 function tx(key) { const entry = translations[key]; if (!entry) return key; return getLang() === 'en' ? entry.en : entry.de; }
 
 // ─── Badge component for transaction status ───

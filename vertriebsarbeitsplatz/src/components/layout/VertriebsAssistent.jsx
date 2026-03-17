@@ -4,10 +4,7 @@ import { useMode } from '../../hooks/useMode';
 import useTranslation from '../../i18n/useTranslation';
 import { KUNDEN_BY_MODE } from '../../data';
 import { VV_LEADS } from '../../data/vvExtended';
-
-// Module-level i18n helpers (for functions outside React component scope)
-function getLang() { try { return localStorage.getItem('kia_language') || 'de'; } catch { return 'de'; } }
-function tx(de, en) { return getLang() === 'en' ? en : de; }
+import { getLang, tx, invalidateLangCache } from '../../utils/langHelper';
 
 function getWelcomeMessage(modeId, t) {
   const keys = {
@@ -469,6 +466,7 @@ function getDemoResponse(message, { currentView, modeId }) {
 
 export default function VertriebsAssistent() {
   const { t, lang } = useTranslation();
+  useEffect(() => { invalidateLangCache(); }, [lang]);
   const { modeId, config, currentView, setActiveTab, selectedKundeId } = useMode();
   const [isOpen, setIsOpen] = useState(true);
   const [messages, setMessages] = useState([]);

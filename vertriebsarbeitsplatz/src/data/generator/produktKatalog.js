@@ -4,8 +4,7 @@
 import { random, randomBetween } from './utils';
 
 // ═══ i18n helpers ═══
-function getLang() { try { return localStorage.getItem('kia_language') || 'de'; } catch { return 'de'; } }
-function tx(de, en) { return getLang() === 'en' ? en : de; }
+import { getLang, tx } from '../../utils/langHelper';
 
 // ═══ KFZ-Modelle nach Vermögensklasse ═══
 export const KFZ_MODELLE = {

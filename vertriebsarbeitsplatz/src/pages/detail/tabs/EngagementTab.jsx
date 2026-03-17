@@ -10,7 +10,7 @@ import { clsx } from 'clsx';
 import useTranslation from '../../../i18n/useTranslation';
 
 // ─── Date formatter ───
-function getLang() { try { return localStorage.getItem('kia_language') || 'de'; } catch { return 'de'; } }
+import { getLang } from '../../../utils/langHelper';
 function fmtDate(d) {
   if (!d) return '-';
   return new Date(d).toLocaleDateString(getLang() === 'en' ? 'en-GB' : 'de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });

@@ -4,8 +4,7 @@
 import { random, randomBetween } from './utils';
 import { pickKfzModell } from './produktKatalog';
 
-function getLang() { try { return localStorage.getItem('kia_language') || 'de'; } catch { return 'de'; } }
-function tx(de, en) { return getLang() === 'en' ? en : de; }
+import { getLang, tx } from '../../utils/langHelper';
 
 const PRIO_ORDER = { kritisch: 0, hoch: 1, mittel: 2, niedrig: 3 };
 

@@ -4,8 +4,7 @@
 import { random, randomBetween, weightedRandom, shuffle } from './utils';
 
 // --- i18n helpers ---
-function getLang() { try { return localStorage.getItem('kia_language') || 'de'; } catch { return 'de'; } }
-function tx(de, en) { return getLang() === 'en' ? en : de; }
+import { getLang, tx } from '../../utils/langHelper';
 
 const VORNAMEN_M = ['Peter','Thomas','Michael','Klaus','Markus','Stefan','Andreas','Christian',
   'Daniel','Martin','Tobias','Florian','Jens','Matthias','Dirk','Ralf','Frank','Oliver',

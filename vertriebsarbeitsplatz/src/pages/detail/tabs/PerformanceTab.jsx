@@ -36,7 +36,7 @@ const ALLOC_COLORS = {
 const REGION_COLORS = [C.primary, C.gold, C.slate, C.slateLight, C.slateLighter];
 
 // ─── Format helpers ───────────────────────────────────────────────────────────
-function getLang() { try { return localStorage.getItem('kia_language') || 'de'; } catch { return 'de'; } }
+import { getLang } from '../../../utils/langHelper';
 function loc() { return getLang() === 'en' ? 'en-US' : 'de-DE'; }
 
 function fmtPct(v, decimals = 1) {

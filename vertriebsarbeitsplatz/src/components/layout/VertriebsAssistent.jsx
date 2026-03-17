@@ -758,7 +758,7 @@ export default function VertriebsAssistent() {
                       e.currentTarget.style.color = lead.isNeuerLead ? '#059669' : primary;
                     }}
                   >
-                    {lead.isNeuerLead && <span className="text-[9px] font-bold block text-emerald-600">NEU</span>}
+                    {lead.isNeuerLead && <span className="text-[9px] font-bold block text-emerald-600">{lang === 'en' ? 'NEW' : 'NEU'}</span>}
                     {lead.name}
                   </button>
                 ))}

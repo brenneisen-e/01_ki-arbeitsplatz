@@ -265,7 +265,7 @@ function LeadRow({ lead, isExpanded, onToggle, t, stadiumLabels, quellenLabels }
             {lead.name}
             {lead.isNeuerLead && (
               <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold whitespace-nowrap ${hovered ? 'bg-white/30 text-white' : 'bg-emerald-500 text-white animate-pulse'}`}>
-                Neuer Lead
+                {t('neuerLead')}
               </span>
             )}
           </div>

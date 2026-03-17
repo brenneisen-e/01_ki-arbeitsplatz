@@ -103,12 +103,12 @@ export const NEUGESCHAEFT_DATA = {
     top5: [
       { name: 'Familie Bergmann-Roth', betrag: 3500000 },
       { name: 'Dr. Anna Fischer', betrag: 1500000 },
-      { name: 'Tim Keller', betrag: 800000 },
+      { name: 'Maxim Meydarn', betrag: 800000 },
     ],
     vertraege: [
       { id: 'VV-2026-001', kundeId: 'VV008', kunde: 'Familie Bergmann-Roth', sparte: 'fairvalue', produkt: 'VV + Family Office', versicherer: 'HRK LUNIS', beitrag: 3500000, beitragsart: 'ges', status: 'aktiv', datum: '2026-01-15' },
       { id: 'VV-2026-002', kundeId: 'VV-NEW', kunde: 'Dr. Anna Fischer', sparte: 'fairvalue', produkt: 'Individuelle VV', versicherer: 'HRK LUNIS', beitrag: 1500000, beitragsart: 'ges', status: 'onboarding', datum: '2026-03-11' },
-      { id: 'VV-2026-003', kundeId: 'VV005', kunde: 'Tim Keller', sparte: 'smartvalue', produkt: 'SmartValue VV', versicherer: 'HRK LUNIS', beitrag: 800000, beitragsart: 'ges', status: 'aktiv', datum: '2026-02-01' },
+      { id: 'VV-2026-003', kundeId: 'VV005', kunde: 'Maxim Meydarn', sparte: 'smartvalue', produkt: 'SmartValue VV', versicherer: 'HRK LUNIS', beitrag: 800000, beitragsart: 'ges', status: 'aktiv', datum: '2026-02-01' },
     ],
   },
 };
@@ -700,8 +700,8 @@ export const AUFGABEN_BY_MODE = {
     { text: 'VR-FinanzPlan Sandra Müller erstellen', faellig: 'Fr', kundeId: 'KDB002', erledigt: false },
   ],
   vermoegensverwaltung: [
-    { text: 'Geeignetheitsbericht Keller NextGen (fällig in 21 Tagen)', faellig: 'Heute', kundeId: 'VV005', erledigt: false },
-    { text: 'WpHG-Fragebogen Keller NextGen aktualisieren', faellig: 'Heute', kundeId: 'VV005', erledigt: false },
+    { text: 'Geeignetheitsbericht Meydarn (fällig in 21 Tagen)', faellig: 'Heute', kundeId: 'VV005', erledigt: false },
+    { text: 'WpHG-Fragebogen Meydarn aktualisieren', faellig: 'Heute', kundeId: 'VV005', erledigt: false },
     { text: 'Rebalancing Tim Keller (Aktien +2pp über Ziel)', faellig: 'Morgen', kundeId: 'VV001', erledigt: false },
     { text: 'Investmentvorschlag Dr. Meier senden (Pipeline)', faellig: '15.03.', kundeId: 'VV-PIPE2', erledigt: false },
   ],

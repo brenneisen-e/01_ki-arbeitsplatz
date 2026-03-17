@@ -5,63 +5,38 @@ import useTranslation from '../../i18n/useTranslation';
 import { KUNDEN_BY_MODE } from '../../data';
 import { VV_LEADS } from '../../data/vvExtended';
 
-const WELCOME_MESSAGES = {
-  versicherung:
-    'Hallo! Ich bin dein KI-Vertriebsassistent. Ich kann dir bei Kundenanalysen, Produktempfehlungen und Vertriebsstrategien helfen.',
-  banking:
-    'Hallo! Ich unterstütze dich bei Kreditanalysen, Anlageberatung und Kundengesprächen.',
-  vermoegensverwaltung:
-    'Hallo! Ich helfe dir bei Portfolioanalysen, Mandatsbetreuung und Compliance-Fragen.',
-};
+function getWelcomeMessage(modeId, t) {
+  const keys = {
+    versicherung: 'welcomeVersicherung',
+    banking: 'welcomeBanking',
+    vermoegensverwaltung: 'welcomeVermoegensverwaltung',
+  };
+  return t(keys[modeId] || keys.versicherung);
+}
 
-const QUICK_ACTIONS = {
-  versicherung: [
-    'Neue Leads anzeigen',
-    'Kundenpotenzial analysieren',
-    'Gesprächsleitfaden erstellen',
-    'Cross-Selling Chancen',
-  ],
-  banking: [
-    'Neue Leads anzeigen',
-    'Kundenpotenzial analysieren',
-    'Gesprächsleitfaden erstellen',
-    'Kreditanalyse starten',
-  ],
-  vermoegensverwaltung: [
-    'Neue Leads anzeigen',
-    'Mandantenpotenzial analysieren',
-    'Gesprächsleitfaden erstellen',
-    'Portfolio-Analyse',
-  ],
-};
+function getQuickActions(modeId, t) {
+  const actions = {
+    versicherung: [t('neueLeadsAnzeigen'), t('kundenpotenzialAnalysieren'), t('gespraechsleitfadenErstellen'), t('crossSellingChancen')],
+    banking: [t('neueLeadsAnzeigen'), t('kundenpotenzialAnalysieren'), t('gespraechsleitfadenErstellen'), t('kreditanalyseStarten')],
+    vermoegensverwaltung: [t('neueLeadsAnzeigen'), t('mandantenpotenzialAnalysieren'), t('gespraechsleitfadenErstellen'), t('portfolioAnalyse')],
+  };
+  return actions[modeId] || actions.versicherung;
+}
 
 // Detail-view quick actions that change based on customer context
-function getDetailQuickActions(modeId, kunde) {
+function getDetailQuickActions(modeId, kunde, t) {
   if (modeId === 'vermoegensverwaltung' && kunde) {
     const leads = VV_LEADS.filter(l => l.referenzMandant === kunde.id);
     const hasLeads = leads.length > 0;
-    const actions = [
-      'Anschreiben formulieren',
-      'Gesprächsleitfaden erstellen',
-    ];
-    if (hasLeads) actions.push('Leads analysieren');
-    actions.push('Portfolio-Analyse');
+    const actions = [t('anschreibenFormulieren'), t('gespraechsleitfadenErstellen')];
+    if (hasLeads) actions.push(t('leadsAnalysieren'));
+    actions.push(t('portfolioAnalyse'));
     return actions;
   }
   if (modeId === 'banking') {
-    return [
-      'Anschreiben formulieren',
-      'Gesprächsleitfaden erstellen',
-      'Kreditanalyse starten',
-      'Cross-Selling Chancen',
-    ];
+    return [t('anschreibenFormulieren'), t('gespraechsleitfadenErstellen'), t('kreditanalyseStarten'), t('crossSellingChancen')];
   }
-  return [
-    'Anschreiben formulieren',
-    'Gesprächsleitfaden erstellen',
-    'Kundenpotenzial analysieren',
-    'Cross-Selling Chancen',
-  ];
+  return [t('anschreibenFormulieren'), t('gespraechsleitfadenErstellen'), t('kundenpotenzialAnalysieren'), t('crossSellingChancen')];
 }
 
 function getAnschreibenLeadOptions(kundeId) {
@@ -146,11 +121,9 @@ Senior Advisor | HRK LUNIS AG`;
   </div>`;
 }
 
-const COCKPIT_QUICK_ACTIONS = [
-  'Top 5 nach Ergebnis',
-  'Performance Überblick',
-  'Auffällige Vermittler',
-];
+function getCockpitQuickActions(t) {
+  return [t('top5NachErgebnis'), t('performanceUeberblick'), t('auffaelligeVermittler')];
+}
 
 function getCockpitDemoResponse(message) {
   const lower = message.toLowerCase();
@@ -627,15 +600,15 @@ export default function VertriebsAssistent() {
   };
 
   const welcomeMessage = currentView === 'cockpit'
-    ? 'Hallo! Ich kann dir bei der Analyse deiner Dashboard-Daten helfen. Hier sind einige Vorschläge:'
+    ? t('welcomeCockpit')
     : currentView === 'detail' && currentKunde
-      ? `Hallo! Ich bin bereit für ${currentKunde.name}. Was kann ich für dich tun?`
-      : (WELCOME_MESSAGES[modeId] || WELCOME_MESSAGES.versicherung);
+      ? t('welcomeDetail', { name: currentKunde.name })
+      : getWelcomeMessage(modeId, t);
   const quickActions = currentView === 'cockpit'
-    ? COCKPIT_QUICK_ACTIONS
+    ? getCockpitQuickActions(t)
     : currentView === 'detail' && currentKunde
-      ? getDetailQuickActions(modeId, currentKunde)
-      : (QUICK_ACTIONS[modeId] || QUICK_ACTIONS.versicherung);
+      ? getDetailQuickActions(modeId, currentKunde, t)
+      : getQuickActions(modeId, t);
 
   // Don't show on landing page
   if (currentView === 'landing') return null;
@@ -810,7 +783,7 @@ export default function VertriebsAssistent() {
                     <span className="animate-bounce" style={{ animationDelay: '150ms' }}>.</span>
                     <span className="animate-bounce" style={{ animationDelay: '300ms' }}>.</span>
                   </span>
-                  {' '}Analysiere...
+                  {' '}{t('analysiere')}
                 </div>
               </div>
             )}
@@ -826,7 +799,7 @@ export default function VertriebsAssistent() {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={handleKeyDown}
-                placeholder="Nachricht eingeben..."
+                placeholder={t('nachrichtEingeben')}
                 rows={1}
                 className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm resize-none focus:outline-none focus:ring-2 transition-shadow"
                 style={{

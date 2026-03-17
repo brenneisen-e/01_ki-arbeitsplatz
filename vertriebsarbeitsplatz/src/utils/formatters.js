@@ -1,4 +1,4 @@
-function getLang() { try { return localStorage.getItem('kia_language') || 'de'; } catch { return 'de'; } }
+import { getLang } from './langHelper';
 function numLoc() { return getLang() === 'en' ? 'en-US' : 'de-DE'; }
 function dateLoc() { return getLang() === 'en' ? 'en-GB' : 'de-DE'; }
 function cur() { return getLang() === 'en' ? '$' : '\u20ac'; }

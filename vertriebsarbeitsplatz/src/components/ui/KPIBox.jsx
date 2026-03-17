@@ -2,7 +2,7 @@ import { clsx } from 'clsx';
 import * as LucideIcons from 'lucide-react';
 import { useEffect, useState, useMemo } from 'react';
 
-function getLang() { try { return localStorage.getItem('kia_language') || 'de'; } catch { return 'de'; } }
+import { getLang } from '../../utils/langHelper';
 
 function formatValue(wert, format) {
   const loc = getLang() === 'en' ? 'en-US' : 'de-DE';

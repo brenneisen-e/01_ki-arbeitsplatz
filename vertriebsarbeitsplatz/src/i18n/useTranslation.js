@@ -23,6 +23,7 @@ export default function useTranslation() {
     };
     // Listen for same-tab language changes via custom event
     const langHandler = (e) => {
+      console.log('[useTranslation] Language change event received:', e.detail);
       setLang(e.detail || 'de');
     };
     window.addEventListener('storage', storageHandler);

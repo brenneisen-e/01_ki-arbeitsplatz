@@ -10,8 +10,7 @@ import { VV_LEADS } from '../../../data/vvExtended';
 import { formatEur } from '../../../utils/formatters';
 import { getKundeFoto } from '../../../utils/kundenFotos';
 
-function getLang() { try { return localStorage.getItem('kia_language') || 'de'; } catch { return 'de'; } }
-function tx(de, en) { return getLang() === 'en' ? en : de; }
+import { getLang, tx } from '../../../utils/langHelper';
 
 const MINI_KPIS = {
   versicherung: [

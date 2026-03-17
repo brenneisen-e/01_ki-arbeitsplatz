@@ -5,6 +5,7 @@ import { useMode } from '../../hooks/useMode';
 import { MODE_CONFIGS, MODUS_LIST } from '../../data/modeConfig';
 import { getLogoUrl } from '../../utils/logos';
 import useTranslation from '../../i18n/useTranslation';
+import { invalidateLangCache } from '../../utils/langHelper';
 
 export default function LandingPage() {
   const { t } = useTranslation();
@@ -253,24 +254,24 @@ export default function LandingPage() {
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-1 bg-white/10 rounded-lg p-0.5">
             <button
-              onClick={() => { setLanguage('de'); localStorage.setItem('kia_language', 'de'); window.dispatchEvent(new CustomEvent('kia-language-change', { detail: 'de' })); }}
+              onClick={() => { console.log('[LangSwitch] Clicked DE'); invalidateLangCache(); setLanguage('de'); localStorage.setItem('kia_language', 'de'); window.dispatchEvent(new CustomEvent('kia-language-change', { detail: 'de' })); }}
               className={clsx(
-                'flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium transition-all cursor-pointer',
-                language === 'de' ? 'bg-white text-slate-800 shadow-sm' : 'text-white/60 hover:text-white/90'
+                'flex items-center gap-1.5 px-3 py-2 rounded-md text-xs font-medium transition-all cursor-pointer select-none',
+                language === 'de' ? 'bg-white text-slate-800 shadow-sm' : 'text-white/60 hover:text-white hover:bg-white/15'
               )}
             >
-              <svg className="w-4 h-3 rounded-sm" viewBox="0 0 640 480"><rect width="640" height="160" fill="#000"/><rect y="160" width="640" height="160" fill="#D00"/><rect y="320" width="640" height="160" fill="#FFCE00"/></svg>
-              DE
+              <svg className="w-4 h-3 rounded-sm pointer-events-none" viewBox="0 0 640 480"><rect width="640" height="160" fill="#000"/><rect y="160" width="640" height="160" fill="#D00"/><rect y="320" width="640" height="160" fill="#FFCE00"/></svg>
+              <span className="pointer-events-none">DE</span>
             </button>
             <button
-              onClick={() => { setLanguage('en'); localStorage.setItem('kia_language', 'en'); window.dispatchEvent(new CustomEvent('kia-language-change', { detail: 'en' })); }}
+              onClick={() => { console.log('[LangSwitch] Clicked EN'); invalidateLangCache(); setLanguage('en'); localStorage.setItem('kia_language', 'en'); window.dispatchEvent(new CustomEvent('kia-language-change', { detail: 'en' })); }}
               className={clsx(
-                'flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium transition-all cursor-pointer',
-                language === 'en' ? 'bg-white text-slate-800 shadow-sm' : 'text-white/60 hover:text-white/90'
+                'flex items-center gap-1.5 px-3 py-2 rounded-md text-xs font-medium transition-all cursor-pointer select-none',
+                language === 'en' ? 'bg-white text-slate-800 shadow-sm' : 'text-white/60 hover:text-white hover:bg-white/15'
               )}
             >
-              <svg className="w-4 h-3 rounded-sm" viewBox="0 0 60 30"><clipPath id="s"><path d="M0,0 v30 h60 v-30 z"/></clipPath><clipPath id="t"><path d="M30,15 h30 v15 z v15 h-30 z h-30 v-15 z v-15 h30 z"/></clipPath><g clipPath="url(#s)"><path d="M0,0 v30 h60 v-30 z" fill="#012169"/><path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" strokeWidth="6"/><path d="M0,0 L60,30 M60,0 L0,30" clipPath="url(#t)" stroke="#C8102E" strokeWidth="4"/><path d="M30,0 v30 M0,15 h60" stroke="#fff" strokeWidth="10"/><path d="M30,0 v30 M0,15 h60" stroke="#C8102E" strokeWidth="6"/></g></svg>
-              EN
+              <svg className="w-4 h-3 rounded-sm pointer-events-none" viewBox="0 0 60 30"><clipPath id="s"><path d="M0,0 v30 h60 v-30 z"/></clipPath><clipPath id="t"><path d="M30,15 h30 v15 z v15 h-30 z h-30 v-15 z v-15 h30 z"/></clipPath><g clipPath="url(#s)"><path d="M0,0 v30 h60 v-30 z" fill="#012169"/><path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" strokeWidth="6"/><path d="M0,0 L60,30 M60,0 L0,30" clipPath="url(#t)" stroke="#C8102E" strokeWidth="4"/><path d="M30,0 v30 M0,15 h60" stroke="#fff" strokeWidth="10"/><path d="M30,0 v30 M0,15 h60" stroke="#C8102E" strokeWidth="6"/></g></svg>
+              <span className="pointer-events-none">EN</span>
             </button>
           </div>
           <span className="text-xs text-white/40 font-medium tracking-wider uppercase">Open Finance Suite</span>

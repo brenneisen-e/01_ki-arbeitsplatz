@@ -10,6 +10,69 @@ import { useState } from 'react';
 import { useMode } from '../../../hooks/useMode';
 import useTranslation from '../../../i18n/useTranslation';
 
+// ─── Translation helpers for data values ───
+const FAMILIENSTAND_EN = { verheiratet: 'Married', ledig: 'Single', geschieden: 'Divorced', verwitwet: 'Widowed' };
+const BERUF_EN = [
+  ['Unternehmer', 'Entrepreneur'], ['Unternehmerin', 'Entrepreneur'],
+  ['Maschinenbau', 'Mechanical Engineering'], ['Stiftungsvorstand', 'Foundation Chair'],
+  ['Stiftungsvorsitzende', 'Foundation Chair'], ['Ärztin', 'Physician'], ['Arzt', 'Physician'],
+  ['Anwältin', 'Lawyer'], ['Anwalt', 'Lawyer'], ['Ingenieur', 'Engineer'],
+  ['Geschäftsführer', 'Managing Director'], ['Geschäftsführerin', 'Managing Director'],
+  ['Beamter', 'Civil Servant'], ['Beamtin', 'Civil Servant'],
+  ['Lehrer', 'Teacher'], ['Lehrerin', 'Teacher'],
+  ['Architekt', 'Architect'], ['Architektin', 'Architect'],
+  ['Selbstständig', 'Self-Employed'], ['Freiberufler', 'Freelancer'],
+  ['Rentner', 'Retiree'], ['Rentnerin', 'Retiree'],
+  ['Hausfrau', 'Homemaker'], ['Hausmann', 'Homemaker'],
+  ['Kaufmann', 'Merchant'], ['Kauffrau', 'Merchant'],
+  ['Berater', 'Consultant'], ['Beraterin', 'Consultant'],
+  ['Apotheker', 'Pharmacist'], ['Apothekerin', 'Pharmacist'],
+  ['Zahnarzt', 'Dentist'], ['Zahnärztin', 'Dentist'],
+  ['Chefarzt', 'Chief Physician'], ['Chefärztin', 'Chief Physician'],
+  ['Kardiologe', 'Cardiologist'], ['Kardiologin', 'Cardiologist'],
+  ['Chirurg', 'Surgeon'], ['Chirurgin', 'Surgeon'],
+  ['Praxiskette', 'Practice Chain'], ['Privatpraxis', 'Private Practice'],
+  ['Tech-Gründer', 'Tech Founder'], ['Tech-Unternehmer', 'Tech Entrepreneur'],
+  ['Familienunternehmen', 'Family Business'], ['Bildungsstiftung', 'Education Foundation'],
+  ['Kulturstiftung', 'Cultural Foundation'], ['Vorstandsvorsitzender', 'Chairman'],
+  ['Gen', 'Gen'], ['3.Gen', '3rd Gen'],
+];
+const INST_EN = { Eigene: 'Own', Privat: 'Private' };
+const SPARTE_EN = { vv: 'AM', leben: 'Life', schaden: 'P&C', kranken: 'Health', komposit: 'Composite', kredit: 'Credit', vorsorge: 'Pension' };
+const DETAILS_EN = [
+  ['Gemischtes Mandat', 'Mixed Mandate'], ['Gemischte Fonds', 'Mixed Funds'],
+  ['Festgeld/Tagesgeld', 'Fixed Deposit/Money Market'],
+  ['Konservativ-Ausgewogen', 'Conservative-Balanced'], ['Ausgewogen', 'Balanced'],
+  ['Konservativ', 'Conservative'], ['Defensiv', 'Defensive'], ['Wachstum', 'Growth'],
+  ['EFH', 'Detached House'], ['MFH', 'Multi-Family'], ['Gewerbe', 'Commercial'],
+  ['Maschinenbau GmbH', 'Engineering GmbH'], ['Ferienwohnung', 'Vacation Apartment'],
+  ['CASH GEPARKT! Exit-Erlöse', 'CASH PARKED! Exit proceeds'],
+  ['Praxis-Konto', 'Practice Account'], ['Praxis-Immobilie', 'Practice Property'],
+  ['Privatkonto', 'Private Account'], ['Schwerpunkt', 'Focus'],
+  ['Ausschüttung', 'Distribution'], ['Ablauf', 'Maturity'],
+  ['Rückkaufswert', 'Surrender Value'], ['RKW', 'SV'],
+  ['ESG-Filter', 'ESG Filter'], ['Tech-Fokus', 'Tech Focus'],
+  ['Gehaltseingang', 'Salary Deposit'], ['Notgroschen', 'Emergency Fund'],
+  ['Steuerrücklage', 'Tax Reserve'], ['Firmenkonto', 'Company Account'],
+  ['Betriebsmittel', 'Operating Funds'], ['Hauptkonto', 'Main Account'],
+  ['Ansparphase', 'Savings Phase'], ['Zinsbindung', 'Fixed Rate Period'],
+  ['bis', 'until'], ['mtl', '/mo'],
+];
+
+function translateDetails(details, lang) {
+  if (lang !== 'en' || !details) return details;
+  let s = details;
+  for (const [de, en] of DETAILS_EN) s = s.replaceAll(de, en);
+  return s;
+}
+
+function translateBeruf(beruf, lang) {
+  if (lang !== 'en' || !beruf) return beruf;
+  let s = beruf;
+  for (const [de, en] of BERUF_EN) s = s.replaceAll(de, en);
+  return s;
+}
+
 function getFremdTypLabels(t) {
   return {
     girokonto: t('typ.girokonto'),
@@ -37,11 +100,24 @@ function getFremdTypLabels(t) {
     rechtsschutz: t('typ.rechtsschutz'),
     wohngebaeude: t('typ.wohngebaeude'),
     pflege: t('typ.pflege'),
+    // VV-specific types
+    cash: t('typ.tagesgeld'),
+    immobilien: t('typ.immobilien'),
+    immobilie: t('typ.immobilien'),
+    gmbh: t('typ.gmbh'),
+    lv: t('typ.lv') || (getLang() === 'en' ? 'Life Insurance' : 'Lebensversicherung'),
+    angel: getLang() === 'en' ? 'Angel Investment' : 'Angel Investment',
+    krypto: getLang() === 'en' ? 'Crypto' : 'Krypto',
+    konto: getLang() === 'en' ? 'Account' : 'Konto',
+    praxiskonto: getLang() === 'en' ? 'Practice Account' : 'Praxiskonto',
+    pe: 'Private Equity',
+    mandat: getLang() === 'en' ? 'Mandate' : 'Mandat',
+    unternehmensbeteiligung: getLang() === 'en' ? 'Business Participation' : 'Unternehmensbeteiligung',
   };
 }
 
 export default function StammdatenDetailTab({ kunde }) {
-  const { t, tn } = useTranslation();
+  const { t, tn, lang } = useTranslation();
   const [risikoExpanded, setRisikoExpanded] = useState(false);
   const [fotoFailed, setFotoFailed] = useState(false);
   const { config, modeId } = useMode();
@@ -86,10 +162,10 @@ export default function StammdatenDetailTab({ kunde }) {
           <div className="flex-1">
             <h2 className="text-xl font-bold text-slate-800">{tn(kunde.name)}</h2>
             <div className="flex items-center gap-4 mt-1.5 text-sm text-slate-500">
-              <span className="flex items-center gap-1"><Briefcase size={14} /> {kunde.beruf}</span>
+              <span className="flex items-center gap-1"><Briefcase size={14} /> {translateBeruf(kunde.beruf, lang)}</span>
               <span className="flex items-center gap-1"><Users size={14} /> {kunde.alter} {t('jahre')}</span>
               {kunde.familienstand && (
-                <span className="flex items-center gap-1"><Heart size={14} /> {kunde.familienstand?.charAt(0).toUpperCase() + kunde.familienstand?.slice(1)}</span>
+                <span className="flex items-center gap-1"><Heart size={14} /> {lang === 'en' ? (FAMILIENSTAND_EN[kunde.familienstand] || kunde.familienstand) : kunde.familienstand?.charAt(0).toUpperCase() + kunde.familienstand?.slice(1)}</span>
               )}
             </div>
             <div className="flex items-center gap-3 mt-2 text-xs text-slate-400">
@@ -128,13 +204,13 @@ export default function StammdatenDetailTab({ kunde }) {
               const birthDate = new Date(birthYear, today.getMonth() - 3, 15);
               return birthDate.toLocaleDateString(getLang() === 'en' ? 'en-GB' : 'de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
             })()})`} />
-            <InfoRow label={t('beruf')} value={kunde.beruf} />
+            <InfoRow label={t('beruf')} value={translateBeruf(kunde.beruf, lang)} />
             {kunde.arbeitgeber && (
               <ArbeitgeberRow arbeitgeber={kunde.arbeitgeber} t={t} />
             )}
-            <InfoRow label={t('familienstand')} value={kunde.familienstand ? kunde.familienstand.charAt(0).toUpperCase() + kunde.familienstand.slice(1) : ''} />
+            <InfoRow label={t('familienstand')} value={kunde.familienstand ? (lang === 'en' ? (FAMILIENSTAND_EN[kunde.familienstand] || kunde.familienstand) : kunde.familienstand.charAt(0).toUpperCase() + kunde.familienstand.slice(1)) : ''} />
             {kunde.partner && (
-              <InfoRow label={t('partner')} value={`${kunde.partner.name} (${kunde.partner.beruf})`} />
+              <InfoRow label={t('partner')} value={`${kunde.partner.name} (${translateBeruf(kunde.partner.beruf, lang)})`} />
             )}
             {kunde.kinder?.length > 0 && (
               <InfoRow label={t('kinder')} value={kunde.kinder.map(k => `${k.name} (${k.alter})`).join(', ')} />
@@ -251,11 +327,11 @@ export default function StammdatenDetailTab({ kunde }) {
                 return (
                   <span className="flex items-center gap-2">
                     {logoUrl && <img src={logoUrl} alt="" className="w-5 h-5 rounded object-contain" onError={e => { e.target.style.display = 'none'; }} />}
-                    <span>{v}</span>
+                    <span>{lang === 'en' ? (INST_EN[v] || v) : v}</span>
                   </span>
                 );
               }},
-              { id: 'details', label: t('details') },
+              { id: 'details', label: t('details'), render: v => translateDetails(v, lang) },
               { id: 'volumen', label: t('volumenLabel'), render: v => <span className="font-mono">{formatEur(v)}</span> },
               { id: 'consent', label: 'Consent', render: (v, row) => {
                 if (!v) return <span className="text-slate-400">{'\u2717'}</span>;
@@ -433,6 +509,7 @@ function HaustiereRow({ haustiere, t }) {
 function ExpandableProduktRow({ produkt, isVV, t }) {
   const [expanded, setExpanded] = useState(false);
   const [hovered, setHovered] = useState(false);
+  const lang = getLang();
 
   return (
     <>
@@ -453,11 +530,11 @@ function ExpandableProduktRow({ produkt, isVV, t }) {
         </td>
         <td className="px-4 py-3 text-sm">
           {hovered && !expanded
-            ? <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-white/20 text-white">{produkt.sparte || '-'}</span>
+            ? <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-white/20 text-white">{(lang === 'en' ? SPARTE_EN[produkt.sparte] : null) || produkt.sparte || '-'}</span>
             : (produkt.sparte ? <SparteBadge sparte={produkt.sparte} /> : '-')
           }
         </td>
-        <td className={`px-4 py-3 text-sm ${hovered && !expanded ? 'text-white/90' : 'text-slate-700'}`}>{produkt.details}</td>
+        <td className={`px-4 py-3 text-sm ${hovered && !expanded ? 'text-white/90' : 'text-slate-700'}`}>{translateDetails(produkt.details, lang)}</td>
         <td className={`px-4 py-3 text-sm ${hovered && !expanded ? 'text-white' : ''}`}>
           <span className={`font-mono font-medium ${hovered && !expanded ? 'text-white' : ''}`}>
             {formatEur(isVV ? produkt.volumen : produkt.praemie)}
@@ -485,11 +562,11 @@ function ExpandableProduktRow({ produkt, isVV, t }) {
               </div>
               <div>
                 <span className="text-slate-400 uppercase tracking-wider">Sparte</span>
-                <div className="font-medium text-slate-700 mt-0.5">{produkt.sparte || '-'}</div>
+                <div className="font-medium text-slate-700 mt-0.5">{(lang === 'en' ? SPARTE_EN[produkt.sparte] : null) || produkt.sparte || '-'}</div>
               </div>
               <div>
                 <span className="text-slate-400 uppercase tracking-wider">Details</span>
-                <div className="font-medium text-slate-700 mt-0.5">{produkt.details}</div>
+                <div className="font-medium text-slate-700 mt-0.5">{translateDetails(produkt.details, lang)}</div>
               </div>
               {produkt.status === 'optimierbar' && (
                 <div className="col-span-2 md:col-span-4 mt-1">

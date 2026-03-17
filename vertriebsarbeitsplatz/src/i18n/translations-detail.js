@@ -291,6 +291,7 @@ const translationsDetail = {
   'mitarbeiterLabel': { de: 'Mitarbeiter', en: 'Employees' },
   'standortLabel': { de: 'Standort', en: 'Location' },
   'geschWert': { de: 'Gesch. Wert', en: 'Est. Value' },
+  'seitLabel': { de: 'seit', en: 'since' },
 
   // ─── Open Finance Tab (additional) ───
   'fidaConsentStatus': { de: 'FIDA Consent-Status', en: 'FIDA Consent Status' },

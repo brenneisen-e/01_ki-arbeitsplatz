@@ -394,12 +394,41 @@ const ROLLE_MAP = {
   stiftung: { de: 'Mandant (Institution)', en: 'Client (Institution)' },
 };
 
+const BERUF_FAM_EN = [
+  ['Unternehmer Maschinenbau 3.Gen', 'Entrepreneur, Mechanical Engineering 3rd Gen'],
+  ['Stiftungsvorstand (ehrenamtlich)', 'Foundation Chair (honorary)'],
+  ['Anwaeltin, Partnerin Wirtschaftskanzlei (Frankfurt)', 'Attorney, Partner at Law Firm (Frankfurt)'],
+  ['Ingenieur, im Familienunternehmen taetig', 'Engineer, active in Family Business'],
+  ['SaaS-Unternehmer (Exit 2024, 8M netto)', 'SaaS Entrepreneur (Exit 2024, 8M net)'],
+  ['CTO (eigenes Startup)', 'CTO (own Startup)'],
+  ['Abiturient, Studienbeginn 2026', 'High School Graduate, starting University 2026'],
+  ['Schülerin (Gymnasium)', 'High School Student'],
+  ['Bildungsstiftung (gegründet 2008)', 'Education Foundation (founded 2008)'],
+  ['Stifter, ehem. Unternehmer', 'Founder, former Entrepreneur'],
+  ['Stiftungsvorstand', 'Foundation Chair'],
+  ['Geschäftsfuehrer Stiftung, Vorstandsmitglied', 'Foundation Managing Director, Board Member'],
+  ['Chefarzt Kardiologie + Privatpraxis', 'Chief of Cardiology + Private Practice'],
+  ['Psychologin (eigene Praxis)', 'Psychologist (own Practice)'],
+  ['Assistenzarzt Innere Medizin', 'Resident, Internal Medicine'],
+  ['Medizinstudentin (5. Semester)', 'Medical Student (5th Semester)'],
+  ['Tech-Gründer (Seed-Exit 500k)', 'Tech Founder (Seed Exit 500k)'],
+];
+
+function translateBerufFam(beruf, lang) {
+  if (lang !== 'en' || !beruf) return beruf;
+  for (const [de, en] of BERUF_FAM_EN) {
+    if (beruf === de) return en;
+  }
+  return beruf;
+}
+
 function transformFamilie(raw) {
   if (!raw) return null;
   const lang = getLang();
   const mitglieder = (raw.mitglieder || []).map(m => ({
     ...m,
     rolle: (ROLLE_MAP[m.rolle] || { de: m.rolle, en: m.rolle })[lang],
+    beruf: translateBerufFam(m.beruf, lang),
     istMandant: m.mandant === true || m.rolle === 'mandant',
     istLead: m.istLead || false,
   }));
@@ -412,20 +441,22 @@ function transformFamilie(raw) {
 
   const unternehmen = hasUnternehmen ? {
     name: beruf.includes('Maschinenbau') ? 'Keller Maschinenbau GmbH' :
-          beruf.includes('SaaS') ? 'Lindenberg Digital GmbH (verkauft)' :
+          beruf.includes('SaaS') ? (lang === 'en' ? 'Lindenberg Digital GmbH (sold)' : 'Lindenberg Digital GmbH (verkauft)') :
           `${mandant?.name?.split(' ').pop() || 'Familien'} Holding GmbH`,
-    branche: beruf.includes('Maschinenbau') ? 'Maschinenbau' :
-             beruf.includes('SaaS') ? 'Software/SaaS' : 'Diversifiziert',
+    branche: beruf.includes('Maschinenbau') ? (lang === 'en' ? 'Mechanical Engineering' : 'Maschinenbau') :
+             beruf.includes('SaaS') ? 'Software/SaaS' : (lang === 'en' ? 'Diversified' : 'Diversifiziert'),
     umsatz: '15-50M EUR',
     mitarbeiter: '50-200',
-    standort: 'Deutschland',
+    standort: lang === 'en' ? 'Germany' : 'Deutschland',
     geschaetzterWert: '5-20M EUR',
     nachfolge: gp?.themen?.some(t => t.toLowerCase().includes('nachfolge'))
-      ? { status: 'offen', details: gp.themen.find(t => t.toLowerCase().includes('nachfolge')) || 'Nachfolgeregelung in Planung' }
+      ? { status: 'offen', details: lang === 'en'
+          ? 'Succession planning in progress'
+          : (gp.themen.find(t => t.toLowerCase().includes('nachfolge')) || 'Nachfolgeregelung in Planung') }
       : null,
     positionen: mitglieder.filter(m => m.istMandant || m.beruf?.toLowerCase().includes('unternehmen')).map(m => ({
       name: m.name,
-      rolle: m.istMandant ? 'Geschäftsführer' : 'Mitarbeiter',
+      rolle: m.istMandant ? (lang === 'en' ? 'Managing Director' : 'Geschäftsführer') : (lang === 'en' ? 'Employee' : 'Mitarbeiter'),
       anteil: m.istMandant ? '100%' : null,
     })),
   } : null;
@@ -433,7 +464,7 @@ function transformFamilie(raw) {
   return {
     mitglieder,
     gesamtAuM: raw.vermoegensUebersicht?.gesamt || mitglieder.reduce((s, m) => s + (m.aum || m.vermoegen || 0), 0),
-    potenzial: gp?.zeitrahmen || 'Hoch',
+    potenzial: gp?.zeitrahmen || (lang === 'en' ? 'High' : 'Hoch'),
     unternehmen,
     weitereMandate: [],
     peBeteiligungen: [],

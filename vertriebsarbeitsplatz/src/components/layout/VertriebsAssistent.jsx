@@ -735,35 +735,6 @@ export default function VertriebsAssistent() {
               </div>
             )}
 
-            {/* Lead selection chips for Anschreiben flow */}
-            {anschreibenStep === 'select_lead' && kundeLeads.length > 0 && (
-              <div className="pl-9 flex flex-wrap gap-1.5">
-                {kundeLeads.map((lead) => (
-                  <button
-                    key={lead.id}
-                    onClick={() => sendMessage(lead.name)}
-                    className="px-2.5 py-1.5 text-[11px] rounded-lg border transition-colors text-left leading-tight"
-                    style={{
-                      borderColor: lead.isNeuerLead ? '#10b981' : primaryLight,
-                      color: lead.isNeuerLead ? '#059669' : primary,
-                      backgroundColor: lead.isNeuerLead ? '#ecfdf5' : undefined,
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.backgroundColor = lead.isNeuerLead ? '#059669' : primary;
-                      e.currentTarget.style.color = '#fff';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.backgroundColor = lead.isNeuerLead ? '#ecfdf5' : 'transparent';
-                      e.currentTarget.style.color = lead.isNeuerLead ? '#059669' : primary;
-                    }}
-                  >
-                    {lead.isNeuerLead && <span className="text-[9px] font-bold block text-emerald-600">{lang === 'en' ? 'NEW' : 'NEU'}</span>}
-                    {lead.name}
-                  </button>
-                ))}
-              </div>
-            )}
-
             {/* Chat messages */}
             {messages.map((msg, i) => (
               <div
@@ -807,6 +778,35 @@ export default function VertriebsAssistent() {
                 )}
               </div>
             ))}
+
+            {/* Lead selection chips for Anschreiben flow */}
+            {anschreibenStep === 'select_lead' && kundeLeads.length > 0 && (
+              <div className="pl-9 flex flex-wrap gap-1.5">
+                {kundeLeads.map((lead) => (
+                  <button
+                    key={lead.id}
+                    onClick={() => sendMessage(lead.name)}
+                    className="px-2.5 py-1.5 text-[11px] rounded-lg border transition-colors text-left leading-tight"
+                    style={{
+                      borderColor: lead.isNeuerLead ? '#10b981' : primaryLight,
+                      color: lead.isNeuerLead ? '#059669' : primary,
+                      backgroundColor: lead.isNeuerLead ? '#ecfdf5' : undefined,
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = lead.isNeuerLead ? '#059669' : primary;
+                      e.currentTarget.style.color = '#fff';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = lead.isNeuerLead ? '#ecfdf5' : 'transparent';
+                      e.currentTarget.style.color = lead.isNeuerLead ? '#059669' : primary;
+                    }}
+                  >
+                    {lead.isNeuerLead && <span className="text-[9px] font-bold block text-emerald-600">{lang === 'en' ? 'NEW' : 'NEU'}</span>}
+                    {lead.name}
+                  </button>
+                ))}
+              </div>
+            )}
 
             {/* Typing indicator */}
             {isTyping && (

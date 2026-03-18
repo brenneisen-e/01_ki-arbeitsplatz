@@ -194,35 +194,29 @@
   pointer-events: auto;
 }
 
-/* Card Hover (nur für eigenständige Kacheln ohne Zeilen) */
-.card-hover:hover {
-  background-color: var(--mode-primary) !important;
-  border-color: transparent !important;
-  color: white !important;
-}
-.card-hover:hover span,
-.card-hover:hover div,
-.card-hover:hover a,
-.card-hover:hover svg {
+/* Kinder in hover-baren Elementen erben IMMER die Farbe vom Parent.
+   So muss bei Hover nur 1 Element restyled werden statt 15+. */
+.row-hover span, .row-hover div, .row-hover a, .row-hover td, .row-hover svg,
+.card-hover span, .card-hover div, .card-hover a, .card-hover svg {
   color: inherit !important;
-}
-.card-hover:hover .kpi-icon-box {
-  background-color: rgba(255,255,255,0.25) !important;
 }
 
-/* Row Hover (komplett unabhängig von Card) */
-.row-hover:hover {
-  background-color: var(--mode-primary) !important;
-  color: white !important;
+/* Card Hover: nur 2 Properties auf dem Parent */
+.card-hover:hover {
+  background-color: var(--mode-primary);
+  border-color: transparent;
+  color: white;
 }
-.row-hover:hover span,
-.row-hover:hover div,
-.row-hover:hover a,
-.row-hover:hover td,
-.row-hover:hover svg {
-  color: inherit !important;
+.card-hover:hover .kpi-icon-box {
+  background-color: rgba(255,255,255,0.25);
+}
+
+/* Row Hover: nur 2 Properties auf dem Parent */
+.row-hover:hover {
+  background-color: var(--mode-primary);
+  color: white;
 }
 .row-hover:hover .rh-badge {
-  background-color: rgba(255,255,255,0.2) !important;
-  border-color: rgba(255,255,255,0.35) !important;
+  background-color: rgba(255,255,255,0.2);
+  border-color: rgba(255,255,255,0.35);
 }

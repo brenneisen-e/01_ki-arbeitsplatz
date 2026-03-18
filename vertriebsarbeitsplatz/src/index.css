@@ -188,9 +188,10 @@
   border-color: transparent;
 }
 
-/* === Row-Hover: performant mit CSS Containment === */
+/* === Row-Hover: performant mit CSS Containment + GPU Layer === */
 .row-hover {
   contain: layout style paint;
+  will-change: background-color;
 }
 
 .row-hover:hover {

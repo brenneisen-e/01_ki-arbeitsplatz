@@ -50,7 +50,7 @@ const MARKET_DATA = [
   { symbol: 'Gold', value: '2.185', change: '+0,65%', positive: true },
 ];
 
-export default function GlobalHeader({ kundeInfo }) {
+export default function GlobalHeader({ kundeInfo, tabBadges }) {
   const { config, modeId, switchMode, switchInstitut, activeTab, setActiveTab, currentView, goBack } = useMode();
   const { t, lang } = useTranslation();
   const [showModeDropdown, setShowModeDropdown] = useState(false);
@@ -225,6 +225,9 @@ export default function GlobalHeader({ kundeInfo }) {
             )}
           >
             {tab.labelKey ? t(tab.labelKey) : (lang === 'en' && tab.labelEn ? tab.labelEn : tab.label)}
+            {tabBadges?.[tab.id] > 0 && (
+              <span className="ml-1.5 inline-flex items-center justify-center w-5 h-5 text-[10px] font-bold rounded-full bg-red-500 text-white">{tabBadges[tab.id]}</span>
+            )}
           </button>
         ))}
       </div>
@@ -233,6 +236,7 @@ export default function GlobalHeader({ kundeInfo }) {
 }
 
 function ModeDropdown({ currentMode, currentInstitut, onSelect, onClose }) {
+  const { lang } = useTranslation();
   const modes = Object.values(MODE_CONFIGS);
 
   return (

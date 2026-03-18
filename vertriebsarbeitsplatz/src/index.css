@@ -170,6 +170,11 @@
   }
 
   .row-hover:hover {
-    background-color: var(--mode-row-hover);
+    background-color: var(--mode-primary);
+    color: white;
+  }
+
+  .row-hover:hover * {
+    color: inherit !important;
   }
 }

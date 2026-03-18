@@ -5,16 +5,24 @@ import KPIGrid from '../../components/ui/KPIGrid';
 import { KUNDEN_BY_MODE } from '../../data';
 import UebersichtTab from './tabs/UebersichtTab';
 
-const NeugeschaeftTab = lazy(() => import('./tabs/NeugeschaeftTab'));
-const BestandTab = lazy(() => import('./tabs/BestandTab'));
-const StornoTab = lazy(() => import('./tabs/StornoTab'));
-const VerguetungTab = lazy(() => import('./tabs/VerguetungTab'));
-const QualitaetTab = lazy(() => import('./tabs/QualitaetTab'));
-const KundenTab = lazy(() => import('./tabs/KundenTab'));
-const PotentialeTab = lazy(() => import('./tabs/PotentialeTab'));
-const StammdatenOverviewTab = lazy(() => import('./tabs/StammdatenOverviewTab'));
-const PipelineLeadsTab = lazy(() => import('./tabs/PipelineLeadsTab'));
-const RevenueTab = lazy(() => import('./tabs/RevenueTab'));
+// Lazy import mit Auto-Reload bei veralteten Chunks
+function lazyRetry(fn) {
+  return lazy(() => fn().catch(() => {
+    window.location.reload();
+    return new Promise(() => {}); // never resolves, page reloads
+  }));
+}
+
+const NeugeschaeftTab = lazyRetry(() => import('./tabs/NeugeschaeftTab'));
+const BestandTab = lazyRetry(() => import('./tabs/BestandTab'));
+const StornoTab = lazyRetry(() => import('./tabs/StornoTab'));
+const VerguetungTab = lazyRetry(() => import('./tabs/VerguetungTab'));
+const QualitaetTab = lazyRetry(() => import('./tabs/QualitaetTab'));
+const KundenTab = lazyRetry(() => import('./tabs/KundenTab'));
+const PotentialeTab = lazyRetry(() => import('./tabs/PotentialeTab'));
+const StammdatenOverviewTab = lazyRetry(() => import('./tabs/StammdatenOverviewTab'));
+const PipelineLeadsTab = lazyRetry(() => import('./tabs/PipelineLeadsTab'));
+const RevenueTab = lazyRetry(() => import('./tabs/RevenueTab'));
 
 const TAB_COMPONENTS = {
   uebersicht: UebersichtTab,

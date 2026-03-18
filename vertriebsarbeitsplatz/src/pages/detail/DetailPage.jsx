@@ -5,17 +5,24 @@ import { KUNDEN_BY_MODE, getKundeById } from '../../data';
 import GlobalHeader from '../../components/layout/GlobalHeader';
 import StammdatenDetailTab from './tabs/StammdatenDetailTab';
 
-const VertraegeTab = lazy(() => import('./tabs/VertraegeTab'));
-const OpenFinanceTab = lazy(() => import('./tabs/OpenFinanceTab'));
-const ImpulseTab = lazy(() => import('./tabs/ImpulseTab'));
-const FinanzprofilTab = lazy(() => import('./tabs/FinanzprofilTab'));
-const KommunikationTab = lazy(() => import('./tabs/KommunikationTab'));
-const PerformanceTab = lazy(() => import('./tabs/PerformanceTab'));
-const WpHGComplianceTab = lazy(() => import('./tabs/WpHGComplianceTab'));
-const FamilieNetzwerkTab = lazy(() => import('./tabs/FamilieNetzwerkTab'));
-const EngagementTab = lazy(() => import('./tabs/EngagementTab'));
-const LeadsTab = lazy(() => import('./tabs/LeadsTab'));
-const ProduktabschlussTab = lazy(() => import('./tabs/ProduktabschlussTab'));
+function lazyRetry(fn) {
+  return lazy(() => fn().catch(() => {
+    window.location.reload();
+    return new Promise(() => {});
+  }));
+}
+
+const VertraegeTab = lazyRetry(() => import('./tabs/VertraegeTab'));
+const OpenFinanceTab = lazyRetry(() => import('./tabs/OpenFinanceTab'));
+const ImpulseTab = lazyRetry(() => import('./tabs/ImpulseTab'));
+const FinanzprofilTab = lazyRetry(() => import('./tabs/FinanzprofilTab'));
+const KommunikationTab = lazyRetry(() => import('./tabs/KommunikationTab'));
+const PerformanceTab = lazyRetry(() => import('./tabs/PerformanceTab'));
+const WpHGComplianceTab = lazyRetry(() => import('./tabs/WpHGComplianceTab'));
+const FamilieNetzwerkTab = lazyRetry(() => import('./tabs/FamilieNetzwerkTab'));
+const EngagementTab = lazyRetry(() => import('./tabs/EngagementTab'));
+const LeadsTab = lazyRetry(() => import('./tabs/LeadsTab'));
+const ProduktabschlussTab = lazyRetry(() => import('./tabs/ProduktabschlussTab'));
 
 const TAB_COMPONENTS = {
   stammdaten: StammdatenDetailTab,

@@ -1,6 +1,5 @@
-import { clsx } from 'clsx';
 import * as LucideIcons from 'lucide-react';
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo, useRef } from 'react';
 
 import { getLang } from '../../utils/langHelper';
 
@@ -113,22 +112,22 @@ export default function KPIBox({ icon, label, wert, format = 'num', trend, delay
 
   const monthlyData = useMemo(() => generateMonthlyData(wert, trend || 0), [wert, trend]);
 
+  const rafRef = useRef(0);
   useEffect(() => {
-    const duration = 800;
-    const steps = 30;
-    const stepTime = duration / steps;
-    let current = 0;
-    const timer = setInterval(() => {
-      current++;
-      const progress = current / steps;
+    const duration = 600;
+    let start = 0;
+    function tick(ts) {
+      if (!start) start = ts;
+      const elapsed = ts - start;
+      const progress = Math.min(elapsed / duration, 1);
       const eased = 1 - Math.pow(1 - progress, 3);
       setDisplayed(wert * eased);
-      if (current >= steps) {
-        setDisplayed(wert);
-        clearInterval(timer);
+      if (progress < 1) {
+        rafRef.current = requestAnimationFrame(tick);
       }
-    }, stepTime);
-    return () => clearInterval(timer);
+    }
+    rafRef.current = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(rafRef.current);
   }, [wert]);
 
   return (

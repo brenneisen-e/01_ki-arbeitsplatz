@@ -118,7 +118,7 @@ export default function PotentialeTab() {
             <div key={kundeId} className="border-b border-slate-200 last:border-0">
               {/* Kunden-Header */}
               <div
-                className="flex items-center justify-between px-4 py-3 bg-slate-50 cursor-pointer row-hover transition-colors"
+                className="flex items-center justify-between px-4 py-3 bg-slate-50 cursor-pointer row-hover"
                 onClick={() => navigateTo('detail', { kundeId, tab: 'impulse' })}
               >
                 <div className="flex items-center gap-3">
@@ -141,7 +141,7 @@ export default function PotentialeTab() {
 
               {/* Potentiale-Zeilen */}
               {potentiale.map((p, i) => (
-                <div key={i} className="flex items-center justify-between px-4 py-3 pl-12 border-t border-slate-100 row-hover transition-colors cursor-pointer">
+                <div key={i} className="flex items-center justify-between px-4 py-3 pl-12 border-t border-slate-100 row-hover cursor-pointer">
                   <div className="flex items-center gap-3 flex-1 min-w-0">
                     <span className="text-sm text-slate-700 truncate">{p.titel}</span>
                     <div className="flex gap-1">

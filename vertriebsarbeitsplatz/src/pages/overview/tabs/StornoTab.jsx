@@ -76,7 +76,7 @@ export default function StornoTab() {
               </thead>
               <tbody>
                 {vertraege.map((v, i) => (
-                  <tr key={i} className="border-t border-slate-100 row-hover transition-colors cursor-pointer">
+                  <tr key={i} className="border-t border-slate-100 row-hover cursor-pointer">
                     <td className="px-4 py-3 text-sm font-medium text-slate-700">{v.kunde}</td>
                     <td className="px-4 py-3 text-sm text-slate-700">{v.produkt}</td>
                     <td className="px-4 py-3 text-sm text-slate-500">{v.sparte}</td>

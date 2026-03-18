@@ -1,7 +1,5 @@
 import {
-  VERSICHERUNG_KUNDEN,
-  BANKING_KUNDEN,
-  VV_MANDANTEN,
+  KUNDEN_BY_MODE,
   NEUGESCHAEFT_DATA,
   BESTAND_DATA,
   STORNO_DATA,
@@ -12,9 +10,9 @@ import {
   AUFGABEN_BY_MODE,
 } from '../data';
 
-function buildModeSection(modeId, kunden) {
+function buildModeSection(modeId) {
   return {
-    ['kunden (Kunden-Tab)']: kunden,
+    ['kunden (Kunden-Tab)']: KUNDEN_BY_MODE[modeId],
     ['neugeschaeft (Neugeschäft-Tab)']: NEUGESCHAEFT_DATA[modeId],
     ['bestand (Bestand-Tab)']: BESTAND_DATA[modeId],
     ['storno (Storno-Tab)']: STORNO_DATA[modeId],
@@ -32,9 +30,9 @@ export function downloadDemoData() {
       exportDatum: new Date().toISOString(),
       app: 'KI-Vertriebsarbeitsplatz V02',
     },
-    versicherung: buildModeSection('versicherung', VERSICHERUNG_KUNDEN),
-    banking: buildModeSection('banking', BANKING_KUNDEN),
-    vermoegensverwaltung: buildModeSection('vermoegensverwaltung', VV_MANDANTEN),
+    versicherung: buildModeSection('versicherung'),
+    banking: buildModeSection('banking'),
+    vermoegensverwaltung: buildModeSection('vermoegensverwaltung'),
   };
 
   const json = JSON.stringify(exportData, null, 2);

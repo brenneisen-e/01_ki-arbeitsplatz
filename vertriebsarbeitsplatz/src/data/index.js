@@ -1,6 +1,9 @@
-import { getKunden } from './generator';
+import { getKunden, preloadKunden } from './generator';
 import { getLang } from '../utils/langHelper';
 function tx(de, en) { return getLang() === 'en' ? en : de; }
+
+// Re-export preloadKunden for mode switching
+export { preloadKunden };
 
 // Translate name prefixes like "Familie" → "Family"
 export function translateName(name) {
@@ -11,18 +14,36 @@ export function translateName(name) {
     .replace(/^Stiftung /, 'Foundation ');
 }
 
+// ═══ Lazy per-mode helper ═══
+// Daten werden erst beim ersten Zugriff auf den jeweiligen Modus erzeugt.
+// tx()-Aufrufe werden ebenfalls erst bei Bedarf ausgewertet.
+function lazyByMode(factories) {
+  const _cache = {};
+  const obj = {};
+  for (const [mode, factory] of Object.entries(factories)) {
+    Object.defineProperty(obj, mode, {
+      get() {
+        if (!_cache[mode]) _cache[mode] = factory();
+        return _cache[mode];
+      },
+      enumerable: true,
+      configurable: true,
+    });
+  }
+  return obj;
+}
+
 // Dynamisch generierte Kunden (Showcase + generierte)
 // Lazy: Werden beim ersten Zugriff generiert und gecacht
+// Wirft ein Promise für React Suspense wenn Daten noch nicht geladen
 export const KUNDEN_BY_MODE = {
   get versicherung() { return getKunden('versicherung'); },
   get banking() { return getKunden('banking'); },
   get vermoegensverwaltung() { return getKunden('vermoegensverwaltung'); },
 };
 
-// Legacy exports
-export const VERSICHERUNG_KUNDEN = KUNDEN_BY_MODE.versicherung;
-export const BANKING_KUNDEN = KUNDEN_BY_MODE.banking;
-export const VV_MANDANTEN = KUNDEN_BY_MODE.vermoegensverwaltung;
+// Legacy exports entfernt — vorher wurden hier ALLE 3 Modi sofort ausgewertet!
+// Nutze stattdessen KUNDEN_BY_MODE[modeId] (lazy per getter).
 
 export function getKundeById(modeId, kundeId) {
   const list = KUNDEN_BY_MODE[modeId] || [];
@@ -37,10 +58,10 @@ export function getAllPotentiale(modeId) {
 }
 
 // =============================================
-// NEUGESCHAEFT
+// NEUGESCHAEFT — lazy per mode
 // =============================================
-export const NEUGESCHAEFT_DATA = {
-  versicherung: {
+export const NEUGESCHAEFT_DATA = lazyByMode({
+  versicherung: () => ({
     kpiValues: {
       antraege: { wert: 86, trend: 12.5 },
       policiert: { wert: 392209, trend: 8.3 },
@@ -67,8 +88,8 @@ export const NEUGESCHAEFT_DATA = {
       { id: 'NG-2026-004', kundeId: 'KD00027', kunde: 'Ingrid Sommer', sparte: 'schaden', produkt: 'Hausrat', versicherer: 'Allianz', beitrag: 130, beitragsart: 'J', status: 'policiert', datum: '2026-02-01' },
       { id: 'NG-2026-005', kundeId: 'KD00028', kunde: 'Dirk Hoffmann', sparte: 'leben', produkt: 'Fondspolice', versicherer: 'ERGO', beitrag: 1400, beitragsart: 'mtl', status: 'policiert', datum: '2026-02-10' },
     ],
-  },
-  banking: {
+  }),
+  banking: () => ({
     kpiValues: {
       antraege: { wert: 28, trend: 8.2 },
       policiert: { wert: 2850000, trend: 12.1 },
@@ -99,8 +120,8 @@ export const NEUGESCHAEFT_DATA = {
       { id: 'BNG-2026-006', kundeId: 'KDB006', kunde: 'Andrea Lang', sparte: 'kredit', produkt: 'Praxiskredit', versicherer: 'VB Mittelhessen', beitrag: 85000, beitragsart: 'ges', status: 'ausgezahlt', datum: '2026-02-28' },
       { id: 'BNG-2026-007', kundeId: 'KDB003', kunde: 'Markus Wagner', sparte: 'einlage', produkt: 'VR-Tagesgeld Extra', versicherer: 'VB Mittelhessen', beitrag: 25000, beitragsart: 'ges', status: 'aktiv', datum: '2026-03-01' },
     ],
-  },
-  vermoegensverwaltung: {
+  }),
+  vermoegensverwaltung: () => ({
     kpiValues: {
       antraege: { wert: 3, trend: 50.0 },
       policiert: { wert: 5800000, trend: 15.3 },
@@ -121,44 +142,44 @@ export const NEUGESCHAEFT_DATA = {
       { id: 'VV-2026-002', kundeId: 'VV-NEW', kunde: 'Dr. Anna Fischer', sparte: 'fairvalue', produkt: 'Individuelle VV', versicherer: 'HRK LUNIS', beitrag: 1500000, beitragsart: 'ges', status: 'onboarding', datum: '2026-03-11' },
       { id: 'VV-2026-003', kundeId: 'VV005', kunde: 'Maxim Meydarn', sparte: 'smartvalue', produkt: 'SmartValue VV', versicherer: 'HRK LUNIS', beitrag: 800000, beitragsart: 'ges', status: 'aktiv', datum: '2026-02-01' },
     ],
-  },
-};
+  }),
+});
 
 // =============================================
-// BESTAND
+// BESTAND — lazy per mode
 // =============================================
-export const BESTAND_DATA = {
-  versicherung: {
+export const BESTAND_DATA = lazyByMode({
+  versicherung: () => ({
     kpiValues: {
       vertraege: { wert: 42, trend: 2.1 },
       praemienvolumen: { wert: 141863, trend: 0.9 },
       durchschnittspraemie: { wert: 3378, trend: -0.5 },
       vertragsdichte: { wert: 3.8, trend: 0.2 },
     },
-  },
-  banking: {
+  }),
+  banking: () => ({
     kpiValues: {
       vertraege: { wert: 140, trend: 5.4 },
       praemienvolumen: { wert: 4200000, trend: 3.2 },
       durchschnittspraemie: { wert: 3800000, trend: 1.8 },
       vertragsdichte: { wert: 3.5, trend: 0.3 },
     },
-  },
-  vermoegensverwaltung: {
+  }),
+  vermoegensverwaltung: () => ({
     kpiValues: {
       vertraege: { wert: 5, trend: 25.0 },
       praemienvolumen: { wert: 30050000, trend: 4.2 },
       durchschnittspraemie: { wert: 6010000, trend: -1.8 },
       vertragsdichte: { wert: 1.0, trend: 0.0 },
     },
-  },
-};
+  }),
+});
 
 // =============================================
-// STORNO
+// STORNO — lazy per mode
 // =============================================
-export const STORNO_DATA = {
-  versicherung: {
+export const STORNO_DATA = lazyByMode({
+  versicherung: () => ({
     kpiValues: {
       stornoAnzahl: { wert: 4, trend: -25.0 },
       stornoQuote: { wert: 5.0, trend: -0.3 },
@@ -178,8 +199,8 @@ export const STORNO_DATA = {
       { kunde: 'Frank Zimmermann', kundeId: 'KD00025', produkt: 'ERGO Kfz-Vollkasko', sparte: tx('Kfz', 'Motor'), praemie: 780, stornoDatum: '2026-01-08', grund: tx('Umzug', 'Relocation'), typ: tx('Frühstorno', 'Early Cancel.') },
       { kunde: 'Monika Becker', kundeId: 'KD00031', produkt: tx('ERGO Privat Familie', 'ERGO Private Family'), sparte: tx('Schaden', 'Property'), praemie: 95, stornoDatum: '2025-12-03', grund: tx('Unzufriedenheit', 'Dissatisfaction'), typ: tx('Spätstorno', 'Late Cancel.') },
     ],
-  },
-  banking: {
+  }),
+  banking: () => ({
     kpiValues: {
       stornoAnzahl: { wert: 6, trend: -14.3 },
       stornoQuote: { wert: 4.3, trend: -0.2 },
@@ -193,8 +214,8 @@ export const STORNO_DATA = {
       { name: tx('Unzufriedenheit (Service)', 'Dissatisfaction (service)'), value: 15 },
       { name: tx('Sonstiges (Todesfall etc.)', 'Other (death etc.)'), value: 10 },
     ],
-  },
-  vermoegensverwaltung: {
+  }),
+  vermoegensverwaltung: () => ({
     kpiValues: {
       stornoAnzahl: { wert: 0, trend: 0.0 },
       stornoQuote: { wert: 0.0, trend: 0.0 },
@@ -207,14 +228,14 @@ export const STORNO_DATA = {
       { name: tx('Konsolidierung', 'Consolidation'), value: 20 },
       { name: tx('Sonstiges', 'Other'), value: 10 },
     ],
-  },
-};
+  }),
+});
 
 // =============================================
-// VERGUETUNG / ERTRAEGE
+// VERGUETUNG / ERTRAEGE — lazy per mode
 // =============================================
-export const VERGUETUNG_DATA = {
-  versicherung: {
+export const VERGUETUNG_DATA = lazyByMode({
+  versicherung: () => ({
     kpiValues: {
       provision: { wert: 48500, trend: 8.2 },
       ap: { wert: 32000, trend: 12.5 },
@@ -267,8 +288,8 @@ export const VERGUETUNG_DATA = {
         'Qualität A+: +2% Bonus',
       ],
     },
-  },
-  banking: {
+  }),
+  banking: () => ({
     kpiValues: {
       provision: { wert: 72400, trend: 8.2 },
       ap: { wert: 28500, trend: 5.4 },
@@ -323,8 +344,8 @@ export const VERGUETUNG_DATA = {
         'Weiterbildung 100%: +2%',
       ],
     },
-  },
-  vermoegensverwaltung: {
+  }),
+  vermoegensverwaltung: () => ({
     kpiValues: {
       provision: { wert: 892000, trend: 8.7 },
       ap: { wert: 425000, trend: 12.3 },
@@ -376,14 +397,14 @@ export const VERGUETUNG_DATA = {
         'Compliance A: +3% Bonus',
       ],
     },
-  },
-};
+  }),
+});
 
 // =============================================
-// QUALITAET
+// QUALITAET — lazy per mode
 // =============================================
-export const QUALITAET_DATA = {
-  versicherung: {
+export const QUALITAET_DATA = lazyByMode({
+  versicherung: () => ({
     kpiValues: {
       gesamtNote: { wert: 1.8, trend: -5.3 },
       complianceQuote: { wert: 98.5, trend: 0.5 },
@@ -411,8 +432,8 @@ export const QUALITAET_DATA = {
       { name: tx('ESG-Beratung', 'ESG Advisory'), stunden: 4, status: 'ok' },
       { name: tx('Cyber-Sicherheit', 'Cyber Security'), stunden: 2, status: 'pending' },
     ],
-  },
-  banking: {
+  }),
+  banking: () => ({
     kpiValues: {
       gesamtNote: { wert: 8.4, trend: 3.7 },
       complianceQuote: { wert: 95.0, trend: 2.1 },
@@ -452,8 +473,8 @@ export const QUALITAET_DATA = {
       { name: 'genoGPT / Truuco Impulsmanager', stunden: 4, status: 'ok' },
       { name: tx('Wero / Digitale girocard', 'Wero / Digital girocard'), stunden: 2, status: 'ok' },
     ],
-  },
-  vermoegensverwaltung: {
+  }),
+  vermoegensverwaltung: () => ({
     kpiValues: {
       gesamtNote: { wert: 94.0, trend: 2.0 },
       complianceQuote: { wert: 100.0, trend: 0.0 },
@@ -490,14 +511,14 @@ export const QUALITAET_DATA = {
       { name: tx('Portfoliomanagement Zertifizierung', 'Portfolio Management Certification'), stunden: 8, status: 'ok' },
       { name: tx('Geldwäsche-Prävention', 'Anti-Money Laundering Prevention'), stunden: 2, status: 'ok' },
     ],
-  },
-};
+  }),
+});
 
 // =============================================
-// STAMMDATEN (Berater/Advisor)
+// STAMMDATEN (Berater/Advisor) — lazy per mode
 // =============================================
-export const STAMMDATEN_DATA = {
-  versicherung: {
+export const STAMMDATEN_DATA = lazyByMode({
+  versicherung: () => ({
     basis: [
       { label: 'Name', value: 'Nadine Müller' },
       { label: 'Titel', value: 'Agentur' },
@@ -530,8 +551,8 @@ export const STAMMDATEN_DATA = {
       { label: 'Exklusivität', value: '100% Exklusiv' },
       { label: 'Kündigungsfrist', value: '6 Monate' },
     ],
-  },
-  banking: {
+  }),
+  banking: () => ({
     basis: [
       { label: 'Name', value: 'Nadine Müller' },
       { label: 'Titel', value: 'Beraterin' },
@@ -563,8 +584,8 @@ export const STAMMDATEN_DATA = {
       { label: 'Jahresziel DB III', value: '85.000\u20ac' },
       { label: 'Segment-Betreuung', value: 'Retail + Premium' },
     ],
-  },
-  vermoegensverwaltung: {
+  }),
+  vermoegensverwaltung: () => ({
     basis: [
       { label: 'Name', value: 'Dr. Thomas Richter' },
       { label: 'Titel', value: 'Senior Advisor' },
@@ -596,8 +617,8 @@ export const STAMMDATEN_DATA = {
       { label: 'AuM-Ziel 2026', value: '85M\u20ac' },
       { label: 'NNM-Ziel 2026', value: '8M\u20ac' },
     ],
-  },
-};
+  }),
+});
 
 // =============================================
 // TERMINE (mode-aware, dynamisch relativ zu heute)
@@ -692,8 +713,6 @@ export const TERMINE_BY_MODE = {
     ];
   },
 };
-// Keep legacy export for backward compatibility
-export const TERMINE = TERMINE_BY_MODE.versicherung;
 
 // =============================================
 // AUFGABEN (mode-aware)
@@ -717,6 +736,3 @@ export const AUFGABEN_BY_MODE = {
     { text: tx('Investmentvorschlag Dr. Meier senden (Pipeline)', 'Send investment proposal to Dr. Meier (Pipeline)'), faellig: '15.03.', kundeId: 'VV-PIPE2', erledigt: false },
   ],
 };
-
-// Keep legacy export for backward compatibility
-export const AUFGABEN = AUFGABEN_BY_MODE.versicherung;

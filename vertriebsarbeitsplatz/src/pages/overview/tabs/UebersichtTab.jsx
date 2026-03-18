@@ -468,7 +468,7 @@ export default function UebersichtTab() {
         </Card>
 
         {/* Schnellzugriff Formulare */}
-        <Card >
+        <Card hover={false}>
           <div className="flex items-center gap-2 mb-4">
             <FileText size={20} className="text-slate-500" strokeWidth={1.75} />
             <h3 className="font-semibold text-slate-800">{t('schnellzugriffFormulare')}</h3>
@@ -479,7 +479,7 @@ export default function UebersichtTab() {
               return (
                 <button
                   key={i}
-                  className="flex flex-col items-center gap-2 p-4 rounded-xl border border-slate-200 hover:border-slate-300 row-hover transition-all text-center"
+                  className="flex flex-col items-center gap-2 p-4 rounded-xl border border-slate-200 row-hover cursor-pointer text-center"
                 >
                   <Icon size={24} style={{ color: item.color }} strokeWidth={1.5} />
                   <span className="text-xs font-medium text-slate-600">{t(item.labelKey)}</span>

@@ -184,8 +184,20 @@
 .card-hover:hover {
   transform: translateY(-1px);
   box-shadow: 0 4px 6px rgba(0,0,0,0.04), 0 2px 4px rgba(0,0,0,0.06);
-  background-color: var(--mode-pastel);
+  background-color: var(--mode-primary);
   border-color: transparent;
+  color: white;
+}
+
+.card-hover:hover span,
+.card-hover:hover div,
+.card-hover:hover a {
+  color: inherit !important;
+}
+
+.card-hover:hover svg {
+  color: white !important;
+  stroke: white;
 }
 
 /* === Row-Hover: performant ohne GPU-Layer-Overhead === */

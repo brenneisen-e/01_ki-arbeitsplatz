@@ -186,28 +186,43 @@
   background-color: #ffffff;
 }
 
-/* Card + Row Hover: nur Hintergrund + Farbe, NICHTS sonst */
-.card-hover:hover,
-.row-hover:hover {
+/* Kacheln mit Zeilen: pointer-events durchreichen, nicht selbst reagieren */
+.card-passthrough {
+  pointer-events: none;
+}
+.card-passthrough > * {
+  pointer-events: auto;
+}
+
+/* Card Hover (nur für eigenständige Kacheln ohne Zeilen) */
+.card-hover:hover {
   background-color: var(--mode-primary) !important;
   border-color: transparent !important;
   color: white !important;
 }
-
-/* Ein einziger kombinierter Selektor für Text in beiden */
-:is(.card-hover, .row-hover):hover :is(span, div, a, td, svg) {
+.card-hover:hover span,
+.card-hover:hover div,
+.card-hover:hover a,
+.card-hover:hover svg {
   color: inherit !important;
 }
-
 .card-hover:hover .kpi-icon-box {
   background-color: rgba(255,255,255,0.25) !important;
 }
 
-.card-hover:hover .kpi-icon-box svg {
+/* Row Hover (komplett unabhängig von Card) */
+.row-hover:hover {
+  background-color: var(--mode-primary) !important;
   color: white !important;
 }
-
-:is(.card-hover, .row-hover):hover .rh-badge {
+.row-hover:hover span,
+.row-hover:hover div,
+.row-hover:hover a,
+.row-hover:hover td,
+.row-hover:hover svg {
+  color: inherit !important;
+}
+.row-hover:hover .rh-badge {
   background-color: rgba(255,255,255,0.2) !important;
   border-color: rgba(255,255,255,0.35) !important;
 }

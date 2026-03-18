@@ -249,7 +249,7 @@ export default function UebersichtTab() {
                   </div>
                   <div className="text-right text-sm font-mono font-medium text-slate-700 flex items-center justify-end gap-2">
                     {k.id === 'VV00001' && VV_LEADS.some(l => l.isNeuerLead && l.referenzMandant === 'VV00001') && (
-                      <span className="rh-badge inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500 text-white whitespace-nowrap animate-pulse">
+                      <span className="rh-badge inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500 text-white whitespace-nowrap">
                         {t('neuerLead')}
                       </span>
                     )}

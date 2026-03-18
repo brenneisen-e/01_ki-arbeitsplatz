@@ -127,7 +127,7 @@ export default function VertraegeTab({ kunde }) {
 
   return (
     <div className="space-y-4">
-      <Card>
+      <Card hover={false}>
         <h3 className="font-semibold text-slate-800 mb-4">
           {t('eigeneProdukte')} ({produkte.length} {modeId === 'banking' ? t('produkteLabel') : t('vertraege')})
         </h3>

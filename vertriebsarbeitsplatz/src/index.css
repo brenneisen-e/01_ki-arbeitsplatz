@@ -177,6 +177,26 @@
   color: white !important;
 }
 
-.row-hover:hover * {
+/* Text weiß machen, aber Badges mit eigenen Hintergründen ausnehmen */
+.row-hover:hover *:not([class*="bg-"]):not([class*="badge"]):not([class*="Badge"]) {
   color: inherit !important;
+}
+
+/* Badges mit farbigem Hintergrund: weißen Text erzwingen für Lesbarkeit */
+.row-hover:hover [class*="bg-emerald"],
+.row-hover:hover [class*="bg-red"],
+.row-hover:hover [class*="bg-amber"],
+.row-hover:hover [class*="bg-blue"],
+.row-hover:hover [class*="bg-green"],
+.row-hover:hover [class*="bg-purple"],
+.row-hover:hover [class*="bg-pink"],
+.row-hover:hover [class*="bg-slate-8"],
+.row-hover:hover [class*="bg-slate-7"] {
+  color: white !important;
+}
+
+/* Badges mit hellem Hintergrund: dunklen Text behalten */
+.row-hover:hover [class*="bg-slate-1"],
+.row-hover:hover [class*="bg-slate-5"] {
+  color: white !important;
 }

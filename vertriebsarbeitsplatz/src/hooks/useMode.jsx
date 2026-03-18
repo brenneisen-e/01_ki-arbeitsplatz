@@ -62,6 +62,8 @@ export function ModeProvider({ children }) {
       ...baseConfig,
       institut: institutOverride.institut,
       beraterTitel: institutOverride.beraterTitel || baseConfig.beraterTitel,
+      beraterTitelM: institutOverride.beraterTitelM || baseConfig.beraterTitelM,
+      beraterTitelW: institutOverride.beraterTitelW || baseConfig.beraterTitelW,
       colors: institutOverride.colors || baseConfig.colors,
     };
   }, [baseConfig, institutOverride]);
@@ -163,15 +165,18 @@ export function ModeProvider({ children }) {
     }
   }, [currentView, baseConfig]);
 
+  const modeRef = useRef(null);
+
   /* ── Sync CSS variables with current institut colors ────── */
   useEffect(() => {
-    const root = document.documentElement;
+    const el = modeRef.current;
+    if (!el) return;
     const c = config.colors;
     if (c) {
-      root.style.setProperty('--mode-primary', c.primary);
-      root.style.setProperty('--mode-primary-light', c.primaryLight);
-      root.style.setProperty('--mode-gradient', c.gradient);
-      if (c.accent) root.style.setProperty('--mode-accent', c.accent);
+      el.style.setProperty('--mode-primary', c.primary);
+      el.style.setProperty('--mode-primary-light', c.primaryLight);
+      el.style.setProperty('--mode-gradient', c.gradient);
+      if (c.accent) el.style.setProperty('--mode-accent', c.accent);
     }
   }, [config.colors]);
 
@@ -181,7 +186,7 @@ export function ModeProvider({ children }) {
       switchMode, switchInstitut, navigateTo,
       setActiveTab, setSelectedKundeId, goBack,
     }}>
-      <div data-mode={modeId}>
+      <div ref={modeRef} data-mode={modeId}>
         {children}
       </div>
     </ModeContext.Provider>

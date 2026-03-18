@@ -62,7 +62,7 @@ export default function ImpulseTab({ kunde }) {
 
       {/* Whitespots (Neugeschaeft) */}
       {whitespots.length > 0 && (
-        <Card>
+        <Card hover={false}>
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
               <Zap size={20} style={{ color: 'var(--mode-primary-light)' }} strokeWidth={1.75} />
@@ -90,7 +90,7 @@ export default function ImpulseTab({ kunde }) {
 
       {/* Anpassungsbedarfe */}
       {anpassungen.length > 0 && (
-        <Card>
+        <Card hover={false}>
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
               <RefreshCw size={20} className="text-amber-500" strokeWidth={1.75} />
@@ -118,7 +118,7 @@ export default function ImpulseTab({ kunde }) {
 
       {/* Cross-Sell / Sonstiges */}
       {crossSell.length > 0 && (
-        <Card>
+        <Card hover={false}>
           <div className="flex items-center justify-between mb-4">
             <h3 className="font-semibold text-slate-800">{t('weiterePotentiale')}</h3>
             <span className="text-sm text-slate-400">{crossSell.length} Potentiale</span>
@@ -164,7 +164,7 @@ function PotentialCard({ potential: p, kunde, expanded, onToggle, t }) {
     >
       {/* Clickable header */}
       <div
-        className="p-4 cursor-pointer hover:bg-slate-50 transition-colors"
+        className="p-4 cursor-pointer row-hover transition-colors rounded-t-lg"
         onClick={onToggle}
       >
         <div className="flex items-start justify-between mb-2">

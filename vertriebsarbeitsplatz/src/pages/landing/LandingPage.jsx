@@ -63,6 +63,7 @@ export default function LandingPage() {
   const [language, setLanguage] = useState(() => localStorage.getItem('kia_language') || 'de');
   const [settingsName, setSettingsName] = useState(() => localStorage.getItem('kia_user_fullname') || '');
   const [settingsPhoto, setSettingsPhoto] = useState(() => localStorage.getItem('kia_user_photo') || '');
+  const [settingsGender, setSettingsGender] = useState(() => localStorage.getItem('kia_user_gender') || '');
   const photoInputRef = useRef(null);
 
   useEffect(() => {
@@ -104,12 +105,19 @@ export default function LandingPage() {
     reader.readAsDataURL(file);
   }
 
+  function handleGenderChange(gender) {
+    setSettingsGender(gender);
+    localStorage.setItem('kia_user_gender', gender);
+  }
+
   function handleSettingsReset() {
     localStorage.removeItem('kia_user_fullname');
     localStorage.removeItem('kia_user_photo');
     localStorage.removeItem('kia_user_name');
+    localStorage.removeItem('kia_user_gender');
     setSettingsName('');
     setSettingsPhoto('');
+    setSettingsGender('');
     setUserName('');
   }
 
@@ -453,6 +461,28 @@ export default function LandingPage() {
                   </button>
                 )}
               </div>
+            </div>
+
+            {/* Anrede */}
+            <label className="block text-xs text-white/60 font-medium mb-1.5">{t('anrede')}</label>
+            <div className="flex gap-2 mb-4">
+              {[
+                { value: 'm', label: t('herr') },
+                { value: 'w', label: t('frau') },
+              ].map(opt => (
+                <button
+                  key={opt.value}
+                  onClick={() => handleGenderChange(opt.value)}
+                  className={clsx(
+                    'px-4 py-2 rounded-xl text-sm font-medium transition-all',
+                    settingsGender === opt.value
+                      ? 'bg-white text-slate-800'
+                      : 'bg-white/10 border border-white/15 text-white/60 hover:bg-white/20'
+                  )}
+                >
+                  {opt.label}
+                </button>
+              ))}
             </div>
 
             {/* Name input */}

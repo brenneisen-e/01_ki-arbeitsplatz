@@ -1,5 +1,7 @@
-import * as LucideIcons from 'lucide-react';
+import { Briefcase, TrendingUp, AlertTriangle, Target, Users, Landmark, PiggyBank, Wallet, BarChart3, X } from 'lucide-react';
 import { useState, useMemo } from 'react';
+
+const KPI_ICONS = { Briefcase, TrendingUp, AlertTriangle, Target, Users, Landmark, PiggyBank, Wallet, BarChart3 };
 
 import { getLang } from '../../utils/langHelper';
 
@@ -80,7 +82,7 @@ function ExpandedChart({ data, format, label, onClose }) {
         <div className="flex items-center justify-between mb-4">
           <h3 className="font-semibold text-slate-800">{label} — {getLang() === 'en' ? 'Last 12 Months' : 'Letzte 12 Monate'}</h3>
           <button onClick={onClose} className="text-slate-400 hover:text-slate-600">
-            <LucideIcons.X size={18} />
+            <X size={18} />
           </button>
         </div>
         <div className="flex items-end gap-1.5 mb-6">
@@ -106,7 +108,7 @@ function ExpandedChart({ data, format, label, onClose }) {
 
 export default function KPIBox({ icon, label, wert, format = 'num', trend, delay = 0 }) {
   const [expanded, setExpanded] = useState(false);
-  const Icon = LucideIcons[icon] || LucideIcons.BarChart3;
+  const Icon = KPI_ICONS[icon] || BarChart3;
   const isPositive = trend >= 0;
 
   const monthlyData = useMemo(() => generateMonthlyData(wert, trend || 0), [wert, trend]);
@@ -120,22 +122,22 @@ export default function KPIBox({ icon, label, wert, format = 'num', trend, delay
       >
         <div className="flex items-center justify-between mb-3">
           <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-slate-100 kpi-icon-box">
-            <Icon size={18} style={{ color: 'var(--mode-primary-light)' }} strokeWidth={1.75} />
+            <Icon size={18} style={{ color: 'var(--_fg, var(--mode-primary-light))' }} strokeWidth={1.75} />
           </div>
           {trend !== undefined && (
-            <span className={`text-xs font-medium ${isPositive ? 'text-emerald-600' : 'text-red-500'}`}>
+            <span className="text-xs font-medium" style={{ color: 'var(--_fg, ' + (isPositive ? '#059669' : '#ef4444') + ')' }}>
               {isPositive ? '\u2191' : '\u2193'} {Math.abs(trend).toFixed(1)}%
             </span>
           )}
         </div>
         <div
-          className="font-mono text-2xl font-bold text-slate-900 mb-1 truncate kpi-value"
-          style={{ fontFeatureSettings: "'tnum'", animationDelay: `${delay}ms` }}
+          className="font-mono text-2xl font-bold mb-1 truncate kpi-value"
+          style={{ color: 'var(--_fg, #0f172a)', fontFeatureSettings: "'tnum'", animationDelay: `${delay}ms` }}
         >
           {formatValue(format === 'pct' ? wert : Math.round(wert), format)}
         </div>
         <div className="flex items-center justify-between">
-          <div className="text-sm text-slate-500">{label}</div>
+          <div className="text-sm" style={{ color: 'var(--_fg, #64748b)' }}>{label}</div>
           <Sparkline data={monthlyData} />
         </div>
       </div>

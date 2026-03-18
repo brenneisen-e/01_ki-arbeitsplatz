@@ -191,7 +191,7 @@ export default function UebersichtTab() {
 
         {/* Vertriebspotenziale / Mandate & Potenziale */}
         {modeId === 'vermoegensverwaltung' ? (
-          <Card>
+          <Card hover={false}>
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
                 <Zap size={20} style={{ color: 'var(--mode-primary-light)' }} strokeWidth={1.75} />
@@ -297,7 +297,7 @@ export default function UebersichtTab() {
             </button>
           </Card>
         ) : (
-          <Card>
+          <Card hover={false}>
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
                 <Zap size={20} style={{ color: 'var(--mode-primary-light)' }} strokeWidth={1.75} />
@@ -370,7 +370,7 @@ export default function UebersichtTab() {
         )}
 
         {/* Aufgaben */}
-        <Card >
+        <Card hover={false}>
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
               <CheckSquare size={20} className="text-slate-500" strokeWidth={1.75} />
@@ -393,7 +393,7 @@ export default function UebersichtTab() {
         </Card>
 
         {/* Letzte Abschluesse */}
-        <Card >
+        <Card hover={false}>
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
               <CheckCircle size={20} className="text-emerald-500" strokeWidth={1.75} />
@@ -435,7 +435,7 @@ export default function UebersichtTab() {
       {/* Rechte Spalte 1/3 */}
       <div className="col-span-1 space-y-4 min-w-0">
         {/* Anstehende Termine */}
-        <Card >
+        <Card hover={false}>
           <div className="flex items-center gap-2 mb-4">
             <Clock size={20} className="text-slate-500" strokeWidth={1.75} />
             <h3 className="font-semibold text-slate-800">{t('anstehendeTermine')}</h3>
@@ -490,7 +490,7 @@ export default function UebersichtTab() {
         </Card>
 
         {/* Provisionsabrechnungen */}
-        <Card >
+        <Card hover={false}>
           <div className="flex items-center gap-2 mb-4">
             <Euro size={20} className="text-slate-500" strokeWidth={1.75} />
             <h3 className="font-semibold text-slate-800">
@@ -521,7 +521,7 @@ export default function UebersichtTab() {
         </Card>
 
         {/* Geburtstage diese Woche */}
-        <Card >
+        <Card hover={false}>
           <div className="flex items-center gap-2 mb-4">
             <Cake size={20} className="text-pink-400" strokeWidth={1.75} />
             <h3 className="font-semibold text-slate-800">{t('geburtstagsWoche')}</h3>

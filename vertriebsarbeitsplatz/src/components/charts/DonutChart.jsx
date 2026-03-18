@@ -13,7 +13,9 @@ function CustomTooltip({ active, payload }) {
   );
 }
 
-export default function DonutChart({ data, height = 250, centerLabel, centerValue, colors = COLORS }) {
+import { memo } from 'react';
+
+export default memo(function DonutChart({ data, height = 250, centerLabel, centerValue, colors = COLORS }) {
   const total = data.reduce((s, d) => s + d.value, 0);
   const enriched = data.map(d => ({ ...d, total }));
 
@@ -47,4 +49,4 @@ export default function DonutChart({ data, height = 250, centerLabel, centerValu
       )}
     </div>
   );
-}
+});

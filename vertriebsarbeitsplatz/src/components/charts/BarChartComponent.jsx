@@ -11,7 +11,9 @@ function CustomTooltip({ active, payload, label }) {
   );
 }
 
-export default function BarChartComponent({ data, dataKey = 'value', xKey = 'name', height = 250, color }) {
+import { memo } from 'react';
+
+export default memo(function BarChartComponent({ data, dataKey = 'value', xKey = 'name', height = 250, color }) {
   const fillColor = color || 'var(--mode-primary-light)';
 
   return (
@@ -31,4 +33,4 @@ export default function BarChartComponent({ data, dataKey = 'value', xKey = 'nam
       </BarChart>
     </ResponsiveContainer>
   );
-}
+});

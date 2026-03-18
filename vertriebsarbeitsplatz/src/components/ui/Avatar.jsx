@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { memo, useState } from 'react';
 
 const GRADIENTS = [
   'linear-gradient(135deg, #2563eb, #1d4ed8)',
@@ -20,7 +20,7 @@ function getInitials(name) {
   return words.map(w => w[0]).join('').slice(0, 2).toUpperCase();
 }
 
-export default function Avatar({ name, foto, size = 32, className = '' }) {
+export default memo(function Avatar({ name, foto, size = 32, className = '' }) {
   const [imgFailed, setImgFailed] = useState(false);
 
   if (foto && !imgFailed) {
@@ -33,6 +33,8 @@ export default function Avatar({ name, foto, size = 32, className = '' }) {
           src={foto}
           alt={name}
           className="w-full h-full object-cover"
+          loading="lazy"
+          decoding="async"
           onError={() => setImgFailed(true)}
         />
       </div>
@@ -52,4 +54,4 @@ export default function Avatar({ name, foto, size = 32, className = '' }) {
       {getInitials(name)}
     </div>
   );
-}
+});

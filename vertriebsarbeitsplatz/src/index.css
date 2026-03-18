@@ -188,19 +188,18 @@
   border-color: transparent;
 }
 
-/* === Row-Hover: performant mit CSS Containment + GPU Layer === */
-.row-hover {
-  contain: layout style paint;
-  will-change: background-color;
-}
-
+/* === Row-Hover: performant ohne GPU-Layer-Overhead === */
 .row-hover:hover {
   background-color: var(--mode-primary) !important;
   color: white !important;
 }
 
-.row-hover:hover * {
-  color: white !important;
+/* Typ-Selektoren statt * → Browser matcht nur 4 Typen statt alle Elemente */
+.row-hover:hover span,
+.row-hover:hover div,
+.row-hover:hover a,
+.row-hover:hover td {
+  color: inherit !important;
 }
 
 .row-hover:hover .rh-badge {

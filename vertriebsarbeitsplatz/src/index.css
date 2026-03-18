@@ -194,28 +194,47 @@
   pointer-events: auto;
 }
 
-/* Card Hover */
+/* === CSS Custom Property Hover (zero descendant matching on hover) ===
+   Kinder referenzieren var() permanent → bei Hover ändert sich NUR
+   die Variable auf dem Parent → Browser propagiert via Inheritance.
+   Kein Descendant-Selektor-Matching bei Hover = Echtzeit. */
+
+.card-hover {
+  --_fg: var(--text-primary);
+  --_fg2: var(--text-secondary);
+  --_badge-bg: initial;
+  --_badge-border: initial;
+  --_icon-bg: initial;
+}
 .card-hover:hover {
   background-color: var(--mode-primary);
   border-color: transparent;
-  color: white;
-}
-.card-hover:hover span {
-  color: inherit !important;
-}
-.card-hover:hover .kpi-icon-box {
-  background-color: rgba(255,255,255,0.25);
+  --_fg: white;
+  --_fg2: rgba(255,255,255,0.7);
+  --_badge-bg: rgba(255,255,255,0.2);
+  --_badge-border: rgba(255,255,255,0.35);
+  --_icon-bg: rgba(255,255,255,0.25);
 }
 
-/* Row Hover: nur span (deckt 90% der Texte ab, 1 Typ statt 5) */
+.row-hover {
+  --_fg: var(--text-primary);
+  --_fg2: var(--text-secondary);
+  --_badge-bg: initial;
+  --_badge-border: initial;
+}
 .row-hover:hover {
   background-color: var(--mode-primary);
-  color: white;
+  --_fg: white;
+  --_fg2: rgba(255,255,255,0.7);
+  --_badge-bg: rgba(255,255,255,0.2);
+  --_badge-border: rgba(255,255,255,0.35);
 }
-.row-hover:hover span {
-  color: inherit !important;
+
+/* Einmalig: Kinder binden an Custom Properties (nicht bei Hover!) */
+.row-hover, .card-hover { color: var(--_fg); }
+.row-hover span, .card-hover span { color: var(--_fg) !important; }
+.row-hover .rh-badge, .card-hover .rh-badge {
+  background-color: var(--_badge-bg);
+  border-color: var(--_badge-border);
 }
-.row-hover:hover .rh-badge {
-  background-color: rgba(255,255,255,0.2);
-  border-color: rgba(255,255,255,0.35);
-}
+.card-hover .kpi-icon-box { background-color: var(--_icon-bg); }

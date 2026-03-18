@@ -15,7 +15,7 @@ function ProduktRow({ produkt, modeId, onNavigateKontoumsaetze, t }) {
   return (
     <>
       <tr
-        className="border-t border-slate-100 cursor-pointer transition-colors"
+        className="border-t border-slate-100 cursor-pointer transition-colors row-hover"
         style={hovered && !expanded ? { backgroundColor: 'var(--mode-primary-light)', color: '#ffffff' } : undefined}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}

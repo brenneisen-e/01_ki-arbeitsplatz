@@ -38,6 +38,7 @@ export const V5 = {
     {
       titel: 'PKV-Optimierung Selbstbehalt', typ: 'anpassung', quellen: ['bestand'], prioritaet: 'mittel', volumen: -400, volumenTyp: 'jaehrlich',
       beschreibung: 'Erh\u00f6hung SB auf 600\u20ac spart ca. 400\u20ac/J.',
+      kiDescription: 'KI-Analyse: Herr Meier zahlt derzeit 4.300\u20ac/J. f\u00fcr seinen PKV-Tarif ERGO Beamte Komfort mit einem Selbstbehalt von nur 300\u20ac/J. \u2014 als Beamter A14 mit stabilem Einkommen von 4.600\u20ac netto und geringem Krankheitsrisiko ist eine Erh\u00f6hung des Selbstbehalts auf 600\u20ac wirtschaftlich sinnvoll. Die Pr\u00e4mienersparnis betr\u00e4gt ca. 400\u20ac/J. bei lediglich 300\u20ac Mehrrisiko \u2014 Empfehlung: Umstellung auf ERGO PKV Beamte Optimal mit erh\u00f6htem Selbstbehalt.',
       empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'ERGO PKV Beamte Optimal', status: 'identifiziert',
       herleitung: [
         { label: 'Aktueller PKV-Tarif', value: 'ERGO PKV Beamte Komfort' },
@@ -51,6 +52,7 @@ export const V5 = {
     {
       titel: 'DU-Wechsel DBV\u2192ERGO', typ: 'anpassung', quellen: ['wettbewerb'], prioritaet: 'hoch', volumen: 1200, volumenTyp: 'jaehrlich',
       beschreibung: 'DBV DU-Tarif veraltet. ERGO DU mit besserem Leistungskatalog.',
+      kiDescription: 'KI-Analyse: Herr Meier besitzt einen veralteten DBV-Dienstunf\u00e4higkeitstarif (vor 2015) mit einer Pr\u00e4mie von 1.200\u20ac/J. und einer DU-Rente von 2.500\u20ac/mtl. \u2014 dem Tarif fehlen wesentliche Leistungen wie Nachversicherungsgarantie, Infektionsschutz und Dienstunfall-Klausel. Der ERGO DU Beamte Plus bietet all diese Leistungen bei ca. 100\u20ac/J. geringerer Pr\u00e4mie \u2014 Empfehlung: Tarifvergleich erstellen und Wechsel zu ERGO DU Plus einleiten.',
       empfohleneAktion: 'tarifvergleich', produktEmpfehlung: 'ERGO DU Beamte Plus', status: 'angeschrieben',
       herleitung: [
         { label: 'Aktueller DU-Schutz (DBV)', value: '1.200\u20ac/J. Pr\u00e4mie' },
@@ -74,6 +76,7 @@ export const V5 = {
     {
       titel: 'Pflegezusatz Ehepaar', typ: 'whitespot', quellen: ['bestand', 'lebensereignis'], prioritaet: 'mittel', volumen: 960, volumenTyp: 'jaehrlich',
       beschreibung: 'Beide 48, Pflege-Vorsorge noch g\u00fcnstig.',
+      kiDescription: 'KI-Analyse: Ehepaar Meier ist beide 48 Jahre alt und verf\u00fcgt \u00fcber keinerlei Pflegezusatzversicherung \u2014 die Pflegel\u00fccke bei Pflegegrad 3 betr\u00e4gt ca. 1.800\u20ac/mtl. pro Person. Aktuell ist eine Absicherung f\u00fcr ca. 80\u20ac/mtl. (Ehepaar) noch m\u00f6glich, ab 55 Jahren steigt die Pr\u00e4mie auf ca. 140\u20ac/mtl. \u2014 Empfehlung: Zeitnah ERGO Pflege-Schutz f\u00fcr beide Partner abschlie\u00dfen, solange die Gesundheitspr\u00fcfung unkritisch ist.',
       empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'ERGO Pflege-Schutz', status: 'identifiziert',
       herleitung: [
         { label: 'Alter Ehepaar', value: 'Beide 48 Jahre' },
@@ -86,6 +89,7 @@ export const V5 = {
     {
       titel: 'Fondspolice statt DWS-Depot', typ: 'whitespot', quellen: ['finanztransaktion'], prioritaet: 'mittel', volumen: 35000, volumenTyp: 'einmalig',
       beschreibung: '35k bei DWS. Fondspolice mit Steuervorteilen.',
+      kiDescription: 'KI-Analyse: Herr Meier h\u00e4lt 35.000\u20ac in gemischten Fonds bei DWS, auf deren Ertr\u00e4ge derzeit 26,375% Abgeltungssteuer anf\u00e4llt \u2014 durch Umschichtung in eine ERGO Rente Balance Fondspolice greift nach 12 Jahren Laufzeit das Halbeink\u00fcnfteverfahren, wodurch nur die H\u00e4lfte der Ertr\u00e4ge versteuert wird. Bei erwarteter Rendite spart dies mehrere Tausend Euro Steuern bis zur Rente \u2014 Empfehlung: Beratungstermin zur steueroptimierten Umschichtung vereinbaren.',
       empfohleneAktion: 'termin_vereinbaren', produktEmpfehlung: 'ERGO Rente Balance', status: 'identifiziert',
       herleitung: [
         { label: 'Aktuelles Depot (DWS)', value: '35.000\u20ac gemischte Fonds' },
@@ -97,6 +101,7 @@ export const V5 = {
     {
       titel: 'Kinderunfall-Versicherung', typ: 'whitespot', quellen: ['bestand'], prioritaet: 'niedrig', volumen: 180, volumenTyp: 'jaehrlich',
       beschreibung: '3 Kinder, aktiv im Sportverein.',
+      kiDescription: 'KI-Analyse: Die drei Kinder Sophie (16), Felix (13) und Tim (9) sind aktiv in Sportvereinen (Fu\u00dfball, Schwimmen) und verf\u00fcgen \u00fcber keinerlei Unfallversicherung \u2014 schulische und Vereinsunf\u00e4lle sind nur \u00fcber die gesetzliche Unfallversicherung minimal abgedeckt. Eine ERGO Kinderunfall-Versicherung f\u00fcr alle drei Kinder kostet ca. 180\u20ac/J. \u2014 Empfehlung: Angebot f\u00fcr Kinderunfall-Police erstellen, insbesondere angesichts der sportlichen Aktivit\u00e4ten.',
       empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'ERGO Kinderunfall', status: 'identifiziert',
       herleitung: [
         { label: 'Kinder', value: 'Sophie (16), Felix (13), Tim (9)' },
@@ -110,8 +115,9 @@ export const V5 = {
     { datum: '2026-01-15', typ: 'termin', richtung: 'ausgehend', betreff: 'PKV-Check', zusammenfassung: 'Tarif-Check durchgef\u00fchrt. Kunde zufrieden, aber offen f\u00fcr DU-Wechsel.' },
   ],
   absicherung: {
-    vorhanden: ['wohngebaeude', 'hausrat', 'haftpflicht', 'kfz', 'pkv'],
-    fehlend: ['pflege', 'unfall_kinder', 'rechtsschutz'],
+    vorhanden: ['wohngebaeude', 'hausrat', 'haftpflicht', 'kfz'],
+    fremd: ['bu'],
+    fehlend: ['rlv', 'pflege', 'unfall', 'rechtsschutz'],
   },
 };
 
@@ -144,6 +150,7 @@ export const V6 = {
     {
       titel: 'BU-Absicherung Kreativberuf', typ: 'whitespot', quellen: ['bestand'], prioritaet: 'kritisch', volumen: 1080, volumenTyp: 'jaehrlich',
       beschreibung: 'Freelancerin ohne BU! Existenzbedrohend bei Ausfall.',
+      kiDescription: 'KI-Analyse: Frau Bauer ist als Freelancerin im Kreativbereich t\u00e4tig mit 2.800\u20ac Nettoeinkommen und verf\u00fcgt \u00fcber keinerlei Berufsunf\u00e4higkeitsabsicherung \u2014 ohne Arbeitgeberschutz und mit nur minimaler KSK-Grundsicherung w\u00e4re ein Berufsausfall existenzbedrohend. Die empfohlene BU-Rente betr\u00e4gt 2.240\u20ac/mtl. (80% des Nettos), die Deckungsl\u00fccke liegt bei 100% \u2014 Empfehlung: Sofortige Angebotserstellung f\u00fcr ERGO BU Comfort mit h\u00f6chster Priorit\u00e4t.',
       empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'ERGO BU Comfort', status: 'identifiziert',
       herleitung: [
         { label: 'Nettoeinkommen', value: '2.800\u20ac/mtl.' },
@@ -165,6 +172,7 @@ export const V6 = {
     {
       titel: 'Berufshaftpflicht Freelancer', typ: 'whitespot', quellen: ['bestand'], prioritaet: 'hoch', volumen: 350, volumenTyp: 'jaehrlich',
       beschreibung: 'Kein beruflicher Haftpflichtschutz. Wichtig f\u00fcr Auftraggeber.',
+      kiDescription: 'KI-Analyse: Als Freelancerin im Marketing- und Designbereich arbeitet Frau Bauer mit Kundendaten und urheberrechtlich gesch\u00fctztem Material, verf\u00fcgt jedoch \u00fcber keine Berufshaftpflichtversicherung \u2014 Risiken wie Urheberrechtsverletzungen oder Datenverlust k\u00f6nnen schnell f\u00fcnfstellige Sch\u00e4den verursachen. Viele Auftraggeber setzen eine Berufshaftpflicht inzwischen vertraglich voraus, Pr\u00e4mie ab 350\u20ac/J. \u2014 Empfehlung: ERGO Berufshaftpflicht-Angebot erstellen und als Qualit\u00e4tsmerkmal gegen\u00fcber Kunden positionieren.',
       empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'ERGO Berufshaftpflicht', status: 'identifiziert',
       herleitung: [
         { label: 'Berufsstatus', value: 'Freelancerin Marketing/Design' },
@@ -176,6 +184,7 @@ export const V6 = {
     {
       titel: 'Hausratversicherung', typ: 'whitespot', quellen: ['bestand'], prioritaet: 'mittel', volumen: 65, volumenTyp: 'jaehrlich',
       beschreibung: 'Teure Arbeitsger\u00e4te (iMac, iPad Pro) nicht versichert.',
+      kiDescription: 'KI-Analyse: Frau Bauer bewohnt eine 45-qm-Mietwohnung in Frankfurt und nutzt professionelle Arbeitsger\u00e4te im Wert von ca. 8.000\u20ac (iMac, iPad Pro, Kamera) \u2014 ohne Hausratversicherung sind diese Ger\u00e4te bei Einbruch, Brand oder Wassersch\u00e4den vollst\u00e4ndig unversichert. Ein Verlust w\u00fcrde ihre Arbeitsf\u00e4higkeit direkt beeintr\u00e4chtigen, Pr\u00e4mie ab 65\u20ac/J. \u2014 Empfehlung: ERGO Hausrat Basis mit Elektronik-Zusatzbaustein anbieten.',
       empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'ERGO Hausrat Basis + Elektronik', status: 'identifiziert',
       herleitung: [
         { label: 'Wohnsituation', value: 'Miete, 45 qm' },
@@ -187,6 +196,7 @@ export const V6 = {
     {
       titel: 'R\u00fcrup-Rente Selbst\u00e4ndige', typ: 'whitespot', quellen: ['finanztransaktion'], prioritaet: 'mittel', volumen: 2400, volumenTyp: 'jaehrlich',
       beschreibung: 'Keine Altersvorsorge ausser KSK. Steuerlich absetzbar.',
+      kiDescription: 'KI-Analyse: Frau Bauer ist 31 Jahre alt und verf\u00fcgt au\u00dfer \u00fcber die KSK-Pflichtbeitr\u00e4ge \u00fcber keinerlei private Altersvorsorge \u2014 als Selbstst\u00e4ndige hat sie noch 36 Jahre bis zur Rente und kann mit einem R\u00fcrup-Beitrag von 200\u20ac/mtl. (2.400\u20ac/J.) eine steuerliche Ersparnis von ca. 840\u20ac/J. realisieren. Der Zinseszinseffekt \u00fcber die lange Laufzeit ist erheblich \u2014 Empfehlung: Beratungstermin f\u00fcr ERGO R\u00fcrup Rente vereinbaren und Steuervorteile aufzeigen.',
       empfohleneAktion: 'termin_vereinbaren', produktEmpfehlung: 'ERGO R\u00fcrup Rente', status: 'identifiziert',
       herleitung: [
         { label: 'Altersvorsorge', value: 'Nur KSK-Pflichtbeitr\u00e4ge' },
@@ -201,7 +211,8 @@ export const V6 = {
   ],
   absicherung: {
     vorhanden: ['haftpflicht'],
-    fehlend: ['bu', 'berufshaftpflicht', 'hausrat', 'rechtsschutz', 'altersvorsorge'],
+    fremd: [],
+    fehlend: ['bu', 'kfz', 'hausrat', 'rlv', 'pflege', 'unfall', 'rechtsschutz', 'wohngebaeude'],
   },
 };
 
@@ -244,6 +255,7 @@ export const V7 = {
     {
       titel: 'Pflegezusatz Ehepaar', typ: 'whitespot', quellen: ['bestand', 'lebensereignis'], prioritaet: 'hoch', volumen: 1440, volumenTyp: 'jaehrlich',
       beschreibung: 'Beide \u00fcber 60, kein Pflegeschutz. Noch versicherbar.',
+      kiDescription: 'KI-Analyse: Herr Braun (62) und seine Frau Renate (ca. 60) verf\u00fcgen \u00fcber keinerlei Pflegezusatzversicherung \u2014 die Pflegel\u00fccke bei Pflegegrad 3 betr\u00e4gt ca. 2.200\u20ac/mtl., was das Verm\u00f6gen des Ehepaars schnell aufzehren w\u00fcrde. Die Pr\u00e4mie liegt aktuell bei ca. 120\u20ac/mtl. f\u00fcr beide, die Gesundheitspr\u00fcfung wird mit zunehmendem Alter deutlich schwieriger \u2014 Empfehlung: Umgehend ERGO Pflege-Schutz Premium f\u00fcr das Ehepaar beantragen, bevor gesundheitliche Einschr\u00e4nkungen die Versicherbarkeit gef\u00e4hrden.',
       empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'ERGO Pflege-Schutz Premium', status: 'angeschrieben',
       herleitung: [
         { label: 'Alter Michael', value: '62 Jahre' },
@@ -257,6 +269,7 @@ export const V7 = {
     {
       titel: 'Sterbegeld-Versicherung', typ: 'whitespot', quellen: ['lebensereignis'], prioritaet: 'mittel', volumen: 600, volumenTyp: 'jaehrlich',
       beschreibung: 'Bestattungsvorsorge f\u00fcr Ehepaar.',
+      kiDescription: 'KI-Analyse: Ehepaar Braun hat keine Bestattungsvorsorge getroffen \u2014 die durchschnittlichen Bestattungskosten liegen bei 8.000\u201312.000\u20ac pro Person, was die Angeh\u00f6rigen unvorbereitet finanziell belasten w\u00fcrde. Mit einer empfohlenen Summe von 10.000\u20ac pro Person bei ca. 50\u20ac/mtl. Pr\u00e4mie f\u00fcr das Ehepaar ist die Absicherung noch gut darstellbar \u2014 Empfehlung: ERGO Sterbegeld-Angebot f\u00fcr beide Partner erstellen und als Teil der Nachlassplanung positionieren.',
       empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'ERGO Sterbegeld', status: 'identifiziert',
       herleitung: [
         { label: 'Bestattungsvorsorge', value: 'Nicht vorhanden' },
@@ -268,6 +281,7 @@ export const V7 = {
     {
       titel: 'Fondspolice statt Deka-Depot', typ: 'whitespot', quellen: ['finanztransaktion'], prioritaet: 'mittel', volumen: 145000, volumenTyp: 'einmalig',
       beschreibung: '145k bei Deka. Umschichtung in steueroptimierte Fondspolice.',
+      kiDescription: 'KI-Analyse: Herr Braun h\u00e4lt 145.000\u20ac in gemischten Fonds bei Deka, auf deren Ertr\u00e4ge 26,375% Abgeltungssteuer anf\u00e4llt \u2014 mit 62 Jahren kann er durch Umschichtung in eine ERGO Rente Balance sofortige Steuervorteile realisieren, da das Halbeink\u00fcnfteverfahren bei Auszahlung ab 62 Jahren und mind. 12 Jahren Laufzeit greift. Bei einem Volumen von 145.000\u20ac ist das Einsparpotenzial erheblich \u2014 Empfehlung: Beratungstermin zur steueroptimierten Umstrukturierung des Deka-Depots vereinbaren.',
       empfohleneAktion: 'termin_vereinbaren', produktEmpfehlung: 'ERGO Rente Balance', status: 'identifiziert',
       herleitung: [
         { label: 'Deka-Depot', value: '145.000\u20ac' },
@@ -279,6 +293,7 @@ export const V7 = {
     {
       titel: 'Wohngeb\u00e4ude-Update', typ: 'anpassung', quellen: ['bestand'], prioritaet: 'mittel', volumen: 200, volumenTyp: 'jaehrlich',
       beschreibung: 'Basis-Tarif von 2000. Elementar fehlt, Unterversicherung m\u00f6glich.',
+      kiDescription: 'KI-Analyse: Herr Braun besitzt seit dem Jahr 2000 einen ERGO Wohngeb\u00e4ude Basis-Tarif f\u00fcr sein 200-qm-Einfamilienhaus (Baujahr 1985) \u2014 dem Tarif fehlt der Elementarschutz (Starkregen, \u00dcberschwemmung), es besteht kein Unterversicherungsverzicht und Ableitungsrohre sind nicht versichert. Die aktuelle Pr\u00e4mie von 850\u20ac/J. w\u00fcrde auf ca. 1.050\u20ac/J. steigen, daf\u00fcr aber umfassenden Schutz bieten \u2014 Empfehlung: Upgrade auf ERGO Wohngeb\u00e4ude Premium mit Elementarschutz dringend empfohlen.',
       empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'ERGO Wohngeb\u00e4ude Premium + Elementar', status: 'identifiziert',
       herleitung: [
         { label: 'Aktueller Tarif', value: 'ERGO Wohngeb\u00e4ude Basis (seit 2000!)' },
@@ -301,6 +316,7 @@ export const V7 = {
     {
       titel: 'Enkelkind-Vorsorge', typ: 'cross_sell', quellen: ['lebensereignis'], prioritaet: 'niedrig', volumen: 1200, volumenTyp: 'jaehrlich',
       beschreibung: 'Enkel (2 Jahre). Ausbildungsversicherung/Fondssparplan.',
+      kiDescription: 'KI-Analyse: Herr Braun hat ein Enkelkind im Alter von 2 Jahren \u2014 mit einem monatlichen Beitrag von 100\u20ac (1.200\u20ac/J.) in eine ERGO Junior Vorsorge kann bis zum 18. Lebensjahr ein Kapital von ca. 25.000\u201330.000\u20ac f\u00fcr Ausbildung oder Studium aufgebaut werden. Als Gro\u00dfvater mit solidem Einkommen (3.200\u20ac Rente + 1.800\u20ac Partnerin) ist der Beitrag gut tragbar \u2014 Empfehlung: Angebot f\u00fcr ERGO Junior Vorsorge als Geschenk f\u00fcr das Enkelkind erstellen.',
       empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'ERGO Junior Vorsorge', status: 'identifiziert',
       herleitung: [
         { label: 'Enkelkind', value: '2 Jahre alt' },
@@ -315,7 +331,8 @@ export const V7 = {
   ],
   absicherung: {
     vorhanden: ['wohngebaeude', 'hausrat', 'haftpflicht', 'kfz', 'rechtsschutz', 'unfall'],
-    fehlend: ['pflege', 'sterbegeld'],
+    fremd: [],
+    fehlend: ['bu', 'rlv', 'pflege'],
   },
 };
 
@@ -359,6 +376,7 @@ export const V8 = {
     {
       titel: 'Erh\u00f6hung BU-Absicherung', typ: 'anpassung', quellen: ['bestand', 'lebensereignis'], prioritaet: 'hoch', volumen: 1200, volumenTyp: 'jaehrlich',
       beschreibung: 'Einkommen deutlich gestiegen. BU deckt nur 42%.',
+      kiDescription: 'KI-Analyse: Frau Yilmaz verdient aktuell 5.200\u20ac netto als Pharma-Referentin, ihre bestehende BU-Rente von 2.200\u20ac/mtl. deckt jedoch nur 42% des Einkommens ab \u2014 empfohlen werden 80%, also 4.160\u20ac/mtl., was eine Deckungsl\u00fccke von 1.960\u20ac/mtl. ergibt. Als Alleinverdienerin neben dem selbstst\u00e4ndigen Ehemann (Zahnarztpraxis) ist eine h\u00f6here Absicherung existenziell wichtig \u2014 Empfehlung: BU-Nachversicherung auf ERGO BU Comfort Plus mit erh\u00f6hter Rente umsetzen.',
       empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'ERGO BU Comfort Plus', status: 'termin',
       herleitung: [
         { label: 'Aktuelles Nettoeinkommen', value: '5.200\u20ac/mtl.' },
@@ -380,6 +398,7 @@ export const V8 = {
     {
       titel: 'RLV Baufi-Vorbereitung', typ: 'whitespot', quellen: ['lebensereignis'], prioritaet: 'hoch', volumen: 480, volumenTyp: 'jaehrlich',
       beschreibung: 'Immobilienkauf geplant 2027. RLV jetzt abschliessen.',
+      kiDescription: 'KI-Analyse: Familie Yilmaz plant f\u00fcr 2027 einen Immobilienkauf mit einem Finanzierungsvolumen von ca. 400.000\u2013500.000\u20ac \u2014 derzeit besteht keine Risikolebensversicherung, obwohl bei einem Haushaltsbruttoeinkommen von 11.700\u20ac/mtl. und einem Kind (Leyla, 5) die Absicherung der Restschuld zwingend erforderlich ist. Eine RLV \u00fcber 500.000\u20ac kostet ca. 480\u20ac/J. und sollte vor dem Immobilienkauf abgeschlossen werden \u2014 Empfehlung: Jetzt ERGO Risikoleben-Angebot erstellen, da die Gesundheitspr\u00fcfung bei Abschluss vor der Baufinanzierung stressfreier verl\u00e4uft.',
       empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'ERGO Risikoleben', status: 'identifiziert',
       herleitung: [
         { label: 'Immobilienkauf geplant', value: '2027' },
@@ -392,6 +411,7 @@ export const V8 = {
     {
       titel: 'Wohngeb\u00e4ude vormerken', typ: 'cross_sell', quellen: ['lebensereignis'], prioritaet: 'mittel', volumen: 1200, volumenTyp: 'jaehrlich',
       beschreibung: 'Hauskauf geplant. Wohngeb\u00e4ude-Police vorbereiten.',
+      kiDescription: 'KI-Analyse: Familie Yilmaz plant den Erwerb einer Immobilie im Jahr 2027 und ben\u00f6tigt dann zwingend eine Wohngeb\u00e4udeversicherung \u2014 durch fr\u00fchzeitige Vormerkung einer ERGO Wohngeb\u00e4ude Premium-Police mit Elementarschutz (gesch\u00e4tzte Pr\u00e4mie ca. 1.200\u20ac/J.) kann der \u00dcbergang nahtlos gestaltet werden. Dies st\u00e4rkt die Kundenbindung und sichert den Cross-Selling-Ansatz \u2014 Empfehlung: Im Rahmen des BU-Beratungstermins das Thema Wohngeb\u00e4ude ansprechen und Bedarfsermittlung durchf\u00fchren.',
       empfohleneAktion: 'termin_vereinbaren', produktEmpfehlung: 'ERGO Wohngeb\u00e4ude Premium', status: 'identifiziert',
       herleitung: [
         { label: 'Immobilienkauf', value: 'Geplant 2027' },
@@ -402,6 +422,7 @@ export const V8 = {
     {
       titel: 'Fondspolice statt ING-Depot', typ: 'whitespot', quellen: ['finanztransaktion'], prioritaet: 'mittel', volumen: 85000, volumenTyp: 'einmalig',
       beschreibung: '85k bei ING. Teilumschichtung in Fondspolice.',
+      kiDescription: 'KI-Analyse: Frau Yilmaz h\u00e4lt 85.000\u20ac in ETFs und Einzelaktien bei ING mit einem laufenden Sparplan von 800\u20ac/mtl. \u2014 auf alle Ertr\u00e4ge fallen 26,375% Abgeltungssteuer an, w\u00e4hrend eine Fondspolice steuerfreie Umschichtungen und das Halbeink\u00fcnfteverfahren erm\u00f6glicht. Eine Einmalanlage von 50.000\u20ac in die ERGO Rente Balance bei Weiterlaufen des restlichen ING-Depots w\u00e4re optimal \u2014 Empfehlung: Beratungstermin zur Teilumschichtung vereinbaren und Steuervorteile anhand konkreter Modellrechnungen aufzeigen.',
       empfohleneAktion: 'termin_vereinbaren', produktEmpfehlung: 'ERGO Rente Balance', status: 'identifiziert',
       herleitung: [
         { label: 'ING-Depot', value: '85.000\u20ac' },
@@ -417,6 +438,7 @@ export const V8 = {
   ],
   absicherung: {
     vorhanden: ['bu', 'haftpflicht', 'kfz'],
-    fehlend: ['rlv', 'hausrat', 'rechtsschutz', 'wohngebaeude_vormerken'],
+    fremd: [],
+    fehlend: ['hausrat', 'rlv', 'pflege', 'unfall', 'rechtsschutz', 'wohngebaeude'],
   },
 };

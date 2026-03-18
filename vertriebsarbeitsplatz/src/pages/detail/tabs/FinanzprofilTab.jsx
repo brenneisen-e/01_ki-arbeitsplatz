@@ -422,7 +422,7 @@ export default function FinanzprofilTab({ kunde }) {
     <div className="space-y-4">
       {/* Row 1: Einnahmen/Ausgaben + Donut */}
       <div className="grid grid-cols-2 gap-4">
-        <Card>
+        <Card hover={false}>
           <h3 className="font-semibold text-slate-800 mb-4">{t('einnahmenAusgaben')}</h3>
           <div className="mb-4">
             <div className="flex justify-between text-sm font-semibold text-slate-700 mb-2">
@@ -460,7 +460,7 @@ export default function FinanzprofilTab({ kunde }) {
           </div>
         </Card>
 
-        <Card>
+        <Card hover={false}>
           <h3 className="font-semibold text-slate-800 mb-4">{t('ausgabenVerteilung')}</h3>
           <DonutChart data={donutData} height={260} centerValue={formatEur(totalAus)} centerLabel={t('ausgaben')} colors={COLORS} />
           <div className="mt-4 space-y-1.5">
@@ -481,7 +481,7 @@ export default function FinanzprofilTab({ kunde }) {
 
       {/* Row 2: Kontotransaktionen (Open Banking / Tink) - hidden for VV */}
       {!isVV && (
-        <Card>
+        <Card hover={false}>
           <div className="flex items-center justify-between mb-4">
             <div>
               <h3 className="font-semibold text-slate-800">{t('kontotransaktionen')}</h3>
@@ -521,7 +521,7 @@ export default function FinanzprofilTab({ kunde }) {
 
       {/* Row 3: KI-Erkenntnisse aus Kontoumsätzen - hidden for VV */}
       {!isVV && insights.length > 0 && (
-        <Card>
+        <Card hover={false}>
           <div className="flex items-center gap-2 mb-4">
             <span className="shrink-0">{InsightIcons.header}</span>
             <h3 className="font-semibold text-slate-800">{t('kiErkenntnisse')}</h3>

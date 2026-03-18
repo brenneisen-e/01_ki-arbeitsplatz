@@ -226,7 +226,7 @@ const translationsDetail = {
   'haustierLabel': { de: 'Haustier', en: 'Pet' },
   'haustierVermutet': { de: 'Vermutlich Haustier:', en: 'Suspected pet:' },
   'haustierHinweis': { de: 'Haustier-Hinweis:', en: 'Pet indicator:' },
-  'haustierAusKonto': { de: 'Haustier vermutet (aus Kontoumsätzen)', en: 'Pet suspected (from account transactions)' },
+  'haustierAusKonto': { de: 'Aus Kontoumsätzen erkannt', en: 'Detected from account transactions' },
   'ausKontoumsaetzenErkannt': { de: 'aus Kontoumsätzen erkannt', en: 'detected from account transactions' },
   'erkannteTransaktionen': { de: 'Erkannte Transaktionen', en: 'Detected Transactions' },
   'quellePsd2': { de: 'Quelle: PSD2/Open Finance Transaktionsanalyse', en: 'Source: PSD2/Open Finance Transaction Analysis' },

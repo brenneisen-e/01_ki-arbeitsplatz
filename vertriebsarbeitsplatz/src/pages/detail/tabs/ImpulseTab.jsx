@@ -5,7 +5,7 @@ import { PrioBadge, QuellenBadge } from '../../../components/ui/Badge';
 import { formatEur } from '../../../utils/formatters';
 import { useMode } from '../../../hooks/useMode';
 import useTranslation from '../../../i18n/useTranslation';
-import { Shield, Zap, RefreshCw, CheckCircle, XCircle, ChevronDown, Calendar, User, ExternalLink, TrendingUp, ArrowRight } from 'lucide-react';
+import { Shield, Zap, RefreshCw, CheckCircle, XCircle, ChevronDown, Calendar, User, ExternalLink, TrendingUp, ArrowRight, Sparkles } from 'lucide-react';
 
 const ABSICHERUNGS_TYPEN = [
   { key: 'bu' },
@@ -32,7 +32,7 @@ export default function ImpulseTab({ kunde }) {
   return (
     <div className="space-y-4">
       {/* Absicherungsstatus */}
-      <Card>
+      <Card hover={false}>
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             <Shield size={20} className="text-slate-500" strokeWidth={1.75} />
@@ -42,17 +42,20 @@ export default function ImpulseTab({ kunde }) {
         </div>
         <div className="flex flex-wrap gap-2">
           {ABSICHERUNGS_TYPEN.map(typ => {
-            const vorhanden = absicherung.vorhanden?.some(v => v.includes(typ.key));
+            const eigen = absicherung.vorhanden?.some(v => v.includes(typ.key));
+            const fremd = absicherung.fremd?.some(v => v.includes(typ.key));
             return (
               <div
                 key={typ.key}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium ${
-                  vorhanden
+                  eigen
                     ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                    : 'bg-red-50 text-red-600 border border-red-200'
+                    : fremd
+                      ? 'bg-slate-100 text-slate-500 border border-slate-200'
+                      : 'bg-red-50 text-red-600 border border-red-200'
                 }`}
               >
-                {vorhanden ? <CheckCircle size={14} /> : <XCircle size={14} />}
+                {eigen ? <CheckCircle size={14} /> : fremd ? <CheckCircle size={14} className="text-slate-400" /> : <XCircle size={14} />}
                 {t(`absicherung.${typ.key}`)}
               </div>
             );
@@ -193,6 +196,17 @@ function PotentialCard({ potential: p, kunde, expanded, onToggle, t }) {
       {/* Expandable detail section */}
       {expanded && (
         <div className="border-t border-slate-100 bg-slate-50/50 p-4 space-y-5 animate-fade-in">
+          {/* KI-Zusammenfassung */}
+          {p.kiDescription && (
+            <div className="bg-gradient-to-r from-indigo-50 to-purple-50 border border-indigo-100 rounded-xl px-4 py-3">
+              <div className="flex items-center gap-2 mb-2">
+                <Sparkles size={14} className="text-indigo-500" />
+                <span className="text-xs font-semibold text-indigo-600">{t('kiZusammenfassung')}</span>
+              </div>
+              <p className="text-sm text-slate-700 leading-relaxed">{p.kiDescription}</p>
+            </div>
+          )}
+
           {/* Herleitung */}
           {p.herleitung && p.herleitung.length > 0 && (
             <div>

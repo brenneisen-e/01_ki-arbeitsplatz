@@ -296,7 +296,7 @@ function LeadRow({ lead, kunde, isExpanded, onToggle, t, stadiumLabels, quellenL
   return (
     <>
       <tr
-        className="border-b border-slate-100 transition-colors cursor-pointer"
+        className="border-b border-slate-100 transition-colors cursor-pointer row-hover"
         style={hovered ? { backgroundColor: 'var(--mode-primary-light)', color: '#ffffff' } : undefined}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}

@@ -25,7 +25,7 @@ const VERSICHERUNG_REGELN = [
   {
     id: 'bu_fehlt',
     check: (p) => !hatProdukt(p, 'bu') && p.alter < 60 && p._berufObj.buRisiko !== 'keine',
-    titel: (p) => tx('Erhöhung Abdeckung BU', 'Increase Disability Coverage'),
+    titel: (p) => tx('Erhöhung Abdeckung Berufsunfähigkeitsversicherung', 'Increase Disability Coverage'),
     typ: 'whitespot', quellen: ['bestand'], prioritaet: 'kritisch',
     volumen: (p) => Math.round(p.nettoeinkommen * 0.8 * 12 * 0.04),
     beschreibung: (p) => `Keine BU vorhanden. ${p.beruf} (${p._berufObj.buRisiko}). Empfehlung: ${Math.round(p.nettoeinkommen * 0.8)}€/mtl. Rente.`,

@@ -169,12 +169,14 @@
     animation: scaleIn 200ms ease-out forwards;
   }
 
-  .row-hover:hover {
-    background-color: var(--mode-primary);
-    color: white;
-  }
+}
 
-  .row-hover:hover * {
-    color: inherit !important;
-  }
+/* Row-Hover: außerhalb @layer damit es Tailwind-Utilities überschreibt */
+.row-hover:hover {
+  background-color: var(--mode-primary) !important;
+  color: white !important;
+}
+
+.row-hover:hover * {
+  color: inherit !important;
 }

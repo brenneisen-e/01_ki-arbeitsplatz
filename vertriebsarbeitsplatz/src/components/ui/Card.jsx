@@ -6,7 +6,7 @@ export default function Card({ children, className, hover = true, onClick, paddi
       className={clsx(
         'rounded-xl border border-slate-200 card-base',
         padding && 'p-5',
-        hover && 'card-hover cursor-pointer',
+        hover ? 'card-hover cursor-pointer' : 'card-passthrough',
         onClick && 'cursor-pointer',
         className
       )}

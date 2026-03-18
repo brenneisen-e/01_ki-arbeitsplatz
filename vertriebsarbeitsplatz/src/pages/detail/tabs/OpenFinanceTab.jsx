@@ -2,8 +2,9 @@ import Card from '../../../components/ui/Card';
 import DataTable from '../../../components/ui/DataTable';
 import LogoImg from '../../../components/ui/LogoImg';
 import { formatEur } from '../../../utils/formatters';
-import { CheckCircle, XCircle, Link2 } from 'lucide-react';
+import { CheckCircle, XCircle, Link2, Briefcase } from 'lucide-react';
 import useTranslation from '../../../i18n/useTranslation';
+import { useMode } from '../../../hooks/useMode';
 
 const TYP_EN = {
   depot: 'Securities Account', depot2: 'Securities Account 2', depot_firma: 'Company Securities',
@@ -76,7 +77,9 @@ function translateDetails(details, lang) {
 
 export default function OpenFinanceTab({ kunde }) {
   const { t, lang } = useTranslation();
+  const { config } = useMode();
   const fremd = kunde.fremdProdukte || [];
+  const eigen = kunde.eigeneProdukte || [];
   const consented = fremd.filter(f => f.consent).length;
   const total = fremd.length;
 
@@ -110,6 +113,7 @@ export default function OpenFinanceTab({ kunde }) {
         <DataTable
           columns={[
             { id: 'typ', label: t('produkt'), render: v => <span className="font-medium capitalize">{lang === 'en' ? (TYP_EN[v] || v.replace(/_/g, ' ')) : v.replace(/_/g, ' ')}</span> },
+            { id: 'produktart', label: t('produktart') || 'Produktart', render: v => v ? <span className="text-slate-600">{v}</span> : <span className="text-slate-300">–</span> },
             { id: 'institut', label: t('institut'), render: (v) => (
               <div className="flex items-center gap-2">
                 <LogoImg name={v} size={18} />
@@ -117,7 +121,7 @@ export default function OpenFinanceTab({ kunde }) {
               </div>
             )},
             { id: 'details', label: t('details'), render: v => translateDetails(v, lang) },
-            { id: 'volumen', label: t('volumenLabel'), render: v => <span className="font-mono">{formatEur(v)}</span> },
+            { id: 'volumen', label: t('volumenLabel'), render: v => v > 0 ? <span className="font-mono">{formatEur(v)}</span> : <span className="text-slate-300">–</span> },
             { id: 'consent', label: 'Consent', render: v => (
               v ? (
                 <span className="flex items-center gap-1 text-emerald-600">
@@ -133,6 +137,31 @@ export default function OpenFinanceTab({ kunde }) {
           data={fremd}
         />
       </Card>
+
+      {/* Eigene Produkte */}
+      {eigen.length > 0 && (
+        <Card hover={false}>
+          <div className="flex items-center gap-2 mb-4">
+            <Briefcase size={20} className="text-slate-500" strokeWidth={1.75} />
+            <h3 className="font-semibold text-slate-800">{t('eigeneProdukte')} ({eigen.length})</h3>
+          </div>
+          <DataTable
+            columns={[
+              { id: 'produkt', label: t('produkt'), render: v => <span className="font-medium">{v}</span> },
+              { id: 'sparte', label: t('sparte') || 'Sparte', render: v => <span className="capitalize">{v}</span> },
+              { id: 'details', label: t('details'), render: v => translateDetails(v, lang) },
+              { id: 'praemie', label: t('praemieLabel') || 'Prämie/J.', render: v => v > 0 ? <span className="font-mono">{formatEur(v)}</span> : <span className="text-slate-300">–</span> },
+              { id: 'seit', label: t('seit') || 'Seit' },
+              { id: 'status', label: 'Status', render: v => (
+                <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${v === 'aktiv' ? 'bg-emerald-50 text-emerald-700' : v === 'optimierbar' ? 'bg-amber-50 text-amber-700' : 'bg-slate-100 text-slate-600'}`}>
+                  {v}
+                </span>
+              )},
+            ]}
+            data={eigen}
+          />
+        </Card>
+      )}
     </div>
   );
 }

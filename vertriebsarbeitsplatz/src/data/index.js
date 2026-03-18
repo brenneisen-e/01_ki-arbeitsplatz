@@ -701,7 +701,7 @@ export const TERMINE_BY_MODE = {
   get banking() {
     const s = [0,1,2,3].map(i => nextTerminSlot(i));
     return [
-      { datum: s[0].datum, zeit: s[0].zeit, kunde: 'Klaus Fischer', betreff: tx('Anschlussfinanzierung Beratung', 'Refinancing consultation'), kundeId: 'KDB001', foto: './images/AdobeStock_329502726.jpeg' },
+      { datum: s[0].datum, zeit: s[0].zeit, kunde: 'Stefan Braun', betreff: tx('Gewerbekonto-Beratung', 'Business account consultation'), kundeId: 'BK00006', foto: './images/AdobeStock_329502726.jpeg' },
       { datum: s[1].datum, zeit: s[1].zeit, kunde: 'Peter Hoffmann', betreff: tx('VermögenPlus Depot Review', 'VermögenPlus Depot Review'), kundeId: 'KDB005', foto: './images/AdobeStock_1210213822.jpeg' },
       { datum: s[2].datum, zeit: s[2].zeit, kunde: 'Sandra Müller', betreff: tx('VR-FinanzPlan Erstgespräch', 'VR Financial Plan initial meeting'), kundeId: 'KDB002', foto: './images/AdobeStock_477904088.jpeg' },
       { datum: s[3].datum, zeit: s[3].zeit, kunde: 'Andrea Lang', betreff: tx('Praxiskredit Auszahlung', 'Practice loan disbursement'), kundeId: 'KDB006', foto: './images/AdobeStock_612940075.jpeg' },

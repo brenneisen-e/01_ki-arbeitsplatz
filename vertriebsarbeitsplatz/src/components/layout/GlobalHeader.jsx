@@ -62,6 +62,12 @@ export default function GlobalHeader({ kundeInfo, tabBadges }) {
 
   return (
     <header className="transition-all duration-500" style={{ background: config.colors.gradient }}>
+      {/* Demo-Hinweis */}
+      <div className="flex justify-center">
+        <div className="bg-slate-500/80 text-white/90 text-[10px] font-medium px-4 py-1 rounded-b-md tracking-wide">
+          Demo-Umgebung — Rein synthetische Daten, keine echten Kundendaten
+        </div>
+      </div>
       {/* Top Row */}
       <div className="px-6 pt-5 pb-3 flex items-center justify-between">
         <div className="flex items-center gap-4">

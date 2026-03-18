@@ -342,7 +342,7 @@ export default function KundenTab() {
           <div
             key={row.id || i}
             className={clsx(
-              'flex items-center border-b border-slate-100 last:border-0 cursor-pointer transition-colors duration-100',
+              'flex items-center border-b border-slate-100 last:border-0 cursor-pointer',
               i % 2 === 0 ? 'bg-white' : 'bg-slate-50/40',
               'row-hover',
             )}

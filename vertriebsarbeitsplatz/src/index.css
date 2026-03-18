@@ -180,15 +180,20 @@
 
 }
 
-/* === Hover: maximal einfach, null Overhead === */
+/* === Card Styles === */
 .card-base {
   box-shadow: var(--card-shadow);
   background-color: #ffffff;
 }
 
-/* Kacheln mit Zeilen: NUR rows + buttons bekommen pointer-events.
-   Alles dazwischen (Header, Container) ist unsichtbar für Maus.
-   So fliegt die Maus direkt von Zeile zu Zeile ohne Zwischenstopps. */
+/* CSS Containment: Browser begrenzt Style-Recalculation + Repaint
+   auf die Card-Boundary. Hover in Card A invalidiert NICHT Card B.
+   https://developer.mozilla.org/en-US/docs/Web/CSS/contain */
+.card-base, .card-passthrough {
+  contain: layout paint;
+}
+
+/* Kacheln mit Zeilen: NUR rows + buttons bekommen pointer-events */
 .card-passthrough {
   pointer-events: none;
 }
@@ -200,30 +205,25 @@
   pointer-events: auto;
 }
 
-/* === CSS Custom Property Hover ===
-   Text: --_fg Variable auf Parent, Kinder binden einmalig via var().
-   Bei Hover ändert sich NUR --_fg → O(1) statt O(n).
-   Badges: wenige pro Zeile, normaler Hover-Selektor akzeptabel. */
-
-.card-hover, .row-hover { --_fg: inherit; }
+/* === Hover: Einfache Descendant-Selektoren ===
+   Durch contain: layout paint auf den Cards ist die Recalculation
+   auf die Card-Boundary begrenzt → schnell genug. */
 
 .card-hover:hover {
   background-color: var(--mode-primary);
   border-color: transparent;
-  --_fg: white;
 }
 .row-hover:hover {
   background-color: var(--mode-primary);
-  --_fg: white;
 }
 
-/* Text: einmalig an --_fg binden (KEIN Hover-Selektor) */
-.row-hover span, .row-hover div,
-.card-hover span, .card-hover div {
-  color: var(--_fg) !important;
+/* Text weiß bei Hover (*, nicht nur span/div) */
+.card-hover:hover *,
+.row-hover:hover * {
+  color: white !important;
 }
 
-/* Badges + Icon-Box: nur 2-3 pro Zeile, Hover-Selektor OK */
+/* Badges + Icon-Box */
 .row-hover:hover .rh-badge, .card-hover:hover .rh-badge {
   background-color: rgba(255,255,255,0.2) !important;
   border-color: rgba(255,255,255,0.35) !important;

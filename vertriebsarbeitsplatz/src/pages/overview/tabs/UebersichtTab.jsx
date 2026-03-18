@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { Sun, Clock, Zap, CheckSquare, Calendar, Phone, AlertTriangle, CheckCircle, FileText, Heart, Car, Home, ShieldAlert, Cake, Euro, Download, Landmark, BarChart3, PiggyBank, Wallet, Sparkles } from 'lucide-react';
+import { Sun, Clock, Zap, CheckSquare, Calendar, Phone, AlertTriangle, CheckCircle, FileText, Heart, Car, Home, ShieldAlert, Cake, Euro, Download, Landmark, BarChart3, PiggyBank, Wallet, Sparkles, Star } from 'lucide-react';
 import Card from '../../../components/ui/Card';
 import Avatar from '../../../components/ui/Avatar';
 import { PrioBadge, SparteBadge } from '../../../components/ui/Badge';
@@ -82,8 +82,8 @@ const GEBURTSTAGE = {
     { name: 'Sandra Yilmaz', kundeId: 'KD00008', datum: 'Sa, 15.03.', alter: 45, foto: './images/AdobeStock_612932760.jpeg' },
   ],
   banking: [
-    { name: 'Klaus Fischer', kundeId: 'KDB001', datum: 'Mi, 12.03.', alter: 52 },
-    { name: 'Andrea Lang', kundeId: 'KDB006', datum: 'Fr, 14.03.', alter: 41 },
+    { name: 'Sandra Müller', kundeId: 'BK00002', datum: 'Mi, 19.03.', alter: 34 },
+    { name: 'Andrea Lang', kundeId: 'BK00005', datum: 'Fr, 21.03.', alter: 41 },
   ],
   vermoegensverwaltung: [
     { name: 'Dr. Stefan Meier', kundeId: 'VV001', datum: 'Do, 13.03.', alter: 58 },
@@ -149,7 +149,8 @@ export default function UebersichtTab() {
       if (!grouped[p.kundeId]) {
         const k = kundenMap[p.kundeId];
         const abgebrochen = (k?.produktabschluss || []).filter(a => a.status === 'abgebrochen').length;
-        grouped[p.kundeId] = { kundeId: p.kundeId, kundeName: p.kundeName, nps: k?.nps, abgebrochenCount: abgebrochen, potentiale: [], gesamtPraemie: 0, gesamtProvision: 0 };
+        const clv = (k?.eigeneProdukte?.reduce((s, p2) => s + (p2.praemie || 0), 0) || 0) * 10 || Math.round((k?.nettoeinkommen || 5000) * 12 * 0.03 * 10);
+        grouped[p.kundeId] = { kundeId: p.kundeId, kundeName: p.kundeName, nps: k?.nps, abgebrochenCount: abgebrochen, clv, potentiale: [], gesamtPraemie: 0, gesamtProvision: 0 };
       }
       grouped[p.kundeId].potentiale.push(p);
       if (p.volumen > 0) {
@@ -310,14 +311,13 @@ export default function UebersichtTab() {
               <span className="text-sm text-slate-400">{t('kundenPotenzialeSummary', { kunden: kundenPotentiale.length, potenziale: getAllPotentiale(modeId).length })}</span>
             </div>
             <div className="space-y-0">
-              <div className="grid py-1.5 px-3 items-center text-[10px] uppercase text-slate-400 font-semibold" style={{ gridTemplateColumns: '1fr 50px 80px 1fr 80px 100px 100px' }}>
+              <div className="grid py-1.5 px-3 items-center text-[10px] uppercase text-slate-400 font-semibold" style={{ gridTemplateColumns: '1fr 70px 80px 1fr 100px 100px' }}>
                 <span>{t('kunde')}</span>
                 <span className="text-center">NPS</span>
                 <span className="text-center">Leads</span>
                 <span>{t('topPotenziale')}</span>
-                <span className="text-right">{t('anzahl')}</span>
-                <span className="text-right">{modeId === 'banking' ? t('volumen') : t('praemie')}</span>
-                <span className="text-right">{t('provision')}</span>
+                <span className="text-right">{modeId === 'banking' ? 'CLV' : t('praemie')}</span>
+                <span className="text-right">{modeId === 'banking' ? 'Leads CLV' : t('provision')}</span>
               </div>
               {kundenPotentiale.slice(0, 8).map((kp, i) => {
                 const topPrio = kp.potentiale.reduce((best, p) => {
@@ -328,8 +328,8 @@ export default function UebersichtTab() {
                   <div
                     key={kp.kundeId}
                     className="grid py-2.5 px-3 rounded-lg row-hover cursor-pointer items-center"
-                    style={{ gridTemplateColumns: '1fr 50px 80px 1fr 80px 100px 100px' }}
-                    onClick={() => navigateTo('detail', { kundeId: kp.kundeId, tab: 'impulse' })}
+                    style={{ gridTemplateColumns: '1fr 70px 80px 1fr 100px 100px' }}
+                    onClick={() => navigateTo('detail', { kundeId: kp.kundeId, tab: 'stammdaten' })}
                   >
                     <div className="flex items-center gap-2 min-w-0">
                       <Avatar name={kp.kundeName} foto={getKundeFoto(kp.kundeId)} size={30} />
@@ -340,10 +340,16 @@ export default function UebersichtTab() {
                         </div>
                       </div>
                     </div>
-                    <div className="text-center">
-                      <span className={`text-xs font-bold ${kp.nps >= 9 ? 'text-emerald-600' : kp.nps >= 7 ? 'text-slate-600' : 'text-red-500'}`} style={{ color: kp.nps != null ? undefined : 'var(--_fg, #94a3b8)' }}>
-                        {kp.nps != null ? kp.nps : '-'}
-                      </span>
+                    <div className="text-center flex justify-center">
+                      {kp.nps != null ? (
+                        <div className="flex items-center gap-px">
+                          {[1,2,3,4,5].map(s => {
+                            const filled = kp.nps >= s * 2;
+                            const half = !filled && kp.nps >= s * 2 - 1;
+                            return <Star key={s} size={11} className={filled ? 'text-amber-400 fill-amber-400' : half ? 'text-amber-400 fill-amber-400/50' : 'text-slate-200'} />;
+                          })}
+                        </div>
+                      ) : <span className="text-slate-300 text-xs">–</span>}
                     </div>
                     <div className="text-center">
                       <span className="inline-flex items-center gap-1 text-xs font-semibold" style={{ color: 'var(--_fg, #334155)' }}>
@@ -361,16 +367,15 @@ export default function UebersichtTab() {
                         <span className="rh-badge text-[10px] px-1.5 py-0.5 rounded bg-slate-50 text-slate-400">+{kp.potentiale.length - 3}</span>
                       )}
                     </div>
-                    <div className="text-right">
-                      <span className="inline-flex items-center gap-0.5 text-sm font-semibold" style={{ color: 'var(--_fg, var(--mode-primary-light))' }}>
-                        {kp.potentiale.length}
-                      </span>
-                    </div>
                     <div className="text-right text-sm font-mono font-medium" style={{ color: 'var(--_fg, #334155)' }}>
-                      {kp.gesamtPraemie > 0 ? `${kp.gesamtPraemie.toLocaleString(lang === 'en' ? 'en-US' : 'de-DE')}€` : '-'}
+                      {modeId === 'banking'
+                        ? (kp.clv > 0 ? `${kp.clv.toLocaleString(lang === 'en' ? 'en-US' : 'de-DE')}€` : '-')
+                        : (kp.gesamtPraemie > 0 ? `${kp.gesamtPraemie.toLocaleString(lang === 'en' ? 'en-US' : 'de-DE')}€` : '-')}
                     </div>
                     <div className="text-right text-sm font-mono font-medium" style={{ color: 'var(--_fg, var(--mode-primary-light))' }}>
-                      {kp.gesamtProvision > 0 ? `${kp.gesamtProvision.toLocaleString(lang === 'en' ? 'en-US' : 'de-DE')}€` : '-'}
+                      {modeId === 'banking'
+                        ? (kp.gesamtPraemie > 0 ? `${Math.round(kp.gesamtPraemie * 0.03).toLocaleString(lang === 'en' ? 'en-US' : 'de-DE')}€` : '-')
+                        : (kp.gesamtProvision > 0 ? `${kp.gesamtProvision.toLocaleString(lang === 'en' ? 'en-US' : 'de-DE')}€` : '-')}
                     </div>
                   </div>
                 );

@@ -141,7 +141,7 @@ export default function StammdatenDetailTab({ kunde }) {
   return (
     <div className="space-y-4">
       {/* Kunden-Profil Header */}
-      <Card>
+      <Card hover={false}>
         <div className="flex items-center gap-5">
           {foto && !fotoFailed ? (
             <img
@@ -185,7 +185,7 @@ export default function StammdatenDetailTab({ kunde }) {
 
       <div className="grid grid-cols-2 gap-4">
         {/* Persoenliche Daten */}
-        <Card>
+        <Card hover={false}>
           <div className="flex items-center gap-2 mb-4">
             <User size={20} className="text-slate-500" strokeWidth={1.75} />
             <h3 className="font-semibold text-slate-800">{t('persoenlicheDaten')}</h3>
@@ -230,7 +230,7 @@ export default function StammdatenDetailTab({ kunde }) {
         </Card>
 
         {/* Finanzuebersicht */}
-        <Card>
+        <Card hover={false}>
           <div className="flex items-center gap-2 mb-4">
             <Wallet size={20} className="text-slate-500" strokeWidth={1.75} />
             <h3 className="font-semibold text-slate-800">{t('finanzuebersicht')}</h3>
@@ -277,84 +277,7 @@ export default function StammdatenDetailTab({ kunde }) {
         </Card>
       </div>
 
-      {/* Eigene Produkte */}
-      <Card hover={false}>
-        <h3 className="font-semibold text-slate-800 mb-4">
-          {t('eigeneProdukte')} ({adaptedProdukte.length} {modeId === 'banking' ? t('produkteLabel') : t('vertraege')})
-        </h3>
-        {adaptedProdukte.length > 0 ? (
-          <div className="bg-white rounded-xl border border-slate-200 overflow-hidden" style={{ boxShadow: 'var(--card-shadow)' }}>
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="bg-slate-50">
-                    <th className="px-4 py-3 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">{t('produkt')}</th>
-                    <th className="px-4 py-3 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">{t('sparte')}</th>
-                    <th className="px-4 py-3 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">{t('details')}</th>
-                    <th className="px-4 py-3 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">{isVV ? t('volumenLabel') : t('praemieLabel') + '/J.'}</th>
-                    <th className="px-4 py-3 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">{t('seit')}</th>
-                    <th className="px-4 py-3 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">{t('status')}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {adaptedProdukte.map((p, i) => (
-                    <ExpandableProduktRow key={p.id || i} produkt={p} isVV={isVV} t={t} />
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        ) : (
-          <div className="text-sm text-slate-400 py-4 text-center">{t('keineEigeneProdukte')}</div>
-        )}
-      </Card>
-
-      {/* Fremdprodukte */}
-      <Card hover={false}>
-        <h3 className="font-semibold text-slate-800 mb-4">
-          {t('fremdprodukte')} ({kunde.fremdProdukte?.length || 0} {t('produkteLabel')})
-        </h3>
-        {kunde.fremdProdukte?.length > 0 ? (
-          <DataTable
-            columns={[
-              { id: 'typ', label: t('produkt'), render: v => {
-                const fremdLabels = getFremdTypLabels(t);
-                const label = fremdLabels[v] || v || '';
-                return label.charAt(0).toUpperCase() + label.slice(1);
-              }},
-              { id: 'institut', label: t('institut'), render: (v, row) => {
-                const logoUrl = v ? getLogoUrl(v, 24) : null;
-                return (
-                  <span className="flex items-center gap-2">
-                    {logoUrl && <img src={logoUrl} alt="" className="w-5 h-5 rounded object-contain" onError={e => { e.target.style.display = 'none'; }} />}
-                    <span>{lang === 'en' ? (INST_EN[v] || v) : v}</span>
-                  </span>
-                );
-              }},
-              { id: 'details', label: t('details'), render: v => translateDetails(v, lang) },
-              { id: 'volumen', label: t('volumenLabel'), render: v => <span className="font-mono">{formatEur(v)}</span> },
-              { id: 'consent', label: 'Consent', render: (v, row) => {
-                if (!v) return <span className="text-slate-400">{'\u2717'}</span>;
-                // Generate a plausible consent date based on the product
-                const consentDate = row.consentDatum || (() => {
-                  const seed = ((row.typ || '').length + (row.institut || '').length) % 12;
-                  const month = seed + 1;
-                  const year = month > 6 ? 2024 : 2025;
-                  return `${String(15 + seed).padStart(2, '0')}.${String(month).padStart(2, '0')}.${year}`;
-                })();
-                return (
-                  <span className="text-emerald-600 flex items-center gap-1">
-                    {'\u2713'} <span className="text-slate-400 text-xs">{consentDate}</span>
-                  </span>
-                );
-              }},
-            ]}
-            data={kunde.fremdProdukte}
-          />
-        ) : (
-          <div className="text-sm text-slate-400 py-4 text-center">{t('keineFremdprodukte')}</div>
-        )}
-      </Card>
+      {/* Produkte/Fremdprodukte sind in den Tabs "Produkte" und "Open Finance" */}
     </div>
   );
 }

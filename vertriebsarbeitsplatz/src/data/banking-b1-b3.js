@@ -33,7 +33,7 @@ export const B1 = {
     { kategorie: 'konsum', betrag: -1800, empfaenger: 'Diverse' },
   ],
   potentiale: [
-    { titel: 'Anschlussfinanzierung KRITISCH', typ: 'anpassung', quellen: ['bestand'], prioritaet: 'kritisch', volumen: 185000, volumenTyp: 'einmalig', beschreibung: 'Zinsbindung endet 04/2026! Sofort Forward-Darlehen anbieten.', empfohleneAktion: 'termin_vereinbaren', produktEmpfehlung: 'VR-Baufinanzierung Forward', status: 'termin',
+    { titel: 'Anschlussfinanzierung', typ: 'anpassung', quellen: ['bestand'], prioritaet: 'kritisch', volumen: 185000, volumenTyp: 'einmalig', beschreibung: 'Zinsbindung endet 04/2026! Sofort Forward-Darlehen anbieten.', kiDescription: 'KI-Analyse: Die Baufinanzierung von Herrn Fischer (Restschuld 185.000 €, aktueller Zins 2,1 %) läuft in nur einem Monat aus (04/2026) — ohne Anschlussfinanzierung droht eine variable Verzinsung zu deutlich schlechteren Konditionen. Ein Forward-Darlehen kann den aktuellen Marktzins von ca. 3,5 % (10 J. fest) sichern, bei einer Mehrbelastung von lediglich 70 €/mtl. (1.050 € statt 980 €). Zusätzlich sollte das zuteilungsreife BSV-Guthaben (30.000 €) als Sondertilgung geprüft werden — dies würde die Restschuld auf 155.000 € senken und die monatliche Rate spürbar reduzieren.', empfohleneAktion: 'termin_vereinbaren', produktEmpfehlung: 'VR-Baufinanzierung Forward', status: 'termin',
       herleitung: [
         { label: 'Datenquelle', value: 'Bestandsanalyse \u2013 Kreditdaten' },
         { label: 'Restschuld', value: '185.000 \u20ac' },
@@ -56,7 +56,7 @@ export const B1 = {
         ],
       },
     },
-    { titel: 'Union Investment statt Trade Republic', typ: 'cross_sell', quellen: ['finanztransaktion'], prioritaet: 'hoch', volumen: 28000, volumenTyp: 'einmalig', beschreibung: '28k bei Trade Republic. Union Investment Sparplan anbieten.', empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'UnionDepot', status: 'angeschrieben',
+    { titel: 'Union Investment statt Trade Republic', typ: 'cross_sell', quellen: ['finanztransaktion'], prioritaet: 'hoch', volumen: 28000, volumenTyp: 'einmalig', beschreibung: '28k bei Trade Republic. Union Investment Sparplan anbieten.', kiDescription: 'KI-Analyse: Herr Fischer führt ein ETF-Depot bei Trade Republic mit 28.000 € Volumen und einem Sparplan von 200 €/mtl. — ohne jegliche persönliche Beratung. Als verheirateter Familienvater mit zwei Kindern (12 und 9 Jahre) besteht erhöhter Beratungsbedarf hinsichtlich Steueroptimierung und VL-fähiger Fonds. Ein Wechsel zum UnionDepot bietet persönliche Beratung in der Filiale, VL-Fähigkeit und VR-Verbundvorteile — die Sparplanüberführung kann nahtlos erfolgen.', empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'UnionDepot', status: 'angeschrieben',
       herleitung: [
         { label: 'Datenquelle', value: 'Open Finance \u2013 Depotdaten' },
         { label: 'Fremddepot', value: 'Trade Republic, 28.000 \u20ac' },
@@ -78,7 +78,7 @@ export const B1 = {
         ],
       },
     },
-    { titel: 'BSV Zuteilung verwenden', typ: 'anpassung', quellen: ['bestand'], prioritaet: 'hoch', volumen: 30000, volumenTyp: 'einmalig', beschreibung: 'BSV zuteilungsreif. Für Anschlussfinanzierung oder Modernisierung nutzen.', empfohleneAktion: 'termin_vereinbaren', produktEmpfehlung: 'Schwäbisch Hall', status: 'identifiziert',
+    { titel: 'BSV Zuteilung verwenden', typ: 'anpassung', quellen: ['bestand'], prioritaet: 'hoch', volumen: 30000, volumenTyp: 'einmalig', beschreibung: 'BSV zuteilungsreif. Für Anschlussfinanzierung oder Modernisierung nutzen.', kiDescription: 'KI-Analyse: Der Schwäbisch-Hall-Bausparvertrag von Herrn Fischer (seit 2012, Bausparsumme 30.000 €) wird 2026 zuteilungsreif — ein attraktiver Altvertrag mit günstigem Guthabenzins. Bei gleichzeitig auslaufender Zinsbindung der Baufinanzierung (185.000 € Restschuld, 04/2026) bietet sich die Verwendung als Sondertilgung an, was die Restschuld um ca. 16 % reduzieren würde. Alternativ kann das Guthaben für eine Modernisierung der Immobilie (150 m² Eigentum) eingesetzt werden — eine Entscheidung sollte zeitnah im Zusammenhang mit der Anschlussfinanzierung getroffen werden.', empfohleneAktion: 'termin_vereinbaren', produktEmpfehlung: 'Schwäbisch Hall', status: 'identifiziert',
       herleitung: [
         { label: 'Datenquelle', value: 'Bestandsanalyse \u2013 Bauspar' },
         { label: 'BSV-Vertrag', value: 'Schw\u00e4bisch Hall, seit 2012' },
@@ -88,7 +88,7 @@ export const B1 = {
         { label: 'Empfehlung', value: 'BSV-Guthaben als Sondertilgung oder Modernisierung einsetzen' },
       ],
     },
-    { titel: 'R+V KFZ + Haftpflicht', typ: 'cross_sell', quellen: ['wettbewerb'], prioritaet: 'mittel', volumen: 1285, volumenTyp: 'jaehrlich', beschreibung: 'HUK+Allianz Versicherungen. R+V Verbund-Rabatt möglich.', empfohleneAktion: 'tarifvergleich', produktEmpfehlung: 'R+V Bündel', status: 'identifiziert',
+    { titel: 'R+V KFZ + Haftpflicht', typ: 'cross_sell', quellen: ['wettbewerb'], prioritaet: 'mittel', volumen: 1285, volumenTyp: 'jaehrlich', beschreibung: 'HUK+Allianz Versicherungen. R+V Verbund-Rabatt möglich.', kiDescription: 'KI-Analyse: Herr Fischer zahlt derzeit 1.285 €/Jahr für KFZ-Versicherung (HUK, ca. 1.200 €) und Privathaftpflicht (Allianz, 85 €) bei zwei separaten Anbietern. Als langjähriger VR-Kunde besteht Anspruch auf den R+V-Bündelrabatt von bis zu 15 % — eine Zusammenführung in ein R+V-Bündel (KFZ + Haftpflicht + Hausrat) könnte die Gesamtkosten auf ca. 1.100 €/Jahr senken und eine jährliche Ersparnis von ca. 185 € erzielen. Zusätzlicher Vorteil: persönlicher Schadenservice in der Filiale statt reiner Online-/Hotline-Abwicklung.', empfohleneAktion: 'tarifvergleich', produktEmpfehlung: 'R+V Bündel', status: 'identifiziert',
       herleitung: [
         { label: 'Datenquelle', value: 'Wettbewerbsanalyse \u2013 Versicherungsdaten' },
         { label: 'KFZ-Versicherung', value: 'HUK \u2013 ca. 1.200 \u20ac/Jahr' },
@@ -110,7 +110,7 @@ export const B1 = {
         ],
       },
     },
-    { titel: 'ING Tagesgeld konsolidieren', typ: 'cross_sell', quellen: ['finanztransaktion'], prioritaet: 'mittel', volumen: 22000, volumenTyp: 'einmalig', beschreibung: '22k bei ING. VR-Festgeld oder VR-Sparkonto attraktiver.', empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'VR-Festgeld', status: 'identifiziert',
+    { titel: 'ING Tagesgeld konsolidieren', typ: 'cross_sell', quellen: ['finanztransaktion'], prioritaet: 'mittel', volumen: 22000, volumenTyp: 'einmalig', beschreibung: '22k bei ING. VR-Festgeld oder VR-Sparkonto attraktiver.', kiDescription: 'KI-Analyse: Herr Fischer hält 22.000 € auf einem ING-Tagesgeldkonto zu 2,0 % variablem Zins — parallel dazu ein VR-Sparkonto mit 15.000 € zu nur 0,5 %. Ein Wechsel auf VR-Festgeld (12 Monate, 2,8 % fest) würde den jährlichen Zinsertrag von ca. 440 € auf ca. 616 € steigern — eine Mehrrendite von 176 €/Jahr bei gleichzeitiger Konsolidierung aller Einlagen bei der Volksbank. Empfehlung: 22.000 € in VR-Festgeld umschichten und die Bankverbindung auf einen Ansprechpartner bündeln.', empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'VR-Festgeld', status: 'identifiziert',
       herleitung: [
         { label: 'Datenquelle', value: 'Open Finance \u2013 Kontodaten' },
         { label: 'Fremdkonto', value: 'ING Tagesgeld, 22.000 \u20ac' },
@@ -132,7 +132,7 @@ export const B1 = {
         ],
       },
     },
-    { titel: 'R+V BU-Wechsel', typ: 'cross_sell', quellen: ['wettbewerb'], prioritaet: 'hoch', volumen: 1800, volumenTyp: 'jaehrlich', beschreibung: 'HDI BU alt. R+V BU mit Verbundvorteil.', empfohleneAktion: 'tarifvergleich', produktEmpfehlung: 'R+V BU Premium', status: 'identifiziert',
+    { titel: 'R+V BU-Wechsel', typ: 'cross_sell', quellen: ['wettbewerb'], prioritaet: 'hoch', volumen: 1800, volumenTyp: 'jaehrlich', beschreibung: 'HDI BU alt. R+V BU mit Verbundvorteil.', kiDescription: 'KI-Analyse: Herr Fischer ist mit einem Nettoeinkommen von 4.500 €/mtl. derzeit nur mit 2.000 €/mtl. BU-Rente (HDI-Altvertrag) abgesichert — das entspricht lediglich 44 % des Nettoeinkommens. Die empfohlene Absicherung liegt bei 75 % (3.375 €/mtl.), sodass eine Deckungslücke von 1.375 €/mtl. besteht. Ein Wechsel auf R+V BU Premium bietet aktuelle Top-Bedingungen, Nachversicherungsmöglichkeit ohne Gesundheitsprüfung und bis zu 10 % Verbund-Rabatt als VR-Kunde — bei einem geschätzten Mehrbeitrag von nur ca. 45 €/mtl.', empfohleneAktion: 'tarifvergleich', produktEmpfehlung: 'R+V BU Premium', status: 'identifiziert',
       herleitung: [
         { label: 'Datenquelle', value: 'Wettbewerbsanalyse \u2013 Versicherungsdaten' },
         { label: 'Nettoeinkommen', value: '4.500 \u20ac/mtl.' },
@@ -163,7 +163,7 @@ export const B1 = {
       },
     },
     { titel: 'Privatkredit 15k \u2013 Online-Abbruch', typ: 'anpassung', quellen: ['direktvertrieb'], prioritaet: 'hoch', volumen: 15000, volumenTyp: 'einmalig',
-      beschreibung: 'Kunde hat Online-Kreditantrag (15.000\u20ac, Badsanierung) bei VideoIdent abgebrochen. Pers\u00f6nlich ansprechen!',
+      beschreibung: 'Kunde hat Online-Kreditantrag (15.000\u20ac, Badsanierung) bei VideoIdent abgebrochen. Pers\u00f6nlich ansprechen!', kiDescription: 'KI-Analyse: Herr Fischer hat am 25.02.2026 einen Online-Kreditantrag über 15.000 € (60 Monate, 4,9 % eff., Verwendung: Badsanierung) vollständig bis zur Legitimation ausgefüllt und erst beim VideoIdent-Schritt abgebrochen — alle persönlichen Daten, Einkommensangaben und Kontoverbindung liegen bereits vor. Der Abbruch erfolgte um 19:30 Uhr, was auf Zeitmangel oder ein technisches Problem hindeutet. Empfehlung: persönliche Ansprache mit PostIdent-Alternative und Abschlussmöglichkeit in der Filiale — die Abschlusswahrscheinlichkeit ist bei vorliegenden Daten sehr hoch.',
       empfohleneAktion: 'termin_vereinbaren', produktEmpfehlung: 'VR-Privatkredit Komfort', status: 'identifiziert',
       herleitung: [
         { label: 'Datenquelle', value: 'Direktvertrieb \u2013 Online-Strecke' },
@@ -174,7 +174,7 @@ export const B1 = {
         { label: 'Empfehlung', value: 'Pers\u00f6nlich ansprechen, PostIdent als Alternative anbieten, Abschluss in Filiale erm\u00f6glichen' },
       ],
     },
-    { titel: 'VR-FinanzPlan Familie', typ: 'cross_sell', quellen: ['bestand'], prioritaet: 'mittel', volumen: 0, volumenTyp: 'vermittlung', beschreibung: 'Ganzheitliche Beratung fehlt. VR-FinanzPlan anbieten.', empfohleneAktion: 'termin_vereinbaren', produktEmpfehlung: 'VR-FinanzPlan', status: 'identifiziert',
+    { titel: 'VR-FinanzPlan Familie', typ: 'cross_sell', quellen: ['bestand'], prioritaet: 'mittel', volumen: 0, volumenTyp: 'vermittlung', beschreibung: 'Ganzheitliche Beratung fehlt. VR-FinanzPlan anbieten.', kiDescription: 'KI-Analyse: Familie Fischer verfügt über ein Haushaltseinkommen von 5.700 € netto (4.500 € + 1.200 €) und verteilt ihre Finanzprodukte auf mindestens sechs verschiedene Anbieter (VR, Trade Republic, ING, HUK, HDI, Allianz, Alte Leipziger) — ein ganzheitlicher Finanzüberblick fehlt vollständig. Mit zwei Kindern (12 und 9 Jahre), einer auslaufenden Baufinanzierung und einer Lebensversicherung (Ablauf 2030, 65.000 €) bestehen zahlreiche Optimierungshebel. Ein VR-FinanzPlan Familie würde alle Bausteine (Vorsorge, Absicherung, Vermögen, Immobilie) in einem strukturierten Konzept bündeln — Einsparpotenzial durch Konsolidierung und Verbundvorteile geschätzt 800–1.200 €/Jahr.', empfohleneAktion: 'termin_vereinbaren', produktEmpfehlung: 'VR-FinanzPlan', status: 'identifiziert',
       herleitung: [
         { label: 'Datenquelle', value: 'Bestandsanalyse' },
         { label: 'Haushaltseinkommen', value: '5.700 \u20ac netto (4.500 + 1.200)' },
@@ -236,7 +236,7 @@ export const B1 = {
       emailBody: 'Guten Tag,\n\nmein Bausparvertrag bei Schw\u00e4bisch Hall ist ja bald zuteilungsreif (2026). Was sind meine Optionen? Kann ich das Geld auch einfach auszahlen lassen oder muss ich es f\u00fcr Wohnzwecke nutzen?\n\nBitte informieren Sie mich.\n\nMit freundlichen Gr\u00fc\u00dfen\nKlaus Fischer',
     },
   ],
-  absicherung: { vorhanden: ['girokonto', 'baufi', 'sparkonto'], fehlend: ['depot_vr', 'versicherung_rv'] },
+  absicherung: { vorhanden: [], fremd: ['bu', 'kfz', 'hausrat', 'haftpflicht', 'rlv'], fehlend: ['pflege', 'unfall', 'rechtsschutz', 'wohngebaeude'] },
 };
 
 // B2: Sandra Müller
@@ -260,7 +260,7 @@ export const B2 = {
     { kategorie: 'konsum', betrag: -2000, empfaenger: 'Diverse' },
   ],
   potentiale: [
-    { titel: 'Baufinanzierung vorbereiten', typ: 'cross_sell', quellen: ['lebensereignis'], prioritaet: 'hoch', volumen: 350000, volumenTyp: 'einmalig', beschreibung: 'Hausbau geplant 2027. Vorab-Beratung und Finanzierungsrahmen.', empfohleneAktion: 'termin_vereinbaren', produktEmpfehlung: 'VR-Baufinanzierung', status: 'termin',
+    { titel: 'Baufinanzierung vorbereiten', typ: 'cross_sell', quellen: ['lebensereignis'], prioritaet: 'hoch', volumen: 350000, volumenTyp: 'einmalig', beschreibung: 'Hausbau geplant 2027. Vorab-Beratung und Finanzierungsrahmen.', kiDescription: 'KI-Analyse: Das Ehepaar Müller plant einen Hausbau für 2027 mit einem geschätzten Finanzierungsrahmen von 350.000–400.000 € — bei einem Haushaltseinkommen von 7.400 € netto (3.200 € + 4.200 €) besteht eine sehr gute Bonität. Das vorhandene Eigenkapital von 35.000 € (VR-Sparkonto) plus ca. 40.000 € von Ehemann Tobias ergibt eine Eigenkapitalquote von ca. 21 %, was günstige Konditionen ermöglicht. Empfehlung: frühzeitige Vorab-Beratung inkl. Fördermittel-Check (KfW, WIBank) und Festlegung eines realistischen Finanzierungsrahmens — der Zeitvorlauf von ca. 12 Monaten ist ideal für eine strukturierte Vorbereitung.', empfohleneAktion: 'termin_vereinbaren', produktEmpfehlung: 'VR-Baufinanzierung', status: 'termin',
       herleitung: [
         { label: 'Datenquelle', value: 'PSD2-Gehaltsanalyse + Kundengespr\u00e4ch' },
         { label: 'Nettoeinkommen Kundin', value: '3.200 \u20ac/mtl. (selbständig)' },
@@ -271,7 +271,7 @@ export const B2 = {
         { label: 'Empfehlung', value: 'Vorab-Beratung Baufinanzierung inkl. F\u00f6rdermittel-Check (KfW, WIBank)' },
       ],
     },
-    { titel: 'Ehemann Tobias als Kunden gewinnen', typ: 'cross_sell', quellen: ['bestand'], prioritaet: 'hoch', volumen: 0, volumenTyp: 'vermittlung', beschreibung: 'Tobias bei Commerzbank. Gemeinsames Konto für Baufi nötig.', empfohleneAktion: 'termin_vereinbaren', produktEmpfehlung: 'VR-GemeinschaftsKonto', status: 'angeschrieben',
+    { titel: 'Ehemann Tobias als Kunden gewinnen', typ: 'cross_sell', quellen: ['bestand'], prioritaet: 'hoch', volumen: 0, volumenTyp: 'vermittlung', beschreibung: 'Tobias bei Commerzbank. Gemeinsames Konto für Baufi nötig.', kiDescription: 'KI-Analyse: Ehemann Tobias Müller (Ingenieur, 4.200 € netto) führt sein Gehaltskonto bei der Commerzbank — für die geplante Baufinanzierung 2027 (350.000–400.000 €) ist eine gemeinsame Bankverbindung jedoch entscheidend für bessere Konditionen. Ein VR-Gemeinschaftskonto würde das gesamte Haushaltseinkommen (7.400 € netto) bei der Volksbank bündeln und die Bonitätsprüfung erheblich vereinfachen. Empfehlung: Tobias als Neukunden gewinnen, Gemeinschaftskonto eröffnen und damit die Grundlage für eine optimale Baufinanzierung schaffen — gleichzeitig entsteht Cross-Selling-Potenzial für weitere Produkte (Depot, Versicherungen).', empfohleneAktion: 'termin_vereinbaren', produktEmpfehlung: 'VR-GemeinschaftsKonto', status: 'angeschrieben',
       herleitung: [
         { label: 'Datenquelle', value: 'Bestandsanalyse \u2013 Kundenprofil' },
         { label: 'Ehemann', value: 'Tobias M\u00fcller, Ingenieur, 4.200 \u20ac netto' },
@@ -281,7 +281,7 @@ export const B2 = {
         { label: 'Empfehlung', value: 'Tobias als Neukunden gewinnen \u2013 VR-GemeinschaftsKonto er\u00f6ffnen' },
       ],
     },
-    { titel: 'BSV für Zinssicherung', typ: 'cross_sell', quellen: ['lebensereignis'], prioritaet: 'hoch', volumen: 50000, volumenTyp: 'einmalig', beschreibung: 'Bausparvertrag für Zinssicherung vor Hausbau.', empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'Schwäbisch Hall Fuchs', status: 'identifiziert',
+    { titel: 'BSV für Zinssicherung', typ: 'cross_sell', quellen: ['lebensereignis'], prioritaet: 'hoch', volumen: 50000, volumenTyp: 'einmalig', beschreibung: 'Bausparvertrag für Zinssicherung vor Hausbau.', kiDescription: 'KI-Analyse: Bei einem geplanten Hausbau 2027 mit ca. 350.000 € Finanzierungsvolumen und einem aktuellen Zinsniveau von ca. 3,4 % (10 J. fest) mit unsicherer Tendenz bietet ein Bausparvertrag (Schwäbisch Hall Fuchs, 50.000 € Bausparsumme) eine wirksame Zinssicherung. Das BSV-Darlehen sichert einen garantierten Darlehenszins von ca. 1,5–2,0 % für einen Teil der Finanzierung — bei einem Finanzierungsmix kann dies die Gesamtbelastung um ca. 80–120 €/mtl. gegenüber einer reinen Bankfinanzierung senken. Empfehlung: Sofortigen BSV-Abschluss mit monatlicher Ansparrate, um bis 2027 maximale Zuteilungsreife zu erreichen.', empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'Schwäbisch Hall Fuchs', status: 'identifiziert',
       herleitung: [
         { label: 'Datenquelle', value: 'Bestandsanalyse \u2013 Lebensereignis' },
         { label: 'Geplanter Hausbau', value: '2027 \u2013 Finanzierung ca. 350.000 \u20ac' },
@@ -291,7 +291,7 @@ export const B2 = {
         { label: 'Empfehlung', value: 'Schw\u00e4bisch Hall Fuchs \u2013 jetzt Zinsen sichern f\u00fcr 2027' },
       ],
     },
-    { titel: 'R+V RLV für Baufi', typ: 'cross_sell', quellen: ['lebensereignis'], prioritaet: 'mittel', volumen: 360, volumenTyp: 'jaehrlich', beschreibung: 'RLV wird für Baufinanzierung benötigt.', empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'R+V Risikoleben', status: 'identifiziert',
+    { titel: 'R+V RLV für Baufi', typ: 'cross_sell', quellen: ['lebensereignis'], prioritaet: 'mittel', volumen: 360, volumenTyp: 'jaehrlich', beschreibung: 'RLV wird für Baufinanzierung benötigt.', kiDescription: 'KI-Analyse: Für die geplante Baufinanzierung von 350.000 € (ab 2027) wird eine Risikolebensversicherung in der Regel als Pflichtvoraussetzung der Bank gefordert — aktuell besteht keinerlei RLV-Absicherung für das Ehepaar Müller. Bei einer Absicherungssumme von 350.000 € und einem Eintrittsalter von 33/35 Jahren liegt die geschätzte Jahresprämie bei ca. 360 € (R+V Risikoleben). Empfehlung: RLV frühzeitig abschließen, da günstigere Konditionen durch jüngeres Eintrittsalter und guten Gesundheitszustand gesichert werden — dies beschleunigt zudem den späteren Baufinanzierungsprozess erheblich.', empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'R+V Risikoleben', status: 'identifiziert',
       herleitung: [
         { label: 'Datenquelle', value: 'Bestandsanalyse \u2013 Lebensereignis' },
         { label: 'Geplante Baufinanzierung', value: '350.000 \u20ac ab 2027' },
@@ -320,7 +320,7 @@ export const B2 = {
       kiZusammenfassung: 'Sandra M\u00fcller unzufrieden mit 0,5% Sparkonto-Zinsen (35.000\u20ac). Chatbot empfahl Festgeld (2,8%) oder Splitting-Strategie mit Blick auf Hausbau 2027. Kundin offen f\u00fcr Beratung. \u2192 Potenzial: Zinsoptimierung + Baufinanzierungs-Vorbereitung.',
     },
   ],
-  absicherung: { vorhanden: ['girokonto', 'sparkonto'], fehlend: ['baufi', 'bsv', 'rlv', 'partner_konto'] },
+  absicherung: { vorhanden: [], fremd: [], fehlend: ['bu', 'kfz', 'hausrat', 'haftpflicht', 'rlv', 'pflege', 'unfall', 'rechtsschutz', 'wohngebaeude'] },
 };
 
 // B3: Peter Hoffmann
@@ -351,7 +351,7 @@ export const B3 = {
     { kategorie: 'konsum', betrag: -3500, empfaenger: 'Diverse' },
   ],
   potentiale: [
-    { titel: 'Union Investment Firmendepot', typ: 'cross_sell', quellen: ['finanztransaktion'], prioritaet: 'hoch', volumen: 150000, volumenTyp: 'einmalig', beschreibung: '150k Firmendepot bei Deutsche Bank. Union Inv. institutionell.', empfohleneAktion: 'termin_vereinbaren', produktEmpfehlung: 'Union Investment Institutionell', status: 'identifiziert',
+    { titel: 'Union Investment Firmendepot', typ: 'cross_sell', quellen: ['finanztransaktion'], prioritaet: 'hoch', volumen: 150000, volumenTyp: 'einmalig', beschreibung: '150k Firmendepot bei Deutsche Bank. Union Inv. institutionell.', kiDescription: 'KI-Analyse: Herr Hoffmann hält insgesamt 430.000 € in Depots bei der Deutschen Bank (150.000 € Firmendepot + 280.000 € Privatdepot) — trotz langjähriger VR-Firmenkundenbeziehung seit 2008. Ein Wechsel des Firmendepots (150.000 €) zu Union Investment Institutionell bietet reduzierte Depotgebühren (ab 0,3 % statt ca. 0,5 % p.a.), was einer jährlichen Ersparnis von ca. 300 € entspricht. Zusätzlich ermöglicht die Integration eine abgestimmte Firmen-/Privatanlagestrategie über einen Ansprechpartner — bei erfolgreicher Überführung besteht Folgepotenzial für das Privatdepot (280.000 €).', empfohleneAktion: 'termin_vereinbaren', produktEmpfehlung: 'Union Investment Institutionell', status: 'identifiziert',
       herleitung: [
         { label: 'Datenquelle', value: 'Open Finance \u2013 Depotdaten' },
         { label: 'Fremddepot Firma', value: 'Deutsche Bank, 150.000 \u20ac Firmendepot' },
@@ -373,7 +373,7 @@ export const B3 = {
         ],
       },
     },
-    { titel: 'bAV für 25 Mitarbeiter', typ: 'cross_sell', quellen: ['bestand'], prioritaet: 'hoch', volumen: 0, volumenTyp: 'vermittlung', beschreibung: '25 MA ohne bAV. Arbeitgeberzuschuss-Pflicht.', empfohleneAktion: 'termin_vereinbaren', produktEmpfehlung: 'R+V bAV', status: 'angeschrieben',
+    { titel: 'bAV für 25 Mitarbeiter', typ: 'cross_sell', quellen: ['bestand'], prioritaet: 'hoch', volumen: 0, volumenTyp: 'vermittlung', beschreibung: '25 MA ohne bAV. Arbeitgeberzuschuss-Pflicht.', kiDescription: 'KI-Analyse: Die GmbH von Herrn Hoffmann beschäftigt 25 Mitarbeiter, für die seit 2022 eine gesetzliche Arbeitgeberzuschuss-Pflicht von 15 % bei Entgeltumwandlung besteht — aktuell existiert keinerlei bAV-Lösung, was ein Compliance-Risiko darstellt. Ein R+V-Gruppenvertrag für 25 Mitarbeiter bietet dem Unternehmen Sozialabgaben-Ersparnis als Betriebsausgabe und stärkt gleichzeitig die Mitarbeiterbindung. Empfehlung: zeitnah einen R+V-bAV-Gruppenvertrag einrichten — bei durchschnittlicher Entgeltumwandlung von 200 €/mtl. pro Mitarbeiter ergibt sich ein Gesamtvolumen von ca. 60.000 €/Jahr mit erheblichem Steuervorteil für beide Seiten.', empfohleneAktion: 'termin_vereinbaren', produktEmpfehlung: 'R+V bAV', status: 'angeschrieben',
       herleitung: [
         { label: 'Datenquelle', value: 'Bestandsanalyse \u2013 Firmendaten' },
         { label: 'Mitarbeiteranzahl', value: '25 Mitarbeiter' },
@@ -383,7 +383,7 @@ export const B3 = {
         { label: 'Empfehlung', value: 'R+V bAV \u2013 Gruppenvertrag f\u00fcr 25 MA einrichten' },
       ],
     },
-    { titel: 'D&O Wechsel zu R+V', typ: 'cross_sell', quellen: ['wettbewerb'], prioritaet: 'mittel', volumen: 4500, volumenTyp: 'jaehrlich', beschreibung: 'Allianz D&O. R+V Angebot prüfen.', empfohleneAktion: 'tarifvergleich', produktEmpfehlung: 'R+V D&O', status: 'identifiziert',
+    { titel: 'D&O Wechsel zu R+V', typ: 'cross_sell', quellen: ['wettbewerb'], prioritaet: 'mittel', volumen: 4500, volumenTyp: 'jaehrlich', beschreibung: 'Allianz D&O. R+V Angebot prüfen.', kiDescription: 'KI-Analyse: Herr Hoffmann zahlt derzeit ca. 8.500 €/Jahr an die Allianz (D&O ca. 4.500 € + Firmenflotte ca. 4.000 €) — als GmbH-Geschäftsführer mit persönlicher Haftung ist die D&O-Versicherung essenziell, jedoch bietet R+V eine höhere Deckungssumme (2 Mio. € statt 1 Mio. €) bei niedrigerem Selbstbehalt (5.000 € statt 10.000 €) und einer geschätzten Prämie von ca. 3.800 €/Jahr. Das entspricht einer Ersparnis von ca. 700 €/Jahr bei gleichzeitig besserem Schutz — zusätzlich besteht als langjähriger VR-Firmenkunde Anspruch auf bis zu 12 % Bündelrabatt bei Zusammenführung von D&O, Flotte und Betriebshaftpflicht.', empfohleneAktion: 'tarifvergleich', produktEmpfehlung: 'R+V D&O', status: 'identifiziert',
       herleitung: [
         { label: 'Datenquelle', value: 'Wettbewerbsanalyse \u2013 Versicherungsdaten' },
         { label: 'Aktuelle D&O', value: 'Allianz \u2013 ca. 4.500 \u20ac/Jahr' },
@@ -405,7 +405,7 @@ export const B3 = {
         ],
       },
     },
-    { titel: 'Nachfolgeplanung GmbH', typ: 'cross_sell', quellen: ['lebensereignis'], prioritaet: 'hoch', volumen: 0, volumenTyp: 'vermittlung', beschreibung: '58 Jahre, Nachfolge planen. Sohn Jan als Nachfolger?', empfohleneAktion: 'termin_vereinbaren', produktEmpfehlung: 'VR-Nachfolgeberatung', status: 'identifiziert',
+    { titel: 'Nachfolgeplanung GmbH', typ: 'cross_sell', quellen: ['lebensereignis'], prioritaet: 'hoch', volumen: 0, volumenTyp: 'vermittlung', beschreibung: '58 Jahre, Nachfolge planen. Sohn Jan als Nachfolger?', kiDescription: 'KI-Analyse: Herr Hoffmann ist 58 Jahre alt und führt eine GmbH mit 25 Mitarbeitern — eine strukturierte Nachfolgeplanung ist dringend empfohlen, da der durchschnittliche Übergabeprozess 3–5 Jahre dauert. Sohn Jan (28 Jahre) kommt als potenzieller Nachfolger in Frage, was steuerliche Gestaltungsmöglichkeiten (Schenkung, vorweggenommene Erbfolge) eröffnet. Bei einer langjährigen VR-Bankverbindung seit 2008 und Firmenvermögen (Kreditlinie 200.000 €, Rücklagen 85.000 €, Firmendepot 150.000 €) bietet die VR-Nachfolgeberatung eine ganzheitliche Lösung — inkl. Unternehmensbewertung, erbrechtlicher Gestaltung und Steueroptimierung der Übertragung.', empfohleneAktion: 'termin_vereinbaren', produktEmpfehlung: 'VR-Nachfolgeberatung', status: 'identifiziert',
       herleitung: [
         { label: 'Datenquelle', value: 'Bestandsanalyse \u2013 Lebensereignis' },
         { label: 'Alter', value: '58 Jahre \u2013 Nachfolgeplanung dringend empfohlen' },
@@ -415,7 +415,7 @@ export const B3 = {
         { label: 'Empfehlung', value: 'VR-Nachfolgeberatung \u2013 Unternehmensbewertung, Erbrecht, Steueroptimierung' },
       ],
     },
-    { titel: 'KfW Energieeffizienz Förderung', typ: 'cross_sell', quellen: ['bestand'], prioritaet: 'mittel', volumen: 50000, volumenTyp: 'einmalig', beschreibung: 'Firmensitz Baujahr 1992. Energetische Sanierung förderbar.', empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'KfW Energieeffizienz', status: 'identifiziert',
+    { titel: 'KfW Energieeffizienz Förderung', typ: 'cross_sell', quellen: ['bestand'], prioritaet: 'mittel', volumen: 50000, volumenTyp: 'einmalig', beschreibung: 'Firmensitz Baujahr 1992. Energetische Sanierung förderbar.', kiDescription: 'KI-Analyse: Der Firmensitz von Herrn Hoffmann (Ringallee 42, Baujahr 1992) wurde vor Inkrafttreten der Energieeinsparverordnung errichtet — ein erheblicher energetischer Sanierungsbedarf (Dämmung, Fenster, Heizung, ggf. PV-Anlage) ist wahrscheinlich. Über die KfW-Förderung Energieeffizienz sind bis zu 50.000 € Tilgungszuschuss möglich, bei einem KfW-Kredit ab 1,0 % — deutlich unter dem aktuellen Marktzins. Empfehlung: Förderantrag über die Volksbank als Durchleitungsbank stellen und parallel einen zertifizierten Energieberater einschalten — die Kombination aus Zuschuss und günstigem Kredit kann die Sanierungskosten um 30–40 % reduzieren.', empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'KfW Energieeffizienz', status: 'identifiziert',
       herleitung: [
         { label: 'Datenquelle', value: 'Bestandsanalyse \u2013 Firmendaten' },
         { label: 'Firmensitz', value: 'Baujahr 1992 \u2013 \u00e4lteres Geb\u00e4ude' },
@@ -437,5 +437,5 @@ export const B3 = {
       zusammenfassung: 'Kunde bat telefonisch um Erh\u00f6hung der Kreditlinie von 200k auf 250k f\u00fcr Auftragsvorfinanzierung.',
       inhalt: 'Anruf von Peter Hoffmann. Ben\u00f6tigt h\u00f6here Kreditlinie (von 200k auf 250k) wegen gro\u00dfem Auftrag von Siemens Healthineers. Auftragsvolumen ca. 180k, Zahlungsziel 60 Tage. Habe BWA und aktuelle Zahlen angefordert. Interne Genehmigung wird eingeholt.' },
   ],
-  absicherung: { vorhanden: ['firmenkonto', 'kredit', 'sparkonto'], fehlend: ['depot_vr', 'bav', 'nachfolge'] },
+  absicherung: { vorhanden: [], fremd: ['kfz', 'haftpflicht'], fehlend: ['bu', 'hausrat', 'rlv', 'pflege', 'unfall', 'rechtsschutz', 'wohngebaeude'] },
 };

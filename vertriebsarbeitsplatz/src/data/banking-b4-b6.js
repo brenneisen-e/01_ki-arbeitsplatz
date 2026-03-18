@@ -20,7 +20,9 @@ export const B4 = {
     { kategorie: 'konsum', betrag: -1000, empfaenger: 'Diverse' },
   ],
   potentiale: [
-    { titel: 'Union Investment Sparplan', typ: 'cross_sell', quellen: ['finanztransaktion'], prioritaet: 'hoch', volumen: 200, volumenTyp: 'monatlich', beschreibung: 'Sparplan bei Trade Republic. Union Investment als Alternative.', empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'UnionDepot Sparplan', status: 'identifiziert',
+    { titel: 'Union Investment Sparplan', typ: 'cross_sell', quellen: ['finanztransaktion'], prioritaet: 'hoch', volumen: 200, volumenTyp: 'monatlich', beschreibung: 'Sparplan bei Trade Republic. Union Investment als Alternative.',
+      kiDescription: 'KI-Analyse: Herr Wagner (29 J.) bespart aktuell ein Depot bei Trade Republic mit 5.200 € Volumen und 100 €/mtl. Sparplan — ohne persönliche Beratung oder VL-Nutzung. Als Mitarbeiter der Volksbank Mittelhessen hat er Anspruch auf 40 €/mtl. vermögenswirksame Leistungen, die er derzeit nicht nutzt — das entspricht 480 € entgangener Arbeitgeberleistung pro Jahr. Empfehlung: UnionDepot Sparplan mit VL-Integration anbieten, um Beratungsvorteil und Arbeitgeberzuschuss zu aktivieren.',
+      empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'UnionDepot Sparplan', status: 'identifiziert',
       herleitung: [
         { label: 'Datenquelle', value: 'Open Finance \u2013 Depotdaten' },
         { label: 'Fremddepot', value: 'Trade Republic, 5.200 \u20ac' },
@@ -44,6 +46,7 @@ export const B4 = {
     },
     { titel: 'FlexKredit 5k \u2013 Online-Abbruch', typ: 'anpassung', quellen: ['direktvertrieb'], prioritaet: 'hoch', volumen: 5000, volumenTyp: 'einmalig',
       beschreibung: 'Kunde hat Online-Kreditantrag (5.000\u20ac, Gebrauchtwagen) bei Einkommensangaben abgebrochen. Pers\u00f6nlich beraten!',
+      kiDescription: 'KI-Analyse: Herr Wagner hat am 08.03.2026 einen Online-Kreditantrag über 5.000 € (36 Monate, 5,9 % eff.) für eine Gebrauchtwagen-Anzahlung gestartet — bei den Einkommensangaben jedoch abgebrochen. Bei einem Nettoeinkommen von 2.600 €/mtl. und einer kalkulierten Rate von 152 €/mtl. wäre die Bonität voraussichtlich ausreichend. Empfehlung: Persönliche Ansprache innerhalb von 48 Stunden, Bonität gemeinsam prüfen und ggf. günstigeren VR-Kundentarif anbieten.',
       empfohleneAktion: 'termin_vereinbaren', produktEmpfehlung: 'VR-FlexKredit', status: 'identifiziert',
       herleitung: [
         { label: 'Datenquelle', value: 'Direktvertrieb \u2013 Online-Strecke' },
@@ -54,7 +57,9 @@ export const B4 = {
         { label: 'Empfehlung', value: 'Pers\u00f6nlich ansprechen, Bonit\u00e4t gemeinsam pr\u00fcfen, ggf. g\u00fcnstigeren Tarif f\u00fcr VR-Kunden anbieten' },
       ],
     },
-    { titel: 'R+V BU KRITISCH', typ: 'cross_sell', quellen: ['bestand'], prioritaet: 'kritisch', volumen: 1200, volumenTyp: 'jaehrlich', beschreibung: 'Jung, keine BU! Jetzt g\u00fcnstig abschlie\u00dfen.', empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'R+V BU Start', status: 'identifiziert',
+    { titel: 'R+V Berufsunfähigkeit', typ: 'cross_sell', quellen: ['bestand'], prioritaet: 'kritisch', volumen: 1200, volumenTyp: 'jaehrlich', beschreibung: 'Jung, keine BU! Jetzt g\u00fcnstig abschlie\u00dfen.',
+      kiDescription: 'KI-Analyse: Herr Wagner (29 J., Junior Controller) verfügt bei einem Nettoeinkommen von 2.600 €/mtl. über keinerlei Berufsunfähigkeitsabsicherung — die empfohlene Absicherung liegt bei 75 %, also 1.950 €/mtl. Als Bürotätiger erhält er eine günstige BU-Einstufung, und sein junges Alter ermöglicht niedrige Einstiegsprämien von ca. 1.200 €/Jahr. Empfehlung: R+V BU Start jetzt abschließen, um die günstigen Konditionen zu sichern und später bedarfsgerecht aufzustocken.',
+      empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'R+V BU Start', status: 'identifiziert',
       herleitung: [
         { label: 'Datenquelle', value: 'Bestandsanalyse \u2013 Absicherungscheck' },
         { label: 'Nettoeinkommen', value: '2.600 \u20ac/mtl.' },
@@ -72,7 +77,9 @@ export const B4 = {
         einheit: '\u20ac/mtl.',
       },
     },
-    { titel: 'VR-FinanzPlan Jung', typ: 'cross_sell', quellen: ['bestand'], prioritaet: 'mittel', volumen: 0, volumenTyp: 'vermittlung', beschreibung: 'Grundlegende Finanzplanung für Berufseinsteiger.', empfohleneAktion: 'termin_vereinbaren', produktEmpfehlung: 'VR-FinanzPlan', status: 'identifiziert',
+    { titel: 'VR-FinanzPlan Jung', typ: 'cross_sell', quellen: ['bestand'], prioritaet: 'mittel', volumen: 0, volumenTyp: 'vermittlung', beschreibung: 'Grundlegende Finanzplanung für Berufseinsteiger.',
+      kiDescription: 'KI-Analyse: Herr Wagner (29 J.) besitzt bei der Volksbank ausschließlich ein Girokonto — es fehlen BU-Versicherung, eigenes Depot, Altersvorsorge und ein strukturierter Finanzplan. Bei 2.600 € Nettoeinkommen und fehlenden Bausteinen besteht erheblicher Beratungsbedarf als Berufseinsteiger. Empfehlung: VR-FinanzPlan Jung als Einstieg nutzen, um alle Bausteine strukturiert aufzubauen und Cross-Selling-Potenziale systematisch zu erschließen.',
+      empfohleneAktion: 'termin_vereinbaren', produktEmpfehlung: 'VR-FinanzPlan', status: 'identifiziert',
       herleitung: [
         { label: 'Datenquelle', value: 'Bestandsanalyse' },
         { label: 'Alter', value: '29 Jahre \u2013 Berufseinsteiger' },
@@ -82,7 +89,9 @@ export const B4 = {
         { label: 'Empfehlung', value: 'VR-FinanzPlan Jung \u2013 alle Bausteine strukturiert aufbauen' },
       ],
     },
-    { titel: 'BSV für spätere Immobilie', typ: 'cross_sell', quellen: ['lebensereignis'], prioritaet: 'niedrig', volumen: 25000, volumenTyp: 'einmalig', beschreibung: 'Wohnungskauf in 3-5 Jahren denkbar. BSV jetzt starten.', empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'Schwäbisch Hall', status: 'identifiziert',
+    { titel: 'BSV für spätere Immobilie', typ: 'cross_sell', quellen: ['lebensereignis'], prioritaet: 'niedrig', volumen: 25000, volumenTyp: 'einmalig', beschreibung: 'Wohnungskauf in 3-5 Jahren denkbar. BSV jetzt starten.',
+      kiDescription: 'KI-Analyse: Herr Wagner (29 J.) wohnt aktuell zur Miete auf 50 m² — perspektivisch zu klein, ein Eigentumswunsch in 3–5 Jahren ist realistisch. Das Eigenkapital ist derzeit gering, weshalb ein Bausparvertrag als kombiniertes Spar- und Zinssicherungsinstrument sinnvoll ist. Empfehlung: Schwäbisch Hall Bausparvertrag mit 25.000 € Bausparsumme jetzt starten, um frühzeitig Eigenkapital aufzubauen und günstige Darlehenszinsen zu sichern.',
+      empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'Schwäbisch Hall', status: 'identifiziert',
       herleitung: [
         { label: 'Datenquelle', value: 'Bestandsanalyse \u2013 Lebensereignis' },
         { label: 'Alter', value: '29 Jahre \u2013 Eigentumswunsch in 3\u20135 Jahren denkbar' },
@@ -137,7 +146,7 @@ export const B4 = {
       emailBody: 'Hallo Herr Wagner,\n\nein neues Jahr \u2013 der perfekte Zeitpunkt f\u00fcr einen Finanzcheck!\n\nAls Berufseinsteiger (29 J.) haben Sie jetzt die besten Voraussetzungen, g\u00fcnstig vorzusorgen:\n\n\u2022 BU-Versicherung: Je j\u00fcnger, desto g\u00fcnstiger! Als B\u00fcroangestellter ab ca. 80\u20ac/mtl.\n\u2022 Depot/Sparplan: Langer Anlagehorizont = gr\u00f6\u00dfter Vorteil\n\u2022 VL nutzen: Arbeitgeberzuschuss nicht verschenken!\n\nSoll ich einen kurzen Beratungstermin (30 Min.) f\u00fcr Sie einrichten?\n\nViele Gr\u00fc\u00dfe\nIhre VR-Beraterin',
     },
   ],
-  absicherung: { vorhanden: ['girokonto'], fehlend: ['bu', 'depot_vr', 'finanzplan'] },
+  absicherung: { vorhanden: [], fremd: [], fehlend: ['bu', 'kfz', 'hausrat', 'haftpflicht', 'rlv', 'pflege', 'unfall', 'rechtsschutz', 'wohngebaeude'] },
 };
 
 // B5: Andrea Lang
@@ -168,7 +177,9 @@ export const B5 = {
     { kategorie: 'versicherung', betrag: -350, empfaenger: 'Allianz, VHV' },
   ],
   potentiale: [
-    { titel: 'R+V Gewerbe-Bündel', typ: 'cross_sell', quellen: ['wettbewerb'], prioritaet: 'hoch', volumen: 4200, volumenTyp: 'jaehrlich', beschreibung: 'Allianz+VHV separat. R+V Gewerbebündel für alle 3 Cafés.', empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'R+V Gewerbe-Bündel Gastro', status: 'angeschrieben',
+    { titel: 'R+V Gewerbe-Bündel', typ: 'cross_sell', quellen: ['wettbewerb'], prioritaet: 'hoch', volumen: 4200, volumenTyp: 'jaehrlich', beschreibung: 'Allianz+VHV separat. R+V Gewerbebündel für alle 3 Cafés.',
+      kiDescription: 'KI-Analyse: Frau Lang versichert ihre 3 Café-Standorte derzeit über zwei separate Anbieter — Inhaltsversicherung bei Allianz (2.400 €/Jahr) und Betriebshaftpflicht bei VHV (1.800 €/Jahr), insgesamt 4.200 €/Jahr. Durch Bündelung im R+V Gewerbe-Bündel Gastro können die Kosten auf ca. 3.400 €/Jahr gesenkt werden — eine Ersparnis von ca. 800 €/Jahr bzw. 19 %. Zusätzlich profitiert sie als VR-Geschäftskundin von bis zu 15 % Verbund-Rabatt und kann ein zukünftiges 4. Café einfach aufnehmen.',
+      empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'R+V Gewerbe-Bündel Gastro', status: 'angeschrieben',
       herleitung: [
         { label: 'Datenquelle', value: 'Wettbewerbsanalyse \u2013 Versicherungsdaten' },
         { label: 'Inhaltsversicherung', value: 'Allianz \u2013 ca. 2.400 \u20ac/Jahr (3 Caf\u00e9s)' },
@@ -190,7 +201,9 @@ export const B5 = {
         ],
       },
     },
-    { titel: 'Expansion Standort 4', typ: 'cross_sell', quellen: ['bestand', 'finanztransaktion'], prioritaet: 'hoch', volumen: 80000, volumenTyp: 'einmalig', beschreibung: '4. Café geplant. KfW Förderkredit + VR-Kredit Kombi.', empfohleneAktion: 'termin_vereinbaren', produktEmpfehlung: 'KfW + VR-Gewerbekredit', status: 'termin',
+    { titel: 'Expansion Standort 4', typ: 'cross_sell', quellen: ['bestand', 'finanztransaktion'], prioritaet: 'hoch', volumen: 80000, volumenTyp: 'einmalig', beschreibung: '4. Café geplant. KfW Förderkredit + VR-Kredit Kombi.',
+      kiDescription: 'KI-Analyse: Frau Lang betreibt erfolgreich 3 Café-Standorte (Innenstadt, Bahnhof, Uni) und plant die Expansion auf einen 4. Standort — der Businessplan liegt bereits vor. Der Finanzierungsbedarf beträgt ca. 80.000 € für Umbau und Erstausstattung, bei bestehenden Verbindlichkeiten von 65.000 € (KfW) und 12.000 € (VR-SmartFinanz). Empfehlung: Kombination aus KfW Gründerkredit (zinsgünstig, bis 50 % tilgungsfrei) und VR-Gewerbekredit für die Restfinanzierung — damit optimale Konditionen bei bewährter Kundenbeziehung seit 2016.',
+      empfohleneAktion: 'termin_vereinbaren', produktEmpfehlung: 'KfW + VR-Gewerbekredit', status: 'termin',
       herleitung: [
         { label: 'Datenquelle', value: 'Bestandsanalyse + Kundengespr\u00e4ch' },
         { label: 'Bestehende Standorte', value: '3 Caf\u00e9s (Innenstadt, Bahnhof, Uni) \u2013 alle profitabel' },
@@ -200,7 +213,9 @@ export const B5 = {
         { label: 'Empfehlung', value: 'KfW Gr\u00fcnderkredit + VR-Gewerbekredit Kombi f\u00fcr optimale Konditionen' },
       ],
     },
-    { titel: 'bAV für 18 Mitarbeiter', typ: 'cross_sell', quellen: ['bestand'], prioritaet: 'hoch', volumen: 0, volumenTyp: 'vermittlung', beschreibung: '18 MA. bAV-Pflicht mit AG-Zuschuss.', empfohleneAktion: 'termin_vereinbaren', produktEmpfehlung: 'R+V bAV', status: 'identifiziert',
+    { titel: 'bAV für 18 Mitarbeiter', typ: 'cross_sell', quellen: ['bestand'], prioritaet: 'hoch', volumen: 0, volumenTyp: 'vermittlung', beschreibung: '18 MA. bAV-Pflicht mit AG-Zuschuss.',
+      kiDescription: 'KI-Analyse: Frau Lang beschäftigt 18 Mitarbeiter in ihren 3 Cafés — aktuell besteht keinerlei betriebliche Altersvorsorge (bAV). Seit 2022 ist der Arbeitgeber gesetzlich verpflichtet, bei Entgeltumwandlung einen Zuschuss von mindestens 15 % zu leisten. In der Gastronomie-Branche mit typisch hoher Fluktuation ist eine bAV zudem ein wirksames Instrument zur Mitarbeiterbindung. Empfehlung: R+V bAV-Gruppenvertrag für alle 18 Mitarbeiter einrichten — einfache Verwaltung, gesetzliche Pflicht erfüllen und Arbeitgeberattraktivität steigern.',
+      empfohleneAktion: 'termin_vereinbaren', produktEmpfehlung: 'R+V bAV', status: 'identifiziert',
       herleitung: [
         { label: 'Datenquelle', value: 'Bestandsanalyse \u2013 Firmendaten' },
         { label: 'Mitarbeiteranzahl', value: '18 Mitarbeiter (3 Caf\u00e9s)' },
@@ -210,7 +225,9 @@ export const B5 = {
         { label: 'Empfehlung', value: 'R+V bAV \u2013 Gruppenvertrag f\u00fcr 18 MA, einfache Verwaltung' },
       ],
     },
-    { titel: 'Union Investment Privat', typ: 'cross_sell', quellen: ['finanztransaktion'], prioritaet: 'mittel', volumen: 22000, volumenTyp: 'einmalig', beschreibung: 'ING Privatkonto. Vermögensaufbau bei VR starten.', empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'UnionDepot', status: 'identifiziert',
+    { titel: 'Union Investment Privat', typ: 'cross_sell', quellen: ['finanztransaktion'], prioritaet: 'mittel', volumen: 22000, volumenTyp: 'einmalig', beschreibung: 'ING Privatkonto. Vermögensaufbau bei VR starten.',
+      kiDescription: 'KI-Analyse: Frau Lang hält 22.000 € auf einem ING Privat-Girokonto — unverzinst und ohne jeglichen Vermögensaufbau oder Sparplan. Bei einem Nettoeinkommen von 5.500 €/mtl. und als geschiedene Mutter mit einem Kind (10 J.) ist private Vorsorge besonders wichtig. Empfehlung: UnionDepot mit Sparplan eröffnen, um das brachliegende Kapital renditeorientiert anzulegen — gleichzeitig wird die Gesamtbankverbindung (geschäftlich + privat) bei der VR konsolidiert.',
+      empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'UnionDepot', status: 'identifiziert',
       herleitung: [
         { label: 'Datenquelle', value: 'Open Finance \u2013 Kontodaten' },
         { label: 'Fremdkonto', value: 'ING Privat-Girokonto, 22.000 \u20ac' },
@@ -236,7 +253,7 @@ export const B5 = {
   kommunikation: [
     { datum: '2026-03-08', typ: 'termin', richtung: 'ausgehend', betreff: 'Expansion Standort 4', zusammenfassung: 'Businessplan für 4. Café besprochen. Finanzierung 80k nötig.' },
   ],
-  absicherung: { vorhanden: ['geschaeftskonto', 'kredit', 'kreditlinie'], fehlend: ['gewerbebuendel_rv', 'bav', 'depot'] },
+  absicherung: { vorhanden: [], fremd: ['haftpflicht'], fehlend: ['bu', 'kfz', 'hausrat', 'rlv', 'pflege', 'unfall', 'rechtsschutz', 'wohngebaeude'] },
 };
 
 // B6: Stefan Braun
@@ -266,7 +283,9 @@ export const B6 = {
     { kategorie: 'software', betrag: -200, empfaenger: 'Cloud, Tools' },
   ],
   potentiale: [
-    { titel: 'R+V BU KRITISCH', typ: 'cross_sell', quellen: ['bestand'], prioritaet: 'kritisch', volumen: 2400, volumenTyp: 'jaehrlich', beschreibung: 'IT-Freelancer ohne BU! Hohes Einkommen, keine Absicherung.', empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'R+V BU IT-Spezial', status: 'identifiziert',
+    { titel: 'R+V Berufsunfähigkeit', typ: 'cross_sell', quellen: ['bestand'], prioritaet: 'kritisch', volumen: 2400, volumenTyp: 'jaehrlich', beschreibung: 'IT-Freelancer ohne BU! Hohes Einkommen, keine Absicherung.',
+      kiDescription: 'KI-Analyse: Herr Braun (36 J., IT-Freelancer) erzielt 6.800 €/mtl. Nettoeinkommen — ohne jegliche Berufsunfähigkeitsabsicherung. Als Selbstständiger besteht keinerlei gesetzliche Absicherung durch einen Arbeitgeber; bei Berufsunfähigkeit droht unmittelbarer Existenzverlust. Die empfohlene BU-Rente beträgt 75 % des Nettoeinkommens, also 5.100 €/mtl. Empfehlung: R+V BU IT-Spezial sofort abschließen — die Deckungslücke von 5.100 €/mtl. ist existenzbedrohend und sollte höchste Priorität haben.',
+      empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'R+V BU IT-Spezial', status: 'identifiziert',
       herleitung: [
         { label: 'Datenquelle', value: 'Bestandsanalyse \u2013 Absicherungscheck' },
         { label: 'Nettoeinkommen', value: '6.800 \u20ac/mtl.' },
@@ -284,7 +303,9 @@ export const B6 = {
         einheit: '\u20ac/mtl.',
       },
     },
-    { titel: 'VR-Geschäftskonto', typ: 'cross_sell', quellen: ['finanztransaktion'], prioritaet: 'hoch', volumen: 12000, volumenTyp: 'einmalig', beschreibung: 'N26 Business nicht professionell. VR-BusinessKonto anbieten.', empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'VR-BusinessKonto Plus', status: 'identifiziert',
+    { titel: 'VR-Geschäftskonto', typ: 'cross_sell', quellen: ['finanztransaktion'], prioritaet: 'hoch', volumen: 12000, volumenTyp: 'einmalig', beschreibung: 'N26 Business nicht professionell. VR-BusinessKonto anbieten.',
+      kiDescription: 'KI-Analyse: Herr Braun führt sein Geschäftskonto bei N26 Business mit 12.000 € Volumen — bei einem monatlichen Zahlungsverkehr von 6.800 € netto als IT-Freelancer fehlen dort essenzielle Funktionen wie DATEV-Schnittstelle, Steuerberater-Anbindung und Geschäftskreditlinie. N26 bietet zudem keinen persönlichen Berater, nur Chat/E-Mail-Support. Empfehlung: VR-BusinessKonto Plus anbieten — mit DATEV-Integration, persönlichem Firmenkundenberater und der Möglichkeit, Kredit, Depot und Versicherung aus einer Hand zu nutzen.',
+      empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'VR-BusinessKonto Plus', status: 'identifiziert',
       herleitung: [
         { label: 'Datenquelle', value: 'Open Finance \u2013 Kontodaten' },
         { label: 'Gesch\u00e4ftskonto', value: 'N26 Business, 12.000 \u20ac' },
@@ -306,7 +327,9 @@ export const B6 = {
         ],
       },
     },
-    { titel: 'Union Investment Depot', typ: 'cross_sell', quellen: ['finanztransaktion'], prioritaet: 'mittel', volumen: 83000, volumenTyp: 'einmalig', beschreibung: '83k bei TradeRep+Scalable. Union Investment Beratungsdepot.', empfohleneAktion: 'termin_vereinbaren', produktEmpfehlung: 'UnionDepot', status: 'identifiziert',
+    { titel: 'Union Investment Depot', typ: 'cross_sell', quellen: ['finanztransaktion'], prioritaet: 'mittel', volumen: 83000, volumenTyp: 'einmalig', beschreibung: '83k bei TradeRep+Scalable. Union Investment Beratungsdepot.',
+      kiDescription: 'KI-Analyse: Herr Braun verwaltet 83.000 € Depotvolumen verteilt auf zwei Neobroker — 68.000 € bei Trade Republic (Tech + Krypto-ETP, hohes Risiko) und 15.000 € bei Scalable Capital (ETF World). Der monatliche Sparplan beträgt insgesamt 700 €/mtl. (500 + 200), jedoch ohne professionelle Beratung und mit starker Konzentration auf Tech/Krypto ohne ausreichende Diversifikation. Empfehlung: UnionDepot mit persönlicher Beratung anbieten, um die Risikostreuung zu verbessern und beide Depots in einer professionell betreuten Gesamtlösung zu konsolidieren.',
+      empfohleneAktion: 'termin_vereinbaren', produktEmpfehlung: 'UnionDepot', status: 'identifiziert',
       herleitung: [
         { label: 'Datenquelle', value: 'Open Finance \u2013 Depotdaten' },
         { label: 'Depot 1', value: 'Trade Republic \u2013 68.000 \u20ac (Tech + Krypto-ETP)' },
@@ -328,7 +351,9 @@ export const B6 = {
         ],
       },
     },
-    { titel: 'Rürup-Rente Freelancer', typ: 'cross_sell', quellen: ['bestand'], prioritaet: 'mittel', volumen: 6000, volumenTyp: 'jaehrlich', beschreibung: 'Keine Altersvorsorge. Rürup steuerlich attraktiv.', empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'R+V Rürup Rente', status: 'identifiziert',
+    { titel: 'Rürup-Rente Freelancer', typ: 'cross_sell', quellen: ['bestand'], prioritaet: 'mittel', volumen: 6000, volumenTyp: 'jaehrlich', beschreibung: 'Keine Altersvorsorge. Rürup steuerlich attraktiv.',
+      kiDescription: 'KI-Analyse: Herr Braun (36 J., IT-Freelancer) verfügt über keinerlei Altersvorsorge — als Selbstständiger besteht keine Rentenversicherungspflicht, sodass ohne private Vorsorge im Alter eine massive Versorgungslücke droht. Bei 6.800 €/mtl. Nettoeinkommen ist ein Rürup-Beitrag von ca. 500 €/mtl. (6.000 €/Jahr) empfohlen, wobei bis zu 27.566 €/Jahr steuerlich absetzbar sind (2026). Empfehlung: R+V Rürup Rente abschließen — steueroptimierte Altersvorsorge speziell für Freelancer, die gleichzeitig die Steuerlast signifikant senkt.',
+      empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'R+V Rürup Rente', status: 'identifiziert',
       herleitung: [
         { label: 'Datenquelle', value: 'Bestandsanalyse \u2013 Absicherungscheck' },
         { label: 'Nettoeinkommen', value: '6.800 \u20ac/mtl.' },
@@ -340,5 +365,5 @@ export const B6 = {
     },
   ],
   kommunikation: [],
-  absicherung: { vorhanden: ['girokonto'], fehlend: ['bu', 'geschaeftskonto_vr', 'depot_vr', 'altersvorsorge'] },
+  absicherung: { vorhanden: [], fremd: [], fehlend: ['bu', 'kfz', 'hausrat', 'haftpflicht', 'rlv', 'pflege', 'unfall', 'rechtsschutz', 'wohngebaeude'] },
 };

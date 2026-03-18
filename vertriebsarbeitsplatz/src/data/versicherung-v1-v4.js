@@ -45,6 +45,7 @@ export const V1 = {
     {
       titel: 'Erh\u00f6hung Abdeckung BU', typ: 'anpassung', quellen: ['bestand', 'lebensereignis'], prioritaet: 'hoch', volumen: 960, volumenTyp: 'jaehrlich',
       beschreibung: 'Zweites Kind, Einkommen gestiegen. BU deckt nur 69% statt 80%.',
+      kiDescription: 'KI-Analyse: Peter Schmidt (42 J., IT-Projektleiter) hat nach der Geburt seines zweiten Kindes Max und einer Gehaltserhöhung auf 4.200\u20ac netto eine BU-Deckungslücke von 11 Prozentpunkten — aktuelle BU-Rente 1.800\u20ac/mtl. deckt nur 69% statt der empfohlenen 80% (2.600\u20ac). Bei einer 4-köpfigen Familie mit Baufinanzierung (285k Restschuld) ist eine Erhöhung auf ERGO BU Comfort Plus dringend empfohlen — Mehrprämie ca. 80\u20ac/mtl.',
       empfohleneAktion: 'termin_vereinbaren', produktEmpfehlung: 'ERGO BU Comfort Plus', status: 'termin',
       herleitung: [
         { label: 'Aktuelles Nettoeinkommen', value: '4.200\u20ac/mtl.' },
@@ -69,6 +70,7 @@ export const V1 = {
     {
       titel: 'Hausrat-Upgrade 65\u2192145qm + Elementar', typ: 'anpassung', quellen: ['bestand'], prioritaet: 'hoch', volumen: 120, volumenTyp: 'jaehrlich',
       beschreibung: 'Falsche Wohnfl\u00e4che seit Umzug 2021. Keine Elementar trotz EFH.',
+      kiDescription: 'KI-Analyse: Seit dem Umzug 2021 in das Einfamilienhaus (145 qm) basiert der Hausratvertrag weiterhin auf 65 qm \u2014 damit sind 55% der Wohnfl\u00e4che nicht versichert, was im Schadenfall zu massiven Leistungsk\u00fcrzungen f\u00fchrt. Zus\u00e4tzlich fehlt der Elementarschutz (\u00dcberschwemmung, Starkregen) trotz EFH in Risikozone \u2014 Upgrade auf ERGO Hausrat Premium + Elementar f\u00fcr ca. 300\u20ac/J. dringend empfohlen.',
       empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'ERGO Hausrat Premium + Elementar', status: 'identifiziert',
       herleitung: [
         { label: 'Versicherte Wohnfl\u00e4che', value: '65 qm (FALSCH seit 2021!)' },
@@ -94,6 +96,7 @@ export const V1 = {
     {
       titel: 'Fondspolice statt ING-ETF-Depot', typ: 'whitespot', quellen: ['finanztransaktion', 'bestand'], prioritaet: 'mittel', volumen: 42000, volumenTyp: 'einmalig',
       beschreibung: '42k bei ING ohne Steuervorteil. ERGO-Fondspolice mit Halbeink\u00fcnfte.',
+      kiDescription: 'KI-Analyse: Peter Schmidt bespart ein ETF-Depot bei ING DiBa mit 42.000\u20ac Volumen und 300\u20ac/mtl. Sparrate \u2014 s\u00e4mtliche Ertr\u00e4ge unterliegen der vollen Abgeltungssteuer (26,375%). Durch Umschichtung in eine ERGO Rente Balance (Fondspolice) greift nach 12 Jahren das Halbeink\u00fcnfteverfahren \u2014 gesch\u00e4tzte Steuerersparnis ca. 4.500\u20ac \u00fcber 20 Jahre Laufzeit.',
       empfohleneAktion: 'termin_vereinbaren', produktEmpfehlung: 'ERGO Rente Balance', status: 'identifiziert',
       herleitung: [
         { label: 'Aktuelles Depot (ING DiBa)', value: '42.000\u20ac (MSCI World 70%, EM 30%)' },
@@ -119,6 +122,7 @@ export const V1 = {
     {
       titel: 'RLV-Erh\u00f6hung 150k\u2192300k', typ: 'anpassung', quellen: ['wettbewerb', 'lebensereignis'], prioritaet: 'hoch', volumen: 240, volumenTyp: 'jaehrlich',
       beschreibung: 'Allianz-RLV deckt nicht mal Baufi-Restschuld.',
+      kiDescription: 'KI-Analyse: Die bestehende Allianz-RLV (150.000\u20ac) deckt nicht einmal die Baufinanzierungs-Restschuld von 285.000\u20ac ab \u2014 eine Deckungsl\u00fccke von 135.000\u20ac. Bei einer 4-k\u00f6pfigen Familie mit zwei Kindern (7 und 1 J.) und laufender Baufinanzierung ist eine Erh\u00f6hung auf 300.000\u20ac (5x Jahreseinkommen) dringend empfohlen \u2014 ERGO Risikoleben f\u00fcr ca. 780\u20ac/J.',
       empfohleneAktion: 'tarifvergleich', produktEmpfehlung: 'ERGO Risikoleben', status: 'angeschrieben',
       herleitung: [
         { label: 'Aktuelle RLV (Allianz)', value: '150.000\u20ac Deckung' },
@@ -142,6 +146,7 @@ export const V1 = {
     {
       titel: 'Unfallversicherung Familie', typ: 'whitespot', quellen: ['bestand'], prioritaet: 'mittel', volumen: 250, volumenTyp: 'jaehrlich',
       beschreibung: '2 Kinder, kein Unfallschutz. ERGO Unfall Smart.',
+      kiDescription: 'KI-Analyse: Die Familie Schmidt (4 Personen) verf\u00fcgt \u00fcber keinerlei Unfallversicherung \u2014 bei zwei Kindern im aktiven Alter (Lina 7 J., Max 1 J.) besteht ein erh\u00f6htes Freizeitunfallrisiko. Eine ERGO Unfall Smart Familienversicherung f\u00fcr ca. 250\u20ac/J. sichert alle vier Familienmitglieder ab und schlie\u00dft eine wesentliche L\u00fccke im Absicherungskonzept.',
       empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'ERGO Unfall Smart Familie', status: 'identifiziert',
       herleitung: [
         { label: 'Familiensituation', value: '4-k\u00f6pfige Familie, 2 Kinder (7 + 1 J.)' },
@@ -154,6 +159,7 @@ export const V1 = {
     {
       titel: 'Baufi-Anschlussfinanzierung 2027', typ: 'cross_sell', quellen: ['finanztransaktion'], prioritaet: 'hoch', volumen: 0, volumenTyp: 'vermittlung',
       beschreibung: 'Zinsbindung Sparkasse endet 09/2027. Forward-Darlehen jetzt pr\u00fcfen.',
+      kiDescription: 'KI-Analyse: Die Zinsbindung der Sparkassen-Baufinanzierung (285.000\u20ac Restschuld, aktuell 1,8%) endet im September 2027 \u2014 nur noch 18 Monate. Bei aktuellem Marktzinsniveau von 3,2\u20133,8% droht eine Mehrbelastung von ca. 230\u20ac/mtl. Ein Forward-Darlehen sichert jetzt die Konditionen \u2014 Vermittlung \u00fcber ERGO-Kooperationspartner empfohlen.',
       empfohleneAktion: 'termin_vereinbaren', produktEmpfehlung: 'Kooperationspartner', status: 'identifiziert',
       herleitung: [
         { label: 'Aktuelle Baufinanzierung', value: 'Sparkasse K\u00f6ln, 285k Restschuld' },
@@ -180,6 +186,7 @@ export const V1 = {
     {
       titel: 'Tierkrankenversicherung Hund', typ: 'cross_sell', quellen: ['finanztransaktion'], prioritaet: 'niedrig', volumen: 360, volumenTyp: 'jaehrlich',
       beschreibung: 'Labrador "Buddy" erkannt \u00fcber Kontoums\u00e4tze (Fressnapf, Tierarzt). Keine Tierkrankenversicherung.',
+      kiDescription: 'KI-Analyse: \u00dcber FIDA-Kontoums\u00e4tze wurde ein Labrador ("Buddy") identifiziert \u2014 monatliche Ausgaben bei Fressnapf (85\u20ac), Hundeschule Rhein (45\u20ac) und quartalsweise Tierarztbesuche (120\u20ac) ergeben j\u00e4hrliche Tierkosten von ca. 2.040\u20ac. Ohne Tierkrankenversicherung k\u00f6nnen OP-Kosten bis 5.000\u20ac entstehen \u2014 ERGO Tierkrankenversicherung Hund f\u00fcr ca. 360\u20ac/J. empfohlen.',
       empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'ERGO Tierkrankenversicherung Hund', status: 'identifiziert',
       herleitung: [
         { label: 'Erkanntes Haustier', value: 'Hund (Labrador "Buddy")' },
@@ -215,7 +222,8 @@ export const V1 = {
   ],
   absicherung: {
     vorhanden: ['bu', 'kfz', 'haftpflicht'],
-    fehlend: ['hausrat_korrekt', 'rlv_ausreichend', 'pflege', 'unfall', 'rechtsschutz', 'wohngebaeude'],
+    fremd: ['rlv'],
+    fehlend: ['hausrat', 'pflege', 'unfall', 'rechtsschutz', 'wohngebaeude'],
   },
 };
 
@@ -252,6 +260,7 @@ export const V2 = {
     {
       titel: 'BU-Absicherung Einkommen', typ: 'whitespot', quellen: ['bestand'], prioritaet: 'kritisch', volumen: 1440, volumenTyp: 'jaehrlich',
       beschreibung: 'Keine BU trotz Alleinverdienerin. ERGO BU Smart.',
+      kiDescription: 'KI-Analyse: Amira K\u00f6nig (28 J., Designerin) ist ledig und Alleinverdienerin mit 2.800\u20ac netto \u2014 eine Berufsunf\u00e4higkeit w\u00e4re ohne BU-Absicherung existenzbedrohend. Als junge B\u00fcroberuflerin profitiert sie von g\u00fcnstigen Einstufungen \u2014 empfohlene BU-Rente 2.240\u20ac/mtl. (80% Netto) f\u00fcr ca. 120\u20ac/mtl. \u00fcber ERGO BU Smart.',
       empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'ERGO BU Smart', status: 'identifiziert',
       herleitung: [
         { label: 'Nettoeinkommen', value: '2.800\u20ac/mtl.' },
@@ -274,6 +283,7 @@ export const V2 = {
     {
       titel: 'Haftpflichtversicherung', typ: 'whitespot', quellen: ['bestand'], prioritaet: 'hoch', volumen: 65, volumenTyp: 'jaehrlich',
       beschreibung: 'Keine Privathaftpflicht. Grundabsicherung fehlt.',
+      kiDescription: 'KI-Analyse: Amira K\u00f6nig verf\u00fcgt \u00fcber keinerlei Privathaftpflichtversicherung \u2014 die wichtigste Grundabsicherung fehlt vollst\u00e4ndig. Ohne Haftpflicht haftet sie mit ihrem gesamten Verm\u00f6gen unbegrenzt f\u00fcr Sch\u00e4den an Dritten. ERGO Haftpflicht Single (10 Mio. \u20ac Deckung) ab nur 65\u20ac/J. schlie\u00dft diese kritische L\u00fccke.',
       empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'ERGO Haftpflicht Single', status: 'identifiziert',
       herleitung: [
         { label: 'Privathaftpflicht vorhanden', value: 'KEINE \u2013 Grundschutz fehlt!' },
@@ -285,6 +295,7 @@ export const V2 = {
     {
       titel: 'Kfz-Abwerbung Fremdversicherer', typ: 'anpassung', quellen: ['wettbewerb'], prioritaet: 'mittel', volumen: 540, volumenTyp: 'jaehrlich',
       beschreibung: 'G\u00fcnstigerer Tarif m\u00f6glich bei ERGO.',
+      kiDescription: 'KI-Analyse: Amira K\u00f6nigs VW Polo ist aktuell im ERGO KFZ Comfort-Tarif versichert (420\u20ac/J.) \u2014 ein Upgrade auf ERGO KFZ Premium bietet Schutzbrief, Rabattschutz und freie Werkstattwahl f\u00fcr ca. 380\u20ac/J. Das bedeutet mehr Leistung bei 40\u20ac/J. Ersparnis.',
       empfohleneAktion: 'tarifvergleich', produktEmpfehlung: 'ERGO KFZ Premium', status: 'angeschrieben',
       herleitung: [
         { label: 'Aktuelles Fahrzeug', value: 'VW Polo, Vollkasko' },
@@ -307,6 +318,7 @@ export const V2 = {
     {
       titel: 'Hausratversicherung', typ: 'whitespot', quellen: ['bestand'], prioritaet: 'mittel', volumen: 85, volumenTyp: 'jaehrlich',
       beschreibung: 'Kein Hausrat. 55qm Mietwohnung.',
+      kiDescription: 'KI-Analyse: Amira K\u00f6nig (Designerin) besitzt keine Hausratversicherung f\u00fcr ihre 55-qm-Mietwohnung in K\u00f6ln \u2014 hochwertige Arbeitsmittel wie iMac, iPad Pro und Design-Equipment sind bei Einbruch, Brand oder Leitungswasser unversichert. ERGO Hausrat Basis mit Elektronikzusatz ab ca. 85\u20ac/J. empfohlen.',
       empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'ERGO Hausrat Basis', status: 'identifiziert',
       herleitung: [
         { label: 'Wohnsituation', value: 'Miete, 55 qm' },
@@ -319,6 +331,7 @@ export const V2 = {
     {
       titel: 'Tierkrankenversicherung Katze', typ: 'cross_sell', quellen: ['finanztransaktion'], prioritaet: 'niedrig', volumen: 240, volumenTyp: 'jaehrlich',
       beschreibung: 'Katze "Milo" erkannt \u00fcber Kontoums\u00e4tze (Zooplus, Tierklinik). Keine Tierkrankenversicherung.',
+      kiDescription: 'KI-Analyse: \u00dcber FIDA-Kontoums\u00e4tze wurde eine Katze ("Milo", Britisch Kurzhaar) identifiziert \u2014 monatliche Zooplus-Ausgaben (45\u20ac) und halbj\u00e4hrliche Tierklinikbesuche (85\u20ac) ergeben j\u00e4hrliche Tierkosten von ca. 710\u20ac. Ohne Tierkrankenversicherung k\u00f6nnen OP-Kosten bis 3.000\u20ac entstehen \u2014 ERGO Tierkrankenversicherung Katze f\u00fcr ca. 240\u20ac/J. empfohlen.',
       empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'ERGO Tierkrankenversicherung Katze', status: 'identifiziert',
       herleitung: [
         { label: 'Erkanntes Haustier', value: 'Katze (Britisch Kurzhaar "Milo")' },
@@ -352,7 +365,8 @@ export const V2 = {
   ],
   absicherung: {
     vorhanden: ['kfz'],
-    fehlend: ['bu', 'haftpflicht', 'hausrat', 'rechtsschutz'],
+    fremd: [],
+    fehlend: ['bu', 'haftpflicht', 'hausrat', 'rlv', 'pflege', 'unfall', 'rechtsschutz', 'wohngebaeude'],
   },
 };
 
@@ -397,6 +411,7 @@ export const V3 = {
     {
       titel: 'Bindungsgespr\u00e4ch NPS-Detractor', typ: 'anpassung', quellen: ['kommunikation'], prioritaet: 'kritisch', volumen: 5140, volumenTyp: 'jaehrlich',
       beschreibung: 'NPS 5 = Detractor. Bestandsverlust-Risiko 5.140\u20ac/J.',
+      kiDescription: 'KI-Analyse: Thomas Weber (55 J., Bestandskunde seit 2005) weist einen NPS von 5 (Detractor) auf \u2014 mit 7 ERGO-Vertr\u00e4gen und 5.140\u20ac Jahrespr\u00e4mie besteht ein hohes Abwanderungsrisiko. Im Jahresgespr\u00e4ch erw\u00e4hnte er ein g\u00fcnstigeres HUK24-Angebot und ist unzufrieden mit der Schadensregulierung \u2014 pers\u00f6nliches Bindungsgespr\u00e4ch mit Kulanzangebot dringend empfohlen.',
       empfohleneAktion: 'termin_vereinbaren', produktEmpfehlung: 'Kundenbindung', status: 'identifiziert',
       herleitung: [
         { label: 'NPS-Score', value: '5 (Detractor \u2013 unzufrieden)' },
@@ -410,6 +425,7 @@ export const V3 = {
     {
       titel: 'LV-Ablauf 2028 Wiederanlage', typ: 'cross_sell', quellen: ['bestand', 'finanztransaktion'], prioritaet: 'hoch', volumen: 95000, volumenTyp: 'einmalig',
       beschreibung: 'R+V LV l\u00e4uft 2028 ab. 95k Wiederanlage in ERGO-Produkt.',
+      kiDescription: 'KI-Analyse: Die R+V Lebensversicherung von Thomas Weber l\u00e4uft 2028 ab mit einem R\u00fcckkaufswert von 95.000\u20ac \u2014 bei Alter 57 bleiben noch 8 Jahre bis zur Rente. Statt Festgeld (ca. 2,5% nach Steuern) bietet eine ERGO Rente Balance als Einmalanlage mit Halbeink\u00fcnfteverfahren eine erwartete Rendite von 4\u20136% und steuerliche Vorteile ab dem 62. Lebensjahr.',
       empfohleneAktion: 'termin_vereinbaren', produktEmpfehlung: 'ERGO Rente Balance', status: 'identifiziert',
       herleitung: [
         { label: 'Lebensversicherung (R+V)', value: 'R\u00fcckkaufswert 95.000\u20ac' },
@@ -435,6 +451,7 @@ export const V3 = {
     {
       titel: 'Nachfolgeplanung Betrieb', typ: 'cross_sell', quellen: ['lebensereignis'], prioritaet: 'hoch', volumen: 0, volumenTyp: 'vermittlung',
       beschreibung: 'Handwerksbetrieb, 55 Jahre. Nachfolge planen.',
+      kiDescription: 'KI-Analyse: Thomas Weber (55 J.) f\u00fchrt die Weber Sanit\u00e4r & Heizung GmbH und befindet sich in der Vorruhestandsphase \u2014 Sohn Jan (25 J.) kommt als Nachfolger infrage, eine strukturierte Nachfolgeplanung ist jedoch noch nicht eingeleitet. Vermittlung an ERGO-Kooperationspartner f\u00fcr Nachfolge-Beratung empfohlen, um Betriebswert und \u00dcbergabekonditionen rechtzeitig zu kl\u00e4ren.',
       empfohleneAktion: 'termin_vereinbaren', produktEmpfehlung: 'Kooperationspartner', status: 'identifiziert',
       herleitung: [
         { label: 'Betrieb', value: 'Weber Sanit\u00e4r & Heizung GmbH' },
@@ -447,6 +464,7 @@ export const V3 = {
     {
       titel: 'R\u00fcrup-Rente Steueroptimierung', typ: 'whitespot', quellen: ['finanztransaktion'], prioritaet: 'mittel', volumen: 6000, volumenTyp: 'jaehrlich',
       beschreibung: 'Hohe Steuerlast als Selbst\u00e4ndiger. R\u00fcrup-Potential.',
+      kiDescription: 'KI-Analyse: Thomas Weber ist als GmbH-Gesch\u00e4ftsf\u00fchrer selbst\u00e4ndig mit 4.800\u20ac netto und hoher Steuerlast \u2014 R\u00fcrup-Beitr\u00e4ge sind bis 27.566\u20ac/J. steuerlich absetzbar (2026). Bei einem empfohlenen Beitrag von 500\u20ac/mtl. (6.000\u20ac/J.) ergibt sich eine Steuerersparnis von ca. 2.400\u20ac/J. bei einem Grenzsteuersatz von 40% \u2014 ERGO R\u00fcrup Rente empfohlen.',
       empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'ERGO R\u00fcrup Rente', status: 'identifiziert',
       herleitung: [
         { label: 'Berufsstatus', value: 'Selbst\u00e4ndig (GmbH-GF)' },
@@ -459,6 +477,7 @@ export const V3 = {
     {
       titel: 'Unfallversicherung Infektionsklausel', typ: 'anpassung', quellen: ['kommunikation', 'chatbot'], prioritaet: 'hoch', volumen: 120, volumenTyp: 'jaehrlich',
       beschreibung: 'Kunde fragte im Chatbot nach Zeckenbiss-Deckung. Baustein fehlt im aktuellen Tarif.',
+      kiDescription: 'KI-Analyse: Thomas Weber fragte aktiv im Chatbot nach Zeckenbiss-Deckung (Borreliose-Verdacht bei Ehefrau Monika) \u2014 der aktuelle ERGO Unfall Kombi-Tarif (540\u20ac/J.) enth\u00e4lt keine Infektionsklausel. Kunde hat R\u00fccckruf erbeten und ist kaufbereit \u2014 Upgrade auf ERGO Unfall Premium mit Infektionsklausel f\u00fcr ca. 120\u20ac/J. Aufpreis empfohlen.',
       empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'ERGO Unfall Premium + Infektionsklausel', status: 'identifiziert',
       herleitung: [
         { label: 'Ausl\u00f6ser', value: 'Chatbot-Anfrage vom 15.02.2026' },
@@ -484,6 +503,7 @@ export const V3 = {
     {
       titel: 'KFZ-Abwerbung HUK24', typ: 'anpassung', quellen: ['wettbewerb'], prioritaet: 'niedrig', volumen: 350, volumenTyp: 'jaehrlich',
       beschreibung: 'HUK24 Zweitwagen. ERGO B\u00fcndelrabatt m\u00f6glich.',
+      kiDescription: 'KI-Analyse: Der Zweitwagen (VW Golf, Monika Weber) ist bei HUK24 versichert (350\u20ac/J. Teilkasko) \u2014 da der BMW X3 bereits bei ERGO l\u00e4uft (890\u20ac/J.), ist ein B\u00fcndelrabatt von ca. 10% bei Zusammenf\u00fchrung m\u00f6glich. ERGO-Angebot inkl. Schutzbrief und pers\u00f6nlichem Service f\u00fcr ca. 320\u20ac/J. \u2014 Wechsel zum n\u00e4chsten Stichtag empfohlen.',
       empfohleneAktion: 'tarifvergleich', produktEmpfehlung: 'ERGO KFZ', status: 'identifiziert',
       herleitung: [
         { label: 'Fahrzeug', value: 'VW Golf (Zweitwagen Monika)' },
@@ -534,7 +554,8 @@ export const V3 = {
   ],
   absicherung: {
     vorhanden: ['bu', 'kfz', 'haftpflicht', 'hausrat', 'wohngebaeude', 'unfall'],
-    fehlend: ['pflege', 'rechtsschutz', 'sterbegeld'],
+    fremd: [],
+    fehlend: ['rlv', 'pflege', 'rechtsschutz'],
   },
 };
 
@@ -576,6 +597,7 @@ export const V4 = {
     {
       titel: 'BU-Absicherung \u00c4rzte-Tarif', typ: 'whitespot', quellen: ['bestand'], prioritaet: 'kritisch', volumen: 3600, volumenTyp: 'jaehrlich',
       beschreibung: '\u00c4rztin ohne BU! \u00c4rzte-Spezialtarif mit besseren Konditionen.',
+      kiDescription: 'KI-Analyse: Dr. Anna Hoffmann (35 J., \u00c4rztin, 5.500\u20ac netto) verf\u00fcgt \u00fcber keinerlei BU-Absicherung \u2014 als \u00c4rztin mit Familie (Kind Emma, 3 J.) ist dies existenzbedrohend. Der ERGO BU \u00c4rzte Comfort Plus bietet Verzicht auf abstrakte Verweisung und Infektionsklausel \u2014 empfohlene BU-Rente 4.400\u20ac/mtl. (80% Netto) f\u00fcr ca. 300\u20ac/mtl.',
       empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'ERGO BU \u00c4rzte Comfort Plus', status: 'termin',
       herleitung: [
         { label: 'Nettoeinkommen', value: '5.500\u20ac/mtl.' },
@@ -599,6 +621,7 @@ export const V4 = {
     {
       titel: 'Risikoleben-Versicherung', typ: 'whitespot', quellen: ['lebensereignis'], prioritaet: 'hoch', volumen: 480, volumenTyp: 'jaehrlich',
       beschreibung: 'Familie mit Kind, keine RLV. 500k Deckung empfohlen.',
+      kiDescription: 'KI-Analyse: Familie Hoffmann (Ehepaar mit Tochter Emma, 3 J.) hat keine Risikolebensversicherung \u2014 bei einem Haushaltseinkommen von 8.950\u20ac/mtl. und Mietkosten von 1.350\u20ac/mtl. w\u00e4re der Ausfall eines Partners finanziell verheerend. Empfohlene Deckungssumme 500.000\u20ac (5x Jahreseinkommen) \u2014 ERGO Risikoleben f\u00fcr ca. 480\u20ac/J. (Nichtraucherin, 35 J.).',
       empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'ERGO Risikoleben', status: 'identifiziert',
       herleitung: [
         { label: 'Familiensituation', value: 'Verheiratet, 1 Kind (Emma, 3 J.)' },
@@ -611,6 +634,7 @@ export const V4 = {
     {
       titel: 'Fondspolice statt Scalable-Depot', typ: 'whitespot', quellen: ['finanztransaktion'], prioritaet: 'mittel', volumen: 38000, volumenTyp: 'einmalig',
       beschreibung: '38k bei Scalable. Fondspolice mit Steuervorteil.',
+      kiDescription: 'KI-Analyse: Anna Hoffmann bespart ein ETF-Portfolio bei Scalable Capital mit 38.000\u20ac Volumen und 500\u20ac/mtl. Sparrate \u2014 alle Ertr\u00e4ge unterliegen der vollen Abgeltungssteuer (26,375%). Durch Umschichtung in eine ERGO Rente Balance greift nach 12 Jahren das Halbeink\u00fcnfteverfahren mit nur 50% Gewinnbesteuerung \u2014 bei ihrem Alter (35 J.) ein idealer Einstiegszeitpunkt.',
       empfohleneAktion: 'termin_vereinbaren', produktEmpfehlung: 'ERGO Rente Balance', status: 'identifiziert',
       herleitung: [
         { label: 'Aktuelles Depot (Scalable)', value: '38.000\u20ac ETF Portfolio' },
@@ -633,6 +657,7 @@ export const V4 = {
     {
       titel: 'KFZ-Wechsel Allianz\u2192ERGO', typ: 'anpassung', quellen: ['wettbewerb'], prioritaet: 'niedrig', volumen: 720, volumenTyp: 'jaehrlich',
       beschreibung: 'Allianz KFZ. ERGO B\u00fcndel-Rabatt m\u00f6glich.',
+      kiDescription: 'KI-Analyse: Der Audi A3 von Anna Hoffmann ist bei der Allianz vollkaskoversichert (720\u20ac/J.) \u2014 bei bereits bestehenden ERGO-Vertr\u00e4gen (Haftpflicht + Hausrat) ist ein B\u00fcndelrabatt von ca. 10% m\u00f6glich. ERGO KFZ Premium inkl. Schutzbrief und freier Werkstattwahl f\u00fcr ca. 650\u20ac/J. \u2014 70\u20ac/J. Ersparnis plus alles aus einer Hand.',
       empfohleneAktion: 'tarifvergleich', produktEmpfehlung: 'ERGO KFZ Premium', status: 'identifiziert',
       herleitung: [
         { label: 'Fahrzeug', value: 'Audi A3, Vollkasko' },
@@ -656,6 +681,7 @@ export const V4 = {
     {
       titel: 'Tierkrankenversicherung Hund', typ: 'cross_sell', quellen: ['finanztransaktion'], prioritaet: 'niedrig', volumen: 420, volumenTyp: 'jaehrlich',
       beschreibung: 'Golden Retriever "Luna" erkannt \u00fcber Kontoums\u00e4tze. Keine Tierkrankenversicherung.',
+      kiDescription: 'KI-Analyse: \u00dcber FIDA-Kontoums\u00e4tze wurde ein Golden Retriever ("Luna") identifiziert \u2014 monatliche Futterhaus-Ausgaben (95\u20ac) und quartalsweise Tierarztbesuche (150\u20ac) ergeben j\u00e4hrliche Tierkosten von ca. 1.740\u20ac. Golden Retriever haben ein erh\u00f6htes H\u00fcftdysplasie-Risiko mit OP-Kosten bis 6.000\u20ac \u2014 ERGO Tierkrankenversicherung Hund f\u00fcr ca. 420\u20ac/J. dringend empfohlen.',
       empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'ERGO Tierkrankenversicherung Hund', status: 'identifiziert',
       herleitung: [
         { label: 'Erkanntes Haustier', value: 'Hund (Golden Retriever "Luna")' },
@@ -693,6 +719,7 @@ export const V4 = {
   ],
   absicherung: {
     vorhanden: ['haftpflicht', 'hausrat'],
-    fehlend: ['bu', 'rlv', 'rechtsschutz', 'unfall', 'wohngebaeude_vormerken'],
+    fremd: ['kfz'],
+    fehlend: ['bu', 'rlv', 'pflege', 'unfall', 'rechtsschutz', 'wohngebaeude'],
   },
 };

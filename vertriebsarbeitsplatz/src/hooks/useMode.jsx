@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useCallback, useMemo, useEffect, useRef } from 'react';
 import { MODE_CONFIGS } from '../data/modeConfig';
+import { preloadKunden } from '../data';
 
 const ModeContext = createContext(null);
 
@@ -102,11 +103,15 @@ export function ModeProvider({ children }) {
       setCurrentView('landing');
       window.history.replaceState(null, '', '#/versicherung/landing');
     }
-  }, []);
+    // Preload Kundendaten für den initialen Modus
+    preloadKunden(modeId);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   /* ── Navigation methods ──────────────────────────────────── */
 
   const switchMode = useCallback((newModeId) => {
+    // Preload Kundendaten für den neuen Modus (async, startet sofort)
+    preloadKunden(newModeId);
     setModeId(newModeId);
     setInstitutOverride(null);
     setCurrentView('overview');

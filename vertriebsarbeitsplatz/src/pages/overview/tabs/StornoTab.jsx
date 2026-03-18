@@ -56,7 +56,7 @@ export default function StornoTab() {
         />
       </Card>
 
-      <Card>
+      <Card hover={false}>
         <h3 className="font-semibold text-slate-800 mb-4">
           {modeId === 'banking' ? t('gekuendigteKontenProdukte') : t('stornierteVertraege')}
         </h3>
@@ -76,7 +76,7 @@ export default function StornoTab() {
               </thead>
               <tbody>
                 {vertraege.map((v, i) => (
-                  <tr key={i} className="border-t border-slate-100 hover:bg-slate-50 transition-colors">
+                  <tr key={i} className="border-t border-slate-100 row-hover transition-colors cursor-pointer">
                     <td className="px-4 py-3 text-sm font-medium text-slate-700">{v.kunde}</td>
                     <td className="px-4 py-3 text-sm text-slate-700">{v.produkt}</td>
                     <td className="px-4 py-3 text-sm text-slate-500">{v.sparte}</td>

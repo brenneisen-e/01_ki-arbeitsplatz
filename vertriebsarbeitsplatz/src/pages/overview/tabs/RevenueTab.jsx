@@ -70,7 +70,7 @@ export default function RevenueTab() {
       </div>
 
       {/* Mandanten Revenue */}
-      <Card>
+      <Card hover={false}>
         <h3 className="font-semibold text-slate-800 mb-4">{t('ertragNachMandant')}</h3>
         <table className="w-full text-sm">
           <thead>
@@ -86,7 +86,7 @@ export default function RevenueTab() {
             {data.mandantenRevenue.map((m, i) => {
               const anteil = ytdTotal > 0 ? ((m.ertrag / ytdTotal) * 100).toFixed(1) : 0;
               return (
-                <tr key={i} className="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                <tr key={i} className="border-b border-slate-100 row-hover transition-colors cursor-pointer">
                   <td className="py-2.5 pr-3 font-medium text-slate-800">{tn(m.name)}</td>
                   <td className="py-2.5 pr-3 text-right font-mono text-slate-700">{formatEur(m.aum)}</td>
                   <td className="py-2.5 pr-3 text-right font-mono text-slate-600">{m.fee}%</td>

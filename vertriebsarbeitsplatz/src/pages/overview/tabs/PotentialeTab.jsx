@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import KPIGrid from '../../../components/ui/KPIGrid';
 import Card from '../../../components/ui/Card';
 import PipelineBar from '../../../components/ui/PipelineBar';
@@ -44,39 +44,42 @@ export default function PotentialeTab() {
   const allPotentiale = getAllPotentiale(modeId);
   const kunden = KUNDEN_BY_MODE[modeId] || [];
 
-  const statusCounts = {
-    identifiziert: allPotentiale.filter(p => p.status === 'identifiziert').length,
-    angeschrieben: allPotentiale.filter(p => p.status === 'angeschrieben').length,
-    termin: allPotentiale.filter(p => p.status === 'termin').length,
-    abgeschlossen: allPotentiale.filter(p => p.status === 'abgeschlossen').length,
-  };
+  const { statusCounts, totalVolumen } = useMemo(() => {
+    const counts = { identifiziert: 0, angeschrieben: 0, termin: 0, abgeschlossen: 0 };
+    let vol = 0;
+    for (const p of allPotentiale) {
+      if (counts[p.status] !== undefined) counts[p.status]++;
+      if (p.volumenTyp === 'jaehrlich') vol += p.volumen;
+    }
+    return { statusCounts: counts, totalVolumen: vol };
+  }, [allPotentiale]);
 
-  const totalVolumen = allPotentiale.reduce((s, p) => s + (p.volumenTyp === 'jaehrlich' ? p.volumen : 0), 0);
-
-  const kpiValues = {
+  const kpiValues = useMemo(() => ({
     consentKunden: { wert: kunden.length, trend: 5.0 },
     potentiale: { wert: allPotentiale.length, trend: 8.2 },
     praemienvolumen: { wert: totalVolumen, trend: 12.5 },
     convRate: { wert: 13.6, trend: 2.1 },
-  };
+  }), [kunden.length, allPotentiale.length, totalVolumen]);
 
-  const pipelineSegments = [
+  const pipelineSegments = useMemo(() => [
     { label: t('identifiziert'), count: statusCounts.identifiziert, color: '#3b82f6' },
     { label: t('angeschrieben'), count: statusCounts.angeschrieben, color: '#f59e0b' },
     { label: t('terminLabel'), count: statusCounts.termin, color: '#10b981' },
     { label: t('abgeschl'), count: statusCounts.abgeschlossen, color: 'var(--mode-primary)' },
-  ];
+  ], [statusCounts, t]);
 
-  const filtered = statusFilter === 'alle'
-    ? allPotentiale
-    : allPotentiale.filter(p => p.status === statusFilter);
-
-  // Group by Kunde
-  const grouped = new Map();
-  filtered.forEach(p => {
-    if (!grouped.has(p.kundeId)) grouped.set(p.kundeId, []);
-    grouped.get(p.kundeId).push(p);
-  });
+  // Filtered + grouped (memoized)
+  const grouped = useMemo(() => {
+    const filtered = statusFilter === 'alle'
+      ? allPotentiale
+      : allPotentiale.filter(p => p.status === statusFilter);
+    const map = new Map();
+    for (const p of filtered) {
+      if (!map.has(p.kundeId)) map.set(p.kundeId, []);
+      map.get(p.kundeId).push(p);
+    }
+    return map;
+  }, [allPotentiale, statusFilter]);
 
   return (
     <div className="space-y-6">

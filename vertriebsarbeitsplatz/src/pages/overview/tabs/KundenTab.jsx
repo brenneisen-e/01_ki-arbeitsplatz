@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo, memo } from 'react';
 import KPIGrid from '../../../components/ui/KPIGrid';
 import { useMode } from '../../../hooks/useMode';
 import useTranslation from '../../../i18n/useTranslation';
@@ -7,7 +7,7 @@ import { formatEur, potentialSterne } from '../../../utils/formatters';
 import { Star, Search, TrendingDown, Minus, AlertTriangle, ChevronUp, ChevronDown } from 'lucide-react';
 import { clsx } from 'clsx';
 
-function StarRating({ score }) {
+const StarRating = memo(function StarRating({ score }) {
   const { full, half, empty } = potentialSterne(score);
   return (
     <div className="flex items-center gap-0.5">
@@ -16,7 +16,7 @@ function StarRating({ score }) {
       {Array(empty).fill(0).map((_, i) => <Star key={`e${i}`} size={12} className="text-slate-200" />)}
     </div>
   );
-}
+});
 
 function formatAuM(val) {
   if (val == null || val === 0) return '-';
@@ -152,70 +152,77 @@ export default function KundenTab() {
     }
   }
 
-  // Build table data
-  const tableData = kunden
-    .filter(k => !filter || k.name.toLowerCase().includes(filter.toLowerCase()))
-    .map(k => {
-      const volumen = isVV
-        ? (k.aum || k.eigeneProdukte?.reduce((s, p) => s + (p.volumen || 0), 0) || 0)
-        : (k.eigeneProdukte?.reduce((s, p) => s + (p.praemie || p.volumen || 0), 0) || 0);
-      const fremdTotal = k.fremdProdukte?.reduce((s, p) => s + (p.volumen || 0), 0) || 0;
-      const mandatStart = k.eigeneProdukte?.[0]?.seit || null;
+  // Build table data (memoized)
+  const tableData = useMemo(() => {
+    const data = kunden
+      .filter(k => !filter || k.name.toLowerCase().includes(filter.toLowerCase()))
+      .map(k => {
+        const volumen = isVV
+          ? (k.aum || k.eigeneProdukte?.reduce((s, p) => s + (p.volumen || 0), 0) || 0)
+          : (k.eigeneProdukte?.reduce((s, p) => s + (p.praemie || p.volumen || 0), 0) || 0);
+        const fremdTotal = k.fremdProdukte?.reduce((s, p) => s + (p.volumen || 0), 0) || 0;
+        const mandatStart = k.eigeneProdukte?.[0]?.seit || null;
+        return {
+          ...k,
+          volumen,
+          gesamtVermoegen: volumen + fremdTotal,
+          mandatSeit: mandatStart,
+          allocation: k.portfolio?.allocation ?? null,
+          esgScore: k.portfolio?.esgScore ?? null,
+          ytd: k.portfolio?.performance?.ytd ?? null,
+          perfVsBm: k.portfolio?.performance?.ytd != null && k.portfolio?.benchmark?.ytd != null
+            ? +(k.portfolio.performance.ytd - k.portfolio.benchmark.ytd).toFixed(1) : null,
+          letzterKontakt: k.kommunikation?.[0]?.datum
+            ? (() => {
+                const [y, m, d] = k.kommunikation[0].datum.split('-');
+                return `${d}.${m}.${y}`;
+              })()
+            : '-',
+          potCount: k.potentiale?.filter(p => p.status !== 'abgeschlossen')?.length || 0,
+          potValue: k.potentiale?.filter(p => p.status !== 'abgeschlossen')?.reduce((s, p) => s + (p.volumen || 0), 0) || 0,
+        };
+      });
+
+    // Sort
+    if (sortCol) {
+      data.sort((a, b) => {
+        let va = a[sortCol], vb = b[sortCol];
+        if (va == null) return 1;
+        if (vb == null) return -1;
+        const cmp = typeof va === 'number' ? va - vb : String(va).localeCompare(String(vb), 'de');
+        return sortDir === 'asc' ? cmp : -cmp;
+      });
+    }
+    return data;
+  }, [kunden, filter, sortCol, sortDir, isVV]);
+
+  // KPIs (memoized)
+  const { kpiConfig, kpiValues } = useMemo(() => {
+    if (isVV) {
+      const gesamtAuM = kunden.reduce((s, k) => s + (k.aum || k.eigeneProdukte?.reduce((ps, p) => ps + (p.volumen || 0), 0) || 0), 0);
       return {
-        ...k,
-        volumen,
-        gesamtVermoegen: volumen + fremdTotal,
-        mandatSeit: mandatStart,
-        allocation: k.portfolio?.allocation ?? null,
-        esgScore: k.portfolio?.esgScore ?? null,
-        ytd: k.portfolio?.performance?.ytd ?? null,
-        perfVsBm: k.portfolio?.performance?.ytd != null && k.portfolio?.benchmark?.ytd != null
-          ? +(k.portfolio.performance.ytd - k.portfolio.benchmark.ytd).toFixed(1) : null,
-        letzterKontakt: k.kommunikation?.[0]?.datum
-          ? (() => {
-              const [y, m, d] = k.kommunikation[0].datum.split('-');
-              return `${d}.${m}.${y}`;
-            })()
-          : '-',
-        potCount: k.potentiale?.filter(p => p.status !== 'abgeschlossen')?.length || 0,
-        potValue: k.potentiale?.filter(p => p.status !== 'abgeschlossen')?.reduce((s, p) => s + (p.volumen || 0), 0) || 0,
+        kpiConfig: VV_KPI_CONFIG,
+        kpiValues: {
+          mandatAnzahl: { wert: kunden.length, trend: 2.1 },
+          gesamtAuM: { wert: gesamtAuM, trend: 4.5 },
+          avgAuM: { wert: Math.round(gesamtAuM / (kunden.length || 1)), trend: 2.3 },
+          avgNps: { wert: parseFloat((kunden.reduce((s, k) => s + (k.nps || 0), 0) / (kunden.length || 1)).toFixed(1)), trend: 0.3 },
+        },
       };
-    });
-
-  // Sort
-  if (sortCol) {
-    tableData.sort((a, b) => {
-      let va = a[sortCol], vb = b[sortCol];
-      if (va == null) return 1;
-      if (vb == null) return -1;
-      const cmp = typeof va === 'number' ? va - vb : String(va).localeCompare(String(vb), 'de');
-      return sortDir === 'asc' ? cmp : -cmp;
-    });
-  }
-
-  // KPIs
-  let kpiConfig, kpiValues;
-  if (isVV) {
-    const gesamtAuM = kunden.reduce((s, k) => s + (k.aum || k.eigeneProdukte?.reduce((ps, p) => ps + (p.volumen || 0), 0) || 0), 0);
-    kpiConfig = VV_KPI_CONFIG;
-    kpiValues = {
-      mandatAnzahl: { wert: kunden.length, trend: 2.1 },
-      gesamtAuM: { wert: gesamtAuM, trend: 4.5 },
-      avgAuM: { wert: Math.round(gesamtAuM / (kunden.length || 1)), trend: 2.3 },
-      avgNps: { wert: parseFloat((kunden.reduce((s, k) => s + (k.nps || 0), 0) / (kunden.length || 1)).toFixed(1)), trend: 0.3 },
-    };
-  } else {
+    }
     const avgVertraege = kunden.reduce((s, k) => s + (k.eigeneProdukte?.length || 0), 0) / (kunden.length || 1);
     const avgVolumen = kunden.reduce((s, k) => s + k.eigeneProdukte?.reduce((ps, p) => ps + (p.praemie || 0), 0), 0) / (kunden.length || 1);
     const avgNps = kunden.reduce((s, k) => s + (k.nps || 0), 0) / (kunden.length || 1);
-    kpiConfig = K_KPI_CONFIG;
-    kpiValues = {
-      kundenAnzahl: { wert: kunden.length, trend: 3.2 },
-      avgVertraege: { wert: parseFloat(avgVertraege.toFixed(1)), trend: 0.2 },
-      avgVolumen: { wert: Math.round(avgVolumen), trend: 1.5 },
-      avgNps: { wert: parseFloat(avgNps.toFixed(1)), trend: 0.3 },
+    return {
+      kpiConfig: K_KPI_CONFIG,
+      kpiValues: {
+        kundenAnzahl: { wert: kunden.length, trend: 3.2 },
+        avgVertraege: { wert: parseFloat(avgVertraege.toFixed(1)), trend: 0.2 },
+        avgVolumen: { wert: Math.round(avgVolumen), trend: 1.5 },
+        avgNps: { wert: parseFloat(avgNps.toFixed(1)), trend: 0.3 },
+      },
     };
-  }
+  }, [kunden, isVV]);
 
   const kundenLabel = isVV ? t('mandant') : t('kundeLabel');
 

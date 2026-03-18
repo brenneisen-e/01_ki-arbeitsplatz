@@ -119,7 +119,7 @@ export default function KPIBox({ icon, label, wert, format = 'num', trend, delay
         onClick={() => setExpanded(true)}
       >
         <div className="flex items-center justify-between mb-3">
-          <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-slate-100 rh-badge">
+          <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-slate-100 kpi-icon-box">
             <Icon size={18} style={{ color: 'var(--mode-primary-light)' }} strokeWidth={1.75} />
           </div>
           {trend !== undefined && (

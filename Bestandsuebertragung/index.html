@@ -32,11 +32,10 @@
         .then(r => r.text())
         .then(html => {
             document.getElementById('bestandsuebertragungModule').innerHTML = html;
-            // Load Bestandsübertragung ES modules
-            var s = document.createElement('script');
-            s.type = 'module';
-            s.src = '../js/bestandsuebertragung/index.js';
-            document.body.appendChild(s);
+            // Load Bestandsübertragung ES modules and initialize
+            import('../js/bestandsuebertragung/index.js').then(function(mod) {
+                mod.initBestandApp();
+            });
         });
     </script>
 </body>

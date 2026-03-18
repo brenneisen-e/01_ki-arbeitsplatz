@@ -181,8 +181,8 @@
   color: white !important;
 }
 
-/* Helle Badge-Hintergründe bei Hover halbtransparent machen */
-.row-hover:hover .bg-slate-100,
-.row-hover:hover .bg-slate-50 {
-  background-color: rgba(255,255,255,0.18) !important;
+/* Badges bei Hover: halbtransparenter Hintergrund + weiße Border */
+.row-hover:hover .rh-badge {
+  background-color: rgba(255,255,255,0.2) !important;
+  border-color: rgba(255,255,255,0.35) !important;
 }

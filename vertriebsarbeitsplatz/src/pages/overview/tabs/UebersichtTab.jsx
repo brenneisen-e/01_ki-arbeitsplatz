@@ -336,10 +336,10 @@ export default function UebersichtTab() {
                     </div>
                     <div className="flex flex-wrap gap-1 min-w-0">
                       {kp.potentiale.slice(0, 3).map((p, pi) => (
-                        <span key={pi} className="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-600 whitespace-nowrap">{p.titel}</span>
+                        <span key={pi} className="rh-badge text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-600 whitespace-nowrap">{p.titel}</span>
                       ))}
                       {kp.potentiale.length > 3 && (
-                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-slate-50 text-slate-400">+{kp.potentiale.length - 3}</span>
+                        <span className="rh-badge text-[10px] px-1.5 py-0.5 rounded bg-slate-50 text-slate-400">+{kp.potentiale.length - 3}</span>
                       )}
                     </div>
                     <div className="text-right">

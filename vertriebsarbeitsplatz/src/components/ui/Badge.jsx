@@ -45,7 +45,7 @@ const STATUS_STYLES = {
 
 export function PrioBadge({ prioritaet }) {
   return (
-    <span className={clsx('inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium border', PRIO_STYLES[prioritaet] || PRIO_STYLES.niedrig)}>
+    <span className={clsx('rh-badge inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium border', PRIO_STYLES[prioritaet] || PRIO_STYLES.niedrig)}>
       {PRIO_LABELS[prioritaet] || prioritaet.charAt(0).toUpperCase() + prioritaet.slice(1)}
     </span>
   );
@@ -61,7 +61,7 @@ export function QuellenBadge({ quelle }) {
     markt: 'Markt',
   };
   return (
-    <span className={clsx('inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium', QUELLEN_STYLES[quelle] || QUELLEN_STYLES.markt)}>
+    <span className={clsx('rh-badge inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium', QUELLEN_STYLES[quelle] || QUELLEN_STYLES.markt)}>
       {label[quelle] || quelle}
     </span>
   );
@@ -69,7 +69,7 @@ export function QuellenBadge({ quelle }) {
 
 export function SparteBadge({ sparte }) {
   return (
-    <span className={clsx('inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium', SPARTEN_STYLES[sparte] || 'bg-gray-100 text-gray-600')}>
+    <span className={clsx('rh-badge inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium', SPARTEN_STYLES[sparte] || 'bg-gray-100 text-gray-600')}>
       {sparte.charAt(0).toUpperCase() + sparte.slice(1)}
     </span>
   );
@@ -77,7 +77,7 @@ export function SparteBadge({ sparte }) {
 
 export function StatusBadge({ status }) {
   return (
-    <span className={clsx('inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium', STATUS_STYLES[status] || 'bg-gray-100 text-gray-600')}>
+    <span className={clsx('rh-badge inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium', STATUS_STYLES[status] || 'bg-gray-100 text-gray-600')}>
       {status === 'optimierbar' ? '\u26a0 Optim.' : status.charAt(0).toUpperCase() + status.slice(1)}
     </span>
   );

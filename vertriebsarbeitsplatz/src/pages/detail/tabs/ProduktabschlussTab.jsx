@@ -66,7 +66,7 @@ export default function ProduktabschlussTab({ kunde }) {
           </div>
           <div>
             <div className="text-2xl font-bold text-slate-800">
-              {abschluesse.reduce((sum, a) => sum + (a.details?.betrag || 0), 0).toLocaleString(getLang() === 'en' ? 'en-US' : 'de-DE')}\u20ac
+              {abschluesse.reduce((sum, a) => sum + (a.details?.betrag || 0), 0).toLocaleString(getLang() === 'en' ? 'en-US' : 'de-DE')}€
             </div>
             <div className="text-xs text-slate-400">{t('kreditvolumenGesamt')}</div>
           </div>
@@ -130,7 +130,7 @@ function AntragCard({ antrag, t, statusConfig: STATUS_CONFIG }) {
           <>
             <div className="bg-slate-50 rounded-lg p-3">
               <div className="text-xs text-slate-400 mb-1">{t('kreditbetrag')}</div>
-              <div className="text-lg font-bold text-slate-800">{antrag.details.betrag?.toLocaleString(getLang() === 'en' ? 'en-US' : 'de-DE')}\u20ac</div>
+              <div className="text-lg font-bold text-slate-800">{antrag.details.betrag?.toLocaleString(getLang() === 'en' ? 'en-US' : 'de-DE')}€</div>
             </div>
             <div className="bg-slate-50 rounded-lg p-3">
               <div className="text-xs text-slate-400 mb-1">{t('laufzeit')}</div>
@@ -142,7 +142,7 @@ function AntragCard({ antrag, t, statusConfig: STATUS_CONFIG }) {
             </div>
             <div className="bg-slate-50 rounded-lg p-3">
               <div className="text-xs text-slate-400 mb-1">{t('monatsrate')}</div>
-              <div className="text-lg font-bold text-slate-800">{antrag.details.rate}\u20ac</div>
+              <div className="text-lg font-bold text-slate-800">{antrag.details.rate}€</div>
             </div>
           </>
         )}

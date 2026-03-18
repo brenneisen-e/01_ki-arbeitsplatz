@@ -164,7 +164,7 @@ function PotentialCard({ potential: p, kunde, expanded, onToggle, t }) {
     >
       {/* Clickable header */}
       <div
-        className="p-4 cursor-pointer row-hover transition-colors rounded-t-lg"
+        className="p-4 cursor-pointer row-hover rounded-t-lg"
         onClick={onToggle}
       >
         <div className="flex items-start justify-between mb-2">

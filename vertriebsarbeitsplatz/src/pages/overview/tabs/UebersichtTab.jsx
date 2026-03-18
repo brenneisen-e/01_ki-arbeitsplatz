@@ -230,7 +230,7 @@ export default function UebersichtTab() {
               {filteredVVKunden.slice(0, 8).map((k, i) => (
                 <div
                   key={k.id || i}
-                  className="grid py-2.5 px-3 rounded-lg row-hover transition-colors cursor-pointer items-center"
+                  className="grid py-2.5 px-3 rounded-lg row-hover cursor-pointer items-center"
                   style={{ gridTemplateColumns: '2fr 90px 100px 70px 60px 90px' }}
                   onClick={() => navigateTo('detail', { kundeId: k.id })}
                 >
@@ -321,7 +321,7 @@ export default function UebersichtTab() {
                 return (
                   <div
                     key={kp.kundeId}
-                    className="grid py-2.5 px-3 rounded-lg row-hover transition-colors cursor-pointer items-center"
+                    className="grid py-2.5 px-3 rounded-lg row-hover cursor-pointer items-center"
                     style={{ gridTemplateColumns: '1fr 1fr 80px 100px 100px' }}
                     onClick={() => navigateTo('detail', { kundeId: kp.kundeId, tab: 'impulse' })}
                   >
@@ -380,7 +380,7 @@ export default function UebersichtTab() {
           </div>
           <div className="space-y-2">
             {aufgaben.map((a, i) => (
-              <div key={i} className="flex items-center justify-between py-2 cursor-pointer row-hover -mx-2 px-2 rounded-lg transition-colors"
+              <div key={i} className="flex items-center justify-between py-2 cursor-pointer row-hover -mx-2 px-2 rounded-lg"
                 onClick={() => a.kundeId && navigateTo('detail', { kundeId: a.kundeId })}>
                 <div className="flex items-center gap-3">
                   <input type="checkbox" className="w-4 h-4 rounded border-slate-300" readOnly />
@@ -405,7 +405,7 @@ export default function UebersichtTab() {
             {abschluesse.map((a, i) => (
               <div
                 key={i}
-                className="flex items-center justify-between py-2.5 px-3 rounded-lg row-hover transition-colors cursor-pointer"
+                className="flex items-center justify-between py-2.5 px-3 rounded-lg row-hover cursor-pointer"
                 onClick={() => navigateTo('detail', { kundeId: a.kundeId, tab: 'vertraege' })}
               >
                 <div className="flex items-center gap-3">
@@ -449,7 +449,7 @@ export default function UebersichtTab() {
               return (
                 <div
                   key={i}
-                  className="flex items-center gap-3 py-2.5 border-b border-slate-100 last:border-0 cursor-pointer row-hover -mx-2 px-2 rounded-lg transition-colors"
+                  className="flex items-center gap-3 py-2.5 border-b border-slate-100 last:border-0 cursor-pointer row-hover -mx-2 px-2 rounded-lg"
                   onClick={() => navigateTo('detail', { kundeId: termin.kundeId })}
                 >
                   <div className="text-center shrink-0 w-14">
@@ -499,7 +499,7 @@ export default function UebersichtTab() {
           </div>
           <div className="space-y-2">
             {abrechnungen.map((a, i) => (
-              <div key={i} className="flex items-center justify-between py-2 px-2 rounded-lg row-hover transition-colors cursor-pointer">
+              <div key={i} className="flex items-center justify-between py-2 px-2 rounded-lg row-hover cursor-pointer">
                 <div className="flex items-center gap-3">
                   <Download size={16} className="text-slate-400" />
                   <div>
@@ -530,7 +530,7 @@ export default function UebersichtTab() {
             {geburtstage.map((g, i) => (
               <div
                 key={i}
-                className="flex items-center gap-3 py-2 cursor-pointer row-hover -mx-2 px-2 rounded-lg transition-colors"
+                className="flex items-center gap-3 py-2 cursor-pointer row-hover -mx-2 px-2 rounded-lg"
                 onClick={() => navigateTo('detail', { kundeId: g.kundeId })}
               >
                 <Avatar name={g.name} foto={g.foto} size={40} />

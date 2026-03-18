@@ -50,11 +50,15 @@ export function getKundeById(modeId, kundeId) {
   return list.find(k => k.id === kundeId);
 }
 
+const _potentialeCache = {};
 export function getAllPotentiale(modeId) {
+  if (_potentialeCache[modeId]) return _potentialeCache[modeId];
   const kunden = KUNDEN_BY_MODE[modeId] || [];
-  return kunden.flatMap(k =>
+  const result = kunden.flatMap(k =>
     (k.potentiale || []).map(p => ({ ...p, kundeId: k.id, kundeName: k.name }))
   );
+  _potentialeCache[modeId] = result;
+  return result;
 }
 
 // =============================================

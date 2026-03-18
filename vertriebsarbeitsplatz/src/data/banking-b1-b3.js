@@ -18,10 +18,12 @@ export const B1 = {
   fremdProdukte: [
     { typ: 'depot', institut: 'Trade Republic', details: 'ETF Sparplan 200/mtl', volumen: 28000, consent: true },
     { typ: 'tagesgeld', institut: 'ING', details: '2,0%', volumen: 22000, consent: true },
-    { typ: 'versicherung', institut: 'HUK', details: 'KFZ + Hausrat + Haftpfl.', volumen: 1200, consent: true },
-    { typ: 'bu', institut: 'HDI', details: 'BU 2.000\u20ac/mtl.', volumen: 1800, consent: true },
-    { typ: 'haftpflicht', institut: 'Allianz', details: 'Privat', volumen: 85, consent: false },
-    { typ: 'lebensversicherung', institut: 'Alte Leipziger', details: 'Ablauf 2030', volumen: 65000, consent: true },
+    { typ: 'versicherung', produktart: 'KFZ-Vollkasko', institut: 'HUK', details: 'VW Tiguan, SF-12', volumen: 780, consent: true },
+    { typ: 'versicherung', produktart: 'Hausrat', institut: 'HUK', details: 'Im B\u00fcndel', volumen: 0, consent: true },
+    { typ: 'versicherung', produktart: 'Haftpflicht', institut: 'HUK', details: 'Familie', volumen: 0, consent: true },
+    { typ: 'versicherung', produktart: 'Berufsunf\u00e4higkeit', institut: 'HDI', details: 'BU 2.000\u20ac/mtl.', volumen: 1800, consent: true },
+    { typ: 'versicherung', produktart: 'Privathaftpflicht', institut: 'Allianz', details: 'Privat', volumen: 85, consent: false },
+    { typ: 'versicherung', produktart: 'Lebensversicherung', institut: 'Alte Leipziger', details: 'Ablauf 2030', volumen: 65000, consent: true },
   ],
   transaktionen: [
     { kategorie: 'gehalt', betrag: 4500, empfaenger: 'Arbeitgeber' },

@@ -286,7 +286,7 @@ function PotentialCard({ potential: p, kunde, expanded, onToggle, t }) {
 
 function HerleitungRow({ label, value }) {
   return (
-    <div className="bg-white rounded-lg px-3 py-2 border border-slate-100">
+    <div className="bg-white rounded-lg px-3 py-2 border border-slate-100 hover:bg-slate-50 hover:border-slate-200 transition-colors">
       <span className="text-xs text-slate-400 block">{label}</span>
       <span className="text-slate-700 font-medium">{value}</span>
     </div>

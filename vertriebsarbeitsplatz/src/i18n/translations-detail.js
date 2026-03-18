@@ -238,6 +238,7 @@ const translationsDetail = {
   'keineEigeneProdukte': { de: 'Keine eigenen Produkte', en: 'No own products' },
   'keineFremdprodukte': { de: 'Keine Fremdprodukte bekannt', en: 'No external products known' },
   'produkteLabel': { de: 'Produkte', en: 'Products' },
+  'produktart': { de: 'Produktart', en: 'Product Type' },
 
   // ─── Verträge Tab (additional) ───
   'vertragszusammenfassung': { de: 'Vertragszusammenfassung', en: 'Contract Summary' },

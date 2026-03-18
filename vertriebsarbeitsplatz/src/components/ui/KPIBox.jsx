@@ -108,7 +108,6 @@ export default function KPIBox({ icon, label, wert, format = 'num', trend, delay
   const [expanded, setExpanded] = useState(false);
   const Icon = LucideIcons[icon] || LucideIcons.BarChart3;
   const isPositive = trend >= 0;
-  const displayed = wert;
 
   const monthlyData = useMemo(() => generateMonthlyData(wert, trend || 0), [wert, trend]);
 
@@ -129,8 +128,11 @@ export default function KPIBox({ icon, label, wert, format = 'num', trend, delay
             </span>
           )}
         </div>
-        <div className="font-mono text-2xl font-bold text-slate-900 mb-1 truncate" style={{ fontFeatureSettings: "'tnum'" }}>
-          {formatValue(format === 'pct' ? displayed : Math.round(displayed), format)}
+        <div
+          className="font-mono text-2xl font-bold text-slate-900 mb-1 truncate kpi-value"
+          style={{ fontFeatureSettings: "'tnum'", animationDelay: `${delay}ms` }}
+        >
+          {formatValue(format === 'pct' ? wert : Math.round(wert), format)}
         </div>
         <div className="flex items-center justify-between">
           <div className="text-sm text-slate-500">{label}</div>

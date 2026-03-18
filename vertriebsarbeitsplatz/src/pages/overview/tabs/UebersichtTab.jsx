@@ -249,7 +249,7 @@ export default function UebersichtTab() {
                   </div>
                   <div className="text-right text-sm font-mono font-medium text-slate-700 flex items-center justify-end gap-2">
                     {k.id === 'VV00001' && VV_LEADS.some(l => l.isNeuerLead && l.referenzMandant === 'VV00001') && (
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500 text-white whitespace-nowrap animate-pulse">
+                      <span className="rh-badge inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500 text-white whitespace-nowrap animate-pulse">
                         {t('neuerLead')}
                       </span>
                     )}
@@ -260,7 +260,7 @@ export default function UebersichtTab() {
                   </div>
                   <div className="text-center">
                     {k.leadsCount > 0 ? (
-                      <span className="inline-flex items-center justify-center w-6 h-6 rounded-full text-xs font-bold text-white" style={{ backgroundColor: 'var(--mode-primary-light)' }}>
+                      <span className="rh-badge inline-flex items-center justify-center w-6 h-6 rounded-full text-xs font-bold text-white" style={{ backgroundColor: 'var(--mode-primary-light)' }}>
                         {k.leadsCount}
                       </span>
                     ) : (
@@ -268,7 +268,7 @@ export default function UebersichtTab() {
                     )}
                   </div>
                   <div className="text-center">
-                    <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium ${
+                    <span className={`rh-badge text-[10px] px-1.5 py-0.5 rounded-full font-medium ${
                       k.istNeu
                         ? 'bg-blue-50 text-blue-700 border border-blue-200'
                         : 'bg-slate-100 text-slate-600'
@@ -277,7 +277,7 @@ export default function UebersichtTab() {
                     </span>
                   </div>
                   <div className="text-center">
-                    <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-semibold border ${
+                    <span className={`rh-badge text-[10px] px-1.5 py-0.5 rounded-full font-semibold border ${
                       k.mandatsTyp === 'FairValue' ? 'bg-blue-50 text-blue-700 border-blue-200' :
                       k.mandatsTyp === 'SmartValue' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' :
                       'bg-purple-50 text-purple-700 border-purple-200'

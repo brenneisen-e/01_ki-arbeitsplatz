@@ -163,6 +163,18 @@ export function ModeProvider({ children }) {
     }
   }, [currentView, baseConfig]);
 
+  /* ── Sync CSS variables with current institut colors ────── */
+  useEffect(() => {
+    const root = document.documentElement;
+    const c = config.colors;
+    if (c) {
+      root.style.setProperty('--mode-primary', c.primary);
+      root.style.setProperty('--mode-primary-light', c.primaryLight);
+      root.style.setProperty('--mode-gradient', c.gradient);
+      if (c.accent) root.style.setProperty('--mode-accent', c.accent);
+    }
+  }, [config.colors]);
+
   return (
     <ModeContext.Provider value={{
       modeId, config, currentView, activeTab, selectedKundeId,

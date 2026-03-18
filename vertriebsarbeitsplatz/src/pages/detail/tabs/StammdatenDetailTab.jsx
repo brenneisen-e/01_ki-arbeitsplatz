@@ -278,7 +278,7 @@ export default function StammdatenDetailTab({ kunde }) {
       </div>
 
       {/* Eigene Produkte */}
-      <Card>
+      <Card hover={false}>
         <h3 className="font-semibold text-slate-800 mb-4">
           {t('eigeneProdukte')} ({adaptedProdukte.length} {modeId === 'banking' ? t('produkteLabel') : t('vertraege')})
         </h3>
@@ -310,7 +310,7 @@ export default function StammdatenDetailTab({ kunde }) {
       </Card>
 
       {/* Fremdprodukte */}
-      <Card>
+      <Card hover={false}>
         <h3 className="font-semibold text-slate-800 mb-4">
           {t('fremdprodukte')} ({kunde.fremdProdukte?.length || 0} {t('produkteLabel')})
         </h3>

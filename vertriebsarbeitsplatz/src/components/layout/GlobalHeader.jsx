@@ -100,7 +100,13 @@ export default function GlobalHeader({ kundeInfo }) {
                   )}
                   <div>
                     <div className="text-white text-sm font-medium">
-                      {lang === 'en' && config.beraterTitelEn ? config.beraterTitelEn : config.beraterTitel}: {displayName}
+                      {(() => {
+                        if (lang === 'en' && config.beraterTitelEn) return config.beraterTitelEn;
+                        const gender = localStorage.getItem('kia_user_gender');
+                        if (gender === 'm' && config.beraterTitelM) return config.beraterTitelM;
+                        if (gender === 'w' && config.beraterTitelW) return config.beraterTitelW;
+                        return config.beraterTitel;
+                      })()}: {displayName}
                     </div>
                     <div className="text-white/60 text-xs">
                       {config.beraterId} | {t('aktiv')}

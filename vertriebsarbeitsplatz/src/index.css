@@ -192,13 +192,11 @@
 .card-base, .card-passthrough {
   contain: layout paint;
 }
-/* Jede Row auch containen → Row A Hover invalidiert nicht Row B Paint */
-.row-hover {
-  contain: layout paint;
-  transition: background-color 80ms ease;
-}
+/* KPI-Karten: will-change hinted den Browser, eigene Compositing Layer
+   vorzubereiten → Hover-Repaint wird auf GPU ausgelagert. Nur auf
+   card-hover (4 KPI-Karten), NICHT auf row-hover (30+ Rows → zu viel). */
 .card-hover {
-  transition: background-color 80ms ease, border-color 80ms ease;
+  will-change: background-color;
 }
 
 /* Kacheln mit Zeilen: NUR rows + buttons bekommen pointer-events */

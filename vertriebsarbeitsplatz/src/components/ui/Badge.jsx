@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { clsx } from 'clsx';
 
 const PRIO_STYLES = {
@@ -43,15 +44,15 @@ const STATUS_STYLES = {
   storniert: 'bg-red-50 text-red-600',
 };
 
-export function PrioBadge({ prioritaet }) {
+export const PrioBadge = memo(function PrioBadge({ prioritaet }) {
   return (
     <span className={clsx('rh-badge inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium border', PRIO_STYLES[prioritaet] || PRIO_STYLES.niedrig)}>
       {PRIO_LABELS[prioritaet] || prioritaet.charAt(0).toUpperCase() + prioritaet.slice(1)}
     </span>
   );
-}
+});
 
-export function QuellenBadge({ quelle }) {
+export const QuellenBadge = memo(function QuellenBadge({ quelle }) {
   const label = {
     finanztransaktion: 'FinTx',
     bestand: 'Best.',
@@ -65,20 +66,20 @@ export function QuellenBadge({ quelle }) {
       {label[quelle] || quelle}
     </span>
   );
-}
+});
 
-export function SparteBadge({ sparte }) {
+export const SparteBadge = memo(function SparteBadge({ sparte }) {
   return (
     <span className={clsx('rh-badge inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium', SPARTEN_STYLES[sparte] || 'bg-gray-100 text-gray-600')}>
       {sparte.charAt(0).toUpperCase() + sparte.slice(1)}
     </span>
   );
-}
+});
 
-export function StatusBadge({ status }) {
+export const StatusBadge = memo(function StatusBadge({ status }) {
   return (
     <span className={clsx('rh-badge inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium', STATUS_STYLES[status] || 'bg-gray-100 text-gray-600')}>
       {status === 'optimierbar' ? '\u26a0 Optim.' : status.charAt(0).toUpperCase() + status.slice(1)}
     </span>
   );
-}
+});

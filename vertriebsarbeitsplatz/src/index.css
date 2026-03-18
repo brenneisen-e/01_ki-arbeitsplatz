@@ -192,6 +192,14 @@
 .card-base, .card-passthrough {
   contain: layout paint;
 }
+/* Jede Row auch containen → Row A Hover invalidiert nicht Row B Paint */
+.row-hover {
+  contain: layout paint;
+  transition: background-color 80ms ease;
+}
+.card-hover {
+  transition: background-color 80ms ease, border-color 80ms ease;
+}
 
 /* Kacheln mit Zeilen: NUR rows + buttons bekommen pointer-events */
 .card-passthrough {
@@ -217,10 +225,20 @@
   background-color: var(--mode-primary);
 }
 
-/* Text weiß bei Hover (*, nicht nur span/div) */
-.card-hover:hover *,
-.row-hover:hover * {
-  color: white !important;
+/* Text weiß bei Hover – OHNE * Wildcard-Selektor.
+   * matched JEDEN Descendant (~20 pro Row × 8 Rows = 160 Checks).
+   Stattdessen: color auf dem Parent + Typ-Selektoren (div, span)
+   für Kinder mit hartkodiertem Tailwind text-*. Typ-Selektoren
+   sind O(1) in Chromes Style-Engine (Tagname-HashMap). */
+.card-hover:hover,
+.row-hover:hover {
+  color: white;
+}
+.card-hover:hover div,
+.card-hover:hover span,
+.row-hover:hover div,
+.row-hover:hover span {
+  color: inherit !important;
 }
 
 /* Badges + Icon-Box */

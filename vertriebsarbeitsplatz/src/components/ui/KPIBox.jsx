@@ -1,5 +1,5 @@
 import * as LucideIcons from 'lucide-react';
-import { useEffect, useState, useMemo, useRef } from 'react';
+import { useState, useMemo } from 'react';
 
 import { getLang } from '../../utils/langHelper';
 
@@ -105,30 +105,11 @@ function ExpandedChart({ data, format, label, onClose }) {
 }
 
 export default function KPIBox({ icon, label, wert, format = 'num', trend, delay = 0 }) {
-  const [displayed, setDisplayed] = useState(0);
   const [expanded, setExpanded] = useState(false);
   const Icon = LucideIcons[icon] || LucideIcons.BarChart3;
   const isPositive = trend >= 0;
 
   const monthlyData = useMemo(() => generateMonthlyData(wert, trend || 0), [wert, trend]);
-
-  const rafRef = useRef(0);
-  useEffect(() => {
-    const duration = 600;
-    let start = 0;
-    function tick(ts) {
-      if (!start) start = ts;
-      const elapsed = ts - start;
-      const progress = Math.min(elapsed / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      setDisplayed(wert * eased);
-      if (progress < 1) {
-        rafRef.current = requestAnimationFrame(tick);
-      }
-    }
-    rafRef.current = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(rafRef.current);
-  }, [wert]);
 
   return (
     <>
@@ -138,7 +119,7 @@ export default function KPIBox({ icon, label, wert, format = 'num', trend, delay
         onClick={() => setExpanded(true)}
       >
         <div className="flex items-center justify-between mb-3">
-          <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-slate-100">
+          <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-slate-100 rh-badge">
             <Icon size={18} style={{ color: 'var(--mode-primary-light)' }} strokeWidth={1.75} />
           </div>
           {trend !== undefined && (
@@ -147,8 +128,11 @@ export default function KPIBox({ icon, label, wert, format = 'num', trend, delay
             </span>
           )}
         </div>
-        <div className="font-mono text-2xl font-bold text-slate-900 mb-1 truncate" style={{ fontFeatureSettings: "'tnum'" }}>
-          {formatValue(format === 'pct' ? displayed : Math.round(displayed), format)}
+        <div
+          className="font-mono text-2xl font-bold text-slate-900 mb-1 truncate kpi-value"
+          style={{ fontFeatureSettings: "'tnum'", animationDelay: `${delay}ms` }}
+        >
+          {formatValue(format === 'pct' ? wert : Math.round(wert), format)}
         </div>
         <div className="flex items-center justify-between">
           <div className="text-sm text-slate-500">{label}</div>

@@ -234,14 +234,26 @@
   color: white;
 }
 
-/* Badges + Icon-Box: Gezielter Descendant-Selektor (nur 2-3 pro Row).
-   Badges haben unterschiedliche Tailwind-Backgrounds → nicht via Custom Property lösbar.
-   Aber: NUR .rh-badge targeted, NICHT alle div/span → minimal teuer. */
+/* Fallback für Komponenten ohne var(--_fg): Descendant-Selektoren.
+   Auf der Übersichtsseite (hot path mit 30+ Rows) greifen die inline
+   styles var(--_fg) VOR diesen Regeln → kein Perf-Overhead dort.
+   Auf Detail-Seiten (3-5 Cards) ist der Overhead vernachlässigbar. */
+.card-hover:hover div,
+.card-hover:hover span,
+.card-hover:hover h4,
+.card-hover:hover p,
+.row-hover:hover div,
+.row-hover:hover span,
+.row-hover:hover h4,
+.row-hover:hover p {
+  color: inherit !important;
+}
+
+/* Badges + Icon-Box */
 .row-hover:hover .rh-badge,
 .card-hover:hover .rh-badge {
   background-color: rgba(255,255,255,0.2) !important;
   border-color: rgba(255,255,255,0.35) !important;
-  color: white !important;
 }
 .card-hover:hover .kpi-icon-box {
   background-color: rgba(255,255,255,0.25) !important;

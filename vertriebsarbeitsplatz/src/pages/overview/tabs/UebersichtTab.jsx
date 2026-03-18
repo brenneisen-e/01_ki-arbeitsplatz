@@ -237,17 +237,17 @@ export default function UebersichtTab() {
                   <div className="flex items-center gap-2.5 min-w-0">
                     {k.istNeu ? (
                       <div className="w-[34px] h-[34px] rounded-full bg-slate-100 flex items-center justify-center shrink-0">
-                        <Sparkles size={16} className="text-slate-400" />
+                        <Sparkles size={16} style={{ color: 'var(--_fg, #94a3b8)' }} />
                       </div>
                     ) : (
                       <Avatar name={tn(k.name)} foto={getKundeFoto(k.id)} size={34} />
                     )}
                     <div className="min-w-0">
-                      <div className="text-sm font-semibold text-slate-700 truncate">{tn(k.name)}</div>
-                      <div className="text-xs text-slate-400 truncate">{k.mandat ? k.mandat.produkt : k.mandatsTyp || '–'}</div>
+                      <div className="text-sm font-semibold truncate" style={{ color: 'var(--_fg, #334155)' }}>{tn(k.name)}</div>
+                      <div className="text-xs truncate" style={{ color: 'var(--_fg, #94a3b8)' }}>{k.mandat ? k.mandat.produkt : k.mandatsTyp || '–'}</div>
                     </div>
                   </div>
-                  <div className="text-right text-sm font-mono font-medium text-slate-700 flex items-center justify-end gap-2">
+                  <div className="text-right text-sm font-mono font-medium flex items-center justify-end gap-2" style={{ color: 'var(--_fg, #334155)' }}>
                     {k.id === 'VV00001' && VV_LEADS.some(l => l.isNeuerLead && l.referenzMandant === 'VV00001') && (
                       <span className="rh-badge inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500 text-white whitespace-nowrap">
                         {t('neuerLead')}
@@ -255,7 +255,7 @@ export default function UebersichtTab() {
                     )}
                     {k.aum ? `${(k.aum / 1000000).toFixed(1)}M` : '–'}
                   </div>
-                  <div className="text-right text-xs text-slate-500">
+                  <div className="text-right text-xs" style={{ color: 'var(--_fg, #64748b)' }}>
                     {k.letzteKomm ? new Date(k.letzteKomm.datum).toLocaleDateString(lang === 'en' ? 'en-GB' : 'de-DE', { day: '2-digit', month: '2-digit', year: '2-digit' }) : '–'}
                   </div>
                   <div className="text-center">
@@ -264,7 +264,7 @@ export default function UebersichtTab() {
                         {k.leadsCount}
                       </span>
                     ) : (
-                      <span className="text-slate-300 text-xs">–</span>
+                      <span className="text-xs" style={{ color: 'var(--_fg, #cbd5e1)' }}>–</span>
                     )}
                   </div>
                   <div className="text-center">
@@ -328,7 +328,7 @@ export default function UebersichtTab() {
                     <div className="flex items-center gap-2 min-w-0">
                       <Avatar name={kp.kundeName} foto={getKundeFoto(kp.kundeId)} size={30} />
                       <div className="min-w-0">
-                        <div className="text-sm font-semibold text-slate-700 truncate flex items-center gap-1.5">
+                        <div className="text-sm font-semibold truncate flex items-center gap-1.5" style={{ color: 'var(--_fg, #334155)' }}>
                           {tn(kp.kundeName)}
                           <PrioBadge prioritaet={topPrio} />
                         </div>
@@ -343,14 +343,14 @@ export default function UebersichtTab() {
                       )}
                     </div>
                     <div className="text-right">
-                      <span className="inline-flex items-center gap-0.5 text-sm font-semibold" style={{ color: 'var(--mode-primary-light)' }}>
+                      <span className="inline-flex items-center gap-0.5 text-sm font-semibold" style={{ color: 'var(--_fg, var(--mode-primary-light))' }}>
                         {kp.potentiale.length}
                       </span>
                     </div>
-                    <div className="text-right text-sm font-mono font-medium text-slate-700">
+                    <div className="text-right text-sm font-mono font-medium" style={{ color: 'var(--_fg, #334155)' }}>
                       {kp.gesamtPraemie > 0 ? `${kp.gesamtPraemie.toLocaleString(lang === 'en' ? 'en-US' : 'de-DE')}€` : '-'}
                     </div>
-                    <div className="text-right text-sm font-mono font-medium" style={{ color: 'var(--mode-primary-light)' }}>
+                    <div className="text-right text-sm font-mono font-medium" style={{ color: 'var(--_fg, var(--mode-primary-light))' }}>
                       {kp.gesamtProvision > 0 ? `${kp.gesamtProvision.toLocaleString(lang === 'en' ? 'en-US' : 'de-DE')}€` : '-'}
                     </div>
                   </div>
@@ -384,9 +384,9 @@ export default function UebersichtTab() {
                 onClick={() => a.kundeId && navigateTo('detail', { kundeId: a.kundeId })}>
                 <div className="flex items-center gap-3">
                   <input type="checkbox" className="w-4 h-4 rounded border-slate-300" readOnly />
-                  <span className="text-sm text-slate-700">{a.text}</span>
+                  <span className="text-sm" style={{ color: 'var(--_fg, #334155)' }}>{a.text}</span>
                 </div>
-                <span className="text-xs text-slate-400">{a.faellig}</span>
+                <span className="text-xs" style={{ color: 'var(--_fg, #94a3b8)' }}>{a.faellig}</span>
               </div>
             ))}
           </div>
@@ -411,13 +411,13 @@ export default function UebersichtTab() {
                 <div className="flex items-center gap-3">
                   <SparteBadge sparte={a.sparte} />
                   <div>
-                    <span className="text-sm font-medium text-slate-700">{a.kunde}</span>
-                    <div className="text-xs text-slate-500">{a.produkt}</div>
+                    <span className="text-sm font-medium" style={{ color: 'var(--_fg, #334155)' }}>{a.kunde}</span>
+                    <div className="text-xs" style={{ color: 'var(--_fg, #64748b)' }}>{a.produkt}</div>
                   </div>
                 </div>
                 <div className="text-right">
-                  <div className="text-sm font-mono font-medium text-slate-800">{formatEur(a.betrag)}</div>
-                  <div className="text-xs text-slate-400">{a.datum}</div>
+                  <div className="text-sm font-mono font-medium" style={{ color: 'var(--_fg, #1e293b)' }}>{formatEur(a.betrag)}</div>
+                  <div className="text-xs" style={{ color: 'var(--_fg, #94a3b8)' }}>{a.datum}</div>
                 </div>
               </div>
             ))}
@@ -453,13 +453,13 @@ export default function UebersichtTab() {
                   onClick={() => navigateTo('detail', { kundeId: termin.kundeId })}
                 >
                   <div className="text-center shrink-0 w-14">
-                    <div className={`text-[10px] font-semibold uppercase ${isToday ? 'text-red-500' : 'text-slate-400'}`}>{dayLabel}</div>
-                    <div className="text-sm font-bold text-slate-700">{termin.zeit}</div>
+                    <div className="text-[10px] font-semibold uppercase" style={{ color: isToday ? 'var(--_fg, #ef4444)' : 'var(--_fg, #94a3b8)' }}>{dayLabel}</div>
+                    <div className="text-sm font-bold" style={{ color: 'var(--_fg, #334155)' }}>{termin.zeit}</div>
                   </div>
                   <Avatar name={termin.kunde} foto={termin.foto} size={44} />
                   <div className="flex-1 min-w-0">
-                    <div className="text-sm font-semibold text-slate-700 truncate">{termin.kunde}</div>
-                    <div className="text-xs text-slate-500 truncate">{termin.betreff}</div>
+                    <div className="text-sm font-semibold truncate" style={{ color: 'var(--_fg, #334155)' }}>{termin.kunde}</div>
+                    <div className="text-xs truncate" style={{ color: 'var(--_fg, #64748b)' }}>{termin.betreff}</div>
                   </div>
                 </div>
               );
@@ -481,8 +481,8 @@ export default function UebersichtTab() {
                   key={i}
                   className="flex flex-col items-center gap-2 p-4 rounded-xl border border-slate-200 row-hover cursor-pointer text-center"
                 >
-                  <Icon size={24} style={{ color: item.color }} strokeWidth={1.5} />
-                  <span className="text-xs font-medium text-slate-600">{t(item.labelKey)}</span>
+                  <Icon size={24} style={{ color: 'var(--_fg, ' + item.color + ')' }} strokeWidth={1.5} />
+                  <span className="text-xs font-medium" style={{ color: 'var(--_fg, #475569)' }}>{t(item.labelKey)}</span>
                 </button>
               );
             })}
@@ -501,13 +501,13 @@ export default function UebersichtTab() {
             {abrechnungen.map((a, i) => (
               <div key={i} className="flex items-center justify-between py-2 px-2 rounded-lg row-hover cursor-pointer">
                 <div className="flex items-center gap-3">
-                  <Download size={16} className="text-slate-400" />
+                  <Download size={16} style={{ color: 'var(--_fg, #94a3b8)' }} />
                   <div>
-                    <div className="text-sm font-medium text-slate-700">{a.monat}</div>
-                    <div className="text-xs text-slate-400">{a.datum}</div>
+                    <div className="text-sm font-medium" style={{ color: 'var(--_fg, #334155)' }}>{a.monat}</div>
+                    <div className="text-xs" style={{ color: 'var(--_fg, #94a3b8)' }}>{a.datum}</div>
                   </div>
                 </div>
-                <span className="text-sm font-mono font-semibold text-slate-800">{formatEur(a.betrag)}</span>
+                <span className="text-sm font-mono font-semibold" style={{ color: 'var(--_fg, #1e293b)' }}>{formatEur(a.betrag)}</span>
               </div>
             ))}
           </div>
@@ -535,8 +535,8 @@ export default function UebersichtTab() {
               >
                 <Avatar name={g.name} foto={g.foto} size={40} />
                 <div className="flex-1 min-w-0">
-                  <div className="text-sm font-medium text-slate-700">{tn(g.name)}</div>
-                  <div className="text-xs text-slate-400">{g.datum} · {t('wird')} {g.alter}</div>
+                  <div className="text-sm font-medium" style={{ color: 'var(--_fg, #334155)' }}>{tn(g.name)}</div>
+                  <div className="text-xs" style={{ color: 'var(--_fg, #94a3b8)' }}>{g.datum} · {t('wird')} {g.alter}</div>
                 </div>
               </div>
             ))}

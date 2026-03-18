@@ -3,8 +3,10 @@ import { clsx } from 'clsx';
 import {
   ArrowLeft, ChevronDown, LayoutDashboard, List,
   TrendingUp, TrendingDown, Maximize2, X, Download, Calendar, BarChart3 as BarChartIcon, Activity,
+  Briefcase, AlertTriangle, Target, Users, Landmark, PiggyBank, Wallet,
 } from 'lucide-react';
-import * as LucideIcons from 'lucide-react';
+
+const COCKPIT_ICONS = { Briefcase, TrendingUp, AlertTriangle, Target, Users, Landmark, PiggyBank, Wallet, BarChart3: BarChartIcon, Activity };
 import { AreaChart, Area, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import { useMode } from '../../hooks/useMode';
 import GermanyMap from './GermanyMap';
@@ -43,7 +45,7 @@ function KPICard({ kpi, data, onExpand }) {
     ? data.reduce((s, m) => s + (m[kpi.id] || 0), 0) / (data.length || 1)
     : data.reduce((s, m) => s + (m[kpi.id] || 0), 0);
 
-  const Icon = LucideIcons[kpi.icon] || LucideIcons.BarChart3;
+  const Icon = COCKPIT_ICONS[kpi.icon] || BarChartIcon;
   const chartColor = '#2563eb';
 
   const distData = [
@@ -150,7 +152,7 @@ function KPICard({ kpi, data, onExpand }) {
 function FullscreenModal({ kpi, data, onClose }) {
   const [chartView, setChartView] = useState('month');
   if (!kpi) return null;
-  const Icon = LucideIcons[kpi.icon] || LucideIcons.BarChart3;
+  const Icon = COCKPIT_ICONS[kpi.icon] || BarChartIcon;
 
   return (
     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center" onClick={onClose}>

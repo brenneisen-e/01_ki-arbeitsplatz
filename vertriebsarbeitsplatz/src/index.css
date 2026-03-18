@@ -194,27 +194,26 @@
   pointer-events: auto;
 }
 
-/* Kinder in hover-baren Elementen erben IMMER die Farbe vom Parent.
-   So muss bei Hover nur 1 Element restyled werden statt 15+. */
-.row-hover span, .row-hover div, .row-hover a, .row-hover td, .row-hover svg,
-.card-hover span, .card-hover div, .card-hover a, .card-hover svg {
-  color: inherit !important;
-}
-
-/* Card Hover: nur 2 Properties auf dem Parent */
+/* Card Hover */
 .card-hover:hover {
   background-color: var(--mode-primary);
   border-color: transparent;
   color: white;
 }
+.card-hover:hover span {
+  color: inherit !important;
+}
 .card-hover:hover .kpi-icon-box {
   background-color: rgba(255,255,255,0.25);
 }
 
-/* Row Hover: nur 2 Properties auf dem Parent */
+/* Row Hover: nur span (deckt 90% der Texte ab, 1 Typ statt 5) */
 .row-hover:hover {
   background-color: var(--mode-primary);
   color: white;
+}
+.row-hover:hover span {
+  color: inherit !important;
 }
 .row-hover:hover .rh-badge {
   background-color: rgba(255,255,255,0.2);

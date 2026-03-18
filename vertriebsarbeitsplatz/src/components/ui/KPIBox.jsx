@@ -142,7 +142,7 @@ export default function KPIBox({ icon, label, wert, format = 'num', trend, delay
             <Icon size={18} style={{ color: 'var(--mode-primary-light)' }} strokeWidth={1.75} />
           </div>
           {trend !== undefined && (
-            <span className={clsx('text-xs font-medium', isPositive ? 'text-emerald-600' : 'text-red-500')}>
+            <span className={`text-xs font-medium ${isPositive ? 'text-emerald-600' : 'text-red-500'}`}>
               {isPositive ? '\u2191' : '\u2193'} {Math.abs(trend).toFixed(1)}%
             </span>
           )}

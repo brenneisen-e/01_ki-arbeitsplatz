@@ -186,55 +186,48 @@
   background-color: #ffffff;
 }
 
-/* Kacheln mit Zeilen: pointer-events durchreichen, nicht selbst reagieren */
+/* Kacheln mit Zeilen: NUR rows + buttons bekommen pointer-events.
+   Alles dazwischen (Header, Container) ist unsichtbar für Maus.
+   So fliegt die Maus direkt von Zeile zu Zeile ohne Zwischenstopps. */
 .card-passthrough {
   pointer-events: none;
 }
-.card-passthrough > * {
+.card-passthrough .row-hover,
+.card-passthrough button,
+.card-passthrough a,
+.card-passthrough input,
+.card-passthrough [onclick] {
   pointer-events: auto;
 }
 
-/* === CSS Custom Property Hover (zero descendant matching on hover) ===
-   Kinder referenzieren var() permanent → bei Hover ändert sich NUR
-   die Variable auf dem Parent → Browser propagiert via Inheritance.
-   Kein Descendant-Selektor-Matching bei Hover = Echtzeit. */
+/* === CSS Custom Property Hover ===
+   Text: --_fg Variable auf Parent, Kinder binden einmalig via var().
+   Bei Hover ändert sich NUR --_fg → O(1) statt O(n).
+   Badges: wenige pro Zeile, normaler Hover-Selektor akzeptabel. */
 
-.card-hover {
-  --_fg: var(--text-primary);
-  --_fg2: var(--text-secondary);
-  --_badge-bg: initial;
-  --_badge-border: initial;
-  --_icon-bg: initial;
-}
+.card-hover, .row-hover { --_fg: inherit; }
+
 .card-hover:hover {
   background-color: var(--mode-primary);
   border-color: transparent;
   --_fg: white;
-  --_fg2: rgba(255,255,255,0.7);
-  --_badge-bg: rgba(255,255,255,0.2);
-  --_badge-border: rgba(255,255,255,0.35);
-  --_icon-bg: rgba(255,255,255,0.25);
-}
-
-.row-hover {
-  --_fg: var(--text-primary);
-  --_fg2: var(--text-secondary);
-  --_badge-bg: initial;
-  --_badge-border: initial;
 }
 .row-hover:hover {
   background-color: var(--mode-primary);
   --_fg: white;
-  --_fg2: rgba(255,255,255,0.7);
-  --_badge-bg: rgba(255,255,255,0.2);
-  --_badge-border: rgba(255,255,255,0.35);
 }
 
-/* Einmalig: Kinder binden an Custom Properties (nicht bei Hover!) */
-.row-hover, .card-hover { color: var(--_fg); }
-.row-hover span, .card-hover span { color: var(--_fg) !important; }
-.row-hover .rh-badge, .card-hover .rh-badge {
-  background-color: var(--_badge-bg);
-  border-color: var(--_badge-border);
+/* Text: einmalig an --_fg binden (KEIN Hover-Selektor) */
+.row-hover span, .row-hover div,
+.card-hover span, .card-hover div {
+  color: var(--_fg) !important;
 }
-.card-hover .kpi-icon-box { background-color: var(--_icon-bg); }
+
+/* Badges + Icon-Box: nur 2-3 pro Zeile, Hover-Selektor OK */
+.row-hover:hover .rh-badge, .card-hover:hover .rh-badge {
+  background-color: rgba(255,255,255,0.2) !important;
+  border-color: rgba(255,255,255,0.35) !important;
+}
+.card-hover:hover .kpi-icon-box {
+  background-color: rgba(255,255,255,0.25) !important;
+}

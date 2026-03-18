@@ -1,7 +1,8 @@
+import { memo } from 'react';
 import KPIBox from './KPIBox';
 import useTranslation from '../../i18n/useTranslation';
 
-export default function KPIGrid({ kpiConfig, kpiValues }) {
+export default memo(function KPIGrid({ kpiConfig, kpiValues }) {
   const { lang } = useTranslation();
   return (
     <div className="grid grid-cols-4 gap-4 mb-6">
@@ -21,4 +22,4 @@ export default function KPIGrid({ kpiConfig, kpiValues }) {
       })}
     </div>
   );
-}
+});

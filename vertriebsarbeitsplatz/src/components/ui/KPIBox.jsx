@@ -107,7 +107,6 @@ function ExpandedChart({ data, format, label, onClose }) {
 
 export default function KPIBox({ icon, label, wert, format = 'num', trend, delay = 0 }) {
   const [displayed, setDisplayed] = useState(0);
-  const [isHovered, setIsHovered] = useState(false);
   const [expanded, setExpanded] = useState(false);
   const Icon = LucideIcons[icon] || LucideIcons.BarChart3;
   const isPositive = trend >= 0;
@@ -135,18 +134,8 @@ export default function KPIBox({ icon, label, wert, format = 'num', trend, delay
   return (
     <>
       <div
-        className={clsx(
-          'rounded-xl border p-5 animate-fade-in-up transition-all duration-200 cursor-pointer',
-          'hover:-translate-y-px',
-          isHovered ? 'border-transparent shadow-md' : 'border-slate-200',
-        )}
-        style={{
-          boxShadow: isHovered ? undefined : 'var(--card-shadow)',
-          backgroundColor: isHovered ? 'var(--mode-pastel)' : '#ffffff',
-          animationDelay: `${delay}ms`,
-        }}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
+        className="rounded-xl border border-slate-200 p-5 animate-fade-in-up cursor-pointer card-base card-hover"
+        style={{ animationDelay: `${delay}ms` }}
         onClick={() => setExpanded(true)}
       >
         <div className="flex items-center justify-between mb-3">

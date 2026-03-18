@@ -11,7 +11,9 @@ function CustomTooltip({ active, payload, label }) {
   );
 }
 
-export default function LineChartComponent({ data, dataKey = 'value', xKey = 'name', height = 250, color }) {
+import { memo } from 'react';
+
+export default memo(function LineChartComponent({ data, dataKey = 'value', xKey = 'name', height = 250, color }) {
   const strokeColor = color || 'var(--mode-primary-light)';
   const gradientId = `area-gradient-${dataKey}`;
 
@@ -41,4 +43,4 @@ export default function LineChartComponent({ data, dataKey = 'value', xKey = 'na
       </AreaChart>
     </ResponsiveContainer>
   );
-}
+});

@@ -62,7 +62,7 @@ export default function DetailPage() {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      <GlobalHeader kundeInfo={{ name: tn(kunde.name), id: kunde.id, beruf: kunde.beruf }} />
+      <GlobalHeader kundeInfo={{ name: tn(kunde.name), id: kunde.id, beruf: kunde.beruf }} tabBadges={{ produktabschluss: (kunde.produktabschluss || []).filter(a => a.status === 'abgebrochen').length || undefined }} />
       <div className="px-6 py-6 animate-fade-in-up">
         <Suspense fallback={TabFallback}>
           <TabComponent kunde={kunde} />

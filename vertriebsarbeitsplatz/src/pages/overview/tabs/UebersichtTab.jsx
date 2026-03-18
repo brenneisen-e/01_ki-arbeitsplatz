@@ -143,9 +143,13 @@ export default function UebersichtTab() {
     if (modeId === 'vermoegensverwaltung') return [];
     const allPots = getAllPotentiale(modeId);
     const grouped = {};
+    const kundenMap = {};
+    (KUNDEN_BY_MODE[modeId] || []).forEach(k => { kundenMap[k.id] = k; });
     allPots.forEach(p => {
       if (!grouped[p.kundeId]) {
-        grouped[p.kundeId] = { kundeId: p.kundeId, kundeName: p.kundeName, potentiale: [], gesamtPraemie: 0, gesamtProvision: 0 };
+        const k = kundenMap[p.kundeId];
+        const abgebrochen = (k?.produktabschluss || []).filter(a => a.status === 'abgebrochen').length;
+        grouped[p.kundeId] = { kundeId: p.kundeId, kundeName: p.kundeName, nps: k?.nps, abgebrochenCount: abgebrochen, potentiale: [], gesamtPraemie: 0, gesamtProvision: 0 };
       }
       grouped[p.kundeId].potentiale.push(p);
       if (p.volumen > 0) {
@@ -306,8 +310,10 @@ export default function UebersichtTab() {
               <span className="text-sm text-slate-400">{t('kundenPotenzialeSummary', { kunden: kundenPotentiale.length, potenziale: getAllPotentiale(modeId).length })}</span>
             </div>
             <div className="space-y-0">
-              <div className="grid py-1.5 px-3 items-center text-[10px] uppercase text-slate-400 font-semibold" style={{ gridTemplateColumns: '1fr 1fr 80px 100px 100px' }}>
+              <div className="grid py-1.5 px-3 items-center text-[10px] uppercase text-slate-400 font-semibold" style={{ gridTemplateColumns: '1fr 50px 80px 1fr 80px 100px 100px' }}>
                 <span>{t('kunde')}</span>
+                <span className="text-center">NPS</span>
+                <span className="text-center">Leads</span>
                 <span>{t('topPotenziale')}</span>
                 <span className="text-right">{t('anzahl')}</span>
                 <span className="text-right">{modeId === 'banking' ? t('volumen') : t('praemie')}</span>
@@ -322,7 +328,7 @@ export default function UebersichtTab() {
                   <div
                     key={kp.kundeId}
                     className="grid py-2.5 px-3 rounded-lg row-hover cursor-pointer items-center"
-                    style={{ gridTemplateColumns: '1fr 1fr 80px 100px 100px' }}
+                    style={{ gridTemplateColumns: '1fr 50px 80px 1fr 80px 100px 100px' }}
                     onClick={() => navigateTo('detail', { kundeId: kp.kundeId, tab: 'impulse' })}
                   >
                     <div className="flex items-center gap-2 min-w-0">
@@ -333,6 +339,19 @@ export default function UebersichtTab() {
                           <PrioBadge prioritaet={topPrio} />
                         </div>
                       </div>
+                    </div>
+                    <div className="text-center">
+                      <span className={`text-xs font-bold ${kp.nps >= 9 ? 'text-emerald-600' : kp.nps >= 7 ? 'text-slate-600' : 'text-red-500'}`} style={{ color: kp.nps != null ? undefined : 'var(--_fg, #94a3b8)' }}>
+                        {kp.nps != null ? kp.nps : '-'}
+                      </span>
+                    </div>
+                    <div className="text-center">
+                      <span className="inline-flex items-center gap-1 text-xs font-semibold" style={{ color: 'var(--_fg, #334155)' }}>
+                        {kp.potentiale.length}
+                        {kp.abgebrochenCount > 0 && (
+                          <span className="rh-badge text-[9px] px-1.5 py-0.5 rounded-full bg-red-500 text-white font-bold">{kp.abgebrochenCount} Neu</span>
+                        )}
+                      </span>
                     </div>
                     <div className="flex flex-wrap gap-1 min-w-0">
                       {kp.potentiale.slice(0, 3).map((p, pi) => (

@@ -163,7 +163,7 @@ export default function VertraegeTab({ kunde }) {
         </div>
       </Card>
 
-      <Card>
+      <Card hover={false}>
         <h3 className="font-semibold text-slate-800 mb-4">{t('vertragszusammenfassung')}</h3>
         <div className="grid grid-cols-3 gap-6">
           <SummaryItem label={sumLabel} value={formatEur(produkte.reduce((s, p) => s + (p.praemie || 0), 0))} />

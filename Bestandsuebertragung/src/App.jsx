@@ -10,6 +10,8 @@ import Dashboard from './pages/Dashboard'
 import Vorgaenge from './pages/Vorgaenge'
 import Makler from './pages/Makler'
 import Emails from './pages/Emails'
+import AIUploadPage from './pages/AIUploadPage'
+import VorlagenPage from './pages/VorlagenPage'
 import StaticPage from './pages/StaticPage'
 import * as Storage from './utils/storage'
 import { loadDemoData, downloadDemoExportJSON } from './utils/demo-data'
@@ -128,7 +130,9 @@ function AppContent() {
         {activeView === 'vorgaenge' && <Vorgaenge onOpenCase={openCase} />}
         {activeView === 'makler' && <Makler onOpenMakler={openMakler} />}
         {activeView === 'emails' && <Emails onOpenCase={openCase} />}
-        {['ai-upload', 'architektur', 'vorlagen', 'prozess', 'projektplan'].includes(activeView) && (
+        {activeView === 'ai-upload' && <AIUploadPage />}
+        {activeView === 'vorlagen' && <VorlagenPage />}
+        {['architektur', 'prozess', 'projektplan'].includes(activeView) && (
           <StaticPage pageId={activeView} />
         )}
       </main>

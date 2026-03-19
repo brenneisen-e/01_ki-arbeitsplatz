@@ -288,3 +288,12 @@
 .card-hover:hover path[fill="#1a365d"] {
   fill: rgba(255,255,255,0.9) !important;
 }
+/* Legend dots with primary color → white outline so they stay visible on dark hover */
+.card-hover:hover .legend-dot[style*="#1a365d"] {
+  background-color: rgba(255,255,255,0.9) !important;
+}
+/* Drift/diff badges → transparent bg with white text on dark hover */
+.card-hover:hover .drift-badge {
+  background-color: rgba(255,255,255,0.15) !important;
+  color: rgba(255,255,255,0.85) !important;
+}

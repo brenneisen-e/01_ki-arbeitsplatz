@@ -399,7 +399,7 @@ function KPI({ icon: Icon, label, value, sub, color }) {
     <Card>
       <div className="flex items-center gap-3">
         <div className="p-2 rounded-lg bg-slate-100 kpi-icon-box">
-          <Icon size={20} className="text-slate-500" />
+          <Icon size={20} style={{ color: 'var(--_fg, var(--mode-primary-light))' }} />
         </div>
         <div>
           <div className={`text-2xl font-bold ${color || 'text-slate-800'}`}>{value}</div>

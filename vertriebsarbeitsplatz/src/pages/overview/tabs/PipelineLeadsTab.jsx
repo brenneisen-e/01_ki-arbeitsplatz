@@ -269,7 +269,7 @@ function LeadRow({ lead, isExpanded, onToggle, t, tn, stadiumLabels, quellenLabe
   return (
     <>
       <tr
-        className="border-b border-slate-100 transition-colors cursor-pointer"
+        className="border-b border-slate-100 transition-colors cursor-pointer row-hover"
         style={hovered ? { backgroundColor: 'var(--mode-primary-light)', color: '#ffffff' } : undefined}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
@@ -287,7 +287,7 @@ function LeadRow({ lead, isExpanded, onToggle, t, tn, stadiumLabels, quellenLabe
               </span>
             )}
           </div>
-          {lead.beruf && <div className={`text-[10px] ${hovered ? 'text-white/70' : 'text-slate-400'}`}>{lead.beruf}</div>}
+          {lead.beruf && <div className={`text-[10px] ${hovered ? 'text-white/70' : 'text-slate-400'}`}>{getLeadField(lead, 'beruf', lang)}</div>}
         </td>
         <td className="py-2.5 pr-2">
           <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${

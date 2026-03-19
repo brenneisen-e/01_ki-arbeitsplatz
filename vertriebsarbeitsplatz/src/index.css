@@ -242,15 +242,19 @@
    Auf Detail-Seiten (3-5 Cards) ist der Overhead vernachlässigbar. */
 .card-hover:hover div,
 .card-hover:hover span,
+.card-hover:hover h2,
 .card-hover:hover h3,
 .card-hover:hover h4,
+.card-hover:hover h5,
 .card-hover:hover p,
 .card-hover:hover svg,
 .row-hover:hover td,
 .row-hover:hover div,
 .row-hover:hover span,
+.row-hover:hover h2,
 .row-hover:hover h3,
 .row-hover:hover h4,
+.row-hover:hover h5,
 .row-hover:hover p,
 .row-hover:hover svg {
   color: inherit !important;

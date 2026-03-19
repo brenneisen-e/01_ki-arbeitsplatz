@@ -50,21 +50,24 @@ export default function RevenueTab() {
           <h3 className="font-semibold text-slate-800 mb-4">{t('feeStruktur')}</h3>
           <DonutChart
             data={feeDonut}
-            height={200}
+            height={250}
             centerValue={formatEur(ytdTotal)}
             centerLabel={t('gesamt')}
             colors={FEE_COLORS}
           />
           <div className="mt-3 space-y-1.5">
-            {data.feeStruktur.map((f, i) => (
-              <div key={f.typ} className="flex items-center justify-between text-sm">
-                <div className="flex items-center gap-2">
-                  <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: FEE_COLORS[i] }} />
-                  <span className="text-slate-600">{f.typ}</span>
+            {data.feeStruktur.map((f, i) => {
+              const isFirstDark = i === 0;
+              return (
+                <div key={f.typ} className="flex items-center justify-between text-sm">
+                  <div className="flex items-center gap-2">
+                    <div className={`w-2.5 h-2.5 rounded-full ${isFirstDark ? 'border border-white/60' : ''}`} style={{ backgroundColor: isFirstDark ? '#ffffff' : FEE_COLORS[i] }} />
+                    <span className="text-slate-600">{f.typ}</span>
+                  </div>
+                  <span className="font-mono text-slate-700">{f.anteil}%</span>
                 </div>
-                <span className="font-mono text-slate-700">{f.anteil}%</span>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </Card>
       </div>

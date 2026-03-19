@@ -70,12 +70,12 @@ function ChartTooltip({ active, payload, label }) {
 // ─── KPI Box ──────────────────────────────────────────────────────────────────
 function KpiBox({ label, value, suffix = '%' }) {
   return (
-    <div className="bg-white border border-slate-200 rounded-xl p-4" style={{ boxShadow: 'var(--card-shadow)' }}>
+    <Card>
       <p className="text-xs text-slate-500 mb-1">{label}</p>
       <p className="font-mono font-semibold text-2xl text-[#1a365d]">
         {value == null ? '–' : `${typeof value === 'number' && value > 0 && suffix === '%' ? '+' : ''}${typeof value === 'string' ? value : fmtNum(value)}${suffix}`}
       </p>
-    </div>
+    </Card>
   );
 }
 
@@ -645,7 +645,7 @@ export default function PerformanceTab({ kunde }) {
       {/* ── 10. Footer: ESG, Kosten, Verlustschwelle ── */}
       <div className="grid grid-cols-3 gap-4">
         {/* ESG Score */}
-        <div className="bg-white border border-slate-200 rounded-xl p-4" style={{ boxShadow: 'var(--card-shadow)' }}>
+        <Card>
           <div className="flex items-center gap-1.5 mb-2">
             <Leaf className="w-3.5 h-3.5 text-emerald-500" />
             <p className="text-[10px] text-slate-400 uppercase tracking-wide">{t('esgScore')}</p>
@@ -666,10 +666,10 @@ export default function PerformanceTab({ kunde }) {
               }}
             />
           </div>
-        </div>
+        </Card>
 
         {/* Kosten */}
-        <div className="bg-white border border-slate-200 rounded-xl p-4" style={{ boxShadow: 'var(--card-shadow)' }}>
+        <Card>
           <p className="text-[10px] text-slate-400 uppercase tracking-wide mb-2">{t('kostenquoteAllIn')}</p>
           <div className="flex items-end gap-2">
             <span className="font-mono font-semibold text-2xl text-slate-800">{fmtNum(kosten?.quote, 2)}%</span>
@@ -678,10 +678,10 @@ export default function PerformanceTab({ kunde }) {
           {kosten?.betrag != null && (
             <p className="text-[10px] text-slate-400 mt-1">{formatEur(kosten.betrag)} ({kosten.jahr})</p>
           )}
-        </div>
+        </Card>
 
         {/* Verlustschwelle */}
-        <div className="bg-white border border-slate-200 rounded-xl p-4" style={{ boxShadow: 'var(--card-shadow)' }}>
+        <Card>
           <p className="text-[10px] text-slate-400 uppercase tracking-wide mb-2">{t('verlustschwelle')}</p>
           <div className="flex items-center gap-2">
             {vsRatio < 0.8 ? (
@@ -715,7 +715,7 @@ export default function PerformanceTab({ kunde }) {
               }}
             />
           </div>
-        </div>
+        </Card>
       </div>
     </div>
   );

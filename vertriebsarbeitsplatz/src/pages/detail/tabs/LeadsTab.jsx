@@ -314,7 +314,7 @@ function LeadRow({ lead, kunde, isExpanded, onToggle, t, stadiumLabels, quellenL
               </span>
             )}
           </div>
-          {lead.beruf && <div className={`text-[10px] ${hovered ? 'text-white/70' : 'text-slate-400'}`}>{lead.beruf}</div>}
+          {lead.beruf && <div className={`text-[10px] ${hovered ? 'text-white/70' : 'text-slate-400'}`}>{getLeadField(lead, 'beruf', lang)}</div>}
         </td>
         <td className="py-2.5 pr-2">
           <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${

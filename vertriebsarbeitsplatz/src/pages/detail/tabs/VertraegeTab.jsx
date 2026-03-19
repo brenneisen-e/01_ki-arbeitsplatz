@@ -131,7 +131,7 @@ export default function VertraegeTab({ kunde }) {
         <h3 className="font-semibold text-slate-800 mb-4">
           {t('eigeneProdukte')} ({produkte.length} {modeId === 'banking' ? t('produkteLabel') : t('vertraege')})
         </h3>
-        <div className="bg-white rounded-xl border border-slate-200 overflow-hidden" style={{ boxShadow: 'var(--card-shadow)' }}>
+        <Card hover={false} padding={false} className="overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
@@ -160,7 +160,7 @@ export default function VertraegeTab({ kunde }) {
               </tbody>
             </table>
           </div>
-        </div>
+        </Card>
       </Card>
 
       <Card hover={false}>

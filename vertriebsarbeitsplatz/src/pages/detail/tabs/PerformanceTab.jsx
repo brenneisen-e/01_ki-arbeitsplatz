@@ -197,7 +197,7 @@ export default function PerformanceTab({ kunde }) {
   if (!perfData) {
     return (
       <div className="space-y-4">
-        <Card hover={false}>
+        <Card>
           <div className="flex flex-col items-center justify-center py-16 text-center">
             <div className="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center mb-4">
               <TrendingUp className="w-8 h-8 text-slate-400" />
@@ -377,7 +377,7 @@ export default function PerformanceTab({ kunde }) {
       )}
 
       {/* ── 2. Performance vs. Benchmark (Line Chart) ── */}
-      <Card hover={false}>
+      <Card>
         <div className="flex items-center justify-between mb-4">
           <SectionTitle sub={`${t('portfolioVsBenchmark')} (${benchmarkName})`}>{t('performanceVerlauf')}</SectionTitle>
           <div className="flex gap-1">
@@ -458,7 +458,7 @@ export default function PerformanceTab({ kunde }) {
       <div className="grid grid-cols-2 gap-4">
 
         {/* ── 3. Asset Allocation Donut ── */}
-        <Card hover={false}>
+        <Card>
           <SectionTitle sub={t('istVsSoll')}>{t('assetAllocation')}</SectionTitle>
           <div className="flex items-start gap-6">
             <div className="flex flex-col items-center gap-1">
@@ -497,7 +497,7 @@ export default function PerformanceTab({ kunde }) {
         </Card>
 
         {/* ── 4. Sektoren (Horizontal Bar) ── */}
-        <Card hover={false}>
+        <Card>
           <SectionTitle sub={t('topSektoren')}>{t('sektoren')}</SectionTitle>
           <div className="space-y-2.5">
             {(sektoren || []).map((s) => (
@@ -522,7 +522,7 @@ export default function PerformanceTab({ kunde }) {
       <div className="grid grid-cols-2 gap-4">
 
         {/* ── 5. Regional Allocation ── */}
-        <Card hover={false}>
+        <Card>
           <SectionTitle sub={t('geographischeVerteilung')}>{t('regionen')}</SectionTitle>
           <div className="flex items-start gap-6">
             <MiniDonut data={regionData} size={160} centerLabel={t('regionen')} />
@@ -533,7 +533,7 @@ export default function PerformanceTab({ kunde }) {
         </Card>
 
         {/* ── 6. Risk Profile ── */}
-        <Card hover={false}>
+        <Card>
           <SectionTitle sub={t('risikokennzahlen')}>{t('risikoprofil')}</SectionTitle>
           <div className="grid grid-cols-2 gap-3">
             <div className="bg-slate-50 rounded-lg p-3">
@@ -563,7 +563,7 @@ export default function PerformanceTab({ kunde }) {
       <div className="grid grid-cols-2 gap-4">
 
         {/* ── 7. Bond Maturity Structure ── */}
-        <Card hover={false}>
+        <Card>
           <SectionTitle sub={t('laufzeitenstruktur')}>{t('anleihenLabel')}</SectionTitle>
           {anleihen?.laufzeiten && (
             <div className="mb-4">
@@ -598,7 +598,7 @@ export default function PerformanceTab({ kunde }) {
         </Card>
 
         {/* ── 8. Currency Allocation ── */}
-        <Card hover={false}>
+        <Card>
           <SectionTitle sub={t('waehrungsverteilung')}>{t('waehrungen')}</SectionTitle>
           <div className="flex items-start gap-6">
             <MiniDonut data={waehrungData} size={140} centerLabel="FX" />
@@ -623,7 +623,7 @@ export default function PerformanceTab({ kunde }) {
 
       {/* ── 9. Investment Office Kommentar ── */}
       {ioKommentar && (
-        <Card hover={false}>
+        <Card>
           <div className="flex items-start gap-3">
             <div className="w-9 h-9 rounded-lg bg-[#1a365d]/10 flex items-center justify-center flex-shrink-0 mt-0.5">
               <MessageSquare className="w-4 h-4 text-[#1a365d]" />

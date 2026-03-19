@@ -51,35 +51,41 @@ export default function ProduktabschlussTab({ kunde }) {
     <div className="space-y-4">
       {/* Summary */}
       <div className="grid grid-cols-3 gap-3">
-        <div className="bg-white border border-slate-200 rounded-xl p-4 flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-amber-50 flex items-center justify-center">
-            <AlertTriangle size={20} className="text-amber-600" />
-          </div>
-          <div>
-            <div className="text-2xl font-bold text-slate-800">{abschluesse.filter(a => a.status === 'abgebrochen').length}</div>
-            <div className="text-xs text-slate-400">{t('abgebrocheneAntraege')}</div>
-          </div>
-        </div>
-        <div className="bg-white border border-slate-200 rounded-xl p-4 flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center">
-            <CreditCard size={20} className="text-blue-600" />
-          </div>
-          <div>
-            <div className="text-2xl font-bold text-slate-800">
-              {abschluesse.reduce((sum, a) => sum + (a.details?.betrag || 0), 0).toLocaleString(getLang() === 'en' ? 'en-US' : 'de-DE')}€
+        <Card className="p-4" padding={false}>
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-lg bg-amber-50 flex items-center justify-center">
+              <AlertTriangle size={20} className="text-amber-600" />
             </div>
-            <div className="text-xs text-slate-400">{t('kreditvolumenGesamt')}</div>
+            <div>
+              <div className="text-2xl font-bold text-slate-800">{abschluesse.filter(a => a.status === 'abgebrochen').length}</div>
+              <div className="text-xs text-slate-400">{t('abgebrocheneAntraege')}</div>
+            </div>
           </div>
-        </div>
-        <div className="bg-white border border-slate-200 rounded-xl p-4 flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-purple-50 flex items-center justify-center">
-            <ShoppingCart size={20} className="text-purple-600" />
+        </Card>
+        <Card className="p-4" padding={false}>
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center">
+              <CreditCard size={20} className="text-blue-600" />
+            </div>
+            <div>
+              <div className="text-2xl font-bold text-slate-800">
+                {abschluesse.reduce((sum, a) => sum + (a.details?.betrag || 0), 0).toLocaleString(getLang() === 'en' ? 'en-US' : 'de-DE')}€
+              </div>
+              <div className="text-xs text-slate-400">{t('kreditvolumenGesamt')}</div>
+            </div>
           </div>
-          <div>
-            <div className="text-2xl font-bold text-slate-800">Online</div>
-            <div className="text-xs text-slate-400">{t('kanalDirektvertrieb')}</div>
+        </Card>
+        <Card className="p-4" padding={false}>
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-lg bg-purple-50 flex items-center justify-center">
+              <ShoppingCart size={20} className="text-purple-600" />
+            </div>
+            <div>
+              <div className="text-2xl font-bold text-slate-800">Online</div>
+              <div className="text-xs text-slate-400">{t('kanalDirektvertrieb')}</div>
+            </div>
           </div>
-        </div>
+        </Card>
       </div>
 
       {/* Applications */}

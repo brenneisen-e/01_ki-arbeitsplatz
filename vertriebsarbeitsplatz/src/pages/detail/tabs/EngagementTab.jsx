@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import { clsx } from 'clsx';
 import useTranslation from '../../../i18n/useTranslation';
+import Card from '../../../components/ui/Card';
 
 // ─── Date formatter ───
 import { getLang } from '../../../utils/langHelper';
@@ -70,13 +71,13 @@ function MatchBadge({ level, t }) {
 // ─── Section wrapper ───
 function Section({ title, icon: Icon, children }) {
   return (
-    <div className="bg-white rounded-2xl border border-slate-200 p-5" style={{ boxShadow: 'var(--card-shadow)' }}>
+    <Card hover={false}>
       <div className="flex items-center gap-2 mb-4">
         {Icon && <Icon size={18} className="text-slate-500" strokeWidth={1.75} />}
         <h3 className="font-semibold text-slate-800">{title}</h3>
       </div>
       {children}
-    </div>
+    </Card>
   );
 }
 
@@ -90,9 +91,9 @@ export default function EngagementTab() {
 
   if (!data || !kunde) {
     return (
-      <div className="bg-white rounded-2xl border border-slate-200 p-8 text-center text-slate-400">
+      <Card hover={false} className="p-8 text-center text-slate-400">
         {t('keineEngagementDaten')}
-      </div>
+      </Card>
     );
   }
 

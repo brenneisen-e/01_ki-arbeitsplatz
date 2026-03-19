@@ -59,7 +59,7 @@ export default function RevenueTab() {
             {data.feeStruktur.map((f, i) => (
               <div key={f.typ} className="flex items-center justify-between text-sm">
                 <div className="flex items-center gap-2">
-                  <div className="w-2.5 h-2.5 rounded-full legend-dot" style={{ backgroundColor: FEE_COLORS[i] }} />
+                  <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: FEE_COLORS[i] }} />
                   <span className="text-slate-600">{f.typ}</span>
                 </div>
                 <span className="font-mono text-slate-700">{f.anteil}%</span>

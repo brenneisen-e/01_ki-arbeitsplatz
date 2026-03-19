@@ -306,7 +306,7 @@ function DeckungslueckeBar({ data, t }) {
       <h5 className="text-xs font-semibold text-slate-600 uppercase tracking-wider mb-3">
         {label || t('deckungslueckenAnalyse')}
       </h5>
-      <div className="bg-white rounded-xl border border-slate-200 p-4 space-y-4">
+      <Card hover={false} className="space-y-4">
         {/* Key numbers */}
         <div className="grid grid-cols-3 gap-3 text-center">
           <div className="bg-slate-50 rounded-lg p-3">
@@ -367,7 +367,7 @@ function DeckungslueckeBar({ data, t }) {
             </span>
           </div>
         )}
-      </div>
+      </Card>
     </div>
   );
 }
@@ -380,7 +380,7 @@ function VergleichsTabelle({ data }) {
       <h5 className="text-xs font-semibold text-slate-600 uppercase tracking-wider mb-3">
         {titel}
       </h5>
-      <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
+      <Card hover={false} padding={false} className="overflow-hidden">
         <table className="w-full text-sm">
           <thead>
             <tr className="bg-slate-50">
@@ -414,7 +414,7 @@ function VergleichsTabelle({ data }) {
             ))}
           </tbody>
         </table>
-      </div>
+      </Card>
     </div>
   );
 }

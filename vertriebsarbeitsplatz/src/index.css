@@ -273,8 +273,9 @@
   background-color: rgba(255,255,255,0.2) !important;
   border-color: rgba(255,255,255,0.35) !important;
 }
-.card-hover:hover .kpi-icon-box {
-  background-color: rgba(255,255,255,0.25) !important;
+.card-hover:hover .kpi-icon-box,
+.card-hover:hover .metric-box {
+  background-color: rgba(255,255,255,0.15) !important;
 }
 /* Donut/chart: primary-colored segments become invisible on dark hover → make white */
 .card-hover:hover path[fill="#1a365d"] {

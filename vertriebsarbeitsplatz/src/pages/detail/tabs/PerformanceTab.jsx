@@ -536,22 +536,22 @@ export default function PerformanceTab({ kunde }) {
         <Card>
           <SectionTitle sub={t('risikokennzahlen')}>{t('risikoprofil')}</SectionTitle>
           <div className="grid grid-cols-2 gap-3">
-            <div className="bg-slate-50 rounded-lg p-3">
+            <div className="bg-slate-50 rounded-lg p-3 metric-box">
               <p className="text-[10px] text-slate-400 uppercase tracking-wide">{t('volatilitaet')}</p>
               <p className="font-mono font-semibold text-lg text-slate-800">{fmtNum(risiko?.volatilitaet)}%</p>
               {risiko?.benchmarkVola != null && (
                 <p className="text-[10px] text-slate-400 mt-0.5">BM: {fmtNum(risiko.benchmarkVola)}%</p>
               )}
             </div>
-            <div className="bg-slate-50 rounded-lg p-3">
+            <div className="bg-slate-50 rounded-lg p-3 metric-box">
               <p className="text-[10px] text-slate-400 uppercase tracking-wide">{t('maxDrawdown')}</p>
               <p className="font-mono font-semibold text-lg text-red-600">{fmtNum(risiko?.maxDrawdown)}%</p>
             </div>
-            <div className="bg-slate-50 rounded-lg p-3">
+            <div className="bg-slate-50 rounded-lg p-3 metric-box">
               <p className="text-[10px] text-slate-400 uppercase tracking-wide">{t('sharpeRatio')}</p>
               <p className="font-mono font-semibold text-lg text-slate-800">{fmtNum(risiko?.sharpeRatio, 2)}</p>
             </div>
-            <div className="bg-slate-50 rounded-lg p-3">
+            <div className="bg-slate-50 rounded-lg p-3 metric-box">
               <p className="text-[10px] text-slate-400 uppercase tracking-wide">{t('beta')}</p>
               <p className="font-mono font-semibold text-lg text-slate-800">{fmtNum(risiko?.beta, 2)}</p>
             </div>

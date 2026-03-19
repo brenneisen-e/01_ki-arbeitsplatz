@@ -134,19 +134,19 @@ function AntragCard({ antrag, t, statusConfig: STATUS_CONFIG }) {
       <div className="grid grid-cols-4 gap-3 mb-4">
         {antrag.details && (
           <>
-            <div className="bg-slate-50 rounded-lg p-3">
+            <div className="bg-slate-50 rounded-lg p-3 metric-box">
               <div className="text-xs text-slate-400 mb-1">{t('kreditbetrag')}</div>
               <div className="text-lg font-bold text-slate-800">{antrag.details.betrag?.toLocaleString(getLang() === 'en' ? 'en-US' : 'de-DE')}€</div>
             </div>
-            <div className="bg-slate-50 rounded-lg p-3">
+            <div className="bg-slate-50 rounded-lg p-3 metric-box">
               <div className="text-xs text-slate-400 mb-1">{t('laufzeit')}</div>
               <div className="text-lg font-bold text-slate-800">{antrag.details.laufzeit} {t('monate')}</div>
             </div>
-            <div className="bg-slate-50 rounded-lg p-3">
+            <div className="bg-slate-50 rounded-lg p-3 metric-box">
               <div className="text-xs text-slate-400 mb-1">{t('effektivzins')}</div>
               <div className="text-lg font-bold text-slate-800">{antrag.details.zins}%</div>
             </div>
-            <div className="bg-slate-50 rounded-lg p-3">
+            <div className="bg-slate-50 rounded-lg p-3 metric-box">
               <div className="text-xs text-slate-400 mb-1">{t('monatsrate')}</div>
               <div className="text-lg font-bold text-slate-800">{antrag.details.rate}€</div>
             </div>

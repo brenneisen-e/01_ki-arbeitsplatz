@@ -36,7 +36,7 @@ import {
   scoreToRatingClass,
 } from '../../utils/ratingEngine';
 import { haircutRates } from '../../data/haircutRates';
-import { useAI } from '../../hooks/useAI';
+import { generateKiKreditempfehlung, convertKiResultToHtml } from '../../utils/kiEmpfehlung';
 
 const TABS = [
   { key: 'vorlage', label: 'Kreditempfehlung', icon: ClipboardList },
@@ -81,8 +81,9 @@ export default function CreditProposalView() {
   const { getSelectedCompany, navigate } = useApp();
   const company = getSelectedCompany();
   const [activeTab, setActiveTab] = useState('vorlage');
-  const { callAI, loading: aiLoading } = useAI();
+  const [aiLoading, setAiLoading] = useState(false);
   const [aiResult, setAiResult] = useState(null);
+  const [aiHtml, setAiHtml] = useState(null);
   const [aiExpanded, setAiExpanded] = useState(true);
 
   // Konditionierung state
@@ -162,24 +163,23 @@ export default function CreditProposalView() {
   // Sparkline data for ratios over years
   const ekQuoteTrend = years.map(y => ratios.eigenkapitalquote != null ? calculateAllRatios(bilanz[y]).eigenkapitalquote : null).filter(v => v != null);
 
-  // KI Kreditvorlage generation
-  const generateProposal = async () => {
-    const dataJson = JSON.stringify({
-      firma: company.firma, rechtsform: company.rechtsform, hrb: company.hrb,
-      gruendung: company.gruendung, branche: company.branche, mitarbeiter: company.mitarbeiter,
-      gf: company.gf, kredit, umsatz: b23.umsatz,
-      ratios: { ekQuote: ratios.eigenkapitalquote?.toFixed(1), ebitdaMarge: ratios.ebitda_marge?.toFixed(1),
-        dynVerschuldung: ratios.dynamischer_verschuldungsgrad?.toFixed(1), zinsdeckung: ratios.zinsdeckungsgrad?.toFixed(1) },
-      rating: { klasse: ratingClass.klasse, pd: ratingClass.pd, score: overallScore?.toFixed(2) },
-      sicherheiten: sichBewertung.map(s => ({ art: s.art, wert: s.wert, anrechenbar: s.anrechenbar })),
-      deckungsgrad: deckungsgrad.toFixed(1), blankoanteil, kundenZins: kundenZins.toFixed(2),
-      bestehende_verbindlichkeiten: company.bestehende_verbindlichkeiten,
-    }, null, 2);
+  // Simulated rating for the company
+  const simulatedRating = company.creditreform_index
+    ? (company.creditreform_index <= 200 ? 3 : company.creditreform_index <= 250 ? 5 : company.creditreform_index <= 350 ? 8 : 12)
+    : 5;
+  const bestVerbind = company.bestehende_verbindlichkeiten || [];
 
-    const systemPrompt = `Du bist ein erfahrener Firmenkundenbetreuer einer deutschen Bank. Erstelle eine Kreditvorlage für den Kreditausschuss auf Basis der folgenden Daten. Struktur: 1. Kreditnehmer-Profil, 2. Finanzierungsanlass, 3. Finanzlage (3J), 4. Rating, 5. Sicherheiten, 6. KDF inkl. Stresstest, 7. SWOT, 8. Konditionen, 9. Risikobeurteilung, 10. Empfehlung mit Auflagen. Bankübliche Sprache, konkrete Zahlen.`;
-
-    const result = await callAI(systemPrompt, dataJson);
-    setAiResult(result);
+  // KI Kreditempfehlung generation
+  const generateProposal = () => {
+    setAiLoading(true);
+    setAiResult(null);
+    setAiHtml(null);
+    setTimeout(() => {
+      setAiLoading(false);
+      const plainText = generateKiKreditempfehlung(company, kredit, betrag, bilanz, b23, simulatedRating, bestVerbind, kundenZins);
+      setAiResult(plainText);
+      setAiHtml(convertKiResultToHtml(plainText));
+    }, 2000);
   };
 
   // Color helper for ratios
@@ -436,7 +436,7 @@ export default function CreditProposalView() {
                 {aiLoading ? 'Kreditempfehlung wird generiert...' : 'KI-Kreditempfehlung generieren'}
               </button>
             </div>
-            {aiResult && (
+            {aiHtml && (
               <div className="border-t border-border">
                 <button
                   type="button"
@@ -451,9 +451,10 @@ export default function CreditProposalView() {
                 </button>
                 {aiExpanded && (
                   <div className="px-5 pb-5 prose prose-sm max-w-none">
-                    <div className="text-xs text-text-secondary whitespace-pre-wrap leading-relaxed font-body">
-                      {aiResult}
-                    </div>
+                    <div
+                      className="text-sm text-text-primary font-body leading-relaxed"
+                      dangerouslySetInnerHTML={{ __html: aiHtml }}
+                    />
                   </div>
                 )}
               </div>

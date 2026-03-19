@@ -100,7 +100,7 @@ export default function Dashboard({ onOpenCase, onOpenValidation, onExportReady 
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Sparten */}
-        <div className="bg-white rounded-xl border border-gray-200 p-5">
+        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
           <h3 className="font-semibold text-sm text-gray-700 mb-4">Sparten-Verteilung</h3>
           {spartenStats.length === 0 ? (
             <p className="text-sm text-gray-400">Keine Sparten</p>
@@ -124,7 +124,7 @@ export default function Dashboard({ onOpenCase, onOpenValidation, onExportReady 
         </div>
 
         {/* Recent Activity */}
-        <div className="lg:col-span-2 bg-white rounded-xl border border-gray-200 p-5">
+        <div className="lg:col-span-2 bg-white rounded-xl border border-gray-200 shadow-sm p-5">
           <div className="flex items-center justify-between mb-4">
             <h3 className="font-semibold text-sm text-gray-700">Letzte Aktivitäten</h3>
             <div className="flex items-center gap-2">
@@ -164,7 +164,7 @@ export default function Dashboard({ onOpenCase, onOpenValidation, onExportReady 
 
       {/* Import/Export History */}
       {importExportHistory.length > 0 && (
-        <div className="bg-white rounded-xl border border-gray-200 p-5">
+        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
           <h3 className="font-semibold text-sm text-gray-700 mb-4">Import/Export Historie</h3>
           <table className="w-full text-sm">
             <thead>
@@ -191,14 +191,14 @@ export default function Dashboard({ onOpenCase, onOpenValidation, onExportReady 
 
 function KPICard({ label, value, pct, color }) {
   return (
-    <div className="bg-white rounded-xl border border-gray-200 p-4">
+    <div className="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all p-4">
       <div className="text-xs text-gray-500 mb-1">{label}</div>
       <div className="text-2xl font-bold text-gray-800">{value}</div>
       {pct !== undefined && (
         <>
           <div className="text-xs text-gray-400 mt-1">{pct}%</div>
-          <div className="kpi-bar-track mt-2">
-            <div className={`kpi-bar-fill ${color}`} style={{ width: `${pct}%` }} />
+          <div className="mt-2 h-2 bg-gray-100 rounded-full overflow-hidden">
+            <div className={`h-full rounded-full ${color} transition-all`} style={{ width: `${pct}%` }} />
           </div>
         </>
       )}

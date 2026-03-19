@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { useApp } from '../../context/AppContext';
-import { MessageSquare, Bell, User, ChevronRight, Home, ChevronDown, Check } from 'lucide-react';
+import { MessageSquare, Bell, User, ChevronRight, Home, ChevronDown, Upload, RotateCcw } from 'lucide-react';
 
 const viewTitles = {
   dashboard: 'Dashboard',
@@ -15,29 +15,71 @@ const viewTitles = {
 };
 
 function goToLanding() {
-  // Navigate directly to the landing page
   window.location.href = '/index.html';
 }
 
 export default function Header() {
   const { state, dispatch, getSelectedCompany } = useApp();
   const company = getSelectedCompany();
-  const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef(null);
+  const photoInputRef = useRef(null);
+
+  // Profile state from localStorage (same keys as vertriebsarbeitsplatz)
+  const [profileName, setProfileName] = useState(() => localStorage.getItem('kia_user_fullname') || '');
+  const [profilePhoto, setProfilePhoto] = useState(() => localStorage.getItem('kia_user_photo') || '');
+  const [profileGender, setProfileGender] = useState(() => localStorage.getItem('kia_user_gender') || '');
+
+  // Derived display values
+  const displayName = profileName || state.currentUser.name;
+  const displayRole = state.currentUser.role;
 
   // Close menu on outside click
   useEffect(() => {
-    if (!userMenuOpen) return;
+    if (!menuOpen) return;
     const handler = (e) => {
-      if (menuRef.current && !menuRef.current.contains(e.target)) {
-        setUserMenuOpen(false);
-      }
+      if (menuRef.current && !menuRef.current.contains(e.target)) setMenuOpen(false);
     };
     document.addEventListener('mousedown', handler);
     return () => document.removeEventListener('mousedown', handler);
-  }, [userMenuOpen]);
+  }, [menuOpen]);
 
-  const { currentUser, availableUsers } = state;
+  function handleSaveName() {
+    localStorage.setItem('kia_user_fullname', profileName);
+    const firstName = profileName.trim().split(' ')[0];
+    if (firstName) {
+      localStorage.setItem('kia_user_name', firstName);
+    } else {
+      localStorage.removeItem('kia_user_name');
+    }
+  }
+
+  function handlePhotoUpload(e) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const dataUrl = ev.target.result;
+      localStorage.setItem('kia_user_photo', dataUrl);
+      setProfilePhoto(dataUrl);
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function handleGenderChange(gender) {
+    setProfileGender(gender);
+    localStorage.setItem('kia_user_gender', gender);
+  }
+
+  function handleReset() {
+    localStorage.removeItem('kia_user_fullname');
+    localStorage.removeItem('kia_user_photo');
+    localStorage.removeItem('kia_user_name');
+    localStorage.removeItem('kia_user_gender');
+    setProfileName('');
+    setProfilePhoto('');
+    setProfileGender('');
+  }
 
   return (
     <header className="h-14 bg-white border-b border-border flex items-center justify-between px-6 shrink-0">
@@ -85,47 +127,138 @@ export default function Header() {
             <span className="absolute top-1 right-1 w-2 h-2 bg-danger rounded-full" />
           )}
         </button>
+
+        {/* User profile area */}
         <div className="relative pl-3 border-l border-border" ref={menuRef}>
           <button
-            onClick={() => setUserMenuOpen(!userMenuOpen)}
+            onClick={() => setMenuOpen(!menuOpen)}
             className="flex items-center gap-2 hover:bg-surface rounded-lg px-2 py-1 transition-colors"
           >
-            <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center">
-              <User size={14} className="text-white" />
-            </div>
+            {profilePhoto ? (
+              <img src={profilePhoto} alt="Profil" className="w-8 h-8 rounded-full object-cover" />
+            ) : (
+              <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center">
+                <User size={14} className="text-white" />
+              </div>
+            )}
             <div className="hidden sm:block text-xs text-left">
-              <div className="font-medium text-text-primary">{currentUser.name}</div>
-              <div className="text-text-muted">{currentUser.role}</div>
+              <div className="font-medium text-text-primary">{displayName}</div>
+              <div className="text-text-muted">{displayRole}</div>
             </div>
             <ChevronDown size={14} className="text-text-muted hidden sm:block" />
           </button>
 
-          {userMenuOpen && (
-            <div className="absolute right-0 top-full mt-1 w-64 bg-white border border-border rounded-lg shadow-lg z-50 py-1">
-              <div className="px-3 py-2 text-xs text-text-muted font-medium border-b border-border">
-                Benutzer wechseln
-              </div>
-              {availableUsers.map((user) => (
-                <button
-                  key={user.id}
-                  onClick={() => {
-                    dispatch({ type: 'SWITCH_USER', userId: user.id });
-                    setUserMenuOpen(false);
-                  }}
-                  className="w-full flex items-center gap-3 px-3 py-2.5 hover:bg-surface transition-colors text-left"
-                >
-                  <div className="w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                    <User size={12} className="text-primary" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="text-sm font-medium text-text-primary">{user.name}</div>
-                    <div className="text-xs text-text-muted">{user.role}</div>
-                  </div>
-                  {currentUser.id === user.id && (
-                    <Check size={16} className="text-accent shrink-0" />
+          {menuOpen && (
+            <div className="absolute right-0 top-full mt-1 w-72 bg-white border border-border rounded-xl shadow-xl z-50 p-4 space-y-4">
+              <h3 className="text-sm font-semibold text-text-primary flex items-center gap-2">
+                <User size={15} />
+                Berater-Profil
+              </h3>
+
+              {/* Photo */}
+              <div className="flex items-center gap-3">
+                <div className="relative shrink-0">
+                  {profilePhoto ? (
+                    <img src={profilePhoto} alt="Profil" className="w-14 h-14 rounded-full object-cover border-2 border-border" />
+                  ) : (
+                    <div className="w-14 h-14 rounded-full bg-surface border-2 border-border flex items-center justify-center">
+                      <User size={20} className="text-text-muted" />
+                    </div>
                   )}
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  <button
+                    onClick={() => photoInputRef.current?.click()}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface hover:bg-gray-100 text-text-secondary text-xs font-medium transition-colors"
+                  >
+                    <Upload size={12} />
+                    Bild hochladen
+                  </button>
+                  <input
+                    ref={photoInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={handlePhotoUpload}
+                    className="hidden"
+                  />
+                  {profilePhoto && (
+                    <button
+                      onClick={() => { setProfilePhoto(''); localStorage.removeItem('kia_user_photo'); }}
+                      className="text-[10px] text-text-muted hover:text-text-secondary transition-colors text-left"
+                    >
+                      Bild entfernen
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {/* Anrede */}
+              <div>
+                <label className="block text-xs text-text-muted font-medium mb-1.5">Anrede</label>
+                <div className="flex gap-2">
+                  {[
+                    { value: 'm', label: 'Herr' },
+                    { value: 'w', label: 'Frau' },
+                  ].map(opt => (
+                    <button
+                      key={opt.value}
+                      onClick={() => handleGenderChange(opt.value)}
+                      className={`px-4 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                        profileGender === opt.value
+                          ? 'bg-primary text-white'
+                          : 'bg-surface text-text-secondary hover:bg-gray-100'
+                      }`}
+                    >
+                      {opt.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Name */}
+              <div>
+                <label className="block text-xs text-text-muted font-medium mb-1.5">Vor- und Nachname</label>
+                <input
+                  type="text"
+                  value={profileName}
+                  onChange={e => setProfileName(e.target.value)}
+                  onBlur={handleSaveName}
+                  onKeyDown={e => { if (e.key === 'Enter') handleSaveName(); }}
+                  placeholder="z.B. Max Weber"
+                  className="w-full px-3 py-2 rounded-lg bg-surface border border-border text-sm text-text-primary placeholder-text-muted focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-all"
+                />
+              </div>
+
+              {/* User-Rolle wechseln */}
+              <div>
+                <label className="block text-xs text-text-muted font-medium mb-1.5">Rolle</label>
+                <div className="space-y-1">
+                  {state.availableUsers.map((user) => (
+                    <button
+                      key={user.id}
+                      onClick={() => dispatch({ type: 'SWITCH_USER', userId: user.id })}
+                      className={`w-full text-left px-3 py-1.5 rounded-lg text-xs transition-colors ${
+                        state.currentUser.id === user.id
+                          ? 'bg-primary/10 text-primary font-medium'
+                          : 'hover:bg-surface text-text-secondary'
+                      }`}
+                    >
+                      {user.role}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Reset */}
+              <div className="pt-2 border-t border-border">
+                <button
+                  onClick={handleReset}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg hover:bg-surface text-text-muted hover:text-text-secondary text-xs font-medium transition-colors"
+                >
+                  <RotateCcw size={12} />
+                  Auf Standard zurücksetzen
                 </button>
-              ))}
+              </div>
             </div>
           )}
         </div>

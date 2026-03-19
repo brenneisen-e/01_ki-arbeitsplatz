@@ -150,6 +150,8 @@ export default function DecisionView() {
   const { state, getSelectedCompany, navigate, dispatch } = useApp();
   const company = getSelectedCompany();
   const currentUser = state.currentUser;
+  const customName = typeof window !== 'undefined' ? localStorage.getItem('kia_user_fullname') : '';
+  const bearbeiterName = customName || currentUser.name;
 
   const [activeTab, setActiveTab] = useState('votierung');
 
@@ -633,7 +635,7 @@ Empfehlung: Genehmigung unter den nachfolgend genannten Auflagen und Bedingungen
           {/* Erstvotum (Markt) */}
           <VotumCard
             title="Erstvotum (Markt)"
-            bearbeiter={`${currentUser.name}, ${currentUser.role}`}
+            bearbeiter={`${bearbeiterName}, ${currentUser.role}`}
             empfehlung={marktEmpfehlung}
             setEmpfehlung={setMarktEmpfehlung}
             begruendung={marktBegruendung}
@@ -804,7 +806,7 @@ Empfehlung: Genehmigung unter den nachfolgend genannten Auflagen und Bedingungen
     const steps = [
       {
         label: 'Erstvotum',
-        person: currentUser.name,
+        person: bearbeiterName,
         role: currentUser.role,
         status: 'completed',
         timestamp: '03.03.2026, 09:15',

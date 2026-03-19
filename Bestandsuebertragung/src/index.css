@@ -1,0 +1,68 @@
+@import "tailwindcss";
+
+:root {
+  --primary: #c41230;
+  --primary-dark: #a00f28;
+  --primary-light: #e8143a;
+  --success: #28a745;
+  --warning: #ffc107;
+  --danger: #dc3545;
+  --info: #17a2b8;
+  --gray-50: #f8f9fa;
+  --gray-100: #f0f1f3;
+  --gray-200: #e2e4e8;
+  --gray-300: #ccd0d5;
+  --gray-400: #a0a5ad;
+  --gray-500: #6c757d;
+  --gray-600: #495057;
+  --gray-700: #343a40;
+  --gray-800: #23272b;
+  --gray-900: #1a1d21;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--gray-50);
+  color: var(--gray-800);
+  line-height: 1.5;
+}
+
+/* Status badge colors */
+.status-unvollstaendig { background: #fff3cd; color: #856404; }
+.status-zu-validieren { background: #cce5ff; color: #004085; }
+.status-export-bereit { background: #d4edda; color: #155724; }
+.status-abgeschlossen { background: #d1e7dd; color: #0f5132; }
+.status-abgelehnt { background: #f8d7da; color: #721c24; }
+.status-wiedervorlage { background: #e2e3e5; color: #383d41; }
+
+/* Toast animations */
+@keyframes slideIn {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideOut {
+  from { transform: translateX(0); opacity: 1; }
+  to { transform: translateX(100%); opacity: 0; }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--gray-300); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--gray-400); }
+
+/* KPI progress bar */
+.kpi-bar-track {
+  height: 4px;
+  background: var(--gray-200);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.kpi-bar-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.5s ease;
+}

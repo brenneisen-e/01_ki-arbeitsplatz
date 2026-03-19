@@ -56,50 +56,52 @@ const PAGE_CONFIG = {
 
 export default function StaticPage({ pageId }) {
   const config = PAGE_CONFIG[pageId]
-  if (!config) return <div className="p-6 text-gray-400">Seite nicht gefunden</div>
+  if (!config) return <div className="p-6 text-slate-400">Seite nicht gefunden</div>
 
   const Icon = config.icon
 
   return (
-    <div className="p-6 max-w-4xl mx-auto space-y-6">
+    <div className="p-6 max-w-4xl mx-auto space-y-6 animate-fade-in-up">
       <div className="flex items-center gap-3">
-        <div className="w-12 h-12 bg-[#c41230]/10 rounded-xl flex items-center justify-center">
-          <Icon size={24} className="text-[#c41230]" />
+        <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ backgroundColor: 'var(--mode-pastel)' }}>
+          <Icon size={24} style={{ color: 'var(--mode-primary-light)' }} />
         </div>
         <div>
-          <h2 className="text-xl font-bold text-gray-800">{config.title}</h2>
-          <p className="text-sm text-gray-500">{config.description}</p>
+          <h2 className="text-xl font-bold text-slate-800">{config.title}</h2>
+          <p className="text-sm text-slate-500">{config.description}</p>
         </div>
       </div>
 
       {config.content && (
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
-          <p className="text-gray-600 whitespace-pre-line">{config.content}</p>
+        <div className="card-base p-6">
+          <p className="text-slate-600 whitespace-pre-line">{config.content}</p>
         </div>
       )}
 
       {config.sections && config.sections.map((s, i) => (
-        <div key={i} className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+        <div key={i} className="card-base p-6">
           <div className="flex items-center justify-between mb-3">
-            <h3 className="font-semibold text-gray-800">{s.title}</h3>
+            <h3 className="font-semibold text-slate-800">{s.title}</h3>
             <button onClick={() => { navigator.clipboard.writeText(s.text) }}
-              className="text-xs text-[#c41230] hover:text-[#a00f28] px-3 py-1 border border-[#c41230]/30 rounded-lg hover:bg-[#c41230]/5 transition-colors">
+              className="text-xs px-3 py-1 border rounded-lg transition-colors hover:bg-slate-50"
+              style={{ color: 'var(--mode-primary-light)', borderColor: 'var(--mode-primary-light)' }}>
               Kopieren
             </button>
           </div>
-          <pre className="text-sm text-gray-600 whitespace-pre-wrap bg-gray-50 rounded-lg p-4 font-sans">{s.text}</pre>
+          <pre className="text-sm text-slate-600 whitespace-pre-wrap bg-slate-50 rounded-lg p-4 font-sans">{s.text}</pre>
         </div>
       ))}
 
       {config.steps && (
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+        <div className="card-base p-6">
           <div className="space-y-3">
             {config.steps.map((step, i) => (
               <div key={i} className="flex items-start gap-3">
-                <div className="w-6 h-6 bg-[#c41230]/10 text-[#c41230] rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">
+                <div className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5"
+                  style={{ backgroundColor: 'var(--mode-pastel)', color: 'var(--mode-primary-light)' }}>
                   {i + 1}
                 </div>
-                <p className="text-sm text-gray-700">{step.replace(/^\d+\.\s*/, '')}</p>
+                <p className="text-sm text-slate-700">{step.replace(/^\d+\.\s*/, '')}</p>
               </div>
             ))}
           </div>
@@ -109,20 +111,20 @@ export default function StaticPage({ pageId }) {
       {config.milestones && (
         <div className="space-y-4">
           {config.milestones.map((m, i) => (
-            <div key={i} className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+            <div key={i} className="card-base p-5">
               <div className="flex items-center justify-between mb-3">
                 <div>
-                  <span className="text-xs text-gray-400">{m.phase}</span>
-                  <h3 className="font-semibold text-gray-800">{m.title}</h3>
+                  <span className="text-xs text-slate-400">{m.phase}</span>
+                  <h3 className="font-semibold text-slate-800">{m.title}</h3>
                 </div>
                 <span className={`text-xs px-2.5 py-1 rounded-full font-medium ${
-                  m.status === 'Abgeschlossen' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'
+                  m.status === 'Abgeschlossen' ? 'bg-emerald-100 text-emerald-700' : 'bg-blue-100 text-blue-700'
                 }`}>{m.status}</span>
               </div>
               <ul className="space-y-1">
                 {m.items.map((item, j) => (
-                  <li key={j} className="text-sm text-gray-600 flex items-center gap-2">
-                    <span className="text-green-500">•</span> {item}
+                  <li key={j} className="text-sm text-slate-600 flex items-center gap-2">
+                    <span className="text-emerald-500">•</span> {item}
                   </li>
                 ))}
               </ul>

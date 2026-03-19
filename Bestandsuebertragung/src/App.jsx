@@ -1,7 +1,6 @@
-import { useState, useCallback, useRef } from 'react'
+import { useState, useCallback } from 'react'
 import { AppProvider, useApp } from './context/AppContext'
 import Header from './components/Header'
-import NavTabs from './components/NavTabs'
 import ToastContainer from './components/Toast'
 import CaseModal from './components/CaseModal'
 import MaklerModal from './components/MaklerModal'
@@ -95,7 +94,8 @@ function AppContent() {
   const counts = { vorgaenge: cases.length, makler: maklerStats.length, emails: allEmails.length }
 
   return (
-    <div className="min-h-screen bg-gray-50"
+    <div className="flex flex-col min-h-screen"
+      style={{ backgroundColor: 'var(--bg-primary)' }}
       onDragOver={e => { e.preventDefault(); setDragOver(true) }}
       onDragLeave={e => { if (e.target === e.currentTarget) setDragOver(false) }}
       onDrop={handleDrop}>
@@ -104,18 +104,24 @@ function AppContent() {
       {dragOver && (
         <div className="fixed inset-0 z-[2000] bg-[#c41230]/10 border-4 border-dashed border-[#c41230] flex items-center justify-center"
           onDragLeave={() => setDragOver(false)}>
-          <div className="bg-white rounded-2xl p-8 shadow-2xl text-center">
+          <div className="bg-white rounded-2xl p-8 shadow-2xl text-center animate-scale-in">
             <div className="text-4xl mb-3">📁</div>
-            <div className="text-lg font-semibold text-gray-800">JSON-Datei hier ablegen</div>
-            <div className="text-sm text-gray-500 mt-1">Outlook-Export oder Backup importieren</div>
+            <div className="text-lg font-semibold text-slate-800">JSON-Datei hier ablegen</div>
+            <div className="text-sm text-slate-500 mt-1">Outlook-Export oder Backup importieren</div>
           </div>
         </div>
       )}
 
-      <Header onImport={handleImport} onDemoDownload={handleDemoDownload} onReset={handleReset} />
-      <NavTabs activeView={activeView} onViewChange={setActiveView} counts={counts} />
+      <Header
+        activeView={activeView}
+        onViewChange={setActiveView}
+        counts={counts}
+        onImport={handleImport}
+        onDemoDownload={handleDemoDownload}
+        onReset={handleReset}
+      />
 
-      <main>
+      <main className="flex-1">
         {activeView === 'dashboard' && (
           <Dashboard onOpenCase={openCase} onOpenValidation={() => handleOpenValidation()} onExportReady={handleExportReady} />
         )}

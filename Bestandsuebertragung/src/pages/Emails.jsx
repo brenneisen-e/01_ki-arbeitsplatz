@@ -21,27 +21,28 @@ export default function Emails({ onOpenCase }) {
   }, [cases, search, sort])
 
   return (
-    <div className="p-6 space-y-4">
+    <div className="p-6 space-y-4 animate-fade-in-up">
       <div className="flex items-center gap-3">
         <div className="relative flex-1 max-w-md">
-          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
           <input type="text" placeholder="E-Mails suchen..." value={search} onChange={e => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#c41230]/30" />
+            className="w-full pl-10 pr-4 py-2 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#c41230]/30"
+            style={{ border: 'var(--card-border)' }} />
         </div>
         <select value={sort} onChange={e => setSort(e.target.value)}
-          className="text-sm border border-gray-200 rounded-lg px-3 py-2">
+          className="text-sm border border-slate-200 rounded-lg px-3 py-2 bg-white">
           <option value="desc">Neueste zuerst</option>
           <option value="asc">Älteste zuerst</option>
         </select>
       </div>
 
       {emails.length === 0 ? (
-        <div className="text-center py-12 text-gray-400">Keine E-Mails vorhanden</div>
+        <div className="text-center py-12 text-slate-400">Keine E-Mails vorhanden</div>
       ) : (
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+        <div className="card-base overflow-hidden">
           <table className="w-full text-sm">
             <thead>
-              <tr className="text-left text-xs text-gray-500 border-b border-gray-200 bg-gray-50">
+              <tr className="text-left text-xs text-slate-500 border-b border-slate-200 bg-slate-50">
                 <th className="py-2 px-3 w-8"></th>
                 <th className="py-2 px-3">Datum</th>
                 <th className="py-2 px-3">Absender</th>
@@ -55,12 +56,12 @@ export default function Emails({ onOpenCase }) {
                 const isSent = email.folder === 'sent'
                 return (
                   <tr key={i} onClick={() => { const c = Storage.getCase(email.caseId); if (c) onOpenCase(c) }}
-                    className="hover:bg-gray-50 cursor-pointer border-b border-gray-50">
-                    <td className="py-2.5 px-3"><span className={isSent ? 'text-green-500' : 'text-blue-500'}>{isSent ? '↑' : '↓'}</span></td>
-                    <td className="py-2.5 px-3 text-xs text-gray-500 whitespace-nowrap">{formatDateTime(email.receivedTime)}</td>
-                    <td className="py-2.5 px-3 text-gray-600 truncate max-w-[200px]">{email.senderEmail || '-'}</td>
-                    <td className="py-2.5 px-3 text-gray-700 truncate max-w-[300px]">{email.subject || 'Kein Betreff'}</td>
-                    <td className="py-2.5 px-3 text-gray-600">{email.kundeName || 'Unbekannt'}</td>
+                    className="hover:bg-slate-50 cursor-pointer border-b border-slate-100 transition-colors">
+                    <td className="py-2.5 px-3"><span className={isSent ? 'text-emerald-500' : 'text-blue-500'}>{isSent ? '↑' : '↓'}</span></td>
+                    <td className="py-2.5 px-3 text-xs text-slate-500 font-mono whitespace-nowrap">{formatDateTime(email.receivedTime)}</td>
+                    <td className="py-2.5 px-3 text-slate-600 truncate max-w-[200px]">{email.senderEmail || '-'}</td>
+                    <td className="py-2.5 px-3 text-slate-700 truncate max-w-[300px]">{email.subject || 'Kein Betreff'}</td>
+                    <td className="py-2.5 px-3 text-slate-600">{email.kundeName || 'Unbekannt'}</td>
                     <td className="py-2.5 px-3"><StatusBadge status={email.status} showLabel={false} /></td>
                   </tr>
                 )

@@ -3,6 +3,7 @@
 // ============================================
 import { random, randomBetween } from './utils';
 import { pickKfzModell } from './produktKatalog';
+import { generateFbRating, fbRatingKlasse } from './produktZuordnung';
 
 import { getLang, tx } from '../../utils/langHelper';
 
@@ -277,11 +278,15 @@ const VERSICHERUNG_REGELN = [
       const kfz = p.fremdProdukte.find(f => f.typ === 'kfz');
       const fremdPraemie = kfz?.volumen || randomBetween(500, 900);
       const ergoPraemie = Math.round(fremdPraemie * 0.82);
+      const fbAlt = kfz?.fbRating || generateFbRating(false);
+      const fbNeu = generateFbRating(true);
       return {
         titel: `Vergleich: ${kfz?.institut || 'Fremdversicherer'} (aktuell) vs. ERGO Kfz`,
         spalten: ['Merkmal', `${kfz?.institut || 'Aktuell'}`, 'ERGO Kfz Comfort'],
+        fbVergleich: { alt: fbAlt, altKlasse: fbRatingKlasse(fbAlt), neu: fbNeu, neuKlasse: fbRatingKlasse(fbNeu) },
         zeilen: [
           { merkmal: 'Jahresprämie', aktuell: fmtEur(fremdPraemie), angebot: fmtEur(ergoPraemie), highlight: true },
+          { merkmal: 'Franke & Bornberg', aktuell: `${fbAlt}/100`, angebot: `${fbNeu}/100`, highlight: fbNeu > fbAlt, isFbRating: true },
           { merkmal: 'Vollkasko SB', aktuell: '300€', angebot: '300€' },
           { merkmal: 'Teilkasko SB', aktuell: '150€', angebot: '150€' },
           { merkmal: 'GAP-Deckung', aktuell: 'Nein', angebot: 'Ja', highlight: true },
@@ -440,11 +445,15 @@ const BANKING_REGELN = [
       const kfz = p.fremdProdukte.find(f => f.typ === 'kfz');
       const fremdPraemie = kfz?.volumen || randomBetween(500, 900);
       const rvPraemie = Math.round(fremdPraemie * 0.85);
+      const fbAlt = kfz?.fbRating || generateFbRating(false);
+      const fbNeu = generateFbRating(true);
       return {
         titel: `Vergleich: ${kfz?.institut || 'Fremdversicherer'} vs. R+V Kfz`,
         spalten: ['Merkmal', `${kfz?.institut || 'Aktuell'}`, 'R+V Kfz'],
+        fbVergleich: { alt: fbAlt, altKlasse: fbRatingKlasse(fbAlt), neu: fbNeu, neuKlasse: fbRatingKlasse(fbNeu) },
         zeilen: [
           { merkmal: 'Jahresprämie', aktuell: fmtEur(fremdPraemie), angebot: fmtEur(rvPraemie), highlight: true },
+          { merkmal: 'Franke & Bornberg', aktuell: `${fbAlt}/100`, angebot: `${fbNeu}/100`, highlight: fbNeu > fbAlt, isFbRating: true },
           { merkmal: 'Vollkasko SB', aktuell: '300€', angebot: '300€' },
           { merkmal: 'SF-Rabatt Übernahme', aktuell: 'Standard', angebot: 'Ja (1:1)', highlight: true },
           { merkmal: 'VR-Bündelrabatt', aktuell: '–', angebot: '10% auf alle R+V-Verträge', highlight: true },
@@ -870,6 +879,8 @@ export function evaluatePotentiale(person) {
       herleitung: r.herleitung ? (typeof r.herleitung === 'function' ? r.herleitung(person) : r.herleitung) : null,
       vergleich: r.vergleich ? (typeof r.vergleich === 'function' ? r.vergleich(person) : r.vergleich) : null,
       deckungsluecke: r.deckungsluecke ? (typeof r.deckungsluecke === 'function' ? r.deckungsluecke(person) : r.deckungsluecke) : null,
+      // F&B Rating für Versicherungsprodukte (empfohlenes Produkt)
+      fbRatingNeu: r.produktEmpfehlung ? generateFbRating(true) : null,
     }))
     .sort((a, b) => (PRIO_ORDER[a.prioritaet] || 3) - (PRIO_ORDER[b.prioritaet] || 3));
 }

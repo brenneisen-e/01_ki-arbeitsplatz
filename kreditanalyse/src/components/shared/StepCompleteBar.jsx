@@ -5,8 +5,8 @@ const STEP_CONFIG = {
   kyc: { label: 'KYC abschließen → §18 Prüfung', next: 'analysis', nextLabel: '§18 KWG Prüfung' },
   analysis: { label: '§18 Prüfung abschließen → Rating', next: 'rating', nextLabel: 'Rating' },
   rating: { label: 'Rating abschließen → Sicherheiten', next: 'collateral', nextLabel: 'Sicherheiten' },
-  collateral: { label: 'Sicherheiten abschließen → Kreditvorlage', next: 'credit-proposal', nextLabel: 'Kreditvorlage' },
-  'credit-proposal': { label: 'Kreditvorlage abschließen → Votierung', next: 'decision', nextLabel: 'Votierung' },
+  collateral: { label: 'Sicherheiten abschließen → Kreditempfehlung', next: 'credit-proposal', nextLabel: 'Kreditempfehlung' },
+  'credit-proposal': { label: 'Kreditempfehlung abschließen → Votierung', next: 'decision', nextLabel: 'Votierung' },
 };
 
 export default function StepCompleteBar({ currentStep }) {

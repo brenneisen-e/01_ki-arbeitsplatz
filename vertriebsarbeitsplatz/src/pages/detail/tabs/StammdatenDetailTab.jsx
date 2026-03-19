@@ -3,7 +3,7 @@ import { getLang } from '../../../utils/langHelper';
 import DataTable from '../../../components/ui/DataTable';
 import { StatusBadge, SparteBadge } from '../../../components/ui/Badge';
 import { formatEur, formatPct, berechneHaushaltsnetto, berechneAbsicherungsquote, berechneSparquote, berechneFrei, potentialSterne } from '../../../utils/formatters';
-import { User, Wallet, Linkedin, Star, ChevronDown, ChevronRight, MapPin, Briefcase, Heart, Users, CheckCircle, Building2, PawPrint, Info } from 'lucide-react';
+import { User, Wallet, Linkedin, Star, ChevronDown, ChevronRight, MapPin, Briefcase, Heart, Users, CheckCircle, Building2, PawPrint, Info, Car, Fuel } from 'lucide-react';
 import { getLogoUrl } from '../../../utils/logos';
 import { getKundeFoto } from '../../../utils/kundenFotos';
 import { useState } from 'react';
@@ -226,6 +226,10 @@ export default function StammdatenDetailTab({ kunde }) {
                 <span className="text-slate-400">&middot; {kunde.linkedin.branchen?.join(', ')}</span>
               </div>
             )}
+            {/* Fahrzeuge / Mobilität (PSD2) */}
+            {kunde.fahrzeuge && (kunde.fahrzeuge.liste?.length > 0 || kunde.fahrzeuge.monatlicheAusgaben > 0) && (
+              <FahrzeugeSection fahrzeuge={kunde.fahrzeuge} t={t} />
+            )}
           </div>
         </Card>
 
@@ -423,6 +427,93 @@ function HaustiereRow({ haustiere, t }) {
             <CheckCircle size={10} />
             {t('bestaetigt')}
           </span>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function FahrzeugeSection({ fahrzeuge, t }) {
+  const [showDetail, setShowDetail] = useState(false);
+
+  return (
+    <div className="pt-2 border-t border-slate-100 mt-2">
+      <div className="flex items-center gap-2 mb-1">
+        <Car size={14} className="text-blue-500" />
+        <span className="text-sm font-medium text-slate-700">{t('fahrzeugeMobilitaet')}</span>
+        <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-blue-50 text-blue-600 border border-blue-100 font-medium">PSD2</span>
+        {fahrzeuge.liste?.length > 0 && (
+          <button
+            onClick={() => setShowDetail(!showDetail)}
+            className="flex items-center gap-1 text-[10px] text-blue-500 bg-blue-50 px-1.5 py-0.5 rounded-full border border-blue-100 hover:bg-blue-100 transition-colors"
+          >
+            <Info size={10} />
+            {t('details')}
+          </button>
+        )}
+      </div>
+
+      {fahrzeuge.liste?.length > 0 ? (
+        <>
+          {fahrzeuge.liste.map((fz, i) => (
+            <div key={i} className="flex items-center gap-2 text-sm ml-5 mb-1">
+              <span className="text-slate-700 font-medium">{fz.modell}</span>
+              {fz.deckung && <span className="text-slate-400 text-xs">({fz.deckung})</span>}
+              {fz.quelle === 'psd2' && (
+                <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-indigo-50 text-indigo-500 border border-indigo-100">
+                  Open Finance
+                </span>
+              )}
+              {fz.fbRating && (
+                <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold ${
+                  fz.fbRating >= 75 ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                  : fz.fbRating >= 55 ? 'bg-amber-50 text-amber-700 border border-amber-200'
+                  : 'bg-red-50 text-red-600 border border-red-200'
+                }`}>
+                  F&B {fz.fbRating}
+                </span>
+              )}
+            </div>
+          ))}
+        </>
+      ) : (
+        <div className="text-sm text-slate-400 ml-5 italic">{t('keinFahrzeugErkannt')}</div>
+      )}
+
+      {fahrzeuge.monatlicheAusgaben > 0 && (
+        <div className="flex items-center gap-2 text-sm ml-5 mt-1">
+          <Fuel size={12} className="text-slate-400" />
+          <span className="text-slate-500">{t('mobilitaetsausgaben')}: <span className="font-mono font-medium text-slate-700">{fahrzeuge.monatlicheAusgaben}€{t('proMonat')}</span></span>
+        </div>
+      )}
+
+      {showDetail && fahrzeuge.liste?.length > 0 && (
+        <div className="mt-2 bg-blue-50 border border-blue-200 rounded-lg p-3 space-y-2 animate-fade-in">
+          <div className="text-xs font-semibold text-blue-700 flex items-center gap-1.5">
+            <Car size={12} />
+            {t('fahrzeugErkannt')}
+          </div>
+          {fahrzeuge.liste.map((fz, i) => (
+            <div key={i} className="bg-white rounded-lg p-2 border border-blue-100">
+              <div className="flex justify-between text-xs">
+                <span className="font-medium text-slate-700">{fz.modell}</span>
+                <span className="text-slate-500">{fz.versicherer}</span>
+              </div>
+              <div className="flex justify-between text-xs mt-1 text-slate-500">
+                <span>{t('deckung')}: {fz.deckung || '–'} {fz.sf || ''}</span>
+                {fz.praemie > 0 && <span className="font-mono">{fz.praemie}€/J.</span>}
+              </div>
+              {fz.fbRating && (
+                <div className="flex items-center gap-2 mt-1">
+                  <img src="https://img.logo.dev/franke-bornberg.de?token=pk_H7vb5Y2lTsW47U4Xq-w3HA&size=32&format=png" alt="F&B" className="w-3 h-3 rounded" onError={(e) => e.target.style.display='none'} />
+                  <span className="text-[10px] text-slate-500">Franke & Bornberg: <strong>{fz.fbRating}/100</strong> ({fz.fbKlasse})</span>
+                </div>
+              )}
+            </div>
+          ))}
+          <div className="text-[10px] text-blue-600 pt-1 border-t border-blue-200">
+            {t('quellePsd2Mobilitaet')}
+          </div>
         </div>
       )}
     </div>

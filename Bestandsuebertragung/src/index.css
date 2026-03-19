@@ -1,0 +1,146 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import "tailwindcss";
+
+:root {
+  /* === MODUS-FARBEN (ERGO Bestandsübertragung) === */
+  --mode-primary: #8b1a2b;
+  --mode-primary-light: #c41230;
+  --mode-gradient: linear-gradient(135deg, #5a1018 0%, #8b1a2b 40%, #c41230 100%);
+  --mode-accent: #e8c547;
+  --mode-pastel: #fef2f2;
+
+  /* === NEUTRALE FARBEN === */
+  --bg-primary: #f8fafc;
+  --bg-card: #ffffff;
+  --bg-card-hover: #f1f5f9;
+  --bg-table-stripe: #f8fafc;
+
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-tertiary: #94a3b8;
+  --text-on-dark: #f8fafc;
+
+  --border-light: #e2e8f0;
+  --border-medium: #cbd5e1;
+  --border-focus: var(--mode-primary-light);
+
+  /* === SEMANTISCHE FARBEN === */
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-danger: #ef4444;
+  --color-info: #3b82f6;
+
+  /* === KARTEN === */
+  --card-radius: 12px;
+  --card-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.06);
+  --card-shadow-hover: 0 4px 6px rgba(0,0,0,0.04), 0 2px 4px rgba(0,0,0,0.06);
+  --card-border: 1px solid var(--border-light);
+}
+
+/* === GLOBALE STILE === */
+/* WICHTIG: Kein * { margin/padding: 0 } hier!
+   Tailwind v4 hat seinen eigenen Reset in @layer base.
+   Un-layered CSS würde alle Tailwind-Utilities überschreiben. */
+
+@layer base {
+  html {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    color: var(--text-primary);
+    background-color: var(--bg-primary);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    min-height: 100vh;
+  }
+
+  #root {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+/* === SCROLLBAR === */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-medium); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-tertiary); }
+
+/* === ANIMATIONEN === */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes kpiReveal {
+  from { opacity: 0; transform: translateY(6px) scale(0.9); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes slideIn {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideOut {
+  from { transform: translateX(0); opacity: 1; }
+  to { transform: translateX(100%); opacity: 0; }
+}
+
+@layer utilities {
+  .font-mono {
+    font-family: 'JetBrains Mono', monospace !important;
+    font-feature-settings: 'tnum';
+  }
+
+  .animate-fade-in-up {
+    animation: fadeInUp 300ms ease-out forwards;
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 200ms ease-out forwards;
+  }
+
+  .kpi-value {
+    animation: kpiReveal 500ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .animate-scale-in {
+    animation: scaleIn 200ms ease-out forwards;
+  }
+}
+
+/* === Card Styles === */
+.card-base {
+  box-shadow: var(--card-shadow);
+  background-color: var(--bg-card);
+  border-radius: var(--card-radius);
+  border: var(--card-border);
+  contain: layout paint;
+}
+
+.card-base:hover {
+  box-shadow: var(--card-shadow-hover);
+}
+
+/* === STATUS BADGES === */
+.status-unvollstaendig { background: #fff3cd; color: #856404; }
+.status-zu-validieren { background: #cce5ff; color: #004085; }
+.status-export-bereit { background: #d4edda; color: #155724; }
+.status-abgeschlossen { background: #d1e7dd; color: #0f5132; }
+.status-abgelehnt { background: #f8d7da; color: #721c24; }
+.status-wiedervorlage { background: #e2e3e5; color: #383d41; }

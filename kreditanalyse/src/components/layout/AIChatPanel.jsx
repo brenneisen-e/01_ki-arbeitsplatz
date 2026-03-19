@@ -10,9 +10,103 @@ const viewContextPrompts = {
   analysis: 'Du hilfst bei der §18 KWG Prüfung, Bilanzanalyse, BWA-Auswertung und Kapitaldienstfähigkeitsberechnung.',
   rating: 'Du hilfst bei der Erstellung und Bewertung von Kreditratings (quantitativ, qualitativ, Eigentümer, Kontoführung).',
   collateral: 'Du hilfst bei der Bewertung von Kreditsicherheiten, Haircut-Berechnung und Blankoanteil-Ermittlung.',
+  'credit-proposal': 'Du hilfst bei der Erstellung der Kreditempfehlung, Zusammenfassung der Analyseergebnisse und Konditionierung.',
   decision: 'Du hilfst bei der Kreditentscheidung, Konditionenberechnung, Votierung und dem Genehmigungsworkflow.',
+  contract: 'Du hilfst bei der Kreditvertragserstellung, Vertragsklauseln und LMA-Standardverträgen.',
   monitoring: 'Du hilfst beim Kreditmonitoring, Frühwarnindikatoren, Rating-Migration und Watchlist-Management.',
 };
+
+const viewSuggestedQuestions = {
+  dashboard: [
+    'Welche Anträge haben höchste Priorität?',
+    'Gibt es überfällige Vorgänge?',
+    'Wie ist die aktuelle Pipeline-Verteilung?',
+  ],
+  application: [
+    'Sind alle Pflichtunterlagen eingereicht?',
+    'Was fehlt noch für die Antragsvollständigkeit?',
+    'Wie ist die Kredithistorie mit diesem Kunden?',
+  ],
+  kyc: [
+    'Gibt es Auffälligkeiten bei der KYC-Prüfung?',
+    'Wer sind die wirtschaftlich Berechtigten (UBOs)?',
+    'Liegen PEP- oder Sanktionstreffer vor?',
+  ],
+  analysis: [
+    'Wie bewertest du die Bilanz im Dreijahresvergleich?',
+    'Ist die Kapitaldienstfähigkeit gegeben?',
+    'Welche Kennzahlen weichen von Branchenwerten ab?',
+  ],
+  rating: [
+    'Wie setzt sich das Rating zusammen?',
+    'Welche Faktoren treiben das Rating nach oben/unten?',
+    'Wie hat sich das Rating im Zeitverlauf entwickelt?',
+  ],
+  collateral: [
+    'Reichen die Sicherheiten zur Deckung aus?',
+    'Wie hoch ist der Blankoanteil?',
+    'Welche zusätzlichen Sicherheiten wären sinnvoll?',
+  ],
+  'credit-proposal': [
+    'Erstelle eine Zusammenfassung der Kreditempfehlung.',
+    'Welche Auflagen sollten vereinbart werden?',
+    'Welche Risiken sollten im Votum angesprochen werden?',
+  ],
+  decision: [
+    'Wie bewertest du das Gesamtrisiko des Engagements?',
+    'Ist die vorgeschlagene Konditionierung marktgerecht?',
+    'Welche Auflagen empfiehlst du für die Genehmigung?',
+  ],
+  contract: [
+    'Welche Vertragsklauseln sind besonders wichtig?',
+    'Gibt es regulatorische Anforderungen an den Vertrag?',
+    'Welche Financial Covenants sollten aufgenommen werden?',
+  ],
+  monitoring: [
+    'Gibt es aktuelle Frühwarnindikatoren?',
+    'Wie hat sich das Rating seit Bewilligung verändert?',
+    'Welche Covenants sollten überprüft werden?',
+  ],
+};
+
+const viewLabels = {
+  dashboard: 'Dashboard',
+  application: 'Kreditantrag',
+  kyc: 'KYC & Compliance',
+  analysis: '§18 KWG Prüfung',
+  rating: 'Rating',
+  collateral: 'Sicherheiten',
+  'credit-proposal': 'Kreditempfehlung',
+  decision: 'Kreditentscheidung',
+  contract: 'Kreditvertrag',
+  monitoring: 'Monitoring',
+};
+
+/**
+ * Convert simple markdown-like formatting to HTML.
+ * Handles **bold**, *italic*, and - / bullet lists.
+ */
+function formatMessageHtml(text) {
+  let html = text
+    // Escape HTML entities first
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    // **bold**
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    // *italic* (but not inside <strong>)
+    .replace(/(?<!\*)\*([^*]+?)\*(?!\*)/g, '<em>$1</em>')
+    // Lines starting with - or • as list items
+    .replace(/^[\-•]\s+(.+)$/gm, '<li>$1</li>')
+    // Wrap consecutive <li> in <ul>
+    .replace(/((?:<li>.*<\/li>\n?)+)/g, '<ul class="ai-list">$1</ul>')
+    // Double newlines → paragraph breaks
+    .replace(/\n\n/g, '</p><p>')
+    // Single newlines → line breaks (but not inside lists)
+    .replace(/\n/g, '<br/>');
+
+  return `<p>${html}</p>`;
+}
 
 export default function AIChatPanel() {
   const { state, dispatch, getSelectedCompany } = useApp();
@@ -32,6 +126,8 @@ export default function AIChatPanel() {
   }, [state.aiPanelOpen]);
 
   if (!state.aiPanelOpen) return null;
+
+  const suggestions = viewSuggestedQuestions[state.currentView] || viewSuggestedQuestions.dashboard;
 
   const handleExportPdf = (content) => {
     const companyName = company?.firma || 'Kreditanalyse';
@@ -64,16 +160,16 @@ export default function AIChatPanel() {
     setTimeout(() => URL.revokeObjectURL(url), 60000);
   };
 
-  const handleSend = async () => {
-    if (!input.trim() || loading) return;
-    const message = input.trim();
+  const handleSend = async (overrideMessage) => {
+    const message = (overrideMessage || input).trim();
+    if (!message || loading) return;
     setInput('');
 
     const contextInfo = company
       ? `Aktueller Kontext: ${company.firma} (${company.branche}), Kreditantrag über ${company.kredit?.betrag?.toLocaleString('de-DE')} € für ${company.kredit?.verwendung}.`
       : 'Es ist kein spezifischer Kreditantrag ausgewählt.';
 
-    const systemPrompt = `Du bist ein erfahrener Kreditanalyst bei einer deutschen Bank (Sparkasse/Genossenschaftsbank). ${viewContextPrompts[state.currentView] || ''} ${contextInfo} Antworte auf Deutsch, professionell und präzise. Verwende bankübliche Fachbegriffe. Beziehe dich auf regulatorische Anforderungen (MaRisk, KWG, CRR, GwG) wo relevant.`;
+    const systemPrompt = `Du bist ein erfahrener Kreditanalyst bei einer deutschen Bank (Sparkasse/Genossenschaftsbank). ${viewContextPrompts[state.currentView] || ''} ${contextInfo} Antworte auf Deutsch, professionell und präzise. Verwende bankübliche Fachbegriffe. Beziehe dich auf regulatorische Anforderungen (MaRisk, KWG, CRR, GwG) wo relevant. Formatiere deine Antwort NICHT mit Markdown. Verwende kein ** für Fettdruck. Schreibe in klarem Fließtext mit Absätzen.`;
 
     await sendChatMessage(systemPrompt, message);
   };
@@ -85,40 +181,68 @@ export default function AIChatPanel() {
     }
   };
 
+  /** Suggestion chips - shown initially and after every assistant reply */
+  const SuggestionChips = ({ intro }) => (
+    <div className={intro ? 'text-center text-text-muted text-sm py-6' : 'py-2'}>
+      {intro && (
+        <>
+          <Bot size={32} className="mx-auto mb-3 opacity-30" />
+          <p className="mb-1">Ich bin im Bereich <strong className="text-text-secondary">{viewLabels[state.currentView] || state.currentView}</strong>.</p>
+          <p className="text-xs text-text-muted mb-4">Hier sind passende Fragen:</p>
+        </>
+      )}
+      <div className={intro ? 'space-y-2' : 'flex flex-wrap gap-1.5'}>
+        {suggestions.map((q) => (
+          <button
+            key={q}
+            onClick={() => handleSend(q)}
+            className={
+              intro
+                ? 'block w-full text-left px-3 py-2 text-xs bg-surface rounded-lg hover:bg-border transition-colors'
+                : 'inline-block px-2.5 py-1.5 text-[11px] bg-surface text-text-secondary rounded-lg hover:bg-border transition-colors text-left leading-snug'
+            }
+          >
+            {q}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+
+  // Check if the last message is from the assistant (so we show follow-up suggestions)
+  const lastMsg = state.aiMessages[state.aiMessages.length - 1];
+  const showFollowUpSuggestions = lastMsg?.role === 'assistant' && !loading;
+
   return (
     <div className="w-96 bg-white border-l border-border flex flex-col h-full shrink-0">
       {/* Header */}
-      <div className="flex items-center justify-between px-4 h-14 border-b border-border shrink-0">
-        <div className="flex items-center gap-2">
-          <Bot size={18} className="text-primary" />
-          <span className="text-sm font-semibold font-headline">KI-Assistent</span>
+      <div className="border-b border-border shrink-0">
+        <div className="flex items-center justify-between px-4 h-14">
+          <div className="flex items-center gap-2">
+            <Bot size={18} className="text-primary" />
+            <span className="text-sm font-semibold font-headline">KI-Assistent</span>
+          </div>
+          <button
+            onClick={() => dispatch({ type: 'SET_AI_PANEL', open: false })}
+            className="p-1 text-text-muted hover:text-text-primary transition-colors"
+          >
+            <X size={16} />
+          </button>
         </div>
-        <button
-          onClick={() => dispatch({ type: 'SET_AI_PANEL', open: false })}
-          className="p-1 text-text-muted hover:text-text-primary transition-colors"
-        >
-          <X size={16} />
-        </button>
+        {/* Current context indicator */}
+        <div className="px-4 pb-2.5 flex items-center gap-1.5">
+          <span className="inline-block w-2 h-2 rounded-full bg-accent animate-pulse" />
+          <span className="text-[11px] text-text-muted font-body">
+            Kontext: <span className="font-semibold text-text-secondary">{viewLabels[state.currentView] || state.currentView}</span>
+            {company && <span className="text-text-muted"> · {company.firma}</span>}
+          </span>
+        </div>
       </div>
 
       {/* Messages */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-thin">
         {state.aiMessages.length === 0 && (
-          <div className="text-center text-text-muted text-sm py-8">
-            <Bot size={32} className="mx-auto mb-3 opacity-30" />
-            <p>Stelle eine Frage zum aktuellen Bereich.</p>
-            <div className="mt-4 space-y-2">
-              {['Wie bewertest du die Eigenkapitalquote?', 'Welche Risiken siehst du?', 'Erstelle eine Zusammenfassung.'].map((q) => (
-                <button
-                  key={q}
-                  onClick={() => { setInput(q); inputRef.current?.focus(); }}
-                  className="block w-full text-left px-3 py-2 text-xs bg-surface rounded-lg hover:bg-border transition-colors"
-                >
-                  {q}
-                </button>
-              ))}
-            </div>
-          </div>
+          <SuggestionChips intro />
         )}
         {state.aiMessages.map((msg, i) => (
           <div key={i} className={`flex gap-2 ${msg.role === 'user' ? 'justify-end' : ''}`}>
@@ -132,7 +256,14 @@ export default function AIChatPanel() {
                 ? 'bg-primary text-white'
                 : 'bg-surface text-text-primary'
             }`}>
-              <div className="whitespace-pre-wrap">{msg.content}</div>
+              {msg.role === 'assistant' ? (
+                <div
+                  className="ai-message-content"
+                  dangerouslySetInnerHTML={{ __html: formatMessageHtml(msg.content) }}
+                />
+              ) : (
+                <div className="whitespace-pre-wrap">{msg.content}</div>
+              )}
               {msg.role === 'assistant' && (
                 <button
                   onClick={() => handleExportPdf(msg.content)}
@@ -161,6 +292,7 @@ export default function AIChatPanel() {
             </div>
           </div>
         )}
+        {showFollowUpSuggestions && <SuggestionChips />}
         <div ref={messagesEndRef} />
       </div>
 
@@ -177,7 +309,7 @@ export default function AIChatPanel() {
             className="flex-1 px-3 py-2 border border-border rounded-lg text-sm resize-none focus:outline-none focus:border-primary-light focus:ring-2 focus:ring-primary-light/10"
           />
           <button
-            onClick={handleSend}
+            onClick={() => handleSend()}
             disabled={!input.trim() || loading}
             className="px-3 py-2 bg-primary text-white rounded-lg hover:bg-primary-light transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >

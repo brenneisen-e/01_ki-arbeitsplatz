@@ -373,13 +373,46 @@ function DeckungslueckeBar({ data, t }) {
 }
 
 function VergleichsTabelle({ data }) {
-  const { titel, spalten, zeilen } = data;
+  const { titel, spalten, zeilen, fbVergleich } = data;
 
   return (
     <div>
       <h5 className="text-xs font-semibold text-slate-600 uppercase tracking-wider mb-3">
         {titel}
       </h5>
+      {/* F&B Rating Vergleich Header */}
+      {fbVergleich && (
+        <div className="flex items-center gap-4 mb-3 p-3 bg-gradient-to-r from-slate-50 to-blue-50 rounded-xl border border-slate-200">
+          <img
+            src="https://img.logo.dev/franke-bornberg.de?token=pk_H7vb5Y2lTsW47U4Xq-w3HA&size=48&format=png"
+            alt="Franke & Bornberg"
+            className="w-6 h-6 rounded"
+            onError={(e) => e.target.style.display='none'}
+          />
+          <div className="flex items-center gap-6 flex-1">
+            <div className="text-center">
+              <div className="text-[10px] text-slate-400 uppercase tracking-wider">Bisherig</div>
+              <div className={`text-lg font-bold ${fbVergleich.alt >= 75 ? 'text-emerald-600' : fbVergleich.alt >= 55 ? 'text-amber-600' : 'text-red-600'}`}>
+                {fbVergleich.alt}
+              </div>
+              <div className="text-[10px] text-slate-400">{fbVergleich.altKlasse}</div>
+            </div>
+            <ArrowRight size={16} className="text-slate-300" />
+            <div className="text-center">
+              <div className="text-[10px] text-slate-400 uppercase tracking-wider">Empfehlung</div>
+              <div className={`text-lg font-bold ${fbVergleich.neu >= 75 ? 'text-emerald-600' : fbVergleich.neu >= 55 ? 'text-amber-600' : 'text-red-600'}`}>
+                {fbVergleich.neu}
+              </div>
+              <div className="text-[10px] text-slate-400">{fbVergleich.neuKlasse}</div>
+            </div>
+            {fbVergleich.neu > fbVergleich.alt && (
+              <span className="ml-auto text-xs font-medium px-2 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+                +{fbVergleich.neu - fbVergleich.alt} Punkte
+              </span>
+            )}
+          </div>
+        </div>
+      )}
       <Card padding={false} className="overflow-hidden">
         <table className="w-full text-sm">
           <thead>
@@ -400,15 +433,38 @@ function VergleichsTabelle({ data }) {
             {zeilen.map((z, i) => (
               <tr
                 key={i}
-                className={`border-t border-slate-100 ${i % 2 === 1 ? 'bg-slate-50/50' : ''}`}
+                className={`border-t border-slate-100 ${i % 2 === 1 ? 'bg-slate-50/50' : ''} ${z.isFbRating ? 'bg-blue-50/30' : ''}`}
               >
-                <td className="px-4 py-2.5 text-slate-600 font-medium">{z.merkmal}</td>
-                <td className="px-4 py-2.5 text-slate-500">{z.aktuell}</td>
+                <td className="px-4 py-2.5 text-slate-600 font-medium">
+                  <span className="flex items-center gap-1.5">
+                    {z.isFbRating && (
+                      <img
+                        src="https://img.logo.dev/franke-bornberg.de?token=pk_H7vb5Y2lTsW47U4Xq-w3HA&size=24&format=png"
+                        alt="F&B"
+                        className="w-3.5 h-3.5 rounded"
+                        onError={(e) => e.target.style.display='none'}
+                      />
+                    )}
+                    {z.merkmal}
+                  </span>
+                </td>
+                <td className={`px-4 py-2.5 ${z.isFbRating ? 'font-bold' : ''} text-slate-500`}>
+                  {z.isFbRating ? (
+                    <span className={parseInt(z.aktuell) >= 75 ? 'text-emerald-600' : parseInt(z.aktuell) >= 55 ? 'text-amber-600' : 'text-red-600'}>
+                      {z.aktuell}
+                    </span>
+                  ) : z.aktuell}
+                </td>
                 <td className={`px-4 py-2.5 text-right font-medium ${
                   z.highlight ? 'text-emerald-600' : 'text-slate-700'
                 }`}>
-                  {z.highlight && <span className="font-semibold">{z.angebot}</span>}
-                  {!z.highlight && z.angebot}
+                  {z.isFbRating ? (
+                    <span className={`font-bold ${parseInt(z.angebot) >= 75 ? 'text-emerald-600' : parseInt(z.angebot) >= 55 ? 'text-amber-600' : 'text-red-600'}`}>
+                      {z.angebot}
+                    </span>
+                  ) : z.highlight ? (
+                    <span className="font-semibold">{z.angebot}</span>
+                  ) : z.angebot}
                 </td>
               </tr>
             ))}

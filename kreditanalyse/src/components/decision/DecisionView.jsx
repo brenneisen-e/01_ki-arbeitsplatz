@@ -33,6 +33,7 @@ import {
   BadgeCheck,
   FileSignature,
   Download,
+  ClipboardCheck,
 } from 'lucide-react';
 import {
   BarChart,
@@ -56,6 +57,7 @@ import {
 } from '../../data/competencyMatrix';
 import { fillContractTemplate } from '../../utils/contractTemplate';
 import { exportContractAsDocx } from '../../utils/contractExport';
+import { generateKiKreditempfehlung, convertKiResultToHtml } from '../../utils/kiEmpfehlung';
 
 // =============================================================================
 // Constants
@@ -145,8 +147,18 @@ function SectionHeading({ children }) {
 // =============================================================================
 
 export default function DecisionView() {
-  const { getSelectedCompany, navigate, dispatch } = useApp();
+  const { state, getSelectedCompany, navigate, dispatch } = useApp();
   const company = getSelectedCompany();
+  const currentUser = state.currentUser;
+  const customName = typeof window !== 'undefined' ? localStorage.getItem('kia_user_fullname') : '';
+
+  // Erstvotum = Firmenkundenberater (weber), Zweitvotum = Kreditanalyst (fischer)
+  const marktUser = state.availableUsers.find(u => u.id === 'weber') || state.availableUsers[0];
+  const marktfolgeUser = state.availableUsers.find(u => u.id === 'fischer') || state.availableUsers[1];
+
+  // If the current user matches the slot AND has a custom profile name, use it
+  const erstvotumName = (currentUser.id === marktUser.id && customName) ? customName : marktUser.name;
+  const zweitvotumName = (currentUser.id === marktfolgeUser.id && customName) ? customName : marktfolgeUser.name;
 
   const [activeTab, setActiveTab] = useState('votierung');
 
@@ -177,9 +189,11 @@ export default function DecisionView() {
   const [marktSigniert, setMarktSigniert] = useState(false);
   const [marktfolgeSigniert, setMarktfolgeSigniert] = useState(false);
 
-  // KI Kreditvorlage
+  // KI Kreditempfehlung
   const [kiLoading, setKiLoading] = useState(false);
   const [kiResult, setKiResult] = useState(null);
+  const [kiHtml, setKiHtml] = useState(null);
+  const [kiTransferred, setKiTransferred] = useState(false);
 
   // ---------------------------------------------------------------------------
   // No-company fallback
@@ -268,25 +282,35 @@ Die regulatorischen Anforderungen gemäß §18 KWG, MaRisk BTO 1.2 sowie CRR/CRD
 
 Empfehlung: Genehmigung unter den nachfolgend genannten Auflagen und Bedingungen.`;
 
-  // Initialize defaults once
+  // Initialize defaults once (only Erstvotum pre-filled)
   if (!marktBegruendung) {
     // Using a trick: we set via timeout 0 to avoid setState during render
     setTimeout(() => {
       setMarktBegruendung(defaultMarktBegruendung);
-      setMarktfolgeBegruendung(defaultMarktfolgeBegruendung);
       setMarktEindruck('Herr ' + (company.gf?.[0]?.name?.split(' ').pop() || 'Geschäftsführer') + ' machte im persönlichen Gespräch am ' + new Date().toLocaleDateString('de-DE') + ' einen kompetenten und vertrauenswürdigen Eindruck. Die Investitionspläne wurden schlüssig und detailliert dargelegt. Das Unternehmen wird gut geführt und verfügt über klare strategische Ziele.');
-      setMarktfolgeEindruck('Die eingereichten Unterlagen sind vollständig und plausibel. Die Geschäftsführung reagiert zeitnah und kooperativ auf Rückfragen. Die Buchführungsqualität ist angemessen.');
     }, 0);
   }
 
-  // KI Kreditvorlage handler
-  const handleKiVorlage = () => {
+  // KI Kreditempfehlung handler
+  const handleKiEmpfehlung = () => {
     setKiLoading(true);
     setKiResult(null);
+    setKiHtml(null);
+    setKiTransferred(false);
     setTimeout(() => {
       setKiLoading(false);
-      setKiResult(generateKiKreditvorlage(company, kredit, betrag, bilanz, b23, simulatedRating, bestVerbind, kundenZins));
+      const plainText = generateKiKreditempfehlung(company, kredit, betrag, bilanz, b23, simulatedRating, bestVerbind, kundenZins);
+      setKiResult(plainText);
+      setKiHtml(convertKiResultToHtml(plainText));
     }, 2000);
+  };
+
+  // Transfer KI result into Erstvotum Begründung
+  const handleTransferToVotum = () => {
+    if (kiResult) {
+      setMarktBegruendung(kiResult);
+      setKiTransferred(true);
+    }
   };
 
   // ---------------------------------------------------------------------------
@@ -618,7 +642,7 @@ Empfehlung: Genehmigung unter den nachfolgend genannten Auflagen und Bedingungen
           {/* Erstvotum (Markt) */}
           <VotumCard
             title="Erstvotum (Markt)"
-            bearbeiter="M. Weber, Firmenkundenberater"
+            bearbeiter={`${erstvotumName}, ${marktUser.role}`}
             empfehlung={marktEmpfehlung}
             setEmpfehlung={setMarktEmpfehlung}
             begruendung={marktBegruendung}
@@ -637,7 +661,7 @@ Empfehlung: Genehmigung unter den nachfolgend genannten Auflagen und Bedingungen
           {/* Zweitvotum (Marktfolge) */}
           <VotumCard
             title="Zweitvotum (Marktfolge)"
-            bearbeiter="Dr. K. Fischer, Kreditanalyst"
+            bearbeiter={`${zweitvotumName}, ${marktfolgeUser.role}`}
             empfehlung={marktfolgeEmpfehlung}
             setEmpfehlung={setMarktfolgeEmpfehlung}
             begruendung={marktfolgeBegruendung}
@@ -717,11 +741,11 @@ Empfehlung: Genehmigung unter den nachfolgend genannten Auflagen und Bedingungen
           <div className="bg-surface-card border border-border rounded-xl p-6">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-base font-semibold font-headline text-text-primary">
-                KI-Kreditvorlage
+                KI-Kreditempfehlung
               </h2>
               <button
                 type="button"
-                onClick={handleKiVorlage}
+                onClick={handleKiEmpfehlung}
                 disabled={kiLoading}
                 className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg text-sm font-body hover:bg-primary-light transition-colors disabled:opacity-60"
               >
@@ -730,23 +754,46 @@ Empfehlung: Genehmigung unter den nachfolgend genannten Auflagen und Bedingungen
                 ) : (
                   <Sparkles size={16} strokeWidth={1.5} />
                 )}
-                {kiLoading ? 'Generiere Vorlage...' : 'KI-Kreditvorlage generieren'}
+                {kiLoading ? 'Generiere Empfehlung...' : 'KI-Kreditempfehlung generieren'}
               </button>
             </div>
 
             {kiLoading && (
               <div className="flex items-center gap-3 p-6 text-text-secondary text-sm">
                 <Loader2 size={20} strokeWidth={1.5} className="animate-spin text-primary" />
-                KI analysiert Kreditantrag und erstellt Vorlage...
+                KI analysiert Kreditantrag und erstellt Empfehlung...
               </div>
             )}
 
-            {kiResult && (
-              <div className="bg-surface border border-border rounded-lg p-6 prose prose-sm max-w-none">
-                <div className="whitespace-pre-wrap text-sm text-text-primary font-body leading-relaxed">
-                  {kiResult}
+            {kiHtml && (
+              <>
+                <div className="bg-surface border border-border rounded-lg p-6 prose prose-sm max-w-none">
+                  <div
+                    className="text-sm text-text-primary font-body leading-relaxed ki-recommendation-html"
+                    dangerouslySetInnerHTML={{ __html: kiHtml }}
+                  />
                 </div>
-              </div>
+                <div className="mt-4 flex items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={handleTransferToVotum}
+                    disabled={kiTransferred}
+                    className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold font-body transition-colors shadow-sm ${
+                      kiTransferred
+                        ? 'bg-accent/20 text-accent border border-accent/30 cursor-default'
+                        : 'bg-accent text-white hover:bg-accent/90'
+                    }`}
+                  >
+                    <ClipboardCheck size={16} strokeWidth={1.5} />
+                    {kiTransferred ? 'In Erstvotum übernommen' : 'In Erstvotum (Votum 1) übernehmen'}
+                  </button>
+                  {kiTransferred && (
+                    <span className="text-xs text-accent font-body">
+                      Empfehlung wurde in die Begründung des Erstvotums übertragen.
+                    </span>
+                  )}
+                </div>
+              </>
             )}
           </div>
         )}
@@ -766,16 +813,16 @@ Empfehlung: Genehmigung unter den nachfolgend genannten Auflagen und Bedingungen
     const steps = [
       {
         label: 'Erstvotum',
-        person: 'M. Weber',
-        role: 'Firmenkundenberater',
+        person: erstvotumName,
+        role: marktUser.role,
         status: 'completed',
         timestamp: '03.03.2026, 09:15',
         icon: FileText,
       },
       {
         label: 'Zweitvotum',
-        person: 'Dr. K. Fischer',
-        role: 'Kreditanalyst',
+        person: zweitvotumName,
+        role: marktfolgeUser.role,
         status: 'completed',
         timestamp: '03.03.2026, 14:30',
         icon: Shield,
@@ -1189,171 +1236,3 @@ function getApproverName(approver) {
   return names[approver] || approver;
 }
 
-// =============================================================================
-// KI Kreditvorlage generator (hardcoded realistic demo text)
-// =============================================================================
-
-function generateKiKreditvorlage(company, kredit, betrag, bilanz, b23, rating, bestVerbind, kundenZins) {
-  const firma = company.firma || 'Unternehmen';
-  const branche = company.branche || 'k.A.';
-  const gruendung = company.gruendung || '–';
-  const ort = company.adresse?.ort || '–';
-  const mitarbeiter = company.mitarbeiter || '–';
-  const gf = company.gf || [];
-  const sicherheiten = company.sicherheiten || [];
-
-  const sumSicherheiten = sicherheiten.reduce((s, si) => s + ((si.wert || 0) - (si.vorlasten || 0)), 0);
-  const deckungsquote = betrag > 0 ? Math.round(sumSicherheiten / betrag * 100) : 0;
-
-  const totalBestehend = bestVerbind.reduce((s, v) => s + (v.restschuld || 0), 0);
-  const neuObligo = totalBestehend + betrag;
-
-  return `═══════════════════════════════════════════════════════════════
-                    KREDITVORLAGE
-             ${firma}
-             Erstellt: ${new Date().toLocaleDateString('de-DE')} | Vertraulich
-═══════════════════════════════════════════════════════════════
-
-1. KUNDENPROFIL
-───────────────────────────────────────────────────────────────
-Firma:              ${firma}
-Rechtsform:         ${company.rechtsform || '–'}
-HRB:                ${company.hrb || '–'}
-Sitz:               ${ort}
-Gründungsjahr:      ${gruendung}
-Branche:            ${branche} (WZ-Code: ${company.wz_code || '–'})
-Mitarbeiter:        ${mitarbeiter}
-Geschäftsführung:   ${gf.map(g => `${g.name} (${g.funktion}, ${g.anteil}%, seit ${g.seit})`).join('; ')}
-Hauptbankverbindung: ${company.hauptbank ? 'Ja' : 'Nein'}
-SCHUFA GF:          ${company.schufa ? Object.values(company.schufa).join(' / ') : '–'}
-Creditreform-Index: ${company.creditreform_index || '–'}
-
-2. FINANZIERUNGSANLASS
-───────────────────────────────────────────────────────────────
-Kreditart:          ${kredit.art || '–'}
-Kreditbetrag:       ${formatCurrency(betrag)}
-Laufzeit:           ${kredit.laufzeit || '–'} Monate
-Tilgungsfrei:       ${kredit.tilgungsfrei || 0} Monate
-Verwendungszweck:   ${kredit.verwendung || '–'}
-
-Das Unternehmen plant eine strategische Investition zur Erweiterung der
-Produktionskapazitäten bzw. zur Modernisierung des Geschäftsbetriebs.
-Die Investition steht im Einklang mit der langfristigen Unternehmensstrategie
-und soll die Wettbewerbsfähigkeit nachhaltig stärken. Die Investitionssumme
-beträgt ca. ${formatCurrency(betrag * 1.2)}, wovon der Kunde einen Eigenanteil
-von ${formatCurrency(betrag * 0.2)} (ca. 16,7%) einbringt.
-
-3. FINANZIELLE KENNZAHLEN (Jahresabschluss 2023)
-───────────────────────────────────────────────────────────────
-Umsatzerlöse:           ${formatCurrency(b23.umsatz || 0)}
-Materialaufwand:        ${formatCurrency(b23.materialaufwand || 0)}
-Personalaufwand:        ${formatCurrency(b23.personalaufwand || 0)}
-EBITDA:                 ${formatCurrency((b23.umsatz || 0) + (b23.sonstige_ertraege || 0) - (b23.materialaufwand || 0) - (b23.personalaufwand || 0) - (b23.sonstige_aufwendungen || 0))}
-Jahresüberschuss:       ${formatCurrency(b23.jahresueberschuss || 0)}
-Bilanzsumme:            ${formatCurrency((b23.immateriell || 0) + (b23.sachanlagen || 0) + (b23.finanzanlagen || 0) + (b23.vorraete || 0) + (b23.forderungen || 0) + (b23.liquide || 0))}
-Eigenkapital:           ${formatCurrency(b23.eigenkapital || 0)}
-Eigenkapitalquote:      ${b23.eigenkapital && b23.umsatz ? formatNumber(b23.eigenkapital / ((b23.immateriell || 0) + (b23.sachanlagen || 0) + (b23.finanzanlagen || 0) + (b23.vorraete || 0) + (b23.forderungen || 0) + (b23.liquide || 0)) * 100, 1) + '%' : '–'}
-Verschuldungsgrad:      ${b23.eigenkapital ? formatNumber(((b23.verb_kurz || 0) + (b23.verb_lang || 0)) / b23.eigenkapital * 100, 1) + '%' : '–'}
-
-Die Umsatzentwicklung der letzten drei Geschäftsjahre zeigt einen positiven
-Trend mit kontinuierlichem Wachstum. Die Ertragslage ist stabil, und die
-Margen bewegen sich im branchenüblichen Rahmen. Die Liquiditätssituation
-ist geordnet mit ausreichenden Reserven für den laufenden Geschäftsbetrieb.
-
-4. RATING-ERGEBNIS
-───────────────────────────────────────────────────────────────
-Internes Rating:        Klasse ${rating}
-Bezeichnung:            ${rating <= 3 ? 'Gut' : rating <= 6 ? 'Befriedigend' : rating <= 9 ? 'Ausreichend' : 'Mangelhaft'}
-Ausfallwahrscheinlichkeit (PD): ${rating <= 3 ? '0,07' : rating <= 6 ? '0,35' : rating <= 9 ? '1,35' : '5,00'}%
-IFD-Masterskala:        ${rating <= 5 ? 'Klasse III (BBB)' : rating <= 9 ? 'Klasse IV (BB)' : 'Klasse V (B)'}
-
-Das Rating basiert auf der quantitativen Bilanzanalyse (Gewichtung 60%),
-der qualitativen Bewertung von Management, Marktposition und Geschäfts-
-modell (Gewichtung 25%) sowie den Kontoinformationen und externen
-Bonitätsdaten (Gewichtung 15%). Die Rating-Klasse ${rating} entspricht einer
-${rating <= 3 ? 'guten' : rating <= 6 ? 'befriedigenden' : 'ausreichenden'} Bonität des Kreditnehmers.
-
-5. SICHERHEITENÜBERSICHT
-───────────────────────────────────────────────────────────────
-${sicherheiten.length > 0 ? sicherheiten.map((s, i) =>
-`${i + 1}. ${s.art}
-   Bezeichnung:    ${s.bezeichnung}
-   Marktwert:      ${formatCurrency(s.wert)}
-   Vorlasten:      ${formatCurrency(s.vorlasten || 0)}
-   Nettowert:      ${formatCurrency((s.wert || 0) - (s.vorlasten || 0))}
-   Rang:           ${s.rang}. Rang
-   Bewertung:      ${s.bewertung} vom ${s.datum ? new Date(s.datum).toLocaleDateString('de-DE') : '–'}`
-).join('\n\n') : 'Keine Sicherheiten erfasst.'}
-
-Sicherheitenwert gesamt:     ${formatCurrency(sumSicherheiten)}
-Kreditbetrag:                ${formatCurrency(betrag)}
-Rechnerische Deckungsquote:  ${deckungsquote}%
-Blankoanteil:                ${formatCurrency(Math.max(0, betrag - sumSicherheiten))}
-
-6. BESTEHENDES OBLIGO
-───────────────────────────────────────────────────────────────
-${bestVerbind.length > 0 ? bestVerbind.map(v =>
-`• ${v.glaeubiger}: ${v.art}, Restschuld ${formatCurrency(v.restschuld)}, Zins ${formatNumber(v.zins, 1)}%, Ende ${v.ende}`
-).join('\n') : 'Keine bestehenden Verbindlichkeiten.'}
-
-Bestehendes Obligo:          ${formatCurrency(totalBestehend)}
-Neues Engagement:            ${formatCurrency(betrag)}
-Gesamtobligo nach Kredit:    ${formatCurrency(neuObligo)}
-
-7. SWOT-ANALYSE
-───────────────────────────────────────────────────────────────
-
-  STÄRKEN (Strengths)                 SCHWÄCHEN (Weaknesses)
-  ─────────────────────               ─────────────────────────
-  • Langjährige Marktpräsenz          • Abhängigkeit von konjunktur-
-    seit ${gruendung}                       sensitivem ${branche}-Sektor
-  • Erfahrene Geschäftsführung        • Begrenzte Diversifikation
-    mit > ${gf[0]?.erfahrung || 15} Jahren Expertise       der Kundenbasis
-  • Stabile Eigenkapitalbasis         • Steigende Personalkosten
-  • Gute regionale Marktposition      • Investitionsstau in Teilbereichen
-    im Raum ${ort}
-
-  CHANCEN (Opportunities)             RISIKEN (Threats)
-  ─────────────────────               ─────────────────────────
-  • Kapazitätserweiterung durch       • Zunehmender Wettbewerbsdruck
-    geplante Investition                durch internationale Anbieter
-  • Digitalisierungspotenziale        • Rohstoffpreisvolatilität
-  • Wachsende Nachfrage im            • Fachkräftemangel in der Region
-    regionalen Marktumfeld            • Regulatorische Verschärfungen
-  • Cross-Selling-Potenzial           • Zinsänderungsrisiko bei
-    für Bankprodukte                    variablem Anteil
-
-8. EMPFEHLUNG UND AUFLAGEN
-───────────────────────────────────────────────────────────────
-Auf Basis der durchgeführten Kredit- und Risikoanalyse wird die
-GENEHMIGUNG des beantragten Kreditengagements empfohlen.
-
-Konditionen:
-  • Kundenzins:       ${formatNumber(kundenZins, 2)}% p.a.
-  • Laufzeit:         ${kredit.laufzeit || '–'} Monate
-  • Tilgungsfreie Z.: ${kredit.tilgungsfrei || 0} Monate
-  • Auszahlungskurs:  100%
-
-Auflagen und Bedingungen:
-  1. Quartalsweise Einreichung der BWA und SuSa
-  2. Jährliche Einreichung des testierten Jahresabschlusses
-     innerhalb von 6 Monaten nach Geschäftsjahresende
-  3. Nachweis der zweckgebundenen Mittelverwendung
-  4. Halbjährliche Überprüfung der Sicherheitenwerte
-  5. Einhaltung der Financial Covenants:
-     - Eigenkapitalquote > 25%
-     - Dynamischer Verschuldungsgrad < 7 Jahre
-     - Kapitaldienstdeckungsgrad > 1,2x
-  6. Negativerklärung: Keine Bestellung weiterer dinglicher
-     Sicherheiten zugunsten Dritter ohne Zustimmung der Bank
-  7. Informationspflicht bei wesentlichen Änderungen der
-     Gesellschafterstruktur oder Geschäftsführung
-
-Nächste Überprüfung: ${new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toLocaleDateString('de-DE')}
-
-═══════════════════════════════════════════════════════════════
-Erstellt durch KI-Kreditanalysemodul | ${new Date().toLocaleDateString('de-DE')}
-Dieses Dokument dient als Entscheidungsvorlage und ersetzt
-nicht die individuelle Prüfung durch den Kompetenzträger.
-═══════════════════════════════════════════════════════════════`;
-}

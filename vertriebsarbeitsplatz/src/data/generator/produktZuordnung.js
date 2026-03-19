@@ -7,6 +7,36 @@ import { VERSICHERUNGS_PRODUKTE, BANKING_PRODUKTE, VV_PRODUKTE, FREMD_PROFILE, p
 // ═══ i18n helpers ═══
 import { getLang, tx } from '../../utils/langHelper';
 
+// ═══ Franke und Bornberg Rating: Versicherungsprodukte bewerten ═══
+// Score 0-100, höhere Werte = besseres Produkt
+const FB_RATING_RANGES = {
+  // Eigene Produkte (ERGO/R+V) tendieren zu guten Ratings
+  eigen: { min: 65, max: 95 },
+  // Fremdprodukte haben breitere Streuung
+  fremd: { min: 35, max: 92 },
+};
+
+function generateFbRating(isEigen) {
+  const range = isEigen ? FB_RATING_RANGES.eigen : FB_RATING_RANGES.fremd;
+  return randomBetween(range.min, range.max);
+}
+
+function fbRatingKlasse(score) {
+  if (score >= 85) return 'FFF+ (Hervorragend)';
+  if (score >= 75) return 'FFF (Sehr gut)';
+  if (score >= 65) return 'FF+ (Gut)';
+  if (score >= 55) return 'FF (Befriedigend)';
+  if (score >= 45) return 'F+ (Ausreichend)';
+  return 'F (Mangelhaft)';
+}
+
+// Product types that receive F&B ratings (insurance products only)
+const FB_RATED_TYPES = ['bu','rlv','kfz','haftpflicht','hausrat','wohngebaeude',
+  'rechtsschutz','unfall','pflege','pkv','zahnzusatz','krankentagegeld',
+  'elementar','tierhalter','kapital_lv','fondspolice','ruerup','riester',
+  'sterbegeld','ausbildung','gewerbe_hp','inhaltsvers','berufshp','cyber',
+  'rv_kfz','rv_bu','rv_rlv','rv_haftpflicht','rv_hausrat','rv_wohngebaeude','rv_pflege'];
+
 // ═══ Versicherer-Produkt-Name generieren ═══
 function generateProduktName(prod, modus) {
   const institut = modus === 'versicherung' ? 'ERGO'
@@ -88,7 +118,7 @@ export function assignEigeneProdukte(person, modus) {
 
     for (let i = 0; i < Math.min(dichte, shuffled.length); i++) {
       const p = shuffled[i];
-      produkte.push({
+      const entry = {
         typ: p.id,
         sparte: p.sparte,
         produkt: `ERGO ${p.name.replace(/versicherung/i, '').replace(/insurance/i, '').trim()}`,
@@ -96,7 +126,12 @@ export function assignEigeneProdukte(person, modus) {
         praemie: calculatePraemie(p, person),
         seit: generateVertragsdatum(person.alter),
         status: weightedRandom({ aktiv: 70, optimierbar: 20, auslaufend: 10 }),
-      });
+      };
+      if (FB_RATED_TYPES.includes(p.id)) {
+        entry.fbRating = generateFbRating(true);
+        entry.fbKlasse = fbRatingKlasse(entry.fbRating);
+      }
+      produkte.push(entry);
     }
   }
 
@@ -124,6 +159,10 @@ export function assignEigeneProdukte(person, modus) {
         status: weightedRandom({ aktiv: 80, optimierbar: 15, auslaufend: 5 }),
       };
       if (volumen) entry.volumen = volumen;
+      if (FB_RATED_TYPES.includes(p.id)) {
+        entry.fbRating = generateFbRating(true);
+        entry.fbKlasse = fbRatingKlasse(entry.fbRating);
+      }
       produkte.push(entry);
     }
   }
@@ -224,12 +263,17 @@ function assignFremdVersicherung(person, eigeneProdukte) {
     .filter(p => !eigeneTypen.includes(p.id) && p.relevanz(person) && randomBetween(0, 100) > 50)
     .slice(0, randomBetween(1, 3))
     .forEach(p => {
-      fremd.push({
+      const entry = {
         typ: p.id, institut: random(profil.versicherer),
         details: generateProduktDetails(p, person),
         volumen: calculatePraemie(p, person),
         consent: randomBetween(0, 100) > 40,
-      });
+      };
+      if (FB_RATED_TYPES.includes(p.id)) {
+        entry.fbRating = generateFbRating(false);
+        entry.fbKlasse = fbRatingKlasse(entry.fbRating);
+      }
+      fremd.push(entry);
     });
 
   return fremd;
@@ -273,12 +317,17 @@ function assignFremdBanking(person, eigeneProdukte) {
   shuffle(versicherungen).slice(0, randomBetween(1, 3)).forEach(v => {
     if (randomBetween(0, 100) < v.chance) {
       const prod = VERSICHERUNGS_PRODUKTE.find(p => p.id === v.typ);
-      fremd.push({
+      const entry = {
         typ: v.typ, institut: v.institut(),
         details: prod ? generateProduktDetails(prod, person) : v.typ,
         volumen: randomBetween(200, 2000),
         consent: randomBetween(0, 100) > 40,
-      });
+      };
+      if (FB_RATED_TYPES.includes(v.typ)) {
+        entry.fbRating = generateFbRating(false);
+        entry.fbKlasse = fbRatingKlasse(entry.fbRating);
+      }
+      fremd.push(entry);
     }
   });
 
@@ -369,11 +418,15 @@ function assignFremdVV(person) {
       details: `${pickKfzModell(person)}, ${tx('Vollkasko', 'Comprehensive')}`,
       volumen: randomBetween(800, 3000),
       consent: false,
+      fbRating: generateFbRating(false),
+      fbKlasse: fbRatingKlasse(generateFbRating(false)),
     });
   }
 
   return fremd;
 }
+
+export { generateFbRating, fbRatingKlasse, FB_RATED_TYPES };
 
 // ═══ Plausibilitäts-Validierung ═══
 export function validateFremdProdukte(person, modus) {

@@ -88,7 +88,7 @@ export default function KommunikationTab({ kunde }) {
       </div>
 
       {/* Timeline */}
-      <Card hover={false}>
+      <Card>
         <h3 className="font-semibold text-slate-800 mb-4">{t('kommunikationsTimeline')}</h3>
         {filtered.length === 0 ? (
           <div className="text-sm text-slate-400 py-8 text-center">{t('keineKommunikation')}</div>

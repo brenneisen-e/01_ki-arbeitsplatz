@@ -38,7 +38,7 @@ export default function ProduktabschlussTab({ kunde }) {
 
   if (abschluesse.length === 0) {
     return (
-      <Card hover={false}>
+      <Card>
         <div className="text-center py-12 text-slate-400">
           <ShoppingCart size={32} className="mx-auto mb-3 opacity-50" />
           <p className="text-sm">{t('keineOffenenProduktabschluesse')}</p>
@@ -104,7 +104,7 @@ function AntragCard({ antrag, t, statusConfig: STATUS_CONFIG }) {
   const progress = totalSteps > 0 ? (completedSteps / totalSteps) * 100 : 0;
 
   return (
-    <Card hover={false}>
+    <Card>
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3">

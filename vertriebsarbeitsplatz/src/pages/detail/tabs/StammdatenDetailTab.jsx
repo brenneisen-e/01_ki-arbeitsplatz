@@ -141,7 +141,7 @@ export default function StammdatenDetailTab({ kunde }) {
   return (
     <div className="space-y-4">
       {/* Kunden-Profil Header */}
-      <Card hover={false}>
+      <Card>
         <div className="flex items-center gap-5">
           {foto && !fotoFailed ? (
             <img
@@ -185,7 +185,7 @@ export default function StammdatenDetailTab({ kunde }) {
 
       <div className="grid grid-cols-2 gap-4">
         {/* Persoenliche Daten */}
-        <Card hover={false}>
+        <Card>
           <div className="flex items-center gap-2 mb-4">
             <User size={20} className="text-slate-500" strokeWidth={1.75} />
             <h3 className="font-semibold text-slate-800">{t('persoenlicheDaten')}</h3>
@@ -230,7 +230,7 @@ export default function StammdatenDetailTab({ kunde }) {
         </Card>
 
         {/* Finanzuebersicht */}
-        <Card hover={false}>
+        <Card>
           <div className="flex items-center gap-2 mb-4">
             <Wallet size={20} className="text-slate-500" strokeWidth={1.75} />
             <h3 className="font-semibold text-slate-800">{t('finanzuebersicht')}</h3>

@@ -32,7 +32,7 @@ export default function ImpulseTab({ kunde }) {
   return (
     <div className="space-y-4">
       {/* Absicherungsstatus */}
-      <Card hover={false}>
+      <Card>
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             <Shield size={20} className="text-slate-500" strokeWidth={1.75} />
@@ -65,7 +65,7 @@ export default function ImpulseTab({ kunde }) {
 
       {/* Whitespots (Neugeschaeft) */}
       {whitespots.length > 0 && (
-        <Card hover={false}>
+        <Card>
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
               <Zap size={20} style={{ color: 'var(--mode-primary-light)' }} strokeWidth={1.75} />
@@ -93,7 +93,7 @@ export default function ImpulseTab({ kunde }) {
 
       {/* Anpassungsbedarfe */}
       {anpassungen.length > 0 && (
-        <Card hover={false}>
+        <Card>
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
               <RefreshCw size={20} className="text-amber-500" strokeWidth={1.75} />
@@ -121,7 +121,7 @@ export default function ImpulseTab({ kunde }) {
 
       {/* Cross-Sell / Sonstiges */}
       {crossSell.length > 0 && (
-        <Card hover={false}>
+        <Card>
           <div className="flex items-center justify-between mb-4">
             <h3 className="font-semibold text-slate-800">{t('weiterePotentiale')}</h3>
             <span className="text-sm text-slate-400">{crossSell.length} Potentiale</span>
@@ -306,7 +306,7 @@ function DeckungslueckeBar({ data, t }) {
       <h5 className="text-xs font-semibold text-slate-600 uppercase tracking-wider mb-3">
         {label || t('deckungslueckenAnalyse')}
       </h5>
-      <Card hover={false} className="space-y-4">
+      <Card className="space-y-4">
         {/* Key numbers */}
         <div className="grid grid-cols-3 gap-3 text-center">
           <div className="bg-slate-50 rounded-lg p-3">
@@ -380,7 +380,7 @@ function VergleichsTabelle({ data }) {
       <h5 className="text-xs font-semibold text-slate-600 uppercase tracking-wider mb-3">
         {titel}
       </h5>
-      <Card hover={false} padding={false} className="overflow-hidden">
+      <Card padding={false} className="overflow-hidden">
         <table className="w-full text-sm">
           <thead>
             <tr className="bg-slate-50">

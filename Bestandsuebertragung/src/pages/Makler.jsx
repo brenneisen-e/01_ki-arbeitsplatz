@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react'
 import { useApp } from '../context/AppContext'
 import * as Storage from '../utils/storage'
-import { Search, ArrowUpDown } from 'lucide-react'
+import { Search } from 'lucide-react'
 
 export default function Makler({ onOpenMakler }) {
   const { cases } = useApp()
@@ -34,7 +34,7 @@ export default function Makler({ onOpenMakler }) {
   }
 
   const SortHeader = ({ field, children }) => (
-    <th className="pb-2 pr-2 cursor-pointer select-none hover:text-gray-700" onClick={() => handleSort(field)}>
+    <th className="pb-2 pr-2 cursor-pointer select-none hover:text-slate-700 transition-colors" onClick={() => handleSort(field)}>
       <span className="flex items-center gap-1">
         {children}
         {sortField === field && <span className="text-[10px]">{sortDir === 'desc' ? '↓' : '↑'}</span>}
@@ -43,20 +43,21 @@ export default function Makler({ onOpenMakler }) {
   )
 
   return (
-    <div className="p-6 space-y-4">
+    <div className="p-6 space-y-4 animate-fade-in-up">
       <div className="relative max-w-md">
-        <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+        <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
         <input type="text" placeholder="Makler suchen..." value={search} onChange={e => setSearch(e.target.value)}
-          className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#c41230]/30" />
+          className="w-full pl-10 pr-4 py-2 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#c41230]/30"
+          style={{ border: 'var(--card-border)' }} />
       </div>
 
       {filtered.length === 0 ? (
-        <div className="text-center py-12 text-gray-400">Keine Makler gefunden</div>
+        <div className="text-center py-12 text-slate-400">Keine Makler gefunden</div>
       ) : (
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+        <div className="card-base overflow-hidden">
           <table className="w-full text-sm">
             <thead>
-              <tr className="text-left text-xs text-gray-500 border-b border-gray-200 bg-gray-50">
+              <tr className="text-left text-xs text-slate-500 border-b border-slate-200 bg-slate-50">
                 <SortHeader field="name">Name</SortHeader>
                 <th className="pb-2 pr-2 font-normal">E-Mail</th>
                 <SortHeader field="total">Gesamt</SortHeader>
@@ -68,13 +69,13 @@ export default function Makler({ onOpenMakler }) {
             <tbody>
               {filtered.map(m => (
                 <tr key={m.name} onClick={() => onOpenMakler(m)}
-                  className="hover:bg-gray-50 cursor-pointer border-b border-gray-50">
-                  <td className="py-3 pr-2 font-medium text-gray-800">{m.name}</td>
-                  <td className="py-3 pr-2 text-gray-500">{m.email}</td>
-                  <td className="py-3 pr-2 text-gray-700">{m.total}</td>
-                  <td className="py-3 pr-2 text-green-600">{m.bestaetigt}</td>
-                  <td className="py-3 pr-2 text-yellow-600">{m.offen}</td>
-                  <td className="py-3 pr-2 text-red-600">{m.abgelehnt}</td>
+                  className="hover:bg-slate-50 cursor-pointer border-b border-slate-100 transition-colors">
+                  <td className="py-3 pr-2 font-medium text-slate-800">{m.name}</td>
+                  <td className="py-3 pr-2 text-slate-500">{m.email}</td>
+                  <td className="py-3 pr-2 text-slate-700 font-mono">{m.total}</td>
+                  <td className="py-3 pr-2 text-emerald-600 font-mono">{m.bestaetigt}</td>
+                  <td className="py-3 pr-2 text-amber-600 font-mono">{m.offen}</td>
+                  <td className="py-3 pr-2 text-red-600 font-mono">{m.abgelehnt}</td>
                 </tr>
               ))}
             </tbody>

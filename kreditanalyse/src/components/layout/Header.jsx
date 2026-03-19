@@ -1,5 +1,6 @@
+import { useState, useRef, useEffect } from 'react';
 import { useApp } from '../../context/AppContext';
-import { MessageSquare, Bell, User, ChevronRight, Home } from 'lucide-react';
+import { MessageSquare, Bell, User, ChevronRight, Home, ChevronDown, Check } from 'lucide-react';
 
 const viewTitles = {
   dashboard: 'Dashboard',
@@ -21,6 +22,22 @@ function goToLanding() {
 export default function Header() {
   const { state, dispatch, getSelectedCompany } = useApp();
   const company = getSelectedCompany();
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const menuRef = useRef(null);
+
+  // Close menu on outside click
+  useEffect(() => {
+    if (!userMenuOpen) return;
+    const handler = (e) => {
+      if (menuRef.current && !menuRef.current.contains(e.target)) {
+        setUserMenuOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [userMenuOpen]);
+
+  const { currentUser, availableUsers } = state;
 
   return (
     <header className="h-14 bg-white border-b border-border flex items-center justify-between px-6 shrink-0">
@@ -68,14 +85,49 @@ export default function Header() {
             <span className="absolute top-1 right-1 w-2 h-2 bg-danger rounded-full" />
           )}
         </button>
-        <div className="flex items-center gap-2 pl-3 border-l border-border">
-          <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center">
-            <User size={14} className="text-white" />
-          </div>
-          <div className="hidden sm:block text-xs">
-            <div className="font-medium text-text-primary">M. Weber</div>
-            <div className="text-text-muted">Firmenkundenberater</div>
-          </div>
+        <div className="relative pl-3 border-l border-border" ref={menuRef}>
+          <button
+            onClick={() => setUserMenuOpen(!userMenuOpen)}
+            className="flex items-center gap-2 hover:bg-surface rounded-lg px-2 py-1 transition-colors"
+          >
+            <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center">
+              <User size={14} className="text-white" />
+            </div>
+            <div className="hidden sm:block text-xs text-left">
+              <div className="font-medium text-text-primary">{currentUser.name}</div>
+              <div className="text-text-muted">{currentUser.role}</div>
+            </div>
+            <ChevronDown size={14} className="text-text-muted hidden sm:block" />
+          </button>
+
+          {userMenuOpen && (
+            <div className="absolute right-0 top-full mt-1 w-64 bg-white border border-border rounded-lg shadow-lg z-50 py-1">
+              <div className="px-3 py-2 text-xs text-text-muted font-medium border-b border-border">
+                Benutzer wechseln
+              </div>
+              {availableUsers.map((user) => (
+                <button
+                  key={user.id}
+                  onClick={() => {
+                    dispatch({ type: 'SWITCH_USER', userId: user.id });
+                    setUserMenuOpen(false);
+                  }}
+                  className="w-full flex items-center gap-3 px-3 py-2.5 hover:bg-surface transition-colors text-left"
+                >
+                  <div className="w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                    <User size={12} className="text-primary" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-sm font-medium text-text-primary">{user.name}</div>
+                    <div className="text-xs text-text-muted">{user.role}</div>
+                  </div>
+                  {currentUser.id === user.id && (
+                    <Check size={16} className="text-accent shrink-0" />
+                  )}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </header>

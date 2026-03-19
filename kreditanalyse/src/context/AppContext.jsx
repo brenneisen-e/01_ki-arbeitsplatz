@@ -3,6 +3,12 @@ import { demoCompanies } from '../data/demoCompanies';
 
 const AppContext = createContext(null);
 
+const USERS = [
+  { id: 'weber', name: 'M. Weber', role: 'Firmenkundenberater' },
+  { id: 'fischer', name: 'Dr. K. Fischer', role: 'Kreditanalyst' },
+  { id: 'schneider', name: 'H. Schneider', role: 'Abteilungsleiter Kredit' },
+];
+
 const initialState = {
   currentView: 'dashboard',
   currentSubView: null,
@@ -12,6 +18,8 @@ const initialState = {
   aiPanelOpen: true,
   aiMessages: [],
   aiLoading: false,
+  currentUser: USERS[0],
+  availableUsers: USERS,
   // Application form draft
   applicationDraft: {
     firma: '', rechtsform: 'GmbH', hrb: '', amtsgericht: '',
@@ -125,6 +133,8 @@ function reducer(state, action) {
         companies: [...state.companies, newCompany],
       };
     }
+    case 'SWITCH_USER':
+      return { ...state, currentUser: state.availableUsers.find(u => u.id === action.userId) || state.currentUser };
     case 'ADD_NOTIFICATION':
       return { ...state, notifications: [...state.notifications, { id: Date.now(), ...action.notification }] };
     case 'DISMISS_NOTIFICATION':

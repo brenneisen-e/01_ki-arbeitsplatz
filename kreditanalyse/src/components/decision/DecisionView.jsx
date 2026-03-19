@@ -147,8 +147,9 @@ function SectionHeading({ children }) {
 // =============================================================================
 
 export default function DecisionView() {
-  const { getSelectedCompany, navigate, dispatch } = useApp();
+  const { state, getSelectedCompany, navigate, dispatch } = useApp();
   const company = getSelectedCompany();
+  const currentUser = state.currentUser;
 
   const [activeTab, setActiveTab] = useState('votierung');
 
@@ -632,7 +633,7 @@ Empfehlung: Genehmigung unter den nachfolgend genannten Auflagen und Bedingungen
           {/* Erstvotum (Markt) */}
           <VotumCard
             title="Erstvotum (Markt)"
-            bearbeiter="M. Weber, Firmenkundenberater"
+            bearbeiter={`${currentUser.name}, ${currentUser.role}`}
             empfehlung={marktEmpfehlung}
             setEmpfehlung={setMarktEmpfehlung}
             begruendung={marktBegruendung}
@@ -803,8 +804,8 @@ Empfehlung: Genehmigung unter den nachfolgend genannten Auflagen und Bedingungen
     const steps = [
       {
         label: 'Erstvotum',
-        person: 'M. Weber',
-        role: 'Firmenkundenberater',
+        person: currentUser.name,
+        role: currentUser.role,
         status: 'completed',
         timestamp: '03.03.2026, 09:15',
         icon: FileText,

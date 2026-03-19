@@ -2,7 +2,7 @@ import { ArrowLeft, FileJson, RefreshCw } from 'lucide-react'
 
 export default function Header({ onImport, onDemoDownload, onReset }) {
   return (
-    <div className="bg-gradient-to-r from-[#8b1a2b] to-[#c41230] text-white">
+    <div className="bg-gradient-to-r from-[#8b1a2b] to-[#c41230] text-white shadow-md">
       <div className="px-6 py-3 flex items-center gap-4">
         <button
           onClick={() => window.location.href = '/'}

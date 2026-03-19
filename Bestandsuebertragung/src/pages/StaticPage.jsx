@@ -73,13 +73,13 @@ export default function StaticPage({ pageId }) {
       </div>
 
       {config.content && (
-        <div className="bg-white rounded-xl border border-gray-200 p-6">
+        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
           <p className="text-gray-600 whitespace-pre-line">{config.content}</p>
         </div>
       )}
 
       {config.sections && config.sections.map((s, i) => (
-        <div key={i} className="bg-white rounded-xl border border-gray-200 p-6">
+        <div key={i} className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
           <div className="flex items-center justify-between mb-3">
             <h3 className="font-semibold text-gray-800">{s.title}</h3>
             <button onClick={() => { navigator.clipboard.writeText(s.text) }}
@@ -92,7 +92,7 @@ export default function StaticPage({ pageId }) {
       ))}
 
       {config.steps && (
-        <div className="bg-white rounded-xl border border-gray-200 p-6">
+        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
           <div className="space-y-3">
             {config.steps.map((step, i) => (
               <div key={i} className="flex items-start gap-3">
@@ -109,7 +109,7 @@ export default function StaticPage({ pageId }) {
       {config.milestones && (
         <div className="space-y-4">
           {config.milestones.map((m, i) => (
-            <div key={i} className="bg-white rounded-xl border border-gray-200 p-5">
+            <div key={i} className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
               <div className="flex items-center justify-between mb-3">
                 <div>
                   <span className="text-xs text-gray-400">{m.phase}</span>

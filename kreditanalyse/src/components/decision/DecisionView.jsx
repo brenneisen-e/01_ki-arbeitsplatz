@@ -151,7 +151,14 @@ export default function DecisionView() {
   const company = getSelectedCompany();
   const currentUser = state.currentUser;
   const customName = typeof window !== 'undefined' ? localStorage.getItem('kia_user_fullname') : '';
-  const bearbeiterName = customName || currentUser.name;
+
+  // Erstvotum = Firmenkundenberater (weber), Zweitvotum = Kreditanalyst (fischer)
+  const marktUser = state.availableUsers.find(u => u.id === 'weber') || state.availableUsers[0];
+  const marktfolgeUser = state.availableUsers.find(u => u.id === 'fischer') || state.availableUsers[1];
+
+  // If the current user matches the slot AND has a custom profile name, use it
+  const erstvotumName = (currentUser.id === marktUser.id && customName) ? customName : marktUser.name;
+  const zweitvotumName = (currentUser.id === marktfolgeUser.id && customName) ? customName : marktfolgeUser.name;
 
   const [activeTab, setActiveTab] = useState('votierung');
 
@@ -635,7 +642,7 @@ Empfehlung: Genehmigung unter den nachfolgend genannten Auflagen und Bedingungen
           {/* Erstvotum (Markt) */}
           <VotumCard
             title="Erstvotum (Markt)"
-            bearbeiter={`${bearbeiterName}, ${currentUser.role}`}
+            bearbeiter={`${erstvotumName}, ${marktUser.role}`}
             empfehlung={marktEmpfehlung}
             setEmpfehlung={setMarktEmpfehlung}
             begruendung={marktBegruendung}
@@ -654,7 +661,7 @@ Empfehlung: Genehmigung unter den nachfolgend genannten Auflagen und Bedingungen
           {/* Zweitvotum (Marktfolge) */}
           <VotumCard
             title="Zweitvotum (Marktfolge)"
-            bearbeiter="Dr. K. Fischer, Kreditanalyst"
+            bearbeiter={`${zweitvotumName}, ${marktfolgeUser.role}`}
             empfehlung={marktfolgeEmpfehlung}
             setEmpfehlung={setMarktfolgeEmpfehlung}
             begruendung={marktfolgeBegruendung}
@@ -806,16 +813,16 @@ Empfehlung: Genehmigung unter den nachfolgend genannten Auflagen und Bedingungen
     const steps = [
       {
         label: 'Erstvotum',
-        person: bearbeiterName,
-        role: currentUser.role,
+        person: erstvotumName,
+        role: marktUser.role,
         status: 'completed',
         timestamp: '03.03.2026, 09:15',
         icon: FileText,
       },
       {
         label: 'Zweitvotum',
-        person: 'Dr. K. Fischer',
-        role: 'Kreditanalyst',
+        person: zweitvotumName,
+        role: marktfolgeUser.role,
         status: 'completed',
         timestamp: '03.03.2026, 14:30',
         icon: Shield,

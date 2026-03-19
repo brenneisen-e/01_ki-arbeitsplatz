@@ -67,9 +67,7 @@ Die wirtschaftlichen Verhältnisse des Antragstellers sind insgesamt als **solid
 - Die angebotenen Sicherheiten bieten eine angemessene Risikoabsicherung
 - Regulatorische Anforderungen (§18 KWG, MaRisk BTO 1.1) sind zu beachten
 
-Für eine vertiefte Analyse empfehle ich, die einzelnen Bereiche (Bilanzanalyse, Rating, Sicherheiten) im Detail zu prüfen. Nutzen Sie dafür die entsprechenden Reiter in der Navigation.
-
-Kann ich Ihnen bei einem spezifischen Aspekt der Kreditanalyse weiterhelfen?`
+Für eine vertiefte Analyse empfehle ich, die einzelnen Bereiche (Bilanzanalyse, Rating, Sicherheiten) im Detail zu prüfen. Nutzen Sie dafür die entsprechenden Reiter in der Navigation.`
 };
 
 function getDemoResponse(userMessage) {

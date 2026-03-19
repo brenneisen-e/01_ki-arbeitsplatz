@@ -9,7 +9,7 @@ const initialState = {
   selectedCompanyId: null,
   companies: demoCompanies,
   sidebarCollapsed: false,
-  aiPanelOpen: false,
+  aiPanelOpen: true,
   aiMessages: [],
   aiLoading: false,
   // Application form draft

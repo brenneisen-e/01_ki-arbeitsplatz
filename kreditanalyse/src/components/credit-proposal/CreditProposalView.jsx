@@ -39,7 +39,7 @@ import { haircutRates } from '../../data/haircutRates';
 import { useAI } from '../../hooks/useAI';
 
 const TABS = [
-  { key: 'vorlage', label: 'Kreditvorlage', icon: ClipboardList },
+  { key: 'vorlage', label: 'Kreditempfehlung', icon: ClipboardList },
   { key: 'konditionen', label: 'Konditionierung', icon: Calculator },
 ];
 
@@ -198,7 +198,7 @@ export default function CreditProposalView() {
         </div>
         <div>
           <h2 className="text-lg font-headline font-semibold text-text-primary">
-            Kreditvorlage – {company.firma}
+            Kreditempfehlung – {company.firma}
           </h2>
           <p className="text-xs text-text-muted font-body">
             Aggregierte Übersicht aller Antragsdaten für den Kreditausschuss
@@ -433,7 +433,7 @@ export default function CreditProposalView() {
                 className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#00A3BF] text-white rounded-lg text-sm font-semibold font-body hover:bg-[#00A3BF]/90 disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
               >
                 {aiLoading ? <Loader2 size={16} className="animate-spin" /> : <Sparkles size={16} />}
-                {aiLoading ? 'Kreditvorlage wird generiert...' : 'KI-Kreditvorlage generieren'}
+                {aiLoading ? 'Kreditempfehlung wird generiert...' : 'KI-Kreditempfehlung generieren'}
               </button>
             </div>
             {aiResult && (
@@ -445,7 +445,7 @@ export default function CreditProposalView() {
                 >
                   <span className="text-sm font-semibold text-text-primary flex items-center gap-2">
                     <Sparkles size={14} className="text-[#00A3BF]" />
-                    KI-Kreditvorlage
+                    KI-Kreditempfehlung
                   </span>
                   {aiExpanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
                 </button>

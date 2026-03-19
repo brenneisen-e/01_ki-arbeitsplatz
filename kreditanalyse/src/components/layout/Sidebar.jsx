@@ -12,7 +12,7 @@ const navItems = [
   { id: 'analysis', label: '§18 KWG Prüfung', icon: FileSearch },
   { id: 'rating', label: 'Rating', icon: BarChart3 },
   { id: 'collateral', label: 'Sicherheiten', icon: Lock },
-  { id: 'credit-proposal', label: 'Kreditvorlage', icon: ClipboardList },
+  { id: 'credit-proposal', label: 'Kreditempfehlung', icon: ClipboardList },
   { id: 'decision', label: 'Kreditentscheidung', icon: Gavel },
   { id: 'contract', label: 'Kreditvertrag', icon: FileSignature },
   { id: 'monitoring', label: 'Monitoring', icon: Activity },

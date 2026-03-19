@@ -506,9 +506,9 @@ export default function PerformanceTab({ kunde }) {
                   <span className="text-slate-600">{s.name}</span>
                   <span className="font-mono text-slate-700">{fmtNum(s.anteil)}%</span>
                 </div>
-                <div className="w-full bg-slate-100 rounded-full h-2">
+                <div className="w-full bg-slate-100 rounded-full h-2 progress-track">
                   <div
-                    className="h-2 rounded-full transition-all duration-500"
+                    className="h-2 rounded-full transition-all duration-500 progress-fill"
                     style={{ width: `${Math.min(s.anteil, 100)}%`, backgroundColor: C.primary }}
                   />
                 </div>
@@ -609,9 +609,9 @@ export default function PerformanceTab({ kunde }) {
                   <span className="text-slate-500">{t('fxHedgingQuote')}</span>
                   <span className="font-mono font-semibold text-slate-800">{hedgingQuote ?? '–'}%</span>
                 </div>
-                <div className="w-full bg-slate-100 rounded-full h-1.5 mt-1.5">
+                <div className="w-full bg-slate-100 rounded-full h-1.5 mt-1.5 progress-track">
                   <div
-                    className="h-1.5 rounded-full"
+                    className="h-1.5 rounded-full progress-fill"
                     style={{ width: `${hedgingQuote ?? 0}%`, backgroundColor: C.primary }}
                   />
                 </div>
@@ -657,9 +657,9 @@ export default function PerformanceTab({ kunde }) {
           {esg?.sfdr && (
             <p className="text-[10px] text-slate-400 mt-1">{esg.sfdr} &middot; CO2: {esg.co2 ?? '–'} t</p>
           )}
-          <div className="w-full bg-slate-100 rounded-full h-2 mt-2">
+          <div className="w-full bg-slate-100 rounded-full h-2 mt-2 progress-track">
             <div
-              className="h-2 rounded-full transition-all"
+              className="h-2 rounded-full transition-all progress-fill"
               style={{
                 width: `${esg?.score ?? 0}%`,
                 backgroundColor: (esg?.score ?? 0) >= 80 ? C.green : (esg?.score ?? 0) >= 60 ? C.gold : C.red,
@@ -706,9 +706,9 @@ export default function PerformanceTab({ kunde }) {
               </p>
             )}
           </div>
-          <div className="w-full bg-slate-100 rounded-full h-2 mt-2 relative">
+          <div className="w-full bg-slate-100 rounded-full h-2 mt-2 relative progress-track">
             <div
-              className="h-2 rounded-full absolute left-0 top-0"
+              className="h-2 rounded-full absolute left-0 top-0 progress-fill"
               style={{
                 width: `${Math.min(100, vsRatio * 100)}%`,
                 backgroundColor: vsRatio > 0.8 ? C.red : vsRatio > 0.5 ? C.amber : C.green,

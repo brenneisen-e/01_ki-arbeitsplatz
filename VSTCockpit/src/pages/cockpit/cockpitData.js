@@ -93,6 +93,40 @@ export const ABSCHLUESSE = [
   { datum: '01.03.2026', vn: 'Dirk Hoffmann', produkt: 'Fondspolice', tarif: 'ERGO Balance', antragNr: 'A-2026-1239', beitrag: 1400, faktor: 18.0, provision: 25200, status: 'angenommen' },
 ];
 
+// KI-Forecast: generate forecast months based on actual data
+const FORECAST_MONTHS = ['Jan*', 'Feb*', 'Mär*', 'Apr*', 'Mai*', 'Jun*'];
+const MONTHLY_GROWTH = {
+  neugeschaeft: 0.015,
+  bestand: 0.008,
+  storno: -0.01,
+  nps: 0.005,
+  risiko: -0.005,
+  combined: -0.003,
+  ergebnis: 0.02,
+  underwriting: 0.002,
+  deckungsbeitrag: 0.012,
+};
+
+export function generateForecastData(actualData) {
+  if (!actualData || actualData.length === 0) return [];
+  const last = actualData[actualData.length - 1];
+  const forecast = [];
+  let prev = { ...last };
+
+  for (let i = 0; i < 6; i++) {
+    const point = { month: FORECAST_MONTHS[i], isForecast: true };
+    for (const kpi of KPI_DEFS) {
+      const val = prev[kpi.id] || 0;
+      const growth = MONTHLY_GROWTH[kpi.id] || 0.01;
+      const variance = 1 + (Math.random() - 0.5) * 0.004;
+      point[kpi.id] = +(val * (1 + growth) * variance).toFixed(kpi.unit === 'currency' ? 0 : 1);
+    }
+    forecast.push(point);
+    prev = point;
+  }
+  return forecast;
+}
+
 // Helper: format currency
 export function fmtCur(val) {
   if (val >= 1000000) return `${(val / 1000000).toLocaleString('de-DE', { maximumFractionDigits: 1 })} Mio€`;

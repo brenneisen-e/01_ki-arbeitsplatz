@@ -11,6 +11,7 @@ import GermanyMap from './GermanyMap';
 import {
   KPI_DEFS, MONTHLY_DATA,
   BUNDESLAND_DATA, TOP_VERMITTLER, ABSCHLUESSE, fmtVal, fmtCur,
+  generateForecastData,
 } from './cockpitData';
 
 /* ── Filters ──────────────────────────────────── */
@@ -30,18 +31,20 @@ function ChartTooltip({ active, payload, label }) {
 }
 
 /* ── KPI Card (matches legacy A-03 layout) ────── */
-function KPICard({ kpi, data, onExpand }) {
+function KPICard({ kpi, data, forecastEnabled, onExpand }) {
   const [chartView, setChartView] = useState('month');
 
-  const current = data[data.length - 1]?.[kpi.id] ?? 0;
-  const prev = data[data.length - 2]?.[kpi.id] ?? 0;
+  // Use only actual data for KPI values
+  const actualData = forecastEnabled ? data.filter(d => !d.isForecast) : data;
+  const current = actualData[actualData.length - 1]?.[kpi.id] ?? 0;
+  const prev = actualData[actualData.length - 2]?.[kpi.id] ?? 0;
   const trend = prev !== 0 ? ((current - prev) / Math.abs(prev)) * 100 : 0;
   const isGood = kpi.invertTrend ? trend <= 0 : trend >= 0;
 
   const isAvgKpi = ['storno', 'nps', 'risiko', 'combined', 'underwriting'].includes(kpi.id);
   const ytd = isAvgKpi
-    ? data.reduce((s, m) => s + (m[kpi.id] || 0), 0) / (data.length || 1)
-    : data.reduce((s, m) => s + (m[kpi.id] || 0), 0);
+    ? actualData.reduce((s, m) => s + (m[kpi.id] || 0), 0) / (actualData.length || 1)
+    : actualData.reduce((s, m) => s + (m[kpi.id] || 0), 0);
 
   const Icon = LucideIcons[kpi.icon] || LucideIcons.BarChart3;
   const chartColor = '#2563eb';
@@ -121,36 +124,69 @@ function KPICard({ kpi, data, onExpand }) {
               <Bar dataKey="value" fill={chartColor} radius={[4, 4, 0, 0]} barSize={24} animationDuration={600} />
             </BarChart>
           ) : (
-            <AreaChart data={data} margin={{ top: 5, right: 5, bottom: 5, left: 5 }}>
+            <AreaChart data={forecastEnabled ? data.map(d => ({ ...d, actual: d.isForecast ? null : d[kpi.id], forecast: d.isForecast ? d[kpi.id] : null })) : data} margin={{ top: 5, right: 5, bottom: 5, left: 5 }}>
               <defs>
                 <linearGradient id={`grad-${kpi.id}`} x1="0" y1="0" x2="0" y2="1">
                   <stop offset="5%" stopColor={chartColor} stopOpacity={0.12} />
                   <stop offset="95%" stopColor={chartColor} stopOpacity={0} />
                 </linearGradient>
+                <linearGradient id={`grad-fc-${kpi.id}`} x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#86BC25" stopOpacity={0.12} />
+                  <stop offset="95%" stopColor="#86BC25" stopOpacity={0} />
+                </linearGradient>
               </defs>
               <XAxis dataKey="month" tick={{ fontSize: 10, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
               <YAxis tick={{ fontSize: 10, fill: '#94a3b8' }} axisLine={false} tickLine={false} width={40} />
               <Tooltip content={<ChartTooltip />} />
-              <Area
-                type="monotone" dataKey={kpi.id} stroke={chartColor} strokeWidth={2}
-                fill={`url(#grad-${kpi.id})`}
-                dot={{ r: 3, fill: chartColor, stroke: '#fff', strokeWidth: 1.5 }}
-                activeDot={{ r: 5, fill: chartColor, stroke: '#fff', strokeWidth: 2 }}
-                animationDuration={800} animationEasing="ease-out"
-              />
+              {forecastEnabled ? (
+                <>
+                  <Area
+                    type="monotone" dataKey="actual" stroke={chartColor} strokeWidth={2}
+                    fill={`url(#grad-${kpi.id})`} connectNulls={false}
+                    dot={{ r: 3, fill: chartColor, stroke: '#fff', strokeWidth: 1.5 }}
+                    activeDot={{ r: 5, fill: chartColor, stroke: '#fff', strokeWidth: 2 }}
+                    animationDuration={800} animationEasing="ease-out"
+                  />
+                  <Area
+                    type="monotone" dataKey="forecast" stroke="#86BC25" strokeWidth={2} strokeDasharray="6 3"
+                    fill={`url(#grad-fc-${kpi.id})`} connectNulls={false}
+                    dot={{ r: 3, fill: '#86BC25', stroke: '#fff', strokeWidth: 1.5 }}
+                    activeDot={{ r: 5, fill: '#86BC25', stroke: '#fff', strokeWidth: 2 }}
+                    animationDuration={800} animationEasing="ease-out"
+                  />
+                </>
+              ) : (
+                <Area
+                  type="monotone" dataKey={kpi.id} stroke={chartColor} strokeWidth={2}
+                  fill={`url(#grad-${kpi.id})`}
+                  dot={{ r: 3, fill: chartColor, stroke: '#fff', strokeWidth: 1.5 }}
+                  activeDot={{ r: 5, fill: chartColor, stroke: '#fff', strokeWidth: 2 }}
+                  animationDuration={800} animationEasing="ease-out"
+                />
+              )}
             </AreaChart>
           )}
         </ResponsiveContainer>
+        {forecastEnabled && chartView !== 'distribution' && (
+          <div className="absolute top-1 right-1 flex items-center gap-3 text-[10px] text-slate-400">
+            <span className="flex items-center gap-1"><span className="w-3 h-0.5 bg-blue-600 inline-block" /> Ist</span>
+            <span className="flex items-center gap-1"><span className="w-3 h-0.5 inline-block" style={{ background: '#86BC25', borderTop: '1px dashed #86BC25' }} /> Forecast</span>
+          </div>
+        )}
       </div>
     </div>
   );
 }
 
 /* ── Fullscreen Modal ─────────────────────────── */
-function FullscreenModal({ kpi, data, onClose }) {
+function FullscreenModal({ kpi, data, forecastEnabled, onClose }) {
   const [chartView, setChartView] = useState('month');
   if (!kpi) return null;
   const Icon = LucideIcons[kpi.icon] || LucideIcons.BarChart3;
+
+  const fsData = forecastEnabled
+    ? data.map(d => ({ ...d, actual: d.isForecast ? null : d[kpi.id], forecast: d.isForecast ? d[kpi.id] : null }))
+    : data;
 
   return (
     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center" onClick={onClose}>
@@ -164,6 +200,12 @@ function FullscreenModal({ kpi, data, onClose }) {
             </div>
           </div>
           <div className="flex items-center gap-3">
+            {forecastEnabled && chartView !== 'bar' && (
+              <div className="flex items-center gap-3 text-xs text-slate-400 mr-2">
+                <span className="flex items-center gap-1"><span className="w-4 h-0.5 bg-blue-600 inline-block" /> Ist-Daten</span>
+                <span className="flex items-center gap-1"><span className="w-4 h-0.5 inline-block" style={{ background: '#86BC25', borderTop: '1px dashed #86BC25' }} /> KI-Forecast</span>
+              </div>
+            )}
             <div className="flex gap-1 bg-slate-100 rounded-lg p-0.5">
               {[['month', 'Monat'], ['bar', 'Verteilung'], ['daily', 'Tagesverlauf']].map(([v, l]) => (
                 <button key={v} onClick={() => setChartView(v)}
@@ -187,20 +229,37 @@ function FullscreenModal({ kpi, data, onClose }) {
                 <Bar dataKey={kpi.id} fill="#2563eb" radius={[6, 6, 0, 0]} barSize={40} animationDuration={600} />
               </BarChart>
             ) : (
-              <AreaChart data={data} margin={{ top: 10, right: 20, bottom: 10, left: 20 }}>
+              <AreaChart data={fsData} margin={{ top: 10, right: 20, bottom: 10, left: 20 }}>
                 <defs>
                   <linearGradient id="fs-grad" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="#2563eb" stopOpacity={0.15} />
                     <stop offset="95%" stopColor="#2563eb" stopOpacity={0} />
                   </linearGradient>
+                  <linearGradient id="fs-grad-fc" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#86BC25" stopOpacity={0.15} />
+                    <stop offset="95%" stopColor="#86BC25" stopOpacity={0} />
+                  </linearGradient>
                 </defs>
                 <XAxis dataKey="month" tick={{ fontSize: 12, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
                 <YAxis tick={{ fontSize: 12, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
                 <Tooltip content={<ChartTooltip />} />
-                <Area type="monotone" dataKey={kpi.id} stroke="#2563eb" strokeWidth={2.5} fill="url(#fs-grad)"
-                  dot={{ r: 4, fill: '#2563eb', stroke: '#fff', strokeWidth: 2 }}
-                  activeDot={{ r: 6, fill: '#2563eb', stroke: '#fff', strokeWidth: 2 }}
-                  animationDuration={600} />
+                {forecastEnabled ? (
+                  <>
+                    <Area type="monotone" dataKey="actual" stroke="#2563eb" strokeWidth={2.5} fill="url(#fs-grad)" connectNulls={false}
+                      dot={{ r: 4, fill: '#2563eb', stroke: '#fff', strokeWidth: 2 }}
+                      activeDot={{ r: 6, fill: '#2563eb', stroke: '#fff', strokeWidth: 2 }}
+                      animationDuration={600} />
+                    <Area type="monotone" dataKey="forecast" stroke="#86BC25" strokeWidth={2.5} strokeDasharray="6 3" fill="url(#fs-grad-fc)" connectNulls={false}
+                      dot={{ r: 4, fill: '#86BC25', stroke: '#fff', strokeWidth: 2 }}
+                      activeDot={{ r: 6, fill: '#86BC25', stroke: '#fff', strokeWidth: 2 }}
+                      animationDuration={600} />
+                  </>
+                ) : (
+                  <Area type="monotone" dataKey={kpi.id} stroke="#2563eb" strokeWidth={2.5} fill="url(#fs-grad)"
+                    dot={{ r: 4, fill: '#2563eb', stroke: '#fff', strokeWidth: 2 }}
+                    activeDot={{ r: 6, fill: '#2563eb', stroke: '#fff', strokeWidth: 2 }}
+                    animationDuration={600} />
+                )}
               </AreaChart>
             )}
           </ResponsiveContainer>
@@ -467,9 +526,14 @@ export default function CockpitPage() {
   const [tableView, setTableView] = useState('bundeslaender');
   const [showReport, setShowReport] = useState(false);
   const [selectedStates, setSelectedStates] = useState(new Set());
+  const [forecastEnabled, setForecastEnabled] = useState(false);
 
   // Filtered data based on selected states
   const filteredData = useMemo(() => scaleMonthlyData(MONTHLY_DATA, selectedStates), [selectedStates]);
+
+  // Generate forecast data (stable per toggle, regenerates on toggle off/on)
+  const forecastData = useMemo(() => forecastEnabled ? generateForecastData(filteredData) : [], [forecastEnabled, filteredData]);
+  const chartData = useMemo(() => forecastEnabled ? [...filteredData.map(d => ({ ...d, isForecast: false })), ...forecastData] : filteredData, [filteredData, forecastData, forecastEnabled]);
   const filteredBundesland = useMemo(() => {
     if (selectedStates.size === 0) return BUNDESLAND_DATA;
     return BUNDESLAND_DATA.filter(bl => selectedStates.has(bl.name));
@@ -544,6 +608,23 @@ export default function CockpitPage() {
             <select value={segment} onChange={e => setSegment(e.target.value)} className="bg-white/10 text-white border-0 rounded-md px-2 py-1 text-sm cursor-pointer">
               {SEGMENTS.map(s => <option key={s} value={s} className="text-slate-800">{s}</option>)}
             </select>
+            <div className="h-5 w-px bg-white/20 mx-1" />
+            <button
+              onClick={() => setForecastEnabled(f => !f)}
+              className={clsx(
+                'flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all border',
+                forecastEnabled
+                  ? 'bg-emerald-500/20 border-emerald-400/50 text-emerald-300'
+                  : 'bg-white/10 border-white/10 text-white/70 hover:text-white hover:bg-white/15'
+              )}
+            >
+              <Sparkles size={14} />
+              AI Forecast
+              <span className={clsx(
+                'text-[10px] font-bold px-1.5 py-0.5 rounded',
+                forecastEnabled ? 'bg-emerald-400/30 text-emerald-200' : 'bg-white/15 text-white/50'
+              )}>KI</span>
+            </button>
           </div>
         </div>
       </header>
@@ -563,7 +644,7 @@ export default function CockpitPage() {
               )}
               <div className="grid gap-5" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(380px, 1fr))' }}>
                 {KPI_DEFS.map(kpi => (
-                  <KPICard key={kpi.id} kpi={kpi} data={filteredData} onExpand={setExpandedKpi} />
+                  <KPICard key={kpi.id} kpi={kpi} data={chartData} forecastEnabled={forecastEnabled} onExpand={setExpandedKpi} />
                 ))}
               </div>
             </div>
@@ -713,7 +794,7 @@ export default function CockpitPage() {
         </div>
       )}
 
-      {expandedKpi && <FullscreenModal kpi={expandedKpi} data={filteredData} onClose={() => setExpandedKpi(null)} />}
+      {expandedKpi && <FullscreenModal kpi={expandedKpi} data={chartData} forecastEnabled={forecastEnabled} onClose={() => setExpandedKpi(null)} />}
 
       <CockpitChatbot onNavigate={handleChatNavigate} />
     </div>

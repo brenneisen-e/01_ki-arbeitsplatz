@@ -6,7 +6,8 @@ import { useApp } from '../context/AppContext'
 import * as AI from '../utils/ai-processor'
 import * as Storage from '../utils/storage'
 import StatusBadge from '../components/StatusBadge'
-import { Upload, Key, X, FileText, Mail, CheckCircle, AlertTriangle, Loader2, Save, Download, Trash2, Eye, EyeOff } from 'lucide-react'
+import { Upload, Key, X, FileText, Mail, CheckCircle, AlertTriangle, Loader2, Save, Download, Trash2, Eye, EyeOff, ChevronDown, ChevronRight, Package } from 'lucide-react'
+import { getFileCatalog, downloadFile as downloadDemoFile, generateFile } from '../utils/demo-files-gen'
 
 const VALID_EXTENSIONS = ['.eml', '.msg', '.docx', '.xlsx', '.pdf']
 
@@ -330,6 +331,18 @@ export default function AIUploadPage() {
         </div>
       )}
 
+      {/* Demo Files Section */}
+      <DemoFilesSection
+        onAddToUpload={(file) => {
+          setFiles(prev => {
+            const existing = new Set(prev.map(f => f.name + f.size))
+            return existing.has(file.name + file.size) ? prev : [...prev, file]
+          })
+          showToast(`${file.name} zur Upload-Liste hinzugefügt`, 'success')
+        }}
+        showToast={showToast}
+      />
+
       {/* API Key Modal */}
       {showKeyModal && (
         <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/50" onClick={() => setShowKeyModal(false)}>
@@ -380,6 +393,124 @@ export default function AIUploadPage() {
               )}
             </div>
           </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// ============================================================
+// Demo Files Section
+// ============================================================
+
+const CATEGORY_LABELS = {
+  'email-simple': { label: 'Einfache E-Mails', color: 'text-blue-600', bg: 'bg-blue-50' },
+  'email-word': { label: 'E-Mails mit Word-Anhang', color: 'text-indigo-600', bg: 'bg-indigo-50' },
+  'email-excel': { label: 'E-Mails mit Excel-Anhang', color: 'text-emerald-600', bg: 'bg-emerald-50' },
+  'email-complex': { label: 'Komplexe E-Mails (mehrere Anhänge)', color: 'text-purple-600', bg: 'bg-purple-50' },
+  'email-edge': { label: 'Edge-Cases (fehlende Daten)', color: 'text-amber-600', bg: 'bg-amber-50' },
+  'template': { label: 'Vorlagen (DOCX/XLSX)', color: 'text-slate-600', bg: 'bg-slate-50' },
+}
+
+function DemoFilesSection({ onAddToUpload, showToast }) {
+  const [expanded, setExpanded] = useState(false)
+  const [expandedCats, setExpandedCats] = useState({})
+  const catalog = getFileCatalog()
+
+  // Group by category
+  const grouped = {}
+  for (const file of catalog) {
+    if (!grouped[file.category]) grouped[file.category] = []
+    grouped[file.category].push(file)
+  }
+
+  function handleDownload(fileId) {
+    downloadDemoFile(fileId)
+    showToast('Demo-Datei heruntergeladen', 'success')
+  }
+
+  function handleAddToUpload(fileId, filename) {
+    const result = generateFile(fileId)
+    if (!result) return
+    const blob = new Blob([result.data], { type: result.mimeType })
+    const file = new File([blob], result.filename, { type: result.mimeType })
+    onAddToUpload(file)
+  }
+
+  function toggleCat(cat) {
+    setExpandedCats(prev => ({ ...prev, [cat]: !prev[cat] }))
+  }
+
+  return (
+    <div className="card-base overflow-hidden">
+      <button
+        onClick={() => setExpanded(!expanded)}
+        className="w-full flex items-center justify-between px-5 py-4 hover:bg-slate-50 transition-colors"
+      >
+        <div className="flex items-center gap-3">
+          <Package size={20} style={{ color: 'var(--mode-primary-light)' }} />
+          <div className="text-left">
+            <div className="text-sm font-semibold text-slate-800">Demo-Dateien zum Testen</div>
+            <div className="text-xs text-slate-500">{catalog.length} realistische Vorgänge (EML mit DOCX/XLSX-Anhängen) — herunterladen oder direkt in Upload laden</div>
+          </div>
+        </div>
+        {expanded ? <ChevronDown size={18} className="text-slate-400" /> : <ChevronRight size={18} className="text-slate-400" />}
+      </button>
+
+      {expanded && (
+        <div className="border-t border-slate-100">
+          {Object.entries(grouped).map(([cat, files]) => {
+            const catInfo = CATEGORY_LABELS[cat] || { label: cat, color: 'text-slate-600', bg: 'bg-slate-50' }
+            const isOpen = expandedCats[cat] !== false // default open
+            return (
+              <div key={cat}>
+                <button
+                  onClick={() => toggleCat(cat)}
+                  className={`w-full flex items-center gap-2 px-5 py-2.5 text-xs font-semibold ${catInfo.color} ${catInfo.bg} border-b border-slate-100`}
+                >
+                  {isOpen ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
+                  {catInfo.label}
+                  <span className="text-slate-400 font-normal">({files.length})</span>
+                </button>
+                {isOpen && (
+                  <div className="divide-y divide-slate-50">
+                    {files.map(file => (
+                      <div key={file.id} className="flex items-center gap-3 px-5 py-2.5 hover:bg-slate-50 transition-colors">
+                        <div className="flex-1 min-w-0">
+                          <div className="text-sm text-slate-700 font-medium truncate">{file.title}</div>
+                          <div className="text-xs text-slate-400 truncate">{file.description}</div>
+                          <div className="flex items-center gap-1 mt-1">
+                            {file.tags.map(tag => (
+                              <span key={tag} className="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-500">{tag}</span>
+                            ))}
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-1.5 shrink-0">
+                          {file.filename.endsWith('.eml') && (
+                            <button
+                              onClick={() => handleAddToUpload(file.id, file.filename)}
+                              className="flex items-center gap-1 px-2.5 py-1.5 text-xs rounded-lg text-white transition-colors"
+                              style={{ backgroundColor: 'var(--mode-primary-light)' }}
+                              title="Direkt in Upload-Liste laden"
+                            >
+                              <Upload size={12} /> Upload
+                            </button>
+                          )}
+                          <button
+                            onClick={() => handleDownload(file.id)}
+                            className="flex items-center gap-1 px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 transition-colors"
+                            title="Herunterladen"
+                          >
+                            <Download size={12} /> .{file.filename.split('.').pop()}
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )
+          })}
         </div>
       )}
     </div>

@@ -4,7 +4,7 @@
 // ============================================
 import { seedRandom } from './utils';
 import { generatePerson, generateVVPerson } from './personGenerator';
-import { assignEigeneProdukte, assignFremdProdukte, validateFremdProdukte } from './produktZuordnung';
+import { assignEigeneProdukte, assignFremdProdukte, validateFremdProdukte, generateFbRating, fbRatingKlasse, FB_RATED_TYPES } from './produktZuordnung';
 import { evaluatePotentiale } from './potenzialEngine';
 import { calculateScores, generateTransaktionen, generateKommunikation, berechneAbsicherung } from './scoresKomm';
 
@@ -22,6 +22,45 @@ const showcaseLoaders = {
 
   vermoegensverwaltung: () => import('../vv').then(m => [m.W1, m.W2, m.W3, m.W4, m.W5]),
 };
+
+// ═══ Fahrzeuge aus KFZ-Produkten + Transaktionen ableiten ═══
+function deriveFahrzeuge(person) {
+  const fahrzeuge = [];
+  const allProducts = [...(person.eigeneProdukte || []), ...(person.fremdProdukte || [])];
+  const kfzProducts = allProducts.filter(p => p.typ === 'kfz');
+
+  for (const kfz of kfzProducts) {
+    const details = kfz.details || '';
+    // Parse vehicle model from details like "BMW 3er, Vollkasko, SF-15"
+    const parts = details.split(',').map(s => s.trim());
+    const modell = parts[0] || 'Unbekannt';
+    const deckung = parts[1] || '';
+    const sf = parts[2] || '';
+
+    fahrzeuge.push({
+      modell,
+      deckung,
+      sf,
+      versicherer: kfz.versicherer || kfz.institut || (kfz.produkt?.split(' ')[0]) || 'Unbekannt',
+      praemie: kfz.praemie || kfz.volumen || 0,
+      quelle: kfz.institut ? 'psd2' : 'bestand',
+      fbRating: kfz.fbRating || null,
+      fbKlasse: kfz.fbKlasse || null,
+    });
+  }
+
+  // Add mobility spending from transactions
+  const mobilTx = (person.transaktionen || []).filter(t =>
+    t.kategorie === 'mobilitaet' || t.empfaenger?.match(/ARAL|Shell|Total|Tankstelle|ADAC|Parkhaus|Leasing/i)
+  );
+  const monatlicheAusgaben = mobilTx.reduce((s, t) => s + Math.abs(t.betrag || 0), 0);
+
+  return {
+    liste: fahrzeuge,
+    monatlicheAusgaben: monatlicheAusgaben > 0 ? monatlicheAusgaben : (fahrzeuge.length > 0 ? Math.round(150 + Math.random() * 250) : 0),
+    quellen: fahrzeuge.length > 0 ? ['kfz-versicherung', 'kontoumsaetze'] : (monatlicheAusgaben > 0 ? ['kontoumsaetze'] : []),
+  };
+}
 
 function buildKunde(person, modus) {
   // 1. Eigene Produkte
@@ -53,6 +92,9 @@ function buildKunde(person, modus) {
 
   // 9. Kommunikation
   person.kommunikation = generateKommunikation(person);
+
+  // 10. Fahrzeuge/Mobilität (PSD2-abgeleitet)
+  person.fahrzeuge = deriveFahrzeuge(person);
 
   // Cleanup interne Felder
   delete person._berufObj;
@@ -143,6 +185,17 @@ function generateAllKunden(modus, showcase, anzahl = 45, seed = 42) {
     if (!enriched.kommunikation) {
       enriched.kommunikation = generateKommunikation(enriched);
     }
+    if (!enriched.fahrzeuge) {
+      enriched.fahrzeuge = deriveFahrzeuge(enriched);
+    }
+    // Enrich insurance products with F&B ratings if missing
+    [...(enriched.eigeneProdukte || []), ...(enriched.fremdProdukte || [])].forEach(p => {
+      if (!p.fbRating && FB_RATED_TYPES.includes(p.typ)) {
+        const isEigen = (enriched.eigeneProdukte || []).includes(p);
+        p.fbRating = generateFbRating(isEigen);
+        p.fbKlasse = fbRatingKlasse(p.fbRating);
+      }
+    });
     return enriched;
   });
 

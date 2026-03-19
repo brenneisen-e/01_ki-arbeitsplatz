@@ -233,6 +233,25 @@ const translationsDetail = {
   'haustierBestaetigen': { de: 'Haustier bestätigen:', en: 'Confirm pet:' },
   'artPlaceholder': { de: 'Art (z.B. Katze, Hund)', en: 'Type (e.g. Cat, Dog)' },
   'optimierungspotenzial': { de: 'Optimierungspotenzial erkannt — Tarifaktualisierung empfohlen', en: 'Optimization potential detected — rate update recommended' },
+
+  // ─── Fahrzeuge / Mobilität (PSD2) ───
+  'fahrzeugeMobilitaet': { de: 'Fahrzeuge / Mobilität', en: 'Vehicles / Mobility' },
+  'fahrzeugLabel': { de: 'Fahrzeug', en: 'Vehicle' },
+  'fahrzeugErkannt': { de: 'Erkanntes Fahrzeug:', en: 'Detected vehicle:' },
+  'fahrzeugAusPsd2': { de: 'Erkannt aus PSD2-Kontoumsätzen (Tankstellen, KFZ-Versicherung, Leasing)', en: 'Detected from PSD2 account transactions (gas stations, car insurance, leasing)' },
+  'quellePsd2Mobilitaet': { de: 'Quelle: PSD2/Open Finance Mobilitätsanalyse', en: 'Source: PSD2/Open Finance Mobility Analysis' },
+  'versicherung': { de: 'Versicherung', en: 'Insurance' },
+  'deckung': { de: 'Deckung', en: 'Coverage' },
+  'keinFahrzeugErkannt': { de: 'Kein Fahrzeug erkannt', en: 'No vehicle detected' },
+  'mobilitaetsausgaben': { de: 'Mobilitätsausgaben', en: 'Mobility expenses' },
+  'proMonat': { de: '/Monat', en: '/month' },
+
+  // ─── Franke und Bornberg Rating ───
+  'fbRating': { de: 'F&B Rating', en: 'F&B Rating' },
+  'fbRatingLabel': { de: 'Franke und Bornberg', en: 'Franke und Bornberg' },
+  'fbRatingTooltip': { de: 'Franke und Bornberg Produktbewertung (0-100)', en: 'Franke und Bornberg product rating (0-100)' },
+  'fbRatingAlt': { de: 'Bisherig', en: 'Current' },
+  'fbRatingNeu': { de: 'Empfehlung', en: 'Recommended' },
   'vertragsbeginn': { de: 'Vertragsbeginn', en: 'Contract Start' },
   'details': { de: 'Details', en: 'Details' },
   'keineEigeneProdukte': { de: 'Keine eigenen Produkte', en: 'No own products' },

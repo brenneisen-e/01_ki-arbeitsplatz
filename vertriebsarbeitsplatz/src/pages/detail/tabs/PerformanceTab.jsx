@@ -472,7 +472,7 @@ export default function PerformanceTab({ kunde }) {
                   return (
                     <div key={item.name} className="flex items-center justify-between text-xs">
                       <div className="flex items-center gap-1.5">
-                        <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: item.color }} />
+                        <span className="w-2.5 h-2.5 rounded-full legend-dot" style={{ backgroundColor: item.color }} />
                         <span className="text-slate-600">{item.name}</span>
                       </div>
                       <div className="flex items-center gap-2">
@@ -481,7 +481,7 @@ export default function PerformanceTab({ kunde }) {
                         <span className="font-mono text-slate-400">{sollVal}%</span>
                         {drift !== 0 && (
                           <span className={clsx(
-                            'font-mono text-[10px] px-1 py-0.5 rounded',
+                            'font-mono text-[10px] px-1 py-0.5 rounded drift-badge',
                             Math.abs(drift) > 3 ? 'bg-amber-50 text-amber-600' : 'bg-slate-50 text-slate-400',
                           )}>
                             {drift > 0 ? '+' : ''}{drift}pp

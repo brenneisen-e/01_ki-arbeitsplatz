@@ -231,19 +231,20 @@ export default function Header() {
 
               {/* User-Rolle wechseln */}
               <div>
-                <label className="block text-xs text-text-muted font-medium mb-1.5">Rolle</label>
+                <label className="block text-xs text-text-muted font-medium mb-1.5">Benutzer wechseln</label>
                 <div className="space-y-1">
                   {state.availableUsers.map((user) => (
                     <button
                       key={user.id}
                       onClick={() => dispatch({ type: 'SWITCH_USER', userId: user.id })}
-                      className={`w-full text-left px-3 py-1.5 rounded-lg text-xs transition-colors ${
+                      className={`w-full text-left px-3 py-2 rounded-lg text-xs transition-colors ${
                         state.currentUser.id === user.id
-                          ? 'bg-primary/10 text-primary font-medium'
+                          ? 'bg-primary/10 text-primary font-medium ring-1 ring-primary/20'
                           : 'hover:bg-surface text-text-secondary'
                       }`}
                     >
-                      {user.role}
+                      <div className="font-medium">{user.name}</div>
+                      <div className={`text-[10px] mt-0.5 ${state.currentUser.id === user.id ? 'text-primary/70' : 'text-text-muted'}`}>{user.role}</div>
                     </button>
                   ))}
                 </div>

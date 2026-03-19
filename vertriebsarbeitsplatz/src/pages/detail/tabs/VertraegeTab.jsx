@@ -5,7 +5,7 @@ import { StatusBadge, SparteBadge } from '../../../components/ui/Badge';
 import { formatEur } from '../../../utils/formatters';
 import { useMode } from '../../../hooks/useMode';
 import useTranslation from '../../../i18n/useTranslation';
-import { ChevronDown, ChevronRight, ExternalLink } from 'lucide-react';
+import { ChevronDown, ChevronRight, ExternalLink, Award } from 'lucide-react';
 
 function ProduktRow({ produkt, modeId, onNavigateKontoumsaetze, t }) {
   const [expanded, setExpanded] = useState(false);
@@ -50,10 +50,17 @@ function ProduktRow({ produkt, modeId, onNavigateKontoumsaetze, t }) {
             : <StatusBadge status={produkt.status} />
           }
         </td>
+        <td className="px-4 py-3 text-sm">
+          {produkt.fbRating ? (
+            <FbRatingBadge rating={produkt.fbRating} klasse={produkt.fbKlasse} hovered={hovered && !expanded} />
+          ) : (
+            <span className={hovered && !expanded ? 'text-white/50' : 'text-slate-300'}>–</span>
+          )}
+        </td>
       </tr>
       {expanded && (
         <tr className="bg-slate-50/80">
-          <td colSpan={modeId === 'banking' ? 7 : 6} className="px-4 py-3">
+          <td colSpan={modeId === 'banking' ? 8 : 7} className="px-4 py-3">
             <div className="pl-8 grid grid-cols-2 md:grid-cols-4 gap-4 text-xs">
               <div>
                 <span className="text-slate-400 uppercase tracking-wider">{t('vertragsbeginn')}</span>
@@ -71,6 +78,22 @@ function ProduktRow({ produkt, modeId, onNavigateKontoumsaetze, t }) {
                 <span className="text-slate-400 uppercase tracking-wider">{t('details')}</span>
                 <div className="font-medium text-slate-700 mt-0.5">{produkt.details}</div>
               </div>
+              {produkt.fbRating && (
+                <div className="col-span-2 md:col-span-4 mt-1">
+                  <div className="flex items-center gap-3 bg-slate-50 border border-slate-200 rounded-lg px-3 py-2">
+                    <img src="https://img.logo.dev/franke-bornberg.de?token=pk_H7vb5Y2lTsW47U4Xq-w3HA&size=40&format=png" alt="Franke & Bornberg" className="w-5 h-5 rounded" onError={(e) => e.target.style.display='none'} />
+                    <div>
+                      <span className="text-xs text-slate-500">{t('fbRatingLabel')}</span>
+                      <div className="flex items-center gap-2">
+                        <span className={`text-sm font-bold ${produkt.fbRating >= 75 ? 'text-emerald-600' : produkt.fbRating >= 55 ? 'text-amber-600' : 'text-red-600'}`}>
+                          {produkt.fbRating}/100
+                        </span>
+                        <span className="text-xs text-slate-500">{produkt.fbKlasse}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
               {produkt.status === 'optimierbar' && (
                 <div className="col-span-2 md:col-span-4 mt-1">
                   <div className="bg-amber-50 border border-amber-200 rounded px-3 py-2 text-amber-800 text-xs">
@@ -145,6 +168,7 @@ export default function VertraegeTab({ kunde }) {
                   <th className="px-4 py-3 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">{praemieLabel}</th>
                   <th className="px-4 py-3 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">{t('seit')}</th>
                   <th className="px-4 py-3 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">{t('status')}</th>
+                  <th className="px-4 py-3 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">{t('fbRating')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -171,6 +195,37 @@ export default function VertraegeTab({ kunde }) {
           <SummaryItem label={t('optimierbar')} value={produkte.filter(p => p.status === 'optimierbar').length} highlight />
         </div>
       </Card>
+    </div>
+  );
+}
+
+function FbRatingBadge({ rating, klasse, hovered }) {
+  if (!rating) return null;
+  const color = rating >= 75 ? 'emerald' : rating >= 55 ? 'amber' : 'red';
+
+  if (hovered) {
+    return (
+      <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-white/20 text-white">
+        {rating}
+      </span>
+    );
+  }
+
+  return (
+    <div className="flex items-center gap-1.5" title={`Franke & Bornberg: ${rating}/100 – ${klasse || ''}`}>
+      <img
+        src="https://img.logo.dev/franke-bornberg.de?token=pk_H7vb5Y2lTsW47U4Xq-w3HA&size=32&format=png"
+        alt="F&B"
+        className="w-3.5 h-3.5 rounded"
+        onError={(e) => e.target.style.display='none'}
+      />
+      <span className={`text-xs font-bold px-1.5 py-0.5 rounded ${
+        color === 'emerald' ? 'bg-emerald-50 text-emerald-700'
+        : color === 'amber' ? 'bg-amber-50 text-amber-700'
+        : 'bg-red-50 text-red-600'
+      }`}>
+        {rating}
+      </span>
     </div>
   );
 }

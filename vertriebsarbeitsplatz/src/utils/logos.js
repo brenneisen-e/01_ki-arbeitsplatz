@@ -83,6 +83,8 @@ const DOMAIN_MAP = {
   'N26': 'n26.com',
   'Coinbase': 'coinbase.com',
   'Coinbase/Ledger': 'coinbase.com',
+  'Franke und Bornberg': 'franke-bornberg.de',
+  'Franke & Bornberg': 'franke-bornberg.de',
   'Zukunftsversicherung': null,
   'Zukunftsbank': null,
   'Privat': null,

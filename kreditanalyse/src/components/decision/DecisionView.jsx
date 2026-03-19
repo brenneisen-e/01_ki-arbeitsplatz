@@ -33,6 +33,7 @@ import {
   BadgeCheck,
   FileSignature,
   Download,
+  ClipboardCheck,
 } from 'lucide-react';
 import {
   BarChart,
@@ -177,9 +178,11 @@ export default function DecisionView() {
   const [marktSigniert, setMarktSigniert] = useState(false);
   const [marktfolgeSigniert, setMarktfolgeSigniert] = useState(false);
 
-  // KI Kreditvorlage
+  // KI Kreditempfehlung
   const [kiLoading, setKiLoading] = useState(false);
   const [kiResult, setKiResult] = useState(null);
+  const [kiHtml, setKiHtml] = useState(null);
+  const [kiTransferred, setKiTransferred] = useState(false);
 
   // ---------------------------------------------------------------------------
   // No-company fallback
@@ -279,14 +282,26 @@ Empfehlung: Genehmigung unter den nachfolgend genannten Auflagen und Bedingungen
     }, 0);
   }
 
-  // KI Kreditvorlage handler
-  const handleKiVorlage = () => {
+  // KI Kreditempfehlung handler
+  const handleKiEmpfehlung = () => {
     setKiLoading(true);
     setKiResult(null);
+    setKiHtml(null);
+    setKiTransferred(false);
     setTimeout(() => {
       setKiLoading(false);
-      setKiResult(generateKiKreditvorlage(company, kredit, betrag, bilanz, b23, simulatedRating, bestVerbind, kundenZins));
+      const plainText = generateKiKreditvorlage(company, kredit, betrag, bilanz, b23, simulatedRating, bestVerbind, kundenZins);
+      setKiResult(plainText);
+      setKiHtml(convertKiResultToHtml(plainText));
     }, 2000);
+  };
+
+  // Transfer KI result into Erstvotum Begründung
+  const handleTransferToVotum = () => {
+    if (kiResult) {
+      setMarktBegruendung(kiResult);
+      setKiTransferred(true);
+    }
   };
 
   // ---------------------------------------------------------------------------
@@ -717,11 +732,11 @@ Empfehlung: Genehmigung unter den nachfolgend genannten Auflagen und Bedingungen
           <div className="bg-surface-card border border-border rounded-xl p-6">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-base font-semibold font-headline text-text-primary">
-                KI-Kreditvorlage
+                KI-Kreditempfehlung
               </h2>
               <button
                 type="button"
-                onClick={handleKiVorlage}
+                onClick={handleKiEmpfehlung}
                 disabled={kiLoading}
                 className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg text-sm font-body hover:bg-primary-light transition-colors disabled:opacity-60"
               >
@@ -730,23 +745,46 @@ Empfehlung: Genehmigung unter den nachfolgend genannten Auflagen und Bedingungen
                 ) : (
                   <Sparkles size={16} strokeWidth={1.5} />
                 )}
-                {kiLoading ? 'Generiere Vorlage...' : 'KI-Kreditvorlage generieren'}
+                {kiLoading ? 'Generiere Empfehlung...' : 'KI-Kreditempfehlung generieren'}
               </button>
             </div>
 
             {kiLoading && (
               <div className="flex items-center gap-3 p-6 text-text-secondary text-sm">
                 <Loader2 size={20} strokeWidth={1.5} className="animate-spin text-primary" />
-                KI analysiert Kreditantrag und erstellt Vorlage...
+                KI analysiert Kreditantrag und erstellt Empfehlung...
               </div>
             )}
 
-            {kiResult && (
-              <div className="bg-surface border border-border rounded-lg p-6 prose prose-sm max-w-none">
-                <div className="whitespace-pre-wrap text-sm text-text-primary font-body leading-relaxed">
-                  {kiResult}
+            {kiHtml && (
+              <>
+                <div className="bg-surface border border-border rounded-lg p-6 prose prose-sm max-w-none">
+                  <div
+                    className="text-sm text-text-primary font-body leading-relaxed ki-recommendation-html"
+                    dangerouslySetInnerHTML={{ __html: kiHtml }}
+                  />
                 </div>
-              </div>
+                <div className="mt-4 flex items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={handleTransferToVotum}
+                    disabled={kiTransferred}
+                    className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold font-body transition-colors shadow-sm ${
+                      kiTransferred
+                        ? 'bg-accent/20 text-accent border border-accent/30 cursor-default'
+                        : 'bg-accent text-white hover:bg-accent/90'
+                    }`}
+                  >
+                    <ClipboardCheck size={16} strokeWidth={1.5} />
+                    {kiTransferred ? 'In Erstvotum übernommen' : 'In Erstvotum (Votum 1) übernehmen'}
+                  </button>
+                  {kiTransferred && (
+                    <span className="text-xs text-accent font-body">
+                      Empfehlung wurde in die Begründung des Erstvotums übertragen.
+                    </span>
+                  )}
+                </div>
+              </>
             )}
           </div>
         )}
@@ -1190,7 +1228,83 @@ function getApproverName(approver) {
 }
 
 // =============================================================================
-// KI Kreditvorlage generator (hardcoded realistic demo text)
+// Convert plain-text KI result to structured HTML
+// =============================================================================
+
+function convertKiResultToHtml(text) {
+  const lines = text.split('\n');
+  let html = '';
+  let inList = false;
+
+  for (const line of lines) {
+    const trimmed = line.trim();
+
+    // Double-line header (═══)
+    if (/^═+$/.test(trimmed)) {
+      html += '<hr style="border:none;border-top:2px solid #00875A;margin:12px 0;" />';
+      continue;
+    }
+
+    // Section dividers (───)
+    if (/^─+$/.test(trimmed)) {
+      html += '<hr style="border:none;border-top:1px solid #e2e8f0;margin:8px 0;" />';
+      continue;
+    }
+
+    // Main title (KREDITEMPFEHLUNG)
+    if (trimmed === 'KREDITEMPFEHLUNG') {
+      html += `<h2 style="text-align:center;font-size:16px;font-weight:700;color:#003D6A;margin:4px 0;">${trimmed}</h2>`;
+      continue;
+    }
+
+    // Section headings (1. KUNDENPROFIL, etc.)
+    if (/^\d+\.\s+[A-ZÄÖÜ\s()–-]+$/.test(trimmed)) {
+      if (inList) { html += '</ul>'; inList = false; }
+      html += `<h3 style="font-size:13px;font-weight:700;color:#00875A;margin:16px 0 6px 0;">${trimmed}</h3>`;
+      continue;
+    }
+
+    // Key:Value rows (like "Firma:  Wert")
+    if (/^[A-ZÄÖÜa-zäöüß][\w\s()-]*:\s{2,}/.test(trimmed)) {
+      const colonIdx = trimmed.indexOf(':');
+      const key = trimmed.slice(0, colonIdx).trim();
+      const val = trimmed.slice(colonIdx + 1).trim();
+      html += `<div style="display:flex;justify-content:space-between;padding:2px 0;font-size:12px;"><span style="color:#6b7280;">${key}</span><span style="font-weight:500;color:#1f2937;">${val}</span></div>`;
+      continue;
+    }
+
+    // Bullet points (• or numbered like "1." at start of indent)
+    if (/^\s*•/.test(line) || /^\s*\d+\.\s/.test(line) && trimmed.length < 120) {
+      if (!inList) { html += '<ul style="margin:4px 0;padding-left:20px;font-size:12px;">'; inList = true; }
+      html += `<li style="margin:2px 0;color:#374151;">${trimmed.replace(/^[•]\s*/, '').replace(/^\d+\.\s*/, '')}</li>`;
+      continue;
+    }
+
+    // SWOT table headings
+    if (/STÄRKEN|SCHWÄCHEN|CHANCEN|RISIKEN/.test(trimmed)) {
+      if (inList) { html += '</ul>'; inList = false; }
+      html += `<p style="font-size:12px;font-weight:600;color:#003D6A;margin:8px 0 2px 0;">${trimmed}</p>`;
+      continue;
+    }
+
+    // Empty line
+    if (trimmed === '') {
+      if (inList) { html += '</ul>'; inList = false; }
+      html += '<div style="height:6px;"></div>';
+      continue;
+    }
+
+    // Regular paragraph text
+    if (inList) { html += '</ul>'; inList = false; }
+    html += `<p style="font-size:12px;color:#374151;margin:3px 0;line-height:1.6;">${trimmed}</p>`;
+  }
+
+  if (inList) html += '</ul>';
+  return html;
+}
+
+// =============================================================================
+// KI Kreditempfehlung generator (hardcoded realistic demo text)
 // =============================================================================
 
 function generateKiKreditvorlage(company, kredit, betrag, bilanz, b23, rating, bestVerbind, kundenZins) {
@@ -1209,7 +1323,7 @@ function generateKiKreditvorlage(company, kredit, betrag, bilanz, b23, rating, b
   const neuObligo = totalBestehend + betrag;
 
   return `═══════════════════════════════════════════════════════════════
-                    KREDITVORLAGE
+                    KREDITEMPFEHLUNG
              ${firma}
              Erstellt: ${new Date().toLocaleDateString('de-DE')} | Vertraulich
 ═══════════════════════════════════════════════════════════════

@@ -10,8 +10,76 @@ const viewContextPrompts = {
   analysis: 'Du hilfst bei der §18 KWG Prüfung, Bilanzanalyse, BWA-Auswertung und Kapitaldienstfähigkeitsberechnung.',
   rating: 'Du hilfst bei der Erstellung und Bewertung von Kreditratings (quantitativ, qualitativ, Eigentümer, Kontoführung).',
   collateral: 'Du hilfst bei der Bewertung von Kreditsicherheiten, Haircut-Berechnung und Blankoanteil-Ermittlung.',
+  'credit-proposal': 'Du hilfst bei der Erstellung der Kreditempfehlung, Zusammenfassung der Analyseergebnisse und Konditionierung.',
   decision: 'Du hilfst bei der Kreditentscheidung, Konditionenberechnung, Votierung und dem Genehmigungsworkflow.',
+  contract: 'Du hilfst bei der Kreditvertragserstellung, Vertragsklauseln und LMA-Standardverträgen.',
   monitoring: 'Du hilfst beim Kreditmonitoring, Frühwarnindikatoren, Rating-Migration und Watchlist-Management.',
+};
+
+const viewSuggestedQuestions = {
+  dashboard: [
+    'Welche Anträge haben höchste Priorität?',
+    'Gibt es überfällige Vorgänge?',
+    'Wie ist die aktuelle Pipeline-Verteilung?',
+  ],
+  application: [
+    'Sind alle Pflichtunterlagen eingereicht?',
+    'Was fehlt noch für die Antragsvollständigkeit?',
+    'Wie ist die Kredithistorie mit diesem Kunden?',
+  ],
+  kyc: [
+    'Gibt es Auffälligkeiten bei der KYC-Prüfung?',
+    'Wer sind die wirtschaftlich Berechtigten (UBOs)?',
+    'Liegen PEP- oder Sanktionstreffer vor?',
+  ],
+  analysis: [
+    'Wie bewertest du die Bilanz im Dreijahresvergleich?',
+    'Ist die Kapitaldienstfähigkeit gegeben?',
+    'Welche Kennzahlen weichen von Branchenwerten ab?',
+  ],
+  rating: [
+    'Wie setzt sich das Rating zusammen?',
+    'Welche Faktoren treiben das Rating nach oben/unten?',
+    'Wie hat sich das Rating im Zeitverlauf entwickelt?',
+  ],
+  collateral: [
+    'Reichen die Sicherheiten zur Deckung aus?',
+    'Wie hoch ist der Blankoanteil?',
+    'Welche zusätzlichen Sicherheiten wären sinnvoll?',
+  ],
+  'credit-proposal': [
+    'Erstelle eine Zusammenfassung der Kreditempfehlung.',
+    'Welche Auflagen sollten vereinbart werden?',
+    'Welche Risiken sollten im Votum angesprochen werden?',
+  ],
+  decision: [
+    'Wie bewertest du das Gesamtrisiko des Engagements?',
+    'Ist die vorgeschlagene Konditionierung marktgerecht?',
+    'Welche Auflagen empfiehlst du für die Genehmigung?',
+  ],
+  contract: [
+    'Welche Vertragsklauseln sind besonders wichtig?',
+    'Gibt es regulatorische Anforderungen an den Vertrag?',
+    'Welche Financial Covenants sollten aufgenommen werden?',
+  ],
+  monitoring: [
+    'Gibt es aktuelle Frühwarnindikatoren?',
+    'Wie hat sich das Rating seit Bewilligung verändert?',
+    'Welche Covenants sollten überprüft werden?',
+  ],
+};
+
+const viewLabels = {
+  dashboard: 'Dashboard',
+  application: 'Kreditantrag',
+  kyc: 'KYC & Compliance',
+  analysis: '§18 KWG Prüfung',
+  rating: 'Rating',
+  collateral: 'Sicherheiten',
+  'credit-proposal': 'Kreditempfehlung',
+  decision: 'Kreditentscheidung',
+  contract: 'Kreditvertrag',
+  monitoring: 'Monitoring',
 };
 
 export default function AIChatPanel() {
@@ -88,27 +156,38 @@ export default function AIChatPanel() {
   return (
     <div className="w-96 bg-white border-l border-border flex flex-col h-full shrink-0">
       {/* Header */}
-      <div className="flex items-center justify-between px-4 h-14 border-b border-border shrink-0">
-        <div className="flex items-center gap-2">
-          <Bot size={18} className="text-primary" />
-          <span className="text-sm font-semibold font-headline">KI-Assistent</span>
+      <div className="border-b border-border shrink-0">
+        <div className="flex items-center justify-between px-4 h-14">
+          <div className="flex items-center gap-2">
+            <Bot size={18} className="text-primary" />
+            <span className="text-sm font-semibold font-headline">KI-Assistent</span>
+          </div>
+          <button
+            onClick={() => dispatch({ type: 'SET_AI_PANEL', open: false })}
+            className="p-1 text-text-muted hover:text-text-primary transition-colors"
+          >
+            <X size={16} />
+          </button>
         </div>
-        <button
-          onClick={() => dispatch({ type: 'SET_AI_PANEL', open: false })}
-          className="p-1 text-text-muted hover:text-text-primary transition-colors"
-        >
-          <X size={16} />
-        </button>
+        {/* Current context indicator */}
+        <div className="px-4 pb-2.5 flex items-center gap-1.5">
+          <span className="inline-block w-2 h-2 rounded-full bg-accent animate-pulse" />
+          <span className="text-[11px] text-text-muted font-body">
+            Kontext: <span className="font-semibold text-text-secondary">{viewLabels[state.currentView] || state.currentView}</span>
+            {company && <span className="text-text-muted"> · {company.firma}</span>}
+          </span>
+        </div>
       </div>
 
       {/* Messages */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-thin">
         {state.aiMessages.length === 0 && (
-          <div className="text-center text-text-muted text-sm py-8">
+          <div className="text-center text-text-muted text-sm py-6">
             <Bot size={32} className="mx-auto mb-3 opacity-30" />
-            <p>Stelle eine Frage zum aktuellen Bereich.</p>
-            <div className="mt-4 space-y-2">
-              {['Wie bewertest du die Eigenkapitalquote?', 'Welche Risiken siehst du?', 'Erstelle eine Zusammenfassung.'].map((q) => (
+            <p className="mb-1">Ich bin im Bereich <strong className="text-text-secondary">{viewLabels[state.currentView] || state.currentView}</strong>.</p>
+            <p className="text-xs text-text-muted mb-4">Hier sind passende Fragen:</p>
+            <div className="space-y-2">
+              {(viewSuggestedQuestions[state.currentView] || viewSuggestedQuestions.dashboard).map((q) => (
                 <button
                   key={q}
                   onClick={() => { setInput(q); inputRef.current?.focus(); }}

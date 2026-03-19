@@ -66,7 +66,7 @@ const COLUMNS = [
   },
   {
     key: 'credit-proposal',
-    label: 'Kreditvorlage',
+    label: 'Kreditempfehlung',
     statuses: ['credit-proposal'],
     icon: ClipboardList,
     headerColor: 'bg-teal-50 text-teal-700 border-teal-200',

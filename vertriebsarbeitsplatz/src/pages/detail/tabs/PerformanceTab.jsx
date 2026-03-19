@@ -506,9 +506,9 @@ export default function PerformanceTab({ kunde }) {
                   <span className="text-slate-600">{s.name}</span>
                   <span className="font-mono text-slate-700">{fmtNum(s.anteil)}%</span>
                 </div>
-                <div className="w-full bg-slate-100 rounded-full h-2">
+                <div className="w-full bg-slate-100 rounded-full h-2 progress-track">
                   <div
-                    className="h-2 rounded-full transition-all duration-500"
+                    className="h-2 rounded-full transition-all duration-500 progress-fill"
                     style={{ width: `${Math.min(s.anteil, 100)}%`, backgroundColor: C.primary }}
                   />
                 </div>
@@ -536,22 +536,22 @@ export default function PerformanceTab({ kunde }) {
         <Card>
           <SectionTitle sub={t('risikokennzahlen')}>{t('risikoprofil')}</SectionTitle>
           <div className="grid grid-cols-2 gap-3">
-            <div className="bg-slate-50 rounded-lg p-3">
+            <div className="bg-slate-50 rounded-lg p-3 metric-box">
               <p className="text-[10px] text-slate-400 uppercase tracking-wide">{t('volatilitaet')}</p>
               <p className="font-mono font-semibold text-lg text-slate-800">{fmtNum(risiko?.volatilitaet)}%</p>
               {risiko?.benchmarkVola != null && (
                 <p className="text-[10px] text-slate-400 mt-0.5">BM: {fmtNum(risiko.benchmarkVola)}%</p>
               )}
             </div>
-            <div className="bg-slate-50 rounded-lg p-3">
+            <div className="bg-slate-50 rounded-lg p-3 metric-box">
               <p className="text-[10px] text-slate-400 uppercase tracking-wide">{t('maxDrawdown')}</p>
               <p className="font-mono font-semibold text-lg text-red-600">{fmtNum(risiko?.maxDrawdown)}%</p>
             </div>
-            <div className="bg-slate-50 rounded-lg p-3">
+            <div className="bg-slate-50 rounded-lg p-3 metric-box">
               <p className="text-[10px] text-slate-400 uppercase tracking-wide">{t('sharpeRatio')}</p>
               <p className="font-mono font-semibold text-lg text-slate-800">{fmtNum(risiko?.sharpeRatio, 2)}</p>
             </div>
-            <div className="bg-slate-50 rounded-lg p-3">
+            <div className="bg-slate-50 rounded-lg p-3 metric-box">
               <p className="text-[10px] text-slate-400 uppercase tracking-wide">{t('beta')}</p>
               <p className="font-mono font-semibold text-lg text-slate-800">{fmtNum(risiko?.beta, 2)}</p>
             </div>
@@ -609,9 +609,9 @@ export default function PerformanceTab({ kunde }) {
                   <span className="text-slate-500">{t('fxHedgingQuote')}</span>
                   <span className="font-mono font-semibold text-slate-800">{hedgingQuote ?? '–'}%</span>
                 </div>
-                <div className="w-full bg-slate-100 rounded-full h-1.5 mt-1.5">
+                <div className="w-full bg-slate-100 rounded-full h-1.5 mt-1.5 progress-track">
                   <div
-                    className="h-1.5 rounded-full"
+                    className="h-1.5 rounded-full progress-fill"
                     style={{ width: `${hedgingQuote ?? 0}%`, backgroundColor: C.primary }}
                   />
                 </div>
@@ -657,9 +657,9 @@ export default function PerformanceTab({ kunde }) {
           {esg?.sfdr && (
             <p className="text-[10px] text-slate-400 mt-1">{esg.sfdr} &middot; CO2: {esg.co2 ?? '–'} t</p>
           )}
-          <div className="w-full bg-slate-100 rounded-full h-2 mt-2">
+          <div className="w-full bg-slate-100 rounded-full h-2 mt-2 progress-track">
             <div
-              className="h-2 rounded-full transition-all"
+              className="h-2 rounded-full transition-all progress-fill"
               style={{
                 width: `${esg?.score ?? 0}%`,
                 backgroundColor: (esg?.score ?? 0) >= 80 ? C.green : (esg?.score ?? 0) >= 60 ? C.gold : C.red,
@@ -706,9 +706,9 @@ export default function PerformanceTab({ kunde }) {
               </p>
             )}
           </div>
-          <div className="w-full bg-slate-100 rounded-full h-2 mt-2 relative">
+          <div className="w-full bg-slate-100 rounded-full h-2 mt-2 relative progress-track">
             <div
-              className="h-2 rounded-full absolute left-0 top-0"
+              className="h-2 rounded-full absolute left-0 top-0 progress-fill"
               style={{
                 width: `${Math.min(100, vsRatio * 100)}%`,
                 backgroundColor: vsRatio > 0.8 ? C.red : vsRatio > 0.5 ? C.amber : C.green,

@@ -309,17 +309,17 @@ function DeckungslueckeBar({ data, t }) {
       <Card className="space-y-4">
         {/* Key numbers */}
         <div className="grid grid-cols-3 gap-3 text-center">
-          <div className="bg-slate-50 rounded-lg p-3">
+          <div className="bg-slate-50 rounded-lg p-3 metric-box">
             <div className="text-xs text-slate-400 mb-1">{gehaltLabel}</div>
             <div className="text-lg font-bold text-slate-800">{gehalt.toLocaleString(getLang() === 'en' ? 'en-US' : 'de-DE')}{einheit?.replace('€/mtl.', '€')}</div>
             <div className="text-xs text-slate-400">/mtl.</div>
           </div>
-          <div className="bg-red-50 rounded-lg p-3">
+          <div className="bg-red-50 rounded-lg p-3 metric-box">
             <div className="text-xs text-red-400 mb-1">{absicherungLabel}</div>
             <div className="text-lg font-bold text-red-600">{aktuelleAbsicherung.toLocaleString(getLang() === 'en' ? 'en-US' : 'de-DE')}€</div>
             <div className="text-xs text-red-400">/mtl. ({pctAbgesichert}%)</div>
           </div>
-          <div className="bg-emerald-50 rounded-lg p-3">
+          <div className="bg-emerald-50 rounded-lg p-3 metric-box">
             <div className="text-xs text-emerald-500 mb-1">{t('empfehlungLabel')}</div>
             <div className="text-lg font-bold text-emerald-700">{empfohleneAbsicherung.toLocaleString(getLang() === 'en' ? 'en-US' : 'de-DE')}€</div>
             <div className="text-xs text-emerald-500">/mtl. ({pctEmpfohlen}%)</div>

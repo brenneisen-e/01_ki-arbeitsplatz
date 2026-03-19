@@ -396,9 +396,9 @@ function LeadRow({ lead, isExpanded, onToggle, t, tn, stadiumLabels, quellenLabe
 
 function KPI({ icon: Icon, label, value, sub, color }) {
   return (
-    <Card hover={false}>
+    <Card>
       <div className="flex items-center gap-3">
-        <div className="p-2 rounded-lg bg-slate-100">
+        <div className="p-2 rounded-lg bg-slate-100 kpi-icon-box">
           <Icon size={20} className="text-slate-500" />
         </div>
         <div>

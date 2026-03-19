@@ -59,7 +59,7 @@ export default function RevenueTab() {
             {data.feeStruktur.map((f, i) => (
               <div key={f.typ} className="flex items-center justify-between text-sm">
                 <div className="flex items-center gap-2">
-                  <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: FEE_COLORS[i] }} />
+                  <div className="w-2.5 h-2.5 rounded-full legend-dot" style={{ backgroundColor: FEE_COLORS[i] }} />
                   <span className="text-slate-600">{f.typ}</span>
                 </div>
                 <span className="font-mono text-slate-700">{f.anteil}%</span>
@@ -120,14 +120,14 @@ export default function RevenueTab() {
       </Card>
 
       {/* Forecast */}
-      <Card>
+      <Card hover={false}>
         <h3 className="font-semibold text-slate-800 mb-4">{t('forecast')}</h3>
         <div className="grid grid-cols-4 gap-4">
           {['Q1', 'Q2', 'Q3', 'Q4'].map((q, i) => {
             const val = [data.forecast.q1, data.forecast.q2, data.forecast.q3, data.forecast.q4][i];
             const isActual = i === 0;
             return (
-              <div key={q} className={`text-center py-3 rounded-lg border ${isActual ? 'border-emerald-200 bg-emerald-50' : 'border-slate-200 bg-slate-50'}`}>
+              <div key={q} className={`text-center py-3 rounded-lg border card-hover ${isActual ? 'border-emerald-200 bg-emerald-50' : 'border-slate-200 bg-slate-50'}`}>
                 <div className="text-xs text-slate-400 uppercase mb-1">{q} {isActual ? t('ist') : t('plan')}</div>
                 <div className={`text-lg font-mono font-bold ${isActual ? 'text-emerald-700' : 'text-slate-700'}`}>{formatEur(val)}</div>
               </div>

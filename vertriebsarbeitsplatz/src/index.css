@@ -204,6 +204,7 @@
   pointer-events: none;
 }
 .card-passthrough table,
+.card-passthrough .card-hover,
 .card-passthrough .row-hover,
 .card-passthrough button,
 .card-passthrough a,
@@ -244,12 +245,14 @@
 .card-hover:hover h3,
 .card-hover:hover h4,
 .card-hover:hover p,
+.card-hover:hover svg,
 .row-hover:hover td,
 .row-hover:hover div,
 .row-hover:hover span,
 .row-hover:hover h3,
 .row-hover:hover h4,
-.row-hover:hover p {
+.row-hover:hover p,
+.row-hover:hover svg {
   color: inherit !important;
 }
 
@@ -269,7 +272,7 @@
 .card-hover:hover .kpi-icon-box {
   background-color: rgba(255,255,255,0.25) !important;
 }
-/* Legend dots: make visible on dark hover background */
-.card-hover:hover .legend-dot {
-  background-color: rgba(255,255,255,0.7) !important;
+/* Donut/chart: primary-colored segments become invisible on dark hover → make white */
+.card-hover:hover path[fill="#1a365d"] {
+  fill: rgba(255,255,255,0.9) !important;
 }

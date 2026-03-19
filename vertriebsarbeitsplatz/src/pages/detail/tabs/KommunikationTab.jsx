@@ -54,15 +54,17 @@ export default function KommunikationTab({ kunde }) {
           const colors = TYP_COLORS[typ] || TYP_COLORS.email;
           const Icon = TYP_ICONS[typ];
           return (
-            <div key={typ} className="bg-white border border-slate-200 rounded-xl p-3 flex items-center gap-3">
-              <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${colors.bg}`}>
-                <Icon size={16} className={colors.text} />
+            <Card key={typ} className="p-3" padding={false}>
+              <div className="flex items-center gap-3">
+                <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${colors.bg}`}>
+                  <Icon size={16} className={colors.text} />
+                </div>
+                <div>
+                  <div className="text-lg font-bold text-slate-800">{count}</div>
+                  <div className="text-[10px] text-slate-400">{label}</div>
+                </div>
               </div>
-              <div>
-                <div className="text-lg font-bold text-slate-800">{count}</div>
-                <div className="text-[10px] text-slate-400">{label}</div>
-              </div>
-            </div>
+            </Card>
           );
         })}
       </div>
@@ -86,7 +88,7 @@ export default function KommunikationTab({ kunde }) {
       </div>
 
       {/* Timeline */}
-      <Card hover={false}>
+      <Card>
         <h3 className="font-semibold text-slate-800 mb-4">{t('kommunikationsTimeline')}</h3>
         {filtered.length === 0 ? (
           <div className="text-sm text-slate-400 py-8 text-center">{t('keineKommunikation')}</div>

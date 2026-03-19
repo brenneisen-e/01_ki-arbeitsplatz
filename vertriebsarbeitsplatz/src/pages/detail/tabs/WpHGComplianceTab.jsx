@@ -3,6 +3,7 @@ import { formatEur } from '../../../utils/formatters';
 import { CheckCircle, AlertTriangle, Shield, FileText, TrendingDown, Receipt, Target, Leaf, Clock } from 'lucide-react';
 import { clsx } from 'clsx';
 import useTranslation from '../../../i18n/useTranslation';
+import Card from '../../../components/ui/Card';
 
 // ─── Helper: format date ───
 import { getLang } from '../../../utils/langHelper';
@@ -99,13 +100,13 @@ function VerlustschwelleBar({ trigger, drawdown, t }) {
 // ─── Section card wrapper ───
 function Section({ title, icon: Icon, children }) {
   return (
-    <div className="bg-white rounded-xl border border-slate-200 p-5" style={{ boxShadow: 'var(--card-shadow)' }}>
+    <Card>
       <div className="flex items-center gap-2 mb-4">
         {Icon && <Icon size={18} className="text-slate-500" strokeWidth={1.75} />}
         <h3 className="font-semibold text-slate-800">{title}</h3>
       </div>
       {children}
-    </div>
+    </Card>
   );
 }
 
@@ -118,7 +119,7 @@ export default function WpHGComplianceTab({ kunde }) {
   if (!wphg) {
     return (
       <div className="space-y-4">
-        <div className="bg-white rounded-xl border border-slate-200 p-5" style={{ boxShadow: 'var(--card-shadow)' }}>
+        <Card>
           <div className="flex flex-col items-center justify-center py-16 text-center">
             <div className="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center mb-4">
               <Shield className="w-8 h-8 text-slate-400" />
@@ -128,7 +129,7 @@ export default function WpHGComplianceTab({ kunde }) {
               {t('wphgDatenFehlen', { name: kunde?.name || 'diesen Mandanten' })}
             </p>
           </div>
-        </div>
+        </Card>
       </div>
     );
   }
@@ -183,10 +184,10 @@ export default function WpHGComplianceTab({ kunde }) {
           const borderColor = isOk ? 'border-l-emerald-500' : 'border-l-amber-400';
           const Icon = item.icon;
           return (
-            <div
+            <Card
               key={item.label}
-              className={`bg-white border border-slate-200 border-l-4 ${borderColor} rounded-xl p-4`}
-              style={{ boxShadow: 'var(--card-shadow)' }}
+              className={`border-l-4 ${borderColor} p-4`}
+              padding={false}
             >
               <div className="flex items-center gap-2 mb-2">
                 <Icon size={16} className="text-slate-400" />
@@ -194,7 +195,7 @@ export default function WpHGComplianceTab({ kunde }) {
               </div>
               <StatusBadge status={item.status} t={t} />
               <p className="text-xs text-slate-500 mt-2">{item.detail}</p>
-            </div>
+            </Card>
           );
         })}
       </div>

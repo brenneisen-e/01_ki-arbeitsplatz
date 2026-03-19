@@ -70,3 +70,11 @@ input, select, textarea {
 .animate-shake {
   animation: shake 0.5s ease-in-out;
 }
+
+/* AI message content formatting */
+.ai-message-content p { margin-bottom: 0.5rem; }
+.ai-message-content p:last-child { margin-bottom: 0; }
+.ai-message-content strong { font-weight: 600; color: var(--color-text-primary); }
+.ai-message-content ul.ai-list { margin: 0.35rem 0; padding-left: 0.25rem; list-style: none; }
+.ai-message-content ul.ai-list li { position: relative; padding-left: 1rem; margin-bottom: 0.2rem; }
+.ai-message-content ul.ai-list li::before { content: "–"; position: absolute; left: 0; color: var(--color-text-muted); }

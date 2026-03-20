@@ -69,7 +69,7 @@ export default function Wissenscheck() {
   if (activeQuestions) {
     if (currentIndex >= activeQuestions.length) {
       return (
-        <div className="px-6 py-8 max-w-2xl mx-auto">
+        <div className="px-6 py-8 ">
           <QuizEndScreen
             questions={activeQuestions}
             answers={answers}
@@ -80,7 +80,7 @@ export default function Wissenscheck() {
       );
     }
     return (
-      <div className="px-6 py-8 max-w-2xl mx-auto">
+      <div className="px-6 py-8 ">
         <QuizQuestion
           key={currentIndex}
           question={activeQuestions[currentIndex]}
@@ -98,7 +98,7 @@ export default function Wissenscheck() {
 
   return (
     <div className="px-6 py-8 animate-fade-in-up">
-      <div className="max-w-4xl mx-auto">
+      <div className="">
         {/* Header */}
         <div className="mb-6">
           <h2 className="text-2xl font-bold text-slate-900 flex items-center gap-3">

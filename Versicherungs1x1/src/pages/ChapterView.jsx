@@ -43,7 +43,7 @@ export default function ChapterView() {
     <div className="animate-fade-in-up">
       {/* Hero Section */}
       <div className="header-gradient px-6 py-10 text-white">
-        <div className="max-w-4xl mx-auto">
+        <div className="">
           <span className="text-xs font-mono text-white/50 mb-2 block">
             {num} / {String(total).padStart(2, '0')}
           </span>
@@ -87,7 +87,7 @@ export default function ChapterView() {
       </div>
 
       {/* Content */}
-      <div className="px-6 py-8 max-w-4xl mx-auto">
+      <div className="px-6 py-8 ">
         {/* Sub-chapter tabs */}
         {chapter.subChapters?.length > 0 && (
           <div className="flex gap-2 overflow-x-auto pb-4 mb-6" style={{ scrollbarWidth: 'none' }}>

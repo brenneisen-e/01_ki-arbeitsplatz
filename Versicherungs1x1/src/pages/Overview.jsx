@@ -14,11 +14,13 @@ export default function Overview() {
       {/* Landing Hero */}
       <div className="header-gradient py-16 px-6 text-center text-white">
         <div className="max-w-3xl mx-auto">
-          <img
-            src={`https://img.logo.dev/deloitte.com?token=${LOGO_TOKEN}&format=png&size=200`}
-            alt="Deloitte"
-            className="h-8 mx-auto mb-4 opacity-90"
-          />
+          <div className="w-16 h-16 rounded-xl bg-white/20 border border-white/30 overflow-hidden flex items-center justify-center mx-auto mb-5">
+            <img
+              src={`https://img.logo.dev/deloitte.com?token=${LOGO_TOKEN}&format=png&size=200`}
+              alt="Deloitte"
+              className="h-12 w-12 object-contain"
+            />
+          </div>
           <div className="inline-block text-xs font-semibold tracking-wider uppercase bg-white/15 px-3 py-1 rounded-full mb-4">
             Insurance Strategy & Consulting
           </div>

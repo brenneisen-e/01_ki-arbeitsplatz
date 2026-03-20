@@ -1,2 +1,18 @@
 # Cloudflare Pages Redirects
 # Root serves index.html (React M-01 Landing Page)
+
+# Sub-App redirects: serve built dist/ versions instead of source index.html
+/Versicherungs1x1/ /Versicherungs1x1/dist/index.html 200
+/Versicherungs1x1 /Versicherungs1x1/dist/index.html 200
+/Bestandsuebertragung/ /Bestandsuebertragung/dist/index.html 200
+/Bestandsuebertragung /Bestandsuebertragung/dist/index.html 200
+/HRPipeline/ /HRPipeline/dist/index.html 200
+/HRPipeline /HRPipeline/dist/index.html 200
+/VSTCockpit/ /VSTCockpit/dist/index.html 200
+/VSTCockpit /VSTCockpit/dist/index.html 200
+/vertriebsarbeitsplatz/ /vertriebsarbeitsplatz/dist/index.html 200
+/vertriebsarbeitsplatz /vertriebsarbeitsplatz/dist/index.html 200
+/kreditanalyse/ /kreditanalyse/dist/index.html 200
+/kreditanalyse /kreditanalyse/dist/index.html 200
+/asset-management/ /asset-management/dist/index.html 200
+/asset-management /asset-management/dist/index.html 200

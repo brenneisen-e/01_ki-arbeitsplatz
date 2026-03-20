@@ -188,14 +188,14 @@ export default function VorlagenPage() {
   }
 
   return (
-    <div className="p-6 max-w-4xl mx-auto space-y-6 animate-fade-in-up">
+    <div className="p-6 space-y-6 animate-fade-in-up">
       <div className="flex items-center gap-3">
         <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ backgroundColor: 'var(--mode-pastel)' }}>
           <Mail size={24} style={{ color: 'var(--mode-primary-light)' }} />
         </div>
         <div>
-          <h2 className="text-xl font-bold text-slate-800">E-Mail Vorlagen</h2>
-          <p className="text-sm text-slate-500">Standardisierte Vorlagen als .eml herunterladen oder in die Zwischenablage kopieren</p>
+          <h2 className="text-2xl font-bold text-slate-800">E-Mail Vorlagen</h2>
+          <p className="text-base text-slate-500">Standardisierte Vorlagen als .eml herunterladen oder in die Zwischenablage kopieren</p>
         </div>
       </div>
 
@@ -205,7 +205,7 @@ export default function VorlagenPage() {
           return (
             <div key={template.id} className="card-base overflow-hidden">
               <div className={`flex items-center justify-between px-5 py-3 ${colors.bg} border-b ${colors.border}`}>
-                <h3 className={`font-semibold text-sm ${colors.text}`}>{template.title}</h3>
+                <h3 className={`font-semibold text-base ${colors.text}`}>{template.title}</h3>
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => handleCopy(template)}
@@ -224,8 +224,8 @@ export default function VorlagenPage() {
                 </div>
               </div>
               <div className="p-5">
-                <div className="text-xs text-slate-400 mb-2">Betreff: {template.subject}</div>
-                <pre className="text-sm text-slate-600 whitespace-pre-wrap bg-slate-50 rounded-lg p-4 font-sans leading-relaxed">{template.body}</pre>
+                <div className="text-sm text-slate-400 mb-2">Betreff: {template.subject}</div>
+                <pre className="text-base text-slate-600 whitespace-pre-wrap bg-slate-50 rounded-lg p-4 font-sans leading-relaxed">{template.body}</pre>
               </div>
             </div>
           )

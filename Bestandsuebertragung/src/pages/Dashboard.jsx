@@ -50,7 +50,7 @@ export default function Dashboard({ onOpenCase, onOpenValidation, onExportReady 
         <input
           type="text" placeholder="Suche nach Kunde, VS-Nr, Makler, Sparte..."
           value={search} onChange={e => setSearch(e.target.value)}
-          className="w-full pl-10 pr-4 py-2.5 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#c41230]/30"
+          className="w-full pl-10 pr-4 py-2.5 rounded-lg text-base bg-white focus:outline-none focus:ring-2 focus:ring-[#c41230]/30"
           style={{ border: 'var(--card-border)' }}
         />
         {searchResults.length > 0 && (
@@ -61,8 +61,8 @@ export default function Dashboard({ onOpenCase, onOpenValidation, onExportReady 
                 className="px-4 py-3 hover:bg-slate-50 cursor-pointer border-b border-slate-100 last:border-0 transition-colors">
                 <div className="flex items-center justify-between">
                   <div>
-                    <div className="font-medium text-sm text-slate-800">{c.kunde?.name || 'Unbekannt'}</div>
-                    <div className="text-xs text-slate-500">VS-Nr: {c.versicherungsnummer?.value || '-'} | {c.sparte || '-'} | Makler: {c.makler?.name || '-'}</div>
+                    <div className="font-medium text-base text-slate-800">{c.kunde?.name || 'Unbekannt'}</div>
+                    <div className="text-sm text-slate-500">VS-Nr: {c.versicherungsnummer?.value || '-'} | {c.sparte || '-'} | Makler: {c.makler?.name || '-'}</div>
                   </div>
                   <StatusBadge status={c.status} />
                 </div>
@@ -103,7 +103,7 @@ export default function Dashboard({ onOpenCase, onOpenValidation, onExportReady 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Sparten */}
         <div className="card-base p-5">
-          <h3 className="font-semibold text-sm text-slate-700 mb-4">Sparten-Verteilung</h3>
+          <h3 className="font-semibold text-base text-slate-700 mb-4">Sparten-Verteilung</h3>
           {spartenStats.length === 0 ? (
             <p className="text-sm text-slate-400">Keine Sparten</p>
           ) : (
@@ -113,11 +113,11 @@ export default function Dashboard({ onOpenCase, onOpenValidation, onExportReady 
                 const pct = Math.round((s.count / max) * 100)
                 return (
                   <div key={s.sparte} className="flex items-center gap-2">
-                    <span className="text-xs text-slate-600 w-24 truncate" title={s.sparte}>{s.sparte}</span>
+                    <span className="text-sm text-slate-600 w-28 truncate" title={s.sparte}>{s.sparte}</span>
                     <div className="flex-1 h-2 bg-slate-100 rounded-full overflow-hidden">
                       <div className="h-full rounded-full transition-all" style={{ width: `${pct}%`, backgroundColor: 'var(--mode-primary-light)' }} />
                     </div>
-                    <span className="text-xs font-medium font-mono text-slate-700 w-6 text-right">{s.count}</span>
+                    <span className="text-sm font-medium font-mono text-slate-700 w-8 text-right">{s.count}</span>
                   </div>
                 )
               })}
@@ -128,7 +128,7 @@ export default function Dashboard({ onOpenCase, onOpenValidation, onExportReady 
         {/* Recent Activity */}
         <div className="lg:col-span-2 card-base p-5">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="font-semibold text-sm text-slate-700">Letzte Aktivitäten</h3>
+            <h3 className="font-semibold text-base text-slate-700">Letzte Aktivitäten</h3>
             <div className="flex items-center gap-2">
               <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)}
                 className="text-xs border border-slate-200 rounded-lg px-2 py-1 bg-white">
@@ -146,12 +146,12 @@ export default function Dashboard({ onOpenCase, onOpenValidation, onExportReady 
             {filteredActivity.length === 0 ? (
               <p className="text-sm text-slate-400">Keine Aktivitäten</p>
             ) : (
-              <table className="w-full text-sm">
+              <table className="w-full text-base">
                 <tbody>
                   {filteredActivity.map((a, i) => (
                     <tr key={i} onClick={() => { const c = Storage.getCase(a.caseId); if (c) onOpenCase(c) }}
                       className="hover:bg-slate-50 cursor-pointer border-b border-slate-100 transition-colors">
-                      <td className="py-2.5 pr-2 text-xs text-slate-400 font-mono w-24">{formatDate(a.date)}</td>
+                      <td className="py-2.5 pr-2 text-sm text-slate-400 font-mono w-28">{formatDate(a.date)}</td>
                       <td className="py-2.5 pr-2 text-slate-700 font-medium">{a.kundeName}</td>
                       <td className="py-2.5 pr-2 text-slate-500">{a.maklerName}</td>
                       <td className="py-2.5"><StatusBadge status={a.to} /></td>
@@ -167,18 +167,18 @@ export default function Dashboard({ onOpenCase, onOpenValidation, onExportReady 
       {/* Import/Export History */}
       {importExportHistory.length > 0 && (
         <div className="card-base p-5">
-          <h3 className="font-semibold text-sm text-slate-700 mb-4">Import/Export Historie</h3>
-          <table className="w-full text-sm">
+          <h3 className="font-semibold text-base text-slate-700 mb-4">Import/Export Historie</h3>
+          <table className="w-full text-base">
             <thead>
-              <tr className="text-left text-xs text-slate-500 border-b border-slate-200">
+              <tr className="text-left text-sm text-slate-500 border-b border-slate-200">
                 <th className="pb-2 pr-2">Datum</th><th className="pb-2 pr-2">Typ</th><th className="pb-2 pr-2">Anzahl</th><th className="pb-2">Benutzer</th>
               </tr>
             </thead>
             <tbody>
               {importExportHistory.map((h, i) => (
                 <tr key={i} className="border-b border-slate-100">
-                  <td className="py-2 pr-2 text-xs text-slate-500 font-mono">{formatDateTime(h.date)}</td>
-                  <td className="py-2 pr-2"><span className={`text-xs px-2 py-0.5 rounded-full ${h.type === 'import' ? 'bg-blue-100 text-blue-700' : 'bg-emerald-100 text-emerald-700'}`}>{h.type === 'import' ? 'Import' : 'Export'}</span></td>
+                  <td className="py-2 pr-2 text-sm text-slate-500 font-mono">{formatDateTime(h.date)}</td>
+                  <td className="py-2 pr-2"><span className={`text-sm px-2 py-0.5 rounded-full ${h.type === 'import' ? 'bg-blue-100 text-blue-700' : 'bg-emerald-100 text-emerald-700'}`}>{h.type === 'import' ? 'Import' : 'Export'}</span></td>
                   <td className="py-2 pr-2 text-slate-700">{h.count} Vorgänge</td>
                   <td className="py-2 text-slate-500">{h.user || 'Unbekannt'}</td>
                 </tr>
@@ -194,11 +194,11 @@ export default function Dashboard({ onOpenCase, onOpenValidation, onExportReady 
 function KPICard({ label, value, pct, color, delay = 0 }) {
   return (
     <div className="card-base p-4 animate-fade-in-up" style={{ animationDelay: `${delay * 60}ms` }}>
-      <div className="text-xs text-slate-500 mb-1">{label}</div>
-      <div className="text-2xl font-bold kpi-value" style={{ color: 'var(--text-primary)' }}>{value}</div>
+      <div className="text-sm text-slate-500 mb-1">{label}</div>
+      <div className="text-3xl font-bold kpi-value" style={{ color: 'var(--text-primary)' }}>{value}</div>
       {pct !== undefined && (
         <>
-          <div className="text-xs text-slate-400 font-mono mt-1">{pct}%</div>
+          <div className="text-sm text-slate-400 font-mono mt-1">{pct}%</div>
           <div className="mt-2 h-2 bg-slate-100 rounded-full overflow-hidden">
             <div className={`h-full rounded-full ${color} transition-all`} style={{ width: `${pct}%` }} />
           </div>

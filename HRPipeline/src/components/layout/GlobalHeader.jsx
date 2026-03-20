@@ -1,5 +1,8 @@
-import { Home, UserPlus, LayoutDashboard, Shield, ShieldCheck } from 'lucide-react';
+import { useState, useRef, useEffect } from 'react';
+import { Home, UserPlus, LayoutDashboard, Shield, ShieldCheck, ChevronDown } from 'lucide-react';
 import { clsx } from 'clsx';
+import { useInstitut } from '../../hooks/useInstitut';
+import { logoUrl } from '../../data/institutConfig';
 
 function getBasePath() {
   const path = window.location.pathname;
@@ -9,7 +12,46 @@ function getBasePath() {
   return '/';
 }
 
+function InstitutDropdown({ onClose }) {
+  const { institut, varianten, switchInstitut } = useInstitut();
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const handler = (e) => { if (ref.current && !ref.current.contains(e.target)) onClose(); };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [onClose]);
+
+  return (
+    <div ref={ref} className="hp-institut-dropdown">
+      <div className="hp-institut-dropdown-title">Institut wählen</div>
+      {varianten.map(v => (
+        <button
+          key={v.institut}
+          className={clsx('hp-institut-option', v.institut === institut.institut && 'active')}
+          onClick={() => { switchInstitut(v); onClose(); }}
+        >
+          <div className="hp-institut-option-dot" style={{ background: v.colors.gradient }} />
+          <img
+            src={logoUrl(v.domain)}
+            alt={v.institut}
+            className="hp-institut-option-logo"
+            onError={e => { e.target.style.display = 'none'; }}
+          />
+          <span>{v.institut}</span>
+          {v.institut === institut.institut && (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" width="14" height="14" style={{ marginLeft: 'auto', color: v.colors.primaryLight }}><polyline points="20 6 9 17 4 12"/></svg>
+          )}
+        </button>
+      ))}
+    </div>
+  );
+}
+
 export default function GlobalHeader({ currentMode, onModeChange }) {
+  const { institut } = useInstitut();
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+
   const modes = [
     { id: 'bewerber', label: 'Bewerber-Portal', icon: UserPlus },
     { id: 'arbeitgeber', label: 'Recruiting Dashboard', icon: LayoutDashboard },
@@ -17,7 +59,7 @@ export default function GlobalHeader({ currentMode, onModeChange }) {
   ];
 
   return (
-    <header className="transition-all duration-500" style={{ background: 'linear-gradient(135deg, #5a1018 0%, #86181d 40%, #a02028 100%)' }}>
+    <header className="transition-all duration-500" style={{ background: institut.colors.gradient }}>
       {/* Top Row */}
       <div className="px-6 pt-5 pb-3 flex items-center justify-between">
         <div className="flex items-center gap-4">
@@ -29,9 +71,25 @@ export default function GlobalHeader({ currentMode, onModeChange }) {
             <Home size={16} strokeWidth={1.75} />
             <span className="text-xs font-medium">Startseite</span>
           </button>
-          <div className="w-10 h-10 rounded-lg bg-white/20 border border-white/30 flex items-center justify-center overflow-hidden">
-            <span className="text-white font-bold text-sm">ERGO</span>
+
+          {/* Institut Selector */}
+          <div className="relative">
+            <button
+              onClick={() => setDropdownOpen(!dropdownOpen)}
+              className="flex items-center gap-2.5 px-3 py-1.5 rounded-lg bg-white/15 hover:bg-white/25 transition-colors border border-white/20"
+            >
+              <img
+                src={logoUrl(institut.domain)}
+                alt={institut.institut}
+                className="w-6 h-6 rounded object-contain bg-white"
+                onError={e => { e.target.style.display = 'none'; }}
+              />
+              <span className="text-white font-bold text-sm">{institut.institut}</span>
+              <ChevronDown size={14} className={clsx('text-white/60 transition-transform', dropdownOpen && 'rotate-180')} />
+            </button>
+            {dropdownOpen && <InstitutDropdown onClose={() => setDropdownOpen(false)} />}
           </div>
+
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 rounded-full bg-white/20 border-2 border-white/50 flex items-center justify-center">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="24" height="24" className="text-white">

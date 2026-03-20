@@ -4,6 +4,7 @@ import { HP_PROFILES } from '../../data/profiles';
 import { HP_POSITIONS } from '../../data/positions';
 import { getHPMatchScore, getHPMatchBadges, HP_DISTANCES } from '../../data/applicants';
 import { useToast } from '../../hooks/useToast';
+import { useInstitut } from '../../hooks/useInstitut';
 import ScoreRing from '../shared/ScoreRing';
 import WaterfallChart from '../shared/WaterfallChart';
 
@@ -51,6 +52,7 @@ function KiSummary({ text }) {
 
 // ======== Upload / Landing Section ========
 function UploadSection({ onLoadProfile, onJobDetail }) {
+  const { institut } = useInstitut();
   const [linkedinChecked, setLinkedinChecked] = useState(true);
   const [demosExpanded, setDemosExpanded] = useState(false);
   const fileInputRef = useRef(null);
@@ -64,7 +66,7 @@ function UploadSection({ onLoadProfile, onJobDetail }) {
             <CheckCircle size={14} />
             KI-gestützte Stellensuche
           </div>
-          <h2 className="hp-landing-title">Willkommen im ERGO Karriereportal</h2>
+          <h2 className="hp-landing-title">Willkommen im {institut.institut} Karriereportal</h2>
           <p className="hp-landing-subtitle">
             Finden Sie Ihre ideale Vertriebsposition bei einem der führenden Versicherungsunternehmen Deutschlands. Unsere KI analysiert Ihren Lebenslauf und findet die besten Stellen für Sie — in Sekunden.
           </p>

@@ -3,6 +3,7 @@ import { UserPlus, Activity, Eye, EyeOff, MapPin, Calendar, Briefcase, CheckCirc
 import { HP_POSITIONS } from '../../data/positions';
 import { HP_ALL_APPLICANTS, anonymizeText } from '../../data/applicants';
 import { useToast } from '../../hooks/useToast';
+import { useInstitut } from '../../hooks/useInstitut';
 import WaterfallChart from '../shared/WaterfallChart';
 import SkillGapChart from '../shared/SkillGapChart';
 
@@ -95,6 +96,11 @@ function ApplicantCard({ applicant, isBlind, onClick }) {
       onClick={onClick}
     >
       <div className={`hp-applicant-score ${scoreClass}`}>{applicant.totalScore}</div>
+      {!isBlind && applicant.photo ? (
+        <img src={applicant.photo} alt={applicant.name} style={{ width: 40, height: 40, borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }} />
+      ) : (
+        <div className="hp-profile-avatar-small">{isBlind ? `#${getBlindId(applicant.id)}` : applicant.initials}</div>
+      )}
       <div className="hp-applicant-info">
         <h4>{isBlind ? `Kandidat/in #${getBlindId(applicant.id)}` : applicant.name}</h4>
         <div className="hp-applicant-location">
@@ -366,12 +372,14 @@ function InviteWorkflow({ name, onCancel, onConfirm }) {
 
 // ======== Reject Workflow ========
 function RejectWorkflow({ name, onCancel, onConfirm }) {
+  const { institut } = useInstitut();
   const [template, setTemplate] = useState('standard');
+  const iName = institut.institut;
 
   const templates = {
-    standard: `Sehr geehrte/r ${name},\n\nvielen Dank für Ihre Bewerbung und Ihr Interesse an ERGO. Nach sorgfältiger Prüfung müssen wir Ihnen leider mitteilen, dass wir uns für andere Kandidat/innen entschieden haben.\n\nWir wünschen Ihnen für Ihre berufliche Zukunft alles Gute.\n\nMit freundlichen Grüßen\nERGO Recruiting Team`,
-    talentpool: `Sehr geehrte/r ${name},\n\nvielen Dank für Ihre Bewerbung. Leider können wir Ihnen aktuell keine passende Position anbieten. Ihr Profil hat uns jedoch überzeugt — wir möchten Sie gerne in unseren Talent-Pool aufnehmen und Sie kontaktieren, sobald eine geeignete Stelle frei wird.\n\nMit freundlichen Grüßen\nERGO Recruiting Team`,
-    empfehlung: `Sehr geehrte/r ${name},\n\nvielen Dank für Ihre Bewerbung. Für die ausgeschriebene Position können wir Ihnen leider kein Angebot machen. Wir empfehlen Ihnen jedoch, sich auf andere offene Stellen in unserem Karriereportal umzusehen, die besser zu Ihrem Profil passen könnten.\n\nMit freundlichen Grüßen\nERGO Recruiting Team`
+    standard: `Sehr geehrte/r ${name},\n\nvielen Dank für Ihre Bewerbung und Ihr Interesse an ${iName}. Nach sorgfältiger Prüfung müssen wir Ihnen leider mitteilen, dass wir uns für andere Kandidat/innen entschieden haben.\n\nWir wünschen Ihnen für Ihre berufliche Zukunft alles Gute.\n\nMit freundlichen Grüßen\n${iName} Recruiting Team`,
+    talentpool: `Sehr geehrte/r ${name},\n\nvielen Dank für Ihre Bewerbung. Leider können wir Ihnen aktuell keine passende Position anbieten. Ihr Profil hat uns jedoch überzeugt — wir möchten Sie gerne in unseren Talent-Pool aufnehmen und Sie kontaktieren, sobald eine geeignete Stelle frei wird.\n\nMit freundlichen Grüßen\n${iName} Recruiting Team`,
+    empfehlung: `Sehr geehrte/r ${name},\n\nvielen Dank für Ihre Bewerbung. Für die ausgeschriebene Position können wir Ihnen leider kein Angebot machen. Wir empfehlen Ihnen jedoch, sich auf andere offene Stellen in unserem Karriereportal umzusehen, die besser zu Ihrem Profil passen könnten.\n\nMit freundlichen Grüßen\n${iName} Recruiting Team`
   };
 
   return (

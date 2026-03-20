@@ -1,5 +1,7 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, lazy, Suspense } from 'react';
 import { LayoutGrid, MapPin, Users, AlertTriangle, Shield } from 'lucide-react';
+
+const GermanyMap = lazy(() => import('./GermanyMap'));
 
 // ======== Demo Data ========
 const REGIONALDIREKTIONEN = [
@@ -89,44 +91,62 @@ function OverviewView({ data }) {
         </div>
       </div>
 
-      {/* Alerts */}
-      <div className="hc-panel" style={{ marginBottom: 'var(--space-6)' }}>
-        <div className="hc-panel-header">
-          <h3>Aktuelle Warnungen</h3>
-          <span className="hc-alert-count">{data.filter(d => d.tier === 'red').length + data.filter(d => d.tier === 'amber').length}</span>
-        </div>
-        <div className="hc-alerts-list">
-          {data.filter(d => d.tier !== 'green').sort((a, b) => a.composite - b.composite).slice(0, 5).map(d => (
-            <div key={d.id} className={`hc-alert-item ${d.tier}`}>
-              <span className={`hc-alert-dot ${d.tier}`} />
-              <span className="hc-alert-text"><strong>{d.name}</strong> — Health Score {d.composite} ({d.tier === 'red' ? 'Kritisch' : 'Beobachten'})</span>
-              <span className="hc-alert-metric">Fluktuation: {d.turnoverRate}%</span>
+      {/* Two-column: Alerts + Map */}
+      <div className="hc-overview-grid">
+        <div className="hc-overview-main">
+          {/* Alerts */}
+          <div className="hc-panel" style={{ marginBottom: 'var(--space-6)' }}>
+            <div className="hc-panel-header">
+              <h3>Aktuelle Warnungen</h3>
+              <span className="hc-alert-count">{data.filter(d => d.tier === 'red').length + data.filter(d => d.tier === 'amber').length}</span>
             </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Risk Movers Table */}
-      <div className="hc-panel hc-full-width">
-        <div className="hc-panel-header"><h3>Risk Movers — Größte Score-Veränderungen</h3></div>
-        <div className="hc-table-wrapper">
-          <table className="hc-table">
-            <thead>
-              <tr><th>Kennung</th><th>Regionaldirektion</th><th>Aktueller Score</th><th>Vermittler</th><th>Fluktuation</th><th>Vakanzen</th></tr>
-            </thead>
-            <tbody>
-              {data.sort((a, b) => a.composite - b.composite).map(d => (
-                <tr key={d.id}>
-                  <td><span style={{ color: tierColor(d.tier), fontWeight: 600 }}>●</span> {d.id.replace('rd_', '').toUpperCase()}</td>
-                  <td>{d.name}</td>
-                  <td><strong>{d.composite}</strong></td>
-                  <td>{d.headcount}</td>
-                  <td>{d.turnoverRate}%</td>
-                  <td>{d.vacancyRate.toFixed(1)}%</td>
-                </tr>
+            <div className="hc-alerts-list">
+              {data.filter(d => d.tier !== 'green').sort((a, b) => a.composite - b.composite).slice(0, 5).map(d => (
+                <div key={d.id} className={`hc-alert-item ${d.tier}`}>
+                  <span className={`hc-alert-dot ${d.tier}`} />
+                  <span className="hc-alert-text"><strong>{d.name}</strong> — Health Score {d.composite} ({d.tier === 'red' ? 'Kritisch' : 'Beobachten'})</span>
+                  <span className="hc-alert-metric">Fluktuation: {d.turnoverRate}%</span>
+                </div>
               ))}
-            </tbody>
-          </table>
+            </div>
+          </div>
+
+          {/* Risk Movers Table */}
+          <div className="hc-panel hc-full-width">
+            <div className="hc-panel-header"><h3>Risk Movers — Größte Score-Veränderungen</h3></div>
+            <div className="hc-table-wrapper">
+              <table className="hc-table">
+                <thead>
+                  <tr><th>Kennung</th><th>Regionaldirektion</th><th>Aktueller Score</th><th>Vermittler</th><th>Fluktuation</th><th>Vakanzen</th></tr>
+                </thead>
+                <tbody>
+                  {[...data].sort((a, b) => a.composite - b.composite).map(d => (
+                    <tr key={d.id}>
+                      <td><span style={{ color: tierColor(d.tier), fontWeight: 600 }}>●</span> {d.id.replace('rd_', '').toUpperCase()}</td>
+                      <td>{d.name}</td>
+                      <td><strong>{d.composite}</strong></td>
+                      <td>{d.headcount}</td>
+                      <td>{d.turnoverRate}%</td>
+                      <td>{d.vacancyRate.toFixed(1)}%</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        {/* Map Panel */}
+        <div className="hc-overview-sidebar">
+          <div className="hc-panel hc-map-panel">
+            <div className="hc-panel-header">
+              <h3>Regionaldirektionen — Gesundheitsscore</h3>
+              <span className="hc-panel-badge">Klicken für Details</span>
+            </div>
+            <Suspense fallback={<div style={{ height: 400, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><div className="hp-loading-spinner" /></div>}>
+              <GermanyMap data={data} />
+            </Suspense>
+          </div>
         </div>
       </div>
     </div>
@@ -151,7 +171,7 @@ function RegionsView({ data }) {
               <tr><th>Regionaldirektion</th><th>Gesamt</th>{dims.map(d => <th key={d}>{d}</th>)}</tr>
             </thead>
             <tbody>
-              {data.sort((a, b) => b.composite - a.composite).map(d => (
+              {[...data].sort((a, b) => b.composite - a.composite).map(d => (
                 <tr key={d.id}>
                   <td style={{ fontWeight: 600 }}>{d.name}</td>
                   <td style={{ background: heatmapColor(d.composite), fontWeight: 700, textAlign: 'center' }}>{d.composite}</td>
@@ -174,7 +194,7 @@ function RegionsView({ data }) {
               <tr><th>#</th><th>Regionaldirektion</th><th>Health Score</th><th>Vermittler</th><th>Fluktuation</th><th>Vakanzen</th></tr>
             </thead>
             <tbody>
-              {data.sort((a, b) => b.composite - a.composite).map((d, i) => (
+              {[...data].sort((a, b) => b.composite - a.composite).map((d, i) => (
                 <tr key={d.id}>
                   <td>{i + 1}</td>
                   <td style={{ fontWeight: 600 }}>{d.name}</td>

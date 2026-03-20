@@ -187,16 +187,7 @@ export default function AIUploadPage() {
       )}
 
       {/* Heutige Problematik */}
-      <HeutigeProblematikSection
-        onAddToUpload={(file) => {
-          setFiles(prev => {
-            const existing = new Set(prev.map(f => f.name + f.size))
-            return existing.has(file.name + file.size) ? prev : [...prev, file]
-          })
-          showToast(`${file.name} zur Upload-Liste hinzugefügt`, 'success')
-        }}
-        showToast={showToast}
-      />
+      <HeutigeProblematikSection showToast={showToast} />
 
       {/* Drop Zone */}
       <div
@@ -279,69 +270,7 @@ export default function AIUploadPage() {
       )}
 
       {/* Results */}
-      {results.length > 0 && (
-        <div className="space-y-4">
-          <h3 className="text-lg font-semibold text-slate-700">Analyseergebnisse</h3>
-          {results.map((result, ri) => (
-            <div key={ri} className="card-base overflow-hidden">
-              <div className={`px-4 py-3 flex items-center gap-2 ${result.success ? 'bg-emerald-50' : 'bg-red-50'}`}>
-                {result.success ? <CheckCircle size={16} className="text-emerald-500" /> : <AlertTriangle size={16} className="text-red-500" />}
-                <span className="text-base font-medium text-slate-700">{result.filename}</span>
-                {result.analysis?.vorgaenge && (
-                  <span className="text-xs px-2 py-0.5 rounded-full bg-white text-slate-600 border border-slate-200">
-                    {result.analysis.vorgaenge.length} Vorgänge
-                  </span>
-                )}
-              </div>
-
-              {result.error && (
-                <div className="px-4 py-3 text-sm text-red-600">{result.error}</div>
-              )}
-
-              {result.analysis?.zusammenfassung && (
-                <div className="px-4 py-2 text-xs text-slate-500 border-b border-slate-100">{result.analysis.zusammenfassung}</div>
-              )}
-
-              {result.analysis?.vorgaenge?.map((v, vi) => (
-                <div key={vi} className="px-4 py-3 border-b border-slate-100 last:border-0">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-base font-medium text-slate-800">{v.kunde || 'Unbekannt'}</span>
-                    <span className={`text-xs px-2 py-0.5 rounded-full ${
-                      v.kategorie === 'erinnerung' ? 'bg-amber-100 text-amber-700' : 'bg-blue-100 text-blue-700'
-                    }`}>{v.kategorie === 'erinnerung' ? 'Erinnerung' : 'Neu'}</span>
-                  </div>
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm">
-                    <div><span className="text-slate-400">VS-Nr:</span> <span className="text-slate-700 font-mono">{v.versicherungsnummer || '-'}</span></div>
-                    <div><span className="text-slate-400">Sparte:</span> <span className="text-slate-700">{v.sparte || '-'}</span></div>
-                    <div><span className="text-slate-400">Makler:</span> <span className="text-slate-700">{v.makler || '-'}</span></div>
-                    <div><span className="text-slate-400">Gültig ab:</span> <span className="text-slate-700 font-mono">{v.gueltigkeitsdatum || '-'}</span></div>
-                  </div>
-
-                  {/* Maklervollmacht */}
-                  {v.maklervollmacht && (
-                    <div className="mt-2 flex items-center gap-2 text-sm">
-                      <span className="text-slate-400">Vollmacht:</span>
-                      {v.maklervollmacht.als_anhang && v.maklervollmacht.unterschrieben ? (
-                        <span className="text-emerald-600 flex items-center gap-1"><CheckCircle size={12} /> Vorhanden, unterschrieben</span>
-                      ) : v.maklervollmacht.als_anhang ? (
-                        <span className="text-amber-600 flex items-center gap-1"><AlertTriangle size={12} /> Vorhanden, nicht unterschrieben</span>
-                      ) : v.maklervollmacht.nur_erwaehnt ? (
-                        <span className="text-amber-600">Nur erwähnt</span>
-                      ) : (
-                        <span className="text-red-600">Fehlt</span>
-                      )}
-                    </div>
-                  )}
-
-                  {v.fehlende_infos?.length > 0 && (
-                    <div className="mt-1 text-sm text-amber-600">Fehlend: {v.fehlende_infos.join(', ')}</div>
-                  )}
-                </div>
-              ))}
-            </div>
-          ))}
-        </div>
-      )}
+      {results.length > 0 && <AnalyseErgebnisse results={results} />}
 
       {/* Demo Files Section */}
       <DemoFilesSection
@@ -460,6 +389,182 @@ const COLOR_VARIANTS = {
   purple: { bg: 'bg-purple-50', border: 'border-purple-200', text: 'text-purple-700', light: 'bg-purple-100', dot: 'bg-purple-400' },
 }
 
+// ============================================================
+// Analyse Ergebnisse (grouped by Vorgang)
+// ============================================================
+
+function buildGroupedResults(results) {
+  // Collect all vorgaenge with their source file info
+  const allEntries = []
+  const errors = []
+
+  for (const result of results) {
+    if (!result.success) {
+      errors.push(result)
+      continue
+    }
+    if (!result.analysis?.vorgaenge) continue
+    for (const v of result.analysis.vorgaenge) {
+      allEntries.push({
+        vorgang: v,
+        filename: result.filename,
+        zusammenfassung: result.analysis.zusammenfassung,
+      })
+    }
+  }
+
+  // Group by kunde + versicherungsnummer (normalized)
+  const groups = []
+  const groupMap = new Map()
+
+  for (const entry of allEntries) {
+    const kunde = (entry.vorgang.kunde || '').toLowerCase().trim()
+    const vsNr = (entry.vorgang.versicherungsnummer || '').toLowerCase().trim()
+    // Build key: if we have both kunde and vsNr, use both; otherwise just kunde
+    const key = vsNr ? `${kunde}::${vsNr}` : `${kunde}::${entry.filename}::${Math.random()}`
+
+    if (groupMap.has(key)) {
+      groupMap.get(key).entries.push(entry)
+    } else {
+      const group = { key, entries: [entry] }
+      groupMap.set(key, group)
+      groups.push(group)
+    }
+  }
+
+  return { groups, errors }
+}
+
+function VorgangDetails({ v }) {
+  return (
+    <div>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm">
+        <div><span className="text-slate-400">VS-Nr:</span> <span className="text-slate-700 font-mono">{v.versicherungsnummer || '-'}</span></div>
+        <div><span className="text-slate-400">Sparte:</span> <span className="text-slate-700">{v.sparte || '-'}</span></div>
+        <div><span className="text-slate-400">Makler:</span> <span className="text-slate-700">{v.makler || '-'}</span></div>
+        <div><span className="text-slate-400">Gültig ab:</span> <span className="text-slate-700 font-mono">{v.gueltigkeitsdatum || '-'}</span></div>
+      </div>
+      {v.maklervollmacht && (
+        <div className="mt-2 flex items-center gap-2 text-sm">
+          <span className="text-slate-400">Vollmacht:</span>
+          {v.maklervollmacht.als_anhang && v.maklervollmacht.unterschrieben ? (
+            <span className="text-emerald-600 flex items-center gap-1"><CheckCircle size={12} /> Vorhanden, unterschrieben</span>
+          ) : v.maklervollmacht.als_anhang ? (
+            <span className="text-amber-600 flex items-center gap-1"><AlertTriangle size={12} /> Vorhanden, nicht unterschrieben</span>
+          ) : v.maklervollmacht.nur_erwaehnt ? (
+            <span className="text-amber-600">Nur erwähnt</span>
+          ) : (
+            <span className="text-red-600">Fehlt</span>
+          )}
+        </div>
+      )}
+      {v.fehlende_infos?.length > 0 && (
+        <div className="mt-1 text-sm text-amber-600">Fehlend: {v.fehlende_infos.join(', ')}</div>
+      )}
+    </div>
+  )
+}
+
+function AnalyseErgebnisse({ results }) {
+  const { groups, errors } = buildGroupedResults(results)
+  const totalVorgaenge = groups.length
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center gap-3">
+        <h3 className="text-lg font-semibold text-slate-700">Analyseergebnisse</h3>
+        <span className="text-xs px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+          {totalVorgaenge} {totalVorgaenge === 1 ? 'Vorgang' : 'Vorgänge'} erkannt
+        </span>
+        {groups.some(g => g.entries.length > 1) && (
+          <span className="text-xs px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 border border-blue-200 flex items-center gap-1">
+            <GitMerge size={12} /> Zusammengehörige E-Mails erkannt
+          </span>
+        )}
+      </div>
+
+      {/* Error results */}
+      {errors.map((result, i) => (
+        <div key={`err-${i}`} className="card-base overflow-hidden">
+          <div className="px-4 py-3 flex items-center gap-2 bg-red-50">
+            <AlertTriangle size={16} className="text-red-500" />
+            <span className="text-base font-medium text-slate-700">{result.filename}</span>
+          </div>
+          <div className="px-4 py-3 text-sm text-red-600">{result.error}</div>
+        </div>
+      ))}
+
+      {/* Grouped Vorgänge */}
+      {groups.map((group, gi) => {
+        const isGrouped = group.entries.length > 1
+        const primaryV = group.entries[0].vorgang
+
+        if (!isGrouped) {
+          // Single entry — render as simple card
+          const entry = group.entries[0]
+          return (
+            <div key={gi} className="card-base overflow-hidden">
+              <div className="px-4 py-3 flex items-center gap-2 bg-emerald-50">
+                <CheckCircle size={16} className="text-emerald-500" />
+                <span className="text-base font-medium text-slate-800">{primaryV.kunde || 'Unbekannt'}</span>
+                <span className={`text-xs px-2 py-0.5 rounded-full ${
+                  primaryV.kategorie === 'erinnerung' ? 'bg-amber-100 text-amber-700' : 'bg-blue-100 text-blue-700'
+                }`}>{primaryV.kategorie === 'erinnerung' ? 'Erinnerung' : 'Neu'}</span>
+                <span className="ml-auto text-xs text-slate-400">{entry.filename}</span>
+              </div>
+              {entry.zusammenfassung && (
+                <div className="px-4 py-2 text-xs text-slate-500 border-b border-slate-100">{entry.zusammenfassung}</div>
+              )}
+              <div className="px-4 py-3">
+                <VorgangDetails v={primaryV} />
+              </div>
+            </div>
+          )
+        }
+
+        // Grouped entries — multiple emails for the same Vorgang
+        return (
+          <div key={gi} className="card-base overflow-hidden border-2 border-blue-200">
+            {/* Group header */}
+            <div className="px-4 py-3 flex items-center gap-2 bg-blue-50">
+              <GitMerge size={16} className="text-blue-600" />
+              <span className="text-base font-bold text-slate-800">{primaryV.kunde || 'Unbekannt'}</span>
+              <span className="text-xs px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 font-medium">
+                {group.entries.length} E-Mails zusammengeführt
+              </span>
+              <span className="text-xs text-slate-500 font-mono ml-auto">{primaryV.versicherungsnummer || ''}</span>
+            </div>
+
+            {/* Merged Vorgang summary */}
+            <div className="px-4 py-3 border-b border-blue-100 bg-blue-50/30">
+              <VorgangDetails v={primaryV} />
+            </div>
+
+            {/* Individual email sub-cards */}
+            <div className="px-4 py-3 space-y-2">
+              <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Zusammengeführte E-Mails</div>
+              {group.entries.map((entry, ei) => (
+                <div key={ei} className="rounded-lg border border-slate-200 bg-slate-50 overflow-hidden">
+                  <div className="px-3 py-2 flex items-center gap-2">
+                    <Mail size={14} className="text-slate-400 shrink-0" />
+                    <span className="text-sm font-medium text-slate-700 truncate flex-1">{entry.filename}</span>
+                    <span className={`text-xs px-2 py-0.5 rounded-full ${
+                      entry.vorgang.kategorie === 'erinnerung' ? 'bg-amber-100 text-amber-700' : 'bg-blue-100 text-blue-700'
+                    }`}>{entry.vorgang.kategorie === 'erinnerung' ? 'Erinnerung' : 'Erstanfrage'}</span>
+                  </div>
+                  {entry.zusammenfassung && (
+                    <div className="px-3 pb-2 text-xs text-slate-500">{entry.zusammenfassung}</div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )
+      })}
+    </div>
+  )
+}
+
 function parseEmlRaw(raw) {
   const splitIdx = raw.search(/\r?\n\r?\n/)
   const headerBlock = splitIdx >= 0 ? raw.substring(0, splitIdx) : raw
@@ -526,7 +631,7 @@ function parseEmlRaw(raw) {
   return { subject, from, to, date, body: body.trim(), attachments }
 }
 
-function EmailPreviewModal({ fileId, onClose, onAddToUpload, onDownload }) {
+function EmailPreviewModal({ fileId, onClose, onDownload }) {
   const email = (() => {
     if (!fileId) return null
     const result = generateFile(fileId)
@@ -591,13 +696,6 @@ function EmailPreviewModal({ fileId, onClose, onAddToUpload, onDownload }) {
         {/* Actions */}
         <div className="flex items-center gap-2 px-6 py-4 border-t border-slate-100 bg-slate-50">
           <button
-            onClick={() => { onAddToUpload(fileId); onClose() }}
-            className="flex items-center gap-1.5 px-4 py-2 text-sm rounded-lg text-white transition-colors hover:opacity-90"
-            style={{ backgroundColor: 'var(--mode-primary-light)' }}
-          >
-            <Upload size={14} /> In Upload laden
-          </button>
-          <button
             onClick={() => onDownload(fileId)}
             className="flex items-center gap-1.5 px-4 py-2 text-sm rounded-lg border border-slate-200 text-slate-600 hover:bg-white transition-colors"
           >
@@ -610,21 +708,13 @@ function EmailPreviewModal({ fileId, onClose, onAddToUpload, onDownload }) {
   )
 }
 
-function HeutigeProblematikSection({ onAddToUpload, showToast }) {
+function HeutigeProblematikSection({ showToast }) {
   const [expanded, setExpanded] = useState(true)
   const [previewFileId, setPreviewFileId] = useState(null)
 
   function handleDownload(fileId) {
     downloadDemoFile(fileId)
     showToast('Demo-Datei heruntergeladen', 'success')
-  }
-
-  function handleAddToUpload(fileId) {
-    const result = generateFile(fileId)
-    if (!result) return
-    const blob = new Blob([result.data], { type: result.mimeType })
-    const file = new File([blob], result.filename, { type: result.mimeType })
-    onAddToUpload(file)
   }
 
   return (
@@ -650,7 +740,6 @@ function HeutigeProblematikSection({ onAddToUpload, showToast }) {
         <EmailPreviewModal
           fileId={previewFileId}
           onClose={() => setPreviewFileId(null)}
-          onAddToUpload={handleAddToUpload}
           onDownload={handleDownload}
         />
       )}
@@ -701,14 +790,6 @@ function HeutigeProblematikSection({ onAddToUpload, showToast }) {
                                 title="E-Mail anschauen"
                               >
                                 <Eye size={11} /> Anschauen
-                              </button>
-                              <button
-                                onClick={(e) => { e.stopPropagation(); handleAddToUpload(email.fileId) }}
-                                className="flex items-center gap-1 px-2 py-1 text-xs rounded-md text-white transition-colors hover:opacity-90"
-                                style={{ backgroundColor: 'var(--mode-primary-light)' }}
-                                title="In Upload-Liste laden"
-                              >
-                                <Upload size={11} /> Upload
                               </button>
                               <button
                                 onClick={(e) => { e.stopPropagation(); handleDownload(email.fileId) }}

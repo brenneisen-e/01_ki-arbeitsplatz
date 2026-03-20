@@ -1,6 +1,19 @@
 import { useState, useRef, useEffect } from 'react'
-import { ArrowLeft, ChevronDown } from 'lucide-react'
+import { ArrowLeft, ChevronDown, Check } from 'lucide-react'
 import { insurerModes } from '../data/constants'
+
+function InsurerLogo({ src, name, size = 36, className }) {
+  const [error, setError] = useState(false)
+  if (error || !src) {
+    const initials = name.slice(0, 2).toUpperCase()
+    return (
+      <div className={className} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: size * 0.35, fontWeight: 800, color: '#64748b', background: '#f1f5f9', width: size, height: size }}>
+        {initials}
+      </div>
+    )
+  }
+  return <img src={src} alt={name} className={className} style={{ width: size, height: size }} loading="lazy" decoding="async" onError={() => setError(true)} />
+}
 
 function InsurerDropdown({ currentKey, onSelect, onClose }) {
   const ref = useRef(null)
@@ -22,17 +35,12 @@ function InsurerDropdown({ currentKey, onSelect, onClose }) {
           className={`insurer-dropdown-item ${ins.key === currentKey ? 'active' : ''}`}
           onClick={() => { onSelect(ins.key); onClose() }}
         >
-          <img
-            src={ins.logo}
-            alt={ins.name}
-            className="insurer-dropdown-logo"
-            onError={e => { e.target.style.display = 'none' }}
-          />
+          <InsurerLogo src={ins.logo} name={ins.name} size={36} className="insurer-dropdown-logo" />
           <div className="insurer-dropdown-info">
             <span className="insurer-dropdown-name">{ins.name}</span>
             <span className="insurer-dropdown-model">{ins.modellName}</span>
           </div>
-          {ins.key === currentKey && <span className="insurer-dropdown-check">✓</span>}
+          {ins.key === currentKey && <Check size={16} className="insurer-dropdown-check" />}
         </div>
       ))}
     </div>
@@ -46,18 +54,9 @@ export default function Header({ insurer, onSwitchInsurer, currentKey }) {
     <div className="vu-header" style={{ background: insurer.colors.gradient }}>
       <div className="vu-header-content">
         <div className="vu-header-left">
-          <img
-            src={insurer.logo}
-            alt={insurer.name}
-            className="vu-header-logo"
-            onError={e => {
-              e.target.style.display = 'none'
-              e.target.nextSibling.style.display = 'flex'
-            }}
-          />
-          <div className="vu-logo-badge" style={{ display: 'none' }}>{insurer.short}</div>
+          <InsurerLogo src={insurer.logo} name={insurer.name} size={52} className="vu-header-logo" />
           <div>
-            <h1>Vertragsumstellung Insurance</h1>
+            <h1>Vertragsumstellung</h1>
             <div className="subtitle">Simulationsergebnisse — Provisionsmodell {insurer.modellName}</div>
           </div>
         </div>
@@ -70,14 +69,9 @@ export default function Header({ insurer, onSwitchInsurer, currentKey }) {
               className="vu-insurer-btn"
               onClick={() => setDropdownOpen(!dropdownOpen)}
             >
-              <img
-                src={insurer.logo}
-                alt=""
-                className="vu-insurer-btn-logo"
-                onError={e => { e.target.style.display = 'none' }}
-              />
+              <InsurerLogo src={insurer.logo} name={insurer.name} size={24} className="vu-insurer-btn-logo" />
               {insurer.name}
-              <ChevronDown size={14} />
+              <ChevronDown size={14} style={{ transition: 'transform 0.2s', transform: dropdownOpen ? 'rotate(180deg)' : 'none' }} />
             </button>
             {dropdownOpen && (
               <InsurerDropdown

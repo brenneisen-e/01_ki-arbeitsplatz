@@ -206,11 +206,12 @@ export const vermittlerList = [
     agenturStatus: 'Ab 01.01.2026',
     simRole: 'Leiter des Service-Centers',
     simStand: '04.12.2025',
+    foto: './images/maria-musterfrau.png',
   },
-  { id: '0042/0210', name: 'Anna Schmidt' },
-  { id: '0078/0415', name: 'Thomas Weber' },
-  { id: '0091/0520', name: 'Julia Braun' },
-  { id: '0063/0330', name: 'Stefan Klein' },
+  { id: '0042/0210', name: 'Anna Schmidt', foto: './images/AdobeStock_624564221.jpeg' },
+  { id: '0078/0415', name: 'Thomas Weber', foto: './images/AdobeStock_329502726.jpeg' },
+  { id: '0091/0520', name: 'Julia Braun', foto: './images/AdobeStock_477904088.jpeg' },
+  { id: '0063/0330', name: 'Stefan Klein', foto: './images/AdobeStock_361342769.jpeg' },
 ]
 
 export const mockVermittler = [

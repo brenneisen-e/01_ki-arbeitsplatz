@@ -48,7 +48,7 @@ export default function ChartBlock({ block, chapter }) {
         <div className="text-sm font-semibold text-slate-700 mb-3">{block.title}</div>
       )}
       <div className="bg-white border border-slate-200 rounded-xl p-4">
-        <ResponsiveContainer width="100%" height={type === 'doughnut' ? 280 : 300}>
+        <ResponsiveContainer width="100%" height={type === 'doughnut' ? 280 : isHorizontal ? Math.max(300, data.length * 40) : 300}>
           {type === 'doughnut' || type === 'pie' ? (
             <PieChart>
               <Pie

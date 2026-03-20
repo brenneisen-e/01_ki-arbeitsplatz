@@ -61,14 +61,14 @@ export default function StaticPage({ pageId }) {
   const Icon = config.icon
 
   return (
-    <div className="p-6 max-w-4xl mx-auto space-y-6 animate-fade-in-up">
+    <div className="p-6 space-y-6 animate-fade-in-up">
       <div className="flex items-center gap-3">
         <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ backgroundColor: 'var(--mode-pastel)' }}>
           <Icon size={24} style={{ color: 'var(--mode-primary-light)' }} />
         </div>
         <div>
-          <h2 className="text-xl font-bold text-slate-800">{config.title}</h2>
-          <p className="text-sm text-slate-500">{config.description}</p>
+          <h2 className="text-2xl font-bold text-slate-800">{config.title}</h2>
+          <p className="text-base text-slate-500">{config.description}</p>
         </div>
       </div>
 
@@ -101,7 +101,7 @@ export default function StaticPage({ pageId }) {
                   style={{ backgroundColor: 'var(--mode-pastel)', color: 'var(--mode-primary-light)' }}>
                   {i + 1}
                 </div>
-                <p className="text-sm text-slate-700">{step.replace(/^\d+\.\s*/, '')}</p>
+                <p className="text-base text-slate-700">{step.replace(/^\d+\.\s*/, '')}</p>
               </div>
             ))}
           </div>
@@ -123,7 +123,7 @@ export default function StaticPage({ pageId }) {
               </div>
               <ul className="space-y-1">
                 {m.items.map((item, j) => (
-                  <li key={j} className="text-sm text-slate-600 flex items-center gap-2">
+                  <li key={j} className="text-base text-slate-600 flex items-center gap-2">
                     <span className="text-emerald-500">•</span> {item}
                   </li>
                 ))}

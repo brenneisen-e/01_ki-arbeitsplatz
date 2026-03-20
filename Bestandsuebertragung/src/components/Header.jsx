@@ -41,10 +41,10 @@ export default function Header({ activeView, onViewChange, counts = {}, onImport
               <User size={24} className="text-white" strokeWidth={1.75} />
             </div>
             <div>
-              <div className="text-white text-sm font-medium">
+              <div className="text-white text-base font-medium">
                 Bestandsübertragung
               </div>
-              <div className="text-white/60 text-xs">
+              <div className="text-white/60 text-sm">
                 Sales Operations | Portfolio Transfer Management
               </div>
             </div>
@@ -81,7 +81,7 @@ export default function Header({ activeView, onViewChange, counts = {}, onImport
             key={tab.id}
             onClick={() => onViewChange(tab.id)}
             className={clsx(
-              'px-4 py-2.5 text-sm font-medium rounded-t-lg transition-all duration-200 whitespace-nowrap',
+              'px-4 py-2.5 text-base font-medium rounded-t-lg transition-all duration-200 whitespace-nowrap',
               activeView === tab.id
                 ? 'bg-white text-slate-800'
                 : 'text-white/70 hover:text-white hover:bg-white/10'

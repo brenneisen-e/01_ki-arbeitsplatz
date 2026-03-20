@@ -47,7 +47,7 @@ export default function Makler({ onOpenMakler }) {
       <div className="relative max-w-md">
         <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
         <input type="text" placeholder="Makler suchen..." value={search} onChange={e => setSearch(e.target.value)}
-          className="w-full pl-10 pr-4 py-2 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#c41230]/30"
+          className="w-full pl-10 pr-4 py-2.5 rounded-lg text-base bg-white focus:outline-none focus:ring-2 focus:ring-[#c41230]/30"
           style={{ border: 'var(--card-border)' }} />
       </div>
 
@@ -55,9 +55,9 @@ export default function Makler({ onOpenMakler }) {
         <div className="text-center py-12 text-slate-400">Keine Makler gefunden</div>
       ) : (
         <div className="card-base overflow-hidden">
-          <table className="w-full text-sm">
+          <table className="w-full text-base">
             <thead>
-              <tr className="text-left text-xs text-slate-500 border-b border-slate-200 bg-slate-50">
+              <tr className="text-left text-sm text-slate-500 border-b border-slate-200 bg-slate-50">
                 <SortHeader field="name">Name</SortHeader>
                 <th className="pb-2 pr-2 font-normal">E-Mail</th>
                 <SortHeader field="total">Gesamt</SortHeader>

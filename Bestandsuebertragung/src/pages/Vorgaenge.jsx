@@ -45,16 +45,16 @@ export default function Vorgaenge({ onOpenCase }) {
         <div className="relative flex-1 min-w-[200px]">
           <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
           <input type="text" placeholder="Suche..." value={search} onChange={e => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#c41230]/30"
+            className="w-full pl-10 pr-4 py-2.5 rounded-lg text-base bg-white focus:outline-none focus:ring-2 focus:ring-[#c41230]/30"
             style={{ border: 'var(--card-border)' }} />
         </div>
         <select value={sparteFilter} onChange={e => setSparteFilter(e.target.value)}
-          className="text-sm border border-slate-200 rounded-lg px-3 py-2 bg-white">
+          className="text-base border border-slate-200 rounded-lg px-3 py-2.5 bg-white">
           <option value="">Alle Sparten</option>
           {SPARTEN.map(s => <option key={s} value={s}>{s}</option>)}
         </select>
         <select value={exportFilter} onChange={e => setExportFilter(e.target.value)}
-          className="text-sm border border-slate-200 rounded-lg px-3 py-2 bg-white">
+          className="text-base border border-slate-200 rounded-lg px-3 py-2.5 bg-white">
           <option value="">Alle</option>
           <option value="exported">Exportiert</option>
           <option value="not-exported">Nicht exportiert</option>
@@ -80,23 +80,23 @@ export default function Vorgaenge({ onOpenCase }) {
               <div key={status}>
                 <div className="flex items-center gap-2 mb-3">
                   <StatusBadge status={status} />
-                  <span className="text-sm text-slate-400 font-mono">{group.length}</span>
+                  <span className="text-base text-slate-400 font-mono">{group.length}</span>
                 </div>
                 <div className="space-y-2">
                   {group.map(c => (
                     <div key={c.id} onClick={() => onOpenCase(c)}
                       className="card-base p-4 cursor-pointer transition-all flex items-center justify-between">
                       <div>
-                        <div className="font-medium text-sm text-slate-800">{c.kunde?.name || 'Unbekannt'}</div>
-                        <div className="flex items-center gap-3 text-xs text-slate-500 mt-1">
+                        <div className="font-medium text-base text-slate-800">{c.kunde?.name || 'Unbekannt'}</div>
+                        <div className="flex items-center gap-3 text-sm text-slate-500 mt-1">
                           <span>VS-Nr: {c.versicherungsnummer?.value || '-'}</span>
                           <span>{c.sparte || '-'}</span>
                           <span>Makler: {c.makler?.name || '-'}</span>
                         </div>
                       </div>
                       <div className="flex items-center gap-3">
-                        {c.exported?.date && <span className="text-xs px-2 py-0.5 bg-emerald-50 text-emerald-700 rounded-full">Exportiert</span>}
-                        <span className="text-xs text-slate-400 font-mono">{formatDate(c.updatedAt)}</span>
+                        {c.exported?.date && <span className="text-sm px-2 py-0.5 bg-emerald-50 text-emerald-700 rounded-full">Exportiert</span>}
+                        <span className="text-sm text-slate-400 font-mono">{formatDate(c.updatedAt)}</span>
                       </div>
                     </div>
                   ))}

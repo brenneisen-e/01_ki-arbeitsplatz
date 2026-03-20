@@ -26,7 +26,7 @@ export default function Emails({ onOpenCase }) {
         <div className="relative flex-1 max-w-md">
           <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
           <input type="text" placeholder="E-Mails suchen..." value={search} onChange={e => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#c41230]/30"
+            className="w-full pl-10 pr-4 py-2.5 rounded-lg text-base bg-white focus:outline-none focus:ring-2 focus:ring-[#c41230]/30"
             style={{ border: 'var(--card-border)' }} />
         </div>
         <select value={sort} onChange={e => setSort(e.target.value)}
@@ -40,9 +40,9 @@ export default function Emails({ onOpenCase }) {
         <div className="text-center py-12 text-slate-400">Keine E-Mails vorhanden</div>
       ) : (
         <div className="card-base overflow-hidden">
-          <table className="w-full text-sm">
+          <table className="w-full text-base">
             <thead>
-              <tr className="text-left text-xs text-slate-500 border-b border-slate-200 bg-slate-50">
+              <tr className="text-left text-sm text-slate-500 border-b border-slate-200 bg-slate-50">
                 <th className="py-2 px-3 w-8"></th>
                 <th className="py-2 px-3">Datum</th>
                 <th className="py-2 px-3">Absender</th>

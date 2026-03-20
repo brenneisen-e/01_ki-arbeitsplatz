@@ -179,7 +179,11 @@ export default function LandingPage() {
   }
 
   function handleSubmit() {
-    if (!chatInput.trim()) return;
+    if (!chatInput.trim()) {
+      // Empty input: go straight to overview dashboard
+      executeSuggestion({ action: 'overview' });
+      return;
+    }
     const lower = chatInput.toLowerCase();
     const match = SUGGESTIONS.find(s => s.label.toLowerCase() === lower || lower.includes(s.trigger));
     if (match) {

@@ -98,8 +98,8 @@ function getTierStroke(tier) {
 }
 
 /* ── Component ──────────────────────────────────────────────────── */
-const SVG_W = 380;
-const SVG_H = 480;
+const SVG_W = 400;
+const SVG_H = 540;
 
 export default function GermanyMap({ data, onSelectRD }) {
   const [hoveredState, setHoveredState] = useState(null);

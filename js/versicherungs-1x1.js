@@ -2559,4 +2559,4 @@
   };
 
 })();
-window.__registerModule('versicherungs-1x1.js');
+window.__registerModule && window.__registerModule('versicherungs-1x1.js');

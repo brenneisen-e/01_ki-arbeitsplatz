@@ -348,7 +348,7 @@ const DEMO_RESPONSES = {
 };
 
 function CockpitChatbot({ onNavigate }) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
   const [messages, setMessages] = useState([
     { role: 'bot', text: 'Willkommen im KI-Vertriebsassistenten. Was möchten Sie analysieren?', actions: QUICK_ACTIONS },
   ]);
@@ -426,7 +426,7 @@ function CockpitChatbot({ onNavigate }) {
   }
 
   return (
-    <div className="fixed bottom-6 right-6 z-40 w-[400px] h-[520px] bg-white rounded-2xl shadow-2xl border border-slate-200 flex flex-col animate-fade-in-up overflow-hidden">
+    <div className="fixed bottom-6 right-6 z-40 w-[440px] h-[600px] bg-white rounded-2xl shadow-2xl border border-slate-200 flex flex-col animate-fade-in-up overflow-hidden">
       {/* Header */}
       <div className="bg-slate-800 text-white px-4 py-3 flex items-center justify-between shrink-0">
         <div className="flex items-center gap-2">
@@ -662,7 +662,7 @@ export default function CockpitPage() {
                 ))}
               </div>
             </div>
-            <div className="w-[380px] shrink-0 bg-white rounded-2xl border border-slate-200 p-5 flex flex-col" style={{ boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
+            <div className="w-[440px] shrink-0 bg-white rounded-2xl border border-slate-200 p-5 flex flex-col" style={{ boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
               <h3 className="text-sm font-semibold text-slate-800 mb-3">Deutschlandkarte</h3>
               <GermanyMap selectedStates={selectedStates} onToggleState={toggleState} />
             </div>

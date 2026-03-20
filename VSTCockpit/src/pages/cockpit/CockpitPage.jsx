@@ -19,6 +19,14 @@ const YEARS = [`${new Date().getFullYear()} YTD`, `${new Date().getFullYear() - 
 const SILOS = ['Alle', 'Ausschließlichkeit', 'Makler', 'Direktvertrieb', 'Banken'];
 const SEGMENTS = ['Alle', 'Leben', 'Kranken', 'Schaden', 'Kfz'];
 
+/* ── Y-axis tick formatter ────────────────────── */
+function fmtTick(val) {
+  if (val >= 1000000) return `${(val / 1000000).toFixed(1)}M`;
+  if (val >= 1000) return `${(val / 1000).toFixed(0)}k`;
+  if (val <= -1000) return `${(val / 1000).toFixed(0)}k`;
+  return val % 1 === 0 ? val : val.toFixed(1);
+}
+
 /* ── Chart tooltip ────────────────────────────── */
 function ChartTooltip({ active, payload, label }) {
   if (!active || !payload?.[0]) return null;
@@ -119,7 +127,7 @@ function KPICard({ kpi, data, forecastEnabled, onExpand }) {
           {chartView === 'distribution' ? (
             <BarChart data={distData} margin={{ top: 5, right: 5, bottom: 5, left: 5 }}>
               <XAxis dataKey="name" tick={{ fontSize: 10, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fontSize: 10, fill: '#94a3b8' }} axisLine={false} tickLine={false} width={30} />
+              <YAxis tick={{ fontSize: 10, fill: '#94a3b8' }} axisLine={false} tickLine={false} width={30} tickFormatter={fmtTick} />
               <Tooltip content={<ChartTooltip />} />
               <Bar dataKey="value" fill={chartColor} radius={[4, 4, 0, 0]} barSize={24} animationDuration={600} />
             </BarChart>
@@ -139,7 +147,7 @@ function KPICard({ kpi, data, forecastEnabled, onExpand }) {
                 </linearGradient>
               </defs>
               <XAxis dataKey="month" tick={{ fontSize: 10, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fontSize: 10, fill: '#94a3b8' }} axisLine={false} tickLine={false} width={40} />
+              <YAxis tick={{ fontSize: 10, fill: '#94a3b8' }} axisLine={false} tickLine={false} width={44} domain={['auto', 'auto']} tickFormatter={fmtTick} />
               <Tooltip content={<ChartTooltip />} />
               {forecastEnabled ? (
                 <>
@@ -230,7 +238,7 @@ function FullscreenModal({ kpi, data, forecastEnabled, onClose }) {
             {chartView === 'bar' ? (
               <BarChart data={data} margin={{ top: 10, right: 20, bottom: 10, left: 20 }}>
                 <XAxis dataKey="month" tick={{ fontSize: 12, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
-                <YAxis tick={{ fontSize: 12, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
+                <YAxis tick={{ fontSize: 12, fill: '#94a3b8' }} axisLine={false} tickLine={false} domain={['auto', 'auto']} tickFormatter={fmtTick} />
                 <Tooltip content={<ChartTooltip />} />
                 <Bar dataKey={kpi.id} fill="#2563eb" radius={[6, 6, 0, 0]} barSize={40} animationDuration={600} />
               </BarChart>
@@ -247,7 +255,7 @@ function FullscreenModal({ kpi, data, forecastEnabled, onClose }) {
                   </linearGradient>
                 </defs>
                 <XAxis dataKey="month" tick={{ fontSize: 12, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
-                <YAxis tick={{ fontSize: 12, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
+                <YAxis tick={{ fontSize: 12, fill: '#94a3b8' }} axisLine={false} tickLine={false} domain={['auto', 'auto']} tickFormatter={fmtTick} />
                 <Tooltip content={<ChartTooltip />} />
                 {forecastEnabled ? (
                   <>
@@ -601,7 +609,7 @@ export default function CockpitPage() {
               </button>
             </div>
           </div>
-          <div className="flex items-center gap-3 text-sm">
+          <div className="flex items-center gap-3 text-sm shrink-0">
             <span className="text-white/40 text-xs">Jahr:</span>
             <select value={year} onChange={e => setYear(e.target.value)} className="bg-white/10 text-white border-0 rounded-md px-2 py-1 text-sm cursor-pointer">
               {YEARS.map(y => <option key={y} value={y} className="text-slate-800">{y}</option>)}

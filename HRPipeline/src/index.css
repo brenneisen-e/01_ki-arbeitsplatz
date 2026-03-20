@@ -3142,9 +3142,10 @@ body {
 /* Overview Grid */
 .hc-overview-grid {
     display: grid;
-    grid-template-columns: 1fr 420px;
+    grid-template-columns: 1fr 1fr;
     gap: var(--space-6);
     margin-bottom: var(--space-4);
+    max-width: 1600px;
 }
 
 @media (max-width: 900px) {

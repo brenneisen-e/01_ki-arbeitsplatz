@@ -1,5 +1,5 @@
 import {
-  BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer,
+  BarChart, Bar, Cell, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer,
   LineChart, Line, CartesianGrid, ReferenceLine,
 } from 'recharts'
 import { User } from 'lucide-react'
@@ -7,7 +7,7 @@ import { commissionRates, karriereStufen, sparteLevels, sliderConfig, defaultSim
 import { formatEuro, formatDelta, formatPercent } from '../utils/format'
 import { getTotalProduction, getHighestReachedLevel, get5YearProjection } from '../utils/calculations'
 
-function StammdatenSidebar({ results, insurer }) {
+function StammdatenSidebar({ results, insurer, selectedVermittler }) {
   const delta = results.neu.total - results.alt.total
   const pct = results.alt.total > 0 ? (delta / results.alt.total * 100) : 0
 
@@ -20,10 +20,18 @@ function StammdatenSidebar({ results, insurer }) {
   return (
     <div className="vu-sim-stammdaten" style={{ background: insurer.colors.sidebarGradient }}>
       <div className="vu-sim-stamm-photo" style={{ borderColor: insurer.colors.accent + '66' }}>
-        <User size={40} strokeWidth={1.5} />
+        {selectedVermittler?.foto ? (
+          <img
+            src={selectedVermittler.foto}
+            alt={selectedVermittler.name}
+            style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }}
+            onError={e => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'block' }}
+          />
+        ) : null}
+        <User size={40} strokeWidth={1.5} style={selectedVermittler?.foto ? { display: 'none' } : undefined} />
       </div>
-      <div className="vu-sim-stamm-select">Maria Musterfrau</div>
-      <div className="vu-sim-stamm-role">Leiter des Service-Centers</div>
+      <div className="vu-sim-stamm-select">{selectedVermittler?.name || 'Maria Musterfrau'}</div>
+      <div className="vu-sim-stamm-role">{selectedVermittler?.simRole || 'Leiter des Service-Centers'}</div>
 
       <div className="vu-sim-stamm-fields">
         {[
@@ -212,7 +220,7 @@ function SparteCharts({ results }) {
                 ))}
                 <Bar dataKey="value" radius={[6, 6, 0, 0]} barSize={50}>
                   {chartData.map((entry, i) => (
-                    <rect key={i} fill={entry.fill} />
+                    <Cell key={i} fill={entry.fill} />
                   ))}
                 </Bar>
               </BarChart>
@@ -437,11 +445,11 @@ function FiveYearChart({ results, insurer }) {
   )
 }
 
-export default function SimulationTab({ simulation, results, karriereStufe, onSliderChange, insurer }) {
+export default function SimulationTab({ simulation, results, karriereStufe, onSliderChange, insurer, selectedVermittler }) {
   return (
     <div className="vu-tab-content active">
       <div className="vu-sim-grid">
-        <StammdatenSidebar results={results} insurer={insurer} />
+        <StammdatenSidebar results={results} insurer={insurer} selectedVermittler={selectedVermittler} />
         <div className="vu-sim-main" style={{ borderColor: insurer.colors.simBorder }}>
           <KPIRow results={results} karriereStufe={karriereStufe} />
           <Sliders simulation={simulation} onSliderChange={onSliderChange} />

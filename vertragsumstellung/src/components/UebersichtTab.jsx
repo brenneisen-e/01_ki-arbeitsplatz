@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import {
-  BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer,
+  BarChart, Bar, Cell, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer,
 } from 'recharts'
 import {
   mockVermittler, vzOptions, produktionsstandard, distributionCharts,
@@ -57,7 +57,7 @@ function VzSidebar({ insurer }) {
             <YAxis tick={{ fill: 'rgba(255,255,255,0.4)', fontSize: 10 }} axisLine={false} tickLine={false} />
             <Bar dataKey="value" radius={[4, 4, 0, 0]} barSize={20}>
               {vzChartData.map((entry, i) => (
-                <rect key={i} fill={entry.fill} />
+                <Cell key={i} fill={entry.fill} />
               ))}
             </Bar>
           </BarChart>

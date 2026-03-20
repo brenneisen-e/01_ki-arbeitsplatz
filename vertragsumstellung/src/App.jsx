@@ -65,6 +65,7 @@ export default function App() {
           karriereStufe={karriereStufe}
           onSliderChange={updateSlider}
           insurer={insurer}
+          selectedVermittler={selectedVermittler}
         />
       )}
 

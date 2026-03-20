@@ -3223,6 +3223,72 @@ body {
     display: inline-block;
 }
 
+/* Map Panel */
+.hc-map-panel { position: sticky; top: var(--space-4); }
+
+.hc-map-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: var(--space-2);
+}
+
+.hc-map-state {
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.hc-map-state:hover {
+    filter: brightness(0.92);
+}
+
+.hc-map-marker {
+    cursor: pointer;
+}
+
+.hc-map-marker:hover circle {
+    filter: brightness(1.15);
+}
+
+.hc-map-tooltip-inner {
+    background: rgba(255,255,255,0.97);
+    backdrop-filter: blur(8px);
+    padding: 8px 12px;
+    border-radius: var(--radius-md);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    border: 1px solid var(--border);
+    font-size: var(--font-xs);
+}
+
+.hc-map-tooltip-title {
+    font-weight: var(--font-bold);
+    color: var(--text-primary);
+}
+
+.hc-map-tooltip-subtitle {
+    color: var(--text-tertiary);
+    font-size: 10px;
+    margin-bottom: var(--space-1);
+}
+
+.hc-map-tooltip-metrics {
+    display: flex;
+    gap: var(--space-3);
+    font-size: 10px;
+    color: var(--text-secondary);
+}
+
+.hc-panel-badge {
+    font-size: var(--font-xs);
+    color: var(--text-tertiary);
+    background: var(--gray-50);
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-full);
+}
+
+.hc-overview-main { min-width: 0; }
+.hc-overview-sidebar { min-width: 0; }
+
 /* Donut Chart */
 .hc-donut-container {
     display: flex;

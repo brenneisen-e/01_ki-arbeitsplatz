@@ -13,7 +13,7 @@ export default function Overview() {
     <div className="animate-fade-in-up">
       {/* Landing Hero */}
       <div className="header-gradient py-16 px-6 text-center text-white">
-        <div className="max-w-3xl mx-auto">
+        <div>
           <div className="w-16 h-16 rounded-xl bg-white/20 border border-white/30 overflow-hidden flex items-center justify-center mx-auto mb-5">
             <img
               src={`https://img.logo.dev/deloitte.com?token=${LOGO_TOKEN}&format=png&size=200`}
@@ -91,7 +91,7 @@ export default function Overview() {
                 style={{ animationDelay: `${Math.min(i, 4) * 60}ms` }}
               >
                 <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
+                  <div className="chapter-icon-box w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
                     style={{ background: 'var(--mode-pastel)', color: 'var(--mode-primary)' }}
                   >
                     <Icon className="w-5 h-5" />

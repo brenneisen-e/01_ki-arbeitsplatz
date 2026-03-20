@@ -145,6 +145,9 @@
 .card-hover:hover svg {
   color: inherit !important;
 }
+.card-hover:hover .chapter-icon-box {
+  background: rgba(255,255,255,0.15) !important;
+}
 
 /* Header Gradient */
 .header-gradient {

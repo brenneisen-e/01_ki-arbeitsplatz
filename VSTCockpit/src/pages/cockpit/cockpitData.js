@@ -1,4 +1,42 @@
-// Legacy A-03 "Gesamtübersicht" KPI definitions - mirrors js/config.js kpiDefinitions
+// ═══════════════════════════════════════════════════════════════
+// VST Cockpit – Dynamischer Mockdaten-Generator
+// Alle Daten sind datumsabhängig: Seed basiert auf aktuellem
+// Monat/Jahr, Monatsdaten laufen bis "heute", Abschlüsse
+// zeigen die letzten Tage. Pro Monat stabile Werte (seeded PRNG).
+// ═══════════════════════════════════════════════════════════════
+
+// ── Aktuelles Datum ─────────────────────────────────────────
+const NOW = new Date();
+const CURRENT_YEAR = NOW.getFullYear();
+const CURRENT_MONTH = NOW.getMonth(); // 0-based
+const CURRENT_DAY = NOW.getDate();
+
+// ── Seeded PRNG (Mulberry32) ────────────────────────────────
+function mulberry32(seed) {
+  let s = seed | 0;
+  return function () {
+    s = (s + 0x6d2b79f5) | 0;
+    let t = Math.imul(s ^ (s >>> 15), 1 | s);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+// Seed = Jahr * 100 + Monat → neue Werte jeden Monat, stabil innerhalb eines Monats
+const SEED = CURRENT_YEAR * 100 + CURRENT_MONTH;
+const rand = mulberry32(SEED);
+
+// Helpers for generator
+function randBetween(min, max) { return min + rand() * (max - min); }
+function randInt(min, max) { return Math.floor(randBetween(min, max + 1)); }
+function pick(arr) { return arr[Math.floor(rand() * arr.length)]; }
+
+// Wachstumsfaktor: je weiter in der Zukunft, desto höher die Basiswerte
+// Referenzpunkt: März 2026 = 1.0, +0.5% pro Monat
+const MONTHS_SINCE_REF = (CURRENT_YEAR - 2026) * 12 + (CURRENT_MONTH - 2); // Mär 2026 = 0
+const GROWTH_FACTOR = 1 + MONTHS_SINCE_REF * 0.005;
+
+// ── KPI Definitions ─────────────────────────────────────────
 export const KPI_DEFS = [
   { id: 'neugeschaeft', title: 'Neugeschäftsvolumen', desc: 'Gesamtvolumen aller neu abgeschlossenen Verträge', unit: 'currency', icon: 'TrendingUp' },
   { id: 'bestand', title: 'Bestandsvolumen', desc: 'Gesamtwert aller verwalteten Versicherungsverträge', unit: 'currency', icon: 'Briefcase' },
@@ -11,25 +49,143 @@ export const KPI_DEFS = [
   { id: 'deckungsbeitrag', title: 'Deckungsbeitrag', desc: 'Ertrag nach Abzug direkter Kosten und Provisionen', unit: 'currency', icon: 'Euro' },
 ];
 
-// Monthly data (mirrors aggregated data from legacy CSV-based system)
-const MONTHS = ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'];
-
-export const MONTHLY_DATA = [
-  { month: 'Jan', neugeschaeft: 2850000, bestand: 138000000, storno: 5.2, nps: 42, risiko: 3.1, combined: 94.2, ergebnis: 1200000, underwriting: 87.5, deckungsbeitrag: 980000 },
-  { month: 'Feb', neugeschaeft: 3120000, bestand: 138500000, storno: 4.9, nps: 43, risiko: 3.0, combined: 93.8, ergebnis: 1350000, underwriting: 88.1, deckungsbeitrag: 1050000 },
-  { month: 'Mär', neugeschaeft: 3450000, bestand: 139200000, storno: 5.1, nps: 44, risiko: 2.9, combined: 93.1, ergebnis: 1580000, underwriting: 89.0, deckungsbeitrag: 1180000 },
-  { month: 'Apr', neugeschaeft: 2980000, bestand: 139800000, storno: 4.8, nps: 45, risiko: 2.8, combined: 92.5, ergebnis: 1420000, underwriting: 89.5, deckungsbeitrag: 1100000 },
-  { month: 'Mai', neugeschaeft: 3280000, bestand: 140300000, storno: 5.0, nps: 46, risiko: 2.7, combined: 92.1, ergebnis: 1600000, underwriting: 90.2, deckungsbeitrag: 1220000 },
-  { month: 'Jun', neugeschaeft: 2750000, bestand: 140600000, storno: 4.7, nps: 45, risiko: 2.9, combined: 93.0, ergebnis: 1280000, underwriting: 89.8, deckungsbeitrag: 1050000 },
-  { month: 'Jul', neugeschaeft: 2620000, bestand: 140900000, storno: 4.5, nps: 47, risiko: 2.6, combined: 91.8, ergebnis: 1350000, underwriting: 90.5, deckungsbeitrag: 1080000 },
-  { month: 'Aug', neugeschaeft: 2480000, bestand: 141100000, storno: 4.6, nps: 46, risiko: 2.7, combined: 92.3, ergebnis: 1180000, underwriting: 90.0, deckungsbeitrag: 980000 },
-  { month: 'Sep', neugeschaeft: 3350000, bestand: 141400000, storno: 4.9, nps: 48, risiko: 2.5, combined: 91.5, ergebnis: 1650000, underwriting: 91.0, deckungsbeitrag: 1250000 },
-  { month: 'Okt', neugeschaeft: 3580000, bestand: 141600000, storno: 5.0, nps: 47, risiko: 2.6, combined: 91.2, ergebnis: 1720000, underwriting: 91.3, deckungsbeitrag: 1320000 },
-  { month: 'Nov', neugeschaeft: 3750000, bestand: 141800000, storno: 4.8, nps: 49, risiko: 2.4, combined: 90.8, ergebnis: 1850000, underwriting: 92.0, deckungsbeitrag: 1400000 },
-  { month: 'Dez', neugeschaeft: 3900000, bestand: 141863691, storno: 5.0, nps: 48, risiko: 2.5, combined: 91.0, ergebnis: 1900000, underwriting: 91.5, deckungsbeitrag: 1450000 },
+// ── Basiskonfiguration ──────────────────────────────────────
+const FIRST_NAMES = [
+  'Alexander','Benjamin','Christian','Daniel','Erik','Felix','Georg','Hans','Ingo','Jürgen',
+  'Klaus','Lars','Martin','Norbert','Oliver','Peter','Ralf','Stefan','Thomas','Uwe',
+  'Werner','Andreas','Bernd','Dieter','Frank','Holger','Michael','Rainer','Volker','Wolfgang',
+  'Anna','Barbara','Christine','Doris','Elisabeth','Franziska','Gabriele','Heike','Ingrid','Julia',
+  'Karin','Lena','Maria','Nina','Petra','Rita','Sandra','Tanja','Ursula','Vera',
+];
+const LAST_NAMES = [
+  'Müller','Schmidt','Schneider','Fischer','Weber','Meyer','Wagner','Becker','Schulz','Hoffmann',
+  'Schäfer','Koch','Bauer','Richter','Klein','Wolf','Schröder','Neumann','Schwarz','Zimmermann',
+  'Braun','Krüger','Hofmann','Hartmann','Lange','Werner','Krause','Lehmann','Schmitt','König',
 ];
 
-// Segment distribution (mirrors legacy config.js segmentFactors)
+const BUNDESLAENDER = [
+  { name: 'Bayern', abbr: 'BY', factor: 1.40, baseVermittler: 142 },
+  { name: 'Baden-Württemberg', abbr: 'BW', factor: 1.35, baseVermittler: 128 },
+  { name: 'Nordrhein-Westfalen', abbr: 'NRW', factor: 1.30, baseVermittler: 156 },
+  { name: 'Hessen', abbr: 'HE', factor: 1.25, baseVermittler: 98 },
+  { name: 'Hamburg', abbr: 'HH', factor: 1.45, baseVermittler: 64 },
+  { name: 'Niedersachsen', abbr: 'NI', factor: 1.00, baseVermittler: 95 },
+  { name: 'Schleswig-Holstein', abbr: 'SH', factor: 1.02, baseVermittler: 72 },
+  { name: 'Berlin', abbr: 'BE', factor: 0.95, baseVermittler: 58 },
+  { name: 'Rheinland-Pfalz', abbr: 'RP', factor: 0.98, baseVermittler: 62 },
+  { name: 'Sachsen', abbr: 'SN', factor: 0.78, baseVermittler: 48 },
+  { name: 'Bremen', abbr: 'HB', factor: 1.05, baseVermittler: 22 },
+  { name: 'Thüringen', abbr: 'TH', factor: 0.72, baseVermittler: 38 },
+  { name: 'Brandenburg', abbr: 'BB', factor: 0.65, baseVermittler: 35 },
+  { name: 'Sachsen-Anhalt', abbr: 'ST', factor: 0.68, baseVermittler: 32 },
+  { name: 'Saarland', abbr: 'SL', factor: 0.82, baseVermittler: 18 },
+  { name: 'Mecklenburg-Vorpommern', abbr: 'MV', factor: 0.55, baseVermittler: 24 },
+];
+
+const MONTHS = ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'];
+
+// Seasonality: relative strength per month (1.0 = average)
+const SEASONALITY = [0.85, 0.92, 1.05, 0.95, 1.02, 0.88, 0.82, 0.78, 1.05, 1.12, 1.18, 1.22];
+
+// ── Schritt 2: Vermittler-Generator ─────────────────────────
+function generateVermittler() {
+  const vermittler = [];
+  let id = 1;
+  const usedNames = new Set();
+
+  for (const bl of BUNDESLAENDER) {
+    // Generate ~10% of baseVermittler as named top-agents, rest is implicit
+    const count = Math.max(3, Math.round(bl.baseVermittler * 0.08));
+    for (let i = 0; i < count; i++) {
+      let name;
+      do {
+        name = `${pick(FIRST_NAMES)} ${pick(LAST_NAMES)}`;
+      } while (usedNames.has(name));
+      usedNames.add(name);
+
+      const quality = randBetween(0.4, 1.0); // agent quality tier
+      vermittler.push({
+        id: `VM${String(id++).padStart(5, '0')}`,
+        name,
+        region: bl.abbr === 'NRW' ? 'NRW' : bl.name,
+        bundesland: bl.name,
+        neugeschaeft: Math.round(randBetween(180000, 950000) * quality * bl.factor * GROWTH_FACTOR),
+        bestand: Math.round(randBetween(2000000, 14000000) * quality * bl.factor * GROWTH_FACTOR),
+        storno: +(randBetween(3.2, 6.0) * (1.1 - quality * 0.3)).toFixed(1),
+        nps: Math.round(randBetween(35, 68) * (0.7 + quality * 0.5)),
+        abschluesse: Math.round(randBetween(12, 50) * quality),
+      });
+    }
+  }
+
+  // Sort by neugeschaeft descending
+  vermittler.sort((a, b) => b.neugeschaeft - a.neugeschaeft);
+  return vermittler;
+}
+
+const ALL_VERMITTLER = generateVermittler();
+export const TOP_VERMITTLER = ALL_VERMITTLER.slice(0, 10);
+
+// ── Schritt 3: Bundesland-Aggregation ───────────────────────
+function generateBundeslandData() {
+  return BUNDESLAENDER.map(bl => {
+    const blVermittler = ALL_VERMITTLER.filter(v => v.bundesland === bl.name);
+    // Vermittler in the list are only ~10%, scale up
+    const scaleFactor = bl.baseVermittler / Math.max(1, blVermittler.length);
+    const ngSum = blVermittler.reduce((s, v) => s + v.neugeschaeft, 0);
+    const bsSum = blVermittler.reduce((s, v) => s + v.bestand, 0);
+    const stornoAvg = blVermittler.length > 0
+      ? blVermittler.reduce((s, v) => s + v.storno, 0) / blVermittler.length
+      : 5.0;
+
+    return {
+      name: bl.name,
+      neugeschaeft: Math.round(ngSum * scaleFactor),
+      bestand: Math.round(bsSum * scaleFactor),
+      storno: +stornoAvg.toFixed(1),
+      vermittler: bl.baseVermittler,
+      factor: bl.factor,
+    };
+  });
+}
+
+export const BUNDESLAND_DATA = generateBundeslandData();
+
+// ── Monatsdaten-Generator (nur bis aktueller Monat) ─────────
+function generateMonthlyData() {
+  const totalNG = BUNDESLAND_DATA.reduce((s, bl) => s + bl.neugeschaeft, 0);
+  const totalBestand = BUNDESLAND_DATA.reduce((s, bl) => s + bl.bestand, 0);
+  const baseMonthNG = totalNG / 12;
+
+  let runningBestand = Math.round(totalBestand * 0.97);
+
+  // Nur Monate bis einschließlich aktuellem Monat generieren
+  const monthCount = CURRENT_MONTH + 1; // z.B. März (2) → 3 Monate
+  const months = MONTHS.slice(0, monthCount);
+
+  return months.map((month, i) => {
+    const s = SEASONALITY[i];
+    const ng = Math.round(baseMonthNG * s * randBetween(0.95, 1.05));
+    runningBestand = Math.round(runningBestand + ng * randBetween(0.15, 0.25));
+
+    return {
+      month,
+      neugeschaeft: ng,
+      bestand: runningBestand,
+      storno: +(randBetween(4.3, 5.5) * (i < 6 ? 1.02 : 0.98)).toFixed(1),
+      nps: Math.round(randBetween(41, 50) + i * 0.5),
+      risiko: +(randBetween(2.3, 3.2) - i * 0.05).toFixed(1),
+      combined: +(randBetween(90.5, 94.5) - i * 0.25).toFixed(1),
+      ergebnis: Math.round(ng * randBetween(0.35, 0.52)),
+      underwriting: +(randBetween(87, 92) + i * 0.35).toFixed(1),
+      deckungsbeitrag: Math.round(ng * randBetween(0.28, 0.40)),
+    };
+  });
+}
+
+export const MONTHLY_DATA = generateMonthlyData();
+
+// ── Segment & Vertriebsweg (statisch, da rein prozentual) ───
 export const SEGMENT_VERTEILUNG = [
   { name: 'Leben', value: 35, color: '#3b82f6' },
   { name: 'Kranken', value: 22, color: '#10b981' },
@@ -37,7 +193,6 @@ export const SEGMENT_VERTEILUNG = [
   { name: 'Kfz', value: 19, color: '#f59e0b' },
 ];
 
-// Vertriebsweg distribution (mirrors legacy siloFactors)
 export const VERTRIEBSWEG_VERTEILUNG = [
   { name: 'Ausschließlichkeit', value: 45, color: '#3b82f6' },
   { name: 'Makler', value: 28, color: '#10b981' },
@@ -45,70 +200,66 @@ export const VERTRIEBSWEG_VERTEILUNG = [
   { name: 'Banken', value: 12, color: '#f59e0b' },
 ];
 
-// Bundesland data (mirrors legacy map data)
-export const BUNDESLAND_DATA = [
-  { name: 'Bayern', neugeschaeft: 5800000, bestand: 21200000, storno: 4.8, vermittler: 142, factor: 1.40 },
-  { name: 'Baden-Württemberg', neugeschaeft: 5200000, bestand: 19100000, storno: 4.9, vermittler: 128, factor: 1.35 },
-  { name: 'Nordrhein-Westfalen', neugeschaeft: 6100000, bestand: 18400000, storno: 5.2, vermittler: 156, factor: 1.30 },
-  { name: 'Hessen', neugeschaeft: 4200000, bestand: 17600000, storno: 5.0, vermittler: 98, factor: 1.25 },
-  { name: 'Hamburg', neugeschaeft: 3800000, bestand: 14500000, storno: 4.5, vermittler: 64, factor: 1.45 },
-  { name: 'Niedersachsen', neugeschaeft: 3200000, bestand: 14100000, storno: 5.1, vermittler: 95, factor: 1.00 },
-  { name: 'Schleswig-Holstein', neugeschaeft: 2800000, bestand: 10200000, storno: 4.7, vermittler: 72, factor: 1.02 },
-  { name: 'Berlin', neugeschaeft: 2600000, bestand: 8500000, storno: 5.5, vermittler: 58, factor: 0.95 },
-  { name: 'Rheinland-Pfalz', neugeschaeft: 2200000, bestand: 7800000, storno: 5.0, vermittler: 62, factor: 0.98 },
-  { name: 'Sachsen', neugeschaeft: 1800000, bestand: 5200000, storno: 5.3, vermittler: 48, factor: 0.78 },
-  { name: 'Bremen', neugeschaeft: 1500000, bestand: 3800000, storno: 4.6, vermittler: 22, factor: 1.05 },
-  { name: 'Thüringen', neugeschaeft: 1200000, bestand: 3200000, storno: 5.4, vermittler: 38, factor: 0.72 },
-  { name: 'Brandenburg', neugeschaeft: 1100000, bestand: 2900000, storno: 5.6, vermittler: 35, factor: 0.65 },
-  { name: 'Sachsen-Anhalt', neugeschaeft: 980000, bestand: 2600000, storno: 5.5, vermittler: 32, factor: 0.68 },
-  { name: 'Saarland', neugeschaeft: 820000, bestand: 2100000, storno: 4.9, vermittler: 18, factor: 0.82 },
-  { name: 'Mecklenburg-Vorpommern', neugeschaeft: 720000, bestand: 1600000, storno: 5.8, vermittler: 24, factor: 0.55 },
+// ── Schritt 5: Abschlüsse-Generator ────────────────────────
+const PRODUKTE = [
+  { produkt: 'BU-Versicherung', tarif: 'BU Premium', beitragRange: [800, 2200], faktor: 12.5 },
+  { produkt: 'Zahnzusatz', tarif: 'DKV ZZ Pro', beitragRange: [180, 550], faktor: 8.0 },
+  { produkt: 'Kfz-Komfort', tarif: 'ERGO Premium', beitragRange: [450, 1200], faktor: 3.0 },
+  { produkt: 'BU-Nachversicherung', tarif: 'ERGO BU Plus', beitragRange: [1000, 2500], faktor: 10.0 },
+  { produkt: 'Haftpflicht', tarif: 'PHV Familie', beitragRange: [80, 250], faktor: 5.0 },
+  { produkt: 'Risikoleben', tarif: 'RL Basis', beitragRange: [200, 800], faktor: 15.0 },
+  { produkt: 'Rentenversicherung', tarif: 'fondsgebunden', beitragRange: [150, 500], faktor: 20.0 },
+  { produkt: 'Wohngebäude', tarif: 'WG Plus', beitragRange: [350, 900], faktor: 4.0 },
+  { produkt: 'Kranken-Zusatz', tarif: 'DKV AmbulantPlus', beitragRange: [120, 380], faktor: 8.0 },
+  { produkt: 'Fondspolice', tarif: 'ERGO Balance', beitragRange: [800, 2000], faktor: 18.0 },
 ];
 
-// Top Vermittler (sales report / Agenturen table)
-export const TOP_VERMITTLER = [
-  { id: 'VM00001', name: 'Maria Musterfrau', region: 'Hessen', neugeschaeft: 890000, bestand: 12500000, storno: 3.8, nps: 62, abschluesse: 45 },
-  { id: 'VM00002', name: 'Thomas Weber', region: 'Bayern', neugeschaeft: 820000, bestand: 11200000, storno: 4.1, nps: 58, abschluesse: 41 },
-  { id: 'VM00003', name: 'Sabine Danzig', region: 'NRW', neugeschaeft: 780000, bestand: 10800000, storno: 4.3, nps: 55, abschluesse: 38 },
-  { id: 'VM00004', name: 'Klaus Richter', region: 'Baden-Württemberg', neugeschaeft: 750000, bestand: 9600000, storno: 4.5, nps: 52, abschluesse: 36 },
-  { id: 'VM00005', name: 'Petra Hoffmann', region: 'Hamburg', neugeschaeft: 720000, bestand: 8900000, storno: 3.9, nps: 60, abschluesse: 35 },
-  { id: 'VM00006', name: 'Michael Braun', region: 'Niedersachsen', neugeschaeft: 680000, bestand: 8100000, storno: 4.6, nps: 48, abschluesse: 32 },
-  { id: 'VM00007', name: 'Andrea Fischer', region: 'Berlin', neugeschaeft: 650000, bestand: 7500000, storno: 5.0, nps: 45, abschluesse: 30 },
-  { id: 'VM00008', name: 'Frank Peters', region: 'Sachsen', neugeschaeft: 580000, bestand: 6200000, storno: 4.8, nps: 50, abschluesse: 28 },
-  { id: 'VM00009', name: 'Heike Bauer', region: 'Rheinland-Pfalz', neugeschaeft: 520000, bestand: 5800000, storno: 4.2, nps: 54, abschluesse: 26 },
-  { id: 'VM00010', name: 'Stefan Krüger', region: 'Schleswig-Holstein', neugeschaeft: 480000, bestand: 5100000, storno: 4.7, nps: 47, abschluesse: 24 },
-];
+function generateAbschluesse() {
+  const abschluesse = [];
+  const baseAntragNr = CURRENT_YEAR * 1000 + CURRENT_MONTH * 80 + CURRENT_DAY;
 
-// Vertriebsbericht / Abschlüsse (mirrors legacy salesReportTableBody)
-export const ABSCHLUESSE = [
-  { datum: '10.03.2026', vn: 'Ralf Dietrich', produkt: 'BU-Versicherung', tarif: 'BU Premium', antragNr: 'A-2026-1248', beitrag: 1500, faktor: 12.5, provision: 18750, status: 'policiert' },
-  { datum: '09.03.2026', vn: 'Ingrid Sommer', produkt: 'Zahnzusatz', tarif: 'DKV ZZ Pro', antragNr: 'A-2026-1247', beitrag: 384, faktor: 8.0, provision: 3072, status: 'policiert' },
-  { datum: '08.03.2026', vn: 'Michael Braun', produkt: 'Kfz-Komfort', tarif: 'ERGO Premium', antragNr: 'A-2026-1246', beitrag: 890, faktor: 3.0, provision: 2670, status: 'policiert' },
-  { datum: '07.03.2026', vn: 'Peter Schmidt', produkt: 'BU-Nachversicherung', tarif: 'ERGO BU Plus', antragNr: 'A-2026-1245', beitrag: 1680, faktor: 10.0, provision: 16800, status: 'policiert' },
-  { datum: '06.03.2026', vn: 'Anna Hoffmann', produkt: 'Haftpflicht', tarif: 'PHV Familie', antragNr: 'A-2026-1244', beitrag: 145, faktor: 5.0, provision: 725, status: 'policiert' },
-  { datum: '05.03.2026', vn: 'Sabine Danzig', produkt: 'Risikoleben', tarif: 'RL Basis', antragNr: 'A-2026-1243', beitrag: 480, faktor: 15.0, provision: 7200, status: 'policiert' },
-  { datum: '04.03.2026', vn: 'Amira König', produkt: 'Rentenversicherung', tarif: 'fondsgebunden', antragNr: 'A-2026-1242', beitrag: 250, faktor: 20.0, provision: 5000, status: 'angenommen' },
-  { datum: '03.03.2026', vn: 'Thomas Weber', produkt: 'Wohngebäude', tarif: 'WG Plus', antragNr: 'A-2026-1241', beitrag: 650, faktor: 4.0, provision: 2600, status: 'policiert' },
-  { datum: '02.03.2026', vn: 'Sandra Yilmaz', produkt: 'Kranken-Zusatz', tarif: 'DKV AmbulantPlus', antragNr: 'A-2026-1240', beitrag: 189, faktor: 8.0, provision: 1512, status: 'policiert' },
-  { datum: '01.03.2026', vn: 'Dirk Hoffmann', produkt: 'Fondspolice', tarif: 'ERGO Balance', antragNr: 'A-2026-1239', beitrag: 1400, faktor: 18.0, provision: 25200, status: 'angenommen' },
-];
+  for (let i = 0; i < 10; i++) {
+    const p = pick(PRODUKTE);
+    const beitrag = Math.round(randBetween(p.beitragRange[0], p.beitragRange[1]));
 
-// KI-Forecast: generate forecast months based on actual data
-const FORECAST_MONTHS = ['Jan*', 'Feb*', 'Mär*', 'Apr*', 'Mai*', 'Jun*'];
+    // Letzte 10 Tage vor heute (rückwärts)
+    const date = new Date(CURRENT_YEAR, CURRENT_MONTH, CURRENT_DAY - i);
+    const dd = String(date.getDate()).padStart(2, '0');
+    const mm = String(date.getMonth() + 1).padStart(2, '0');
+    const yyyy = date.getFullYear();
+
+    abschluesse.push({
+      datum: `${dd}.${mm}.${yyyy}`,
+      vn: `${pick(FIRST_NAMES)} ${pick(LAST_NAMES)}`,
+      produkt: p.produkt,
+      tarif: p.tarif,
+      antragNr: `A-${yyyy}-${baseAntragNr - i}`,
+      beitrag,
+      faktor: p.faktor,
+      provision: Math.round(beitrag * p.faktor),
+      status: rand() > 0.2 ? 'policiert' : 'angenommen',
+    });
+  }
+  return abschluesse;
+}
+
+export const ABSCHLUESSE = generateAbschluesse();
+
+// ── KI-Forecast (seeded, dynamische Monate) ────────────────
+// Forecast startet ab dem Monat nach dem aktuellen
+const FORECAST_MONTHS = Array.from({ length: 6 }, (_, i) => {
+  const idx = (CURRENT_MONTH + 1 + i) % 12;
+  return MONTHS[idx] + '*';
+});
 const MONTHLY_GROWTH = {
-  neugeschaeft: 0.015,
-  bestand: 0.008,
-  storno: -0.01,
-  nps: 0.005,
-  risiko: -0.005,
-  combined: -0.003,
-  ergebnis: 0.02,
-  underwriting: 0.002,
-  deckungsbeitrag: 0.012,
+  neugeschaeft: 0.015, bestand: 0.008, storno: -0.01, nps: 0.005,
+  risiko: -0.005, combined: -0.003, ergebnis: 0.02, underwriting: 0.002, deckungsbeitrag: 0.012,
 };
 
 export function generateForecastData(actualData) {
   if (!actualData || actualData.length === 0) return [];
+  // Reset forecast PRNG for deterministic output
+  const fRand = mulberry32(42);
   const last = actualData[actualData.length - 1];
   const forecast = [];
   let prev = { ...last };
@@ -118,7 +269,7 @@ export function generateForecastData(actualData) {
     for (const kpi of KPI_DEFS) {
       const val = prev[kpi.id] || 0;
       const growth = MONTHLY_GROWTH[kpi.id] || 0.01;
-      const variance = 1 + (Math.random() - 0.5) * 0.004;
+      const variance = 1 + (fRand() - 0.5) * 0.004;
       point[kpi.id] = +(val * (1 + growth) * variance).toFixed(kpi.unit === 'currency' ? 0 : 1);
     }
     forecast.push(point);
@@ -127,10 +278,10 @@ export function generateForecastData(actualData) {
   return forecast;
 }
 
-// Helper: format currency
+// ── Format-Helfer ───────────────────────────────────────────
 export function fmtCur(val) {
   if (val >= 1000000) return `${(val / 1000000).toLocaleString('de-DE', { maximumFractionDigits: 1 })} Mio€`;
-  if (val >= 1000) return `${(val / 1000).toLocaleString('de-DE', { maximumFractionDigits: 0 })}k€`;
+  if (val >= 1000) return `${(val / 1000).toLocaleString('de-DE', { maximumFractionDigits: 0 })}€`;
   return `${val.toLocaleString('de-DE')}€`;
 }
 

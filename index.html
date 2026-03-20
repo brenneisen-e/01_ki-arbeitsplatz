@@ -12,6 +12,7 @@
             'bg-green-50', 'text-green-600',
             'bg-blue-50', 'text-blue-600',
             'bg-violet-50', 'text-violet-600',
+            'bg-emerald-50', 'text-emerald-700',
         ],
         theme: {
             extend: {
@@ -41,6 +42,7 @@
         .module-tile:hover .tile-external { color: rgba(255,255,255,0.5) !important; }
         .module-tile:hover .tile-versions a { background: rgba(255,255,255,0.15) !important; color: white !important; border-color: rgba(255,255,255,0.3) !important; }
         .module-tile:hover .tile-versions a:hover { background: rgba(255,255,255,0.3) !important; }
+        .module-tile:hover .tile-tag { background: rgba(255,255,255,0.15) !important; color: rgba(255,255,255,0.9) !important; border-color: rgba(255,255,255,0.3) !important; }
 
         /* Hero dot-pattern background */
         .hero-pattern {
@@ -145,10 +147,10 @@
             iconBg: 'bg-green-50',
             iconColor: 'text-green-600',
             modules: [
-                { id: 'dashboard',  label: 'VST-Cockpit',           icon: LayoutDashboard, desc: 'KPIs, Bestand, Neugeschäft',       href: 'VSTCockpit/dist/index.html' },
-                { id: 'vap',        label: 'Vertriebsarbeitsplatz', icon: Users,           desc: 'Agenturansicht, Kunden, Verträge', href: 'vertriebsarbeitsplatz/dist/index.html' },
-                { id: 'kredit',     label: 'KI-Kreditanalyse',      icon: ClipboardCheck,  desc: 'KI-gestützte Kreditbewertung',     href: 'kreditanalyse/dist/index.html' },
-                { id: 'scoring',    label: 'Vermittler-Scoring',    icon: Clock,           desc: 'Risikobewertung & Analyse',        href: 'Risikoscoring/index.html' },
+                { id: 'dashboard',  label: 'VST-Cockpit',           icon: LayoutDashboard, desc: 'KPIs, Bestand, Neugeschäft',       href: 'VSTCockpit/dist/index.html',              tags: ['versicherung'] },
+                { id: 'vap',        label: 'Vertriebsarbeitsplatz', icon: Users,           desc: 'Agenturansicht, Kunden, Verträge', href: 'vertriebsarbeitsplatz/dist/index.html',   tags: ['versicherung', 'banken', 'am'] },
+                { id: 'kredit',     label: 'KI-Kreditanalyse',      icon: ClipboardCheck,  desc: 'KI-gestützte Kreditbewertung',     href: 'kreditanalyse/dist/index.html',           tags: ['banken'] },
+                { id: 'scoring',    label: 'Vermittler-Scoring',    icon: Clock,           desc: 'Risikobewertung & Analyse',        href: 'Risikoscoring/index.html',                tags: ['versicherung'] },
             ]
         },
         {
@@ -159,10 +161,10 @@
             iconBg: 'bg-blue-50',
             iconColor: 'text-blue-600',
             modules: [
-                { id: 'bgav',       label: 'Vertragsumstellung',     icon: ShieldCheck, desc: 'BGAV Simulation & Übersicht',      href: 'BGAVUmstellung/index.html' },
-                { id: 'bestand',    label: 'Bestandsübertragung',    icon: FileText,    desc: 'Vertragsübertragungen verwalten',  href: 'Bestandsuebertragung/dist/index.html' },
-                { id: 'abrechnung', label: 'Abrechnungsprüfung',     icon: CreditCard,  desc: 'Abrechnungen prüfen & validieren', href: 'https://billingcheck.pages.dev/app', external: true },
-                { id: 'provision',  label: 'Provisionsvalidierung',  icon: CheckCircle, desc: 'Provisionen analysieren',           href: 'https://provisions-analyzer.pages.dev/', external: true },
+                { id: 'bgav',       label: 'Vertragsumstellung',     icon: ShieldCheck, desc: 'BGAV Simulation & Übersicht',      href: 'BGAVUmstellung/index.html',                  tags: ['versicherung'] },
+                { id: 'bestand',    label: 'Bestandsübertragung',    icon: FileText,    desc: 'Vertragsübertragungen verwalten',  href: 'Bestandsuebertragung/dist/index.html',       tags: ['versicherung'] },
+                { id: 'abrechnung', label: 'Abrechnungsprüfung',     icon: CreditCard,  desc: 'Abrechnungen prüfen & validieren', href: 'https://billingcheck.pages.dev/app', external: true, tags: ['versicherung'] },
+                { id: 'provision',  label: 'Provisionsvalidierung',  icon: CheckCircle, desc: 'Provisionen analysieren',           href: 'https://provisions-analyzer.pages.dev/', external: true, tags: ['versicherung'] },
             ]
         },
         {
@@ -175,7 +177,7 @@
             modules: [
                 { id: 'pmo',    label: 'PMO Toolbox',          icon: LayoutGrid, desc: 'Transformationsprogramm',          href: 'PMOToolbox/index.html' },
                 { id: 'hr',     label: 'HR Pipeline',          icon: UserPlus,   desc: 'Recruiting & Bewerbermanagement',  href: 'HRPipeline/index.html' },
-                { id: 'v1x1',   label: 'Versicherungs-1×1',    icon: BookOpen,   desc: 'Wissen & Nachschlagewerk',         href: 'Versicherungs1x1/index.html' },
+                { id: 'v1x1',   label: 'Versicherungs-1×1',    icon: BookOpen,   desc: 'Wissen & Nachschlagewerk',         href: 'Versicherungs1x1/index.html', tags: ['versicherung'] },
             ]
         },
         {
@@ -186,7 +188,7 @@
             iconBg: 'bg-emerald-50',
             iconColor: 'text-emerald-700',
             modules: [
-                { id: 'am-equities', label: 'Active Equities',       icon: Activity,   desc: 'Portfolio Management Dashboard',    href: 'asset-management/dist/index.html' },
+                { id: 'am-equities', label: 'Active Equities',       icon: Activity,   desc: 'Portfolio Management Dashboard',    href: 'asset-management/dist/index.html', tags: ['am'] },
             ]
         }
     ];
@@ -200,11 +202,18 @@
         { text: 'Was kann ich hier machen?',            href: VAP_BASE + '#/versicherung/cockpit' },
     ];
 
+    const TAG_CONFIG = {
+        versicherung: { label: 'Versicherung', bg: '#fef2f2', color: '#991b1b', border: '#fecaca' },
+        banken:       { label: 'Banken',       bg: '#f0fdf4', color: '#166534', border: '#bbf7d0' },
+        am:           { label: 'AM',           bg: '#f0fdf4', color: '#2d5016', border: '#86BC25' },
+    };
+
     function ModuleTile({ mod, delay, cluster }) {
         const iconBg = cluster ? cluster.iconBg : 'bg-slate-100';
         const iconColor = cluster ? cluster.iconColor : 'text-slate-600';
 
         if (mod.versions) {
+            const vTags = mod.tags || [];
             return h('div', {
                 className: 'module-tile bg-white rounded-xl border border-slate-200 p-5 animate-fade-in-up cursor-default',
                 style: { animationDelay: delay + 'ms' }
@@ -213,7 +222,17 @@
                     h(mod.icon, { size: 20, className: 'tile-icon ' + iconColor, strokeWidth: 1.75 })
                 ),
                 h('div', { className: 'tile-label font-semibold text-slate-800 mb-1 text-sm' }, mod.label),
-                h('div', { className: 'tile-desc text-xs text-slate-400 mb-3' }, mod.desc),
+                h('div', { className: 'tile-desc text-xs text-slate-400 mb-2' }, mod.desc),
+                vTags.length > 0 && h('div', { className: 'tile-tags flex flex-wrap gap-1 mb-2' },
+                    vTags.map(t => {
+                        const cfg = TAG_CONFIG[t];
+                        return cfg && h('span', {
+                            key: t,
+                            className: 'tile-tag inline-block text-[10px] font-semibold px-1.5 py-0.5 rounded-md leading-tight',
+                            style: { background: cfg.bg, color: cfg.color, border: '1px solid ' + cfg.border }
+                        }, cfg.label);
+                    })
+                ),
                 h('div', { className: 'tile-versions flex gap-2' },
                     mod.versions.map(v =>
                         h('a', {
@@ -226,6 +245,8 @@
                 )
             );
         }
+
+        const tags = mod.tags || [];
 
         return h('a', {
             href: mod.href,
@@ -241,7 +262,17 @@
                 h(mod.icon, { size: 20, className: 'tile-icon ' + iconColor, strokeWidth: 1.75 })
             ),
             h('div', { className: 'tile-label font-semibold text-slate-800 mb-1 text-sm' }, mod.label),
-            h('div', { className: 'tile-desc text-xs text-slate-400' }, mod.desc)
+            h('div', { className: 'tile-desc text-xs text-slate-400' }, mod.desc),
+            tags.length > 0 && h('div', { className: 'tile-tags flex flex-wrap gap-1 mt-2.5' },
+                tags.map(t => {
+                    const cfg = TAG_CONFIG[t];
+                    return cfg && h('span', {
+                        key: t,
+                        className: 'tile-tag inline-block text-[10px] font-semibold px-1.5 py-0.5 rounded-md leading-tight',
+                        style: { background: cfg.bg, color: cfg.color, border: '1px solid ' + cfg.border }
+                    }, cfg.label);
+                })
+            )
         );
     }
 

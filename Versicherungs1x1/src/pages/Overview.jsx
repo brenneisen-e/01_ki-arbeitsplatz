@@ -12,26 +12,30 @@ export default function Overview() {
   return (
     <div className="animate-fade-in-up">
       {/* Landing Hero */}
-      <div className="header-gradient py-16 px-6 text-center text-white">
+      <div className="header-gradient py-16 px-6 text-white">
         <div>
-          <div className="w-16 h-16 rounded-xl bg-white/20 border border-white/30 overflow-hidden flex items-center justify-center mx-auto mb-5">
-            <img
-              src={`https://img.logo.dev/deloitte.com?token=${LOGO_TOKEN}&format=png&size=200`}
-              alt="Deloitte"
-              className="h-12 w-12 object-contain"
-            />
+          <div className="flex items-center gap-5 mb-6">
+            <div className="w-16 h-16 rounded-xl bg-white/20 border border-white/30 overflow-hidden flex items-center justify-center flex-shrink-0">
+              <img
+                src={`https://img.logo.dev/deloitte.com?token=${LOGO_TOKEN}&format=png&size=200`}
+                alt="Deloitte"
+                className="h-12 w-12 object-contain"
+              />
+            </div>
+            <div>
+              <div className="inline-block text-xs font-semibold tracking-wider uppercase bg-white/15 px-3 py-1 rounded-full mb-2">
+                Insurance Strategy & Consulting
+              </div>
+              <h1 className="text-4xl font-bold tracking-tight">Versicherungs-1×1</h1>
+            </div>
           </div>
-          <div className="inline-block text-xs font-semibold tracking-wider uppercase bg-white/15 px-3 py-1 rounded-full mb-4">
-            Insurance Strategy & Consulting
-          </div>
-          <h1 className="text-4xl font-bold mb-3 tracking-tight">Versicherungs-1×1</h1>
-          <p className="text-white/75 text-base leading-relaxed max-w-2xl mx-auto">
+          <p className="text-white/75 text-base leading-relaxed">
             Das strategische Wissensframework für neue Berater im Bereich Monitor Deloitte Insurance —
             von regulatorischen Grundlagen über Vertriebsstrategien bis hin zu disruptiven Zukunftsthemen.
           </p>
 
           {/* KPI Strip */}
-          <div className="flex items-center justify-center gap-6 mt-10 flex-wrap">
+          <div className="flex items-center gap-6 mt-10 flex-wrap">
             {[
               { target: 254, unit: 'Mrd.\u2009€', label: 'Beitragsvolumen\nDE-Markt 2025' },
               { target: 9, unit: '', label: 'Strategische\nKapitel' },
@@ -52,13 +56,13 @@ export default function Overview() {
           </div>
 
           {/* Pillars */}
-          <div className="flex justify-center gap-6 mt-10 flex-wrap">
+          <div className="flex gap-4 mt-10 flex-wrap">
             {[
               { icon: Layers, title: '3 Wissensebenen', sub: 'Level 1 Basics · Level 2 Vertiefung · Level 3 Expert Deep-Dive' },
               { icon: CheckCircle, title: 'Integrierter Wissenscheck', sub: 'Wissen testen und Lücken gezielt schließen' },
               { icon: BookOpen, title: 'Praxisnahes Glossar', sub: 'Über 100 Fachbegriffe mit Kontext erklärt' },
             ].map((p, i) => (
-              <div key={i} className="flex items-start gap-3 text-left bg-white/8 rounded-xl px-4 py-3 max-w-[260px]">
+              <div key={i} className="flex-1 min-w-[200px] flex items-start gap-3 text-left bg-white/8 rounded-xl px-4 py-3">
                 <p.icon className="w-5 h-5 text-emerald-300 flex-shrink-0 mt-0.5" />
                 <div>
                   <div className="font-semibold text-sm">{p.title}</div>
@@ -68,12 +72,14 @@ export default function Overview() {
             ))}
           </div>
 
-          <button
-            className="mt-8 inline-flex items-center gap-2 px-5 py-2.5 bg-white/15 hover:bg-white/25 rounded-lg text-sm font-medium transition"
-            onClick={() => gridRef.current?.scrollIntoView({ behavior: 'smooth' })}
-          >
-            <ChevronDown className="w-4 h-4" /> Kapitel entdecken
-          </button>
+          <div className="mt-8">
+            <button
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-white/15 hover:bg-white/25 rounded-lg text-sm font-medium transition"
+              onClick={() => gridRef.current?.scrollIntoView({ behavior: 'smooth' })}
+            >
+              <ChevronDown className="w-4 h-4" /> Kapitel entdecken
+            </button>
+          </div>
         </div>
       </div>
 

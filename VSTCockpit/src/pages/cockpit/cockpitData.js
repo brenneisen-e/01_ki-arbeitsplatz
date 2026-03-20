@@ -1,8 +1,15 @@
 // ═══════════════════════════════════════════════════════════════
-// VST Cockpit – Generierter Mockdaten-Pool
-// Alle Daten werden deterministisch per seeded PRNG erzeugt,
-// damit die UI bei jedem Laden identische Werte zeigt.
+// VST Cockpit – Dynamischer Mockdaten-Generator
+// Alle Daten sind datumsabhängig: Seed basiert auf aktuellem
+// Monat/Jahr, Monatsdaten laufen bis "heute", Abschlüsse
+// zeigen die letzten Tage. Pro Monat stabile Werte (seeded PRNG).
 // ═══════════════════════════════════════════════════════════════
+
+// ── Aktuelles Datum ─────────────────────────────────────────
+const NOW = new Date();
+const CURRENT_YEAR = NOW.getFullYear();
+const CURRENT_MONTH = NOW.getMonth(); // 0-based
+const CURRENT_DAY = NOW.getDate();
 
 // ── Seeded PRNG (Mulberry32) ────────────────────────────────
 function mulberry32(seed) {
@@ -14,12 +21,20 @@ function mulberry32(seed) {
     return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
   };
 }
-const rand = mulberry32(20260320); // seed = today's date
+
+// Seed = Jahr * 100 + Monat → neue Werte jeden Monat, stabil innerhalb eines Monats
+const SEED = CURRENT_YEAR * 100 + CURRENT_MONTH;
+const rand = mulberry32(SEED);
 
 // Helpers for generator
 function randBetween(min, max) { return min + rand() * (max - min); }
 function randInt(min, max) { return Math.floor(randBetween(min, max + 1)); }
 function pick(arr) { return arr[Math.floor(rand() * arr.length)]; }
+
+// Wachstumsfaktor: je weiter in der Zukunft, desto höher die Basiswerte
+// Referenzpunkt: März 2026 = 1.0, +0.5% pro Monat
+const MONTHS_SINCE_REF = (CURRENT_YEAR - 2026) * 12 + (CURRENT_MONTH - 2); // Mär 2026 = 0
+const GROWTH_FACTOR = 1 + MONTHS_SINCE_REF * 0.005;
 
 // ── KPI Definitions ─────────────────────────────────────────
 export const KPI_DEFS = [
@@ -94,8 +109,8 @@ function generateVermittler() {
         name,
         region: bl.abbr === 'NRW' ? 'NRW' : bl.name,
         bundesland: bl.name,
-        neugeschaeft: Math.round(randBetween(180000, 950000) * quality * bl.factor),
-        bestand: Math.round(randBetween(2000000, 14000000) * quality * bl.factor),
+        neugeschaeft: Math.round(randBetween(180000, 950000) * quality * bl.factor * GROWTH_FACTOR),
+        bestand: Math.round(randBetween(2000000, 14000000) * quality * bl.factor * GROWTH_FACTOR),
         storno: +(randBetween(3.2, 6.0) * (1.1 - quality * 0.3)).toFixed(1),
         nps: Math.round(randBetween(35, 68) * (0.7 + quality * 0.5)),
         abschluesse: Math.round(randBetween(12, 50) * quality),
@@ -136,16 +151,19 @@ function generateBundeslandData() {
 
 export const BUNDESLAND_DATA = generateBundeslandData();
 
-// ── Schritt 4: Monatsdaten-Generator ────────────────────────
+// ── Monatsdaten-Generator (nur bis aktueller Monat) ─────────
 function generateMonthlyData() {
-  // Base annual totals (derived from Bundesland sums)
   const totalNG = BUNDESLAND_DATA.reduce((s, bl) => s + bl.neugeschaeft, 0);
   const totalBestand = BUNDESLAND_DATA.reduce((s, bl) => s + bl.bestand, 0);
   const baseMonthNG = totalNG / 12;
 
-  let runningBestand = Math.round(totalBestand * 0.97); // start slightly below year-end
+  let runningBestand = Math.round(totalBestand * 0.97);
 
-  return MONTHS.map((month, i) => {
+  // Nur Monate bis einschließlich aktuellem Monat generieren
+  const monthCount = CURRENT_MONTH + 1; // z.B. März (2) → 3 Monate
+  const months = MONTHS.slice(0, monthCount);
+
+  return months.map((month, i) => {
     const s = SEASONALITY[i];
     const ng = Math.round(baseMonthNG * s * randBetween(0.95, 1.05));
     runningBestand = Math.round(runningBestand + ng * randBetween(0.15, 0.25));
@@ -198,16 +216,24 @@ const PRODUKTE = [
 
 function generateAbschluesse() {
   const abschluesse = [];
+  const baseAntragNr = CURRENT_YEAR * 1000 + CURRENT_MONTH * 80 + CURRENT_DAY;
+
   for (let i = 0; i < 10; i++) {
     const p = pick(PRODUKTE);
     const beitrag = Math.round(randBetween(p.beitragRange[0], p.beitragRange[1]));
-    const day = 10 - i; // 10.03 → 01.03
+
+    // Letzte 10 Tage vor heute (rückwärts)
+    const date = new Date(CURRENT_YEAR, CURRENT_MONTH, CURRENT_DAY - i);
+    const dd = String(date.getDate()).padStart(2, '0');
+    const mm = String(date.getMonth() + 1).padStart(2, '0');
+    const yyyy = date.getFullYear();
+
     abschluesse.push({
-      datum: `${String(day).padStart(2, '0')}.03.2026`,
+      datum: `${dd}.${mm}.${yyyy}`,
       vn: `${pick(FIRST_NAMES)} ${pick(LAST_NAMES)}`,
       produkt: p.produkt,
       tarif: p.tarif,
-      antragNr: `A-2026-${1248 - i}`,
+      antragNr: `A-${yyyy}-${baseAntragNr - i}`,
       beitrag,
       faktor: p.faktor,
       provision: Math.round(beitrag * p.faktor),
@@ -219,15 +245,16 @@ function generateAbschluesse() {
 
 export const ABSCHLUESSE = generateAbschluesse();
 
-// ── Schritt 6: KI-Forecast (seeded) ────────────────────────
-const FORECAST_MONTHS = ['Jan*', 'Feb*', 'Mär*', 'Apr*', 'Mai*', 'Jun*'];
+// ── KI-Forecast (seeded, dynamische Monate) ────────────────
+// Forecast startet ab dem Monat nach dem aktuellen
+const FORECAST_MONTHS = Array.from({ length: 6 }, (_, i) => {
+  const idx = (CURRENT_MONTH + 1 + i) % 12;
+  return MONTHS[idx] + '*';
+});
 const MONTHLY_GROWTH = {
   neugeschaeft: 0.015, bestand: 0.008, storno: -0.01, nps: 0.005,
   risiko: -0.005, combined: -0.003, ergebnis: 0.02, underwriting: 0.002, deckungsbeitrag: 0.012,
 };
-
-// Use a separate seeded PRNG for forecast so it's stable independently
-const forecastRand = mulberry32(42);
 
 export function generateForecastData(actualData) {
   if (!actualData || actualData.length === 0) return [];

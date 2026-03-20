@@ -15,7 +15,7 @@ import {
 } from './cockpitData';
 
 /* ── Filters ──────────────────────────────────── */
-const YEARS = ['2025 YTD', '2024'];
+const YEARS = [`${new Date().getFullYear()} YTD`, `${new Date().getFullYear() - 1}`];
 const SILOS = ['Alle', 'Ausschließlichkeit', 'Makler', 'Direktvertrieb', 'Banken'];
 const SEGMENTS = ['Alle', 'Leben', 'Kranken', 'Schaden', 'Kfz'];
 

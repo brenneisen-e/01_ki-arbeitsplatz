@@ -960,16 +960,16 @@ body {
 }
 
 .hp-profile-avatar-small {
-    width: 40px;
-    height: 40px;
-    min-width: 40px;
+    width: 56px;
+    height: 56px;
+    min-width: 56px;
     border-radius: var(--radius-full);
     background: var(--primary-subtle);
     display: flex;
     align-items: center;
     justify-content: center;
     color: var(--primary);
-    font-size: var(--font-sm);
+    font-size: var(--font-base);
     font-weight: var(--font-bold);
     flex-shrink: 0;
 }
@@ -1731,7 +1731,7 @@ body {
     border-radius: var(--radius-lg);
     padding: var(--space-5);
     display: grid;
-    grid-template-columns: auto 1fr auto;
+    grid-template-columns: auto auto 1fr auto;
     gap: var(--space-4);
     align-items: center;
     cursor: pointer;
@@ -3142,9 +3142,10 @@ body {
 /* Overview Grid */
 .hc-overview-grid {
     display: grid;
-    grid-template-columns: 1fr 420px;
+    grid-template-columns: 1fr 1fr;
     gap: var(--space-6);
     margin-bottom: var(--space-4);
+    max-width: 1600px;
 }
 
 @media (max-width: 900px) {

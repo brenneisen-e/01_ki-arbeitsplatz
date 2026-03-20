@@ -24,7 +24,7 @@ export default function App() {
       <InstitutProvider>
         <div className="hp-scanner-page" style={{ padding: 0, maxWidth: 'none' }}>
           <GlobalHeader currentMode={currentMode} onModeChange={setCurrentMode} />
-          <div style={{ padding: 'var(--space-6)', maxWidth: 1400, margin: '0 auto' }}>
+          <div style={{ padding: 'var(--space-6)' }}>
             <Suspense fallback={<LoadingFallback />}>
               {currentMode === 'bewerber' && <BewerberMode />}
               {currentMode === 'arbeitgeber' && <ArbeitgeberMode />}

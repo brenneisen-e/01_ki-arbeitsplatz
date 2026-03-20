@@ -152,7 +152,7 @@ function KPICard({ kpi, data, forecastEnabled, onExpand }) {
                   />
                   <Area
                     type="monotone" dataKey="forecast" stroke="#86BC25" strokeWidth={2} strokeDasharray="6 3"
-                    fill={`url(#grad-fc-${kpi.id})`} connectNulls={false}
+                    fill={`url(#grad-fc-${kpi.id})`} connectNulls
                     dot={{ r: 3, fill: '#86BC25', stroke: '#fff', strokeWidth: 1.5 }}
                     activeDot={{ r: 5, fill: '#86BC25', stroke: '#fff', strokeWidth: 2 }}
                     animationDuration={800} animationEasing="ease-out"
@@ -255,7 +255,7 @@ function FullscreenModal({ kpi, data, forecastEnabled, onClose }) {
                       dot={{ r: 4, fill: '#2563eb', stroke: '#fff', strokeWidth: 2 }}
                       activeDot={{ r: 6, fill: '#2563eb', stroke: '#fff', strokeWidth: 2 }}
                       animationDuration={600} />
-                    <Area type="monotone" dataKey="forecast" stroke="#86BC25" strokeWidth={2.5} strokeDasharray="6 3" fill="url(#fs-grad-fc)" connectNulls={false}
+                    <Area type="monotone" dataKey="forecast" stroke="#86BC25" strokeWidth={2.5} strokeDasharray="6 3" fill="url(#fs-grad-fc)" connectNulls
                       dot={{ r: 4, fill: '#86BC25', stroke: '#fff', strokeWidth: 2 }}
                       activeDot={{ r: 6, fill: '#86BC25', stroke: '#fff', strokeWidth: 2 }}
                       animationDuration={600} />
@@ -525,7 +525,7 @@ export default function CockpitPage() {
     }
   };
   const [view, setView] = useState('dashboard');
-  const [year, setYear] = useState('2025 YTD');
+  const [year, setYear] = useState(YEARS[0]);
   const [silo, setSilo] = useState('Alle');
   const [segment, setSegment] = useState('Alle');
   const [expandedKpi, setExpandedKpi] = useState(null);

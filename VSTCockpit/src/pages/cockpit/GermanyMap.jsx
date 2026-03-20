@@ -67,14 +67,9 @@ function featureToPath(feature, project) {
   return parts.join(' ');
 }
 
-/* ── Color scale (matches A-03 legacy) ──────────────────────────────── */
-function getColor(factor) {
-  if (factor >= 1.3) return '#1e40af';
-  if (factor >= 1.1) return '#3b82f6';
-  if (factor >= 0.9) return '#93c5fd';
-  if (factor >= 0.7) return '#bfdbfe';
-  return '#dbeafe';
-}
+/* ── Farben: hell = unselektiert, dunkel = gefiltert ──────────────── */
+const COLOR_DEFAULT = '#dbeafe';   // helles Blau (alle Bundesländer)
+const COLOR_SELECTED = '#1e40af';  // dunkles Blau (gefiltert/ausgewählt)
 
 /* ── Component ──────────────────────────────────────────────────────── */
 const SVG_W = 400;
@@ -116,11 +111,11 @@ export default function GermanyMap({ selectedStates, onToggleState }) {
               <path
                 key={name}
                 d={d}
-                fill={isSelected ? '#86BC25' : getColor(bl?.factor || 0.5)}
-                stroke={isHovered ? '#1e293b' : 'white'}
-                strokeWidth={isHovered ? 2 : 1}
+                fill={isSelected ? COLOR_SELECTED : isHovered ? '#93c5fd' : COLOR_DEFAULT}
+                stroke="white"
+                strokeWidth={isHovered || isSelected ? 2 : 1}
                 className="cursor-pointer transition-all duration-150"
-                style={{ opacity: isHovered ? 1 : 0.85 }}
+                style={{ opacity: selectedStates.size > 0 && !isSelected && !isHovered ? 0.6 : 1 }}
                 onClick={() => onToggleState(name)}
                 onMouseEnter={() => setHoveredState(name)}
                 onMouseLeave={() => setHoveredState(null)}
@@ -173,14 +168,15 @@ export default function GermanyMap({ selectedStates, onToggleState }) {
 
       {/* Legend */}
       <div className="mt-3 pt-3 border-t border-slate-100">
-        <div className="flex items-center gap-2 text-[10px] text-slate-500">
-          <span>Niedrig</span>
-          <div className="flex gap-0.5">
-            {['#dbeafe', '#bfdbfe', '#93c5fd', '#3b82f6', '#1e40af'].map((c) => (
-              <div key={c} className="w-5 h-2.5 rounded-sm" style={{ backgroundColor: c }} />
-            ))}
-          </div>
-          <span>Hoch</span>
+        <div className="flex items-center gap-4 text-[10px] text-slate-500">
+          <span className="flex items-center gap-1.5">
+            <div className="w-4 h-3 rounded-sm" style={{ backgroundColor: COLOR_DEFAULT }} />
+            Alle Bundesländer
+          </span>
+          <span className="flex items-center gap-1.5">
+            <div className="w-4 h-3 rounded-sm" style={{ backgroundColor: COLOR_SELECTED }} />
+            Ausgewählt
+          </span>
         </div>
       </div>
     </div>

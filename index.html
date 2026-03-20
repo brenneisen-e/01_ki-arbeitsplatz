@@ -42,7 +42,7 @@
         .module-tile:hover .tile-external { color: rgba(255,255,255,0.5) !important; }
         .module-tile:hover .tile-versions a { background: rgba(255,255,255,0.15) !important; color: white !important; border-color: rgba(255,255,255,0.3) !important; }
         .module-tile:hover .tile-versions a:hover { background: rgba(255,255,255,0.3) !important; }
-        .module-tile:hover .tile-tag { background: rgba(255,255,255,0.15) !important; color: rgba(255,255,255,0.9) !important; border-color: rgba(255,255,255,0.3) !important; }
+        .module-tile:hover .tile-tag circle { fill: rgba(255,255,255,0.8) !important; }
 
         /* Hero dot-pattern background */
         .hero-pattern {
@@ -203,10 +203,18 @@
     ];
 
     const TAG_CONFIG = {
-        versicherung: { label: 'Versicherung', bg: '#fef2f2', color: '#991b1b', border: '#fecaca' },
-        banken:       { label: 'Banken',       bg: '#f0fdf4', color: '#166534', border: '#bbf7d0' },
-        am:           { label: 'AM',           bg: '#f0fdf4', color: '#2d5016', border: '#86BC25' },
+        versicherung: { label: 'Versicherung', color: '#C8102E' },
+        banken:       { label: 'Banken',       color: '#00843d' },
+        am:           { label: 'Asset Mgmt',   color: '#2d5016' },
     };
+
+    function TagDot({ tag }) {
+        const cfg = TAG_CONFIG[tag];
+        if (!cfg) return null;
+        return h('svg', { width: 10, height: 10, viewBox: '0 0 10 10', className: 'tile-tag shrink-0' },
+            h('circle', { cx: 5, cy: 5, r: 4.5, fill: cfg.color })
+        );
+    }
 
     function ModuleTile({ mod, delay, cluster }) {
         const iconBg = cluster ? cluster.iconBg : 'bg-slate-100';
@@ -223,15 +231,8 @@
                 ),
                 h('div', { className: 'tile-label font-semibold text-slate-800 mb-1 text-sm' }, mod.label),
                 h('div', { className: 'tile-desc text-xs text-slate-400 mb-2' }, mod.desc),
-                vTags.length > 0 && h('div', { className: 'tile-tags flex flex-wrap gap-1 mb-2' },
-                    vTags.map(t => {
-                        const cfg = TAG_CONFIG[t];
-                        return cfg && h('span', {
-                            key: t,
-                            className: 'tile-tag inline-block text-[10px] font-semibold px-1.5 py-0.5 rounded-md leading-tight',
-                            style: { background: cfg.bg, color: cfg.color, border: '1px solid ' + cfg.border }
-                        }, cfg.label);
-                    })
+                vTags.length > 0 && h('div', { className: 'tile-tags flex items-center gap-1.5 mb-2' },
+                    vTags.map(t => h(TagDot, { key: t, tag: t }))
                 ),
                 h('div', { className: 'tile-versions flex gap-2' },
                     mod.versions.map(v =>
@@ -263,15 +264,8 @@
             ),
             h('div', { className: 'tile-label font-semibold text-slate-800 mb-1 text-sm' }, mod.label),
             h('div', { className: 'tile-desc text-xs text-slate-400' }, mod.desc),
-            tags.length > 0 && h('div', { className: 'tile-tags flex flex-wrap gap-1 mt-2.5' },
-                tags.map(t => {
-                    const cfg = TAG_CONFIG[t];
-                    return cfg && h('span', {
-                        key: t,
-                        className: 'tile-tag inline-block text-[10px] font-semibold px-1.5 py-0.5 rounded-md leading-tight',
-                        style: { background: cfg.bg, color: cfg.color, border: '1px solid ' + cfg.border }
-                    }, cfg.label);
-                })
+            tags.length > 0 && h('div', { className: 'tile-tags flex items-center gap-1.5 mt-2.5' },
+                tags.map(t => h(TagDot, { key: t, tag: t }))
             )
         );
     }
@@ -597,6 +591,18 @@
                 h('h3', { className: 'text-xs font-semibold uppercase tracking-wider text-slate-400 mb-4' }, 'Module'),
                 MODULE_CLUSTERS.map((cluster, ci) =>
                     h(ClusterSection, { key: cluster.id, cluster, startDelay: ci * 200 })
+                ),
+
+                // Domain Legend
+                h('div', { className: 'flex items-center gap-5 mt-2 mb-6 px-1' },
+                    Object.entries(TAG_CONFIG).map(([key, cfg]) =>
+                        h('div', { key, className: 'flex items-center gap-1.5' },
+                            h('svg', { width: 10, height: 10, viewBox: '0 0 10 10' },
+                                h('circle', { cx: 5, cy: 5, r: 4.5, fill: cfg.color })
+                            ),
+                            h('span', { className: 'text-xs text-slate-400' }, cfg.label)
+                        )
+                    )
                 ),
 
                 // Settings Panel

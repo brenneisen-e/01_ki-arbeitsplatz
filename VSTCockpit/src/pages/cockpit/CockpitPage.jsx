@@ -124,7 +124,10 @@ function KPICard({ kpi, data, forecastEnabled, onExpand }) {
               <Bar dataKey="value" fill={chartColor} radius={[4, 4, 0, 0]} barSize={24} animationDuration={600} />
             </BarChart>
           ) : (
-            <AreaChart data={forecastEnabled ? data.map(d => ({ ...d, actual: d.isForecast ? null : d[kpi.id], forecast: d.isForecast ? d[kpi.id] : null })) : data} margin={{ top: 5, right: 5, bottom: 5, left: 5 }}>
+            <AreaChart data={forecastEnabled ? data.map((d, i, arr) => {
+              const isLast = !d.isForecast && (i === arr.length - 1 || arr[i + 1]?.isForecast);
+              return { ...d, actual: d.isForecast ? null : d[kpi.id], forecast: d.isForecast ? d[kpi.id] : isLast ? d[kpi.id] : null };
+            }) : data} margin={{ top: 5, right: 5, bottom: 5, left: 5 }}>
               <defs>
                 <linearGradient id={`grad-${kpi.id}`} x1="0" y1="0" x2="0" y2="1">
                   <stop offset="5%" stopColor={chartColor} stopOpacity={0.12} />
@@ -185,7 +188,10 @@ function FullscreenModal({ kpi, data, forecastEnabled, onClose }) {
   const Icon = LucideIcons[kpi.icon] || LucideIcons.BarChart3;
 
   const fsData = forecastEnabled
-    ? data.map(d => ({ ...d, actual: d.isForecast ? null : d[kpi.id], forecast: d.isForecast ? d[kpi.id] : null }))
+    ? data.map((d, i, arr) => {
+        const isLast = !d.isForecast && (i === arr.length - 1 || arr[i + 1]?.isForecast);
+        return { ...d, actual: d.isForecast ? null : d[kpi.id], forecast: d.isForecast ? d[kpi.id] : isLast ? d[kpi.id] : null };
+      })
     : data;
 
   return (

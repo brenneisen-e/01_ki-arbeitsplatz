@@ -84,7 +84,7 @@ export default function Overview() {
       </div>
 
       {/* Chapter Grid */}
-      <div ref={gridRef} className="px-6 py-10">
+      <div ref={gridRef} className="px-6 py-10" style={{ scrollMarginTop: '120px' }}>
         <h2 className="text-xl font-bold text-slate-900 mb-6">Alle Kapitel im Überblick</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {data?.chapters?.map((ch, i) => {

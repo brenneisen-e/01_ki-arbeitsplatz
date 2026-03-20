@@ -1,13 +1,11 @@
 import { useEffect } from 'react';
 import { useModule } from '../../hooks/useModule';
-import { Search, ChevronRight, Home } from '../ui/Icons';
+import { Search, Home } from '../ui/Icons';
 import TopNav from './TopNav';
 import Breadcrumb from './Breadcrumb';
 
-const LOGO_TOKEN = 'pk_H7vb5Y2lTsW47U4Xq-w3HA';
-
 export default function Header({ onGlossary, onSearch }) {
-  const { data, visited, showOverview } = useModule();
+  const { data, visited } = useModule();
 
   useEffect(() => {
     const handler = (e) => {
@@ -26,10 +24,10 @@ export default function Header({ onGlossary, onSearch }) {
   return (
     <header className="sticky top-0 z-40">
       {/* Top Bar */}
-      <div className="header-gradient px-6 pt-5 pb-4">
+      <div className="bg-[#1a1a2e] px-6 pt-4 pb-3">
         <div className="flex items-center justify-between">
-          {/* Left: Back + Logo + Title */}
-          <div className="flex items-center gap-4">
+          {/* Left: Home */}
+          <div className="flex items-center gap-3">
             <button
               onClick={() => { window.location.href = '/'; }}
               className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-white/70 hover:text-white hover:bg-white/10 transition"
@@ -38,20 +36,6 @@ export default function Header({ onGlossary, onSearch }) {
               <Home className="w-4 h-4" />
               <span className="text-xs font-medium hidden sm:inline">Startseite</span>
             </button>
-            <button onClick={showOverview} className="text-white/80 hover:text-white transition">
-              <ChevronRight className="w-5 h-5 rotate-180" />
-            </button>
-            <div className="w-10 h-10 rounded-lg bg-white/20 border border-white/30 overflow-hidden flex items-center justify-center">
-              <img
-                src={`https://img.logo.dev/deloitte.com?token=${LOGO_TOKEN}&format=png&size=200`}
-                alt="Deloitte"
-                className="h-8 w-8 object-contain"
-              />
-            </div>
-            <div>
-              <h1 className="text-white font-bold text-xl tracking-tight">Versicherungs-1×1</h1>
-              <div className="text-white/50 text-xs">Insurance Strategy & Consulting</div>
-            </div>
           </div>
 
           {/* Right: Search + Progress */}

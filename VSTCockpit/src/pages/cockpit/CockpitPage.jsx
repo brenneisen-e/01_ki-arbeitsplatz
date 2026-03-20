@@ -639,7 +639,7 @@ export default function CockpitPage() {
                   <button onClick={() => setSelectedStates(new Set())} className="text-xs text-blue-600 hover:text-blue-700 ml-1">(Filter zurücksetzen)</button>
                 </div>
               )}
-              <div className="grid gap-5" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(380px, 1fr))' }}>
+              <div className="grid grid-cols-3 gap-5">
                 {KPI_DEFS.map(kpi => (
                   <KPICard key={kpi.id} kpi={kpi} data={chartData} forecastEnabled={forecastEnabled} onExpand={setExpandedKpi} />
                 ))}

@@ -6,7 +6,7 @@ import { useApp } from '../context/AppContext'
 import * as AI from '../utils/ai-processor'
 import * as Storage from '../utils/storage'
 import StatusBadge from '../components/StatusBadge'
-import { Upload, Key, X, FileText, Mail, CheckCircle, AlertTriangle, Loader2, Save, Download, Trash2, Eye, EyeOff, ChevronDown, ChevronRight, Package } from 'lucide-react'
+import { Upload, Key, X, FileText, Mail, CheckCircle, AlertTriangle, Loader2, Save, Download, Trash2, Eye, EyeOff, ChevronDown, ChevronRight, Package, ArrowRight, ArrowDown, Clock, Link2, Layers, Inbox, XCircle, GitMerge } from 'lucide-react'
 import { getFileCatalog, downloadFile as downloadDemoFile, generateFile } from '../utils/demo-files-gen'
 
 const VALID_EXTENSIONS = ['.eml', '.msg', '.docx', '.xlsx', '.pdf']
@@ -185,6 +185,9 @@ export default function AIUploadPage() {
           </div>
         </div>
       )}
+
+      {/* Heutige Problematik */}
+      <HeutigeProblematikSection />
 
       {/* Drop Zone */}
       <div
@@ -391,6 +394,194 @@ export default function AIUploadPage() {
                   Entfernen
                 </button>
               )}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// ============================================================
+// Heutige Problematik Section
+// ============================================================
+
+const EXAMPLE_SCENARIOS = [
+  {
+    id: 'reminder',
+    title: 'Erstanfrage + Erinnerung',
+    description: '1 Vorgang, 2 E-Mails über Wochen verteilt',
+    color: 'blue',
+    emails: [
+      { date: '03.03.2026', from: 'makler.schmidt@vema.de', subject: 'BÜ Kunde Müller, KFZ, VS-Nr 4711', type: 'Erstanfrage', highlight: false },
+      { date: '17.03.2026', from: 'makler.schmidt@vema.de', subject: 'Re: BÜ Kunde Müller – Erinnerung', type: 'Erinnerung (14 Tage)', highlight: true },
+    ],
+    realResult: '1 Vorgang: Müller, KFZ, VS 4711',
+    wrongResult: '2 separate Vorgänge im Postkorb',
+  },
+  {
+    id: 'supplement',
+    title: 'Ergänzende Unterlagen',
+    description: '1 Vorgang, Nachlieferung von Dokumenten',
+    color: 'indigo',
+    emails: [
+      { date: '05.03.2026', from: 'agentur.weber@aon.de', subject: 'Bestandsübertragung Frau Schneider, Leben', type: 'Erstanfrage', highlight: false },
+      { date: '07.03.2026', from: 'agentur.weber@aon.de', subject: 'Nachtrag: Maklervollmacht Schneider', type: 'Ergänzung (Vollmacht)', highlight: true },
+      { date: '10.03.2026', from: 'agentur.weber@aon.de', subject: 'Nachtrag: Unterschriebener Antrag Schneider', type: 'Ergänzung (Antrag)', highlight: true },
+    ],
+    realResult: '1 Vorgang: Schneider, Leben – mit allen Unterlagen',
+    wrongResult: '3 separate Vorgänge im Postkorb',
+  },
+  {
+    id: 'multi',
+    title: 'Sammel-E-Mail',
+    description: '1 E-Mail enthält mehrere Vorgänge',
+    color: 'purple',
+    emails: [
+      { date: '12.03.2026', from: 'backoffice@finanzhaus.de', subject: 'Bestandsübertragungen März – 3 Kunden', type: 'Sammelanfrage', highlight: false },
+    ],
+    realResult: '3 Vorgänge: Bauer (KFZ), Klein (Haftpflicht), Wolf (Unfall)',
+    wrongResult: '1 Vorgang im Postkorb – 2 Kunden gehen unter',
+  },
+]
+
+const COLOR_VARIANTS = {
+  blue: { bg: 'bg-blue-50', border: 'border-blue-200', text: 'text-blue-700', light: 'bg-blue-100', dot: 'bg-blue-400' },
+  indigo: { bg: 'bg-indigo-50', border: 'border-indigo-200', text: 'text-indigo-700', light: 'bg-indigo-100', dot: 'bg-indigo-400' },
+  purple: { bg: 'bg-purple-50', border: 'border-purple-200', text: 'text-purple-700', light: 'bg-purple-100', dot: 'bg-purple-400' },
+}
+
+function HeutigeProblematikSection() {
+  const [expanded, setExpanded] = useState(true)
+
+  return (
+    <div className="card-base overflow-hidden">
+      <button
+        onClick={() => setExpanded(!expanded)}
+        className="w-full flex items-center justify-between px-6 py-4 hover:bg-slate-50 transition-colors"
+      >
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-red-50 flex items-center justify-center">
+            <AlertTriangle size={20} className="text-red-500" />
+          </div>
+          <div className="text-left">
+            <div className="text-base font-semibold text-slate-800">Heutige Problematik: E-Mail-Zuordnung im Postkorb</div>
+            <div className="text-sm text-slate-500">Warum einzelne E-Mails als Vorgänge nicht funktionieren</div>
+          </div>
+        </div>
+        {expanded ? <ChevronDown size={18} className="text-slate-400" /> : <ChevronRight size={18} className="text-slate-400" />}
+      </button>
+
+      {expanded && (
+        <div className="border-t border-slate-100 px-6 py-5 space-y-6">
+          {/* Intro */}
+          <p className="text-base text-slate-600">
+            E-Mails zu Bestandsübertragungen stehen in Beziehung zueinander. Im realen Posteingang sieht das so aus:
+          </p>
+
+          {/* Scenario Cards */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+            {EXAMPLE_SCENARIOS.map(scenario => {
+              const c = COLOR_VARIANTS[scenario.color]
+              return (
+                <div key={scenario.id} className={`rounded-xl border ${c.border} overflow-hidden`}>
+                  {/* Scenario Header */}
+                  <div className={`${c.bg} px-4 py-3`}>
+                    <div className={`font-semibold text-base ${c.text}`}>{scenario.title}</div>
+                    <div className="text-sm text-slate-500">{scenario.description}</div>
+                  </div>
+
+                  {/* Email Timeline */}
+                  <div className="px-4 py-3 space-y-0">
+                    {scenario.emails.map((email, i) => (
+                      <div key={i} className="flex gap-3">
+                        {/* Timeline line */}
+                        <div className="flex flex-col items-center">
+                          <div className={`w-3 h-3 rounded-full ${c.dot} shrink-0 mt-1.5`} />
+                          {i < scenario.emails.length - 1 && (
+                            <div className="w-0.5 flex-1 bg-slate-200 my-1" />
+                          )}
+                        </div>
+                        {/* Email content */}
+                        <div className={`pb-3 flex-1 min-w-0 ${email.highlight ? '' : ''}`}>
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs font-mono text-slate-400">{email.date}</span>
+                            <span className={`text-xs px-1.5 py-0.5 rounded ${c.light} ${c.text}`}>{email.type}</span>
+                          </div>
+                          <div className="text-sm text-slate-600 mt-0.5 truncate" title={email.from}>{email.from}</div>
+                          <div className="text-sm font-medium text-slate-800 truncate" title={email.subject}>{email.subject}</div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Correct vs Wrong */}
+                  <div className="border-t border-slate-100 px-4 py-3 space-y-2">
+                    <div className="flex items-start gap-2">
+                      <GitMerge size={16} className="text-emerald-500 shrink-0 mt-0.5" />
+                      <div>
+                        <div className="text-xs font-semibold text-emerald-700">KI-Erkennung (richtig)</div>
+                        <div className="text-sm text-slate-700">{scenario.realResult}</div>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-2">
+                      <XCircle size={16} className="text-red-400 shrink-0 mt-0.5" />
+                      <div>
+                        <div className="text-xs font-semibold text-red-600">Manuell / Postkorb (Problem)</div>
+                        <div className="text-sm text-slate-700">{scenario.wrongResult}</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+
+          {/* Problem Summary */}
+          <div className="rounded-xl border-2 border-red-200 bg-red-50 p-5">
+            <div className="flex items-start gap-3">
+              <Inbox size={24} className="text-red-500 shrink-0 mt-0.5" />
+              <div>
+                <h4 className="font-bold text-base text-red-800 mb-2">Das Problem: Jede E-Mail = 1 Vorgang im Postkorb</h4>
+                <div className="space-y-2 text-sm text-red-900/80">
+                  <p>
+                    Wenn jede eingehende E-Mail automatisch als eigener Vorgang im Postkorb eröffnet wird, entstehen massive Probleme:
+                  </p>
+                  <ul className="space-y-1.5 ml-1">
+                    <li className="flex items-start gap-2">
+                      <span className="text-red-400 mt-0.5">1.</span>
+                      <span><strong>Duplikate:</strong> Erinnerungsmails erzeugen Doppel-Vorgänge — der Sachbearbeiter sieht denselben Kunden mehrfach und muss manuell zusammenführen.</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-red-400 mt-0.5">2.</span>
+                      <span><strong>Verstreute Unterlagen:</strong> Nachgelieferte Vollmachten oder Anträge landen als separate Vorgänge — der Zusammenhang zum Ursprungsantrag geht verloren.</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-red-400 mt-0.5">3.</span>
+                      <span><strong>Verlorene Vorgänge:</strong> Sammel-E-Mails mit mehreren Kunden werden als ein Vorgang behandelt — nur der erste Kunde wird bearbeitet, die restlichen gehen unter.</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-red-400 mt-0.5">4.</span>
+                      <span><strong>Manueller Aufwand:</strong> Sachbearbeiter müssen jeden einzelnen Vorgang manuell prüfen, zuordnen und zusammenführen — bei hohem Volumen nicht leistbar.</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Solution Hint */}
+          <div className="rounded-xl border-2 border-emerald-200 bg-emerald-50 p-5">
+            <div className="flex items-start gap-3">
+              <GitMerge size={24} className="text-emerald-600 shrink-0 mt-0.5" />
+              <div>
+                <h4 className="font-bold text-base text-emerald-800 mb-1">Die Lösung: KI-gestützte Analyse</h4>
+                <p className="text-sm text-emerald-900/80">
+                  Die KI erkennt automatisch Zusammenhänge zwischen E-Mails (Kunde, VS-Nr, Makler), fasst zusammengehörige Nachrichten zu einem Vorgang zusammen,
+                  trennt Sammel-E-Mails in einzelne Vorgänge auf und ordnet Nachlieferungen dem richtigen Vorgang zu.
+                  Laden Sie E-Mails oben hoch, um die KI-Analyse in Aktion zu sehen.
+                </p>
+              </div>
             </div>
           </div>
         </div>

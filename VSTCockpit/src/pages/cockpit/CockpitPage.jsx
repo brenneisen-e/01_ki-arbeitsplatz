@@ -6,7 +6,7 @@ import {
   MessageSquare, Send, Sparkles, ArrowRight,
 } from 'lucide-react';
 import * as LucideIcons from 'lucide-react';
-import { AreaChart, Area, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import { AreaChart, Area, BarChart, Bar, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import GermanyMap from './GermanyMap';
 import {
   KPI_DEFS, MONTHLY_DATA,
@@ -132,46 +132,36 @@ function KPICard({ kpi, data, forecastEnabled, onExpand }) {
               <Bar dataKey="value" fill={chartColor} radius={[4, 4, 0, 0]} barSize={24} animationDuration={600} />
             </BarChart>
           ) : (
-            <AreaChart data={forecastEnabled ? data.map((d, i, arr) => {
-              const isLast = !d.isForecast && (i === arr.length - 1 || arr[i + 1]?.isForecast);
-              return { ...d, actual: d.isForecast ? null : d[kpi.id], forecast: d.isForecast ? d[kpi.id] : isLast ? d[kpi.id] : null };
-            }) : data} margin={{ top: 5, right: 5, bottom: 5, left: 5 }}>
+            <AreaChart data={forecastEnabled ? data.map(d => ({
+              ...d,
+              fcLine: d.isForecast ? d[kpi.id] : undefined,
+            })) : data} margin={{ top: 5, right: 5, bottom: 5, left: 5 }}>
               <defs>
                 <linearGradient id={`grad-${kpi.id}`} x1="0" y1="0" x2="0" y2="1">
                   <stop offset="5%" stopColor={chartColor} stopOpacity={0.12} />
                   <stop offset="95%" stopColor={chartColor} stopOpacity={0} />
                 </linearGradient>
                 <linearGradient id={`grad-fc-${kpi.id}`} x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#86BC25" stopOpacity={0.12} />
+                  <stop offset="5%" stopColor="#86BC25" stopOpacity={0.1} />
                   <stop offset="95%" stopColor="#86BC25" stopOpacity={0} />
                 </linearGradient>
               </defs>
               <XAxis dataKey="month" tick={{ fontSize: 10, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
               <YAxis tick={{ fontSize: 10, fill: '#94a3b8' }} axisLine={false} tickLine={false} width={44} domain={['auto', 'auto']} tickFormatter={fmtTick} />
               <Tooltip content={<ChartTooltip />} />
-              {forecastEnabled ? (
-                <>
-                  <Area
-                    type="monotone" dataKey="actual" stroke={chartColor} strokeWidth={2}
-                    fill={`url(#grad-${kpi.id})`} connectNulls={false}
-                    dot={{ r: 3, fill: chartColor, stroke: '#fff', strokeWidth: 1.5 }}
-                    activeDot={{ r: 5, fill: chartColor, stroke: '#fff', strokeWidth: 2 }}
-                    animationDuration={800} animationEasing="ease-out"
-                  />
-                  <Area
-                    type="monotone" dataKey="forecast" stroke="#86BC25" strokeWidth={2} strokeDasharray="6 3"
-                    fill={`url(#grad-fc-${kpi.id})`} connectNulls
-                    dot={{ r: 3, fill: '#86BC25', stroke: '#fff', strokeWidth: 1.5 }}
-                    activeDot={{ r: 5, fill: '#86BC25', stroke: '#fff', strokeWidth: 2 }}
-                    animationDuration={800} animationEasing="ease-out"
-                  />
-                </>
-              ) : (
+              <Area
+                type="monotone" dataKey={kpi.id} stroke={chartColor} strokeWidth={2}
+                fill={`url(#grad-${kpi.id})`}
+                dot={{ r: 3, fill: chartColor, stroke: '#fff', strokeWidth: 1.5 }}
+                activeDot={{ r: 5, fill: chartColor, stroke: '#fff', strokeWidth: 2 }}
+                animationDuration={800} animationEasing="ease-out"
+              />
+              {forecastEnabled && (
                 <Area
-                  type="monotone" dataKey={kpi.id} stroke={chartColor} strokeWidth={2}
-                  fill={`url(#grad-${kpi.id})`}
-                  dot={{ r: 3, fill: chartColor, stroke: '#fff', strokeWidth: 1.5 }}
-                  activeDot={{ r: 5, fill: chartColor, stroke: '#fff', strokeWidth: 2 }}
+                  type="monotone" dataKey="fcLine" stroke="#86BC25" strokeWidth={2} strokeDasharray="6 3"
+                  fill={`url(#grad-fc-${kpi.id})`} connectNulls={false}
+                  dot={{ r: 3, fill: '#86BC25', stroke: '#fff', strokeWidth: 1.5 }}
+                  activeDot={{ r: 5, fill: '#86BC25', stroke: '#fff', strokeWidth: 2 }}
                   animationDuration={800} animationEasing="ease-out"
                 />
               )}
@@ -196,10 +186,10 @@ function FullscreenModal({ kpi, data, forecastEnabled, onClose }) {
   const Icon = LucideIcons[kpi.icon] || LucideIcons.BarChart3;
 
   const fsData = forecastEnabled
-    ? data.map((d, i, arr) => {
-        const isLast = !d.isForecast && (i === arr.length - 1 || arr[i + 1]?.isForecast);
-        return { ...d, actual: d.isForecast ? null : d[kpi.id], forecast: d.isForecast ? d[kpi.id] : isLast ? d[kpi.id] : null };
-      })
+    ? data.map(d => ({
+        ...d,
+        fcLine: d.isForecast ? d[kpi.id] : undefined,
+      }))
     : data;
 
   return (
@@ -257,21 +247,14 @@ function FullscreenModal({ kpi, data, forecastEnabled, onClose }) {
                 <XAxis dataKey="month" tick={{ fontSize: 12, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
                 <YAxis tick={{ fontSize: 12, fill: '#94a3b8' }} axisLine={false} tickLine={false} domain={['auto', 'auto']} tickFormatter={fmtTick} />
                 <Tooltip content={<ChartTooltip />} />
-                {forecastEnabled ? (
-                  <>
-                    <Area type="monotone" dataKey="actual" stroke="#2563eb" strokeWidth={2.5} fill="url(#fs-grad)" connectNulls={false}
-                      dot={{ r: 4, fill: '#2563eb', stroke: '#fff', strokeWidth: 2 }}
-                      activeDot={{ r: 6, fill: '#2563eb', stroke: '#fff', strokeWidth: 2 }}
-                      animationDuration={600} />
-                    <Area type="monotone" dataKey="forecast" stroke="#86BC25" strokeWidth={2.5} strokeDasharray="6 3" fill="url(#fs-grad-fc)" connectNulls
-                      dot={{ r: 4, fill: '#86BC25', stroke: '#fff', strokeWidth: 2 }}
-                      activeDot={{ r: 6, fill: '#86BC25', stroke: '#fff', strokeWidth: 2 }}
-                      animationDuration={600} />
-                  </>
-                ) : (
-                  <Area type="monotone" dataKey={kpi.id} stroke="#2563eb" strokeWidth={2.5} fill="url(#fs-grad)"
-                    dot={{ r: 4, fill: '#2563eb', stroke: '#fff', strokeWidth: 2 }}
-                    activeDot={{ r: 6, fill: '#2563eb', stroke: '#fff', strokeWidth: 2 }}
+                <Area type="monotone" dataKey={kpi.id} stroke="#2563eb" strokeWidth={2.5} fill="url(#fs-grad)"
+                  dot={{ r: 4, fill: '#2563eb', stroke: '#fff', strokeWidth: 2 }}
+                  activeDot={{ r: 6, fill: '#2563eb', stroke: '#fff', strokeWidth: 2 }}
+                  animationDuration={600} />
+                {forecastEnabled && (
+                  <Area type="monotone" dataKey="fcLine" stroke="#86BC25" strokeWidth={2.5} strokeDasharray="6 3" fill="url(#fs-grad-fc)" connectNulls={false}
+                    dot={{ r: 4, fill: '#86BC25', stroke: '#fff', strokeWidth: 2 }}
+                    activeDot={{ r: 6, fill: '#86BC25', stroke: '#fff', strokeWidth: 2 }}
                     animationDuration={600} />
                 )}
               </AreaChart>

@@ -116,7 +116,7 @@ function generateVermittler() {
   return vermittler;
 }
 
-const ALL_VERMITTLER = generateVermittler();
+export const ALL_VERMITTLER = generateVermittler();
 export const TOP_VERMITTLER = ALL_VERMITTLER.slice(0, 10);
 
 // ── Bundesland-Aggregation ──────────────────────────────────

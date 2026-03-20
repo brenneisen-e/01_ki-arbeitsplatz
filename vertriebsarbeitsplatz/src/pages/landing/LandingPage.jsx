@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { clsx } from 'clsx';
-import { Send, Briefcase, Shield, Landmark, Wallet, PieChart, Bot, Loader2, Settings, Upload, RotateCcw, User, ChevronDown, ChevronUp } from 'lucide-react';
+import { Send, Briefcase, Shield, Landmark, Wallet, PieChart, Bot, Loader2, Settings, Upload, RotateCcw, User, ChevronDown, ChevronUp, ArrowLeft } from 'lucide-react';
 import { useMode } from '../../hooks/useMode';
 import { MODE_CONFIGS, MODUS_LIST } from '../../data/modeConfig';
 import { getLogoUrl } from '../../utils/logos';
@@ -254,6 +254,13 @@ export default function LandingPage() {
       {/* Top bar */}
       <div className="px-6 py-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
+          <a
+            href="../../index.html"
+            className="w-8 h-8 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors"
+            title="Zurück zur Modulübersicht"
+          >
+            <ArrowLeft size={16} className="text-white/70" strokeWidth={1.75} />
+          </a>
           <div className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center">
             <Briefcase size={16} className="text-white" strokeWidth={1.75} />
           </div>

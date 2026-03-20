@@ -10,7 +10,7 @@ import { AreaChart, Area, BarChart, Bar, Line, XAxis, YAxis, Tooltip, Responsive
 import GermanyMap from './GermanyMap';
 import {
   KPI_DEFS, MONTHLY_DATA,
-  BUNDESLAND_DATA, TOP_VERMITTLER, ABSCHLUESSE, fmtVal, fmtCur,
+  BUNDESLAND_DATA, ALL_VERMITTLER, TOP_VERMITTLER, ABSCHLUESSE, fmtVal, fmtCur,
   generateForecastData,
 } from './cockpitData';
 
@@ -524,6 +524,7 @@ export default function CockpitPage() {
   const [showReport, setShowReport] = useState(false);
   const [selectedStates, setSelectedStates] = useState(new Set());
   const [forecastEnabled, setForecastEnabled] = useState(false);
+  const [agentur, setAgentur] = useState('Alle');
 
   // Filtered data based on selected states
   const filteredData = useMemo(() => scaleMonthlyData(MONTHLY_DATA, selectedStates), [selectedStates]);
@@ -604,6 +605,11 @@ export default function CockpitPage() {
             <span className="text-white/40 text-xs">Segment:</span>
             <select value={segment} onChange={e => setSegment(e.target.value)} className="bg-white/10 text-white border-0 rounded-md px-2 py-1 text-sm cursor-pointer">
               {SEGMENTS.map(s => <option key={s} value={s} className="text-slate-800">{s}</option>)}
+            </select>
+            <span className="text-white/40 text-xs">Agentur:</span>
+            <select value={agentur} onChange={e => setAgentur(e.target.value)} className="bg-white/10 text-white border-0 rounded-md px-2 py-1 text-sm cursor-pointer max-w-[180px]">
+              <option value="Alle" className="text-slate-800">Alle</option>
+              {ALL_VERMITTLER.map(vm => <option key={vm.id} value={vm.id} className="text-slate-800">{vm.id} – {vm.name}</option>)}
             </select>
             <div className="h-5 w-px bg-white/20 mx-1" />
             <button

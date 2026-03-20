@@ -33,5 +33,5 @@ export {
   ChevronDown, ChevronLeft, ChevronRight, Check, Search, X,
   RotateCcw, BookOpen, CheckCircle, LayoutGrid, ArrowUp, ArrowDown,
   Info, AlertTriangle, Lightbulb, Layers, Shield, ShieldCheck,
-  BarChart3,
+  BarChart3, Home,
 };

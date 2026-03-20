@@ -73,7 +73,7 @@ export default function Header({ onGlossary, onSearch }) {
             onClick={() => openChapter(ch.id)}
           >
             <span className="text-xs opacity-60">{String(i + 1).padStart(2, '0')}</span>
-            <span className="hidden lg:inline truncate max-w-[120px]">{ch.title}</span>
+            <span>{ch.title}</span>
             {visited.includes(ch.id) && (
               <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-emerald-400" />
             )}

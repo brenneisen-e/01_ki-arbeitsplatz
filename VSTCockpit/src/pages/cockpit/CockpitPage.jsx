@@ -590,7 +590,7 @@ export default function CockpitPage() {
     <div className="min-h-screen bg-slate-50">
       {/* Header */}
       <header className="bg-slate-800 text-white">
-        <div className="px-5 pt-3 pb-2 flex items-center justify-between max-w-[1920px] mx-auto">
+        <div className="px-5 pt-3 pb-2 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <button onClick={goToLanding} className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-white/70 hover:text-white hover:bg-white/10 transition-colors" title="Zurück zur Startseite">
               <Home size={16} strokeWidth={1.75} />
@@ -645,7 +645,7 @@ export default function CockpitPage() {
 
       {/* Dashboard View */}
       {view === 'dashboard' && (
-        <div className="max-w-[1920px] mx-auto p-5">
+        <div className="p-5">
           {/* Main: KPI grid + Map sidebar */}
           <div className="flex gap-5 items-stretch">
             <div className="flex-1 min-w-0">
@@ -662,7 +662,7 @@ export default function CockpitPage() {
                 ))}
               </div>
             </div>
-            <div className="w-[440px] shrink-0 bg-white rounded-2xl border border-slate-200 p-5 flex flex-col" style={{ boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
+            <div className="w-[440px] shrink-0 bg-white rounded-2xl border border-slate-200 p-5 flex flex-col self-start sticky top-5" style={{ boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
               <h3 className="text-sm font-semibold text-slate-800 mb-3">Deutschlandkarte</h3>
               <GermanyMap selectedStates={selectedStates} onToggleState={toggleState} />
             </div>
@@ -729,7 +729,7 @@ export default function CockpitPage() {
 
       {/* Table View */}
       {view === 'table' && (
-        <div className="max-w-[1920px] mx-auto p-5 animate-fade-in-up">
+        <div className="p-5 animate-fade-in-up">
           {selectedStates.size > 0 && (
             <div className="mb-4 flex items-center gap-2 text-sm text-slate-500">
               <LucideIcons.Filter size={14} />

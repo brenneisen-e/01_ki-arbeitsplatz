@@ -99,8 +99,7 @@ export default function GermanyMap({ selectedStates, onToggleState }) {
       <div className="flex-1 min-h-0">
         <svg
           viewBox={`0 0 ${SVG_W} ${SVG_H}`}
-          className="w-full h-full"
-          style={{ maxHeight: 460 }}
+          className="w-full"
         >
           <rect width={SVG_W} height={SVG_H} fill="#f8fafc" rx="8" />
           {paths.map(({ name, d }) => {

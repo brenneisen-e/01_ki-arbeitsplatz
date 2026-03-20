@@ -6,7 +6,7 @@ import { useApp } from '../context/AppContext'
 import * as AI from '../utils/ai-processor'
 import * as Storage from '../utils/storage'
 import StatusBadge from '../components/StatusBadge'
-import { Upload, Key, X, FileText, Mail, CheckCircle, AlertTriangle, Loader2, Save, Download, Trash2, Eye, EyeOff, ChevronDown, ChevronRight, Package, ArrowRight, ArrowDown, Clock, Link2, Layers, Inbox, XCircle, GitMerge } from 'lucide-react'
+import { Upload, Key, X, FileText, Mail, CheckCircle, AlertTriangle, Loader2, Save, Download, Trash2, Eye, EyeOff, ChevronDown, ChevronRight, Package, ArrowRight, ArrowDown, Clock, Link2, Layers, Inbox, XCircle, GitMerge, Paperclip } from 'lucide-react'
 import { getFileCatalog, downloadFile as downloadDemoFile, generateFile } from '../utils/demo-files-gen'
 
 const VALID_EXTENSIONS = ['.eml', '.msg', '.docx', '.xlsx', '.pdf']
@@ -187,7 +187,16 @@ export default function AIUploadPage() {
       )}
 
       {/* Heutige Problematik */}
-      <HeutigeProblematikSection />
+      <HeutigeProblematikSection
+        onAddToUpload={(file) => {
+          setFiles(prev => {
+            const existing = new Set(prev.map(f => f.name + f.size))
+            return existing.has(file.name + file.size) ? prev : [...prev, file]
+          })
+          showToast(`${file.name} zur Upload-Liste hinzugefügt`, 'success')
+        }}
+        showToast={showToast}
+      />
 
       {/* Drop Zone */}
       <div
@@ -413,10 +422,10 @@ const EXAMPLE_SCENARIOS = [
     description: '1 Vorgang, 2 E-Mails über Wochen verteilt',
     color: 'blue',
     emails: [
-      { date: '03.03.2026', from: 'makler.schmidt@vema.de', subject: 'BÜ Kunde Müller, KFZ, VS-Nr 4711', type: 'Erstanfrage', highlight: false },
-      { date: '17.03.2026', from: 'makler.schmidt@vema.de', subject: 'Re: BÜ Kunde Müller – Erinnerung', type: 'Erinnerung (14 Tage)', highlight: true },
+      { date: '13.01.2026', from: 'thomas.meier@meier-versicherungen.de', subject: 'Bestandsübertragung KFZ – Hans Müller, ERG-7823456', type: 'Erstanfrage', fileId: 'anfrage_text_mueller' },
+      { date: '27.01.2026', from: 'thomas.meier@meier-versicherungen.de', subject: 'Erinnerung: Bestandsübertragung KFZ – Hans Müller', type: 'Erinnerung (14 Tage)', fileId: 'erinnerung_kfz_mueller' },
     ],
-    realResult: '1 Vorgang: Müller, KFZ, VS 4711',
+    realResult: '1 Vorgang: Müller, KFZ, ERG-7823456',
     wrongResult: '2 separate Vorgänge im Postkorb',
   },
   {
@@ -425,11 +434,11 @@ const EXAMPLE_SCENARIOS = [
     description: '1 Vorgang, Nachlieferung von Dokumenten',
     color: 'indigo',
     emails: [
-      { date: '05.03.2026', from: 'agentur.weber@aon.de', subject: 'Bestandsübertragung Frau Schneider, Leben', type: 'Erstanfrage', highlight: false },
-      { date: '07.03.2026', from: 'agentur.weber@aon.de', subject: 'Nachtrag: Maklervollmacht Schneider', type: 'Ergänzung (Vollmacht)', highlight: true },
-      { date: '10.03.2026', from: 'agentur.weber@aon.de', subject: 'Nachtrag: Unterschriebener Antrag Schneider', type: 'Ergänzung (Antrag)', highlight: true },
+      { date: '16.01.2026', from: 'lisa.wagner@wagner-makler.de', subject: 'BÜ Petra Schneider, ERG-5567891 – Vollmacht folgt', type: 'Erstanfrage', fileId: 'nachreichung_schneider' },
+      { date: '17.01.2026', from: 'lisa.wagner@wagner-makler.de', subject: 'Re: Fehlende Maklervollmacht – Petra Schneider', type: 'Ergänzung (Vollmacht)', fileId: 'antwort_vollmacht_schneider' },
+      { date: '20.01.2026', from: 'lisa.wagner@wagner-makler.de', subject: 'Nachtrag: Unterschriebener Antrag – Schneider', type: 'Ergänzung (Antrag)', fileId: 'nachreichung_antrag_schneider' },
     ],
-    realResult: '1 Vorgang: Schneider, Leben – mit allen Unterlagen',
+    realResult: '1 Vorgang: Schneider, BU – mit allen Unterlagen',
     wrongResult: '3 separate Vorgänge im Postkorb',
   },
   {
@@ -438,7 +447,7 @@ const EXAMPLE_SCENARIOS = [
     description: '1 E-Mail enthält mehrere Vorgänge',
     color: 'purple',
     emails: [
-      { date: '12.03.2026', from: 'backoffice@finanzhaus.de', subject: 'Bestandsübertragungen März – 3 Kunden', type: 'Sammelanfrage', highlight: false },
+      { date: '12.03.2026', from: 'hendrik.falk@falk-makler.de', subject: 'Bestandsübertragungen März – 3 Kunden (Bauer, Klein, Wolf)', type: 'Sammelanfrage', fileId: 'sammel_bauer_klein_wolf' },
     ],
     realResult: '3 Vorgänge: Bauer (KFZ), Klein (Haftpflicht), Wolf (Unfall)',
     wrongResult: '1 Vorgang im Postkorb – 2 Kunden gehen unter',
@@ -451,8 +460,172 @@ const COLOR_VARIANTS = {
   purple: { bg: 'bg-purple-50', border: 'border-purple-200', text: 'text-purple-700', light: 'bg-purple-100', dot: 'bg-purple-400' },
 }
 
-function HeutigeProblematikSection() {
+function parseEmlRaw(raw) {
+  const splitIdx = raw.search(/\r?\n\r?\n/)
+  const headerBlock = splitIdx >= 0 ? raw.substring(0, splitIdx) : raw
+  const bodyBlock = splitIdx >= 0 ? raw.substring(splitIdx).replace(/^[\r\n]+/, '') : ''
+
+  const headers = {}
+  let currentKey = ''
+  for (const line of headerBlock.replace(/\r\n/g, '\n').split('\n')) {
+    if (/^\s/.test(line) && currentKey) headers[currentKey] += ' ' + line.trim()
+    else {
+      const m = line.match(/^([A-Za-z-]+):\s*(.*)/)
+      if (m) { currentKey = m[1].toLowerCase(); headers[currentKey] = m[2].trim() }
+    }
+  }
+
+  // Decode RFC 2047 encoded subject
+  const decodeRfc = (s) => {
+    if (!s) return ''
+    return s.replace(/=\?([^?]+)\?([BQ])\?([^?]+)\?=/gi, (_, charset, enc, text) => {
+      try {
+        if (enc.toUpperCase() === 'B') return new TextDecoder(charset).decode(Uint8Array.from(atob(text), c => c.charCodeAt(0)))
+        return decodeURIComponent(text.replace(/=([0-9A-Fa-f]{2})/g, '%$1').replace(/_/g, ' '))
+      } catch { return text }
+    })
+  }
+
+  // Decode quoted-printable body
+  const decodeQP = (s) => {
+    const decoded = s.replace(/=\r?\n/g, '').replace(/=([0-9A-Fa-f]{2})/g, (_, hex) => String.fromCharCode(parseInt(hex, 16)))
+    try { return new TextDecoder('utf-8').decode(Uint8Array.from(decoded, c => c.charCodeAt(0))) } catch { return decoded }
+  }
+
+  const subject = decodeRfc(headers['subject'] || '')
+  const from = decodeRfc(headers['from'] || '')
+  const to = decodeRfc(headers['to'] || '')
+  const date = headers['date'] || ''
+  const contentType = headers['content-type'] || ''
+  const boundaryMatch = contentType.match(/boundary="?([^";\s]+)"?/i)
+
+  let body = ''
+  const attachments = []
+
+  if (boundaryMatch) {
+    const parts = bodyBlock.split('--' + boundaryMatch[1])
+    for (let i = 1; i < parts.length; i++) {
+      if (parts[i].startsWith('--')) break
+      const part = parts[i].replace(/^[\r\n]+/, '')
+      const pSplit = part.search(/\r?\n\r?\n/)
+      const pHeaders = pSplit >= 0 ? part.substring(0, pSplit).toLowerCase() : ''
+      const pBody = pSplit >= 0 ? part.substring(pSplit).replace(/^[\r\n]+/, '') : part
+
+      if (pHeaders.includes('content-disposition: attachment') || pHeaders.includes('application/')) {
+        const fnMatch = part.substring(0, pSplit).match(/filename="?([^";\r\n]+)"?/i)
+        if (fnMatch) attachments.push(fnMatch[1].trim())
+      } else if (pHeaders.includes('text/plain') && !body) {
+        body = pHeaders.includes('quoted-printable') ? decodeQP(pBody) : pBody
+      }
+    }
+  } else {
+    const encoding = (headers['content-transfer-encoding'] || '').toLowerCase()
+    body = encoding.includes('quoted-printable') ? decodeQP(bodyBlock) : bodyBlock
+  }
+
+  return { subject, from, to, date, body: body.trim(), attachments }
+}
+
+function EmailPreviewModal({ fileId, onClose, onAddToUpload, onDownload }) {
+  const email = (() => {
+    if (!fileId) return null
+    const result = generateFile(fileId)
+    if (!result) return null
+    const raw = new TextDecoder('utf-8').decode(result.data)
+    return { ...parseEmlRaw(raw), filename: result.filename }
+  })()
+
+  if (!email) return null
+
+  // Format date nicely
+  let dateFormatted = email.date
+  try {
+    const d = new Date(email.date)
+    if (!isNaN(d)) dateFormatted = d.toLocaleDateString('de-DE', { weekday: 'long', day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })
+  } catch {}
+
+  return (
+    <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/50" onClick={onClose}>
+      <div className="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[85vh] flex flex-col animate-scale-in" onClick={e => e.stopPropagation()}>
+        {/* Header */}
+        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100">
+          <div className="flex items-center gap-2">
+            <Mail size={20} style={{ color: 'var(--mode-primary-light)' }} />
+            <span className="font-semibold text-base text-slate-800">E-Mail Vorschau</span>
+          </div>
+          <button onClick={onClose} className="p-1 hover:bg-slate-100 rounded-lg transition-colors">
+            <X size={18} className="text-slate-400" />
+          </button>
+        </div>
+
+        {/* Email metadata */}
+        <div className="px-6 py-4 border-b border-slate-100 space-y-2 bg-slate-50">
+          <div className="text-lg font-semibold text-slate-800">{email.subject}</div>
+          <div className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-sm">
+            <span className="text-slate-400 font-medium">Von:</span>
+            <span className="text-slate-700">{email.from}</span>
+            <span className="text-slate-400 font-medium">An:</span>
+            <span className="text-slate-700">{email.to}</span>
+            <span className="text-slate-400 font-medium">Datum:</span>
+            <span className="text-slate-700">{dateFormatted}</span>
+          </div>
+          {email.attachments.length > 0 && (
+            <div className="flex items-center gap-2 pt-1">
+              <Paperclip size={14} className="text-slate-400" />
+              <div className="flex flex-wrap gap-1">
+                {email.attachments.map((att, i) => (
+                  <span key={i} className="text-xs px-2 py-0.5 rounded-full bg-white border border-slate-200 text-slate-600">
+                    {att}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Email body */}
+        <div className="flex-1 overflow-auto px-6 py-4">
+          <pre className="text-sm text-slate-700 whitespace-pre-wrap font-[inherit] leading-relaxed">{email.body}</pre>
+        </div>
+
+        {/* Actions */}
+        <div className="flex items-center gap-2 px-6 py-4 border-t border-slate-100 bg-slate-50">
+          <button
+            onClick={() => { onAddToUpload(fileId); onClose() }}
+            className="flex items-center gap-1.5 px-4 py-2 text-sm rounded-lg text-white transition-colors hover:opacity-90"
+            style={{ backgroundColor: 'var(--mode-primary-light)' }}
+          >
+            <Upload size={14} /> In Upload laden
+          </button>
+          <button
+            onClick={() => onDownload(fileId)}
+            className="flex items-center gap-1.5 px-4 py-2 text-sm rounded-lg border border-slate-200 text-slate-600 hover:bg-white transition-colors"
+          >
+            <Download size={14} /> Herunterladen (.eml)
+          </button>
+          <span className="ml-auto text-xs text-slate-400 font-mono">{email.filename}</span>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function HeutigeProblematikSection({ onAddToUpload, showToast }) {
   const [expanded, setExpanded] = useState(true)
+  const [previewFileId, setPreviewFileId] = useState(null)
+
+  function handleDownload(fileId) {
+    downloadDemoFile(fileId)
+    showToast('Demo-Datei heruntergeladen', 'success')
+  }
+
+  function handleAddToUpload(fileId) {
+    const result = generateFile(fileId)
+    if (!result) return
+    const blob = new Blob([result.data], { type: result.mimeType })
+    const file = new File([blob], result.filename, { type: result.mimeType })
+    onAddToUpload(file)
+  }
 
   return (
     <div className="card-base overflow-hidden">
@@ -471,6 +644,16 @@ function HeutigeProblematikSection() {
         </div>
         {expanded ? <ChevronDown size={18} className="text-slate-400" /> : <ChevronRight size={18} className="text-slate-400" />}
       </button>
+
+      {/* Email Preview Modal */}
+      {previewFileId && (
+        <EmailPreviewModal
+          fileId={previewFileId}
+          onClose={() => setPreviewFileId(null)}
+          onAddToUpload={handleAddToUpload}
+          onDownload={handleDownload}
+        />
+      )}
 
       {expanded && (
         <div className="border-t border-slate-100 px-6 py-5 space-y-6">
@@ -503,13 +686,39 @@ function HeutigeProblematikSection() {
                           )}
                         </div>
                         {/* Email content */}
-                        <div className={`pb-3 flex-1 min-w-0 ${email.highlight ? '' : ''}`}>
+                        <div className="pb-3 flex-1 min-w-0">
                           <div className="flex items-center gap-2">
                             <span className="text-xs font-mono text-slate-400">{email.date}</span>
                             <span className={`text-xs px-1.5 py-0.5 rounded ${c.light} ${c.text}`}>{email.type}</span>
                           </div>
                           <div className="text-sm text-slate-600 mt-0.5 truncate" title={email.from}>{email.from}</div>
                           <div className="text-sm font-medium text-slate-800 truncate" title={email.subject}>{email.subject}</div>
+                          {email.fileId && (
+                            <div className="flex items-center gap-1.5 mt-1.5">
+                              <button
+                                onClick={(e) => { e.stopPropagation(); setPreviewFileId(email.fileId) }}
+                                className="flex items-center gap-1 px-2 py-1 text-xs rounded-md bg-slate-100 text-slate-600 hover:bg-slate-200 transition-colors"
+                                title="E-Mail anschauen"
+                              >
+                                <Eye size={11} /> Anschauen
+                              </button>
+                              <button
+                                onClick={(e) => { e.stopPropagation(); handleAddToUpload(email.fileId) }}
+                                className="flex items-center gap-1 px-2 py-1 text-xs rounded-md text-white transition-colors hover:opacity-90"
+                                style={{ backgroundColor: 'var(--mode-primary-light)' }}
+                                title="In Upload-Liste laden"
+                              >
+                                <Upload size={11} /> Upload
+                              </button>
+                              <button
+                                onClick={(e) => { e.stopPropagation(); handleDownload(email.fileId) }}
+                                className="flex items-center gap-1 px-2 py-1 text-xs rounded-md border border-slate-200 text-slate-500 hover:bg-slate-50 transition-colors"
+                                title="Herunterladen"
+                              >
+                                <Download size={11} /> .eml
+                              </button>
+                            </div>
+                          )}
                         </div>
                       </div>
                     ))}

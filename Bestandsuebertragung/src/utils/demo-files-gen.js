@@ -603,6 +603,43 @@ lisa.wagner@wagner-makler.de`
         }
     },
 
+    // Erinnerung zu Mueller (gehoert zu anfrage_text_mueller)
+    {
+        id: 'erinnerung_kfz_mueller',
+        category: 'email-simple',
+        title: 'Erinnerung KFZ \u2013 M\u00fcller',
+        description: 'Makler erinnert an die laufende Bestands\u00fcbertragung KFZ M\u00fcller (14 Tage sp\u00e4ter).',
+        tags: ['EML', 'Nur Text', 'Erinnerung'],
+        filename: '18_Erinnerung_KFZ_Mueller.eml',
+        generate() {
+            return createEml({
+                from: '"Thomas Meier" <thomas.meier@meier-versicherungen.de>',
+                to: 'maklerservice@ergo.de',
+                subject: 'Erinnerung: Bestands\u00fcbertragung KFZ \u2013 Hans M\u00fcller, ERG-7823456',
+                date: 'Tue, 27 Jan 2026 10:42:00 +0100',
+                body: `Sehr geehrte Damen und Herren,
+
+ich m\u00f6chte an unseren Antrag auf Bestands\u00fcbertragung vom 13.01.2026 erinnern:
+
+Versicherungsnehmer: Hans M\u00fcller
+Versicherungsnummer: ERG-7823456
+Sparte: KFZ-Haftpflicht/Vollkasko
+Gew\u00fcnschter \u00dcbertragungstermin: 01.03.2026
+
+Wir haben bisher keine Best\u00e4tigung erhalten. K\u00f6nnten Sie uns bitte den aktuellen Bearbeitungsstand mitteilen?
+
+Die Maklervollmacht wurde bereits per Einschreiben am 08.01.2026 \u00fcbermittelt.
+
+Mit freundlichen Gr\u00fc\u00dfen
+
+Thomas Meier
+Meier Versicherungsmakler GmbH
+Tel.: 0221-9876543
+thomas.meier@meier-versicherungen.de`
+            });
+        }
+    },
+
     // === Category: E-Mails mit Word-Anhang ===
     {
         id: 'anfrage_vollmacht_seidel',
@@ -1291,6 +1328,140 @@ Tel.: 0211-5567890`,
                     },
                     {
                         filename: 'Vertragsliste_Otto_Sommer.xlsx',
+                        mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                        data: xlsx
+                    }
+                ]
+            });
+        }
+    },
+
+    // Nachreichung Antrag fuer Schneider (gehoert zu nachreichung_schneider + antwort_vollmacht_schneider)
+    {
+        id: 'nachreichung_antrag_schneider',
+        category: 'email-word',
+        title: 'Nachreichung Antrag \u2013 Schneider',
+        description: 'Dritte E-Mail im Schneider-Vorgang: Makler schickt unterschriebenen \u00dcbertragungsantrag nach.',
+        tags: ['EML', 'DOCX', 'Antrag', 'Nachreichung'],
+        filename: '19_Nachreichung_Antrag_Schneider.eml',
+        generate() {
+            const antrag = buildAntragSchreiben(
+                'ERGO Versicherung AG',
+                'Lisa Wagner', 'Wagner Maklerb\u00fcro',
+                'Petra Schneider', 'ERG-5567891', 'Berufsunf\u00e4higkeit',
+                '20.01.2026'
+            );
+            return createEml({
+                from: '"Lisa Wagner" <lisa.wagner@wagner-makler.de>',
+                to: 'maklerservice@ergo.de',
+                subject: 'Nachtrag: Unterschriebener Antrag \u2013 Petra Schneider, ERG-5567891',
+                date: 'Mon, 20 Jan 2026 09:15:00 +0100',
+                body: `Sehr geehrte Damen und Herren,
+
+erg\u00e4nzend zu unserer Maklervollmacht vom 17.01.2026 \u00fcbersende ich Ihnen hiermit den unterschriebenen Antrag auf Bestands\u00fcbertragung f\u00fcr:
+
+Versicherungsnehmer: Petra Schneider
+Versicherungsnummer: ERG-5567891
+Sparte: Berufsunf\u00e4higkeit
+Gew\u00fcnschtes \u00dcbertragungsdatum: 01.03.2026
+
+Damit sollten Ihnen nun alle Unterlagen (Antrag + Maklervollmacht) vorliegen.
+
+Mit freundlichen Gr\u00fc\u00dfen
+
+Lisa Wagner
+Wagner Maklerb\u00fcro
+Friedrichstr. 22, 40210 D\u00fcsseldorf
+Tel.: 0211-7788990`,
+                attachments: [{
+                    filename: 'Antrag_Bestandsuebertragung_Schneider.docx',
+                    mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                    data: antrag
+                }]
+            });
+        }
+    },
+
+    // Sammel-E-Mail mit 3 Kunden (Bauer, Klein, Wolf)
+    {
+        id: 'sammel_bauer_klein_wolf',
+        category: 'email-complex',
+        title: 'Sammel\u00fcbertragung \u2013 Bauer + Klein + Wolf (3 VN)',
+        description: 'Ein Makler beantragt \u00dcbertragungen f\u00fcr 3 Kunden in einer E-Mail. Vollmachten + Vertragsliste.',
+        tags: ['EML', 'DOCX', 'XLSX', '3 VN', 'Vollst\u00e4ndig'],
+        filename: '20_Sammel_Bauer_Klein_Wolf.eml',
+        generate() {
+            const vollmachtBauer = buildMaklervollmacht(
+                'Stefan Bauer', '18.04.1975',
+                'Berliner Str. 33, 51063 K\u00f6ln',
+                'Hendrik Falk', 'Falk Versicherungsmakler',
+                'K\u00f6ln', '10.03.2026',
+                true
+            );
+            const vollmachtKlein = buildMaklervollmacht(
+                'Marina Klein', '07.12.1988',
+                'Venloer Str. 112, 50823 K\u00f6ln',
+                'Hendrik Falk', 'Falk Versicherungsmakler',
+                'K\u00f6ln', '10.03.2026',
+                true
+            );
+            const vollmachtWolf = buildMaklervollmacht(
+                'J\u00fcrgen Wolf', '21.08.1962',
+                'Aachener Str. 5, 50674 K\u00f6ln',
+                'Hendrik Falk', 'Falk Versicherungsmakler',
+                'K\u00f6ln', '10.03.2026',
+                true
+            );
+            const xlsx = buildVersicherungsliste([
+                ['ERG-9901001', 'Stefan Bauer', 'KFZ', 'ERGO', '01.05.2025', '01.05.2026', '1.045,00 \u20ac'],
+                ['ERG-9901002', 'Marina Klein', 'Haftpflicht', 'ERGO', '01.01.2025', '01.01.2026', '98,40 \u20ac'],
+                ['ERG-9901003', 'J\u00fcrgen Wolf', 'Unfall', 'ERGO', '01.07.2025', '01.07.2026', '245,00 \u20ac'],
+            ]);
+            return createEml({
+                from: '"Hendrik Falk" <hendrik.falk@falk-makler.de>',
+                to: 'maklerservice@ergo.de',
+                subject: 'Bestands\u00fcbertragungen M\u00e4rz \u2013 3 Kunden (Bauer, Klein, Wolf)',
+                date: 'Thu, 12 Mar 2026 08:30:00 +0100',
+                body: `Sehr geehrte Damen und Herren,
+
+hiermit beantragen wir die Bestands\u00fcbertragung f\u00fcr folgende drei Kunden:
+
+1. Stefan Bauer \u2013 KFZ-Versicherung, ERG-9901001
+2. Marina Klein \u2013 Haftpflichtversicherung, ERG-9901002
+3. J\u00fcrgen Wolf \u2013 Unfallversicherung, ERG-9901003
+
+Gew\u00fcnschtes \u00dcbertragungsdatum f\u00fcr alle: 01.04.2026
+
+Anbei:
+- 3 unterschriebene Maklervollmachten (je eine pro Kunde)
+- Vertragsliste mit allen betroffenen Vertr\u00e4gen
+
+Bitte best\u00e4tigen Sie die \u00dcbertragung f\u00fcr jeden Kunden einzeln.
+
+Mit freundlichen Gr\u00fc\u00dfen
+
+Hendrik Falk
+Falk Versicherungsmakler
+Hohenzollernring 22, 50672 K\u00f6ln
+Tel.: 0221-3345567`,
+                attachments: [
+                    {
+                        filename: 'Maklervollmacht_Bauer.docx',
+                        mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                        data: vollmachtBauer
+                    },
+                    {
+                        filename: 'Maklervollmacht_Klein.docx',
+                        mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                        data: vollmachtKlein
+                    },
+                    {
+                        filename: 'Maklervollmacht_Wolf.docx',
+                        mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                        data: vollmachtWolf
+                    },
+                    {
+                        filename: 'Vertragsliste_Maerz_2026.xlsx',
                         mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
                         data: xlsx
                     }

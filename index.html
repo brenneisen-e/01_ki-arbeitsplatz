@@ -54,13 +54,8 @@
         .cluster-section:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.04); }
 
         /* Animated Header Logo */
-        @keyframes logo-rotate { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        @keyframes logo-orbit { 0% { transform: rotate(0deg) translateX(14px) rotate(0deg); } 100% { transform: rotate(360deg) translateX(14px) rotate(-360deg); } }
         @keyframes logo-glow { 0%, 100% { filter: drop-shadow(0 0 4px rgba(134,188,37,0.4)); } 50% { filter: drop-shadow(0 0 10px rgba(134,188,37,0.7)); } }
         .header-logo { animation: logo-glow 3s ease-in-out infinite; }
-        .header-logo .orbit-dot { animation: logo-orbit 4s linear infinite; }
-        .header-logo .orbit-dot-2 { animation: logo-orbit 4s linear infinite reverse; animation-delay: -2s; }
-        .header-logo .ring { animation: logo-rotate 8s linear infinite; }
 
         /* Loading Screen */
         #loading-screen {
@@ -92,9 +87,9 @@
     <div id="loading-screen">
         <div class="loading-logo">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="64" height="64">
-                <rect x="3" y="3" width="18" height="18" rx="3" ry="3"></rect>
-                <line x1="3" y1="9" x2="21" y2="9"></line>
-                <line x1="9" y1="21" x2="9" y2="9"></line>
+                <circle cx="12" cy="12" r="1"></circle>
+                <path d="M20.2 20.2c2.04-2.03.02-7.36-4.5-11.9-4.54-4.52-9.87-6.54-11.9-4.5-2.04 2.03-.02 7.36 4.5 11.9 4.54 4.52 9.87 6.54 11.9 4.5Z"></path>
+                <path d="M15.7 15.7c4.52-4.54 6.54-9.87 4.5-11.9-2.03-2.04-7.36-.02-11.9 4.5-4.52 4.54-6.54 9.87-4.5 11.9 2.03 2.04 7.36.02 11.9-4.5Z"></path>
             </svg>
         </div>
         <h1 class="loading-brand">KI Use Case Suite</h1>
@@ -139,7 +134,7 @@
         CreditCard, CheckCircle, LayoutGrid, UserPlus, BookOpen, ClipboardCheck,
         Briefcase, ExternalLink, Mic, Send, MessageCircle, Search,
         Settings, User, Key, Upload, Play, FileUp, Lock, Camera, Video, Eye, EyeOff, ChevronDown,
-        Activity, LineChart
+        Activity, LineChart, Atom
     } from 'lucide-react';
 
     const h = React.createElement;
@@ -546,30 +541,12 @@
                 }),
                 h('div', { className: 'max-w-5xl mx-auto flex items-center justify-between relative z-10' },
                     h('div', { className: 'flex items-center gap-4' },
-                        // Animated SVG Logo
-                        h('svg', {
-                            width: 44, height: 44, viewBox: '0 0 44 44',
-                            className: 'header-logo shrink-0'
+                        // Atom Logo
+                        h('div', {
+                            className: 'header-logo shrink-0 w-11 h-11 rounded-full flex items-center justify-center',
+                            style: { background: 'linear-gradient(135deg, #86BC25, #00AA4F)' }
                         },
-                            h('defs', null,
-                                h('linearGradient', { id: 'logoGrad', x1: '0%', y1: '0%', x2: '100%', y2: '100%' },
-                                    h('stop', { offset: '0%', stopColor: '#86BC25' }),
-                                    h('stop', { offset: '100%', stopColor: '#00AA4F' })
-                                )
-                            ),
-                            // Outer ring
-                            h('circle', { cx: 22, cy: 22, r: 20, fill: 'none', stroke: 'rgba(255,255,255,0.15)', strokeWidth: 1.5, className: 'ring' }),
-                            // Inner filled circle
-                            h('circle', { cx: 22, cy: 22, r: 15, fill: 'url(#logoGrad)', opacity: 0.9 }),
-                            // KI text
-                            h('text', { x: 22, y: 27, textAnchor: 'middle', fontFamily: 'system-ui', fontSize: 13, fontWeight: 'bold', fill: 'white' }, 'KI'),
-                            // Orbiting dots
-                            h('g', { style: { transformOrigin: '22px 22px' }, className: 'orbit-dot' },
-                                h('circle', { cx: 36, cy: 22, r: 2.5, fill: '#86BC25' })
-                            ),
-                            h('g', { style: { transformOrigin: '22px 22px' }, className: 'orbit-dot-2' },
-                                h('circle', { cx: 36, cy: 22, r: 1.8, fill: '#00AA4F', opacity: 0.7 })
-                            )
+                            h(Atom, { size: 24, className: 'text-white', strokeWidth: 1.75 })
                         ),
                         h('div', null,
                             h('div', { className: 'text-lg font-bold text-white tracking-tight' }, 'KI Use Case Suite'),

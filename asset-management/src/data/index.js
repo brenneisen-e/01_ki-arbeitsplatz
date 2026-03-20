@@ -3,7 +3,7 @@ export const PROFILE = {
   name: 'Doreen',
   fullName: 'Doreen Duenschede',
   role: 'Portfolio Manager',
-  photo: '../assets/images/1623835026886.jpg',
+  photo: './doreen.jpg',
 };
 
 export const FOUR_EYE_APPROVER = {

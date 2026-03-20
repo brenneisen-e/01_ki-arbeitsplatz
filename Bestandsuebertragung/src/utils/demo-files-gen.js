@@ -497,36 +497,48 @@ const CATALOG = [
     // === Category: Einfache E-Mails ===
     {
         id: 'anfrage_text_mueller',
-        category: 'email-simple',
-        title: 'Anfrage KFZ \u2013 M\u00fcller',
-        description: 'Einfache Text-E-Mail: Bestands\u00fcbertragung KFZ bei ERGO anfragen.',
-        tags: ['EML', 'Nur Text', 'Anfrage'],
+        category: 'email-word',
+        title: 'Anfrage KFZ \u2013 M\u00fcller (inkl. Vollmacht)',
+        description: 'E-Mail mit Bestands\u00fcbertragung KFZ bei ERGO + unterschriebene Maklervollmacht als Anhang.',
+        tags: ['EML', 'DOCX', 'Maklervollmacht', 'Anfrage'],
         filename: '01_Anfrage_KFZ_Mueller.eml',
         generate() {
+            const vollmacht = buildMaklervollmacht(
+                'Hans M\u00fcller', '15.06.1972',
+                'Aachener Str. 88, 50674 K\u00f6ln',
+                'Thomas Meier', 'Meier Versicherungsmakler GmbH',
+                'K\u00f6ln', '08.01.2026',
+                true // unterschrieben
+            );
             return createEml({
                 from: '"Thomas Meier" <thomas.meier@meier-versicherungen.de>',
                 to: 'maklerservice@ergo.de',
-                subject: 'Bestandsübertragung KFZ – Hans Müller, ERG-7823456',
+                subject: 'Bestands\u00fcbertragung KFZ \u2013 Hans M\u00fcller, ERG-7823456',
                 date: 'Mon, 13 Jan 2026 09:15:00 +0100',
                 body: `Sehr geehrte Damen und Herren,
 
-hiermit beantragen wir die Bestandsübertragung für unseren Kunden:
+hiermit beantragen wir die Bestands\u00fcbertragung f\u00fcr unseren Kunden:
 
-Versicherungsnehmer: Hans Müller
+Versicherungsnehmer: Hans M\u00fcller
 Versicherungsnummer: ERG-7823456
 Sparte: KFZ-Haftpflicht/Vollkasko
-Gewünschter Übertragungstermin: 01.03.2026
+Gew\u00fcnschter \u00dcbertragungstermin: 01.03.2026
 
-Die unterschriebene Maklervollmacht wurde bereits per Post übermittelt (Einschreiben vom 08.01.2026).
+Die unterschriebene Maklervollmacht finden Sie im Anhang.
 
-Bitte bestätigen Sie die Übertragung schriftlich.
+Bitte best\u00e4tigen Sie die \u00dcbertragung schriftlich.
 
-Mit freundlichen Grüßen
+Mit freundlichen Gr\u00fc\u00dfen
 
 Thomas Meier
 Meier Versicherungsmakler GmbH
 Tel.: 0221-9876543
-thomas.meier@meier-versicherungen.de`
+thomas.meier@meier-versicherungen.de`,
+                attachments: [{
+                    filename: 'Maklervollmacht_Mueller.docx',
+                    mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                    data: vollmacht
+                }]
             });
         }
     },

@@ -711,6 +711,8 @@ function EmailPreviewModal({ fileId, onClose, onDownload }) {
 function HeutigeProblematikSection({ showToast }) {
   const [expanded, setExpanded] = useState(true)
   const [previewFileId, setPreviewFileId] = useState(null)
+  const [showProblem, setShowProblem] = useState(false)
+  const [showSolution, setShowSolution] = useState(false)
 
   function handleDownload(fileId) {
     downloadDemoFile(fileId)
@@ -827,52 +829,62 @@ function HeutigeProblematikSection({ showToast }) {
             })}
           </div>
 
-          {/* Problem Summary */}
-          <div className="rounded-xl border-2 border-red-200 bg-red-50 p-5">
-            <div className="flex items-start gap-3">
-              <Inbox size={24} className="text-red-500 shrink-0 mt-0.5" />
-              <div>
-                <h4 className="font-bold text-base text-red-800 mb-2">Das Problem: Jede E-Mail = 1 Vorgang im Postkorb</h4>
-                <div className="space-y-2 text-sm text-red-900/80">
-                  <p>
-                    Wenn jede eingehende E-Mail automatisch als eigener Vorgang im Postkorb eröffnet wird, entstehen massive Probleme:
-                  </p>
-                  <ul className="space-y-1.5 ml-1">
-                    <li className="flex items-start gap-2">
-                      <span className="text-red-400 mt-0.5">1.</span>
-                      <span><strong>Duplikate:</strong> Erinnerungsmails erzeugen Doppel-Vorgänge — der Sachbearbeiter sieht denselben Kunden mehrfach und muss manuell zusammenführen.</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-red-400 mt-0.5">2.</span>
-                      <span><strong>Verstreute Unterlagen:</strong> Nachgelieferte Vollmachten oder Anträge landen als separate Vorgänge — der Zusammenhang zum Ursprungsantrag geht verloren.</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-red-400 mt-0.5">3.</span>
-                      <span><strong>Verlorene Vorgänge:</strong> Sammel-E-Mails mit mehreren Kunden werden als ein Vorgang behandelt — nur der erste Kunde wird bearbeitet, die restlichen gehen unter.</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-red-400 mt-0.5">4.</span>
-                      <span><strong>Manueller Aufwand:</strong> Sachbearbeiter müssen jeden einzelnen Vorgang manuell prüfen, zuordnen und zusammenführen — bei hohem Volumen nicht leistbar.</span>
-                    </li>
-                  </ul>
-                </div>
+          {/* Problem Summary (collapsible) */}
+          <div className="rounded-xl border-2 border-red-200 bg-red-50 overflow-hidden">
+            <button
+              onClick={() => setShowProblem(!showProblem)}
+              className="w-full flex items-center gap-3 p-4 hover:bg-red-100/50 transition-colors text-left"
+            >
+              <Inbox size={22} className="text-red-500 shrink-0" />
+              <h4 className="font-bold text-base text-red-800 flex-1">Das Problem: Jede E-Mail = 1 Vorgang im Postkorb</h4>
+              {showProblem ? <ChevronDown size={16} className="text-red-400" /> : <ChevronRight size={16} className="text-red-400" />}
+            </button>
+            {showProblem && (
+              <div className="px-5 pb-5 pt-0 ml-[34px] space-y-2 text-sm text-red-900/80">
+                <p>
+                  Wenn jede eingehende E-Mail automatisch als eigener Vorgang im Postkorb eröffnet wird, entstehen massive Probleme:
+                </p>
+                <ul className="space-y-1.5 ml-1">
+                  <li className="flex items-start gap-2">
+                    <span className="text-red-400 mt-0.5">1.</span>
+                    <span><strong>Duplikate:</strong> Erinnerungsmails erzeugen Doppel-Vorgänge — der Sachbearbeiter sieht denselben Kunden mehrfach und muss manuell zusammenführen.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-red-400 mt-0.5">2.</span>
+                    <span><strong>Verstreute Unterlagen:</strong> Nachgelieferte Vollmachten oder Anträge landen als separate Vorgänge — der Zusammenhang zum Ursprungsantrag geht verloren.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-red-400 mt-0.5">3.</span>
+                    <span><strong>Verlorene Vorgänge:</strong> Sammel-E-Mails mit mehreren Kunden werden als ein Vorgang behandelt — nur der erste Kunde wird bearbeitet, die restlichen gehen unter.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-red-400 mt-0.5">4.</span>
+                    <span><strong>Manueller Aufwand:</strong> Sachbearbeiter müssen jeden einzelnen Vorgang manuell prüfen, zuordnen und zusammenführen — bei hohem Volumen nicht leistbar.</span>
+                  </li>
+                </ul>
               </div>
-            </div>
+            )}
           </div>
 
-          {/* Solution Hint */}
-          <div className="rounded-xl border-2 border-emerald-200 bg-emerald-50 p-5">
-            <div className="flex items-start gap-3">
-              <GitMerge size={24} className="text-emerald-600 shrink-0 mt-0.5" />
-              <div>
-                <h4 className="font-bold text-base text-emerald-800 mb-1">Die Lösung: KI-gestützte Analyse</h4>
+          {/* Solution Hint (collapsible) */}
+          <div className="rounded-xl border-2 border-emerald-200 bg-emerald-50 overflow-hidden">
+            <button
+              onClick={() => setShowSolution(!showSolution)}
+              className="w-full flex items-center gap-3 p-4 hover:bg-emerald-100/50 transition-colors text-left"
+            >
+              <GitMerge size={22} className="text-emerald-600 shrink-0" />
+              <h4 className="font-bold text-base text-emerald-800 flex-1">Die Lösung: KI-gestützte Analyse</h4>
+              {showSolution ? <ChevronDown size={16} className="text-emerald-400" /> : <ChevronRight size={16} className="text-emerald-400" />}
+            </button>
+            {showSolution && (
+              <div className="px-5 pb-5 pt-0 ml-[34px]">
                 <p className="text-sm text-emerald-900/80">
                   Die KI erkennt automatisch Zusammenhänge zwischen E-Mails (Kunde, VS-Nr, Makler), fasst zusammengehörige Nachrichten zu einem Vorgang zusammen,
                   trennt Sammel-E-Mails in einzelne Vorgänge auf und ordnet Nachlieferungen dem richtigen Vorgang zu.
                   Laden Sie E-Mails oben hoch, um die KI-Analyse in Aktion zu sehen.
                 </p>
               </div>
-            </div>
+            )}
           </div>
         </div>
       )}

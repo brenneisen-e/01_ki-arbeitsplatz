@@ -1,13 +1,11 @@
-import { useRef } from 'react';
 import { useModule } from '../hooks/useModule';
-import { getIconComponent, Layers, CheckCircle, BookOpen, ChevronDown } from '../components/ui/Icons';
+import { getIconComponent, Layers, CheckCircle, BookOpen } from '../components/ui/Icons';
 import CountUp from '../components/ui/CountUp';
 
 const LOGO_TOKEN = 'pk_H7vb5Y2lTsW47U4Xq-w3HA';
 
 export default function Overview() {
   const { data, openChapter } = useModule();
-  const gridRef = useRef(null);
 
   return (
     <div className="animate-fade-in-up">
@@ -72,19 +70,11 @@ export default function Overview() {
             ))}
           </div>
 
-          <div className="mt-8">
-            <button
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-white/15 hover:bg-white/25 rounded-lg text-sm font-medium transition"
-              onClick={() => gridRef.current?.scrollIntoView({ behavior: 'smooth' })}
-            >
-              <ChevronDown className="w-4 h-4" /> Kapitel entdecken
-            </button>
-          </div>
         </div>
       </div>
 
       {/* Chapter Grid */}
-      <div ref={gridRef} className="px-6 py-10" style={{ scrollMarginTop: '120px' }}>
+      <div className="px-6 py-10">
         <h2 className="text-xl font-bold text-slate-900 mb-6">Alle Kapitel im Überblick</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {data?.chapters?.map((ch, i) => {

@@ -97,7 +97,7 @@ function ApplicantCard({ applicant, isBlind, onClick }) {
     >
       <div className={`hp-applicant-score ${scoreClass}`}>{applicant.totalScore}</div>
       {!isBlind && applicant.photo ? (
-        <img src={applicant.photo} alt={applicant.name} style={{ width: 40, height: 40, borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }} />
+        <img src={applicant.photo} alt={applicant.name} style={{ width: 56, height: 56, borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }} />
       ) : (
         <div className="hp-profile-avatar-small">{isBlind ? `#${getBlindId(applicant.id)}` : applicant.initials}</div>
       )}
@@ -174,7 +174,7 @@ function DetailOverlay({ applicant, isBlind, onClose }) {
                 {/* Header */}
                 <div style={{ display: 'flex', gap: 'var(--space-4)', marginBottom: 'var(--space-6)', alignItems: 'center' }}>
                   {!isBlind && applicant.photo ? (
-                    <img src={applicant.photo} alt={applicant.name} className="hp-profile-avatar-large hp-photo-hover" style={{ width: 56, height: 56, borderRadius: '50%', objectFit: 'cover' }} />
+                    <img src={applicant.photo} alt={applicant.name} className="hp-profile-avatar-large hp-photo-hover" style={{ width: 72, height: 72, borderRadius: '50%', objectFit: 'cover' }} />
                   ) : (
                     <div className="hp-profile-avatar-large">{isBlind ? `#${getBlindId(applicant.id)}` : applicant.initials}</div>
                   )}

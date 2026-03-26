@@ -8,6 +8,7 @@ const TABS = [
   { id: 'makler', label: 'Makler', countKey: 'makler' },
   { id: 'emails', label: 'E-Mails', countKey: 'emails' },
   { id: 'ai-upload', label: 'KI Upload' },
+  { id: 'simulation', label: 'Simulation' },
   { id: 'architektur', label: 'Architektur' },
   { id: 'vorlagen', label: 'E-Mail Vorlagen' },
   { id: 'prozess', label: 'Prozess' },

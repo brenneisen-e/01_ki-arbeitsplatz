@@ -13,6 +13,7 @@ import Emails from './pages/Emails'
 import AIUploadPage from './pages/AIUploadPage'
 import VorlagenPage from './pages/VorlagenPage'
 import StaticPage from './pages/StaticPage'
+import SimulationPage from './pages/SimulationPage'
 import * as Storage from './utils/storage'
 import { loadDemoData, downloadDemoExportJSON } from './utils/demo-data'
 import { importFromJSON, fixEmailEncoding } from './utils/export'
@@ -131,6 +132,7 @@ function AppContent() {
         {activeView === 'makler' && <Makler onOpenMakler={openMakler} />}
         {activeView === 'emails' && <Emails onOpenCase={openCase} />}
         {activeView === 'ai-upload' && <AIUploadPage />}
+        {activeView === 'simulation' && <SimulationPage />}
         {activeView === 'vorlagen' && <VorlagenPage />}
         {['architektur', 'prozess', 'projektplan'].includes(activeView) && (
           <StaticPage pageId={activeView} />

@@ -9,52 +9,42 @@ import { ChevronDown, ChevronRight, ExternalLink, Award } from 'lucide-react';
 
 function ProduktRow({ produkt, modeId, onNavigateKontoumsaetze, t }) {
   const [expanded, setExpanded] = useState(false);
-  const [hovered, setHovered] = useState(false);
   const isGiro = produkt.typ === 'girokonto';
 
   return (
     <>
       <tr
         className="border-t border-slate-100 cursor-pointer transition-colors row-hover"
-        style={hovered && !expanded ? { backgroundColor: 'var(--mode-primary-light)', color: '#ffffff' } : undefined}
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}
         onClick={() => setExpanded(!expanded)}
       >
         <td className="px-4 py-3 text-sm">
           <div className="flex items-center gap-2">
-            <span className={hovered && !expanded ? 'text-white' : 'text-slate-400'}>
+            <span className="text-slate-400">
               {expanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
             </span>
             {produkt.versicherer && <LogoImg name={produkt.versicherer} size={18} />}
-            <span className={`font-medium ${hovered && !expanded ? 'text-white' : 'text-slate-700'}`}>{produkt.produkt}</span>
+            <span className="font-medium text-slate-700">{produkt.produkt}</span>
           </div>
         </td>
         <td className="px-4 py-3 text-sm">
-          {hovered && !expanded
-            ? <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-white/20 text-white">{produkt.sparte || '-'}</span>
-            : (produkt.sparte ? <SparteBadge sparte={produkt.sparte} /> : '-')
-          }
+          {produkt.sparte ? <SparteBadge sparte={produkt.sparte} /> : '-'}
         </td>
-        <td className={`px-4 py-3 text-sm ${hovered && !expanded ? 'text-white/90' : 'text-slate-700'}`}>{produkt.details}</td>
+        <td className="px-4 py-3 text-sm text-slate-700">{produkt.details}</td>
         {modeId === 'banking' && (
-          <td className={`px-4 py-3 text-sm ${hovered && !expanded ? 'text-white' : ''}`}>
-            {produkt.volumen ? <span className={`font-mono ${hovered && !expanded ? 'text-white' : 'text-slate-500'}`}>{formatEur(produkt.volumen)}</span> : '-'}
+          <td className="px-4 py-3 text-sm">
+            {produkt.volumen ? <span className="font-mono text-slate-500">{formatEur(produkt.volumen)}</span> : '-'}
           </td>
         )}
-        <td className={`px-4 py-3 text-sm ${hovered && !expanded ? 'text-white' : ''}`}><span className={`font-mono font-medium ${hovered && !expanded ? 'text-white' : ''}`}>{formatEur(produkt.praemie)}</span></td>
-        <td className={`px-4 py-3 text-sm ${hovered && !expanded ? 'text-white/80' : ''}`}>{produkt.seit}</td>
+        <td className="px-4 py-3 text-sm"><span className="font-mono font-medium">{formatEur(produkt.praemie)}</span></td>
+        <td className="px-4 py-3 text-sm">{produkt.seit}</td>
         <td className="px-4 py-3 text-sm">
-          {hovered && !expanded
-            ? <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-white/20 text-white">{produkt.status}</span>
-            : <StatusBadge status={produkt.status} />
-          }
+          <StatusBadge status={produkt.status} />
         </td>
         <td className="px-4 py-3 text-sm">
           {produkt.fbRating ? (
-            <FbRatingBadge rating={produkt.fbRating} klasse={produkt.fbKlasse} hovered={hovered && !expanded} />
+            <FbRatingBadge rating={produkt.fbRating} klasse={produkt.fbKlasse} />
           ) : (
-            <span className={hovered && !expanded ? 'text-white/50' : 'text-slate-300'}>–</span>
+            <span className="text-slate-300">–</span>
           )}
         </td>
       </tr>
@@ -199,17 +189,9 @@ export default function VertraegeTab({ kunde }) {
   );
 }
 
-function FbRatingBadge({ rating, klasse, hovered }) {
+function FbRatingBadge({ rating, klasse }) {
   if (!rating) return null;
   const color = rating >= 75 ? 'emerald' : rating >= 55 ? 'amber' : 'red';
-
-  if (hovered) {
-    return (
-      <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-white/20 text-white">
-        {rating}
-      </span>
-    );
-  }
 
   return (
     <div className="flex items-center gap-1.5" title={`Franke & Bornberg: ${rating}/100 – ${klasse || ''}`}>
@@ -219,7 +201,7 @@ function FbRatingBadge({ rating, klasse, hovered }) {
         className="w-3.5 h-3.5 rounded"
         onError={(e) => e.target.style.display='none'}
       />
-      <span className={`text-xs font-bold px-1.5 py-0.5 rounded ${
+      <span className={`rh-badge text-xs font-bold px-1.5 py-0.5 rounded ${
         color === 'emerald' ? 'bg-emerald-50 text-emerald-700'
         : color === 'amber' ? 'bg-amber-50 text-amber-700'
         : 'bg-red-50 text-red-600'

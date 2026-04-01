@@ -19,10 +19,10 @@ export const V5 = {
     { typ: 'pkv', sparte: 'kranken', produkt: 'ERGO PKV Beamte Komfort', details: 'Familie, Beihilfe 50%', praemie: 4300, seit: '2008-01', status: 'aktiv' },
   ],
   fremdProdukte: [
-    { typ: 'girokonto', institut: 'Sparkasse', details: 'Gehaltseingang', volumen: 42000, consent: true },
-    { typ: 'bausparvertrag', institut: 'LBS', details: 'Ansparphase', volumen: 25000, consent: true },
-    { typ: 'depot', institut: 'DWS', details: 'Gemischte Fonds', volumen: 35000, consent: true },
-    { typ: 'du', institut: 'DBV', details: 'Dienstunf\u00e4higkeit', volumen: 1200, consent: true },
+    { typ: 'girokonto', produktart: 'Girokonto', institut: 'Sparkasse', details: 'Gehaltseingang', volumen: 42000, consent: true },
+    { typ: 'bausparvertrag', produktart: 'Bausparvertrag', institut: 'LBS', details: 'Ansparphase', volumen: 25000, consent: true },
+    { typ: 'depot', produktart: 'Wertpapierdepot', institut: 'DWS', details: 'Gemischte Fonds', volumen: 35000, consent: true },
+    { typ: 'du', produktart: 'Dienstunf\u00e4higkeitsvers.', institut: 'DBV', details: 'Dienstunf\u00e4higkeit', volumen: 1200, consent: true },
   ],
   transaktionen: [
     { kategorie: 'gehalt', betrag: 4600, empfaenger: 'Land Hessen' },
@@ -135,9 +135,9 @@ export const V6 = {
     { typ: 'haftpflicht', sparte: 'schaden', produkt: 'ERGO Privat Basis', details: 'Single 5M\u20ac', praemie: 55, seit: '2023-06', status: 'aktiv' },
   ],
   fremdProdukte: [
-    { typ: 'geschaeftskonto', institut: 'Holvi', details: 'Freelancer-Konto', volumen: 4500, consent: true },
-    { typ: 'girokonto', institut: 'DKB', details: 'Privatkonto', volumen: 2800, consent: true },
-    { typ: 'kuenstlersozialkasse', institut: 'KSK', details: 'Pflichtversichert', volumen: 0, consent: false },
+    { typ: 'geschaeftskonto', produktart: 'Gesch\u00e4ftskonto', institut: 'Holvi', details: 'Freelancer-Konto', volumen: 4500, consent: true },
+    { typ: 'girokonto', produktart: 'Girokonto', institut: 'DKB', details: 'Privatkonto', volumen: 2800, consent: true },
+    { typ: 'kuenstlersozialkasse', produktart: 'Sozialversicherung', institut: 'KSK', details: 'Pflichtversichert', volumen: 0, consent: false },
   ],
   transaktionen: [
     { kategorie: 'einkommen', betrag: 2800, empfaenger: 'Diverse Kunden' },
@@ -148,7 +148,7 @@ export const V6 = {
   ],
   potentiale: [
     {
-      titel: 'BU-Absicherung Kreativberuf', typ: 'whitespot', quellen: ['bestand'], prioritaet: 'kritisch', volumen: 1080, volumenTyp: 'jaehrlich',
+      titel: 'Berufsunf\u00e4higkeitsversicherung \u2013 Kreativberuf', typ: 'whitespot', quellen: ['bestand'], prioritaet: 'kritisch', volumen: 1080, volumenTyp: 'jaehrlich',
       beschreibung: 'Freelancerin ohne BU! Existenzbedrohend bei Ausfall.',
       kiDescription: 'KI-Analyse: Frau Bauer ist als Freelancerin im Kreativbereich t\u00e4tig mit 2.800\u20ac Nettoeinkommen und verf\u00fcgt \u00fcber keinerlei Berufsunf\u00e4higkeitsabsicherung \u2014 ohne Arbeitgeberschutz und mit nur minimaler KSK-Grundsicherung w\u00e4re ein Berufsausfall existenzbedrohend. Die empfohlene BU-Rente betr\u00e4gt 2.240\u20ac/mtl. (80% des Nettos), die Deckungsl\u00fccke liegt bei 100% \u2014 Empfehlung: Sofortige Angebotserstellung f\u00fcr ERGO BU Comfort mit h\u00f6chster Priorit\u00e4t.',
       empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'ERGO BU Comfort', status: 'identifiziert',
@@ -237,10 +237,10 @@ export const V7 = {
     { typ: 'unfall', sparte: 'schaden', produkt: 'ERGO Unfall Senior', details: 'Ehepaar', praemie: 480, seit: '2015-01', status: 'aktiv' },
   ],
   fremdProdukte: [
-    { typ: 'girokonto', institut: 'Sparkasse', details: 'Renteneingang', volumen: 15000, consent: true },
-    { typ: 'festgeld', institut: 'Sparkasse', details: '2,5% bis 2027', volumen: 80000, consent: true },
-    { typ: 'depot', institut: 'Deka', details: 'Gemischte Fonds', volumen: 145000, consent: true },
-    { typ: 'pkv', institut: 'DKV', details: 'Privatversicherung', volumen: 680, consent: true },
+    { typ: 'girokonto', produktart: 'Girokonto', institut: 'Sparkasse', details: 'Renteneingang', volumen: 15000, consent: true },
+    { typ: 'festgeld', produktart: 'Festgeld', institut: 'Sparkasse', details: '2,5% bis 2027', volumen: 80000, consent: true },
+    { typ: 'depot', produktart: 'Wertpapierdepot', institut: 'Deka', details: 'Gemischte Fonds', volumen: 145000, consent: true },
+    { typ: 'pkv', produktart: 'Private Krankenvers.', institut: 'DKV', details: 'Privatversicherung', volumen: 680, consent: true },
   ],
   transaktionen: [
     { kategorie: 'rente', betrag: 3200, empfaenger: 'Deutsche Rentenversicherung' },
@@ -354,11 +354,11 @@ export const V8 = {
     { typ: 'kfz', sparte: 'kfz', produkt: 'ERGO Kfz-Vollkasko', details: 'BMW X1, 500\u20ac SB', praemie: 850, seit: '2022-01', status: 'aktiv' },
   ],
   fremdProdukte: [
-    { typ: 'girokonto', institut: 'ING', details: 'Gehaltseingang', volumen: 12000, consent: true },
-    { typ: 'tagesgeld', institut: 'ING', details: '2,0%', volumen: 95000, consent: true },
-    { typ: 'depot', institut: 'ING', details: 'ETF + Einzelaktien', volumen: 85000, consent: true },
-    { typ: 'pkv_ehemann', institut: 'Signal Iduna', details: 'PKV Zahnarzt', volumen: 850, consent: true },
-    { typ: 'praxis_hp', institut: 'HDI', details: 'Praxis-Haftpflicht', volumen: 1200, consent: false },
+    { typ: 'girokonto', produktart: 'Girokonto', institut: 'ING', details: 'Gehaltseingang', volumen: 12000, consent: true },
+    { typ: 'tagesgeld', produktart: 'Tagesgeld', institut: 'ING', details: '2,0%', volumen: 95000, consent: true },
+    { typ: 'depot', produktart: 'Wertpapierdepot', institut: 'ING', details: 'ETF + Einzelaktien', volumen: 85000, consent: true },
+    { typ: 'pkv_ehemann', produktart: 'Private Krankenvers.', institut: 'Signal Iduna', details: 'PKV Zahnarzt', volumen: 850, consent: true },
+    { typ: 'praxis_hp', produktart: 'Berufshaftpflicht', institut: 'HDI', details: 'Praxis-Haftpflicht', volumen: 1200, consent: false },
   ],
   transaktionen: [
     { kategorie: 'gehalt', betrag: 5200, empfaenger: 'Pharma AG' },
@@ -374,7 +374,7 @@ export const V8 = {
   ],
   potentiale: [
     {
-      titel: 'Erh\u00f6hung BU-Absicherung', typ: 'anpassung', quellen: ['bestand', 'lebensereignis'], prioritaet: 'hoch', volumen: 1200, volumenTyp: 'jaehrlich',
+      titel: 'Erh\u00f6hung Berufsunf\u00e4higkeitsversicherung', typ: 'anpassung', quellen: ['bestand', 'lebensereignis'], prioritaet: 'hoch', volumen: 1200, volumenTyp: 'jaehrlich',
       beschreibung: 'Einkommen deutlich gestiegen. BU deckt nur 42%.',
       kiDescription: 'KI-Analyse: Frau Yilmaz verdient aktuell 5.200\u20ac netto als Pharma-Referentin, ihre bestehende BU-Rente von 2.200\u20ac/mtl. deckt jedoch nur 42% des Einkommens ab \u2014 empfohlen werden 80%, also 4.160\u20ac/mtl., was eine Deckungsl\u00fccke von 1.960\u20ac/mtl. ergibt. Als Alleinverdienerin neben dem selbstst\u00e4ndigen Ehemann (Zahnarztpraxis) ist eine h\u00f6here Absicherung existenziell wichtig \u2014 Empfehlung: BU-Nachversicherung auf ERGO BU Comfort Plus mit erh\u00f6hter Rente umsetzen.',
       empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'ERGO BU Comfort Plus', status: 'termin',

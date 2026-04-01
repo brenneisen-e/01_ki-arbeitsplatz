@@ -117,34 +117,15 @@ function generateKontoumsaetze(kunde) {
     ]});
   }
 
-  // Lebensmittel & Alltag — items sum to exact konsum amount
+  // Lebensmittel & Alltag — items sum to exact konsum amount only
   const konsum = txn.find(t => t.kategorie === 'konsum');
-  const haustier = txn.find(t => t.kategorie === 'haustier');
   const konsumItems = [];
   if (konsum) {
     const total = Math.abs(konsum.betrag);
-    const haustierAmt = haustier ? Math.abs(haustier.betrag) : 0;
-    const konsumOnly = total;
-    const [rewe, edeka, dm] = splitTotal(konsumOnly, [0.45, 0.30, 0.25]);
+    const [rewe, edeka, dm] = splitTotal(total, [0.45, 0.30, 0.25]);
     konsumItems.push({ name: 'REWE Supermarkt', amount: rewe, datum: fmtDate(vm, 8) });
     konsumItems.push({ name: 'EDEKA', amount: edeka, datum: fmtDate(vm, 15) });
     konsumItems.push({ name: 'dm Drogerie', amount: dm, datum: fmtDate(vm, 10) });
-  }
-  if (haustier) {
-    konsumItems.push({
-      name: 'Fressnapf Tiernahrung', amount: Math.abs(haustier.betrag), datum: fmtDate(vm, 12),
-      badge: 'tier-hint', badgeLabel: tx('finanzprofil.haustierErkannt'), recurring: true,
-      insight: tx('finanzprofil.insightHaustierInline')
-    });
-  } else {
-    const seed = (kunde.name || '').length + (kunde.vorname || '').length;
-    if (seed % 3 === 0) {
-      konsumItems.push({
-        name: 'Fressnapf Tiernahrung', amount: 42, datum: fmtDate(vm, 12),
-        badge: 'tier-hint', badgeLabel: tx('finanzprofil.haustierErkannt'), recurring: true,
-        insight: tx('finanzprofil.insightHaustierInline')
-      });
-    }
   }
   if (konsumItems.length > 0) {
     categories.push({ name: tx('finanzprofil.lebensmittelAlltag'), color: '#f0c78a', total: konsumItems.reduce((s, i) => s + i.amount, 0), items: konsumItems });
@@ -205,13 +186,14 @@ function generateKontoumsaetze(kunde) {
     ]});
   }
 
-  // Tierbedarf (separate category if exists)
+  // Tierbedarf + Tierarzt (separate category if exists)
   const tierbedarf = txn.find(t => t.kategorie === 'tierbedarf');
-  if (tierbedarf) {
-    categories.push({ name: tx('finanzprofil.tierbedarf'), color: '#e8a87c', total: Math.abs(tierbedarf.betrag), items: [
-      { name: `${tierbedarf.empfaenger || 'Fressnapf'}`, amount: Math.abs(tierbedarf.betrag), datum: fmtDate(vm, 12), badge: 'tier-hint', badgeLabel: tx('finanzprofil.haustierErkannt'), recurring: true,
-        insight: tx('finanzprofil.insightHaustierInline') }
-    ]});
+  const tierarzt = txn.find(t => t.kategorie === 'tierarzt');
+  if (tierbedarf || tierarzt) {
+    const tierItems = [];
+    if (tierbedarf) tierItems.push({ name: tierbedarf.empfaenger || 'Fressnapf', amount: Math.abs(tierbedarf.betrag), datum: fmtDate(vm, 12), badge: 'tier-hint', badgeLabel: tx('finanzprofil.haustierErkannt'), recurring: true, insight: tx('finanzprofil.insightHaustierInline') });
+    if (tierarzt) tierItems.push({ name: tierarzt.empfaenger || 'Tierarzt', amount: Math.abs(tierarzt.betrag), datum: fmtDate(vm, 18), badge: 'tier-hint', badgeLabel: tx('finanzprofil.haustierErkannt'), recurring: true });
+    categories.push({ name: tx('finanzprofil.tierbedarf'), color: '#e8a87c', total: tierItems.reduce((s, i) => s + i.amount, 0), items: tierItems });
   }
 
   return categories;

@@ -13,7 +13,7 @@ export const V1 = {
   eigeneProdukte: [
     { typ: 'bu', sparte: 'leben', produkt: 'ERGO BU Comfort', details: '1.800\u20ac/mtl. Rente', praemie: 2160, seit: '2018-03', status: 'optimierbar' },
     { typ: 'kfz', sparte: 'kfz', produkt: 'ERGO Kfz-Vollkasko', details: 'VW Tiguan, 500\u20ac SB, SF-12', praemie: 680, seit: '2021-06', status: 'aktiv' },
-    { typ: 'hausrat', sparte: 'schaden', produkt: 'ERGO Hausrat Basis', details: '65qm FALSCH! Lebt in 145qm EFH', praemie: 180, seit: '2016-01', status: 'optimierbar' },
+    { typ: 'hausrat', sparte: 'schaden', produkt: 'ERGO Hausrat Basis', details: '65qm versichert, 145qm EFH \u2013 unterversichert', praemie: 180, seit: '2016-01', status: 'optimierbar' },
     { typ: 'haftpflicht', sparte: 'schaden', produkt: 'ERGO Privat Premium', details: 'Familie 10M\u20ac', praemie: 95, seit: '2017-05', status: 'aktiv' },
   ],
   fremdProdukte: [

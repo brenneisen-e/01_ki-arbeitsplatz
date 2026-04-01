@@ -18,12 +18,35 @@ export const V1 = {
   ],
   fremdProdukte: [
     { typ: 'girokonto', produktart: 'Girokonto', institut: 'Sparkasse K\u00f6ln', details: 'Gehaltseingang 4.200\u20ac', volumen: 3500, consent: true },
-    { typ: 'baufinanzierung', produktart: 'Baufinanzierung', institut: 'Sparkasse K\u00f6ln', details: '285k Rest, 1,8%, Zinsbindung bis 09/2027', volumen: 285000, consent: true },
+    { typ: 'baufinanzierung', produktart: 'Baufinanzierung', institut: 'Sparkasse K\u00f6ln', details: '285k Rest, 2,85%, Zinsbindung bis 09/2027', volumen: 285000, consent: true },
     { typ: 'kredit', produktart: 'Ratenkredit', institut: 'KfW', details: 'Studienkredit Rest 12k', volumen: 12000, consent: true },
-    { typ: 'depot', produktart: 'Wertpapierdepot', institut: 'ING DiBa', details: 'MSCI World+EM, Sparplan 300/mtl', volumen: 42000, consent: true },
-    { typ: 'tagesgeld', produktart: 'Tagesgeld', institut: 'DKB', details: '1,5% Zins', volumen: 8500, consent: false },
+    { typ: 'depot', produktart: 'Wertpapierdepot', institut: 'DWS', details: 'Fondssparen 800/mtl', volumen: 85000, consent: true },
+    { typ: 'tagesgeld', produktart: 'Tagesgeld', institut: 'ING DiBa', details: '2,75% Zins', volumen: 15400, consent: true },
+    { typ: 'festgeld', produktart: 'Festgeld', institut: 'ING DiBa', details: '3,25% bis 2026', volumen: 25000, consent: true },
+    { typ: 'kfz', produktart: 'KFZ-Vollkasko', institut: 'Allianz', details: 'VW Passat, SF-12', volumen: 720, consent: true },
     { typ: 'rlv', produktart: 'Risikolebensversicherung', institut: 'Allianz', details: '150k Deckung, bis 2035', volumen: 540, consent: true },
   ],
+  openFinance: {
+    geldmarkt: [
+      { produkt: 'Tagesgeldkonto', institut: 'ING DiBa', volumen: 15400, zinssatz: '2,75% p.a.', laufzeit: 'Flexibel' },
+      { produkt: 'Festgeld', institut: 'ING DiBa', volumen: 25000, zinssatz: '3,25% p.a.', laufzeit: 'bis 03/2026' },
+    ],
+    kapitalmarkt: [
+      { produkt: 'DWS Depot', institut: 'DWS', volumen: 85000, sparrate: '800\u20ac/Mon.', positionen: [
+        { name: 'DWS Top Dividende', institut: 'DWS', volumen: 42500, sparrate: '400\u20ac/Mon.', performanceYtd: '+8,2%' },
+        { name: 'iShares Core MSCI World', institut: 'DWS', volumen: 28300, sparrate: '300\u20ac/Mon.', performanceYtd: '+12,4%' },
+        { name: 'UniRak', institut: 'Union Investment', volumen: 14200, sparrate: '100\u20ac/Mon.', performanceYtd: '+5,1%' },
+      ]},
+    ],
+    versicherungenFremd: [
+      { produkt: 'KFZ-Vollkasko', institut: 'Allianz', details: 'VW Passat, SF-12', praemie: 720, deckungssumme: 'VK 50k / TK 25k', leistungen: ['GAP-Deckung', 'Mardersch\u00e4den', 'Auslandsschutz'], selbstbehalt: '300\u20ac VK' },
+      { produkt: 'Risikolebensversicherung', institut: 'Allianz', details: '150k Deckung, bis 2035', praemie: 540, deckungssumme: '150.000\u20ac' },
+    ],
+    finanzierungen: [
+      { produkt: 'Baufinanzierung', institut: 'Sparkasse K\u00f6ln', restschuld: 285000, zinssatz: '2,85% p.a.', rate: '1.450\u20ac/Mon.', laufzeit: 'bis 2045', details: 'Zinsbindung bis 09/2027', absicherung: null },
+      { produkt: 'Studienkredit', institut: 'KfW', restschuld: 12000, zinssatz: '1,0% p.a.', rate: '120\u20ac/Mon.', laufzeit: 'bis 2028', details: 'Studienkredit Rest 12k' },
+    ],
+  },
   transaktionen: [
     { kategorie: 'gehalt', betrag: 4200, empfaenger: 'Arbeitgeber' },
     { kategorie: 'gehalt_partner', betrag: 1800, empfaenger: 'Land NRW' },

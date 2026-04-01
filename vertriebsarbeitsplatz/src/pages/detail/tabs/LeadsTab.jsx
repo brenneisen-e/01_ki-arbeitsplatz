@@ -289,7 +289,6 @@ function getHerleitungEn(lead, lang) {
 }
 
 function LeadRow({ lead, kunde, isExpanded, onToggle, t, stadiumLabels, quellenLabels }) {
-  const [hovered, setHovered] = useState(false);
   const { config, navigateTo } = useMode();
   const { lang } = useTranslation();
 
@@ -297,54 +296,46 @@ function LeadRow({ lead, kunde, isExpanded, onToggle, t, stadiumLabels, quellenL
     <>
       <tr
         className="border-b border-slate-100 transition-colors cursor-pointer row-hover"
-        style={hovered ? { backgroundColor: 'var(--mode-primary-light)', color: '#ffffff' } : undefined}
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}
         onClick={onToggle}
       >
-        <td className={`py-2.5 pr-1 w-5 ${hovered ? 'text-white' : 'text-slate-400'}`}>
+        <td className="py-2.5 pr-1 w-5 text-slate-400">
           {isExpanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
         </td>
         <td className="py-2.5 pr-2">
-          <div className={`font-medium flex items-center gap-2 ${hovered ? 'text-white' : 'text-slate-800'}`}>
+          <div className="font-medium flex items-center gap-2 text-slate-800">
             {lead.name}
             {lead.isNeuerLead && (
-              <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold whitespace-nowrap ${hovered ? 'bg-white/30 text-white' : 'bg-emerald-500 text-white animate-pulse'}`}>
+              <span className="rh-badge inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold whitespace-nowrap bg-emerald-500 text-white animate-pulse">
                 {t('neuerLead')}
               </span>
             )}
           </div>
-          {lead.beruf && <div className={`text-[10px] ${hovered ? 'text-white/70' : 'text-slate-400'}`}>{getLeadField(lead, 'beruf', lang)}</div>}
+          {lead.beruf && <div className="text-[10px] text-slate-400">{getLeadField(lead, 'beruf', lang)}</div>}
         </td>
         <td className="py-2.5 pr-2">
-          <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${
-            hovered
-              ? 'bg-white/20 text-white'
-              : lead.kategorie === 'neumandat'
-                ? 'bg-blue-50 text-blue-700'
-                : 'bg-emerald-50 text-emerald-700'
+          <span className={`rh-badge text-xs font-medium px-2 py-0.5 rounded-full ${
+            lead.kategorie === 'neumandat'
+              ? 'bg-blue-50 text-blue-700'
+              : 'bg-emerald-50 text-emerald-700'
           }`}>
             {lead.kategorie === 'neumandat' ? t('neuesMandat.badge') : t('bestand')}
           </span>
         </td>
         <td className="py-2.5 pr-2">
           <span
-            className="text-[10px] font-medium px-2 py-0.5 rounded-full text-white"
-            style={{ backgroundColor: hovered ? 'rgba(255,255,255,0.25)' : (QUELLEN_COLORS[lead.quelle] || '#94a3b8') }}
+            className="rh-badge text-[10px] font-medium px-2 py-0.5 rounded-full text-white"
+            style={{ backgroundColor: QUELLEN_COLORS[lead.quelle] || '#94a3b8' }}
           >
             {quellenLabels[lead.quelle] || lead.quelleLabel || lead.quelle}
           </span>
         </td>
         <td className="py-2.5 pr-2">
-          {hovered
-            ? <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-white/20 text-white">{stadiumLabels[lead.stadium] || lead.stadium}</span>
-            : <StadiumBadge stadium={lead.stadium} stadiumLabels={stadiumLabels} />
-          }
+          <StadiumBadge stadium={lead.stadium} stadiumLabels={stadiumLabels} />
         </td>
-        <td className={`py-2.5 pr-2 font-mono text-sm ${hovered ? 'text-white' : 'text-slate-700'}`}>
+        <td className="py-2.5 pr-2 font-mono text-sm text-slate-700">
           {lead.geschaetztesVolumen || '—'}
         </td>
-        <td className={`py-2.5 text-xs truncate ${hovered ? 'text-white/80' : 'text-slate-500'}`}>
+        <td className="py-2.5 text-xs truncate text-slate-500">
           {getLeadField(lead, 'herkunft', lang)}
         </td>
       </tr>
@@ -534,7 +525,7 @@ function StadiumBadge({ stadium, stadiumLabels }) {
     gewonnen: 'bg-emerald-50 text-emerald-600',
   };
   return (
-    <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${styles[stadium] || styles.lead}`}>
+    <span className={`rh-badge text-[10px] font-medium px-2 py-0.5 rounded-full ${styles[stadium] || styles.lead}`}>
       {stadiumLabels[stadium] || stadium}
     </span>
   );

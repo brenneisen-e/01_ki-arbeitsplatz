@@ -17,13 +17,36 @@ export const V1 = {
     { typ: 'haftpflicht', sparte: 'schaden', produkt: 'ERGO Privat Premium', details: 'Familie 10M\u20ac', praemie: 95, seit: '2017-05', status: 'aktiv' },
   ],
   fremdProdukte: [
-    { typ: 'girokonto', institut: 'Sparkasse K\u00f6ln', details: 'Gehaltseingang 4.200\u20ac', volumen: 3500, consent: true },
-    { typ: 'baufinanzierung', institut: 'Sparkasse K\u00f6ln', details: '285k Rest, 1,8%, Zinsbindung bis 09/2027', volumen: 285000, consent: true },
-    { typ: 'kredit', institut: 'KfW', details: 'Studienkredit Rest 12k', volumen: 12000, consent: true },
-    { typ: 'depot', institut: 'ING DiBa', details: 'MSCI World+EM, Sparplan 300/mtl', volumen: 42000, consent: true },
-    { typ: 'tagesgeld', institut: 'DKB', details: '1,5% Zins', volumen: 8500, consent: false },
-    { typ: 'rlv', institut: 'Allianz', details: '150k Deckung, bis 2035', volumen: 540, consent: true },
+    { typ: 'girokonto', produktart: 'Girokonto', institut: 'Sparkasse K\u00f6ln', details: 'Gehaltseingang 4.200\u20ac', volumen: 3500, consent: true },
+    { typ: 'baufinanzierung', produktart: 'Baufinanzierung', institut: 'Sparkasse K\u00f6ln', details: '285k Rest, 2,85%, Zinsbindung bis 09/2027', volumen: 285000, consent: true },
+    { typ: 'kredit', produktart: 'Ratenkredit', institut: 'KfW', details: 'Studienkredit Rest 12k', volumen: 12000, consent: true },
+    { typ: 'depot', produktart: 'Wertpapierdepot', institut: 'DWS', details: 'Fondssparen 800/mtl', volumen: 85000, consent: true },
+    { typ: 'tagesgeld', produktart: 'Tagesgeld', institut: 'ING DiBa', details: '2,75% Zins', volumen: 15400, consent: true },
+    { typ: 'festgeld', produktart: 'Festgeld', institut: 'ING DiBa', details: '3,25% bis 2026', volumen: 25000, consent: true },
+    { typ: 'kfz', produktart: 'KFZ-Vollkasko', institut: 'Allianz', details: 'VW Passat, SF-12', volumen: 720, consent: true },
+    { typ: 'rlv', produktart: 'Risikolebensversicherung', institut: 'Allianz', details: '150k Deckung, bis 2035', volumen: 540, consent: true },
   ],
+  openFinance: {
+    geldmarkt: [
+      { produkt: 'Tagesgeldkonto', institut: 'ING DiBa', volumen: 15400, zinssatz: '2,75% p.a.', laufzeit: 'Flexibel' },
+      { produkt: 'Festgeld', institut: 'ING DiBa', volumen: 25000, zinssatz: '3,25% p.a.', laufzeit: 'bis 03/2026' },
+    ],
+    kapitalmarkt: [
+      { produkt: 'DWS Depot', institut: 'DWS', volumen: 85000, sparrate: '800\u20ac/Mon.', positionen: [
+        { name: 'DWS Top Dividende', institut: 'DWS', volumen: 42500, sparrate: '400\u20ac/Mon.', performanceYtd: '+8,2%' },
+        { name: 'iShares Core MSCI World', institut: 'DWS', volumen: 28300, sparrate: '300\u20ac/Mon.', performanceYtd: '+12,4%' },
+        { name: 'UniRak', institut: 'Union Investment', volumen: 14200, sparrate: '100\u20ac/Mon.', performanceYtd: '+5,1%' },
+      ]},
+    ],
+    versicherungenFremd: [
+      { produkt: 'KFZ-Vollkasko', institut: 'Allianz', details: 'VW Passat, SF-12', praemie: 720, deckungssumme: 'VK 50k / TK 25k', leistungen: ['GAP-Deckung', 'Mardersch\u00e4den', 'Auslandsschutz'], selbstbehalt: '300\u20ac VK' },
+      { produkt: 'Risikolebensversicherung', institut: 'Allianz', details: '150k Deckung, bis 2035', praemie: 540, deckungssumme: '150.000\u20ac' },
+    ],
+    finanzierungen: [
+      { produkt: 'Baufinanzierung', institut: 'Sparkasse K\u00f6ln', restschuld: 285000, zinssatz: '2,85% p.a.', rate: '1.450\u20ac/Mon.', laufzeit: 'bis 2045', details: 'Zinsbindung bis 09/2027', absicherung: null },
+      { produkt: 'Studienkredit', institut: 'KfW', restschuld: 12000, zinssatz: '1,0% p.a.', rate: '120\u20ac/Mon.', laufzeit: 'bis 2028', details: 'Studienkredit Rest 12k' },
+    ],
+  },
   transaktionen: [
     { kategorie: 'gehalt', betrag: 4200, empfaenger: 'Arbeitgeber' },
     { kategorie: 'gehalt_partner', betrag: 1800, empfaenger: 'Land NRW' },
@@ -43,7 +66,7 @@ export const V1 = {
   ],
   potentiale: [
     {
-      titel: 'Erh\u00f6hung Abdeckung BU', typ: 'anpassung', quellen: ['bestand', 'lebensereignis'], prioritaet: 'hoch', volumen: 960, volumenTyp: 'jaehrlich',
+      titel: 'Erh\u00f6hung Abdeckung Berufsunf\u00e4higkeitsversicherung', typ: 'anpassung', quellen: ['bestand', 'lebensereignis'], prioritaet: 'hoch', volumen: 960, volumenTyp: 'jaehrlich',
       beschreibung: 'Zweites Kind, Einkommen gestiegen. BU deckt nur 69% statt 80%.',
       kiDescription: 'KI-Analyse: Peter Schmidt (42 J., IT-Projektleiter) hat nach der Geburt seines zweiten Kindes Max und einer Gehaltserhöhung auf 4.200\u20ac netto eine BU-Deckungslücke von 11 Prozentpunkten — aktuelle BU-Rente 1.800\u20ac/mtl. deckt nur 69% statt der empfohlenen 80% (2.600\u20ac). Bei einer 4-köpfigen Familie mit Baufinanzierung (285k Restschuld) ist eine Erhöhung auf ERGO BU Comfort Plus dringend empfohlen — Mehrprämie ca. 80\u20ac/mtl.',
       empfohleneAktion: 'termin_vereinbaren', produktEmpfehlung: 'ERGO BU Comfort Plus', status: 'termin',
@@ -242,9 +265,9 @@ export const V2 = {
     { typ: 'kfz', sparte: 'kfz', produkt: 'ERGO KFZ Comfort', details: 'VW Polo, VK 300\u20ac SB', praemie: 420, seit: '2024-01', status: 'aktiv' },
   ],
   fremdProdukte: [
-    { typ: 'girokonto', institut: 'N26', details: 'Gehaltseingang 2.800\u20ac', volumen: 2100, consent: true },
-    { typ: 'depot', institut: 'Trade Republic', details: 'ETF Sparplan 150/mtl', volumen: 8500, consent: true },
-    { typ: 'tagesgeld', institut: 'Commerzbank', details: '2,0% Zins', volumen: 3200, consent: true },
+    { typ: 'girokonto', produktart: 'Girokonto', institut: 'N26', details: 'Gehaltseingang 2.800\u20ac', volumen: 2100, consent: true },
+    { typ: 'depot', produktart: 'Wertpapierdepot', institut: 'Trade Republic', details: 'ETF Sparplan 150/mtl', volumen: 8500, consent: true },
+    { typ: 'tagesgeld', produktart: 'Tagesgeld', institut: 'Commerzbank', details: '2,0% Zins', volumen: 3200, consent: true },
   ],
   transaktionen: [
     { kategorie: 'gehalt', betrag: 2800, empfaenger: 'Agentur XY' },
@@ -258,7 +281,7 @@ export const V2 = {
   ],
   potentiale: [
     {
-      titel: 'BU-Absicherung Einkommen', typ: 'whitespot', quellen: ['bestand'], prioritaet: 'kritisch', volumen: 1440, volumenTyp: 'jaehrlich',
+      titel: 'Berufsunf\u00e4higkeitsversicherung \u2013 Einkommensabsicherung', typ: 'whitespot', quellen: ['bestand'], prioritaet: 'kritisch', volumen: 1440, volumenTyp: 'jaehrlich',
       beschreibung: 'Keine BU trotz Alleinverdienerin. ERGO BU Smart.',
       kiDescription: 'KI-Analyse: Amira K\u00f6nig (28 J., Designerin) ist ledig und Alleinverdienerin mit 2.800\u20ac netto \u2014 eine Berufsunf\u00e4higkeit w\u00e4re ohne BU-Absicherung existenzbedrohend. Als junge B\u00fcroberuflerin profitiert sie von g\u00fcnstigen Einstufungen \u2014 empfohlene BU-Rente 2.240\u20ac/mtl. (80% Netto) f\u00fcr ca. 120\u20ac/mtl. \u00fcber ERGO BU Smart.',
       empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'ERGO BU Smart', status: 'identifiziert',
@@ -392,11 +415,11 @@ export const V3 = {
     { typ: 'unfall', sparte: 'schaden', produkt: 'ERGO Unfall Kombi', details: 'Ehepaar', praemie: 540, seit: '2008-03', status: 'aktiv' },
   ],
   fremdProdukte: [
-    { typ: 'girokonto', institut: 'Volksbank', details: 'Privat + Firma', volumen: 12000, consent: true },
-    { typ: 'bausparvertrag', institut: 'Schw\u00e4bisch Hall', details: 'Zuteilungsreif 2027', volumen: 18000, consent: true },
-    { typ: 'lebensversicherung', institut: 'R+V', details: 'Ablauf 2028, R\u00fcckkaufswert 95k', volumen: 95000, consent: true },
-    { typ: 'depot', institut: 'DKB', details: 'Gemischtes Depot', volumen: 120000, consent: true },
-    { typ: 'kfz_fremd', institut: 'HUK24', details: 'Zweitwagen Frau', volumen: 350, consent: false },
+    { typ: 'girokonto', produktart: 'Girokonto', institut: 'Volksbank', details: 'Privat + Firma', volumen: 12000, consent: true },
+    { typ: 'bausparvertrag', produktart: 'Bausparvertrag', institut: 'Schw\u00e4bisch Hall', details: 'Zuteilungsreif 2027', volumen: 18000, consent: true },
+    { typ: 'lebensversicherung', produktart: 'Kapitallebensversicherung', institut: 'R+V', details: 'Ablauf 2028, R\u00fcckkaufswert 95k', volumen: 95000, consent: true },
+    { typ: 'depot', produktart: 'Wertpapierdepot', institut: 'DKB', details: 'Gemischtes Depot', volumen: 120000, consent: true },
+    { typ: 'kfz_fremd', produktart: 'KFZ-Versicherung', institut: 'HUK24', details: 'Zweitwagen Frau', volumen: 350, consent: false },
   ],
   transaktionen: [
     { kategorie: 'gehalt', betrag: 4800, empfaenger: 'Eigener Betrieb' },
@@ -576,10 +599,10 @@ export const V4 = {
     { typ: 'hausrat', sparte: 'schaden', produkt: 'ERGO Hausrat Komfort', details: '95qm', praemie: 200, seit: '2022-01', status: 'aktiv' },
   ],
   fremdProdukte: [
-    { typ: 'girokonto', institut: 'Commerzbank', details: 'Gehaltseingang 5.500\u20ac', volumen: 8000, consent: true },
-    { typ: 'tagesgeld', institut: 'ING', details: '2,0% Zins', volumen: 65000, consent: true },
-    { typ: 'depot', institut: 'Scalable Capital', details: 'ETF Portfolio', volumen: 38000, consent: true },
-    { typ: 'kfz', institut: 'Allianz', details: 'Audi A3, VK', volumen: 720, consent: true },
+    { typ: 'girokonto', produktart: 'Girokonto', institut: 'Commerzbank', details: 'Gehaltseingang 5.500\u20ac', volumen: 8000, consent: true },
+    { typ: 'tagesgeld', produktart: 'Tagesgeld', institut: 'ING', details: '2,0% Zins', volumen: 65000, consent: true },
+    { typ: 'depot', produktart: 'Wertpapierdepot', institut: 'Scalable Capital', details: 'ETF Portfolio', volumen: 38000, consent: true },
+    { typ: 'kfz', produktart: 'KFZ-Vollkasko', institut: 'Allianz', details: 'Audi A3, VK', volumen: 720, consent: true },
   ],
   transaktionen: [
     { kategorie: 'gehalt', betrag: 5500, empfaenger: 'Klinikum' },
@@ -595,7 +618,7 @@ export const V4 = {
   ],
   potentiale: [
     {
-      titel: 'BU-Absicherung \u00c4rzte-Tarif', typ: 'whitespot', quellen: ['bestand'], prioritaet: 'kritisch', volumen: 3600, volumenTyp: 'jaehrlich',
+      titel: 'Berufsunf\u00e4higkeitsversicherung \u2013 \u00c4rzte-Tarif', typ: 'whitespot', quellen: ['bestand'], prioritaet: 'kritisch', volumen: 3600, volumenTyp: 'jaehrlich',
       beschreibung: '\u00c4rztin ohne BU! \u00c4rzte-Spezialtarif mit besseren Konditionen.',
       kiDescription: 'KI-Analyse: Dr. Anna Hoffmann (35 J., \u00c4rztin, 5.500\u20ac netto) verf\u00fcgt \u00fcber keinerlei BU-Absicherung \u2014 als \u00c4rztin mit Familie (Kind Emma, 3 J.) ist dies existenzbedrohend. Der ERGO BU \u00c4rzte Comfort Plus bietet Verzicht auf abstrakte Verweisung und Infektionsklausel \u2014 empfohlene BU-Rente 4.400\u20ac/mtl. (80% Netto) f\u00fcr ca. 300\u20ac/mtl.',
       empfohleneAktion: 'angebot_erstellen', produktEmpfehlung: 'ERGO BU \u00c4rzte Comfort Plus', status: 'termin',

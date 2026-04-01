@@ -25,6 +25,26 @@ export const B1 = {
     { typ: 'versicherung', produktart: 'Privathaftpflicht', institut: 'Allianz', details: 'Privat', volumen: 85, consent: false },
     { typ: 'versicherung', produktart: 'Lebensversicherung', institut: 'Alte Leipziger', details: 'Ablauf 2030', volumen: 65000, consent: true },
   ],
+  openFinance: {
+    geldmarkt: [
+      { produkt: 'Tagesgeldkonto', institut: 'ING', volumen: 22000, zinssatz: '2,0% p.a.', laufzeit: 'Flexibel' },
+    ],
+    kapitalmarkt: [
+      { produkt: 'Trade Republic Depot', institut: 'Trade Republic', volumen: 28000, sparrate: '200\u20ac/Mon.', positionen: [
+        { name: 'Vanguard FTSE All-World', institut: 'Trade Republic', volumen: 15500, sparrate: '100\u20ac/Mon.', performanceYtd: '+10,8%' },
+        { name: 'iShares MSCI EM', institut: 'Trade Republic', volumen: 7200, sparrate: '50\u20ac/Mon.', performanceYtd: '+3,2%' },
+        { name: 'Xtrackers DAX', institut: 'Trade Republic', volumen: 5300, sparrate: '50\u20ac/Mon.', performanceYtd: '+14,1%' },
+      ]},
+    ],
+    versicherungenFremd: [
+      { produkt: 'KFZ-Vollkasko', institut: 'HUK', details: 'VW Tiguan, SF-12', praemie: 780, deckungssumme: 'VK 50k', leistungen: ['GAP-Deckung', 'Mardersch\u00e4den'] },
+      { produkt: 'Hausrat', institut: 'HUK', details: 'Im B\u00fcndel', praemie: null, leistungen: ['Fahrraddiebstahl'] },
+      { produkt: 'Haftpflicht', institut: 'HUK', details: 'Familie', praemie: null, leistungen: ['Schl\u00fcsselsch\u00e4den'] },
+      { produkt: 'Berufsunf\u00e4higkeit', institut: 'HDI', details: 'BU 2.000\u20ac/mtl.', praemie: 1800, deckungssumme: '2.000\u20ac/mtl.' },
+      { produkt: 'Lebensversicherung', institut: 'Alte Leipziger', details: 'Ablauf 2030', praemie: null, deckungssumme: 'R\u00fcckkaufswert 65k' },
+    ],
+    finanzierungen: [],
+  },
   transaktionen: [
     { kategorie: 'gehalt', betrag: 4500, empfaenger: 'Arbeitgeber' },
     { kategorie: 'gehalt_partner', betrag: 1200, empfaenger: 'Stadt' },

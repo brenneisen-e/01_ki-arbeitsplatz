@@ -106,15 +106,14 @@ function DataRow({ row, columns, index, onRowClick, indent }) {
   return (
     <tr
       className={clsx(
-        'border-t border-slate-100 transition-colors duration-150',
+        'border-t border-slate-100 transition-colors duration-150 row-hover',
         index % 2 === 0 ? 'bg-white' : 'bg-slate-50/50',
-        'hover:bg-slate-100',
         onRowClick && 'cursor-pointer'
       )}
       onClick={() => onRowClick?.(row)}
     >
       {columns.map((col, ci) => (
-        <td key={col.id} className={clsx('px-4 py-3 text-sm text-slate-700', ci === 0 && indent && 'pl-8')}>
+        <td key={col.id} className={clsx('px-4 py-3 text-sm', ci === 0 && indent && 'pl-8')}>
           {col.render ? col.render(row[col.id], row) : row[col.id]}
         </td>
       ))}

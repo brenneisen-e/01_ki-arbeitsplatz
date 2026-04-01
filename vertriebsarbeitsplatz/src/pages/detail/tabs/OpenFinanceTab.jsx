@@ -86,7 +86,7 @@ export default function OpenFinanceTab({ kunde }) {
   return (
     <div className="space-y-4">
       {/* Consent Status */}
-      <Card>
+      <Card hover={false}>
         <div className="flex items-center gap-2 mb-4">
           <Link2 size={20} className="text-slate-500" strokeWidth={1.75} />
           <h3 className="font-semibold text-slate-800">{t('fidaConsentStatus')}</h3>
@@ -108,7 +108,7 @@ export default function OpenFinanceTab({ kunde }) {
       </Card>
 
       {/* Externe Verknuepfungen */}
-      <Card>
+      <Card hover={false}>
         <h3 className="font-semibold text-slate-800 mb-4">{t('externeVerknuepfungen')}</h3>
         <DataTable
           columns={[
@@ -140,7 +140,7 @@ export default function OpenFinanceTab({ kunde }) {
 
       {/* Eigene Produkte */}
       {eigen.length > 0 && (
-        <Card>
+        <Card hover={false}>
           <div className="flex items-center gap-2 mb-4">
             <Briefcase size={20} className="text-slate-500" strokeWidth={1.75} />
             <h3 className="font-semibold text-slate-800">{t('eigeneProdukte')} ({eigen.length})</h3>

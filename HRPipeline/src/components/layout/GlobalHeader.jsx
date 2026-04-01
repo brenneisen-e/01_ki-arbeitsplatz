@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Home, UserPlus, LayoutDashboard, Shield, ShieldCheck, ChevronDown } from 'lucide-react';
 import { clsx } from 'clsx';
 import { useInstitut } from '../../hooks/useInstitut';
-import { logoUrl } from '../../data/institutConfig';
+import { getInstitutLogoUrl } from '../../data/institutConfig';
 
 function getBasePath() {
   const path = window.location.pathname;
@@ -33,7 +33,7 @@ function InstitutDropdown({ onClose }) {
         >
           <div className="hp-institut-option-dot" style={{ background: v.colors.gradient }} />
           <img
-            src={logoUrl(v.domain)}
+            src={getInstitutLogoUrl(v)}
             alt={v.institut}
             className="hp-institut-option-logo"
             onError={e => { e.target.style.display = 'none'; }}
@@ -79,7 +79,7 @@ export default function GlobalHeader({ currentMode, onModeChange }) {
               className="flex items-center gap-2.5 px-3 py-1.5 rounded-lg bg-white/15 hover:bg-white/25 transition-colors border border-white/20"
             >
               <img
-                src={logoUrl(institut.domain)}
+                src={getInstitutLogoUrl(institut)}
                 alt={institut.institut}
                 className="w-6 h-6 rounded object-contain bg-white"
                 onError={e => { e.target.style.display = 'none'; }}

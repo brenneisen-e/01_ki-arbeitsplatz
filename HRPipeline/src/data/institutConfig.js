@@ -1,6 +1,18 @@
 const LOGO_TOKEN = 'pk_H7vb5Y2lTsW47U4Xq-w3HA';
 export const logoUrl = (domain) => `https://img.logo.dev/${domain}?token=${LOGO_TOKEN}&format=png`;
 
+const CUSTOM_LOGOS = {
+  'Zukunftsversicherung': 'images/zukunftsversicherung-logo.svg',
+};
+
+export function getInstitutLogoUrl(variant) {
+  if (CUSTOM_LOGOS[variant.institut]) {
+    const base = import.meta.env.BASE_URL || './';
+    return `${base}${CUSTOM_LOGOS[variant.institut]}`;
+  }
+  return logoUrl(variant.domain);
+}
+
 export const INSTITUT_VARIANTEN = [
   {
     institut: 'ERGO',
@@ -70,6 +82,16 @@ export const INSTITUT_VARIANTEN = [
       primaryLight: '#0060bf',
       gradient: 'linear-gradient(135deg, #002a55 0%, #003d7a 40%, #0060bf 100%)',
       accent: '#e6a817',
+    },
+  },
+  {
+    institut: 'Zukunftsversicherung',
+    domain: null,
+    colors: {
+      primary: '#1e2a4a',
+      primaryLight: '#2d3f6e',
+      gradient: 'linear-gradient(135deg, #121a30 0%, #1e2a4a 40%, #2d3f6e 100%)',
+      accent: '#5b8def',
     },
   },
 ];

@@ -70,7 +70,7 @@ function HorizontalConnector({ count }) {
 // ─── Section wrapper ───
 function Section({ title, icon: Icon, children }) {
   return (
-    <Card>
+    <Card hover={false}>
       <div className="flex items-center gap-2 mb-4">
         {Icon && <Icon size={18} className="text-slate-500" strokeWidth={1.75} />}
         <h3 className="font-semibold text-slate-800">{title}</h3>
@@ -88,7 +88,7 @@ export default function FamilieNetzwerkTab({ kunde }) {
   if (!data) {
     return (
       <div className="space-y-4">
-        <Card>
+        <Card hover={false}>
           <div className="flex flex-col items-center justify-center py-16 text-center">
             <div className="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center mb-4">
               <Users className="w-8 h-8 text-slate-400" />

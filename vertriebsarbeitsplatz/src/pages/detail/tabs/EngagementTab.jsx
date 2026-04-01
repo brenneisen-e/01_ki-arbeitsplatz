@@ -71,7 +71,7 @@ function MatchBadge({ level, t }) {
 // ─── Section wrapper ───
 function Section({ title, icon: Icon, children }) {
   return (
-    <Card>
+    <Card hover={false}>
       <div className="flex items-center gap-2 mb-4">
         {Icon && <Icon size={18} className="text-slate-500" strokeWidth={1.75} />}
         <h3 className="font-semibold text-slate-800">{title}</h3>
@@ -91,7 +91,7 @@ export default function EngagementTab() {
 
   if (!data || !kunde) {
     return (
-      <Card className="p-8 text-center text-slate-400">
+      <Card hover={false} className="p-8 text-center text-slate-400">
         {t('keineEngagementDaten')}
       </Card>
     );

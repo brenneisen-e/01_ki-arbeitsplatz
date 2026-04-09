@@ -12,6 +12,41 @@ function getBasePath() {
   return '/';
 }
 
+function InstitutLogo({ variant, className, style }) {
+  const url = getInstitutLogoUrl(variant);
+  if (url) {
+    return (
+      <img
+        src={url}
+        alt={variant.institut}
+        className={className}
+        style={style}
+        onError={e => { e.target.style.display = 'none'; }}
+      />
+    );
+  }
+  // Fallback for industry-neutral / white-label entries without a logo
+  const initials = variant.institut.split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase();
+  return (
+    <div
+      className={className}
+      style={{
+        ...style,
+        background: variant.colors?.primary || '#475569',
+        color: '#fff',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontWeight: 700,
+        fontSize: 10,
+        letterSpacing: 0.5
+      }}
+    >
+      {initials}
+    </div>
+  );
+}
+
 function InstitutDropdown({ onClose }) {
   const { institut, varianten, switchInstitut } = useInstitut();
   const ref = useRef(null);
@@ -32,14 +67,14 @@ function InstitutDropdown({ onClose }) {
           onClick={() => { switchInstitut(v); onClose(); }}
         >
           <div className="hp-institut-option-dot" style={{ background: v.colors.gradient }} />
-          <img
-            src={getInstitutLogoUrl(v)}
-            alt={v.institut}
-            className="hp-institut-option-logo"
-            onError={e => { e.target.style.display = 'none'; }}
-          />
+          <InstitutLogo variant={v} className="hp-institut-option-logo" />
           <span>{v.institut}</span>
-          {v.institut === institut.institut && (
+          {v.mode === 'generic' && (
+            <span style={{ marginLeft: 'auto', fontSize: 10, fontWeight: 600, color: '#64748b', background: '#f1f5f9', padding: '2px 6px', borderRadius: 4 }}>
+              White Label
+            </span>
+          )}
+          {v.institut === institut.institut && v.mode !== 'generic' && (
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" width="14" height="14" style={{ marginLeft: 'auto', color: v.colors.primaryLight }}><polyline points="20 6 9 17 4 12"/></svg>
           )}
         </button>
@@ -78,13 +113,13 @@ export default function GlobalHeader({ currentMode, onModeChange }) {
               onClick={() => setDropdownOpen(!dropdownOpen)}
               className="flex items-center gap-2.5 px-3 py-1.5 rounded-lg bg-white/15 hover:bg-white/25 transition-colors border border-white/20"
             >
-              <img
-                src={getInstitutLogoUrl(institut)}
-                alt={institut.institut}
-                className="w-6 h-6 rounded object-contain bg-white"
-                onError={e => { e.target.style.display = 'none'; }}
-              />
+              <InstitutLogo variant={institut} className="w-6 h-6 rounded object-contain bg-white" />
               <span className="text-white font-bold text-sm">{institut.institut}</span>
+              {institut.mode === 'generic' && (
+                <span className="text-[10px] font-semibold tracking-wide text-white/70 bg-white/15 px-1.5 py-0.5 rounded">
+                  White Label
+                </span>
+              )}
               <ChevronDown size={14} className={clsx('text-white/60 transition-transform', dropdownOpen && 'rotate-180')} />
             </button>
             {dropdownOpen && <InstitutDropdown onClose={() => setDropdownOpen(false)} />}

@@ -1,7 +1,41 @@
-import { useState, useEffect, useRef, lazy, Suspense } from 'react';
+import { useState, useEffect, useRef, lazy, Suspense, useMemo } from 'react';
 import { LayoutGrid, MapPin, Users, AlertTriangle, Shield } from 'lucide-react';
+import { useInstitut } from '../../hooks/useInstitut';
 
 const GermanyMap = lazy(() => import('./GermanyMap'));
+
+const COCKPIT_LABELS = {
+  insurance: {
+    headcountLabel: 'Vermittler gesamt',
+    headcountShort: 'Vermittler',
+    unitLabel: 'Regionaldirektion',
+    unitLabelPlural: 'Regionaldirektionen',
+    unitLabelPluralHeading: 'Regionaldirektionen — Gesundheitsscore',
+    unitLabelShort: 'RDs',
+    dimTurnover: 'Fluktuation',
+    dimStaffing: 'Vakanzen',
+    dimEngagement: 'Engagement',
+    dimDemographics: 'Nachwuchs',
+    dimProduction: 'Produktion',
+    dimQuality: 'Stornoquote',
+    complianceBanner: 'HR-Cockpit — Frühwarnsystem für Vertriebsorganisationen. Alle Daten pseudonymisiert gemäß DSGVO Art. 25. Mindestgruppengröße: 10 Personen. Human-in-the-Loop gem. Art. 22 DSGVO.'
+  },
+  generic: {
+    headcountLabel: 'Mitarbeitende gesamt',
+    headcountShort: 'Mitarbeitende',
+    unitLabel: 'Business Unit',
+    unitLabelPlural: 'Business Units',
+    unitLabelPluralHeading: 'Business Units — Gesundheitsscore',
+    unitLabelShort: 'BUs',
+    dimTurnover: 'Fluktuation',
+    dimStaffing: 'Vakanzen',
+    dimEngagement: 'Engagement',
+    dimDemographics: 'Nachwuchs',
+    dimProduction: 'Produktivität',
+    dimQuality: 'Qualität',
+    complianceBanner: 'HR-Cockpit — Frühwarnsystem für die Workforce. Alle Daten pseudonymisiert gemäß DSGVO Art. 25. Mindestgruppengröße: 10 Personen. Human-in-the-Loop gem. Art. 22 DSGVO.'
+  }
+};
 
 // ======== Demo Data ========
 const REGIONALDIREKTIONEN = [
@@ -59,7 +93,7 @@ const heatmapColor = (val) => {
 const tierColor = (tier) => tier === 'green' ? '#16A34A' : tier === 'amber' ? '#D97706' : '#DC2626';
 
 // ======== Sub-Views ========
-function OverviewView({ data }) {
+function OverviewView({ data, labels }) {
   const totalHeadcount = data.reduce((s, d) => s + d.headcount, 0);
   const totalBudgeted = data.reduce((s, d) => s + d.budgeted, 0);
   const avgComposite = Math.round(data.reduce((s, d) => s + d.composite, 0) / data.length);
@@ -70,22 +104,22 @@ function OverviewView({ data }) {
       {/* KPIs */}
       <div className="hp-kpi-bar" style={{ gridTemplateColumns: 'repeat(4, 1fr)', marginBottom: 'var(--space-6)' }}>
         <div className="hp-kpi-card">
-          <div className="hp-kpi-label">Vermittler gesamt</div>
+          <div className="hp-kpi-label">{labels.headcountLabel}</div>
           <div className="hp-kpi-value">{totalHeadcount.toLocaleString('de-DE')}</div>
           <div className="hp-kpi-desc">von {totalBudgeted.toLocaleString('de-DE')} budgetiert</div>
         </div>
         <div className="hp-kpi-card">
           <div className="hp-kpi-label">Ø Health Score</div>
           <div className={`hp-kpi-value ${avgComposite >= 60 ? 'green' : avgComposite >= 40 ? '' : 'red'}`}>{avgComposite}/100</div>
-          <div className="hp-kpi-desc">Gewichteter Durchschnitt aller RDs</div>
+          <div className="hp-kpi-desc">Gewichteter Durchschnitt aller {labels.unitLabelShort}</div>
         </div>
         <div className="hp-kpi-card">
-          <div className="hp-kpi-label">Regionaldirektionen</div>
+          <div className="hp-kpi-label">{labels.unitLabelPlural}</div>
           <div className="hp-kpi-value blue">{data.length}</div>
           <div className="hp-kpi-desc">bundesweit</div>
         </div>
         <div className="hp-kpi-card">
-          <div className="hp-kpi-label">Kritische RDs</div>
+          <div className="hp-kpi-label">Kritische {labels.unitLabelShort}</div>
           <div className="hp-kpi-value" style={{ color: '#DC2626' }}>{redCount}</div>
           <div className="hp-kpi-desc">Health Score unter 40</div>
         </div>
@@ -117,7 +151,7 @@ function OverviewView({ data }) {
             <div className="hc-table-wrapper">
               <table className="hc-table">
                 <thead>
-                  <tr><th>Kennung</th><th>Regionaldirektion</th><th>Aktueller Score</th><th>Vermittler</th><th>Fluktuation</th><th>Vakanzen</th></tr>
+                  <tr><th>Kennung</th><th>{labels.unitLabel}</th><th>Aktueller Score</th><th>{labels.headcountShort}</th><th>Fluktuation</th><th>Vakanzen</th></tr>
                 </thead>
                 <tbody>
                   {[...data].sort((a, b) => a.composite - b.composite).map(d => (
@@ -140,7 +174,7 @@ function OverviewView({ data }) {
         <div className="hc-overview-sidebar">
           <div className="hc-panel hc-map-panel">
             <div className="hc-panel-header">
-              <h3>Regionaldirektionen — Gesundheitsscore</h3>
+              <h3>{labels.unitLabelPluralHeading}</h3>
               <span className="hc-panel-badge">Klicken für Details</span>
             </div>
             <Suspense fallback={<div style={{ height: 400, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><div className="hp-loading-spinner" /></div>}>
@@ -153,8 +187,8 @@ function OverviewView({ data }) {
   );
 }
 
-function RegionsView({ data }) {
-  const dims = ['Fluktuation', 'Vakanzen', 'Engagement', 'Nachwuchs', 'Produktion', 'Stornoquote'];
+function RegionsView({ data, labels }) {
+  const dims = [labels.dimTurnover, labels.dimStaffing, labels.dimEngagement, labels.dimDemographics, labels.dimProduction, labels.dimQuality];
   const dimKeys = ['retention', 'staffing', 'engagement', 'demographics', 'production', 'quality'];
 
   return (
@@ -163,12 +197,12 @@ function RegionsView({ data }) {
       <div className="hc-panel hc-full-width" style={{ marginBottom: 'var(--space-6)' }}>
         <div className="hc-panel-header">
           <h3>Organisations-Gesundheit — Heat Map</h3>
-          <span className="hc-panel-subtitle">Regionaldirektionen × Gesundheitsdimensionen</span>
+          <span className="hc-panel-subtitle">{labels.unitLabelPlural} × Gesundheitsdimensionen</span>
         </div>
         <div className="hc-heatmap-wrapper">
           <table className="hc-heatmap">
             <thead>
-              <tr><th>Regionaldirektion</th><th>Gesamt</th>{dims.map(d => <th key={d}>{d}</th>)}</tr>
+              <tr><th>{labels.unitLabel}</th><th>Gesamt</th>{dims.map(d => <th key={d}>{d}</th>)}</tr>
             </thead>
             <tbody>
               {[...data].sort((a, b) => b.composite - a.composite).map(d => (
@@ -191,7 +225,7 @@ function RegionsView({ data }) {
         <div className="hc-table-wrapper">
           <table className="hc-table">
             <thead>
-              <tr><th>#</th><th>Regionaldirektion</th><th>Health Score</th><th>Vermittler</th><th>Fluktuation</th><th>Vakanzen</th></tr>
+              <tr><th>#</th><th>{labels.unitLabel}</th><th>Health Score</th><th>{labels.headcountShort}</th><th>Fluktuation</th><th>Vakanzen</th></tr>
             </thead>
             <tbody>
               {[...data].sort((a, b) => b.composite - a.composite).map((d, i) => (
@@ -212,14 +246,14 @@ function RegionsView({ data }) {
   );
 }
 
-function UnitDetailView({ data }) {
+function UnitDetailView({ data, labels }) {
   const [selectedRD, setSelectedRD] = useState(data[0]?.id || '');
   const rd = data.find(d => d.id === selectedRD) || data[0];
 
   return (
     <div>
       <div className="hc-unit-selector">
-        <label>Regionaldirektion:</label>
+        <label>{labels.unitLabel}:</label>
         <select value={selectedRD} onChange={e => setSelectedRD(e.target.value)}>
           {data.map(d => <option key={d.id} value={d.id}>{d.name} ({d.region})</option>)}
         </select>
@@ -232,7 +266,7 @@ function UnitDetailView({ data }) {
             <div className="hc-unit-scorecard">
               {[
                 { label: 'Health Score', value: rd.composite, unit: '/100' },
-                { label: 'Vermittler', value: rd.headcount, unit: `/ ${rd.budgeted}` },
+                { label: labels.headcountShort, value: rd.headcount, unit: `/ ${rd.budgeted}` },
                 { label: 'Fluktuation', value: `${rd.turnoverRate}%`, unit: '' },
                 { label: 'Vakanzenquote', value: `${rd.vacancyRate.toFixed(1)}%`, unit: '' },
               ].map((item, i) => (
@@ -250,10 +284,10 @@ function UnitDetailView({ data }) {
             <div className="hp-score-breakdown">
               {Object.entries(rd.metrics).map(([key, val]) => {
                 const barClass = val >= 70 ? 'high' : val >= 40 ? 'mid' : 'low';
-                const labels = { retention: 'Fluktuation', staffing: 'Vakanzen', engagement: 'Engagement', demographics: 'Nachwuchs', production: 'Produktion', quality: 'Stornoquote' };
+                const dimLabels = { retention: labels.dimTurnover, staffing: labels.dimStaffing, engagement: labels.dimEngagement, demographics: labels.dimDemographics, production: labels.dimProduction, quality: labels.dimQuality };
                 return (
                   <div key={key} className="hp-score-bar-row">
-                    <div className="hp-score-bar-label">{labels[key] || key}</div>
+                    <div className="hp-score-bar-label">{dimLabels[key] || key}</div>
                     <div className="hp-score-bar-track"><div className={`hp-score-bar-value ${barClass}`} style={{ width: `${val}%` }} /></div>
                     <div className="hp-score-bar-num">{val}</div>
                   </div>
@@ -267,7 +301,7 @@ function UnitDetailView({ data }) {
   );
 }
 
-function EarlyWarningView({ data }) {
+function EarlyWarningView({ data, labels }) {
   const criticalRDs = data.filter(d => d.tier !== 'green').sort((a, b) => a.composite - b.composite);
 
   return (
@@ -288,7 +322,7 @@ function EarlyWarningView({ data }) {
               <div className="hc-ew-card-body">
                 <div>Fluktuation: {d.turnoverRate}%</div>
                 <div>Vakanzen: {d.vacancyRate.toFixed(1)}%</div>
-                <div>Vermittler: {d.headcount} / {d.budgeted}</div>
+                <div>{labels.headcountShort}: {d.headcount} / {d.budgeted}</div>
               </div>
             </div>
           ))}
@@ -315,7 +349,7 @@ function EarlyWarningView({ data }) {
                 {i === 0 && criticalRDs.filter(d => d.tier === 'red').map(d => (
                   <div key={d.id} className="hc-kanban-card">
                     <strong>{d.name}</strong>
-                    <div>Score: {d.composite} | {d.headcount} Vermittler</div>
+                    <div>Score: {d.composite} | {d.headcount} {labels.headcountShort}</div>
                   </div>
                 ))}
               </div>
@@ -348,6 +382,8 @@ function EarlyWarningView({ data }) {
 
 // ======== Main Cockpit Mode ========
 export default function CockpitMode() {
+  const { institut } = useInstitut();
+  const labels = useMemo(() => COCKPIT_LABELS[institut.mode === 'generic' ? 'generic' : 'insurance'], [institut.mode]);
   const [view, setView] = useState('overview');
   const [data] = useState(() => generateMetrics());
 
@@ -376,13 +412,13 @@ export default function CockpitMode() {
       {/* Compliance Banner */}
       <div className="hc-compliance-banner">
         <Shield size={16} />
-        <span>HR-Cockpit — Frühwarnsystem für Vertriebsorganisationen. Alle Daten pseudonymisiert gemäß DSGVO Art. 25. Mindestgruppengröße: 10 Personen. Human-in-the-Loop gem. Art. 22 DSGVO.</span>
+        <span>{labels.complianceBanner}</span>
       </div>
 
-      {view === 'overview' && <OverviewView data={data} />}
-      {view === 'regions' && <RegionsView data={data} />}
-      {view === 'unit' && <UnitDetailView data={data} />}
-      {view === 'earlywarning' && <EarlyWarningView data={data} />}
+      {view === 'overview' && <OverviewView data={data} labels={labels} />}
+      {view === 'regions' && <RegionsView data={data} labels={labels} />}
+      {view === 'unit' && <UnitDetailView data={data} labels={labels} />}
+      {view === 'earlywarning' && <EarlyWarningView data={data} labels={labels} />}
     </div>
   );
 }

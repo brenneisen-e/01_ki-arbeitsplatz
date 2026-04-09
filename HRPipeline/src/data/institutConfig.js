@@ -10,13 +10,27 @@ export function getInstitutLogoUrl(variant) {
     const base = import.meta.env.BASE_URL || './';
     return `${base}${CUSTOM_LOGOS[variant.institut]}`;
   }
+  if (!variant.domain) return null;
   return logoUrl(variant.domain);
 }
 
 export const INSTITUT_VARIANTEN = [
   {
+    institut: 'Zukunfts AG',
+    domain: null,
+    mode: 'generic',
+    tagline: 'Industrieunspezifisches Karriereportal',
+    colors: {
+      primary: '#334155',
+      primaryLight: '#475569',
+      gradient: 'linear-gradient(135deg, #1e293b 0%, #334155 45%, #475569 100%)',
+      accent: '#94a3b8',
+    },
+  },
+  {
     institut: 'ERGO',
     domain: 'ergo.de',
+    mode: 'insurance',
     colors: {
       primary: '#86181d',
       primaryLight: '#C8102E',
@@ -27,6 +41,7 @@ export const INSTITUT_VARIANTEN = [
   {
     institut: 'Allianz',
     domain: 'allianz.de',
+    mode: 'insurance',
     colors: {
       primary: '#003781',
       primaryLight: '#0056b3',
@@ -37,6 +52,7 @@ export const INSTITUT_VARIANTEN = [
   {
     institut: 'AXA',
     domain: 'axa.de',
+    mode: 'insurance',
     colors: {
       primary: '#00008f',
       primaryLight: '#0033cc',
@@ -47,6 +63,7 @@ export const INSTITUT_VARIANTEN = [
   {
     institut: 'Generali',
     domain: 'generali.de',
+    mode: 'insurance',
     colors: {
       primary: '#c8102e',
       primaryLight: '#e01e3c',
@@ -57,6 +74,7 @@ export const INSTITUT_VARIANTEN = [
   {
     institut: 'Zurich',
     domain: 'zurich.de',
+    mode: 'insurance',
     colors: {
       primary: '#003399',
       primaryLight: '#0050b3',
@@ -67,6 +85,7 @@ export const INSTITUT_VARIANTEN = [
   {
     institut: 'HDI',
     domain: 'hdi.de',
+    mode: 'insurance',
     colors: {
       primary: '#004f3b',
       primaryLight: '#007a5e',
@@ -77,6 +96,7 @@ export const INSTITUT_VARIANTEN = [
   {
     institut: 'R+V',
     domain: 'ruv.de',
+    mode: 'insurance',
     colors: {
       primary: '#003d7a',
       primaryLight: '#0060bf',
@@ -87,6 +107,7 @@ export const INSTITUT_VARIANTEN = [
   {
     institut: 'Zukunftsversicherung',
     domain: null,
+    mode: 'insurance',
     colors: {
       primary: '#1e2a4a',
       primaryLight: '#2d3f6e',
@@ -96,4 +117,4 @@ export const INSTITUT_VARIANTEN = [
   },
 ];
 
-export const DEFAULT_INSTITUT = INSTITUT_VARIANTEN[0];
+export const DEFAULT_INSTITUT = INSTITUT_VARIANTEN.find(v => v.institut === 'ERGO') || INSTITUT_VARIANTEN[0];

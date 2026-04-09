@@ -142,8 +142,35 @@ export function getHRData(mode) {
     };
 }
 
-// Mode-aware match score that works for both data sets
-export function getHPMatchScoreExt(profile, position) {
+// Adjacency groups for "related but not identical" job families.
+// Partial match gives a softer penalty than a full mismatch.
+const JOB_FAMILY_ADJACENCY = {
+    'Human Resources':   ['Human Resources'],
+    'Finance':           ['Finance', 'Data & Analytics'],
+    'Tech & IT':         ['Tech & IT', 'Data & Analytics'],
+    'Marketing':         ['Marketing'],
+    'Operations':        ['Operations', 'Finance'],
+    'Data & Analytics':  ['Data & Analytics', 'Finance', 'Tech & IT']
+};
+
+// Returns a penalty in total-score points based on how far the profile's job
+// family is from the position's job family. Only used in generic mode where
+// positions span multiple functions.
+function jobFamilyPenalty(profile, position) {
+    if (!position.jobFamily) return 0;
+    const affinities = profile.jobFamilyAffinities || (profile.jobFamily ? [profile.jobFamily] : []);
+    if (!affinities.length) return 25;
+    if (affinities.includes(position.jobFamily)) return 0;
+    // Check adjacency (e.g. Data Analyst is adjacent to Finance)
+    const profileFamily = profile.jobFamily || affinities[0];
+    const adjacents = JOB_FAMILY_ADJACENCY[profileFamily] || [profileFamily];
+    if (adjacents.includes(position.jobFamily)) return 18;
+    return 35;
+}
+
+// Mode-aware match score. Accepts an optional `mode` arg so the generic mode
+// can add a job-family fit component on top of distance and type heuristics.
+export function getHPMatchScoreExt(profile, position, mode) {
     const base = profile.totalScore;
     const dist = HP_DISTANCES_EXT[profile.city]?.[position.city] ?? 300;
     const distPenalty = Math.min(dist / 20, 15);
@@ -151,12 +178,27 @@ export function getHPMatchScoreExt(profile, position) {
     if (position.type === 'Führung' && profile.scores.vertrieb > 80) typeBonus = 5;
     if (position.type === 'Einstieg' && profile.scores.vertrieb < 70) typeBonus = 8;
     if (position.type === 'Einstieg' && base < 50) typeBonus = 5;
-    return Math.max(15, Math.min(98, Math.round(base - distPenalty + typeBonus + (Math.random() * 6 - 3))));
+    const familyPenalty = mode === 'generic' ? jobFamilyPenalty(profile, position) : 0;
+    return Math.max(15, Math.min(98, Math.round(base - distPenalty - familyPenalty + typeBonus + (Math.random() * 6 - 3))));
 }
 
 export function getHPMatchBadgesExt(profile, position, mode) {
     const badges = [];
     const dist = HP_DISTANCES_EXT[profile.city]?.[position.city] ?? 300;
+    if (mode === 'generic' && position.jobFamily) {
+        const affinities = profile.jobFamilyAffinities || (profile.jobFamily ? [profile.jobFamily] : []);
+        if (affinities.includes(position.jobFamily)) {
+            badges.push({ text: 'Job-Family-Match', color: 'green' });
+        } else {
+            const profileFamily = profile.jobFamily || affinities[0];
+            const adjacents = JOB_FAMILY_ADJACENCY[profileFamily] || [];
+            if (adjacents.includes(position.jobFamily)) {
+                badges.push({ text: 'Angrenzende Jobfamilie', color: 'orange' });
+            } else {
+                badges.push({ text: 'Andere Jobfamilie', color: 'orange' });
+            }
+        }
+    }
     if (dist <= 50) badges.push({ text: 'Wohnortnähe', color: 'green' });
     if (profile.scores.branche > 70) badges.push({ text: mode === 'generic' ? 'Fachkompetenz' : 'Branchenerfahrung', color: 'blue' });
     if (profile.scores.vertrieb > 80) badges.push({ text: mode === 'generic' ? 'Senior-Erfahrung' : 'Vertriebserfahrung', color: 'blue' });

@@ -8,7 +8,7 @@ import WaterfallChart from '../shared/WaterfallChart';
 
 function getMatchesForProfile(profile, positions, mode) {
   return positions.map(pos => {
-    const score = getHPMatchScoreExt(profile, pos);
+    const score = getHPMatchScoreExt(profile, pos, mode);
     const distance = HP_DISTANCES_EXT[profile.city]?.[pos.city] ?? 999;
     const badges = getHPMatchBadgesExt(profile, pos, mode);
     return { position: pos, score, distance, badges, recommended: score >= 85 && distance <= 50 };
@@ -396,9 +396,18 @@ function ResultsSection({ profile, onReset, onJobDetail, hrData }) {
   const [expandedIdx, setExpandedIdx] = useState(null);
   const { positions, mode, scoreLabels, ui } = hrData;
 
-  const matches = getMatchesForProfile(profile, positions, mode);
-  if (sortBy === 'distance') matches.sort((a, b) => a.distance - b.distance);
-  else if (sortBy === 'region') matches.sort((a, b) => a.position.region.localeCompare(b.position.region));
+  // Compute matches once per profile/positions/mode so scores stay stable
+  // across re-renders (otherwise the ±3 random fuzz shuffles the list).
+  const baseMatches = useMemo(
+    () => getMatchesForProfile(profile, positions, mode),
+    [profile, positions, mode]
+  );
+  const matches = useMemo(() => {
+    const copy = [...baseMatches];
+    if (sortBy === 'distance') copy.sort((a, b) => a.distance - b.distance);
+    else if (sortBy === 'region') copy.sort((a, b) => a.position.region.localeCompare(b.position.region));
+    return copy;
+  }, [baseMatches, sortBy]);
 
   return (
     <div className="hp-results-section active">

@@ -10,6 +10,7 @@ export const HP_ALL_APPLICANTS_GENERIC = [
 
     {
         id: 'ben', name: 'Ben Kowalski', initials: 'BK', photo: '../../assets/images/AdobeStock_1091012713.jpeg',
+        jobFamily: 'Tech & IT', jobFamilyAffinities: ['Tech & IT', 'Data & Analytics'],
         age: 32, city: 'München', region: 'bayern', appliedDate: '2026-02-10', appliedPositionId: 3,
         experience: '6 Jahre Full-Stack-Development (FinTech Scale-up)', experienceYears: 6,
         education: 'M.Sc. Informatik (TU München)',
@@ -53,6 +54,7 @@ export const HP_ALL_APPLICANTS_GENERIC = [
 
     {
         id: 'mira', name: 'Mira Tanaka', initials: 'MT',
+        jobFamily: 'Finance', jobFamilyAffinities: ['Finance', 'Data & Analytics'],
         age: 31, city: 'Frankfurt', region: 'hessen', appliedDate: '2026-02-12', appliedPositionId: 2,
         experience: '5 Jahre Controlling bei DAX-Konzern', experienceYears: 5,
         education: 'M.Sc. Finance (Frankfurt School of Finance)',
@@ -91,6 +93,7 @@ export const HP_ALL_APPLICANTS_GENERIC = [
 
     {
         id: 'sana', name: 'Sana Osei', initials: 'SO',
+        jobFamily: 'Marketing', jobFamilyAffinities: ['Marketing'],
         age: 27, city: 'Hamburg', region: 'nord', appliedDate: '2026-02-17', appliedPositionId: 4,
         experience: '3 Jahre B2B-Marketing (SaaS Scale-up)', experienceYears: 3,
         education: 'B.A. Marketing & Kommunikation (HAW Hamburg)',
@@ -128,6 +131,7 @@ export const HP_ALL_APPLICANTS_GENERIC = [
 
     {
         id: 'rafael', name: 'Rafael Oliveira', initials: 'RO',
+        jobFamily: 'Tech & IT', jobFamilyAffinities: ['Tech & IT'],
         age: 36, city: 'Düsseldorf', region: 'nrw', appliedDate: '2026-02-08', appliedPositionId: 7,
         experience: '10 Jahre IT-Operations, davon 4 Jahre als Team Lead', experienceYears: 10,
         education: 'B.Sc. Informatik + MBA (berufsbegleitend)',
@@ -166,6 +170,7 @@ export const HP_ALL_APPLICANTS_GENERIC = [
 
     {
         id: 'eric', name: 'Eric Hoffmann', initials: 'EH',
+        jobFamily: 'Human Resources', jobFamilyAffinities: ['Human Resources'],
         age: 24, city: 'Berlin', region: 'berlin', appliedDate: '2026-02-19', appliedPositionId: 5,
         experience: '1 Jahr Werkstudent Recruiting (Agentur) + 6 Monate Praktikum People Ops', experienceYears: 1,
         education: 'B.Sc. BWL mit Schwerpunkt HR (laufend, 5. Semester)',
@@ -195,6 +200,7 @@ export const HP_ALL_APPLICANTS_GENERIC = [
 
     {
         id: 'yvonne', name: 'Yvonne Baumann', initials: 'YB',
+        jobFamily: 'Operations', jobFamilyAffinities: ['Operations'],
         age: 41, city: 'Stuttgart', region: 'baden', appliedDate: '2026-02-05', appliedPositionId: 6,
         experience: '15 Jahre Supply Chain (Automotive-Zulieferer), davon 5 Jahre Teamleitung', experienceYears: 15,
         education: 'Diplom Wirtschaftsingenieurwesen (Uni Stuttgart)',
@@ -223,6 +229,7 @@ export const HP_ALL_APPLICANTS_GENERIC = [
 
     {
         id: 'dennis', name: 'Dennis Schröder', initials: 'DS',
+        jobFamily: 'Tech & IT', jobFamilyAffinities: ['Tech & IT'],
         age: 29, city: 'Dortmund', region: 'nrw', appliedDate: '2026-02-01', appliedPositionId: 3,
         experience: '3 Jahre Frontend-Entwicklung (Agentur)', experienceYears: 3,
         education: 'Ausbildung Fachinformatiker Anwendungsentwicklung',
@@ -251,6 +258,7 @@ export const HP_ALL_APPLICANTS_GENERIC = [
 
     {
         id: 'mike', name: 'Mike Fechner', initials: 'MF',
+        jobFamily: 'Operations', jobFamilyAffinities: [],
         age: 47, city: 'Bremen', region: 'nord', appliedDate: '2026-01-22', appliedPositionId: 7,
         experience: '6 Jahre Kleinunternehmer (Einzelhandel), zuvor diverse kurze Engagements', experienceYears: 6,
         education: 'Realschulabschluss',
@@ -278,6 +286,7 @@ export const HP_ALL_APPLICANTS_GENERIC = [
 
     {
         id: 'kathrin', name: 'Kathrin Lindberg', initials: 'KL',
+        jobFamily: 'Human Resources', jobFamilyAffinities: ['Human Resources'],
         age: 39, city: 'Hamburg', region: 'nord', appliedDate: '2026-02-03', appliedPositionId: 1,
         experience: '9 Jahre HR (davon 3 Jahre HR-Manager Retail)', experienceYears: 9,
         education: 'B.A. BWL mit Schwerpunkt HR',

@@ -1,14 +1,14 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { UserPlus, Activity, Eye, EyeOff, MapPin, Calendar, Briefcase, CheckCircle, XCircle, Bookmark, HelpCircle, Send, FileText, Phone, Video, Building, ChevronDown } from 'lucide-react';
-import { HP_POSITIONS } from '../../data/positions';
-import { HP_ALL_APPLICANTS, anonymizeText } from '../../data/applicants';
+import { anonymizeText } from '../../data/applicants';
+import { getHRData } from '../../data/hrData';
 import { useToast } from '../../hooks/useToast';
 import { useInstitut } from '../../hooks/useInstitut';
 import WaterfallChart from '../shared/WaterfallChart';
 import SkillGapChart from '../shared/SkillGapChart';
 
-function getBlindId(applicantId) {
-  const idx = HP_ALL_APPLICANTS.findIndex(a => a.id === applicantId);
+function getBlindId(applicantId, applicants) {
+  const idx = applicants.findIndex(a => a.id === applicantId);
   return String(idx + 1).padStart(3, '0');
 }
 
@@ -84,10 +84,10 @@ function KPISection() {
 }
 
 // ======== Applicant Card ========
-function ApplicantCard({ applicant, isBlind, onClick }) {
+function ApplicantCard({ applicant, isBlind, onClick, positions, applicants }) {
   const scoreClass = applicant.totalScore >= 80 ? 'high' : applicant.totalScore >= 60 ? 'mid' : 'low';
   const statusLabel = applicant.status === 'recommended' ? 'Empfohlen' : applicant.status === 'review' ? 'Prüfen' : 'Ablehnung empfohlen';
-  const appliedPos = applicant.appliedPositionId ? HP_POSITIONS.find(p => p.id === applicant.appliedPositionId) : null;
+  const appliedPos = applicant.appliedPositionId ? positions.find(p => p.id === applicant.appliedPositionId) : null;
   const dateStr = applicant.appliedDate ? new Date(applicant.appliedDate).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' }) : '';
 
   return (
@@ -99,10 +99,10 @@ function ApplicantCard({ applicant, isBlind, onClick }) {
       {!isBlind && applicant.photo ? (
         <img src={applicant.photo} alt={applicant.name} style={{ width: 56, height: 56, borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }} />
       ) : (
-        <div className="hp-profile-avatar-small">{isBlind ? `#${getBlindId(applicant.id)}` : applicant.initials}</div>
+        <div className="hp-profile-avatar-small">{isBlind ? `#${getBlindId(applicant.id, applicants)}` : applicant.initials}</div>
       )}
       <div className="hp-applicant-info">
-        <h4>{isBlind ? `Kandidat/in #${getBlindId(applicant.id)}` : applicant.name}</h4>
+        <h4>{isBlind ? `Kandidat/in #${getBlindId(applicant.id, applicants)}` : applicant.name}</h4>
         <div className="hp-applicant-location">
           {isBlind ? applicant.region?.toUpperCase() : `${applicant.city} | ${applicant.age} Jahre`}
         </div>
@@ -133,25 +133,22 @@ function ApplicantCard({ applicant, isBlind, onClick }) {
 }
 
 // ======== Detail Overlay ========
-function DetailOverlay({ applicant, isBlind, onClose }) {
+function DetailOverlay({ applicant, isBlind, onClose, positions, applicants, scoreLabels }) {
   const showToast = useToast();
   const [actionView, setActionView] = useState(null); // null | 'einladen' | 'ablehnen'
   const [interviewOpen, setInterviewOpen] = useState(false);
 
   if (!applicant) return null;
 
-  const displayName = isBlind ? `Kandidat/in #${getBlindId(applicant.id)}` : applicant.name;
+  const displayName = isBlind ? `Kandidat/in #${getBlindId(applicant.id, applicants)}` : applicant.name;
   const scoreClass = applicant.totalScore >= 80 ? 'high' : applicant.totalScore >= 60 ? 'mid' : 'low';
-  const appliedPos = applicant.appliedPositionId ? HP_POSITIONS.find(p => p.id === applicant.appliedPositionId) : null;
+  const appliedPos = applicant.appliedPositionId ? positions.find(p => p.id === applicant.appliedPositionId) : null;
   const dateStr = applicant.appliedDate ? new Date(applicant.appliedDate).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' }) : '';
 
-  const scoreCategories = [
-    { label: 'Vertriebserfahrung (30%)', value: applicant.scores?.vertrieb || 0 },
-    { label: 'Branchenkenntnis (25%)', value: applicant.scores?.branche || 0 },
-    { label: 'Qualifikation (20%)', value: applicant.scores?.qualifikation || 0 },
-    { label: 'Standort-Match (15%)', value: applicant.scores?.standort || 0 },
-    { label: 'Soft Skills (10%)', value: applicant.scores?.softskills || 0 },
-  ];
+  const scoreCategories = scoreLabels.weighted.map(entry => ({
+    label: entry.label,
+    value: applicant.scores?.[entry.key] || 0
+  }));
 
   const handleAction = (type) => {
     if (type === 'merken') { showToast?.(`${displayName} wurde vorgemerkt`, 'info'); return; }
@@ -176,7 +173,7 @@ function DetailOverlay({ applicant, isBlind, onClose }) {
                   {!isBlind && applicant.photo ? (
                     <img src={applicant.photo} alt={applicant.name} className="hp-profile-avatar-large hp-photo-hover" style={{ width: 72, height: 72, borderRadius: '50%', objectFit: 'cover' }} />
                   ) : (
-                    <div className="hp-profile-avatar-large">{isBlind ? `#${getBlindId(applicant.id)}` : applicant.initials}</div>
+                    <div className="hp-profile-avatar-large">{isBlind ? `#${getBlindId(applicant.id, applicants)}` : applicant.initials}</div>
                   )}
                   <div>
                     <div style={{ fontSize: 'var(--font-lg)', fontWeight: 'var(--font-bold)', color: 'var(--text-primary)' }}>{displayName}</div>
@@ -478,11 +475,23 @@ function generateDateOptions() {
 // ======== Main Arbeitgeber Mode ========
 export default function ArbeitgeberMode() {
   const showToast = useToast();
+  const { institut } = useInstitut();
+  const hrData = useMemo(() => getHRData(institut.mode), [institut.mode]);
+  const { applicants, positions, regionOptions, scoreLabels } = hrData;
+
   const [blindScreening, setBlindScreening] = useState(false);
   const [filterRegion, setFilterRegion] = useState('');
   const [filterScore, setFilterScore] = useState('');
   const [filterStatus, setFilterStatus] = useState('');
   const [detailApplicant, setDetailApplicant] = useState(null);
+
+  // Reset state when mode changes so selected data from the previous mode is dropped
+  useEffect(() => {
+    setDetailApplicant(null);
+    setFilterRegion('');
+    setFilterScore('');
+    setFilterStatus('');
+  }, [institut.mode]);
 
   const toggleBlind = () => {
     setBlindScreening(prev => {
@@ -491,7 +500,7 @@ export default function ArbeitgeberMode() {
     });
   };
 
-  const filteredApplicants = HP_ALL_APPLICANTS.filter(a => {
+  const filteredApplicants = applicants.filter(a => {
     if (filterRegion && a.region !== filterRegion) return false;
     if (filterScore) {
       if (filterScore === 'high' && a.totalScore < 80) return false;
@@ -524,10 +533,7 @@ export default function ArbeitgeberMode() {
       {/* Filters */}
       <div className="hp-filters">
         <select className="hp-filter-select" value={filterRegion} onChange={e => setFilterRegion(e.target.value)}>
-          <option value="">Alle Regionen</option>
-          <option value="nrw">Nordrhein-Westfalen</option>
-          <option value="nord">Norddeutschland</option>
-          <option value="sued">Süddeutschland</option>
+          {regionOptions.map(opt => <option key={opt.value} value={opt.value}>{opt.label}</option>)}
         </select>
         <select className="hp-filter-select" value={filterScore} onChange={e => setFilterScore(e.target.value)}>
           <option value="">Alle Scores</option>
@@ -551,6 +557,8 @@ export default function ArbeitgeberMode() {
             applicant={applicant}
             isBlind={blindScreening}
             onClick={() => setDetailApplicant(applicant)}
+            positions={positions}
+            applicants={applicants}
           />
         ))}
       </div>
@@ -560,6 +568,9 @@ export default function ArbeitgeberMode() {
           applicant={detailApplicant}
           isBlind={blindScreening}
           onClose={() => setDetailApplicant(null)}
+          positions={positions}
+          applicants={applicants}
+          scoreLabels={scoreLabels}
         />
       )}
     </div>

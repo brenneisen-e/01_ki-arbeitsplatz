@@ -1,18 +1,16 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { Upload, ChevronDown, ChevronLeft, MapPin, Calendar, Briefcase, Activity, CheckCircle, AlertCircle, HelpCircle } from 'lucide-react';
-import { HP_PROFILES } from '../../data/profiles';
-import { HP_POSITIONS } from '../../data/positions';
-import { getHPMatchScore, getHPMatchBadges, HP_DISTANCES } from '../../data/applicants';
+import { getHRData, HP_DISTANCES_EXT, getHPMatchScoreExt, getHPMatchBadgesExt } from '../../data/hrData';
 import { useToast } from '../../hooks/useToast';
 import { useInstitut } from '../../hooks/useInstitut';
 import ScoreRing from '../shared/ScoreRing';
 import WaterfallChart from '../shared/WaterfallChart';
 
-function getMatchesForProfile(profile) {
-  return HP_POSITIONS.map(pos => {
-    const score = getHPMatchScore(profile, pos);
-    const distance = HP_DISTANCES[profile.city]?.[pos.city] || 999;
-    const badges = getHPMatchBadges(profile, pos);
+function getMatchesForProfile(profile, positions, mode) {
+  return positions.map(pos => {
+    const score = getHPMatchScoreExt(profile, pos, mode);
+    const distance = HP_DISTANCES_EXT[profile.city]?.[pos.city] ?? 999;
+    const badges = getHPMatchBadgesExt(profile, pos, mode);
     return { position: pos, score, distance, badges, recommended: score >= 85 && distance <= 50 };
   }).sort((a, b) => b.score - a.score);
 }
@@ -51,11 +49,12 @@ function KiSummary({ text }) {
 }
 
 // ======== Upload / Landing Section ========
-function UploadSection({ onLoadProfile, onJobDetail }) {
+function UploadSection({ onLoadProfile, onJobDetail, hrData }) {
   const { institut } = useInstitut();
   const [linkedinChecked, setLinkedinChecked] = useState(true);
   const [demosExpanded, setDemosExpanded] = useState(false);
   const fileInputRef = useRef(null);
+  const { positions, ui } = hrData;
 
   return (
     <div className="hp-upload-section">
@@ -66,10 +65,8 @@ function UploadSection({ onLoadProfile, onJobDetail }) {
             <CheckCircle size={14} />
             KI-gestützte Stellensuche
           </div>
-          <h2 className="hp-landing-title">Willkommen im {institut.institut} Karriereportal</h2>
-          <p className="hp-landing-subtitle">
-            Finden Sie Ihre ideale Vertriebsposition bei einem der führenden Versicherungsunternehmen Deutschlands. Unsere KI analysiert Ihren Lebenslauf und findet die besten Stellen für Sie — in Sekunden.
-          </p>
+          <h2 className="hp-landing-title">Willkommen im {institut.institut} {ui.portalTitle}</h2>
+          <p className="hp-landing-subtitle">{ui.landingSubtitle}</p>
           <div className="hp-landing-cta">
             <button className="hp-landing-upload-btn" onClick={() => fileInputRef.current?.click()}>
               <Upload size={18} />
@@ -80,7 +77,7 @@ function UploadSection({ onLoadProfile, onJobDetail }) {
               ref={fileInputRef}
               type="file"
               accept=".pdf,.docx"
-              onChange={() => onLoadProfile('max')}
+              onChange={() => onLoadProfile(ui.defaultProfileId)}
               style={{ display: 'none' }}
             />
           </div>
@@ -93,12 +90,12 @@ function UploadSection({ onLoadProfile, onJobDetail }) {
         <div className="hp-landing-hero-visual">
           <div className="hp-landing-stats">
             <div className="hp-landing-stat">
-              <div className="hp-landing-stat-value">8</div>
+              <div className="hp-landing-stat-value">{positions.length}</div>
               <div className="hp-landing-stat-label">Offene Stellen</div>
             </div>
             <div className="hp-landing-stat">
-              <div className="hp-landing-stat-value">NRW</div>
-              <div className="hp-landing-stat-label">Schwerpunkt Region</div>
+              <div className="hp-landing-stat-value">{ui.statsFocusRegion}</div>
+              <div className="hp-landing-stat-label">{ui.statsFocusLabel}</div>
             </div>
             <div className="hp-landing-stat">
               <div className="hp-landing-stat-value">&lt;30s</div>
@@ -131,10 +128,10 @@ function UploadSection({ onLoadProfile, onJobDetail }) {
 
       {/* Positions Preview */}
       <div className="hp-landing-positions">
-        <h3>Aktuelle Vertriebspositionen</h3>
+        <h3>{ui.positionsTeaserHeading}</h3>
         <div className="hp-landing-positions-grid">
-          {[1, 2, 5, 7].map(id => {
-            const pos = HP_POSITIONS.find(p => p.id === id);
+          {ui.teaserPositionIds.map(id => {
+            const pos = positions.find(p => p.id === id);
             return pos ? (
               <div key={id} className="hp-landing-position-card" onClick={() => onJobDetail(id)}>
                 <div className="hp-landing-pos-title">{pos.title}</div>
@@ -154,21 +151,13 @@ function UploadSection({ onLoadProfile, onJobDetail }) {
         <div className="hp-demo-content">
           <p className="hp-demo-hint">Testen Sie die KI-Analyse mit einem vorgefertigten Profil:</p>
           <div className="hp-demo-grid">
-            <button className="hp-demo-btn score-high" onClick={() => onLoadProfile('max')}>
-              <div className="hp-demo-avatar">MB</div>
-              <span className="name">Max Berger</span>
-              <span className="role">Top-Kandidat</span>
-            </button>
-            <button className="hp-demo-btn score-mid" onClick={() => onLoadProfile('sarah')}>
-              <div className="hp-demo-avatar">SK</div>
-              <span className="name">Sarah Klein</span>
-              <span className="role">Quereinsteigerin</span>
-            </button>
-            <button className="hp-demo-btn score-low" onClick={() => onLoadProfile('thomas')}>
-              <div className="hp-demo-avatar">TW</div>
-              <span className="name">Thomas Wendt</span>
-              <span className="role">Ablehnung</span>
-            </button>
+            {ui.demoProfiles.map(dp => (
+              <button key={dp.id} className={`hp-demo-btn score-${dp.score}`} onClick={() => onLoadProfile(dp.id)}>
+                <div className="hp-demo-avatar">{dp.initials}</div>
+                <span className="name">{dp.name}</span>
+                <span className="role">{dp.role}</span>
+              </button>
+            ))}
           </div>
         </div>
       </div>
@@ -177,22 +166,11 @@ function UploadSection({ onLoadProfile, onJobDetail }) {
 }
 
 // ======== Loading Section ========
-function LoadingSection({ onDone }) {
+function LoadingSection({ onDone, steps }) {
   const [progress, setProgress] = useState(0);
-  const [status, setStatus] = useState('Dokument wird verarbeitet...');
+  const [status, setStatus] = useState(steps[0]?.text || 'Dokument wird verarbeitet...');
 
   useEffect(() => {
-    const steps = [
-      { pct: 12, text: 'Dokument wird verarbeitet...' },
-      { pct: 25, text: 'Textextraktion läuft...' },
-      { pct: 40, text: 'Qualifikationen werden erkannt (§34d, IHK, Fachwirt)...' },
-      { pct: 55, text: 'Versicherungs-Branchenerfahrung wird analysiert...' },
-      { pct: 68, text: 'LinkedIn-Profil wird analysiert...' },
-      { pct: 78, text: 'Social-Media-Netzwerk wird ausgewertet...' },
-      { pct: 88, text: 'Stellenabgleich wird durchgeführt...' },
-      { pct: 95, text: 'SHAP-Erklärung wird generiert...' },
-      { pct: 100, text: 'Analyse abgeschlossen!' },
-    ];
     let i = 0;
     const interval = setInterval(() => {
       if (i < steps.length) {
@@ -205,7 +183,7 @@ function LoadingSection({ onDone }) {
       }
     }, 350);
     return () => clearInterval(interval);
-  }, [onDone]);
+  }, [onDone, steps]);
 
   return (
     <div className="hp-loading-section active">
@@ -220,7 +198,7 @@ function LoadingSection({ onDone }) {
 }
 
 // ======== Profile Card ========
-function ProfileCard({ profile }) {
+function ProfileCard({ profile, scoreLabels, indicatorsLabel }) {
   const scoreClass = profile.totalScore >= 80 ? 'high' : profile.totalScore >= 60 ? 'mid' : 'low';
   const certTags = profile.certifications || [];
   const greenFlags = profile.insuranceFlags?.green || [];
@@ -257,7 +235,7 @@ function ProfileCard({ profile }) {
           </div>
         </div>
         <div className="hp-profile-section">
-          <h4>Versicherungs-Indikatoren</h4>
+          <h4>{indicatorsLabel}</h4>
           <div className="hp-tags">
             {greenFlags.map((f, i) => <span key={`g${i}`} className="hp-tag flag-green">{f}</span>)}
             {redFlags.map((f, i) => <span key={`r${i}`} className="hp-tag flag-red">{f}</span>)}
@@ -285,7 +263,7 @@ function ProfileCard({ profile }) {
         <div className="hp-profile-section">
           <h4>Stärken-Profil</h4>
           <div className="hp-score-breakdown">
-            {['Vertrieb', 'Branche', 'Qualifikation', 'Standort', 'Soft Skills'].map((label, i) => {
+            {scoreLabels.dimensions.map((label, i) => {
               const keys = ['vertrieb', 'branche', 'qualifikation', 'standort', 'softskills'];
               const val = profile.scores[keys[i]];
               const barClass = val >= 70 ? 'high' : val >= 40 ? 'mid' : 'low';
@@ -357,8 +335,8 @@ function JobMatchCard({ match, idx, expanded, onToggle, onDetail }) {
 }
 
 // ======== Job Detail Overlay ========
-function JobDetailOverlay({ positionId, onClose }) {
-  const position = HP_POSITIONS.find(p => p.id === positionId);
+function JobDetailOverlay({ positionId, onClose, positions }) {
+  const position = positions.find(p => p.id === positionId);
   if (!position) return null;
 
   return (
@@ -413,13 +391,23 @@ function JobDetailOverlay({ positionId, onClose }) {
 }
 
 // ======== Results Section ========
-function ResultsSection({ profile, onReset, onJobDetail }) {
+function ResultsSection({ profile, onReset, onJobDetail, hrData }) {
   const [sortBy, setSortBy] = useState('score');
   const [expandedIdx, setExpandedIdx] = useState(null);
+  const { positions, mode, scoreLabels, ui } = hrData;
 
-  const matches = getMatchesForProfile(profile);
-  if (sortBy === 'distance') matches.sort((a, b) => a.distance - b.distance);
-  else if (sortBy === 'region') matches.sort((a, b) => a.position.region.localeCompare(b.position.region));
+  // Compute matches once per profile/positions/mode so scores stay stable
+  // across re-renders (otherwise the ±3 random fuzz shuffles the list).
+  const baseMatches = useMemo(
+    () => getMatchesForProfile(profile, positions, mode),
+    [profile, positions, mode]
+  );
+  const matches = useMemo(() => {
+    const copy = [...baseMatches];
+    if (sortBy === 'distance') copy.sort((a, b) => a.distance - b.distance);
+    else if (sortBy === 'region') copy.sort((a, b) => a.position.region.localeCompare(b.position.region));
+    return copy;
+  }, [baseMatches, sortBy]);
 
   return (
     <div className="hp-results-section active">
@@ -432,7 +420,7 @@ function ResultsSection({ profile, onReset, onJobDetail }) {
         KI-gestützte Vorauswahl — Die finale Bewertung und Entscheidung wird stets durch qualifiziertes Personal getroffen.
       </div>
 
-      <ProfileCard profile={profile} />
+      <ProfileCard profile={profile} scoreLabels={scoreLabels} indicatorsLabel={scoreLabels.indicatorsLabel} />
 
       {profile.rejected && (
         <div className="hp-rejection-notice active">
@@ -480,16 +468,25 @@ function ResultsSection({ profile, onReset, onJobDetail }) {
 // ======== Main Bewerber Mode ========
 export default function BewerberMode() {
   const showToast = useToast();
+  const { institut } = useInstitut();
+  const hrData = useMemo(() => getHRData(institut.mode), [institut.mode]);
   const [view, setView] = useState('upload'); // 'upload' | 'loading' | 'results'
   const [currentProfile, setCurrentProfile] = useState(null);
   const [jobDetailId, setJobDetailId] = useState(null);
 
+  // Reset when mode changes so we never render stale data from another mode
+  useEffect(() => {
+    setCurrentProfile(null);
+    setJobDetailId(null);
+    setView('upload');
+  }, [institut.mode]);
+
   const handleLoadProfile = useCallback((profileId) => {
-    const profile = HP_PROFILES[profileId];
+    const profile = hrData.profiles[profileId];
     if (!profile) return;
     setCurrentProfile(profile);
     setView('loading');
-  }, []);
+  }, [hrData]);
 
   const handleLoadingDone = useCallback(() => {
     setView('results');
@@ -504,16 +501,16 @@ export default function BewerberMode() {
   return (
     <div className="hp-bewerber-section">
       {view === 'upload' && (
-        <UploadSection onLoadProfile={handleLoadProfile} onJobDetail={setJobDetailId} />
+        <UploadSection onLoadProfile={handleLoadProfile} onJobDetail={setJobDetailId} hrData={hrData} />
       )}
       {view === 'loading' && (
-        <LoadingSection onDone={handleLoadingDone} />
+        <LoadingSection onDone={handleLoadingDone} steps={hrData.ui.loadingSteps} />
       )}
       {view === 'results' && currentProfile && (
-        <ResultsSection profile={currentProfile} onReset={handleReset} onJobDetail={setJobDetailId} />
+        <ResultsSection profile={currentProfile} onReset={handleReset} onJobDetail={setJobDetailId} hrData={hrData} />
       )}
       {jobDetailId && (
-        <JobDetailOverlay positionId={jobDetailId} onClose={() => { setJobDetailId(null); showToast?.('Bewerbung wurde erfolgreich eingereicht!', 'success'); }} />
+        <JobDetailOverlay positionId={jobDetailId} positions={hrData.positions} onClose={() => { setJobDetailId(null); showToast?.('Bewerbung wurde erfolgreich eingereicht!', 'success'); }} />
       )}
     </div>
   );

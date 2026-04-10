@@ -138,15 +138,12 @@ function UploadSection({ onLoadProfile, onJobDetail, hrData }) {
       <div className="hp-landing-positions">
         <h3>{ui.positionsTeaserHeading}</h3>
         <div className="hp-landing-positions-grid">
-          {ui.teaserPositionIds.map(id => {
-            const pos = positions.find(p => p.id === id);
-            return pos ? (
-              <div key={id} className="hp-landing-position-card" onClick={() => onJobDetail(id)}>
-                <div className="hp-landing-pos-title">{pos.title}</div>
-                <div className="hp-landing-pos-meta">{pos.city} · {pos.type}</div>
-              </div>
-            ) : null;
-          })}
+          {positions.map(pos => (
+            <div key={pos.id} className="hp-landing-position-card" onClick={() => onJobDetail(pos.id)}>
+              <div className="hp-landing-pos-title">{pos.title}</div>
+              <div className="hp-landing-pos-meta">{pos.city} · {pos.type}</div>
+            </div>
+          ))}
         </div>
       </div>
 

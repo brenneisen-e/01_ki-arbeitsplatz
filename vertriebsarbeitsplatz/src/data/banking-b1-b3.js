@@ -8,6 +8,20 @@ export const B1 = {
   wohnsituation: 'Eigentum', wohnflaeche: 150, adresse: 'Gartenstr. 18, 35390 Gießen',
   tiere: { typ: null, rasse: null, name: null, vermutet: true, quelle: 'kontoumsaetze', umsaetze: [{ empfaenger: 'Fressnapf Gießen', betrag: -75, haeufigkeit: 'monatlich' }, { empfaenger: 'Tierarztpraxis Dr. Schäfer', betrag: -110, haeufigkeit: 'quartalsweise' }] },
   nps: 7, risikoscore: 30, potentialScore: 4.2, abwanderungsrisiko: 'mittel',
+  risikoSignale: [
+    {
+      typ: 'extremsport',
+      titel: 'Extremsport-Aktivitäten erkannt',
+      beschreibung: 'Aus Kontoumsätzen abgeleitet: Klaus Fischer ist häufig in der Boulderhalle aktiv und hat im Vorjahr eine Fallschirmsprung-Buchung getätigt.',
+      transaktionen: [
+        { empfaenger: 'DAV Boulderhalle Gießen', betrag: 65, haeufigkeit: 'monatlich' },
+        { empfaenger: 'Skydive Center Marburg', betrag: 320, haeufigkeit: 'einmalig 09/2025' },
+        { empfaenger: 'Kletterschuhe Globetrotter', betrag: 149, haeufigkeit: 'einmalig 06/2025' },
+      ],
+      konsequenz: 'Die aktuelle R+V Unfallversicherung (Basis-Tarif) schließt Extremsport-Risiken explizit aus. Bei einem Unfall im Rahmen dieser Aktivitäten besteht keine Deckung.',
+      empfehlung: 'Zusatzbaustein „Sport- & Freizeitrisiken" oder Wechsel in Premium-Tarif anbieten.',
+    },
+  ],
   eigeneProdukte: [
     { typ: 'girokonto', sparte: 'konto', produkt: 'VR-MeinKonto Plus', details: 'Gehaltseingang 4.500\u20ac netto', praemie: 0, seit: '2015-01', status: 'aktiv' },
     { typ: 'sparkonto', sparte: 'sparen', produkt: 'VR-Sparkonto', details: '0,5% Zins', praemie: 0, seit: '2015-01', status: 'aktiv', volumen: 15000 },

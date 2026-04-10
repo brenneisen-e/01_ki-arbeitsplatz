@@ -122,7 +122,7 @@ function formatTooltipDate(s) {
 
 /* ── Component ────────────────────────────────────────────── */
 export default function LebenszeitstrahlCard({ kunde }) {
-  const [hovered, setHovered] = useState(null); // { track, idx }
+  const [hovered, setHovered] = useState(null); // { track, idx, x, y }
   const [zoom, setZoom] = useState('5j');
 
   const data = useMemo(() => getTimelineForKunde(kunde), [kunde]);
@@ -166,31 +166,12 @@ export default function LebenszeitstrahlCard({ kunde }) {
     return years;
   }, [rangeStart, rangeEnd, totalRange]);
 
-  // Detail panel: hovered event OR fallback to "today" event (most recent)
-  const detailEvent = useMemo(() => {
-    if (hovered) {
-      const track = TRACKS.find((t) => t.key === hovered.track);
-      const event = data[hovered.track]?.[hovered.idx];
-      if (event) return { ...event, track };
-    }
-    // Fallback: pick the latest event across all tracks before today
-    const today = Date.now();
-    let latest = null;
-    TRACKS.forEach((tr) => {
-      data[tr.key].forEach((e, idx) => {
-        const t = parseDate(e.date).getTime();
-        if (t <= today && (!latest || t > latest.t)) {
-          latest = { ...e, track: tr, idx, t };
-        }
-      });
-    });
-    return latest;
-  }, [hovered, data]);
-
-  const TRACK_HEIGHT = 64;
+  const TRACK_HEIGHT = 80;
+  const DOT_BASE = 28;
+  const DOT_HOVER = 40;
 
   return (
-    <Card hover={false}>
+    <Card hover={false} className="lebenszeitstrahl-card">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <Sparkles size={20} style={{ color: 'var(--mode-primary-light)' }} strokeWidth={1.75} />
@@ -260,6 +241,8 @@ export default function LebenszeitstrahlCard({ kunde }) {
 
           {TRACKS.map((tr, ti) => {
             const trackCenter = (ti + 0.5) * TRACK_HEIGHT;
+            // Erste Spur: Tooltip unterhalb, sonst oberhalb des Dots
+            const tooltipBelow = ti === 0;
             return (
               <div key={tr.key}>
                 {/* Track baseline */}
@@ -272,7 +255,7 @@ export default function LebenszeitstrahlCard({ kunde }) {
                 {data[tr.key].map((event, idx) => {
                   const left = xPct(event.date);
                   const isHovered = hovered?.track === tr.key && hovered?.idx === idx;
-                  const dotSize = isHovered ? 22 : 16;
+                  const dotSize = isHovered ? DOT_HOVER : DOT_BASE;
                   return (
                     <div
                       key={idx}
@@ -281,7 +264,7 @@ export default function LebenszeitstrahlCard({ kunde }) {
                         left: `${left}%`,
                         top: trackCenter,
                         transform: 'translate(-50%, -50%)',
-                        padding: 14,
+                        padding: 10,
                         zIndex: isHovered ? 30 : 10,
                       }}
                       onMouseEnter={() => setHovered({ track: tr.key, idx })}
@@ -292,12 +275,12 @@ export default function LebenszeitstrahlCard({ kunde }) {
                         <div
                           className="absolute rounded-full pointer-events-none"
                           style={{
-                            width: 36,
-                            height: 36,
+                            width: dotSize + 16,
+                            height: dotSize + 16,
                             top: '50%',
                             left: '50%',
                             transform: 'translate(-50%, -50%)',
-                            backgroundColor: tr.color + '25',
+                            backgroundColor: tr.color + '30',
                           }}
                         />
                       )}
@@ -312,33 +295,137 @@ export default function LebenszeitstrahlCard({ kunde }) {
                             ? `3px dashed ${tr.color}`
                             : `3px solid white`,
                           boxShadow: isHovered
-                            ? `0 4px 12px ${tr.color}66`
-                            : '0 1px 4px rgba(0,0,0,0.2)',
+                            ? `0 6px 18px ${tr.color}80`
+                            : '0 2px 6px rgba(0,0,0,0.22)',
                         }}
                       />
                       {/* AI sparkle badge */}
                       {event.aiDetected && (
                         <div
-                          className="absolute w-4 h-4 rounded-full bg-amber-400 flex items-center justify-center border-2 border-white shadow-sm"
-                          style={{ top: 8, right: 8 }}
+                          className="absolute rounded-full bg-amber-400 flex items-center justify-center border-2 border-white shadow-sm pointer-events-none"
+                          style={{
+                            width: isHovered ? 18 : 14,
+                            height: isHovered ? 18 : 14,
+                            top: 4,
+                            right: 4,
+                          }}
                         >
-                          <Sparkles size={9} className="text-white" strokeWidth={3} />
+                          <Sparkles size={isHovered ? 11 : 9} className="text-white" strokeWidth={3} />
                         </div>
                       )}
                       {/* FIDA dot */}
                       {event.fida && (
                         <div
-                          className="absolute w-3 h-3 rounded-full bg-purple-500 border-2 border-white shadow-sm"
-                          style={{ top: 9, right: 9 }}
+                          className="absolute rounded-full bg-purple-500 border-2 border-white shadow-sm pointer-events-none"
+                          style={{
+                            width: isHovered ? 14 : 11,
+                            height: isHovered ? 14 : 11,
+                            top: 6,
+                            right: 6,
+                          }}
                         />
                       )}
                       {/* Warning */}
                       {event.isWarning && (
                         <div
-                          className="absolute w-4 h-4 rounded-full bg-red-500 flex items-center justify-center border-2 border-white shadow-sm"
-                          style={{ top: 8, right: 8 }}
+                          className="absolute rounded-full bg-red-500 flex items-center justify-center border-2 border-white shadow-sm pointer-events-none"
+                          style={{
+                            width: isHovered ? 18 : 14,
+                            height: isHovered ? 18 : 14,
+                            top: 4,
+                            right: 4,
+                          }}
                         >
-                          <AlertTriangle size={9} className="text-white" strokeWidth={3} />
+                          <AlertTriangle size={isHovered ? 11 : 9} className="text-white" strokeWidth={3} />
+                        </div>
+                      )}
+                      {/* Floating tooltip */}
+                      {isHovered && (
+                        <div
+                          className="absolute pointer-events-none animate-fade-in"
+                          style={{
+                            left: '50%',
+                            ...(tooltipBelow
+                              ? { top: '100%', transform: 'translate(-50%, 8px)' }
+                              : { bottom: '100%', transform: 'translate(-50%, -8px)' }),
+                            zIndex: 50,
+                          }}
+                        >
+                          <div
+                            className="rounded-xl shadow-xl border px-3.5 py-2.5 bg-white"
+                            style={{
+                              borderColor: tr.color + '60',
+                              minWidth: 220,
+                              maxWidth: 300,
+                              boxShadow: `0 10px 30px -8px ${tr.color}55, 0 4px 10px rgba(0,0,0,0.08)`,
+                            }}
+                          >
+                            <div className="flex items-center gap-1.5 mb-1 flex-wrap">
+                              <span
+                                className="text-[9px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded-full"
+                                style={{ backgroundColor: tr.color + '22', color: tr.color }}
+                              >
+                                {tr.label}
+                              </span>
+                              <span className="text-[10px] font-mono font-semibold text-slate-500">
+                                {formatTooltipDate(event.date)}
+                              </span>
+                              {event.aiDetected && (
+                                <span className="inline-flex items-center gap-0.5 text-[9px] font-bold uppercase tracking-wider text-amber-700 bg-amber-100 px-1.5 py-0.5 rounded-full">
+                                  <Sparkles size={9} /> KI
+                                </span>
+                              )}
+                              {event.fida && (
+                                <span className="inline-flex items-center gap-0.5 text-[9px] font-bold uppercase tracking-wider text-purple-700 bg-purple-100 px-1.5 py-0.5 rounded-full">
+                                  <Database size={9} /> FIDA
+                                </span>
+                              )}
+                              {event.isFuture && (
+                                <span className="text-[9px] font-bold uppercase tracking-wider text-slate-600 bg-slate-200 px-1.5 py-0.5 rounded-full">
+                                  Zukunft
+                                </span>
+                              )}
+                              {event.isWarning && (
+                                <span className="inline-flex items-center gap-0.5 text-[9px] font-bold uppercase tracking-wider text-red-700 bg-red-100 px-1.5 py-0.5 rounded-full">
+                                  <AlertTriangle size={9} /> Warnung
+                                </span>
+                              )}
+                            </div>
+                            <div className="text-[13px] font-bold text-slate-900 leading-snug">
+                              {event.label}
+                            </div>
+                            {event.source && (
+                              <div className="text-[11px] text-slate-500 italic mt-0.5">
+                                Quelle: {event.source}
+                              </div>
+                            )}
+                            {event.signals && event.signals.length > 0 && (
+                              <div className="mt-1.5 pt-1.5 border-t border-slate-100">
+                                <div className="text-[9px] font-bold uppercase tracking-wider text-slate-400 mb-0.5">
+                                  Erkannte Signale
+                                </div>
+                                <ul className="space-y-0.5">
+                                  {event.signals.map((s, si) => (
+                                    <li key={si} className="text-[11px] text-slate-700 flex items-start gap-1">
+                                      <span style={{ color: tr.color }} className="mt-0.5">▸</span>
+                                      <span>{s}</span>
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
+                            )}
+                            {/* Arrow */}
+                            <div
+                              className="absolute left-1/2 -translate-x-1/2 w-0 h-0"
+                              style={{
+                                ...(tooltipBelow
+                                  ? { bottom: '100%', borderBottom: `7px solid ${tr.color}60` }
+                                  : { top: '100%', borderTop: `7px solid ${tr.color}60` }),
+                                borderLeft: '7px solid transparent',
+                                borderRight: '7px solid transparent',
+                              }}
+                            />
+                          </div>
                         </div>
                       )}
                     </div>
@@ -363,84 +450,6 @@ export default function LebenszeitstrahlCard({ kunde }) {
           ))}
         </div>
       </div>
-
-      {/* Detail panel: shows hovered event or latest event by default */}
-      {detailEvent && (() => {
-        const track = detailEvent.track;
-        const TIcon = track.icon;
-        return (
-          <div
-            className="mt-4 rounded-xl border-2 p-4 transition-all"
-            style={{
-              borderColor: track.color + '40',
-              background: `linear-gradient(135deg, ${track.color}08 0%, ${track.color}03 100%)`,
-            }}
-          >
-            <div className="flex items-start gap-4">
-              {/* Icon column */}
-              <div
-                className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0"
-                style={{ backgroundColor: track.color + '20' }}
-              >
-                <TIcon size={22} style={{ color: track.color }} strokeWidth={2} />
-              </div>
-
-              {/* Main content */}
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 mb-1 flex-wrap">
-                  <span
-                    className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full"
-                    style={{ backgroundColor: track.color + '20', color: track.color }}
-                  >
-                    {track.label}
-                  </span>
-                  <span className="text-xs font-mono font-semibold text-slate-500">{formatTooltipDate(detailEvent.date)}</span>
-                  {detailEvent.aiDetected && (
-                    <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-amber-700 bg-amber-100 px-2 py-0.5 rounded-full">
-                      <Sparkles size={10} /> KI erkannt
-                    </span>
-                  )}
-                  {detailEvent.fida && (
-                    <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-purple-700 bg-purple-100 px-2 py-0.5 rounded-full">
-                      <Database size={10} /> FIDA
-                    </span>
-                  )}
-                  {detailEvent.isFuture && (
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-600 bg-slate-200 px-2 py-0.5 rounded-full">
-                      Zukunft
-                    </span>
-                  )}
-                  {detailEvent.isWarning && (
-                    <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-red-700 bg-red-100 px-2 py-0.5 rounded-full">
-                      <AlertTriangle size={10} /> Warnsignal
-                    </span>
-                  )}
-                </div>
-
-                <div className="text-base font-bold text-slate-900 leading-snug">{detailEvent.label}</div>
-
-                {detailEvent.source && (
-                  <div className="text-xs text-slate-500 italic mt-1">Quelle: {detailEvent.source}</div>
-                )}
-
-                {detailEvent.signals && detailEvent.signals.length > 0 && (
-                  <div className="mt-3">
-                    <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">Erkannte Signale</div>
-                    <ul className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-1">
-                      {detailEvent.signals.map((s, i) => (
-                        <li key={i} className="text-xs text-slate-700 flex items-start gap-1.5">
-                          <span style={{ color: track.color }} className="mt-0.5">▸</span>
-                          <span>{s}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        );
-      })()}
 
       {/* Legend */}
       <div className="mt-3 flex items-center gap-4 text-[11px] text-slate-500 flex-wrap">

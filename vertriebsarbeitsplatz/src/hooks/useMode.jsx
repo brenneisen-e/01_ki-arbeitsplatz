@@ -181,22 +181,16 @@ export function ModeProvider({ children }) {
   const goBack = useCallback(() => {
     if (currentView === 'detail') {
       setCurrentView('overview');
-      if (previousOverviewTab) {
-        // Return to the tab the user came from (e.g. "Übersicht" / "uebersicht").
-        setActiveTab(previousOverviewTab);
-      } else {
-        // Fallback (e.g. direct deep link to a customer): go to the customers tab.
-        const kundenTab = baseConfig.tabs.find(t =>
-          t.id === 'kunden' || t.id === 'mandatsliste'
-        );
-        setActiveTab(kundenTab?.id || 'kunden');
-      }
+      // Always return to the Übersicht tab when leaving the customer detail view.
+      // Users expect "Zurück" to go to the dashboard, not the raw customer list,
+      // regardless of which overview tab they came from.
+      setActiveTab('uebersicht');
       setSelectedKundeId(null);
       setPreviousOverviewTab(null);
     } else if (currentView === 'overview' || currentView === 'cockpit') {
       setCurrentView('landing');
     }
-  }, [currentView, baseConfig, previousOverviewTab]);
+  }, [currentView]);
 
   const modeRef = useRef(null);
 

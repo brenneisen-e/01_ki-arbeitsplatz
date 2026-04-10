@@ -26,3 +26,17 @@ Alle Projekte nutzen: **Vite + React 19 + Tailwind CSS v4**
 - Card-System: `.card-base` Klasse für Karten mit Shadow, Border-Radius, Containment
 - Modus-Farben über CSS Custom Properties (`--mode-primary`, `--mode-primary-light`, etc.)
 - Seiten-Layouts sollen die volle verfügbare Breite nutzen (kein `max-w-*` + `mx-auto` auf Page-Containern)
+
+## Icon- und Emoji-Regeln
+
+- **Keine Emojis** im gesamten Produkt. Dazu zählen insbesondere `💡`, `🔥`, `✨`, `⭐`, `🎉`, `⚠️`, `✅`, `❌`, `🚀` und sonstige Unicode-Emojis — weder in UI-Texten, Chatbot-Antworten, Tooltips, Badges, Notifications, noch in Demo-Daten.
+- **Ausschließlich einfarbige Icons** verwenden. Lucide-Icons (React) oder inline SVGs sind die einzige erlaubte Icon-Quelle. Icons dürfen nur eine Farbe haben (`currentColor` oder eine CSS Custom Property), keine Multi-Color- oder Gradient-Icons.
+- **Keine Farbverläufe in Icons**. Wenn Hervorhebung nötig ist, über Container (Background-Gradient auf dem Button/der Card), nicht über das Icon selbst.
+- Statt `💡` als „Tipp"-Marker verwenden: Lucide `Lightbulb` oder `Sparkles` in einer Farbe.
+- Statt `🔥` für Streaks: Lucide `Flame` in einfarbigem Orange.
+- Statt `⚠️`: Lucide `AlertTriangle` oder `AlertCircle`.
+- Statt `✅`/`❌`: Lucide `Check`/`X`.
+
+## Datenkonsistenz
+
+- Die Antworten des KI-Vertriebsassistenten (VertriebsAssistent.jsx) **müssen zu den tatsächlich im UI angezeigten Daten passen**. Keine hardcodierten Zeiten, Namen oder Zahlen, die sich von den Tab-Inhalten unterscheiden. Stattdessen die realen Datenquellen (`TERMINE_BY_MODE`, `AUFGABEN_BY_MODE`, `getAllPotentiale`, …) lesen.

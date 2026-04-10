@@ -165,10 +165,36 @@ function MapRenderer({
   svgH,
   markerScale = 1,
 }) {
-  // When a state is selected, zoom the SVG viewBox onto that state's
-  // bounding box so the user visually dives into the region.
+  const [hoveredKunde, setHoveredKunde] = useState(null);
+
+  // When a state is selected, zoom directly onto the customer cluster (not the
+  // state bounding box). The state outline is still rendered – just clipped
+  // by the new viewBox – so users dive right to where the pins actually sit.
   const viewBox = useMemo(() => {
     if (!zoomedState) return `0 0 ${svgW} ${svgH}`;
+
+    // Compute bounding box of the actual customer pins
+    if (visibleKunden && visibleKunden.length > 0) {
+      let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+      visibleKunden.forEach((k) => {
+        const [px, py] = project(k.lng, k.lat);
+        if (px < minX) minX = px;
+        if (px > maxX) maxX = px;
+        if (py < minY) minY = py;
+        if (py > maxY) maxY = py;
+      });
+      // Generous padding so a single point still gets a meaningful frame
+      const spanX = Math.max(maxX - minX, 30);
+      const spanY = Math.max(maxY - minY, 30);
+      const pad = Math.max(spanX, spanY) * 0.6 + 16;
+      const x = Math.max(0, minX - pad);
+      const y = Math.max(0, minY - pad);
+      const w = Math.min(svgW - x, spanX + pad * 2);
+      const h = Math.min(svgH - y, spanY + pad * 2);
+      return `${x} ${y} ${w} ${h}`;
+    }
+
+    // Fallback: state bbox
     const feature = geojson.features.find((f) => f.properties.name === zoomedState);
     if (!feature) return `0 0 ${svgW} ${svgH}`;
     const bb = featureBBox(feature, project);
@@ -178,7 +204,7 @@ function MapRenderer({
     const w = Math.min(svgW - x, bb.maxX - bb.minX + pad * 2);
     const h = Math.min(svgH - y, bb.maxY - bb.minY + pad * 2);
     return `${x} ${y} ${w} ${h}`;
-  }, [zoomedState, project, svgW, svgH]);
+  }, [zoomedState, project, svgW, svgH, visibleKunden]);
 
   // Scale markers inversely to zoom so they stay roughly the same visual size.
   const zoomScale = useMemo(() => {
@@ -274,7 +300,8 @@ function MapRenderer({
       {zoomedState &&
         visibleKunden.map((k) => {
           const [x, y] = project(k.lng, k.lat);
-          const r = 4 * markerScale;
+          const isHovered = hoveredKunde === k.id;
+          const r = (isHovered ? 6 : 4) * markerScale;
           return (
             <g
               key={k.id}
@@ -282,6 +309,8 @@ function MapRenderer({
                 e.stopPropagation();
                 onKundeClick?.(k.id);
               }}
+              onMouseEnter={() => setHoveredKunde(k.id)}
+              onMouseLeave={() => setHoveredKunde(null)}
               style={{ cursor: 'pointer' }}
             >
               <circle cx={x} cy={y + 1} r={r + 1} fill="rgba(0,0,0,0.2)" style={{ pointerEvents: 'none' }} />
@@ -297,6 +326,26 @@ function MapRenderer({
             </g>
           );
         })}
+
+      {/* Hover tooltip for the active customer pin */}
+      {zoomedState && hoveredKunde && (() => {
+        const k = visibleKunden.find((c) => c.id === hoveredKunde);
+        if (!k) return null;
+        const [x, y] = project(k.lng, k.lat);
+        const [vx, vy, vw] = viewBox.split(' ').map(Number);
+        const tipW = 160;
+        const tipH = 44;
+        const tipX = Math.min(Math.max(x - tipW / 2, vx + 4), vx + vw - tipW - 4);
+        const tipY = Math.max(vy + 4, y - tipH - 10);
+        return (
+          <foreignObject x={tipX} y={tipY} width={tipW} height={tipH} style={{ pointerEvents: 'none' }}>
+            <div className="bg-white px-3 py-1.5 rounded-lg shadow-lg border border-slate-200 text-xs">
+              <div className="font-bold text-slate-800 truncate">{k.name}</div>
+              <div className="text-slate-500 truncate">{k.city}</div>
+            </div>
+          </foreignObject>
+        );
+      })()}
     </svg>
   );
 }
@@ -503,76 +552,26 @@ export default function KundenKarte({
               </div>
             </div>
 
-            <div className="flex-1 flex overflow-hidden">
-              {/* Map */}
-              <div className="flex-1 p-6 min-h-0">
-                <div className="w-full h-full flex items-center justify-center">
-                  <div style={{ aspectRatio: `${SVG_W}/${SVG_H}`, height: '100%', maxWidth: '100%' }}>
-                    <MapRenderer
-                      paths={paths}
-                      project={project}
-                      clusters={clusters}
-                      getStateFill={getStateFill}
-                      zoomedState={zoomedState}
-                      onZoomState={handleZoomState}
-                      visibleKunden={visibleKunden}
-                      onKundeClick={(id) => {
-                        setIsModalOpen(false);
-                        onKundeClick?.(id);
-                      }}
-                      svgW={SVG_W}
-                      svgH={SVG_H}
-                      markerScale={1.4}
-                    />
-                  </div>
+            <div className="flex-1 p-6 min-h-0">
+              <div className="w-full h-full flex items-center justify-center">
+                <div style={{ aspectRatio: `${SVG_W}/${SVG_H}`, height: '100%', maxWidth: '100%' }}>
+                  <MapRenderer
+                    paths={paths}
+                    project={project}
+                    clusters={clusters}
+                    getStateFill={getStateFill}
+                    zoomedState={zoomedState}
+                    onZoomState={handleZoomState}
+                    visibleKunden={visibleKunden}
+                    onKundeClick={(id) => {
+                      setIsModalOpen(false);
+                      onKundeClick?.(id);
+                    }}
+                    svgW={SVG_W}
+                    svgH={SVG_H}
+                    markerScale={1.4}
+                  />
                 </div>
-              </div>
-
-              {/* Sidebar list in modal */}
-              <div className="w-80 border-l border-slate-200 overflow-y-auto p-5 bg-slate-50">
-                <div className="text-xs uppercase font-bold text-slate-500 mb-3 tracking-wider">
-                  {zoomedState ? `${visibleKunden.length} Kunden in ${zoomedState}` : `Top-Bundesländer`}
-                </div>
-                {zoomedState ? (
-                  <div className="space-y-1">
-                    {visibleKunden.map((k) => (
-                      <div
-                        key={k.id}
-                        onClick={() => {
-                          setIsModalOpen(false);
-                          onKundeClick?.(k.id);
-                        }}
-                        className="flex items-center gap-2 py-2 px-2 rounded-lg hover:bg-white cursor-pointer transition-colors"
-                      >
-                        <Avatar name={k.name} foto={getKundeFoto(k.id)} size={32} />
-                        <div className="flex-1 min-w-0">
-                          <div className="text-sm font-semibold text-slate-800 truncate">{k.name}</div>
-                          <div className="text-xs text-slate-500 truncate">{k.city}</div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="space-y-1">
-                    {Object.entries(clusters)
-                      .sort((a, b) => b[1].length - a[1].length)
-                      .map(([state, ks]) => (
-                        <button
-                          key={state}
-                          onClick={() => setZoomedState(state)}
-                          className="w-full flex items-center justify-between py-2 px-3 rounded-lg hover:bg-white cursor-pointer transition-colors text-left"
-                        >
-                          <span className="text-sm font-medium text-slate-700">{state}</span>
-                          <span
-                            className="text-xs font-bold px-2.5 py-0.5 rounded-full text-white"
-                            style={{ backgroundColor: 'var(--mode-primary, #004d26)' }}
-                          >
-                            {ks.length}
-                          </span>
-                        </button>
-                      ))}
-                  </div>
-                )}
               </div>
             </div>
           </div>

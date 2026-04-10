@@ -112,7 +112,7 @@ export default function KPIBox({ icon, label, wert, format = 'num', trend, delay
   return (
     <>
       <div
-        className="relative rounded-xl border p-4 animate-fade-in-up cursor-pointer card-base card-hover overflow-hidden h-full flex flex-col"
+        className="relative rounded-xl border p-4 animate-fade-in-up cursor-pointer card-base overflow-hidden h-full flex flex-col transition-shadow hover:shadow-lg"
         style={{
           animationDelay: `${delay}ms`,
           // Pastel tint derived from the current mode's primary colour so KPI

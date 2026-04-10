@@ -112,19 +112,20 @@ export default function KPIBox({ icon, label, wert, format = 'num', trend, delay
   return (
     <>
       <div
-        className="relative rounded-xl border border-slate-200 p-4 animate-fade-in-up cursor-pointer card-base card-hover overflow-hidden"
+        className="relative rounded-xl border p-4 animate-fade-in-up cursor-pointer card-base card-hover overflow-hidden"
         style={{
           animationDelay: `${delay}ms`,
-          background: 'linear-gradient(180deg, #ffffff 0%, #f8fafc 100%)',
-          boxShadow: '0 6px 16px -6px rgba(15, 23, 42, 0.12), 0 2px 6px -2px rgba(15, 23, 42, 0.06)',
+          // Pastel tint derived from the current mode's primary colour so KPI
+          // cards visually pop against the white content cards below without a
+          // loud accent strip. `color-mix` degrades gracefully to the fallback
+          // background on older browsers.
+          background:
+            'linear-gradient(180deg, color-mix(in srgb, var(--mode-primary-light) 14%, #ffffff) 0%, color-mix(in srgb, var(--mode-primary-light) 6%, #ffffff) 100%)',
+          borderColor: 'color-mix(in srgb, var(--mode-primary-light) 22%, #e2e8f0)',
+          boxShadow: '0 6px 16px -6px rgba(15, 23, 42, 0.10), 0 2px 6px -2px rgba(15, 23, 42, 0.05)',
         }}
         onClick={() => setExpanded(true)}
       >
-        {/* Coloured accent strip at the top so KPI cards visually stand apart from plain content cards */}
-        <div
-          className="absolute top-0 left-0 right-0 h-1"
-          style={{ background: 'linear-gradient(90deg, var(--mode-primary-light), var(--mode-primary))' }}
-        />
         {/* Header: icon + label on left, trend pill on right */}
         <div className="flex items-center justify-between mb-1.5">
           <div className="flex items-center gap-2 min-w-0">

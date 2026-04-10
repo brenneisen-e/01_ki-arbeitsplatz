@@ -44,6 +44,19 @@ function parseHash(hash) {
 
 /* ── Provider ──────────────────────────────────────────────── */
 
+// Read the last selected institut variant from localStorage so a hard
+// reload stays on e.g. Zukunftsbank instead of snapping back to the
+// mode's default institut (Volksbank).
+function readPersistedVariant(modeId) {
+  try {
+    const raw = localStorage.getItem('kia_last_mode');
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (parsed?.modeId === modeId && parsed?.variant) return parsed.variant;
+  } catch {}
+  return null;
+}
+
 export function ModeProvider({ children }) {
   const initial = parseHash(window.location.hash);
 
@@ -51,7 +64,7 @@ export function ModeProvider({ children }) {
   const [currentView, setCurrentView] = useState(initial.view);
   const [activeTab, setActiveTab] = useState(initial.tab || 'uebersicht');
   const [selectedKundeId, setSelectedKundeId] = useState(initial.kundeId);
-  const [institutOverride, setInstitutOverride] = useState(null);
+  const [institutOverride, setInstitutOverride] = useState(() => readPersistedVariant(initial.modeId));
   // Remember which overview tab the user came from when navigating to detail,
   // so goBack can restore it (e.g. returning to "Übersicht" instead of "Kunden").
   const [previousOverviewTab, setPreviousOverviewTab] = useState(null);
@@ -92,7 +105,9 @@ export function ModeProvider({ children }) {
       setCurrentView(parsed.view);
       setActiveTab(parsed.tab || getDefaultTab(parsed.modeId, parsed.view));
       setSelectedKundeId(parsed.kundeId);
-      setInstitutOverride(null);
+      // Keep the persisted institut variant across navigation so Zukunftsbank
+      // etc. survives hard reloads and hash changes within the same mode.
+      setInstitutOverride(readPersistedVariant(parsed.modeId));
       setPreviousOverviewTab(null);
     }
     window.addEventListener('popstate', onHashChange);

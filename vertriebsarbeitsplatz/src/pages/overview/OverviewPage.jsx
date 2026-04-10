@@ -2,6 +2,7 @@ import { lazy, Suspense, useMemo } from 'react';
 import { useMode } from '../../hooks/useMode';
 import GlobalHeader from '../../components/layout/GlobalHeader';
 import KPIGrid from '../../components/ui/KPIGrid';
+import { KundenKarteLeafletCompact } from '../../components/ui/KundenKarteLeaflet';
 import { KUNDEN_BY_MODE } from '../../data';
 import UebersichtTab from './tabs/UebersichtTab';
 
@@ -50,7 +51,7 @@ const TabFallback = (
 );
 
 export default function OverviewPage() {
-  const { config, activeTab, modeId } = useMode();
+  const { config, activeTab, modeId, navigateTo } = useMode();
   const TabComponent = TAB_COMPONENTS[activeTab] || UebersichtTab;
 
   // Dynamische KPI-Werte: Mandate-Zahl aus echten Kundendaten berechnen
@@ -71,7 +72,19 @@ export default function OverviewPage() {
       <GlobalHeader />
       <div className="px-6 py-6 animate-fade-in-up">
         {activeTab === 'uebersicht' && (
-          <KPIGrid kpiConfig={config.kpiConfig} kpiValues={kpiValues} />
+          <KPIGrid
+            kpiConfig={config.kpiConfig}
+            kpiValues={kpiValues}
+            leadingSlot={
+              modeId === 'banking' ? (
+                <KundenKarteLeafletCompact
+                  kunden={KUNDEN_BY_MODE.banking || []}
+                  onKundeClick={(kundeId) => navigateTo('detail', { kundeId, tab: 'stammdaten' })}
+                  title="Kundenkarte"
+                />
+              ) : null
+            }
+          />
         )}
         <Suspense fallback={TabFallback}>
           <TabComponent />

@@ -350,7 +350,7 @@ function getCockpitDemoResponse(message) {
   };
 }
 
-function getDemoResponse(message, { currentView, modeId }) {
+export function getDemoResponse(message, { currentView, modeId }) {
   const lower = message.toLowerCase();
 
   if (lower.includes('vertriebspotentiale') || lower.includes('vertriebspotenziale') || lower.includes('neue leads') || lower.includes('leads anzeigen') || lower.includes('show leads') || lower.includes('analyze leads') || lower.includes('new leads')) {

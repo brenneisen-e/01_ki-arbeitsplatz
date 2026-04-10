@@ -2,7 +2,6 @@ import { useState, useMemo } from 'react';
 import { Sun, Clock, Zap, CheckSquare, Calendar, Phone, AlertTriangle, CheckCircle, FileText, Heart, Car, Home, ShieldAlert, Cake, Euro, Download, Landmark, BarChart3, PiggyBank, Wallet, Sparkles, Star, Megaphone, ChevronDown, ChevronRight } from 'lucide-react';
 import Card from '../../../components/ui/Card';
 import Avatar from '../../../components/ui/Avatar';
-import KundenKarte from '../../../components/ui/KundenKarte';
 import KIAssistentCard from '../../../components/ui/KIAssistentCard';
 import { SparteBadge } from '../../../components/ui/Badge';
 import { useMode } from '../../../hooks/useMode';
@@ -254,7 +253,7 @@ export default function UebersichtTab() {
       {/* Linke Spalte 2/3 */}
       <div className="col-span-2 space-y-4 min-w-0">
         {/* Potenziale + Marketingkampagnen – side-by-side in banking, stacked otherwise */}
-        <div className={modeId === 'banking' ? 'grid grid-cols-2 gap-4 items-start' : 'space-y-4'}>
+        <div className={modeId === 'banking' ? 'grid grid-cols-2 gap-4 items-stretch' : 'space-y-4'}>
         {/* Vertriebspotenziale / Mandate & Potenziale */}
         {modeId === 'vermoegensverwaltung' ? (
           <Card hover={false}>
@@ -363,7 +362,7 @@ export default function UebersichtTab() {
             </button>
           </Card>
         ) : (
-          <Card hover={false}>
+          <Card hover={false} className="h-full flex flex-col">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
                 <Zap size={20} style={{ color: 'var(--mode-primary-light)' }} strokeWidth={1.75} />
@@ -440,7 +439,7 @@ export default function UebersichtTab() {
 
         {/* Marketingkampagnen (Banking only) */}
         {modeId === 'banking' && (
-          <Card hover={false}>
+          <Card hover={false} className="h-full flex flex-col">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
                 <Megaphone size={20} style={{ color: 'var(--mode-primary-light)' }} strokeWidth={1.75} />
@@ -549,43 +548,6 @@ export default function UebersichtTab() {
         )}
         </div>
         {/* /Potenziale + Marketingkampagnen wrapper */}
-
-        {/* Kundenkarte + Anstehende Termine (Banking only) */}
-        {modeId === 'banking' && (
-          <KundenKarte
-            kunden={KUNDEN_BY_MODE[modeId] || []}
-            onKundeClick={(kundeId) => navigateTo('detail', { kundeId, tab: 'stammdaten' })}
-            title={lang === 'en' ? 'Customer map' : 'Kundenkarte'}
-            sidebarTitle={t('anstehendeTermine')}
-            sidebar={
-              <div className="space-y-2 overflow-y-auto" style={{ maxHeight: 300 }}>
-                {termine.map((termin, i) => {
-                  const tDate = new Date(termin.datum);
-                  const todayStr = heute.toISOString().split('T')[0];
-                  const isToday = termin.datum === todayStr;
-                  const dayLabel = isToday ? t('heute') : tDate.toLocaleDateString(lang === 'en' ? 'en-GB' : 'de-DE', { weekday: 'short', day: '2-digit', month: '2-digit' });
-                  return (
-                    <div
-                      key={i}
-                      className="flex items-center gap-2 py-2 px-2 rounded-lg row-hover cursor-pointer border-b border-slate-100 last:border-0"
-                      onClick={() => navigateTo('detail', { kundeId: termin.kundeId })}
-                    >
-                      <div className="text-center shrink-0 w-12">
-                        <div className="text-[9px] font-semibold uppercase" style={{ color: isToday ? 'var(--_fg, #ef4444)' : 'var(--_fg, #94a3b8)' }}>{dayLabel}</div>
-                        <div className="text-xs font-bold" style={{ color: 'var(--_fg, #334155)' }}>{termin.zeit}</div>
-                      </div>
-                      <Avatar name={termin.kunde} foto={termin.foto} size={34} />
-                      <div className="flex-1 min-w-0">
-                        <div className="text-xs font-semibold truncate" style={{ color: 'var(--_fg, #334155)' }}>{termin.kunde}</div>
-                        <div className="text-[10px] truncate" style={{ color: 'var(--_fg, #64748b)' }}>{termin.betreff}</div>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            }
-          />
-        )}
 
         {/* Aufgaben – modern card list */}
         <Card hover={false}>
@@ -705,40 +667,38 @@ export default function UebersichtTab() {
         {/* KI-Assistent (Banking only) mit lila Akzent */}
         {modeId === 'banking' && <KIAssistentCard />}
 
-        {/* Anstehende Termine – nur wenn nicht im Banking-Modus, sonst im Map-Sidebar */}
-        {modeId !== 'banking' && (
-          <Card hover={false}>
-            <div className="flex items-center gap-2 mb-4">
-              <Clock size={20} className="text-slate-500" strokeWidth={1.75} />
-              <h3 className="font-semibold text-slate-800">{t('anstehendeTermine')}</h3>
-            </div>
-            <div className="space-y-3">
-              {termine.map((termin, i) => {
-                const tDate = new Date(termin.datum);
-                const todayStr = heute.toISOString().split('T')[0];
-                const isToday = termin.datum === todayStr;
-                const dayLabel = isToday ? t('heute') : tDate.toLocaleDateString(lang === 'en' ? 'en-GB' : 'de-DE', { weekday: 'short', day: '2-digit', month: '2-digit' });
-                return (
-                  <div
-                    key={i}
-                    className="flex items-center gap-3 py-2.5 border-b border-slate-100 last:border-0 cursor-pointer row-hover -mx-2 px-2 rounded-lg"
-                    onClick={() => navigateTo('detail', { kundeId: termin.kundeId })}
-                  >
-                    <div className="text-center shrink-0 w-14">
-                      <div className="text-[10px] font-semibold uppercase" style={{ color: isToday ? 'var(--_fg, #ef4444)' : 'var(--_fg, #94a3b8)' }}>{dayLabel}</div>
-                      <div className="text-sm font-bold" style={{ color: 'var(--_fg, #334155)' }}>{termin.zeit}</div>
-                    </div>
-                    <Avatar name={termin.kunde} foto={termin.foto} size={44} />
-                    <div className="flex-1 min-w-0">
-                      <div className="text-sm font-semibold truncate" style={{ color: 'var(--_fg, #334155)' }}>{termin.kunde}</div>
-                      <div className="text-xs truncate" style={{ color: 'var(--_fg, #64748b)' }}>{termin.betreff}</div>
-                    </div>
+        {/* Anstehende Termine */}
+        <Card hover={false}>
+          <div className="flex items-center gap-2 mb-4">
+            <Clock size={20} className="text-slate-500" strokeWidth={1.75} />
+            <h3 className="font-semibold text-slate-800">{t('anstehendeTermine')}</h3>
+          </div>
+          <div className="space-y-3">
+            {termine.map((termin, i) => {
+              const tDate = new Date(termin.datum);
+              const todayStr = heute.toISOString().split('T')[0];
+              const isToday = termin.datum === todayStr;
+              const dayLabel = isToday ? t('heute') : tDate.toLocaleDateString(lang === 'en' ? 'en-GB' : 'de-DE', { weekday: 'short', day: '2-digit', month: '2-digit' });
+              return (
+                <div
+                  key={i}
+                  className="flex items-center gap-3 py-2.5 border-b border-slate-100 last:border-0 cursor-pointer row-hover -mx-2 px-2 rounded-lg"
+                  onClick={() => navigateTo('detail', { kundeId: termin.kundeId })}
+                >
+                  <div className="text-center shrink-0 w-14">
+                    <div className="text-[10px] font-semibold uppercase" style={{ color: isToday ? 'var(--_fg, #ef4444)' : 'var(--_fg, #94a3b8)' }}>{dayLabel}</div>
+                    <div className="text-sm font-bold" style={{ color: 'var(--_fg, #334155)' }}>{termin.zeit}</div>
                   </div>
-                );
-              })}
-            </div>
-          </Card>
-        )}
+                  <Avatar name={termin.kunde} foto={termin.foto} size={44} />
+                  <div className="flex-1 min-w-0">
+                    <div className="text-sm font-semibold truncate" style={{ color: 'var(--_fg, #334155)' }}>{termin.kunde}</div>
+                    <div className="text-xs truncate" style={{ color: 'var(--_fg, #64748b)' }}>{termin.betreff}</div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </Card>
 
         {/* Schnellzugriff Formulare */}
         <Card hover={false}>

@@ -52,6 +52,9 @@ export function ModeProvider({ children }) {
   const [activeTab, setActiveTab] = useState(initial.tab || 'uebersicht');
   const [selectedKundeId, setSelectedKundeId] = useState(initial.kundeId);
   const [institutOverride, setInstitutOverride] = useState(null);
+  // Remember which overview tab the user came from when navigating to detail,
+  // so goBack can restore it (e.g. returning to "Übersicht" instead of "Kunden").
+  const [previousOverviewTab, setPreviousOverviewTab] = useState(null);
 
   const skipNextPush = useRef(false);
 
@@ -90,6 +93,7 @@ export function ModeProvider({ children }) {
       setActiveTab(parsed.tab || getDefaultTab(parsed.modeId, parsed.view));
       setSelectedKundeId(parsed.kundeId);
       setInstitutOverride(null);
+      setPreviousOverviewTab(null);
     }
     window.addEventListener('popstate', onHashChange);
     window.addEventListener('hashchange', onHashChange);
@@ -134,10 +138,16 @@ export function ModeProvider({ children }) {
   }, [modeId]);
 
   const navigateTo = useCallback((view, opts = {}) => {
+    // When leaving the overview for the detail view, remember which tab we were on
+    // so goBack can return the user to the same place (e.g. back to "Übersicht").
+    if (view === 'detail' && currentView === 'overview') {
+      setPreviousOverviewTab(activeTab);
+    }
     setCurrentView(view);
     if (view === 'overview') {
       setActiveTab(opts.tab || 'uebersicht');
       setSelectedKundeId(null);
+      setPreviousOverviewTab(null);
     } else if (view === 'detail') {
       if (opts.kundeId !== undefined) setSelectedKundeId(opts.kundeId);
       const requestedTab = opts.tab;
@@ -149,21 +159,29 @@ export function ModeProvider({ children }) {
     } else if (view === 'cockpit') {
       setActiveTab('cockpit');
       setSelectedKundeId(null);
+      setPreviousOverviewTab(null);
     }
-  }, [config]);
+  }, [config, currentView, activeTab]);
 
   const goBack = useCallback(() => {
     if (currentView === 'detail') {
-      const kundenTab = baseConfig.tabs.find(t =>
-        t.id === 'kunden' || t.id === 'mandatsliste'
-      );
       setCurrentView('overview');
-      setActiveTab(kundenTab?.id || 'kunden');
+      if (previousOverviewTab) {
+        // Return to the tab the user came from (e.g. "Übersicht" / "uebersicht").
+        setActiveTab(previousOverviewTab);
+      } else {
+        // Fallback (e.g. direct deep link to a customer): go to the customers tab.
+        const kundenTab = baseConfig.tabs.find(t =>
+          t.id === 'kunden' || t.id === 'mandatsliste'
+        );
+        setActiveTab(kundenTab?.id || 'kunden');
+      }
       setSelectedKundeId(null);
+      setPreviousOverviewTab(null);
     } else if (currentView === 'overview' || currentView === 'cockpit') {
       setCurrentView('landing');
     }
-  }, [currentView, baseConfig]);
+  }, [currentView, baseConfig, previousOverviewTab]);
 
   const modeRef = useRef(null);
 

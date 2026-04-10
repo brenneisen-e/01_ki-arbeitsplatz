@@ -4,15 +4,14 @@
  * Gespeicherte PDF-URLs werden in localStorage abgelegt.
  */
 
-const API_BASE = 'https://rxresu.me/api/openapi';
-const API_KEY = 'uEsOtWYyUGGtKgwItLRGnfrAnKtBWnJpfCyKNyoHQBCCUQaDyzeLefgNyNgukpUB';
+// Proxy-Endpunkt (Cloudflare Pages Function) — umgeht CORS-Beschränkungen von rxresu.me
+const API_BASE = '/api/rxresume';
 const STORAGE_KEY = 'hr_rxresume_cv_urls';
 
 const uid = () => crypto.randomUUID();
 
 const H = {
     'Content-Type': 'application/json',
-    'x-api-key': API_KEY,
 };
 
 async function apiCall(method, path, body) {

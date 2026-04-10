@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { Heart, Globe, TrendingUp, Sparkles, AlertTriangle } from 'lucide-react';
+import { Heart, Globe, TrendingUp, Sparkles, AlertTriangle, Database } from 'lucide-react';
 import Card from './Card';
 
 /* ── Track config ──────────────────────────────────────────── */
@@ -32,15 +32,15 @@ const TIMELINE_DATA = {
     finanzen: [
       { date: '2015-01', label: 'Girokonto eröffnet' },
       { date: '2016-04', label: 'Sparplan 200 €/Mon.' },
-      { date: '2018-03', label: 'Baufi 380.000€' },
-      { date: '2019-01', label: 'KfW Modernisierung' },
-      { date: '2020-06', label: 'R+V Unfallvers.' },
+      { date: '2018-03', label: 'Baufinanzierung 380.000 €' },
+      { date: '2019-01', label: 'KfW-Kredit Modernisierung' },
+      { date: '2020-06', label: 'R+V Unfallversicherung' },
       { date: '2021-09', label: 'Union Investment Depot' },
-      { date: '2023-11', label: 'ING Tagesgeld 15k€', fida: true },
+      { date: '2023-11', label: 'ING Tagesgeld 15.000 €', fida: true },
       { date: '2025-06', label: 'Sparplan reduziert', isWarning: true },
       { date: '2025-08', label: 'Trade Republic Depot', fida: true },
       { date: '2026-01', label: 'LV gekündigt', isWarning: true },
-      { date: '2026-06', label: 'KfW läuft aus → 840€ frei', isFuture: true },
+      { date: '2026-06', label: 'KfW läuft aus → 840€/Mon. frei', isFuture: true },
       { date: '2033-03', label: 'Baufi-Zinsbindung Ende', isFuture: true },
     ],
   },
@@ -57,31 +57,31 @@ const TIMELINE_DATA = {
       { date: '2024-09', label: 'Senior Marketing Lead', source: 'LinkedIn' },
     ],
     finanzen: [
-      { date: '2020-01', label: 'VR-Mein Konto' },
-      { date: '2021-06', label: 'UniProfiRente 175€' },
-      { date: '2022-11', label: 'Hochzeitskredit 8k€' },
-      { date: '2024-04', label: 'Junior-Sparbuch' },
-      { date: '2026-01', label: 'Bauspar-Anfrage' },
+      { date: '2020-01', label: 'VR-MeinKonto eröffnet' },
+      { date: '2021-06', label: 'UniProfiRente 175 €/Mon.' },
+      { date: '2022-11', label: 'Hochzeitskredit 8.000 €' },
+      { date: '2024-04', label: 'Junior-Sparbuch eröffnet' },
+      { date: '2026-01', label: 'Bauspar-Anfrage gestartet' },
     ],
   },
   BK00003: {
     leben: [
-      { date: '2008-01', label: 'Kunde seit 2008 (GmbH)' },
-      { date: '2012-05', label: 'Familienunternehmen' },
-      { date: '2024-09', label: 'Nachfolge-Recherche', aiDetected: true,
-        signals: ['M&A Beratung', 'Steuerberater-Gespräche'] },
+      { date: '2008-01', label: 'Kunde seit 2008 (GmbH-Gründung)' },
+      { date: '2012-05', label: 'Wird Familienunternehmen' },
+      { date: '2024-09', label: 'Nachfolge-Recherche erkannt', aiDetected: true,
+        signals: ['M&A Beratung gesucht', 'Erste Steuerberater-Gespräche'] },
     ],
     oeffentlich: [
       { date: '2008-03', label: 'GmbH eingetragen', source: 'Handelsregister' },
-      { date: '2018-11', label: '„Mittelstand Hessen 2018"', source: 'Pressemeldung' },
+      { date: '2018-11', label: 'Auszeichnung „Mittelstand Hessen 2018"', source: 'Pressemeldung' },
     ],
     finanzen: [
-      { date: '2008-01', label: 'VR-BusinessKonto' },
+      { date: '2008-01', label: 'VR-BusinessKonto eröffnet' },
       { date: '2010-06', label: 'Steuerrücklagen-Konto' },
-      { date: '2015-04', label: 'Firmenkredit 200k€' },
-      { date: '2021-09', label: 'Union Investment Depot' },
-      { date: '2024-12', label: 'bAV für 25 MA' },
-      { date: '2027-06', label: 'Geplante Übergabe', isFuture: true },
+      { date: '2015-04', label: 'Firmenkredit-Linie 200.000 €' },
+      { date: '2021-09', label: 'Union Investment Firmendepot' },
+      { date: '2024-12', label: 'bAV für 25 Mitarbeiter' },
+      { date: '2027-06', label: 'Geplante Nachfolge-Übergabe', isFuture: true },
     ],
   },
 };
@@ -116,13 +116,13 @@ function parseDate(s) {
 
 function formatTooltipDate(s) {
   const [y, m] = s.split('-').map(Number);
-  const months = ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'];
+  const months = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'];
   return `${months[(m || 1) - 1]} ${y}`;
 }
 
 /* ── Component ────────────────────────────────────────────── */
 export default function LebenszeitstrahlCard({ kunde }) {
-  const [hovered, setHovered] = useState(null);
+  const [hovered, setHovered] = useState(null); // { track, idx }
   const [zoom, setZoom] = useState('5j');
 
   const data = useMemo(() => getTimelineForKunde(kunde), [kunde]);
@@ -166,21 +166,28 @@ export default function LebenszeitstrahlCard({ kunde }) {
     return years;
   }, [rangeStart, rangeEnd, totalRange]);
 
-  // For label collision avoidance: alternate labels above/below
-  // by sorting events per track and toggling
-  const annotatedTracks = useMemo(() => {
-    return TRACKS.map((tr) => {
-      const events = [...data[tr.key]]
-        .map((e, idx) => ({ ...e, _origIdx: idx, _x: xPct(e.date) }))
-        .sort((a, b) => a._x - b._x);
-      // Alternate label position above/below
-      events.forEach((e, i) => { e._labelAbove = i % 2 === 0; });
-      return { ...tr, events };
+  // Detail panel: hovered event OR fallback to "today" event (most recent)
+  const detailEvent = useMemo(() => {
+    if (hovered) {
+      const track = TRACKS.find((t) => t.key === hovered.track);
+      const event = data[hovered.track]?.[hovered.idx];
+      if (event) return { ...event, track };
+    }
+    // Fallback: pick the latest event across all tracks before today
+    const today = Date.now();
+    let latest = null;
+    TRACKS.forEach((tr) => {
+      data[tr.key].forEach((e, idx) => {
+        const t = parseDate(e.date).getTime();
+        if (t <= today && (!latest || t > latest.t)) {
+          latest = { ...e, track: tr, idx, t };
+        }
+      });
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data, rangeStart, rangeEnd]);
+    return latest;
+  }, [hovered, data]);
 
-  const TRACK_HEIGHT = 130;
+  const TRACK_HEIGHT = 64;
 
   return (
     <Card hover={false}>
@@ -209,56 +216,35 @@ export default function LebenszeitstrahlCard({ kunde }) {
         </div>
       </div>
 
-      {/* Legend */}
-      <div className="flex items-center gap-4 mb-4 text-xs">
-        {TRACKS.map((tr) => {
-          const Icon = tr.icon;
-          return (
-            <div key={tr.key} className="flex items-center gap-1.5">
-              <div className="w-6 h-6 rounded-md flex items-center justify-center" style={{ backgroundColor: tr.color + '20' }}>
-                <Icon size={13} style={{ color: tr.color }} strokeWidth={2.25} />
-              </div>
-              <span className="font-semibold text-slate-700">{tr.label}</span>
-            </div>
-          );
-        })}
-        <div className="ml-auto flex items-center gap-3 text-[11px] text-slate-500">
-          <span className="flex items-center gap-1"><Sparkles size={11} className="text-amber-500" /> KI erkannt</span>
-          <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full bg-purple-500" /> FIDA</span>
-          <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full border-2 border-slate-400 bg-white" /> Zukunft</span>
-        </div>
-      </div>
-
       {/* Timeline body */}
-      <div className="relative bg-slate-50 rounded-xl p-6 pl-32 pr-6">
+      <div className="bg-slate-50 rounded-2xl p-5 pl-32 pr-6">
         {/* Track row labels (left) */}
-        <div
-          className="absolute left-4 top-6 flex flex-col"
-          style={{ height: TRACK_HEIGHT * 3, width: 96 }}
-        >
-          {TRACKS.map((tr) => {
-            const Icon = tr.icon;
-            return (
-              <div
-                key={tr.key}
-                className="flex items-center gap-2"
-                style={{ height: TRACK_HEIGHT }}
-              >
+        <div className="absolute pl-5 -ml-32" style={{ width: 96 }}>
+          <div className="flex flex-col gap-0">
+            {TRACKS.map((tr) => {
+              const Icon = tr.icon;
+              return (
                 <div
-                  className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0"
-                  style={{ backgroundColor: tr.color + '20' }}
+                  key={tr.key}
+                  className="flex items-center gap-2"
+                  style={{ height: TRACK_HEIGHT }}
                 >
-                  <Icon size={18} style={{ color: tr.color }} strokeWidth={2.25} />
+                  <div
+                    className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0"
+                    style={{ backgroundColor: tr.color + '20' }}
+                  >
+                    <Icon size={18} style={{ color: tr.color }} strokeWidth={2.25} />
+                  </div>
+                  <span className="text-xs font-bold uppercase tracking-wider" style={{ color: tr.color }}>
+                    {tr.label}
+                  </span>
                 </div>
-                <span className="text-xs font-bold uppercase tracking-wider" style={{ color: tr.color }}>
-                  {tr.label}
-                </span>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
 
-        {/* Tracks */}
+        {/* Tracks (relative container) */}
         <div className="relative" style={{ height: TRACK_HEIGHT * 3 }}>
           {/* "Heute" vertical line */}
           {todayPct >= 0 && todayPct <= 100 && (
@@ -272,57 +258,69 @@ export default function LebenszeitstrahlCard({ kunde }) {
             </div>
           )}
 
-          {annotatedTracks.map((tr, ti) => {
+          {TRACKS.map((tr, ti) => {
             const trackCenter = (ti + 0.5) * TRACK_HEIGHT;
             return (
               <div key={tr.key}>
                 {/* Track baseline */}
                 <div
-                  className="absolute left-0 right-0 h-px"
-                  style={{ top: trackCenter, backgroundColor: tr.color + '40' }}
+                  className="absolute left-0 right-0 h-0.5 rounded-full"
+                  style={{ top: trackCenter - 1, backgroundColor: tr.color + '25' }}
                 />
 
                 {/* Events */}
-                {tr.events.map((event, idx) => {
-                  const left = event._x;
-                  const isHovered = hovered?.track === tr.key && hovered?.idx === event._origIdx;
-                  const dotSize = isHovered ? 18 : 14;
-                  const labelAbove = event._labelAbove;
+                {data[tr.key].map((event, idx) => {
+                  const left = xPct(event.date);
+                  const isHovered = hovered?.track === tr.key && hovered?.idx === idx;
+                  const dotSize = isHovered ? 22 : 16;
                   return (
                     <div
                       key={idx}
-                      className="absolute cursor-pointer group"
+                      className="absolute cursor-pointer"
                       style={{
                         left: `${left}%`,
                         top: trackCenter,
                         transform: 'translate(-50%, -50%)',
-                        // Bigger hit area: invisible padding around the dot
-                        padding: 12,
+                        padding: 14,
                         zIndex: isHovered ? 30 : 10,
                       }}
-                      onMouseEnter={() => setHovered({ track: tr.key, idx: event._origIdx })}
+                      onMouseEnter={() => setHovered({ track: tr.key, idx })}
                       onMouseLeave={() => setHovered(null)}
                     >
+                      {/* Outer glow when hovered */}
+                      {isHovered && (
+                        <div
+                          className="absolute rounded-full pointer-events-none"
+                          style={{
+                            width: 36,
+                            height: 36,
+                            top: '50%',
+                            left: '50%',
+                            transform: 'translate(-50%, -50%)',
+                            backgroundColor: tr.color + '25',
+                          }}
+                        />
+                      )}
                       {/* Dot */}
                       <div
                         className="rounded-full transition-all"
                         style={{
                           width: dotSize,
                           height: dotSize,
-                          backgroundColor: event.isFuture ? 'white' : tr.color,
+                          backgroundColor: event.isFuture ? '#ffffff' : tr.color,
                           border: event.isFuture
-                            ? `2.5px dashed ${tr.color}`
-                            : `2.5px solid white`,
+                            ? `3px dashed ${tr.color}`
+                            : `3px solid white`,
                           boxShadow: isHovered
-                            ? `0 0 0 6px ${tr.color}30`
-                            : '0 1px 4px rgba(0,0,0,0.25)',
+                            ? `0 4px 12px ${tr.color}66`
+                            : '0 1px 4px rgba(0,0,0,0.2)',
                         }}
                       />
                       {/* AI sparkle badge */}
                       {event.aiDetected && (
                         <div
-                          className="absolute w-4 h-4 rounded-full bg-amber-400 flex items-center justify-center border-2 border-white"
-                          style={{ top: 6, right: 6 }}
+                          className="absolute w-4 h-4 rounded-full bg-amber-400 flex items-center justify-center border-2 border-white shadow-sm"
+                          style={{ top: 8, right: 8 }}
                         >
                           <Sparkles size={9} className="text-white" strokeWidth={3} />
                         </div>
@@ -330,58 +328,19 @@ export default function LebenszeitstrahlCard({ kunde }) {
                       {/* FIDA dot */}
                       {event.fida && (
                         <div
-                          className="absolute w-3 h-3 rounded-full bg-purple-500 border-2 border-white"
-                          style={{ top: 7, right: 7 }}
+                          className="absolute w-3 h-3 rounded-full bg-purple-500 border-2 border-white shadow-sm"
+                          style={{ top: 9, right: 9 }}
                         />
                       )}
                       {/* Warning */}
                       {event.isWarning && (
                         <div
-                          className="absolute w-4 h-4 rounded-full bg-red-500 flex items-center justify-center border-2 border-white"
-                          style={{ top: 6, right: 6 }}
+                          className="absolute w-4 h-4 rounded-full bg-red-500 flex items-center justify-center border-2 border-white shadow-sm"
+                          style={{ top: 8, right: 8 }}
                         >
                           <AlertTriangle size={9} className="text-white" strokeWidth={3} />
                         </div>
                       )}
-
-                      {/* Inline label – stems out vertically from the dot */}
-                      <div
-                        className="absolute pointer-events-none whitespace-nowrap text-[11px] font-medium text-slate-700"
-                        style={{
-                          left: '50%',
-                          top: labelAbove ? -2 : 'auto',
-                          bottom: labelAbove ? 'auto' : -2,
-                          transform: labelAbove
-                            ? 'translate(-50%, -100%)'
-                            : 'translate(-50%, 100%)',
-                          maxWidth: 140,
-                          whiteSpace: 'normal',
-                          textAlign: 'center',
-                          lineHeight: 1.15,
-                        }}
-                      >
-                        <div
-                          className="px-1.5 py-0.5 rounded inline-block max-w-[140px]"
-                          style={{
-                            backgroundColor: '#ffffff',
-                            border: `1px solid ${tr.color}30`,
-                            fontWeight: isHovered ? 700 : 500,
-                            color: isHovered ? '#0f172a' : '#475569',
-                          }}
-                        >
-                          {event.label}
-                        </div>
-                        {/* Connector line from label to dot */}
-                        <div
-                          className="absolute left-1/2 -translate-x-1/2 w-px"
-                          style={{
-                            top: labelAbove ? '100%' : 'auto',
-                            bottom: labelAbove ? 'auto' : '100%',
-                            height: 6,
-                            backgroundColor: tr.color + '60',
-                          }}
-                        />
-                      </div>
                     </div>
                   );
                 })}
@@ -391,7 +350,7 @@ export default function LebenszeitstrahlCard({ kunde }) {
         </div>
 
         {/* Year markers */}
-        <div className="relative mt-6 h-6 border-t-2 border-slate-300">
+        <div className="relative mt-3 h-6 border-t-2 border-slate-200">
           {yearMarkers.map((m) => (
             <div
               key={m.year}
@@ -403,71 +362,102 @@ export default function LebenszeitstrahlCard({ kunde }) {
             </div>
           ))}
         </div>
-
-        {/* Detail tooltip (rendered absolutely over the timeline) */}
-        {hovered && (() => {
-          const track = TRACKS.find((t) => t.key === hovered.track);
-          const e = data[hovered.track][hovered.idx];
-          if (!e) return null;
-          const tipPct = xPct(e.date);
-          return (
-            <div
-              className="absolute z-40 bg-white rounded-xl shadow-2xl border border-slate-200 p-4 text-xs pointer-events-none animate-fade-in"
-              style={{
-                left: `min(max(calc(${tipPct}% + 8rem - 130px), 8rem), calc(100% - 280px))`,
-                top: -8,
-                width: 280,
-              }}
-            >
-              <div className="flex items-center gap-2 mb-2 pb-2 border-b border-slate-100">
-                <div className="w-7 h-7 rounded-md flex items-center justify-center shrink-0" style={{ background: track.color + '20' }}>
-                  <track.icon size={14} style={{ color: track.color }} strokeWidth={2.25} />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="text-[10px] uppercase font-bold tracking-wider text-slate-400">{track.label}</div>
-                  <div className="text-[11px] font-mono font-semibold text-slate-600">{formatTooltipDate(e.date)}</div>
-                </div>
-              </div>
-              <div className="font-bold text-slate-900 text-sm leading-snug mb-2">{e.label}</div>
-              {e.source && (
-                <div className="text-[11px] text-slate-500 italic mb-1">Quelle: {e.source}</div>
-              )}
-              {e.aiDetected && (
-                <div className="flex items-center gap-1 text-[11px] text-amber-700 font-semibold mb-1">
-                  <Sparkles size={11} /> Aus Kontoumsätzen erkannt
-                </div>
-              )}
-              {e.fida && (
-                <div className="text-[11px] text-purple-700 font-semibold mb-1">FIDA · Fremdbank-Daten</div>
-              )}
-              {e.isFuture && (
-                <div className="text-[11px] text-slate-500 italic mb-1">Geplant · Zukunft</div>
-              )}
-              {e.isWarning && (
-                <div className="flex items-center gap-1 text-[11px] text-red-700 font-semibold mb-1">
-                  <AlertTriangle size={11} /> Achtung – Warnsignal
-                </div>
-              )}
-              {e.signals && e.signals.length > 0 && (
-                <div className="mt-2 pt-2 border-t border-slate-100">
-                  <div className="text-[10px] font-bold uppercase text-slate-400 mb-1">Erkannte Signale</div>
-                  <ul className="space-y-1">
-                    {e.signals.map((s, i) => (
-                      <li key={i} className="text-[11px] text-slate-700 flex items-start gap-1">
-                        <span style={{ color: track.color }}>•</span>
-                        <span>{s}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-            </div>
-          );
-        })()}
       </div>
 
-      <div className="mt-3 text-[11px] text-slate-400 italic">
-        Basierend auf öffentlich zugänglichen Informationen, internen Bankdaten und FIDA-Quellen. Keine geschützten Daten.
+      {/* Detail panel: shows hovered event or latest event by default */}
+      {detailEvent && (() => {
+        const track = detailEvent.track;
+        const TIcon = track.icon;
+        return (
+          <div
+            className="mt-4 rounded-xl border-2 p-4 transition-all"
+            style={{
+              borderColor: track.color + '40',
+              background: `linear-gradient(135deg, ${track.color}08 0%, ${track.color}03 100%)`,
+            }}
+          >
+            <div className="flex items-start gap-4">
+              {/* Icon column */}
+              <div
+                className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0"
+                style={{ backgroundColor: track.color + '20' }}
+              >
+                <TIcon size={22} style={{ color: track.color }} strokeWidth={2} />
+              </div>
+
+              {/* Main content */}
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 mb-1 flex-wrap">
+                  <span
+                    className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full"
+                    style={{ backgroundColor: track.color + '20', color: track.color }}
+                  >
+                    {track.label}
+                  </span>
+                  <span className="text-xs font-mono font-semibold text-slate-500">{formatTooltipDate(detailEvent.date)}</span>
+                  {detailEvent.aiDetected && (
+                    <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-amber-700 bg-amber-100 px-2 py-0.5 rounded-full">
+                      <Sparkles size={10} /> KI erkannt
+                    </span>
+                  )}
+                  {detailEvent.fida && (
+                    <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-purple-700 bg-purple-100 px-2 py-0.5 rounded-full">
+                      <Database size={10} /> FIDA
+                    </span>
+                  )}
+                  {detailEvent.isFuture && (
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-600 bg-slate-200 px-2 py-0.5 rounded-full">
+                      Zukunft
+                    </span>
+                  )}
+                  {detailEvent.isWarning && (
+                    <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-red-700 bg-red-100 px-2 py-0.5 rounded-full">
+                      <AlertTriangle size={10} /> Warnsignal
+                    </span>
+                  )}
+                </div>
+
+                <div className="text-base font-bold text-slate-900 leading-snug">{detailEvent.label}</div>
+
+                {detailEvent.source && (
+                  <div className="text-xs text-slate-500 italic mt-1">Quelle: {detailEvent.source}</div>
+                )}
+
+                {detailEvent.signals && detailEvent.signals.length > 0 && (
+                  <div className="mt-3">
+                    <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">Erkannte Signale</div>
+                    <ul className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-1">
+                      {detailEvent.signals.map((s, i) => (
+                        <li key={i} className="text-xs text-slate-700 flex items-start gap-1.5">
+                          <span style={{ color: track.color }} className="mt-0.5">▸</span>
+                          <span>{s}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        );
+      })()}
+
+      {/* Legend */}
+      <div className="mt-3 flex items-center gap-4 text-[11px] text-slate-500 flex-wrap">
+        {TRACKS.map((tr) => {
+          const Icon = tr.icon;
+          return (
+            <div key={tr.key} className="flex items-center gap-1.5">
+              <Icon size={12} style={{ color: tr.color }} strokeWidth={2.5} />
+              <span className="font-medium">{tr.label}</span>
+            </div>
+          );
+        })}
+        <span className="text-slate-300">·</span>
+        <span className="flex items-center gap-1"><Sparkles size={11} className="text-amber-500" /> KI erkannt</span>
+        <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full bg-purple-500" /> FIDA</span>
+        <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full border-2 border-slate-400 bg-white" /> Zukunft</span>
+        <span className="ml-auto text-[10px] italic text-slate-400">Hover über einen Punkt für Details</span>
       </div>
     </Card>
   );

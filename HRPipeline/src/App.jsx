@@ -18,6 +18,7 @@ function LoadingFallback() {
 
 export default function App() {
   const [currentMode, setCurrentMode] = useState('bewerber');
+  const [newApplicantProfileId, setNewApplicantProfileId] = useState(null);
 
   return (
     <ToastProvider>
@@ -26,8 +27,8 @@ export default function App() {
           <GlobalHeader currentMode={currentMode} onModeChange={setCurrentMode} />
           <div style={{ padding: 'var(--space-6)' }}>
             <Suspense fallback={<LoadingFallback />}>
-              {currentMode === 'bewerber' && <BewerberMode />}
-              {currentMode === 'arbeitgeber' && <ArbeitgeberMode />}
+              {currentMode === 'bewerber' && <BewerberMode onProfileSubmitted={setNewApplicantProfileId} />}
+              {currentMode === 'arbeitgeber' && <ArbeitgeberMode newApplicantProfileId={newApplicantProfileId} />}
               {currentMode === 'cockpit' && <CockpitMode />}
             </Suspense>
           </div>

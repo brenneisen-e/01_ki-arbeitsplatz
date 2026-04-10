@@ -470,17 +470,19 @@ function ResultsSection({ profile, onReset, onJobDetail, hrData }) {
 }
 
 // ======== Main Bewerber Mode ========
-export default function BewerberMode() {
+export default function BewerberMode({ onProfileSubmitted }) {
   const showToast = useToast();
   const { institut } = useInstitut();
   const hrData = useMemo(() => getHRData(institut.mode), [institut.mode]);
   const [view, setView] = useState('upload'); // 'upload' | 'loading' | 'results'
   const [currentProfile, setCurrentProfile] = useState(null);
+  const [currentProfileId, setCurrentProfileId] = useState(null);
   const [jobDetailId, setJobDetailId] = useState(null);
 
   // Reset when mode changes so we never render stale data from another mode
   useEffect(() => {
     setCurrentProfile(null);
+    setCurrentProfileId(null);
     setJobDetailId(null);
     setView('upload');
   }, [institut.mode]);
@@ -489,8 +491,10 @@ export default function BewerberMode() {
     const profile = hrData.profiles[profileId];
     if (!profile) return;
     setCurrentProfile(profile);
+    setCurrentProfileId(profileId);
     setView('loading');
-  }, [hrData]);
+    onProfileSubmitted?.(profileId);
+  }, [hrData, onProfileSubmitted]);
 
   const handleLoadingDone = useCallback(() => {
     setView('results');

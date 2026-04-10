@@ -260,11 +260,16 @@
   color: inherit !important;
 }
 
-/* Charts: Tooltip-Text nicht von card-hover überschreiben */
-.card-hover:hover .recharts-tooltip-wrapper div,
-.card-hover:hover .recharts-tooltip-wrapper span,
-.card-hover:hover .recharts-tooltip-wrapper p {
-  color: revert !important;
+/* Charts: Tooltip-Text nicht von card-hover überschreiben.
+   `revert` greift unzuverlässig, wenn Tailwind-Utilities aktiv sind –
+   daher explizite Farben setzen. */
+.card-hover:hover .recharts-tooltip-wrapper,
+.card-hover:hover .recharts-tooltip-wrapper * {
+  color: #334155 !important;
+}
+.card-hover:hover .recharts-tooltip-wrapper .recharts-default-tooltip {
+  background-color: #ffffff !important;
+  border-color: #e2e8f0 !important;
 }
 
 /* Badges + Icon-Box */

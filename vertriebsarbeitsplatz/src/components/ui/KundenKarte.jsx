@@ -204,8 +204,8 @@ export default function KundenKarte({ kunden = [], onKundeClick, title = 'Kunden
         )}
       </div>
 
-      <div className="relative mx-auto" style={{ maxWidth: 320 }}>
-        <svg viewBox={`0 0 ${SVG_W} ${SVG_H}`} className="w-full block" style={{ maxHeight: 360 }}>
+      <div className="relative mx-auto" style={{ maxWidth: 300 }}>
+        <svg viewBox={`0 0 ${SVG_W} ${SVG_H}`} className="w-full block" style={{ maxHeight: 340 }}>
           <defs>
             <linearGradient id="kundenkarte-bg" x1="0" y1="0" x2="0" y2="1">
               <stop offset="0%" stopColor="#f8fafc" />

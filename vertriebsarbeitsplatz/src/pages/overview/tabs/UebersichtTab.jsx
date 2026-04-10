@@ -371,13 +371,11 @@ export default function UebersichtTab() {
               <span className="text-sm text-slate-400">{t('kundenPotenzialeSummary', { kunden: kundenPotentiale.length, potenziale: getAllPotentiale(modeId).length })}</span>
             </div>
             <div className="border border-slate-200 rounded-xl overflow-hidden">
-              <div className="grid py-2.5 px-3 items-center text-[10px] uppercase text-slate-500 font-bold bg-slate-50 border-b border-slate-200 divide-x divide-slate-200" style={{ gridTemplateColumns: '1.3fr 70px 80px 1.3fr 100px 100px' }}>
+              <div className="grid py-2.5 px-3 items-center text-[10px] uppercase text-slate-500 font-bold bg-slate-50 border-b border-slate-200 divide-x divide-slate-200" style={{ gridTemplateColumns: '1.3fr 70px 80px 1.6fr' }}>
                 <span className="pr-2">{t('kunde')}</span>
                 <span className="text-center px-2">NPS</span>
                 <span className="text-center px-2">Leads</span>
-                <span className="px-2">{t('topPotenziale')}</span>
-                <span className="text-right px-2">{modeId === 'banking' ? 'CLV' : t('praemie')}</span>
-                <span className="text-right pl-2">{modeId === 'banking' ? 'Leads CLV' : t('provision')}</span>
+                <span className="pl-2">{t('topPotenziale')}</span>
               </div>
               {kundenPotentiale.slice(0, modeId === 'banking' ? 5 : 8).map((kp, i, arr) => {
                 const isLast = i === arr.length - 1;
@@ -385,7 +383,7 @@ export default function UebersichtTab() {
                   <div
                     key={kp.kundeId}
                     className={`grid py-3 px-3 hover:bg-slate-50 cursor-pointer items-center transition-colors divide-x divide-slate-100 ${isLast ? '' : 'border-b border-slate-100'}`}
-                    style={{ gridTemplateColumns: '1.3fr 70px 80px 1.3fr 100px 100px' }}
+                    style={{ gridTemplateColumns: '1.3fr 70px 80px 1.6fr' }}
                     onClick={() => navigateTo('detail', { kundeId: kp.kundeId, tab: 'stammdaten' })}
                   >
                     <div className="flex items-center gap-2 min-w-0 pr-2">
@@ -415,23 +413,13 @@ export default function UebersichtTab() {
                         )}
                       </span>
                     </div>
-                    <div className="flex flex-wrap gap-1 min-w-0 px-2">
+                    <div className="flex flex-wrap gap-1 min-w-0 pl-2">
                       {kp.potentiale.slice(0, 3).map((p, pi) => (
                         <span key={pi} className="rh-badge text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-600 whitespace-nowrap">{p.titel}</span>
                       ))}
                       {kp.potentiale.length > 3 && (
                         <span className="rh-badge text-[10px] px-1.5 py-0.5 rounded bg-slate-50 text-slate-400">+{kp.potentiale.length - 3}</span>
                       )}
-                    </div>
-                    <div className="text-right text-sm font-mono font-medium px-2" style={{ color: 'var(--_fg, #334155)' }}>
-                      {modeId === 'banking'
-                        ? (kp.clv > 0 ? `${kp.clv.toLocaleString(lang === 'en' ? 'en-US' : 'de-DE')}€` : '-')
-                        : (kp.gesamtPraemie > 0 ? `${kp.gesamtPraemie.toLocaleString(lang === 'en' ? 'en-US' : 'de-DE')}€` : '-')}
-                    </div>
-                    <div className="text-right text-sm font-mono font-medium pl-2" style={{ color: 'var(--_fg, var(--mode-primary-light))' }}>
-                      {modeId === 'banking'
-                        ? (kp.gesamtPraemie > 0 ? `${Math.round(kp.gesamtPraemie * 0.03).toLocaleString(lang === 'en' ? 'en-US' : 'de-DE')}€` : '-')
-                        : (kp.gesamtProvision > 0 ? `${kp.gesamtProvision.toLocaleString(lang === 'en' ? 'en-US' : 'de-DE')}€` : '-')}
                     </div>
                   </div>
                 );
@@ -561,15 +549,6 @@ export default function UebersichtTab() {
         </div>
         {/* /Potenziale + Marketingkampagnen wrapper */}
 
-        {/* Kundenkarte (Banking only) */}
-        {modeId === 'banking' && (
-          <KundenKarte
-            kunden={KUNDEN_BY_MODE[modeId] || []}
-            onKundeClick={(kundeId) => navigateTo('detail', { kundeId, tab: 'stammdaten' })}
-            title={lang === 'en' ? 'Customer map' : 'Kundenkarte'}
-          />
-        )}
-
         {/* Aufgaben – modern card list */}
         <Card hover={false}>
           <div className="flex items-center justify-between mb-4">
@@ -685,6 +664,15 @@ export default function UebersichtTab() {
 
       {/* Rechte Spalte 1/3 */}
       <div className="col-span-1 space-y-4 min-w-0">
+        {/* Kundenkarte (Banking only) – am Platz der Termine */}
+        {modeId === 'banking' && (
+          <KundenKarte
+            kunden={KUNDEN_BY_MODE[modeId] || []}
+            onKundeClick={(kundeId) => navigateTo('detail', { kundeId, tab: 'stammdaten' })}
+            title={lang === 'en' ? 'Customer map' : 'Kundenkarte'}
+          />
+        )}
+
         {/* Anstehende Termine */}
         <Card hover={false}>
           <div className="flex items-center gap-2 mb-4">

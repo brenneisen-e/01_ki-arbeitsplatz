@@ -3,7 +3,7 @@ import { Sun, Clock, Zap, CheckSquare, Calendar, Phone, AlertTriangle, CheckCirc
 import Card from '../../../components/ui/Card';
 import Avatar from '../../../components/ui/Avatar';
 import KundenKarte from '../../../components/ui/KundenKarte';
-import { PrioBadge, SparteBadge } from '../../../components/ui/Badge';
+import { SparteBadge } from '../../../components/ui/Badge';
 import { useMode } from '../../../hooks/useMode';
 import useTranslation from '../../../i18n/useTranslation';
 import { KUNDEN_BY_MODE, TERMINE_BY_MODE, AUFGABEN_BY_MODE, getAllPotentiale } from '../../../data';
@@ -380,10 +380,6 @@ export default function UebersichtTab() {
                 <span className="text-right pl-2">{modeId === 'banking' ? 'Leads CLV' : t('provision')}</span>
               </div>
               {kundenPotentiale.slice(0, modeId === 'banking' ? 5 : 8).map((kp, i, arr) => {
-                const topPrio = kp.potentiale.reduce((best, p) => {
-                  const prio = { kritisch: 0, hoch: 1, mittel: 2, niedrig: 3 };
-                  return (prio[p.prioritaet] ?? 3) < (prio[best] ?? 3) ? p.prioritaet : best;
-                }, 'niedrig');
                 const isLast = i === arr.length - 1;
                 return (
                   <div
@@ -395,9 +391,8 @@ export default function UebersichtTab() {
                     <div className="flex items-center gap-2 min-w-0 pr-2">
                       <Avatar name={kp.kundeName} foto={getKundeFoto(kp.kundeId)} size={30} />
                       <div className="min-w-0">
-                        <div className="text-sm font-semibold truncate flex items-center gap-1.5" style={{ color: 'var(--_fg, #334155)' }}>
+                        <div className="text-sm font-semibold truncate" style={{ color: 'var(--_fg, #334155)' }}>
                           {tn(kp.kundeName)}
-                          <PrioBadge prioritaet={topPrio} />
                         </div>
                       </div>
                     </div>
@@ -566,6 +561,15 @@ export default function UebersichtTab() {
         </div>
         {/* /Potenziale + Marketingkampagnen wrapper */}
 
+        {/* Kundenkarte (Banking only) */}
+        {modeId === 'banking' && (
+          <KundenKarte
+            kunden={KUNDEN_BY_MODE[modeId] || []}
+            onKundeClick={(kundeId) => navigateTo('detail', { kundeId, tab: 'stammdaten' })}
+            title={lang === 'en' ? 'Customer map' : 'Kundenkarte'}
+          />
+        )}
+
         {/* Aufgaben – modern card list */}
         <Card hover={false}>
           <div className="flex items-center justify-between mb-4">
@@ -681,14 +685,6 @@ export default function UebersichtTab() {
 
       {/* Rechte Spalte 1/3 */}
       <div className="col-span-1 space-y-4 min-w-0">
-        {/* Kundenkarte (Deutschland) */}
-        <KundenKarte
-          kunden={KUNDEN_BY_MODE[modeId] || []}
-          onKundeClick={(kundeId) => navigateTo('detail', { kundeId, tab: 'stammdaten' })}
-          title={t('kundenkarte') || 'Kundenkarte'}
-          subtitle={lang === 'en' ? 'Customer distribution' : 'Regionale Verteilung'}
-        />
-
         {/* Anstehende Termine */}
         <Card hover={false}>
           <div className="flex items-center gap-2 mb-4">

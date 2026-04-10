@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { MapPin, ChevronLeft, ZoomIn } from 'lucide-react';
+import { MapPin, ChevronLeft } from 'lucide-react';
 import geojson from '../../pages/cockpit/bundeslaender.geo.json';
 import Card from './Card';
 import Avatar from './Avatar';
@@ -137,8 +137,8 @@ function geocodeKunde(kunde, index) {
 }
 
 /* ── Component ──────────────────────────────────────────────── */
-const SVG_W = 420;
-const SVG_H = 520;
+const SVG_W = 360;
+const SVG_H = 420;
 
 export default function KundenKarte({ kunden = [], onKundeClick, title = 'Kundenkarte', subtitle }) {
   const [zoomedState, setZoomedState] = useState(null);
@@ -181,20 +181,10 @@ export default function KundenKarte({ kunden = [], onKundeClick, title = 'Kunden
 
   return (
     <Card hover={false}>
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2 min-w-0">
-          <div
-            className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
-            style={{
-              background: 'linear-gradient(135deg, var(--mode-primary-light), var(--mode-primary))',
-            }}
-          >
-            <MapPin size={16} className="text-white" strokeWidth={2} />
-          </div>
-          <div className="min-w-0">
-            <h3 className="font-semibold text-slate-800 truncate">{title}</h3>
-            {subtitle && <div className="text-xs text-slate-500 truncate">{subtitle}</div>}
-          </div>
+          <MapPin size={18} style={{ color: 'var(--mode-primary-light)' }} strokeWidth={1.75} />
+          <h3 className="font-semibold text-slate-800 truncate">{title}</h3>
         </div>
         {zoomedState ? (
           <button
@@ -202,20 +192,20 @@ export default function KundenKarte({ kunden = [], onKundeClick, title = 'Kunden
               setZoomedState(null);
               setHoveredKunde(null);
             }}
-            className="flex items-center gap-1 text-xs font-medium text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded-full transition-colors"
+            className="flex items-center gap-1 text-xs font-medium text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 px-2.5 py-1 rounded-full transition-colors"
           >
-            <ChevronLeft size={14} />
-            <span>Übersicht</span>
+            <ChevronLeft size={12} />
+            <span>{zoomedState}</span>
           </button>
         ) : (
-          <span className="text-xs px-2.5 py-1 rounded-full bg-slate-100 text-slate-500 font-medium">
+          <span className="text-xs text-slate-400 font-medium">
             {geocoded.length} Kunden · {Object.keys(clusters).length} BL
           </span>
         )}
       </div>
 
-      <div className="relative">
-        <svg viewBox={`0 0 ${SVG_W} ${SVG_H}`} className="w-full block">
+      <div className="relative mx-auto" style={{ maxWidth: 320 }}>
+        <svg viewBox={`0 0 ${SVG_W} ${SVG_H}`} className="w-full block" style={{ maxHeight: 360 }}>
           <defs>
             <linearGradient id="kundenkarte-bg" x1="0" y1="0" x2="0" y2="1">
               <stop offset="0%" stopColor="#f8fafc" />
@@ -228,7 +218,7 @@ export default function KundenKarte({ kunden = [], onKundeClick, title = 'Kunden
 
           <rect width={SVG_W} height={SVG_H} fill="url(#kundenkarte-bg)" rx="12" />
 
-          {/* State shapes */}
+          {/* State shapes (clickable) */}
           {paths.map(({ name, d }) => {
             const count = clusters[name]?.length || 0;
             const isZoomed = zoomedState === name;
@@ -236,6 +226,7 @@ export default function KundenKarte({ kunden = [], onKundeClick, title = 'Kunden
             const isHovered = hoveredState === name;
             const fill = isInactive ? '#e2e8f0' : getStateFill(count);
             const hasClusters = count > 0;
+            const clickable = hasClusters && !zoomedState;
 
             return (
               <path
@@ -243,15 +234,12 @@ export default function KundenKarte({ kunden = [], onKundeClick, title = 'Kunden
                 d={d}
                 fill={fill}
                 stroke={isZoomed || isHovered ? 'var(--mode-primary, #004d26)' : '#cbd5e1'}
-                strokeWidth={isZoomed || isHovered ? 2 : 0.8}
-                opacity={isInactive ? 0.45 : 1}
-                style={{
-                  cursor: hasClusters && !zoomedState ? 'pointer' : 'default',
-                  transition: 'all 0.2s ease',
-                }}
-                onClick={() => hasClusters && !zoomedState && setZoomedState(name)}
-                onMouseEnter={() => hasClusters && !zoomedState && setHoveredState(name)}
-                onMouseLeave={() => setHoveredState(null)}
+                strokeWidth={isZoomed || isHovered ? 1.5 : 0.7}
+                opacity={isInactive ? 0.4 : 1}
+                style={{ cursor: clickable ? 'pointer' : 'default' }}
+                onClick={clickable ? () => setZoomedState(name) : undefined}
+                onMouseEnter={clickable ? () => setHoveredState(name) : undefined}
+                onMouseLeave={clickable ? () => setHoveredState(null) : undefined}
               />
             );
           })}
@@ -262,8 +250,7 @@ export default function KundenKarte({ kunden = [], onKundeClick, title = 'Kunden
               const centroid = STATE_CENTROIDS[state];
               if (!centroid) return null;
               const [cx, cy] = project(centroid.lng, centroid.lat);
-              const radius = 14 + Math.sqrt(kundenInState.length) * 3.5;
-              const isHovered = hoveredState === state;
+              const radius = 10 + Math.sqrt(kundenInState.length) * 2.2;
               return (
                 <g
                   key={state}
@@ -273,8 +260,8 @@ export default function KundenKarte({ kunden = [], onKundeClick, title = 'Kunden
                   style={{ cursor: 'pointer' }}
                 >
                   {/* Pulse ring */}
-                  <circle cx={cx} cy={cy} r={radius + 5} fill="var(--mode-primary, #004d26)" opacity={0.15}>
-                    <animate attributeName="r" from={radius + 2} to={radius + 10} dur="2s" repeatCount="indefinite" />
+                  <circle cx={cx} cy={cy} r={radius + 3} fill="var(--mode-primary, #004d26)" opacity={0.15} style={{ pointerEvents: 'none' }}>
+                    <animate attributeName="r" from={radius + 1} to={radius + 8} dur="2s" repeatCount="indefinite" />
                     <animate attributeName="opacity" from="0.35" to="0" dur="2s" repeatCount="indefinite" />
                   </circle>
                   <circle
@@ -283,15 +270,14 @@ export default function KundenKarte({ kunden = [], onKundeClick, title = 'Kunden
                     r={radius}
                     fill="var(--mode-primary, #004d26)"
                     stroke="white"
-                    strokeWidth={3}
+                    strokeWidth={2}
                     filter="url(#kundenkarte-shadow)"
-                    style={{ transform: isHovered ? 'scale(1.08)' : 'scale(1)', transformOrigin: `${cx}px ${cy}px`, transition: 'transform 0.2s ease' }}
                   />
                   <text
                     x={cx}
-                    y={cy + 4}
+                    y={cy + 3.5}
                     textAnchor="middle"
-                    fontSize="13"
+                    fontSize="11"
                     fontWeight="800"
                     fill="white"
                     fontFamily="'DM Sans', sans-serif"
@@ -308,6 +294,7 @@ export default function KundenKarte({ kunden = [], onKundeClick, title = 'Kunden
             visibleKunden.map((k) => {
               const [x, y] = project(k.lng, k.lat);
               const isHovered = hoveredKunde === k.id;
+              const r = isHovered ? 5 : 3.8;
               return (
                 <g
                   key={k.id}
@@ -316,109 +303,60 @@ export default function KundenKarte({ kunden = [], onKundeClick, title = 'Kunden
                   onMouseLeave={() => setHoveredKunde(null)}
                   style={{ cursor: 'pointer' }}
                 >
-                  {/* Shadow */}
-                  <ellipse cx={x} cy={y + 4} rx={4} ry={1.5} fill="rgba(0,0,0,0.2)" />
-                  {/* Pin teardrop */}
-                  <path
-                    d={`M${x},${y - 14} C${x - 6},${y - 14} ${x - 6},${y - 6} ${x},${y} C${x + 6},${y - 6} ${x + 6},${y - 14} ${x},${y - 14} Z`}
+                  <circle cx={x} cy={y + 1} r={r + 1} fill="rgba(0,0,0,0.2)" style={{ pointerEvents: 'none' }} />
+                  <circle
+                    cx={x}
+                    cy={y}
+                    r={r}
                     fill="var(--mode-primary, #004d26)"
                     stroke="white"
                     strokeWidth={1.5}
                     filter="url(#kundenkarte-shadow)"
-                    style={{
-                      transform: isHovered ? 'scale(1.3)' : 'scale(1)',
-                      transformOrigin: `${x}px ${y}px`,
-                      transition: 'transform 0.15s ease',
-                    }}
                   />
-                  <circle cx={x} cy={y - 10} r={2.2} fill="white" />
                 </g>
               );
             })}
 
-          {/* Hover tooltip */}
+          {/* Hover tooltip for states (non-interactive) */}
           {hoveredState && !zoomedState && clusters[hoveredState] && (
-            <foreignObject x="8" y="8" width="240" height="76">
-              <div className="bg-white/95 backdrop-blur px-3 py-2 rounded-lg shadow-lg border border-slate-200 text-xs">
-                <div className="font-bold text-slate-800 text-sm mb-1">{hoveredState}</div>
-                <div className="flex items-center gap-3 text-slate-600">
+            <foreignObject x="6" y="6" width="200" height="48" style={{ pointerEvents: 'none' }}>
+              <div className="bg-white/95 backdrop-blur px-2.5 py-1.5 rounded-lg shadow-md border border-slate-200 text-[11px]">
+                <div className="font-bold text-slate-800 mb-0.5">{hoveredState}</div>
+                <div className="text-slate-500">
                   <span className="font-mono font-semibold" style={{ color: 'var(--mode-primary, #004d26)' }}>
-                    {clusters[hoveredState].length} Kunden
-                  </span>
-                  <span className="text-slate-400">·</span>
-                  <span>klicken zum Zoomen</span>
+                    {clusters[hoveredState].length}
+                  </span>{' '}
+                  Kunden · klicken zum Zoom
                 </div>
               </div>
             </foreignObject>
           )}
-
-          {hoveredKunde && zoomedState && (() => {
-            const k = visibleKunden.find((x) => x.id === hoveredKunde);
-            if (!k) return null;
-            const [x, y] = project(k.lng, k.lat);
-            const tooltipX = Math.min(Math.max(x - 80, 8), SVG_W - 168);
-            const tooltipY = Math.max(y - 60, 8);
-            return (
-              <foreignObject x={tooltipX} y={tooltipY} width="160" height="56">
-                <div className="bg-white px-3 py-2 rounded-lg shadow-lg border border-slate-200 text-xs">
-                  <div className="font-bold text-slate-800 truncate">{k.name}</div>
-                  <div className="text-slate-500 truncate">{k.city}</div>
-                </div>
-              </foreignObject>
-            );
-          })()}
         </svg>
 
-        {/* Zoom hint overlay */}
-        {!zoomedState && geocoded.length > 0 && (
-          <div className="absolute bottom-3 left-3 flex items-center gap-1.5 bg-white/90 backdrop-blur px-2.5 py-1 rounded-full border border-slate-200 shadow-sm text-[10px] font-medium text-slate-500">
-            <ZoomIn size={11} />
-            <span>Bundesland klicken zum Zoomen</span>
-          </div>
-        )}
       </div>
 
       {/* Zoomed customer list (fly-out) */}
       {zoomedState && visibleKunden.length > 0 && (
-        <div className="mt-3 pt-3 border-t border-slate-100">
-          <div className="text-[10px] uppercase font-bold text-slate-400 mb-2 tracking-wider">
-            {visibleKunden.length} Kunden in {zoomedState}
-          </div>
-          <div className="space-y-1 max-h-40 overflow-y-auto -mx-1 px-1">
-            {visibleKunden.slice(0, 8).map((k) => (
+        <div className="mt-2 pt-2 border-t border-slate-100">
+          <div className="grid grid-cols-2 gap-1 max-h-28 overflow-y-auto">
+            {visibleKunden.slice(0, 10).map((k) => (
               <div
                 key={k.id}
                 onClick={() => onKundeClick?.(k.id)}
                 onMouseEnter={() => setHoveredKunde(k.id)}
                 onMouseLeave={() => setHoveredKunde(null)}
-                className="flex items-center gap-2 py-1.5 px-2 rounded-lg hover:bg-slate-50 cursor-pointer transition-colors"
+                className="flex items-center gap-1.5 py-1 px-1.5 rounded hover:bg-slate-50 cursor-pointer transition-colors min-w-0"
               >
-                <Avatar name={k.name} foto={getKundeFoto(k.id)} size={26} />
-                <div className="flex-1 min-w-0">
-                  <div className="text-xs font-semibold text-slate-800 truncate">{k.name}</div>
-                  <div className="text-[10px] text-slate-500 truncate">{k.city}</div>
-                </div>
+                <Avatar name={k.name} foto={getKundeFoto(k.id)} size={22} />
+                <div className="text-[11px] font-medium text-slate-700 truncate">{k.name}</div>
               </div>
             ))}
-            {visibleKunden.length > 8 && (
-              <div className="text-[10px] text-slate-400 text-center py-1">
-                + {visibleKunden.length - 8} weitere
-              </div>
-            )}
           </div>
-        </div>
-      )}
-
-      {/* Legend */}
-      {!zoomedState && (
-        <div className="mt-3 pt-3 border-t border-slate-100 flex items-center gap-2 text-[10px] text-slate-500">
-          <span>Wenige</span>
-          <div className="flex gap-0.5">
-            <div className="w-5 h-2.5 rounded-sm" style={{ backgroundColor: 'rgba(122, 182, 72, 0.45)' }} />
-            <div className="w-5 h-2.5 rounded-sm" style={{ backgroundColor: 'var(--mode-primary-light, #00843d)' }} />
-            <div className="w-5 h-2.5 rounded-sm" style={{ backgroundColor: 'var(--mode-primary, #004d26)' }} />
-          </div>
-          <span>Viele Kunden</span>
+          {visibleKunden.length > 10 && (
+            <div className="text-[10px] text-slate-400 text-center mt-1">
+              + {visibleKunden.length - 10} weitere
+            </div>
+          )}
         </div>
       )}
     </Card>

@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
-import { UserPlus, Activity, Eye, EyeOff, MapPin, Calendar, Briefcase, CheckCircle, XCircle, Bookmark, HelpCircle, Send, FileText, Phone, Video, Building, ChevronDown } from 'lucide-react';
+import { UserPlus, Activity, Eye, EyeOff, MapPin, Calendar, Briefcase, CheckCircle, XCircle, Bookmark, HelpCircle, Send, FileText, Phone, Video, Building, ChevronDown, Sparkles } from 'lucide-react';
 import { anonymizeText } from '../../data/applicants';
 import { getHRData } from '../../data/hrData';
 import { useToast } from '../../hooks/useToast';
@@ -472,8 +472,40 @@ function generateDateOptions() {
   return options;
 }
 
+// ======== New Applicant Card ========
+function NewApplicantCard({ profile, onClick }) {
+  const scoreClass = profile.totalScore >= 80 ? 'high' : profile.totalScore >= 60 ? 'mid' : 'low';
+  return (
+    <div className="hp-applicant-card hp-new-applicant-card" onClick={onClick}>
+      <div className={`hp-applicant-score ${scoreClass}`}>{profile.totalScore}</div>
+      {profile.photo ? (
+        <img src={profile.photo} alt={profile.name} style={{ width: 56, height: 56, borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }} />
+      ) : (
+        <div className="hp-profile-avatar-small">{profile.initials}</div>
+      )}
+      <div className="hp-applicant-info">
+        <h4 style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', flexWrap: 'wrap' }}>
+          {profile.name}
+          <span className="hp-new-badge"><Sparkles size={10} style={{ marginRight: 3 }} />NEU</span>
+        </h4>
+        <div className="hp-applicant-location">{profile.city} | {profile.age} Jahre</div>
+        <div style={{ fontSize: 'var(--font-xs)', color: 'var(--primary)', fontWeight: 600, marginTop: 'var(--space-1)' }}>
+          Soeben eingegangen · KI-Analyse bereit
+        </div>
+        <div className="hp-applicant-summary">{(profile.summary || '').slice(0, 130)}…</div>
+        <div className="hp-tags">
+          {(profile.strengths || []).slice(0, 3).map((s, i) => <span key={i} className="hp-tag">{s}</span>)}
+        </div>
+      </div>
+      <div className="hp-applicant-status">
+        <span className="hp-status-badge recommended">Empfohlen</span>
+      </div>
+    </div>
+  );
+}
+
 // ======== Main Arbeitgeber Mode ========
-export default function ArbeitgeberMode() {
+export default function ArbeitgeberMode({ newApplicantProfileId }) {
   const showToast = useToast();
   const { institut } = useInstitut();
   const hrData = useMemo(() => getHRData(institut.mode), [institut.mode]);
@@ -484,6 +516,12 @@ export default function ArbeitgeberMode() {
   const [filterScore, setFilterScore] = useState('');
   const [filterStatus, setFilterStatus] = useState('');
   const [detailApplicant, setDetailApplicant] = useState(null);
+  const [analyzingNew, setAnalyzingNew] = useState(false);
+
+  const newApplicantProfile = useMemo(
+    () => newApplicantProfileId ? hrData.profiles[newApplicantProfileId] : null,
+    [newApplicantProfileId, hrData]
+  );
 
   // Reset state when mode changes so selected data from the previous mode is dropped
   useEffect(() => {
@@ -492,6 +530,19 @@ export default function ArbeitgeberMode() {
     setFilterScore('');
     setFilterStatus('');
   }, [institut.mode]);
+
+  const handleNewApplicantClick = useCallback(() => {
+    if (!newApplicantProfile) return;
+    setAnalyzingNew(true);
+    setTimeout(() => {
+      setAnalyzingNew(false);
+      setDetailApplicant({
+        ...newApplicantProfile,
+        status: newApplicantProfile.totalScore >= 80 ? 'recommended' : newApplicantProfile.totalScore >= 60 ? 'review' : 'rejected',
+        appliedDate: new Date().toISOString(),
+      });
+    }, 2000);
+  }, [newApplicantProfile]);
 
   const toggleBlind = () => {
     setBlindScreening(prev => {
@@ -551,6 +602,9 @@ export default function ArbeitgeberMode() {
 
       {/* Applicant Grid */}
       <div className="hp-applicant-grid">
+        {newApplicantProfile && (
+          <NewApplicantCard profile={newApplicantProfile} onClick={handleNewApplicantClick} />
+        )}
         {filteredApplicants.map(applicant => (
           <ApplicantCard
             key={applicant.id}
@@ -562,6 +616,19 @@ export default function ArbeitgeberMode() {
           />
         ))}
       </div>
+
+      {/* KI Analyzing Overlay */}
+      {analyzingNew && newApplicantProfile && (
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(15,23,42,0.55)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
+          <div style={{ background: 'var(--surface)', borderRadius: 'var(--radius-xl)', padding: 'var(--space-10) var(--space-12)', textAlign: 'center', boxShadow: 'var(--shadow-xl)', maxWidth: 360 }}>
+            <div className="hp-loading-spinner" style={{ margin: '0 auto var(--space-6)' }} />
+            <h3 style={{ margin: '0 0 var(--space-2)', fontSize: 'var(--font-lg)', fontWeight: 'var(--font-semibold)', color: 'var(--text-primary)' }}>KI analysiert Bewerbung…</h3>
+            <p style={{ margin: 0, fontSize: 'var(--font-sm)', color: 'var(--text-secondary)' }}>
+              {newApplicantProfile.name} · Score wird berechnet
+            </p>
+          </div>
+        </div>
+      )}
 
       {detailApplicant && (
         <DetailOverlay

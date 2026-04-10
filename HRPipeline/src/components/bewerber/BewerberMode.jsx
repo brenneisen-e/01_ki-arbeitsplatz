@@ -38,12 +38,11 @@ function useTypewriter(text, speed = 12) {
 }
 
 function KiSummary({ text }) {
-  const { displayed, done } = useTypewriter(text);
+  const { displayed } = useTypewriter(text);
   return (
     <div className="hp-ki-summary">
       <strong>KI-Zusammenfassung:</strong>{' '}
       <span>{displayed}</span>
-      {!done && <span className="hp-typewriter-cursor" />}
     </div>
   );
 }
@@ -88,7 +87,7 @@ function UploadSection({ onLoadProfile, onJobDetail, hrData }) {
               <span>LinkedIn &amp; Social-Media-Profile automatisch analysieren</span>
             </label>
             <p className="hp-linkedin-toggle-hint">
-              Die KI ergänzt Ihren Lebenslauf um öffentlich sichtbare Informationen aus Ihrem LinkedIn-, Xing- und GitHub-Profil
+              Die KI ergänzt Ihren Lebenslauf um öffentlich sichtbare Informationen aus Ihrem LinkedIn- und Xing-Profil
               (z. B. Empfehlungen, Publikationen, Nebentätigkeiten, Netzwerkgröße). Das kann Ihren Match-Score verbessern, ist
               aber optional. Es werden ausschließlich öffentlich einsehbare Daten verarbeitet — DSGVO-konform, nachvollziehbar
               und jederzeit widerrufbar.
@@ -471,17 +470,19 @@ function ResultsSection({ profile, onReset, onJobDetail, hrData }) {
 }
 
 // ======== Main Bewerber Mode ========
-export default function BewerberMode() {
+export default function BewerberMode({ onProfileSubmitted }) {
   const showToast = useToast();
   const { institut } = useInstitut();
   const hrData = useMemo(() => getHRData(institut.mode), [institut.mode]);
   const [view, setView] = useState('upload'); // 'upload' | 'loading' | 'results'
   const [currentProfile, setCurrentProfile] = useState(null);
+  const [currentProfileId, setCurrentProfileId] = useState(null);
   const [jobDetailId, setJobDetailId] = useState(null);
 
   // Reset when mode changes so we never render stale data from another mode
   useEffect(() => {
     setCurrentProfile(null);
+    setCurrentProfileId(null);
     setJobDetailId(null);
     setView('upload');
   }, [institut.mode]);
@@ -490,8 +491,10 @@ export default function BewerberMode() {
     const profile = hrData.profiles[profileId];
     if (!profile) return;
     setCurrentProfile(profile);
+    setCurrentProfileId(profileId);
     setView('loading');
-  }, [hrData]);
+    onProfileSubmitted?.(profileId);
+  }, [hrData, onProfileSubmitted]);
 
   const handleLoadingDone = useCallback(() => {
     setView('results');

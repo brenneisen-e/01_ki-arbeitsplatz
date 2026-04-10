@@ -138,14 +138,17 @@ function generateBedarfsfelder(kunde, modeId) {
 }
 
 // ─── Section header with colored icon ───
-function BedarfsfeldHeader({ icon: Icon, title, source, color }) {
+function BedarfsfeldHeader({ icon: Icon, title, source, color, count }) {
   return (
     <div className="flex items-center justify-between mb-4">
       <div className="flex items-center gap-2">
         <div className={`p-1.5 rounded-lg ${color}`}>
           <Icon size={18} className="text-white" />
         </div>
-        <h3 className="font-semibold text-slate-800">{title}</h3>
+        <h3 className="font-semibold text-slate-800">
+          {title}
+          {count != null && <span className="text-slate-400 font-normal ml-1">({count})</span>}
+        </h3>
       </div>
       {source && <span className="text-xs text-slate-400">{source}</span>}
     </div>
@@ -229,7 +232,12 @@ export default function OpenFinanceTab({ kunde }) {
       {/* ═══ Bedarfsfeld: Sparen & Vorsorgen ═══ */}
       {(bf.geldmarkt?.length > 0 || bf.kapitalmarkt?.length > 0) && (
         <Card hover={false}>
-          <BedarfsfeldHeader icon={PiggyBank} title="Sparen & Vorsorgen" color="bg-emerald-500" />
+          <BedarfsfeldHeader
+            icon={PiggyBank}
+            title="Sparen & Vorsorgen"
+            color="bg-emerald-500"
+            count={(bf.geldmarkt?.length || 0) + (bf.kapitalmarkt?.flatMap(k => k.positionen || [k]).length || 0)}
+          />
 
           {/* Geldmarkt */}
           {bf.geldmarkt.length > 0 && (
@@ -327,7 +335,13 @@ export default function OpenFinanceTab({ kunde }) {
       {/* ═══ Bedarfsfeld: Absichern (Fremd) ═══ */}
       {bf.versicherungenFremd?.length > 0 && (
         <Card hover={false}>
-          <BedarfsfeldHeader icon={Shield} title="Absichern" source="Wettbewerber-Versicherungen" color="bg-blue-500" />
+          <BedarfsfeldHeader
+            icon={Shield}
+            title="Absichern"
+            source="Wettbewerber-Versicherungen"
+            color="bg-blue-500"
+            count={bf.versicherungenFremd.length}
+          />
           <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
             <table className="w-full text-sm">
               <thead>
@@ -358,7 +372,7 @@ export default function OpenFinanceTab({ kunde }) {
                         {v.leistungen ? (
                           <div className="flex flex-wrap gap-1">
                             {v.leistungen.map((l, j) => (
-                              <span key={j} className="text-[10px] px-1.5 py-0.5 rounded bg-blue-50 text-blue-600">{l}</span>
+                              <span key={j} className="rh-badge text-[10px] px-1.5 py-0.5 rounded bg-blue-50 text-blue-600">{l}</span>
                             ))}
                           </div>
                         ) : '–'}
@@ -376,7 +390,12 @@ export default function OpenFinanceTab({ kunde }) {
       {/* ═══ Bedarfsfeld: Finanzieren ═══ */}
       {bf.finanzierungen?.length > 0 && (
         <Card hover={false}>
-          <BedarfsfeldHeader icon={Home} title="Finanzieren" color="bg-violet-500" />
+          <BedarfsfeldHeader
+            icon={Home}
+            title="Finanzieren"
+            color="bg-violet-500"
+            count={bf.finanzierungen.length}
+          />
           <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
             <table className="w-full text-sm">
               <thead>
@@ -430,7 +449,10 @@ export default function OpenFinanceTab({ kunde }) {
         <Card hover={false}>
           <div className="flex items-center gap-2 mb-4">
             <Briefcase size={20} className="text-slate-500" strokeWidth={1.75} />
-            <h3 className="font-semibold text-slate-800">{t('eigeneProdukte')} ({eigen.length})</h3>
+            <h3 className="font-semibold text-slate-800">
+              {t('eigeneProdukte')}
+              <span className="text-slate-400 font-normal ml-1">({eigen.length})</span>
+            </h3>
           </div>
           <DataTable
             columns={[
@@ -440,7 +462,7 @@ export default function OpenFinanceTab({ kunde }) {
               { id: 'praemie', label: t('praemieLabel') || 'Prämie/J.', render: v => v > 0 ? <span className="font-mono">{formatEur(v)}</span> : <span className="text-slate-300">–</span> },
               { id: 'seit', label: t('seit') || 'Seit' },
               { id: 'status', label: 'Status', render: v => (
-                <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${v === 'aktiv' ? 'bg-emerald-50 text-emerald-700' : v === 'optimierbar' ? 'bg-amber-50 text-amber-700' : 'bg-slate-100 text-slate-600'}`}>
+                <span className={`rh-badge text-xs font-medium px-2 py-0.5 rounded-full ${v === 'aktiv' ? 'bg-emerald-50 text-emerald-700' : v === 'optimierbar' ? 'bg-amber-50 text-amber-700' : 'bg-slate-100 text-slate-600'}`}>
                   {v}
                 </span>
               )},

@@ -21,6 +21,7 @@ const QUELLEN_STYLES = {
   kommunikation: 'bg-violet-50 text-violet-700',
   wettbewerb: 'bg-amber-50 text-amber-700',
   lebensereignis: 'bg-pink-50 text-pink-700',
+  direktvertrieb: 'bg-cyan-50 text-cyan-700',
   markt: 'bg-gray-50 text-gray-600',
 };
 
@@ -59,11 +60,13 @@ export const QuellenBadge = memo(function QuellenBadge({ quelle }) {
     kommunikation: 'Komm.',
     wettbewerb: 'Wettb.',
     lebensereignis: 'Leben.',
+    direktvertrieb: 'Direktvertrieb',
     markt: 'Markt',
   };
+  const display = label[quelle] || (quelle ? quelle.charAt(0).toUpperCase() + quelle.slice(1) : '');
   return (
     <span className={clsx('rh-badge inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium', QUELLEN_STYLES[quelle] || QUELLEN_STYLES.markt)}>
-      {label[quelle] || quelle}
+      {display}
     </span>
   );
 });

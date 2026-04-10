@@ -302,41 +302,41 @@ export default function LebenszeitstrahlCard({ kunde }) {
                       {/* AI sparkle badge */}
                       {event.aiDetected && (
                         <div
-                          className="absolute rounded-full bg-amber-400 flex items-center justify-center border-2 border-white shadow-sm pointer-events-none"
+                          className="absolute rounded-full bg-amber-400 flex items-center justify-center border-2 border-white shadow-md pointer-events-none"
                           style={{
-                            width: isHovered ? 18 : 14,
-                            height: isHovered ? 18 : 14,
-                            top: 4,
-                            right: 4,
+                            width: isHovered ? 26 : 22,
+                            height: isHovered ? 26 : 22,
+                            top: -2,
+                            right: -2,
                           }}
                         >
-                          <Sparkles size={isHovered ? 11 : 9} className="text-white" strokeWidth={3} />
+                          <Sparkles size={isHovered ? 14 : 12} className="text-white" strokeWidth={2.75} />
                         </div>
                       )}
                       {/* FIDA dot */}
                       {event.fida && (
                         <div
-                          className="absolute rounded-full bg-purple-500 border-2 border-white shadow-sm pointer-events-none"
+                          className="absolute rounded-full bg-purple-500 border-2 border-white shadow-md pointer-events-none"
                           style={{
-                            width: isHovered ? 14 : 11,
-                            height: isHovered ? 14 : 11,
-                            top: 6,
-                            right: 6,
+                            width: isHovered ? 20 : 16,
+                            height: isHovered ? 20 : 16,
+                            top: 0,
+                            right: 0,
                           }}
                         />
                       )}
                       {/* Warning */}
                       {event.isWarning && (
                         <div
-                          className="absolute rounded-full bg-red-500 flex items-center justify-center border-2 border-white shadow-sm pointer-events-none"
+                          className="absolute rounded-full bg-red-500 flex items-center justify-center border-2 border-white shadow-md pointer-events-none"
                           style={{
-                            width: isHovered ? 18 : 14,
-                            height: isHovered ? 18 : 14,
-                            top: 4,
-                            right: 4,
+                            width: isHovered ? 26 : 22,
+                            height: isHovered ? 26 : 22,
+                            top: -2,
+                            right: -2,
                           }}
                         >
-                          <AlertTriangle size={isHovered ? 11 : 9} className="text-white" strokeWidth={3} />
+                          <AlertTriangle size={isHovered ? 14 : 12} className="text-white" strokeWidth={2.75} />
                         </div>
                       )}
                       {/* Floating tooltip */}

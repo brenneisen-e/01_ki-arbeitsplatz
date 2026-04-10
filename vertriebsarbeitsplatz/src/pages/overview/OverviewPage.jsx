@@ -2,7 +2,7 @@ import { lazy, Suspense, useMemo } from 'react';
 import { useMode } from '../../hooks/useMode';
 import GlobalHeader from '../../components/layout/GlobalHeader';
 import KPIGrid from '../../components/ui/KPIGrid';
-import { KundenKarteLeafletCompact } from '../../components/ui/KundenKarteLeaflet';
+import { KundenKarteCompact } from '../../components/ui/KundenKarte';
 import { KUNDEN_BY_MODE } from '../../data';
 import UebersichtTab from './tabs/UebersichtTab';
 
@@ -77,7 +77,7 @@ export default function OverviewPage() {
             kpiValues={kpiValues}
             leadingSlot={
               modeId === 'banking' ? (
-                <KundenKarteLeafletCompact
+                <KundenKarteCompact
                   kunden={KUNDEN_BY_MODE.banking || []}
                   onKundeClick={(kundeId) => navigateTo('detail', { kundeId, tab: 'stammdaten' })}
                   title="Kundenkarte"

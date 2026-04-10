@@ -541,3 +541,236 @@ export default function KundenKarte({
     </>
   );
 }
+
+/* ── Compact portrait variant for the KPI row ─────────────────── */
+export function KundenKarteCompact({ kunden = [], onKundeClick, title = 'Kundenkarte' }) {
+  const [zoomedState, setZoomedState] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const geocoded = useMemo(
+    () => kunden.map((k, i) => geocodeKunde(k, i)).filter(Boolean),
+    [kunden]
+  );
+
+  const clusters = useMemo(() => {
+    const map = {};
+    geocoded.forEach((k) => {
+      if (!map[k.bundesland]) map[k.bundesland] = [];
+      map[k.bundesland].push(k);
+    });
+    return map;
+  }, [geocoded]);
+
+  const { paths, project } = useMemo(() => {
+    const proj = buildProjection(geojson.features, SVG_W, SVG_H);
+    const ps = geojson.features.map((f) => ({
+      name: f.properties.name,
+      d: featureToPath(f, proj),
+    }));
+    return { paths: ps, project: proj };
+  }, []);
+
+  const maxCount = Math.max(1, ...Object.values(clusters).map((v) => v.length));
+  const getStateFill = (count) => {
+    if (count === 0) return '#f1f5f9';
+    const intensity = count / maxCount;
+    if (intensity >= 0.66) return 'var(--mode-primary, #004d26)';
+    if (intensity >= 0.33) return 'var(--mode-primary-light, #00843d)';
+    return 'rgba(122, 182, 72, 0.45)';
+  };
+
+  const visibleKunden = zoomedState ? clusters[zoomedState] || [] : [];
+
+  return (
+    <>
+      <div
+        className="relative rounded-xl border p-3 cursor-pointer overflow-hidden card-base flex flex-col"
+        style={{
+          background:
+            'linear-gradient(180deg, color-mix(in srgb, var(--mode-primary-light) 14%, #ffffff) 0%, color-mix(in srgb, var(--mode-primary-light) 6%, #ffffff) 100%)',
+          borderColor: 'color-mix(in srgb, var(--mode-primary-light) 22%, #e2e8f0)',
+          boxShadow: '0 6px 16px -6px rgba(15, 23, 42, 0.10), 0 2px 6px -2px rgba(15, 23, 42, 0.05)',
+        }}
+        onClick={() => setIsModalOpen(true)}
+      >
+        <div className="flex items-center gap-1.5 mb-1">
+          <div className="w-6 h-6 rounded-lg flex items-center justify-center bg-slate-100 kpi-icon-box shrink-0">
+            <MapPin size={13} style={{ color: 'var(--mode-primary-light)' }} strokeWidth={1.75} />
+          </div>
+          <span className="text-[11px] font-medium text-slate-500 truncate">{title}</span>
+          <Maximize2 size={11} className="text-slate-400 ml-auto shrink-0" />
+        </div>
+        <div className="font-mono text-[1.4rem] leading-none font-extrabold" style={{ color: '#0f172a' }}>
+          {geocoded.length}
+        </div>
+        <div className="text-[9px] font-medium uppercase tracking-wider text-slate-500 mb-1.5">
+          Kunden regional
+        </div>
+        <div className="flex-1 min-h-0 flex items-center justify-center">
+          <svg
+            viewBox={`0 0 ${SVG_W} ${SVG_H}`}
+            className="w-full h-full block"
+            preserveAspectRatio="xMidYMid meet"
+            style={{ pointerEvents: 'none' }}
+          >
+            {paths.map(({ name, d }) => {
+              const count = clusters[name]?.length || 0;
+              return (
+                <path
+                  key={name}
+                  d={d}
+                  fill={count === 0 ? '#f1f5f9' : getStateFill(count)}
+                  stroke="#cbd5e1"
+                  strokeWidth={0.5}
+                />
+              );
+            })}
+            {Object.entries(clusters).map(([state, kundenInState]) => {
+              const centroid = STATE_CENTROIDS[state];
+              if (!centroid) return null;
+              const [cx, cy] = project(centroid.lng, centroid.lat);
+              const radius = 8 + Math.sqrt(kundenInState.length) * 1.6;
+              return (
+                <g key={state}>
+                  <circle cx={cx} cy={cy} r={radius + 2} fill="var(--mode-primary, #004d26)" opacity={0.2} />
+                  <circle
+                    cx={cx}
+                    cy={cy}
+                    r={radius}
+                    fill="var(--mode-primary, #004d26)"
+                    stroke="white"
+                    strokeWidth={1.5}
+                  />
+                  <text
+                    x={cx}
+                    y={cy + 3}
+                    textAnchor="middle"
+                    fontSize="9"
+                    fontWeight="800"
+                    fill="white"
+                    fontFamily="'DM Sans', sans-serif"
+                  >
+                    {kundenInState.length}
+                  </text>
+                </g>
+              );
+            })}
+          </svg>
+        </div>
+      </div>
+
+      {/* Modal – reuse the full MapRenderer + sidebar list like the main card */}
+      {isModalOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-6"
+          onClick={() => setIsModalOpen(false)}
+        >
+          <div
+            className="bg-white rounded-2xl shadow-2xl w-full max-w-5xl h-[88vh] overflow-hidden flex flex-col"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between px-5 py-4 border-b border-slate-200 shrink-0">
+              <div className="flex items-center gap-2">
+                <MapPin size={20} style={{ color: 'var(--mode-primary-light)' }} strokeWidth={1.75} />
+                <div>
+                  <h3 className="font-semibold text-slate-800">{title}</h3>
+                  <div className="text-xs text-slate-500">
+                    {geocoded.length} Kunden · {Object.keys(clusters).length} Bundesländer
+                    {zoomedState && ` · Fokus: ${zoomedState}`}
+                  </div>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                {zoomedState && (
+                  <button
+                    onClick={() => setZoomedState(null)}
+                    className="flex items-center gap-1 text-sm font-medium text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded-full transition-colors"
+                  >
+                    <ChevronLeft size={14} />
+                    <span>Zurück zur Übersicht</span>
+                  </button>
+                )}
+                <button
+                  onClick={() => setIsModalOpen(false)}
+                  className="p-2 rounded-lg hover:bg-slate-100 text-slate-500 hover:text-slate-700 transition-colors"
+                  aria-label="Schließen"
+                >
+                  <X size={18} />
+                </button>
+              </div>
+            </div>
+            <div className="flex-1 flex overflow-hidden">
+              <div className="flex-1 p-6 min-h-0">
+                <div className="w-full h-full flex items-center justify-center">
+                  <div style={{ aspectRatio: `${SVG_W}/${SVG_H}`, height: '100%', maxWidth: '100%' }}>
+                    <MapRenderer
+                      paths={paths}
+                      project={project}
+                      clusters={clusters}
+                      getStateFill={getStateFill}
+                      zoomedState={zoomedState}
+                      onZoomState={setZoomedState}
+                      visibleKunden={visibleKunden}
+                      onKundeClick={(id) => {
+                        setIsModalOpen(false);
+                        onKundeClick?.(id);
+                      }}
+                      svgW={SVG_W}
+                      svgH={SVG_H}
+                      markerScale={1.4}
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="w-80 border-l border-slate-200 overflow-y-auto p-5 bg-slate-50">
+                <div className="text-xs uppercase font-bold text-slate-500 mb-3 tracking-wider">
+                  {zoomedState ? `${visibleKunden.length} Kunden in ${zoomedState}` : 'Top-Bundesländer'}
+                </div>
+                {zoomedState ? (
+                  <div className="space-y-1">
+                    {visibleKunden.map((k) => (
+                      <div
+                        key={k.id}
+                        onClick={() => {
+                          setIsModalOpen(false);
+                          onKundeClick?.(k.id);
+                        }}
+                        className="flex items-center gap-2 py-2 px-2 rounded-lg hover:bg-white cursor-pointer transition-colors"
+                      >
+                        <Avatar name={k.name} foto={getKundeFoto(k.id)} size={32} />
+                        <div className="flex-1 min-w-0">
+                          <div className="text-sm font-semibold text-slate-800 truncate">{k.name}</div>
+                          <div className="text-xs text-slate-500 truncate">{k.city}</div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="space-y-1">
+                    {Object.entries(clusters)
+                      .sort((a, b) => b[1].length - a[1].length)
+                      .map(([state, ks]) => (
+                        <button
+                          key={state}
+                          onClick={() => setZoomedState(state)}
+                          className="w-full flex items-center justify-between py-2 px-3 rounded-lg hover:bg-white cursor-pointer transition-colors text-left"
+                        >
+                          <span className="text-sm font-medium text-slate-700">{state}</span>
+                          <span
+                            className="text-xs font-bold px-2.5 py-0.5 rounded-full text-white"
+                            style={{ backgroundColor: 'var(--mode-primary, #004d26)' }}
+                          >
+                            {ks.length}
+                          </span>
+                        </button>
+                      ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  );
+}

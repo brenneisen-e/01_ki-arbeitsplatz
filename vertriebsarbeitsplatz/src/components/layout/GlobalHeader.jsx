@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { clsx } from 'clsx';
-import { ArrowLeft, Home, ChevronDown, Download, Settings, User, Calendar, AlertTriangle, Cloud, Sun, CloudRain, TrendingUp, TrendingDown, Minus } from 'lucide-react';
+import { ArrowLeft, Home, ChevronDown, Download, Settings, User, Calendar, AlertTriangle, Cloud, Sun, CloudRain, TrendingUp, TrendingDown, Minus, Image as ImageIcon, Upload, Trash2, X } from 'lucide-react';
 import { useMode } from '../../hooks/useMode';
 import { MODE_CONFIGS } from '../../data/modeConfig';
 import LogoImg from '../ui/LogoImg';

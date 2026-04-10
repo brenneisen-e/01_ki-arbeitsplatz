@@ -91,6 +91,7 @@ export const MODE_CONFIGS = {
       { id: 'ertraege', label: 'Erträge', labelEn: 'Revenue' },
       { id: 'qualitaet', label: 'Qualität', labelEn: 'Quality' },
       { id: 'kunden', label: 'Kunden', labelEn: 'Clients' },
+      { id: 'potentiale', label: 'Potenziale', labelEn: 'Potentials' },
     ],
     detailTabs: [
       { id: 'stammdaten', label: 'Stammdaten', labelEn: 'Master Data' },

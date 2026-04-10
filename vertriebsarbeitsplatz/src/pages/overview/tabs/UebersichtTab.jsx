@@ -115,75 +115,137 @@ const SCHNELLZUGRIFF = {
 };
 
 // Marketing campaigns for banking Übersicht
-const MARKETING_KAMPAGNEN_BANKING = [
-  {
-    id: 'fruehlings-baufi',
-    titel: 'Frühlings-Baufi-Aktion',
-    titelEn: 'Spring Mortgage Campaign',
-    status: 'aktiv',
-    zeitraum: '01.03.–30.04.2026',
-    zielgruppe: 'Kunden mit Immo-Signalen',
-    zielgruppeEn: 'Clients with property signals',
-    // Photo-style gradient background (no external image so it still renders offline)
-    photoGradient: 'linear-gradient(135deg, #10b981 0%, #059669 50%, #065f46 100%)',
-    photoIcon: 'Home',
-    photoAccent: '#a7f3d0',
-    passendeKunden: [
-      { kundeId: 'BK00001', name: 'Klaus Fischer', match: 97, begruendung: 'Zinsbindung läuft 04/2026 aus, Schwäbisch-Hall Bausparer zuteilungsreif', begruendungEn: 'Interest lock expires 04/2026, Schwäbisch-Hall building loan ready' },
-      { kundeId: 'BK00002', name: 'Sandra Müller', match: 92, begruendung: 'Immobilienkauf vorbereiten, Ehemann als Neukunde gewinnen', begruendungEn: 'Preparing home purchase, onboard spouse as new client' },
-      { kundeId: 'BK00004', name: 'Markus Wagner', match: 78, begruendung: 'Junges Alter, erstes Eigenheim-Interesse erkannt', begruendungEn: 'Young age, first home interest detected' },
-    ],
+// Brand profile per banking institut. The Marketingkampagnen titles
+// (and a few brand-specific begründungen) are derived from this so that
+// the campaigns always show the right product names for whichever bank
+// the user has currently picked – no Volksbank-specific names leak into
+// Zukunftsbank, Sparkasse, Deutsche Bank etc.
+const BANKING_BRANDS = {
+  'Volksbank Mittelhessen': {
+    prefix: 'VR',
+    vorsorgeBrand: 'VR-VorsorgePlus',
+    depotProduct: 'VR-MeinDepot',
+    insurer: 'R+V',
+    bausparPartner: 'Schwäbisch-Hall',
+    fundsPartner: 'Union Investment',
   },
-  {
-    id: 'vorsorgeplus-bundle',
-    titel: 'VR-VorsorgePlus Bundle',
-    titelEn: 'VR Pension Plus Bundle',
-    status: 'aktiv',
-    zeitraum: '15.03.–31.05.2026',
-    zielgruppe: 'Junge Familien ohne Absicherung',
-    zielgruppeEn: 'Young families without protection',
-    photoGradient: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 50%, #1e40af 100%)',
-    photoIcon: 'Users',
-    photoAccent: '#bfdbfe',
-    passendeKunden: [
-      { kundeId: 'BK00002', name: 'Sandra Müller', match: 94, begruendung: 'Junge Familie, keine BU/Risikoleben vorhanden', begruendungEn: 'Young family, no disability/term life coverage' },
-      { kundeId: 'BK00004', name: 'Markus Wagner', match: 87, begruendung: '29 Jahre, keine BU – optimaler Einstiegszeitpunkt', begruendungEn: '29 years, no disability cover – optimal entry age' },
-      { kundeId: 'BK00005', name: 'Andrea Lang', match: 79, begruendung: 'Praxiskredit ohne Absicherung, keine BU', begruendungEn: 'Practice loan without coverage, no disability insurance' },
-    ],
+  'Sparkasse': {
+    prefix: 'S',
+    vorsorgeBrand: 'S-VorsorgePlus',
+    depotProduct: 'S-Broker Depot',
+    insurer: 'Sparkassen-Versicherung',
+    bausparPartner: 'LBS',
+    fundsPartner: 'DekaBank',
   },
-  {
-    id: 'depot-wechsel',
-    titel: 'Depot-Wechsel-Prämie',
-    titelEn: 'Custody Transfer Bonus',
-    status: 'aktiv',
-    zeitraum: '01.04.–30.06.2026',
-    zielgruppe: 'Kunden mit Fremdbank-Depots',
-    zielgruppeEn: 'Clients with third-party custody accounts',
-    photoGradient: 'linear-gradient(135deg, #8b5cf6 0%, #6366f1 50%, #4338ca 100%)',
-    photoIcon: 'TrendingUp',
-    photoAccent: '#ddd6fe',
-    passendeKunden: [
-      { kundeId: 'BK00001', name: 'Klaus Fischer', match: 91, begruendung: 'Trade Republic Depot (28k), ING Tagesgeld (22k) – konsolidieren', begruendungEn: 'Trade Republic portfolio (28k), ING call money (22k) – consolidate' },
-      { kundeId: 'BK00003', name: 'Peter Hoffmann', match: 88, begruendung: 'Firmendepot-Optimierung, Union Investment als Alternative', begruendungEn: 'Corporate portfolio optimisation, Union Investment as alternative' },
-      { kundeId: 'BK00006', name: 'Stefan Braun', match: 82, begruendung: 'ETF-Sparplan bei Online-Broker, Wechsel zu VR-MeinDepot', begruendungEn: 'ETF savings plan with online broker, switch to VR-MeinDepot' },
-    ],
+  'Commerzbank': {
+    prefix: 'Commerz',
+    vorsorgeBrand: 'CB VorsorgePlus',
+    depotProduct: 'comdirect Depot',
+    insurer: 'Allianz',
+    bausparPartner: 'BHW',
+    fundsPartner: 'Allianz Global Investors',
   },
-  {
-    id: 'rv-tierschutz',
-    titel: 'R+V TierSchutz Aktion',
-    titelEn: 'R+V Pet Protection Campaign',
-    status: 'geplant',
-    zeitraum: 'Ab 01.05.2026',
-    zielgruppe: 'Tierhalter ohne Haftpflicht/KV',
-    zielgruppeEn: 'Pet owners without liability/health cover',
-    photoGradient: 'linear-gradient(135deg, #f59e0b 0%, #ea580c 50%, #9a3412 100%)',
-    photoIcon: 'Heart',
-    photoAccent: '#fde68a',
-    passendeKunden: [
-      { kundeId: 'BK00002', name: 'Sandra Müller', match: 85, begruendung: 'Fressnapf-Umsätze erkannt, keine Tierhalterhaftpflicht', begruendungEn: 'Pet store purchases detected, no pet liability insurance' },
-    ],
+  'Deutsche Bank': {
+    prefix: 'DB',
+    vorsorgeBrand: 'db VorsorgePlus',
+    depotProduct: 'maxblue Depot',
+    insurer: 'Zurich',
+    bausparPartner: 'BHW',
+    fundsPartner: 'DWS',
   },
-];
+  'ING': {
+    prefix: 'ING',
+    vorsorgeBrand: 'ING VorsorgePlus',
+    depotProduct: 'ING Direkt-Depot',
+    insurer: 'NN',
+    bausparPartner: 'Interhyp',
+    fundsPartner: 'ING Investments',
+  },
+  'Zukunftsbank': {
+    prefix: 'ZB',
+    vorsorgeBrand: 'Zukunfts VorsorgePlus',
+    depotProduct: 'Zukunfts Depot',
+    insurer: 'Zukunfts Versicherung',
+    bausparPartner: 'Zukunfts Bausparen',
+    fundsPartner: 'Zukunfts Invest',
+  },
+};
+
+function getBankingBrand(institut) {
+  return BANKING_BRANDS[institut] || BANKING_BRANDS['Volksbank Mittelhessen'];
+}
+
+function buildBankingKampagnen(institut) {
+  const b = getBankingBrand(institut);
+  return [
+    {
+      id: 'fruehlings-baufi',
+      titel: 'Frühlings-Baufi-Aktion',
+      titelEn: 'Spring Mortgage Campaign',
+      status: 'aktiv',
+      zeitraum: '01.03.–30.04.2026',
+      zielgruppe: 'Kunden mit Immo-Signalen',
+      zielgruppeEn: 'Clients with property signals',
+      photoGradient: 'linear-gradient(135deg, #10b981 0%, #059669 50%, #065f46 100%)',
+      photoIcon: 'Home',
+      photoAccent: '#a7f3d0',
+      passendeKunden: [
+        { kundeId: 'BK00001', name: 'Klaus Fischer', match: 97, begruendung: `Zinsbindung läuft 04/2026 aus, ${b.bausparPartner}-Bausparer zuteilungsreif`, begruendungEn: `Interest lock expires 04/2026, ${b.bausparPartner} building loan ready` },
+        { kundeId: 'BK00002', name: 'Sandra Müller', match: 92, begruendung: 'Immobilienkauf vorbereiten, Ehemann als Neukunde gewinnen', begruendungEn: 'Preparing home purchase, onboard spouse as new client' },
+        { kundeId: 'BK00004', name: 'Markus Wagner', match: 78, begruendung: 'Junges Alter, erstes Eigenheim-Interesse erkannt', begruendungEn: 'Young age, first home interest detected' },
+      ],
+    },
+    {
+      id: 'vorsorgeplus-bundle',
+      titel: `${b.vorsorgeBrand} Bundle`,
+      titelEn: `${b.vorsorgeBrand} Bundle`,
+      status: 'aktiv',
+      zeitraum: '15.03.–31.05.2026',
+      zielgruppe: 'Junge Familien ohne Absicherung',
+      zielgruppeEn: 'Young families without protection',
+      photoGradient: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 50%, #1e40af 100%)',
+      photoIcon: 'Users',
+      photoAccent: '#bfdbfe',
+      passendeKunden: [
+        { kundeId: 'BK00002', name: 'Sandra Müller', match: 94, begruendung: 'Junge Familie, keine BU/Risikoleben vorhanden', begruendungEn: 'Young family, no disability/term life coverage' },
+        { kundeId: 'BK00004', name: 'Markus Wagner', match: 87, begruendung: '29 Jahre, keine BU – optimaler Einstiegszeitpunkt', begruendungEn: '29 years, no disability cover – optimal entry age' },
+        { kundeId: 'BK00005', name: 'Andrea Lang', match: 79, begruendung: 'Praxiskredit ohne Absicherung, keine BU', begruendungEn: 'Practice loan without coverage, no disability insurance' },
+      ],
+    },
+    {
+      id: 'depot-wechsel',
+      titel: 'Depot-Wechsel-Prämie',
+      titelEn: 'Custody Transfer Bonus',
+      status: 'aktiv',
+      zeitraum: '01.04.–30.06.2026',
+      zielgruppe: 'Kunden mit Fremdbank-Depots',
+      zielgruppeEn: 'Clients with third-party custody accounts',
+      photoGradient: 'linear-gradient(135deg, #8b5cf6 0%, #6366f1 50%, #4338ca 100%)',
+      photoIcon: 'TrendingUp',
+      photoAccent: '#ddd6fe',
+      passendeKunden: [
+        { kundeId: 'BK00001', name: 'Klaus Fischer', match: 91, begruendung: 'Trade Republic Depot (28k), ING Tagesgeld (22k) – konsolidieren', begruendungEn: 'Trade Republic portfolio (28k), ING call money (22k) – consolidate' },
+        { kundeId: 'BK00003', name: 'Peter Hoffmann', match: 88, begruendung: `Firmendepot-Optimierung, ${b.fundsPartner} als Alternative`, begruendungEn: `Corporate portfolio optimisation, ${b.fundsPartner} as alternative` },
+        { kundeId: 'BK00006', name: 'Stefan Braun', match: 82, begruendung: `ETF-Sparplan bei Online-Broker, Wechsel zu ${b.depotProduct}`, begruendungEn: `ETF savings plan with online broker, switch to ${b.depotProduct}` },
+      ],
+    },
+    {
+      id: 'tierschutz',
+      titel: `${b.insurer} TierSchutz Aktion`,
+      titelEn: `${b.insurer} Pet Protection Campaign`,
+      status: 'geplant',
+      zeitraum: 'Ab 01.05.2026',
+      zielgruppe: 'Tierhalter ohne Haftpflicht/KV',
+      zielgruppeEn: 'Pet owners without liability/health cover',
+      photoGradient: 'linear-gradient(135deg, #f59e0b 0%, #ea580c 50%, #9a3412 100%)',
+      photoIcon: 'Heart',
+      photoAccent: '#fde68a',
+      passendeKunden: [
+        { kundeId: 'BK00002', name: 'Sandra Müller', match: 85, begruendung: 'Fressnapf-Umsätze erkannt, keine Tierhalterhaftpflicht', begruendungEn: 'Pet store purchases detected, no pet liability insurance' },
+      ],
+    },
+  ];
+}
 
 const PROVISIONSABRECHNUNGEN = {
   versicherung: [
@@ -208,6 +270,13 @@ export default function UebersichtTab() {
   const { t, tn, lang } = useTranslation();
   const [mandatFilter, setMandatFilter] = useState('alle');
   const [expandedKampagne, setExpandedKampagne] = useState('fruehlings-baufi');
+  // Marketingkampagnen are derived from the active institut so the campaign
+  // titles always reflect the current bank's brand (no Volksbank-only names
+  // leaking into Zukunftsbank, Sparkasse, Deutsche Bank etc.).
+  const marketingKampagnen = useMemo(
+    () => buildBankingKampagnen(config.institut),
+    [config.institut]
+  );
   const potentiale = useMemo(() => getAllPotentiale(modeId).sort((a, b) => {
     const prio = { kritisch: 0, hoch: 1, mittel: 2, niedrig: 3 };
     return (prio[a.prioritaet] || 3) - (prio[b.prioritaet] || 3);
@@ -267,10 +336,13 @@ export default function UebersichtTab() {
     <div className="grid grid-cols-3 gap-4">
       {/* Linke Spalte 2/3 */}
       <div className="col-span-2 space-y-4 min-w-0">
-        {/* Potenziale (+ Marketingkampagnen as own full-width row below in banking) */}
+        {/* Potenziale (+ Marketingkampagnen as own full-width row below in banking).
+            For banking the Potenziale already live in their own tab + can be
+            opened from there, so no separate Vertriebspotenziale card on the
+            Übersicht itself. */}
         <div className="space-y-4">
-        {/* Vertriebspotenziale / Mandate & Potenziale */}
-        {modeId === 'vermoegensverwaltung' ? (
+        {/* Vertriebspotenziale / Mandate & Potenziale (skipped for banking) */}
+        {modeId === 'banking' ? null : modeId === 'vermoegensverwaltung' ? (
           <Card hover={false}>
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
@@ -462,11 +534,11 @@ export default function UebersichtTab() {
                 <h3 className="font-semibold text-slate-800">{lang === 'en' ? 'Marketing Campaigns' : 'Marketingkampagnen'}</h3>
               </div>
               <span className="text-sm text-slate-400">
-                {MARKETING_KAMPAGNEN_BANKING.filter(k => k.status === 'aktiv').length} {lang === 'en' ? 'active' : 'aktiv'} · {MARKETING_KAMPAGNEN_BANKING.filter(k => k.status === 'geplant').length} {lang === 'en' ? 'planned' : 'geplant'}
+                {marketingKampagnen.filter(k => k.status === 'aktiv').length} {lang === 'en' ? 'active' : 'aktiv'} · {marketingKampagnen.filter(k => k.status === 'geplant').length} {lang === 'en' ? 'planned' : 'geplant'}
               </span>
             </div>
             <div className="grid grid-cols-4 gap-4">
-              {MARKETING_KAMPAGNEN_BANKING.map((kampagne) => {
+              {marketingKampagnen.map((kampagne) => {
                 const istAktiv = kampagne.status === 'aktiv';
                 const titel = lang === 'en' ? kampagne.titelEn : kampagne.titel;
                 const zielgruppe = lang === 'en' ? kampagne.zielgruppeEn : kampagne.zielgruppe;
@@ -536,7 +608,7 @@ export default function UebersichtTab() {
 
             {/* Expanded matches list for the selected campaign */}
             {expandedKampagne && (() => {
-              const kampagne = MARKETING_KAMPAGNEN_BANKING.find((k) => k.id === expandedKampagne);
+              const kampagne = marketingKampagnen.find((k) => k.id === expandedKampagne);
               if (!kampagne) return null;
               const titel = lang === 'en' ? kampagne.titelEn : kampagne.titel;
               return (

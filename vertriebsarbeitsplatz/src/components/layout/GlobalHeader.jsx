@@ -50,6 +50,12 @@ const MARKET_DATA = [
   { symbol: 'Gold', value: '2.185', change: '+0,65%', positive: true },
 ];
 
+// Default header images per institut variant. The user can override them
+// by uploading their own image, or hide them entirely via the toggle.
+const DEFAULT_HEADER_IMAGES = {
+  'Zukunftsbank': './images/zukunftsbank-header.jpeg',
+};
+
 function readHeaderImage() {
   if (typeof window === 'undefined') return null;
   try {
@@ -60,18 +66,43 @@ function readHeaderImage() {
   }
 }
 
+function readHeaderImageEnabled() {
+  if (typeof window === 'undefined') return true;
+  try {
+    const raw = localStorage.getItem('kia_header_image_enabled');
+    if (raw === null) return true; // default ON
+    return raw !== 'false';
+  } catch {
+    return true;
+  }
+}
+
+function readDefaultHeaderPos() {
+  if (typeof window === 'undefined') return { posX: 50, posY: 50 };
+  try {
+    const raw = localStorage.getItem('kia_header_default_pos');
+    if (raw) return JSON.parse(raw);
+  } catch {}
+  return { posX: 50, posY: 50 };
+}
+
 export default function GlobalHeader({ kundeInfo, tabBadges }) {
   const { config, modeId, switchMode, switchInstitut, activeTab, setActiveTab, currentView, goBack } = useMode();
   const { t, lang } = useTranslation();
   const [showModeDropdown, setShowModeDropdown] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [headerImage, setHeaderImage] = useState(() => readHeaderImage());
+  const [headerImageEnabled, setHeaderImageEnabled] = useState(() => readHeaderImageEnabled());
+  const [defaultHeaderPos, setDefaultHeaderPos] = useState(() => readDefaultHeaderPos());
   const fileInputRef = useRef(null);
   const tabs = currentView === 'detail' ? config.detailTabs : config.tabs;
   const tagesItems = TAGESSTART_ITEMS[modeId] || TAGESSTART_ITEMS.versicherung;
   const weather = getWeatherData();
   const WeatherIcon = weather.icon;
   const isOverview = currentView !== 'detail';
+
+  // Default header image lookup based on the active institut variant
+  const defaultHeaderImageUrl = DEFAULT_HEADER_IMAGES[config.institut] || null;
 
   // Persist header image overrides whenever they change
   useEffect(() => {
@@ -80,6 +111,18 @@ export default function GlobalHeader({ kundeInfo, tabBadges }) {
       else localStorage.removeItem('kia_header_image');
     } catch {}
   }, [headerImage]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('kia_header_image_enabled', String(headerImageEnabled));
+    } catch {}
+  }, [headerImageEnabled]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('kia_header_default_pos', JSON.stringify(defaultHeaderPos));
+    } catch {}
+  }, [defaultHeaderPos]);
 
   function handleFileSelect(e) {
     const file = e.target.files?.[0];
@@ -95,16 +138,31 @@ export default function GlobalHeader({ kundeInfo, tabBadges }) {
     reader.readAsDataURL(file);
   }
 
-  // Build the header background style: use the uploaded image if present,
-  // otherwise fall back to the mode-specific gradient.
-  const headerStyle = headerImage
-    ? {
-        backgroundImage: `linear-gradient(rgba(15,23,42,0.55), rgba(15,23,42,0.55)), url(${headerImage.dataUrl})`,
-        backgroundSize: 'cover',
-        backgroundPosition: `${headerImage.posX}% ${headerImage.posY}%`,
-        backgroundRepeat: 'no-repeat',
-      }
-    : { background: config.colors.gradient };
+  // Build the header background style:
+  // 1. If toggle is OFF → mode gradient
+  // 2. Else if user uploaded image → use it
+  // 3. Else if institut has a default image → use that
+  // 4. Else mode gradient
+  let headerStyle;
+  if (!headerImageEnabled) {
+    headerStyle = { background: config.colors.gradient };
+  } else if (headerImage) {
+    headerStyle = {
+      backgroundImage: `linear-gradient(rgba(15,23,42,0.55), rgba(15,23,42,0.55)), url(${headerImage.dataUrl})`,
+      backgroundSize: 'cover',
+      backgroundPosition: `${headerImage.posX}% ${headerImage.posY}%`,
+      backgroundRepeat: 'no-repeat',
+    };
+  } else if (defaultHeaderImageUrl) {
+    headerStyle = {
+      backgroundImage: `linear-gradient(rgba(15,23,42,0.55), rgba(15,23,42,0.55)), url(${defaultHeaderImageUrl})`,
+      backgroundSize: 'cover',
+      backgroundPosition: `${defaultHeaderPos.posX}% ${defaultHeaderPos.posY}%`,
+      backgroundRepeat: 'no-repeat',
+    };
+  } else {
+    headerStyle = { background: config.colors.gradient };
+  }
 
   return (
     <header className="transition-all duration-500" style={headerStyle}>
@@ -311,11 +369,50 @@ export default function GlobalHeader({ kundeInfo, tabBadges }) {
             </div>
 
             <div className="p-5 space-y-4">
+              {/* On/off toggle */}
+              <div className="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-200">
+                <div>
+                  <div className="text-sm font-semibold text-slate-800">
+                    {lang === 'en' ? 'Show header image' : 'Header-Bild anzeigen'}
+                  </div>
+                  <div className="text-xs text-slate-500 mt-0.5">
+                    {lang === 'en'
+                      ? 'When off, the header uses the institut gradient instead.'
+                      : 'Wenn aus, nutzt der Header den Institut-Gradient stattdessen.'}
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  role="switch"
+                  aria-checked={headerImageEnabled}
+                  onClick={() => setHeaderImageEnabled((v) => !v)}
+                  className="relative inline-flex h-7 w-12 shrink-0 items-center rounded-full transition-colors"
+                  style={{ backgroundColor: headerImageEnabled ? '#10b981' : '#cbd5e1' }}
+                >
+                  <span
+                    className="inline-block h-5 w-5 transform rounded-full bg-white shadow transition-transform"
+                    style={{ transform: headerImageEnabled ? 'translateX(24px)' : 'translateX(4px)' }}
+                  />
+                </button>
+              </div>
+
               <p className="text-sm text-slate-600">
                 {lang === 'en'
                   ? 'Upload a landscape photo to use as the header background. After uploading you can pan the visible crop with the sliders.'
                   : 'Lade ein Querformat-Foto hoch, das als Header-Hintergrund verwendet wird. Nach dem Upload kannst du den sichtbaren Bildausschnitt mit den Reglern verschieben.'}
               </p>
+
+              {/* Default image notice (e.g. Zukunftsbank) */}
+              {!headerImage && defaultHeaderImageUrl && (
+                <div className="flex items-start gap-2 p-3 rounded-xl bg-indigo-50 border border-indigo-100 text-xs text-indigo-800">
+                  <ImageIcon size={14} className="text-indigo-500 shrink-0 mt-0.5" />
+                  <div>
+                    {lang === 'en' ? 'A default header image is active for ' : 'Für '}
+                    <strong>{config.institut}</strong>
+                    {lang === 'en' ? '. Upload your own to override.' : ' ist ein Standard-Headerbild aktiv. Lade ein eigenes hoch, um es zu ersetzen.'}
+                  </div>
+                </div>
+              )}
 
               <div className="flex items-center gap-3">
                 <input
@@ -342,6 +439,57 @@ export default function GlobalHeader({ kundeInfo, tabBadges }) {
                   </button>
                 )}
               </div>
+
+              {/* Position sliders for the default image */}
+              {!headerImage && defaultHeaderImageUrl && headerImageEnabled && (
+                <div className="space-y-3">
+                  <div className="text-xs uppercase font-bold text-slate-500 tracking-wider">
+                    {lang === 'en' ? 'Default image preview' : 'Standard-Bild Vorschau'}
+                  </div>
+                  <div
+                    className="w-full rounded-xl border border-slate-200 overflow-hidden"
+                    style={{
+                      height: 140,
+                      backgroundImage: `linear-gradient(rgba(15,23,42,0.55), rgba(15,23,42,0.55)), url(${defaultHeaderImageUrl})`,
+                      backgroundSize: 'cover',
+                      backgroundPosition: `${defaultHeaderPos.posX}% ${defaultHeaderPos.posY}%`,
+                      backgroundRepeat: 'no-repeat',
+                    }}
+                  >
+                    <div className="h-full w-full flex items-center px-4 text-white text-sm font-medium">
+                      {config.institut}
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">
+                        {lang === 'en' ? 'Horizontal' : 'Horizontal'} ({defaultHeaderPos.posX}%)
+                      </label>
+                      <input
+                        type="range"
+                        min={0}
+                        max={100}
+                        value={defaultHeaderPos.posX}
+                        onChange={(e) => setDefaultHeaderPos({ ...defaultHeaderPos, posX: Number(e.target.value) })}
+                        className="w-full"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">
+                        {lang === 'en' ? 'Vertical' : 'Vertikal'} ({defaultHeaderPos.posY}%)
+                      </label>
+                      <input
+                        type="range"
+                        min={0}
+                        max={100}
+                        value={defaultHeaderPos.posY}
+                        onChange={(e) => setDefaultHeaderPos({ ...defaultHeaderPos, posY: Number(e.target.value) })}
+                        className="w-full"
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
 
               {headerImage && (
                 <div className="space-y-3">

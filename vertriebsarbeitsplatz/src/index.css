@@ -276,6 +276,24 @@
   border-color: #e2e8f0 !important;
 }
 
+/* Charts: Auf hover die Linie weiß mit leichtem Schatten machen, damit
+   sie auf dem dunklen Hover-Hintergrund sichtbar bleibt. Die Area-Füllung
+   wird ebenfalls aufgehellt. Y/X-Achsen-Labels werden hell. */
+.card-hover:hover .recharts-area-curve,
+.card-hover:hover .recharts-line-curve {
+  stroke: #ffffff !important;
+  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.4));
+}
+.card-hover:hover .recharts-area-area {
+  fill: rgba(255, 255, 255, 0.18) !important;
+}
+.card-hover:hover .recharts-cartesian-axis-tick text {
+  fill: rgba(255, 255, 255, 0.7) !important;
+}
+.card-hover:hover .recharts-active-dot circle {
+  stroke: #ffffff !important;
+}
+
 /* Badges + Icon-Box */
 .row-hover:hover .rh-badge,
 .card-hover:hover .rh-badge {

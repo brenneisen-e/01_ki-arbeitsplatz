@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import { Sun, Clock, Zap, CheckSquare, Calendar, Phone, AlertTriangle, CheckCircle, FileText, Heart, Car, Home, ShieldAlert, Cake, Euro, Download, Landmark, BarChart3, PiggyBank, Wallet, Sparkles, Star, Megaphone, ChevronDown, ChevronRight } from 'lucide-react';
 import Card from '../../../components/ui/Card';
 import Avatar from '../../../components/ui/Avatar';
+import KundenKarte from '../../../components/ui/KundenKarte';
 import { PrioBadge, SparteBadge } from '../../../components/ui/Badge';
 import { useMode } from '../../../hooks/useMode';
 import useTranslation from '../../../i18n/useTranslation';
@@ -251,8 +252,8 @@ export default function UebersichtTab() {
     <div className="grid grid-cols-3 gap-4">
       {/* Linke Spalte 2/3 */}
       <div className="col-span-2 space-y-4 min-w-0">
-        {/* Vertriebspotenziale / Mandate & Potenziale - moved up, greeting removed */}
-
+        {/* Potenziale + Marketingkampagnen – side-by-side in banking, stacked otherwise */}
+        <div className={modeId === 'banking' ? 'grid grid-cols-2 gap-4 items-start' : 'space-y-4'}>
         {/* Vertriebspotenziale / Mandate & Potenziale */}
         {modeId === 'vermoegensverwaltung' ? (
           <Card hover={false}>
@@ -369,28 +370,29 @@ export default function UebersichtTab() {
               </div>
               <span className="text-sm text-slate-400">{t('kundenPotenzialeSummary', { kunden: kundenPotentiale.length, potenziale: getAllPotentiale(modeId).length })}</span>
             </div>
-            <div className="space-y-0">
-              <div className="grid py-1.5 px-3 items-center text-[10px] uppercase text-slate-400 font-semibold" style={{ gridTemplateColumns: '1fr 70px 80px 1fr 100px 100px' }}>
-                <span>{t('kunde')}</span>
-                <span className="text-center">NPS</span>
-                <span className="text-center">Leads</span>
-                <span>{t('topPotenziale')}</span>
-                <span className="text-right">{modeId === 'banking' ? 'CLV' : t('praemie')}</span>
-                <span className="text-right">{modeId === 'banking' ? 'Leads CLV' : t('provision')}</span>
+            <div className="border border-slate-200 rounded-xl overflow-hidden">
+              <div className="grid py-2.5 px-3 items-center text-[10px] uppercase text-slate-500 font-bold bg-slate-50 border-b border-slate-200 divide-x divide-slate-200" style={{ gridTemplateColumns: '1.3fr 70px 80px 1.3fr 100px 100px' }}>
+                <span className="pr-2">{t('kunde')}</span>
+                <span className="text-center px-2">NPS</span>
+                <span className="text-center px-2">Leads</span>
+                <span className="px-2">{t('topPotenziale')}</span>
+                <span className="text-right px-2">{modeId === 'banking' ? 'CLV' : t('praemie')}</span>
+                <span className="text-right pl-2">{modeId === 'banking' ? 'Leads CLV' : t('provision')}</span>
               </div>
-              {kundenPotentiale.slice(0, modeId === 'banking' ? 5 : 8).map((kp, i) => {
+              {kundenPotentiale.slice(0, modeId === 'banking' ? 5 : 8).map((kp, i, arr) => {
                 const topPrio = kp.potentiale.reduce((best, p) => {
                   const prio = { kritisch: 0, hoch: 1, mittel: 2, niedrig: 3 };
                   return (prio[p.prioritaet] ?? 3) < (prio[best] ?? 3) ? p.prioritaet : best;
                 }, 'niedrig');
+                const isLast = i === arr.length - 1;
                 return (
                   <div
                     key={kp.kundeId}
-                    className="grid py-2.5 px-3 rounded-lg row-hover cursor-pointer items-center"
-                    style={{ gridTemplateColumns: '1fr 70px 80px 1fr 100px 100px' }}
+                    className={`grid py-3 px-3 hover:bg-slate-50 cursor-pointer items-center transition-colors divide-x divide-slate-100 ${isLast ? '' : 'border-b border-slate-100'}`}
+                    style={{ gridTemplateColumns: '1.3fr 70px 80px 1.3fr 100px 100px' }}
                     onClick={() => navigateTo('detail', { kundeId: kp.kundeId, tab: 'stammdaten' })}
                   >
-                    <div className="flex items-center gap-2 min-w-0">
+                    <div className="flex items-center gap-2 min-w-0 pr-2">
                       <Avatar name={kp.kundeName} foto={getKundeFoto(kp.kundeId)} size={30} />
                       <div className="min-w-0">
                         <div className="text-sm font-semibold truncate flex items-center gap-1.5" style={{ color: 'var(--_fg, #334155)' }}>
@@ -399,7 +401,7 @@ export default function UebersichtTab() {
                         </div>
                       </div>
                     </div>
-                    <div className="text-center flex justify-center">
+                    <div className="text-center flex justify-center px-2">
                       {kp.nps != null ? (
                         <div className="flex items-center gap-px">
                           {[1,2,3,4,5].map(s => {
@@ -410,7 +412,7 @@ export default function UebersichtTab() {
                         </div>
                       ) : <span className="text-slate-300 text-xs">–</span>}
                     </div>
-                    <div className="text-center">
+                    <div className="text-center px-2">
                       <span className="inline-flex items-center gap-1 text-xs font-semibold" style={{ color: 'var(--_fg, #334155)' }}>
                         {kp.potentiale.length}
                         {kp.abgebrochenCount > 0 && (
@@ -418,7 +420,7 @@ export default function UebersichtTab() {
                         )}
                       </span>
                     </div>
-                    <div className="flex flex-wrap gap-1 min-w-0">
+                    <div className="flex flex-wrap gap-1 min-w-0 px-2">
                       {kp.potentiale.slice(0, 3).map((p, pi) => (
                         <span key={pi} className="rh-badge text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-600 whitespace-nowrap">{p.titel}</span>
                       ))}
@@ -426,12 +428,12 @@ export default function UebersichtTab() {
                         <span className="rh-badge text-[10px] px-1.5 py-0.5 rounded bg-slate-50 text-slate-400">+{kp.potentiale.length - 3}</span>
                       )}
                     </div>
-                    <div className="text-right text-sm font-mono font-medium" style={{ color: 'var(--_fg, #334155)' }}>
+                    <div className="text-right text-sm font-mono font-medium px-2" style={{ color: 'var(--_fg, #334155)' }}>
                       {modeId === 'banking'
                         ? (kp.clv > 0 ? `${kp.clv.toLocaleString(lang === 'en' ? 'en-US' : 'de-DE')}€` : '-')
                         : (kp.gesamtPraemie > 0 ? `${kp.gesamtPraemie.toLocaleString(lang === 'en' ? 'en-US' : 'de-DE')}€` : '-')}
                     </div>
-                    <div className="text-right text-sm font-mono font-medium" style={{ color: 'var(--_fg, var(--mode-primary-light))' }}>
+                    <div className="text-right text-sm font-mono font-medium pl-2" style={{ color: 'var(--_fg, var(--mode-primary-light))' }}>
                       {modeId === 'banking'
                         ? (kp.gesamtPraemie > 0 ? `${Math.round(kp.gesamtPraemie * 0.03).toLocaleString(lang === 'en' ? 'en-US' : 'de-DE')}€` : '-')
                         : (kp.gesamtProvision > 0 ? `${kp.gesamtProvision.toLocaleString(lang === 'en' ? 'en-US' : 'de-DE')}€` : '-')}
@@ -561,27 +563,79 @@ export default function UebersichtTab() {
             </div>
           </Card>
         )}
+        </div>
+        {/* /Potenziale + Marketingkampagnen wrapper */}
 
-        {/* Aufgaben */}
+        {/* Aufgaben – modern card list */}
         <Card hover={false}>
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
-              <CheckSquare size={20} className="text-slate-500" strokeWidth={1.75} />
+              <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: 'linear-gradient(135deg, var(--mode-primary-light), var(--mode-primary))' }}>
+                <CheckSquare size={16} className="text-white" strokeWidth={2} />
+              </div>
               <h3 className="font-semibold text-slate-800">{t('aktuelleAufgaben')}</h3>
             </div>
-            <span className="text-sm text-slate-400">{t('offen', { count: aufgaben.length })}</span>
+            <span className="rh-badge text-xs px-2.5 py-1 rounded-full font-semibold bg-red-50 text-red-600 border border-red-100">
+              {aufgaben.length} {lang === 'en' ? 'open' : 'offen'}
+            </span>
           </div>
-          <div className="space-y-2">
-            {aufgaben.map((a, i) => (
-              <div key={i} className="flex items-center justify-between py-2 cursor-pointer row-hover -mx-2 px-2 rounded-lg"
-                onClick={() => a.kundeId && navigateTo('detail', { kundeId: a.kundeId })}>
-                <div className="flex items-center gap-3">
-                  <input type="checkbox" className="w-4 h-4 rounded border-slate-300" readOnly />
-                  <span className="text-sm" style={{ color: 'var(--_fg, #334155)' }}>{a.text}</span>
+          <div className="grid grid-cols-2 gap-2.5">
+            {aufgaben.map((a, i) => {
+              const fSlug = String(a.faellig || '').toLowerCase();
+              const isToday = fSlug === 'heute' || fSlug === 'today';
+              const isTomorrow = fSlug === 'morgen' || fSlug === 'tomorrow';
+              const urgentColor = isToday ? '#ef4444' : isTomorrow ? '#f97316' : '#3b82f6';
+              const urgentBg = isToday ? '#fef2f2' : isTomorrow ? '#fff7ed' : '#eff6ff';
+              const text = a.text || '';
+              const TaskIcon = /fida|consent|dokument|unterlage|formular|vertrag|plan|analyse/i.test(text) ? FileText
+                : /anruf|call|nachfass|kontakt|ruf/i.test(text) ? Phone
+                : /termin|meeting|gespraech|gespräch/i.test(text) ? Calendar
+                : /vorbereit|erstellen|prep/i.test(text) ? Sparkles
+                : CheckSquare;
+              return (
+                <div
+                  key={i}
+                  className="group relative flex items-center gap-3 p-3 pl-4 rounded-xl bg-white border border-slate-200 hover:border-slate-300 hover:shadow-md cursor-pointer transition-all overflow-hidden"
+                  onClick={() => a.kundeId && navigateTo('detail', { kundeId: a.kundeId })}
+                >
+                  {/* Priority stripe */}
+                  <div className="absolute left-0 top-0 bottom-0 w-1" style={{ background: urgentColor }} />
+
+                  {/* Checkbox */}
+                  <button
+                    className="w-5 h-5 rounded-md border-2 border-slate-300 flex items-center justify-center group-hover:border-emerald-500 transition-colors shrink-0"
+                    onClick={(e) => e.stopPropagation()}
+                    aria-label="Erledigen"
+                  >
+                    <div className="w-2 h-2 rounded-sm bg-emerald-500 scale-0 group-hover:scale-100 transition-transform" />
+                  </button>
+
+                  {/* Icon tile */}
+                  <div
+                    className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0"
+                    style={{ backgroundColor: urgentBg }}
+                  >
+                    <TaskIcon size={16} style={{ color: urgentColor }} strokeWidth={2} />
+                  </div>
+
+                  {/* Text */}
+                  <div className="flex-1 min-w-0">
+                    <div className="text-sm font-medium text-slate-800 truncate">{text}</div>
+                    <div className="text-[11px] text-slate-400 mt-0.5">
+                      {a.kundeId ? (lang === 'en' ? 'Open client file' : 'Kundenakte öffnen') : (lang === 'en' ? 'Internal task' : 'Interne Aufgabe')}
+                    </div>
+                  </div>
+
+                  {/* Date badge */}
+                  <span
+                    className="rh-badge text-[10px] px-2.5 py-1 rounded-full font-bold whitespace-nowrap uppercase tracking-wide shrink-0"
+                    style={{ backgroundColor: urgentColor, color: 'white' }}
+                  >
+                    {a.faellig}
+                  </span>
                 </div>
-                <span className="text-xs" style={{ color: 'var(--_fg, #94a3b8)' }}>{a.faellig}</span>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </Card>
 
@@ -627,6 +681,14 @@ export default function UebersichtTab() {
 
       {/* Rechte Spalte 1/3 */}
       <div className="col-span-1 space-y-4 min-w-0">
+        {/* Kundenkarte (Deutschland) */}
+        <KundenKarte
+          kunden={KUNDEN_BY_MODE[modeId] || []}
+          onKundeClick={(kundeId) => navigateTo('detail', { kundeId, tab: 'stammdaten' })}
+          title={t('kundenkarte') || 'Kundenkarte'}
+          subtitle={lang === 'en' ? 'Customer distribution' : 'Regionale Verteilung'}
+        />
+
         {/* Anstehende Termine */}
         <Card hover={false}>
           <div className="flex items-center gap-2 mb-4">

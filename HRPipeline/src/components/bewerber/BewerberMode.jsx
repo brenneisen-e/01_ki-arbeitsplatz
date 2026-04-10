@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
-import { Upload, ChevronDown, ChevronLeft, MapPin, Calendar, Briefcase, Activity, CheckCircle, AlertCircle, HelpCircle } from 'lucide-react';
+import { Upload, ChevronDown, ChevronLeft, MapPin, Calendar, Briefcase, Activity, CheckCircle, AlertCircle, HelpCircle, Download, FileText } from 'lucide-react';
 import { getHRData, HP_DISTANCES_EXT, getHPMatchScoreExt, getHPMatchBadgesExt } from '../../data/hrData';
 import { useToast } from '../../hooks/useToast';
 import { useInstitut } from '../../hooks/useInstitut';
@@ -81,11 +81,19 @@ function UploadSection({ onLoadProfile, onJobDetail, hrData }) {
               style={{ display: 'none' }}
             />
           </div>
-          <label className="hp-linkedin-toggle">
-            <input type="checkbox" checked={linkedinChecked} onChange={e => setLinkedinChecked(e.target.checked)} />
-            <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16" style={{ color: '#0A66C2' }}><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
-            <span>LinkedIn &amp; Social-Media-Profile automatisch analysieren</span>
-          </label>
+          <div className="hp-linkedin-toggle-wrap">
+            <label className="hp-linkedin-toggle">
+              <input type="checkbox" checked={linkedinChecked} onChange={e => setLinkedinChecked(e.target.checked)} />
+              <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16" style={{ color: '#0A66C2' }}><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+              <span>LinkedIn &amp; Social-Media-Profile automatisch analysieren</span>
+            </label>
+            <p className="hp-linkedin-toggle-hint">
+              Die KI ergänzt Ihren Lebenslauf um öffentlich sichtbare Informationen aus Ihrem LinkedIn-, Xing- und GitHub-Profil
+              (z. B. Empfehlungen, Publikationen, Nebentätigkeiten, Netzwerkgröße). Das kann Ihren Match-Score verbessern, ist
+              aber optional. Es werden ausschließlich öffentlich einsehbare Daten verarbeitet — DSGVO-konform, nachvollziehbar
+              und jederzeit widerrufbar.
+            </p>
+          </div>
         </div>
         <div className="hp-landing-hero-visual">
           <div className="hp-landing-stats">
@@ -125,6 +133,49 @@ function UploadSection({ onLoadProfile, onJobDetail, hrData }) {
           <p>Erhalten Sie personalisierte Stellenvorschläge mit Match-Score und Entfernungsberechnung.</p>
         </div>
       </div>
+
+      {/* CV Templates — downloadable sample CVs to test the upload flow */}
+      {ui.demoProfiles.some(p => p.cvPdf) && (
+        <div className="hp-cv-templates">
+          <div className="hp-cv-templates-head">
+            <div>
+              <h3>CV-Vorlagen zum Ausprobieren</h3>
+              <p>Laden Sie einen der drei Beispiel-Lebensläufe (PDF) herunter und reichen Sie ihn oben über „Lebenslauf hochladen" wieder ein, um die KI-Analyse live auf einem echten CV zu testen.</p>
+            </div>
+          </div>
+          <div className="hp-cv-templates-grid">
+            {ui.demoProfiles.filter(p => p.cvPdf).map(p => {
+              const profile = hrData.profiles[p.id];
+              return (
+                <div key={p.id} className={`hp-cv-template-card score-${p.score}`}>
+                  {profile?.photo ? (
+                    <img src={profile.photo} alt={p.name} className="hp-cv-template-photo" />
+                  ) : (
+                    <div className="hp-cv-template-photo hp-cv-template-photo-fallback">{p.initials}</div>
+                  )}
+                  <div className="hp-cv-template-info">
+                    <div className="hp-cv-template-name">{p.name}</div>
+                    <div className="hp-cv-template-title">{p.title}</div>
+                    <div className="hp-cv-template-role">
+                      <span className={`hp-cv-template-role-dot score-${p.score}`} />
+                      {p.role}
+                    </div>
+                  </div>
+                  <a
+                    href={p.cvPdf}
+                    download
+                    className="hp-cv-template-download"
+                    onClick={e => e.stopPropagation()}
+                  >
+                    <Download size={14} />
+                    PDF herunterladen
+                  </a>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       {/* Positions Preview */}
       <div className="hp-landing-positions">

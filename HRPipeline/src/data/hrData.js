@@ -93,9 +93,9 @@ export const HP_UI_TEXTS = {
             { pct: 100, text: 'Analyse abgeschlossen!' }
         ],
         demoProfiles: [
-            { id: 'max', initials: 'MB', name: 'Max Berger', role: 'Top-Kandidat', score: 'high' },
-            { id: 'sarah', initials: 'SK', name: 'Sarah Klein', role: 'Quereinsteigerin', score: 'mid' },
-            { id: 'thomas', initials: 'TW', name: 'Thomas Wendt', role: 'Ablehnung', score: 'low' }
+            { id: 'max', initials: 'MB', name: 'Max Berger', role: 'Top-Kandidat', score: 'high', title: 'Agenturleiter / AO-Vertrieb', cvPdf: null },
+            { id: 'sarah', initials: 'SK', name: 'Sarah Klein', role: 'Quereinsteigerin', score: 'mid', title: 'Teamleiterin Einzelhandel → Vertrieb', cvPdf: null },
+            { id: 'thomas', initials: 'TW', name: 'Thomas Wendt', role: 'Ablehnung', score: 'low', title: 'Sachbearbeiter Verwaltung', cvPdf: null }
         ],
         defaultProfileId: 'max',
         teaserPositionIds: [1, 2, 5, 7],
@@ -119,9 +119,9 @@ export const HP_UI_TEXTS = {
             { pct: 100, text: 'Analyse abgeschlossen!' }
         ],
         demoProfiles: [
-            { id: 'laura', initials: 'LS', name: 'Laura Schneider', role: 'Top-Kandidatin (HR)', score: 'high' },
-            { id: 'jonas', initials: 'JW', name: 'Jonas Weber', role: 'Career Switcher (Data)', score: 'mid' },
-            { id: 'peter', initials: 'PS', name: 'Peter Schmitt', role: 'Ablehnung', score: 'low' }
+            { id: 'laura', initials: 'LS', name: 'Laura Schneider', role: 'Top-Kandidatin (HR)', score: 'high', title: 'Senior HR Business Partner · Berlin', cvPdf: './cv/laura-schneider-cv.pdf' },
+            { id: 'jonas', initials: 'JW', name: 'Jonas Weber', role: 'Career Switcher (Data)', score: 'mid', title: 'Business Analyst → Data Analyst · Köln', cvPdf: './cv/jonas-weber-cv.pdf' },
+            { id: 'peter', initials: 'PS', name: 'Peter Schmitt', role: 'Ablehnung', score: 'low', title: 'Produktionsmitarbeiter · Flensburg', cvPdf: './cv/peter-schmitt-cv.pdf' }
         ],
         defaultProfileId: 'laura',
         teaserPositionIds: [1, 2, 3, 7],

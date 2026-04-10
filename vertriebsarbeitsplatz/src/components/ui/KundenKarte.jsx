@@ -632,7 +632,7 @@ export function KundenKarteCompact({ kunden = [], onKundeClick, title = 'Kundenk
   return (
     <>
       <div
-        className="relative rounded-xl border p-3 cursor-pointer overflow-hidden card-base flex flex-col"
+        className="relative rounded-xl border p-3 cursor-pointer overflow-hidden card-base card-hover flex flex-col"
         style={{
           background:
             'linear-gradient(180deg, color-mix(in srgb, var(--mode-primary-light) 14%, #ffffff) 0%, color-mix(in srgb, var(--mode-primary-light) 6%, #ffffff) 100%)',

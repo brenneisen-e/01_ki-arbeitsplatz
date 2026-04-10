@@ -981,54 +981,59 @@ export default function VertriebsAssistent() {
         </button>
       )}
 
-      {/* Chat panel */}
+      {/* Chat panel – larger, lila glow background so it pops out */}
       {isOpen && (
         <div
-          className="fixed bottom-6 right-6 z-50 w-[400px] h-[500px] bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-gray-200"
-          style={{ maxHeight: 'calc(100vh - 48px)' }}
+          className="fixed bottom-6 right-6 z-50 w-[520px] h-[640px] rounded-2xl flex flex-col overflow-hidden border"
+          style={{
+            maxHeight: 'calc(100vh - 48px)',
+            background: 'linear-gradient(180deg, #f5f3ff 0%, #ede9fe 100%)',
+            borderColor: '#d8d4ff',
+            boxShadow: '0 20px 50px -12px rgba(124, 58, 237, 0.45), 0 8px 24px -8px rgba(124, 58, 237, 0.25)',
+          }}
         >
           {/* Header */}
           <div
             style={{ background: gradient }}
-            className="flex items-center justify-between px-4 py-3 shrink-0"
+            className="flex items-center justify-between px-5 py-4 shrink-0"
           >
-            <div className="flex items-center gap-2 text-white">
-              <Bot size={20} />
-              <span className="text-sm font-semibold">{t('kiVertriebsassistent')}</span>
+            <div className="flex items-center gap-2.5 text-white">
+              <Bot size={24} />
+              <span className="text-base font-bold">{t('kiVertriebsassistent')}</span>
             </div>
             <button
               onClick={() => setIsOpen(false)}
-              className="p-1 text-white/80 hover:text-white transition-colors"
+              className="p-1.5 text-white/80 hover:text-white hover:bg-white/15 rounded-lg transition-colors"
             >
-              <X size={18} />
+              <X size={20} />
             </button>
           </div>
 
           {/* Messages area */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-3" onClick={handleMessagesClick}>
+          <div className="flex-1 overflow-y-auto p-5 space-y-4" onClick={handleMessagesClick}>
             {/* Welcome message */}
             {messages.length === 0 && (
               <div className="space-y-4">
                 {/* Bot welcome */}
-                <div className="flex gap-2">
+                <div className="flex gap-2.5">
                   <div
-                    className="w-7 h-7 rounded-full flex items-center justify-center shrink-0 mt-0.5"
+                    className="w-9 h-9 rounded-full flex items-center justify-center shrink-0 mt-0.5"
                     style={{ backgroundColor: primary }}
                   >
-                    <Bot size={14} className="text-white" />
+                    <Bot size={18} className="text-white" />
                   </div>
-                  <div className="bg-gray-100 rounded-lg rounded-tl-none px-3 py-2 text-sm text-gray-800 max-w-[85%]">
+                  <div className="bg-white/80 backdrop-blur rounded-xl rounded-tl-none px-4 py-3 text-base text-slate-800 max-w-[85%] border border-white shadow-sm">
                     {welcomeMessage}
                   </div>
                 </div>
 
                 {/* Quick action chips */}
-                <div className="pl-9 flex flex-wrap gap-2">
+                <div className="pl-11 flex flex-wrap gap-2">
                   {quickActions.map((action) => (
                     <button
                       key={action}
                       onClick={() => sendMessage(action)}
-                      className="px-3 py-1.5 text-xs rounded-full border transition-colors"
+                      className="px-3.5 py-2 text-sm font-medium rounded-full border transition-colors bg-white/70 backdrop-blur"
                       style={{
                         borderColor: primaryLight,
                         color: primary,
@@ -1038,7 +1043,7 @@ export default function VertriebsAssistent() {
                         e.currentTarget.style.color = '#fff';
                       }}
                       onMouseLeave={(e) => {
-                        e.currentTarget.style.backgroundColor = 'transparent';
+                        e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.7)';
                         e.currentTarget.style.color = primary;
                       }}
                     >
@@ -1053,32 +1058,32 @@ export default function VertriebsAssistent() {
             {messages.map((msg, i) => (
               <div
                 key={i}
-                className={`flex gap-2 ${msg.role === 'user' ? 'justify-end' : ''}`}
+                className={`flex gap-2.5 ${msg.role === 'user' ? 'justify-end' : ''}`}
               >
                 {msg.role === 'assistant' && (
                   <div
-                    className="w-7 h-7 rounded-full flex items-center justify-center shrink-0 mt-0.5"
+                    className="w-9 h-9 rounded-full flex items-center justify-center shrink-0 mt-0.5"
                     style={{ backgroundColor: primary }}
                   >
-                    <Bot size={14} className="text-white" />
+                    <Bot size={18} className="text-white" />
                   </div>
                 )}
                 {msg.isHtml ? (
                   <div
-                    className={`max-w-[85%] rounded-lg px-3 py-2 text-sm ${
+                    className={`max-w-[85%] rounded-xl px-4 py-3 text-sm ${
                       msg.role === 'user'
                         ? 'rounded-tr-none text-white'
-                        : 'rounded-tl-none bg-gray-100 text-gray-800'
+                        : 'rounded-tl-none bg-white/85 backdrop-blur text-slate-800 border border-white shadow-sm'
                     }`}
                     style={msg.role === 'user' ? { backgroundColor: primary } : undefined}
                     dangerouslySetInnerHTML={{ __html: msg.content }}
                   />
                 ) : (
                   <div
-                    className={`max-w-[85%] rounded-lg px-3 py-2 text-sm whitespace-pre-wrap ${
+                    className={`max-w-[85%] rounded-xl px-4 py-3 text-sm whitespace-pre-wrap ${
                       msg.role === 'user'
                         ? 'rounded-tr-none text-white'
-                        : 'rounded-tl-none bg-gray-100 text-gray-800'
+                        : 'rounded-tl-none bg-white/85 backdrop-blur text-slate-800 border border-white shadow-sm'
                     }`}
                     style={msg.role === 'user' ? { backgroundColor: primary } : undefined}
                   >
@@ -1086,8 +1091,8 @@ export default function VertriebsAssistent() {
                   </div>
                 )}
                 {msg.role === 'user' && (
-                  <div className="w-7 h-7 rounded-full bg-gray-400 flex items-center justify-center shrink-0 mt-0.5">
-                    <User size={14} className="text-white" />
+                  <div className="w-9 h-9 rounded-full bg-slate-400 flex items-center justify-center shrink-0 mt-0.5">
+                    <User size={18} className="text-white" />
                   </div>
                 )}
               </div>
@@ -1124,14 +1129,14 @@ export default function VertriebsAssistent() {
 
             {/* Typing indicator */}
             {isTyping && (
-              <div className="flex gap-2">
+              <div className="flex gap-2.5">
                 <div
-                  className="w-7 h-7 rounded-full flex items-center justify-center shrink-0"
+                  className="w-9 h-9 rounded-full flex items-center justify-center shrink-0"
                   style={{ backgroundColor: primary }}
                 >
-                  <Bot size={14} className="text-white" />
+                  <Bot size={18} className="text-white" />
                 </div>
-                <div className="bg-gray-100 rounded-lg rounded-tl-none px-3 py-2 text-sm text-gray-500">
+                <div className="bg-white/85 backdrop-blur rounded-xl rounded-tl-none px-4 py-3 text-sm text-slate-500 border border-white shadow-sm">
                   <span className="inline-flex gap-1">
                     <span className="animate-bounce" style={{ animationDelay: '0ms' }}>.</span>
                     <span className="animate-bounce" style={{ animationDelay: '150ms' }}>.</span>
@@ -1146,7 +1151,7 @@ export default function VertriebsAssistent() {
           </div>
 
           {/* Input area */}
-          <div className="p-3 border-t border-gray-200 shrink-0">
+          <div className="p-4 border-t border-violet-200/60 shrink-0 bg-white/40 backdrop-blur">
             <div className="flex gap-2">
               <textarea
                 ref={inputRef}
@@ -1155,7 +1160,7 @@ export default function VertriebsAssistent() {
                 onKeyDown={handleKeyDown}
                 placeholder={t('nachrichtEingeben')}
                 rows={1}
-                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm resize-none focus:outline-none focus:ring-2 transition-shadow"
+                className="flex-1 px-4 py-2.5 border-2 border-white bg-white/90 rounded-xl text-sm resize-none focus:outline-none focus:ring-2 transition-shadow"
                 style={{
                   '--tw-ring-color': primaryLight + '40',
                   borderColor: input ? primaryLight : undefined,
@@ -1170,17 +1175,17 @@ export default function VertriebsAssistent() {
               <button
                 onClick={handleSend}
                 disabled={!input.trim() || isTyping}
-                className="px-3 py-2 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                style={{ backgroundColor: primary }}
+                className="w-11 h-11 text-white rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center shrink-0 shadow-md"
+                style={{ background: gradient }}
                 onMouseEnter={(e) => {
                   if (!e.currentTarget.disabled)
                     e.currentTarget.style.backgroundColor = primaryLight;
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = primary;
+                  e.currentTarget.style.background = gradient;
                 }}
               >
-                <Send size={16} />
+                <Send size={18} />
               </button>
             </div>
           </div>

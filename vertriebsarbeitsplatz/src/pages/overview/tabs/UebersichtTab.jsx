@@ -734,27 +734,27 @@ export default function UebersichtTab() {
                       ✕
                     </button>
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                     {kampagne.passendeKunden.map((k) => (
                       <div
                         key={k.kundeId}
-                        className="flex items-center gap-2 p-2 rounded-lg border border-slate-200 hover:border-slate-300 hover:shadow-sm cursor-pointer transition-all"
+                        className="flex items-center gap-3 p-3 rounded-xl border border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50 hover:shadow-md hover:-translate-y-0.5 cursor-pointer transition-all"
                         onClick={(e) => {
                           e.stopPropagation();
                           navigateTo('detail', { kundeId: k.kundeId, tab: 'stammdaten' });
                         }}
                       >
-                        <Avatar name={k.name} foto={getKundeFoto(k.kundeId)} size={32} />
+                        <Avatar name={k.name} foto={getKundeFoto(k.kundeId)} size={42} />
                         <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-1.5">
-                            <span className="text-xs font-semibold text-slate-800 truncate">{k.name}</span>
-                            <span className={`rh-badge text-[9px] px-1.5 py-0.5 rounded-full font-bold whitespace-nowrap ${
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className="text-sm font-bold text-slate-800 truncate">{k.name}</span>
+                            <span className={`rh-badge text-[11px] px-2 py-0.5 rounded-full font-bold whitespace-nowrap ${
                               k.match >= 90 ? 'bg-emerald-100 text-emerald-800'
                               : k.match >= 80 ? 'bg-lime-100 text-lime-800'
                               : 'bg-amber-100 text-amber-800'
                             }`}>{k.match}%</span>
                           </div>
-                          <div className="text-[10px] text-slate-500 truncate">
+                          <div className="text-xs text-slate-600 leading-snug line-clamp-2">
                             {lang === 'en' ? k.begruendungEn : k.begruendung}
                           </div>
                         </div>
@@ -795,7 +795,7 @@ export default function UebersichtTab() {
                   return (
                     <div
                       key={l.kundeId + l.event}
-                      className="relative flex items-start gap-3 p-3 pl-4 rounded-xl border border-slate-200 hover:border-slate-300 hover:shadow-md cursor-pointer transition-all bg-white"
+                      className="relative flex items-start gap-3 p-3 pl-4 rounded-xl border border-slate-200 hover:border-slate-400 hover:shadow-lg hover:bg-slate-50 hover:-translate-y-0.5 cursor-pointer transition-all bg-white"
                       onClick={() => navigateTo('detail', { kundeId: l.kundeId, tab: 'stammdaten' })}
                     >
                       <div className="absolute left-0 top-2 bottom-2 w-1 rounded-r" style={{ background: stripe }} />
@@ -853,7 +853,7 @@ export default function UebersichtTab() {
                   return (
                     <div
                       key={r.kundeId}
-                      className="relative flex items-start gap-3 p-3 pl-4 rounded-xl border border-slate-200 hover:border-slate-300 hover:shadow-md cursor-pointer transition-all bg-white"
+                      className="relative flex items-start gap-3 p-3 pl-4 rounded-xl border border-slate-200 hover:border-slate-400 hover:shadow-lg hover:bg-slate-50 hover:-translate-y-0.5 cursor-pointer transition-all bg-white"
                       onClick={() => navigateTo('detail', { kundeId: r.kundeId, tab: 'stammdaten' })}
                     >
                       <div className="absolute left-0 top-2 bottom-2 w-1 rounded-r" style={{ background: risk.stripe }} />

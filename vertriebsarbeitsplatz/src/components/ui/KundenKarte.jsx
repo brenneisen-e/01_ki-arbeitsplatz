@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { MapPin, ChevronLeft, Maximize2, X } from 'lucide-react';
 import geojson from '../../pages/cockpit/bundeslaender.geo.json';
 import Card from './Card';
@@ -130,6 +130,34 @@ function extractCity(adresse) {
   return match ? match[1].trim() : cityPart;
 }
 
+// Recency colour scale: green = fresh contact / appointment, gray = stale.
+function getContactStatus(kunde, now = new Date()) {
+  const komms = Array.isArray(kunde?.kommunikation) ? kunde.kommunikation : [];
+  let last = null;
+  for (const k of komms) {
+    if (k?.datum) {
+      const d = new Date(k.datum);
+      if (!isNaN(d) && (!last || d > last)) last = d;
+    }
+  }
+  // Upcoming termin counts as fresh as well
+  const termine = Array.isArray(kunde?.termine) ? kunde.termine : [];
+  let upcoming = null;
+  for (const t of termine) {
+    if (t?.datum) {
+      const d = new Date(t.datum);
+      if (!isNaN(d) && d >= now && (!upcoming || d < upcoming)) upcoming = d;
+    }
+  }
+  if (upcoming) return { color: '#10b981', label: 'Termin geplant' };
+  if (!last) return { color: '#94a3b8', label: 'Kein Kontakt' };
+  const daysAgo = (now - last) / 86400000;
+  if (daysAgo <= 21) return { color: '#10b981', label: 'Kürzlich kontaktiert' };
+  if (daysAgo <= 60) return { color: '#84cc16', label: 'Letzter Kontakt < 2 Monate' };
+  if (daysAgo <= 120) return { color: '#a3a3a3', label: 'Länger her' };
+  return { color: '#6b7280', label: 'Termin überfällig' };
+}
+
 function geocodeKunde(kunde, index) {
   const city = extractCity(kunde.adresse);
   if (!city) return null;
@@ -148,6 +176,7 @@ function geocodeKunde(kunde, index) {
     bundesland: coord.bundesland,
     lat: coord.lat + jLat,
     lng: coord.lng + jLng,
+    status: getContactStatus(kunde),
   };
 }
 
@@ -296,12 +325,13 @@ function MapRenderer({
           );
         })}
 
-      {/* Individual customer pins (zoomed mode) */}
+      {/* Individual customer pins (zoomed mode) – colour by contact recency */}
       {zoomedState &&
         visibleKunden.map((k) => {
           const [x, y] = project(k.lng, k.lat);
           const isHovered = hoveredKunde === k.id;
           const r = (isHovered ? 6 : 4) * markerScale;
+          const fill = k.status?.color || 'var(--mode-primary, #004d26)';
           return (
             <g
               key={k.id}
@@ -313,12 +343,12 @@ function MapRenderer({
               onMouseLeave={() => setHoveredKunde(null)}
               style={{ cursor: 'pointer' }}
             >
-              <circle cx={x} cy={y + 1} r={r + 1} fill="rgba(0,0,0,0.2)" style={{ pointerEvents: 'none' }} />
+              <circle cx={x} cy={y + 1} r={r + 1} fill="rgba(0,0,0,0.25)" style={{ pointerEvents: 'none' }} />
               <circle
                 cx={x}
                 cy={y}
                 r={r}
-                fill="var(--mode-primary, #004d26)"
+                fill={fill}
                 stroke="white"
                 strokeWidth={1.5}
                 filter="url(#kundenkarte-shadow)"
@@ -333,8 +363,8 @@ function MapRenderer({
         if (!k) return null;
         const [x, y] = project(k.lng, k.lat);
         const [vx, vy, vw] = viewBox.split(' ').map(Number);
-        const tipW = 160;
-        const tipH = 44;
+        const tipW = 180;
+        const tipH = 60;
         const tipX = Math.min(Math.max(x - tipW / 2, vx + 4), vx + vw - tipW - 4);
         const tipY = Math.max(vy + 4, y - tipH - 10);
         return (
@@ -342,6 +372,11 @@ function MapRenderer({
             <div className="bg-white px-3 py-1.5 rounded-lg shadow-lg border border-slate-200 text-xs">
               <div className="font-bold text-slate-800 truncate">{k.name}</div>
               <div className="text-slate-500 truncate">{k.city}</div>
+              {k.status?.label && (
+                <div className="text-[10px] font-semibold mt-0.5" style={{ color: k.status.color }}>
+                  ● {k.status.label}
+                </div>
+              )}
             </div>
           </foreignObject>
         );
@@ -586,6 +621,19 @@ export function KundenKarteCompact({ kunden = [], onKundeClick, title = 'Kundenk
   const [zoomedState, setZoomedState] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  // When the modal opens, immediately zoom into the Bundesland with the
+  // most customers so the user lands on a usable close-up of the pins.
+  useEffect(() => {
+    if (!isModalOpen) {
+      setZoomedState(null);
+      return;
+    }
+    if (zoomedState) return;
+    const top = Object.entries(clusters || {}).sort((a, b) => b[1].length - a[1].length)[0];
+    if (top) setZoomedState(top[0]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isModalOpen]);
+
   const geocoded = useMemo(
     () => kunden.map((k, i) => geocodeKunde(k, i)).filter(Boolean),
     [kunden]
@@ -732,74 +780,35 @@ export function KundenKarteCompact({ kunden = [], onKundeClick, title = 'Kundenk
                 </button>
               </div>
             </div>
-            <div className="flex-1 flex overflow-hidden">
-              <div className="flex-1 p-6 min-h-0">
-                <div className="w-full h-full flex items-center justify-center">
-                  <div style={{ aspectRatio: `${SVG_W}/${SVG_H}`, height: '100%', maxWidth: '100%' }}>
-                    <MapRenderer
-                      paths={paths}
-                      project={project}
-                      clusters={clusters}
-                      getStateFill={getStateFill}
-                      zoomedState={zoomedState}
-                      onZoomState={setZoomedState}
-                      visibleKunden={visibleKunden}
-                      onKundeClick={(id) => {
-                        setIsModalOpen(false);
-                        onKundeClick?.(id);
-                      }}
-                      svgW={SVG_W}
-                      svgH={SVG_H}
-                      markerScale={1.4}
-                    />
-                  </div>
+            <div className="flex-1 p-6 min-h-0">
+              <div className="w-full h-full flex items-center justify-center">
+                <div style={{ aspectRatio: `${SVG_W}/${SVG_H}`, height: '100%', maxWidth: '100%' }}>
+                  <MapRenderer
+                    paths={paths}
+                    project={project}
+                    clusters={clusters}
+                    getStateFill={getStateFill}
+                    zoomedState={zoomedState}
+                    onZoomState={setZoomedState}
+                    visibleKunden={visibleKunden}
+                    onKundeClick={(id) => {
+                      setIsModalOpen(false);
+                      onKundeClick?.(id);
+                    }}
+                    svgW={SVG_W}
+                    svgH={SVG_H}
+                    markerScale={1.4}
+                  />
                 </div>
               </div>
-              <div className="w-80 border-l border-slate-200 overflow-y-auto p-5 bg-slate-50">
-                <div className="text-xs uppercase font-bold text-slate-500 mb-3 tracking-wider">
-                  {zoomedState ? `${visibleKunden.length} Kunden in ${zoomedState}` : 'Top-Bundesländer'}
-                </div>
-                {zoomedState ? (
-                  <div className="space-y-1">
-                    {visibleKunden.map((k) => (
-                      <div
-                        key={k.id}
-                        onClick={() => {
-                          setIsModalOpen(false);
-                          onKundeClick?.(k.id);
-                        }}
-                        className="flex items-center gap-2 py-2 px-2 rounded-lg hover:bg-white cursor-pointer transition-colors"
-                      >
-                        <Avatar name={k.name} foto={getKundeFoto(k.id)} size={32} />
-                        <div className="flex-1 min-w-0">
-                          <div className="text-sm font-semibold text-slate-800 truncate">{k.name}</div>
-                          <div className="text-xs text-slate-500 truncate">{k.city}</div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="space-y-1">
-                    {Object.entries(clusters)
-                      .sort((a, b) => b[1].length - a[1].length)
-                      .map(([state, ks]) => (
-                        <button
-                          key={state}
-                          onClick={() => setZoomedState(state)}
-                          className="w-full flex items-center justify-between py-2 px-3 rounded-lg hover:bg-white cursor-pointer transition-colors text-left"
-                        >
-                          <span className="text-sm font-medium text-slate-700">{state}</span>
-                          <span
-                            className="text-xs font-bold px-2.5 py-0.5 rounded-full text-white"
-                            style={{ backgroundColor: 'var(--mode-primary, #004d26)' }}
-                          >
-                            {ks.length}
-                          </span>
-                        </button>
-                      ))}
-                  </div>
-                )}
-              </div>
+            </div>
+
+            {/* Legend */}
+            <div className="px-5 py-3 border-t border-slate-200 flex items-center justify-center gap-4 text-xs text-slate-500">
+              <div className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full" style={{ background: '#10b981' }} /><span>Termin / kürzlich kontaktiert</span></div>
+              <div className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full" style={{ background: '#84cc16' }} /><span>Wenige Wochen</span></div>
+              <div className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full" style={{ background: '#a3a3a3' }} /><span>Länger her</span></div>
+              <div className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full" style={{ background: '#6b7280' }} /><span>Termin überfällig</span></div>
             </div>
           </div>
         </div>

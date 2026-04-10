@@ -147,11 +147,18 @@ export default function LebenszeitstrahlCard({ kunde }) {
   }, [data, zoom]);
 
   const totalRange = rangeEnd.getTime() - rangeStart.getTime();
-  const todayPct = Math.max(0, Math.min(100, ((Date.now() - rangeStart.getTime()) / totalRange) * 100));
+
+  // Inset Buffer auf beiden Seiten (in Prozent) damit die ersten/letzten
+  // Dots nicht in die Track-Labels bzw. den rechten Card-Rand laufen.
+  const INSET = 4;
+  const remap = (raw) => INSET + (raw / 100) * (100 - 2 * INSET);
+
+  const todayPct = remap(Math.max(0, Math.min(100, ((Date.now() - rangeStart.getTime()) / totalRange) * 100)));
 
   const xPct = (date) => {
     const t = parseDate(date).getTime();
-    return Math.max(0, Math.min(100, ((t - rangeStart.getTime()) / totalRange) * 100));
+    const raw = Math.max(0, Math.min(100, ((t - rangeStart.getTime()) / totalRange) * 100));
+    return remap(raw);
   };
 
   // Year markers
@@ -161,7 +168,8 @@ export default function LebenszeitstrahlCard({ kunde }) {
     const years = [];
     const step = (endY - startY) > 12 ? 2 : 1;
     for (let y = startY; y <= endY; y += step) {
-      years.push({ year: y, pct: ((new Date(y, 0, 1).getTime() - rangeStart.getTime()) / totalRange) * 100 });
+      const raw = ((new Date(y, 0, 1).getTime() - rangeStart.getTime()) / totalRange) * 100;
+      years.push({ year: y, pct: INSET + (raw / 100) * (100 - 2 * INSET) });
     }
     return years;
   }, [rangeStart, rangeEnd, totalRange]);

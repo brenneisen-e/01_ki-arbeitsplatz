@@ -246,6 +246,114 @@ function buildBankingKampagnen(institut) {
   ];
 }
 
+/* ── Lebenslagen-Radar (banking) ──────────────────────────────── */
+const LEBENSLAGEN_KATEGORIE_FARBEN = {
+  immobilie: '#22c55e',
+  familie:   '#3b82f6',
+  beruf:     '#f59e0b',
+  trennung:  '#3b82f6',
+  ruhestand: '#8b5cf6',
+  erbschaft: '#64748b',
+};
+
+const LEBENSLAGEN_RADAR_BANKING = [
+  {
+    kundeId: 'BK00004',
+    customerName: 'Markus Wagner',
+    initials: 'MW',
+    event: 'Immobilienkauf',
+    signals: [
+      'KfW-Kredit #4401 läuft in 2 Monaten aus (840 €/Mon. frei)',
+      'Bausparer zuteilungsreif (42.000 €)',
+      'Immo-Newsletter seit 24 Mon., Öffnungsrate 78%',
+    ],
+    signalCount: 3,
+    confidence: 97,
+    revenue: 4200,
+    category: 'immobilie',
+    isNew: true,
+  },
+  {
+    kundeId: 'BK00005',
+    customerName: 'Andrea Lang',
+    initials: 'AL',
+    event: 'Praxis-Erweiterung',
+    signals: [
+      'Gewerbeanmeldung Zweitstandort erkannt',
+      'Umsatzsteuer-Vorauszahlungen seit 2 Mon. erhöht',
+      'Recherche: Gewerbeversicherungen (Newsletter-Klicks)',
+      'Kontoumsätze: Praxisausstattung, Webhosting',
+    ],
+    signalCount: 4,
+    confidence: 89,
+    revenue: 2800,
+    category: 'beruf',
+    isNew: true,
+  },
+  {
+    kundeId: 'BK00001',
+    customerName: 'Klaus Fischer',
+    initials: 'KF',
+    event: 'Trennung / Scheidung',
+    signals: [
+      '2. Mietüberweisung an neue Adresse seit 3 Mon.',
+      'Anwaltskosten (Familienrecht) in Umsätzen',
+      'Kapitallebensversicherung vorzeitig gekündigt',
+      'Unterhaltszahlungen neu eingerichtet',
+    ],
+    signalCount: 4,
+    confidence: 84,
+    revenue: 1600,
+    category: 'trennung',
+    isNew: false,
+  },
+];
+
+/* ── Abwanderungsradar (banking) ──────────────────────────────── */
+const ABWANDERUNGS_RADAR_BANKING = [
+  {
+    kundeId: 'BK00006',
+    customerName: 'Stefan Braun',
+    initials: 'SB',
+    riskLevel: 'high',
+    riskScore: 87,
+    riskType: 'Gehaltskonto-Wechsel',
+    summary: 'Dauerauftrag 500€ → N26 · Tagesgeld ING neu',
+    signals: [
+      'Neuer Dauerauftrag 500 €/Mon. an N26-Konto seit 6 Wochen',
+      'Tagesgeldkonto bei ING eröffnet, 15.000 € übertragen',
+      'Lastschriften für Strom/Internet auf Fremdkonto umgestellt',
+      'Geschäftskonto: Aktivität -40% in 3 Monaten',
+      'Kreditanfrage bei Smava erkannt (SCHUFA-Abfrage)',
+    ],
+    clvAtRisk: 24480,
+    trend: 'steigend',
+  },
+  {
+    kundeId: 'BK00003',
+    customerName: 'Peter Hoffmann',
+    initials: 'PH',
+    riskLevel: 'medium',
+    riskScore: 64,
+    riskType: 'Depot-Abwanderung',
+    summary: 'Trade Republic Sparplan ↑ · Hauptdepot ↓',
+    signals: [
+      'Trade Republic Sparplan um 200 €/Mon. erhöht',
+      'Hauptdepot-Sparplan um 100 €/Mon. reduziert',
+      '3 Wertpapierverkäufe im Hauptdepot in 4 Wochen',
+      'Newsletter-Tracking: Suche nach „Depotübertrag Trade Republic"',
+    ],
+    clvAtRisk: 14210,
+    trend: 'stabil',
+  },
+];
+
+const RISK_LEVEL_FARBEN = {
+  high:   { stripe: '#dc2626', bg: '#fef2f2', text: '#991b1b', label: 'Hoch' },
+  medium: { stripe: '#d97706', bg: '#fffbeb', text: '#92400e', label: 'Mittel' },
+  low:    { stripe: '#64748b', bg: '#f1f5f9', text: '#475569', label: 'Niedrig' },
+};
+
 const PROVISIONSABRECHNUNGEN = {
   versicherung: [
     { monat: tx('Februar 2026', 'February 2026'), betrag: 8420, datum: '01.03.2026' },
@@ -657,6 +765,128 @@ export default function UebersichtTab() {
               );
             })()}
           </Card>
+        )}
+
+        {/* Lebenslagen-Radar + Abwanderungsradar (banking) – just below Marketingkampagnen */}
+        {modeId === 'banking' && (
+          <div className="grid grid-cols-2 gap-4">
+            {/* Lebenslagen-Radar */}
+            <Card hover={false}>
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-2">
+                  <div className="relative w-8 h-8 rounded-lg flex items-center justify-center bg-emerald-50">
+                    <Sparkles size={16} className="text-emerald-600" strokeWidth={2} />
+                    {LEBENSLAGEN_RADAR_BANKING.some((l) => l.isNew) && (
+                      <span className="absolute -top-0.5 -right-0.5 flex h-2.5 w-2.5">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                        <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500" />
+                      </span>
+                    )}
+                  </div>
+                  <h3 className="font-semibold text-slate-800">Lebenslagen-Radar</h3>
+                </div>
+                <span className="text-xs px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 font-semibold border border-emerald-100">
+                  {LEBENSLAGEN_RADAR_BANKING.filter((l) => l.isNew).length} neue Signale
+                </span>
+              </div>
+              <div className="space-y-2">
+                {LEBENSLAGEN_RADAR_BANKING.slice(0, 3).map((l) => {
+                  const stripe = LEBENSLAGEN_KATEGORIE_FARBEN[l.category] || '#64748b';
+                  return (
+                    <div
+                      key={l.kundeId + l.event}
+                      className="relative flex items-start gap-3 p-3 pl-4 rounded-xl border border-slate-200 hover:border-slate-300 hover:shadow-md cursor-pointer transition-all bg-white"
+                      onClick={() => navigateTo('detail', { kundeId: l.kundeId, tab: 'stammdaten' })}
+                    >
+                      <div className="absolute left-0 top-2 bottom-2 w-1 rounded-r" style={{ background: stripe }} />
+                      <Avatar name={l.customerName} foto={getKundeFoto(l.kundeId)} size={36} />
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between gap-2 mb-0.5">
+                          <span className="text-sm font-bold text-slate-800 truncate">{l.customerName}</span>
+                          <span className="text-xs font-semibold whitespace-nowrap" style={{ color: stripe }}>
+                            {l.event}
+                          </span>
+                        </div>
+                        <div className="text-[11px] text-slate-500 truncate">
+                          {l.signals.slice(0, 1).join(' · ')} <span className="text-slate-400">→ {l.signalCount} Quellen</span>
+                        </div>
+                        <div className="flex items-center justify-between gap-2 mt-1.5">
+                          <span className="text-xs text-slate-500">Potenzial: <span className="font-bold text-slate-800">{l.revenue.toLocaleString('de-DE')}€</span></span>
+                          <div className="flex items-center gap-1.5">
+                            <div className="w-16 h-1.5 rounded-full bg-slate-200 overflow-hidden">
+                              <div className="h-full rounded-full" style={{ width: `${l.confidence}%`, background: stripe }} />
+                            </div>
+                            <span className="text-[10px] font-bold text-slate-600">{l.confidence}%</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+              <div className="mt-3 pt-2 border-t border-slate-100 flex items-center justify-between text-xs">
+                <span className="text-slate-500">{LEBENSLAGEN_RADAR_BANKING.length} erkannt</span>
+                <span className="font-bold text-slate-800">
+                  {LEBENSLAGEN_RADAR_BANKING.reduce((s, l) => s + l.revenue, 0).toLocaleString('de-DE')}€ Gesamtpotenzial
+                </span>
+              </div>
+            </Card>
+
+            {/* Abwanderungsradar */}
+            <Card hover={false}>
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-red-50">
+                    <AlertTriangle size={16} className="text-red-600" strokeWidth={2} />
+                  </div>
+                  <h3 className="font-semibold text-slate-800">Abwanderungsradar</h3>
+                </div>
+                <span className="text-xs px-2.5 py-1 rounded-full bg-red-50 text-red-700 font-semibold border border-red-100">
+                  {ABWANDERUNGS_RADAR_BANKING.length} Risikokunden
+                </span>
+              </div>
+              <div className="space-y-2">
+                {ABWANDERUNGS_RADAR_BANKING.map((r) => {
+                  const risk = RISK_LEVEL_FARBEN[r.riskLevel] || RISK_LEVEL_FARBEN.medium;
+                  const trendArrow = r.trend === 'steigend' ? '↑' : r.trend === 'fallend' ? '↓' : '→';
+                  const trendColor = r.trend === 'steigend' ? '#dc2626' : r.trend === 'fallend' ? '#059669' : '#d97706';
+                  return (
+                    <div
+                      key={r.kundeId}
+                      className="relative flex items-start gap-3 p-3 pl-4 rounded-xl border border-slate-200 hover:border-slate-300 hover:shadow-md cursor-pointer transition-all bg-white"
+                      onClick={() => navigateTo('detail', { kundeId: r.kundeId, tab: 'stammdaten' })}
+                    >
+                      <div className="absolute left-0 top-2 bottom-2 w-1 rounded-r" style={{ background: risk.stripe }} />
+                      <Avatar name={r.customerName} foto={getKundeFoto(r.kundeId)} size={36} />
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between gap-2 mb-0.5">
+                          <span className="text-sm font-bold text-slate-800 truncate">{r.customerName}</span>
+                          <span
+                            className="text-[10px] font-bold px-2 py-0.5 rounded-full uppercase whitespace-nowrap flex items-center gap-1"
+                            style={{ background: risk.bg, color: risk.text }}
+                          >
+                            <span style={{ color: trendColor }}>{trendArrow}</span> {risk.label}
+                          </span>
+                        </div>
+                        <div className="text-[11px] text-slate-500 truncate">{r.summary}</div>
+                        <div className="text-[11px] text-slate-400 italic truncate">{r.riskType} wahrscheinlich</div>
+                        <div className="text-xs mt-1.5">
+                          <span className="text-slate-500">CLV at risk: </span>
+                          <span className="font-bold" style={{ color: risk.stripe }}>{r.clvAtRisk.toLocaleString('de-DE')}€</span>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+              <div className="mt-3 pt-2 border-t border-slate-100 flex items-center justify-between text-xs">
+                <span className="text-slate-500">{ABWANDERUNGS_RADAR_BANKING.length} Kunden</span>
+                <span className="font-bold text-red-700">
+                  {ABWANDERUNGS_RADAR_BANKING.reduce((s, r) => s + r.clvAtRisk, 0).toLocaleString('de-DE')}€ CLV at risk
+                </span>
+              </div>
+            </Card>
+          </div>
         )}
         </div>
         {/* /Potenziale + Marketingkampagnen wrapper */}

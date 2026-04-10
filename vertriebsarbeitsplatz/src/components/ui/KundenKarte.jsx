@@ -632,18 +632,12 @@ export function KundenKarteCompact({ kunden = [], onKundeClick, title = 'Kundenk
         }}
         onClick={() => setIsModalOpen(true)}
       >
-        <div className="flex items-center gap-1.5 mb-1">
+        <div className="flex items-center gap-1.5 mb-2">
           <div className="w-6 h-6 rounded-lg flex items-center justify-center bg-slate-100 kpi-icon-box shrink-0">
             <MapPin size={13} style={{ color: 'var(--mode-primary-light)' }} strokeWidth={1.75} />
           </div>
           <span className="text-[11px] font-medium text-slate-500 truncate">{title}</span>
           <Maximize2 size={11} className="text-slate-400 ml-auto shrink-0" />
-        </div>
-        <div className="font-mono text-[1.4rem] leading-none font-extrabold" style={{ color: '#0f172a' }}>
-          {geocoded.length}
-        </div>
-        <div className="text-[9px] font-medium uppercase tracking-wider text-slate-500 mb-1.5">
-          Kunden regional
         </div>
         <div className="flex-1 min-h-0 flex items-center justify-center">
           <svg

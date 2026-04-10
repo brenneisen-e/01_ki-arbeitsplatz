@@ -133,10 +133,13 @@ export function LeafletMap({ geocoded, onKundeClick, mini = false, initialCenter
       tap: !mini,
     });
 
-    // OpenStreetMap tiles → automatic streets, municipal boundaries, building outlines
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    // CartoDB Positron tiles → minimalist, almost SVG-like map style.
+    // Light background, subtle gray streets and municipal boundaries,
+    // unobtrusive labels. Looks clean and matches the rest of the UI.
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
       maxZoom: 19,
-      attribution: mini ? '' : '© OpenStreetMap',
+      subdomains: 'abcd',
+      attribution: mini ? '' : '© OpenStreetMap · © CARTO',
     }).addTo(map);
 
     // Customer markers

@@ -38,12 +38,11 @@ function useTypewriter(text, speed = 12) {
 }
 
 function KiSummary({ text }) {
-  const { displayed, done } = useTypewriter(text);
+  const { displayed } = useTypewriter(text);
   return (
     <div className="hp-ki-summary">
       <strong>KI-Zusammenfassung:</strong>{' '}
       <span>{displayed}</span>
-      {!done && <span className="hp-typewriter-cursor" />}
     </div>
   );
 }

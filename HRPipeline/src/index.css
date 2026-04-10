@@ -987,8 +987,8 @@ body {
 .hp-loading-spinner {
     width: 48px;
     height: 48px;
-    border: 3px solid var(--border);
-    border-top: 3px solid var(--primary);
+    border: 4px solid var(--primary);
+    border-top-color: transparent;
     border-radius: 50%;
     margin: 0 auto var(--space-6);
     animation: hp-spin 1s linear infinite;

@@ -795,7 +795,7 @@ export default function UebersichtTab() {
                   return (
                     <div
                       key={l.kundeId + l.event}
-                      className="relative flex items-start gap-3 p-3 pl-4 rounded-xl border border-slate-200 hover:border-slate-400 hover:shadow-lg hover:bg-slate-50 hover:-translate-y-0.5 cursor-pointer transition-all bg-white"
+                      className="row-hover relative flex items-start gap-3 p-3 pl-4 rounded-xl border border-slate-200 cursor-pointer transition-all bg-white"
                       onClick={() => navigateTo('detail', { kundeId: l.kundeId, tab: 'stammdaten' })}
                     >
                       <div className="absolute left-0 top-2 bottom-2 w-1 rounded-r" style={{ background: stripe }} />
@@ -853,7 +853,7 @@ export default function UebersichtTab() {
                   return (
                     <div
                       key={r.kundeId}
-                      className="relative flex items-start gap-3 p-3 pl-4 rounded-xl border border-slate-200 hover:border-slate-400 hover:shadow-lg hover:bg-slate-50 hover:-translate-y-0.5 cursor-pointer transition-all bg-white"
+                      className="row-hover relative flex items-start gap-3 p-3 pl-4 rounded-xl border border-slate-200 cursor-pointer transition-all bg-white"
                       onClick={() => navigateTo('detail', { kundeId: r.kundeId, tab: 'stammdaten' })}
                     >
                       <div className="absolute left-0 top-2 bottom-2 w-1 rounded-r" style={{ background: risk.stripe }} />

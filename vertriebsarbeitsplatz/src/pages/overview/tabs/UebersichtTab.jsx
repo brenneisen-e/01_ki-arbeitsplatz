@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { Sun, Clock, Zap, CheckSquare, Calendar, Phone, AlertTriangle, CheckCircle, FileText, Heart, Car, Home, ShieldAlert, Cake, Euro, Download, Landmark, BarChart3, PiggyBank, Wallet, Sparkles, Star } from 'lucide-react';
+import { Sun, Clock, Zap, CheckSquare, Calendar, Phone, AlertTriangle, CheckCircle, FileText, Heart, Car, Home, ShieldAlert, Cake, Euro, Download, Landmark, BarChart3, PiggyBank, Wallet, Sparkles, Star, Megaphone, ChevronDown, ChevronRight } from 'lucide-react';
 import Card from '../../../components/ui/Card';
 import Avatar from '../../../components/ui/Avatar';
 import { PrioBadge, SparteBadge } from '../../../components/ui/Badge';
@@ -111,6 +111,64 @@ const SCHNELLZUGRIFF = {
   ],
 };
 
+// Marketing campaigns for banking Übersicht
+const MARKETING_KAMPAGNEN_BANKING = [
+  {
+    id: 'fruehlings-baufi',
+    titel: 'Frühlings-Baufi-Aktion',
+    titelEn: 'Spring Mortgage Campaign',
+    status: 'aktiv',
+    zeitraum: '01.03.–30.04.2026',
+    zielgruppe: 'Kunden mit Immo-Signalen',
+    zielgruppeEn: 'Clients with property signals',
+    passendeKunden: [
+      { kundeId: 'BK00001', name: 'Klaus Fischer', match: 97, begruendung: 'Zinsbindung läuft 04/2026 aus, Schwäbisch-Hall Bausparer zuteilungsreif', begruendungEn: 'Interest lock expires 04/2026, Schwäbisch-Hall building loan ready' },
+      { kundeId: 'BK00002', name: 'Sandra Müller', match: 92, begruendung: 'Immobilienkauf vorbereiten, Ehemann als Neukunde gewinnen', begruendungEn: 'Preparing home purchase, onboard spouse as new client' },
+      { kundeId: 'BK00004', name: 'Markus Wagner', match: 78, begruendung: 'Junges Alter, erstes Eigenheim-Interesse erkannt', begruendungEn: 'Young age, first home interest detected' },
+    ],
+  },
+  {
+    id: 'vorsorgeplus-bundle',
+    titel: 'VR-VorsorgePlus Bundle',
+    titelEn: 'VR Pension Plus Bundle',
+    status: 'aktiv',
+    zeitraum: '15.03.–31.05.2026',
+    zielgruppe: 'Junge Familien ohne Absicherung',
+    zielgruppeEn: 'Young families without protection',
+    passendeKunden: [
+      { kundeId: 'BK00002', name: 'Sandra Müller', match: 94, begruendung: 'Junge Familie, keine BU/Risikoleben vorhanden', begruendungEn: 'Young family, no disability/term life coverage' },
+      { kundeId: 'BK00004', name: 'Markus Wagner', match: 87, begruendung: '29 Jahre, keine BU – optimaler Einstiegszeitpunkt', begruendungEn: '29 years, no disability cover – optimal entry age' },
+      { kundeId: 'BK00005', name: 'Andrea Lang', match: 79, begruendung: 'Praxiskredit ohne Absicherung, keine BU', begruendungEn: 'Practice loan without coverage, no disability insurance' },
+    ],
+  },
+  {
+    id: 'depot-wechsel',
+    titel: 'Depot-Wechsel-Prämie',
+    titelEn: 'Custody Transfer Bonus',
+    status: 'aktiv',
+    zeitraum: '01.04.–30.06.2026',
+    zielgruppe: 'Kunden mit Fremdbank-Depots',
+    zielgruppeEn: 'Clients with third-party custody accounts',
+    passendeKunden: [
+      { kundeId: 'BK00001', name: 'Klaus Fischer', match: 91, begruendung: 'Trade Republic Depot (28k), ING Tagesgeld (22k) – konsolidieren', begruendungEn: 'Trade Republic portfolio (28k), ING call money (22k) – consolidate' },
+      { kundeId: 'BK00003', name: 'Peter Hoffmann', match: 88, begruendung: 'Firmendepot-Optimierung, Union Investment als Alternative', begruendungEn: 'Corporate portfolio optimisation, Union Investment as alternative' },
+      { kundeId: 'BK00006', name: 'Stefan Braun', match: 82, begruendung: 'ETF-Sparplan bei Online-Broker, Wechsel zu VR-MeinDepot', begruendungEn: 'ETF savings plan with online broker, switch to VR-MeinDepot' },
+    ],
+  },
+  {
+    id: 'rv-tierschutz',
+    titel: 'R+V TierSchutz Aktion',
+    titelEn: 'R+V Pet Protection Campaign',
+    status: 'geplant',
+    zeitraum: 'Ab 01.05.2026',
+    zielgruppe: 'Tierhalter ohne Haftpflicht/KV',
+    zielgruppeEn: 'Pet owners without liability/health cover',
+    passendeKunden: [
+      { kundeId: 'BK00002', name: 'Sandra Müller', match: 85, begruendung: 'Fressnapf-Umsätze erkannt, keine Tierhalterhaftpflicht', begruendungEn: 'Pet store purchases detected, no pet liability insurance' },
+    ],
+  },
+];
+
 const PROVISIONSABRECHNUNGEN = {
   versicherung: [
     { monat: tx('Februar 2026', 'February 2026'), betrag: 8420, datum: '01.03.2026' },
@@ -133,6 +191,7 @@ export default function UebersichtTab() {
   const { modeId, config, navigateTo, setActiveTab } = useMode();
   const { t, tn, lang } = useTranslation();
   const [mandatFilter, setMandatFilter] = useState('alle');
+  const [expandedKampagne, setExpandedKampagne] = useState('fruehlings-baufi');
   const potentiale = useMemo(() => getAllPotentiale(modeId).sort((a, b) => {
     const prio = { kritisch: 0, hoch: 1, mittel: 2, niedrig: 3 };
     return (prio[a.prioritaet] || 3) - (prio[b.prioritaet] || 3);
@@ -319,7 +378,7 @@ export default function UebersichtTab() {
                 <span className="text-right">{modeId === 'banking' ? 'CLV' : t('praemie')}</span>
                 <span className="text-right">{modeId === 'banking' ? 'Leads CLV' : t('provision')}</span>
               </div>
-              {kundenPotentiale.slice(0, 8).map((kp, i) => {
+              {kundenPotentiale.slice(0, modeId === 'banking' ? 5 : 8).map((kp, i) => {
                 const topPrio = kp.potentiale.reduce((best, p) => {
                   const prio = { kritisch: 0, hoch: 1, mittel: 2, niedrig: 3 };
                   return (prio[p.prioritaet] ?? 3) < (prio[best] ?? 3) ? p.prioritaet : best;
@@ -381,15 +440,125 @@ export default function UebersichtTab() {
                 );
               })}
             </div>
-            {kundenPotentiale.length > 8 && (
+            {kundenPotentiale.length > (modeId === 'banking' ? 5 : 8) && (
               <button
                 className="mt-3 text-sm font-medium hover:underline"
                 style={{ color: 'var(--mode-primary-light)' }}
                 onClick={() => setActiveTab('potentiale')}
               >
-                {t('weitereKundenAnzeigen', { count: kundenPotentiale.length - 8 })}
+                {t('weitereKundenAnzeigen', { count: kundenPotentiale.length - (modeId === 'banking' ? 5 : 8) })}
               </button>
             )}
+          </Card>
+        )}
+
+        {/* Marketingkampagnen (Banking only) */}
+        {modeId === 'banking' && (
+          <Card hover={false}>
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <Megaphone size={20} style={{ color: 'var(--mode-primary-light)' }} strokeWidth={1.75} />
+                <h3 className="font-semibold text-slate-800">{lang === 'en' ? 'Marketing Campaigns' : 'Marketingkampagnen'}</h3>
+              </div>
+              <span className="text-sm text-slate-400">
+                {MARKETING_KAMPAGNEN_BANKING.filter(k => k.status === 'aktiv').length} {lang === 'en' ? 'active' : 'aktiv'} · {MARKETING_KAMPAGNEN_BANKING.filter(k => k.status === 'geplant').length} {lang === 'en' ? 'planned' : 'geplant'}
+              </span>
+            </div>
+            <div className="space-y-0">
+              <div className="grid py-1.5 px-3 items-center text-[10px] uppercase text-slate-400 font-semibold gap-2" style={{ gridTemplateColumns: '16px 1fr 80px 130px 1.2fr 70px' }}>
+                <span></span>
+                <span>{lang === 'en' ? 'Campaign' : 'Kampagne'}</span>
+                <span className="text-center">{lang === 'en' ? 'Status' : 'Status'}</span>
+                <span>{lang === 'en' ? 'Period' : 'Zeitraum'}</span>
+                <span>{lang === 'en' ? 'Target group' : 'Zielgruppe'}</span>
+                <span className="text-center">{lang === 'en' ? 'Matches' : 'Treffer'}</span>
+              </div>
+              {MARKETING_KAMPAGNEN_BANKING.map((kampagne) => {
+                const isExpanded = expandedKampagne === kampagne.id;
+                const istAktiv = kampagne.status === 'aktiv';
+                const titel = lang === 'en' ? kampagne.titelEn : kampagne.titel;
+                const zielgruppe = lang === 'en' ? kampagne.zielgruppeEn : kampagne.zielgruppe;
+                return (
+                  <div key={kampagne.id}>
+                    <div
+                      className="grid py-2.5 px-3 rounded-lg row-hover cursor-pointer items-center gap-2"
+                      style={{ gridTemplateColumns: '16px 1fr 80px 130px 1.2fr 70px' }}
+                      onClick={() => setExpandedKampagne(isExpanded ? null : kampagne.id)}
+                    >
+                      <div className="flex items-center justify-center text-slate-400">
+                        {isExpanded
+                          ? <ChevronDown size={14} strokeWidth={2} />
+                          : <ChevronRight size={14} strokeWidth={2} />}
+                      </div>
+                      <div className="text-sm font-semibold truncate" style={{ color: 'var(--_fg, #334155)' }}>
+                        {titel}
+                      </div>
+                      <div className="text-center">
+                        <span className={`rh-badge text-[10px] px-2 py-0.5 rounded-full font-semibold border whitespace-nowrap ${
+                          istAktiv
+                            ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                            : 'bg-amber-50 text-amber-700 border-amber-200'
+                        }`}>
+                          {istAktiv ? (lang === 'en' ? 'Active' : 'Aktiv') : (lang === 'en' ? 'Planned' : 'Geplant')}
+                        </span>
+                      </div>
+                      <div className="text-xs font-mono truncate" style={{ color: 'var(--_fg, #64748b)' }}>
+                        {kampagne.zeitraum}
+                      </div>
+                      <div className="text-xs truncate" style={{ color: 'var(--_fg, #64748b)' }}>
+                        {zielgruppe}
+                      </div>
+                      <div className="text-center">
+                        <span className="rh-badge inline-flex items-center justify-center w-6 h-6 rounded-full text-xs font-bold text-white" style={{ backgroundColor: 'var(--mode-primary-light)' }}>
+                          {kampagne.passendeKunden.length}
+                        </span>
+                      </div>
+                    </div>
+                    {isExpanded && (
+                      <div className="ml-4 mb-2 mt-1 pl-3 border-l-2" style={{ borderColor: 'var(--mode-primary-light)' }}>
+                        <div className="grid py-1 px-3 items-center text-[10px] uppercase text-slate-400 font-semibold gap-2" style={{ gridTemplateColumns: '1.2fr 60px 2fr' }}>
+                          <span>{lang === 'en' ? 'Client' : 'Kunde'}</span>
+                          <span className="text-center">Match</span>
+                          <span>{lang === 'en' ? 'Rationale' : 'Begründung'}</span>
+                        </div>
+                        {kampagne.passendeKunden.map((k) => (
+                          <div
+                            key={k.kundeId}
+                            className="grid py-2 px-3 rounded-lg row-hover cursor-pointer items-center gap-2"
+                            style={{ gridTemplateColumns: '1.2fr 60px 2fr' }}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              navigateTo('detail', { kundeId: k.kundeId, tab: 'stammdaten' });
+                            }}
+                          >
+                            <div className="flex items-center gap-2 min-w-0">
+                              <Avatar name={k.name} foto={getKundeFoto(k.kundeId)} size={28} />
+                              <span className="text-sm font-medium truncate" style={{ color: 'var(--_fg, #334155)' }}>
+                                {k.name}
+                              </span>
+                            </div>
+                            <div className="text-center">
+                              <span className={`rh-badge text-[10px] px-2 py-0.5 rounded-full font-bold whitespace-nowrap ${
+                                k.match >= 90
+                                  ? 'bg-emerald-100 text-emerald-800'
+                                  : k.match >= 80
+                                    ? 'bg-lime-100 text-lime-800'
+                                    : 'bg-amber-100 text-amber-800'
+                              }`}>
+                                {k.match}%
+                              </span>
+                            </div>
+                            <div className="text-xs truncate" style={{ color: 'var(--_fg, #64748b)' }}>
+                              {lang === 'en' ? k.begruendungEn : k.begruendung}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
           </Card>
         )}
 

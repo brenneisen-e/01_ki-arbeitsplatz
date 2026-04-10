@@ -1,9 +1,10 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import { MapPin, ChevronLeft, Maximize2, X } from 'lucide-react';
 import geojson from '../../pages/cockpit/bundeslaender.geo.json';
 import Card from './Card';
 import Avatar from './Avatar';
 import { getKundeFoto } from '../../utils/kundenFotos';
+import { LeafletMap, geocodeKundeLeaflet } from './KundenKarteLeaflet';
 
 /* ── Mercator projection helpers ──────────────────────────────── */
 const DEG2RAD = Math.PI / 180;
@@ -357,30 +358,6 @@ function MapRenderer({
           );
         })}
 
-      {/* Hover tooltip for the active customer pin */}
-      {zoomedState && hoveredKunde && (() => {
-        const k = visibleKunden.find((c) => c.id === hoveredKunde);
-        if (!k) return null;
-        const [x, y] = project(k.lng, k.lat);
-        const [vx, vy, vw] = viewBox.split(' ').map(Number);
-        const tipW = 180;
-        const tipH = 60;
-        const tipX = Math.min(Math.max(x - tipW / 2, vx + 4), vx + vw - tipW - 4);
-        const tipY = Math.max(vy + 4, y - tipH - 10);
-        return (
-          <foreignObject x={tipX} y={tipY} width={tipW} height={tipH} style={{ pointerEvents: 'none' }}>
-            <div className="bg-white px-3 py-1.5 rounded-lg shadow-lg border border-slate-200 text-xs">
-              <div className="font-bold text-slate-800 truncate">{k.name}</div>
-              <div className="text-slate-500 truncate">{k.city}</div>
-              {k.status?.label && (
-                <div className="text-[10px] font-semibold mt-0.5" style={{ color: k.status.color }}>
-                  ● {k.status.label}
-                </div>
-              )}
-            </div>
-          </foreignObject>
-        );
-      })()}
     </svg>
   );
 }
@@ -618,21 +595,7 @@ export default function KundenKarte({
 
 /* ── Compact portrait variant for the KPI row ─────────────────── */
 export function KundenKarteCompact({ kunden = [], onKundeClick, title = 'Kundenkarte' }) {
-  const [zoomedState, setZoomedState] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  // When the modal opens, immediately zoom into the Bundesland with the
-  // most customers so the user lands on a usable close-up of the pins.
-  useEffect(() => {
-    if (!isModalOpen) {
-      setZoomedState(null);
-      return;
-    }
-    if (zoomedState) return;
-    const top = Object.entries(clusters || {}).sort((a, b) => b[1].length - a[1].length)[0];
-    if (top) setZoomedState(top[0]);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isModalOpen]);
 
   const geocoded = useMemo(
     () => kunden.map((k, i) => geocodeKunde(k, i)).filter(Boolean),
@@ -740,14 +703,17 @@ export function KundenKarteCompact({ kunden = [], onKundeClick, title = 'Kundenk
         </div>
       </div>
 
-      {/* Modal – reuse the full MapRenderer + sidebar list like the main card */}
+      {/* Modal – Leaflet with real OpenStreetMap tiles so the user can
+          zoom down to street/city level. The on-map tooltips are native
+          Leaflet tooltips (constant pixel size) so they don't blow up
+          like the previous foreignObject implementation. */}
       {isModalOpen && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-6"
           onClick={() => setIsModalOpen(false)}
         >
           <div
-            className="bg-white rounded-2xl shadow-2xl w-full max-w-5xl h-[88vh] overflow-hidden flex flex-col"
+            className="bg-white rounded-2xl shadow-2xl w-full max-w-6xl h-[88vh] overflow-hidden flex flex-col"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between px-5 py-4 border-b border-slate-200 shrink-0">
@@ -757,50 +723,27 @@ export function KundenKarteCompact({ kunden = [], onKundeClick, title = 'Kundenk
                   <h3 className="font-semibold text-slate-800">{title}</h3>
                   <div className="text-xs text-slate-500">
                     {geocoded.length} Kunden · {Object.keys(clusters).length} Bundesländer
-                    {zoomedState && ` · Fokus: ${zoomedState}`}
                   </div>
                 </div>
               </div>
-              <div className="flex items-center gap-2">
-                {zoomedState && (
-                  <button
-                    onClick={() => setZoomedState(null)}
-                    className="flex items-center gap-1 text-sm font-medium text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded-full transition-colors"
-                  >
-                    <ChevronLeft size={14} />
-                    <span>Zurück zur Übersicht</span>
-                  </button>
-                )}
-                <button
-                  onClick={() => setIsModalOpen(false)}
-                  className="p-2 rounded-lg hover:bg-slate-100 text-slate-500 hover:text-slate-700 transition-colors"
-                  aria-label="Schließen"
-                >
-                  <X size={18} />
-                </button>
-              </div>
+              <button
+                onClick={() => setIsModalOpen(false)}
+                className="p-2 rounded-lg hover:bg-slate-100 text-slate-500 hover:text-slate-700 transition-colors"
+                aria-label="Schließen"
+              >
+                <X size={18} />
+              </button>
             </div>
-            <div className="flex-1 p-6 min-h-0">
-              <div className="w-full h-full flex items-center justify-center">
-                <div style={{ aspectRatio: `${SVG_W}/${SVG_H}`, height: '100%', maxWidth: '100%' }}>
-                  <MapRenderer
-                    paths={paths}
-                    project={project}
-                    clusters={clusters}
-                    getStateFill={getStateFill}
-                    zoomedState={zoomedState}
-                    onZoomState={setZoomedState}
-                    visibleKunden={visibleKunden}
-                    onKundeClick={(id) => {
-                      setIsModalOpen(false);
-                      onKundeClick?.(id);
-                    }}
-                    svgW={SVG_W}
-                    svgH={SVG_H}
-                    markerScale={1.4}
-                  />
-                </div>
-              </div>
+
+            {/* Leaflet map – real streets, scrollwheel zoom, drag, etc. */}
+            <div className="flex-1 min-h-0 relative">
+              <LeafletMap
+                geocoded={kunden.map((k, i) => geocodeKundeLeaflet(k, i)).filter(Boolean)}
+                onKundeClick={(id) => {
+                  setIsModalOpen(false);
+                  onKundeClick?.(id);
+                }}
+              />
             </div>
 
             {/* Legend */}

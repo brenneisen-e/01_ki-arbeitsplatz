@@ -77,6 +77,7 @@ function getContactStatus(kunde, referenceDate = new Date()) {
   return { color: '#525252', label: 'Sehr lange her', tone: 'gray' };
 }
 
+export function geocodeKundeLeaflet(kunde, index) { return geocodeKunde(kunde, index); }
 function geocodeKunde(kunde, index) {
   const city = extractCity(kunde.adresse);
   if (!city) return null;
@@ -102,7 +103,7 @@ function geocodeKunde(kunde, index) {
 }
 
 /* ── Leaflet inner renderer ───────────────────────────────────── */
-function LeafletMap({ geocoded, onKundeClick, mini = false, initialCenter, initialZoom }) {
+export function LeafletMap({ geocoded, onKundeClick, mini = false, initialCenter, initialZoom }) {
   const containerRef = useRef(null);
   const mapRef = useRef(null);
   const markersRef = useRef([]);

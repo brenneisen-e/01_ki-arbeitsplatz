@@ -9,7 +9,7 @@ export const HP_ALL_APPLICANTS_GENERIC = [
     { ...HP_PROFILES_GENERIC.peter, status: 'rejected', appliedDate: '2026-01-19', appliedPositionId: 5 },
 
     {
-        id: 'ben', name: 'Ben Kowalski', initials: 'BK', photo: '../../assets/images/AdobeStock_1091012713.jpeg',
+        id: 'ben', name: 'Ben Kowalski', initials: 'BK', photo: './images/AdobeStock_1091012713.jpeg',
         jobFamily: 'Tech & IT', jobFamilyAffinities: ['Tech & IT', 'Data & Analytics'],
         age: 32, city: 'München', region: 'bayern', appliedDate: '2026-02-10', appliedPositionId: 3,
         experience: '6 Jahre Full-Stack-Development (FinTech Scale-up)', experienceYears: 6,

@@ -4,7 +4,7 @@ import { HP_POSITIONS } from './positions.js';
 export const HP_ALL_APPLICANTS = [
     { ...HP_PROFILES.max, status: 'recommended', appliedDate: '2026-02-03', appliedPositionId: 1 },
     {
-        id: 'miller', name: 'Susan Miller', initials: 'SM', photo: '../../assets/images/AdobeStock_612932760.jpeg', age: 29, city: 'Berlin', region: 'berlin', appliedDate: '2026-02-16', appliedPositionId: 2,
+        id: 'miller', name: 'Susan Miller', initials: 'SM', photo: './images/AdobeStock_612932760.jpeg', age: 29, city: 'Berlin', region: 'berlin', appliedDate: '2026-02-16', appliedPositionId: 2,
         experience: '3 Jahre Versicherungsvertrieb (Ping An, China)', experienceYears: 3,
         education: 'MBA Finance, University of Shanghai',
         skills: ['Finanzanalyse', 'Vertrieb', 'Data Analytics', 'Kundenberatung'],
@@ -48,7 +48,7 @@ export const HP_ALL_APPLICANTS = [
     { ...HP_PROFILES.sarah, status: 'review', appliedDate: '2026-02-07', appliedPositionId: 5 },
     { ...HP_PROFILES.thomas, status: 'rejected', appliedDate: '2026-01-22', appliedPositionId: 4 },
     {
-        id: 'julia', name: 'Julia Hoffmann', initials: 'JH', photo: '../../assets/images/AdobeStock_612932760.jpeg', age: 31, city: 'Essen', region: 'nrw', appliedDate: '2026-02-10', appliedPositionId: 3,
+        id: 'julia', name: 'Julia Hoffmann', initials: 'JH', photo: './images/AdobeStock_612932760.jpeg', age: 31, city: 'Essen', region: 'nrw', appliedDate: '2026-02-10', appliedPositionId: 3,
         experience: '5 Jahre Maklertätigkeit (HDI)', experienceYears: 5,
         education: 'BWL-Studium, IHK Versicherungsfachfrau, Fachwirt i.A.',
         skills: ['Maklerbetreuung', 'Verhandlung', 'Führungserfahrung', 'Courtage-Management'],
@@ -89,7 +89,7 @@ export const HP_ALL_APPLICANTS = [
         }
     },
     {
-        id: 'markus', name: 'Markus Scholz', initials: 'MS', photo: '../../assets/images/AdobeStock_1091012713.jpeg', age: 38, city: 'Bonn', region: 'nrw', appliedDate: '2026-02-12', appliedPositionId: 6,
+        id: 'markus', name: 'Markus Scholz', initials: 'MS', photo: './images/AdobeStock_1091012713.jpeg', age: 38, city: 'Bonn', region: 'nrw', appliedDate: '2026-02-12', appliedPositionId: 6,
         experience: '6 Jahre Bankvertrieb (Sparkasse), §34f', experienceYears: 6,
         education: 'Bankkaufmann, Weiterbildung Finanzberatung, §34f GewO',
         skills: ['Finanzberatung', 'Kundenakquise', 'Cross-Selling', 'Anlageberatung'],

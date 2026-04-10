@@ -1,9 +1,10 @@
-import { useState, useRef, useEffect, useMemo } from 'react';
-import { Home, UserPlus, LayoutDashboard, Shield, ShieldCheck, ChevronDown, FileText, Download } from 'lucide-react';
+import { useState, useRef, useEffect, useMemo, useCallback } from 'react';
+import { Home, UserPlus, LayoutDashboard, Shield, ShieldCheck, ChevronDown, FileText, Download, RefreshCw, Loader2, CheckCircle2, AlertCircle } from 'lucide-react';
 import { clsx } from 'clsx';
 import { useInstitut } from '../../hooks/useInstitut';
 import { getInstitutLogoUrl } from '../../data/institutConfig';
 import { getHRData } from '../../data/hrData';
+import { createAllCVs, loadCvUrls, clearCvUrls } from '../../services/rxresume';
 
 function getBasePath() {
   const path = window.location.pathname;
@@ -84,6 +85,135 @@ function InstitutDropdown({ onClose }) {
   );
 }
 
+const GENERATE_LABELS = {
+  max:    'Max Berger',
+  sarah:  'Sarah Klein',
+  thomas: 'Thomas Wendt',
+};
+
+function CvGeneratePanel({ demoProfiles, profiles, cvUrls, onGenerated, onClose }) {
+  const ref = useRef(null);
+  const [progress, setProgress] = useState({}); // { key: { status, url, error } }
+  const [running, setRunning] = useState(false);
+
+  useEffect(() => {
+    const handler = (e) => { if (ref.current && !ref.current.contains(e.target)) onClose(); };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [onClose]);
+
+  const handleGenerate = useCallback(async () => {
+    setRunning(true);
+    setProgress({});
+    clearCvUrls();
+
+    const urls = await createAllCVs((key, status, url, error) => {
+      setProgress(prev => ({ ...prev, [key]: { status, url: url ?? null, error: error ?? null } }));
+    });
+
+    setRunning(false);
+    onGenerated(urls);
+  }, [onGenerated]);
+
+  const hasCvs = demoProfiles.some(p => cvUrls[p.id]);
+  const keys = ['max', 'sarah', 'thomas'];
+
+  return (
+    <div ref={ref} className="hp-cv-templates-dropdown" style={{ minWidth: 360 }}>
+      <div className="hp-cv-templates-dropdown-head">
+        <div className="hp-cv-templates-dropdown-title">CVs via rxresu.me generieren</div>
+        <p className="hp-cv-templates-dropdown-hint">
+          Erstellt echte Lebensläufe auf rxresu.me und verknüpft die PDFs direkt mit den Demo-Profilen.
+        </p>
+      </div>
+
+      {/* Status-Liste */}
+      <div style={{ padding: '8px 14px', display: 'flex', flexDirection: 'column', gap: 8 }}>
+        {keys.map(key => {
+          const p = progress[key];
+          const existingUrl = cvUrls[key];
+          return (
+            <div key={key} style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 13 }}>
+              {!p && !running && existingUrl
+                ? <CheckCircle2 size={15} style={{ color: '#16a34a', flexShrink: 0 }} />
+                : !p && !running
+                ? <div style={{ width: 15, height: 15, borderRadius: '50%', border: '1.5px solid #cbd5e1', flexShrink: 0 }} />
+                : p?.status === 'done'
+                ? <CheckCircle2 size={15} style={{ color: '#16a34a', flexShrink: 0 }} />
+                : p?.status === 'error'
+                ? <AlertCircle size={15} style={{ color: '#dc2626', flexShrink: 0 }} />
+                : <Loader2 size={15} style={{ color: '#3b82f6', flexShrink: 0, animation: 'spin 1s linear infinite' }} />
+              }
+              <span style={{ fontWeight: 500, color: '#1e293b' }}>{GENERATE_LABELS[key]}</span>
+              <span style={{ color: '#64748b', fontSize: 11, marginLeft: 'auto' }}>
+                {p?.status === 'creating' && 'Erstelle CV…'}
+                {p?.status === 'pdf' && 'PDF generieren…'}
+                {p?.status === 'done' && (p.url ? '✓ PDF bereit' : '✓ Erstellt (PDF folgt)')}
+                {p?.status === 'error' && `Fehler: ${p.error}`}
+                {!p && existingUrl && '✓ Vorhanden'}
+                {!p && !existingUrl && '–'}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+
+      <div style={{ padding: '10px 14px', borderTop: '1px solid #e2e8f0', display: 'flex', gap: 8 }}>
+        <button
+          onClick={handleGenerate}
+          disabled={running}
+          style={{
+            flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+            padding: '8px 12px', borderRadius: 8, border: 'none', cursor: running ? 'not-allowed' : 'pointer',
+            background: running ? '#94a3b8' : '#1d4ed8', color: '#fff', fontSize: 13, fontWeight: 600
+          }}
+        >
+          {running
+            ? <><Loader2 size={14} style={{ animation: 'spin 1s linear infinite' }} /> Erstelle CVs…</>
+            : <><RefreshCw size={14} /> {hasCvs ? 'Neu generieren' : 'CVs jetzt erstellen'}</>
+          }
+        </button>
+      </div>
+
+      {/* Download-Links wenn vorhanden */}
+      {hasCvs && (
+        <div className="hp-cv-templates-dropdown-list" style={{ borderTop: '1px solid #e2e8f0' }}>
+          {demoProfiles.filter(p => cvUrls[p.id]).map(p => {
+            const profile = profiles[p.id];
+            return (
+              <a
+                key={p.id}
+                href={cvUrls[p.id]}
+                target="_blank"
+                rel="noreferrer"
+                className="hp-cv-templates-dropdown-item"
+                onClick={e => e.stopPropagation()}
+              >
+                {profile?.photo ? (
+                  <img src={profile.photo} alt={p.name} className="hp-cv-templates-dropdown-photo" />
+                ) : (
+                  <div className="hp-cv-templates-dropdown-photo hp-cv-templates-dropdown-photo-fallback">
+                    {p.initials}
+                  </div>
+                )}
+                <div className="hp-cv-templates-dropdown-info">
+                  <div className="hp-cv-templates-dropdown-name">
+                    {p.name}
+                    <span className={`hp-cv-templates-dropdown-dot score-${p.score}`} />
+                  </div>
+                  <div className="hp-cv-templates-dropdown-role">{p.role}</div>
+                  <div className="hp-cv-templates-dropdown-subtitle">{p.title}</div>
+                </div>
+                <Download size={16} className="hp-cv-templates-dropdown-icon" />
+              </a>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function CvTemplatesDropdown({ demoProfiles, profiles, onClose }) {
   const ref = useRef(null);
   useEffect(() => {
@@ -97,7 +227,7 @@ function CvTemplatesDropdown({ demoProfiles, profiles, onClose }) {
       <div className="hp-cv-templates-dropdown-head">
         <div className="hp-cv-templates-dropdown-title">CV-Vorlagen zum Ausprobieren</div>
         <p className="hp-cv-templates-dropdown-hint">
-          Laden Sie eines der Beispiel-PDFs herunter und reichen Sie es über „Lebenslauf hochladen“ wieder ein,
+          Laden Sie eines der Beispiel-PDFs herunter und reichen Sie es über "Lebenslauf hochladen" wieder ein,
           um die KI-Analyse auf einem echten CV zu testen.
         </p>
       </div>
@@ -140,12 +270,21 @@ export default function GlobalHeader({ currentMode, onModeChange }) {
   const { institut } = useInstitut();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [cvDropdownOpen, setCvDropdownOpen] = useState(false);
+  const [cvUrls, setCvUrls] = useState(() => loadCvUrls());
 
   const hrData = useMemo(() => getHRData(institut.mode), [institut.mode]);
+
+  // Nur im Insurance-Modus wird rxresume genutzt (Generic-Modus hat eigene PDFs)
+  const isInsuranceMode = institut.mode !== 'generic';
+
   const cvTemplates = useMemo(
-    () => hrData.ui.demoProfiles.filter(p => p.cvPdf),
-    [hrData]
+    () => hrData.ui.demoProfiles.filter(p => p.cvPdf || (isInsuranceMode && cvUrls[p.id])),
+    [hrData, cvUrls, isInsuranceMode]
   );
+
+  const handleCvsGenerated = useCallback((urls) => {
+    setCvUrls(urls);
+  }, []);
 
   const modes = [
     { id: 'bewerber', label: 'Bewerber-Portal', icon: UserPlus },
@@ -211,7 +350,35 @@ export default function GlobalHeader({ currentMode, onModeChange }) {
         </div>
 
         <div className="flex items-center gap-3">
-          {cvTemplates.length > 0 && (
+          {/* Insurance-Modus: rxresume.me Generier-Button */}
+          {isInsuranceMode && (
+            <div className="relative">
+              <button
+                onClick={() => setCvDropdownOpen(v => !v)}
+                className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/15 hover:bg-white/25 transition-colors border border-white/20 text-white text-xs font-medium"
+                title="CVs auf rxresu.me generieren"
+              >
+                <FileText size={14} strokeWidth={1.75} />
+                <span>CVs</span>
+                {Object.values(cvUrls).some(Boolean) && (
+                  <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#4ade80', display: 'inline-block' }} />
+                )}
+                <ChevronDown size={12} className={clsx('text-white/60 transition-transform', cvDropdownOpen && 'rotate-180')} />
+              </button>
+              {cvDropdownOpen && (
+                <CvGeneratePanel
+                  demoProfiles={hrData.ui.demoProfiles}
+                  profiles={hrData.profiles}
+                  cvUrls={cvUrls}
+                  onGenerated={handleCvsGenerated}
+                  onClose={() => setCvDropdownOpen(false)}
+                />
+              )}
+            </div>
+          )}
+
+          {/* Generic-Modus: statische CV-Vorlagen */}
+          {!isInsuranceMode && cvTemplates.length > 0 && (
             <div className="relative">
               <button
                 onClick={() => setCvDropdownOpen(v => !v)}
@@ -231,6 +398,7 @@ export default function GlobalHeader({ currentMode, onModeChange }) {
               )}
             </div>
           )}
+
           <span className="text-[11px] text-white/40 tracking-wide">Demo-Umgebung — Rein synthetische Daten</span>
         </div>
       </div>

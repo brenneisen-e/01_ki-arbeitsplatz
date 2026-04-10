@@ -966,9 +966,6 @@ export default function VertriebsAssistent() {
 
   // Don't show on landing page
   if (currentView === 'landing') return null;
-  // On the Übersicht tab the inline KIAssistentCard already covers this –
-  // no need for a second floating bubble.
-  if (currentView === 'overview' && activeTab === 'uebersicht') return null;
 
   return (
     <>

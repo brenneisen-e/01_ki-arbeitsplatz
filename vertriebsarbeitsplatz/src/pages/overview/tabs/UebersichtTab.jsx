@@ -4,7 +4,6 @@ import { Sun, Clock, Zap, CheckSquare, Calendar, Phone, AlertTriangle, CheckCirc
 const CAMPAIGN_ICONS = { Home, Users, TrendingUp, Heart, Sparkles };
 import Card from '../../../components/ui/Card';
 import Avatar from '../../../components/ui/Avatar';
-import KIAssistentCard from '../../../components/ui/KIAssistentCard';
 import { SparteBadge } from '../../../components/ui/Badge';
 import { useMode } from '../../../hooks/useMode';
 import useTranslation from '../../../i18n/useTranslation';
@@ -777,9 +776,6 @@ export default function UebersichtTab() {
 
       {/* Rechte Spalte 1/3 */}
       <div className="col-span-1 space-y-4 min-w-0">
-        {/* KI-Assistent (Banking only) mit lila Akzent */}
-        {modeId === 'banking' && <KIAssistentCard />}
-
         {/* Anstehende Termine */}
         <Card hover={false}>
           <div className="flex items-center gap-2 mb-4">

@@ -2,32 +2,18 @@
  * rxresume.js — Erstellt Demo-CVs auf rxresu.me via OpenAPI (v4 Schema)
  * Proxy: /api/rxresume (Cloudflare Pages Function, umgeht CORS)
  *
- * Bestätigte v4-Änderungen (aus API-Fehlern abgeleitet):
- *  - data.picture  → top-level in data (nicht in basics)
- *  - data.summary  → top-level { content: "..." } (nicht in sections)
- *  - sections.*    → title statt name, hidden: false ergänzt
- *  - items.period  → String statt Objekt ("Mär 2019 – Heute")
- *  - customSections: [] auf top-level
- *  - metadata.layout → { pages: [[col1, col2]] }
- *  - metadata.css  → { enabled: false, value: "" }
- *  - metadata.page → gapX/gapY/marginX/marginY ergänzt
- *  - metadata.design → neues Pflicht-Objekt
- *  - metadata.typography → body/heading Objekte ergänzt
- *
- *  Alle item-Felder (company, school, degree, language, title …) bleiben
- *  wie in v3 — sie wurden in den Fehlern NICHT beanstandet.
+ * Schema aus docs/spec.json des Reactive-Resume-Repos abgeleitet.
  */
 
 const API_BASE = '/api/rxresume';
 const STORAGE_KEY = 'hr_rxresume_cv_urls';
 
 const uid = () => crypto.randomUUID();
-const H = { 'Content-Type': 'application/json' };
 
 async function apiCall(method, path, body) {
     const res = await fetch(`${API_BASE}${path}`, {
         method,
-        headers: H,
+        headers: { 'Content-Type': 'application/json' },
         body: body ? JSON.stringify(body) : undefined,
     });
     const text = await res.text();
@@ -44,53 +30,61 @@ function period(start, end = '') {
     return `${fmt(start)} \u2013 ${fmt(end)}`;
 }
 
-/** Leere versteckte Section (v4: title + hidden) */
+/** Pflichtfeld auf allen Items */
+const itemOptions = { showLinkInTitle: false };
+
+/** Leere versteckte Section */
 function emptySection(id, title) {
-    return { title, hidden: true, id, columns: 1, separateLinks: true, items: [] };
+    return { title, columns: 1, hidden: true, items: [] };
 }
 
-/** Profil-Foto-Objekt (leer) */
-function pic() {
+const BASE_URL = 'https://kiarbeitsplatz.pages.dev/HRPipeline/dist/images';
+
+/** Profil-Foto-Objekt */
+function pic(filename) {
     return {
-        url: '', size: 64, aspectRatio: 1, borderRadius: 0,
-        borderColor: 'rgba(0,0,0,1)', borderWidth: 0,
-        shadowColor: 'rgba(0,0,0,0)', shadowWidth: 0, rotation: 0,
-        effects: { hidden: false, border: false, grayscale: false },
+        hidden: false,
+        url: filename ? `${BASE_URL}/${filename}` : '',
+        size: 64,
+        aspectRatio: 1,
+        borderRadius: 0,
+        borderColor: 'rgba(0,0,0,1)',
+        borderWidth: 0,
+        shadowColor: 'rgba(0,0,0,0)',
+        shadowWidth: 0,
+        rotation: 0,
     };
 }
 
-/** Metadata (v4-Schema) */
+/** Metadata (aus spec.json) */
 function meta(primary = '#1d4ed8') {
     return {
         template: 'onyx',
         layout: {
-            pages: [[
-                ['experience', 'education', 'certifications'],
-                ['profiles', 'skills', 'languages'],
-            ]],
+            sidebarWidth: 30,
+            pages: [{
+                fullWidth: false,
+                main: ['experience', 'education', 'certifications'],
+                sidebar: ['profiles', 'skills', 'languages'],
+            }],
         },
         css: { enabled: false, value: '' },
         page: {
             format: 'a4',
-            margin: 18,
             marginX: 18,
             marginY: 18,
             gapX: 10,
             gapY: 10,
-            options: { breakLine: true, pageNumbers: true },
+            locale: 'de-DE',
+            hideIcons: false,
         },
-        theme: { background: '#ffffff', text: '#000000', primary },
         design: {
             colors: { primary, background: '#ffffff', text: '#000000' },
-            spacing: 4,
+            level: { icon: 'circle', type: 'bar' },
         },
         typography: {
-            font: { family: 'IBM Plex Serif', subset: 'latin', variants: ['regular', '600'], size: 14 },
-            body: { family: 'IBM Plex Serif', size: 14, weight: 'regular', lineHeight: 1.5 },
-            heading: { family: 'IBM Plex Serif', size: 20, weight: '600', lineHeight: 1.3 },
-            lineHeight: 1.5,
-            hideIcons: false,
-            underlineLinks: true,
+            body: { fontFamily: 'IBM Plex Serif', fontWeights: ['regular'], fontSize: 14, lineHeight: 1.5 },
+            heading: { fontFamily: 'IBM Plex Serif', fontWeights: ['600'], fontSize: 20, lineHeight: 1.3 },
         },
         notes: '',
     };
@@ -99,7 +93,6 @@ function meta(primary = '#1d4ed8') {
 // ── CV 1: Max Berger – Industriekaufmann ──────────────────────────────────────
 function buildMaxBerger() {
     return {
-        // basics: v3-Felder unverändert (kein Fehler für diese Felder)
         basics: {
             name: 'Max Berger',
             headline: 'Industriekaufmann | Key Account & Vertriebsinnendienst',
@@ -109,39 +102,36 @@ function buildMaxBerger() {
             website: { url: '', label: '' },
             customFields: [],
         },
-        // v4: picture top-level (nicht in basics)
-        picture: pic(),
-        // v4: summary top-level (nicht in sections)
+        picture: pic('AdobeStock_624564221.jpeg'),
         summary: {
+            title: 'Zusammenfassung',
+            columns: 1,
+            hidden: false,
             content: '<p>Erfahrener Industriekaufmann mit 8 Jahren Berufserfahrung im Key Account Management und Vertriebsinnendienst. Bestandsportfolio 2,4 Mio. €, Führung von 3 Mitarbeitern, Ø 115 % Zielerreichung.</p>',
         },
-        // v4: customSections pflicht
         customSections: [],
         sections: {
-            // v4: title + hidden statt name + visible
             profiles: {
-                title: 'Profile', hidden: false, id: 'profiles', columns: 4, separateLinks: true,
-                // v3 item-Felder: network, username, website, icon
+                title: 'Profile', columns: 4, hidden: false,
                 items: [
-                    { id: uid(), hidden: false, network: 'LinkedIn', username: 'maxberger-dus', website: { url: 'https://linkedin.com/in/maxberger-dus', label: 'LinkedIn' }, icon: 'PhLinkedinLogo' },
+                    { id: uid(), hidden: false, options: itemOptions, network: 'LinkedIn', username: 'maxberger-dus', website: { url: 'https://linkedin.com/in/maxberger-dus', label: 'LinkedIn' }, icon: 'PhLinkedinLogo' },
                 ],
             },
             experience: {
-                title: 'Berufserfahrung', hidden: false, id: 'experience', columns: 1, separateLinks: true,
+                title: 'Berufserfahrung', columns: 1, hidden: false,
                 items: [
                     {
-                        id: uid(), hidden: false,
-                        // v3 item-Felder: company, position, location, date/period, website, description, roles
+                        id: uid(), hidden: false, options: itemOptions,
                         company: 'Henkel AG & Co. KGaA',
                         position: 'Key Account Manager – Industrievertrieb',
                         location: 'Düsseldorf',
-                        period: period('2019-03'),          // v4: String statt Objekt
+                        period: period('2019-03'),
                         website: { url: 'https://www.henkel.de', label: 'Henkel' },
                         description: '<ul><li>Bestandsportfolio 2,4 Mio. € (Chemie, Automotive, Maschinenbau)</li><li>Steuerung 3-köpfiges Innendienstteam</li><li>Ø 115 % Zielerreichung über 5 Jahre</li><li>Neukundenakquise B2B, Angebotserstellung, Preisverhandlung</li></ul>',
                         roles: [],
                     },
                     {
-                        id: uid(), hidden: false,
+                        id: uid(), hidden: false, options: itemOptions,
                         company: 'Thyssenkrupp Materials Services GmbH',
                         position: 'Sachbearbeiter Vertriebsinnendienst',
                         location: 'Essen',
@@ -153,11 +143,10 @@ function buildMaxBerger() {
                 ],
             },
             education: {
-                title: 'Ausbildung & Studium', hidden: false, id: 'education', columns: 1, separateLinks: true,
+                title: 'Ausbildung & Studium', columns: 1, hidden: false,
                 items: [
                     {
-                        id: uid(), hidden: false,
-                        // v3 item-Felder: school, degree, area, grade, location, period, website, description
+                        id: uid(), hidden: false, options: itemOptions,
                         school: 'Fachhochschule Düsseldorf',
                         degree: 'Bachelor of Arts',
                         area: 'Betriebswirtschaftslehre',
@@ -168,7 +157,7 @@ function buildMaxBerger() {
                         description: 'Schwerpunkt: Marketing & Vertriebsmanagement · DQR 6',
                     },
                     {
-                        id: uid(), hidden: false,
+                        id: uid(), hidden: false, options: itemOptions,
                         school: 'Robert Bosch GmbH',
                         degree: 'Ausbildung',
                         area: 'Industriekaufmann (IHK)',
@@ -181,32 +170,29 @@ function buildMaxBerger() {
                 ],
             },
             certifications: {
-                title: 'Zertifikate', hidden: false, id: 'certifications', columns: 1, separateLinks: true,
-                // v3 item-Felder: title, issuer, date, website, description
+                title: 'Zertifikate', columns: 1, hidden: false,
                 items: [
-                    { id: uid(), hidden: false, title: 'IHK Industriekaufmann (DQR 4)', issuer: 'IHK Düsseldorf', date: 'Jul 2013', website: { url: '', label: '' }, description: '' },
-                    { id: uid(), hidden: false, title: 'BWL Bachelor of Arts (DQR 6)', issuer: 'FH Düsseldorf', date: 'Aug 2016', website: { url: '', label: '' }, description: '' },
-                    { id: uid(), hidden: false, title: 'Salesforce Certified Sales Representative', issuer: 'Salesforce', date: 'Mär 2021', website: { url: '', label: '' }, description: '' },
+                    { id: uid(), hidden: false, options: itemOptions, title: 'IHK Industriekaufmann (DQR 4)', issuer: 'IHK Düsseldorf', date: 'Jul 2013', website: { url: '', label: '' }, description: '' },
+                    { id: uid(), hidden: false, options: itemOptions, title: 'BWL Bachelor of Arts (DQR 6)', issuer: 'FH Düsseldorf', date: 'Aug 2016', website: { url: '', label: '' }, description: '' },
+                    { id: uid(), hidden: false, options: itemOptions, title: 'Salesforce Certified Sales Representative', issuer: 'Salesforce', date: 'Mär 2021', website: { url: '', label: '' }, description: '' },
                 ],
             },
             skills: {
-                title: 'Kenntnisse', hidden: false, id: 'skills', columns: 1, separateLinks: true,
-                // v3 item-Felder: name, level, proficiency, icon, keywords
+                title: 'Kenntnisse', columns: 1, hidden: false,
                 items: [
-                    { id: uid(), hidden: false, name: 'Key Account Management', level: 5, proficiency: 'Expert', icon: '', keywords: [] },
-                    { id: uid(), hidden: false, name: 'SAP SD / MM', level: 4, proficiency: 'Advanced', icon: '', keywords: [] },
-                    { id: uid(), hidden: false, name: 'Salesforce CRM', level: 4, proficiency: 'Advanced', icon: '', keywords: [] },
-                    { id: uid(), hidden: false, name: 'Angebots- & Preisgestaltung', level: 5, proficiency: 'Expert', icon: '', keywords: [] },
-                    { id: uid(), hidden: false, name: 'Teamführung', level: 4, proficiency: 'Advanced', icon: '', keywords: [] },
-                    { id: uid(), hidden: false, name: 'MS Office (Excel, PowerPoint)', level: 5, proficiency: 'Expert', icon: '', keywords: [] },
+                    { id: uid(), hidden: false, options: itemOptions, name: 'Key Account Management', level: 5, proficiency: 'Expert', icon: '', keywords: [] },
+                    { id: uid(), hidden: false, options: itemOptions, name: 'SAP SD / MM', level: 4, proficiency: 'Advanced', icon: '', keywords: [] },
+                    { id: uid(), hidden: false, options: itemOptions, name: 'Salesforce CRM', level: 4, proficiency: 'Advanced', icon: '', keywords: [] },
+                    { id: uid(), hidden: false, options: itemOptions, name: 'Angebots- & Preisgestaltung', level: 5, proficiency: 'Expert', icon: '', keywords: [] },
+                    { id: uid(), hidden: false, options: itemOptions, name: 'Teamführung', level: 4, proficiency: 'Advanced', icon: '', keywords: [] },
+                    { id: uid(), hidden: false, options: itemOptions, name: 'MS Office (Excel, PowerPoint)', level: 5, proficiency: 'Expert', icon: '', keywords: [] },
                 ],
             },
             languages: {
-                title: 'Sprachen', hidden: false, id: 'languages', columns: 1, separateLinks: true,
-                // v3 item-Felder: language, fluency, level
+                title: 'Sprachen', columns: 1, hidden: false,
                 items: [
-                    { id: uid(), hidden: false, language: 'Deutsch', fluency: 'Muttersprache', level: 5 },
-                    { id: uid(), hidden: false, language: 'Englisch', fluency: 'Verhandlungssicher (C1)', level: 4 },
+                    { id: uid(), hidden: false, options: itemOptions, language: 'Deutsch', fluency: 'Muttersprache', level: 5 },
+                    { id: uid(), hidden: false, options: itemOptions, language: 'Englisch', fluency: 'Verhandlungssicher (C1)', level: 4 },
                 ],
             },
             awards: emptySection('awards', 'Auszeichnungen'),
@@ -232,23 +218,26 @@ function buildSarahKlein() {
             website: { url: '', label: '' },
             customFields: [],
         },
-        picture: pic(),
+        picture: pic('AdobeStock_252262042.jpeg'),
         summary: {
+            title: 'Zusammenfassung',
+            columns: 1,
+            hidden: false,
             content: '<p>Motivierte Vertriebspersönlichkeit mit 4 Jahren Erfahrung im Einzelhandel, davon 2 Jahre Teamleitung (5 MA) bei MediaMarkt. Kommunikationsstärke und Beratungskompetenz als Grundlage für den Wechsel in den B2C-/B2B-Vertrieb.</p>',
         },
         customSections: [],
         sections: {
             profiles: {
-                title: 'Profile', hidden: false, id: 'profiles', columns: 4, separateLinks: true,
+                title: 'Profile', columns: 4, hidden: false,
                 items: [
-                    { id: uid(), hidden: false, network: 'LinkedIn', username: 'sarahklein-koeln', website: { url: 'https://linkedin.com/in/sarahklein-koeln', label: 'LinkedIn' }, icon: 'PhLinkedinLogo' },
+                    { id: uid(), hidden: false, options: itemOptions, network: 'LinkedIn', username: 'sarahklein-koeln', website: { url: 'https://linkedin.com/in/sarahklein-koeln', label: 'LinkedIn' }, icon: 'PhLinkedinLogo' },
                 ],
             },
             experience: {
-                title: 'Berufserfahrung', hidden: false, id: 'experience', columns: 1, separateLinks: true,
+                title: 'Berufserfahrung', columns: 1, hidden: false,
                 items: [
                     {
-                        id: uid(), hidden: false,
+                        id: uid(), hidden: false, options: itemOptions,
                         company: 'MediaMarkt Saturn Retail Group',
                         position: 'Teamleiterin Verkauf – Unterhaltungselektronik',
                         location: 'Köln',
@@ -258,7 +247,7 @@ function buildSarahKlein() {
                         roles: [],
                     },
                     {
-                        id: uid(), hidden: false,
+                        id: uid(), hidden: false, options: itemOptions,
                         company: 'MediaMarkt Saturn Retail Group',
                         position: 'Verkaufsberaterin – Smartphones & Zubehör',
                         location: 'Köln',
@@ -270,10 +259,10 @@ function buildSarahKlein() {
                 ],
             },
             education: {
-                title: 'Ausbildung & Weiterbildung', hidden: false, id: 'education', columns: 1, separateLinks: true,
+                title: 'Ausbildung & Weiterbildung', columns: 1, hidden: false,
                 items: [
                     {
-                        id: uid(), hidden: false,
+                        id: uid(), hidden: false, options: itemOptions,
                         school: 'IHK Köln',
                         degree: 'Weiterbildungszertifikat',
                         area: 'Vertrieb & Kundenkommunikation',
@@ -284,7 +273,7 @@ function buildSarahKlein() {
                         description: '',
                     },
                     {
-                        id: uid(), hidden: false,
+                        id: uid(), hidden: false, options: itemOptions,
                         school: 'MediaMarkt Ausbildungszentrum',
                         degree: 'Ausbildung',
                         area: 'Einzelhandelskauffrau (IHK)',
@@ -297,28 +286,28 @@ function buildSarahKlein() {
                 ],
             },
             certifications: {
-                title: 'Qualifikationen', hidden: false, id: 'certifications', columns: 1, separateLinks: true,
+                title: 'Qualifikationen', columns: 1, hidden: false,
                 items: [
-                    { id: uid(), hidden: false, title: 'Einzelhandelskauffrau (DQR 4)', issuer: 'IHK Köln', date: 'Aug 2020', website: { url: '', label: '' }, description: '' },
-                    { id: uid(), hidden: false, title: 'Weiterbildung Vertrieb & Kommunikation', issuer: 'IHK Köln', date: 'Jun 2023', website: { url: '', label: '' }, description: '' },
+                    { id: uid(), hidden: false, options: itemOptions, title: 'Einzelhandelskauffrau (DQR 4)', issuer: 'IHK Köln', date: 'Aug 2020', website: { url: '', label: '' }, description: '' },
+                    { id: uid(), hidden: false, options: itemOptions, title: 'Weiterbildung Vertrieb & Kommunikation', issuer: 'IHK Köln', date: 'Jun 2023', website: { url: '', label: '' }, description: '' },
                 ],
             },
             skills: {
-                title: 'Kenntnisse', hidden: false, id: 'skills', columns: 1, separateLinks: true,
+                title: 'Kenntnisse', columns: 1, hidden: false,
                 items: [
-                    { id: uid(), hidden: false, name: 'Teamführung', level: 4, proficiency: 'Advanced', icon: '', keywords: [] },
-                    { id: uid(), hidden: false, name: 'Kundenberatung / B2C-Vertrieb', level: 5, proficiency: 'Expert', icon: '', keywords: [] },
-                    { id: uid(), hidden: false, name: 'Reklamationsmanagement', level: 4, proficiency: 'Advanced', icon: '', keywords: [] },
-                    { id: uid(), hidden: false, name: 'Kassensysteme (SAP POS)', level: 4, proficiency: 'Advanced', icon: '', keywords: [] },
-                    { id: uid(), hidden: false, name: 'Visual Merchandising', level: 3, proficiency: 'Intermediate', icon: '', keywords: [] },
-                    { id: uid(), hidden: false, name: 'MS Office', level: 3, proficiency: 'Intermediate', icon: '', keywords: [] },
+                    { id: uid(), hidden: false, options: itemOptions, name: 'Teamführung', level: 4, proficiency: 'Advanced', icon: '', keywords: [] },
+                    { id: uid(), hidden: false, options: itemOptions, name: 'Kundenberatung / B2C-Vertrieb', level: 5, proficiency: 'Expert', icon: '', keywords: [] },
+                    { id: uid(), hidden: false, options: itemOptions, name: 'Reklamationsmanagement', level: 4, proficiency: 'Advanced', icon: '', keywords: [] },
+                    { id: uid(), hidden: false, options: itemOptions, name: 'Kassensysteme (SAP POS)', level: 4, proficiency: 'Advanced', icon: '', keywords: [] },
+                    { id: uid(), hidden: false, options: itemOptions, name: 'Visual Merchandising', level: 3, proficiency: 'Intermediate', icon: '', keywords: [] },
+                    { id: uid(), hidden: false, options: itemOptions, name: 'MS Office', level: 3, proficiency: 'Intermediate', icon: '', keywords: [] },
                 ],
             },
             languages: {
-                title: 'Sprachen', hidden: false, id: 'languages', columns: 1, separateLinks: true,
+                title: 'Sprachen', columns: 1, hidden: false,
                 items: [
-                    { id: uid(), hidden: false, language: 'Deutsch', fluency: 'Muttersprache', level: 5 },
-                    { id: uid(), hidden: false, language: 'Englisch', fluency: 'Gute Kenntnisse (B2)', level: 3 },
+                    { id: uid(), hidden: false, options: itemOptions, language: 'Deutsch', fluency: 'Muttersprache', level: 5 },
+                    { id: uid(), hidden: false, options: itemOptions, language: 'Englisch', fluency: 'Gute Kenntnisse (B2)', level: 3 },
                 ],
             },
             awards: emptySection('awards', 'Auszeichnungen'),
@@ -344,21 +333,24 @@ function buildThomasWendt() {
             website: { url: '', label: '' },
             customFields: [],
         },
-        picture: pic(),
+        picture: pic('AdobeStock_361342769.jpeg'),
         summary: {
+            title: 'Zusammenfassung',
+            columns: 1,
+            hidden: false,
             content: '<p>Verwaltungsfachangestellter mit 20 Jahren Berufserfahrung in der Kommunalverwaltung. Fundierte Kenntnisse in Sachbearbeitung, Dokumentenmanagement und Verwaltungsrecht (VwGO, BGB). Sucht neue Herausforderung außerhalb des öffentlichen Dienstes.</p>',
         },
         customSections: [],
         sections: {
             profiles: {
-                title: 'Profile', hidden: false, id: 'profiles', columns: 4, separateLinks: true,
+                title: 'Profile', columns: 4, hidden: false,
                 items: [],
             },
             experience: {
-                title: 'Berufserfahrung', hidden: false, id: 'experience', columns: 1, separateLinks: true,
+                title: 'Berufserfahrung', columns: 1, hidden: false,
                 items: [
                     {
-                        id: uid(), hidden: false,
+                        id: uid(), hidden: false, options: itemOptions,
                         company: 'Stadt Flensburg – Ordnungsamt',
                         position: 'Sachbearbeiter',
                         location: 'Flensburg',
@@ -368,7 +360,7 @@ function buildThomasWendt() {
                         roles: [],
                     },
                     {
-                        id: uid(), hidden: false,
+                        id: uid(), hidden: false, options: itemOptions,
                         company: 'Stadt Flensburg – Einwohnermeldeamt',
                         position: 'Sachbearbeiter',
                         location: 'Flensburg',
@@ -378,7 +370,7 @@ function buildThomasWendt() {
                         roles: [],
                     },
                     {
-                        id: uid(), hidden: false,
+                        id: uid(), hidden: false, options: itemOptions,
                         company: 'Kreis Schleswig-Flensburg',
                         position: 'Verwaltungsangestellter',
                         location: 'Schleswig',
@@ -390,10 +382,10 @@ function buildThomasWendt() {
                 ],
             },
             education: {
-                title: 'Ausbildung', hidden: false, id: 'education', columns: 1, separateLinks: true,
+                title: 'Ausbildung', columns: 1, hidden: false,
                 items: [
                     {
-                        id: uid(), hidden: false,
+                        id: uid(), hidden: false, options: itemOptions,
                         school: 'Stadt Flensburg / Berufsschule Flensburg',
                         degree: 'Ausbildung',
                         area: 'Verwaltungsfachangestellter (DQR 4)',
@@ -406,25 +398,25 @@ function buildThomasWendt() {
                 ],
             },
             certifications: {
-                title: 'Qualifikationen', hidden: false, id: 'certifications', columns: 1, separateLinks: true,
+                title: 'Qualifikationen', columns: 1, hidden: false,
                 items: [
-                    { id: uid(), hidden: false, title: 'Verwaltungsfachangestellter (DQR 4)', issuer: 'Stadt Flensburg', date: 'Jul 2004', website: { url: '', label: '' }, description: '' },
+                    { id: uid(), hidden: false, options: itemOptions, title: 'Verwaltungsfachangestellter (DQR 4)', issuer: 'Stadt Flensburg', date: 'Jul 2004', website: { url: '', label: '' }, description: '' },
                 ],
             },
             skills: {
-                title: 'Kenntnisse', hidden: false, id: 'skills', columns: 1, separateLinks: true,
+                title: 'Kenntnisse', columns: 1, hidden: false,
                 items: [
-                    { id: uid(), hidden: false, name: 'Verwaltungsrecht (VwGO, BGB)', level: 5, proficiency: 'Expert', icon: '', keywords: [] },
-                    { id: uid(), hidden: false, name: 'Aktenführung & Dokumentation', level: 5, proficiency: 'Expert', icon: '', keywords: [] },
-                    { id: uid(), hidden: false, name: 'SAP R/3', level: 3, proficiency: 'Intermediate', icon: '', keywords: [] },
-                    { id: uid(), hidden: false, name: 'MS Office (Word, Excel)', level: 3, proficiency: 'Intermediate', icon: '', keywords: [] },
-                    { id: uid(), hidden: false, name: 'Bürgerservice & Beratung', level: 4, proficiency: 'Advanced', icon: '', keywords: [] },
+                    { id: uid(), hidden: false, options: itemOptions, name: 'Verwaltungsrecht (VwGO, BGB)', level: 5, proficiency: 'Expert', icon: '', keywords: [] },
+                    { id: uid(), hidden: false, options: itemOptions, name: 'Aktenführung & Dokumentation', level: 5, proficiency: 'Expert', icon: '', keywords: [] },
+                    { id: uid(), hidden: false, options: itemOptions, name: 'SAP R/3', level: 3, proficiency: 'Intermediate', icon: '', keywords: [] },
+                    { id: uid(), hidden: false, options: itemOptions, name: 'MS Office (Word, Excel)', level: 3, proficiency: 'Intermediate', icon: '', keywords: [] },
+                    { id: uid(), hidden: false, options: itemOptions, name: 'Bürgerservice & Beratung', level: 4, proficiency: 'Advanced', icon: '', keywords: [] },
                 ],
             },
             languages: {
-                title: 'Sprachen', hidden: false, id: 'languages', columns: 1, separateLinks: true,
+                title: 'Sprachen', columns: 1, hidden: false,
                 items: [
-                    { id: uid(), hidden: false, language: 'Deutsch', fluency: 'Muttersprache', level: 5 },
+                    { id: uid(), hidden: false, options: itemOptions, language: 'Deutsch', fluency: 'Muttersprache', level: 5 },
                 ],
             },
             awards: emptySection('awards', 'Auszeichnungen'),
@@ -462,6 +454,7 @@ export async function createAllCVs(onProgress) {
         onProgress?.(def.key, 'creating');
         try {
             const data = def.build();
+            // Body: { data } only — title/slug werden automatisch generiert
             const created = await apiCall('POST', '/resumes/import', { data });
             const id = typeof created === 'string' ? created
                 : (created.id ?? created.data?.id ?? null);

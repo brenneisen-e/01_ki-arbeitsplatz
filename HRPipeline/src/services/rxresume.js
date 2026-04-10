@@ -1,18 +1,15 @@
 /**
- * rxresume.js — Erstellt Demo-CVs auf rxresu.me via OpenAPI
- * Authentifizierung: x-api-key Header
- * Gespeicherte PDF-URLs werden in localStorage abgelegt.
+ * rxresume.js — Erstellt Demo-CVs auf rxresu.me via OpenAPI (v4/v5 Schema)
+ * Proxy-Endpunkt: /api/rxresume (Cloudflare Pages Function)
+ * PDF-URLs werden in localStorage gespeichert.
  */
 
-// Proxy-Endpunkt (Cloudflare Pages Function) — umgeht CORS-Beschränkungen von rxresu.me
 const API_BASE = '/api/rxresume';
 const STORAGE_KEY = 'hr_rxresume_cv_urls';
 
 const uid = () => crypto.randomUUID();
 
-const H = {
-    'Content-Type': 'application/json',
-};
+const H = { 'Content-Type': 'application/json' };
 
 async function apiCall(method, path, body) {
     const res = await fetch(`${API_BASE}${path}`, {
@@ -25,11 +22,23 @@ async function apiCall(method, path, body) {
     try { return JSON.parse(text); } catch { return text; }
 }
 
-function emptySection(id, name) {
-    return { name, columns: 1, separateLinks: true, visible: false, id, items: [] };
+// Hilfsfunktion: Datumsbereich als String formatieren (DE)
+function period(start, end = '') {
+    const fmt = (d) => {
+        if (!d) return 'Heute';
+        const date = new Date(d + '-01');
+        return date.toLocaleDateString('de-DE', { month: 'short', year: 'numeric' });
+    };
+    return `${fmt(start)} \u2013 ${fmt(end)}`;
 }
 
-function pic() {
+// Leere Section mit korrektem v4-Schema
+function emptySection(id, title) {
+    return { title, hidden: true, id, columns: 1, separateLinks: true, items: [] };
+}
+
+// Profil-Foto (leer)
+function picture() {
     return {
         url: '', size: 64, aspectRatio: 1, borderRadius: 0,
         borderColor: 'rgba(0,0,0,1)', borderWidth: 0,
@@ -38,18 +47,35 @@ function pic() {
     };
 }
 
+// Metadata mit korrektem v4-Schema
 function meta(primary = '#1d4ed8') {
     return {
         template: 'onyx',
-        layout: [[
-            ['summary', 'experience', 'education', 'certifications'],
-            ['profiles', 'skills', 'languages'],
-        ]],
-        css: { value: '', visible: false },
-        page: { margin: 18, format: 'a4', options: { breakLine: true, pageNumbers: true } },
+        layout: {
+            pages: [[
+                ['experience', 'education', 'certifications'],
+                ['profiles', 'skills', 'languages'],
+            ]],
+        },
+        css: { enabled: false, value: '' },
+        page: {
+            format: 'a4',
+            margin: 18,
+            marginX: 18,
+            marginY: 18,
+            gapX: 10,
+            gapY: 10,
+            options: { breakLine: true, pageNumbers: true },
+        },
         theme: { background: '#ffffff', text: '#000000', primary },
+        design: {
+            colors: { primary, background: '#ffffff', text: '#000000' },
+            spacing: 4,
+        },
         typography: {
             font: { family: 'IBM Plex Serif', subset: 'latin', variants: ['regular', '600'], size: 14 },
+            body: { family: 'IBM Plex Serif', size: 14, weight: 'regular', lineHeight: 1.5 },
+            heading: { family: 'IBM Plex Serif', size: 20, weight: '600', lineHeight: 1.3 },
             lineHeight: 1.5,
             hideIcons: false,
             underlineLinks: true,
@@ -69,95 +95,97 @@ function buildMaxBerger() {
             location: 'Düsseldorf, Deutschland',
             website: { url: '', label: '' },
             customFields: [],
-            picture: pic(),
         },
+        picture: picture(),
+        summary: {
+            content: '<p>Erfahrener Industriekaufmann mit 8 Jahren Berufserfahrung im Key Account Management und Vertriebsinnendienst. Bestandsportfolio von 2,4 Mio. € Umsatz, Führungserfahrung über 3 Mitarbeiter und durchschnittliche Zielerreichung von 115 %. Nachgewiesene Stärken in Angebotserstellung, Preisverhandlung und strategischer Kundenentwicklung im B2B-Umfeld.</p>',
+        },
+        customSections: [],
         sections: {
-            summary: {
-                name: 'Profil', columns: 1, separateLinks: true, visible: true, id: 'summary',
-                content: '<p>Erfahrener Industriekaufmann mit 8 Jahren Berufserfahrung im Key Account Management und Vertriebsinnendienst. Bestandsportfolio von 2,4 Mio. € Umsatz, Führungserfahrung über 3 Mitarbeiter und durchschnittliche Zielerreichung von 115 %. Nachgewiesene Stärken in Angebotserstellung, Preisverhandlung und strategischer Kundenentwicklung im B2B-Umfeld.</p>',
+            profiles: {
+                title: 'Profile', hidden: false, columns: 4, separateLinks: true, id: 'profiles',
+                items: [
+                    { id: uid(), hidden: false, network: 'LinkedIn', username: 'maxberger-dus', url: 'https://linkedin.com/in/maxberger-dus', icon: 'PhLinkedinLogo' },
+                ],
             },
             experience: {
-                name: 'Berufserfahrung', columns: 1, separateLinks: true, visible: true, id: 'experience',
+                title: 'Berufserfahrung', hidden: false, columns: 1, separateLinks: true, id: 'experience',
                 items: [
                     {
                         id: uid(), hidden: false,
                         company: 'Henkel AG & Co. KGaA',
                         position: 'Key Account Manager – Industrievertrieb',
                         location: 'Düsseldorf',
-                        period: { startDate: '2019-03', endDate: '' },
-                        website: { url: 'https://www.henkel.de', label: 'Henkel' },
-                        description: '<ul><li>Betreuung eines Bestandsportfolios mit 2,4 Mio. € Jahresumsatz (Chemie, Automotive, Maschinenbau)</li><li>Steuerung und Entwicklung eines 3-köpfigen Innendienstteams</li><li>Ø 115 % Zielerreichung über fünf Geschäftsjahre</li><li>Neukundenakquise und Angebotserstellung im B2B-Segment</li><li>Preisverhandlung und Vertragsgestaltung auf Einkäuferebene</li></ul>',
-                        roles: [],
+                        period: period('2019-03'),
+                        url: '',
+                        summary: '<ul><li>Betreuung eines Bestandsportfolios mit 2,4 Mio. € Jahresumsatz</li><li>Steuerung und Entwicklung eines 3-köpfigen Innendienstteams</li><li>Ø 115 % Zielerreichung über fünf Geschäftsjahre</li><li>Neukundenakquise und Angebotserstellung im B2B-Segment</li></ul>',
+                        keywords: [],
                     },
                     {
                         id: uid(), hidden: false,
                         company: 'Thyssenkrupp Materials Services GmbH',
                         position: 'Sachbearbeiter Vertriebsinnendienst',
                         location: 'Essen',
-                        period: { startDate: '2016-09', endDate: '2019-02' },
-                        website: { url: 'https://www.thyssenkrupp-materials.com', label: 'Thyssenkrupp' },
-                        description: '<ul><li>Auftragsabwicklung und Angebotserstellung für Industriekunden</li><li>Koordination zwischen Einkauf, Logistik und Außendienst</li><li>Pflege von Kundenstammdaten im CRM-System (Salesforce)</li><li>Reklamationsbearbeitung und Kundenzufriedenheitsmanagement</li></ul>',
-                        roles: [],
+                        period: period('2016-09', '2019-02'),
+                        url: '',
+                        summary: '<ul><li>Auftragsabwicklung und Angebotserstellung für Industriekunden</li><li>Koordination zwischen Einkauf, Logistik und Außendienst</li><li>Pflege von Kundenstammdaten im CRM-System (Salesforce)</li></ul>',
+                        keywords: [],
                     },
                 ],
             },
             education: {
-                name: 'Ausbildung & Studium', columns: 1, separateLinks: true, visible: true, id: 'education',
+                title: 'Ausbildung & Studium', hidden: false, columns: 1, separateLinks: true, id: 'education',
                 items: [
                     {
                         id: uid(), hidden: false,
-                        school: 'Fachhochschule Düsseldorf',
-                        degree: 'Bachelor of Arts',
+                        institution: 'Fachhochschule Düsseldorf',
+                        studyType: 'Bachelor of Arts',
                         area: 'Betriebswirtschaftslehre',
-                        grade: '',
+                        score: '',
                         location: 'Düsseldorf',
-                        period: { startDate: '2013-10', endDate: '2016-08' },
-                        website: { url: '', label: '' },
-                        description: '<p>Schwerpunkt: Marketing & Vertriebsmanagement · DQR 6</p>',
+                        period: period('2013-10', '2016-08'),
+                        url: '',
+                        summary: '<p>Schwerpunkt: Marketing & Vertriebsmanagement · DQR 6</p>',
+                        keywords: [],
                     },
                     {
                         id: uid(), hidden: false,
-                        school: 'Robert Bosch GmbH',
-                        degree: 'Ausbildung',
+                        institution: 'Robert Bosch GmbH',
+                        studyType: 'Ausbildung',
                         area: 'Industriekaufmann (IHK)',
-                        grade: 'Gut (81 Punkte)',
+                        score: 'Gut (81 Punkte)',
                         location: 'Düsseldorf',
-                        period: { startDate: '2010-09', endDate: '2013-07' },
-                        website: { url: '', label: '' },
-                        description: '',
+                        period: period('2010-09', '2013-07'),
+                        url: '',
+                        summary: '',
+                        keywords: [],
                     },
                 ],
             },
             certifications: {
-                name: 'Zertifikate & Qualifikationen', columns: 1, separateLinks: true, visible: true, id: 'certifications',
+                title: 'Zertifikate', hidden: false, columns: 1, separateLinks: true, id: 'certifications',
                 items: [
-                    { id: uid(), hidden: false, title: 'IHK Industriekaufmann (DQR 4)', issuer: 'IHK Düsseldorf', date: '2013-07', website: { url: '', label: '' }, description: '' },
-                    { id: uid(), hidden: false, title: 'BWL Bachelor of Arts (DQR 6)', issuer: 'FH Düsseldorf', date: '2016-08', website: { url: '', label: '' }, description: '' },
-                    { id: uid(), hidden: false, title: 'Salesforce Certified Sales Representative', issuer: 'Salesforce', date: '2021-03', website: { url: '', label: '' }, description: '' },
+                    { id: uid(), hidden: false, name: 'IHK Industriekaufmann (DQR 4)', issuer: 'IHK Düsseldorf', date: 'Jul 2013', url: '', summary: '' },
+                    { id: uid(), hidden: false, name: 'BWL Bachelor of Arts (DQR 6)', issuer: 'FH Düsseldorf', date: 'Aug 2016', url: '', summary: '' },
+                    { id: uid(), hidden: false, name: 'Salesforce Certified Sales Representative', issuer: 'Salesforce', date: 'Mär 2021', url: '', summary: '' },
                 ],
             },
             skills: {
-                name: 'Kenntnisse', columns: 1, separateLinks: true, visible: true, id: 'skills',
+                title: 'Kenntnisse', hidden: false, columns: 1, separateLinks: true, id: 'skills',
                 items: [
-                    { id: uid(), hidden: false, name: 'Key Account Management', level: 5, proficiency: 'Expert', icon: '', keywords: [] },
-                    { id: uid(), hidden: false, name: 'SAP SD / MM', level: 4, proficiency: 'Advanced', icon: '', keywords: [] },
-                    { id: uid(), hidden: false, name: 'Salesforce CRM', level: 4, proficiency: 'Advanced', icon: '', keywords: [] },
-                    { id: uid(), hidden: false, name: 'Angebots- & Preisgestaltung', level: 5, proficiency: 'Expert', icon: '', keywords: [] },
-                    { id: uid(), hidden: false, name: 'Teamführung', level: 4, proficiency: 'Advanced', icon: '', keywords: [] },
-                    { id: uid(), hidden: false, name: 'MS Office (Excel, PowerPoint)', level: 5, proficiency: 'Expert', icon: '', keywords: [] },
-                ],
-            },
-            profiles: {
-                name: 'Profile', columns: 4, separateLinks: true, visible: true, id: 'profiles',
-                items: [
-                    { id: uid(), hidden: false, network: 'LinkedIn', username: 'maxberger-dus', website: { url: 'https://linkedin.com/in/maxberger-dus', label: 'LinkedIn' }, icon: 'PhLinkedinLogo' },
+                    { id: uid(), hidden: false, name: 'Key Account Management', level: 5, description: '' },
+                    { id: uid(), hidden: false, name: 'SAP SD / MM', level: 4, description: '' },
+                    { id: uid(), hidden: false, name: 'Salesforce CRM', level: 4, description: '' },
+                    { id: uid(), hidden: false, name: 'Angebots- & Preisgestaltung', level: 5, description: '' },
+                    { id: uid(), hidden: false, name: 'Teamführung', level: 4, description: '' },
+                    { id: uid(), hidden: false, name: 'MS Office (Excel, PowerPoint)', level: 5, description: '' },
                 ],
             },
             languages: {
-                name: 'Sprachen', columns: 1, separateLinks: true, visible: true, id: 'languages',
+                title: 'Sprachen', hidden: false, columns: 1, separateLinks: true, id: 'languages',
                 items: [
-                    { id: uid(), hidden: false, language: 'Deutsch', fluency: 'Muttersprache', level: 5 },
-                    { id: uid(), hidden: false, language: 'Englisch', fluency: 'Verhandlungssicher (C1)', level: 4 },
+                    { id: uid(), hidden: false, name: 'Deutsch', level: 5, description: 'Muttersprache' },
+                    { id: uid(), hidden: false, name: 'Englisch', level: 4, description: 'Verhandlungssicher (C1)' },
                 ],
             },
             awards: emptySection('awards', 'Auszeichnungen'),
@@ -182,94 +210,96 @@ function buildSarahKlein() {
             location: 'Köln, Deutschland',
             website: { url: '', label: '' },
             customFields: [],
-            picture: pic(),
         },
+        picture: picture(),
+        summary: {
+            content: '<p>Motivierte Vertriebspersönlichkeit mit 4 Jahren Erfahrung im Einzelhandel, davon 2 Jahre als Teamleiterin (5 Mitarbeiter) bei MediaMarkt. Ausgeprägte Kommunikationsstärke, Beratungskompetenz und Freude am Kundenkontakt. Aktiv auf der Suche nach einer Herausforderung im B2C- oder B2B-Vertrieb.</p>',
+        },
+        customSections: [],
         sections: {
-            summary: {
-                name: 'Profil', columns: 1, separateLinks: true, visible: true, id: 'summary',
-                content: '<p>Motivierte Vertriebspersönlichkeit mit 4 Jahren Erfahrung im Einzelhandel, davon 2 Jahre als Teamleiterin (5 Mitarbeiter) bei MediaMarkt. Ausgeprägte Kommunikationsstärke, nachgewiesene Beratungskompetenz und Freude am Kundenkontakt. Aktiv auf der Suche nach einer Herausforderung im B2C- oder B2B-Vertrieb.</p>',
+            profiles: {
+                title: 'Profile', hidden: false, columns: 4, separateLinks: true, id: 'profiles',
+                items: [
+                    { id: uid(), hidden: false, network: 'LinkedIn', username: 'sarahklein-koeln', url: 'https://linkedin.com/in/sarahklein-koeln', icon: 'PhLinkedinLogo' },
+                ],
             },
             experience: {
-                name: 'Berufserfahrung', columns: 1, separateLinks: true, visible: true, id: 'experience',
+                title: 'Berufserfahrung', hidden: false, columns: 1, separateLinks: true, id: 'experience',
                 items: [
                     {
                         id: uid(), hidden: false,
                         company: 'MediaMarkt Saturn Retail Group',
                         position: 'Teamleiterin Verkauf – Unterhaltungselektronik',
                         location: 'Köln',
-                        period: { startDate: '2022-04', endDate: '' },
-                        website: { url: '', label: '' },
-                        description: '<ul><li>Führung und Motivation eines 5-köpfigen Verkaufsteams</li><li>Verantwortung für Abteilungsumsatz und Zielerreichung (Ø 108 %)</li><li>Schulung neuer Mitarbeiter in Produktberatung und Verkaufstechniken</li><li>Reklamations- und Beschwerdemanagement</li><li>Umsetzung von Visual-Merchandising-Konzepten</li></ul>',
-                        roles: [],
+                        period: period('2022-04'),
+                        url: '',
+                        summary: '<ul><li>Führung und Motivation eines 5-köpfigen Verkaufsteams</li><li>Verantwortung für Abteilungsumsatz und Zielerreichung (Ø 108 %)</li><li>Schulung neuer Mitarbeiter in Produktberatung und Verkaufstechniken</li><li>Reklamations- und Beschwerdemanagement</li></ul>',
+                        keywords: [],
                     },
                     {
                         id: uid(), hidden: false,
                         company: 'MediaMarkt Saturn Retail Group',
                         position: 'Verkaufsberaterin – Smartphones & Zubehör',
                         location: 'Köln',
-                        period: { startDate: '2020-09', endDate: '2022-03' },
-                        website: { url: '', label: '' },
-                        description: '<ul><li>Aktive Kundenberatung und Verkauf im Bereich Smartphones & Zubehör</li><li>Kassenbetrieb und Tagesabschluss</li><li>Bestandspflege und Wareneingangskontrolle</li></ul>',
-                        roles: [],
+                        period: period('2020-09', '2022-03'),
+                        url: '',
+                        summary: '<ul><li>Aktive Kundenberatung und Verkauf im Bereich Smartphones & Zubehör</li><li>Kassenbetrieb und Tagesabschluss</li><li>Bestandspflege und Wareneingangskontrolle</li></ul>',
+                        keywords: [],
                     },
                 ],
             },
             education: {
-                name: 'Ausbildung & Weiterbildung', columns: 1, separateLinks: true, visible: true, id: 'education',
+                title: 'Ausbildung & Weiterbildung', hidden: false, columns: 1, separateLinks: true, id: 'education',
                 items: [
                     {
                         id: uid(), hidden: false,
-                        school: 'IHK Köln',
-                        degree: 'Weiterbildungszertifikat',
+                        institution: 'IHK Köln',
+                        studyType: 'Weiterbildungszertifikat',
                         area: 'Vertrieb & Kundenkommunikation',
-                        grade: '',
+                        score: '',
                         location: 'Köln',
-                        period: { startDate: '2023-01', endDate: '2023-06' },
-                        website: { url: '', label: '' },
-                        description: '',
+                        period: period('2023-01', '2023-06'),
+                        url: '',
+                        summary: '',
+                        keywords: [],
                     },
                     {
                         id: uid(), hidden: false,
-                        school: 'MediaMarkt Ausbildungszentrum',
-                        degree: 'Ausbildung',
+                        institution: 'MediaMarkt Ausbildungszentrum',
+                        studyType: 'Ausbildung',
                         area: 'Einzelhandelskauffrau (IHK)',
-                        grade: '',
+                        score: '',
                         location: 'Köln',
-                        period: { startDate: '2017-09', endDate: '2020-08' },
-                        website: { url: '', label: '' },
-                        description: '',
+                        period: period('2017-09', '2020-08'),
+                        url: '',
+                        summary: '',
+                        keywords: [],
                     },
                 ],
             },
             certifications: {
-                name: 'Qualifikationen', columns: 1, separateLinks: true, visible: true, id: 'certifications',
+                title: 'Qualifikationen', hidden: false, columns: 1, separateLinks: true, id: 'certifications',
                 items: [
-                    { id: uid(), hidden: false, title: 'Einzelhandelskauffrau (DQR 4)', issuer: 'IHK Köln', date: '2020-08', website: { url: '', label: '' }, description: '' },
-                    { id: uid(), hidden: false, title: 'Weiterbildung Vertrieb & Kommunikation', issuer: 'IHK Köln', date: '2023-06', website: { url: '', label: '' }, description: '' },
+                    { id: uid(), hidden: false, name: 'Einzelhandelskauffrau (DQR 4)', issuer: 'IHK Köln', date: 'Aug 2020', url: '', summary: '' },
+                    { id: uid(), hidden: false, name: 'Weiterbildung Vertrieb & Kommunikation', issuer: 'IHK Köln', date: 'Jun 2023', url: '', summary: '' },
                 ],
             },
             skills: {
-                name: 'Kenntnisse', columns: 1, separateLinks: true, visible: true, id: 'skills',
+                title: 'Kenntnisse', hidden: false, columns: 1, separateLinks: true, id: 'skills',
                 items: [
-                    { id: uid(), hidden: false, name: 'Teamführung', level: 4, proficiency: 'Advanced', icon: '', keywords: [] },
-                    { id: uid(), hidden: false, name: 'Kundenberatung / B2C-Vertrieb', level: 5, proficiency: 'Expert', icon: '', keywords: [] },
-                    { id: uid(), hidden: false, name: 'Reklamationsmanagement', level: 4, proficiency: 'Advanced', icon: '', keywords: [] },
-                    { id: uid(), hidden: false, name: 'Kassensysteme (SAP POS)', level: 4, proficiency: 'Advanced', icon: '', keywords: [] },
-                    { id: uid(), hidden: false, name: 'Visual Merchandising', level: 3, proficiency: 'Intermediate', icon: '', keywords: [] },
-                    { id: uid(), hidden: false, name: 'MS Office', level: 3, proficiency: 'Intermediate', icon: '', keywords: [] },
-                ],
-            },
-            profiles: {
-                name: 'Profile', columns: 4, separateLinks: true, visible: true, id: 'profiles',
-                items: [
-                    { id: uid(), hidden: false, network: 'LinkedIn', username: 'sarahklein-koeln', website: { url: 'https://linkedin.com/in/sarahklein-koeln', label: 'LinkedIn' }, icon: 'PhLinkedinLogo' },
+                    { id: uid(), hidden: false, name: 'Teamführung', level: 4, description: '' },
+                    { id: uid(), hidden: false, name: 'Kundenberatung / B2C-Vertrieb', level: 5, description: '' },
+                    { id: uid(), hidden: false, name: 'Reklamationsmanagement', level: 4, description: '' },
+                    { id: uid(), hidden: false, name: 'Kassensysteme (SAP POS)', level: 4, description: '' },
+                    { id: uid(), hidden: false, name: 'Visual Merchandising', level: 3, description: '' },
+                    { id: uid(), hidden: false, name: 'MS Office', level: 3, description: '' },
                 ],
             },
             languages: {
-                name: 'Sprachen', columns: 1, separateLinks: true, visible: true, id: 'languages',
+                title: 'Sprachen', hidden: false, columns: 1, separateLinks: true, id: 'languages',
                 items: [
-                    { id: uid(), hidden: false, language: 'Deutsch', fluency: 'Muttersprache', level: 5 },
-                    { id: uid(), hidden: false, language: 'Englisch', fluency: 'Gute Kenntnisse (B2)', level: 3 },
+                    { id: uid(), hidden: false, name: 'Deutsch', level: 5, description: 'Muttersprache' },
+                    { id: uid(), hidden: false, name: 'Englisch', level: 3, description: 'Gute Kenntnisse (B2)' },
                 ],
             },
             awards: emptySection('awards', 'Auszeichnungen'),
@@ -294,88 +324,89 @@ function buildThomasWendt() {
             location: 'Flensburg, Deutschland',
             website: { url: '', label: '' },
             customFields: [],
-            picture: pic(),
         },
+        picture: picture(),
+        summary: {
+            content: '<p>Erfahrener Verwaltungsfachangestellter mit 20 Jahren Berufserfahrung in der Kommunalverwaltung. Fundierte Kenntnisse in Sachbearbeitung, Dokumentenmanagement und der Anwendung einschlägiger Verwaltungsvorschriften (VwGO, BGB). Sucht nach einer neuen beruflichen Herausforderung außerhalb des öffentlichen Dienstes.</p>',
+        },
+        customSections: [],
         sections: {
-            summary: {
-                name: 'Profil', columns: 1, separateLinks: true, visible: true, id: 'summary',
-                content: '<p>Erfahrener Verwaltungsfachangestellter mit 20 Jahren Berufserfahrung in der Kommunalverwaltung. Fundierte Kenntnisse in Sachbearbeitung, Dokumentenmanagement und der Anwendung einschlägiger Verwaltungsvorschriften. Sucht nach einer neuen beruflichen Herausforderung außerhalb des öffentlichen Dienstes.</p>',
+            profiles: {
+                title: 'Profile', hidden: false, columns: 4, separateLinks: true, id: 'profiles',
+                items: [],
             },
             experience: {
-                name: 'Berufserfahrung', columns: 1, separateLinks: true, visible: true, id: 'experience',
+                title: 'Berufserfahrung', hidden: false, columns: 1, separateLinks: true, id: 'experience',
                 items: [
                     {
                         id: uid(), hidden: false,
                         company: 'Stadt Flensburg – Ordnungsamt',
                         position: 'Sachbearbeiter',
                         location: 'Flensburg',
-                        period: { startDate: '2012-01', endDate: '' },
-                        website: { url: '', label: '' },
-                        description: '<ul><li>Bearbeitung von Anträgen und Verwaltungsvorgängen nach VwGO und BGB</li><li>Schriftverkehr mit Bürgern, Behörden und Dienstleistern</li><li>Dokumentenmanagement und Aktenführung</li><li>Anwendung kommunaler IT-Systeme (SAP R/3)</li></ul>',
-                        roles: [],
+                        period: period('2012-01'),
+                        url: '',
+                        summary: '<ul><li>Bearbeitung von Anträgen und Verwaltungsvorgängen nach VwGO und BGB</li><li>Schriftverkehr mit Bürgern, Behörden und Dienstleistern</li><li>Dokumentenmanagement und Aktenführung</li><li>Anwendung kommunaler IT-Systeme (SAP R/3)</li></ul>',
+                        keywords: [],
                     },
                     {
                         id: uid(), hidden: false,
                         company: 'Stadt Flensburg – Einwohnermeldeamt',
                         position: 'Sachbearbeiter',
                         location: 'Flensburg',
-                        period: { startDate: '2006-03', endDate: '2011-12' },
-                        website: { url: '', label: '' },
-                        description: '<ul><li>An- und Abmeldung von Einwohnern, Ausstellung von Meldebescheinigungen</li><li>Bearbeitung von Passanträgen und Personalausweisen</li><li>Bürgerberatung am Schalter</li></ul>',
-                        roles: [],
+                        period: period('2006-03', '2011-12'),
+                        url: '',
+                        summary: '<ul><li>An- und Abmeldung von Einwohnern, Ausstellung von Meldebescheinigungen</li><li>Bearbeitung von Passanträgen und Personalausweisen</li><li>Bürgerberatung am Schalter</li></ul>',
+                        keywords: [],
                     },
                     {
                         id: uid(), hidden: false,
                         company: 'Kreis Schleswig-Flensburg',
                         position: 'Verwaltungsangestellter',
                         location: 'Schleswig',
-                        period: { startDate: '2004-08', endDate: '2006-02' },
-                        website: { url: '', label: '' },
-                        description: '<ul><li>Allgemeine Verwaltungsaufgaben und Sachbearbeitung</li><li>Datenpflege in kommunalen IT-Systemen</li></ul>',
-                        roles: [],
+                        period: period('2004-08', '2006-02'),
+                        url: '',
+                        summary: '<ul><li>Allgemeine Verwaltungsaufgaben und Sachbearbeitung</li><li>Datenpflege in kommunalen IT-Systemen</li></ul>',
+                        keywords: [],
                     },
                 ],
             },
             education: {
-                name: 'Ausbildung', columns: 1, separateLinks: true, visible: true, id: 'education',
+                title: 'Ausbildung', hidden: false, columns: 1, separateLinks: true, id: 'education',
                 items: [
                     {
                         id: uid(), hidden: false,
-                        school: 'Stadt Flensburg / Berufsschule Flensburg',
-                        degree: 'Ausbildung',
+                        institution: 'Stadt Flensburg / Berufsschule Flensburg',
+                        studyType: 'Ausbildung',
                         area: 'Verwaltungsfachangestellter (DQR 4)',
-                        grade: '',
+                        score: '',
                         location: 'Flensburg',
-                        period: { startDate: '2001-08', endDate: '2004-07' },
-                        website: { url: '', label: '' },
-                        description: '',
+                        period: period('2001-08', '2004-07'),
+                        url: '',
+                        summary: '',
+                        keywords: [],
                     },
                 ],
             },
             certifications: {
-                name: 'Qualifikationen', columns: 1, separateLinks: true, visible: true, id: 'certifications',
+                title: 'Qualifikationen', hidden: false, columns: 1, separateLinks: true, id: 'certifications',
                 items: [
-                    { id: uid(), hidden: false, title: 'Verwaltungsfachangestellter (DQR 4)', issuer: 'Stadt Flensburg', date: '2004-07', website: { url: '', label: '' }, description: '' },
+                    { id: uid(), hidden: false, name: 'Verwaltungsfachangestellter (DQR 4)', issuer: 'Stadt Flensburg', date: 'Jul 2004', url: '', summary: '' },
                 ],
             },
             skills: {
-                name: 'Kenntnisse', columns: 1, separateLinks: true, visible: true, id: 'skills',
+                title: 'Kenntnisse', hidden: false, columns: 1, separateLinks: true, id: 'skills',
                 items: [
-                    { id: uid(), hidden: false, name: 'Verwaltungsrecht (VwGO, BGB)', level: 5, proficiency: 'Expert', icon: '', keywords: [] },
-                    { id: uid(), hidden: false, name: 'Aktenführung & Dokumentation', level: 5, proficiency: 'Expert', icon: '', keywords: [] },
-                    { id: uid(), hidden: false, name: 'SAP R/3', level: 3, proficiency: 'Intermediate', icon: '', keywords: [] },
-                    { id: uid(), hidden: false, name: 'MS Office (Word, Excel)', level: 3, proficiency: 'Intermediate', icon: '', keywords: [] },
-                    { id: uid(), hidden: false, name: 'Bürgerservice & Beratung', level: 4, proficiency: 'Advanced', icon: '', keywords: [] },
+                    { id: uid(), hidden: false, name: 'Verwaltungsrecht (VwGO, BGB)', level: 5, description: '' },
+                    { id: uid(), hidden: false, name: 'Aktenführung & Dokumentation', level: 5, description: '' },
+                    { id: uid(), hidden: false, name: 'SAP R/3', level: 3, description: '' },
+                    { id: uid(), hidden: false, name: 'MS Office (Word, Excel)', level: 3, description: '' },
+                    { id: uid(), hidden: false, name: 'Bürgerservice & Beratung', level: 4, description: '' },
                 ],
             },
-            profiles: {
-                name: 'Profile', columns: 4, separateLinks: true, visible: true, id: 'profiles',
-                items: [],
-            },
             languages: {
-                name: 'Sprachen', columns: 1, separateLinks: true, visible: true, id: 'languages',
+                title: 'Sprachen', hidden: false, columns: 1, separateLinks: true, id: 'languages',
                 items: [
-                    { id: uid(), hidden: false, language: 'Deutsch', fluency: 'Muttersprache', level: 5 },
+                    { id: uid(), hidden: false, name: 'Deutsch', level: 5, description: 'Muttersprache' },
                 ],
             },
             awards: emptySection('awards', 'Auszeichnungen'),
@@ -391,31 +422,28 @@ function buildThomasWendt() {
 
 // ── Public API ────────────────────────────────────────────────────────────────
 
-/** Liest gespeicherte CV-URLs aus localStorage. */
 export function loadCvUrls() {
     try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); }
     catch { return {}; }
 }
 
-/** Speichert CV-URLs in localStorage. */
 export function saveCvUrls(urls) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(urls));
 }
 
-/** Löscht gespeicherte CV-URLs (zum Neu-Erstellen). */
 export function clearCvUrls() {
     localStorage.removeItem(STORAGE_KEY);
 }
 
 const CV_DEFINITIONS = [
-    { key: 'max', label: 'Max Berger', build: buildMaxBerger },
-    { key: 'sarah', label: 'Sarah Klein', build: buildSarahKlein },
-    { key: 'thomas', label: 'Thomas Wendt', build: buildThomasWendt },
+    { key: 'max',    label: 'Max Berger',    slug: 'max-berger-industriekaufmann',    build: buildMaxBerger },
+    { key: 'sarah',  label: 'Sarah Klein',   slug: 'sarah-klein-einzelhandel',        build: buildSarahKlein },
+    { key: 'thomas', label: 'Thomas Wendt',  slug: 'thomas-wendt-verwaltung',         build: buildThomasWendt },
 ];
 
 /**
- * Erstellt alle 3 CVs auf rxresu.me und gibt ein Objekt { max, sarah, thomas }
- * mit den jeweiligen PDF-URLs zurück. Ruft onProgress(key, status) auf.
+ * Erstellt alle 3 CVs auf rxresu.me und gibt { max, sarah, thomas } mit PDF-URLs zurück.
+ * Ruft onProgress(key, status, url?, errorMsg?) auf.
  */
 export async function createAllCVs(onProgress) {
     const urls = {};
@@ -423,20 +451,24 @@ export async function createAllCVs(onProgress) {
     for (const def of CV_DEFINITIONS) {
         onProgress?.(def.key, 'creating');
         try {
-            // 1. Resume via Import-Endpunkt anlegen
             const data = def.build();
+
+            // Resume via Import-Endpunkt anlegen
             const created = await apiCall('POST', '/resumes/import', { data });
-            const id = typeof created === 'string' ? created : (created.id ?? created);
+            const id = typeof created === 'string' ? created
+                : (created.id ?? created.data?.id ?? null);
+
+            if (!id) throw new Error('Keine Resume-ID in der Antwort: ' + JSON.stringify(created));
 
             onProgress?.(def.key, 'pdf');
 
-            // 2. PDF-URL abrufen
+            // PDF-URL abrufen
             let pdfUrl = null;
             try {
                 const pdfRes = await apiCall('GET', `/resumes/${id}/pdf`);
                 pdfUrl = typeof pdfRes === 'string' ? pdfRes : (pdfRes.url ?? null);
             } catch {
-                // PDF-Generierung kann etwas dauern – URL als null belassen
+                // PDF-Generierung asynchron — URL später abrufbar
             }
 
             urls[def.key] = pdfUrl;

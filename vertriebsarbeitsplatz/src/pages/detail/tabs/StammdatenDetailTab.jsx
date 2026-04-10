@@ -1,4 +1,5 @@
 import Card from '../../../components/ui/Card';
+import LebenszeitstrahlCard from '../../../components/ui/LebenszeitstrahlCard';
 import { getLang } from '../../../utils/langHelper';
 import DataTable from '../../../components/ui/DataTable';
 import { StatusBadge, SparteBadge } from '../../../components/ui/Badge';
@@ -275,6 +276,9 @@ export default function StammdatenDetailTab({ kunde }) {
           </div>
         </Card>
       </div>
+
+      {/* Lebenszeitstrahl – Banking only (FIDA + Open Finance Kontext) */}
+      {modeId === 'banking' && <LebenszeitstrahlCard kunde={kunde} />}
 
       {/* Produkte/Fremdprodukte sind in den Tabs "Produkte" und "Open Finance" */}
     </div>

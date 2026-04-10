@@ -350,34 +350,32 @@ export default function GlobalHeader({ currentMode, onModeChange }) {
         </div>
 
         <div className="flex items-center gap-3">
-          {/* Insurance-Modus: rxresume.me Generier-Button */}
-          {isInsuranceMode && (
-            <div className="relative">
-              <button
-                onClick={() => setCvDropdownOpen(v => !v)}
-                className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/15 hover:bg-white/25 transition-colors border border-white/20 text-white text-xs font-medium"
-                title="CVs auf rxresu.me generieren"
-              >
-                <FileText size={14} strokeWidth={1.75} />
-                <span>CVs</span>
-                {Object.values(cvUrls).some(Boolean) && (
-                  <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#4ade80', display: 'inline-block' }} />
-                )}
-                <ChevronDown size={12} className={clsx('text-white/60 transition-transform', cvDropdownOpen && 'rotate-180')} />
-              </button>
-              {cvDropdownOpen && (
-                <CvGeneratePanel
-                  demoProfiles={hrData.ui.demoProfiles}
-                  profiles={hrData.profiles}
-                  cvUrls={cvUrls}
-                  onGenerated={handleCvsGenerated}
-                  onClose={() => setCvDropdownOpen(false)}
-                />
+          {/* rxresume.me Generier-Button — in beiden Modi sichtbar */}
+          <div className="relative">
+            <button
+              onClick={() => setCvDropdownOpen(v => !v)}
+              className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/15 hover:bg-white/25 transition-colors border border-white/20 text-white text-xs font-medium"
+              title="CVs auf rxresu.me generieren"
+            >
+              <FileText size={14} strokeWidth={1.75} />
+              <span>CVs</span>
+              {Object.values(cvUrls).some(Boolean) && (
+                <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#4ade80', display: 'inline-block' }} />
               )}
-            </div>
-          )}
+              <ChevronDown size={12} className={clsx('text-white/60 transition-transform', cvDropdownOpen && 'rotate-180')} />
+            </button>
+            {cvDropdownOpen && (
+              <CvGeneratePanel
+                demoProfiles={hrData.ui.demoProfiles}
+                profiles={hrData.profiles}
+                cvUrls={cvUrls}
+                onGenerated={handleCvsGenerated}
+                onClose={() => setCvDropdownOpen(false)}
+              />
+            )}
+          </div>
 
-          {/* Generic-Modus: statische CV-Vorlagen */}
+          {/* Generic-Modus: zusätzliche statische CV-Vorlagen */}
           {!isInsuranceMode && cvTemplates.length > 0 && (
             <div className="relative">
               <button

@@ -80,7 +80,7 @@ function meta(primary = '#1d4ed8') {
         },
         design: {
             colors: { primary, background: '#ffffff', text: '#000000' },
-            level: { icon: 'circle', type: 'bar' },
+            level: { icon: 'circle', type: 'progress-bar' },
         },
         typography: {
             body: { fontFamily: 'IBM Plex Serif', fontWeights: ['regular'], fontSize: 14, lineHeight: 1.5 },

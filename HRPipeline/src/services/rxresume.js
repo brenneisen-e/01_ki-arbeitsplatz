@@ -38,11 +38,13 @@ function emptySection(id, title) {
     return { title, columns: 1, hidden: true, items: [] };
 }
 
+const BASE_URL = 'https://kiarbeitsplatz.pages.dev/HRPipeline/dist/images';
+
 /** Profil-Foto-Objekt */
-function pic() {
+function pic(filename) {
     return {
         hidden: false,
-        url: '',
+        url: filename ? `${BASE_URL}/${filename}` : '',
         size: 64,
         aspectRatio: 1,
         borderRadius: 0,
@@ -100,7 +102,7 @@ function buildMaxBerger() {
             website: { url: '', label: '' },
             customFields: [],
         },
-        picture: pic(),
+        picture: pic('AdobeStock_624564221.jpeg'),
         summary: {
             title: 'Zusammenfassung',
             columns: 1,
@@ -216,7 +218,7 @@ function buildSarahKlein() {
             website: { url: '', label: '' },
             customFields: [],
         },
-        picture: pic(),
+        picture: pic('AdobeStock_252262042.jpeg'),
         summary: {
             title: 'Zusammenfassung',
             columns: 1,
@@ -331,7 +333,7 @@ function buildThomasWendt() {
             website: { url: '', label: '' },
             customFields: [],
         },
-        picture: pic(),
+        picture: pic('AdobeStock_361342769.jpeg'),
         summary: {
             title: 'Zusammenfassung',
             columns: 1,

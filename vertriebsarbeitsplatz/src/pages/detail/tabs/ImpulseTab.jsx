@@ -5,7 +5,8 @@ import { PrioBadge, QuellenBadge } from '../../../components/ui/Badge';
 import { formatEur } from '../../../utils/formatters';
 import { useMode } from '../../../hooks/useMode';
 import useTranslation from '../../../i18n/useTranslation';
-import { Shield, Zap, RefreshCw, CheckCircle, XCircle, ChevronDown, Calendar, User, ExternalLink, TrendingUp, ArrowRight, Sparkles } from 'lucide-react';
+import { Shield, Landmark, ShieldCheck, LineChart, CheckCircle, XCircle, ChevronDown, Calendar, Mail, ExternalLink, TrendingUp, ArrowRight, Sparkles } from 'lucide-react';
+import AnschreibenModal from '../../../components/ui/AnschreibenModal';
 
 const ABSICHERUNGS_TYPEN = [
   { key: 'bu' },
@@ -19,15 +20,46 @@ const ABSICHERUNGS_TYPEN = [
   { key: 'wohngebaeude' },
 ];
 
+// Produkt-Kategorien nach denen die Leads/Potenziale geclustert werden.
+// Die Reihenfolge ist die Anzeige-Reihenfolge.
+const PRODUKT_KATEGORIEN = [
+  { key: 'bank',          label: 'Bankprodukte',          icon: Landmark,    color: '#0f766e' },
+  { key: 'versicherung',  label: 'Versicherungsprodukte', icon: ShieldCheck, color: '#b45309' },
+  { key: 'anlage',        label: 'Anlageprodukte',        icon: LineChart,   color: '#6d28d9' },
+];
+
+// Priorität → numerische Sortier-Reihenfolge
+const PRIO_ORDER = { sehr_hoch: 0, kritisch: 1, hoch: 2, mittel: 3, niedrig: 4 };
+
+// Kategorisiert ein Potential anhand seiner Titel/Empfehlung/Beschreibung
+function getProduktKategorie(p) {
+  const t = ((p.titel || '') + ' ' + (p.produktEmpfehlung || '') + ' ' + (p.beschreibung || '')).toLowerCase();
+  if (/versicher|haftpflicht|\brlv\b|\bbu\b|unfall|tierhalter|hausrat|r\+v|berufsunf/.test(t)) return 'versicherung';
+  if (/depot|sparplan|uniondepot|union investment|fonds|\betf\b|wertpapier|trade republic|aktien/.test(t)) return 'anlage';
+  return 'bank';
+}
+
 export default function ImpulseTab({ kunde }) {
   const { t, tn } = useTranslation();
   const absicherung = kunde.absicherung || { vorhanden: [], fehlend: [] };
   const potentiale = kunde.potentiale || [];
-  const whitespots = useMemo(() => potentiale.filter(p => p.typ === 'whitespot'), [potentiale]);
-  const anpassungen = useMemo(() => potentiale.filter(p => p.typ === 'anpassung'), [potentiale]);
-  const crossSell = useMemo(() => potentiale.filter(p => p.typ === 'cross_sell' || p.typ === 'konsolidierung' || p.typ === 'nextgen' || p.typ === 'beratung'), [potentiale]);
   const luecken = absicherung.fehlend?.length || 0;
   const [expandedIndex, setExpandedIndex] = useState(null);
+  const [anschreibenFor, setAnschreibenFor] = useState(null);
+
+  // Gruppiere alle Potenziale nach Produktkategorie und sortiere innerhalb
+  // jeder Gruppe nach Priorität (sehr_hoch → kritisch → hoch → mittel → niedrig).
+  const gruppiert = useMemo(() => {
+    const g = { bank: [], versicherung: [], anlage: [] };
+    potentiale.forEach(p => {
+      const kat = getProduktKategorie(p);
+      g[kat].push(p);
+    });
+    Object.keys(g).forEach(k => {
+      g[k].sort((a, b) => (PRIO_ORDER[a.prioritaet] ?? 9) - (PRIO_ORDER[b.prioritaet] ?? 9));
+    });
+    return g;
+  }, [potentiale]);
 
   return (
     <div className="space-y-4">
@@ -63,85 +95,46 @@ export default function ImpulseTab({ kunde }) {
         </div>
       </Card>
 
-      {/* Whitespots (Neugeschaeft) */}
-      {whitespots.length > 0 && (
-        <Card hover={false}>
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-2">
-              <Zap size={20} style={{ color: 'var(--mode-primary-light)' }} strokeWidth={1.75} />
-              <h3 className="font-semibold text-slate-800">{t('whitespotsNeugeschaeft')}</h3>
+      {/* Leads / Potenziale geclustert nach Produktkategorie */}
+      {PRODUKT_KATEGORIEN.map(kat => {
+        const list = gruppiert[kat.key] || [];
+        if (list.length === 0) return null;
+        const Icon = kat.icon;
+        return (
+          <Card key={kat.key} hover={false}>
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <Icon size={20} style={{ color: kat.color }} strokeWidth={1.75} />
+                <h3 className="font-semibold text-slate-800">{kat.label}</h3>
+              </div>
+              <span className="text-sm text-slate-400">{list.length} Potentiale</span>
             </div>
-            <span className="text-sm text-slate-400">{whitespots.length} Potentiale</span>
-          </div>
-          <div className="space-y-3">
-            {whitespots.map((p, i) => {
-              const key = `ws-${i}`;
-              return (
-                <PotentialCard
-                  key={key}
-                  potential={p}
-                  kunde={kunde}
-                  expanded={expandedIndex === key}
-                  onToggle={() => setExpandedIndex(expandedIndex === key ? null : key)}
-                  t={t}
-                />
-              );
-            })}
-          </div>
-        </Card>
-      )}
-
-      {/* Anpassungsbedarfe */}
-      {anpassungen.length > 0 && (
-        <Card hover={false}>
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-2">
-              <RefreshCw size={20} className="text-amber-500" strokeWidth={1.75} />
-              <h3 className="font-semibold text-slate-800">{t('anpassungsbedarfe')}</h3>
+            <div className="space-y-3">
+              {list.map((p, i) => {
+                const key = `${kat.key}-${i}`;
+                return (
+                  <PotentialCard
+                    key={key}
+                    potential={p}
+                    kunde={kunde}
+                    expanded={expandedIndex === key}
+                    onToggle={() => setExpandedIndex(expandedIndex === key ? null : key)}
+                    onAnschreiben={() => setAnschreibenFor(p)}
+                    t={t}
+                  />
+                );
+              })}
             </div>
-            <span className="text-sm text-slate-400">{anpassungen.length} Potentiale</span>
-          </div>
-          <div className="space-y-3">
-            {anpassungen.map((p, i) => {
-              const key = `an-${i}`;
-              return (
-                <PotentialCard
-                  key={key}
-                  potential={p}
-                  kunde={kunde}
-                  expanded={expandedIndex === key}
-                  onToggle={() => setExpandedIndex(expandedIndex === key ? null : key)}
-                  t={t}
-                />
-              );
-            })}
-          </div>
-        </Card>
-      )}
+          </Card>
+        );
+      })}
 
-      {/* Cross-Sell / Sonstiges */}
-      {crossSell.length > 0 && (
-        <Card hover={false}>
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="font-semibold text-slate-800">{t('weiterePotentiale')}</h3>
-            <span className="text-sm text-slate-400">{crossSell.length} Potentiale</span>
-          </div>
-          <div className="space-y-3">
-            {crossSell.map((p, i) => {
-              const key = `cs-${i}`;
-              return (
-                <PotentialCard
-                  key={key}
-                  potential={p}
-                  kunde={kunde}
-                  expanded={expandedIndex === key}
-                  onToggle={() => setExpandedIndex(expandedIndex === key ? null : key)}
-                  t={t}
-                />
-              );
-            })}
-          </div>
-        </Card>
+      {anschreibenFor && (
+        <AnschreibenModal
+          kunde={kunde}
+          potential={anschreibenFor}
+          onClose={() => setAnschreibenFor(null)}
+        />
       )}
     </div>
   );
@@ -158,8 +151,8 @@ function quellenLabel(quellen, t) {
   return (quellen || []).map(q => map[q] || q).join(' + ');
 }
 
-function PotentialCard({ potential: p, kunde, expanded, onToggle, t }) {
-  const { config, navigateTo } = useMode();
+function PotentialCard({ potential: p, kunde, expanded, onToggle, onAnschreiben, t }) {
+  const { config } = useMode();
 
   return (
     <div
@@ -253,14 +246,14 @@ function PotentialCard({ potential: p, kunde, expanded, onToggle, t }) {
             </h5>
             <div className="flex flex-wrap gap-2">
               <button
-                onClick={(e) => { e.stopPropagation(); navigateTo('detail', { kundeId: kunde.id, tab: 'stammdaten' }); }}
+                onClick={(e) => { e.stopPropagation(); onAnschreiben?.(); }}
                 className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium text-white transition-colors"
                 style={{ backgroundColor: config.colors.primary }}
                 onMouseEnter={(e) => e.currentTarget.style.backgroundColor = config.colors.primaryLight}
                 onMouseLeave={(e) => e.currentTarget.style.backgroundColor = config.colors.primary}
               >
-                <User size={14} />
-                {t('kundeOeffnen')}
+                <Sparkles size={14} />
+                Anschreiben formulieren
               </button>
               <button
                 className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium border border-slate-300 text-slate-700 hover:bg-slate-100 transition-colors"

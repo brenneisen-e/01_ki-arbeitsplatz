@@ -224,8 +224,12 @@
   --_fg: white;
   --_badge-bg: rgba(255,255,255,0.2);
   --_badge-border: rgba(255,255,255,0.35);
-  background-color: var(--mode-primary);
-  border-color: transparent;
+  /* `background` shorthand with !important so it wins against inline
+     `style={{ background: ... }}` on cards (e.g. the pastel KPI tile). */
+  background: var(--mode-primary) !important;
+  background-color: var(--mode-primary) !important;
+  background-image: none !important;
+  border-color: transparent !important;
   color: white;
 }
 .row-hover:hover {

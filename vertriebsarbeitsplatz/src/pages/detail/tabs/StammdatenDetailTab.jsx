@@ -175,7 +175,7 @@ export default function StammdatenDetailTab({ kunde }) {
               {kunde.linkedin && (
                 <>
                   <span>·</span>
-                  <span className="flex items-center gap-1"><Linkedin size={12} className="text-blue-500" /> {kunde.linkedin.kontakte}+ Kontakte</span>
+                  <span className="flex items-center gap-1"><Linkedin size={12} className="text-blue-500" /> {kunde.linkedin.kontakte}+ {t('kontakte')}</span>
                 </>
               )}
             </div>
@@ -198,12 +198,7 @@ export default function StammdatenDetailTab({ kunde }) {
               const birthDate = new Date(birthYear, today.getMonth() - 3, 15);
               return birthDate.toLocaleDateString(getLang() === 'en' ? 'en-GB' : 'de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
             })()} />
-            <InfoRow label={t('alter')} value={`${kunde.alter} ${t('jahre')} (${(() => {
-              const today = new Date();
-              const birthYear = today.getFullYear() - kunde.alter;
-              const birthDate = new Date(birthYear, today.getMonth() - 3, 15);
-              return birthDate.toLocaleDateString(getLang() === 'en' ? 'en-GB' : 'de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
-            })()})`} />
+            <InfoRow label={t('alter')} value={`${kunde.alter} ${t('jahre')}`} />
             <InfoRow label={t('beruf')} value={translateBeruf(kunde.beruf, lang)} />
             {kunde.arbeitgeber && (
               <ArbeitgeberRow arbeitgeber={kunde.arbeitgeber} t={t} />
@@ -222,7 +217,7 @@ export default function StammdatenDetailTab({ kunde }) {
             {kunde.linkedin && (
               <div className="flex items-center gap-2 pt-2 border-t border-slate-100 mt-2">
                 <Linkedin size={14} className="text-blue-600" />
-                <span className="text-slate-500">LinkedIn: {kunde.linkedin.kontakte}+ Kontakte</span>
+                <span className="text-slate-500">{kunde.linkedin.kontakte}+ {t('kontakte')}</span>
                 <span className="text-slate-400">&middot; {kunde.linkedin.branchen?.join(', ')}</span>
               </div>
             )}

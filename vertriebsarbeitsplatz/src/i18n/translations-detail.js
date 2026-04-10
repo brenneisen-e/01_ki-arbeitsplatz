@@ -444,7 +444,7 @@ const translationsDetail = {
   'schritt.einkommensangaben': { de: 'Einkommensangaben', en: 'Income Details' },
   'schritt.kontoverbindung': { de: 'Kontoverbindung', en: 'Bank Details' },
   'schritt.legitimation': { de: 'Legitimation', en: 'Verification' },
-  'schritt.legitimationVideo': { de: 'Legitimation (VideoIdent)', en: 'Verification (VideoIdent)' },
+  'schritt.legitimationVideoIdent': { de: 'Legitimation (VideoIdent)', en: 'Verification (VideoIdent)' },
   'schritt.unterschrift': { de: 'Unterschrift', en: 'Signature' },
 
   // ─── FinanzprofilTab labels ───

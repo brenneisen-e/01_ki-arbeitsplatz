@@ -56,7 +56,7 @@ export default function KommunikationTab({ kunde }) {
           return (
             <Card key={typ} className="p-3" padding={false}>
               <div className="flex items-center gap-3">
-                <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${colors.bg}`}>
+                <div className={`w-8 h-8 rounded-lg flex items-center justify-center kpi-icon-box ${colors.bg}`}>
                   <Icon size={16} className={colors.text} />
                 </div>
                 <div>
@@ -78,8 +78,8 @@ export default function KommunikationTab({ kunde }) {
             className={clsx(
               'px-3 py-1.5 rounded-lg text-sm font-medium transition-colors',
               filterTyp === typ
-                ? 'bg-slate-800 text-white'
-                : 'bg-white text-slate-500 border border-slate-200 hover:bg-slate-50'
+                ? 'bg-slate-800 text-white border border-slate-800'
+                : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-100 hover:border-slate-400 hover:text-slate-800'
             )}
           >
             {typ === 'alle' ? `${t('alle')} (${kommunikation.length})` : `${TYP_LABELS[typ] || typ} (${typCounts[typ] || 0})`}

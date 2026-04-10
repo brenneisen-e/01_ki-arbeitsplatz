@@ -1,11 +1,11 @@
 // B1: Klaus Fischer
 export const B1 = {
-  name: 'Klaus Fischer', id: 'BK00001', alter: 41,
+  name: 'Klaus Fischer', id: 'BK00001', alter: 32,
   beruf: 'Vertriebsleiter', arbeitgeber: { name: 'Continental AG', quelle: 'linkedin', bestaetigt: false }, nettoeinkommen: 4500,
   familienstand: 'verheiratet',
-  partner: { name: 'Sabine', beruf: 'Teilzeit Verwaltung', einkommen: 1200 },
-  kinder: [{ name: 'Lukas', alter: 12 }, { name: 'Marie', alter: 9 }],
-  wohnsituation: 'Eigentum', wohnflaeche: 150, adresse: 'Gartenstr. 18, 35390 Gießen',
+  partner: { name: 'Sabine', einkommen: 1200 },
+  kinder: [{ name: 'Lukas', alter: 4 }, { name: 'Marie', alter: 1 }],
+  wohnsituation: 'Miete', wohnflaeche: 88, adresse: 'Gartenstr. 18, 35390 Gießen',
   tiere: { typ: null, rasse: null, name: null, vermutet: true, quelle: 'kontoumsaetze', umsaetze: [{ empfaenger: 'Fressnapf Gießen', betrag: -75, haeufigkeit: 'monatlich' }, { empfaenger: 'Tierarztpraxis Dr. Schäfer', betrag: -110, haeufigkeit: 'quartalsweise' }] },
   nps: 7, risikoscore: 30, potentialScore: 4.2, abwanderungsrisiko: 'mittel',
   risikoSignale: [
@@ -23,25 +23,25 @@ export const B1 = {
     },
   ],
   eigeneProdukte: [
-    { typ: 'girokonto', sparte: 'konto', produkt: 'VR-MeinKonto Plus', details: 'Gehaltseingang 4.500\u20ac netto', praemie: 0, seit: '2015-01', status: 'aktiv' },
-    { typ: 'sparkonto', sparte: 'sparen', produkt: 'VR-Sparkonto', details: '0,5% Zins', praemie: 0, seit: '2015-01', status: 'aktiv', volumen: 15000 },
-    { typ: 'baufi', sparte: 'kredit', produkt: 'VR-Baufinanzierung', details: '185k Rest, 2,1%, ZINSBINDUNG 04/2026!', praemie: 980, seit: '2016-06', status: 'aktiv', volumen: 185000 },
-    { typ: 'visa', sparte: 'karte', produkt: 'VR-Visa Gold', details: 'Limit 5k', praemie: 60, seit: '2018-01', status: 'aktiv' },
-    { typ: 'bsv', sparte: 'sparen', produkt: 'Schwäbisch Hall BSV', details: 'Zuteilungsreif 2026', praemie: 0, seit: '2012-01', status: 'aktiv', volumen: 30000 },
+    { typ: 'girokonto', sparte: 'konto', produkt: 'VR-MeinKonto Plus', details: 'Gehaltseingang 4.500\u20ac netto', praemie: 0, seit: '2018-03', status: 'aktiv' },
+    { typ: 'sparkonto', sparte: 'sparen', produkt: 'VR-Sparkonto', details: '0,5% Zins', praemie: 0, seit: '2018-03', status: 'aktiv', volumen: 15000 },
+    { typ: 'visa', sparte: 'karte', produkt: 'VR-Visa Gold', details: 'Limit 5k', praemie: 60, seit: '2019-01', status: 'aktiv' },
   ],
   fremdProdukte: [
     { typ: 'depot', institut: 'Trade Republic', details: 'ETF Sparplan 200/mtl', volumen: 28000, consent: true },
     { typ: 'tagesgeld', institut: 'ING', details: '2,0%', volumen: 22000, consent: true },
+    { typ: 'bausparen', institut: 'Schwäbisch Hall', details: 'Bausparvertrag, zuteilungsreif Q2/2026', volumen: 30000, consent: true },
+    { typ: 'kredit', institut: 'KfW', details: 'KfW-Studienkredit, läuft 06/2026 aus (840€/Mon. werden frei)', volumen: 1680, consent: true },
     { typ: 'versicherung', produktart: 'KFZ-Vollkasko', institut: 'HUK', details: 'VW Tiguan, SF-12', volumen: 780, consent: true },
     { typ: 'versicherung', produktart: 'Hausrat', institut: 'HUK', details: 'Im B\u00fcndel', volumen: 0, consent: true },
     { typ: 'versicherung', produktart: 'Haftpflicht', institut: 'HUK', details: 'Familie', volumen: 0, consent: true },
     { typ: 'versicherung', produktart: 'Berufsunf\u00e4higkeit', institut: 'HDI', details: 'BU 2.000\u20ac/mtl.', volumen: 1800, consent: true },
     { typ: 'versicherung', produktart: 'Privathaftpflicht', institut: 'Allianz', details: 'Privat', volumen: 85, consent: false },
-    { typ: 'versicherung', produktart: 'Lebensversicherung', institut: 'Alte Leipziger', details: 'Ablauf 2030', volumen: 65000, consent: true },
   ],
   openFinance: {
     geldmarkt: [
       { produkt: 'Tagesgeldkonto', institut: 'ING', volumen: 22000, zinssatz: '2,0% p.a.', laufzeit: 'Flexibel' },
+      { produkt: 'Bausparvertrag (zuteilungsreif 04/2026)', institut: 'Schwäbisch Hall', volumen: 30000, zinssatz: '0,5% Guthaben', laufzeit: 'Zuteilungsreif Q2/2026' },
     ],
     kapitalmarkt: [
       { produkt: 'Trade Republic Depot', institut: 'Trade Republic', volumen: 28000, sparrate: '200\u20ac/Mon.', positionen: [
@@ -55,49 +55,22 @@ export const B1 = {
       { produkt: 'Hausrat', institut: 'HUK', details: 'Im B\u00fcndel', praemie: null, leistungen: ['Fahrraddiebstahl'] },
       { produkt: 'Haftpflicht', institut: 'HUK', details: 'Familie', praemie: null, leistungen: ['Schl\u00fcsselsch\u00e4den'] },
       { produkt: 'Berufsunf\u00e4higkeit', institut: 'HDI', details: 'BU 2.000\u20ac/mtl.', praemie: 1800, deckungssumme: '2.000\u20ac/mtl.' },
-      { produkt: 'Lebensversicherung', institut: 'Alte Leipziger', details: 'Ablauf 2030', praemie: null, deckungssumme: 'R\u00fcckkaufswert 65k' },
     ],
-    finanzierungen: [],
+    finanzierungen: [
+      { produkt: 'KfW-Studienkredit', institut: 'KfW', restschuld: 1680, zinssatz: '0,75 % p.a.', rate: '840 €/Mon.', details: 'Läuft in 2 Monaten aus → 840 €/Mon. werden frei' },
+    ],
   },
   transaktionen: [
     { kategorie: 'gehalt', betrag: 4500, empfaenger: 'Arbeitgeber' },
     { kategorie: 'gehalt_partner', betrag: 1200, empfaenger: 'Stadt' },
-    { kategorie: 'kindergeld', betrag: 500, empfaenger: 'Familienkasse' },
-    { kategorie: 'baufi', betrag: -980, empfaenger: 'Volksbank' },
+    { kategorie: 'miete', betrag: -980, empfaenger: 'Vermieter Gartenstr. 18' },
+    { kategorie: 'kredit', betrag: -840, empfaenger: 'KfW (läuft 06/2026 aus)' },
     { kategorie: 'sparplan', betrag: -200, empfaenger: 'Trade Republic' },
     { kategorie: 'versicherung', betrag: -310, empfaenger: 'HUK, HDI, Allianz' },
     { kategorie: 'konsum', betrag: -1800, empfaenger: 'Diverse' },
   ],
   potentiale: [
-    // 1. Zinsbindungsende Baufinanzierung (kritisch)
-    { titel: 'Zinsbindungsende Baufinanzierung', typ: 'anpassung', quellen: ['bestand'], prioritaet: 'kritisch', volumen: 185000, volumenTyp: 'einmalig',
-      beschreibung: 'Baufinanzierung 185.000\u20ac Restschuld, Zinsbindung endet 04/2026. Forward-Darlehen sichern!',
-      kiDescription: 'KI-Analyse: Die Baufinanzierung von Herrn Fischer (250.000 \u20ac urspr\u00fcnglich, Restschuld 185.000 \u20ac) hat aktuell einen Zins von 1,2 % \u2013 die Zinsbindung endet in nur einem Monat (04/2026). Bei Prolongation ohne Verhandlung steigt der Marktzins auf ca. 3,5 %, was eine Mehrbelastung von +385 \u20ac/mtl. bedeutet. Ein Forward-Darlehen kann jetzt noch 3,3 % sichern \u2013 bei weiterem Warten drohen 3,8 % oder mehr. Empfehlung: Sofort Forward-Darlehen abschlie\u00dfen und BSV-Guthaben (30.000 \u20ac) als Sondertilgung pr\u00fcfen.',
-      empfohleneAktion: 'termin_vereinbaren', produktEmpfehlung: 'VR-Baufinanzierung Forward', status: 'termin',
-      herleitung: [
-        { label: 'Datenquelle', value: 'Bestandsanalyse \u2013 Kreditdaten' },
-        { label: 'Urspr\u00fcngliches Darlehen', value: '250.000 \u20ac' },
-        { label: 'Restschuld', value: '185.000 \u20ac' },
-        { label: 'Aktueller Zins', value: '1,2 % fest' },
-        { label: 'Zinsbindungsende', value: '04/2026 \u2013 in 1 Monat!' },
-        { label: 'Marktzins aktuell', value: 'ca. 3,5 % (10 J. fest)' },
-        { label: 'Monatl. Mehrbelastung', value: '+385 \u20ac/mtl. bei Prolongation' },
-        { label: 'Empfehlung', value: 'Sofort Forward-Darlehen sichern, BSV als Sondertilgung pr\u00fcfen' },
-      ],
-      vergleich: {
-        titel: 'Vergleich: Aktuelle Baufi vs. Forward-Darlehen',
-        spalten: ['Merkmal', 'Aktuell (auslaufend)', 'VR-Forward-Darlehen'],
-        zeilen: [
-          { merkmal: 'Zinssatz', aktuell: '1,2 % (endet 04/2026)', angebot: 'ca. 3,3 % (10 J. fest)', highlight: true },
-          { merkmal: 'Restschuld', aktuell: '185.000 \u20ac', angebot: '185.000 \u20ac', highlight: false },
-          { merkmal: 'Monatsrate (Bsp.)', aktuell: '980 \u20ac', angebot: 'ca. 1.050 \u20ac', highlight: true },
-          { merkmal: 'Zinssicherheit', aktuell: 'Keine (l\u00e4uft aus)', angebot: '10 Jahre gesichert', highlight: true },
-          { merkmal: 'Sondertilgung', aktuell: 'Nein', angebot: '5 % p.a. m\u00f6glich', highlight: true },
-          { merkmal: 'BSV-Kombination', aktuell: 'Nicht genutzt', angebot: '30k BSV als Tilgung m\u00f6glich', highlight: true },
-        ],
-      },
-    },
-    // 1b. Immobilienkredit-Gespräch (sehr_hoch) — KfW läuft aus + BSV zuteilungsreif + Immo-Newsletter-Signal
+    // 1. Immobilienkredit-Gespräch (sehr_hoch) — KfW läuft aus + BSV zuteilungsreif + Immo-Newsletter-Signal
     { titel: 'Kreditgespräch Immobilienfinanzierung', typ: 'cross_sell', quellen: ['finanztransaktion', 'bestand', 'kommunikation'], prioritaet: 'sehr_hoch', volumen: 250000, volumenTyp: 'einmalig',
       beschreibung: 'KfW-Kredit läuft in 2 Monaten aus → 840€/Mon. frei. Bausparvertrag bei Schwäbisch Hall zuteilungsreif. Immobilien-Newsletter seit 2 Jahren abonniert.',
       kiDescription: 'KI-Analyse: Drei unabhängige Signale ergeben einen klaren Vertriebsimpuls für ein Immobilienkredit-Gespräch:\n\n1. Auslaufender KfW-Kredit (Modernisierung): Aus den PSD2-Kontoumsätzen erkennen wir, dass die letzte Ratenzahlung in 2 Monaten erfolgt — danach werden 840 €/Monat freie Liquidität verfügbar.\n\n2. Zuteilungsreifer Bausparvertrag bei Fremdbausparer (Schwäbisch Hall, 30.000 €) — diese Mittel können sofort als Eigenkapital oder Sondertilgung eingesetzt werden.\n\n3. Klaus Fischer hat sich vor 2 Jahren in unseren Newsletter „VR-Immobilien & Finanzieren" eingetragen und öffnet die Mails regelmäßig. Klares Suchverhalten Richtung Immobilienkauf bzw. -modernisierung.\n\nKombiniert ergibt das ein sehr starkes Lead-Signal: Zeitpunkt (Liquiditätsspitze), Kapital (BSV) und Interesse (Newsletter) treffen aufeinander. Empfehlung: Aktiv auf ein Beratungsgespräch zur Immobilienfinanzierung zugehen, BSV-Zuteilung als Aufhänger nutzen.',
@@ -130,7 +103,7 @@ export const B1 = {
     // 3. Versicherungscheck via FIDA (hoch)
     { titel: 'R+V Versicherungscheck \u2013 KFZ + Haftpflicht', typ: 'cross_sell', quellen: ['finanztransaktion', 'wettbewerb'], prioritaet: 'hoch', volumen: 1285, volumenTyp: 'jaehrlich',
       beschreibung: 'HUK KFZ-Vollkasko 780\u20ac/J. \u2013 bei R+V nur 620\u20ac/J. Keine Haftpflicht trotz Familie!',
-      kiDescription: 'KI-Analyse: \u00dcber Open Finance (FIDA) sehen wir, dass Herr Fischer bei der HUK eine KFZ-Vollkasko f\u00fcr 780 \u20ac/Jahr zahlt \u2013 bei R+V w\u00e4re der gleiche Schutz (VW Tiguan, SF-12, 500 \u20ac SB) f\u00fcr 620 \u20ac/Jahr m\u00f6glich, eine Ersparnis von 160 \u20ac/Jahr. Zus\u00e4tzlich hat er bei Allianz eine Privathaftpflicht f\u00fcr 85 \u20ac/Jahr \u2013 als VR-Kunde k\u00f6nnte er beides im R+V-B\u00fcndel f\u00fcr ca. 680 \u20ac/Jahr absichern (statt 865 \u20ac). Dringender: Die Familie (2 Kinder, 12 + 9 J.) hat keine Unfallversicherung und keine Risikolebensversicherung \u2013 bei 185.000 \u20ac Baufi-Restschuld ein erhebliches Risiko.',
+      kiDescription: 'KI-Analyse: \u00dcber Open Finance (FIDA) sehen wir, dass Herr Fischer bei der HUK eine KFZ-Vollkasko f\u00fcr 780 \u20ac/Jahr zahlt \u2013 bei R+V w\u00e4re der gleiche Schutz (VW Tiguan, SF-12, 500 \u20ac SB) f\u00fcr 620 \u20ac/Jahr m\u00f6glich, eine Ersparnis von 160 \u20ac/Jahr. Zus\u00e4tzlich hat er bei Allianz eine Privathaftpflicht f\u00fcr 85 \u20ac/Jahr \u2013 als VR-Kunde k\u00f6nnte er beides im R+V-B\u00fcndel f\u00fcr ca. 680 \u20ac/Jahr absichern (statt 865 \u20ac). Dringender: Im Hinblick auf den geplanten Immobilienkauf sollte parallel eine Risikolebensversicherung ab\u00bcgeschlossen werden \u2013 die Bank wird sie bei der Baufinanzierung ohnehin verlangen.',
       empfohleneAktion: 'tarifvergleich', produktEmpfehlung: 'R+V B\u00fcndel (KFZ + Haftpflicht)', status: 'identifiziert',
       herleitung: [
         { label: 'Datenquelle', value: 'Open Finance (FIDA) \u2013 Versicherungsdaten' },
@@ -139,7 +112,7 @@ export const B1 = {
         { label: 'Haftpflicht aktuell', value: 'Allianz, 85 \u20ac/Jahr' },
         { label: 'R+V B\u00fcndel-Preis', value: 'ca. 680 \u20ac/Jahr (KFZ + Haftpflicht)' },
         { label: 'Gesamtersparnis', value: 'ca. 185 \u20ac/Jahr' },
-        { label: 'ACHTUNG', value: 'Keine Unfallversicherung, keine RLV \u2013 bei 185k Baufi und 2 Kindern!' },
+        { label: 'ACHTUNG', value: 'Keine RLV \u2013 wird bei der geplanten Baufinanzierung ben\u00f6tigt!' },
         { label: 'Empfehlung', value: 'R+V B\u00fcndelversicherung + Beratungsgespr\u00e4ch Absicherungsl\u00fccken' },
       ],
       vergleich: {
@@ -208,21 +181,6 @@ export const B1 = {
           { merkmal: 'Steueroptimierung', aktuell: 'Keine', angebot: 'Umschichtung ohne Steuer m\u00f6glich', highlight: true },
         ],
       },
-    },
-    // 6. BSV Zuteilung nutzen (hoch)
-    { titel: 'BSV zuteilungsreif \u2013 strategisch einsetzen', typ: 'anpassung', quellen: ['bestand'], prioritaet: 'hoch', volumen: 30000, volumenTyp: 'einmalig',
-      beschreibung: 'Schw\u00e4bisch Hall BSV wird 2026 zuteilungsreif. F\u00fcr Anschlussfinanzierung als Sondertilgung nutzen!',
-      kiDescription: 'KI-Analyse: Der Schw\u00e4bisch-Hall-Bausparvertrag von Herrn Fischer (seit 2012, Bausparsumme 30.000 \u20ac) wird 2026 zuteilungsreif \u2013 ein Altvertrag mit attraktivem Guthabenzins. Bei gleichzeitig auslaufender Zinsbindung der Baufinanzierung (185.000 \u20ac Restschuld, 04/2026) bietet sich die Verwendung als Sondertilgung an \u2013 dies w\u00fcrde die Restschuld um ca. 16 % auf 155.000 \u20ac reduzieren und die monatliche Rate bei der Anschlussfinanzierung sp\u00fcrbar senken. Entscheidung sollte zeitnah im Kontext der Anschlussfinanzierung getroffen werden.',
-      empfohleneAktion: 'termin_vereinbaren', produktEmpfehlung: 'Schw\u00e4bisch Hall', status: 'identifiziert',
-      herleitung: [
-        { label: 'Datenquelle', value: 'Bestandsanalyse \u2013 Bauspar' },
-        { label: 'BSV-Vertrag', value: 'Schw\u00e4bisch Hall, seit 2012' },
-        { label: 'Bausparsumme', value: '30.000 \u20ac \u2013 zuteilungsreif 2026' },
-        { label: 'Guthabenzins', value: 'Altvertrag mit attraktivem Zins' },
-        { label: 'Baufi-Restschuld', value: '185.000 \u20ac (Zinsbindung endet 04/2026)' },
-        { label: 'Sondertilgungseffekt', value: 'Restschuld sinkt auf 155.000 \u20ac (-16 %)' },
-        { label: 'Empfehlung', value: 'BSV-Guthaben als Sondertilgung \u2013 koordiniert mit Forward-Darlehen' },
-      ],
     },
     // 7. Liquidit\u00e4tsaufbau Girokonto (mittel)
     { titel: 'Girokonto-\u00dcberschuss 18k \u2013 Liquidit\u00e4t strukturieren', typ: 'cross_sell', quellen: ['finanztransaktion'], prioritaet: 'mittel', volumen: 18000, volumenTyp: 'einmalig',

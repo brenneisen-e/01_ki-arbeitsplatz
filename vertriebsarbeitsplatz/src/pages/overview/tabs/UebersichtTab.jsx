@@ -929,8 +929,7 @@ export default function UebersichtTab() {
               return (
                 <div
                   key={i}
-                  className="group row-hover relative flex items-center gap-3 p-3 pl-4 rounded-xl bg-white border border-slate-200 cursor-pointer transition-all overflow-hidden"
-                  style={{ color: 'var(--_fg, #334155)' }}
+                  className="group aufgabe-tile relative flex items-center gap-3 p-3 pl-4 rounded-xl bg-white border border-slate-200 hover:border-slate-300 hover:bg-slate-50 hover:shadow-md cursor-pointer transition-all overflow-hidden"
                   onClick={() => a.kundeId && navigateTo('detail', { kundeId: a.kundeId })}
                 >
                   {/* Priority stripe */}
@@ -947,7 +946,7 @@ export default function UebersichtTab() {
 
                   {/* Icon tile */}
                   <div
-                    className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0"
+                    className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0 transition-transform group-hover:scale-110"
                     style={{ backgroundColor: urgentBg }}
                   >
                     <TaskIcon size={16} style={{ color: urgentColor }} strokeWidth={2} />
@@ -955,15 +954,15 @@ export default function UebersichtTab() {
 
                   {/* Text */}
                   <div className="flex-1 min-w-0">
-                    <div className="text-sm font-medium text-slate-800 truncate">{text}</div>
-                    <div className="text-[11px] text-slate-400 mt-0.5">
+                    <div className="text-sm font-medium text-slate-800 truncate group-hover:text-slate-900">{text}</div>
+                    <div className="text-xs text-slate-400 mt-0.5 group-hover:text-slate-500">
                       {a.kundeId ? (lang === 'en' ? 'Open client file' : 'Kundenakte öffnen') : (lang === 'en' ? 'Internal task' : 'Interne Aufgabe')}
                     </div>
                   </div>
 
                   {/* Date badge */}
                   <span
-                    className="rh-badge text-[10px] px-2.5 py-1 rounded-full font-bold whitespace-nowrap uppercase tracking-wide shrink-0"
+                    className="text-xs px-2.5 py-1 rounded-full font-bold whitespace-nowrap uppercase tracking-wide shrink-0"
                     style={{ backgroundColor: urgentColor, color: 'white' }}
                   >
                     {a.faellig}

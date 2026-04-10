@@ -1,6 +1,5 @@
 import Card from '../../../components/ui/Card';
 import LebenszeitstrahlCard from '../../../components/ui/LebenszeitstrahlCard';
-import { LeafletMap, geocodeKundeLeaflet } from '../../../components/ui/KundenKarteLeaflet';
 import { getLang } from '../../../utils/langHelper';
 import DataTable from '../../../components/ui/DataTable';
 import { StatusBadge, SparteBadge } from '../../../components/ui/Badge';
@@ -142,35 +141,38 @@ export default function StammdatenDetailTab({ kunde }) {
 
   return (
     <div className="space-y-4">
-      {/* Kunden-Profil Header (mit eingebetteter KI-Zusammenfassung für Banking) */}
+      {/* Kunden-Profil Header (mit KI-Zusammenfassung rechts daneben für Banking) */}
       <Card hover={false}>
-        <div className="flex items-center gap-5">
+        <div className="flex items-stretch gap-5">
+          {/* Foto */}
           {foto && !fotoFailed ? (
             <img
               src={foto}
               alt={kunde.name}
-              className="w-24 h-24 rounded-xl object-cover border-2 shadow-sm"
+              className="w-24 h-24 rounded-xl object-cover border-2 shadow-sm shrink-0 self-center"
               style={{ borderColor: config.colors.primaryLight + '40' }}
               onError={() => setFotoFailed(true)}
             />
           ) : (
             <div
-              className="w-24 h-24 rounded-xl flex items-center justify-center text-white text-2xl font-bold shadow-sm"
+              className="w-24 h-24 rounded-xl flex items-center justify-center text-white text-2xl font-bold shadow-sm shrink-0 self-center"
               style={{ background: config.colors.gradient }}
             >
               {initialen}
             </div>
           )}
-          <div className="flex-1">
+
+          {/* Stammdaten-Block */}
+          <div className="flex-1 min-w-0 self-center">
             <h2 className="text-xl font-bold text-slate-800">{tn(kunde.name)}</h2>
-            <div className="flex items-center gap-4 mt-1.5 text-sm text-slate-500">
+            <div className="flex items-center gap-4 mt-1.5 text-sm text-slate-500 flex-wrap">
               <span className="flex items-center gap-1"><Briefcase size={14} /> {translateBeruf(kunde.beruf, lang)}</span>
               <span className="flex items-center gap-1"><Users size={14} /> {kunde.alter} {t('jahre')}</span>
               {kunde.familienstand && (
                 <span className="flex items-center gap-1"><Heart size={14} /> {lang === 'en' ? (FAMILIENSTAND_EN[kunde.familienstand] || kunde.familienstand) : kunde.familienstand?.charAt(0).toUpperCase() + kunde.familienstand?.slice(1)}</span>
               )}
             </div>
-            <div className="flex items-center gap-3 mt-2 text-xs text-slate-400">
+            <div className="flex items-center gap-3 mt-2 text-xs text-slate-400 flex-wrap">
               <span>{kunde.id}</span>
               <span>·</span>
               <span>{t('kundeSeit')} {kunde.eigeneProdukte?.[0]?.seit || '–'}</span>
@@ -182,17 +184,17 @@ export default function StammdatenDetailTab({ kunde }) {
               )}
             </div>
           </div>
-        </div>
 
-        {/* KI-Zusammenfassung als Inlay innerhalb der Header-Kachel (Banking) */}
-        {modeId === 'banking' && (
-          <div className="mt-4 pt-4 border-t border-slate-100">
-            <KIZusammenfassungInlay kunde={kunde} embedded />
-          </div>
-        )}
+          {/* KI-Zusammenfassung rechts neben den Stammdaten (Banking) */}
+          {modeId === 'banking' && (
+            <div className="flex-[2] min-w-0">
+              <KIZusammenfassungInlay kunde={kunde} embedded />
+            </div>
+          )}
+        </div>
       </Card>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className={modeId === 'banking' ? 'grid grid-cols-3 gap-4' : 'grid grid-cols-2 gap-4'}>
         {/* Persoenliche Daten */}
         <Card hover={false}>
           <div className="flex items-center gap-2 mb-4">
@@ -292,15 +294,10 @@ export default function StammdatenDetailTab({ kunde }) {
             </div>
           </div>
         </Card>
-      </div>
 
-      {/* Banking only: Adresse-Map + Aktivitäten */}
-      {modeId === 'banking' && (
-        <div className="grid grid-cols-2 gap-4">
-          <AdresseMapCard kunde={kunde} />
-          <AktivitaetenCard kunde={kunde} />
-        </div>
-      )}
+        {/* Aktivitäten – Banking only, in derselben Reihe wie Persönliche Daten + Finanzübersicht */}
+        {modeId === 'banking' && <AktivitaetenCard kunde={kunde} />}
+      </div>
 
       {/* Lebenszeitstrahl – Banking only (FIDA + Open Finance Kontext) */}
       {modeId === 'banking' && <LebenszeitstrahlCard kunde={kunde} />}
@@ -322,34 +319,29 @@ function ArbeitgeberRow({ arbeitgeber, beruf, t }) {
   const fmt = (d) => d.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
 
   return (
-    <div className="space-y-1 text-sm">
-      {/* Zeile 1: Arbeitgeber + Bestätigungs-Quelle (Kontoumsätze) */}
-      <div className="flex items-baseline gap-2 flex-wrap">
+    <>
+      {/* Arbeitgeber + Bestätigung */}
+      <div className="flex items-baseline gap-2 text-sm flex-wrap">
         <span className="text-slate-400 shrink-0">{t('arbeitgeberLabel')}:</span>
-        <span className="flex items-center gap-2 text-slate-700 font-medium">
-          <Building2 size={14} className="text-slate-400" />
-          {arbeitgeber.name}
-        </span>
+        <span className="text-slate-700 font-medium">{arbeitgeber.name}</span>
         <span className="inline-flex items-center gap-1 text-xs font-medium text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full">
           <CheckCircle size={11} /> bestätigt durch Kontoumsätze
         </span>
-        <span className="text-xs text-slate-400 font-mono">letzter Gehaltseingang {fmt(lastSalaryDate)}</span>
+        <span className="text-xs text-slate-400 font-mono">{fmt(lastSalaryDate)}</span>
       </div>
 
-      {/* Zeile 2: Position/Abteilung aus LinkedIn */}
+      {/* Position/Abteilung aus LinkedIn — gleiche Spalte wie die anderen InfoRows */}
       {beruf && (
-        <div className="flex items-baseline gap-2 flex-wrap pl-[68px] -mt-0.5">
-          <Linkedin size={14} className="text-blue-600 self-center" />
-          <span className="text-sm text-slate-700">
-            {beruf}
-          </span>
+        <div className="flex items-baseline gap-2 text-sm flex-wrap">
+          <span className="text-slate-400 shrink-0">Position:</span>
+          <span className="text-slate-700 font-medium">{beruf}</span>
           <span className="inline-flex items-center gap-1 text-xs font-medium text-blue-700 bg-blue-50 border border-blue-100 px-2 py-0.5 rounded-full">
-            LinkedIn
+            <Linkedin size={11} /> LinkedIn
           </span>
-          <span className="text-xs text-slate-400 font-mono">aktualisiert {fmt(linkedInUpdate)}</span>
+          <span className="text-xs text-slate-400 font-mono">{fmt(linkedInUpdate)}</span>
         </div>
       )}
-    </div>
+    </>
   );
 }
 
@@ -461,104 +453,48 @@ function HaustiereRow({ haustiere, t }) {
 }
 
 function FahrzeugeSection({ fahrzeuge, t }) {
-  const [showDetail, setShowDetail] = useState(false);
-
   return (
-    <div className="pt-2 border-t border-slate-100 mt-2">
-      <div className="flex items-center gap-2 mb-1">
-        <Car size={14} className="text-blue-500" />
-        <span className="text-sm font-medium text-slate-700">{t('fahrzeugeMobilitaet')}</span>
-        <span className="text-xs px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 border border-blue-100 font-medium">PSD2</span>
-        {fahrzeuge.liste?.length > 0 && (
-          <button
-            onClick={() => setShowDetail(!showDetail)}
-            className="flex items-center gap-1 text-xs text-blue-500 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-100 hover:bg-blue-100 transition-colors"
-          >
-            <Info size={11} />
-            {t('details')}
-          </button>
-        )}
-      </div>
-
+    <>
       {fahrzeuge.liste?.length > 0 ? (
-        <div className="space-y-1.5 ml-5">
-          {fahrzeuge.liste.map((fz, i) => (
-            <div key={i} className="text-sm">
-              <div className="flex items-center gap-2 flex-wrap">
-                <span className="text-slate-700 font-semibold">{fz.modell}</span>
-                {fz.deckung && (
-                  <span className="text-xs px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200 font-medium">
-                    {fz.deckung}{fz.sf ? ` · ${fz.sf}` : ''}
-                  </span>
-                )}
-                {fz.quelle === 'psd2' && (
-                  <span className="text-xs px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-500 border border-indigo-100">
-                    Open Finance
-                  </span>
-                )}
-                {fz.fbRating && (
-                  <span className={`text-xs px-2 py-0.5 rounded-full font-bold ${
-                    fz.fbRating >= 75 ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                    : fz.fbRating >= 55 ? 'bg-amber-50 text-amber-700 border border-amber-200'
-                    : 'bg-red-50 text-red-600 border border-red-200'
-                  }`}>
-                    F&B {fz.fbRating}
-                  </span>
-                )}
-              </div>
-              <div className="flex items-center gap-2 text-sm text-slate-500 mt-0.5">
-                <Building2 size={13} className="text-slate-400" />
-                <span>
-                  Versichert bei <span className="font-medium text-slate-700">{fz.versicherer || 'Unbekannt'}</span>
-                </span>
-                {fz.praemie > 0 && (
-                  <span className="font-mono text-slate-500">· {fz.praemie}€/J.</span>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
-      ) : (
-        <div className="text-sm text-slate-400 ml-5 italic">{t('keinFahrzeugErkannt')}</div>
-      )}
+        fahrzeuge.liste.map((fz, i) => (
+          <div key={i} className="flex items-baseline gap-2 text-sm flex-wrap">
+            <span className="text-slate-400 shrink-0">Fahrzeug:</span>
+            <span className="text-slate-700 font-medium">{fz.modell}</span>
+            {fz.deckung && (
+              <span className="text-xs px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200 font-medium">
+                {fz.deckung}{fz.sf ? ` · ${fz.sf}` : ''}
+              </span>
+            )}
+            <span className="text-slate-500">
+              · {fz.versicherer || 'Unbekannt'}
+              {fz.praemie > 0 && <span className="font-mono"> ({fz.praemie}€/J.)</span>}
+            </span>
+            {fz.quelle === 'psd2' && (
+              <span className="text-xs px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-500 border border-indigo-100">
+                Open Finance
+              </span>
+            )}
+            {fz.fbRating && (
+              <span className={`text-xs px-2 py-0.5 rounded-full font-bold ${
+                fz.fbRating >= 75 ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                : fz.fbRating >= 55 ? 'bg-amber-50 text-amber-700 border border-amber-200'
+                : 'bg-red-50 text-red-600 border border-red-200'
+              }`}>
+                F&B {fz.fbRating}
+              </span>
+            )}
+          </div>
+        ))
+      ) : null}
 
       {fahrzeuge.monatlicheAusgaben > 0 && (
-        <div className="flex items-center gap-2 text-sm ml-5 mt-1">
-          <Fuel size={13} className="text-slate-400" />
-          <span className="text-slate-500">{t('mobilitaetsausgaben')}: <span className="font-mono font-medium text-slate-700">{fahrzeuge.monatlicheAusgaben}€{t('proMonat')}</span></span>
+        <div className="flex items-baseline gap-2 text-sm flex-wrap">
+          <span className="text-slate-400 shrink-0">{t('mobilitaetsausgaben')}:</span>
+          <span className="font-mono font-medium text-slate-700">{fahrzeuge.monatlicheAusgaben}€{t('proMonat')}</span>
+          <span className="text-xs px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 border border-blue-100 font-medium">PSD2</span>
         </div>
       )}
-
-      {showDetail && fahrzeuge.liste?.length > 0 && (
-        <div className="mt-2 bg-blue-50 border border-blue-200 rounded-lg p-3 space-y-2 animate-fade-in">
-          <div className="text-xs font-semibold text-blue-700 flex items-center gap-1.5">
-            <Car size={12} />
-            {t('fahrzeugErkannt')}
-          </div>
-          {fahrzeuge.liste.map((fz, i) => (
-            <div key={i} className="bg-white rounded-lg p-2 border border-blue-100">
-              <div className="flex justify-between text-xs">
-                <span className="font-medium text-slate-700">{fz.modell}</span>
-                <span className="text-slate-500">{fz.versicherer}</span>
-              </div>
-              <div className="flex justify-between text-xs mt-1 text-slate-500">
-                <span>{t('deckung')}: {fz.deckung || '–'} {fz.sf || ''}</span>
-                {fz.praemie > 0 && <span className="font-mono">{fz.praemie}€/J.</span>}
-              </div>
-              {fz.fbRating && (
-                <div className="flex items-center gap-2 mt-1">
-                  <img src="https://img.logo.dev/franke-bornberg.de?token=pk_H7vb5Y2lTsW47U4Xq-w3HA&size=32&format=png" alt="F&B" className="w-3 h-3 rounded" onError={(e) => e.target.style.display='none'} />
-                  <span className="text-xs text-slate-500">Franke & Bornberg: <strong>{fz.fbRating}/100</strong> ({fz.fbKlasse})</span>
-                </div>
-              )}
-            </div>
-          ))}
-          <div className="text-xs text-blue-600 pt-1 border-t border-blue-200">
-            {t('quellePsd2Mobilitaet')}
-          </div>
-        </div>
-      )}
-    </div>
+    </>
   );
 }
 
@@ -805,35 +741,6 @@ function generateKISummary(kunde) {
   }
 
   return { text, recommendation };
-}
-
-// ─── Adresse-Map (zoom auf die Anschrift des Kunden) ───
-function AdresseMapCard({ kunde }) {
-  const geocoded = geocodeKundeLeaflet(kunde, 0);
-  return (
-    <Card hover={false} className="adresse-map-card">
-      <div className="flex items-center gap-2 mb-3">
-        <MapPin size={20} className="text-slate-500" strokeWidth={1.75} />
-        <h3 className="font-semibold text-slate-800">Anschrift</h3>
-        {kunde.adresse && (
-          <span className="text-xs text-slate-400 ml-auto truncate max-w-[60%]">{kunde.adresse}</span>
-        )}
-      </div>
-      <div className="rounded-xl overflow-hidden border border-slate-200" style={{ height: 260 }}>
-        {geocoded ? (
-          <LeafletMap
-            geocoded={[geocoded]}
-            initialCenter={[geocoded.lat, geocoded.lng]}
-            initialZoom={15}
-          />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center bg-slate-50 text-sm text-slate-400">
-            Keine Anschrift hinterlegt
-          </div>
-        )}
-      </div>
-    </Card>
-  );
 }
 
 // ─── Aktivitäten: letzte Gespräche & Notizen ───

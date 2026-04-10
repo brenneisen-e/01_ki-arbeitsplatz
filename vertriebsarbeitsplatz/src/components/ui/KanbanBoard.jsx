@@ -353,7 +353,7 @@ function PotenzialCard({ p, columnColor, onDragStart, onDragEnd, onReactivate, o
         if (dragStartedRef.current) return; // ignore click that came from a drag
         onCardClick?.(p);
       }}
-      className="rounded-lg p-2.5 shadow-sm hover:shadow-md transition-all cursor-pointer active:cursor-grabbing relative border border-slate-200"
+      className="rounded-lg p-2.5 shadow-sm hover:shadow-md hover:border-slate-300 hover:-translate-y-0.5 transition-all cursor-pointer active:cursor-grabbing relative border border-slate-200"
       style={{
         backgroundColor: cardBg,
         opacity: cardOpacity,

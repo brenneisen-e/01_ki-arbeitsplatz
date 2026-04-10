@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
-import { Upload, ChevronDown, ChevronLeft, MapPin, Calendar, Briefcase, Activity, CheckCircle, AlertCircle, HelpCircle, Download, FileText } from 'lucide-react';
+import { Upload, ChevronDown, ChevronLeft, MapPin, Calendar, Briefcase, Activity, CheckCircle, AlertCircle, HelpCircle } from 'lucide-react';
 import { getHRData, HP_DISTANCES_EXT, getHPMatchScoreExt, getHPMatchBadgesExt } from '../../data/hrData';
 import { useToast } from '../../hooks/useToast';
 import { useInstitut } from '../../hooks/useInstitut';
@@ -133,49 +133,6 @@ function UploadSection({ onLoadProfile, onJobDetail, hrData }) {
           <p>Erhalten Sie personalisierte Stellenvorschläge mit Match-Score und Entfernungsberechnung.</p>
         </div>
       </div>
-
-      {/* CV Templates — downloadable sample CVs to test the upload flow */}
-      {ui.demoProfiles.some(p => p.cvPdf) && (
-        <div className="hp-cv-templates">
-          <div className="hp-cv-templates-head">
-            <div>
-              <h3>CV-Vorlagen zum Ausprobieren</h3>
-              <p>Laden Sie einen der drei Beispiel-Lebensläufe (PDF) herunter und reichen Sie ihn oben über „Lebenslauf hochladen" wieder ein, um die KI-Analyse live auf einem echten CV zu testen.</p>
-            </div>
-          </div>
-          <div className="hp-cv-templates-grid">
-            {ui.demoProfiles.filter(p => p.cvPdf).map(p => {
-              const profile = hrData.profiles[p.id];
-              return (
-                <div key={p.id} className={`hp-cv-template-card score-${p.score}`}>
-                  {profile?.photo ? (
-                    <img src={profile.photo} alt={p.name} className="hp-cv-template-photo" />
-                  ) : (
-                    <div className="hp-cv-template-photo hp-cv-template-photo-fallback">{p.initials}</div>
-                  )}
-                  <div className="hp-cv-template-info">
-                    <div className="hp-cv-template-name">{p.name}</div>
-                    <div className="hp-cv-template-title">{p.title}</div>
-                    <div className="hp-cv-template-role">
-                      <span className={`hp-cv-template-role-dot score-${p.score}`} />
-                      {p.role}
-                    </div>
-                  </div>
-                  <a
-                    href={p.cvPdf}
-                    download
-                    className="hp-cv-template-download"
-                    onClick={e => e.stopPropagation()}
-                  >
-                    <Download size={14} />
-                    PDF herunterladen
-                  </a>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      )}
 
       {/* Positions Preview */}
       <div className="hp-landing-positions">

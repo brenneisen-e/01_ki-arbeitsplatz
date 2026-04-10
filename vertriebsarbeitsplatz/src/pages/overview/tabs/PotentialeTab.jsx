@@ -7,7 +7,7 @@ import GamificationDashboard from '../../../components/ui/GamificationDashboard'
 import KanbanBoard from '../../../components/ui/KanbanBoard';
 
 export default function PotentialeTab() {
-  const { modeId } = useMode();
+  const { modeId, navigateTo } = useMode();
   const { t } = useTranslation();
 
   const P_KPI_CONFIG = [
@@ -104,6 +104,7 @@ export default function PotentialeTab() {
         kunden={kunden}
         onMoveCard={handleMoveCard}
         onReactivate={handleReactivate}
+        onCardClick={(p) => navigateTo('detail', { kundeId: p.kundeId, tab: 'stammdaten' })}
       />
     </div>
   );

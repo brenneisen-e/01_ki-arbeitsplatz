@@ -428,12 +428,21 @@ export default function UebersichtTab() {
   }), [vvKunden, mandatFilter]);
 
   const termine = (TERMINE_BY_MODE[modeId] || TERMINE_BY_MODE.versicherung).slice(0, 4);
-  const aufgaben = AUFGABEN_BY_MODE[modeId] || AUFGABEN_BY_MODE.versicherung;
+  const allAufgaben = AUFGABEN_BY_MODE[modeId] || AUFGABEN_BY_MODE.versicherung;
+  // Bei Zukunftsbank gibt es kein „VR-FinanzPlan" — diese VR-spezifische
+  // Aufgabe filtern wir hier aus, damit das Branding stimmt.
+  const isZukunftsbank = config.institut === 'Zukunftsbank';
+  const aufgaben = isZukunftsbank
+    ? allAufgaben.filter(a => !/VR-?FinanzPlan/i.test(a.text || ''))
+    : allAufgaben;
   const miniKpis = MINI_KPIS[modeId] || MINI_KPIS.versicherung;
   const tagesItems = TAGESSTART_ITEMS[modeId] || TAGESSTART_ITEMS.versicherung;
   const abschluesse = LETZTE_ABSCHLUESSE[modeId] || LETZTE_ABSCHLUESSE.versicherung;
   const geburtstage = GEBURTSTAGE[modeId] || GEBURTSTAGE.versicherung;
-  const schnellzugriff = SCHNELLZUGRIFF[modeId] || SCHNELLZUGRIFF.versicherung;
+  const allSchnellzugriff = SCHNELLZUGRIFF[modeId] || SCHNELLZUGRIFF.versicherung;
+  const schnellzugriff = isZukunftsbank
+    ? allSchnellzugriff.filter(s => !/VR-?FinanzPlan|finanzplan/i.test(s.labelKey || s.label || ''))
+    : allSchnellzugriff;
   const abrechnungen = PROVISIONSABRECHNUNGEN[modeId] || PROVISIONSABRECHNUNGEN.versicherung;
 
   const heute = new Date();
@@ -920,7 +929,8 @@ export default function UebersichtTab() {
               return (
                 <div
                   key={i}
-                  className="group relative flex items-center gap-3 p-3 pl-4 rounded-xl bg-white border border-slate-200 hover:border-slate-300 hover:shadow-md cursor-pointer transition-all overflow-hidden"
+                  className="group row-hover relative flex items-center gap-3 p-3 pl-4 rounded-xl bg-white border border-slate-200 cursor-pointer transition-all overflow-hidden"
+                  style={{ color: 'var(--_fg, #334155)' }}
                   onClick={() => a.kundeId && navigateTo('detail', { kundeId: a.kundeId })}
                 >
                   {/* Priority stripe */}

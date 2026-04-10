@@ -9,7 +9,7 @@ const KUNDEN_FOTOS = {
   'KD00005': './images/AdobeStock_612932760.jpeg',
   'KD00008': './images/AdobeStock_1091012713.jpeg',
   // Banking
-  'BK00001': './images/AdobeStock_329502726.jpeg',
+  'BK00001': './images/AdobeStock_361342769.jpeg',
   'BK00003': './images/AdobeStock_361342769.jpeg',
   'BK00005': './images/AdobeStock_252262042.jpeg',
   'WM00001': './images/AdobeStock_612932760.jpeg',

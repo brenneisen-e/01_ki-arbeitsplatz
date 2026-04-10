@@ -1,6 +1,6 @@
 // B1: Klaus Fischer
 export const B1 = {
-  name: 'Klaus Fischer', id: 'BK00001', alter: 45,
+  name: 'Klaus Fischer', id: 'BK00001', alter: 41,
   beruf: 'Vertriebsleiter', arbeitgeber: { name: 'Continental AG', quelle: 'linkedin', bestaetigt: false }, nettoeinkommen: 4500,
   familienstand: 'verheiratet',
   partner: { name: 'Sabine', beruf: 'Teilzeit Verwaltung', einkommen: 1200 },
@@ -96,6 +96,21 @@ export const B1 = {
           { merkmal: 'BSV-Kombination', aktuell: 'Nicht genutzt', angebot: '30k BSV als Tilgung m\u00f6glich', highlight: true },
         ],
       },
+    },
+    // 1b. Immobilienkredit-Gespräch (sehr_hoch) — KfW läuft aus + BSV zuteilungsreif + Immo-Newsletter-Signal
+    { titel: 'Kreditgespräch Immobilienfinanzierung', typ: 'cross_sell', quellen: ['finanztransaktion', 'bestand', 'kommunikation'], prioritaet: 'sehr_hoch', volumen: 250000, volumenTyp: 'einmalig',
+      beschreibung: 'KfW-Kredit läuft in 2 Monaten aus → 840€/Mon. frei. Bausparvertrag bei Schwäbisch Hall zuteilungsreif. Immobilien-Newsletter seit 2 Jahren abonniert.',
+      kiDescription: 'KI-Analyse: Drei unabhängige Signale ergeben einen klaren Vertriebsimpuls für ein Immobilienkredit-Gespräch:\n\n1. Auslaufender KfW-Kredit (Modernisierung): Aus den PSD2-Kontoumsätzen erkennen wir, dass die letzte Ratenzahlung in 2 Monaten erfolgt — danach werden 840 €/Monat freie Liquidität verfügbar.\n\n2. Zuteilungsreifer Bausparvertrag bei Fremdbausparer (Schwäbisch Hall, 30.000 €) — diese Mittel können sofort als Eigenkapital oder Sondertilgung eingesetzt werden.\n\n3. Klaus Fischer hat sich vor 2 Jahren in unseren Newsletter „VR-Immobilien & Finanzieren" eingetragen und öffnet die Mails regelmäßig. Klares Suchverhalten Richtung Immobilienkauf bzw. -modernisierung.\n\nKombiniert ergibt das ein sehr starkes Lead-Signal: Zeitpunkt (Liquiditätsspitze), Kapital (BSV) und Interesse (Newsletter) treffen aufeinander. Empfehlung: Aktiv auf ein Beratungsgespräch zur Immobilienfinanzierung zugehen, BSV-Zuteilung als Aufhänger nutzen.',
+      empfohleneAktion: 'termin_vereinbaren', produktEmpfehlung: 'VR-ImmobilienFinanzierung',
+      status: 'identifiziert',
+      herleitung: [
+        { label: 'Datenquelle 1', value: 'PSD2-Kontoumsätze — KfW-Kredit endet in 2 Monaten (840 €/Mon. frei)' },
+        { label: 'Datenquelle 2', value: 'Bestand — Schwäbisch Hall BSV (30.000 €) zuteilungsreif' },
+        { label: 'Datenquelle 3', value: 'Marketing — Newsletter „VR-Immobilien" seit 24 Monaten abonniert, hohe Öffnungsrate' },
+        { label: 'Freie Liquidität ab Q3/2026', value: '840 €/mtl.' },
+        { label: 'Verfügbares Eigenkapital', value: '30.000 € (BSV) + 15.000 € (VR-Sparkonto)' },
+        { label: 'Empfehlung', value: 'Beratungstermin Immobilienfinanzierung anbieten, BSV-Zuteilung als Aufhänger' },
+      ],
     },
     // 2. Abgebrochener Online-Kredit (hoch)
     { titel: 'Ratenkredit 15k \u2013 Online-Abbruch', typ: 'anpassung', quellen: ['direktvertrieb'], prioritaet: 'hoch', volumen: 15000, volumenTyp: 'einmalig',

@@ -12,7 +12,7 @@ import { formatEur } from '../../utils/formatters';
  * The values use the in-session kanban state where possible so they react to
  * actual moves the advisor makes during the demo.
  */
-export default function GamificationDashboard({ potentiale, kanbanState }) {
+export default function GamificationDashboard({ potentiale, kanbanState, onQuickWinClick }) {
   const stats = useMemo(() => {
     const abgeschlossen = potentiale.filter(p => p.status === 'abgeschlossen');
     const nichtSinnvoll = potentiale.filter(p => p.status === 'nicht_sinnvoll');

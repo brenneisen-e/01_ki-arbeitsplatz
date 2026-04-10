@@ -142,7 +142,7 @@ export default function StammdatenDetailTab({ kunde }) {
 
   return (
     <div className="space-y-4">
-      {/* Kunden-Profil Header */}
+      {/* Kunden-Profil Header (mit eingebetteter KI-Zusammenfassung für Banking) */}
       <Card hover={false}>
         <div className="flex items-center gap-5">
           {foto && !fotoFailed ? (
@@ -183,10 +183,14 @@ export default function StammdatenDetailTab({ kunde }) {
             </div>
           </div>
         </div>
-      </Card>
 
-      {/* KI-Zusammenfassung – Banking only */}
-      {modeId === 'banking' && <KIZusammenfassungInlay kunde={kunde} />}
+        {/* KI-Zusammenfassung als Inlay innerhalb der Header-Kachel (Banking) */}
+        {modeId === 'banking' && (
+          <div className="mt-4 pt-4 border-t border-slate-100">
+            <KIZusammenfassungInlay kunde={kunde} embedded />
+          </div>
+        )}
+      </Card>
 
       <div className="grid grid-cols-2 gap-4">
         {/* Persoenliche Daten */}
@@ -251,8 +255,8 @@ export default function StammdatenDetailTab({ kunde }) {
                 <span className="flex items-center gap-1">
                   <span className="text-slate-700 font-medium">{kunde.risikoscore} ({kunde.risikoscore < 30 ? t('niedrig') : kunde.risikoscore < 50 ? t('mittel') : t('hoch')})</span>
                   {kunde.risikoSignale?.length > 0 && (
-                    <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-red-100 border border-red-300 text-red-600 ml-1 animate-pulse" title="Versicherungslücke erkannt">
-                      <AlertTriangle size={12} strokeWidth={2.5} />
+                    <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-blue-100 border border-blue-300 text-blue-600 ml-1" title="Risiko-Signal aus Kontoumsätzen">
+                      <ShieldAlert size={12} strokeWidth={2.5} />
                     </span>
                   )}
                   <ChevronDown size={14} className={`text-slate-400 transition-transform ${risikoExpanded ? 'rotate-180' : ''}`} />
@@ -318,7 +322,7 @@ function ArbeitgeberRow({ arbeitgeber, beruf, t }) {
   const fmt = (d) => d.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
 
   return (
-    <div className="space-y-1">
+    <div className="space-y-1 text-sm">
       {/* Zeile 1: Arbeitgeber + Bestätigungs-Quelle (Kontoumsätze) */}
       <div className="flex items-baseline gap-2 flex-wrap">
         <span className="text-slate-400 shrink-0">{t('arbeitgeberLabel')}:</span>
@@ -326,23 +330,23 @@ function ArbeitgeberRow({ arbeitgeber, beruf, t }) {
           <Building2 size={14} className="text-slate-400" />
           {arbeitgeber.name}
         </span>
-        <span className="inline-flex items-center gap-1 text-[10px] font-medium text-emerald-700 bg-emerald-50 border border-emerald-200 px-1.5 py-0.5 rounded-full">
-          <CheckCircle size={10} /> bestätigt durch Kontoumsätze
+        <span className="inline-flex items-center gap-1 text-xs font-medium text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full">
+          <CheckCircle size={11} /> bestätigt durch Kontoumsätze
         </span>
-        <span className="text-[10px] text-slate-400 font-mono">letzter Gehaltseingang {fmt(lastSalaryDate)}</span>
+        <span className="text-xs text-slate-400 font-mono">letzter Gehaltseingang {fmt(lastSalaryDate)}</span>
       </div>
 
       {/* Zeile 2: Position/Abteilung aus LinkedIn */}
       {beruf && (
         <div className="flex items-baseline gap-2 flex-wrap pl-[68px] -mt-0.5">
-          <Linkedin size={11} className="text-blue-600 self-center" />
-          <span className="text-xs text-slate-600">
+          <Linkedin size={14} className="text-blue-600 self-center" />
+          <span className="text-sm text-slate-700">
             {beruf}
           </span>
-          <span className="inline-flex items-center gap-1 text-[10px] font-medium text-blue-700 bg-blue-50 border border-blue-100 px-1.5 py-0.5 rounded-full">
+          <span className="inline-flex items-center gap-1 text-xs font-medium text-blue-700 bg-blue-50 border border-blue-100 px-2 py-0.5 rounded-full">
             LinkedIn
           </span>
-          <span className="text-[10px] text-slate-400 font-mono">aktualisiert {fmt(linkedInUpdate)}</span>
+          <span className="text-xs text-slate-400 font-mono">aktualisiert {fmt(linkedInUpdate)}</span>
         </div>
       )}
     </div>
@@ -376,8 +380,8 @@ function HaustiereRow({ haustiere, t }) {
     <div className="pt-2 border-t border-slate-100 mt-2">
       {!confirmed ? (
         <>
-          <div className="flex items-center gap-2">
-            <span className="flex items-center gap-1.5 text-amber-500 shrink-0">
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="flex items-center gap-1.5 text-amber-500 shrink-0 text-sm">
               <PawPrint size={14} />
               {haustiere.vermutet ? t('haustierVermutet') : t('haustierHinweis')}
             </span>
@@ -388,9 +392,9 @@ function HaustiereRow({ haustiere, t }) {
             </span>
             <button
               onClick={() => setShowDetail(!showDetail)}
-              className="flex items-center gap-1 text-[10px] text-blue-500 bg-blue-50 px-1.5 py-0.5 rounded-full border border-blue-100 hover:bg-blue-100 transition-colors"
+              className="flex items-center gap-1 text-xs text-blue-500 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-100 hover:bg-blue-100 transition-colors"
             >
-              <Info size={10} />
+              <Info size={11} />
               {t('details')}
             </button>
           </div>
@@ -406,7 +410,7 @@ function HaustiereRow({ haustiere, t }) {
                   <span className="font-mono">{t.betrag}€ ({t.haeufigkeit})</span>
                 </div>
               ))}
-              <div className="text-[10px] text-amber-600 pt-1 border-t border-amber-200">
+              <div className="text-xs text-amber-600 pt-1 border-t border-amber-200">
                 {t('quellePsd2')}
               </div>
               <div className="pt-2 border-t border-amber-200 space-y-2">
@@ -446,8 +450,8 @@ function HaustiereRow({ haustiere, t }) {
           <span className="text-slate-700 font-medium">
             {tierArt}{tierName ? ` (${tierName})` : ''}
           </span>
-          <span className="flex items-center gap-1 text-[10px] text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded-full border border-emerald-200">
-            <CheckCircle size={10} />
+          <span className="flex items-center gap-1 text-xs text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+            <CheckCircle size={11} />
             {t('bestaetigt')}
           </span>
         </div>
@@ -464,13 +468,13 @@ function FahrzeugeSection({ fahrzeuge, t }) {
       <div className="flex items-center gap-2 mb-1">
         <Car size={14} className="text-blue-500" />
         <span className="text-sm font-medium text-slate-700">{t('fahrzeugeMobilitaet')}</span>
-        <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-blue-50 text-blue-600 border border-blue-100 font-medium">PSD2</span>
+        <span className="text-xs px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 border border-blue-100 font-medium">PSD2</span>
         {fahrzeuge.liste?.length > 0 && (
           <button
             onClick={() => setShowDetail(!showDetail)}
-            className="flex items-center gap-1 text-[10px] text-blue-500 bg-blue-50 px-1.5 py-0.5 rounded-full border border-blue-100 hover:bg-blue-100 transition-colors"
+            className="flex items-center gap-1 text-xs text-blue-500 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-100 hover:bg-blue-100 transition-colors"
           >
-            <Info size={10} />
+            <Info size={11} />
             {t('details')}
           </button>
         )}
@@ -483,17 +487,17 @@ function FahrzeugeSection({ fahrzeuge, t }) {
               <div className="flex items-center gap-2 flex-wrap">
                 <span className="text-slate-700 font-semibold">{fz.modell}</span>
                 {fz.deckung && (
-                  <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200 font-medium">
+                  <span className="text-xs px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200 font-medium">
                     {fz.deckung}{fz.sf ? ` · ${fz.sf}` : ''}
                   </span>
                 )}
                 {fz.quelle === 'psd2' && (
-                  <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-indigo-50 text-indigo-500 border border-indigo-100">
+                  <span className="text-xs px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-500 border border-indigo-100">
                     Open Finance
                   </span>
                 )}
                 {fz.fbRating && (
-                  <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold ${
+                  <span className={`text-xs px-2 py-0.5 rounded-full font-bold ${
                     fz.fbRating >= 75 ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
                     : fz.fbRating >= 55 ? 'bg-amber-50 text-amber-700 border border-amber-200'
                     : 'bg-red-50 text-red-600 border border-red-200'
@@ -502,8 +506,8 @@ function FahrzeugeSection({ fahrzeuge, t }) {
                   </span>
                 )}
               </div>
-              <div className="flex items-center gap-2 text-xs text-slate-500 mt-0.5">
-                <Building2 size={11} className="text-slate-400" />
+              <div className="flex items-center gap-2 text-sm text-slate-500 mt-0.5">
+                <Building2 size={13} className="text-slate-400" />
                 <span>
                   Versichert bei <span className="font-medium text-slate-700">{fz.versicherer || 'Unbekannt'}</span>
                 </span>
@@ -520,7 +524,7 @@ function FahrzeugeSection({ fahrzeuge, t }) {
 
       {fahrzeuge.monatlicheAusgaben > 0 && (
         <div className="flex items-center gap-2 text-sm ml-5 mt-1">
-          <Fuel size={12} className="text-slate-400" />
+          <Fuel size={13} className="text-slate-400" />
           <span className="text-slate-500">{t('mobilitaetsausgaben')}: <span className="font-mono font-medium text-slate-700">{fahrzeuge.monatlicheAusgaben}€{t('proMonat')}</span></span>
         </div>
       )}
@@ -544,12 +548,12 @@ function FahrzeugeSection({ fahrzeuge, t }) {
               {fz.fbRating && (
                 <div className="flex items-center gap-2 mt-1">
                   <img src="https://img.logo.dev/franke-bornberg.de?token=pk_H7vb5Y2lTsW47U4Xq-w3HA&size=32&format=png" alt="F&B" className="w-3 h-3 rounded" onError={(e) => e.target.style.display='none'} />
-                  <span className="text-[10px] text-slate-500">Franke & Bornberg: <strong>{fz.fbRating}/100</strong> ({fz.fbKlasse})</span>
+                  <span className="text-xs text-slate-500">Franke & Bornberg: <strong>{fz.fbRating}/100</strong> ({fz.fbKlasse})</span>
                 </div>
               )}
             </div>
           ))}
-          <div className="text-[10px] text-blue-600 pt-1 border-t border-blue-200">
+          <div className="text-xs text-blue-600 pt-1 border-t border-blue-200">
             {t('quellePsd2Mobilitaet')}
           </div>
         </div>
@@ -645,51 +649,60 @@ function InfoRow({ label, value }) {
 }
 
 // ─── Risiko-Signale (z.B. Extremsport vs. Unfallversicherungs-Deckung) ───
+// Optisch wie der „Haustier erkannt"-Hinweis: blauer/dezenter Info-Stil,
+// nicht alarmrot. Die Versicherungslücke wird in einem separaten kleinen
+// Block hervorgehoben.
 function RisikoSignale({ signale }) {
-  const [expanded, setExpanded] = useState(false);
+  const [expanded, setExpanded] = useState(null);
   return (
     <div className="mt-2.5 space-y-2">
       {signale.map((s, i) => (
-        <div key={i} className="rounded-lg border border-red-200 bg-red-50 overflow-hidden">
-          <button
-            onClick={() => setExpanded(expanded === i ? null : i)}
-            className="w-full flex items-start gap-2 px-2.5 py-2 text-left hover:bg-red-100 transition-colors"
-          >
-            <ShieldAlert size={14} className="text-red-600 shrink-0 mt-0.5" strokeWidth={2.25} />
-            <div className="flex-1 min-w-0">
-              <div className="text-xs font-bold text-red-800 leading-tight">{s.titel}</div>
-              <div className="text-[11px] text-red-700 leading-snug mt-0.5 line-clamp-2">
-                {s.beschreibung}
-              </div>
-            </div>
-            <ChevronDown size={12} className={`text-red-500 shrink-0 mt-0.5 transition-transform ${expanded === i ? 'rotate-180' : ''}`} />
-          </button>
+        <div key={i}>
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="flex items-center gap-1.5 text-blue-600 shrink-0 text-sm">
+              <ShieldAlert size={14} />
+              {s.titel}
+            </span>
+            <span className="text-sm text-slate-500 italic">Aus Kontoumsätzen erkannt</span>
+            <button
+              onClick={() => setExpanded(expanded === i ? null : i)}
+              className="flex items-center gap-1 text-xs text-blue-500 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-100 hover:bg-blue-100 transition-colors"
+            >
+              <Info size={11} />
+              Details
+            </button>
+          </div>
           {expanded === i && (
-            <div className="px-2.5 pb-2.5 pt-1 border-t border-red-200 animate-fade-in space-y-2">
+            <div className="mt-2 bg-blue-50 border border-blue-200 rounded-lg p-3 space-y-2 animate-fade-in">
+              <div className="text-sm text-slate-700 leading-snug">{s.beschreibung}</div>
+
               {s.transaktionen?.length > 0 && (
-                <div>
-                  <div className="text-[10px] font-bold uppercase tracking-wider text-red-600 mb-1">Erkannte Transaktionen</div>
+                <div className="pt-2 border-t border-blue-200">
+                  <div className="text-xs font-bold uppercase tracking-wider text-blue-700 mb-1">Erkannte Transaktionen</div>
                   <div className="space-y-0.5">
                     {s.transaktionen.map((t, ti) => (
-                      <div key={ti} className="flex items-baseline justify-between text-[11px]">
-                        <span className="text-red-800">{t.empfaenger}</span>
-                        <span className="font-mono text-red-700 ml-2 shrink-0">{t.betrag}€ ({t.haeufigkeit})</span>
+                      <div key={ti} className="flex items-baseline justify-between text-sm">
+                        <span className="text-slate-700">{t.empfaenger}</span>
+                        <span className="font-mono text-slate-600 ml-2 shrink-0">{t.betrag}€ ({t.haeufigkeit})</span>
                       </div>
                     ))}
                   </div>
                 </div>
               )}
+
               {s.konsequenz && (
-                <div className="rounded bg-white border border-red-200 p-2">
-                  <div className="text-[10px] font-bold uppercase tracking-wider text-red-600 mb-0.5 flex items-center gap-1">
-                    <AlertTriangle size={10} /> Versicherungslücke
+                <div className="rounded bg-white border border-amber-200 p-2 flex items-start gap-2">
+                  <AlertTriangle size={14} className="text-amber-600 shrink-0 mt-0.5" />
+                  <div>
+                    <div className="text-xs font-bold uppercase tracking-wider text-amber-700 mb-0.5">Versicherungslücke</div>
+                    <div className="text-sm text-slate-700 leading-snug">{s.konsequenz}</div>
                   </div>
-                  <div className="text-[11px] text-slate-700 leading-snug">{s.konsequenz}</div>
                 </div>
               )}
+
               {s.empfehlung && (
-                <div className="flex items-start gap-1.5 text-[11px]">
-                  <Sparkles size={11} className="text-violet-600 mt-0.5 shrink-0" />
+                <div className="flex items-start gap-1.5 text-sm pt-1">
+                  <Sparkles size={13} className="text-violet-600 mt-0.5 shrink-0" />
                   <span className="text-slate-700"><strong className="text-violet-700">Empfehlung:</strong> {s.empfehlung}</span>
                 </div>
               )}
@@ -702,39 +715,42 @@ function RisikoSignale({ signale }) {
 }
 
 // ─── KI-Zusammenfassung als Inlay-Container ───
-function KIZusammenfassungInlay({ kunde }) {
+function KIZusammenfassungInlay({ kunde, embedded = false }) {
   const summary = generateKISummary(kunde);
+  const wrapperClass = embedded
+    ? 'relative rounded-xl border overflow-hidden'
+    : 'relative rounded-2xl border overflow-hidden';
   return (
     <div
-      className="relative rounded-2xl border overflow-hidden"
+      className={wrapperClass}
       style={{
         background: 'linear-gradient(135deg, #f5f3ff 0%, #ede9fe 50%, #e0e7ff 100%)',
         borderColor: '#d8d4ff',
-        boxShadow: '0 4px 14px -6px rgba(124, 58, 237, 0.18)',
+        boxShadow: embedded ? 'none' : '0 4px 14px -6px rgba(124, 58, 237, 0.18)',
       }}
     >
       <div
         className="absolute -top-12 -right-12 w-40 h-40 rounded-full pointer-events-none"
         style={{ background: 'radial-gradient(circle, rgba(167, 139, 250, 0.3) 0%, transparent 70%)' }}
       />
-      <div className="relative p-5 flex items-start gap-4">
+      <div className="relative p-4 flex items-start gap-3">
         <div
-          className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 shadow-sm"
+          className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 shadow-sm"
           style={{ background: 'linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%)' }}
         >
-          <Sparkles size={20} className="text-white" strokeWidth={2} />
+          <Sparkles size={18} className="text-white" strokeWidth={2} />
         </div>
         <div className="flex-1 min-w-0">
-          <div className="flex items-center justify-between mb-1.5">
-            <h3 className="font-bold text-slate-900 text-sm">KI-Zusammenfassung</h3>
-            <span className="text-[10px] text-slate-500 font-mono">
+          <div className="flex items-center justify-between mb-1">
+            <h3 className="font-semibold text-slate-800 text-sm">KI-Zusammenfassung</h3>
+            <span className="text-xs text-slate-500 font-mono">
               Aktualisiert {new Date().toLocaleDateString('de-DE')}
             </span>
           </div>
           <p className="text-sm text-slate-700 leading-relaxed">{summary.text}</p>
           {summary.recommendation && (
-            <div className="mt-2 flex items-start gap-1.5 text-xs">
-              <Sparkles size={12} className="text-violet-600 mt-0.5 shrink-0" />
+            <div className="mt-2 flex items-start gap-1.5 text-sm">
+              <Sparkles size={13} className="text-violet-600 mt-0.5 shrink-0" />
               <span className="text-slate-700">
                 <strong className="text-violet-700">Empfehlung:</strong> {summary.recommendation}
               </span>
@@ -875,11 +891,11 @@ function AktivitaetenCard({ kunde }) {
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-baseline gap-2 flex-wrap">
-                    <span className="text-xs font-semibold text-slate-800 truncate">{k.betreff || k.typ}</span>
-                    <span className="text-[10px] text-slate-400 font-mono shrink-0">{date}</span>
+                    <span className="text-sm font-semibold text-slate-800 truncate">{k.betreff || k.typ}</span>
+                    <span className="text-xs text-slate-400 font-mono shrink-0">{date}</span>
                   </div>
                   {(k.zusammenfassung || k.kiZusammenfassung) && (
-                    <div className="text-[11px] text-slate-600 leading-snug mt-0.5 line-clamp-2">
+                    <div className="text-xs text-slate-600 leading-snug mt-0.5 line-clamp-2">
                       {k.zusammenfassung || k.kiZusammenfassung}
                     </div>
                   )}

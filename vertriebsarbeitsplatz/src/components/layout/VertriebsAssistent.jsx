@@ -762,8 +762,8 @@ Volksbank Mittelhessen</div>
 export default function VertriebsAssistent() {
   const { t, lang } = useTranslation();
   useEffect(() => { invalidateLangCache(); }, [lang]);
-  const { modeId, config, currentView, setActiveTab, selectedKundeId } = useMode();
-  const [isOpen, setIsOpen] = useState(true);
+  const { modeId, config, currentView, activeTab, setActiveTab, selectedKundeId } = useMode();
+  const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
@@ -772,7 +772,12 @@ export default function VertriebsAssistent() {
   const inputRef = useRef(null);
   const hasAutoOpened = useRef(false);
 
-  const { primary, primaryLight, gradient } = config.colors;
+  // The floating assistant now uses the same lila theme as the inline
+  // KIAssistentCard so it visually identifies as an AI surface regardless
+  // of the active institut mode.
+  const primary = '#7c3aed';       // violet-600
+  const primaryLight = '#8b5cf6';  // violet-500
+  const gradient = 'linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%)';
 
   // Get current customer data for detail view
   const currentKunde = currentView === 'detail' && selectedKundeId
@@ -961,6 +966,9 @@ export default function VertriebsAssistent() {
 
   // Don't show on landing page
   if (currentView === 'landing') return null;
+  // On the Übersicht tab the inline KIAssistentCard already covers this –
+  // no need for a second floating bubble.
+  if (currentView === 'overview' && activeTab === 'uebersicht') return null;
 
   return (
     <>

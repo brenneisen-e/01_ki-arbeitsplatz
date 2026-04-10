@@ -58,6 +58,24 @@ function featureToPath(feature, project) {
   return parts.join(' ');
 }
 
+/** Compute bounding box of a GeoJSON feature in SVG coordinates via project(). */
+function featureBBox(feature, project) {
+  let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+  const visit = (coords) => {
+    if (typeof coords[0] === 'number') {
+      const [x, y] = project(coords[0], coords[1]);
+      if (x < minX) minX = x;
+      if (x > maxX) maxX = x;
+      if (y < minY) minY = y;
+      if (y > maxY) maxY = y;
+    } else {
+      coords.forEach(visit);
+    }
+  };
+  visit(feature.geometry.coordinates);
+  return { minX, maxX, minY, maxY };
+}
+
 /* ── State centroids (approximate geographic centers) ─────────── */
 const STATE_CENTROIDS = {
   'Baden-Württemberg':       { lat: 48.66, lng: 9.38 },
@@ -147,8 +165,30 @@ function MapRenderer({
   svgH,
   markerScale = 1,
 }) {
+  // When a state is selected, zoom the SVG viewBox onto that state's
+  // bounding box so the user visually dives into the region.
+  const viewBox = useMemo(() => {
+    if (!zoomedState) return `0 0 ${svgW} ${svgH}`;
+    const feature = geojson.features.find((f) => f.properties.name === zoomedState);
+    if (!feature) return `0 0 ${svgW} ${svgH}`;
+    const bb = featureBBox(feature, project);
+    const pad = 24;
+    const x = Math.max(0, bb.minX - pad);
+    const y = Math.max(0, bb.minY - pad);
+    const w = Math.min(svgW - x, bb.maxX - bb.minX + pad * 2);
+    const h = Math.min(svgH - y, bb.maxY - bb.minY + pad * 2);
+    return `${x} ${y} ${w} ${h}`;
+  }, [zoomedState, project, svgW, svgH]);
+
+  // Scale markers inversely to zoom so they stay roughly the same visual size.
+  const zoomScale = useMemo(() => {
+    if (!zoomedState) return 1;
+    const [, , w] = viewBox.split(' ').map(Number);
+    return Math.max(0.35, w / svgW);
+  }, [viewBox, svgW, zoomedState]);
+
   return (
-    <svg viewBox={`0 0 ${svgW} ${svgH}`} className="w-full h-full block" preserveAspectRatio="xMidYMid meet">
+    <svg viewBox={viewBox} className="w-full h-full block" preserveAspectRatio="xMidYMid meet" style={{ transition: 'all 400ms ease' }}>
       <defs>
         <linearGradient id="kundenkarte-bg" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stopColor="#f8fafc" />

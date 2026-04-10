@@ -112,7 +112,7 @@ export default function KPIBox({ icon, label, wert, format = 'num', trend, delay
   return (
     <>
       <div
-        className="relative rounded-xl border p-4 animate-fade-in-up cursor-pointer card-base card-hover overflow-hidden"
+        className="relative rounded-xl border p-4 animate-fade-in-up cursor-pointer card-base card-hover overflow-hidden h-full flex flex-col"
         style={{
           animationDelay: `${delay}ms`,
           // Pastel tint derived from the current mode's primary colour so KPI
@@ -152,8 +152,10 @@ export default function KPIBox({ icon, label, wert, format = 'num', trend, delay
           {formatValue(format === 'pct' ? wert : Math.round(wert), format)}
         </div>
 
-        {/* Mini Area Chart (VSTCockpit style – recharts with axes) */}
-        <div className="h-[52px] -mx-1">
+        {/* Mini Area Chart (VSTCockpit style – recharts with axes)
+            flex-1 so it fills the remaining space when the card is stretched
+            to match the taller Kundenkarte tile in the KPI row. */}
+        <div className="flex-1 min-h-[52px] -mx-1">
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={monthlyData} margin={{ top: 2, right: 4, bottom: 0, left: 0 }}>
               <defs>

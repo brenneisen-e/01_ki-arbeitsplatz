@@ -50,18 +50,64 @@ const MARKET_DATA = [
   { symbol: 'Gold', value: '2.185', change: '+0,65%', positive: true },
 ];
 
+function readHeaderImage() {
+  if (typeof window === 'undefined') return null;
+  try {
+    const raw = localStorage.getItem('kia_header_image');
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+
 export default function GlobalHeader({ kundeInfo, tabBadges }) {
   const { config, modeId, switchMode, switchInstitut, activeTab, setActiveTab, currentView, goBack } = useMode();
   const { t, lang } = useTranslation();
   const [showModeDropdown, setShowModeDropdown] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
+  const [headerImage, setHeaderImage] = useState(() => readHeaderImage());
+  const fileInputRef = useRef(null);
   const tabs = currentView === 'detail' ? config.detailTabs : config.tabs;
   const tagesItems = TAGESSTART_ITEMS[modeId] || TAGESSTART_ITEMS.versicherung;
   const weather = getWeatherData();
   const WeatherIcon = weather.icon;
   const isOverview = currentView !== 'detail';
 
+  // Persist header image overrides whenever they change
+  useEffect(() => {
+    try {
+      if (headerImage) localStorage.setItem('kia_header_image', JSON.stringify(headerImage));
+      else localStorage.removeItem('kia_header_image');
+    } catch {}
+  }, [headerImage]);
+
+  function handleFileSelect(e) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      setHeaderImage({
+        dataUrl: reader.result,
+        posX: 50,
+        posY: 50,
+      });
+    };
+    reader.readAsDataURL(file);
+  }
+
+  // Build the header background style: use the uploaded image if present,
+  // otherwise fall back to the mode-specific gradient.
+  const headerStyle = headerImage
+    ? {
+        backgroundImage: `linear-gradient(rgba(15,23,42,0.55), rgba(15,23,42,0.55)), url(${headerImage.dataUrl})`,
+        backgroundSize: 'cover',
+        backgroundPosition: `${headerImage.posX}% ${headerImage.posY}%`,
+        backgroundRepeat: 'no-repeat',
+      }
+    : { background: config.colors.gradient };
+
   return (
-    <header className="transition-all duration-500" style={{ background: config.colors.gradient }}>
+    <header className="transition-all duration-500" style={headerStyle}>
       {/* Top Row */}
       <div className="px-6 pt-5 pb-3 flex items-center justify-between">
         <div className="flex items-center gap-4">
@@ -166,7 +212,11 @@ export default function GlobalHeader({ kundeInfo, tabBadges }) {
           >
             <Download size={18} strokeWidth={1.75} />
           </button>
-          <button className="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors">
+          <button
+            onClick={() => setShowSettings(true)}
+            className="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors"
+            title={lang === 'en' ? 'Header settings' : 'Header-Einstellungen'}
+          >
             <Settings size={18} strokeWidth={1.75} />
           </button>
         </div>
@@ -235,6 +285,132 @@ export default function GlobalHeader({ kundeInfo, tabBadges }) {
           </button>
         ))}
       </div>
+
+      {/* Settings modal — header background image upload + crop position */}
+      {showSettings && (
+        <div
+          className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 backdrop-blur-sm p-6"
+          onClick={() => setShowSettings(false)}
+        >
+          <div
+            className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between px-5 py-4 border-b border-slate-200">
+              <div className="flex items-center gap-2">
+                <ImageIcon size={20} className="text-slate-600" strokeWidth={1.75} />
+                <h3 className="font-semibold text-slate-800">{lang === 'en' ? 'Header background' : 'Header-Hintergrund'}</h3>
+              </div>
+              <button
+                onClick={() => setShowSettings(false)}
+                className="p-2 rounded-lg hover:bg-slate-100 text-slate-500 hover:text-slate-700 transition-colors"
+                aria-label="Close"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            <div className="p-5 space-y-4">
+              <p className="text-sm text-slate-600">
+                {lang === 'en'
+                  ? 'Upload a landscape photo to use as the header background. After uploading you can pan the visible crop with the sliders.'
+                  : 'Lade ein Querformat-Foto hoch, das als Header-Hintergrund verwendet wird. Nach dem Upload kannst du den sichtbaren Bildausschnitt mit den Reglern verschieben.'}
+              </p>
+
+              <div className="flex items-center gap-3">
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handleFileSelect}
+                />
+                <button
+                  onClick={() => fileInputRef.current?.click()}
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-900 text-white text-sm font-medium hover:bg-slate-700 transition-colors"
+                >
+                  <Upload size={14} strokeWidth={2} />
+                  <span>{headerImage ? (lang === 'en' ? 'Replace image' : 'Bild ersetzen') : (lang === 'en' ? 'Upload image' : 'Bild hochladen')}</span>
+                </button>
+                {headerImage && (
+                  <button
+                    onClick={() => setHeaderImage(null)}
+                    className="flex items-center gap-2 px-4 py-2 rounded-lg bg-red-50 text-red-700 text-sm font-medium hover:bg-red-100 transition-colors"
+                  >
+                    <Trash2 size={14} strokeWidth={2} />
+                    <span>{lang === 'en' ? 'Remove' : 'Entfernen'}</span>
+                  </button>
+                )}
+              </div>
+
+              {headerImage && (
+                <div className="space-y-3">
+                  <div className="text-xs uppercase font-bold text-slate-500 tracking-wider">
+                    {lang === 'en' ? 'Preview' : 'Vorschau'}
+                  </div>
+                  <div
+                    className="w-full rounded-xl border border-slate-200 overflow-hidden"
+                    style={{
+                      height: 140,
+                      backgroundImage: `linear-gradient(rgba(15,23,42,0.55), rgba(15,23,42,0.55)), url(${headerImage.dataUrl})`,
+                      backgroundSize: 'cover',
+                      backgroundPosition: `${headerImage.posX}% ${headerImage.posY}%`,
+                      backgroundRepeat: 'no-repeat',
+                    }}
+                  >
+                    <div className="h-full w-full flex items-center px-4 text-white text-sm font-medium">
+                      {lang === 'en' ? 'Header preview' : 'Header-Vorschau'}
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">
+                        {lang === 'en' ? 'Horizontal' : 'Horizontal'} ({headerImage.posX}%)
+                      </label>
+                      <input
+                        type="range"
+                        min={0}
+                        max={100}
+                        value={headerImage.posX}
+                        onChange={(e) => setHeaderImage({ ...headerImage, posX: Number(e.target.value) })}
+                        className="w-full"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">
+                        {lang === 'en' ? 'Vertical' : 'Vertikal'} ({headerImage.posY}%)
+                      </label>
+                      <input
+                        type="range"
+                        min={0}
+                        max={100}
+                        value={headerImage.posY}
+                        onChange={(e) => setHeaderImage({ ...headerImage, posY: Number(e.target.value) })}
+                        className="w-full"
+                      />
+                    </div>
+                  </div>
+                  <p className="text-[11px] text-slate-400">
+                    {lang === 'en'
+                      ? 'A dark overlay is added so the header text stays readable.'
+                      : 'Ein dunkles Overlay wird automatisch hinzugefügt, damit der Header-Text lesbar bleibt.'}
+                  </p>
+                </div>
+              )}
+            </div>
+
+            <div className="px-5 py-3 border-t border-slate-200 flex items-center justify-end">
+              <button
+                onClick={() => setShowSettings(false)}
+                className="px-4 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-100 transition-colors"
+              >
+                {lang === 'en' ? 'Done' : 'Fertig'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </header>
   );
 }

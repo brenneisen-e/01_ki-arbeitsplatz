@@ -64,7 +64,7 @@ function featureToPath(feature, project) {
   return parts.join(' ');
 }
 
-/* ── State → RD mapping ───────────────────────────────────────────── */
+/* ── State → RD mapping (insurance) ──────────────────────────────── */
 const STATE_TO_RD = {
   'Nordrhein-Westfalen': 'rd_nrw_west',
   'Hamburg': 'rd_nord_west',
@@ -84,6 +84,26 @@ const STATE_TO_RD = {
   'Bayern': 'rd_sued_ost',
 };
 
+/* ── State → BU mapping (generic / Zukunfts AG) ──────────────────── */
+const STATE_TO_BU = {
+  'Berlin':                 'bu_tech',
+  'Brandenburg':            'bu_tech',
+  'Mecklenburg-Vorpommern': 'bu_data',
+  'Sachsen':                'bu_data',
+  'Sachsen-Anhalt':         'bu_data',
+  'Thüringen':              'bu_data',
+  'Hamburg':                'bu_hr',
+  'Bremen':                 'bu_hr',
+  'Schleswig-Holstein':     'bu_hr',
+  'Niedersachsen':          'bu_hr',
+  'Hessen':                 'bu_finance',
+  'Rheinland-Pfalz':        'bu_legal',
+  'Saarland':               'bu_legal',
+  'Nordrhein-Westfalen':    'bu_operations',
+  'Bayern':                 'bu_marketing',
+  'Baden-Württemberg':      'bu_procurement',
+};
+
 /* ── Tier colors ──────────────────────────────────────────────────── */
 function getTierFill(tier) {
   if (tier === 'green') return 'rgba(22,163,74,0.35)';
@@ -101,8 +121,11 @@ function getTierStroke(tier) {
 const SVG_W = 400;
 const SVG_H = 540;
 
-export default function GermanyMap({ data, onSelectRD }) {
+export default function GermanyMap({ data, onSelectRD, headcountShort = 'Mitarbeitende' }) {
   const [hoveredState, setHoveredState] = useState(null);
+
+  const isGenericMode = useMemo(() => data.length > 0 && data[0].id.startsWith('bu_'), [data]);
+  const stateMap = useMemo(() => isGenericMode ? STATE_TO_BU : STATE_TO_RD, [isGenericMode]);
 
   const rdMap = useMemo(() => {
     const m = {};
@@ -119,31 +142,46 @@ export default function GermanyMap({ data, onSelectRD }) {
     return { project: proj, paths: ps };
   }, []);
 
-  // Compute centroid for RD markers
+  // Compute centroid for RD/BU markers
   const rdMarkers = useMemo(() => {
     const RD_COORDS = {
-      rd_nrw_west: { lat: 51.23, lng: 6.78 },
-      rd_nrw_ost: { lat: 51.51, lng: 7.47 },
-      rd_nrw_sued: { lat: 50.94, lng: 6.96 },
-      rd_nord_west: { lat: 53.55, lng: 10.0 },
-      rd_nord_ost: { lat: 52.52, lng: 13.41 },
-      rd_mitte_west: { lat: 50.11, lng: 8.68 },
-      rd_mitte_ost: { lat: 50.98, lng: 11.03 },
-      rd_sued_west: { lat: 48.78, lng: 9.18 },
-      rd_sued_ost: { lat: 48.14, lng: 11.58 },
-      rd_nord_mitte: { lat: 52.37, lng: 9.74 },
+      rd_nrw_west:   { lat: 51.23, lng: 6.78  },
+      rd_nrw_ost:    { lat: 51.51, lng: 7.47  },
+      rd_nrw_sued:   { lat: 50.94, lng: 6.96  },
+      rd_nord_west:  { lat: 53.55, lng: 10.0  },
+      rd_nord_ost:   { lat: 52.52, lng: 13.41 },
+      rd_mitte_west: { lat: 50.11, lng: 8.68  },
+      rd_mitte_ost:  { lat: 50.98, lng: 11.03 },
+      rd_sued_west:  { lat: 48.78, lng: 9.18  },
+      rd_sued_ost:   { lat: 48.14, lng: 11.58 },
+      rd_nord_mitte: { lat: 52.37, lng: 9.74  },
       rd_sued_mitte: { lat: 49.45, lng: 11.08 },
-      rd_ost: { lat: 51.05, lng: 13.74 },
+      rd_ost:        { lat: 51.05, lng: 13.74 },
     };
+    const BU_COORDS = {
+      bu_tech:        { lat: 52.52, lng: 13.41 },
+      bu_data:        { lat: 52.47, lng: 13.52 },
+      bu_finance:     { lat: 50.11, lng: 8.68  },
+      bu_legal:       { lat: 50.17, lng: 8.60  },
+      bu_hr:          { lat: 53.55, lng: 10.0  },
+      bu_marketing:   { lat: 48.14, lng: 11.58 },
+      bu_product:     { lat: 48.20, lng: 11.48 },
+      bu_operations:  { lat: 51.51, lng: 7.47  },
+      bu_logistics:   { lat: 51.46, lng: 7.55  },
+      bu_sales:       { lat: 51.23, lng: 6.78  },
+      bu_cs:          { lat: 50.94, lng: 6.96  },
+      bu_procurement: { lat: 48.78, lng: 9.18  },
+    };
+    const coords = isGenericMode ? BU_COORDS : RD_COORDS;
     return data.map((rd) => {
-      const coord = RD_COORDS[rd.id];
+      const coord = coords[rd.id];
       if (!coord) return null;
       const [x, y] = project(coord.lng, coord.lat);
       return { ...rd, x, y };
     }).filter(Boolean);
-  }, [data, project]);
+  }, [data, project, isGenericMode]);
 
-  const hoveredRD = hoveredState ? rdMap[STATE_TO_RD[hoveredState]] : null;
+  const hoveredRD = hoveredState ? rdMap[stateMap[hoveredState]] : null;
 
   return (
     <div className="hc-map-container">
@@ -152,7 +190,7 @@ export default function GermanyMap({ data, onSelectRD }) {
 
         {/* State shapes */}
         {paths.map(({ name, d }) => {
-          const rdId = STATE_TO_RD[name];
+          const rdId = stateMap[name];
           const rd = rdId ? rdMap[rdId] : null;
           const isHovered = hoveredState === name;
           return (
@@ -200,10 +238,10 @@ export default function GermanyMap({ data, onSelectRD }) {
           <foreignObject x="10" y="10" width="220" height="70">
             <div className="hc-map-tooltip-inner">
               <div className="hc-map-tooltip-title">{hoveredRD.name}</div>
-              <div className="hc-map-tooltip-subtitle">{hoveredState}</div>
+              <div className="hc-map-tooltip-subtitle">{isGenericMode ? hoveredRD.region : hoveredState}</div>
               <div className="hc-map-tooltip-metrics">
                 <span style={{ color: getTierStroke(hoveredRD.tier), fontWeight: 700 }}>Score: {hoveredRD.composite}</span>
-                <span>{hoveredRD.headcount} Vermittler</span>
+                <span>{hoveredRD.headcount} {headcountShort}</span>
                 <span>Flukt. {hoveredRD.turnoverRate}%</span>
               </div>
             </div>

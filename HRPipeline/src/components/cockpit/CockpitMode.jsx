@@ -18,6 +18,9 @@ const COCKPIT_LABELS = {
     dimDemographics: 'Nachwuchs',
     dimProduction: 'Produktion',
     dimQuality: 'Stornoquote',
+    navRegions: 'Regionen-Vergleich',
+    navUnit: 'Einheiten-Detail',
+    idPrefix: 'rd_',
     complianceBanner: 'HR-Cockpit — Frühwarnsystem für Vertriebsorganisationen. Alle Daten pseudonymisiert gemäß DSGVO Art. 25. Mindestgruppengröße: 10 Personen. Human-in-the-Loop gem. Art. 22 DSGVO.'
   },
   generic: {
@@ -25,7 +28,7 @@ const COCKPIT_LABELS = {
     headcountShort: 'Mitarbeitende',
     unitLabel: 'Business Unit',
     unitLabelPlural: 'Business Units',
-    unitLabelPluralHeading: 'Business Units — Gesundheitsscore',
+    unitLabelPluralHeading: 'Business Units — Workforce Health',
     unitLabelShort: 'BUs',
     dimTurnover: 'Fluktuation',
     dimStaffing: 'Vakanzen',
@@ -33,11 +36,29 @@ const COCKPIT_LABELS = {
     dimDemographics: 'Nachwuchs',
     dimProduction: 'Produktivität',
     dimQuality: 'Qualität',
+    navRegions: 'Abteilungs-Vergleich',
+    navUnit: 'BU-Detail',
+    idPrefix: 'bu_',
     complianceBanner: 'HR-Cockpit — Frühwarnsystem für die Workforce. Alle Daten pseudonymisiert gemäß DSGVO Art. 25. Mindestgruppengröße: 10 Personen. Human-in-the-Loop gem. Art. 22 DSGVO.'
   }
 };
 
 // ======== Demo Data ========
+const BUSINESS_UNITS = [
+  { id: 'bu_tech',        name: 'Technology',         region: 'Berlin',      headcount: 312, budgeted: 340 },
+  { id: 'bu_data',        name: 'Data & Analytics',   region: 'Berlin',      headcount: 89,  budgeted: 110 },
+  { id: 'bu_finance',     name: 'Finance',            region: 'Frankfurt',   headcount: 198, budgeted: 220 },
+  { id: 'bu_legal',       name: 'Legal & Compliance', region: 'Frankfurt',   headcount: 67,  budgeted: 75  },
+  { id: 'bu_hr',          name: 'Human Resources',    region: 'Hamburg',     headcount: 145, budgeted: 160 },
+  { id: 'bu_marketing',   name: 'Marketing',          region: 'München',     headcount: 167, budgeted: 185 },
+  { id: 'bu_product',     name: 'Product',            region: 'München',     headcount: 212, budgeted: 235 },
+  { id: 'bu_operations',  name: 'Operations',         region: 'Dortmund',    headcount: 441, budgeted: 480 },
+  { id: 'bu_logistics',   name: 'Logistics',          region: 'Dortmund',    headcount: 356, budgeted: 400 },
+  { id: 'bu_sales',       name: 'Sales',              region: 'Düsseldorf',  headcount: 284, budgeted: 310 },
+  { id: 'bu_cs',          name: 'Customer Success',   region: 'Köln',        headcount: 178, budgeted: 200 },
+  { id: 'bu_procurement', name: 'Procurement',        region: 'Stuttgart',   headcount: 134, budgeted: 150 },
+];
+
 const REGIONALDIREKTIONEN = [
   { id: 'rd_nrw_west', name: 'RD Düsseldorf', region: 'NRW West', headcount: 584, budgeted: 620 },
   { id: 'rd_nrw_ost', name: 'RD Dortmund', region: 'NRW Ost', headcount: 461, budgeted: 500 },
@@ -53,10 +74,10 @@ const REGIONALDIREKTIONEN = [
   { id: 'rd_ost', name: 'RD Dresden', region: 'Ost', headcount: 222, budgeted: 280 },
 ];
 
-function generateMetrics() {
+function generateMetrics(units) {
   const profiles = [{ bias: 'good', count: 4 }, { bias: 'average', count: 5 }, { bias: 'bad', count: 3 }];
   let profileIdx = 0, profileCount = 0;
-  return REGIONALDIREKTIONEN.map(rd => {
+  return units.map(rd => {
     if (profileCount >= profiles[profileIdx].count) { profileIdx = Math.min(profileIdx + 1, profiles.length - 1); profileCount = 0; }
     profileCount++;
     const bias = profiles[profileIdx].bias;
@@ -156,7 +177,7 @@ function OverviewView({ data, labels }) {
                 <tbody>
                   {[...data].sort((a, b) => a.composite - b.composite).map(d => (
                     <tr key={d.id}>
-                      <td><span style={{ color: tierColor(d.tier), fontWeight: 600 }}>●</span> {d.id.replace('rd_', '').toUpperCase()}</td>
+                      <td><span style={{ color: tierColor(d.tier), fontWeight: 600 }}>●</span> {d.id.replace(labels.idPrefix, '').toUpperCase()}</td>
                       <td>{d.name}</td>
                       <td><strong>{d.composite}</strong></td>
                       <td>{d.headcount}</td>
@@ -178,7 +199,7 @@ function OverviewView({ data, labels }) {
               <span className="hc-panel-badge">Klicken für Details</span>
             </div>
             <Suspense fallback={<div style={{ height: 400, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><div className="hp-loading-spinner" /></div>}>
-              <GermanyMap data={data} />
+              <GermanyMap data={data} headcountShort={labels.headcountShort} />
             </Suspense>
           </div>
         </div>
@@ -385,12 +406,15 @@ export default function CockpitMode() {
   const { institut } = useInstitut();
   const labels = useMemo(() => COCKPIT_LABELS[institut.mode === 'generic' ? 'generic' : 'insurance'], [institut.mode]);
   const [view, setView] = useState('overview');
-  const [data] = useState(() => generateMetrics());
+  const data = useMemo(
+    () => generateMetrics(institut.mode === 'generic' ? BUSINESS_UNITS : REGIONALDIREKTIONEN),
+    [institut.mode]
+  );
 
   const views = [
     { id: 'overview', label: 'Gesamtübersicht', icon: <LayoutGrid size={16} /> },
-    { id: 'regions', label: 'Regionen-Vergleich', icon: <MapPin size={16} /> },
-    { id: 'unit', label: 'Einheiten-Detail', icon: <Users size={16} /> },
+    { id: 'regions', label: labels.navRegions, icon: <MapPin size={16} /> },
+    { id: 'unit', label: labels.navUnit, icon: <Users size={16} /> },
     { id: 'earlywarning', label: 'Frühwarnsystem', icon: <AlertTriangle size={16} /> },
   ];
 

@@ -192,6 +192,12 @@
 .card-base, .card-passthrough {
   contain: layout paint;
 }
+/* Lebenszeitstrahl: Tooltips müssen über die Card-Boundary hinausragen
+   können, deshalb hier kein paint-Containment. */
+.lebenszeitstrahl-card {
+  contain: none;
+  overflow: visible;
+}
 /* KPI-Karten: will-change hinted den Browser, eigene Compositing Layer
    vorzubereiten → Hover-Repaint wird auf GPU ausgelagert. Nur auf
    card-hover (4 KPI-Karten), NICHT auf row-hover (30+ Rows → zu viel). */

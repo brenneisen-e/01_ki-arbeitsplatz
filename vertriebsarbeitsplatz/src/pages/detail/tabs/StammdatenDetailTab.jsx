@@ -1,5 +1,13 @@
 import Card from '../../../components/ui/Card';
 import LebenszeitstrahlCard from '../../../components/ui/LebenszeitstrahlCard';
+import {
+  KISummaryBlock,
+  ProduktbestandBlock,
+  AbsicherungsCheckBlock,
+  KontaktBlock,
+  HaushaltBlock,
+  NaechsteEreignisseBlock,
+} from '../../../components/ui/KundenInfoBlocks';
 import { getLang } from '../../../utils/langHelper';
 import DataTable from '../../../components/ui/DataTable';
 import { StatusBadge, SparteBadge } from '../../../components/ui/Badge';
@@ -184,6 +192,9 @@ export default function StammdatenDetailTab({ kunde }) {
         </div>
       </Card>
 
+      {/* KI-Zusammenfassung – Banking only */}
+      {modeId === 'banking' && <KISummaryBlock kunde={kunde} />}
+
       <div className="grid grid-cols-2 gap-4">
         {/* Persoenliche Daten */}
         <Card hover={false}>
@@ -276,6 +287,21 @@ export default function StammdatenDetailTab({ kunde }) {
           </div>
         </Card>
       </div>
+
+      {/* Erweiterte Banking-Info-Blöcke */}
+      {modeId === 'banking' && (
+        <>
+          <div className="grid grid-cols-2 gap-4">
+            <ProduktbestandBlock kunde={kunde} />
+            <AbsicherungsCheckBlock kunde={kunde} />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <KontaktBlock kunde={kunde} />
+            <HaushaltBlock kunde={kunde} />
+          </div>
+          <NaechsteEreignisseBlock kunde={kunde} />
+        </>
+      )}
 
       {/* Lebenszeitstrahl – Banking only (FIDA + Open Finance Kontext) */}
       {modeId === 'banking' && <LebenszeitstrahlCard kunde={kunde} />}

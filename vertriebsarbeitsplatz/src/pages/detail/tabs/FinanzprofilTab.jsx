@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { Sparkles } from 'lucide-react';
 import Card from '../../../components/ui/Card';
 import DonutChart from '../../../components/charts/DonutChart';
 import { formatEur } from '../../../utils/formatters';
@@ -302,7 +303,7 @@ function CategoryRow({ category, defaultOpen = false }) {
           {category.items.filter(i => i.insight).map((item, idx) => (
             <div key={`insight-${idx}`} className="px-3 py-2 bg-amber-50 border-t border-amber-100">
               <div className="flex items-start gap-2">
-                <span className="text-amber-500 text-sm mt-0.5">💡</span>
+                <Sparkles size={14} className="text-amber-500 mt-0.5 shrink-0" strokeWidth={2} />
                 <span className="text-xs text-amber-800">{item.insight}</span>
               </div>
             </div>
@@ -501,21 +502,6 @@ export default function FinanzprofilTab({ kunde }) {
         </Card>
       )}
 
-      {/* Row 3: KI-Erkenntnisse aus Kontoumsätzen - hidden for VV */}
-      {!isVV && insights.length > 0 && (
-        <Card hover={false}>
-          <div className="flex items-center gap-2 mb-4">
-            <span className="shrink-0">{InsightIcons.header}</span>
-            <h3 className="font-semibold text-slate-800">{t('kiErkenntnisse')}</h3>
-            <span className="text-xs text-slate-400 ml-auto">{insights.length} {t('erkenntnisseLabel')}</span>
-          </div>
-          <div className="space-y-2.5">
-            {insights.map((ins, i) => (
-              <InsightCard key={i} insight={ins} />
-            ))}
-          </div>
-        </Card>
-      )}
     </div>
   );
 }

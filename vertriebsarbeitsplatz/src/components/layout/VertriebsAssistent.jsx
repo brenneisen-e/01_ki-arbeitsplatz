@@ -2,7 +2,7 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import { MessageCircle, X, Send, Bot, User, FileText, Mail } from 'lucide-react';
 import { useMode } from '../../hooks/useMode';
 import useTranslation from '../../i18n/useTranslation';
-import { KUNDEN_BY_MODE } from '../../data';
+import { KUNDEN_BY_MODE, TERMINE_BY_MODE, AUFGABEN_BY_MODE, getAllPotentiale } from '../../data';
 import { VV_LEADS } from '../../data/vvExtended';
 import { getLang, tx, invalidateLangCache } from '../../utils/langHelper';
 import { MODE_CONFIGS } from '../../data/modeConfig';
@@ -33,7 +33,7 @@ function getWelcomeMessage(modeId, t) {
 function getQuickActions(modeId, t) {
   const actions = {
     versicherung: [t('neueLeadsAnzeigen'), t('kundenpotenzialAnalysieren'), t('gespraechsleitfadenErstellen'), t('crossSellingChancen')],
-    banking: ['Was steht heute an?', 'Erstgespräch Markus Wagner vorbereiten', 'Auslaufende Kredite 6 Monate', 'Kunden zur Baufi-Aktion'],
+    banking: ['Was steht heute an?', 'Meine neuen Leads', 'Erstgespräch Markus Wagner vorbereiten', 'Auslaufende Kredite 6 Monate'],
     vermoegensverwaltung: [t('neueLeadsAnzeigen'), t('mandantenpotenzialAnalysieren'), t('gespraechsleitfadenErstellen'), t('portfolioAnalyse')],
   };
   return actions[modeId] || actions.versicherung;
@@ -46,6 +46,7 @@ const BANKING_SUGGESTIONS = [
     category: 'Tagesplanung',
     prompts: [
       'Was steht heute an?',
+      'Meine neuen Leads',
       'Priorisiere meine offenen Leads nach Ertragspotenzial',
       'Welche FIDA-Consents fehlen mir noch?',
     ],
@@ -353,7 +354,7 @@ function getCockpitDemoResponse(message) {
 export function getDemoResponse(message, { currentView, modeId }) {
   const lower = message.toLowerCase();
 
-  if (lower.includes('vertriebspotentiale') || lower.includes('vertriebspotenziale') || lower.includes('neue leads') || lower.includes('leads anzeigen') || lower.includes('show leads') || lower.includes('analyze leads') || lower.includes('new leads')) {
+  if (lower.includes('vertriebspotentiale') || lower.includes('vertriebspotenziale') || lower.includes('neue leads') || lower.includes('neuen leads') || lower.includes('meine leads') || lower.includes('leads anzeigen') || lower.includes('show leads') || lower.includes('analyze leads') || lower.includes('new leads') || lower.includes('my leads')) {
     if (modeId === 'vermoegensverwaltung') {
       return {
         content: `<div class="space-y-3">
@@ -377,23 +378,32 @@ export function getDemoResponse(message, { currentView, modeId }) {
       };
     }
     if (modeId === 'banking') {
+      // Lies die echten Potenziale aus der gleichen Quelle, die der
+      // Potenziale-Tab anzeigt, damit die Antwort konsistent ist.
+      const allPot = getAllPotentiale('banking');
+      const identifiziert = allPot.filter(p => p.status === 'identifiziert');
+      const prioRank = { sehr_hoch: 4, hoch: 3, mittel: 2, niedrig: 1 };
+      const topPotentiale = [...identifiziert]
+        .sort((a, b) => (prioRank[b.prioritaet] || 0) - (prioRank[a.prioritaet] || 0) || (b.volumen || 0) - (a.volumen || 0))
+        .slice(0, 6);
+      const fmtAmount = (p) => {
+        if (!p.volumen) return '';
+        const v = p.volumen >= 1000 ? `${Math.round(p.volumen / 100) / 10}k€` : `${p.volumen}€`;
+        return p.volumenTyp === 'jaehrlich' ? `${v}/J.` : v;
+      };
+      const listItems = topPotentiale.map(p => {
+        const amt = fmtAmount(p);
+        return `<li><strong>${p.kundeName}</strong> — ${p.titel}${amt ? ` <span class="text-slate-500">(${amt})</span>` : ''}</li>`;
+      }).join('');
+      const totalCount = identifiziert.length;
       return {
         content: `<div class="space-y-3">
-          <p class="font-semibold">${tx('Aktuelle Leads', 'Current Leads')}</p>
-          <p>${tx('Ich habe <strong>8 aktive Vertriebschancen</strong> identifiziert:', 'I have identified <strong>8 active sales opportunities</strong>:')}</p>
-          <p class="text-xs font-semibold text-slate-600 mt-1">${tx('Neukunden (4):', 'New Customers (4):')} </p>
-          <ol class="list-decimal pl-4 space-y-1">
-            <li><strong>Dr. Martin Schäfer</strong> — ${tx('Baufinanzierung 380k, Termin vereinbart', 'Mortgage 380k, appointment arranged')}</li>
-            <li><strong>Lisa & Tom Bergmann</strong> — ${tx('Hauskauf geplant, Kreditbedarf 420k', 'House purchase planned, credit need 420k')}</li>
-            <li><strong>Firma Elektro Wenzel</strong> — ${tx('Betriebsmittelkredit, 150k', 'Working capital loan, 150k')}</li>
+          <p class="font-semibold">${tx('Deine neuen Leads', 'Your new leads')}</p>
+          <p>${tx(`Ich habe <strong>${totalCount} neue Potenziale</strong> in der Spalte „Identifiziert". Die wichtigsten:`, `I have identified <strong>${totalCount} new potentials</strong> in the "Identified" column. The top ones:`)}</p>
+          <ol class="list-decimal pl-4 space-y-1 text-[13px]">
+            ${listItems}
           </ol>
-          <p class="text-xs font-semibold text-slate-600 mt-1">${tx('Bestandskunden (4):', 'Existing Customers (4):')} </p>
-          <ol class="list-decimal pl-4 space-y-1">
-            <li><strong>Schmidt ${tx('Anschlussfinanzierung', 'Refinancing')}</strong> — ${tx('Zinsbindung läuft 09/2027, 285k', 'Fixed rate expires 09/2027, 285k')}</li>
-            <li><strong>Meier ${tx('Sparplan-Erhöhung', 'Savings Plan Increase')}</strong> — ${tx('Gehaltsanpassung, +200€/mtl.', 'Salary adjustment, +200€/mo.')}</li>
-            <li><strong>Weber ${tx('Festgeld-Fälligkeit', 'Fixed Deposit Maturity')}</strong> — ${tx('50k, Wiederanlage beraten', '50k, reinvestment advice')}</li>
-          </ol>
-          <p class="text-xs text-slate-500 mt-2">${tx('→ Wechsel zum Tab <em>Potenziale</em> für Details...', '→ Switch to the <em>Potentials</em> tab for details...')}</p>
+          <p class="text-xs text-slate-500 mt-2">${tx('→ Wechsel zum Tab <em>Potenziale</em> zeigt alle Leads im Kanban-Board.', '→ Switching to the <em>Potentials</em> tab shows all leads in the kanban board.')}</p>
         </div>`,
         navigateTo: currentView === 'detail' ? 'impulse' : 'potentiale',
       };
@@ -478,7 +488,7 @@ export function getDemoResponse(message, { currentView, modeId }) {
           <li><strong>${tx('Abschluss', 'Closing')}</strong> — ${tx('Nächste Schritte vereinbaren, Folgetermin festlegen', 'Agree on next steps, schedule follow-up')}</li>
         </ol>
         <div class="mt-2 p-2 bg-amber-50 border border-amber-200 rounded text-xs text-amber-800">
-          💡 <strong>${tx('Tipp:', 'Tip:')}</strong> ${tx('Den Kunden zuerst erzählen lassen — offene Fragen stellen!', 'Let the customer talk first — ask open-ended questions!')}
+          <strong>${tx('Tipp:', 'Tip:')}</strong> ${tx('Den Kunden zuerst erzählen lassen — offene Fragen stellen!', 'Let the customer talk first — ask open-ended questions!')}
         </div>
       </div>`,
     };
@@ -515,20 +525,54 @@ export function getDemoResponse(message, { currentView, modeId }) {
   // ─── Extended Banking handlers (FIDA-powered assistant scenarios) ───
 
   if (modeId === 'banking') {
-    // Tagesstart / Was steht heute an
+    // Tagesstart / Was steht heute an — liest aus denselben Datenquellen,
+    // die auch in der Übersichts-Ansicht (TERMINE_BY_MODE, AUFGABEN_BY_MODE)
+    // angezeigt werden, damit die Antwort konsistent ist.
     if (lower.includes('heute') || lower.includes('tagesplan') || lower.includes('tagesstart') || lower.includes('steht an')) {
+      const termine = (TERMINE_BY_MODE.banking || []).slice(0, 4);
+      const aufgaben = (AUFGABEN_BY_MODE.banking || []);
+      const heute = new Date();
+      const heuteStr = heute.toISOString().split('T')[0];
+      const termineToday = termine.filter(t => t.datum === heuteStr);
+      const termineRest = termine.filter(t => t.datum !== heuteStr);
+      const aufgabeHeute = aufgaben.find(a => /heute|today/i.test(a.faellig || ''));
+
+      const formatDatum = (iso) => {
+        const d = new Date(iso);
+        return d.toLocaleDateString('de-DE', { weekday: 'short', day: '2-digit', month: '2-digit' });
+      };
+
+      const terminLines = [
+        ...termineToday.map(t =>
+          `<div class="flex items-start gap-2"><span class="w-1.5 h-1.5 rounded-full bg-red-500 mt-1.5"></span><div><strong>${t.zeit} ${t.kunde}</strong> — ${t.betreff} <span class="text-xs text-red-500">· heute</span></div></div>`
+        ),
+        ...termineRest.map(t =>
+          `<div class="flex items-start gap-2"><span class="w-1.5 h-1.5 rounded-full bg-blue-500 mt-1.5"></span><div><strong>${formatDatum(t.datum)} · ${t.zeit} ${t.kunde}</strong> — ${t.betreff}</div></div>`
+        ),
+      ].join('');
+
+      const aufgabenLines = aufgaben.slice(0, 3).map((a) => {
+        const isToday = /heute|today/i.test(a.faellig || '');
+        const dotClass = isToday ? 'bg-amber-500' : 'bg-slate-400';
+        const textClass = isToday ? 'text-amber-600' : 'text-slate-500';
+        return `<div class="flex items-start gap-2"><span class="w-1.5 h-1.5 rounded-full ${dotClass} mt-1.5"></span><div><strong>${a.text}</strong> <span class="text-xs ${textClass}">· ${a.faellig}</span></div></div>`;
+      }).join('');
+
+      // Top-Priorität = erste Aufgabe mit „Heute"-Fälligkeit oder erster Termin heute
+      const topPrio = aufgabeHeute
+        ? aufgabeHeute.text
+        : (termineToday[0] ? `${termineToday[0].kunde} — ${termineToday[0].betreff}` : null);
+
       return {
         content: `<div class="space-y-2">
           <p class="font-semibold">Dein Tag im Überblick</p>
           <div class="space-y-1.5 text-[13px]">
-            <div class="flex items-start gap-2"><span class="w-1.5 h-1.5 rounded-full bg-red-500 mt-1.5"></span><div><strong>16:30 Stefan Braun</strong> — Gewerbekonto-Beratung <span class="text-xs text-red-500">· heute</span></div></div>
-            <div class="flex items-start gap-2"><span class="w-1.5 h-1.5 rounded-full bg-amber-500 mt-1.5"></span><div><strong>Anschlussfinanzierung Fischer vorbereiten</strong> — Zinsbindung 04/2026 <span class="text-xs text-amber-600">· kritisch</span></div></div>
-            <div class="flex items-start gap-2"><span class="w-1.5 h-1.5 rounded-full bg-blue-500 mt-1.5"></span><div><strong>2 FIDA-Consents offen</strong> — Hoffmann, Lang</div></div>
-            <div class="flex items-start gap-2"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mt-1.5"></span><div><strong>1 Rückruf</strong> — Sandra Müller (Baufi-Vorgespräch)</div></div>
+            ${terminLines || '<div class="text-slate-500 italic text-xs">Keine Termine geplant.</div>'}
+            ${aufgabenLines}
           </div>
-          <div class="mt-2 p-2 bg-indigo-50 border border-indigo-200 rounded text-xs text-indigo-800">
-            💡 <strong>Top-Priorität:</strong> Fischer — nur noch ~4 Wochen bis Zinsbindungsende.
-          </div>
+          ${topPrio ? `<div class="mt-2 p-2 bg-indigo-50 border border-indigo-200 rounded text-xs text-indigo-800">
+            <strong>Top-Priorität:</strong> ${topPrio}
+          </div>` : ''}
         </div>`,
       };
     }
@@ -576,7 +620,7 @@ export function getDemoResponse(message, { currentView, modeId }) {
             <li><strong>Stefan Braun</strong> — 36, IT-Selbstständig, kein Schutz</li>
           </ol>
           <div class="mt-2 p-2 bg-amber-50 border border-amber-200 rounded text-xs text-amber-800">
-            💡 Alle drei qualifizieren für die R+V VorsorgePlus-Aktion.
+            Alle drei qualifizieren für die R+V VorsorgePlus-Aktion.
           </div>
         </div>`,
       };

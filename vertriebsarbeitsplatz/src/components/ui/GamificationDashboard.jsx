@@ -1,0 +1,245 @@
+import { useMemo } from 'react';
+import { Trophy, Target, TrendingUp, Flame, Zap, Calendar, ArrowRight } from 'lucide-react';
+import Card from './Card';
+import { formatEur } from '../../utils/formatters';
+
+/**
+ * Gamification dashboard above the Potenziale Kanban board.
+ *
+ * Shows the advisor's progress on three KPIs (Abschlüsse, Volumen, Conv-Rate),
+ * a streak indicator, and three KI-empfohlene "Quick Wins" for the day.
+ *
+ * The values use the in-session kanban state where possible so they react to
+ * actual moves the advisor makes during the demo.
+ */
+export default function GamificationDashboard({ potentiale, kanbanState }) {
+  const stats = useMemo(() => {
+    const abgeschlossen = potentiale.filter(p => p.status === 'abgeschlossen');
+    const nichtSinnvoll = potentiale.filter(p => p.status === 'nicht_sinnvoll');
+    const abschluesse = abgeschlossen.length;
+    const abschlussVolumen = abgeschlossen.reduce((s, p) => {
+      const ov = p._override || {};
+      return s + (ov.volumen || p.volumen || 0);
+    }, 0);
+    const convDenominator = abgeschlossen.length + nichtSinnvoll.length;
+    const convRate = convDenominator > 0
+      ? (abgeschlossen.length / convDenominator) * 100
+      : 0;
+    return { abschluesse, abschlussVolumen, convRate };
+  }, [potentiale]);
+
+  // Static targets — in einer echten App vom Filialleiter konfigurierbar
+  const targets = {
+    abschluesse: 45,
+    volumen: 80000,
+    convRate: 15,
+  };
+
+  // Streak — gezählt aus dem kanbanState (Einträge pro Tag in den letzten 14 Werktagen)
+  const streak = useMemo(() => {
+    const movesByDay = {};
+    Object.values(kanbanState || {}).forEach(entry => {
+      if (!entry?.movedAt) return;
+      const day = entry.movedAt.split('T')[0];
+      movesByDay[day] = (movesByDay[day] || 0) + 1;
+    });
+    // Rückwärts vom heutigen Tag, Wochenenden überspringen
+    const today = new Date();
+    const days = [];
+    let count = 0;
+    let streakActive = true;
+    for (let i = 0; i < 10; i++) {
+      const d = new Date(today);
+      d.setDate(d.getDate() - i);
+      const dow = d.getDay();
+      if (dow === 0 || dow === 6) continue; // Sa/So überspringen
+      const key = d.toISOString().split('T')[0];
+      // Demo-Streak: erste 8 Tage aktiv, danach noch 0
+      const baseActive = i < 8;
+      const moved = !!movesByDay[key];
+      const active = baseActive || moved;
+      if (i === 0 && !active) streakActive = false;
+      if (active && streakActive) count++;
+      days.unshift({ date: key, active, label: d.toLocaleDateString('de-DE', { weekday: 'short' }).replace('.', '') });
+    }
+    return { count, days };
+  }, [kanbanState]);
+
+  // Quick Wins — drei niedrig-effort, hoch-konfidente Potenziale aus „identifiziert"/„termin"
+  const quickWins = useMemo(() => {
+    const candidates = potentiale.filter(p =>
+      p.status === 'identifiziert' || p.status === 'termin'
+    );
+    // Sortiere nach Priorität, dann Volumen
+    const prioRank = { sehr_hoch: 4, hoch: 3, mittel: 2, niedrig: 1 };
+    const sorted = [...candidates].sort((a, b) => {
+      const pa = prioRank[a.prioritaet] || 0;
+      const pb = prioRank[b.prioritaet] || 0;
+      if (pb !== pa) return pb - pa;
+      return (b.volumen || 0) - (a.volumen || 0);
+    });
+    return sorted.slice(0, 3);
+  }, [potentiale]);
+
+  return (
+    <Card hover={false}>
+      <div className="flex items-center justify-between mb-5">
+        <div className="flex items-center gap-2">
+          <Trophy size={20} className="text-amber-500" strokeWidth={1.75} />
+          <h3 className="font-semibold text-slate-800">Dein Monat</h3>
+        </div>
+        <div className="text-xs text-slate-400 font-mono">
+          {new Date().toLocaleDateString('de-DE', { month: 'long', year: 'numeric' })}
+        </div>
+      </div>
+
+      {/* Progress KPIs */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
+        <ProgressCard
+          icon={Target}
+          label="Abschlüsse"
+          current={stats.abschluesse}
+          target={targets.abschluesse}
+          format={(n) => n}
+        />
+        <ProgressCard
+          icon={TrendingUp}
+          label="Abschluss-Volumen"
+          current={stats.abschlussVolumen}
+          target={targets.volumen}
+          format={(n) => formatEur(n)}
+        />
+        <ProgressCard
+          icon={Zap}
+          label="Conversion-Rate"
+          current={stats.convRate}
+          target={targets.convRate}
+          format={(n) => `${n.toFixed(1)}%`}
+        />
+      </div>
+
+      {/* Streak */}
+      <div className="rounded-xl border border-orange-200 bg-gradient-to-r from-orange-50 to-amber-50 p-4 mb-5">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-lg bg-orange-100 flex items-center justify-center shrink-0">
+            <Flame size={20} className="text-orange-600" strokeWidth={2} />
+          </div>
+          <div className="flex-1 min-w-0">
+            <div className="text-sm font-bold text-slate-800">
+              {streak.count} {streak.count === 1 ? 'Tag' : 'Tage'} in Folge mindestens 1 Potenzial bearbeitet
+            </div>
+            <div className="text-xs text-slate-500 mt-0.5">
+              {streak.count >= 20 ? 'Unaufhaltsam' : streak.count >= 10 ? 'Auf Kurs' : streak.count >= 5 ? 'Solide Woche' : 'Streak aufbauen'}
+            </div>
+          </div>
+          <div className="flex items-center gap-1">
+            {streak.days.map((d, i) => (
+              <div
+                key={i}
+                className="flex flex-col items-center gap-0.5"
+                title={d.date}
+              >
+                <div
+                  className={`w-3 h-3 rounded-full transition-colors ${
+                    d.active
+                      ? 'bg-orange-500'
+                      : 'bg-white border border-orange-200'
+                  }`}
+                />
+                <span className="text-[9px] text-slate-400 font-medium">{d.label}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Quick Wins */}
+      <div className="rounded-xl border border-indigo-200 bg-gradient-to-br from-indigo-50/60 to-blue-50/30 p-4">
+        <div className="flex items-center gap-2 mb-3">
+          <Calendar size={16} className="text-indigo-600" strokeWidth={2} />
+          <span className="text-sm font-bold text-slate-800">Die KI empfiehlt diese {quickWins.length} Potenziale für heute:</span>
+        </div>
+        <div className="space-y-2">
+          {quickWins.map((qw, i) => (
+            <div
+              key={qw._id || i}
+              className="flex items-center gap-3 bg-white rounded-lg border border-slate-200 px-3 py-2 hover:border-indigo-300 hover:shadow-sm transition-all cursor-pointer"
+            >
+              <div className="w-7 h-7 rounded-lg bg-indigo-100 flex items-center justify-center text-xs font-bold text-indigo-700 shrink-0">
+                {i + 1}
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="text-xs font-bold text-slate-800">
+                    {(qw.kundeName || '').split(' ').map(n => n[0]).join('')} {qw.kundeName}
+                  </span>
+                  <span className="text-xs text-slate-600 truncate">{qw.titel}</span>
+                </div>
+                <div className="text-[11px] text-slate-500 mt-0.5">
+                  {qw.volumen ? (
+                    <span className="font-mono font-semibold text-slate-700">
+                      {formatEur(qw.volumen)}{qw.volumenTyp === 'jaehrlich' ? '/J.' : ''}
+                    </span>
+                  ) : null}
+                  {qw.beschreibung && qw.volumen ? ' · ' : ''}
+                  {qw.beschreibung}
+                </div>
+              </div>
+              <ArrowRight size={14} className="text-slate-300 shrink-0" />
+            </div>
+          ))}
+          {quickWins.length === 0 && (
+            <div className="text-xs text-slate-500 italic text-center py-2">
+              Keine offenen Quick Wins.
+            </div>
+          )}
+        </div>
+      </div>
+    </Card>
+  );
+}
+
+function ProgressCard({ icon: Icon, label, current, target, format }) {
+  const pct = target > 0 ? Math.min(100, (current / target) * 100) : 0;
+  const pctRounded = Math.round(pct);
+
+  // Color thresholds: red <50, amber 50-80, green >80, gold >100
+  let barColor = '#dc2626';
+  let bgColor = 'bg-red-50';
+  let borderColor = 'border-red-200';
+  if (pct >= 100) {
+    barColor = '#f59e0b';
+    bgColor = 'bg-amber-50';
+    borderColor = 'border-amber-300';
+  } else if (pct >= 80) {
+    barColor = '#16a34a';
+    bgColor = 'bg-emerald-50';
+    borderColor = 'border-emerald-200';
+  } else if (pct >= 50) {
+    barColor = '#f59e0b';
+    bgColor = 'bg-amber-50';
+    borderColor = 'border-amber-200';
+  }
+
+  return (
+    <div className={`rounded-xl border ${borderColor} ${bgColor} p-4`}>
+      <div className="flex items-center gap-2 mb-2">
+        <Icon size={14} style={{ color: barColor }} strokeWidth={2} />
+        <span className="text-xs font-semibold text-slate-600 uppercase tracking-wider">{label}</span>
+      </div>
+      <div className="flex items-baseline justify-between mb-2">
+        <span className="text-xl font-bold text-slate-800 font-mono">{format(current)}</span>
+        <span className="text-xs text-slate-500 font-mono">/ {format(target)}</span>
+      </div>
+      <div className="h-2 bg-white rounded-full overflow-hidden border border-slate-200">
+        <div
+          className="h-full rounded-full transition-all"
+          style={{ width: `${pct}%`, backgroundColor: barColor }}
+        />
+      </div>
+      <div className="text-[11px] text-slate-500 mt-1.5 font-medium">
+        {pctRounded}% Ziel
+      </div>
+    </div>
+  );
+}

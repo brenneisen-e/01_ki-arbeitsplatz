@@ -7,63 +7,63 @@ export const HP_PROFILES = {
         age: 34,
         city: 'Düsseldorf',
         region: 'nrw',
-        experience: '8 Jahre Versicherungsvertrieb (Allianz AO)',
+        experience: '8 Jahre Industrievertrieb (Henkel AG, Key Account)',
         experienceYears: 8,
-        education: 'BWL-Studium (B.A.), IHK Versicherungsfachmann',
-        skills: ['Kundenakquise', 'Bestandsmanagement', 'Führungserfahrung', 'Vertriebssteuerung', 'Kundenbindung'],
-        certifications: ['IHK Versicherungsfachmann (§34d)', 'BWL Bachelor (DQR 6)', 'IDD Weiterbildung 2024'],
+        education: 'BWL-Studium (B.A.), Ausbildung Industriekaufmann (IHK)',
+        skills: ['Key Account Management', 'Angebotserstellung', 'Teamführung', 'SAP SD', 'Salesforce CRM'],
+        certifications: ['IHK Industriekaufmann (DQR 4)', 'BWL Bachelor (DQR 6)', 'Salesforce Certified'],
         insuranceFlags: {
-            green: ['8J Allianz AO-Erfahrung', 'IHK §34d qualifiziert', 'Bestandsgröße 2.4 Mio €', 'Ø 115% Zielerreichung'],
-            red: ['Kein Fachwirt IHK'],
-            neutral: ['Keine ERGO-Erfahrung']
+            green: ['8J B2B-Vertriebserfahrung', 'BWL-Studium (DQR 6)', 'Bestandsvolumen 2,4 Mio €', 'Ø 115% Zielerreichung', 'Führungserfahrung (3 MA)'],
+            red: ['Keine Versicherungserfahrung', 'Keine IHK §34d'],
+            neutral: ['Branchenwechsel aus Industrie']
         },
-        strengths: ['Kundenakquise', 'Bestandsmanagement', 'Führungserfahrung (3 MA)', 'IHK-qualifiziert', 'Allianz AO-Erfahrung'],
-        weaknesses: ['Kein Fachwirt IHK'],
-        neutrals: ['Keine ERGO-Erfahrung'],
-        scores: { vertrieb: 95, branche: 90, qualifikation: 88, standort: 92, softskills: 85 },
-        totalScore: 92,
-        summary: '8 Jahre fundierte Vertriebserfahrung in der Allianz Ausschließlichkeitsorganisation. IHK-Qualifikation nach §34d, nachgewiesene Führungskompetenz über 3 Mitarbeiter und Bestandsvolumen von 2,4 Mio €. Durchschnittliche Zielerreichung von 115% belegt überdurchschnittliche Vertriebsleistung. Idealer Kandidat für die Agenturleitung.',
-        radarData: [95, 90, 88, 92, 85],
+        strengths: ['Starke B2B-Vertriebserfahrung', 'BWL-Studium (DQR 6)', 'Führungserfahrung (3 MA)', 'Hohe Zielerreichung (115%)', 'CRM- & SAP-Kompetenz'],
+        weaknesses: ['Keine Versicherungserfahrung', 'Keine IHK §34d-Qualifikation'],
+        neutrals: ['Branchenwechsel aus Industrie'],
+        scores: { vertrieb: 90, branche: 42, qualifikation: 85, standort: 92, softskills: 85 },
+        totalScore: 78,
+        summary: '8 Jahre Industrievertrieb bei Henkel AG als Key Account Manager. BWL-Bachelor (DQR 6), IHK Industriekaufmann und Salesforce-Zertifizierung. Bestandsvolumen 2,4 Mio. €, Führungserfahrung über 3 Mitarbeiter und Ø 115 % Zielerreichung. Starker Vertriebskandidat mit Branchenwechselpotenzial — §34d-Qualifikation über ERGO Einarbeitungsprogramm nachholen.',
+        radarData: [90, 42, 85, 92, 85],
         waterfall: [
-            { label: 'IHK Versicherungsfachmann §34d', points: 18, type: 'positive' },
-            { label: '8 Jahre AO-Erfahrung (Allianz)', points: 15, type: 'positive' },
-            { label: 'Bestandsgröße 2,4 Mio €', points: 14, type: 'positive' },
+            { label: '8 Jahre Key Account B2B (Henkel)', points: 16, type: 'positive' },
+            { label: 'Bestandsvolumen 2,4 Mio €', points: 14, type: 'positive' },
             { label: 'Führungserfahrung (3 MA)', points: 12, type: 'positive' },
             { label: 'BWL-Studium (DQR 6)', points: 10, type: 'positive' },
-            { label: 'Ø 115% Zielerreichung', points: 8, type: 'positive' },
-            { label: 'IDD Weiterbildung aktuell', points: 5, type: 'positive' },
+            { label: 'Ø 115% Zielerreichung', points: 9, type: 'positive' },
+            { label: 'Salesforce CRM / SAP SD', points: 6, type: 'positive' },
             { label: 'Standort Düsseldorf (Match)', points: 7, type: 'positive' },
-            { label: 'Kein Fachwirt IHK', points: -7, type: 'negative' },
-            { label: 'Keine ERGO-Erfahrung', points: -3, type: 'neutral' }
+            { label: 'Keine Versicherungserfahrung', points: -14, type: 'negative' },
+            { label: 'Keine IHK §34d Qualifikation', points: -10, type: 'negative' },
+            { label: 'Branchenwechsel', points: -5, type: 'neutral' }
         ],
         linkedinInsights: [
-            { text: 'Nebentätigkeit: Dozent IHK Düsseldorf (seit 2023)', detail: 'Hält Seminare zu Versicherungsvertrieb — im CV nicht erwähnt, zeigt Fachexpertise und Engagement' },
-            { text: 'Empfohlen für „Vertriebsführung" von 12 Kontakten', detail: '520+ Kontakte im Versicherungs- und Finanzsektor bestätigen starkes Branchennetzwerk' }
+            { text: 'Empfohlen für „Key Account Management" von 14 Kontakten', detail: '480+ Kontakte im Industrie- und B2B-Vertriebsumfeld belegen starkes Netzwerk' },
+            { text: 'Aktiv in XING-Gruppe „Vertrieb & Sales NRW"', detail: 'Regelmäßige Beiträge zu Vertriebsstrategien — zeigt Eigeninitiative und Brancheninteresse' }
         ],
-        counterfactual: 'Wenn dieser Kandidat den Fachwirt für Versicherungen und Finanzen IHK (Bachelor Professional, DQR 6) abschließt, steigt sein Score von 92 auf 97. Empfehlung: DVA-Programm (24 Monate berufsbegleitend, ca. 3.500 €).',
+        counterfactual: 'Nach Abschluss der IHK-Sachkundeprüfung §34d (ERGO Einarbeitungsprogramm, 3 Monate) steigt der Score von 78 auf 89. Zusätzliche Spartenweiterbildung (DVA, 6 Monate) → Score 93. ROI: Einarbeitungskosten ~8.000 € vs. externe Neubesetzung mit Versicherungserfahrung ~22.000 €.',
         interviewQuestions: {
             background: [
-                { q: 'Ihr CV zeigt 8 Jahre bei der Allianz AO — beschreiben Sie Ihren typischen Bestandskundenbetreuungsprozess.', why: 'Verifizierung der AO-Vertriebserfahrung und Bestandsmanagement-Kompetenz' },
-                { q: 'Wie haben Sie Ihr Bestandsvolumen von 2,4 Mio € aufgebaut? Welche Akquise-Strategien waren am erfolgreichsten?', why: 'Quantifizierung der Vertriebsleistung und strategisches Denken' }
+                { q: 'Ihr CV zeigt 8 Jahre Key Account bei Henkel — wie haben Sie ein B2B-Bestandsportfolio von 2,4 Mio. € betreut?', why: 'Übertragbare Bestandsmanagement-Kompetenz und Vertriebsmethodik verifizieren' },
+                { q: 'Was motiviert Sie zum Wechsel vom Industrievertrieb in die Versicherungsbranche?', why: 'Wechselmotivation und Ernsthaftigkeit der Bewerbung bewerten' }
             ],
             behavioral: [
-                { q: 'Erzählen Sie von einer Situation, in der Sie eine Deckungslücke bei einem Bestandskunden identifiziert haben. Wie sind Sie vorgegangen?', why: 'STAR-Methode: Bedarfsanalyse-Kompetenz und Beratungsqualität' },
-                { q: 'Beschreiben Sie eine Herausforderung bei der Führung Ihres 3-köpfigen Teams. Wie haben Sie diese gelöst?', why: 'Führungskompetenz und Konfliktlösungsfähigkeit für Agenturleiter-Rolle' }
+                { q: 'Beschreiben Sie eine komplexe Preisverhandlung mit einem Key Account — wie haben Sie sich vorbereitet und was war das Ergebnis?', why: 'STAR-Methode: Verhandlungsstärke und strategisches Denken' },
+                { q: 'Wie haben Sie Ihr 3-köpfiges Innendienst-Team motiviert, Umsatzziele zu erreichen?', why: 'Führungsstil und Teamsteuerung für mögliche Agenturleiter-Perspektive' }
             ],
             technical: [
-                { q: 'Wie würden Sie eine bAV-Beratung für ein mittelständisches Unternehmen mit 200 Mitarbeitern strukturieren?', why: 'Technisches Fachwissen und Beratungskompetenz im Firmenkundengeschäft' },
-                { q: 'Welche Erfahrungen haben Sie mit BiPRO-Schnittstellen und digitalen Vergleichsrechnern?', why: 'Digitale Kompetenz — entscheidend für moderne Vertriebsprozesse' }
+                { q: 'Was unterscheidet aus Ihrer Sicht den Vertrieb im Industriebereich vom Versicherungsvertrieb?', why: 'Branchenverständnis und Reflexionsfähigkeit prüfen' },
+                { q: 'Wie würden Sie in den ersten 90 Tagen als Vertriebspartner Ihren Bestand aufbauen?', why: 'Onboarding-Plan und Eigeninitiative — entscheidend bei Branchenquereinstieg' }
             ]
         },
         skillGap: {
             dimensions: [
-                { label: 'Regulatorik', current: 85, required: 80, reason: 'IHK §34d vorhanden, IDD aktuell — Fachwirt fehlt für höhere Einstufung' },
-                { label: 'Vertriebserfahrung', current: 95, required: 85, reason: '8 Jahre AO mit nachweislich 2,4 Mio € Bestand und 115% Zielerreichung' },
-                { label: 'Spartenkenntnis', current: 80, required: 75, reason: 'Komposit/Leben/Kranken im CV belegt, bAV-Tiefe nicht erkennbar' },
-                { label: 'Digital-Kompetenz', current: 70, required: 80, reason: 'Keine Erwähnung digitaler Tools (CRM, BiPRO, Vergleichsrechner) im CV' },
-                { label: 'Führungskompetenz', current: 78, required: 85, reason: '3 MA geführt — für Agenturleitung (5+ MA) ausbaufähig' }
+                { label: 'Regulatorik', current: 15, required: 80, reason: 'Keine §34d oder IHK-Versicherungsqualifikation — muss im Einarbeitungsprogramm erworben werden' },
+                { label: 'Vertriebserfahrung', current: 90, required: 85, reason: '8 Jahre Key Account B2B mit 2,4 Mio. € Bestand und 115% Zielerreichung — stark übertragbar' },
+                { label: 'Spartenkenntnis', current: 10, required: 65, reason: 'Kein Bezug zu Versicherungsprodukten im bisherigen Werdegang erkennbar' },
+                { label: 'Digital-Kompetenz', current: 85, required: 75, reason: 'Salesforce CRM, SAP SD/MM, MS Office — digitale Kompetenz überdurchschnittlich' },
+                { label: 'Führungskompetenz', current: 80, required: 75, reason: '3 MA Innendienst geführt — solide Grundlage für Agenturleiter-Perspektive' }
             ],
-            training: 'Empfehlung: Fachwirt für Versicherungen und Finanzen IHK (DVA, 24 Monate, ~3.500 €) → Score-Steigerung: +5 Punkte. ROI: Weiterbildungskosten 3.500 € vs. externe Neubesetzung ~18.000 €.'
+            training: 'Empfehlung: ERGO Einarbeitungsprogramm Branchenquereinstieg (3 Monate, §34d inkl.) → Score +11 Punkte. Anschließend DVA Spartenweiterbildung (6 Monate) → weitere +4 Punkte. ROI: Gesamtinvestition ~8.000 € vs. externe Neubesetzung ~22.000 €.'
         }
     },
     sarah: {

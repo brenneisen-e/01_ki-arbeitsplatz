@@ -386,7 +386,7 @@ export default function UebersichtTab() {
               <span className="text-sm text-slate-400">{t('kundenPotenzialeSummary', { kunden: kundenPotentiale.length, potenziale: getAllPotentiale(modeId).length })}</span>
             </div>
             <div className="border border-slate-200 rounded-xl overflow-hidden">
-              <div className="grid py-2.5 px-3 items-center text-[10px] uppercase text-slate-500 font-bold bg-slate-50 border-b border-slate-200 divide-x divide-slate-200" style={{ gridTemplateColumns: '1.3fr 70px 80px 1.6fr' }}>
+              <div className="grid py-2.5 px-3 items-center text-[10px] uppercase text-slate-500 font-bold bg-slate-50 border-b border-slate-200 divide-x divide-slate-200" style={{ gridTemplateColumns: '220px 80px 80px minmax(0, 1fr)' }}>
                 <span className="pr-2">{t('kunde')}</span>
                 <span className="text-center px-2">NPS</span>
                 <span className="text-center px-2">Leads</span>
@@ -398,7 +398,7 @@ export default function UebersichtTab() {
                   <div
                     key={kp.kundeId}
                     className={`grid py-3 px-3 hover:bg-slate-50 cursor-pointer items-center transition-colors divide-x divide-slate-100 ${isLast ? '' : 'border-b border-slate-100'}`}
-                    style={{ gridTemplateColumns: '1.3fr 70px 80px 1.6fr' }}
+                    style={{ gridTemplateColumns: '220px 80px 80px minmax(0, 1fr)' }}
                     onClick={() => navigateTo('detail', { kundeId: kp.kundeId, tab: 'stammdaten' })}
                   >
                     <div className="flex items-center gap-2 min-w-0 pr-2">

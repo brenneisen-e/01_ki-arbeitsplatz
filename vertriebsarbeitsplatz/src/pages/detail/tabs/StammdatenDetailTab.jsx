@@ -1,5 +1,6 @@
 import Card from '../../../components/ui/Card';
 import LebenszeitstrahlCard from '../../../components/ui/LebenszeitstrahlCard';
+import TerminPrepModal from '../../../components/ui/TerminPrepModal';
 import { getLang } from '../../../utils/langHelper';
 import DataTable from '../../../components/ui/DataTable';
 import { StatusBadge, SparteBadge } from '../../../components/ui/Badge';
@@ -10,6 +11,7 @@ import { getKundeFoto } from '../../../utils/kundenFotos';
 import { useState } from 'react';
 import { useMode } from '../../../hooks/useMode';
 import useTranslation from '../../../i18n/useTranslation';
+import { useDayAdvanced, buildKlausFischerAppointmentActivity, formatAppointmentDate, formatAppointmentTime, getSimulatedAppointment } from '../../../utils/demoClock';
 
 // ─── Translation helpers for data values ───
 const FAMILIENSTAND_EN = { verheiratet: 'Married', ledig: 'Single', geschieden: 'Divorced', verwitwet: 'Widowed' };
@@ -142,20 +144,20 @@ export default function StammdatenDetailTab({ kunde }) {
   return (
     <div className="space-y-4">
       {/* Kunden-Profil Header (mit KI-Zusammenfassung rechts daneben für Banking) */}
-      <Card hover={false}>
-        <div className="flex items-stretch gap-5">
+      <Card hover={false} padding={false} className="px-5 py-3">
+        <div className="flex items-center gap-5">
           {/* Foto */}
           {foto && !fotoFailed ? (
             <img
               src={foto}
               alt={kunde.name}
-              className="w-24 h-24 rounded-xl object-cover border-2 shadow-sm shrink-0 self-center"
+              className="w-20 h-20 rounded-xl object-cover border-2 shadow-sm shrink-0"
               style={{ borderColor: config.colors.primaryLight + '40' }}
               onError={() => setFotoFailed(true)}
             />
           ) : (
             <div
-              className="w-24 h-24 rounded-xl flex items-center justify-center text-white text-2xl font-bold shadow-sm shrink-0 self-center"
+              className="w-20 h-20 rounded-xl flex items-center justify-center text-white text-2xl font-bold shadow-sm shrink-0"
               style={{ background: config.colors.gradient }}
             >
               {initialen}
@@ -163,7 +165,7 @@ export default function StammdatenDetailTab({ kunde }) {
           )}
 
           {/* Stammdaten-Block */}
-          <div className="flex-1 min-w-0 self-center">
+          <div className="flex-1 min-w-0">
             <h2 className="text-xl font-bold text-slate-800">{tn(kunde.name)}</h2>
             <div className="flex items-center gap-4 mt-1.5 text-sm text-slate-500 flex-wrap">
               <span className="flex items-center gap-1"><Briefcase size={14} /> {translateBeruf(kunde.beruf, lang)}</span>
@@ -217,7 +219,12 @@ export default function StammdatenDetailTab({ kunde }) {
             )}
             <InfoRow label={t('familienstand')} value={kunde.familienstand ? (lang === 'en' ? (FAMILIENSTAND_EN[kunde.familienstand] || kunde.familienstand) : kunde.familienstand.charAt(0).toUpperCase() + kunde.familienstand.slice(1)) : ''} />
             {kunde.partner && (
-              <InfoRow label={t('partner')} value={`${kunde.partner.name} (${translateBeruf(kunde.partner.beruf, lang)})`} />
+              <InfoRow
+                label={t('partner')}
+                value={kunde.partner.beruf
+                  ? `${kunde.partner.name} (${translateBeruf(kunde.partner.beruf, lang)})`
+                  : kunde.partner.name}
+              />
             )}
             {kunde.kinder?.length > 0 && (
               <InfoRow label={t('kinder')} value={kunde.kinder.map(k => `${k.name} (${k.alter})`).join(', ')} />
@@ -336,7 +343,7 @@ function ArbeitgeberRow({ arbeitgeber, beruf, t }) {
           <span className="text-slate-400 shrink-0">Position:</span>
           <span className="text-slate-700 font-medium">{beruf}</span>
           <span className="inline-flex items-center gap-1 text-xs font-medium text-blue-700 bg-blue-50 border border-blue-100 px-2 py-0.5 rounded-full">
-            <Linkedin size={11} /> LinkedIn
+            <Linkedin size={11} /> Durch LinkedIn Abgleich
           </span>
           <span className="text-xs text-slate-400 font-mono">{fmt(linkedInUpdate)}</span>
         </div>
@@ -669,24 +676,24 @@ function KIZusammenfassungInlay({ kunde, embedded = false }) {
         className="absolute -top-12 -right-12 w-40 h-40 rounded-full pointer-events-none"
         style={{ background: 'radial-gradient(circle, rgba(167, 139, 250, 0.3) 0%, transparent 70%)' }}
       />
-      <div className="relative p-4 flex items-start gap-3">
+      <div className="relative px-4 py-3 flex items-start gap-3">
         <div
-          className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 shadow-sm"
+          className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 shadow-sm"
           style={{ background: 'linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%)' }}
         >
-          <Sparkles size={18} className="text-white" strokeWidth={2} />
+          <Sparkles size={16} className="text-white" strokeWidth={2} />
         </div>
         <div className="flex-1 min-w-0">
-          <div className="flex items-center justify-between mb-1">
+          <div className="flex items-center justify-between mb-0.5">
             <h3 className="font-semibold text-slate-800 text-sm">KI-Zusammenfassung</h3>
-            <span className="text-xs text-slate-500 font-mono">
+            <span className="text-[11px] text-slate-500 font-mono">
               Aktualisiert {new Date().toLocaleDateString('de-DE')}
             </span>
           </div>
-          <p className="text-sm text-slate-700 leading-relaxed">{summary.text}</p>
+          <p className="text-[13px] text-slate-700 leading-snug">{summary.text}</p>
           {summary.recommendation && (
-            <div className="mt-2 flex items-start gap-1.5 text-sm">
-              <Sparkles size={13} className="text-violet-600 mt-0.5 shrink-0" />
+            <div className="mt-1 flex items-start gap-1.5 text-[13px]">
+              <Sparkles size={12} className="text-violet-600 mt-0.5 shrink-0" />
               <span className="text-slate-700">
                 <strong className="text-violet-700">Empfehlung:</strong> {summary.recommendation}
               </span>
@@ -745,16 +752,27 @@ function generateKISummary(kunde) {
 
 // ─── Aktivitäten: letzte Gespräche & Notizen ───
 function AktivitaetenCard({ kunde }) {
-  const komms = (kunde.kommunikation || [])
-    .slice()
-    .sort((a, b) => new Date(b.datum) - new Date(a.datum))
-    .slice(0, 5);
+  const dayAdvanced = useDayAdvanced();
+  const [showTerminPrep, setShowTerminPrep] = useState(false);
+
+  // Für Klaus Fischer wird nach dem Weiterdrehen der Uhr eine neue
+  // Terminzusage-Aktivität vorne angehängt.
+  const base = (kunde.kommunikation || []).slice();
+  const extra = (dayAdvanced && kunde.id === 'BK00001') ? [buildKlausFischerAppointmentActivity()] : [];
+  const komms = [...extra, ...base]
+    .sort((a, b) => {
+      // Die neu erzeugte Terminzusage bleibt immer ganz oben
+      if (a.istNeuZugestimmt) return -1;
+      if (b.istNeuZugestimmt) return 1;
+      return new Date(b.datum) - new Date(a.datum);
+    })
+    .slice(0, 6);
 
   const iconForType = (typ) => {
     switch (typ) {
       case 'termin': return Calendar;
       case 'telefon': case 'anruf': return Phone;
-      case 'email': case 'mail': return Mail;
+      case 'email': case 'newsletter': case 'mail': return Mail;
       case 'chatbot': case 'chat': return MessageSquare;
       case 'notiz': return FileText;
       default: return MessageSquare;
@@ -766,6 +784,7 @@ function AktivitaetenCard({ kunde }) {
       case 'termin': return { bg: 'bg-emerald-50', text: 'text-emerald-600', border: 'border-emerald-200' };
       case 'telefon': case 'anruf': return { bg: 'bg-blue-50', text: 'text-blue-600', border: 'border-blue-200' };
       case 'email': case 'mail': return { bg: 'bg-violet-50', text: 'text-violet-600', border: 'border-violet-200' };
+      case 'newsletter': return { bg: 'bg-amber-50', text: 'text-amber-600', border: 'border-amber-200' };
       case 'chatbot': case 'chat': return { bg: 'bg-indigo-50', text: 'text-indigo-600', border: 'border-indigo-200' };
       default: return { bg: 'bg-slate-50', text: 'text-slate-600', border: 'border-slate-200' };
     }
@@ -786,13 +805,25 @@ function AktivitaetenCard({ kunde }) {
           Noch keine Aktivitäten erfasst.
         </div>
       ) : (
-        <div className="space-y-2.5">
+        <div className="space-y-3">
           {komms.map((k, i) => {
             const Icon = iconForType(k.typ);
             const c = colorForType(k.typ);
+            const isNeu = k.istNeuZugestimmt;
             const date = new Date(k.datum).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+            const appointmentLabel = isNeu
+              ? `${formatAppointmentDate(getSimulatedAppointment())} · ${formatAppointmentTime(getSimulatedAppointment())} Uhr`
+              : null;
             return (
-              <div key={i} className="flex items-start gap-2.5">
+              <div
+                key={k.id || i}
+                className={`flex items-start gap-2.5 rounded-lg transition-colors ${
+                  isNeu
+                    ? 'border border-emerald-200 bg-emerald-50/70 p-2.5 cursor-pointer hover:bg-emerald-50'
+                    : ''
+                }`}
+                onClick={isNeu ? () => setShowTerminPrep(true) : undefined}
+              >
                 <div className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 border ${c.bg} ${c.border}`}>
                   <Icon size={13} className={c.text} strokeWidth={2} />
                 </div>
@@ -800,10 +831,21 @@ function AktivitaetenCard({ kunde }) {
                   <div className="flex items-baseline gap-2 flex-wrap">
                     <span className="text-sm font-semibold text-slate-800 truncate">{k.betreff || k.typ}</span>
                     <span className="text-xs text-slate-400 font-mono shrink-0">{date}</span>
+                    {isNeu && (
+                      <span className="rh-badge inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-emerald-500 text-white text-[9px] font-bold uppercase tracking-wide">
+                        <Sparkles size={9} /> Neu
+                      </span>
+                    )}
                   </div>
                   {(k.zusammenfassung || k.kiZusammenfassung) && (
-                    <div className="text-xs text-slate-600 leading-snug mt-0.5 line-clamp-2">
+                    <div className={`text-xs leading-snug mt-0.5 ${isNeu ? 'text-emerald-800' : 'text-slate-600 line-clamp-2'}`}>
                       {k.zusammenfassung || k.kiZusammenfassung}
+                    </div>
+                  )}
+                  {appointmentLabel && (
+                    <div className="mt-1 text-[11px] font-semibold text-emerald-700 inline-flex items-center gap-1">
+                      <Calendar size={11} /> {appointmentLabel}
+                      <span className="ml-1 text-emerald-600 underline">· Gesprächsvorbereitung öffnen</span>
                     </div>
                   )}
                 </div>
@@ -811,6 +853,10 @@ function AktivitaetenCard({ kunde }) {
             );
           })}
         </div>
+      )}
+
+      {showTerminPrep && (
+        <TerminPrepModal kunde={kunde} onClose={() => setShowTerminPrep(false)} />
       )}
     </Card>
   );

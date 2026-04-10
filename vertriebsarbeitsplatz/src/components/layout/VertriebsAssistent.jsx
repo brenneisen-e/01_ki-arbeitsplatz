@@ -71,8 +71,8 @@ const BANKING_SUGGESTIONS = [
   {
     category: 'Formulierungshilfe',
     prompts: [
-      'Schreib eine Einladung zur Immobilienfinanzierung für Markus Wagner',
-      'Formuliere eine Nachfass-Mail für die Depot-Wechsel-Prämie an Klaus Fischer',
+      'Schreib ein Anschreiben zum Kreditgespräch Immobilienfinanzierung für Klaus Fischer',
+      'Formuliere eine Nachfass-Mail für die Depot-Wechsel-Prämie an Peter Hoffmann',
       'Erstelle einen Gesprächsleitfaden Tierhalterhaftpflicht',
     ],
   },
@@ -584,11 +584,11 @@ export function getDemoResponse(message, { currentView, modeId }) {
         content: `<div class="space-y-2">
           <p class="font-semibold">Auslaufende Kredite (nächste 6 Monate)</p>
           <table class="w-full text-xs mt-1">
-            <tr class="border-b border-slate-200"><td class="py-1.5"><strong>Klaus Fischer</strong></td><td class="py-1.5 font-mono">185.000€</td><td class="py-1.5 text-red-600">04/2026</td></tr>
+            <tr class="border-b border-slate-200"><td class="py-1.5"><strong>Klaus Fischer</strong></td><td class="py-1.5 font-mono">1.680€ (KfW)</td><td class="py-1.5 text-emerald-600">06/2026</td></tr>
             <tr class="border-b border-slate-200"><td class="py-1.5"><strong>Peter Hoffmann</strong></td><td class="py-1.5 font-mono">45.000€ Rahmen</td><td class="py-1.5 text-amber-600">07/2026</td></tr>
             <tr><td class="py-1.5"><strong>Andrea Lang</strong></td><td class="py-1.5 font-mono">85.000€</td><td class="py-1.5 text-amber-600">09/2026</td></tr>
           </table>
-          <p class="text-xs text-slate-500 mt-2">→ <em>Forward-Darlehen bei Fischer dringend!</em></p>
+          <p class="text-xs text-slate-500 mt-2">→ <em>Bei Fischer werden 840€/Mon. frei → Immobilienfinanzierung ansprechen!</em></p>
         </div>`,
       };
     }
@@ -632,7 +632,7 @@ export function getDemoResponse(message, { currentView, modeId }) {
         content: `<div class="space-y-2">
           <p class="font-semibold">Kampagnen-Matching — Frühlings-Baufi-Aktion</p>
           <table class="w-full text-xs mt-1">
-            <tr class="border-b border-slate-200"><td class="py-1.5"><strong>Klaus Fischer</strong></td><td class="py-1.5 text-center"><span class="font-bold text-emerald-700">97%</span></td><td class="py-1.5 text-slate-500">Zinsbindung läuft aus, Bausparer zuteilungsreif</td></tr>
+            <tr class="border-b border-slate-200"><td class="py-1.5"><strong>Klaus Fischer</strong></td><td class="py-1.5 text-center"><span class="font-bold text-emerald-700">97%</span></td><td class="py-1.5 text-slate-500">KfW-Kredit läuft aus, Bausparer zuteilungsreif, Newsletter-Interesse</td></tr>
             <tr class="border-b border-slate-200"><td class="py-1.5"><strong>Sandra Müller</strong></td><td class="py-1.5 text-center"><span class="font-bold text-emerald-700">92%</span></td><td class="py-1.5 text-slate-500">Baufi vorbereiten, Ehepartner als Neukunde</td></tr>
             <tr><td class="py-1.5"><strong>Markus Wagner</strong></td><td class="py-1.5 text-center"><span class="font-bold text-lime-700">78%</span></td><td class="py-1.5 text-slate-500">Junges Alter, erstes Eigenheim-Interesse</td></tr>
           </table>
@@ -748,7 +748,7 @@ Volksbank Mittelhessen</div>
         content: `<div class="space-y-2">
           <p class="font-semibold">Leads nach Ertragspotenzial</p>
           <ol class="list-decimal pl-4 space-y-1 text-[13px]">
-            <li><strong>Klaus Fischer</strong> — Anschlussfinanzierung 185k <span class="text-emerald-600 font-semibold">· ~8.951€</span></li>
+            <li><strong>Klaus Fischer</strong> — Kreditgespräch Immobilienfinanzierung 250k <span class="text-emerald-600 font-semibold">· ~12.085€</span></li>
             <li><strong>Sandra Müller</strong> — Baufi + Ehemann als Neukunde <span class="text-emerald-600 font-semibold">· ~12.011€</span></li>
             <li><strong>Peter Hoffmann</strong> — Firmendepot + bAV <span class="text-emerald-600 font-semibold">· ~6.135€</span></li>
             <li><strong>Andrea Lang</strong> — Praxiskredit + Absicherung <span class="text-emerald-600 font-semibold">· ~3.186€</span></li>

@@ -1,11 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
 import { clsx } from 'clsx';
-import { ArrowLeft, Home, ChevronDown, Download, Settings, User, Calendar, AlertTriangle, Cloud, Sun, CloudRain, TrendingUp, TrendingDown, Minus, Image as ImageIcon, Upload, Trash2, X } from 'lucide-react';
+import { ArrowLeft, Home, ChevronDown, Download, Settings, User, Calendar, AlertTriangle, Cloud, Sun, CloudRain, TrendingUp, TrendingDown, Minus, Image as ImageIcon, Upload, Trash2, X, Clock, Sparkles, CheckCircle } from 'lucide-react';
 import { useMode } from '../../hooks/useMode';
 import { MODE_CONFIGS } from '../../data/modeConfig';
 import LogoImg from '../ui/LogoImg';
 import { downloadDemoData } from '../../utils/downloadDemoData';
 import useTranslation from '../../i18n/useTranslation';
+import { isDayAdvanced, setDayAdvanced, useDayAdvanced, formatAppointmentDate, formatAppointmentTime, getSimulatedAppointment } from '../../utils/demoClock';
 
 function getBasePath() {
   const path = window.location.pathname;
@@ -91,6 +92,8 @@ export default function GlobalHeader({ kundeInfo, tabBadges }) {
   const { t, lang } = useTranslation();
   const [showModeDropdown, setShowModeDropdown] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  const [showDayAdvanceOverlay, setShowDayAdvanceOverlay] = useState(false);
+  const dayAdvanced = useDayAdvanced();
   const [headerImage, setHeaderImage] = useState(() => readHeaderImage());
   const [headerImageEnabled, setHeaderImageEnabled] = useState(() => readHeaderImageEnabled());
   const [defaultHeaderPos, setDefaultHeaderPos] = useState(() => readDefaultHeaderPos());
@@ -263,6 +266,33 @@ export default function GlobalHeader({ kundeInfo, tabBadges }) {
               />
             )}
           </div>
+          {/* Demo-Zeitmaschine (nur Banking) */}
+          {modeId === 'banking' && (
+            <button
+              onClick={() => {
+                if (dayAdvanced) {
+                  // Bereits aktiv → zurücksetzen
+                  setDayAdvanced(false);
+                  return;
+                }
+                setShowDayAdvanceOverlay(true);
+                setTimeout(() => {
+                  setDayAdvanced(true);
+                  setTimeout(() => setShowDayAdvanceOverlay(false), 850);
+                }, 1600);
+              }}
+              title="Demo-Zeitmaschine: einen Tag weiter springen"
+              className={clsx(
+                'p-2 rounded-lg text-white transition-colors relative',
+                dayAdvanced ? 'bg-emerald-500/40 hover:bg-emerald-500/50' : 'bg-white/10 hover:bg-white/20'
+              )}
+            >
+              <Clock size={18} strokeWidth={1.75} />
+              {dayAdvanced && (
+                <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-emerald-400 border border-white" />
+              )}
+            </button>
+          )}
           <button
             onClick={downloadDemoData}
             title={t('demodatenExportieren')}
@@ -343,6 +373,34 @@ export default function GlobalHeader({ kundeInfo, tabBadges }) {
           </button>
         ))}
       </div>
+
+      {/* Demo-Zeitmaschinen-Overlay: täuscht Nacht-zu-nächster-Tag vor und
+          setzt dann das Flag, damit neue Aktivitäten sichtbar werden. */}
+      {showDayAdvanceOverlay && (
+        <div className="fixed inset-0 z-[90] flex items-center justify-center bg-slate-950/70 backdrop-blur-md animate-fade-in">
+          <div className="text-center text-white space-y-5 px-6">
+            <div className="w-20 h-20 mx-auto rounded-2xl flex items-center justify-center shadow-2xl" style={{ background: 'linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%)' }}>
+              <Clock size={38} className="animate-pulse" />
+            </div>
+            <div className="space-y-1">
+              <div className="text-xl font-semibold">Nacht simulieren …</div>
+              <div className="text-sm text-white/70 max-w-md mx-auto">
+                KI wartet auf Reaktionen Ihrer Kunden und sammelt neue Aktivitäten für den nächsten Tag.
+              </div>
+            </div>
+            <div className="flex items-center justify-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-white/80 animate-pulse" />
+              <span className="w-2 h-2 rounded-full bg-white/60 animate-pulse [animation-delay:150ms]" />
+              <span className="w-2 h-2 rounded-full bg-white/40 animate-pulse [animation-delay:300ms]" />
+            </div>
+            {dayAdvanced && (
+              <div className="inline-flex items-center gap-2 text-emerald-300 text-sm font-medium bg-emerald-500/10 border border-emerald-400/30 px-3 py-1.5 rounded-full">
+                <CheckCircle size={14} /> Neue Termin­zusage eingegangen
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Settings modal — header background image upload + crop position */}
       {showSettings && (

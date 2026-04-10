@@ -13,35 +13,30 @@ const TRACKS = [
 const TIMELINE_DATA = {
   BK00001: {
     leben: [
-      { date: '2015-01', label: 'Kunde seit 2015' },
-      { date: '2017-06', label: 'Heirat mit Sabine' },
-      { date: '2018-03', label: 'Hauskauf Gießen, 150qm' },
-      { date: '2020-09', label: 'Sohn Lukas geboren' },
-      { date: '2022-04', label: 'Tochter Marie geboren' },
-      { date: '2025-08', label: 'Haustier (Hund) erkannt', aiDetected: true,
-        signals: ['Fressnapf-Umsätze', 'Tierarzt-Buchung'] },
-      { date: '2026-03', label: 'Trennung erkannt', aiDetected: true, isWarning: true,
-        signals: ['2. Miete an neue Adresse', 'Anwaltskosten Familienrecht', 'LV vorzeitig gekündigt', 'Unterhaltszahlungen eingerichtet'] },
+      { date: '2018-03', label: 'Kunde seit 2018' },
+      { date: '2020-08', label: 'Heirat mit Sabine' },
+      { date: '2021-09', label: 'Sohn Lukas geboren' },
+      { date: '2024-11', label: 'Tochter Marie geboren' },
+      { date: '2024-04', label: 'Boulder-Mitgliedschaft erkannt', aiDetected: true,
+        signals: ['DAV-Boulderhalle Gießen monatlich', 'Kletterausrüstung'] },
+      { date: '2025-09', label: 'Fallschirmsprung-Buchung', aiDetected: true, isWarning: true,
+        signals: ['Skydive Center Marburg 320 €'] },
+      { date: '2026-03', label: 'Immobiliensuche aktiv', aiDetected: true,
+        signals: ['Newsletter „VR-Immobilien" seit 2 Jahren', 'ImmoScout-Logins (PSD2)', 'Maklerbesuche'] },
     ],
     oeffentlich: [
-      { date: '2017-02', label: 'Wechsel zu Continental AG', source: 'LinkedIn' },
-      { date: '2019-11', label: 'Beförderung Senior Vertrieb', source: 'LinkedIn' },
+      { date: '2019-02', label: 'Wechsel zu Continental AG', source: 'LinkedIn' },
+      { date: '2022-11', label: 'Beförderung Senior Vertrieb', source: 'LinkedIn' },
       { date: '2024-06', label: 'Vertriebsleiter', source: 'LinkedIn' },
-      { date: '2026-02', label: '„Open to Work" aktiviert', source: 'LinkedIn', isWarning: true },
     ],
     finanzen: [
-      { date: '2015-01', label: 'Girokonto eröffnet' },
-      { date: '2016-04', label: 'Sparplan 200 €/Mon.' },
-      { date: '2018-03', label: 'Baufinanzierung 380.000 €' },
-      { date: '2019-01', label: 'KfW-Kredit Modernisierung' },
-      { date: '2020-06', label: 'R+V Unfallversicherung' },
-      { date: '2021-09', label: 'Union Investment Depot' },
-      { date: '2023-11', label: 'ING Tagesgeld 15.000 €', fida: true },
-      { date: '2025-06', label: 'Sparplan reduziert', isWarning: true },
+      { date: '2018-03', label: 'Girokonto eröffnet' },
+      { date: '2018-06', label: 'Bausparvertrag Schwäbisch Hall 30k', fida: true },
+      { date: '2019-01', label: 'KfW-Studienkredit (Schlussraten)' },
+      { date: '2023-11', label: 'ING Tagesgeld 22.000 €', fida: true },
       { date: '2025-08', label: 'Trade Republic Depot', fida: true },
-      { date: '2026-01', label: 'LV gekündigt', isWarning: true },
+      { date: '2026-04', label: 'BSV zuteilungsreif → 30k Eigenkapital', isFuture: true },
       { date: '2026-06', label: 'KfW läuft aus → 840€/Mon. frei', isFuture: true },
-      { date: '2033-03', label: 'Baufi-Zinsbindung Ende', isFuture: true },
     ],
   },
   BK00002: {
@@ -147,11 +142,18 @@ export default function LebenszeitstrahlCard({ kunde }) {
   }, [data, zoom]);
 
   const totalRange = rangeEnd.getTime() - rangeStart.getTime();
-  const todayPct = Math.max(0, Math.min(100, ((Date.now() - rangeStart.getTime()) / totalRange) * 100));
+
+  // Inset Buffer auf beiden Seiten (in Prozent) damit die ersten/letzten
+  // Dots nicht in die Track-Labels bzw. den rechten Card-Rand laufen.
+  const INSET = 4;
+  const remap = (raw) => INSET + (raw / 100) * (100 - 2 * INSET);
+
+  const todayPct = remap(Math.max(0, Math.min(100, ((Date.now() - rangeStart.getTime()) / totalRange) * 100)));
 
   const xPct = (date) => {
     const t = parseDate(date).getTime();
-    return Math.max(0, Math.min(100, ((t - rangeStart.getTime()) / totalRange) * 100));
+    const raw = Math.max(0, Math.min(100, ((t - rangeStart.getTime()) / totalRange) * 100));
+    return remap(raw);
   };
 
   // Year markers
@@ -161,7 +163,8 @@ export default function LebenszeitstrahlCard({ kunde }) {
     const years = [];
     const step = (endY - startY) > 12 ? 2 : 1;
     for (let y = startY; y <= endY; y += step) {
-      years.push({ year: y, pct: ((new Date(y, 0, 1).getTime() - rangeStart.getTime()) / totalRange) * 100 });
+      const raw = ((new Date(y, 0, 1).getTime() - rangeStart.getTime()) / totalRange) * 100;
+      years.push({ year: y, pct: INSET + (raw / 100) * (100 - 2 * INSET) });
     }
     return years;
   }, [rangeStart, rangeEnd, totalRange]);
@@ -302,41 +305,41 @@ export default function LebenszeitstrahlCard({ kunde }) {
                       {/* AI sparkle badge */}
                       {event.aiDetected && (
                         <div
-                          className="absolute rounded-full bg-amber-400 flex items-center justify-center border-2 border-white shadow-sm pointer-events-none"
+                          className="absolute rounded-full bg-amber-400 flex items-center justify-center border-2 border-white shadow-md pointer-events-none"
                           style={{
-                            width: isHovered ? 18 : 14,
-                            height: isHovered ? 18 : 14,
-                            top: 4,
-                            right: 4,
+                            width: isHovered ? 26 : 22,
+                            height: isHovered ? 26 : 22,
+                            top: -2,
+                            right: -2,
                           }}
                         >
-                          <Sparkles size={isHovered ? 11 : 9} className="text-white" strokeWidth={3} />
+                          <Sparkles size={isHovered ? 14 : 12} className="text-white" strokeWidth={2.75} />
                         </div>
                       )}
                       {/* FIDA dot */}
                       {event.fida && (
                         <div
-                          className="absolute rounded-full bg-purple-500 border-2 border-white shadow-sm pointer-events-none"
+                          className="absolute rounded-full bg-purple-500 border-2 border-white shadow-md pointer-events-none"
                           style={{
-                            width: isHovered ? 14 : 11,
-                            height: isHovered ? 14 : 11,
-                            top: 6,
-                            right: 6,
+                            width: isHovered ? 20 : 16,
+                            height: isHovered ? 20 : 16,
+                            top: 0,
+                            right: 0,
                           }}
                         />
                       )}
                       {/* Warning */}
                       {event.isWarning && (
                         <div
-                          className="absolute rounded-full bg-red-500 flex items-center justify-center border-2 border-white shadow-sm pointer-events-none"
+                          className="absolute rounded-full bg-red-500 flex items-center justify-center border-2 border-white shadow-md pointer-events-none"
                           style={{
-                            width: isHovered ? 18 : 14,
-                            height: isHovered ? 18 : 14,
-                            top: 4,
-                            right: 4,
+                            width: isHovered ? 26 : 22,
+                            height: isHovered ? 26 : 22,
+                            top: -2,
+                            right: -2,
                           }}
                         >
-                          <AlertTriangle size={isHovered ? 11 : 9} className="text-white" strokeWidth={3} />
+                          <AlertTriangle size={isHovered ? 14 : 12} className="text-white" strokeWidth={2.75} />
                         </div>
                       )}
                       {/* Floating tooltip */}

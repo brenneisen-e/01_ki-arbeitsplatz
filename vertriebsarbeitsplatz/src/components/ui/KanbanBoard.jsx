@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useRef } from 'react';
 import {
   Search,
   Filter,
@@ -9,6 +9,7 @@ import {
   Database,
   Clock,
   ChevronDown,
+  Check,
 } from 'lucide-react';
 import { PrioBadge, QuellenBadge } from './Badge';
 import { formatEur } from '../../utils/formatters';
@@ -41,7 +42,7 @@ const REASON_OPTIONS = [
 
 const REASON_LABELS = REASON_OPTIONS.reduce((acc, r) => ({ ...acc, [r.id]: r.label }), {});
 
-export default function KanbanBoard({ potentiale, kunden, onMoveCard, onReactivate }) {
+export default function KanbanBoard({ potentiale, kunden, onMoveCard, onReactivate, onCardClick }) {
   const [filters, setFilters] = useState({
     kunde: 'alle',
     kategorie: 'alle',
@@ -275,6 +276,7 @@ export default function KanbanBoard({ potentiale, kunden, onMoveCard, onReactiva
                     onDragStart={handleDragStart}
                     onDragEnd={handleDragEnd}
                     onReactivate={onReactivate}
+                    onCardClick={onCardClick}
                   />
                 ))}
                 {cards.length === 0 && (
@@ -326,7 +328,9 @@ function FilterSelect({ value, onChange, options }) {
   );
 }
 
-function PotenzialCard({ p, columnColor, onDragStart, onDragEnd, onReactivate }) {
+function PotenzialCard({ p, columnColor, onDragStart, onDragEnd, onReactivate, onCardClick }) {
+  const dragStartedRef = useRef(false);
+  const isClosed = p.status === 'abgeschlossen';
   const isDismissed = p.status === 'nicht_sinnvoll';
   const ageInDays = computeAge(p);
   const ageWarn = ageInDays != null && ageInDays > 30;
@@ -335,28 +339,24 @@ function PotenzialCard({ p, columnColor, onDragStart, onDragEnd, onReactivate })
 
   const fida = (p.quellen || []).includes('finanztransaktion');
 
-  // Border-Farbe basierend auf Alter / Status
-  let borderColor = '#e2e8f0';
-  let borderWidth = 1;
-  if (isDismissed) {
-    borderColor = '#cbd5e1';
-  } else if (ageWarn) {
-    borderColor = '#dc2626';
-    borderWidth = 2;
-  } else if (ageInDays != null && ageInDays > 14) {
-    borderColor = '#f59e0b';
-    borderWidth = 2;
-  }
+  // Einheitlich dünne Karten-Umrandung — keine dicke Alters-Warnkontur,
+  // visueller Druck kommt nur über das kleine Warn-Icon im Header.
+  const cardOpacity = isClosed ? 0.55 : isDismissed ? 0.7 : 1;
+  const cardBg = isClosed ? '#f8fafc' : '#ffffff';
 
   return (
     <div
       draggable={p.status !== 'abgeschlossen'}
-      onDragStart={(e) => onDragStart(e, p)}
-      onDragEnd={onDragEnd}
-      className="bg-white rounded-lg p-2.5 shadow-sm hover:shadow-md transition-all cursor-grab active:cursor-grabbing relative"
+      onDragStart={(e) => { dragStartedRef.current = true; onDragStart(e, p); }}
+      onDragEnd={(e) => { onDragEnd(e); setTimeout(() => { dragStartedRef.current = false; }, 0); }}
+      onClick={() => {
+        if (dragStartedRef.current) return; // ignore click that came from a drag
+        onCardClick?.(p);
+      }}
+      className="rounded-lg p-2.5 shadow-sm hover:shadow-md hover:border-slate-300 hover:-translate-y-0.5 transition-all cursor-pointer active:cursor-grabbing relative border border-slate-200"
       style={{
-        border: `${borderWidth}px solid ${borderColor}`,
-        opacity: isDismissed ? 0.7 : 1,
+        backgroundColor: cardBg,
+        opacity: cardOpacity,
       }}
     >
       {/* Header: Avatar + Name */}
@@ -367,11 +367,16 @@ function PotenzialCard({ p, columnColor, onDragStart, onDragEnd, onReactivate })
         >
           {initials || '?'}
         </div>
-        <span className="text-xs font-semibold text-slate-700 truncate flex-1">{p.kundeName}</span>
-        {fida && (
+        <span className={`text-xs font-semibold truncate flex-1 ${isClosed ? 'text-slate-500 line-through' : 'text-slate-700'}`}>{p.kundeName}</span>
+        {isClosed && (
+          <span className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-emerald-500 shrink-0" title="Abgeschlossen">
+            <Check size={11} className="text-white" strokeWidth={3} />
+          </span>
+        )}
+        {!isClosed && fida && (
           <span className="w-2 h-2 rounded-full bg-purple-500 shrink-0" title="FIDA-Daten" />
         )}
-        {ageWarn && !isDismissed && (
+        {ageWarn && !isDismissed && !isClosed && (
           <AlertTriangle size={11} className="text-red-500 shrink-0" />
         )}
       </div>

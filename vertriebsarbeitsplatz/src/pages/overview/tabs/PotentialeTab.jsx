@@ -7,7 +7,7 @@ import GamificationDashboard from '../../../components/ui/GamificationDashboard'
 import KanbanBoard from '../../../components/ui/KanbanBoard';
 
 export default function PotentialeTab() {
-  const { modeId } = useMode();
+  const { modeId, navigateTo } = useMode();
   const { t } = useTranslation();
 
   const P_KPI_CONFIG = [
@@ -68,7 +68,7 @@ export default function PotentialeTab() {
     consentKunden: { wert: kunden.length, trend: 5.0 },
     potentiale: { wert: allPotentiale.length, trend: 8.2 },
     praemienvolumen: { wert: totalVolumen, trend: 12.5 },
-    convRate: { wert: 13.6, trend: 2.1 },
+    convRate: { wert: 80.6, trend: 2.1 },
   }), [kunden.length, allPotentiale.length, totalVolumen]);
 
   const handleMoveCard = (potentialId, newStatus, extras = {}) => {
@@ -104,6 +104,7 @@ export default function PotentialeTab() {
         kunden={kunden}
         onMoveCard={handleMoveCard}
         onReactivate={handleReactivate}
+        onCardClick={(p) => navigateTo('detail', { kundeId: p.kundeId, tab: 'stammdaten' })}
       />
     </div>
   );

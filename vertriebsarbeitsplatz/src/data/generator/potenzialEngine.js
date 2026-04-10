@@ -859,28 +859,50 @@ export function evaluatePotentiale(person) {
     : person._modus === 'banking' ? BANKING_REGELN
     : VV_REGELN;
 
-  const statusOptions = ['identifiziert', 'angeschrieben', 'termin', 'abgeschlossen'];
+  // Default-Verteilung enthält auch ein paar bewusst verworfene Potenziale,
+  // damit die KI-Feedback-Spalte „Nicht sinnvoll" im Kanban-Board bereits
+  // mit Beispiel-Daten gefüllt ist.
+  const statusOptions = [
+    'identifiziert', 'identifiziert', 'identifiziert',
+    'angeschrieben', 'angeschrieben',
+    'termin', 'termin',
+    'abgeschlossen', 'abgeschlossen',
+    'nicht_sinnvoll',
+  ];
 
   return regeln
     .filter(r => r.check(person))
-    .map(r => ({
-      titel: typeof r.titel === 'function' ? r.titel(person) : r.titel,
-      typ: r.typ,
-      quellen: r.quellen,
-      prioritaet: typeof r.prioritaet === 'function' ? r.prioritaet(person) : r.prioritaet,
-      volumen: typeof r.volumen === 'function' ? r.volumen(person) : (r.volumen || 0),
-      volumenTyp: r.typ === 'cross_sell' && typeof r.volumen === 'function' && r.volumen(person) === 0
-        ? 'vermittlung'
-        : (typeof r.volumen === 'function' && r.volumen(person) > 5000 ? 'einmalig' : 'jaehrlich'),
-      beschreibung: typeof r.beschreibung === 'function' ? r.beschreibung(person) : (r.beschreibung || ''),
-      empfohleneAktion: r.empfohleneAktion || 'termin_vereinbaren',
-      produktEmpfehlung: typeof r.produktEmpfehlung === 'function' ? r.produktEmpfehlung(person) : (r.produktEmpfehlung || ''),
-      status: random(statusOptions),
-      herleitung: r.herleitung ? (typeof r.herleitung === 'function' ? r.herleitung(person) : r.herleitung) : null,
-      vergleich: r.vergleich ? (typeof r.vergleich === 'function' ? r.vergleich(person) : r.vergleich) : null,
-      deckungsluecke: r.deckungsluecke ? (typeof r.deckungsluecke === 'function' ? r.deckungsluecke(person) : r.deckungsluecke) : null,
-      // F&B Rating für Versicherungsprodukte (empfohlenes Produkt)
-      fbRatingNeu: r.produktEmpfehlung ? generateFbRating(true) : null,
-    }))
+    .map(r => {
+      const status = random(statusOptions);
+      const dismissReasons = [
+        { reason: 'kein_interesse', comment: 'Kunde hat im Termin explizit abgewinkt.' },
+        { reason: 'bereits_abgesichert', comment: 'Bestand bei Drittanbieter ausreichend.' },
+        { reason: 'falsche_erkennung', comment: 'Signal traf so nicht zu.' },
+        { reason: 'timing', comment: 'Wiedervorlage in 6 Monaten.' },
+      ];
+      const dismissal = status === 'nicht_sinnvoll' ? random(dismissReasons) : null;
+      return {
+        titel: typeof r.titel === 'function' ? r.titel(person) : r.titel,
+        typ: r.typ,
+        quellen: r.quellen,
+        prioritaet: typeof r.prioritaet === 'function' ? r.prioritaet(person) : r.prioritaet,
+        volumen: typeof r.volumen === 'function' ? r.volumen(person) : (r.volumen || 0),
+        volumenTyp: r.typ === 'cross_sell' && typeof r.volumen === 'function' && r.volumen(person) === 0
+          ? 'vermittlung'
+          : (typeof r.volumen === 'function' && r.volumen(person) > 5000 ? 'einmalig' : 'jaehrlich'),
+        beschreibung: typeof r.beschreibung === 'function' ? r.beschreibung(person) : (r.beschreibung || ''),
+        empfohleneAktion: r.empfohleneAktion || 'termin_vereinbaren',
+        produktEmpfehlung: typeof r.produktEmpfehlung === 'function' ? r.produktEmpfehlung(person) : (r.produktEmpfehlung || ''),
+        status,
+        // Wenn die Demo-Daten ein „Nicht sinnvoll" produzieren, gleich eine
+        // Begründung mitliefern, damit das Card-UI sie anzeigen kann.
+        ...(dismissal ? { _override: dismissal } : {}),
+        herleitung: r.herleitung ? (typeof r.herleitung === 'function' ? r.herleitung(person) : r.herleitung) : null,
+        vergleich: r.vergleich ? (typeof r.vergleich === 'function' ? r.vergleich(person) : r.vergleich) : null,
+        deckungsluecke: r.deckungsluecke ? (typeof r.deckungsluecke === 'function' ? r.deckungsluecke(person) : r.deckungsluecke) : null,
+        // F&B Rating für Versicherungsprodukte (empfohlenes Produkt)
+        fbRatingNeu: r.produktEmpfehlung ? generateFbRating(true) : null,
+      };
+    })
     .sort((a, b) => (PRIO_ORDER[a.prioritaet] || 3) - (PRIO_ORDER[b.prioritaet] || 3));
 }

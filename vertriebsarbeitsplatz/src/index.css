@@ -193,10 +193,16 @@
   contain: layout paint;
 }
 /* Lebenszeitstrahl: Tooltips müssen über die Card-Boundary hinausragen
-   können, deshalb hier kein paint-Containment. */
+   können, deshalb hier kein paint-Containment. Außerdem brauchen die
+   einzelnen Event-Dots Hover-Events, die sonst durch das `card-passthrough`
+   pointer-events: none gekillt würden. */
 .lebenszeitstrahl-card {
   contain: none;
   overflow: visible;
+  pointer-events: auto !important;
+}
+.lebenszeitstrahl-card * {
+  pointer-events: auto;
 }
 /* KPI-Karten: will-change hinted den Browser, eigene Compositing Layer
    vorzubereiten → Hover-Repaint wird auf GPU ausgelagert. Nur auf

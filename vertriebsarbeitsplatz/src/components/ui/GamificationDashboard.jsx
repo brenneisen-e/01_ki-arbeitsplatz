@@ -12,7 +12,7 @@ import { formatEur } from '../../utils/formatters';
  * The values use the in-session kanban state where possible so they react to
  * actual moves the advisor makes during the demo.
  */
-export default function GamificationDashboard({ potentiale, kanbanState }) {
+export default function GamificationDashboard({ potentiale, kanbanState, onQuickWinClick }) {
   const stats = useMemo(() => {
     const abgeschlossen = potentiale.filter(p => p.status === 'abgeschlossen');
     const nichtSinnvoll = potentiale.filter(p => p.status === 'nicht_sinnvoll');
@@ -21,7 +21,11 @@ export default function GamificationDashboard({ potentiale, kanbanState }) {
       const ov = p._override || {};
       return s + (ov.volumen || p.volumen || 0);
     }, 0);
-    const convDenominator = abgeschlossen.length + nichtSinnvoll.length;
+    // Historischer Baseline-Anteil verworfener Potenziale, damit die
+    // Conversion-Rate realistisch (~80%) startet, statt bei 100% zu kleben
+    // wenn der Berater noch keine Karte nach „Nicht sinnvoll" gezogen hat.
+    const HISTORICAL_DISMISSED = Math.round(abgeschlossen.length * 0.25);
+    const convDenominator = abgeschlossen.length + nichtSinnvoll.length + HISTORICAL_DISMISSED;
     const convRate = convDenominator > 0
       ? (abgeschlossen.length / convDenominator) * 100
       : 0;
@@ -32,7 +36,7 @@ export default function GamificationDashboard({ potentiale, kanbanState }) {
   const targets = {
     abschluesse: 45,
     volumen: 80000,
-    convRate: 15,
+    convRate: 85,
   };
 
   // Streak — gezählt aus dem kanbanState (Einträge pro Tag in den letzten 14 Werktagen)

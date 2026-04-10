@@ -1,18 +1,10 @@
 import Card from '../../../components/ui/Card';
 import LebenszeitstrahlCard from '../../../components/ui/LebenszeitstrahlCard';
-import {
-  KISummaryBlock,
-  ProduktbestandBlock,
-  AbsicherungsCheckBlock,
-  KontaktBlock,
-  HaushaltBlock,
-  NaechsteEreignisseBlock,
-} from '../../../components/ui/KundenInfoBlocks';
 import { getLang } from '../../../utils/langHelper';
 import DataTable from '../../../components/ui/DataTable';
 import { StatusBadge, SparteBadge } from '../../../components/ui/Badge';
 import { formatEur, formatPct, berechneHaushaltsnetto, berechneAbsicherungsquote, berechneSparquote, berechneFrei, potentialSterne } from '../../../utils/formatters';
-import { User, Wallet, Linkedin, Star, ChevronDown, ChevronRight, MapPin, Briefcase, Heart, Users, CheckCircle, Building2, PawPrint, Info, Car, Fuel } from 'lucide-react';
+import { User, Wallet, Linkedin, Star, ChevronDown, ChevronRight, MapPin, Briefcase, Heart, Users, CheckCircle, Building2, PawPrint, Info, Car, Fuel, Sparkles, MessageSquare, Phone, Mail, Calendar, FileText, AlertTriangle, ShieldAlert } from 'lucide-react';
 import { getLogoUrl } from '../../../utils/logos';
 import { getKundeFoto } from '../../../utils/kundenFotos';
 import { useState } from 'react';
@@ -149,35 +141,38 @@ export default function StammdatenDetailTab({ kunde }) {
 
   return (
     <div className="space-y-4">
-      {/* Kunden-Profil Header */}
+      {/* Kunden-Profil Header (mit KI-Zusammenfassung rechts daneben für Banking) */}
       <Card hover={false}>
-        <div className="flex items-center gap-5">
+        <div className="flex items-stretch gap-5">
+          {/* Foto */}
           {foto && !fotoFailed ? (
             <img
               src={foto}
               alt={kunde.name}
-              className="w-24 h-24 rounded-xl object-cover border-2 shadow-sm"
+              className="w-24 h-24 rounded-xl object-cover border-2 shadow-sm shrink-0 self-center"
               style={{ borderColor: config.colors.primaryLight + '40' }}
               onError={() => setFotoFailed(true)}
             />
           ) : (
             <div
-              className="w-24 h-24 rounded-xl flex items-center justify-center text-white text-2xl font-bold shadow-sm"
+              className="w-24 h-24 rounded-xl flex items-center justify-center text-white text-2xl font-bold shadow-sm shrink-0 self-center"
               style={{ background: config.colors.gradient }}
             >
               {initialen}
             </div>
           )}
-          <div className="flex-1">
+
+          {/* Stammdaten-Block */}
+          <div className="flex-1 min-w-0 self-center">
             <h2 className="text-xl font-bold text-slate-800">{tn(kunde.name)}</h2>
-            <div className="flex items-center gap-4 mt-1.5 text-sm text-slate-500">
+            <div className="flex items-center gap-4 mt-1.5 text-sm text-slate-500 flex-wrap">
               <span className="flex items-center gap-1"><Briefcase size={14} /> {translateBeruf(kunde.beruf, lang)}</span>
               <span className="flex items-center gap-1"><Users size={14} /> {kunde.alter} {t('jahre')}</span>
               {kunde.familienstand && (
                 <span className="flex items-center gap-1"><Heart size={14} /> {lang === 'en' ? (FAMILIENSTAND_EN[kunde.familienstand] || kunde.familienstand) : kunde.familienstand?.charAt(0).toUpperCase() + kunde.familienstand?.slice(1)}</span>
               )}
             </div>
-            <div className="flex items-center gap-3 mt-2 text-xs text-slate-400">
+            <div className="flex items-center gap-3 mt-2 text-xs text-slate-400 flex-wrap">
               <span>{kunde.id}</span>
               <span>·</span>
               <span>{t('kundeSeit')} {kunde.eigeneProdukte?.[0]?.seit || '–'}</span>
@@ -189,13 +184,17 @@ export default function StammdatenDetailTab({ kunde }) {
               )}
             </div>
           </div>
+
+          {/* KI-Zusammenfassung rechts neben den Stammdaten (Banking) */}
+          {modeId === 'banking' && (
+            <div className="flex-[2] min-w-0">
+              <KIZusammenfassungInlay kunde={kunde} embedded />
+            </div>
+          )}
         </div>
       </Card>
 
-      {/* KI-Zusammenfassung – Banking only */}
-      {modeId === 'banking' && <KISummaryBlock kunde={kunde} />}
-
-      <div className="grid grid-cols-2 gap-4">
+      <div className={modeId === 'banking' ? 'grid grid-cols-3 gap-4' : 'grid grid-cols-2 gap-4'}>
         {/* Persoenliche Daten */}
         <Card hover={false}>
           <div className="flex items-center gap-2 mb-4">
@@ -211,9 +210,10 @@ export default function StammdatenDetailTab({ kunde }) {
               return birthDate.toLocaleDateString(getLang() === 'en' ? 'en-GB' : 'de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
             })()} />
             <InfoRow label={t('alter')} value={`${kunde.alter} ${t('jahre')}`} />
-            <InfoRow label={t('beruf')} value={translateBeruf(kunde.beruf, lang)} />
-            {kunde.arbeitgeber && (
-              <ArbeitgeberRow arbeitgeber={kunde.arbeitgeber} t={t} />
+            {kunde.arbeitgeber ? (
+              <ArbeitgeberRow arbeitgeber={kunde.arbeitgeber} beruf={translateBeruf(kunde.beruf, lang)} t={t} />
+            ) : (
+              <InfoRow label={t('beruf')} value={translateBeruf(kunde.beruf, lang)} />
             )}
             <InfoRow label={t('familienstand')} value={kunde.familienstand ? (lang === 'en' ? (FAMILIENSTAND_EN[kunde.familienstand] || kunde.familienstand) : kunde.familienstand.charAt(0).toUpperCase() + kunde.familienstand.slice(1)) : ''} />
             {kunde.partner && (
@@ -256,6 +256,11 @@ export default function StammdatenDetailTab({ kunde }) {
                 <span className="text-slate-400 shrink-0">{t('risikoscore')}</span>
                 <span className="flex items-center gap-1">
                   <span className="text-slate-700 font-medium">{kunde.risikoscore} ({kunde.risikoscore < 30 ? t('niedrig') : kunde.risikoscore < 50 ? t('mittel') : t('hoch')})</span>
+                  {kunde.risikoSignale?.length > 0 && (
+                    <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-blue-100 border border-blue-300 text-blue-600 ml-1" title="Risiko-Signal aus Kontoumsätzen">
+                      <ShieldAlert size={12} strokeWidth={2.5} />
+                    </span>
+                  )}
                   <ChevronDown size={14} className={`text-slate-400 transition-transform ${risikoExpanded ? 'rotate-180' : ''}`} />
                 </span>
               </div>
@@ -265,6 +270,9 @@ export default function StammdatenDetailTab({ kunde }) {
                   <div>{t('zahlungsverhalten')}</div>
                   <div>{t('abwanderungsrisiko')} {kunde.abwanderungsrisiko}</div>
                 </div>
+              )}
+              {kunde.risikoSignale?.length > 0 && (
+                <RisikoSignale signale={kunde.risikoSignale} />
               )}
             </div>
             <InfoRow label="NPS" value={`${kunde.nps}/10`} />
@@ -286,22 +294,10 @@ export default function StammdatenDetailTab({ kunde }) {
             </div>
           </div>
         </Card>
-      </div>
 
-      {/* Erweiterte Banking-Info-Blöcke */}
-      {modeId === 'banking' && (
-        <>
-          <div className="grid grid-cols-2 gap-4">
-            <ProduktbestandBlock kunde={kunde} />
-            <AbsicherungsCheckBlock kunde={kunde} />
-          </div>
-          <div className="grid grid-cols-2 gap-4">
-            <KontaktBlock kunde={kunde} />
-            <HaushaltBlock kunde={kunde} />
-          </div>
-          <NaechsteEreignisseBlock kunde={kunde} />
-        </>
-      )}
+        {/* Aktivitäten – Banking only, in derselben Reihe wie Persönliche Daten + Finanzübersicht */}
+        {modeId === 'banking' && <AktivitaetenCard kunde={kunde} />}
+      </div>
 
       {/* Lebenszeitstrahl – Banking only (FIDA + Open Finance Kontext) */}
       {modeId === 'banking' && <LebenszeitstrahlCard kunde={kunde} />}
@@ -311,43 +307,41 @@ export default function StammdatenDetailTab({ kunde }) {
   );
 }
 
-function ArbeitgeberRow({ arbeitgeber, t }) {
-  const [bestaetigt, setBestaetigt] = useState(arbeitgeber.bestaetigt);
-  const [showTooltip, setShowTooltip] = useState(false);
+function ArbeitgeberRow({ arbeitgeber, beruf, t }) {
+  // Demo-Datumsangaben für die Datenherkunft
+  const today = new Date();
+  const lastSalaryDate = new Date(today);
+  lastSalaryDate.setDate(28);
+  if (lastSalaryDate > today) lastSalaryDate.setMonth(lastSalaryDate.getMonth() - 1);
+  const linkedInUpdate = new Date(today);
+  linkedInUpdate.setMonth(linkedInUpdate.getMonth() - 1);
+  linkedInUpdate.setDate(8);
+  const fmt = (d) => d.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
 
   return (
-    <div className="flex items-center gap-2">
-      <span className="text-slate-400 shrink-0">{t('arbeitgeberLabel')}:</span>
-      <span className="flex items-center gap-2 text-slate-700 font-medium">
-        <Building2 size={14} className="text-slate-400" />
-        {arbeitgeber.name}
-        <span
-          className="relative"
-          onMouseEnter={() => setShowTooltip(true)}
-          onMouseLeave={() => setShowTooltip(false)}
-        >
-          <Linkedin size={14} className="text-blue-600 cursor-help" />
-          {showTooltip && (
-            <span className="absolute bottom-6 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs rounded-lg px-3 py-2 whitespace-nowrap z-50 shadow-lg">
-              {t('datenAusLinkedin')}
-              <span className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-800" />
-            </span>
-          )}
+    <>
+      {/* Arbeitgeber + Bestätigung */}
+      <div className="flex items-baseline gap-2 text-sm flex-wrap">
+        <span className="text-slate-400 shrink-0">{t('arbeitgeberLabel')}:</span>
+        <span className="text-slate-700 font-medium">{arbeitgeber.name}</span>
+        <span className="inline-flex items-center gap-1 text-xs font-medium text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full">
+          <CheckCircle size={11} /> bestätigt durch Kontoumsätze
         </span>
-        {bestaetigt ? (
-          <span className="flex items-center gap-1 text-emerald-600 text-xs bg-emerald-50 px-2 py-0.5 rounded-full">
-            <CheckCircle size={12} /> {t('bestaetigt')}
+        <span className="text-xs text-slate-400 font-mono">{fmt(lastSalaryDate)}</span>
+      </div>
+
+      {/* Position/Abteilung aus LinkedIn — gleiche Spalte wie die anderen InfoRows */}
+      {beruf && (
+        <div className="flex items-baseline gap-2 text-sm flex-wrap">
+          <span className="text-slate-400 shrink-0">Position:</span>
+          <span className="text-slate-700 font-medium">{beruf}</span>
+          <span className="inline-flex items-center gap-1 text-xs font-medium text-blue-700 bg-blue-50 border border-blue-100 px-2 py-0.5 rounded-full">
+            <Linkedin size={11} /> LinkedIn
           </span>
-        ) : (
-          <button
-            onClick={() => setBestaetigt(true)}
-            className="flex items-center gap-1 text-xs text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 px-2 py-0.5 rounded-full border border-slate-200 hover:border-emerald-200 transition-colors cursor-pointer"
-          >
-            <CheckCircle size={12} /> {t('bestaetigen')}
-          </button>
-        )}
-      </span>
-    </div>
+          <span className="text-xs text-slate-400 font-mono">{fmt(linkedInUpdate)}</span>
+        </div>
+      )}
+    </>
   );
 }
 
@@ -378,8 +372,8 @@ function HaustiereRow({ haustiere, t }) {
     <div className="pt-2 border-t border-slate-100 mt-2">
       {!confirmed ? (
         <>
-          <div className="flex items-center gap-2">
-            <span className="flex items-center gap-1.5 text-amber-500 shrink-0">
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="flex items-center gap-1.5 text-amber-500 shrink-0 text-sm">
               <PawPrint size={14} />
               {haustiere.vermutet ? t('haustierVermutet') : t('haustierHinweis')}
             </span>
@@ -390,9 +384,9 @@ function HaustiereRow({ haustiere, t }) {
             </span>
             <button
               onClick={() => setShowDetail(!showDetail)}
-              className="flex items-center gap-1 text-[10px] text-blue-500 bg-blue-50 px-1.5 py-0.5 rounded-full border border-blue-100 hover:bg-blue-100 transition-colors"
+              className="flex items-center gap-1 text-xs text-blue-500 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-100 hover:bg-blue-100 transition-colors"
             >
-              <Info size={10} />
+              <Info size={11} />
               {t('details')}
             </button>
           </div>
@@ -408,7 +402,7 @@ function HaustiereRow({ haustiere, t }) {
                   <span className="font-mono">{t.betrag}€ ({t.haeufigkeit})</span>
                 </div>
               ))}
-              <div className="text-[10px] text-amber-600 pt-1 border-t border-amber-200">
+              <div className="text-xs text-amber-600 pt-1 border-t border-amber-200">
                 {t('quellePsd2')}
               </div>
               <div className="pt-2 border-t border-amber-200 space-y-2">
@@ -448,8 +442,8 @@ function HaustiereRow({ haustiere, t }) {
           <span className="text-slate-700 font-medium">
             {tierArt}{tierName ? ` (${tierName})` : ''}
           </span>
-          <span className="flex items-center gap-1 text-[10px] text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded-full border border-emerald-200">
-            <CheckCircle size={10} />
+          <span className="flex items-center gap-1 text-xs text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+            <CheckCircle size={11} />
             {t('bestaetigt')}
           </span>
         </div>
@@ -459,89 +453,48 @@ function HaustiereRow({ haustiere, t }) {
 }
 
 function FahrzeugeSection({ fahrzeuge, t }) {
-  const [showDetail, setShowDetail] = useState(false);
-
   return (
-    <div className="pt-2 border-t border-slate-100 mt-2">
-      <div className="flex items-center gap-2 mb-1">
-        <Car size={14} className="text-blue-500" />
-        <span className="text-sm font-medium text-slate-700">{t('fahrzeugeMobilitaet')}</span>
-        <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-blue-50 text-blue-600 border border-blue-100 font-medium">PSD2</span>
-        {fahrzeuge.liste?.length > 0 && (
-          <button
-            onClick={() => setShowDetail(!showDetail)}
-            className="flex items-center gap-1 text-[10px] text-blue-500 bg-blue-50 px-1.5 py-0.5 rounded-full border border-blue-100 hover:bg-blue-100 transition-colors"
-          >
-            <Info size={10} />
-            {t('details')}
-          </button>
-        )}
-      </div>
-
+    <>
       {fahrzeuge.liste?.length > 0 ? (
-        <>
-          {fahrzeuge.liste.map((fz, i) => (
-            <div key={i} className="flex items-center gap-2 text-sm ml-5 mb-1">
-              <span className="text-slate-700 font-medium">{fz.modell}</span>
-              {fz.deckung && <span className="text-slate-400 text-xs">({fz.deckung})</span>}
-              {fz.quelle === 'psd2' && (
-                <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-indigo-50 text-indigo-500 border border-indigo-100">
-                  Open Finance
-                </span>
-              )}
-              {fz.fbRating && (
-                <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold ${
-                  fz.fbRating >= 75 ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                  : fz.fbRating >= 55 ? 'bg-amber-50 text-amber-700 border border-amber-200'
-                  : 'bg-red-50 text-red-600 border border-red-200'
-                }`}>
-                  F&B {fz.fbRating}
-                </span>
-              )}
-            </div>
-          ))}
-        </>
-      ) : (
-        <div className="text-sm text-slate-400 ml-5 italic">{t('keinFahrzeugErkannt')}</div>
-      )}
+        fahrzeuge.liste.map((fz, i) => (
+          <div key={i} className="flex items-baseline gap-2 text-sm flex-wrap">
+            <span className="text-slate-400 shrink-0">Fahrzeug:</span>
+            <span className="text-slate-700 font-medium">{fz.modell}</span>
+            {fz.deckung && (
+              <span className="text-xs px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200 font-medium">
+                {fz.deckung}{fz.sf ? ` · ${fz.sf}` : ''}
+              </span>
+            )}
+            <span className="text-slate-500">
+              · {fz.versicherer || 'Unbekannt'}
+              {fz.praemie > 0 && <span className="font-mono"> ({fz.praemie}€/J.)</span>}
+            </span>
+            {fz.quelle === 'psd2' && (
+              <span className="text-xs px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-500 border border-indigo-100">
+                Open Finance
+              </span>
+            )}
+            {fz.fbRating && (
+              <span className={`text-xs px-2 py-0.5 rounded-full font-bold ${
+                fz.fbRating >= 75 ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                : fz.fbRating >= 55 ? 'bg-amber-50 text-amber-700 border border-amber-200'
+                : 'bg-red-50 text-red-600 border border-red-200'
+              }`}>
+                F&B {fz.fbRating}
+              </span>
+            )}
+          </div>
+        ))
+      ) : null}
 
       {fahrzeuge.monatlicheAusgaben > 0 && (
-        <div className="flex items-center gap-2 text-sm ml-5 mt-1">
-          <Fuel size={12} className="text-slate-400" />
-          <span className="text-slate-500">{t('mobilitaetsausgaben')}: <span className="font-mono font-medium text-slate-700">{fahrzeuge.monatlicheAusgaben}€{t('proMonat')}</span></span>
+        <div className="flex items-baseline gap-2 text-sm flex-wrap">
+          <span className="text-slate-400 shrink-0">{t('mobilitaetsausgaben')}:</span>
+          <span className="font-mono font-medium text-slate-700">{fahrzeuge.monatlicheAusgaben}€{t('proMonat')}</span>
+          <span className="text-xs px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 border border-blue-100 font-medium">PSD2</span>
         </div>
       )}
-
-      {showDetail && fahrzeuge.liste?.length > 0 && (
-        <div className="mt-2 bg-blue-50 border border-blue-200 rounded-lg p-3 space-y-2 animate-fade-in">
-          <div className="text-xs font-semibold text-blue-700 flex items-center gap-1.5">
-            <Car size={12} />
-            {t('fahrzeugErkannt')}
-          </div>
-          {fahrzeuge.liste.map((fz, i) => (
-            <div key={i} className="bg-white rounded-lg p-2 border border-blue-100">
-              <div className="flex justify-between text-xs">
-                <span className="font-medium text-slate-700">{fz.modell}</span>
-                <span className="text-slate-500">{fz.versicherer}</span>
-              </div>
-              <div className="flex justify-between text-xs mt-1 text-slate-500">
-                <span>{t('deckung')}: {fz.deckung || '–'} {fz.sf || ''}</span>
-                {fz.praemie > 0 && <span className="font-mono">{fz.praemie}€/J.</span>}
-              </div>
-              {fz.fbRating && (
-                <div className="flex items-center gap-2 mt-1">
-                  <img src="https://img.logo.dev/franke-bornberg.de?token=pk_H7vb5Y2lTsW47U4Xq-w3HA&size=32&format=png" alt="F&B" className="w-3 h-3 rounded" onError={(e) => e.target.style.display='none'} />
-                  <span className="text-[10px] text-slate-500">Franke & Bornberg: <strong>{fz.fbRating}/100</strong> ({fz.fbKlasse})</span>
-                </div>
-              )}
-            </div>
-          ))}
-          <div className="text-[10px] text-blue-600 pt-1 border-t border-blue-200">
-            {t('quellePsd2Mobilitaet')}
-          </div>
-        </div>
-      )}
-    </div>
+    </>
   );
 }
 
@@ -628,5 +581,237 @@ function InfoRow({ label, value }) {
       <span className="text-slate-400 shrink-0">{label}:</span>
       <span className="text-slate-700 font-medium">{value}</span>
     </div>
+  );
+}
+
+// ─── Risiko-Signale (z.B. Extremsport vs. Unfallversicherungs-Deckung) ───
+// Optisch wie der „Haustier erkannt"-Hinweis: blauer/dezenter Info-Stil,
+// nicht alarmrot. Die Versicherungslücke wird in einem separaten kleinen
+// Block hervorgehoben.
+function RisikoSignale({ signale }) {
+  const [expanded, setExpanded] = useState(null);
+  return (
+    <div className="mt-2.5 space-y-2">
+      {signale.map((s, i) => (
+        <div key={i}>
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="flex items-center gap-1.5 text-blue-600 shrink-0 text-sm">
+              <ShieldAlert size={14} />
+              {s.titel}
+            </span>
+            <span className="text-sm text-slate-500 italic">Aus Kontoumsätzen erkannt</span>
+            <button
+              onClick={() => setExpanded(expanded === i ? null : i)}
+              className="flex items-center gap-1 text-xs text-blue-500 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-100 hover:bg-blue-100 transition-colors"
+            >
+              <Info size={11} />
+              Details
+            </button>
+          </div>
+          {expanded === i && (
+            <div className="mt-2 bg-blue-50 border border-blue-200 rounded-lg p-3 space-y-2 animate-fade-in">
+              <div className="text-sm text-slate-700 leading-snug">{s.beschreibung}</div>
+
+              {s.transaktionen?.length > 0 && (
+                <div className="pt-2 border-t border-blue-200">
+                  <div className="text-xs font-bold uppercase tracking-wider text-blue-700 mb-1">Erkannte Transaktionen</div>
+                  <div className="space-y-0.5">
+                    {s.transaktionen.map((t, ti) => (
+                      <div key={ti} className="flex items-baseline justify-between text-sm">
+                        <span className="text-slate-700">{t.empfaenger}</span>
+                        <span className="font-mono text-slate-600 ml-2 shrink-0">{t.betrag}€ ({t.haeufigkeit})</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {s.konsequenz && (
+                <div className="rounded bg-white border border-amber-200 p-2 flex items-start gap-2">
+                  <AlertTriangle size={14} className="text-amber-600 shrink-0 mt-0.5" />
+                  <div>
+                    <div className="text-xs font-bold uppercase tracking-wider text-amber-700 mb-0.5">Versicherungslücke</div>
+                    <div className="text-sm text-slate-700 leading-snug">{s.konsequenz}</div>
+                  </div>
+                </div>
+              )}
+
+              {s.empfehlung && (
+                <div className="flex items-start gap-1.5 text-sm pt-1">
+                  <Sparkles size={13} className="text-violet-600 mt-0.5 shrink-0" />
+                  <span className="text-slate-700"><strong className="text-violet-700">Empfehlung:</strong> {s.empfehlung}</span>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// ─── KI-Zusammenfassung als Inlay-Container ───
+function KIZusammenfassungInlay({ kunde, embedded = false }) {
+  const summary = generateKISummary(kunde);
+  const wrapperClass = embedded
+    ? 'relative rounded-xl border overflow-hidden'
+    : 'relative rounded-2xl border overflow-hidden';
+  return (
+    <div
+      className={wrapperClass}
+      style={{
+        background: 'linear-gradient(135deg, #f5f3ff 0%, #ede9fe 50%, #e0e7ff 100%)',
+        borderColor: '#d8d4ff',
+        boxShadow: embedded ? 'none' : '0 4px 14px -6px rgba(124, 58, 237, 0.18)',
+      }}
+    >
+      <div
+        className="absolute -top-12 -right-12 w-40 h-40 rounded-full pointer-events-none"
+        style={{ background: 'radial-gradient(circle, rgba(167, 139, 250, 0.3) 0%, transparent 70%)' }}
+      />
+      <div className="relative p-4 flex items-start gap-3">
+        <div
+          className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 shadow-sm"
+          style={{ background: 'linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%)' }}
+        >
+          <Sparkles size={18} className="text-white" strokeWidth={2} />
+        </div>
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center justify-between mb-1">
+            <h3 className="font-semibold text-slate-800 text-sm">KI-Zusammenfassung</h3>
+            <span className="text-xs text-slate-500 font-mono">
+              Aktualisiert {new Date().toLocaleDateString('de-DE')}
+            </span>
+          </div>
+          <p className="text-sm text-slate-700 leading-relaxed">{summary.text}</p>
+          {summary.recommendation && (
+            <div className="mt-2 flex items-start gap-1.5 text-sm">
+              <Sparkles size={13} className="text-violet-600 mt-0.5 shrink-0" />
+              <span className="text-slate-700">
+                <strong className="text-violet-700">Empfehlung:</strong> {summary.recommendation}
+              </span>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function generateKISummary(kunde) {
+  // Demo-KI-Zusammenfassung basierend auf vorhandenen Kundendaten
+  const name = kunde.name || 'Der Kunde';
+  const beruf = kunde.beruf || 'Berufstätig';
+  const arbeitgeber = kunde.arbeitgeber?.name || null;
+  const jahre = kunde.eigeneProdukte?.[0]?.seit
+    ? new Date().getFullYear() - parseInt(kunde.eigeneProdukte[0].seit.slice(0, 4), 10)
+    : null;
+  const partner = kunde.partner?.name || null;
+  const kinder = (kunde.kinder || []).length;
+  const abwanderung = kunde.abwanderungsrisiko || 'gering';
+  const offenePot = (kunde.potentiale || []).filter(p => p.status === 'identifiziert' || p.status === 'termin').length;
+
+  let text = '';
+  text += `${name} ist seit ${jahre || 'mehreren'} Jahren Kunde, ${beruf}`;
+  if (arbeitgeber) text += ` bei ${arbeitgeber}`;
+  text += '. ';
+  if (partner) text += `Verheiratet mit ${partner}`;
+  if (kinder > 0) text += `, ${kinder} ${kinder === 1 ? 'Kind' : 'Kinder'}`;
+  if (partner || kinder) text += '. ';
+
+  if (abwanderung === 'hoch') {
+    text += 'Die FIDA-Daten zeigen erhöhtes Abwanderungsrisiko: Vermögen wandert teilweise zu Fremdbanken ab. ';
+  } else if (abwanderung === 'mittel') {
+    text += 'Erste Signale für Vermögensverlagerung an Fremdbanken erkennbar. ';
+  } else {
+    text += 'Stabile Hauptbankbeziehung, keine Abwanderungssignale. ';
+  }
+
+  if (offenePot > 0) {
+    text += `Aktuell ${offenePot} offene Vertriebspotenziale im Pipeline-Board.`;
+  }
+
+  let recommendation = null;
+  if (abwanderung === 'hoch' || abwanderung === 'mittel') {
+    recommendation = 'Persönliches Bindungsgespräch priorisieren und Depot-Wechsel-Prämie als konkretes Angebot positionieren.';
+  } else if (offenePot > 2) {
+    recommendation = 'Top-Potenzial aus dem Kanban-Board angehen — kurzfristig Termin vereinbaren.';
+  } else {
+    recommendation = 'Jahresgespräch zur Bedarfsabklärung terminieren.';
+  }
+
+  return { text, recommendation };
+}
+
+// ─── Aktivitäten: letzte Gespräche & Notizen ───
+function AktivitaetenCard({ kunde }) {
+  const komms = (kunde.kommunikation || [])
+    .slice()
+    .sort((a, b) => new Date(b.datum) - new Date(a.datum))
+    .slice(0, 5);
+
+  const iconForType = (typ) => {
+    switch (typ) {
+      case 'termin': return Calendar;
+      case 'telefon': case 'anruf': return Phone;
+      case 'email': case 'mail': return Mail;
+      case 'chatbot': case 'chat': return MessageSquare;
+      case 'notiz': return FileText;
+      default: return MessageSquare;
+    }
+  };
+
+  const colorForType = (typ) => {
+    switch (typ) {
+      case 'termin': return { bg: 'bg-emerald-50', text: 'text-emerald-600', border: 'border-emerald-200' };
+      case 'telefon': case 'anruf': return { bg: 'bg-blue-50', text: 'text-blue-600', border: 'border-blue-200' };
+      case 'email': case 'mail': return { bg: 'bg-violet-50', text: 'text-violet-600', border: 'border-violet-200' };
+      case 'chatbot': case 'chat': return { bg: 'bg-indigo-50', text: 'text-indigo-600', border: 'border-indigo-200' };
+      default: return { bg: 'bg-slate-50', text: 'text-slate-600', border: 'border-slate-200' };
+    }
+  };
+
+  return (
+    <Card hover={false}>
+      <div className="flex items-center gap-2 mb-4">
+        <MessageSquare size={20} className="text-slate-500" strokeWidth={1.75} />
+        <h3 className="font-semibold text-slate-800">Aktivitäten</h3>
+        <span className="text-xs text-slate-400 ml-auto">
+          {komms.length === 0 ? 'Keine' : `${komms.length} letzte`}
+        </span>
+      </div>
+
+      {komms.length === 0 ? (
+        <div className="text-sm text-slate-400 italic text-center py-6">
+          Noch keine Aktivitäten erfasst.
+        </div>
+      ) : (
+        <div className="space-y-2.5">
+          {komms.map((k, i) => {
+            const Icon = iconForType(k.typ);
+            const c = colorForType(k.typ);
+            const date = new Date(k.datum).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+            return (
+              <div key={i} className="flex items-start gap-2.5">
+                <div className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 border ${c.bg} ${c.border}`}>
+                  <Icon size={13} className={c.text} strokeWidth={2} />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-baseline gap-2 flex-wrap">
+                    <span className="text-sm font-semibold text-slate-800 truncate">{k.betreff || k.typ}</span>
+                    <span className="text-xs text-slate-400 font-mono shrink-0">{date}</span>
+                  </div>
+                  {(k.zusammenfassung || k.kiZusammenfassung) && (
+                    <div className="text-xs text-slate-600 leading-snug mt-0.5 line-clamp-2">
+                      {k.zusammenfassung || k.kiZusammenfassung}
+                    </div>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </Card>
   );
 }

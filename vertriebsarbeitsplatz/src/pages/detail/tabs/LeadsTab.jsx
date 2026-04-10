@@ -8,7 +8,8 @@ import { useMode } from '../../../hooks/useMode';
 import useTranslation from '../../../i18n/useTranslation';
 import {
   ChevronDown, ChevronUp, UserPlus, Briefcase, Calendar, User,
-  ExternalLink, TrendingUp, Filter, Sparkles,
+  ExternalLink, TrendingUp, Filter, Sparkles, Send, Mail, X, Check,
+  ListChecks, MessageCircle,
 } from 'lucide-react';
 import { clsx } from 'clsx';
 
@@ -51,6 +52,8 @@ export default function LeadsTab({ kunde }) {
   const [kategorieFilter, setKategorieFilter] = useState('alle');
   const [statusFilter, setStatusFilter] = useState('alle');
   const [expandedLead, setExpandedLead] = useState(null);
+  const [letterModal, setLetterModal] = useState(null); // { lead }
+  const [letterSent, setLetterSent] = useState({}); // { leadId: true }
   const { t, lang } = useTranslation();
 
   // Translated labels computed inside the component
@@ -92,24 +95,35 @@ export default function LeadsTab({ kunde }) {
     const kundeLeads = allLeads.filter(l => l.referenzMandant === kunde?.id);
 
     // Also include leads from the mandant's potentiale (persona data)
-    const personaLeads = (kunde?.potentiale || []).map((p, i) => ({
-      id: `persona-${i}`,
-      name: p.titel,
-      kategorie: p.typ === 'nextgen' || p.typ === 'beratung' ? 'neumandat' : 'bestandsmandat',
-      quelle: p.typ === 'nextgen' ? 'nextgen' : p.typ === 'konsolidierung' ? 'fremdbank' : p.typ === 'anpassung' ? 'upgrade' : p.typ === 'cross_sell' ? 'upgrade' : 'lifeevent',
-      quelleLabel: p.quellen?.join(', ') || p.typ,
-      stadium: p.status === 'abgeschlossen' ? 'gewonnen' : p.status === 'termin' ? 'termin' : p.status === 'angeschrieben' ? 'kennenlernen' : 'identifiziert',
-      geschaetztesVolumen: p.volumen > 0 ? `${(p.volumen / 1000000).toFixed(1)}M €` : '—',
-      potentialAuM: p.volumen || 0,
-      herkunft: p.beschreibung,
-      herleitung: p.herleitung || [],
-      vergleich: p.vergleich || null,
-      deckungsluecke: p.deckungsluecke || null,
-      naechsterSchritt: p.empfohleneAktion === 'termin_vereinbaren' ? 'Termin vereinbaren' : p.empfohleneAktion === 'angebot_erstellen' ? 'Angebot erstellen' : p.empfohleneAktion,
-      produktEmpfehlung: p.produktEmpfehlung,
-      beruf: '',
-      datum: '',
-    }));
+    const formatVolumen = (v, typ) => {
+      if (!v || v <= 0) return '—';
+      // > 1 Mio: in M € darstellen, sonst in k € (passt für Banking + VV)
+      if (v >= 1000000) return `${(v / 1000000).toFixed(1)}M €`;
+      if (v >= 1000) return `${Math.round(v / 1000)}k €${typ === 'jaehrlich' ? '/J.' : ''}`;
+      return `${v}€${typ === 'jaehrlich' ? '/J.' : ''}`;
+    };
+    const personaLeads = (kunde?.potentiale || [])
+      // „nicht_sinnvoll" Potenziale gehören nicht in den Lead-Reiter
+      .filter(p => p.status !== 'nicht_sinnvoll')
+      .map((p, i) => ({
+        id: `persona-${i}`,
+        name: p.titel,
+        kategorie: p.typ === 'nextgen' || p.typ === 'beratung' ? 'neumandat' : 'bestandsmandat',
+        quelle: p.typ === 'nextgen' ? 'nextgen' : p.typ === 'konsolidierung' ? 'fremdbank' : p.typ === 'anpassung' ? 'upgrade' : p.typ === 'cross_sell' ? 'upgrade' : 'lifeevent',
+        quelleLabel: p.quellen?.join(', ') || p.typ,
+        stadium: p.status === 'abgeschlossen' ? 'gewonnen' : p.status === 'termin' ? 'termin' : p.status === 'angeschrieben' ? 'kennenlernen' : 'identifiziert',
+        geschaetztesVolumen: formatVolumen(p.volumen, p.volumenTyp),
+        potentialAuM: p.volumen || 0,
+        herkunft: p.beschreibung,
+        kiDescription: p.kiDescription || null,
+        herleitung: p.herleitung || [],
+        vergleich: p.vergleich || null,
+        deckungsluecke: p.deckungsluecke || null,
+        naechsterSchritt: p.empfohleneAktion === 'termin_vereinbaren' ? 'Termin vereinbaren' : p.empfohleneAktion === 'angebot_erstellen' ? 'Angebot erstellen' : p.empfohleneAktion,
+        produktEmpfehlung: p.produktEmpfehlung,
+        beruf: '',
+        datum: '',
+      }));
 
     // Merge: use VV_LEADS for this mandant, plus persona leads if not duplicated
     const merged = [...kundeLeads];
@@ -272,8 +286,171 @@ export default function LeadsTab({ kunde }) {
           )}
         </div>
       </Card>
+
+      {/* KI-Anschreiben Modal */}
+      {letterModal && (
+        <KundenAnspracheModal
+          lead={letterModal.lead}
+          kunde={kunde}
+          onClose={() => setLetterModal(null)}
+          onSent={() => {
+            setLetterSent(prev => ({ ...prev, [letterModal.lead.id]: true }));
+            // Aktivität persistieren, damit sie im Aktivitäten-Block der Stammdaten erscheint
+            try {
+              const key = `aktivitaeten_${kunde.id}`;
+              const existing = JSON.parse(localStorage.getItem(key) || '[]');
+              existing.unshift({
+                datum: new Date().toISOString().split('T')[0],
+                typ: 'email',
+                richtung: 'ausgehend',
+                betreff: `Anschreiben: ${letterModal.lead.name}`,
+                zusammenfassung: 'KI-generiertes Anschreiben verschickt.',
+              });
+              localStorage.setItem(key, JSON.stringify(existing));
+            } catch {}
+            setLetterModal(null);
+          }}
+        />
+      )}
     </div>
   );
+}
+
+// ─── KI-Anschreiben Modal ───
+function KundenAnspracheModal({ lead, kunde, onClose, onSent }) {
+  const initialText = generateLetterText(lead, kunde);
+  const [text, setText] = useState(initialText);
+  const [subject, setSubject] = useState(generateLetterSubject(lead));
+  const [generating, setGenerating] = useState(false);
+
+  const regenerate = () => {
+    setGenerating(true);
+    setTimeout(() => {
+      setText(generateLetterText(lead, kunde, true));
+      setGenerating(false);
+    }, 900);
+  };
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm"
+      onClick={onClose}
+    >
+      <div
+        className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col"
+        onClick={e => e.stopPropagation()}
+      >
+        {/* Header */}
+        <div className="px-5 py-4 border-b border-slate-200 flex items-center gap-3">
+          <div
+            className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 shadow-sm"
+            style={{ background: 'linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%)' }}
+          >
+            <Sparkles size={18} className="text-white" strokeWidth={2} />
+          </div>
+          <div className="flex-1 min-w-0">
+            <h3 className="text-sm font-bold text-slate-900">KI-Anschreiben</h3>
+            <p className="text-xs text-slate-500 truncate">
+              {kunde?.name} · {lead.name}
+            </p>
+          </div>
+          <button
+            onClick={onClose}
+            className="w-8 h-8 rounded-lg hover:bg-slate-100 flex items-center justify-center text-slate-400 hover:text-slate-700"
+          >
+            <X size={18} />
+          </button>
+        </div>
+
+        {/* Body */}
+        <div className="p-5 space-y-3 overflow-y-auto">
+          <div>
+            <label className="text-xs font-semibold text-slate-600 mb-1 block">Betreff</label>
+            <input
+              type="text"
+              value={subject}
+              onChange={e => setSubject(e.target.value)}
+              className="w-full border border-slate-200 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-violet-200 focus:border-violet-300"
+            />
+          </div>
+          <div>
+            <label className="text-xs font-semibold text-slate-600 mb-1 block">Anschreiben</label>
+            <textarea
+              value={generating ? 'KI generiert ein neues Anschreiben…' : text}
+              onChange={e => setText(e.target.value)}
+              rows={14}
+              className={`w-full border border-slate-200 rounded-lg p-3 text-sm leading-relaxed font-mono focus:outline-none focus:ring-2 focus:ring-violet-200 focus:border-violet-300 ${generating ? 'animate-pulse text-slate-400' : ''}`}
+              disabled={generating}
+            />
+          </div>
+          <div className="rounded-lg bg-violet-50 border border-violet-200 px-3 py-2 flex items-start gap-2">
+            <Sparkles size={14} className="text-violet-600 mt-0.5 shrink-0" />
+            <p className="text-xs text-violet-800 leading-relaxed">
+              Anschreiben generiert basierend auf dem Lead-Anlass und allen Datenquellen.
+              Bitte vor dem Versand prüfen und ggf. anpassen.
+            </p>
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div className="px-5 py-4 border-t border-slate-200 flex items-center justify-between gap-2 bg-slate-50">
+          <button
+            onClick={regenerate}
+            disabled={generating}
+            className="flex items-center gap-1.5 text-xs font-medium text-slate-600 hover:text-slate-900 px-3 py-1.5 rounded-lg hover:bg-white border border-slate-200 disabled:opacity-50"
+          >
+            <Sparkles size={13} /> Neu generieren
+          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={onClose}
+              className="px-4 py-2 rounded-lg text-sm font-medium text-slate-600 hover:bg-white"
+            >
+              Abbrechen
+            </button>
+            <button
+              onClick={onSent}
+              className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold text-white shadow-sm"
+              style={{ background: 'linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%)' }}
+            >
+              <Send size={14} /> Senden
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function generateLetterSubject(lead) {
+  return `Persönliche Einladung: ${lead.name}`;
+}
+
+function generateLetterText(lead, kunde, regenerated = false) {
+  const name = kunde?.name || 'sehr geehrter Kunde';
+  const lastName = name.split(' ').slice(-1)[0];
+  const anrede = `Sehr geehrter Herr ${lastName},`;
+  const variant = regenerated ? 1 : 0;
+
+  const intros = [
+    `ich melde mich heute mit einem konkreten Anlass: ${lead.name}.`,
+    `wir haben Ihre Situation gerade durchgesehen und möchten Sie zu folgendem Thema persönlich ansprechen: ${lead.name}.`,
+  ];
+  const bodies = [
+    `Aus den uns vorliegenden Daten ergibt sich aktuell ein klares Vertriebspotenzial: ${lead.herkunft || 'Es gibt einen vielversprechenden Anlass, der zeitlich gut zu Ihrer aktuellen Lebenssituation passt.'}`,
+    `Aus unserer aktuellen Analyse ergibt sich für Sie eine sehr passende Gelegenheit: ${lead.herkunft || 'Wir möchten Ihnen eine konkrete Empfehlung unterbreiten.'}`,
+  ];
+
+  return `${anrede}
+
+${intros[variant]}
+
+${bodies[variant]}
+
+Gerne würde ich die Details mit Ihnen in einem persönlichen Gespräch besprechen. Darf ich Ihnen einen Termin in den nächsten zwei Wochen vorschlagen? Ich richte mich gerne nach Ihrem Kalender.
+
+Mit freundlichen Grüßen
+Ihre Beraterin`;
 }
 
 function getLeadField(lead, field, lang) {
@@ -405,6 +582,15 @@ function LeadRow({ lead, kunde, isExpanded, onToggle, t, stadiumLabels, quellenL
 
               {/* Aktionen */}
               <div className="flex flex-wrap gap-2 pt-2">
+                <button
+                  onClick={() => setLetterModal({ lead })}
+                  className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold text-white transition-all shadow-sm hover:shadow-md"
+                  style={{ background: 'linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%)' }}
+                >
+                  <Sparkles size={14} />
+                  Kunde ansprechen
+                  {letterSent[lead.id] && <Check size={12} className="ml-1" />}
+                </button>
                 {lead.naechsterSchritt && (
                   <button
                     className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium text-white transition-colors"

@@ -27,15 +27,30 @@ const showcaseLoaders = {
 function deriveFahrzeuge(person) {
   const fahrzeuge = [];
   const allProducts = [...(person.eigeneProdukte || []), ...(person.fremdProdukte || [])];
-  const kfzProducts = allProducts.filter(p => p.typ === 'kfz');
+  // KFZ-Produkte erkennen: explizit `typ === 'kfz'`, `produktart` mit „KFZ"
+  // (Showcase-Kunden) oder über das Detailfeld als Fallback.
+  const kfzProducts = allProducts.filter(p =>
+    p.typ === 'kfz' ||
+    /kfz/i.test(p.produktart || '') ||
+    /vollkasko|teilkasko|haftpflicht.*kfz/i.test(p.details || '')
+  );
 
   for (const kfz of kfzProducts) {
     const details = kfz.details || '';
     // Parse vehicle model from details like "BMW 3er, Vollkasko, SF-15"
     const parts = details.split(',').map(s => s.trim());
     const modell = parts[0] || 'Unbekannt';
-    const deckung = parts[1] || '';
-    const sf = parts[2] || '';
+    let deckung = parts[1] || '';
+    let sf = parts[2] || '';
+    // Wenn produktart die Deckung enthält (z.B. „KFZ-Vollkasko"), als Fallback nehmen
+    if (!deckung && kfz.produktart) {
+      const dm = kfz.produktart.match(/(Vollkasko|Teilkasko|Haftpflicht)/i);
+      if (dm) deckung = dm[1];
+    }
+    if (!sf) {
+      const sfMatch = details.match(/SF[-\s]?\d+/i);
+      if (sfMatch) sf = sfMatch[0];
+    }
 
     fahrzeuge.push({
       modell,

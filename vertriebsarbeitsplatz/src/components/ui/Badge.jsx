@@ -3,6 +3,7 @@ import { clsx } from 'clsx';
 
 const PRIO_STYLES = {
   kritisch: 'bg-emerald-100 text-emerald-800 border-emerald-300',
+  sehr_hoch: 'bg-emerald-100 text-emerald-800 border-emerald-300',
   hoch: 'bg-emerald-50 text-emerald-700 border-emerald-200',
   mittel: 'bg-teal-50 text-teal-700 border-teal-200',
   niedrig: 'bg-gray-50 text-gray-600 border-gray-200',
@@ -10,6 +11,7 @@ const PRIO_STYLES = {
 
 const PRIO_LABELS = {
   kritisch: 'Sehr hoch',
+  sehr_hoch: 'Sehr hoch',
   hoch: 'Hoch',
   mittel: 'Mittel',
   niedrig: 'Niedrig',

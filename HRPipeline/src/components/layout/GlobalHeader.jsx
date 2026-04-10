@@ -1,8 +1,9 @@
-import { useState, useRef, useEffect } from 'react';
-import { Home, UserPlus, LayoutDashboard, Shield, ShieldCheck, ChevronDown } from 'lucide-react';
+import { useState, useRef, useEffect, useMemo } from 'react';
+import { Home, UserPlus, LayoutDashboard, Shield, ShieldCheck, ChevronDown, FileText, Download } from 'lucide-react';
 import { clsx } from 'clsx';
 import { useInstitut } from '../../hooks/useInstitut';
 import { getInstitutLogoUrl } from '../../data/institutConfig';
+import { getHRData } from '../../data/hrData';
 
 function getBasePath() {
   const path = window.location.pathname;
@@ -83,9 +84,68 @@ function InstitutDropdown({ onClose }) {
   );
 }
 
+function CvTemplatesDropdown({ demoProfiles, profiles, onClose }) {
+  const ref = useRef(null);
+  useEffect(() => {
+    const handler = (e) => { if (ref.current && !ref.current.contains(e.target)) onClose(); };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [onClose]);
+
+  return (
+    <div ref={ref} className="hp-cv-templates-dropdown">
+      <div className="hp-cv-templates-dropdown-head">
+        <div className="hp-cv-templates-dropdown-title">CV-Vorlagen zum Ausprobieren</div>
+        <p className="hp-cv-templates-dropdown-hint">
+          Laden Sie eines der Beispiel-PDFs herunter und reichen Sie es über „Lebenslauf hochladen“ wieder ein,
+          um die KI-Analyse auf einem echten CV zu testen.
+        </p>
+      </div>
+      <div className="hp-cv-templates-dropdown-list">
+        {demoProfiles.filter(p => p.cvPdf).map(p => {
+          const profile = profiles[p.id];
+          return (
+            <a
+              key={p.id}
+              href={p.cvPdf}
+              download
+              className="hp-cv-templates-dropdown-item"
+              onClick={e => e.stopPropagation()}
+            >
+              {profile?.photo ? (
+                <img src={profile.photo} alt={p.name} className="hp-cv-templates-dropdown-photo" />
+              ) : (
+                <div className="hp-cv-templates-dropdown-photo hp-cv-templates-dropdown-photo-fallback">
+                  {p.initials}
+                </div>
+              )}
+              <div className="hp-cv-templates-dropdown-info">
+                <div className="hp-cv-templates-dropdown-name">
+                  {p.name}
+                  <span className={`hp-cv-templates-dropdown-dot score-${p.score}`} />
+                </div>
+                <div className="hp-cv-templates-dropdown-role">{p.role}</div>
+                <div className="hp-cv-templates-dropdown-subtitle">{p.title}</div>
+              </div>
+              <Download size={16} className="hp-cv-templates-dropdown-icon" />
+            </a>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 export default function GlobalHeader({ currentMode, onModeChange }) {
   const { institut } = useInstitut();
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [cvDropdownOpen, setCvDropdownOpen] = useState(false);
+
+  const hrData = useMemo(() => getHRData(institut.mode), [institut.mode]);
+  const cvTemplates = useMemo(
+    () => hrData.ui.demoProfiles.filter(p => p.cvPdf),
+    [hrData]
+  );
 
   const modes = [
     { id: 'bewerber', label: 'Bewerber-Portal', icon: UserPlus },
@@ -151,6 +211,26 @@ export default function GlobalHeader({ currentMode, onModeChange }) {
         </div>
 
         <div className="flex items-center gap-3">
+          {cvTemplates.length > 0 && (
+            <div className="relative">
+              <button
+                onClick={() => setCvDropdownOpen(v => !v)}
+                className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/15 hover:bg-white/25 transition-colors border border-white/20 text-white text-xs font-medium"
+                title="CV-Vorlagen zum Testen herunterladen"
+              >
+                <FileText size={14} strokeWidth={1.75} />
+                <span>Vorlagen</span>
+                <ChevronDown size={12} className={clsx('text-white/60 transition-transform', cvDropdownOpen && 'rotate-180')} />
+              </button>
+              {cvDropdownOpen && (
+                <CvTemplatesDropdown
+                  demoProfiles={cvTemplates}
+                  profiles={hrData.profiles}
+                  onClose={() => setCvDropdownOpen(false)}
+                />
+              )}
+            </div>
+          )}
           <span className="text-[11px] text-white/40 tracking-wide">Demo-Umgebung — Rein synthetische Daten</span>
         </div>
       </div>

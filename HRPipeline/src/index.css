@@ -468,7 +468,6 @@ body {
     color: var(--text-secondary);
     margin: 0 0 var(--space-6);
     line-height: var(--leading-relaxed);
-    max-width: 72ch;
 }
 
 .hp-landing-cta {
@@ -506,7 +505,6 @@ body {
 
 .hp-linkedin-toggle-wrap {
     margin-top: var(--space-3);
-    max-width: 72ch;
 }
 
 .hp-linkedin-toggle {
@@ -653,144 +651,128 @@ body {
     line-height: var(--leading-relaxed);
 }
 
-/* CV Templates — downloadable sample CVs in PDF */
-.hp-cv-templates {
-    margin-bottom: var(--space-10);
-    padding: var(--space-6) var(--space-6) var(--space-5);
+/* CV Templates — downloadable sample CVs in the header Vorlagen dropdown */
+.hp-cv-templates-dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    width: 360px;
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: var(--radius-xl);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 12px 32px rgba(15, 23, 42, 0.18);
+    z-index: 60;
+    overflow: hidden;
 }
 
-.hp-cv-templates-head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--space-4);
-    margin-bottom: var(--space-5);
+.hp-cv-templates-dropdown-head {
+    padding: var(--space-4) var(--space-4) var(--space-3);
+    border-bottom: 1px solid var(--border);
 }
 
-.hp-cv-templates-head h3 {
-    font-size: var(--font-lg);
+.hp-cv-templates-dropdown-title {
+    font-size: var(--font-base);
     font-weight: var(--font-semibold);
     color: var(--text-primary);
-    margin: 0 0 4px 0;
+    margin-bottom: 4px;
 }
 
-.hp-cv-templates-head p {
-    font-size: var(--font-sm);
+.hp-cv-templates-dropdown-hint {
+    font-size: var(--font-xs);
     color: var(--text-secondary);
-    margin: 0;
-    max-width: 80ch;
     line-height: var(--leading-relaxed);
+    margin: 0;
 }
 
-.hp-cv-templates-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: var(--space-4);
-}
-
-.hp-cv-template-card {
+.hp-cv-templates-dropdown-list {
+    padding: var(--space-2);
     display: flex;
     flex-direction: column;
+    gap: 2px;
+}
+
+.hp-cv-templates-dropdown-item {
+    display: flex;
     align-items: center;
     gap: var(--space-3);
-    padding: var(--space-5) var(--space-4);
+    padding: var(--space-3);
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    color: inherit;
+    transition: background var(--transition-fast);
+    cursor: pointer;
+}
+
+.hp-cv-templates-dropdown-item:hover {
     background: var(--gray-50);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    text-align: center;
-    transition: all var(--transition-fast);
 }
 
-.hp-cv-template-card:hover {
-    box-shadow: var(--shadow-md);
-    transform: translateY(-2px);
-    border-color: var(--mode-primary-light, var(--primary));
-}
-
-.hp-cv-template-photo {
-    width: 88px;
-    height: 88px;
+.hp-cv-templates-dropdown-photo {
+    width: 44px;
+    height: 44px;
     border-radius: 50%;
     object-fit: cover;
-    border: 3px solid var(--surface);
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    flex-shrink: 0;
+    border: 1px solid var(--border);
 }
 
-.hp-cv-template-photo-fallback {
+.hp-cv-templates-dropdown-photo-fallback {
     display: flex;
     align-items: center;
     justify-content: center;
     background: var(--gray-200);
     color: var(--text-secondary);
     font-weight: var(--font-bold);
-    font-size: var(--font-lg);
+    font-size: var(--font-sm);
 }
 
-.hp-cv-template-info {
+.hp-cv-templates-dropdown-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.hp-cv-templates-dropdown-name {
     display: flex;
-    flex-direction: column;
-    gap: 2px;
-    min-height: 72px;
-    justify-content: flex-start;
-}
-
-.hp-cv-template-name {
-    font-size: var(--font-base);
-    font-weight: var(--font-bold);
+    align-items: center;
+    gap: 6px;
+    font-size: var(--font-sm);
+    font-weight: var(--font-semibold);
     color: var(--text-primary);
 }
 
-.hp-cv-template-title {
-    font-size: var(--font-sm);
-    color: var(--text-secondary);
-    line-height: 1.4;
-}
-
-.hp-cv-template-role {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-size: var(--font-xs);
-    color: var(--text-tertiary);
-    margin-top: 4px;
-}
-
-.hp-cv-template-role-dot {
-    width: 8px;
-    height: 8px;
+.hp-cv-templates-dropdown-dot {
+    width: 7px;
+    height: 7px;
     border-radius: 50%;
     display: inline-block;
 }
 
-.hp-cv-template-role-dot.score-high { background: #16A34A; }
-.hp-cv-template-role-dot.score-mid { background: #D97706; }
-.hp-cv-template-role-dot.score-low { background: #DC2626; }
+.hp-cv-templates-dropdown-dot.score-high { background: #16A34A; }
+.hp-cv-templates-dropdown-dot.score-mid { background: #D97706; }
+.hp-cv-templates-dropdown-dot.score-low { background: #DC2626; }
 
-.hp-cv-template-download {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 8px 16px;
-    background: var(--mode-primary-light, var(--primary));
-    color: #fff;
-    border-radius: var(--radius-md);
-    font-size: var(--font-sm);
-    font-weight: var(--font-semibold);
-    text-decoration: none;
-    transition: all var(--transition-fast);
-    margin-top: auto;
+.hp-cv-templates-dropdown-role {
+    font-size: var(--font-xs);
+    color: var(--text-tertiary);
+    margin-top: 1px;
 }
 
-.hp-cv-template-download:hover {
-    background: var(--mode-primary, #a00d24);
-    transform: translateY(-1px);
+.hp-cv-templates-dropdown-subtitle {
+    font-size: var(--font-xs);
+    color: var(--text-secondary);
+    margin-top: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-@media (max-width: 960px) {
-    .hp-cv-templates-grid { grid-template-columns: 1fr; }
+.hp-cv-templates-dropdown-icon {
+    color: var(--text-tertiary);
+    flex-shrink: 0;
+}
+
+.hp-cv-templates-dropdown-item:hover .hp-cv-templates-dropdown-icon {
+    color: var(--mode-primary-light, var(--primary));
 }
 
 /* Landing Positions Preview */

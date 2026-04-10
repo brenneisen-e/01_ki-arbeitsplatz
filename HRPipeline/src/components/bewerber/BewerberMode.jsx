@@ -88,7 +88,7 @@ function UploadSection({ onLoadProfile, onJobDetail, hrData }) {
               <span>LinkedIn &amp; Social-Media-Profile automatisch analysieren</span>
             </label>
             <p className="hp-linkedin-toggle-hint">
-              Die KI ergänzt Ihren Lebenslauf um öffentlich sichtbare Informationen aus Ihrem LinkedIn-, Xing- und GitHub-Profil
+              Die KI ergänzt Ihren Lebenslauf um öffentlich sichtbare Informationen aus Ihrem LinkedIn- und Xing-Profil
               (z. B. Empfehlungen, Publikationen, Nebentätigkeiten, Netzwerkgröße). Das kann Ihren Match-Score verbessern, ist
               aber optional. Es werden ausschließlich öffentlich einsehbare Daten verarbeitet — DSGVO-konform, nachvollziehbar
               und jederzeit widerrufbar.

@@ -629,8 +629,6 @@ export function KundenKarteCompact({ kunden = [], onKundeClick, title = 'Kundenk
     return 'rgba(122, 182, 72, 0.45)';
   };
 
-  const visibleKunden = zoomedState ? clusters[zoomedState] || [] : [];
-
   return (
     <>
       <div

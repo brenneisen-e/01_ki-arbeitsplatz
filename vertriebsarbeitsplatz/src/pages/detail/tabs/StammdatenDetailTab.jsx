@@ -1,10 +1,11 @@
 import Card from '../../../components/ui/Card';
+import LogoImg from '../../../components/ui/LogoImg';
 import LebenszeitstrahlCard from '../../../components/ui/LebenszeitstrahlCard';
 import TerminPrepModal from '../../../components/ui/TerminPrepModal';
 import { getLang } from '../../../utils/langHelper';
 import DataTable from '../../../components/ui/DataTable';
 import { StatusBadge, SparteBadge } from '../../../components/ui/Badge';
-import { formatEur, formatPct, berechneHaushaltsnetto, berechneAbsicherungsquote, berechneSparquote, berechneFrei, potentialSterne } from '../../../utils/formatters';
+import { formatEur, formatPct, berechneHaushaltsnetto, berechneAbsicherungsquote, berechneSparquote, berechneFrei, potentialSterne, berechneAnlagevolumen, berechneKreditvolumen } from '../../../utils/formatters';
 import { User, Wallet, Linkedin, Star, ChevronDown, ChevronRight, MapPin, Briefcase, Heart, Users, CheckCircle, Building2, PawPrint, Info, Car, Fuel, Sparkles, MessageSquare, Phone, Mail, Calendar, FileText, AlertTriangle, ShieldAlert } from 'lucide-react';
 import { getLogoUrl } from '../../../utils/logos';
 import { getKundeFoto } from '../../../utils/kundenFotos';
@@ -12,7 +13,7 @@ import { useState } from 'react';
 import { useMode } from '../../../hooks/useMode';
 import useTranslation from '../../../i18n/useTranslation';
 import { useDayAdvanced, buildKlausFischerAppointmentActivity, formatAppointmentDate, formatAppointmentTime, getSimulatedAppointment } from '../../../utils/demoClock';
-import { interpolateDynamicDates } from '../../../utils/dynamicDates';
+import { interpolateDynamicDates, resolveVersicherungspartner } from '../../../utils/dynamicDates';
 
 // ─── Translation helpers for data values ───
 const FAMILIENSTAND_EN = { verheiratet: 'Married', ledig: 'Single', geschieden: 'Divorced', verwitwet: 'Widowed' };
@@ -124,18 +125,33 @@ export default function StammdatenDetailTab({ kunde }) {
   const { t, tn, lang } = useTranslation();
   const [risikoExpanded, setRisikoExpanded] = useState(false);
   const [fotoFailed, setFotoFailed] = useState(false);
-  const { config, modeId } = useMode();
+  const { config, modeId, setActiveTab } = useMode();
   const institut = config?.institut;
   const isVV = modeId === 'vermoegensverwaltung';
   const haushalt = berechneHaushaltsnetto(kunde);
 
-  // Adapt product names to selected institut
+  // Adapt product names + details to selected institut (inkl. Versicherungspartner:
+  // R+V → Zukunftsversicherung / Provinzial / … je nach Bank-Whitelabel).
   const baseInstitut = modeId === 'versicherung' ? 'ERGO' : modeId === 'banking' ? 'VR' : null;
   const shortInstitut = institut ? institut.split(' ')[0] : null;
-  const adaptedProdukte = (kunde.eigeneProdukte || []).map(p => {
-    if (!baseInstitut || !shortInstitut || shortInstitut === baseInstitut) return p;
-    return { ...p, produkt: p.produkt?.replace(new RegExp(baseInstitut, 'g'), shortInstitut) };
-  });
+  const baseVersicherer = modeId === 'banking' ? 'R+V' : null;
+  const versicherungspartner = modeId === 'banking' ? resolveVersicherungspartner(institut) : null;
+  const replaceBrand = (s) => {
+    if (!s || typeof s !== 'string') return s;
+    let out = s;
+    if (baseInstitut && shortInstitut && shortInstitut !== baseInstitut) {
+      out = out.replace(new RegExp(baseInstitut, 'g'), shortInstitut);
+    }
+    if (baseVersicherer && versicherungspartner && versicherungspartner !== baseVersicherer) {
+      out = out.replace(new RegExp(baseVersicherer.replace(/[+]/g, '\\+'), 'g'), versicherungspartner);
+    }
+    return out;
+  };
+  const adaptedProdukte = (kunde.eigeneProdukte || []).map(p => ({
+    ...p,
+    produkt: replaceBrand(p.produkt),
+    details: replaceBrand(p.details),
+  }));
   const absQuote = berechneAbsicherungsquote(kunde);
   const sparQuote = berechneSparquote(kunde);
   const frei = berechneFrei(kunde);
@@ -144,8 +160,16 @@ export default function StammdatenDetailTab({ kunde }) {
 
   return (
     <div className="space-y-4">
-      {/* Kunden-Profil Header (mit KI-Zusammenfassung rechts daneben für Banking) */}
-      <Card hover={false} padding={false} className="px-5 py-3">
+      {/* Kunden-Profil Header — gleicher Look wie die KPI-Cards in der Übersicht */}
+      <div
+        className="relative rounded-xl border p-4 card-base overflow-hidden"
+        style={{
+          background:
+            'linear-gradient(180deg, color-mix(in srgb, var(--mode-primary-light) 14%, #ffffff) 0%, color-mix(in srgb, var(--mode-primary-light) 6%, #ffffff) 100%)',
+          borderColor: 'color-mix(in srgb, var(--mode-primary-light) 22%, #e2e8f0)',
+          boxShadow: '0 6px 16px -6px rgba(15, 23, 42, 0.10), 0 2px 6px -2px rgba(15, 23, 42, 0.05)',
+        }}
+      >
         <div className="flex items-center gap-5">
           {/* Foto */}
           {foto && !fotoFailed ? (
@@ -195,16 +219,19 @@ export default function StammdatenDetailTab({ kunde }) {
             </div>
           )}
         </div>
-      </Card>
+      </div>
 
-      <div className={modeId === 'banking' ? 'grid grid-cols-3 gap-4' : 'grid grid-cols-2 gap-4'}>
+      <div className={modeId === 'banking' ? 'grid grid-cols-3 gap-4 items-stretch' : 'grid grid-cols-2 gap-4 items-stretch'}>
         {/* Persoenliche Daten */}
-        <Card hover={false}>
-          <div className="flex items-center gap-2 mb-4">
-            <User size={20} className="text-slate-500" strokeWidth={1.75} />
-            <h3 className="font-semibold text-slate-800">{t('persoenlicheDaten')}</h3>
+        <Card hover={false} className="h-full flex flex-col">
+          <div
+            className="-mx-5 -mt-5 mb-4 px-5 py-3 rounded-t-xl border-b border-blue-200 flex items-center gap-2"
+            style={{ background: 'linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)' }}
+          >
+            <User size={20} className="text-blue-600" strokeWidth={1.75} />
+            <h3 className="font-semibold text-blue-900">{t('persoenlicheDaten')}</h3>
           </div>
-          <div className="space-y-2 text-sm">
+          <div className="space-y-2 text-sm flex-1 flex flex-col justify-between">
             <InfoRow label={t('name')} value={tn(kunde.name)} />
             <InfoRow label={t('geburtsdatum')} value={(() => {
               const today = new Date();
@@ -243,40 +270,74 @@ export default function StammdatenDetailTab({ kunde }) {
             )}
             {/* Fahrzeuge / Mobilität (PSD2) */}
             {kunde.fahrzeuge && (kunde.fahrzeuge.liste?.length > 0 || kunde.fahrzeuge.monatlicheAusgaben > 0) && (
-              <FahrzeugeSection fahrzeuge={kunde.fahrzeuge} t={t} />
+              <FahrzeugeSection
+                fahrzeuge={kunde.fahrzeuge}
+                t={t}
+                onJumpToKfz={() => {
+                  setActiveTab('openfinance');
+                  setTimeout(() => {
+                    window.dispatchEvent(new CustomEvent('kia:highlight-finanzuebersicht', { detail: { key: 'kfz' } }));
+                  }, 80);
+                }}
+              />
             )}
           </div>
         </Card>
 
         {/* Finanzuebersicht */}
-        <Card hover={false}>
-          <div className="flex items-center gap-2 mb-4">
-            <Wallet size={20} className="text-slate-500" strokeWidth={1.75} />
-            <h3 className="font-semibold text-slate-800">{t('finanzuebersicht')}</h3>
+        <Card hover={false} className="h-full flex flex-col">
+          <div
+            className="-mx-5 -mt-5 mb-4 px-5 py-3 rounded-t-xl border-b border-emerald-200 flex items-center gap-2"
+            style={{ background: 'linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%)' }}
+          >
+            <Wallet size={20} className="text-emerald-600" strokeWidth={1.75} />
+            <h3 className="font-semibold text-emerald-900">{t('finanzuebersicht')}</h3>
           </div>
-          <div className="space-y-2 text-sm">
+          <div className="space-y-2 text-sm flex-1 flex flex-col justify-between">
             <InfoRow label={t('haushaltsnetto')} value={`${formatEur(haushalt)}/mtl.`} />
             <InfoRow label={t('absicherungsquote')} value={formatPct(absQuote > 0 ? absQuote : (kunde.aum ? 72 + ((kunde.alter || 50) % 20) : 0))} />
             <InfoRow label={t('sparquote')} value={formatPct(sparQuote > 0 ? sparQuote : (kunde.nettoeinkommen ? Math.min(45, Math.round(kunde.nettoeinkommen / 200)) : 18))} />
             <InfoRow label={t('freiVerfuegbar')} value={`${formatEur(frei > 0 ? frei : (kunde.nettoeinkommen ? Math.round(kunde.nettoeinkommen * 0.3) : 2500))}/mtl.`} />
             {(() => {
-              // Gesamt-Anlagevolumen = eigene Spar/Depot-Produkte + Open-Finance Geld- und Kapitalmarkt
-              const eigen = kunde.eigeneProdukte || [];
-              const of = kunde.openFinance || {};
-              const kapital = (of.kapitalmarkt || []).flatMap(k => k.positionen || [k]);
-              const geld = of.geldmarkt || [];
-              const anlageTypen = new Set(['depot', 'depot_privat', 'depot_firma', 'depot2', 'fonds', 'sparkonto', 'tagesgeld', 'festgeld', 'bausparvertrag', 'bausparer', 'lv', 'lebensversicherung', 'riester', 'ruerup', 'bav']);
-              const anlageVol = [
-                ...eigen.filter(p => anlageTypen.has(p.typ)).map(p => p.volumen || 0),
-                ...kapital.map(k => k.volumen || 0),
-                ...geld.map(g => g.volumen || 0),
-              ].reduce((s, v) => s + v, 0);
-              const kreditVol = (of.finanzierungen || []).reduce((s, f) => s + (f.restschuld || 0), 0)
-                + (kunde.fremdProdukte || []).filter(p => ['kredit', 'privatkredit', 'konsumkredit', 'baufinanzierung', 'kffw'].includes(p.typ)).reduce((s, p) => s + (p.volumen || 0), 0);
+              // Werte identisch zur Finanzübersicht-Tab (OpenFinanceTab):
+              // zentrale Helper, keine doppelten Quellen, keine Doppelzählung
+              // zwischen fremdProdukte und openFinance.finanzierungen.
+              const anlageVol = berechneAnlagevolumen(kunde);
+              const kreditVol = berechneKreditvolumen(kunde);
+              const jumpToFinanzuebersicht = (highlightKey) => {
+                setActiveTab('openfinance');
+                // Kleine Verzögerung, damit der Tab gemountet ist, bevor das
+                // Highlight-Event gefeuert wird.
+                setTimeout(() => {
+                  window.dispatchEvent(new CustomEvent('kia:highlight-finanzuebersicht', { detail: { key: highlightKey } }));
+                }, 80);
+              };
               return (
                 <>
-                  {anlageVol > 0 && <InfoRow label={t('anlagevolumen') !== 'anlagevolumen' ? t('anlagevolumen') : 'Anlagevolumen'} value={formatEur(anlageVol)} />}
-                  {kreditVol > 0 && <InfoRow label={t('kreditvolumen') !== 'kreditvolumen' ? t('kreditvolumen') : 'Kreditvolumen'} value={formatEur(kreditVol)} />}
+                  {anlageVol > 0 && (
+                    <button
+                      type="button"
+                      onClick={() => jumpToFinanzuebersicht('anlage')}
+                      className="w-full flex items-baseline gap-2 text-sm text-left rounded-md px-1 -mx-1 py-0.5 hover:bg-slate-50 transition-colors group cursor-pointer"
+                      title="Zur Finanzübersicht – relevante Verträge anzeigen"
+                    >
+                      <span className="text-slate-400 shrink-0">{t('anlagevolumen') !== 'anlagevolumen' ? t('anlagevolumen') : 'Anlagevolumen'}:</span>
+                      <span className="text-slate-700 font-medium group-hover:underline">{formatEur(anlageVol)}</span>
+                      <ChevronRight size={12} className="text-slate-300 group-hover:text-slate-500 ml-auto" />
+                    </button>
+                  )}
+                  {kreditVol > 0 && (
+                    <button
+                      type="button"
+                      onClick={() => jumpToFinanzuebersicht('kredit')}
+                      className="w-full flex items-baseline gap-2 text-sm text-left rounded-md px-1 -mx-1 py-0.5 hover:bg-slate-50 transition-colors group cursor-pointer"
+                      title="Zur Finanzübersicht – relevante Finanzierungen anzeigen"
+                    >
+                      <span className="text-slate-400 shrink-0">{t('kreditvolumen') !== 'kreditvolumen' ? t('kreditvolumen') : 'Kreditvolumen'}:</span>
+                      <span className="text-slate-700 font-medium group-hover:underline">{formatEur(kreditVol)}</span>
+                      <ChevronRight size={12} className="text-slate-300 group-hover:text-slate-500 ml-auto" />
+                    </button>
+                  )}
                 </>
               );
             })()}
@@ -311,6 +372,35 @@ export default function StammdatenDetailTab({ kunde }) {
               if (!seit) return null;
               const jahre = new Date().getFullYear() - parseInt(seit.slice(0, 4), 10);
               return <InfoRow label={t('kundeSeit')} value={`${seit} (${jahre} Jahre)`} />;
+            })()}
+            {(() => {
+              // Bonitätsscore (Schufa-Score nach dem im März 2026 reformierten Modell).
+              // Wert deterministisch aus Risikoscore abgeleitet, damit keine
+              // Zufallswerte beim Re-Render entstehen.
+              const risiko = Number(kunde.risikoscore) || 30;
+              // Niedriger Risikoscore → hoher Schufa-Score.
+              // Skala des neuen Schufa-Modells (gültig seit 03/2026): 0–999.
+              const schufa = Math.max(250, Math.min(999, Math.round(975 - risiko * 6)));
+              const klasse = schufa >= 950 ? { label: 'sehr gut', color: 'text-emerald-600', dot: 'bg-emerald-500' }
+                          : schufa >= 850 ? { label: 'gut', color: 'text-lime-600', dot: 'bg-lime-500' }
+                          : schufa >= 700 ? { label: 'mittel', color: 'text-amber-600', dot: 'bg-amber-500' }
+                          : { label: 'erhöhtes Risiko', color: 'text-red-600', dot: 'bg-red-500' };
+              return (
+                <div className="flex items-center gap-2 text-sm" title="Schufa-Score (neues Modell, gültig seit März 2026)">
+                  <span className="text-slate-400 shrink-0">Bonitätsscore:</span>
+                  <span className="flex items-center gap-2">
+                    <img
+                      src="https://img.logo.dev/schufa.de?token=pk_H7vb5Y2lTsW47U4Xq-w3HA&size=96&format=png"
+                      alt="Schufa"
+                      className="w-9 h-9 rounded"
+                      onError={(e) => { e.target.style.display = 'none'; }}
+                    />
+                    <span className={`font-semibold ${klasse.color}`}>{schufa}/999</span>
+                    <span className={`inline-block w-1.5 h-1.5 rounded-full ${klasse.dot}`} />
+                    <span className="text-xs text-slate-400">({klasse.label}, neues Schufa-Modell 03/2026)</span>
+                  </span>
+                </div>
+              );
             })()}
             <div className="pt-2 border-t border-slate-100 mt-2">
               <div className="flex items-center gap-2 cursor-pointer" onClick={() => setRisikoExpanded(!risikoExpanded)}>
@@ -390,8 +480,9 @@ function ArbeitgeberRow({ arbeitgeber, beruf, t }) {
   return (
     <>
       {/* Arbeitgeber + Bestätigung */}
-      <div className="flex items-baseline gap-2 text-sm flex-wrap">
+      <div className="flex items-center gap-2 text-sm flex-wrap">
         <span className="text-slate-400 shrink-0">{t('arbeitgeberLabel')}:</span>
+        <LogoImg name={arbeitgeber.name} size={16} />
         <span className="text-slate-700 font-medium">{arbeitgeber.name}</span>
         <span className="inline-flex items-center gap-1 text-xs font-medium text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full">
           <CheckCircle size={11} /> bestätigt durch Kontoumsätze
@@ -521,17 +612,23 @@ function HaustiereRow({ haustiere, t }) {
   );
 }
 
-function FahrzeugeSection({ fahrzeuge, t }) {
+function FahrzeugeSection({ fahrzeuge, t, onJumpToKfz }) {
   return (
     <>
       {fahrzeuge.liste?.length > 0 ? (
         fahrzeuge.liste.map((fz, i) => (
-          <div key={i} className="flex items-baseline gap-2 text-sm flex-wrap">
+          <button
+            key={i}
+            type="button"
+            onClick={onJumpToKfz}
+            className="w-full flex items-center gap-2 text-sm text-left rounded-md px-1 -mx-1 py-0.5 hover:bg-slate-50 transition-colors group cursor-pointer flex-wrap"
+            title="Zur Finanzübersicht — KFZ-Versicherung anzeigen"
+          >
             <span className="text-slate-400 shrink-0">Fahrzeug:</span>
-            <span className="text-slate-700 font-medium">{fz.modell}</span>
-            {fz.deckung && (
+            <span className="text-slate-700 font-medium group-hover:underline">{fz.modell}</span>
+            {(fz.deckung || fz.sf) && (
               <span className="text-xs px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200 font-medium">
-                {fz.deckung}{fz.sf ? ` · ${fz.sf}` : ''}
+                {[fz.deckung, fz.sf].filter(Boolean).join(' · ')}
               </span>
             )}
             <span className="text-slate-500">
@@ -552,7 +649,7 @@ function FahrzeugeSection({ fahrzeuge, t }) {
                 F&B {fz.fbRating}
               </span>
             )}
-          </div>
+          </button>
         ))
       ) : null}
 
@@ -774,22 +871,16 @@ export function KIZusammenfassungInlay({ kunde, embedded = false, variant = 'sta
 }
 
 // Finanz-fokussierte KI-Zusammenfassung: nutzt Open-Finance-/Bestands-Daten
-// statt des CRM-Blicks der Stammdaten-Variante.
+// statt des CRM-Blicks der Stammdaten-Variante. Anlage- und Kreditvolumen
+// kommen aus den gleichen Helpern, die auch die Stammdaten-Finanzübersicht
+// nutzt — damit sind die Zahlen über alle Sichten hinweg konsistent.
 function generateFinanzKISummary(kunde) {
   const name = (kunde.name || 'Der Kunde').split(' ')[0];
   const fremd = kunde.fremdProdukte || [];
-  const eigen = kunde.eigeneProdukte || [];
   const of = kunde.openFinance || {};
-  const kapitalmarkt = of.kapitalmarkt || [];
-  const geldmarkt = of.geldmarkt || [];
-  const finanzierungen = of.finanzierungen || [];
 
-  const anlageVol = [
-    ...kapitalmarkt.flatMap(k => k.positionen || [k]).map(k => k.volumen || 0),
-    ...geldmarkt.map(g => g.volumen || 0),
-    ...eigen.filter(p => ['depot', 'fonds', 'sparkonto', 'tagesgeld', 'festgeld'].includes(p.typ)).map(p => p.volumen || 0),
-  ].reduce((s, v) => s + v, 0);
-  const kreditVol = finanzierungen.reduce((s, f) => s + (f.restschuld || 0), 0);
+  const anlageVol = berechneAnlagevolumen(kunde);
+  const kreditVol = berechneKreditvolumen(kunde);
   const fremdInstitute = Array.from(new Set(fremd.map(f => f.institut).filter(Boolean)));
   const versicherungenFremdCount = (of.versicherungenFremd || []).length || fremd.filter(p => /vers/i.test(p.typ)).length;
   const haushalt = berechneHaushaltsnetto(kunde);
@@ -900,11 +991,14 @@ function AktivitaetenCard({ kunde }) {
   };
 
   return (
-    <Card hover={false}>
-      <div className="flex items-center gap-2 mb-4">
-        <MessageSquare size={20} className="text-slate-500" strokeWidth={1.75} />
-        <h3 className="font-semibold text-slate-800">Aktivitäten</h3>
-        <span className="text-xs text-slate-400 ml-auto">
+    <Card hover={false} className="h-full flex flex-col">
+      <div
+        className="-mx-5 -mt-5 mb-4 px-5 py-3 rounded-t-xl border-b border-orange-200 flex items-center gap-2"
+        style={{ background: 'linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%)' }}
+      >
+        <MessageSquare size={20} className="text-orange-600" strokeWidth={1.75} />
+        <h3 className="font-semibold text-orange-900">Aktivitäten</h3>
+        <span className="text-xs text-orange-800/70 ml-auto">
           {komms.length === 0 ? 'Keine' : `${komms.length} letzte`}
         </span>
       </div>

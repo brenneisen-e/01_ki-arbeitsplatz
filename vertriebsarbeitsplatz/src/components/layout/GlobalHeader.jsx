@@ -88,7 +88,7 @@ function readDefaultHeaderPos() {
 }
 
 export default function GlobalHeader({ kundeInfo, tabBadges }) {
-  const { config, modeId, switchMode, switchInstitut, activeTab, setActiveTab, currentView, goBack } = useMode();
+  const { config, modeId, switchMode, switchInstitut, navigateTo, activeTab, setActiveTab, currentView, goBack } = useMode();
   const { t, lang } = useTranslation();
   const [showModeDropdown, setShowModeDropdown] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
@@ -278,7 +278,12 @@ export default function GlobalHeader({ kundeInfo, tabBadges }) {
                 setShowDayAdvanceOverlay(true);
                 setTimeout(() => {
                   setDayAdvanced(true);
-                  setTimeout(() => setShowDayAdvanceOverlay(false), 850);
+                  setTimeout(() => {
+                    setShowDayAdvanceOverlay(false);
+                    // Nach der Nacht-Simulation immer auf der Übersicht landen,
+                    // damit der neue Termin direkt sichtbar ist.
+                    navigateTo('overview', { tab: 'uebersicht' });
+                  }, 850);
                 }, 1600);
               }}
               title="Demo-Zeitmaschine: einen Tag weiter springen"

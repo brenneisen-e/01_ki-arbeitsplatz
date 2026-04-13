@@ -42,6 +42,12 @@ function deriveFahrzeuge(person) {
     const modell = parts[0] || 'Unbekannt';
     let deckung = parts[1] || '';
     let sf = parts[2] || '';
+    // Wenn das, was wir als „Deckung" interpretiert haben, eigentlich die
+    // Schadenfreiheitsklasse ist (z. B. nur "SF-12"), nach `sf` umverschieben.
+    if (deckung && /^SF[-\s]?\d+$/i.test(deckung)) {
+      sf = sf || deckung;
+      deckung = '';
+    }
     // Wenn produktart die Deckung enthält (z.B. „KFZ-Vollkasko"), als Fallback nehmen
     if (!deckung && kfz.produktart) {
       const dm = kfz.produktart.match(/(Vollkasko|Teilkasko|Haftpflicht)/i);

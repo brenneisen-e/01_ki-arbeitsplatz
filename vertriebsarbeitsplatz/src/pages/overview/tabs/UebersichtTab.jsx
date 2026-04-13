@@ -11,6 +11,8 @@ import { KUNDEN_BY_MODE, TERMINE_BY_MODE, AUFGABEN_BY_MODE, getAllPotentiale } f
 import { VV_LEADS } from '../../../data/vvExtended';
 import { formatEur } from '../../../utils/formatters';
 import { getKundeFoto } from '../../../utils/kundenFotos';
+import TerminPrepModal from '../../../components/ui/TerminPrepModal';
+import { useDayAdvanced, getSimulatedAppointment, formatAppointmentTime } from '../../../utils/demoClock';
 
 import { getLang, tx } from '../../../utils/langHelper';
 
@@ -429,7 +431,32 @@ export default function UebersichtTab() {
     return true;
   }), [vvKunden, mandatFilter]);
 
-  const termine = (TERMINE_BY_MODE[modeId] || TERMINE_BY_MODE.versicherung).slice(0, 4);
+  // Demo-Zeitmaschine: nach „Nacht simulieren" wird Klaus Fischers
+  // Beratungstermin oben mit „+1"-Badge in die Liste injiziert.
+  const dayAdvanced = useDayAdvanced();
+  const baseTermine = TERMINE_BY_MODE[modeId] || TERMINE_BY_MODE.versicherung;
+  // Banking-Kunden frühzeitig dereferenzieren, damit die Daten geladen sind,
+  // wenn der "+1 Neu"-Termin angeklickt wird (Suspense-Promise).
+  const bankingKunden = modeId === 'banking' ? (KUNDEN_BY_MODE.banking || []) : [];
+  const klausFischerTermin = useMemo(() => {
+    if (!dayAdvanced || modeId !== 'banking') return null;
+    const klaus = bankingKunden.find(k => k.id === 'BK00001');
+    if (!klaus) return null;
+    const appt = getSimulatedAppointment();
+    return {
+      kundeId: klaus.id,
+      kunde: klaus.name,
+      foto: getKundeFoto(klaus.id),
+      datum: appt.toISOString().slice(0, 10),
+      zeit: formatAppointmentTime(appt),
+      betreff: 'Kreditgespräch Immobilienfinanzierung',
+      istNeuZugestimmt: true,
+    };
+  }, [dayAdvanced, modeId, bankingKunden]);
+  const termine = (klausFischerTermin
+    ? [klausFischerTermin, ...baseTermine]
+    : baseTermine).slice(0, 5);
+  const [terminPrep, setTerminPrep] = useState(null); // { kunde, termin }
   const allAufgaben = AUFGABEN_BY_MODE[modeId] || AUFGABEN_BY_MODE.versicherung;
   // Bei Zukunftsbank gibt es kein „VR-FinanzPlan" — diese VR-spezifische
   // Aufgabe filtern wir hier aus, damit das Branding stimmt.
@@ -685,8 +712,8 @@ export default function UebersichtTab() {
                         className="absolute -bottom-4 -left-4 w-16 h-16 rounded-full opacity-20"
                         style={{ background: kampagne.photoAccent }}
                       />
-                      {/* Icon */}
-                      <PhotoIcon size={48} className="text-white relative z-10 transition-transform group-hover:scale-110" strokeWidth={1.5} />
+                      {/* Icon — versteckt sich, sobald das CTA "Kampagne öffnen" eingeblendet wird */}
+                      <PhotoIcon size={48} className="text-white relative z-10 transition-opacity duration-200 group-hover:opacity-0" strokeWidth={1.5} />
 
                       {/* Hover overlay — fades in, dims the gradient so the CTA surfaces */}
                       <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-[1px] opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
@@ -1032,11 +1059,27 @@ export default function UebersichtTab() {
               const todayStr = heute.toISOString().split('T')[0];
               const isToday = termin.datum === todayStr;
               const dayLabel = isToday ? t('heute') : tDate.toLocaleDateString(lang === 'en' ? 'en-GB' : 'de-DE', { weekday: 'short', day: '2-digit', month: '2-digit' });
+              const isNeu = !!termin.istNeuZugestimmt;
+              const handleClick = () => {
+                // Alle Termine öffnen die KI-Gesprächsvorbereitung als Popup.
+                // Falls der Kunde nicht im aktuell geladenen Mode-Bestand zu
+                // finden ist (z. B. VV-Pipeline-Stubs, KDB-Stubs), springen
+                // wir direkt auf die Detailseite — dann kümmert sich die
+                // Suspense-Logik um das Laden.
+                const k = bankingKunden.find(k => k.id === termin.kundeId);
+                if (k) {
+                  setTerminPrep({ kunde: k, termin });
+                } else {
+                  navigateTo('detail', { kundeId: termin.kundeId });
+                }
+              };
               return (
                 <div
                   key={i}
-                  className="flex items-center gap-3 py-2.5 border-b border-slate-100 last:border-0 cursor-pointer row-hover -mx-2 px-2 rounded-lg"
-                  onClick={() => navigateTo('detail', { kundeId: termin.kundeId })}
+                  className={`row-hover flex items-center gap-3 py-2.5 border-b border-slate-100 last:border-0 cursor-pointer -mx-2 px-2 rounded-lg ${
+                    isNeu ? 'bg-emerald-50/70 border border-emerald-200 hover:bg-emerald-50' : ''
+                  }`}
+                  onClick={handleClick}
                 >
                   <div className="text-center shrink-0 w-14">
                     <div className="text-[10px] font-semibold uppercase" style={{ color: isToday ? 'var(--_fg, #ef4444)' : 'var(--_fg, #94a3b8)' }}>{dayLabel}</div>
@@ -1044,7 +1087,14 @@ export default function UebersichtTab() {
                   </div>
                   <Avatar name={termin.kunde} foto={termin.foto} size={44} />
                   <div className="flex-1 min-w-0">
-                    <div className="text-sm font-semibold truncate" style={{ color: 'var(--_fg, #334155)' }}>{termin.kunde}</div>
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <span className="text-sm font-semibold truncate" style={{ color: 'var(--_fg, #334155)' }}>{termin.kunde}</span>
+                      {isNeu && (
+                        <span className="rh-badge inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-emerald-500 text-white text-[9px] font-bold uppercase tracking-wide">
+                          <Sparkles size={9} /> +1 Neu
+                        </span>
+                      )}
+                    </div>
                     <div className="text-xs truncate" style={{ color: 'var(--_fg, #64748b)' }}>{termin.betreff}</div>
                   </div>
                 </div>
@@ -1052,6 +1102,13 @@ export default function UebersichtTab() {
             })}
           </div>
         </Card>
+        {terminPrep && (
+          <TerminPrepModal
+            kunde={terminPrep.kunde}
+            termin={terminPrep.termin}
+            onClose={() => setTerminPrep(null)}
+          />
+        )}
 
         {/* Schnellzugriff Formulare */}
         <Card hover={false}>

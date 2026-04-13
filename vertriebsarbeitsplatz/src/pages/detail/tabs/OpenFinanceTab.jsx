@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Card from '../../../components/ui/Card';
 import DataTable from '../../../components/ui/DataTable';
 import LogoImg from '../../../components/ui/LogoImg';
-import { formatEur } from '../../../utils/formatters';
+import { formatEur, berechneAnlagevolumen, berechneKreditvolumen } from '../../../utils/formatters';
 import { CheckCircle, XCircle, Link2, Briefcase, PiggyBank, Shield, Home, TrendingUp, AlertTriangle, ChevronDown } from 'lucide-react';
 import useTranslation from '../../../i18n/useTranslation';
 import { useMode } from '../../../hooks/useMode';
@@ -164,15 +164,21 @@ function generateBedarfsfelder(kunde, modeId) {
     } else if (['versicherung', 'kfz', 'kfz_fremd', 'hausrat', 'haftpflicht', 'rechtsschutz',
                  'rlv', 'bu', 'du', 'pkv', 'pkv_ehemann', 'unfall', 'lebensversicherung',
                  'praxis_hp', 'betriebshaftpflicht', 'inhaltsversicherung', 'wohngebaeude'].includes(t)) {
+      // Ohne Consent dürfen wir keine Vertragsdetails kennen — nur das
+      // Institut bleibt sichtbar, damit der Berater sieht, dass dort eine
+      // Versicherung liegt.
+      const hasConsent = !!p.consent;
       versicherungenFremd.push({
         produkt: p.produktart || p.typ.replace(/_/g, ' '),
-        institut: p.institut, praemie: p.volumen > 0 && p.volumen < 10000 ? p.volumen : null,
-        deckungssumme: p.deckungssumme || null,
-        tarifart: p.tarifart || null,
-        leistungen: p.leistungen || null,
-        selbstbehalt: p.selbstbehalt || null,
-        kuendigungsfrist: p.kuendigungsfrist || null,
-        details: p.details,
+        institut: p.institut,
+        consent: hasConsent,
+        praemie: hasConsent && p.volumen > 0 && p.volumen < 10000 ? p.volumen : null,
+        deckungssumme: hasConsent ? (p.deckungssumme || null) : null,
+        tarifart: hasConsent ? (p.tarifart || null) : null,
+        leistungen: hasConsent ? (p.leistungen || null) : null,
+        selbstbehalt: hasConsent ? (p.selbstbehalt || null) : null,
+        kuendigungsfrist: hasConsent ? (p.kuendigungsfrist || null) : null,
+        details: hasConsent ? p.details : null,
       });
     } else if (['baufinanzierung', 'kredit', 'konsumkredit', 'privatkredit', 'kffw'].includes(t)) {
       finanzierungen.push({
@@ -219,6 +225,30 @@ function PerfBadge({ value }) {
 export default function OpenFinanceTab({ kunde }) {
   const { t, lang } = useTranslation();
   const { config, modeId } = useMode();
+
+  // Highlight-Event: wenn von einem anderen Tab (z. B. Stammdaten) ein
+  // Klick auf "Anlagevolumen" / "Kreditvolumen" passiert, lassen wir die
+  // jeweils relevanten Bedarfsfeld-Karten kurz aufblinken.
+  const [flashKey, setFlashKey] = useState(null);
+  const sparenRef = useRef(null);
+  const finanzierenRef = useRef(null);
+  const absichernRef = useRef(null);
+  useEffect(() => {
+    const onFlash = (e) => {
+      const key = e?.detail?.key;
+      if (!key) return;
+      setFlashKey(key);
+      const target = key === 'kredit' ? finanzierenRef.current
+                   : key === 'absicherung' || key === 'kfz' ? absichernRef.current
+                   : sparenRef.current;
+      if (target && typeof target.scrollIntoView === 'function') {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+      window.setTimeout(() => setFlashKey(null), 2200);
+    };
+    window.addEventListener('kia:highlight-finanzuebersicht', onFlash);
+    return () => window.removeEventListener('kia:highlight-finanzuebersicht', onFlash);
+  }, []);
   const fremd = kunde.fremdProdukte || [];
   const eigen = kunde.eigeneProdukte || [];
   // Externe Verknüpfungen should list each company only once even if the
@@ -301,8 +331,39 @@ export default function OpenFinanceTab({ kunde }) {
         />
       </Card>
 
+      {/* Gesamt-Anlagevolumen Summenzeile (über alle Assets, identisch zu
+          berechneAnlagevolumen → konsistent mit Stammdaten-Finanzübersicht) */}
+      {(() => {
+        const anlageGesamt = berechneAnlagevolumen(kunde);
+        const kreditGesamt = berechneKreditvolumen(kunde);
+        const netto = anlageGesamt - kreditGesamt;
+        if (anlageGesamt <= 0 && kreditGesamt <= 0) return null;
+        return (
+          <Card hover={false} padding={false} className="overflow-hidden">
+            <div className="grid grid-cols-3 divide-x divide-slate-100">
+              <div className="px-5 py-4">
+                <div className="text-xs uppercase tracking-wider text-slate-400 mb-1">Anlagevolumen gesamt</div>
+                <div className="font-mono text-2xl font-bold text-slate-800">{formatEur(anlageGesamt)}</div>
+                <div className="text-[11px] text-slate-400 mt-0.5">eigene Bestände + Open-Finance-Depots</div>
+              </div>
+              <div className="px-5 py-4">
+                <div className="text-xs uppercase tracking-wider text-slate-400 mb-1">Kreditvolumen gesamt</div>
+                <div className="font-mono text-2xl font-bold text-amber-700">{formatEur(kreditGesamt)}</div>
+                <div className="text-[11px] text-slate-400 mt-0.5">offene Finanzierungen</div>
+              </div>
+              <div className="px-5 py-4">
+                <div className="text-xs uppercase tracking-wider text-slate-400 mb-1">Netto-Vermögen</div>
+                <div className={`font-mono text-2xl font-bold ${netto >= 0 ? 'text-emerald-700' : 'text-red-600'}`}>{formatEur(netto)}</div>
+                <div className="text-[11px] text-slate-400 mt-0.5">Anlagen − Verbindlichkeiten</div>
+              </div>
+            </div>
+          </Card>
+        );
+      })()}
+
       {/* ═══ Bedarfsfeld: Sparen & Vorsorgen ═══ */}
       {(bf.geldmarkt?.length > 0 || bf.kapitalmarkt?.length > 0) && (
+        <div ref={sparenRef} className={flashKey === 'anlage' ? 'kia-flash-card' : ''}>
         <Card hover={false}>
           <BedarfsfeldHeader
             icon={PiggyBank}
@@ -402,10 +463,12 @@ export default function OpenFinanceTab({ kunde }) {
             </div>
           )}
         </Card>
+        </div>
       )}
 
       {/* ═══ Bedarfsfeld: Absichern (Fremd) ═══ */}
       {bf.versicherungenFremd?.length > 0 && (
+        <div ref={absichernRef} className={(flashKey === 'absicherung' || flashKey === 'kfz') ? 'kia-flash-card' : ''}>
         <Card hover={false}>
           <BedarfsfeldHeader
             icon={Shield}
@@ -433,16 +496,23 @@ export default function OpenFinanceTab({ kunde }) {
               </thead>
               <tbody>
                 {bf.versicherungenFremd.map((v, i) => (
-                  <tr key={i} className="border-t border-slate-100 row-hover">
-                    <td className="px-4 py-2.5 font-medium capitalize">{v.produkt}</td>
+                  <tr key={i} className={`border-t border-slate-100 row-hover ${v.consent === false ? 'bg-amber-50/40' : ''}`}>
+                    <td className="px-4 py-2.5 font-medium capitalize">
+                      {v.produkt}
+                      {v.consent === false && (
+                        <span className="ml-2 text-[10px] font-semibold uppercase tracking-wider text-amber-700 bg-amber-100 border border-amber-200 px-1.5 py-0.5 rounded">Consent fehlt</span>
+                      )}
+                    </td>
                     <td className="px-4 py-2.5"><div className="flex items-center gap-2"><LogoImg name={v.institut} size={18} />{v.institut}</div></td>
-                    <td className="px-4 py-2.5 text-slate-500">{v.details}</td>
+                    <td className="px-4 py-2.5 text-slate-500">{v.consent === false ? 'Details gesperrt' : (v.details || '–')}</td>
                     {bf.versicherungenFremd.some(x => x.deckungssumme) && (
-                      <td className="px-4 py-2.5 text-slate-600">{v.deckungssumme || '–'}</td>
+                      <td className="px-4 py-2.5 text-slate-600">{v.consent === false ? '•••' : (v.deckungssumme || '–')}</td>
                     )}
                     {bf.versicherungenFremd.some(x => x.leistungen) && (
                       <td className="px-4 py-2.5">
-                        {v.leistungen ? (
+                        {v.consent === false ? (
+                          <span className="text-slate-400">•••</span>
+                        ) : v.leistungen ? (
                           <div className="flex flex-wrap gap-1">
                             {v.leistungen.map((l, j) => (
                               <span key={j} className="rh-badge text-[10px] px-1.5 py-0.5 rounded bg-blue-50 text-blue-600">{l}</span>
@@ -452,19 +522,21 @@ export default function OpenFinanceTab({ kunde }) {
                       </td>
                     )}
                     <td className="px-4 py-2.5 text-center">
-                      <InsuranceScore score={scoreVersicherung(kunde.id, v)} />
+                      {v.consent === false ? <span className="text-slate-300 text-xs">keine Daten</span> : <InsuranceScore score={scoreVersicherung(kunde.id, v)} />}
                     </td>
-                    <td className="px-4 py-2.5 text-right font-mono">{v.praemie ? `${formatEur(v.praemie)}/J.` : '–'}</td>
+                    <td className="px-4 py-2.5 text-right font-mono">{v.consent === false ? '•••' : (v.praemie ? `${formatEur(v.praemie)}/J.` : '–')}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
         </Card>
+        </div>
       )}
 
       {/* ═══ Bedarfsfeld: Finanzieren ═══ */}
       {bf.finanzierungen?.length > 0 && (
+        <div ref={finanzierenRef} className={flashKey === 'kredit' ? 'kia-flash-card' : ''}>
         <Card hover={false}>
           <BedarfsfeldHeader
             icon={Home}
@@ -518,6 +590,7 @@ export default function OpenFinanceTab({ kunde }) {
             </div>
           )}
         </Card>
+        </div>
       )}
 
     </div>

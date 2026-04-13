@@ -146,7 +146,7 @@ export default function LandingPage() {
     executeSuggestion(suggestion);
   }
 
-  function executeSuggestion(suggestion) {
+  function executeSuggestion(suggestion, opts = {}) {
     setIsThinking(true);
     const steps = [
       t('datenWerdenGeladen'),
@@ -162,10 +162,12 @@ export default function LandingPage() {
         setThinkingText(steps[step]);
       } else {
         clearInterval(interval);
-        // Navigate
-        const targetMode = activeModule;
+        // Navigate. `modeOverride` lets callers (e.g. the microphone flow)
+        // force a specific target mode – otherwise the closure's
+        // activeModule could still be stale after a same-tick setState.
+        const targetMode = opts.modeOverride || activeModule;
         switchMode(targetMode);
-        if (selectedVariant) {
+        if (selectedVariant && !opts.modeOverride) {
           switchInstitut(selectedVariant, targetMode);
         }
         if (suggestion.action === 'cockpit') {
@@ -233,10 +235,11 @@ export default function LandingPage() {
             setActiveModule(targetMode);
             setSelectedVariant(null);
             try { localStorage.setItem('kia_last_mode', JSON.stringify({ modeId: targetMode })); } catch {}
-            // Force banking for the upcoming navigation regardless of
-            // whatever activeModule's closure still sees.
-            switchMode(targetMode);
-            executeSuggestion({ action: 'overview' });
+            // Hand off to the same pipeline a chat submit would use, so the
+            // user sees the thinking overlay (Daten werden geladen …) before
+            // the overview opens. modeOverride forces Banking regardless of
+            // whatever activeModule was selected on the landing page.
+            executeSuggestion({ action: 'overview' }, { modeOverride: targetMode });
           }, 500);
           listenTimeoutsRef.current.push(finish);
         }

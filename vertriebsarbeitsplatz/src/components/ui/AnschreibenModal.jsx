@@ -1,5 +1,29 @@
 import { useEffect, useMemo, useState } from 'react';
 import { X, Sparkles, Send, Mail, Loader2, Check } from 'lucide-react';
+import { useMode } from '../../hooks/useMode';
+
+// Liest die auf der Landing-Page hinterlegten Berater-Stammdaten aus dem
+// localStorage und ergänzt sie um den Mode-Default + ein passendes Anrede-
+// Präfix („Ihre Beraterin Frau Müller" / „Ihr Berater Herr Schmidt").
+function getBeraterSignatur(modeConfig) {
+  const fullname = (typeof window !== 'undefined' && localStorage.getItem('kia_user_fullname')) || '';
+  const gender = (typeof window !== 'undefined' && localStorage.getItem('kia_user_gender')) || '';
+  const name = fullname.trim() || modeConfig?.beraterName || 'Ihre Beraterin';
+  const last = name.split(' ').filter(Boolean).pop() || name;
+  const isWeiblich = gender === 'w' || gender === 'weiblich' || gender === 'female';
+  const isMaennlich = gender === 'm' || gender === 'männlich' || gender === 'male';
+  const titelW = modeConfig?.beraterTitelW || modeConfig?.beraterTitel || 'Beraterin';
+  const titelM = modeConfig?.beraterTitelM || modeConfig?.beraterTitel || 'Berater';
+  const anredePrefix = isMaennlich
+    ? `Ihr ${titelM} Herr`
+    : isWeiblich
+      ? `Ihre ${titelW} Frau`
+      : `${titelW || 'Ihre Beraterin'}`;
+  return {
+    line1: `${anredePrefix} ${last}`.trim(),
+    line2: modeConfig?.institut || '',
+  };
+}
 
 /**
  * AnschreibenModal
@@ -12,7 +36,9 @@ import { X, Sparkles, Send, Mail, Loader2, Check } from 'lucide-react';
  */
 export default function AnschreibenModal({ kunde, potential, onClose }) {
   const [phase, setPhase] = useState('generating'); // generating | ready | sending | sent
-  const draft = useMemo(() => buildDraft(kunde, potential), [kunde, potential]);
+  const { config } = useMode();
+  const beraterSig = useMemo(() => getBeraterSignatur(config), [config]);
+  const draft = useMemo(() => buildDraft(kunde, potential, beraterSig), [kunde, potential, beraterSig]);
   const [text, setText] = useState('');
   const [subject, setSubject] = useState(draft.subject);
 
@@ -34,7 +60,8 @@ export default function AnschreibenModal({ kunde, potential, onClose }) {
 
   const handleSend = () => {
     setPhase('sending');
-    setTimeout(() => setPhase('sent'), 900);
+    // Animation läuft 1,4 s — danach in „sent" wechseln
+    setTimeout(() => setPhase('sent'), 1500);
   };
 
   return (
@@ -89,7 +116,34 @@ export default function AnschreibenModal({ kunde, potential, onClose }) {
             </div>
           )}
 
-          {phase !== 'generating' && (
+          {phase === 'sending' && (
+            <div className="relative flex items-center justify-center py-16 min-h-[260px] overflow-hidden">
+              {/* Brief faltet sich zusammen */}
+              <div className="kia-letter-fold w-64 h-44 rounded-lg border border-slate-200 bg-white shadow-md p-4 text-[10px] leading-snug text-slate-400 overflow-hidden">
+                <div className="font-semibold text-slate-500 mb-1.5">{subject}</div>
+                <div className="space-y-0.5">
+                  <div className="h-1.5 bg-slate-100 rounded w-3/4" />
+                  <div className="h-1.5 bg-slate-100 rounded w-full" />
+                  <div className="h-1.5 bg-slate-100 rounded w-5/6" />
+                  <div className="h-1.5 bg-slate-100 rounded w-2/3" />
+                  <div className="h-1.5 bg-slate-100 rounded w-4/5" />
+                  <div className="h-1.5 bg-slate-100 rounded w-3/4" />
+                </div>
+              </div>
+              {/* Umschlag fliegt nach oben rechts */}
+              <div className="kia-envelope-fly">
+                <svg viewBox="0 0 96 64" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full drop-shadow-md">
+                  <rect x="2" y="6" width="92" height="54" rx="4" fill="#ffffff" stroke="#6366f1" strokeWidth="2" />
+                  <path d="M2 8 L48 38 L94 8" stroke="#6366f1" strokeWidth="2" fill="none" />
+                  <path d="M2 60 L36 32 M94 60 L60 32" stroke="#a5b4fc" strokeWidth="1.5" fill="none" />
+                </svg>
+              </div>
+              <div className="kia-envelope-swoosh" />
+              <p className="absolute bottom-4 text-xs text-indigo-600 font-medium">Anschreiben wird verpackt und versendet …</p>
+            </div>
+          )}
+
+          {(phase === 'ready' || phase === 'sent') && (
             <>
               {/* Signal-Rationale */}
               <div className="rounded-xl border border-indigo-100 bg-gradient-to-r from-violet-50 to-indigo-50 p-4">
@@ -181,10 +235,19 @@ export default function AnschreibenModal({ kunde, potential, onClose }) {
 }
 
 // ─── Demo-Draft-Generator ────────────────────────────────────────
-function buildDraft(kunde, p) {
+function buildDraft(kunde, p, beraterSig) {
   const nachname = (kunde?.name || 'Kunde').split(' ').slice(-1)[0];
   const anrede = kunde?.anrede || 'Sehr geehrter Herr';
   const recipient = `${kunde?.name || ''} <${slug(kunde?.name || 'kunde')}@mail-demo.de>`;
+  const sigLine1 = beraterSig?.line1 || 'Ihre Beraterin';
+  const sigLine2 = beraterSig?.line2 || '';
+  const signatur = `Herzliche Grüße\n${sigLine1}${sigLine2 ? '\n' + sigLine2 : ''}`;
+  const institut = sigLine2 || 'Ihre Bank';
+  const partner = (function () {
+    // Lazy import vermeiden — wir mappen die häufigsten Fälle direkt.
+    const map = { 'Volksbank Mittelhessen': 'R+V', 'Sparkasse': 'Provinzial', 'Commerzbank': 'AMB', 'Deutsche Bank': 'Zurich', 'ING': 'NN', 'Zukunftsbank': 'Zukunftsversicherung' };
+    return map[institut] || 'unserem Versicherungspartner';
+  })();
 
   // Potenzial-spezifische Bausteine.
   const titel = p?.titel || 'Beratungsgespräch';
@@ -212,17 +275,15 @@ in den letzten Wochen haben wir bei Ihnen drei Signale gesehen, die sehr gut zus
 • Ihr Bausparvertrag bei Schwäbisch Hall wird im zweiten Quartal 2026 zuteilungsreif – rund 30.000 € stehen dann als Eigenkapital bzw. Sondertilgung bereit.
 • Außerdem sind Sie seit 2 Jahren Abonnent unseres Newsletters „VR-Immobilien & Finanzieren" und haben zuletzt mehrfach Artikel rund um Bausparen und KfW-Förderprogramme gelesen.
 
-Das ist für uns ein klares Zeichen, dass Sie sich aktiv mit dem Thema Immobilienkauf oder Modernisierung auseinandersetzen. Genau dafür würde ich mir gerne 30 Minuten Zeit nehmen und Ihnen in einem persönlichen Gespräch zeigen, wie eine Finanzierung über die Volksbank Mittelhessen strukturiert sein könnte – mit den konkreten Zahlen auf Ihre Situation zugeschnitten.
+Das ist für uns ein klares Zeichen, dass Sie sich aktiv mit dem Thema Immobilienkauf oder Modernisierung auseinandersetzen. Genau dafür würde ich mir gerne 30 Minuten Zeit nehmen und Ihnen in einem persönlichen Gespräch zeigen, wie eine Finanzierung über ${institut} strukturiert sein könnte – mit den konkreten Zahlen auf Ihre Situation zugeschnitten.
 
 Passt Ihnen ein Termin nächste Woche vormittags in unserer Filiale oder möchten Sie lieber per Video sprechen?
 
-Herzliche Grüße
-Ihre Beraterin Frau Weber
-Volksbank Mittelhessen`;
+${signatur}`;
   } else if (istVersicherung) {
     subject = `Ihr Versicherungsschutz – konkrete Einsparmöglichkeiten für Sie`;
     rationale = [
-      'Open Finance zeigt höhere Prämien bei Fremdanbieter als bei R+V.',
+      `Open Finance zeigt höhere Prämien bei Fremdanbieter als bei ${partner}.`,
       'Mehrere Verträge bei verschiedenen Anbietern – Bündelung spart Prämie.',
       'Einzelne Absicherungslücken identifiziert (keine RLV / Unfall).',
     ];
@@ -231,15 +292,13 @@ Volksbank Mittelhessen`;
 
 über Ihre Open-Finance-Einwilligung haben wir Ihre aktuellen Versicherungsverträge analysiert und einige Optimierungspotenziale entdeckt:
 
-• Ihre KFZ-Vollkasko bei der HUK kostet aktuell 780 € / Jahr – bei R+V wäre derselbe Schutz für rund 620 € / Jahr möglich.
-• Die Haftpflicht läuft separat bei einem anderen Anbieter – im R+V-Bündel wäre sie bereits enthalten.
+• Ihre KFZ-Vollkasko bei der HUK kostet aktuell 780 € / Jahr – bei ${partner} wäre derselbe Schutz für rund 620 € / Jahr möglich.
+• Die Haftpflicht läuft separat bei einem anderen Anbieter – im ${partner}-Bündel wäre sie bereits enthalten.
 • Außerdem möchte ich mit Ihnen einige offene Absicherungsthemen ansprechen, die im Hinblick auf Ihre Familie sinnvoll wären.
 
 Gerne zeige ich Ihnen in einem kurzen Gespräch die konkreten Zahlen und wir finden gemeinsam das Paket, das für Sie am besten passt. Passt Ihnen nächste Woche ein Termin?
 
-Herzliche Grüße
-Ihre Beraterin Frau Weber
-Volksbank Mittelhessen`;
+${signatur}`;
   } else {
     subject = `${titel} – Vorschlag für ein kurzes Gespräch`;
     rationale = [
@@ -259,9 +318,7 @@ Gerne möchte ich Ihnen in einem kurzen persönlichen Gespräch zeigen, welche k
 
 Hätten Sie diese oder nächste Woche einen passenden Termin?
 
-Herzliche Grüße
-Ihre Beraterin Frau Weber
-Volksbank Mittelhessen`;
+${signatur}`;
   }
 
   return { body, subject, recipient, rationale };

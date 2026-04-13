@@ -226,12 +226,15 @@ export default function OpenFinanceTab({ kunde }) {
   const [flashKey, setFlashKey] = useState(null);
   const sparenRef = useRef(null);
   const finanzierenRef = useRef(null);
+  const absichernRef = useRef(null);
   useEffect(() => {
     const onFlash = (e) => {
       const key = e?.detail?.key;
       if (!key) return;
       setFlashKey(key);
-      const target = key === 'kredit' ? finanzierenRef.current : sparenRef.current;
+      const target = key === 'kredit' ? finanzierenRef.current
+                   : key === 'absicherung' || key === 'kfz' ? absichernRef.current
+                   : sparenRef.current;
       if (target && typeof target.scrollIntoView === 'function') {
         target.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
@@ -459,6 +462,7 @@ export default function OpenFinanceTab({ kunde }) {
 
       {/* ═══ Bedarfsfeld: Absichern (Fremd) ═══ */}
       {bf.versicherungenFremd?.length > 0 && (
+        <div ref={absichernRef} className={(flashKey === 'absicherung' || flashKey === 'kfz') ? 'kia-flash-card' : ''}>
         <Card hover={false}>
           <BedarfsfeldHeader
             icon={Shield}
@@ -514,6 +518,7 @@ export default function OpenFinanceTab({ kunde }) {
             </table>
           </div>
         </Card>
+        </div>
       )}
 
       {/* ═══ Bedarfsfeld: Finanzieren ═══ */}

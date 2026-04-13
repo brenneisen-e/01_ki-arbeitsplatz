@@ -270,7 +270,16 @@ export default function StammdatenDetailTab({ kunde }) {
             )}
             {/* Fahrzeuge / Mobilität (PSD2) */}
             {kunde.fahrzeuge && (kunde.fahrzeuge.liste?.length > 0 || kunde.fahrzeuge.monatlicheAusgaben > 0) && (
-              <FahrzeugeSection fahrzeuge={kunde.fahrzeuge} t={t} />
+              <FahrzeugeSection
+                fahrzeuge={kunde.fahrzeuge}
+                t={t}
+                onJumpToKfz={() => {
+                  setActiveTab('openfinance');
+                  setTimeout(() => {
+                    window.dispatchEvent(new CustomEvent('kia:highlight-finanzuebersicht', { detail: { key: 'kfz' } }));
+                  }, 80);
+                }}
+              />
             )}
           </div>
         </Card>
@@ -603,17 +612,23 @@ function HaustiereRow({ haustiere, t }) {
   );
 }
 
-function FahrzeugeSection({ fahrzeuge, t }) {
+function FahrzeugeSection({ fahrzeuge, t, onJumpToKfz }) {
   return (
     <>
       {fahrzeuge.liste?.length > 0 ? (
         fahrzeuge.liste.map((fz, i) => (
-          <div key={i} className="flex items-baseline gap-2 text-sm flex-wrap">
+          <button
+            key={i}
+            type="button"
+            onClick={onJumpToKfz}
+            className="w-full flex items-center gap-2 text-sm text-left rounded-md px-1 -mx-1 py-0.5 hover:bg-slate-50 transition-colors group cursor-pointer flex-wrap"
+            title="Zur Finanzübersicht — KFZ-Versicherung anzeigen"
+          >
             <span className="text-slate-400 shrink-0">Fahrzeug:</span>
-            <span className="text-slate-700 font-medium">{fz.modell}</span>
-            {fz.deckung && (
+            <span className="text-slate-700 font-medium group-hover:underline">{fz.modell}</span>
+            {(fz.deckung || fz.sf) && (
               <span className="text-xs px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200 font-medium">
-                {fz.deckung}{fz.sf ? ` · ${fz.sf}` : ''}
+                {[fz.deckung, fz.sf].filter(Boolean).join(' · ')}
               </span>
             )}
             <span className="text-slate-500">

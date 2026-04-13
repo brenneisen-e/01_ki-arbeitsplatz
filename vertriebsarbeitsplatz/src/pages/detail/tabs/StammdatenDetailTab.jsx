@@ -649,7 +649,7 @@ function FahrzeugeSection({ fahrzeuge, t, onJumpToKfz }) {
                 F&B {fz.fbRating}
               </span>
             )}
-          </div>
+          </button>
         ))
       ) : null}
 

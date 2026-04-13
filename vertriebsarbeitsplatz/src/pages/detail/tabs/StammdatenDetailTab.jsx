@@ -160,8 +160,16 @@ export default function StammdatenDetailTab({ kunde }) {
 
   return (
     <div className="space-y-4">
-      {/* Kunden-Profil Header (mit KI-Zusammenfassung rechts daneben für Banking) */}
-      <Card hover={false} padding={false} className="px-5 py-3">
+      {/* Kunden-Profil Header — gleicher Look wie die KPI-Cards in der Übersicht */}
+      <div
+        className="relative rounded-xl border p-4 card-base overflow-hidden"
+        style={{
+          background:
+            'linear-gradient(180deg, color-mix(in srgb, var(--mode-primary-light) 14%, #ffffff) 0%, color-mix(in srgb, var(--mode-primary-light) 6%, #ffffff) 100%)',
+          borderColor: 'color-mix(in srgb, var(--mode-primary-light) 22%, #e2e8f0)',
+          boxShadow: '0 6px 16px -6px rgba(15, 23, 42, 0.10), 0 2px 6px -2px rgba(15, 23, 42, 0.05)',
+        }}
+      >
         <div className="flex items-center gap-5">
           {/* Foto */}
           {foto && !fotoFailed ? (
@@ -211,7 +219,7 @@ export default function StammdatenDetailTab({ kunde }) {
             </div>
           )}
         </div>
-      </Card>
+      </div>
 
       <div className={modeId === 'banking' ? 'grid grid-cols-3 gap-4 items-stretch' : 'grid grid-cols-2 gap-4 items-stretch'}>
         {/* Persoenliche Daten */}
@@ -373,9 +381,9 @@ export default function StammdatenDetailTab({ kunde }) {
                   <span className="text-slate-400 shrink-0">Bonitätsscore:</span>
                   <span className="flex items-center gap-2">
                     <img
-                      src="https://img.logo.dev/schufa.de?token=pk_H7vb5Y2lTsW47U4Xq-w3HA&size=64&format=png"
+                      src="https://img.logo.dev/schufa.de?token=pk_H7vb5Y2lTsW47U4Xq-w3HA&size=96&format=png"
                       alt="Schufa"
-                      className="w-6 h-6 rounded"
+                      className="w-9 h-9 rounded"
                       onError={(e) => { e.target.style.display = 'none'; }}
                     />
                     <span className={`font-semibold ${klasse.color}`}>{schufa}/999</span>

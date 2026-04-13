@@ -129,14 +129,22 @@ export default function LebenszeitstrahlCard({ kunde }) {
       ...data.finanzen.map((e) => parseDate(e.date).getTime()),
     ];
     const today = new Date();
+    const earliest = all.length ? Math.min(...all) : today.getTime();
+    const latest   = all.length ? Math.max(...all) : today.getTime();
     let start, end;
     if (zoom === 'all') {
-      start = new Date(Math.min(...all, today.getTime() - 5 * 365 * 86400000));
-      end = new Date(Math.max(...all, today.getTime() + 365 * 86400000));
+      start = new Date(Math.min(earliest, today.getTime() - 5 * 365 * 86400000));
+      end   = new Date(Math.max(latest, today.getTime() + 365 * 86400000));
     } else {
       const yearsBack = zoom === '1j' ? 1 : zoom === '3j' ? 3 : 5;
-      start = new Date(today.getFullYear() - yearsBack, 0, 1);
-      end = new Date(today.getFullYear() + 2, 0, 1);
+      const zoomStart = new Date(today.getFullYear() - yearsBack, 0, 1).getTime();
+      const zoomEnd   = new Date(today.getFullYear() + 2, 0, 1).getTime();
+      // Always extend the axis to include the actual earliest/latest events,
+      // otherwise events older than the zoom window get clamped to 0 % and
+      // stack on top of each other at the left edge (e.g. Heirat 08/2020 and
+      // Wechsel Continental 02/2019 were both pinned to the same position).
+      start = new Date(Math.min(zoomStart, earliest));
+      end   = new Date(Math.max(zoomEnd, latest));
     }
     return { rangeStart: start, rangeEnd: end };
   }, [data, zoom]);

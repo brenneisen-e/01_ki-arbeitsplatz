@@ -435,9 +435,12 @@ export default function UebersichtTab() {
   // Beratungstermin oben mit „+1"-Badge in die Liste injiziert.
   const dayAdvanced = useDayAdvanced();
   const baseTermine = TERMINE_BY_MODE[modeId] || TERMINE_BY_MODE.versicherung;
+  // Banking-Kunden frühzeitig dereferenzieren, damit die Daten geladen sind,
+  // wenn der "+1 Neu"-Termin angeklickt wird (Suspense-Promise).
+  const bankingKunden = modeId === 'banking' ? (KUNDEN_BY_MODE.banking || []) : [];
   const klausFischerTermin = useMemo(() => {
     if (!dayAdvanced || modeId !== 'banking') return null;
-    const klaus = (KUNDEN_BY_MODE.banking || []).find(k => k.id === 'BK00001');
+    const klaus = bankingKunden.find(k => k.id === 'BK00001');
     if (!klaus) return null;
     const appt = getSimulatedAppointment();
     return {
@@ -449,7 +452,7 @@ export default function UebersichtTab() {
       betreff: 'Kreditgespräch Immobilienfinanzierung',
       istNeuZugestimmt: true,
     };
-  }, [dayAdvanced, modeId]);
+  }, [dayAdvanced, modeId, bankingKunden]);
   const termine = (klausFischerTermin
     ? [klausFischerTermin, ...baseTermine]
     : baseTermine).slice(0, 5);
@@ -1059,9 +1062,17 @@ export default function UebersichtTab() {
               const isNeu = !!termin.istNeuZugestimmt;
               const handleClick = () => {
                 if (isNeu) {
-                  // Neuer Termin nach Nacht-Sim → KI-Vorbereitung als Popup öffnen
-                  const klaus = (KUNDEN_BY_MODE.banking || []).find(k => k.id === termin.kundeId);
-                  if (klaus) setTerminPrepKunde(klaus);
+                  // Neuer Termin nach Nacht-Sim → KI-Vorbereitung als Popup öffnen.
+                  // Wir greifen auf die bereits oben dereferenzierten Banking-
+                  // Kunden zu (Suspense-sicher).
+                  const klaus = bankingKunden.find(k => k.id === termin.kundeId);
+                  if (klaus) {
+                    setTerminPrepKunde(klaus);
+                  } else {
+                    // Fallback: direkt zur Detailseite springen, falls Daten
+                    // noch nicht geladen sind.
+                    navigateTo('detail', { kundeId: termin.kundeId });
+                  }
                 } else {
                   navigateTo('detail', { kundeId: termin.kundeId });
                 }

@@ -1,5 +1,14 @@
 import { getKunden, preloadKunden } from './generator';
 import { getLang } from '../utils/langHelper';
+import { getKundeFoto } from '../utils/kundenFotos';
+
+// Hilfsfunktion: nutzt das zentrale Foto-Mapping aus kundenFotos.js und fällt
+// nur dann auf einen explizit angegebenen Pfad zurück, wenn der Kunde dort
+// nicht eingetragen ist (z. B. Pipeline-Mockups VV-NEW). Damit bleiben
+// Übersicht- und Detail-Foto eines Kunden zwingend identisch.
+function fotoFor(kundeId, fallback) {
+  return getKundeFoto(kundeId) || fallback || null;
+}
 function tx(de, en) { return getLang() === 'en' ? en : de; }
 
 // Re-export preloadKunden for mode switching
@@ -691,28 +700,31 @@ export const TERMINE_BY_MODE = {
   get versicherung() {
     const s = [0,1,2,3].map(i => nextTerminSlot(i));
     return [
-      { datum: s[0].datum, zeit: s[0].zeit, kunde: 'Amira König', betreff: tx('Kfz-Angebot besprechen', 'Discuss motor insurance quote'), kundeId: 'KD00002', foto: './images/AdobeStock_252262042.jpeg' },
-      { datum: s[1].datum, zeit: s[1].zeit, kunde: 'Anna Hoffmann', betreff: tx('Altersvorsorge-Beratung', 'Retirement planning consultation'), kundeId: 'KD00004' },
-      { datum: s[2].datum, zeit: s[2].zeit, kunde: 'Thomas Weber', betreff: tx('Hausbesuch Bindungsgespräch', 'Home visit retention meeting'), kundeId: 'KD00003', foto: './images/AdobeStock_361342769.jpeg' },
-      { datum: s[3].datum, zeit: s[3].zeit, kunde: 'Sandra Yilmaz', betreff: tx('Jahresgespräch', 'Annual review'), kundeId: 'KD00008', foto: './images/AdobeStock_612932760.jpeg' },
+      { datum: s[0].datum, zeit: s[0].zeit, kunde: 'Amira König', betreff: tx('Kfz-Angebot besprechen', 'Discuss motor insurance quote'), kundeId: 'KD00002', foto: fotoFor('KD00002', './images/AdobeStock_252262042.jpeg') },
+      { datum: s[1].datum, zeit: s[1].zeit, kunde: 'Anna Hoffmann', betreff: tx('Altersvorsorge-Beratung', 'Retirement planning consultation'), kundeId: 'KD00004', foto: fotoFor('KD00004') },
+      { datum: s[2].datum, zeit: s[2].zeit, kunde: 'Thomas Weber', betreff: tx('Hausbesuch Bindungsgespräch', 'Home visit retention meeting'), kundeId: 'KD00003', foto: fotoFor('KD00003', './images/AdobeStock_361342769.jpeg') },
+      { datum: s[3].datum, zeit: s[3].zeit, kunde: 'Sandra Yilmaz', betreff: tx('Jahresgespräch', 'Annual review'), kundeId: 'KD00008', foto: fotoFor('KD00008', './images/AdobeStock_612932760.jpeg') },
     ];
   },
   get banking() {
     const s = [0,1,2,3].map(i => nextTerminSlot(i));
     return [
-      { datum: s[0].datum, zeit: s[0].zeit, kunde: 'Stefan Braun', betreff: tx('Gewerbekonto-Beratung', 'Business account consultation'), kundeId: 'BK00006', foto: './images/AdobeStock_329502726.jpeg' },
-      { datum: s[1].datum, zeit: s[1].zeit, kunde: 'Peter Hoffmann', betreff: tx('VermögenPlus Depot Review', 'VermögenPlus Depot Review'), kundeId: 'KDB005', foto: './images/AdobeStock_1210213822.jpeg' },
-      { datum: s[2].datum, zeit: s[2].zeit, kunde: 'Sandra Müller', betreff: tx('VR-FinanzPlan Erstgespräch', 'VR Financial Plan initial meeting'), kundeId: 'KDB002', foto: './images/AdobeStock_477904088.jpeg' },
-      { datum: s[3].datum, zeit: s[3].zeit, kunde: 'Andrea Lang', betreff: tx('Praxiskredit Auszahlung', 'Practice loan disbursement'), kundeId: 'KDB006', foto: './images/AdobeStock_612940075.jpeg' },
+      // Banking-Termine: kundeId zeigt auf BK0000X, Foto kommt zentral aus
+      // kundenFotos.js. Demo-Stub-IDs (KDB00X) bekommen weiterhin den
+      // Fallback-Pfad, damit nichts leer bleibt.
+      { datum: s[0].datum, zeit: s[0].zeit, kunde: 'Stefan Braun', betreff: tx('Gewerbekonto-Beratung', 'Business account consultation'), kundeId: 'BK00006', foto: fotoFor('BK00006') },
+      { datum: s[1].datum, zeit: s[1].zeit, kunde: 'Peter Hoffmann', betreff: tx('VermögenPlus Depot Review', 'VermögenPlus Depot Review'), kundeId: 'BK00003', foto: fotoFor('BK00003') },
+      { datum: s[2].datum, zeit: s[2].zeit, kunde: 'Sandra Müller', betreff: tx('VR-FinanzPlan Erstgespräch', 'VR Financial Plan initial meeting'), kundeId: 'BK00002', foto: fotoFor('BK00002') },
+      { datum: s[3].datum, zeit: s[3].zeit, kunde: 'Andrea Lang', betreff: tx('Praxiskredit Auszahlung', 'Practice loan disbursement'), kundeId: 'BK00005', foto: fotoFor('BK00005') },
     ];
   },
   get vermoegensverwaltung() {
     const s = [0,1,2,3].map(i => nextTerminSlot(i));
     return [
-      { datum: s[0].datum, zeit: s[0].zeit, kunde: 'Dr. Anna Fischer', betreff: tx('Onboarding-Gespräch (3,5M€)', 'Onboarding meeting (3.5M€)'), kundeId: 'VV-NEW', foto: './images/AdobeStock_910604663.jpeg' },
-      { datum: s[1].datum, zeit: s[1].zeit, kunde: translateName('Familie Schneider'), betreff: tx('WpHG-Fragebogen', 'MiFID Questionnaire'), kundeId: 'VV-PIPE', foto: './images/AdobeStock_965208311.jpeg' },
-      { datum: s[2].datum, zeit: s[2].zeit, kunde: 'Dr. Stefan Meier', betreff: tx('Investmentvorschlag (5M€)', 'Investment proposal (5M€)'), kundeId: 'VV-PIPE2', foto: './images/AdobeStock_1387839378.jpeg' },
-      { datum: s[3].datum, zeit: s[3].zeit, kunde: translateName('Fam. Hohenlohe'), betreff: 'Family Office Pitch (15M€)', kundeId: 'VV-PIPE3', foto: './images/AdobeStock_1367815601.jpeg' },
+      { datum: s[0].datum, zeit: s[0].zeit, kunde: 'Dr. Anna Fischer', betreff: tx('Onboarding-Gespräch (3,5M€)', 'Onboarding meeting (3.5M€)'), kundeId: 'VV-NEW', foto: fotoFor('VV-NEW', './images/AdobeStock_910604663.jpeg') },
+      { datum: s[1].datum, zeit: s[1].zeit, kunde: translateName('Familie Schneider'), betreff: tx('WpHG-Fragebogen', 'MiFID Questionnaire'), kundeId: 'VV-PIPE', foto: fotoFor('VV-PIPE', './images/AdobeStock_965208311.jpeg') },
+      { datum: s[2].datum, zeit: s[2].zeit, kunde: 'Dr. Stefan Meier', betreff: tx('Investmentvorschlag (5M€)', 'Investment proposal (5M€)'), kundeId: 'VV-PIPE2', foto: fotoFor('VV-PIPE2', './images/AdobeStock_1387839378.jpeg') },
+      { datum: s[3].datum, zeit: s[3].zeit, kunde: translateName('Fam. Hohenlohe'), betreff: 'Family Office Pitch (15M€)', kundeId: 'VV-PIPE3', foto: fotoFor('VV-PIPE3', './images/AdobeStock_1367815601.jpeg') },
     ];
   },
 };

@@ -9,6 +9,20 @@ import { Shield, Landmark, ShieldCheck, LineChart, CheckCircle, XCircle, Chevron
 import AnschreibenModal from '../../../components/ui/AnschreibenModal';
 import { interpolateDynamicDates } from '../../../utils/dynamicDates';
 
+// Rekursive Interpolation für strukturierte Daten (Strings, Arrays, Objekte).
+// Der Kontext enthält insb. `institut`, damit Banking-Institut-spezifische
+// Versicherungspartner im gesamten Lead-Baum konsistent ersetzt werden.
+function interpolateDeep(value, ctx) {
+  if (typeof value === 'string') return interpolateDynamicDates(value, ctx);
+  if (Array.isArray(value)) return value.map(v => interpolateDeep(v, ctx));
+  if (value && typeof value === 'object') {
+    const out = {};
+    for (const k of Object.keys(value)) out[k] = interpolateDeep(value[k], ctx);
+    return out;
+  }
+  return value;
+}
+
 const ABSICHERUNGS_TYPEN = [
   { key: 'bu' },
   { key: 'kfz' },
@@ -83,6 +97,8 @@ function getProduktKategorie(p) {
 
 export default function ImpulseTab({ kunde }) {
   const { t, tn } = useTranslation();
+  const { config } = useMode();
+  const ctx = { institut: config?.institut };
   // Prefer a derived coverage view so it is always consistent with the
   // Finanzübersicht. The hand-curated `kunde.absicherung` is used only as a
   // fallback if no product data is available at all.
@@ -171,6 +187,7 @@ export default function ImpulseTab({ kunde }) {
                     onToggle={() => setExpandedIndex(expandedIndex === key ? null : key)}
                     onAnschreiben={() => setAnschreibenFor(p)}
                     t={t}
+                    ctx={ctx}
                   />
                 );
               })}
@@ -201,7 +218,7 @@ function quellenLabel(quellen, t) {
   return (quellen || []).map(q => map[q] || q).join(' + ');
 }
 
-function PotentialCard({ potential: p, kunde, expanded, onToggle, onAnschreiben, t }) {
+function PotentialCard({ potential: p, kunde, expanded, onToggle, onAnschreiben, t, ctx = {} }) {
   const { config } = useMode();
 
   return (
@@ -233,7 +250,7 @@ function PotentialCard({ potential: p, kunde, expanded, onToggle, onAnschreiben,
             />
           </div>
         </div>
-        <p className="text-sm text-slate-500">{interpolateDynamicDates(p.beschreibung)}</p>
+        <p className="text-sm text-slate-500">{interpolateDynamicDates(p.beschreibung, ctx)}</p>
       </div>
 
       {/* Expandable detail section */}
@@ -246,7 +263,7 @@ function PotentialCard({ potential: p, kunde, expanded, onToggle, onAnschreiben,
                 <Sparkles size={14} className="text-indigo-500" />
                 <span className="text-xs font-semibold text-indigo-600">{t('kiZusammenfassung')}</span>
               </div>
-              <p className="text-sm text-slate-700 leading-relaxed">{interpolateDynamicDates(p.kiDescription)}</p>
+              <p className="text-sm text-slate-700 leading-relaxed">{interpolateDynamicDates(p.kiDescription, ctx)}</p>
             </div>
           )}
 
@@ -258,7 +275,7 @@ function PotentialCard({ potential: p, kunde, expanded, onToggle, onAnschreiben,
               </h5>
               <div className="grid grid-cols-2 gap-2 text-sm">
                 {p.herleitung.map((h, i) => (
-                  <HerleitungRow key={i} label={h.label} value={h.value} />
+                  <HerleitungRow key={i} label={interpolateDynamicDates(h.label, ctx)} value={h.value} ctx={ctx} />
                 ))}
               </div>
             </div>
@@ -284,9 +301,14 @@ function PotentialCard({ potential: p, kunde, expanded, onToggle, onAnschreiben,
             <DeckungslueckeBar data={p.deckungsluecke} t={t} />
           )}
 
+          {/* Einzelne Versicherungen: Bisher vs. Neu inkl. Bewertungs-Score */}
+          {p.einzelVergleiche && p.einzelVergleiche.length > 0 && (
+            <EinzelVergleiche einzelVergleiche={interpolateDeep(p.einzelVergleiche, ctx)} />
+          )}
+
           {/* Vergleichstabelle */}
           {p.vergleich && (
-            <VergleichsTabelle data={p.vergleich} />
+            <VergleichsTabelle data={interpolateDeep(p.vergleich, ctx)} />
           )}
 
           {/* Aktionen */}
@@ -327,11 +349,11 @@ function PotentialCard({ potential: p, kunde, expanded, onToggle, onAnschreiben,
   );
 }
 
-function HerleitungRow({ label, value }) {
+function HerleitungRow({ label, value, ctx }) {
   return (
     <div className="bg-white rounded-lg px-3 py-2 border border-slate-100 hover:bg-slate-50 hover:border-slate-200 transition-colors">
       <span className="text-xs text-slate-400 block">{label}</span>
-      <span className="text-slate-700 font-medium">{typeof value === 'string' ? interpolateDynamicDates(value) : value}</span>
+      <span className="text-slate-700 font-medium">{typeof value === 'string' ? interpolateDynamicDates(value, ctx) : value}</span>
     </div>
   );
 }
@@ -411,6 +433,89 @@ function DeckungslueckeBar({ data, t }) {
           </div>
         )}
       </Card>
+    </div>
+  );
+}
+
+function ScoreBadge({ score }) {
+  const color = score >= 85 ? { bg: 'bg-emerald-50', text: 'text-emerald-700', bar: '#10b981' }
+             : score >= 70 ? { bg: 'bg-lime-50', text: 'text-lime-700', bar: '#84cc16' }
+             : score >= 55 ? { bg: 'bg-amber-50', text: 'text-amber-700', bar: '#f59e0b' }
+             : { bg: 'bg-red-50', text: 'text-red-700', bar: '#ef4444' };
+  return (
+    <div className="inline-flex items-center gap-2">
+      <div className="w-16 h-1.5 rounded-full bg-slate-200 overflow-hidden">
+        <div className="h-full rounded-full" style={{ width: `${score}%`, background: color.bar }} />
+      </div>
+      <span className={`rh-badge text-[11px] font-bold px-2 py-0.5 rounded-full ${color.bg} ${color.text}`}>{score}</span>
+    </div>
+  );
+}
+
+function EinzelVergleiche({ einzelVergleiche }) {
+  return (
+    <div className="space-y-4">
+      <h5 className="text-xs font-semibold text-slate-600 uppercase tracking-wider">Einzelvergleich pro Versicherung</h5>
+      {einzelVergleiche.map((v, idx) => {
+        const delta = (v.neu?.score ?? 0) - (v.bisher?.score ?? 0);
+        const alleMerkmale = Array.from(new Set([
+          ...(v.bisher?.merkmale || []).map(m => m.label),
+          ...(v.neu?.merkmale || []).map(m => m.label),
+        ]));
+        const bisherMap = Object.fromEntries((v.bisher?.merkmale || []).map(m => [m.label, m.wert]));
+        const neuMap = Object.fromEntries((v.neu?.merkmale || []).map(m => [m.label, m.wert]));
+        return (
+          <div key={idx} className="border border-slate-200 rounded-xl overflow-hidden bg-white">
+            <div className="flex items-center justify-between px-4 py-2.5 bg-slate-50 border-b border-slate-200">
+              <div className="flex items-center gap-2">
+                <Shield size={15} className="text-slate-500" />
+                <span className="text-sm font-semibold text-slate-700">{v.titel}</span>
+              </div>
+              {delta !== 0 && (
+                <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${
+                  delta > 0 ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-red-50 text-red-700 border border-red-200'
+                }`}>
+                  {delta > 0 ? `+${delta}` : delta} Punkte Bewertung
+                </span>
+              )}
+            </div>
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="bg-white border-b border-slate-100">
+                  <th className="px-4 py-2 text-left text-xs uppercase tracking-wider font-semibold text-slate-400 w-1/3">Merkmal</th>
+                  <th className="px-4 py-2 text-left text-xs uppercase tracking-wider font-semibold text-slate-500">Bisher — {v.bisher?.anbieter || '–'}</th>
+                  <th className="px-4 py-2 text-left text-xs uppercase tracking-wider font-semibold text-emerald-700">Neu — {v.neu?.anbieter || '–'}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr className="border-t border-slate-100">
+                  <td className="px-4 py-2 text-slate-500 font-medium">Bewertung</td>
+                  <td className="px-4 py-2"><ScoreBadge score={v.bisher?.score ?? 0} /></td>
+                  <td className="px-4 py-2"><ScoreBadge score={v.neu?.score ?? 0} /></td>
+                </tr>
+                <tr className="border-t border-slate-100 bg-slate-50/40">
+                  <td className="px-4 py-2 text-slate-500 font-medium">Prämie</td>
+                  <td className="px-4 py-2 font-mono text-slate-700">{v.bisher?.praemie || '–'}</td>
+                  <td className="px-4 py-2 font-mono text-emerald-700 font-semibold">{v.neu?.praemie || '–'}</td>
+                </tr>
+                {alleMerkmale.map((label, i) => (
+                  <tr key={label} className={`border-t border-slate-100 ${i % 2 === 0 ? '' : 'bg-slate-50/40'}`}>
+                    <td className="px-4 py-2 text-slate-500 font-medium">{label}</td>
+                    <td className="px-4 py-2 text-slate-600">{bisherMap[label] || '–'}</td>
+                    <td className="px-4 py-2 text-slate-800 font-medium">{neuMap[label] || '–'}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            {v.fazit && (
+              <div className="px-4 py-2.5 bg-emerald-50/60 border-t border-emerald-100 flex items-start gap-2">
+                <Sparkles size={13} className="text-emerald-600 mt-0.5 shrink-0" />
+                <span className="text-xs text-emerald-800">{v.fazit}</span>
+              </div>
+            )}
+          </div>
+        );
+      })}
     </div>
   );
 }

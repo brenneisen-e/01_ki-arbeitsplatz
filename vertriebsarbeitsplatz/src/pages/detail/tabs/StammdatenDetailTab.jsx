@@ -324,23 +324,24 @@ export default function StammdatenDetailTab({ kunde }) {
               // Wert deterministisch aus Risikoscore abgeleitet, damit keine
               // Zufallswerte beim Re-Render entstehen.
               const risiko = Number(kunde.risikoscore) || 30;
-              // niedriger Risikoscore → hoher Schufa-Score
-              const schufa = Math.max(2500, Math.min(9999, Math.round(9750 - risiko * 60)));
-              const klasse = schufa >= 9500 ? { label: 'sehr gut', color: 'text-emerald-600', dot: 'bg-emerald-500' }
-                          : schufa >= 8500 ? { label: 'gut', color: 'text-lime-600', dot: 'bg-lime-500' }
-                          : schufa >= 7000 ? { label: 'mittel', color: 'text-amber-600', dot: 'bg-amber-500' }
+              // Niedriger Risikoscore → hoher Schufa-Score.
+              // Skala des neuen Schufa-Modells (gültig seit 03/2026): 0–999.
+              const schufa = Math.max(250, Math.min(999, Math.round(975 - risiko * 6)));
+              const klasse = schufa >= 950 ? { label: 'sehr gut', color: 'text-emerald-600', dot: 'bg-emerald-500' }
+                          : schufa >= 850 ? { label: 'gut', color: 'text-lime-600', dot: 'bg-lime-500' }
+                          : schufa >= 700 ? { label: 'mittel', color: 'text-amber-600', dot: 'bg-amber-500' }
                           : { label: 'erhöhtes Risiko', color: 'text-red-600', dot: 'bg-red-500' };
               return (
-                <div className="flex items-baseline gap-2 text-sm" title="Schufa-Basisscore (neues Modell, gültig seit März 2026)">
+                <div className="flex items-center gap-2 text-sm" title="Schufa-Score (neues Modell, gültig seit März 2026)">
                   <span className="text-slate-400 shrink-0">Bonitätsscore:</span>
-                  <span className="flex items-center gap-1.5">
+                  <span className="flex items-center gap-2">
                     <img
-                      src="https://img.logo.dev/schufa.de?token=pk_H7vb5Y2lTsW47U4Xq-w3HA&size=32&format=png"
+                      src="https://img.logo.dev/schufa.de?token=pk_H7vb5Y2lTsW47U4Xq-w3HA&size=64&format=png"
                       alt="Schufa"
-                      className="w-4 h-4 rounded-sm"
+                      className="w-6 h-6 rounded"
                       onError={(e) => { e.target.style.display = 'none'; }}
                     />
-                    <span className={`font-medium ${klasse.color}`}>{schufa.toLocaleString('de-DE')}/9.999</span>
+                    <span className={`font-semibold ${klasse.color}`}>{schufa}/999</span>
                     <span className={`inline-block w-1.5 h-1.5 rounded-full ${klasse.dot}`} />
                     <span className="text-xs text-slate-400">({klasse.label}, neues Schufa-Modell 03/2026)</span>
                   </span>

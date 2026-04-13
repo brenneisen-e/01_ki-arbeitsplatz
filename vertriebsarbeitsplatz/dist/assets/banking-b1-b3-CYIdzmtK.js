@@ -28,7 +28,7 @@ Ich melde mich in den kommenden Wochen für einen kurzen Austausch bei Ihnen.
 
 Mit freundlichen Grüßen
 Ihre Beraterin Frau Weber
-Volksbank Mittelhessen`},{datum:"2025-06-12",typ:"email",richtung:"eingehend",betreff:'Anmeldung Newsletter „VR-Immobilien"',zusammenfassung:"Kunde hat sich aktiv für den Immobilien-Newsletter angemeldet.",emailBody:`Hallo,
+Volksbank Mittelhessen`},{datum:"2024-04-08",typ:"email",richtung:"eingehend",betreff:'Anmeldung Newsletter „VR-Immobilien"',zusammenfassung:"Kunde hat sich aktiv für den Immobilien-Newsletter angemeldet (vor ca. 2 Jahren).",emailBody:`Hallo,
 
 ich würde mich gerne für Ihren Newsletter „VR-Immobilien & Finanzieren" eintragen. Mich interessieren besonders Tipps rund um Bausparen, KfW-Förderung und den ersten Immobilienkauf.
 

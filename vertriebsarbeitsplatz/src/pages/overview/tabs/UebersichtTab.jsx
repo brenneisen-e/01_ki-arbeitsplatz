@@ -67,9 +67,9 @@ const LETZTE_ABSCHLUESSE = {
     { kunde: 'Peter Schmidt', kundeId: 'KD00001', produkt: 'ERGO BU-Nachversicherung', sparte: 'leben', betrag: 1680, datum: '07.03.2026' },
   ],
   banking: [
-    { kunde: 'Klaus Fischer', kundeId: 'KDB001', produkt: 'VR-ImmobilienFinanzierung', sparte: 'kredit', betrag: 250000, datum: '10.03.2026' },
-    { kunde: 'Sandra Müller', kundeId: 'KDB002', produkt: 'VR-FinanzPlan', sparte: 'wertpapier', betrag: 25000, datum: '09.03.2026' },
-    { kunde: 'Peter Hoffmann', kundeId: 'KDB005', produkt: 'VermögenPlus Depot', sparte: 'wertpapier', betrag: 50000, datum: '08.03.2026' },
+    { kunde: 'Andrea Lang', kundeId: 'BK00005', produkt: 'Praxiskredit', sparte: 'kredit', betrag: 85000, datum: '10.03.2026' },
+    { kunde: 'Sandra Müller', kundeId: 'BK00002', produkt: 'VR-FinanzPlan', sparte: 'wertpapier', betrag: 25000, datum: '09.03.2026' },
+    { kunde: 'Peter Hoffmann', kundeId: 'BK00003', produkt: 'VermögenPlus Depot', sparte: 'wertpapier', betrag: 50000, datum: '08.03.2026' },
   ],
   vermoegensverwaltung: [
     { kunde: 'Dr. Stefan Meier', kundeId: 'VV001', produkt: 'Spezialmandat Dividende', sparte: 'mandat', betrag: 5000000, datum: '10.03.2026' },
@@ -191,7 +191,7 @@ function buildBankingKampagnen(institut) {
       passendeKunden: [
         { kundeId: 'BK00001', name: 'Klaus Fischer', match: 97, begruendung: `KfW-Kredit läuft 06/2026 aus (840€ frei), ${b.bausparPartner}-BSV zuteilungsreif, Immo-Newsletter seit 2 Jahren`, begruendungEn: `KfW loan expires 06/2026 (€840 free), ${b.bausparPartner} building loan ready, property newsletter for 2 years` },
         { kundeId: 'BK00002', name: 'Sandra Müller', match: 92, begruendung: 'Immobilienkauf vorbereiten, Ehemann als Neukunde gewinnen', begruendungEn: 'Preparing home purchase, onboard spouse as new client' },
-        { kundeId: 'BK00004', name: 'Markus Wagner', match: 78, begruendung: 'Junges Alter, erstes Eigenheim-Interesse erkannt', begruendungEn: 'Young age, first home interest detected' },
+        { kundeId: 'BK00004', name: 'Markus Wagner', match: 78, begruendung: 'Junge Familie mit Neugeborenem – passender Zeitpunkt für ein erstes Eigenheim', begruendungEn: 'Young family with newborn – right time for first own home' },
       ],
     },
     {
@@ -207,7 +207,7 @@ function buildBankingKampagnen(institut) {
       photoAccent: '#bfdbfe',
       passendeKunden: [
         { kundeId: 'BK00002', name: 'Sandra Müller', match: 94, begruendung: 'Junge Familie, keine BU/Risikoleben vorhanden', begruendungEn: 'Young family, no disability/term life coverage' },
-        { kundeId: 'BK00004', name: 'Markus Wagner', match: 87, begruendung: '29 Jahre, keine BU – optimaler Einstiegszeitpunkt', begruendungEn: '29 years, no disability cover – optimal entry age' },
+        { kundeId: 'BK00004', name: 'Markus Wagner', match: 87, begruendung: '29 Jahre, frischgebackener Vater – RLV/BU jetzt dringend', begruendungEn: '29 years, brand-new father – RLV/BU urgently needed' },
         { kundeId: 'BK00005', name: 'Andrea Lang', match: 79, begruendung: 'Praxiskredit ohne Absicherung, keine BU', begruendungEn: 'Practice loan without coverage, no disability insurance' },
       ],
     },
@@ -292,15 +292,15 @@ const LEBENSLAGEN_RADAR_BANKING = [
     isNew: true,
   },
   {
-    kundeId: 'BK00007',
-    customerName: 'Maria Schuster',
-    initials: 'MS',
-    event: 'Ruhestand geplant',
+    kundeId: 'BK00003',
+    customerName: 'Peter Hoffmann',
+    initials: 'PH',
+    event: 'Ruhestand / Nachfolge',
     signals: [
-      'Altersvorsorge-Rechner im Online-Banking aufgerufen',
-      'Gehaltseingang fällt planmäßig in 8 Monaten weg',
-      'Anfrage zur Auszahlung fondsgebundener LV',
-      'Newsletter „Ruhestand & Rente" aktiviert',
+      'Recherche „GmbH-Nachfolge" über das Online-Banking',
+      'Erste Steuerberater-Termine in den Kontoumsätzen',
+      'M&A-Beratungs-Anfrage erkannt',
+      'Newsletter „Vermögen & Übergabe" aktiviert',
     ],
     signalCount: 4,
     confidence: 82,

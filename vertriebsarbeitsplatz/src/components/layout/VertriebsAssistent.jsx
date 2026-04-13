@@ -615,7 +615,7 @@ export function getDemoResponse(message, { currentView, modeId }) {
         content: `<div class="space-y-2">
           <p class="font-semibold">Bestandslücken-Analyse — BU-Versicherung (&lt;40 Jahre)</p>
           <ol class="list-decimal pl-4 space-y-1 text-[13px]">
-            <li><strong>Markus Wagner</strong> — 29, keine BU, optimaler Einstieg</li>
+            <li><strong>Markus Wagner</strong> — 29, junge Familie mit Neugeborenem, keine BU</li>
             <li><strong>Sandra Müller</strong> — 33, junge Familie, keine BU/RL</li>
             <li><strong>Stefan Braun</strong> — 36, IT-Selbstständig, kein Schutz</li>
           </ol>
@@ -634,7 +634,7 @@ export function getDemoResponse(message, { currentView, modeId }) {
           <table class="w-full text-xs mt-1">
             <tr class="border-b border-slate-200"><td class="py-1.5"><strong>Klaus Fischer</strong></td><td class="py-1.5 text-center"><span class="font-bold text-emerald-700">97%</span></td><td class="py-1.5 text-slate-500">KfW-Kredit läuft aus, Bausparer zuteilungsreif, Newsletter-Interesse</td></tr>
             <tr class="border-b border-slate-200"><td class="py-1.5"><strong>Sandra Müller</strong></td><td class="py-1.5 text-center"><span class="font-bold text-emerald-700">92%</span></td><td class="py-1.5 text-slate-500">Baufi vorbereiten, Ehepartner als Neukunde</td></tr>
-            <tr><td class="py-1.5"><strong>Markus Wagner</strong></td><td class="py-1.5 text-center"><span class="font-bold text-lime-700">78%</span></td><td class="py-1.5 text-slate-500">Junges Alter, erstes Eigenheim-Interesse</td></tr>
+            <tr><td class="py-1.5"><strong>Markus Wagner</strong></td><td class="py-1.5 text-center"><span class="font-bold text-lime-700">78%</span></td><td class="py-1.5 text-slate-500">Junge Familie mit Neugeborenem – Eigenheim-Wunsch</td></tr>
           </table>
         </div>`,
       };

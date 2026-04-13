@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
-import { Sparkles } from 'lucide-react';
+import { Sparkles, Briefcase } from 'lucide-react';
 import Card from '../../../components/ui/Card';
+import DataTable from '../../../components/ui/DataTable';
 import DonutChart from '../../../components/charts/DonutChart';
 import { formatEur } from '../../../utils/formatters';
 import { useMode } from '../../../hooks/useMode';
@@ -92,18 +93,56 @@ function generateKontoumsaetze(kunde) {
     }
   }
   if (versFremd) {
-    const fremdTotal = Math.abs(versFremd.betrag);
-    const fremdProdukte = (kunde.fremdProdukte || []).filter(p => p.typ !== 'baufinanzierung' && p.typ !== 'depot' && p.typ !== 'girokonto' && p.typ !== 'tagesgeld' && p.typ !== 'bausparvertrag').slice(0, 3);
-    if (fremdProdukte.length > 0) {
-      let remaining = fremdTotal;
-      fremdProdukte.forEach((p, i) => {
-        const label = PRODUKT_LABELS[p.typ] || p.typ;
-        const amount = i === fremdProdukte.length - 1 ? remaining : Math.round(fremdTotal / fremdProdukte.length);
-        remaining -= Math.round(fremdTotal / fremdProdukte.length);
-        versItems.push({ name: `${label} (${p.institut || tx('finanzprofil.fremd')})`, amount, datum: fmtDate(vm, 1), badge: 'unbekannt', badgeLabel: tx('finanzprofil.fremd') });
+    const fremdTotalMonthly = Math.abs(versFremd.betrag);
+    // Only true insurance products belong in the Versicherungen category.
+    // The previous blacklist filter accidentally lumped Bausparverträge and
+    // Kredite into "Versicherungen" (see Klaus Fischer). We now whitelist
+    // actual insurance typ values.
+    const INSURANCE_TYPES = new Set([
+      'versicherung', 'kfz', 'kfz_fremd', 'kfz2', 'haftpflicht', 'hausrat',
+      'rechtsschutz', 'rlv', 'bu', 'du', 'pkv', 'pkv_ehemann', 'unfall',
+      'lebensversicherung', 'praxis_hp', 'betriebshaftpflicht',
+      'inhaltsversicherung', 'wohngebaeude', 'it_hp', 'dno', 'kk',
+    ]);
+    const fremdProdukte = (kunde.fremdProdukte || []).filter(p => INSURANCE_TYPES.has(p.typ));
+
+    // Use each policy's actual monthly premium (volumen is annual). Bundled
+    // items with 0 premium are skipped – they are already represented by
+    // the main carrier row.
+    let knownMonthly = 0;
+    fremdProdukte.forEach((p) => {
+      const annual = Number(p.volumen) || 0;
+      if (annual <= 0) return;
+      const monthly = Math.round(annual / 12);
+      knownMonthly += monthly;
+      const label = p.produktart || PRODUKT_LABELS[p.typ] || p.typ;
+      versItems.push({
+        name: `${label} (${p.institut || tx('finanzprofil.fremd')})`,
+        amount: monthly,
+        datum: fmtDate(vm, 1),
+        badge: 'unbekannt',
+        badgeLabel: tx('finanzprofil.fremd'),
+        recurring: true,
       });
-    } else {
-      versItems.push({ name: tx('finanzprofil.versicherungFremd'), amount: fremdTotal, datum: fmtDate(vm, 1), badge: 'unbekannt', badgeLabel: tx('finanzprofil.fremd') });
+    });
+
+    // If the transaction total exceeds the sum of known premiums, surface the
+    // gap as a separate "hidden" insurance item. It cannot be linked to any
+    // Open-Finance product – typically it is an external policy paid via a
+    // partner account (e.g. Kfz-Versicherung der Partnerin).
+    const gap = fremdTotalMonthly - knownMonthly;
+    if (gap >= 10) {
+      versItems.push({
+        name: 'Unzugeordnete Versicherung',
+        amount: gap,
+        datum: fmtDate(vm, 5),
+        badge: 'insight',
+        badgeLabel: 'Nicht in Open Finance',
+        insight: 'Diese Abbuchung taucht nicht in den Open-Finance-Daten auf – vermutlich eine Versicherung, die über das Partnerkonto oder einen Dritten läuft (z. B. KFZ-Versicherung der Partnerin).',
+        recurring: true,
+      });
+    } else if (versItems.length === 0) {
+      versItems.push({ name: tx('finanzprofil.versicherungFremd'), amount: fremdTotalMonthly, datum: fmtDate(vm, 1), badge: 'unbekannt', badgeLabel: tx('finanzprofil.fremd') });
     }
   }
   if (versItems.length > 0) {
@@ -401,8 +440,38 @@ export default function FinanzprofilTab({ kunde }) {
     ? kontoumsaetze
     : kontoumsaetze.filter(c => c.name.toLowerCase().includes(activeFilter));
 
+  const eigeneProdukte = kunde.eigeneProdukte || [];
+
   return (
     <div className="space-y-4">
+      {/* Eigene Produkte – moved from Finanzübersicht into the Haushaltsprofil */}
+      {!isVV && eigeneProdukte.length > 0 && (
+        <Card hover={false}>
+          <div className="flex items-center gap-2 mb-4">
+            <Briefcase size={20} className="text-slate-500" strokeWidth={1.75} />
+            <h3 className="font-semibold text-slate-800">
+              {t('eigeneProdukte')}
+              <span className="text-slate-400 font-normal ml-1">({eigeneProdukte.length})</span>
+            </h3>
+          </div>
+          <DataTable
+            columns={[
+              { id: 'produkt', label: t('produkt'), render: v => <span className="font-medium">{v}</span> },
+              { id: 'sparte', label: t('sparte') || 'Sparte', render: v => <span className="capitalize">{v}</span> },
+              { id: 'details', label: t('details') },
+              { id: 'praemie', label: t('praemieLabel') || 'Prämie/J.', render: v => v > 0 ? <span className="font-mono">{formatEur(v)}</span> : <span className="text-slate-300">–</span> },
+              { id: 'seit', label: t('seit') || 'Seit' },
+              { id: 'status', label: 'Status', render: v => (
+                <span className={`rh-badge text-xs font-medium px-2 py-0.5 rounded-full ${v === 'aktiv' ? 'bg-emerald-50 text-emerald-700' : v === 'optimierbar' ? 'bg-amber-50 text-amber-700' : 'bg-slate-100 text-slate-600'}`}>
+                  {v}
+                </span>
+              )},
+            ]}
+            data={eigeneProdukte}
+          />
+        </Card>
+      )}
+
       {/* Row 1: Einnahmen/Ausgaben + Donut */}
       <div className="grid grid-cols-2 gap-4">
         <Card hover={false}>

@@ -685,8 +685,8 @@ export default function UebersichtTab() {
                         className="absolute -bottom-4 -left-4 w-16 h-16 rounded-full opacity-20"
                         style={{ background: kampagne.photoAccent }}
                       />
-                      {/* Icon */}
-                      <PhotoIcon size={48} className="text-white relative z-10 transition-transform group-hover:scale-110" strokeWidth={1.5} />
+                      {/* Icon — versteckt sich, sobald das CTA "Kampagne öffnen" eingeblendet wird */}
+                      <PhotoIcon size={48} className="text-white relative z-10 transition-opacity duration-200 group-hover:opacity-0" strokeWidth={1.5} />
 
                       {/* Hover overlay — fades in, dims the gradient so the CTA surfaces */}
                       <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-[1px] opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">

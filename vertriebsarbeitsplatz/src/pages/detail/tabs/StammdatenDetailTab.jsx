@@ -1,4 +1,5 @@
 import Card from '../../../components/ui/Card';
+import LogoImg from '../../../components/ui/LogoImg';
 import LebenszeitstrahlCard from '../../../components/ui/LebenszeitstrahlCard';
 import TerminPrepModal from '../../../components/ui/TerminPrepModal';
 import { getLang } from '../../../utils/langHelper';
@@ -212,9 +213,9 @@ export default function StammdatenDetailTab({ kunde }) {
         </div>
       </Card>
 
-      <div className={modeId === 'banking' ? 'grid grid-cols-3 gap-4' : 'grid grid-cols-2 gap-4'}>
+      <div className={modeId === 'banking' ? 'grid grid-cols-3 gap-4 items-stretch' : 'grid grid-cols-2 gap-4 items-stretch'}>
         {/* Persoenliche Daten */}
-        <Card hover={false}>
+        <Card hover={false} className="h-full flex flex-col">
           <div
             className="-mx-5 -mt-5 mb-4 px-5 py-3 rounded-t-xl border-b border-blue-200 flex items-center gap-2"
             style={{ background: 'linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)' }}
@@ -222,7 +223,7 @@ export default function StammdatenDetailTab({ kunde }) {
             <User size={20} className="text-blue-600" strokeWidth={1.75} />
             <h3 className="font-semibold text-blue-900">{t('persoenlicheDaten')}</h3>
           </div>
-          <div className="space-y-2 text-sm">
+          <div className="space-y-2 text-sm flex-1 flex flex-col justify-between">
             <InfoRow label={t('name')} value={tn(kunde.name)} />
             <InfoRow label={t('geburtsdatum')} value={(() => {
               const today = new Date();
@@ -267,7 +268,7 @@ export default function StammdatenDetailTab({ kunde }) {
         </Card>
 
         {/* Finanzuebersicht */}
-        <Card hover={false}>
+        <Card hover={false} className="h-full flex flex-col">
           <div
             className="-mx-5 -mt-5 mb-4 px-5 py-3 rounded-t-xl border-b border-emerald-200 flex items-center gap-2"
             style={{ background: 'linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%)' }}
@@ -275,7 +276,7 @@ export default function StammdatenDetailTab({ kunde }) {
             <Wallet size={20} className="text-emerald-600" strokeWidth={1.75} />
             <h3 className="font-semibold text-emerald-900">{t('finanzuebersicht')}</h3>
           </div>
-          <div className="space-y-2 text-sm">
+          <div className="space-y-2 text-sm flex-1 flex flex-col justify-between">
             <InfoRow label={t('haushaltsnetto')} value={`${formatEur(haushalt)}/mtl.`} />
             <InfoRow label={t('absicherungsquote')} value={formatPct(absQuote > 0 ? absQuote : (kunde.aum ? 72 + ((kunde.alter || 50) % 20) : 0))} />
             <InfoRow label={t('sparquote')} value={formatPct(sparQuote > 0 ? sparQuote : (kunde.nettoeinkommen ? Math.min(45, Math.round(kunde.nettoeinkommen / 200)) : 18))} />
@@ -462,8 +463,9 @@ function ArbeitgeberRow({ arbeitgeber, beruf, t }) {
   return (
     <>
       {/* Arbeitgeber + Bestätigung */}
-      <div className="flex items-baseline gap-2 text-sm flex-wrap">
+      <div className="flex items-center gap-2 text-sm flex-wrap">
         <span className="text-slate-400 shrink-0">{t('arbeitgeberLabel')}:</span>
+        <LogoImg name={arbeitgeber.name} size={16} />
         <span className="text-slate-700 font-medium">{arbeitgeber.name}</span>
         <span className="inline-flex items-center gap-1 text-xs font-medium text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full">
           <CheckCircle size={11} /> bestätigt durch Kontoumsätze
@@ -966,7 +968,7 @@ function AktivitaetenCard({ kunde }) {
   };
 
   return (
-    <Card hover={false}>
+    <Card hover={false} className="h-full flex flex-col">
       <div
         className="-mx-5 -mt-5 mb-4 px-5 py-3 rounded-t-xl border-b border-orange-200 flex items-center gap-2"
         style={{ background: 'linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%)' }}

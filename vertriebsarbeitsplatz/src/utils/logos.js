@@ -48,6 +48,23 @@ const DOMAIN_MAP = {
   'Kravag': 'kravag.de',
   'ARAG': 'arag.de',
   'Fressnapf': 'fressnapf.de',
+  'Continental': 'continental.com',
+  'Continental AG': 'continental.com',
+  'SAP': 'sap.com',
+  'SAP SE': 'sap.com',
+  'Bosch': 'bosch.com',
+  'Siemens': 'siemens.com',
+  'Daimler': 'mercedes-benz.com',
+  'Mercedes-Benz': 'mercedes-benz.com',
+  'BMW': 'bmw.de',
+  'Volkswagen': 'volkswagen.de',
+  'VW': 'volkswagen.de',
+  'Audi': 'audi.de',
+  'Deutsche Telekom': 'telekom.de',
+  'Telekom': 'telekom.de',
+  'Lufthansa': 'lufthansa.com',
+  'BASF': 'basf.com',
+  'Bayer': 'bayer.com',
   'Bausparkasse Schwäbisch Hall': 'schwaebisch-hall.de',
   'Schwäbisch Hall': 'schwaebisch-hall.de',
   'Bausparkasse LBS': 'lbs.de',
@@ -106,6 +123,20 @@ export function getLogoUrl(name, size = 32) {
         domain = DOMAIN_MAP[key];
         break;
       }
+    }
+  }
+  if (!domain) {
+    // Fallback: aus Firmennamen eine wahrscheinliche Domain ableiten
+    // ("Continental AG" → continental.com, "Stadt Gießen" → stadtgießen.de).
+    // logo.dev liefert für unbekannte Domains einen 404 → LogoImg fängt das
+    // über onError ab und zeigt die Initialen.
+    const cleaned = String(name)
+      .replace(/\b(AG|GmbH|KG|SE|mbH|& Co\.?|Co\.?|KGaA|Holding|Group|Konzern|e\.V\.|eG)\b/gi, '')
+      .replace(/[^a-zA-ZäöüÄÖÜß0-9]+/g, '')
+      .toLowerCase()
+      .trim();
+    if (cleaned.length >= 3) {
+      domain = `${cleaned}.com`;
     }
   }
   if (!domain) return null;

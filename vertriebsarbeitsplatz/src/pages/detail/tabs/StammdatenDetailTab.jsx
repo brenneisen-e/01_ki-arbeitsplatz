@@ -657,7 +657,7 @@ function RisikoSignale({ signale }) {
 }
 
 // ─── KI-Zusammenfassung als Inlay-Container ───
-function KIZusammenfassungInlay({ kunde, embedded = false }) {
+export function KIZusammenfassungInlay({ kunde, embedded = false }) {
   const summary = generateKISummary(kunde);
   const wrapperClass = embedded
     ? 'relative rounded-xl border overflow-hidden'

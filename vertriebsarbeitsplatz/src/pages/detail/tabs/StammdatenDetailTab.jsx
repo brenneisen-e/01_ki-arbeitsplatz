@@ -268,7 +268,6 @@ export default function StammdatenDetailTab({ kunde }) {
                       <ShieldAlert size={12} strokeWidth={2.5} />
                     </span>
                   )}
-                  <ChevronDown size={14} className={`text-slate-400 transition-transform ${risikoExpanded ? 'rotate-180' : ''}`} />
                 </span>
               </div>
               {risikoExpanded && (

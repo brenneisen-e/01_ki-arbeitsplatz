@@ -3,6 +3,7 @@ import { MapPin, Maximize2, X } from 'lucide-react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import Card from './Card';
+import bundeslaenderGeo from '../../pages/cockpit/bundeslaender.geo.json';
 
 /* ── City coordinates + Bundesland mapping ────────────────────── */
 const CITY_COORDS = {
@@ -133,13 +134,18 @@ export function LeafletMap({ geocoded, onKundeClick, mini = false, initialCenter
       tap: !mini,
     });
 
-    // CartoDB Positron tiles → minimalist, almost SVG-like map style.
-    // Light background, subtle gray streets and municipal boundaries,
-    // unobtrusive labels. Looks clean and matches the rest of the UI.
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-      maxZoom: 19,
-      subdomains: 'abcd',
-      attribution: mini ? '' : '© OpenStreetMap · © CARTO',
+    // Clean, uncluttered background: no OpenStreetMap tiles at all – just the
+    // Bundesländer outlines on a plain white surface. This removes green
+    // parks, forests, rivers and street labels so customer pins stand out.
+    // The map container itself provides the background colour via CSS.
+    L.geoJSON(bundeslaenderGeo, {
+      style: {
+        color: '#cbd5e1',      // stroke: slate-300
+        weight: 1,
+        fillColor: '#f8fafc',  // slate-50 – very subtle fill
+        fillOpacity: 1,
+      },
+      interactive: false,
     }).addTo(map);
 
     // Customer markers
@@ -188,7 +194,7 @@ export function LeafletMap({ geocoded, onKundeClick, mini = false, initialCenter
     };
   }, [geocoded, onKundeClick, mini, initialCenter, initialZoom]);
 
-  return <div ref={containerRef} className="w-full h-full" style={{ minHeight: mini ? 100 : 300 }} />;
+  return <div ref={containerRef} className="w-full h-full" style={{ minHeight: mini ? 100 : 300, background: '#ffffff' }} />;
 }
 
 /* ── Full card with modal (inline large version) ──────────────── */

@@ -842,9 +842,17 @@ function AktivitaetenCard({ kunde }) {
                     </div>
                   )}
                   {appointmentLabel && (
-                    <div className="mt-1 text-[11px] font-semibold text-emerald-700 inline-flex items-center gap-1">
-                      <Calendar size={11} /> {appointmentLabel}
-                      <span className="ml-1 text-emerald-600 underline">· Gesprächsvorbereitung öffnen</span>
+                    <div className="mt-1.5 flex items-center gap-2 flex-wrap">
+                      <span className="text-[11px] font-semibold text-emerald-700 inline-flex items-center gap-1">
+                        <Calendar size={11} /> {appointmentLabel}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={(e) => { e.stopPropagation(); setShowTerminPrep(true); }}
+                        className="text-[11px] font-semibold text-white bg-emerald-600 hover:bg-emerald-700 px-2.5 py-1 rounded-full transition-colors inline-flex items-center gap-1 shadow-sm"
+                      >
+                        <Sparkles size={11} strokeWidth={2.5} /> Gesprächsvorbereitung öffnen
+                      </button>
                     </div>
                   )}
                 </div>

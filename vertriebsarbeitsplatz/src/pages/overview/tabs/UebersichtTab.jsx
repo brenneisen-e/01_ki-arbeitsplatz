@@ -948,10 +948,10 @@ export default function UebersichtTab() {
 
                   {/* Icon tile */}
                   <div
-                    className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0 transition-transform group-hover:scale-110"
+                    className="aufgabe-icon-tile w-9 h-9 rounded-lg flex items-center justify-center shrink-0 transition-transform group-hover:scale-110"
                     style={{ backgroundColor: urgentBg }}
                   >
-                    <TaskIcon size={16} style={{ color: urgentColor }} strokeWidth={2} />
+                    <TaskIcon size={16} className="aufgabe-icon" style={{ color: urgentColor }} strokeWidth={2} />
                   </div>
 
                   {/* Text */}
@@ -964,7 +964,7 @@ export default function UebersichtTab() {
 
                   {/* Date badge */}
                   <span
-                    className="text-xs px-2.5 py-1 rounded-full font-bold whitespace-nowrap uppercase tracking-wide shrink-0"
+                    className="aufgabe-date-badge text-xs px-2.5 py-1 rounded-full font-bold whitespace-nowrap uppercase tracking-wide shrink-0"
                     style={{ backgroundColor: urgentColor, color: 'white' }}
                   >
                     {a.faellig}

@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import Card from '../../../components/ui/Card';
 import DataTable from '../../../components/ui/DataTable';
 import LogoImg from '../../../components/ui/LogoImg';
-import { formatEur } from '../../../utils/formatters';
+import { formatEur, berechneAnlagevolumen, berechneKreditvolumen } from '../../../utils/formatters';
 import { CheckCircle, XCircle, Link2, Briefcase, PiggyBank, Shield, Home, TrendingUp, AlertTriangle, ChevronDown } from 'lucide-react';
 import useTranslation from '../../../i18n/useTranslation';
 import { useMode } from '../../../hooks/useMode';
@@ -321,6 +321,36 @@ export default function OpenFinanceTab({ kunde }) {
           data={fremdByInstitut}
         />
       </Card>
+
+      {/* Gesamt-Anlagevolumen Summenzeile (über alle Assets, identisch zu
+          berechneAnlagevolumen → konsistent mit Stammdaten-Finanzübersicht) */}
+      {(() => {
+        const anlageGesamt = berechneAnlagevolumen(kunde);
+        const kreditGesamt = berechneKreditvolumen(kunde);
+        const netto = anlageGesamt - kreditGesamt;
+        if (anlageGesamt <= 0 && kreditGesamt <= 0) return null;
+        return (
+          <Card hover={false} padding={false} className="overflow-hidden">
+            <div className="grid grid-cols-3 divide-x divide-slate-100">
+              <div className="px-5 py-4">
+                <div className="text-xs uppercase tracking-wider text-slate-400 mb-1">Anlagevolumen gesamt</div>
+                <div className="font-mono text-2xl font-bold text-slate-800">{formatEur(anlageGesamt)}</div>
+                <div className="text-[11px] text-slate-400 mt-0.5">eigene Bestände + Open-Finance-Depots</div>
+              </div>
+              <div className="px-5 py-4">
+                <div className="text-xs uppercase tracking-wider text-slate-400 mb-1">Kreditvolumen gesamt</div>
+                <div className="font-mono text-2xl font-bold text-amber-700">{formatEur(kreditGesamt)}</div>
+                <div className="text-[11px] text-slate-400 mt-0.5">offene Finanzierungen</div>
+              </div>
+              <div className="px-5 py-4">
+                <div className="text-xs uppercase tracking-wider text-slate-400 mb-1">Netto-Vermögen</div>
+                <div className={`font-mono text-2xl font-bold ${netto >= 0 ? 'text-emerald-700' : 'text-red-600'}`}>{formatEur(netto)}</div>
+                <div className="text-[11px] text-slate-400 mt-0.5">Anlagen − Verbindlichkeiten</div>
+              </div>
+            </div>
+          </Card>
+        );
+      })()}
 
       {/* ═══ Bedarfsfeld: Sparen & Vorsorgen ═══ */}
       {(bf.geldmarkt?.length > 0 || bf.kapitalmarkt?.length > 0) && (

@@ -12,7 +12,7 @@ import { useState } from 'react';
 import { useMode } from '../../../hooks/useMode';
 import useTranslation from '../../../i18n/useTranslation';
 import { useDayAdvanced, buildKlausFischerAppointmentActivity, formatAppointmentDate, formatAppointmentTime, getSimulatedAppointment } from '../../../utils/demoClock';
-import { interpolateDynamicDates } from '../../../utils/dynamicDates';
+import { interpolateDynamicDates, resolveVersicherungspartner } from '../../../utils/dynamicDates';
 
 // ─── Translation helpers for data values ───
 const FAMILIENSTAND_EN = { verheiratet: 'Married', ledig: 'Single', geschieden: 'Divorced', verwitwet: 'Widowed' };
@@ -129,13 +129,28 @@ export default function StammdatenDetailTab({ kunde }) {
   const isVV = modeId === 'vermoegensverwaltung';
   const haushalt = berechneHaushaltsnetto(kunde);
 
-  // Adapt product names to selected institut
+  // Adapt product names + details to selected institut (inkl. Versicherungspartner:
+  // R+V → Zukunftsversicherung / Provinzial / … je nach Bank-Whitelabel).
   const baseInstitut = modeId === 'versicherung' ? 'ERGO' : modeId === 'banking' ? 'VR' : null;
   const shortInstitut = institut ? institut.split(' ')[0] : null;
-  const adaptedProdukte = (kunde.eigeneProdukte || []).map(p => {
-    if (!baseInstitut || !shortInstitut || shortInstitut === baseInstitut) return p;
-    return { ...p, produkt: p.produkt?.replace(new RegExp(baseInstitut, 'g'), shortInstitut) };
-  });
+  const baseVersicherer = modeId === 'banking' ? 'R+V' : null;
+  const versicherungspartner = modeId === 'banking' ? resolveVersicherungspartner(institut) : null;
+  const replaceBrand = (s) => {
+    if (!s || typeof s !== 'string') return s;
+    let out = s;
+    if (baseInstitut && shortInstitut && shortInstitut !== baseInstitut) {
+      out = out.replace(new RegExp(baseInstitut, 'g'), shortInstitut);
+    }
+    if (baseVersicherer && versicherungspartner && versicherungspartner !== baseVersicherer) {
+      out = out.replace(new RegExp(baseVersicherer.replace(/[+]/g, '\\+'), 'g'), versicherungspartner);
+    }
+    return out;
+  };
+  const adaptedProdukte = (kunde.eigeneProdukte || []).map(p => ({
+    ...p,
+    produkt: replaceBrand(p.produkt),
+    details: replaceBrand(p.details),
+  }));
   const absQuote = berechneAbsicherungsquote(kunde);
   const sparQuote = berechneSparquote(kunde);
   const frei = berechneFrei(kunde);

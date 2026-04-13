@@ -6,6 +6,7 @@ import { formatEur } from '../../../utils/formatters';
 import { useMode } from '../../../hooks/useMode';
 import useTranslation from '../../../i18n/useTranslation';
 import { ChevronDown, ChevronRight, ExternalLink, Award } from 'lucide-react';
+import { resolveVersicherungspartner } from '../../../utils/dynamicDates';
 
 function ProduktRow({ produkt, modeId, onNavigateKontoumsaetze, t }) {
   const [expanded, setExpanded] = useState(false);
@@ -116,14 +117,35 @@ const INSTITUT_REPLACEMENTS = {
   banking: 'VR',
 };
 
+// Im Banking-Modus wird R+V als "Haus-Versicherer" der Volksbank in den
+// Demo-Daten verwendet. Für andere Banken-Whitelabels wird dieser Name auf
+// den jeweiligen Versicherungspartner gemappt (z. B. Zukunftsbank →
+// Zukunftsversicherung).
+const VERSICHERUNGSPARTNER_BASE_BY_MODE = {
+  banking: 'R+V',
+};
+
 function adaptProduktName(name, modeId, institut) {
-  if (!institut || !name) return name;
-  const baseInstitut = INSTITUT_REPLACEMENTS[modeId];
-  if (!baseInstitut) return name;
-  // Extract short name for replacement (e.g., "Allianz" from "Allianz", "Zukunftsversicherung" etc.)
-  const shortInstitut = institut.split(' ')[0];
-  if (shortInstitut === baseInstitut) return name;
-  return name.replace(new RegExp(baseInstitut, 'g'), shortInstitut);
+  if (!name) return name;
+  let out = name;
+  if (institut) {
+    const baseInstitut = INSTITUT_REPLACEMENTS[modeId];
+    if (baseInstitut) {
+      const shortInstitut = institut.split(' ')[0];
+      if (shortInstitut !== baseInstitut) {
+        out = out.replace(new RegExp(baseInstitut, 'g'), shortInstitut);
+      }
+    }
+    const baseVersicherer = VERSICHERUNGSPARTNER_BASE_BY_MODE[modeId];
+    if (baseVersicherer) {
+      const partner = resolveVersicherungspartner(institut);
+      if (partner && partner !== baseVersicherer) {
+        // R+V im Text durch passenden Partner ersetzen. RegExp-escape für das "+"
+        out = out.replace(new RegExp(baseVersicherer.replace(/[+]/g, '\\+'), 'g'), partner);
+      }
+    }
+  }
+  return out;
 }
 
 export default function VertraegeTab({ kunde }) {
@@ -133,6 +155,7 @@ export default function VertraegeTab({ kunde }) {
   const produkte = (kunde.eigeneProdukte || []).map(p => ({
     ...p,
     produkt: adaptProduktName(p.produkt, modeId, institut),
+    details: adaptProduktName(p.details, modeId, institut),
   }));
 
   const praemieLabel = modeId === 'banking' ? t('jahreskosten') : modeId === 'vermoegensverwaltung' ? t('volumenLabel') : t('gesamtpraemie').replace('/J.', '') + '/J.';

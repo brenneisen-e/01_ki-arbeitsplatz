@@ -6,6 +6,8 @@ import { formatEur } from '../../../utils/formatters';
 import { CheckCircle, XCircle, Link2, Briefcase, PiggyBank, Shield, Home, TrendingUp, AlertTriangle, ChevronDown } from 'lucide-react';
 import useTranslation from '../../../i18n/useTranslation';
 import { useMode } from '../../../hooks/useMode';
+import VertraegeTab from './VertraegeTab';
+import { KIZusammenfassungInlay } from './StammdatenDetailTab';
 
 const TYP_EN = {
   depot: 'Securities Account', depot2: 'Securities Account 2', depot_firma: 'Company Securities',
@@ -219,39 +221,62 @@ export default function OpenFinanceTab({ kunde }) {
   const { config, modeId } = useMode();
   const fremd = kunde.fremdProdukte || [];
   const eigen = kunde.eigeneProdukte || [];
-  const consented = fremd.filter(f => f.consent).length;
-  const total = fremd.length;
+  // Externe Verknüpfungen should list each company only once even if the
+  // customer holds several contracts (e.g. HUK KFZ + Hausrat + Haftpflicht
+  // counts as one HUK consent). Deduplicate by institut and treat the company
+  // as "consented" if any of its contracts has consent.
+  const fremdByInstitut = (() => {
+    const map = new Map();
+    fremd.forEach(f => {
+      const key = f.institut || '—';
+      const existing = map.get(key);
+      if (!existing) {
+        map.set(key, { ...f, consent: !!f.consent });
+      } else if (f.consent && !existing.consent) {
+        map.set(key, { ...existing, consent: true });
+      }
+    });
+    return Array.from(map.values());
+  })();
+  const consented = fremdByInstitut.filter(f => f.consent).length;
+  const total = fremdByInstitut.length;
 
   const bf = generateBedarfsfelder(kunde, modeId);
   const hasExtended = bf.geldmarkt?.length > 0 || bf.kapitalmarkt?.length > 0 || bf.versicherungenFremd?.length > 0 || bf.finanzierungen?.length > 0;
 
   return (
     <div className="space-y-4">
-      {/* Consent Status */}
-      <Card hover={false}>
-        <div className="flex items-center gap-2 mb-4">
-          <Link2 size={20} className="text-slate-500" strokeWidth={1.75} />
-          <h3 className="font-semibold text-slate-800">{t('fidaConsentStatus')}</h3>
-        </div>
-        <div className="grid grid-cols-3 gap-6 mb-4">
-          <div>
-            <div className="text-xs text-slate-400 uppercase tracking-wider mb-1">{t('gesamt')}</div>
-            <div className="font-mono text-2xl font-bold text-slate-800">{total}</div>
-          </div>
-          <div>
-            <div className="text-xs text-slate-400 uppercase tracking-wider mb-1">{t('consentErteilt')}</div>
-            <div className="font-mono text-2xl font-bold text-emerald-600">{consented}</div>
-          </div>
-          <div>
-            <div className="text-xs text-slate-400 uppercase tracking-wider mb-1">{t('ausstehend')}</div>
-            <div className="font-mono text-2xl font-bold text-amber-600">{total - consented}</div>
-          </div>
-        </div>
-      </Card>
+      {/* Eigene Produkte (formerly the "Produkte" tab) – rendered at the top
+          of the Finanzübersicht so the whole financial picture is in one place. */}
+      {eigen.length > 0 && <VertraegeTab kunde={kunde} />}
 
-      {/* Externe Verknuepfungen */}
+      {/* KI-Zusammenfassung – Gesamtüberblick Kunde */}
+      <KIZusammenfassungInlay kunde={kunde} />
+
+      {/* Externe Verknuepfungen + FIDA Consent Status kombiniert */}
       <Card hover={false}>
-        <h3 className="font-semibold text-slate-800 mb-4">{t('externeVerknuepfungen')}</h3>
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <Link2 size={20} className="text-slate-500" strokeWidth={1.75} />
+            <h3 className="font-semibold text-slate-800">{t('externeVerknuepfungen')}</h3>
+          </div>
+          <div className="flex items-center gap-4 text-xs">
+            <span className="flex items-center gap-1.5">
+              <span className="text-slate-400 uppercase tracking-wider">{t('gesamt')}</span>
+              <span className="font-mono font-bold text-slate-800">{total}</span>
+            </span>
+            <span className="flex items-center gap-1.5">
+              <CheckCircle size={13} className="text-emerald-600" />
+              <span className="text-slate-400 uppercase tracking-wider">{t('consentErteilt')}</span>
+              <span className="font-mono font-bold text-emerald-600">{consented}</span>
+            </span>
+            <span className="flex items-center gap-1.5">
+              <XCircle size={13} className="text-amber-500" />
+              <span className="text-slate-400 uppercase tracking-wider">{t('ausstehend')}</span>
+              <span className="font-mono font-bold text-amber-600">{total - consented}</span>
+            </span>
+          </div>
+        </div>
         <DataTable
           columns={[
             { id: 'institut', label: lang === 'en' ? 'Company' : 'Unternehmen', render: (v) => (
@@ -272,7 +297,7 @@ export default function OpenFinanceTab({ kunde }) {
               return <span className={`font-mono ${isExpiring ? 'text-amber-600 font-semibold' : 'text-slate-600'}`}>{d.bis}</span>;
             }},
           ]}
-          data={fremd}
+          data={fremdByInstitut}
         />
       </Card>
 

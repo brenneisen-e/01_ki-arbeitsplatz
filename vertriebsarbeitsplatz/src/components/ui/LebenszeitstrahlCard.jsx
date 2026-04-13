@@ -13,14 +13,11 @@ const TRACKS = [
 const TIMELINE_DATA = {
   BK00001: {
     leben: [
-      { date: '2018-03', label: 'Kunde seit 2018' },
       { date: '2020-08', label: 'Heirat mit Sabine' },
       { date: '2021-09', label: 'Sohn Lukas geboren' },
       { date: '2024-11', label: 'Tochter Marie geboren' },
       { date: '2024-04', label: 'Boulder-Mitgliedschaft erkannt', aiDetected: true,
         signals: ['DAV-Boulderhalle Gießen monatlich', 'Kletterausrüstung'] },
-      { date: '2025-09', label: 'Fallschirmsprung-Buchung', aiDetected: true, isWarning: true,
-        signals: ['Skydive Center Marburg 320 €'] },
       { date: '2026-03', label: 'Immobiliensuche aktiv', aiDetected: true,
         signals: ['Newsletter „VR-Immobilien" seit 2 Jahren', 'ImmoScout-Logins (PSD2)', 'Maklerbesuche'] },
     ],
@@ -41,7 +38,6 @@ const TIMELINE_DATA = {
   },
   BK00002: {
     leben: [
-      { date: '2020-01', label: 'Kunde seit 2020' },
       { date: '2022-08', label: 'Heirat mit Tobias' },
       { date: '2024-03', label: 'Sohn geboren' },
       { date: '2026-02', label: 'Immo-Suche erkannt', aiDetected: true,
@@ -61,7 +57,6 @@ const TIMELINE_DATA = {
   },
   BK00003: {
     leben: [
-      { date: '2008-01', label: 'Kunde seit 2008 (GmbH-Gründung)' },
       { date: '2012-05', label: 'Wird Familienunternehmen' },
       { date: '2024-09', label: 'Nachfolge-Recherche erkannt', aiDetected: true,
         signals: ['M&A Beratung gesucht', 'Erste Steuerberater-Gespräche'] },
@@ -86,7 +81,8 @@ function getTimelineForKunde(kunde) {
   const seitJahr = kunde?.eigeneProdukte?.[0]?.seit?.slice(0, 7) || '2020-01';
   return {
     leben: [
-      { date: seitJahr, label: `Kunde seit ${seitJahr}` },
+      // "Kunde seit …" ist ein Finanzereignis (Kontoeröffnung) und gehört
+      // in die Finanzen-Spur, nicht in die Lebens-Spur.
       ...(kunde?.partner ? [{ date: seitJahr, label: `Partner: ${kunde.partner.name}` }] : []),
       ...((kunde?.kinder || []).map((k) => ({
         date: `${new Date().getFullYear() - (k.alter || 0)}-06`,
@@ -96,10 +92,13 @@ function getTimelineForKunde(kunde) {
     oeffentlich: kunde?.linkedin ? [
       { date: seitJahr, label: kunde.beruf || 'Beruf', source: 'LinkedIn' },
     ] : [],
-    finanzen: (kunde?.eigeneProdukte || []).map((p) => ({
-      date: (p.seit || seitJahr).slice(0, 7),
-      label: p.produkt,
-    })),
+    finanzen: [
+      { date: seitJahr, label: `Kunde seit ${seitJahr}` },
+      ...((kunde?.eigeneProdukte || []).map((p) => ({
+        date: (p.seit || seitJahr).slice(0, 7),
+        label: p.produkt,
+      }))),
+    ],
   };
 }
 
@@ -129,14 +128,22 @@ export default function LebenszeitstrahlCard({ kunde }) {
       ...data.finanzen.map((e) => parseDate(e.date).getTime()),
     ];
     const today = new Date();
+    const earliest = all.length ? Math.min(...all) : today.getTime();
+    const latest   = all.length ? Math.max(...all) : today.getTime();
     let start, end;
     if (zoom === 'all') {
-      start = new Date(Math.min(...all, today.getTime() - 5 * 365 * 86400000));
-      end = new Date(Math.max(...all, today.getTime() + 365 * 86400000));
+      start = new Date(Math.min(earliest, today.getTime() - 5 * 365 * 86400000));
+      end   = new Date(Math.max(latest, today.getTime() + 365 * 86400000));
     } else {
       const yearsBack = zoom === '1j' ? 1 : zoom === '3j' ? 3 : 5;
-      start = new Date(today.getFullYear() - yearsBack, 0, 1);
-      end = new Date(today.getFullYear() + 2, 0, 1);
+      const zoomStart = new Date(today.getFullYear() - yearsBack, 0, 1).getTime();
+      const zoomEnd   = new Date(today.getFullYear() + 2, 0, 1).getTime();
+      // Always extend the axis to include the actual earliest/latest events,
+      // otherwise events older than the zoom window get clamped to 0 % and
+      // stack on top of each other at the left edge (e.g. Heirat 08/2020 and
+      // Wechsel Continental 02/2019 were both pinned to the same position).
+      start = new Date(Math.min(zoomStart, earliest));
+      end   = new Date(Math.max(zoomEnd, latest));
     }
     return { rangeStart: start, rangeEnd: end };
   }, [data, zoom]);

@@ -127,7 +127,7 @@ function adaptProduktName(name, modeId, institut) {
 }
 
 export default function VertraegeTab({ kunde }) {
-  const { t } = useTranslation();
+  const { t, lang } = useTranslation();
   const { modeId, setActiveTab, config } = useMode();
   const institut = config?.institut;
   const produkte = (kunde.eigeneProdukte || []).map(p => ({
@@ -179,11 +179,73 @@ export default function VertraegeTab({ kunde }) {
 
       <Card hover={false}>
         <h3 className="font-semibold text-slate-800 mb-4">{t('vertragszusammenfassung')}</h3>
-        <div className="grid grid-cols-3 gap-6">
-          <SummaryItem label={sumLabel} value={formatEur(produkte.reduce((s, p) => s + (p.praemie || 0), 0))} />
-          <SummaryItem label={modeId === 'banking' ? t('anzahlProdukte') : t('anzahlVertraege')} value={produkte.length} />
-          <SummaryItem label={t('optimierbar')} value={produkte.filter(p => p.status === 'optimierbar').length} highlight />
-        </div>
+        {(() => {
+          const EXTERN_COST_TYPES = new Set([
+            'versicherung', 'kfz', 'kfz_fremd', 'haftpflicht', 'hausrat',
+            'rechtsschutz', 'rlv', 'bu', 'du', 'pkv', 'pkv_ehemann', 'unfall',
+            'lebensversicherung', 'praxis_hp', 'betriebshaftpflicht',
+            'inhaltsversicherung', 'wohngebaeude', 'it_hp', 'dno', 'kk',
+            'kredit', 'konsumkredit', 'privatkredit', 'kffw', 'kfw',
+            'baufinanzierung',
+          ]);
+          const intern = produkte;
+          const extern = (kunde.fremdProdukte || []);
+          const internKosten = intern.reduce((s, p) => s + (p.praemie || 0), 0);
+          const externKosten = extern
+            .filter(p => EXTERN_COST_TYPES.has(p.typ))
+            .reduce((s, p) => s + (Number(p.volumen) || 0), 0);
+          const gesamtAnzahl = intern.length + extern.length;
+          const gesamtKosten = internKosten + externKosten;
+          const optimierbar = intern.filter(p => p.status === 'optimierbar').length;
+          const anzahlLabel = modeId === 'banking' ? t('anzahlProdukte') : t('anzahlVertraege');
+          return (
+            <div className="grid grid-cols-3 gap-6">
+              <div className="rounded-xl border border-slate-200 bg-slate-50/60 p-4">
+                <div className="text-xs text-slate-500 font-semibold uppercase tracking-wider mb-2">
+                  {lang === 'en' ? 'All contracts' : 'Alle Verträge'}
+                </div>
+                <div className="flex items-baseline justify-between mb-1">
+                  <span className="text-[11px] text-slate-400">{anzahlLabel}</span>
+                  <span className="font-mono text-lg font-bold text-slate-800">{gesamtAnzahl}</span>
+                </div>
+                <div className="flex items-baseline justify-between mb-1">
+                  <span className="text-[11px] text-slate-400">{sumLabel}</span>
+                  <span className="font-mono text-lg font-bold text-slate-800">{formatEur(gesamtKosten)}</span>
+                </div>
+                <div className="flex items-baseline justify-between">
+                  <span className="text-[11px] text-slate-400">{t('optimierbar')}</span>
+                  <span className={`font-mono text-lg font-bold ${optimierbar > 0 ? 'text-amber-600' : 'text-slate-400'}`}>{optimierbar}</span>
+                </div>
+              </div>
+              <div className="rounded-xl border border-emerald-200 bg-emerald-50/60 p-4">
+                <div className="text-xs text-emerald-700 font-semibold uppercase tracking-wider mb-2">
+                  {lang === 'en' ? 'Internal' : 'Intern'}
+                </div>
+                <div className="flex items-baseline justify-between mb-1">
+                  <span className="text-[11px] text-slate-500">{anzahlLabel}</span>
+                  <span className="font-mono text-lg font-bold text-slate-800">{intern.length}</span>
+                </div>
+                <div className="flex items-baseline justify-between">
+                  <span className="text-[11px] text-slate-500">{sumLabel}</span>
+                  <span className="font-mono text-lg font-bold text-slate-800">{formatEur(internKosten)}</span>
+                </div>
+              </div>
+              <div className="rounded-xl border border-slate-200 bg-white p-4">
+                <div className="text-xs text-slate-500 font-semibold uppercase tracking-wider mb-2">
+                  {lang === 'en' ? 'External' : 'Extern'}
+                </div>
+                <div className="flex items-baseline justify-between mb-1">
+                  <span className="text-[11px] text-slate-400">{anzahlLabel}</span>
+                  <span className="font-mono text-lg font-bold text-slate-800">{extern.length}</span>
+                </div>
+                <div className="flex items-baseline justify-between">
+                  <span className="text-[11px] text-slate-400">{sumLabel}</span>
+                  <span className="font-mono text-lg font-bold text-slate-800">{formatEur(externKosten)}</span>
+                </div>
+              </div>
+            </div>
+          );
+        })()}
       </Card>
     </div>
   );

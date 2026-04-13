@@ -3,6 +3,7 @@ import { MapPin, Maximize2, X } from 'lucide-react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import Card from './Card';
+import bundeslaenderGeo from '../../pages/cockpit/bundeslaender.geo.json';
 
 /* ── City coordinates + Bundesland mapping ────────────────────── */
 const CITY_COORDS = {
@@ -188,7 +189,7 @@ export function LeafletMap({ geocoded, onKundeClick, mini = false, initialCenter
     };
   }, [geocoded, onKundeClick, mini, initialCenter, initialZoom]);
 
-  return <div ref={containerRef} className="w-full h-full" style={{ minHeight: mini ? 100 : 300 }} />;
+  return <div ref={containerRef} className="w-full h-full" style={{ minHeight: mini ? 100 : 300, background: '#ffffff' }} />;
 }
 
 /* ── Full card with modal (inline large version) ──────────────── */

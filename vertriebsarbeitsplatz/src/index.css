@@ -221,7 +221,9 @@
 .card-passthrough button,
 .card-passthrough a,
 .card-passthrough input,
-.card-passthrough [onclick] {
+.card-passthrough [onclick],
+.card-passthrough [role="button"],
+.card-passthrough .pointer-events-auto {
   pointer-events: auto;
 }
 
@@ -311,6 +313,23 @@
 .card-hover:hover .rh-badge {
   background-color: rgba(255,255,255,0.2) !important;
   border-color: rgba(255,255,255,0.35) !important;
+}
+
+/* Aufgaben-Kacheln: auf Hover wird der Hintergrund mode-primary und
+   die Schrift weiß. Die farbige Icon-Kachel (pastell) + farbiges Icon
+   (rot/orange/blau) würden dabei "invertiert" wirken und auf dem
+   dunklen Hintergrund fast unsichtbar werden. Deshalb die Icon-Kachel
+   transparent-weiß machen und das Icon selbst weiß. Das Due-Date-Badge
+   bekommt ebenfalls weiße Akzente. */
+.row-hover.aufgabe-tile:hover .aufgabe-icon-tile {
+  background-color: rgba(255,255,255,0.2) !important;
+}
+.row-hover.aufgabe-tile:hover .aufgabe-icon {
+  color: #ffffff !important;
+}
+.row-hover.aufgabe-tile:hover .aufgabe-date-badge {
+  background-color: rgba(255,255,255,0.22) !important;
+  color: #ffffff !important;
 }
 .card-hover:hover .kpi-icon-box,
 .card-hover:hover .metric-box {

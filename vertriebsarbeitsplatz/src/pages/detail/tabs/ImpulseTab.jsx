@@ -7,6 +7,7 @@ import { useMode } from '../../../hooks/useMode';
 import useTranslation from '../../../i18n/useTranslation';
 import { Shield, Landmark, ShieldCheck, LineChart, CheckCircle, XCircle, ChevronDown, Calendar, Mail, ExternalLink, TrendingUp, ArrowRight, Sparkles } from 'lucide-react';
 import AnschreibenModal from '../../../components/ui/AnschreibenModal';
+import { interpolateDynamicDates } from '../../../utils/dynamicDates';
 
 const ABSICHERUNGS_TYPEN = [
   { key: 'bu' },
@@ -232,7 +233,7 @@ function PotentialCard({ potential: p, kunde, expanded, onToggle, onAnschreiben,
             />
           </div>
         </div>
-        <p className="text-sm text-slate-500">{p.beschreibung}</p>
+        <p className="text-sm text-slate-500">{interpolateDynamicDates(p.beschreibung)}</p>
       </div>
 
       {/* Expandable detail section */}
@@ -245,7 +246,7 @@ function PotentialCard({ potential: p, kunde, expanded, onToggle, onAnschreiben,
                 <Sparkles size={14} className="text-indigo-500" />
                 <span className="text-xs font-semibold text-indigo-600">{t('kiZusammenfassung')}</span>
               </div>
-              <p className="text-sm text-slate-700 leading-relaxed">{p.kiDescription}</p>
+              <p className="text-sm text-slate-700 leading-relaxed">{interpolateDynamicDates(p.kiDescription)}</p>
             </div>
           )}
 
@@ -330,7 +331,7 @@ function HerleitungRow({ label, value }) {
   return (
     <div className="bg-white rounded-lg px-3 py-2 border border-slate-100 hover:bg-slate-50 hover:border-slate-200 transition-colors">
       <span className="text-xs text-slate-400 block">{label}</span>
-      <span className="text-slate-700 font-medium">{value}</span>
+      <span className="text-slate-700 font-medium">{typeof value === 'string' ? interpolateDynamicDates(value) : value}</span>
     </div>
   );
 }

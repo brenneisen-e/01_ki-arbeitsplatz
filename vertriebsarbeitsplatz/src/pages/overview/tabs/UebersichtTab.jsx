@@ -655,7 +655,7 @@ export default function UebersichtTab() {
                 {marketingKampagnen.filter(k => k.status === 'aktiv').length} {lang === 'en' ? 'active' : 'aktiv'} · {marketingKampagnen.filter(k => k.status === 'geplant').length} {lang === 'en' ? 'planned' : 'geplant'}
               </span>
             </div>
-            <div className="grid grid-cols-4 gap-4">
+            <div className="grid grid-cols-4 gap-4 pointer-events-auto">
               {marketingKampagnen.map((kampagne) => {
                 const istAktiv = kampagne.status === 'aktiv';
                 const titel = lang === 'en' ? kampagne.titelEn : kampagne.titel;
@@ -665,8 +665,11 @@ export default function UebersichtTab() {
                 return (
                   <div
                     key={kampagne.id}
-                    className="group relative rounded-xl overflow-hidden border border-slate-200 cursor-pointer transition-all hover:shadow-xl hover:-translate-y-0.5 bg-white flex flex-col"
+                    role="button"
+                    tabIndex={0}
+                    className="group relative rounded-xl overflow-hidden border border-slate-200 cursor-pointer transition-all hover:shadow-xl hover:-translate-y-0.5 bg-white flex flex-col pointer-events-auto"
                     onClick={() => setKampagneModal(kampagne)}
+                    onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setKampagneModal(kampagne); }}
                   >
                     {/* Photo-style hero (gradient + icon) */}
                     <div
@@ -948,10 +951,10 @@ export default function UebersichtTab() {
 
                   {/* Icon tile */}
                   <div
-                    className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0 transition-transform group-hover:scale-110"
+                    className="aufgabe-icon-tile w-9 h-9 rounded-lg flex items-center justify-center shrink-0 transition-transform group-hover:scale-110"
                     style={{ backgroundColor: urgentBg }}
                   >
-                    <TaskIcon size={16} style={{ color: urgentColor }} strokeWidth={2} />
+                    <TaskIcon size={16} className="aufgabe-icon" style={{ color: urgentColor }} strokeWidth={2} />
                   </div>
 
                   {/* Text */}
@@ -964,7 +967,7 @@ export default function UebersichtTab() {
 
                   {/* Date badge */}
                   <span
-                    className="text-xs px-2.5 py-1 rounded-full font-bold whitespace-nowrap uppercase tracking-wide shrink-0"
+                    className="aufgabe-date-badge text-xs px-2.5 py-1 rounded-full font-bold whitespace-nowrap uppercase tracking-wide shrink-0"
                     style={{ backgroundColor: urgentColor, color: 'white' }}
                   >
                     {a.faellig}

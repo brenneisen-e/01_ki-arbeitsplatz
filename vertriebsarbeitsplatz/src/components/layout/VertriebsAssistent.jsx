@@ -33,7 +33,7 @@ function getWelcomeMessage(modeId, t) {
 function getQuickActions(modeId, t) {
   const actions = {
     versicherung: [t('neueLeadsAnzeigen'), t('kundenpotenzialAnalysieren'), t('gespraechsleitfadenErstellen'), t('crossSellingChancen')],
-    banking: ['Was steht heute an?', 'Meine neuen Leads', 'Erstgespräch Markus Wagner vorbereiten', 'Auslaufende Kredite 6 Monate'],
+    banking: ['Was steht heute an?', 'Meine neuen Leads', 'Auslaufende Kredite 6 Monate'],
     vermoegensverwaltung: [t('neueLeadsAnzeigen'), t('mandantenpotenzialAnalysieren'), t('gespraechsleitfadenErstellen'), t('portfolioAnalyse')],
   };
   return actions[modeId] || actions.versicherung;

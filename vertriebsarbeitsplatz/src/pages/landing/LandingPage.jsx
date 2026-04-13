@@ -146,7 +146,7 @@ export default function LandingPage() {
     executeSuggestion(suggestion);
   }
 
-  function executeSuggestion(suggestion) {
+  function executeSuggestion(suggestion, opts = {}) {
     setIsThinking(true);
     const steps = [
       t('datenWerdenGeladen'),
@@ -162,11 +162,18 @@ export default function LandingPage() {
         setThinkingText(steps[step]);
       } else {
         clearInterval(interval);
-        // Navigate
-        const targetMode = activeModule;
+        // Navigate. `modeOverride` lets callers (e.g. the microphone flow)
+        // force a specific target mode – otherwise the closure's
+        // activeModule could still be stale after a same-tick setState.
+        const targetMode = opts.modeOverride || activeModule;
         switchMode(targetMode);
-        if (selectedVariant) {
-          switchInstitut(selectedVariant, targetMode);
+        // Preserve the selected institut variant (e.g. Zukunftsbank). If a
+        // caller explicitly passes variantOverride (mic flow) it wins –
+        // otherwise fall back to the currently selected one, but only when
+        // the mode isn't being forced (which would reset institutOverride).
+        const variantToApply = 'variantOverride' in opts ? opts.variantOverride : (opts.modeOverride ? null : selectedVariant);
+        if (variantToApply) {
+          switchInstitut(variantToApply, targetMode);
         }
         if (suggestion.action === 'cockpit') {
           navigateTo('cockpit');
@@ -222,15 +229,35 @@ export default function LandingPage() {
           const t = setTimeout(typeNext, 220);
           listenTimeoutsRef.current.push(t);
         } else {
-          // 0.5s after final word: switch to banking and open Übersicht
+          // After typing finishes, briefly keep the "listening" state, then
+          // hand off to the same pipeline a chat submit would use: switch to
+          // banking and run executeSuggestion so the user sees the normal
+          // "thinking" overlay (Daten werden geladen …) before the overview
+          // opens.
           const finish = setTimeout(() => {
             setIsListening(false);
             const targetMode = 'banking';
+            // Keep the currently selected banking variant (e.g. Zukunftsbank)
+            // if the user is already on the banking module. Only when the
+            // voice flow actually switches the mode (e.g. from Versicherung)
+            // do we reset the variant to the default institut.
+            const keepVariant = activeModule === targetMode ? selectedVariant : null;
             setActiveModule(targetMode);
-            setSelectedVariant(null);
-            try { localStorage.setItem('kia_last_mode', JSON.stringify({ modeId: targetMode })); } catch {}
-            switchMode(targetMode);
-            navigateTo('overview');
+            setSelectedVariant(keepVariant);
+            try {
+              localStorage.setItem('kia_last_mode', JSON.stringify(
+                keepVariant ? { modeId: targetMode, variant: keepVariant } : { modeId: targetMode }
+              ));
+            } catch {}
+            // Hand off to the same pipeline a chat submit would use, so the
+            // user sees the thinking overlay (Daten werden geladen …) before
+            // the overview opens. modeOverride forces Banking regardless of
+            // whatever activeModule was selected on the landing page;
+            // variantOverride preserves Zukunftsbank / Sparkasse / etc.
+            executeSuggestion(
+              { action: 'overview' },
+              { modeOverride: targetMode, variantOverride: keepVariant }
+            );
           }, 500);
           listenTimeoutsRef.current.push(finish);
         }

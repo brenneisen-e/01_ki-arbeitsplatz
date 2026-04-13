@@ -1,7 +1,6 @@
 import { useState, useMemo } from 'react';
-import { Sparkles, Briefcase } from 'lucide-react';
+import { Sparkles } from 'lucide-react';
 import Card from '../../../components/ui/Card';
-import DataTable from '../../../components/ui/DataTable';
 import DonutChart from '../../../components/charts/DonutChart';
 import { formatEur } from '../../../utils/formatters';
 import { useMode } from '../../../hooks/useMode';
@@ -440,38 +439,8 @@ export default function FinanzprofilTab({ kunde }) {
     ? kontoumsaetze
     : kontoumsaetze.filter(c => c.name.toLowerCase().includes(activeFilter));
 
-  const eigeneProdukte = kunde.eigeneProdukte || [];
-
   return (
     <div className="space-y-4">
-      {/* Eigene Produkte – moved from Finanzübersicht into the Haushaltsprofil */}
-      {!isVV && eigeneProdukte.length > 0 && (
-        <Card hover={false}>
-          <div className="flex items-center gap-2 mb-4">
-            <Briefcase size={20} className="text-slate-500" strokeWidth={1.75} />
-            <h3 className="font-semibold text-slate-800">
-              {t('eigeneProdukte')}
-              <span className="text-slate-400 font-normal ml-1">({eigeneProdukte.length})</span>
-            </h3>
-          </div>
-          <DataTable
-            columns={[
-              { id: 'produkt', label: t('produkt'), render: v => <span className="font-medium">{v}</span> },
-              { id: 'sparte', label: t('sparte') || 'Sparte', render: v => <span className="capitalize">{v}</span> },
-              { id: 'details', label: t('details') },
-              { id: 'praemie', label: t('praemieLabel') || 'Prämie/J.', render: v => v > 0 ? <span className="font-mono">{formatEur(v)}</span> : <span className="text-slate-300">–</span> },
-              { id: 'seit', label: t('seit') || 'Seit' },
-              { id: 'status', label: 'Status', render: v => (
-                <span className={`rh-badge text-xs font-medium px-2 py-0.5 rounded-full ${v === 'aktiv' ? 'bg-emerald-50 text-emerald-700' : v === 'optimierbar' ? 'bg-amber-50 text-amber-700' : 'bg-slate-100 text-slate-600'}`}>
-                  {v}
-                </span>
-              )},
-            ]}
-            data={eigeneProdukte}
-          />
-        </Card>
-      )}
-
       {/* Row 1: Einnahmen/Ausgaben + Donut */}
       <div className="grid grid-cols-2 gap-4">
         <Card hover={false}>
@@ -564,8 +533,8 @@ export default function FinanzprofilTab({ kunde }) {
 
           {/* Category Rows */}
           <div className="space-y-2">
-            {filteredCategories.map((cat, i) => (
-              <CategoryRow key={cat.name} category={cat} defaultOpen={i === 0} />
+            {filteredCategories.map((cat) => (
+              <CategoryRow key={cat.name} category={cat} defaultOpen />
             ))}
           </div>
         </Card>

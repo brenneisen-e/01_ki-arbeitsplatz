@@ -222,15 +222,21 @@ export default function LandingPage() {
           const t = setTimeout(typeNext, 220);
           listenTimeoutsRef.current.push(t);
         } else {
-          // 0.5s after final word: switch to banking and open Übersicht
+          // After typing finishes, briefly keep the "listening" state, then
+          // hand off to the same pipeline a chat submit would use: switch to
+          // banking and run executeSuggestion so the user sees the normal
+          // "thinking" overlay (Daten werden geladen …) before the overview
+          // opens.
           const finish = setTimeout(() => {
             setIsListening(false);
             const targetMode = 'banking';
             setActiveModule(targetMode);
             setSelectedVariant(null);
             try { localStorage.setItem('kia_last_mode', JSON.stringify({ modeId: targetMode })); } catch {}
+            // Force banking for the upcoming navigation regardless of
+            // whatever activeModule's closure still sees.
             switchMode(targetMode);
-            navigateTo('overview');
+            executeSuggestion({ action: 'overview' });
           }, 500);
           listenTimeoutsRef.current.push(finish);
         }

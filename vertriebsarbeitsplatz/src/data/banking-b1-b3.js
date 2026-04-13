@@ -32,7 +32,7 @@ export const B1 = {
     { typ: 'depot', institut: 'Trade Republic', details: 'ETF Sparplan 200/mtl', volumen: 28000, consent: true },
     { typ: 'tagesgeld', institut: 'ING', details: '2,0%', volumen: 22000, consent: true },
     { typ: 'bausparen', institut: 'Schwäbisch Hall', details: 'Bausparvertrag, zuteilungsreif Q2/2026', volumen: 30000, consent: true },
-    { typ: 'kredit', institut: 'KfW', details: 'KfW-Studienkredit, läuft 06/2026 aus (840€/Mon. werden frei)', volumen: 1680, consent: true },
+    { typ: 'kredit', institut: 'Commerzbank', details: 'Commerzbank-Studienkredit, läuft 06/2026 aus (840€/Mon. werden frei)', volumen: 1680, consent: true },
     { typ: 'versicherung', produktart: 'KFZ-Vollkasko', institut: 'HUK', details: 'VW Tiguan, SF-12', volumen: 780, consent: true },
     { typ: 'versicherung', produktart: 'Hausrat', institut: 'HUK', details: 'Im B\u00fcndel', volumen: 0, consent: true },
     { typ: 'versicherung', produktart: 'Haftpflicht', institut: 'HUK', details: 'Familie', volumen: 0, consent: true },
@@ -58,27 +58,27 @@ export const B1 = {
       { produkt: 'Berufsunf\u00e4higkeit', institut: 'HDI', details: 'BU 2.000\u20ac/mtl.', praemie: 1800, deckungssumme: '2.000\u20ac/mtl.' },
     ],
     finanzierungen: [
-      { produkt: 'KfW-Studienkredit', institut: 'KfW', restschuld: 1680, zinssatz: '0,75 % p.a.', rate: '840 €/Mon.', details: 'Läuft in 2 Monaten aus → 840 €/Mon. werden frei' },
+      { produkt: 'Commerzbank-Studienkredit', institut: 'Commerzbank', restschuld: 1680, zinssatz: '0,75 % p.a.', rate: '840 €/Mon.', details: 'Läuft in 2 Monaten aus → 840 €/Mon. werden frei' },
     ],
   },
   transaktionen: [
     { kategorie: 'gehalt', betrag: 4500, empfaenger: 'Arbeitgeber' },
     { kategorie: 'gehalt_partner', betrag: 1200, empfaenger: 'Stadt' },
     { kategorie: 'miete', betrag: -980, empfaenger: 'Vermieter Gartenstr. 18' },
-    { kategorie: 'kredit', betrag: -840, empfaenger: 'KfW (läuft 06/2026 aus)' },
+    { kategorie: 'kredit', betrag: -840, empfaenger: 'Commerzbank (läuft 06/2026 aus)' },
     { kategorie: 'sparplan', betrag: -200, empfaenger: 'Trade Republic' },
     { kategorie: 'versicherung', betrag: -310, empfaenger: 'HUK, HDI, Allianz' },
     { kategorie: 'konsum', betrag: -1800, empfaenger: 'Diverse' },
   ],
   potentiale: [
-    // 1. Immobilienkredit-Gespräch (sehr_hoch) — KfW läuft aus + BSV zuteilungsreif + Immo-Newsletter-Signal
+    // 1. Immobilienkredit-Gespräch (sehr_hoch) — Commerzbank-Studienkredit läuft aus + BSV zuteilungsreif + Immo-Newsletter-Signal
     { titel: 'Kreditgespräch Immobilienfinanzierung', typ: 'cross_sell', quellen: ['finanztransaktion', 'bestand', 'kommunikation'], prioritaet: 'sehr_hoch', volumen: 250000, volumenTyp: 'einmalig',
-      beschreibung: 'KfW-Kredit läuft in 2 Monaten aus → 840€/Mon. frei. Bausparvertrag bei Schwäbisch Hall zuteilungsreif. Immobilien-Newsletter seit 2 Jahren abonniert.',
-      kiDescription: 'KI-Analyse: Drei unabhängige Signale ergeben einen klaren Vertriebsimpuls für ein Immobilienkredit-Gespräch:\n\n1. Auslaufender KfW-Kredit (Modernisierung): Aus den PSD2-Kontoumsätzen erkennen wir, dass die letzte Ratenzahlung in 2 Monaten erfolgt — danach werden 840 €/Monat freie Liquidität verfügbar.\n\n2. Zuteilungsreifer Bausparvertrag bei Fremdbausparer (Schwäbisch Hall, 30.000 €) — diese Mittel können sofort als Eigenkapital oder Sondertilgung eingesetzt werden.\n\n3. Klaus Fischer hat sich vor 2 Jahren in unseren Newsletter „VR-Immobilien & Finanzieren" eingetragen und öffnet die Mails regelmäßig. Klares Suchverhalten Richtung Immobilienkauf bzw. -modernisierung.\n\nKombiniert ergibt das ein sehr starkes Lead-Signal: Zeitpunkt (Liquiditätsspitze), Kapital (BSV) und Interesse (Newsletter) treffen aufeinander. Empfehlung: Aktiv auf ein Beratungsgespräch zur Immobilienfinanzierung zugehen, BSV-Zuteilung als Aufhänger nutzen.',
+      beschreibung: 'Commerzbank-Studienkredit läuft in 2 Monaten aus → 840€/Mon. frei. Bausparvertrag bei Schwäbisch Hall zuteilungsreif. Immobilien-Newsletter seit 2 Jahren abonniert.',
+      kiDescription: 'KI-Analyse: Drei unabhängige Signale ergeben einen klaren Vertriebsimpuls für ein Immobilienkredit-Gespräch:\n\n1. Auslaufender Commerzbank-Studienkredit: Aus Open Finance erkennen wir, dass die letzte Ratenzahlung in 2 Monaten erfolgt — danach werden 840 €/Monat freie Liquidität verfügbar.\n\n2. Zuteilungsreifer Bausparvertrag bei Fremdbausparer (Schwäbisch Hall, 30.000 €) — diese Mittel können sofort als Eigenkapital oder Sondertilgung eingesetzt werden.\n\n3. Klaus Fischer hat sich vor 2 Jahren in unseren Newsletter „VR-Immobilien & Finanzieren" eingetragen und öffnet die Mails regelmäßig. Klares Suchverhalten Richtung Immobilienkauf bzw. -modernisierung.\n\nKombiniert ergibt das ein sehr starkes Lead-Signal: Zeitpunkt (Liquiditätsspitze), Kapital (BSV) und Interesse (Newsletter) treffen aufeinander. Empfehlung: Aktiv auf ein Beratungsgespräch zur Immobilienfinanzierung zugehen, BSV-Zuteilung als Aufhänger nutzen.',
       empfohleneAktion: 'termin_vereinbaren', produktEmpfehlung: 'VR-ImmobilienFinanzierung',
       status: 'identifiziert',
       herleitung: [
-        { label: 'Datenquelle 1', value: 'PSD2-Kontoumsätze — KfW-Kredit endet in 2 Monaten (840 €/Mon. frei)' },
+        { label: 'Datenquelle 1', value: 'Open Finance — Commerzbank-Studienkredit endet in 2 Monaten (840 €/Mon. frei)' },
         { label: 'Datenquelle 2', value: 'Bestand — Schwäbisch Hall BSV (30.000 €) zuteilungsreif' },
         { label: 'Datenquelle 3', value: 'Marketing — Newsletter „VR-Immobilien" seit 24 Monaten abonniert, hohe Öffnungsrate' },
         { label: 'Freie Liquidität ab Q3/2026', value: '840 €/mtl.' },

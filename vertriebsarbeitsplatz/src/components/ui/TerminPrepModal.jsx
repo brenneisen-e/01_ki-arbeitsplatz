@@ -103,7 +103,7 @@ export default function TerminPrepModal({ kunde, termin, onClose }) {
                   <>Klaus Fischer (32) ist seit 2018 Kunde der Volksbank Mittelhessen. Er arbeitet als
                   Vertriebsleiter bei der Continental AG, ist verheiratet mit Sabine und hat zwei
                   Kinder (Lukas, 4 und Marie, 1). Nettohaushaltseinkommen: ca. 5.700 €/mtl.
-                  Die drei erkannten Signale — auslaufender KfW-Kredit, zuteilungsreifer
+                  Die drei erkannten Signale — auslaufender Commerzbank-Studienkredit, zuteilungsreifer
                   Bausparvertrag und langjähriges Newsletter-Interesse — bilden einen sehr
                   starken Vertriebsimpuls für ein Erstgespräch zur Immobilienfinanzierung.</>
                 ) : (
@@ -126,7 +126,7 @@ export default function TerminPrepModal({ kunde, termin, onClose }) {
               <Section color="slate">
                 <SectionTitle icon={FileText} label="Schlüssel-Kennzahlen" color="slate" />
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm pt-2">
-                  <KPI label="Freie Liquidität ab 06/2026" value="840 €/mtl." accent="text-emerald-600" />
+                  <KPI label="Freie Liquidität ab 06/2026 (Commerzbank-Studienkredit endet)" value="840 €/mtl." accent="text-emerald-600" />
                   <KPI label="Bauspar-Zuteilung (Q2/2026)" value="30.000 €" accent="text-emerald-600" />
                   <KPI label="VR-Sparkonto" value="15.000 €" />
                   <KPI label="Machbarer Kreditrahmen (ca.)" value="250.000 €" accent="text-indigo-600" />
@@ -248,7 +248,7 @@ export default function TerminPrepModal({ kunde, termin, onClose }) {
               <LeitfadenStep
                 nr={3}
                 title="Signale spiegeln"
-                text={'„Drei Dinge passen bei Ihnen gerade zusammen": KfW-Kredit läuft aus, BSV wird zuteilungsreif, Newsletter-Interesse. Dem Kunden die KI-Erkennung als Mehrwert erlebbar machen.'}
+                text={'„Drei Dinge passen bei Ihnen gerade zusammen": Commerzbank-Studienkredit läuft aus, BSV wird zuteilungsreif, Newsletter-Interesse. Dem Kunden die KI-Erkennung als Mehrwert erlebbar machen.'}
               />
               <LeitfadenStep
                 nr={4}

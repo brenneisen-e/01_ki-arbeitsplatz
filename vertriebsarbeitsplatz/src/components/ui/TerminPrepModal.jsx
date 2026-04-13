@@ -178,9 +178,14 @@ export default function TerminPrepModal({ kunde, termin, onClose }) {
               fremd.forEach(p => {
                 const inst = p.institut || '–';
                 const entry = byInst.get(inst) || { institut: inst, vol: 0, kategorien: new Set(), consent: false };
-                entry.vol += Number(p.volumen) || 0;
-                entry.kategorien.add(cat(p));
-                if (p.consent) entry.consent = true;
+                // Ohne Consent kennen wir die konkreten Werte nicht — wir
+                // merken das Institut zwar, führen aber kein Volumen oder
+                // Kategorie-Detail.
+                if (p.consent) {
+                  entry.vol += Number(p.volumen) || 0;
+                  entry.kategorien.add(cat(p));
+                  entry.consent = true;
+                }
                 byInst.set(inst, entry);
               });
               const list = Array.from(byInst.values()).sort((a, b) => b.vol - a.vol);
@@ -191,10 +196,14 @@ export default function TerminPrepModal({ kunde, termin, onClose }) {
                       <LogoImg name={row.institut} size={22} />
                       <div className="flex-1 min-w-0">
                         <div className="text-sm font-medium text-slate-700 truncate">{row.institut}</div>
-                        <div className="text-[11px] text-slate-500 truncate">{Array.from(row.kategorien).join(' · ')}</div>
+                        <div className="text-[11px] text-slate-500 truncate">
+                          {row.consent ? (Array.from(row.kategorien).join(' · ') || '—') : 'Details gesperrt'}
+                        </div>
                       </div>
                       <div className="text-right shrink-0">
-                        <div className="text-sm font-mono font-semibold text-slate-700">{row.vol > 0 ? formatEur(row.vol) : '—'}</div>
+                        <div className="text-sm font-mono font-semibold text-slate-700">
+                          {row.consent ? (row.vol > 0 ? formatEur(row.vol) : '—') : '•••'}
+                        </div>
                         <div className={`text-[10px] font-medium ${row.consent ? 'text-emerald-600' : 'text-amber-600'}`}>
                           {row.consent ? 'Consent OK' : 'Consent fehlt'}
                         </div>

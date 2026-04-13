@@ -116,8 +116,7 @@ export const NEUGESCHAEFT_DATA = lazyByMode({
       { name: 'Markus Wagner', betrag: 2200 },
     ],
     vertraege: [
-      { id: 'BNG-2026-001', kundeId: 'KDB001', kunde: 'Klaus Fischer', sparte: 'kredit', produkt: 'Anschlussfinanzierung', versicherer: 'VB Mittelhessen', beitrag: 185000, beitragsart: 'ges', status: 'ausgezahlt', datum: '2026-01-20' },
-      { id: 'BNG-2026-002', kundeId: 'KDB001', kunde: 'Klaus Fischer', sparte: 'wertpapier', produkt: 'VR-MeinDepot ETF-Sparplan', versicherer: 'Union Investment', beitrag: 300, beitragsart: 'mtl', status: 'aktiv', datum: '2026-01-22' },
+      { id: 'BNG-2026-001', kundeId: 'KDB001', kunde: 'Klaus Fischer', sparte: 'wertpapier', produkt: 'VR-MeinDepot ETF-Sparplan', versicherer: 'Union Investment', beitrag: 300, beitragsart: 'mtl', status: 'aktiv', datum: '2026-01-22' },
       { id: 'BNG-2026-003', kundeId: 'KDB002', kunde: 'Sandra Müller', sparte: 'vorsorge', produkt: 'UniProfiRente', versicherer: 'Union Investment', beitrag: 175, beitragsart: 'mtl', status: 'aktiv', datum: '2026-02-05' },
       { id: 'BNG-2026-004', kundeId: 'KDB005', kunde: 'Peter Hoffmann', sparte: 'wertpapier', produkt: 'VermögenPlus Depot', versicherer: 'Union Investment', beitrag: 500, beitragsart: 'mtl', status: 'aktiv', datum: '2026-02-12' },
       { id: 'BNG-2026-005', kundeId: 'KDB005', kunde: 'Peter Hoffmann', sparte: 'versicherung', produkt: 'R+V Risikoleben', versicherer: 'R+V', beitrag: 240, beitragsart: 'J', status: 'vermittelt', datum: '2026-02-12' },
@@ -728,7 +727,7 @@ export const AUFGABEN_BY_MODE = {
     { text: tx('Storno-Warnung Klaus Wagner prüfen', 'Check cancellation warning Klaus Wagner'), faellig: tx('Fr', 'Fri'), kundeId: 'KD00003', erledigt: false },
   ],
   banking: [
-    { text: tx('Anschlussfinanzierung Fischer vorbereiten', 'Prepare refinancing for Fischer'), faellig: tx('Heute', 'Today'), kundeId: 'KDB001', erledigt: false },
+    { text: tx('Kreditgespräch Immobilienfinanzierung Fischer vorbereiten', 'Prepare property financing talk for Fischer'), faellig: tx('Heute', 'Today'), kundeId: 'KDB001', erledigt: false },
     { text: tx('FIDA-Consent Julia Becker einholen', 'Obtain FIDA consent Julia Becker'), faellig: tx('Morgen', 'Tomorrow'), kundeId: 'KDB004', erledigt: false },
     { text: tx('Wero-Aktivierung Stefan Braun nachfassen', 'Follow up Wero activation Stefan Braun'), faellig: tx('Mi', 'Wed'), kundeId: 'KDB009', erledigt: false },
     { text: tx('VR-FinanzPlan Sandra Müller erstellen', 'Create VR Financial Plan for Sandra Müller'), faellig: tx('Fr', 'Fri'), kundeId: 'KDB002', erledigt: false },

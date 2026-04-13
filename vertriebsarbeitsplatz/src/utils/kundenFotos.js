@@ -14,7 +14,6 @@ const KUNDEN_FOTOS = {
   'BK00004': './images/AdobeStock_965208311.jpeg',
   'BK00005': './images/AdobeStock_252262042.jpeg',
   'BK00006': './images/AdobeStock_612940075.jpeg',
-  'BK00007': './images/AdobeStock_1210213822.jpeg',
   'WM00001': './images/AdobeStock_612932760.jpeg',
   'WM00003': './images/AdobeStock_1091012713.jpeg',
   // Stiftungen: Logo statt Foto

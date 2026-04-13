@@ -456,7 +456,7 @@ export default function UebersichtTab() {
   const termine = (klausFischerTermin
     ? [klausFischerTermin, ...baseTermine]
     : baseTermine).slice(0, 5);
-  const [terminPrepKunde, setTerminPrepKunde] = useState(null);
+  const [terminPrep, setTerminPrep] = useState(null); // { kunde, termin }
   const allAufgaben = AUFGABEN_BY_MODE[modeId] || AUFGABEN_BY_MODE.versicherung;
   // Bei Zukunftsbank gibt es kein „VR-FinanzPlan" — diese VR-spezifische
   // Aufgabe filtern wir hier aus, damit das Branding stimmt.
@@ -1061,18 +1061,14 @@ export default function UebersichtTab() {
               const dayLabel = isToday ? t('heute') : tDate.toLocaleDateString(lang === 'en' ? 'en-GB' : 'de-DE', { weekday: 'short', day: '2-digit', month: '2-digit' });
               const isNeu = !!termin.istNeuZugestimmt;
               const handleClick = () => {
-                if (isNeu) {
-                  // Neuer Termin nach Nacht-Sim → KI-Vorbereitung als Popup öffnen.
-                  // Wir greifen auf die bereits oben dereferenzierten Banking-
-                  // Kunden zu (Suspense-sicher).
-                  const klaus = bankingKunden.find(k => k.id === termin.kundeId);
-                  if (klaus) {
-                    setTerminPrepKunde(klaus);
-                  } else {
-                    // Fallback: direkt zur Detailseite springen, falls Daten
-                    // noch nicht geladen sind.
-                    navigateTo('detail', { kundeId: termin.kundeId });
-                  }
+                // Alle Termine öffnen die KI-Gesprächsvorbereitung als Popup.
+                // Falls der Kunde nicht im aktuell geladenen Mode-Bestand zu
+                // finden ist (z. B. VV-Pipeline-Stubs, KDB-Stubs), springen
+                // wir direkt auf die Detailseite — dann kümmert sich die
+                // Suspense-Logik um das Laden.
+                const k = bankingKunden.find(k => k.id === termin.kundeId);
+                if (k) {
+                  setTerminPrep({ kunde: k, termin });
                 } else {
                   navigateTo('detail', { kundeId: termin.kundeId });
                 }
@@ -1106,8 +1102,12 @@ export default function UebersichtTab() {
             })}
           </div>
         </Card>
-        {terminPrepKunde && (
-          <TerminPrepModal kunde={terminPrepKunde} onClose={() => setTerminPrepKunde(null)} />
+        {terminPrep && (
+          <TerminPrepModal
+            kunde={terminPrep.kunde}
+            termin={terminPrep.termin}
+            onClose={() => setTerminPrep(null)}
+          />
         )}
 
         {/* Schnellzugriff Formulare */}

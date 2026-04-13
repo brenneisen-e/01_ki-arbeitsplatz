@@ -123,7 +123,7 @@ export default function TerminPrepModal({ kunde, onClose }) {
               <LeitfadenStep
                 nr={1}
                 title="Warm-up & Beziehung"
-                text="Kurzer Rückblick auf die letzte Chatbot-Interaktion zum Thema BSV-Zuteilung. Aktiv zuhören, familiäre Situation aufgreifen (Kinder, neue Lebensphase)."
+                text="Kurzer Rückblick auf die letzte Chatbot-Interaktion zur Auslandsreisekrankenversicherung (geplante Familienreise nach Thailand). Aktiv zuhören, familiäre Situation aufgreifen (Kinder, neue Lebensphase)."
               />
               <LeitfadenStep
                 nr={2}

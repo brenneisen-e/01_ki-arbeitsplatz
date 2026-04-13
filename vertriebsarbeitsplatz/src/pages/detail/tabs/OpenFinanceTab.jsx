@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Card from '../../../components/ui/Card';
 import DataTable from '../../../components/ui/DataTable';
 import LogoImg from '../../../components/ui/LogoImg';
@@ -219,6 +219,27 @@ function PerfBadge({ value }) {
 export default function OpenFinanceTab({ kunde }) {
   const { t, lang } = useTranslation();
   const { config, modeId } = useMode();
+
+  // Highlight-Event: wenn von einem anderen Tab (z. B. Stammdaten) ein
+  // Klick auf "Anlagevolumen" / "Kreditvolumen" passiert, lassen wir die
+  // jeweils relevanten Bedarfsfeld-Karten kurz aufblinken.
+  const [flashKey, setFlashKey] = useState(null);
+  const sparenRef = useRef(null);
+  const finanzierenRef = useRef(null);
+  useEffect(() => {
+    const onFlash = (e) => {
+      const key = e?.detail?.key;
+      if (!key) return;
+      setFlashKey(key);
+      const target = key === 'kredit' ? finanzierenRef.current : sparenRef.current;
+      if (target && typeof target.scrollIntoView === 'function') {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+      window.setTimeout(() => setFlashKey(null), 2200);
+    };
+    window.addEventListener('kia:highlight-finanzuebersicht', onFlash);
+    return () => window.removeEventListener('kia:highlight-finanzuebersicht', onFlash);
+  }, []);
   const fremd = kunde.fremdProdukte || [];
   const eigen = kunde.eigeneProdukte || [];
   // Externe Verknüpfungen should list each company only once even if the
@@ -303,6 +324,7 @@ export default function OpenFinanceTab({ kunde }) {
 
       {/* ═══ Bedarfsfeld: Sparen & Vorsorgen ═══ */}
       {(bf.geldmarkt?.length > 0 || bf.kapitalmarkt?.length > 0) && (
+        <div ref={sparenRef} className={flashKey === 'anlage' ? 'kia-flash-card' : ''}>
         <Card hover={false}>
           <BedarfsfeldHeader
             icon={PiggyBank}
@@ -402,6 +424,7 @@ export default function OpenFinanceTab({ kunde }) {
             </div>
           )}
         </Card>
+        </div>
       )}
 
       {/* ═══ Bedarfsfeld: Absichern (Fremd) ═══ */}
@@ -465,6 +488,7 @@ export default function OpenFinanceTab({ kunde }) {
 
       {/* ═══ Bedarfsfeld: Finanzieren ═══ */}
       {bf.finanzierungen?.length > 0 && (
+        <div ref={finanzierenRef} className={flashKey === 'kredit' ? 'kia-flash-card' : ''}>
         <Card hover={false}>
           <BedarfsfeldHeader
             icon={Home}
@@ -518,6 +542,7 @@ export default function OpenFinanceTab({ kunde }) {
             </div>
           )}
         </Card>
+        </div>
       )}
 
     </div>

@@ -124,7 +124,7 @@ export default function StammdatenDetailTab({ kunde }) {
   const { t, tn, lang } = useTranslation();
   const [risikoExpanded, setRisikoExpanded] = useState(false);
   const [fotoFailed, setFotoFailed] = useState(false);
-  const { config, modeId } = useMode();
+  const { config, modeId, setActiveTab } = useMode();
   const institut = config?.institut;
   const isVV = modeId === 'vermoegensverwaltung';
   const haushalt = berechneHaushaltsnetto(kunde);
@@ -215,9 +215,12 @@ export default function StammdatenDetailTab({ kunde }) {
       <div className={modeId === 'banking' ? 'grid grid-cols-3 gap-4' : 'grid grid-cols-2 gap-4'}>
         {/* Persoenliche Daten */}
         <Card hover={false}>
-          <div className="flex items-center gap-2 mb-4">
-            <User size={20} className="text-slate-500" strokeWidth={1.75} />
-            <h3 className="font-semibold text-slate-800">{t('persoenlicheDaten')}</h3>
+          <div
+            className="-mx-5 -mt-5 mb-4 px-5 py-3 rounded-t-xl border-b border-blue-200 flex items-center gap-2"
+            style={{ background: 'linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)' }}
+          >
+            <User size={20} className="text-blue-600" strokeWidth={1.75} />
+            <h3 className="font-semibold text-blue-900">{t('persoenlicheDaten')}</h3>
           </div>
           <div className="space-y-2 text-sm">
             <InfoRow label={t('name')} value={tn(kunde.name)} />
@@ -265,9 +268,12 @@ export default function StammdatenDetailTab({ kunde }) {
 
         {/* Finanzuebersicht */}
         <Card hover={false}>
-          <div className="flex items-center gap-2 mb-4">
-            <Wallet size={20} className="text-slate-500" strokeWidth={1.75} />
-            <h3 className="font-semibold text-slate-800">{t('finanzuebersicht')}</h3>
+          <div
+            className="-mx-5 -mt-5 mb-4 px-5 py-3 rounded-t-xl border-b border-emerald-200 flex items-center gap-2"
+            style={{ background: 'linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%)' }}
+          >
+            <Wallet size={20} className="text-emerald-600" strokeWidth={1.75} />
+            <h3 className="font-semibold text-emerald-900">{t('finanzuebersicht')}</h3>
           </div>
           <div className="space-y-2 text-sm">
             <InfoRow label={t('haushaltsnetto')} value={`${formatEur(haushalt)}/mtl.`} />
@@ -280,10 +286,40 @@ export default function StammdatenDetailTab({ kunde }) {
               // zwischen fremdProdukte und openFinance.finanzierungen.
               const anlageVol = berechneAnlagevolumen(kunde);
               const kreditVol = berechneKreditvolumen(kunde);
+              const jumpToFinanzuebersicht = (highlightKey) => {
+                setActiveTab('openfinance');
+                // Kleine Verzögerung, damit der Tab gemountet ist, bevor das
+                // Highlight-Event gefeuert wird.
+                setTimeout(() => {
+                  window.dispatchEvent(new CustomEvent('kia:highlight-finanzuebersicht', { detail: { key: highlightKey } }));
+                }, 80);
+              };
               return (
                 <>
-                  {anlageVol > 0 && <InfoRow label={t('anlagevolumen') !== 'anlagevolumen' ? t('anlagevolumen') : 'Anlagevolumen'} value={formatEur(anlageVol)} />}
-                  {kreditVol > 0 && <InfoRow label={t('kreditvolumen') !== 'kreditvolumen' ? t('kreditvolumen') : 'Kreditvolumen'} value={formatEur(kreditVol)} />}
+                  {anlageVol > 0 && (
+                    <button
+                      type="button"
+                      onClick={() => jumpToFinanzuebersicht('anlage')}
+                      className="w-full flex items-baseline gap-2 text-sm text-left rounded-md px-1 -mx-1 py-0.5 hover:bg-slate-50 transition-colors group cursor-pointer"
+                      title="Zur Finanzübersicht – relevante Verträge anzeigen"
+                    >
+                      <span className="text-slate-400 shrink-0">{t('anlagevolumen') !== 'anlagevolumen' ? t('anlagevolumen') : 'Anlagevolumen'}:</span>
+                      <span className="text-slate-700 font-medium group-hover:underline">{formatEur(anlageVol)}</span>
+                      <ChevronRight size={12} className="text-slate-300 group-hover:text-slate-500 ml-auto" />
+                    </button>
+                  )}
+                  {kreditVol > 0 && (
+                    <button
+                      type="button"
+                      onClick={() => jumpToFinanzuebersicht('kredit')}
+                      className="w-full flex items-baseline gap-2 text-sm text-left rounded-md px-1 -mx-1 py-0.5 hover:bg-slate-50 transition-colors group cursor-pointer"
+                      title="Zur Finanzübersicht – relevante Finanzierungen anzeigen"
+                    >
+                      <span className="text-slate-400 shrink-0">{t('kreditvolumen') !== 'kreditvolumen' ? t('kreditvolumen') : 'Kreditvolumen'}:</span>
+                      <span className="text-slate-700 font-medium group-hover:underline">{formatEur(kreditVol)}</span>
+                      <ChevronRight size={12} className="text-slate-300 group-hover:text-slate-500 ml-auto" />
+                    </button>
+                  )}
                 </>
               );
             })()}
@@ -931,10 +967,13 @@ function AktivitaetenCard({ kunde }) {
 
   return (
     <Card hover={false}>
-      <div className="flex items-center gap-2 mb-4">
-        <MessageSquare size={20} className="text-slate-500" strokeWidth={1.75} />
-        <h3 className="font-semibold text-slate-800">Aktivitäten</h3>
-        <span className="text-xs text-slate-400 ml-auto">
+      <div
+        className="-mx-5 -mt-5 mb-4 px-5 py-3 rounded-t-xl border-b border-orange-200 flex items-center gap-2"
+        style={{ background: 'linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%)' }}
+      >
+        <MessageSquare size={20} className="text-orange-600" strokeWidth={1.75} />
+        <h3 className="font-semibold text-orange-900">Aktivitäten</h3>
+        <span className="text-xs text-orange-800/70 ml-auto">
           {komms.length === 0 ? 'Keine' : `${komms.length} letzte`}
         </span>
       </div>

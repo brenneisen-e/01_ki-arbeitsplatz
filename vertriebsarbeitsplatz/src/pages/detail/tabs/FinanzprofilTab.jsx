@@ -533,8 +533,8 @@ export default function FinanzprofilTab({ kunde }) {
 
           {/* Category Rows */}
           <div className="space-y-2">
-            {filteredCategories.map((cat, i) => (
-              <CategoryRow key={cat.name} category={cat} defaultOpen={i === 0} />
+            {filteredCategories.map((cat) => (
+              <CategoryRow key={cat.name} category={cat} defaultOpen />
             ))}
           </div>
         </Card>

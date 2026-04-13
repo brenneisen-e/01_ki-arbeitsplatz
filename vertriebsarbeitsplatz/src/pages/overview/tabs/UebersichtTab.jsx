@@ -1080,8 +1080,8 @@ export default function UebersichtTab() {
               return (
                 <div
                   key={i}
-                  className={`flex items-center gap-3 py-2.5 border-b border-slate-100 last:border-0 cursor-pointer -mx-2 px-2 rounded-lg ${
-                    isNeu ? 'bg-emerald-50/70 border border-emerald-200 hover:bg-emerald-50' : 'row-hover'
+                  className={`row-hover flex items-center gap-3 py-2.5 border-b border-slate-100 last:border-0 cursor-pointer -mx-2 px-2 rounded-lg ${
+                    isNeu ? 'bg-emerald-50/70 border border-emerald-200 hover:bg-emerald-50' : ''
                   }`}
                   onClick={handleClick}
                 >

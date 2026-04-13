@@ -79,6 +79,7 @@ export default function OverviewPage() {
               modeId === 'banking' ? (
                 <KundenKarteCompact
                   kunden={KUNDEN_BY_MODE.banking || []}
+                  totalCount={kpiValues.kundenzahl?.wert}
                   onKundeClick={(kundeId) => navigateTo('detail', { kundeId, tab: 'stammdaten' })}
                   title="Kundenkarte"
                 />

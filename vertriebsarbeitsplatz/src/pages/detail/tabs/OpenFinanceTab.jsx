@@ -250,8 +250,8 @@ export default function OpenFinanceTab({ kunde }) {
           of the Finanzübersicht so the whole financial picture is in one place. */}
       {eigen.length > 0 && <VertraegeTab kunde={kunde} />}
 
-      {/* KI-Zusammenfassung – Gesamtüberblick Kunde */}
-      <KIZusammenfassungInlay kunde={kunde} />
+      {/* KI-Zusammenfassung – Fokus Finanzübersicht (Open Finance + Bestand) */}
+      <KIZusammenfassungInlay kunde={kunde} variant="finanzuebersicht" />
 
       {/* Externe Verknuepfungen + FIDA Consent Status kombiniert */}
       <Card hover={false}>
@@ -427,8 +427,8 @@ export default function OpenFinanceTab({ kunde }) {
                   {bf.versicherungenFremd.some(v => v.leistungen) && (
                     <th className="px-4 py-2.5 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">Leistungen</th>
                   )}
-                  <th className="px-4 py-2.5 text-right text-xs uppercase tracking-wider font-semibold text-slate-400">Prämie</th>
                   <th className="px-4 py-2.5 text-center text-xs uppercase tracking-wider font-semibold text-slate-400">Bewertung</th>
+                  <th className="px-4 py-2.5 text-right text-xs uppercase tracking-wider font-semibold text-slate-400">Prämie</th>
                 </tr>
               </thead>
               <tbody>
@@ -451,10 +451,10 @@ export default function OpenFinanceTab({ kunde }) {
                         ) : '–'}
                       </td>
                     )}
-                    <td className="px-4 py-2.5 text-right font-mono">{v.praemie ? `${formatEur(v.praemie)}/J.` : '–'}</td>
                     <td className="px-4 py-2.5 text-center">
                       <InsuranceScore score={scoreVersicherung(kunde.id, v)} />
                     </td>
+                    <td className="px-4 py-2.5 text-right font-mono">{v.praemie ? `${formatEur(v.praemie)}/J.` : '–'}</td>
                   </tr>
                 ))}
               </tbody>

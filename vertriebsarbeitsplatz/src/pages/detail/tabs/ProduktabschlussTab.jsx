@@ -7,6 +7,31 @@ import { formatDatum } from '../../../utils/formatters';
 import { useMode } from '../../../hooks/useMode';
 import useTranslation from '../../../i18n/useTranslation';
 
+// Für Demo-Zwecke verschieben wir Anträge mit `dynamicDaysAgo` auf
+// (heute − X Tage), damit der "abgebrochene Online-Antrag" immer realistisch
+// relativ zum heutigen Datum ist. Die Uhrzeit der einzelnen Schritte bleibt
+// erhalten, die Datumsreferenz wird proportional mitverschoben.
+function applyDynamicDates(antrag) {
+  if (!antrag?.dynamicDaysAgo || !antrag?.datum) return antrag;
+  const original = new Date(antrag.datum);
+  if (Number.isNaN(original.getTime())) return antrag;
+  const target = new Date();
+  target.setHours(0, 0, 0, 0);
+  target.setDate(target.getDate() - antrag.dynamicDaysAgo);
+  const deltaMs = target.getTime() - new Date(original.getFullYear(), original.getMonth(), original.getDate()).getTime();
+  const shift = (iso) => {
+    if (!iso) return iso;
+    const d = new Date(iso);
+    if (Number.isNaN(d.getTime())) return iso;
+    return new Date(d.getTime() + deltaMs).toISOString();
+  };
+  return {
+    ...antrag,
+    datum: target.toISOString().slice(0, 10),
+    schritte: (antrag.schritte || []).map(s => s.datum ? { ...s, datum: shift(s.datum) } : s),
+  };
+}
+
 const SCHRITT_ICONS_BY_KEY = {
   'kreditrechner': CreditCard,
   'persoenlicheDaten': User,
@@ -34,7 +59,7 @@ export default function ProduktabschlussTab({ kunde }) {
     abgebrochen: { icon: XCircle, color: 'text-red-500', bg: 'bg-red-50', label: t('abgebrochen') },
     offen: { icon: Clock, color: 'text-slate-300', bg: 'bg-slate-50', label: t('statusOffen') },
   };
-  const abschluesse = kunde.produktabschluss || [];
+  const abschluesse = (kunde.produktabschluss || []).map(applyDynamicDates);
 
   if (abschluesse.length === 0) {
     return (

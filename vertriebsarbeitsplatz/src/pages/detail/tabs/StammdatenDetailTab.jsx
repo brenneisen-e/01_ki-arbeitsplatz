@@ -12,6 +12,7 @@ import { useState } from 'react';
 import { useMode } from '../../../hooks/useMode';
 import useTranslation from '../../../i18n/useTranslation';
 import { useDayAdvanced, buildKlausFischerAppointmentActivity, formatAppointmentDate, formatAppointmentTime, getSimulatedAppointment } from '../../../utils/demoClock';
+import { interpolateDynamicDates } from '../../../utils/dynamicDates';
 
 // ─── Translation helpers for data values ───
 const FAMILIENSTAND_EN = { verheiratet: 'Married', ledig: 'Single', geschieden: 'Divorced', verwitwet: 'Widowed' };
@@ -258,6 +259,59 @@ export default function StammdatenDetailTab({ kunde }) {
             <InfoRow label={t('absicherungsquote')} value={formatPct(absQuote > 0 ? absQuote : (kunde.aum ? 72 + ((kunde.alter || 50) % 20) : 0))} />
             <InfoRow label={t('sparquote')} value={formatPct(sparQuote > 0 ? sparQuote : (kunde.nettoeinkommen ? Math.min(45, Math.round(kunde.nettoeinkommen / 200)) : 18))} />
             <InfoRow label={t('freiVerfuegbar')} value={`${formatEur(frei > 0 ? frei : (kunde.nettoeinkommen ? Math.round(kunde.nettoeinkommen * 0.3) : 2500))}/mtl.`} />
+            {(() => {
+              // Gesamt-Anlagevolumen = eigene Spar/Depot-Produkte + Open-Finance Geld- und Kapitalmarkt
+              const eigen = kunde.eigeneProdukte || [];
+              const of = kunde.openFinance || {};
+              const kapital = (of.kapitalmarkt || []).flatMap(k => k.positionen || [k]);
+              const geld = of.geldmarkt || [];
+              const anlageTypen = new Set(['depot', 'depot_privat', 'depot_firma', 'depot2', 'fonds', 'sparkonto', 'tagesgeld', 'festgeld', 'bausparvertrag', 'bausparer', 'lv', 'lebensversicherung', 'riester', 'ruerup', 'bav']);
+              const anlageVol = [
+                ...eigen.filter(p => anlageTypen.has(p.typ)).map(p => p.volumen || 0),
+                ...kapital.map(k => k.volumen || 0),
+                ...geld.map(g => g.volumen || 0),
+              ].reduce((s, v) => s + v, 0);
+              const kreditVol = (of.finanzierungen || []).reduce((s, f) => s + (f.restschuld || 0), 0)
+                + (kunde.fremdProdukte || []).filter(p => ['kredit', 'privatkredit', 'konsumkredit', 'baufinanzierung', 'kffw'].includes(p.typ)).reduce((s, p) => s + (p.volumen || 0), 0);
+              return (
+                <>
+                  {anlageVol > 0 && <InfoRow label={t('anlagevolumen') !== 'anlagevolumen' ? t('anlagevolumen') : 'Anlagevolumen'} value={formatEur(anlageVol)} />}
+                  {kreditVol > 0 && <InfoRow label={t('kreditvolumen') !== 'kreditvolumen' ? t('kreditvolumen') : 'Kreditvolumen'} value={formatEur(kreditVol)} />}
+                </>
+              );
+            })()}
+            {(() => {
+              // Absicherungsscore: Mittelwert aus eigenen + Open-Finance-Versicherungen.
+              // Demo-Berechnung: Anzahl vorhandener Sparten (von 8 relevanten) × 12,5
+              // ergibt 0–100, plus kleiner Bonus je Open-Finance-Datensatz.
+              const eigen = kunde.eigeneProdukte || [];
+              const ofVers = kunde.openFinance?.versicherungenFremd || [];
+              const alle = [...eigen, ...ofVers];
+              const sparten = ['kfz', 'haftpflicht', 'hausrat', 'rlv', 'bu', 'unfall', 'rechtsschutz', 'wohngebaeude'];
+              const abgedeckt = sparten.filter(s => alle.some(p => {
+                const t = (p.typ || p.produkt || p.produktart || '').toLowerCase();
+                if (s === 'haftpflicht') return /haftpflicht/.test(t);
+                if (s === 'rlv') return /rlv|risikoleben/.test(t);
+                if (s === 'bu') return /\bbu\b|berufsunf/.test(t);
+                return t.includes(s);
+              })).length;
+              const score = Math.min(100, Math.round((abgedeckt / sparten.length) * 100));
+              const color = score >= 75 ? 'text-emerald-600' : score >= 50 ? 'text-amber-600' : 'text-red-600';
+              const label = score >= 75 ? 'gut' : score >= 50 ? 'mittel' : 'ausbaufähig';
+              return (
+                <div className="flex items-baseline gap-2 text-sm" title="Basiert auf Open-Finance-Daten: Anzahl abgedeckter Versicherungssparten">
+                  <span className="text-slate-400 shrink-0">Absicherungsscore:</span>
+                  <span className={`font-medium ${color}`}>{score}/100</span>
+                  <span className="text-xs text-slate-400">({label}, {abgedeckt}/{sparten.length} Sparten)</span>
+                </div>
+              );
+            })()}
+            {(() => {
+              const seit = kunde.eigeneProdukte?.[0]?.seit;
+              if (!seit) return null;
+              const jahre = new Date().getFullYear() - parseInt(seit.slice(0, 4), 10);
+              return <InfoRow label={t('kundeSeit')} value={`${seit} (${jahre} Jahre)`} />;
+            })()}
             <div className="pt-2 border-t border-slate-100 mt-2">
               <div className="flex items-center gap-2 cursor-pointer" onClick={() => setRisikoExpanded(!risikoExpanded)}>
                 <span className="text-slate-400 shrink-0">{t('risikoscore')}</span>
@@ -278,10 +332,19 @@ export default function StammdatenDetailTab({ kunde }) {
                 </div>
               )}
               {kunde.risikoSignale?.length > 0 && (
-                <RisikoSignale signale={kunde.risikoSignale} />
+                <RisikoSignale signale={kunde.risikoSignale} institut={institut} />
               )}
             </div>
-            <InfoRow label="NPS" value={`${kunde.nps}/10`} />
+            {(() => {
+              // Deterministisches NPS-Erhebungsdatum aus der Kunden-ID ableiten,
+              // damit der Stand nicht bei jedem Render springt.
+              const seed = (kunde.id || kunde.name || '').split('').reduce((s, c) => s + c.charCodeAt(0), 0);
+              const daysAgo = 14 + (seed % 90); // vor 2 Wochen bis ca. 3,5 Monaten
+              const d = new Date();
+              d.setDate(d.getDate() - daysAgo);
+              const datum = d.toLocaleDateString(getLang() === 'en' ? 'en-GB' : 'de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+              return <InfoRow label="NPS" value={`${kunde.nps}/10 (erhoben ${datum})`} />;
+            })()}
             <InfoRow label="CLV" value={formatEur((() => {
               const praemien = (kunde.eigeneProdukte?.reduce((s, p) => s + (p.praemie || 0), 0) || 0) * 10;
               if (praemien > 0) return praemien;
@@ -594,8 +657,9 @@ function InfoRow({ label, value }) {
 // Optisch wie der „Haustier erkannt"-Hinweis: blauer/dezenter Info-Stil,
 // nicht alarmrot. Die Versicherungslücke wird in einem separaten kleinen
 // Block hervorgehoben.
-function RisikoSignale({ signale }) {
+function RisikoSignale({ signale, institut }) {
   const [expanded, setExpanded] = useState(null);
+  const ctx = { institut };
   return (
     <div className="mt-2.5 space-y-2">
       {signale.map((s, i) => (
@@ -603,7 +667,7 @@ function RisikoSignale({ signale }) {
           <div className="flex items-center gap-2 flex-wrap">
             <span className="flex items-center gap-1.5 text-blue-600 shrink-0 text-sm">
               <ShieldAlert size={14} />
-              {s.titel}
+              {interpolateDynamicDates(s.titel, ctx)}
             </span>
             <span className="text-sm text-slate-500 italic">Aus Kontoumsätzen erkannt</span>
             <button
@@ -616,7 +680,7 @@ function RisikoSignale({ signale }) {
           </div>
           {expanded === i && (
             <div className="mt-2 bg-blue-50 border border-blue-200 rounded-lg p-3 space-y-2 animate-fade-in">
-              <div className="text-sm text-slate-700 leading-snug">{s.beschreibung}</div>
+              <div className="text-sm text-slate-700 leading-snug">{interpolateDynamicDates(s.beschreibung, ctx)}</div>
 
               {s.transaktionen?.length > 0 && (
                 <div className="pt-2 border-t border-blue-200">
@@ -637,7 +701,7 @@ function RisikoSignale({ signale }) {
                   <AlertTriangle size={14} className="text-amber-600 shrink-0 mt-0.5" />
                   <div>
                     <div className="text-xs font-bold uppercase tracking-wider text-amber-700 mb-0.5">Versicherungslücke</div>
-                    <div className="text-sm text-slate-700 leading-snug">{s.konsequenz}</div>
+                    <div className="text-sm text-slate-700 leading-snug">{interpolateDynamicDates(s.konsequenz, ctx)}</div>
                   </div>
                 </div>
               )}
@@ -645,7 +709,7 @@ function RisikoSignale({ signale }) {
               {s.empfehlung && (
                 <div className="flex items-start gap-1.5 text-sm pt-1">
                   <Sparkles size={13} className="text-violet-600 mt-0.5 shrink-0" />
-                  <span className="text-slate-700"><strong className="text-violet-700">Empfehlung:</strong> {s.empfehlung}</span>
+                  <span className="text-slate-700"><strong className="text-violet-700">Empfehlung:</strong> {interpolateDynamicDates(s.empfehlung, ctx)}</span>
                 </div>
               )}
             </div>
@@ -657,8 +721,13 @@ function RisikoSignale({ signale }) {
 }
 
 // ─── KI-Zusammenfassung als Inlay-Container ───
-export function KIZusammenfassungInlay({ kunde, embedded = false }) {
-  const summary = generateKISummary(kunde);
+// `variant` steuert, welcher Blickwinkel zusammengefasst wird.
+//   - 'stammdaten' (default): persönlicher Überblick / CRM-Sicht
+//   - 'finanzuebersicht': Fokus auf Bilanz, Liquidität, Open-Finance-Sicht
+export function KIZusammenfassungInlay({ kunde, embedded = false, variant = 'stammdaten' }) {
+  const summary = variant === 'finanzuebersicht'
+    ? generateFinanzKISummary(kunde)
+    : generateKISummary(kunde);
   const wrapperClass = embedded
     ? 'relative rounded-xl border overflow-hidden'
     : 'relative rounded-2xl border overflow-hidden';
@@ -702,6 +771,47 @@ export function KIZusammenfassungInlay({ kunde, embedded = false }) {
       </div>
     </div>
   );
+}
+
+// Finanz-fokussierte KI-Zusammenfassung: nutzt Open-Finance-/Bestands-Daten
+// statt des CRM-Blicks der Stammdaten-Variante.
+function generateFinanzKISummary(kunde) {
+  const name = (kunde.name || 'Der Kunde').split(' ')[0];
+  const fremd = kunde.fremdProdukte || [];
+  const eigen = kunde.eigeneProdukte || [];
+  const of = kunde.openFinance || {};
+  const kapitalmarkt = of.kapitalmarkt || [];
+  const geldmarkt = of.geldmarkt || [];
+  const finanzierungen = of.finanzierungen || [];
+
+  const anlageVol = [
+    ...kapitalmarkt.flatMap(k => k.positionen || [k]).map(k => k.volumen || 0),
+    ...geldmarkt.map(g => g.volumen || 0),
+    ...eigen.filter(p => ['depot', 'fonds', 'sparkonto', 'tagesgeld', 'festgeld'].includes(p.typ)).map(p => p.volumen || 0),
+  ].reduce((s, v) => s + v, 0);
+  const kreditVol = finanzierungen.reduce((s, f) => s + (f.restschuld || 0), 0);
+  const fremdInstitute = Array.from(new Set(fremd.map(f => f.institut).filter(Boolean)));
+  const versicherungenFremdCount = (of.versicherungenFremd || []).length || fremd.filter(p => /vers/i.test(p.typ)).length;
+  const haushalt = berechneHaushaltsnetto(kunde);
+  const frei = berechneFrei(kunde);
+
+  let text = `Finanzielle Lage von ${name}: `;
+  if (haushalt > 0) text += `Haushaltsnetto ${formatEur(haushalt)}/mtl., davon ${frei > 0 ? `${formatEur(frei)} frei verfügbar` : 'aktuell nichts frei verfügbar'}. `;
+  if (anlageVol > 0) text += `Gesamt-Anlagevolumen ca. ${formatEur(anlageVol)} (eigene Bestände und Open-Finance-Depots kombiniert). `;
+  if (kreditVol > 0) text += `Offene Finanzierungen ${formatEur(kreditVol)}. `;
+  if (fremdInstitute.length > 0) text += `Verbindungen zu ${fremdInstitute.length} Fremdinstituten (${fremdInstitute.slice(0, 3).join(', ')}${fremdInstitute.length > 3 ? ', …' : ''}). `;
+  if (versicherungenFremdCount > 0) text += `${versicherungenFremdCount} Fremdversicherungen sichtbar — daraus leitet sich der Absicherungsscore ab. `;
+
+  let recommendation = null;
+  if (kreditVol > 0 && frei > 0 && anlageVol > 0) {
+    recommendation = 'Finanzierung, Liquidität und Geldanlage in einem Jahresgespräch gemeinsam betrachten — Konsolidierungspotenzial sichtbar.';
+  } else if (fremdInstitute.length >= 2) {
+    recommendation = 'Open-Finance-Daten für konkretes Konsolidierungsangebot nutzen — Cross-Sell-Potenzial hoch.';
+  } else {
+    recommendation = 'Open-Finance-Bestand nutzen, um Absicherungsscore und Cross-Sell-Impulse zu priorisieren.';
+  }
+
+  return { text: text.trim(), recommendation };
 }
 
 function generateKISummary(kunde) {

@@ -165,7 +165,7 @@ export default function StammdatenDetailTab({ kunde }) {
           )}
 
           {/* Stammdaten-Block */}
-          <div className="flex-1 min-w-0">
+          <div className="shrink-0 min-w-0">
             <h2 className="text-xl font-bold text-slate-800">{tn(kunde.name)}</h2>
             <div className="flex items-center gap-4 mt-1.5 text-sm text-slate-500 flex-wrap">
               <span className="flex items-center gap-1"><Briefcase size={14} /> {translateBeruf(kunde.beruf, lang)}</span>
@@ -189,7 +189,7 @@ export default function StammdatenDetailTab({ kunde }) {
 
           {/* KI-Zusammenfassung rechts neben den Stammdaten (Banking) */}
           {modeId === 'banking' && (
-            <div className="flex-[2] min-w-0">
+            <div className="flex-1 min-w-0">
               <KIZusammenfassungInlay kunde={kunde} embedded />
             </div>
           )}

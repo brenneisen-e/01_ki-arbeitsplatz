@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import {
   X, Sparkles, Calendar, Clock, MapPin, Target, User, CheckSquare,
-  ListChecks, MessageSquare, FileText, Loader2, Phone, Mail,
+  ListChecks, MessageSquare, FileText, Loader2, Phone, Mail, HelpCircle, ArrowRight,
 } from 'lucide-react';
 import { formatAppointmentDate, formatAppointmentTime, getSimulatedAppointment } from '../../utils/demoClock';
+import { useMode } from '../../hooks/useMode';
 
 /**
  * TerminPrepModal
@@ -15,6 +16,7 @@ import { formatAppointmentDate, formatAppointmentTime, getSimulatedAppointment }
 export default function TerminPrepModal({ kunde, onClose }) {
   const [phase, setPhase] = useState('loading');
   const appointment = getSimulatedAppointment();
+  const { navigateTo } = useMode();
 
   // KI-Generierung simulieren
   useEffect(() => {
@@ -150,6 +152,26 @@ export default function TerminPrepModal({ kunde, onClose }) {
               />
             </div>
 
+            {/* Mögliche Fragen des Kunden */}
+            <SectionTitle icon={HelpCircle} label="Mögliche Fragen des Kunden" />
+            <ul className="space-y-1.5">
+              {[
+                { q: 'Wie viel Eigenkapital brauchen wir mindestens für 350 k Kaufpreis?', a: 'Faustregel: 20 % Kaufpreis + Nebenkosten (~10 %). Mit BSV (30 k) + VR-Sparkonto (15 k) decken Sie etwa 13 % ab — gemeinsam mit der KfW-Förderung ist das machbar.' },
+                { q: 'Was passiert mit dem Bausparvertrag bei der Zuteilung?', a: 'Sie haben drei Optionen: Auszahlung als Eigenkapital, Sondertilgung einer bestehenden Finanzierung, oder Fortsetzung als Guthaben.' },
+                { q: 'Welche Zinsbindung ist gerade sinnvoll?', a: 'Bei aktuellem Zinsniveau und Ihrer Lebenssituation (junge Familie) tendieren wir zu 15 oder 20 Jahren — Planungssicherheit hat Vorrang vor minimaler Zinsoptimierung.' },
+                { q: 'Brauchen wir wirklich eine Risikolebensversicherung?', a: 'Ja, die Bank verlangt sie für die Baufinanzierung. Im Bündel mit Ihrer KFZ und Haftpflicht oft günstiger als separat.' },
+                { q: 'Wie schnell könnte das gehen?', a: 'Bei vollständigen Unterlagen ca. 4–6 Wochen bis zum Darlehensvertrag.' },
+              ].map((item, i) => (
+                <li key={i} className="rounded-lg border border-slate-200 bg-white px-3 py-2">
+                  <div className="text-sm font-medium text-slate-700 flex items-start gap-2">
+                    <HelpCircle size={14} className="text-violet-500 mt-0.5 shrink-0" />
+                    <span>{item.q}</span>
+                  </div>
+                  <div className="text-xs text-slate-500 mt-1 pl-6">→ {item.a}</div>
+                </li>
+              ))}
+            </ul>
+
             {/* To-Dos vor dem Termin */}
             <SectionTitle icon={CheckSquare} label="To-Dos VOR dem Termin" />
             <TodoList
@@ -197,6 +219,17 @@ export default function TerminPrepModal({ kunde, onClose }) {
           >
             Schließen
           </button>
+          {kunde?.id && (
+            <button
+              onClick={() => {
+                onClose?.();
+                navigateTo?.('detail', { kundeId: kunde.id, tab: 'stammdaten' });
+              }}
+              className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold text-slate-700 bg-white border border-slate-300 hover:bg-slate-100 transition-colors"
+            >
+              <ArrowRight size={14} /> Kunde öffnen
+            </button>
+          )}
           <button
             className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold text-white shadow-sm"
             style={{ background: 'linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%)' }}

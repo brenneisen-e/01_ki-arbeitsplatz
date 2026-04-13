@@ -4,7 +4,7 @@ import TerminPrepModal from '../../../components/ui/TerminPrepModal';
 import { getLang } from '../../../utils/langHelper';
 import DataTable from '../../../components/ui/DataTable';
 import { StatusBadge, SparteBadge } from '../../../components/ui/Badge';
-import { formatEur, formatPct, berechneHaushaltsnetto, berechneAbsicherungsquote, berechneSparquote, berechneFrei, potentialSterne } from '../../../utils/formatters';
+import { formatEur, formatPct, berechneHaushaltsnetto, berechneAbsicherungsquote, berechneSparquote, berechneFrei, potentialSterne, berechneAnlagevolumen, berechneKreditvolumen } from '../../../utils/formatters';
 import { User, Wallet, Linkedin, Star, ChevronDown, ChevronRight, MapPin, Briefcase, Heart, Users, CheckCircle, Building2, PawPrint, Info, Car, Fuel, Sparkles, MessageSquare, Phone, Mail, Calendar, FileText, AlertTriangle, ShieldAlert } from 'lucide-react';
 import { getLogoUrl } from '../../../utils/logos';
 import { getKundeFoto } from '../../../utils/kundenFotos';
@@ -275,19 +275,11 @@ export default function StammdatenDetailTab({ kunde }) {
             <InfoRow label={t('sparquote')} value={formatPct(sparQuote > 0 ? sparQuote : (kunde.nettoeinkommen ? Math.min(45, Math.round(kunde.nettoeinkommen / 200)) : 18))} />
             <InfoRow label={t('freiVerfuegbar')} value={`${formatEur(frei > 0 ? frei : (kunde.nettoeinkommen ? Math.round(kunde.nettoeinkommen * 0.3) : 2500))}/mtl.`} />
             {(() => {
-              // Gesamt-Anlagevolumen = eigene Spar/Depot-Produkte + Open-Finance Geld- und Kapitalmarkt
-              const eigen = kunde.eigeneProdukte || [];
-              const of = kunde.openFinance || {};
-              const kapital = (of.kapitalmarkt || []).flatMap(k => k.positionen || [k]);
-              const geld = of.geldmarkt || [];
-              const anlageTypen = new Set(['depot', 'depot_privat', 'depot_firma', 'depot2', 'fonds', 'sparkonto', 'tagesgeld', 'festgeld', 'bausparvertrag', 'bausparer', 'lv', 'lebensversicherung', 'riester', 'ruerup', 'bav']);
-              const anlageVol = [
-                ...eigen.filter(p => anlageTypen.has(p.typ)).map(p => p.volumen || 0),
-                ...kapital.map(k => k.volumen || 0),
-                ...geld.map(g => g.volumen || 0),
-              ].reduce((s, v) => s + v, 0);
-              const kreditVol = (of.finanzierungen || []).reduce((s, f) => s + (f.restschuld || 0), 0)
-                + (kunde.fremdProdukte || []).filter(p => ['kredit', 'privatkredit', 'konsumkredit', 'baufinanzierung', 'kffw'].includes(p.typ)).reduce((s, p) => s + (p.volumen || 0), 0);
+              // Werte identisch zur Finanzübersicht-Tab (OpenFinanceTab):
+              // zentrale Helper, keine doppelten Quellen, keine Doppelzählung
+              // zwischen fremdProdukte und openFinance.finanzierungen.
+              const anlageVol = berechneAnlagevolumen(kunde);
+              const kreditVol = berechneKreditvolumen(kunde);
               return (
                 <>
                   {anlageVol > 0 && <InfoRow label={t('anlagevolumen') !== 'anlagevolumen' ? t('anlagevolumen') : 'Anlagevolumen'} value={formatEur(anlageVol)} />}
@@ -326,6 +318,34 @@ export default function StammdatenDetailTab({ kunde }) {
               if (!seit) return null;
               const jahre = new Date().getFullYear() - parseInt(seit.slice(0, 4), 10);
               return <InfoRow label={t('kundeSeit')} value={`${seit} (${jahre} Jahre)`} />;
+            })()}
+            {(() => {
+              // Bonitätsscore (Schufa-Score nach dem im März 2026 reformierten Modell).
+              // Wert deterministisch aus Risikoscore abgeleitet, damit keine
+              // Zufallswerte beim Re-Render entstehen.
+              const risiko = Number(kunde.risikoscore) || 30;
+              // niedriger Risikoscore → hoher Schufa-Score
+              const schufa = Math.max(2500, Math.min(9999, Math.round(9750 - risiko * 60)));
+              const klasse = schufa >= 9500 ? { label: 'sehr gut', color: 'text-emerald-600', dot: 'bg-emerald-500' }
+                          : schufa >= 8500 ? { label: 'gut', color: 'text-lime-600', dot: 'bg-lime-500' }
+                          : schufa >= 7000 ? { label: 'mittel', color: 'text-amber-600', dot: 'bg-amber-500' }
+                          : { label: 'erhöhtes Risiko', color: 'text-red-600', dot: 'bg-red-500' };
+              return (
+                <div className="flex items-baseline gap-2 text-sm" title="Schufa-Basisscore (neues Modell, gültig seit März 2026)">
+                  <span className="text-slate-400 shrink-0">Bonitätsscore:</span>
+                  <span className="flex items-center gap-1.5">
+                    <img
+                      src="https://img.logo.dev/schufa.de?token=pk_H7vb5Y2lTsW47U4Xq-w3HA&size=32&format=png"
+                      alt="Schufa"
+                      className="w-4 h-4 rounded-sm"
+                      onError={(e) => { e.target.style.display = 'none'; }}
+                    />
+                    <span className={`font-medium ${klasse.color}`}>{schufa.toLocaleString('de-DE')}/9.999</span>
+                    <span className={`inline-block w-1.5 h-1.5 rounded-full ${klasse.dot}`} />
+                    <span className="text-xs text-slate-400">({klasse.label}, neues Schufa-Modell 03/2026)</span>
+                  </span>
+                </div>
+              );
             })()}
             <div className="pt-2 border-t border-slate-100 mt-2">
               <div className="flex items-center gap-2 cursor-pointer" onClick={() => setRisikoExpanded(!risikoExpanded)}>
@@ -789,22 +809,16 @@ export function KIZusammenfassungInlay({ kunde, embedded = false, variant = 'sta
 }
 
 // Finanz-fokussierte KI-Zusammenfassung: nutzt Open-Finance-/Bestands-Daten
-// statt des CRM-Blicks der Stammdaten-Variante.
+// statt des CRM-Blicks der Stammdaten-Variante. Anlage- und Kreditvolumen
+// kommen aus den gleichen Helpern, die auch die Stammdaten-Finanzübersicht
+// nutzt — damit sind die Zahlen über alle Sichten hinweg konsistent.
 function generateFinanzKISummary(kunde) {
   const name = (kunde.name || 'Der Kunde').split(' ')[0];
   const fremd = kunde.fremdProdukte || [];
-  const eigen = kunde.eigeneProdukte || [];
   const of = kunde.openFinance || {};
-  const kapitalmarkt = of.kapitalmarkt || [];
-  const geldmarkt = of.geldmarkt || [];
-  const finanzierungen = of.finanzierungen || [];
 
-  const anlageVol = [
-    ...kapitalmarkt.flatMap(k => k.positionen || [k]).map(k => k.volumen || 0),
-    ...geldmarkt.map(g => g.volumen || 0),
-    ...eigen.filter(p => ['depot', 'fonds', 'sparkonto', 'tagesgeld', 'festgeld'].includes(p.typ)).map(p => p.volumen || 0),
-  ].reduce((s, v) => s + v, 0);
-  const kreditVol = finanzierungen.reduce((s, f) => s + (f.restschuld || 0), 0);
+  const anlageVol = berechneAnlagevolumen(kunde);
+  const kreditVol = berechneKreditvolumen(kunde);
   const fremdInstitute = Array.from(new Set(fremd.map(f => f.institut).filter(Boolean)));
   const versicherungenFremdCount = (of.versicherungenFremd || []).length || fremd.filter(p => /vers/i.test(p.typ)).length;
   const haushalt = berechneHaushaltsnetto(kunde);

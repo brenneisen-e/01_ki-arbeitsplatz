@@ -665,8 +665,11 @@ export default function UebersichtTab() {
                 return (
                   <div
                     key={kampagne.id}
-                    className="group relative rounded-xl overflow-hidden border border-slate-200 cursor-pointer transition-all hover:shadow-xl hover:-translate-y-0.5 bg-white flex flex-col"
+                    role="button"
+                    tabIndex={0}
+                    className="group relative rounded-xl overflow-hidden border border-slate-200 cursor-pointer transition-all hover:shadow-xl hover:-translate-y-0.5 bg-white flex flex-col pointer-events-auto"
                     onClick={() => setKampagneModal(kampagne)}
+                    onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setKampagneModal(kampagne); }}
                   >
                     {/* Photo-style hero (gradient + icon) */}
                     <div

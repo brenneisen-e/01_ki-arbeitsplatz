@@ -221,7 +221,9 @@
 .card-passthrough button,
 .card-passthrough a,
 .card-passthrough input,
-.card-passthrough [onclick] {
+.card-passthrough [onclick],
+.card-passthrough [role="button"],
+.card-passthrough .pointer-events-auto {
   pointer-events: auto;
 }
 

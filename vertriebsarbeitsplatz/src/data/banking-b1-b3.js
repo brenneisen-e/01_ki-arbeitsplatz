@@ -101,7 +101,7 @@ export const B1 = {
       ],
     },
     // 3. Versicherungscheck via FIDA (hoch)
-    { titel: 'R+V Versicherungscheck \u2013 KFZ + Haftpflicht', typ: 'cross_sell', quellen: ['finanztransaktion', 'wettbewerb'], prioritaet: 'hoch', volumen: 1285, volumenTyp: 'jaehrlich',
+    { titel: 'Versicherungscheck \u2013 KFZ + Haftpflicht', typ: 'cross_sell', quellen: ['finanztransaktion', 'wettbewerb'], prioritaet: 'hoch', volumen: 1285, volumenTyp: 'jaehrlich',
       beschreibung: 'HUK KFZ-Vollkasko 780\u20ac/J. \u2013 bei R+V nur 620\u20ac/J. Keine Haftpflicht trotz Familie!',
       kiDescription: 'KI-Analyse: \u00dcber Open Finance (FIDA) sehen wir, dass Herr Fischer bei der HUK eine KFZ-Vollkasko f\u00fcr 780 \u20ac/Jahr zahlt \u2013 bei R+V w\u00e4re der gleiche Schutz (VW Tiguan, SF-12, 500 \u20ac SB) f\u00fcr 620 \u20ac/Jahr m\u00f6glich, eine Ersparnis von 160 \u20ac/Jahr. Zus\u00e4tzlich hat er bei Allianz eine Privathaftpflicht f\u00fcr 85 \u20ac/Jahr \u2013 als VR-Kunde k\u00f6nnte er beides im R+V-B\u00fcndel f\u00fcr ca. 680 \u20ac/Jahr absichern (statt 865 \u20ac). Dringender: Im Hinblick auf den geplanten Immobilienkauf sollte parallel eine Risikolebensversicherung ab\u00bcgeschlossen werden \u2013 die Bank wird sie bei der Baufinanzierung ohnehin verlangen.',
       empfohleneAktion: 'tarifvergleich', produktEmpfehlung: 'R+V B\u00fcndel (KFZ + Haftpflicht)', status: 'identifiziert',

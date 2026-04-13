@@ -20,6 +20,47 @@ const ABSICHERUNGS_TYPEN = [
   { key: 'wohngebaeude' },
 ];
 
+// ─── Derive Absicherungsstatus directly from Open Finance / Bestand ────────
+// A customer's coverage must always reflect what the Finanzübersicht actually
+// shows. We therefore compute `vorhanden` / `fremd` from eigeneProdukte,
+// fremdProdukte and openFinance.versicherungenFremd instead of relying on a
+// hand-curated `absicherung` field (which can drift out of sync).
+const ABSICHERUNG_PATTERNS = {
+  bu:         /\bbu\b|berufsunf[aä]higkeit|disability/i,
+  kfz:        /\bkfz\b|auto|pkw|vollkasko|teilkasko|haftpflicht\s*auto|kfz[-_\s]*fremd/i,
+  hausrat:    /hausrat|inhaltsvers/i,
+  haftpflicht:/privathaftpflicht|^haftpflicht$|\bhaftpflicht\b(?!\s*auto)/i,
+  rlv:        /\brlv\b|risikoleben/i,
+  pflege:     /pflege/i,
+  unfall:     /unfall/i,
+  rechtsschutz:/rechtsschutz/i,
+  wohngebaeude:/wohngeb[aä]ude|geb[aä]udevers/i,
+};
+
+function productMatches(product, key) {
+  const pattern = ABSICHERUNG_PATTERNS[key];
+  if (!pattern) return false;
+  const text = [product.typ, product.produktart, product.produkt, product.sparte, product.details]
+    .filter(Boolean).join(' ');
+  return pattern.test(text);
+}
+
+function deriveAbsicherung(kunde) {
+  const eigen = kunde.eigeneProdukte || [];
+  const fremd = kunde.fremdProdukte || [];
+  const ofVers = kunde.openFinance?.versicherungenFremd || [];
+  const fremdPool = [...fremd, ...ofVers];
+  const result = { vorhanden: [], fremd: [], fehlend: [] };
+  Object.keys(ABSICHERUNG_PATTERNS).forEach(key => {
+    const inEigen = eigen.some(p => productMatches(p, key));
+    const inFremd = fremdPool.some(p => productMatches(p, key));
+    if (inEigen) result.vorhanden.push(key);
+    else if (inFremd) result.fremd.push(key);
+    else result.fehlend.push(key);
+  });
+  return result;
+}
+
 // Produkt-Kategorien nach denen die Leads/Potenziale geclustert werden.
 // Die Reihenfolge ist die Anzeige-Reihenfolge.
 const PRODUKT_KATEGORIEN = [
@@ -41,7 +82,15 @@ function getProduktKategorie(p) {
 
 export default function ImpulseTab({ kunde }) {
   const { t, tn } = useTranslation();
-  const absicherung = kunde.absicherung || { vorhanden: [], fehlend: [] };
+  // Prefer a derived coverage view so it is always consistent with the
+  // Finanzübersicht. The hand-curated `kunde.absicherung` is used only as a
+  // fallback if no product data is available at all.
+  const absicherung = useMemo(() => {
+    const derived = deriveAbsicherung(kunde);
+    const hasAnyData = (kunde.eigeneProdukte?.length || 0) + (kunde.fremdProdukte?.length || 0) + (kunde.openFinance?.versicherungenFremd?.length || 0) > 0;
+    if (hasAnyData) return derived;
+    return kunde.absicherung || { vorhanden: [], fremd: [], fehlend: [] };
+  }, [kunde]);
   const potentiale = kunde.potentiale || [];
   const luecken = absicherung.fehlend?.length || 0;
   const [expandedIndex, setExpandedIndex] = useState(null);
@@ -74,8 +123,8 @@ export default function ImpulseTab({ kunde }) {
         </div>
         <div className="flex flex-wrap gap-2">
           {ABSICHERUNGS_TYPEN.map(typ => {
-            const eigen = absicherung.vorhanden?.some(v => v.includes(typ.key));
-            const fremd = absicherung.fremd?.some(v => v.includes(typ.key));
+            const eigen = absicherung.vorhanden?.includes(typ.key);
+            const fremd = absicherung.fremd?.includes(typ.key);
             return (
               <div
                 key={typ.key}

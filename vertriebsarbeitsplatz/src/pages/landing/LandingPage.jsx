@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { clsx } from 'clsx';
-import { Send, Briefcase, Shield, Landmark, Wallet, PieChart, Bot, Loader2, Settings, Upload, RotateCcw, User, ChevronDown, ChevronUp, ArrowLeft } from 'lucide-react';
+import { Send, Mic, Briefcase, Shield, Landmark, Wallet, PieChart, Bot, Loader2, Settings, Upload, RotateCcw, User, ChevronDown, ChevronUp, ArrowLeft } from 'lucide-react';
 import { useMode } from '../../hooks/useMode';
 import { MODE_CONFIGS, MODUS_LIST } from '../../data/modeConfig';
 import { getLogoUrl } from '../../utils/logos';
@@ -44,7 +44,9 @@ export default function LandingPage() {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [isThinking, setIsThinking] = useState(false);
   const [thinkingText, setThinkingText] = useState('');
+  const [isListening, setIsListening] = useState(false);
   const inputRef = useRef(null);
+  const listenTimeoutsRef = useRef([]);
 
   // Name prompt on first visit only (check localStorage)
   const [userName, setUserName] = useState(() => localStorage.getItem('kia_user_name') || '');
@@ -193,6 +195,54 @@ export default function LandingPage() {
       executeSuggestion({ action: 'overview' });
     }
   }
+
+  function handleMicClick() {
+    if (isListening) return;
+    // Clear any leftover timers
+    listenTimeoutsRef.current.forEach(clearTimeout);
+    listenTimeoutsRef.current = [];
+
+    setIsListening(true);
+    setShowSuggestions(false);
+    setChatInput('Zuhören...');
+
+    // Wait 1-3 seconds before "transcribing"
+    const initialDelay = 1000 + Math.random() * 2000;
+    const phrase = 'Gib mir meinen Tagesüberblick';
+    const words = phrase.split(' ');
+
+    const startTyping = setTimeout(() => {
+      setChatInput('');
+      let i = 0;
+      const typeNext = () => {
+        i++;
+        const partial = words.slice(0, i).join(' ');
+        setChatInput(partial);
+        if (i < words.length) {
+          const t = setTimeout(typeNext, 220);
+          listenTimeoutsRef.current.push(t);
+        } else {
+          // 0.5s after final word: switch to banking and open Übersicht
+          const finish = setTimeout(() => {
+            setIsListening(false);
+            const targetMode = 'banking';
+            setActiveModule(targetMode);
+            setSelectedVariant(null);
+            try { localStorage.setItem('kia_last_mode', JSON.stringify({ modeId: targetMode })); } catch {}
+            switchMode(targetMode);
+            navigateTo('overview');
+          }, 500);
+          listenTimeoutsRef.current.push(finish);
+        }
+      };
+      typeNext();
+    }, initialDelay);
+    listenTimeoutsRef.current.push(startTyping);
+  }
+
+  useEffect(() => () => {
+    listenTimeoutsRef.current.forEach(clearTimeout);
+  }, []);
 
   function handleKeyDown(e) {
     if (e.key === 'Enter') {
@@ -352,6 +402,18 @@ export default function LandingPage() {
               className="p-4 rounded-2xl bg-white/20 hover:bg-white/30 text-white transition-colors backdrop-blur-sm border border-white/20"
             >
               <Send size={18} strokeWidth={1.75} />
+            </button>
+            <button
+              onClick={handleMicClick}
+              aria-label="Spracheingabe"
+              className={clsx(
+                'p-4 rounded-2xl transition-colors backdrop-blur-sm border',
+                isListening
+                  ? 'bg-white border-white text-red-600 animate-pulse shadow-lg'
+                  : 'bg-white/20 hover:bg-white/30 text-white border-white/20'
+              )}
+            >
+              <Mic size={18} strokeWidth={1.75} />
             </button>
           </div>
         </div>

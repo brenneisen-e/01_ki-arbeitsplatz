@@ -41,9 +41,9 @@ export const MODE_CONFIGS = {
     detailTabs: [
       { id: 'stammdaten', label: 'Stammdaten', labelEn: 'Master Data' },
       { id: 'vertraege', label: 'Verträge', labelEn: 'Contracts' },
-      { id: 'openfinance', label: 'Open Finance' },
+      { id: 'openfinance', label: 'Finanzübersicht', labelEn: 'Financial Overview' },
       { id: 'impulse', label: 'Leads', labelEn: 'Leads' },
-      { id: 'finanzprofil', label: 'Finanzprofil', labelEn: 'Financial Profile' },
+      { id: 'finanzprofil', label: 'Haushaltsprofil', labelEn: 'Household Profile' },
       { id: 'kommunikation', label: 'Kommunikation', labelEn: 'Communication' },
     ],
     institutVarianten: [
@@ -96,9 +96,9 @@ export const MODE_CONFIGS = {
     detailTabs: [
       { id: 'stammdaten', label: 'Stammdaten', labelEn: 'Master Data' },
       { id: 'produkte', label: 'Produkte', labelEn: 'Products' },
-      { id: 'openfinance', label: 'Open Finance' },
+      { id: 'openfinance', label: 'Finanzübersicht', labelEn: 'Financial Overview' },
       { id: 'impulse', label: 'Leads', labelEn: 'Leads' },
-      { id: 'finanzprofil', label: 'Finanzprofil', labelEn: 'Financial Profile' },
+      { id: 'finanzprofil', label: 'Haushaltsprofil', labelEn: 'Household Profile' },
       { id: 'produktabschluss', label: 'Produktabschluss', labelEn: 'Product Closing' },
       { id: 'kommunikation', label: 'Kommunikation', labelEn: 'Communication' },
     ],

@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { Sun, Clock, Zap, CheckSquare, Calendar, Phone, AlertTriangle, CheckCircle, FileText, Heart, Car, Home, ShieldAlert, Cake, Euro, Download, Landmark, BarChart3, PiggyBank, Wallet, Sparkles, Star, Megaphone, ChevronDown, ChevronRight, Users, TrendingUp } from 'lucide-react';
+import { Sun, Clock, Zap, CheckSquare, Calendar, Phone, AlertTriangle, CheckCircle, FileText, Heart, Car, Home, ShieldAlert, Cake, Euro, Download, Landmark, BarChart3, PiggyBank, Wallet, Sparkles, Star, Megaphone, ChevronDown, ChevronRight, Users, TrendingUp, X, Mail, Target, ListChecks, Send, BarChart, PlayCircle, Copy } from 'lucide-react';
 
 const CAMPAIGN_ICONS = { Home, Users, TrendingUp, Heart, Sparkles };
 import Card from '../../../components/ui/Card';
@@ -378,6 +378,7 @@ export default function UebersichtTab() {
   const { t, tn, lang } = useTranslation();
   const [mandatFilter, setMandatFilter] = useState('alle');
   const [expandedKampagne, setExpandedKampagne] = useState('fruehlings-baufi');
+  const [kampagneModal, setKampagneModal] = useState(null);
   // Marketingkampagnen are derived from the active institut so the campaign
   // titles always reflect the current bank's brand (no Volksbank-only names
   // leaking into Zukunftsbank, Sparkasse, Deutsche Bank etc.).
@@ -665,7 +666,7 @@ export default function UebersichtTab() {
                   <div
                     key={kampagne.id}
                     className="group relative rounded-xl overflow-hidden border border-slate-200 cursor-pointer transition-all hover:shadow-xl hover:-translate-y-0.5 bg-white flex flex-col"
-                    onClick={() => setExpandedKampagne(isExpanded ? null : kampagne.id)}
+                    onClick={() => setKampagneModal(kampagne)}
                   >
                     {/* Photo-style hero (gradient + icon) */}
                     <div
@@ -930,7 +931,7 @@ export default function UebersichtTab() {
               return (
                 <div
                   key={i}
-                  className="group aufgabe-tile relative flex items-center gap-3 p-3 pl-4 rounded-xl bg-white border border-slate-200 hover:border-slate-300 hover:bg-slate-50 hover:shadow-md cursor-pointer transition-all overflow-hidden"
+                  className="row-hover group aufgabe-tile relative flex items-center gap-3 p-3 pl-4 rounded-xl bg-white border border-slate-200 cursor-pointer transition-all overflow-hidden"
                   onClick={() => a.kundeId && navigateTo('detail', { kundeId: a.kundeId })}
                 >
                   {/* Priority stripe */}
@@ -1125,6 +1126,158 @@ export default function UebersichtTab() {
           </div>
         </Card>
       </div>
+
+      {/* Marketingkampagne Detail Modal */}
+      {kampagneModal && (() => {
+        const k = kampagneModal;
+        const titel = lang === 'en' ? k.titelEn : k.titel;
+        const zielgruppe = lang === 'en' ? k.zielgruppeEn : k.zielgruppe;
+        const PhotoIcon = CAMPAIGN_ICONS[k.photoIcon] || Megaphone;
+        const istAktiv = k.status === 'aktiv';
+        const totalMatches = k.passendeKunden.length;
+        const avgMatch = Math.round(k.passendeKunden.reduce((s, p) => s + p.match, 0) / Math.max(totalMatches, 1));
+        const erwarteterUmsatz = totalMatches * 1850;
+        return (
+          <div
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4"
+            onClick={() => setKampagneModal(null)}
+          >
+            <div
+              className="bg-white rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Hero */}
+              <div
+                className="relative h-44 flex items-center gap-4 px-8 overflow-hidden"
+                style={{ background: k.photoGradient }}
+              >
+                <div className="absolute -top-10 -right-10 w-40 h-40 rounded-full opacity-30" style={{ background: k.photoAccent }} />
+                <div className="absolute -bottom-8 -left-8 w-32 h-32 rounded-full opacity-20" style={{ background: k.photoAccent }} />
+                <div className="relative z-10 w-20 h-20 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center shrink-0">
+                  <PhotoIcon size={40} className="text-white" strokeWidth={1.5} />
+                </div>
+                <div className="relative z-10 flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider ${istAktiv ? 'bg-emerald-500 text-white' : 'bg-amber-500 text-white'}`}>
+                      {istAktiv ? (lang === 'en' ? 'Active' : 'Aktiv') : (lang === 'en' ? 'Planned' : 'Geplant')}
+                    </span>
+                    <span className="text-[11px] font-mono text-white/80">{k.zeitraum}</span>
+                  </div>
+                  <h2 className="text-2xl font-bold text-white truncate">{titel}</h2>
+                  <p className="text-sm text-white/80 mt-1 truncate">{zielgruppe}</p>
+                </div>
+                <button
+                  onClick={() => setKampagneModal(null)}
+                  className="relative z-10 w-9 h-9 rounded-lg bg-white/20 hover:bg-white/30 flex items-center justify-center text-white transition-colors"
+                  aria-label="Schließen"
+                >
+                  <X size={18} strokeWidth={2} />
+                </button>
+              </div>
+
+              {/* Body */}
+              <div className="p-6 space-y-5">
+                {/* KPI Strip */}
+                <div className="grid grid-cols-4 gap-3">
+                  <div className="rounded-xl border border-slate-200 p-3 text-center">
+                    <div className="text-xs text-slate-500 mb-1">{lang === 'en' ? 'Matches' : 'Treffer'}</div>
+                    <div className="text-xl font-bold text-slate-800">{totalMatches}</div>
+                  </div>
+                  <div className="rounded-xl border border-slate-200 p-3 text-center">
+                    <div className="text-xs text-slate-500 mb-1">{lang === 'en' ? 'Avg. Match' : 'Ø Match'}</div>
+                    <div className="text-xl font-bold text-emerald-600">{avgMatch}%</div>
+                  </div>
+                  <div className="rounded-xl border border-slate-200 p-3 text-center">
+                    <div className="text-xs text-slate-500 mb-1">{lang === 'en' ? 'Expected revenue' : 'Erw. Umsatz'}</div>
+                    <div className="text-xl font-bold text-slate-800">{erwarteterUmsatz.toLocaleString('de-DE')}€</div>
+                  </div>
+                  <div className="rounded-xl border border-slate-200 p-3 text-center">
+                    <div className="text-xs text-slate-500 mb-1">{lang === 'en' ? 'Channel' : 'Kanal'}</div>
+                    <div className="text-xl font-bold text-slate-800">3</div>
+                  </div>
+                </div>
+
+                {/* Beschreibung */}
+                <div>
+                  <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                    <Target size={12} /> {lang === 'en' ? 'Campaign briefing' : 'Kampagnen-Briefing'}
+                  </h4>
+                  <p className="text-sm text-slate-700 leading-relaxed">
+                    {lang === 'en'
+                      ? `This campaign targets ${zielgruppe.toLowerCase()} who have shown relevant signals in their financial behavior. The matching engine scored ${totalMatches} clients above the 75% threshold and proposes a personalised approach via email, phone and online banking inbox.`
+                      : `Diese Kampagne richtet sich an ${zielgruppe.toLowerCase()}, bei denen relevante Signale im Finanzverhalten erkannt wurden. Die Matching-Engine hat ${totalMatches} Kunden oberhalb der 75 %-Schwelle gescored und schlägt eine personalisierte Ansprache über E-Mail, Telefon und Online-Banking-Postfach vor.`}
+                  </p>
+                </div>
+
+                {/* Maßnahmen-Sequenz */}
+                <div>
+                  <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                    <ListChecks size={12} /> {lang === 'en' ? 'Action sequence' : 'Maßnahmen-Sequenz'}
+                  </h4>
+                  <ol className="space-y-2 text-sm">
+                    {[
+                      lang === 'en' ? 'Day 1: Personalised email with campaign offer' : 'Tag 1: Personalisierte E-Mail mit Kampagnen-Angebot',
+                      lang === 'en' ? 'Day 4: Online-banking inbox message + push notification' : 'Tag 4: Online-Banking-Postfach + Push-Benachrichtigung',
+                      lang === 'en' ? 'Day 8: Advisor call to clients with > 80% match' : 'Tag 8: Beraterkontakt für Kunden mit > 80 % Match',
+                      lang === 'en' ? 'Day 14: Reminder email + retargeting via banner' : 'Tag 14: Erinnerungs-Mail + Retargeting via Banner',
+                    ].map((step, idx) => (
+                      <li key={idx} className="flex items-start gap-2.5">
+                        <span className="w-5 h-5 rounded-full bg-slate-800 text-white text-[10px] font-bold flex items-center justify-center shrink-0 mt-0.5">{idx + 1}</span>
+                        <span className="text-slate-700">{step}</span>
+                      </li>
+                    ))}
+                  </ol>
+                </div>
+
+                {/* Passende Kunden */}
+                <div>
+                  <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                    <Users size={12} /> {lang === 'en' ? 'Top matches' : 'Top-Treffer'}
+                  </h4>
+                  <div className="space-y-2">
+                    {k.passendeKunden.slice(0, 3).map((kd) => (
+                      <div key={kd.kundeId} className="flex items-center gap-3 p-2.5 rounded-lg border border-slate-200 bg-slate-50">
+                        <Avatar name={kd.name} foto={getKundeFoto(kd.kundeId)} size={36} />
+                        <div className="flex-1 min-w-0">
+                          <div className="text-sm font-bold text-slate-800 truncate">{kd.name}</div>
+                          <div className="text-xs text-slate-600 truncate">{lang === 'en' ? kd.begruendungEn : kd.begruendung}</div>
+                        </div>
+                        <span className={`text-[11px] px-2 py-0.5 rounded-full font-bold whitespace-nowrap ${
+                          kd.match >= 90 ? 'bg-emerald-100 text-emerald-800'
+                          : kd.match >= 80 ? 'bg-lime-100 text-lime-800'
+                          : 'bg-amber-100 text-amber-800'
+                        }`}>{kd.match}%</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Footer Actions */}
+              <div className="px-6 py-4 border-t border-slate-100 bg-slate-50 flex flex-wrap items-center justify-end gap-2 rounded-b-2xl">
+                <button className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold text-slate-600 hover:bg-slate-100 transition-colors">
+                  <Copy size={14} /> {lang === 'en' ? 'Duplicate' : 'Duplizieren'}
+                </button>
+                <button className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold text-slate-600 hover:bg-slate-100 transition-colors">
+                  <BarChart size={14} /> {lang === 'en' ? 'View report' : 'Auswertung'}
+                </button>
+                <button className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold text-slate-700 bg-white border border-slate-200 hover:bg-slate-50 transition-colors">
+                  <Mail size={14} /> {lang === 'en' ? 'Send test mail' : 'Test-Mail senden'}
+                </button>
+                <button className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold text-white bg-slate-800 hover:bg-slate-700 transition-colors">
+                  <ListChecks size={14} /> {lang === 'en' ? 'Generate client list' : 'Kundenliste generieren'}
+                </button>
+                <button
+                  className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold text-white transition-colors"
+                  style={{ background: 'var(--mode-primary)' }}
+                >
+                  <PlayCircle size={14} /> {lang === 'en' ? 'Launch campaign' : 'Kampagne starten'}
+                </button>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
     </div>
   );
 }

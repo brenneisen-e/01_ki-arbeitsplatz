@@ -594,7 +594,7 @@ export default function KundenKarte({
 }
 
 /* ── Compact portrait variant for the KPI row ─────────────────── */
-export function KundenKarteCompact({ kunden = [], onKundeClick, title = 'Kundenkarte' }) {
+export function KundenKarteCompact({ kunden = [], onKundeClick, title = 'Kundenkarte', totalCount }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const geocoded = useMemo(
@@ -611,6 +611,39 @@ export function KundenKarteCompact({ kunden = [], onKundeClick, title = 'Kundenk
     return map;
   }, [geocoded]);
 
+  // Scale the displayed counts so the sum matches the real KPI-reported customer
+  // total (e.g. 248) rather than the demo sample size (e.g. 40). Each state's
+  // displayed count is proportionally scaled; any rounding delta is absorbed by
+  // the state with the most customers so the total exactly matches totalCount.
+  const displayCounts = useMemo(() => {
+    const counts = {};
+    const base = Object.fromEntries(
+      Object.entries(clusters).map(([s, arr]) => [s, arr.length])
+    );
+    const sampleTotal = Object.values(base).reduce((s, v) => s + v, 0);
+    if (!totalCount || !sampleTotal || totalCount === sampleTotal) {
+      return base;
+    }
+    const factor = totalCount / sampleTotal;
+    let running = 0;
+    const entries = Object.entries(base).sort((a, b) => b[1] - a[1]);
+    entries.forEach(([state, v], idx) => {
+      if (idx === entries.length - 1) {
+        counts[state] = Math.max(1, totalCount - running);
+      } else {
+        const scaled = Math.max(1, Math.round(v * factor));
+        counts[state] = scaled;
+        running += scaled;
+      }
+    });
+    return counts;
+  }, [clusters, totalCount]);
+
+  const displayTotal = useMemo(
+    () => Object.values(displayCounts).reduce((s, v) => s + v, 0),
+    [displayCounts]
+  );
+
   const { paths, project } = useMemo(() => {
     const proj = buildProjection(geojson.features, SVG_W, SVG_H);
     const ps = geojson.features.map((f) => ({
@@ -620,7 +653,7 @@ export function KundenKarteCompact({ kunden = [], onKundeClick, title = 'Kundenk
     return { paths: ps, project: proj };
   }, []);
 
-  const maxCount = Math.max(1, ...Object.values(clusters).map((v) => v.length));
+  const maxCount = Math.max(1, ...Object.values(displayCounts));
   const getStateFill = (count) => {
     if (count === 0) return '#f1f5f9';
     const intensity = count / maxCount;
@@ -656,7 +689,7 @@ export function KundenKarteCompact({ kunden = [], onKundeClick, title = 'Kundenk
             style={{ pointerEvents: 'none' }}
           >
             {paths.map(({ name, d }) => {
-              const count = clusters[name]?.length || 0;
+              const count = displayCounts[name] || 0;
               return (
                 <path
                   key={name}
@@ -667,11 +700,12 @@ export function KundenKarteCompact({ kunden = [], onKundeClick, title = 'Kundenk
                 />
               );
             })}
-            {Object.entries(clusters).map(([state, kundenInState]) => {
+            {Object.entries(clusters).map(([state]) => {
               const centroid = STATE_CENTROIDS[state];
               if (!centroid) return null;
               const [cx, cy] = project(centroid.lng, centroid.lat);
-              const radius = 8 + Math.sqrt(kundenInState.length) * 1.6;
+              const count = displayCounts[state] || 0;
+              const radius = 8 + Math.sqrt(count) * 1.1;
               return (
                 <g key={state}>
                   <circle cx={cx} cy={cy} r={radius + 2} fill="var(--mode-primary, #004d26)" opacity={0.2} />
@@ -692,7 +726,7 @@ export function KundenKarteCompact({ kunden = [], onKundeClick, title = 'Kundenk
                     fill="white"
                     fontFamily="'DM Sans', sans-serif"
                   >
-                    {kundenInState.length}
+                    {count}
                   </text>
                 </g>
               );
@@ -720,7 +754,7 @@ export function KundenKarteCompact({ kunden = [], onKundeClick, title = 'Kundenk
                 <div>
                   <h3 className="font-semibold text-slate-800">{title}</h3>
                   <div className="text-xs text-slate-500">
-                    {geocoded.length} Kunden · {Object.keys(clusters).length} Bundesländer
+                    {displayTotal} Kunden · {Object.keys(clusters).length} Bundesländer
                   </div>
                 </div>
               </div>

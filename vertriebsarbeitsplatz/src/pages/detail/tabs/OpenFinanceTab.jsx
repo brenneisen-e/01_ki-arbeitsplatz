@@ -75,6 +75,57 @@ function translateDetails(details, lang) {
   return s;
 }
 
+// ─── Bewertung (score) for a Fremd-Versicherung ───────────────────────────
+// Deterministic 55–95 score based on kundeId + product + how many Leistungen
+// the tariff lists and whether a Deckungssumme is known. Used as demo score
+// in the "Absichern" table.
+function scoreVersicherung(kundeId, v) {
+  const seedStr = `${kundeId || ''}|${v.produkt || ''}|${v.institut || ''}`;
+  let h = 0;
+  for (let i = 0; i < seedStr.length; i++) h = (h * 31 + seedStr.charCodeAt(i)) >>> 0;
+  let score = 55 + (h % 30); // 55–84 baseline
+  if (Array.isArray(v.leistungen) && v.leistungen.length >= 2) score += 5;
+  if (v.deckungssumme) score += 4;
+  if (v.praemie && v.praemie > 1500) score -= 3; // high premium → worse value
+  return Math.max(40, Math.min(96, score));
+}
+
+function InsuranceScore({ score }) {
+  const color = score >= 85 ? { bg: 'bg-emerald-50', text: 'text-emerald-700', bar: '#10b981' }
+             : score >= 70 ? { bg: 'bg-lime-50', text: 'text-lime-700', bar: '#84cc16' }
+             : score >= 55 ? { bg: 'bg-amber-50', text: 'text-amber-700', bar: '#f59e0b' }
+             : { bg: 'bg-red-50', text: 'text-red-700', bar: '#ef4444' };
+  return (
+    <div className="inline-flex items-center gap-2">
+      <div className="w-16 h-1.5 rounded-full bg-slate-200 overflow-hidden">
+        <div className="h-full rounded-full" style={{ width: `${score}%`, background: color.bar }} />
+      </div>
+      <span className={`rh-badge text-[11px] font-bold px-2 py-0.5 rounded-full ${color.bg} ${color.text}`}>{score}</span>
+    </div>
+  );
+}
+
+// ─── Deterministic consent dates (grant + expiry) per (kundeId, product) ───
+// Consents under PSD2/FIDA-Style are valid for 180 days. We derive a stable
+// seed from kunde.id + product type/institut so the same row always shows the
+// same dates and a subset of rows is "expiring soon" for demo purposes.
+function consentDates(kundeId, row) {
+  const seedStr = `${kundeId || ''}|${row.typ || ''}|${row.institut || ''}`;
+  let h = 0;
+  for (let i = 0; i < seedStr.length; i++) h = (h * 31 + seedStr.charCodeAt(i)) >>> 0;
+  // Grant date: 1–170 days ago
+  const daysAgo = 1 + (h % 170);
+  const grant = new Date();
+  grant.setDate(grant.getDate() - daysAgo);
+  // Expiry: 180 days after grant
+  const expiry = new Date(grant);
+  expiry.setDate(expiry.getDate() + 180);
+  const today = new Date();
+  const daysLeft = Math.round((expiry - today) / (1000 * 60 * 60 * 24));
+  const fmt = (d) => d.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+  return { erteilt: fmt(grant), bis: fmt(expiry), daysLeft };
+}
+
 // ─── Generate extended Open Finance data from fremdProdukte ───
 function generateBedarfsfelder(kunde, modeId) {
   const fremd = kunde.fremdProdukte || [];
@@ -203,27 +254,23 @@ export default function OpenFinanceTab({ kunde }) {
         <h3 className="font-semibold text-slate-800 mb-4">{t('externeVerknuepfungen')}</h3>
         <DataTable
           columns={[
-            { id: 'typ', label: t('produkt'), render: v => <span className="font-medium capitalize">{lang === 'en' ? (TYP_EN[v] || v.replace(/_/g, ' ')) : v.replace(/_/g, ' ')}</span> },
-            { id: 'produktart', label: t('produktart') || 'Produktart', render: v => v ? <span className="text-slate-600">{v}</span> : <span className="text-slate-300">–</span> },
-            { id: 'institut', label: t('institut'), render: (v) => (
+            { id: 'institut', label: lang === 'en' ? 'Company' : 'Unternehmen', render: (v) => (
               <div className="flex items-center gap-2">
                 <LogoImg name={v} size={18} />
-                <span>{lang === 'en' ? (INST_EN[v] || v) : v}</span>
+                <span className="font-medium">{lang === 'en' ? (INST_EN[v] || v) : v}</span>
               </div>
             )},
-            { id: 'details', label: t('details'), render: v => translateDetails(v, lang) },
-            { id: 'volumen', label: t('volumenLabel'), render: v => v > 0 ? <span className="font-mono">{formatEur(v)}</span> : <span className="text-slate-300">–</span> },
-            { id: 'consent', label: 'Consent', render: v => (
-              v ? (
-                <span className="flex items-center gap-1 text-emerald-600">
-                  <CheckCircle size={14} /> {t('erteilt')}
-                </span>
-              ) : (
-                <span className="flex items-center gap-1 text-slate-400">
-                  <XCircle size={14} /> {t('ausstehend')}
-                </span>
-              )
-            )},
+            { id: 'consentErteilt', label: lang === 'en' ? 'Consent granted' : 'Consent erteilt', render: (_, row) => {
+              if (!row.consent) return <span className="flex items-center gap-1 text-slate-400"><XCircle size={14} /> {t('ausstehend')}</span>;
+              const d = consentDates(kunde.id, row).erteilt;
+              return <span className="flex items-center gap-1 text-emerald-600"><CheckCircle size={14} /> {d}</span>;
+            }},
+            { id: 'consentBis', label: lang === 'en' ? 'Consent expires' : 'Läuft aus am', render: (_, row) => {
+              if (!row.consent) return <span className="text-slate-300">–</span>;
+              const d = consentDates(kunde.id, row);
+              const isExpiring = d.daysLeft <= 30;
+              return <span className={`font-mono ${isExpiring ? 'text-amber-600 font-semibold' : 'text-slate-600'}`}>{d.bis}</span>;
+            }},
           ]}
           data={fremd}
         />
@@ -356,6 +403,7 @@ export default function OpenFinanceTab({ kunde }) {
                     <th className="px-4 py-2.5 text-left text-xs uppercase tracking-wider font-semibold text-slate-400">Leistungen</th>
                   )}
                   <th className="px-4 py-2.5 text-right text-xs uppercase tracking-wider font-semibold text-slate-400">Prämie</th>
+                  <th className="px-4 py-2.5 text-center text-xs uppercase tracking-wider font-semibold text-slate-400">Bewertung</th>
                 </tr>
               </thead>
               <tbody>
@@ -379,6 +427,9 @@ export default function OpenFinanceTab({ kunde }) {
                       </td>
                     )}
                     <td className="px-4 py-2.5 text-right font-mono">{v.praemie ? `${formatEur(v.praemie)}/J.` : '–'}</td>
+                    <td className="px-4 py-2.5 text-center">
+                      <InsuranceScore score={scoreVersicherung(kunde.id, v)} />
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -444,33 +495,6 @@ export default function OpenFinanceTab({ kunde }) {
         </Card>
       )}
 
-      {/* Eigene Produkte */}
-      {eigen.length > 0 && (
-        <Card hover={false}>
-          <div className="flex items-center gap-2 mb-4">
-            <Briefcase size={20} className="text-slate-500" strokeWidth={1.75} />
-            <h3 className="font-semibold text-slate-800">
-              {t('eigeneProdukte')}
-              <span className="text-slate-400 font-normal ml-1">({eigen.length})</span>
-            </h3>
-          </div>
-          <DataTable
-            columns={[
-              { id: 'produkt', label: t('produkt'), render: v => <span className="font-medium">{v}</span> },
-              { id: 'sparte', label: t('sparte') || 'Sparte', render: v => <span className="capitalize">{v}</span> },
-              { id: 'details', label: t('details'), render: v => translateDetails(v, lang) },
-              { id: 'praemie', label: t('praemieLabel') || 'Prämie/J.', render: v => v > 0 ? <span className="font-mono">{formatEur(v)}</span> : <span className="text-slate-300">–</span> },
-              { id: 'seit', label: t('seit') || 'Seit' },
-              { id: 'status', label: 'Status', render: v => (
-                <span className={`rh-badge text-xs font-medium px-2 py-0.5 rounded-full ${v === 'aktiv' ? 'bg-emerald-50 text-emerald-700' : v === 'optimierbar' ? 'bg-amber-50 text-amber-700' : 'bg-slate-100 text-slate-600'}`}>
-                  {v}
-                </span>
-              )},
-            ]}
-            data={eigen}
-          />
-        </Card>
-      )}
     </div>
   );
 }

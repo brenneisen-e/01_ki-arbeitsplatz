@@ -41,7 +41,12 @@ export default function VorgangDetail({ vorgang, analyse, analyseLoading, onStat
           <DetailRow label="Erwartet" value={formatEur(vorgang.erwartet)} />
           <DetailRow label="Erhalten" value={formatEur(vorgang.erhalten)} />
           <div className="col-span-2">
-            <DetailRow label="Differenz" value={formatEur(vorgang.differenz)} highlight />
+            <DetailRow
+              label="Differenz"
+              value={formatEur(vorgang.differenz)}
+              highlight={vorgang.differenz !== 0}
+              neutral={vorgang.differenz === 0}
+            />
           </div>
         </div>
         {vorgang.beschreibung && (
@@ -70,11 +75,16 @@ export default function VorgangDetail({ vorgang, analyse, analyseLoading, onStat
   );
 }
 
-function DetailRow({ label, value, mono, highlight }) {
+function DetailRow({ label, value, mono, highlight, neutral }) {
+  const textClass = neutral
+    ? 'font-semibold text-slate-500'
+    : highlight
+      ? 'font-semibold text-red-600'
+      : 'text-slate-700 font-medium';
   return (
     <div className="flex justify-between gap-2">
       <span className="text-slate-400 shrink-0">{label}</span>
-      <span className={`text-right truncate ${mono ? 'font-mono' : ''} ${highlight ? 'font-semibold text-red-600' : 'text-slate-700 font-medium'}`}>
+      <span className={`text-right truncate ${mono ? 'font-mono' : ''} ${textClass}`}>
         {value}
       </span>
     </div>

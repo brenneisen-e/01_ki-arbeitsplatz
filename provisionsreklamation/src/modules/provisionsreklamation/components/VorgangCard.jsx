@@ -43,7 +43,10 @@ export default function VorgangCard({ vorgang, isActive, onClick }) {
           </div>
         </div>
         <div className="text-right shrink-0">
-          <p className="text-sm font-mono font-semibold text-red-600">{formatEur(vorgang.differenz)}</p>
+          <p className={clsx(
+            'text-sm font-mono font-semibold',
+            vorgang.differenz < 0 ? 'text-red-600' : vorgang.differenz > 0 ? 'text-emerald-600' : 'text-slate-400'
+          )}>{formatEur(vorgang.differenz)}</p>
           <p className="text-xs text-slate-400 mt-1">{vorgang.eingangsdatum}</p>
           <ChevronRight size={16} className="text-slate-300 ml-auto mt-1" />
         </div>

@@ -1,5 +1,5 @@
 import { clsx } from 'clsx';
-import { Clock, CheckCircle, XCircle, AlertTriangle, FileText } from 'lucide-react';
+import { Clock, CheckCircle, XCircle, AlertTriangle, FileText, MessageCircle } from 'lucide-react';
 
 const STATUS_CONFIG = {
   'Neu': {
@@ -19,6 +19,12 @@ const STATUS_CONFIG = {
     text: 'text-emerald-700',
     border: 'border-emerald-200',
     icon: CheckCircle,
+  },
+  'Beantwortet': {
+    bg: 'bg-slate-50',
+    text: 'text-slate-600',
+    border: 'border-slate-200',
+    icon: MessageCircle,
   },
   'Abgelehnt': {
     bg: 'bg-red-50',

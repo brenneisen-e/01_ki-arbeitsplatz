@@ -8,7 +8,7 @@ import PriorisierungsBanner from '../components/PriorisierungsBanner';
 import VorgangCard from '../components/VorgangCard';
 import VorgangDetail from '../components/VorgangDetail';
 
-const STATUS_OPTIONS = ['Alle', 'Neu', 'In Bearbeitung', 'Geklärt', 'Abgelehnt', 'Eskaliert'];
+const STATUS_OPTIONS = ['Alle', 'Neu', 'In Bearbeitung', 'Geklärt', 'Beantwortet', 'Abgelehnt', 'Eskaliert'];
 const PRIO_OPTIONS = ['Alle', 'Normal', 'Auffällig'];
 const SORT_OPTIONS = [
   { value: 'datum', label: 'Eingangsdatum (neueste zuerst)' },

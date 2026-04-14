@@ -1,5 +1,5 @@
 import { clsx } from 'clsx';
-import { Sparkles, AlertTriangle, CheckCircle, XCircle, Shield } from 'lucide-react';
+import { Sparkles, AlertTriangle, CheckCircle, XCircle, Shield, Info } from 'lucide-react';
 import { DEMO_VERTRAGSDATEN } from '../data/demoData';
 
 const AMPEL_CONFIG = {
@@ -7,6 +7,7 @@ const AMPEL_CONFIG = {
   gelb: { bg: 'bg-amber-50', border: 'border-amber-200', text: 'text-amber-700', icon: AlertTriangle, label: 'Klärungsbedarf' },
   rot: { bg: 'bg-red-50', border: 'border-red-200', text: 'text-red-700', icon: XCircle, label: 'Unbegründet' },
   orange: { bg: 'bg-orange-50', border: 'border-orange-200', text: 'text-orange-700', icon: AlertTriangle, label: 'Systemischer Fehler' },
+  blau: { bg: 'bg-blue-50', border: 'border-blue-200', text: 'text-blue-700', icon: Info, label: 'Fachliche Anfrage' },
 };
 
 export default function KiAnalysePanel({ vorgang, analyse, loading }) {

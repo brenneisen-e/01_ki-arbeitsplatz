@@ -188,6 +188,30 @@ export const DEMO_VORGAENGE = [
     auffaellig: false,
     kiBewertung: 'rot',
   },
+  // === VORGANG 9 — Fachliche Rückfrage ohne Buchungsbedarf ===
+  {
+    id: 'RK-2026-0049',
+    status: 'Beantwortet',
+    vermittler: 'Robert Krause',
+    vermittlerNr: 'VM-72940',
+    agentur: 'Krause Versicherungsberatung',
+    email: 'r.krause@krause-versicherung.de',
+    vsNummer: 'LV-2022-430119',
+    sparte: 'Leben',
+    typ: 'Fachliche Rückfrage (keine Reklamation)',
+    vnName: 'Heinrich Vogel',
+    vertragsbeginn: '2022-09-01',
+    monatsbeitrag: 120.00,
+    differenz: 0,
+    erwartet: 0,
+    erhalten: 0,
+    eingangsdatum: '2026-03-28',
+    zeitraumVon: '2026-01',
+    zeitraumBis: '2026-03',
+    beschreibung: 'Keine Reklamation — Rückfrage zur Staffelung der Bestandsprovision: In der Standard-Courtagevereinbarung steigt der Bestandsprovisionssatz laut meiner Lesart ab dem 5. Versicherungsjahr von 2,5 % auf 3,0 % JNB an. Bei meinem Kunden Herrn Vogel beginnt in diesem Jahr das 5. Vertragsjahr und die Abrechnung für Q1/2026 zeigt weiterhin 2,5 %. Könnten Sie mir kurz bestätigen, ob die Staffelerhöhung erst mit dem Beginn des nächsten vollen Kalenderjahres (also Q3/2026, Vertragsbeginn 01.09.) greift? Ich möchte nur für mich Klarheit haben — die Abrechnung stimmt aus meiner Sicht so, wie sie ist.',
+    auffaellig: false,
+    kiBewertung: 'blau',
+  },
 ];
 
 // === VERTRAGSDATEN (zugeordnet via vsNummer) ===
@@ -295,6 +319,19 @@ export const DEMO_VERTRAGSDATEN = {
     stornohaftungszeit: '60 Monate',
     stornoreserveEinbehalt: '15%',
     beitragssumme: '43.200,00 EUR (Laufzeit 20J)',
+  },
+  'LV-2022-430119': {
+    produkt: 'Klassische Lebensversicherung „SicherPlus Basis"',
+    tarif: 'T-KLV-2022',
+    vertragsstatus: 'Aktiv',
+    zahlungsweise: 'Monatlich',
+    dynamik: 'Keine',
+    courtagevereinbarung: 'Standard-Courtagevereinbarung (Staffel-Modell)',
+    apSatz: '30\u2030 der BWS',
+    bpSatz: 'Staffel: 2,5% (J1–4) / 3,0% (ab J5)',
+    stornohaftungszeit: '60 Monate',
+    stornoreserveEinbehalt: '15%',
+    beitragssumme: '43.200,00 EUR (Laufzeit 30J)',
   },
 };
 
@@ -457,5 +494,23 @@ export const DEMO_KI_ANALYSEN = {
       auffaelligkeit: { erkannt: false, muster: '', geschaetzte_betroffene: '' },
     },
     antwort_entwurf: 'Sehr geehrter Herr Bergmann,\n\nvielen Dank für Ihre Reklamation vom 10.03.2026 zu Ihrem Vorgang RK-2026-0048 (VS-Nr. LV-2025-991204, VN Dirk Freiburg).\n\nNach Prüfung des Sachverhalts müssen wir Ihre Reklamation leider ablehnen. Ihr Vermittlervertrag enthält keine Superprovisionsklausel. Die Superprovision / Differenzprovision steht ausschließlich Vermittlern mit Agenturleiter-Status zu.\n\nSollten Sie hierzu Fragen haben, stehen wir Ihnen gerne zur Verfügung.\n\nMit freundlichen Grüßen\nLisa Neumann\nAbteilung Provisionsservice',
+  },
+  'RK-2026-0049': {
+    provisionsberechnung: {
+      positionen: [
+        { position: 'Bestandsprovision Q1/2026 (J4 lt. Staffel)', soll: 36.00, ist: 36.00, differenz: 0.00 },
+      ],
+      gesamt_soll: 36.00,
+      gesamt_ist: 36.00,
+      gesamt_differenz: 0.00,
+    },
+    bewertung: {
+      ampel: 'blau',
+      titel: 'Keine Reklamation — reine Fachfrage, kein Buchungsbedarf',
+      analyse: 'Es liegt **keine Reklamation** im eigentlichen Sinn vor. Der Vermittler bittet lediglich um Bestätigung der Staffelregelung der Bestandsprovision.\n\n**Sachverhalt:**\n- Vertrag LV-2022-430119, Vertragsbeginn 01.09.2022, klassische LV.\n- Standard-Courtagevereinbarung, Staffel-Modell: 2,5 % JNB in den Versicherungsjahren 1–4, 3,0 % JNB ab Versicherungsjahr 5.\n- Die Abrechnung Q1/2026 wurde korrekt mit 2,5 % berechnet, da sich der Vertrag zum Abrechnungsstichtag noch im 4. Versicherungsjahr befindet (Vertragsjahr 5 beginnt erst am 01.09.2026).\n- **Differenz SOLL vs. IST: 0,00 EUR.** Es besteht kein Buchungsbedarf.\n\nDie Annahme des Vermittlers ist sachlich richtig: Die Staffel greift nach vollendetem 4. Versicherungsjahr, also ab Q3/2026 anteilig bzw. ab Q4/2026 voll. Dies lässt sich ohne weitere Prüfung beantworten.',
+      handlungsempfehlung: 'Kurze fachliche Auskunft erteilen, Vorgang als „Beantwortet" schließen. Keine Nachbuchung, keine Korrektur, keine Eskalation erforderlich.',
+      auffaelligkeit: { erkannt: false, muster: '', geschaetzte_betroffene: '' },
+    },
+    antwort_entwurf: 'Sehr geehrter Herr Krause,\n\nvielen Dank für Ihre Rückfrage vom 28.03.2026 zu Vorgang RK-2026-0049 (VS-Nr. LV-2022-430119, VN Heinrich Vogel).\n\nIhre Einschätzung ist korrekt: In der Standard-Courtagevereinbarung greift die Staffelerhöhung der Bestandsprovision von 2,5 % auf 3,0 % JNB nach Ablauf des 4. Versicherungsjahres. Bei Vertragsbeginn 01.09.2022 beginnt das 5. Versicherungsjahr am 01.09.2026. Die Abrechnung für Q1 und Q2/2026 mit 2,5 % ist daher korrekt. Ab Q3/2026 wird anteilig (September) und ab Q4/2026 vollständig mit 3,0 % abgerechnet.\n\nEs besteht kein Buchungsbedarf — es lag somit keine Reklamation vor, sondern eine reine Auslegungsfrage.\n\nSollten Sie weitere Rückfragen haben, stehen wir Ihnen gerne zur Verfügung.\n\nMit freundlichen Grüßen\nLisa Neumann\nAbteilung Provisionsservice',
   },
 };

@@ -853,16 +853,17 @@ Empfehlung: Genehmigung unter den nachfolgend genannten Auflagen und Bedingungen
               <button
                 type="button"
                 onClick={() => {
-                  const contractText = fillContractTemplate(company);
-                  setContractPreviewText(contractText);
-                  setContractPreviewOpen(true);
-                  // Vorgang in die "Kreditvertrag"-Stufe rücken
+                  // Vorgang in die "Kreditvertrag"-Stufe rücken und direkt
+                  // in den Kreditvertrag-Reiter springen — dort wird der
+                  // Vertrag automatisch aus den Antragsdaten befüllt und
+                  // ein Haken zeigt, dass der Schritt schon erledigt ist.
                   dispatch({ type: 'ADVANCE_TO_CONTRACT', companyId: company.id });
+                  navigate('contract');
                 }}
                 className="inline-flex items-center gap-2 px-5 py-3 bg-emerald-600 text-white rounded-lg text-sm font-semibold font-body hover:bg-emerald-700 transition-colors"
               >
                 <FileSignature size={18} />
-                Kreditvertrag generieren & anzeigen
+                Kreditvertrag generieren & öffnen
               </button>
               <button
                 type="button"

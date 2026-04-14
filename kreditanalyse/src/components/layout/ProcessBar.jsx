@@ -32,6 +32,7 @@ const PHASES = [
     sub: 'Draft & Close Contract',
     steps: [
       { view: 'contract', label: 'Kreditvertrag' },
+      { view: 'contract', label: 'Unterschrift / Rückläufer' },
     ],
   },
   {
@@ -70,7 +71,8 @@ const STATUS_REACHED_INDEX = {
   approved: 6,
   rejected: 6,
   contract: 7,
-  active: 8,
+  signature_pending: 8,
+  active: 9,
 };
 
 // Flacher Workflow für Rechnen des reachedIndex

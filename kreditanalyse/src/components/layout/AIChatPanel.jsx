@@ -422,8 +422,13 @@ WICHTIG – Quellenangaben: Nenne immer transparent, woher du deine Informatione
   const lastMsg = state.aiMessages[state.aiMessages.length - 1];
   const showFollowUpSuggestions = lastMsg?.role === 'assistant' && !loading;
 
+  // Panel wird breiter, sobald der Assistent geantwortet hat — Tabellen und
+  // Charts sind sonst zu schwer lesbar. Ohne Antworten bleibt er kompakt.
+  const hasAssistantReply = state.aiMessages.some(m => m.role === 'assistant');
+  const panelWidth = hasAssistantReply ? 'w-[560px]' : 'w-96';
+
   return (
-    <div className="w-96 bg-white border-l border-border flex flex-col h-full shrink-0">
+    <div className={`${panelWidth} bg-white border-l border-border flex flex-col h-full shrink-0 transition-[width] duration-200`}>
       {/* Header */}
       <div className="border-b border-border shrink-0">
         <div className="flex items-center justify-between px-4 h-14">
@@ -460,7 +465,7 @@ WICHTIG – Quellenangaben: Nenne immer transparent, woher du deine Informatione
                 <Bot size={12} className="text-white" />
               </div>
             )}
-            <div className={`max-w-[85%] rounded-lg px-3 py-2 text-sm ${
+            <div className={`${msg.role === 'user' ? 'max-w-[85%]' : 'max-w-[95%] flex-1'} rounded-lg px-3 py-2 text-sm ${
               msg.role === 'user'
                 ? 'bg-primary text-white'
                 : 'bg-surface text-text-primary'

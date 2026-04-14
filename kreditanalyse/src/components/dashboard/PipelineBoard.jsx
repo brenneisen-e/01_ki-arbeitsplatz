@@ -84,11 +84,20 @@ const COLUMNS = [
   },
   {
     key: 'decided',
-    label: 'Entschieden',
-    statuses: ['approved', 'rejected'],
+    label: 'Genehmigt',
+    statuses: ['approved'],
     icon: CheckCircle2,
     headerColor: 'bg-green-50 text-green-700 border-green-200',
     badgeColor: 'bg-green-100 text-green-700',
+    targetView: 'decision',
+  },
+  {
+    key: 'rejected',
+    label: 'Abgelehnt',
+    statuses: ['rejected'],
+    icon: CheckCircle2,
+    headerColor: 'bg-red-50 text-red-700 border-red-200',
+    badgeColor: 'bg-red-100 text-red-700',
     targetView: 'decision',
   },
   {

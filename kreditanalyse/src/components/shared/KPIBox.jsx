@@ -118,7 +118,7 @@ function ExpandedChart({ data, format, label, onClose }) {
   );
 }
 
-export default function KPIBox({ icon, label, wert, format = 'num', trend, delay = 0 }) {
+export default function KPIBox({ icon, label, wert, format = 'num', trend, delay = 0, description, period }) {
   const [expanded, setExpanded] = useState(false);
   const Icon = KPI_ICONS[icon] || Sparkles;
   const isPositive = (trend ?? 0) >= 0;
@@ -165,6 +165,14 @@ export default function KPIBox({ icon, label, wert, format = 'num', trend, delay
         >
           {isNumeric ? formatValue(format === 'pct' ? wert : Math.round(wert), format) : String(wert)}
         </div>
+
+        {/* Description / timeframe */}
+        {(description || period) && (
+          <p className="text-[10px] leading-snug text-slate-500 mb-1.5">
+            {description}{description && period && ' · '}
+            {period && <span className="font-semibold text-slate-600">{period}</span>}
+          </p>
+        )}
 
         {/* Mini Area Chart */}
         <div className="flex-1 min-h-[52px] -mx-1">

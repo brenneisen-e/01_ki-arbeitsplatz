@@ -1,6 +1,7 @@
 import { useState, useMemo, useCallback } from 'react';
 import { useApp } from '../../context/AppContext';
 import StepCompleteBar from '../shared/StepCompleteBar';
+import { MockPdfPreviewButton, CHECKLIST_ID_TO_DOC } from '../shared/MockPdfPreview';
 import {
   ArrowLeft,
   FileCheck,
@@ -371,6 +372,13 @@ function IdentifizierungTab({ checklist, setChecklist, expandedItem, setExpanded
                 {item.pruefDatum && (
                   <span className="text-xs font-mono text-text-muted hidden sm:inline">
                     {new Date(item.pruefDatum).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' })}
+                  </span>
+                )}
+
+                {/* Dokument-Vorschau */}
+                {CHECKLIST_ID_TO_DOC[item.id] && (item.status === 'geprueft' || item.status === 'eingereicht') && (
+                  <span onClick={e => e.stopPropagation()}>
+                    <MockPdfPreviewButton documentId={CHECKLIST_ID_TO_DOC[item.id]} label="Ansehen" />
                   </span>
                 )}
 

@@ -282,10 +282,26 @@ export default function ComplianceView() {
 
       {/* KPIs */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <KPIBox icon="Sparkles" label="KI-Funktionen gesamt" wert={totalFunctions} format="num" trend={8.3} delay={0} />
-        <KPIBox icon="AlertTriangle" label="Hochrisiko-KI (AI Act)" wert={highRiskCount} format="num" trend={-4.2} delay={80} />
-        <KPIBox icon="UserCheck" label="Human-in-the-Loop" wert={100} format="pct" trend={0.5} delay={160} />
-        <KPIBox icon="CheckCircle2" label="Audit-Events (30 T.)" wert={847} format="num" trend={12.1} delay={240} />
+        <KPIBox
+          icon="Sparkles" label="KI-Funktionen gesamt" wert={totalFunctions} format="num" trend={8.3} delay={0}
+          description="Anzahl dokumentierter KI-Komponenten im Kreditprozess"
+          period="Stand heute"
+        />
+        <KPIBox
+          icon="AlertTriangle" label="Hochrisiko-KI (AI Act)" wert={highRiskCount} format="num" trend={-4.2} delay={80}
+          description="Komponenten mit Einstufung 'Hohes Risiko' nach EU AI Act"
+          period="aktuelle Klassifizierung"
+        />
+        <KPIBox
+          icon="UserCheck" label="Human-in-the-Loop" wert={100} format="pct" trend={0.5} delay={160}
+          description="Anteil KI-Entscheidungen mit menschlicher Freigabe"
+          period="rollierend 30 Tage"
+        />
+        <KPIBox
+          icon="CheckCircle2" label="Audit-Events" wert={847} format="num" trend={12.1} delay={240}
+          description="Protokollierte KI-Aktionen (Inference, Override, Freigabe)"
+          period="letzte 30 Tage"
+        />
       </div>
 
       {/* Governance principles */}

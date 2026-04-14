@@ -35,13 +35,41 @@ export default function KPICards() {
   }, [companies]);
 
   const kpis = [
-    { icon: 'FileText',   label: 'Offene Anträge',          wert: openCount,       format: 'num', trend: 12 },
-    { icon: 'Clock',      label: 'Ø Bearbeitungszeit (T)',  wert: 12,              format: 'num', trend: -8 },
-    { icon: 'CheckCircle2', label: 'Genehmigungsquote',      wert: approvalRate,   format: 'pct', trend: 5 },
-    { icon: 'Euro',       label: 'Volumen in Bearbeitung',  wert: totalVolume,     format: 'eur', trend: 3.2 },
-    { icon: 'Banknote',   label: 'Genehmigtes Volumen',     wert: approvedVolume,  format: 'eur', trend: 15 },
-    { icon: 'XCircle',    label: 'Abgelehnte Anträge',      wert: rejectedCount,   format: 'num', trend: -3 },
-    { icon: 'Timer',      label: 'Ø Kreditbetrag',          wert: avgBetrag,       format: 'eur', trend: 4.5 },
+    {
+      icon: 'FileText', label: 'Offene Anträge', wert: openCount, format: 'num', trend: 12,
+      description: 'Anträge in Bearbeitung (alle Stufen vor Entscheidung)',
+      period: 'aktueller Bestand',
+    },
+    {
+      icon: 'Clock', label: 'Ø Bearbeitungszeit', wert: 12, format: 'num', trend: -8,
+      description: 'Durchschnitt Eingang bis Entscheidung, in Tagen',
+      period: 'letzte 90 Tage',
+    },
+    {
+      icon: 'CheckCircle2', label: 'Genehmigungsquote', wert: approvalRate, format: 'pct', trend: 5,
+      description: 'Anteil genehmigter an entschiedenen Anträgen',
+      period: 'YTD 2026',
+    },
+    {
+      icon: 'Euro', label: 'Volumen in Bearbeitung', wert: totalVolume, format: 'eur', trend: 3.2,
+      description: 'Summe beantragter Kreditbeträge offener Anträge',
+      period: 'Stand heute',
+    },
+    {
+      icon: 'Banknote', label: 'Genehmigtes Volumen', wert: approvedVolume, format: 'eur', trend: 15,
+      description: 'Summe bewilligter Kreditbeträge',
+      period: 'YTD 2026',
+    },
+    {
+      icon: 'XCircle', label: 'Abgelehnte Anträge', wert: rejectedCount, format: 'num', trend: -3,
+      description: 'Zahl negativ entschiedener Anträge',
+      period: 'YTD 2026',
+    },
+    {
+      icon: 'Timer', label: 'Ø Kreditbetrag', wert: avgBetrag, format: 'eur', trend: 4.5,
+      description: 'Durchschnittliches Kreditvolumen je Antrag',
+      period: 'letzte 12 Monate',
+    },
   ];
 
   return (
@@ -54,6 +82,8 @@ export default function KPICards() {
           wert={kpi.wert}
           format={kpi.format}
           trend={kpi.trend}
+          description={kpi.description}
+          period={kpi.period}
           delay={i * 60}
         />
       ))}

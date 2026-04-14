@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useApp } from '../../context/AppContext';
 import { useAI } from '../../hooks/useAI';
-import { X, Send, Bot, User, Loader2, Download } from 'lucide-react';
+import { X, Send, Bot, User, Loader2, Download, Sparkles } from 'lucide-react';
 
 const viewContextPrompts = {
   dashboard: 'Du hilfst bei der Übersicht über das Kreditportfolio und offene Anträge.',
@@ -400,17 +400,18 @@ WICHTIG – Quellenangaben: Nenne immer transparent, woher du deine Informatione
           <p className="text-xs text-text-muted mb-4">Hier sind passende Fragen:</p>
         </>
       )}
-      <div className={intro ? 'space-y-2' : 'flex flex-wrap gap-1.5'}>
+      <div className={intro ? 'space-y-2' : 'flex flex-wrap gap-2'}>
         {suggestions.map((q) => (
           <button
             key={q}
             onClick={() => handleSend(q)}
             className={
               intro
-                ? 'block w-full text-left px-3 py-2 text-xs bg-surface rounded-lg hover:bg-border transition-colors'
-                : 'inline-block px-2.5 py-1.5 text-[11px] bg-surface text-text-secondary rounded-lg hover:bg-border transition-colors text-left leading-snug'
+                ? 'flex items-center gap-2 w-full text-left px-3.5 py-2.5 text-sm bg-violet-50 text-violet-800 border border-violet-200 rounded-lg hover:bg-violet-100 hover:border-violet-300 font-medium transition-colors'
+                : 'inline-flex items-center gap-1.5 px-3 py-2 text-xs font-medium bg-violet-50 text-violet-800 border border-violet-200 rounded-lg hover:bg-violet-100 hover:border-violet-300 transition-colors text-left leading-snug'
             }
           >
+            <Sparkles size={13} strokeWidth={2} className="shrink-0 text-violet-600" />
             {q}
           </button>
         ))}

@@ -584,7 +584,7 @@ export function getDemoResponse(message, { currentView, modeId }) {
         content: `<div class="space-y-2">
           <p class="font-semibold">Auslaufende Kredite (nächste 6 Monate)</p>
           <table class="w-full text-xs mt-1">
-            <tr class="border-b border-slate-200"><td class="py-1.5"><strong>Klaus Fischer</strong></td><td class="py-1.5 font-mono">1.680€ (KfW)</td><td class="py-1.5 text-emerald-600">06/2026</td></tr>
+            <tr class="border-b border-slate-200"><td class="py-1.5"><strong>Klaus Fischer</strong></td><td class="py-1.5 font-mono">1.680€ (Commerzbank)</td><td class="py-1.5 text-emerald-600">06/2026</td></tr>
             <tr class="border-b border-slate-200"><td class="py-1.5"><strong>Peter Hoffmann</strong></td><td class="py-1.5 font-mono">45.000€ Rahmen</td><td class="py-1.5 text-amber-600">07/2026</td></tr>
             <tr><td class="py-1.5"><strong>Andrea Lang</strong></td><td class="py-1.5 font-mono">85.000€</td><td class="py-1.5 text-amber-600">09/2026</td></tr>
           </table>
@@ -632,7 +632,7 @@ export function getDemoResponse(message, { currentView, modeId }) {
         content: `<div class="space-y-2">
           <p class="font-semibold">Kampagnen-Matching — Frühlings-Baufi-Aktion</p>
           <table class="w-full text-xs mt-1">
-            <tr class="border-b border-slate-200"><td class="py-1.5"><strong>Klaus Fischer</strong></td><td class="py-1.5 text-center"><span class="font-bold text-emerald-700">97%</span></td><td class="py-1.5 text-slate-500">KfW-Kredit läuft aus, Bausparer zuteilungsreif, Newsletter-Interesse</td></tr>
+            <tr class="border-b border-slate-200"><td class="py-1.5"><strong>Klaus Fischer</strong></td><td class="py-1.5 text-center"><span class="font-bold text-emerald-700">97%</span></td><td class="py-1.5 text-slate-500">Commerzbank-Ratenkredit läuft aus, Bausparer zuteilungsreif, Newsletter-Interesse</td></tr>
             <tr class="border-b border-slate-200"><td class="py-1.5"><strong>Sandra Müller</strong></td><td class="py-1.5 text-center"><span class="font-bold text-emerald-700">92%</span></td><td class="py-1.5 text-slate-500">Baufi vorbereiten, Ehepartner als Neukunde</td></tr>
             <tr><td class="py-1.5"><strong>Markus Wagner</strong></td><td class="py-1.5 text-center"><span class="font-bold text-lime-700">78%</span></td><td class="py-1.5 text-slate-500">Junge Familie mit Neugeborenem – Eigenheim-Wunsch</td></tr>
           </table>

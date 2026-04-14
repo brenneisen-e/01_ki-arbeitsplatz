@@ -29,11 +29,11 @@ const TIMELINE_DATA = {
     finanzen: [
       { date: '2018-03', label: 'Girokonto eröffnet' },
       { date: '2018-06', label: 'Bausparvertrag Schwäbisch Hall 30k', fida: true },
-      { date: '2019-01', label: 'KfW-Studienkredit (Schlussraten)' },
+      { date: '2019-01', label: 'Commerzbank-Ratenkredit (Schlussraten)' },
       { date: '2023-11', label: 'ING Tagesgeld 22.000 €', fida: true },
       { date: '2025-08', label: 'Trade Republic Depot', fida: true },
       { date: '2026-04', label: 'BSV zuteilungsreif → 30k Eigenkapital', isFuture: true },
-      { date: '2026-06', label: 'KfW läuft aus → 840€/Mon. frei', isFuture: true },
+      { date: '2026-06', label: 'Commerzbank-Ratenkredit läuft aus → 840€/Mon. frei', isFuture: true },
     ],
   },
   BK00002: {

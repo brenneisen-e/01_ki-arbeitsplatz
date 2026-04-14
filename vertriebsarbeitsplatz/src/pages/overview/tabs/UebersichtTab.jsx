@@ -191,7 +191,7 @@ function buildBankingKampagnen(institut) {
       photoIcon: 'Home',
       photoAccent: '#a7f3d0',
       passendeKunden: [
-        { kundeId: 'BK00001', name: 'Klaus Fischer', match: 97, begruendung: `KfW-Kredit läuft 06/2026 aus (840€ frei), ${b.bausparPartner}-BSV zuteilungsreif, Immo-Newsletter seit 2 Jahren`, begruendungEn: `KfW loan expires 06/2026 (€840 free), ${b.bausparPartner} building loan ready, property newsletter for 2 years` },
+        { kundeId: 'BK00001', name: 'Klaus Fischer', match: 97, begruendung: `Commerzbank-Ratenkredit läuft 06/2026 aus (840€ frei), ${b.bausparPartner}-BSV zuteilungsreif, Immo-Newsletter seit 2 Jahren`, begruendungEn: `Commerzbank loan expires 06/2026 (€840 free), ${b.bausparPartner} building loan ready, property newsletter for 2 years` },
         { kundeId: 'BK00002', name: 'Sandra Müller', match: 92, begruendung: 'Immobilienkauf vorbereiten, Ehemann als Neukunde gewinnen', begruendungEn: 'Preparing home purchase, onboard spouse as new client' },
         { kundeId: 'BK00004', name: 'Markus Wagner', match: 78, begruendung: 'Junge Familie mit Neugeborenem – passender Zeitpunkt für ein erstes Eigenheim', begruendungEn: 'Young family with newborn – right time for first own home' },
       ],

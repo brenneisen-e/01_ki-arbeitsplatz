@@ -1,8 +1,9 @@
 import { useState, useCallback, useMemo } from 'react';
 import { clsx } from 'clsx';
-import { Home, User, Building2, FileText, AlertTriangle, Clock, Settings } from 'lucide-react';
+import { Home, User, Building2, FileText, AlertTriangle, Clock, Settings, Shield } from 'lucide-react';
 import ReklamationFormView from './views/ReklamationFormView';
 import BackofficeView from './views/BackofficeView';
+import AdminView from './views/AdminView';
 import { DEMO_VORGAENGE } from './data/demoData';
 
 function getBasePath() {
@@ -16,6 +17,7 @@ function getBasePath() {
 const TABS = [
   { id: 'formular', label: 'Reklamation einreichen', icon: User },
   { id: 'backoffice', label: 'Backoffice', icon: Building2 },
+  { id: 'admin', label: 'Admin', icon: Shield },
 ];
 
 const HEADER_STATS = [
@@ -223,6 +225,9 @@ export default function ProvisionsreklamationModule() {
             onStatusChange={handleVorgangStatusChange}
             onMarkVorgangSighted={handleMarkVorgangSighted}
           />
+        )}
+        {activeTab === 'admin' && (
+          <AdminView />
         )}
       </main>
 

@@ -26,6 +26,19 @@ import {
   AlertCircle,
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
+import KiSourceHint from '../shared/KiSourceHint';
+
+// Wrapper: Label with optional inline KI-source hint
+function LabelWithSource({ htmlFor, children, hint }) {
+  return (
+    <div className="flex items-center gap-2 mb-1">
+      <label className="text-xs font-medium font-body text-text-secondary" htmlFor={htmlFor}>
+        {children}
+      </label>
+      {hint && <KiSourceHint {...hint} />}
+    </div>
+  );
+}
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -518,7 +531,9 @@ export default function NewApplicationView() {
         {/* Row 1 */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="md:col-span-1">
-            <Label htmlFor="firma">Firmenname *</Label>
+            <LabelWithSource htmlFor="firma" hint={firma ? { document: 'handelsregister', field: 'firma', value: firma } : null}>
+              Firmenname *
+            </LabelWithSource>
             <input
               id="firma"
               type="text"
@@ -529,7 +544,9 @@ export default function NewApplicationView() {
             />
           </div>
           <div>
-            <Label htmlFor="rechtsform">Rechtsform *</Label>
+            <LabelWithSource htmlFor="rechtsform" hint={rechtsform ? { document: 'handelsregister', field: 'rechtsform', value: rechtsform } : null}>
+              Rechtsform *
+            </LabelWithSource>
             <div className="relative">
               <select
                 id="rechtsform"
@@ -550,7 +567,9 @@ export default function NewApplicationView() {
             </div>
           </div>
           <div>
-            <Label htmlFor="hrb">HRB/HRA-Nummer</Label>
+            <LabelWithSource htmlFor="hrb" hint={hrb ? { document: 'handelsregister', field: 'hrb', value: hrb } : null}>
+              HRB/HRA-Nummer
+            </LabelWithSource>
             <input
               id="hrb"
               type="text"
@@ -565,7 +584,9 @@ export default function NewApplicationView() {
         {/* Row 2 */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
           <div>
-            <Label htmlFor="amtsgericht">Amtsgericht</Label>
+            <LabelWithSource htmlFor="amtsgericht" hint={amtsgericht ? { document: 'handelsregister', field: 'hrb', value: amtsgericht } : null}>
+              Amtsgericht
+            </LabelWithSource>
             <input
               id="amtsgericht"
               type="text"
@@ -576,7 +597,9 @@ export default function NewApplicationView() {
             />
           </div>
           <div>
-            <Label htmlFor="gruendung">Gruendungsjahr *</Label>
+            <LabelWithSource htmlFor="gruendung" hint={gruendung ? { document: 'handelsregister', field: 'gruendung', value: gruendung } : null}>
+              Gruendungsjahr *
+            </LabelWithSource>
             <input
               id="gruendung"
               type="number"

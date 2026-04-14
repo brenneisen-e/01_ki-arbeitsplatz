@@ -36,6 +36,7 @@ const viewSuggestedQuestions = {
     'Wie bewertest du die Bilanz im Dreijahresvergleich?',
     'Ist die Kapitaldienstfähigkeit gegeben?',
     'Welche Kennzahlen weichen von Branchenwerten ab?',
+    'Woher stammen die zugrundeliegenden Daten?',
   ],
   rating: [
     'Wie setzt sich das Rating zusammen?',
@@ -169,7 +170,9 @@ export default function AIChatPanel() {
       ? `Aktueller Kontext: ${company.firma} (${company.branche}), Kreditantrag über ${company.kredit?.betrag?.toLocaleString('de-DE')} € für ${company.kredit?.verwendung}.`
       : 'Es ist kein spezifischer Kreditantrag ausgewählt.';
 
-    const systemPrompt = `Du bist ein erfahrener Kreditanalyst bei einer deutschen Bank (Sparkasse/Genossenschaftsbank). ${viewContextPrompts[state.currentView] || ''} ${contextInfo} Antworte auf Deutsch, professionell und präzise. Verwende bankübliche Fachbegriffe. Beziehe dich auf regulatorische Anforderungen (MaRisk, KWG, CRR, GwG) wo relevant. Formatiere deine Antwort NICHT mit Markdown. Verwende kein ** für Fettdruck. Schreibe in klarem Fließtext mit Absätzen.`;
+    const systemPrompt = `Du bist ein erfahrener Kreditanalyst bei einer deutschen Bank (Sparkasse/Genossenschaftsbank). ${viewContextPrompts[state.currentView] || ''} ${contextInfo} Antworte auf Deutsch, professionell und präzise. Verwende bankübliche Fachbegriffe. Beziehe dich auf regulatorische Anforderungen (MaRisk, KWG, CRR, GwG) wo relevant. Formatiere deine Antwort NICHT mit Markdown. Verwende kein ** für Fettdruck. Schreibe in klarem Fließtext mit Absätzen.
+
+WICHTIG – Quellenangaben: Nenne immer transparent, woher du deine Informationen ziehst. Schließe jede Antwort mit einem Abschnitt "Quellen:" ab und liste die konkreten Datenquellen auf (z. B. "Jahresabschluss 2023 des Antragstellers", "BWA März 2026", "Handelsregister HRB 12345", "Creditreform-Auskunft vom 10.04.2026", "Kompetenzmatrix der Bank", "MaRisk BTO 1.2.1"). Wenn Annahmen getroffen werden, markiere sie als "Annahme:".`;
 
     await sendChatMessage(systemPrompt, message);
   };

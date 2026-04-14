@@ -70,14 +70,26 @@ const TABS = [
   { key: 'kapitaldienst', label: 'Kapitaldienstfähigkeit', icon: Calculator },
 ];
 
+// Dynamic date helper (today-relative)
+function daysAgoISO(n) {
+  const d = new Date();
+  d.setDate(d.getDate() - n);
+  return d.toISOString().slice(0, 10);
+}
+
+function formatDE(iso) {
+  if (!iso) return '';
+  return new Date(iso).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+}
+
 const DOCUMENTS = [
-  { name: 'Jahresabschluss 2023', status: 'Extrahiert', type: 'bilanz' },
-  { name: 'Jahresabschluss 2022', status: 'Extrahiert', type: 'bilanz' },
-  { name: 'Jahresabschluss 2021', status: 'Extrahiert', type: 'bilanz' },
-  { name: 'BWA aktuell', status: 'Hochgeladen', type: 'bwa' },
-  { name: 'Summen-Saldenliste', status: 'Offen', type: 'ssl' },
-  { name: 'Steuerbescheide', status: 'Offen', type: 'steuer' },
-  { name: 'Planungsrechnung', status: 'Offen', type: 'plan' },
+  { name: 'Jahresabschluss 2023', status: 'Extrahiert', type: 'bilanz', pruefDatum: daysAgoISO(3), kiGeprueft: true },
+  { name: 'Jahresabschluss 2022', status: 'Extrahiert', type: 'bilanz', pruefDatum: daysAgoISO(3), kiGeprueft: true },
+  { name: 'Jahresabschluss 2021', status: 'Extrahiert', type: 'bilanz', pruefDatum: daysAgoISO(5), kiGeprueft: true },
+  { name: 'BWA aktuell', status: 'Hochgeladen', type: 'bwa', pruefDatum: daysAgoISO(1), kiGeprueft: true },
+  { name: 'Summen-Saldenliste', status: 'Offen', type: 'ssl', pruefDatum: '', kiGeprueft: false },
+  { name: 'Steuerbescheide', status: 'Offen', type: 'steuer', pruefDatum: '', kiGeprueft: false },
+  { name: 'Planungsrechnung', status: 'Offen', type: 'plan', pruefDatum: '', kiGeprueft: false },
 ];
 
 const STATUS_STYLES = {
@@ -392,12 +404,26 @@ function TabDokumente({ obligo750, totalObligo }) {
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-medium font-body text-text-primary truncate">{doc.name}</p>
-              <div className="mt-1.5 flex items-center gap-2">
+              <div className="mt-1.5 flex items-center gap-2 flex-wrap">
                 <span className={`inline-flex items-center gap-1 px-2 py-0.5 text-xs font-medium rounded-full border ${STATUS_STYLES[doc.status]}`}>
                   {doc.status === 'Extrahiert' && <CheckCircle size={12} strokeWidth={1.5} />}
                   {doc.status === 'Hochgeladen' && <AlertCircle size={12} strokeWidth={1.5} />}
                   {doc.status}
                 </span>
+                {doc.kiGeprueft && (
+                  <span
+                    className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold bg-violet-100 text-violet-700 border border-violet-200"
+                    title="KI-Extraktion & -Plausibilisierung mit Freigabe durch Analyst (Human-in-the-Loop)"
+                  >
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                    KI geprüft
+                  </span>
+                )}
+                {doc.pruefDatum && (
+                  <span className="text-[10px] font-mono text-text-muted">
+                    geprüft am {formatDE(doc.pruefDatum)}
+                  </span>
+                )}
                 {doc.status === 'Extrahiert' && doc.name.includes('2021') && (
                   <span className="text-xs text-accent-warm font-body">Alter: 2+ Jahre</span>
                 )}

@@ -282,12 +282,18 @@ Die regulatorischen Anforderungen gemäß §18 KWG, MaRisk BTO 1.2 sowie CRR/CRD
 
 Empfehlung: Genehmigung unter den nachfolgend genannten Auflagen und Bedingungen.`;
 
-  // Initialize defaults once (only Erstvotum pre-filled)
+  // Initialize defaults once
   if (!marktBegruendung) {
     // Using a trick: we set via timeout 0 to avoid setState during render
     setTimeout(() => {
       setMarktBegruendung(defaultMarktBegruendung);
       setMarktEindruck('Herr ' + (company.gf?.[0]?.name?.split(' ').pop() || 'Geschäftsführer') + ' machte im persönlichen Gespräch am ' + new Date().toLocaleDateString('de-DE') + ' einen kompetenten und vertrauenswürdigen Eindruck. Die Investitionspläne wurden schlüssig und detailliert dargelegt. Das Unternehmen wird gut geführt und verfügt über klare strategische Ziele.');
+    }, 0);
+  }
+  if (!marktfolgeBegruendung) {
+    setTimeout(() => {
+      setMarktfolgeBegruendung(defaultMarktfolgeBegruendung);
+      setMarktfolgeEindruck('Die Unterlagen wurden vollständig und termingerecht eingereicht. Die wirtschaftlichen Verhältnisse wurden gemäß §18 KWG geprüft. Die Sicherheitenbewertung erfolgte nach den institutsinternen Beleihungswertrichtlinien.');
     }, 0);
   }
 
@@ -656,6 +662,8 @@ Empfehlung: Genehmigung unter den nachfolgend genannten Auflagen und Bedingungen
             signiert={marktSigniert}
             setSigniert={setMarktSigniert}
             accentColor="primary"
+            readOnly={currentUser.id !== marktUser.id}
+            readOnlyHint={`Nur ${marktUser.name} (${marktUser.role}) kann das Erstvotum bearbeiten.`}
           />
 
           {/* Zweitvotum (Marktfolge) */}
@@ -675,6 +683,8 @@ Empfehlung: Genehmigung unter den nachfolgend genannten Auflagen und Bedingungen
             signiert={marktfolgeSigniert}
             setSigniert={setMarktfolgeSigniert}
             accentColor="primary-light"
+            readOnly={currentUser.id !== marktfolgeUser.id}
+            readOnlyHint={`Nur ${marktfolgeUser.name} (${marktfolgeUser.role}) kann das Zweitvotum bearbeiten.`}
           />
         </div>
 
@@ -689,7 +699,7 @@ Empfehlung: Genehmigung unter den nachfolgend genannten Auflagen und Bedingungen
           {ergebnis === 'positiv' ? (
             <>
               <CheckCircle size={22} strokeWidth={1.5} className="text-green-600 shrink-0" />
-              <div>
+              <div className="flex-1">
                 <p className="font-semibold font-headline text-sm">Beide Voten positiv – Weiter zur Genehmigung</p>
                 <p className="text-xs mt-0.5 opacity-80">Die Kreditvorlage kann dem zuständigen Kompetenzträger vorgelegt werden.</p>
               </div>
@@ -712,6 +722,58 @@ Empfehlung: Genehmigung unter den nachfolgend genannten Auflagen und Bedingungen
             </>
           )}
         </div>
+
+        {/* Entscheidung des Kompetenzträgers */}
+        {company.status !== 'approved' && company.status !== 'rejected' && company.status !== 'contract' && (
+          <div className="bg-surface-card border border-border rounded-xl p-6">
+            <div className="flex items-start gap-3 mb-4">
+              <Gavel size={20} strokeWidth={1.5} className="text-primary shrink-0 mt-0.5" />
+              <div>
+                <h2 className="text-base font-semibold font-headline text-text-primary">
+                  Entscheidung durch Kompetenzträger
+                </h2>
+                <p className="text-sm text-text-secondary mt-1">
+                  Zuständig: <strong className="text-text-primary">{requiredApprover.approver}</strong>
+                  {' '}({getApproverName(requiredApprover.approver)})
+                </p>
+              </div>
+            </div>
+
+            {!(marktSigniert && marktfolgeSigniert) && (
+              <div className="flex items-start gap-2 p-3 mb-4 rounded-lg bg-amber-50 border border-amber-200 text-xs text-amber-900">
+                <AlertCircle size={14} strokeWidth={1.5} className="shrink-0 mt-0.5" />
+                <span>
+                  Beide Voten (Erst- und Zweitvotum) müssen digital signiert sein, bevor die Entscheidung getroffen werden kann.
+                </span>
+              </div>
+            )}
+
+            <div className="flex flex-wrap gap-3">
+              <button
+                type="button"
+                disabled={!(marktSigniert && marktfolgeSigniert)}
+                onClick={() => {
+                  dispatch({ type: 'SET_COMPANY_STATUS', companyId: company.id, status: 'approved' });
+                }}
+                className="inline-flex items-center gap-2 px-5 py-3 bg-emerald-600 text-white rounded-lg text-sm font-semibold font-body hover:bg-emerald-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              >
+                <CheckCircle size={16} strokeWidth={1.5} />
+                Kredit genehmigen
+              </button>
+              <button
+                type="button"
+                disabled={!(marktSigniert && marktfolgeSigniert)}
+                onClick={() => {
+                  dispatch({ type: 'SET_COMPANY_STATUS', companyId: company.id, status: 'rejected' });
+                }}
+                className="inline-flex items-center gap-2 px-5 py-3 bg-red-600 text-white rounded-lg text-sm font-semibold font-body hover:bg-red-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              >
+                <AlertTriangle size={16} strokeWidth={1.5} />
+                Kredit ablehnen
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* KI Kreditvorlage / Kreditvertrag generieren */}
         {company.status === 'approved' ? (
@@ -1072,6 +1134,8 @@ function VotumCard({
   signiert,
   setSigniert,
   accentColor,
+  readOnly = false,
+  readOnlyHint = '',
 }) {
   const empfehlungOptions = [
     { value: 'genehmigung', label: 'Genehmigung' },
@@ -1083,11 +1147,24 @@ function VotumCard({
   const min500 = 500;
 
   return (
-    <div className={`bg-surface-card border border-border rounded-xl p-5 space-y-4`}>
+    <div className={`bg-surface-card border ${readOnly ? 'border-dashed border-border' : 'border-border'} rounded-xl p-5 space-y-4 ${readOnly ? 'opacity-90' : ''}`}>
       <div className={`flex items-center gap-2 pb-3 border-b border-border`}>
         <Vote size={18} strokeWidth={1.5} className={`text-${accentColor}`} />
         <h3 className="text-sm font-bold font-headline text-text-primary">{title}</h3>
+        {readOnly && (
+          <span className="ml-auto inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-slate-100 text-slate-700 border border-slate-200">
+            <Shield size={10} strokeWidth={2} />
+            Nur Lesezugriff
+          </span>
+        )}
       </div>
+
+      {readOnly && readOnlyHint && (
+        <div className="text-xs text-text-muted font-body italic -mt-1 flex items-start gap-1">
+          <AlertCircle size={12} strokeWidth={1.5} className="shrink-0 mt-0.5" />
+          {readOnlyHint}
+        </div>
+      )}
 
       {/* Bearbeiter */}
       <div>
@@ -1110,7 +1187,8 @@ function VotumCard({
                 value={opt.value}
                 checked={empfehlung === opt.value}
                 onChange={() => setEmpfehlung(opt.value)}
-                className="accent-primary w-3.5 h-3.5"
+                disabled={readOnly}
+                className="accent-primary w-3.5 h-3.5 disabled:cursor-not-allowed"
               />
               <span className={`text-sm font-body ${
                 opt.value === 'ablehnung' ? 'text-danger' : 'text-text-primary'
@@ -1134,7 +1212,8 @@ function VotumCard({
           value={begruendung}
           onChange={(e) => setBegruendung(e.target.value)}
           rows={6}
-          className="w-full px-3 py-2 bg-surface rounded-lg border border-border text-sm font-body text-text-primary resize-y focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
+          readOnly={readOnly}
+          className={`w-full px-3 py-2 bg-surface rounded-lg border border-border text-sm font-body text-text-primary resize-y focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary ${readOnly ? 'cursor-not-allowed bg-slate-50' : ''}`}
         />
       </div>
 
@@ -1145,7 +1224,8 @@ function VotumCard({
           value={eindruck}
           onChange={(e) => setEindruck(e.target.value)}
           rows={3}
-          className="w-full px-3 py-2 bg-surface rounded-lg border border-border text-sm font-body text-text-primary resize-y focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
+          readOnly={readOnly}
+          className={`w-full px-3 py-2 bg-surface rounded-lg border border-border text-sm font-body text-text-primary resize-y focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary ${readOnly ? 'cursor-not-allowed bg-slate-50' : ''}`}
         />
       </div>
 
@@ -1164,18 +1244,22 @@ function VotumCard({
                   next[i] = e.target.value;
                   setAuflagen(next);
                 }}
-                className="flex-1 px-2 py-1.5 bg-surface rounded border border-border text-sm font-body text-text-primary focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
+                readOnly={readOnly}
+                className={`flex-1 px-2 py-1.5 bg-surface rounded border border-border text-sm font-body text-text-primary focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary ${readOnly ? 'cursor-not-allowed bg-slate-50' : ''}`}
               />
-              <button
-                type="button"
-                onClick={() => setAuflagen(auflagen.filter((_, j) => j !== i))}
-                className="text-text-muted hover:text-danger transition-colors p-1"
-                title="Entfernen"
-              >
-                <Trash2 size={14} strokeWidth={1.5} />
-              </button>
+              {!readOnly && (
+                <button
+                  type="button"
+                  onClick={() => setAuflagen(auflagen.filter((_, j) => j !== i))}
+                  className="text-text-muted hover:text-danger transition-colors p-1"
+                  title="Entfernen"
+                >
+                  <Trash2 size={14} strokeWidth={1.5} />
+                </button>
+              )}
             </div>
           ))}
+          {!readOnly && (
           <button
             type="button"
             onClick={() => setAuflagen([...auflagen, ''])}
@@ -1184,6 +1268,7 @@ function VotumCard({
             <Plus size={14} strokeWidth={1.5} />
             Auflage hinzufügen
           </button>
+          )}
         </div>
       </div>
 
@@ -1194,19 +1279,27 @@ function VotumCard({
           type="date"
           value={datum}
           onChange={(e) => setDatum(e.target.value)}
-          className="w-full px-3 py-2 bg-surface rounded-lg border border-border text-sm font-mono text-text-primary focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
+          lang="de-DE"
+          readOnly={readOnly}
+          className={`w-full px-3 py-2 bg-surface rounded-lg border border-border text-sm font-mono text-text-primary focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary ${readOnly ? 'cursor-not-allowed bg-slate-50' : ''}`}
         />
+        {datum && (
+          <p className="text-[10px] text-text-muted mt-1 font-mono">
+            {new Date(datum).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' })}
+          </p>
+        )}
       </div>
 
       {/* Signatur */}
-      <label className="flex items-center gap-2 cursor-pointer pt-1">
+      <label className={`flex items-center gap-2 pt-1 ${readOnly ? 'cursor-not-allowed' : 'cursor-pointer'}`}>
         <input
           type="checkbox"
           checked={signiert}
           onChange={(e) => setSigniert(e.target.checked)}
-          className="accent-primary w-4 h-4"
+          disabled={readOnly}
+          className="accent-primary w-4 h-4 disabled:cursor-not-allowed"
         />
-        <span className="text-sm font-body text-text-primary">Digital signiert</span>
+        <span className="text-sm font-body text-text-primary">Votum einreichen & digital signieren</span>
         {signiert && <BadgeCheck size={16} strokeWidth={1.5} className="text-accent" />}
       </label>
     </div>

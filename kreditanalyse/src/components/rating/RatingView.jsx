@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { useApp } from '../../context/AppContext';
 import StepCompleteBar from '../shared/StepCompleteBar';
+import StepIntroCard from '../shared/StepIntroCard';
 import {
   ArrowLeft,
   BarChart3,
@@ -286,6 +287,7 @@ export default function RatingView() {
 
   return (
     <div className="space-y-6">
+      <StepIntroCard stepKey="rating" />
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
@@ -396,17 +398,19 @@ function QuantitativesRating({ quantResult, ratios }) {
   const { details, score } = quantResult;
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center gap-2 mb-1">
-        <BarChart3 size={18} strokeWidth={1.5} className="text-primary" />
-        <h2 className="font-headline text-lg font-semibold text-text-primary">
-          Quantitatives Rating
-        </h2>
+    <div className="space-y-4">
+      <div className="flex items-start gap-2">
+        <BarChart3 size={18} strokeWidth={1.5} className="text-primary mt-0.5 shrink-0" />
+        <div>
+          <h2 className="font-headline text-lg font-semibold text-text-primary leading-tight">
+            Quantitatives Rating
+          </h2>
+          <p className="text-sm text-text-secondary mt-1">
+            Automatisch berechnet auf Basis der Jahresabschlussdaten 2023. Die Einzelkennzahlen werden
+            branchenspezifisch bewertet und gewichtet.
+          </p>
+        </div>
       </div>
-      <p className="text-sm text-text-secondary -mt-4">
-        Automatisch berechnet auf Basis der Jahresabschlussdaten 2023. Die Einzelkennzahlen werden
-        branchenspezifisch bewertet und gewichtet.
-      </p>
 
       <div className="overflow-x-auto">
         <table className="w-full text-sm">

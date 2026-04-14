@@ -8,172 +8,225 @@
  */
 
 import { useState } from 'react';
+import { useApp } from '../../context/AppContext';
 import { X, FileText, Download, Printer, Eye } from 'lucide-react';
+
+// ---------------------------------------------------------------------------
+// Hilfsfunktionen, um die Dokumente je nach aktuellem Vorgang dynamisch
+// zu füllen. Sonst würde bei jedem Vorgang die gleiche Rhein-Immobilien-Seite
+// gezeigt werden.
+// ---------------------------------------------------------------------------
+
+function fmtDate(iso) {
+  if (!iso) return '';
+  try { return new Date(iso).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' }); }
+  catch { return String(iso); }
+}
+function fmtEUR(n) {
+  if (n == null) return '—';
+  return Number(n).toLocaleString('de-DE') + ',00 EUR';
+}
+function rechtsformLang(k) {
+  const m = { 'GmbH': 'Gesellschaft mit beschränkter Haftung', 'AG': 'Aktiengesellschaft', 'UG': 'Unternehmergesellschaft (haftungsbeschränkt)', 'KG': 'Kommanditgesellschaft', 'OHG': 'Offene Handelsgesellschaft', 'GmbH & Co. KG': 'GmbH & Co. KG', 'eG': 'eingetragene Genossenschaft', 'e.K.': 'eingetragener Kaufmann' };
+  return m[k] || k || 'Gesellschaft';
+}
+
+function buildCompanyDocs(company) {
+  const c = company || {};
+  const firma = c.firma || 'Muster GmbH';
+  const rechtsform = c.rechtsform || 'GmbH';
+  const hrb = c.hrb || 'HRB 00000';
+  const amtsgericht = c.amtsgericht || 'Musterstadt';
+  const gruendung = c.gruendung || 2010;
+  const adresse = c.adresse || {};
+  const ort = adresse.ort || '—';
+  const fullAdresse = [adresse.strasse, `${adresse.plz || ''} ${ort}`.trim()].filter(Boolean).join(', ');
+  const branche = c.branche || '—';
+  const stammkapital = c.stammkapital || 25000;
+  const gf = c.gf?.[0] || {};
+  const gfName = gf.name || 'Geschäftsführer';
+  const gfGeb = gf.geb ? fmtDate(gf.geb) : '';
+  const mitarbeiter = c.mitarbeiter || '—';
+  const ustId = c.ust_id || c.ustid || '—';
+
+  const today = new Date();
+  const abruf = fmtDate(today.toISOString());
+
+  const bil23 = c.bilanz?.[2023] || {};
+  const umsatz = bil23.umsatz ?? c.umsatz ?? 0;
+  const bilanzsumme = bil23.bilanzsumme ?? 0;
+  const eigenkapital = bil23.eigenkapital ?? 0;
+  const ekquote = bilanzsumme ? (eigenkapital / bilanzsumme * 100).toFixed(1) + ' %' : '—';
+  const fremdkapital = bilanzsumme && eigenkapital ? bilanzsumme - eigenkapital : 0;
+
+  return {
 
 // ---------------------------------------------------------------------------
 // Mock-Dokumente: Jede Definition beschreibt einen Seiteninhalt als
 // strukturierte Liste von Blöcken. Wird als SVG-Seite gerendert.
 // ---------------------------------------------------------------------------
 
-const DOCS = {
-  handelsregister: {
-    title: 'Handelsregisterauszug',
-    subtitle: 'Amtsgericht Düsseldorf · HRB 65890',
-    meta: 'Abruf: 10.04.2026 · Digital signiert',
-    pageLabel: 'Seite 1 von 3',
-    blocks: [
-      { type: 'heading', text: 'A Aktuelle Eintragungen' },
-      { type: 'field', label: 'Nummer der Firma', value: 'HRB 65890' },
-      { type: 'field', label: 'Firma', value: 'Rhein-Immobilien GmbH' },
-      { type: 'field', label: 'Sitz', value: 'Düsseldorf' },
-      { type: 'field', label: 'Geschäftsanschrift', value: 'Königsallee 92, 40212 Düsseldorf' },
-      { type: 'field', label: 'Gegenstand des Unternehmens', value: 'Erwerb, Verwaltung, Bebauung und Verwertung von Grundstücken und grundstücksgleichen Rechten.' },
-      { type: 'field', label: 'Stammkapital', value: '250.000,00 EUR' },
-      { type: 'field', label: 'Rechtsform', value: 'Gesellschaft mit beschränkter Haftung' },
-      { type: 'field', label: 'Tag der Eintragung', value: '15. März 2008' },
-      { type: 'heading', text: 'B Geschäftsführer / Vertretungsbefugnis' },
-      { type: 'field', label: 'Geschäftsführer', value: 'Clemens Vogel, geb. 12.03.1968, wohnhaft Düsseldorf' },
-      { type: 'field', label: 'Vertretungsregelung', value: 'Die Gesellschaft wird durch einen Geschäftsführer vertreten.' },
-    ],
-  },
+    handelsregister: {
+      title: 'Handelsregisterauszug',
+      subtitle: `${amtsgericht ? 'Amtsgericht ' + amtsgericht : 'Amtsgericht'} · ${hrb}`,
+      meta: `Abruf: ${abruf} · Digital signiert`,
+      pageLabel: 'Seite 1 von 3',
+      blocks: [
+        { type: 'heading', text: 'A Aktuelle Eintragungen' },
+        { type: 'field', label: 'Nummer der Firma', value: hrb },
+        { type: 'field', label: 'Firma', value: firma },
+        { type: 'field', label: 'Sitz', value: ort },
+        { type: 'field', label: 'Geschäftsanschrift', value: fullAdresse || '—' },
+        { type: 'field', label: 'Gegenstand des Unternehmens', value: branche },
+        { type: 'field', label: 'Stammkapital', value: fmtEUR(stammkapital) },
+        { type: 'field', label: 'Rechtsform', value: rechtsformLang(rechtsform) },
+        { type: 'field', label: 'Tag der Eintragung', value: `${gruendung}` },
+        { type: 'heading', text: 'B Geschäftsführer / Vertretungsbefugnis' },
+        { type: 'field', label: 'Geschäftsführer', value: gfName + (gfGeb ? `, geb. ${gfGeb}` : '') + (ort ? `, wohnhaft ${ort}` : '') },
+        { type: 'field', label: 'Vertretungsregelung', value: 'Die Gesellschaft wird durch einen Geschäftsführer vertreten.' },
+      ],
+    },
 
-  gesellschaftsvertrag: {
-    title: 'Gesellschaftsvertrag',
-    subtitle: 'Notariell beurkundet · URNr. 512/2008',
-    meta: 'Notar Dr. Schmitt, Düsseldorf',
-    pageLabel: 'Seite 2 von 12',
-    blocks: [
-      { type: 'paragraph', label: '§ 1 Firma und Sitz', value: '(1) Die Firma der Gesellschaft lautet: Rhein-Immobilien GmbH.\n(2) Sitz der Gesellschaft ist Düsseldorf.' },
-      { type: 'paragraph', label: '§ 2 Gegenstand des Unternehmens', value: 'Gegenstand des Unternehmens ist der Erwerb, die Verwaltung, die Bebauung und die Verwertung von Grundstücken und grundstücksgleichen Rechten sowie alle damit in Zusammenhang stehenden Geschäfte.' },
-      { type: 'paragraph', label: '§ 3 Stammkapital', value: '(1) Das Stammkapital der Gesellschaft beträgt 250.000,00 EUR.\n(2) Hiervon übernimmt Herr Clemens Vogel einen Anteil im Nennwert von 250.000,00 EUR (= 100 %).' },
-      { type: 'paragraph', label: '§ 4 Geschäftsführung', value: 'Die Gesellschaft hat einen oder mehrere Geschäftsführer. Ist nur ein Geschäftsführer bestellt, vertritt er die Gesellschaft allein.' },
-      { type: 'paragraph', label: '§ 5 Geschäftsjahr', value: 'Das Geschäftsjahr ist das Kalenderjahr.' },
-    ],
-  },
+    gesellschaftsvertrag: {
+      title: 'Gesellschaftsvertrag',
+      subtitle: `${firma} · Notariell beurkundet`,
+      meta: `Notar Dr. Schmitt, ${ort || 'Musterstadt'}`,
+      pageLabel: 'Seite 2 von 12',
+      blocks: [
+        { type: 'paragraph', label: '§ 1 Firma und Sitz', value: `(1) Die Firma der Gesellschaft lautet: ${firma}.\n(2) Sitz der Gesellschaft ist ${ort || '—'}.` },
+        { type: 'paragraph', label: '§ 2 Gegenstand des Unternehmens', value: `Gegenstand des Unternehmens ist ${branche.toLowerCase()} sowie alle damit in Zusammenhang stehenden Geschäfte.` },
+        { type: 'paragraph', label: '§ 3 Stammkapital', value: `(1) Das Stammkapital der Gesellschaft beträgt ${fmtEUR(stammkapital)}.\n(2) Hiervon übernimmt Herr/Frau ${gfName} einen Anteil laut Gesellschafterliste.` },
+        { type: 'paragraph', label: '§ 4 Geschäftsführung', value: 'Die Gesellschaft hat einen oder mehrere Geschäftsführer. Ist nur ein Geschäftsführer bestellt, vertritt er die Gesellschaft allein.' },
+        { type: 'paragraph', label: '§ 5 Geschäftsjahr', value: 'Das Geschäftsjahr ist das Kalenderjahr.' },
+      ],
+    },
 
-  gesellschafterliste: {
-    title: 'Gesellschafterliste gem. § 40 GmbHG',
-    subtitle: 'Rhein-Immobilien GmbH · HRB 65890',
-    meta: 'Stand: 01.04.2026 · unterschrieben durch Geschäftsführer',
-    pageLabel: 'Seite 1 von 1',
-    blocks: [
-      { type: 'heading', text: 'Gesellschafter' },
-      { type: 'table', headers: ['Nr.', 'Name', 'Geburtsdatum', 'Nennbetrag', 'Anteil'], rows: [
-        ['1', 'Clemens Vogel', '12.03.1968', '250.000,00 EUR', '100,00 %'],
-      ]},
-      { type: 'paragraph', label: 'Anmerkung', value: 'Die Summe aller Nennbeträge entspricht dem im Handelsregister eingetragenen Stammkapital von 250.000,00 EUR.' },
-      { type: 'field', label: 'Datum / Unterschrift GF', value: '01.04.2026 / C. Vogel' },
-    ],
-  },
+    gesellschafterliste: {
+      title: 'Gesellschafterliste gem. § 40 GmbHG',
+      subtitle: `${firma} · ${hrb}`,
+      meta: `Stand: ${abruf} · unterschrieben durch Geschäftsführer`,
+      pageLabel: 'Seite 1 von 1',
+      blocks: [
+        { type: 'heading', text: 'Gesellschafter' },
+        { type: 'table', headers: ['Nr.', 'Name', 'Geburtsdatum', 'Nennbetrag', 'Anteil'], rows: [
+          ['1', gfName, gfGeb || '—', fmtEUR(stammkapital), (gf.anteil || 100) + ',00 %'],
+        ]},
+        { type: 'paragraph', label: 'Anmerkung', value: `Die Summe aller Nennbeträge entspricht dem im Handelsregister eingetragenen Stammkapital von ${fmtEUR(stammkapital)}.` },
+        { type: 'field', label: 'Datum / Unterschrift GF', value: `${abruf} / ${gfName}` },
+      ],
+    },
 
-  transparenzregister: {
-    title: 'Transparenzregisterauszug',
-    subtitle: 'Bundesanzeiger-Verlag · Abruf 12.04.2026',
-    meta: 'Auszug gem. § 23 GwG',
-    pageLabel: 'Seite 1 von 2',
-    blocks: [
-      { type: 'heading', text: 'Rechtseinheit' },
-      { type: 'field', label: 'Firma', value: 'Rhein-Immobilien GmbH' },
-      { type: 'field', label: 'Registernummer', value: 'HRB 65890, Amtsgericht Düsseldorf' },
-      { type: 'heading', text: 'Wirtschaftlich Berechtigter' },
-      { type: 'field', label: 'Name', value: 'Clemens Vogel' },
-      { type: 'field', label: 'Geburtsdatum', value: '12.03.1968' },
-      { type: 'field', label: 'Wohnort', value: 'Düsseldorf, Deutschland' },
-      { type: 'field', label: 'Staatsangehörigkeit', value: 'deutsch' },
-      { type: 'field', label: 'Art der Berechtigung', value: 'Kapitalanteile > 25 %' },
-      { type: 'field', label: 'Umfang der Berechtigung', value: '100 %' },
-    ],
-  },
+    transparenzregister: {
+      title: 'Transparenzregisterauszug',
+      subtitle: `Bundesanzeiger-Verlag · Abruf ${abruf}`,
+      meta: 'Auszug gem. § 23 GwG',
+      pageLabel: 'Seite 1 von 2',
+      blocks: [
+        { type: 'heading', text: 'Rechtseinheit' },
+        { type: 'field', label: 'Firma', value: firma },
+        { type: 'field', label: 'Registernummer', value: `${hrb}, Amtsgericht ${amtsgericht}` },
+        { type: 'heading', text: 'Wirtschaftlich Berechtigter' },
+        { type: 'field', label: 'Name', value: gfName },
+        { type: 'field', label: 'Geburtsdatum', value: gfGeb || '—' },
+        { type: 'field', label: 'Wohnort', value: `${ort || '—'}, Deutschland` },
+        { type: 'field', label: 'Staatsangehörigkeit', value: 'deutsch' },
+        { type: 'field', label: 'Art der Berechtigung', value: 'Kapitalanteile > 25 %' },
+        { type: 'field', label: 'Umfang der Berechtigung', value: (gf.anteil || 100) + ',00 %' },
+      ],
+    },
 
-  ausweis: {
-    title: 'Personalausweis – Bundesrepublik Deutschland',
-    subtitle: 'Legitimationsprüfung GF 1 · Ausweiskopie',
-    meta: 'Eingereicht: 08.04.2026 · KI-OCR verifiziert',
-    pageLabel: 'Seite 1 von 1',
-    blocks: [
-      { type: 'heading', text: 'Ausweisdaten' },
-      { type: 'field', label: 'Name', value: 'Vogel' },
-      { type: 'field', label: 'Vornamen', value: 'Clemens' },
-      { type: 'field', label: 'Geburtsdatum', value: '12.03.1968' },
-      { type: 'field', label: 'Geburtsort', value: 'Düsseldorf' },
-      { type: 'field', label: 'Staatsangehörigkeit', value: 'DEUTSCH' },
-      { type: 'field', label: 'Ausweisnummer', value: 'T22000129' },
-      { type: 'field', label: 'Ausstellende Behörde', value: 'Stadt Düsseldorf' },
-      { type: 'field', label: 'Gültig bis', value: '14.08.2030' },
-      { type: 'paragraph', label: 'Hinweis', value: 'Ausweiskopie in das System eingescannt und mit Handelsregister / Transparenzregister automatisch abgeglichen. Legitimation bestätigt durch SB, 08.04.2026.' },
-    ],
-  },
+    ausweis: {
+      title: 'Personalausweis – Bundesrepublik Deutschland',
+      subtitle: `Legitimationsprüfung · ${firma}`,
+      meta: `Eingereicht · KI-OCR verifiziert`,
+      pageLabel: 'Seite 1 von 1',
+      blocks: [
+        { type: 'heading', text: 'Ausweisdaten' },
+        { type: 'field', label: 'Name', value: (gfName.split(' ').pop() || gfName) },
+        { type: 'field', label: 'Vornamen', value: gfName.split(' ').slice(0, -1).join(' ') || gfName },
+        { type: 'field', label: 'Geburtsdatum', value: gfGeb || '—' },
+        { type: 'field', label: 'Geburtsort', value: ort || '—' },
+        { type: 'field', label: 'Staatsangehörigkeit', value: 'DEUTSCH' },
+        { type: 'field', label: 'Ausweisnummer', value: 'T22000129' },
+        { type: 'field', label: 'Ausstellende Behörde', value: `Stadt ${ort || 'Musterstadt'}` },
+        { type: 'field', label: 'Gültig bis', value: '14.08.2030' },
+        { type: 'paragraph', label: 'Hinweis', value: 'Ausweiskopie eingescannt und mit Handelsregister / Transparenzregister automatisch abgeglichen. Legitimation bestätigt (Human-in-the-Loop).' },
+      ],
+    },
 
-  gewerbe: {
-    title: 'Gewerbeanmeldung',
-    subtitle: 'Stadt Düsseldorf · Ordnungsamt',
-    meta: 'Aktenzeichen 2008/004521 · Vorgang 15.03.2008',
-    pageLabel: 'Seite 1 von 1',
-    blocks: [
-      { type: 'heading', text: 'Angaben zum Gewerbetreibenden' },
-      { type: 'field', label: 'Firma', value: 'Rhein-Immobilien GmbH' },
-      { type: 'field', label: 'Rechtsform', value: 'GmbH, HRB 65890 Düsseldorf' },
-      { type: 'field', label: 'Geschäftsanschrift', value: 'Königsallee 92, 40212 Düsseldorf' },
-      { type: 'heading', text: 'Angaben zum Gewerbe' },
-      { type: 'field', label: 'Tätigkeit', value: 'Erwerb, Verwaltung, Bebauung und Verwertung von Immobilien' },
-      { type: 'field', label: 'Beginn der Tätigkeit', value: '15.03.2008' },
-      { type: 'field', label: 'Anzahl Beschäftigte', value: 'ca. 18' },
-      { type: 'field', label: 'Umsatzsteuer-ID', value: 'DE 278 451 902' },
-      { type: 'paragraph', label: 'Bescheid', value: 'Die Anmeldung des oben genannten Gewerbes ist beim Ordnungsamt der Stadt Düsseldorf ordnungsgemäß eingegangen und bestätigt.' },
-    ],
-  },
+    gewerbe: {
+      title: 'Gewerbeanmeldung',
+      subtitle: `Stadt ${ort || 'Musterstadt'} · Ordnungsamt`,
+      meta: `Aktenzeichen ${gruendung}/${String(hrb).replace(/[^0-9]/g, '').slice(-6) || '004521'} · Vorgang`,
+      pageLabel: 'Seite 1 von 1',
+      blocks: [
+        { type: 'heading', text: 'Angaben zum Gewerbetreibenden' },
+        { type: 'field', label: 'Firma', value: firma },
+        { type: 'field', label: 'Rechtsform', value: `${rechtsform}, ${hrb} ${amtsgericht}` },
+        { type: 'field', label: 'Geschäftsanschrift', value: fullAdresse || '—' },
+        { type: 'heading', text: 'Angaben zum Gewerbe' },
+        { type: 'field', label: 'Tätigkeit', value: branche },
+        { type: 'field', label: 'Beginn der Tätigkeit', value: `${gruendung}` },
+        { type: 'field', label: 'Anzahl Beschäftigte', value: `ca. ${mitarbeiter}` },
+        { type: 'field', label: 'Umsatzsteuer-ID', value: ustId },
+        { type: 'paragraph', label: 'Bescheid', value: `Die Anmeldung des oben genannten Gewerbes ist beim Ordnungsamt der Stadt ${ort || 'Musterstadt'} ordnungsgemäß eingegangen und bestätigt.` },
+      ],
+    },
 
-  jahresabschluss: {
-    title: 'Jahresabschluss 2023',
-    subtitle: 'Rhein-Immobilien GmbH · testiert 28.03.2024',
-    meta: 'Uneingeschränkter Bestätigungsvermerk',
-    pageLabel: 'Seite 4 von 18 – Bilanz',
-    blocks: [
-      { type: 'heading', text: 'Bilanz zum 31.12.2023 (Auszug)' },
-      { type: 'table', headers: ['Position', '31.12.2023', '31.12.2022'], rows: [
-        ['AKTIVA', '', ''],
-        ['  Anlagevermögen', '6.280.000', '5.950.000'],
-        ['  Umlaufvermögen', '2.520.000', '2.320.000'],
-        ['  Rechnungsabgrenzung', '140.000', '130.000'],
-        ['Bilanzsumme', '8.940.000', '8.400.000'],
-        ['PASSIVA', '', ''],
-        ['  Eigenkapital', '2.905.000', '2.650.000'],
-        ['  Rückstellungen', '120.000', '110.000'],
-        ['  Verbindlichkeiten', '5.915.000', '5.640.000'],
-        ['Bilanzsumme', '8.940.000', '8.400.000'],
-      ]},
-      { type: 'field', label: 'Eigenkapitalquote', value: '32,5 %' },
-      { type: 'field', label: 'Umsatzerlöse', value: '4.980.000 EUR' },
-      { type: 'field', label: 'Jahresüberschuss', value: '285.000 EUR' },
-    ],
-  },
+    jahresabschluss: {
+      title: 'Jahresabschluss 2023',
+      subtitle: `${firma} · testiert 28.03.2024`,
+      meta: 'Uneingeschränkter Bestätigungsvermerk',
+      pageLabel: 'Seite 4 von 18 – Bilanz',
+      blocks: [
+        { type: 'heading', text: 'Bilanz zum 31.12.2023 (Auszug)' },
+        { type: 'table', headers: ['Position', '31.12.2023', '31.12.2022'], rows: [
+          ['AKTIVA', '', ''],
+          ['  Anlagevermögen', fmtEUR((bilanzsumme * 0.7) || 0), fmtEUR((bilanzsumme * 0.7 * 0.94) || 0)],
+          ['  Umlaufvermögen', fmtEUR((bilanzsumme * 0.28) || 0), fmtEUR((bilanzsumme * 0.28 * 0.94) || 0)],
+          ['  Rechnungsabgrenzung', fmtEUR((bilanzsumme * 0.02) || 0), fmtEUR((bilanzsumme * 0.02 * 0.94) || 0)],
+          ['Bilanzsumme', fmtEUR(bilanzsumme || 0), fmtEUR((bilanzsumme * 0.94) || 0)],
+          ['PASSIVA', '', ''],
+          ['  Eigenkapital', fmtEUR(eigenkapital || 0), fmtEUR((eigenkapital * 0.92) || 0)],
+          ['  Rückstellungen', fmtEUR((bilanzsumme * 0.015) || 0), fmtEUR((bilanzsumme * 0.014) || 0)],
+          ['  Verbindlichkeiten', fmtEUR(fremdkapital || 0), fmtEUR((fremdkapital * 0.95) || 0)],
+          ['Bilanzsumme', fmtEUR(bilanzsumme || 0), fmtEUR((bilanzsumme * 0.94) || 0)],
+        ]},
+        { type: 'field', label: 'Eigenkapitalquote', value: ekquote },
+        { type: 'field', label: 'Umsatzerlöse', value: fmtEUR(umsatz) },
+      ],
+    },
 
-  bwa: {
-    title: 'Betriebswirtschaftliche Auswertung (BWA)',
-    subtitle: 'Rhein-Immobilien GmbH · Stand 31.03.2026',
-    meta: 'Datev-Auswertung · Kurzauswertung',
-    pageLabel: 'Seite 1 von 4',
-    blocks: [
-      { type: 'heading', text: 'Gewinn- und Verlustrechnung YTD' },
-      { type: 'table', headers: ['Position', 'YTD 2026', 'Vorjahr YTD', 'Abw. %'], rows: [
-        ['Gesamtleistung', '1.245.000', '1.170.000', '+6,4 %'],
-        ['Materialaufwand', '-412.000', '-385.000', '+7,0 %'],
-        ['Personalaufwand', '-385.000', '-360.000', '+6,9 %'],
-        ['Sonstige Aufwendungen', '-178.000', '-165.000', '+7,9 %'],
-        ['Vorläufiges Ergebnis', '+270.000', '+260.000', '+3,8 %'],
-      ]},
-      { type: 'paragraph', label: 'Kommentar', value: 'Die Ertragslage ist stabil. Steigende Material- und Personalkosten werden durch Preisanpassungen ausgeglichen.' },
-    ],
-  },
-};
+    bwa: {
+      title: 'Betriebswirtschaftliche Auswertung (BWA)',
+      subtitle: `${firma} · Stand ${abruf}`,
+      meta: 'Datev-Auswertung · Kurzauswertung',
+      pageLabel: 'Seite 1 von 4',
+      blocks: [
+        { type: 'heading', text: 'Gewinn- und Verlustrechnung YTD' },
+        { type: 'table', headers: ['Position', 'YTD', 'Vorjahr YTD', 'Abw. %'], rows: [
+          ['Gesamtleistung', fmtEUR(umsatz * 0.25), fmtEUR(umsatz * 0.235), '+6,4 %'],
+          ['Materialaufwand', fmtEUR(-(umsatz * 0.083)), fmtEUR(-(umsatz * 0.077)), '+7,0 %'],
+          ['Personalaufwand', fmtEUR(-(umsatz * 0.077)), fmtEUR(-(umsatz * 0.072)), '+6,9 %'],
+          ['Sonstige Aufwendungen', fmtEUR(-(umsatz * 0.036)), fmtEUR(-(umsatz * 0.033)), '+7,9 %'],
+          ['Vorläufiges Ergebnis', fmtEUR(umsatz * 0.054), fmtEUR(umsatz * 0.052), '+3,8 %'],
+        ]},
+        { type: 'paragraph', label: 'Kommentar', value: 'Die Ertragslage ist stabil. Steigende Material- und Personalkosten werden durch Preisanpassungen ausgeglichen.' },
+      ],
+    },
+  };
+}
 
 // ---------------------------------------------------------------------------
 // Public: Button, der das Modal öffnet
 // ---------------------------------------------------------------------------
 
-export function MockPdfPreviewButton({ documentId, label = 'Dokument ansehen', className = '' }) {
+export function MockPdfPreviewButton({ documentId, label = 'Dokument ansehen', className = '', company: companyProp }) {
   const [open, setOpen] = useState(false);
-  if (!DOCS[documentId]) return null;
+  const { getSelectedCompany } = useApp();
+  const company = companyProp || getSelectedCompany();
+  const docs = buildCompanyDocs(company);
+  if (!docs[documentId]) return null;
   return (
     <>
       <button
@@ -184,7 +237,7 @@ export function MockPdfPreviewButton({ documentId, label = 'Dokument ansehen', c
         <Eye size={13} strokeWidth={1.5} />
         {label}
       </button>
-      {open && <MockPdfPreviewModal documentId={documentId} onClose={() => setOpen(false)} />}
+      {open && <MockPdfPreviewModal documentId={documentId} company={company} onClose={() => setOpen(false)} />}
     </>
   );
 }
@@ -193,8 +246,11 @@ export function MockPdfPreviewButton({ documentId, label = 'Dokument ansehen', c
 // Modal
 // ---------------------------------------------------------------------------
 
-export function MockPdfPreviewModal({ documentId, onClose }) {
-  const doc = DOCS[documentId];
+export function MockPdfPreviewModal({ documentId, company: companyProp, onClose }) {
+  const { getSelectedCompany } = useApp();
+  const company = companyProp || getSelectedCompany();
+  const docs = buildCompanyDocs(company);
+  const doc = docs[documentId];
   if (!doc) return null;
 
   const PAGE_W = 620;

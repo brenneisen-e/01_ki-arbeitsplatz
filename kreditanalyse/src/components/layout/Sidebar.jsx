@@ -16,7 +16,11 @@ const navItems = [
   { id: 'decision', label: 'Kreditentscheidung', icon: Gavel },
   { id: 'contract', label: 'Kreditvertrag', icon: FileSignature },
   { id: 'monitoring', label: 'Monitoring', icon: Activity },
-  { id: 'compliance', label: 'Compliance-Sicht', icon: ShieldCheck },
+  // Separator: Compliance-Sicht ist kein Prozessschritt, sondern eine
+  // Querschnittssicht (KI-Governance, AI Act, §22 DSGVO). Wird visuell
+  // abgesetzt.
+  { divider: true },
+  { id: 'compliance', label: 'Compliance-Sicht', icon: ShieldCheck, emphasis: true },
 ];
 
 export default function Sidebar() {
@@ -61,19 +65,36 @@ export default function Sidebar() {
       {/* Nav */}
       <nav className="flex-1 py-4 overflow-y-auto scrollbar-thin">
         <ul className="space-y-1 px-2">
-          {navItems.map((item) => {
+          {navItems.map((item, idx) => {
+            if (item.divider) {
+              return (
+                <li key={`divider-${idx}`} className="pt-3 mt-3 border-t border-white/15">
+                  {!sidebarCollapsed && (
+                    <p className="px-3 text-[9px] uppercase tracking-wider font-semibold text-white/40 mb-1">
+                      Querschnitt
+                    </p>
+                  )}
+                </li>
+              );
+            }
             const Icon = item.icon;
             const active = currentView === item.id;
+            // Emphasis-Eintrag (Compliance-Sicht) bekommt leichte graue Füllung,
+            // damit er sich vom Rest der Navigation abhebt.
+            const emphasisClass = item.emphasis
+              ? active
+                ? 'bg-slate-700 text-white border-slate-500'
+                : 'bg-white/8 text-gray-200 hover:bg-white/15 hover:text-white border-white/10'
+              : active
+                ? 'bg-primary text-white border-transparent'
+                : 'text-gray-400 hover:text-white hover:bg-white/5 border-transparent';
             return (
               <li key={item.id}>
                 <button
                   onClick={() => navigate(item.id)}
-                  className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors ${
-                    active
-                      ? 'bg-primary text-white'
-                      : 'text-gray-400 hover:text-white hover:bg-white/5'
-                  }`}
+                  className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm border transition-colors ${emphasisClass}`}
                   title={sidebarCollapsed ? item.label : undefined}
+                  style={item.emphasis && !active ? { backgroundColor: 'rgba(255,255,255,0.08)' } : undefined}
                 >
                   <Icon size={18} strokeWidth={1.5} className="shrink-0" />
                   {!sidebarCollapsed && <span className="truncate">{item.label}</span>}

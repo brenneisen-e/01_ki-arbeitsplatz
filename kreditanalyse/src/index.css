@@ -15,9 +15,13 @@
   --color-text-muted: #94A3B8;
   --color-accent-teal: #00A3BF;
 
-  --font-headline: "DM Sans", sans-serif;
-  --font-body: "IBM Plex Sans", sans-serif;
-  --font-mono: "IBM Plex Mono", monospace;
+  /* Tool-weite Typografie auf Aptos umgestellt.
+     Aptos ist eine Microsoft-Schrift und wird lokal via @font-face
+     (siehe unten) geladen. Fallbacks sorgen dafür, dass das Tool
+     auch ohne installiertes Aptos lesbar bleibt. */
+  --font-headline: "Aptos", "Aptos Display", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font-body: "Aptos", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font-mono: "Aptos Mono", "Cascadia Mono", "Consolas", "IBM Plex Mono", monospace;
 }
 
 * {

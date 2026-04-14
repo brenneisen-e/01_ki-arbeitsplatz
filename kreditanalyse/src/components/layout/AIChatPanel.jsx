@@ -423,10 +423,11 @@ WICHTIG – Quellenangaben: Nenne immer transparent, woher du deine Informatione
   const lastMsg = state.aiMessages[state.aiMessages.length - 1];
   const showFollowUpSuggestions = lastMsg?.role === 'assistant' && !loading;
 
-  // Panel wird breiter, sobald der Assistent geantwortet hat — Tabellen und
-  // Charts sind sonst zu schwer lesbar. Ohne Antworten bleibt er kompakt.
+  // Panel-Grundbreite: auch ohne Nachrichten 440px damit Vorschläge und
+  // Chips nicht abgeschnitten werden. Nach der ersten Assistenz-Antwort
+  // wird das Panel weiter aufgezogen, damit Tabellen & Charts lesbar bleiben.
   const hasAssistantReply = state.aiMessages.some(m => m.role === 'assistant');
-  const panelWidth = hasAssistantReply ? 'w-[560px]' : 'w-96';
+  const panelWidth = hasAssistantReply ? 'w-[620px]' : 'w-[440px]';
 
   return (
     <div className={`${panelWidth} bg-white border-l border-border flex flex-col h-full shrink-0 transition-[width] duration-200`}>

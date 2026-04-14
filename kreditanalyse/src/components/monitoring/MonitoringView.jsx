@@ -370,15 +370,22 @@ function CustomBarTooltip({ active, payload, label }) {
 // =============================================================================
 
 function PortfolioTab({ companies }) {
+  // Portfolio = alle NICHT abgelehnten Anträge/Engagements. Damit ist der
+  // Portfoliovolumen-Wert konsistent zur Summe Volumen in Bearbeitung +
+  // Genehmigtes Volumen aus dem Dashboard.
+  const portfolioCompanies = useMemo(
+    () => companies.filter(c => c.status !== 'rejected'),
+    [companies],
+  );
   const portfolioVolume = useMemo(
-    () => companies.reduce((sum, c) => sum + (c.kredit?.betrag || 0), 0),
-    [companies]
+    () => portfolioCompanies.reduce((sum, c) => sum + (c.kredit?.betrag || 0), 0),
+    [portfolioCompanies]
   );
 
-  /** Group companies by branche and sum kredit.betrag */
+  /** Group companies by branche and sum kredit.betrag (ohne abgelehnte) */
   const branchenData = useMemo(() => {
     const map = {};
-    companies.forEach((c) => {
+    portfolioCompanies.forEach((c) => {
       const branche = c.branche || 'Sonstige';
       if (!map[branche]) map[branche] = 0;
       map[branche] += c.kredit?.betrag || 0;
@@ -386,7 +393,7 @@ function PortfolioTab({ companies }) {
     return Object.entries(map)
       .map(([name, betrag]) => ({ name, betrag }))
       .sort((a, b) => b.betrag - a.betrag);
-  }, [companies]);
+  }, [portfolioCompanies]);
 
   const kpis = [
     {

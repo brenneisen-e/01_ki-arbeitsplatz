@@ -2,6 +2,7 @@ import { useState, useMemo, useCallback } from 'react';
 import { useApp } from '../../context/AppContext';
 import StepCompleteBar from '../shared/StepCompleteBar';
 import { MockPdfPreviewButton, CHECKLIST_ID_TO_DOC } from '../shared/MockPdfPreview';
+import StepIntroCard from '../shared/StepIntroCard';
 import {
   ArrowLeft,
   FileCheck,
@@ -172,6 +173,9 @@ export default function KYCView() {
   // ---------------------------------------------------------------------------
   return (
     <div className="space-y-6">
+      {/* Step intro card */}
+      <StepIntroCard stepKey="kyc" />
+
       {/* Page heading */}
       <div className="flex items-center gap-3">
         <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">

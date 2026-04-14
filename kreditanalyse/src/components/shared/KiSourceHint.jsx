@@ -14,94 +14,169 @@
  */
 
 import { useState } from 'react';
+import { useApp } from '../../context/AppContext';
 import { Sparkles, X, FileText, MapPin } from 'lucide-react';
 
 // ---------------------------------------------------------------------------
-// Mock-Dokumente: SVG-Seiten mit Layout und Highlight-Bereichen pro Feld
+// Hilfsfunktionen
 // ---------------------------------------------------------------------------
 
-const DOCUMENTS = {
-  handelsregister: {
-    title: 'Handelsregisterauszug',
-    subtitle: 'Amtsgericht Düsseldorf · HRB 65890 · Abruf vom 10.04.2026',
-    seiten: 3,
-    pageLabel: 'Seite 1 von 3',
-    rows: [
-      { label: 'Nummer der Firma', value: 'HRB 65890', field: 'hrb' },
-      { label: 'Firma', value: 'Rhein-Immobilien GmbH', field: 'firma' },
-      { label: 'Sitz', value: 'Düsseldorf', field: 'ort' },
-      { label: 'Geschäftsanschrift', value: 'Königsallee 92, 40212 Düsseldorf', field: 'adresse' },
-      { label: 'Gegenstand des Unternehmens', value: 'Erwerb, Verwaltung, Bebauung und Verwertung von Grundstücken', field: 'branche' },
-      { label: 'Stammkapital', value: '250.000,00 EUR', field: 'stammkapital' },
-      { label: 'Rechtsform', value: 'Gesellschaft mit beschränkter Haftung', field: 'rechtsform' },
-      { label: 'Tag der Eintragung', value: '15. März 2008', field: 'gruendung' },
-      { label: 'Geschäftsführer', value: 'Clemens Vogel, geb. 12.03.1968', field: 'gf' },
-      { label: 'Vertretungsregelung', value: 'Die Gesellschaft wird durch einen Geschäftsführer vertreten.', field: 'vertretung' },
-    ],
-  },
-  gesellschaftsvertrag: {
-    title: 'Gesellschaftsvertrag',
-    subtitle: 'Notariell beurkundet · URNr. 512/2008 · §§ Auszug',
-    seiten: 12,
-    pageLabel: 'Seite 2 von 12',
-    rows: [
-      { label: '§ 1 Firma und Sitz', value: 'Die Firma der Gesellschaft lautet Rhein-Immobilien GmbH. Sitz ist Düsseldorf.', field: 'firma' },
-      { label: '§ 2 Gegenstand', value: 'Erwerb, Verwaltung und Bebauung von Grundstücken und grundstücksgleichen Rechten.', field: 'branche' },
-      { label: '§ 3 Stammkapital', value: 'Das Stammkapital der Gesellschaft beträgt 250.000,00 EUR.', field: 'stammkapital' },
-      { label: '§ 4 Gesellschafter', value: 'Clemens Vogel hält einen Anteil von 100 % (Nennwert 250.000,00 EUR).', field: 'gesellschafter' },
-      { label: '§ 5 Geschäftsjahr', value: 'Das Geschäftsjahr ist das Kalenderjahr.', field: 'geschaeftsjahr' },
-    ],
-  },
-  jahresabschluss: {
-    title: 'Jahresabschluss 2023',
-    subtitle: 'Rhein-Immobilien GmbH · Testiert am 28.03.2024',
-    seiten: 18,
-    pageLabel: 'Seite 4 von 18 – Bilanz',
-    rows: [
-      { label: 'Umsatzerlöse', value: '4.980.000 EUR', field: 'umsatz' },
-      { label: 'EBITDA', value: '473.000 EUR', field: 'ebitda' },
-      { label: 'Jahresüberschuss', value: '285.000 EUR', field: 'jahresuberschuss' },
-      { label: 'Bilanzsumme', value: '8.940.000 EUR', field: 'bilanzsumme' },
-      { label: 'Eigenkapital', value: '2.905.000 EUR', field: 'eigenkapital' },
-      { label: 'Eigenkapitalquote', value: '32,5 %', field: 'ekquote' },
-      { label: 'Verbindlichkeiten', value: '5.915.000 EUR', field: 'fremdkapital' },
-    ],
-  },
-  bwa: {
-    title: 'BWA März 2026',
-    subtitle: 'Betriebswirtschaftliche Auswertung · Stand 31.03.2026',
-    seiten: 4,
-    pageLabel: 'Seite 1 von 4',
-    rows: [
-      { label: 'Gesamtleistung YTD', value: '1.245.000 EUR', field: 'umsatz' },
-      { label: 'Materialaufwand', value: '-412.000 EUR', field: 'materialaufwand' },
-      { label: 'Personalaufwand', value: '-385.000 EUR', field: 'personalaufwand' },
-      { label: 'Sonstige betriebl. Aufwendungen', value: '-178.000 EUR', field: 'sonstige' },
-      { label: 'Vorläufiges Ergebnis', value: '+ 270.000 EUR', field: 'ergebnis' },
-    ],
-  },
-  transparenzregister: {
-    title: 'Transparenzregisterauszug',
-    subtitle: 'Bundesanzeiger-Verlag · Abruf vom 12.04.2026',
-    seiten: 2,
-    pageLabel: 'Seite 1 von 2',
-    rows: [
-      { label: 'Rechtseinheit', value: 'Rhein-Immobilien GmbH (HRB 65890)', field: 'firma' },
-      { label: 'Wirtschaftlich Berechtigter', value: 'Clemens Vogel, geb. 12.03.1968, Düsseldorf', field: 'ubo' },
-      { label: 'Art der Berechtigung', value: 'Kapitalanteile > 25 %', field: 'berechtigung' },
-      { label: 'Umfang der Berechtigung', value: '100 %', field: 'anteil' },
-    ],
-  },
-};
+function fmtDateDE(iso) {
+  if (!iso) return '—';
+  try {
+    return new Date(iso).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+  } catch {
+    return String(iso);
+  }
+}
+
+function fmtEUR(n) {
+  if (n == null) return '—';
+  return Number(n).toLocaleString('de-DE') + ',00 EUR';
+}
+
+function rechtsformLang(kurz) {
+  const map = {
+    'GmbH': 'Gesellschaft mit beschränkter Haftung',
+    'AG': 'Aktiengesellschaft',
+    'UG': 'Unternehmergesellschaft (haftungsbeschränkt)',
+    'OHG': 'Offene Handelsgesellschaft',
+    'KG': 'Kommanditgesellschaft',
+    'GmbH & Co. KG': 'GmbH & Co. Kommanditgesellschaft',
+    'eG': 'eingetragene Genossenschaft',
+    'e.K.': 'eingetragener Kaufmann',
+  };
+  return map[kurz] || kurz || 'Gesellschaft';
+}
+
+// ---------------------------------------------------------------------------
+// Dynamische Dokumente aus dem aktuell gewählten Vorgang
+// ---------------------------------------------------------------------------
+
+function buildDocuments(company) {
+  if (!company) return {};
+
+  const firma = company.firma || 'Muster GmbH';
+  const rechtsform = company.rechtsform || 'GmbH';
+  const hrb = company.hrb || 'HRB 00000';
+  const amtsgericht = company.amtsgericht || 'Amtsgericht';
+  const gruendung = company.gruendung || 2010;
+  const adresse = company.adresse || {};
+  const strasse = adresse.strasse || '';
+  const plz = adresse.plz || '';
+  const ort = adresse.ort || '';
+  const fullAdresse = [strasse, `${plz} ${ort}`.trim()].filter(Boolean).join(', ') || '—';
+  const branche = company.branche || '—';
+  const stammkapital = company.stammkapital || 25000;
+  const gf = company.gf?.[0];
+  const gfName = gf?.name || 'Geschäftsführer';
+  const gfGeb = gf?.geb ? fmtDateDE(gf.geb) : '';
+
+  const today = new Date();
+  const abruf = fmtDateDE(today.toISOString());
+
+  const bil23 = company.bilanz?.[2023] || {};
+  const umsatz = bil23.umsatz ?? company.umsatz ?? 0;
+  const ebitda = bil23.ebitda ?? 0;
+  const jahresueberschuss = bil23.jahresueberschuss ?? 0;
+  const bilanzsumme = bil23.bilanzsumme ?? 0;
+  const eigenkapital = bil23.eigenkapital ?? 0;
+  const ekquote = bilanzsumme ? (eigenkapital / bilanzsumme * 100).toFixed(1) + ' %' : '—';
+  const fremdkapital = bilanzsumme && eigenkapital ? bilanzsumme - eigenkapital : 0;
+
+  return {
+    handelsregister: {
+      title: 'Handelsregisterauszug',
+      subtitle: `${amtsgericht ? 'Amtsgericht ' + amtsgericht : 'Amtsgericht'} · ${hrb} · Abruf vom ${abruf}`,
+      seiten: 3,
+      pageLabel: 'Seite 1 von 3',
+      rows: [
+        { label: 'Nummer der Firma', value: hrb, field: 'hrb' },
+        { label: 'Firma', value: firma, field: 'firma' },
+        { label: 'Sitz', value: ort || '—', field: 'ort' },
+        { label: 'Geschäftsanschrift', value: fullAdresse, field: 'adresse' },
+        { label: 'Gegenstand des Unternehmens', value: branche, field: 'branche' },
+        { label: 'Stammkapital', value: fmtEUR(stammkapital), field: 'stammkapital' },
+        { label: 'Rechtsform', value: rechtsformLang(rechtsform), field: 'rechtsform' },
+        { label: 'Tag der Eintragung', value: `${gruendung}`, field: 'gruendung' },
+        { label: 'Geschäftsführer', value: gfName + (gfGeb ? `, geb. ${gfGeb}` : ''), field: 'gf' },
+        { label: 'Vertretungsregelung', value: 'Die Gesellschaft wird durch einen Geschäftsführer vertreten.', field: 'vertretung' },
+      ],
+    },
+    gesellschaftsvertrag: {
+      title: 'Gesellschaftsvertrag',
+      subtitle: `${firma} · Notariell beurkundet · §§ Auszug`,
+      seiten: 12,
+      pageLabel: 'Seite 2 von 12',
+      rows: [
+        { label: '§ 1 Firma und Sitz', value: `Die Firma der Gesellschaft lautet ${firma}. Sitz ist ${ort || '—'}.`, field: 'firma' },
+        { label: '§ 2 Gegenstand', value: branche, field: 'branche' },
+        { label: '§ 3 Stammkapital', value: `Das Stammkapital der Gesellschaft beträgt ${fmtEUR(stammkapital)}.`, field: 'stammkapital' },
+        { label: '§ 4 Gesellschafter', value: `${gfName} hält einen Anteil laut Gesellschafterliste.`, field: 'gesellschafter' },
+        { label: '§ 5 Geschäftsjahr', value: 'Das Geschäftsjahr ist das Kalenderjahr.', field: 'geschaeftsjahr' },
+      ],
+    },
+    jahresabschluss: {
+      title: 'Jahresabschluss 2023',
+      subtitle: `${firma} · Testiert 28.03.2024`,
+      seiten: 18,
+      pageLabel: 'Seite 4 von 18 – Bilanz',
+      rows: [
+        { label: 'Umsatzerlöse', value: fmtEUR(umsatz), field: 'umsatz' },
+        { label: 'EBITDA', value: fmtEUR(ebitda), field: 'ebitda' },
+        { label: 'Jahresüberschuss', value: fmtEUR(jahresueberschuss), field: 'jahresuberschuss' },
+        { label: 'Bilanzsumme', value: fmtEUR(bilanzsumme), field: 'bilanzsumme' },
+        { label: 'Eigenkapital', value: fmtEUR(eigenkapital), field: 'eigenkapital' },
+        { label: 'Eigenkapitalquote', value: ekquote, field: 'ekquote' },
+        { label: 'Verbindlichkeiten', value: fmtEUR(fremdkapital), field: 'fremdkapital' },
+      ],
+    },
+    bwa: {
+      title: 'BWA aktuell',
+      subtitle: `${firma} · Betriebswirtschaftliche Auswertung · Stand ${abruf}`,
+      seiten: 4,
+      pageLabel: 'Seite 1 von 4',
+      rows: [
+        { label: 'Gesamtleistung YTD', value: fmtEUR(umsatz * 0.25), field: 'umsatz' },
+        { label: 'Materialaufwand', value: fmtEUR(-(umsatz * 0.08)), field: 'materialaufwand' },
+        { label: 'Personalaufwand', value: fmtEUR(-(umsatz * 0.07)), field: 'personalaufwand' },
+        { label: 'Vorläufiges Ergebnis', value: fmtEUR(umsatz * 0.05), field: 'ergebnis' },
+      ],
+    },
+    transparenzregister: {
+      title: 'Transparenzregisterauszug',
+      subtitle: `Bundesanzeiger-Verlag · Abruf vom ${abruf}`,
+      seiten: 2,
+      pageLabel: 'Seite 1 von 2',
+      rows: [
+        { label: 'Rechtseinheit', value: `${firma} (${hrb})`, field: 'firma' },
+        { label: 'Wirtschaftlich Berechtigter', value: gfName + (gfGeb ? `, geb. ${gfGeb}, ${ort || ''}` : ''), field: 'ubo' },
+        { label: 'Art der Berechtigung', value: 'Kapitalanteile > 25 %', field: 'berechtigung' },
+        { label: 'Umfang der Berechtigung', value: gf?.anteil ? `${gf.anteil} %` : '100 %', field: 'anteil' },
+      ],
+    },
+  };
+}
 
 // ---------------------------------------------------------------------------
 // Render-Komponente
 // ---------------------------------------------------------------------------
 
-export default function KiSourceHint({ document = 'handelsregister', field, value, extractedAt }) {
+export default function KiSourceHint({ document = 'handelsregister', field, value, extractedAt, company: companyProp }) {
   const [open, setOpen] = useState(false);
 
-  const doc = DOCUMENTS[document] || DOCUMENTS.handelsregister;
+  // Wenn kein Vorgang explizit übergeben wurde, den aktuell ausgewählten
+  // Vorgang aus dem App-Context verwenden. Dadurch zeigt die KI-Quelle
+  // immer die Daten des aktuell bearbeiteten Kunden — nicht mehr hardcodiert.
+  const { getSelectedCompany } = useApp();
+  const contextCompany = getSelectedCompany();
+  const company = companyProp || contextCompany;
+
+  // Fallback-Kompanie, damit die Komponente auch dann noch sinnvoll aussieht,
+  // wenn noch kein Kunde ausgewählt wurde (z. B. bei leerem Formular)
+  const fallback = { firma: value || 'Muster GmbH', rechtsform: 'GmbH', hrb: 'HRB 00000', amtsgericht: 'Musterstadt', gruendung: 2010, adresse: {}, branche: '—' };
+  const docs = buildDocuments(company || fallback);
+  const doc = docs[document] || docs.handelsregister;
 
   return (
     <>

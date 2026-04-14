@@ -1,4 +1,4 @@
-import { FileText } from 'lucide-react';
+import { FileText, Reply, Mail } from 'lucide-react';
 import StatusBadge from './StatusBadge';
 import KiAnalysePanel from './KiAnalysePanel';
 import AntwortEntwurf from './AntwortEntwurf';
@@ -70,6 +70,37 @@ export default function VorgangDetail({ vorgang, analyse, analyseLoading, onStat
           </div>
         )}
       </div>
+
+      {/* Rückmeldung vom Vermittler — erscheint nur, wenn der Vermittler auf
+          eine gesendete Antwort reagiert hat. */}
+      {vorgang.vermittlerAntwort && (
+        <div className="card-base overflow-hidden border-blue-200">
+          <div className="px-4 py-2.5 bg-blue-50 border-b border-blue-200 flex items-center gap-2">
+            <Reply size={15} className="text-blue-600" strokeWidth={2} />
+            <span className="text-xs font-semibold text-blue-700 uppercase tracking-wider">
+              Rückfrage vom Vermittler
+            </span>
+            {vorgang.backofficeUnreadReply && (
+              <span className="ml-auto inline-flex items-center px-1.5 py-0.5 rounded-full bg-red-500 text-white text-[10px] font-bold uppercase tracking-wider">
+                Neu
+              </span>
+            )}
+          </div>
+          <div className="p-4">
+            <div className="mb-2 pb-2 border-b border-slate-100 text-xs space-y-0.5">
+              <p><span className="text-slate-400">Von:</span> <span className="text-slate-700">{vorgang.vermittler} &lt;{vorgang.email}&gt;</span></p>
+              <p><span className="text-slate-400">An:</span> <span className="text-slate-700">Lisa Neumann &lt;provisionsservice&gt;</span></p>
+              <p><span className="text-slate-400">Betreff:</span> <span className="text-slate-700">Re: Ihre Reklamation {vorgang.id}</span></p>
+              {vorgang.vermittlerAntwortDatum && (
+                <p><span className="text-slate-400">Eingang:</span> <span className="text-slate-700">{formatDatumDe(vorgang.vermittlerAntwortDatum)}</span></p>
+              )}
+            </div>
+            <div className="text-sm text-slate-700 whitespace-pre-line leading-relaxed">
+              {vorgang.vermittlerAntwort}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Bereich B: KI-Analyse */}
       <KiAnalysePanel

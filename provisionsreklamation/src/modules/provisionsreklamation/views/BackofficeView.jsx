@@ -69,9 +69,9 @@ export default function BackofficeView({ vorgaenge, onStatusChange, onMarkVorgan
 
   const handleSelect = useCallback((vorgang) => {
     setSelectedId(vorgang.id);
-    // „Neu eingereicht"-Badge entfernen, sobald der Sachbearbeiter irgendeinen
-    // Vorgang aktiv auswählt — der Eingang gilt damit als gesichtet.
-    if (onMarkVorgangSighted) onMarkVorgangSighted();
+    // „Neu eingereicht"- und „Rückmeldung vom Vermittler"-Flag entfernen,
+    // sobald der Sachbearbeiter den Vorgang aktiv auswählt.
+    if (onMarkVorgangSighted) onMarkVorgangSighted(vorgang.id);
     requestAnalyse(vorgang);
   }, [requestAnalyse, onMarkVorgangSighted]);
 
@@ -135,8 +135,8 @@ export default function BackofficeView({ vorgaenge, onStatusChange, onMarkVorgan
           auf 380px und das Detail-Panel öffnet sich rechts. */}
       <div className="flex gap-4" style={{ minHeight: 'calc(100vh - 420px)' }}>
         <div className={clsx(
-          'overflow-y-auto max-h-[calc(100vh-420px)] pr-1',
-          selectedVorgang ? 'w-[380px] shrink-0 space-y-2' : 'flex-1 space-y-2'
+          'overflow-y-auto max-h-[calc(100vh-420px)] pr-1 space-y-2 shrink-0',
+          selectedVorgang ? 'w-[380px]' : 'w-[760px]'
         )}>
           {(() => {
             const rendered = new Set();

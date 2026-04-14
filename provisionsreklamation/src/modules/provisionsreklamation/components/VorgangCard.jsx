@@ -1,5 +1,5 @@
 import { clsx } from 'clsx';
-import { ChevronRight, AlertTriangle, Sparkles } from 'lucide-react';
+import { ChevronRight, AlertTriangle, Sparkles, Reply } from 'lucide-react';
 import StatusBadge from './StatusBadge';
 
 export default function VorgangCard({ vorgang, isActive, onClick }) {
@@ -18,19 +18,28 @@ export default function VorgangCard({ vorgang, isActive, onClick }) {
       onClick={onClick}
       className={clsx(
         'w-full text-left p-4 rounded-lg border transition-all duration-200 relative',
-        vorgang.auffaellig && 'border-l-4 border-l-amber-500',
-        vorgang.isNeuEingereicht && !vorgang.auffaellig && 'border-l-4 border-l-blue-500',
+        vorgang.backofficeUnreadReply && 'border-l-4 border-l-red-500',
+        !vorgang.backofficeUnreadReply && vorgang.auffaellig && 'border-l-4 border-l-amber-500',
+        !vorgang.backofficeUnreadReply && !vorgang.auffaellig && vorgang.isNeuEingereicht && 'border-l-4 border-l-blue-500',
         isActive
           ? 'bg-blue-50 border-blue-200 shadow-sm'
-          : vorgang.isNeuEingereicht
-            ? 'bg-blue-50/40 border-blue-200 hover:bg-blue-50 hover:shadow-sm'
-            : 'bg-white border-slate-200 hover:bg-slate-50 hover:shadow-sm'
+          : vorgang.backofficeUnreadReply
+            ? 'bg-red-50/40 border-red-200 hover:bg-red-50 hover:shadow-sm'
+            : vorgang.isNeuEingereicht
+              ? 'bg-blue-50/40 border-blue-200 hover:bg-blue-50 hover:shadow-sm'
+              : 'bg-white border-slate-200 hover:bg-slate-50 hover:shadow-sm'
       )}
     >
       {vorgang.isNeuEingereicht && (
         <span className="absolute top-2 right-2 flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-blue-600 text-white text-[10px] font-bold tracking-wider uppercase shadow-sm">
           <Sparkles size={10} strokeWidth={2.5} />
           Neu eingereicht
+        </span>
+      )}
+      {vorgang.backofficeUnreadReply && (
+        <span className="absolute top-2 right-2 flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-red-500 text-white text-[10px] font-bold tracking-wider uppercase shadow-sm">
+          <Reply size={10} strokeWidth={2.5} />
+          Rückfrage
         </span>
       )}
       <div className="flex items-start justify-between gap-2">

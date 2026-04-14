@@ -2,7 +2,7 @@ import { FileText } from 'lucide-react';
 import ReklamationForm from '../components/ReklamationForm';
 import VermittlerInbox from '../components/VermittlerInbox';
 
-export default function ReklamationFormView({ onSubmit, inboxVorgaenge = [], onMarkAntwortGelesen }) {
+export default function ReklamationFormView({ onSubmit, inboxVorgaenge = [], onMarkAntwortGelesen, onVermittlerAntwort }) {
   // Wenn es unquittierte Antworten vom Provisionsservice gibt, übernimmt der
   // Vermittler-Inbox die komplette Tab-Fläche — der Nutzer ist „in der
   // Perspektive des Vermittlers" und sieht die Antwort zum Vorgang.
@@ -11,6 +11,7 @@ export default function ReklamationFormView({ onSubmit, inboxVorgaenge = [], onM
       <VermittlerInbox
         vorgaenge={inboxVorgaenge}
         onMarkGelesen={onMarkAntwortGelesen}
+        onAntworten={onVermittlerAntwort}
       />
     );
   }

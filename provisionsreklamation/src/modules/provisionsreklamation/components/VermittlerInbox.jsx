@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Mail, User, FileText, CheckCircle, ChevronLeft } from 'lucide-react';
+import { Mail, User, FileText, CheckCircle, ChevronLeft, Send, Reply } from 'lucide-react';
 
 const formatEur = (val) => new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(val || 0);
 const formatDatumDe = (iso) => {
@@ -12,14 +12,81 @@ const formatDatumDe = (iso) => {
 // Zeigt die Perspektive des Vermittlers, der eine Reklamation eingereicht
 // hat: oben seine eigenen Kontaktdaten, darunter der Status des Vorgangs und
 // die Antwort-E-Mail aus dem Provisionsservice.
-export default function VermittlerInbox({ vorgaenge, onMarkGelesen }) {
+export default function VermittlerInbox({ vorgaenge, onMarkGelesen, onAntworten }) {
   const [activeId, setActiveId] = useState(vorgaenge[0]?.id || null);
+  const [replyMode, setReplyMode] = useState(false);
+  const [replyText, setReplyText] = useState('');
+  const [sendingStage, setSendingStage] = useState(null); // 'sending' | 'delivered' | null
   const aktuellerVorgang = vorgaenge.find(v => v.id === activeId) || vorgaenge[0];
 
   if (!aktuellerVorgang) return null;
 
   const statusLabel = aktuellerVorgang.antwortStatus || aktuellerVorgang.status;
   const isPositiv = statusLabel === 'Geklärt' || statusLabel === 'Beantwortet';
+
+  const startReply = () => {
+    setReplyMode(true);
+    setReplyText(
+      `Sehr geehrte Frau Neumann,\n\nvielen Dank für Ihre Rückmeldung zu Vorgang ${aktuellerVorgang.id}.\n\n\n\nMit freundlichen Grüßen\n${aktuellerVorgang.vermittler}`
+    );
+  };
+
+  const cancelReply = () => {
+    setReplyMode(false);
+    setReplyText('');
+  };
+
+  const submitReply = () => {
+    if (!replyText.trim()) return;
+    // Kurze Send-Animation analog zum Backoffice.
+    setSendingStage('sending');
+    setTimeout(() => {
+      setSendingStage('delivered');
+      setTimeout(() => {
+        setSendingStage(null);
+        setReplyMode(false);
+        if (onAntworten) onAntworten(aktuellerVorgang.id, replyText.trim());
+        setReplyText('');
+      }, 900);
+    }, 1200);
+  };
+
+  if (sendingStage) {
+    return (
+      <div className="p-6 animate-fade-in-up">
+        <div className="card-base p-10 text-center">
+          {sendingStage === 'sending' ? (
+            <>
+              <div className="relative w-16 h-16 mx-auto mb-4">
+                <div className="absolute inset-0 rounded-full bg-blue-100 animate-ping opacity-60" />
+                <div className="relative w-16 h-16 rounded-full bg-blue-50 flex items-center justify-center">
+                  <Send size={28} className="text-blue-500 animate-pulse" strokeWidth={1.75} />
+                </div>
+              </div>
+              <p className="text-sm font-medium text-slate-700">
+                Ihre Antwort wird an den Provisionsservice gesendet …
+              </p>
+              <div className="flex items-center justify-center gap-1.5 mt-3">
+                <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse" />
+                <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse [animation-delay:150ms]" />
+                <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse [animation-delay:300ms]" />
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="w-16 h-16 rounded-full bg-emerald-50 flex items-center justify-center mx-auto mb-4 animate-fade-in-up">
+                <Mail size={28} className="text-emerald-500" strokeWidth={1.75} />
+              </div>
+              <p className="text-sm font-medium text-slate-700">Rückfrage zugestellt.</p>
+              <p className="text-xs text-slate-400 mt-1">
+                Der Vorgang wird dem Provisionsservice erneut zur Prüfung vorgelegt.
+              </p>
+            </>
+          )}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="p-6 animate-fade-in-up space-y-6">
@@ -141,19 +208,76 @@ export default function VermittlerInbox({ vorgaenge, onMarkGelesen }) {
         </div>
       </div>
 
+      {/* Antwort-Formular des Vermittlers */}
+      {replyMode ? (
+        <div className="card-base overflow-hidden">
+          <div className="px-5 py-3 bg-blue-50 border-b border-blue-200 flex items-center gap-2">
+            <Reply size={16} className="text-blue-600" strokeWidth={1.75} />
+            <span className="text-xs font-semibold text-blue-700 uppercase tracking-wider">
+              Rückfrage an den Provisionsservice
+            </span>
+          </div>
+          <div className="p-5 space-y-3">
+            <div className="text-xs space-y-0.5">
+              <p><span className="text-slate-400">Von:</span> <span className="text-slate-700">{aktuellerVorgang.vermittler} &lt;{aktuellerVorgang.email}&gt;</span></p>
+              <p><span className="text-slate-400">An:</span> <span className="text-slate-700">Lisa Neumann &lt;provisionsservice@beispiel-versicherung.de&gt;</span></p>
+              <p><span className="text-slate-400">Betreff:</span> <span className="text-slate-700">Re: Ihre Reklamation {aktuellerVorgang.id}</span></p>
+            </div>
+            <textarea
+              value={replyText}
+              onChange={(e) => setReplyText(e.target.value)}
+              rows={10}
+              className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 resize-y leading-relaxed"
+              placeholder="Ihre Rückfrage…"
+            />
+            <div className="flex items-center justify-end gap-2">
+              <button
+                type="button"
+                onClick={cancelReply}
+                className="px-3 py-1.5 text-xs font-medium text-slate-600 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors"
+              >
+                Abbrechen
+              </button>
+              <button
+                type="button"
+                onClick={submitReply}
+                disabled={!replyText.trim()}
+                className="flex items-center gap-1.5 px-4 py-1.5 text-xs font-medium bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed transition-colors"
+              >
+                <Send size={13} strokeWidth={2} />
+                Antwort senden
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
+
       {/* Aktionen */}
-      <div className="flex items-center justify-between">
-        <p className="text-xs text-slate-400">
+      <div className="flex items-center justify-between gap-3 flex-wrap">
+        <p className="text-xs text-slate-400 flex-1 min-w-[200px]">
           Nach der Kenntnisnahme verschwindet diese Nachricht aus Ihrem Posteingang.
+          Sie können den Vorgang auch direkt beantworten — der Vorgang geht dann erneut an den Provisionsservice.
         </p>
-        <button
-          type="button"
-          onClick={() => onMarkGelesen(aktuellerVorgang.id)}
-          className="flex items-center gap-1.5 px-4 py-2 text-sm font-medium bg-slate-800 text-white rounded-lg hover:bg-slate-700 transition-colors"
-        >
-          <ChevronLeft size={14} strokeWidth={2} />
-          Zur Kenntnis genommen
-        </button>
+        <div className="flex items-center gap-2">
+          {!replyMode && (
+            <button
+              type="button"
+              onClick={startReply}
+              className="flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-blue-700 bg-blue-50 border border-blue-200 rounded-lg hover:bg-blue-100 transition-colors"
+            >
+              <Reply size={14} strokeWidth={2} />
+              Auf Ticket antworten
+            </button>
+          )}
+          <button
+            type="button"
+            onClick={() => onMarkGelesen(aktuellerVorgang.id)}
+            className="flex items-center gap-1.5 px-4 py-2 text-sm font-medium bg-slate-800 text-white rounded-lg hover:bg-slate-700 transition-colors"
+          >
+            <ChevronLeft size={14} strokeWidth={2} />
+            Zur Kenntnis genommen
+          </button>
+        </div>
       </div>
     </div>
   );

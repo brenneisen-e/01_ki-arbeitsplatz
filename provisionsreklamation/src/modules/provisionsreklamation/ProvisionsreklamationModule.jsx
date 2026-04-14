@@ -1,8 +1,9 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { clsx } from 'clsx';
 import { Home, User, Building2, FileText, AlertTriangle, Clock, Settings } from 'lucide-react';
 import ReklamationFormView from './views/ReklamationFormView';
 import BackofficeView from './views/BackofficeView';
+import { DEMO_VORGAENGE } from './data/demoData';
 
 function getBasePath() {
   const path = window.location.pathname;
@@ -25,11 +26,54 @@ const HEADER_STATS = [
 
 export default function ProvisionsreklamationModule() {
   const [activeTab, setActiveTab] = useState('formular');
-  const [vorgaenge, setVorgaenge] = useState([]);
+  // Alle Vorgänge (Demo + selbst eingereichte) leben jetzt hier, damit sowohl
+  // das Backoffice-Tab als auch der Vermittler-Inbox im „Reklamation
+  // einreichen"-Tab vom selben Datenstand lesen können.
+  const [vorgaenge, setVorgaenge] = useState(DEMO_VORGAENGE);
 
   const addVorgang = useCallback((vorgang) => {
     setVorgaenge(prev => [vorgang, ...prev]);
   }, []);
+
+  // Wenn der Sachbearbeiter im Backoffice eine Antwort verschickt, speichern
+  // wir den neuen Status plus den Antworttext auf dem Vorgang und markieren
+  // ihn als „vom Vermittler noch nicht gesichtet" (antwortGelesen: false).
+  const handleVorgangStatusChange = useCallback((vorgangId, newStatus, antwortText) => {
+    setVorgaenge(prev => prev.map(v => {
+      if (v.id !== vorgangId) return v;
+      return {
+        ...v,
+        status: newStatus,
+        antwortText: antwortText || v.antwortText || null,
+        antwortStatus: newStatus,
+        antwortGelesen: false,
+      };
+    }));
+  }, []);
+
+  const handleMarkAntwortGelesen = useCallback((vorgangId) => {
+    setVorgaenge(prev => prev.map(v =>
+      v.id === vorgangId ? { ...v, antwortGelesen: true } : v
+    ));
+  }, []);
+
+  // „Neu eingereicht"-Flag wird gecleared, sobald der Sachbearbeiter im
+  // Backoffice irgendeinen Vorgang aktiv auswählt — der Eingang gilt als
+  // gesichtet.
+  const handleMarkVorgangSighted = useCallback(() => {
+    setVorgaenge(prev => {
+      if (!prev.some(v => v.isNeuEingereicht)) return prev;
+      return prev.map(v => v.isNeuEingereicht ? { ...v, isNeuEingereicht: false } : v);
+    });
+  }, []);
+
+  // Inbox-Vorgänge = alle Vorgänge mit Antwort, die noch nicht vom Vermittler
+  // quittiert wurden.
+  const inboxVorgaenge = useMemo(
+    () => vorgaenge.filter(v => v.antwortText && !v.antwortGelesen),
+    [vorgaenge]
+  );
+  const inboxCount = inboxVorgaenge.length;
 
   return (
     <div className="min-h-screen flex flex-col bg-[var(--bg-primary)]">
@@ -107,12 +151,13 @@ export default function ProvisionsreklamationModule() {
         <div className="px-6 flex gap-1 overflow-x-auto pb-0">
           {TABS.map(tab => {
             const Icon = tab.icon;
+            const badgeCount = tab.id === 'formular' ? inboxCount : 0;
             return (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
                 className={clsx(
-                  'px-4 py-2.5 text-sm font-medium rounded-t-lg transition-all duration-200 whitespace-nowrap flex items-center gap-2',
+                  'px-4 py-2.5 text-sm font-medium rounded-t-lg transition-all duration-200 whitespace-nowrap flex items-center gap-2 relative',
                   activeTab === tab.id
                     ? 'bg-white text-slate-800'
                     : 'text-white/70 hover:text-white hover:bg-white/10'
@@ -120,6 +165,11 @@ export default function ProvisionsreklamationModule() {
               >
                 <Icon size={16} strokeWidth={1.75} />
                 {tab.label}
+                {badgeCount > 0 && (
+                  <span className="ml-1 inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 text-[10px] font-bold rounded-full bg-red-500 text-white shadow-sm">
+                    {badgeCount}
+                  </span>
+                )}
               </button>
             );
           })}
@@ -129,10 +179,18 @@ export default function ProvisionsreklamationModule() {
       {/* Content */}
       <main className="flex-1">
         {activeTab === 'formular' && (
-          <ReklamationFormView onSubmit={addVorgang} />
+          <ReklamationFormView
+            onSubmit={addVorgang}
+            inboxVorgaenge={inboxVorgaenge}
+            onMarkAntwortGelesen={handleMarkAntwortGelesen}
+          />
         )}
         {activeTab === 'backoffice' && (
-          <BackofficeView zusaetzlicheVorgaenge={vorgaenge} />
+          <BackofficeView
+            vorgaenge={vorgaenge}
+            onStatusChange={handleVorgangStatusChange}
+            onMarkVorgangSighted={handleMarkVorgangSighted}
+          />
         )}
       </main>
 

@@ -82,7 +82,7 @@ export default function VorgangDetail({ vorgang, analyse, analyseLoading, onStat
       {analyse && !analyseLoading && (
         <AntwortEntwurf
           antwortText={analyse.antwort_entwurf}
-          onStatusChange={(newStatus) => onStatusChange(vorgang.id, newStatus)}
+          onStatusChange={(newStatus, antwortText) => onStatusChange(vorgang.id, newStatus, antwortText)}
         />
       )}
     </div>

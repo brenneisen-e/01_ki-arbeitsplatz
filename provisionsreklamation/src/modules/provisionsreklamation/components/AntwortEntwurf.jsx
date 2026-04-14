@@ -1,14 +1,49 @@
 import { useState } from 'react';
 import { clsx } from 'clsx';
-import { Send, Edit3, ArrowUpRight, XCircle, CheckCircle } from 'lucide-react';
+import { Send, Edit3, ArrowUpRight, XCircle, CheckCircle, Mail } from 'lucide-react';
 
 export default function AntwortEntwurf({ antwortText, onStatusChange }) {
   const [text, setText] = useState(antwortText || '');
   const [editing, setEditing] = useState(false);
   const [showConfirmReject, setShowConfirmReject] = useState(false);
   const [actionDone, setActionDone] = useState(null);
+  const [sendingAnimation, setSendingAnimation] = useState(null); // 'sending' | 'delivered' | null
 
   if (!antwortText) return null;
+
+  // Kurze E-Mail-Versand-Animation nach „Antwort übernehmen" — gibt dem
+  // Sachbearbeiter visuelles Feedback, dass die Antwort tatsächlich an den
+  // Vermittler rausgeht, bevor wir auf den Erfolgs-Screen umschalten.
+  if (sendingAnimation) {
+    return (
+      <div className="card-base p-8 text-center animate-fade-in">
+        {sendingAnimation === 'sending' ? (
+          <>
+            <div className="relative w-16 h-16 mx-auto mb-4">
+              <div className="absolute inset-0 rounded-full bg-blue-100 animate-ping opacity-60" />
+              <div className="relative w-16 h-16 rounded-full bg-blue-50 flex items-center justify-center">
+                <Send size={28} className="text-blue-500 animate-pulse" strokeWidth={1.75} />
+              </div>
+            </div>
+            <p className="text-sm font-medium text-slate-700">E-Mail wird an den Vermittler versendet …</p>
+            <div className="flex items-center justify-center gap-1.5 mt-3">
+              <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse" />
+              <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse [animation-delay:150ms]" />
+              <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse [animation-delay:300ms]" />
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="w-16 h-16 rounded-full bg-emerald-50 flex items-center justify-center mx-auto mb-4 animate-fade-in-up">
+              <Mail size={28} className="text-emerald-500" strokeWidth={1.75} />
+            </div>
+            <p className="text-sm font-medium text-slate-700">E-Mail zugestellt.</p>
+            <p className="text-xs text-slate-400 mt-1">Der Vermittler erhält Ihre Antwort als Nachricht im Reklamations-Portal.</p>
+          </>
+        )}
+      </div>
+    );
+  }
 
   if (actionDone) {
     const isSuccess = actionDone === 'geklaert' || actionDone === 'eskaliert';
@@ -32,16 +67,33 @@ export default function AntwortEntwurf({ antwortText, onStatusChange }) {
     );
   }
 
+  const finalizeAction = (action) => {
+    setActionDone(action);
+    if (onStatusChange) {
+      const statusMap = { geklaert: 'Geklärt', eskaliert: 'Eskaliert', abgelehnt: 'Abgelehnt' };
+      onStatusChange(statusMap[action], text);
+    }
+  };
+
   const handleAction = (action) => {
     if (action === 'abgelehnt' && !showConfirmReject) {
       setShowConfirmReject(true);
       return;
     }
-    setActionDone(action);
-    if (onStatusChange) {
-      const statusMap = { geklaert: 'Geklärt', eskaliert: 'Eskaliert', abgelehnt: 'Abgelehnt' };
-      onStatusChange(statusMap[action]);
+    // „Antwort übernehmen & abschließen" triggert die Send-Animation; andere
+    // Aktionen (Eskalation/Ablehnung) überspringen sie.
+    if (action === 'geklaert') {
+      setSendingAnimation('sending');
+      setTimeout(() => {
+        setSendingAnimation('delivered');
+        setTimeout(() => {
+          setSendingAnimation(null);
+          finalizeAction(action);
+        }, 900);
+      }, 1200);
+      return;
     }
+    finalizeAction(action);
   };
 
   return (

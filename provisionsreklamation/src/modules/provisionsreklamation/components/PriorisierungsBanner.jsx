@@ -21,12 +21,12 @@ const MUSTER_CLUSTER = [
     id: 'muster-pkv-bap',
     titel: 'PKV-Bestandsprovision nach BAP zu niedrig',
     beschreibung: 'Seit Release 4.2.1 werden PKV-Bestandsprovisionen nach Beitragsanpassung auf Basis des Alt-Beitrags und mit Standard-Satz (statt Individualsatz) berechnet.',
-    gesamtBetroffen: 7,
+    gesamtBetroffen: 6,
     gemeldet: 1,
-    nichtGemeldet: 6,
+    nichtGemeldet: 5,
     gemeldeteIds: ['RK-2026-0046'],
-    beispielVermittler: ['Claudia Weber', 'Dr. Stefan Kuhn', 'Anna Lipp', 'Benedikt Ostermeier', 'Ingrid Falk', 'Paul Rehberg'],
-    schaetzSumme: 1640.40,
+    beispielVermittler: ['Dr. Stefan Kuhn', 'Anna Lipp', 'Benedikt Ostermeier', 'Ingrid Falk', 'Paul Rehberg'],
+    schaetzSumme: 1168.50,
   },
 ];
 

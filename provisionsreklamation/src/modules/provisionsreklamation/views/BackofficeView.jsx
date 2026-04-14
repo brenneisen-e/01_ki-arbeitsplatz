@@ -1,7 +1,6 @@
-import { useState, useMemo, useEffect, useCallback } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { clsx } from 'clsx';
 import { Search, Filter } from 'lucide-react';
-import { DEMO_VORGAENGE } from '../data/demoData';
 import useKiAnalyse from '../hooks/useKiAnalyse';
 import StatistikHeader from '../components/StatistikHeader';
 import PriorisierungsBanner from '../components/PriorisierungsBanner';
@@ -17,25 +16,16 @@ const SORT_OPTIONS = [
   { value: 'prioritaet', label: 'Priorität' },
 ];
 
-export default function BackofficeView({ zusaetzlicheVorgaenge = [] }) {
-  const [vorgaenge, setVorgaenge] = useState(DEMO_VORGAENGE);
+// `vorgaenge` + Status-Änderungen werden vom `ProvisionsreklamationModule`
+// gehalten, damit auch das „Reklamation einreichen"-Tab (Vermittler-Inbox)
+// vom selben Datenstand liest.
+export default function BackofficeView({ vorgaenge, onStatusChange, onMarkVorgangSighted }) {
   const [selectedId, setSelectedId] = useState(null);
   const [statusFilter, setStatusFilter] = useState('Alle');
   const [prioFilter, setPrioFilter] = useState('Alle');
   const [suchtext, setSuchtext] = useState('');
   const [sortierung, setSortierung] = useState('datum');
   const { getAnalyse, isLoading, requestAnalyse } = useKiAnalyse();
-
-  // Zusätzliche Vorgänge (aus Formular) hinzufügen
-  useEffect(() => {
-    if (zusaetzlicheVorgaenge.length > 0) {
-      setVorgaenge(prev => {
-        const existingIds = new Set(prev.map(v => v.id));
-        const neueVorgaenge = zusaetzlicheVorgaenge.filter(v => !existingIds.has(v.id));
-        return [...neueVorgaenge, ...prev];
-      });
-    }
-  }, [zusaetzlicheVorgaenge]);
 
   // Filtern & Sortieren
   const gefilterteVorgaenge = useMemo(() => {
@@ -81,18 +71,9 @@ export default function BackofficeView({ zusaetzlicheVorgaenge = [] }) {
     setSelectedId(vorgang.id);
     // „Neu eingereicht"-Badge entfernen, sobald der Sachbearbeiter irgendeinen
     // Vorgang aktiv auswählt — der Eingang gilt damit als gesichtet.
-    setVorgaenge(prev => {
-      if (!prev.some(v => v.isNeuEingereicht)) return prev;
-      return prev.map(v => v.isNeuEingereicht ? { ...v, isNeuEingereicht: false } : v);
-    });
+    if (onMarkVorgangSighted) onMarkVorgangSighted();
     requestAnalyse(vorgang);
-  }, [requestAnalyse]);
-
-  const handleStatusChange = useCallback((vorgangId, newStatus) => {
-    setVorgaenge(prev => prev.map(v =>
-      v.id === vorgangId ? { ...v, status: newStatus } : v
-    ));
-  }, []);
+  }, [requestAnalyse, onMarkVorgangSighted]);
 
   const handleShowAuffaellig = useCallback(() => {
     setPrioFilter('Auffällig');
@@ -201,7 +182,7 @@ export default function BackofficeView({ zusaetzlicheVorgaenge = [] }) {
             vorgang={selectedVorgang}
             analyse={selectedVorgang ? getAnalyse(selectedVorgang.id) : null}
             analyseLoading={selectedVorgang ? isLoading(selectedVorgang.id) : false}
-            onStatusChange={handleStatusChange}
+            onStatusChange={onStatusChange}
           />
         </div>
       </div>

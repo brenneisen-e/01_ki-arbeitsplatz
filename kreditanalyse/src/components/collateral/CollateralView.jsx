@@ -22,6 +22,7 @@ import {
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import StepCompleteBar from '../shared/StepCompleteBar';
+import StepIntroCard from '../shared/StepIntroCard';
 import { formatCurrency, formatPercent, formatDate } from '../../utils/formatters';
 import { haircutRates, sicherheitenArten } from '../../data/haircutRates';
 import {
@@ -966,6 +967,7 @@ export default function CollateralView() {
   // ---------------------------------------------------------------------------
   return (
     <div className="space-y-6">
+      <StepIntroCard stepKey="collateral" />
       {/* Page heading */}
       <div className="flex items-center gap-3">
         <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">

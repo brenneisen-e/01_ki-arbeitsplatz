@@ -32,6 +32,7 @@ import {
   generateBwaPdf,
   DEMO_EXTRACTION_RESULT,
 } from '../../utils/demoPdfGenerator';
+import { MockPdfPreviewModal } from '../shared/MockPdfPreview';
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -190,6 +191,25 @@ export default function CustomerApplicationView() {
   const [submitted, setSubmitted] = useState(false);
 
   const isFieldError = (fieldName) => showErrors && validationErrors.some(e => e.field === fieldName);
+
+  // Preview modal state (for clicking on uploaded mock docs)
+  const [previewDocId, setPreviewDocId] = useState(null);
+
+  // Simulate uploading a mock document
+  const handleMockUpload = useCallback((doc) => {
+    const fake = {
+      name: doc.filename,
+      size: doc.size,
+      type: 'application/pdf',
+      uploadedAt: new Date(),
+      mockDocId: doc.id, // → zur Preview-Modal-Nutzung
+    };
+    setUploadedFiles(prev => {
+      // Doppel-Uploads vermeiden
+      if (prev.some(f => f.mockDocId === doc.id)) return prev;
+      return [...prev, fake];
+    });
+  }, []);
 
   // Handle file upload (demo: accepts any file, simulates AI extraction)
   const handleFileUpload = useCallback((e) => {
@@ -436,6 +456,42 @@ export default function CustomerApplicationView() {
           </div>
         </div>
 
+        {/* Demo-Upload — Mock-Dokumente mit einem Klick "hochladen" */}
+        <div className="bg-violet-50 border border-violet-200 rounded-lg p-4 mb-5">
+          <div className="flex items-start gap-3">
+            <Upload size={16} className="text-violet-600 mt-0.5 shrink-0" />
+            <div className="flex-1">
+              <p className="text-xs font-semibold text-violet-900">
+                Demo-Upload: Dokumente simuliert hochladen
+              </p>
+              <p className="text-xs text-violet-700 mt-0.5 mb-3">
+                Klicke auf einen Button, um den Upload eines typischen Kreditantrags-Dokuments zu simulieren
+                — so als hättest du gerade ein echtes PDF hochgeladen. Die KI startet dann automatisch die
+                Extraktion. Klick auf einen bereits "hochgeladenen" Eintrag, um das Mock-PDF anzusehen.
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {[
+                  { id: 'handelsregister', label: 'Handelsregisterauszug', filename: 'Handelsregisterauszug_HRB_12345.pdf', size: 184_320 },
+                  { id: 'gesellschaftsvertrag', label: 'Gesellschaftsvertrag', filename: 'Gesellschaftsvertrag_URNr_512_2008.pdf', size: 412_000 },
+                  { id: 'gesellschafterliste', label: 'Gesellschafterliste', filename: 'Gesellschafterliste_2026.pdf', size: 62_400 },
+                  { id: 'ausweis', label: 'Ausweiskopie GF', filename: 'Ausweiskopie_GF_Mueller.pdf', size: 98_700 },
+                  { id: 'gewerbe', label: 'Gewerbeanmeldung', filename: 'Gewerbeanmeldung_Stadt.pdf', size: 145_500 },
+                ].map(doc => (
+                  <button
+                    key={doc.id}
+                    type="button"
+                    onClick={() => handleMockUpload(doc)}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-violet-300 text-violet-800 rounded text-xs font-semibold hover:bg-violet-100 transition-colors"
+                  >
+                    <Upload size={12} strokeWidth={2} />
+                    {doc.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Upload area */}
         <div
           className="border-2 border-dashed border-border rounded-lg p-6 text-center cursor-pointer hover:border-amber-400 hover:bg-amber-50/30 transition-colors"
@@ -461,22 +517,33 @@ export default function CustomerApplicationView() {
         {/* Uploaded files list */}
         {uploadedFiles.length > 0 && (
           <div className="mt-4 space-y-2">
-            {uploadedFiles.map((file, idx) => (
-              <div key={idx} className="flex items-center gap-3 bg-surface rounded-lg px-4 py-2.5 border border-border">
-                <FileText size={16} className="text-amber-600 shrink-0" />
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-body text-text-primary truncate">{file.name}</p>
-                  <p className="text-xs text-text-muted">{(file.size / 1024).toFixed(0)} KB</p>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => removeFile(idx)}
-                  className="p-1 text-text-muted hover:text-danger transition-colors"
+            {uploadedFiles.map((file, idx) => {
+              const isMock = !!file.mockDocId;
+              return (
+                <div
+                  key={idx}
+                  className={`flex items-center gap-3 bg-surface rounded-lg px-4 py-2.5 border border-border ${isMock ? 'cursor-pointer hover:border-violet-300 hover:bg-violet-50/40' : ''}`}
+                  onClick={isMock ? () => setPreviewDocId(file.mockDocId) : undefined}
+                  title={isMock ? 'Mock-PDF ansehen' : undefined}
                 >
-                  <X size={14} />
-                </button>
-              </div>
-            ))}
+                  <FileText size={16} className={isMock ? 'text-violet-600 shrink-0' : 'text-amber-600 shrink-0'} />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-body text-text-primary truncate">{file.name}</p>
+                    <p className="text-xs text-text-muted">
+                      {(file.size / 1024).toFixed(0)} KB
+                      {isMock && <span className="ml-2 text-violet-600 font-semibold">· Demo-Upload · klicken für Vorschau</span>}
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={(e) => { e.stopPropagation(); removeFile(idx); }}
+                    className="p-1 text-text-muted hover:text-danger transition-colors"
+                  >
+                    <X size={14} />
+                  </button>
+                </div>
+              );
+            })}
           </div>
         )}
 
@@ -784,6 +851,32 @@ export default function CustomerApplicationView() {
         <Send size={20} />
         Kreditantrag einreichen
       </button>
+
+      {/* Vorschau-Modal für Mock-Dokumente (Handelsregister, Gesellschaftsvertrag …).
+          Nutzt Müller-Maschinenbau-Demo-Daten (Kundenperspektive). */}
+      {previewDocId && (
+        <MockPdfPreviewModal
+          documentId={previewDocId}
+          company={{
+            firma: formData.firma || 'Müller Maschinenbau GmbH',
+            rechtsform: formData.rechtsform || 'GmbH',
+            hrb: formData.hrb || 'HRB 12345',
+            amtsgericht: formData.amtsgericht || 'München',
+            gruendung: formData.gruendung || 2005,
+            adresse: {
+              strasse: formData.strasse || 'Industriestraße 42',
+              plz: formData.plz || '80339',
+              ort: formData.ort || 'München',
+            },
+            branche: formData.branche || 'Maschinenbau',
+            stammkapital: 250000,
+            gf: [{ name: formData.ansprechpartner_name || 'Stefan Müller', geb: '1975-06-12', anteil: 100 }],
+            mitarbeiter: formData.mitarbeiter || 42,
+            ust_id: formData.ust_id || 'DE 123 456 789',
+          }}
+          onClose={() => setPreviewDocId(null)}
+        />
+      )}
     </div>
   );
 }

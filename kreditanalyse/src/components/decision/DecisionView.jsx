@@ -53,6 +53,7 @@ import {
 } from 'recharts';
 import { useApp } from '../../context/AppContext';
 import StepCompleteBar from '../shared/StepCompleteBar';
+import StepIntroCard from '../shared/StepIntroCard';
 import { formatCurrency, formatPercent, formatNumber } from '../../utils/formatters';
 import {
   competencyMatrix,
@@ -377,6 +378,7 @@ Empfehlung: Genehmigung unter den nachfolgend genannten Auflagen und Bedingungen
   // ---------------------------------------------------------------------------
   return (
     <div className="space-y-6">
+      <StepIntroCard stepKey="decision" />
       {/* Page header */}
       <div className="flex items-center justify-between">
         <div>

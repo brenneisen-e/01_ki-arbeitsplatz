@@ -14,6 +14,7 @@ import { useApp } from '../../context/AppContext';
 import { exportContractAsDocx, exportContractAsPdf } from '../../utils/contractExport';
 import { fillContractTemplate } from '../../utils/contractTemplate';
 import { useAI } from '../../hooks/useAI';
+import StepIntroCard from '../shared/StepIntroCard';
 
 export default function ContractView() {
   const { getSelectedCompany, navigate } = useApp();
@@ -75,6 +76,7 @@ export default function ContractView() {
 
   return (
     <div className="max-w-4xl mx-auto space-y-6 pb-12">
+      <StepIntroCard stepKey="contract" />
       {/* Header */}
       <div className="flex items-center gap-3 mb-2 no-print">
         <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-emerald-600 text-white">

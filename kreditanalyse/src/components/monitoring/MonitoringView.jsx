@@ -49,6 +49,7 @@ import {
   Legend,
 } from 'recharts';
 import { useApp } from '../../context/AppContext';
+import StepIntroCard from '../shared/StepIntroCard';
 import {
   formatCurrency,
   formatCurrencyCompact,
@@ -1238,6 +1239,7 @@ export default function MonitoringView() {
 
   return (
     <div className="space-y-6">
+      <StepIntroCard stepKey="monitoring" />
       {/* Page heading */}
       <div className="flex items-center gap-3">
         <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">

@@ -18,8 +18,8 @@ const TABS = [
 ];
 
 const HEADER_STATS = [
-  { icon: FileText, text: '12 Offene Vorgänge' },
-  { icon: AlertTriangle, text: '2 Auffälligkeiten', className: 'text-amber-300' },
+  { icon: FileText, text: '14 Offene Vorgänge' },
+  { icon: AlertTriangle, text: '4 Auffälligkeiten (1 Cluster)', className: 'text-amber-300' },
   { icon: Clock, text: 'Ø 4,2 Tage Bearbeitung' },
 ];
 

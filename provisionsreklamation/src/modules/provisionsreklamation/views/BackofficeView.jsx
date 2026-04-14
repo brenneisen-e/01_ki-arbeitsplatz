@@ -7,6 +7,7 @@ import StatistikHeader from '../components/StatistikHeader';
 import PriorisierungsBanner from '../components/PriorisierungsBanner';
 import VorgangCard from '../components/VorgangCard';
 import VorgangDetail from '../components/VorgangDetail';
+import ClusterGroup from '../components/ClusterGroup';
 
 const STATUS_OPTIONS = ['Alle', 'Neu', 'In Bearbeitung', 'Geklärt', 'Beantwortet', 'Abgelehnt', 'Eskaliert'];
 const PRIO_OPTIONS = ['Alle', 'Normal', 'Auffällig'];
@@ -143,16 +144,44 @@ export default function BackofficeView({ zusaetzlicheVorgaenge = [] }) {
 
       {/* Zwei-Spalten-Layout */}
       <div className="flex gap-4" style={{ minHeight: 'calc(100vh - 420px)' }}>
-        {/* Vorgangsliste (links) */}
+        {/* Vorgangsliste (links) — Cluster-Vorgänge (≥2 mit identischer clusterId)
+            werden visuell gruppiert, damit der Sachbearbeiter inhaltlich identische
+            Reklamationen als Bündel sieht und gemeinsam bearbeiten kann. */}
         <div className="w-[380px] shrink-0 space-y-2 overflow-y-auto max-h-[calc(100vh-420px)] pr-1">
-          {gefilterteVorgaenge.map(vorgang => (
-            <VorgangCard
-              key={vorgang.id}
-              vorgang={vorgang}
-              isActive={selectedId === vorgang.id}
-              onClick={() => handleSelect(vorgang)}
-            />
-          ))}
+          {(() => {
+            const rendered = new Set();
+            const items = [];
+            gefilterteVorgaenge.forEach(vorgang => {
+              if (rendered.has(vorgang.id)) return;
+              const cid = vorgang.clusterId;
+              if (cid) {
+                const members = gefilterteVorgaenge.filter(v => v.clusterId === cid);
+                if (members.length >= 2) {
+                  members.forEach(m => rendered.add(m.id));
+                  items.push(
+                    <ClusterGroup
+                      key={`cluster-${cid}`}
+                      clusterId={cid}
+                      vorgaenge={members}
+                      selectedId={selectedId}
+                      onSelect={handleSelect}
+                    />
+                  );
+                  return;
+                }
+              }
+              rendered.add(vorgang.id);
+              items.push(
+                <VorgangCard
+                  key={vorgang.id}
+                  vorgang={vorgang}
+                  isActive={selectedId === vorgang.id}
+                  onClick={() => handleSelect(vorgang)}
+                />
+              );
+            });
+            return items;
+          })()}
           {gefilterteVorgaenge.length === 0 && (
             <div className="text-center py-8 text-sm text-slate-400">
               Keine Vorgänge gefunden.

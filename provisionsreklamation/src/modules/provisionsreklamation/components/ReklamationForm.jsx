@@ -249,8 +249,18 @@ export default function ReklamationForm({ onSubmit }) {
                 {REKLAMATIONSTYPEN.map(t => <option key={t} value={t}>{t}</option>)}
               </select>
             </div>
-            <FormField label="Abrechnungszeitraum (von)" type="month" value={form.zeitraumVon} onChange={handleChange('zeitraumVon')} required />
-            <FormField label="Abrechnungszeitraum (bis)" type="month" value={form.zeitraumBis} onChange={handleChange('zeitraumBis')} required />
+            <MonatJahrPicker
+              label="Abrechnungszeitraum (von)"
+              value={form.zeitraumVon}
+              onChange={(v) => setForm(prev => ({ ...prev, zeitraumVon: v }))}
+              required
+            />
+            <MonatJahrPicker
+              label="Abrechnungszeitraum (bis)"
+              value={form.zeitraumBis}
+              onChange={(v) => setForm(prev => ({ ...prev, zeitraumBis: v }))}
+              required
+            />
             <FormField label="Erwarteter Betrag (EUR)" type="number" value={form.erwartet} onChange={handleChange('erwartet')} placeholder="0.00" required />
             <FormField label="Erhaltener Betrag (EUR)" type="number" value={form.erhalten} onChange={handleChange('erhalten')} placeholder="0.00" required />
             <div>
@@ -340,6 +350,7 @@ export default function ReklamationForm({ onSubmit }) {
 }
 
 function FormField({ label, value, onChange, readonly, type = 'text', placeholder, required }) {
+  const isDate = type === 'date';
   return (
     <div>
       <label className="block text-xs font-medium text-slate-600 mb-1">
@@ -353,11 +364,69 @@ function FormField({ label, value, onChange, readonly, type = 'text', placeholde
         placeholder={placeholder}
         required={required}
         step={type === 'number' ? '0.01' : undefined}
+        lang={isDate ? 'de-DE' : undefined}
         className={clsx(
           'w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400',
           readonly ? 'bg-slate-50 text-slate-500' : 'bg-white'
         )}
       />
+      {isDate && value && (
+        <p className="text-[11px] text-slate-400 mt-1 font-mono">
+          {new Date(value).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' })}
+        </p>
+      )}
+    </div>
+  );
+}
+
+// Monat/Jahr-Auswahl mit deutschen Monatsnamen (ersetzt <input type="month">,
+// das Browser-Locale-abhängig ist und sonst englische Monatsnamen zeigt).
+const MONATE_DE = [
+  'Januar', 'Februar', 'März', 'April', 'Mai', 'Juni',
+  'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember',
+];
+
+function MonatJahrPicker({ label, value, onChange, required }) {
+  const [year, month] = (value || '').split('-');
+  const jahre = [];
+  for (let y = 2020; y <= 2028; y += 1) jahre.push(String(y));
+
+  const update = (m, y) => {
+    if (!m || !y) {
+      onChange('');
+      return;
+    }
+    onChange(`${y}-${m}`);
+  };
+
+  return (
+    <div>
+      <label className="block text-xs font-medium text-slate-600 mb-1">
+        {label} {required && <span className="text-red-400">*</span>}
+      </label>
+      <div className="grid grid-cols-2 gap-2">
+        <select
+          value={month || ''}
+          onChange={(e) => update(e.target.value, year || '')}
+          required={required}
+          className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400"
+        >
+          <option value="">Monat...</option>
+          {MONATE_DE.map((name, i) => {
+            const mm = String(i + 1).padStart(2, '0');
+            return <option key={mm} value={mm}>{name}</option>;
+          })}
+        </select>
+        <select
+          value={year || ''}
+          onChange={(e) => update(month || '', e.target.value)}
+          required={required}
+          className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400"
+        >
+          <option value="">Jahr...</option>
+          {jahre.map(y => <option key={y} value={y}>{y}</option>)}
+        </select>
+      </div>
     </div>
   );
 }

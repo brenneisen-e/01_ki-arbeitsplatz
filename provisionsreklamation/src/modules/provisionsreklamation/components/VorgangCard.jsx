@@ -6,6 +6,12 @@ export default function VorgangCard({ vorgang, isActive, onClick }) {
   const formatEur = (val) => {
     return new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(val);
   };
+  const formatDatumDe = (iso) => {
+    if (!iso) return '';
+    const d = new Date(iso);
+    if (Number.isNaN(d.getTime())) return iso;
+    return d.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+  };
 
   return (
     <button
@@ -47,7 +53,7 @@ export default function VorgangCard({ vorgang, isActive, onClick }) {
             'text-sm font-mono font-semibold',
             vorgang.differenz < 0 ? 'text-red-600' : vorgang.differenz > 0 ? 'text-emerald-600' : 'text-slate-400'
           )}>{formatEur(vorgang.differenz)}</p>
-          <p className="text-xs text-slate-400 mt-1">{vorgang.eingangsdatum}</p>
+          <p className="text-xs text-slate-400 mt-1">{formatDatumDe(vorgang.eingangsdatum)}</p>
           <ChevronRight size={16} className="text-slate-300 ml-auto mt-1" />
         </div>
       </div>

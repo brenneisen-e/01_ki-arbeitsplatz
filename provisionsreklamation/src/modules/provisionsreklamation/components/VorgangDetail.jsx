@@ -16,6 +16,20 @@ export default function VorgangDetail({ vorgang, analyse, analyseLoading, onStat
   }
 
   const formatEur = (val) => new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(val);
+  const formatDatumDe = (iso) => {
+    if (!iso) return '';
+    const d = new Date(iso);
+    if (Number.isNaN(d.getTime())) return iso;
+    return d.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+  };
+  const MONATE = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
+  const formatMonatJahrDe = (iso) => {
+    if (!iso) return '';
+    const [y, m] = iso.split('-');
+    const idx = Number(m) - 1;
+    if (!y || !MONATE[idx]) return iso;
+    return `${MONATE[idx]} ${y}`;
+  };
 
   return (
     <div className="space-y-4 animate-fade-in-up">
@@ -27,7 +41,7 @@ export default function VorgangDetail({ vorgang, analyse, analyseLoading, onStat
         </div>
         <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-xs">
           <DetailRow label="Vorgangsnummer" value={vorgang.id} mono />
-          <DetailRow label="Eingangsdatum" value={vorgang.eingangsdatum} />
+          <DetailRow label="Eingangsdatum" value={formatDatumDe(vorgang.eingangsdatum)} />
           <DetailRow label="Vermittler" value={`${vorgang.vermittler} (${vorgang.vermittlerNr})`} />
           <DetailRow label="Agentur" value={vorgang.agentur} />
           <DetailRow label="E-Mail" value={vorgang.email} />
@@ -35,9 +49,9 @@ export default function VorgangDetail({ vorgang, analyse, analyseLoading, onStat
           <DetailRow label="Sparte" value={vorgang.sparte} />
           <DetailRow label="VN" value={vorgang.vnName} />
           <DetailRow label="Reklamationstyp" value={vorgang.typ} />
-          <DetailRow label="Vertragsbeginn" value={vorgang.vertragsbeginn} />
-          <DetailRow label="Monatsbeitrag" value={`${vorgang.monatsbeitrag?.toFixed(2)} EUR`} />
-          <DetailRow label="Zeitraum" value={`${vorgang.zeitraumVon} – ${vorgang.zeitraumBis}`} />
+          <DetailRow label="Vertragsbeginn" value={formatDatumDe(vorgang.vertragsbeginn)} />
+          <DetailRow label="Monatsbeitrag" value={new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(vorgang.monatsbeitrag || 0)} />
+          <DetailRow label="Zeitraum" value={`${formatMonatJahrDe(vorgang.zeitraumVon)} – ${formatMonatJahrDe(vorgang.zeitraumBis)}`} />
           <DetailRow label="Erwartet" value={formatEur(vorgang.erwartet)} />
           <DetailRow label="Erhalten" value={formatEur(vorgang.erhalten)} />
           <div className="col-span-2">

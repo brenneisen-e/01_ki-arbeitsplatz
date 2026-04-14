@@ -79,6 +79,12 @@ export default function BackofficeView({ zusaetzlicheVorgaenge = [] }) {
 
   const handleSelect = useCallback((vorgang) => {
     setSelectedId(vorgang.id);
+    // „Neu eingereicht"-Badge entfernen, sobald der Sachbearbeiter irgendeinen
+    // Vorgang aktiv auswählt — der Eingang gilt damit als gesichtet.
+    setVorgaenge(prev => {
+      if (!prev.some(v => v.isNeuEingereicht)) return prev;
+      return prev.map(v => v.isNeuEingereicht ? { ...v, isNeuEingereicht: false } : v);
+    });
     requestAnalyse(vorgang);
   }, [requestAnalyse]);
 

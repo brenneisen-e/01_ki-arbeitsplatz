@@ -129,12 +129,15 @@ export default function BackofficeView({ vorgaenge, onStatusChange, onMarkVorgan
         <span className="text-xs text-slate-400">{gefilterteVorgaenge.length} Vorgänge</span>
       </div>
 
-      {/* Zwei-Spalten-Layout */}
+      {/* Zwei-Spalten-Layout — solange nichts ausgewählt ist, nimmt die Liste
+          die komplette Breite ein (mehrspaltig) und das Detail-Panel ist
+          ausgeblendet. Sobald ein Vorgang ausgewählt ist, schrumpft die Liste
+          auf 380px und das Detail-Panel öffnet sich rechts. */}
       <div className="flex gap-4" style={{ minHeight: 'calc(100vh - 420px)' }}>
-        {/* Vorgangsliste (links) — Cluster-Vorgänge (≥2 mit identischer clusterId)
-            werden visuell gruppiert, damit der Sachbearbeiter inhaltlich identische
-            Reklamationen als Bündel sieht und gemeinsam bearbeiten kann. */}
-        <div className="w-[380px] shrink-0 space-y-2 overflow-y-auto max-h-[calc(100vh-420px)] pr-1">
+        <div className={clsx(
+          'overflow-y-auto max-h-[calc(100vh-420px)] pr-1',
+          selectedVorgang ? 'w-[380px] shrink-0 space-y-2' : 'flex-1 space-y-2'
+        )}>
           {(() => {
             const rendered = new Set();
             const items = [];
@@ -176,15 +179,17 @@ export default function BackofficeView({ vorgaenge, onStatusChange, onMarkVorgan
           )}
         </div>
 
-        {/* Detail-Panel (rechts) */}
-        <div className="flex-1 overflow-y-auto max-h-[calc(100vh-420px)] pr-1">
-          <VorgangDetail
-            vorgang={selectedVorgang}
-            analyse={selectedVorgang ? getAnalyse(selectedVorgang.id) : null}
-            analyseLoading={selectedVorgang ? isLoading(selectedVorgang.id) : false}
-            onStatusChange={onStatusChange}
-          />
-        </div>
+        {/* Detail-Panel (rechts) — nur sichtbar, wenn ein Vorgang ausgewählt ist. */}
+        {selectedVorgang && (
+          <div className="flex-1 overflow-y-auto max-h-[calc(100vh-420px)] pr-1">
+            <VorgangDetail
+              vorgang={selectedVorgang}
+              analyse={getAnalyse(selectedVorgang.id)}
+              analyseLoading={isLoading(selectedVorgang.id)}
+              onStatusChange={onStatusChange}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

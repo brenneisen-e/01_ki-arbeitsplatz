@@ -158,9 +158,12 @@ export default function DecisionView() {
   const marktUser = state.availableUsers.find(u => u.id === 'weber') || state.availableUsers[0];
   const marktfolgeUser = state.availableUsers.find(u => u.id === 'fischer') || state.availableUsers[1];
 
-  // If the current user matches the slot AND has a custom profile name, use it
-  const erstvotumName = (currentUser.id === marktUser.id && customName) ? customName : marktUser.name;
-  const zweitvotumName = (currentUser.id === marktfolgeUser.id && customName) ? customName : marktfolgeUser.name;
+  // Der Profilname repräsentiert die angemeldete Person (Markt-Rolle = Eigentümer
+  // des Accounts). Der Erstvotum-Bearbeiter bleibt konstant — unabhängig davon,
+  // in welche Perspektive der Nutzer gerade wechselt. Nur Lese-/Schreibrechte
+  // ändern sich durch den Perspektivwechsel, nicht die angezeigten Namen.
+  const erstvotumName = customName || marktUser.name;
+  const zweitvotumName = marktfolgeUser.name;
 
   const [activeTab, setActiveTab] = useState('votierung');
 

@@ -31,7 +31,13 @@ export default function Header() {
   const [profileGender, setProfileGender] = useState(() => localStorage.getItem('kia_user_gender') || '');
 
   // Derived display values
-  const displayName = profileName || state.currentUser.name;
+  // profileName (e.g. "Eike Brenneisen") steht für die angemeldete Person,
+  // die primär der Markt-Rolle (weber) zugeordnet ist. Wenn der Nutzer per
+  // "Benutzer wechseln" in eine andere Rolle schlüpft (Fischer, Schneider),
+  // soll der Header den tatsächlichen switched-User zeigen und nicht mehr
+  // den eigenen Profilnamen überschreiben.
+  const isSelfRole = state.currentUser.id === 'weber';
+  const displayName = isSelfRole && profileName ? profileName : state.currentUser.name;
   const displayRole = state.currentUser.role;
 
   // Close menu on outside click

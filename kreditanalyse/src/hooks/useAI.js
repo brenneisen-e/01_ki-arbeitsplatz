@@ -7,14 +7,25 @@ import { useApp } from '../context/AppContext';
 const demoResponses = {
   eigenkapitalquote: `Analyse der Eigenkapitalquote:
 
-Die Eigenkapitalquote des Unternehmens liegt bei ca. 32,5% und damit im soliden Mittelfeld für die Branche. Der Branchendurchschnitt liegt bei etwa 28-35%.
+Die Eigenkapitalquote des Unternehmens liegt bei ca. 32,5 % und damit im soliden Mittelfeld für die Branche. Der Branchendurchschnitt liegt bei etwa 28 – 35 %.
+
+Entwicklung EK-Quote 2021-2023:
+[chart: 2021=30.2 2022=31.4 2023=32.5]
+
+Kennzahlen im Branchenvergleich:
+
+| Kennzahl | Unternehmen | Branchen-Ø | Status |
+| --- | --- | --- | --- |
+| Eigenkapitalquote | 32,5 % | 29,0 % | **über Ø** |
+| Verschuldungsgrad | 210 % | 245 % | **besser** |
+| Anlagendeckung II | 118 % | 105 % | **solide** |
 
 Bewertung:
 - Ausreichende Eigenkapitalausstattung für das beantragte Kreditvolumen
 - Positiver Trend über die letzten 3 Jahre (+2,3 Prozentpunkte)
 - Beachten Sie die geplante Investition und deren Auswirkung auf die EK-Quote
 
-Empfehlung: Die Eigenkapitalquote stützt eine positive Kreditentscheidung. Bei Auszahlung des beantragten Kredits sollte die Quote nicht unter 25% fallen.
+Empfehlung: Die Eigenkapitalquote stützt eine positive Kreditentscheidung. Bei Auszahlung des beantragten Kredits sollte die Quote nicht unter 25 % fallen.
 
 Quellen:
 - Jahresabschluss 2023 (Bilanz, Passivseite, Position "Eigenkapital" und "Bilanzsumme")

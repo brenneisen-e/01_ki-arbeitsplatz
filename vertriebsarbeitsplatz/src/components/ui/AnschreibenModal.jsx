@@ -262,7 +262,7 @@ function buildDraft(kunde, p, beraterSig) {
   if (istImmo) {
     subject = 'Ihre Immobilienpläne – gemeinsam den nächsten Schritt gehen';
     rationale = [
-      'Auslaufender KfW-Kredit schafft in 2 Monaten 840 €/Mon. freie Liquidität (PSD2).',
+      'Auslaufender Ratenkredit bei der Commerzbank schafft in 2 Monaten 840 €/Mon. freie Liquidität (PSD2).',
       'Schwäbisch-Hall-Bausparvertrag (30.000 €) wird im Q2/2026 zuteilungsreif (Bestandsdaten).',
       'Seit 24 Monaten Abonnent des Newsletters „VR-Immobilien" – zuletzt zwei Artikel zum KfW-Wohneigentumsprogramm angeklickt.',
     ];
@@ -271,7 +271,7 @@ function buildDraft(kunde, p, beraterSig) {
 
 in den letzten Wochen haben wir bei Ihnen drei Signale gesehen, die sehr gut zusammenpassen:
 
-• Ihr KfW-Kredit läuft planmäßig in wenigen Wochen aus – danach haben Sie rund 840 € zusätzliche Liquidität pro Monat zur Verfügung.
+• Ihr Ratenkredit bei der Commerzbank läuft planmäßig in wenigen Wochen aus – danach haben Sie rund 840 € zusätzliche Liquidität pro Monat zur Verfügung.
 • Ihr Bausparvertrag bei Schwäbisch Hall wird im zweiten Quartal 2026 zuteilungsreif – rund 30.000 € stehen dann als Eigenkapital bzw. Sondertilgung bereit.
 • Außerdem sind Sie seit 2 Jahren Abonnent unseres Newsletters „VR-Immobilien & Finanzieren" und haben zuletzt mehrfach Artikel rund um Bausparen und KfW-Förderprogramme gelesen.
 

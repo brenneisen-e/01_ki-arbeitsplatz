@@ -103,7 +103,7 @@ export default function TerminPrepModal({ kunde, termin, onClose }) {
                   <>Klaus Fischer (32) ist seit 2018 Kunde der Volksbank Mittelhessen. Er arbeitet als
                   Vertriebsleiter bei der Continental AG, ist verheiratet mit Sabine und hat zwei
                   Kinder (Lukas, 4 und Marie, 1). Nettohaushaltseinkommen: ca. 5.700 €/mtl.
-                  Die drei erkannten Signale — auslaufender KfW-Kredit, zuteilungsreifer
+                  Die drei erkannten Signale — auslaufender Ratenkredit bei der Commerzbank, zuteilungsreifer
                   Bausparvertrag und langjähriges Newsletter-Interesse — bilden einen sehr
                   starken Vertriebsimpuls für ein Erstgespräch zur Immobilienfinanzierung.</>
                 ) : (
@@ -248,7 +248,7 @@ export default function TerminPrepModal({ kunde, termin, onClose }) {
               <LeitfadenStep
                 nr={3}
                 title="Signale spiegeln"
-                text={'„Drei Dinge passen bei Ihnen gerade zusammen": KfW-Kredit läuft aus, BSV wird zuteilungsreif, Newsletter-Interesse. Dem Kunden die KI-Erkennung als Mehrwert erlebbar machen.'}
+                text={'„Drei Dinge passen bei Ihnen gerade zusammen": Commerzbank-Ratenkredit läuft aus, BSV wird zuteilungsreif, Newsletter-Interesse. Dem Kunden die KI-Erkennung als Mehrwert erlebbar machen.'}
               />
               <LeitfadenStep
                 nr={4}

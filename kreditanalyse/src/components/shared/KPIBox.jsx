@@ -14,9 +14,16 @@ import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'rec
 import {
   Sparkles, AlertTriangle, UserCheck, CheckCircle2, TrendingUp, TrendingDown,
   Shield, ShieldAlert, FileCheck, Bot, Eye, Lock, X,
+  FileText, Clock, CheckCircle, Euro, Banknote, XCircle, Timer,
+  Landmark, PiggyBank, Users, BarChart3,
 } from 'lucide-react';
 
-const KPI_ICONS = { Sparkles, AlertTriangle, UserCheck, CheckCircle2, Shield, ShieldAlert, FileCheck, Bot, Eye, Lock };
+const KPI_ICONS = {
+  Sparkles, AlertTriangle, UserCheck, CheckCircle2, Shield, ShieldAlert,
+  FileCheck, Bot, Eye, Lock,
+  FileText, Clock, CheckCircle, Euro, Banknote, XCircle, Timer,
+  Landmark, PiggyBank, Users, BarChart3,
+};
 
 const PRIMARY = '#1B2B4B';
 const PRIMARY_LIGHT = '#2D4A7A';

@@ -44,14 +44,21 @@ const DOCUMENT_STATUS_OPTIONS = [
   { value: 'mangel', label: 'Mangel', color: 'bg-red-100 text-red-700' },
 ];
 
+// Dynamic date helper: returns a date N days ago as YYYY-MM-DD
+function daysAgo(n) {
+  const d = new Date();
+  d.setDate(d.getDate() - n);
+  return d.toISOString().slice(0, 10);
+}
+
 const INITIAL_CHECKLIST = [
-  { id: 'hrAuszug', name: 'Handelsregisterauszug (max. 3 Monate alt)', status: 'geprueft', checked: true, pruefDatum: '2025-12-10', pruefer: 'KM', comment: 'Aktuell, keine Beanstandung', kiGeprueft: true },
-  { id: 'gesellschaftsvertrag', name: 'Gesellschaftsvertrag / Satzung (aktuell)', status: 'geprueft', checked: true, pruefDatum: '2025-12-10', pruefer: 'KM', comment: '', kiGeprueft: false },
-  { id: 'gesellschafterliste', name: 'Gesellschafterliste (aktuell)', status: 'eingereicht', checked: false, pruefDatum: '', pruefer: '', comment: '', kiGeprueft: false },
-  { id: 'transparenzregister', name: 'Transparenzregisterauszug', status: 'geprueft', checked: true, pruefDatum: '2025-12-12', pruefer: 'KM', comment: 'Abgleich erfolgt', kiGeprueft: true },
-  { id: 'legGF1', name: 'Legitimation GF 1 (Ausweiskopie)', status: 'geprueft', checked: true, pruefDatum: '2025-12-08', pruefer: 'SB', comment: '', kiGeprueft: true },
-  { id: 'legGF2', name: 'Legitimation GF 2 (falls vorhanden)', status: 'offen', checked: false, pruefDatum: '', pruefer: '', comment: '', kiGeprueft: false },
-  { id: 'gewerbe', name: 'Gewerbeanmeldung/-ummeldung', status: 'eingereicht', checked: false, pruefDatum: '', pruefer: '', comment: '', kiGeprueft: false },
+  { id: 'hrAuszug', name: 'Handelsregisterauszug (max. 3 Monate alt)', status: 'geprueft', checked: true, pruefDatum: daysAgo(4), pruefer: 'KM', comment: 'Aktuell, keine Beanstandung', kiGeprueft: true },
+  { id: 'gesellschaftsvertrag', name: 'Gesellschaftsvertrag / Satzung (aktuell)', status: 'geprueft', checked: true, pruefDatum: daysAgo(4), pruefer: 'KM', comment: 'KI-Extraktion der Gesellschafterstruktur, manuell freigegeben', kiGeprueft: true },
+  { id: 'gesellschafterliste', name: 'Gesellschafterliste (aktuell)', status: 'eingereicht', checked: false, pruefDatum: '', pruefer: '', comment: '', kiGeprueft: true },
+  { id: 'transparenzregister', name: 'Transparenzregisterauszug', status: 'geprueft', checked: true, pruefDatum: daysAgo(2), pruefer: 'KM', comment: 'Abgleich erfolgt', kiGeprueft: true },
+  { id: 'legGF1', name: 'Legitimation GF 1 (Ausweiskopie)', status: 'geprueft', checked: true, pruefDatum: daysAgo(6), pruefer: 'SB', comment: '', kiGeprueft: true },
+  { id: 'legGF2', name: 'Legitimation GF 2 (falls vorhanden)', status: 'offen', checked: false, pruefDatum: '', pruefer: '', comment: '', kiGeprueft: true },
+  { id: 'gewerbe', name: 'Gewerbeanmeldung/-ummeldung', status: 'eingereicht', checked: false, pruefDatum: '', pruefer: '', comment: '', kiGeprueft: true },
 ];
 
 const PEP_CATEGORIES = [
@@ -351,16 +358,19 @@ function IdentifizierungTab({ checklist, setChecklist, expandedItem, setExpanded
 
                 {/* KI geprüft badge */}
                 {item.kiGeprueft && (
-                  <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold bg-violet-100 text-violet-700 border border-violet-200">
+                  <span
+                    className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold bg-violet-100 text-violet-700 border border-violet-200"
+                    title="Dokument wurde von der KI geprüft (OCR + Plausibilisierung) und wird durch einen Mitarbeiter freigegeben (Human-in-the-Loop)"
+                  >
                     <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-                    KI geprüft
+                    KI geprüft · menschliche Freigabe
                   </span>
                 )}
 
                 {/* Date indicator if checked */}
                 {item.pruefDatum && (
                   <span className="text-xs font-mono text-text-muted hidden sm:inline">
-                    {item.pruefDatum}
+                    {new Date(item.pruefDatum).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' })}
                   </span>
                 )}
 

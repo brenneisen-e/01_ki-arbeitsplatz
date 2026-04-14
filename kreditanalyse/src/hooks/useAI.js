@@ -14,7 +14,13 @@ Bewertung:
 - Positiver Trend über die letzten 3 Jahre (+2,3 Prozentpunkte)
 - Beachten Sie die geplante Investition und deren Auswirkung auf die EK-Quote
 
-Empfehlung: Die Eigenkapitalquote stützt eine positive Kreditentscheidung. Bei Auszahlung des beantragten Kredits sollte die Quote nicht unter 25% fallen.`,
+Empfehlung: Die Eigenkapitalquote stützt eine positive Kreditentscheidung. Bei Auszahlung des beantragten Kredits sollte die Quote nicht unter 25% fallen.
+
+Quellen:
+- Jahresabschluss 2023 (Bilanz, Passivseite, Position "Eigenkapital" und "Bilanzsumme")
+- Jahresabschlüsse 2021 und 2022 (für Trendberechnung)
+- Branchenbenchmark-Datenbank der Bank (Branchencode laut Antrag)
+- Interne Mindestquoten-Policy (Risikorichtlinie §4.2)`,
 
   risiken: `Risikoanalyse:
 
@@ -33,7 +39,14 @@ Geringe Risiken:
 - Standortrisiko gering (etablierter Industriestandort)
 - Nachfolgeplanung vorhanden
 
-Gesamteinschätzung: Risikoprofil moderat – vertretbar bei angemessener Besicherung.`,
+Gesamteinschätzung: Risikoprofil moderat – vertretbar bei angemessener Besicherung.
+
+Quellen:
+- Kundenliste & Umsatzkonzentration aus BWA aktuell sowie Jahresabschluss 2023 (GuV-Details)
+- Bestehende Verbindlichkeiten laut Antragsdaten
+- Branchenreport Creditreform (Branchenkonjunktur)
+- Personalaufwandsquote: eigene Berechnung aus Jahresabschluss 2023 / 2022
+- Annahme: Nachfolgeplanung laut Managementgespräch`,
 
   zusammenfassung: `Kreditanalyse – Zusammenfassung
 
@@ -56,7 +69,15 @@ Vorgeschlagene Sicherheiten decken den Kreditbetrag zu ca. 75-85% ab. Blankoante
 Befürwortung des Kreditantrags unter folgenden Auflagen:
 - Jährliche Offenlegung gemäß §18 KWG
 - Quartalsweise BWA-Einreichung
-- Einhaltung Financial Covenants (EK-Quote ≥ 25%, DSCR ≥ 1,2x)`,
+- Einhaltung Financial Covenants (EK-Quote ≥ 25%, DSCR ≥ 1,2x)
+
+Quellen:
+- Antragsdaten (Kreditantrag, Verwendungszweck)
+- Jahresabschlüsse 2021-2023
+- Aktuelle BWA
+- Rating-Engine (quantitatives & qualitatives Rating)
+- Sicherheitenbewertung nach institutsinternen Beleihungswertrichtlinien
+- Kompetenzmatrix der Bank, §18 KWG, MaRisk BTO 1.2`,
 
   default: `Vielen Dank für Ihre Frage. Basierend auf den vorliegenden Unterlagen und Kennzahlen kann ich Folgendes feststellen:
 
@@ -67,7 +88,13 @@ Wichtige Punkte:
 - Die angebotenen Sicherheiten bieten eine angemessene Risikoabsicherung
 - Regulatorische Anforderungen (§18 KWG, MaRisk BTO 1.1) sind zu beachten
 
-Für eine vertiefte Analyse empfehle ich, die einzelnen Bereiche (Bilanzanalyse, Rating, Sicherheiten) im Detail zu prüfen. Nutzen Sie dafür die entsprechenden Reiter in der Navigation.`
+Für eine vertiefte Analyse empfehle ich, die einzelnen Bereiche (Bilanzanalyse, Rating, Sicherheiten) im Detail zu prüfen. Nutzen Sie dafür die entsprechenden Reiter in der Navigation.
+
+Quellen:
+- Antragsdaten und hochgeladene Dokumente des Antragstellers
+- Kennzahlenberechnung basierend auf Jahresabschluss 2023
+- Sicherheitenbewertung aus Modul "Sicherheiten"
+- Regulatorische Referenzen: §18 KWG, MaRisk BTO 1.1`
 };
 
 function getDemoResponse(userMessage) {

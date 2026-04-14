@@ -2,7 +2,7 @@ import { useApp } from '../../context/AppContext';
 import {
   LayoutDashboard, FileText, Shield, FileSearch, BarChart3,
   Lock, Gavel, Activity, ChevronLeft, ChevronRight, Building2,
-  FileSignature, ClipboardList, Send,
+  FileSignature, ClipboardList, Send, ShieldCheck,
 } from 'lucide-react';
 
 const navItems = [
@@ -16,6 +16,7 @@ const navItems = [
   { id: 'decision', label: 'Kreditentscheidung', icon: Gavel },
   { id: 'contract', label: 'Kreditvertrag', icon: FileSignature },
   { id: 'monitoring', label: 'Monitoring', icon: Activity },
+  { id: 'compliance', label: 'Compliance-Sicht', icon: ShieldCheck },
 ];
 
 export default function Sidebar() {

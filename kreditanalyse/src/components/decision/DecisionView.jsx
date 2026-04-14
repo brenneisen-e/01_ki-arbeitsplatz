@@ -34,6 +34,7 @@ import {
   FileSignature,
   Download,
   ClipboardCheck,
+  Gavel,
 } from 'lucide-react';
 import {
   BarChart,
